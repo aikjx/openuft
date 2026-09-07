@@ -1,6 +1,6 @@
 # Question · 提问
 
-> 提问前请先看 [FAQ.md](../../FAQ.md)。
+> 提问前请先看 [FAQ.md](../../00_governance/FAQ.md)。
 
 ---
 
@@ -12,7 +12,7 @@
 
 - [ ] 读过 [README.md](../../README.md)
 - [ ] 读过 [QUICKSTART.md](../../QUICKSTART.md)
-- [ ] 看过 [FAQ.md](../../FAQ.md)
+- [ ] 看过 [FAQ.md](../../00_governance/FAQ.md)
 - [ ] 搜过 [Issues](https://github.com/aikjx/openuft/issues?q=)
 - [ ] 搜过 [Discussions](https://github.com/aikjx/openuft/discussions)
 
