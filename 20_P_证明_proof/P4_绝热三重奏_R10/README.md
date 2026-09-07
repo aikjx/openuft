@@ -35,4 +35,4 @@ $$\kappa^2 + \tau^2 = \left(\frac{\omega(t)}{v(t)}\right)^2 \left[1 + O(\varepsi
 
 ---
 
-*算法联盟 · ROOT · ★ 核心证明*
+*AI 科技星 · ★ 核心证明*

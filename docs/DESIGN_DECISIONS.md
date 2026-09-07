@@ -175,12 +175,12 @@
 **状态**：✅ 已采纳
 
 ### 决策
-项目作者署名从「莫国子（Guozi Mo）/ 算法联盟 ROOT」统一切换为 **AI 科技星（AI Tech Star）**。
+项目作者署名从「莫国子（Guozi Mo）/ AI 科技星」统一切换为 **AI 科技星（AI Tech Star）**。
 
 ### 旧名清理
 - `莫国子` → `AI 科技星`（已批量替换 60+ 文件）
 - `Guozi Mo` / `Guozi` → `AI 科技星`
-- `算法联盟 ROOT` → `AI 科技星`
+- `AI 科技星` → `AI 科技星`
 - `ROOT`（孤立使用）→ `AI 科技星`
 
 ### 保留
@@ -199,7 +199,7 @@
 - ✅ CHANGELOG.md（保留历史叙述提及）
 
 ### 选择 AI 科技星的理由
-1. **统一性**：原「莫国子」「算法联盟 ROOT」混合使用造成文件标记混乱
+1. **统一性**：原「莫国子」「AI 科技星」混合使用造成文件标记混乱
 2. **品牌化**：「AI 科技星」更易记、可用作商标
 3. **国际化**：AI Tech Star 与中文署名 1:1 对应，便于双语发布
 4. **传承性**：组织名保留「AI 科技星实验室（Algorithm Alliance）」作为方法论溯源
@@ -271,4 +271,48 @@ sed 替换所有 github.com/.../openUFT → openuft  ✅
 
 ---
 
-— AI 科技星 · 2026-09-06
+## ADR-011 · Windows 大小写不敏感事故教训
+
+**日期**：2026-09-07
+**状态**：✅ 已采纳（血泪教训）
+
+### 事故经过
+1. 误以为 `openUFT/` 与 `openuft/` 是两个独立目录
+2. 实际 Windows 文件系统**大小写不敏感**，两者是**同一物理目录**
+3. 执行 `rm -rf openUFT` 意图删除"旧目录"，实际删除了**唯一**目录的全部 96 文件
+
+### 恢复过程
+1. `git status` 确认 `deleted: openUFT/...` 记录
+2. `git restore openUFT/` 从 git HEAD 恢复 93 文件
+3. 重建 `99_inbox_future/` 10 个空子目录（不被 git 跟踪）
+4. `git mv` 两步法修正大小写
+
+### 教训（永久规则）
+
+| 规则 | 说明 |
+|---|---|
+| **Windows 大小写不敏感** | `openUFT` ≡ `openuft`，永远当作同一目录 |
+| **删除前先 git status** | 确认要删的是"预期中的文件" |
+| **优先 git rm，不用 rm -rf** | `git rm` 有版本控制保护 |
+| **空目录用 .gitkeep 占位** | 否则恢复时丢失 |
+| **改大小写用 git mv 两步法** | `core.ignorecase=false` + `openUFT→tmp→openuft` |
+
+### 为何之前没发现
+- `shutil.copytree(openUFT, openuft)` 在大小写不敏感系统上实际是"复制到自己"
+- `sed` 替换 openUFT→openuft 实际对同一目录原地修改
+- 两次 `find` 列出的 250 文件"完全一致"，正是因为是同一目录
+
+### 正确的大小写改名方案
+
+```bash
+# 在 Windows + git 环境改目录大小写的唯一正确姿势
+git config core.ignorecase false
+git mv openUFT openuft_tmp
+git mv openuft_tmp openuft
+git config core.ignorecase true
+```
+
+---
+
+— AI 科技星 · 2026-09-07
+

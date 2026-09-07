@@ -23,6 +23,26 @@
 
 ---
 
+## [4.0.3] - 2026-09-07 10:03 — 事故恢复 + 目录大小写 git 化修正
+
+### Fixed（关键恢复）
+- **事故**：误删 `openUFT/` 目录（Windows 大小写不敏感导致 `openUFT` 与 `openuft` 实为同一物理目录，`rm -rf openUFT` 误删全部）
+- **恢复**：`git restore openUFT/` 从 git HEAD（提交 e8945964）完整恢复 93 文件
+- **重建**：`99_inbox_future/` 下 10 个开放问题子目录（空目录不被 git 跟踪，恢复后丢失，已用 README 占位重建）
+- **验证**：`python verify.py` 36/36 通过
+
+### Changed（目录大小写正确处理）
+- **git mv 两步法**：`openUFT/` → `openuft_tmp/` → `openuft/`（配合 `core.ignorecase=false`）
+- git 记录中路径从 `openUFT/` 正确变更为 `openuft/`（rename 记录 R 全部就位）
+- 物理目录与 git 索引路径统一为小写 `openuft/`
+
+### 教训（ADR-011 记录）
+- **Windows 文件系统大小写不敏感**：`openUFT` ≡ `openuft`（同一物理目录），绝不可当作两个目录处理
+- 删除任何目录前必须先 `git status` 确认，且用 `git rm` 而非 `rm -rf`
+- 空目录不被 git 跟踪 → 需用 `.gitkeep` 或 README 占位
+
+---
+
 ## [4.0.2] - 2026-09-06 23:57 — 目录小写化
 
 ### Changed（核心变更）
@@ -52,7 +72,7 @@
 ## [4.0.1] - 2026-09-06 22:34 — 全维整理优化 v2（求导·证明·验证·精算）
 
 ### Changed（核心变更）
-- **作者统一切换**：`莫国子 / Guozi Mo / 算法联盟 ROOT` → **AI 科技星（AI Tech Star）**
+- **作者统一切换**：`莫国子 / Guozi Mo / AI 科技星` → **AI 科技星（AI Tech Star）**
   - 60+ 文件批量替换
   - LICENSE / CITATION.cff / README.md / docs 全部更新
   - 组织名保留「AI 科技星实验室（Algorithm Alliance）」作为方法论传承

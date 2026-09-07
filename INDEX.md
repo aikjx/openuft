@@ -53,7 +53,7 @@
 - `A3_证伪标准/` 4 条人工场证伪 + CMB + 粒子谱
 - `A4_诚实声明OpenProblems/` OPEN O-1 ~ O-12
 - `A5_分层标注Hierarchy/` L0-L8 + αS π₃ 质量谱
-- `A6_算法联盟认证/` ROOT 权限记录
+- `A6_AI科技星认证/` AI 科技星 权限记录
 
 ## 50_physics_domains/ 物理领域
 
