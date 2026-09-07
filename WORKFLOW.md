@@ -163,5 +163,5 @@ git push -u origin main
 
 ---
 
-*算法联盟 · AI 科技星 ROOT*
+*AI 科技星*
 *最后更新：2026-09-06 21:48 GMT+8*

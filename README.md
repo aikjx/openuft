@@ -64,7 +64,7 @@ openuft/
 │   ├── A3_证伪标准_Falsification
 │   ├── A4_诚实声明_OPEN清单
 │   ├── A5_分层标注_L0_L8
-│   └── A6_算法联盟认证_最高权限
+│   └── A6_AI科技星认证_最高权限
 │
 ├── 50_physics_domains/                ← 物理领域（按主题）
 │   ├── 电磁QED / 弱力SU2 / 强力SU3
