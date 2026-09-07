@@ -29,7 +29,7 @@
 
 ## 三、检查清单（Checklist）
 
-- [ ] 我读过 [CONTRIBUTING.md](../../CONTRIBUTING.md)
+- [ ] 我读过 [CONTRIBUTING.md](../00_governance/CONTRIBUTING.md)
 - [ ] 我读过分层标准（L0-L8）
 - [ ] 数学严格性符合要求（sympy / mpmath）
 - [ ] 物理诚实性符合要求（含分层标注）

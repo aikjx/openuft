@@ -1,8 +1,9 @@
 # 快速开始
 
-1. 打开[理论路线](01_hypotheses/README.md)，选择一个可检验问题。
-2. 阅读该路线 sources.md，核对原文前提。
-3. 复制[记录模板](03_research_protocol/claim_template.md)到对应阶段，补全上游编号与边界条件。
-4. 完成推导、预测和独立检验后更新[比较表](02_comparison/README.md)。
+1. 在 [理论路线](01_models/README.md) 选择基础假设相符的模块。
+2. 完成 model.json 与 00_project/plan.md，登记假设版本。
+3. 在 claims.csv 建立命题编号，沿阶段目录链接推导、预测、数据和运行。
+4. 运行 `python verify.py` 检查结构。
+5. 复算共享历史引擎：从 openuft 进入 `02_shared/computation/src` 后运行 `python -m triad_uft.verify`。输出中的历史证据标签需另行审查。
 
-目录检查：在 openuft 目录运行 `python reorganize_structure.py --check`。此命令检查资料保全与新增导航链接，不验证物理理论。
+未知归属资料先进入 [99_inbox](99_inbox/README.md)。
