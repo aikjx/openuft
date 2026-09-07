@@ -28,4 +28,10 @@
 | 15_releases | [说明](15_releases/README.md) |
 | 90_archive | [说明](90_archive/README.md) |
 
-目前没有声明对其他候选体系的结论依赖。
+声明的关系（借用，非已证明的逻辑依赖，不转移证据等级）：
+
+- [S01 螺旋三重奏与谱几何](../s01_triad_kinematics/README.md)：借用曲率/挠率螺旋数学；数学恒等式不能认证本体系本体公设。
+- [S02 张祥前空间运动与统一力](../s02_zhang_space_motion/README.md)：借用统一力方程 `P = m(c − v)`、`F = dP/dt`，登记为公设 S12-A4。
+- [S10 频率本源与复螺旋宇宙](../s10_frequency_helix_ontology/README.md)：共用数学骨架 `√(κ²+τ²) = ω/c`，但本体系是空间以光速螺旋运动（`v ≡ c` 恒等），S10 是振动的频率本体（`v ≤ c` 上限）。互不认证。
+
+区分边界见 [02_assumptions/postulates.md](02_assumptions/postulates.md)。
