@@ -24,7 +24,7 @@
 | [HDU 高维紧致化统一](s05_hdu_higher_dimensions/README.md) | unreviewed | 高维几何、紧致化及低维常数的投影关系 |
 | [TCL 拓扑手征锁定](s06_tcl_topological_chirality/README.md) | unreviewed | 边界态、手征与费米子代结构的对应 |
 | [频率本源与复螺旋宇宙](s10_frequency_helix_ontology/README.md) | unreviewed | 振动本体、作用量子及复曲率轨迹三项原理 |
-| [空间光速螺旋统一体系](s12_light_speed_helix/README.md) | unreviewed | 空间光速螺旋 v=c 为本源公设的统一场论报告系列 |
+| [空间光速螺旋统一体系](s12_light_speed_helix/README.md) | unreviewed | v≡c 空间光速螺旋本源公设（垂直原理、光速约束、螺旋参数化）及统一力方程 F=dP/dt, P=m(c−v) |
 
 ## 待完备理论框架（1）
 

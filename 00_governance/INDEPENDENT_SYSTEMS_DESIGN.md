@@ -30,9 +30,9 @@
 | [S07 GAQ 复曲率融合](../01_systems/s07_gaq_complex_curvature/README.md) | v4 原著重新组织复曲率公设，并声明融合 IEG/HDU/TCL | 作为组合候选独立管理，不把融合视为三个上游自动成立 |
 | [S08 GAQ 常数几何化](../01_systems/s08_gaq_geometrized_constants/README.md) | v5 改变 c、hbar 的公设常数地位 | 基础输入的地位改变需要独立审查，因此不是简单文件名升级 |
 | [S09 GAQ 粒子质量谱](../01_systems/s09_gaq_mass_spectrum/README.md) | v6 明确引入代结构与质量比的扩展研究 | 类型是扩展候选，不声称已成为自足的完整统一理论 |
-| [S10 频率本源与复螺旋宇宙](../01_systems/s10_frequency_helix_ontology/README.md) | 原著总序明确给出振动、量子与复曲率轨迹三项原理 | 频率本体原著单独管理，不因为也出现螺旋就并入 S01 |
+| [S10 频率本源与复螺旋宇宙](../01_systems/s10_frequency_helix_ontology/README.md) | 原著总序明确给出振动、量子与复曲率轨迹三项原理 | 频率本体原著单独管理，不因为也出现螺旋就并入 S01；与 S12 的分界已登记在两体系 `02_assumptions/postulates.md`：本体系是振动本体且 c 为**上限**（`v ≤ c`），S12 是空间运动本体且 `v ≡ c` **恒等** |
 | [S11 GMUFT 几何自由度与耦合](../01_systems/s11_gmuft_geometric_coupling/README.md) | G–epsilon0 文稿第 V 节明确组织 GMUFT，第 VIII 节列其限制 | 类型是待完善候选框架，不把经典近似计算当完整场论 |
-| [S12 空间光速螺旋统一](../01_systems/s12_light_speed_helix/README.md) | 报告 v5/v6 明确将 v=c 光速螺旋作为本源公设 | 与 GAQ 版本线分开；早期报告按谱系审查，不默认公设完全一致 |
+| [S12 空间光速螺旋统一](../01_systems/s12_light_speed_helix/README.md) | 报告 v5/v6 明确将 v=c 光速螺旋作为本源公设 | 与 GAQ 版本线分开；早期报告按谱系审查，不默认公设完全一致；与 S10 共用数学骨架 `√(κ²+τ²)=ω/c` 但本体不同，互不认证 |
 
 另外四个入口分别保留为 [P01 空间压缩](../01_systems/p01_space_compression/README.md)、[P02 物体源场](../01_systems/p02_matter_source/README.md)、[P03 规范统一](../01_systems/p03_gauge_unification/README.md)、[P04 量子涌现](../01_systems/p04_quantum_emergence/README.md)。它们目前是独立待建模方向，原候选资料索引不等于已建立公设体系。不能把“16 个目录”表述为“16 个已建立理论”。
 
