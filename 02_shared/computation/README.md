@@ -1,5 +1,9 @@
-# 共享计算工具
+# 共享计算基础
 
-现有源码位于 [src/triad_uft](src/triad_uft/)。H01 与 H04 的既有复算脚本依赖此库，因此保留一个共享实现。库中的理论假设与证据标签继承历史版本，未在目录迁移中科学审定。
+这里只保留共同常数与经典演示，不保管候选理论主实现。
 
-从本目录的 src 执行 `python -m triad_uft.verify`。各模型专属代码放在各自 07_computation/src。环境与依赖以实际运行记录为准。
+- [物理常数](src/physics_constants.py)
+- [经典变分演示](src/classical_derivations.py)
+- [D0 入口](../baselines/classical_action/D0_作用量变分求导/README.md)
+
+三重奏算法移入 S01；张祥前统一力函数移入 S02。历史常数和演示的科学说明仍需审查。

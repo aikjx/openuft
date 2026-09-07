@@ -1,5 +1,5 @@
-# 归档
+# 全局历史归档
 
-[历史资料](legacy/README.md) · [本次迁移记录](migrations/20260907_full_layout/manifest.json) · [迁移前完整快照](migrations/20260907_full_layout/before.zip)
+[旧研究材料](legacy/README.md) · [当前独立体系设计](../00_governance/INDEPENDENT_SYSTEMS_DESIGN.md) · [最近迁移快照](migrations/20260907_independent_systems/before.zip) · [最近映射](migrations/20260907_independent_systems/manifest.json)
 
-legacy_tools 中的脚本仅用于历史查阅，不作为当前入口。快照逐字节保存本次修改前的文件，包含原有未提交编辑。恢复时解压到独立目录核对，不直接覆盖正在工作的目录。
+layout_reviews 保存原六路线骨架及分析；legacy_tools 保存失效工具。已明确归属的理论资料已进入各独立体系，历史区不再作为它们的唯一入口。

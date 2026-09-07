@@ -1,9 +1,9 @@
 # 快速开始
 
-1. 在 [理论路线](01_models/README.md) 选择基础假设相符的模块。
-2. 完成 model.json 与 00_project/plan.md，登记假设版本。
-3. 在 claims.csv 建立命题编号，沿阶段目录链接推导、预测、数据和运行。
-4. 运行 `python verify.py` 检查结构。
-5. 复算共享历史引擎：从 openuft 进入 `02_shared/computation/src` 后运行 `python -m triad_uft.verify`。输出中的历史证据标签需另行审查。
+1. 在 [大体系总表](01_systems/README.md) 选择具体体系；未知资料进入 99_inbox。
+2. 阅读 system.json 和 sources.md，确认原始前提，不因相同公式自动合并体系。
+3. 登记该体系 claims.csv，链接本体系推导、运行、数据及结论。
+4. 在 openuft 根目录运行 `python verify.py`。
+5. 三重奏复算：进入 `01_systems/s01_triad_kinematics/07_computation/src` 执行 `python -m triad_uft.verify`。
 
-未知归属资料先进入 [99_inbox](99_inbox/README.md)。
+[迁移与独立边界](00_governance/INDEPENDENT_SYSTEMS_DESIGN.md)。

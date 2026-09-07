@@ -1,331 +1,653 @@
-# 全部实际目录逐项分析
+# 独立体系布局：全部目录审计
 
-生成日期：2026-09-07。[主论证与最优性评估](DIRECTORY_DESIGN_REVIEW.md) · [生成器](tools/audit_directories.py) · [机器可读清单](directory_audit.json)。
+[设计与最优性分析](INDEPENDENT_SYSTEMS_DESIGN.md) · [类型与扩展](SCALABILITY_REVIEW.md) · [机器清单](directory_audit.json)。
 
-## 实测范围
+当前扫描 645 个实际目录、905 个文件；12 个研究模块与 4 个待建模方向独立管理，另有模板。类型不证明科学状态或来源有效性。历史目录也逐项列出；不展开 ZIP。递归文件数不可相加作为总数。目录职责由路径规则判定，不表示逐篇科学审定。
 
-扫描 openuft 下全部实际目录，包括 .github、模板、历史专题与迁移目录；不展开 ZIP 内部虚拟路径。根目录不计入目录数量，根文件职责见主文。
-
-- 实际目录：262；已分析：262；未归类：0。
-- 当前文件：393。
-- 递归文件名集合仅为 README.md 的目录：167；这是占位倾向指标，不代表正文无研究内容。
-
-目录的递归文件数包含子目录，不能逐行相加求总数。职责与边界由显式规则逐项匹配，不根据文件数量推断科学成熟度。
-
-## 模型登记现状
-
-| 模型 | 公设条数 | 公设版本 | 命题记录行 | 数据记录行 | 模型内 Python 文件 |
-|---|---:|---|---:|---:|---:|
-| h01_space_motion | 0 | 未填写 | 0 | 0 | 2 |
-| h02_space_compression | 0 | 未填写 | 0 | 0 | 0 |
-| h03_matter_driven | 0 | 未填写 | 0 | 0 | 0 |
-| h04_geometry_action | 0 | 未填写 | 0 | 0 | 1 |
-| h05_gauge_symmetry | 0 | 未填写 | 0 | 0 | 0 |
-| h06_quantum_emergence | 0 | 未填写 | 0 | 0 | 0 |
-
-模型内 Python 文件数不包括共享引擎；零条登记不说明不存在散落正文，只说明尚未录入这些登记表。
-
-## 逐目录结论
-
-
-### .github
-
-| 目录 | 直接/递归文件 | 职责 | 保留理由 | 边界与风险 | 判断 |
-|---|---:|---|---|---|---|
-| [.github](../.github/) | 1/4 | 协作平台配置 | 平台固定路径要求 | 不属于理论模块；现有模板不意味着有 CI | 保留 |
-| [.github/ISSUE_TEMPLATE](../.github/ISSUE_TEMPLATE/) | 3/3 | 问题反馈模板 | 规范外部输入 | 不能取代正式证据登记 | 保留 |
-
-### 00_governance
-
-| 目录 | 直接/递归文件 | 职责 | 保留理由 | 边界与风险 | 判断 |
-|---|---:|---|---|---|---|
-| [00_governance](./) | 12/20 | 全局治理 | 规则与研究内容职责分离 | 避免将治理文档当科学认证 | 保留 |
-| [00_governance/catalog](catalog/) | 6/6 | 生成索引与历史总表 | 提供全局查找视图 | 目录索引不构成理论归属审查 | 保留 |
-| [00_governance/tools](tools/) | 2/2 | 目录维护工具 | 生成视图可重复更新 | 应有覆盖检查，不能静默遗漏新目录 | 保留 |
-
-### 01_models
-
-| 目录 | 直接/递归文件 | 职责 | 保留理由 | 边界与风险 | 判断 |
-|---|---:|---|---|---|---|
-| [01_models](../01_models/) | 1/276 | 研究路线主轴 | 优先按前提追踪论证 | 六路线并不互斥或穷尽 | 保留 |
-| [01_models/_template](../01_models/_template/) | 4/37 | 新增路线模板 | 保证新路线拥有同一职责集合 | 模板不是第七条理论；空字段必须按实际填写 | 保留 |
-| [01_models/_template/00_project](../01_models/_template/00_project/) | 2/2 | 立项计划与决策 | 问题、范围和退出条件需要稳定入口 | 计划不得作为结果；负责人和里程碑需要实际填写 | 保留 |
-| [01_models/_template/01_literature](../01_models/_template/01_literature/) | 1/1 | 模型文献与基准 | 区分借用知识与本模型新主张 | 共同书目引用共享层，不复制多份主记录 | 保留 |
-| [01_models/_template/02_assumptions](../01_models/_template/02_assumptions/) | 1/1 | 本体与公设 | 后续结论须有显式前提 | 模型名称不能代替公设、版本与适用域 | 保留；内容待完善 |
-| [01_models/_template/03_formalism](../01_models/_template/03_formalism/) | 1/1 | 数学形式与定义 | 统一符号、单位和边界约定 | 定义与物理假设分别标记 | 保留 |
-| [01_models/_template/04_derivations](../01_models/_template/04_derivations/) | 1/1 | 方程推导 | 保存从前提到方程的演算链 | 推导成功不等于理论一致或观测成立 | 保留 |
-| [01_models/_template/05_consistency](../01_models/_template/05_consistency/) | 1/1 | 条件性证明与一致性 | 分别审查守恒、稳定性、已知极限等 | 数值例子不替代一般证明 | 保留 |
-| [01_models/_template/06_predictions](../01_models/_template/06_predictions/) | 1/1 | 可测量预测 | 先规定可区分量和检验标准 | 拟合已有数据与独立预测不得混淆 | 保留 |
-| [01_models/_template/07_computation](../01_models/_template/07_computation/) | 1/7 | 计算实现与复现 | 统一管理代码、配置、测试和执行 | 输出结论需链接验证层；模板不等于可运行环境 | 保留 |
-| [01_models/_template/07_computation/configs](../01_models/_template/07_computation/configs/) | 1/1 | 参数与算法配置 | 输入与输出分离有利于复现 | 记录单位、版本及默认值 | 保留 |
-| [01_models/_template/07_computation/notebooks](../01_models/_template/07_computation/notebooks/) | 1/1 | 交互探索 | 保留研究过程及演示 | 正式结果须能从干净状态顺序复算 | 按工作量使用 |
-| [01_models/_template/07_computation/runs](../01_models/_template/07_computation/runs/) | 2/2 | 逐次运行记录 | 执行命令、环境及失败状态可追踪 | run_template.json 不是已完成运行 | 保留 |
-| [01_models/_template/07_computation/src](../01_models/_template/07_computation/src/) | 1/1 | 模型专属源码 | 主实现集中，避免阶段间重复算法 | 历史阶段入口可以保留，但依赖要显式 | 保留 |
-| [01_models/_template/07_computation/tests](../01_models/_template/07_computation/tests/) | 1/1 | 自动断言与回归 | 实现正确性需要独立检查入口 | 测试通过不代表理论正确 | 保留；当前多为模板 |
-| [01_models/_template/08_data](../01_models/_template/08_data/) | 2/5 | 数据来源与处理链 | 数据身份独立于代码与论文 | 只读是约定，尚未由权限强制 | 保留 |
-| [01_models/_template/08_data/external](../01_models/_template/08_data/external/) | 1/1 | 外部来源与获取元数据 | 明确来源、许可、版本及获取方式 | 若存原件必须确定唯一主位置，避免与 raw 冲突 | 边界需执行约束 |
-| [01_models/_template/08_data/processed](../01_models/_template/08_data/processed/) | 1/1 | 派生数据 | 处理过程与原件分离 | 须链接输入 data_id 和生成 run_id | 保留 |
-| [01_models/_template/08_data/raw](../01_models/_template/08_data/raw/) | 1/1 | 原始数据主副本 | 保留输入原貌 | 不要与 external 重复保管同一主副本 | 保留 |
-| [01_models/_template/09_validation](../01_models/_template/09_validation/) | 1/1 | 实现验证与观测检验 | 对照预测、数据和基准 | 应标注检验类型，不能把内部恒等式当外部验证 | 保留 |
-| [01_models/_template/10_uncertainty](../01_models/_template/10_uncertainty/) | 1/1 | 误差预算与稳健性 | 有效数字不能代替不确定度 | 必须进入预测和检验设计，不只用于论文末尾 | 保留 |
-| [01_models/_template/11_falsification](../01_models/_template/11_falsification/) | 1/1 | 反例与负结果 | 失败记录需要不受最终叙述影响的位置 | 链接同一主结果，避免复制不利数据 | 保留 |
-| [01_models/_template/12_conclusions](../01_models/_template/12_conclusions/) | 1/1 | 证据约束下的结论 | 把数学、数值、观测与未验证主张分开 | 必须追溯公设与证据版本 | 保留 |
-| [01_models/_template/13_publications](../01_models/_template/13_publications/) | 1/4 | 模型论文材料 | 叙述、图表和补充材料有出版职责 | 跨模型综述放公共出版层 | 保留 |
-| [01_models/_template/13_publications/figures](../01_models/_template/13_publications/figures/) | 1/1 | 图表与生成来源 | 出版图可追踪到运行 | 不要手工复制后失去版本关系 | 保留 |
-| [01_models/_template/13_publications/manuscript](../01_models/_template/13_publications/manuscript/) | 1/1 | 正文与参考文献 | 面向出版读者组织叙述 | 结论证据仍保留在研究阶段 | 保留 |
-| [01_models/_template/13_publications/supplement](../01_models/_template/13_publications/supplement/) | 1/1 | 补充材料 | 提供读者所需复现说明 | 不复制完整数据仓库 | 保留 |
-| [01_models/_template/14_review](../01_models/_template/14_review/) | 2/2 | 评审与独立复现 | 保存意见、回复和独立检查过程 | 自评不等于外部认可；允许贯穿所有阶段 | 保留 |
-| [01_models/_template/15_releases](../01_models/_template/15_releases/) | 2/2 | 冻结版本与发布清单 | 引用和复现需要确定版本 | 发布不自动代表同行评审通过 | 保留 |
-| [01_models/_template/90_archive](../01_models/_template/90_archive/) | 1/1 | 模型内历史 | 保留替代关系与停止原因 | 模型稳定入口不删除；跨模型历史进入根归档 | 保留 |
-| [01_models/h01_space_motion](../01_models/h01_space_motion/) | 4/51 | 空间运行与螺旋运动路线容器 | 同一前提下研究材料形成稳定主路径 | 公设版本尚待完善；交叉关系见主文第 5 节 | 保留；边界待科学定义 |
-| [01_models/h01_space_motion/00_project](../01_models/h01_space_motion/00_project/) | 2/2 | 立项计划与决策 | 问题、范围和退出条件需要稳定入口 | 计划不得作为结果；负责人和里程碑需要实际填写 | 保留 |
-| [01_models/h01_space_motion/01_literature](../01_models/h01_space_motion/01_literature/) | 1/1 | 模型文献与基准 | 区分借用知识与本模型新主张 | 共同书目引用共享层，不复制多份主记录 | 保留 |
-| [01_models/h01_space_motion/02_assumptions](../01_models/h01_space_motion/02_assumptions/) | 1/1 | 本体与公设 | 后续结论须有显式前提 | 模型名称不能代替公设、版本与适用域 | 保留；内容待完善 |
-| [01_models/h01_space_motion/03_formalism](../01_models/h01_space_motion/03_formalism/) | 1/1 | 数学形式与定义 | 统一符号、单位和边界约定 | 定义与物理假设分别标记 | 保留 |
-| [01_models/h01_space_motion/04_derivations](../01_models/h01_space_motion/04_derivations/) | 1/3 | 方程推导 | 保存从前提到方程的演算链 | 推导成功不等于理论一致或观测成立 | 保留 |
-| [01_models/h01_space_motion/04_derivations/D5_大统一力方程](../01_models/h01_space_motion/04_derivations/D5_大统一力方程/) | 2/2 | 保留 H01 的既有力方程推导与复算入口 | 沿用已有专题分组减少迁移破坏 | 命名与历史证明标签未重新审定；不必推广为全部模型必建目录 | 保留历史专题 |
-| [01_models/h01_space_motion/05_consistency](../01_models/h01_space_motion/05_consistency/) | 1/11 | 条件性证明与一致性 | 分别审查守恒、稳定性、已知极限等 | 数值例子不替代一般证明 | 保留 |
-| [01_models/h01_space_motion/05_consistency/P1_螺旋三重奏_TS1](../01_models/h01_space_motion/05_consistency/P1_螺旋三重奏_TS1/) | 2/2 | 保留三重奏命题相关历史论证 | 沿用已有专题分组减少迁移破坏 | 命名与历史证明标签未重新审定；不必推广为全部模型必建目录 | 保留历史专题 |
-| [01_models/h01_space_motion/05_consistency/P3_归纳闭合_R9](../01_models/h01_space_motion/05_consistency/P3_归纳闭合_R9/) | 4/4 | 保留归纳闭合的条件与证明过程 | 沿用已有专题分组减少迁移破坏 | 命名与历史证明标签未重新审定；不必推广为全部模型必建目录 | 保留历史专题 |
-| [01_models/h01_space_motion/05_consistency/P4_绝热三重奏_R10](../01_models/h01_space_motion/05_consistency/P4_绝热三重奏_R10/) | 2/2 | 保留绝热与特殊极限研究 | 沿用已有专题分组减少迁移破坏 | 命名与历史证明标签未重新审定；不必推广为全部模型必建目录 | 保留历史专题 |
-| [01_models/h01_space_motion/05_consistency/P5_梯度磁场精确性_R11](../01_models/h01_space_motion/05_consistency/P5_梯度磁场精确性_R11/) | 1/1 | 保留梯度磁场命题专题入口 | 沿用已有专题分组减少迁移破坏 | 命名与历史证明标签未重新审定；不必推广为全部模型必建目录 | 保留历史专题 |
-| [01_models/h01_space_motion/05_consistency/P6_谱理论框架_R7R8](../01_models/h01_space_motion/05_consistency/P6_谱理论框架_R7R8/) | 1/1 | 保留谱理论专题证明资料 | 沿用已有专题分组减少迁移破坏 | 命名与历史证明标签未重新审定；不必推广为全部模型必建目录 | 保留历史专题 |
-| [01_models/h01_space_motion/06_predictions](../01_models/h01_space_motion/06_predictions/) | 1/1 | 可测量预测 | 先规定可区分量和检验标准 | 拟合已有数据与独立预测不得混淆 | 保留 |
-| [01_models/h01_space_motion/07_computation](../01_models/h01_space_motion/07_computation/) | 1/7 | 计算实现与复现 | 统一管理代码、配置、测试和执行 | 输出结论需链接验证层；模板不等于可运行环境 | 保留 |
-| [01_models/h01_space_motion/07_computation/configs](../01_models/h01_space_motion/07_computation/configs/) | 1/1 | 参数与算法配置 | 输入与输出分离有利于复现 | 记录单位、版本及默认值 | 保留 |
-| [01_models/h01_space_motion/07_computation/notebooks](../01_models/h01_space_motion/07_computation/notebooks/) | 1/1 | 交互探索 | 保留研究过程及演示 | 正式结果须能从干净状态顺序复算 | 按工作量使用 |
-| [01_models/h01_space_motion/07_computation/runs](../01_models/h01_space_motion/07_computation/runs/) | 2/2 | 逐次运行记录 | 执行命令、环境及失败状态可追踪 | run_template.json 不是已完成运行 | 保留 |
-| [01_models/h01_space_motion/07_computation/src](../01_models/h01_space_motion/07_computation/src/) | 1/1 | 模型专属源码 | 主实现集中，避免阶段间重复算法 | 历史阶段入口可以保留，但依赖要显式 | 保留 |
-| [01_models/h01_space_motion/07_computation/tests](../01_models/h01_space_motion/07_computation/tests/) | 1/1 | 自动断言与回归 | 实现正确性需要独立检查入口 | 测试通过不代表理论正确 | 保留；当前多为模板 |
-| [01_models/h01_space_motion/08_data](../01_models/h01_space_motion/08_data/) | 2/5 | 数据来源与处理链 | 数据身份独立于代码与论文 | 只读是约定，尚未由权限强制 | 保留 |
-| [01_models/h01_space_motion/08_data/external](../01_models/h01_space_motion/08_data/external/) | 1/1 | 外部来源与获取元数据 | 明确来源、许可、版本及获取方式 | 若存原件必须确定唯一主位置，避免与 raw 冲突 | 边界需执行约束 |
-| [01_models/h01_space_motion/08_data/processed](../01_models/h01_space_motion/08_data/processed/) | 1/1 | 派生数据 | 处理过程与原件分离 | 须链接输入 data_id 和生成 run_id | 保留 |
-| [01_models/h01_space_motion/08_data/raw](../01_models/h01_space_motion/08_data/raw/) | 1/1 | 原始数据主副本 | 保留输入原貌 | 不要与 external 重复保管同一主副本 | 保留 |
-| [01_models/h01_space_motion/09_validation](../01_models/h01_space_motion/09_validation/) | 1/3 | 实现验证与观测检验 | 对照预测、数据和基准 | 应标注检验类型，不能把内部恒等式当外部验证 | 保留 |
-| [01_models/h01_space_motion/09_validation/V2_mpmath高精度](../01_models/h01_space_motion/09_validation/V2_mpmath高精度/) | 2/2 | 保留多精度数值复算入口 | 沿用已有专题分组减少迁移破坏 | 命名与历史证明标签未重新审定；不必推广为全部模型必建目录 | 保留历史专题 |
-| [01_models/h01_space_motion/10_uncertainty](../01_models/h01_space_motion/10_uncertainty/) | 1/1 | 误差预算与稳健性 | 有效数字不能代替不确定度 | 必须进入预测和检验设计，不只用于论文末尾 | 保留 |
-| [01_models/h01_space_motion/11_falsification](../01_models/h01_space_motion/11_falsification/) | 1/1 | 反例与负结果 | 失败记录需要不受最终叙述影响的位置 | 链接同一主结果，避免复制不利数据 | 保留 |
-| [01_models/h01_space_motion/12_conclusions](../01_models/h01_space_motion/12_conclusions/) | 1/1 | 证据约束下的结论 | 把数学、数值、观测与未验证主张分开 | 必须追溯公设与证据版本 | 保留 |
-| [01_models/h01_space_motion/13_publications](../01_models/h01_space_motion/13_publications/) | 1/4 | 模型论文材料 | 叙述、图表和补充材料有出版职责 | 跨模型综述放公共出版层 | 保留 |
-| [01_models/h01_space_motion/13_publications/figures](../01_models/h01_space_motion/13_publications/figures/) | 1/1 | 图表与生成来源 | 出版图可追踪到运行 | 不要手工复制后失去版本关系 | 保留 |
-| [01_models/h01_space_motion/13_publications/manuscript](../01_models/h01_space_motion/13_publications/manuscript/) | 1/1 | 正文与参考文献 | 面向出版读者组织叙述 | 结论证据仍保留在研究阶段 | 保留 |
-| [01_models/h01_space_motion/13_publications/supplement](../01_models/h01_space_motion/13_publications/supplement/) | 1/1 | 补充材料 | 提供读者所需复现说明 | 不复制完整数据仓库 | 保留 |
-| [01_models/h01_space_motion/14_review](../01_models/h01_space_motion/14_review/) | 2/2 | 评审与独立复现 | 保存意见、回复和独立检查过程 | 自评不等于外部认可；允许贯穿所有阶段 | 保留 |
-| [01_models/h01_space_motion/15_releases](../01_models/h01_space_motion/15_releases/) | 2/2 | 冻结版本与发布清单 | 引用和复现需要确定版本 | 发布不自动代表同行评审通过 | 保留 |
-| [01_models/h01_space_motion/90_archive](../01_models/h01_space_motion/90_archive/) | 1/1 | 模型内历史 | 保留替代关系与停止原因 | 模型稳定入口不删除；跨模型历史进入根归档 | 保留 |
-| [01_models/h02_space_compression](../01_models/h02_space_compression/) | 4/37 | 空间压缩与密度梯度路线容器 | 同一前提下研究材料形成稳定主路径 | 公设版本尚待完善；交叉关系见主文第 5 节 | 保留；边界待科学定义 |
-| [01_models/h02_space_compression/00_project](../01_models/h02_space_compression/00_project/) | 2/2 | 立项计划与决策 | 问题、范围和退出条件需要稳定入口 | 计划不得作为结果；负责人和里程碑需要实际填写 | 保留 |
-| [01_models/h02_space_compression/01_literature](../01_models/h02_space_compression/01_literature/) | 1/1 | 模型文献与基准 | 区分借用知识与本模型新主张 | 共同书目引用共享层，不复制多份主记录 | 保留 |
-| [01_models/h02_space_compression/02_assumptions](../01_models/h02_space_compression/02_assumptions/) | 1/1 | 本体与公设 | 后续结论须有显式前提 | 模型名称不能代替公设、版本与适用域 | 保留；内容待完善 |
-| [01_models/h02_space_compression/03_formalism](../01_models/h02_space_compression/03_formalism/) | 1/1 | 数学形式与定义 | 统一符号、单位和边界约定 | 定义与物理假设分别标记 | 保留 |
-| [01_models/h02_space_compression/04_derivations](../01_models/h02_space_compression/04_derivations/) | 1/1 | 方程推导 | 保存从前提到方程的演算链 | 推导成功不等于理论一致或观测成立 | 保留 |
-| [01_models/h02_space_compression/05_consistency](../01_models/h02_space_compression/05_consistency/) | 1/1 | 条件性证明与一致性 | 分别审查守恒、稳定性、已知极限等 | 数值例子不替代一般证明 | 保留 |
-| [01_models/h02_space_compression/06_predictions](../01_models/h02_space_compression/06_predictions/) | 1/1 | 可测量预测 | 先规定可区分量和检验标准 | 拟合已有数据与独立预测不得混淆 | 保留 |
-| [01_models/h02_space_compression/07_computation](../01_models/h02_space_compression/07_computation/) | 1/7 | 计算实现与复现 | 统一管理代码、配置、测试和执行 | 输出结论需链接验证层；模板不等于可运行环境 | 保留 |
-| [01_models/h02_space_compression/07_computation/configs](../01_models/h02_space_compression/07_computation/configs/) | 1/1 | 参数与算法配置 | 输入与输出分离有利于复现 | 记录单位、版本及默认值 | 保留 |
-| [01_models/h02_space_compression/07_computation/notebooks](../01_models/h02_space_compression/07_computation/notebooks/) | 1/1 | 交互探索 | 保留研究过程及演示 | 正式结果须能从干净状态顺序复算 | 按工作量使用 |
-| [01_models/h02_space_compression/07_computation/runs](../01_models/h02_space_compression/07_computation/runs/) | 2/2 | 逐次运行记录 | 执行命令、环境及失败状态可追踪 | run_template.json 不是已完成运行 | 保留 |
-| [01_models/h02_space_compression/07_computation/src](../01_models/h02_space_compression/07_computation/src/) | 1/1 | 模型专属源码 | 主实现集中，避免阶段间重复算法 | 历史阶段入口可以保留，但依赖要显式 | 保留 |
-| [01_models/h02_space_compression/07_computation/tests](../01_models/h02_space_compression/07_computation/tests/) | 1/1 | 自动断言与回归 | 实现正确性需要独立检查入口 | 测试通过不代表理论正确 | 保留；当前多为模板 |
-| [01_models/h02_space_compression/08_data](../01_models/h02_space_compression/08_data/) | 2/5 | 数据来源与处理链 | 数据身份独立于代码与论文 | 只读是约定，尚未由权限强制 | 保留 |
-| [01_models/h02_space_compression/08_data/external](../01_models/h02_space_compression/08_data/external/) | 1/1 | 外部来源与获取元数据 | 明确来源、许可、版本及获取方式 | 若存原件必须确定唯一主位置，避免与 raw 冲突 | 边界需执行约束 |
-| [01_models/h02_space_compression/08_data/processed](../01_models/h02_space_compression/08_data/processed/) | 1/1 | 派生数据 | 处理过程与原件分离 | 须链接输入 data_id 和生成 run_id | 保留 |
-| [01_models/h02_space_compression/08_data/raw](../01_models/h02_space_compression/08_data/raw/) | 1/1 | 原始数据主副本 | 保留输入原貌 | 不要与 external 重复保管同一主副本 | 保留 |
-| [01_models/h02_space_compression/09_validation](../01_models/h02_space_compression/09_validation/) | 1/1 | 实现验证与观测检验 | 对照预测、数据和基准 | 应标注检验类型，不能把内部恒等式当外部验证 | 保留 |
-| [01_models/h02_space_compression/10_uncertainty](../01_models/h02_space_compression/10_uncertainty/) | 1/1 | 误差预算与稳健性 | 有效数字不能代替不确定度 | 必须进入预测和检验设计，不只用于论文末尾 | 保留 |
-| [01_models/h02_space_compression/11_falsification](../01_models/h02_space_compression/11_falsification/) | 1/1 | 反例与负结果 | 失败记录需要不受最终叙述影响的位置 | 链接同一主结果，避免复制不利数据 | 保留 |
-| [01_models/h02_space_compression/12_conclusions](../01_models/h02_space_compression/12_conclusions/) | 1/1 | 证据约束下的结论 | 把数学、数值、观测与未验证主张分开 | 必须追溯公设与证据版本 | 保留 |
-| [01_models/h02_space_compression/13_publications](../01_models/h02_space_compression/13_publications/) | 1/4 | 模型论文材料 | 叙述、图表和补充材料有出版职责 | 跨模型综述放公共出版层 | 保留 |
-| [01_models/h02_space_compression/13_publications/figures](../01_models/h02_space_compression/13_publications/figures/) | 1/1 | 图表与生成来源 | 出版图可追踪到运行 | 不要手工复制后失去版本关系 | 保留 |
-| [01_models/h02_space_compression/13_publications/manuscript](../01_models/h02_space_compression/13_publications/manuscript/) | 1/1 | 正文与参考文献 | 面向出版读者组织叙述 | 结论证据仍保留在研究阶段 | 保留 |
-| [01_models/h02_space_compression/13_publications/supplement](../01_models/h02_space_compression/13_publications/supplement/) | 1/1 | 补充材料 | 提供读者所需复现说明 | 不复制完整数据仓库 | 保留 |
-| [01_models/h02_space_compression/14_review](../01_models/h02_space_compression/14_review/) | 2/2 | 评审与独立复现 | 保存意见、回复和独立检查过程 | 自评不等于外部认可；允许贯穿所有阶段 | 保留 |
-| [01_models/h02_space_compression/15_releases](../01_models/h02_space_compression/15_releases/) | 2/2 | 冻结版本与发布清单 | 引用和复现需要确定版本 | 发布不自动代表同行评审通过 | 保留 |
-| [01_models/h02_space_compression/90_archive](../01_models/h02_space_compression/90_archive/) | 1/1 | 模型内历史 | 保留替代关系与停止原因 | 模型稳定入口不删除；跨模型历史进入根归档 | 保留 |
-| [01_models/h03_matter_driven](../01_models/h03_matter_driven/) | 4/37 | 物体驱动与源场耦合路线容器 | 同一前提下研究材料形成稳定主路径 | 公设版本尚待完善；交叉关系见主文第 5 节 | 保留；边界待科学定义 |
-| [01_models/h03_matter_driven/00_project](../01_models/h03_matter_driven/00_project/) | 2/2 | 立项计划与决策 | 问题、范围和退出条件需要稳定入口 | 计划不得作为结果；负责人和里程碑需要实际填写 | 保留 |
-| [01_models/h03_matter_driven/01_literature](../01_models/h03_matter_driven/01_literature/) | 1/1 | 模型文献与基准 | 区分借用知识与本模型新主张 | 共同书目引用共享层，不复制多份主记录 | 保留 |
-| [01_models/h03_matter_driven/02_assumptions](../01_models/h03_matter_driven/02_assumptions/) | 1/1 | 本体与公设 | 后续结论须有显式前提 | 模型名称不能代替公设、版本与适用域 | 保留；内容待完善 |
-| [01_models/h03_matter_driven/03_formalism](../01_models/h03_matter_driven/03_formalism/) | 1/1 | 数学形式与定义 | 统一符号、单位和边界约定 | 定义与物理假设分别标记 | 保留 |
-| [01_models/h03_matter_driven/04_derivations](../01_models/h03_matter_driven/04_derivations/) | 1/1 | 方程推导 | 保存从前提到方程的演算链 | 推导成功不等于理论一致或观测成立 | 保留 |
-| [01_models/h03_matter_driven/05_consistency](../01_models/h03_matter_driven/05_consistency/) | 1/1 | 条件性证明与一致性 | 分别审查守恒、稳定性、已知极限等 | 数值例子不替代一般证明 | 保留 |
-| [01_models/h03_matter_driven/06_predictions](../01_models/h03_matter_driven/06_predictions/) | 1/1 | 可测量预测 | 先规定可区分量和检验标准 | 拟合已有数据与独立预测不得混淆 | 保留 |
-| [01_models/h03_matter_driven/07_computation](../01_models/h03_matter_driven/07_computation/) | 1/7 | 计算实现与复现 | 统一管理代码、配置、测试和执行 | 输出结论需链接验证层；模板不等于可运行环境 | 保留 |
-| [01_models/h03_matter_driven/07_computation/configs](../01_models/h03_matter_driven/07_computation/configs/) | 1/1 | 参数与算法配置 | 输入与输出分离有利于复现 | 记录单位、版本及默认值 | 保留 |
-| [01_models/h03_matter_driven/07_computation/notebooks](../01_models/h03_matter_driven/07_computation/notebooks/) | 1/1 | 交互探索 | 保留研究过程及演示 | 正式结果须能从干净状态顺序复算 | 按工作量使用 |
-| [01_models/h03_matter_driven/07_computation/runs](../01_models/h03_matter_driven/07_computation/runs/) | 2/2 | 逐次运行记录 | 执行命令、环境及失败状态可追踪 | run_template.json 不是已完成运行 | 保留 |
-| [01_models/h03_matter_driven/07_computation/src](../01_models/h03_matter_driven/07_computation/src/) | 1/1 | 模型专属源码 | 主实现集中，避免阶段间重复算法 | 历史阶段入口可以保留，但依赖要显式 | 保留 |
-| [01_models/h03_matter_driven/07_computation/tests](../01_models/h03_matter_driven/07_computation/tests/) | 1/1 | 自动断言与回归 | 实现正确性需要独立检查入口 | 测试通过不代表理论正确 | 保留；当前多为模板 |
-| [01_models/h03_matter_driven/08_data](../01_models/h03_matter_driven/08_data/) | 2/5 | 数据来源与处理链 | 数据身份独立于代码与论文 | 只读是约定，尚未由权限强制 | 保留 |
-| [01_models/h03_matter_driven/08_data/external](../01_models/h03_matter_driven/08_data/external/) | 1/1 | 外部来源与获取元数据 | 明确来源、许可、版本及获取方式 | 若存原件必须确定唯一主位置，避免与 raw 冲突 | 边界需执行约束 |
-| [01_models/h03_matter_driven/08_data/processed](../01_models/h03_matter_driven/08_data/processed/) | 1/1 | 派生数据 | 处理过程与原件分离 | 须链接输入 data_id 和生成 run_id | 保留 |
-| [01_models/h03_matter_driven/08_data/raw](../01_models/h03_matter_driven/08_data/raw/) | 1/1 | 原始数据主副本 | 保留输入原貌 | 不要与 external 重复保管同一主副本 | 保留 |
-| [01_models/h03_matter_driven/09_validation](../01_models/h03_matter_driven/09_validation/) | 1/1 | 实现验证与观测检验 | 对照预测、数据和基准 | 应标注检验类型，不能把内部恒等式当外部验证 | 保留 |
-| [01_models/h03_matter_driven/10_uncertainty](../01_models/h03_matter_driven/10_uncertainty/) | 1/1 | 误差预算与稳健性 | 有效数字不能代替不确定度 | 必须进入预测和检验设计，不只用于论文末尾 | 保留 |
-| [01_models/h03_matter_driven/11_falsification](../01_models/h03_matter_driven/11_falsification/) | 1/1 | 反例与负结果 | 失败记录需要不受最终叙述影响的位置 | 链接同一主结果，避免复制不利数据 | 保留 |
-| [01_models/h03_matter_driven/12_conclusions](../01_models/h03_matter_driven/12_conclusions/) | 1/1 | 证据约束下的结论 | 把数学、数值、观测与未验证主张分开 | 必须追溯公设与证据版本 | 保留 |
-| [01_models/h03_matter_driven/13_publications](../01_models/h03_matter_driven/13_publications/) | 1/4 | 模型论文材料 | 叙述、图表和补充材料有出版职责 | 跨模型综述放公共出版层 | 保留 |
-| [01_models/h03_matter_driven/13_publications/figures](../01_models/h03_matter_driven/13_publications/figures/) | 1/1 | 图表与生成来源 | 出版图可追踪到运行 | 不要手工复制后失去版本关系 | 保留 |
-| [01_models/h03_matter_driven/13_publications/manuscript](../01_models/h03_matter_driven/13_publications/manuscript/) | 1/1 | 正文与参考文献 | 面向出版读者组织叙述 | 结论证据仍保留在研究阶段 | 保留 |
-| [01_models/h03_matter_driven/13_publications/supplement](../01_models/h03_matter_driven/13_publications/supplement/) | 1/1 | 补充材料 | 提供读者所需复现说明 | 不复制完整数据仓库 | 保留 |
-| [01_models/h03_matter_driven/14_review](../01_models/h03_matter_driven/14_review/) | 2/2 | 评审与独立复现 | 保存意见、回复和独立检查过程 | 自评不等于外部认可；允许贯穿所有阶段 | 保留 |
-| [01_models/h03_matter_driven/15_releases](../01_models/h03_matter_driven/15_releases/) | 2/2 | 冻结版本与发布清单 | 引用和复现需要确定版本 | 发布不自动代表同行评审通过 | 保留 |
-| [01_models/h03_matter_driven/90_archive](../01_models/h03_matter_driven/90_archive/) | 1/1 | 模型内历史 | 保留替代关系与停止原因 | 模型稳定入口不删除；跨模型历史进入根归档 | 保留 |
-| [01_models/h04_geometry_action](../01_models/h04_geometry_action/) | 4/39 | 几何与作用量路线容器 | 同一前提下研究材料形成稳定主路径 | 公设版本尚待完善；交叉关系见主文第 5 节 | 保留；边界待科学定义 |
-| [01_models/h04_geometry_action/00_project](../01_models/h04_geometry_action/00_project/) | 2/2 | 立项计划与决策 | 问题、范围和退出条件需要稳定入口 | 计划不得作为结果；负责人和里程碑需要实际填写 | 保留 |
-| [01_models/h04_geometry_action/01_literature](../01_models/h04_geometry_action/01_literature/) | 1/1 | 模型文献与基准 | 区分借用知识与本模型新主张 | 共同书目引用共享层，不复制多份主记录 | 保留 |
-| [01_models/h04_geometry_action/02_assumptions](../01_models/h04_geometry_action/02_assumptions/) | 1/1 | 本体与公设 | 后续结论须有显式前提 | 模型名称不能代替公设、版本与适用域 | 保留；内容待完善 |
-| [01_models/h04_geometry_action/03_formalism](../01_models/h04_geometry_action/03_formalism/) | 1/1 | 数学形式与定义 | 统一符号、单位和边界约定 | 定义与物理假设分别标记 | 保留 |
-| [01_models/h04_geometry_action/04_derivations](../01_models/h04_geometry_action/04_derivations/) | 1/3 | 方程推导 | 保存从前提到方程的演算链 | 推导成功不等于理论一致或观测成立 | 保留 |
-| [01_models/h04_geometry_action/04_derivations/D0_作用量变分求导](../01_models/h04_geometry_action/04_derivations/D0_作用量变分求导/) | 2/2 | 保留 H04 的既有作用量推导与复算入口 | 沿用已有专题分组减少迁移破坏 | 命名与历史证明标签未重新审定；不必推广为全部模型必建目录 | 保留历史专题 |
-| [01_models/h04_geometry_action/05_consistency](../01_models/h04_geometry_action/05_consistency/) | 1/1 | 条件性证明与一致性 | 分别审查守恒、稳定性、已知极限等 | 数值例子不替代一般证明 | 保留 |
-| [01_models/h04_geometry_action/06_predictions](../01_models/h04_geometry_action/06_predictions/) | 1/1 | 可测量预测 | 先规定可区分量和检验标准 | 拟合已有数据与独立预测不得混淆 | 保留 |
-| [01_models/h04_geometry_action/07_computation](../01_models/h04_geometry_action/07_computation/) | 1/7 | 计算实现与复现 | 统一管理代码、配置、测试和执行 | 输出结论需链接验证层；模板不等于可运行环境 | 保留 |
-| [01_models/h04_geometry_action/07_computation/configs](../01_models/h04_geometry_action/07_computation/configs/) | 1/1 | 参数与算法配置 | 输入与输出分离有利于复现 | 记录单位、版本及默认值 | 保留 |
-| [01_models/h04_geometry_action/07_computation/notebooks](../01_models/h04_geometry_action/07_computation/notebooks/) | 1/1 | 交互探索 | 保留研究过程及演示 | 正式结果须能从干净状态顺序复算 | 按工作量使用 |
-| [01_models/h04_geometry_action/07_computation/runs](../01_models/h04_geometry_action/07_computation/runs/) | 2/2 | 逐次运行记录 | 执行命令、环境及失败状态可追踪 | run_template.json 不是已完成运行 | 保留 |
-| [01_models/h04_geometry_action/07_computation/src](../01_models/h04_geometry_action/07_computation/src/) | 1/1 | 模型专属源码 | 主实现集中，避免阶段间重复算法 | 历史阶段入口可以保留，但依赖要显式 | 保留 |
-| [01_models/h04_geometry_action/07_computation/tests](../01_models/h04_geometry_action/07_computation/tests/) | 1/1 | 自动断言与回归 | 实现正确性需要独立检查入口 | 测试通过不代表理论正确 | 保留；当前多为模板 |
-| [01_models/h04_geometry_action/08_data](../01_models/h04_geometry_action/08_data/) | 2/5 | 数据来源与处理链 | 数据身份独立于代码与论文 | 只读是约定，尚未由权限强制 | 保留 |
-| [01_models/h04_geometry_action/08_data/external](../01_models/h04_geometry_action/08_data/external/) | 1/1 | 外部来源与获取元数据 | 明确来源、许可、版本及获取方式 | 若存原件必须确定唯一主位置，避免与 raw 冲突 | 边界需执行约束 |
-| [01_models/h04_geometry_action/08_data/processed](../01_models/h04_geometry_action/08_data/processed/) | 1/1 | 派生数据 | 处理过程与原件分离 | 须链接输入 data_id 和生成 run_id | 保留 |
-| [01_models/h04_geometry_action/08_data/raw](../01_models/h04_geometry_action/08_data/raw/) | 1/1 | 原始数据主副本 | 保留输入原貌 | 不要与 external 重复保管同一主副本 | 保留 |
-| [01_models/h04_geometry_action/09_validation](../01_models/h04_geometry_action/09_validation/) | 1/1 | 实现验证与观测检验 | 对照预测、数据和基准 | 应标注检验类型，不能把内部恒等式当外部验证 | 保留 |
-| [01_models/h04_geometry_action/10_uncertainty](../01_models/h04_geometry_action/10_uncertainty/) | 1/1 | 误差预算与稳健性 | 有效数字不能代替不确定度 | 必须进入预测和检验设计，不只用于论文末尾 | 保留 |
-| [01_models/h04_geometry_action/11_falsification](../01_models/h04_geometry_action/11_falsification/) | 1/1 | 反例与负结果 | 失败记录需要不受最终叙述影响的位置 | 链接同一主结果，避免复制不利数据 | 保留 |
-| [01_models/h04_geometry_action/12_conclusions](../01_models/h04_geometry_action/12_conclusions/) | 1/1 | 证据约束下的结论 | 把数学、数值、观测与未验证主张分开 | 必须追溯公设与证据版本 | 保留 |
-| [01_models/h04_geometry_action/13_publications](../01_models/h04_geometry_action/13_publications/) | 1/4 | 模型论文材料 | 叙述、图表和补充材料有出版职责 | 跨模型综述放公共出版层 | 保留 |
-| [01_models/h04_geometry_action/13_publications/figures](../01_models/h04_geometry_action/13_publications/figures/) | 1/1 | 图表与生成来源 | 出版图可追踪到运行 | 不要手工复制后失去版本关系 | 保留 |
-| [01_models/h04_geometry_action/13_publications/manuscript](../01_models/h04_geometry_action/13_publications/manuscript/) | 1/1 | 正文与参考文献 | 面向出版读者组织叙述 | 结论证据仍保留在研究阶段 | 保留 |
-| [01_models/h04_geometry_action/13_publications/supplement](../01_models/h04_geometry_action/13_publications/supplement/) | 1/1 | 补充材料 | 提供读者所需复现说明 | 不复制完整数据仓库 | 保留 |
-| [01_models/h04_geometry_action/14_review](../01_models/h04_geometry_action/14_review/) | 2/2 | 评审与独立复现 | 保存意见、回复和独立检查过程 | 自评不等于外部认可；允许贯穿所有阶段 | 保留 |
-| [01_models/h04_geometry_action/15_releases](../01_models/h04_geometry_action/15_releases/) | 2/2 | 冻结版本与发布清单 | 引用和复现需要确定版本 | 发布不自动代表同行评审通过 | 保留 |
-| [01_models/h04_geometry_action/90_archive](../01_models/h04_geometry_action/90_archive/) | 1/1 | 模型内历史 | 保留替代关系与停止原因 | 模型稳定入口不删除；跨模型历史进入根归档 | 保留 |
-| [01_models/h05_gauge_symmetry](../01_models/h05_gauge_symmetry/) | 4/37 | 规范对称与相互作用路线容器 | 同一前提下研究材料形成稳定主路径 | 公设版本尚待完善；交叉关系见主文第 5 节 | 保留；边界待科学定义 |
-| [01_models/h05_gauge_symmetry/00_project](../01_models/h05_gauge_symmetry/00_project/) | 2/2 | 立项计划与决策 | 问题、范围和退出条件需要稳定入口 | 计划不得作为结果；负责人和里程碑需要实际填写 | 保留 |
-| [01_models/h05_gauge_symmetry/01_literature](../01_models/h05_gauge_symmetry/01_literature/) | 1/1 | 模型文献与基准 | 区分借用知识与本模型新主张 | 共同书目引用共享层，不复制多份主记录 | 保留 |
-| [01_models/h05_gauge_symmetry/02_assumptions](../01_models/h05_gauge_symmetry/02_assumptions/) | 1/1 | 本体与公设 | 后续结论须有显式前提 | 模型名称不能代替公设、版本与适用域 | 保留；内容待完善 |
-| [01_models/h05_gauge_symmetry/03_formalism](../01_models/h05_gauge_symmetry/03_formalism/) | 1/1 | 数学形式与定义 | 统一符号、单位和边界约定 | 定义与物理假设分别标记 | 保留 |
-| [01_models/h05_gauge_symmetry/04_derivations](../01_models/h05_gauge_symmetry/04_derivations/) | 1/1 | 方程推导 | 保存从前提到方程的演算链 | 推导成功不等于理论一致或观测成立 | 保留 |
-| [01_models/h05_gauge_symmetry/05_consistency](../01_models/h05_gauge_symmetry/05_consistency/) | 1/1 | 条件性证明与一致性 | 分别审查守恒、稳定性、已知极限等 | 数值例子不替代一般证明 | 保留 |
-| [01_models/h05_gauge_symmetry/06_predictions](../01_models/h05_gauge_symmetry/06_predictions/) | 1/1 | 可测量预测 | 先规定可区分量和检验标准 | 拟合已有数据与独立预测不得混淆 | 保留 |
-| [01_models/h05_gauge_symmetry/07_computation](../01_models/h05_gauge_symmetry/07_computation/) | 1/7 | 计算实现与复现 | 统一管理代码、配置、测试和执行 | 输出结论需链接验证层；模板不等于可运行环境 | 保留 |
-| [01_models/h05_gauge_symmetry/07_computation/configs](../01_models/h05_gauge_symmetry/07_computation/configs/) | 1/1 | 参数与算法配置 | 输入与输出分离有利于复现 | 记录单位、版本及默认值 | 保留 |
-| [01_models/h05_gauge_symmetry/07_computation/notebooks](../01_models/h05_gauge_symmetry/07_computation/notebooks/) | 1/1 | 交互探索 | 保留研究过程及演示 | 正式结果须能从干净状态顺序复算 | 按工作量使用 |
-| [01_models/h05_gauge_symmetry/07_computation/runs](../01_models/h05_gauge_symmetry/07_computation/runs/) | 2/2 | 逐次运行记录 | 执行命令、环境及失败状态可追踪 | run_template.json 不是已完成运行 | 保留 |
-| [01_models/h05_gauge_symmetry/07_computation/src](../01_models/h05_gauge_symmetry/07_computation/src/) | 1/1 | 模型专属源码 | 主实现集中，避免阶段间重复算法 | 历史阶段入口可以保留，但依赖要显式 | 保留 |
-| [01_models/h05_gauge_symmetry/07_computation/tests](../01_models/h05_gauge_symmetry/07_computation/tests/) | 1/1 | 自动断言与回归 | 实现正确性需要独立检查入口 | 测试通过不代表理论正确 | 保留；当前多为模板 |
-| [01_models/h05_gauge_symmetry/08_data](../01_models/h05_gauge_symmetry/08_data/) | 2/5 | 数据来源与处理链 | 数据身份独立于代码与论文 | 只读是约定，尚未由权限强制 | 保留 |
-| [01_models/h05_gauge_symmetry/08_data/external](../01_models/h05_gauge_symmetry/08_data/external/) | 1/1 | 外部来源与获取元数据 | 明确来源、许可、版本及获取方式 | 若存原件必须确定唯一主位置，避免与 raw 冲突 | 边界需执行约束 |
-| [01_models/h05_gauge_symmetry/08_data/processed](../01_models/h05_gauge_symmetry/08_data/processed/) | 1/1 | 派生数据 | 处理过程与原件分离 | 须链接输入 data_id 和生成 run_id | 保留 |
-| [01_models/h05_gauge_symmetry/08_data/raw](../01_models/h05_gauge_symmetry/08_data/raw/) | 1/1 | 原始数据主副本 | 保留输入原貌 | 不要与 external 重复保管同一主副本 | 保留 |
-| [01_models/h05_gauge_symmetry/09_validation](../01_models/h05_gauge_symmetry/09_validation/) | 1/1 | 实现验证与观测检验 | 对照预测、数据和基准 | 应标注检验类型，不能把内部恒等式当外部验证 | 保留 |
-| [01_models/h05_gauge_symmetry/10_uncertainty](../01_models/h05_gauge_symmetry/10_uncertainty/) | 1/1 | 误差预算与稳健性 | 有效数字不能代替不确定度 | 必须进入预测和检验设计，不只用于论文末尾 | 保留 |
-| [01_models/h05_gauge_symmetry/11_falsification](../01_models/h05_gauge_symmetry/11_falsification/) | 1/1 | 反例与负结果 | 失败记录需要不受最终叙述影响的位置 | 链接同一主结果，避免复制不利数据 | 保留 |
-| [01_models/h05_gauge_symmetry/12_conclusions](../01_models/h05_gauge_symmetry/12_conclusions/) | 1/1 | 证据约束下的结论 | 把数学、数值、观测与未验证主张分开 | 必须追溯公设与证据版本 | 保留 |
-| [01_models/h05_gauge_symmetry/13_publications](../01_models/h05_gauge_symmetry/13_publications/) | 1/4 | 模型论文材料 | 叙述、图表和补充材料有出版职责 | 跨模型综述放公共出版层 | 保留 |
-| [01_models/h05_gauge_symmetry/13_publications/figures](../01_models/h05_gauge_symmetry/13_publications/figures/) | 1/1 | 图表与生成来源 | 出版图可追踪到运行 | 不要手工复制后失去版本关系 | 保留 |
-| [01_models/h05_gauge_symmetry/13_publications/manuscript](../01_models/h05_gauge_symmetry/13_publications/manuscript/) | 1/1 | 正文与参考文献 | 面向出版读者组织叙述 | 结论证据仍保留在研究阶段 | 保留 |
-| [01_models/h05_gauge_symmetry/13_publications/supplement](../01_models/h05_gauge_symmetry/13_publications/supplement/) | 1/1 | 补充材料 | 提供读者所需复现说明 | 不复制完整数据仓库 | 保留 |
-| [01_models/h05_gauge_symmetry/14_review](../01_models/h05_gauge_symmetry/14_review/) | 2/2 | 评审与独立复现 | 保存意见、回复和独立检查过程 | 自评不等于外部认可；允许贯穿所有阶段 | 保留 |
-| [01_models/h05_gauge_symmetry/15_releases](../01_models/h05_gauge_symmetry/15_releases/) | 2/2 | 冻结版本与发布清单 | 引用和复现需要确定版本 | 发布不自动代表同行评审通过 | 保留 |
-| [01_models/h05_gauge_symmetry/90_archive](../01_models/h05_gauge_symmetry/90_archive/) | 1/1 | 模型内历史 | 保留替代关系与停止原因 | 模型稳定入口不删除；跨模型历史进入根归档 | 保留 |
-| [01_models/h06_quantum_emergence](../01_models/h06_quantum_emergence/) | 4/37 | 量子结构与涌现路线容器 | 同一前提下研究材料形成稳定主路径 | 公设版本尚待完善；交叉关系见主文第 5 节 | 保留；边界待科学定义 |
-| [01_models/h06_quantum_emergence/00_project](../01_models/h06_quantum_emergence/00_project/) | 2/2 | 立项计划与决策 | 问题、范围和退出条件需要稳定入口 | 计划不得作为结果；负责人和里程碑需要实际填写 | 保留 |
-| [01_models/h06_quantum_emergence/01_literature](../01_models/h06_quantum_emergence/01_literature/) | 1/1 | 模型文献与基准 | 区分借用知识与本模型新主张 | 共同书目引用共享层，不复制多份主记录 | 保留 |
-| [01_models/h06_quantum_emergence/02_assumptions](../01_models/h06_quantum_emergence/02_assumptions/) | 1/1 | 本体与公设 | 后续结论须有显式前提 | 模型名称不能代替公设、版本与适用域 | 保留；内容待完善 |
-| [01_models/h06_quantum_emergence/03_formalism](../01_models/h06_quantum_emergence/03_formalism/) | 1/1 | 数学形式与定义 | 统一符号、单位和边界约定 | 定义与物理假设分别标记 | 保留 |
-| [01_models/h06_quantum_emergence/04_derivations](../01_models/h06_quantum_emergence/04_derivations/) | 1/1 | 方程推导 | 保存从前提到方程的演算链 | 推导成功不等于理论一致或观测成立 | 保留 |
-| [01_models/h06_quantum_emergence/05_consistency](../01_models/h06_quantum_emergence/05_consistency/) | 1/1 | 条件性证明与一致性 | 分别审查守恒、稳定性、已知极限等 | 数值例子不替代一般证明 | 保留 |
-| [01_models/h06_quantum_emergence/06_predictions](../01_models/h06_quantum_emergence/06_predictions/) | 1/1 | 可测量预测 | 先规定可区分量和检验标准 | 拟合已有数据与独立预测不得混淆 | 保留 |
-| [01_models/h06_quantum_emergence/07_computation](../01_models/h06_quantum_emergence/07_computation/) | 1/7 | 计算实现与复现 | 统一管理代码、配置、测试和执行 | 输出结论需链接验证层；模板不等于可运行环境 | 保留 |
-| [01_models/h06_quantum_emergence/07_computation/configs](../01_models/h06_quantum_emergence/07_computation/configs/) | 1/1 | 参数与算法配置 | 输入与输出分离有利于复现 | 记录单位、版本及默认值 | 保留 |
-| [01_models/h06_quantum_emergence/07_computation/notebooks](../01_models/h06_quantum_emergence/07_computation/notebooks/) | 1/1 | 交互探索 | 保留研究过程及演示 | 正式结果须能从干净状态顺序复算 | 按工作量使用 |
-| [01_models/h06_quantum_emergence/07_computation/runs](../01_models/h06_quantum_emergence/07_computation/runs/) | 2/2 | 逐次运行记录 | 执行命令、环境及失败状态可追踪 | run_template.json 不是已完成运行 | 保留 |
-| [01_models/h06_quantum_emergence/07_computation/src](../01_models/h06_quantum_emergence/07_computation/src/) | 1/1 | 模型专属源码 | 主实现集中，避免阶段间重复算法 | 历史阶段入口可以保留，但依赖要显式 | 保留 |
-| [01_models/h06_quantum_emergence/07_computation/tests](../01_models/h06_quantum_emergence/07_computation/tests/) | 1/1 | 自动断言与回归 | 实现正确性需要独立检查入口 | 测试通过不代表理论正确 | 保留；当前多为模板 |
-| [01_models/h06_quantum_emergence/08_data](../01_models/h06_quantum_emergence/08_data/) | 2/5 | 数据来源与处理链 | 数据身份独立于代码与论文 | 只读是约定，尚未由权限强制 | 保留 |
-| [01_models/h06_quantum_emergence/08_data/external](../01_models/h06_quantum_emergence/08_data/external/) | 1/1 | 外部来源与获取元数据 | 明确来源、许可、版本及获取方式 | 若存原件必须确定唯一主位置，避免与 raw 冲突 | 边界需执行约束 |
-| [01_models/h06_quantum_emergence/08_data/processed](../01_models/h06_quantum_emergence/08_data/processed/) | 1/1 | 派生数据 | 处理过程与原件分离 | 须链接输入 data_id 和生成 run_id | 保留 |
-| [01_models/h06_quantum_emergence/08_data/raw](../01_models/h06_quantum_emergence/08_data/raw/) | 1/1 | 原始数据主副本 | 保留输入原貌 | 不要与 external 重复保管同一主副本 | 保留 |
-| [01_models/h06_quantum_emergence/09_validation](../01_models/h06_quantum_emergence/09_validation/) | 1/1 | 实现验证与观测检验 | 对照预测、数据和基准 | 应标注检验类型，不能把内部恒等式当外部验证 | 保留 |
-| [01_models/h06_quantum_emergence/10_uncertainty](../01_models/h06_quantum_emergence/10_uncertainty/) | 1/1 | 误差预算与稳健性 | 有效数字不能代替不确定度 | 必须进入预测和检验设计，不只用于论文末尾 | 保留 |
-| [01_models/h06_quantum_emergence/11_falsification](../01_models/h06_quantum_emergence/11_falsification/) | 1/1 | 反例与负结果 | 失败记录需要不受最终叙述影响的位置 | 链接同一主结果，避免复制不利数据 | 保留 |
-| [01_models/h06_quantum_emergence/12_conclusions](../01_models/h06_quantum_emergence/12_conclusions/) | 1/1 | 证据约束下的结论 | 把数学、数值、观测与未验证主张分开 | 必须追溯公设与证据版本 | 保留 |
-| [01_models/h06_quantum_emergence/13_publications](../01_models/h06_quantum_emergence/13_publications/) | 1/4 | 模型论文材料 | 叙述、图表和补充材料有出版职责 | 跨模型综述放公共出版层 | 保留 |
-| [01_models/h06_quantum_emergence/13_publications/figures](../01_models/h06_quantum_emergence/13_publications/figures/) | 1/1 | 图表与生成来源 | 出版图可追踪到运行 | 不要手工复制后失去版本关系 | 保留 |
-| [01_models/h06_quantum_emergence/13_publications/manuscript](../01_models/h06_quantum_emergence/13_publications/manuscript/) | 1/1 | 正文与参考文献 | 面向出版读者组织叙述 | 结论证据仍保留在研究阶段 | 保留 |
-| [01_models/h06_quantum_emergence/13_publications/supplement](../01_models/h06_quantum_emergence/13_publications/supplement/) | 1/1 | 补充材料 | 提供读者所需复现说明 | 不复制完整数据仓库 | 保留 |
-| [01_models/h06_quantum_emergence/14_review](../01_models/h06_quantum_emergence/14_review/) | 2/2 | 评审与独立复现 | 保存意见、回复和独立检查过程 | 自评不等于外部认可；允许贯穿所有阶段 | 保留 |
-| [01_models/h06_quantum_emergence/15_releases](../01_models/h06_quantum_emergence/15_releases/) | 2/2 | 冻结版本与发布清单 | 引用和复现需要确定版本 | 发布不自动代表同行评审通过 | 保留 |
-| [01_models/h06_quantum_emergence/90_archive](../01_models/h06_quantum_emergence/90_archive/) | 1/1 | 模型内历史 | 保留替代关系与停止原因 | 模型稳定入口不删除；跨模型历史进入根归档 | 保留 |
-
-### 02_shared
-
-| 目录 | 直接/递归文件 | 职责 | 保留理由 | 边界与风险 | 判断 |
-|---|---:|---|---|---|---|
-| [02_shared](../02_shared/) | 1/27 | 共享研究资产 | 复用时保留单一主位置 | 共享不等于不含假设 | 保留 |
-| [02_shared/computation](../02_shared/computation/) | 1/8 | 共享计算工具 | H01/H04 已有共同依赖 | 缺少完整环境发布契约 | 保留并补工程约束 |
-| [02_shared/computation/src](../02_shared/computation/src/) | 0/7 | 共享源码根 | 为 Python 包提供一致导入根 | 当前靠入口定位；将来可评估正式打包 | 保留 |
-| [02_shared/computation/src/triad_uft](../02_shared/computation/src/triad_uft/) | 7/7 | 历史复算实现 | 多个入口调用同一实现 | 历史 STRICT/VERIFIED 标签未获本次科学认证 | 保留并审查假设 |
-| [02_shared/protocols](../02_shared/protocols/) | 5/10 | 共同研究方法 | 方法约定集中维护 | 旧阶段名及历史证据分层需统一解释 | 保留；需语义修订 |
-| [02_shared/protocols/audit_methodology](../02_shared/protocols/audit_methodology/) | 1/5 | 历史审计方法材料 | 保留误差与开放问题的已有来源 | 方法文档含历史主张，不自动成为中立协议 | 有条件保留 |
-| [02_shared/protocols/audit_methodology/A1_误差预算](../02_shared/protocols/audit_methodology/A1_误差预算/) | 1/1 | 误差预算历史资料；数值精度与模型误差必须区分 | 保留原有方法与审计资料的出处 | 不能作为当前证据等级的自动认证 | 有条件保留；需语义审查 |
-| [02_shared/protocols/audit_methodology/A4_诚实声明OpenProblems](../02_shared/protocols/audit_methodology/A4_诚实声明OpenProblems/) | 1/1 | 开放问题历史清单；结论需链接模型当前版本 | 保留原有方法与审计资料的出处 | 不能作为当前证据等级的自动认证 | 有条件保留；需语义审查 |
-| [02_shared/protocols/audit_methodology/A5_分层标注Hierarchy](../02_shared/protocols/audit_methodology/A5_分层标注Hierarchy/) | 1/1 | 历史层级体系；需与当前证据类型建立明确映射 | 保留原有方法与审计资料的出处 | 不能作为当前证据等级的自动认证 | 有条件保留；需语义审查 |
-| [02_shared/protocols/audit_methodology/A6_AI科技星认证](../02_shared/protocols/audit_methodology/A6_AI科技星认证/) | 1/1 | 历史自评记录；目录名称不证明外部认证 | 保留原有方法与审计资料的出处 | 不能作为当前证据等级的自动认证 | 有条件保留；需语义审查 |
-| [02_shared/references](../02_shared/references/) | 8/8 | 数学、文献与术语 | 统一公共背景与引用入口 | 原始来源与内部总结应明确区分 | 保留 |
-
-### 03_comparative
-
-| 目录 | 直接/递归文件 | 职责 | 保留理由 | 边界与风险 | 判断 |
-|---|---:|---|---|---|---|
-| [03_comparative](../03_comparative/) | 2/6 | 跨模型分析 | 比较结论的范围超过单模型 | 必须冻结前提、数据与评价准则 | 保留 |
-| [03_comparative/applications](../03_comparative/applications/) | 1/1 | 应用可行性探索 | 为公共应用方向提供入口 | 与比较不是同一职责；增长后再考虑独立 | 暂保留的折中 |
-| [03_comparative/comparison](../03_comparative/comparison/) | 1/1 | 比较方案与结果 | 研究公平对照关系 | 总登记表在父层，具体报告放此 | 保留 |
-| [03_comparative/physics_domains](../03_comparative/physics_domains/) | 1/1 | 按物理领域的次级视图 | 统一候选涉及多个物理主题 | 用链接组织，不再复制模型主文件 | 保留为视图 |
-| [03_comparative/synthesis](../03_comparative/synthesis/) | 1/1 | 综合候选 | 组合前提须显式讨论兼容性 | 不能将各路线结论直接相加 | 保留 |
-
-### 04_publications
-
-| 目录 | 直接/递归文件 | 职责 | 保留理由 | 边界与风险 | 判断 |
-|---|---:|---|---|---|---|
-| [04_publications](../04_publications/) | 1/11 | 跨模型传播 | 综合叙述没有唯一单模型归属 | 明确区分历史报告、草稿和正式出版 | 保留 |
-| [04_publications/legacy_reports](../04_publications/legacy_reports/) | 1/9 | 历史综合报告 | 暂不拆散未审查的理论系列 | 放在出版层不代表已发表或已验证 | 暂保留；归属待审 |
-| [04_publications/legacy_reports/全维修订版v2](../04_publications/legacy_reports/全维修订版v2/) | 1/1 | 全维修订版v2历史作品系列 | 保留系列版本与上下文 | 理论归属、发表状态和科学结论均待审 | 暂保留历史分组 |
-| [04_publications/legacy_reports/求导证明v3](../04_publications/legacy_reports/求导证明v3/) | 1/1 | 求导证明v3历史作品系列 | 保留系列版本与上下文 | 理论归属、发表状态和科学结论均待审 | 暂保留历史分组 |
-| [04_publications/legacy_reports/终极报告系列](../04_publications/legacy_reports/终极报告系列/) | 5/5 | 终极报告系列历史作品系列 | 保留系列版本与上下文 | 理论归属、发表状态和科学结论均待审 | 暂保留历史分组 |
-| [04_publications/legacy_reports/综述修订](../04_publications/legacy_reports/综述修订/) | 1/1 | 综述修订历史作品系列 | 保留系列版本与上下文 | 理论归属、发表状态和科学结论均待审 | 暂保留历史分组 |
-| [04_publications/visualizations](../04_publications/visualizations/) | 1/1 | 公共可视化 | 支持跨模型解释 | 模型专属图回到模型论文层 | 保留 |
-
-### 90_archive
-
-| 目录 | 直接/递归文件 | 职责 | 保留理由 | 边界与风险 | 判断 |
-|---|---:|---|---|---|---|
-| [90_archive](../90_archive/) | 1/31 | 跨项目历史与迁移证据 | 保证演变可追溯 | 不参加当前研究成熟度判断 | 保留 |
-| [90_archive/legacy](../90_archive/legacy/) | 6/24 | 历史研究系列 | 保留原有版本关系 | 历史标题和结论待审 | 保留 |
-| [90_archive/legacy/GAQ_UFT_v1_几何原子](../90_archive/legacy/GAQ_UFT_v1_几何原子/) | 5/5 | GAQ_UFT_v1_几何原子历史版本 | 保存既有研究或布局演变 | 历史内容与旧链接不表示当前约定 | 保留归档 |
-| [90_archive/legacy/GAQ_UFT_v3_三大新体系](../90_archive/legacy/GAQ_UFT_v3_三大新体系/) | 5/5 | GAQ_UFT_v3_三大新体系历史版本 | 保存既有研究或布局演变 | 历史内容与旧链接不表示当前约定 | 保留归档 |
-| [90_archive/legacy/GAQ_UFT_v4_全维统一](../90_archive/legacy/GAQ_UFT_v4_全维统一/) | 1/1 | GAQ_UFT_v4_全维统一历史版本 | 保存既有研究或布局演变 | 历史内容与旧链接不表示当前约定 | 保留归档 |
-| [90_archive/legacy/GAQ_UFT_v5_cħ几何化](../90_archive/legacy/GAQ_UFT_v5_cħ几何化/) | 1/1 | GAQ_UFT_v5_cħ几何化历史版本 | 保存既有研究或布局演变 | 历史内容与旧链接不表示当前约定 | 保留归档 |
-| [90_archive/legacy/GAQ_UFT_v6_质量谱](../90_archive/legacy/GAQ_UFT_v6_质量谱/) | 1/1 | GAQ_UFT_v6_质量谱历史版本 | 保存既有研究或布局演变 | 历史内容与旧链接不表示当前约定 | 保留归档 |
-| [90_archive/legacy/layout_before_20260907](../90_archive/legacy/layout_before_20260907/) | 5/5 | layout_before_20260907历史版本 | 保存既有研究或布局演变 | 历史内容与旧链接不表示当前约定 | 保留归档 |
-| [90_archive/legacy_tools](../90_archive/legacy_tools/) | 2/2 | 废弃工具 | 保存旧操作逻辑供追溯 | 不得作为当前运行入口 | 保留只供查阅 |
-| [90_archive/migrations](../90_archive/migrations/) | 0/4 | 迁移记录集合 | 结构变更需要恢复依据 | 不要把当前活跃研究放入这里 | 保留 |
-| [90_archive/migrations/20260907_full_layout](../90_archive/migrations/20260907_full_layout/) | 4/4 | 本次迁移快照与映射 | 恢复 193 个迁移前文件字节 | 只代表该时间点；脚本不是可随时重跑的入口 | 保留 |
-
-### 99_inbox
-
-| 目录 | 直接/递归文件 | 职责 | 保留理由 | 边界与风险 | 判断 |
-|---|---:|---|---|---|---|
-| [99_inbox](../99_inbox/) | 1/11 | 待审资料与研究问题 | 未知归属无需猜测 | 缺少负责人、期限和处置监测 | 保留并补管理 |
-| [99_inbox/CMB_B模观测](../99_inbox/CMB_B模观测/) | 1/1 | CMB_B模观测待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/人工场实验验证](../99_inbox/人工场实验验证/) | 1/1 | 人工场实验验证待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/大统一完成](../99_inbox/大统一完成/) | 1/1 | 大统一完成待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/引力非重整化突破](../99_inbox/引力非重整化突破/) | 1/1 | 引力非重整化突破待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/弦论_LQG统一](../99_inbox/弦论_LQG统一/) | 1/1 | 弦论_LQG统一待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/弯曲时空三重奏](../99_inbox/弯曲时空三重奏/) | 1/1 | 弯曲时空三重奏待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/强相互作用精确化](../99_inbox/强相互作用精确化/) | 1/1 | 强相互作用精确化待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/暗物质直接探测](../99_inbox/暗物质直接探测/) | 1/1 | 暗物质直接探测待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/暗能量本质](../99_inbox/暗能量本质/) | 1/1 | 暗能量本质待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
-| [99_inbox/黑洞信息悖论](../99_inbox/黑洞信息悖论/) | 1/1 | 黑洞信息悖论待研究问题 | 为未立项主题保留入口 | 标题不代表成果；须指定模型归属、负责人和处置日期 | 暂保留；待审理 |
+| 目录 | 主归属 | 直接/递归文件 | 职责 | 设置理由 | 边界 |
+|---|---|---:|---|---|---|
+| [.github](../.github/) | .github | 1/4 | 协作平台配置 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [.github/ISSUE_TEMPLATE](../.github/ISSUE_TEMPLATE/) | .github | 3/3 | 协作平台配置 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [00_governance](./) | 00_governance | 18/28 | 项目规则、索引及审计 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [00_governance/catalog](catalog/) | 00_governance | 6/6 | 项目规则、索引及审计 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [00_governance/tools](tools/) | 00_governance | 4/4 | 项目规则、索引及审计 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [01_systems](../01_systems/) | 01_systems | 2/680 | 按基础前提独立管理体系 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [01_systems/_template](../01_systems/_template/) | _template | 4/37 | 新体系模板 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/00_project](../01_systems/_template/00_project/) | _template | 2/2 | 新体系模板 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/01_literature](../01_systems/_template/01_literature/) | _template | 1/1 | 新体系模板 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/02_assumptions](../01_systems/_template/02_assumptions/) | _template | 1/1 | 新体系模板 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/03_formalism](../01_systems/_template/03_formalism/) | _template | 1/1 | 新体系模板 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/04_derivations](../01_systems/_template/04_derivations/) | _template | 1/1 | 新体系模板 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/05_consistency](../01_systems/_template/05_consistency/) | _template | 1/1 | 新体系模板 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/06_predictions](../01_systems/_template/06_predictions/) | _template | 1/1 | 新体系模板 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/07_computation](../01_systems/_template/07_computation/) | _template | 1/7 | 新体系模板 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/07_computation/configs](../01_systems/_template/07_computation/configs/) | _template | 1/1 | 新体系模板 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/07_computation/notebooks](../01_systems/_template/07_computation/notebooks/) | _template | 1/1 | 新体系模板 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/07_computation/runs](../01_systems/_template/07_computation/runs/) | _template | 2/2 | 新体系模板 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/07_computation/src](../01_systems/_template/07_computation/src/) | _template | 1/1 | 新体系模板 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/07_computation/tests](../01_systems/_template/07_computation/tests/) | _template | 1/1 | 新体系模板 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/08_data](../01_systems/_template/08_data/) | _template | 2/5 | 新体系模板 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/08_data/external](../01_systems/_template/08_data/external/) | _template | 1/1 | 新体系模板 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/08_data/processed](../01_systems/_template/08_data/processed/) | _template | 1/1 | 新体系模板 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/08_data/raw](../01_systems/_template/08_data/raw/) | _template | 1/1 | 新体系模板 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/09_validation](../01_systems/_template/09_validation/) | _template | 1/1 | 新体系模板 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/10_uncertainty](../01_systems/_template/10_uncertainty/) | _template | 1/1 | 新体系模板 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/11_falsification](../01_systems/_template/11_falsification/) | _template | 1/1 | 新体系模板 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/12_conclusions](../01_systems/_template/12_conclusions/) | _template | 1/1 | 新体系模板 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/13_publications](../01_systems/_template/13_publications/) | _template | 1/4 | 新体系模板 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/13_publications/figures](../01_systems/_template/13_publications/figures/) | _template | 1/1 | 新体系模板 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/13_publications/manuscript](../01_systems/_template/13_publications/manuscript/) | _template | 1/1 | 新体系模板 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/13_publications/supplement](../01_systems/_template/13_publications/supplement/) | _template | 1/1 | 新体系模板 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/14_review](../01_systems/_template/14_review/) | _template | 2/2 | 新体系模板 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/15_releases](../01_systems/_template/15_releases/) | _template | 2/2 | 新体系模板 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/_template/90_archive](../01_systems/_template/90_archive/) | _template | 1/1 | 新体系模板 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/p01_space_compression](../01_systems/p01_space_compression/) | p01_space_compression | 4/38 | 空间压缩与密度本体 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/p01_space_compression/00_project](../01_systems/p01_space_compression/00_project/) | p01_space_compression | 2/2 | 空间压缩与密度本体 / 立项 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/01_literature](../01_systems/p01_space_compression/01_literature/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 文献 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/02_assumptions](../01_systems/p01_space_compression/02_assumptions/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 公设 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/03_formalism](../01_systems/p01_space_compression/03_formalism/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/04_derivations](../01_systems/p01_space_compression/04_derivations/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 推导 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/05_consistency](../01_systems/p01_space_compression/05_consistency/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 一致性 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/06_predictions](../01_systems/p01_space_compression/06_predictions/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 预测 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/07_computation](../01_systems/p01_space_compression/07_computation/) | p01_space_compression | 1/7 | 空间压缩与密度本体 / 计算 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/07_computation/configs](../01_systems/p01_space_compression/07_computation/configs/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/07_computation/notebooks](../01_systems/p01_space_compression/07_computation/notebooks/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/07_computation/runs](../01_systems/p01_space_compression/07_computation/runs/) | p01_space_compression | 2/2 | 空间压缩与密度本体 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/07_computation/src](../01_systems/p01_space_compression/07_computation/src/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/07_computation/tests](../01_systems/p01_space_compression/07_computation/tests/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/08_data](../01_systems/p01_space_compression/08_data/) | p01_space_compression | 2/5 | 空间压缩与密度本体 / 数据 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/08_data/external](../01_systems/p01_space_compression/08_data/external/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/08_data/processed](../01_systems/p01_space_compression/08_data/processed/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/08_data/raw](../01_systems/p01_space_compression/08_data/raw/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/09_validation](../01_systems/p01_space_compression/09_validation/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 验证 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/10_uncertainty](../01_systems/p01_space_compression/10_uncertainty/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/11_falsification](../01_systems/p01_space_compression/11_falsification/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 证伪 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/12_conclusions](../01_systems/p01_space_compression/12_conclusions/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 结论 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/13_publications](../01_systems/p01_space_compression/13_publications/) | p01_space_compression | 1/4 | 空间压缩与密度本体 / 论文 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/13_publications/figures](../01_systems/p01_space_compression/13_publications/figures/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/13_publications/manuscript](../01_systems/p01_space_compression/13_publications/manuscript/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/13_publications/supplement](../01_systems/p01_space_compression/13_publications/supplement/) | p01_space_compression | 1/1 | 空间压缩与密度本体 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/14_review](../01_systems/p01_space_compression/14_review/) | p01_space_compression | 2/2 | 空间压缩与密度本体 / 评审 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/15_releases](../01_systems/p01_space_compression/15_releases/) | p01_space_compression | 2/2 | 空间压缩与密度本体 / 发布 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p01_space_compression/90_archive](../01_systems/p01_space_compression/90_archive/) | p01_space_compression | 2/2 | 空间压缩与密度本体 / 归档 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source](../01_systems/p02_matter_source/) | p02_matter_source | 4/38 | 物体驱动与源场本体 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/p02_matter_source/00_project](../01_systems/p02_matter_source/00_project/) | p02_matter_source | 2/2 | 物体驱动与源场本体 / 立项 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/01_literature](../01_systems/p02_matter_source/01_literature/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 文献 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/02_assumptions](../01_systems/p02_matter_source/02_assumptions/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 公设 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/03_formalism](../01_systems/p02_matter_source/03_formalism/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/04_derivations](../01_systems/p02_matter_source/04_derivations/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 推导 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/05_consistency](../01_systems/p02_matter_source/05_consistency/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 一致性 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/06_predictions](../01_systems/p02_matter_source/06_predictions/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 预测 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/07_computation](../01_systems/p02_matter_source/07_computation/) | p02_matter_source | 1/7 | 物体驱动与源场本体 / 计算 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/07_computation/configs](../01_systems/p02_matter_source/07_computation/configs/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/07_computation/notebooks](../01_systems/p02_matter_source/07_computation/notebooks/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/07_computation/runs](../01_systems/p02_matter_source/07_computation/runs/) | p02_matter_source | 2/2 | 物体驱动与源场本体 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/07_computation/src](../01_systems/p02_matter_source/07_computation/src/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/07_computation/tests](../01_systems/p02_matter_source/07_computation/tests/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/08_data](../01_systems/p02_matter_source/08_data/) | p02_matter_source | 2/5 | 物体驱动与源场本体 / 数据 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/08_data/external](../01_systems/p02_matter_source/08_data/external/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/08_data/processed](../01_systems/p02_matter_source/08_data/processed/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/08_data/raw](../01_systems/p02_matter_source/08_data/raw/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/09_validation](../01_systems/p02_matter_source/09_validation/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 验证 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/10_uncertainty](../01_systems/p02_matter_source/10_uncertainty/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/11_falsification](../01_systems/p02_matter_source/11_falsification/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 证伪 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/12_conclusions](../01_systems/p02_matter_source/12_conclusions/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 结论 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/13_publications](../01_systems/p02_matter_source/13_publications/) | p02_matter_source | 1/4 | 物体驱动与源场本体 / 论文 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/13_publications/figures](../01_systems/p02_matter_source/13_publications/figures/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/13_publications/manuscript](../01_systems/p02_matter_source/13_publications/manuscript/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/13_publications/supplement](../01_systems/p02_matter_source/13_publications/supplement/) | p02_matter_source | 1/1 | 物体驱动与源场本体 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/14_review](../01_systems/p02_matter_source/14_review/) | p02_matter_source | 2/2 | 物体驱动与源场本体 / 评审 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/15_releases](../01_systems/p02_matter_source/15_releases/) | p02_matter_source | 2/2 | 物体驱动与源场本体 / 发布 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p02_matter_source/90_archive](../01_systems/p02_matter_source/90_archive/) | p02_matter_source | 2/2 | 物体驱动与源场本体 / 归档 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification](../01_systems/p03_gauge_unification/) | p03_gauge_unification | 4/38 | 规范对称统一候选 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/p03_gauge_unification/00_project](../01_systems/p03_gauge_unification/00_project/) | p03_gauge_unification | 2/2 | 规范对称统一候选 / 立项 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/01_literature](../01_systems/p03_gauge_unification/01_literature/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 文献 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/02_assumptions](../01_systems/p03_gauge_unification/02_assumptions/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 公设 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/03_formalism](../01_systems/p03_gauge_unification/03_formalism/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/04_derivations](../01_systems/p03_gauge_unification/04_derivations/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 推导 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/05_consistency](../01_systems/p03_gauge_unification/05_consistency/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 一致性 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/06_predictions](../01_systems/p03_gauge_unification/06_predictions/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 预测 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/07_computation](../01_systems/p03_gauge_unification/07_computation/) | p03_gauge_unification | 1/7 | 规范对称统一候选 / 计算 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/07_computation/configs](../01_systems/p03_gauge_unification/07_computation/configs/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/07_computation/notebooks](../01_systems/p03_gauge_unification/07_computation/notebooks/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/07_computation/runs](../01_systems/p03_gauge_unification/07_computation/runs/) | p03_gauge_unification | 2/2 | 规范对称统一候选 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/07_computation/src](../01_systems/p03_gauge_unification/07_computation/src/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/07_computation/tests](../01_systems/p03_gauge_unification/07_computation/tests/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/08_data](../01_systems/p03_gauge_unification/08_data/) | p03_gauge_unification | 2/5 | 规范对称统一候选 / 数据 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/08_data/external](../01_systems/p03_gauge_unification/08_data/external/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/08_data/processed](../01_systems/p03_gauge_unification/08_data/processed/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/08_data/raw](../01_systems/p03_gauge_unification/08_data/raw/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/09_validation](../01_systems/p03_gauge_unification/09_validation/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 验证 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/10_uncertainty](../01_systems/p03_gauge_unification/10_uncertainty/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/11_falsification](../01_systems/p03_gauge_unification/11_falsification/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 证伪 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/12_conclusions](../01_systems/p03_gauge_unification/12_conclusions/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 结论 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/13_publications](../01_systems/p03_gauge_unification/13_publications/) | p03_gauge_unification | 1/4 | 规范对称统一候选 / 论文 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/13_publications/figures](../01_systems/p03_gauge_unification/13_publications/figures/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/13_publications/manuscript](../01_systems/p03_gauge_unification/13_publications/manuscript/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/13_publications/supplement](../01_systems/p03_gauge_unification/13_publications/supplement/) | p03_gauge_unification | 1/1 | 规范对称统一候选 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/14_review](../01_systems/p03_gauge_unification/14_review/) | p03_gauge_unification | 2/2 | 规范对称统一候选 / 评审 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/15_releases](../01_systems/p03_gauge_unification/15_releases/) | p03_gauge_unification | 2/2 | 规范对称统一候选 / 发布 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p03_gauge_unification/90_archive](../01_systems/p03_gauge_unification/90_archive/) | p03_gauge_unification | 2/2 | 规范对称统一候选 / 归档 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence](../01_systems/p04_quantum_emergence/) | p04_quantum_emergence | 4/38 | 量子结构与时空涌现候选 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/p04_quantum_emergence/00_project](../01_systems/p04_quantum_emergence/00_project/) | p04_quantum_emergence | 2/2 | 量子结构与时空涌现候选 / 立项 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/01_literature](../01_systems/p04_quantum_emergence/01_literature/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 文献 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/02_assumptions](../01_systems/p04_quantum_emergence/02_assumptions/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 公设 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/03_formalism](../01_systems/p04_quantum_emergence/03_formalism/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/04_derivations](../01_systems/p04_quantum_emergence/04_derivations/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 推导 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/05_consistency](../01_systems/p04_quantum_emergence/05_consistency/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 一致性 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/06_predictions](../01_systems/p04_quantum_emergence/06_predictions/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 预测 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/07_computation](../01_systems/p04_quantum_emergence/07_computation/) | p04_quantum_emergence | 1/7 | 量子结构与时空涌现候选 / 计算 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/07_computation/configs](../01_systems/p04_quantum_emergence/07_computation/configs/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/07_computation/notebooks](../01_systems/p04_quantum_emergence/07_computation/notebooks/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/07_computation/runs](../01_systems/p04_quantum_emergence/07_computation/runs/) | p04_quantum_emergence | 2/2 | 量子结构与时空涌现候选 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/07_computation/src](../01_systems/p04_quantum_emergence/07_computation/src/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/07_computation/tests](../01_systems/p04_quantum_emergence/07_computation/tests/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/08_data](../01_systems/p04_quantum_emergence/08_data/) | p04_quantum_emergence | 2/5 | 量子结构与时空涌现候选 / 数据 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/08_data/external](../01_systems/p04_quantum_emergence/08_data/external/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/08_data/processed](../01_systems/p04_quantum_emergence/08_data/processed/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/08_data/raw](../01_systems/p04_quantum_emergence/08_data/raw/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/09_validation](../01_systems/p04_quantum_emergence/09_validation/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 验证 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/10_uncertainty](../01_systems/p04_quantum_emergence/10_uncertainty/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/11_falsification](../01_systems/p04_quantum_emergence/11_falsification/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 证伪 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/12_conclusions](../01_systems/p04_quantum_emergence/12_conclusions/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 结论 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/13_publications](../01_systems/p04_quantum_emergence/13_publications/) | p04_quantum_emergence | 1/4 | 量子结构与时空涌现候选 / 论文 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/13_publications/figures](../01_systems/p04_quantum_emergence/13_publications/figures/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/13_publications/manuscript](../01_systems/p04_quantum_emergence/13_publications/manuscript/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/13_publications/supplement](../01_systems/p04_quantum_emergence/13_publications/supplement/) | p04_quantum_emergence | 1/1 | 量子结构与时空涌现候选 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/14_review](../01_systems/p04_quantum_emergence/14_review/) | p04_quantum_emergence | 2/2 | 量子结构与时空涌现候选 / 评审 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/15_releases](../01_systems/p04_quantum_emergence/15_releases/) | p04_quantum_emergence | 2/2 | 量子结构与时空涌现候选 / 发布 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/p04_quantum_emergence/90_archive](../01_systems/p04_quantum_emergence/90_archive/) | p04_quantum_emergence | 2/2 | 量子结构与时空涌现候选 / 归档 | 以本体系为作用域保留此生命周期职责 | 待建模方向，尚无具体公设，不计为已建立理论 |
+| [01_systems/s01_triad_kinematics](../01_systems/s01_triad_kinematics/) | s01_triad_kinematics | 4/56 | 螺旋三重奏与谱几何 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/00_project](../01_systems/s01_triad_kinematics/00_project/) | s01_triad_kinematics | 2/2 | 螺旋三重奏与谱几何 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/01_literature](../01_systems/s01_triad_kinematics/01_literature/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/02_assumptions](../01_systems/s01_triad_kinematics/02_assumptions/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/03_formalism](../01_systems/s01_triad_kinematics/03_formalism/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/04_derivations](../01_systems/s01_triad_kinematics/04_derivations/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/05_consistency](../01_systems/s01_triad_kinematics/05_consistency/) | s01_triad_kinematics | 1/11 | 螺旋三重奏与谱几何 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/05_consistency/P1_螺旋三重奏_TS1](../01_systems/s01_triad_kinematics/05_consistency/P1_螺旋三重奏_TS1/) | s01_triad_kinematics | 2/2 | 螺旋三重奏与谱几何 / 一致性 / P1_螺旋三重奏_TS1 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/05_consistency/P3_归纳闭合_R9](../01_systems/s01_triad_kinematics/05_consistency/P3_归纳闭合_R9/) | s01_triad_kinematics | 4/4 | 螺旋三重奏与谱几何 / 一致性 / P3_归纳闭合_R9 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/05_consistency/P4_绝热三重奏_R10](../01_systems/s01_triad_kinematics/05_consistency/P4_绝热三重奏_R10/) | s01_triad_kinematics | 2/2 | 螺旋三重奏与谱几何 / 一致性 / P4_绝热三重奏_R10 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/05_consistency/P5_梯度磁场精确性_R11](../01_systems/s01_triad_kinematics/05_consistency/P5_梯度磁场精确性_R11/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 一致性 / P5_梯度磁场精确性_R11 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/05_consistency/P6_谱理论框架_R7R8](../01_systems/s01_triad_kinematics/05_consistency/P6_谱理论框架_R7R8/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 一致性 / P6_谱理论框架_R7R8 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/06_predictions](../01_systems/s01_triad_kinematics/06_predictions/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/07_computation](../01_systems/s01_triad_kinematics/07_computation/) | s01_triad_kinematics | 1/14 | 螺旋三重奏与谱几何 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/07_computation/configs](../01_systems/s01_triad_kinematics/07_computation/configs/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/07_computation/notebooks](../01_systems/s01_triad_kinematics/07_computation/notebooks/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/07_computation/runs](../01_systems/s01_triad_kinematics/07_computation/runs/) | s01_triad_kinematics | 2/2 | 螺旋三重奏与谱几何 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/07_computation/src](../01_systems/s01_triad_kinematics/07_computation/src/) | s01_triad_kinematics | 1/8 | 螺旋三重奏与谱几何 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/07_computation/src/triad_uft](../01_systems/s01_triad_kinematics/07_computation/src/triad_uft/) | s01_triad_kinematics | 7/7 | 螺旋三重奏与谱几何 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/07_computation/tests](../01_systems/s01_triad_kinematics/07_computation/tests/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/08_data](../01_systems/s01_triad_kinematics/08_data/) | s01_triad_kinematics | 2/5 | 螺旋三重奏与谱几何 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/08_data/external](../01_systems/s01_triad_kinematics/08_data/external/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/08_data/processed](../01_systems/s01_triad_kinematics/08_data/processed/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/08_data/raw](../01_systems/s01_triad_kinematics/08_data/raw/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/09_validation](../01_systems/s01_triad_kinematics/09_validation/) | s01_triad_kinematics | 1/3 | 螺旋三重奏与谱几何 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/09_validation/V2_mpmath高精度](../01_systems/s01_triad_kinematics/09_validation/V2_mpmath高精度/) | s01_triad_kinematics | 2/2 | 螺旋三重奏与谱几何 / 验证 / V2_mpmath高精度 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/10_uncertainty](../01_systems/s01_triad_kinematics/10_uncertainty/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/11_falsification](../01_systems/s01_triad_kinematics/11_falsification/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/12_conclusions](../01_systems/s01_triad_kinematics/12_conclusions/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/13_publications](../01_systems/s01_triad_kinematics/13_publications/) | s01_triad_kinematics | 1/4 | 螺旋三重奏与谱几何 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/13_publications/figures](../01_systems/s01_triad_kinematics/13_publications/figures/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/13_publications/manuscript](../01_systems/s01_triad_kinematics/13_publications/manuscript/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/13_publications/supplement](../01_systems/s01_triad_kinematics/13_publications/supplement/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/14_review](../01_systems/s01_triad_kinematics/14_review/) | s01_triad_kinematics | 2/2 | 螺旋三重奏与谱几何 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/15_releases](../01_systems/s01_triad_kinematics/15_releases/) | s01_triad_kinematics | 2/2 | 螺旋三重奏与谱几何 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s01_triad_kinematics/90_archive](../01_systems/s01_triad_kinematics/90_archive/) | s01_triad_kinematics | 1/1 | 螺旋三重奏与谱几何 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s02_zhang_space_motion](../01_systems/s02_zhang_space_motion/) | s02_zhang_space_motion | 4/40 | 张祥前空间运动与统一力 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/00_project](../01_systems/s02_zhang_space_motion/00_project/) | s02_zhang_space_motion | 2/2 | 张祥前空间运动与统一力 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/01_literature](../01_systems/s02_zhang_space_motion/01_literature/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/02_assumptions](../01_systems/s02_zhang_space_motion/02_assumptions/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/03_formalism](../01_systems/s02_zhang_space_motion/03_formalism/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/04_derivations](../01_systems/s02_zhang_space_motion/04_derivations/) | s02_zhang_space_motion | 1/3 | 张祥前空间运动与统一力 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/04_derivations/D5_大统一力方程](../01_systems/s02_zhang_space_motion/04_derivations/D5_大统一力方程/) | s02_zhang_space_motion | 2/2 | 张祥前空间运动与统一力 / 推导 / D5_大统一力方程 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/05_consistency](../01_systems/s02_zhang_space_motion/05_consistency/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/06_predictions](../01_systems/s02_zhang_space_motion/06_predictions/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/07_computation](../01_systems/s02_zhang_space_motion/07_computation/) | s02_zhang_space_motion | 1/8 | 张祥前空间运动与统一力 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/07_computation/configs](../01_systems/s02_zhang_space_motion/07_computation/configs/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/07_computation/notebooks](../01_systems/s02_zhang_space_motion/07_computation/notebooks/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/07_computation/runs](../01_systems/s02_zhang_space_motion/07_computation/runs/) | s02_zhang_space_motion | 2/2 | 张祥前空间运动与统一力 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/07_computation/src](../01_systems/s02_zhang_space_motion/07_computation/src/) | s02_zhang_space_motion | 2/2 | 张祥前空间运动与统一力 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/07_computation/tests](../01_systems/s02_zhang_space_motion/07_computation/tests/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/08_data](../01_systems/s02_zhang_space_motion/08_data/) | s02_zhang_space_motion | 2/5 | 张祥前空间运动与统一力 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/08_data/external](../01_systems/s02_zhang_space_motion/08_data/external/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/08_data/processed](../01_systems/s02_zhang_space_motion/08_data/processed/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/08_data/raw](../01_systems/s02_zhang_space_motion/08_data/raw/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/09_validation](../01_systems/s02_zhang_space_motion/09_validation/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/10_uncertainty](../01_systems/s02_zhang_space_motion/10_uncertainty/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/11_falsification](../01_systems/s02_zhang_space_motion/11_falsification/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/12_conclusions](../01_systems/s02_zhang_space_motion/12_conclusions/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/13_publications](../01_systems/s02_zhang_space_motion/13_publications/) | s02_zhang_space_motion | 1/4 | 张祥前空间运动与统一力 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/13_publications/figures](../01_systems/s02_zhang_space_motion/13_publications/figures/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/13_publications/manuscript](../01_systems/s02_zhang_space_motion/13_publications/manuscript/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/13_publications/supplement](../01_systems/s02_zhang_space_motion/13_publications/supplement/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/14_review](../01_systems/s02_zhang_space_motion/14_review/) | s02_zhang_space_motion | 2/2 | 张祥前空间运动与统一力 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/15_releases](../01_systems/s02_zhang_space_motion/15_releases/) | s02_zhang_space_motion | 2/2 | 张祥前空间运动与统一力 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s02_zhang_space_motion/90_archive](../01_systems/s02_zhang_space_motion/90_archive/) | s02_zhang_space_motion | 1/1 | 张祥前空间运动与统一力 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s03_gaq_geometric_atom](../01_systems/s03_gaq_geometric_atom/) | s03_gaq_geometric_atom | 4/46 | GAQ 几何原子与作用量子 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/00_project](../01_systems/s03_gaq_geometric_atom/00_project/) | s03_gaq_geometric_atom | 2/2 | GAQ 几何原子与作用量子 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/01_literature](../01_systems/s03_gaq_geometric_atom/01_literature/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/02_assumptions](../01_systems/s03_gaq_geometric_atom/02_assumptions/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/03_formalism](../01_systems/s03_gaq_geometric_atom/03_formalism/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/04_derivations](../01_systems/s03_gaq_geometric_atom/04_derivations/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/05_consistency](../01_systems/s03_gaq_geometric_atom/05_consistency/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/06_predictions](../01_systems/s03_gaq_geometric_atom/06_predictions/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/07_computation](../01_systems/s03_gaq_geometric_atom/07_computation/) | s03_gaq_geometric_atom | 1/7 | GAQ 几何原子与作用量子 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/07_computation/configs](../01_systems/s03_gaq_geometric_atom/07_computation/configs/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/07_computation/notebooks](../01_systems/s03_gaq_geometric_atom/07_computation/notebooks/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/07_computation/runs](../01_systems/s03_gaq_geometric_atom/07_computation/runs/) | s03_gaq_geometric_atom | 2/2 | GAQ 几何原子与作用量子 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/07_computation/src](../01_systems/s03_gaq_geometric_atom/07_computation/src/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/07_computation/tests](../01_systems/s03_gaq_geometric_atom/07_computation/tests/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/08_data](../01_systems/s03_gaq_geometric_atom/08_data/) | s03_gaq_geometric_atom | 2/5 | GAQ 几何原子与作用量子 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/08_data/external](../01_systems/s03_gaq_geometric_atom/08_data/external/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/08_data/processed](../01_systems/s03_gaq_geometric_atom/08_data/processed/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/08_data/raw](../01_systems/s03_gaq_geometric_atom/08_data/raw/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/09_validation](../01_systems/s03_gaq_geometric_atom/09_validation/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/10_uncertainty](../01_systems/s03_gaq_geometric_atom/10_uncertainty/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/11_falsification](../01_systems/s03_gaq_geometric_atom/11_falsification/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/12_conclusions](../01_systems/s03_gaq_geometric_atom/12_conclusions/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/13_publications](../01_systems/s03_gaq_geometric_atom/13_publications/) | s03_gaq_geometric_atom | 1/4 | GAQ 几何原子与作用量子 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/13_publications/figures](../01_systems/s03_gaq_geometric_atom/13_publications/figures/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/13_publications/manuscript](../01_systems/s03_gaq_geometric_atom/13_publications/manuscript/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/13_publications/supplement](../01_systems/s03_gaq_geometric_atom/13_publications/supplement/) | s03_gaq_geometric_atom | 1/1 | GAQ 几何原子与作用量子 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/14_review](../01_systems/s03_gaq_geometric_atom/14_review/) | s03_gaq_geometric_atom | 2/2 | GAQ 几何原子与作用量子 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/15_releases](../01_systems/s03_gaq_geometric_atom/15_releases/) | s03_gaq_geometric_atom | 2/2 | GAQ 几何原子与作用量子 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s03_gaq_geometric_atom/90_archive](../01_systems/s03_gaq_geometric_atom/90_archive/) | s03_gaq_geometric_atom | 1/10 | GAQ 几何原子与作用量子 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s03_gaq_geometric_atom/90_archive/gaq_early_extensions](../01_systems/s03_gaq_geometric_atom/90_archive/gaq_early_extensions/) | s03_gaq_geometric_atom | 4/4 | GAQ 几何原子与作用量子 / 归档 / gaq_early_extensions | 本体系内的专题或资料分组，避免流入公共总筐 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s03_gaq_geometric_atom/90_archive/gaq_v1_collection](../01_systems/s03_gaq_geometric_atom/90_archive/gaq_v1_collection/) | s03_gaq_geometric_atom | 5/5 | GAQ 几何原子与作用量子 / 归档 / gaq_v1_collection | 本体系内的专题或资料分组，避免流入公共总筐 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s04_ieg_information_gravity](../01_systems/s04_ieg_information_gravity/) | s04_ieg_information_gravity | 4/38 | IEG 信息熵引力 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/00_project](../01_systems/s04_ieg_information_gravity/00_project/) | s04_ieg_information_gravity | 2/2 | IEG 信息熵引力 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/01_literature](../01_systems/s04_ieg_information_gravity/01_literature/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/02_assumptions](../01_systems/s04_ieg_information_gravity/02_assumptions/) | s04_ieg_information_gravity | 2/2 | IEG 信息熵引力 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/03_formalism](../01_systems/s04_ieg_information_gravity/03_formalism/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/04_derivations](../01_systems/s04_ieg_information_gravity/04_derivations/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/05_consistency](../01_systems/s04_ieg_information_gravity/05_consistency/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/06_predictions](../01_systems/s04_ieg_information_gravity/06_predictions/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/07_computation](../01_systems/s04_ieg_information_gravity/07_computation/) | s04_ieg_information_gravity | 1/7 | IEG 信息熵引力 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/07_computation/configs](../01_systems/s04_ieg_information_gravity/07_computation/configs/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/07_computation/notebooks](../01_systems/s04_ieg_information_gravity/07_computation/notebooks/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/07_computation/runs](../01_systems/s04_ieg_information_gravity/07_computation/runs/) | s04_ieg_information_gravity | 2/2 | IEG 信息熵引力 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/07_computation/src](../01_systems/s04_ieg_information_gravity/07_computation/src/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/07_computation/tests](../01_systems/s04_ieg_information_gravity/07_computation/tests/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/08_data](../01_systems/s04_ieg_information_gravity/08_data/) | s04_ieg_information_gravity | 2/5 | IEG 信息熵引力 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/08_data/external](../01_systems/s04_ieg_information_gravity/08_data/external/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/08_data/processed](../01_systems/s04_ieg_information_gravity/08_data/processed/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/08_data/raw](../01_systems/s04_ieg_information_gravity/08_data/raw/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/09_validation](../01_systems/s04_ieg_information_gravity/09_validation/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/10_uncertainty](../01_systems/s04_ieg_information_gravity/10_uncertainty/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/11_falsification](../01_systems/s04_ieg_information_gravity/11_falsification/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/12_conclusions](../01_systems/s04_ieg_information_gravity/12_conclusions/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/13_publications](../01_systems/s04_ieg_information_gravity/13_publications/) | s04_ieg_information_gravity | 1/4 | IEG 信息熵引力 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/13_publications/figures](../01_systems/s04_ieg_information_gravity/13_publications/figures/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/13_publications/manuscript](../01_systems/s04_ieg_information_gravity/13_publications/manuscript/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/13_publications/supplement](../01_systems/s04_ieg_information_gravity/13_publications/supplement/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/14_review](../01_systems/s04_ieg_information_gravity/14_review/) | s04_ieg_information_gravity | 2/2 | IEG 信息熵引力 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/15_releases](../01_systems/s04_ieg_information_gravity/15_releases/) | s04_ieg_information_gravity | 2/2 | IEG 信息熵引力 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s04_ieg_information_gravity/90_archive](../01_systems/s04_ieg_information_gravity/90_archive/) | s04_ieg_information_gravity | 1/1 | IEG 信息熵引力 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s05_hdu_higher_dimensions](../01_systems/s05_hdu_higher_dimensions/) | s05_hdu_higher_dimensions | 4/38 | HDU 高维紧致化统一 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/00_project](../01_systems/s05_hdu_higher_dimensions/00_project/) | s05_hdu_higher_dimensions | 2/2 | HDU 高维紧致化统一 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/01_literature](../01_systems/s05_hdu_higher_dimensions/01_literature/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/02_assumptions](../01_systems/s05_hdu_higher_dimensions/02_assumptions/) | s05_hdu_higher_dimensions | 2/2 | HDU 高维紧致化统一 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/03_formalism](../01_systems/s05_hdu_higher_dimensions/03_formalism/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/04_derivations](../01_systems/s05_hdu_higher_dimensions/04_derivations/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/05_consistency](../01_systems/s05_hdu_higher_dimensions/05_consistency/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/06_predictions](../01_systems/s05_hdu_higher_dimensions/06_predictions/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/07_computation](../01_systems/s05_hdu_higher_dimensions/07_computation/) | s05_hdu_higher_dimensions | 1/7 | HDU 高维紧致化统一 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/07_computation/configs](../01_systems/s05_hdu_higher_dimensions/07_computation/configs/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/07_computation/notebooks](../01_systems/s05_hdu_higher_dimensions/07_computation/notebooks/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/07_computation/runs](../01_systems/s05_hdu_higher_dimensions/07_computation/runs/) | s05_hdu_higher_dimensions | 2/2 | HDU 高维紧致化统一 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/07_computation/src](../01_systems/s05_hdu_higher_dimensions/07_computation/src/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/07_computation/tests](../01_systems/s05_hdu_higher_dimensions/07_computation/tests/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/08_data](../01_systems/s05_hdu_higher_dimensions/08_data/) | s05_hdu_higher_dimensions | 2/5 | HDU 高维紧致化统一 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/08_data/external](../01_systems/s05_hdu_higher_dimensions/08_data/external/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/08_data/processed](../01_systems/s05_hdu_higher_dimensions/08_data/processed/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/08_data/raw](../01_systems/s05_hdu_higher_dimensions/08_data/raw/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/09_validation](../01_systems/s05_hdu_higher_dimensions/09_validation/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/10_uncertainty](../01_systems/s05_hdu_higher_dimensions/10_uncertainty/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/11_falsification](../01_systems/s05_hdu_higher_dimensions/11_falsification/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/12_conclusions](../01_systems/s05_hdu_higher_dimensions/12_conclusions/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/13_publications](../01_systems/s05_hdu_higher_dimensions/13_publications/) | s05_hdu_higher_dimensions | 1/4 | HDU 高维紧致化统一 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/13_publications/figures](../01_systems/s05_hdu_higher_dimensions/13_publications/figures/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/13_publications/manuscript](../01_systems/s05_hdu_higher_dimensions/13_publications/manuscript/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/13_publications/supplement](../01_systems/s05_hdu_higher_dimensions/13_publications/supplement/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/14_review](../01_systems/s05_hdu_higher_dimensions/14_review/) | s05_hdu_higher_dimensions | 2/2 | HDU 高维紧致化统一 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/15_releases](../01_systems/s05_hdu_higher_dimensions/15_releases/) | s05_hdu_higher_dimensions | 2/2 | HDU 高维紧致化统一 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s05_hdu_higher_dimensions/90_archive](../01_systems/s05_hdu_higher_dimensions/90_archive/) | s05_hdu_higher_dimensions | 1/1 | HDU 高维紧致化统一 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s06_tcl_topological_chirality](../01_systems/s06_tcl_topological_chirality/) | s06_tcl_topological_chirality | 4/38 | TCL 拓扑手征锁定 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/00_project](../01_systems/s06_tcl_topological_chirality/00_project/) | s06_tcl_topological_chirality | 2/2 | TCL 拓扑手征锁定 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/01_literature](../01_systems/s06_tcl_topological_chirality/01_literature/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/02_assumptions](../01_systems/s06_tcl_topological_chirality/02_assumptions/) | s06_tcl_topological_chirality | 2/2 | TCL 拓扑手征锁定 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/03_formalism](../01_systems/s06_tcl_topological_chirality/03_formalism/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/04_derivations](../01_systems/s06_tcl_topological_chirality/04_derivations/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/05_consistency](../01_systems/s06_tcl_topological_chirality/05_consistency/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/06_predictions](../01_systems/s06_tcl_topological_chirality/06_predictions/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/07_computation](../01_systems/s06_tcl_topological_chirality/07_computation/) | s06_tcl_topological_chirality | 1/7 | TCL 拓扑手征锁定 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/07_computation/configs](../01_systems/s06_tcl_topological_chirality/07_computation/configs/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/07_computation/notebooks](../01_systems/s06_tcl_topological_chirality/07_computation/notebooks/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/07_computation/runs](../01_systems/s06_tcl_topological_chirality/07_computation/runs/) | s06_tcl_topological_chirality | 2/2 | TCL 拓扑手征锁定 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/07_computation/src](../01_systems/s06_tcl_topological_chirality/07_computation/src/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/07_computation/tests](../01_systems/s06_tcl_topological_chirality/07_computation/tests/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/08_data](../01_systems/s06_tcl_topological_chirality/08_data/) | s06_tcl_topological_chirality | 2/5 | TCL 拓扑手征锁定 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/08_data/external](../01_systems/s06_tcl_topological_chirality/08_data/external/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/08_data/processed](../01_systems/s06_tcl_topological_chirality/08_data/processed/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/08_data/raw](../01_systems/s06_tcl_topological_chirality/08_data/raw/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/09_validation](../01_systems/s06_tcl_topological_chirality/09_validation/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/10_uncertainty](../01_systems/s06_tcl_topological_chirality/10_uncertainty/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/11_falsification](../01_systems/s06_tcl_topological_chirality/11_falsification/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/12_conclusions](../01_systems/s06_tcl_topological_chirality/12_conclusions/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/13_publications](../01_systems/s06_tcl_topological_chirality/13_publications/) | s06_tcl_topological_chirality | 1/4 | TCL 拓扑手征锁定 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/13_publications/figures](../01_systems/s06_tcl_topological_chirality/13_publications/figures/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/13_publications/manuscript](../01_systems/s06_tcl_topological_chirality/13_publications/manuscript/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/13_publications/supplement](../01_systems/s06_tcl_topological_chirality/13_publications/supplement/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/14_review](../01_systems/s06_tcl_topological_chirality/14_review/) | s06_tcl_topological_chirality | 2/2 | TCL 拓扑手征锁定 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/15_releases](../01_systems/s06_tcl_topological_chirality/15_releases/) | s06_tcl_topological_chirality | 2/2 | TCL 拓扑手征锁定 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s06_tcl_topological_chirality/90_archive](../01_systems/s06_tcl_topological_chirality/90_archive/) | s06_tcl_topological_chirality | 1/1 | TCL 拓扑手征锁定 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s07_gaq_complex_curvature](../01_systems/s07_gaq_complex_curvature/) | s07_gaq_complex_curvature | 4/38 | GAQ 复曲率融合体系 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/00_project](../01_systems/s07_gaq_complex_curvature/00_project/) | s07_gaq_complex_curvature | 2/2 | GAQ 复曲率融合体系 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/01_literature](../01_systems/s07_gaq_complex_curvature/01_literature/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/02_assumptions](../01_systems/s07_gaq_complex_curvature/02_assumptions/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/03_formalism](../01_systems/s07_gaq_complex_curvature/03_formalism/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/04_derivations](../01_systems/s07_gaq_complex_curvature/04_derivations/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/05_consistency](../01_systems/s07_gaq_complex_curvature/05_consistency/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/06_predictions](../01_systems/s07_gaq_complex_curvature/06_predictions/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/07_computation](../01_systems/s07_gaq_complex_curvature/07_computation/) | s07_gaq_complex_curvature | 1/7 | GAQ 复曲率融合体系 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/07_computation/configs](../01_systems/s07_gaq_complex_curvature/07_computation/configs/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/07_computation/notebooks](../01_systems/s07_gaq_complex_curvature/07_computation/notebooks/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/07_computation/runs](../01_systems/s07_gaq_complex_curvature/07_computation/runs/) | s07_gaq_complex_curvature | 2/2 | GAQ 复曲率融合体系 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/07_computation/src](../01_systems/s07_gaq_complex_curvature/07_computation/src/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/07_computation/tests](../01_systems/s07_gaq_complex_curvature/07_computation/tests/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/08_data](../01_systems/s07_gaq_complex_curvature/08_data/) | s07_gaq_complex_curvature | 2/5 | GAQ 复曲率融合体系 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/08_data/external](../01_systems/s07_gaq_complex_curvature/08_data/external/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/08_data/processed](../01_systems/s07_gaq_complex_curvature/08_data/processed/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/08_data/raw](../01_systems/s07_gaq_complex_curvature/08_data/raw/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/09_validation](../01_systems/s07_gaq_complex_curvature/09_validation/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/10_uncertainty](../01_systems/s07_gaq_complex_curvature/10_uncertainty/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/11_falsification](../01_systems/s07_gaq_complex_curvature/11_falsification/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/12_conclusions](../01_systems/s07_gaq_complex_curvature/12_conclusions/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/13_publications](../01_systems/s07_gaq_complex_curvature/13_publications/) | s07_gaq_complex_curvature | 1/5 | GAQ 复曲率融合体系 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/13_publications/figures](../01_systems/s07_gaq_complex_curvature/13_publications/figures/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/13_publications/manuscript](../01_systems/s07_gaq_complex_curvature/13_publications/manuscript/) | s07_gaq_complex_curvature | 1/2 | GAQ 复曲率融合体系 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/13_publications/manuscript/gaq_v4](../01_systems/s07_gaq_complex_curvature/13_publications/manuscript/gaq_v4/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/13_publications/supplement](../01_systems/s07_gaq_complex_curvature/13_publications/supplement/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/14_review](../01_systems/s07_gaq_complex_curvature/14_review/) | s07_gaq_complex_curvature | 2/2 | GAQ 复曲率融合体系 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/15_releases](../01_systems/s07_gaq_complex_curvature/15_releases/) | s07_gaq_complex_curvature | 2/2 | GAQ 复曲率融合体系 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s07_gaq_complex_curvature/90_archive](../01_systems/s07_gaq_complex_curvature/90_archive/) | s07_gaq_complex_curvature | 1/1 | GAQ 复曲率融合体系 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s08_gaq_geometrized_constants](../01_systems/s08_gaq_geometrized_constants/) | s08_gaq_geometrized_constants | 4/38 | GAQ 常数几何化体系 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/00_project](../01_systems/s08_gaq_geometrized_constants/00_project/) | s08_gaq_geometrized_constants | 2/2 | GAQ 常数几何化体系 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/01_literature](../01_systems/s08_gaq_geometrized_constants/01_literature/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/02_assumptions](../01_systems/s08_gaq_geometrized_constants/02_assumptions/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/03_formalism](../01_systems/s08_gaq_geometrized_constants/03_formalism/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/04_derivations](../01_systems/s08_gaq_geometrized_constants/04_derivations/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/05_consistency](../01_systems/s08_gaq_geometrized_constants/05_consistency/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/06_predictions](../01_systems/s08_gaq_geometrized_constants/06_predictions/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/07_computation](../01_systems/s08_gaq_geometrized_constants/07_computation/) | s08_gaq_geometrized_constants | 1/7 | GAQ 常数几何化体系 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/07_computation/configs](../01_systems/s08_gaq_geometrized_constants/07_computation/configs/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/07_computation/notebooks](../01_systems/s08_gaq_geometrized_constants/07_computation/notebooks/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/07_computation/runs](../01_systems/s08_gaq_geometrized_constants/07_computation/runs/) | s08_gaq_geometrized_constants | 2/2 | GAQ 常数几何化体系 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/07_computation/src](../01_systems/s08_gaq_geometrized_constants/07_computation/src/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/07_computation/tests](../01_systems/s08_gaq_geometrized_constants/07_computation/tests/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/08_data](../01_systems/s08_gaq_geometrized_constants/08_data/) | s08_gaq_geometrized_constants | 2/5 | GAQ 常数几何化体系 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/08_data/external](../01_systems/s08_gaq_geometrized_constants/08_data/external/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/08_data/processed](../01_systems/s08_gaq_geometrized_constants/08_data/processed/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/08_data/raw](../01_systems/s08_gaq_geometrized_constants/08_data/raw/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/09_validation](../01_systems/s08_gaq_geometrized_constants/09_validation/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/10_uncertainty](../01_systems/s08_gaq_geometrized_constants/10_uncertainty/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/11_falsification](../01_systems/s08_gaq_geometrized_constants/11_falsification/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/12_conclusions](../01_systems/s08_gaq_geometrized_constants/12_conclusions/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/13_publications](../01_systems/s08_gaq_geometrized_constants/13_publications/) | s08_gaq_geometrized_constants | 1/5 | GAQ 常数几何化体系 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/13_publications/figures](../01_systems/s08_gaq_geometrized_constants/13_publications/figures/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/13_publications/manuscript](../01_systems/s08_gaq_geometrized_constants/13_publications/manuscript/) | s08_gaq_geometrized_constants | 1/2 | GAQ 常数几何化体系 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/13_publications/manuscript/gaq_v5](../01_systems/s08_gaq_geometrized_constants/13_publications/manuscript/gaq_v5/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/13_publications/supplement](../01_systems/s08_gaq_geometrized_constants/13_publications/supplement/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/14_review](../01_systems/s08_gaq_geometrized_constants/14_review/) | s08_gaq_geometrized_constants | 2/2 | GAQ 常数几何化体系 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/15_releases](../01_systems/s08_gaq_geometrized_constants/15_releases/) | s08_gaq_geometrized_constants | 2/2 | GAQ 常数几何化体系 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s08_gaq_geometrized_constants/90_archive](../01_systems/s08_gaq_geometrized_constants/90_archive/) | s08_gaq_geometrized_constants | 1/1 | GAQ 常数几何化体系 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s09_gaq_mass_spectrum](../01_systems/s09_gaq_mass_spectrum/) | s09_gaq_mass_spectrum | 4/38 | GAQ 粒子质量谱体系 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/00_project](../01_systems/s09_gaq_mass_spectrum/00_project/) | s09_gaq_mass_spectrum | 2/2 | GAQ 粒子质量谱体系 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/01_literature](../01_systems/s09_gaq_mass_spectrum/01_literature/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/02_assumptions](../01_systems/s09_gaq_mass_spectrum/02_assumptions/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/03_formalism](../01_systems/s09_gaq_mass_spectrum/03_formalism/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/04_derivations](../01_systems/s09_gaq_mass_spectrum/04_derivations/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/05_consistency](../01_systems/s09_gaq_mass_spectrum/05_consistency/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/06_predictions](../01_systems/s09_gaq_mass_spectrum/06_predictions/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/07_computation](../01_systems/s09_gaq_mass_spectrum/07_computation/) | s09_gaq_mass_spectrum | 1/7 | GAQ 粒子质量谱体系 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/07_computation/configs](../01_systems/s09_gaq_mass_spectrum/07_computation/configs/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/07_computation/notebooks](../01_systems/s09_gaq_mass_spectrum/07_computation/notebooks/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/07_computation/runs](../01_systems/s09_gaq_mass_spectrum/07_computation/runs/) | s09_gaq_mass_spectrum | 2/2 | GAQ 粒子质量谱体系 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/07_computation/src](../01_systems/s09_gaq_mass_spectrum/07_computation/src/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/07_computation/tests](../01_systems/s09_gaq_mass_spectrum/07_computation/tests/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/08_data](../01_systems/s09_gaq_mass_spectrum/08_data/) | s09_gaq_mass_spectrum | 2/5 | GAQ 粒子质量谱体系 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/08_data/external](../01_systems/s09_gaq_mass_spectrum/08_data/external/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/08_data/processed](../01_systems/s09_gaq_mass_spectrum/08_data/processed/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/08_data/raw](../01_systems/s09_gaq_mass_spectrum/08_data/raw/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/09_validation](../01_systems/s09_gaq_mass_spectrum/09_validation/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/10_uncertainty](../01_systems/s09_gaq_mass_spectrum/10_uncertainty/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/11_falsification](../01_systems/s09_gaq_mass_spectrum/11_falsification/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/12_conclusions](../01_systems/s09_gaq_mass_spectrum/12_conclusions/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/13_publications](../01_systems/s09_gaq_mass_spectrum/13_publications/) | s09_gaq_mass_spectrum | 1/5 | GAQ 粒子质量谱体系 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/13_publications/figures](../01_systems/s09_gaq_mass_spectrum/13_publications/figures/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/13_publications/manuscript](../01_systems/s09_gaq_mass_spectrum/13_publications/manuscript/) | s09_gaq_mass_spectrum | 1/2 | GAQ 粒子质量谱体系 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/13_publications/manuscript/gaq_v6](../01_systems/s09_gaq_mass_spectrum/13_publications/manuscript/gaq_v6/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/13_publications/supplement](../01_systems/s09_gaq_mass_spectrum/13_publications/supplement/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/14_review](../01_systems/s09_gaq_mass_spectrum/14_review/) | s09_gaq_mass_spectrum | 2/2 | GAQ 粒子质量谱体系 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/15_releases](../01_systems/s09_gaq_mass_spectrum/15_releases/) | s09_gaq_mass_spectrum | 2/2 | GAQ 粒子质量谱体系 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s09_gaq_mass_spectrum/90_archive](../01_systems/s09_gaq_mass_spectrum/90_archive/) | s09_gaq_mass_spectrum | 1/1 | GAQ 粒子质量谱体系 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s10_frequency_helix_ontology](../01_systems/s10_frequency_helix_ontology/) | s10_frequency_helix_ontology | 4/38 | 频率本源与复螺旋宇宙 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/00_project](../01_systems/s10_frequency_helix_ontology/00_project/) | s10_frequency_helix_ontology | 2/2 | 频率本源与复螺旋宇宙 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/01_literature](../01_systems/s10_frequency_helix_ontology/01_literature/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/02_assumptions](../01_systems/s10_frequency_helix_ontology/02_assumptions/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/03_formalism](../01_systems/s10_frequency_helix_ontology/03_formalism/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/04_derivations](../01_systems/s10_frequency_helix_ontology/04_derivations/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/05_consistency](../01_systems/s10_frequency_helix_ontology/05_consistency/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/06_predictions](../01_systems/s10_frequency_helix_ontology/06_predictions/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/07_computation](../01_systems/s10_frequency_helix_ontology/07_computation/) | s10_frequency_helix_ontology | 1/7 | 频率本源与复螺旋宇宙 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/07_computation/configs](../01_systems/s10_frequency_helix_ontology/07_computation/configs/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/07_computation/notebooks](../01_systems/s10_frequency_helix_ontology/07_computation/notebooks/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/07_computation/runs](../01_systems/s10_frequency_helix_ontology/07_computation/runs/) | s10_frequency_helix_ontology | 2/2 | 频率本源与复螺旋宇宙 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/07_computation/src](../01_systems/s10_frequency_helix_ontology/07_computation/src/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/07_computation/tests](../01_systems/s10_frequency_helix_ontology/07_computation/tests/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/08_data](../01_systems/s10_frequency_helix_ontology/08_data/) | s10_frequency_helix_ontology | 2/5 | 频率本源与复螺旋宇宙 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/08_data/external](../01_systems/s10_frequency_helix_ontology/08_data/external/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/08_data/processed](../01_systems/s10_frequency_helix_ontology/08_data/processed/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/08_data/raw](../01_systems/s10_frequency_helix_ontology/08_data/raw/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/09_validation](../01_systems/s10_frequency_helix_ontology/09_validation/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/10_uncertainty](../01_systems/s10_frequency_helix_ontology/10_uncertainty/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/11_falsification](../01_systems/s10_frequency_helix_ontology/11_falsification/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/12_conclusions](../01_systems/s10_frequency_helix_ontology/12_conclusions/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/13_publications](../01_systems/s10_frequency_helix_ontology/13_publications/) | s10_frequency_helix_ontology | 1/5 | 频率本源与复螺旋宇宙 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/13_publications/figures](../01_systems/s10_frequency_helix_ontology/13_publications/figures/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/13_publications/manuscript](../01_systems/s10_frequency_helix_ontology/13_publications/manuscript/) | s10_frequency_helix_ontology | 2/2 | 频率本源与复螺旋宇宙 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/13_publications/supplement](../01_systems/s10_frequency_helix_ontology/13_publications/supplement/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/14_review](../01_systems/s10_frequency_helix_ontology/14_review/) | s10_frequency_helix_ontology | 2/2 | 频率本源与复螺旋宇宙 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/15_releases](../01_systems/s10_frequency_helix_ontology/15_releases/) | s10_frequency_helix_ontology | 2/2 | 频率本源与复螺旋宇宙 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s10_frequency_helix_ontology/90_archive](../01_systems/s10_frequency_helix_ontology/90_archive/) | s10_frequency_helix_ontology | 1/1 | 频率本源与复螺旋宇宙 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s11_gmuft_geometric_coupling](../01_systems/s11_gmuft_geometric_coupling/) | s11_gmuft_geometric_coupling | 4/38 | GMUFT 几何自由度与耦合 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/00_project](../01_systems/s11_gmuft_geometric_coupling/00_project/) | s11_gmuft_geometric_coupling | 2/2 | GMUFT 几何自由度与耦合 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/01_literature](../01_systems/s11_gmuft_geometric_coupling/01_literature/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/02_assumptions](../01_systems/s11_gmuft_geometric_coupling/02_assumptions/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/03_formalism](../01_systems/s11_gmuft_geometric_coupling/03_formalism/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/04_derivations](../01_systems/s11_gmuft_geometric_coupling/04_derivations/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/05_consistency](../01_systems/s11_gmuft_geometric_coupling/05_consistency/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/06_predictions](../01_systems/s11_gmuft_geometric_coupling/06_predictions/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/07_computation](../01_systems/s11_gmuft_geometric_coupling/07_computation/) | s11_gmuft_geometric_coupling | 1/7 | GMUFT 几何自由度与耦合 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/07_computation/configs](../01_systems/s11_gmuft_geometric_coupling/07_computation/configs/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/07_computation/notebooks](../01_systems/s11_gmuft_geometric_coupling/07_computation/notebooks/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/07_computation/runs](../01_systems/s11_gmuft_geometric_coupling/07_computation/runs/) | s11_gmuft_geometric_coupling | 2/2 | GMUFT 几何自由度与耦合 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/07_computation/src](../01_systems/s11_gmuft_geometric_coupling/07_computation/src/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/07_computation/tests](../01_systems/s11_gmuft_geometric_coupling/07_computation/tests/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/08_data](../01_systems/s11_gmuft_geometric_coupling/08_data/) | s11_gmuft_geometric_coupling | 2/5 | GMUFT 几何自由度与耦合 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/08_data/external](../01_systems/s11_gmuft_geometric_coupling/08_data/external/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/08_data/processed](../01_systems/s11_gmuft_geometric_coupling/08_data/processed/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/08_data/raw](../01_systems/s11_gmuft_geometric_coupling/08_data/raw/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/09_validation](../01_systems/s11_gmuft_geometric_coupling/09_validation/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/10_uncertainty](../01_systems/s11_gmuft_geometric_coupling/10_uncertainty/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/11_falsification](../01_systems/s11_gmuft_geometric_coupling/11_falsification/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/12_conclusions](../01_systems/s11_gmuft_geometric_coupling/12_conclusions/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/13_publications](../01_systems/s11_gmuft_geometric_coupling/13_publications/) | s11_gmuft_geometric_coupling | 1/5 | GMUFT 几何自由度与耦合 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/13_publications/figures](../01_systems/s11_gmuft_geometric_coupling/13_publications/figures/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/13_publications/manuscript](../01_systems/s11_gmuft_geometric_coupling/13_publications/manuscript/) | s11_gmuft_geometric_coupling | 2/2 | GMUFT 几何自由度与耦合 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/13_publications/supplement](../01_systems/s11_gmuft_geometric_coupling/13_publications/supplement/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/14_review](../01_systems/s11_gmuft_geometric_coupling/14_review/) | s11_gmuft_geometric_coupling | 2/2 | GMUFT 几何自由度与耦合 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/15_releases](../01_systems/s11_gmuft_geometric_coupling/15_releases/) | s11_gmuft_geometric_coupling | 2/2 | GMUFT 几何自由度与耦合 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s11_gmuft_geometric_coupling/90_archive](../01_systems/s11_gmuft_geometric_coupling/90_archive/) | s11_gmuft_geometric_coupling | 1/1 | GMUFT 几何自由度与耦合 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [01_systems/s12_light_speed_helix](../01_systems/s12_light_speed_helix/) | s12_light_speed_helix | 4/43 | 空间光速螺旋统一体系 | 该体系拥有独立身份、证据及发布位置 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/00_project](../01_systems/s12_light_speed_helix/00_project/) | s12_light_speed_helix | 2/2 | 空间光速螺旋统一体系 / 立项 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/01_literature](../01_systems/s12_light_speed_helix/01_literature/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 文献 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/02_assumptions](../01_systems/s12_light_speed_helix/02_assumptions/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 公设 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/03_formalism](../01_systems/s12_light_speed_helix/03_formalism/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 数学形式 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/04_derivations](../01_systems/s12_light_speed_helix/04_derivations/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 推导 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/05_consistency](../01_systems/s12_light_speed_helix/05_consistency/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 一致性 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/06_predictions](../01_systems/s12_light_speed_helix/06_predictions/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 预测 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/07_computation](../01_systems/s12_light_speed_helix/07_computation/) | s12_light_speed_helix | 1/7 | 空间光速螺旋统一体系 / 计算 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/07_computation/configs](../01_systems/s12_light_speed_helix/07_computation/configs/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 计算 / 配置输入 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/07_computation/notebooks](../01_systems/s12_light_speed_helix/07_computation/notebooks/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 计算 / 交互探索 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/07_computation/runs](../01_systems/s12_light_speed_helix/07_computation/runs/) | s12_light_speed_helix | 2/2 | 空间光速螺旋统一体系 / 计算 / 独立运行记录 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/07_computation/src](../01_systems/s12_light_speed_helix/07_computation/src/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 计算 / 主实现 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/07_computation/tests](../01_systems/s12_light_speed_helix/07_computation/tests/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 计算 / 实现与回归断言 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/08_data](../01_systems/s12_light_speed_helix/08_data/) | s12_light_speed_helix | 2/5 | 空间光速螺旋统一体系 / 数据 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/08_data/external](../01_systems/s12_light_speed_helix/08_data/external/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 数据 / 外部来源与获取说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/08_data/processed](../01_systems/s12_light_speed_helix/08_data/processed/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 数据 / 可溯源派生数据 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/08_data/raw](../01_systems/s12_light_speed_helix/08_data/raw/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 数据 / 原始数据主副本 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/09_validation](../01_systems/s12_light_speed_helix/09_validation/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 验证 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/10_uncertainty](../01_systems/s12_light_speed_helix/10_uncertainty/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 不确定度 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/11_falsification](../01_systems/s12_light_speed_helix/11_falsification/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 证伪 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/12_conclusions](../01_systems/s12_light_speed_helix/12_conclusions/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 结论 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/13_publications](../01_systems/s12_light_speed_helix/13_publications/) | s12_light_speed_helix | 1/10 | 空间光速螺旋统一体系 / 论文 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/13_publications/figures](../01_systems/s12_light_speed_helix/13_publications/figures/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 论文 / 图表及生成来源 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/13_publications/manuscript](../01_systems/s12_light_speed_helix/13_publications/manuscript/) | s12_light_speed_helix | 2/7 | 空间光速螺旋统一体系 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/13_publications/manuscript/终极报告系列](../01_systems/s12_light_speed_helix/13_publications/manuscript/终极报告系列/) | s12_light_speed_helix | 5/5 | 空间光速螺旋统一体系 / 论文 / 原著与论文 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/13_publications/supplement](../01_systems/s12_light_speed_helix/13_publications/supplement/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 论文 / 补充说明 | 本体系内的专题或资料分组，避免流入公共总筐 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/14_review](../01_systems/s12_light_speed_helix/14_review/) | s12_light_speed_helix | 2/2 | 空间光速螺旋统一体系 / 评审 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/15_releases](../01_systems/s12_light_speed_helix/15_releases/) | s12_light_speed_helix | 2/2 | 空间光速螺旋统一体系 / 发布 | 以本体系为作用域保留此生命周期职责 | 与相关体系可有谱系关系，不能自动继承证据 |
+| [01_systems/s12_light_speed_helix/90_archive](../01_systems/s12_light_speed_helix/90_archive/) | s12_light_speed_helix | 1/1 | 空间光速螺旋统一体系 / 归档 | 以本体系为作用域保留此生命周期职责 | 体系历史保留原始表述，不表示科学认可 |
+| [02_shared](../02_shared/) | 02_shared | 1/26 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/baselines](../02_shared/baselines/) | 02_shared | 1/4 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/baselines/classical_action](../02_shared/baselines/classical_action/) | 02_shared | 1/3 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/baselines/classical_action/D0_作用量变分求导](../02_shared/baselines/classical_action/D0_作用量变分求导/) | 02_shared | 2/2 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/computation](../02_shared/computation/) | 02_shared | 1/3 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 仅共同常数和经典演示；候选理论实现归各体系 |
+| [02_shared/computation/src](../02_shared/computation/src/) | 02_shared | 2/2 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 仅共同常数和经典演示；候选理论实现归各体系 |
+| [02_shared/protocols](../02_shared/protocols/) | 02_shared | 5/10 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/protocols/audit_methodology](../02_shared/protocols/audit_methodology/) | 02_shared | 1/5 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/protocols/audit_methodology/A1_误差预算](../02_shared/protocols/audit_methodology/A1_误差预算/) | 02_shared | 1/1 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/protocols/audit_methodology/A4_诚实声明OpenProblems](../02_shared/protocols/audit_methodology/A4_诚实声明OpenProblems/) | 02_shared | 1/1 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/protocols/audit_methodology/A5_分层标注Hierarchy](../02_shared/protocols/audit_methodology/A5_分层标注Hierarchy/) | 02_shared | 1/1 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/protocols/audit_methodology/A6_AI科技星认证](../02_shared/protocols/audit_methodology/A6_AI科技星认证/) | 02_shared | 1/1 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [02_shared/references](../02_shared/references/) | 02_shared | 8/8 | 共同方法、常数与基准 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [03_comparative](../03_comparative/) | 03_comparative | 2/9 | 显式跨体系比较及组合 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [03_comparative/applications](../03_comparative/applications/) | 03_comparative | 1/1 | 显式跨体系比较及组合 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [03_comparative/comparison](../03_comparative/comparison/) | 03_comparative | 1/1 | 显式跨体系比较及组合 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [03_comparative/physics_domains](../03_comparative/physics_domains/) | 03_comparative | 1/1 | 显式跨体系比较及组合 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [03_comparative/source_collections](../03_comparative/source_collections/) | 03_comparative | 3/3 | 显式跨体系比较及组合 | 跨体系原著只有一份主文件，独立章节可溯源 | 摘录是派生产物，不是互相独立的原始证据 |
+| [03_comparative/synthesis](../03_comparative/synthesis/) | 03_comparative | 1/1 | 显式跨体系比较及组合 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [04_publications](../04_publications/) | 04_publications | 1/6 | 跨体系综述与公共展示 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [04_publications/legacy_reports](../04_publications/legacy_reports/) | 04_publications | 1/4 | 跨体系综述与公共展示 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [04_publications/legacy_reports/全维修订版v2](../04_publications/legacy_reports/全维修订版v2/) | 04_publications | 1/1 | 跨体系综述与公共展示 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [04_publications/legacy_reports/求导证明v3](../04_publications/legacy_reports/求导证明v3/) | 04_publications | 1/1 | 跨体系综述与公共展示 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [04_publications/legacy_reports/综述修订](../04_publications/legacy_reports/综述修订/) | 04_publications | 1/1 | 跨体系综述与公共展示 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [04_publications/visualizations](../04_publications/visualizations/) | 04_publications | 1/1 | 跨体系综述与公共展示 | 职责范围与理论主文件分离 | 目录齐备不代表工作完成 |
+| [90_archive](../90_archive/) | 90_archive | 1/134 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews](../90_archive/layout_reviews/) | 90_archive | 0/114 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_analysis](../90_archive/layout_reviews/six_route_analysis/) | 90_archive | 3/4 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_analysis/tools](../90_archive/layout_reviews/six_route_analysis/tools/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout](../90_archive/layout_reviews/six_route_layout/) | 90_archive | 1/110 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template](../90_archive/layout_reviews/six_route_layout/_template/) | 90_archive | 4/37 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/00_project](../90_archive/layout_reviews/six_route_layout/_template/00_project/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/01_literature](../90_archive/layout_reviews/six_route_layout/_template/01_literature/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/02_assumptions](../90_archive/layout_reviews/six_route_layout/_template/02_assumptions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/03_formalism](../90_archive/layout_reviews/six_route_layout/_template/03_formalism/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/04_derivations](../90_archive/layout_reviews/six_route_layout/_template/04_derivations/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/05_consistency](../90_archive/layout_reviews/six_route_layout/_template/05_consistency/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/06_predictions](../90_archive/layout_reviews/six_route_layout/_template/06_predictions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/07_computation](../90_archive/layout_reviews/six_route_layout/_template/07_computation/) | 90_archive | 1/7 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/07_computation/configs](../90_archive/layout_reviews/six_route_layout/_template/07_computation/configs/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/07_computation/notebooks](../90_archive/layout_reviews/six_route_layout/_template/07_computation/notebooks/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/07_computation/runs](../90_archive/layout_reviews/six_route_layout/_template/07_computation/runs/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/07_computation/src](../90_archive/layout_reviews/six_route_layout/_template/07_computation/src/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/07_computation/tests](../90_archive/layout_reviews/six_route_layout/_template/07_computation/tests/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/08_data](../90_archive/layout_reviews/six_route_layout/_template/08_data/) | 90_archive | 2/5 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/08_data/external](../90_archive/layout_reviews/six_route_layout/_template/08_data/external/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/08_data/processed](../90_archive/layout_reviews/six_route_layout/_template/08_data/processed/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/08_data/raw](../90_archive/layout_reviews/six_route_layout/_template/08_data/raw/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/09_validation](../90_archive/layout_reviews/six_route_layout/_template/09_validation/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/10_uncertainty](../90_archive/layout_reviews/six_route_layout/_template/10_uncertainty/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/11_falsification](../90_archive/layout_reviews/six_route_layout/_template/11_falsification/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/12_conclusions](../90_archive/layout_reviews/six_route_layout/_template/12_conclusions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/13_publications](../90_archive/layout_reviews/six_route_layout/_template/13_publications/) | 90_archive | 1/4 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/13_publications/figures](../90_archive/layout_reviews/six_route_layout/_template/13_publications/figures/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/13_publications/manuscript](../90_archive/layout_reviews/six_route_layout/_template/13_publications/manuscript/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/13_publications/supplement](../90_archive/layout_reviews/six_route_layout/_template/13_publications/supplement/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/14_review](../90_archive/layout_reviews/six_route_layout/_template/14_review/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/15_releases](../90_archive/layout_reviews/six_route_layout/_template/15_releases/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/_template/90_archive](../90_archive/layout_reviews/six_route_layout/_template/90_archive/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion](../90_archive/layout_reviews/six_route_layout/h01_space_motion/) | 90_archive | 4/35 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/00_project](../90_archive/layout_reviews/six_route_layout/h01_space_motion/00_project/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/01_literature](../90_archive/layout_reviews/six_route_layout/h01_space_motion/01_literature/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/02_assumptions](../90_archive/layout_reviews/six_route_layout/h01_space_motion/02_assumptions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/03_formalism](../90_archive/layout_reviews/six_route_layout/h01_space_motion/03_formalism/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/04_derivations](../90_archive/layout_reviews/six_route_layout/h01_space_motion/04_derivations/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/06_predictions](../90_archive/layout_reviews/six_route_layout/h01_space_motion/06_predictions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation](../90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/) | 90_archive | 1/7 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/configs](../90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/configs/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/notebooks](../90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/notebooks/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/runs](../90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/runs/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/src](../90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/src/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/tests](../90_archive/layout_reviews/six_route_layout/h01_space_motion/07_computation/tests/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/08_data](../90_archive/layout_reviews/six_route_layout/h01_space_motion/08_data/) | 90_archive | 2/5 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/08_data/external](../90_archive/layout_reviews/six_route_layout/h01_space_motion/08_data/external/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/08_data/processed](../90_archive/layout_reviews/six_route_layout/h01_space_motion/08_data/processed/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/08_data/raw](../90_archive/layout_reviews/six_route_layout/h01_space_motion/08_data/raw/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/10_uncertainty](../90_archive/layout_reviews/six_route_layout/h01_space_motion/10_uncertainty/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/11_falsification](../90_archive/layout_reviews/six_route_layout/h01_space_motion/11_falsification/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/12_conclusions](../90_archive/layout_reviews/six_route_layout/h01_space_motion/12_conclusions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/13_publications](../90_archive/layout_reviews/six_route_layout/h01_space_motion/13_publications/) | 90_archive | 1/4 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/13_publications/figures](../90_archive/layout_reviews/six_route_layout/h01_space_motion/13_publications/figures/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/13_publications/manuscript](../90_archive/layout_reviews/six_route_layout/h01_space_motion/13_publications/manuscript/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/13_publications/supplement](../90_archive/layout_reviews/six_route_layout/h01_space_motion/13_publications/supplement/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/14_review](../90_archive/layout_reviews/six_route_layout/h01_space_motion/14_review/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/15_releases](../90_archive/layout_reviews/six_route_layout/h01_space_motion/15_releases/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h01_space_motion/90_archive](../90_archive/layout_reviews/six_route_layout/h01_space_motion/90_archive/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/) | 90_archive | 4/37 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/00_project](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/00_project/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/01_literature](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/01_literature/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/02_assumptions](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/02_assumptions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/03_formalism](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/03_formalism/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/04_derivations](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/04_derivations/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/05_consistency](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/05_consistency/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/06_predictions](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/06_predictions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/) | 90_archive | 1/7 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/configs](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/configs/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/notebooks](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/notebooks/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/runs](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/runs/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/src](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/src/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/tests](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/07_computation/tests/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/08_data](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/08_data/) | 90_archive | 2/5 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/08_data/external](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/08_data/external/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/08_data/processed](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/08_data/processed/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/08_data/raw](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/08_data/raw/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/09_validation](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/09_validation/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/10_uncertainty](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/10_uncertainty/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/11_falsification](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/11_falsification/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/12_conclusions](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/12_conclusions/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/13_publications](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/13_publications/) | 90_archive | 1/4 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/13_publications/figures](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/13_publications/figures/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/13_publications/manuscript](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/13_publications/manuscript/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/13_publications/supplement](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/13_publications/supplement/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/14_review](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/14_review/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/15_releases](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/15_releases/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/layout_reviews/six_route_layout/h04_geometry_action/90_archive](../90_archive/layout_reviews/six_route_layout/h04_geometry_action/90_archive/) | 90_archive | 1/1 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/legacy](../90_archive/legacy/) | 90_archive | 3/8 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/legacy/layout_before_20260907](../90_archive/legacy/layout_before_20260907/) | 90_archive | 5/5 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/legacy_tools](../90_archive/legacy_tools/) | 90_archive | 2/2 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/migrations](../90_archive/migrations/) | 90_archive | 0/9 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/migrations/20260907_full_layout](../90_archive/migrations/20260907_full_layout/) | 90_archive | 4/4 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [90_archive/migrations/20260907_independent_systems](../90_archive/migrations/20260907_independent_systems/) | 90_archive | 5/5 | 历史布局及迁移证据 | 保留历史分析和逐字节快照 | 旧布局说明与工具不得作为当前约定 |
+| [99_inbox](../99_inbox/) | 99_inbox | 1/11 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/CMB_B模观测](../99_inbox/CMB_B模观测/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/人工场实验验证](../99_inbox/人工场实验验证/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/大统一完成](../99_inbox/大统一完成/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/引力非重整化突破](../99_inbox/引力非重整化突破/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/弦论_LQG统一](../99_inbox/弦论_LQG统一/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/弯曲时空三重奏](../99_inbox/弯曲时空三重奏/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/强相互作用精确化](../99_inbox/强相互作用精确化/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/暗物质直接探测](../99_inbox/暗物质直接探测/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/暗能量本质](../99_inbox/暗能量本质/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |
+| [99_inbox/黑洞信息悖论](../99_inbox/黑洞信息悖论/) | 99_inbox | 1/1 | 归属未定的输入 | 职责范围与理论主文件分离 | 需审理归属与负责人，不能堆积为新的总筐 |

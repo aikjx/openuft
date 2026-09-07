@@ -1,5 +1,5 @@
-# 共享研究基础
+# 共享基础
 
-[研究协议](protocols/README.md) · [数学与文献](references/README.md) · [计算工具](computation/README.md)
+[公共协议](protocols/README.md) · [参考文献](references/README.md) · [共同常数与经典函数](computation/README.md) · [经典基准演示](baselines/README.md)
 
-只共享确实可复用的定义、方法与实现。任何带理论前提的工具须注明适用模型和版本。
+候选体系专属代码、公设、论文和结论归 01_systems。共享只表示复用，不能授予某个体系科学认可。
