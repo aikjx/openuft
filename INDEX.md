@@ -1,5 +1,5 @@
 # 导航
 
-[目录布局是否最优：分析与论证](00_governance/DIRECTORY_DESIGN_REVIEW.md) · [逐目录分析清单](00_governance/DIRECTORY_AUDIT.md)
+[按模块类型查看](01_systems/TYPE_INDEX.md) · [最优性与扩展分析](00_governance/SCALABILITY_REVIEW.md)
 
-[大模块入口](README.md) · [理论路线](01_models/README.md) · [全部文件](00_governance/catalog/material_catalog.md)
+[独立大体系](01_systems/README.md) · [拆分依据](00_governance/INDEPENDENT_SYSTEMS_DESIGN.md) · [逐目录分析](00_governance/DIRECTORY_AUDIT.md) · [全量文件](00_governance/catalog/material_catalog.md)
