@@ -1,9 +1,17 @@
 # 快速开始
 
-1. 在 [大体系总表](01_systems/README.md) 选择具体体系；未知资料进入 99_inbox。
-2. 阅读 system.json 和 sources.md，确认原始前提，不因相同公式自动合并体系。
-3. 登记该体系 claims.csv，链接本体系推导、运行、数据及结论。
-4. 在 openuft 根目录运行 `python verify.py`。
-5. 三重奏复算：进入 `01_systems/s01_triad_kinematics/07_computation/src` 执行 `python -m triad_uft.verify`。
+1. 阅读 [全球研究路线](05_全球研究/02_全球路线/README.md)，了解外部理论与本地体系的边界。
+2. 在 [体系分类](01_独立体系/TYPE_INDEX.md) 选择中文体系目录，核对 system.json、公设与来源。
+3. 新命题登记到所属体系 claims.csv；未知资料进入“99_待整理资料”。
+4. 在项目根运行 `python -B verify.py`。
+5. 三重奏复算：进入 `01_独立体系/S01_螺旋三重奏与谱几何/07_计算复现/源码`，执行 `python -B -m 三重奏统一场.verify`。
 
-[迁移与独立边界](00_governance/INDEPENDENT_SYSTEMS_DESIGN.md)。
+修改登记或目录后，依次运行：
+
+```sh
+python -B 00_项目治理/维护工具/module_catalog.py refresh
+python -B 00_项目治理/维护工具/global_catalog.py refresh
+python -B 00_项目治理/维护工具/audit_directories.py
+python -B 00_项目治理/维护工具/refresh_catalog.py
+python -B verify.py
+```

@@ -1,0 +1,58 @@
+<html style="margin:0;padding:0;">
+<div style="background-color:transparent;box-sizing:border-box;font-family:'PingFang SC','Segoe UI',Arial,sans-serif;padding:16px;max-width:720px;margin:0 auto;">
+  <div style="text-align:center;margin-bottom:12px;">
+    <div style="font-size:16px;font-weight:600;color:#1A1B1C;">全维三重奏验证精度矩阵</div>
+    <div style="font-size:11px;color:#6B7280;margin-top:3px;">各验证项相对差（log轴，越小越精确）| 数据源：R1–R11 全部验证脚本</div>
+  </div>
+  <div id="chart" style="width:100%;height:420px;"></div>
+  <div style="margin-top:10px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+    <span style="font-size:11px;color:#555;"><span style="display:inline-block;width:10px;height:10px;background:#52C41A;border-radius:2px;margin-right:4px;"></span>严格证明级 (&lt;1e-25)</span>
+    <span style="font-size:11px;color:#555;"><span style="display:inline-block;width:10px;height:10px;background:#8BC8EA;border-radius:2px;margin-right:4px;"></span>数值验证级 (1e-25~1e-10)</span>
+    <span style="font-size:11px;color:#555;"><span style="display:inline-block;width:10px;height:10px;background:#FAAD14;border-radius:2px;margin-right:4px;"></span>实验对标级 (&gt;1e-10)</span>
+  </div>
+</div>
+<script>
+(function(){
+  try{
+    var chartDom=document.getElementById('chart');
+    if(typeof echarts==='undefined'){
+      chartDom.innerHTML='<div style="padding:40px;text-align:center;color:#999;font-size:13px;">ECharts 加载中…若长时间空白请检查网络</div>';
+      var s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js';
+      s.onload=function(){initChart();};
+      document.head.appendChild(s);
+    }else{initChart();}
+    function initChart(){
+      var chart=echarts.init(chartDom);
+      var data=[
+        {name:'螺旋三重奏 (sympy符号)', value:1e-300, itemStyle:{color:'#52C41A'}},
+        {name:'电子B=1T对标', value:1e-300, itemStyle:{color:'#52C41A'}},
+        {name:'b=0纯圆周精确', value:3.9e-31, itemStyle:{color:'#52C41A'}},
+        {name:'谱理论Σκ²=−tr(A²)/2', value:1.94e-29, itemStyle:{color:'#52C41A'}},
+        {name:'全维定理(20组随机)', value:8.3e-29, itemStyle:{color:'#52C41A'}},
+        {name:'梯度磁场(mpmath50位)', value:1.17e-18, itemStyle:{color:'#8BC8EA'}},
+        {name:'归纳证明Beᵢ=eᵢ′', value:4.2e-15, itemStyle:{color:'#8BC8EA'}},
+        {name:'绝热修正(ε=1e-4)', value:3.5e-10, itemStyle:{color:'#8BC8EA'}},
+        {name:'CODATA ℓ_P对标', value:1.5e-8, itemStyle:{color:'#FAAD14'}}
+      ];
+      chart.setOption({
+        backgroundColor:'transparent',
+        tooltip:{trigger:'axis',triggerOn:'click',renderMode:'richText',confine:true,
+          textStyle:{fontSize:10,lineHeight:14},padding:[6,8],
+          formatter:function(p){return p[0].name+'<br/>相对差: '+p[0].value.toExponential(2);}},
+        grid:{left:10,right:30,top:10,bottom:20,containLabel:true},
+        xAxis:{type:'log',min:1e-302,max:1,name:'相对差 (log)',
+          axisLabel:{color:'#555',fontSize:10,formatter:function(v){return v.toExponential(0);}},
+          nameTextStyle:{fontSize:10,color:'#888'}},
+        yAxis:{type:'category',data:data.map(function(d){return d.name;}),
+          axisLabel:{color:'#333',fontSize:10,width:130,overflow:'truncate'}},
+        series:[{type:'bar',data:data,barWidth:14,
+          label:{show:true,position:'right',fontSize:9,color:'#555',
+            formatter:function(p){return p.value<1e-290?'精确(=0)':p.value.toExponential(1);}}}]
+      });
+      window.addEventListener('resize',function(){chart.resize();});
+    }
+  }catch(e){document.getElementById('chart').innerHTML='<div style="padding:40px;text-align:center;color:#999;">渲染失败: '+e.message+'</div>';}
+})();
+</script>
+</html>

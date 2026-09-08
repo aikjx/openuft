@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent
 def main():
     errors = []
     import importlib.util
-    spec = importlib.util.spec_from_file_location('module_catalog', ROOT / '00_governance/tools/module_catalog.py')
+    spec = importlib.util.spec_from_file_location('module_catalog', ROOT / '00_项目治理/维护工具/module_catalog.py')
     catalog = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(catalog)
     catalog_errors = catalog.check(ROOT)
@@ -22,21 +22,25 @@ def main():
         for error in catalog_errors: print(error)
         print('FAIL: identity/type validation; fix before structural checks')
         return True
-    layout = json.loads((ROOT / '00_governance/layout.json').read_text(encoding='utf-8'))
+    layout = json.loads((ROOT / '00_项目治理/layout.json').read_text(encoding='utf-8'))
     for section in layout['sections']:
         if not (ROOT / section / 'README.md').is_file(): errors.append('Missing section: ' + section)
     systems = layout['systems']
+    dir_map = layout.get('system_directories', {})
     identities = []
     for model in systems + ['_template']:
-        base = ROOT / '01_systems' / model
+        base = ROOT / '01_独立体系' / ('新体系模板' if model == '_template' else dir_map.get(model, model))
         for stage in layout['stages']:
             if not (base / stage / 'README.md').is_file(): errors.append('Missing stage: ' + model + '/' + stage)
-        for name in ['system.json', 'claims.csv', '08_data/data_registry.csv', '07_computation/runs/run_template.json']:
+        for name in ['system.json', 'claims.csv', '08_研究数据/data_registry.csv', '07_计算复现/运行记录/run_template.json']:
             if not (base / name).is_file(): errors.append('Missing record: ' + model + '/' + name)
         if (base / 'system.json').exists():
             identity = json.loads((base / 'system.json').read_text(encoding='utf-8'))
             identities.append(identity)
             if identity['id'] != model: errors.append('Wrong system id: ' + model)
+            expected_dir = ('新体系模板' if model == '_template' else dir_map.get(model, model))
+            if identity.get('directory', expected_dir) != expected_dir:
+                errors.append('Wrong directory mapping: ' + model)
             for source in identity['source_records']:
                 if not (ROOT / source['path']).is_file(): errors.append('Missing provenance: ' + source['path'])
             for dependency in identity['related_systems']:
@@ -45,33 +49,39 @@ def main():
                 if not (ROOT / dependency).is_dir(): errors.append('Missing code dependency: ' + dependency)
     if len(set(systems)) != len(systems): errors.append('Duplicate system ids')
     if (ROOT / '01_models').exists(): errors.append('Obsolete six-route root still active')
-    registry = json.loads((ROOT / '00_governance/system_registry.json').read_text(encoding='utf-8'))['systems']
+    registry = json.loads((ROOT / '00_项目治理/system_registry.json').read_text(encoding='utf-8'))['systems']
     if registry != [entry for entry in identities if entry['id'] != '_template']:
         errors.append('System registry differs from individual identities')
+    global_spec = importlib.util.spec_from_file_location('global_catalog', ROOT / '00_项目治理/维护工具/global_catalog.py')
+    global_catalog = importlib.util.module_from_spec(global_spec)
+    global_spec.loader.exec_module(global_catalog)
+    errors.extend(global_catalog.check(ROOT))
+    for directory in ROOT.rglob('*'):
+        if not directory.is_dir(): continue
+        parts = directory.relative_to(ROOT).parts
+        if parts[0].startswith('.') or '__pycache__' in parts: continue
+        if not re.search(r'[\u4e00-\u9fff]', directory.name):
+            errors.append('Research directory must use Chinese: ' + directory.relative_to(ROOT).as_posix())
     checked = 0
     for p in ROOT.rglob('*.md'):
-        if '90_archive' in p.relative_to(ROOT).parts: continue
+        if '90_历史归档' in p.relative_to(ROOT).parts: continue
         body = re.sub(r'```.*?```', '', p.read_text(encoding='utf-8-sig'), flags=re.S)
         for target in re.findall(r'!?\[[^\]\n]*\]\(([^\s)]+)\)', body):
             if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#'): continue
             dest = p.parent / unquote(target.split('#', 1)[0].strip('<>'))
             checked += 1
             if not dest.exists(): errors.append('Broken link: ' + p.relative_to(ROOT).as_posix() + ' -> ' + target)
-    migrations = [ROOT / '90_archive/migrations' / name for name in ['20260907_full_layout', '20260907_independent_systems']]
-    manifests = [json.loads((p / 'manifest.json').read_text(encoding='utf-8')) for p in migrations]
-    latest_moves = {row['old']: row['new'] for row in manifests[-1]['files']}
-    for index, (migration, manifest) in enumerate(zip(migrations, manifests)):
-        with zipfile.ZipFile(migration / 'before.zip') as snapshot:
-            for row in manifest['files']:
-                if hashlib.sha256(snapshot.read(row['old'])).hexdigest() != row['sha256_before']: errors.append('Snapshot mismatch: ' + row['old'])
-                target = latest_moves.get(row['new'], row['new']) if index == 0 else row['new']
-                if not (ROOT / target).is_file(): errors.append('Lost migrated file: ' + target)
-    for record in json.loads((ROOT / '00_governance/chapter_provenance.json').read_text(encoding='utf-8')):
+    migration_spec = importlib.util.spec_from_file_location('migration_check', ROOT / '00_项目治理/维护工具/migration_check.py')
+    migration_check = importlib.util.module_from_spec(migration_spec)
+    migration_spec.loader.exec_module(migration_check)
+    migration_errors, snapshot_counts = migration_check.check(ROOT)
+    errors.extend(migration_errors)
+    for record in json.loads((ROOT / '00_项目治理/chapter_provenance.json').read_text(encoding='utf-8')):
         source = ROOT / record['source']
         if hashlib.sha256(source.read_bytes()).hexdigest() != record['source_sha256']: errors.append('Changed chapter source: ' + record['source'])
         excerpt = ''.join(source.read_text(encoding='utf-8').splitlines(keepends=True)[record['start_line']-1:record['end_line']])
         if excerpt.rstrip() + '\n' != (ROOT / record['derived_path']).read_text(encoding='utf-8'): errors.append('Chapter excerpt mismatch: ' + record['derived_path'])
-    print('Systems/directions: {}; lifecycle stages: {}; local links: {}; snapshot originals: {}'.format(len(systems), len(layout['stages']), checked, [len(m['files']) for m in manifests]))
+    print('Systems/directions: {}; lifecycle stages: {}; local links: {}; snapshot originals: {}'.format(len(systems), len(layout['stages']), checked, snapshot_counts))
     for error in errors: print(error)
     print('PASS' if not errors else 'FAIL: {} issues'.format(len(errors)))
     return bool(errors)
