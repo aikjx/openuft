@@ -1,23 +1,22 @@
-# OpenUFT · 独立体系与模块类型
+# AI科技星 · 全球统一场论开放研究
 
-[按模块类型浏览](01_systems/TYPE_INDEX.md) · [全部独立体系](01_systems/README.md) · [最优性与可持续扩展分析](00_governance/SCALABILITY_REVIEW.md)
+**AI科技星 · [aikjx.com](https://aikjx.com)**
 
-每个大体系拥有稳定主目录及独立的公设、推导、代码、数据、证据、论文和发布入口。模块按数学框架、理论候选、待完备框架、组合候选、扩展分支、待建模方向分类。类型、工作状态和科学证据分别管理。
+以中文目录组织全球研究路线、独立候选体系、共享方法和可复核成果。现有本地体系与外部理论分别登记，数学证明、计算结果和物理证据分别审查。
 
-当前体系名单从各自 system.json 自动生成，类型变化不搬动原路径，新增体系不要求重排已有目录。
+[全球研究路线](05_全球研究/02_全球路线/README.md) · [独立体系分类](01_独立体系/TYPE_INDEX.md) · [完整目录](INDEX.md) · [参与贡献](CONTRIBUTING.md)
 
-## 项目层次
-
-| 目录 | 用途 |
+| 目录 | 内容 |
 |---|---|
-| [00_governance](00_governance/README.md) | 规则、类型字典、登记和结构审查 |
-| [01_systems](01_systems/README.md) | 各大体系独立研究与完整生命周期 |
-| [02_shared](02_shared/README.md) | 共用方法、常数和经典基准 |
-| [03_comparative](03_comparative/README.md) | 跨体系比较与精确来源引用 |
-| [04_publications](04_publications/README.md) | 跨体系综述和公共展示 |
-| [90_archive](90_archive/README.md) | 历史资料与迁移恢复证据 |
-| [99_inbox](99_inbox/README.md) | 尚未确定归属的输入 |
+| [00_项目治理](00_项目治理/README.md) | 规则、体系登记、目录设计与审计 |
+| [01_独立体系](01_独立体系/README.md) | 16 个本地研究模块，各自管理公设、推导、代码和证据 |
+| [02_共享基础](02_共享基础/README.md) | 共用方法、经典基准与参考资料 |
+| [03_跨体系研究](03_跨体系研究/README.md) | 体系比较、综合研究和物理问题 |
+| [04_公共成果](04_公共成果/README.md) | 公共报告、综述与可视化 |
+| [05_全球研究](05_全球研究/README.md) | 9 条首批外部研究路线、文献登记与国际协作 |
+| [90_历史归档](90_历史归档/README.md) | 历史材料与可恢复迁移快照 |
+| [99_待整理资料](99_待整理资料/README.md) | 尚未明确归属的材料 |
 
-[快速开始](QUICKSTART.md) · [逐目录分析](00_governance/DIRECTORY_AUDIT.md) · [全量文件索引](00_governance/catalog/material_catalog.md) · [历史拆分依据](00_governance/INDEPENDENT_SYSTEMS_DESIGN.md)
+结构检查：`python -B verify.py`。目录完整、来源入口已核对或代码运行成功，都不表示某个统一场论已经成立。
 
-结构检查：`python -B verify.py`。结构完整与计算成功均不表示统一场论成立。
+[快速开始](QUICKSTART.md) · [国际参与说明](国际参与说明.md) · [体系编号索引](01_独立体系/体系编号索引.md)

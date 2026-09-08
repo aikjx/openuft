@@ -1,0 +1,31 @@
+# GAQ 复曲率融合体系
+
+编号：`s07_gaq_complex_curvature`；类型：`composite_candidate`。
+
+基础前提：v4 复曲率 κ+iτ 及 IEG/HDU/TCL 组合假设。
+
+独立管理公设、推导、代码、数据、结论及发布，不继承其他体系的证据等级。当前科学状态：待审查；空模板不表示研究完成。
+
+[体系身份](system.json) · [来源与谱系](sources.md) · [体系总表](../README.md)
+
+| 生命周期 | 入口 |
+|---|---|
+| 00_研究立项 | [说明](00_研究立项/README.md) |
+| 01_文献来源 | [说明](01_文献来源/README.md) |
+| 02_基础公设 | [说明](02_基础公设/README.md) |
+| 03_数学形式 | [说明](03_数学形式/README.md) |
+| 04_理论推导 | [说明](04_理论推导/README.md) |
+| 05_一致性检查 | [说明](05_一致性检查/README.md) |
+| 06_可检验预测 | [说明](06_可检验预测/README.md) |
+| 07_计算复现 | [说明](07_计算复现/README.md) |
+| 08_研究数据 | [说明](08_研究数据/README.md) |
+| 09_验证结果 | [说明](09_验证结果/README.md) |
+| 10_误差与不确定性 | [说明](10_误差与不确定性/README.md) |
+| 11_证伪与反例 | [说明](11_证伪与反例/README.md) |
+| 12_研究结论 | [说明](12_研究结论/README.md) |
+| 13_论文与成果 | [说明](13_论文与成果/README.md) |
+| 14_独立评审 | [说明](14_独立评审/README.md) |
+| 15_版本发布 | [说明](15_版本发布/README.md) |
+| 90_历史归档 | [说明](90_历史归档/README.md) |
+
+上游体系：[s03_gaq_geometric_atom](../S03_GAQ几何原子与作用量子/README.md), [s04_ieg_information_gravity](../S04_IEG信息熵引力/README.md), [s05_hdu_higher_dimensions](../S05_HDU高维紧致化统一/README.md), [s06_tcl_topological_chirality](../S06_TCL拓扑手征锁定/README.md)

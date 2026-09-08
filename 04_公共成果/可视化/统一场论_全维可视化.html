@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全维统一场论 · 力的大统一可视化图谱</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg-deep:#05060a;
+  --bg-panel:rgba(18,22,36,0.72);
+  --bg-panel-solid:#12162a;
+  --rule:#232a42;
+  --ink:#e6ecf7;
+  --muted:#8b96b3;
+  --grav:#5b8cff;
+  --em:#22d3ee;
+  --weak:#a78bfa;
+  --strong:#fb5b6f;
+  --gut:#fbbf24;
+  --susy:#f472b6;
+  --hd:#34d399;
+  --lqg:#2dd4bf;
+  --ok:#34d399;
+  --warn:#fbbf24;
+  --bad:#fb5b6f;
+  --font-h:'Noto Serif SC','Georgia',serif;
+  --font-b:'Noto Sans SC','Segoe UI',sans-serif;
+  --font-m:'JetBrains Mono','Consolas',monospace;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg-deep);
+  color:var(--ink);
+  font-family:var(--font-b);
+  line-height:1.7;
+  overflow-x:hidden;
+}
+#stars{position:fixed; inset:0; z-index:0; opacity:0.9;}
+.wrap{position:relative; z-index:1;}
+
+/* ===== NAV ===== */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  display:flex; align-items:center; justify-content:center; gap:28px;
+  padding:14px 20px; background:rgba(5,6,10,0.65); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--rule);
+  flex-wrap:wrap;
+}
+nav a{color:var(--muted); text-decoration:none; font-size:0.92rem; letter-spacing:0.5px; transition:color .25s;}
+nav a:hover{color:var(--em);}
+nav .brand{color:var(--ink); font-weight:700; font-family:var(--font-h); font-size:1.05rem; margin-right:auto;}
+
+/* ===== HERO ===== */
+header.hero{
+  min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:140px 20px 80px; position:relative;
+}
+header.hero h1{
+  font-family:var(--font-h); font-size:clamp(2.2rem,6vw,4.2rem); font-weight:700;
+  background:linear-gradient(90deg,var(--grav),var(--em),var(--weak),var(--strong),var(--gut));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  letter-spacing:2px; line-height:1.25;
+  animation:hueflow 8s linear infinite;
+  background-size:200% 100%;
+}
+@keyframes hueflow{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+header.hero p.sub{margin-top:22px; color:var(--muted); font-size:1.15rem; max-width:760px;}
+header.hero .badgebar{display:flex; gap:12px; margin-top:34px; flex-wrap:wrap; justify-content:center;}
+.badge{
+  padding:6px 14px; border-radius:999px; font-size:0.82rem; border:1px solid var(--rule);
+  background:var(--bg-panel); backdrop-filter:blur(6px);
+}
+.badge.ok{color:var(--ok); border-color:rgba(52,211,153,0.4);}
+.badge.warn{color:var(--warn); border-color:rgba(251,191,36,0.4);}
+.badge.bad{color:var(--bad); border-color:rgba(251,91,111,0.4);}
+.scrolldown{margin-top:56px; color:var(--muted); font-size:0.85rem; animation:bob 2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(10px);}}
+
+/* ===== SECTIONS ===== */
+section{padding:90px 5vw; max-width:1400px; margin:0 auto; position:relative;}
+section h2{
+  font-family:var(--font-h); font-size:clamp(1.6rem,3vw,2.4rem); margin-bottom:10px;
+  display:flex; align-items:center; gap:14px;
+}
+section h2 .num{
+  font-family:var(--font-m); font-size:0.9rem; color:var(--bg-deep); background:var(--em);
+  padding:4px 10px; border-radius:8px; font-weight:700;
+}
+section .lede{color:var(--muted); max-width:820px; margin-bottom:40px; font-size:1rem;}
+.panel{
+  background:var(--bg-panel); border:1px solid var(--rule); border-radius:18px; padding:28px;
+  backdrop-filter:blur(10px); box-shadow:0 20px 60px rgba(0,0,0,0.35);
+}
+.disclaimer{
+  border-left:3px solid var(--warn); background:rgba(251,191,36,0.07); padding:18px 22px;
+  border-radius:0 12px 12px 0; color:#f2e3b8; font-size:0.92rem; max-width:900px; margin:20px auto 0;
+}
+
+/* ===== GRAPH ===== */
+#graph-area{display:grid; grid-template-columns:1fr 320px; gap:20px;}
+@media(max-width:980px){#graph-area{grid-template-columns:1fr;}}
+#graph-svg-wrap{position:relative; border-radius:18px; overflow:hidden; border:1px solid var(--rule);
+  background:radial-gradient(ellipse at 50% 30%, rgba(91,140,255,0.08), transparent 60%), #0a0d18;}
+#graph-svg-wrap svg{width:100%; height:640px; display:block; cursor:grab;}
+.legend-chip{display:flex; align-items:center; gap:8px; font-size:0.82rem; color:var(--muted); margin-bottom:8px;}
+.legend-dot{width:11px; height:11px; border-radius:50%; flex:none;}
+#info-panel h3{font-family:var(--font-h); font-size:1.1rem; margin-bottom:8px; color:var(--em);}
+#info-panel p{font-size:0.88rem; color:var(--muted);}
+#info-panel .status-tag{display:inline-block; margin-top:10px; font-size:0.78rem; padding:3px 10px; border-radius:999px;}
+.tooltip{
+  position:fixed; pointer-events:none; z-index:200; background:#0d1120; border:1px solid var(--rule);
+  padding:8px 12px; border-radius:8px; font-size:0.8rem; color:var(--ink); max-width:260px; opacity:0; transition:opacity .15s;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* ===== FORCE CARDS ===== */
+.force-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:40px;}
+@media(max-width:1000px){.force-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.force-grid{grid-template-columns:1fr;}}
+.force-card{border-radius:16px; padding:20px; border:1px solid var(--rule); background:var(--bg-panel); position:relative; overflow:hidden;}
+.force-card::before{content:''; position:absolute; top:0; left:0; right:0; height:4px;}
+.force-card.grav::before{background:var(--grav);} .force-card.em::before{background:var(--em);}
+.force-card.weak::before{background:var(--weak);} .force-card.strong::before{background:var(--strong);}
+.force-card h4{font-family:var(--font-h); font-size:1.15rem; margin-bottom:6px;}
+.force-card .val{font-family:var(--font-m); font-size:1.5rem; margin:8px 0 4px;}
+.force-card.grav .val{color:var(--grav);} .force-card.em .val{color:var(--em);}
+.force-card.weak .val{color:var(--weak);} .force-card.strong .val{color:var(--strong);}
+.force-card .meta{font-size:0.8rem; color:var(--muted);}
+.force-card svg{width:100%; height:70px; margin-top:10px;}
+
+.chart-block{margin-bottom:52px;}
+.chart-block h3{font-family:var(--font-h); font-size:1.2rem; margin-bottom:6px; color:var(--ink);}
+.chart-block .cap{font-size:0.85rem; color:var(--muted); margin-bottom:16px;}
+canvas{max-width:100%;}
+#rangeRuler{width:100%; height:220px; display:block;}
+#dirGrid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+@media(max-width:1000px){#dirGrid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){#dirGrid{grid-template-columns:1fr;}}
+.dir-card{border:1px solid var(--rule); border-radius:16px; padding:16px; background:var(--bg-panel);}
+.dir-card h5{font-family:var(--font-h); font-size:1rem; margin-bottom:8px;}
+.dir-card svg{width:100%; height:110px; background:#0a0d18; border-radius:10px;}
+.dir-card p{font-size:0.8rem; color:var(--muted); margin-top:8px;}
+
+/* ===== RG SECTION ===== */
+.toggle-row{display:flex; gap:10px; margin-bottom:18px;}
+.toggle-btn{
+  padding:8px 18px; border-radius:999px; border:1px solid var(--rule); background:transparent; color:var(--muted);
+  cursor:pointer; font-size:0.88rem; transition:all .2s;
+}
+.toggle-btn.active{background:var(--em); color:#04121a; border-color:var(--em); font-weight:700;}
+
+/* ===== EQUATIONS ===== */
+.eq-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+@media(max-width:900px){.eq-grid{grid-template-columns:1fr;}}
+.eq-card{border:1px solid var(--rule); border-radius:16px; padding:22px; background:var(--bg-panel);}
+.eq-card h4{font-family:var(--font-h); font-size:1.05rem; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;}
+.eq-card .eq{font-size:1.05rem; overflow-x:auto; padding:6px 0;}
+.eq-card p.note{font-size:0.83rem; color:var(--muted); margin-top:8px;}
+
+/* status tag helper */
+.tag{font-size:0.72rem; padding:2px 9px; border-radius:999px; font-weight:600; letter-spacing:0.3px;}
+.tag.ok{background:rgba(52,211,153,0.15); color:var(--ok);}
+.tag.warn{background:rgba(251,191,36,0.15); color:var(--warn);}
+.tag.bad{background:rgba(251,91,111,0.15); color:var(--bad);}
+
+footer{padding:60px 5vw 100px; text-align:center; color:var(--muted); font-size:0.85rem; border-top:1px solid var(--rule); margin-top:60px;}
+footer a{color:var(--em);}
+
+table.spec{width:100%; border-collapse:collapse; font-size:0.85rem; margin-top:10px;}
+table.spec th, table.spec td{padding:8px 10px; border-bottom:1px solid var(--rule); text-align:left;}
+table.spec th{color:var(--muted); font-weight:600;}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<nav>
+  <span class="brand">GAQ · 统一场论可视化</span>
+  <a href="#graph">知识图谱</a>
+  <a href="#forces">四力对比</a>
+  <a href="#rg">耦合汇合</a>
+  <a href="#equations">方程库</a>
+  <a href="#conclusion">结论</a>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <h1>全维统一场论<br>力的大统一 · 可视化知识图谱</h1>
+  <p class="sub">从对称性公理到四种基本力的实验数据 —— 全维度、全链路的求导 · 证明 · 验证 · 精算可视化呈现。</p>
+  <div class="badgebar">
+    <span class="badge ok">✅ 广义相对论 / 标准模型：已验证</span>
+    <span class="badge warn">⚠️ GUT / 耦合汇合：理论自洽，部分证伪</span>
+    <span class="badge bad">❌ 弦论 / LQG / SUSY：数学结构，未被实验证实</span>
+  </div>
+  <div class="scrolldown">↓ 向下滚动，进入知识图谱</div>
+</header>
+
+<section id="graph">
+  <h2><span class="num">01</span> 全维统一知识图谱</h2>
+  <p class="lede">节点代表对称性原理、场方程与理论层级；边代表"变分生成 / 嵌入 / 破缺 / 预言 / 证伪"等逻辑关系。可拖拽节点、滚轮缩放、点击节点查看详情与验证状态。</p>
+  <div id="graph-area">
+    <div id="graph-svg-wrap"><svg id="graphSvg"></svg></div>
+    <div class="panel" id="info-panel">
+      <div id="legendBox"></div>
+      <hr style="border-color:var(--rule); margin:14px 0;">
+      <div id="infoContent">
+        <h3>点击任意节点</h3>
+        <p>查看该理论层级的对称性来源、核心方程与实验验证状态。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="forces">
+  <h2><span class="num">02</span> 四种基本力：大小 · 方向 · 力程</h2>
+  <p class="lede">以质子-质子相互作用为基准，对比四种基本力的相对强度数量级、作用力程与相互作用性质（吸引/排斥/媒介粒子）。</p>
+
+  <div class="force-grid">
+    <div class="force-card strong">
+      <h4>强核力 Strong</h4>
+      <div class="val">~1</div>
+      <div class="meta">力程 ≈ 1.4 fm (1.4×10⁻¹⁵ m) · 媒介：胶子 (自旋1,质量0,色荷)</div>
+    </div>
+    <div class="force-card em">
+      <h4>电磁力 EM</h4>
+      <div class="val">~7.3×10⁻³</div>
+      <div class="meta">力程 = ∞ (1/r²) · 媒介：光子 (自旋1,质量0)</div>
+    </div>
+    <div class="force-card weak">
+      <h4>弱核力 Weak</h4>
+      <div class="val">~1.0×10⁻⁶</div>
+      <div class="meta">力程 ≈ 2.5×10⁻¹⁸ m · 媒介：W±/Z⁰ (自旋1,质量80-91GeV)</div>
+    </div>
+    <div class="force-card grav">
+      <h4>引力 Gravity</h4>
+      <div class="val">~5.9×10⁻³⁹</div>
+      <div class="meta">力程 = ∞ (1/r²) · 媒介：引力子(推测,自旋2,质量0)</div>
+    </div>
+  </div>
+
+  <div class="chart-block panel">
+    <h3>相对强度（对数尺度，强力归一为1）</h3>
+    <div class="cap">数量级跨度达 38 个数量级 —— 这正是"力的统一"在数学上如此困难的根本原因（层级问题 Hierarchy Problem）。</div>
+    <canvas id="strengthChart" height="110"></canvas>
+  </div>
+
+  <div class="chart-block panel">
+    <h3>作用力程标尺（对数尺度，米）</h3>
+    <div class="cap">强力/弱力被严格限制在原子核尺度内；电磁力与引力以 1/r² 衰减但延伸至无穷远。</div>
+    <svg id="rangeRuler"></svg>
+  </div>
+
+  <div class="chart-block panel">
+    <h3>作用势能 V(r) 形状对比（归一化，双对数坐标）</h3>
+    <div class="cap">强力用汤川势 $V\sim -\frac{g^2}{r}e^{-r/\lambda}$ 描述短程饱和；电磁/引力为库仑型 $V\sim -1/r$；弱力汤川质量极大导致势能在 10⁻¹⁸m 外几乎为零。（曲线已各自归一化以便比较衰减形状，不代表相对强度，强度见上图）</div>
+    <canvas id="potentialChart" height="110"></canvas>
+  </div>
+
+  <div class="chart-block">
+    <h3 style="padding-left:4px;">相互作用方向性示意</h3>
+    <div class="cap" style="padding-left:4px;">吸引 / 排斥 / 味变换 —— 四种力的本质区别。</div>
+    <div id="dirGrid">
+      <div class="dir-card"><h5 style="color:var(--grav)">引力：恒吸引</h5><svg id="dirGrav"></svg><p>任何两个质量之间恒为吸引，无排斥态，无屏蔽。</p></div>
+      <div class="dir-card"><h5 style="color:var(--em)">电磁力：同性斥·异性吸</h5><svg id="dirEM"></svg><p>正-正/负-负排斥，正-负吸引；可被屏蔽（电中性物质宏观不显）。</p></div>
+      <div class="dir-card"><h5 style="color:var(--strong)">强力：短程吸引+核心排斥</h5><svg id="dirStrong"></svg><p>~1-2fm处强吸引(核子束缚)，<0.5fm出现硬核排斥，防止核坍缩。</p></div>
+      <div class="dir-card"><h5 style="color:var(--weak)">弱力：味变换(非经典方向)</h5><svg id="dirWeak"></svg><p>不表现为"吸引/排斥"，而是通过W/Z交换改变粒子种类（如中子衰变）。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="rg">
+  <h2><span class="num">03</span> 耦合常数重整化群流动与GUT汇合</h2>
+  <p class="lede">三个规范耦合常数 $\alpha_i^{-1}(\mu)=\alpha_i^{-1}(M_Z)-\dfrac{b_i}{2\pi}\ln\dfrac{\mu}{M_Z}$ 随能标 $\mu$ 演化。标准模型（SM）中三线无法精确交于一点；引入最小超对称（MSSM）后三线在 $M_{GUT}\approx2\times10^{16}$ GeV 精确汇合。</p>
+  <div class="panel">
+    <div class="toggle-row">
+      <button class="toggle-btn active" data-mode="sm">标准模型 (SM) — 不精确汇合</button>
+      <button class="toggle-btn" data-mode="mssm">最小超对称 (MSSM) — 精确汇合</button>
+      <button class="toggle-btn" data-mode="both">叠加对比</button>
+    </div>
+    <canvas id="rgChart" height="100"></canvas>
+    <p class="cap" id="rgCaption" style="margin-top:14px;"></p>
+  </div>
+</section>
+
+<section id="equations">
+  <h2><span class="num">04</span> 核心方程库（求导 · 证明 · 验证）</h2>
+  <p class="lede">每个方程均标注其对称性来源、Noether守恒荷与实验验证状态。</p>
+  <div class="eq-grid">
+
+    <div class="eq-card">
+      <h4>Einstein 场方程 <span class="tag ok">✅已验证</span></h4>
+      <div class="eq">\[ G_{\mu\nu}+\Lambda g_{\mu\nu}=\kappa^2 T_{\mu\nu} \]</div>
+      <p class="note">来源：微分同胚不变性 $\delta_g S_{EH}=0$。Bianchi恒等式 $\nabla^\mu G_{\mu\nu}\equiv0$ ⟹ 能量动量协变守恒 $\nabla^\mu T_{\mu\nu}=0$。验证：引力波GW170817、水星进动、光线偏折，精度达 10⁻¹⁵级。</p>
+    </div>
+
+    <div class="eq-card">
+      <h4>Yang-Mills 方程 <span class="tag ok">✅已验证</span></h4>
+      <div class="eq">\[ D_\mu F^{a\mu\nu}=J^{a\nu},\qquad D_\mu J^{a\mu}=0 \]</div>
+      <p class="note">来源：局域规范不变性 $\psi\to U(x)\psi$。Noether第二定理给出协变守恒流。验证：LEP/LHC对QCD与电弱规范玻色子的精密测量，精度10⁻⁴级。</p>
+    </div>
+
+    <div class="eq-card">
+      <h4>Dirac 方程 <span class="tag ok">✅已验证</span></h4>
+      <div class="eq">\[ (i\gamma^\mu D_\mu-m)\psi=0 \]</div>
+      <p class="note">来源：洛伦兹不变性 + 一阶波动方程要求。验证：电子反常磁矩 $(g-2)$ 实验，理论与实验符合至10⁻¹²级 —— 物理学中最精确验证的方程之一。</p>
+    </div>
+
+    <div class="eq-card">
+      <h4>Higgs 机制 / 电弱对称破缺 <span class="tag ok">✅已验证</span></h4>
+      <div class="eq">\[ m_W=\frac{gv}{2},\quad m_Z=\frac{v}{2}\sqrt{g^2+g'^2},\quad v\approx246\ \text{GeV} \]</div>
+      <p class="note">来源：$SU(2)_L\times U(1)_Y\to U(1)_{em}$ 自发破缺。验证：2012年LHC发现Higgs玻色子(125GeV)，$m_W,m_Z$与预测符合至10⁻³级。</p>
+    </div>
+
+    <div class="eq-card">
+      <h4>重整化群方程 (耦合汇合) <span class="tag warn">⚠️理论自洽</span></h4>
+      <div class="eq">\[ \mu\frac{dg_i}{d\mu}=\frac{b_i}{16\pi^2}g_i^3 \]</div>
+      <p class="note">来源：重整化标度不变性。SM三线在GUT尺度附近汇合精度仅2-3%；MSSM精确汇合于 $M_{GUT}\approx2\times10^{16}$GeV。尚无直接实验证据支持SUSY。</p>
+    </div>
+
+    <div class="eq-card">
+      <h4>Kaluza-Klein 5维度规约化 <span class="tag bad">❌未验证</span></h4>
+      <div class="eq">\[ ds_5^2=g_{\mu\nu}dx^\mu dx^\nu+\phi\,(dy+A_\mu dx^\mu)^2 \]</div>
+      <p class="note">5维纯引力约化后给出4维(引力+电磁场+标量场)——数学上严格证明电磁场可几何化。LHC未发现KK共振态，紧致半径 $R^{-1}>$几TeV。</p>
+    </div>
+
+    <div class="eq-card">
+      <h4>SU(5) 质子衰变预言 <span class="tag bad">❌已被证伪</span></h4>
+      <div class="eq">\[ \tau_p(p\to e^+\pi^0)\sim\frac{M_X^4}{m_p^5\,\alpha_{GUT}^2} \]</div>
+      <p class="note">最简单SU(5)预言 $\tau_p\sim10^{31}$年量级。Super-Kamiokande实测 $\tau_p>2.4\times10^{34}$年，直接证伪最简单SU(5)模型 —— "统一"不等于"正确"的经典案例。</p>
+    </div>
+
+    <div class="eq-card">
+      <h4>SO(10) 跷跷板机制 <span class="tag warn">⚠️理论自洽</span></h4>
+      <div class="eq">\[ m_\nu=-\frac{m_D^2}{M_R}\sim\frac{(100\,\text{GeV})^2}{10^{14}\,\text{GeV}}\sim0.1\,\text{eV} \]</div>
+      <p class="note">SO(10)的 $\mathbf{16}$ 表示自然包含右手中微子。预言的中微子质量量级与振荡实验 $\sqrt{\Delta m^2_{32}}\approx0.05$eV 吻合，是当前最具吸引力的GUT候选之一。</p>
+    </div>
+
+  </div>
+</section>
+
+<section id="conclusion">
+  <h2><span class="num">05</span> 结论：诚实的统一现状</h2>
+  <div class="panel" style="max-width:900px;">
+    <p style="margin-bottom:14px;"><b>1. 已完成的统一：</b>电弱统一（$SU(2)_L\times U(1)_Y$）是人类历史上唯一被实验完全证实的"力的统一"，1979年获诺贝尔物理学奖。</p>
+    <p style="margin-bottom:14px;"><b>2. 理论自洽但未验证：</b>GUT（SU(5)/SO(10)）、超对称在数学上自洽；简单SU(5)已被质子衰变实验证伪；SO(10)/MSSM仍存活但依赖尚未发现的超伴子粒子。</p>
+    <p style="margin-bottom:14px;"><b>3. 未解决的核心障碍：</b>引力非重整化性、宇宙学常数问题（真空能预言与观测相差约120个数量级）、弦论与圈量子引力互不兼容、暗物质暗能量在现有框架内无解释。</p>
+    <p><b>4. 方法论：</b>真正的"统一"不是写下一个包罗万象的公式，而是建立从<b>对称性公理→变分原理→场方程→Noether守恒→量纲检验→实验证伪/验证</b>的完整逻辑闭环，并对每层置信度做诚实分级。</p>
+  </div>
+  <div class="disclaimer">
+    ⚠️ 免责声明：本页面是一份严谨的统一场论结构化综述与可视化，<b>不代表已存在被实验证实的"万有理论"</b>。已验证部分（标注✅）基于标准模型与广义相对论的实测数据；理论自洽但未验证部分（标注⚠️/❌）请勿视为已确立事实。
+  </div>
+</section>
+
+<footer>
+  GAQ AI科技星 · 全维统一场论可视化 &nbsp;|&nbsp; 数据来源：PDG粒子物理数据组、Super-Kamiokande实验、LEP/LHC电弱精密测量
+</footer>
+
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+/* ================= 星空背景动画 ================= */
+(function(){
+  const c=document.getElementById('stars'), ctx=c.getContext('2d');
+  let w,h,stars=[];
+  function resize(){ w=c.width=innerWidth; h=c.height=document.documentElement.scrollHeight; }
+  function init(){
+    resize();
+    stars=Array.from({length:220},()=>({
+      x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.4+0.2,
+      a:Math.random(), da:(Math.random()*0.02+0.005)*(Math.random()<0.5?-1:1),
+      hue:[91,140,255],
+    }));
+  }
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle='rgba(5,6,10,1)'; ctx.fillRect(0,0,w,h);
+    for(const s of stars){
+      s.a+=s.da; if(s.a<0.05||s.a>1) s.da*=-1;
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(200,215,255,${Math.max(0,Math.min(1,s.a))})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  window.addEventListener('resize',()=>{resize();});
+  init(); tick();
+  setInterval(()=>{ if(document.documentElement.scrollHeight!==h) init(); },1500);
+})();
+
+/* ================= 知识图谱 D3 ================= */
+(function(){
+  const groups = {
+    L0:{name:'引力/微分同胚', color:getCss('--grav')},
+    L1L2L3:{name:'规范场/费米子', color:getCss('--em')},
+    L4:{name:'电弱统一', color:'#f59e0b'},
+    L5:{name:'大统一GUT', color:getCss('--gut')},
+    L6:{name:'超对称SUSY', color:getCss('--susy')},
+    L7:{name:'高维/弦', color:getCss('--hd')},
+    L8:{name:'量子引力', color:getCss('--lqg')},
+  };
+  function getCss(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+  const nodes = [
+    {id:'diffeo', label:'微分同胚不变性', group:'L0', status:'ok', info:'时空坐标变换不变性，广义相对论的对称性基石。'},
+    {id:'einstein', label:'Einstein场方程', group:'L0', status:'ok', info:'G_{μν}+Λg_{μν}=κ²T_{μν}。由EH作用量对度规变分导出。已被引力波、水星进动等精确验证。'},
+    {id:'gaugeSU3', label:'局域规范不变性 SU(3)', group:'L1L2L3', status:'ok', info:'色荷规范对称性，QCD的对称性来源。'},
+    {id:'ym_strong', label:'Yang-Mills(强力)', group:'L1L2L3', status:'ok', info:'D_μF^{aμν}=J^{aν}。渐近自由，已被LHC强子对撞数据精确验证。'},
+    {id:'dirac', label:'Dirac方程', group:'L1L2L3', status:'ok', info:'(iγ^μD_μ-m)ψ=0。电子(g-2)实验验证精度达10⁻¹²级。'},
+    {id:'higgs', label:'Higgs机制', group:'L4', status:'ok', info:'自发对称破缺 SU(2)×U(1)→U(1)_em，赋予W/Z质量。2012年LHC直接发现Higgs玻色子。'},
+    {id:'ewsm', label:'电弱统一', group:'L4', status:'ok', info:'SU(2)_L×U(1)_Y统一弱力与电磁力，1979年诺贝尔奖。人类唯一实验证实的力统一。'},
+    {id:'sm', label:'标准模型 SU(3)×SU(2)×U(1)', group:'L4', status:'ok', info:'强、弱、电磁三力的规范场论集合体，被LHC等实验高精度验证。'},
+    {id:'su5', label:'SU(5) 大统一', group:'L5', status:'bad', info:'最简单GUT模型，预言质子衰变τ~10³¹年。SuperKamiokande实测下限2.4×10³⁴年，已被证伪。'},
+    {id:'so10', label:'SO(10) 大统一', group:'L5', status:'warn', info:'包含右手中微子，自然给出跷跷板机制，理论自洽，实验未证伪但也未证实。'},
+    {id:'rg', label:'RG耦合汇合', group:'L5', status:'warn', info:'三耦合常数在SM中汇合精度2-3%；MSSM中精确汇合于2×10¹⁶GeV。'},
+    {id:'protondecay', label:'质子衰变预言', group:'L5', status:'bad', info:'SuperK等实验持续未观测到质子衰变，直接证伪最简单SU(5)模型。'},
+    {id:'seesaw', label:'跷跷板机制/右手中微子', group:'L5', status:'warn', info:'预言中微子质量~0.1eV，与振荡实验测得量级吻合。'},
+    {id:'susy', label:'超对称 SUSY', group:'L6', status:'bad', info:'玻色子-费米子配对对称性，解决规范阶层问题。LHC至今未发现任何超伴子粒子。'},
+    {id:'mssm', label:'最小超对称标准模型 MSSM', group:'L6', status:'bad', info:'SUSY的最简实现，使RG三线精确汇合，但预言的超伴子粒子尚未被发现。'},
+    {id:'卡鲁扎克莱因', label:'Kaluza-Klein 5维引力', group:'L7', status:'bad', info:'5维纯引力约化=4维(引力+电磁+标量)。数学严格但LHC未见KK共振，紧致半径受限于TeV级以下。'},
+    {id:'string', label:'超弦理论(10维)', group:'L7', status:'bad', info:'要求10维时空反常抵消。弦标度预期~10¹⁶⁻¹⁹GeV，远超现有对撞机能力，无法直接检验。'},
+    {id:'cy', label:'Calabi-Yau紧致化', group:'L7', status:'bad', info:'弦论额外6维紧致化方案，存在~10⁵⁰⁰种真空(景观问题)，预言能力受质疑。'},
+    {id:'sugra', label:'超引力 Supergravity', group:'L6', status:'bad', info:'局域超对称必然包含自旋3/2引力微子，是弦论的低能有效场论极限。'},
+    {id:'lqg', label:'圈量子引力 LQG', group:'L8', status:'bad', info:'正则量子化几何变量，面积/体积算符谱离散化。与弦论框架互不兼容。'},
+    {id:'toe', label:'万有理论 TOE (目标)', group:'L8', status:'bad', info:'尚不存在的终极目标：统一四种力且被实验验证的完整理论。'},
+  ];
+
+  const links = [
+    {source:'diffeo', target:'einstein', label:'变分 δS=0 生成', style:'solid'},
+    {source:'gaugeSU3', target:'ym_strong', label:'变分生成', style:'solid'},
+    {source:'dirac', target:'sm', label:'构成', style:'solid'},
+    {source:'higgs', target:'ewsm', label:'自发破缺机制', style:'solid'},
+    {source:'ewsm', target:'sm', label:'构成', style:'solid'},
+    {source:'ym_strong', target:'sm', label:'构成', style:'solid'},
+    {source:'einstein', target:'sm', label:'并存但未统一', style:'dashed'},
+    {source:'sm', target:'su5', label:'嵌入', style:'solid'},
+    {source:'sm', target:'so10', label:'嵌入', style:'solid'},
+    {source:'su5', target:'so10', label:'子群', style:'solid'},
+    {source:'su5', target:'protondecay', label:'预言', style:'solid'},
+    {source:'protondecay', target:'su5', label:'证伪(SuperK)', style:'dashed', bad:true},
+    {source:'so10', target:'seesaw', label:'预言', style:'solid'},
+    {source:'rg', target:'su5', label:'计算统一能标', style:'solid'},
+    {source:'rg', target:'mssm', label:'需要SUSY精确汇合', style:'dashed'},
+    {source:'susy', target:'mssm', label:'最简实现', style:'solid'},
+    {source:'mssm', target:'rg', label:'改善汇合精度', style:'solid'},
+    {source:'einstein', target:'卡鲁扎克莱因', label:'高维推广', style:'solid'},
+    {source:'卡鲁扎克莱因', target:'ym_strong', label:'几何化电磁场(类比)', style:'dashed'},
+    {source:'susy', target:'string', label:'要求(反常抵消)', style:'solid'},
+    {source:'string', target:'cy', label:'紧致化', style:'solid'},
+    {source:'cy', target:'sugra', label:'低能极限', style:'solid'},
+    {source:'sugra', target:'sm', label:'目标:统一(未验证)', style:'dashed'},
+    {source:'lqg', target:'einstein', label:'正则量子化', style:'solid'},
+    {source:'string', target:'toe', label:'候选路径', style:'dashed'},
+    {source:'lqg', target:'toe', label:'候选路径(不兼容)', style:'dashed'},
+    {source:'mssm', target:'toe', label:'候选路径', style:'dashed'},
+  ];
+
+  const svg = d3.select('#graphSvg');
+  const wrapEl = document.getElementById('graph-svg-wrap');
+  let W = wrapEl.clientWidth, H = 640;
+  svg.attr('viewBox', [0,0,W,H]);
+
+  const g = svg.append('g');
+  svg.call(d3.zoom().scaleExtent([0.3,3]).on('zoom', (ev)=> g.attr('transform', ev.transform)));
+
+  // arrow markers
+  const defs = svg.append('defs');
+  ['solid','dashed','bad'].forEach(kind=>{
+    defs.append('marker').attr('id','arrow-'+kind)
+      .attr('viewBox','0 -5 10 10').attr('refX',22).attr('refY',0)
+      .attr('markerWidth',7).attr('markerHeight',7).attr('orient','auto')
+      .append('path').attr('d','M0,-5L10,0L0,5')
+      .attr('fill', kind==='bad' ? getCss('--bad') : '#5a6482');
+  });
+
+  const linkSel = g.append('g').attr('fill','none')
+    .selectAll('path').data(links).join('path')
+    .attr('stroke', d=> d.bad ? getCss('--bad') : '#4a5578')
+    .attr('stroke-width', 1.4)
+    .attr('stroke-dasharray', d=> d.style==='dashed' ? '5,4' : null)
+    .attr('marker-end', d=> `url(#arrow-${d.bad?'bad':d.style==='dashed'?'dashed':'solid'})`)
+    .attr('opacity', 0.65);
+  linkSel.append('title').text(d=>d.label);
+
+  const nodeSel = g.append('g').selectAll('g.node').data(nodes).join('g')
+    .attr('class','node')
+    .style('cursor','pointer')
+    .call(drag());
+
+  nodeSel.append('circle')
+    .attr('r', d=> d.id==='sm'||d.id==='einstein'||d.id==='toe' ? 22 : 14)
+    .attr('fill', d=> groups[d.group].color)
+    .attr('fill-opacity', 0.85)
+    .attr('stroke', d=> d.status==='bad' ? getCss('--bad') : d.status==='warn' ? getCss('--gut') : '#fff')
+    .attr('stroke-width', d=> d.status==='ok' ? 1 : 2)
+    .attr('stroke-dasharray', d=> d.status!=='ok' ? '3,2' : null);
+
+  nodeSel.append('text')
+    .text(d=>d.label)
+    .attr('x', 0).attr('y', d=> (d.id==='sm'||d.id==='einstein'||d.id==='toe'?22:14)+13)
+    .attr('text-anchor','middle')
+    .attr('font-size', 10.5)
+    .attr('fill', '#c7d0e8')
+    .style('pointer-events','none');
+
+  const tooltip = d3.select('#tooltip');
+  nodeSel.on('mouseenter', (ev,d)=>{
+      tooltip.style('opacity',1).html(`<b>${d.label}</b>`);
+    })
+    .on('mousemove', (ev)=>{
+      tooltip.style('left', (ev.clientX+14)+'px').style('top', (ev.clientY+10)+'px');
+    })
+    .on('mouseleave', ()=> tooltip.style('opacity',0))
+    .on('click', (ev,d)=>{
+      const statusTag = d.status==='ok' ? '<span class="tag ok">✅已验证</span>'
+        : d.status==='warn' ? '<span class="tag warn">⚠️理论自洽/未验证</span>'
+        : '<span class="tag bad">❌未验证或已证伪</span>';
+      document.getElementById('infoContent').innerHTML =
+        `<h3>${d.label}</h3><p>${d.info}</p><div class="status-tag">${statusTag}</div>`;
+      linkSel.attr('opacity', l=> (l.source.id===d.id||l.target.id===d.id) ? 1 : 0.12);
+      nodeSel.select('circle').attr('opacity', n=> n.id===d.id || links.some(l=>(l.source.id===d.id&&l.target.id===n.id)||(l.target.id===d.id&&l.source.id===n.id)) ? 1 : 0.25);
+    });
+
+  svg.on('click', (ev)=>{
+    if(ev.target.tagName==='svg' || ev.target.tagName==='g'){
+      linkSel.attr('opacity',0.65);
+      nodeSel.select('circle').attr('opacity',1);
+    }
+  });
+
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d=>d.id).distance(105).strength(0.55))
+    .force('charge', d3.forceManyBody().strength(-420))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collide', d3.forceCollide(38))
+    .on('tick', ticked);
+
+  function ticked(){
+    linkSel.attr('d', d=> {
+      const sx = d.source.x, sy=d.source.y, tx=d.target.x, ty=d.target.y;
+      return `M${sx},${sy} L${tx},${ty}`;
+    });
+    nodeSel.attr('transform', d=> `translate(${d.x},${d.y})`);
+  }
+
+  function drag(){
+    return d3.drag()
+      .on('start', (ev,d)=>{ if(!ev.active) sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on('drag', (ev,d)=>{ d.fx=ev.x; d.fy=ev.y; })
+      .on('end', (ev,d)=>{ if(!ev.active) sim.alphaTarget(0); d.fx=null; d.fy=null; });
+  }
+
+  // legend
+  const legendBox = document.getElementById('legendBox');
+  legendBox.innerHTML = '<h3 style="margin-bottom:10px;">图层图例</h3>' +
+    Object.entries(groups).map(([k,v])=>
+      `<div class="legend-chip"><span class="legend-dot" style="background:${v.color}"></span>${v.name}</div>`
+    ).join('') +
+    `<div style="margin-top:10px; font-size:0.78rem; color:var(--muted);">实线=已证明推导关系 · 虚线=类比/推测/未验证关系<br>圆边框:实线=✅已验证 虚线=⚠️/❌未验证</div>`;
+
+  window.addEventListener('resize', ()=>{
+    W = wrapEl.clientWidth;
+    svg.attr('viewBox', [0,0,W,H]);
+    sim.force('center', d3.forceCenter(W/2,H/2));
+    sim.alpha(0.3).restart();
+  });
+})();
+
+/* ================= 力的强度条形图 ================= */
+(function(){
+  const ctx = document.getElementById('strengthChart');
+  const data = [
+    {label:'强力 Strong', value:1, color:getComputedStyle(document.documentElement).getPropertyValue('--strong')},
+    {label:'电磁力 EM', value:7.3e-3, color:getComputedStyle(document.documentElement).getPropertyValue('--em')},
+    {label:'弱力 Weak', value:1.0e-6, color:getComputedStyle(document.documentElement).getPropertyValue('--weak')},
+    {label:'引力 Gravity', value:5.9e-39, color:getComputedStyle(document.documentElement).getPropertyValue('--grav')},
+  ];
+  new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:data.map(d=>d.label),
+      datasets:[{ label:'相对强度(对数)', data:data.map(d=>d.value), backgroundColor:data.map(d=>d.color), borderRadius:8 }]
+    },
+    options:{
+      indexAxis:'y',
+      scales:{ x:{ type:'logarithmic', min:1e-40, max:2, grid:{color:'#232a42'}, ticks:{color:'#8b96b3'} },
+               y:{ grid:{display:false}, ticks:{color:'#e6ecf7', font:{size:13}} } },
+      plugins:{ legend:{display:false},
+        tooltip:{ callbacks:{ label:(c)=> '相对强度 ≈ '+c.raw.toExponential(2) } } }
+    }
+  });
+})();
+
+/* ================= 力程标尺 SVG ================= */
+(function(){
+  const svg = d3.select('#rangeRuler');
+  const wrap = svg.node().parentElement;
+  const W = wrap.clientWidth, H = 220;
+  svg.attr('viewBox',[0,0,W,H]);
+  const marginL=70, marginR=60;
+  const expMin=-18, expMax=0; // meters 10^-18 .. 10^0
+  const x = d3.scaleLinear().domain([expMin,expMax]).range([marginL, W-marginR]);
+
+  // axis ticks
+  const ticks = d3.range(expMin, expMax+1, 2);
+  svg.append('line').attr('x1',marginL).attr('x2',W-marginR).attr('y1',H-40).attr('y2',H-40).attr('stroke','#3a4260');
+  ticks.forEach(e=>{
+    svg.append('line').attr('x1',x(e)).attr('x2',x(e)).attr('y1',H-44).attr('y2',H-36).attr('stroke','#3a4260');
+    svg.append('text').attr('x',x(e)).attr('y',H-20).attr('text-anchor','middle').attr('fill','#8b96b3').attr('font-size',10.5)
+      .text('10^'+e+' m');
+  });
+
+  const rows = [
+    {label:'弱力', from:-18, to:-17.6, color:getComputedStyle(document.documentElement).getPropertyValue('--weak'), y:30, infinite:false},
+    {label:'强力', from:-15.2, to:-14.6, color:getComputedStyle(document.documentElement).getPropertyValue('--strong'), y:64, infinite:false},
+    {label:'电磁力', from:-18, to:0, color:getComputedStyle(document.documentElement).getPropertyValue('--em'), y:98, infinite:true},
+    {label:'引力', from:-18, to:0, color:getComputedStyle(document.documentElement).getPropertyValue('--grav'), y:132, infinite:true},
+  ];
+  rows.forEach(r=>{
+    svg.append('text').attr('x',8).attr('y',r.y+5).attr('fill',r.color).attr('font-size',12.5).attr('font-weight',700).text(r.label);
+    const barW = Math.max(6, x(r.to)-x(r.from));
+    svg.append('rect').attr('x',x(r.from)).attr('y',r.y-8).attr('width',barW).attr('height',16).attr('rx',8)
+      .attr('fill',r.color).attr('opacity',0.85);
+    if(r.infinite){
+      svg.append('text').attr('x', W-marginR+8).attr('y', r.y+5).attr('fill', r.color).attr('font-size',13).text('→ ∞');
+    }
+  });
+})();
+
+/* ================= 势能形状对比图 ================= */
+(function(){
+  const ctx = document.getElementById('potentialChart');
+  function logspace(a,b,n){ const arr=[]; for(let i=0;i<n;i++){ arr.push(Math.pow(10, a+(b-a)*i/(n-1))); } return arr; }
+  const rs = logspace(-18, 0, 200); // meters
+  function yukawa(r, lambda){ return Math.exp(-r/lambda)/r; }
+  function coulomb(r){ return 1/r; }
+
+  const strongCurve = rs.map(r=> yukawa(r, 1.4e-15));
+  const weakCurve = rs.map(r=> yukawa(r, 2.5e-18));
+  const emCurve = rs.map(r=> coulomb(r));
+  const gravCurve = rs.map(r=> coulomb(r));
+
+  function normalize(arr){ const m=Math.max(...arr.filter(v=>isFinite(v))); return arr.map(v=> v/m); }
+
+  new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: rs.map(r=>r),
+      datasets:[
+        {label:'强力(汤川,λ=1.4fm)', data:normalize(strongCurve), borderColor:getComputedStyle(document.documentElement).getPropertyValue('--strong'), pointRadius:0, borderWidth:2},
+        {label:'弱力(汤川,λ=2.5×10⁻³fm)', data:normalize(weakCurve), borderColor:getComputedStyle(document.documentElement).getPropertyValue('--weak'), pointRadius:0, borderWidth:2},
+        {label:'电磁力(库仑 1/r)', data:normalize(emCurve), borderColor:getComputedStyle(document.documentElement).getPropertyValue('--em'), pointRadius:0, borderWidth:2, borderDash:[4,3]},
+        {label:'引力(牛顿 1/r)', data:normalize(gravCurve), borderColor:getComputedStyle(document.documentElement).getPropertyValue('--grav'), pointRadius:0, borderWidth:2, borderDash:[1,3]},
+      ]
+    },
+    options:{
+      scales:{
+        x:{ type:'logarithmic', title:{display:true,text:'距离 r (m)',color:'#8b96b3'}, ticks:{color:'#8b96b3', callback:(v,i)=> i%25===0? rs[i].toExponential(0):'' }, grid:{color:'#1c2338'} },
+        y:{ type:'logarithmic', title:{display:true,text:'归一化 |V(r)|',color:'#8b96b3'}, ticks:{color:'#8b96b3'}, grid:{color:'#1c2338'} }
+      },
+      plugins:{ legend:{ labels:{color:'#c7d0e8', font:{size:11.5}} } },
+      elements:{ line:{ tension:0 } }
+    }
+  });
+})();
+
+/* ================= 方向性小图 ================= */
+(function(){
+  function circle(svgSel, cx, cy, r, fill, stroke){
+    return svgSel.append('circle').attr('cx',cx).attr('cy',cy).attr('r',r).attr('fill',fill).attr('stroke',stroke||'none').attr('stroke-width',1.5);
+  }
+  function arrow(svgSel, x1,y1,x2,y2,color){
+    svgSel.append('line').attr('x1',x1).attr('y1',y1).attr('x2',x2).attr('y2',y2).attr('stroke',color).attr('stroke-width',2).attr('marker-end','url(#dirArrow)');
+  }
+  function setupDefs(svgSel,color){
+    svgSel.append('defs').append('marker').attr('id','dirArrow').attr('viewBox','0 -4 8 8').attr('refX',7).attr('refY',0)
+      .attr('markerWidth',6).attr('markerHeight',6).attr('orient','auto')
+      .append('path').attr('d','M0,-4L8,0L0,4').attr('fill', color);
+  }
+  const cssVar = v => getComputedStyle(document.documentElement).getPropertyValue(v);
+
+  // Gravity: two masses, arrows pointing toward each other
+  (function(){
+    const svg=d3.select('#dirGrav'); const c=cssVar('--grav');
+    setupDefs(svg,c);
+    circle(svg,50,55,16,c); circle(svg,190,55,16,c);
+    arrow(svg,80,55,120,55,c); arrow(svg,160,55,120,55,c);
+    svg.append('text').attr('x',120).attr('y',95).attr('text-anchor','middle').attr('fill','#8b96b3').attr('font-size',11).text('M₁ ← 恒吸引 → M₂');
+  })();
+
+  // EM: like repel, unlike attract
+  (function(){
+    const svg=d3.select('#dirEM'); const c=cssVar('--em');
+    setupDefs(svg,c);
+    circle(svg,45,32,14,c).attr('opacity',0.9); svg.append('text').attr('x',45).attr('y',37).attr('text-anchor','middle').attr('fill','#04121a').attr('font-weight',700).text('+');
+    circle(svg,115,32,14,c).attr('opacity',0.9); svg.append('text').attr('x',115).attr('y',37).attr('text-anchor','middle').attr('fill','#04121a').attr('font-weight',700).text('+');
+    arrow(svg,65,20,45,10,c); arrow(svg,95,20,115,10,c);
+    circle(svg,45,82,14,c).attr('opacity',0.9); svg.append('text').attr('x',45).attr('y',87).attr('text-anchor','middle').attr('fill','#04121a').attr('font-weight',700).text('+');
+    circle(svg,115,82,14,c).attr('opacity',0.9); svg.append('text').attr('x',115).attr('y',87).attr('text-anchor','middle').attr('fill','#04121a').attr('font-weight',700).text('−');
+    arrow(svg,65,82,95,82,c);
+    svg.append('text').attr('x',80).attr('y',15).attr('text-anchor','middle').attr('fill','#8b96b3').attr('font-size',9.5).text('同性排斥');
+    svg.append('text').attr('x',80).attr('y',108).attr('text-anchor','middle').attr('fill','#8b96b3').attr('font-size',9.5).text('异性吸引');
+  })();
+
+  // Strong: attractive well + repulsive core curve
+  (function(){
+    const svg=d3.select('#dirStrong'); const c=cssVar('--strong');
+    const pts=[]; const n=60;
+    for(let i=0;i<n;i++){ const x=i/(n-1); const r=0.15+x*1.5; const v = -Math.exp(-((r-0.5)**2)/0.05)*1.0 + (r<0.35? (0.35-r)*6:0); pts.push([x*220+10, 60-v*35]); }
+    const line = d3.line();
+    svg.append('path').attr('d', line(pts)).attr('stroke', c).attr('fill','none').attr('stroke-width',2.2);
+    svg.append('line').attr('x1',10).attr('x2',230).attr('y1',60).attr('y2',60).attr('stroke','#3a4260').attr('stroke-dasharray','2,2');
+    svg.append('text').attr('x',120).attr('y',100).attr('text-anchor','middle').attr('fill','#8b96b3').attr('font-size',10).text('r↑: 核心排斥 → 束缚吸引 → 迅速归零');
+  })();
+
+  // Weak: decay diagram
+  (function(){
+    const svg=d3.select('#dirWeak'); const c=cssVar('--weak');
+    setupDefs(svg,c);
+    circle(svg,40,55,15,c); svg.append('text').attr('x',40).attr('y',59).attr('text-anchor','middle').attr('fill','#04121a').attr('font-size',9).attr('font-weight',700).text('n');
+    arrow(svg,58,55,150,30,c);
+    svg.append('text').attr('x',100,).attr('y',20).attr('fill','#8b96b3').attr('font-size',9).text('W⁻ 玻色子');
+    circle(svg,170,20,12,c); svg.append('text').attr('x',170).attr('y',24).attr('text-anchor','middle').attr('fill','#04121a').attr('font-size',8).attr('font-weight',700).text('p');
+    circle(svg,170,60,10,c); svg.append('text').attr('x',170).attr('y',64).attr('text-anchor','middle').attr('fill','#04121a').attr('font-size',8).attr('font-weight',700).text('e⁻');
+    circle(svg,210,60,10,c).attr('opacity',0.6); svg.append('text').attr('x',210).attr('y',64).attr('text-anchor','middle').attr('fill','#04121a').attr('font-size',7).text('ν̄');
+    svg.append('line').attr('x1',150).attr('y1',30).attr('x2',170).attr('y2',55).attr('stroke',c).attr('stroke-width',1.5);
+    svg.append('line').attr('x1',150).attr('y1',30).attr('x2',210).attr('y2',58).attr('stroke',c).attr('stroke-width',1.5);
+    svg.append('text').attr('x',120).attr('y',100).attr('text-anchor','middle').attr('fill','#8b96b3').attr('font-size',9.5).text('中子β衰变: n → p + e⁻ + ν̄ₑ');
+  })();
+})();
+
+/* ================= RG 汇合图 ================= */
+(function(){
+  const ctx = document.getElementById('rgChart');
+  const MZ = 91.1876;
+  const alpha0 = { a1:59.0, a2:29.6, a3:8.55 }; // GUT-normalized at MZ
+  const bSM  = { b1:41/10, b2:-19/6, b3:-7 };
+  const bMSSM= { b1:33/5,  b2:1,     b3:-3 };
+
+  function alphaInv(a0, b, logE){
+    const logMZ = Math.log10(MZ);
+    return a0 - (b/(2*Math.PI)) * (Math.LN10*(logE-logMZ));
+  }
+  const logEs = d3.range(2, 19.01, 0.25); // log10(GeV) from 100 GeV to 1e19 GeV
+
+  function buildDatasets(mode){
+    const ds=[];
+    const conf = mode==='mssm' ? bMSSM : bSM;
+    const label = mode==='mssm' ? 'MSSM' : 'SM';
+    const colors = {a1:'#22d3ee', a2:'#a78bfa', a3:'#fb5b6f'};
+    ['a1','a2','a3'].forEach((k,idx)=>{
+      const bkey='b'+(idx+1);
+      ds.push({
+        label: `1/α${idx+1} (${label})`,
+        data: logEs.map(le=> alphaInv(alpha0[k], conf[bkey], le)),
+        borderColor: colors[k],
+        borderDash: mode==='mssm'? [] : [6,4],
+        pointRadius:0, borderWidth:2.4, tension:0
+      });
+    });
+    return ds;
+  }
+
+  let chart = new Chart(ctx, {
+    type:'line',
+    data:{ labels: logEs.map(v=>v.toFixed(1)), datasets: buildDatasets('sm') },
+    options:{
+      scales:{
+        x:{ title:{display:true,text:'log₁₀(能标 μ / GeV)',color:'#8b96b3'}, ticks:{color:'#8b96b3', maxTicksLimit:12}, grid:{color:'#1c2338'} },
+        y:{ title:{display:true,text:'1/α_i (耦合常数倒数)',color:'#8b96b3'}, ticks:{color:'#8b96b3'}, grid:{color:'#1c2338'}, min:0, max:65 }
+      },
+      plugins:{ legend:{ labels:{color:'#c7d0e8'} } },
+      animation:{ duration:600 }
+    }
+  });
+
+  const captions = {
+    sm:'标准模型（SM）：三条耦合常数曲线在约10¹⁵⁻¹⁶GeV附近接近但并不精确交于一点（偏差约2-3%），说明纯标准模型不能自然实现精确大统一。',
+    mssm:'最小超对称标准模型（MSSM）：由于超对称粒子改变了β函数系数，三条曲线在 M_GUT≈2×10¹⁶GeV 精确汇聚于一点 —— 这是支持SUSY-GUT最强的间接证据，但LHC尚未发现任何超伴子粒子。',
+    both:'叠加对比：虚线=标准模型(SM，不精确汇合)；实线=MSSM(精确汇合于同一点)。两者的差异完全来自新增超对称粒子对RG方程β系数的贡献。'
+  };
+  document.getElementById('rgCaption').textContent = captions.sm;
+
+  document.querySelectorAll('.toggle-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.dataset.mode;
+      if(mode==='both'){
+        chart.data.datasets = [...buildDatasets('sm'), ...buildDatasets('mssm')];
+      } else {
+        chart.data.datasets = buildDatasets(mode);
+      }
+      chart.update();
+      document.getElementById('rgCaption').textContent = captions[mode];
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
