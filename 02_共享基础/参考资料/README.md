@@ -23,3 +23,7 @@
 4. 提交 Pull Request
 
 — AI科技星
+
+## 引用文件
+
+[统一参考文献](BIBLIOGRAPHY.md) · [引用登记](引用登记.csv) · [BibTeX](references.bib)。ZXQ2024 使用用户指定书目；其他条目逐条标明元数据核实范围。

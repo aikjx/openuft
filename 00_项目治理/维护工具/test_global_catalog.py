@@ -13,6 +13,9 @@ class GlobalCatalogContract(unittest.TestCase):
         self.base = self.root / '05_全球研究'
         self.base.mkdir()
         self.data = json.loads((catalog.ROOT / '05_全球研究/全球研究登记.json').read_text(encoding='utf-8'))
+        governance = self.root / '00_项目治理'
+        governance.mkdir()
+        (governance / '国际化配置.json').write_text((catalog.ROOT / '00_项目治理/国际化配置.json').read_text(encoding='utf-8'),encoding='utf-8')
         self.save()
 
     def save(self):

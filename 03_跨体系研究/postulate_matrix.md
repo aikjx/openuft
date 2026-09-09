@@ -13,7 +13,7 @@
 | [p03 规范统一](../01_独立体系/P03_规范对称统一候选/README.md) | hypothesis | 待建模方向 | 无 | — | — | — | 方向占位 |
 | [p04 量子涌现](../01_独立体系/P04_量子结构与时空涌现候选/README.md) | observation | 待建模方向 | 无 | — | — | — | 方向占位 |
 | [s01 螺旋三重奏](../01_独立体系/S01_螺旋三重奏与谱几何/README.md) | mathematical_framework | 无（纯数学） | A1–A3 数学设定 | 不涉及 | R1–R11 审计 | 无需（框架） | [postulates](../01_独立体系/S01_螺旋三重奏与谱几何/02_基础公设/postulates.md) |
-| [s02 张祥前统一力](../01_独立体系/S02_张祥前空间运动与统一力/README.md) | candidate_theory | 统一力动力学（无几何本体） | A1–A4 | c 为速度上限 | D5 | 无 | [postulates](../01_独立体系/S02_张祥前空间运动与统一力/02_基础公设/postulates.md) |
+| [s02 空间光速螺旋统一力](../01_独立体系/S02_空间光速螺旋统一力/README.md) | candidate_theory | 统一力动力学（无几何本体） | A1–A4 | c 为速度上限 | D5 | 无 | [postulates](../01_独立体系/S02_空间光速螺旋统一力/02_基础公设/postulates.md) |
 | [s03 GAQ 几何原子](../01_独立体系/S03_GAQ几何原子与作用量子/README.md) | candidate_theory | 离散几何元胞 | A1–A5 | c=L_p/T_p 几何化；ħ 公理 | v1 | 无 | [postulates](../01_独立体系/S03_GAQ几何原子与作用量子/02_基础公设/postulates.md) |
 | [s04 IEG 信息熵引力](../01_独立体系/S04_IEG信息熵引力/README.md) | candidate_theory | 几何信息场 | A1–A3 | 不涉及 | GAQ v3 | 无 | [postulates](../01_独立体系/S04_IEG信息熵引力/02_基础公设/postulates.md) |
 | [s05 HDU 高维统一](../01_独立体系/S05_HDU高维紧致化统一/README.md) | candidate_theory | 11 维 M 理论嵌入 | A1–A3 | 不涉及 | GAQ v3 | 无 | [postulates](../01_独立体系/S05_HDU高维紧致化统一/02_基础公设/postulates.md) |

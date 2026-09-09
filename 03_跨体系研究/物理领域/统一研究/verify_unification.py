@@ -16,7 +16,7 @@ verify_unification.py — 垂直原理→三场统一：严格求导证明与精
 
 诚实声明：
   - 垂直原理→螺旋运动是公理+推理
-  - 三场的几何定义是张祥前统一场论的核心假设
+  - 三场的几何定义是空间光速螺旋统一场论的核心假设
   - 螺旋运动的Frenet几何、正交性、三重奏是严格定理
   - 与麦克斯韦/牛顿引力的对标是量纲匹配+极限验证
   - 变化电磁场产生引力场尚未被实验证实
@@ -97,7 +97,7 @@ def part1_three_field_decomposition():
     print(f"  → 加速度只有 -e_r 分量（纯向心加速度）")
 
     # 三场几何定义
-    print(f"\n【三场几何定义（张祥前统一场论核心假设）】")
+    print(f"\n【三场几何定义（空间光速螺旋统一场论核心假设）】")
     print(f"  电场 E ∝ v_z e_z = b e_z  （直线运动部分）")
     print(f"  磁场 B ∝ v_φ e_φ = Rω e_φ  （旋转切向部分）")
     print(f"  引力场 g ∝ a_r (-e_r) = Rω² e_r  （向心加速度部分）")
@@ -226,7 +226,7 @@ def part3_changing_field_coupling():
     print("第三部分：变化电磁场产生引力场（核心预言）")
     print("="*70)
 
-    print("  张祥前统一场论核心预言：")
+    print("  空间光速螺旋统一场论核心预言：")
     print("    dB/dt = -(A × E)/c²  （变化磁场↔引力场×电场）")
     print("    其中 A 为引力场（矢量引力势）")
     print()
@@ -287,7 +287,7 @@ def part4_force_unification():
     print("第四部分：力的统一公式")
     print("="*70)
 
-    print("  张祥前统一场论动量方程：P = m(C - V)")
+    print("  空间光速螺旋统一场论动量方程：P = m(C - V)")
     print("  其中 C 是矢量光速（空间本身运动速度），V 是物体运动速度")
     print()
     print("  力的定义：F = dP/dt = d[m(C-V)]/dt")

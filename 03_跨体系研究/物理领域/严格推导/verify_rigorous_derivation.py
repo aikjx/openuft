@@ -209,7 +209,7 @@ def verify_D3_emc2_from_rest_momentum():
 
     m0, c = sp.symbols('m_0 c', real=True, positive=True)
 
-    print("  张祥前统一场论核心假设：静止动量 p₀ = m₀c ≠ 0")
+    print("  空间光速螺旋统一场论核心假设：静止动量 p₀ = m₀c ≠ 0")
     print("  （传统物理：静止动量 p=0）")
     print()
 

@@ -8,6 +8,18 @@ import zipfile
 
 def check(root):
     errors = []
+    correction = root / '90_历史归档/迁移记录/20260909_术语与语言'
+    corrections = json.loads((correction / '变更清单.json').read_text(encoding='utf-8'))['files'] if (correction / '变更清单.json').exists() else []
+    aliases = {row['old']: row['new'] for row in corrections}
+    def current(path):
+        return root / aliases.get(path, path)
+    if corrections:
+        with zipfile.ZipFile(correction / '变更前原件.zip') as snapshot:
+            for row in corrections:
+                if hashlib.sha256(snapshot.read(row['old'])).hexdigest() != row['sha256_before']:
+                    errors.append('Terminology snapshot mismatch: ' + row['old'])
+                if not current(row['new']).is_file():
+                    errors.append('Lost renamed file: ' + row['new'])
     base = root / '90_历史归档/迁移记录/20260909_中文目录与署名'
     manifest = json.loads((base / '迁移清单.json').read_text(encoding='utf-8'))
     mapping = {row['old']: row['new'] for row in manifest['files']}
@@ -16,7 +28,7 @@ def check(root):
         for row in manifest['files']:
             if hashlib.sha256(original.read(row['old'])).hexdigest() != row['sha256_before']:
                 errors.append('Localization snapshot mismatch: ' + row['new'])
-            target = (root / row['new']).resolve()
+            target = current(row['new']).resolve()
             try:
                 target.relative_to(root.resolve())
             except ValueError:
@@ -31,13 +43,13 @@ def check(root):
         for index, (path, record) in enumerate(zip(paths, historic)):
             counts.append(len(record['files']))
             original_zip = original.read(path + '/before.zip')
-            if (root / mapping[path + '/before.zip']).read_bytes() != original_zip:
+            if current(mapping[path + '/before.zip']).read_bytes() != original_zip:
                 errors.append('Historic ZIP changed: ' + path)
             with zipfile.ZipFile(io.BytesIO(original_zip)) as snapshot:
                 for row in record['files']:
                     if hashlib.sha256(snapshot.read(row['old'])).hexdigest() != row['sha256_before']:
                         errors.append('Historic snapshot mismatch: ' + row['old'])
                     old_target = latest.get(row['new'], row['new']) if index == 0 else row['new']
-                    if old_target not in mapping or not (root / mapping[old_target]).is_file():
+                    if old_target not in mapping or not current(mapping[old_target]).is_file():
                         errors.append('Lost historical target: ' + old_target)
     return errors, counts

@@ -1,119 +1,231 @@
-# 参考文献 · BIBLIOGRAPHY
+# 统一参考文献与引用规则
 
-> 完整参考文献列表。所有 §X.Y 引用均可追溯到具体来源。
+[结构化引用登记](引用登记.csv) · [BibTeX](references.bib) · [DOI 元数据及失败记录](文献元数据.json) · [原列表底稿](原参考文献待核底稿.md)。
 
----
+体系按物理内容命名；作者姓名用于来源署名。原题名保留原语言，不将他人著作归为本项目原创。引用登记只表示出处，不证明其中主张成立。
 
-## A. 经典基础（1900-1970）
+## 用户指定著作
 
-### A.1 爱因斯坦
-- A. Einstein (1915), "Die Feldgleichungen der Gravitation", *Sitzungsber. Preuss. Akad. Wiss.* **1915**: 844-847
-- A. Einstein (1916), "Die Grundlage der allgemeinen Relativitätstheorie", *Annalen der Physik* **354** (7): 769-822
-- A. Einstein, B. Podolsky, N. Rosen (1935), "Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?", *Phys. Rev.* **47**: 777
+**[ZXQ2024]** Zhang X Q. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
 
-### A.2 量子力学
-- M. Born, P. Jordan (1925), "Zur Quantenmechanik", *Z. Phys.* **34**: 858
-- W. Heisenberg (1925), "Über quantentheoretische Umdeutung kinematischer und mechanischer Beziehungen", *Z. Phys.* **33**: 879
-- E. Schrödinger (1926), "Quantisierung als Eigenwertproblem", *Annalen der Physik* **384**: 361
-- P. A. M. Dirac (1928), "The Quantum Theory of the Electron", *Proc. Roy. Soc. Lond.* **A117**: 610
+用户提供；未取得全文，出版社和 ISBN 尚未独立核实。未掌握具体页码时，不把项目某条公式断言为已由该书证明。
 
-### A.3 规范场论起源
-- H. Weyl (1929), "Elektron und Gravitation", *Z. Phys.* **56**: 330
-- C. N. Yang, R. L. Mills (1954), "Conservation of Isotopic Spin and Isotopic Gauge Invariance", *Phys. Rev.* **96**: 191
+## 经典、数学与软件文献
 
----
+**[REF001]** A. Einstein. Die Feldgleichungen der Gravitation[J]. Sitzungsber. Preuss. Akad. Wiss., 1915, 1915: 844-847.
 
-## B. 标准模型（1970-2000）
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
-### B.1 量子色动力学 (QCD)
-- D. J. Gross, F. Wilczek (1973), "Ultraviolet Behavior of Non-Abelian Gauge Theories", *Phys. Rev. Lett.* **30**: 1343
-- H. D. Politzer (1973), "Reliable Perturbative Results for Strong Interactions?", *Phys. Rev. Lett.* **30**: 1346
+**[REF002]** A. Einstein. Die Grundlage der allgemeinen Relativitätstheorie[J]. Annalen der Physik, 1916, 354 (7): 769-822.
 
-### B.2 电弱统一
-- S. Weinberg (1967), "A Model of Leptons", *Phys. Rev. Lett.* **19**: 1264
-- A. Salam (1968), "Weak and Electromagnetic Interactions", *in* *Elementary Particle Theory* (ed. N. Svartholm), Almqvist & Wiksell
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
-### B.3 大统一
-- H. Georgi, S. L. Glashow (1974), "Unity of All Elementary-Particle Forces", *Phys. Rev. Lett.* **32**: 438
-- H. Fritzsch, P. Minkowski (1975), "Unified Interactions of Leptons and Hadrons", *Ann. Phys.* **93**: 193
+**[REF003]** Einstein A., Podolsky B., Rosen N. Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?[J]. Physical Review, 1935, 47(10): 777-780. DOI: 10.1103/physrev.47.777.
 
----
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1103/physrev.47.777)。
 
-## C. 量子引力候选（1980-2020）
+**[REF004]** M. Born, P. Jordan. Zur Quantenmechanik[J]. Z. Phys., 1925, 34: 858.
 
-### C.1 弦论
-- M. B. Green, J. H. Schwarz (1984), "Anomaly Cancellation in Supersymmetric D=10 Gauge Theory", *Phys. Lett.* **B149**: 117
-- E. Witten (1995), "String Theory Dynamics in Various Dimensions", *Nucl. Phys.* **B443**: 85 (M-theory)
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
-### C.2 圈量子引力
-- A. Ashtekar (1986), "New Variables for Classical and Quantum Gravity", *Phys. Rev. Lett.* **57**: 2244
-- C. Rovelli (2004), *Quantum Gravity*, Cambridge University Press
+**[REF005]** W. Heisenberg. Über quantentheoretische Umdeutung kinematischer und mechanischer Beziehungen[J]. Z. Phys., 1925, 33: 879.
 
-### C.3 因果动力学
-- R. Sorkin (2007), "Causal Sets: Discrete Gravity", *in* *Lectures on Quantum Gravity*, Springer
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
----
+**[REF006]** Schrödinger E. Quantisierung als Eigenwertproblem[J]. Annalen der Physik, 1926, 384(4): 361-376. DOI: 10.1002/andp.19263840404.
 
-## D. 宇宙学（1990-2020）
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1002/andp.19263840404)。
 
-### D.1 暴胀与加速膨胀
-- A. H. Guth (1981), "Inflationary Universe: A Possible Solution to the Horizon and Flatness Problems", *Phys. Rev.* **D23**: 347
-- A. G. Riess et al. (1998), "Observational Evidence from Supernovae for an Accelerating Universe and a Cosmological Constant", *AJ* **116**: 1009
+**[REF007]** Dirac Paul Adrien Maurice. The quantum theory of the electron[J]. Proceedings of the Royal Society of London. Series A, Containing Papers of a Mathematical and Physical Character, 1928, 117(778): 610-624. DOI: 10.1098/rspa.1928.0023.
 
-### D.2 Planck 数据
-- Planck Collaboration (2020), "Planck 2018 Results. VI. Cosmological Parameters", *A&A* **641**: A6
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1098/rspa.1928.0023)。
 
----
+**[REF008]** H. Weyl. Elektron und Gravitation[J]. Z. Phys., 1929, 56: 330.
 
-## E. 引力波（2010-2020）
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
-- B. P. Abbott et al. (LIGO) (2016), "Observation of Gravitational Waves from a Binary Black Hole Merger", *Phys. Rev. Lett.* **116**: 061102
-- B. P. Abbott et al. (2017), "GW170817: Observation of Gravitational Waves from a Binary Neutron Star Inspiral", *Phys. Rev. Lett.* **119**: 161101
+**[REF009]** C. N. Yang, R. L. Mills. Conservation of Isotopic Spin and Isotopic Gauge Invariance[J]. Phys. Rev., 1954, 96: 191.
 
----
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
-## F. 黑洞物理
+**[REF010]** Gross David J., Wilczek Frank. Ultraviolet Behavior of Non-Abelian Gauge Theories[J]. Physical Review Letters, 1973, 30(26): 1343-1346. DOI: 10.1103/physrevlett.30.1343.
 
-- S. W. Hawking (1975), "Particle Creation by Black Holes", *Comm. Math. Phys.* **43**: 199
-- J. D. Bekenstein (1973), "Black Holes and Entropy", *Phys. Rev.* **D7**: 2333
-- J. M. Bardeen, B. Carter, S. W. Hawking (1973), "The Four Laws of Black Hole Mechanics", *Comm. Math. Phys.* **31**: 161
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1103/physrevlett.30.1343)。
 
----
+**[REF011]** Politzer H. David. Reliable Perturbative Results for Strong Interactions?[J]. Physical Review Letters, 1973, 30(26): 1346-1349. DOI: 10.1103/physrevlett.30.1346.
 
-## G. 数学工具
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1103/physrevlett.30.1346)。
 
-### G.1 微分几何
-- S. W. Hawking, G. F. R. Ellis (1973), *The Large Scale Structure of Space-Time*, Cambridge University Press
-- R. M. Wald (1984), *General Relativity*, University of Chicago Press
+**[REF012]** S. Weinberg. A Model of Leptons[J]. Phys. Rev. Lett., 1967, 19: 1264.
 
-### G.2 Clifford 代数
-- D. Hestenes (1966), *Space-Time Algebra*, Gordon and Breach
-- P. Lounesto (2001), *Clifford Algebras and Spinors*, Cambridge University Press
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
-### G.3 数值方法
-- mpmath Development Team (2024), "mpmath: a Python library for arbitrary-precision arithmetic", http://mpmath.org/
-- SymPy Development Team (2024), "SymPy: symbolic computing in Python", https://www.sympy.org/
+**[REF013]** A. Salam. Weak and Electromagnetic Interactions[M]. in Elementary Particle Theory (ed. N. Svartholm), Almqvist & Wiksell, 1968.
 
----
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
-## H. openuft 内部
+**[REF014]** Georgi Howard, Glashow S. L. Unity of All Elementary-Particle Forces[J]. Physical Review Letters, 1974, 32(8): 438-441. DOI: 10.1103/physrevlett.32.438.
 
-- AI科技星 (2026a), "全维统一场论 · 全维度修订版 v2", `90_paper_论文/全维修订版v2/`
-- AI科技星 (2026b), "R9 全维三重奏 · 完整严格证明", `20_P_证明_proof/P3_归纳闭合_R9/`
-- AI科技星 (2026c), "R10 绝热三重奏 · 纯圆周 b=0", `20_P_证明_proof/P4_绝热三重奏_R10/`
-- AI科技星 (2026d), "R11 梯度磁场 · mpmath 50 位 1.17e-18", `20_P_证明_proof/P5_梯度磁场精确性_R11/`
-- AI科技星 (2026e), "终极总报告 v6 · FINAL", `90_paper_论文/终极报告系列/v6_20260906_FINAL.md`
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1103/physrevlett.32.438)。
 
----
+**[REF015]** H. Fritzsch, P. Minkowski. Unified Interactions of Leptons and Hadrons[J]. Ann. Phys., 1975, 93: 193.
 
-## 进一步阅读推荐
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
 
-| 受众 | 推荐起点 |
-|---|---|
-| 本科生 | Griffiths "Introduction to Elementary Particles" (2008) |
-| 研究生 | Peskin & Schroeder "An Introduction to QFT" (1995) |
-| 引力研究者 | Wald "General Relativity" (1984) |
-| 量子引力研究者 | Rovelli "Quantum Gravity" (2004) |
-| 数值物理 | Press et al. "Numerical Recipes" (2007) |
+**[REF016]** M. B. Green, J. H. Schwarz. Anomaly Cancellation in Supersymmetric D=10 Gauge Theory[J]. Phys. Lett., 1984, B149: 117.
 
-— AI科技星 · 2026-09-06
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF017]** E. Witten. String Theory Dynamics in Various Dimensions[J]. Nucl. Phys., 1995, B443: 85 (M-theory).
+
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF018]** Ashtekar Abhay. New Variables for Classical and Quantum Gravity[J]. Physical Review Letters, 1986, 57(18): 2244-2247. DOI: 10.1103/physrevlett.57.2244.
+
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1103/physrevlett.57.2244)。
+
+**[REF019]** C. Rovelli. Quantum Gravity[M]. Cambridge University Press, 2004.
+
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF020]** Sorkin R D. Causal Sets: Discrete Gravity[M]//Gomberoff A, Marolf D, eds. Lectures on Quantum Gravity. Springer, 2005: 305–327. DOI: 10.1007/0-387-24992-3_7.
+
+核实范围：出版社页面核对；原列表 2007 更正为 2005。 [来源](https://link.springer.com/chapter/10.1007/0-387-24992-3_7)。
+
+**[REF021]** A. H. Guth. Inflationary Universe: A Possible Solution to the Horizon and Flatness Problems[J]. Phys. Rev., 1981, D23: 347.
+
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF022]** Riess Adam G., Filippenko Alexei V., Challis Peter, et al. Observational Evidence from Supernovae for an Accelerating Universe and a Cosmological Constant[J]. The Astronomical Journal, 1998, 116(3): 1009-1038. DOI: 10.1086/300499.
+
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1086/300499)。
+
+**[REF023]** Planck Collaboration. Planck 2018 Results. VI. Cosmological Parameters[J]. A&A, 2020, 641: A6.
+
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF024]** Abbott B. P., Abbott R., Abbott T. D., et al. Observation of Gravitational Waves from a Binary Black Hole Merger[J]. Physical Review Letters, 2016, 116(6): 061102. DOI: 10.1103/physrevlett.116.061102.
+
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1103/physrevlett.116.061102)。
+
+**[REF025]** Abbott B. P., Abbott R., Abbott T. D., et al. GW170817: Observation of Gravitational Waves from a Binary Neutron Star Inspiral[J]. Physical Review Letters, 2017, 119(16): 161101. DOI: 10.1103/physrevlett.119.161101.
+
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1103/physrevlett.119.161101)。
+
+**[REF026]** Hawking S. W. Particle creation by black holes[J]. Communications In Mathematical Physics, 1975, 43(3): 199-220. DOI: 10.1007/bf02345020.
+
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1007/bf02345020)。
+
+**[REF027]** Bekenstein Jacob D. Black Holes and Entropy[J]. Physical Review D, 1973, 7(8): 2333-2346. DOI: 10.1103/physrevd.7.2333.
+
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1103/physrevd.7.2333)。
+
+**[REF028]** Bardeen J. M., Carter B., Hawking S. W. The four laws of black hole mechanics[J]. Communications in Mathematical Physics, 1973, 31(2): 161-170. DOI: 10.1007/bf01645742.
+
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.1007/bf01645742)。
+
+**[REF029]** S. W. Hawking, G. F. R. Ellis. The Large Scale Structure of Space-Time[M]. Cambridge University Press, 1973.
+
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF030]** R. M. Wald. General Relativity[M]. University of Chicago Press, 1984.
+
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF031]** D. Hestenes. Space-Time Algebra[M]. Gordon and Breach, 1966.
+
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF032]** P. Lounesto. Clifford Algebras and Spinors[M]. Cambridge University Press, 2001.
+
+核实范围：按原有条目规范化；未独立核实版次、完整页码或出版元数据。
+
+**[REF033]** mpmath developers. mpmath: Python library for arbitrary-precision floating-point arithmetic[CP/OL]. https://mpmath.org/ (accessed 2026-09-09).
+
+核实范围：官网核对；软件版本应由运行环境另行登记，不沿用任意 2024 年份。 [来源](https://mpmath.org/)。
+
+**[REF034]** Meurer Aaron, Smith Christopher P., Paprocki Mateusz, et al. SymPy: symbolic computing in Python[J]. PeerJ Computer Science, 2017, 3: e103. DOI: 10.7717/peerj-cs.103.
+
+核实范围：已核对 DOI 注册元数据；不表示审查正文。 [来源](https://doi.org/10.7717/peerj-cs.103)。
+
+**[READ01]** Griffiths D. Introduction to Elementary Particles[M]. 2008.
+
+核实范围：保留原进一步阅读条目；版次与出版社待核实。
+
+**[READ02]** Peskin M E, Schroeder D V. An Introduction to Quantum Field Theory[M]. 1995.
+
+核实范围：保留原进一步阅读条目；版次与出版社待核实。
+
+**[READ03]** Press W H, et al. Numerical Recipes[M]. 2007.
+
+核实范围：保留原进一步阅读条目；版次与出版社待核实。
+
+
+## 全球路线原始入口
+
+**[GLOBAL01]** CERN. Unified forces[EB/OL]. 未标注. https://home.web.cern.ch/science/physics/unified-forces/ (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献01 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://home.web.cern.ch/science/physics/unified-forces/)。
+
+**[GLOBAL02]** John H. Schwarz. Introduction to Superstring Theory[EB/OL]. 2000. https://arxiv.org/abs/hep-ex/0008017 (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献02 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://arxiv.org/abs/hep-ex/0008017)。
+
+**[GLOBAL03]** Abhay Ashtekar; Jerzy Lewandowski. Background Independent Quantum Gravity: A Status Report[EB/OL]. 2004. https://arxiv.org/abs/gr-qc/0404018 (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献03 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://arxiv.org/abs/gr-qc/0404018)。
+
+**[GLOBAL04]** Alfio Bonanno; Astrid Eichhorn; Holger Gies; Jan M. Pawlowski; Roberto Percacci; Martin Reuter; Frank Saueressig; Gian Paolo Vacca. Critical reflections on asymptotically safe gravity[EB/OL]. 2020. https://arxiv.org/abs/2004.06810 (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献04 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://arxiv.org/abs/2004.06810)。
+
+**[GLOBAL05]** Sumati Surya. The causal set approach to quantum gravity[EB/OL]. 2019. https://arxiv.org/abs/1903.11544 (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献05 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://arxiv.org/abs/1903.11544)。
+
+**[GLOBAL06]** R. Loll. Quantum Gravity from Causal Dynamical Triangulations: A Review[EB/OL]. 2019. https://arxiv.org/abs/1905.08669 (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献06 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://arxiv.org/abs/1905.08669)。
+
+**[GLOBAL07]** Ali H. Chamseddine; Alain Connes; Matilde Marcolli. Gravity and the standard model with neutrino mixing[EB/OL]. 2006. https://arxiv.org/abs/hep-th/0610241 (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献07 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://arxiv.org/abs/hep-th/0610241)。
+
+**[GLOBAL08]** Juan M. Maldacena. The Large N Limit of Superconformal Field Theories and Supergravity[EB/OL]. 1997. https://arxiv.org/abs/hep-th/9711200 (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献08 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://arxiv.org/abs/hep-th/9711200)。
+
+**[GLOBAL09]** Erik P. Verlinde. On the Origin of Gravity and the Laws of Newton[EB/OL]. 2010. https://arxiv.org/abs/1001.0785 (accessed 2026-09-09).
+
+核实范围：沿用全球文献登记 文献09 的入口核实范围；arXiv 条目按在线版本引用。 [来源](https://arxiv.org/abs/1001.0785)。
+
+
+## 本项目内部研究稿
+
+**[LOCAL01]** AI科技星. 全维度修订v2[R]. 项目内部研究稿，2026；版本以文件为准。
+
+核实范围：项目内部资料；未登记外部出版或同行评审。 [当前文件](../../04_公共成果/历史综合报告/全维修订版v2/全维度修订v2.md)。
+
+**[LOCAL02]** AI科技星. 完整严格证明[R]. 项目内部研究稿，2026；版本以文件为准。
+
+核实范围：项目内部资料；未登记外部出版或同行评审。 [当前文件](../../01_独立体系/S01_螺旋三重奏与谱几何/05_一致性检查/P3_归纳闭合_R9/完整严格证明.md)。
+
+**[LOCAL03]** AI科技星. 绝热与纯圆周精确[R]. 项目内部研究稿，2026；版本以文件为准。
+
+核实范围：项目内部资料；未登记外部出版或同行评审。 [当前文件](../../01_独立体系/S01_螺旋三重奏与谱几何/05_一致性检查/P4_绝热三重奏_R10/绝热与纯圆周精确.md)。
+
+**[LOCAL04]** AI科技星. README[R]. 项目内部研究稿，2026；版本以文件为准。
+
+核实范围：项目内部资料；未登记外部出版或同行评审。 [当前文件](../../01_独立体系/S01_螺旋三重奏与谱几何/05_一致性检查/P5_梯度磁场精确性_R11/README.md)。
+
+**[LOCAL05]** AI科技星. v6_20260906_FINAL[R]. 项目内部研究稿，2026；版本以文件为准。
+
+核实范围：项目内部资料；未登记外部出版或同行评审。 [当前文件](../../01_独立体系/S12_空间光速螺旋统一体系/13_论文与成果/论文正文/终极报告系列/v6_20260906_FINAL.md)。
+
+## 正文引用与语言版本
+
+正文使用稳定编号，例如 [ZXQ2024]，并在能查到原文时补充具体页码/章节。书目数据由用户提供或尚未独立核实时，保留此状态，不猜测 DOI、页码、版次或译者。
+
+英文、日语摘要使用同一套引用编号和原文题名；只翻译说明文字，不虚构英文版、日文版或译本 ISBN。
+
+[English](../../05_全球研究/03_多语种协作/英语/项目介绍.md) · [日本語](../../05_全球研究/03_多语种协作/日语/项目介绍.md)。

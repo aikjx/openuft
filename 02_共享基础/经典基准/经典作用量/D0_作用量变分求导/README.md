@@ -10,7 +10,7 @@
 | 电磁/Maxwell | −¼∫F² | ∂_μ F^{μν}=J^ν |
 | Yang-Mills | −¼∫Tr(F²) | D_μ F^{μν}=J^ν |
 | Einstein-Hilbert | ∫d⁴x √−g (R−2Λ)/(16πG) | G_{μν}+Λg_{μν}=8πG T_{μν} |
-| 大统一力（张祥前） | P=m(c−v) | dP/dt=F |
+| 空间光速螺旋统一力 | P=m(c−v) | dP/dt=F |
 
 ## 全维度求导链（核心）
 
