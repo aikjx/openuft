@@ -13,7 +13,7 @@
 | `D2_经典场论/` | Maxwell + Einstein | ∂μFμν=Jν |
 | `D3_量子场论/` | KG / Dirac / Schrödinger | (□+m²)φ=0 |
 | `D4_规范场/` | YM / Higgs / 电弱 | DμFμν=Jν |
-| `D5_大统一力方程/` | 张祥前统一场论 | P=m(c-v), dP/dt=F |
+| `D5_大统一力方程/` | 空间光速螺旋统一场论 | P=m(c-v), dP/dt=F |
 
 ## 当前状态
 

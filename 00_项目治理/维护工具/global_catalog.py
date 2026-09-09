@@ -3,6 +3,7 @@ import argparse
 import csv
 import io
 import json
+import importlib.util
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -35,6 +36,10 @@ def views(root):
     outputs[base / '02_全球路线/README.md'] = intro
     outputs[base / '02_全球路线/覆盖矩阵.csv'] = csv_text(['路线编号','研究路线','来源编号','覆盖状态','核实日期','仍需完成'], [[x['编号'],x['名称'],x['来源编号'],x['覆盖状态'],x['核实日期'],'全文精读；最新进展补充；适用域与预测审查'] for x in rows])
     outputs[base / '01_文献来源/文献登记.csv'] = csv_text(['来源编号','原作者','原题名','年份','原始链接','路线编号','核实日期','核实范围'],[[x['来源编号'],x['原作者'],x['原题名'],x['年份'],x['原始链接'],x['编号'],x['核实日期'],x['核实范围']] for x in rows])
+    spec = importlib.util.spec_from_file_location('international_views', Path(__file__).with_name('international_views.py'))
+    international = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(international)
+    outputs.update(international.views(root, data))
     return outputs
 
 def check(root):
