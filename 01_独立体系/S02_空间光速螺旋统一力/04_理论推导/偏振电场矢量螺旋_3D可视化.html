@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>电场矢量螺旋（偏振）· 3D 科研可视化</title>
+<style>
+  :root { --bg:#0b0e14; --fg:#d7e0ea; --acc:#39d0ff; --warn:#ffb454; --ok:#7ee787; }
+  * { box-sizing: border-box; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--fg);
+    font-family: "Cascadia Code", "JetBrains Mono", Consolas, Menlo, monospace; }
+  #app { display:flex; height:100%; }
+  #view { flex:1; position:relative; }
+  canvas { display:block; }
+  #panel { width:360px; background:#0f141d; border-left:1px solid #1d2630;
+    padding:14px 16px; overflow-y:auto; font-size:12.5px; line-height:1.55; }
+  h1 { font-size:14px; color:var(--acc); margin:0 0 6px; }
+  h2 { font-size:12.5px; color:var(--warn); margin:14px 0 4px; letter-spacing:.5px; }
+  .eq { background:#0b0e14; border-left:2px solid var(--acc); padding:6px 8px;
+    margin:6px 0; white-space:pre-wrap; color:#cfe8ff; }
+  .row { display:flex; align-items:center; gap:8px; margin:5px 0; }
+  label { flex:0 0 110px; color:#9fb2c4; }
+  select, input[type=range] { flex:1; background:#0b0e14; color:var(--fg);
+    border:1px solid #263241; border-radius:4px; padding:3px; }
+  .read { font-variant-numeric: tabular-nums; }
+  .k { color:var(--acc); } .v { color:var(--ok); }
+  .note { color:#8aa0b4; font-size:11.5px; }
+  #legend { position:absolute; left:12px; top:12px; background:rgba(11,14,20,.7);
+    border:1px solid #1d2630; padding:8px 10px; font-size:11.5px; border-radius:6px; }
+  .sw { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+  details { margin-top:8px; } summary { cursor:pointer; color:var(--warn); }
+  code { color:#ffd9a0; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="view">
+    <div id="legend">
+      <div><span class="sw" style="background:#ff5d5d"></span>Z 轴 = 传播方向（波前以 c 前进）</div>
+      <div><span class="sw" style="background:#5dff8f"></span>X 轴 = 电场横向分量 Eₓ</div>
+      <div><span class="sw" style="background:#5db8ff"></span>Y 轴 = 电场横向分量 E_y</div>
+      <div><span class="sw" style="background:#39d0ff"></span>螺旋曲线 = E 矢量尖端时空轨迹</div>
+      <div><span class="sw" style="background:#ffb454"></span>偏振片轴 + 透射投影</div>
+      <div class="note" style="margin-top:6px">鼠标拖拽旋转 · 滚轮缩放</div>
+    </div>
+  </div>
+  <div id="panel">
+    <h1>电场矢量螺旋（偏振）· 科研可视化</h1>
+    <div class="note">圆偏振的电场矢量尖端在横截面 (x,y) 内画圆；叠加沿 Z 传播，即在 (x,y,z) 空间描出<b>螺旋</b>。此螺旋属于<b>场矢量空间</b>，不是光子空间轨迹；波前仍以 c 沿 Z 前进。</div>
+
+    <h2>控制</h2>
+    <div class="row"><label>偏振类型</label>
+      <select id="pol">
+        <option value="RCP">圆偏振 右旋 (RCP)</option>
+        <option value="LCP">圆偏振 左旋 (LCP)</option>
+        <option value="linear-x">线偏振 X</option>
+        <option value="linear-y">线偏振 Y</option>
+        <option value="linear-45">线偏振 45°</option>
+        <option value="elliptical">椭圆偏振</option>
+      </select></div>
+    <div class="row"><label>波长 λ (场景单位)</label><input id="lambda" type="range" min="1" max="4" step="0.1" value="2"></div>
+    <div class="row"><label>振幅 A</label><input id="amp" type="range" min="0.3" max="1.5" step="0.05" value="1"></div>
+    <div class="row"><label>动画速度</label><input id="speed" type="range" min="0" max="3" step="0.1" value="1"></div>
+    <div class="row"><label>偏振片角度 θ</label><input id="theta" type="range" min="0" max="180" step="1" value="0"></div>
+    <div class="row"><label>显示偏振片</label><input id="showPol" type="checkbox" checked style="flex:0"></div>
+    <div class="row"><label>显示横截面圆</label><input id="showCircle" type="checkbox" checked style="flex:0"></div>
+
+    <h2>实时读数</h2>
+    <div class="read">相位 φ(z₀)=<span class="v" id="rPhi">0</span> · E=(<span class="v" id="rEx">0</span>, <span class="v" id="rEy">0</span>)</div>
+    <div class="read">|E|²=<span class="v" id="rE2">0</span> （圆偏振恒定 ⇒ 强度恒定）</div>
+    <div class="read">透射 I/I₀=<span class="v" id="rI">0</span> · 理论均值=<span class="v" id="rIavg">0</span></div>
+    <div class="note" id="rWarn"></div>
+
+    <h2>方程与映射</h2>
+    <div class="eq">E(z,t)=A·[ cos(kz−ωt)·x̂ + s·sin(kz−ωt)·ŷ ]
+s=+1 右旋, s=−1 左旋; k=2π/λ, ω=ck, c=ω/k=1(场景)</div>
+    <div class="eq">时空螺旋（固定 t）：x=A cos(kz), y=s·A sin(kz), z=z
+螺距 = λ，尖端场空间速率 = ωA（非空间速度）</div>
+
+    <details>
+      <summary>求导证明 · 验证分析</summary>
+      <div class="eq">① 强度：⟨E²⟩=A²⟨cos²φ+s²sin²φ⟩=A²  (圆偏振)
+   ⇒ I 与相位无关，恒定。</div>
+      <div class="eq">② ∂E/∂t = −ωA[ sinφ·x̂ − s·cosφ·ŷ ]
+  |∂E/∂t| = ωA  ⇒ 矢量以角频率 ω 旋转。</div>
+      <div class="eq">③ 偏振片投影（轴 â 与 X 夹角 θ）：
+  E·â = A[cosφ·cosθ + s·sinφ·sinθ]
+  ⟨(E·â)²⟩ = A²/2  (圆偏振, 与 θ 无关 ⇒ 任意线偏振片得 I₀/2)</div>
+      <div class="eq">④ 线偏振输入（角 α）经分析片（角 θ）：
+  I/I₀ = cos²(α−θ)  —— 马吕斯定律</div>
+      <div class="eq">⑤ 两垂直片：θ₂−θ₁=90° ⇒ cos²90°=0 ⇒ 全挡
+  插 45° 第三片：I₀·½·cos²45°·cos²45° = I₀/8</div>
+      <div class="note">验证：改变 θ，圆偏振的 I/I₀ 恒为 ½（右上读数）；线偏振则呈 cos² 起伏——与 §2.2–2.5 实验数据一致。</div>
+    </details>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const params = { pol:'RCP', lambda:2, amp:1, speed:1, theta:0, showPol:true, showCircle:true };
+const C_SIM = 1;                       // 场景光速
+let k, omega, L, zObs, zPol;
+function recompute(){ k = 2*Math.PI/params.lambda; omega = C_SIM*k; L = 4*params.lambda; zObs = L*0.32; zPol = L*0.72; }
+
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0b0e14);
+const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+document.getElementById('view').appendChild(renderer.domElement);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+// lights (for plane)
+scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+
+// axes
+function axis(dir, color, len){ const a=new THREE.ArrowHelper(dir,new THREE.Vector3(0,0,0),len,color,len*0.04,len*0.025); scene.add(a); }
+axis(new THREE.Vector3(0,0,1), 0xff5d5d, 1); axis(new THREE.Vector3(1,0,0), 0x5dff8f, 1); axis(new THREE.Vector3(0,1,0), 0x5db8ff, 1);
+
+// E-field vector (transverse) at given z, t
+function Efield(z, t){
+  const phi = k*z - omega*t, A = params.amp, s = (params.pol==='LCP')?-1:1;
+  let x=0, y=0;
+  switch(params.pol){
+    case 'RCP': case 'LCP': x=A*Math.cos(phi); y=A*s*Math.sin(phi); break;
+    case 'linear-x': x=A*Math.cos(phi); y=0; break;
+    case 'linear-y': x=0; y=A*Math.cos(phi); break;
+    case 'linear-45': x=A*Math.cos(phi)/Math.SQRT2; y=A*Math.cos(phi)/Math.SQRT2; break;
+    case 'elliptical': x=A*Math.cos(phi); y=0.5*A*Math.sin(phi); break;
+  }
+  return {x,y};
+}
+
+// helix line (field tip spacetime locus), N points along z
+const N = 480;
+const hPos = new Float32Array(N*3), hCol = new Float32Array(N*3);
+const hGeo = new THREE.BufferGeometry();
+hGeo.setAttribute('position', new THREE.BufferAttribute(hPos,3));
+hGeo.setAttribute('color', new THREE.BufferAttribute(hCol,3));
+const hMat = new THREE.LineBasicMaterial({ vertexColors:true });
+const helix = new THREE.Line(hGeo, hMat); scene.add(helix);
+
+// transverse locus (ring) at observer
+const M = 160;
+const rPos = new Float32Array(M*3);
+const rGeo = new THREE.BufferGeometry();
+rGeo.setAttribute('position', new THREE.BufferAttribute(rPos,3));
+const ring = new THREE.LineLoop(rGeo, new THREE.LineBasicMaterial({color:0x6fb3ff})); scene.add(ring);
+
+function rebuildRing(){
+  for(let i=0;i<M;i++){ const phi=2*Math.PI*i/M; const e=Efield(zObs,0); // shape independent of t
+    // sample locus by phase offset
+    const ph = k*zObs - omega*0 + phi; const A=params.amp, s=(params.pol==='LCP')?-1:1;
+    let x=0,y=0;
+    switch(params.pol){
+      case 'RCP': case 'LCP': x=A*Math.cos(ph); y=A*s*Math.sin(ph); break;
+      case 'linear-x': x=A*Math.cos(ph); y=0; break;
+      case 'linear-y': x=0; y=A*Math.cos(ph); break;
+      case 'linear-45': x=A*Math.cos(ph)/Math.SQRT2; y=A*Math.cos(ph)/Math.SQRT2; break;
+      case 'elliptical': x=A*Math.cos(ph); y=0.5*A*Math.sin(ph); break;
+    }
+    rPos[i*3]=x; rPos[i*3+1]=y; rPos[i*3+2]=zObs; }
+  rGeo.attributes.position.needsUpdate=true;
+}
+
+// arrows
+function mkArrow(color){ const a=new THREE.ArrowHelper(new THREE.Vector3(1,0,0),new THREE.Vector3(),1,color,0.25,0.16); scene.add(a); return a; }
+const arrObs = mkArrow(0x39d0ff);
+const arrTrans = mkArrow(0xffb454);
+
+// polarizer plane + axis line
+const polGroup = new THREE.Group(); scene.add(polGroup);
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(2.6,2.6),
+  new THREE.MeshBasicMaterial({color:0xffb454, transparent:true, opacity:0.12, side:THREE.DoubleSide}));
+const axisLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),
+  new THREE.LineBasicMaterial({color:0xffb454}));
+polGroup.add(plane); polGroup.add(axisLine);
+
+function updatePolarizer(){
+  polGroup.position.set(0,0,zPol);
+  polGroup.visible = params.showPol;
+  if(!params.showPol) return;
+  plane.rotation.y = Math.PI/2;            // plane normal along Z
+  const th = params.theta*Math.PI/180, len=1.2;
+  axisLine.geometry.setFromPoints([ new THREE.Vector3(-len*Math.cos(th),-len*Math.sin(th),0),
+                                    new THREE.Vector3( len*Math.cos(th), len*Math.sin(th),0) ]);
+}
+
+// theory average I/I0
+function avgRatio(){
+  const th=params.theta*Math.PI/180, A=params.amp;
+  switch(params.pol){
+    case 'RCP': case 'LCP': return 0.5;
+    case 'linear-x': return Math.cos(th)**2;
+    case 'linear-y': return Math.cos(th-Math.PI/2)**2;
+    case 'linear-45': return Math.cos(th-Math.PI/4)**2;
+    case 'elliptical': { const a=A,b=0.5*A; return (a*a*Math.cos(th)**2 + b*b*Math.sin(th)**2)/(a*a+b*b); }
+  }
+}
+
+let t = 0;
+function updateArrows(){
+  const eObs = Efield(zObs, t);
+  // observer arrow
+  arrObs.position.set(0,0,zObs);
+  const vObs = new THREE.Vector3(eObs.x, eObs.y, 0); const lObs=vObs.length();
+  if(lObs>1e-6){ arrObs.visible=true; arrObs.setDirection(vObs.normalize()); arrObs.setLength(lObs, Math.min(0.22,lObs*0.3), Math.min(0.14,lObs*0.2)); }
+  else arrObs.visible=false;
+  // transmitted arrow (after polarizer)
+  const ePol = Efield(zPol, t); const th=params.theta*Math.PI/180;
+  const proj = ePol.x*Math.cos(th) + ePol.y*Math.sin(th);
+  const vT = new THREE.Vector3(proj*Math.cos(th), proj*Math.sin(th), 0); const lT=vT.length();
+  if(params.showPol && lT>1e-6){ arrTrans.visible=true; arrTrans.position.set(0,0,zPol+0.15);
+    arrTrans.setDirection(vT.normalize()); arrTrans.setLength(lT, Math.min(0.22,lT*0.3), Math.min(0.14,lT*0.2)); }
+  else arrTrans.visible=false;
+  return {eObs, proj};
+}
+
+const elPhi=document.getElementById('rPhi'), elEx=document.getElementById('rEx'), elEy=document.getElementById('rEy'),
+      elE2=document.getElementById('rE2'), elI=document.getElementById('rI'), elIavg=document.getElementById('rIavg'),
+      elWarn=document.getElementById('rWarn');
+
+function animate(){
+  requestAnimationFrame(animate);
+  t += 0.016 * params.speed;
+  // rebuild helix (traveling wave)
+  for(let i=0;i<N;i++){ const z = L*i/(N-1); const e=Efield(z,t);
+    hPos[i*3]=e.x; hPos[i*3+1]=e.y; hPos[i*3+2]=z;
+    const hue = (k*z - omega*t)/(2*Math.PI); const c=new THREE.Color(); c.setHSL((0.6+hue*0.15)%1,0.8,0.6);
+    hCol[i*3]=c.r; hCol[i*3+1]=c.g; hCol[i*3+2]=c.b; }
+  hGeo.attributes.position.needsUpdate=true; hGeo.attributes.color.needsUpdate=true;
+  ring.visible = params.showCircle;
+  updatePolarizer();
+  const {eObs, proj} = updateArrows();
+  // readouts
+  const phi = k*zObs - omega*t;
+  elPhi.textContent = phi.toFixed(2);
+  elEx.textContent = eObs.x.toFixed(3); elEy.textContent = eObs.y.toFixed(3);
+  elE2.textContent = (eObs.x*eObs.x+eObs.y*eObs.y).toFixed(3);
+  const A=params.amp; const Iinst = (proj*proj)/(A*A); // normalized to peak
+  elI.textContent = Iinst.toFixed(3);
+  const ia = avgRatio(); elIavg.textContent = ia.toFixed(3);
+  elWarn.textContent = (params.pol==='RCP'||params.pol==='LCP')
+    ? '圆偏振：I/I₀ 理论恒为 ½，与偏振片角度无关（验证 §2.5）。'
+    : '线/椭圆偏振：I/I₀ 随 θ 呈 cos² 起伏（马吕斯，验证 §2.2）。';
+  controls.update();
+  renderer.render(scene,camera);
+}
+
+// UI
+function bind(id,key,fn){ const el=document.getElementById(id); el.addEventListener('input',()=>{ params[key]=fn?fn(el.value):el.value; if(key==='pol'||key==='lambda'||key==='amp'){ recompute(); rebuildRing(); } }); }
+bind('pol','pol'); bind('lambda','lambda',v=>parseFloat(v)); bind('amp','amp',v=>parseFloat(v));
+bind('speed','speed',v=>parseFloat(v)); bind('theta','theta',v=>parseFloat(v));
+document.getElementById('showPol').addEventListener('change',e=>params.showPol=e.target.checked);
+document.getElementById('showCircle').addEventListener('change',e=>params.showCircle=e.target.checked);
+
+function resize(){ const v=document.getElementById('view'); camera.aspect=v.clientWidth/v.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(v.clientWidth,v.clientHeight); }
+window.addEventListener('resize',resize);
+
+recompute(); rebuildRing();
+camera.position.set(6,4,9); controls.target.set(0,0,L*0.5);
+resize(); animate();
+</script>
+</body>
+</html>
