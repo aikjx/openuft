@@ -2,7 +2,7 @@
 """
 全仓库第一性健康度归一化总览（可复跑）
 ======================================
-把 openuft 的 17 个体系归一到统一的第一性坐标系：
+把 openuft 的**全部已登记体系**（读 system_registry.json，随登记数增加）归一到统一的第一性坐标系：
 
   评级  H = 健康（自洽、无已知硬冲突）
         O = 欠定 / 高风险候选（依赖已证伪谱系、或本体待建）
@@ -39,6 +39,11 @@ U_SET = {"p01_space_compression", "p02_matter_source", "p03_gauge_unification", 
 AUDIT_CONFLICT_IDS = {
     "S02-C0001", "S05-C0001", "S05-C0002", "S06-C0001", "S06-C0002",
     "S07-C0001", "S08-C0001", "S08-C0002", "S09-C0001", "S10-C0001", "S12-C0006",
+    # 2026-09-15 增量：S14 TUFT 三册精算（四力统一 / 黑洞热力学 / 暴胀CMB）的审计判定 FAIL 项
+    "S14-C0001", "S14-C0002", "S14-C0003", "S14-C0004", "S14-C0005",
+    "S14-C0006", "S14-C0007", "S14-C0008", "S14-C0012",
+    "S14-C0013", "S14-C0014", "S14-C0015", "S14-C0016", "S14-C0017",
+    "S14-C0018", "S14-C0019", "S14-C0020", "S14-C0021",
 }
 
 NOTE = {
@@ -50,6 +55,7 @@ NOTE = {
     "s06_tcl_topological_chirality": "隔离审查发现独立缺陷：Cl(4,4)⊗ℂ 代数同构错、维数自相矛盾（§14）",
     "s11_gmuft_geometric_coupling": "借用 GAQ 几何；隔离审查判非标准式 Q/M=√(4πε₀G) 原文已诚实标注（OPEN-2）",
     "p03_gauge_unification": "方向占位；P03 立项评估建议立项，走群论不受 M02 影响",
+    "s14_torsion_unified_field_tuft": "2026-09-15 新登记体系；两册精算判 FAIL 42 项（四力统一 19 / 黑洞热力学 23）：结构群为直积非单群、SM 三耦合 1e16 GeV 处 21% 分散不汇聚、统一作用量无 TUFT 特有项、T_H 与质量式量纲非法、元胞计数与 A/4l_P² 差因子 4、真空挠率与自身作用量矛盾；正面：T_H=ħc√K(r_h)/(4πk_B) 与标准式代数恒等、SM 五类反常精确为零",
     "p01_space_compression": "方向占位，无公设",
     "p02_matter_source": "方向占位，无公设",
     "p04_quantum_emergence": "方向占位，无公设",
@@ -104,7 +110,7 @@ for s in systems:
 cnt = Counter(r["rating"] for r in rows)
 
 md = "# 全仓库第一性健康度归一化总览\n\n"
-md += "> 来源：system_registry.json（17 体系）+ 各体系 claims.csv（鲁棒读取 status）+ 算法联盟审计结论。\n\n"
+md += "> 来源：system_registry.json（%d 体系）+ 各体系 claims.csv（鲁棒读取 status）+ 算法联盟审计结论。\n\n" % len(systems)
 md += "评级：H=健康 / O=欠定或高风险 / C=内部冲突(审计判定) / U=未立项占位。\n"
 md += "注：体系**自我记录并已修复**的证伪不计 C，仅在备注标注（诚实治理 ≠ 未修复冲突）。\n\n"
 md += "## 统计\n\n| 评级 | 数量 | 体系 |\n|---|---|---|\n"
