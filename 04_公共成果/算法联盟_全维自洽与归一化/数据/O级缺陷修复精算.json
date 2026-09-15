@@ -1,0 +1,152 @@
+[
+  {
+    "id": "s05-H2.dim",
+    "system": "s05_HDU高维紧致化",
+    "item": "原式 R₁₁ 量纲",
+    "kind": "量纲审计",
+    "statement": "R₁₁=(ℏ/2π)^(1/3)G^(1/3)c^(-2/3)",
+    "value": "2.31856995298e-21",
+    "verdict": "FAIL",
+    "detail": "原式量纲 = L^1 T^-1/3，**非长度**（长度应为 L^1）；数值 2.318570e-21 m"
+  },
+  {
+    "id": "s05-H2.solve",
+    "system": "s05_HDU高维紧致化",
+    "item": "由 (ℏ,G,c) 造长度的指数解",
+    "kind": "求导证明",
+    "statement": "解 a·[ℏ]+b·[G]+d·[c]=(0,1,0)",
+    "value": "a=1/2 b=1/2 d=-3/2",
+    "verdict": "PASS",
+    "detail": "唯一解 a=b=1/2, d=-3/2 ⇒ ℏ^(1/2)G^(1/2)c^(-3/2)=ℓ_P（解唯一，因 3 方程组 3 未知数满秩）"
+  },
+  {
+    "id": "s05-H2.fix",
+    "system": "s05_HDU高维紧致化",
+    "item": "修正形式 = C·ℓ_P",
+    "kind": "求导证明",
+    "statement": "R₁₁=C·ℏ^(1/2)G^(1/2)c^(-3/2)=C·ℓ_P",
+    "value": "1.61625502393e-35",
+    "verdict": "PASS",
+    "detail": "修正量纲 = L^1 = 长度 ✓；ℓ_P=1.616255e-35 m。原文声称 R₁₁≈ℓ_P（误差<1e-4）⇒ C=1 即 R₁₁=ℓ_P"
+  },
+  {
+    "id": "s05-H2.gap",
+    "system": "s05_HDU高维紧致化",
+    "item": "原式 vs 正确值",
+    "kind": "精算",
+    "statement": "原式 2.318570e-21 m vs ℓ_P 1.616255e-35 m",
+    "value": "1.4345322e+14",
+    "verdict": "FAIL",
+    "detail": "偏大 1.4345e+14 倍。根因：指数 (1/3,1/3,-2/3) 与正确 (1/2,1/2,-3/2) 不符"
+  },
+  {
+    "id": "s05-H2.alt",
+    "system": "s05_HDU高维紧致化",
+    "item": "备选：经作用量子化",
+    "kind": "求导证明",
+    "statement": "M₁₁ c R₁₁ = ℏ ⇒ R₁₁ = ℏ/(M₁₁ c)",
+    "value": "dim = L",
+    "verdict": "PASS",
+    "detail": "ℏ/(M·c) 量纲 = (M L² T⁻¹)/(M·L T⁻¹) = L ✓。两条独立路径均给【长度】，原式两者皆不匹配"
+  },
+  {
+    "id": "s05-H3.num",
+    "system": "s05_HDU高维紧致化",
+    "item": "M₁₁=M_P(2π)^(1/3) 精算",
+    "kind": "精算",
+    "statement": "M_P·(2π)^(1/3)",
+    "value": "2.25287210835984277e+19",
+    "verdict": "FAIL",
+    "detail": "实算 2.2529e+19 GeV（M_P=1.2209e+19 GeV × (2π)^(1/3)=1.8453）；原文 3.18e19 GeV 偏大 1.412 倍"
+  },
+  {
+    "id": "s05-H3.self",
+    "system": "s05_HDU高维紧致化",
+    "item": "自洽闭合（R₁₁=ℓ_P）",
+    "kind": "求导证明",
+    "statement": "若 R₁₁=ℓ_P 且 M₁₁cR₁₁=ℏ ⇒ M₁₁=ℏ/(cℓ_P)=M_P",
+    "value": "1.22089012820986406e+19",
+    "verdict": "PASS",
+    "detail": "闭合值 M₁₁=M_P=1.2209e+19 GeV；此时 (2π)^(1/3) 因子无来源（应弃），H2/H3 与 H1 才算自洽"
+  },
+  {
+    "id": "s06.dim",
+    "system": "s06_TCL拓扑手征锁定",
+    "item": "Cl(4,4) 维数",
+    "kind": "求导证明",
+    "statement": "dim_ℝ Cl(p,q)=2^(p+q)",
+    "value": "2^8 = 256",
+    "verdict": "PASS",
+    "detail": "原文精算表『2⁴·2=32』无依据，实为 2^8=256"
+  },
+  {
+    "id": "s06.cls",
+    "system": "s06_TCL拓扑手征锁定",
+    "item": "周期表定位 Cl(4,4)",
+    "kind": "求导证明",
+    "statement": "n=8 偶, (p-q)mod8=0 ⇒ M_{2^{n/2}}(ℝ)",
+    "value": "M_16(ℝ)",
+    "verdict": "PASS",
+    "detail": "Cl(4,4) ≅ M₁₆(ℝ)（实维数 256）；⊗ℂ ⇒ M₁₆(ℂ)（复维数 256）"
+  },
+  {
+    "id": "s06.fix",
+    "system": "s06_TCL拓扑手征锁定",
+    "item": "修正同构",
+    "kind": "求导证明",
+    "statement": "Cl(4,4)⊗ℂ ≅ M₁₆(ℂ)",
+    "value": "dim_ℂ = 256",
+    "verdict": "PASS",
+    "detail": "原文 M₈⊕M₈（维数 128）错误：M₈⊕M₈ 半单（两个单代数），而复 Clifford 代数是单代数，二者不可能同构"
+  },
+  {
+    "id": "s06.origin",
+    "system": "s06_TCL拓扑手征锁定",
+    "item": "M₈⊕M₈ 的真实归属",
+    "kind": "求导证明",
+    "statement": "n=7 奇, (p-q)mod8=1 ⇒ M₈(ℝ)⊕M₈(ℝ)",
+    "value": "Cl(4,3)",
+    "verdict": "PASS",
+    "detail": "M₈⊕M₈ ⟺ Cl(4,3)（n=7, s=1）。故原文是把 Cl(4,4) 误写成 Cl(4,3) 的代数"
+  },
+  {
+    "id": "s06.center",
+    "system": "s06_TCL拓扑手征锁定",
+    "item": "中心维数判据",
+    "kind": "求导证明",
+    "statement": "M₁₆(ℂ) 中心维=1；M₈⊕M₈ 中心维=2",
+    "value": "1 vs 2",
+    "verdict": "PASS",
+    "detail": "单代数中心为一维；半单 M₈⊕M₈ 中心为 ℝ⊕ℝ（两中央幂等元）⇒ 反证 M₈⊕M₈ 不可为正 Clifford 代数"
+  },
+  {
+    "id": "s06-T3a",
+    "system": "s06_TCL拓扑手征锁定",
+    "item": "内部因子量纲",
+    "kind": "量纲审计",
+    "statement": "ℏc/(Δm²/(2m_ν))",
+    "value": "L^1",
+    "verdict": "PASS",
+    "detail": "量纲 = L^1 = 长度 ✓（内部因子本身是长度）"
+  },
+  {
+    "id": "s06-T3b",
+    "system": "s06_TCL拓扑手征锁定",
+    "item": "整体量纲",
+    "kind": "量纲审计",
+    "statement": "L_ij = [ℏc/(Δm²/2m_ν)]·2πR₃",
+    "value": "L^2",
+    "verdict": "FAIL",
+    "detail": "内部(长度)×2πR₃(长度) = L^2 = 长度²，**非长度**（BOUNDARY 升级为可判定）"
+  },
+  {
+    "id": "s06-T3c",
+    "system": "s06_TCL拓扑手征锁定",
+    "item": "修复",
+    "kind": "修复",
+    "statement": "2πR₃ 须为无量纲缠绕数 N，或去除",
+    "value": "L_ij = ℏc/ΔE × N",
+    "verdict": "PASS",
+    "detail": "若 2πR₃→N（无量纲整数缠绕数）则 L_ij 为长度 ✓；否则公式多一个长度因子"
+  }
+]
