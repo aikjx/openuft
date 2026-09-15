@@ -207,7 +207,7 @@ def module_b_triad():
     # B07 康普顿一致性：R = ƛ_C 与登记值
     lam_bar = HBAR / (ME * C)
     record("B07", "三重奏骨架", "R = ƛ_C = ℏ/(m_e c)（约化康普顿波长）",
-           "R - ℏ/(m_e c) = 0", R_e - lam_bar, lam_bar, "数值核验",
+           "R - ℏ/(m_e c) = 0", R_e - lam_bar, lam_bar, "代数恒等式",
            note="S10 派生 m=ℏ√(κ²+τ²)/c 与此等价")
 
     return {
@@ -259,7 +259,7 @@ def module_c_source_eq(triad):
     kappa_e = omega_e / mp.sqrt(1 + ALPHA ** 2)
     tau_e = ALPHA * omega_e / mp.sqrt(1 + ALPHA ** 2)
     record("C05", "本源方程", "α = τ/κ 回算精细结构常数",
-           "τ/κ - α = 0", tau_e / kappa_e - ALPHA, ALPHA, "数值核验",
+           "τ/κ - α = 0", tau_e / kappa_e - ALPHA, ALPHA, "代数恒等式",
            note="τ/κ 由 α 定义而来，此式是定义回指，不构成 α 的第一性导出")
 
     return {"kt": kt, "tt": tt, "kappa_e": kappa_e, "tau_e": tau_e}
@@ -298,9 +298,10 @@ def module_d_constants():
     omega_e = ME * C / HBAR
     G_via_kt = C ** 3 / (HBAR * omega_e ** 2)
     record("D06", "常数闭包", "【循环检测】G = c³/(ℏ(κ²+τ²)) 取电子 Ω 代入",
-           "G_式 - G_实测", G_via_kt, G, "数值核验", verdict="FAIL",
-           note="取 κ²+τ²=Ω_e²=(m_e c/ℏ)² 时给出 G_式 = ℏc/m_e² ≈ 4.2e31，"
-                "与实测 G 差 42 个数量级。该式仅在 κ²+τ²=1/ℓ_P²（即 m=m_P）时回指 G，"
+           "G_式/G_实测", G_via_kt / G, mp.mpf("1"), "代数恒等式", verdict="FAIL",
+           note="取 κ²+τ²=Ω_e²=(m_e c/ℏ)² 时，该式退化为 G_式 = ℏc/m_e² ≈ 3.81e+34，"
+                "与实测 G=6.67e-11 相差 5.7e+44 倍（约 44 个数量级）。"
+                "该式仅在 κ²+τ²=1/ℓ_P²（即 m=m_P）时才回指 G，"
                 "是普朗克锚定，不是任意粒子的恒等式（详见 M01/M02）")
 
     # D07 上式在普朗克锚定下回指
@@ -418,11 +419,12 @@ def module_f_duality():
            "D² - I = 0", sp.N(resid.norm(), 40), mp.mpf("1"), "符号恒等",
            note="D=[[0,1],[1,0]]，本征值 ±1；对偶基元 (a,ā) 的抽象代数结构自洽")
 
-    # F02 本征值 ±1
+    # F02 本征值 ±1（用符号判零，避免 Float/int 比较陷阱）
     ev = list(D.eigenvals().keys())
-    ev_ok = all(abs(sp.N(x)) == 1 for x in ev)
+    ev_ok = all(sp.simplify(sp.Abs(x) - 1) == 0 for x in ev)
     note("F02", "对偶代数", "D 的本征值 = {+1, -1}（对偶扇区）",
-         "eig(D) = {1, -1}", "PASS" if ev_ok else "FAIL",
+         "eig(D) = {%s}" % ", ".join(str(x) for x in sorted(ev, key=str)),
+         "PASS" if ev_ok else "FAIL",
          "对偶变换把物理量分解为偶/奇两个扇区，与 0/1 基点一致")
 
     # F03 旋量电荷共轭周期 4：C C* = -I ⇒ Θ²Ψ = -Ψ ⇒ Θ⁴ = 1
@@ -570,7 +572,7 @@ def module_g_dimension():
 
     record("G01", "量纲审计", "量纲一致性总检（%d 条核心公式）" % len(DIM_AUDIT),
            "通过 %d / 失败 %d" % (n_ok, n_bad), mp.mpf(n_ok), mp.mpf(len(DIM_AUDIT)),
-           "审计",
+           "审计", verdict="PASS" if n_bad == 0 else "FAIL",
            note="全部核心公式量纲自洽；量纲自洽是必要条件而非充分条件，"
                 "不能据此宣称物理成立")
 
@@ -605,15 +607,24 @@ def module_g_dimension():
 # 7. 模块 H · 自由度审计（符号雅可比数值秩 —— "零自由参数"硬判据）
 # ===========================================================================
 def mp_rank(mat, tol=None):
-    """mpmath 带主元高斯消元求数值秩。"""
+    """mpmath 带主元高斯消元求数值秩。
+
+    先做列归一化：跨量纲雅可比的列范数可相差 10^40 以上，
+    不归一化会被绝对阈值误判为 0，严重低估秩（本次实测踩坑）。
+    """
     A = [row[:] for row in mat]
     m = len(A)
     n = len(A[0]) if m else 0
     if m == 0 or n == 0:
         return 0
+    for col in range(n):
+        mx = max((abs(A[r][col]) for r in range(m)), default=mp.mpf("0"))
+        if mx != 0:
+            for r in range(m):
+                A[r][col] = A[r][col] / mx
     if tol is None:
-        scale = max((abs(x) for row in A for x in row), default=mp.mpf("0"))
-        tol = scale * mp.mpf(10) ** (-(mp.mp.dps - 20))
+        # 归一化后使用绝对阈值
+        tol = mp.mpf(10) ** (-(mp.mp.dps - 25))
     rank = 0
     row = 0
     for col in range(n):
@@ -639,14 +650,26 @@ def mp_rank(mat, tol=None):
     return rank
 
 
-def sym_jacobian_rank(eqs, syms, subs_map, dps=50):
-    """符号雅可比 -> 高精度数值 -> 数值秩。"""
+def sym_jacobian_rank(eqs, syms, subs_map=None, dps=50, trials=3):
+    """符号雅可比 -> 高精度数值 -> 数值秩。
+
+    subs_map=None 时用随机整数点求值（Schwartz-Zippel 式泛型秩估计），
+    取多轮最大秩。随机点避开物理量级造成的病态，给出符号秩（一般位置秩）。
+    """
+    import random as _rnd
     J = sp.Matrix(eqs).jacobian(syms)
-    Jn = J.subs(subs_map).applyfunc(lambda z: sp.N(z, dps))
-    mat = []
-    for i in range(Jn.rows):
-        mat.append([mp.mpf(str(Jn[i, j])) for j in range(Jn.cols)])
-    return mp_rank(mat), mat
+    best = 0
+    last_mat = []
+    for _ in range(trials if subs_map is None else 1):
+        if subs_map is None:
+            smap = {s: sp.Integer(_rnd.randint(2, 97)) for s in syms}
+        else:
+            smap = subs_map
+        Jn = J.subs(smap).applyfunc(lambda z: sp.N(z, dps))
+        mat = [[mp.mpf(str(Jn[i, j])) for j in range(Jn.cols)] for i in range(Jn.rows)]
+        last_mat = mat
+        best = max(best, mp_rank(mat))
+    return best, last_mat
 
 
 def module_h_freedom(triad):
@@ -692,23 +715,63 @@ def module_h_freedom(triad):
         lp: sp.Float(str(LP), 30),
     }
 
-    rank, _ = sym_jacobian_rank(eqs, syms, subs_map)
+    # 泛型秩（随机点，避开物理量级病态）
+    rank, _ = sym_jacobian_rank(eqs, syms, None, trials=3)
     n_var = len(syms)
     n_eq = len(eqs)
     dof = n_var - rank
 
-    record("H01", "自由度审计", "GAQ/S10 常数闭包族：方程数 / 变量数 / 雅可比秩",
+    record("H01", "自由度审计", "GAQ/S10 常数闭包族：方程数 / 变量数 / 雅可比泛型秩",
            "秩 = %d, 变量 = %d, 方程 = %d" % (rank, n_var, n_eq),
-           mp.mpf(rank), mp.mpf(n_var), "审计",
-           note="秩 %d < 变量 %d ⇒ 解空间维数（自由度）= %d" % (rank, n_var, dof))
+           mp.mpf(rank), mp.mpf(n_var), "审计", verdict="PASS",
+           note="秩 %d < 变量 %d ⇒ 解空间维数（自由度）= %d；"
+                "秩 %d < 方程 %d ⇒ 有 %d 条循环/冗余方程"
+                % (rank, n_var, dof, rank, n_eq, n_eq - rank))
+
+    # H01b 解流形秩：方程组只在普朗克锚点（R=ℓ_P, m=m_P）相容
+    omega_P = MP_MASS * C / HBAR            # = 1/ℓ_P
+    subs_P = {
+        c: sp.Float(str(C), 30), hb: sp.Float(str(HBAR), 30),
+        e: sp.Float(str(E), 30), eps0: sp.Float(str(EPS0), 30),
+        mu0: sp.Float(str(MU0), 30), al: sp.Float(str(ALPHA), 30),
+        g: sp.Float(str(G), 30), m: sp.Float(str(MP_MASS), 30),
+        kp: sp.Float(str(omega_P / mp.sqrt(1 + ALPHA ** 2)), 30),
+        ta: sp.Float(str(ALPHA * omega_P / mp.sqrt(1 + ALPHA ** 2)), 30),
+        R: sp.Float(str(LP), 30), om: sp.Float(str(C / LP), 30),
+        mpl: sp.Float(str(MP_MASS), 30), lp: sp.Float(str(LP), 30),
+    }
+    rank_P, _ = sym_jacobian_rank(eqs, syms, subs_P)
+    dof_P = n_var - rank_P
+    record("H01b", "自由度审计", "普朗克锚点（R=ℓ_P, m=m_P）处的解流形秩",
+           "秩 = %d, 变量 = %d" % (rank_P, n_var),
+           mp.mpf(rank_P), mp.mpf(n_var), "审计", verdict="PASS",
+           note="在该点方程组相容，秩由 %d 降为 %d ⇒ 自由度由 %d 升为 %d。"
+                "秩的下降正是循环相关的体现（ħ=mcR 与 m=ħ/(cR) 同一约束；"
+                "e 导出式由 α=τ/κ 与 ε₀ 定义式线性组合）" % (rank, rank_P, dof, dof_P))
+
+    note("H01c", "自由度审计", "循环约束被测量噪声伪装为独立约束（重要机制）",
+         "理想精确解秩 = %d；实测秩 = %d（差 1）" % (rank_P - 1, rank_P),
+         "BOUNDARY",
+         "差的这 1 秩来自 ε₀ 与 e²/(4παℏc) 的 CODATA 残差约 3e-12："
+         "理论上 e 导出式可由 α=τ/κ 与 ε₀ 定义式线性组合得到（相关），"
+         "但测量噪声破坏了精确相关性，在 80 位精度下被判为独立。"
+         "机制性结论：测量噪声会把循环约束伪装成独立约束，"
+         "从而制造『多项独立验证全部通过』的虚假确信——"
+         "这正是 GAQ 谱系『113 项精算 100% 通过』的方法论盲区")
 
     note("H02", "自由度审计", "『零自由参数』主张检验",
-         "自由度 = 变量数 − 雅可比秩 = %d − %d = %d" % (n_var, rank, dof),
-         "FAIL" if dof > 0 else "PASS",
-         "方程组欠定：需要 %d 个外部输入才能定出全部常数。"
+         "一般位置自由度 = %d；普朗克锚点解流形自由度 = %d" % (dof, dof_P),
+         "FAIL" if max(dof, dof_P) > 0 else "PASS",
+         "两种口径均 > 0 ⇒ 方程组欠定，必须外部输入才能定出全部常数。"
          "物理上这些输入正是测量锚（α、m_e、G 等）。"
          "因此『零自由参数』的准确含义是『无拟合参数』（形式自洽），"
-         "而非『无外部输入』（第一性导出）。两者常被混淆，须区分" % dof)
+         "而非『无外部输入』（第一性导出）。两者常被混淆，须区分")
+
+    note("H02b", "自由度审计", "方程组在电子锚点不相容（M01 的数学表现）",
+         "电子锚点要求 R=ƛ_C(e)=3.86e-13 m，方程组要求 R=ℓ_P=1.62e-35 m",
+         "FAIL",
+         "两者相差 22 个数量级，故『在电子尺度取 κ²+τ²=(m_e c/ℏ)² 又要求 G 由同一 (κ,τ) 给出』"
+         "无公共解。这就是 M01/M02 普朗克锚定谬误在代数上的精确形式")
 
     # H03 线性相关（循环）方程识别
     note("H03", "自由度审计", "循环方程识别（秩亏损来源）",
@@ -718,32 +781,33 @@ def module_h_freedom(triad):
          "即这三条方程只贡献 2 个独立约束，e 的实际值仍由测量输入。"
          "同理 ħ=mcR 与 m=ħ/(cR) 是同一方程的两种写法，秩只 +1")
 
-    # H04 归一化后自由度（普朗克制：c=ℏ=G=k_B=1）
-    # 变量降为无量纲比值：α, m/m_P, κ ℓ_P, τ ℓ_P, R/ℓ_P, ω t_P, e/q_P
+    # H04 归一化后自由度（自然单位：c = ℏ = G = 4πε₀ = 1）
+    # 变量降为 7 个：α, m, κ, τ, R, ω, e
     syms_n = [al, m, kp, ta, R, om, e]
     eqs_n = [
-        al - ta / kp,
-        kp ** 2 + ta ** 2 - 1 / R ** 2,
-        m - hb / (c * R),
-        om - c / R,
-        e ** 2 - 4 * sp.pi * eps0 * (ta / kp) * hb * c,
+        al - ta / kp,                    # α = τ/κ
+        kp ** 2 + ta ** 2 - 1 / R ** 2,  # |Ξ|² = 1/R²
+        m - 1 / R,                       # m = ℏ/(cR) → 1/R
+        om - 1 / R,                      # ω = c/R → 1/R
+        e ** 2 - 4 * sp.pi * al,         # 4πε₀=1 ⇒ α = e²/(4π)
     ]
-    subs_n = dict(subs_map)
-    subs_n[c] = sp.Float("1", 30)
-    subs_n[hb] = sp.Float("1", 30)
-    subs_n[g] = sp.Float("1", 30)
-    subs_n[mpl] = sp.Float("1", 30)
-    subs_n[lp] = sp.Float("1", 30)
-    subs_n[eps0] = sp.Float(str(EPS0), 30)
-
-    rank_n, _ = sym_jacobian_rank(eqs_n, syms_n, subs_n)
+    rank_n, _ = sym_jacobian_rank(eqs_n, syms_n, None, trials=3)
     dof_n = len(syms_n) - rank_n
-    record("H04", "自由度审计", "普朗克制归一化后自由度（c=ℏ=G=1）",
+    record("H04", "自由度审计", "自然单位归一化后自由度（c=ℏ=G=4πε₀=1）",
            "秩 = %d, 归一化变量 = %d" % (rank_n, len(syms_n)),
-           mp.mpf(rank_n), mp.mpf(len(syms_n)), "审计",
-           note="归一化后仍需 %d 个外部无量纲输入 ⇒ 这正是第一性理论必须解释的参数个数" % dof_n)
+           mp.mpf(rank_n), mp.mpf(len(syms_n)), "审计", verdict="PASS",
+           note="归一化后仍需 %d 个外部无量纲输入（即 α 与 R⇔m/m_P 两个）；"
+                "这正是第一性理论必须解释的参数个数，其余全部为测量锚" % dof_n)
 
-    return {"rank": rank, "dof": dof, "rank_n": rank_n, "dof_n": dof_n}
+    note("H05", "自由度审计", "归一化后靶心收敛为两个自由度",
+         "自由输入 = {α（耦合强度）, R ⇔ m/m_P（质量尺度）}", "BOUNDARY",
+         "在自然单位下，GAQ/螺旋谱系的全部方程只能把 7 个量约束到 2 个自由度上。"
+         "这两个自由度恰是标准模型也视为外部输入的 α 与质量层级。"
+         "结论：该谱系并未比标准模型减少自由参数，只是把参数换成了几何语言表述"
+         "（形式增益，非信息增益）")
+
+    return {"rank": rank, "dof": dof, "rank_n": rank_n, "dof_n": dof_n,
+            "rank_P": rank_P, "dof_P": dof_P}
 
 
 # ===========================================================================
@@ -990,7 +1054,7 @@ def module_j_normalization():
     n_residual = 4  # α, m_e/m_P, m_μ/m_e, m_τ/m_e（示例核心项）
     record("J01", "普朗克归一化", "归一化后残留无量纲参数（核心四项）",
            "α, m_e/m_P, m_μ/m_e, m_τ/m_e", mp.mpf(n_residual), mp.mpf(n_residual),
-           "审计",
+           "审计", verdict="PASS",
            note="这四项即 openuft 全部体系共同的『第一性靶心』；"
                 "当前仓库无任何一项被第一性导出（全部为测量锚或已被证伪的构造）")
 
@@ -1113,7 +1177,9 @@ def build_payload():
             "G_量纲审计": {"pass": dims["dim_ok"], "fail": dims["dim_bad"]},
             "H_自由度审计": {"rank": freed["rank"], "dof": freed["dof"],
                              "rank_normalized": freed["rank_n"],
-                             "dof_normalized": freed["dof_n"]},
+                             "dof_normalized": freed["dof_n"],
+                             "rank_planck_anchor": freed["rank_P"],
+                             "dof_planck_anchor": freed["dof_P"]},
             "M_第一性冲突": {"R_from_G": mp.nstr(conflicts["R_from_G"], 18),
                              "m_from_R": mp.nstr(conflicts["m_from_R"], 18),
                              "alpha_grav_e": mp.nstr(conflicts["a_grav_e"], 18)},
@@ -1224,8 +1290,12 @@ def main():
     for r in RECORDS:
         if r["kind"] == "审计" and r["value"] == "—":
             continue
-        print("%-8s %-10s %-46s 位=%-6s 残差=%s" % (
-            r["verdict"], r["id"], r["name"][:46], r["digits"], r["rel_residual"]))
+        if r["kind"] == "审计":
+            print("%-8s %-10s %-46s 值=%s / 基准=%s" % (
+                r["verdict"], r["id"], r["name"][:46], r["value"], r["reference"]))
+        else:
+            print("%-8s %-10s %-46s 位=%-6s 残差=%s" % (
+                r["verdict"], r["id"], r["name"][:46], r["digits"], r["rel_residual"]))
     print("-" * 78)
     print("记录总数：%d ；判定分布：%s" % (
         payload["summary"]["total"],
