@@ -28,6 +28,14 @@
 
 **数学形式**：$\beta\left( -g \right) = -\beta\left( g \right)$；不动点成对 $g^{*} = \pm\sqrt{\varepsilon/c}$，均稳定（$\beta'\left( g^{*} \right) = -2\varepsilon < 0$）。
 
+**符号约定（2026-09-15 补注，见 F08）**：上式 $\beta'\left( g^{*} \right) = -2\varepsilon$ 对应约定
+
+$$\beta\left( g \right) = \varepsilon g - c\,g^{3}$$
+
+而主流 Wilson–Fisher 展开（$d = 4 - \varepsilon$）采用 $\beta\left( g \right) = -\varepsilon g + c\,g^{3}$，其在同一不动点 $g^{*} = \sqrt{\varepsilon/c}$ 处给出 $\beta'\left( g^{*} \right) = +2\varepsilon > 0$（IR 不稳定 / UV 稳定）。两者**仅差 $\varepsilon$ 的符号约定**，物理结论等价；本体系取前者，等价于把 $\varepsilon$ 解释为 $d = 4 + \varepsilon$ 侧或取 $\varepsilon \to -\varepsilon$。
+
+**边界**：本公设文件此前未声明该约定，与文献按 $d = 4 - \varepsilon$ 直接比对会被误判为矛盾。引用本公设的稳定性结论时必须连同本约定一并引用。该约定已由算法联盟全维自洽引擎符号验证 $\beta\left( -g \right) + \beta\left( g \right) = 0$、$g^{*2} - \varepsilon/c = 0$、$\beta'\left( g^{*} \right) + 2\varepsilon = 0$ 三项，均为机器零（记录 F05 / F06 / F07）。
+
 **边界**：双向分形是标度维的结构主张，不预设具体物质分布；作为可检验内容，给出分形维度 $D = 4 - \gamma$ 与预言一（分形宇宙学 $\xi \propto r^{D-3}$）。
 
 ## 二、公设间关系
