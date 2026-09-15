@@ -23,10 +23,19 @@ OUT_DIR = os.path.join(ROOT, "04_公共成果", "算法联盟_全维自洽与归
 H_SET = {"s01_triad_kinematics", "s13_duality_fractal_uft"}
 U_SET = {"p01_space_compression", "p02_matter_source", "p03_gauge_unification", "p04_quantum_emergence"}
 AUDIT_CONFLICT_IDS = {
+    # 2026-09-15 增量：S14 TUFT 三册精算（四力统一 / 黑洞 / 暴胀CMB）+ 公理化的审计判定 FAIL
+    "S14-C0001", "S14-C0002", "S14-C0003", "S14-C0004", "S14-C0005",
+    "S14-C0006", "S14-C0007", "S14-C0008", "S14-C0012",
+    "S14-C0013", "S14-C0014", "S14-C0015", "S14-C0016", "S14-C0017",
+    "S14-C0018", "S14-C0019", "S14-C0020", "S14-C0021",
+    "S14-C0022", "S14-C0023", "S14-C0024", "S14-C0025", "S14-C0026",
+    "S14-C0027", "S14-C0028", "S14-C0029", "S14-C0030", "S14-C0031",
     "S02-C0001", "S05-C0001", "S05-C0002", "S06-C0001", "S06-C0002",
     "S07-C0001", "S08-C0001", "S08-C0002", "S09-C0001", "S10-C0001", "S12-C0006",
 }
 LAYER_NOTE = {
+    "s14_torsion_unified_field_tuft": "L0/L1 为主 + L4 本体：可用部分为标准公式复用（慢滚骨架、`T_H=ħc√K/4πk_B`、SM 反常五类为零属**继承**）；"
+                                      "TUFT 特有主张（`αKTΩ/c²` 类量纲、`F_T`、`Π_T`、直积归一、暴胀势）均 FAIL 且跨册复发",
     "s01_triad_kinematics": "L0（三重奏 κ²+τ²=(ω/v)² 代数恒等，引擎 B01–B04）；claims 空 → 零物理 claim",
     "s13_duality_fractal_uft": "L0/L1/L2（流守恒/曲率闭式/霍普夫荷整性/希格斯谱）+ L3 候选（4 预言，conjecture 待检验）",
     "s02_light_speed_helix_force": "含 M03 冲突（P=m(c−v) 低速极限）",
