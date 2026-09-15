@@ -15,11 +15,28 @@
 - `docs/OPEN_PROBLEMS.md`：扩展开放问题清单（与 A4 同步）
 - `三重奏统一场` 子模块集成至 `70_source_code/`（ADR-008）
 
+### Added
+- **`04_公共成果/算法联盟_全维自洽与归一化/`**：全维自洽与归一化引擎（可复跑）+ 主报告 + 机器可读图谱。
+  146 条核验记录（PASS 106 / BOUNDARY 33 / FAIL 7），覆盖第一性层级分级 L0–L4、
+  sympy 符号求导 + mpmath 80 位精算、14 条公式量纲审计、雅可比自由度审计、
+  第一性冲突探测、公设同源融合聚类（17 体系 → 6 族系）、四层归一化（符号/量纲/单位制/靶心）
+
 ### Changed
-- 无
+- `03_跨体系研究/comparison_matrix.csv`、`03_跨体系研究/postulate_matrix.md`：补齐遗漏的 `s13_duality_fractal_uft`；
+  `p01`–`p04` 类型标注统一为 `system.json` 的 `unformulated_direction`；体系计数 16 → 17；
+  增补「s13 与螺旋族」易混淆组与「第一性自洽审计已建立」结论
+- `书籍/v1/` → `书籍/v1_正文/`：满足「研究目录名须含中文」的治理契约（正文无链接引用，仅自动索引受影响）
 
 ### Fixed
-- 无
+- **S13 溯源阻塞修复**：`system.json` 的 `source_records` 指向已不存在的 `12_研究结论/理论总纲_V1.2.md`
+  → 改为现存的 `理论总纲_V1.7.md`（同步 `sources.md`、`12_研究结论/README.md`），
+  此前 `verify.py` 在 identity 校验阶段即 FAIL，导致后续结构与链接检查长期未执行
+- `00_项目治理/system_registry.json` 及派生视图（`TYPE_INDEX.md`、`01_独立体系/README.md`、`体系编号索引.md`）
+  用 `module_catalog.py refresh` 重新生成以保持一致
+- `00_项目治理/资料索引/material_catalog.md` 断链 → 用 `refresh_catalog.py` 重建（`structure_manifest.json` 同步）
+- S01 8 个三重奏文档的迁移清单登记位置更新为整理后的实际位置（`12_研究结论` 3 个 / `13_论文与成果` 5 个），
+  `migration_check` 的 Lost localized file 告警清零
+- 结果：`python -B verify.py` 由 FAIL（identity 阻塞 + 9 项）转为 **PASS**（17 体系 / 4685 本地链接 / 快照 193+393）
 
 ---
 
@@ -35,7 +52,8 @@
 ### Fixed
 - `S02_空间光速螺旋统一力/04_理论推导/偏振与螺旋辨析总览.md`：断链 `../../system.json` → `../system.json`
 ### Known（历史遗留，非本次引入）
-- `S01_螺旋三重奏与谱几何/` 8 个三重奏文档在 20260909 中文目录迁移后又被移入 `12_研究结论`/13_论文与成果 子目录，未补迁移记录，`migration_check` 报 Lost localized file；文件实际均在，不影响使用
+- ~~`S01_螺旋三重奏与谱几何/` 8 个三重奏文档在 20260909 中文目录迁移后又被移入 `12_研究结论`/13_论文与成果 子目录，未补迁移记录，`migration_check` 报 Lost localized file；文件实际均在，不影响使用~~
+  **已于 2026-09-15 修复**：迁移清单登记位置已更新为实际位置，告警清零（见 [Unreleased] → Fixed）
 
 ---
 
