@@ -102,7 +102,7 @@
 | 跨体系归一化 | 已做 | H/O/C/U 坐标，可与 openuft 其他体系对接 |
 | 与 openuft 主库对接 | 已完成登记 | `S14_torsion_unified_field_tuft`（kind=`candidate_theory`，健康度 **C**）；`verify.py` → **PASS** |
 
-## 第七章 复跑与文件索引
+## 第七章 判据门禁与复跑索引
 
 ```powershell
 cd tuft
@@ -117,7 +117,23 @@ cd ../openuft
 & C:/Users/mo/AppData/Local/Programs/Python/Python38/python.exe -B verify.py    # -> PASS
 ```
 
-- 编排总览：`tuft_全景总报告.md`；自动索引：`tuft_总索引.md`；缺陷族：`tuft_跨册缺陷族.md`
+### 7.1 判据门禁（自动）
+
+门禁：`tuft_判据门禁.py`（量纲 / 可观测锚 / 重述 / 代码 四道）。
+
+**量纲非法 5 条**（实算 vs 期望，精确有理指数）：
+
+- m = α K T Ω / c²（续篇 §5.1 / SU(3) §5.1 / 黑洞 §3） → 实算 `L^-5·T^2`，应为 `M^1`
+- ρ = α K T Ω（黑洞 §6 称能量密度） → 实算 `L^-3`，应为 `M^1·L^-1·T^-2`
+- T_H = ħ c /(8π G M)（原文式） → 实算 `M^1`，应为 `Θ^1`
+- F_T = 1 + ⟨T⟩²/K_sat²（挠率增强因子） → 实算 `L^2`，应为 `1（无量纲）`
+- ε = (1/2κ)(V'/V)²（慢滚参数，κ 约定） → 实算 `M^1·L^1·T^-2`，应为 `1（无量纲）`
+
+- 无观测锚（不可判决）分册：色挠率 SU(3)
+- PASS 全为"重述/继承/标准"的分册：无 ✅
+- 声称仿真却未逐行复现的分册：无 ✅
+
+- 编排总览：`tuft_全景总报告.md`；自动索引：`tuft_总索引.md`；缺陷族：`tuft_跨册缺陷族.md`；门禁：`tuft_判据门禁.md`
 - 逐册：精算报告 + 诚实修订版 + 运行原始输出 `tuft_*_report.txt`
 - 主库登记：`openuft/01_独立体系/S14_挠率统一场论TUFT/`（`claims.csv`、`postulates.md`、`11_证伪与反例/精算判定_FAIL汇总.md`）
 
