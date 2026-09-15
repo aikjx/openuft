@@ -76,21 +76,20 @@ def record(tag, group, name, formula, value, ref, kind, verdict=None, note=""):
       本征值                -> 只登记数值，不做比对
       审计                  -> value 为审计量，ref 为阈值
     """
+    # 残差口径（三选一，与原四分支行为等价）：
+    #   缺参                     -> rel = 0，digits 取满精度
+    #   代数恒等式/符号恒等/审计  -> |value| / |ref|（应当趋 0）
+    #   其余（数值核验）          -> |value - ref| / |ref|
     if value is None or ref is None:
         rel = mp.mpf("0")
-        digits = float(mp.mp.dps - 2)
-    elif kind in ("代数恒等式", "符号恒等"):
+    elif kind in ("代数恒等式", "符号恒等", "审计"):
         denom = abs(ref) if abs(ref) != 0 else mp.mpf("1")
         rel = abs(value) / denom
-        digits = float(mp.mp.dps - 2) if rel == 0 else max(0.0, -float(mp.log(rel, 10)))
-    elif kind == "审计":
-        denom = abs(ref) if abs(ref) != 0 else mp.mpf("1")
-        rel = abs(value) / denom
-        digits = float(mp.mp.dps - 2) if rel == 0 else max(0.0, -float(mp.log(rel, 10)))
     else:
         denom = abs(ref) if abs(ref) != 0 else mp.mpf("1")
         rel = abs(value - ref) / denom
-        digits = float(mp.mp.dps - 2) if rel == 0 else max(0.0, -float(mp.log(rel, 10)))
+    digits = (float(mp.mp.dps - 2) if rel == 0
+              else max(0.0, -float(mp.log(rel, 10))))
 
     if verdict is None:
         verdict = "PASS" if digits >= 6 else "WEAK"
