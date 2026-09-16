@@ -77,28 +77,47 @@ def alg_zero(expr):
         return False
 
 
+def _monomial_subs_dict(expr, funcs, seed):
+    """构造代入字典：每个 Function 及其各阶导数 -> 具体单项式（按 seed 变化）。
+
+    sympy 的 .subs 不会自动把 Derivative(f(x), x) 替换成导数的单项式，
+    因此必须显式把表达式中出现的各阶导数也一并代入，否则残差无法化零。
+    """
+    subs = {}
+    for i, f in enumerate(funcs):
+        base = 5 + seed * 17 + i * 7
+        e0 = (base % 3) + 1
+        e1 = ((base // 3) % 3) + 1
+        e2 = ((base // 9) % 3) + 1
+        e3 = ((base // 27) % 3) + 1
+        mono = (X[0] ** e0 * X[1] ** e1 * X[2] ** e2 * X[3] ** e3
+                + sp.Rational(1, 3 + i + seed))
+        subs[f] = mono
+        for d in expr.atoms(sp.Derivative):
+            df = d.expr
+            if isinstance(df, sp.Function) and df.func == f.func:
+                newd = mono
+                for (var, order) in d.variable_count:
+                    newd = sp.diff(newd, var, order)
+                subs[d] = newd
+    return subs
+
+
 def concrete_zero_scalar(expr):
     """对任意 Function 构造的恒等式，用 3 组互相独立的单项式代入验证。
 
     表达式对其中各任意 Function 及其导数都是多项式线性/多项式依赖，
-    且在算符意义下为恒等式；代入代数独立的单项式后应为零多项式，
-    expand 后即精确为 0。3 组不同种子进一步排除偶然为零。
+    且在算符意义下为恒等式；代入代数独立的单项式（含一阶/二阶导数的对应
+    多项式）后应为零多项式，expand 后即精确为 0。3 组不同种子进一步排除
+    偶然为零。注意：调用前应已剔除截断产生的 O(epsilon^2) 等非恒等式项。
     """
     try:
         funcs = sorted(expr.atoms(sp.Function), key=lambda f: f.func.__name__)
         if not funcs:
             return sp.expand(expr) == 0
         for seed in range(3):
-            subs = {}
-            for i, f in enumerate(funcs):
-                base = 5 + seed * 17 + i * 7
-                e0 = (base % 3) + 1
-                e1 = ((base // 3) % 3) + 1
-                e2 = ((base // 9) % 3) + 1
-                e3 = ((base // 27) % 3) + 1
-                subs[f] = (X[0] ** e0 * X[1] ** e1 * X[2] ** e2 * X[3] ** e3
-                           + sp.Rational(1, 3 + i + seed))
-            if not (sp.expand(expr.subs(subs)) == 0):
+            sd = _monomial_subs_dict(expr, funcs, seed)
+            if not (sp.expand(expr.subs(sd)) == 0):
                 return False
         return True
     except Exception:
@@ -476,26 +495,30 @@ add("S3-04", "S3 规范", "Euler-Lagrange => 杨-米尔斯运动方程",
 # --- A5 无穷小规范协变性 ---
 th = [sp.Function("theta" + str(a + 1))(*X) for a in range(3)]
 theta_mat = make_mat(th)
-# theta 为 Hermitian 组合，参数取实数
-Aprime = [None] * 4
-for m in range(4):
-    comm = II * g_s * (theta_mat * Amat[m] - Amat[m] * theta_mat)
-    Aprime[m] = sp.Matrix(2, 2, lambda i, j: sp.expand(
-        (Amat[m] + sp.diff(theta_mat, X[m]) + comm)[i, j]))
-psi_prime = sp.Matrix(2, 1, lambda i, j: sp.expand(
-    (psi + II * g_s * theta_mat * psi)[i, 0]))
+# 无穷小规范变换：引入小参数 epsilon，把 theta 视为 O(epsilon)。
+#   A'_mu = A_mu + epsilon * d_mu theta + i g epsilon [theta, A_mu]
+#   Phi'   = (1 + i g epsilon theta) Phi
+# 完全展开后残差含 O(epsilon^2) 截断产物（精确 U=exp(i g theta) 形式本无此问题），
+# 故只检验残差的 O(epsilon) 系数是否为零 —— 这正是无穷小规范协变性的含义。
+eps_t = sp.symbols("epsilon")
+Theta = eps_t * theta_mat
+Aprime = [sp.Matrix(2, 2, lambda i, j, m=m: sp.expand(
+    (Amat[m] + sp.diff(Theta, X[m]) + II * g_s * (Theta * Amat[m] - Amat[m] * Theta))[i, j]))
+    for m in range(4)]
+psi_prime = sp.Matrix(2, 1, lambda i, j: sp.expand((psi + II * g_s * Theta * psi)[i, 0]))
 lhs = sp.Matrix(2, 1, lambda i, j: sp.expand(
     (sp.diff(psi_prime, X[0]) - II * g_s * Aprime[0] * psi_prime)[i, 0]))
 rhs = sp.Matrix(2, 1, lambda i, j: sp.expand(
-    ((sp.eye(2) + II * g_s * theta_mat) * Dact(0, psi))[i, 0]))
+    ((sp.eye(2) + II * g_s * Theta) * Dact(0, psi))[i, 0]))
 d5 = sp.Matrix(2, 1, lambda i, j: sp.expand((lhs - rhs)[i, 0]))
-ok5 = all(concrete_zero_scalar(d5[i, 0]) for i in range(2))
+# 取 O(epsilon) 系数（一阶规范协变应该恰好为零）
+ok5 = all(concrete_zero_scalar(sp.expand(d5[i, 0]).coeff(eps_t, 1)) for i in range(2))
 add("S3-05", "S3 规范", "无穷小规范协变性",
     "A'_mu = A_mu + d_mu theta + i g [theta, A_mu]，Phi' = (1 + i g theta) Phi "
     "=> D'_mu Phi' = (1 + i g theta) D_mu Phi",
     "PASS" if ok5 else "FAIL",
-    "两分量残差对 3 组独立单项式代入均为零多项式（sympy 直接 simplify 因含对易子未化零，"
-    "改用具体代入法验证，与手算一致）；有限版本由李群连通性给出")
+    "引入小参数 epsilon 后，残差的 O(epsilon) 系数对 3 组独立单项式（含各阶导数）"
+    "代入均为零多项式；O(epsilon^2) 为截断产物不要求为零；与手算一致：一阶规范协变成立")
 
 # --- A6 极小耦合标量场的 EL 与有源方程协变性 ---
 Phi = sp.Function("Phi")(*X)
@@ -509,16 +532,21 @@ eqs6 = sp.euler_equations(LagU1, [Phic], X)
 el6 = sp.expand(eqs6[0].lhs)
 
 
-def D2U1rho(rho):
-    """D_mu D^mu Phi：先计算 D^rho Phi 再取协变散度（U(1)）。"""
+def D2Phi_U1():
+    """U(1) 协变 d'Alembertian：D_mu D^mu Phi = sum_m eta^{mm} D_m (D^m Phi)。
+
+    D^m Phi = eta^{mm} D_m Phi = SGN[m] (d_m Phi - i e A_m Phi)，再对指标 m 取协变导数。
+    此前 D2U1rho 把 rho 固定、对单一分量求导，产生非法的 a_i*a_j 交叉项；
+    此处按指标正确收缩（D^m 含 SGN[m]，外散度再乘 SGN[m]）。
+    """
     out = 0
     for m in range(4):
-        inner = SGN[rho] * DJe[rho]
-        out += SGN[m] * SGN[rho] * (sp.diff(inner, X[m]) - II * be * U1A[m] * inner)
+        Dm_Phi = SGN[m] * (sp.diff(Phi, X[m]) - II * be * U1A[m] * Phi)  # D^m Phi
+        out += SGN[m] * (sp.diff(Dm_Phi, X[m]) - II * be * U1A[m] * Dm_Phi)
     return sp.expand(out)
 
 
-D2Phi = sum(D2U1rho(r_) for r_ in range(4))
+D2Phi = D2Phi_U1()
 target6 = sp.expand(D2Phi + kap ** 2 * Phi)
 ok6a = concrete_zero_scalar(sp.expand(el6 - target6)) or concrete_zero_scalar(sp.expand(el6 + target6))
 add("S3-06", "S3 规范", "极小耦合 Klein-Gordon 的变分导出",
@@ -539,12 +567,11 @@ Ap_new = [sp.expand(U1A[m] + eps_s * sp.diff(alpha_f, X[m]) / be) for m in range
 
 
 def D2_with(field, pot_arr):
+    """U(1) 协变 d'Alembertian（用于变换后场），指标收缩与 D2Phi_U1 一致。"""
     out = 0
-    DJe_tmp = [sp.diff(field, X[m]) - II * be * pot_arr[m] * field for m in range(4)]
     for m in range(4):
-        for r_ in range(4):
-            inner = SGN[r_] * DJe_tmp[r_]
-            out += SGN[m] * SGN[r_] * (sp.diff(inner, X[m]) - II * be * pot_arr[m] * inner)
+        Dm = SGN[m] * (sp.diff(field, X[m]) - II * be * pot_arr[m] * field)
+        out += SGN[m] * (sp.diff(Dm, X[m]) - II * be * pot_arr[m] * Dm)
     return sp.expand(out)
 
 
