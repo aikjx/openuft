@@ -40,7 +40,9 @@ import numpy as np
 import mpmath as mp
 
 T_START = time.time()
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
+# ROOT = openuft 仓库根（与同级套件脚本一致：上溯 3 级）。
+# 旧版用 4 个 ".."（上溯 4 级到工作区根 my_lib），产物会误落到 my_lib/04_公共成果/...。
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 OUT_DIR = os.path.join(ROOT, "04_公共成果", "算法联盟_全维自洽与归一化", "数据")
 
 RESULTS = []
@@ -533,16 +535,19 @@ el6 = sp.expand(eqs6[0].lhs)
 
 
 def D2Phi_U1():
-    """U(1) 协变 d'Alembertian：D_mu D^mu Phi = sum_m eta^{mm} D_m (D^m Phi)。
+    """U(1) 协变 d'Alembertian：D_mu D^mu Phi = sum_mu eta^{mu mu} D_mu(D_mu Phi)。
 
-    D^m Phi = eta^{mm} D_m Phi = SGN[m] (d_m Phi - i e A_m Phi)，再对指标 m 取协变导数。
-    此前 D2U1rho 把 rho 固定、对单一分量求导，产生非法的 a_i*a_j 交叉项；
-    此处按指标正确收缩（D^m 含 SGN[m]，外散度再乘 SGN[m]）。
+    eta^{mu mu} = SGN[m] 是外层度规收缩、只出现一次；内层 D_mu = d_mu - i e A_mu。
+    此前 D2U1rho 把 rho 固定、对单一分量求导，且把 SGN[m] 同时塞进内层 D^m 与外层，
+    等于乘了 SGN[m]^2 = 1，丢失度规符号、把闵可夫斯基盒算成欧氏盒（全部 + 二阶导），
+    产生非法的 a_i*a_j 交叉项。此处只在外层做一次 SGN[m] 收缩，与 euler_equations
+    的结果 el6 精确匹配（el6 = -(D2Phi + kap^2 Phi)）。
     """
     out = 0
     for m in range(4):
-        Dm_Phi = SGN[m] * (sp.diff(Phi, X[m]) - II * be * U1A[m] * Phi)  # D^m Phi
-        out += SGN[m] * (sp.diff(Dm_Phi, X[m]) - II * be * U1A[m] * Dm_Phi)
+        Dm = sp.diff(Phi, X[m]) - II * be * U1A[m] * Phi          # D_mu Phi
+        DmuDmu = sp.diff(Dm, X[m]) - II * be * U1A[m] * Dm        # D_mu(D_mu Phi)
+        out += SGN[m] * DmuDmu                                    # eta^{mu mu} 收缩
     return sp.expand(out)
 
 
@@ -567,23 +572,28 @@ Ap_new = [sp.expand(U1A[m] + eps_s * sp.diff(alpha_f, X[m]) / be) for m in range
 
 
 def D2_with(field, pot_arr):
-    """U(1) 协变 d'Alembertian（用于变换后场），指标收缩与 D2Phi_U1 一致。"""
+    """U(1) 协变 d'Alembertian（用于变换后场），指标收缩与 D2Phi_U1 一致（单 SGN 外层）。"""
     out = 0
     for m in range(4):
-        Dm = SGN[m] * (sp.diff(field, X[m]) - II * be * pot_arr[m] * field)
-        out += SGN[m] * (sp.diff(Dm, X[m]) - II * be * pot_arr[m] * Dm)
+        Dm = sp.diff(field, X[m]) - II * be * pot_arr[m] * field
+        DmuDmu = sp.diff(Dm, X[m]) - II * be * pot_arr[m] * Dm
+        out += SGN[m] * DmuDmu
     return sp.expand(out)
 
 
 transformed = sp.expand(D2_with(Phi_p, Ap_new) + kap ** 2 * Phi_p
                         - exp_small * Jsrc)
 expected = sp.expand(exp_small * src_eq_sym)
-ok6b = concrete_zero_scalar(sp.expand(transformed - expected))
+# 无穷小规范变换下，有源方程的一阶协变性由 O(epsilon) 系数承载；
+# O(epsilon^2) 项来自 phi'=(1+i epsilon alpha)phi / A'_mu 的截断，是截断产物，不要求为零。
+diff7 = sp.expand(transformed - expected)
+ok6b = concrete_zero_scalar(sp.expand(diff7.coeff(eps_s, 1)))
 add("S3-07", "S3 规范", "有源方程的规范协变性",
     "D_mu D^mu Phi + kappa^2 Phi = J 在 Phi -> e^{i alpha} Phi、"
     "A_mu -> A_mu + d_mu alpha / e、J -> e^{i alpha} J 下形式不变",
     "PASS" if ok6b else "FAIL",
-    "变换后方程 - e^{i alpha} x 原方程 对 3 组独立单项式代入为零多项式；"
+    "取残差 O(epsilon) 系数（一阶规范协变应恰为零），对 3 组独立单项式代入为零多项式；"
+    "O(epsilon^2) 项为截断产物（完整 e^{i alpha} 指数形式无此问题），不要求为零；"
     "这要求源与物质场同相位变换，是耦合层的自洽约束")
 
 # --- A7 非阿贝尔流：普通散度不守恒 / 协变散度守恒 ---
@@ -601,32 +611,41 @@ def Fconc(m, n):
                      - II * g_s * (Aconc[m] * Aconc[n] - Aconc[n] * Aconc[m]))
 
 
-gval = sp.Rational(3, 2)
-Jcur = sp.zeros(2, 2)
+def Dcov(M, m):
+    """协变导数 D_m 作用在 Lie 代数取值的 2x2 矩阵 M 上。"""
+    return sp.expand(sp.diff(M, X[m]) - II * g_s * (Aconc[m] * M - M * Aconc[m]))
+
+
+# 矢量流 J^nu = D_mu F^{mu nu}（必须保留 Lorentz 指标 nu）。
+# 旧版把 nu 也累加进 Jcur（Jcur += SGN[nu]*acc），把带指标 nu 的矢量流坍缩成
+# 无 Lorentz 指标的标量，之后求"散度"已无意义；且对巨型表达式反复 sp.simplify
+# 会耗时数分钟乃至挂起。此处按指标正确构造，并用 expand 判零（代数抵消，快速精确）。
+Jvec = []
 for nu in range(4):
     acc = sp.zeros(2, 2)
     for m in range(4):
-        FF = SGN[m] * SGN[nu] * Fconc(m, nu)
-        d = sp.diff(FF, X[m]) - II * g_s * (Aconc[m] * FF - FF * Aconc[m])
-        acc += d
-    Jcur += SGN[nu] * acc
-Jcur = sp.Matrix(2, 2, lambda i, j: sp.simplify(sp.expand(Jcur[i, j])))
+        Fup = SGN[m] * SGN[nu] * Fconc(m, nu)          # F^{mu nu}
+        acc += Dcov(Fup, m)
+    Jvec.append(sp.Matrix(2, 2, lambda i, j: sp.expand(acc[i, j])))
+
+# 协变散度 D_nu J^nu（Noether 恒等式 => 恒为 0）
 cov_div = sp.zeros(2, 2)
 for nu in range(4):
-    JJ = SGN[nu] * Jcur
-    cov_div += sp.diff(JJ, X[nu]) - II * g_s * (Aconc[nu] * JJ - JJ * Aconc[nu])
-cov_div = sp.Matrix(2, 2, lambda i, j: sp.simplify(sp.expand(cov_div[i, j])))
-ok7a = all(sp.simplify(cov_div[i, j]) == 0 for i in range(2) for j in range(2))
+    cov_div += Dcov(Jvec[nu], nu)
+cov_div = sp.Matrix(2, 2, lambda i, j: sp.expand(cov_div[i, j]))
+ok7a = all(cov_div[i, j] == 0 for i in range(2) for j in range(2))
+
+# 普通散度 d_nu J^nu（非阿贝尔一般不为 0）
 plain_div = sp.zeros(2, 2)
 for nu in range(4):
-    plain_div += sp.diff(SGN[nu] * Jcur, X[nu])
-plain_div = sp.Matrix(2, 2, lambda i, j: sp.simplify(sp.expand(plain_div[i, j])))
-ok7b = any(sp.simplify(plain_div[i, j]) != 0 for i in range(2) for j in range(2))
+    plain_div += sp.diff(Jvec[nu], X[nu])
+plain_div = sp.Matrix(2, 2, lambda i, j: sp.expand(plain_div[i, j]))
+ok7b = any(plain_div[i, j] != 0 for i in range(2) for j in range(2))
 add("S3-08", "S3 规范", "非阿贝尔流的普通散度 vs 协变散度",
     "D_nu J^nu = 0 成立，而 d_nu J^nu != 0（一般情形）",
     "PASS" if (ok7a and ok7b) else "FAIL",
-    "具体 SU(2) 场演示：协变散度 4 个矩阵元全 0；普通散度非 0"
-    " => 非阿贝尔理论中只有协变守恒律，U(1) 的普通连续性方程不再成立")
+    "具体 SU(2) 场演示（J^nu = D_mu F^{mu nu}）：协变散度 4 个矩阵元全 0（Noether 恒等式），"
+    "普通散度非 0 => 非阿贝尔理论中只有协变守恒律，U(1) 的普通连续性方程不再成立")
 
 # =========================================================================
 # S4  涡旋拓扑显式解
@@ -668,34 +687,44 @@ bps_f = sp.Eq(fp, nw * (1 - av) * fv / rr)
 bps_a = sp.Eq(ap, ee ** 2 * rr * (1 - fv ** 2) / nw)
 
 
-def repl_derivs(expr):
-    """把 f、a 的各阶导数按其阶数替换为 BPS 一阶方程给出的表达式。"""
-    reps = []
-    for d in expr.atoms(sp.Derivative):
-        vc = tuple(d.variable_count)
-        if d.expr == fv:
-            if vc == ((rr, 1),):
-                e = nw * (1 - av) * fv / rr
-            elif vc in (((rr, 2),), ((rr, 1), (rr, 1))):
-                e = sp.diff(nw * (1 - av) * fv / rr, rr)
-            else:
-                e = None
-        elif d.expr == av:
-            if vc == ((rr, 1),):
-                e = ee ** 2 * rr * (1 - fv ** 2) / nw
-            elif vc in (((rr, 2),), ((rr, 1), (rr, 1))):
-                e = sp.diff(ee ** 2 * rr * (1 - fv ** 2) / nw, rr)
-            else:
-                e = None
-        else:
-            e = None
-        if e is not None:
-            reps.append((d, e))
-    return expr.subs(reps)
+def _bps_value(d):
+    """导数对象 d（对 f 或 a）按 BPS 一阶方程取值：一阶 -> 一阶式；二阶 -> 其全导数。"""
+    tot = sum(o for _, o in d.variable_count)
+    if d.expr == fv:
+        if tot == 1:
+            return nw * (1 - av) * fv / rr
+        if tot == 2:
+            return sp.diff(nw * (1 - av) * fv / rr, rr)
+    if d.expr == av:
+        if tot == 1:
+            return ee ** 2 * rr * (1 - fv ** 2) / nw
+        if tot == 2:
+            return sp.diff(ee ** 2 * rr * (1 - fv ** 2) / nw, rr)
+    return None
 
 
-ode_f_bps = sp.expand(repl_derivs(ode_f.subs(lam, 2 * ee ** 2)))
-ode_a_bps = sp.expand(repl_derivs(ode_a.subs(lam, 2 * ee ** 2)))
+def bps_reduce(expr, maxit=12):
+    """把 f、a 的各阶导数反复代入 BPS 一阶方程，直到表达式不再含导数。
+
+    单次 subs 不足以消去全部导数：把 f'' 换成 diff(P,r) 会引入新的 f'、a'，
+    且 sympy 可能把 P 包进外层 Derivative（Derivative(P, r)）。必须迭代 +
+    doit() 强制对"具体表达式的导数"求值，逐步收敛到无导数的不动点。
+    旧版 repl_derivs 只做一次 subs，残留 Derivative 导致残差假非零（FAIL）。
+    """
+    for _ in range(maxit):
+        expr = sp.expand(expr.doit())
+        ds = list(expr.atoms(sp.Derivative))
+        if not ds:
+            break
+        reps = [(d, _bps_value(d)) for d in ds if _bps_value(d) is not None]
+        if not reps:
+            break
+        expr = sp.expand(expr.subs(reps))
+    return sp.expand(expr.doit())
+
+
+ode_f_bps = bps_reduce(ode_f.subs(lam, 2 * ee ** 2))
+ode_a_bps = bps_reduce(ode_a.subs(lam, 2 * ee ** 2))
 ok_b2 = sp.expand(ode_f_bps) == 0 and sp.expand(ode_a_bps) == 0
 add("S4-03", "S4 涡旋", "BPS 一阶方程蕴含二阶 Euler-Lagrange 方程",
     "f' = n(1-a)f/r 与 a' = e^2 r (1-f^2)/n => 两条二阶方程同时满足",
@@ -730,11 +759,15 @@ if HAVE_SCIPY:
         xg = np.linspace(1e-6, R, 4001)
         guess = np.vstack([1.0 - np.exp(-xg), np.exp(-xg),
                            1.0 - np.exp(-xg ** 2), 2.0 * xg * np.exp(-xg ** 2)])
-        sol = solve_bvp(ode, bc, xg, guess, tol=1e-10, max_nodes=200000)
+        # tol=1e-10 过于苛刻：solve_bvp 会耗尽网格节点并返回 success=False
+        # （解本身已足够准，见末端残差/能量比）；放宽到 1e-8 可正常收敛。
+        sol = solve_bvp(ode, bc, xg, guess, tol=1e-8, max_nodes=200000)
         return sol
 
+    # 第三个 case 取 Type II（lambda=4 > 2 e^2）：非临界耦合下 E > 2 pi n；
+    # 若取 Type I（lambda < 2 e^2）则 E < 2 pi n（吸引型），不能用于 "E>2 pi n" 的断言。
     for (n_val, e_val, lam_val, tag) in [(1, 1.0, 2.0, "BPS"), (2, 1.0, 2.0, "BPS"),
-                                         (1, 1.0, 0.5, "non-BPS")]:
+                                         (1, 1.0, 4.0, "non-BPS")]:
         sol = solve_case(n_val, e_val, lam_val)
         xs = np.linspace(1e-6, R_MAX, 6001)
         ys = sol.sol(xs)
@@ -774,7 +807,7 @@ if HAVE_SCIPY:
     add("S4-04", "S4 涡旋", "Nielsen-Olesen 涡旋两点边值数值解",
         "f(0)=a(0)=0，f(inf)=a(inf)=1 存在解",
         "PASS" if ok_b3a else "FAIL",
-        "n=1,2 均收敛（solve_bvp tol=1e-10），末端残差 < 1e-4；"
+        "n=1,2 均收敛（solve_bvp tol=1e-8，success=True），末端残差 < 1e-4；"
         "说明有限能量涡旋剖面真实存在")
 
     ok_b3b = all(c["flux_rel"] < 1e-3 for c in VORTEX_CASES)
@@ -802,10 +835,11 @@ if HAVE_SCIPY:
     if non_bps:
         c0 = non_bps[0]
         add("S4-08", "S4 涡旋", "非临界耦合下界不再饱和",
-            "lambda != 2 e^2 时 E > 2 pi n（严格大于）",
+            "lambda != 2 e^2 时 E != 2 pi n（Type II，lambda > 2 e^2：E > 2 pi n；"
+            "Type I，lambda < 2 e^2：E < 2 pi n）",
             "PASS" if c0["energy_over_bound"] > 1.0 + 1e-3 else "FAIL",
-            "n=1, lambda=0.5e? lambda=%.2f：E/(2 pi n)=%.6f > 1，"
-            "符合 Bogomolny 界只在临界耦合取等号的预期"
+            "n=1, lambda=%.2f（Type II，lambda > 2 e^2）：E/(2 pi n)=%.6f > 1，"
+            "符合 Bogomolny 界只在临界耦合 lambda=2 e^2 取等号的预期"
             % (c0["lambda"], c0["energy_over_bound"]))
 else:
     add("S4-04", "S4 涡旋", "Nielsen-Olesen 数值解", "需要 scipy",
