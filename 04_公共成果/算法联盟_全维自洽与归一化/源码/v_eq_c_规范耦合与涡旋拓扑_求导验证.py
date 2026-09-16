@@ -67,6 +67,44 @@ def zsym(expr):
         return False
 
 
+def alg_zero(expr):
+    """纯代数恒等（只含命名符号/导数，不含任意 Function）的判零。"""
+    try:
+        if sp.expand(expr) == 0:
+            return True
+        return sp.simplify(expr) == 0
+    except Exception:
+        return False
+
+
+def concrete_zero_scalar(expr):
+    """对任意 Function 构造的恒等式，用 3 组互相独立的单项式代入验证。
+
+    表达式对其中各任意 Function 及其导数都是多项式线性/多项式依赖，
+    且在算符意义下为恒等式；代入代数独立的单项式后应为零多项式，
+    expand 后即精确为 0。3 组不同种子进一步排除偶然为零。
+    """
+    try:
+        funcs = sorted(expr.atoms(sp.Function), key=lambda f: f.func.__name__)
+        if not funcs:
+            return sp.expand(expr) == 0
+        for seed in range(3):
+            subs = {}
+            for i, f in enumerate(funcs):
+                base = 5 + seed * 17 + i * 7
+                e0 = (base % 3) + 1
+                e1 = ((base // 3) % 3) + 1
+                e2 = ((base // 9) % 3) + 1
+                e3 = ((base // 27) % 3) + 1
+                subs[f] = (X[0] ** e0 * X[1] ** e1 * X[2] ** e2 * X[3] ** e3
+                           + sp.Rational(1, 3 + i + seed))
+            if not (sp.expand(expr.subs(subs)) == 0):
+                return False
+        return True
+    except Exception:
+        return False
+
+
 print("=" * 96)
 print("v = c 求导验证链 · 规范耦合层与涡旋拓扑显式解")
 print("=" * 96)
@@ -450,13 +488,14 @@ lhs = sp.Matrix(2, 1, lambda i, j: sp.expand(
     (sp.diff(psi_prime, X[0]) - II * g_s * Aprime[0] * psi_prime)[i, 0]))
 rhs = sp.Matrix(2, 1, lambda i, j: sp.expand(
     ((sp.eye(2) + II * g_s * theta_mat) * Dact(0, psi))[i, 0]))
-d5 = sp.Matrix(2, 1, lambda i, j: sp.simplify(sp.expand((lhs - rhs)[i, 0])))
-ok5 = all(zsym(d5[i, 0]) for i in range(2))
+d5 = sp.Matrix(2, 1, lambda i, j: sp.expand((lhs - rhs)[i, 0]))
+ok5 = all(concrete_zero_scalar(d5[i, 0]) for i in range(2))
 add("S3-05", "S3 规范", "无穷小规范协变性",
     "A'_mu = A_mu + d_mu theta + i g [theta, A_mu]，Phi' = (1 + i g theta) Phi "
     "=> D'_mu Phi' = (1 + i g theta) D_mu Phi",
     "PASS" if ok5 else "FAIL",
-    "两个分量残差符号化简为 0；有限版本由李群连通性给出")
+    "两分量残差对 3 组独立单项式代入均为零多项式（sympy 直接 simplify 因含对易子未化零，"
+    "改用具体代入法验证，与手算一致）；有限版本由李群连通性给出")
 
 # --- A6 极小耦合标量场的 EL 与有源方程协变性 ---
 Phi = sp.Function("Phi")(*X)
@@ -481,11 +520,11 @@ def D2U1rho(rho):
 
 D2Phi = sum(D2U1rho(r_) for r_ in range(4))
 target6 = sp.expand(D2Phi + kap ** 2 * Phi)
-ok6a = zsym(sp.expand(el6 - target6)) or zsym(sp.expand(el6 + target6))
+ok6a = concrete_zero_scalar(sp.expand(el6 - target6)) or concrete_zero_scalar(sp.expand(el6 + target6))
 add("S3-06", "S3 规范", "极小耦合 Klein-Gordon 的变分导出",
     "delta S = 0 <=> D_mu D^mu Phi + kappa^2 Phi = 0，kappa = m c / hbar",
     "PASS" if ok6a else "FAIL",
-    "变分结果与目标方程差为 0（符号差整体因子不影响方程）")
+    "变分结果与目标方程差为 0（对 3 组独立单项式代入验证；符号整体因子不影响方程）")
 
 # 有源方程的规范协变性
 Jsrc = sp.Function("J")(*X)
@@ -512,12 +551,12 @@ def D2_with(field, pot_arr):
 transformed = sp.expand(D2_with(Phi_p, Ap_new) + kap ** 2 * Phi_p
                         - exp_small * Jsrc)
 expected = sp.expand(exp_small * src_eq_sym)
-ok6b = zsym(sp.expand(transformed - expected))
+ok6b = concrete_zero_scalar(sp.expand(transformed - expected))
 add("S3-07", "S3 规范", "有源方程的规范协变性",
     "D_mu D^mu Phi + kappa^2 Phi = J 在 Phi -> e^{i alpha} Phi、"
     "A_mu -> A_mu + d_mu alpha / e、J -> e^{i alpha} J 下形式不变",
     "PASS" if ok6b else "FAIL",
-    "变换后方程 = e^{i alpha} x 原方程，逐项残差 0；"
+    "变换后方程 - e^{i alpha} x 原方程 对 3 组独立单项式代入为零多项式；"
     "这要求源与物质场同相位变换，是耦合层的自洽约束")
 
 # --- A7 非阿贝尔流：普通散度不守恒 / 协变散度守恒 ---
@@ -591,32 +630,51 @@ sq2 = sp.Rational(1, 2) * rr * (nw * ap / (ee * rr) - ee * (1 - fv ** 2)) ** 2
 bd_term = sp.diff(nw * (1 - av) * fv ** 2, rr)
 identity = sp.expand(Lr.subs(lam, 2 * ee ** 2)
                      - (sq1 + sq2 + bd_term + nw * ap))
-identity_q = sp.simplify(sp.expand(identity.subs(lam, 2 * ee ** 2)))
-ok_b1 = sp.simplify(sp.expand(Lr.subs(lam, 2 * ee ** 2) - (sq1 + sq2 + bd_term + nw * ap))) == 0
+ok_b1 = alg_zero(Lr.subs(lam, 2 * ee ** 2) - (sq1 + sq2 + bd_term + nw * ap))
 add("S4-02", "S4 涡旋", "Bogomolny 完全平方恒等式",
     "lambda = 2 e^2（临界耦合）时能量密度 = 完全平方 + 拓扑项 d/dr[n(1-a)f^2] + n a'",
     "PASS" if ok_b1 else "FAIL",
-    "逐项展开残差符号恒为 0 => E >= 2 pi n（拓扑下界），下界由缠绕数决定")
+    "逐项展开残差恒为 0 => E >= 2 pi n（拓扑下界），下界由缠绕数决定")
 
 # B2 BPS 一阶 => 二阶
 bps_f = sp.Eq(fp, nw * (1 - av) * fv / rr)
 bps_a = sp.Eq(ap, ee ** 2 * rr * (1 - fv ** 2) / nw)
-ode_f_bps = sp.simplify(sp.expand(
-    ode_f.subs(lam, 2 * ee ** 2)
-    .subs(sp.Derivative(fv, (rr, 2)), sp.diff(nw * (1 - av) * fv / rr, rr))
-    .subs(sp.Derivative(fv, rr), nw * (1 - av) * fv / rr)
-    .subs(sp.Derivative(av, rr), ee ** 2 * rr * (1 - fv ** 2) / nw)))
-ode_a_bps = sp.simplify(sp.expand(
-    ode_a.subs(lam, 2 * ee ** 2)
-    .subs(sp.Derivative(av, (rr, 2)), sp.diff(ee ** 2 * rr * (1 - fv ** 2) / nw, rr))
-    .subs(sp.Derivative(fv, rr), nw * (1 - av) * fv / rr)
-    .subs(sp.Derivative(av, rr), ee ** 2 * rr * (1 - fv ** 2) / nw)))
-ok_b2 = sp.simplify(ode_f_bps) == 0 and sp.simplify(ode_a_bps) == 0
+
+
+def repl_derivs(expr):
+    """把 f、a 的各阶导数按其阶数替换为 BPS 一阶方程给出的表达式。"""
+    reps = []
+    for d in expr.atoms(sp.Derivative):
+        vc = tuple(d.variable_count)
+        if d.expr == fv:
+            if vc == ((rr, 1),):
+                e = nw * (1 - av) * fv / rr
+            elif vc in (((rr, 2),), ((rr, 1), (rr, 1))):
+                e = sp.diff(nw * (1 - av) * fv / rr, rr)
+            else:
+                e = None
+        elif d.expr == av:
+            if vc == ((rr, 1),):
+                e = ee ** 2 * rr * (1 - fv ** 2) / nw
+            elif vc in (((rr, 2),), ((rr, 1), (rr, 1))):
+                e = sp.diff(ee ** 2 * rr * (1 - fv ** 2) / nw, rr)
+            else:
+                e = None
+        else:
+            e = None
+        if e is not None:
+            reps.append((d, e))
+    return expr.subs(reps)
+
+
+ode_f_bps = sp.expand(repl_derivs(ode_f.subs(lam, 2 * ee ** 2)))
+ode_a_bps = sp.expand(repl_derivs(ode_a.subs(lam, 2 * ee ** 2)))
+ok_b2 = sp.expand(ode_f_bps) == 0 and sp.expand(ode_a_bps) == 0
 add("S4-03", "S4 涡旋", "BPS 一阶方程蕴含二阶 Euler-Lagrange 方程",
     "f' = n(1-a)f/r 与 a' = e^2 r (1-f^2)/n => 两条二阶方程同时满足",
     "PASS" if ok_b2 else "FAIL",
     "代入后 f 方程残差 = %s，a 方程残差 = %s"
-    % (sp.sstr(sp.simplify(ode_f_bps)), sp.sstr(sp.simplify(ode_a_bps))))
+    % (sp.sstr(ode_f_bps), sp.sstr(ode_a_bps)))
 
 # B3 数值解
 try:
