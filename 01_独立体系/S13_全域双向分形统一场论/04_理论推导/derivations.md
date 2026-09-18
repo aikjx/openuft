@@ -52,11 +52,21 @@ $\beta\left( g \right) = \varepsilon g - cg^{3}$，令导数为零：$g^{*} = \p
 
 $g^{\mathrm{eff}}\left( r \right) = 1 - \frac{r_{s}r}{r^{2}+\ell^{2}}$，Ricci 标量：
 
+> **【2026-09-18 修正 · 勘误 E7】** 原式写作
+> $R\left( r \right) = \dfrac{r_{s}\,\ell^{2}\left( 3r^{2} - \ell^{2} \right)}{\left( r^{2} + \ell^{2} \right)^{3}}$
+> 与 $3r^{4} - 6\ell^{2}r^{2} - \ell^{4} = 0$ 均为**书写笔误**：前者在驻点 $r=(\sqrt{2}-1)\ell$ 处给 $0.3018$，
+> 与下方 $|R|_{\max}$ 闭式差 $79.29\%$，且 $R(0^{+}) = -1 \neq 0$（违反端点条件）；
+> 后者的解为 $r^{2}=\left(1+\tfrac{2\sqrt{3}}{3}\right)\ell^{2}\approx 2.1547\ell^{2}$，与其自身给出的 $\left(3\pm2\sqrt{2}\right)$ 不符。
+> 正确式如下（已由 `全维勘误精算修复验证.py` F6 组以 sympy + 50 位数值核验，并与本体系
+> `09_验证结果/验证精算报告_V1.8.md` P4c/P4d/P4f 的 $\sim 10^{-50}$ 残差一致）。
+> **注**：驻点解 $r=\left(\sqrt{2}\pm1\right)\ell$ 与 $|R|_{\max}$ 闭式原本正确，本次仅修正其推导过程中的表达式。
+
 $$
-R\left( r \right) = \frac{r_{s}\,\ell^{2}\left( 3r^{2} - \ell^{2} \right)}{\left( r^{2} + \ell^{2} \right)^{3}}
+R\left( r \right) = -\frac{\mathrm{d}^{2}}{\mathrm{d}r^{2}}g^{\mathrm{eff}}
+= \frac{2\,r_{s}\,r\left( r^{2} - 3\ell^{2} \right)}{\left( r^{2} + \ell^{2} \right)^{3}}
 $$
 
-驻点条件 $3r^{4} - 6\ell^{2}r^{2} - \ell^{4} = 0 \Rightarrow r^{2} = \left( 3 \pm 2\sqrt{2} \right)\ell^{2}$，代回得：
+驻点条件 $r^{4} - 6\ell^{2}r^{2} + \ell^{4} = 0 \Rightarrow r^{2} = \left( 3 \pm 2\sqrt{2} \right)\ell^{2}$，代回得：
 
 $$
 \left| R \right|_{\max} = \frac{\left( 3 + 2\sqrt{2} \right)GM}{2\ell^{3}}, \qquad r = \left( \sqrt{2}\pm 1 \right)\ell
