@@ -26,6 +26,14 @@ import numpy as np
 import sympy as sp
 import mpmath as mp
 
+# 修复（2026-09-18）：Windows 默认控制台为 GBK，无法编码 ²/ω/→/✅ 等字符，
+# 原脚本在默认环境下 print 即抛 UnicodeEncodeError，整条验证链无法运行。
+# 统一改为 UTF-8 输出并对不可编码字符降级替换，不改变任何验证逻辑。
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 mp.mp.dps = 200
@@ -82,21 +90,28 @@ def verify_TS1_triad_theorem():
     kappa2 = sp.simplify(cross2 / v2**3)
     tau2 = sp.simplify((cross.dot(a_prime))**2 / cross2**2)
 
-    # 代入光速约束 v2=c²
-    lhs = sp.simplify((kappa2 + tau2).subs(v2, c**2))
+    # 代入光速约束（修复 2026-09-18，见 openuft 勘误 E6）
+    # 【原缺陷】写作 (kappa2 + tau2).subs(v2, c**2)：subs 只替换了分母中的 v2，
+    # 分子残留未替换，残差恒为 omega**2*(R**2*omega**2 + b**2 - c**2)/c**4 ≠ 0，
+    # 导致 TS1 被误判为 ❌（定理本身正确，属符号替换不彻底的脚本 bug）。
+    # 【修复】分两步：① 先证不依赖任何约束的一般恒等式 κ²+τ² = ω²/(R²ω²+b²)；
+    #               ② 再把光速约束以 b**2 → c**2 − R**2*omega**2 的形式代入。
+    diff_general = sp.simplify(kappa2 + tau2 - omega**2 / v2)
+    lhs = sp.simplify((omega**2 / v2).subs(b**2, c**2 - R**2 * omega**2))
     rhs = sp.simplify(omega**2 / c**2)
     diff = sp.simplify(lhs - rhs)
 
     print(f"  曲率 κ² = {kappa2}")
     print(f"  挠率 τ² = {tau2}")
-    print(f"  代入v²=c²：κ²+τ² = {lhs}")
+    print(f"  一般恒等式：κ²+τ² − ω²/(R²ω²+b²) = {diff_general}")
+    print(f"  代入 v²=c²（b² → c²−R²ω²）：κ²+τ² = {lhs}")
     print(f"  (ω/c)² = {rhs}")
     print(f"  差 = {diff}")
-    if diff == 0:
+    if diff == 0 and diff_general == 0:
         print(f"  → 精确为0 ✅ 三重奏定理严格成立")
     else:
         print(f"  → 差不为0，需要检查")
-    return diff == 0
+    return (diff == 0) and (diff_general == 0)
 
 
 # ============================================================
