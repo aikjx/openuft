@@ -150,9 +150,16 @@ TARGET_VAL = {
     "sin2_thetaW":  L("0.23122"),
 }
 # 靶自身的相对标准不确定度（外部 CODATA / PDG 数据，见 OPEN O-6）
+#
+# !! 已被 VII 修正（Sigma_cov-6）!!
+#   m_p_over_me 取 3.1e-10 是**传播口径**（照抄 sigma(m_p)）。CODATA 直接公布
+#   该比值 1836.15267343(11) ⇒ u_rel = 5.9908e-11，比本表的 3.1e-10 精 5.17 倍
+#   （质子质量正是经由 m_p/m_e 比值测出来的，故二者强相关 rho = +0.9812）。
+#   正确值见 VII 的 UNC_T_PUB。修正方向使本册 Gamma-2 / Theta-8 的结论**更强**
+#   （残差/不确定度 0.49 → 0.09），不改变任何判定。
 UNC_T_REL = {
     "alpha": 1.5e-10, "alpha_grav_e": 2.2e-5, "m_e_over_mP": 1.1e-5,
-    "m_mu_over_me": 2.2e-8, "m_p_over_me": 3.1e-10,
+    "m_mu_over_me": 2.2e-8, "m_p_over_me": 3.1e-10,   # <- 应为 5.9908e-11
     "alpha_s": 7.6e-3, "sin2_thetaW": 1.7e-4,
 }
 TARGET_STR = {

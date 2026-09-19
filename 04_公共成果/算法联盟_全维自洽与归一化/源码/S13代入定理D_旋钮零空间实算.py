@@ -22,9 +22,15 @@ S13 代入定理 D：旋钮零空间实算 + 标度不变性壁垒（定理 E）
 
 import json
 import os
+import sys
 from datetime import date
 
 import sympy as sp
+
+try:                       # 修复：GBK 控制台无法编码 '⇒'(U+21D2) 等字符时崩溃
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.abspath(os.path.join(HERE, "..", "数据"))
