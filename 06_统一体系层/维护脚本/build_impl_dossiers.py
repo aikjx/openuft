@@ -500,6 +500,62 @@ openuft 已有自己的 [研究流程](../../../00_项目治理/WORKFLOW.md) 与
 另一相关项：openmath 的 `04-数学统一场论/` 含桥接定理 `OM-BR-0001_三重奏定理_线性动力学谱与Frenet曲率.md`，与 [s01](../../../01_独立体系/S01_螺旋三重奏与谱几何/README.md) 存在实质关联，后续可建立跨库关系边（路线图 C4）。
 '''
 
+DOSSIERS['UFE1统一场方程.md'] = '''# 实现方式档案：UFE-1 统一场方程
+
+[实现方式总览](../README.md) · 归属：[候登记_ufe1](../../体系坐标系/体系坐标表.md) · 理论正文：[07_统一场方程](../../../07_统一场方程/README.md)
+
+- **形态**：M1 符号推导 · M2 数值验算 · M6 论文
+- **位置**：`openuft/07_统一场方程/`（11 篇正文 + 2 个 CSV + 1 个生成器 + 1 个验证器）
+- **状态**：active（自证完备，外部校准未做）
+
+## 主张与本体
+
+主方程取自单一总联络 $\\mathcal A$ 的曲率：
+
+$$\\frac{\\delta S}{\\delta\\Phi}=0,\\quad \\Phi=(e,\\mathcal A,H,\\Psi);\\qquad
+\\star D_{\\mathcal A}\\!\\star\\mathcal F=\\mathcal J,\\quad \\mathcal F=d\\mathcal A+\\mathcal A\\wedge\\mathcal A$$
+
+"四种力写在一个方程"的机制是**李代数直和分解**：
+
+$$\\mathfrak g=\\mathfrak{so}(1,3)\\oplus\\mathfrak{su}(3)\\oplus\\mathfrak{su}(2)\\oplus\\mathfrak u(1)$$
+
+四种力是同一曲率沿四个因子的分量，不是四个并列项。麦克斯韦齐次方程来自统一比安基恒等式
+$D_{\\mathcal A}\\mathcal F\\equiv0$，不来自变分。
+
+## 诚实评级
+
+| 项 | 结论 |
+|---|---|
+| 理论实质 | **Einstein–Cartan（含挠率）引力 + 标准模型**，非新提出的替代物理 |
+| 已完成 | 五组变分（$\\delta\\omega,\\delta e,\\delta A,\\delta H,\\delta\\Psi$）逐步展开；四力还原；反常消除精确有理计算 |
+| 关键推算 | 由 $G_F,\\alpha,m_Z,m_t$ 算出 $m_W=80.409$ GeV，实测 $80.377\\pm0.012$，**偏差 0.04%** |
+| 主要缺陷 | **19 个输入参数**（含 $\\alpha$ 的数值、质量谱、代数、$\\Lambda$ 全部为输入）；无右手中微子致 $m_\nu=0$，与振荡实验矛盾 |
+| 未解决 | 禁闭无解析证明（Clay 问题）、引力量子化、层级问题、强 CP、暗物质 |
+
+**与既有体系的区别**：S14（TUFT）同样以主丛与联络为骨架，但其多项 claims 已登记为 falsified
+（挠率多分量相加为类型错误、$\\sin^2\\theta_W$ 尺度混淆、单圈三耦合不汇聚）。UFE-1 不重复这些错误：
+挠率在本体中是**代数**方程（不传播、不产生第五种力），$\\sin^2\\theta_W$ 与耦合统一作为**检验项**而非结论登记。
+
+## 验证方式与结果
+
+`07_统一场方程/验证脚本/verify_core.py` —— **零第三方依赖**（纯 `fractions` + `math`），可复跑：
+
+```bash
+cd openuft/07_统一场方程/验证脚本 && python -B verify_core.py
+```
+
+**47 项：PASS 38 / FAIL 3 / INFO 6。** 三项 FAIL 是如实登记的否定结果：
+SM 单圈三耦合不统一（$\\alpha^{-1}$ 最小散布 3.66，MSSM 对照 0.049）、无右手中微子。
+
+## 待裁定事项
+
+1. **编号归属未定**：本板块现为顶层 section，未进入 `01_独立体系/` 的 `sNN` 注册。
+   是否改登记为 `s15`、是否补 `system.json` + 17 阶段 + `claims.csv`，需维护者裁定。
+   在此之前，坐标表中以 `候登记_ufe1` 记录。
+2. **外部校准未做**：UFT-1…UFT-6 判据未与标准模型之外的其他路线做定量计分（路线图 D3）。
+3. **C8=19 未被优化**：参数数目未做任何自然性论证。
+'''
+
 # ---------------- 关系图谱 ----------------
 RELATIONS = [
     # source, relation, target, evidence, status
@@ -530,13 +586,24 @@ RELATIONS = [
     ('实现:三分量统一场论库 triad_uft/', 'implements', 's12_light_speed_helix', 'light_speed_helix.py', 'active'),
     ('实现:GMUFT v2.1', 'implements', 's11_gmuft_geometric_coupling', 'verify_gmuft_v21.py', 'active'),
     ('实现:算法联盟自洽引擎', 'implements', '跨体系', '量纲/自由度/量纲零空间审计', 'active'),
-    ('实现:双向分形 bifuf', 'implements', '候裁定', '**disputed**，见档案', 'disputed'),
-    ('实现:全域数学 UM', 'implements', '候登记', 'uft/06-论文/', 'candidate'),
-    ('实现:V21 Ω 元一方程', 'implements', '候登记', 'V21_Ω…txt', 'candidate'),
     ('s14_torsion_unified_field_tuft', 'falsified_by', 'S14-C0001 挠率多分量相加为类型错误', '维数不可加；实为 SM 表示论重述', 'falsified'),
     ('s14_torsion_unified_field_tuft', 'falsified_by', 'S14-C0002 sin²θ_W 尺度混淆', '1/4 vs 0.23122 差 8.12%', 'falsified'),
     ('s14_torsion_unified_field_tuft', 'falsified_by', 'S14-C0003 1-loop SM 三耦合不汇聚', '10^16 GeV 处 21.0% 分散', 'falsified'),
     ('s13_duality_fractal_uft', 'falsified_by', '1D 绕数（π₁(S²)=0）', '已改 3D Hopf（π₃(S²)=ℤ）', 'falsified'),
+    # UFE-1（07_统一场方程）接入
+    ('实现:UFE-1 统一场方程', 'implements', '候登记_ufe1', '07_统一场方程/ 主方程 + 五组变分 + 47 项验证', 'active'),
+    ('候登记_ufe1', 'competes', 's14_torsion_unified_field_tuft',
+     '同为几何联络路线；S14 挠率多分量相加已被证伪，UFE-1 取挠率为代数约束', 'active'),
+    ('候登记_ufe1', 'competes', 's11_gmuft_geometric_coupling',
+     '同为几何自由度统一路线；S11 完整场方程 OPEN（其 L4=none）', 'active'),
+    ('候登记_ufe1', 'independent', 's13_duality_fractal_uft',
+     '规范场论本体 vs 0/1 对偶基元，L1 无公设交集', 'active'),
+    # 候登记 / 候裁定的具体化（原先指向泛化节点，图上不可见）
+    ('实现:全域数学 UM', 'implements', '候登记_um', 'uft/06-论文/', 'candidate'),
+    ('实现:V21 Ω 元一方程', 'implements', '候登记_v21omega', 'V21_Ω…txt', 'candidate'),
+    ('实现:双向分形 bifuf', 'implements', '候裁定_bifuf', '**disputed**，见档案；裁定前结论不得引用', 'disputed'),
+    ('候裁定_bifuf', 'independent', 's13_duality_fractal_uft',
+     '仅名称相近：分形树自洽检查 vs 0/1 对偶基元，本体不同', 'active'),
 ]
 
 RELATION_DOC = '''# 体系关系图谱
@@ -568,11 +635,12 @@ RELATION_DOC = '''# 体系关系图谱
     for r in RELATIONS
 ) + '''
 
-## 三类高危误解
+## 四类高危误解
 
 1. **把 `borrows_math` 当依赖**：s10/s12 借用 s01 的三重奏恒等式，但 s01 的数学结果不能为 s10/s12 的本体主张背书。
-2. **把 `implements` 当认证**：TUFT 主线跑了 17 个版本，不等于 s14 成立；s14 的 claims 中多项为 falsified。
+2. **把 `implements` 当认证**：TUFT 主线跑了 17 个版本，不等于 s14 成立；s14 的 claims 中多项为 falsified。同理，UFE-1 有 47 项验证通过，不等于它已被证实。
 3. **把 `version_of` 当等价**：s03→s07→s08→s09 是同一研究逐版改公设，不是四个互相支持的独立证据。
+4. **把 `候登记` 当已登记**：`候登记_ufe1`、`候登记_um`、`候登记_v21omega` 与 `候裁定_bifuf` 尚未取得 `sNN` / `pNN` 编号。它们在图中出现只为标注关系，不表示身份已确立；`候裁定_bifuf` 在裁定前其结论不得引用。
 
 ## 待完成
 
@@ -597,6 +665,8 @@ def build_graph_html():
         '对偶 / 挠率族': ['s13_duality_fractal_uft', 's14_torsion_unified_field_tuft'],
         '待完备与方向': ['s11_gmuft_geometric_coupling', 'p01_space_compression',
                     'p02_matter_source', 'p03_gauge_unification', 'p04_quantum_emergence'],
+        '形式化核心 / 候登记': ['候登记_ufe1', '候登记_um',
+                        '候登记_v21omega', '候裁定_bifuf'],
     }
     labels = {
         's01_triad_kinematics': 'S01 螺旋三重奏\n(数学框架)',
@@ -617,12 +687,17 @@ def build_graph_html():
         'p02_matter_source': 'P02 物体驱动',
         'p03_gauge_unification': 'P03 规范统一',
         'p04_quantum_emergence': 'P04 量子涌现',
+        '候登记_ufe1': 'UFE-1 统一场方程\n(07 · 候登记)',
+        '候登记_um': 'UM 全域数学\n(候登记)',
+        '候登记_v21omega': 'V21 Ω 元一方程\n(候登记)',
+        '候裁定_bifuf': 'bifuf 双向分形\n(disputed)',
     }
     colors = {
         '螺旋 / 光速族': '#2563eb',
         'GAQ 几何族': '#7c3aed',
         '对偶 / 挠率族': '#c2410c',
         '待完备与方向': '#64748b',
+        '形式化核心 / 候登记': '#0f766e',
     }
     # 布局：两列两行分区
     boxes = {
@@ -630,6 +705,7 @@ def build_graph_html():
         'GAQ 几何族': (530, 120, 430, 420),
         '对偶 / 挠率族': (60, 470, 430, 220),
         '待完备与方向': (530, 590, 430, 330),
+        '形式化核心 / 候登记': (60, 710, 430, 210),
     }
     node_pos = {}
     for g, members in groups.items():
@@ -650,7 +726,7 @@ def build_graph_html():
         'independent': '#cbd5e1',
         'supersedes': '#a16207',
     }
-    svg_w, svg_h = 1020, 1075
+    svg_w, svg_h = 1020, 1120
     falsified_count = {'s14_torsion_unified_field_tuft': 3, 's13_duality_fractal_uft': 1}
     parts = []
     parts.append('<svg viewBox="0 0 {} {}" xmlns="http://www.w3.org/2000/svg" '
@@ -717,13 +793,13 @@ def build_graph_html():
         parts.append('<line x1="{}" y1="{}" x2="{}" y2="{}" stroke="{}" stroke-width="2.4"/>'
                      .format(lx, yy - 4, lx + 30, yy - 4, edge_color[k]))
         parts.append('<text x="{}" y="{}" font-size="12" fill="#334155">{}</text>'.format(lx + 38, yy, name))
-    parts.append('<text x="530" y="810" font-size="13" font-weight="700" fill="#0f172a">阅读提醒</text>')
+    parts.append('<text x="640" y="980" font-size="13" font-weight="700" fill="#0f172a">阅读提醒</text>')
     notes = ['本图不表示任何统一场论已经成立。',
              'S14 已登记多项 falsified，见其 claims.csv。',
-             'bifuf、UM、V21Ω 尚未取得稳定编号，以候登记处理。',
-             '实现（代码/书稿/图谱）不提升证据等级。']
+             '候登记 / 候裁定节点未进入 sNN 注册，编号待裁定。',
+             '实现（代码 / 书稿 / 图谱）不提升证据等级。']
     for i, n in enumerate(notes):
-        parts.append('<text x="530" y="{}" font-size="12" fill="#475569">· {}</text>'.format(832 + i * 21, n))
+        parts.append('<text x="640" y="{}" font-size="12" fill="#475569">· {}</text>'.format(1002 + i * 21, n))
     parts.append('</svg>')
 
     html = '''<!DOCTYPE html>

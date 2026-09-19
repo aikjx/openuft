@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 """claims.csv 列数规范化（可复跑，非破坏性）
 
-背景：仓库内 claims.csv 的 header 为 12 列，但历史数据行多为 11 列
-（S12 rows=[11,12]、S13 rows=[10,11,17]），未转义英文逗号会导致**列错位**，
-固定列号读取会静默误判（算法联盟已改用"行末两列定位 status"来规避）。
+背景：仓库内 claims.csv 的 header 现为 **14 列**
+（`claim_id,hypothesis_revision,statement,assumptions,derivation,prediction,`
+`prediction_value,prediction_urel,run_id,data_id,uncertainty,evidence_level,status,reviewer`），
+但历史数据行曾为 10/11/12/17 列（S12 rows=[11,12]、S13 rows=[10,11,17]）。
+未转义英文逗号会导致**列错位**，固定列号读取会静默误判
+（算法联盟已改用"行末两列定位 status"来规避）。
+
+**状态（2026-09-19）**：18 个体系的数据行已全部与 14 列 header 对齐，
+`新体系模板/claims.csv` 亦已同步为 14 列。本工具保留用于今后再出现列漂移时的复位。
 
 本工具：把指定体系 claims.csv 的**数据行**规范化为固定列数（默认 11，与仓库惯例一致）：
   - 多出的字段合并进 statement（第 3 列），用中文全角"，"连接 —— **不丢内容**；
