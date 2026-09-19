@@ -56,12 +56,21 @@ DEFAULT_REMOTE = 'openuft'
 DEFAULT_REMOTE_BRANCH = 'main'
 
 
-def git(*args: str, cwd: Path, check: bool = True) -> str:
+def git(*args: str, cwd: Path, check: bool = True, merge: bool = False) -> str:
+    """运行 git 并返回输出。
+
+    merge=True 时把 stderr 也并入返回值：**`git push` 的状态行（含 fast-forward
+    箭头与 rejected 提示）是写到 stderr 的**，只取 stdout 会把"需要推送"
+    误判成"远端已是最新"。凡解析 push 结果必须用 merge=True。
+    """
     proc = subprocess.run(['git', *args], cwd=str(cwd),
                           capture_output=True, text=True, encoding='utf-8', errors='replace')
     if check and proc.returncode != 0:
         raise SystemExit('git {} 失败：\n{}'.format(' '.join(args), (proc.stderr or '').strip()))
-    return (proc.stdout or '').strip()
+    out = proc.stdout or ''
+    if merge:
+        out += proc.stderr or ''
+    return out.strip()
 
 
 def run_python(script: Path, cwd: Path) -> tuple[int, str]:
@@ -159,7 +168,7 @@ def main() -> int:
 
     # ---- 推送预演 / 推送 ----
     refspec = '{}:{}'.format(args.branch, args.remote_branch)
-    dry = git('push', '--dry-run', args.remote, refspec, cwd=toplevel)
+    dry = git('push', '--dry-run', args.remote, refspec, cwd=toplevel, merge=True)
     print('\n---- 推送预演 ----\n{}'.format(dry or '（空：远端已是最新）'))
 
     if not dry.strip():
@@ -167,6 +176,10 @@ def main() -> int:
         return 0
 
     low = dry.lower()
+    if 'everything up-to-date' in low:
+        print('\n远端已是最新，无需推送。')
+        return 0
+
     ff = ('..' in dry) and ('+' not in dry) and ('rejected' not in low) and ('non-fast-forward' not in low)
 
     if not args.push:
@@ -179,7 +192,7 @@ def main() -> int:
         return 2
 
     print('\n---- 实际推送 ----')
-    print(git('push', args.remote, refspec, cwd=toplevel))
+    print(git('push', args.remote, refspec, cwd=toplevel, merge=True))
     print('已完成。远端 {} refs/heads/{} 应为：{}'.format(
         args.remote, args.remote_branch, git('rev-parse', 'HEAD', cwd=worktree)[:12]))
     return 0
