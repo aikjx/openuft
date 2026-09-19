@@ -10,7 +10,7 @@
      等，属开发工作区或外部资料，迁入既无意义也会毁掉仓库可用性。
      这类只**登记**，不移动。
   3. 可回滚。移动前把 (原路径, 目标路径, 字节, mtime) 全部写进 manifest.json；
-     同目录 restore.py 可一键还原。
+     用 `--restore` 即可按 manifest 逐条搬回原位（无独立的 restore.py）。
   4. 幂等。重复运行不会产生嵌套；目标已存在则跳过并记 skip。
 
 用法：
@@ -34,7 +34,10 @@ from pathlib import Path
 TOOL_DIR = Path(__file__).resolve().parent
 OPENUFT = TOOL_DIR.parent.parent                     # openuft/
 REPO = OPENUFT.parent                                # my_lib/
-DEST_ROOT = OPENUFT / '99_待整理资料' / '根目录来料_20260919'
+# 封存区放 90_历史归档 而非 99_待整理资料：本区语义是「已完成位置迁移、待逐件归属的
+# 既有来源」，更接近历史快照；且 90_历史归档 在 verify.py 中豁免链接检查，来源自带的
+# 相对链接不会误报断链。见 99_待整理资料/README.md。
+DEST_ROOT = OPENUFT / '90_历史归档' / '来源语料_根目录_20260919'
 RECORD = OPENUFT / '90_历史归档' / '迁移记录' / '20260919_根目录归集'
 MANIFEST = RECORD / 'manifest.json'
 
@@ -171,7 +174,7 @@ def do_move(plan, manifest):
         moved.append({'name': item['name'], 'kind': item['kind'],
                       'source': str(src), 'target': str(dst),
                       'bytes': item['bytes'], 'bin': item['bin'],
-                      'attribution': '待归属（线索：%s）' % item['clue']})
+                      'attribution': '待归属（%s）' % item['clue']})
         item['status'] = 'moved'
     manifest['entries'] = moved
     return manifest
@@ -189,16 +192,36 @@ def write_manifest(manifest, plan, reg, skip):
 
 
 def write_csv(plan, manifest):
+    """清单以 manifest 为唯一数据源。
+
+    早期版本按「当次计划」写 CSV，导致重复执行（第二次计划为空）时把清单覆盖成
+    只剩表头 —— 所以这里改成只读 manifest，保证任何一次运行的结果都等价。
+    """
     DEST_ROOT.mkdir(parents=True, exist_ok=True)
     out = DEST_ROOT / '来料清单.csv'
+    live = {it['name']: it for it in plan}
+    rows = []
+    for e in sorted(manifest.get('entries', []), key=lambda x: (x['bin'], x['name'])):
+        it = live.get(e['name'])
+        rows.append([
+            e['name'],
+            '目录' if e['kind'] == 'dir' else '文件',
+            e['bin'],
+            it['files'] if it else '',
+            human(e['bytes']),
+            '已迁入',
+            e['attribution'].replace('线索：线索：', '线索：'),
+        ])
+    # 只登记未搬的重型库也进清单，否则读者会以为它们"不存在"
+    for r in manifest.get('register_only', []):
+        rows.append([r['name'], '目录' if r['kind'] == 'dir' else '文件',
+                     '(仅登记)', '', '', '未迁入（留在原处）', r['reason']])
+    for r in manifest.get('held_back', []):
+        rows.append([r['name'], '—', '(未分类)', '', '', '未迁入（留在原处）', r['reason']])
     with open(out, 'w', encoding='utf-8-sig', newline='') as f:
         w = csv.writer(f)
-        w.writerow(['来源名', '类型', '分箱', '文件数', '字节', '归属状态', '归属线索'])
-        for it in plan:
-            touched = [e for e in manifest.get('entries', []) if e['name'] == it['name']]
-            st = '已迁入' if touched else ('已存在' if it.get('status', '').startswith('skip') else '待迁入')
-            w.writerow([it['name'], '目录' if it['kind'] == 'dir' else '文件',
-                        it['bin'], it['files'], it['bytes'], st, it['clue']])
+        w.writerow(['来源名', '类型', '分箱', '文件数', '字节', '状态', '归属状态 / 不搬理由'])
+        w.writerows(rows)
     return out
 
 
@@ -234,7 +257,7 @@ def write_record(plan, manifest, reg, skip):
     tb = sum(e['bytes'] for e in moved)
     lines = ['# 20260919 根目录来源材料归集', '',
              '把 `my_lib` 根目录中尚未进入 openuft 的统一场论来源材料，', 
-             '归入 `99_待整理资料/根目录来料_20260919/`。', '',
+             '原样封存到 `90_历史归档/来源语料_根目录_20260919/`。', '',
              '## 结果', '',
              '| 项 | 值 |', '|---|---|',
              '| 迁入条目 | %d |' % len(moved),
