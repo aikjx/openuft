@@ -11,6 +11,13 @@ sys.dont_write_bytecode = True
 
 ROOT = Path(__file__).resolve().parent
 
+# 来源封存区：按原路径原样保存外部收拢回来的材料，因此**豁免**「目录名必须含中文」。
+# 理由：这些目录名是来源的一部分（如 tuft/、uft/core/、Appendices/）。改名会让
+# 材料与它的原始出处对不上，等于毁掉可追溯性；而该约定本意是约束研究目录的命名，
+# 封存区不是研究目录。链接检查同样不适用的地方见下方 `90_历史归档` 分支。
+ARCHIVE_RAW_SECTION = '90_历史归档'
+ARCHIVE_RAW_PREFIX = '来源语料_根目录_'
+
 RAW_STAGING_SECTION = '99_待整理资料'
 RAW_BATCH_PREFIX = '根目录来料_'
 
@@ -21,6 +28,13 @@ def is_raw_staging(parts) -> bool:
     中文目录命名与本地链接治理，避免为迎合规则而破坏来源镜像的完整性。"""
     return bool(parts) and parts[0] == RAW_STAGING_SECTION and any(
         part.startswith(RAW_BATCH_PREFIX) for part in parts)
+
+
+def is_archive_raw(parts) -> bool:
+    """`90_历史归档/来源语料_根目录_*` 是外部语料的原样封存，目录名照搬上游
+    （tuft/、uft/arxiv/、Appendices/ 等），同样不套用中文目录命名约定。"""
+    return bool(parts) and parts[0] == ARCHIVE_RAW_SECTION and any(
+        part.startswith(ARCHIVE_RAW_PREFIX) for part in parts)
 
 
 def main():
@@ -73,6 +87,7 @@ def main():
         parts = directory.relative_to(ROOT).parts
         if parts[0].startswith('.') or '__pycache__' in parts: continue
         if is_raw_staging(parts): continue
+        if is_archive_raw(parts): continue
         if not re.search(r'[一-鿿]', directory.name):
             errors.append('Research directory must use Chinese: ' + directory.relative_to(ROOT).as_posix())
     checked = 0
