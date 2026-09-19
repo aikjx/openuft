@@ -44,6 +44,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -55,6 +56,25 @@ DEFAULT_BRANCH = 'openuft-standalone'
 DEFAULT_REMOTE = 'openuft'
 DEFAULT_REMOTE_BRANCH = 'main'
 
+# 凭据：显式绕过helper-selector，只读 ~/.git-credentials（store）
+#
+# 本机 PortableGit 的系统 gitconfig 把 credential.helper 设成 WorkBuddy 自带的
+# helper-selector，而 ~/.gitconfig 只给 codeup.aliyun.com / gitee.com / gitcode.com
+# 配了 provider，**github.com 没配**。命中未配置的 host 时该选择器会尝试交互式取凭据，
+# 在无终端环境下表现为永久阻塞：`git push` 卡 20+ 分钟无输出，最终 401；手工执行
+# `git credential fill` 同样挂住不返回。
+#
+# `-c credential.helper=` 先清空 helper 列表，再用第二个 -c 只装上 store，
+# 等价于命令行版 `git -c credential.helper= -c credential.helper=store push ...`。
+# 同一内容用 store 直推实测 6 秒完成（be529536..b4f062ad）。
+#
+# 若你的凭据不放在 ~/.git-credentials、而依赖 manager/交互式助手，
+# 设 OPENUFT_GIT_CRED=default 可关闭本覆盖。
+CRED_ARGS: list[str] = [] if os.environ.get('OPENUFT_GIT_CRED') == 'default' else [
+    '-c', 'credential.helper=', '-c', 'credential.helper=store',
+    '-c', 'http.postBuffer=524288000',
+]
+
 
 def git(*args: str, cwd: Path, check: bool = True, merge: bool = False) -> str:
     """运行 git 并返回输出。
@@ -63,7 +83,8 @@ def git(*args: str, cwd: Path, check: bool = True, merge: bool = False) -> str:
     箭头与 rejected 提示）是写到 stderr 的**，只取 stdout 会把"需要推送"
     误判成"远端已是最新"。凡解析 push 结果必须用 merge=True。
     """
-    proc = subprocess.run(['git', *args], cwd=str(cwd),
+    env = dict(os.environ, GIT_TERMINAL_PROMPT='0')
+    proc = subprocess.run(['git', *CRED_ARGS, *args], cwd=str(cwd), env=env,
                           capture_output=True, text=True, encoding='utf-8', errors='replace')
     if check and proc.returncode != 0:
         raise SystemExit('git {} 失败：\n{}'.format(' '.join(args), (proc.stderr or '').strip()))
