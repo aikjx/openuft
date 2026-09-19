@@ -1,0 +1,33 @@
+======================================================================
+TUFT R28 · Kerr/Teukolsky 推广：第一性结构探测（自检失败，不产出 Kerr 数值）
+======================================================================
+[INFO] 几何单位 G=c=M=1
+[INFO] §V1 符号：Teukolsky 径向方程 a->0 且 s=0 的标量极限
+[INFO]   Teukolsky(a=0,s=0) 展开：ΔR''+Δ'R'+[K²/Δ−λ]R，Δ=r²−2Mr，K=ωr²
+[INFO]   独立标量方程：r²fR''+(2r−2M)R'+[r²ω²/f−l(l+1)]R
+[INFO]   两者之差 = 0
+[PASS] V1 Teukolsky 径向方程正确建立：a→0,s=0 与 Schwarzschild 无质量标量径向方程符号恒等（Δ=r²−2Mr ⇒ K²/Δ=ω²r²/f，Δ'=2r−2M），方程本身无误
+[INFO] §V2 machinery 自检：对 RW（R25 已知 3 项）复算，要求 (deg S'',deg S',deg S)=(2,1,0)
+[INFO]   RW 最小清分母倍数 = y*(1 - y)**2 ；次数 = (deg S'',deg S',deg S) = (3, 2, 1)
+[FAIL] V2 machinery **自检未通过**：RW 应给 (2,1,0)（对应 3 项递推），实得 (3, 2, 1)。表明本册的 y-变量约化 machinery 与 R25 的推导存在**未定位的偏差**（可能在 RW 方程表述、ansatz 指数 (u,v)=(−2iMω,4iMω)、或先除以 A=f² 引入的人为极点），故不能用于 Kerr
+[INFO] §V3 同一 machinery 对 Teukolsky(a=0,s=−2) 的约化（Leaver ansatz：u=−s−2iMω, v=−1+s）
+[INFO]   Teukolsky 最小清分母倍数 = y*(1 - y)**3 ；次数 = (4, 3, 2)
+[BOUNDARY] V3 Teukolsky(a=0,s=−2) 约化得次数 (4, 3, 2)；但 **V2 自检未过，此结果不可信** ⇒ 本册**不产出任何 Kerr QNM 频率**
+[INFO] §C1 结构与修复清单
+[INFO]   Teukolsky 径向方程：ΔR''+(s+1)Δ'R'+[K²/Δ−2is(r−M)K/Δ+4isωr−λ]R=0，Δ=r²−2Mr+a²，K=(r²+a²)ω−ma，λ=A+a²ω²−2amω，s=−2
+[INFO]   正规奇点：r=r_±=M±√(M²−a²) 与 r=∞；Horizon 指标指数 {0,−s}（由 indicial 方程 Dλ(λ+s)=0 给出）
+[INFO]   Leaver ansatz：R=e^{iωr}(r−r_+)^{−s−iσ_+}(r−r_−)^{−1+s+iσ_−}Σd_n[(r−r_+)/(r−r_−)]^n，σ_±=(ω(r_±²+a²)−ma)/(r_+−r_−)
+[BOUNDARY] 修复清单①：定位 V2 偏差——应先用 R25 已通的 RW 推导路径（而非本册重建的 y-变量形式）对齐，重点排查『先除以 A=f² 再清分母』是否引入人为极点（f=y 使 A→0 于 y=0）
+[BOUNDARY] 修复清单②：对齐后再处理 Kerr 的 aa=ma≠0、r_−≠0 分支；需与 Leaver(1985) 原文核对 ansatz 指数与 σ_± 归一
+[BOUNDARY] 修复清单③：即便 3 项成立，Kerr 还需**角向自旋权椭球调和本征值 A(aω)** 与径向联动求解（双连分式/迭代）
+[BOUNDARY] 修复清单④：若高阶递推确实成立，则需 Nollert 广义(矩阵)连分式，而非 Leaver 单连分式
+[BOUNDARY] 边界①：本册**不含任何 Kerr QNM 数值**，亦不含 Spin_weight / Teukolsky-Starobinsky 数值结果
+[BOUNDARY] 边界②：V1 仅核对 a=0,s=0 标量极限；s=±2 的项（-2is(r−M)K/Δ、4isωr）未被独立验证
+[BOUNDARY] 边界③：V2 的『应为 (2,1,0)』是根据 R25 的 3 项结论反推的判据，若 R25 的 3 项来自另一等价形式，则 V2 可能是判据而非 machinery 出错——已如实标注为『未定位』
+[BOUNDARY] 边界④：仅为非磁化、无宇宙学常数的 Kerr；极值 a→M 的行为未处理
+[BOUNDARY] 边界⑤：红线——宁记失败不产出未经自检的数值；Kerr 的拖曳效应(framedragging)、Teukolsky-Starobinsky 恒等式与高自旋管道均未在本册实现
+----------------------------------------------------------------------
+PASS = 1 / FAIL = 1 / BOUNDARY = 10 / INFO = 13
+----------------------------------------------------------------------
+评级：C / L2（Kerr/Teukolsky 结构探测；方程标量极限已验证，但约化 machinery 自检未过，故**中止**未产出 Kerr QNM）
+红线：数学自洽 != 实验证实；本册以『自检失败』为主结论，不粉饰、不编造数值。

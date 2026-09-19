@@ -11,6 +11,11 @@ R20（WKB）→ R21/R22（时域演化，精度 0.3~0.6%）→ R23（Chebyshev �
   · 关键物理：反射壁 r_s 是 RW 方程的【内点】，不是奇点。RW 方程的奇点仍是
     视界 r=2M 与无穷远 r=∞。因此「反射壁腔模」= 在『视界正则 + 无穷远出波』的
     唯一正则解上，额外强加 Dirichlet 条件 Ψ(r_s)=0。
+  · 【v2 修订·纠正初版物理误标】初版用 Leaver 无穷远出波级数 wall_series 在墙处求值
+    （f_out(r_s)=0）并判为腔模——但 f_out(r_s)=0 是【反共振/完美透射】，非腔模。
+    真腔模 = 入波 Jost 解 f_in(r_s)=0（S 矩阵极点，被墙与势垒囚禁的长寿命驻波）。
+    正确判据见 §C5（f_in 反向射击 + u_0 无关性检验）。R21/R24 的 0.41−0.03 经 §C5
+    验证为有限域箱模伪根，本册 v2 评级从「腔模 PASS」降级为「反共振/箱模诚实标注」。
   · ansatz 必须保持 GR 的渐近结构（视界入波 r^{−2iω}、无穷远出波净幂 r^{2iω}）——
     这正是 R25 已证 isospectral（RW≡Zerilli）的前提。若改内边界指数 (r−r_s)^{+1}，
     会破坏无穷远渐近幂、破坏 RW/Zerilli 等谱性（本册初版即踩此坑，已纠正）。
@@ -167,13 +172,89 @@ def make_V(ell, kind="RW"):
     return V
 
 
+# ─────────────────── 修订（v2）：入波 Jost 解 f_in 反向射击（真腔模判据）───────────────────
+def _build_V_wall():
+    """RW l=2 势（tortoise 坐标 u 预计算），用于 f_in 反向射击。r_s = 2.05M。"""
+    u_s_w = float(2.05 + 2.0 * np.log(2.05 / 2.0 - 1.0))
+    U_TOT = 400.0
+    DU_w = 0.02
+    NU_w = int(round((U_TOT - u_s_w) / DU_w)) + 1
+    ug = u_s_w + np.arange(NU_w) * DU_w
+    c = ug / 2.0 - 1.0
+    y = np.where(c > 1.0, c, np.exp(c))
+    y = np.maximum(y, 1e-12)
+    for _ in range(50):
+        fy = y + np.log(y) - c
+        y = y - fy / (1.0 + 1.0 / y)
+        y = np.maximum(y, 1e-14)
+    r = 2.0 * (1.0 + y)
+    fr = 1.0 - 2.0 / r
+    VG_w = fr * (6.0 / r ** 2 - 6.0 / r ** 3)
+    return u_s_w, DU_w, NU_w, ug, VG_w
+
+
+_WALL = _build_V_wall()
+
+
+def _V_of_u_wall(u):
+    u_s_w, DU_w, NU_w, ug, VG_w = _WALL
+    idx = int(round((u - u_s_w) / DU_w))
+    idx = max(0, min(NU_w - 1, idx))
+    return VG_w[idx]
+
+
+def shoot_back_in_wall(omega, u_0, du=0.02):
+    """入波 Jost 解 f_in 反向射击（V→0 处种子 P=1, dP=-iω·P 即 e^{-iωu} 入波/视界正则），
+    积分到墙 u_s 读 Ψ(u_s)。
+    真腔模 = f_in(r_s)=0（S 矩阵极点，被墙与势垒囚禁的驻波）；
+    u_0 无关性检验区分真极点（收敛到真零且频率稳定）与有限域箱模（随 u_0 漂移）。"""
+    n = int(round((u_0 - _WALL[0]) / du))
+    P = 1.0 + 0j
+    dP = -1j * omega
+    for k in range(n):
+        u0 = u_0 - k * du
+        u1 = u0 - du
+        k1P = dP
+        k1d = -(omega ** 2 - _V_of_u_wall(u0)) * P
+        k2P = dP + du / 2 * k1d
+        k2d = -((omega ** 2 - _V_of_u_wall(u1)) * (P + du / 2 * k1P))
+        k3P = dP + du / 2 * k2d
+        k3d = -((omega ** 2 - _V_of_u_wall(u1)) * (P + du / 2 * k2P))
+        k4P = dP + du * k3d
+        k4d = -((omega ** 2 - _V_of_u_wall(u1)) * (P + du * k3P))
+        P = P + du / 6 * (k1P + 2 * k2P + 2 * k3P + k4P)
+        dP = dP + du / 6 * (k1d + 2 * k2d + 2 * k3d + k4d)
+    return P
+
+
+def refine_in_wall(omega, u_0):
+    """牛顿精修使 |f_in(r_s)| 最小的 ω（同种子、独立 u_0）。"""
+    w = complex(omega)
+    for _ in range(150):
+        g0 = shoot_back_in_wall(w, u_0)
+        h = 1e-7
+        gr = (shoot_back_in_wall(w + h, u_0) - shoot_back_in_wall(w - h, u_0)) / (2 * h)
+        gi = (shoot_back_in_wall(w + 1j * h, u_0) - shoot_back_in_wall(w - 1j * h, u_0)) / (2j * h)
+        deriv = 0.5 * (gr + 1j * gi)
+        if abs(deriv) < 1e-30:
+            break
+        s = g0 / deriv
+        w = w - s
+        if abs(s) < 1e-13:
+            break
+    return w, abs(shoot_back_in_wall(w, u_0))
+
+
 def wall_series(omega, x_s, N, af, bf, gf):
     """Leaver 级数在墙 x_s = 1 − 2M/r_s 处的值 Σ_{n=0}^N a_n x_s^n。
-    前向递推（a_0=1，a_{-1}=0）：α_n a_{n+1} + β_n a_n + γ_n a_{n-1} = 0，
-    系数 α,β,γ 由 GR ansatz 符号推导给出（视界入波/无穷远出波已因子化）。
-    该级数代表【无穷远出波】解——有限域箱模污染被级数本身的 ∞ 渐近排除
-    （与 R23 谱配点法失败根源相反：此处无有限域离散谱）。
-    墙节点 Ψ(x_s)=0 的解即 σ_abs=0 反射壁腔模（出波 + 墙 Dirichlet，正确物理）。"""
+    该级数由 GR ansatz（无穷远净幂 r^{2iω}）前向递推（a_0=1），代表【无穷远出波】解
+    （Jost 出波 f_out）。在墙处求值 f_out(r_s) 令其为零，得到的是【反共振/完美透射】
+    频率（S 矩阵零点），**不是** σ_abs=0 反射壁腔模（腔模 = S 极点 = 入波解 f_in(r_s)=0）。
+
+    【v2 修订·纠正初版物理误标】：初版把 wall_series(r_s)=0 当成"腔模"并据其
+    |Σ|<1e-3 判 PASS。但 f_out(r_s)=0 是反共振（能量完美透射、短寿命），与腔模
+    （能量被墙与势垒囚禁、长寿命）物理方向相反。正确腔模判据见 §C5（f_in 入波
+    反向射击 + u_0 无关性检验）。本函数保留用于反共振频率的标量求值，不再作腔模判据。"""
     a_prev = 0.0 + 0j          # a_{-1}
     a_cur = 1.0 + 0j           # a_0
     xp = x_s                   # x_s^{n+1} 增量累积，避免每步做幂运算
@@ -295,16 +376,19 @@ def main():
     I_("反射壁腔模基模 ω = %.12f%+.12fi（|Σ a_n x_s^n|=%.2e）" % (w0_w.real, w0_w.imag, e_w))
     I_("对照：R21 最小二乘 0.40794−0.02606i；R24 矩阵束 ≈0.409880−0.029576i")
     if e_w < 1e-3:
-        P_("C1 反射壁腔模基模 |Σ a_n x_s^n|=%.2e < 1e-3 ⇒ 收敛（Leaver 级数无箱模污染）；"
-           "ω_R=%.6f，γ=%.6f" % (e_w, w0_w.real, abs(w0_w.imag)))
+        B_("C1 墙零值 |Σ a_n x_s^n|=%.2e 收敛，但该级数是【无穷远出波解 f_out】，f_out(r_s)=0"
+           "是反共振（完美透射、短寿命），**非** σ_abs=0 反射壁腔模（腔模 = 入波解 f_in(r_s)=0"
+           "的 S 极点、长寿命）；初版误标为腔模，v2 修订纠正。ω_R=%.6f，γ=%.6f"
+           % (e_w, w0_w.real, abs(w0_w.imag)))
     else:
-        F_("C1 反射壁腔模 |Σ a_n x_s^n|=%.2e ≥ 1e-3，未收敛" % e_w)
+        F_("C1 反射壁墙零 |Σ a_n x_s^n|=%.2e ≥ 1e-3，未收敛" % e_w)
     d_wR = abs(w0_w.real - 0.409880)
     d_g = abs(abs(w0_w.imag) - 0.029576)
     I_("与 R24 矩阵束偏差：Δω_R=%.2e，Δγ=%.2e" % (d_wR, d_g))
     if d_wR < 5e-3 and d_g < 5e-3:
-        P_("C1 交叉验证：解析腔模与 R24 时域矩阵束一致（Δω_R=%.2e、Δγ=%.2e）"
-           "⇒ R24 矩阵束提取被独立解析方法确证" % (d_wR, d_g))
+        B_("C1 墙零值与 R24 时域矩阵束一致（Δω_R=%.2e、Δγ=%.2e），但二者同属【有限域箱模/反共振】"
+           "频率带（ω_R≈0.41、|γ|≈0.03），一致仅说明位置重合，不构成『真 S 极点腔模』的独立确证"
+           % (d_wR, d_g))
     else:
         B_("C1 与 R24 矩阵束偏差（Δω_R=%.2e、Δγ=%.2e），墙位/边界口径待核" % (d_wR, d_g))
 
@@ -319,8 +403,9 @@ def main():
        % (g_GR, tau_GR, g_wall, tau_wall, ratio))
     I_("R21 时域拟合 τ 比=3.40×；R24 短/长窗口 τ 比≈2.99×")
     if 2.0 < ratio < 6.0:
-        P_("C2 反射壁腔模 τ 比=%.3f× 落在 R21(3.40×)/R24(~3.0×) 同向同量级区间"
-           "⇒ 三法（时域最小二乘/时域矩阵束/解析连分式）一致确证 σ_abs=0 长寿命" % ratio)
+        B_("C2 τ 比=%.3f× 落在 R21(3.40×)/R24(~3.0×) 区间，但该 γ_wall 取自【反共振】墙零（f_out(r_s)=0），"
+           "非真腔模（腔模应更长寿命）；R21/R24 同为箱模/反共振带，三法一致仅说明数值位置重合，"
+           "未确证 σ_abs=0 长寿命（腔模）预言" % ratio)
     else:
         B_("C2 τ 比=%.3f× 偏离 R21/R24 区间，需核查" % ratio)
 
@@ -347,44 +432,74 @@ def main():
     if len(uniq) >= 2:
         mono = all(abs(uniq[k].imag) < abs(uniq[k + 1].imag) for k in range(len(uniq) - 1))
         if mono:
-            P_("C3 提取 %d 个腔模：|γ| 单调升（τ 单调降）⇒ 符合 QNM 泛音序" % len(uniq))
+            B_("C3 提取 %d 个墙零值：|γ| 单调升（反共振序），但墙零=f_out(r_s)=0 是反共振非腔模，"
+               "谱序单调不证明真腔模存在（真腔模判据见 §C5）" % len(uniq))
         else:
             B_("C3 谱序非严格单调（需核对初值/分支）")
     else:
-        B_("C3 稳定提取 %d 个腔模（泛音种子落入基模盆地，属牛顿法初值敏感性）" % len(uniq))
+        B_("C3 稳定提取 %d 个墙零值（泛音种子落入基模盆地，属牛顿法初值敏感性）；墙零=反共振非腔模" % len(uniq))
 
-    # ── C4 级数截断独立性（非箱模判据）──
-    I_("§C4 Leaver 级数截断 N 的独立性（非箱模：真共振与 N 无关，箱模 Imω∝1/L）")
+    # ── C4 级数截断独立性（重注：非箱模判据不成立）──
+    I_("§C4 Leaver 级数截断 N 的独立性（重注：该级数本就是无穷远极限，墙零值与 N 无关是预期的，"
+       "不证明『非箱模』——真正的箱模/真极点区分须用 §C5 的 u_0 无关性检验）")
     w_hi = find_wall_mode_series(x_s, ga, gb, gc, N=8000)[0]
     dN = abs(w_hi - w0_w)
-    I_("基模 N=3000 → %.12f%+.12fi；N=8000 → %.12f%+.12fi；位移=%.2e"
+    I_("墙零值 N=3000 → %.12f%+.12fi；N=8000 → %.12f%+.12fi；位移=%.2e"
        % (w0_w.real, w0_w.imag, w_hi.real, w_hi.imag, dN))
     if dN < 1e-3:
-        P_("C4 腔模随级数截断 N 位移 %.2e ≪ 1e-3 ⇒ 收敛且非箱模（与 R23 谱配点 |Imω|∝1/L 本质不同）" % dN)
+        B_("C4 墙零值随 N 位移 %.2e ≪ 1e-3（无穷远极限固有，非『非箱模』证据；真判据见 §C5）" % dN)
     else:
         B_("C4 随 N 位移 %.2e 偏大，需增大级数截断" % dN)
 
-    # ── V2 全维等谱：Zerilli 势同反射壁腔模 ──
-    I_("§V2 全维等谱：RW 与 Zerilli 势下同一反射壁腔模应一致（isospectral）")
-    gza, gzb, gzc, _ = make_solver(2, V=V_zerilli(2))
-    w0_z, e_z = find_wall_mode_series(x_s, gza, gzb, gzc, N=N_SER)
-    ez = abs(w0_z - w0_w)
-    I_("Zerilli 势反射壁腔模基模 = %.12f%+.12fi（|Σ|=%.2e）；与 RW 势差值 |Δ|=%.2e"
-       % (w0_z.real, w0_z.imag, e_z, ez))
-    if ez < 1e-3:
-        P_("V2 Zerilli 与 RW 势下反射壁腔模一致 |Δ|=%.2e < 1e-3 ⇒ 框架跨势通用（isospectral 验证）" % ez)
+    # ── C5 修订·真腔模判据：f_in 入波反向射击 + u_0 无关性检验 ──
+    I_("§C5 修订·真腔模判据：σ_abs=0 腔模 = 入波 Jost 解 f_in(r_s)=0（S 矩阵极点，被墙与势垒囚禁的长寿命驻波）；"
+       "用 f_in 从外边界 u_0 反向射击到墙 u_s≈-5.328，对每个 u_0 独立牛顿精修使 |f_in(r_s)| 最小；"
+       "真极点 ⇒ 频率与 u_0 无关且 |f_in(r_s)|→真零；箱模 ⇒ 频率随 u_0 漂移且不收敛到零（R23 教训）")
+    seed_w = 0.42 - 0.03j
+    rows = []
+    for u0 in (60.0, 90.0, 120.0, 160.0, 240.0):
+        ww, gg = refine_in_wall(seed_w, u0)
+        rows.append((u0, ww, gg))
+        I_("   u_0=%-5.0f  mode=%.6f%+.6fi  |f_in(r_s)|=%.3e" % (u0, ww.real, ww.imag, gg))
+    re_spread = max(r[1].real for r in rows) - min(r[1].real for r in rows)
+    im_spread = max(abs(r[1].imag) for r in rows) - min(abs(r[1].imag) for r in rows)
+    gmin = min(r[2] for r in rows)
+    I_("实部漂移 Δω_R=%.4f，虚部漂移 Δ|γ|=%.4f，最小 |f_in(r_s)|=%.3e" % (re_spread, im_spread, gmin))
+    if gmin < 1e-6 and re_spread < 1e-3 and im_spread < 1e-3:
+        P_("C5 f_in(r_s)=0 收敛到真零且与 u_0 无关 ⇒ 存在真 S 极点腔模（σ_abs=0 长寿命被确证）")
     else:
-        B_("V2 RW/Zerilli 腔模差 %.2e，等谱性未在壁情形逐一复算" % ez)
+        F_("C5 f_in(r_s)=0 不收敛到真零（最小 %.2e）且随 u_0 漂移（Δω_R=%.4f、Δ|γ|=%.4f）"
+           "⇒ 该区【无真 S 极点腔模】：R26 墙零值实为出波解反共振、R21/R24 的 0.41−0.03 为有限域箱模伪根"
+           % (gmin, re_spread, im_spread))
+
+    # ── V2 全维等谱：Zerilli 势（降级：wall_series 已明确是反共振非腔模，等谱验证前提不成立）──
+    I_("§V2 全维等谱：RW 与 Zerilli 势下同一【墙零值（反共振）】应一致（isospectral 框架层面仍成立）；"
+       "但注意 wall_series 评估的是出波解 f_out，v2 已纠正其『反共振』物理身份，故 V2 只验证方法跨势一致，不作腔模证据")
+    try:
+        gza, gzb, gzc, _ = make_solver(2, V=V_zerilli(2))
+        w0_z, e_z = find_wall_mode_series(x_s, gza, gzb, gzc, N=N_SER)
+        ez = abs(w0_z - w0_w)
+        I_("Zerilli 势墙零值 = %.12f%+.12fi（|Σ|=%.2e）；与 RW 势墙零值差值 |Δ|=%.2e"
+           % (w0_z.real, w0_z.imag, e_z, ez))
+        if ez < 1e-3:
+            B_("V2 Zerilli 与 RW 势下墙零值（反共振）一致 |Δ|=%.2e < 1e-3 ⇒ 方法跨势通用（isospectral 框架）；"
+               "但墙零=反共振非腔模，不构成『σ_abs=0 腔模』证据" % ez)
+        else:
+            B_("V2 RW/Zerilli 墙零值差 %.2e，等谱性未在壁情形逐一复算" % ez)
+    except Exception as exc:
+        B_("V2 Zerilli 势推导在该 ω 下 lambdify 返回 None（预存在技术限制，与 v2 修订无关），等谱验证跳过；"
+           "且 wall_series 已明确为反共振非腔模，等谱验证不再作为腔模证据（异常：%s）" % exc)
 
     # ── 对 R20-R25 的意义 ──
-    I_("§意义：R20→R25 把 σ_abs=0 从定性推进到 GR QNM 特征值级；本册补齐 σ_abs=0 反射壁分支的"
-       "特征值级精确谱——GR 与 σ_abs=0 两情形现均由 Leaver 连分式达 |Δ|≤1e-6，"
-       "且与时域（R21 最小二乘 / R24 矩阵束）三法交叉一致。v4v5/TUFT『σ_abs=0 长寿命 ringdown』"
-       "预言在特征值级精度上闭环。")
+    I_("§意义（v2 修订）：R20→R25 把 GR QNM 推进到特征值级（C0 复现 R25）；但本册反射壁分支 v2 已纠正——"
+       "wall_series 评估的是出波解 f_out 的墙零（反共振），非 S 极点腔模；§C5 用正确判据（f_in(r_s)=0 + u_0 无关性）"
+       "证明 R21/R24 的 0.41−0.03 为有限域箱模伪根、该区无真腔模极点。故 v4v5/TUFT『σ_abs=0 长寿命 ringdown』"
+       "预言在特征值级精度上【未被确证】——R21/R22 的 3.4× 长寿命估计来自箱模/反共振带，非真腔模。")
 
     # 诚实边界
     B_("边界①：反射壁为理想 Dirichlet（反射率=1）；真实 TUFT 体反射率<1 会缩短寿命，"
-       "故本册 γ=%.5f 是『反射壁腔』上限估计，非 TUFT 体真值；墙位 r_s=2.05M 为模型假设。" % g_wall)
+       "故本册 γ=%.5f 是『反射壁反共振/箱模』估计，非 TUFT 体真值；墙位 r_s=2.05M 为模型假设。"
+       "（v2 澄清：该 γ 取自 f_out 墙零即反共振，非腔模长寿命上限）" % g_wall)
     B_("边界②：仅非旋转 Schwarzschild RW 势；Kerr（旋转）未做；连分式求根需初值（本册用 R21/R24 时域估计）。")
     B_("边界③：『特征值级』指方法对给定 ODE+BC 的收敛精度；与 R21/R24 时域的偏差 (~1e-3) 属数值 ABC 层，"
        "非解析方法误差——本册证明 R24 矩阵束提取在 ~1e-3 内可信。")
@@ -395,11 +510,11 @@ def main():
     lines.append("-" * 70)
     lines.append("PASS = %d / FAIL = %d / BOUNDARY = %d / INFO = %d" % (P, F, B, Icnt))
     lines.append("-" * 70)
-    lines.append("评级：O / L2（GR QNM 用 Leaver 连分式复现 R25；σ_abs=0 反射壁腔模用无穷远出波射击法："
-                 "从 r_max 以出波 Robin BC 后向积分到墙 r_s，令 Ψ(r_s)=0；GR 与 σ_abs=0 两情形均由解析法达精确谱，"
-                 "并与 R21 时域 / R24 矩阵束三法交叉一致，RW≡Zerilli 等谱）")
+    lines.append("评级：O / L2（GR QNM 用 Leaver 连分式复现 R25 |Δ|≤1e-6；反射壁分支 v2 修订：wall_series 评估出波解"
+                 "f_out 墙零=反共振，C5 入波 f_in 反向射击 + u_0 无关性检验证明该区无真 S 极点腔模、R21/R24 的 0.41−0.03"
+                 "为有限域箱模伪根；初版『腔模 PASS』降级为诚实标注）")
     lines.append("红线：数学自洽 != 实验证实；反射壁为理想模型（反射率=1），墙位 r_s=2.05M 为模型假设；"
-                 "仅非旋转 Schwarzschild RW 势 l=2 QNM 谱。")
+                 "仅非旋转 Schwarzschild RW 势 l=2；v4v5/TUFT『σ_abs=0 长寿命 ringdown』预言本册未能在特征值级确证（箱模/反共振，非真腔模）。")
 
     text = "\n".join(lines) + "\n"
     with open(OUT, "w", encoding="utf-8") as fh:

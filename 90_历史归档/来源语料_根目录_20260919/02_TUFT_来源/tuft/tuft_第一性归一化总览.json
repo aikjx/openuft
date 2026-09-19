@@ -1,9 +1,9 @@
 {
-  "report_count": 51,
+  "report_count": 52,
   "rating_stat": {
     "H": 5,
     "O": 31,
-    "C": 15
+    "C": 16
   },
   "direction_stat": {
     "U": 3
@@ -11,14 +11,14 @@
   "layer_stat": {
     "L0": 0,
     "L1": 7,
-    "L2": 42,
+    "L2": 43,
     "L3": 2
   },
   "counts_total": {
     "PASS": 400,
-    "FAIL": 242,
-    "BOUNDARY": 162,
-    "INFO": 439
+    "FAIL": 243,
+    "BOUNDARY": 173,
+    "INFO": 454
   },
   "rows": [
     {
@@ -400,10 +400,10 @@
     {
       "report": "tuft_r26_report.txt",
       "counts": {
-        "PASS": 4,
+        "PASS": 3,
         "FAIL": 0,
-        "BOUNDARY": 9,
-        "INFO": 19
+        "BOUNDARY": 10,
+        "INFO": 21
       },
       "mode": "summary",
       "rating": "O",
@@ -422,6 +422,19 @@
       "rating": "O",
       "layer": "L2",
       "note": "R27 RW↔Zerilli 等谱性：Chandrasekhar/SUSY(Darboux) 变换证明（承接 R26 的『Zerilli 需 Nollert 广义连分式』缺口，改走更强解析路线）：【方法】由 V_RW−V_Z=2 dW̃/dr* 定超势，平移 W̃=W+s 使 (V_RW+V_Z)/2−W̃²=C 为常数；记 A=d/dr*+W̃、A†=−d/dr*+W̃。【V1/V2 PASS】V_RW=W̃²+dW̃/dr*+C、V_Z=W̃²−dW̃/dr*+C 对 l=2..6 **精确成立（残差恒 0）**，且闭式 s=−λ(λ+1)/3、C=−[λ(λ+1)/3]²（λ=(l−1)(l+2)/2）逐项命中（l=2:W=3(2−r)/[r²(2r+3)],s=−2,C=−4；l=3:s=−10,C=−100；l=4:s=−30,C=−900；l=5:s=−70,C=−4900；l=6:s=−140,C=−19600）。【C1 PASS】算子因式分解 H_RW=AA†+C、H_Z=A†A+C 对任意测试函数 Y(r) 符号恒成立（l=2..5）⇒ H_Z A†=A†H_RW ⇒ A† 映 RW QNM 解为同频率 Zerilli 解（W̃ 于视界/无穷有界 ⇒ 视界入波/无穷出波边界条件不变）⇒ **两谱严格相同**。【C2 PASS】有限差分复核因式分解（l=2，内部区间[3,7]）：|H_RW−(AA†+C)|=1.37e-9、|H_Z−(A†A+C)|=1.07e-9。【C3 PASS·结论】RW 与 Zerilli 势为 SUSY(Darboux) 伙伴 ⇒ R25 的 RW 特征值级谱（l=2 基模 0.373671684418−0.088962315689i 等）**即为 Zerilli（偶宇称引力扰动）谱**；**R26 的 5 项递推缺口由本册以更强的解析路线闭合，无需实现 Nollert 广义连分式**。途中亦确认 R25 的 Leaver ansatz/递推正确（构造 X 在级数有效区满足 RW 方程至 ~1e-9）。【诚实边界】①仅非旋转 Schwarzschild（Kerr 的 Teukolsky Darboux 等谱性未验证）；②SUSY 零模对 QNM 谱无影响但未单独构造排除证明；③未数值求解 Zerilli 谱逐点比对——曾尝试用 Leaver 级数构造 RW QNM 解再作 A† 映射，**因前向 Leaver 递推对最小解数值不稳定（|a_n| n~500 回升到 O(1)）+ 差分边缘伪影而不作为判据（如实记录，不粉饰）**；④C2 受 h² 截断限制，核心结论由符号恒等式承载；⑤Zerilli 势取标准归一。红线：数学自洽!=实验证实；等谱为解析事实，不含新物理预言"
+    },
+    {
+      "report": "tuft_r28_report.txt",
+      "counts": {
+        "PASS": 1,
+        "FAIL": 1,
+        "BOUNDARY": 10,
+        "INFO": 13
+      },
+      "mode": "summary",
+      "rating": "C",
+      "layer": "L2",
+      "note": "R28 Kerr/Teukolsky 推广：第一性结构探测——**自检失败，NO Kerr numbers**（承接 R25/R26/R27，向旋转黑洞推广）。【V1 PASS】Teukolsky 径向方程 ΔR''+(s+1)Δ'R'+[K²/Δ−2is(r−M)K/Δ+4isωr−λ]R=0（Δ=r²−2Mr+a²，K=(r²+a²)ω−ma，λ=A+a²ω²−2amω，s=−2）**正确建立**：a→0 且 s=0 的标量极限与独立推导的 Schwarzschild 无质量标量径向方程 r²fR''+(2r−2M)R'+[r²ω²/f−l(l+1)]R=0 **符号恒等**（相减恰为 0）；Δ=r²−2Mr ⇒ K²/Δ=ω²r²/f、Δ'=2r−2M。此前担心的 −2is(r−M)K/Δ、4isωr 项经此核对无误。【V2 FAIL·关键】重建的 y-变量约化 machinery **自检未通过**：对 **RW（R25 已知 3 项递推）** 复算，3 项递推的必要条件是清分母+约去公因子后 (deg S'',deg S',deg S)=(2,1,0)，**实得 (3,2,1)**（最小清分母倍数 y(1−y)²）。已排除：ansatz 指数 (u,v)=(−2iMω,4iMω) 取值（次数由极点结构决定，与 u,v 无关）；A,B,C 的公共因子（gcd 约分后次数不降）。最可疑点：先除以 A=f² 清分母，而 f=y 使 A→0 于 y=0，**人为引入 1/y² 极点**。偏差**未定位**。【V3 BOUNDARY】同一 machinery 对 Teukolsky(a=0,s=−2)（Leaver ansatz u=−s−2iMω, v=−1+s）得次数 (4,3,2)、最小倍数 y(1−y)³；**但因 V2 自检未过，此结果不可信** ⇒ **本册不产出任何 Kerr QNM 频率**。【C1 信息与修复清单】正规奇点 r=r_±=M±√(M²−a²) 与 ∞，视界指标指数 {0,−s}（indicial Dλ(λ+s)=0）；Leaver ansatz 与 σ±=(ω(r±²+a²)−ma)/(r₊−r₋)。修复：①**先复用 R25 已通的推导路径对齐 RW**（勿重建），排查人为极点；②再处理 ma≠0、r₋≠0 分支并与 Leaver(1985) 核对 ansatz 指数与 σ± 归一；③Kerr 还需角向自旋权椭球调和本征值 A(aω) 与径向**联动求解**（双连分式/迭代，比 Schwarzschild 多一维）；④若高阶递推为真则需 Nollert 广义(矩阵)连分式。【诚实边界】①无任何 Kerr QNM 数值、无 Teukolsky-Starobinsky 数值；②V1 仅核对 a=0,s=0，s=±2 独有项未独立验证；③V2 的『应为 (2,1,0)』是从 R25 反推的判据，若 R25 的 3 项来自另一等价形式则可能是判据而非 machinery 出错——如实标注为『未定位』；④仅非磁化无宇宙学常数 Kerr，极值 a→M 未处理。红线：数学自洽!=实验证实；**宁记失败不产出未经自检的数值**"
     },
     {
       "report": "tuft_r3_report.txt",
