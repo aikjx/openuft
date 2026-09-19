@@ -13,6 +13,8 @@
 | `higgs_verify.py` | 第8/14章 | 实验十三–十五（对偶帧酉性、模式谱、未破缺 $U(1)$） |
 | `dimension_unify_verify.py` | 第17/19/20章 | 验证A–E（量纲谱、参数自洽、常数比例、依赖图可达性、四重归一化） |
 | `yang_mills_verify.py` | 第21章 | 验证A–D（联络结构、几何曲率、格点规范不变性、希格斯–金哈质量谱） |
+| `_audit_v26_wronskian.py` | 第14/15/16章（D18） | 实验十六（v26 Wronskian 伪点独立复算，REJECT/Grade D） |
+| `_audit_v26_analytic_pole.py` | 第14/16章（D18） | 实验十七（解析 $V_{\rm frac}$ 消对消，Grade C 维持） |
 
 ## B.2 重跑命令
 
@@ -41,6 +43,10 @@
 【 **统一跑动检验（V1.7 新增）** :`python running_unify_verify.py`——验证A：$M_{Z}$ 处三规范耦合（GUT 归一化）；验证B：SM 单圈三线不汇聚（差距 $13.1\%$，标准结论）；验证C：CP² 候选 $\sin^{2}\theta = 1/4$ 跑动检验（电弱尺度差 $5.4\%$，唯一尺度 $3.7$ TeV 无出处——负面结果如实）；验证D：MSSM 对照（统一 $M \approx 2\times10^{16}$ GeV、$\alpha_{GUT} \approx 1/24$、真预测 $\sin^{2}\theta_{W}(M_{Z}) = 0.2309$ vs $0.23122$，差 $0.12\%$——对偶周期四↔超对称的候选锚点）；验证E：判定与边界。全过。】
 
 【 **动力学作用量（拼图一）** :`python yang_mills_verify.py`——联络反厄米性 $1.9\times10^{-5}$；霍普夫几何曲率 $\max|b| = 7.82$；plaquette 规范不变性相对差 $1.18\times10^{-16}$；质量谱 $[0, 0.0625, 0.0625, 0.085]$ 与 $\{0, m_{W}^{2}, m_{W}^{2}, m_{Z}^{2}\}$ 精确一致。】
+
+【 **D18·v26 Wronskian 伪点独立审计（实验十六）** :`python _audit_v26_wronskian.py`——GR 门三-N $2.72\times10^{-10}$/跨 $b$ $3.1\times10^{-11}$；错误 $1/s$ 边界复现伪根 $0.446860296-0.012798531i$；远场 $b(s_{\rm out})$ 漂移 $1.00\times10^{-2}$ 非单调；GR 自洽门近 QNM 种子+正确 $1/s^2$ 边界 $0.0190$ 随 $s_{\rm out}$ 发散至 $0.232$；与 E450/E452 差 $4.54\times10^{-2}$。判定 REJECT（Grade D）。原始输出 `_audit_v26_wronskian_out.txt`。】
+
+【 **D18·v26 解析 V_frac 路径（实验十七）** :`python _audit_v26_analytic_pole.py`——GR 门 $4.93\times10^{-13}$/$1.6\times10^{-12}$；解析 Laurent $V(s)=\tfrac13 s^{-2}-0.134590\,s^{-4/3}+\cdots$；对消消除 $t_0$ $2.4\times$、N-sweep $4\times$；robust core 仍 $3.02\times10^{-5}$ 未过 $<10^{-6}$。判定 Grade C 维持。原始输出 `_audit_v26_analytic_pole_out.txt`。】
 
 ## B.3 结果对照要点
 
