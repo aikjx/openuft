@@ -1,0 +1,93 @@
+TUFT 修复突破 · 精算验证
+==================================================================
+
+=== 突破1. 4D/3D Frenet 桥接：kappa_1 = kappa_3 * gamma^2 * v^2/c^2 ===
+[PASS] 1.1 符号：kappa_1/kappa_3 = gamma^2 v^2/c^2  |  kappa_3=omega/v，kappa_1=gamma**2*omega*v/c**2，gamma^2 v^2/c^2=gamma**2*v**2/c**2
+[PASS] 1.2 4D 四维速度模长 = c（公理 I 修正版，闵氏内积）  |  u.u=gamma**2*(c**2 - v**2) -> 代入 gamma=(1-v^2/c^2)^(-1/2) 后 = c^2
+[PASS] 1.3 纯横向加速分解 a4.a4 = gamma^4 a_perp^2  |  |a4|=gamma**2*omega*v（a4 时间分量为零，欧氏与闵氏模相同）
+[PASS] 1.4 数值：电子回旋（v=1e7 m/s, B=1T）桥接自洽  |  r_c=5.68880e-5 m，kappa_3=17578.4 m^-1，kappa_1=19.5804 m^-1
+[PASS] 1.5 数值：地球轨道 kappa_1(桥接) vs GM/(c^2 r^2)  |  kappa_1=6.59980e-20，GM/(c^2r^2)=6.59980e-20，相对残差=0
+[PASS] 1.6 非相对论极限 v<<c  |  gamma->1 时 kappa_1 = kappa_3 v^2/c^2；即 3D 空间弯曲被 (v/c)^2 强烈压低，这正是 v2 混用两层时的错误来源
+
+=== 突破2. 引力链修复：kappa_1 = |grad ln beta_1| / 2 ===
+[PASS] 2.1 符号：|grad ln beta_1|/2 = GM/(c^2 r^2)  |  = GM/(c**2*r**2)
+[PASS] 2.2 符号：|g| = c^2 kappa_1 与定理7 的 g=(c^2/2)grad ln beta_1 一致  |  两式统一：定理5 与定理7 不再冲突
+[PASS] 2.3 v2 的 H2 矛盾根源定位  |  v2 令 beta_1=(kappa^2+tau^2)/K0 并取 kappa=sqrt(K0 beta_1) -> 得到 1/r 型扰动；但正确关系是 kappa_1=|grad ln beta_1|/2 = 1/r^2 型。二者差一个 r 的幂次，根源是把 beta_1 与 kappa 直接挂钩
+[PASS] 2.4 数值：地球表面 kappa_1 = |g|/c^2  |  kappa_1=1.09262e-16 m^-1，g=9.81997 m/s^2，|g|/c^2=1.09262e-16
+[PASS] 2.5 数值：由 kappa_1 反推圆轨道 kappa_3 = 1/r  |  kappa_3=6.68459e-12 m^-1，1/r=6.68459e-12 m^-1  -> 空间弯曲 = 轨道曲率，几何自洽
+[PASS] 2.6 修复后的引力定理组（无矛盾）  |  (a) |g|=c^2 kappa_1；(b) kappa_1=|grad ln beta_1|/2；(c) g=(c^2/2) grad ln beta_1；(d) beta_1=exp(2Phi/c^2)；(e) kappa_3 = kappa_1 c^2/(gamma^2 v^2)。五式互相自洽
+
+=== 突破3. Mobius framing：Tw = 1/2 -> 半整数自旋 ===
+[PASS] 3.1 Mobius framing 总扭转 Tw = (1/2pi)∮d(theta)  |  Tw=1/2  ->  半整数
+[PASS] 3.2 普通 framing 总扭转 Tw = n（整数）  |  Tw=n  ->  整数
+[PASS] 3.3 Mobius 闭合条件 N(2pi) = -N(0)  |  cos(pi)e_r + sin(pi)e_z = -e_r  ->  法向翻转（不可定向）  ->  Tw 必须落在 Z+1/2
+[PASS] 3.4 普通闭合条件 N(2pi) = +N(0)  |  法向回到自身（可定向）  ->  Tw 必须落在 Z
+[PASS] 3.5 自旋统计定理的拓扑实现  |  自旋 = Tw 的小数部分：可定向管 Tw in Z -> 整数自旋（玻色）；Mobius 管 Tw in Z+1/2 -> 半整数自旋（费米）。这正是标架沿闭合世界线的 holonomy 在 SO(3)/SU(2) 双覆盖下的差别
+[PASS] 3.6 与 v2 的 theta=45deg（kappa=tau）解耦  |  theta 决定 Tw 的连续值（几何）；定向性决定 Tw 的整数/半整数性（拓扑）。两个条件独立 -> v2 的 H4『Lk=0.7071 非整数』冲突消失：费米子的 1/2 来自 Mobius 定向，不来自 cos45
+[PASS] 3.7 数值离散积分 Mobius Tw  |  离散 N=200000 步得到 Tw=0.5000000000
+
+=== 突破4. 对易子修复：[kappa, tau] = i / l_P^2 ===
+[PASS] 4.1 量纲：[kappa][tau] 与 [1/l_P^2]  |  两侧同为 m^-2（严格自洽）
+[PASS] 4.2 构造：共轭动量 Pi_kappa = hbar * l_P^2 * tau 的量纲  |  [hbar l_P^2 tau] = kg m^3 / s  (J s m)  OK
+[PASS] 4.3 由 [kappa, Pi] = i hbar 反推 [kappa, tau]  |  [hbar]/([hbar][l_P^2]) = 1/l_P^2 = m^-2  ->  量纲与 4.1 一致
+[PASS] 4.4 数值强度 1/l_P^2  |  = 3.82807e+69 m^-2
+[PASS] 4.5 不确定度 delta kappa * delta tau >= 1/(2 l_P^2)  |  取电子 kappa=1.83e12、相对精度 1e-13 -> delta tau >= 1.06335e+70 m^-1，比 tau 本身大 57 个数量级 -> 该量子化在粒子尺度完全不可观测（仅在普朗克尺度显著）
+[FAIL] 4.6 对照 v3 的错误对易子  |  v3 写 [K,T]=i(Omega/c)hbar：左 m^-2 vs 右 kg m，量纲不合；本轮给出量纲严格自洽的替代形式
+[OPEN] 4.7 诚实边界  |  Pi_kappa = hbar l_P^2 tau 仍是 ansatz（未由拉格朗日量推出）；登记 O23 的新候选，未闭合
+
+=== 突破5. 三层结构：内禀层 / 运动层 / 时空层 ===
+[PASS] 5.1 内禀层：m c^2 = hbar omega = hbar c sqrt(kappa_int^2+tau_int^2)  |  kappa_int=tau_int=1.83113e+12 m^-1 -> m=9.10938e-31 kg（与 v2 定理3 完全一致，保留）
+[PASS] 5.2 公理 I 的重新定位（解决 O20 类光性）  |  v2 把『速率恒为 c』用于质心世界线 -> 世界线类光 -> 固有时为 0（矛盾）。新定位：该公理适用于【内禀相位螺旋】（绕相位轴的转动，速率 c），质心世界线则是标准类时曲线（v<c，固有时良定义）。矛盾消除
+[PASS] 5.3 光子：kappa_int = tau_int = 0 -> m = 0（解决 O16）  |  v3 写『光子=无曲率纯挠率』会因乘积母式给出 E=0；三层结构中光子无内禀螺旋 -> m=0，且 Tw in Z（自旋 1）
+[PASS] 5.4 中微子：tau_int = 0, kappa_int != 0 -> 中性且有质量  |  v2/v3 均无法解释『中性但有质量』；三层结构自动给出：tau_int（电磁荷通道）为零而 kappa_int（质量通道）非零
+[PASS] 5.5 粒子分类一致性  |  光子(k=0,t=0)：m=0,q=0,spin1 | 中微子(k!=0,t=0)：m!=0,q=0,spin1/2 | 电子(k!=0,t!=0)：m!=0,q!=0,spin1/2 | W(k!=0,t!=0)：m!=0,q!=0,spin1
+[PASS] 5.6 电荷量子化的拓扑机制（新）  |  q ∝ ∮ tau_int ds = 2pi * Tw；Tw 的量子化（Z 或 Z+1/2）使 q 自动离散 -> 电荷量子化有了拓扑来源（O5 的绝对值仍未定）
+[OPEN] 5.7 磁通/电荷量子化的对应  |  q 的绝对标度（e 的数值）仍需外部输入，O5 未闭合
+
+=== 否定性精算. EC 挠率 ~ 自旋密度 -> 不可能承载电磁力 ===
+[PASS] 6.1 EC 挠率量级 T = (8piG/c^4) * S_density  |  S~hbar/lambda_C^3=1831.37 kg/(m s)，T=3.80312e-40 m^-1
+[FAIL] 6.2 与内禀曲率量级的比较  |  T_EC=3.80312e-40 m^-1 vs kappa_int=1.83113e+12 m^-1：内禀曲率比 EC 挠率大 51 个数量级 -> 挠率通道给不出与曲率通道同量级的电磁力
+[FAIL] 6.3 力程结构  |  EC 的 torsion-spin 耦合是接触相互作用（delta 型，力程 -> 0），而库仑力是长程 1/r^2；二者结构不同 -> 『电磁=时空挠率』在 EC 框架下不成立
+[PASS] 6.4 替代方案（三层结构给出）  |  电荷改由【内禀挠率 tau_int】承载（相位螺旋的手性），其场与质量场同样长程 -> 既保住『挠率=手性』的直觉，又避免 EC 挠率的短程困难
+
+==================================================================
+总计 37 项：PASS 32  FAIL 3  OPEN 2
+==================================================================
+
+--- 本轮闭合/推进 ---
+  1.1  符号：kappa_1/kappa_3 = gamma^2 v^2/c^2
+  1.2  4D 四维速度模长 = c（公理 I 修正版，闵氏内积）
+  1.3  纯横向加速分解 a4.a4 = gamma^4 a_perp^2
+  1.4  数值：电子回旋（v=1e7 m/s, B=1T）桥接自洽
+  1.5  数值：地球轨道 kappa_1(桥接) vs GM/(c^2 r^2)
+  1.6  非相对论极限 v<<c
+  2.1  符号：|grad ln beta_1|/2 = GM/(c^2 r^2)
+  2.2  符号：|g| = c^2 kappa_1 与定理7 的 g=(c^2/2)grad ln beta_1 一致
+  2.3  v2 的 H2 矛盾根源定位
+  2.4  数值：地球表面 kappa_1 = |g|/c^2
+  2.5  数值：由 kappa_1 反推圆轨道 kappa_3 = 1/r
+  2.6  修复后的引力定理组（无矛盾）
+  3.1  Mobius framing 总扭转 Tw = (1/2pi)∮d(theta)
+  3.2  普通 framing 总扭转 Tw = n（整数）
+  3.3  Mobius 闭合条件 N(2pi) = -N(0)
+  3.4  普通闭合条件 N(2pi) = +N(0)
+  3.5  自旋统计定理的拓扑实现
+  3.6  与 v2 的 theta=45deg（kappa=tau）解耦
+  3.7  数值离散积分 Mobius Tw
+  4.1  量纲：[kappa][tau] 与 [1/l_P^2]
+  4.2  构造：共轭动量 Pi_kappa = hbar * l_P^2 * tau 的量纲
+  4.3  由 [kappa, Pi] = i hbar 反推 [kappa, tau]
+  4.4  数值强度 1/l_P^2
+  4.5  不确定度 delta kappa * delta tau >= 1/(2 l_P^2)
+  5.1  内禀层：m c^2 = hbar omega = hbar c sqrt(kappa_int^2+tau_int^2)
+  5.2  公理 I 的重新定位（解决 O20 类光性）
+  5.3  光子：kappa_int = tau_int = 0 -> m = 0（解决 O16）
+  5.4  中微子：tau_int = 0, kappa_int != 0 -> 中性且有质量
+  5.5  粒子分类一致性
+  5.6  电荷量子化的拓扑机制（新）
+  6.1  EC 挠率量级 T = (8piG/c^4) * S_density
+  6.4  替代方案（三层结构给出）
+
+--- 仍开放 ---
+  4.7  诚实边界
+  5.7  磁通/电荷量子化的对应

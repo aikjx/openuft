@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUFT 突破性新方程集 E1–E199 全维架构图</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --line:#2d3a4d;
+    --tx:#e6edf3; --tx2:#9aa7b8; --strict:#3fb950; --cond:#58a6ff;
+    --def:#d29922; --open:#f85149; --axiom:#bc8cff; --post:#f778ba;
+    --novel:#f0b429; --ok:#3fb950; --warn:#f0883e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--tx);font-family:"Segoe UI","Microsoft YaHei",sans-serif;padding:24px;line-height:1.55}
+  h1{font-size:26px;margin-bottom:4px;letter-spacing:.5px}
+  .sub{color:var(--tx2);font-size:13px;margin-bottom:18px}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:120px}
+  .stat .n{font-size:24px;font-weight:700}
+  .stat .l{font-size:12px;color:var(--tx2)}
+  .n.strict{color:var(--strict)} .n.cond{color:var(--cond)} .n.def{color:var(--def)} .n.open{color:var(--open)} .n.total{color:var(--novel)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:18px}
+  .panel h2{font-size:17px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .panel .desc{color:var(--tx2);font-size:12px;margin-bottom:12px}
+  .badge{display:inline-block;font-size:10px;padding:1px 7px;border-radius:8px;font-weight:600;vertical-align:1px}
+  .b-strict{background:rgba(63,185,80,.15);color:var(--strict);border:1px solid rgba(63,185,80,.4)}
+  .b-cond{background:rgba(88,166,255,.15);color:var(--cond);border:1px solid rgba(88,166,255,.4)}
+  .b-def{background:rgba(210,153,34,.15);color:var(--def);border:1px solid rgba(210,153,34,.4)}
+  .b-open{background:rgba(248,81,73,.15);color:var(--open);border:1px solid rgba(248,81,73,.4)}
+  .b-axiom{background:rgba(188,140,255,.15);color:var(--axiom);border:1px solid rgba(188,140,255,.4)}
+  .b-post{background:rgba(247,120,186,.15);color:var(--post);border:1px solid rgba(247,120,186,.4)}
+  .b-novel{background:rgba(240,180,41,.18);color:var(--novel);border:1px solid rgba(240,180,41,.5)}
+  .eq{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:6px 0;font-size:13px}
+  .eq .id{font-weight:700;color:var(--cond);margin-right:8px;font-size:12px}
+  .eq .id.ow{color:var(--open)} .eq .id.s{color:var(--strict)} .eq .id.d{color:var(--def)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .node{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:12px;text-align:center;min-width:110px}
+  .node .t{font-weight:700;font-size:13px}
+  .arrow{color:var(--tx2);font-size:14px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+  th,td{border:1px solid var(--line);padding:6px 9px;text-align:left}
+  th{background:var(--panel2);color:var(--tx2);font-weight:600}
+  td.hl{color:var(--novel);font-weight:700}
+  .note{font-size:12px;color:var(--warn);border-left:3px solid var(--warn);background:rgba(240,136,62,.08);padding:6px 10px;border-radius:0 6px 6px 0;margin:8px 0}
+  .note.ok{color:var(--ok);border-color:var(--ok);background:rgba(63,185,80,.07)}
+  .verdict{background:linear-gradient(135deg,rgba(240,180,41,.12),rgba(248,81,73,.08));border:1px solid rgba(240,180,41,.45);border-radius:10px;padding:12px 16px;margin:10px 0}
+  .verdict .big{font-size:19px;font-weight:800;color:var(--novel)}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0;font-size:12px;color:var(--tx2)}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:0}
+  .lg-strict::before{background:var(--strict)} .lg-cond::before{background:var(--cond)}
+  .lg-def::before{background:var(--def)} .lg-open::before{background:var(--open)}
+  .lg-axiom::before{background:var(--axiom)} .lg-post::before{background:var(--post)}
+  .ok{color:var(--ok)} .bad{color:var(--open)} .warn{color:var(--warn)}
+  .mono{font-family:Consolas,"Courier New",monospace}
+  footer{color:var(--tx2);font-size:11px;margin-top:20px;text-align:center}
+</style>
+</head>
+<body>
+
+<h1>TUFT 本源拓扑统一场论 · 突破性新方程集 E1–E199 全维架构图</h1>
+<div class="sub">Frenet–Serret 微分几何 + Călugăreanu–White 拓扑纽结统一纲领 ｜ 算法联盟全维攻坚 v1→v6 ｜ 四态分级 · 禁止伪闭合 ｜ MainAgent 独立复核落盘（2026-09-17）</div>
+
+<div class="stats">
+  <div class="stat"><div class="n total">199</div><div class="l">方程总数 E1–E199</div></div>
+  <div class="stat"><div class="n strict">35</div><div class="l">严格定理</div></div>
+  <div class="stat"><div class="n cond">61</div><div class="l">条件定理</div></div>
+  <div class="stat"><div class="n def">18</div><div class="l">定义/识别假设</div></div>
+  <div class="stat"><div class="n open">27</div><div class="l">开放命题</div></div>
+  <div class="stat"><div class="n" style="color:var(--axiom)">16</div><div class="l">公设 P1–P16</div></div>
+  <div class="stat"><div class="n" style="color:var(--novel)">21</div><div class="l">判别预言 D1–D21</div></div>
+  <div class="stat"><div class="n" style="color:var(--warn)">9/14</div><div class="l">谜题部分覆盖</div></div>
+</div>
+
+<div class="legend">
+  <span class="lg-axiom">公理/公设</span>
+  <span class="lg-strict">严格定理</span>
+  <span class="lg-cond">条件定理</span>
+  <span class="lg-def">定义/识别假设</span>
+  <span class="lg-open">开放命题</span>
+  <span class="lg-post">新增公设(含代价)</span>
+  <span class="lg-novel">novel 预言</span>
+</div>
+
+<!-- 公理 -->
+<div class="panel">
+  <h2>① 三大本源公理（全部逻辑起点） <span class="badge b-axiom">公理</span></h2>
+  <div class="desc">三条公理为唯一假设；以下全部方程均为导出量，不存在脱离几何拓扑的独立物质本体。</div>
+  <div class="grid2">
+    <div class="eq"><span class="id d">公理Ⅰ</span>时空元世界线速率守恒：<span class="mono">v⊥²+h²=c²</span>（正交分解切向旋转+轴向推进）</div>
+    <div class="eq"><span class="id d">公理Ⅱ</span>Frenet–Serret 微分几何：d<b>T</b>/ds=κ<b>N</b>, d<b>N</b>/ds=−κ<b>T</b>+τ<b>B</b>, d<b>B</b>/ds=−τ<b>N</b></div>
+    <div class="eq"><span class="id d">公理Ⅲ</span>拓扑–物理对应：一切可观测量 = 世界线曲率/挠率/角频率/拓扑不变量的泛函</div>
+  </div>
+  <div class="flow" style="margin-top:10px">
+    <div class="node"><div class="t">公理Ⅰ+Ⅱ</div>螺旋几何 κ=Rω²/c² 等</div><span class="arrow">→</span>
+    <div class="node"><div class="t">定理1–10</div>基础几何严格导出</div><span class="arrow">→</span>
+    <div class="node"><div class="t">波动动力学</div>κ/τ 通道 + β₁ 场方程</div><span class="arrow">→</span>
+    <div class="node"><div class="t">衍生分支</div>电磁·量子·宇宙学</div><span class="arrow">→</span>
+    <div class="node"><div class="t" style="color:var(--novel)">v4–v6 精算</div>σ_abs=0 · 回波 · SM 嵌入</div>
+  </div>
+</div>
+
+<!-- 基础定理 -->
+<div class="panel">
+  <h2>② 基础几何严格导出定理（v1 核心，E1–E24 中基础段）</h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">定理1</span>稳态圆柱螺旋：κ=Rω²/c², τ=hω/c², ω=c√(κ²+τ²), tanθ=κ/τ</div>
+    <div class="eq"><span class="id s">定理2</span>Călugăreanu–White：Lk=Tw+Wr；自旋拓扑恒等式 s+Lk²_eff=1（三角恒等式，v1 重命名修正）</div>
+    <div class="eq"><span class="id s">定理3</span>拓扑质量 m=ℏ/c·√(κ²+τ²)；玻色 90° / 费米 45° 孤子解</div>
+    <div class="eq"><span class="id s">定理5/6</span>引力 g=−c²κ<b>N</b>；统一动力学 <b>F</b>=mc²κ<b>N</b>+mc²τ<b>B</b></div>
+    <div class="eq"><span class="id s">定理7</span>β₁ 非线性场方程 ∇²β₁−(∇β₁)²/β₁=−8πGρ/c²；静态解 β₁=e^{2GM/(c²r)}</div>
+    <div class="eq"><span class="id s">定理8</span>电荷 = 挠率闭合通量 q∝∬τdS（挠率符号定电荷手性）</div>
+  </div>
+</div>
+
+<!-- 引力通道 -->
+<div class="panel">
+  <h2>③ 引力通道（E1–E12 / E25–E31 / E48–E61 / E83–E114）</h2>
+  <div class="desc">弱场 1PN 与 GR 精确简并（PPN β=γ=1，无独立经典检验）；区分性集中在强场/σ_abs。</div>
+  <div class="grid">
+    <div class="eq"><span class="id s">E1/E2</span>静态球对称解 φ=−2GM/(c²r)；β₁=e^φ（Yilmaz 同形）</div>
+    <div class="eq"><span class="id s">E3/E4</span>PPN β=γ=1；近日点进动 Δφ=6πGM/[c²a(1−e²)]（与 GR 简并）</div>
+    <div class="eq"><span class="id s">E7</span>光偏折 α=4GM/(c²b)−4πG²M²/(c⁴b²)+…（1PN 简并；2PN 差 ~10⁻⁵″）</div>
+    <div class="eq"><span class="id s">E25</span>后度量 ansatz：g_tt=e^{−2U}, g_rr=−e^{2U}(1+cU²+dU³)</div>
+    <div class="eq"><span class="id s">E26</span>光子球方程 r³−2r²−2c=0（v3 权威修正；c=−0.5→1.000/1.618）</div>
+    <div class="eq"><span class="id s">E29/E31</span>b_crit=r_ph√(B/A)；EHT 阴影 c≈−0.29 → 39.7 μas（观测 40±4）</div>
+    <div class="eq"><span class="id s">E52/E55</span>c=−χ_S·α_sk·(Λ_n/m_n)²；稳定性+方差正定性 ⇒ c<0 自然导出</div>
+    <div class="eq"><span class="id s">E57</span>各向同性坐标正确 L² 公式（v2 ISCO 硬伤 = 数值 bug，v3 撤销 D9）</div>
+    <div class="eq"><span class="id s">E58–E61</span>c=−0.290,d=−0.050 → ISCO=4.9491, b_crit=5.1928（&lt;0.2%，三约束全过）</div>
+    <div class="eq"><span class="id s">E84/85</span>VK 下界 M≥0.771|Q|^{3/4}；Sutcliffe 数值 M≈22.3|Q|^{3/4}</div>
+    <div class="eq"><span class="id s">E90</span>c 的 RG 升格：c=−χ_S·α_sk·(Λ_n/m_n)²；c=−0.29 ∈ 收紧区间 [−0.330,−0.133]</div>
+    <div class="eq"><span class="id s">线二自检</span>GR 对照 σ_abs=84.818≈27π=84.823（误差 0.006%）</div>
+  </div>
+  <div class="verdict">
+    <div class="big">v4 最终裁决 · novel 预言：σ_abs = 0 ⟹ v6 回波判据</div>
+    c&lt;0 时 r_h=M√(−c) 为<b>反射壁（非单向膜）</b>——所有 b&gt;0 光子最终逃逸（仅延迟），吸收截面恒为 0。一阶光学与 EHT 不可区分。v6 定量化：外垒与 GR 重合（V₀ 0.257/0.245 vs 0.247）⟹ 一阶 ringdown 与 GR 不可区分；反射壁 ⟹ <b>长寿命振荡 + 延迟回波包（等间隔重复脉冲）</b>——引力波回波为可观测判据。空腔精确复根 OPEN（需 Leaver 连分数）。
+  </div>
+  <table>
+    <tr><th>模型</th><th>σ_abs (M²)</th><th>b_crit (M)</th><th>ISCO (M)</th><th>r_h (M)</th><th>QNM l=2 (Re, Im)</th></tr>
+    <tr><td>GR Schwarzschild</td><td>84.82 (=27π)</td><td>5.196</td><td>4.949</td><td>2.0（事件视界）</td><td>0.3737, −0.0890（文献）</td></tr>
+    <tr><td>TUFT c=−0.5</td><td class="hl">0</td><td>5.009</td><td>4.744</td><td>0.707（反射壁）</td><td>WKB 0.5156, −0.0963（偏高，见复核）</td></tr>
+    <tr><td>TUFT c=−0.29,d=−0.05</td><td class="hl">0</td><td>5.193</td><td>4.951</td><td>0.610（反射壁）</td><td>WKB 0.5034, −0.0931（偏高，见复核）</td></tr>
+    <tr><td>TUFT c=0（纯 Yilmaz）</td><td class="hl">0（真无视界）</td><td>5.437</td><td>5.236</td><td>无</td><td>—</td></tr>
+  </table>
+</div>
+
+<!-- 电磁/自旋 -->
+<div class="panel">
+  <h2>④ 电磁 / 自旋通道（E13–E19 / E32–E38 / E62–E82）</h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E15</span>齐次 Maxwell = Bianchi 恒等式（spin-connection 曲率 ≡ U(1) 场，识别假设）</div>
+    <div class="eq"><span class="id s">E34</span>精细结构常数 <b>量纲封锁</b>：α∉span{G,c,ℏ} —— 几何化电磁共同天花板</div>
+    <div class="eq"><span class="id s">E36</span>洛伦兹力断裂（严格）：纯轴矢量挠率对无自旋粒子轨道加速度恒为 0</div>
+    <div class="eq"><span class="id s">E77</span>zitter 平均量纲鸿沟 [ML⁴T⁻⁴]≠[Q] ⇒ P9 三件套（Hopf k∈ℤ + α≈1/137 + U(1) 线性耦合）不可替代</div>
+    <div class="eq"><span class="id s">E18</span>费米特征 boost：v=c/√2≈0.707c（D1 硬预言）</div>
+    <div class="eq"><span class="id s">E80</span>KK 紧化修正：R⊥≈9.5×10⁻³⁴ m ≈ 59 l_Pl（v2 旧值差 12 个量级，D12）</div>
+    <div class="eq"><span class="id s">E23</span>Hopf 不变量 Q∈ℤ，奇偶定自旋统计（Finkelstein–Rubinstein）</div>
+    <div class="eq"><span class="id s">E65–E75</span>Riemann–Cartan MPD 自旋粒子：打破测地线但不恢复洛伦兹力（量级 ~10⁻³⁵ m/s²，不可测）</div>
+  </div>
+</div>
+
+<!-- 宇宙学 -->
+<div class="panel">
+  <h2>⑤ 宇宙学通道（E39–E47 / E115–E134 / E166–E171）</h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E41/E42</span>物质主导 u/H=2、辐射主导 u/H=3（数值/解析=1.0000）；E81：H=φ̇ 仅为德西特渐近条件</div>
+    <div class="eq"><span class="id s">E44</span>稳态分支被摩擦项救活成德西特，但与 BBN 冲突 ⇒ 弃</div>
+    <div class="eq"><span class="id s">E46/E47</span>NGC3198 旋转曲线 v_flat=144.1 vs 150 km/s（−3.9%）；BTFR 斜率 4.000 vs 观测 4.192</div>
+    <div class="eq"><span class="id s">E115–E118</span>双场分离：n tracker + ψ quintessence（λ=0.5）→ Ωψ=0.697, wψ=−0.962（解冻自洽）</div>
+    <div class="eq"><span class="id s">E119/E120</span>SN Ia max|Δμ|=1.19×10⁻² mag（微超 0.01 目标）；BAO r_d=147.2 Mpc（v6 复算）</div>
+    <div class="eq"><span class="id ow">E121</span>H₀ 张力不缓解（67.7 vs SH0ES 73.0）——需 phantom/早期暗能量【开放】</div>
+    <div class="eq"><span class="id s">E166</span>Λ_n/m_n 口径统一 = <b>0.54±0.10</b>（canonical √|c|；E92 的 0.69=0.54/√0.609 自洽 PASS）</div>
+    <div class="eq"><span class="id s">E123/E124</span>分支 A（m_n~TeV）被 LHC Run 3 大部分排除；分支 B（Λ_n~M_Pl）仅宇宙学/WEP 可测</div>
+  </div>
+</div>
+
+<!-- 大统一延伸 -->
+<div class="panel">
+  <h2>⑥ v5 大统一延伸：SM 嵌入（E135–E147）</h2>
+  <div class="grid">
+    <div class="eq"><span class="id d">E135</span>G_line=SU(3)_c×SU(2)_L×U(1)_Y <span class="badge b-post">P13</span>（推翻 v3 纯 U(1) 线汇）</div>
+    <div class="eq"><span class="id s">E136</span><b>分数电荷出路：q/e = k_EM − k_c/3</b> —— 双荷组合覆盖 0, ±1/3, ±2/3, ±1（D19 可证伪）</div>
+    <div class="eq"><span class="id s">E142</span><b>Q=1,2,3 → 三代被数值硬否决</b>（Q^{3/4}=1:1.68:2.28 ≪ PDG 206.8/16.8）</div>
+    <div class="eq"><span class="id d">E143</span>三代归因于纽结交叉数 C_k <span class="badge b-post">P14</span>（v6 被 L4 强否决，见面板⑧）</div>
+    <div class="eq"><span class="id s">E141</span>PDG 质量比 m_μ/m_e=206.77, m_τ/m_μ=16.82（重算一致）</div>
+    <div class="eq"><span class="id ow">E145</span>汤川 y 跨度 3.4×10⁵ vs 几何量乘积 ~10²【开放】</div>
+    <div class="eq"><span class="id ow">E146</span>Hopfion 弦张力 vs QCD 差 10³⁸ 倍【开放】</div>
+    <div class="eq"><span class="id ow">E147</span>夸克禁闭半闭合偏开放【开放】</div>
+  </div>
+</div>
+
+<!-- v6 面板 -->
+<div class="panel">
+  <h2>⑦ v6 攻坚面板：QNM / 暗能量 / C_k / SU(3) / seesaw（E148–E221） <span class="badge b-novel">v6 新 52 条</span></h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E148–E158</span><b>QNM 定量预言</b>：GR 门禁 PASS（文献 0.3737−0.0890i，残差 1.57e-3）；TUFT 外垒与 GR 几乎重合 ⟹ 一阶不可区分；反射壁 ⟹ <b>长寿命振荡 + 延迟回波</b>（D18 定量化）；空腔复根 OPEN</div>
+    <div class="eq"><span class="id s">E166–E171</span><b>暗能量复算</b>：Ωψ=0.6970 ✓；wψ=−0.962（设计 −0.979 为冻结极限，差 0.017 诚实标注）；Λ_n/m_n=<b>0.54±0.10</b> 口径统一</div>
+    <div class="eq"><span class="id ow">E181–E189</span><b>C_k 三代假说 L4 强否决</b>：ln 间隔比 1.889≠1；Z₃≠SU(3)；C_k=1,2 无素纽结；环面纽结 V=0；残差 ≥0.46 dex —— 五条独立证据</div>
+    <div class="eq"><span class="id d">E196–E200</span><b>SU(3) 拓扑起源</b>：trefoil 三色 + B₃→S₃（Weyl 群阶 6）群论骨架严格成立；物理映射弱（着色非色荷）；整体=<b>开放（二级半）</b></div>
+    <div class="eq"><span class="id ow">E201–E221</span><b>中微子 seesaw 半闭合</b>：公式层嵌入成立；M_N~10¹⁴ GeV 需非 O(1) 指数（k=19）/微调 μ₀~10⁻⁵；三拓扑候选全失败；汤川跨度四条路径全失败【开放】</div>
+  </div>
+  <div class="note">【MainAgent 复核 ①】QNM WKB-1 系统性偏高：GR 自检 WKB-1=0.5064 vs 精确 0.3737（+35%）。TUFT 表内 0.5156/0.5034 携带同偏差，降级为"Re(ω) 上界估计"；精确 TUFT QNM 预计与 GR 近简并（壁垒重合 + 残差同量级），回波预言不受影响。</div>
+  <div class="note">【MainAgent 复核 ③】c 区间：脚本收紧值 [-0.3296,-0.1331]（-0.29 ∈ ✓）；总结文本 [−0.588,−0.0675] 与脚本不符，以脚本为准。</div>
+</div>
+
+<!-- 破解矩阵 -->
+<div class="panel">
+  <h2>⑧ 破解矩阵 · 14 未解之谜最终审计 <span class="badge b-novel">0/14 完全闭合 · 9/14 部分 · 5/14 未触及</span></h2>
+  <table>
+    <tr><th>谜题</th><th>状态</th><th>TUFT 对应</th></tr>
+    <tr><td>三代质量谱</td><td class="warn">部分覆盖</td><td>E142 否决 Q；E143 C_k 亦被 L4 否决 ⟹ 起源完全开放</td></tr>
+    <tr><td>精细结构常数</td><td class="warn">部分覆盖</td><td>E34 量纲封锁；P9 输入</td></tr>
+    <tr><td>暗物质候选</td><td class="warn">部分覆盖</td><td>E115–E118 ψ 场；E146 Hopfion</td></tr>
+    <tr><td>强 CP/轴子</td><td class="warn">部分覆盖</td><td>E143 方向；ADMX/CAST 边界</td></tr>
+    <tr><td>夸克禁闭 / q=e/3</td><td class="warn">部分覆盖</td><td>E136 双荷组合 ✓；E147 弦张力差 10³⁸</td></tr>
+    <tr><td>引力量子化</td><td class="warn">部分覆盖</td><td>E20 协变；E105–E158 强场+QNM</td></tr>
+    <tr><td>宇宙学常数</td><td class="warn">部分覆盖</td><td>E48/E49 真空退化 Λ；E115–E118 quintessence</td></tr>
+    <tr><td>哈勃张力</td><td class="warn">部分覆盖</td><td>E121 不缓解（需外部）</td></tr>
+    <tr><td>中微子质量（v6 新升）</td><td class="warn">部分覆盖</td><td>E201–E221 seesaw 公式嵌入；M_N 自然性未解</td></tr>
+    <tr><td>物质–反物质不对称</td><td class="bad">未触及</td><td>无 CP 破坏</td></tr>
+    <tr><td>质子衰变</td><td class="bad">未触及</td><td>无 X/Y 玻色子</td></tr>
+    <tr><td>量子测量</td><td class="bad">未触及</td><td>纯经典场论</td></tr>
+    <tr><td>黑洞信息</td><td class="bad">未触及</td><td>半经典框架</td></tr>
+    <tr><td>暴胀</td><td class="bad">未触及</td><td>无暴胀子势</td></tr>
+  </table>
+</div>
+
+<!-- 判别预言 -->
+<div class="panel">
+  <h2>⑨ 判别预言 D1–D21（按可证伪强度）</h2>
+  <div class="grid2">
+    <div class="eq"><span class="id s">D1</span>费米特征 boost v=c/√2=0.707c —— <b>TUFT 独有硬预言</b></div>
+    <div class="eq"><span class="id s">D18</span><b>σ_abs=0 → GW 回波</b>（v6 定量化）：长寿命振荡 + 延迟等间隔回波包，GR 单调衰减</div>
+    <div class="eq"><span class="id s">D19</span>q/e=k_EM−k_c/3 分数电荷搜索（可证伪）</div>
+    <div class="eq"><span class="id s">D20</span>Q≠三代；C_k 亦否决 ⟹ 三代起源开放</div>
+    <div class="eq"><span class="id s">D8</span>EHT 阴影 c≈−0.29 → 39.7 μas（观测 40±4）</div>
+    <div class="eq"><span class="id s">D2</span>视界=反射壁非单向膜（r_h=M√(−c)）</div>
+    <div class="eq"><span class="id s">D12</span>KK 紧化半径 R⊥≈59 l_Pl</div>
+    <div class="eq"><span class="id s">D5</span>2PN 光偏折修正（c 参数化，理论区间 [−0.330,−0.133]）</div>
+    <div class="eq"><span class="id s">D4</span>a₀=cH₀/(2π)=1.083×10⁻¹⁰ m/s²（vs MOND 差 10.8%）</div>
+    <div class="eq"><span class="id ow">D21</span>H₀ 张力不缓解（67.7 vs 73.0）</div>
+    <div class="eq"><span class="id s">D3</span>BTFR 斜率 4.000（观测 4.192±0.1）</div>
+    <div class="eq"><span class="id s">D6/D7</span>Q 奇偶定统计；1PN 与 GR 精确简并（无区分力）</div>
+  </div>
+</div>
+
+<!-- 未完成与复核 -->
+<div class="panel">
+  <h2>⑩ 未完成项 + MainAgent 复核（禁止伪闭合）</h2>
+  <div class="note">【编号口径】联盟文本汇总 v6 新增 52 条（E148–E221 含预留空位），累计 E1–E199；两口径均有效、不重复计数</div>
+  <div class="note">【未完成·开放】QNM 空腔精确复根（需 Leaver）｜ 三代起源双否决后完全开放 ｜ 汤川 y 四路径全失败 ｜ M_N 自然性需微调 ｜ 5 谜题未触及 ｜ c 仍需 P12 先验 ｜ SU(3) 物理映射开放</div>
+  <div class="note ok">【MainAgent 复核通过】GR QNM 文献值确认 + 门禁残差 1.57e-3 ✓；Ωψ=0.6970 精确复现 ✓；Λ_n/m_n=0.54 自洽互验 0.690≈0.69 ✓；C_k 五条证据数学事实核对无误 ✓；seesaw 振荡参数符合 NuFIT 6.0 ✓；v5 全项复核保留（σ_abs=0 手写 RK4、E126 电荷、E131 三代否决）</div>
+  <div class="note">【复核修正 1】QNM WKB-1 系统性偏高（GR 自检 +35%）⟹ TUFT Re(ω) 降级为上界估计，精确值预计与 GR 近简并</div>
+  <div class="note">【复核修正 2】SN Ia max|Δμ|=1.19×10⁻² mag 微超其 <0.01 目标（仍 ≪ 观测散布）</div>
+  <div class="note">【复核修正 3】c 区间以脚本 [-0.3296,-0.1331] 为准（文本 [−0.588,−0.0675] 不符，需追溯先验）</div>
+  <div class="note">【复核修正 4】微调比 Δ=1.91%（(1+w)/2 口径），取代 v5 文本 1.4%</div>
+</div>
+
+<footer>TUFT 全维架构图 E1–E199 ｜ 算法联盟 o_0001sQSJsct 产出 + MainAgent 独立复核（v1–v6 六期） ｜ 数学自洽 ≠ 实验证实 · 开放缺口显式标注，未伪闭合</footer>
+</body>
+</html>

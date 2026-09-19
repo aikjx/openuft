@@ -1,0 +1,153 @@
+{
+  "module": "突破_螺距动力学不可行性（定理 E）",
+  "geometry": {
+    "param": "x = h/R",
+    "kappa": "1/(R(1+x²))",
+    "tau": "x/(R(1+x²))",
+    "alpha": "κ/τ = 1/x",
+    "alpha_obs_inv": 137.0359990836958
+  },
+  "action_scan": [
+    {
+      "action": "∫ds（弧长）",
+      "critical_points": [],
+      "kind": "无临界点",
+      "alpha_fixed": null,
+      "nullity_dyn": 1,
+      "verdict": "α 完全自由（旋钮未被固定）"
+    },
+    {
+      "action": "∫κ ds",
+      "critical_points": [],
+      "kind": "无临界点",
+      "alpha_fixed": null,
+      "nullity_dyn": 1,
+      "verdict": "α 完全自由（旋钮未被固定）"
+    },
+    {
+      "action": "∫τ ds",
+      "critical_points": [],
+      "kind": "无临界点",
+      "alpha_fixed": null,
+      "nullity_dyn": 1,
+      "verdict": "α 完全自由（旋钮未被固定）"
+    },
+    {
+      "action": "∫κ² ds（弯曲能）",
+      "critical_points": [],
+      "kind": "无临界点",
+      "alpha_fixed": null,
+      "nullity_dyn": 1,
+      "verdict": "α 完全自由（旋钮未被固定）"
+    },
+    {
+      "action": "∫τ² ds（扭转能）",
+      "critical_points": [
+        1.414213562373
+      ],
+      "kind": "极大",
+      "alpha_fixed": 0.707106781186595,
+      "nullity_dyn": 0,
+      "verdict": "α 被固定到 0.707107（阶 1 值）"
+    },
+    {
+      "action": "∫κτ ds",
+      "critical_points": [
+        0.707106781187
+      ],
+      "kind": "极大",
+      "alpha_fixed": 1.41421356237219,
+      "nullity_dyn": 0,
+      "verdict": "α 被固定到 1.414214（阶 1 值）"
+    },
+    {
+      "action": "∫(κ²+τ²) ds",
+      "critical_points": [],
+      "kind": "无临界点",
+      "alpha_fixed": null,
+      "nullity_dyn": 1,
+      "verdict": "α 完全自由（旋钮未被固定）"
+    }
+  ],
+  "least_action": [
+    {
+      "action": "∫ds（弧长）",
+      "min_at": "x→0（螺距→0）",
+      "alpha_predicted": "∞",
+      "S_at_0": 2.0,
+      "S_at_inf": Infinity
+    },
+    {
+      "action": "∫κ ds",
+      "min_at": "x→∞（螺距→∞）",
+      "alpha_predicted": "0",
+      "S_at_0": 2.0,
+      "S_at_inf": 0.0
+    },
+    {
+      "action": "∫τ ds",
+      "min_at": "x→0（螺距→0）",
+      "alpha_predicted": "∞",
+      "S_at_0": 0.0,
+      "S_at_inf": 2.0
+    },
+    {
+      "action": "∫κ² ds（弯曲能）",
+      "min_at": "x→∞（螺距→∞）",
+      "alpha_predicted": "0",
+      "S_at_0": 2.0,
+      "S_at_inf": 0.0
+    },
+    {
+      "action": "∫τ² ds（扭转能）",
+      "min_at": "两端退化（x→0 与 x→∞ 同值）",
+      "alpha_predicted": "{0, ∞}",
+      "S_at_0": 0.0,
+      "S_at_inf": 0.0
+    },
+    {
+      "action": "∫κτ ds",
+      "min_at": "两端退化（x→0 与 x→∞ 同值）",
+      "alpha_predicted": "{0, ∞}",
+      "S_at_0": 0.0,
+      "S_at_inf": 0.0
+    },
+    {
+      "action": "∫(κ²+τ²) ds",
+      "min_at": "x→∞（螺距→∞）",
+      "alpha_predicted": "0",
+      "S_at_0": 2.0,
+      "S_at_inf": 0.0
+    }
+  ],
+  "summary": {
+    "n_actions": 7,
+    "n_free_minus1": 5,
+    "n_fixed": 2,
+    "alphas_fixed_interior": [
+      0.707107,
+      1.414214
+    ]
+  },
+  "tuning_bound": {
+    "family": "S = ∫τ²ds + λ∫κ²ds",
+    "lambda_of_xstar": "2/3 - x**2/3",
+    "lambda_star_at_1_over_alpha": -6258.955014955559,
+    "crit_check_backsub": 137.0359990836958,
+    "alpha_inv": 137.0359990836958
+  },
+  "circularity_witness": {
+    "model": "S = ½∫[A(κ−κ₀)² + C(τ−τ₀)²] ds（内禀曲率的弹性杆）",
+    "extremum_at": "(κ, τ) = (κ₀, τ₀)",
+    "alpha_result": "α = κ₀/τ₀",
+    "verdict": "λ 已被固定（nullity_dyn=0），但固定值 = 输入比值 ⇒ α 仍是输入（循环）"
+  },
+  "theorem_E": {
+    "name": "定理 E（螺旋几何的 α 不可行性）",
+    "statement": "在均匀螺旋上，初等几何作用量 S(x)（κ,τ 的至多二次单项式及其和）的内点临界点只能给出 α = 1/√2（阶 1 值）或退化为边界 α∈{0,∞}；不存在能把 α 固定到 O(α_obs) 小值的初等几何作用量。把临界点搬到 x*=1/α 需要系数比 |λ| ≈ (1/α²)/3，即把 O(α⁻²) 作为输入塞入。",
+    "witness_tuning_bound": -6258.955014955559,
+    "corollary": "几何作用量类不可行 ⇒ 第62章三块砖之 (i) 不可由几何作用量提供",
+    "analogue_of": "定理 C（量纲代数的 α 不可行性）",
+    "honest_scope": "扫描覆盖 κ,τ 的至多二次单项式及其线性组合（含弧长项）；不排除高度非线性的泛函（如含 κ^n n>2 的精细组合）。结论对'初等几何作用量'类成立。"
+  }
+}

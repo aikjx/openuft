@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UFO原理 - 统一场论可视化系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#7B61FF',
+                        accent: '#FF6B8B',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .principle-card {
+                transition: all 0.3s ease;
+            }
+            .principle-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px -5px rgba(255, 107, 139, 0.1);
+            }
+            .glow {
+                box-shadow: 0 0 15px rgba(123, 97, 255, 0.5);
+            }
+        }
+    </style>
+</head>
+<body class="bg-light text-dark min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                    <i class="fa fa-cube text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold text-primary">统一场论可视化系统</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="../index.html" class="font-medium hover:text-primary transition-colors">首页</a>
+                <a href="../core_equations/index.html" class="font-medium hover:text-primary transition-colors">核心方程</a>
+                <a href="../applications/index.html" class="font-medium hover:text-primary transition-colors">十大应用</a>
+                <a href="#" class="font-medium text-primary border-b-2 border-primary pb-1">UFO原理</a>
+                <a href="../vertical_principle/index.html" class="font-medium hover:text-primary transition-colors">垂直原理</a>
+            </div>
+            <button class="md:hidden text-dark text-xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="flex-grow py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">UFO飞行原理</h2>
+                <p class="text-gray-600">
+                    基于张祥前统一场论的UFO飞行机制可视化，展示质量操控、时空扭曲等先进技术如何实现超常规飞行特性。
+                </p>
+            </div>
+
+            <!-- 3D可视化区域 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-12">
+                <div class="p-6 border-b border-gray-100">
+                    <h3 class="text-xl font-semibold">UFO飞行原理3D可视化</h3>
+                    <p class="text-gray-600 mt-2">
+                        交互式演示UFO的飞行特性，包括质量操控、直角转弯、悬停无声等现象
+                    </p>
+                </div>
+                <div id="ufoCanvas" class="w-full h-[600px]"></div>
+                <div class="p-6 border-t border-gray-100">
+                    <div class="flex flex-wrap gap-6">
+                        <div>
+                            <h4 class="font-medium mb-3">飞行模式控制</h4>
+                            <div class="space-y-3">
+                                <button id="hoverBtn" class="bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors">
+                                    <i class="fa fa-circle-o-notch mr-2"></i>悬停模式
+                                </button>
+                                <button id="straightBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-arrow-right mr-2"></i>直线飞行
+                                </button>
+                                <button id="turnBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-random mr-2"></i>直角转弯
+                                </button>
+                                <button id="ascendBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-arrow-up mr-2"></i>垂直升降
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-3">参数调节</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">质量减少程度</label>
+                                    <input type="range" id="massSlider" min="0" max="1" step="0.01" value="0.9" 
+                                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" 
+                                           oninput="updateMassValue(this.value)">
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>正常质量</span>
+                                        <span id="massValue">90% 减少</span>
+                                        <span>零质量</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">飞行速度</label>
+                                    <input type="range" id="speedSlider" min="0" max="1" step="0.01" value="0.3" 
+                                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" 
+                                           oninput="updateSpeedValue(this.value)">
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>静止</span>
+                                        <span id="speedValue">30% 光速</span>
+                                        <span>光速</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-3">场强度可视化</h4>
+                            <div class="space-y-3">
+                                <button id="showFieldBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-field-hockey mr-2"></i>显示场强度
+                                </button>
+                                <button id="showTrailBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-stream mr-2"></i>显示轨迹
+                                </button>
+                                <button id="resetBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-refresh mr-2"></i>重置场景
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UFO原理说明 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- 理论基础 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">理论基础</h3>
+                    <div class="space-y-4">
+                        <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium mb-2 text-accent">质量操控原理</h4>
+                            <p class="text-gray-600">
+                                根据统一场论动量方程 P = m(C-V)，当UFO通过人工场技术使自身质量m→0时，其速度V必然趋近于光速C。这解释了UFO的超机动性和违反牛顿力学的飞行特性。
+                            </p>
+                            <div class="mt-2 bg-white p-2 rounded">
+                                <span class="text-sm">$$\vec{P} = m(\vec{C} - \vec{V})$$，当m→0时，V→C</span>
+                            </div>
+                            <a href="../core_equations/momentum_equation.html" class="text-primary hover:underline block mt-2">查看动量方程可视化</a>
+                        </div>
+                        <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium mb-2 text-accent">空间拖动效应</h4>
+                            <p class="text-gray-600">
+                                UFO利用统一场论揭示的空间运动本质，通过人工场扫描技术控制周围空间的运动状态，使空间带着UFO一起运动，从而实现无工质推进。
+                            </p>
+                            <div class="mt-2 bg-white p-2 rounded">
+                                <span class="text-sm">$$\vec{S} = \vec{C}t$$，空间本身以光速C运动</span>
+                            </div>
+                        </div>
+                        <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium mb-2 text-accent">时空扭曲技术</h4>
+                            <p class="text-gray-600">
+                                基于统一场论对时空的几何化描述，UFO可能掌握了操控时空结构的技术，通过能量方程 W = m·C·V 实现能量与空间结构的相互转换。
+                            </p>
+                            <div class="mt-2 bg-white p-2 rounded">
+                                <span class="text-sm">$$W = m\vec{C}\cdot\vec{V}$$，能量场可以扭曲局部时空</span>
+                            </div>
+                            <a href="../core_equations/energy_equation.html" class="text-primary hover:underline block mt-2">查看能量方程可视化</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 飞行特性 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">飞行特性解释</h3>
+                    <div class="space-y-4">
+                        <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium mb-2 text-accent">直角转弯</h4>
+                            <p class="text-gray-600">
+                                由于质量接近零，UFO不受惯性约束，能够瞬间改变运动方向而无需向心力，实现完美的直角转弯。
+                            </p>
+                            <div class="mt-2 flex items-center text-sm text-gray-500">
+                                <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                                <span>无惯性，无向心力需求</span>
+                            </div>
+                        </div>
+                        <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium mb-2 text-accent">悬停无声</h4>
+                            <p class="text-gray-600">
+                                通过人工场抵消引力，无需推进器即可悬停，因此不会产生噪音和空气扰动。
+                            </p>
+                            <div class="mt-2 flex items-center text-sm text-gray-500">
+                                <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                                <span>无推进器，无空气扰动</span>
+                            </div>
+                        </div>
+                        <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium mb-2 text-accent">高速无声</h4>
+                            <p class="text-gray-600">
+                                人工场拖动周围空间一起运动，UFO与周围介质相对静止，因此高速飞行时不会产生音爆或空气摩擦。
+                            </p>
+                            <div class="mt-2 flex items-center text-sm text-gray-500">
+                                <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                                <span>空间拖动效应，无空气阻力</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 技术对比 -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-6 text-center">传统飞行器 vs UFO技术</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">特性</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">传统飞行器</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">UFO（基于统一场论）</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">推进方式</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">化学燃料/喷气推进</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">人工场质量操控</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">最高速度</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">亚音速到高超音速</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">接近光速</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">机动性</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">受惯性和空气动力学限制</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">无惯性限制，可直角转弯</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">噪音</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">高噪音（推进器、空气摩擦）</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">无噪音（无推进器）</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">能耗</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">高能耗（化学能转换效率低）</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">低能耗（空间能利用）</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">环境影响</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">废气排放，空气扰动</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">零排放，无空气扰动</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">© 2025 统一场论可视化系统</p>
+            <p class="text-sm text-gray-400">基于张祥前统一场论理论开发的交互式可视化平台</p>
+        </div>
+    </footer>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let ufo, ufoField, trailParticles;
+        let currentMode = 'hover';
+        let massReduction = 0.9;
+        let speed = 0.3;
+        let showField = false;
+        let showTrail = false;
+        let animationFrameId;
+        
+        // 飞行路径点
+        const flightPath = [
+            new THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(5, 0, 0),
+            new THREE.Vector3(5, 0, 5),
+            new THREE.Vector3(0, 0, 5),
+            new THREE.Vector3(0, 5, 5),
+            new THREE.Vector3(0, 0, 0)
+        ];
+        
+        let pathIndex = 0;
+        let pathProgress = 0;
+        let targetPosition = flightPath[0].clone();
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 渲染数学公式
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+
+            // 初始化3D场景
+            initScene();
+            
+            // 设置事件监听
+            setupEventListeners();
+            
+            // 开始动画循环
+            animate();
+        });
+
+        // 初始化3D场景
+        function initScene() {
+            const container = document.getElementById('ufoCanvas');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x050a15);
+            
+            // 添加星空背景
+            createStarfield();
+            
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(10, 10, 10);
+            camera.lookAt(0, 0, 0);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // 添加控制器
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // 添加坐标轴
+            const axesHelper = new THREE.AxesHelper(10);
+            scene.add(axesHelper);
+            
+            // 添加地面网格
+            const gridHelper = new THREE.GridHelper(20, 20, 0x333333, 0x222222);
+            scene.add(gridHelper);
+            
+            // 创建UFO模型
+            createUFO();
+            
+            // 创建粒子系统用于轨迹
+            createTrailParticles();
+            
+            // 响应式处理
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // 创建星空背景
+        function createStarfield() {
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1000;
+            const posArray = new Float32Array(particlesCount * 3);
+            
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 200;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.1,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const starfield = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(starfield);
+        }
+
+        // 创建UFO模型
+        function createUFO() {
+            // UFO主体
+            const mainGeometry = new THREE.SphereGeometry(1, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+            const mainMaterial = new THREE.MeshBasicMaterial({ color: 0x165DFF });
+            ufo = new THREE.Mesh(mainGeometry, mainMaterial);
+            scene.add(ufo);
+            
+            // UFO底部
+            const baseGeometry = new THREE.CylinderGeometry(0.8, 1, 0.2, 32);
+            const baseMaterial = new THREE.MeshBasicMaterial({ color: 0x7B61FF });
+            const base = new THREE.Mesh(baseGeometry, baseMaterial);
+            base.position.y = -0.6;
+            ufo.add(base);
+            
+            // 创建发光效果（光晕）
+            const glowGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+            const glowMaterial = new THREE.MeshBasicMaterial({
+                color: 0x7B61FF,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+            ufoField = new THREE.Mesh(glowGeometry, glowMaterial);
+            ufoField.visible = false;
+            scene.add(ufoField);
+        }
+
+        // 创建轨迹粒子系统
+        function createTrailParticles() {
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 500;
+            const posArray = new Float32Array(particlesCount * 3);
+            const colorArray = new Float32Array(particlesCount * 3);
+            
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = 0;
+                colorArray[i] = Math.random() * 0.5 + 0.5; // 蓝色调
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            trailParticles = new THREE.Points(particlesGeometry, particlesMaterial);
+            trailParticles.visible = false;
+            scene.add(trailParticles);
+        }
+
+        // 设置事件监听
+        function setupEventListeners() {
+            // 飞行模式按钮
+            document.getElementById('hoverBtn').addEventListener('click', () => {
+                setFlightMode('hover');
+            });
+            document.getElementById('straightBtn').addEventListener('click', () => {
+                setFlightMode('straight');
+            });
+            document.getElementById('turnBtn').addEventListener('click', () => {
+                setFlightMode('turn');
+            });
+            document.getElementById('ascendBtn').addEventListener('click', () => {
+                setFlightMode('ascend');
+            });
+            
+            // 场强度和轨迹显示按钮
+            document.getElementById('showFieldBtn').addEventListener('click', toggleFieldVisibility);
+            document.getElementById('showTrailBtn').addEventListener('click', toggleTrailVisibility);
+            
+            // 重置按钮
+            document.getElementById('resetBtn').addEventListener('resetScene');
+        }
+
+        // 设置飞行模式
+        function setFlightMode(mode) {
+            currentMode = mode;
+            
+            // 更新按钮样式
+            document.querySelectorAll('#hoverBtn, #straightBtn, #turnBtn, #ascendBtn').forEach(btn => {
+                btn.className = 'bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors';
+            });
+            
+            const activeBtn = document.getElementById(mode + 'Btn');
+            activeBtn.className = 'bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors';
+            
+            // 重置路径
+            pathIndex = 0;
+            pathProgress = 0;
+            if (mode === 'straight') {
+                flightPath[1].set(8, 0, 0);
+                flightPath[2].set(8, 0, 0);
+                flightPath[3].set(8, 0, 0);
+                flightPath[4].set(8, 0, 0);
+                flightPath[5].set(0, 0, 0);
+            } else if (mode === 'turn') {
+                flightPath[1].set(5, 0, 0);
+                flightPath[2].set(5, 0, 5);
+                flightPath[3].set(0, 0, 5);
+                flightPath[4].set(0, 0, 5);
+                flightPath[5].set(0, 0, 0);
+            } else if (mode === 'ascend') {
+                flightPath[1].set(0, 5, 0);
+                flightPath[2].set(0, 5, 0);
+                flightPath[3].set(0, 5, 0);
+                flightPath[4].set(0, 5, 0);
+                flightPath[5].set(0, 0, 0);
+            }
+        }
+
+        // 更新质量值显示
+        function updateMassValue(value) {
+            massReduction = parseFloat(value);
+            document.getElementById('massValue').textContent = (massReduction * 100).toFixed(0) + '% 减少';
+            
+            // 更新UFO场强度可视化
+            if (ufoField.visible) {
+                ufoField.scale.set(
+                    1.5 + massReduction * 1.5,
+                    1.5 + massReduction * 1.5,
+                    1.5 + massReduction * 1.5
+                );
+                ufoField.material.opacity = 0.3 + massReduction * 0.4;
+            }
+        }
+
+        // 更新速度值显示
+        function updateSpeedValue(value) {
+            speed = parseFloat(value);
+            document.getElementById('speedValue').textContent = (speed * 100).toFixed(0) + '% 光速';
+        }
+
+        // 切换场强度可视化
+        function toggleFieldVisibility() {
+            showField = !showField;
+            ufoField.visible = showField;
+            
+            const btn = document.getElementById('showFieldBtn');
+            if (showField) {
+                btn.className = 'bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors';
+                ufoField.scale.set(
+                    1.5 + massReduction * 1.5,
+                    1.5 + massReduction * 1.5,
+                    1.5 + massReduction * 1.5
+                );
+                ufoField.material.opacity = 0.3 + massReduction * 0.4;
+            } else {
+                btn.className = 'bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors';
+            }
+        }
+
+        // 切换轨迹显示
+        function toggleTrailVisibility() {
+            showTrail = !showTrail;
+            trailParticles.visible = showTrail;
+            
+            const btn = document.getElementById('showTrailBtn');
+            if (showTrail) {
+                btn.className = 'bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors';
+            } else {
+                btn.className = 'bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors';
+            }
+        }
+
+        // 重置场景
+        function resetScene() {
+            ufo.position.set(0, 0, 0);
+            ufo.rotation.set(0, 0, 0);
+            pathIndex = 0;
+            pathProgress = 0;
+            targetPosition = flightPath[0].clone();
+            
+            // 清空轨迹粒子
+            if (trailParticles) {
+                const positions = trailParticles.geometry.attributes.position.array;
+                for(let i = 0; i < positions.length; i++) {
+                    positions[i] = 0;
+                }
+                trailParticles.geometry.attributes.position.needsUpdate = true;
+            }
+        }
+
+        // 添加轨迹粒子
+        function addTrailParticle(position) {
+            if (!showTrail || !trailParticles) return;
+            
+            const positions = trailParticles.geometry.attributes.position.array;
+            
+            // 将粒子向前移动
+            for(let i = positions.length - 3; i > 0; i -= 3) {
+                positions[i] = positions[i - 3];
+                positions[i + 1] = positions[i - 2];
+                positions[i + 2] = positions[i - 1];
+            }
+            
+            // 添加新粒子
+            positions[0] = position.x;
+            positions[1] = position.y;
+            positions[2] = position.z;
+            
+            trailParticles.geometry.attributes.position.needsUpdate = true;
+        }
+
+        // 动画循环
+        function animate() {
+            animationFrameId = requestAnimationFrame(animate);
+            
+            // 根据当前模式更新UFO位置
+            if (currentMode === 'hover') {
+                // 悬停动画
+                ufo.position.y = 0.5 + Math.sin(Date.now() * 0.002) * 0.2;
+                ufo.rotation.y += 0.005;
+            } else {
+                // 沿路径移动
+                pathProgress += 0.005 * speed * 2; // 调整速度
+                
+                if (pathProgress >= 1) {
+                    pathProgress = 0;
+                    pathIndex = (pathIndex + 1) % flightPath.length;
+                }
+                
+                const nextIndex = (pathIndex + 1) % flightPath.length;
+                const start = flightPath[pathIndex];
+                const end = flightPath[nextIndex];
+                
+                ufo.position.lerpVectors(start, end, pathProgress);
+                
+                // 添加轨迹粒子
+                addTrailParticle(ufo.position.clone());
+                
+                // 更新UFO朝向
+                if (currentMode === 'turn' && pathIndex === 1) {
+                    // 直角转弯时的旋转
+                    ufo.rotation.y = Math.PI / 2;
+                } else if (currentMode === 'turn' && pathIndex === 2) {
+                    ufo.rotation.y = Math.PI;
+                }
+            }
+            
+            // 更新场的位置以跟随UFO
+            if (showField) {
+                ufoField.position.copy(ufo.position);
+            }
+            
+            // 添加UFO旋转效果
+            if (currentMode !== 'hover') {
+                ufo.rotation.x += 0.002;
+                ufo.rotation.z += 0.002;
+            }
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        // 为重置按钮添加直接引用的函数
+        window.resetScene = resetScene;
+    </script>
+</body>
+</html>

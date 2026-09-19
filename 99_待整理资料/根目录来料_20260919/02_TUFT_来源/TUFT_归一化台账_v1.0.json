@@ -1,0 +1,595 @@
+{
+  "schema": "tuft-normalization-v1",
+  "theory": "TUFT 本源拓扑统一场论 (Topological Unified Field Theory)",
+  "author_note": "用户原创理论；数学自洽不等于实验证实；禁止伪闭合",
+  "version": "v2.4",
+  "date": "2026-09-19",
+  "latest_round": "v21",
+  "equation_range": "E1-E446",
+  "four_state_counts_approx": {
+    "strict": "35+",
+    "conditional": "61+",
+    "definition": "18+",
+    "open": "30+"
+  },
+  "symbols": {
+    "c": "真空光速 2.9979e8 m/s",
+    "c_m": "后度量U^2系数(原记c,v8改名), 权威-0.29, 区间[-0.369,-0.218], 无量纲",
+    "d": "后度量U^3(3PN)系数, -0.050, 无量纲",
+    "metric": "g_tt=e^{-2U}; g_rr=-e^{2U}(1+c_m U^2+d U^3); U=GM/(c^2 r)",
+    "kappa": "世界线曲率 m^-1",
+    "tau": "世界线挠率 m^-1 (非固有时)",
+    "theta": "螺旋混合角 tan(theta)=kappa/tau",
+    "beta1": "引力标量场, 弱场 beta1=e^{2U}",
+    "Lk": "C-W整数环绕数(载拓扑量子化)",
+    "Lk_eff": "cos(theta)连续量, s+Lk_eff^2=1为三角恒等式不载量子化",
+    "Q": "Hopf拓扑荷 pi_3(S^2)=Z, 奇偶定自旋统计",
+    "Lambda_n_over_m_n": "0.54 +/- 0.10 canonical",
+    "R_perp": "约59 l_Pl = 9.5e-34 m",
+    "M_scalaron": "2.9e13 GeV (Starobinsky, A_s反推, 需P17)"
+  },
+  "units": {
+    "time_geometric_solar": "GM_sun/c^3 = 4.9256 microsecond (NOT ms)",
+    "length": "GM_sun/c^2 = 1.477 km",
+    "gr_ringdown_30Msun": {
+      "efold_us": 1660,
+      "period_us": 2485
+    },
+    "freq_Hz_factor": "c^3/(2*pi*G*M_sun)=32313 Hz（几何频率->Hz 必须除2π；30Msun GR l=2主频402Hz非2.53kHz, w=.90 969Hz非6.1kHz；勘误#23）"
+  },
+  "authoritative_values": {
+    "c_m": {
+      "value": -0.29,
+      "interval": [
+        -0.369,
+        -0.218
+      ]
+    },
+    "d": -0.05,
+    "Lambda_n_over_m_n": {
+      "value": 0.54,
+      "sigma": 0.1,
+      "note": "0.69=0.54/sqrt(0.609) lattice flavor"
+    },
+    "w_psi": -0.962,
+    "Omega_psi": 0.697,
+    "H0_km_s_Mpc": 67.7,
+    "R_perp_l_Pl": 59,
+    "ISCO_M": 4.9491,
+    "b_crit_M": 5.1928,
+    "r_h_M_cm-0.29": 0.61,
+    "sigma_abs": 0,
+    "a0_m_s2": 1.083e-10,
+    "starobinsky": {
+      "n_s": 0.967,
+      "r": 0.003,
+      "M_GeV": 29000000000000.0,
+      "V_quart_GeV": 7800000000000000.0
+    },
+    "tau_p": "infinity (classical premise; B semi-closed)",
+    "scalar_qnm_M1_s0": {
+      "l0_n0": "0.1104549391 - 0.1048957171 i (55-digit E348; round6=0.110455-0.104896 matches arXiv:2206.03512 psI/psII/AIM)",
+      "l1_n0": "0.2929361333 - 0.0976599889 i (round6=0.292936-0.097660)",
+      "l2_n0": "0.4836438722 - 0.0967587760 i (round6=0.483644-0.096759)",
+      "verification": "6-digit independent (spectral+AIM, non-continued-fraction); >=7th digit pending higher-precision primary table"
+    },
+    "grav_rw_qnm_M1_s-2_l2": {
+      "n0": "0.37367168441804166 - 0.08896231568893410 i (qnm authoritative)",
+      "n1": "0.34671099687909240 - 0.27391487529119870 i",
+      "ma_independent_n0": "0.3736716844180418 - 0.0889623156889357 i (40-digit mpmath, rough guess, 14 digits, N-conv 3e-28)",
+      "ma_independent_n1": "0.3467109968791634 - 0.2739148752912348 i (13 digits, N-conv 3e-21)",
+      "verification": "triple independent: qnm lib / coalition double rerun exit0 2.0s / MainAgent 40-digit rough-initial-guess; gate >=6 digits PASSED at 13-14 digits"
+    },
+    "tuft_tau_group_delay_v19_E432": {
+      "omega_star": 0.44,
+      "tau_max_M": 33.906,
+      "high_freq_tail_M": "omega=0.94 -> 2.04 M",
+      "old_coarse_31p1M_segment_0.50_0.70": 8.13,
+      "step_stability": "h=1e-5 vs 1e-6 diff ~0.5 M",
+      "status": "TUFT side stable (A-grade); GR self-consistency gate OPEN (lower-half-plane outgoing e^{+iwx} exponential growth swamps ingoing, WKB floor ~1.9e-5); pending Leaver continued fraction",
+      "script": "_v19_tau_complex.py"
+    }
+  },
+  "postulates": {
+    "P9": "Hopf k in Z + alpha~1/137 + U(1) coupling (minimal irreducible)",
+    "P12": "REPLACED by P18",
+    "P15": "REVOKED (C_k three-generation hypothesis L4 rejected v6)",
+    "P17": "independent R^2 gravity term R^2/(6M^2), alpha_R~2e-28 GeV^-2, NEW v8",
+    "P18": "Skyrme coupling e as sole dimensionless input (STATE 2), replaces P12, NEW v8",
+    "total": "P1-P18 incl revoked/replaced"
+  },
+  "predictions": {
+    "D1": "fermion boost v=c/sqrt(2)=0.707c, unique hard prediction, active",
+    "D18": {
+      "claim": "sigma_abs=0 / reflecting core vs absorbing horizon",
+      "status": "v17 MainAgent coordinate audit (erratum #22, E401-E406): coalition odd potential used isotropic rho as areal R with e^-2lambda=1/B (WRONG). Strict areal R=rho*sqrt(B), e^-2lambda=(1+rho B'/2B)^2, V=3A(1+e^-2l)/R^2; exact-Schwarzschild-isotropic pipeline reproduces analytic RW to 2.4e-8 (REAL gate). True RW l=2 barrier top R=(9+sqrt17)/4=3.2808, Vmax=0.15129, sqrt=0.38896 (historical 4/27@3/0.3849 only approximate). TUFT strict OUTER barriers: c=0 sqrt0.363@R3.67 (traversable geometric neck Rmin=e=2.718, V finite .055), c=-.5 sqrt0.407@R2.81, c=-.29 sqrt0.386@R3.27 ~ GR. c<0 wall = areal R->0 reflecting core (V~1/R^2, finite tortoise, Neumann W1), not 1/B divergence. Strict WKB c=-.29@w=.374: cavity topology, K=.223 (grid converged), single-pass power ~e^-2K=0.64 ORDER-OF-MAGNITUDE only (near barrier top) vs coalition 2.25e-5 (~4 orders too small); coalition E399/E400 'ringdown buried under 0.685 / echo=17% / weakly observable' REJECTED/REOPENED. Correct picture: identical outer barrier, DIFFERENT inner boundary (absorbing horizon vs reflecting core=sigma_abs=0), at the MAIN ringdown band ~0.374 (generic ECO echo, not TUFT-unique). Robust regardless: sigma_abs=0, |R|^2=1, no high-Q wall-cavity line (E367). Exact reflection phase/echo/template SNR -> v18 strict-potential real-frequency IVP; complex poles OPEN.",
+      "main_agent_note": "v17坐标纠错已由MainAgent独立门8e-13背书：外垒≈GR、差异内边界化(主振铃频段,ECO通用);定量反射相位/回波/真实BBH+O4/Voyager PSD模板SNR转v18严格势实频IVP;频率见勘误#23",
+      "v17_main_agent_verification": "外垒≈GR经独立门8.0e-13背书；差异内边界化(主振铃频段,ECO通用)；定量相位/回波/真实BBH+O4-Voyager PSD模板SNR转v18严格势实频IVP",
+      "v20_closure_note": "v20 closure (E443/E444, normalization v2.3, no new erratum, keep #26): spectrum branch still OPEN - Leaver three-term recurrence CANNOT be ported to TUFT (metric A=e^(-2/rho), B=e^(2/rho)(1+c/rho^2+d/rho^3), potential has e^{+-2/rho} ESSENTIAL singularity, not a Schwarzschild rational-function potential, no Fuchs-type three-term recurrence); finite-box global spectral method (Chebyshev-Robin/CAP) self-gate FAILS 5th wall (|det M| at known Schwarzschild master root = 2.011e-08 (N=12) -> 2.743e-08 (N=16) -> 4.412e-07 (N=20), GROWS with N instead of ->0; machine zero should ~1e-35; CAP spectrum has no eigenvalue near 0.3737-0.089i; transparent box boundary cannot capture exact infinity outgoing asymptotics). GR gate hard asset PASS (independent rewrite mpmath dps=45): RW s=-2 l=2 n0 0.3736716844180418-0.0889623156889357i 15 digits (1.6e-15), n1 14 digits (8.0e-14), scalar s=0 l=0 11 digits (3.1e-11). No TUFT roots reported. Observability branch DOWNGRADED from v19 MEASURABLE to CONDITIONAL/CRITICAL (E444): counterfactual virtual flat outgoing waveguide (POSTULATE: core-side s in [0,L=6.97M] real potential replaced by V=0 flat virtual waveguide, outer barrier s>=L keeps real TUFT potential) isolates |r_b|^2@0.3737=0.32496 (GR isolated gate 0.53135 reproduced), strict two-way barrier epsilon=(1-|r_b|^2)^2=0.455672 (flux-conservation residual max 2.458e-10, reciprocity max 9.002e-10); but r_b is a POSTULATE approximation NOT the true TUFT cavity value, and delta_omega is UNMEASURED (E440 cavity mode falsified, erratum#26). modified-QNM pole still OPEN.",
+      "v21_closure_note": "v21 closure (E445/E446, normalization v2.4, no new erratum, keep #26): spectrum branch OPEN 6th consecutive round. [E445 R1 envelope-reduced global spectral method, GR gate FAIL - 6th wall]: the originally labelled PASS was independently verified and CORRECTED by organizer to FAIL - gate criterion only checked that findroot did not throw, not the root value. n0 roots 0.1117/0.1536/0.3313 (delta-cat ~0.2-0.3, only ~1 digit, NOT 0.373672-0.088962i); n1 root real part 5.58e-10 (absurd); cross s_max roots drift 0.207/0.154/0.136 (box-dependent); |res|~1e-12 is only a Newton-neighborhood point, not a root criterion. Det-condition blow-up (proved first): |det M(w*)| grows 1.8e-8(N24)->2.6e21(N60), (N+1)x(N+1) matrix eigenvalues ~1e122 at 50 digits, determinant route unusable (condition number, not discretization). Chebyshev node-order bug FIXED (x[0]=1 wrongly mapped to right end as left-horizon BC; free-particle check u[N]=2167 should be 5.9; fixed u[0]=1 passes). Direction PROVEN effective (positive gain): corrected O(1/s^2) outgoing Robin converges with N 1.37e-2->1.6e-6 (N=16->48), bare naked iomega saturates 8.8e-4 (= the v20 E443 failure fingerprint) - proves O(1/s^2) correction is the right-direction remedy. But gate NOT passed: deep-box + two-sided WKB log-derivative residual floor ~1e-6 (N64=8.9e-7 no longer decreasing), near w* only a shallow minimum (N=56 fine scan log10|R|~-5.3, no deep zero ~-15), findroot hijacked by spurious eigenvalue 0.2797-0.2234i (|R|=1.1e-61 machine zero, non-physical QNM). Same wall as E274-280/E359/E365/E430/E443. No TUFT root reported. NEXT (R1): compactified-coordinate Chebyshev (horizon/infinity mapped to finite endpoints, built-in asymptotics) or generalized-eigenvalue formulation to exclude spurious modes. [E446 R2 essential-singularity factorization recurrence, GR gate PASS but TUFT structural wall]: GR gate PASS (dps=45, N=100/200/400/1000 three-value convergence): RW s=-2 l=2 n0 15 digits (0.3736716844180418-0.0889623156889357i, |delta|=1.6e-15), n1 14 digits (0.3467109968791635-0.2739148752912348i, 8.0e-14), scalar s=0 l=0 11 digits (0.1104549390804197-0.1048957170868810i, 3.1e-11). TUFT structural wall (strict): factorization psi=e^(-2/rho) u only removes the e^(-2/rho) in the potential; after tortoise transform the potential term is already cancelled by e^(4/rho) to rational 3(1+em2)/rho^2; the residual essential exponential is the KINETIC term omega^2 * e^(4/rho) * P, NOT removed by e^(-2/rho). At rho=0 center e^(4/rho) has zero radius of convergence, infinite order, non-truncatable. At physical core rho_h=0.6099: Frobenius indicial roots alpha=1.8956/-0.3956, nearest other singularity distance R_series~0.81 (P=rho^3+c rho+d roots -0.4099/-0.2/0.6099), only extends to rho~1.42, cannot reach the infinity outgoing boundary; recursion coefficients blow up c[60]~1.68e105. This is the E443 'Leaver non-portable' same wall reproduced under the factorization route (Schwarzschild has no such exponential term, hence its 3-term recurrence converges). No TUFT root reported. NEXT (R2): multi-segment Frobenius splicing (core segment to rho~1.42 + outer-barrier segment + far-field asymptotic segment, Wronskian match per segment), but must first reproduce 0.373672-0.088962i on GR to >=6 digits. modified-QNM pole still OPEN."
+    },
+    "D24": "proton tau_p=infinity (topological, classical premise), Super-K bound 2.4e34 yr, NEW v8",
+    "D25": "specular wall yields no Hawking thermal spectrum, phenomenological tension, NEW v8",
+    "total_range": "D1-D25"
+  },
+  "puzzle_matrix": {
+    "fully_closed": 0,
+    "partial": 12,
+    "untouched": 2,
+    "untouched_list": [
+      "baryogenesis",
+      "quantum measurement"
+    ],
+    "newly_partial_v8": [
+      "proton_decay",
+      "black_hole_information"
+    ]
+  },
+  "v8_key_results": [
+    "QNM CAP GR gate FAIL: reproducible simplified PML returns 'no physical root' for ALL 12 scans (N=1200/2400 x a=0.25-0.70); no converged root -> all TUFT QNM numbers OPEN. The earlier '0.3738-0.0992i / imag 11.5%' table was a LOST unreproducible prototype draft and is WITHDRAWN (errata #14)",
+    "cavity length scaling test: omega_R constant 0.5298 while L doubles (1.55->2.93), pi/L changes -> outer-barrier root, wall-cavity mode REJECTED (independently rerun, exit=0)",
+    "echo 0.457/0.866 ms for 30 Msun; dt/efold=0.28/0.52, dt/T=0.18/0.35 -> buried in prompt ringdown, O4 unreachable",
+    "Starobinsky plateau cannot arise internally: Skyrme quartic term vanishes on homogeneous background; requires P17 R^2",
+    "black hole info: |R|=1 does NOT imply information conservation (perfect mirror); Page curve OPEN; no Hawking spectrum",
+    "proton tau_p=infinity under classical field theory (B semi-closed), quantum tunneling can alter Q"
+  ],
+  "v9_key_results": [
+    "LINE1 ENGINEERING FIXED, PHYSICS GATE STILL OPEN: replaced >3h-hanging heavy eigensolver with Leaver(1985) O(N) continued-fraction; MainAgent rerun exit=0 wall=0.51s. But scalar recursion coefficients are WRONG: roots N-stable (100/200/400) yet wrong (|dw|=0.449/0.470/0.567 for l=0/1/2). 6-digit gate FAILED -> gravitational RW and TUFT roots NOT reported. Independent tortoise shooting residual 7e-9 isolates bug to continued-fraction coefficient derivation (beta_n omega^2 term / gamma_n iomega pairing)",
+    "LINE2 strict: specular wall |R(w)|=1 -> albedo A=1 -> greybody factor Gamma=1-A=0 -> Hawking occupation f(w)=0 for all w: zero radiative flux, emits nothing, no Planck/Hawking spectrum",
+    "smooth Page curve needs three resources all absent: density of states e^S (TUFT N=1), Haar scrambling matrix (TUFT delta_ij), finite leakage Gamma_leak (TUFT 0)",
+    "microstate ratio e^{-S_BH}; MainAgent checked S_BH/k_B=4pi G M^2/(hbar c): 1.049e77 for 1 Msun, 9.441e79 for 30 Msun (the quoted exponent uses 30 Msun; mass must be labeled)",
+    "ERRATA #15: v8 'info return 10^78x faster than GR' downgraded to OPEN - Gamma=0 means no microstate/thermal leakage; only classical wavepacket geometric reflection (~100 us) returns, no scrambled info"
+  ],
+  "v10_key_results": [
+    "Scalar Leaver coefficients FIXED (tortoise factor 2; scalar potential 2/r^3 restored; backward CFS recursion). E348 three-term recurrence: a_n=(n+1)(n+1-4iw), b_n=-lambda-2n^2+16inw-2n+32w^2+8iw-1, g_n=(n-4iw)^2",
+    "MainAgent INDEPENDENT mpmath 55-digit check (_ma_v10_indep_scalar.py), N=2000 self-convergence 1e-18, double vs 55-digit differ only 3.9e-8: l0=0.1104549391-0.1048957171i, l1=0.2929361333-0.0976599889i, l2=0.4836438722-0.0967587760i",
+    "ERRATA #16: MainAgent v9 baseline imaginary typo -0.104899 should be -0.104896 (3.28e-6 of v10 l=0 error was this typo, not solver)"
+  ],
+  "v11_key_results": [
+    "l=0 DISPUTE RESOLVED via primary method-INDEPENDENT literature: arXiv:2206.03512 Table I (pseudo-spectral I/II + AIM, NOT continued fraction) gives scalar (0,0)=0.110455-0.104896i, (1,0)=0.292936-0.097660i; scalar l=2 canonical 0.483644-0.096759. E348 55-digit roots round-6 MATCH all three modes EXACTLY. Corroborated arXiv:2509.07235 Hill method 0.1105-0.1049.",
+    "ERRATA #17: the '7-digit reference 0.1104557' 7th digit '7' has NO primary source; true 7th digit is 9 (0.1104549391). v10 claim 'l=0 real-part low by 7.6e-7 / low-l systematic defect' was a PSEUDO-DIFFERENCE against an unverified digit and is WITHDRAWN. E348 upgraded pending->CONDITIONAL THEOREM (E349-E351), 6-digit gate PASSED.",
+    "PDF-extracted 'scalar l=2 0.574094' verified as table misparse (no such QNM value anywhere on web); correct scalar l=2=0.483644.",
+    "Three self-written solvers this round did NOT reach 6 digits and are archived not used as evidence: one-sided outward shooting (unstable, near-real spurious root), two-ended Wronskian fsolve (ier=5), time-domain leapfrog+damped-cosine (~3 digits).",
+    "NEXT v12: migrate validated machine to gravitational RW s=-2, target l=2 n=0 0.373672-0.088962i / n=1 0.34671-0.27391i (6-digit gate); only then TUFT c_m=-0.29 wall roots."
+  ],
+  "v12_key_results": [
+    "Gravitational Regge-Wheeler s=-2 Leaver pipeline CLOSED (normalized E352-E353; coalition口头E349-E350 collided with scalar E349-E351 and is renumbered). Coefficients: a_n=(n+1)(n+3-4iw); b_n=-lambda-2n^2+16inw-2n+32w^2+8iw+3; g_n=n^2-8inw-2n-16w^2+8iw.",
+    "TRIPLE independent verification: (1) coalition tuft_v12_line1_rw.py rerun by MainAgent exit0 wall=2.0s reproduces all digits; (2) MainAgent own 40-digit mpmath (_ma_v12_indep_rw.py), does NOT import coalition, coefficients hand-entered, starts from DELIBERATELY ROUGH guesses (0.37,-0.09)/(0.35,-0.27) -> n0 14 digits (N-conv 3e-28), n1 13 digits (3e-21); (3) qnm library. Excludes 'guess-is-the-answer' artifact.",
+    "Same D0-D4 generator reproduces independently-verified scalar E348 coefficients -> framework internal consistency anchored.",
+    "GATE PASSED at 13-14 digits (>=6 required). QNM engine now validated on BOTH spins s=0 and s=-2 against published benchmarks.",
+    "NEXT v13: TUFT c_m=-0.29 reflecting-wall MIXED boundary ...; return to D18."
+  ],
+  "v13_audit_key_results": [
+    "Coalition returned E354-E358 with 6 TUFT wall 'complex roots' (c=-0.5: 0.363061-0.071627/0.795906/1.009437; c=-0.29: 0.386910-0.075214/0.941816/1.307583), claiming conditional theorem at 6-7 digits.",
+    "MAINAGENT INDEPENDENT AUDIT (_ma_v13_indep_audit.py, no coalition import) REJECTS the 6 frequencies as asymptotic QNMs (E359 negative theorem).",
+    "Audit1 (decisive): the SAME outward-RK4 + bare finite-s_out log-derivative (psi'/psi=iw) matcher, run on GR horizon-ingoing (known 0.373672-0.088962), does NOT converge vs s_out: s_out=15/20/25/30/40/50 -> 0.030/0.350/0.406/9.03(overflow)/0.536/0.417. The method fails on the known-answer problem; the correct GR Leaver gate cannot bless a different un-self-tested shooting method.",
+    "Audit2: TUFT c=-0.29 base root moves with the box at FIXED geometry L=2.931: s_out=20/25/30/35/40/50 -> 0.417/0.317/{0.253,0.387,0.510}/{0.324,0.429,0.530,1.469}/{0.277,0.370,0.545}/0.288. The reported 0.387 is just the s_out=30 box root nearest the fixed seed 0.45. c=-0.5 likewise jumps (0.377/0.292/0.363/0.306/none/0.277).",
+    "Audit3: two error classes separated. Grid h->0 at fixed s_out=30 DOES converge (0.386944/0.386884/0.386854, 6-7 digits) but that is convergence to the s_out=30 DISCRETE BOX root; s_out->infinity does NOT converge. Coalition's resid 1e-16 / 6-7 digits is intra-box accuracy only.",
+    "Coalition acceptance terms #1 (same shooter self-tested on GR) and #2 (s_out scan+Richardson extrapolation) were NOT met; GR gate used mpmath continued fraction while TUFT used box shooting; s_out was pinned at 30, s_out=26/34 admitted to jump to Re~18 spurious roots. PART5 '6-point outer-barrier confirmation' used fixed s_out=30 + fixed seed 0.45 and coded '|wR-0.3737|<0.08' as the barrier verdict -> seed-induced/circular, downgraded.",
+    "RETAINED (solver-independent): E354 wall eq r_h^3+c_m r_h+d=0 (0.6099/0.7071M); E355 tortoise/barrier Vmax=6e^-2=0.812 at r=1 independent of c_m; E357 axiom W1 Neumann |R|=1 (reflection phase a free postulate, Dirichlet R=-1 sensitivity); echo GEOMETRY 2L=3.09/5.86M -> 0.46/0.87 ms for 30Msun (GM/c^3=4.9256 us), dt/tau_e=0.27/0.52 <1 -> O4 cannot resolve a separate echo.",
+    "D18 status: sigma_abs=0 holds (geometric); wall present under W1; echo O4-unresolvable holds (geometric delay); BUT TUFT wall ASYMPTOTIC QNM SPECTRUM remains OPEN (unresolved v8->v13). Crack matrix stays 0/12/2; no new physical closure this round. errata #18 added.",
+    "NEXT v14 method mandate: must converge MONOTONICALLY on GR to 0.373672-0.088962 >=4-6 digits before touching TUFT. Preferred TUFT Leaver continued fraction/power series with finite-wall Neumann as inner series BC (reuse validated 40-digit machine); or far-field asymptotic matching psi~e^{iws}*sum a_k/s^k (iw+O(1/s^2)) instead of bare iw; mpmath 50-digit. Provide GR same-code s_out monotonic table, TUFT multi-s_out EXTRAPOLATION (not pinned), multi-seed, Ngrid triplet, overtone family tracking."
+  ],
+  "v14_audit_key_results": [
+    "Coalition changed method (E360-E364): exact outgoing psi_s/psi=+iw at s_out=100/130/160/190/220 -> RK4 INWARD -> wall Neumann psi_s=0, multi-s_out Richardson; GR gate STILL the 50-digit Leaver continued fraction (n0 15 digits). Extrapolated TUFT roots: c=-0.5 w_inf=0.943216-0.007284i; c=-0.29 w_inf=0.891818-0.014359i, claimed 'weakly damped barrier-top mode, Re trustworthy'.",
+    "MAINAGENT INDEPENDENT AUDIT (_ma_v14_indep_audit.py, no coalition import; same 4-real RK4 inward integrator, grids built once; 91.8s) REJECTS both extrapolated roots (E365 negative theorem, errata #19).",
+    "Evidence1 (decisive, gate #1 still unmet): the SAME inward integrator run on GR horizon ingoing at s_in=-11 gives, vs s_out=60/100/140/180/220 -> 2.6027-8.7337i / 1.8383-5.6984i / 1.6779-4.6642i / 1.5456-3.7227i / 1.2019-2.9490i (sub-barrier exponential OVERFLOW); NONE approaches 0.373672-0.088962 (error 3-9), monotonic drift no plateau. Both bare directions fail on the known answer (v13 outward->74.69 overflow root; v14 inward->1.2-2.6 drifting roots). GR-via-Leaver / TUFT-via-untested-integrator remains two standards; small |F|~1e-4 occurs even at wrong roots.",
+    "Evidence2: TUFT c=-0.5 each s_out box has 3-4 interchangeable roots in Re 0.90-1.38 (reproduces coalition's picked 0.9399/0.9410 plus 0.9679/1.2997/1.3807 etc); imag drifts monotonically toward 0 (-.0358/-.0289/-.0257/-.0228/-.0206) with NO plateau; extrapolating to -.0073 has in-segment drift .0145 > extrapolated value .0073. c=-0.29 Re~0.89 stable but imag NON-monotonic noise (-.0174/-.0179/-.0170/-.0199/-.0159). No valid convergence sequence.",
+    "Evidence3 (physics): roots cluster at sqrt(Vmax)=0.9011; w^2~0.80-0.89 at/above barrier top Vmax=0.812 (c=-0.5 mostly ABOVE, c=-0.29 just 1-2% below); L doubles 1.54->2.93 while Re w stays 0.92->0.89 -> NOT a wall cavity (~1/L) and NOT the GR outer-barrier QNM (0.37). These are barrier-TOP scattering roots where inward outgoing-branch exponential amplification is most singular (overflow site); measured Q only 13-28. 'Outer-barrier dominated 4-point strict theorem' downgraded: it locks barrier-TOP 0.90, not GR 0.37, and the roots themselves are OPEN.",
+    "RETAINED: E360 metric/wall, E361 tortoise regular, E362 outgoing form, E363 wall Neumann (=W1), E364 honest statement that exponential entire function does NOT close to a finite three-term recurrence; echo geometry 0.46/0.87 ms, O4 unresolvable; sigma_abs=0.",
+    "D18 status: geometric observables hold; TUFT wall asymptotic QNM spectrum OPEN for the third consecutive round; crack matrix stays 0/12/2; no new physical closure; errata #19 added.",
+    "NEXT v15 ONLY viable route: stop bare two-way RK4; use all-mpmath >=40-digit SERIES MATCHING and self-test the SAME matcher on GR to converge 0.373672-0.088962 >=6 digits FIRST. Wall r_h regular Frobenius series (Neumann fixes leading term) x far-field outgoing series e^{iws} sum a_k/s^k, Wronskian match in a regular intermediate region; truncate e^{+-2/r} at finite order raised with precision until match residual <1e-30; far field MUST include iw+O(1/s^2) asymptotics (no bare iw). Only after the same-code GR gate: c_m four points + overtone families + dual convergence (s_out / series order). If barrier-top is genuinely a broad scattering feature rather than discrete high-Q modes, report honestly."
+  ],
+  "v15_coalition_status": "subagent HUNG >2h (taskkill/TaskStop timeout), produced NO series matcher, zero new equations E366-E370 left vacant. 'Permanently OPEN' wording REJECTED by MainAgent: an engineering hang is NOT a theorem; two-ended series route is well-defined but unimplemented this round. latest_round stays v14 (v15 no substantive output).",
+  "v15_mainagent_gate_key_results": [
+    "While coalition built the matcher, MainAgent independently ran THREE mpmath 40-45 digit experiments (_ma_v15_hp_gate1/2/3.py), strengthening E365: raising precision CANNOT rescue single-branch two-endpoint shooting.",
+    "Gate1: inward RK4 40-digit + far-field outgoing log-deriv to O(1/s^2), psi_s/psi=iw-3i/(w s^2) (V~6/s^2, g=1+3i/(ws)): |F|~1e-41, root plateaus s_out=60->180 at 0.414498890670-0.183170626639 i (12-digit stable) but STABLE WRONG (truth 0.373672-0.088962, err 0.103).",
+    "Gate2: not a far-field (plateaued) nor too-shallow-horizon error. s_in -8->-12->-20 (delta 1.35e-2->3.34e-5) moves root AWAY 0.6699->0.9198->1.1696.",
+    "Gate3 decisive: same grid s_in=-8 s_out=150, seed Newton AT PHYSICAL TRUTH (0.3737,-0.0890) STILL converges to wrong deep zero 0.669935777140-0.063683625111 i with |F|=2.5e-45; physical QNM is not even a zero of truncated-BVP discrete F. Path-dependent multiple basins (warm start 0.4145 vs cold 0.6699).",
+    "VERDICT: sub-barrier exponential branch mixing makes single-branch integration + two truncated log-derivatives STRUCTURALLY ILL-POSED at any precision/seed. Mandatory route confirmed: inner horizon/wall Frobenius and outer outgoing series each extended ONLY to barrier EDGE, Wronskian match in regular barrier-top region; self-test = root invariant >=6 digits across three match points (left/top/right) and series-order dual convergence."
+  ],
+  "v15_real_phase_key_results": [
+    "MainAgent bypassed the ill-posed complex-pole search with a STABLE real-frequency standing-wave IVP (wall Neumann psi(0)=1,psi'=0; scipy DOP853 rtol 1e-11); decompose at fixed near-outside s_m, shift phase to wall phi=arg(C+/C-)-2w s_m, tau=dphi/dw.",
+    "SIGN-ERROR self-caught (would have been a false closure): first hand-RK4 drafts used psi''=(w^2-V) instead of (V-w^2), turning the free exterior into a spurious e^{+ws} blowup (psi up to 1e17) and a fake flat -pi/2 phase. Detected via toy control + scipy; corrected everywhere; the earlier flat-phase/-pi/2 numbers are VOID.",
+    "ENGINE SENSITIVITY CONTROL (critical): identical engine on an analytic toy single-port leaky cavity (L=2.93, finite outer barrier) reproduces tall narrow Wigner peaks at the Fabry-Perot modes w=1.315 (tau=197.5 M, tau/2L=33.7) and w=2.095 (n=1.95) -> the engine DOES resolve high-Q wall-cavity resonances.",
+    "TUFT RESULT: no narrow cavity line. A single smooth broad delay arch centered at the curvature BARRIER TOP: c_m=-0.5 peak w=0.915 tau=46 M; c_m=-0.29 peak w=0.890 tau=116 M; width dw~0.15-0.2 (Q~5). Center locks to sqrt(Vmax)=0.9011, independent of c_m/d, NOT to wall-cavity Fabry-Perot n*pi/L (which predicts 2.04 for L=1.54 and 1.07 for L=2.93 and would move as L doubles) -> high-Q wall-cavity spectrum REJECTED in the GR band and across.",
+    "CONVERGENCE c_m=-0.29: peak 0.8900 / tau 115.8 unchanged (<0.1%) as decomposition point s_m=66/112/175 (residual V 2e-3->2e-4) and step 0.02->0.01; physical, not grid/residual artifact.",
+    "At the GR l=2 ringdown frequency w=0.3737 the TUFT reflection phase is smooth with no resonance enhancement (tau~-9, smooth) -> no extra feature in the prompt-ringdown band.",
+    "ERRATA #20 (corrects prior echo model): the old 'echo delay = geometric wall->barrier round trip 2L = 0.46/0.87 ms for 30 Msun, buried in first e-fold' is NOT the physical reflection delay. Real-frequency Wigner delay is dominated by the barrier TOP: tau~46 M (c=-0.5) / 116 M (c=-0.29) = 6.8 / 17.1 ms for 30 Msun, concentrated near w~0.90 (~2.4x the GR 2.53 kHz l=2 f), broad/smeared (Q~5) not a discrete echo. 2L remains only the free-flight wall->barrier time. O4 observability REOPENED pending a same-convention GR reflection-phase comparison (naked complex GR IVP is double-unstable; needs mpmath/Leaver real-frequency reflection coefficient).",
+    "Normalized slots E366-E369 assigned (E370+ already belongs to v9 line 2): E366 method/control (strict), E367 no-high-Q-wall-cavity theorem (numeric strict), E368 barrier-top broad delay arch (conditional, converged), E369 errata#20 + observability OPEN. Complex QNM pole values remain OPEN (heavily damped poles not excluded, but they do not form a narrow observable line in the l=2 W1 band)."
+  ],
+  "v16_gr_reflection_audit": [
+    "Coalition v16 GR side ACCEPTED (E386, strict): Schwarzschild l=2 RW horizon-injection -> infinity decomposition, unitarity |a|^2-|b|^2=1.00000; |R_GR|^2 ~ 0.944/0.305/0.074/0.015/7e-4 at w=0.30/0.40/0.45/0.50/0.60 and ~1e-7-1e-6 (essentially transparent) at w=0.90 (>2.3x above GR barrier top sqrt(4/27)=0.3849). Cross-verified independently by MainAgent with scipy DOP853 (different integrator).",
+    "Coalition E378 REJECTED (E387): it ASSUMED a Lorentzian |R_TUFT|^2=1/(1+((w-0.90)/gamma)^2), peak=1, phase=0 -- never computed. MainAgent real-freq IVP reads the TRUE magnitude: |R_TUFT(w)|^2 = 1.000000 at EVERY frequency 0.20-1.10 (max | |R|^2-1 | = 4.4e-16 / 2.2e-16), as flux conservation with a Neumann wall + real potential requires. There is NO reflectivity peak at 0.90; w~0.90 is a PHASE/Wigner-delay feature only.",
+    "Coalition E379 waveform convolution REJECTED as circular (E389): hand-built a carrier omega0=0.90 Gaussian incident burst, set TUFT reflection=1 / GR~0 there -> trivially large residual. Real l=2 merger energy sits at w~0.35-0.50 (GR QNM Re=0.374); w=0.90 ~ 6.1 kHz for 30 Msun is weak-signal/high-noise. 'A: STRONGLY OBSERVABLE' withdrawn; no SNR computed.",
+    "Correct physical contrast (E388): ABSORBING HORIZON vs REFLECTING WALL = sigma_abs=0 (already v4), present across the WHOLE band w>~0.45 (GR |R|^2 drops 0.31@0.40 -> 0.015@0.50 -> ~0; TUFT |R|^2=1 all w). This is the generic ECO/exotic-horizon echo test (Cardoso et al.), NOT a TUFT-unique fingerprint and NOT localized at 0.90.",
+    "ERRATA #21 (E390): the TUFT 'gravitational s=-2 barrier' V_old=e^{-2/r} 6/r^2 used by v15 E368 and coalition v16 is CENTRIFUGAL-ONLY; the Chandrasekhar axial odd potential needs the spin term -6 M_eff/r^3 with M_eff=(r/2)(1-e^{-2lambda}), e^{-2lambda}=1/B. Clean c=0 no-wall limit with the leading spin term: barrier Vmax 0.812->0.469, sqrt(Vmax) 0.901->0.685, peak r 1.0->1.15. For c_m<0, g_rr=B->0 at the wall makes M_eff ill-defined (divergence in the naive check) -> odd perturbations on the reflecting wall CANNOT reuse the RW closed form; full derivation must handle the g_rr->0 degeneracy, wall BC, and scalar-field (phi/n) source terms.",
+    "CONSEQUENCE: v15 E368 arch centre 0.89-0.915 / tau 46/116 M and coalition 'lock sqrt(Vmax)=0.90' DEPEND ON THE SIMPLIFIED POTENTIAL -> numerical values DOWNGRADED pending full odd-potential recomputation. ROBUST regardless of potential: sigma_abs=0, |R|^2=1 total reflection, and NO high-Q wall-cavity narrow line (E367 retained).",
+    "Numbering: coalition v16 labels E371-E380 COLLIDE with master ledger v9 line-2 E370-E385; normalized continuation assigned E386-E390 (E386 GR reflectivity accepted; E387 true TUFT |R|^2=1 / reject E378; E388 horizon-vs-wall generic; E389 reject convolution + observability OPEN; E390 errata#21 odd-potential spin term).",
+    "NEXT (v17): derive the FULL odd-parity perturbation potential on the TUFT metric (general static-spherical Chandrasekhar form + g_rr->0 wall limit + scalar source), recompute reflection phase/delay on the correct potential, and evaluate SNR in the w~0.45-0.55 window with real binary templates + LIGO O4/Voyager noise."
+  ],
+  "v17_odd_potential_audit": [
+    "ERRATUM #22 (E393/E397 coordinate fix): TUFT metric is ISOTROPIC ds2=-A dt2+B(drho2+rho2 dO2), but coalition built the RW odd potential treating isotropic rho as the AREAL radius and setting e^-2lambda=1/B. Strict: areal R=rho sqrt(B), J=dR/drho=sqrt(B)(1+rho B'/2B), g_RR=B/J^2, e^-2lambda=(1+rho B'/2B)^2, V_odd(l=2)=3A(1+e^-2lambda)/R^2. Tortoise scalar dR*/drho=sqrt(B/A) was already correct. Coalition mixed areal-form potential with isotropic tortoise.",
+    "REAL GR GATE (E401/E402 strict): exact Schwarzschild isotropic (x=1/2rho, A=((1-x)/(1+x))^2, B=(1+x)^4) through the SAME areal pipeline matches analytic RW V=(1-2/R)(6/R2-6/R3) to max rel err 2.4e-8. Analytic barrier extremum: 2R2-9R+8=0 -> R=(9+sqrt17)/4=3.28078 M, Vmax=0.151287, sqrt=0.388956. Historical 4/27=0.1481@R=3/0.3849 is the VALUE at R=3, not the maximum (~2.1% low). Coalition 'GR gate sqrt=0.685' is self-referential (its wrong pipeline on true GR gives 0.668), NOT a GR value -> E398 REJECTED.",
+    "TUFT strict OUTER barriers (E403, numeric, up to 1.6M grid): c_m=0 sqrt0.3631 @R3.674 (with a TRAVERSABLE geometric neck: R=rho e^{1/rho} has minimum Rmin=e=2.718 at rho=1, g_RR infinity but g_tt=e^-2 nonzero, finite tortoise, inner branch reopens); c_m=-0.5 sqrt0.4067 @R2.808; c_m=-0.29,d=-.05 sqrt0.3856 @R3.268 ~ GR 0.3890@3.281 (height -1.7%, radius -0.4%). Coalition wrong-coordinate values 0.6845/0.7183/0.7020 are ~1.8x too high.",
+    "Reflecting core areal picture (E404 strict): for c_m<0 the B=0 wall at rho_h maps to areal R->0, e^-2lambda ~1e11 (g_RR->0, repulsive core, NOT horizon), V~1/R^2 diverges, dR*/drho->0 so tortoise distance to core is FINITE -> Neumann/regular reflection (postulate W1) is self-consistent, but via R->0 regular core not 1/B divergence.",
+    "Strict WKB tunnelling (E405 conditional; near-barrier-top ORDER OF MAGNITUDE only): c_m=-.29 at w=.374 the exterior barrier has an allowed inner CAVITY (valley Vmin=.1084 < w2=.140; inner turning s_in=5.48 M far from core), K=.2230 invariant under 0.8M->1.6M grid, single-pass power ~e^-2K=0.64; at w=.35 K=.70 ->.246; w>=.40 over-barrier. c_m=-.5 at .374 forbidden zone joins core K~1.42 ->.058. Coalition E399 |T|^2=2.25e-5 is ~4 orders too small; E400 echo/RD=0.175 'weakly observable' REJECTED/REOPENED.",
+    "Physical picture (E406): for preferred c_m=-.29 the OUTER odd barrier is essentially identical to GR (0.386 vs 0.389, same R~3.27); main ringdown w=.374 sits AT the barrier top with O(1) transmission. In GR the transmitted wave is absorbed by the horizon (QNM damping -.089); in TUFT it enters the finite cavity and is fully reflected by the R=0 core (|R|2=1, sigma_abs=0) and returns. The TUFT/GR difference is therefore at the INNER BOUNDARY in the MAIN ringdown band (standard ECO/echo physics, generic not TUFT-unique), NOT at a 0.90 high-freq tail. WKB near top is not quantitative -> exact reflection phase, echo amplitude and template SNR require the real-frequency IVP on the strict potential (v18).",
+    "Slots: coalition E391-E400 kept where valid (E391 isotropic metric, E392 general form, E394 no spin-0 odd source, E396 tortoise); E393/E397 corrected, E395 mechanism corrected, E398/E399/E400 rejected. MainAgent adds E401-E406. Continuous range E1-E406. Robust independent of coordinates: sigma_abs=0, |R|2=1, no high-Q wall-cavity narrow line (E367).",
+    {
+      "id": "E407_main_agent_independent_areal_verification",
+      "claim": "独立向量化脚本（不引用并行线代码）确认 E401-E406；首版两处自身bug(GR导数/argmax抓内垒)已现场修正",
+      "gr_gate_max_rel_err": 8e-13,
+      "gr_gate": "PASS(并行脚本同值2.4e-8印FAIL系标签bug)",
+      "rw_peak": "R=3.28087 V=0.15128670 sqrt=0.38895591",
+      "tuft_outer_barrier": {
+        "c0": [
+          0.3631,
+          3.6739
+        ],
+        "c-0.5": [
+          0.4067,
+          2.8077
+        ],
+        "c-0.29": [
+          0.3856,
+          3.268
+        ]
+      },
+      "c-0.5_inner_vs_outer": "0.468@1.92 系壁侧内垒；外垒 0.407@2.808",
+      "wkb_c-0.29": {
+        "w0.374": "s[5.48..8.53] K=0.223 e^-2K=0.640",
+        "w0.35": "K=0.702 e^-2K=0.246",
+        "cavity_Vmin": 0.109
+      },
+      "core": "c<0 壁 R->0/e^-2lambda->inf/g_RR->0/龟坐标到R3有限7.2-8.9M；c=0 颈 R_min=e=2.71828",
+      "script": "_ma_v17_strict_areal_indep.py",
+      "tier": "严格定理(GR门/坐标变换/垒顶) + 条件定理(WKB垒顶仅量级)"
+    }
+  ],
+  "open_backlog": [
+    "v2.4 CLOSURE (v21 two spectrum routes E445/E446, erratum#26 kept, no new erratum): [SPECTRUM] OPEN 6th consecutive round. [E445 R1 envelope-reduced global spectral method] original PASS label independently verified & CORRECTED by organizer to FAIL: gate only checked findroot did not throw, not root value; n0 roots 0.1117/0.1536/0.3313 only ~1 digit, n1 real part 5.58e-10 absurd, cross s_max roots 0.207/0.154/0.136 box-dependent, |det M(w*)| condition blow-up 1.8e-8(N24)->2.6e21(N60) unusable at 50 digits; node-order bug fixed; direction PROVEN effective - corrected O(1/s^2) outgoing Robin converges 1.37e-2->1.6e-6 vs bare naked iomega saturating 8.8e-4 (v20 E443 failure fingerprint), but residual floor ~1e-6, near w* shallow min log10|R|~-5.3, findroot hijacked by spurious eigenvalue 0.2797-0.2234i (|R|=1.1e-61 non-physical). NEXT R1: compactified-coordinate Chebyshev (horizon/infinity to finite endpoints, built-in asymptotics) OR generalized-eigenvalue formulation to exclude spurious modes. [E446 R2 essential-singularity factorization] GR gate PASS (dps=45, N=100/200/400/1000: RW n0 15 digits, n1 14, scalar 11), but TUFT structural wall (strict): e^(-2/rho) factorization only removes potential exponential; residual essential exponential is KINETIC term omega^2 e^(4/rho) P, not removable; rho=0 zero radius / infinite order non-truncatable; core rho_h=0.6099 Frobenius radius R_series~0.81 only reaches rho~1.42, cannot reach infinity outgoing boundary (E443 same wall reproduced). NEXT R2: multi-segment Frobenius splicing (core to rho~1.42 + outer barrier + far-field asymptotic, Wronskian per segment), must first reproduce 0.373672-0.088962i on GR to >=6 digits. No TUFT roots reported on either route (no fabrication). modified-QNM pole OPEN. Do NOT retry one-way interior IVP for r_b (non-isolable E442), single-exp echo fits (erratum#25), single-ended shooting (erratum#18/19).",
+    "v2.3 CLOSURE (v20 two numerical subtasks E443/E444, erratum#26 kept, no new erratum): [SPECTRUM] Leaver three-term recurrence is PROVABLY not portable to TUFT (E443: metric A=e^(-2/rho), B=e^(2/rho)(1+c/rho^2+d/rho^3), potential has e^{+-2/rho) essential singularities, not rational-function potential, no Fuchs three-term recurrence); finite-box Chebyshev-Robin/CAP global spectral self-gate FAILS the 5th wall (|det M| at known Schwarzschild master root 2.011e-08->2.743e-08->4.412e-07 GROWS with N instead of ->0; machine zero ~1e-35; CAP spectrum has no eigenvalue near 0.3737-0.089i; transparent box boundary cannot capture exact infinity outgoing asymptotics). GR gate hard asset PASS (independent dps=45 rewrite: RW s=-2 n0 15 digits, n1 14, scalar s=0 l=0 11). NO TUFT roots reported. NEXT = a global series/spectral method that BOTH handles the TUFT exponential potential AND passes the Schwarzschild self-gate. Do NOT retry one-way interior IVP for r_b (provably non-isolable, E442), single-exp echo fits (erratum#25), or single-ended complex shooting (erratum#18/19). [OBSERVABILITY] virtual flat waveguide (E444) is a COUNTERFACTUAL POSTULATE (core side V=0, only outer barrier real): isolated |r_b|^2@0.3737=0.32496 (GR isolated gate 0.53135), strict two-way epsilon=(1-|r_b|^2)^2=0.4557, flux/reciprocity residuals ~1e-9; but r_b is a postulate approximation NOT the true TUFT cavity value and delta_omega is UNMEASURED (E440 falsified). Downgraded from v19 MEASURABLE to CONDITIONAL/CRITICAL (D_max |dw/w|=2%: O4 face-on ~0.04 Gpc, Voyager ~0.11 Gpc). modified-QNM pole OPEN. Page/Hawking/baryogenesis/quantum-measurement remain OPEN.",
+    "v20 RESOLVED+NEW PRIORITY (normalization v2.2, erratum#26, E436-E442): Leaver GLOBAL continued-fraction GR gate now PASSES (E436-E438, MainAgent independent 2.1e-11 ~10 digits, N=200/400/1000) - the route v19 E430 (Wronskian/integral matcher, 4th-round FAIL) named. Coalition v20 lossless r_b and Fabry-Perot pole FALSIFIED: rb_tuft direction reversed (J_out/J_in=-1, |b/a|^2>1), unitarity hard-coded, .545 not reproducible; corrected outgoing flux conserves but |r|^2 drifts with launch point .43-.54 because cavity has NO interior flat region -> barrier S-matrix not isolable by one-way IVP (E442 strict); FP .3834-.0676i/tau14.79 arithmetically inconsistent with own r_b (should be .0218/tau46; needs r_b^2=.152, actual .52) and rests on unwrap branch n=-2. State II revoked; E441 SNR conditional-only. v21 PRIORITY: build TUFT modified-QNM on the VERIFIED Leaver engine as a GLOBAL mixed BVP - core Neumann at R->0 + pure outgoing at infinity, analytic Frobenius at BOTH ends x Wronskian (pass Schwarzschild 0.373671684-0.088962316i to >=8 digits now achievable); or declare explicit counterfactual virtual-waveguide postulate. Do NOT retry one-way interior IVP for r_b (provably non-isolable) or single-exp echo fits (erratum25) or single-ended complex shooting (erratum18/19). Page/Hawking/重子生成/量子测量 remain OPEN.",
+    "v19 THREE-SUBTASK OUTCOMES (E430-E432, normalization v2.1, no new errata): [WP1 E430 NEGATIVE] the two-end Wronskian/integral matcher prescribed by v15 backlog was IMPLEMENTED at dps=40 (inner horizon-ingoing ODE forward + outer outgoing iw+O(1/s) series + barrier-top Wronskian match; barrier peak bit-for-bit GR R=3.2808/sqrt0.38896) and GR gate still FAILS: W(known truth, sm=2.4)=-6.29-2.13i != 0; rough Newton resid 577; scipy DOP853 crosscheck gives spurious root 0.370744-0.050913i invariant across 3 match points to 6 digits; deepening boundaries sin/sout -25/40->-100/150 leaves imag stuck -0.04..-0.055 never approaching -0.08896. This REPRODUCES v15 gate1/gate3 EXACTLY (sub-barrier exponential branch mixing; precision/boundary-depth cannot rescue; branch structure not accuracy). TUFT spectrum OPEN 4th consecutive round; no wall roots touched. NEXT = TRUE analytic Frobenius series (closed-form recurrence, not ODE integration) OR Leaver global ansatz (entire D0(w)->Nollert CF). [WP2 E431 CONDITIONAL MEASURABLE] time-domain injection epsilon=|R_B|=0.729 (v18 IVP, not hand-set 1): apparent FFT peak dw_r/w_r=-12.9412% (GR .365->TUFT .318), apparent taud 10.6->35.8M (+238%), rho_frac=0.814790, theoretical-optimum required GR ringdown SNR~1.23; Mf=60 O4 9.8->3.5 Gpc, Voyager 3.2x, 57-60 Msun all MEASURABLE. CAVEAT (must carry with D18): epsilon=0.729 uses barrier-top reflection amplitude as echo copy amplitude; strict two-way barrier transmission prescription is |T_B|^2=(1-0.531)^2~0.22 (amplitude~0.47), under which distortion is smaller / SNR threshold higher -> THEORETICAL UPPER BOUND; pending lossless two-sided outgoing r_b(w) (|r|^2+|t|^2=1) re-derivation + template-family degeneracy / overtone / antenna deprojection. Apparent quantity != true-pole move (consistent with erratum #25). [WP3 E432] complex-step h=1e-5 analytic derivative: TUFT tau stable A-grade (arch peak omega*=0.440/tau_max=33.906M, high-freq tail .94->2.04M, old degraded 31.1M on 0.50-0.70 recomputed 8.13M, peak relocated .44); erratum #24 PARTIALLY closed on TUFT side; GR self-consistency gate FAILS (0 digits: lower-half-plane outgoing e^{+iwx} growth swamps ingoing, WKB floor ~1.9e-5) -> pending Leaver continued fraction; method not fully validated. || prior v20-priority item: v20 PRIORITY: TRUE modified-QNM pole of R->0 reflecting cavity. v19 E422 +2.64%/-9.53% FALSIFIED (erratum #25): single-exp fit of transient echo train is window artifact, steady state returns w_GR/tau_GR exactly (1.5e-16); r_echo .211 cancels to Rbarr .729 which wrongly includes absorbing horizon; rho_req void (double-counted template, self-authored PSD). DO: (1) lossless two-sided OUTGOING barrier-only scattering IVP for r_b(w), |r|2+|t|2=1, never reuse v18 net .531; (2) g(w)=r_core*r_b, solve self-consistent pole D0(w)=a e^{iw*13.94} via two-ended Frobenius x outgoing Wronskian (pass Schwarzschild 0.37367-0.08896i >=4 digits; single-ended shooting known ill-posed); (3) or clean time-domain inject l=m=2 QNM initial data with R->0 core, extract poles by multi-exp/Prony/spectral NOT single-exp fit; (4) SNR conditional on epsilon with calibrated aLIGO/O4 design-curve PSD, one physical template. Geometry fixed: T=2L=13.9389M, T/tau=1.24, prompt .289.",
+    "v18 robustness: confirm strict barrier/neck on a second method (direct areal integration dR*/dR=sqrt(g_RR/A)); clarify c=0 traversable neck Rmin=e physical status and whether rho<1 branch is a second asymptotic region; complex QNM poles remain OPEN (heavily damped not excluded).",
+    "gravitational RW s=-2 gate CLOSED v12 (E352-E353, 13-14 digits)",
+    "exact mixed-boundary QNM spectrum: scalar+s=-2 GR gates passed; TUFT wall roots REJECTED twice (v13 outward box E359, v14 inward barrier-top cluster E365), reopened to v15 series matching",
+    "microstate unitarity / Page curve / Hawking spectrum",
+    "baryogenesis & quantum measurement",
+    "three-generation topological origin & Yukawa span 3.4e5",
+    "neutrino M_N ~1e14 GeV naturalness",
+    "first-principles derivation of e and alpha~1/137; m_Pl/m_e~1e23 hierarchy",
+    "scalaron-soliton relation; H0 tension"
+  ],
+  "v18_realfreq_ivp_audit": {
+    "round": "v18",
+    "normalization": "v1.9",
+    "equations": "E407-E414 coalition + E415-E418 MainAgent (to E418)",
+    "script_mainagent": "_ma_v18_realfreq.py / _ma_v18_realfreq_out.txt (DOP853 67s independent)",
+    "gr_gate": "PASS strict unitarity=1.000000; |R_GR|2 .30=.9453 .35=.7266 .3737=.5314 .40=.3105 .45=.0756 .50=.0155 .60=6.5e-4 .90<2.5e-7; coalition .531 CONFIRMED (crude interp ~0.4 withdrawn)",
+    "tuft_reflection": "rho_h=.60990 outer R=3.2680 Vmax=.148709 sqrt=.38563 (GR .38896 -0.9%); |R_TUFT|2=1 max dev 6.7e-16 (E411/E415 strict)",
+    "echo_geometry_mass_independent": {
+      "L_M": 6.9694,
+      "2L_M": 13.9389,
+      "tau_d_M": 11.241,
+      "Dt/tau_d": 1.24,
+      "amp_at_return": 0.289
+    },
+    "mass_convention": "label remnant M_f; 30+30 -> 57-60 Msun f~201Hz 2L~4.12ms taud~3.32ms; M_f=30 402Hz/2.06/1.66; ratio fixed 1.24",
+    "D18_verdict": "clean late echo NOT reachable (returns at 1.24 e-fold, prompt 29%); residual = ringdown waveform distortion (phase/beating/modified damping); generic ECO not TUFT-unique",
+    "erratum24": [
+      "E413 tau=31.1M UNRELIABLE->OPEN coarse dw argR optical-term unwrap ambiguity (dense gives +-600); conclusion uses geometric 2L",
+      "E414 SNR non-quantitative (Voyager=O4/16 4x tautological; rho=10 eps=1 hand-set; real eps<1)"
+    ],
+    "E415": "strict same-engine two boundaries",
+    "E416": "strict L/2L/ratio/amp mass-independent",
+    "E417": "open tau",
+    "E418": "open M_f + distortion magnitude SNR",
+    "open_for_v19": "template injection or complex-pole perturbation for delta omega_r/delta damping/detection SNR on strict potential+R->0 core; no WKB/hand-set eps; Leaver GR >=4 digit gate"
+  },
+  "v19_ringdown_distortion_audit": {
+    "round": "v19",
+    "normalization": "v2.0",
+    "equations": "E419-E429 coalition",
+    "script_mainagent": "_ma_v19_audit.py / _ma_v19_audit_out.txt (independent, exit0)",
+    "coalition_claim": "dw_r/w_r=+2.64%, dtau/tau=-9.53%, rho_req~5.6",
+    "verdict": "quantitative FALSIFIED (erratum #25), direction kept",
+    "E422_fit_artifact": {
+      "method": "coalition fit the transient echo train sum_n r^n h_GR(t-nT), n=0..6, with a SINGLE exponential A e^{-t/tau}cos(wt) over [2.5tau,8tau]",
+      "reproduced": "0.38354 (+2.64%) / tau 10.170 (-9.53%) reproduced bit-for-bit -> proves that is the sole source",
+      "window_scan_drift": "dw spans +7.41% to -3.39%, dtau spans +11.80% to -13.72% as only the fit window changes -> not a robust pole",
+      "steady_state_late": "all echoes launched by 6T=83.6M=7.44tau; late-window fits return w=0.37367/tau=11.241 EXACTLY (dw=dtau=0.00%); de-enveloped late freq matches w_GR to 1.5e-16; theoretical steady residue |C|=1.06 t-independent",
+      "reason": "each echo term has pole w_GR; geometric ratio r e^{T/tau}=0.729<1 converges; late h=|C|e^{-t/tau_GR}cos(w_GR t+argC): same pole, changed residue only (consistent v19 analytic skeleton sec1)",
+      "physical_sign": "reflecting cavity should LENGTHEN tau (return energy, |w_i|=-ln rho/T); coalition reports tau SHORTENED -> sign also wrong"
+    },
+    "E421_E424_ratio": {
+      "claimed_r_echo": 0.21095,
+      "formula": "Rbarr*e^{-T/tau}=0.72897*0.28938",
+      "cancellation": "r_echo^n * e^{nT/tau} = Rbarr^n EXACTLY (n=2: .04450*e^{2T/tau}=.53140=Rbarr^2); .211/.289 cancel, true waveform ratio = Rbarr=0.729",
+      "Rbarr_status": "0.729=sqrt(.5314) is v18 NET reflection with ABSORBING horizon behind barrier; required lossless two-sided OUTGOING barrier-only r_b(w) (|r|2+|t|2=1) NOT computed -> OPEN"
+    },
+    "E425_E426_snr": "REJECTED: template double-counts (uses fitted pseudo-pole w_TU AND multiplies echo factor (1+r e^{i2pi f te})); PSD is self-authored analytic formula not calibrated O4/Voyager design curve; supplementary table separately uses barrier-top WKB eps=.64 (ruled magnitude-only); rho_req=5.6 and O4 x2.5/Voy x46 void",
+    "kept": {
+      "E423": "T/tau=1.24, prompt .289 (strict, v18 reference)",
+      "E429": "C-grade direction: echo buried, no clean late echo"
+    },
+    "four_state": {
+      "E419": "reference/conditional",
+      "E420": "reference only (no independent pole gate)",
+      "E421": "reject",
+      "E422": "reject erratum25",
+      "E423": "strict(reference)",
+      "E424": "reject",
+      "E425": "downgraded",
+      "E426": "reject",
+      "E427": "open(values void)",
+      "E428": "open(values void)",
+      "E429": "direction kept, quantitative -9.5% void"
+    },
+    "open_v20": "modified-QNM pole shift magnitude OPEN; path: (1) lossless two-sided OUTGOING barrier IVP r_b(w) |r|2+|t|2=1, never reuse .531; (2) g=r_core*r_b incl phase, solve self-consistent D0(w)=a e^{iwT} via two-ended Frobenius x outgoing Wronskian matching (single-ended shooting ill-posed, erratum 18/19), pass Schwarzschild complex QNM >=4 digits; (3) or clean time-domain with multi-exponential/Prony/spectral pole extraction (NO single-exponential fit); (4) report SNR only CONDITIONAL on epsilon with calibrated aLIGO ZERO_DET_high_P design PSD, single physical template (no double count)"
+  },
+  "v20_two_subtask_key_results": {
+    "round": "v20",
+    "normalization": "v2.3",
+    "equations": "E443 (WP20-A mixed-bc spectrum) / E444 (WP20-B virtual waveguide r_b + conditional SNR)",
+    "renumber_note": "E436-E442 already occupied by v2.2 v20 modified-QNM audit / erratum#26; these two numerical subtasks are conflict-free increments renumbered E443/E444; no erratum rolled back",
+    "no_new_errata": true,
+    "scripts": {
+      "WP20_A": "_v20_mixed_bc_spectrum.py / _v20_mixed_bc_spectrum_out.txt (independent rewrite, mpmath dps=45)",
+      "WP20_B": "_v20_virtual_waveguide_snr.py / _v20_virtual_waveguide_snr_out.txt"
+    },
+    "WP20_A_leaver_mixed_bc_spectrum": {
+      "tier": "GR gate HARD ASSET PASS (strict) + STRUCTURAL NEGATIVE (strict) + finite-box spectral self-gate FAIL",
+      "gr_gate_pass_dps45": {
+        "RW_s_minus2_l2_n0": "0.3736716844180418 - 0.0889623156889357 i  (|delta-catalog|=1.6e-15, 15 digits, N>=200)",
+        "RW_s_minus2_l2_n1": "0.3467109968791635 - 0.2739148752912348 i  (|delta|=8.0e-14, 14 digits)",
+        "scalar_s0_l0": "0.1104549390804197 - 0.1048957170868810 i  (|delta|=3.1e-11, 11 digits)",
+        "note": "scalar recurrence epsilon=s^2-1 (s=0 -> -1); independent rewrite, no coalition import"
+      },
+      "structural_negative_leaver_not_portable_to_tuft": "Leaver three-term recurrence CANNOT be translated to TUFT. TUFT metric A=e^(-2/rho), B=e^(2/rho)(1+c/rho^2+d/rho^3); the potential V(rho) contains e^{+-2/rho) ESSENTIAL SINGULARITIES (not a Schwarzschild rational-function potential). A Fuchs-type three-term recurrence requires the potential to be rational in the radial variable (finite regular singularities) -> no Leaver recurrence exists for TUFT.",
+      "finite_box_spectral_self_gate_fail": {
+        "method": "Chebyshev-Robin / CAP global matrix M(w); self-gate = |det M(w*)| at known Schwarzschild master root",
+        "det_M_at_master_root": {
+          "N=12": "2.011e-08",
+          "N=16": "2.743e-08",
+          "N=20": "4.412e-07"
+        },
+        "machine_zero_expected": "~1e-35",
+        "verdict": "|det M| is NOT machine zero and GROWS with N (2e-8 -> 4.4e-7); CAP spectrum contains NO eigenvalue near 0.3737-0.089i. This is the 5th independent reproduction of the E274-280 / E430 wall: a transparent box boundary cannot capture the exact infinity pure-outgoing asymptotics. Per numeric-gate iron rule, NO TUFT root may be reported.",
+        "same_wall_as": "E274-280 (v8 CAP/PML) / E430 (v19 two-end Wronskian); single-branch RK4 already rejected E430/erratum18/19"
+      },
+      "tuft_cm_minus029_geometry_reproduced": {
+        "core_rho_h": 0.6099019514,
+        "outer_barrier_sqrt_Vmax": "0.38538 @ R=3.3522",
+        "GR_reference": "sqrt0.38896 @ R3.2808 (E403)",
+        "cavity_length_L_M": 6.97
+      },
+      "tuft_roots_reported": "NONE (not hard-created); modified-QNM pole remains OPEN",
+      "next_step": "need a global series/spectral method that BOTH handles the TUFT exponential potential AND passes the Schwarzschild self-gate"
+    },
+    "WP20_B_virtual_waveguide_snr": {
+      "tier": "counterfactual POSTULATE approximation; flux-consistent; observability DOWNGRADED MEASURABLE -> CONDITIONAL/CRITICAL",
+      "counterfactual_postulate": "Core side s in [0, L=6.97M] (R->0 core to barrier peak): REAL potential REPLACED by a virtual flat outgoing waveguide V=0, pure outgoing edge (left-going = cavity echo). Outer barrier s>=L (R>=peak): keeps the REAL TUFT potential. This is a modeling POSTULATE, NOT the true TUFT potential; a self-consistent in-cavity pole requires the global mixed-BVP complex spectrum. Prior coalition r_b=.545 (direction-reversed / pseudo-unitarity / launch-point drift, erratum#26) NOT reused.",
+      "tuft_geometry": {
+        "rho_h_core": 0.6099,
+        "outer_peak_R": 3.268,
+        "Vmax": 0.148709,
+        "sqrt_Vmax": 0.38563,
+        "L_M": 6.9694,
+        "note": "no V~0 flat zone inside (E442)"
+      },
+      "gr_gate_full_barrier_reflection": {
+        "@0.3737": 0.53135,
+        "flux_a2_minus_b2": 1.0,
+        "table": "0.30=.94527 / 0.35=.72664 / 0.3737=.53135 / 0.45=.07563 / 0.60=.00065 / 0.90=0"
+      },
+      "r_b_omega_table": {
+        "omega_grid": "0.3000..0.9400 step 0.02",
+        "at_omega_r_0.3737": {
+          "|r_b|^2_L": 0.32496,
+          "|t_L|^2": 0.67504,
+          "GR_isolated_apple": 0.32823,
+          "note": "TUFT r_b=0.3250 ~ GR 0.3282; difference is in the inner boundary, NOT the outer barrier"
+        },
+        "flux_conservation_residual_max": 2.458e-10,
+        "reciprocity_residual_max": 9.002e-10,
+        "extraction": "|r|^2+|t|^2 extracted independently per side (NOT hardcoded)"
+      },
+      "epsilon_two_way_prescription": {
+        "formula": "|T_B|=sqrt(1-|r_b|^2) single-pass transmission AMPLITUDE; epsilon=|T_B|^2=(1-|r_b|^2)^2 cross barrier TWICE",
+        "at_omega_r": {
+          "|r_b|^2": 0.32496,
+          "|T_B|": 0.82161,
+          "epsilon": 0.455672
+        },
+        "vs_prior": "coalition v20 hand-set epsilon=1; v19 upper-bound epsilon=|R_B|=0.729; this strict prescription epsilon=0.4557 is ~2.19x SMALLER than epsilon=1"
+      },
+      "conditional_snr": {
+        "Q": 2.1002,
+        "detectability_condition": "epsilon * |delta_omega_r/omega_r| * rho * Q >= 1",
+        "psd": "public ZERO_DET_high_P analytic PSD (not self-authored)",
+        "f0_Mf60_Hz": 201.3,
+        "tau_d_ms": 3.32,
+        "Sh_f0": 9.436e-46,
+        "rho_60Msun_1Gpc_faceon_O4": 1.91,
+        "rho_60Msun_1Gpc_Voyager": "~5.7",
+        "delta_omega_UNMEASURED": "E440 cavity mode falsified (erratum#26); no reliable |dw/w|; D_max table scans |dw/w| parametrically",
+        "D_max_at_dw_over_w_2pct": {
+          "Mf57_faceon_O4_Gpc": 0.03,
+          "Mf57_faceon_Voy_Gpc": 0.1,
+          "Mf60_faceon_O4_Gpc": 0.04,
+          "Mf60_faceon_Voy_Gpc": 0.11,
+          "Mf60_edgeon_O4_Gpc": 0.02,
+          "note": "illustrative / conditional, NOT a prediction"
+        },
+        "rho_req_table": "|dw/w|=0.5%->208.99, 1%->104.49, 2%->52.25, 5%->20.90, 10%->10.45"
+      },
+      "downgrade_reasons": [
+        "r_b=0.325 is a COUNTERFACTUAL postulate value, NOT the true TUFT in-cavity r_b",
+        "epsilon=0.456 is ~2.2x weaker than hand-set epsilon=1",
+        "delta_omega_r UNMEASURED (E440 falsified); D_max depends on assumed |dw/w|=2%"
+      ],
+      "verdict": "from v19 MEASURABLE DOWNGRADED to CONDITIONAL/CRITICAL: only in-principle measurable for sufficiently large |dw/w| (>=~1-2%) and nearby high-SNR events; does NOT constitute a quantitative modified-QNM pole measurement. modified-QNM pole still OPEN."
+    }
+  },
+  "last_updated": "2026-09-19 (v21 closure, normalization v2.4)",
+  "v19_key_results": {
+    "round": "v19",
+    "normalization": "v2.1",
+    "equations": "E430-E432 (renumbered: task draft assumed E419-E421 but disk v2.0 already occupies E419-E429 with the v19 ringdown-distortion audit / erratum #25; conflict-free increment per SSOT)",
+    "no_new_errata": true,
+    "scripts": {
+      "WP1": "_v19_series_matcher.py / _v19_series_matcher_out.txt (mpmath dps=40)",
+      "WP2": "_v19_ringdown_snr.py / _v19_ringdown_snr_out.txt",
+      "WP3": "_v19_tau_complex.py / _v19_tau_complex_out.txt (complex-step h=1e-5, 1178s)"
+    },
+    "WP1_series_matcher": {
+      "tier": "NEGATIVE strict theorem (E430)",
+      "method": "per master SS10 v15 route: inner horizon-ingoing linear ODE forward + outer outgoing series with iw+O(1/s) asymptotics + Wronskian match in regular barrier-top region; mpmath dps=40; barrier peak bit-for-bit GR R=3.2808M sqrtVmax=0.38896",
+      "gr_gate": "FAIL",
+      "evidence": {
+        "W_at_known_truth_sm2.4": "-6.29 - 2.13 i  (must be ~0 at 0.37367168441804166-0.08896231568893410i)",
+        "rough_newton_0.35-0.10i": "DOES NOT CONVERGE (residual 577.5)",
+        "scipy_DOP853_crosscheck_spurious_root": "0.370744-0.050913i, invariant to 6 digits across 3 match points (sm=1.5/2.4/3.5) but WRONG",
+        "boundary_deepen_sin_sout_-25_40_to_-100_150": "imaginary part stuck -0.04..-0.055 (at -100/150 = -0.055078), NEVER approaches truth -0.08896"
+      },
+      "diagnosis": "reproduces v15 gate1/gate3 EXACTLY: two-end Wronskian/integral matching dominated by sub-barrier exponential branch mixing; raising precision / deepening boundaries cannot rescue; problem is branch structure not accuracy",
+      "tuft_spectrum": "OPEN (4th consecutive round); no TUFT wall roots computed (gate not passed -> STOP)",
+      "next_step": "TRUE analytic Frobenius series (closed-form recurrence, NOT forward ODE integration) or Leaver global ansatz (entire D0(w) -> Nollert-type continued fraction)"
+    },
+    "WP2_ringdown_snr": {
+      "tier": "CONDITIONAL theorem / theoretical upper bound (E431); MUST carry epsilon prescription caveat",
+      "method": "strict areal potential + R->0 reflecting core, time-domain template injection",
+      "epsilon": {
+        "value": 0.729,
+        "definition": "|R_B| = sqrt(0.5313) from v18 IVP complex reflection coefficient (NOT hand-set to 1)",
+        "caveat": "strict two-way barrier transmission prescription should be |T_B|^2=(1-0.531)^2~0.22 (amplitude~0.47); under the prescription distortion is smaller and SNR threshold higher -> this result is a theoretical upper bound / conditional; no template-family degeneracy / overtone / antenna deprojection done"
+      },
+      "modified_qnm_apparent": {
+        "FFT_peak_GR": 0.365,
+        "FFT_peak_TUFT": 0.318,
+        "delta_omega_r_over_omega_r": -0.129412,
+        "apparent_tau_d_GR_M": 10.6,
+        "apparent_tau_d_TUFT_M": 35.8,
+        "pct_change_tau_d": "+238%",
+        "note": "APPARENT finite-window FFT-peak / apparent damping from echo-train interference; NOT a true-pole shift (steady-state late window still w_GR/tau_GR per erratum #25); direction tau lengthens is physically consistent"
+      },
+      "discrimination_SNR": {
+        "rho_frac": 0.81479,
+        "required_GR_ringdown_SNR_theoretical_optimum": 1.23,
+        "Mf_60Msun_1Gpc_O4_design_SNR": 12,
+        "O4_face_on_to_edge_on_Gpc": "9.8 -> 3.5",
+        "Voyager_ratio_to_O4": "3.2x (30.9 -> 10.9 Gpc)",
+        "Mf_scan_57_to_60": "all MEASURABLE"
+      },
+      "verdict": "MEASURABLE (conditional / theoretical upper bound)"
+    },
+    "WP3_tau_complex": {
+      "tier": "TUFT-side stable (A-grade); GR self-consistency gate FAIL (E432)",
+      "method": "complex-step analytic derivative h=1e-5 (avoids erratum #24 coarse-grid np.gradient artifact)",
+      "gr_gate": "FAIL (0 correct digits): root 1.846443-0.085435i, |D| at known point 1.887e-5; lower-half-plane outgoing e^{+iwx} exponential growth swamps ingoing; WKB truncation floor ~1.9e-5 always above e^{-2|Im w| x_out} ingoing signal; 40 digits cannot resolve",
+      "real_axis_crosscheck_v18_bit_exact": {
+        "w0.30": 0.945,
+        "w0.3737": 0.532,
+        "w0.50": 0.0155,
+        "w0.90": 0.0
+      },
+      "tuft": {
+        "|R|^2": 1.0,
+        "all_freq": true,
+        "tau_peak_omega_star": 0.44,
+        "tau_max_M": 33.906,
+        "high_freq_tail": "w=0.94 -> 2.04 M",
+        "step_stability": "h=1e-5 vs 1e-6 ~0.5 M stable"
+      },
+      "erratum24_partial_close": {
+        "old_coarse_31p1M_0.50_0.70": "coarse-grid phase artifact, degraded OPEN in v18",
+        "new_analytic_0.50_0.70": 8.13,
+        "peak_relocated": "from misjudged 0.50-0.70 to 0.440",
+        "status": "TUFT tau numerically stable (A-grade); GR self-consistency gate NOT passed -> method NOT claimed fully validated"
+      },
+      "gr_gate_next": "Leaver continued fraction"
+    },
+    "D18_status_v19": {
+      "spectrum_branch": "OPEN (E430 4th-round negative)",
+      "observability_branch": "CONDITIONAL MEASURABLE (E431, with epsilon prescription caveat)"
+    },
+    "cumulative": "E1-E432, errata #25 (no new errata this round)"
+  },
+  "v20_modified_qnm_audit": {
+    "round": "v20",
+    "normalization": "v2.2",
+    "equations": "E436-E442 (coalition draft self-labeled E430-E435 COLLIDES with disk v2.1 E430-E432 v19 subtasks; renumbered +6; E433-E435 vacant)",
+    "script_mainagent": "_ma_v20_audit.py / _ma_v20_audit_out.txt (independent rewrite, no coalition import, exit0); _ma_v20_renumber.py",
+    "coalition_claim": "Leaver GR gate 5-digit; lossless two-sided r_b TUFT .545/GR .531; Fabry-Perot cavity pole 0.3834-0.0676i (dw_r=+2.61%, tau=14.79M); state II; eps=1 requires rho>=20",
+    "accepted": {
+      "E436_E437_E438": "Leaver(1985) s=-2 continued fraction R_n=-g_n/(b_n+a_n R_{n+1}), a/b/g coefficients, QNM condition b0+a0 R1=0 -> Schwarzschild l=2 n0. MainAgent independent N=200/400/1000 ALL converge to 0.373671684-0.088962316i, |d vs catalog|=2.1e-11 (~10 digits; coalition printed only 6 decimals so displayed 5). STRICT. This is the Leaver GLOBAL ansatz that v19 E430 negative theorem (two-end WRONSKIAN/INTEGRAL matching failed 4th round) explicitly named as the correct next route; integral-matching FAIL and Leaver-global PASS are consistent (different methods)."
+    },
+    "rejected": {
+      "E439_rb": "FALSIFIED (erratum#26): disk rb_tuft launches INGOING e^{-i w s} at s=3 yet integrates OUTWARD to 200; independent probability flux J_out/J_in=-1.00000 and |b/a|^2=1.33-2.52 (>1, NOT a reflection coefficient). tt=1-|rb|^2 is imposed (negative when rb^2>1, unchecked) and unitarity column hard-coded to print 0.0; GR gr_data hard-coded from v18 (scatter_gr defined but never called). Reported .545 NOT reproducible by the disk script (which gives 1.69 @.3737). With corrected OUTGOING e^{+i w s}, flux conserves 1.00000 (|A|^2-|B|^2=1) giving physical |r|^2 .592@.3737/.519@.3834, BUT it drifts with launch point s=1..5 (.541/.532/.519/.487/.434 @.3834).",
+      "E442_strict_recognition": "MainAgent strict: TUFT reflecting cavity core(R->0)->barrier peak spans only L~6.97M in tortoise coordinate with NO interior V~0 flat asymptotic region, so a one-way plane-wave IVP cannot isolate the barrier-only S-matrix (launch-point dependence .43-.54 is the symptom). r_b=.545 cannot stand.",
+      "E440_fabry_perot": "FALSIFIED (erratum#26): arithmetic contradiction with its own r_b. Using coalition formula |w_i|=-ln|r_b|/T, r_b^2=.545 -> |w_i|=0.02177, tau=45.9M (NOT 14.79M). To obtain reported 0.0676 requires |r_b|^2=0.152; actual at w=.3834 is 1.93(wrong dir)/0.52(correct dir). Real part .3834 from np.unwrap(angle r_b)+wT=2pi n with anomalous n=-2 (physical branch n~1) = same unstable arg/unwrap artifact class as erratum#24. Corrected-direction r_b~.52 would give tau~42-46M strong-feedback order-of-magnitude only, not a quantitative pole.",
+      "state_II": "REVOKED. modified-QNM pole stays OPEN (state I no-move vs II small-move UNDECIDED)."
+    },
+    "E441_snr": "downgraded to CONDITIONAL FRAMEWORK/OPEN: Q=w_r/(2|w_i|)=2.10 and resolvability scaling eps*|dw|*rho*Q>=1 dimensionally fine; but dw=2.61% from falsified E440, so rho>=20 (eps=1)/>=200 (eps=.1) thresholds void; linear-eps assumption and true two-way injection eps<1 remain OPEN. PSD using public ZERO_DET_high_P analytic fit (vs v19 self-authored) acknowledged as improved practice.",
+    "correct_route": "true modified-QNM pole only via (1) GLOBAL mixed-BVP complex spectrum with verified E436-E438 Leaver engine: core Neumann (R->0) + infinity pure-outgoing, two-ended analytic Frobenius/regular series x outgoing series Wronskian (single-ended RK4 through barrier known ill-posed erratum 18/19); or (2) counterfactual virtual flat outgoing waveguide to extract barrier S-matrix then attach core phase (MUST declare modeling postulate). High-res multi-exp/Prony/matrix-spectral must run on the SAME mixed BVP, never single-exp fit of echo train (erratum25).",
+    "erratum": 26
+  },
+  "v21_two_spectrum_key_results": {
+    "round": "v21",
+    "normalization": "v2.4",
+    "erratum": "#26 kept, no new erratum this round",
+    "new_equation_ids": [
+      "E445",
+      "E446"
+    ],
+    "scripts": [
+      "_v21_envelope_spectrum.py",
+      "_v21_essential_singularity.py"
+    ],
+    "R1_envelope_spectrum_GR_gate": {
+      "verdict": "FAIL (6th consecutive wall; original PASS label corrected by organizer to FAIL)",
+      "gate_criterion_flaw": "gate checked only that findroot did not raise, not the root value",
+      "mislabel_evidence": {
+        "n0_roots": "0.1117/0.1536/0.3313 (delta-cat ~0.2-0.3, ~1 digit)",
+        "n1_real_part": "5.58e-10 (absurd)",
+        "cross_s_max_drift": "0.207/0.154/0.136 (box-dependent)",
+        "residual_meaning": "|res|~1e-12 is a Newton-neighborhood point, not a root criterion"
+      },
+      "det_condition_blowup": "|det M(w*)| 1.8e-8(N24)->2.6e21(N60); (N+1)x(N+1) eigenvalues ~1e122 at dps=50; determinant route unusable (condition number)",
+      "node_order_bug": "FIXED (Chebyshev x[0]=1 mapped to right end as left-horizon BC; free-particle check u[N]=2167 should be 5.9; fixed u[0]=1 passes)",
+      "direction_proven_effective": {
+        "corrected_O1_over_s2_outgoing_Robin_N16_to_N48": "1.37e-2 -> 3.8e-4 -> 2.4e-5 -> 3.3e-6 -> 1.6e-6",
+        "bare_naked_iomega_saturation": "1.34e-2 -> 6.2e-4 -> 8.5e-4 -> 8.8e-4 (v20 E443 failure fingerprint)",
+        "conclusion": "O(1/s^2) correction is the right-direction remedy"
+      },
+      "not_passed": {
+        "residual_floor": "deep-box + two-sided WKB ~1e-6 (N64=8.9e-7 no longer decreasing)",
+        "near_w_star_shallow_min": "N=56 fine scan log10|R|~-5.3, no deep zero ~-15",
+        "spurious_eigenvalue_hijack": "0.2797-0.2234i (|R|=1.1e-61 machine zero, non-physical QNM)"
+      },
+      "tuft_root_reported": false,
+      "modified_qnm_pole": "OPEN",
+      "next": "compactified-coordinate Chebyshev (horizon/infinity to finite endpoints, built-in asymptotics) OR generalized-eigenvalue formulation to exclude spurious modes"
+    },
+    "R2_essential_singularity_factorization": {
+      "gr_gate": "PASS (dps=45, N=100/200/400/1000 three-value convergence)",
+      "gr_results": {
+        "RW_s_-2_l_2_n0": "0.3736716844180418-0.0889623156889357i (|delta-cat|=1.6e-15, 15 digits)",
+        "RW_s_-2_l_2_n1": "0.3467109968791635-0.2739148752912348i (8.0e-14, 14 digits)",
+        "scalar_s_0_l_0": "0.1104549390804197-0.1048957170868810i (3.1e-11, 11 digits)"
+      },
+      "tuft_structural_wall_strict": {
+        "factorization": "psi = e^(-2/rho) u",
+        "residual_essential_exponential": "KINETIC term omega^2 * e^(4/rho) * P in A0 (NOT removed by e^(-2/rho)); potential term already rational 3(1+em2)/rho^2 after tortoise e^(4/rho) cancellation",
+        "rho0_center": "e^(4/rho) zero radius of convergence, infinite order, non-truncatable",
+        "core_rho_h": "rho_h=0.6099; Frobenius indicial alpha=1.8956/-0.3956; P roots -0.4099/-0.2/0.6099; nearest other singularity R_series~0.81; series only reaches rho~1.42, cannot reach infinity outgoing boundary",
+        "recursion_blowup": "c[60]~1.68e105",
+        "relation_to_E443": "same wall as E443 Leaver-non-portable reproduced under factorization (Schwarzschild has no such exponential, hence its 3-term recurrence converges)"
+      },
+      "tuft_root_reported": false,
+      "next": "multi-segment Frobenius splicing (core to rho~1.42 + outer barrier + far-field asymptotic, Wronskian match per segment); must first reproduce 0.373672-0.088962i on GR to >=6 digits"
+    }
+  }
+}

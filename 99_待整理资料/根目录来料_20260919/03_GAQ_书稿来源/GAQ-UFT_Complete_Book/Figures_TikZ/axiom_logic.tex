@@ -1,0 +1,32 @@
+% axiom_logic.tex — GAQ-UFT 公理逻辑依赖框图（TikZ standalone）
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric}
+\begin{document}
+\begin{tikzpicture}[
+    node distance=1.4cm and 1.8cm,
+    axiom/.style={rectangle,draw,rounded corners,minimum width=2.4cm,minimum height=1cm,fill=blue!10},
+    math/.style={ellipse,draw,minimum width=2.6cm,fill=green!10},
+    phys/.style={ellipse,draw,minimum width=2.6cm,fill=orange!15},
+    arrow/.style={-{Latex[length=3mm]},thick}
+  ]
+  \node[axiom] (A1) {A1 广义Kakeya覆盖};
+  \node[axiom,right=of A1] (A2) {A2 Frenet标架};
+  \node[math,below=of A1] (nec) {数学必要条件\\ $\kappa>0,\ \tau\neq0$};
+  \node[phys,right=of nec] (A3) {A3 真空流线齐性\\ (物理假设)};
+  \node[axiom,below=of A3] (A4) {A4 相交/缠绕/打结};
+  \node[axiom,right=of A4] (A5) {A5 量纲自洽};
+  \node[axiom,below=of A4] (A6) {A6 洛伦兹协变};
+  \node[axiom,right=of A6] (A7) {A7 量子对应};
+  \node[math,below=of A6,fill=red!10] (out) {工作分支：圆柱螺旋};
+
+  \draw[arrow] (A1) -- (nec);
+  \draw[arrow] (A2) -- (nec);
+  \draw[arrow] (nec) -- (A3);
+  \draw[arrow] (A3) -- (out);
+  \draw[arrow] (A4) -- (out);
+  \draw[arrow] (A5) -- (out);
+  \draw[arrow] (A6) -- (out);
+  \draw[arrow] (A7) -- (out);
+\end{tikzpicture}
+\end{document}

@@ -11,6 +11,18 @@ sys.dont_write_bytecode = True
 
 ROOT = Path(__file__).resolve().parent
 
+RAW_STAGING_SECTION = '99_待整理资料'
+RAW_BATCH_PREFIX = '根目录来料_'
+
+
+def is_raw_staging(parts) -> bool:
+    """根目录来料_* 批次是外部资料的原样转存（目录命名与链接结构均来自上游，
+    如 assets/fonts/.github/arxiv 等）。完成整理并入正式目录前，不纳入
+    中文目录命名与本地链接治理，避免为迎合规则而破坏来源镜像的完整性。"""
+    return bool(parts) and parts[0] == RAW_STAGING_SECTION and any(
+        part.startswith(RAW_BATCH_PREFIX) for part in parts)
+
+
 def main():
     errors = []
     import importlib.util
@@ -60,11 +72,13 @@ def main():
         if not directory.is_dir(): continue
         parts = directory.relative_to(ROOT).parts
         if parts[0].startswith('.') or '__pycache__' in parts: continue
-        if not re.search(r'[\u4e00-\u9fff]', directory.name):
+        if is_raw_staging(parts): continue
+        if not re.search(r'[一-鿿]', directory.name):
             errors.append('Research directory must use Chinese: ' + directory.relative_to(ROOT).as_posix())
     checked = 0
     for p in ROOT.rglob('*.md'):
         if '90_历史归档' in p.relative_to(ROOT).parts: continue
+        if is_raw_staging(p.relative_to(ROOT).parts): continue
         body = re.sub(r'```.*?```', '', p.read_text(encoding='utf-8-sig'), flags=re.S)
         for target in re.findall(r'!?\[[^\]\n]*\]\(([^\s)]+)\)', body):
             if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#'): continue

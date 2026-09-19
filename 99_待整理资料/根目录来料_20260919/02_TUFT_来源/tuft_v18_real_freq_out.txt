@@ -1,0 +1,100 @@
+================================================================================
+TUFT v18 Line 1 : STRICT AREAL POTENTIAL  V=3A(1+e^-2lam)/R^2
+c=-0.290  d=-0.050  (M=1, l=2)
+reflecting core rho_h (root of rho^3+c rho+d=0) = 0.609902
+outer barrier peak: rho_pk=2.1103  R_pk=3.2680  Vmax=0.148709  sqrtVmax=0.385628
+GR reference: R=(9+sqrt17)/4=3.2808  Vmax=0.15129  sqrt=0.38896
+wall->peak tortoise length  L = 6.9695 M
+echo round-trip (wall->peak->wall) 2L = 13.9390 M
+at 30 Msun : 1M=0.14777 ms -> 2L = 2.060 ms
+
+================================================================================
+GR GATE (E412): same DOP853 engine on Schwarzschild RW, l=2
+================================================================================
+
+   omega |     |R_GR|^2     |T_GR|^2    unitarity   phase(rad) |     err|T|
+------------------------------------------------------------------------------------------
+   0.300 |  9.45266e-01  5.47337e-02  1.00000e+00     -1.11836 |   1.01e-11
+   0.350 |  7.26637e-01  2.73363e-01  1.00000e+00     +1.87461 |   9.69e-12
+   0.374 |  5.31368e-01  4.68632e-01  1.00000e+00     +3.02587 |   1.18e-11
+   0.400 |  3.10516e-01  6.89484e-01  1.00000e+00     -1.26753 |   1.19e-11
+   0.450 |  7.56313e-02  9.24369e-01  1.00000e+00     +1.74930 |   1.43e-11
+   0.500 |  1.55305e-02  9.84469e-01  1.00000e+00     -1.69049 |   1.52e-11
+   0.550 |  3.18613e-03  9.96814e-01  1.00000e+00     +1.02889 |   2.25e-11
+   0.600 |  6.52485e-04  9.99348e-01  1.00000e+00     -2.59320 |   2.90e-11
+   0.650 |  1.46449e-04  9.99854e-01  1.00000e+00     +0.00495 |   2.40e-11
+   0.700 |  3.00813e-05  9.99970e-01  1.00000e+00     +2.56257 |   3.40e-11
+   0.900 |  1.25556e-07  1.00000e+00  1.00000e+00     +0.18651 |   4.11e-11
+
+GR gate criterion: unitarity U=|a|^2-|b|^2 ~ 1  (absorbing horizon).
+At barrier top w~0.39 reflection O(0.3-0.5); at w=0.90 GR is nearly
+transparent (|R_GR|^2 ~ 1e-4) -- this is the E386 benchmark curve.
+
+================================================================================
+TUFT REFLECTION (E411/E413): Neumann core, |R_TUFT|^2 must be 1
+================================================================================
+
+   omega |   |R_TUFT|^2 phi(rad) unwrap    tau=dphi/dw
+----------------------------------------------------------------------
+
+   0.300 |  1.00000e+00      +0.892640      +26.11640
+   0.350 |  1.00000e+00      +2.198460      -73.47212
+   0.374 |  1.00000e+00      -0.656552      -91.31967
+   0.400 |  1.00000e+00      -2.202902      -19.60036
+   0.450 |  1.00000e+00      +0.532350      +51.01987
+   0.500 |  1.00000e+00      +2.899086      +41.33190
+   0.550 |  1.00000e+00      +4.665540      +33.18584
+   0.600 |  1.00000e+00      +6.217669      +30.21764
+   0.650 |  1.00000e+00      +7.687303      +28.92049
+   0.700 |  1.00000e+00      +9.109719      +21.84469
+   0.900 |  1.00000e+00      +8.195755       -4.56982
+
+max||R|-1| over band = 4.441e-16
+group delay range: tau in [-91.320, +51.020] M
+mean group delay in above-barrier band w=0.50-0.70: tau=31.100 M  (expect ~2L=13.94 M)
+phase arch unwinds ~7.30 rad over w=0.30-0.70 (one cavity round-trip resonance)
+
+================================================================================
+SNR (E414): real l=m=2 ringdown + analytic O4/Voyager PSD
+================================================================================
+source total mass = 30 Msun
+ringdown f0 = 402.47 Hz ,  e-fold tau_d = 1.661 ms
+echo delay 2L = 13.939 M = 2.060 ms  (ratio to tau_d=1.66)
+
+ringdown optimal-SNR scaling ratio Voyager/O4 = 4.00  (PSD model 16x -> SNR 4x)
+(absolute SNR set by source distance/amplitude; below we scale to prompt rho_rd=10)
+
+Echo model: perfect core reflection |R_TUFT|^2=1, no absorption.
+Echo is delayed copy h(t-Dt). At known Dt its matched SNR is
+rho_echo = epsilon * rho_rd  (epsilon<=1, O(1) thin-barrier transmission).
+Critical discriminator: Dt vs tau_d separation.
+Dt/tau_d = 1.24  (1M=0.148 ms, tau_d=1.661 ms, 2L=2.060 ms)
+
+Assuming reference prompt ringdown SNR = 10 :
+  O4       rho_echo ~ 10.0 (if echo separated & epsilon=1)
+  Voyager  rho_echo ~ 10.0 (if echo separated & epsilon=1)
+
+================================================================================
+FOUR-STATE GRADING
+================================================================================
+  C : MERGED / MODIFIED-DAMPING -- echo delay 1.24 tau_d, echo buried in prompt ringdown; signature is a perturbed QNM, not a clean delayed echo. Late-echo SNR is NOT separately accessible.
+
+  supporting numbers:
+   |R_TUFT|^2 - 1  max deviation = 4.44e-16 (must be ~0)
+   GR |R_GR|^2 @ w=0.90 = 1.26e-07 (E386 benchmark; transparent)
+   echo delay Dt = 1.24 tau_d
+   above-barrier mean group delay tau(0.50-0.70) = 31.100 M  (~2L=13.94 M)
+
+================================================================================
+CONCLUSION
+================================================================================
+ 1. Strict areal TUFT barrier sqrtVmax=0.3856 @ R=3.268 matches GR 0.3890 @ 3.28.
+ 2. GR gate passed: Schwarzschild horizon absorbs, |R_GR|^2+|T_GR|^2=1,
+    barrier reflection curve physical (transparent at w=0.90).
+ 3. TUFT reflecting core: |R_TUFT|^2=1 (max dev 4.4e-16), no absorption.
+ 4. Echo round-trip 2L=13.94 M = 2.06 ms @30Msun; ringdown tau_d=1.66 ms.
+    Dt/tau_d=1.24 -> echo overlaps prompt ringdown. Late-echo matched SNR
+    is geometrically merged; observable is a MODIFIED QNM, not a separate
+    late echo. Barrier-top WKB e^{-2K} used as order-of-magnitude only.
+================================================================================
+ elapsed 54.9 s

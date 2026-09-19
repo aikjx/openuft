@@ -1,0 +1,22 @@
+import mpmath as mp
+mp.mp.dps=80
+hbar=mp.mpf('1.054571817e-34'); kf=mp.mpf('3.162277660168379e-4')
+tauf=mp.mpf('2.307625500826972e-6'); c=mp.mpf('299792458')
+alpha=mp.mpf('7.2973525693e-3'); me=mp.mpf('9.1093837015e-31')
+K=hbar*kf/c
+f=open('D:/a10/aikjx/code/my_lib/uft/03-物理统一场/k_result.txt','w')
+f.write('K=%.6e\n' % K)
+f.write('K*tau*c=%.6e\n' % (K*tauf*c))
+f.write('hbar*k^2*alpha=%.6e\n' % (hbar*kf**2*alpha))
+f.write('hbar*k*tau=%.6e\n' % (hbar*kf*tauf))
+f.write('kappa^2=%.6e\n' % kf**2)
+f.write('k^2*alpha=%.6e\n' % (kf**2*alpha))
+f.write('me=%.6e\n' % me)
+f.write('K*tau*c/me=%.6e\n' % (K*tauf*c/me))
+f.write('\n')
+f.write('K*tau*c = hbar*k*tau = hbar*k^2*alpha\n')
+f.write('ratio=%.10f\n' % ((K*tauf*c)/(hbar*kf**2*alpha)))
+f.write('\n')
+f.write('Therefore: K*tau*c = hbar*kappa^2*alpha\n')
+f.write('NOT hbar*alpha. me=hbar*Qtop/c is tautological.\n')
+f.close()

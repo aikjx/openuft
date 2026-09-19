@@ -1,0 +1,65 @@
+PROOF 2: Helix ODE Investigation
+============================================================
+
+Constraint: kappa^2 + tau^2 = omega^2 / c^2
+But framework has kappa^2 + tau^2 = alpha^2 * kappa^2 / (1 - alpha^2)?
+No, let's check the actual relationship.
+
+omega = sqrt(k^2 + tau^2) * c = 9.480522e+04 rad/s
+kappa/omega = 3.335552e-09 s/m
+tau/omega   = 2.434070e-11 s/m
+
+------------------------------------------------------------
+Case 1: Vary omega while keeping alpha = tau/kappa constant
+------------------------------------------------------------
+
+Numerical derivatives (alpha fixed):
+d(kappa)/d(ln omega) = 3.1622776602e-04
+d(tau)/d(ln omega)   = 2.3076255008e-06
+
+Expected from helix ODE:
+d(kappa)/d(ln omega) = -tau = -2.3076255008e-06
+d(tau)/d(ln omega)   = +kappa = 3.1622776602e-04
+
+Ratios:
+dk_dlnw / (-tau) = -137.035999
+dt_dlnw / kappa  = 0.007297
+
+------------------------------------------------------------
+Case 2: What if d(kappa)/d(ln omega) = kappa?
+------------------------------------------------------------
+From kappa = omega/(c*sqrt(1+a^2)):
+d(kappa)/d(ln omega) = kappa
+Numerical: 3.1622776602e-04
+Analytical: 3.1622776602e-04
+Match: 5.28e-24
+
+------------------------------------------------------------
+CASE 3: The actual Frenet-Serret helix ODE
+------------------------------------------------------------
+For a helix parameterized by arc length s:
+d(kappa)/d(s) = 0 (constant curvature)
+d(tau)/d(s) = 0 (constant torsion)
+d(kappa)/d(ln omega) is NOT a standard Frenet formula.
+
+The framework's ODE d(k)/d(ln w) = -tau appears to be
+a CONJECTURE, not a standard result.
+
+For the constraint k^2 + tau^2 = w^2/c^2 with alpha fixed:
+d(k)/d(ln w) = k (proportional scaling)
+d(tau)/d(ln w) = tau (proportional scaling)
+
+The framework ODE would require a DIFFERENT constraint.
+
+============================================================
+CONCLUSION FOR PROOF 2:
+============================================================
+The numerical test shows:
+  d(kappa)/d(ln omega) = +kappa (when alpha fixed)
+  NOT = -tau as claimed in framework
+
+Framework ODE: d(k)/d(ln w) = -tau
+Numerical:     d(k)/d(ln w) = +k
+
+STATUS: FRAMEWORK ODO IS NOT VERIFIED
+This needs revision in the theoretical derivation.

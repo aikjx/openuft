@@ -1,0 +1,68 @@
+==============================================================================
+TUFT v10 LINE1 CONT: SCALAR KG LEAVER COEFFICIENTS (2i w convention)
+New equation line: E337
+==============================================================================
+[E337] Schwarzschild scalar radial, M=1, r_h=2, f=1-2/r
+[E338] r* = r + 2 ln|r/2 - 1|   (coeff 2; dr*/dr = r/(r-2))
+[E339] z = 1 - 2/r ;  r = 2/(1-z)
+[E340] r*(z) = 2*((z - 1)*log(-z/(z - 1)) - 1)/(z - 1)
+[E341] A(z)=dz/dr* = z*(z - 1)**2/2
+[E342] P(z) = (3*z - 1)/(z*(z - 1))
+       Q(z) = (-lambda*z**3 + 2*lambda*z**2 - lambda*z + 4*omega**2 + z**4 - 3*z**3 + 3*z**2 - z)/(z**2*(z**4 - 4*z**3 + 6*z**2 - 4*z + 1))
+[E343] horizon indicial: rho^2 + 4 w^2 = 0  => rho = +- 2 i w
+[E344] u-equation (R = e^{i w r*} u):  u_zz + Pu u_z + Qu u = 0
+       Pu(z) = (4*I*omega + 3*z**2 - 4*z + 1)/(z*(z**2 - 2*z + 1))
+       Qu(z) = (-lambda + z - 1)/(z*(z**2 - 2*z + 1))
+[E345] operator on S after u = z^{-4 i w} S:
+       L[S] = (-lambda*S(z) - 16*omega**2*z*S(z) + 32*omega**2*S(z) - 8*I*omega*z**2*Derivative(S(z), z) - 8*I*omega*z*S(z) + 16*I*omega*z*Derivative(S(z), z) + 8*I*omega*S(z) - 4*I*omega*Derivative(S(z), z) + z**3*Derivative(S(z), (z, 2)) + 3*z**2*Derivative(S(z), z) - 2*z**2*Derivative(S(z), (z, 2)) + z*S(z) - 4*z*Derivative(S(z), z) + z*Derivative(S(z), (z, 2)) - S(z) + Derivative(S(z), z))/(z*(z**2 - 2*z + 1))
+[E346] A2 S'' + A1 S' + A0 S  (numerator over z*(z**2 - 2*z + 1) ):
+       A2 = z*(z**2 - 2*z + 1)
+       A1 = -8*I*omega*z**2 + 16*I*omega*z - 4*I*omega + 3*z**2 - 4*z + 1
+       A0 = -lambda - 16*omega**2*z + 32*omega**2 - 8*I*omega*z + 8*I*omega + z - 1
+[E347] numerator coefficients (already polynomial in z):
+       A2p = z*(z - 1)**2
+       A1p = I*(-8*omega*z**2 + 16*omega*z - 4*omega - 3*I*z**2 + 4*I*z - I)
+       A0p = -lambda - 16*omega**2*z + 32*omega**2 - 8*I*omega*z + 8*I*omega + z - 1
+
+[E348] THREE-TERM RECURRENCE: alpha_n a_{n+1} + beta_n a_n + gamma_n a_{n-1} = 0
+       alpha_n = (n + 1)*(n - 4*I*omega + 1)
+       beta_n  = -lambda - 2*n**2 + 16*I*n*omega - 2*n + 32*omega**2 + 8*I*omega - 1
+       gamma_n = (n - 4*I*omega)**2
+
+[E349] expanded (for codegen):
+       alpha_n = n**2 - 4*I*n*omega + 2*n - 4*I*omega + 1
+       beta_n  = -lambda - 2*n**2 + 16*I*n*omega - 2*n + 32*omega**2 + 8*I*omega - 1
+       gamma_n = n**2 - 8*I*n*omega - 16*omega**2
+
+==============================================================================
+NUMERICAL: Leaver continued fraction -> QNM roots
+==============================================================================
+
+Benchmark (M=1):
+   l=0: w = 0.110456 -0.104899 i
+   l=1: w = 0.292936 -0.097660 i
+   l=2: w = 0.483644 -0.096759 i
+
+  l     N         Re(w)         Im(w)    |resid|  dRe(bench)  dIm(bench)
+----------------------------------------------------------------------------------
+  0   100     0.1104550    -0.1048961   3.72e-15   -9.88e-07    2.92e-06
+  0   200     0.1104549    -0.1048957   6.66e-16   -1.06e-06    3.28e-06
+  0   400     0.1104549    -0.1048957   2.84e-15   -1.06e-06    3.28e-06
+----------------------------------------------------------------------------------
+  1   100     0.2929361    -0.0976600   8.20e-15    1.33e-07    1.11e-08
+  1   200     0.2929361    -0.0976600   5.55e-15    1.33e-07    1.11e-08
+  1   400     0.2929361    -0.0976600   5.44e-15    1.33e-07    1.11e-08
+----------------------------------------------------------------------------------
+  2   100     0.4836439    -0.0967588   1.01e-15   -1.28e-07    2.24e-07
+  2   200     0.4836439    -0.0967588   1.57e-15   -1.28e-07    2.24e-07
+  2   400     0.4836439    -0.0967588   1.57e-15   -1.28e-07    2.24e-07
+----------------------------------------------------------------------------------
+
+VERDICT (pass = |w_400 - bench| < 1e-6 AND |w_400 - w_200| < 1e-6):
+   l=0: |w400-w200|=2.26e-09  |w400-bench|=3.45e-06  -> MARGINAL/FAIL
+   l=1: |w400-w200|=1.39e-17  |w400-bench|=1.34e-07  -> PASS
+   l=2: |w400-w200|=0.00e+00  |w400-bench|=2.58e-07  -> PASS
+
+OVERALL: NOT PASS
+Elapsed: 3.35 s
+==============================================================================
