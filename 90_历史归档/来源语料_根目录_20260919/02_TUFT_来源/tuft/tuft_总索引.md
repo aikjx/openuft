@@ -35,8 +35,9 @@
 | tuft_r23_report.txt | 3 | 1 | 6 | 19 |
 | tuft_r24_report.txt | 6 | 0 | 4 | 20 |
 | tuft_r25_report.txt | 6 | 0 | 5 | 21 |
-| tuft_r26_report.txt | 4 | 0 | 9 | 19 |
+| tuft_r26_report.txt | 3 | 0 | 10 | 21 |
 | tuft_r27_report.txt | 4 | 0 | 5 | 11 |
+| tuft_r28_report.txt | 1 | 1 | 10 | 13 |
 | tuft_r3_report.txt | 8 | 0 | 0 | 0 |
 | tuft_r4_report.txt | 9 | 3 | 0 | 12 |
 | tuft_r5_report.txt | 11 | 2 | 15 | 10 |
@@ -57,12 +58,14 @@
 | tuft_续篇_双结交换仿真_report.txt | 5 | 0 | 0 | 6 |
 | tuft_色挠率_SU3_report.txt | 5 | 16 | 6 | 14 |
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
-| **合计** | **400** | **242** | **162** | **439** |
+| **合计** | **400** | **243** | **173** | **454** |
 
-## 二、脚本清单（63）
+## 二、脚本清单（66）
 
-- `_scratch_r27.py`
-- `_scratch_r27b.py`
+- `_scratch_r28.py`
+- `_test_wall_forward.py`
+- `_test_wall_series.py`
+- `_test_wall_true.py`
 - `r5_torsion_sim.py`
 - `tuft_B_UV完成_抑制检验.py`
 - `tuft_B_排查_线性化质量项.py`
@@ -96,6 +99,7 @@
 - `tuft_r26_leaver_qnm_full.py`
 - `tuft_r26_leaver_wall_qnm.py`
 - `tuft_r27_rw_zerilli_susy.py`
+- `tuft_r28_kerr_teukolsky_probe.py`
 - `tuft_r2_derivative_proof.py`
 - `tuft_r3_scale_degeneracy.py`
 - `tuft_r4_scale_generation.py`
@@ -125,7 +129,7 @@
 - `tuft_跨册缺陷族检查.py`
 - `tuft_黑洞热力学_全维求导精算.py`
 
-## 三、报告文档清单（58）
+## 三、报告文档清单（59）
 
 - `TUFT_微观粒子拓扑导出_第十一部分.md`
 - `TUFT拓扑统一场论_第四至十部分_完整整理.md`
@@ -154,6 +158,7 @@
 - `tuft_R25_Leaver连分式精确QNM_文稿.md`
 - `tuft_R26_QNM全维验证_文稿.md`
 - `tuft_R27_RW_Zerilli等谱_SUSY_文稿.md`
+- `tuft_R28_Kerr_Teukolsky结构探测_文稿.md`
 - `tuft_r2_全维求导证明验证精算报告.md`
 - `tuft_r5_挠率探测实验_审计与修订.md`
 - `tuft_三路线_ABC_全维分析修复优化报告.md`
@@ -186,7 +191,7 @@
 - `挠率产生机制_阶段0_可行性判定.md`
 - `挠率探测实验设计_修复版.md`
 
-## 四、原始报告（txt，51）
+## 四、原始报告（txt，52）
 
 - `tuft_B_UV完成_report.txt`
 - `tuft_B_排查_线性化_report.txt`
@@ -219,6 +224,7 @@
 - `tuft_r25_report.txt`
 - `tuft_r26_report.txt`
 - `tuft_r27_report.txt`
+- `tuft_r28_report.txt`
 - `tuft_r3_report.txt`
 - `tuft_r4_report.txt`
 - `tuft_r5_report.txt`
