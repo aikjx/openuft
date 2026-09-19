@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>垂直原理 - 统一场论可视化系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#7B61FF',
+                        accent: '#FF6B8B',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .principle-card {
+                transition: all 0.3s ease;
+            }
+            .principle-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px -5px rgba(123, 97, 255, 0.1);
+            }
+            .equation-box {
+                position: relative;
+                overflow: hidden;
+            }
+            .equation-box::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #165DFF, #7B61FF, #FF6B8B);
+            }
+            .vector-label {
+                font-family: 'Courier New', monospace;
+                font-weight: bold;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light text-dark min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                    <i class="fa fa-cube text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold text-primary">统一场论可视化系统</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="../index.html" class="font-medium hover:text-primary transition-colors">首页</a>
+                <a href="../core_equations/index.html" class="font-medium hover:text-primary transition-colors">核心方程</a>
+                <a href="../applications/index.html" class="font-medium hover:text-primary transition-colors">十大应用</a>
+                <a href="../ufo_principle/index.html" class="font-medium hover:text-primary transition-colors">UFO原理</a>
+                <a href="#" class="font-medium text-primary border-b-2 border-primary pb-1">垂直原理</a>
+            </div>
+            <button class="md:hidden text-dark text-xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="flex-grow py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">统一场论垂直原理</h2>
+                <p class="text-gray-600">
+                    展示统一场论中矢量垂直关系的核心原理，通过3D可视化直观呈现空间几何、运动与力的本质联系。
+                </p>
+            </div>
+
+            <!-- 3D可视化区域 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-12">
+                <div class="p-6 border-b border-gray-100">
+                    <h3 class="text-xl font-semibold">垂直原理3D可视化</h3>
+                    <p class="text-gray-600 mt-2">
+                        交互式演示统一场论中的矢量垂直关系，展示空间几何与物理现象的本质联系
+                    </p>
+                </div>
+                <div id="principleCanvas" class="w-full h-[600px]"></div>
+                <div class="p-6 border-t border-gray-100">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <h4 class="font-medium mb-3">原理演示控制</h4>
+                            <div class="space-y-3">
+                                <button id="showBasicBtn" class="bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors">
+                                    <i class="fa fa-cube mr-2"></i>基础垂直关系
+                                </button>
+                                <button id="showMotionBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-arrows mr-2"></i>运动垂直原理
+                                </button>
+                                <button id="showFieldBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-field-hockey mr-2"></i>场垂直原理
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-3">参数调节</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">矢量长度</label>
+                                    <input type="range" id="vectorLengthSlider" min="0.5" max="3" step="0.1" value="1.5" 
+                                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" 
+                                           oninput="updateVectorLength(this.value)">
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>短</span>
+                                        <span id="vectorLengthValue">1.5</span>
+                                        <span>长</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">旋转速度</label>
+                                    <input type="range" id="rotationSpeedSlider" min="0" max="0.02" step="0.001" value="0.005" 
+                                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" 
+                                           oninput="updateRotationSpeed(this.value)">
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>静止</span>
+                                        <span id="rotationSpeedValue">0.005</span>
+                                        <span>快速</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-3">显示选项</h4>
+                            <div class="space-y-3">
+                                <button id="toggleLabelsBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-tag mr-2"></i>显示标签
+                                </button>
+                                <button id="toggleGridBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-th mr-2"></i>显示网格
+                                </button>
+                                <button id="resetViewBtn" class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors">
+                                    <i class="fa fa-refresh mr-2"></i>重置视角
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 垂直原理详细说明 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                <!-- 基本原理 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">基本垂直原理</h3>
+                    <div class="principle-card bg-gray-50 p-4 rounded-lg mb-4">
+                        <h4 class="font-medium mb-3 text-accent">空间几何基础</h4>
+                        <p class="text-gray-600">
+                            统一场论认为，空间的几何特性是物理现象的基础。在三维空间中，任意两个不共线的矢量可以通过垂直关系构建完整的空间描述。
+                        </p>
+                        <div class="equation-box bg-white p-3 rounded mt-3">
+                            <div class="text-center">$\vec{a} \cdot \vec{b} = |a||b|\cos\theta$</div>
+                            <div class="text-xs text-gray-500 text-center mt-1">点积公式</div>
+                        </div>
+                    </div>
+                    <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium mb-3 text-accent">正交坐标系</h4>
+                        <p class="text-gray-600">
+                            垂直原理在正交坐标系中的应用，展示了三维空间中坐标轴之间的严格垂直关系，以及这种关系如何影响物理量的描述。
+                        </p>
+                        <div class="equation-box bg-white p-3 rounded mt-3">
+                            <div class="text-center">$\vec{i} \cdot \vec{j} = \vec{j} \cdot \vec{k} = \vec{k} \cdot \vec{i} = 0$</div>
+                            <div class="text-xs text-gray-500 text-center mt-1">正交单位矢量点积为零</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 运动垂直原理 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">运动垂直原理</h3>
+                    <div class="principle-card bg-gray-50 p-4 rounded-lg mb-4">
+                        <h4 class="font-medium mb-3 text-accent">速度与位置垂直</h4>
+                        <p class="text-gray-600">
+                            在统一场论中，物体的运动状态由其在空间中的位置矢量和速度矢量描述，这两个矢量之间存在垂直关系，揭示了运动的本质。
+                        </p>
+                        <div class="equation-box bg-white p-3 rounded mt-3">
+                            <div class="text-center">$\vec{v} \perp \vec{r}$</div>
+                            <div class="text-xs text-gray-500 text-center mt-1">速度矢量与位置矢量垂直</div>
+                        </div>
+                    </div>
+                    <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium mb-3 text-accent">动量与能量关系</h4>
+                        <p class="text-gray-600">
+                            基于垂直原理，统一场论推导出动量与能量之间的本质联系，解释了为何物体运动时动量会发生变化。
+                        </p>
+                        <div class="equation-box bg-white p-3 rounded mt-3">
+                            <div class="text-center">$\overrightarrow{p_{动}} = m(\overrightarrow{c} - \overrightarrow{v})$</div>
+                            <div class="text-xs text-gray-500 text-center mt-1">统一场论动量公式</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 场垂直原理 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">场垂直原理</h3>
+                    <div class="principle-card bg-gray-50 p-4 rounded-lg mb-4">
+                        <h4 class="font-medium mb-3 text-accent">场与运动的关系</h4>
+                        <p class="text-gray-600">
+                            统一场论指出，物理场的存在状态与物质的运动密切相关，场的方向与物质运动方向垂直，这种关系是理解场本质的关键。
+                        </p>
+                        <div class="equation-box bg-white p-3 rounded mt-3">
+                            <div class="text-center">$\vec{F} \perp \vec{v}$</div>
+                            <div class="text-xs text-gray-500 text-center mt-1">场力与运动方向垂直</div>
+                        </div>
+                    </div>
+                    <div class="principle-card bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium mb-3 text-accent">时空垂直结构</h4>
+                        <p class="text-gray-600">
+                            垂直原理进一步扩展到时空结构，展示了时间与空间之间的垂直关系，解释了相对论效应的本质。
+                        </p>
+                        <div class="equation-box bg-white p-3 rounded mt-3">
+                            <div class="text-center">$ct \perp \vec{r}$</div>
+                            <div class="text-xs text-gray-500 text-center mt-1">时间与空间的垂直关系</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 垂直原理应用实例 -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-6 text-center">垂直原理的物理意义与应用</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="principle-card bg-gray-50 p-5 rounded-lg">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-lightbulb-o text-primary"></i>
+                            </div>
+                            <h4 class="font-medium text-primary">揭示物理本质</h4>
+                        </div>
+                        <p class="text-gray-600 mb-3">
+                            垂直原理揭示了物理世界中矢量关系的本质，通过几何方式解释了为何某些物理现象必然发生，如电磁感应、引力作用等。
+                        </p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">解释电磁感应中的右手定则</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">阐明角动量守恒的几何基础</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">理解量子力学中的波粒二象性</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="principle-card bg-gray-50 p-5 rounded-lg">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mr-3">
+                                <i class="fa fa-cogs text-secondary"></i>
+                            </div>
+                            <h4 class="font-medium text-secondary">技术应用前景</h4>
+                        </div>
+                        <p class="text-gray-600 mb-3">
+                            基于垂直原理的理解，可以开发出革命性的技术应用，特别是在人工场技术、能源提取和空间操控等领域。
+                        </p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">设计更高效的人工场发生装置</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">优化空间能提取技术的参数配置</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">实现精确的空间-时间操控系统</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">© 2025 统一场论可视化系统</p>
+            <p class="text-sm text-gray-400">基于张祥前统一场论理论开发的交互式可视化平台</p>
+        </div>
+    </footer>
+
+    <script>
+        let scene, camera, renderer, controls;
+        let vectors = []; // 存储所有矢量
+        let vectorLabels = []; // 存储矢量标签
+        let gridHelper;
+        let currentMode = 'basic';
+        let vectorLength = 1.5;
+        let rotationSpeed = 0.005;
+        let showLabels = false;
+        let showGrid = true;
+        let animationFrameId;
+        
+        // 矢量配置
+        const vectorConfigs = {
+            // 基础垂直关系
+            basic: [
+                { start: { x: 0, y: 0, z: 0 }, end: { x: 1, y: 0, z: 0 }, color: 0x165DFF, label: 'x' },
+                { start: { x: 0, y: 0, z: 0 }, end: { x: 0, y: 1, z: 0 }, color: 0x7B61FF, label: 'y' },
+                { start: { x: 0, y: 0, z: 0 }, end: { x: 0, y: 0, z: 1 }, color: 0xFF6B8B, label: 'z' }
+            ],
+            // 运动垂直原理
+            motion: [
+                { start: { x: 0, y: 0, z: 0 }, end: { x: 1, y: 0, z: 0 }, color: 0x165DFF, label: 'r' },
+                { start: { x: 1, y: 0, z: 0 }, end: { x: 1, y: 1, z: 0 }, color: 0xFF6B8B, label: 'v' },
+                { start: { x: 0, y: 0, z: 0 }, end: { x: 0, y: 1, z: 0 }, color: 0x7B61FF, label: 'p' }
+            ],
+            // 场垂直原理
+            field: [
+                { start: { x: 0, y: 0, z: 0 }, end: { x: 1, y: 0, z: 0 }, color: 0x165DFF, label: 'E' },
+                { start: { x: 0, y: 0, z: 0 }, end: { x: 0, y: 1, z: 0 }, color: 0x7B61FF, label: 'B' },
+                { start: { x: 0, y: 0, z: 0 }, end: { x: 0, y: 0, z: 1 }, color: 0xFF6B8B, label: 'v' }
+            ]
+        };
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 渲染数学公式
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+
+            // 初始化3D场景
+            initScene();
+            
+            // 设置事件监听
+            setupEventListeners();
+            
+            // 开始动画循环
+            animate();
+        });
+
+        // 初始化3D场景
+        function initScene() {
+            const container = document.getElementById('principleCanvas');
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x050a15);
+            
+            // 添加星空背景
+            createStarfield();
+            
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(5, 5, 5);
+            camera.lookAt(0, 0, 0);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // 添加控制器
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // 添加网格
+            gridHelper = new THREE.GridHelper(10, 10, 0x333333, 0x222222);
+            scene.add(gridHelper);
+            
+            // 初始显示基础垂直关系
+            updatePrincipleMode('basic');
+            
+            // 响应式处理
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // 创建星空背景
+        function createStarfield() {
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1000;
+            const posArray = new Float32Array(particlesCount * 3);
+            
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 200;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.1,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const starfield = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(starfield);
+        }
+
+        // 创建矢量箭头
+        function createVector(start, end, color, label) {
+            const direction = new THREE.Vector3(
+                end.x - start.x,
+                end.y - start.y,
+                end.z - start.z
+            );
+            
+            const length = direction.length() * vectorLength;
+            direction.normalize();
+            
+            // 创建箭头
+            const arrowHelper = new THREE.ArrowHelper(
+                direction,
+                new THREE.Vector3(start.x, start.y, start.z),
+                length,
+                color,
+                0.2 * vectorLength,
+                0.1 * vectorLength
+            );
+            
+            scene.add(arrowHelper);
+            
+            // 创建标签
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'vector-label fixed bg-dark text-white px-2 py-1 rounded text-xs pointer-events-none transition-opacity';
+            labelDiv.textContent = '→' + label;
+            labelDiv.style.opacity = showLabels ? '1' : '0';
+            document.body.appendChild(labelDiv);
+            
+            return {
+                arrow: arrowHelper,
+                label: labelDiv,
+                labelText: label,
+                start: start,
+                end: end,
+                color: color
+            };
+        }
+
+        // 更新标签位置
+        function updateLabels() {
+            vectorLabels.forEach(vector => {
+                if (!vector.label || !vector.arrow) return;
+                
+                const endPoint = new THREE.Vector3(
+                    vector.start.x + (vector.end.x - vector.start.x) * vectorLength * 0.5,
+                    vector.start.y + (vector.end.y - vector.start.y) * vectorLength * 0.5,
+                    vector.start.z + (vector.end.z - vector.start.z) * vectorLength * 0.5
+                );
+                
+                // 将3D位置转换为屏幕坐标
+                const screenPosition = endPoint.clone();
+                screenPosition.project(camera);
+                
+                const canvas = renderer.domElement;
+                const x = (screenPosition.x * 0.5 + 0.5) * canvas.clientWidth;
+                const y = (- screenPosition.y * 0.5 + 0.5) * canvas.clientHeight;
+                
+                // 更新标签位置
+                vector.label.style.left = `${x + 10}px`;
+                vector.label.style.top = `${y}px`;
+            });
+        }
+
+        // 更新原理模式
+        function updatePrincipleMode(mode) {
+            currentMode = mode;
+            
+            // 移除旧矢量
+            vectors.forEach(vector => {
+                scene.remove(vector.arrow);
+                if (vector.label && vector.label.parentNode) {
+                    document.body.removeChild(vector.label);
+                }
+            });
+            vectors = [];
+            vectorLabels = [];
+            
+            // 更新按钮样式
+            document.querySelectorAll('#showBasicBtn, #showMotionBtn, #showFieldBtn').forEach(btn => {
+                btn.className = 'bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors';
+            });
+            
+            const activeBtn = document.getElementById('show' + mode.charAt(0).toUpperCase() + mode.slice(1) + 'Btn');
+            activeBtn.className = 'bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors';
+            
+            // 创建新矢量
+            vectorConfigs[mode].forEach(config => {
+                const vector = createVector(
+                    config.start,
+                    config.end,
+                    config.color,
+                    config.label
+                );
+                vectors.push(vector);
+                vectorLabels.push(vector);
+            });
+        }
+
+        // 设置事件监听
+        function setupEventListeners() {
+            // 原理模式按钮
+            document.getElementById('showBasicBtn').addEventListener('click', () => {
+                updatePrincipleMode('basic');
+            });
+            document.getElementById('showMotionBtn').addEventListener('click', () => {
+                updatePrincipleMode('motion');
+            });
+            document.getElementById('showFieldBtn').addEventListener('click', () => {
+                updatePrincipleMode('field');
+            });
+            
+            // 标签显示按钮
+            document.getElementById('toggleLabelsBtn').addEventListener('click', toggleLabels);
+            
+            // 网格显示按钮
+            document.getElementById('toggleGridBtn').addEventListener('click', toggleGrid);
+            
+            // 重置视角按钮
+            document.getElementById('resetViewBtn').addEventListener('click', resetView);
+        }
+
+        // 更新矢量长度
+        function updateVectorLength(value) {
+            vectorLength = parseFloat(value);
+            document.getElementById('vectorLengthValue').textContent = vectorLength.toFixed(1);
+            
+            // 更新所有矢量
+            vectors.forEach((vector, index) => {
+                const config = vectorConfigs[currentMode][index];
+                
+                const direction = new THREE.Vector3(
+                    config.end.x - config.start.x,
+                    config.end.y - config.start.y,
+                    config.end.z - config.start.z
+                );
+                
+                const length = direction.length() * vectorLength;
+                direction.normalize();
+                
+                // 更新箭头
+                vector.arrow.setLength(length);
+                vector.arrow.setDirection(direction);
+            });
+        }
+
+        // 更新旋转速度
+        function updateRotationSpeed(value) {
+            rotationSpeed = parseFloat(value);
+            document.getElementById('rotationSpeedValue').textContent = rotationSpeed.toFixed(3);
+        }
+
+        // 切换标签显示
+        function toggleLabels() {
+            showLabels = !showLabels;
+            
+            // 更新标签可见性
+            vectorLabels.forEach(vector => {
+                if (vector.label) {
+                    vector.label.style.opacity = showLabels ? '1' : '0';
+                }
+            });
+            
+            const btn = document.getElementById('toggleLabelsBtn');
+            if (showLabels) {
+                btn.className = 'bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors';
+            } else {
+                btn.className = 'bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors';
+            }
+        }
+
+        // 切换网格显示
+        function toggleGrid() {
+            showGrid = !showGrid;
+            gridHelper.visible = showGrid;
+            
+            const btn = document.getElementById('toggleGridBtn');
+            if (showGrid) {
+                btn.className = 'bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors';
+            } else {
+                btn.className = 'bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors';
+            }
+        }
+
+        // 重置视角
+        function resetView() {
+            camera.position.set(5, 5, 5);
+            camera.lookAt(0, 0, 0);
+            controls.update();
+        }
+
+        // 动画循环
+        function animate() {
+            animationFrameId = requestAnimationFrame(animate);
+            
+            // 旋转场景
+            scene.rotation.y += rotationSpeed;
+            
+            // 更新标签位置
+            updateLabels();
+            
+            // 对于运动模式，添加额外的动画效果
+            if (currentMode === 'motion' && vectors.length >= 3) {
+                const angle = Date.now() * 0.001;
+                const radius = vectorLength;
+                
+                // 更新位置矢量
+                const rVector = vectors[0];
+                if (rVector && rVector.arrow) {
+                    rVector.arrow.position.x = Math.cos(angle) * radius;
+                    rVector.arrow.position.z = Math.sin(angle) * radius;
+                    
+                    const direction = new THREE.Vector3(
+                        -Math.sin(angle),
+                        0,
+                        Math.cos(angle)
+                    ).normalize();
+                    rVector.arrow.setDirection(direction);
+                }
+                
+                // 更新速度矢量
+                const vVector = vectors[1];
+                if (vVector && vVector.arrow) {
+                    vVector.arrow.position.x = Math.cos(angle) * radius;
+                    vVector.arrow.position.z = Math.sin(angle) * radius;
+                    
+                    const vDirection = new THREE.Vector3(
+                        -Math.sin(angle),
+                        0,
+                        Math.cos(angle)
+                    ).normalize();
+                    vVector.arrow.setDirection(vDirection);
+                }
+            }
+            
+            // 对于场模式，添加场线动画效果
+            if (currentMode === 'field') {
+                // 这里可以添加场线的动态效果
+            }
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>

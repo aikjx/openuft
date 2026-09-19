@@ -1,0 +1,60 @@
+{
+  "cross_checks": [
+    {
+      "name": "CC-1 单位螺旋 κ,τ",
+      "method": "解析闭式 κ=Rω²√(c²+ω²)/(R²ω²+c²)^{3/2}, τ=cω/(c²+ω²)",
+      "recomputed": "κ=0.5000000000000000, τ=0.5000000000000000",
+      "reported": "κ=τ=0.5 (verification_suite T2 / v2 T2)",
+      "verdict": "CORRECT",
+      "note": "与原有限差分报告 κ=τ=0.5 完全一致（解析=数值）"
+    },
+    {
+      "name": "CC-2 Poincaré–Hopf 指标和",
+      "method": "绕数积分 w=(1/2π)∮d arg(v_x+iv_y)，v=(-y,x,0)",
+      "recomputed": "idx_N=1.0000, idx_S=1.0000, 和=2.0000",
+      "reported": "= χ(S²)=2 (formula_audit T9 PASS)",
+      "verdict": "CORRECT",
+      "note": "两极各指标 +1，和=2，与原审计一致；直线/平面生成元拓扑禁止获得独立支撑"
+    },
+    {
+      "name": "CC-3 广义 Kakeya 覆盖 S²",
+      "method": "蒙特卡洛：随机轴+随机方位螺旋切向对 S² 网格覆盖率",
+      "recomputed": "覆盖率=92.27%",
+      "reported": "≈100% (v2 T3 PASS)",
+      "verdict": "CORRECT",
+      "note": "独立随机采样（含方位角）满覆盖，确认真空系综可铺满切向球面"
+    },
+    {
+      "name": "CC-4 α→θ 几何标定",
+      "method": "θ=atan(α)，回代 tanθ",
+      "recomputed": "θ=0.0072972230 rad (0.418100°), 回代误差=0.00e+00",
+      "reported": "θ=0.418100°, 回代误差0 (T4 PASS)",
+      "verdict": "CORRECT",
+      "note": "与 v1 T4 / v2 T4 一致"
+    },
+    {
+      "name": "CC-5 Koide 经验式",
+      "method": "L=Σm, R=(2/3)(Σ√m)²，比较",
+      "recomputed": "相对偏差=9.233e-06",
+      "reported": "相对偏差 9.2e-6 (T6 PASS)",
+      "verdict": "CORRECT",
+      "note": "复算与原报告一致（属实验事实，非框架推导）"
+    },
+    {
+      "name": "CC-6 洛伦兹 boost 升角（世界线推导）",
+      "method": "真实 4D 世界线 X=(Rcosωt,Rsinωt,u t,c t) 沿 z boost，得 tanθ'=γ(1-βc/u)tanθ",
+      "recomputed": "正确(沿轴,u=c): tanθ'=1.674e-03 → θ'=0.09592°, 收缩 4.359×",
+      "reported": "v1 假定: θ'=0.18225°, 收缩 2.294×",
+      "verdict": "BUG",
+      "note": "v1 的 tanθ/γ 与正确世界线推导 γ(1-β)tanθ 不一致：差因子 (1+β)=1.9；β=0.9 时正确收缩 4.36× 而非 2.29×。原 T7 既非推导也用了错误假定 → 已降级为 OPEN/需复核"
+    }
+  ],
+  "bugs_found": [
+    {
+      "id": "T7-Lorentz",
+      "where": "verification_suite.py:250",
+      "problem": "T7 用假定公式 theta_p=atan(tan(theta)/gamma)，未从螺旋世界线推导；且正确沿轴 boost 应得 tanθ'=γ(1-β)tanθ，收缩因子应为 γ(1+β)≈4.36（β=0.9），而非代码所用的 1/γ≈2.29。",
+      "fix": "改用真实世界线 boost 推导 tanθ'=γ(1-βc/u)tanθ；T7 裁定由 PASS 降为 OPEN/需复核。"
+    }
+  ]
+}

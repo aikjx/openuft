@@ -1,0 +1,249 @@
+{
+  "tool": "求导验证精算引擎",
+  "total": 22,
+  "pass": 19,
+  "fail": 1,
+  "info": 2,
+  "checks": [
+    {
+      "id": "A1",
+      "group": "螺旋链",
+      "name": "一阶导 v = dr/dt",
+      "status": "PASS",
+      "detail": "v = (-ωR sin ωt, ωR cos ωt, bω)",
+      "evidence": {
+        "v": "Matrix([[-R*omega*sin(omega*t), R*omega*cos(omega*t), b*omega]])"
+      }
+    },
+    {
+      "id": "A2",
+      "group": "螺旋链",
+      "name": "光速公设 |v|² = ω²(R²+b²)",
+      "status": "PASS",
+      "detail": "|v|² = omega**2*(R**2 + b**2)，与 ω²(R²+b²) 恒等",
+      "evidence": {
+        "v2": "omega**2*(R**2 + b**2)"
+      }
+    },
+    {
+      "id": "A3",
+      "group": "螺旋链",
+      "name": "v·a = 0（径向不做功）",
+      "status": "PASS",
+      "detail": "v·a = 0 恒等成立",
+      "evidence": {
+        "va": "0"
+      }
+    },
+    {
+      "id": "A4",
+      "group": "螺旋链",
+      "name": "曲率 κ = R/(R²+b²)",
+      "status": "PASS",
+      "detail": "符号求导所得 κ 与书中闭式一致",
+      "evidence": {
+        "kappa_derived": "R/(R**2 + b**2)",
+        "kappa_claimed": "R/(R**2 + b**2)"
+      }
+    },
+    {
+      "id": "A5",
+      "group": "螺旋链",
+      "name": "挠率 τ = b/(R²+b²)",
+      "status": "PASS",
+      "detail": "符号求导所得 τ 与书中闭式一致",
+      "evidence": {
+        "tau_derived": "b/(R**2 + b**2)",
+        "tau_claimed": "b/(R**2 + b**2)"
+      }
+    },
+    {
+      "id": "A6",
+      "group": "螺旋链",
+      "name": "三重奏恒等式 κ²+τ² = (ω/c)²",
+      "status": "PASS",
+      "detail": "κ²+τ² = 1/(R²+b²) = ω²/c²，恒等成立",
+      "evidence": {
+        "lhs": "1/(R**2 + b**2)"
+      }
+    },
+    {
+      "id": "A7",
+      "group": "螺旋链",
+      "name": "κ/τ 究竟等于 tanθ 还是 sinθ(=α)",
+      "status": "FAIL",
+      "detail": "**符号求导判定：κ/τ = R/b = α/√(1-α²) = tanθ，不等于 α = sinθ。第54章 §53.2.4 写 'α = κ/τ = ρ/b' 有误；§53.4.2 已承认此点，但 §53.3.3 数值表与 §53.7 五字段表仍在使用被自己否定的公式。**",
+      "evidence": {
+        "kappa_over_tau": "alpha/sqrt(1 - alpha**2)",
+        "tan_theta": "alpha/sqrt(1 - alpha**2)",
+        "is_tan": true,
+        "is_alpha": false
+      }
+    },
+    {
+      "id": "A8",
+      "group": "螺旋链",
+      "name": "偏差 tanθ−α 是否等于 α²/2",
+      "status": "PASS",
+      "detail": "tanθ−α = 1.9430471e-7（绝对），相对偏差 2.6626741e-5；α²/2 = 2.6625677e-5；二者吻合到 1e-3 以内。**这就是第54章 §53.3.3 表中 2.66e-05 的来源——它不是数值误差，是定义性系统偏差。**",
+      "evidence": {
+        "tan_theta": "0.00729754687401",
+        "alpha": "0.0072973525693",
+        "dev_rel": "2.6626741e-5",
+        "alpha2_over_2": "2.6625677e-5"
+      }
+    },
+    {
+      "id": "A9",
+      "group": "螺旋链",
+      "name": "表中 0.0072975469 的实际身份",
+      "status": "PASS",
+      "detail": "第54章 §53.3.3 报的 α=κ/τ=0.0072975469 与 tanθ=0.007297546874 吻合到 1e-7，与 sinθ=α=0.007297352569 差 2.66e-05。**该数值是 tanθ，不是 α。**",
+      "evidence": {
+        "reported": "0.0072975469",
+        "tan_theta": "0.007297546874"
+      }
+    },
+    {
+      "id": "A10",
+      "group": "螺旋链",
+      "name": "螺旋恢复力 |F| = mRω² = mαcω",
+      "status": "PASS",
+      "detail": "|F| = 0.00154714 N，与 mαcω = 0.00154714 N 一致（相对差 <1e-4）；书中报 1.5471e-3 N",
+      "evidence": {
+        "F": "0.0015471389",
+        "F_alt": "0.0015471388"
+      }
+    },
+    {
+      "id": "B1",
+      "group": "Higgs链",
+      "name": "中性规范玻色子质量矩阵本征值",
+      "status": "PASS",
+      "detail": "本征值 {0, (g₂²+g₁²)v²/4} —— 一个质量为 0（光子），一个为 Z",
+      "evidence": {
+        "eigenvalues": [
+          "0",
+          "v**2*(g_1**2 + g_2**2)/4"
+        ]
+      }
+    },
+    {
+      "id": "B2",
+      "group": "Higgs链",
+      "name": "树级 custodial 参数 ρ = m_W²/(m_Z²cos²θ_W) = 1",
+      "status": "PASS",
+      "detail": "ρ 符号化简恒等于 1 —— 这是**结构结论**，不依赖参数数值",
+      "evidence": {
+        "rho": "1"
+      }
+    },
+    {
+      "id": "B3",
+      "group": "Higgs链",
+      "name": "e = g₂sinθ_W = g₁cosθ_W = g₂g₁/√(g₂²+g₁²)",
+      "status": "PASS",
+      "detail": "三种写法符号恒等 —— 电荷是破缺后的**残留**耦合，非独立输入",
+      "evidence": {}
+    },
+    {
+      "id": "B4",
+      "group": "Higgs链",
+      "name": "v = (√2·G_F)^{-1/2} 的数值",
+      "status": "PASS",
+      "detail": "v = 246.21965 GeV，与书中 246.22 GeV 一致",
+      "evidence": {
+        "v_GeV": "246.21965"
+      }
+    },
+    {
+      "id": "B5",
+      "group": "Higgs链",
+      "name": "v² = μ²/λ（由 ∂V/∂H = 0 推出）",
+      "status": "PASS",
+      "detail": "∂V/∂H=0 给出 |H|² = μ²/(2λ)，按 H=(0,(v+h)/√2) 归一化得 v²=μ²/λ ✓",
+      "evidence": {
+        "H_vev": "sqrt(2)*mu/(2*sqrt(lambda))"
+      }
+    },
+    {
+      "id": "C1",
+      "group": "挠率方程",
+      "name": "Cartan 方程 (C') 的 rank–nullity",
+      "status": "PASS",
+      "detail": "24×24 系统：rank = 24，nullity = 0。**M 可逆 ⇒ T 完全由 s 代数决定 ⇒ 挠率无独立传播自由度，UFE-1 推论 1.1 成立。**",
+      "evidence": {
+        "rank": 24,
+        "nullity": 0,
+        "dim": 24
+      }
+    },
+    {
+      "id": "C2",
+      "group": "挠率方程",
+      "name": "全反对称自旋流 ⇒ 全反对称挠率（推论 1.2）",
+      "status": "PASS",
+      "detail": "s 取全反对称 ε^{λμνρ}J_ρ 时，解出的 T 亦为全反对称。与书中 T_{λμν}=(κ²/2)ε_{λμνρ}J_A^ρ 的系数比为 2（度规约定差异如实保留）。",
+      "evidence": {
+        "fully_antisymmetric": true,
+        "coefficient_ratio": "2"
+      }
+    },
+    {
+      "id": "C3",
+      "group": "挠率方程",
+      "name": "与量纲零空间定理的方法同构性",
+      "status": "INFO",
+      "detail": "本判定与第56章「量纲零空间定理」用的是同一套线性代数：前者问 nullity(D_A)=n−rank(D_A) 是否为 0（能否由 {c,ℏ,G} 组合出无量纲量），后者问 nullity(M)=24−rank(M) 是否为 0（挠率能否由自旋流唯一决定）。**两个问题的答案都是 0，但语义相反：量纲零空间为 0 ⇒ 什么都导不出；挠率零空间为 0 ⇒ 一切都由源决定、无自由度。**",
+      "evidence": {
+        "analogy": "nullity=0 has opposite meaning in the two contexts"
+      }
+    },
+    {
+      "id": "D1",
+      "group": "EDM链",
+      "name": "d_e = eαρ/2 在 ρ = 康普顿半径下的取值",
+      "status": "PASS",
+      "detail": "ρ = ℏ/(m_ec) = 3.861593e-13 m 时，d_e = 2.2574193e-34 C·m = 1.4089703e-13 e·cm，与第54章 §53.5.4 报的 2.257e-34 C·m / 1.409e-13 e·cm 一致。**即：该数值用的是康普顿半径。**",
+      "evidence": {
+        "rho": "compton",
+        "d_Cm": "2.257419261e-34",
+        "d_ecm": "1.40897028e-13"
+      }
+    },
+    {
+      "id": "D2",
+      "group": "EDM链",
+      "name": "改用第54章修正后的 r_e 时 d_e 的变化",
+      "status": "PASS",
+      "detail": "ρ = r_e = 2.8179403e-15 m 时，d_e = 1.6473183e-36 C·m = 1.0281752e-15 e·cm。两值之比 = 137.03601 ≈ 1/α = 137.036 —— **第54章 §53.5.4 引用的 EDM 数值，用的是该章自己在 §53.3.1 判定应当替换掉的康普顿半径。**",
+      "evidence": {
+        "rho": "classical",
+        "d_Cm": "1.647318287e-36",
+        "d_ecm": "1.028175204e-15",
+        "ratio": "137.03601"
+      }
+    },
+    {
+      "id": "D3",
+      "group": "EDM链",
+      "name": "证伪结论的稳健性（对 ρ 取值不敏感）",
+      "status": "PASS",
+      "detail": "JILA 上限 4.1e-30 e·cm。ρ=康普顿时超出 3.43651e+16 倍（16.5 个数量级）；ρ=r_e 时超出 2.50774e+14 倍（14.4 个数量级）。**两种取值下结论一致：均已被证伪。预言值对横向半径敏感（差 137 倍），但证伪结论不敏感（差 2 个数量级但都远超上限）。**",
+      "evidence": {
+        "ratio_compton": "3.4365129e+16",
+        "orders_compton": "16.54",
+        "ratio_classical": "2.5077444e+14",
+        "orders_classical": "14.4"
+      }
+    },
+    {
+      "id": "D4",
+      "group": "EDM链",
+      "name": "对称性论证与数值预言的并置关系",
+      "status": "INFO",
+      "detail": "第54章 §53.5 用螺旋对称性论证 d_e = 0（[A] 对称性结论），§53.5.4 又列出 d_e = eαρ/2（g2_EDM.py 的假设）。**二者不矛盾，但必须明确分工**：被证伪的是「破坏螺旋对称性的附加偏移假设」，不是螺旋对称性本身。书中把两者并置于同一节，未显式切割，易被误读为「螺旋模型预言了非零 EDM 并被证伪」。正确读法是：**螺旋模型预言 0（与实验相容）；额外假设预言非零，该假设被证伪。**",
+      "evidence": {}
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUFT v2.0 结构总览 · 本源拓扑统一场论（企业级修复版）</title>
+<style>
+  :root{
+    --ink:#1f2933; --muted:#5f6b7a; --line:#d4dae3;
+    --gold:#b7791f; --goldbg:#fdf3e3; --goldline:#e6c887;
+    --green:#227a4a; --greenbg:#e8f6ee; --greenline:#b4dcc8;
+    --blue:#1f5fa8; --bluebg:#eaf2fb; --blueline:#bcd4ee;
+    --gray:#6b7280; --graybg:#f0f2f5; --grayline:#d3d8df;
+    --red:#b3403a; --redbg:#fbeceb;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif; color:var(--ink);
+       background:#fafbfc; padding:24px; font-size:14px; line-height:1.5;}
+  .doc{max-width:1180px; margin:0 auto;}
+  header{border:1px solid var(--line); border-radius:10px; background:#fff; padding:18px 22px; margin-bottom:14px;}
+  h1{font-size:20px; font-weight:700;}
+  .sub{color:var(--muted); font-size:13px; margin-top:6px;}
+  .anchor{border:1px solid var(--goldline); background:var(--goldbg); border-radius:8px; padding:10px 14px;
+          margin-top:12px; font-size:14px; font-weight:600; color:#7c5a12;}
+  .legend{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; font-size:12px; color:var(--muted);}
+  .lg{display:inline-flex; align-items:center; gap:6px;}
+  .sw{width:14px; height:14px; border-radius:3px; border:1px solid var(--line); display:inline-block;}
+  .band{margin-bottom:14px;}
+  .band-title{display:flex; align-items:baseline; gap:10px; margin-bottom:8px;}
+  .band-name{font-size:15px; font-weight:700;}
+  .band-note{font-size:12px; color:var(--muted);}
+  .grid{display:flex; flex-wrap:wrap; gap:10px;}
+  .card{border:1px solid var(--line); background:#fff; border-radius:8px; padding:10px 12px; flex:1 1 170px; min-width:170px;}
+  .card h3{font-size:13px; margin-bottom:4px; display:flex; align-items:center; gap:6px;}
+  .card p{font-size:12px; color:var(--muted);}
+  .chip{display:inline-block; font-size:11px; font-weight:600; padding:1px 7px; border-radius:10px; white-space:nowrap;}
+  .c-theorem{background:var(--greenbg); color:var(--green); border:1px solid var(--greenline);}
+  .c-axiom{background:var(--goldbg); color:#7c5a12; border:1px solid var(--goldline);}
+  .c-def{background:var(--bluebg); color:var(--blue); border:1px solid var(--blueline);}
+  .c-open{background:var(--graybg); color:var(--gray); border:1px solid var(--grayline);}
+  .c-mixed{background:#fdf6ec; color:#8a6d1f; border:1px solid #ecd9a8;}
+  .gold{border-color:var(--goldline); background:var(--goldbg);}
+  .green{border-color:var(--greenline); background:var(--greenbg);}
+  .open{border-color:var(--grayline); background:var(--graybg);}
+  .arrow{text-align:center; color:var(--muted); font-size:16px; line-height:1; margin:2px 0;}
+  footer{border:1px solid var(--line); border-radius:10px; background:#fff; padding:14px 18px;}
+  .pass{border:1px solid var(--greenline); background:var(--greenbg); border-radius:8px; padding:10px 14px;
+        font-size:14px; color:var(--green); font-weight:700; margin-bottom:10px;}
+  .nums{display:flex; flex-wrap:wrap; gap:8px; font-size:12px; color:var(--muted);}
+  .fix{display:inline-flex; align-items:center; gap:6px; font-size:12px; margin-right:14px;}
+  .ok{color:var(--green); font-weight:700;}
+  .half{color:#8a6d1f; font-weight:700;}
+  .tbl{width:100%; border-collapse:collapse; font-size:12px; margin-top:8px;}
+  .tbl th,.tbl td{border:1px solid var(--line); padding:4px 8px; text-align:left;}
+  .tbl th{background:#f4f6f9;}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<header>
+  <h1>本源拓扑统一场论（TUFT）v2.0 · 体系结构总览</h1>
+  <div class="sub">文档 TUFT-SPEC-2026-0916 · 异常修复完成 · 17/17 数值验证通过 · 锚点约束 v_total = c</div>
+  <div class="anchor">锚点公理 Ⅰ：v_total = c —— 任意时空元世界线切向总速率模恒等于真空光速（v⊥² + h² = c²），全部结论与数值验证以此为基准</div>
+  <div class="legend">
+    <span class="lg"><span class="sw" style="background:var(--goldbg);border-color:var(--goldline)"></span>公理（逻辑起点）</span>
+    <span class="lg"><span class="sw" style="background:var(--greenbg);border-color:var(--greenline)"></span>严格定理 / 已修复</span>
+    <span class="lg"><span class="sw" style="background:var(--bluebg);border-color:var(--blueline)"></span>定义 / 重构</span>
+    <span class="lg"><span class="sw" style="background:var(--graybg);border-color:var(--grayline)"></span>开放命题 / 纲领（非公理）</span>
+    <span class="lg"><span class="sw" style="background:#fdf6ec;border-color:#ecd9a8"></span>定理+设定混合</span>
+  </div>
+</header>
+
+<!-- 层1 公理 -->
+<div class="band">
+  <div class="band-title"><span class="band-name">公理体系（v2.0）</span><span class="band-note">4 公理 + 1 纲领；A1–A4 修复载体</span></div>
+  <div class="grid">
+    <div class="card gold"><h3>公理 Ⅰ · 速率守恒</h3><p>v⊥² + h² = c²<br>锚点约束</p></div>
+    <div class="card"><h3>公理 Ⅱ · 正则性</h3><p>C³ 光滑、κ&gt;0，适用 Frenet–Serret（曲线论基本定理）</p></div>
+    <div class="card green"><h3>公理 Ⅲ · 最小耦合 <span class="chip c-theorem">新增 · 修 A3</span></h3><p>F = mc²(κN + τ_ext·B)，外部挠率场经副法向耦合</p></div>
+    <div class="card green"><h3>公理 Ⅳ · 量子化与闭合 <span class="chip c-theorem">新增 · 修 A1/A2</span></h3><p>Ⅳa 闭合：基本孤子为 (p,q) 环面缠绕；Ⅳb 自旋：∮τds = 2πs，s∈{0,½,1,…}</p></div>
+    <div class="card open"><h3>纲领 G · 几何还原论 <span class="chip c-open">非公理 · 修 A4</span></h3><p>“一切可观测量为几何拓扑泛函” —— 指导原则，不参与推导</p></div>
+  </div>
+</div>
+<div class="arrow">▼</div>
+
+<!-- 层2 定理 -->
+<div class="band">
+  <div class="band-title"><span class="band-name">定理体系（v2.0）</span><span class="band-note">状态标注：✅定理 / ⚙️设定 / 混合；A1/A2/A3/A6 修复点</span></div>
+  <div class="grid">
+    <div class="card"><h3>T1 螺旋运动学 <span class="chip c-theorem">✅</span></h3><p>κ=Rω²/c² · τ=hω/c² · ω=c√(κ²+τ²)</p></div>
+    <div class="card"><h3>T2 扭转与自旋量化 <span class="chip c-mixed">✅+⚙️ · 修A1</span></h3><p>单圈 Tw=cosθ；Tw=q·cosθ∈ℤ(玻色)/ℤ+½(费米)</p></div>
+    <div class="card"><h3>T3 拓扑质量 <span class="chip c-def">⚙️</span></h3><p>m = (ℏ/c)√(κ²+τ²)；普朗克单位自洽</p></div>
+    <div class="card"><h3>T4 全局惯性比 <span class="chip c-theorem">✅定义</span></h3><p>β₁ = (κ²+τ²)/⟨κ₀²+τ₀²⟩</p></div>
+    <div class="card"><h3>T5 引力加速度 <span class="chip c-theorem">✅</span></h3><p>g = −c²κN（固有时加速度 = c²κ）</p></div>
+    <div class="card"><h3>T6 统一动力学 <span class="chip c-mixed">⚙️ · 修A3</span></h3><p>F = mc²κN + mc²τ_ext·B（B 项由公理Ⅲ承载）</p></div>
+    <div class="card"><h3>T7 β₁ 场方程 <span class="chip c-theorem">✅</span></h3><p>β₁∇²lnβ₁ = −8πGρ/c²；静态解 e^(2GM/c²r)</p></div>
+    <div class="card"><h3>T8 电荷定义 <span class="chip c-def">⚙️ · 修A6</span></h3><p>q/e = 挠率通量比（归一化无量纲）</p></div>
+    <div class="card"><h3>T9 闭合孤子 <span class="chip c-mixed">✅+⚙️ · 修A2</span></h3><p>(p,q) 环面纽结闭合；均匀螺旋 = q→∞ 局部渐近</p></div>
+    <div class="card"><h3>T10 孤子能量 <span class="chip c-def">⚙️</span></h3><p>E = ℏc√(κ²+τ²)</p></div>
+  </div>
+</div>
+<div class="arrow">▼</div>
+
+<!-- 层3 四大力 -->
+<div class="band">
+  <div class="band-title"><span class="band-name">四大力几何本源</span><span class="band-note">曲率/挠率/拓扑不变量泛函（公理Ⅳ · 纲领 G 之下）</span></div>
+  <div class="grid">
+    <div class="card"><h3>引力</h3><p>曲率场 κ（长程）· 主法向效应</p></div>
+    <div class="card"><h3>电磁</h3><p>挠率场 τ（长程）· 符号 ↔ 电荷手性</p></div>
+    <div class="card"><h3>强</h3><p>核心 κ 非线性暴涨（极短程）</p></div>
+    <div class="card open"><h3>弱 <span class="chip c-open">开放</span></h3><p>SL 突变 · 纽结拓扑相变（OP-WK）</p></div>
+  </div>
+</div>
+<div class="arrow">▼</div>
+
+<!-- 层4 分支 -->
+<div class="band">
+  <div class="band-title"><span class="band-name">衍生分支（模型推论）</span><span class="band-note">明确开放，不伪闭合</span></div>
+  <div class="grid">
+    <div class="card open"><h3>电磁学 <span class="chip c-open">OP-M</span></h3><p>τ 场波动 → 麦克斯韦（第一性推导未完成）</p></div>
+    <div class="card open"><h3>量子力学 <span class="chip c-open">OP-M</span></h3><p>薛定谔/汤川（低能极限推导未完成）</p></div>
+    <div class="card open"><h3>宇宙学 <span class="chip c-open">OP-C</span></h3><p>旋转曲线 β₁,orb · 背景系综 · 弛豫方程（定量缺失）</p></div>
+  </div>
+</div>
+
+<footer>
+  <div class="pass">数值验证：17 / 17 通过（python tuft_v2_verify.py，退出码 0）</div>
+  <div class="nums">
+    <span>SL = Tw+Wr = −4.00000 ∈ ℤ（Δ=3.9e-9）</span>
+    <span>费米孤子 (3,7) 纽结：Tw = −0.500000，SL = −18.00000</span>
+    <span>45° 排除：cosθ=1/√2 无理数 ⇒ 修正为 cosθ=½（θ=60°）</span>
+    <span>β₁ 外域残差 2.8e-9 · g 相对误差 4.9e-11</span>
+    <span>弱场波速 = c · 3D 动态收敛 2GM/r（1.07e-2）</span>
+  </div>
+  <table class="tbl">
+    <tr><th>异常登记</th><th>A1 自旋整数化</th><th>A2 螺旋不闭合</th><th>A3 B项可导性</th><th>A4 公理属性</th><th>A5 挠率概念</th><th>A6 电荷定义</th><th>A7 波动封闭</th><th>A8 四维协变</th><th>A9 宇宙学</th></tr>
+    <tr><td>状态</td><td class="ok">✓ 已修复</td><td class="ok">✓ 已修复</td><td class="ok">✓ 已修复</td><td class="ok">✓ 已处置</td><td class="ok">✓ 已处置</td><td class="ok">✓ 已修复</td><td class="ok">✓ 已升级</td><td class="half">◐ 开放(OP-4D)</td><td class="half">◐ 开放(OP-C)</td></tr>
+  </table>
+  <div style="margin-top:8px;font-size:11px;color:var(--muted);">理论模型规格 · 数学自洽 ≠ 实验证实 · 公理为假设 · G/ℏ/e/α 为外部标定输入</div>
+</footer>
+
+</div>
+</body>
+</html>

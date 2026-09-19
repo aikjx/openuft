@@ -1,0 +1,67 @@
+﻿================================================================================
+MainAgent v17 independent audit : strict AREAL-radius odd potential
+================================================================================
+
+[REAL GR GATE] exact Schwarzschild isotropic -> areal pipeline
+  strict V  barrier: R_peak=3.280876  Vmax=0.15128670  sqrt=0.38895591
+  RW closed-form   : R=3.000000  Vmax=4/27=0.14814815  sqrt=0.38490018
+  max |V_strict - V_RW|/V_RW over exterior = 2.387e-08
+  -> STRICT GR GATE: FAIL
+  [control] coalition-style (isotropic r, 1/B) on GR: sqrt(Vmax)=0.667999 at rho=1.3240
+            (demonstrates that convention is NOT the RW barrier)
+
+================================================================================
+[TUFT] strict areal-radius barrier  vs  coalition isotropic/1-B result
+================================================================================
+  case                 r_wall   R_neck | STRICT areal (R_peak,Vmax,sqrt) | COALITION 1/B (rho,Vmax,sqrt)
+  ----------------------------------------------------------------------------------------------------
+  c_m=0,d=0              none   1.0000 | R=   3.6740 V=0.131877 sqrt=0.363148 | rho=   1.1495 V=0.468509 sqrt=0.684477
+  c_m=-0.5,d=0         0.7071     none | R=   1.9231 V=0.219459 sqrt=0.468465 | rho=   1.0005 V=0.515900 sqrt=0.718262
+  c_m=-0.29,d=-0.05    0.6099     none | R=   3.2680 V=0.148709 sqrt=0.385628 | rho=   1.1012 V=0.492831 sqrt=0.702019
+
+================================================================================
+[WALL / NECK diagnostics] areal radius R(rho) and e^-2lambda
+================================================================================
+
+  c_m=0,d=0:
+    near NECK rho=0.990000 : R=2.718420 e^-2l=0.0001 A=0.13263 V=0.05385 J=-2.774e-02
+    near NECK rho=0.999000 : R=2.718283 e^-2l=0.0000 A=0.13506 V=0.05484 J=-2.724e-03
+    near NECK rho=1.000000 : R=2.718282 e^-2l=0.0000 A=0.13534 V=0.05495 J=2.423e-15
+    near NECK rho=1.001000 : R=2.718283 e^-2l=0.0000 A=0.13561 V=0.05506 J=2.713e-03
+    near NECK rho=1.010000 : R=2.718416 e^-2l=0.0001 A=0.13804 V=0.05605 J=2.665e-02
+
+  c_m=-0.5,d=0:
+    near WALL rho=0.707107 : R=0.004113 e^-2l=2.500e+11 A=0.05911 V=2.62e+15 J=2.908e+03
+    near WALL rho=0.707114 : R=0.013007 e^-2l=2.500e+09 A=0.05911 V=2.62e+12 J=9.197e+02
+    near WALL rho=0.707177 : R=0.041128 e^-2l=2.499e+07 A=0.05912 V=2.621e+09 J=2.907e+02
+    near WALL rho=0.707814 : R=0.129921 e^-2l=2.493e+05 A=0.05927 V=2.627e+06 J=9.165e+01
+    near WALL rho=0.714178 : R=0.406619 e^-2l=2.436e+03 A=0.06078 V=2687 J=2.810e+01
+
+  c_m=-0.29,d=-0.05:
+    near WALL rho=0.609903 : R=0.004683 e^-2l=2.500e+11 A=0.03766 V=1.288e+15 J=3.839e+03
+    near WALL rho=0.609908 : R=0.014810 e^-2l=2.500e+09 A=0.03766 V=1.288e+12 J=1.214e+03
+    near WALL rho=0.609963 : R=0.046826 e^-2l=2.499e+07 A=0.03767 V=1.288e+09 J=3.838e+02
+    near WALL rho=0.610512 : R=0.147881 e^-2l=2.490e+05 A=0.03778 V=1.291e+06 J=1.209e+02
+    near WALL rho=0.616001 : R=0.461594 e^-2l=2.406e+03 A=0.03890 V=1319 J=3.676e+01
+
+================================================================================
+[TORTOISE] dR*/drho=sqrt(B/A); does r* diverge at neck (horizon-like)?
+================================================================================
+  c_m=0,d=0: neck rho_n=1.00000 ; sqrt(B/A) at (1.001,1.01,1.1)rho_n = ['7.37', '7.24', '6.16']
+  c_m=-0.5,d=0: no finite neck (c=0 throat at rho=1).
+  c_m=-0.5,d=0: neck rho_n=1.00000 ; sqrt(B/A) at (1.001,1.01,1.1)rho_n = ['5.22', '5.17', '4.72']
+  c_m=-0.29,d=-0.05: no finite neck (c=0 throat at rho=1).
+  c_m=-0.29,d=-0.05: neck rho_n=1.00000 ; sqrt(B/A) at (1.001,1.01,1.1)rho_n = ['5.99', '5.92', '5.24']
+
+================================================================================
+SUMMARY
+================================================================================
+  REAL GR barrier sqrt(Vmax)=0.38490 @R=3 (Schwarzschild RW 4/27).
+  Coalition 'gate' 0.685 uses isotropic r as areal radius AND e^-2l=1/B;
+  it is a coordinate-convention artifact, not the GR limit.
+  c_m=0,d=0        STRICT sqrt(Vmax)=0.3631 @R=3.6740 | coalition 1/B sqrt=0.6845
+  c_m=-0.5,d=0     STRICT sqrt(Vmax)=0.4685 @R=1.9231 | coalition 1/B sqrt=0.7183
+  c_m=-0.29,d=-0.05 STRICT sqrt(Vmax)=0.3856 @R=3.2680 | coalition 1/B sqrt=0.7020
+
+END (3.7 s)
+[written] D:\a10\aikjx\code\my_lib\_ma_v17_odd_areal_out.txt

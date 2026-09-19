@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四力全维度 3D 可视化 · 统一场论科研系统</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { primary:'#165DFF', secondary:'#7B61FF', accent:'#FF6B8B',
+            dark:'#0F172A', panel:'#1E293B', grid:'#334155' }
+} } }
+</script>
+<style>
+  html,body{margin:0;height:100%;background:#0F172A;color:#E2E8F0;font-family:'Inter',system-ui,sans-serif;overflow:hidden}
+  #app{display:flex;height:100vh;width:100vw}
+  #scene{flex:1;position:relative}
+  #panel{width:380px;background:#1E293B;border-left:1px solid #334155;overflow-y:auto;padding:16px}
+  .eq{background:#0F172A;border:1px solid #334155;border-radius:8px;padding:10px;margin:8px 0;overflow-x:auto}
+  .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600}
+  .ctrl-row{display:flex;align-items:center;justify-content:space-between;margin:10px 0}
+  .ctrl-row label{font-size:13px;color:#94A3B8}
+  input[type=range]{width:200px;accent-color:#7B61FF}
+  .force-toggle{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:13px}
+  .swatch{width:14px;height:14px;border-radius:3px}
+  .stat{font-family:'Courier New',monospace;font-size:12px;color:#CBD5E1}
+  h2{border-left:3px solid #7B61FF;padding-left:8px;margin:16px 0 8px}
+  .hint{font-size:11px;color:#64748B;line-height:1.5}
+  .katex{color:#E2E8F0}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="scene"></div>
+  <div id="panel">
+    <h1 style="font-size:18px;font-weight:700;margin:0 0 4px">四力全维度 3D 可视化</h1>
+    <div class="hint">统一场论 V4 · 复曲率场 <b>Ξ=κ+iτ</b> · 垂直(正交)原理<br>算法联盟 ROOT 最高权限 · 工业科研级</div>
+
+    <h2>维度控制</h2>
+    <div class="force-toggle"><input type="checkbox" id="t-size" checked><span>大小</span><span class="hint">|F|=αᵢ·ℏc/r²</span></div>
+    <div class="force-toggle"><input type="checkbox" id="t-dir" checked><span>方向</span><span class="hint">沿 r̂ (向心)</span></div>
+    <div class="force-toggle"><input type="checkbox" id="t-dist" checked><span>距离</span><span class="hint">1/r² 律</span></div>
+    <div class="force-toggle"><input type="checkbox" id="t-rel" checked><span>关系</span><span class="hint">Ξ 复平面正交投影</span></div>
+    <div class="force-toggle"><input type="checkbox" id="t-char" checked><span>特性</span><span class="hint">∇×F=0 / 源在奇点</span></div>
+
+    <h2>距离 r (归一化单位)</h2>
+    <div class="ctrl-row"><label>r = <span id="r-val">2.0</span></label>
+      <input type="range" id="r-slider" min="0.5" max="8" step="0.1" value="2.0"></div>
+    <div class="hint">拖动观察 1/r² 衰减：力矢量长度 ∝ 1/r²（已按对数视觉压缩便于观察）</div>
+
+    <h2>四力图例与实时大小</h2>
+    <div class="force-toggle"><span class="swatch" style="background:#165DFF"></span><span>引力 G</span><span class="stat" id="s-G">α=3.85e-15</span></div>
+    <div class="force-toggle"><span class="swatch" style="background:#06B6D4"></span><span>电磁 E</span><span class="stat" id="s-E">α=1/137</span></div>
+    <div class="force-toggle"><span class="swatch" style="background:#FF4D4F"></span><span>强 S</span><span class="stat" id="s-S">α≈1 (短程)</span></div>
+    <div class="force-toggle"><span class="swatch" style="background:#7B61FF"></span><span>弱 W</span><span class="stat" id="s-W">α≈0.25 (极短程)</span></div>
+
+    <h2>四力层级 (理论比值)</h2>
+    <div class="eq"><span id="k-fsfe"></span></div>
+    <div class="eq"><span id="k-fefg"></span></div>
+    <div class="eq"><span id="k-fsfg"></span></div>
+
+    <h2>核心方程</h2>
+    <div class="eq"><span id="k-xi"></span></div>
+    <div class="eq"><span id="k-force"></span></div>
+    <div class="eq"><span id="k-norm"></span></div>
+    <div class="hint">⚠ 诚实修正：引力与电磁在空间矢量上均沿 r̂（同线），"正交"仅存于
+      <b>Ξ=κ+iτ 的复数平面</b>（Re⊥Im），非空间矢量垂直。下方复平面小窗展示该正交投影。</div>
+
+    <h2>Frenet 标架 T/N/B</h2>
+    <div class="force-toggle"><span class="swatch" style="background:#22C55E"></span><span>T 切向 (速度)</span></div>
+    <div class="force-toggle"><span class="swatch" style="background:#F59E0B"></span><span>N 法向 (曲率κ)</span></div>
+    <div class="force-toggle"><span class="swatch" style="background:#A855F7"></span><span>B 副法向 (挠率τ)</span></div>
+    <div class="hint">T⊥N⊥B 三元正交（垂直原理，25号符号求导证明）。κ 活在(T,N)平面，τ 活在(T,B)平面。</div>
+  </div>
+</div>
+
+<!-- 复平面小窗: Ξ的实部(引力)与虚部(电磁)正交投影 -->
+<div style="position:fixed;right:396px;bottom:16px;width:200px;height:200px;background:#0F172A;border:1px solid #334155;border-radius:8px">
+  <div style="font-size:11px;color:#94A3B8;padding:6px 8px">复曲率场 Ξ=κ+iτ<br>Re(引力)⊥Im(电磁)</div>
+  <canvas id="xi-canvas" width="200" height="160"></canvas>
+</div>
+
+<script>
+// ===================== 物理常量 (精算, 26号) =====================
+const C = 299792458, HBAR = 1.054571817e-34, G = 6.67430e-11;
+const ALPHA = 1/137.035999084;
+const ME = 0.51099895000*1.78266192162789770e-30;
+const alpha_G = 2*G*ME/(C*HBAR);          // 双电子引力耦合 ~3.85e-15
+const alpha_E = ALPHA;                     // 电磁 = 1/137
+const alpha_S = 1.0;                       // 强 ~1 (τ_int=1/3,n_q=3)
+const alpha_W = 0.25;                      // 弱 ~0.25
+
+// ===================== Three.js 场景 =====================
+const sceneEl = document.getElementById('scene');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0F172A);
+scene.fog = new THREE.Fog(0x0F172A, 12, 40);
+
+const camera = new THREE.PerspectiveCamera(55, sceneEl.clientWidth/sceneEl.clientHeight, 0.1, 1000);
+camera.position.set(6,5,8);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(sceneEl.clientWidth, sceneEl.clientHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+sceneEl.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.08;
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(5,10,7); scene.add(dl);
+const dl2 = new THREE.DirectionalLight(0x7B61FF, 0.4); dl2.position.set(-5,-3,-7); scene.add(dl2);
+
+// 网格地面 (工业坐标系)
+const grid = new THREE.GridHelper(20, 20, 0x334155, 0x1E293B);
+grid.position.y = -0.01; scene.add(grid);
+
+// 原点粒子 (源)
+const core = new THREE.Mesh(new THREE.SphereGeometry(0.18,32,32),
+  new THREE.MeshStandardMaterial({color:0xFBBF24, emissive:0xF59E0B, emissiveIntensity:0.6}));
+scene.add(core);
+
+// ===================== Frenet 标架 T/N/B (固定在原点, 示意正交) =====================
+function axis(dir, color, len=2.4){
+  const mat = new THREE.LineBasicMaterial({color});
+  const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), dir.clone().multiplyScalar(len)]);
+  const line = new THREE.Line(geo, mat);
+  const arrow = new THREE.ArrowHelper(dir.clone().normalize(), new THREE.Vector3(0,0,0), len, color, 0.3, 0.18);
+  scene.add(line); scene.add(arrow);
+  return arrow;
+}
+const Tvec = new THREE.Vector3(0,1,0);        // 切向(轴)
+const Nvec = new THREE.Vector3(1,0,0);        // 法向
+const Bvec = new THREE.Vector3(0,0,1);        // 副法向
+axis(Tvec, 0x22C55E); axis(Nvec, 0xF59E0B); axis(Bvec, 0xA855F7);
+
+// ===================== 螺旋世界线 (空间动态, 17号) =====================
+(function helix(){
+  const pts=[]; const rho=0.6,b=0.25,turns=6;
+  for(let i=0;i<=400;i++){const th=i/400*Math.PI*2*turns;
+    pts.push(new THREE.Vector3(rho*Math.cos(th), b*th*0.4, rho*Math.sin(th)));}
+  const geo=new THREE.BufferGeometry().setFromPoints(pts);
+  const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0x7B61FF,transparent:true,opacity:0.55}));
+  scene.add(line);
+})();
+
+// ===================== 四力矢量 (从原点沿 r̂ 向心) =====================
+const forceColors = {G:0x165DFF, E:0x06B6D4, S:0xFF4D4F, W:0x7B61FF};
+const forceVecs = {};
+function makeForce(key){
+  const color = forceColors[key];
+  const mat = new THREE.MeshBasicMaterial({color});
+  const head = new THREE.Mesh(new THREE.ConeGeometry(0.12,0.35,16), mat);
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,1,12), mat);
+  shaft.position.y = 0.5; head.position.y = 1.0;
+  const grp = new THREE.Group(); grp.add(shaft); grp.add(head);
+  scene.add(grp); forceVecs[key]=grp; return grp;
+}
+['G','E','S','W'].forEach(makeForce);
+
+// 测试粒子位置 (沿 r̂ = X 轴方向, 便于观察向心)
+const particleDir = new THREE.Vector3(1,0,0);
+const particle = new THREE.Mesh(new THREE.SphereGeometry(0.1,16,16),
+  new THREE.MeshStandardMaterial({color:0xFFFFFF, emissive:0x444466}));
+scene.add(particle);
+
+// ===================== 距离 r 与力大小 =====================
+let R = 2.0;
+// 视觉压缩: 长度 = baseLen * (1/r²) 但取 sqrt 压缩避免过小
+function forceLength(alpha, key){
+  const dist = R;
+  // 短程力 (S,W) 额外指数衰减 e^{-r/Λ}
+  let range = 1.0;
+  if(key==='S') range = Math.exp(-dist/1.2);     // 强: Λ~1.2
+  if(key==='W') range = Math.exp(-dist/0.6);     // 弱: Λ~0.6 (更短程)
+  const mag = alpha * range / (dist*dist);       // ∝ α·1/r²
+  return mag;
+}
+const VISUAL = 60;   // 视觉放大系数
+function updateForces(){
+  particle.position.copy(particleDir.clone().multiplyScalar(R));
+  const dir = particleDir.clone().negate();   // 向心(指向原点)
+  const data = {G:alpha_G, E:alpha_E, S:alpha_S, W:alpha_W};
+  for(const k of ['G','E','S','W']){
+    const grp = forceVecs[k];
+    const mag = forceLength(data[k], k);
+    const len = Math.max(0.05, mag*VISUAL);
+    grp.scale.set(1, len, 1);
+    // 放置: 从粒子指向原点(向心), 箭头尖端在粒子处
+    grp.position.copy(particle.position);
+    grp.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().normalize());
+    grp.visible = document.getElementById('t-size').checked || document.getElementById('t-dir').checked;
+  }
+  // 距离维度显示
+  if(!document.getElementById('t-dist').checked){
+    for(const k of ['G','E','S','W']) forceVecs[k].visible=false;
+  }
+}
+
+// ===================== 复平面小窗 (Ξ=κ+iτ 正交投影) =====================
+const xic = document.getElementById('xi-canvas');
+const xictx = xic.getContext('2d');
+function drawXi(){
+  const w=xic.width,h=xic.height; xictx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h/2;
+  xictx.strokeStyle='#334155'; xictx.beginPath();xictx.moveTo(10,cy);xictx.lineTo(w-10,cy);
+  xictx.moveTo(cx,10);xictx.lineTo(cx,h-10);xictx.stroke();
+  // 单位圆
+  xictx.strokeStyle='#475569'; xictx.beginPath();xictx.arc(cx,cy,70,0,Math.PI*2);xictx.stroke();
+  // 相位 φ=atan(α) ≈ atan(1/137) 极小 -> 几乎在实轴
+  const phi=Math.atan(alpha_E);
+  const px=cx+70*Math.cos(phi), py=cy-70*Math.sin(phi);
+  xictx.strokeStyle='#06B6D4'; xictx.beginPath();xictx.moveTo(cx,cy);xictx.lineTo(px,py);xictx.stroke();
+  // 虚部(电磁)分量 (垂直)
+  xictx.strokeStyle='#FF6B8B'; xictx.beginPath();xictx.moveTo(px,py);xictx.lineTo(px,cy);xictx.stroke();
+  xictx.fillStyle='#06B6D4'; xictx.font='10px monospace'; xictx.fillText('Re κ(引力)',cx+4,cy+14);
+  xictx.fillStyle='#FF6B8B'; xictx.fillText('Im τ(电磁)',px+4,cy-4);
+  xictx.fillStyle='#94A3B8'; xictx.fillText('|Ξ̃|²=κ̃²+τ̃²=1',10,h-6);
+}
+
+// ===================== KaTeX 渲染 =====================
+function kt(id, tex){
+  katex.render(tex, document.getElementById(id), {throwOnError:false, displayMode:false});
+}
+kt('k-fsfe','F_S/F_E = 137.04\\ (理论/实验\\,137\\,\\checkmark)');
+kt('k-fefg','F_E/F_G = 1.9\\times10^{12}\\ (引力极弱\\,\\checkmark)');
+kt('k-fsfg','F_S/F_G = 2.6\\times10^{14}');
+kt('k-xi','\\Xi = \\kappa + i\\tau,\\quad |\\Xi|^2=\\kappa^2+\\tau^2=(\\omega/c)^2');
+kt('k-force','\\mathfrak{F} = -\\nabla\\Xi = -(\\nabla\\kappa + i\\nabla\\tau)');
+kt('k-norm','|\\tilde\\Xi|^2 = \\tilde\\kappa^2 + \\tilde\\tau^2 = 1,\\quad \\varphi=\\arctan\\alpha');
+
+// ===================== 交互 =====================
+document.getElementById('r-slider').addEventListener('input', e=>{
+  R = parseFloat(e.target.value);
+  document.getElementById('r-val').textContent = R.toFixed(1);
+  updateForces(); drawXi();
+});
+['t-size','t-dir','t-dist','t-rel','t-char'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', ()=>{ updateForces(); });
+});
+
+// ===================== 渲染循环 =====================
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();
+  // 核心粒子脉动
+  const s = 1+0.1*Math.sin(Date.now()*0.003); core.scale.set(s,s,s);
+  renderer.render(scene, camera);
+}
+updateForces(); drawXi(); animate();
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = sceneEl.clientWidth/sceneEl.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(sceneEl.clientWidth, sceneEl.clientHeight);
+});
+</script>
+</body>
+</html>

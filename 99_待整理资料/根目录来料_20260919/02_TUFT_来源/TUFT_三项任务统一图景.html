@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUFT 空间光速螺旋几何 · 三项任务统一图景（示意）</title>
+<style>
+  :root{
+    --ink:#0f172a; --mut:#475569; --teal:#0f766e; --blue:#1d4ed8;
+    --amber:#b45309; --red:#dc2626; --bg:#f8fafc; --card:#ffffff; --line:#e2e8f0;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;padding:24px 16px;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;}
+  .wrap{max-width:960px;margin:0 auto;}
+  header{text-align:center;margin-bottom:18px;}
+  header h1{margin:0 0 6px;font-size:26px;letter-spacing:1px;}
+  header p{margin:0;color:var(--mut);font-size:14px;}
+  .badge{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:999px;
+         background:#fff7ed;color:var(--amber);font-size:12px;border:1px solid #fdba74;vertical-align:3px;}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;
+         padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(15,23,42,.05);}
+  .panel svg{display:block;width:100%;height:auto;}
+  .cards{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:16px;}
+  .card{flex:1 1 290px;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--teal);
+        border-radius:10px;padding:14px 16px;box-shadow:0 1px 3px rgba(15,23,42,.05);}
+  .card.c2{border-top-color:var(--blue);}
+  .card.c3{border-top-color:var(--amber);}
+  .card h3{margin:0 0 10px;font-size:16px;}
+  .card .tag{display:inline-block;font-size:11px;color:#fff;border-radius:4px;padding:1px 7px;margin-right:6px;vertical-align:1px;}
+  .c1 .tag{background:var(--teal);} .c2 .tag{background:var(--blue);} .c3 .tag{background:var(--amber);}
+  .card ul{margin:0;padding-left:0;list-style:none;}
+  .card li{font-size:13.5px;line-height:1.75;color:var(--ink);}
+  .card .m{font-family:"Cambria Math","Times New Roman",Georgia,serif;}
+  .card li b{color:var(--teal);} .card.c2 li b{color:var(--blue);} .card.c3 li b{color:var(--amber);}
+  .unify{background:var(--card);border:1px dashed var(--teal);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+  .unify .row{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:13.5px;color:var(--mut);}
+  .unify .node{background:#ecfdf5;color:var(--teal);font-weight:700;padding:3px 12px;border-radius:999px;white-space:nowrap;}
+  .unify .arrow{color:var(--teal);font-weight:700;}
+  .next{background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:12px 16px;margin-bottom:16px;}
+  .next h3{margin:0 0 6px;font-size:15px;color:var(--amber);}
+  .next p{margin:0;font-size:13.5px;color:var(--ink);line-height:1.7;}
+  footer{font-size:12px;color:var(--mut);text-align:center;padding:6px 0 14px;line-height:1.6;}
+  sup,sub{font-size:.72em;}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;font-size:12.5px;color:var(--mut);padding-top:10px;border-top:1px solid var(--line);margin-top:8px;}
+  .legend .sw{display:inline-block;width:18px;height:0;border-top:3px solid var(--teal);vertical-align:3px;margin-right:5px;}
+  .legend .sw.dash{border-top:2px dashed #94a3b8;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>TUFT 空间光速螺旋几何 · 三项任务统一图景<span class="badge">示意</span></h1>
+  <p>螺旋涡丝几何：连续动力学的爆破（任务 1）· 拓扑荷的横向耦合（任务 2）· 离散采样点阵（任务 3）</p>
+</header>
+
+<div class="panel">
+  <svg viewBox="0 0 900 340" role="img" aria-label="螺旋涡丝自相似收缩示意图">
+    <defs>
+      <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#b45309"/>
+      </marker>
+      <marker id="av" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#b45309"/>
+      </marker>
+    </defs>
+
+    <!-- 旋转轴 -->
+    <line x1="450" y1="58" x2="450" y2="282" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="7 5"/>
+    <text x="458" y="64" font-size="13" fill="#64748b">旋转轴（涡丝轴）</text>
+
+    <!-- 后层螺旋（虚线，表现三维） -->
+    <path d="M 450.0,50.0 L 458.9,51.2 L 467.3,52.4 L 475.1,53.6 L 481.9,54.8 L 487.5,56.0 L 491.7,57.2 L 494.4,58.4 L 495.5,59.6 L 495.0,60.8 L 492.9,62.0 L 489.3,63.2 L 484.3,64.4 L 478.2,65.6 L 471.2,66.8 L 463.5,68.0 L 455.5,69.2 L 447.3,70.4 L 439.3,71.6 L 431.8,72.8 L 425.0,74.0 L 419.2,75.2 L 414.6,76.4 L 411.2,77.6 L 409.3,78.8 L 408.9,80.0 L 409.9,81.2 L 412.3,82.4 L 416.0,83.6 L 420.8,84.8 L 426.6,86.0 L 433.2,87.2 L 440.3,88.4 L 447.6,89.6 L 454.8,90.8 L 461.8,92.0 L 468.3,93.2 L 474.0,94.4 L 478.8,95.6 L 482.5,96.8 L 485.0,98.0 L 486.2,99.2 L 486.1,100.4 L 484.7,101.6 L 482.2,102.8 L 478.5,104.0 L 473.9,105.2 L 468.5,106.4 L 462.6,107.6 L 456.4,108.8 L 450.0,110.0 L 443.8,111.2 L 437.9,112.4 L 432.6,113.6 L 427.9,114.8 L 424.2,116.0 L 421.5,117.2 L 419.8,118.4 L 419.3,119.6 L 419.8,120.8 L 421.4,122.0 L 424.0,123.2 L 427.4,124.4 L 431.6,125.6 L 436.3,126.8 L 441.3,128.0 L 446.5,129.2 L 451.7,130.4 L 456.7,131.6 L 461.3,132.8 L 465.3,134.0 L 468.6,135.2 L 471.2,136.4 L 472.9,137.6 L 473.8,138.8 L 473.8,140.0 L 472.9,141.2 L 471.2,142.4 L 468.8,143.6 L 465.9,144.8 L 462.5,146.0 L 458.8,147.2 L 455.0,148.4 L 451.2,149.6 L 447.6,150.8 L 444.3,152.0 L 441.4,153.2 L 439.1,154.4 L 437.3,155.6 L 436.2,156.8 L 435.7,158.0 L 435.9,159.2 L 436.6,160.4 L 437.8,161.6 L 439.5,162.8 L 441.4,164.0 L 443.5,165.2 L 445.6,166.4 L 447.5,167.6 L 449.1,168.8 L 450.0,170.0 L 450.9,171.2 L 452.5,172.4 L 454.4,173.6 L 456.5,174.8 L 458.6,176.0 L 460.5,177.2 L 462.2,178.4 L 463.4,179.6 L 464.1,180.8 L 464.3,182.0 L 463.8,183.2 L 462.7,184.4 L 460.9,185.6 L 458.6,186.8 L 455.7,188.0 L 452.4,189.2 L 448.8,190.4 L 445.0,191.6 L 441.2,192.8 L 437.5,194.0 L 434.1,195.2 L 431.2,196.4 L 428.8,197.6 L 427.1,198.8 L 426.2,200.0 L 426.2,201.2 L 427.1,202.4 L 428.8,203.6 L 431.4,204.8 L 434.7,206.0 L 438.7,207.2 L 443.3,208.4 L 448.3,209.6 L 453.5,210.8 L 458.7,212.0 L 463.7,213.2 L 468.4,214.4 L 472.6,215.6 L 476.0,216.8 L 478.6,218.0 L 480.2,219.2 L 480.7,220.4 L 480.2,221.6 L 478.5,222.8 L 475.8,224.0 L 472.1,225.2 L 467.4,226.4 L 462.1,227.6 L 456.2,228.8 L 450.0,230.0 L 443.6,231.2 L 437.4,232.4 L 431.5,233.6 L 426.1,234.8 L 421.5,236.0 L 417.8,237.2 L 415.3,238.4 L 413.9,239.6 L 413.8,240.8 L 415.0,242.0 L 417.5,243.2 L 421.2,244.4 L 426.0,245.6 L 431.7,246.8 L 438.2,248.0 L 445.2,249.2 L 452.4,250.4 L 459.7,251.6 L 466.8,252.8 L 473.4,254.0 L 479.2,255.2 L 484.0,256.4 L 487.7,257.6 L 490.1,258.8 L 491.1,260.0 L 490.7,261.2 L 488.8,262.4 L 485.4,263.6 L 480.8,264.8 L 475.0,266.0 L 468.2,267.2 L 460.7,268.4 L 452.7,269.6 L 444.5,270.8 L 436.5,272.0 L 428.8,273.2 L 421.8,274.4 L 415.7,275.6 L 410.7,276.8 L 407.1,278.0 L 405.0,279.2 L 404.5,280.4 L 405.6,281.6 L 408.3,282.8 L 412.5,284.0 L 418.1,285.2 L 424.9,286.4 L 432.7,287.6 L 441.1,288.8 L 450.0,290.0"
+      fill="none" stroke="#99b8b6" stroke-width="3" stroke-dasharray="6 5" opacity="0.75"/>
+
+    <!-- 前层螺旋（实线，向中心收缩） -->
+    <path d="M 450.0,50.0 L 432.3,51.2 L 415.4,52.4 L 399.9,53.6 L 386.3,54.8 L 375.1,56.0 L 366.7,57.2 L 361.3,58.4 L 359.1,59.6 L 360.1,60.8 L 364.3,62.0 L 371.5,63.2 L 381.3,64.4 L 393.5,65.6 L 407.6,66.8 L 422.9,68.0 L 439.1,69.2 L 455.4,70.4 L 471.4,71.6 L 486.4,72.8 L 499.9,74.0 L 511.6,75.2 L 520.8,76.4 L 527.5,77.6 L 531.4,78.8 L 532.3,80.0 L 530.3,81.2 L 525.5,82.4 L 518.1,83.6 L 508.4,84.8 L 496.7,86.0 L 483.6,87.2 L 469.5,88.4 L 454.9,89.6 L 440.3,90.8 L 426.3,92.0 L 413.4,93.2 L 401.9,94.4 L 392.4,95.6 L 385.0,96.8 L 380.0,98.0 L 377.6,99.2 L 377.8,100.4 L 380.5,101.6 L 385.7,102.8 L 393.0,104.0 L 402.2,105.2 L 412.9,106.4 L 424.8,107.6 L 437.3,108.8 L 450.0,110.0 L 462.5,111.2 L 474.2,112.4 L 484.9,113.6 L 494.1,114.8 L 501.6,116.0 L 507.0,117.2 L 510.3,118.4 L 511.4,119.6 L 510.4,120.8 L 507.1,122.0 L 502.0,123.2 L 495.1,124.4 L 486.8,125.6 L 477.5,126.8 L 467.4,128.0 L 456.9,129.2 L 446.6,130.4 L 436.6,131.6 L 427.5,132.8 L 419.4,134.0 L 412.7,135.2 L 407.6,136.4 L 404.1,137.6 L 402.4,138.8 L 402.5,140.0 L 404.3,141.2 L 407.6,142.4 L 412.4,143.6 L 418.3,144.8 L 425.0,146.0 L 432.4,147.2 L 440.0,148.4 L 447.5,149.6 L 454.8,150.8 L 461.4,152.0 L 467.1,153.2 L 471.8,154.4 L 475.4,155.6 L 477.6,156.8 L 478.6,158.0 L 478.3,159.2 L 476.8,160.4 L 474.3,161.6 L 471.1,162.8 L 467.2,164.0 L 463.0,165.2 L 458.8,166.4 L 454.9,167.6 L 451.8,168.8 L 450.0,170.0 L 448.2,171.2 L 445.1,172.4 L 441.2,173.6 L 437.0,174.8 L 432.8,176.0 L 428.9,177.2 L 425.7,178.4 L 423.2,179.6 L 421.7,180.8 L 421.4,182.0 L 422.4,183.2 L 424.6,184.4 L 428.2,185.6 L 432.9,186.8 L 438.6,188.0 L 445.2,189.2 L 452.5,190.4 L 460.0,191.6 L 467.6,192.8 L 475.0,194.0 L 481.7,195.2 L 487.6,196.4 L 492.4,197.6 L 495.7,198.8 L 497.5,200.0 L 497.6,201.2 L 495.9,202.4 L 492.4,203.6 L 487.3,204.8 L 480.6,206.0 L 472.5,207.2 L 463.4,208.4 L 453.4,209.6 L 443.1,210.8 L 432.6,212.0 L 422.5,213.2 L 413.2,214.4 L 404.9,215.6 L 398.0,216.8 L 392.9,218.0 L 389.6,219.2 L 388.6,220.4 L 389.7,221.6 L 393.0,222.8 L 398.4,224.0 L 405.9,225.2 L 415.1,226.4 L 425.8,227.6 L 437.5,228.8 L 450.0,230.0 L 462.7,231.2 L 475.2,232.4 L 487.1,233.6 L 497.8,234.8 L 507.0,236.0 L 514.3,237.2 L 519.5,238.4 L 522.2,239.6 L 522.4,240.8 L 520.0,242.0 L 515.0,243.2 L 507.6,244.4 L 498.1,245.6 L 486.6,246.8 L 473.7,248.0 L 459.7,249.2 L 445.1,250.4 L 430.5,251.6 L 416.4,252.8 L 403.3,254.0 L 391.6,255.2 L 381.9,256.4 L 374.5,257.6 L 369.7,258.8 L 367.7,260.0 L 368.6,261.2 L 372.5,262.4 L 379.2,263.6 L 388.4,264.8 L 400.1,266.0 L 413.6,267.2 L 428.6,268.4 L 444.6,269.6 L 460.9,270.8 L 477.1,272.0 L 492.4,273.2 L 506.5,274.4 L 518.7,275.6 L 528.5,276.8 L 535.7,278.0 L 539.9,279.2 L 540.9,280.4 L 538.7,281.6 L 533.3,282.8 L 524.9,284.0 L 513.7,285.2 L 500.1,286.4 L 484.6,287.6 L 467.7,288.8 L 450.0,290.0"
+      fill="none" stroke="#0f766e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- 奇点 -->
+    <circle cx="450" cy="170" r="12" fill="none" stroke="#dc2626" stroke-width="2" opacity="0.35"/>
+    <circle cx="450" cy="170" r="6" fill="#dc2626"/>
+    <text x="463" y="166" font-size="15" font-weight="700" fill="#dc2626">奇点：t → T*</text>
+
+    <!-- 径向收缩箭头（上下两端，指向轴线） -->
+    <line x1="335" y1="64"  x2="372" y2="64"  stroke="#b45309" stroke-width="2.5" marker-end="url(#ar)"/>
+    <line x1="565" y1="64"  x2="528" y2="64"  stroke="#b45309" stroke-width="2.5" marker-end="url(#ar)"/>
+    <line x1="335" y1="276" x2="372" y2="276" stroke="#b45309" stroke-width="2.5" marker-end="url(#ar)"/>
+    <line x1="565" y1="276" x2="528" y2="276" stroke="#b45309" stroke-width="2.5" marker-end="url(#ar)"/>
+    <text x="300" y="69" font-size="14" fill="#b45309" text-anchor="end">径向收缩 R(τ) ∝ τ<tspan dy="-4" font-size="11">1/3</tspan> → 0</text>
+    <text x="600" y="69" font-size="14" fill="#b45309">径向收缩</text>
+
+    <!-- 轴向拉伸箭头 -->
+    <line x1="560" y1="82" x2="560" y2="258" stroke="#b45309" stroke-width="2.5"
+          marker-start="url(#av)" marker-end="url(#av)"/>
+    <text x="570" y="175" font-size="14" fill="#b45309">轴向拉伸</text>
+
+    <!-- 关键量标注 -->
+    <text x="60" y="78" font-size="15" fill="#0f172a">τ = T* − t → 0<tspan dy="-4" font-size="11">+</tspan>　自相似收缩</text>
+    <text x="60" y="316" font-size="15" fill="#0f172a">ω ∝ τ<tspan dy="-4" font-size="11">−1</tspan> → ∞　·　∇u ∝ τ<tspan dy="-4" font-size="11">−1</tspan> → ∞　·　E ∝ τ<tspan dy="-4" font-size="11">−1/3</tspan>（截断后有界）</text>
+
+    <g class="legend">
+      <text x="300" y="338" font-size="12.5" fill="#475569"><tspan class="sw"></tspan>前层螺旋（实线）</text>
+      <text x="470" y="338" font-size="12.5" fill="#475569"><tspan class="sw dash"></tspan>后层螺旋（虚线，三维示意）</text>
+    </g>
+  </svg>
+</div>
+
+<div class="cards">
+  <div class="card c1">
+    <h3><span class="tag">任务 1</span>NS 自相似爆破（连续动力学）</h3>
+    <ul>
+      <li class="m"><b>涡量方程：</b>∂<sub>t</sub>ω + (u·∇)ω = (ω·∇)u + νΔω</li>
+      <li class="m"><b>标度匹配：</b>α+β = 1，α &gt; β → α = 2/3，β = 1/3</li>
+      <li class="m"><b>自相似解：</b>u = τ<sup>−2/3</sup>U(x/τ<sup>1/3</sup>)，ω = τ<sup>−1</sup>Ω(x/τ<sup>1/3</sup>)</li>
+      <li class="m"><b>爆破判据：</b>ω→∞，∇u→∞；E ∝ τ<sup>−1/3</sup>（局部）</li>
+      <li class="m">机制：<b>涡拉伸</b> (ω·∇)u 局部压倒粘性 νΔω；2026 已构造有限时间爆破解（带光滑紧支撑外力）</li>
+    </ul>
+  </div>
+  <div class="card c2">
+    <h3><span class="tag">任务 2</span>洛伦兹力 = 涡旋横向耦合</h3>
+    <ul>
+      <li class="m"><b>TUFT 同构：</b>ω ↔ B，u ↔ v，q<sub>eff</sub> ↔ q</li>
+      <li class="m"><b>Biot–Savart：</b>Γ ↔ μ<sub>0</sub>I，d<u>u</u> ↔ d<u>B</u></li>
+      <li class="m"><b>耦合导出：</b>F = q<sub>eff</sub>·v×ω　→　<b>F = q·v×B</b></li>
+      <li class="m">F ⊥ v，<b>不做功</b>；电场 ↔ 无旋势梯度（曲率伸缩），磁场 ↔ 有旋挠率叉乘</li>
+    </ul>
+  </div>
+  <div class="card c3">
+    <h3><span class="tag">任务 3</span>三维螺旋点阵 · Erdős 单位距离</h3>
+    <ul>
+      <li class="m"><b>单根螺旋：</b>r<sub>k</sub> = (R cos kθ, R sin kθ, kh)，θ = 2π/N（分圆根）</li>
+      <li class="m"><b>单位距离：</b>2R²(1 − cos Δkθ) + h²Δk² = 1</li>
+      <li class="m"><b>多螺旋叠加：</b>θ<sub>j</sub> = θ<sub>0</sub> + 2πj/M；约束 |r−r′| ≥ 1 → 球堆积</li>
+      <li class="m"><b>猜想：</b>U(n) 突破 n<sup>1+o(1)</sup>（平面已反例证伪：n<sup>1.014114</sup>，Sawin 2026）</li>
+    </ul>
+  </div>
+</div>
+
+<div class="unify">
+  <div class="row">
+    <span class="node">螺旋涡丝几何（TUFT）</span>
+    <span class="arrow">→</span><span>任务 1：连续动力学的涡拉伸爆破</span>
+    <span class="arrow">→</span><span>任务 2：运动拓扑荷的横向挠率耦合</span>
+    <span class="arrow">→</span><span>任务 3：离散采样的单位距离点阵</span>
+  </div>
+</div>
+
+<div class="next">
+  <h3>下一步 · 任务 C（展望）</h3>
+  <p class="m">将洛伦兹力与 NS 涡方程统一放入 TUFT 作用量泛函：S<sub>TUFT</sub> = ∫ d⁴x ℒ(ω, u, p)，写出拉格朗日统一场方程——待后续推导。</p>
+</div>
+
+<footer>
+  示意｜基于用户提供的 TUFT 推导草稿整理；外部事实以 2026 年公开文献为准<br>
+  （OpenAI《Finite Time Blowup for Navier–Stokes》，2026-09-08；Erdős 单位距离反例 Chen–Sellke–Sawhney，2026-05；Sawin 显式化 arXiv:2605.20579）
+</footer>
+
+</div>
+</body>
+</html>

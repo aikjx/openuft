@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统一场论能量公式可视化 | W = m·C·V</title>
+    <!-- 引入外部库 -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/effects/BloomEffect.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../shared_assets/styles.css">
+    <style>
+        /* 能量方程可视化专用样式 */
+        body {
+            background: linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 50%, #0a1a0a 100%);
+            color: #e0ffe0;
+            font-family: 'Computer Modern', 'Times New Roman', serif;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(10, 26, 10, 0.8);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 50px rgba(10, 74, 10, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 200, 100, 0.2);
+        }
+        .equation-display {
+            font-size: 3.5rem;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(20, 60, 20, 0.6);
+            border-radius: 15px;
+            border: 2px solid #3c7c3c;
+            display: inline-block;
+        }
+        .equation-highlight {
+            color: #7cff7c;
+            text-shadow: 0 0 20px rgba(124, 255, 124, 0.6);
+        }
+        .visualization-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .visualization-panel {
+            flex: 3;
+            min-width: 500px;
+            height: 600px;
+            background: rgba(10, 26, 10, 0.8);
+            border-radius: 15px;
+            border: 1px solid rgba(100, 200, 100, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .control-panel {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(10, 26, 10, 0.8);
+            border-radius: 15px;
+            border: 1px solid rgba(100, 200, 100, 0.2);
+            padding: 30px;
+        }
+        .control-group {
+            margin-bottom: 25px;
+        }
+        .control-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #a0ffb0;
+        }
+        .slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            background: #2a4a2a;
+            border-radius: 3px;
+            outline: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #7cff7c;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(124, 255, 124, 0.6);
+        }
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #7cff7c;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(124, 255, 124, 0.6);
+            border: none;
+        }
+        .slider-value {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #e0ffe0;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #3c7c3c;
+            color: #e0ffe0;
+        }
+        .btn:hover {
+            background: #4c8c4c;
+            box-shadow: 0 0 15px rgba(124, 255, 124, 0.4);
+        }
+        .btn-active {
+            background: #7cff7c;
+            color: #0a1a0a;
+            font-weight: bold;
+        }
+        .theory-section {
+            background: rgba(10, 26, 10, 0.8);
+            border-radius: 15px;
+            border: 1px solid rgba(100, 200, 100, 0.2);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        .theory-section h2 {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #a0ffb0;
+        }
+        .theory-section h3 {
+            font-size: 1.5rem;
+            margin: 25px 0 15px;
+            color: #90ffa0;
+        }
+        .theory-section p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .formula-block {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(20, 60, 20, 0.6);
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        .energy-level {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(20, 60, 20, 0.6);
+            border-radius: 10px;
+            border-left: 4px solid #7cff7c;
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(10, 26, 10, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .energy-value {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 26, 10, 0.9);
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1.2rem;
+            color: #7cff7c;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid rgba(100, 200, 100, 0.3);
+        }
+        .comparison-table th {
+            background: rgba(20, 60, 20, 0.6);
+            color: #a0ffb0;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: rgba(20, 60, 20, 0.3);
+        }
+        @media (max-width: 900px) {
+            .visualization-container {
+                flex-direction: column;
+            }
+            .equation-display {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="../index.html">统一场论可视化系统</a>
+            </div>
+            <div class="nav-links">
+                <a href="../core_equations/index.html">核心公式</a>
+                <a href="../applications/index.html">十大应用</a>
+                <a href="../ufo_principle/index.html">UFO原理</a>
+                <a href="../vertical_principle/index.html">垂直原理</a>
+            </div>
+        </nav>
+
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <h1>统一场论能量公式 <span class="equation-highlight">W = m·C·V</span> 可视化</h1>
+            <div class="equation-display">
+                <span class="equation-highlight">$$W = m\vec{C}\cdot\vec{V}$$</span>
+            </div>
+            <p>探索张祥前统一场论中能量与运动的几何关系，理解质能转换的本质</p>
+        </section>
+
+        <!-- 可视化区域 -->
+        <section class="visualization-container">
+            <!-- 3D可视化面板 -->
+            <div class="visualization-panel">
+                <div id="visualization-canvas"></div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #00ff00;"></div>
+                        <span>能量场 W</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #00ffff;"></div>
+                        <span>光速 C</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ffff00;"></div>
+                        <span>速度 V</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ffffff;"></div>
+                        <span>物体质量 m</span>
+                    </div>
+                </div>
+                <div class="energy-value">
+                    能量: <span id="energy-display">0.0</span>
+                </div>
+            </div>
+
+            <!-- 控制面板 -->
+            <div class="control-panel">
+                <h3>交互式参数控制</h3>
+                
+                <div class="control-group">
+                    <label for="mass-slider">质量 (m)</label>
+                    <input type="range" id="mass-slider" class="slider" min="0.1" max="2.0" step="0.1" value="1.0">
+                    <div class="slider-value">当前值: <span id="mass-value">1.0</span></div>
+                </div>
+
+                <div class="control-group">
+                    <label for="velocity-slider">速度大小 (V/c)</label>
+                    <input type="range" id="velocity-slider" class="slider" min="0" max="1.0" step="0.05" value="0.5">
+                    <div class="slider-value">当前值: <span id="velocity-value">0.5</span>c</div>
+                </div>
+
+                <div class="control-group">
+                    <label for="angle-slider">速度角度 (°)</label>
+                    <input type="range" id="angle-slider" class="slider" min="0" max="180" step="10" value="60">
+                    <div class="slider-value">当前值: <span id="angle-value">60</span>°</div>
+                </div>
+
+                <div class="control-group">
+                    <label for="intensity-slider">能量场强度</label>
+                    <input type="range" id="intensity-slider" class="slider" min="0.1" max="2.0" step="0.1" value="1.0">
+                    <div class="slider-value">当前值: <span id="intensity-value">1.0</span></div>
+                </div>
+
+                <div class="button-group">
+                    <button id="reset-btn" class="btn">重置视图</button>
+                    <button id="show-vectors-btn" class="btn">显示矢量</button>
+                </div>
+
+                <div class="button-group">
+                    <button id="wave-pattern-btn" class="btn btn-active">波动模式</button>
+                    <button id="field-pattern-btn" class="btn">场模式</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 理论推导区域 -->
+        <section class="theory-section">
+            <h2>能量公式的几何化推导</h2>
+            
+            <div class="energy-level">
+                <h3>从动量到能量</h3>
+                <p>根据统一场论动量公式 $\vec{P} = m(\vec{C} - \vec{V})$，能量定义为动量在物体运动方向上的投影：</p>
+                <div class="formula-block">$$W = \vec{P} \cdot \vec{V} = m(\vec{C} - \vec{V}) \cdot \vec{V} = m\vec{C} \cdot \vec{V} - mV^2$$</div>
+                <p>考虑到空间本身的运动特性，第二项 $mV^2$ 是能量的相对论修正项，在低速情况下可以忽略，因此：</p>
+                <div class="formula-block">$$W \approx m\vec{C} \cdot \vec{V}$$</div>
+            </div>
+
+            <div class="energy-level">
+                <h3>与质能方程的关系</h3>
+                <p>当物体以光速运动时（V = C），能量公式变为：</p>
+                <div class="formula-block">$$W = m\vec{C} \cdot \vec{C} = mC^2$$</div>
+                <p>这正是爱因斯坦的质能方程，验证了统一场论与相对论在极端情况下的一致性。</p>
+            </div>
+
+            <div class="energy-level">
+                <h3>能量的几何意义</h3>
+                <p>统一场论能量公式揭示了能量的本质是物体运动与空间运动相互作用的几何度量。能量不再是抽象的概念，而是具有明确几何意义的物理量。</p>
+            </div>
+        </section>
+
+        <!-- 物理意义区域 -->
+        <section class="theory-section">
+            <h2>能量公式的物理意义</h2>
+            
+            <h3>1. 能量的矢量性</h3>
+            <p>统一场论能量公式 $W = m\vec{C} \cdot \vec{V}$ 表明能量本质上是两个矢量的点积，反映了能量的方向性和相对性。能量不仅有大小，还有方向属性。</p>
+            
+            <h3>2. 动能的重新定义</h3>
+            <p>在统一场论中，动能不再是简单的 $\frac{1}{2}mV^2$，而是与物体速度和光速矢量的点积成正比，更准确地描述了物体在时空中的运动状态。</p>
+            
+            <h3>3. 势能的几何解释</h3>
+            <p>势能可以解释为空间结构的几何变形，当物体在空间中运动时，势能转化为动能，体现了空间运动模式的变化。</p>
+            
+            <h3>4. 能量守恒的本质</h3>
+            <p>能量守恒不再是基本假设，而是空间运动几何结构的必然结果，源于空间的连续性和不可破坏性。</p>
+        </section>
+
+        <!-- 与经典理论的对比 -->
+        <section class="theory-section">
+            <h2>与经典能量理论的对比</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>特性</th>
+                        <th>统一场论能量公式</th>
+                        <th>经典能量理论</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>公式形式</td>
+                        <td>$W = m\vec{C} \cdot \vec{V}$</td>
+                        <td>$E = mc^2 + \frac{1}{2}mV^2$</td>
+                    </tr>
+                    <tr>
+                        <td>几何意义</td>
+                        <td>矢量点积，具有方向性</td>
+                        <td>标量，无方向属性</td>
+                    </tr>
+                    <tr>
+                        <td>低速近似</td>
+                        <td>$W \approx mC \cdot V \cos\theta$</td>
+                        <td>$E \approx mc^2 + \frac{1}{2}mV^2$</td>
+                    </tr>
+                    <tr>
+                        <td>高速极限</td>
+                        <td>当 V→C 时，W→mC²</td>
+                        <td>当 V→C 时，E→∞</td>
+                    </tr>
+                    <tr>
+                        <td>理论基础</td>
+                        <td>空间运动的几何关系</td>
+                        <td>质量与能量等价假设</td>
+                    </tr>
+                    <tr>
+                        <td>适用范围</td>
+                        <td>所有速度范围，包括光速</td>
+                        <td>低速和高速需分别处理</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 技术应用前景 -->
+        <section class="theory-section">
+            <h2>能量公式的技术应用前景</h2>
+            
+            <h3>1. 新能源开发</h3>
+            <p>基于统一场论能量公式，可以开发利用空间运动能量的新技术，实现高效清洁的能源转换。通过控制物体与空间的相互作用，有望开发出全新的能源获取方式。</p>
+            
+            <h3>2. 能量传输革新</h3>
+            <p>公式揭示了能量传输的几何本质，为开发无需物理介质的能量传输技术提供了理论基础，可能彻底改变现有的能源传输方式。</p>
+            
+            <h3>3. 空间能源存储</h3>
+            <p>根据公式 $W = m\vec{C} \cdot \vec{V}$，可以开发利用空间结构存储能量的新技术，理论上能量密度远超现有存储技术。</p>
+            
+            <h3>4. 反重力推进系统</h3>
+            <p>通过精确控制能量场的分布和方向，有望开发出基于空间运动的推进系统，实现无工质推进和反重力效果。</p>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 统一场论可视化系统 | 基于张祥前统一场论理论</p>
+        </div>
+    </footer>
+
+    <!-- 3D可视化脚本 -->
+    <script>
+        // 全局变量
+        let scene, camera, renderer, controls;
+        let vectorC, vectorV, energyField, objectSphere;
+        let mass = 1.0, velocityRatio = 0.5, angle = 60, intensity = 1.0;
+        let showVectors = false;
+        let visualizationMode = 'wave'; // 'wave' or 'field'
+        let waveParticles = [];
+        let energyValue = 0;
+        
+        // 初始化Three.js场景
+        function init() {
+            // 创建场景
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a1a0a);
+            
+            // 创建相机
+            const container = document.getElementById('visualization-canvas');
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 3, 8);
+            
+            // 创建渲染器
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+            
+            // 添加轨道控制器
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 3;
+            controls.maxDistance = 15;
+            
+            // 添加光源
+            addLights();
+            
+            // 创建坐标轴
+            addAxes();
+            
+            // 创建可视化元素
+            createVisualization();
+            
+            // 监听窗口大小变化
+            window.addEventListener('resize', onWindowResize);
+            
+            // 开始动画循环
+            animate();
+        }
+        
+        // 添加光源
+        function addLights() {
+            // 环境光
+            const ambientLight = new THREE.AmbientLight(0x223322, 0.5);
+            scene.add(ambientLight);
+            
+            // 平行光
+            const directionalLight1 = new THREE.DirectionalLight(0x88ff88, 1);
+            directionalLight1.position.set(5, 5, 5);
+            directionalLight1.castShadow = true;
+            scene.add(directionalLight1);
+            
+            // 另一个平行光
+            const directionalLight2 = new THREE.DirectionalLight(0xff8888, 0.5);
+            directionalLight2.position.set(-5, 5, -5);
+            scene.add(directionalLight2);
+        }
+        
+        // 添加坐标轴
+        function addAxes() {
+            const axesHelper = new THREE.AxesHelper(5);
+            scene.add(axesHelper);
+        }
+        
+        // 创建可视化元素
+        function createVisualization() {
+            // 清除现有元素
+            if (vectorC) scene.remove(vectorC);
+            if (vectorV) scene.remove(vectorV);
+            if (energyField) scene.remove(energyField);
+            if (objectSphere) scene.remove(objectSphere);
+            
+            // 清除波动粒子
+            waveParticles.forEach(particle => scene.remove(particle));
+            waveParticles = [];
+            
+            // 创建代表物体的球体
+            createObjectSphere();
+            
+            // 计算向量和能量值
+            calculateVectorsAndEnergy();
+            
+            // 根据模式创建可视化
+            if (visualizationMode === 'wave') {
+                createWaveVisualization();
+            } else {
+                createFieldVisualization();
+            }
+            
+            // 如果显示矢量
+            if (showVectors) {
+                createVectors();
+            }
+        }
+        
+        // 计算向量和能量
+        function calculateVectorsAndEnergy() {
+            // 计算向量
+            const cVector = new THREE.Vector3(0, 0, 1); // C指向z轴正方向
+            const angleRad = THREE.MathUtils.degToRad(angle);
+            const vVector = new THREE.Vector3(
+                Math.sin(angleRad) * velocityRatio,
+                0,
+                Math.cos(angleRad) * velocityRatio
+            ).normalize().multiplyScalar(velocityRatio * 3);
+            
+            // 计算能量值（点积）
+            energyValue = mass * cVector.dot(vVector);
+            document.getElementById('energy-display').textContent = energyValue.toFixed(3);
+        }
+        
+        // 创建物体球体
+        function createObjectSphere() {
+            const geometry = new THREE.SphereGeometry(mass * 0.5, 32, 32);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                emissive: 0x222222,
+                shininess: 100,
+                transparent: true,
+                opacity: 0.8
+            });
+            objectSphere = new THREE.Mesh(geometry, material);
+            objectSphere.castShadow = true;
+            scene.add(objectSphere);
+        }
+        
+        // 创建矢量
+        function createVectors() {
+            // 计算向量
+            const cVector = new THREE.Vector3(0, 0, 1); // C指向z轴正方向
+            const angleRad = THREE.MathUtils.degToRad(angle);
+            const vVector = new THREE.Vector3(
+                Math.sin(angleRad) * velocityRatio,
+                0,
+                Math.cos(angleRad) * velocityRatio
+            ).normalize().multiplyScalar(velocityRatio * 3);
+            
+            // 创建C矢量
+            vectorC = createArrow(new THREE.Vector3(0, 0, 0), cVector.multiplyScalar(3), 0x00ffff, 3);
+            scene.add(vectorC);
+            
+            // 创建V矢量
+            vectorV = createArrow(new THREE.Vector3(0, 0, 0), vVector, 0xffff00, 3);
+            scene.add(vectorV);
+        }
+        
+        // 创建波动可视化
+        function createWaveVisualization() {
+            const particles = 2000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particles * 3);
+            const colors = new Float32Array(particles * 3);
+            const sizes = new Float32Array(particles);
+            
+            // 生成波动粒子
+            for (let i = 0; i < particles; i++) {
+                const index = i * 3;
+                
+                // 极坐标生成点
+                const radius = Math.random() * 6 + 0.5;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                
+                // 转换为笛卡尔坐标
+                const x = radius * Math.sin(phi) * Math.cos(theta);
+                const y = radius * Math.sin(phi) * Math.sin(theta);
+                const z = radius * Math.cos(phi);
+                
+                positions[index] = x;
+                positions[index + 1] = y;
+                positions[index + 2] = z;
+                
+                // 计算能量密度 - 基于点积
+                const point = new THREE.Vector3(x, y, z);
+                const cVector = new THREE.Vector3(0, 0, 1).normalize();
+                const angleRad = THREE.MathUtils.degToRad(angle);
+                const vVector = new THREE.Vector3(
+                    Math.sin(angleRad) * velocityRatio,
+                    0,
+                    Math.cos(angleRad) * velocityRatio
+                ).normalize();
+                
+                // 计算点到原点的距离
+                const distance = point.length();
+                
+                // 计算能量场强度
+                const dotProduct = cVector.dot(vVector);
+                const energyDensity = mass * dotProduct * Math.exp(-distance * 0.3) * intensity;
+                
+                // 根据能量密度设置颜色和大小
+                const colorIntensity = Math.max(0, energyDensity);
+                colors[index] = 0.0; // 红
+                colors[index + 1] = colorIntensity;
+                colors[index + 2] = 0.0; // 蓝
+                
+                sizes[i] = Math.max(0.01, colorIntensity * 0.5);
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            
+            const material = new THREE.PointsMaterial({
+                sizeAttenuation: true,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            energyField = new THREE.Points(geometry, material);
+            scene.add(energyField);
+            
+            // 创建波动效果
+            createWaves();
+        }
+        
+        // 创建波动效果
+        function createWaves() {
+            const waveCount = 5;
+            const segments = 64;
+            
+            for (let w = 0; w < waveCount; w++) {
+                const geometry = new THREE.RingGeometry(
+                    1 + w * 0.8,
+                    1.2 + w * 0.8,
+                    segments
+                );
+                
+                // 计算颜色强度
+                const baseIntensity = Math.max(0, mass * velocityRatio * Math.cos(THREE.MathUtils.degToRad(angle)) * intensity);
+                const intensity = baseIntensity * (1 - w * 0.15);
+                
+                const material = new THREE.MeshBasicMaterial({
+                    color: new THREE.Color(0, intensity, 0),
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.3
+                });
+                
+                const wave = new THREE.Mesh(geometry, material);
+                scene.add(wave);
+                waveParticles.push(wave);
+                
+                // 设置波浪动画属性
+                wave.userData.phase = w * 0.5;
+                wave.userData.amplitude = 0.1;
+            }
+        }
+        
+        // 创建场可视化
+        function createFieldVisualization() {
+            // 创建场网格
+            const size = 10;
+            const divisions = 20;
+            
+            const gridHelper = new THREE.GridHelper(size, divisions, 0x224422, 0x112211);
+            scene.add(gridHelper);
+            
+            // 创建场箭头
+            const fieldSize = 5;
+            const fieldDivisions = 4;
+            const step = fieldSize / fieldDivisions;
+            
+            for (let x = -fieldSize / 2; x <= fieldSize / 2; x += step) {
+                for (let y = -fieldSize / 2; y <= fieldSize / 2; y += step) {
+                    for (let z = -fieldSize / 2; z <= fieldSize / 2; z += step) {
+                        // 跳过原点附近
+                        if (Math.sqrt(x*x + y*y + z*z) < 0.5) continue;
+                        
+                        // 计算场方向
+                        const cVector = new THREE.Vector3(0, 0, 1).normalize();
+                        const angleRad = THREE.MathUtils.degToRad(angle);
+                        const vVector = new THREE.Vector3(
+                            Math.sin(angleRad) * velocityRatio,
+                            0,
+                            Math.cos(angleRad) * velocityRatio
+                        ).normalize();
+                        
+                        // 能量场方向由点积决定
+                        const dotProduct = cVector.dot(vVector);
+                        const fieldDirection = new THREE.Vector3(
+                            Math.sin(angleRad) * velocityRatio,
+                            0,
+                            Math.cos(angleRad) * velocityRatio
+                        ).normalize();
+                        
+                        // 场强度
+                        const distance = Math.sqrt(x*x + y*y + z*z);
+                        const fieldIntensity = mass * Math.abs(dotProduct) * Math.exp(-distance * 0.2) * intensity * 0.2;
+                        
+                        if (fieldIntensity > 0.01) {
+                            const arrowLength = fieldIntensity;
+                            const arrowStart = new THREE.Vector3(x, y, z);
+                            const arrowEnd = arrowStart.clone().add(fieldDirection.clone().multiplyScalar(arrowLength));
+                            
+                            // 设置箭头颜色
+                            let arrowColor;
+                            if (dotProduct > 0) {
+                                arrowColor = new THREE.Color(0, fieldIntensity, 0); // 正方向为绿色
+                            } else {
+                                arrowColor = new THREE.Color(fieldIntensity, 0, 0); // 负方向为红色
+                            }
+                            
+                            const arrow = createFieldArrow(arrowStart, arrowEnd, arrowColor, arrowLength * 10);
+                            scene.add(arrow);
+                            waveParticles.push(arrow);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // 创建箭头
+        function createArrow(start, end, color, width = 2) {
+            const direction = new THREE.Vector3().subVectors(end, start);
+            const length = direction.length();
+            
+            // 创建箭头主体
+            const cylinderGeometry = new THREE.CylinderGeometry(width * 0.05, width * 0.05, length, 8);
+            const cylinderMaterial = new THREE.MeshBasicMaterial({ color: color });
+            const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+            
+            // 设置箭头主体位置和方向
+            cylinder.position.copy(start).add(direction.multiplyScalar(0.5));
+            cylinder.lookAt(end);
+            cylinder.rotateX(Math.PI / 2);
+            
+            // 创建箭头头部
+            const coneGeometry = new THREE.ConeGeometry(width * 0.15, width * 0.5, 8);
+            const coneMaterial = new THREE.MeshBasicMaterial({ color: color });
+            const cone = new THREE.Mesh(coneGeometry, coneMaterial);
+            
+            // 设置箭头头部位置和方向
+            cone.position.copy(end);
+            cone.lookAt(start);
+            cone.rotateX(Math.PI / 2);
+            
+            // 创建箭头组
+            const arrow = new THREE.Group();
+            arrow.add(cylinder);
+            arrow.add(cone);
+            
+            return arrow;
+        }
+        
+        // 创建场中的小箭头
+        function createFieldArrow(start, end, color, width = 1) {
+            const direction = new THREE.Vector3().subVectors(end, start);
+            const length = direction.length();
+            
+            // 创建简单箭头
+            const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
+            const material = new THREE.LineBasicMaterial({ color: color, linewidth: width });
+            
+            const arrow = new THREE.Line(geometry, material);
+            return arrow;
+        }
+        
+        // 窗口大小变化处理
+        function onWindowResize() {
+            const container = document.getElementById('visualization-canvas');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+        
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // 更新控制器
+            controls.update();
+            
+            // 旋转物体
+            if (objectSphere) {
+                objectSphere.rotation.y += 0.01;
+            }
+            
+            // 动画波浪
+            waveParticles.forEach((particle, index) => {
+                if (particle.userData.phase !== undefined) {
+                    // 波浪动画
+                    particle.userData.phase += 0.02;
+                    particle.scale.y = 1 + Math.sin(particle.userData.phase) * particle.userData.amplitude;
+                    
+                    // 透明度呼吸效果
+                    if (particle.material.opacity !== undefined) {
+                        particle.material.opacity = 0.2 + 0.1 * Math.sin(particle.userData.phase * 0.5);
+                    }
+                } else {
+                    // 场箭头轻微旋转
+                    particle.rotation.x += 0.005;
+                    particle.rotation.y += 0.005;
+                }
+            });
+            
+            // 动态调整能量场强度
+            if (energyField && energyField.material.opacity !== undefined) {
+                energyField.material.opacity = 0.7 + 0.1 * Math.sin(Date.now() * 0.001);
+            }
+            
+            // 渲染场景
+            renderer.render(scene, camera);
+        }
+        
+        // 初始化滑块控制
+        function initControls() {
+            // 质量滑块
+            const massSlider = document.getElementById('mass-slider');
+            const massValue = document.getElementById('mass-value');
+            massSlider.addEventListener('input', function() {
+                mass = parseFloat(this.value);
+                massValue.textContent = mass.toFixed(1);
+                createVisualization();
+            });
+            
+            // 速度滑块
+            const velocitySlider = document.getElementById('velocity-slider');
+            const velocityValue = document.getElementById('velocity-value');
+            velocitySlider.addEventListener('input', function() {
+                velocityRatio = parseFloat(this.value);
+                velocityValue.textContent = velocityRatio.toFixed(2);
+                createVisualization();
+            });
+            
+            // 角度滑块
+            const angleSlider = document.getElementById('angle-slider');
+            const angleValue = document.getElementById('angle-value');
+            angleSlider.addEventListener('input', function() {
+                angle = parseInt(this.value);
+                angleValue.textContent = angle;
+                createVisualization();
+            });
+            
+            // 强度滑块
+            const intensitySlider = document.getElementById('intensity-slider');
+            const intensityValue = document.getElementById('intensity-value');
+            intensitySlider.addEventListener('input', function() {
+                intensity = parseFloat(this.value);
+                intensityValue.textContent = intensity.toFixed(1);
+                createVisualization();
+            });
+            
+            // 重置按钮
+            const resetBtn = document.getElementById('reset-btn');
+            resetBtn.addEventListener('click', function() {
+                massSlider.value = 1.0;
+                velocitySlider.value = 0.5;
+                angleSlider.value = 60;
+                intensitySlider.value = 1.0;
+                
+                mass = 1.0;
+                velocityRatio = 0.5;
+                angle = 60;
+                intensity = 1.0;
+                
+                massValue.textContent = '1.0';
+                velocityValue.textContent = '0.50';
+                angleValue.textContent = '60';
+                intensityValue.textContent = '1.0';
+                
+                createVisualization();
+                controls.reset();
+            });
+            
+            // 显示矢量按钮
+            const showVectorsBtn = document.getElementById('show-vectors-btn');
+            showVectorsBtn.addEventListener('click', function() {
+                showVectors = !showVectors;
+                this.textContent = showVectors ? '隐藏矢量' : '显示矢量';
+                createVisualization();
+            });
+            
+            // 波动模式按钮
+            const wavePatternBtn = document.getElementById('wave-pattern-btn');
+            wavePatternBtn.addEventListener('click', function() {
+                visualizationMode = 'wave';
+                wavePatternBtn.classList.add('btn-active');
+                fieldPatternBtn.classList.remove('btn-active');
+                createVisualization();
+            });
+            
+            // 场模式按钮
+            const fieldPatternBtn = document.getElementById('field-pattern-btn');
+            fieldPatternBtn.addEventListener('click', function() {
+                visualizationMode = 'field';
+                fieldPatternBtn.classList.add('btn-active');
+                wavePatternBtn.classList.remove('btn-active');
+                createVisualization();
+            });
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('load', function() {
+            init();
+            initControls();
+            // 渲染数学公式
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

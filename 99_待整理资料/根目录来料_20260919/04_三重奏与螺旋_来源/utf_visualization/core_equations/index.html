@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>核心方程 - 统一场论可视化系统</title>
+    <meta
+      name="description"
+      content="统一场论核心方程可视化，通过3D技术展示时空同一化方程、动量公式等核心原理"
+    />
+
+    <!-- 预加载关键资源 -->
+    <link
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"
+      as="script"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"
+      as="script"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"
+      as="style"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="../shared_assets/core/performance.js"
+      as="script"
+    />
+    <link
+      rel="preload"
+      href="../shared_assets/core/sceneManager.js"
+      as="script"
+    />
+    <link
+      rel="preload"
+      href="../shared_assets/core/visualizationManager.js"
+      as="script"
+    />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+
+    <!-- CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      crossorigin
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"
+      rel="stylesheet"
+      crossorigin
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- JavaScript -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/controls/OrbitControls.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"
+      defer
+      crossorigin
+    ></script>
+    <script src="../shared_assets/core/performance.js"></script>
+    <script src="../shared_assets/core/sceneManager.js"></script>
+    <script src="../shared_assets/core/visualizationManager.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#165DFF',
+              secondary: '#7B61FF',
+              accent: '#FF6B8B',
+              dark: '#1E293B',
+              light: '#F8FAFC',
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+        .equation-card {
+          transition: all 0.3s ease;
+        }
+        .equation-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px -5px rgba(22, 93, 255, 0.1);
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease-in-out;
+        }
+        .animate-slide-up {
+          animation: slideUp 0.6s ease-out;
+        }
+        .animate-pulse-slow {
+          animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 加载动画 */
+      .animate-spin {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-light text-dark min-h-screen flex flex-col">
+    <!-- 加载动画 -->
+    <div
+      id="loadingOverlay"
+      class="fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-500"
+    >
+      <div class="text-center">
+        <div
+          class="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"
+        ></div>
+        <h3 class="text-xl font-semibold text-primary">加载中...</h3>
+        <p class="text-gray-600 mt-2">正在初始化核心方程可视化</p>
+      </div>
+    </div>
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+      <div
+        class="container mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <div class="flex items-center space-x-2">
+          <div
+            class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center"
+          >
+            <i class="fa fa-cube text-white text-xl"></i>
+          </div>
+          <h1 class="text-xl font-bold text-primary">统一场论可视化系统</h1>
+        </div>
+        <div class="hidden md:flex items-center space-x-6">
+          <a
+            href="../index.html"
+            class="font-medium hover:text-primary transition-colors"
+            >首页</a
+          >
+          <a
+            href="#"
+            class="font-medium text-primary border-b-2 border-primary pb-1"
+            >核心方程</a
+          >
+          <a
+            href="../applications/index.html"
+            class="font-medium hover:text-primary transition-colors"
+            >十大应用</a
+          >
+          <a
+            href="../ufo_principle/index.html"
+            class="font-medium hover:text-primary transition-colors"
+            >UFO原理</a
+          >
+          <a
+            href="../vertical_principle/index.html"
+            class="font-medium hover:text-primary transition-colors"
+            >垂直原理</a
+          >
+        </div>
+        <button class="md:hidden text-dark text-xl">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="flex-grow py-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center mb-12">
+          <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">
+            统一场论核心方程
+          </h2>
+          <p class="text-gray-600">
+            探索张祥前统一场论的基本数学表达式，通过3D可视化直观理解这些方程的物理意义和几何关系。
+          </p>
+        </div>
+
+        <!-- 方程列表和可视化区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- 方程列表 -->
+          <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl shadow-md p-6">
+              <h3 class="text-xl font-semibold mb-6">方程列表</h3>
+              <ul class="space-y-4">
+                <li
+                  class="equation-card bg-gray-50 p-4 rounded-lg cursor-pointer border-l-4 border-primary"
+                  onclick="loadEquation('spaceTime')"
+                >
+                  <h4 class="font-medium mb-1">时空同一化方程</h4>
+                  <p class="text-sm text-gray-600">描述空间和时间的本质关系</p>
+                </li>
+                <li
+                  class="equation-card bg-gray-50 p-4 rounded-lg cursor-pointer border-l-4 border-transparent hover:border-primary/50"
+                  onclick="loadEquation('momentum')"
+                >
+                  <h4 class="font-medium mb-1">动量公式</h4>
+                  <p class="text-sm text-gray-600">
+                    $\overrightarrow{p_{动}} = m\left(\overrightarrow{c} -
+                    \overrightarrow{v}\right)$
+                  </p>
+                  <a
+                    href="momentum_equation.html"
+                    class="block mt-2 text-primary hover:underline"
+                    >查看可视化页面</a
+                  >
+                </li>
+                <li
+                  class="equation-card bg-gray-50 p-4 rounded-lg cursor-pointer border-l-4 border-transparent hover:border-primary/50"
+                  onclick="loadEquation('energy')"
+                >
+                  <h4 class="font-medium mb-1">能量方程</h4>
+                  <p class="text-sm text-gray-600">统一场论的能量表达式</p>
+                </li>
+                <li
+                  class="equation-card bg-gray-50 p-4 rounded-lg cursor-pointer border-l-4 border-transparent hover:border-primary/50"
+                  onclick="loadEquation('field')"
+                >
+                  <h4 class="font-medium mb-1">电场与磁场关系</h4>
+                  <p class="text-sm text-gray-600">揭示电磁现象的本质联系</p>
+                </li>
+                <li
+                  class="equation-card bg-gray-50 p-4 rounded-lg cursor-pointer border-l-4 border-transparent hover:border-primary/50"
+                  onclick="loadEquation('gravity')"
+                >
+                  <h4 class="font-medium mb-1">引力场方程</h4>
+                  <p class="text-sm text-gray-600">统一引力与电磁力的表达式</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 可视化区域 -->
+          <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+              <div class="p-6 border-b border-gray-100">
+                <h3 id="currentEquationTitle" class="text-xl font-semibold">
+                  时空同一化方程可视化
+                </h3>
+                <p id="currentEquationDescription" class="text-gray-600 mt-2">
+                  时空同一化方程揭示了空间和时间的本质关系，表明时间是空间本身的运动。
+                </p>
+              </div>
+              <div id="equationCanvas" class="w-full h-[500px]"></div>
+              <div class="p-6 border-t border-gray-100">
+                <div class="flex flex-wrap gap-4 items-center justify-between">
+                  <div>
+                    <h4 class="font-medium mb-2">方程表达式</h4>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                      <span id="equationFormula" class="text-lg"
+                        >$\frac{dx}{dt} = c$</span
+                      >
+                    </div>
+                  </div>
+                  <div class="flex gap-2">
+                    <button
+                      class="bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition-colors"
+                    >
+                      <i class="fa fa-play mr-2"></i>播放动画
+                    </button>
+                    <button
+                      class="bg-white border border-gray-300 text-dark py-2 px-4 rounded hover:bg-gray-100 transition-colors"
+                    >
+                      <i class="fa fa-expand mr-2"></i>全屏
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 参数控制面板 -->
+        <div class="mt-8 bg-white rounded-xl shadow-md p-6">
+          <h3 class="text-xl font-semibold mb-6">参数控制</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >运动速度 (v)</label
+              >
+              <input
+                type="range"
+                id="velocitySlider"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0.1"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                oninput="updateVisualization()"
+              />
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>0</span>
+                <span id="velocityValue">0.1c</span>
+                <span>c</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >质量 (m)</label
+              >
+              <input
+                type="range"
+                id="massSlider"
+                min="0"
+                max="2"
+                step="0.1"
+                value="1"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                oninput="updateVisualization()"
+              />
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>0</span>
+                <span id="massValue">1</span>
+                <span>2</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >时间流逝 (t)</label
+              >
+              <input
+                type="range"
+                id="timeSlider"
+                min="0"
+                max="10"
+                step="0.1"
+                value="0"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                oninput="updateVisualization()"
+              />
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>0</span>
+                <span id="timeValue">0</span>
+                <span>10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+      <div class="container mx-auto px-4 text-center">
+        <p class="mb-2">© 2025 统一场论可视化系统</p>
+        <p class="text-sm text-gray-400">
+          基于张祥前统一场论理论开发的交互式可视化平台
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      let sceneManager, visualizationManager;
+      let currentEquation = 'spaceTime';
+
+      // 页面加载完成后初始化
+      document.addEventListener('DOMContentLoaded', function () {
+        // 渲染数学公式
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+          ],
+        });
+
+        // 初始化3D场景
+        initCanvas();
+
+        // 加载默认方程
+        loadEquation('spaceTime');
+
+        // 更新可视化
+        updateVisualization();
+
+        // 隐藏加载动画
+        setTimeout(() => {
+          const loadingOverlay = document.getElementById('loadingOverlay');
+          if (loadingOverlay) {
+            loadingOverlay.style.opacity = '0';
+            setTimeout(() => {
+              loadingOverlay.style.display = 'none';
+              // 添加页面元素动画
+              document
+                .querySelectorAll('main > div > div')
+                .forEach((element, index) => {
+                  setTimeout(() => {
+                    element.classList.add('animate-fade-in');
+                  }, index * 200);
+                });
+            }, 500);
+          }
+        }, 1000);
+      });
+
+      // 初始化3D画布
+      function initCanvas() {
+        const container = document.getElementById('equationCanvas');
+
+        // 检测设备性能
+        const devicePerformance = PerformanceUtils
+          ? PerformanceUtils.detectDevicePerformance()
+          : 'medium';
+
+        // 创建场景管理器
+        sceneManager = new SceneManager(container, {
+          antialias: devicePerformance === 'high',
+          powerPreference: 'high-performance',
+        });
+
+        // 创建可视化管理器
+        visualizationManager = new VisualizationManager(sceneManager);
+
+        // 开始动画
+        sceneManager.startAnimation();
+      }
+
+      // 加载不同的方程可视化
+      function loadEquation(equation) {
+        currentEquation = equation;
+
+        // 更新标题和描述
+        const titles = {
+          spaceTime: '时空同一化方程可视化',
+          momentum: '动量公式可视化',
+          energy: '能量方程可视化',
+          field: '电场与磁场关系可视化',
+          gravity: '引力场方程可视化',
+        };
+
+        const descriptions = {
+          spaceTime:
+            '时空同一化方程揭示了空间和时间的本质关系，表明时间是空间本身的运动。',
+          momentum:
+            '统一场论动量公式表明，物体的动量是质量乘以光速与物体运动速度的矢量差。',
+          energy: '能量方程展示了物质、空间和运动之间的能量转换关系。',
+          field:
+            '电场与磁场关系方程揭示了电磁现象的本质联系，统一了两种场的描述。',
+          gravity:
+            '引力场方程将引力与空间运动联系起来，提供了引力本质的新解释。',
+        };
+
+        const formulas = {
+          spaceTime: '$\\frac{dx}{dt} = c$',
+          momentum:
+            '$\\overrightarrow{p_{动}} = m\\left(\\overrightarrow{c} - \\overrightarrow{v}\\right)$',
+          energy: '$E = mc^2$',
+          field:
+            '$\\overrightarrow{B} = \\frac{\\overrightarrow{v}}{c} \\times \\overrightarrow{E}$',
+          gravity: '$F = G\\frac{m_1m_2}{r^2}$',
+        };
+
+        document.getElementById('currentEquationTitle').textContent =
+          titles[equation];
+        document.getElementById('currentEquationDescription').textContent =
+          descriptions[equation];
+        document.getElementById('equationFormula').innerHTML =
+          formulas[equation];
+
+        // 重新渲染公式
+        renderMathInElement(document.getElementById('equationFormula'), {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+          ],
+        });
+
+        // 加载方程可视化
+        visualizationManager.loadEquation(equation);
+      }
+
+      // 更新可视化
+      function updateVisualization() {
+        const velocity = document.getElementById('velocitySlider').value;
+        const mass = document.getElementById('massSlider').value;
+        const time = document.getElementById('timeSlider').value;
+
+        // 更新显示值
+        document.getElementById('velocityValue').textContent =
+          parseFloat(velocity).toFixed(2) + 'c';
+        document.getElementById('massValue').textContent =
+          parseFloat(mass).toFixed(1);
+        document.getElementById('timeValue').textContent =
+          parseFloat(time).toFixed(1);
+
+        // 更新可视化
+        if (visualizationManager) {
+          visualizationManager.update({
+            velocity: velocity,
+            mass: mass,
+            time: time,
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

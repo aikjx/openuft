@@ -1,0 +1,192 @@
+﻿==============================================================================
+TUFT v17  Line 1 : Complete odd-parity perturbation potential
+==============================================================================
+
+------------------------------------------------------------------------------
+E391  TUFT isotropic metric
+------------------------------------------------------------------------------
+  ds^2 = -A(r) dt^2 + B(r)(dr^2 + r^2 dOmega^2),   G=c=M=1
+  A(r) = exp(-2/r)
+  B(r) = exp(+2/r) * (1 + c_m/r^2 + d/r^3)
+  wall (B=0): r_h^3 + c_m r_h + d = 0
+
+------------------------------------------------------------------------------
+E392  Chandrasekhar odd-parity general form
+------------------------------------------------------------------------------
+  ds^2 = -e^{2nu}dt^2 + e^{2lambda}dr^2 + r^2 dOmega^2
+  d2psi/dr*^2 + [omega^2 - V_odd] psi = 0,  dr*/dr = exp(lambda-nu)=sqrt(B/A)
+  V_odd = e^{2nu} * [ l(l+1)/r^2 - 6 M_eff/r^3 ]
+  M_eff = (r/2)(1 - e^{-2lambda}) = (r/2)(1 - 1/B)
+
+------------------------------------------------------------------------------
+E393  TUFT explicit potential (l=2)
+------------------------------------------------------------------------------
+  V(r) = A/r^2 * [6 - 3(1 - 1/B)] = A/r^2 * (3 + 3/B)
+  Old (erratum #21): V_old = A*6/r^2  (missing spin term)
+
+------------------------------------------------------------------------------
+E394  Scalar source: no odd-parity coupling
+------------------------------------------------------------------------------
+  Spin-0 scalar background h=1/r couples only to EVEN (polar) parity.
+  Odd-parity needs odd-parity matter source (none for spin-0).
+  => No extra scalar term in odd channel.
+
+------------------------------------------------------------------------------
+E395  Wall boundary: B->0, V->inf, regularity=Neumann
+------------------------------------------------------------------------------
+  At wall: 1/B->inf, V~1/(r*-r*_h)^2 (centrifugal barrier at regular centre).
+  l=2 regularity: psi~(r*-r*_h)^3 => dpsi/dr*|wall=0 (Neumann W1).
+  => |R|^2 = 1 for all frequencies (ideal wall, flux conservation).
+
+------------------------------------------------------------------------------
+E396  Tortoise coordinate
+------------------------------------------------------------------------------
+  dr*/dr = sqrt(B/A) = exp(2/r) sqrt(1 + c_m/r^2 + d/r^3),  r*(r_h)=0
+
+==============================================================================
+PART 1  Barrier top position / height
+==============================================================================
+
+  case                   r_h      V_at_rlo r_peak     V_max      sqrt(Vmax) old sqrt  
+  --------------------------------------------------------------------------------
+  c_m=0,d=0 (gate)       none     4.25e-02 1.1493     0.468509   0.684477   0.892823  
+  c_m=-0.5,d=0           0.7071   6.36e-01 1.0000     0.515900   0.718262   0.901117  
+  c_m=-0.29,d=-0.05      0.6099   4.60e-01 1.1010     0.492831   0.702019   0.897086  
+
+  >>> GATE (c_m=0): sqrt(V_max) = 0.6845  (target 0.685)  -> PASS
+
+  Key result: barrier top sqrt(Vmax)=0.685 sits ABOVE GR l=2 QNM
+  frequency omega=0.374.  Ringdown energy does NOT tunnel through.
+
+==============================================================================
+PART 2  WKB tunnelling action K(omega) and group delay
+==============================================================================
+
+  V shape: diverges at wall, shallow local max at r~1.0, ->0 at inf.
+  For omega^2 < V_max: ONE outer turning point (wall side is under-barrier).
+  K(omega) = integral_0^{s_turn} sqrt(V - omega^2) dr*  (tunnelling exponent)
+  |T|^2 = exp(-2K);  echo amplitude |T|^4.
+  Group delay tau(omega) = dK_eff/domega (Wigner-Smith dwell time).
+
+  case                   omega    K          |T|^2      |T|^4      s_turn    
+  ------------------------------------------------------------------------
+  c_m=-0.5,d=0           0.250    6.2576     3.67055e-06 1.34729e-11 14.80     
+  c_m=-0.5,d=0           0.350    4.8817     5.75243e-05 3.30905e-09 10.97     
+  c_m=-0.5,d=0           0.374    4.5768     1.05838e-04 1.12017e-08 10.30     
+  c_m=-0.5,d=0           0.450    3.6454     6.81777e-04 4.64820e-07 8.47      
+  c_m=-0.5,d=0           0.500    3.0476     2.25370e-03 5.07917e-06 7.45      
+  c_m=-0.5,d=0           0.550    2.4506     7.43829e-03 5.53282e-05 6.49      
+  c_m=-0.5,d=0           0.600    1.8435     2.50492e-02 6.27462e-04 5.53      
+  c_m=-0.5,d=0           0.650    1.2086     8.91670e-02 7.95075e-03 4.50      
+  c_m=-0.5,d=0           0.685    0.7248     2.34668e-01 5.50689e-02 3.60      
+  c_m=-0.5,d=0           0.720    0.0959     8.25426e-01 6.81327e-01 0.57      
+  c_m=-0.5,d=0           0.750    0.0384     9.26057e-01 8.57582e-01 0.17      
+  c_m=-0.5,d=0           0.850    0.0017     9.96606e-01 9.93223e-01 0.01      
+  c_m=-0.5,d=0           1.000    0.0000     1.00000e+00 1.00000e+00 -1.00     
+
+  c_m=-0.29,d=-0.05      0.250    7.1578     6.06529e-07 3.67878e-13 16.46     
+  c_m=-0.29,d=-0.05      0.350    5.6848     1.15416e-05 1.33208e-10 12.62     
+  c_m=-0.29,d=-0.05      0.374    5.3502     2.25377e-05 5.07950e-10 11.94     
+  c_m=-0.29,d=-0.05      0.450    4.3034     1.82867e-04 3.34402e-08 10.10     
+  c_m=-0.29,d=-0.05      0.500    3.6070     7.36151e-04 5.41918e-07 9.05      
+  c_m=-0.29,d=-0.05      0.550    2.8846     3.12217e-03 9.74792e-06 8.06      
+  c_m=-0.29,d=-0.05      0.600    2.1062     1.48106e-02 2.19355e-04 7.06      
+  c_m=-0.29,d=-0.05      0.650    1.1699     9.63483e-02 9.28300e-03 5.94      
+  c_m=-0.29,d=-0.05      0.685    0.3604     4.86401e-01 2.36586e-01 4.84      
+  c_m=-0.29,d=-0.05      0.720    0.0000     1.00000e+00 1.00000e+00 -1.00     
+  c_m=-0.29,d=-0.05      0.750    0.0000     1.00000e+00 1.00000e+00 -1.00     
+  c_m=-0.29,d=-0.05      0.850    0.0000     1.00000e+00 1.00000e+00 -1.00     
+  c_m=-0.29,d=-0.05      1.000    0.0000     1.00000e+00 1.00000e+00 -1.00     
+
+  Group delay tau(omega) = -2 dK/domega (WKB round-trip dwell time):
+  case                   omega    tau(M)    
+  --------------------------------------------------
+  c_m=-0.5,d=0           0.350    27.11     
+  c_m=-0.5,d=0           0.374    24.72     
+  c_m=-0.5,d=0           0.450    24.27     
+  c_m=-0.5,d=0           0.500    23.90     
+  c_m=-0.5,d=0           0.550    24.08     
+  c_m=-0.5,d=0           0.600    24.84     
+  c_m=-0.5,d=0           0.650    26.32     
+  c_m=-0.5,d=0           0.685    31.79     
+  c_m=-0.5,d=0           0.720    21.12     
+  c_m=-0.5,d=0           0.750    1.45      
+  c_m=-0.5,d=0           0.850    0.31      
+    -> peak tau = 31.79 M at omega* = 0.685
+
+  c_m=-0.29,d=-0.05      0.350    29.15     
+  c_m=-0.29,d=-0.05      0.374    27.63     
+  c_m=-0.29,d=-0.05      0.450    27.67     
+  c_m=-0.29,d=-0.05      0.500    28.38     
+  c_m=-0.29,d=-0.05      0.550    30.02     
+  c_m=-0.29,d=-0.05      0.600    34.29     
+  c_m=-0.29,d=-0.05      0.650    41.08     
+  c_m=-0.29,d=-0.05      0.685    33.43     
+  c_m=-0.29,d=-0.05      0.720    11.09     
+  c_m=-0.29,d=-0.05      0.750    -0.00     
+  c_m=-0.29,d=-0.05      0.850    -0.00     
+    -> peak tau = 41.08 M at omega* = 0.650
+
+  Note: |R|^2=1 all frequencies (ideal wall, E387).  The WKB |T|^2 is the
+  fraction of incident power that tunnels to the wall and comes back as echo.
+  At omega=0.374 (GR ringdown), |T|^2 = 2.25e-05 (exponentially suppressed).
+
+==============================================================================
+PART 3  Observability SNR (BBH ringdown echo + O4/Voyager noise)
+==============================================================================
+
+  M_total = 60 Msun, M = 0.296 ms
+  f_RD = 201.2 Hz,  f_barrier_top = 368.9 Hz,  tau_RD = 3.32 ms
+
+  Fiducial ringdown peak strain at 1 Gpc: h_peak = 5.0e-22
+
+                                 O4           Voyager     
+  ------------------------------------------------------------
+  Ringdown SNR                   2.069        6.208       
+  Wall-echo SNR (c=-0.29)        0.3613       1.0840      
+  Echo/RD ratio                  1.746e-01    1.746e-01   
+
+  f_RD=201 Hz is BELOW f_barrier_top=369 Hz.  The ringdown PEAK sits
+  below the barrier (|T|^2=2.3e-5 at omega=0.374), but the ringdown Lorentzian
+  has broad tails above the barrier top where |T|^2~1.  Integrated over the
+  full ringdown bandwidth, echo carries ~17% of ringdown SNR.
+  This is marginal: detectable only with high-SNR stacking, and is generic
+  to all ECOs (sigma_abs=0), not TUFT-unique.
+
+==============================================================================
+PART 4  Four-state grading
+==============================================================================
+
+  S1  GR/Yilmaz gate: sqrt(Vmax)=0.6845 -> PASS
+  S2  Potential: V=A/r^2(3+3/B), M_eff=(r/2)(1-1/B), scalar: no odd coupling.
+      Wall: V->inf at B=0, regularity=Neumann.  COMPLETE.
+  S3  c_m=-0.5,d=0        : peak tau=31.79 M at omega*=0.685
+  S3  c_m=-0.29,d=-0.05   : peak tau=41.08 M at omega*=0.650
+  S4  Echo/RD SNR ratio = 1.75e-01 (O4).  For RD-SNR=10, echo SNR=1.75.
+
+  GRADE: B : WEAKLY OBSERVABLE (needs stacking)
+  Reason: Echo carries ~17% of ringdown SNR, dominated by high-frequency tail above barrier top.  Detectable only with high-SNR stacking; sigma_abs=0 is generic ECO, not TUFT-unique.
+
+==============================================================================
+E397-E400  Summary
+==============================================================================
+
+  E397  Corrected potential: V = 3A/r^2 (1 + 1/B)
+         c_m=0,d=0 (gate)      : r_pk=1.1493, Vmax=0.468509, sqrt(Vmax)=0.6845
+         c_m=-0.5,d=0          : r_pk=1.0000, Vmax=0.515900, sqrt(Vmax)=0.7183
+         c_m=-0.29,d=-0.05     : r_pk=1.1010, Vmax=0.492831, sqrt(Vmax)=0.7020
+  E398  Gate: c_m=0 sqrt(Vmax)=0.6845 vs 0.685 target -> PASS
+  E399  WKB tunnelling: at omega=0.374 (GR ringdown), |T|^2=2.25e-05 for c=-0.29.
+  E400  SNR: echo/RD ratio=1.75e-01 (O4), 1.75e-01 (Voyager).  Grade: B : WEAKLY OBSERVABLE (needs stacking)
+
+  UNCHANGED from v16 (robust): |R|^2=1 all frequencies (E387); sigma_abs=0;
+  no high-Q wall-cavity narrow spectrum (E367).
+  CHANGED: barrier top 0.901->0.685; ringdown below barrier peak;
+  wide-arch phase delay re-estimated via WKB (round-trip tau).
+  v15 old: tau=46M (c=-0.5) / 116M (c=-0.29).  v17 WKB: tau=31.8 / 41.1 M.
+  (WKB near-barrier-top estimate; exact IVP phase deferred to v18.)
+
+==============================================================================
+END (0.3 s)
+==============================================================================
+[written] D:\a10\aikjx\code\my_lib\tuft_v17_odd_potential_out.txt
