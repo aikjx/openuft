@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUFT v2.0 · OP-MS 突破全景（排除链 + 泛函矩阵 + β₁ 精算）</title>
+<style>
+  :root{
+    --ink:#1f2933; --muted:#5f6b7a; --line:#d4dae3;
+    --green:#227a4a; --greenbg:#e8f6ee; --greenline:#b4dcc8;
+    --red:#b3403a; --redbg:#fbeceb; --redline:#eec4c2;
+    --blue:#1f5fa8; --bluebg:#eaf2fb; --blueline:#bcd4ee;
+    --gold:#b7791f; --goldbg:#fdf3e3; --goldline:#e6c887;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif; color:var(--ink);
+       background:#fafbfc; padding:24px; font-size:14px; line-height:1.5;}
+  .doc{max-width:1180px; margin:0 auto;}
+  header{border:1px solid var(--line); border-radius:10px; background:#fff; padding:18px 22px; margin-bottom:14px;}
+  h1{font-size:20px; font-weight:700;}
+  .sub{color:var(--muted); font-size:13px; margin-top:6px;}
+  .badges{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+  .badge{font-size:12px; font-weight:700; padding:3px 10px; border-radius:12px; border:1px solid;}
+  .b-pass{background:var(--greenbg); color:var(--green); border-color:var(--greenline);}
+  .b-info{background:var(--bluebg); color:var(--blue); border-color:var(--blueline);}
+  .band{margin-bottom:14px;}
+  .band-title{display:flex; align-items:baseline; gap:10px; margin-bottom:8px;}
+  .band-name{font-size:15px; font-weight:700;}
+  .band-note{font-size:12px; color:var(--muted);}
+  .chain{border:1px solid var(--line); border-radius:8px; background:#fff; padding:12px 16px; margin-bottom:10px;}
+  .chain h3{font-size:14px; display:flex; align-items:center; gap:8px;}
+  .chain p{font-size:13px; color:var(--muted); margin-top:4px;}
+  .chip{display:inline-block; font-size:11px; font-weight:600; padding:1px 8px; border-radius:10px; white-space:nowrap;}
+  .c-proof{background:var(--greenbg); color:var(--green); border:1px solid var(--greenline);}
+  .c-excl{background:var(--redbg); color:var(--red); border:1px solid var(--redline);}
+  .c-open{background:var(--bluebg); color:var(--blue); border:1px solid var(--blueline);}
+  .arrow{text-align:center; color:var(--muted); font-size:15px; line-height:1; margin:4px 0;}
+  .tbl{width:100%; border-collapse:collapse; font-size:12px;}
+  .tbl th,.tbl td{border:1px solid var(--line); padding:4px 8px; text-align:left;}
+  .tbl th{background:#f4f6f9;}
+  .bar-row{display:flex; align-items:center; gap:8px; margin-bottom:6px;}
+  .bar-label{width:190px; font-size:12px; color:var(--muted); text-align:right; flex-shrink:0;}
+  .bar-track{flex:1; background:#f0f2f5; border-radius:4px; height:18px; position:relative;}
+  .bar-fill{height:100%; border-radius:4px;}
+  .bar-val{width:120px; font-size:12px;}
+  .legend{display:flex; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--muted); margin-top:8px;}
+  .lg{display:inline-flex; align-items:center; gap:6px;}
+  .sw{width:14px; height:14px; border-radius:3px; border:1px solid var(--line); display:inline-block;}
+  footer{border:1px solid var(--line); border-radius:10px; background:#fff; padding:14px 18px; margin-top:4px;}
+  .eq{font-family:Consolas,monospace; background:#f6f8fa; border:1px solid var(--line);
+      border-radius:6px; padding:2px 8px; font-size:13px;}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<header>
+  <h1>TUFT v2.0 · OP-MS 质量泛函尺度机制 · 突破全景</h1>
+  <div class="sub">全自动流水线（sympy 符号求导证明 → numpy 数值双轨验证 → 天体精算 → 泛函矩阵）· 2026-09-16</div>
+  <div class="badges">
+    <span class="badge b-pass">A 符号证明 PASS（5/5）</span>
+    <span class="badge b-pass">B 数值验证 PASS（残差 ≤ 2.7e-15）</span>
+    <span class="badge b-pass">C β₁ 精算 PASS</span>
+    <span class="badge b-pass">D 泛函矩阵 PASS</span>
+    <span class="badge b-info">报告: tuft_v2_opms_report.txt</span>
+  </div>
+</header>
+
+<!-- 排除链 -->
+<div class="band">
+  <div class="band-title"><span class="band-name">排除链（带证明，非断言）</span>
+    <span class="band-note">OP-MS 从"开放项"收窄为"4 条可攻出路"</span></div>
+
+  <div class="chain">
+    <h3>① 纯圈数质量口径被排除 <span class="chip c-proof">P1–P3 符号证明</span></h3>
+    <p>恒等式 <span class="eq">M_tot ≡ (1/2π)∮√(κ²+τ²)ds = q'</span>（缠绕圈数）——κ、τ 解析式由 Frenet 符号求导验证；
+       数值残差 <b>0 ～ 2.7e-15（机器精度）</b>。扭转量子化 <span class="eq">Tw = q'·cosθ</span>，费米条件
+       <span class="eq">Tw=±½ ⇒ cosθ=1/(2q')</span>。<br>
+       <b>推论</b>：若 m∝q'（整数圈数），则质量比 = 整数比，而 μ/e = 206.7682830 ∉ ℤ ⇒
+       <span class="chip c-excl">该口径被观测数据排除</span></p>
+  </div>
+
+  <div class="chain">
+    <h3>② β₁ 静态尺度机制被排除 <span class="chip c-proof">P5 定理 + 天体精算</span></h3>
+    <p>真空外解 <span class="eq">β₁(r)=exp(2GM/c²r)</span> 定义域 r ≥ 2GM/c² ⇒ <b>1 &lt; β₁ ≤ e ≈ 2.718</b>；
+       β₁=207 需要 r = 0.3751·视界半径，在视界<b>内</b> ⇒ 视界外不可达。<br>
+       均匀密度球内部解（数值打靶 RK4）：中心 β₁ 上界实测——太阳 1.000006、白矮星 1.00038、中子星 <b>1.580</b>，
+       全部 ≪ 207 ⇒ <span class="chip c-excl">β₁ 静态/内部机制被排除</span></p>
+  </div>
+
+  <div class="chain">
+    <h3>③ 六类静态几何质量泛函全被排除 <span class="chip c-proof">P6 枚举证明</span></h3>
+    <p>在 16 纽结族 + Tw∈ℤ/2 量子化选择律下，11 个量子化态对六类泛函的动态范围最大仅 <b>10.7×</b>，
+       远低于轻子层级 207× ⇒ <span class="chip c-excl">静态纽结几何无解</span></p>
+  </div>
+
+  <div class="chain">
+    <h3>④ 出路（OP-MS 收窄为 4 条候选） <span class="chip c-open">新尺度自由度</span></h3>
+    <p>a. β₁ <b>动态</b>背景（非静态解，视界内/强场动力学）　b. 非静态缠绕/含时纽结演化
+       c. 四维协变拓展（OP-4D）　d. 额外量子数（卫星纽结、双纽结、链接）</p>
+  </div>
+</div>
+
+<!-- 泛函矩阵 -->
+<div class="band">
+  <div class="band-title"><span class="band-name">质量泛函筛选矩阵</span>
+    <span class="band-note">动态范围（log 尺度）vs 轻子层级 207× 阈值</span></div>
+  <div class="tbl" style="border:none;">
+    <div class="bar-row"><div class="bar-label">⟨√(κ²+τ²)⟩·R0 (m̃)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:7.5%;background:#e6a23c;"></div></div>
+      <div class="bar-val">1.49× ✗</div></div>
+    <div class="bar-row"><div class="bar-label">M_tot 全环相位</div>
+      <div class="bar-track"><div class="bar-fill" style="width:14.0%;background:#e6a23c;"></div></div>
+      <div class="bar-val">2.11× ✗</div></div>
+    <div class="bar-row"><div class="bar-label">q 缠绕数</div>
+      <div class="bar-track"><div class="bar-fill" style="width:20.6%;background:#e6a23c;"></div></div>
+      <div class="bar-val">3.00× ✗</div></div>
+    <div class="bar-row"><div class="bar-label">1/minκ 尺度型</div>
+      <div class="bar-track"><div class="bar-fill" style="width:19.7%;background:#e6a23c;"></div></div>
+      <div class="bar-val">2.86× ✗</div></div>
+    <div class="bar-row"><div class="bar-label">1/a 尺度型</div>
+      <div class="bar-track"><div class="bar-fill" style="width:15.2%;background:#e6a23c;"></div></div>
+      <div class="bar-val">2.25× ✗</div></div>
+    <div class="bar-row"><div class="bar-label">|SL| 自链数（最佳）</div>
+      <div class="bar-track"><div class="bar-fill" style="width:44.4%;background:#b3403a;"></div></div>
+      <div class="bar-val">10.67× ✗</div></div>
+    <div class="bar-row"><div class="bar-label">轻子层级阈值</div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:#b3403a;opacity:0.25;"></div></div>
+      <div class="bar-val">207×（μ/e）</div></div>
+  </div>
+  <div class="legend">
+    <span class="lg"><span class="sw" style="background:#e6a23c"></span>被排除（&lt; 207×）</span>
+    <span class="lg"><span class="sw" style="background:#b3403a"></span>最佳泛函 / 阈值</span>
+  </div>
+</div>
+
+<!-- β₁ 精算表 -->
+<div class="band">
+  <div class="band-title"><span class="band-name">β₁ 尺度机制天体精算</span>
+    <span class="band-note">静态解 β₁(r)=exp(2GM/c²r) · 视界外 β₁ ≤ e</span></div>
+  <table class="tbl">
+    <tr><th>天体</th><th>GM/c² (m)</th><th>半径 (m)</th><th>β₁(表面)</th><th>β₁=207 所需 r</th><th>可达性</th></tr>
+    <tr><td>地球</td><td>4.435e-3</td><td>6.371e6</td><td>≈ 1</td><td>1.66e-3</td><td>✗ 视界内</td></tr>
+    <tr><td>太阳</td><td>1477.1</td><td>6.957e8</td><td>1.000004</td><td>554.0</td><td>✗ 视界内</td></tr>
+    <tr><td>白矮星 (0.6M☉)</td><td>886.2</td><td>7.0e6</td><td>1.00025</td><td>332.4</td><td>✗ 视界内</td></tr>
+    <tr><td>中子星 (1.4M☉)</td><td>2067.9</td><td>1.2e4</td><td>1.411</td><td>775.6</td><td>✗ 视界内</td></tr>
+    <tr><td>黑洞 (10M☉) 视界</td><td>14771</td><td>29541</td><td>e = 2.718</td><td>5539.6</td><td>✗ 视界内</td></tr>
+  </table>
+  <div style="margin-top:8px;font-size:12px;color:var(--muted);">
+    均匀密度球内部解（RK4 打靶）中心 β₁：太阳 1.000006 · 白矮星 1.00038 · 中子星 <b>1.580</b> —— 全部 ≪ 207
+  </div>
+</div>
+
+<footer>
+  <div style="font-size:13px;"><b>关键突破恒等式（符号证明 + 机器精度验证）</b></div>
+  <div class="legend" style="margin-top:6px;">
+    <span>M_tot = q'（残差 0）</span>
+    <span>Tw = q'·cosθ（残差 ≤ 2.2e-16）</span>
+    <span>β₁∇²lnβ₁ ≡ ∇²β₁ − (∇β₁)²/β₁（3D 符号恒等）</span>
+  </div>
+  <div style="margin-top:10px;font-size:11px;color:var(--muted);">
+    理论模型规格 · 数学自洽 ≠ 实验证实 · 排除链为形式化+数值证明 · 出路候选为开放命题，未闭环
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

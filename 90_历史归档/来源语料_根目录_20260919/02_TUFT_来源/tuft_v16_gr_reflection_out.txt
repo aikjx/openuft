@@ -1,0 +1,85 @@
+==============================================================================
+TUFT v16  Line 1 : GR real-frequency reflection coefficient  R_GR(omega)
+==============================================================================
+
+[1] Barrier diagnostic  (Schwarzschild, l=2, M=1)
+    V(r) peak at r = 3.2806 M,  Vmax = 0.151287,  sqrt(Vmax) = 0.388956
+    analytic 4/27 = 0.148148, sqrt = 0.384900
+    -> GR barrier top lies at  omega ~ 0.385  (NOT at 0.90).
+    -> Schwarzschild l=2 fundamental QNM (reference): w = 0.37367 - i 0.08896
+
+[2] GR real-frequency reflection sweep (mpmath RK4, dps=35, h=0.1)
+
+  omega    |R_GR|^2     |T_GR|^2    phase delta(rad)   unitarity(|a|^2-|b|^2)
+  ----------------------------------------------------------------------
+   0.100      1.00000      0.00000    +3.10132       +1.00000
+   0.150      0.99993      0.00007    +2.85504       +1.00000
+   0.200      0.99912      0.00088    +2.77452       +1.00000
+   0.250      0.99206      0.00794    +2.91600       +1.00000
+   0.300      0.94437      0.05563    -3.05758       +1.00000
+   0.350      0.72131      0.27869    -2.50439       +1.00000
+   0.400      0.30525      0.69475    -1.82013       +1.00000
+   0.450      0.07358      0.92642    -1.24970       +1.00000
+   0.500      0.01527      0.98473    -0.88354       +1.00000
+   0.600      0.00073      0.99927    -0.49748       +1.00000
+   0.700      0.00006      0.99994    -0.42700       +1.00000
+   0.800      0.00001      0.99999    -0.42710       +1.00000
+   0.850      0.00001      1.00000    -0.58038       +0.99999
+   0.900      0.00001      1.00000    -0.32833       +0.99999
+   0.915      0.00001      1.00000    -0.48091       +0.99999
+   0.950      0.00001      1.00001    -0.43075       +0.99999
+   1.000      0.00000      1.00002    -0.20735       +0.99998
+   1.100      0.00000      1.00003    -0.11364       +0.99996
+   1.200      0.00000      1.00006    -0.02860       +0.99994
+   1.300      0.00000      1.00009    +0.07516       +0.99990
+   1.500      0.00000      1.00023    +0.33614       +0.99977
+   1.800      0.00000      1.00069    +0.60120       +0.99930
+   2.000      0.00000      1.00131    +0.62126       +0.99869
+
+[3] Critical band around the TUFT wide-arch (omega ~ 0.89 - 0.92)
+    omega=0.850   |R_GR|^2 = 8.83396e-06   |T_GR|^2 = 9.99998e-01
+    omega=0.900   |R_GR|^2 = 6.63062e-06   |T_GR|^2 = 1.00000e+00
+    omega=0.915   |R_GR|^2 = 7.28857e-06   |T_GR|^2 = 1.00000e+00
+    omega=0.950   |R_GR|^2 = 6.30690e-06   |T_GR|^2 = 1.00001e+00
+
+    @ TUFT c=-0.50 peak (omega=0.915): |R_GR|^2 = 7.28857e-06 , |T_GR|^2 = 1.00000e+00
+    @ TUFT c=-0.29 peak (omega=0.890): |R_GR|^2 = 6.00115e-06 , |T_GR|^2 = 1.00000e+00
+
+[4] TUFT wide-arch model (E378, given by v15 lock)
+    c=-0.50 : omega_c=0.915, tau=46.0 M, Q=6.70, gamma(1/e width)=0.1366
+    c=-0.29 : omega_c=0.890, tau=116.0 M, Q=16.43, gamma(1/e width)=0.0542
+
+[5] Waveform convolution test (E379)
+    incident burst: carrier omega0=0.900, Gaussian width tau_in=25.0 M
+    peak |h_in|            = 0.99865
+    peak |h_refl, GR|      = 0.00272   (GR barrier at 0.90 gives ~0 reflection)
+    peak |h_refl, TUFT-.50|= 0.95774
+    peak |h_refl, TUFT-.29|= 0.84521
+    RMS (TUFT-.50 - GR)    = 0.20489
+    RMS (TUFT-.29 - GR)    = 0.19006
+    RMS (TUFT-.50)         = 0.20540
+    RMS (TUFT-.29)         = 0.19057
+
+[6] Observability judgement  (four-state grading)
+    GR  |R_GR(0.90)|^2   = 6.63062e-06
+    TUFT|R_TUFT(0.90)|^2 ~ 1.000 (arch peak, by model)
+    contrast R_TUFT / R_GR at 0.90 ~ 1.51e+05
+
+    GRADE : A : STRONGLY OBSERVABLE
+    reason: GR barrier top is at sqrt(Vmax)=0.385, at omega=0.90 the GR wave is ~2.3 barrier heights above top and |R_GR|^2 ~ O(1e-4). TUFT arch peak ~ O(1). Contrast > 10^3. Wide arch is TUFT-unique.
+
+==============================================================================
+CONCLUSION
+==============================================================================
+ Schwarzschild l=2 RW barrier peaks at sqrt(Vmax)=0.385 (Vmax=4/27).
+ At omega=0.90 the GR wave is ~2.3x above the barrier top; GR reflection
+ coefficient is |R_GR|^2 ~ %.2e (essentially transparent).
+ The TUFT wide arch centred at omega~0.90 has NO GR counterpart:
+ GR has no broad reflection peak near 0.90.
+ => The TUFT wide arch is a TUFT-unique, in-principle observable feature
+    when probed at frequencies around omega~0.90/M.
+ Waveform convolution: GR reflected burst is suppressed to 2.7e-03 of incident,
+    while TUFT-.50 / TUFT-.29 reflected bursts reach 0.96 / 0.85 of incident.
+    Residual RMS (TUFT-GR) = 0.2049 / 0.1901 (vs TUFT RMS 0.2054 / 0.1906).
+==============================================================================
+ END

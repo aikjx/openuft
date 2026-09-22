@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>十大应用 - 统一场论可视化系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#7B61FF',
+                        accent: '#FF6B8B',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .app-card {
+                transition: all 0.3s ease;
+            }
+            .app-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(123, 97, 255, 0.1);
+            }
+            .feature-item {
+                transition: all 0.2s ease;
+            }
+            .feature-item:hover {
+                color: #7B61FF;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light text-dark min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                    <i class="fa fa-cube text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold text-primary">统一场论可视化系统</h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="../index.html" class="font-medium hover:text-primary transition-colors">首页</a>
+                <a href="../core_equations/index.html" class="font-medium hover:text-primary transition-colors">核心方程</a>
+                <a href="#" class="font-medium text-primary border-b-2 border-primary pb-1">十大应用</a>
+                <a href="../ufo_principle/index.html" class="font-medium hover:text-primary transition-colors">UFO原理</a>
+                <a href="../vertical_principle/index.html" class="font-medium hover:text-primary transition-colors">垂直原理</a>
+            </div>
+            <button class="md:hidden text-dark text-xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="flex-grow py-12">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">统一场论十大应用</h2>
+                <p class="text-gray-600">
+                    探索基于统一场论和人工场扫描技术的十大革命性应用，这些技术将彻底改变人类文明的发展轨迹。
+                </p>
+            </div>
+
+            <!-- 应用概览 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- 应用卡片 1：光速飞行 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('lightSpeed')">
+                    <div class="h-48 bg-gradient-to-r from-primary to-secondary relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-rocket text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">光速飞行</h3>
+                        <p class="text-gray-600 mb-4">基于统一场论动量方程 P = m(C-V)，通过人工场扫描技术操控质量，当质量m→0时，物体必然以光速V=C运动</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：革命性</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 2：全球瞬间传送 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('teleportation')">
+                    <div class="h-48 bg-gradient-to-r from-accent to-secondary relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-exchange text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">全球瞬间传送</h3>
+                        <p class="text-gray-600 mb-4">利用人工场对空间进行折叠，实现物体和信息的瞬间传送</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：颠覆性</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 3：无药物医学 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('medicine')">
+                    <div class="h-48 bg-gradient-to-r from-primary to-accent relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-heartbeat text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">无药物医学</h3>
+                        <p class="text-gray-600 mb-4">通过人工场直接作用于人体，修复细胞和组织，治疗各种疾病</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：重大</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 4：免费能源 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('energy')">
+                    <div class="h-48 bg-gradient-to-r from-yellow-400 to-orange-500 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-bolt text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">免费能源</h3>
+                        <p class="text-gray-600 mb-4">从空间中提取能量，彻底解决人类能源危机</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：革命性</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 5：意识存储与永生 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('immortality')">
+                    <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-brain text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">意识存储与永生</h3>
+                        <p class="text-gray-600 mb-4">通过人工场扫描技术保存和上传人类意识</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：颠覆性</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 6：反重力技术 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('antigravity')">
+                    <div class="h-48 bg-gradient-to-r from-blue-500 to-teal-400 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-arrow-up text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">反重力技术</h3>
+                        <p class="text-gray-600 mb-4">利用人工场抵消引力，实现物体悬浮和反重力飞行</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：重大</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 7：时间场计算机 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('timeComputer')">
+                    <div class="h-48 bg-gradient-to-r from-indigo-500 to-blue-500 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-microchip text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">时间场计算机</h3>
+                        <p class="text-gray-600 mb-4">基于时间场原理的量子级计算机，突破传统计算极限</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：革命性</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 8：超光速通讯 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('communication')">
+                    <div class="h-48 bg-gradient-to-r from-green-500 to-teal-400 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-wifi text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">超光速通讯</h3>
+                        <p class="text-gray-600 mb-4">利用人工场实现超越光速的即时通讯</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：重大</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 9：物质制造机 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('matterCreation')">
+                    <div class="h-48 bg-gradient-to-r from-red-500 to-orange-500 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-cogs text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">物质制造机</h3>
+                        <p class="text-gray-600 mb-4">通过人工场操控空间结构，直接从空间中制造物质</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：革命性</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 应用卡片 10：空间保护盾 -->
+                <div class="app-card bg-white rounded-xl shadow-md overflow-hidden" onclick="showApplicationDetail('forceField')">
+                    <div class="h-48 bg-gradient-to-r from-purple-500 to-indigo-500 relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa fa-shield text-white text-5xl opacity-30"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">空间保护盾</h3>
+                        <p class="text-gray-600 mb-4">利用人工场创建防护屏障，抵御各种物理攻击</p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <i class="fa fa-clock-o mr-2"></i>
+                            <span>预计影响：重大</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 应用详情模态框 -->
+            <div id="applicationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+                <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto">
+                    <div class="p-6 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <h3 id="modalTitle" class="text-2xl font-bold">应用详情</h3>
+                            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                                <i class="fa fa-times text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div>
+                                <div id="modalVisualization" class="w-full h-64 bg-gray-100 rounded-lg mb-6"></div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-semibold mb-2">技术原理</h4>
+                                        <p id="modalPrinciple" class="text-gray-600">技术原理描述将在这里显示。</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-2">应用前景</h4>
+                                        <p id="modalProspect" class="text-gray-600">应用前景描述将在这里显示。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3">关键特性</h4>
+                                <ul id="modalFeatures" class="space-y-2">
+                                    <!-- 特性将动态添加 -->
+                                </ul>
+                                
+                                <div class="mt-6">
+                                    <h4 class="font-semibold mb-3">统一场论基础</h4>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <p id="modalFormula" class="text-lg">$E = mc^2$</p>
+                                        <p id="modalFormulaDesc" class="text-sm text-gray-600 mt-2">公式描述将在这里显示。</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6">
+                                    <h4 class="font-semibold mb-3">发展阶段</h4>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="modalProgress" class="bg-primary h-2.5 rounded-full" style="width: 30%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>理论研究</span>
+                                        <span>实验验证</span>
+                                        <span>应用开发</span>
+                                        <span>商业化</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 border-t border-gray-100 flex justify-end">
+                        <button onclick="closeModal()" class="bg-gray-100 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-200 transition-colors">
+                            关闭
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">© 2025 统一场论可视化系统</p>
+            <p class="text-sm text-gray-400">基于张祥前统一场论理论开发的交互式可视化平台</p>
+        </div>
+    </footer>
+
+    <script>
+        let modalScene, modalCamera, modalRenderer;
+        let currentApp = null;
+        
+        // 应用数据
+        const applications = {
+            lightSpeed: {
+                title: "光速飞行",
+                principle: "基于统一场论动量方程 P = m(C-V)，当人工场作用使物体质量m→0时，物体必然以光速V=C运动，突破相对论质量效应限制，实现接近光速的飞行。",
+                prospect: "彻底改变人类的交通和航天方式，使星际旅行成为可能。从地球到火星只需几分钟，到最近的恒星系统也只需几年时间。",
+                features: [
+                    "质量操控技术",
+                    "零质量光速飞行",
+                    "无惯性飞行特性",
+                    "直角转弯能力",
+                    "悬停无声"
+                ],
+                formula: "$P = m(C-V)$，当人工场作用使$m \to 0$时，$V \to C$",
+                formulaDesc: "统一场论动量方程揭示了光速飞行的可能性，通过操控物体质量可以突破光速限制。",
+                progress: 20
+            },
+            teleportation: {
+                title: "全球瞬间传送",
+                principle: "利用人工场对空间进行折叠或扭曲，创造虫洞效应，使两个遥远的空间点直接连接，实现物体和信息的瞬间传送。",
+                prospect: "彻底消除地理距离限制，使全球甚至星际间的旅行和通讯变得即时可达。物流、交通、旅游等行业将发生革命性变化。",
+                features: [
+                    "空间折叠技术",
+                    "量子纠缠传输",
+                    "信息与物质传输",
+                    "无需时间延迟",
+                    "能耗低"
+                ],
+                formula: "$d = d_0 e^{-\\alpha \\cdot E}$",
+                formulaDesc: "空间距离 d 随人工场能量 E 指数减小，当能量达到阈值时，距离趋近于零。",
+                progress: 15
+            },
+            medicine: {
+                title: "无药物医学",
+                principle: "利用人工场直接作用于人体细胞和分子层面，修复受损组织，调节生理功能，消灭病原体，而无需使用药物。",
+                prospect: "彻底改变医疗模式，减少药物副作用，提高治疗效率，实现精准医疗和个性化治疗。许多目前无法治愈的疾病将得到有效治疗。",
+                features: [
+                    "细胞修复技术",
+                    "基因编辑功能",
+                    "非侵入式治疗",
+                    "无药物副作用",
+                    "快速康复"
+                ],
+                formula: "$F = k \\cdot \\nabla \\phi$，其中 $\\phi$ 为生命场强度",
+                formulaDesc: "人工场产生的力场可以影响和修复生命体内的场结构，从而达到治疗目的。",
+                progress: 30
+            },
+            energy: {
+                title: "免费能源",
+                principle: "根据统一场论能量方程 W = m·C·V，空间本身蕴含巨大能量。通过人工场技术，可以从空间中直接提取能量，实现几乎无限的清洁能源供应。",
+                prospect: "彻底解决人类能源危机，消除环境污染，推动能源相关产业的革命性变革。能源将变得极其廉价和普及。",
+                features: [
+                    "空间能提取技术",
+                    "零污染排放",
+                    "无限能源供应",
+                    "小型便携设备",
+                    "低成本维护"
+                ],
+                formula: "$W = m \\cdot C \\cdot V$，基于动量方程的能量表达式",
+                formulaDesc: "统一场论能量方程揭示了空间能量的本质，通过人工场技术可以提取并转化为可用能源。",
+                progress: 25
+            },
+            immortality: {
+                title: "意识存储与永生",
+                principle: "通过人工场对大脑进行精确扫描，记录和保存人的意识和记忆，然后可以上传到计算机系统或新的生物载体中。",
+                prospect: "从根本上改变人类对生命和死亡的认知，实现意识层面的永生。同时引发深刻的伦理和哲学思考。",
+                features: [
+                    "大脑精确扫描",
+                    "意识数字化存储",
+                    "记忆完整性保存",
+                    "意识上传下载",
+                    "多载体存在"
+                ],
+                formula: "$I = \\sum_{i=1}^{n} p_i \\log p_i$，其中 $p_i$ 为神经网络状态概率",
+                formulaDesc: "意识信息可以通过神经网络状态的概率分布进行数学描述和存储。",
+                progress: 10
+            },
+            antigravity: {
+                title: "反重力技术",
+                principle: "基于统一场论动量方程和对引力本质的新解释，通过人工场产生与引力场相反的作用力，改变物体在空间中的运动状态，实现物体悬浮和反重力飞行。",
+                prospect: "彻底改变交通、建筑和航天领域，使飞行器摆脱传统推进方式的限制，实现更灵活高效的运输方式。",
+                features: [
+                    "引力场抵消",
+                    "无推进器飞行",
+                    "垂直起降能力",
+                    "高速低能耗",
+                    "静音飞行"
+                ],
+                formula: "$P = m(C-V)$，通过改变物体与空间的相互作用实现反重力",
+                formulaDesc: "动量方程揭示了物体与空间的基本关系，通过人工场技术可以改变这种关系，实现反重力效果。",
+                progress: 22
+            },
+            timeComputer: {
+                title: "时间场计算机",
+                principle: "利用人工场操控时间流逝，创建时间场环境，使计算机在时间维度上并行运算，突破传统计算机的物理极限。",
+                prospect: "计算能力将呈指数级增长，解决当前无法处理的复杂问题，推动人工智能、密码学、材料科学等领域的革命性进步。",
+                features: [
+                    "时间维度并行",
+                    "超高速运算",
+                    "低能耗",
+                    "解决NP完全问题",
+                    "自适应学习能力"
+                ],
+                formula: "$t' = t \\sqrt{1 - \\frac{v^2}{c^2}}$，人工场可控制 $v$ 实现时间操控",
+                formulaDesc: "通过人工场技术操控时间流逝速度，使计算机在不同时间流速的参考系中并行工作。",
+                progress: 18
+            },
+            communication: {
+                title: "超光速通讯",
+                principle: "利用人工场创建的空间通道或时间场效应，实现信息的超光速传输，突破光速对通讯速度的限制。",
+                prospect: "彻底消除远距离通讯的时间延迟，使全球即时通讯成为现实，同时为星际通讯开辟新途径。",
+                features: [
+                    "零延迟传输",
+                    "抗干扰能力强",
+                    "保密性能好",
+                    "长距离传输稳定",
+                    "低能耗"
+                ],
+                formula: "$t = \\frac{d}{c}$，人工场可使 $c' \to \\infty$，从而 $t \to 0$",
+                formulaDesc: "通过人工场技术改变信息传播的有效光速，理论上可以实现无限快的信息传输。",
+                progress: 24
+            },
+            matterCreation: {
+                title: "物质制造机",
+                principle: "基于统一场论对物质本质的认识，通过人工场操控空间结构，直接从空间中凝聚能量形成物质，实现按需制造。",
+                prospect: "彻底改变制造业和资源利用方式，实现物质的按需制造和回收再利用，解决资源短缺问题。",
+                features: [
+                    "从能量到物质转换",
+                    "原子级精确控制",
+                    "零浪费生产",
+                    "多功能制造",
+                    "快速原型设计"
+                ],
+                formula: "$E = mc^2$ 的逆过程：$m = \\frac{E}{c^2}$",
+                formulaDesc: "通过人工场技术将空间能量转换为具有特定结构的物质，实现物质的直接制造。",
+                progress: 15
+            },
+            forceField: {
+                title: "空间保护盾",
+                principle: "利用人工场创建高强度的空间屏障，能够偏转或吸收各种物理攻击，如高速物体、辐射、能量武器等。",
+                prospect: "在军事防御、太空探索、工业安全等领域发挥重要作用，大幅提高安全性和生存能力。",
+                features: [
+                    "高强度空间屏障",
+                    "多频段防护",
+                    "自适应调节",
+                    "低能耗维持",
+                    "透明可视"
+                ],
+                formula: "$\\sigma = \\frac{F}{A} = k \\cdot E^2$，其中 $E$ 为人工场强度",
+                formulaDesc: "人工场强度的平方与防护能力成正比，可以根据需要调整防护强度。",
+                progress: 28
+            }
+        };
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 渲染数学公式
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        });
+
+        // 显示应用详情
+        function showApplicationDetail(appId) {
+            currentApp = appId;
+            const app = applications[appId];
+            
+            // 更新模态框内容
+            document.getElementById('modalTitle').textContent = app.title;
+            document.getElementById('modalPrinciple').textContent = app.principle;
+            document.getElementById('modalProspect').textContent = app.prospect;
+            document.getElementById('modalFormula').innerHTML = app.formula;
+            document.getElementById('modalFormulaDesc').textContent = app.formulaDesc;
+            document.getElementById('modalProgress').style.width = app.progress + '%';
+            
+            // 更新特性列表
+            const featuresList = document.getElementById('modalFeatures');
+            featuresList.innerHTML = '';
+            app.features.forEach(feature => {
+                const li = document.createElement('li');
+                li.className = 'feature-item flex items-center';
+                li.innerHTML = `<i class="fa fa-check-circle text-secondary mr-2"></i> ${feature}`;
+                featuresList.appendChild(li);
+            });
+            
+            // 初始化可视化
+            initModalVisualization();
+            
+            // 显示模态框
+            document.getElementById('applicationModal').classList.remove('hidden');
+            
+            // 重新渲染公式
+            renderMathInElement(document.getElementById('modalFormula'), {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('applicationModal').classList.add('hidden');
+            
+            // 清理3D场景
+            if (modalRenderer) {
+                modalRenderer.dispose();
+                modalScene = null;
+                modalCamera = null;
+                modalRenderer = null;
+            }
+        }
+
+        // 初始化模态框中的3D可视化
+        function initModalVisualization() {
+            const container = document.getElementById('modalVisualization');
+            
+            // 清理现有内容
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            
+            modalScene = new THREE.Scene();
+            modalScene.background = new THREE.Color(0xf0f0f0);
+            
+            modalCamera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            modalCamera.position.z = 5;
+            
+            modalRenderer = new THREE.WebGLRenderer({ antialias: true });
+            modalRenderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(modalRenderer.domElement);
+            
+            // 添加控制器
+            const controls = new THREE.OrbitControls(modalCamera, modalRenderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // 添加坐标轴
+            const axesHelper = new THREE.AxesHelper(3);
+            modalScene.add(axesHelper);
+            
+            // 根据当前应用创建不同的可视化内容
+            createAppVisualization();
+            
+            // 动画循环
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                modalRenderer.render(modalScene, modalCamera);
+            }
+            
+            animate();
+            
+            // 响应式处理
+            window.addEventListener('resize', () => {
+                if (modalCamera && modalRenderer) {
+                    modalCamera.aspect = container.clientWidth / container.clientHeight;
+                    modalCamera.updateProjectionMatrix();
+                    modalRenderer.setSize(container.clientWidth, container.clientHeight);
+                }
+            });
+        }
+
+        // 创建应用特定的可视化
+        function createAppVisualization() {
+            switch(currentApp) {
+                case 'lightSpeed':
+                    createLightSpeedVisualization();
+                    break;
+                case 'teleportation':
+                    createTeleportationVisualization();
+                    break;
+                case 'medicine':
+                    createMedicineVisualization();
+                    break;
+                case 'energy':
+                    createEnergyVisualization();
+                    break;
+                case 'immortality':
+                    createImmortalityVisualization();
+                    break;
+                case 'antigravity':
+                    createAntigravityVisualization();
+                    break;
+                case 'timeComputer':
+                    createTimeComputerVisualization();
+                    break;
+                case 'communication':
+                    createCommunicationVisualization();
+                    break;
+                case 'matterCreation':
+                    createMatterCreationVisualization();
+                    break;
+                case 'forceField':
+                    createForceFieldVisualization();
+                    break;
+            }
+        }
+
+        // 光速飞行可视化
+        function createLightSpeedVisualization() {
+            // 创建飞行器
+            const shipGeometry = new THREE.ConeGeometry(0.5, 1, 32);
+            const shipMaterial = new THREE.MeshBasicMaterial({ color: 0x165DFF });
+            const ship = new THREE.Mesh(shipGeometry, shipMaterial);
+            ship.position.y = 0;
+            modalScene.add(ship);
+            
+            // 创建光效粒子
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1000;
+            const posArray = new Float32Array(particlesCount * 3);
+            
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 10;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                color: 0x7B61FF
+            });
+            const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            modalScene.add(particles);
+            
+            // 添加动态效果
+            function update() {
+                ship.rotation.x = Math.sin(Date.now() * 0.001) * 0.2;
+                particles.rotation.z = Date.now() * 0.0005;
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+
+        // 全球瞬间传送可视化
+        function createTeleportationVisualization() {
+            // 创建两个端点
+            const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            
+            const sphere1Material = new THREE.MeshBasicMaterial({ color: 0x165DFF });
+            const sphere1 = new THREE.Mesh(sphereGeometry, sphere1Material);
+            sphere1.position.x = -2;
+            modalScene.add(sphere1);
+            
+            const sphere2Material = new THREE.MeshBasicMaterial({ color: 0xFF6B8B });
+            const sphere2 = new THREE.Mesh(sphereGeometry, sphere2Material);
+            sphere2.position.x = 2;
+            modalScene.add(sphere2);
+            
+            // 创建虫洞效果
+            const wormholeGeometry = new THREE.TorusGeometry(1, 0.1, 16, 100);
+            const wormholeMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x7B61FF,
+                transparent: true,
+                opacity: 0.7
+            });
+            const wormhole = new THREE.Mesh(wormholeGeometry, wormholeMaterial);
+            modalScene.add(wormhole);
+            
+            // 添加动画
+            function update() {
+                wormhole.rotation.x = Date.now() * 0.001;
+                wormhole.rotation.y = Date.now() * 0.002;
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+
+        // 其他应用的可视化函数类似，这里省略...
+        function createMedicineVisualization() {
+            // 创建人体细胞模型
+            const cellGeometry = new THREE.SphereGeometry(1, 32, 32);
+            const cellMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x34D399,
+                wireframe: true
+            });
+            const cell = new THREE.Mesh(cellGeometry, cellMaterial);
+            modalScene.add(cell);
+            
+            // 创建修复光效
+            const lightGeometry = new THREE.RingGeometry(1.2, 1.5, 32);
+            const lightMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x165DFF,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.5
+            });
+            const lightRing = new THREE.Mesh(lightGeometry, lightMaterial);
+            modalScene.add(lightRing);
+            
+            function update() {
+                lightRing.rotation.x = Date.now() * 0.002;
+                lightRing.opacity = 0.3 + Math.sin(Date.now() * 0.005) * 0.2;
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+
+        function createEnergyVisualization() {
+            // 创建能量核心
+            const coreGeometry = new THREE.SphereGeometry(0.6, 32, 32);
+            const coreMaterial = new THREE.MeshBasicMaterial({ color: 0xFBBF24 });
+            const core = new THREE.Mesh(coreGeometry, coreMaterial);
+            modalScene.add(core);
+            
+            // 创建能量辐射
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2;
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(0.8 * Math.cos(angle), 0, 0.8 * Math.sin(angle)),
+                    new THREE.Vector3(2 * Math.cos(angle), 0, 2 * Math.sin(angle))
+                ]);
+                const lineMaterial = new THREE.LineBasicMaterial({ color: 0xF59E0B });
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                modalScene.add(line);
+            }
+        }
+
+        function createImmortalityVisualization() {
+            // 创建大脑模型（简化）
+            const brainGeometry = new THREE.SphereGeometry(1, 32, 32);
+            const brainMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x8B5CF6,
+                wireframe: true
+            });
+            const brain = new THREE.Mesh(brainGeometry, brainMaterial);
+            modalScene.add(brain);
+            
+            // 创建数字化连接
+            for (let i = 0; i < 20; i++) {
+                const x = (Math.random() - 0.5) * 3;
+                const y = (Math.random() - 0.5) * 3;
+                const z = (Math.random() - 0.5) * 3;
+                const pointGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+                const pointMaterial = new THREE.MeshBasicMaterial({ color: 0xEC4899 });
+                const point = new THREE.Mesh(pointGeometry, pointMaterial);
+                point.position.set(x, y, z);
+                modalScene.add(point);
+            }
+        }
+
+        function createAntigravityVisualization() {
+            // 创建悬浮物体
+            const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x06B6D4 });
+            const box = new THREE.Mesh(boxGeometry, boxMaterial);
+            modalScene.add(box);
+            
+            // 创建反重力场
+            const fieldGeometry = new THREE.RingGeometry(1.5, 2, 32);
+            const fieldMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x3B82F6,
+                transparent: true,
+                opacity: 0.5
+            });
+            const field = new THREE.Mesh(fieldGeometry, fieldMaterial);
+            field.position.y = -1.5;
+            modalScene.add(field);
+            
+            function update() {
+                box.position.y = 0.5 + Math.sin(Date.now() * 0.002) * 0.3;
+                field.rotation.x = Date.now() * 0.001;
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+
+        function createTimeComputerVisualization() {
+            // 创建计算机核心
+            const coreGeometry = new THREE.CylinderGeometry(0.6, 0.6, 1, 32);
+            const coreMaterial = new THREE.MeshBasicMaterial({ color: 0x6366F1 });
+            const core = new THREE.Mesh(coreGeometry, coreMaterial);
+            modalScene.add(core);
+            
+            // 创建时间场线
+            for (let i = 0; i < 10; i++) {
+                const height = -0.5 + (i / 9) * 1;
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(-1.5, height, 0),
+                    new THREE.Vector3(1.5, height, 0)
+                ]);
+                const lineMaterial = new THREE.LineBasicMaterial({ color: 0x8B5CF6 });
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                modalScene.add(line);
+            }
+        }
+
+        function createCommunicationVisualization() {
+            // 创建两个通讯节点
+            const nodeGeometry = new THREE.SphereGeometry(0.4, 16, 16);
+            
+            const node1Material = new THREE.MeshBasicMaterial({ color: 0x10B981 });
+            const node1 = new THREE.Mesh(nodeGeometry, node1Material);
+            node1.position.x = -2;
+            modalScene.add(node1);
+            
+            const node2Material = new THREE.MeshBasicMaterial({ color: 0x10B981 });
+            const node2 = new THREE.Mesh(nodeGeometry, node2Material);
+            node2.position.x = 2;
+            modalScene.add(node2);
+            
+            // 创建数据传输线
+            const dataCurve = new THREE.QuadraticBezierCurve3(
+                new THREE.Vector3(-2, 0, 0),
+                new THREE.Vector3(0, 1, 0),
+                new THREE.Vector3(2, 0, 0)
+            );
+            const dataPoints = dataCurve.getPoints(50);
+            const dataGeometry = new THREE.BufferGeometry().setFromPoints(dataPoints);
+            const dataMaterial = new THREE.LineBasicMaterial({ color: 0x34D399 });
+            const dataLine = new THREE.Line(dataGeometry, dataMaterial);
+            modalScene.add(dataLine);
+        }
+
+        function createMatterCreationVisualization() {
+            // 创建能量源
+            const energyGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            const energyMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xE11D48,
+                transparent: true,
+                opacity: 0.8
+            });
+            const energySource = new THREE.Mesh(energyGeometry, energyMaterial);
+            modalScene.add(energySource);
+            
+            // 创建物质粒子
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const particleGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+                    const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xF97316 });
+                    const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+                    const angle = Math.random() * Math.PI * 2;
+                    particle.position.set(Math.cos(angle), Math.sin(angle), 0).normalize().multiplyScalar(1.2);
+                    modalScene.add(particle);
+                }, i * 300);
+            }
+        }
+
+        function createForceFieldVisualization() {
+            // 创建保护对象
+            const objectGeometry = new THREE.SphereGeometry(0.6, 32, 32);
+            const objectMaterial = new THREE.MeshBasicMaterial({ color: 0x475569 });
+            const object = new THREE.Mesh(objectGeometry, objectMaterial);
+            modalScene.add(object);
+            
+            // 创建保护盾
+            const shieldGeometry = new THREE.SphereGeometry(1.2, 32, 32);
+            const shieldMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x3B82F6,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.6
+            });
+            const shield = new THREE.Mesh(shieldGeometry, shieldMaterial);
+            modalScene.add(shield);
+            
+            function update() {
+                shield.scale.x = 1.2 + Math.sin(Date.now() * 0.002) * 0.1;
+                shield.scale.y = 1.2 + Math.sin(Date.now() * 0.002) * 0.1;
+                shield.scale.z = 1.2 + Math.sin(Date.now() * 0.002) * 0.1;
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>openuft 体系关系图</title>
+<style>
+  :root { --ink:#0f172a; --sub:#475569; --line:#e2e8f0; --bg:#ffffff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; }
+  header { padding:22px 32px 14px; border-bottom:1px solid var(--line); }
+  header h1 { margin:0 0 6px; font-size:21px; }
+  header p { margin:0; font-size:13px; color:var(--sub); }
+  .toolbar { padding:12px 32px; display:flex; flex-wrap:wrap; gap:8px; border-bottom:1px solid var(--line); }
+  .chip { border:1px solid var(--line); background:#f8fafc; border-radius:999px;
+           padding:5px 13px; font-size:12px; cursor:pointer; color:#334155; }
+  .chip.active { background:#0f172a; color:#fff; border-color:#0f172a; }
+  main { padding:10px 32px 40px; }
+  svg { width:100%; height:auto; }
+  .node rect { transition:all .15s ease; }
+  .node:hover rect { filter:drop-shadow(0 3px 8px rgba(15,23,42,.16)); }
+  .node:hover { cursor:default; }
+  line[data-rel] { transition:opacity .15s ease; }
+  svg.filtering line[data-rel] { opacity:.08; }
+  svg.filtering line[data-rel].on { opacity:.85; }
+  footer { padding:16px 32px 30px; font-size:12px; color:var(--sub); border-top:1px solid var(--line); }
+  code { background:#f1f5f9; padding:1px 5px; border-radius:4px; font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>openuft 统一体系层 · 体系关系图</h1>
+  <p>节点按本体族分区。边表示版本演进、数学借用、本体竞争或实现关系，<strong>不构成证据转移</strong>。</p>
+</header>
+<div class="toolbar" id="bar">
+  <button class="chip active" data-rel="all">全部关系</button>
+  <button class="chip" data-rel="version_of">版本演进</button>
+  <button class="chip" data-rel="borrows_math">借用数学</button>
+  <button class="chip" data-rel="competes">本体互斥</button>
+  <button class="chip" data-rel="implements">实现</button>
+  <button class="chip" data-rel="falsified_by">已证伪</button>
+  <button class="chip" data-rel="independent">无交集</button>
+</div>
+<main>
+<svg viewBox="0 0 1020 1120" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Microsoft YaHei,sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="30" y="40" font-size="22" font-weight="700" fill="#0f172a">openuft 统一体系层 · 体系关系图</text>
+<text x="30" y="66" font-size="13" fill="#475569">节点按本体族分区；边为谱系与借用标注，不构成证据转移</text>
+<rect x="60" y="120" width="430" height="300" rx="12" fill="#f8fafc" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="74" y="146" font-size="14" font-weight="700" fill="#2563eb">螺旋 / 光速族</text>
+<rect x="530" y="120" width="430" height="420" rx="12" fill="#f8fafc" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="544" y="146" font-size="14" font-weight="700" fill="#7c3aed">GAQ 几何族</text>
+<rect x="60" y="470" width="430" height="220" rx="12" fill="#f8fafc" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="74" y="496" font-size="14" font-weight="700" fill="#c2410c">对偶 / 挠率族</text>
+<rect x="530" y="590" width="430" height="330" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="544" y="616" font-size="14" font-weight="700" fill="#64748b">待完备与方向</text>
+<rect x="60" y="710" width="430" height="210" rx="12" fill="#f8fafc" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="74" y="736" font-size="14" font-weight="700" fill="#0f766e">形式化核心 / 候登记</text>
+<line x1="647.5" y1="365.0" x2="647.5" y2="175.0" stroke="#16a34a" stroke-width="1.6" opacity="0.55" data-rel="version_of"/>
+<line x1="842.5" y1="365.0" x2="647.5" y2="365.0" stroke="#16a34a" stroke-width="1.6" opacity="0.55" data-rel="version_of"/>
+<line x1="647.5" y1="460.0" x2="842.5" y2="365.0" stroke="#16a34a" stroke-width="1.6" opacity="0.55" data-rel="version_of"/>
+<line x1="842.5" y1="175.0" x2="647.5" y2="175.0" stroke="#16a34a" stroke-width="1.6" opacity="0.55" data-rel="version_of"/>
+<line x1="647.5" y1="270.0" x2="647.5" y2="175.0" stroke="#16a34a" stroke-width="1.6" opacity="0.55" data-rel="version_of"/>
+<line x1="842.5" y1="270.0" x2="647.5" y2="175.0" stroke="#16a34a" stroke-width="1.6" opacity="0.55" data-rel="version_of"/>
+<line x1="842.5" y1="270.0" x2="647.5" y2="460.0" stroke="#dc2626" stroke-width="1.6" opacity="0.55" data-rel="competes"/>
+<line x1="372.5" y1="270.0" x2="372.5" y2="175.0" stroke="#0891b2" stroke-width="1.6" opacity="0.55" data-rel="borrows_math"/>
+<line x1="372.5" y1="270.0" x2="177.5" y2="270.0" stroke="#dc2626" stroke-width="1.6" opacity="0.55" data-rel="competes"/>
+<line x1="177.5" y1="270.0" x2="177.5" y2="175.0" stroke="#0891b2" stroke-width="1.6" opacity="0.55" data-rel="borrows_math"/>
+<line x1="372.5" y1="270.0" x2="177.5" y2="175.0" stroke="#0891b2" stroke-width="1.6" opacity="0.55" data-rel="borrows_math"/>
+<line x1="177.5" y1="525.0" x2="372.5" y2="270.0" stroke="#cbd5e1" stroke-width="1.6" opacity="0.55" data-rel="independent"/>
+<line x1="177.5" y1="525.0" x2="372.5" y2="525.0" stroke="#cbd5e1" stroke-width="1.6" opacity="0.55" data-rel="independent"/>
+<line x1="372.5" y1="525.0" x2="177.5" y2="175.0" stroke="#0891b2" stroke-width="1.6" opacity="0.55" data-rel="borrows_math"/>
+<line x1="647.5" y1="645.0" x2="372.5" y2="525.0" stroke="#dc2626" stroke-width="1.6" opacity="0.55" data-rel="competes"/>
+<line x1="177.5" y1="765.0" x2="372.5" y2="525.0" stroke="#dc2626" stroke-width="1.6" opacity="0.55" data-rel="competes"/>
+<line x1="177.5" y1="765.0" x2="647.5" y2="645.0" stroke="#dc2626" stroke-width="1.6" opacity="0.55" data-rel="competes"/>
+<line x1="177.5" y1="765.0" x2="177.5" y2="525.0" stroke="#cbd5e1" stroke-width="1.6" opacity="0.55" data-rel="independent"/>
+<line x1="372.5" y1="860.0" x2="177.5" y2="525.0" stroke="#cbd5e1" stroke-width="1.6" opacity="0.55" data-rel="independent"/>
+<g class="node"><rect x="82.5" y="141.0" width="190" height="68" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+<text x="177.5" y="171.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S01 螺旋三重奏</text>
+<text x="177.5" y="189.0" font-size="11" text-anchor="middle" fill="#64748b">(数学框架)</text>
+<title>s01_triad_kinematics</title></g>
+<g class="node"><rect x="277.5" y="147.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+<text x="372.5" y="179.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S02 光速螺旋统一力</text>
+<title>s02_light_speed_helix_force</title></g>
+<g class="node"><rect x="82.5" y="242.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+<text x="177.5" y="274.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S10 频率本源</text>
+<title>s10_frequency_helix_ontology</title></g>
+<g class="node"><rect x="277.5" y="242.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+<text x="372.5" y="274.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S12 空间光速螺旋</text>
+<title>s12_light_speed_helix</title></g>
+<g class="node"><rect x="552.5" y="147.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="647.5" y="179.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S03 GAQ 几何原子</text>
+<title>s03_gaq_geometric_atom</title></g>
+<g class="node"><rect x="747.5" y="147.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="842.5" y="179.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S04 IEG 信息熵引力</text>
+<title>s04_ieg_information_gravity</title></g>
+<g class="node"><rect x="552.5" y="242.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="647.5" y="274.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S05 HDU 高维紧致化</text>
+<title>s05_hdu_higher_dimensions</title></g>
+<g class="node"><rect x="747.5" y="242.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="842.5" y="274.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S06 TCL 拓扑手征</text>
+<title>s06_tcl_topological_chirality</title></g>
+<g class="node"><rect x="552.5" y="337.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="647.5" y="369.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S07 GAQ 复曲率</text>
+<title>s07_gaq_complex_curvature</title></g>
+<g class="node"><rect x="747.5" y="337.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="842.5" y="369.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S08 GAQ 常数几何化</text>
+<title>s08_gaq_geometrized_constants</title></g>
+<g class="node"><rect x="552.5" y="432.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+<text x="647.5" y="464.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S09 GAQ 质量谱</text>
+<title>s09_gaq_mass_spectrum</title></g>
+<g class="node"><rect x="82.5" y="497.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#c2410c" stroke-width="2"/>
+<text x="177.5" y="529.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S13 全域双向分形</text>
+<circle cx="264.5" cy="505.0" r="9" fill="#b91c1c"/>
+<text x="264.5" y="509.0" font-size="11" font-weight="700" text-anchor="middle" fill="#ffffff">1</text>
+<title>s13_duality_fractal_uft（含 1 条已证伪条目，见 claims.csv）</title></g>
+<g class="node"><rect x="277.5" y="497.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#c2410c" stroke-width="2"/>
+<text x="372.5" y="529.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S14 挠率统一场论 TUFT</text>
+<circle cx="459.5" cy="505.0" r="9" fill="#b91c1c"/>
+<text x="459.5" y="509.0" font-size="11" font-weight="700" text-anchor="middle" fill="#ffffff">3</text>
+<title>s14_torsion_unified_field_tuft（含 3 条已证伪条目，见 claims.csv）</title></g>
+<g class="node"><rect x="552.5" y="617.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+<text x="647.5" y="649.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">S11 GMUFT 几何耦合</text>
+<title>s11_gmuft_geometric_coupling</title></g>
+<g class="node"><rect x="747.5" y="617.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+<text x="842.5" y="649.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">P01 空间压缩</text>
+<title>p01_space_compression</title></g>
+<g class="node"><rect x="552.5" y="712.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+<text x="647.5" y="744.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">P02 物体驱动</text>
+<title>p02_matter_source</title></g>
+<g class="node"><rect x="747.5" y="712.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+<text x="842.5" y="744.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">P03 规范统一</text>
+<title>p03_gauge_unification</title></g>
+<g class="node"><rect x="552.5" y="807.0" width="190" height="56" rx="8" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+<text x="647.5" y="839.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">P04 量子涌现</text>
+<title>p04_quantum_emergence</title></g>
+<g class="node"><rect x="82.5" y="731.0" width="190" height="68" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+<text x="177.5" y="761.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">UFE-1 统一场方程</text>
+<text x="177.5" y="779.0" font-size="11" text-anchor="middle" fill="#64748b">(07 · 候登记)</text>
+<title>候登记_ufe1</title></g>
+<g class="node"><rect x="277.5" y="731.0" width="190" height="68" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+<text x="372.5" y="761.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">UM 全域数学</text>
+<text x="372.5" y="779.0" font-size="11" text-anchor="middle" fill="#64748b">(候登记)</text>
+<title>候登记_um</title></g>
+<g class="node"><rect x="82.5" y="826.0" width="190" height="68" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+<text x="177.5" y="856.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">V21 Ω 元一方程</text>
+<text x="177.5" y="874.0" font-size="11" text-anchor="middle" fill="#64748b">(候登记)</text>
+<title>候登记_v21omega</title></g>
+<g class="node"><rect x="277.5" y="826.0" width="190" height="68" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+<text x="372.5" y="856.0" font-size="13" font-weight="600" text-anchor="middle" fill="#0f172a">bifuf 双向分形</text>
+<text x="372.5" y="874.0" font-size="11" text-anchor="middle" fill="#64748b">(disputed)</text>
+<title>候裁定_bifuf</title></g>
+<text x="60" y="960" font-size="13" font-weight="700" fill="#0f172a">关系类型</text>
+<circle cx="360" cy="1000" r="8" fill="#b91c1c"/>
+<text x="360" y="1004" font-size="11" font-weight="700" text-anchor="middle" fill="#ffffff">n</text>
+<text x="376" y="1004" font-size="12" fill="#334155">角标 n = 该体系已登记证伪条目数</text>
+<line x1="60" y1="978" x2="90" y2="978" stroke="#16a34a" stroke-width="2.4"/>
+<text x="98" y="982" font-size="12" fill="#334155">版本演进</text>
+<line x1="60" y1="999" x2="90" y2="999" stroke="#0891b2" stroke-width="2.4"/>
+<text x="98" y="1003" font-size="12" fill="#334155">借用数学（不转移证据）</text>
+<line x1="60" y1="1020" x2="90" y2="1020" stroke="#dc2626" stroke-width="2.4"/>
+<text x="98" y="1024" font-size="12" fill="#334155">本体互斥</text>
+<line x1="60" y1="1041" x2="90" y2="1041" stroke="#94a3b8" stroke-width="2.4"/>
+<text x="98" y="1045" font-size="12" fill="#334155">实现</text>
+<line x1="60" y1="1062" x2="90" y2="1062" stroke="#b91c1c" stroke-width="2.4"/>
+<text x="98" y="1066" font-size="12" fill="#334155">已证伪</text>
+<line x1="60" y1="1083" x2="90" y2="1083" stroke="#cbd5e1" stroke-width="2.4"/>
+<text x="98" y="1087" font-size="12" fill="#334155">无公设交集</text>
+<text x="640" y="980" font-size="13" font-weight="700" fill="#0f172a">阅读提醒</text>
+<text x="640" y="1002" font-size="12" fill="#475569">· 本图不表示任何统一场论已经成立。</text>
+<text x="640" y="1023" font-size="12" fill="#475569">· S14 已登记多项 falsified，见其 claims.csv。</text>
+<text x="640" y="1044" font-size="12" fill="#475569">· 候登记 / 候裁定节点未进入 sNN 注册，编号待裁定。</text>
+<text x="640" y="1065" font-size="12" fill="#475569">· 实现（代码 / 书稿 / 图谱）不提升证据等级。</text>
+</svg>
+</main>
+<footer>
+  生成脚本：<code>06_统一体系层/维护脚本/build_impl_dossiers.py</code> ·
+  数据：<a href="体系关系边.csv">体系关系边.csv</a> ·
+  说明：<a href="体系关系图谱.md">体系关系图谱.md</a><br>
+  本图为视图层整理，不移动任何目录，不改变任何体系的证据等级。
+</footer>
+<script>
+  var svg = document.querySelector('svg');
+  document.querySelectorAll('.chip').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.chip').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var rel = btn.dataset.rel;
+      if (rel === 'all') { svg.classList.remove('filtering');
+        svg.querySelectorAll('line[data-rel]').forEach(function(l) { l.classList.remove('on'); }); return; }
+      svg.classList.add('filtering');
+      svg.querySelectorAll('line[data-rel]').forEach(function(l) {
+        l.classList.toggle('on', l.dataset.rel === rel);
+      });
+    });
+  });
+</script>
+</body>
+</html>

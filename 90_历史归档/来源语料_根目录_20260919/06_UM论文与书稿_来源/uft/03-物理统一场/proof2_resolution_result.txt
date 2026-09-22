@@ -1,0 +1,115 @@
+========================================================================
+RESOLUTION: Proof-2 'framework ODE not verified' contradiction
+mpmath dps=120
+========================================================================
+
+========================================================================
+[A] Parameterization A: constant radius (rotation) -- Proof 1's curve
+========================================================================
+  Constraint: kappa^2+tau^2 = Qtop^2 (const);  alpha=tan(u) varies
+    dk/dlnw = -tau
+      analytic=1514267637002.315693333043  numeric=1514267637002.315693333043  resid=9.74581e-62  OK
+    dt/dlnw = +kappa
+      analytic=2100725583048.574934007067  numeric=2100725583048.574934007067  resid=1.35202e-61  OK
+    d(k^2+t^2)/dlnw = 0
+      analytic=0.0  numeric=-4.681676354692198327155849e-67  resid=6.98127e-92  OK
+    d(alpha)/dlnw = sec^2(u)  (alpha is NOT constant)
+      analytic=1.519596997204591824083286  numeric=1.519596997204591824083286  resid=8.5293e-61  OK
+  => A is a ROTATION: radius conserved, angle advances. Proof 1 correct.
+
+========================================================================
+[B] Parameterization B: constant alpha (dilation) -- proof2_fix's curve
+========================================================================
+  Constraint: alpha=const;  kappa^2+tau^2 = w^2/c^2 varies
+    dk/dlnw = +kappa (NOT -tau)
+      analytic=3335.55214182900662820269  numeric=3335.55214182900662820269  resid=1.66667e-61  OK
+    dt/dlnw = +tau
+      analytic=24.34069999221001951958163  numeric=24.34069999221001951958163  resid=1.66667e-61  OK
+    d(alpha)/dlnw = 0
+      analytic=0.0  numeric=0.0  resid=0.0  OK
+  => B is a DILATION: angle frozen, radius scales linearly. proof2_fix
+     is also numerically correct -- but it is NOT Proof 1's curve.
+
+========================================================================
+[C] The two constraints are mutually exclusive (no overlap)
+========================================================================
+  A requires d(k^2+t^2)/dlnw = 0 AND d(alpha)/dlnw != 0
+  B requires d(k^2+t^2)/dlnw != 0 AND d(alpha)/dlnw = 0
+    A: d(radius^2)/dlnw = -4.68168e-67   d(alpha)/dlnw = 1.5196
+    B: d(radius^2)/dlnw = 2.2253e+7   d(alpha)/dlnw = 0.0
+    mutually exclusive = True -> OK
+  => The question 'is dk/dlnw=-tau?' is ILL-POSED until the constraint
+     is declared. There is NO numerical error in either script.
+  Only overlap would need k=t=0 (trivial), excluded since Qtop>0.
+
+========================================================================
+[D] DECISION via Axiom III + constancy of Qtop
+========================================================================
+  Axiom III: omega*rho = c, with rho := 1/sqrt(kappa^2+tau^2)
+  Qtop := m_e*c/hbar is a CONSTANT of the framework (fixed particle).
+
+  Branch A: rho = 1/Qtop = const; omega_spiral := c*sqrt(k^2+t^2) = c*Qtop
+    w=1.0e+9: omega*rho-c rel=0.0 OK
+    w=1.0e+12: omega*rho-c rel=0.0 OK
+    w=1.0e+16: omega*rho-c rel=0.0 OK
+    d(omega*rho)/dlnw = 0 in branch A
+      analytic=0.0  numeric=0.0  resid=0.0  OK
+    Also radius^2 = Qtop^2 exactly:
+    sqrt(k^2+t^2) = Qtop (branch A)
+      analytic=2589605076405.92796820399  numeric=2589605076405.92796820399  resid=0.0  OK
+
+  Branch B: k^2+t^2 = w^2/c^2 => sqrt(k^2+t^2) must EQUAL Qtop only at
+            one single w. Elsewhere it contradicts Qtop=const.
+    w* (unique crossing) = Qtop*c = 7.7634407110501095136e+20 rad/s
+    radius_B(w*) = 2589605076405.9279682   Qtop = 2589605076405.9279682
+    w=7.76344e+19: radius_B/Qtop-1 = 0.9  (must be 0 if Qtop const)
+    w=7.76344e+21: radius_B/Qtop-1 = 9.0  (must be 0 if Qtop const)
+  => Branch B forces Qtop (hence m_e) to drift with w. That contradicts
+     the framework's own definition Qtop = m_e*c/hbar = const.
+     Therefore branch A is the framework's curve; B is a different,
+     self-consistent-but-irrelevant family.
+
+========================================================================
+[E] What proof2_fix actually discovered (the legitimate residue)
+========================================================================
+  proof2_fix used kf=3.162277660168379e-4, tauf=2.307625500826972e-6.
+    alpha_from_those = tau/k = 0.0072973525693000022875
+    1/137.035999084  = 0.0072973525692838009973
+    rel diff = 2.22016e-12
+    radius = sqrt(k^2+t^2) = 0.0003162361856831884537 1/m
+    Qtop                   = 2589605076405.9279682 1/m
+    radius/Qtop = 1.221175339e-16   (NOT 1)
+  => Those kf,tauf are NOT on the Qtop shell at all; they are the
+     alpha-calibrated pair (tau/k = alpha_exp). So proof2_fix compared
+     the alpha-calibration point against the Qtop-shell ODE. Mixing the
+     two families is exactly what produced the bogus factor:
+    dk_dlnw/(-tau) reported by proof2_fix = -137.0359...  = -1/alpha
+      check: -1/alpha = -137.035999084
+     i.e. the '-137' was not a physics discrepancy but the ratio k/tau
+     of the OTHER parameterization. Fully explained, no anomaly.
+    proof2_fix's -137.036 factor == -1/alpha (fully explained)
+      analytic=-137.0359990836957581573604  numeric=-137.035999  resid=6.10757e-10  OK
+
+========================================================================
+VERDICT
+========================================================================
+  1. Proof 1 (analytic_proofs.py) is CORRECT on its own curve:
+     constant-radius rotation, dk/dlnw=-tau, dt/dlnw=+kappa.
+  2. proof2_fix.py is also numerically CORRECT, but on a DIFFERENT
+     curve (constant-alpha dilation), where dk/dlnw=+kappa trivially.
+  3. The two constraints are mutually exclusive; the bare question
+     'is dk/dlnw=-tau?' is ill-posed without declaring the constraint.
+  4. Axiom III + Qtop=m_e*c/hbar=const SELECT branch A. Branch B would
+     require m_e to drift with omega -> rejected by the framework's own
+     definitions.
+  5. proof2_fix's alarming '-137.036' factor is exactly -1/alpha, an
+     artifact of mixing the alpha-calibrated pair with the Qtop-shell
+     ODE. No physical anomaly, no failed ODE.
+
+  >>> proof2_out.txt's 'FRAMEWORK ODE IS NOT VERIFIED' is RETRACTED
+      as ill-posed. Proof 1 stands. BUT the honest cost is recorded:
+      the framework must DECLARE that its ODE lives on the constant-
+      Qtop shell (rotation), and that alpha=tau/kappa therefore CANNOT
+      be a constant along that flow -- alpha is fixed only at one
+      chosen u (the calibration point). This is a real constraint on
+      the framework, not a free win.

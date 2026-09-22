@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUFT 本章预言评估矩阵</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #fafafa; }
+  #chart { width: 100%; height: 520px; }
+  .note { font-size: 12px; color: #546e7a; padding: 4px 16px 12px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+<div class="note">
+  口径：X 轴=与标准物理的区分度（0 同预言 → 3 强偏离）；Y 轴=可检验性（0 不可测 → 3 现有技术可测）；
+  气泡大小=优先级（高/中/低）；颜色=证伪强度（灰=弱、橙=中、红=强）。
+  数据来源：TUFT 汤川势+电磁挠率章可检验预言清单（2026-09-16）。T4 为已被实验排除项（光子质量上限矛盾约 26 个数量级）。
+</div>
+<script>
+var chart = echarts.init(document.getElementById('chart'));
+var option = {
+  backgroundColor: 'transparent',
+  title: {
+    text: 'TUFT 本章预言评估矩阵',
+    subtext: '曲率场汤川势 + 电磁挠率章 · 8 项预言 / 6 组',
+    left: 'center', top: 8,
+    textStyle: { fontSize: 16 },
+    subtextStyle: { fontSize: 11 }
+  },
+  tooltip: {
+    trigger: 'item',
+    triggerOn: 'mousemove|click',
+    renderMode: 'richText',
+    confine: true
+  },
+  grid: { left: 80, right: 40, top: 92, bottom: 64, containLabel: true },
+  xAxis: {
+    type: 'value',
+    name: '与标准物理的区分度',
+    nameLocation: 'middle', nameGap: 30, nameTextStyle: { fontSize: 12 },
+    min: -0.3, max: 3.3, interval: 1,
+    axisLabel: { fontSize: 11 },
+    splitLine: { lineStyle: { type: 'dashed' } }
+  },
+  yAxis: {
+    type: 'value',
+    name: '可检验性',
+    nameLocation: 'middle', nameGap: 44, nameTextStyle: { fontSize: 12 },
+    min: -0.3, max: 3.3, interval: 1,
+    axisLabel: { fontSize: 11 },
+    splitLine: { lineStyle: { type: 'dashed' } }
+  },
+  visualMap: {
+    type: 'piecewise', dimension: 2,
+    pieces: [
+      { value: 1, label: '证伪弱', color: '#90a4ae' },
+      { value: 2, label: '证伪中', color: '#ffb300' },
+      { value: 3, label: '证伪强', color: '#e53935' }
+    ],
+    orient: 'horizontal', left: 'center', top: 62,
+    itemWidth: 14, itemHeight: 12, textStyle: { fontSize: 11 }
+  },
+  series: [{
+    type: 'scatter',
+    data: [
+      { name: 'T1–T3 同构已确认', value: [0, 3, 2], symbolSize: 30, label: { show: true } },
+      { name: 'T4 电磁屏蔽被排除', value: [3, 3, 3], symbolSize: 30, label: { show: true } },
+      { name: 'T5 核力引力过渡降级', value: [2, 1, 1], symbolSize: 22, label: { show: true } },
+      { name: 'T6 自旋挠率探测', value: [2, 2, 2], symbolSize: 22, label: { show: true } },
+      { name: 'T7 三体核力修正', value: [1, 2, 1], symbolSize: 16, label: { show: true } },
+      { name: 'T8 动态挠率辐射', value: [1, 1, 1], symbolSize: 16, label: { show: true } }
+    ],
+    label: {
+      show: true,
+      position: 'top',
+      fontSize: 11,
+      color: '#37474f',
+      formatter: function (p) { return p.name.split(' ')[0]; }
+    },
+    itemStyle: { opacity: 0.85, borderColor: '#263238', borderWidth: 1 },
+    emphasis: { itemStyle: { opacity: 1 } }
+  }]
+};
+chart.setOption(option);
+window.addEventListener('resize', function () { chart.resize(); });
+</script>
+</body>
+</html>

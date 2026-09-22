@@ -1,0 +1,1220 @@
+# AI科技星：统一场论的严格审计、推导与精算式验证
+
+> 版本：2026-09-03  
+> 定位：研究备忘录，不宣称发现了已被实验确认的“终极统一场论”  
+> 结论先行：目前没有被实验确认、同时统一广义相对论与标准模型量子场论的完整理论。本稿给出一个诚实的“统一候选低能框架”，完成可复核的变分推导，并给出把模型风险、参数不确定性和观测检验接起来的精算式处理方案。
+
+## 1. 科学边界与判定标准
+
+标准模型已经非常成功地描述电磁、弱和强相互作用，但不包含引力；把量子理论与广义相对论置于同一个完整框架仍是开放问题。[CERN 对标准模型的说明](https://home.cern/science/physics/standard-model/) 也明确指出了这一点。广义相对论在低能量下可以作为有效场论计算量子修正，但这不等于已经得到紫外完备的量子引力理论。[Donoghue, *General relativity as an effective field theory*](https://arxiv.org/abs/gr-qc/9405057)
+
+因此，“真正统一”至少必须同时满足：
+
+1. **数学一致性**：作用量有明确场、对称性、边界条件；约束闭合，能量符号和因果结构可控。
+2. **极限回收**：低能、弱场、平直时空时分别回收广义相对论与标准模型的可检验结果。
+3. **独立预测**：预测量不能由同一批实验常数反向定义出来；必须在拟合数据之外给出新观测量。
+4. **可证伪性**：明确给出参数范围、观测对象、误差模型和拒绝规则。
+5. **量子完备性**：若声称终极理论，还要处理紫外发散、幺正性、异常和重整化群流。
+
+本稿的框架满足前四项中的“候选/低能”部分，但不冒充满足第五项。
+
+## 2. 最小统一候选：引力 + 杨–米尔斯–希格斯–狄拉克
+
+在四维时空、自然单位制 \(\hbar=c=1\) 中，取
+
+\[
+G_{\rm SM}=SU(3)_c\times SU(2)_L\times U(1)_Y,
+\]
+
+并把度规 \(g_{\mu\nu}\)、规范场 \(A^a_\mu\)、希格斯场 \(\Phi\)、费米子 \(\psi\) 放进同一个作用量：
+
+\[
+\begin{aligned}
+S=\int d^4x\sqrt{-g}\,\bigg[&\frac{M_{\rm Pl}^2}{2}(R-2\Lambda)
+-\frac14\sum_a F^a_{\mu\nu}F_a^{\mu\nu}\\
+&-(D_\mu\Phi)^\dagger D^\mu\Phi-V(\Phi)
+ +\bar\psi(i\gamma^\mu D_\mu-m)\psi\\
+&-\big(\bar\psi_LY\Phi\psi_R+\mathrm{h.c.}\big)\bigg].
+\end{aligned}
+\tag{1}
+\]
+
+其中
+
+\[
+F^a_{\mu\nu}=\partial_\mu A^a_\nu-\partial_\nu A^a_\mu+g f^{abc}A^b_\mu A^c_\nu,
+\qquad
+D_\mu=\nabla_\mu-i g A^a_\mu T^a.
+\tag{2}
+\]
+
+这确实是一个统一的**作用量表达**：所有场都在同一个变分原理中耦合。但它仍是 Einstein–Yang–Mills–Higgs–Dirac 有效理论，不是已经完成的终极统一场论。
+
+## 3. 变分推导
+
+### 3.1 对度规变分：爱因斯坦方程
+
+定义物质能动张量
+
+\[
+T_{\mu\nu}=-\frac{2}{\sqrt{-g}}\frac{\delta S_{\rm matter}}{\delta g^{\mu\nu}}.
+\tag{3}
+\]
+
+利用
+
+\[
+\delta(\sqrt{-g}R)=\sqrt{-g}\left(G_{\mu\nu}\delta g^{\mu\nu}+\nabla_\alpha\Theta^\alpha\right),
+\tag{4}
+\]
+
+在边界项由 Gibbons–Hawking–York 项抵消或取紧支撑变分后，得到
+
+\[
+\boxed{M_{\rm Pl}^2(G_{\mu\nu}+\Lambda g_{\mu\nu})=T_{\mu\nu}.}
+\tag{5}
+\]
+
+这一步严格回收广义相对论的场方程。由微分几何恒等式
+
+\[
+\nabla_\mu G^{\mu\nu}=0,\qquad \nabla_\mu g^{\mu\nu}=0,
+\tag{6}
+\]
+
+可推出
+
+\[
+\nabla_\mu T^{\mu\nu}=0,
+\tag{7}
+\]
+
+即总能动张量守恒。
+
+### 3.2 对规范场变分：杨–米尔斯方程
+
+规范场强的变分为
+
+\[
+\delta F^a_{\mu\nu}=D_\mu\delta A^a_\nu-D_\nu\delta A^a_\mu.
+\tag{8}
+\]
+
+代入规范动能项并对协变导数分部积分：
+
+\[
+\delta S_A
+=\int d^4x\sqrt{-g}\,\left(D_\mu F^{a\mu\nu}-J^{a\nu}\right)\delta A^a_\nu.
+\tag{9}
+\]
+
+故
+
+\[
+\boxed{D_\mu F^{a\mu\nu}=J^{a\nu}.}
+\tag{10}
+\]
+
+规范场的 Bianchi 恒等式来自联络曲率的 Jacobi 恒等式：
+
+\[
+\boxed{D_{[\mu}F^a_{\nu\rho]}=0.}
+\tag{11}
+\]
+
+对 (10) 再取协变散度，并使用规范代数的反对称性，可得相应的规范电流守恒条件
+
+\[
+D_\nu J^{a\nu}=0.
+\tag{12}
+\]
+
+### 3.3 对希格斯场变分
+
+对 \(\Phi^\dagger\) 变分并分部积分：
+
+\[
+\boxed{D_\mu D^\mu\Phi-\frac{\partial V}{\partial\Phi^\dagger}
+ -\frac{\partial}{\partial\Phi^\dagger}
+ \big(\bar\psi_LY\Phi\psi_R+\mathrm{h.c.}\big)=0.}
+\tag{13}
+\]
+
+取标准势
+
+\[
+V(\Phi)=-\mu^2\Phi^\dagger\Phi+\lambda(\Phi^\dagger\Phi)^2,
+\qquad \lambda>0,
+\tag{14}
+\]
+
+可得到自发对称性破缺的真空条件
+
+\[
+\Phi^\dagger\Phi=\frac{\mu^2}{2\lambda},
+\tag{15}
+\]
+
+但 \(\mu,\lambda\) 仍是需要实验确定的参数，不是由曲率或挠率自动推出的普适常数。
+
+### 3.4 对费米子变分
+
+对 \(\bar\psi\) 变分得到
+
+\[
+\boxed{(i\gamma^\mu D_\mu-m)\psi-Y\Phi\psi_R=0,}
+\tag{16}
+\]
+
+其共轭方程由对 \(\psi\) 变分得到。式 (16) 在平直时空和规范场为零时退化为狄拉克方程。
+
+## 4. 可复核的一致性检查
+
+| 检查 | 操作 | 必须得到的结果 | 结论 |
+|---|---|---|---|
+| 维数 | 在 \(\hbar=c=1\) 下逐项计数 | 拉格朗日密度维数为 4 | 通过 |
+| 局域规范不变性 | \(A_\mu\to U A_\mu U^{-1}+\frac{i}{g}(\partial_\mu U)U^{-1}\) | \(F\to UFU^{-1}\)，作用量不变 | 通过 |
+| 坐标不变性 | 对任意微分同胚变换 | \(\sqrt{-g}d^4x\) 与标量组合不变 | 通过 |
+| 广义相对论极限 | 令 \(A,\Phi,\psi=0\) | \(G_{\mu\nu}+\Lambda g_{\mu\nu}=0\) | 通过 |
+| 平直时空极限 | 令 \(g_{\mu\nu}=\eta_{\mu\nu}\) | 标准规范–希格斯–费米子系统 | 通过 |
+| 能量稳定性 | 检查动能项号和 \(\lambda\) | 无明显负范数，势在大场处有下界 | 需按表示逐项检查 |
+| 量子紫外性 | 计算圈图与重整化群 | 纯 Einstein 引力在微扰量子化中出现不可由有限参数吸收的高阶发散 | 未通过“终极理论”要求 |
+
+最后一项不是小瑕疵，而是“有效理论”和“紫外完备理论”的分界。它不否定低能预测，却禁止把 (1) 宣称成已经完成的终极统一。
+
+## 5. 对工作区既有“螺旋/曲率–挠率”稿件的严格审计
+
+工作区已有文稿把
+
+\[
+\alpha=\frac{\tau}{\kappa},\qquad \alpha^{-1}=\frac{2\pi}{\theta}
+\tag{17}
+\]
+
+与实验值联系起来。这里必须区分四种陈述：
+
+1. **定义**：若直接规定 \(\theta=2\pi\alpha\)，再算出 \(\alpha\)，结果必然吻合；这不是独立预测。
+2. **恒等式**：例如 \(\cos^2\theta+\sin^2\theta=1\)，只能证明三角恒等式，不能证明物理机制。
+3. **量纲一致**：\(\kappa,\tau\) 都有长度倒数维数，某些组合能拼出 \(G,\hbar\) 的维数；量纲一致是必要条件，不是充分条件。
+4. **独立预测**：在不使用待预测常数的前提下，先固定模型参数，再预测新观测量，并与未参与拟合的数据比较；只有这一步才可能构成经验支持。
+
+此外，SI 在 2019 年后真空磁导率 \(\mu_0\) 不再是精确的 \(4\pi\times10^{-7}\)，而是通过实验确定；BIPM 明确说明了这一点。[BIPM SI Brochure Appendix 2](https://www.bipm.org/documents/20126/41489676/SI-App2-ampere.pdf/0987a90e-051b-dd7f-827d-3f7b32751a61) 当前 CODATA 2022 推荐值也给出了带不确定度的 \(\mu_0\)、\(\epsilon_0\) 和 \(\alpha\)。[NIST/CODATA 2022](https://physics.nist.gov/cuu/pdf/JPCRD2022CODATA.pdf)
+
+因此，既有稿件中的“200 位精度”“误差为零”若只是把观测常数代回同一公式，不能作为物理验证；需要补上盲测、独立数据和预测区间。
+
+## 6. 精算式验证与风险处理
+
+如果“精算”指保险精算，下面的处理可以把理论不确定性转成可审计的风险指标；它**不能代替物理证明**。
+
+设模型假设为 \(H_k\)，参数为 \(\vartheta_k\)，观测数据为 \(y\)，观测协方差为 \(\Sigma\)。预测向量记为 \(f_k(\vartheta_k)\)，则高斯误差下的对数似然为
+
+\[
+\log L_k=-\frac12\left[(y-f_k)^T\Sigma^{-1}(y-f_k)+\log|\Sigma|+n\log(2\pi)\right].
+\tag{18}
+\]
+
+参数不确定性用后验或重采样传播：
+
+\[
+p(\vartheta_k\mid y)\propto L_k(y\mid\vartheta_k)p(\vartheta_k).
+\tag{19}
+\]
+
+对某个实验/工程损失事件 \(E_i\)，设发生概率为 \(p_i\)，损失严重度为 \(C_i\)，则
+
+\[
+\mathrm{EL}=\sum_i p_i\,\mathbb E[C_i\mid E_i],
+\tag{20}
+\]
+
+并用
+
+\[
+\mathrm{TVaR}_{q}=\mathbb E[L\mid L\ge \mathrm{VaR}_{q}(L)]
+\tag{21}
+\]
+
+描述尾部风险。对理论比较，可采用带复杂度惩罚的评分：
+
+\[
+\mathcal R(H_k)=
+\mathbb E\left[(y_{\rm new}-f_k(\vartheta_k))^T
+\Sigma^{-1}(y_{\rm new}-f_k(\vartheta_k))\right]
+ +\lambda d_k+\mu P_k,
+\tag{22}
+\]
+
+其中 \(d_k\) 是有效参数数目，\(P_k\) 是理论惩罚项（例如破坏规范不变性、出现异常、能量不下界或违反已知实验约束）。
+
+### 建议的验证流程
+
+1. **锁定先验和参数**：在看测试数据之前冻结 \(p(\vartheta)\) 与拟合规则。
+2. **训练/测试分离**：用于校准 \(\alpha\)、质量、耦合常数的数据不得再次作为独立验证。
+3. **基线比较**：至少与标准模型 + 广义相对论有效场论比较，而不是只与空模型比较。
+4. **预测区间**：报告均值、标准不确定度、95% 预测区间和系统误差来源。
+5. **尾部压力测试**：改变宇宙学参数、探测器系统误差、先验和异常值处理，重新计算 (20)–(22)。
+6. **预先规定拒绝规则**：例如 Bayes factor、似然比、覆盖率和误报率阈值必须在看到结果前确定。
+7. **停止条件**：若新模型只是在参数更多时提高样本内拟合，却没有改善样本外预测，则判为“拟合增加、证据不足”。
+
+## 7. 当前可写入论文的最终结论
+
+可以严格写下的结论是：
+
+> 作用量 (1) 给出一个在经典层面统一描述引力、规范场、希格斯场和费米子的有效框架。对各场做变分，分别得到爱因斯坦方程、杨–米尔斯方程、希格斯方程和狄拉克方程；Bianchi 恒等式保证相应守恒律。该框架在广义相对论和标准模型极限下自洽，但由于量子引力的紫外完备性仍未解决，它不是已被证明的终极统一场论。任何曲率–挠率或常数几何化方案都必须通过不使用目标常数的独立预测、盲测和样本外数据，才可声称获得经验支持。
+
+不能诚实写下的结论是“已经找到真正统一场论”“由三角恒等式证明四力统一”或“把实验常数代回定义式后得到零误差验证”。
+
+## 8. 下一步可执行项目
+
+若要把该候选框架推进到可发表的计算项目，最小闭环是：
+
+1. 选定一个明确的新自由参数或新算符，例如 \(\xi R\Phi^\dagger\Phi\) 或某个规范统一群的破缺链；
+2. 推导其线性化方程、传播子和低能有效耦合；
+3. 选择一组没有参与拟合的观测量；
+4. 用 (18)–(22) 完成参数、系统误差、尾部风险和模型比较；
+5. 发布代码、数据、先验、随机种子和失败结果，使第三方能够复算。
+
+在这五步完成前，最准确的名称是“统一场论候选模型及其严格审计”，而不是“真正统一场论的证明”。
+
+## 9. 运动学核心：\(v_{\rm 总}=c\)、曲率、挠率与频率
+
+下面把“空间光速螺旋”写成一个完全可复核的几何模型。这里的 \(v_{\rm 总}=c\) 是**运动学假设**；它不是由爱因斯坦方程或标准模型自动推出的。它适用于类光传播、相位传播或一个被明确规定为类光的内部轨迹。对于有静质量的粒子，真实质心速度必须满足 \(v<c\)，不能把本节的 \(v_{\rm 总}=c\) 直接当成所有物质粒子的速度。
+
+### 9.1 螺旋参数方程与总速度
+
+在平直三维空间中取
+
+\[
+\mathbf r(t)=
+\big(R\cos(\omega t),\;R\sin(\omega t),\;v_z t\big),
+\tag{23}
+\]
+
+其中 \(R\ge 0\) 是圆柱半径，\(\omega\) 是角频率，\(v_z\) 是轴向速度。求导得
+
+\[
+\dot{\mathbf r}=\big(-R\omega\sin\omega t,\;R\omega\cos\omega t,\;v_z\big),
+\tag{24}
+\]
+
+因此
+
+\[
+v_{\rm 总}^2=|\dot{\mathbf r}|^2=(R\omega)^2+v_z^2.
+\tag{25}
+\]
+
+施加类光约束
+
+\[
+\boxed{(R\omega)^2+v_z^2=c^2.}
+\tag{26}
+\]
+
+这给出横向和轴向速度的正交分解
+
+\[
+v_\perp=R\omega,
+\qquad
+v_z=\sqrt{c^2-v_\perp^2},
+\qquad
+v_\perp^2+v_z^2=c^2.
+\tag{27}
+\]
+
+单位切向量为 \(\mathbf T=\dot{\mathbf r}/c\)，弧长满足 \(ds/dt=c\)，所以沿该轨迹的弧长参数是 \(s=ct+s_0\)。
+
+### 9.2 曲率的严格推导
+
+由空间曲线公式
+
+\[
+\kappa=\frac{|\dot{\mathbf r}\times\ddot{\mathbf r}|}{|\dot{\mathbf r}|^3},
+\tag{28}
+\]
+
+以及
+
+\[
+\ddot{\mathbf r}=\big(-R\omega^2\cos\omega t,\;-R\omega^2\sin\omega t,\;0\big),
+\tag{29}
+\]
+
+可得
+
+\[
+|\dot{\mathbf r}\times\ddot{\mathbf r}|=R\omega^2c,
+\tag{30}
+\]
+
+从而
+
+\[
+\boxed{\kappa=\frac{R\omega^2}{c^2}.}
+\tag{31}
+\]
+
+审计注记：若暂时不施加 \(v_{\rm 总}=c\)，一般式应写成
+
+\[
+\kappa=\frac{R\omega^2}{R^2\omega^2+v_z^2}.
+\tag{31a}
+\]
+
+代入 (26) 后才得到 (31)。这一步区分了“任意圆柱螺旋的几何公式”和“类光螺旋的特化公式”。
+
+曲率的量纲是 \({\rm length}^{-1}\)。它描述轨迹弯曲程度，但单独不能等同于引力场强度；引力场还需要度规、能动张量和耦合常数。
+
+### 9.3 挠率的严格推导
+
+空间曲线的挠率为
+
+\[
+\tau=\frac{(\dot{\mathbf r}\times\ddot{\mathbf r})\cdot\dddot{\mathbf r}}
+{|\dot{\mathbf r}\times\ddot{\mathbf r}|^2},
+\tag{32}
+\]
+
+其中
+
+\[
+\dddot{\mathbf r}=\big(R\omega^3\sin\omega t,\;-R\omega^3\cos\omega t,\;0\big).
+\tag{33}
+\]
+
+代入得
+
+\[
+\boxed{\tau=\frac{v_z\omega}{c^2}.}
+\tag{34}
+\]
+
+同理，未施加 (26) 时的一般挠率为
+
+\[
+\tau=\frac{v_z\omega}{R^2\omega^2+v_z^2},
+\tag{34a}
+\]
+
+施加 \(R^2\omega^2+v_z^2=c^2\) 后才得到 (34)。
+
+若改变螺旋的绕行方向，\(\tau\) 的符号随定向改变；因此在讨论强度时使用 \(|\tau|\)，在讨论手性时保留符号。挠率描述曲线离开其密切平面的扭转程度，但单独不能等同于电磁场强度。
+
+### 9.4 曲率–挠率–频率闭合关系
+
+将 (31)、(34) 平方相加：
+
+\[
+\begin{aligned}
+\kappa^2+\tau^2
+&=\frac{R^2\omega^4+v_z^2\omega^2}{c^4}\\
+&=\frac{\omega^2\big((R\omega)^2+v_z^2\big)}{c^4}\\
+&=\boxed{\frac{\omega^2}{c^2}},
+\end{aligned}
+\tag{35}
+\]
+
+最后一步只使用了 \(v_{\rm 总}=c\)。因此
+
+\[
+\boxed{\omega=c\sqrt{\kappa^2+\tau^2}},
+\qquad
+\boxed{f=\frac{\omega}{2\pi}=\frac{c}{2\pi}\sqrt{\kappa^2+\tau^2}}.
+\tag{36}
+\]
+
+这是本模型中最重要、也最诚实的统一运动学关系：给定 \(c\)、曲率和挠率，就能得到角频率与普通频率；反过来，给定 \(\omega\) 和一个几何分解，也能恢复 \(\kappa,\tau\)。它是几何恒等式加类光约束的结果，不是四力动力学的证明。
+
+### 9.5 反解公式与螺旋尺度
+
+令
+
+\[
+q^2:=\kappa^2+\tau^2=\frac{\omega^2}{c^2}.
+\tag{37}
+\]
+
+由 (31)、(34) 可反解出
+
+\[
+\boxed{R=\frac{\kappa}{q^2}},
+\qquad
+\boxed{b:=\frac{v_z}{\omega}=\frac{\tau}{q^2}},
+\tag{38}
+\]
+
+其中 \(b\) 是标准螺旋参数中的轴向推进尺度；每转一周的轴向间距为
+
+\[
+\boxed{P=2\pi b=\frac{2\pi\tau}{\kappa^2+\tau^2}}.
+\tag{39}
+\]
+
+速度分量也可以只用曲率和挠率表示：
+
+\[
+\boxed{v_\perp=c\frac{\kappa}{q}},
+\qquad
+\boxed{v_z=c\frac{\tau}{q}}.
+\tag{40}
+\]
+
+若定义轴向倾角 \(\theta\) 为切向量相对于横向平面的倾角，则
+
+\[
+\boxed{\tan\theta=\frac{v_z}{v_\perp}=\frac{\tau}{\kappa}},
+\qquad
+\sin\theta=\frac{\tau}{q},
+\qquad
+\cos\theta=\frac{\kappa}{q}.
+\tag{41}
+\]
+
+当 \(\tau=0\) 时是平面圆周运动；当 \(\kappa=0\) 时轨迹趋向直线，Frenet 挠率在严格数学上不再定义，故不能把 \(\tau/\kappa\) 在该点当作有限物理常数。
+
+### 9.6 频率的物理解释边界
+
+式 (36) 中的 \(f\) 是轨迹参数的频率。若把它解释成量子能量频率，还必须额外加入
+
+\[
+E=\hbar\omega=hf.
+\tag{42}
+\]
+
+因此
+
+\[
+E=\hbar c\sqrt{\kappa^2+\tau^2}.
+\tag{43}
+\]
+
+式 (43) 只有在该螺旋自由度确实是一个量子相位模态时才可使用；从经典曲线的频率不能自动推出粒子质量、精细结构常数或引力常数。对有静质量 \(m\) 的粒子，应使用
+
+\[
+E^2=p^2c^2+m^2c^4,
+\qquad
+v_{\rm 粒子}=\frac{pc^2}{E}<c,
+\tag{44}
+\]
+
+而不是强行令其质心速度等于 \(c\)。
+
+## 10. 从运动学核心到场论的最小桥接
+
+为了避免把一条曲线误称为完整场论，引入相位场 \(\phi(x)\) 和复振幅场
+
+\[
+\Psi(x)=A(x)e^{i\phi(x)}.
+\tag{45}
+\]
+
+在几何光学/短波极限中，定义波矢
+
+\[
+k_\mu=\nabla_\mu\phi.
+\tag{46}
+\]
+
+若该模态是类光的，则其首阶 eikonal 条件为
+
+\[
+\boxed{g^{\mu\nu}k_\mu k_\nu=0.}
+\tag{47}
+\]
+
+在局部惯性系中，(47) 等价于 \(\omega^2=c^2|\mathbf k|^2\)，即相速度为 \(c\)。可以把运动学核心作为统一候选模型的一个约束项：
+
+\[
+S_{\rm null}=\int d^4x\sqrt{-g}\;\lambda(x)
+\,g^{\mu\nu}\nabla_\mu\phi\nabla_\nu\phi,
+\tag{48}
+\]
+
+其中拉格朗日乘子 \(\lambda\) 的变分给出 (47)。但是 (48) 只约束相位传播为类光，尚未生成规范群、粒子谱或四种相互作用；这些仍必须由主作用量 (1) 或更深层的对称性原理给出。
+
+因此，一个诚实的统一候选模型可以暂时写成
+
+\[
+\boxed{S_{\rm candidate}=S_{\rm EHYD}+S_{\rm null}+S_{\rm int}},
+\tag{49}
+\]
+
+其中 \(S_{\rm EHYD}\) 是 (1)，\(S_{\rm null}\) 是 (48)，而 \(S_{\rm int}\) 必须通过规范不变性、洛伦兹不变性和实验数据确定。若直接把 \(\kappa\) 和 \(\tau\) 定义成已知常数的函数，模型会退化为参数重写，不能产生独立预测。
+
+## 11. 本轮完成度与待证命题
+
+### 已严格推出
+
+\[
+\boxed{
+v_{\rm 总}^2=(R\omega)^2+v_z^2=c^2,
+\quad
+\kappa=\frac{R\omega^2}{c^2},
+\quad
+\tau=\frac{v_z\omega}{c^2},
+\quad
+f=\frac{c}{2\pi}\sqrt{\kappa^2+\tau^2}}
+\tag{50}
+\]
+
+以及由它们反解出的 (38)–(41)。这些结论在给定螺旋参数和类光约束的前提下是可复算的。
+
+### 仍未证明
+
+1. \(\kappa\) 是否等于某个实际引力场不变量；
+2. \(\tau\) 是否等于电磁场或规范场的物理强度；
+3. \(\kappa,\tau,\omega\) 是否能唯一决定 \(G,e,\alpha\) 等常数；
+4. 该螺旋运动学是否能从量子化后的作用量自然产生；
+5. 该模型是否有独立实验预测，并优于标准模型加广义相对论有效场论。
+
+所以，本节把统一场论真正推进了一步：完成了运动学核心和场论桥接，但没有把几何关系越权升级成四力统一的实验定律。
+
+## 12. 无量纲数值复核（代数验证，不是实验验证）
+
+取归一化单位 \(c=1\)，并选
+
+\[
+R=0.6,\qquad \omega=1,\qquad v_z=0.8.
+\tag{51}
+\]
+
+则
+
+\[
+v_{\rm 总}^2=(0.6\times1)^2+0.8^2=0.36+0.64=1=c^2,
+\tag{52}
+\]
+
+\[
+\kappa=R\omega^2=0.6,
+\qquad
+\tau=v_z\omega=0.8,
+\tag{53}
+\]
+
+并且
+
+\[
+\sqrt{\kappa^2+\tau^2}=\sqrt{0.36+0.64}=1=\frac{\omega}{c}.
+\tag{54}
+\]
+
+由 (36) 得
+
+\[
+f=\frac{1}{2\pi},
+\tag{55}
+\]
+
+由 (38) 反解
+
+\[
+R=\frac{0.6}{1^2}=0.6,
+\qquad
+b=\frac{0.8}{1^2}=0.8,
+\tag{56}
+\]
+
+与输入完全一致。这个例子验证了公式链条的内部一致性；它没有使用实验数据，因此也不构成对自然界的经验验证。
+
+## 13. 全维度量纲审计
+
+本节承接上一节，继续把运动学核心接入四维协变场论，并进行量纲、观测量、误差和精算风险审计。
+
+### 13.1 SI 量纲
+
+记长度、时间、质量的基本量纲为 \(L,T,M\)。本模型的核心量纲为
+
+| 量 | 定义/来源 | SI 量纲 |
+|---|---|---|
+| \(c\) | 光速 | \(LT^{-1}\) |
+| \(\omega\) | 角频率 | \(T^{-1}\) |
+| \(f\) | 普通频率 | \(T^{-1}\) |
+| \(R,b\) | 螺旋半径、轴向尺度 | \(L\) |
+| \(\kappa,\tau,q\) | 曲率、挠率、合成几何频率 | \(L^{-1}\) |
+| \(v_\perp,v_z,v_{\rm 总}\) | 速度 | \(LT^{-1}\) |
+| \(E\) | 能量 | \(ML^2T^{-2}\) |
+| \(\hbar\) | 约化普朗克常数 | \(ML^2T^{-1}\) |
+
+由此
+
+\[
+[c^2(\kappa^2+\tau^2)]=L^2T^{-2}L^{-2}=T^{-2}=[\omega^2],
+\tag{57}
+\]
+
+\[
+[\hbar c\sqrt{\kappa^2+\tau^2}]
+=ML^2T^{-1}\cdot LT^{-1}\cdot L^{-1}
+=ML^2T^{-2}=[E].
+\tag{58}
+\]
+
+所以 (36)、(43) 量纲一致；这只是必要条件，不是物理正确性的充分条件。
+
+### 13.2 自然单位制
+
+在 \(\hbar=c=1\) 中，以质量维数表示：
+
+\[
+[x^\mu]=-1,\quad [\partial_\mu]=1,\quad [R]=2,
+\quad [A_\mu]=1,\quad [\Phi]=1,\quad [\psi]=\frac32.
+\tag{59}
+\]
+
+四维作用量要求 \([\mathcal L]=4\)，因此
+
+\[
+[M_{\rm Pl}]=1,\qquad [g]=[Y]=[\lambda]=0.
+\tag{60}
+\]
+
+若把曲率或挠率转成无量纲耦合，必须给出参考尺度 \(\Lambda\)：
+
+\[
+\hat\kappa=\frac{\kappa}{\Lambda},
+\qquad
+\hat\tau=\frac{\tau}{\Lambda}.
+\tag{61}
+\]
+
+没有参考尺度的“曲率等于耦合常数”在量纲上是不完整的。
+
+## 14. 四维协变链路：从类光约束到三维螺旋
+
+三维曲率和挠率依赖观察者选定的空间切片。取度规签名 \((-+++)\)，定义类光波矢
+
+\[
+k^\mu=\frac{dx^\mu}{d\lambda},
+\qquad
+g_{\mu\nu}k^\mu k^\nu=0.
+\tag{62}
+\]
+
+给定观测者四速度 \(u^\mu\)，满足
+
+\[
+g_{\mu\nu}u^\mu u^\nu=-c^2,
+\tag{63}
+\]
+
+其空间投影算子为
+
+\[
+h^\mu{}_\nu=\delta^\mu{}_\nu+\frac{u^\mu u_\nu}{c^2}.
+\tag{64}
+\]
+
+由 (62) 可得在观测者局部惯性系中
+
+\[
+\omega=-u_\mu k^\mu,
+\qquad
+|\mathbf k|=\frac{\omega}{c},
+\qquad
+v_{\rm 相}=\frac{\omega}{|\mathbf k|}=c.
+\tag{65}
+\]
+
+因此应区分四维不变量与三维几何量：
+
+\[
+\text{四维不变量： }k^2=0;
+\qquad
+\text{三维几何量： }R,\kappa,\tau.
+\tag{66}
+\]
+
+若理论声称 \(\kappa,\tau\) 是绝对物理标量，就必须给出它们在不同观测者和空间切片下的变换律，或改用四维曲率、挠率和 Cartan 联络不变量。
+
+## 15. 统一候选模型的作用量链路
+
+将前文 Einstein–Yang–Mills–Higgs–Dirac 作用量记为 \(S_{\rm EHYD}\)，加入相位场和类光约束：
+
+\[
+S_{\rm tot}=S_{\rm EHYD}+S_\phi+S_{\rm null}+S_{\rm coupl}.
+\tag{67}
+\]
+
+取最小相位场项
+
+\[
+S_\phi=\int d^4x\sqrt{-g}\left[
+-\frac{Z_A}{2}g^{\mu\nu}\nabla_\mu A\nabla_\nu A-U(A)
+-\frac{Z_\phi A^2}{2}g^{\mu\nu}\nabla_\mu\phi\nabla_\nu\phi\right],
+\tag{68}
+\]
+
+类光约束项为
+
+\[
+S_{\rm null}=\int d^4x\sqrt{-g}\;\lambda\,g^{\mu\nu}
+\nabla_\mu\phi\nabla_\nu\phi.
+\tag{69}
+\]
+
+一个可检验的非最小耦合示例是
+
+\[
+S_{\rm coupl}=\int d^4x\sqrt{-g}\;\xi R A^2,
+\tag{70}
+\]
+
+其中 \(\xi\) 是无量纲参数。式 (70) 是新增物理假设，不能由螺旋几何自动推出。
+
+### 15.1 对拉格朗日乘子变分
+
+对 \(\lambda\) 变分：
+
+\[
+\delta_\lambda S_{\rm tot}
+=\int d^4x\sqrt{-g}\;\delta\lambda\,(\nabla\phi)^2,
+\tag{71}
+\]
+
+于是
+
+\[
+\boxed{g^{\mu\nu}\nabla_\mu\phi\nabla_\nu\phi=0.}
+\tag{72}
+\]
+
+这就是类光 eikonal 约束。
+
+### 15.2 对相位场变分
+
+令
+
+\[
+\mathcal Z:=Z_\phi A^2-2\lambda.
+\tag{73}
+\]
+
+对 \(\phi\) 分部积分后得到
+
+\[
+\boxed{\nabla_\mu\left(\mathcal Z\nabla^\mu\phi\right)=0.}
+\tag{74}
+\]
+
+这表示相位流的协变守恒；它不是 Maxwell 方程，也不是 Yang–Mills 方程。
+
+### 15.3 对振幅场变分
+
+对 \(A\) 变分，得到一般形式
+
+\[
+\boxed{Z_A\Box A-U'(A)-Z_\phi A(\nabla\phi)^2
+ +2\xi R A+\frac{\partial\mathcal L_{\rm other}}{\partial A}=0.}
+\tag{75}
+\]
+
+结合 (72) 后，类光约束会消掉 \((\nabla\phi)^2\) 项，但曲率耦合 \(2\xi RA\) 仍然留下。是否对应引力、电磁或其他力，必须通过独立实验预测决定。
+
+## 16. 场方程到可观测量的全链路
+
+统一候选框架的计算链可写成
+
+\[
+\boxed{
+\{S,g_{\mu\nu},A_\mu^a,\Phi,\psi,\phi,A\}
+\xrightarrow{\delta S=0}
+\{G_{\mu\nu},D_\mu F^{a\mu\nu},\mathcal E_\Phi,\mathcal D_\psi,\mathcal E_A,\mathcal E_\phi\}
+\xrightarrow{\text{边界/初值}}
+\{g,A_\mu^a,\Phi,\psi,\phi,A\}
+\xrightarrow{\text{观测算子}}
+\mathbf y_{\rm pred}}
+\tag{76}
+\]
+
+观测算子可以包括频率、相位、偏振、传播时间、散射截面、引力波应变或宇宙学距离。任何声称“统一”的公式都必须说明这条链上每一个箭头的输入和输出。
+
+### 16.1 螺旋参数到观测量
+
+由标准螺旋的轴向参数 \(b=v_z/\omega\)，有
+
+\[
+R^2+b^2=\frac{\kappa^2+\tau^2}{(\kappa^2+\tau^2)^2}
+=\frac{1}{\kappa^2+\tau^2}.
+\tag{77}
+\]
+
+因此仅用几何尺度 \(R,b\) 可反解
+
+\[
+\boxed{q=\sqrt{\kappa^2+\tau^2}=\frac{1}{\sqrt{R^2+b^2}}},
+\tag{78}
+\]
+
+\[
+\boxed{\omega=\frac{c}{\sqrt{R^2+b^2}}},
+\qquad
+\boxed{f=\frac{c}{2\pi\sqrt{R^2+b^2}}},
+\tag{79}
+\]
+
+\[
+\boxed{\kappa=\frac{R}{R^2+b^2}},
+\qquad
+\boxed{\tau=\frac{b}{R^2+b^2}}.
+\tag{80}
+\]
+
+若实验独立测量了 \(R,b,f\)，则 (79) 是可检验关系；若先用 \(f\) 定义 \(R\) 或 \(b\)，再回算 \(f\)，则只是代数闭合。
+
+### 16.2 质量模态与类光模态
+
+无质量相位模态使用 \(p^2=0\)。有质量模态则必须满足
+
+\[
+g^{\mu\nu}p_\mu p_\nu=-m^2c^2,
+\tag{81}
+\]
+
+或在平直时空写成
+
+\[
+E^2=p^2c^2+m^2c^4.
+\tag{82}
+\]
+
+所以统一候选理论至少要明确分支：
+
+\[
+\text{类光分支： }p^2=0,\ v=c;
+\qquad
+\text{有质量分支： }p^2=-m^2c^2,\ v<c.
+\tag{83}
+\]
+
+把两者混作同一条经典速度定律会导致逻辑矛盾。
+
+## 17. 一阶扰动与传播检验
+
+令
+
+\[
+g_{\mu\nu}=\eta_{\mu\nu}+h_{\mu\nu},
+\qquad |h_{\mu\nu}|\ll1,
+\tag{84}
+\]
+
+定义迹反转扰动
+
+\[
+\bar h_{\mu\nu}=h_{\mu\nu}-\frac12\eta_{\mu\nu}h,
+\qquad
+\partial^\mu\bar h_{\mu\nu}=0.
+\tag{85}
+\]
+
+在谐和规范下，爱因斯坦方程的一阶形式为
+
+\[
+\boxed{\Box\bar h_{\mu\nu}=-\frac{16\pi G}{c^4}T_{\mu\nu}.}
+\tag{86}
+\]
+
+无源区域给出
+
+\[
+\Box\bar h_{\mu\nu}=0.
+\tag{87}
+\]
+
+因此引力波的局部传播速度是 \(c\)。相位场的无源类光极限也可以满足
+
+\[
+\Box\phi=0,
+\tag{88}
+\]
+
+但 (87) 与 (88) 的自旋、偏振和源耦合不同。仅有相同传播速度不能证明两种场是同一种场。
+
+规范场在 Abelian 弱场极限下满足
+
+\[
+\partial_\mu F^{\mu\nu}=J^\nu,
+\qquad
+\partial_{[\mu}F_{\nu\rho]}=0,
+\tag{89}
+\]
+
+其无源波动方程也具有光速传播，但具有不同的规范自由度和源耦合。统一理论必须解释这些差异如何来自共同结构。
+
+## 18. 误差传播：从 \(R,b,c\) 到 \(f,\kappa,\tau\)
+
+令
+
+\[
+D=R^2+b^2,
+\qquad
+f=\frac{c}{2\pi}D^{-1/2}.
+\tag{90}
+\]
+
+一阶微分为
+
+\[
+df=\frac{1}{2\pi}D^{-1/2}dc
+-\frac{c}{2\pi}D^{-3/2}(R\,dR+b\,db).
+\tag{91}
+\]
+
+若 \(R,b,c\) 的协方差矩阵为 \(\Sigma_{Rbc}\)，定义梯度
+
+\[
+J_f=\left(
+-\frac{cR}{2\pi D^{3/2}},
+-\frac{cb}{2\pi D^{3/2}},
+\frac{1}{2\pi\sqrt D}
+\right),
+\tag{92}
+\]
+
+则一阶协方差传播为
+
+\[
+\boxed{\operatorname{Var}(f)\simeq J_f\Sigma_{Rbc}J_f^T.}
+\tag{93}
+\]
+
+若三者独立，则
+
+\[
+\boxed{
+\left(\frac{\sigma_f}{f}\right)^2
+\simeq
+\left(\frac{\sigma_c}{c}\right)^2
++\frac{R^2\sigma_R^2+b^2\sigma_b^2}{(R^2+b^2)^2}.}
+\tag{94}
+\]
+
+若 \(R,b\) 有协方差，则增加
+
+\[
+\frac{2Rb\,\operatorname{Cov}(R,b)}{(R^2+b^2)^2}.
+\tag{95}
+\]
+
+对于
+
+\[
+\kappa=\frac{R}{D},\qquad \tau=\frac{b}{D},
+\tag{96}
+\]
+
+雅可比矩阵为
+
+\[
+J_{\kappa\tau}
+=\frac1{D^2}
+\begin{pmatrix}
+b^2-R^2 & -2Rb\\
+-2Rb & R^2-b^2
+\end{pmatrix}.
+\tag{97}
+\]
+
+因此
+
+\[
+\boxed{\Sigma_{\kappa\tau}\simeq
+J_{\kappa\tau}\Sigma_{Rb}J_{\kappa\tau}^T.}
+\tag{98}
+\]
+
+这些公式把长度测量误差传递到曲率、挠率和频率；它们解决的是“给定模型后误差如何传播”，不解决模型是否正确。
+
+## 19. 残差、似然与精算式风险链
+
+设实验观测向量为
+
+\[
+\mathbf y=(R_{\rm obs},b_{\rm obs},f_{\rm obs},\ldots)^T,
+\tag{99}
+\]
+
+模型预测为 \(\mathbf f(\vartheta)\)，系统误差和统计误差协方差为 \(\Sigma\)。定义残差
+
+\[
+\mathbf r=\mathbf y-\mathbf f(\vartheta).
+\tag{100}
+\]
+
+高斯情况下
+
+\[
+\chi^2(\vartheta)=\mathbf r^T\Sigma^{-1}\mathbf r,
+\qquad
+\log L=-\frac12\left(\chi^2+\log|\Sigma|+n\log2\pi\right).
+\tag{101}
+\]
+
+对于单个频率关系，标准化残差为
+
+\[
+z_f=\frac{f_{\rm obs}-c/(2\pi\sqrt{R^2+b^2})}{\sigma_{\rm pred}},
+\tag{102}
+\]
+
+其中 \(\sigma_{\rm pred}\) 必须包含观测误差、参数不确定度和系统误差。若 \(|z_f|\) 长期显著偏大，模型受到反驳；若用 \(f\) 拟合 \(R,b\) 后回算，则 \(z_f\) 没有独立验证意义。
+
+### 19.1 后验预测
+
+对参数先验 \(p(\vartheta\mid H)\)，后验为
+
+\[
+p(\vartheta\mid\mathbf y,H)
+\propto L(\mathbf y\mid\vartheta,H)p(\vartheta\mid H).
+\tag{103}
+\]
+
+新数据的后验预测分布为
+
+\[
+p(\mathbf y_{\rm new}\mid\mathbf y,H)
+=\int p(\mathbf y_{\rm new}\mid\vartheta,H)
+p(\vartheta\mid\mathbf y,H)d\vartheta.
+\tag{104}
+\]
+
+只有 (104) 在未参与拟合的新数据上通过覆盖率、残差和预测评分检验，才可称为经验支持。
+
+### 19.2 模型风险与保险精算量
+
+令事件 \(E\) 表示“模型预测偏差超过容许阈值 \(\delta\)”：
+
+\[
+E=\{|f_{\rm obs}-f_{\rm pred}|>\delta\}.
+\tag{105}
+\]
+
+由后验预测分布得到
+
+\[
+p_E=\Pr(E\mid\mathbf y,H).
+\tag{106}
+\]
+
+若该偏差对应损失随机变量 \(C\)，则期望损失为
+
+\[
+\boxed{\mathrm{EL}=p_E\,\mathbb E[C\mid E].}
+\tag{107}
+\]
+
+若存在多个互斥场景 \(E_i\)，则
+
+\[
+\mathrm{EL}=\sum_i p_i\mathbb E[C_i\mid E_i].
+\tag{108}
+\]
+
+损失尾部可用
+
+\[
+\mathrm{VaR}_q(L)=\inf\{\ell:\Pr(L\le\ell)\ge q\},
+\tag{109}
+\]
+
+\[
+\mathrm{TVaR}_q(L)=\mathbb E[L\mid L\ge\mathrm{VaR}_q(L)].
+\tag{110}
+\]
+
+这条链把物理预测误差转换成决策风险，但精算数值必须来自明确的损失函数和暴露量，不能凭空从统一场论常数推出。
+
+## 20. 全链路验证协议
+
+### A. 解析层
+
+1. 从 \(\mathbf r(t)\) 求 \(\dot{\mathbf r},\ddot{\mathbf r},\dddot{\mathbf r}\)。
+2. 用 (28)、(32) 计算 \(\kappa,\tau\)。
+3. 用 (26) 检验 \(v_{\rm 总}=c\)。
+4. 用 (35) 检验 \(\kappa^2+\tau^2=\omega^2/c^2\)。
+
+### B. 量纲层
+
+1. 每个候选项检查 SI 量纲和自然单位质量维数。
+2. 所有无量纲耦合必须明确参考尺度。
+3. 对恢复 \(c,\hbar\) 的公式进行独立量纲复核。
+
+### C. 场论层
+
+1. 对全部基本场独立变分。
+2. 检查规范不变性、微分同胚不变性和边界项。
+3. 检查 Bianchi 恒等式与守恒律。
+4. 在线性化极限下检查传播自由度和因果锥。
+
+### D. 数据层
+
+1. 先冻结模型、参数先验和误差模型。
+2. 将拟合数据与验证数据完全分离。
+3. 使用 (93)、(98) 传播协方差。
+4. 报告 \(\chi^2\)、自由度、标准化残差、预测覆盖率和后验预测区间。
+
+### E. 精算层
+
+1. 将偏差阈值 \(\delta\) 与实际决策后果绑定。
+2. 计算 \(p_E\)、\(\mathrm{EL}\)、\(\mathrm{VaR}\)、\(\mathrm{TVaR}\)。
+3. 改变先验、系统误差和极端场景进行压力测试。
+4. 对模型复杂度加入惩罚，避免用更多参数制造虚假精度。
+
+### F. 证伪层
+
+模型必须预先写明以下任一结果出现时如何被否决：
+
+\[
+\begin{array}{ll}
+(i)& v_{\rm 总}^2\ne c^2\text{ 且超出测量误差；}\\
+(ii)& \omega^2/c^2\ne\kappa^2+\tau^2\text{ 且残差具有统计显著性；}\\
+(iii)& \text{不同观测者下的协变映射不一致；}\\
+(iv)& \text{新模型在样本外预测不优于基线模型；}\\
+(v)& \text{出现负范数、因果性破坏、规范异常或能量无下界。}
+\end{array}
+\tag{111}
+\]
+
+## 21. 全链路结论
+
+本轮得到的严格链路是
+
+\[
+\boxed{
+\text{螺旋参数}
+\to
+\text{速度约束}
+\to
+\text{曲率/挠率}
+\to
+\text{频率}
+\to
+\text{相位场}
+\to
+\text{作用量}
+\to
+\text{变分场方程}
+\to
+\text{线性化传播}
+\to
+\text{观测量}
+\to
+\text{误差传播}
+\to
+\text{后验预测}
+\to
+\text{精算风险}.}
+\tag{112}
+\]
+
+已经由公式严格推出的核心是
+
+\[
+\boxed{v_{\rm 总}^2=(R\omega)^2+v_z^2=c^2}
+\quad\Longrightarrow\quad
+\boxed{\omega^2=c^2(\kappa^2+\tau^2)}.
+\tag{113}
+\]
+
+尚不能越权宣称的部分是：曲率必然等于引力、挠率必然等于电磁力、频率必然产生全部粒子质量谱，以及上述候选作用量已经是紫外完备的终极统一理论。要达到那一步，必须继续给出独立的新预测，并在未参与拟合的数据上通过 (101)–(110) 的统计和精算检验。

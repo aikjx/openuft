@@ -1,0 +1,367 @@
+{
+  "meta": {
+    "script": "v_eq_c_规范耦合与涡旋拓扑_求导验证.py",
+    "elapsed_sec": 33.98,
+    "counts": {
+      "PASS": 31,
+      "INFO": 1,
+      "BOUNDARY": 6
+    }
+  },
+  "results": [
+    {
+      "id": "S0-01",
+      "section": "S0 常数",
+      "item": "Maxwell 常数导出光速",
+      "statement": "c = 1/sqrt(eps0*mu0)",
+      "verdict": "PASS",
+      "detail": "1/sqrt(eps0 mu0)=299792458.0 m/s vs 定义值 299792458 m/s，相对残差 2.17e-14"
+    },
+    {
+      "id": "S0-02",
+      "section": "S0 常数",
+      "item": "光速定义值",
+      "statement": "c = 299792458 m/s（SI 定义，精确）",
+      "verdict": "INFO",
+      "detail": "SI 2019 后 eps0 与 mu0 均为测量量（相对不确定度约 1.5e-10），因此上式的残差只能压到该量级，不能期望机器零 —— 量纲预因子关系本身是精确的"
+    },
+    {
+      "id": "S1-01",
+      "section": "S1 运动学",
+      "item": "洛伦兹因子求导",
+      "statement": "d(gamma)/dv = gamma^3 * v / c^2",
+      "verdict": "PASS",
+      "detail": "残差符号化简为 0"
+    },
+    {
+      "id": "S1-02",
+      "section": "S1 运动学",
+      "item": "功-能定理",
+      "statement": "dE/dt = F . v",
+      "verdict": "PASS",
+      "detail": "dE/dt - F*v 符号残差 0"
+    },
+    {
+      "id": "S1-03",
+      "section": "S1 运动学",
+      "item": "质壳条件",
+      "statement": "E^2 = p^2 c^2 + m^2 c^4",
+      "verdict": "PASS",
+      "detail": "E^2 - p^2c^2 - m^2c^4 符号残差 0"
+    },
+    {
+      "id": "S1-04",
+      "section": "S1 运动学",
+      "item": "群速-相速关系",
+      "statement": "v_g * v_p = c^2，且 v_g <= c",
+      "verdict": "PASS",
+      "detail": "v_g*v_p - c^2 符号残差 0；m=0 时 v_g = v_p = c"
+    },
+    {
+      "id": "S1-05",
+      "section": "S1 运动学",
+      "item": "零质量极限",
+      "statement": "m -> 0 时 v_g = c",
+      "verdict": "PASS",
+      "detail": "v_g(m=0) - c = 0"
+    },
+    {
+      "id": "S2-01",
+      "section": "S2 波动",
+      "item": "Klein-Gordon 色散",
+      "statement": "(square + kappa^2) phi = 0，kappa = m c / hbar",
+      "verdict": "PASS",
+      "detail": "平面波代入后取色散 Omega^2 = k^2 + (mc/hbar)^2，残差 0"
+    },
+    {
+      "id": "S2-02",
+      "section": "S2 波动",
+      "item": "Maxwell 求导导出波速",
+      "statement": "omega^2 = k^2 / (mu0 eps0)，即 c = 1/sqrt(mu0 eps0)",
+      "verdict": "PASS",
+      "detail": "Faraday + Ampere 联立解得 omega = +/- k / sqrt(mu0 eps0)"
+    },
+    {
+      "id": "S2-03",
+      "section": "S2 波动",
+      "item": "TT 规范线性化 Einstein 方程",
+      "statement": "k^2 = 0 且横向无迹时 G^{(1)}_{mu nu} = 0",
+      "verdict": "PASS",
+      "detail": "TT 波代入线性化 Einstein 张量，10 个分量全为 0（横向性 True，无迹 True）"
+    },
+    {
+      "id": "S2-04",
+      "section": "S2 波动",
+      "item": "零质量传播要求 k^2 = 0",
+      "statement": "偏离零质量壳 Omega != Kz 时 G^{(1)} 不再为零（正比于 Omega^2 - Kz^2）",
+      "verdict": "PASS",
+      "detail": "G^{(1)}_xx - G^{(1)}_xx|_(Kz=Omega) = (-Kz**2 + Omega**2)*exp(I*(Kz*x3 - Omega*x0))/2 * A_plus（非零 => 必须 Omega = Kz）"
+    },
+    {
+      "id": "S2-05",
+      "section": "S2 波动",
+      "item": "引力波速 = c",
+      "statement": "Omega = omega/c、Kz = k_z，Omega = Kz => omega = c k_z",
+      "verdict": "PASS",
+      "detail": "线性化真空方程只有零质量解，故张量扰动以 c 传播（与 GW170817 一致）"
+    },
+    {
+      "id": "S3-01",
+      "section": "S3 规范",
+      "item": "协变导数对易子 = 场强",
+      "statement": "[D_mu, D_nu] = -i g F_{mu nu}",
+      "verdict": "PASS",
+      "detail": "SU(2) 任意规范场、6 组指标对 x 2 分量全部为 0（用时 0.9s）；失败项 无"
+    },
+    {
+      "id": "S3-02",
+      "section": "S3 规范",
+      "item": "Bianchi 恒等式（含非阿贝尔项）",
+      "statement": "D_[mu F_{nu rho]] = 0",
+      "verdict": "PASS",
+      "detail": "4 组独立三重指标 x 4 个矩阵元全部为 0（用时 1.6s）；失败项 无"
+    },
+    {
+      "id": "S3-03",
+      "section": "S3 规范",
+      "item": "Noether 恒等式",
+      "statement": "D_nu D_mu F^{mu nu} = 0（恒等成立）",
+      "verdict": "PASS",
+      "detail": "全指标收缩的协变双散度恒为 0（用时 9.3s）；推论：若 D_mu F^{mu nu} = J^nu，则必须有 D_nu J^nu = 0（源必须协变守恒，这是自洽性约束而非自动满足）"
+    },
+    {
+      "id": "S3-04",
+      "section": "S3 规范",
+      "item": "Euler-Lagrange => 杨-米尔斯运动方程",
+      "statement": "delta S = 0 <=> D_mu F^{mu nu} = 0（真空）",
+      "verdict": "PASS",
+      "detail": "12 个规范场分量的变分全部正比于 (D_mu F^{mu nu})^a，比例因子 +1（用时 8.1s）；失配项 无"
+    },
+    {
+      "id": "S3-05",
+      "section": "S3 规范",
+      "item": "无穷小规范协变性",
+      "statement": "A'_mu = A_mu + d_mu theta + i g [theta, A_mu]，Phi' = (1 + i g theta) Phi => D'_mu Phi' = (1 + i g theta) D_mu Phi",
+      "verdict": "PASS",
+      "detail": "引入小参数 epsilon 后，残差的 O(epsilon) 系数对 3 组独立单项式（含各阶导数）代入均为零多项式；O(epsilon^2) 为截断产物不要求为零；与手算一致：一阶规范协变成立"
+    },
+    {
+      "id": "S3-06",
+      "section": "S3 规范",
+      "item": "极小耦合 Klein-Gordon 的变分导出",
+      "statement": "delta S = 0 <=> D_mu D^mu Phi + kappa^2 Phi = 0，kappa = m c / hbar",
+      "verdict": "PASS",
+      "detail": "变分结果与目标方程差为 0（对 3 组独立单项式代入验证；符号整体因子不影响方程）"
+    },
+    {
+      "id": "S3-07",
+      "section": "S3 规范",
+      "item": "有源方程的规范协变性",
+      "statement": "D_mu D^mu Phi + kappa^2 Phi = J 在 Phi -> e^{i alpha} Phi、A_mu -> A_mu + d_mu alpha / e、J -> e^{i alpha} J 下形式不变",
+      "verdict": "PASS",
+      "detail": "取残差 O(epsilon) 系数（一阶规范协变应恰为零），对 3 组独立单项式代入为零多项式；O(epsilon^2) 项为截断产物（完整 e^{i alpha} 指数形式无此问题），不要求为零；这要求源与物质场同相位变换，是耦合层的自洽约束"
+    },
+    {
+      "id": "S3-08",
+      "section": "S3 规范",
+      "item": "非阿贝尔流的普通散度 vs 协变散度",
+      "statement": "D_nu J^nu = 0 成立，而 d_nu J^nu != 0（一般情形）",
+      "verdict": "PASS",
+      "detail": "具体 SU(2) 场演示（J^nu = D_mu F^{mu nu}）：协变散度 4 个矩阵元全 0（Noether 恒等式），普通散度非 0 => 非阿贝尔理论中只有协变守恒律，U(1) 的普通连续性方程不再成立"
+    },
+    {
+      "id": "S4-01",
+      "section": "S4 涡旋",
+      "item": "径向 ansatz 的 Euler-Lagrange 方程",
+      "statement": "phi = f(r) e^{i n theta}，e A_theta = n a(r) / r 代入 Abelian-Higgs 能量泛函后变分",
+      "verdict": "PASS",
+      "detail": "得到两条耦合径向方程 f 方程与 a 方程（见报告附录），与 Nielsen-Olesen 标准形式一致"
+    },
+    {
+      "id": "S4-02",
+      "section": "S4 涡旋",
+      "item": "Bogomolny 完全平方恒等式",
+      "statement": "lambda = 2 e^2（临界耦合）时能量密度 = 完全平方 + 拓扑项 d/dr[n(1-a)f^2] + n a'",
+      "verdict": "PASS",
+      "detail": "逐项展开残差恒为 0 => E >= 2 pi n（拓扑下界），下界由缠绕数决定"
+    },
+    {
+      "id": "S4-03",
+      "section": "S4 涡旋",
+      "item": "BPS 一阶方程蕴含二阶 Euler-Lagrange 方程",
+      "statement": "f' = n(1-a)f/r 与 a' = e^2 r (1-f^2)/n => 两条二阶方程同时满足",
+      "verdict": "PASS",
+      "detail": "代入后 f 方程残差 = 0，a 方程残差 = 0"
+    },
+    {
+      "id": "S4-04",
+      "section": "S4 涡旋",
+      "item": "Nielsen-Olesen 涡旋两点边值数值解",
+      "statement": "f(0)=a(0)=0，f(inf)=a(inf)=1 存在解",
+      "verdict": "PASS",
+      "detail": "n=1,2 均收敛（solve_bvp tol=1e-8，success=True），末端残差 < 1e-4；说明有限能量涡旋剖面真实存在"
+    },
+    {
+      "id": "S4-05",
+      "section": "S4 涡旋",
+      "item": "磁通量子化",
+      "statement": "Phi = int B_z dS = 2 pi n / e",
+      "verdict": "PASS",
+      "detail": "数值面积分与解析值相对误差均 < 1e-3；量子化只依赖渐近 winding n，与势参数 lambda 无关（拓扑量）"
+    },
+    {
+      "id": "S4-06",
+      "section": "S4 涡旋",
+      "item": "BPS 能量界饱和",
+      "statement": "lambda = 2 e^2 时 E = 2 pi n（拓扑下界精确饱和）",
+      "verdict": "PASS",
+      "detail": "n=1: E/(2 pi n)=0.999998; n=2: E/(2 pi n)=1.000000"
+    },
+    {
+      "id": "S4-07",
+      "section": "S4 涡旋",
+      "item": "数值解满足 Bogomolny 一阶方程",
+      "statement": "f' = n(1-a)f/r，a' = e^2 r (1-f^2)/n",
+      "verdict": "PASS",
+      "detail": "n=1 最大残差 1.70e-11; n=2 最大残差 2.65e-11"
+    },
+    {
+      "id": "S4-08",
+      "section": "S4 涡旋",
+      "item": "非临界耦合下界不再饱和",
+      "statement": "lambda != 2 e^2 时 E != 2 pi n（Type II，lambda > 2 e^2：E > 2 pi n；Type I，lambda < 2 e^2：E < 2 pi n）",
+      "verdict": "PASS",
+      "detail": "n=1, lambda=4.00（Type II，lambda > 2 e^2）：E/(2 pi n)=1.156757 > 1，符合 Bogomolny 界只在临界耦合 lambda=2 e^2 取等号的预期"
+    },
+    {
+      "id": "S4-09",
+      "section": "S4 涡旋",
+      "item": "Hopf 纤维的 Gauss 环绕数",
+      "statement": "Hopf 映射两条纤维互为 Hopf 链环，环绕数 = Hopf 荷 = 1",
+      "verdict": "PASS",
+      "detail": "Gauss 双线积分数值 = 1.0000000002（Legendre 240 x 240 节点），与整数 1 的相对偏差 2.13e-10"
+    },
+    {
+      "id": "S4-10",
+      "section": "S4 涡旋",
+      "item": "缠绕数整性",
+      "statement": "(1/2 pi i) oint d(phi)/phi = n in Z",
+      "verdict": "PASS",
+      "detail": "符号积分结果 = n_int"
+    },
+    {
+      "id": "S5-01",
+      "section": "S5 回环",
+      "item": "静止能量 = 本征频率",
+      "statement": "hbar omega_0 = m c^2（K/A = m^2 c^4 / hbar^2 的识别）",
+      "verdict": "PASS",
+      "detail": "电子 e: omega_0 = 7.7634407e+20 rad/s; mu 子: omega_0 = 1.6052333e+23 rad/s; 质子 p: omega_0 = 1.4254862e+24 rad/s"
+    },
+    {
+      "id": "S5-02",
+      "section": "S5 回环",
+      "item": "v=c 完备化的代数一致性",
+      "statement": "A d^2Phi/dt^2 + K Phi = 0 -> A square Phi + (K/c^2) Phi = 0，K/A = m^2 c^4 / hbar^2 后恒等识别",
+      "verdict": "PASS",
+      "detail": "无量纲残差 0；该识别是定义式对照（同维量等式），不是独立物理预言"
+    },
+    {
+      "id": "S6-01",
+      "section": "S6 边界",
+      "item": "耦合常数未导出",
+      "statement": "g、lambda、e 的数值（即四种力的相对强度）不是由 v=c 推出的",
+      "verdict": "BOUNDARY",
+      "detail": "本脚本全部符号恒等对任意 g、lambda 成立 ==> 它们对耦合值零约束力；这正是「结构统一」与「动力学统一」的分界"
+    },
+    {
+      "id": "S6-02",
+      "section": "S6 边界",
+      "item": "群来源未解决",
+      "statement": "SU(3) x SU(2) x U(1) 的选取不是由 v=c 或 anyho about □ 推出的",
+      "verdict": "BOUNDARY",
+      "detail": "本脚本以 SU(2) 为例做结构验证，换成任意紧致李群结构恒等式照样成立 ==> 规范群的选择是外部输入"
+    },
+    {
+      "id": "S6-03",
+      "section": "S6 边界",
+      "item": "线性化不等于完整引力",
+      "statement": "S2 只对 g = eta + h 的一阶扰动验证，未涉及非微扰/强场区",
+      "verdict": "BOUNDARY",
+      "detail": "线性结果不能外推到黑洞奇点、宇宙学解；完整 Einstein 方程的非线性项未验证"
+    },
+    {
+      "id": "S6-04",
+      "section": "S6 边界",
+      "item": "量子化与禁闭未涉及",
+      "statement": "Yang-Mills 的存在性与质量缺口（千禧难题）不在本验证范围内",
+      "verdict": "BOUNDARY",
+      "detail": "本脚本处理的全部是经典场论的符号/半经典层；路径积分、重整化、禁闭均未触及"
+    },
+    {
+      "id": "S6-05",
+      "section": "S6 边界",
+      "item": "涡旋 -> 粒子的映射",
+      "statement": "Nielsen-Olesen 涡旋是经典孤子；「粒子 = 拓扑孤子」为 [B] 候选",
+      "verdict": "BOUNDARY",
+      "detail": "磁通量子化与拓扑下界是 [A] 严格结论；把涡旋认同为具体粒子（含质量谱）缺少定量构造"
+    },
+    {
+      "id": "S6-06",
+      "section": "S6 边界",
+      "item": "机电对偶不是量纲同构",
+      "statement": "m <-> L、v <-> I、dx <-> q、k <-> 1/C 只保持方程形式，不保持量纲",
+      "verdict": "BOUNDARY",
+      "detail": "[m] = M 对 [L] = M L^2 / Q^2 等互不相同；对偶是算子结构同构，据此推断「力学与电学同一实体」属 [B] 诠释而非 [A] 结论"
+    }
+  ],
+  "vortex_cases": [
+    {
+      "n": 1,
+      "e": 1.0,
+      "lambda": 2.0,
+      "tag": "BPS",
+      "f_end": 1.0000000000000002,
+      "a_end": 0.9999999999999999,
+      "energy": 6.283171034997279,
+      "bound": 6.283185307179586,
+      "energy_over_bound": 0.9999977285116372,
+      "flux": 6.283179489411489,
+      "flux_analytic": 6.283185307179586,
+      "flux_rel": 9.259265504784333e-07,
+      "bps_residual": 1.6990955649873866e-11,
+      "success": true
+    },
+    {
+      "n": 2,
+      "e": 1.0,
+      "lambda": 2.0,
+      "tag": "BPS",
+      "f_end": 1.0,
+      "a_end": 1.0,
+      "energy": 12.56636479660719,
+      "bound": 12.566370614359172,
+      "energy_over_bound": 0.999999537038007,
+      "flux": 12.56636479659557,
+      "flux_analytic": 12.566370614359172,
+      "flux_rel": 4.629629175328335e-07,
+      "bps_residual": 2.653204069739643e-11,
+      "success": true
+    },
+    {
+      "n": 1,
+      "e": 1.0,
+      "lambda": 4.0,
+      "tag": "non-BPS",
+      "f_end": 1.0,
+      "a_end": 0.9999999999999999,
+      "energy": 7.268119072178061,
+      "bound": 6.283185307179586,
+      "energy_over_bound": 1.1567570773176186,
+      "flux": 6.2831781330166345,
+      "flux_analytic": 6.283185307179586,
+      "flux_rel": 1.1418034963108103e-06,
+      "bps_residual": 0.1916705498075818,
+      "success": true
+    }
+  ]
+}

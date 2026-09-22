@@ -1,0 +1,130 @@
+﻿========================================================================================================
+TUFT v4 line2 - c<0 metric complete geodesic integration (E91+)  G=c=M=1, isotropic u=1/r
+ansatz: A=e^{-2u}, B=e^{2u}(1+c u^2+d u^3).  samples: (c=-0.290,d=-0.050) and (c=-0.500,d=0)
+========================================================================================================
+
+[E91] GR baseline: exact Schwarzschild isotropic
+        b               fate     r_min
+    0.000    CAPTURE-HORIZON    0.4379
+    2.000    CAPTURE-HORIZON    0.3103
+    4.000    CAPTURE-HORIZON    0.4562
+    5.000    CAPTURE-HORIZON    0.0145
+    5.190    CAPTURE-HORIZON    0.4791
+    5.196    CAPTURE-HORIZON    0.4692
+    5.200        RUN-TIMEOUT    1.9398
+    5.500        RUN-TIMEOUT    2.6732
+    6.000        RUN-TIMEOUT    3.3794
+    8.000        RUN-TIMEOUT    5.6563
+  GR b_abs=5.1960, sigma=84.8180 M^2 (theory 27pi=84.8230) [    PASS]
+
+[E92] sample1: c=-0.500, d=0  photon sphere eq r^3-2r^2+1=0
+  analytic roots: r1=1.000000, r2=1.618034 (2 roots)
+  numerical roots: ['1.000000', '1.618034']
+  V_eff: r=1.0000[MIN] V=0.036631, r=1.6180[MAX] V=0.039850
+  r_out=1.618034, b_crit=5.009380 (GR=5.1962) [    PASS]
+
+[E93] c=-0.5 potential well V_eff(r)=A/(B r^2)
+  B=0 horizon r_h = ['0.707107'] (theory sqrt(-c)=0.707107)
+  well bottom: r=1.0003, V_min=0.036631 (b_wall=5.2249)
+  outer barrier: r=1.6180, V_max=0.039850 (b_crit=5.0094)
+
+[E94] c=-0.5 parallel photon beam RK4 (r0=30)
+        b               fate     r_min
+    0.000    CAPTURE-HORIZON    0.7071
+    0.500        ESCAPED-OUT    0.7077
+    1.000        ESCAPED-OUT    0.7096
+    1.500        RUN-TIMEOUT    0.7129
+    2.000        ESCAPED-OUT    0.7178
+    2.500        ESCAPED-OUT    0.7246
+    3.000        RUN-TIMEOUT    0.7339
+    3.500        ESCAPED-OUT    0.7469
+    4.000        RUN-TIMEOUT    0.7656
+    4.500        ESCAPED-OUT    0.7953
+    4.759        ESCAPED-OUT    0.8200
+    4.959        ESCAPED-OUT    0.8497
+    5.009        RUN-TIMEOUT    0.8601
+    5.059        RUN-TIMEOUT    1.9225
+    5.260        RUN-TIMEOUT    2.3695
+    5.500        RUN-TIMEOUT    2.7506
+    6.125        RUN-TIMEOUT    3.5670
+    6.750        RUN-TIMEOUT    4.2963
+    7.375        RUN-TIMEOUT    4.9900
+    8.000        ESCAPED-OUT    5.6645
+  --> captured=1, escaped=9, b_abs_max=0.0000, sigma_abs=0.000000
+  --> [KEY] no photon reaches B=0: sigma_abs=0  (no absorbing horizon)
+
+[E95] sample2: c=-0.290, d=-0.050  authoritative ansatz
+  photon sphere roots: ['0.773817', '1.794920']
+  V_eff: r=0.7738[MIN] V=0.023300, r=1.7949[MAX] V=0.037084
+  r_out=1.794920, b_crit=5.192836 (v3=5.1928) [    PASS]
+  B=0 r_h = ['0.609902'] (theory sqrt(-c)=0.538516, d-corrected)
+
+[E96] c=-0.29,d=-0.05 parallel photon beam
+        b               fate     r_min
+    0.000        ESCAPED-OUT    0.6099
+    0.562        ESCAPED-OUT    0.6102
+    1.125        RUN-TIMEOUT    0.6112
+    1.688        RUN-TIMEOUT    0.6130
+    2.250        RUN-TIMEOUT    0.6155
+    2.812        RUN-TIMEOUT    0.6190
+    3.375        RUN-TIMEOUT    0.6236
+    3.938        ESCAPED-OUT    0.6296
+    4.500        RUN-TIMEOUT    0.6377
+    4.933        RUN-TIMEOUT    0.6459
+    5.141        RUN-TIMEOUT    0.6507
+    5.193        RUN-TIMEOUT    1.7949
+    5.297        RUN-TIMEOUT    2.2385
+    5.500        RUN-TIMEOUT    2.6315
+    6.333        RUN-TIMEOUT    3.7626
+    7.167        ESCAPED-OUT    4.7256
+    8.000        ESCAPED-OUT    5.6371
+  --> captured=0, b_abs_max=0.0000, sigma_abs=0.000000
+
+[E97] apparent horizon r_h physics (B(r_h)=0 metric sign)
+  [c=-0.5] r_h=0.70711: B(+eps)=+3.242e-01, B(-eps)=-3.535e-01, A(r_h)=5.911e-02
+       B'(r_h)=+47.854; local scale (dr/dl)^2 ~ 1/[A B'(r-r_h)] => r-r_h ~ (dl_h-dl)^(2/3)
+       => radial photon reaches r_h in finite affine lambda; r<r_h is Euclidean-signature unphysical
+       => r_h is a boundary, NOT a Schwarzschild-type event horizon (g_tt never flips, g_rr vanishes not diverges)
+  [c=-0.29] r_h=0.60990: B(+eps)=+5.615e-01, B(-eps)=-6.197e-01, A(r_h)=3.766e-02
+       B'(r_h)=+96.675; local scale (dr/dl)^2 ~ 1/[A B'(r-r_h)] => r-r_h ~ (dl_h-dl)^(2/3)
+       => radial photon reaches r_h in finite affine lambda; r<r_h is Euclidean-signature unphysical
+       => r_h is a boundary, NOT a Schwarzschild-type event horizon (g_tt never flips, g_rr vanishes not diverges)
+
+[E98] timelike geodesics: c=-0.29 ISCO edge stability
+  numerical ISCO = 4.95049 (v3=4.9491) [    PASS]
+  ISCO L=3.46903, E=0.94299
+  [    ISCO(edge)] r0=4.9505: fate=RUN, r=[0.6276,5.7913], amp=2.5819
+  [ ISCO+0.5(out)] r0=5.4505: fate=RUN, r=[0.6277,6.0447], amp=2.7085
+  [  ISCO-0.5(in)] r0=4.4505: fate=RUN, r=[0.6277,6.4601], amp=2.9162
+
+[E99] c>=0 control: B=e^{2u}(1+c u^2)>0 everywhere => truly horizonless
+  c=+0.00: B=0 roots = none (B>0 for all r>0)
+  c=+0.50: B=0 roots = none (B>0 for all r>0)
+
+========================================================================================================
+[E100] FINAL VERDICT - does TUFT have an absorption cross-section?
+========================================================================================================
+  GR Schwarzschild   : sigma_abs = 27 pi M^2 = 84.8230 M^2 (true horizon, absorbing)
+  TUFT c=-0.5        : sigma_abs = 0.0000 M^2 (measured)
+  TUFT c=-0.29,d=-.05: sigma_abs = 0.0000 M^2 (measured)
+
+  Physical chain:
+   (1) c<0: B=e^{2u}(1+c u^2+d u^3) crosses zero at u_h=1/sqrt(-c) => r_h=M sqrt(-c) apparent horizon
+   (2) r>r_h: double photon sphere (outer MAX barrier + inner MIN well), V_eff diverges as wall at r_h
+   (3) any b<b_crit_out photon crosses outer barrier, bounces off inner wall just above r_h, escapes back out
+   (4) b=0 radial photon: (dr/dl)^2~1/(A B'(r-r_h)) => r-r_h~(dl)^(2/3), reaches r_h in finite affine param
+       but r<r_h is Euclidean-signature unphysical; r_h is boundary, not one-way membrane
+   (5) => no photon truly 'absorbed': sigma_abs=0 (all photons eventually escape, only delayed)
+
+  EHT comparison: EHT shadow angular radius ~ b_crit_out, formed by outer photon sphere lensing
+    TUFT c<0 'shadow' is a strong-scattering lensing shadow, not an absorption shadow;
+    first-order optics indistinguishable, but differences: (i) nothing truly falls in (ii) no horizon area
+    (iii) no final ringdown decay after merger.
+
+  Four-state summary:
+    GR baseline      : sigma=84.818 vs 27pi=84.823  [    PASS]
+    c=-0.5 double PS: 2 roots (1.0000,1.6180) analytic-exact            [    PASS]
+    c=-0.29 b_crit  : 5.1928 vs 5.1928                        [    PASS]
+    c=-0.29 ISCO    : 4.9505 vs 4.9491                        [    PASS]
+    absorption verdict: sigma_abs=0 (no absorbing horizon)            [  NOVEL]
+========================================================================================================

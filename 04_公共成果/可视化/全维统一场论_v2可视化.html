@@ -1,0 +1,160 @@
+<html style="margin:0;padding:0;">
+<div style="background-color:transparent;box-sizing:border-box;font-family:'PingFang SC','Segoe UI',Arial,sans-serif;color:#1A1B1C;padding:16px;">
+
+<h2 style="margin:0 0 12px 0;font-size:18px;font-weight:600;">全维统一场论 v2.0 — 知识图谱·验证矩阵·实验路线</h2>
+
+<!-- 第一部分：知识图谱 -->
+<div style="background:#fff;border:1px solid #E4E3DD;border-radius:12px;padding:14px;margin-bottom:16px;">
+<h3 style="margin:0 0 10px 0;font-size:15px;font-weight:600;color:#1A1B1C;">一、理论谱系与验证状态</h3>
+<div id="graph" style="width:100%;height:380px;"></div>
+</div>
+
+<!-- 第二部分：验证精度矩阵 -->
+<div style="background:#fff;border:1px solid #E4E3DD;border-radius:12px;padding:14px;margin-bottom:16px;">
+<h3 style="margin:0 0 10px 0;font-size:15px;font-weight:600;color:#1A1B1C;">二、验证精度矩阵（log轴）</h3>
+<div id="precision" style="width:100%;height:320px;"></div>
+</div>
+
+<!-- 第三部分：人工场实验路线图 -->
+<div style="background:#fff;border:1px solid #E4E3DD;border-radius:12px;padding:14px;margin-bottom:16px;">
+<h3 style="margin:0 0 10px 0;font-size:15px;font-weight:600;color:#1A1B1C;">三、人工场实验路线图</h3>
+<div style="display:flex;flex-wrap:wrap;gap:12px;">
+<div style="flex:1;min-width:200px;background:#F4F3EE;border-radius:8px;padding:12px;border-left:4px solid #52C41A;">
+<div style="font-size:13px;font-weight:600;color:#52C41A;margin-bottom:6px;">阶段1：定性验证</div>
+<div style="font-size:12px;color:#555;line-height:1.6;">
+E=10⁵ V/m<br>∂B/∂t=10 T/s<br>预言 g=9×10¹² m/s²<br>MEMS加速度计(10⁻⁷g)<br><b>判据：观测不到→方程错误</b>
+</div>
+</div>
+<div style="flex:1;min-width:200px;background:#F4F3EE;border-radius:8px;padding:12px;border-left:4px solid #FAAD14;">
+<div style="font-size:13px;font-weight:600;color:#FAAD14;margin-bottom:6px;">阶段2：定量测量</div>
+<div style="font-size:12px;color:#555;line-height:1.6;">
+系统变化E, ∂B/∂t<br>验证 g∝c²∂B/∂t/E<br>确定耦合常数精确值<br>超导加速度计(10⁻¹²g)<br><b>目标：耦合常数±1%</b>
+</div>
+</div>
+<div style="flex:1;min-width:200px;background:#F4F3EE;border-radius:8px;padding:12px;border-left:4px solid #9EACEA;">
+<div style="font-size:13px;font-weight:600;color:#9EACEA;margin-bottom:6px;">阶段3：应用开发</div>
+<div style="font-size:12px;color:#555;line-height:1.6;">
+优化场配置<br>提高能量效率<br>人工场装置原型<br>悬浮/推进/重力屏蔽<br><b>目标：可工程化装置</b>
+</div>
+</div>
+</div>
+</div>
+
+<!-- 第四部分：核心矛盾警示 -->
+<div style="background:#fff;border:1px solid #EA6668;border-radius:12px;padding:14px;margin-bottom:16px;">
+<h3 style="margin:0 0 8px 0;font-size:15px;font-weight:600;color:#EA6668;">⚠️ 核心矛盾：理论预言 vs 实验观测</h3>
+<div style="font-size:13px;color:#555;line-height:1.7;">
+方程 ∂B/∂t=-(g×E)/c² 预言：E=10⁶V/m, ∂B/∂t=1T/s → <b>g=9×10¹⁰ m/s² = 9×10⁹ g_earth</b><br>
+LIGO可探测加速度：~10⁻¹³ m/s²<br>
+<b>预言效应比可探测引力波强 10²⁰ 倍</b> — 如果方程正确，任何常规加速度计都应轻易探测到。<br>
+至今未观测到 → 方程很可能需要重大修正（耦合常数远小于1/c²，或需要特定场拓扑）。
+</div>
+</div>
+
+<!-- 第五部分：定理状态统计 -->
+<div style="background:#fff;border:1px solid #E4E3DD;border-radius:12px;padding:14px;">
+<h3 style="margin:0 0 10px 0;font-size:15px;font-weight:600;color:#1A1B1C;">四、定理状态统计（v2.0）</h3>
+<div id="status" style="width:100%;height:280px;"></div>
+</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+(function(){
+try{
+var graph = echarts.init(document.getElementById('graph'));
+graph.setOption({
+backgroundColor:'transparent',
+tooltip:{trigger:'item',triggerOn:'click',renderMode:'richText',confine:true},
+legend:{top:0,textStyle:{fontSize:11},type:'scroll'},
+series:[{
+type:'graph',layout:'force',roam:true,
+force:{repulsion:200,edgeLength:[60,120]},
+label:{show:true,fontSize:10,position:'right'},
+edgeSymbol:['none','arrow'],edgeSymbolSize:8,
+data:[
+{name:'三重奏定理',category:0,symbolSize:40,itemStyle:{color:'#52C41A'}},
+{name:'梯度磁场精确性',category:0,symbolSize:30},
+{name:'全维推广D维',category:0,symbolSize:28},
+{name:'大统一力方程',category:1,symbolSize:38,itemStyle:{color:'#9EACEA'}},
+{name:'四力分解',category:1,symbolSize:24},
+{name:'核力场r⁻³',category:1,symbolSize:26},
+{name:'人工场方程',category:2,symbolSize:34,itemStyle:{color:'#FAAD14'}},
+{name:'能量-动量关系',category:3,symbolSize:26,itemStyle:{color:'#EA6668'}},
+{name:'弱力几何化',category:4,symbolSize:22,itemStyle:{color:'#C9A7E8'}},
+{name:'量子化起源',category:4,symbolSize:24},
+{name:'QCD渐近自由',category:5,symbolSize:20,itemStyle:{color:'#999'}},
+{name:'量子引力',category:5,symbolSize:20},
+{name:'暗物质暗能量',category:5,symbolSize:20},
+],
+links:[
+{source:'三重奏定理',target:'梯度磁场精确性'},
+{source:'三重奏定理',target:'全维推广D维'},
+{source:'三重奏定理',target:'大统一力方程'},
+{source:'大统一力方程',target:'四力分解'},
+{source:'大统一力方程',target:'核力场r⁻³'},
+{source:'大统一力方程',target:'人工场方程'},
+{source:'大统一力方程',target:'能量-动量关系'},
+{source:'大统一力方程',target:'弱力几何化'},
+{source:'三重奏定理',target:'量子化起源'},
+{source:'核力场r⁻³',target:'QCD渐近自由'},
+{source:'能量-动量关系',target:'量子引力'},
+{source:'量子引力',target:'暗物质暗能量'},
+],
+categories:[
+{name:'已证明✅'},{name:'理论自洽🔵'},{name:'待验证🟣'},
+{name:'框架差异⚠️'},{name:'推测🔵'},{name:'开放🟡'}
+]
+}]
+});
+
+var prec = echarts.init(document.getElementById('precision'));
+prec.setOption({
+backgroundColor:'transparent',
+tooltip:{trigger:'axis',triggerOn:'click',renderMode:'richText',confine:true},
+grid:{left:140,right:30,top:20,bottom:30,containLabel:true},
+xAxis:{type:'value',name:'相对误差(log10)',nameLocation:'middle',nameGap:25,axisLabel:{fontSize:10}},
+yAxis:{type:'category',axisLabel:{fontSize:10},data:[
+'电子静止能量对标','核力/引力比(c/r)','弱力力程对标',
+'绝热三重奏(纯圆周)','谱理论K=B','全维三重奏(D=10)',
+'螺旋三重奏(sympy)','梯度磁场(mpmath50位)','归纳证明闭合'
+]},
+series:[{
+type:'bar',data:[
+{value:-12,itemStyle:{color:'#52C41A'}},
+{value:-100,itemStyle:{color:'#52C41A'}},
+{value:-8,itemStyle:{color:'#52C41A'}},
+{value:-31,itemStyle:{color:'#52C41A'}},
+{value:-15,itemStyle:{color:'#52C41A'}},
+{value:-30,itemStyle:{color:'#52C41A'}},
+{value:-200,itemStyle:{color:'#52C41A'}},
+{value:-18,itemStyle:{color:'#52C41A'}},
+{value:-200,itemStyle:{color:'#52C41A'}},
+],
+label:{show:true,position:'right',fontSize:10,formatter:function(p){return '1e'+p.value;}}
+}]
+});
+
+var status = echarts.init(document.getElementById('status'));
+status.setOption({
+backgroundColor:'transparent',
+tooltip:{trigger:'item',triggerOn:'click',renderMode:'richText',confine:true,formatter:'{b}: {c}项 ({d}%)'},
+legend:{bottom:0,textStyle:{fontSize:11}},
+series:[{
+type:'pie',radius:['40%','70%'],center:['50%','45%'],
+label:{fontSize:11,formatter:'{b}\n{c}项'},
+data:[
+{value:10,name:'已证明✅',itemStyle:{color:'#52C41A'}},
+{value:3,name:'理论推测🔵',itemStyle:{color:'#9EACEA'}},
+{value:5,name:'开放问题🟡',itemStyle:{color:'#FAAD14'}},
+{value:2,name:'已证伪🔴',itemStyle:{color:'#EA6668'}},
+{value:1,name:'待验证预言🟣',itemStyle:{color:'#C9A7E8'}},
+]
+}]
+});
+
+window.addEventListener('resize',function(){graph.resize();prec.resize();status.resize();});
+}catch(e){document.getElementById('graph').innerHTML='<div style="padding:20px;color:#999;">图表加载失败</div>';}
+})();
+</script>
+</html>
