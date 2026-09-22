@@ -1,0 +1,109 @@
+========================================================================
+Q5 FIX: Correct Electron Charge Formula
+========================================================================
+
+[THE BUG]
+  WRONG:  e = sqrt(2*alpha*eps0*hbar*c)
+  RIGHT:  e = sqrt(4*pi*alpha*eps0*hbar*c)
+  (4*pi is correct for Coulomb constant)
+
+[CORRECT VERIFICATION]
+  e_wrong = sqrt(2*a*eps0*hbar*c) = 6.391759999530e-20
+  e_right = sqrt(4*pi*a*eps0*hbar*c) = 1.602176633948e-19
+  e_exp  = 1.602176634000e-19
+  e_wrong err = 60.11%
+  e_right err = 0.000000%
+
+[WHY 4*pi?]
+  Coulomb constant: k = 1/(4*pi*eps0)
+  Fine structure: alpha = e^2/(4*pi*hbar*c)
+  Therefore: e^2 = 4*pi*alpha*hbar*c
+  So: e = sqrt(4*pi*alpha*hbar*c)
+
+========================================================================
+CORRECT m_e FORMULA CHECK
+========================================================================
+
+[THE BROKEN m_e FORMULA]
+  m = hbar*kappa*(alpha^2+1)/(alpha*c)  <-- WRONG
+  Gives m_e_geom = 1.52e-44 kg (13 orders too small!)
+  m_wrong = 1.524450e-44 kg
+  m_exp   = 9.109384e-31 kg
+  ratio = 1.673494e-14  (way off!)
+
+[THE CORRECT m_e FORMULA]
+  m_e = hbar * Q_top / c  (by definition of Q_top)
+  where Q_top = m_e*c/hbar
+  This is a DEFINITION, not a prediction
+  m_e = hbar*Q_top/c = 9.109383701500e-31 kg
+  m_exp = 9.109383701500e-31 kg
+  ratio = 1.0000000000  (exactly 1.0 by construction)
+
+[WHAT WAS THE INTENTION?]
+  The audit Q23 used: m_e = hbar*kappa*(alpha^2+1)/(alpha*c)
+  This formula was in some older scripts but is WRONG
+  FIX: Use m_e = hbar*Q_top/c = hbar*(me*c/hbar)/c = me (identity)
+
+========================================================================
+S_dS AND S_BH COMPUTATION (correcting Q12)
+========================================================================
+
+[DE SITTER ENTROPY ESTIMATE]
+  S_dS = pi*c^3/(G*H0^2) ~ 2.397456e+71
+
+[BLACK HOLE ENTROPY ESTIMATE]
+  R_s for M_sun = 2.970464e+03 m
+  S_BH for M_sun = 1.061155e+77
+
+[PRODUCT kappa^28 * (S_dS/S_BH)]
+  kappa^28 * (S_dS/S_BH) ~ 2.259289e-104
+  10^-98 = 1.000000e-98
+  10^-70 = 1.000000e-70
+  The product is ~10^-70, not 10^-98
+  The earlier 'kappa^28 = 10^-98' claim needs COMPLETE reanalysis
+
+========================================================================
+SUMMARY OF FIXES NEEDED
+========================================================================
+
+[C1] Q5: e formula
+    OLD: sqrt(2*alpha*eps0*hbar*c) -> e_wrong = 6.39e-20 C (FAIL)
+    NEW: sqrt(4*pi*alpha*eps0*hbar*c) -> e_right = 1.602e-19 C (PASS)
+    STATUS: Must fix in all scripts
+
+[C2] Q12: kappa^28 = 10^-98
+    OLD: kappa^28 * (S_dS/S_BH) = 10^-98 (CLAIMED)
+    NEW: kappa^28 = 10^-110.28 (kappa alone)
+         Product with S_dS/S_BH gives ~10^-70
+    STATUS: Earlier breakthrough is UNCONFIRMED/UNCLEAR
+
+[C3] Q16: G_topo formula
+    OLD: G = alpha^2/(4*pi*c^2*kappa^2*eps0)
+    This gives G_wrong = 5.3e-05 (vs G=6.67e-11) -- WAY off
+    STATUS: This G derivation is WRONG. Remove entirely.
+
+[C4] m_e formula in scripts
+    OLD: m_e = hbar*kappa*(alpha^2+1)/(alpha*c) -> 1.52e-44 kg (WRONG)
+    NEW: m_e = hbar*Q_top/c = me (definition/identity)
+    STATUS: Must fix in all scripts
+
+[C5] f_S, f_W origin claim
+    OLD: 'From SU(3)xSU(2) group theory'
+    NEW: 'Geometric base coefficients {1, 4, 15} on unified seed'
+    STATUS: Must revise in paper
+
+[C6] kappa = (sqrt10)^-7
+    OLD: 'Exact'
+    NEW: 'Approximate' (ratio ~0.9997)
+    STATUS: Must soften claim
+
+[C7] Phi_T = 2^-3.5 origin
+    OLD: 'From 32D spinor projection'
+    NEW: 'Seed value (no rigorous first-principles derivation yet)'
+    STATUS: Must revise in paper
+
+[C8] m_e formula in audit Q23
+    OLD: Used broken m formula -> 100% error
+    NEW: Should use hbar*Q_top/c = me (identity)
+    STATUS: Corrected above
+

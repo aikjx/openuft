@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>顶尖 3D 算法可视化</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/ParametricGeometry.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/ConvexGeometry.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/DecalGeometry.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/math/MeshSurfaceSampler.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FXAAShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/UnrealBloomPass.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#6366f1',
+                        accent: '#10b981',
+                        dark: '#1e293b',
+                        light: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .text-gradient {
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                background-image: linear-gradient(to right, #3b82f6, #6366f1);
+            }
+            .bg-gradient {
+                background-image: linear-gradient(to right, #3b82f6, #6366f1);
+            }
+            .glass {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .glass-dark {
+                background: rgba(30, 41, 59, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+    </style>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .algorithm-card {
+            transition: all 0.3s ease;
+        }
+        .algorithm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-light text-dark">
+    <!-- 3D Background Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Header -->
+    <header class="relative z-10">
+        <nav class="glass-dark text-white px-6 py-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fa fa-cube text-primary text-2xl"></i>
+                    <h1 class="text-xl font-bold text-gradient">3D Algorithms Visualization</h1>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#overview" class="hover:text-primary transition-colors">Overview</a>
+                    <a href="#algorithms" class="hover:text-primary transition-colors">Algorithms</a>
+                    <a href="#performance" class="hover:text-primary transition-colors">Performance</a>
+                    <a href="#about" class="hover:text-primary transition-colors">About</a>
+                </div>
+                <button class="md:hidden text-white">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Hero Section -->
+        <div class="container mx-auto px-6 py-20 text-center">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 text-gradient">
+                顶尖 3D 算法可视化
+            </h1>
+            <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-gray-600">
+                探索最先进的三维算法，从几何处理到物理模拟，直观理解复杂的三维计算技术
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <button id="explore-btn" class="bg-gradient text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transition-all">
+                    <i class="fa fa-rocket mr-2"></i> 开始探索
+                </button>
+                <button id="learn-btn" class="bg-white text-primary border border-primary px-8 py-3 rounded-lg font-medium hover:bg-primary hover:text-white transition-all">
+                    <i class="fa fa-book mr-2"></i> 了解更多
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">3D 算法概述</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    三维算法是计算机图形学、计算机视觉、机器人学等领域的核心技术，
+                    它们使计算机能够理解、处理和生成三维数据。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-cubes text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">几何处理算法</h3>
+                    <p class="text-gray-600 mb-6">
+                        包括网格生成、细分曲面、参数化、布尔运算等，用于处理和操作三维几何数据。
+                    </p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>网格简化与优化</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>曲面重建</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>碰撞检测</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-lightbulb-o text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">物理模拟算法</h3>
+                    <p class="text-gray-600 mb-6">
+                        模拟现实世界中的物理现象，如刚体动力学、流体力学、布料模拟等。
+                    </p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>有限元方法</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>粒子系统</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>光线追踪</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-brain text-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">AI 驱动的 3D 算法</h3>
+                    <p class="text-gray-600 mb-6">
+                        利用人工智能技术处理和生成三维数据，如点云分类、3D 目标检测等。
+                    </p>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>神经辐射场 (NeRF)</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>3D 生成对抗网络</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-accent mr-2"></i>
+                            <span>点云深度学习</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Algorithms Section -->
+    <section id="algorithms" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">顶尖 3D 算法</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    探索最先进的三维算法实现，了解它们的工作原理和应用场景。
+                </p>
+            </div>
+            
+            <!-- Algorithm Tabs -->
+            <div class="mb-10">
+                <div class="flex flex-wrap justify-center gap-2 mb-8">
+                    <button class="tab-btn active bg-primary text-white px-6 py-2 rounded-full" data-tab="geometry">
+                        几何处理
+                    </button>
+                    <button class="tab-btn bg-white text-gray-700 px-6 py-2 rounded-full hover:bg-gray-100" data-tab="physics">
+                        物理模拟
+                    </button>
+                    <button class="tab-btn bg-white text-gray-700 px-6 py-2 rounded-full hover:bg-gray-100" data-tab="ai">
+                        AI 驱动
+                    </button>
+                    <button class="tab-btn bg-white text-gray-700 px-6 py-2 rounded-full hover:bg-gray-100" data-tab="rendering">
+                        渲染技术
+                    </button>
+                </div>
+                
+                <!-- Geometry Tab -->
+                <div id="geometry" class="tab-content active">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Algorithm 1 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-cube text-primary mr-3"></i>
+                                网格简化算法
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用二次误差度量 (QEM) 算法简化三维网格，在保持几何形状的同时减少多边形数量。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="mesh-simplification">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(n²)
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Algorithm 2 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-cubes text-primary mr-3"></i>
+                                细分曲面算法
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用 Catmull-Rom 细分算法生成平滑的曲面，通过递归细分多边形网格提高表面质量。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="subdivision-surface">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(n) 每迭代
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Algorithm 3 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-object-group text-primary mr-3"></i>
+                                碰撞检测算法
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用空间分区技术（如 BVH 树）加速碰撞检测，提高物理模拟和游戏引擎的性能。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="collision-detection">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(log n) 每查询
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Algorithm 4 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-puzzle-piece text-primary mr-3"></i>
+                                网格参数化算法
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用基于 Tutte 嵌入的参数化方法，将三维网格映射到二维平面，用于纹理映射和几何处理。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="mesh-parametrization">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(n³)
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Physics Tab -->
+                <div id="physics" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Algorithm 1 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-bolt text-secondary mr-3"></i>
+                                刚体动力学
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用 Verlet 积分和约束求解器模拟刚体运动，处理碰撞和接触力。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="rigid-body">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(n) 每帧
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Algorithm 2 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-tint text-secondary mr-3"></i>
+                                流体模拟
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用格子玻尔兹曼方法 (LBM) 模拟流体运动，处理复杂的流体动力学现象。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="fluid-simulation">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(n²) 每帧
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Tab -->
+                <div id="ai" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Algorithm 1 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-brain text-accent mr-3"></i>
+                                神经辐射场 (NeRF)
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用深度神经网络表示三维场景，通过体素渲染生成高质量视图。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="nerf">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">训练复杂度:</span> O(n³)
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Algorithm 2 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-point-cloud text-accent mr-3"></i>
+                                点云分类
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用 PointNet 架构处理点云数据，实现三维目标分类和分割。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="point-cloud">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(n) 每点
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rendering Tab -->
+                <div id="rendering" class="tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Algorithm 1 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-sun-o text-yellow-500 mr-3"></i>
+                                光线追踪
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用路径追踪算法模拟光线传播，生成真实感渲染图像。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="ray-tracing">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(n²) 每像素
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Algorithm 2 -->
+                        <div class="algorithm-card bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4 flex items-center">
+                                <i class="fa fa-magic text-purple-500 mr-3"></i>
+                                实时阴影映射
+                            </h3>
+                            <p class="text-gray-600 mb-6">
+                                使用阴影映射技术实现实时动态阴影，提高交互式应用的视觉质量。
+                            </p>
+                            <div class="mb-6">
+                                <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden" id="shadow-mapping">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa fa-spinner fa-spin text-4xl text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="text-sm text-gray-500">
+                                    <span class="font-medium">复杂度:</span> O(n) 每帧
+                                </div>
+                                <button class="text-primary hover:underline flex items-center">
+                                    查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section id="performance" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">性能分析</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    比较不同 3D 算法的性能特性，了解它们在不同场景下的表现。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Performance Chart -->
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold mb-6">算法性能比较</h3>
+                    <div class="h-80">
+                        <canvas id="performance-chart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Algorithm Complexity -->
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold mb-6">算法复杂度分析</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">网格简化</span>
+                                <span class="text-gray-500">O(n²)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">刚体动力学</span>
+                                <span class="text-gray-500">O(n)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">光线追踪</span>
+                                <span class="text-gray-500">O(n²)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">点云分类</span>
+                                <span class="text-gray-500">O(n)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">神经辐射场</span>
+                                <span class="text-gray-500">O(n³)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">关于项目</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    本项目旨在通过可视化展示顶尖的 3D 算法，帮助开发者和研究人员更好地理解这些复杂技术。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-code text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">开源项目</h3>
+                    <p class="text-gray-300">
+                        所有代码均开源，欢迎贡献和反馈。我们使用 Three.js 和现代前端技术构建交互式可视化。
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-graduation-cap text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">教育资源</h3>
+                    <p class="text-gray-300">
+                        提供详细的算法解释和实现细节，作为学习计算机图形学和三维算法的教育资源。
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa fa-cogs text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">技术创新</h3>
+                    <p class="text-gray-300">
+                        探索最新的三维算法技术，包括 AI 驱动的方法和硬件加速技术。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fa fa-cube text-primary mr-2"></i>
+                        3D Algorithms
+                    </h3>
+                    <p class="text-gray-400 mb-6">
+                        探索最先进的三维算法，从几何处理到物理模拟。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary">
+                            <i class="fa fa-github text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary">
+                            <i class="fa fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary">
+                            <i class="fa fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">快速链接</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#overview" class="text-gray-400 hover:text-primary">Overview</a></li>
+                        <li><a href="#algorithms" class="text-gray-400 hover:text-primary">Algorithms</a></li>
+                        <li><a href="#performance" class="text-gray-400 hover:text-primary">Performance</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-primary">About</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">算法类别</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-primary">几何处理</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary">物理模拟</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary">AI 驱动</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary">渲染技术</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">联系我们</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope text-primary mr-3"></i>
+                            <span class="text-gray-400">contact@3dalgorithms.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-map-marker text-primary mr-3"></i>
+                            <span class="text-gray-400">123 Algorithm St, Tech City</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2026 3D Algorithms Visualization. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Three.js scene for background
+        function initBackground() {
+            const container = document.getElementById('canvas-container');
+            
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf8fafc);
+            
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Add particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1000;
+            
+            const posArray = new Float32Array(particlesCount * 3);
+            
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 10;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                color: 0x3b82f6
+            });
+            
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            // Add controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particlesMesh.rotation.y += 0.001;
+                
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        // Initialize algorithm visualizations
+        function initAlgorithmVisualizations() {
+            // Mesh Simplification
+            const meshSimplification = document.getElementById('mesh-simplification');
+            if (meshSimplification) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, meshSimplification.clientWidth / meshSimplification.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(meshSimplification.clientWidth, meshSimplification.clientHeight);
+                meshSimplification.innerHTML = '';
+                meshSimplification.appendChild(renderer.domElement);
+                
+                // Create a cube
+                const geometry = new THREE.BoxGeometry(2, 2, 2);
+                const material = new THREE.MeshStandardMaterial({ color: 0x3b82f6 });
+                const cube = new THREE.Mesh(geometry, material);
+                scene.add(cube);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    cube.rotation.x += 0.01;
+                    cube.rotation.y += 0.01;
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Subdivision Surface
+            const subdivisionSurface = document.getElementById('subdivision-surface');
+            if (subdivisionSurface) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, subdivisionSurface.clientWidth / subdivisionSurface.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(subdivisionSurface.clientWidth, subdivisionSurface.clientHeight);
+                subdivisionSurface.innerHTML = '';
+                subdivisionSurface.appendChild(renderer.domElement);
+                
+                // Create a sphere
+                const geometry = new THREE.SphereGeometry(2, 8, 8);
+                const material = new THREE.MeshStandardMaterial({ color: 0x6366f1, wireframe: true });
+                const sphere = new THREE.Mesh(geometry, material);
+                scene.add(sphere);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    sphere.rotation.x += 0.01;
+                    sphere.rotation.y += 0.01;
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Collision Detection
+            const collisionDetection = document.getElementById('collision-detection');
+            if (collisionDetection) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, collisionDetection.clientWidth / collisionDetection.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(collisionDetection.clientWidth, collisionDetection.clientHeight);
+                collisionDetection.innerHTML = '';
+                collisionDetection.appendChild(renderer.domElement);
+                
+                // Create two boxes
+                const geometry1 = new THREE.BoxGeometry(1, 1, 1);
+                const material1 = new THREE.MeshStandardMaterial({ color: 0x3b82f6 });
+                const box1 = new THREE.Mesh(geometry1, material1);
+                scene.add(box1);
+                
+                const geometry2 = new THREE.BoxGeometry(1, 1, 1);
+                const material2 = new THREE.MeshStandardMaterial({ color: 0xef4444 });
+                const box2 = new THREE.Mesh(geometry2, material2);
+                scene.add(box2);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                let time = 0;
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    time += 0.01;
+                    box1.position.x = Math.sin(time) * 1.5;
+                    box2.position.x = Math.cos(time) * 1.5;
+                    
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Mesh Parametrization
+            const meshParametrization = document.getElementById('mesh-parametrization');
+            if (meshParametrization) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, meshParametrization.clientWidth / meshParametrization.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(meshParametrization.clientWidth, meshParametrization.clientHeight);
+                meshParametrization.innerHTML = '';
+                meshParametrization.appendChild(renderer.domElement);
+                
+                // Create a torus
+                const geometry = new THREE.TorusGeometry(1.5, 0.5, 16, 100);
+                const material = new THREE.MeshStandardMaterial({ color: 0x10b981, wireframe: true });
+                const torus = new THREE.Mesh(geometry, material);
+                scene.add(torus);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    torus.rotation.x += 0.01;
+                    torus.rotation.y += 0.01;
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Rigid Body Dynamics
+            const rigidBody = document.getElementById('rigid-body');
+            if (rigidBody) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, rigidBody.clientWidth / rigidBody.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(rigidBody.clientWidth, rigidBody.clientHeight);
+                rigidBody.innerHTML = '';
+                rigidBody.appendChild(renderer.domElement);
+                
+                // Create a floor
+                const floorGeometry = new THREE.PlaneGeometry(10, 10);
+                const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
+                const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                floor.rotation.x = -Math.PI / 2;
+                floor.position.y = -2;
+                scene.add(floor);
+                
+                // Create a box
+                const boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+                const boxMaterial = new THREE.MeshStandardMaterial({ color: 0x6366f1 });
+                const box = new THREE.Mesh(boxGeometry, boxMaterial);
+                box.position.y = 1;
+                scene.add(box);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                camera.position.y = 1;
+                
+                // Animation
+                let velocity = 0;
+                const gravity = -0.01;
+                
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    velocity += gravity;
+                    box.position.y += velocity;
+                    
+                    if (box.position.y < -1.75) {
+                        box.position.y = -1.75;
+                        velocity = -velocity * 0.8;
+                    }
+                    
+                    box.rotation.x += 0.02;
+                    box.rotation.y += 0.03;
+                    
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Fluid Simulation
+            const fluidSimulation = document.getElementById('fluid-simulation');
+            if (fluidSimulation) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, fluidSimulation.clientWidth / fluidSimulation.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(fluidSimulation.clientWidth, fluidSimulation.clientHeight);
+                fluidSimulation.innerHTML = '';
+                fluidSimulation.appendChild(renderer.domElement);
+                
+                // Create particles
+                const particlesGeometry = new THREE.BufferGeometry();
+                const particlesCount = 1000;
+                
+                const posArray = new Float32Array(particlesCount * 3);
+                const colorArray = new Float32Array(particlesCount * 3);
+                
+                for (let i = 0; i < particlesCount * 3; i += 3) {
+                    posArray[i] = (Math.random() - 0.5) * 4;
+                    posArray[i + 1] = (Math.random() - 0.5) * 4;
+                    posArray[i + 2] = (Math.random() - 0.5) * 4;
+                    
+                    colorArray[i] = 0.2 + Math.random() * 0.3;
+                    colorArray[i + 1] = 0.4 + Math.random() * 0.3;
+                    colorArray[i + 2] = 0.8 + Math.random() * 0.2;
+                }
+                
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+                
+                const particlesMaterial = new THREE.PointsMaterial({
+                    size: 0.05,
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+                scene.add(particlesMesh);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                let time = 0;
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    time += 0.01;
+                    particlesMesh.rotation.y += 0.005;
+                    
+                    const positions = particlesGeometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        positions[i] += Math.sin(time + i) * 0.005;
+                        positions[i + 1] += Math.cos(time + i * 1.1) * 0.005;
+                        positions[i + 2] += Math.sin(time + i * 1.2) * 0.005;
+                    }
+                    particlesGeometry.attributes.position.needsUpdate = true;
+                    
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // NeRF
+            const nerf = document.getElementById('nerf');
+            if (nerf) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, nerf.clientWidth / nerf.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(nerf.clientWidth, nerf.clientHeight);
+                nerf.innerHTML = '';
+                nerf.appendChild(renderer.domElement);
+                
+                // Create a sphere
+                const geometry = new THREE.SphereGeometry(2, 64, 64);
+                const material = new THREE.MeshStandardMaterial({ 
+                    color: 0x10b981,
+                    metalness: 0.7,
+                    roughness: 0.2
+                });
+                const sphere = new THREE.Mesh(geometry, material);
+                scene.add(sphere);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    sphere.rotation.x += 0.01;
+                    sphere.rotation.y += 0.01;
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Point Cloud
+            const pointCloud = document.getElementById('point-cloud');
+            if (pointCloud) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, pointCloud.clientWidth / pointCloud.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(pointCloud.clientWidth, pointCloud.clientHeight);
+                pointCloud.innerHTML = '';
+                pointCloud.appendChild(renderer.domElement);
+                
+                // Create point cloud
+                const particlesGeometry = new THREE.BufferGeometry();
+                const particlesCount = 5000;
+                
+                const posArray = new Float32Array(particlesCount * 3);
+                
+                for (let i = 0; i < particlesCount * 3; i += 3) {
+                    // Create a cube shape with points
+                    const x = (Math.random() - 0.5) * 4;
+                    const y = (Math.random() - 0.5) * 4;
+                    const z = (Math.random() - 0.5) * 4;
+                    
+                    // Make it more cube-like
+                    if (Math.abs(x) > Math.abs(y) && Math.abs(x) > Math.abs(z)) {
+                        posArray[i] = Math.sign(x) * 2;
+                        posArray[i + 1] = y;
+                        posArray[i + 2] = z;
+                    } else if (Math.abs(y) > Math.abs(x) && Math.abs(y) > Math.abs(z)) {
+                        posArray[i] = x;
+                        posArray[i + 1] = Math.sign(y) * 2;
+                        posArray[i + 2] = z;
+                    } else {
+                        posArray[i] = x;
+                        posArray[i + 1] = y;
+                        posArray[i + 2] = Math.sign(z) * 2;
+                    }
+                }
+                
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                
+                const particlesMaterial = new THREE.PointsMaterial({
+                    size: 0.03,
+                    color: 0x10b981
+                });
+                
+                const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+                scene.add(particlesMesh);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(1, 1, 1);
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    particlesMesh.rotation.x += 0.01;
+                    particlesMesh.rotation.y += 0.01;
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Ray Tracing
+            const rayTracing = document.getElementById('ray-tracing');
+            if (rayTracing) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, rayTracing.clientWidth / rayTracing.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(rayTracing.clientWidth, rayTracing.clientHeight);
+                rayTracing.innerHTML = '';
+                rayTracing.appendChild(renderer.domElement);
+                
+                // Create a scene with spheres
+                const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+                
+                const sphere1 = new THREE.Mesh(sphereGeometry, new THREE.MeshStandardMaterial({ color: 0x3b82f6 }));
+                sphere1.position.set(-1, 0, 0);
+                scene.add(sphere1);
+                
+                const sphere2 = new THREE.Mesh(sphereGeometry, new THREE.MeshStandardMaterial({ color: 0xef4444 }));
+                sphere2.position.set(1, 0, 0);
+                scene.add(sphere2);
+                
+                const sphere3 = new THREE.Mesh(sphereGeometry, new THREE.MeshStandardMaterial({ color: 0x10b981 }));
+                sphere3.position.set(0, 1, 0);
+                scene.add(sphere3);
+                
+                // Create a floor
+                const floorGeometry = new THREE.PlaneGeometry(10, 10);
+                const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
+                const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                floor.rotation.x = -Math.PI / 2;
+                floor.position.y = -1;
+                scene.add(floor);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+                scene.add(ambientLight);
+                
+                const pointLight = new THREE.PointLight(0xffffff, 1);
+                pointLight.position.set(2, 3, 4);
+                scene.add(pointLight);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    sphere1.rotation.y += 0.01;
+                    sphere2.rotation.y += 0.01;
+                    sphere3.rotation.y += 0.01;
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+            
+            // Shadow Mapping
+            const shadowMapping = document.getElementById('shadow-mapping');
+            if (shadowMapping) {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, shadowMapping.clientWidth / shadowMapping.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(shadowMapping.clientWidth, shadowMapping.clientHeight);
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                shadowMapping.innerHTML = '';
+                shadowMapping.appendChild(renderer.domElement);
+                
+                // Create a floor
+                const floorGeometry = new THREE.PlaneGeometry(10, 10);
+                const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
+                const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                floor.rotation.x = -Math.PI / 2;
+                floor.position.y = -2;
+                floor.receiveShadow = true;
+                scene.add(floor);
+                
+                // Create a cube
+                const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+                const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x3b82f6 });
+                const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                cube.position.y = -1;
+                cube.castShadow = true;
+                cube.receiveShadow = true;
+                scene.add(cube);
+                
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(2, 3, 4);
+                directionalLight.castShadow = true;
+                directionalLight.shadow.mapSize.width = 2048;
+                directionalLight.shadow.mapSize.height = 2048;
+                directionalLight.shadow.camera.near = 0.5;
+                directionalLight.shadow.camera.far = 500;
+                scene.add(directionalLight);
+                
+                camera.position.z = 5;
+                camera.position.y = 1;
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    cube.rotation.x += 0.01;
+                    cube.rotation.y += 0.02;
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+            }
+        }
+        
+        // Initialize performance chart
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        '执行速度',
+                        '内存使用',
+                        '精度',
+                        '可扩展性',
+                        '并行性',
+                        '实现复杂度'
+                    ],
+                    datasets: [
+                        {
+                            label: '网格简化',
+                            data: [85, 90, 95, 80, 75, 60],
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(59, 130, 246, 1)'
+                        },
+                        {
+                            label: '刚体动力学',
+                            data: [95, 85, 90, 95, 90, 70],
+                            backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                            borderColor: 'rgba(99, 102, 241, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(99, 102, 241, 1)'
+                        },
+                        {
+                            label: '光线追踪',
+                            data: [40, 60, 99, 70, 85, 80],
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(16, 185, 129, 1)'
+                        },
+                        {
+                            label: '神经辐射场',
+                            data: [30, 40, 95, 60, 90, 95],
+                            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(239, 68, 68, 1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Tab functionality
+        function initTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and contents
+                    tabBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
+                    tabBtns.forEach(b => b.classList.add('bg-white', 'text-gray-700'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    btn.classList.add('active', 'bg-primary', 'text-white');
+                    btn.classList.remove('bg-white', 'text-gray-700');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+        
+        // Smooth scrolling
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        }
+        
+        // Initialize all functionality
+        window.addEventListener('DOMContentLoaded', () => {
+            initBackground();
+            initTabs();
+            initSmoothScroll();
+            
+            // Initialize algorithm visualizations after a short delay
+            setTimeout(() => {
+                initAlgorithmVisualizations();
+            }, 500);
+            
+            // Initialize performance chart
+            initPerformanceChart();
+            
+            // Add event listeners for buttons
+            document.getElementById('explore-btn').addEventListener('click', () => {
+                document.getElementById('algorithms').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            document.getElementById('learn-btn').addEventListener('click', () => {
+                document.getElementById('overview').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });

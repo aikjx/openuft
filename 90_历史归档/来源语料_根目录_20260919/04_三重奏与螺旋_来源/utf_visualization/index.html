@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>统一场论可视化系统</title>
+    <meta
+      name="description"
+      content="张祥前统一场论可视化系统，通过3D技术直观展示统一场论核心方程和原理"
+    />
+    <meta name="keywords" content="统一场论,可视化,3D,物理学,张祥前" />
+
+    <!-- 预加载关键资源 -->
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"
+      as="script"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+      as="script"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      as="style"
+      crossorigin
+    />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      crossorigin
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+      crossorigin
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- JavaScript (延迟加载非关键脚本) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"
+      defer
+      crossorigin
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script>
+      // 简化的OrbitControls替代方案
+      THREE.OrbitControls = function() {};
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+      defer
+      crossorigin
+    ></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#165DFF',
+              secondary: '#7B61FF',
+              accent: '#FF6B8B',
+              dark: '#1E293B',
+              light: '#F8FAFC',
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+        .text-shadow {
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .bg-gradient-utf {
+          background: linear-gradient(135deg, #165dff 0%, #7b61ff 100%);
+        }
+        .card-hover {
+          transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px -5px rgba(22, 93, 255, 0.1);
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease-in-out;
+        }
+        .animate-slide-up {
+          animation: slideUp 0.6s ease-out;
+        }
+        .animate-pulse-slow {
+          animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 加载动画 */
+      .animate-spin {
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-light text-dark min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <nav
+      class="bg-white shadow-md sticky top-0 z-50 transition-all duration-300"
+    >
+      <div
+        class="container mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <div class="flex items-center space-x-2">
+          <div
+            class="w-10 h-10 rounded-full bg-gradient-utf flex items-center justify-center"
+          >
+            <i class="fa fa-cube text-white text-xl"></i>
+          </div>
+          <h1 class="text-2xl font-bold text-primary">统一场论可视化系统</h1>
+        </div>
+        <div class="hidden md:flex items-center space-x-6">
+          <a
+            href="#core"
+            class="font-medium hover:text-primary transition-colors"
+            >核心方程</a
+          >
+          <a
+            href="#applications"
+            class="font-medium hover:text-primary transition-colors"
+            >十大应用</a
+          >
+          <a
+            href="#ufo"
+            class="font-medium hover:text-primary transition-colors"
+            >UFO原理</a
+          >
+          <a
+            href="#vertical"
+            class="font-medium hover:text-primary transition-colors"
+            >垂直原理</a
+          >
+        </div>
+        <button class="md:hidden text-dark text-xl">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- 加载动画 -->
+    <div
+      id="loadingOverlay"
+      class="fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-500"
+    >
+      <div class="text-center">
+        <div
+          class="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"
+        ></div>
+        <h3 class="text-xl font-semibold text-primary">加载中...</h3>
+        <p class="text-gray-600 mt-2">正在初始化统一场论可视化系统</p>
+      </div>
+    </div>
+
+    <!-- 英雄区域 -->
+    <header class="relative overflow-hidden bg-gradient-utf py-20 text-white">
+      <div class="absolute inset-0 opacity-10">
+        <div id="heroCanvas" class="w-full h-full"></div>
+      </div>
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1
+            class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight text-shadow mb-6"
+          >
+            探索宇宙的终极奥秘
+          </h1>
+          <p class="text-[clamp(1rem,2vw,1.25rem)] mb-8 opacity-90">
+            通过先进的3D可视化技术，深入理解张祥前统一场论的核心原理与应用前景
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="#explore"
+              class="bg-white text-primary font-medium py-3 px-8 rounded-full hover:bg-opacity-90 transition-all"
+            >
+              开始探索
+            </a>
+            <a
+              href="#about"
+              class="bg-transparent border-2 border-white text-white font-medium py-3 px-8 rounded-full hover:bg-white hover:bg-opacity-10 transition-all"
+            >
+              了解更多
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120">
+          <path
+            fill="#F8FAFC"
+            fill-opacity="1"
+            d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,85.3C960,85,1056,75,1152,69.3C1248,64,1344,64,1392,64L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"
+          ></path>
+        </svg>
+      </div>
+    </header>
+
+    <!-- 核心内容区域 -->
+    <main class="flex-grow">
+      <!-- 概述部分 -->
+      <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">
+              统一场论概述
+            </h2>
+            <p class="text-gray-600">
+              张祥前统一场论是一种革命性的物理学理论，旨在统一电磁力、引力和核力，
+              通过空间运动和垂直原理解释宇宙的基本规律。本系统通过交互式可视化，
+              帮助您直观理解这一深奥理论。
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div
+              class="card-hover bg-white rounded-xl shadow-lg p-6 border border-gray-100"
+            >
+              <div
+                class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4"
+              >
+                <i class="fa fa-calculator text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold mb-2">核心方程</h3>
+              <p class="text-gray-600 mb-4">
+                探索统一场论的基本数学表达式和物理意义
+              </p>
+              <a
+                href="core_equations/index.html"
+                class="text-primary font-medium inline-flex items-center"
+              >
+                查看详情 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+
+            <div
+              class="card-hover bg-white rounded-xl shadow-lg p-6 border border-gray-100"
+            >
+              <div
+                class="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mb-4"
+              >
+                <i class="fa fa-lightbulb-o text-secondary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold mb-2">十大应用</h3>
+              <p class="text-gray-600 mb-4">
+                了解统一场论带来的革命性技术和应用场景
+              </p>
+              <a
+                href="applications/index.html"
+                class="text-secondary font-medium inline-flex items-center"
+              >
+                查看详情 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+
+            <div
+              class="card-hover bg-white rounded-xl shadow-lg p-6 border border-gray-100"
+            >
+              <div
+                class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-4"
+              >
+                <i class="fa fa-rocket text-accent text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold mb-2">UFO原理</h3>
+              <p class="text-gray-600 mb-4">
+                探索基于统一场论的UFO飞行机制和物理原理
+              </p>
+              <a
+                href="ufo_principle/index.html"
+                class="text-accent font-medium inline-flex items-center"
+              >
+                查看详情 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+
+            <div
+              class="card-hover bg-white rounded-xl shadow-lg p-6 border border-gray-100"
+            >
+              <div
+                class="w-14 h-14 bg-dark/10 rounded-full flex items-center justify-center mb-4"
+              >
+                <i class="fa fa-compass text-dark text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-semibold mb-2">垂直原理</h3>
+              <p class="text-gray-600 mb-4">
+                深入理解宇宙运动的根本法则和垂直原理的几何本质
+              </p>
+              <a
+                href="vertical_principle/index.html"
+                class="text-dark font-medium inline-flex items-center"
+              >
+                查看详情 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 探索部分 -->
+      <section id="explore" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+          <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold mb-4">
+              交互式探索
+            </h2>
+            <p class="text-gray-600">
+              通过我们的3D可视化工具，您可以直观地理解统一场论的核心概念和原理。
+              调整参数，观察变化，深入探索宇宙的奥秘。
+            </p>
+          </div>
+
+          <div
+            id="interactiveContainer"
+            class="w-full h-[500px] bg-white rounded-xl shadow-lg overflow-hidden"
+          >
+            <!-- 3D交互区域 -->
+            <div id="mainCanvas" class="w-full h-full"></div>
+          </div>
+
+          <div class="mt-8 flex flex-wrap gap-4 justify-center">
+            <button
+              class="bg-primary text-white py-2 px-6 rounded-full hover:bg-primary/90 transition-colors"
+            >
+              加载核心方程可视化
+            </button>
+            <button
+              class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              加载垂直原理演示
+            </button>
+            <button
+              class="bg-white border border-gray-300 text-dark py-2 px-6 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              加载UFO原理模拟
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <div class="flex items-center space-x-2 mb-4">
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-utf flex items-center justify-center"
+              >
+                <i class="fa fa-cube text-white text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">统一场论可视化系统</h3>
+            </div>
+            <p class="text-gray-400 mb-4">
+              基于张祥前统一场论的交互式可视化平台，致力于传播先进物理理论。
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+                ><i class="fa fa-github text-xl"></i
+              ></a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+                ><i class="fa fa-twitter text-xl"></i
+              ></a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+                ><i class="fa fa-linkedin text-xl"></i
+              ></a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">快速链接</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#core"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >核心方程</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#applications"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >十大应用</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#ufo"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >UFO原理</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#vertical"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >垂直原理</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">相关资源</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >统一场论原著</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >技术文档</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >研究论文</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                  >联系我们</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500"
+        >
+          <p>© 2025 统一场论可视化系统. 保留所有权利.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // 确保所有外部脚本加载完成后再初始化
+      window.addEventListener('load', function () {
+        // 渲染数学公式
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ]
+        });
+
+        // 初始化英雄区域的3D效果
+        initHeroCanvas();
+
+        // 初始化主交互区域
+        initMainCanvas();
+
+        // 隐藏加载动画
+        setTimeout(() => {
+          const loadingOverlay = document.getElementById('loadingOverlay');
+          if (loadingOverlay) {
+            loadingOverlay.style.opacity = '0';
+            setTimeout(() => {
+              loadingOverlay.style.display = 'none';
+              // 添加页面元素动画
+              document.querySelectorAll('section').forEach((section, index) => {
+                setTimeout(() => {
+                  section.classList.add('animate-fade-in');
+                }, index * 200);
+              });
+            }, 500);
+          }
+        }, 1000);
+      });
+
+      // 英雄区域的简单3D效果
+      function initHeroCanvas() {
+        const container = document.getElementById('heroCanvas');
+
+        // 检测设备性能，根据性能调整粒子数量
+        const devicePerformance = detectDevicePerformance();
+        const particlesCount = devicePerformance === 'high' ? 1000 : devicePerformance === 'medium' ? 500 : 200;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+
+        const renderer = new THREE.WebGLRenderer({
+          alpha: true,
+          antialias: devicePerformance === 'high', // 只在高性能设备启用抗锯齿
+          powerPreference: 'high-performance' // 优先使用高性能模式
+        });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        // 创建粒子系统
+        const particlesGeometry = new THREE.BufferGeometry();
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+          posArray[i] = (Math.random() - 0.5) * 20;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        // 使用BufferGeometryUtils优化几何体
+        if (THREE.BufferGeometryUtils) {
+          THREE.BufferGeometryUtils.mergeVertices(particlesGeometry);
+        }
+
+        const particlesMaterial = new THREE.PointsMaterial({
+          size: 0.02,
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.8,
+          sizeAttenuation: false // 禁用大小衰减，提高性能
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        camera.position.z = 5;
+
+        // 动画循环
+        let lastTime = 0;
+        function animate(timestamp) {
+          const delta = timestamp - lastTime;
+          lastTime = timestamp;
+
+          // 根据时间差调整旋转速度，确保不同设备上速度一致
+          const rotationSpeed = delta * 0.00005;
+
+          particlesMesh.rotation.x += rotationSpeed;
+          particlesMesh.rotation.y += rotationSpeed;
+
+          renderer.render(scene, camera);
+
+          // 只在可见时继续动画
+          if (isElementInViewport(container)) {
+            requestAnimationFrame(animate);
+          } else {
+            // 元素不可见时暂停动画
+            setTimeout(() => {
+              if (isElementInViewport(container)) {
+                lastTime = performance.now();
+                requestAnimationFrame(animate);
+              }
+            }, 1000);
+          }
+        }
+
+        // 开始动画
+        lastTime = performance.now();
+        requestAnimationFrame(animate);
+
+        // 响应式处理（添加防抖）
+        const resizeHandler = debounce(() => {
+          camera.aspect = container.clientWidth / container.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(container.clientWidth, container.clientHeight);
+        }, 100);
+
+        window.addEventListener('resize', resizeHandler);
+
+        // 清理函数
+        window.addEventListener('beforeunload', () => {
+          window.removeEventListener('resize', resizeHandler);
+          // 清理Three.js资源
+          particlesGeometry.dispose();
+          particlesMaterial.dispose();
+          renderer.dispose();
+        });
+      }
+
+      // 检测设备性能
+      function detectDevicePerformance() {
+        // 简单的设备性能检测
+        if (navigator.hardwareConcurrency >= 8 && window.devicePixelRatio <= 1) {
+          return 'high';
+        } else if (navigator.hardwareConcurrency >= 4) {
+          return 'medium';
+        } else {
+          return 'low';
+        }
+      }
+
+      // 检测元素是否在视口中
+      function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return rect.top >= 0 && rect.left >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+      }
+
+      // 防抖函数
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+
+      // 初始化主交互区域
+      function initMainCanvas() {
+        const container = document.getElementById('mainCanvas');
+
+        // 检测设备性能
+        const devicePerformance = detectDevicePerformance();
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf8fafc);
+
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        const renderer = new THREE.WebGLRenderer({
+          antialias: devicePerformance === 'high',
+          powerPreference: 'high-performance'
+        });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        // 添加坐标轴
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
+
+        // 添加网格
+        const gridHelper = new THREE.GridHelper(10, 10);
+        gridHelper.material.opacity = 0.5;
+        gridHelper.material.transparent = true;
+        scene.add(gridHelper);
+
+        // OrbitControls temporarily disabled due to Three.js r160 compatibility issues
+
+        // 动画循环
+        let lastTime = 0;
+        function animate(timestamp) {
+          const delta = timestamp - lastTime;
+          lastTime = timestamp;
+
+          renderer.render(scene, camera);
+
+          if (isElementInViewport(container)) {
+            requestAnimationFrame(animate);
+          } else {
+            setTimeout(() => {
+              if (isElementInViewport(container)) {
+                lastTime = performance.now();
+                requestAnimationFrame(animate);
+              }
+            }, 1000);
+          }
+        }
+
+        // 开始动画
+        lastTime = performance.now();
+        requestAnimationFrame(animate);
+
+        // 响应式处理
+        const resizeHandler = debounce(() => {
+          camera.aspect = container.clientWidth / container.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(container.clientWidth, container.clientHeight);
+        }, 100);
+
+        window.addEventListener('resize', resizeHandler);
+
+        // 清理函数
+        window.addEventListener('beforeunload', () => {
+          window.removeEventListener('resize', resizeHandler);
+          renderer.dispose();
+        });
+      }
+    </script>
+  </body>
+</html>

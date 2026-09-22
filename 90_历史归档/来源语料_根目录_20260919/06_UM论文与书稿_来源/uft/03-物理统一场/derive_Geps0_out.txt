@@ -1,0 +1,57 @@
+========================================================================================
+   ALGO-ALLIANCE | Corrected G*eps0 first-principles derivation (rigorous, beta_perp != alpha)
+========================================================================================
+
+[1] Frenet-Serret light-speed spiral geometry (beta_perp free, NOT default = alpha)
+  beta_perp (input, !=alpha) = 0.5
+  r                         = 1.498962e+08 m
+  kappa (curvature)         = 1.667820e-09 m^-1
+  tau (torsion)             = 2.888750e-09 m^-1
+  kappa^2+tau^2             = 1.112650e-17
+  omega^2/c^2               = 1.112650e-17  (Frenet identity check: should match)
+  A = kappa c^2 (grav field)= 1.498962e+08 m/s^2  dim [L T^-2] OK
+
+[2] Gauss gravitational flux (Eq2: kappa c^2 r^2 = -G m defines m)
+  LHS = kappa c^2 * 4 pi r^2 = 4.232354e+25
+  m_from_flux = -kappa c^2 r^2 / G = -5.046223e+34 kg
+  consistency: LHS + 4 pi G m_from_flux = -7.491e-96  (should = 0)
+
+[3] Gravity-spiral strict relation (Eq4): beta_perp^2 c^2 kappa/(kappa^2+tau^2) = -G m
+  LHS = beta_perp^2 c^2 kappa/(kappa^2+tau^2) = 3.368000e+24
+  RHS = -G m_from_flux                            = 3.368000e+24
+  relative deviation = 1.390e-121  (should = 0: algebraic identity)
+
+[4] Dimensional self-check Eq4: [c^2][kappa]/[kappa^2] = [L^2T^-2][L^-1]/[L^-2] = [L^3T^-2] = [Gm] OK
+
+[5] d/dt[kappa/(kappa^2+tau^2)] expanded via omega (spiral oscillation assumption)
+  numeric diff d/dt (at theta=pi/4) = -1.199170e+09  (dim [L^-2 T^-1])
+  f(pi/4)=2*k0/(k0^2+t0^2)          = 2.997925e+08  (kappa/tau ratio at steady phase)
+  >> NOTE: evaluated at steady phase theta=pi/4 (kappa,tau both nonzero) to avoid tau=0
+      singularity at theta=0; relies on EXTRA oscillation model, not the axioms themselves;
+      honestly flagged as assumption. dkdt enters Eq(7) as source evolution rate.
+
+[6] Empirical inversion: if Eq(7) holds, what beta_perp is implied?
+  observed G*eps0 (ruler) = 5.909551e-22
+  alpha (EM coupling)     = 7.297353e-03
+  implied beta_perp       = 2.667351e-20
+  alpha / implied_beta    = 2.735805e+17
+  >> implied beta_perp differs from alpha (ratio != 1): proves user core correction
+     beta_perp != alpha; old model forcing beta_perp=alpha was artificial assignment.
+  >> this beta_perp is inverted from observed G*eps0 => INPUT/calibration, not pure geometry
+     (consistent with main framework F2b: Xi=c not independent).
+
+[7] Dynamics-only form (Axiom 6, not derived from spiral geometry)
+  G eps0 = -(q alpha^2 / 4 pi) * dt/dm
+  >> from dynamics axiom; dimension [C^2 kg^-2]; dm/dt needs mass evolution law.
+
+========================================================================================
+   Corrected honest-boundary summary
+========================================================================================
+  [OK] old error removed: no forced beta_perp=alpha, no artificial K coupling constant.
+  [OK] Eq(2)(4) are pure spiral-geometry algebraic identities (no empirical constant injected), dim-consistent.
+  [OK] G*eps0 is determined by dynamics axiom(5) + geometry term (kappa,tau time-deriv), NOT a pure geometry quantity.
+  [OK] beta_perp is a geometric DOF, independent of alpha; inversion shows they differ significantly.
+  [WARN] full numeric generation of G*eps0 needs: (a) topological origin of beta_perp (TBD);
+         (b) first-principles form of kappa,tau oscillation (extra assumption, test model here);
+         (c) dm/dt mass evolution law. All three honestly flagged as pending/INPUT, no fake closure.
+  [WARN] G itself still not pure-geometry-generable (main framework F2b: Xi=c not independent), consistent here.

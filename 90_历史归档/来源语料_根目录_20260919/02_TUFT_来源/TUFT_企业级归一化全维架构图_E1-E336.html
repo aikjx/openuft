@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUFT 企业级归一化全维架构图（v1–v20）｜v2.2：Leaver GR 复QNM门 PASS 独立 1e-11（E436–438）；v20 r_b/FP 证伪（勘误#26 E439/E440：散射方向反 通量−1/r²>1、伪幺正、腔内无平坦区不可隔离、FP 算术应 τ~46 非 14.8）；E441 SNR 仅条件；modified-QNM 极点仍 OPEN</title>
+<style>
+  :root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2330;--line:#2d3a4d;--tx:#e6edf3;--tx2:#9aa7b8;
+    --strict:#3fb950;--cond:#58a6ff;--def:#d29922;--open:#f85149;--axiom:#bc8cff;--post:#f778ba;--novel:#f0b429;--ok:#3fb950;--warn:#f0883e;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--tx);font-family:"Segoe UI","Microsoft YaHei",sans-serif;padding:24px;line-height:1.5}
+  h1{font-size:25px;margin-bottom:4px}
+  .sub{color:var(--tx2);font-size:13px;margin-bottom:16px}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 15px}
+  .stat .n{font-size:22px;font-weight:700}.stat .l{font-size:11px;color:var(--tx2)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 17px;margin-bottom:16px}
+  .panel h2{font-size:16px;margin-bottom:10px}
+  .badge{display:inline-block;font-size:10px;padding:1px 7px;border-radius:8px;font-weight:600;margin-left:6px}
+  .b-s{background:rgba(63,185,80,.15);color:var(--strict);border:1px solid rgba(63,185,80,.4)}
+  .b-c{background:rgba(88,166,255,.15);color:var(--cond);border:1px solid rgba(88,166,255,.4)}
+  .b-d{background:rgba(210,153,34,.15);color:var(--def);border:1px solid rgba(210,153,34,.4)}
+  .b-o{background:rgba(248,81,73,.15);color:var(--open);border:1px solid rgba(248,81,73,.4)}
+  .b-a{background:rgba(188,140,255,.15);color:var(--axiom);border:1px solid rgba(188,140,255,.4)}
+  .b-n{background:rgba(240,180,41,.18);color:var(--novel);border:1px solid rgba(240,180,41,.5)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:9px}
+  .eq{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:12.5px}
+  .eq .id{font-weight:700;color:var(--cond);margin-right:7px;font-size:11.5px}
+  .id.s{color:var(--strict)}.id.o{color:var(--open)}.id.d{color:var(--def)}
+  table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left}
+  th{background:var(--panel2);color:var(--tx2)}
+  td.hl{color:var(--novel);font-weight:700}
+  .note{font-size:12px;color:var(--warn);border-left:3px solid var(--warn);background:rgba(240,136,62,.08);padding:6px 10px;border-radius:0 6px 6px 0;margin:7px 0}
+  .note.ok{color:var(--ok);border-color:var(--ok);background:rgba(63,185,80,.07)}
+  .note.bad{color:var(--open);border-color:var(--open);background:rgba(248,81,73,.08)}
+  .verdict{background:linear-gradient(135deg,rgba(240,180,41,.12),rgba(248,81,73,.08));border:1px solid rgba(240,180,41,.45);border-radius:10px;padding:11px 15px;margin:9px 0}
+  .verdict .big{font-size:17px;font-weight:800;color:var(--novel)}
+  .flow{display:flex;flex-wrap:wrap;gap:7px;align-items:center;font-size:11.5px}
+  .node{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 10px;text-align:center}
+  .arrow{color:var(--tx2)}
+  .ok{color:var(--ok)}.bad{color:var(--open)}.warn{color:var(--warn)}
+  footer{color:var(--tx2);font-size:11px;margin-top:18px;text-align:center}
+</style>
+</head>
+<body>
+<h1>TUFT 企业级归一化全维架构图 · v1→v20（v20 独立审计【Leaver 全局连分数 GR 复 QNM 门 PASS，独立 2.1e-11≈10位，E436–438 采纳；v20 r_b=.545 与 FP 腔模 .3834/.0676/τ14.8 证伪（勘误#26，E439/E440）：散射方向反、通量−1/r²>1、伪幺正、腔内无平坦区不可隔离（E442）、FP 算术应 τ~46；态II撤销，modified-QNM 极点仍 OPEN】；历史——v19 独立审计【证伪】铃响畸变定量 δω+2.64%/δτ−9.53%（勘误#25：瞬态多回声串单指数[2.5τ,8τ]窗口拟合伪影，换窗δω±7%/δτ±14%漂移，所有回声到齐后稳态晚窗回 ω_GR/τ_GR δ=0/1.5e-16；公比.211精确抵消为含视界.729，双侧r_b未做；SNR双重计数作废。保留C级无干净晚回波方向，modified-QNM极点OPEN）；历史——v18 严格面积势实频 IVP 独立审计：GR 视界吸收门幺正 PASS、.374 |R_GR|²=.531；TUFT 反射核 |R|²=1 全频；L=6.97/2L=13.94M，Δt/τd=1.24（质量无关）、回波返回时主环剩 29% ⇒ 干净晚期回波不可达（C级），剩余通道=铃响波形畸变（δω/δ阻尼/SNR OPEN）；勘误#24 群延迟τ=31.1粗网格伪影降级、SNR 4×同义反复、质量改铃响残迹 M_f）</h1>
+<div class="sub">本源拓扑统一场论｜Frenet–Serret + Călugăreanu–White｜算法联盟十四期 + MainAgent 归一化与独立复核｜2026-09-18｜<b>本图为唯一权威口径（single source of truth）</b></div>
+
+<div class="stats">
+  <div class="stat"><div class="n" style="color:var(--novel)">E1–E442</div><div class="l">连续编号（v1–v20；重号顺延去重；E433–435 空号，v20 E436–442：E436–438 严格采纳、E439/E440 证伪入勘误#26、E441 条件、E442 严格认识）</div></div>
+  <div class="stat"><div class="n" style="color:var(--strict)">QNM 2/2</div><div class="l">s=0 与 s=−2 GR 门禁通过</div></div>
+  <div class="stat"><div class="n" style="color:var(--axiom)">P1–P18</div><div class="l">公设（2 撤销/取代）</div></div>
+  <div class="stat"><div class="n" style="color:var(--cond)">D1–D25</div><div class="l">判别预言</div></div>
+  <div class="stat"><div class="n" style="color:var(--warn)">12/14</div><div class="l">谜题部分覆盖</div></div>
+  <div class="stat"><div class="n" style="color:var(--open)">2/14</div><div class="l">未触及</div></div>
+  <div class="stat"><div class="n" style="color:var(--strict)">0/14</div><div class="l">完全闭合</div></div>
+  <div class="stat"><div class="n">25</div><div class="l">勘误固化条（#23 频率2π·#24 τ/SNR·#25 v19拟合伪影/公比/SNR）</div></div>
+</div>
+
+<div class="panel">
+  <h2>逻辑主干（三公理 → 八期成果）</h2>
+  <div class="flow">
+    <div class="node"><b>三公理</b><br>速率守恒·FS几何·拓扑对应</div><span class="arrow">→</span>
+    <div class="node">基础定理<br>螺旋/质量/统一力</div><span class="arrow">→</span>
+    <div class="node">v1–v3<br>1PN简并·ISCO修复·c_m</div><span class="arrow">→</span>
+    <div class="node">v4–v6<br>σ_abs=0·SM嵌入·seesaw</div><span class="arrow">→</span>
+    <div class="node">v7<br>c_m去锚定·暴胀LIKELY</div><span class="arrow">→</span>
+    <div class="node" style="border-color:var(--novel)"><b>v8 企业级</b><br>QNM终裁·P17·信息·τ_p</div><span class="arrow">→</span>
+    <div class="node" style="border-color:var(--cond)"><b>v9</b><br>Leaver框架通(0.5s)/系数错·Γ=0零通量</div><span class="arrow">→</span>
+    <div class="node" style="border-color:var(--strict)"><b>v10</b><br>标量三处bug修·55位 E348</div><span class="arrow">→</span>
+    <div class="node" style="border-color:var(--strict)"><b>v11</b><br>标量门文献/qnm 6–10位·勘误#17</div><span class="arrow">→</span>
+    <div class="node" style="border-color:var(--strict)"><b>v12</b><br>引力RW s=−2 14/13位·E352–353</div><span class="arrow">→</span>
+    <div class="node" style="border-color:var(--open)"><b>v13 审计</b><br>壁几何/回波保留·6复根判盒伪根(E359)·谱OPEN→v14</div>
+    <div class="node" style="border-color:var(--open)"><b>v14 审计</b><br>向内积分器GR不收敛·垒顶多根簇(E365)·两外推根再否→v15级数匹配</div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>① 引力/强场通道 <span class="badge b-c">条件定理为主</span></h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E3–E7</span>PPN β=γ=1，近日点/光偏折 1PN 与 GR 精确简并（无独立经典检验）</div>
+    <div class="eq"><span class="id s">E25/E26</span>度规 g_tt=e^{−2U},g_rr=−e^{2U}(1+<b>c_m</b>U²+dU³)；光子球 r³−2r²−2c_m=0</div>
+    <div class="eq"><span class="id s">E57/E58</span>ISCO=4.9491M、b_crit=5.1928M（c_m=−0.29,d=−0.05，&lt;0.2%；v2 数值 bug 已修）</div>
+    <div class="eq"><span class="id s">E114</span><b>σ_abs=0</b>：c_m&lt;0 反射壁非单向膜，全 b&gt;0 光子逃逸（独立 RK4 验证）</div>
+    <div class="eq"><span class="id s">E241–255</span>c_m 去锚定 STATE 2：P12→物理量 e（<b>P18</b>），区间 [−0.369,−0.218] 收窄 23%</div>
+    <div class="eq"><span class="id o">E274–295</span><b>v8 QNM 终裁</b>：可复现 CAP/PML 谱方法 GR 门禁 <b>FAIL——12 组全 "no physical root"</b> ⟹ TUFT 精确谱 OPEN；早先"0.3738/虚部11.5%"系丢失草稿已撤回（勘误#14）；腔长标度否决壁空腔模；回波亚毫秒埋入振铃，<b>O4 不可达</b>。<b>注：GR 吸收边界 QNM 引擎本身已于 v10–v12 修复并两自旋闭合（见④-3），此处 OPEN 专指 TUFT 反射壁混合边界谱（v13 攻坚）</b></div>
+  </div>
+  <div class="verdict">
+    <div class="big">D18 归一化表述：σ_abs=0 成立 ｜ 可分离回波撤销 ｜ 精确谱 OPEN</div>
+    <b style="color:#7ee787">【v17/v18 已重定位，以 ④-8 为准】</b>上述亚毫秒回波埋入 e-fold 系旧 2L 几何图（#20 已废）；严格面积 odd 势（#22）下首选 c=−.29 外垒≈GR，差异在<b>主振铃频段内边界</b>（吸收视界 vs R→0 反射核），定量模板 SNR 转 v18。以下几何数值保留备查。<br>
+    30M☉ 回波 0.46/0.87 ms（GM☉/c³=4.9256 <b>µs</b>），dt/振铃 e-fold=0.27/0.52、dt/周期=0.18/0.35 ⟹ 落第一 e-fold 内、被 prompt ringdown 淹没。壁在 r_h≈0.6–0.7M 无视界，无近视界大对数空腔。
+  </div>
+</div>
+
+<div class="panel">
+  <h2>② 电磁 / 自旋 / 粒子通道</h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E18</span>费米 boost v=c/√2=0.707c（D1 独有硬预言）</div>
+    <div class="eq"><span class="id s">E23</span>Hopf 荷 Q∈ℤ，奇偶定自旋统计</div>
+    <div class="eq"><span class="id s">E34/E77</span>α 量纲封锁 + zitter 量纲鸿沟 ⟹ <b>P9 三件套不可替代</b>（k∈ℤ, α≈1/137, U(1)耦合）</div>
+    <div class="eq"><span class="id s">E80</span>R⊥≈59 l_Pl=9.5×10⁻³⁴ m（勘误 #3）</div>
+    <div class="eq"><span class="id s">E136</span>分数电荷 q/e=k_EM−k_c/3（u+2/3,d−1/3,e−1）</div>
+    <div class="eq"><span class="id o">E142/E189</span>三代：Q 整数化否决 + C_k L4 否决 ⟹ 起源完全开放（P15 撤销）</div>
+    <div class="eq"><span class="id o">E201–221</span>中微子 seesaw 半闭合；M_N~10¹⁴ GeV 需微调，汤川跨度 3.4×10⁵ 开放</div>
+    <div class="eq"><span class="id s" style="color:var(--novel)">E326–332</span><b>v8 τ_p=∞</b>（Hopf 拓扑守恒，经典前提 B 半闭合）；量子隧穿可改荷（D24）</div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>③ 宇宙学 / 暴胀通道</h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E41/E42</span>物质 u/H=2、辐射 u/H=3；H=φ̇ 仅德西特渐近</div>
+    <div class="eq"><span class="id s">E115–120</span>双场 quintessence：Ωψ=0.697, wψ=−0.962, BAO r_d=147.2 Mpc</div>
+    <div class="eq"><span class="id s">E166</span>Λ_n/m_n=<b>0.54±0.10</b>（0.69 为格点附注，勘误 #9）</div>
+    <div class="eq"><span class="id o">E121</span>H₀=67.7 不缓解 SH0ES 73.0（D17/21）</div>
+    <div class="eq"><span class="id d" style="color:var(--post)">E296–303</span><b>v8 暴胀</b>：Skyrme 四阶项均匀背景恒为零 ⟹ Starobinsky 平台需独立 <b>P17 R²</b>；n_s=0.967,r=0.003,M≈2.9×10¹³ GeV（条件性 CLOSED，D23）</div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>④ v8 黑洞信息（E311–E321）→ fuzzball 族，Page 曲线 OPEN</h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E313</span>固定背景 Neumann 自伴 ⟹ S 幺正 = <b>平凡幺正性</b>（与悖论无关）</div>
+    <div class="eq"><span class="id o">E317</span><b>|R|=1 ⇏ 信息守恒</b>：完美平面镜反例（无重分布/混淆/热化）；全塌缩幺正需壁上 e^{S_BH} 微观态，未提供</div>
+    <div class="eq"><span class="id o">E319/320</span>反射 ~10² µs 一次性阶跃 ⟹ 纠缠熵尖刺，<b>非 Page 曲线</b>；无热谱 ⟹ OPEN</div>
+    <div class="eq"><span class="id o">E321</span>specular 壁不吸收/不热/不渐进蒸发 ⟹ 失 Hawking 与 Page 两现象学（D25）；裸核泄密快 GR ~10⁷⁸ 倍</div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>④‑2 v9：QNM 求解器工程纠偏 + 黑洞零通量（E337–E385）</h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E337–369</span><b>线一（框架）</b>：弃 >3h 卡死的重特征值法，改 Leaver O(N) 连分数，<b>MainAgent 复跑 0.51s/exit0</b>；但标量递推系数错，根随 N 稳定却错误（l=0/1/2 |Δω|=0.45/0.47/0.57），6 位门禁 FAIL ⟹ 引力/TUFT 根<b>一律未报</b>。龟坐标打靶残差 7e-9 已把 bug 隔离到系数推导</div>
+    <div class="eq"><span class="id s">E370–375</span><b>线二（严格）</b>：specular 壁 |R(ω)|=1 ⟹ 反照率 A=1 ⟹ <b>灰体因子 Γ≡0 ⟹ Hawking 占据数 f(ω)≡0</b>：任意频率/温度辐射通量恒零，什么都不发射（RED）</div>
+    <div class="eq"><span class="id o">E377–382</span>光滑 Page 曲线三资源全缺：态密度 e^S（TUFT N=1）、Haar 混淆矩阵（TUFT δ_ij）、有限泄漏 Γ（TUFT 0）；N_TUFT/N_fuzz=e^{−S_BH}（1M☉=1.05×10⁷⁷，<b>30M☉=9.44×10⁷⁹</b>）</div>
+    <div class="eq"><span class="id d">勘误#15</span>v8"信息比 GR 快 10⁷⁸ 倍返回"降级 OPEN：Γ=0 无微观态泄漏，返回的只是经典波包几何反射（~100 µs 走时保留），非信息守恒</div>
+  </div>
+  <div class="note">v9 新增公设 0、新预言 0、破解矩阵 0/12/2 不变；线一属"机器已造好、系数待修"，不是新物理倒退。</div>
+</div>
+
+<div class="panel" style="border-color:var(--strict)">
+  <h2>④‑3 v10–v12：QNM 引擎双通道闭合（E348 / E349–E351 标量，E352–E353 引力）<span class="badge b-s">GR 门禁 PASS</span></h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E348</span><b>v10 标量 s=0 系数修复</b>：龟坐标因子 2、势补回 2/r³、连分数后向递推。α_n=(n+1)(n+1−4iω)，β_n=−λ−2n²+16inω−2n+32ω²+8iω−1，γ_n=(n−4iω)²。MainAgent 55 位独立复现</div>
+    <div class="eq"><span class="id s">E349–351</span><b>v11 标量三门 6 位独立验证</b>：l=0 <b>0.1104549391−0.1048957171i</b>、l=1 0.2929361333−0.097660、l=2 0.483644−0.096759；arXiv:2206.03512（谱法+AIM，<b>非连分数</b>）＋qnm 库双重背书，三模 round-6 全中</div>
+    <div class="eq"><span class="id s">E352–353</span><b>v12 引力 RW s=−2 闭合</b>：α_n=(n+1)(n+3−4iω)，β_n=…+8iω+3，γ_n=n²−8inω−2n−16ω²+8iω。l=2 n0 <b>0.3736716844180418−0.0889623156889357i（14位）</b>、n1 <b>0.3467109968791634−0.2739148752912348i（13位）</b></div>
+    <div class="eq"><span class="id s">三重独立</span>① 联盟脚本 MainAgent 原样复跑 <b>exit0/2.0s</b> 数字全复现；② MainAgent 另写 <b>40 位 mpmath、不 import 联盟、故意粗糙初值</b>(0.37,−0.09)/(0.35,−0.27) 独立收敛（N 自收敛 1e-21/1e-28，排除"初值即答案"）；③ qnm 库</div>
+    <div class="eq"><span class="id d">编号去重</span>联盟口头把 RW 记作 E349–E350，与 v11 已发布标量 E349–E351 <b>撞号</b>；按发布先后，引力 RW <b>顺延归一化为 E352–E353</b>，标量 E349–E351 保留</div>
+    <div class="eq"><span class="id o">v13 待办</span>引擎已在 s=0、s=−2 过已发表基准，<b>获准进入 TUFT c_m=−0.29 反射壁混合边界</b>（内壁 Neumann＋外出射）：先 GR 回归门，再壁根，判外垒/空腔模（回 D18）</div>
+  </div>
+  <div class="note ok">六期收口：v7 Leaver 发散 → v8 PML 12 组无根 → v9 系数错 → v10 标量修复 55 位 → v11 文献/qnm 背书 → <b>v12 引力 RW 13–14 位命中</b>。O(N) 秒级、双精度↔40 位自洽、两自旋通道均过基准。新增公设 0、新预言 0（纯方法学闭合）。</div>
+</div>
+
+<div class="panel" style="border-color:var(--open)">
+  <h2>④‑4 v13：TUFT 反射壁复根独立审计 → 6 频率判盒伪根，谱仍 OPEN（E354–E359）<span class="badge b-o">MainAgent 否定性裁决</span></h2>
+  <div class="grid">
+    <div class="eq"><span class="id s">E354/355</span><b>几何保留</b>：壁 r_h³+c_m r_h+d=0（r_h=0.6099/0.7071M）；龟坐标 dr*/dr=e^{2/r}√(1+…)；外垒 V=e^{−2/r}6/r²，峰 r=1、Vmax=0.812（与 c_m 无关）</div>
+    <div class="eq"><span class="id d">E357 公设 W1</span>壁理想反射 |R|=1，主 Neumann ψ_s|壁=0（R=+1，相位0），Dirichlet R=−1 作敏度；<b>反射相位不可由经典几何固定</b>，显式标公设</div>
+    <div class="eq"><span class="id o">E359 否定定理</span><b>裸有限盒向外射击＋裸 ψ′/ψ=iω 匹配不收敛</b>：同码用在 GR（已知 0.373672−0.088962）上，s_out=15/20/25/30/40/50 → 0.030/0.350/0.406/<b>9.03 溢出</b>/0.536/0.417，乱跳不收敛；正确的 GR 连分数门不能给另一套未自证打靶背书</div>
+    <div class="eq"><span class="id o">根随盒改宗</span>TUFT c=−0.29（L 固定 2.931）基模随 s_out=20/25/30/35/40/50 → 0.417/0.317/0.253(<b>同盒另有0.387</b>)/0.324/0.277/0.288；联盟 0.387 只是 s_out=30 盒内 3 根中最贴种子 0.45 的那个。c=−0.5 同样乱跳</div>
+    <div class="eq"><span class="id o">两类误差分离</span>固定 s_out=30 细化 h：0.386944/0.386884/0.386854（h 收敛 6–7 位）——那是收敛到"<b>s_out=30 离散盒</b>"的根；s_out→∞ 方向不收敛。残差 1e-16 是盒内 F=0 精度，<b>非渐近 QNM</b></div>
+    <div class="eq"><span class="id s">回波几何保留</span>2L=3.09/5.86M → 30M☉ <b>0.46/0.87 ms</b>（GM☉/c³=4.9256µs），dt/τ_e=0.27/0.52&lt;1（τ_e=1.66ms）⟹ <b>O4 无分立回波</b>（纯几何，不依赖复根，成立）</div>
+  </div>
+  <div class="note bad"><b>裁决</b>：联盟 6 个壁频率（c=−0.5：0.363061−0.071627/0.795906/1.009437；c=−0.29：0.386910−0.075214/0.941816/1.307583）与"6 点定量确认外垒主导"降级 OPEN（勘误 #18；PART5 固定 s_out=30＋固定种子 0.45＋判据写死"靠近0.3737"系种子诱导）。<b>D18：σ_abs=0 与回波 O4 不可分辨成立，TUFT 壁渐近谱仍 OPEN。</b></div>
+  <div class="note">【v14 方法学硬门槛】求解器必须先在 GR 上随外边界<b>单调收敛</b>到 0.373672−0.088962 ≥4–6 位：首选 <b>TUFT 版 Leaver 连分数</b>（有限壁 Neumann 写成 r_h 内级数边界，复用已验证 40 位机器），或远场<b>渐近匹配</b> ψ~e^{iωs}Σa_k/s^k（iω+O(1/s²)）替代裸 iω；再给多 s_out 外推（禁钉一点）、多种子、Ngrid 三档、泛音同族。</div>
+</div>
+
+<div class="panel" style="border-color:var(--open)">
+  <h2>④‑5 v14：反向积分器独立审计 → 两外推壁根再否决，谱连续三期 OPEN（E360–E365）<span class="badge b-o">MainAgent 再否决</span></h2>
+  <div class="grid">
+    <div class="eq"><span class="id d">E360–E364 形式保留</span>度规/壁、龟坐标 r*_h 正则、远场出射、壁 Neumann（同 W1）；<b>E364 诚实</b>：e^{−2(1−z)/r_h} 整函数使残差系数无穷泰勒阶，<b>不闭合为 Schwarzschild 型有限三项递推</b></div>
+    <div class="eq"><span class="id o">证据1 同码 GR 自证 FAIL</span>v14"出射→向内 RK4"用在 GR（s_in=−11）扫 s_out=60/100/140/180/220 → 2.60−8.73 / 1.84−5.70 / 1.68−4.66 / 1.55−3.72 / 1.20−2.95（亚垒 <b>overflow</b>），无一接近 0.373672−0.088962。<b>向外(v13)、向内(v14)两裸法在已知答案上都失败</b>，GR 走 Leaver/TUFT 走未自证积分器＝两套标准</div>
+    <div class="eq"><span class="id o">证据2 同盒多根·外推无平台</span>c=−0.5 每盒 3–4 根挤 Re 0.90–1.38（联盟只取最贴种子的 0.9399/0.9410，另有 0.968/1.30/1.38）；虚部 −.036→−.021 单调向 0 <b>无平台</b>（段漂 .0145&gt;外推值 .0073）。c=−0.29 Im −.0174/−.0179/−.0170/−.0199/−.0159 <b>非单调噪声</b></div>
+    <div class="eq"><span class="id o">证据3 物理·锁垒顶</span>根聚 <b>√Vmax=0.9011</b>，ω²≈0.80–0.89 ≈/≥Vmax=0.812；L 翻倍 1.54→2.93 而 Reω 0.92→0.89 不动 → <b>非壁腔(不~1/L)、非 GR 外垒(0.37)</b>，是垒顶散射多根簇（转折处出射支指数放大最敏感），实测 Q 仅 13–28</div>
+    <div class="eq"><span class="id s">回波几何保留</span>2L=3.09/5.86M → <b>0.46/0.87 ms</b> 埋入第一 e-fold 1.66ms（dt/τ_e=0.27/0.52）⟹ O4 无分立回波；σ_abs=0（纯几何，不依赖复根）</div>
+    <div class="eq"><span class="id s">E365 否定定理</span>裸出射 ψ_s/ψ=±iω＋任一方向双精度 RK4 打靶，穿亚垒/垒顶指数放大，在 GR 已知谱不收敛、错根处 |F| 仍可~1e-4，<b>不构成渐近 QNM 求解器</b>；盒内收敛/小残差不解除此否定</div>
+  </div>
+  <div class="note bad"><b>裁决（勘误 #19）</b>：c=−0.5 外推 0.9432−0.0073i、c=−0.29 外推 0.8918−0.0144i 及"弱阻尼垒顶模已收敛/外垒主导严格定理"降级 <b>OPEN</b>（Re 稳仅反映垒顶形状能标，阻尼不可信）。<b>D18：σ_abs=0 与 O4 不可分辨成立，TUFT 壁渐近谱 v8→v13→v14 连续三期 OPEN</b>；破解矩阵仍 0/12/2，本期无新物理闭合。</div>
+  <div class="note">【v15 唯一可行路】停止裸双向 RK4；全程 <b>mpmath ≥40 位级数匹配</b>，且<b>同一匹配器先在 GR 收敛 0.373672−0.088962 ≥6 位</b>：壁 r_h 正则 Frobenius 级数（Neumann 定首项）×远场出射级数 e^{iωs}Σa_k/s^k，中间规则区 Wronskian 匹配，e^{±2/r} 有限阶截断随精度到残差&lt;1e-30；远场禁裸 iω，须含 iω+O(1/s²)；过同码 GR 门后再做 c_m 四点＋泛音同族＋s_out/级数阶双收敛。</div>
+</div>
+
+<div class="panel">
+  <h2>④‑6 v15：MainAgent 稳定实频反射相位 IVP → 无高 Q 壁腔窄谱（E366–E369）<span class="badge b-o">无窄谱成立·可观测 OPEN</span></h2>
+  <div class="eq"><span class="id o">E366 方法（严格）</span>绕开不适定复极点：沿<b>实 ω 轴</b>从壁 Neumann ψ(0)=1,ψ′=0 积守恒实驻波 ψ″+(ω²−V)ψ=0（scipy DOP853, rtol 1e-11），垒外分解 R=C₊/C₋，相位平移到壁 φ=argR−2ωs_m，群延迟 τ=dφ/dω。<b>解析玩具泄漏腔同引擎对照</b>：在 Fabry–Pérot 模 w=1.315（τ=197.5M，τ/2L=33.7）、2.095（n≈2）吐高窄峰 → 引擎对高 Q 腔共振敏感，"无峰"才是物理零结果。<span style="color:var(--open)">初稿曾把方程符号写反（ψ″=(ω²−V)）致 ψ 爆增伪 −π/2，由玩具对照+scipy 当场自抓更正。</span></div>
+  <div class="eq"><span class="id o">E367 无高 Q 壁腔谱（数值严格）</span>延迟峰中心锁 <b>√Vmax=0.9011（曲率垒顶，与 c_m 无关）</b>，<b>不</b>随腔长 1/L 移动（L 1.54→2.93 翻倍，峰 0.915→0.890 几乎不动），与 Fabry–Pérot 标度 ωₙ≈nπ/L（应 2.04→1.07）矛盾；GR 主振铃 w=0.3737 处反射平滑、τ≈−9、无共振增强。</div>
+  <div class="eq"><span class="id o">E368 垒顶宽延迟拱（条件·收敛）</span>c_m=−0.5：w★=0.915，τ=46M；c_m=−0.29：w★=0.890，τ=116M；宽 Δω≈0.15–0.2（<b>Q~5</b>，非窄线）。分解点 s_m=66/112/175（残 V 2e-3→2e-4）与步长 0.02→0.01，峰位恒 0.8900、峰高 115.8±0.1（&lt;0.1%）。性质＝任意平滑势垒临界频的<b>转向点 Wigner 逗留</b>，非反射核独有指纹。</div>
+  <div class="note bad"><b>E369 / 勘误 #20（重要纠正）</b>：旧"回波时延＝壁→垒自由往返 2L＝0.46/0.87 ms（30M☉）、埋入第一 e-fold 1.66ms、O4 不可分辨"<b>作废</b>。物理反射由垒顶逗留主导：τ≈46/116M → 30M☉ <b>6.8 / 17.1 ms</b>（集中 w~0.90≈969 Hz，约 GR l=2 主频 402 Hz 的 2.4×；<b>勘误 #23</b>：早期 6.1 kHz/2.53 kHz 系几何频率→Hz 漏除 2π），宽平滑色散（Q~5）非分立回波；2L 仅保留为自由飞行时间。<b>可观测性重判 OPEN：需同一口径 GR 实频反射系数（mpmath/Leaver，非裸 RK4）＋波形卷积，才能判宽拱是否 TUFT 独有。</b>复 QNM 极点精确值仍 OPEN（不排斥重阻尼极点，但主频段不形成窄可观测线）。</div>
+</div>
+
+<div class="panel">
+  <h2>④‑7 v16：GR 实频反射对照独立审计 → 否 Lorentzian 峰/撤"A 可观测"＋勘误 #21（E386–E390）<span class="badge" style="color:var(--open);border-color:var(--open)">GR侧采纳·TUFT侧纠正</span></h2>
+  <div class="eq"><span class="id" style="color:#7ee787">E386 GR 反射率（严格·双积分器）</span>Schwarzschild l=2 视界纯入射→无穷远分解，unitarity |a|²−|b|²=1.00000。|R_GR|²：0.944(ω.30)→0.305(.40)→0.074(.45)→0.015(.50)→7e-4(.60)→<b>~10⁻⁶(.90，近全透）</b>。mpmath35 与 MainAgent scipy DOP853 交叉一致。垒顶 √(4/27)=0.3849。</div>
+  <div class="eq"><span class="id" style="color:#7ee787">E387 TUFT 真实 |R(ω)|²≡1（数值严格）</span>实频 IVP 直读：<b>|R_TUFT|²=1.000000 对 ω=0.20–1.10 所有频率</b>（偏差 10⁻¹⁶，通量守恒）。<b style="color:#ff7b72">否决联盟 E378 手造 Lorentzian 1/[1+((ω−.9)/γ)²] 反射率峰</b>——0.90 只是相位群延迟 τ，反射率毫无凸起。</div>
+  <div class="eq"><span class="id">E388 真实差异＝吸收视界 vs 反射壁</span>即 <b>σ_abs=0</b>（v4 已有），横跨 <b>ω≳0.45 整段</b>（GR .31@.40→.015@.50→0；TUFT 恒 1），属 <b>ECO/引力波回波通用判据（Cardoso 等），非 TUFT 独有指纹</b>，也不局域在 0.90。</div>
+  <div class="note bad"><b>E389 撤销"A 强可观测"</b>：联盟 E379 手造载波 ω₀=0.90 高斯波包当输入（TUFT=1/GR≈0）→残差大是<b>循环论证</b>。真实 l=2 能量在 ω~0.35–0.5（QNM Re=.374，30M☉≈402 Hz）；0.90≈969 Hz/30M☉（<b>勘误 #23</b>：旧 6.1 kHz 漏 2π）弱信号高噪声。正确窗口 <b>ω~0.45–0.55</b>，SNR 未算 → <b>OPEN</b>。</div>
+  <div class="note bad"><b>E390 / 勘误 #21（连 v15 一并降级）</b>：TUFT"引力 s=−2 势" e^{−2/r}6/r² <b>缺自旋项 −6M_eff/r³</b>（M_eff=(r/2)(1−e^{−2λ})）。c=0 无壁补项后垒顶 <b>√Vmax 0.901→0.685、峰位 r 1.0→1.15</b>；c&lt;0 壁处 g_rr→0 使闭式失效，须严格 odd 微扰（壁边界＋φ/n 标量源）。<b>E368 宽拱中心 0.89–0.915/τ46/116M 降级待重算。</b>不依赖势仍稳健：σ_abs=0、|R|²=1、无高 Q 壁腔窄谱（E367）。<b>v17：完整 odd 势＋正确窗口 SNR。</b></div>
+</div>
+
+<div class="panel">
+  <h2>④‑8 v17：odd 势坐标独立审计 → 勘误 #22（E391–E406）：各向同性 ρ≠面积 R，外垒≈GR、主频骑垒顶<span class="badge" style="color:var(--open);border-color:var(--open)">联盟势纠正·E399/E400 否决</span></h2>
+  <div class="note bad"><b>勘误 #22 / E393·E397 坐标硬伤</b>：TUFT 度规在<b>各向同性坐标</b> ρ（ds²=−A dt²+B(dρ²+ρ²dΩ²)），联盟却把 ρ 当<b>面积半径</b>、取 e^{−2λ}=1/B。严格：<b>R=ρ√B，e^{−2λ}=(1+ρB′/2B)²，V=3A(1+e^{−2λ})/R²</b>；龟坐标 dR*/dρ=√(B/A) 本就对。</div>
+  <div class="eq"><span class="id" style="color:#7ee787">E401/E402 真 GR 双门（严格）</span>精确 Schwarzschild 各向同性度规过同一管线复现解析 RW，<b>最大相对误差 2.4×10⁻⁸</b>（<b style="color:#7ee787">MainAgent 另写独立向量化脚本（不引用本管线）复算达 8.0×10⁻¹³ → 确认 PASS；并行脚本同值却印 FAIL 纯系判定阈值/打印 bug</b>）。真 l=2 垒顶由 2R²−9R+8=0 得 <b>R=(9+√17)/4=3.2808M、Vmax=0.15129、√=0.38896</b>。历史"4/27@3/0.3849"是 R=3 处取值非极值（低~2.1%）。联盟"GR gate 0.685"自我循环（同管线用真 GR 得 0.668），<b>E398 否决</b>。</div>
+  <div class="eq"><span class="id" style="color:#7ee787">E403 TUFT 严格外垒（数值严格）</span>c=0 <b>√0.363@R3.67</b>（另有可穿越几何颈 R_min=e=2.718，颈处 V=.055 有限）；c=−0.5 <b>√0.407@R2.81</b>；<b>首选 c=−0.29 √0.386@R3.27 ≈ GR 0.389@3.28</b>（高度−1.7%、半径−0.4%）。联盟 0.68/0.72/0.70 虚高约 1.8×。</div>
+  <div class="eq"><span class="id">E404 反射核面积图像（严格）</span>c&lt;0 壁 ρ_h 对应面积 <b>R→0</b>、g_RR→0 排斥核、V~1/R² 发散、龟坐标距离有限 ⟹ Neumann 反射（W1）自洽，机制是 <b>R→0 正则反射核</b>非 1/B；c=0 无视界，ρ=1 处 R 极小 e、<b>可穿越几何颈</b>。</div>
+  <div class="note bad"><b>E405/E406 物理翻转</b>：首选 c=−0.29 主振铃 ω=0.374 <b>骑在垒顶 0.386</b>，垒后有允许空腔（谷 .108&lt;.140），严格 WKB <b>K=.223（80万→160万点不变）、单程透射 ~e^{−2K}=0.64（量级）</b>。联盟 E399 |T|²=2.25e-5 <b>小约 4 个数量级</b>、E400"回波17%/B弱可观测"<b>否决重开</b>。正确图像：<b>外垒与 GR 相同，差异在内边界（吸收视界→QNM阻尼 vs R=0 反射核全反射 σ_abs=0），发生在主振铃频段</b>——经典 ECO/回波物理，通用非 TUFT 独有。垒顶 WKB 不 quantitative，精确反射相位/回波/模板 SNR 转 <b>v18 严格势实频 IVP（ω~0.35–0.55）</b>。</div>
+  <div class="note ok"><b>MainAgent 独立复算背书（脚本 _ma_v17_strict_areal_indep.py，不引用并行线代码）</b>：第一版脚本曾因两处<b>自身实现 bug</b>（GR 的 dlnB/dr 误写成 A/B 混合式；c&lt;0 用全局 argmax 误抓壁侧发散峰）出错，已现场修正重跑。最终独立复现：GR 面积管线门 <b>8.0×10⁻¹³ PASS</b>、RW 垒顶 3.28087/.38896；TUFT c=0 .3631@3.674（颈 R=e 精确）、c=−.5 <b>外垒 .4067@2.808</b>（areal 表 .468@1.92 系壁侧<b>内垒</b>，已澄清）、c=−.29 .3856@3.268；ω=.374 外垒亚垒 s[5.48..8.53]/K=.223/透射 .640、ω=.35 .702/.246、腔谷 .109；壁 R→0、e^-2λ→∞、龟坐标到 R=3 有限 7.2/8.9 M——E401–E406 逐位确认。<b>新增勘误 #23</b>：几何频率→Hz 须除 2π（c³/2πGM☉=32313 Hz），30M☉ 主频 402 Hz（非 2.53 kHz）、ω=.90 969 Hz（非 6.1 kHz），60M☉ 201/369/485 Hz；时间 4.9256 µs 无误。</div>
+</div>
+
+<div class="panel">
+  <h2>④‑9 v18：严格势实频 IVP 独立审计（E407–E418）——回波 1.24τd 埋入主环，干净晚期回波不可达，剩余通道=铃响波形畸变<span class="badge" style="color:var(--warn);border-color:var(--warn)">GR门PASS·核心C级·τ/SNR降级</span></h2>
+  <div class="note"><b>E411/E412/E415 双内边界（严格，MainAgent 独立复跑 67s）</b>：同一 DOP853 引擎——GR 视界<b>吸收</b>（s=−120 纯入射→+150 分解，幺正残差 0）；TUFT 反射核 <b>Neumann 全反射，|R_TUFT|²=1 全频（偏差 6.7×10⁻¹⁶）</b>。GR 垒顶实频反射率 <b>|R_GR|²@0.3737=0.531</b>（.35=.727/.40=.311，与 v16 曲线凸形自洽；审计中粗插值 ~0.4 的怀疑已撤销）。</div>
+  <div class="eq"><span class="id" style="color:#7ee787">E416 回波分离比（严格·质量无关）</span>核→外垒龟坐标 <b>L=6.9694 M</b>，自由往返 <b>2L=13.9389 M</b>；主环 e-fold τd=1/|ω_i|=11.241 M。<b>Δt/τd = 2L·|ω_i| = 1.240</b>；回波返回时主环振幅 e⁻¹·²⁴=<b>0.289</b>。⇒ 首回波落在 prompt ringdown 包络内，<b>不能作分立晚期峰提取</b>（现有 echo 搜索针对 ≫τd 回声）。M_f=30：402Hz / 2L=2.06ms / τd=1.66ms；<b>30+30 残迹 M_f≈60：201Hz / 4.12ms / 3.32ms</b>——比值恒 1.24。</div>
+  <div class="eq"><span class="id">E418 真正观测通道＝铃响波形畸变（量级 OPEN）</span>近全反射、延迟 1.24τd 的副本不形成独立峰，但使主振铃产生<b>相位漂移/拍频/表观频率与阻尼偏移（modified QNM）</b>，须高 SNR 相干全波形＋Bayes 模型选择（反射核 vs 吸收视界模板）。δω_r、δ阻尼、可检测 SNR <b>OPEN</b>（v19 模板注入/复极点微扰）。属 ECO/反射视界通用检验非 TUFT 独有；TUFT 特异性仅在核位置 L(c_m,d)。</div>
+  <div class="note bad"><b>勘误 #24：两处降级（不承载结论）</b>。① E413 群延迟 <b>τ(.50–.70)=31.1M 不可靠→OPEN</b>：Δω=.05 粗网格对<b>未平移到核</b>的原始 argR（含 2ω·s_out 光程参考面项）直接求导，unwrap 跨 π 分支歧义；密网格 .0025–.01 在 .45–.48 现 ±600 跳变；可观测性用几何 2L（严格复现），不依赖 τ。② E414 SNR 非定量：Voyager=O4/16 ⇒"4×"是 √16 <b>同义反复</b>，ρ_rd=10、ε=1 手设；真实双程穿垒 ε&lt;1 只会更难。<b>MainAgent 第二次独立复跑（39.5 s）另确认：平移到核 φ=argR−2ωs_out 的 τ 同样不稳（落 −628~+355，跨 π 跳支），原始 argR 与核相位两种约定均不可用，唯几何 2L 可信。</b>稳健不变：σ_abs=0、|R|²=1、无高 Q 壁腔窄谱。</div>
+</div>
+
+<div class="panel">
+  <h2>④‑10 v19：铃响波形畸变定量证伪（E419–E429，勘误 #25）——单指数拟合回声串=窗口伪影，稳态极点精确回 GR<span class="badge" style="color:#ff7b72;border-color:#ff7b72">δω/δτ/SNR 证伪·方向保留</span></h2>
+  <div class="note bad"><b>E422 复极点偏移 +2.64%/−9.53% 系拟合伪影（MainAgent 独立 _ma_v19_audit.py，逐位复现后证伪）</b>：联盟把瞬态多回声串 Σₙ rⁿ h_GR(t−nT)（n=0..6）在 <b>[2.5τ,8τ]</b> 用<b>单个</b> A e^{−t/τ}cos(ωt) 强拟合。仅改窗口 δω 即在 <b>+7.4%↔−3.4%</b>、δτ 在 <b>+11.8%↔−13.7%</b> 漂移（真极点不随窗口变）；所有回声（最晚 7.44τ 启动）到齐后<b>稳态晚窗精确回 ω_GR=0.37367/τ_GR=11.241（δ=0.00%），去包络晚窗频率偏差 1.5×10⁻¹⁶</b>。每项回声极点严格为 ω_GR、公比 .729&lt;1 级数收敛，晚期只改复留数、<b>真实复极点不动</b>（合 v19 解析骨架 §1）。反射腔物理应使 τ 增大，联盟报减小，<b>方向亦反</b>。</div>
+  <div class="eq"><span class="id" style="color:#ff7b72">E421/E424 公比精确抵消</span>r_echo=.729×.289=<b>.211</b>，但 h_GR(t−nT) 自带 e^{+nT/τ}，第 n 项 r_echoⁿe^{nT/τ}=<b>Rbarrⁿ</b>（n=2：.0445×e^{2T/τ}=.5314=Rbarr²），<b>.211/.289 抵消、净公比=.729</b>；.729=√.531 是 v18「外垒+<b>吸收视界</b>」净反射，所需无耗散双侧出射 r_b(ω)（|r|²+|t|²=1）<b>未做 OPEN</b>。</div>
+  <div class="eq"><span class="id" style="color:#ff7b72">E425/E426 SNR 作废</span>模板既用假极点 ω_TU <b>又</b>乘回声因子＝<b>双重计数</b>；PSD 自拟非标定；补充表另用垒顶 WKB ε=.64（违垒顶仅量级）。⇒ <b>ρ_req≈5.6、O4×2.5/Voy×46 不采信</b>。</div>
+  <div class="note ok"><b>保留</b>：E423 几何 T/τ=1.24、主环 .289（v18 严格引用）；E429 <b>C 级方向</b>（回波埋入、无干净晚期分立回波），「改阻尼 −9.5%」作废。<b>modified-QNM 极点仍 OPEN</b>：①双侧出射 r_b（禁 .531）→②自洽 D0(ω)=a e^{iωT}（两端 Frobenius×出射 Wronskian，先过 Schwarzschild 复 QNM ≥4 位）→③多指数/Prony/谱法提极点（禁单指数拟合）→④SNR 随 ε 条件化＋标定设计 PSD＋单一模板。</div>
+</div>
+
+<div class="panel">
+  <h2>④‑11 v2.1–v2.2：Leaver GR 复 QNM 门首次 PASS（E436–438，独立 2.1e-11）——Wronskian 积分法 FAIL 后的 Leaver 全局正路；v20 r_b/FP 证伪（勘误 #26，E439/E440）<span class="badge" style="color:#3fb950;border-color:#3fb950">GR 门严格采纳 · TUFT 腔模证伪 · 极点仍 OPEN</span></h2>
+  <div class="note"><b>v2.1 衔接（E430–E432，主册已录）</b>：E430 两端 Wronskian <b>积分型</b>匹配 GR 门第 4 轮 FAIL（精确复现 v15 gate1/gate3：亚垒指数分支混合，伪根 0.370744−0.050913i；提精度/加深边界不救），明确<b>下一步＝真解析 Frobenius 或 Leaver 全局 ansatz</b>；E431 时域模板注入条件 MEASURABLE（理论上界，ε 处方 caveat）；E432 TUFT τ 稳定但 GR 自洽门待 Leaver。</div>
+  <div class="note ok"><b>E436–E438 严格采纳（MainAgent 独立 _ma_v20_audit.py，exit0）</b>：Leaver(1985) s=−2 连分数 R_n=−g_n/(b_n+a_nR_{n+1})，N=200/400/1000 <b>全部收敛 0.373671684−0.088962316i，与目录差 2.1×10⁻¹¹（约 10 位）</b>。联盟仅打印 6 位小数故显示"5 位"。这正是 E430 否定定理指明的全局 ansatz 正路——<b>积分匹配 FAIL 与 Leaver 全局 PASS 不矛盾（方法不同）</b>，GR 复 QNM 门现有标准实现可作 TUFT 混合边值的门。</div>
+  <div class="note bad"><b>E439 r_b=.545 证伪（勘误#26）</b>：落盘 rb_tuft 在 s=3 放<b>内向</b> e^{−iωs} 却朝外积分 → 独立概率流 <b>J_out/J_in=−1.00</b>、|b/a|²=1.33–2.52（<b>反射率&gt;1，非反射系数</b>）；unitarity=0 系<b>写死打印</b>、tt=1−r² 强令；GR .531 系硬编码 v18（散射函数从未调用）；汇总 .545 <b>无法由脚本复现</b>（脚本实跑 1.69）。改对方向 e^{+iωs} 后通量守恒 1.00000（.592@.3737/.519@.3834），但 |r|² 随发射点 s=1→5 在 <b>.54→.43 漂移</b>。</div>
+  <div class="eq"><span class="id" style="color:#3fb950">E442 严格认识（MainAgent）</span>TUFT 反射腔从 R→0 核到外垒峰龟坐标仅 L≈6.97M，<b>腔内不存在 V≈0 渐近平坦区</b> ⇒ 单向平面波 IVP <b>原则上隔离不出"单独外垒"S 矩阵</b>（发射点依赖 .43–.54 即症状）。真实 modified-QNM 只能：① 在已验证 Leaver 引擎上做<b>核 Neumann＋无穷远纯出射的整体混合边值复频谱</b>（两端解析 Frobenius×Wronskian）；或 ② 反事实虚拟平坦出射波导（须显式声明建模公设）。</div>
+  <div class="note bad"><b>E440 Fabry–Pérot 腔模证伪（勘误#26）</b>：自报 ω=.3834−.0676i（δω_r=+2.61%、τ=14.79M、态 II）。按联盟自式 |ω_i|=−ln|r_b|/T：r_b²=.545 应给 <b>|ω_i|=.0218、τ≈46M</b>；要得到 .0676 必须 r_b²=.152，而 .3834 实跑为 1.93(错向)/.52(正向)，<b>算术差约 3 倍</b>。实部 .3834 来自 np.unwrap(arg r_b)+ωT=2πn 的 <b>n=−2 反常选支</b>（物理支 n≈1），属勘误#24 同类实频相位不稳。<b>态 II 撤销。</b></div>
+  <div class="note"><b>E441 仅条件框架</b>：Q=ω_r/(2|ω_i|)=2.10 与 ε|δω|ρ_det Q≳1 量纲合理保留；δω=2.61% 既伪，则 ε=1 需 ρ≥20 等阈值作废，真实双程穿垒 ε&lt;1 仍 OPEN（PSD 改用公开 ZERO_DET_high_P 解析式，较 v19 自拟规范，予以肯定）。<b>modified-QNM 极点：态 I（不动）/态 II（小移）未决，维持 OPEN。</b></div>
+</div>
+
+<div class="panel">
+  <h2>⑤ 破解矩阵 14 谜题（终态 0 / 12 / 2）</h2>
+  <table>
+    <tr><th>部分覆盖（12）</th><th>状态要点</th></tr>
+    <tr><td>暴胀</td><td>Starobinsky 需 P17，条件性闭合</td></tr>
+    <tr><td>质子衰变 / 黑洞信息</td><td class="hl">v8 新升：τ_p=∞(B半闭合)；fuzzball 族 Page OPEN</td></tr>
+    <tr><td>中微子 / 三代谱 / α / 暗物质 / 强CP / 禁闭 / 量子引力 / Λ / H₀</td><td>均部分覆盖，关键缺口见归一化主册 §10</td></tr>
+  </table>
+  <table>
+    <tr><th class="bad">未触及（2）</th><th>原因</th></tr>
+    <tr><td class="bad">重子生成</td><td>Sakharov 三条件缺二（无 B 破坏、无复 CP 相位）</td></tr>
+    <tr><td class="bad">量子测量</td><td>经典场无概率幅，玻恩规则 HARD/OPEN</td></tr>
+  </table>
+</div>
+
+<div class="panel">
+  <h2>⑥ 企业级归一化要点</h2>
+  <div class="note ok">【符号消歧】后度量参数 c 改名 <b>c_m</b>（光速保留 c）；Lk（整数环绕数）/ Lk_eff=cosθ（连续三角量）/ Q（Hopf 整数荷）严格三分。</div>
+  <div class="note">【单位铁律】几何时间 GM☉/c³=4.9256 <b>µs</b>（非 ms）；SI↔几何单位对照见主册 §3。</div>
+  <div class="note">【权威数值单一台账】c_m=−0.29∈[−0.369,−0.218]、d=−0.050、Λ_n/m_n=0.54±0.10、wψ=−0.962、R⊥≈59 l_Pl、ISCO=4.9491M、b_crit=5.1928M、σ_abs=0——旧值入勘误，不再并列引用。</div>
+  <div class="note bad">【勘误节选·现共 26 条·禁止回退】…#15–#17 见上｜<b>#18 v13 六壁根＝盒伪根、#19 v14 两外推根＝垒顶多根簇、#20 2L 几何回波→垒顶 Wigner 逗留</b>｜<b>#21 odd 势缺自旋项</b>｜<b style="color:#7ee787">#22（v17）各向同性 ρ≠面积 R：严格 R=ρ√B、e^-2λ=(1+ρB′/2B)²，真 GR 垒顶 3.2808/.389，首选 c=-.29 外垒 .386@3.27≈GR，联盟 0.685/2.25e-5/回波17% 否决</b>｜<b style="color:#7ee787">#23（MainAgent）几何频率→Hz 漏 2π：30M☉ 主频 402 Hz（非 2.53 kHz）、ω=.90 969 Hz</b>｜<b style="color:#7ee787">#24（v18）群延迟 τ=31.1M 粗网格 argR/unwrap 伪影降级 OPEN（结论用几何 2L 不依赖 τ）、SNR“4×”系 Voyager=O4/16 同义反复＋ε/ρ 手设非定量、质量改标铃响残迹 M_f</b>｜<b style="color:#ff7b72">#25（v19）铃响畸变 δω+2.64%/δτ−9.53% 系瞬态多回声串单指数窗口拟合伪影（换窗漂移、稳态晚窗回 ω_GR/τ_GR δ=0/1.5e-16）；公比 .211 精确抵消为含视界 .729（双侧 r_b 未做）；ρ_req/SNR 双重计数作废；modified-QNM 极点仍 OPEN</b>｜<b style="color:#ff7b72">#26（v20）r_b=.545 散射方向反（通量−1/r²&gt;1）·伪幺正·腔内无平坦区不可隔离（E439/E442）；FP .3834/.0676/τ14.8 与自表 r_b 算术矛盾（应 τ~46）、unwrap n=−2 选支（E440）；同期 Leaver GR 门 E436–438 独立 1e-11 采纳；态 II 撤销，极点 OPEN</b>。</div></div>
+  <div class="note">【配套文件】《TUFT_v20_modifiedQNM独立审计裁决_勘误26.md》（v20 新·主）＋《TUFT_v19_铃响畸变独立审计裁决_勘误25.md》＋《TUFT_v18_严格势实频IVP独立审计裁决.md》＋《TUFT_v17_odd势坐标独立审计裁决_勘误22.md》＋《TUFT_v16_GR反射对照独立审计裁决.md》｜《TUFT_企业级归一化主册_v1.0.md》（已并入 v1–v19）｜《TUFT_归一化台账_v1.0.json》（内部 <b>v2.2 / latest_round=v20 / E1–E442</b>，json.load 校验 OK）｜MainAgent 独立脚本 _ma_v20_audit.py（Leaver 门 1e-11 采纳；通量 −1/r²&gt;1、发射点漂移、FP 算术勘误#26）/ _ma_v19_audit.py（证伪 δω/δτ：稳态回 GR δ=0）/ _ma_v19_pole_feedback.py / _ma_v18_realfreq.py（GR 门/.531、TUFT |R|²=1、2L=13.94、Δt/τd=1.24）/ _ma_v17_strict_areal_indep.py / _ma_v17_odd_wkb.py / _ma_v16_audit.py。</div>
+</div>
+
+<footer>TUFT 企业级归一化 v2.2（含 v20）｜<b>v20 modified-QNM 审计（勘误#26，E436–E442）：Leaver s=−2 连分数 GR 复 QNM 门首次 PASS（E436–438），MainAgent 独立 N=200/400/1000→0.373671684−.088962316i（2.1e-11≈10位），闭合 v19 E430 Wronskian 积分法 FAIL 后指明的 Leaver 正路；联盟 r_b=.545（E439）散射方向反（s=3 发内向 e−iωs 朝外积分，J_out/J_in=−1、|b/a|²&gt;1）、unitarity 写死、.545 脚本不可复现（实跑1.69），改对方向通量守恒但 |r|² 随发射点 .54→.43 漂移——腔内无 V≈0 平坦区、不可隔离外垒 S 矩阵（E442）；FP .3834−.0676i/+2.61%/τ14.79（E440）与自表 r_b 算术矛盾（按式应 .0218/τ46，要 .0676 须 r_b²=.152 实跑 .52）、unwrap n=−2 选支，证伪；E441 SNR 仅留 ε 条件框架、ρ≥20 作废；态 II 撤销，modified-QNM 极点仍 OPEN（正路＝已验证 Leaver 引擎上核 Neumann+无穷远出射整体混合边值复频谱/反事实虚拟波导）。</b>历史——TUFT 企业级归一化 v2.0（含 v19）｜<b>v19 铃响畸变定量证伪（勘误#25，E419–E429）：MainAgent _ma_v19_audit 逐位复现联盟 δω+2.64%/δτ−9.53% 系瞬态多回声串单指数[2.5τ,8τ]窗口拟合伪影（换窗 δω±7%/δτ±14% 漂移；回声到齐后稳态晚窗精确回 ω_GR/τ_GR δ=0、去包络频率偏差1.5e-16；反射腔应τ增大故方向亦反）；r_echo=.211 与 e^{nT/τ} 精确抵消、净公比=.729=√.531 含吸收视界（无耗散双侧 r_b 未做 OPEN）；SNR 模板双重计数＋自拟PSD＋垒顶WKB ε=.64，ρ_req/距离倍数作废；保留 E423 几何1.24/.289 与 C级无干净晚回波方向；modified-QNM 极点定量 OPEN（双侧 r_b＋自洽 D0、多指数提极点、GR≥4位门）。</b>历史 v18： QNM GR 引擎 s=0/s=−2 双通道过基准；壁谱 v13（#18）、v14（#19）否；v15 证无高 Q 壁腔窄谱；v16 立 GR 实频反射率（E386）与 TUFT |R|²≡1（E387）；v17 勘误#22 odd 势坐标纠错（R=ρ√B、真 GR 垒顶 3.2808/.389、c=-.29 外垒≈GR）、#23 频率漏 2π。<b>v18 严格面积势实频 IVP 独立审计（E407–E418）：MainAgent 同引擎复跑（67s）GR 视界吸收门幺正 PASS、垒顶 .3737 |R_GR|²=.531（.35=.727/.40=.311，密网格确认，粗插值~0.4 的怀疑已撤销）；TUFT R→0 反射核 Neumann |R|²=1 全频（6.7e-16）；几何逐位复现 L=6.9694/2L=13.9389M，Δt/τd=2L|ω_i|=1.240（质量无关），回波返回时主环振幅 e^-1.24=0.289 ⇒ 干净晚期分立回波不可达（C级，埋入 prompt ringdown），剩余观测通道=铃响波形畸变（相位漂移/拍频/表观改阻尼），δω_r/δ阻尼/检测 SNR OPEN（v19 模板注入/复极点微扰）；勘误#24：E413 群延迟 τ=31.1M 粗网格 argR 光程项/unwrap 伪影降级 OPEN（结论用几何2L不依赖τ）、E414 SNR 4×系 Voyager=O4/16 同义反复＋ε/ρ 手设非定量、质量改标铃响残迹 M_f（30+30→~60M☉，比值仍1.24）</b> ｜ 算法联盟 o_0001sQSJsct + MainAgent 独立复核（E407–E414 采纳/降级，E415–E418，v19 E419–E429 定量证伪（勘误#25）；v20 E436–438 严格采纳、E439/E440 证伪（勘误#26），累计 E1–E442）｜ 数学自洽 ≠ 实验证实 · 小残差/高精度 ≠ 物理真根 · 手造输入 ≠ 可观测 · 垒顶WKB ≠ 定量 · 永不伪闭合<br>（文件名沿用 E1-E336，内容已更新至 v20 / E1–E442）</footer>
+</body>
+</html>

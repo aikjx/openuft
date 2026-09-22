@@ -1,0 +1,1 @@
+"""Detailed mathematical derivations."""

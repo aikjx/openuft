@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>大规模网络可视化</title>
+    <style>
+        body { margin:0; padding:0; width:100vw; height:100vh; overflow:hidden; background:#0a0a0f; }
+        #canvas { position:absolute; top:0; left:0; }
+        .controls { position:absolute; top:10px; left:10px; z-index:100; background:rgba(20,20,30,0.95); padding:15px; border-radius:10px; color:white; font-family:Arial,sans-serif; }
+        .controls button { display:block; margin:5px 0; padding:8px 16px; background:#1e88e5; border:none; color:white; border-radius:5px; cursor:pointer; }
+        .controls button:hover { background:#1565c0; }
+        .stats { margin-top:10px; font-size:12px; color:#aaa; }
+        .time-info { color:#66bb6a; font-weight:bold; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="controls">
+        <h3>网络控制</h3>
+        <button onclick="generateNetwork(10000)">10000节点</button>
+        <button onclick="generateNetwork(5000)">5000节点</button>
+        <button onclick="resetView()">重置视图</button>
+        <div class="stats" id="stats">节点数: 0 | 边数: 0</div>
+        <div class="stats time-info" id="timeInfo">布局时间: 0ms</div>
+    </div>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let nodes = [];
+        let edges = [];
+        let view = { x: 0, y: 0, scale: 1 };
+        let isDragging = false;
+        let lastMouse = { x: 0, y: 0 };
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function project(p) {
+            return {
+                x: (p.x + view.x) * view.scale + canvas.width / 2,
+                y: (p.y + view.y) * view.scale + canvas.height / 2
+            };
+        }
+
+        function draw() {
+            ctx.fillStyle = "#0a0a0f";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = Math.max(0.2, 0.5 * view.scale);
+            edges.forEach(function(e) {
+                const s = project(nodes[e.s]);
+                const t = project(nodes[e.t]);
+                ctx.strokeStyle = "rgba(100,150,200," + Math.min(0.2, 0.1 * view.scale) + ")";
+                ctx.beginPath();
+                ctx.moveTo(s.x, s.y);
+                ctx.lineTo(t.x, t.y);
+                ctx.stroke();
+            });
+            nodes.forEach(function(n) {
+                const pos = project(n);
+                const size = Math.max(1, n.s * view.scale);
+                ctx.fillStyle = n.c;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function generateNetwork(count) {
+            if (count === undefined) count = 10000;
+            const start = performance.now();
+            nodes = [];
+            edges = [];
+            const colors = ["#4fc3f7", "#66bb6a", "#ffa726", "#ef5350"];
+            const layers = Math.min(8, Math.ceil(Math.sqrt(count) / 8));
+            const npl = Math.ceil(count / layers);
+
+            for (let i = 0; i < count; i++) {
+                const layer = Math.floor(i / npl);
+                const r = 40 + layer * 50;
+                const idx = i % npl;
+                const angle = (idx / npl) * Math.PI * 2 + layer * 0.3;
+                nodes.push({
+                    x: Math.cos(angle) * r + (Math.random() - 0.5) * 15,
+                    y: Math.sin(angle) * r + (Math.random() - 0.5) * 15,
+                    s: Math.random() * 2 + (layers - layer) * 0.4,
+                    c: colors[layer % colors.length]
+                });
+            }
+
+            const conn = new Set();
+            for (let i = 0; i < count; i++) {
+                const layer = Math.floor(i / npl);
+                if (layer < layers - 1) {
+                    const nextStart = (layer + 1) * npl;
+                    const nextEnd = Math.min(nextStart + npl, count);
+                    const t = nextStart + Math.floor(Math.random() * (nextEnd - nextStart));
+                    const key = i < t ? i + "-" + t : t + "-" + i;
+                    if (!conn.has(key)) { conn.add(key); edges.push({ s: i, t: t }); }
+                }
+                if (i > 0) {
+                    const t = i - 1 - Math.floor(Math.random() * 2);
+                    if (t >= 0) {
+                        const key = i < t ? i + "-" + t : t + "-" + i;
+                        if (!conn.has(key)) { conn.add(key); edges.push({ s: i, t: t }); }
+                    }
+                }
+            }
+
+            const target = Math.floor(count * 1.5);
+            while (edges.length < target) {
+                const s = Math.floor(Math.random() * count);
+                const t = Math.floor(Math.random() * count);
+                if (s !== t) {
+                    const key = s < t ? s + "-" + t : t + "-" + s;
+                    if (!conn.has(key)) { conn.add(key); edges.push({ s: s, t: t }); }
+                }
+            }
+
+            view = { x: 0, y: 0, scale: Math.min(canvas.width, canvas.height) / 500 };
+            const time = (performance.now() - start).toFixed(2);
+            document.getElementById("stats").textContent = "节点数: " + count + " | 边数: " + edges.length;
+            document.getElementById("timeInfo").textContent = "布局时间: " + time + "ms";
+            requestAnimationFrame(draw);
+        }
+
+        function resetView() {
+            view = { x: 0, y: 0, scale: Math.min(canvas.width, canvas.height) / 500 };
+            requestAnimationFrame(draw);
+        }
+
+        canvas.addEventListener("wheel", function(e) {
+            e.preventDefault();
+            const zf = e.deltaY > 0 ? 0.9 : 1.1;
+            view.scale = Math.max(0.1, Math.min(10, view.scale * zf));
+            requestAnimationFrame(draw);
+        });
+
+        canvas.addEventListener("mousedown", function(e) {
+            isDragging = true;
+            lastMouse = { x: e.clientX, y: e.clientY };
+        });
+
+        canvas.addEventListener("mousemove", function(e) {
+            if (isDragging) {
+                view.x += (e.clientX - lastMouse.x) / view.scale;
+                view.y += (e.clientY - lastMouse.y) / view.scale;
+                lastMouse = { x: e.clientX, y: e.clientY };
+                requestAnimationFrame(draw);
+            }
+        });
+
+        canvas.addEventListener("mouseup", function() { isDragging = false; });
+        canvas.addEventListener("mouseleave", function() { isDragging = false; });
+
+        resize();
+        window.addEventListener("resize", function() { resize(); requestAnimationFrame(draw); });
+    </script>
+</body>
+</html>

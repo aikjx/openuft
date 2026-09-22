@@ -1,0 +1,233 @@
+{
+  "summary": {
+    "total": 25,
+    "PASS": 18,
+    "FAIL": 2,
+    "PARTIAL": 1,
+    "OPEN": 3,
+    "INFO": 1
+  },
+  "checks": [
+    {
+      "code": "AL-D1-1a",
+      "name": "亥姆霍兹齐次解残差 (∇²-μ²)κ=0",
+      "status": "PASS",
+      "detail": "sympy 化简残差 = 0",
+      "evidence": {
+        "residual": "0"
+      }
+    },
+    {
+      "code": "AL-D1-1b",
+      "name": "点源归一化 A=C_κ（通量极限=-4πA）",
+      "status": "PASS",
+      "detail": "lim 4πr²κ' = -4*pi*A ⇒ 源强 -4πA 与 -4πC_κδ 匹配，A=C_κ",
+      "evidence": {
+        "flux_limit": "-4*pi*A"
+      }
+    },
+    {
+      "code": "AL-D1-1c",
+      "name": "★ 积分步骤复核（章节硬伤判定）",
+      "status": "FAIL",
+      "detail": "声称 V=-c²A·e^-μr/r 的导数 = (mu*r + 1)*exp(-mu*r)/r**2·c²A ≠ 被积函数 c²A·e^-μr/r（差因子 -(μr+1)）；正确原函数 V=-c²A·E1(μr)（d/dr E1(μr)=-e^-μr/r，数值核对相对误差 3.9e-10）",
+      "evidence": {
+        "deriv_of_claimed_over_c2A": "(mu*r + 1)*exp(-mu*r)/r**2",
+        "dE1_numeric_rel_err": 3.86899206156343e-10
+      }
+    },
+    {
+      "code": "AL-D1-1d",
+      "name": "E1 势重构 dV/dr = c²A e^-μr/r（A6 修复验证）",
+      "status": "PASS",
+      "detail": "三个半径相对误差 < 1e-6（数值中心差分，V=-c²A·E1(μr)）",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D1-1e",
+      "name": "E1 势渐近行为（大 r 汤川尾 / 小 r 对数）",
+      "status": "PASS",
+      "detail": "V=-c²A·E1(μr)：大 r E1(20)=9.8355e-11≈e^-20/20=1.0306e-10 ⇒ V≈-(c²A/μ)e^-μr/r；小 r E1(1e-3)=6.3315≈-(γ+ln1e-3)=6.3305 ⇒ V≈c²A(γ+ln μr)→-∞",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D2-2a",
+      "name": "吸引力符号链（修复后）A>0 ⇒ κ>0，g=-c²κ 指向源",
+      "status": "PASS",
+      "detail": "正确势 V=-c²A·E1(μr)<0（E1>0, A>0）；g_r=-c²A e^-μr/r<0 向内吸引；无需 A<0 约定",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D2-2b",
+      "name": "源归一化约定（章节 4π 吸收进 C_κ，与 O9 一致）",
+      "status": "PASS",
+      "detail": "章节 V=-g²e^-μr/r 对应 O9 V=-g²e^-μr/(4πr) 的 A=g/4π 重标定，形式等价",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D3-3a",
+      "name": "量纲链 g=-c²κ / V_E1=-c²A·E1 / m_γ=ħμc",
+      "status": "PASS",
+      "detail": "g=[LT⁻²]；V(比势)=-c²A·E1(μr)=[L²T⁻²]（与牛顿势 Φ 同量纲）；m_γ=[M]；T^{00}=[能量密度]",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D4-4a",
+      "name": "力程 λ_π=ħ/(m_π c)=1.4138 fm",
+      "status": "PASS",
+      "detail": "λ_π=1.4138e-15 m；与经验核力力程 1.4 fm 偏差 0.99%",
+      "evidence": {
+        "lambda_pi_m": 1.4138169302127508e-15
+      }
+    },
+    {
+      "code": "AL-D4-4b",
+      "name": "μ_π=1/λ_π≈7.07e14 m⁻¹（仿真取 1e15 同量级）",
+      "status": "PASS",
+      "detail": "μ_π=7.073e+14 m⁻¹",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D4-4c",
+      "name": "★ μ=1e15 等效光子质量 vs 实验上限（O16/T4 复核）",
+      "status": "FAIL",
+      "detail": "m_γ=ħμc=197.327 MeV/c²；上限 1e-18 eV；矛盾 1.97e+26 倍（约 26 个数量级）",
+      "evidence": {
+        "m_gamma_MeV": 197.32698033839645,
+        "ratio": 1.9732698033839644e+26
+      }
+    },
+    {
+      "code": "AL-D4-4d",
+      "name": "O9 光子约束 √(κ²+τ²)|_γ < 5.07e-12 m⁻¹, R_γ>1.32 AU",
+      "status": "PASS",
+      "detail": "κ_max=5.068e-12 m⁻¹；R_γ=1.973e+11 m = 1.319 AU（与 O9 §5.3 一致）",
+      "evidence": {
+        "kappa_max_m-1": 5.067730719261491e-12,
+        "R_gamma_AU": 1.3190493916461636
+      }
+    },
+    {
+      "code": "AL-D5-5a",
+      "name": "F^{0i}=-E_i/c 代入 E 定义符号一致",
+      "status": "PASS",
+      "detail": "F^{0i}=k*(d_i_tau_t + dt_tau_i/c) 与章节一致",
+      "evidence": {
+        "symbolic": "k*(d_i_tau_t + dt_tau_i/c)"
+      }
+    },
+    {
+      "code": "AL-D5-5b",
+      "name": "F^{ij}=-ε^{ijk}B_k 与 B=k∇×τ 一致",
+      "status": "PASS",
+      "detail": "定义自洽",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D5-5c",
+      "name": "静态球对称径向 τ ⇒ ∇×τ=0 ⇒ B=0",
+      "status": "PASS",
+      "detail": "curl 三分量化简 = 0, 0, 0",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D5-5d",
+      "name": "T^{00}=½(ε_τE²+B²/μ_τ)，静态 B=0 ⇒ u=½ε_τE²",
+      "status": "PASS",
+      "detail": "与 SI 标准 T^{00} 同构；c²=1/(ε_τμ_τ) 定义保持",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D6-6a",
+      "name": "解析采样表 vs 已实机运行输出（5 点相对误差）",
+      "status": "PASS",
+      "detail": "与 TUFT_torsion_simulation.py 输出逐位一致",
+      "evidence": {
+        "idx0": {
+          "rel_tau": 4.1355035322281165e-05,
+          "rel_E": 3.425935753581033e-05,
+          "rel_u": 3.976838823367456e-05
+        },
+        "idx200": {
+          "rel_tau": 0.00027106494952497254,
+          "rel_E": 0.00012047267556939798,
+          "rel_u": 0.00023691574080985888
+        },
+        "idx400": {
+          "rel_tau": 0.00022052276971609236,
+          "rel_E": 2.659828641911176e-05,
+          "rel_u": 6.07527857179402e-05
+        },
+        "idx600": {
+          "rel_tau": 1.4078816128345246e-05,
+          "rel_E": 3.4944184965082068e-06,
+          "rel_u": 3.827573483456001e-05
+        },
+        "idx799": {
+          "rel_tau": 0.00041046438479620356,
+          "rel_E": 2.19271359121053e-05,
+          "rel_u": 2.368806533422275e-07
+        }
+      }
+    },
+    {
+      "code": "AL-D6-6b",
+      "name": "原代码数值梯度方法误差评估（log 网格）",
+      "status": "PARTIAL",
+      "detail": "相对误差：中段中位 1.50e+02，边缘最大 3.24e+02（首点 2.98e+02）；已改解析导数",
+      "evidence": {
+        "median_rel": 149.81216106169947,
+        "max_rel": 323.6674729666278
+      }
+    },
+    {
+      "code": "AL-D6-6c",
+      "name": "μ 双重角色自洽性要求（电磁扇区 μ_EM=0）",
+      "status": "OPEN",
+      "detail": "仿真 τ=C/r·e^-μr 若为电磁矢势则 μ≠0 ⇔ 有质量光子（AL-D4-4c 排除）；必须规定 μ 仅属强作用曲率场 κ，电磁映射取 μ=0；或明确仿真为 κ 场类比",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D7-7a",
+      "name": "薛定谔方程：O9-5 已闭合（KG→薛定谔+修正项）",
+      "status": "INFO",
+      "detail": "章节『下一步 A：TUFT 薛定谔方程形式化推导』在 O9 已完成，应引用而非重推",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D7-7b",
+      "name": "A6 裁决（E1 势替代汤川）与本审计 AL-D1-1c/1d 一致",
+      "status": "PASS",
+      "detail": "E1 势长程=汤川尾、短程对数可区分；本审计独立复现同一结论",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D7-7c",
+      "name": "R2 排斥芯（r≲0.5 fm 强排斥）",
+      "status": "OPEN",
+      "detail": "E1 势与汤川势均无排斥芯；2M_⊙ 中子星前置未满足（续篇 26.3）",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D7-7d",
+      "name": "ε_0/α 不可导出（O15）与章节开放缺口一致",
+      "status": "PASS",
+      "detail": "ε_τ、μ_τ、k 为模型标定参数，章节已如实标注",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D7-7e",
+      "name": "术语 τ 三重含义（O9 Frenet 挠率 τ_w / 本章电磁 τ / P9-P10 引力挠率 T_μ）",
+      "status": "OPEN",
+      "detail": "建议：本章电磁映射场更名 τ^EM（或『拓扑矢势』），保留『挠率』给引力扇区",
+      "evidence": {}
+    },
+    {
+      "code": "AL-D7-7f",
+      "name": "O-SCALE 尺度简并：μ、C_τ 自由参数",
+      "status": "PASS",
+      "detail": "μ、g² 待标定与联盟 O-SCALE（k²L³=const，绝对尺度自由）一致，非缺陷",
+      "evidence": {}
+    }
+  ]
+}
