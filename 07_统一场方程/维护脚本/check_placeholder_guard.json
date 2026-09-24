@@ -1,0 +1,63 @@
+{
+  "purpose": "核验三条\"只错位不变红\"的排版防护（未填槽位、\\lvert 分隔符、表格列数）确实在接收流量，并取证两条数字核对会见血",
+  "cases_slot": 8,
+  "cases_delimiter": 6,
+  "cases_table": 4,
+  "cases_doccheck": 4,
+  "cases_total": 22,
+  "pass": 22,
+  "all_pass": true,
+  "failed": [],
+  "live_separators": 86,
+  "live_hits": [],
+  "planted_hits": [
+    "\\lvertQ"
+  ],
+  "doc_check_notes": [
+    "README.md:57 写着 \"19 例固定样例\"，防护核验此刻是 22 例（先跑 维护脚本/check_placeholder_guard.py）",
+    "08_预言与判据.md:209 写着 \"6 例（变异体 7、良性 1）\"，变异核验台账此刻是 6 例（变异体 4、良性 1）（先跑 维护脚本/check_r11_mutation.py）",
+    "README.md:57 写着 \"19 例固定样例\"，防护核验此刻是 22 例（先跑 维护脚本/check_placeholder_guard.py）",
+    "08_预言与判据.md:209 写着 \"6 例（变异体 7、良性 1）\"，变异核验台账此刻是 6 例（变异体 4、良性 1）（先跑 维护脚本/check_r11_mutation.py）"
+  ],
+  "table_check_notes": [
+    "基线此刻扫 70 张表 / 895 行，违规 0 处",
+    "把修好的那一行改回本轮修前的样子（两个裸竖线）⇒ 必须被抓 ⇒ 投放 2 行、抓到 [436, 494]",
+    "把转义写成**两个**反斜杠（= 生成器上一版的缺陷）⇒ 必须被抓 ⇒ 投放 2 行、抓到 [436, 494]",
+    "把转义写成**一个**反斜杠（合法）⇒ 不得报（否则它数的是竖线，不是没转义的竖线） ⇒ 投放 2 行、抓到 无"
+  ],
+  "retro_hits": 21,
+  "retro_kinds": [
+    "\\lvertB",
+    "\\lvertD",
+    "\\lvertQ",
+    "\\lvertW"
+  ],
+  "retro_kind_counts": [
+    [
+      "\\lvertB",
+      14
+    ],
+    [
+      "\\lvertD",
+      1
+    ],
+    [
+      "\\lvertQ",
+      2
+    ],
+    [
+      "\\lvertW",
+      4
+    ]
+  ],
+  "retro_safe": 65,
+  "report_file": "SO10表示论报告.md",
+  "rules": [
+    "生成文里不得留未填的 {} 槽位（落单的 $ 视为防护失效）",
+    "\\lvert/\\rvert 后不得紧跟字母或数字（TeX 最长匹配 ⇒ 未定义控制词）",
+    "手写文档里\"N 例固定样例\"必须等于本脚本此刻的例数（check_docs 的 GUARD_CASES）",
+    "手写文档里\"N 处命中 / K 种\"必须等于把分隔空格从真报告里摘掉后的此刻读数（check_docs 的 BLEED ⇒ \"修好前有多少处\"是可重跑的，不是记忆）",
+    "手写文档里\"N 例（变异体 K、良性 M）\"必须等于变异核验台账此刻的读数（check_docs 的 MUT_CASES ⇒ 读 check_r11_mutation.json，不抄；该族与 GUARD_CASES/BLEED 同样**不豁免过去时**段落）",
+    "每一行表格的**分裂竖线数**必须等于其表头（check_tables ⇒ 竖线前要奇数个反斜杠才算转义，两个反斜杠 = 没转义 = 行里多出不存在的列）"
+  ]
+}

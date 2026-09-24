@@ -34,19 +34,27 @@ hbar = 1.054571817e-34
 def frenet_frame_lightspeed(s, K, theta):
     """返回 e1,e2,e3,kappa,tau,omegaD（Darboux 向量）。
 
-    e3(s) = -sin(Ks)sin(theta) x + cos(Ks)sin(theta) y - cos(theta) z
-    与 §13 Part B 全局实验室坐标系下表达式一致。
+    【2026-09-24 修正，依据 §15】原 §13 显式标架不满足其自身声明的 Frenet 方程
+    （θ≠0 时残差达 O(1)，且 omega_D 随 s 变化），仅在 θ=0 成立。
+    现改用 §15.2 修正标架：绕固定 Darboux 轴 omega_D=K*z_hat 以角速率 K 匀角速转动。
+
+        e1 = ( cosθ cosφ,  cosθ sinφ,  sinθ)
+        e2 = (-sinφ,       cosφ,       0   )
+        e3 = (-sinθ cosφ, -sinθ sinφ,  cosθ),   φ = K s
+
+    校验：Frenet 三式残差 ~1e-16（全 θ）；omega_D = tau*e1+kappa*e3 = K*z_hat 严格恒定。
+    注：耦合恒等式 p·omega_D = K^2 Sz 仅依赖正交性，故此修正【不改变】§13 Part A 结论。
     """
     kappa = K * math.cos(theta)
     tau = K * math.sin(theta)
     phi = K * s
-    e1 = np.array([math.cos(phi), math.sin(phi), 0.0])
-    e2 = np.array([-math.sin(phi) * math.cos(theta),
-                   math.cos(phi) * math.cos(theta),
+    e1 = np.array([math.cos(theta) * math.cos(phi),
+                   math.cos(theta) * math.sin(phi),
                    math.sin(theta)])
-    e3 = np.array([-math.sin(phi) * math.sin(theta),
-                   math.cos(phi) * math.sin(theta),
-                   -math.cos(theta)])
+    e2 = np.array([-math.sin(phi), math.cos(phi), 0.0])
+    e3 = np.array([-math.sin(theta) * math.cos(phi),
+                   -math.sin(theta) * math.sin(phi),
+                   math.cos(theta)])
     omegaD = tau * e1 + kappa * e3
     return e1, e2, e3, kappa, tau, omegaD
 
