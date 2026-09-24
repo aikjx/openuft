@@ -1,0 +1,4601 @@
+# -*- coding: utf-8 -*-
+"""UFE-1 · D5=$\\mathfrak{so}(10)$ 表示论引擎（L10 / L15 阶段二；零第三方依赖）。
+
+问题：`so10_chain.py` 已把"给定内容下统不统一"变成可判定计算，但它留下的**最大不确定度
+是标量谱**——情形 A/B/C 里的 $\\Phi(1,2,2)$、$\\Sigma(1,1,3)_0$ 是**手工放置**的，
+而其中被当作 $\\Delta_R$ 的三重态后来被查明 $B-L=0$、取自 $45_H$，根本不能破 $B-L$
+（链探针门禁 S2.7）。$M_{\\rm GUT}$ 因此在各情形之间摆动——倍数**不在这里写死**：
+它由 `chain_band()`/`swing_note()` 当场向链探针要，并由门禁 R2.sw0–R2.sw2 钉住
+（2026-09-24 台账 F4 修复后此数从 $3.8\\,(A/B)$ 倍变成 $8.7\\,(A/C)$ 倍，而本文件当时没跟着动）。
+
+本探针把标量谱从"猜"变成"推"：**唯一李论输入是 D5 的 Dynkin 图**，其余全部现场推导：
+
+    Dynkin 图 → Cartan 矩阵 → 正根 → $\\rho$ → 基本权重 → Weyl 维数公式
+                                      → Freudenthal–Racah 权重重数
+                                      → Adams 运算 $\\mathrm{Sym}^2/\\wedge^2$ 交叉验证
+
+再回答一个此前只能引用的问题：**哪些 Higgs 表示可能承载 $\\Delta_R$（$|B-L|=2$）**，
+使 $B-L$ 与 $SU(2)_R$ 同时破缺、进而给 $\\nu_R$ Majorana 质量。
+
+判据是**严格**的：$\\alpha$-串不断且重数对称是定理 ⇒
+"对子群每个正根 $\\beta$，$\\lambda\\pm\\beta$ 均非权重" $\\iff$ 该权重上的全部态是该子群单态。
+
+最紧的一条判定来自 Cartan 恒等式 $Q=T^3_L+T^3_R+\\tfrac{B-L}{2}$：任何 $(1,1,1)_{\\pm2}$
+单态都带 $|Q|=1$，一取期望值就破电磁 ⇒ "破 $B-L$ 而保 $U(1)_{em}$" **必然**经由 $\\Delta_L$
+或 $\\Delta_R$ 的中性分量（R5.8），而 $\\dim\\le210$ 内的唯一承载者是 $126/\\overline{126}$。
+
+第二问（R7）与第一问相互独立：把 $16_F$ 的双线性乘积 $\\mathrm{Sym}^2/\\wedge^2/16\\otimes\\overline{16}$
+拆成不可约成分、取共轭 $\\Rightarrow$ 得到 **d=4 可重整 Yukawa 允许哪些 Higgs**。
+拆成分走的是"支配权上的单位三角方程组 + 整权重构对账"，与 R3 的"剥已知成分再 `find`"
+是两条不同代码路径（R7.1）。两问在 $\\overline{126}_H$ 上重合：它既是对称手征通道里
+唯一携带 $-2\\nu$ 权重的表示，其 $\\Delta_R$ 中性成员又正好是那个权重（R7.4/R7.5）。
+
+第三问（R8）换一条与 R7 不共享代码的路：直接数 $\\mathrm{mult}((1),V)$（$V$ 里**规范不变**
+方向的个数），并把"荷配平"（零权方向数）与"规范不变"分开记账 $\\Rightarrow$ 恒有
+$\\mathrm{mult}((1),V)\\le\\dim V_0$，而两者之差可逐成分拆开核对。第四问（R9）把 R8 的配对和按
+**双费米子道**拆开：$\\mathrm{mult}((1),A\\otimes A)=\\sum_R n_Rn_{\\bar R}$ 逐道归口 $\\Rightarrow$
+读出的不是"有几个"而是"哪一个走哪条道"，其中"在场却不闭合"的那条道恰是 $126_S$。R9 也是本文件
+里第一次把配对和改走**标号**路径（登记表只到 $\\dim\\le210$，按名字查共轭会在登记范围外把真实
+存在的共轭伙伴静默算成 0 $\\Rightarrow$ 差额由 R9.5 第四条当场量出来）。
+
+第五问（R10）把"$B-L$ 破缺之后**残留哪个离散规范对称性**"从散文变成荷格上的读数：只用本文件
+自己声明的内容（$16_F$ 的各权重 + 在场标量的"色单态且 $Q=0$"分量）现算 $B-L$ 荷格生成元
+$g_0$、圆周 $\\alpha_0=2\\pi/g_0$ 与残留阶 $N=q_\\Delta/g_0$，三条路径同数才认（甲：精确有理
+gcd／lcm；乙：把圆周均分后逐角浮点枚举；丙：整套荷同乘 $1/2$ 的换约定测试 + 一个**故意错配**
+的植入缺陷）。读数**推翻**了此前写在报告 §0/§4/§5 与 09 文档里的一句话：
+$|\\Delta(B-L)|=1$ 那条单步通道留下的是 $\\mathbb{Z}_3$（阶为奇 $\\Rightarrow$ 群里没有 2 阶元，
+物质字称是**被它破掉的**），$\\mathbb{Z}_6=\\mathbb{Z}_2\\times\\mathbb{Z}_3$ 属于
+$|\\Delta(B-L)|=2$ 那一步 $\\Rightarrow$ "物质字称对质子稳定反而有利"这句话的前提当时并不成立。
+
+第六问（R11）接着把"残留群**禁哪些低能算符**"从待办变成 $Y$ 切片上的读数：低能场清单由权重格
+展开（名字由 $(\\lambda,Y,B-L)$ 签名绑定），判决只用一条同余式——$\\mathbb{Z}_N$
+（$N=q_\\Delta/g_0$）不变 $\\iff$ $N\\mid3Q$，$Q=\\sum_k(B-L)_k$，三条互不共享算术的实现
+（整除／群元逐元／浮点角度）同判决才认。两处结论是**否定**的：物质双线性里唯一的低能不变量是
+$\\nu^c\\nu^c$（右手中微子 Majorana 质量与残留群一致，但它在"3221 零权"那个错投影下读成 0
+$\\Rightarrow$ R8.5/R7.4"要 $|B-L|=2$ 必插 $126_H$"在低能一侧重现）；而 d=6 的含单态类里
+$\\Delta B\\ne0$ 且 $\\Delta L\\ne0$ 的那几条**全部**满足 $\\Delta(B-L)=0$、判决**全部允许**
+$\\Rightarrow$ 残留离散规范对称性**不**给质子稳定性论证——机理也是读数：$\\mathbb{Z}_3$ 那半边
+在低能就是色 triality（R11.2 把 R10.4 的同余搬到场、再搬到算符各数一次），它在单态层没有额外
+信息；$\\mathbb{Z}_2$ 那半边是物质字称，对偶数条物质场自动通过。
+
+数值实现：权重全部以 $1/12$ 为单位存成**整数 5 元组**（$D_5$ 权重格的坐标只取
+整数或半整数，$B-L=\\tfrac23(\\varepsilon_1+\\varepsilon_2+\\varepsilon_3)$ 取 $8$），
+于是格点运算全程整数、无浮点；内积 $\\langle a,b\\rangle:=144(a,b)$ 也是整数。
+
+诚实边界（详见报告 §12）：
+- 表示论是**数学**，不是"自然界选了 SO(10)"的证据；本探针不提升任何证据等级，也不关闭 L10。
+- "$Q=0$ 才允许取期望值"与"$B-L$ 必须被破掉"是**物理输入**而非李论推论；两条任一改掉，
+  "$126_H$ 必需"随之失效。$16_H/\\overline{16}_H$ 的 $|\\Delta(B-L)|=1$ 单步通道始终合法
+  （R5.9），只是给不出可重整的 $\\nu_R$ 质量。
+- 物质取偶负号自旋量（`so10_chain.py` 的约定）。换共轭约定会同时对调
+  $16\\leftrightarrow\\bar{16}$、$126\\leftrightarrow\\overline{126}$、$\\Delta_L\\leftrightarrow\\Delta_R$；
+  故**结论一律用 $|B-L|$ 表述**（$\\max|B-L|$ 与"能否承载 $|B-L|=2$"对符号免疫）。
+- 串检验给的是 **Cartan 层面**的多重态类型判定，不替代完整分支规则系数
+  （哪个拷贝与三代费米子耦合、$SU(4)_c$ 的 $4/\\bar4$ 归属），那部分仍是后续工作。
+- R7 只判 **d=4**（可重整）通道、且只判到"哪些表示允许出现"：**没有味自由度**，
+  故"$120_H$ 的 Yukawa 矩阵在味指标上反对称"这类标准论证不进门禁；高维算符也不在范围内。
+- R9 数的是**不变张量经由哪条道**，不是算符个数（Lorentz／味／Fierz 三关未做），且这些数**不**
+  回填进 $\\tau_p$；"哪条道由哪个 Higgs 因子化"一旦落到具体模型，就是**情形声明的输入**而非
+  权重算出来的结论（R9.3 的包含判据在同侧是退化的）。
+- R10 只数 $U(1)_{B-L}$ **这一个因子**内的残留子群：$SU(3)_c$、$SU(2)_{L/R}$ 的中心与规范群的
+  整体形式都不在那张荷格里 $\\Rightarrow$ 完整残留群可能是它的**扩张**。且两条读数都是**条件的**
+  （承载者不在链探针字面声明的标量谱里，R10.10／R11.10）。"残留群能禁哪些低能算符"已由 R11
+  判到 d=6，但结论是**否定**的（那一层的质子衰变算符不受禁）$\\Rightarrow$ 本层不回填质子寿命或
+  暗物质论证，也不改变 L10 的开放状态。
+
+用法： python -B so10_reps.py
+产出： SO10表示论报告.md / SO10表示论报告.json
+"""
+from fractions import Fraction as F
+import itertools
+import json
+import math
+import re
+import sys
+from pathlib import Path
+
+sys.dont_write_bytecode = True
+try:
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+except Exception:
+    pass
+
+ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+
+RESULTS = []
+HYGIENE = {}
+
+
+def rec(cid, claim, computed, expected, tol, status, unit='', note=''):
+    RESULTS.append({'id': cid, 'claim': claim, 'computed': computed,
+                    'expected': expected, 'tolerance': tol, 'unit': unit,
+                    'status': status, 'note': note})
+    return status == 'PASS'
+
+
+def exact(cid, claim, computed, expected, note='', unit=''):
+    """精确比对（整数或有理数）：不容忍浮点。"""
+    return rec(cid, claim, str(computed), str(expected), '0（精确）',
+               'PASS' if computed == expected else 'FAIL', unit, note)
+
+
+def ok(cid, claim, cond, note=''):
+    return rec(cid, claim, bool(cond), True, '布尔', 'PASS' if cond else 'FAIL', '', note)
+
+
+# =============================================================== 格点算术（整数，单位 1/12）
+U = 12                              # 1 个 $\\varepsilon_i$ = 12 个单位
+D4 = U * U                          # $\\langle a,b\\rangle = 144\\,(a,b)$ 为整数
+
+
+def unit(i):
+    v = [0] * 5
+    v[i] = U
+    return tuple(v)
+
+
+EPS = [unit(i) for i in range(5)]
+ZERO = (0,) * 5
+
+
+def add(a, b):
+    return tuple(x + y for x, y in zip(a, b))
+
+
+def sub(a, b):
+    return tuple(x - y for x, y in zip(a, b))
+
+
+def neg(a):
+    return tuple(-x for x in a)
+
+
+def smul(k, a):
+    return tuple(k * x for x in a)
+
+
+def half(a):
+    assert all(x % 2 == 0 for x in a), '奇数分量不能减半：%s' % (a,)
+    return tuple(x // 2 for x in a)
+
+
+def ip(a, b):
+    """$144\\,(a,b)$：整数内积。"""
+    return sum(x * y for x, y in zip(a, b))
+
+
+def nrm(a, b):
+    """真实内积 $(a,b)$ 的精确有理数形式（只用于输出与荷）。"""
+    return F(ip(a, b), D4)
+
+
+def nrm2(a):
+    return nrm(a, a)
+
+
+def ipp(a, b, msg=''):
+    """要求整数内积可被 144 整除（即真实内积为整数）后返回该整数。"""
+    v = ip(a, b)
+    assert v % D4 == 0, '内积非整数%s：%s·%s = %s/144' % (msg, a, b, v)
+    return v // D4
+
+
+def fmt(w):
+    return '(' + ','.join(str(F(x, U)) for x in w) + ')'
+
+
+# =============================================================== 唯一的李论输入
+# D5 的 Dynkin 图：链 1–2–3，节点 3 分叉到 4 与 5（下列指标 0 起始）
+DIAGRAM = [(0, 1), (1, 2), (2, 3), (2, 4)]
+RANK = 5
+
+
+def cartan_from_diagram():
+    A = [[F(2) if i == j else F(0) for j in range(RANK)] for i in range(RANK)]
+    for i, j in DIAGRAM:
+        A[i][j] = A[j][i] = F(-1)
+    return A
+
+
+CARTAN_IN = cartan_from_diagram()
+
+# 标准 $\\varepsilon$ 基实现（$D_n$：全部根长 $\\sqrt2$）
+SIMPLE = [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2]), sub(EPS[2], EPS[3]),
+          sub(EPS[3], EPS[4]), add(EPS[3], EPS[4])]
+
+
+def cartan_from_realization():
+    return [[2 * nrm(SIMPLE[i], SIMPLE[j]) / nrm2(SIMPLE[j]) for j in range(RANK)]
+            for i in range(RANK)]
+
+
+def positive_roots():
+    """正根 = 单根的非负整系数组合中长度平方为 2 者（$D_5$ 最高根系数 $\\le2$）。"""
+    out = []
+    for ns in itertools.product(range(3), repeat=RANK):
+        if not any(ns):
+            continue
+        v = ZERO
+        for n, a in zip(ns, SIMPLE):
+            v = add(v, smul(n, a))
+        if ip(v, v) == 2 * D4:
+            out.append(v)
+    return sorted(out)
+
+
+PH = positive_roots()                       # 正根：20 个
+ROOTS = PH + [neg(a) for a in PH]           # 全部根：40 个
+
+
+def inverse_rows(M):
+    """精确求逆（分数高斯消元）：返回 $M^{-1}$ 的行。"""
+    n = len(M)
+    aug = [[F(M[i][j]) for j in range(n)] + [F(1) if i == k else F(0) for k in range(n)]
+           for i in range(n)]
+    for c in range(n):
+        piv = next((r for r in range(c, n) if aug[r][c] != 0), None)
+        if piv is None:
+            raise ZeroDivisionError('singular Cartan realization')
+        aug[c], aug[piv] = aug[piv], aug[c]
+        pv = aug[c][c]
+        aug[c] = [x / pv for x in aug[c]]
+        for r in range(n):
+            if r != c and aug[r][c] != 0:
+                f = aug[r][c]
+                aug[r] = [x - f * y for x, y in zip(aug[r], aug[c])]
+    return [tuple(aug[i][n + j] for j in range(n)) for i in range(n)]
+
+
+def to_grid(row, what):
+    out = []
+    for x in row:
+        n = x * U
+        assert n.denominator == 1, '%s 不是 $1/12$ 的整数倍：%s' % (what, x)
+        out.append(int(n))
+    return tuple(out)
+
+
+# 基本权重：$(\\omega_i,\\alpha_j)=\\delta_{ij}$。方程组的**行**是 $\\alpha_j$ 的真实分量
+# （故先把 $1/12$ 单位换算回真实值），$\\omega_i$ = 逆矩阵的第 $i$ 列。
+_MINV = inverse_rows([[F(a[k], U) for k in range(RANK)] for a in SIMPLE])
+FUND = [to_grid(tuple(_MINV[r][c] for r in range(RANK)), '基本权重') for c in range(RANK)]
+RHO = half(ZERO)
+for a in PH:
+    RHO = add(RHO, a)
+RHO = half(RHO)
+
+
+def dynkin(mu):
+    """$\\mu$ 的 Dynkin 标号 $(\\mu,\\alpha_i^\\vee)$；本实现里 $\\alpha^\\vee=\\alpha$。"""
+    return tuple(ipp(mu, a) for a in SIMPLE)
+
+
+def weyl_reflect(v, a):
+    return sub(v, smul(ipp(v, a), a))        # $|a|^2=2$ ⇒ 反射系数就是 $(v,a)$
+
+
+def weyl_orbit(v):
+    seen = {v}
+    stack = [v]
+    while stack:
+        u = stack.pop()
+        for a in SIMPLE:
+            w = weyl_reflect(u, a)
+            if w not in seen:
+                seen.add(w)
+                stack.append(w)
+    return seen
+
+
+def dominant(v):
+    """$v$ 的 Weyl 轨道中唯一的支配代表（及其 Dynkin 标号）。"""
+    for w in weyl_orbit(v):
+        lab = dynkin(w)
+        if all(x >= 0 for x in lab):
+            return w, lab
+    raise ValueError('not a weight: %s' % (v,))
+
+
+def weight_of_label(cs):
+    v = ZERO
+    for c, w in zip(cs, FUND):
+        v = add(v, smul(c, w))
+    return v
+
+
+def highest_root():
+    """唯一同时是**正根**且**支配**的根 = 最高根 $\\theta$；一并返回它在单根基下的系数（marks）。"""
+    out = []
+    for ns in itertools.product(range(3), repeat=RANK):
+        if not any(ns):
+            continue
+        v = ZERO
+        for n, a in zip(ns, SIMPLE):
+            v = add(v, smul(n, a))
+        if ip(v, v) == 2 * D4 and all(x >= 0 for x in dynkin(v)):
+            out.append((v, ns))
+    assert len(out) == 1, '最高根不唯一：%s' % ([o[0] for o in out],)
+    return out[0]
+
+
+TH, TH_MARKS = highest_root()
+
+
+def weyl_dim(Lam):
+    """$\\dim(\\Lambda)=\\prod_{\\alpha>0}(\\Lambda+\\rho,\\alpha)/(\\rho,\\alpha)$。"""
+    num, den = 1, 1
+    for a in PH:
+        num *= ip(add(Lam, RHO), a)
+        den *= ip(RHO, a)
+    q = F(num, den)
+    assert q.denominator == 1, 'Weyl 维数不是整数'
+    return int(q)
+
+
+def casimir2(Lam):
+    """$C_2(\\Lambda)=(\\Lambda,\\Lambda+2\\rho)$。"""
+    return nrm2(Lam) + 2 * F(ip(Lam, RHO), D4)
+
+
+def freudenthal(Lam):
+    """Freudenthal–Racah 递推，返回 $\\{\\mu:m_\\mu\\}$（只含重数 $>0$）。
+
+    $m_\\mu\\,[(\\Lambda+\\rho)^2-(\\mu+\\rho)^2]=2\\sum_{\\alpha>0}\\sum_{i>0}
+    m_{\\mu+i\\alpha}\\,(\\mu+i\\alpha,\\alpha)$。
+
+    两点关键（都是本文件早先踩过的坑，写成断言把守）：
+    1. **分母用 $\\rho$ 平移后的范数差**。用 $(\\Lambda,\\Lambda)-(\\mu,\\mu)$ 会在
+       minuscule 表示（$10,16$）处除零并给出错误重数。
+    2. **处理顺序按 $d(\\mu)=\\sum_j n_j$（$\\Lambda-\\mu=\\sum n_j\\alpha_j$ 的系数和）升序**。
+       $d$ 由线性无关性**唯一决定**，等于 $(\\Lambda-\\mu,\\rho)$（因 $(\\alpha_j,\\rho)=1$）；
+       用 DFS 的**路径长度**当 $d$ 会给同一点赋非最小的 $d$，破坏递推顺序 ⇒ 重数不整除。
+    """
+    hmax = ip(Lam, Lam)
+    lamr = ipp(Lam, RHO)
+    cand = {Lam}
+    stack = [Lam]
+    while stack:
+        u = stack.pop()
+        for a in SIMPLE:
+            w = sub(u, a)
+            if ip(w, w) <= hmax and w not in cand:
+                cand.add(w)
+                stack.append(w)
+    depth = dict((mu, lamr - ipp(mu, RHO)) for mu in cand)
+    assert min(depth.values()) == 0
+    m = {}
+    for mu in sorted(cand, key=lambda x: depth[x]):
+        if mu == Lam:
+            m[mu] = 1
+            continue
+        den = ip(add(Lam, RHO), add(Lam, RHO)) - ip(add(mu, RHO), add(mu, RHO))
+        assert den > 0, 'Freudenthal 分母非正（权重 %s）' % (mu,)
+        tot = 0
+        for a in PH:
+            i = 1
+            while True:
+                w = add(mu, smul(i, a))
+                if w not in cand:
+                    break
+                if m.get(w, 0):
+                    tot += m[w] * ip(w, a)
+                i += 1
+        val = F(2 * tot, den)
+        assert val.denominator == 1, 'Freudenthal 重数不整除（权重 %s）' % (mu,)
+        m[mu] = int(val)
+    return dict((mu, k) for mu, k in m.items() if k > 0)
+
+
+# ---------------------------------------------------------------- 多重集工具
+def from_list(ws):
+    out = {}
+    for w in ws:
+        out[w] = out.get(w, 0) + 1
+    return out
+
+
+def madd(*mss):
+    out = {}
+    for ms in mss:
+        for w, k in ms.items():
+            out[w] = out.get(w, 0) + k
+    return dict((w, k) for w, k in out.items() if k)
+
+
+def msub(ms, *parts):
+    """$ms-\\sum_k$ parts；出现负重数即抛（分解不成立时不会静默通过）。"""
+    out = dict(ms)
+    for part in parts:
+        for w, k in part.items():
+            if out.get(w, 0) < k:
+                raise ArithmeticError('剥不掉：权重 %s 重数不足' % (w,))
+            out[w] -= k
+    return dict((w, k) for w, k in out.items() if k)
+
+
+def msum(ms):
+    return sum(ms.values())
+
+
+def tprod(a, b):
+    """$\\chi_a\\chi_b$：权重两两相加（重数相乘）。"""
+    out = {}
+    for w1, k1 in a.items():
+        for w2, k2 in b.items():
+            w = add(w1, w2)
+            out[w] = out.get(w, 0) + k1 * k2
+    return out
+
+
+def psi2(a):
+    """Adams 操作 $\\psi_2$：$\\mu\\mapsto2\\mu$。"""
+    out = {}
+    for w, k in a.items():
+        w2 = smul(2, w)
+        out[w2] = out.get(w2, 0) + k
+    return out
+
+
+def _symwedge(a, sgn):
+    """$(\\chi^2+\\mathrm{sgn}\\cdot\\psi_2\\chi)/2$：逐点必须整除且非负。"""
+    sq, p2 = tprod(a, a), psi2(a)
+    out = {}
+    for w in set(sq) | set(p2):
+        v = sq.get(w, 0) + sgn * p2.get(w, 0)
+        if v % 2:
+            raise ArithmeticError('Adams 运算给出半整数（权重 %s）' % (w,))
+        if v < 0:
+            raise ArithmeticError('Adams 运算给出负重数（权重 %s）' % (w,))
+        if v:
+            out[w] = v // 2
+    return out
+
+
+def sym2(a):
+    return _symwedge(a, +1)
+
+
+def wedge2(a):
+    return _symwedge(a, -1)
+
+
+# =============================================================== 表示清单（按标号搜索）
+def labels_upto(total):
+    out = []
+    for cs in itertools.product(range(total + 1), repeat=RANK):
+        if sum(cs) <= total:
+            out.append(tuple(cs))
+    return out
+
+
+ALL_LABELS = labels_upto(3)                   # $\\sum c_i\\le3$：覆盖到 $\\dim 672$
+DIMMAP = {}
+for _cs in ALL_LABELS:
+    DIMMAP.setdefault(weyl_dim(weight_of_label(_cs)), []).append(_cs)
+
+
+def find(target_dim, want_ms=None):
+    """按维数（可选：再按权重多重集）定位**唯一**的 Dynkin 标号；不唯一/无候选返回 None。"""
+    cands = list(DIMMAP.get(target_dim, []))
+    if want_ms is not None:
+        cands = [cs for cs in cands if irrep(cs)[1] == want_ms]
+    return cands[0] if len(cands) == 1 else None
+
+
+CACHE = {}
+
+
+def irrep(cs):
+    """按 Dynkin 标号取（最高权, 权重多重集, Weyl 维数, Freudenthal 总重数, $C_2$）。"""
+    key = tuple(cs)
+    assert all(c >= 0 for c in key), '标号 %s 非支配 ⇒ 不是最高权，递推不适用' % (cs,)
+    if key not in CACHE:
+        Lam = weight_of_label(key)
+        ms = freudenthal(Lam)
+        CACHE[key] = (Lam, ms, weyl_dim(Lam), msum(ms), casimir2(Lam))
+    return CACHE[key]
+
+
+# 只有 $\\sum c_i\\le2$ 的 15 个标号做全量重数递推（含 dim 1200）；更高标号按需计算
+LOW_LABELS = [cs for cs in ALL_LABELS if sum(cs) <= 2]
+
+
+# =============================================================== 与 so10_chain 对表
+CHAIN_OK = False
+try:
+    import so10_chain as chain
+    CHAIN_OK = chain.run_engine_tests()
+except Exception as e:                                     # pragma: no cover
+    print('[warn] 无法载入 so10_chain：%r —— 荷约定相关判定将不通过' % (e,))
+    chain = None
+
+# 链探针的 Cartan 方向（Fraction 形式）⇒ 换成本引擎的整数格点单位
+def to_grid_dir(vec, what):
+    out = []
+    for x in vec:
+        n = x * U
+        assert n.denominator == 1, '%s 的分母不是 $1/%d$：%s' % (what, U, x)
+        out.append(int(n))
+    return tuple(out)
+
+
+BL = T3L = T3R = YHP = None
+if chain is not None:
+    BL = to_grid_dir(chain.BL, '$B-L$ 方向')
+    T3L = to_grid_dir(chain.T3L, '$T^3_L$ 方向')
+    T3R = to_grid_dir(chain.T3R, '$T^3_R$ 方向')
+    YHP = to_grid_dir(chain.YHP, '$Y$ 方向')
+
+# $Q=T^3_L+T^3_R+\\tfrac{B-L}{2}$：在 so(10) 的 Cartan 子空间里，电磁荷是**另一个方向**，
+# 只有当 $T^3_L=0$（弱单态）时它才等于 $Y$。整条判定链的关键就在这个差别上。
+QHP = add(T3L, add(T3R, half(BL))) if chain is not None else None
+
+
+# =============================================================== 跨仪器对账（摆动倍数不写死）
+def chain_band(scn=None):
+    """现场调用链探针，解出单阈 3221 链各情形的 $M_{\\rm GUT}$（只收物理解）。
+
+    为什么必须是**活数**：本报告 §0/§11 的散文要引用"$M_{\\rm GUT}$ 的摆动倍数"。
+    2026-09-24 台账 F4（链探针情形 C 的 $b_2$ 重复计入）修复后，三情形区间从
+    $3.8\\,(A/B)$ 倍变成 $8.7\\,(A/C)$ 倍，而本报告当时没跟着动 —— 写死数字就是这条复发路径。
+    """
+    if chain is None or not CHAIN_OK:
+        return None
+    keys = list(chain.SCENARIOS) if scn is None else list(scn)
+    out = []
+    for k in keys:
+        r = chain.solve_determined('R3221', k)
+        if r is not None and r['physical']:
+            out.append((k, r['scales']['M_GUT']))
+    return out or None
+
+
+def swing_note(band=None, nested=False):
+    """把区间两端之比连同**哪两个情形**在两端一起给出（供散文直接嵌入）。
+
+    刻意不返回裸数字：一个没有主体的倍数正是 F4 那种"数还活着、意义已经变了"的写法。
+    `nested` 用于已经处在括号里的句子 —— 套两层括号会让读者以为外层在修饰内层。
+    """
+    band = chain_band() if band is None else band
+    if not band:
+        return '未对账（链探针引擎未通过 ⇒ 本报告不引用其摆动倍数）'
+    lo = min(band, key=lambda t: t[1])
+    hi = max(band, key=lambda t: t[1])
+    if nested:
+        return '%.1f 倍——情形 %s↔%s，%d 条物理解**并列**区间，不是误差棒' % (
+            hi[1] / lo[1], lo[0], hi[0], len(band))
+    return '%.1f 倍（情形 %s↔%s；%d 条物理解**并列**给出的区间，不是误差棒）' % (
+        hi[1] / lo[1], lo[0], hi[0], len(band))
+
+
+
+def chg(w, dirn):
+    """权重 $w$ 沿方向 $dirn$ 的荷（精确有理数）。"""
+    return F(ip(w, dirn), D4)
+
+
+def grid_ms(ws):
+    """把链探针的 Fraction 权重集换成本引擎的整数格点多重集。"""
+    out = {}
+    for w, k in from_list(ws).items():
+        out[to_grid_dir(w, '权重')] = k
+    return out
+
+
+# =============================================================== 子群串检验
+# 物理 $SU(3)_c$ 根 $\\pm(\\varepsilon_i-\\varepsilon_j),\\ i<j\\le3$；
+# $SU(2)_L$ 根 $\\varepsilon_4+\\varepsilon_5$；$SU(2)_R$ 根 $\\varepsilon_4-\\varepsilon_5$。
+# $B-L$ 与这三组根全部正交 ⇒ 它是 Pati–Salam 块的中心 $U(1)$。
+A2_C = [sub(EPS[i], EPS[j]) for i in range(3) for j in range(i + 1, 3)]
+A1_L = add(EPS[3], EPS[4])
+A1_R = sub(EPS[3], EPS[4])
+
+
+def string_len(ms, lam, beta):
+    """沿根 $\\beta$ 穿过 $\\lambda$ 的连续串长度（$\\alpha$-串不断 ⇒ 直接数）。"""
+    n, k = 1, 1
+    while add(lam, smul(k, beta)) in ms:
+        n += 1
+        k += 1
+    k = 1
+    while sub(lam, smul(k, beta)) in ms:
+        n += 1
+        k += 1
+    return n
+
+
+def color_singlet_wt(ms, lam):
+    """串长 1 $\\iff$ 该权重上所有态都是 $SU(3)_c$ 单态（既是最高又是最低权）。"""
+    return all(string_len(ms, lam, b) == 1 for b in A2_C)
+
+
+def bl2_class(ms, target=F(2)):
+    """列出 $B-L=$ target 的权重，附 (色单态?, $SU(2)_{L/R}$ 串长, $T^3_{L,R},Y,Q$)。"""
+    rows = []
+    for lam in sorted(w for w in ms if chg(w, BL) == target):
+        rows.append({'w': lam, 'm': ms[lam], 'c1': color_singlet_wt(ms, lam),
+                     'L': string_len(ms, lam, A1_L), 'R': string_len(ms, lam, A1_R),
+                     'T3L': chg(lam, T3L), 'T3R': chg(lam, T3R), 'Y': chg(lam, YHP),
+                     'Q': chg(lam, QHP)})
+    return rows
+
+
+def bl_multiplets(ms):
+    """$|B-L|=2$ 的色单态按多重态类型归档：$\\Delta_R$ / $\\Delta_L$ / $(1,1,1)_{\\pm2}$ / 其他。"""
+    res = {'DR': [], 'DL': [], 'S': [], 'other': []}
+    for t in (F(2), F(-2)):
+        for r in bl2_class(ms, t):
+            if not r['c1']:
+                continue
+            key = ('DR' if (r['L'] == 1 and r['R'] == 3) else
+                   'DL' if (r['L'] == 3 and r['R'] == 1) else
+                   'S' if (r['L'] == 1 and r['R'] == 1) else 'other')
+            res[key].append(dict(r, BL=t))
+    return res
+
+
+def bl2_summary(mp):
+    """把 $|B-L|=2$ 的色单态按（类型, $B-L$）汇总：成员数、$Q$ 谱、$Q=0$ 的成员数。
+
+    三重态（$\\Delta_{L/R}$）的 $Q$ 沿串逐级 $+1$ ⇒ 每组恰有一个中性成员；
+    而 $(1,1,1)_{\\pm2}$ 单态的 $Q=\\tfrac{B-L}{2}=\\pm1$ **恒不为零** ⇒ 它一破缺就破电磁。
+    """
+    out = []
+    for k in ('DR', 'DL', 'S', 'other'):
+        for t in (F(2), F(-2)):
+            grp = [r for r in mp[k] if r['BL'] == t]
+            if not grp:
+                continue
+            out.append({'kind': k, 'BL': str(t), 'n': len(grp),
+                        'Q': [str(q) for q in sorted(set(r['Q'] for r in grp))],
+                        'Y': [str(y) for y in sorted(set(r['Y'] for r in grp))],
+                        'T3': [str(x) for x in sorted(set(
+                            r['T3R' if k == 'DR' else 'T3L'] for r in grp))],
+                        'nq0': sum(1 for r in grp if r['Q'] == 0)})
+    return out
+
+
+def carriers(ms):
+    """$(\\max|B-L|,\\ $有$\\Delta_R$?,\\ $有$\\Delta_L$?,\\ $有(1,1,1)_{\\pm2}$?,\\ 中性可破缺?,\\ 汇总)$。"""
+    mp = bl_multiplets(ms)
+    mx = max(abs(chg(w, BL)) for w in ms)
+    summ = bl2_summary(mp)
+    safe = any(r['kind'] in ('DR', 'DL') and r['nq0'] * 3 == r['n'] for r in summ)
+    return mx, bool(mp['DR']), bool(mp['DL']), bool(mp['S']), safe, summ, mp
+
+
+# ============================================== 分支规则：限制到极大秩子群
+# 两条破缺链的半单部分都与 $SO(10)$ **共享同一个 Cartan 子代数**（满秩子群）：
+#
+#   3221：$SU(3)_c\times SU(2)_L\times SU(2)_R$，单根 $\varepsilon_1-\varepsilon_2$、
+#         $\varepsilon_2-\varepsilon_3$、$\varepsilon_4+\varepsilon_5$、$\varepsilon_4-\varepsilon_5$
+#         （秩 4）；缺的那一维正是与这四个根全部正交的 $B-L$ ⇒ 每个权重的 $B-L$ 原样保留。
+#   422 ：$SU(4)_c\times SU(2)_L\times SU(2)_R$，把 $A_2$ 换成 $D_3\simeq A_3$ 的单根
+#         $\varepsilon_1-\varepsilon_2$、$\varepsilon_2-\varepsilon_3$、$\varepsilon_2+\varepsilon_3$
+#         （秩 $3+1+1=5$ = 满秩，Pati–Salam 的 $U(1)$ 自动在 $SU(4)$ 的 Cartan 里）。
+#
+# ⇒ "分支"就是**同一批权重向量换一套标号**。分支重数用 Klimyk–Springer 交错和
+#   $n_\lambda=\sum_{w\in W_H}\det(w)\,m_\Lambda\big(w(\lambda+\rho_H)-\rho_H\big)$，
+#   它只用到 $m_\Lambda$（Freudenthal 已给）与 $W_H,\rho_H$（由单根现算）⇒ 与 §1 的
+#   递推**互相独立**；再由门禁 R6.3「$\sum_\lambda n_\lambda\dim_H(\lambda)=\dim\Lambda$」收口。
+def positive_roots_of(simples):
+    """正根 = 单根的非负整系数组合中长度平方为 2 者（直和型子系统同样成立）。"""
+    out = []
+    for ns in itertools.product(range(4), repeat=len(simples)):
+        if not any(ns):
+            continue
+        v = ZERO
+        for n, a in zip(ns, simples):
+            v = add(v, smul(n, a))
+        if ip(v, v) == 2 * D4:
+            out.append(v)
+    return sorted(out)
+
+
+def rho_of(pos):
+    s = ZERO
+    for a in pos:
+        s = add(s, a)
+    return half(s)
+
+
+def reflect_mat(beta):
+    r"""$s_\beta$ 在 $\varepsilon$ 基下的**整数**矩阵；第 $k$ 行 = 第 $k$ 个基向量的像。"""
+    b = []
+    for x in beta:
+        assert x % U == 0 and abs(x) <= U, '单根坐标异常：%s' % (beta,)
+        b.append(x // U)                                    # $\in\{0,\pm1\}$
+    return tuple(tuple(int(i == k) - b[k] * b[i] for i in range(5)) for k in range(5))
+
+
+IDENT = tuple(tuple(int(i == j) for j in range(5)) for i in range(5))
+
+
+def mat_compose(A, B):
+    """先 $B$ 后 $A$（行约定：第 $k$ 行 = $e_k$ 的像）。"""
+    return tuple(tuple(sum(B[k][j] * A[j][i] for j in range(5)) for i in range(5))
+                 for k in range(5))
+
+
+def mat_vec(M, v):
+    return tuple(sum(v[k] * M[k][i] for k in range(5)) for i in range(5))
+
+
+def weyl_group_signed(simples):
+    """$\{$矩阵 $:\det\}$。同一矩阵被两条路径以不同符号到达 ⇒ 当场报错（自检）。"""
+    gens = [reflect_mat(a) for a in simples]
+    els = {IDENT: 1}
+    stack = [IDENT]
+    while stack:
+        M = stack.pop()
+        for g in gens:
+            N = mat_compose(M, g)
+            if N in els:
+                assert els[N] == -els[M], 'Weyl 群的符号表示不自洽'
+                continue
+            els[N] = -els[M]
+            stack.append(N)
+    return els
+
+
+class Subsystem(object):
+    r"""极大秩子群的半单部分：正根、$\rho$、Weyl 群、维数公式全部由单根现算。"""
+
+    def __init__(self, name, simples, extra=None):
+        self.name, self.extra = name, extra
+        self.simples = list(simples)
+        for a in self.simples:
+            assert ip(a, a) == 2 * D4, '%s：单根长度不为 2' % name
+        self.pos = positive_roots_of(self.simples)
+        self.rho = rho_of(self.pos)
+        self.W = weyl_group_signed(self.simples)
+        for a in self.simples:
+            assert ip(self.rho, a) * 2 == ip(a, a), '%s：$(\\rho,\\alpha^\\vee)\\ne1$' % name
+        if extra is not None:
+            for a in self.pos:
+                assert ip(a, extra) == 0, '%s：额外 $U(1)$ 方向与根不正交' % name
+
+    def labels(self, mu):
+        return tuple(ipp(mu, a) for a in self.simples)
+
+    def dominant(self, mu):
+        lab = self.labels(mu)
+        return all(x >= 0 for x in lab)
+
+    def dim(self, lam):
+        r"""$\dim_H(\lambda)=\prod_{\beta>0}(\lambda+\rho_H,\beta)/(\rho_H,\beta)$。"""
+        num, den = 1, 1
+        for a in self.pos:
+            num *= ip(add(lam, self.rho), a)
+            den *= ip(self.rho, a)
+        q = F(num, den)
+        assert q.denominator == 1, '%s：Weyl 维数不是整数' % self.name
+        return int(q)
+
+
+SUB_3221 = SUB_422 = None
+if BL is not None:
+    SUB_3221 = Subsystem('3221', [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2]), A1_L, A1_R],
+                         extra=BL)
+SUB_422 = Subsystem('422', [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2]), add(EPS[1], EPS[2]),
+                            A1_L, A1_R])
+
+
+# $SU(3)_c$ 与 $SU(4)_c$ 因子**单独**取出来：R6.4 用它们把「整块的 Weyl 乘积公式」与
+# 「闭式维数公式」对上，从而分支表里每个分量的维数都由两条独立路径给出。
+SUB_A2 = Subsystem('A2', [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2])])
+SUB_A3 = Subsystem('A3', [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2]),
+                          add(EPS[1], EPS[2])])
+# $A_2$ 配上 $B-L$ 作额外方向：这就是 $3221$ 的色因子，也是 $R6.7$ 里 $A_3\downarrow A_2\times U(1)$
+# 的落脚点（$B-L$ 与 $A_2$ 的所有根正交 ⇒ `Subsystem` 构造时那条断言自动把关）。
+SUB_A2B = None
+if BL is not None:
+    SUB_A2B = Subsystem('A2(B-L)', [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2])], extra=BL)
+BRANCH = []                                           # 供报告 §5 取用
+
+
+def branching(ms, S):
+    """把权重多重集 $ms$ 限制到子系统 $S$：返回按标号排序的分支表。
+
+    候选最高权 = 全部 $S$-支配的权重；重数由 Klimyk–Springer 交错和给出。
+    算出**负重数**说明标号系统或 Weyl 群有误 ⇒ 当场报错，不做静默丢弃。
+    """
+    out = []
+    for lam in sorted(l for l in ms if S.dominant(l)):
+        mu = add(lam, S.rho)
+        k = 0
+        for M, sg in S.W.items():
+            k += sg * ms.get(sub(mat_vec(M, mu), S.rho), 0)
+        assert k >= 0, '%s：分支重数为负（%s）⇒ 子系统构造有误' % (S.name, lam)
+        if k:
+            out.append({'wt': lam, 'labels': S.labels(lam), 'dim': S.dim(lam), 'n': k,
+                        'bl': None if S.extra is None else chg(lam, S.extra)})
+    return out
+
+
+def dim3(p, q):
+    """$SU(3)$ 的 $(p,q)$ 维数公式（与 R6.3 的 Weyl 乘积公式**不同**的代码路径）。"""
+    return (p + 1) * (q + 1) * (p + q + 2) // 2
+
+
+# $D_3\simeq A_3$ 的**槽位映射**：本引擎取的单根是 $\beta_1=\varepsilon_1-\varepsilon_2$、
+# $\beta_2=\varepsilon_2-\varepsilon_3$、$\beta_3=\varepsilon_2+\varepsilon_3$，而
+# $(\beta_1,\beta_2)=(\beta_1,\beta_3)=-1$、$(\beta_2,\beta_3)=0$ ⇒ Dynkin 链是
+# "$\beta_3-\beta_1-\beta_2$"，即标准 $A_3$ 编号 $(p_1,p_2,p_3)=(c,a,b)$。槽位放错就会把
+# $SU(4)$ 的 $6$ 读成 $4$ —— 这正是 R6.4 要抓的错。
+def a3_slot(lab):
+    return (lab[2], lab[0], lab[1])
+
+
+def dim4(a, b, c):
+    """$SU(4)=A_3$ 在**标准槽位**下的闭式维数（与子群 Weyl 乘积公式不同的代码路径）。"""
+    return ((a + 1) * (b + 1) * (c + 1) * (a + b + 2) * (b + c + 2) * (a + b + c + 3)
+            // 12)
+
+
+def su_name(lab, d):
+    """共轭由标号倒序给出（$A_2,A_3$ 同规则）：倒序**较大**者即为共轭表示。"""
+    return ('\\overline{%d}' % d) if tuple(reversed(lab)) > tuple(lab) else '%d' % d
+
+
+def fmt_3221(row):
+    """$(SU(3)_c,\ SU(2)_L,\ SU(2)_R)_{B-L}$ 记法（输出可直接放进数学环境）。"""
+    lab = row['labels']
+    return '(%s,%d,%d)_{%s}' % (su_name(lab[:2], dim3(*lab[:2])), lab[2] + 1,
+                                lab[3] + 1, row['bl'])
+
+
+def fmt_422(row):
+    """$(SU(4)_c,\ SU(2)_L,\ SU(2)_R)$ 记法（$U(1)$ 已在 $SU(4)$ 里）。"""
+    lab = row['labels']
+    s = a3_slot(lab[:3])
+    return '(%s,%d,%d)' % (su_name(s, dim4(*s)), lab[3] + 1, lab[4] + 1)
+
+
+def branch_sum(rows):
+    return sum(r['n'] * r['dim'] for r in rows)
+
+
+def branch_tex(rows, fmt):
+    """把一个表示的整条分支写成 $A\oplus B\oplus\cdots$（重数 $>1$ 时前置 $n\cdot$）。"""
+    return '\\oplus'.join([('%d\\cdot' % r['n'] if r['n'] > 1 else '') + fmt(r)
+                            for r in rows])
+
+
+def tex_name(nm):
+    """'10̄' → $\\overline{10}$（只用于报告表头）。"""
+    return ('$\\overline{%s}$' % nm[:-1]) if nm.endswith('\u0304') else ('$%s$' % nm)
+
+
+def plain(s):
+    """终端用的去 LaTeX 版（只用于打印，不参与任何判定）。"""
+    return (s.replace('\\overline{', '~').replace('_{', '_').replace('}', '')
+            .replace('\\oplus', ' + ').replace('\\cdot', '*'))
+
+
+def run_branching():
+    """R6：两条链的完整分支规则（含与 §1 递推、与串检验的三方交叉比对）。"""
+    p = True
+    if SUB_3221 is None:
+        return ok('R6.0', '子群分支需要 $B-L$ 方向（载入 `so10_chain.py`）', False,
+                  'so10_chain 未载入 ⇒ 分支规则不出结论')
+    p &= exact('R6.1', '两个极大秩子系统的正根数：3221 的 $A_2\oplus A_1\oplus A_1$ '
+                       '$=3+1+1$，422 的 $D_3\oplus A_1\oplus A_1=A_3\oplus A_1\oplus A_1$ '
+                       '$=6+1+1$（根总数分别 $10,16$；$D_3\cong A_3$ 由实现自动完成）',
+               [len(SUB_3221.pos), len(SUB_422.pos)], [5, 8],
+               '$(\\rho,\\alpha^\\vee)=1$ 与单根长度已在上层断言')
+    p &= exact('R6.2', 'Weyl 群阶：$|W(A_2\oplus A_1\oplus A_1)|=6\cdot2\cdot2=24$，'
+                       '$|W(A_3\oplus A_1\oplus A_1)|=24\cdot2\cdot2=96$（闭包+符号一致性已断言）',
+               [len(SUB_3221.W), len(SUB_422.W)], [24, 96])
+    rows2, rows4, sums = {}, {}, {}
+    for nm in ORDER:
+        if nm not in NAMED:
+            continue
+        ms = irrep(NAMED[nm])[1]
+        r2 = branching(ms, SUB_3221)
+        r4 = branching(ms, SUB_422)
+        rows2[nm], rows4[nm] = r2, r4
+        sums[nm] = [branch_sum(r2), branch_sum(r4), sum(ms.values())]
+    p &= exact('R6.3', '分支完整性（对每个表示、两条链）：$\sum_\lambda n_\lambda\,'
+                       '\dim_H(\lambda)=\dim\Lambda$（漏掉或多算任何分量都会破坏等式）',
+               sums, dict((k, [v[2], v[2], v[2]]) for k, v in sums.items()),
+               '逐项核验 %d 个表示' % len(sums))
+    chk, bad = 0, []
+    for nm, r2 in rows2.items():
+        for r in r2:
+            c = dim3(*r['labels'][:2])
+            chk += 1
+            if SUB_A2.dim(r['wt']) != c or \
+                    r['dim'] != c * (r['labels'][2] + 1) * (r['labels'][3] + 1):
+                bad.append((nm, fmt_3221(r)))
+    for nm, r4 in rows4.items():
+        for r in r4:
+            c = dim4(*a3_slot(r['labels'][:3]))
+            chk += 1
+            if SUB_A3.dim(r['wt']) != c or \
+                    r['dim'] != c * (r['labels'][3] + 1) * (r['labels'][4] + 1):
+                bad.append((nm, fmt_422(r)))
+    p &= ok('R6.4', '分支表里每个分量的维数由两条独立路径给出且相等：整块 Weyl 乘积公式 '
+                    '= 因子 Weyl 乘积公式 = $(p,q)$/$(p,q,r)$ 闭式（$\\times2$ 的 $SU(2)$ 因子'
+                    '一并核对 ⇒ 直和因子化成立）',
+            not bad, '核验 %d 个分量；不符：%s' % (chk, bad or '无'))
+    kinds = {}
+    for nm, r2 in rows2.items():
+        s = set()
+        for r in r2:
+            if r['labels'][0] or r['labels'][1] or abs(r['bl']) != 2:
+                continue
+            l, rr = r['labels'][2], r['labels'][3]
+            s.add(('DR' if (l, rr) == (0, 2) else 'DL' if (l, rr) == (2, 0) else
+                   'S' if (l, rr) == (0, 0) else 'other', str(r['bl'])))
+        kinds[nm] = s
+    ref = dict((r['name'], set((g['kind'], g['BL']) for g in r['bl2groups']))
+               for r in TABLE)
+    p &= exact('R6.5', '分支表与 R5 的串检验**双向**一致：$|B-L|=2$ 的色单态按 '
+                       '$(SU(2)_L,SU(2)_R)$ 类型归档，两套完全独立的算法给出同一个集合'
+                       '（$\\Delta_R\leftrightarrow(1,1,3)$、$\\Delta_L\leftrightarrow'
+                       '(1,3,1)$、$(1,1,1)_{\\pm2}$）',
+               dict((k, sorted(v)) for k, v in kinds.items()),
+               dict((k, sorted(v)) for k, v in ref.items()),
+               '非空者：%s' % dict((k, sorted(v)) for k, v in kinds.items() if v))
+    # 物理锚点：$16_F$ 与 $10_H$ 的限制是文献里的标准结果（本项目唯一使用外部答案之处）。
+    # 只比 $|B-L|$：本引擎的 $B-L$ 整体符号与部分文献相反（R5.7 已把符号钉在自己的约定里）。
+    key = lambda rows: sorted((((r['labels']), (None if r['bl'] is None
+                                                else abs(r['bl'])), r['n'])
+                               for r in rows),
+                              key=lambda t: (str(t[0]), str(t[1]), t[2]))
+    got = {'16': [key(rows2['16']), key(rows4['16'])],
+           '10': [key(rows2['10']), key(rows4['10'])]}
+    exp = {'16': [[((0, 0, 0, 1), F(1), 1), ((0, 0, 1, 0), F(1), 1),
+                   ((0, 1, 0, 1), F(1, 3), 1), ((1, 0, 1, 0), F(1, 3), 1)],
+                  [((0, 0, 1, 1, 0), None, 1), ((0, 1, 0, 0, 1), None, 1)]],
+           '10': [[((0, 0, 1, 1), F(0), 1), ((0, 1, 0, 0), F(2, 3), 1),
+                   ((1, 0, 0, 0), F(2, 3), 1)],
+                  [((0, 0, 0, 1, 1), None, 1), ((1, 0, 0, 0, 0), None, 1)]]}
+    p &= exact('R6.6', '物理锚点（文献比对，非推导）：$16_F\\to(3,2,1)\\oplus(\\overline{3},1,2)'
+                       '\\oplus(1,2,1)\\oplus(1,1,2)$（一整代费米子，'
+                       '含 $\\nu^c$），$422$ 侧 $=(4,2,1)\\oplus(\\overline{4},1,2)$；'
+                       '$10_H\\to(3,1,1)\\oplus(\\overline{3},1,1)\\oplus(1,2,2)$，'
+                       '$422$ 侧 $=(6,1,1)\\oplus(1,2,2)$。$SU(4)$ 的 $4/\\overline{4}/6$ '
+                       '归属同时检验 $D_3\\simeq A_3$ 的实现（标号按本引擎的 $\\beta$ 槽位写）',
+               got, exp, '$B-L$ 只比绝对值；$SU(4)$ 侧无额外 $U(1)$')
+    BRANCH[:] = [{'name': nm,
+                  'n3221': len(rows2[nm]), 'n422': len(rows4[nm]),
+                  'tex3221': branch_tex(rows2[nm], fmt_3221),
+                  'tex422': branch_tex(rows4[nm], fmt_422),
+                  'c1': [[fmt_3221(r), r['n']] for r in rows2[nm]
+                         if not r['labels'][0] and not r['labels'][1]],
+                  'sum3221': branch_sum(rows2[nm]), 'sum422': branch_sum(rows4[nm])}
+                 for nm in ORDER if nm in rows2]
+    return p
+
+
+# ================================================== 跨链匹配：$422\downarrow3221$ 路径无关性
+SUB_MS = {}                                           # (子系统, 最高权) -> 权重多重集
+FUNDW = {}                                            # 子系统名 -> 基本权重（真实坐标）
+CROSS = []                                            # 供报告 §5 取用
+
+
+def sub_irrep(lam, S):
+    r"""子系统版 Freudenthal–Racah：返回 $S$-不可约表示（最高权 $\lambda$）的权重多重集。
+
+    与 D5 版同一算法、同一坑位断言（分母带 $\rho$ 平移；按 $(\Lambda-\mu,\rho_H)$ 升序处理）。
+    两处必须的差别：
+    1. 深度只取**差** $(\Lambda-\mu,\rho_H)$。子系统的 $\rho_H$ 一般使 $(\mu,\rho_H)$ 自身
+       不是整数（例：$A_3$ 的 $\rho=2\varepsilon_1+\varepsilon_2$ 在半整数权重上给出半整数）。
+    2. 收口用 $\sum_\mu m_\mu=\dim_H(\lambda)$，右端走**另一条**代码路径
+       （`Subsystem.dim` 的 Weyl 乘积公式）⇒ 权重递推与维数公式互检。
+    """
+    key = (S.name, lam)
+    if key not in SUB_MS:
+        hmax = ip(lam, lam)
+        lamr = ip(lam, S.rho)
+        cand, stack = {lam}, [lam]
+        while stack:
+            u = stack.pop()
+            for a in S.simples:
+                w = sub(u, a)
+                if ip(w, w) <= hmax and w not in cand:
+                    cand.add(w)
+                    stack.append(w)
+        depth = {}
+        for mu in cand:
+            d = lamr - ip(mu, S.rho)
+            assert d >= 0 and d % D4 == 0, '%s：$(\\Lambda-\\mu,\\rho_H)$ 异常（%s）' % (S.name, mu)
+            depth[mu] = d // D4
+        assert min(depth.values()) == 0, '%s：起点不是最高权' % S.name
+        sr2 = ip(add(lam, S.rho), add(lam, S.rho))
+        m = {}
+        for mu in sorted(cand, key=lambda x: depth[x]):
+            if mu == lam:
+                m[mu] = 1
+                continue
+            den = sr2 - ip(add(mu, S.rho), add(mu, S.rho))
+            assert den > 0, '%s：Freudenthal 分母非正（%s）' % (S.name, mu)
+            tot = 0
+            for a in S.pos:
+                i = 1
+                while True:
+                    w = add(mu, smul(i, a))
+                    if w not in cand:
+                        break
+                    if m.get(w, 0):
+                        tot += m[w] * ip(w, a)
+                    i += 1
+            val = F(2 * tot, den)
+            assert val.denominator == 1, '%s：Freudenthal 重数不整除（%s）' % (S.name, mu)
+            m[mu] = int(val)
+        out = dict((mu, k) for mu, k in m.items() if k > 0)
+        assert sum(out.values()) == S.dim(lam), \
+            '%s：权重总重数 %d $\\ne$ Weyl 维数 %d' % (S.name, sum(out.values()), S.dim(lam))
+        SUB_MS[key] = out
+    return SUB_MS[key]
+
+
+def _rref(M):
+    r"""精确有理数行最简形，返回 $(M,\text{主元列})$。"""
+    rows, ncols = len(M), len(M[0])
+    piv, r = [], 0
+    for c in range(ncols):
+        k = next((i for i in range(r, rows) if M[i][c]), None)
+        if k is None:
+            continue
+        M[r], M[k] = M[k], M[r]
+        pv = M[r][c]
+        M[r] = [x / pv for x in M[r]]
+        for i in range(rows):
+            if i != r and M[i][c]:
+                f = M[i][c]
+                M[i] = [M[i][j] - f * M[r][j] for j in range(ncols)]
+        piv.append(c)
+        r += 1
+        if r == rows:
+            break
+    return M, piv
+
+
+def _solve(A, b):
+    r"""非奇异方阵的精确解 $Ax=b$。"""
+    n = len(A)
+    M = [list(A[j]) + [b[j]] for j in range(n)]
+    M, piv = _rref(M)
+    assert piv == list(range(n)), '线性方程组奇异，解不唯一'
+    return tuple(M[j][n] for j in range(n))
+
+
+def nullspace(A, ncols):
+    r"""$Ax=0$ 的精确有理数零空间基。"""
+    M, piv = _rref([[F(x) for x in row] for row in A])
+    out = []
+    for f in [c for c in range(ncols) if c not in piv]:
+        v = [F(0)] * ncols
+        v[f] = F(1)
+        for i, c in enumerate(piv):
+            v[c] = -M[i][f]
+        out.append(tuple(v))
+    return out
+
+
+def sub_fundweights(S):
+    r"""$S$ 的基本权重（真实 $\varepsilon$ 坐标，Fraction）：解 $(\omega_i,\beta_j)=\delta_{ij}$。"""
+    n = len(S.simples)
+    G = [[F(ip(S.simples[j], S.simples[k]), D4) for k in range(n)] for j in range(n)]
+    ws = []
+    for i in range(n):
+        c = _solve(G, [F(int(j == i)) for j in range(n)])
+        w = [F(0)] * 5
+        for j in range(n):
+            for k in range(5):
+                w[k] += c[j] * F(S.simples[j][k], U)
+        ws.append(tuple(w))
+    return ws
+
+
+def sub_label_to_wt(S, cs):
+    """子系统 Dynkin 标号 -> 本引擎的格点整数向量（分母不整除 12 时 `to_grid_dir` 当场报错）。"""
+    ws = FUNDW.setdefault(S.name, sub_fundweights(S))
+    v = [F(0)] * 5
+    for c, w in zip(cs, ws):
+        for k in range(5):
+            v[k] += c * w[k]
+    return to_grid_dir(v, '%s 标号 %s 的权' % (S.name, cs))
+
+
+def a3_orthogonal_to_a2():
+    r"""$\mathrm{span}(A_3)$ 中与 $A_2$ 全部单根正交的方向（模标度，真实 Fraction 坐标）。"""
+    A3, A2 = SUB_A3.simples, SUB_A2.simples
+    rows = [[F(ip(a, b), D4) for a in A3] for b in A2]
+    out = []
+    for t in nullspace(rows, len(A3)):
+        v = [F(0)] * 5
+        for c, a in zip(t, A3):
+            for k in range(5):
+                v[k] += c * F(a[k], U)
+        out.append(tuple(v))
+    return out
+
+
+def proportion(a, b):
+    r"""若 $a=\lambda b$ 则返回 $\lambda$（精确有理数），否则 None。"""
+    z = next((k for k in range(5) if a[k]), None)
+    if z is None or not b[z]:
+        return None
+    kap = F(a[z], b[z])
+    return kap if all(a[k] == kap * b[k] for k in range(5)) else None
+
+
+def real(v):
+    r"""格点整数向量 -> 真实（$\varepsilon$ 单位）Fraction 向量。"""
+    return tuple(F(x, U) for x in v)
+
+
+def key_3221(a2lab, l, r, bl):
+    """两条路径共用的键：$((p,q),\ SU(2)_L$ 标号$, \ SU(2)_R$ 标号$, \ B-L)$。"""
+    return (tuple(a2lab), l, r, bl)
+
+
+def direct_3221(nm):
+    r"""一步限制 $SO(10)\downarrow3221$，换成 `key_3221` 键空间。"""
+    out = {}
+    for r in branching(irrep(NAMED[nm])[1], SUB_3221):
+        out[key_3221(r['labels'][:2], r['labels'][2], r['labels'][3], r['bl'])] = r['n']
+    return out
+
+
+def via_422(nm):
+    r"""两步限制：先 $SO(10)\downarrow422$，再对每个 $SU(4)$ 多重态走 $A_3\downarrow A_2\times U(1)_{B-L}$。
+
+    两个 $SU(2)$ 是旁观因子：$A_3$ 的单根全支撑在 $\varepsilon_1,\varepsilon_2,\varepsilon_3$ 上，
+    故权重的 $\varepsilon_4,\varepsilon_5$ 分量在色分支中原样保留，$B-L$ 也只读前三格。
+    """
+    out = {}
+    for r in branching(irrep(NAMED[nm])[1], SUB_422):
+        for s in branching(sub_irrep(r['wt'], SUB_A3), SUB_A2B):
+            k = key_3221(s['labels'], r['labels'][3], r['labels'][4], s['bl'])
+            out[k] = out.get(k, 0) + r['n'] * s['n']
+    return out
+
+
+def run_cross_chain():
+    r"""R6.7/R6.8：$422\to3221$ 的路径无关性，与 $B-L$ 作为 $SU(4)$ 内的无迹生成元。"""
+    p = True
+    if SUB_A2B is None:
+        return ok('R6.7', '跨链匹配需要 $B-L$ 方向（载入 `so10_chain.py`）', False,
+                  'so10_chain 未载入 ⇒ 不出结论')
+    agree, bad = {}, []
+    for nm in ORDER:
+        if nm not in NAMED:
+            continue
+        a, b = direct_3221(nm), via_422(nm)
+        agree[nm] = (a == b)
+        if a != b:
+            bad.append((nm, [str(k) for k in a if b.get(k) != a[k]],
+                        [str(k) for k in b if a.get(k) != b[k]]))
+    p &= exact('R6.7', '跨链路径无关性（$\\dim\\le210$ 的每个表示）：'
+                       '$\\mathrm{Res}^{422}_{3221}\\big(\\mathrm{Res}^{SO(10)}_{422}\\Lambda\\big)'
+                       '=\\mathrm{Res}^{SO(10)}_{3221}\\Lambda$ 作为 '
+                       '$(SU(3)_c,SU(2)_L,SU(2)_R)_{B-L}$ **多重集**逐项相等。左端要先对每个 '
+                       '$SU(4)$ 多重态做子系统 Freudenthal 权重递推、再分支到 $A_2\\times U(1)_{B-L}$；'
+                       '右端直接把 D5 权重格投到 3221；两条路径共用同一份 D5 权重多重集',
+               agree, dict((k, True) for k in agree),
+               '不一致的表示：%s' % (bad or '无'))
+    dirs = a3_orthogonal_to_a2()
+    kap = proportion(dirs[0], real(BL)) if (len(dirs) == 1 and BL is not None) else None
+    p &= ok('R6.8a', '$B-L$ **就是** $SU(4)_c$ 的 Cartan 里与 $SU(3)_c$ 对易的那个 $U(1)$：'
+                     '$\\mathrm{span}(A_3)$ 中与 $A_2$ 全部单根正交的方向**恰 1 维**，'
+                     '且与链探针的 $B-L$ 方向成比例（比例 $%s$，只是两种归一化的差别）'
+                     '$\\Rightarrow422\\to3221$ 不必另外引入 $U(1)$' % kap,
+            kap is not None, '唯一性是整数线性代数的结论；比例 $\\ne1$ 不改变方向')
+    labels = []
+    for cs in [tuple(1 if j == i else 0 for j in range(3)) for i in range(3)] + \
+              [cs for cs in itertools.product(range(3), repeat=3) if 0 < sum(cs) <= 2]:
+        if cs not in labels:
+            labels.append(cs)
+    tr = []
+    for cs in labels:
+        lam = sub_label_to_wt(SUB_A3, cs)
+        ms = sub_irrep(lam, SUB_A3)
+        d = SUB_A3.dim(lam)
+        rows = branching(ms, SUB_A2B)
+        book = sum(r['n'] * dim3(*r['labels']) for r in rows)
+        assert book == d, 'R6.8：$A_3$ 标号 %s 的色分支维数账不平（%d vs %d）' % (cs, book, d)
+        s = a3_slot(cs)
+        nm = su_name(s, d)
+        tr.append({'name': nm, 'key': '%s(%s)' % (nm, ','.join(map(str, s))),
+                   'std': list(s), 'dim': d, 'nwt': len(ms),
+                   'tr': str(sum(k * chg(mu, BL) for mu, k in ms.items())),
+                   'content': ['%s%s' % ('%d\\cdot' % r['n'] if r['n'] > 1 else '',
+                                         fmt_3221({'labels': r['labels'] + (0, 0),
+                                                   'bl': r['bl']})) for r in rows]})
+    # 同名不同标号是真实的（$A_3$ 的 (1,0,1) 与 (2,0,0) 都是 20 维），
+    # 所以门禁的键必须带 Dynkin 标号，报告表格才继续用可读名
+    assert len(set(t['key'] for t in tr)) == len(tr), 'R6.8：表示标识冲突'
+    p &= exact('R6.8', '$B-L$ 在 $SU(4)$ 的**每个**不可约表示上无迹：'
+                       '$\\sum_\\mu m_\\mu\\,(B-L)(\\mu)=0$。核验范围：$A_3$ 的三个基本表示加上'
+                       '$\\sum c_i\\le2$ 的全部标号（共 %d 个表示、%d 个不同权重）；'
+                       '同一循环里逐个核验 $A_2\\times U(1)_{B-L}$ 的维数账 '
+                       '$\sum n_\lambda\dim(\lambda)=\dim$' % (len(tr), sum(t['nwt'] for t in tr)),
+               dict((t['key'], t['tr']) for t in tr),
+               dict((t['key'], '0') for t in tr), '精确零（全程有理数，无浮点容差）')
+    CROSS[:] = tr
+    return p
+# =============================================================== 引擎自检
+def run_engine_tests():
+    p = True
+    # --- 0. 李论输入自洽：实现必须重现 Dynkin 图
+    p &= exact('R0.1', '$\\varepsilon$ 基实现重现由 Dynkin 图导出的 Cartan 矩阵',
+               cartan_from_realization(), CARTAN_IN,
+               '唯一李论输入 = D5 图（链 1-2-3；节点 3 分叉到 4、5）')
+    p &= exact('R0.2', '全部单根长度平方 $=2$（长根归一）',
+               [nrm2(a) for a in SIMPLE], [F(2)] * 5)
+    p &= exact('R0.3', '正根个数 $|D_5^+|$（枚举组合中 $|(\\cdot)|^2=2$ 者）',
+               len(PH), 20)
+    p &= exact('R0.4', '根空间计数 $5+2\\times20$ = 伴随表示的 Weyl 维数',
+               RANK + len(ROOTS), weyl_dim(weight_of_label((0, 1, 0, 0, 0))),
+               '右端由 §1 的维数公式独立给出 ⇒ 根系统与维数公式互相校验')
+    p &= exact('R0.5', '$\\rho=\\tfrac12\\sum_{\\alpha>0}\\alpha=\\sum_i\\omega_i$（定理现场校验）',
+               RHO, weight_of_label((1, 1, 1, 1, 1)))
+    p &= exact('R0.6', '$(\\omega_i,\\alpha_j)=\\delta_{ij}$（基本权重的定义方程）',
+               [[nrm(FUND[i], SIMPLE[j]) for j in range(RANK)] for i in range(RANK)],
+               [[F(1) if i == j else F(0) for j in range(RANK)] for i in range(RANK)])
+    p &= exact('R0.7', '$|W(D_5)|=2^{4}\\cdot5!=1920$（$\\rho$ 是正则权 ⇒ 其轨道大小 $=$ Weyl 群阶）；'
+                       '对照：$\\omega_1$ 的轨道 $=2n=10$ 即向量表示的权重数（稳定子 $=W(D_4)$，阶 $192$）',
+               [len(weyl_orbit(RHO)), len(weyl_orbit(EPS[0]))], [1920, 10],
+               '轨道–稳定子定理：$1920=10\\times192$')
+    p &= exact('R0.8', '$(\\alpha_i,\\rho)=1$ 对全部单根（递推顺序用得到的恒等式）',
+               [ipp(a, RHO) for a in SIMPLE], [1] * 5)
+    # --- 1. Weyl 维数 vs Freudenthal 总重数
+    bad = []
+    for cs in LOW_LABELS:
+        Lam, ms, dw, df, c2 = irrep(cs)
+        if dw != df or df <= 0:
+            bad.append((list(cs), dw, df))
+    p &= ok('R1.1', '对全部 %d 个低标号表示（$\\sum c_i\\le2$，含 $\\dim 1200$）：'
+                   '$\\sum_\\mu m_\\mu$（Freudenthal）$=\\dim$（Weyl 公式）' % len(LOW_LABELS),
+            not bad, '不一致清单：%s' % (bad[:6] if bad else '空'))
+    p &= ok('R1.2', '$10$ 与 $16$ 是 **minuscule** 表示：全部权重同处一个 Weyl 轨道、'
+                    '重数全为 1（由递推**算出**，不是设定）',
+            all(set(irrep(cs)[1]) == weyl_orbit(weight_of_label(cs)) and
+                set(irrep(cs)[1].values()) == {1}
+                for cs in ((1, 0, 0, 0, 0), (0, 0, 0, 1, 0), (0, 0, 0, 0, 1))),
+            '$\\omega_1$（向量）与两个自旋量标号 $\\omega_4,\\omega_5$ 的权重数 10/16/16')
+    p &= exact('R1.3', '最高根 $\\theta$（唯一的支配正根 $=\\varepsilon_1+\\varepsilon_2$）：'
+                       'Dynkin 标号 $\\to$ 伴随标号，单根系数 $=$ marks',
+               [fmt(TH), list(dynkin(TH)), list(TH_MARKS)],
+               ['(1,1,0,0,0)', [0, 1, 0, 0, 0], [1, 2, 2, 1, 1]],
+               '标号 $(0,1,0,0,0)$ 与 R0.4 中按维数公式取伴随表示的标号同源')
+    adj = madd(from_list(ROOTS), {ZERO: RANK})
+    p &= exact('R1.4', '$\\theta$ 的 Freudenthal 权重集 $=$ 根 $\\cup\\{0^{\\times5}\\}$',
+               sorted(irrep(dynkin(TH))[1].items()), sorted(adj.items()))
+    p &= exact('R1.5', '$(\\theta,\\theta+2\\rho)=2h^\\vee$；$D_5$ 的对偶 Coxeter 数 '
+                       '$h^\\vee=2n-2=8$（伴随的 Casimir）',
+               casimir2(TH) / 2, F(8))
+    return p
+
+
+# =============================================================== 表示识别（标号由计算给出）
+NAMED = {}
+
+
+def run_identification():
+    p = True
+    if chain is None or not CHAIN_OK:
+        return ok('R2.0', '链探针 `so10_chain.py` 的引擎自检全部通过（荷约定的同源前提）', False,
+                  '上游引擎未通过 ⇒ 本探针不出结论')
+    p &= ok('R2.0', '链探针 `so10_chain.py` 的引擎自检全部通过（荷约定的同源前提）', True,
+            '%d 项自检 PASS ⇒ $B-L$、$T^3_{L,R}$、$Y$ 方向可直接沿用' % len(chain.RESULTS))
+    for nm, ws in (('10', chain.W10()), ('16', chain.W16()), ('45', chain.W45())):
+        ms = grid_ms(ws)
+        lab = find(msum(ms), ms)
+        p &= ok('R2.%s' % nm, '链探针显式构造的 $%s$ 权重多重集 $=$ 本引擎 Freudenthal '
+                              '权重集 ⇒ 唯一选定 Dynkin 标号' % nm, lab is not None,
+                '标号：%s；按维数 %d 的候选：%s' %
+                (lab, msum(ms), [list(cs) for cs in DIMMAP.get(msum(ms), [])]))
+        if lab is None:
+            return False
+        NAMED[nm] = lab
+        p &= exact('R2.d%s' % nm, '$%s$：Weyl 维数 $=\\sum_\\mu m_\\mu=$ 链探针权重个数' % nm,
+                   (irrep(lab)[2], irrep(lab)[3]), (msum(ms), msum(ms)))
+    conj = {}
+    for nm in ('10', '16', '45'):
+        conj[nm] = list(dominant(neg(weight_of_label(NAMED[nm])))[1])
+        NAMED[nm + '̄'] = tuple(conj[nm])
+    p &= exact('R2.c10c45', '$10$ 与 $45$ 是**实**表示（共轭标号 = 自身）',
+               [conj['10'] == list(NAMED['10']), conj['45'] == list(NAMED['45'])], [True, True])
+    p &= ok('R2.c16', '$16$ 是**复**表示（$\\overline{16}\\neq16$ ⇒ 手征性得以存在）',
+            conj['16'] != list(NAMED['16']),
+            '$16$ 标号 %s，$\\overline{16}$ 标号 %s' % (list(NAMED['16']), conj['16']))
+
+    # ---- R2.sw：本报告引用的"摆动倍数"必须与链探针当场一致
+    band = chain_band()
+    p &= ok('R2.sw0', '链探针在单阈 3221 链上至少给出**两条**物理解（"摆动倍数"才有定义）',
+            band is not None and len(band) >= 2,
+            '物理解：%s' % ('、'.join('%s=%.3e' % t for t in (band or [])) or '无'))
+    if band:
+        lo = min(band, key=lambda t: t[1])
+        hi = max(band, key=lambda t: t[1])
+        p &= ok('R2.sw1', '区间两端来自两个**不同**情形（同一情形既当两端 ⇒ 倍数恒为 1，是空话）',
+                lo[0] != hi[0], '两端 = %s↔%s，倍数 %.2f' % (lo[0], hi[0], hi[1] / lo[1]))
+    # ---- 变异测试：证明倍数是**算出来**的，不是写死在格式化函数里的字符串。
+    # （R2.sw0/sw1 只看读取是否成功；把 swing_note 改成 `return '8.7 倍（…）'` 它们照样绿。）
+    p &= exact('R2.sw2', '植入带 A=2、B=17 ⇒ 文本必须是 8.5 倍（格式器变异测试，防写死）',
+               swing_note(band=[('A', 2.0), ('B', 17.0)], nested=True),
+               '8.5 倍——情形 A↔B，2 条物理解**并列**区间，不是误差棒')
+    p &= ok('R2.sw3', '植入空带 ⇒ 必须落到"未对账"分支（守卫不是死代码）',
+            '未对账' in swing_note(band=[]),
+            '实际文本：%s' % swing_note(band=[]))
+    return p
+
+
+def run_tensor_identities():
+    """Adams 运算与 Freudenthal 两条独立路径互检；顺带选定 54/120/126/144/210 的标号。"""
+    p = True
+    W = dict((nm, irrep(cs)[1]) for nm, cs in NAMED.items())
+    one = {ZERO: 1}
+    a10, s10 = wedge2(W['10']), sym2(W['10'])
+    p &= ok('R3.1', '$\\wedge^2(10)=45$（Adams 运算 vs 独立构造的 45）',
+            a10 == W['45'], '左端权重数 %d；右端 %d' % (msum(a10), msum(W['45'])))
+    try:
+        rem54 = msub(s10, one)
+        lab54 = find(msum(rem54), rem54)
+    except ArithmeticError:
+        lab54 = None
+    p &= ok('R3.2', '$\\mathrm{Sym}^2(10)=1\\oplus54$：剥掉单态后的多重集 $=$ 某 irrep 的 '
+                    'Freudenthal 权重集（标号由等式**选出**）', lab54 is not None,
+            '$\\dim\\mathrm{Sym}^2(10)=%d=1+54$；标号 %s' %
+            (msum(s10), list(lab54) if lab54 else '无唯一候选'))
+    if lab54 is not None:
+        NAMED['54'] = lab54
+    sq = tprod(W['16'], W['16'])
+    S2, A2 = sym2(W['16']), wedge2(W['16'])
+    p &= ok('R3.3', '$\\mathrm{Sym}^2(16)\\oplus\\wedge^2(16)=16\\otimes16$（Adams 自洽）',
+            madd(S2, A2) == sq,
+            '$%d=%d+%d$' % (msum(sq), msum(S2), msum(A2)))
+    lab120 = find(msum(A2), A2)
+    p &= ok('R3.4', '$\\wedge^2(16)=120$：Adams 多重集 $=$ 唯一标号的 Freudenthal 权重集',
+            lab120 is not None, '标号：%s；按维数的候选：%s' %
+            (list(lab120) if lab120 else '无唯一候选',
+             [list(cs) for cs in DIMMAP.get(msum(A2), [])]))
+    if lab120 is not None:
+        NAMED['120'] = lab120
+    try:
+        rem126 = msub(S2, W['10'])
+        lab126 = find(msum(rem126), rem126)
+    except ArithmeticError:
+        lab126 = None
+    p &= ok('R3.5', '$\\mathrm{Sym}^2(16)=10\\oplus126$：剥掉 10 后的多重集 $=$ '
+                    '唯一标号的 Freudenthal 权重集', lab126 is not None,
+            '标号：%s；其共轭即 $\\overline{126}$' %
+            (list(lab126) if lab126 else '无唯一候选',))
+    if lab126 is not None:
+        NAMED['126'] = lab126
+        NAMED['126̄'] = tuple(dominant(neg(weight_of_label(lab126)))[1])
+    if '16̄' in NAMED:
+        W['16̄'] = irrep(NAMED['16̄'])[1]
+        pd = tprod(W['16'], W['16̄'])
+        try:
+            rem210 = msub(pd, one, W['45'])
+            lab210 = find(msum(rem210), rem210)
+        except ArithmeticError:
+            lab210 = None
+        p &= ok('R3.6', '$16\\otimes\\overline{16}=1\\oplus45\\oplus210$：剥掉 $1\\oplus45$ 后'
+                        '的多重集 $=$ 唯一标号的 Freudenthal 权重集', lab210 is not None,
+                '标号：%s；按维数 210 的候选：%s（两个标号同维数，靠权重多重集区分）' %
+                (lab210, [list(cs) for cs in DIMMAP.get(210, [])]))
+        if lab210 is not None:
+            NAMED['210'] = lab210
+        pt = tprod(W['10'], W['16'])
+        try:
+            rem144 = msub(pt, W['16̄'])       # 向量乘自旋量必换手征 ⇒ 剥的是 $\\overline{16}$
+            lab144 = find(msum(rem144), rem144)
+        except ArithmeticError:
+            lab144 = None
+        p &= ok('R3.7', '$10\\otimes16=\\overline{16}\\oplus\\overline{144}$：'
+                        '向量乘自旋量必**换手征**（直接剥 $16$ 会出现负重数，代码当场拒绝）；'
+                        '剥掉后剩下的多重集 $=$ 唯一标号的 Freudenthal 权重集',
+                lab144 is not None,
+                '左端 $\\overline{144}$ 标号：%s；登记用的 $144$ 取其共轭' %
+                (list(lab144) if lab144 else '无唯一候选',))
+        if lab144 is not None:
+            NAMED['144'] = tuple(dominant(neg(weight_of_label(lab144)))[1])
+    return p
+
+
+# =============================================================== 荷谱与物理判定
+def run_physics_tests():
+    p = True
+    p &= exact('R4.1', '$Y=T^3_R+\\tfrac{B-L}{2}$ 作为 Cartan 方向恒等式'
+                       '（于是 $Q=T^3_L+Y=T^3_L+T^3_R+\\tfrac{B-L}{2}$）',
+               YHP, add(T3R, half(BL)))
+    W16 = irrep(NAMED['16'])[1]
+
+    def tr16(dirn, k=1):
+        return sum(chg(w, dirn) ** k * W16[w] for w in W16)      # 按重数求和
+
+    p &= exact('R4.2', '$B-L$ 在 16 上的取值集合（三代费米子的族结构标记）',
+               sorted(set(chg(w, BL) for w in W16)), [F(-1), F(-1, 3), F(1, 3), F(1)])
+    p &= exact('R4.3', '$\\mathrm{Tr}_{16}(Y)=0$', tr16(YHP), F(0))
+    p &= exact('R4.4', '$\\mathrm{Tr}_{16}(Y^3)=0$（逐代 $[U(1)_Y]^3$ 反常相消）',
+               tr16(YHP, 3), F(0))
+    p &= exact('R4.5', '$\\mathrm{Tr}_{16}((T^3_L)^2)=\\mathrm{Tr}_{16}((T^3_R)^2)=2$'
+                       '（与链探针同源）',
+               (tr16(T3L, 2), tr16(T3R, 2)), (F(2), F(2)))
+    qspec = {}
+    for w in W16:
+        qspec[chg(w, QHP)] = qspec.get(chg(w, QHP), 0) + W16[w]
+    p &= exact('R4.6', '$Q=T^3_L+T^3_R+\\tfrac{B-L}{2}$ 在 16 上**恰好**给出一代左手 Weyl '
+                       '费米子的标准电荷谱（含 $\\nu^c$），且 $\\mathrm{Tr}(Q)=\\mathrm{Tr}(Q^3)=0$ '
+                       '⇒ 电磁方向取对了；下文 $Q=0$ 判据因此是物理的而非约定的',
+               [sorted(qspec.items()), tr16(QHP), tr16(QHP, 3)],
+               [[(F(-1), 1), (F(-2, 3), 3), (F(-1, 3), 3), (F(0), 2), (F(1, 3), 3),
+                 (F(2, 3), 3), (F(1), 1)], F(0), F(0)],
+               '电荷集对称（$\\pm$ 成对）是本仓库"偶数负号"约定的产物：该 $16$ 是教科书物质'
+               '$16$ 的共轭，$|B-L|$ 与 $|Q|$ 的结论不受影响')
+    order = ['10', '10̄', '16', '16̄', '45', '54', '120', '126', '126̄', '144', '210']
+    missing = [n for n in order if n not in NAMED]
+    p &= ok('R4.7', '待判定表示的 Dynkin 标号全部由**计算**（维数 + 多重集）认定',
+            not missing, '缺失：%s' % (missing or '无'))
+    return p
+
+
+TABLE = []
+ORDER = ('10', '10̄', '16', '16̄', '45', '54', '120', '126', '126̄', '144', '210')
+
+
+def build_table():
+    TABLE[:] = []
+    for nm in ORDER:
+        if nm not in NAMED:
+            continue
+        cs = NAMED[nm]
+        Lam, ms, dw, df, c2 = irrep(cs)
+        mx, dr, dl, ds, safe, summ, mp = carriers(ms)
+        conj = list(dominant(neg(Lam))[1])
+        TABLE.append({'name': nm, 'dynkin': list(cs), 'dim': dw, 'nweights': len(ms),
+                      'c2': str(c2), 'real': conj == list(cs),
+                      'maxBL': str(mx), 'maxBL_f': float(mx),
+                      'DR': dr, 'DL': dl, 'S2': ds, 'safe': safe, 'bl2groups': summ,
+                      'nDR': len(mp['DR']), 'nDL': len(mp['DL']), 'nS': len(mp['S']),
+                      'bl2': len(bl2_class(ms)), 'bneg2': len(bl2_class(ms, F(-2)))})
+    return TABLE
+
+
+def gate_no_go():
+    """核心结论把守。"""
+    p = True
+    rows = dict((r['name'], r) for r in TABLE)
+    if not rows:
+        return False
+    small = [n for n in ('10', '10̄', '16', '16̄', '45', '54', '144') if n in rows]
+    p &= ok('R5.1', '$\\max|B-L|<2$ 对 $10,\\overline{10},16,\\overline{16},45,54,144$ 全部成立 ⇒ '
+                    '这些 Higgs 表示里**不存在** $|B-L|=2$ 的态，因此承担不了 '
+                    '$|\\Delta(B-L)|=2$ 的破缺（注意：不排除 $16_H$ 以 $|\\Delta(B-L)|=1$ '
+                    '单步破缺，见 R5.9）',
+            len(small) == 7 and all(rows[n]['maxBL_f'] < 2.0 for n in small),
+            '各自 $\\max|B-L|$：%s' % dict((n, rows[n]['maxBL']) for n in small))
+    W45 = irrep(NAMED['45'])[1]
+    p &= exact('R5.2', '$45_H$ 的 $B-L$ 谱 $=\\{0,\\pm2/3,\\pm4/3\\}$（$\\pm4/3$ 来自根 '
+                       '$\\varepsilon_i+\\varepsilon_j$，即 $SU(4)_c$ 伴随 $15\\to3\\oplus\\bar3$ '
+                       '的轻夸克胶子方向）$\\Rightarrow\\max|B-L|=4/3<2$ ⇒ $\\Sigma(1,1,3)_0\\subset45_H$ '
+                       '**不是** $\\Delta_R$（链探针门禁 S2.7 的表示论根据）',
+               sorted(set(chg(w, BL) for w in W45)),
+               [F(-4, 3), F(-2, 3), F(0), F(2, 3), F(4, 3)])
+    cand = sorted([n for n in rows if rows[n]['DR'] or rows[n]['DL']],
+                  key=lambda n: rows[n]['dim'])
+    safe = sorted([n for n in rows if rows[n]['safe']], key=lambda n: rows[n]['dim'])
+    p &= ok('R5.3', '在 $\\dim\\le210$ 内存在承载"$|B-L|=2$ 的色单态 $+$ 弱单态 $+$ '
+                    '三重态、且三重态含中性分量"的表示', bool(safe),
+            '按维数升序的承载者：%s；只带 $(1,1,1)_{\\pm2}$ 带电单态者：%s' %
+            (safe, [n for n in sorted(rows) if rows[n]['S2'] and not rows[n]['safe']]))
+    mins = min([rows[n]['dim'] for n in safe]) if safe else None
+    p &= exact('R5.4', '$\\Delta_{L/R}$ 的**最小**可能 Higgs 维数 '
+                       '（$10/16/45/54/144/210$ 均不承载三重态）', mins, 126)
+    p &= ok('R5.5', '仅靠 $10_H\\oplus\\overline{10}_H\\oplus16_H\\oplus\\overline{16}_H'
+                    '\\oplus45_H\\oplus54_H\\oplus120_H\\oplus144_H\\oplus210_H$ **无法**承载'
+                    '"$|\\Delta(B-L)|=2$ 且保 $U(1)_{em}$"的破缺 ⇒ 情形 B（无 $126_H$）的 $M_R$ '
+                    '只能读作参考匹配标度（$16_H$ 的 $|\\Delta(B-L)|=1$ 单步通道见 R5.9：'
+                    '留 $\\mathbb{Z}_3$ 且物质字称被它破掉（R10.5）、无可重整 $\\nu_R$ 质量）',
+            not any(rows[n]['safe'] for n in ('10', '10̄', '16', '16̄', '45', '54',
+                                              '120', '144', '210') if n in rows))
+    # 承载者的量子数自检：$T^3$ 阶梯差 1；$Y=T^3_R+\\tfrac{B-L}{2}$；$Q=T^3_L+T^3_R+\\tfrac{B-L}{2}$
+    detail, good = [], True
+    for nm in ('126', '126̄'):
+        if nm not in NAMED:
+            continue
+        mp = bl_multiplets(irrep(NAMED[nm])[1])
+        for k in ('DR', 'DL'):
+            for t in (F(2), F(-2)):
+                grp = [r for r in mp[k] if r['BL'] == t]
+                if not grp:
+                    continue
+                t3 = sorted(r['T3R' if k == 'DR' else 'T3L'] for r in grp)
+                ys = sorted(set(r['Y'] for r in grp))
+                qs = sorted(r['Q'] for r in grp)
+                # Δ_R（$T^3_L=0$）：$Y$ 沿串走；Δ_L（$T^3_R=0$）：$Y\\equiv(B-L)/2$ 恒定而 $Q=T^3_L+Y$
+                # 沿串走 —— 后者正是 $\\Delta^{++}\\Delta^{+}\\Delta^{0}$ 的来源。
+                ladder = [t / 2 + F(-1), t / 2, t / 2 + F(1)]
+                ok3 = (len(grp) == 3 and t3 == [F(-1), F(0), F(1)] and qs == ladder and
+                       (ys == ladder if k == 'DR' else ys == [t / 2]))
+                good &= ok3
+                detail.append('%s(%s)$_{B-L=%s}$：$T^3=\\{%s\\}$, $Y=\\{%s\\}$, $Q=\\{%s\\}$%s' %
+                              ('Δ_R' if k == 'DR' else 'Δ_L', nm, t,
+                               ','.join(str(x) for x in t3), ','.join(str(y) for y in ys),
+                               ','.join(str(q) for q in qs), '' if ok3 else ' ✗'))
+    p &= ok('R5.6', '所有 $|B-L|=2$ 的色单态三重态在 Cartan 层自洽：$T^3$ 阶梯差 1、'
+                   '$Q=T^3_L+T^3_R+\\tfrac{B-L}{2}$ 给出 $\\Delta^{++}\\Delta^{+}\\Delta^{0}$ 型谱',
+            good and bool(detail), '；'.join(detail) or '无 $|B-L|=2$ 色单态三重态')
+    occ = {}
+    for nm in ('126', '126̄'):
+        if nm not in NAMED:
+            continue
+        mp = bl_multiplets(irrep(NAMED[nm])[1])
+        occ[nm] = dict((k, sorted(set(str(r['BL']) for r in mp[k]))) for k in ('DR', 'DL'))
+    p &= exact('R5.7', '$126$ 与 $\\overline{126}$ **各自**同时含一个 $\\Delta_L$ 与一个 '
+                       '$\\Delta_R$，区别只在 $B-L$ 的**符号**（共轭表示 = 全部 Cartan 荷反号）'
+                       '⇒ "谁来破 $B-L$" 不是"有没有 $\\Delta_R$"的问题，而是取哪个符号',
+               occ, {'126': {'DR': ['-2'], 'DL': ['2']},
+                     '126̄': {'DR': ['2'], 'DL': ['-2']}})
+    # 决定性一步：在 $|B-L|=2$ 上，"$Q=0$" 与 "是 $SU(2)_{L/R}$ 单态" 互斥
+    sing, trip = [], []
+    for r in TABLE:
+        for g in r['bl2groups']:
+            if g['kind'] == 'S':
+                sing.append((r['name'], g['BL'], g['Q'], g['nq0']))
+            elif g['kind'] in ('DR', 'DL'):
+                trip.append((r['name'], g['kind'], g['BL'], g['nq0'] * 3 == g['n']))
+    p &= ok('R5.8', '$Q=T^3_L+T^3_R+\\tfrac{B-L}{2}$ ⇒ 任何 $(1,1,1)_{\\pm2}$ 单态都有 $|Q|=1$'
+                    '（**一破缺就破电磁** ⇒ $120_H$ 不能用来破 $B-L$）；反之每个 $\\Delta_{L/R}$ '
+                    '三重态恰有一个 $Q=0$ 分量 ⇒ 破 $B-L$ 而保 $U(1)_{em}$ **必然**经由 '
+                    '$\\Delta_L$ 或 $\\Delta_R$',
+            bool(sing) and all(s[2] == ['1'] or s[2] == ['-1'] for s in sing) and
+            all(s[3] == 0 for s in sing) and bool(trip) and all(t[3] for t in trip),
+            '带电单态：%s；含中性分量的三重态组：%s' %
+            (sing, [(t[0], t[1], t[2]) for t in trip]))
+    # $|B-L|=1$ 的另一条通道：存在，但每步只带走一个单位的 $B-L$
+    one = {}
+    for nm in ORDER:
+        if nm not in NAMED:
+            continue
+        ms = irrep(NAMED[nm])[1]
+        one[nm] = sorted(set((str(t), r['L'], r['R']) for t in (F(1), F(-1))
+                             for r in bl2_class(ms, t) if r['c1'] and r['Q'] == 0))
+    got = dict((k, v) for k, v in one.items() if v)
+    p &= ok('R5.9', '$|B-L|=1$ 且 $Q=0$ 的色单态在 $\\dim\\le210$ 内**只**出现在 '
+                    '$16,\\overline{16}$（$(1,2,1)_{+1}\\oplus(1,1,2)_{-1}$ 型二重态）与 '
+                    '$144,\\overline{144}$（$(1,2,3)/(1,3,2)$ 型）里，$10/45/54/120/126/'
+                    '\\overline{126}/210$ 一个都没有 ⇒ $B-L$ 可以**单步**（$|\\Delta(B-L)|=1$）'
+                    '破掉且保住 $U(1)_{em}$，最小通道是 $16_H/\\overline{16}_H$；但每步只带走'
+                    '一个单位 $\\Rightarrow$ 残留 $\\mathbb{Z}_3$，而物质字称**被这一步破掉**'
+                    '（旧句"残留 $Z_2$（物质字称）"由 §9 推翻，其出处是 R10.8 的归一化滑倒），'
+                    '且给不出可重整的 $\\nu_R$ Majorana 质量'
+                    '（那需要 $|\\Delta(B-L)|=2$），而且这些分量必是某个 $SU(2)$ 的二重态 ⇒ '
+                    '单步破缺必然连带破 $SU(2)_{L/R}$',
+            got == {'16': [('-1', 1, 2), ('1', 2, 1)],
+                    '16̄': [('-1', 2, 1), ('1', 1, 2)],
+                    '144': [('-1', 3, 2), ('1', 2, 3)]},
+            '算得（表示 → $(B-L,\\ SU(2)_L$ 串长, $SU(2)_R$ 串长$)$）：%s' % got)
+    return p
+
+
+# =============================================== d=4 物质–Higgs Yukawa 通道（R7）
+# 与 R5 的分工：R5 问"哪个 Higgs 里**有**能破 $B-L$ 的中性分量"，R7 问"哪个 Higgs 拿得到
+# $16_F16_FH$ 这个算符"。两问相互独立：$\Delta_R\subset\overline{126}_H$ 同时过两关，
+# $45_H$ 两关皆不过，$16_H$ 只过第一关（R5.9）。
+def conj_label(cs):
+    r"""Dynkin 标号的共轭标号：$w_\lambda\mapsto-w_\lambda$ 再拉回主导室。
+
+    它对**任何**支配标号都算得出来，不需要这条标号已被登记 $\\Rightarrow$ 配对和
+    （`pair_singlets`）可以在 $\\dim>210$ 的成分上照样闭合；按名字查表做不到这件事，
+    R9.5 的第四条变异把这个差别当场量出来。
+    """
+    return tuple(dominant(neg(weight_of_label(cs)))[1])
+
+
+def registered(cs):
+    """标号是否已在 `NAMED` 里登记（零标号算登记：它就是 $(1)$）。"""
+    return not any(cs) or any(tuple(NAMED[nm]) == tuple(cs) for nm in NAMED)
+
+
+def name_of(cs):
+    """**标号**的显示名：与 `label_name` 同一套优先级（$10$ 与 $\\overline{10}$ 同标号 ⇒ 取表内先出现的），零标号 $\\mapsto$ `'(1)'`，未登记 $\\mapsto$ 裸标号字符串。"""
+    if not any(cs):
+        return '(1)'
+    keys = list(ORDER) + sorted(set(NAMED) - set(ORDER))
+    return next((nm for nm in keys if nm in NAMED and tuple(NAMED[nm]) == tuple(cs)),
+                str(list(cs)))
+
+
+def conj_names(cs):
+    """标号 $cs$ 的共轭表示在 `NAMED` 里登记过的**全部**名字（未认定 $\\Rightarrow$ 空表）。
+
+    实表示会返回两个名字：$\\overline{10}$ 与 $10$ 是同一条标号（R2.c10c45），而 R2 把两个
+    名字都登记进了 `NAMED` ⇒ 这里如实返回 $['10','\\overline{10}']$ 一类的对，由调用方去重。
+    """
+    lab = conj_label(cs)
+    keys = list(ORDER) + sorted(set(NAMED) - set(ORDER))
+    return [nm for nm in keys if nm in NAMED and tuple(NAMED[nm]) == lab]
+
+
+_DECOMP_MEMO = {}
+
+
+def decomp(ms):
+    r"""把 $W$-不变多重集拆成不可约成分：解 $m_V(\lambda)=\sum_\mu n_\mu m_\mu(\lambda)$，
+    $\lambda,\mu$ 跑遍 $V$ 中出现的**支配**权（成分的最高权必然作为权重出现，这是唯一的预设）。
+
+    系数矩阵 $(m_\mu(\lambda))$ 按支配序是单位三角阵的行列同置换 $\Rightarrow$ 行列式 $\pm1$、
+    精确可逆；解出来若有负数或非整数即判失败。**最后用整权重构对账**：拆出来的成分加回去
+    必须逐权重等于原多重集。与 R3 的"先剥已知成分再 `find`"是不同代码路径。
+    返回 $\{$最高权格点: 重数$\}$；任何一环不成立 $\Rightarrow$ None（调用方必须显式降级）。
+
+    按**多重集内容**记忆：R8 与 R9 共用同一批大乘积（$16^{\otimes4}$ 拆一次 1s 量级），
+    不记忆会把同一个方程组解两遍。本函数不读 `NAMED`（只用到 `irrep`/`dynkin`）$\Rightarrow$
+    键里不需要登记状态；返回的字典按**只读**约定使用（4 个调用点都只读）。
+    """
+    key = frozenset(ms.items())
+    if key not in _DECOMP_MEMO:
+        _DECOMP_MEMO[key] = _decomp_once(ms)
+    return _DECOMP_MEMO[key]
+
+
+def _decomp_once(ms):
+    dom = sorted(set(w for w in ms if all(c >= 0 for c in dynkin(w))))
+    if not dom:
+        return None
+    try:
+        n = _solve([[F(irrep(dynkin(mu))[1].get(la, 0)) for mu in dom] for la in dom],
+                   [F(ms[la]) for la in dom])
+    except AssertionError:
+        return None
+    if any(x < 0 or x.denominator != 1 for x in n):
+        return None
+    out = dict((la, int(x)) for la, x in zip(dom, n) if x)
+    got = {}
+    for la, k in out.items():
+        got = madd(got, *([irrep(dynkin(la))[1]] * k))
+    return got == dict(ms) and out or None
+
+
+def label_name(lam):
+    """Dynkin 标号在表内的名字：零标号 $\\mapsto$ `'(1)'`；未认定 $\\mapsto$ 裸标号（**不静默丢**）。"""
+    lab = list(dynkin(lam))
+    if not any(lab):
+        return '(1)'
+    keys = list(ORDER) + sorted(set(NAMED) - set(ORDER))
+    return next((nm for nm in keys if nm in NAMED and list(NAMED[nm]) == lab), lab)
+
+
+def yukawa_products():
+    r"""$16_F$ 的双线性三种乘积（$W$-不变多重集）。"""
+    W16 = irrep(NAMED['16'])[1]
+    out = {'sym': sym2(W16), 'anti': wedge2(W16)}
+    if '16̄' in NAMED:
+        out['vec'] = tprod(W16, irrep(NAMED['16̄'])[1])
+    return out
+
+
+def yukawa_channels(constituents=None):
+    r"""$16_F16_FH$ 在 d=4 允许的 Higgs 名（按对称类型分栏）+ 成分清单。
+
+    `constituents=None` ⇒ 现场把三个乘积拆成不可约成分，再取**共轭**（不变张量要求
+    $H^*\subset16\otimes16$）。传入显式成分名清单只服务于变异测试：证明"允许的表示"
+    是共轭映射算出来的，不是写死在函数里的字符串。
+    """
+    prods = yukawa_products()
+    parts, out = {}, {}
+    for key in ('sym', 'anti', 'vec'):
+        if key not in prods:
+            parts[key], out[key] = None, []
+            continue
+        if constituents is not None:
+            got = [(nm, 1) for nm in constituents.get(key, [])]
+        else:
+            d = decomp(prods[key])
+            if d is None:
+                parts[key], out[key] = None, []
+                continue
+            got = [(label_name(la), k) for la, k in sorted(d.items())]
+        parts[key] = got
+        names = []
+        for nm, _k in got:
+            if nm == '(1)':                       # 单态不是 Higgs 候选（不携物质荷）
+                continue
+            names += conj_names(NAMED[nm])[:1] if nm in NAMED else [nm]   # 实表示取先注册名
+        out[key] = sorted(set(names), key=lambda x: (list(ORDER).index(x)
+                                                     if x in ORDER else 99, x))
+    return out, parts
+
+
+def matter_singlet(W16=None):
+    """$16_F$ 里"色单态 + $SU(2)_L$ 单态 + $Q=0$"的权重表 $=\\nu_R^c$ 所在的权重。
+
+    判据刻意用 $SU(2)_L$ 串长 1 而非 $SU(2)_R$：$\\nu_R^c$ 在 $3221$ 下是 $(1,1,2)_{-1}$
+    的成员，它在 $SU(2)_R$ 侧**不是**单态（$Q=0$ 靠 $T^3_R$ 与 $B-L$ 相消）。
+    """
+    ms = irrep(NAMED['16'])[1] if W16 is None else W16
+    return [w for w in sorted(ms)
+            if color_singlet_wt(ms, w) and string_len(ms, w, A1_L) == 1
+            and chg(w, QHP) == F(0) and chg(w, YHP) == F(0)]
+
+
+def realizable(W, sums=None):
+    r""""权重可加性"计数：$W$ 里有多少个**不同权重**的相反数落在给定的双线性支集 `sums` 里。
+
+    `sums` 默认 $16+16$ 的支集；对消通道要传 $16-16$ 的支集（见 R7.6：两套支集不能混用）。
+    这是耦合的**必要条件**（不变张量至少要荷守恒），不是充分条件 ⇒ 只用来做
+    双向咬合检查，判据仍以 `yukawa_channels` 的张量分解为准。
+    """
+    ms = irrep(NAMED['16'])[1]
+    if sums is None:
+        sums = set(add(a, b) for a in ms for b in ms)
+    return len([w for w in W if neg(w) in sums]), len(sums)
+
+
+def need_weight():
+    """$\\nu_R^c\\nu_R^c$ 这个双线性所要求的 Higgs 权重 $=-2\\nu$（$\\nu$ = 上条的唯一权重）。"""
+    nu = matter_singlet()
+    return smul(-2, nu[0]) if nu else None
+
+
+YUK = []
+YUKCH = {}                                        # 供报告 §6 取用（与门禁同源，不另算一遍）
+
+
+def run_yukawa_layer():
+    """R7：d=4 允许的 Higgs 表示 + $\\nu_R$ Majorana 算符的荷守恒面。"""
+    p = True
+    prods = yukawa_products()
+    allow, parts = yukawa_channels()
+    rebuilt, unknown = {}, []
+    for key in ('sym', 'anti', 'vec'):
+        got = parts.get(key)
+        if not got:
+            rebuilt[key] = False
+            continue
+        ms = {}
+        for nm, k in got:
+            if nm != '(1)' and nm not in NAMED:
+                unknown.append((key, nm))
+            ms = madd(ms, *([irrep(ZERO if nm == '(1)' else NAMED[nm])[1]] * k))
+        rebuilt[key] = (ms == dict(prods[key]))
+    p &= ok('R7.1', '$\\mathrm{Sym}^2(16)$、$\\wedge^2(16)$、$16\\otimes\\overline{16}$ 三乘积'
+                    '各被**精确**拆成不可约成分：在出现的支配权上解单位三角方程组 '
+                    '$m_V(\\lambda)=\\sum_\\mu n_\\mu m_\\mu(\\lambda)$，解须为非负整数，'
+                    '且**按整权重构回去必须逐权重等于原多重集**（本门禁自己重算一遍重构，'
+                    '不信 `decomp` 的返回值）；拆出的成分全部落在 R2/R3 已登记的标号里 $\\Rightarrow$ '
+                    '与本文件"剥已知成分再交给 `find`"那条**不同的代码路径**给出同一批表示',
+            all(rebuilt.values()) and not unknown,
+            '成分清单（通道 → 表示:重数）：%s；未登记的名字：%s；重构比对：%s' %
+            (parts, unknown, rebuilt))
+    tbl = dict((r['name'], r) for r in TABLE)
+    # 两条"权重可加性"检验各自用**自己通道的支集**：手征通道来自 $16+16$，对消通道来自
+    # $16+\\overline{16}=16-16$（$W(\\overline{16})=-W(16)$）。混用会得出假矛盾——
+    # $45_H/210_H$ 在 $16+16$ 支集里得分 0，在 $16-16$ 支集里应得满分。
+    ms16 = irrep(NAMED['16'])[1]
+    sums_cc = set(add(a, b) for a in ms16 for b in ms16)
+    sums_cf = set(add(a, neg(b)) for a in ms16 for b in ms16)
+    rows = []
+    for nm in ORDER:
+        if nm not in NAMED or nm not in tbl:
+            continue
+        Wn = irrep(NAMED[nm])[1]
+        rows.append({'name': nm, 'dim': tbl[nm]['dim'], 'real': tbl[nm]['real'],
+                     'chiral': ('sym' if nm in allow['sym'] else '') +
+                               ('anti' if nm in allow['anti'] else ''),
+                     'sym': nm in allow['sym'], 'anti': nm in allow['anti'],
+                     'vec': nm in allow['vec'], 'realizable': realizable(Wn, sums_cc)[0],
+                     'realizableD': realizable(Wn, sums_cf)[0], 'nweights': len(Wn),
+                     'holds_maj': need_weight() in Wn})
+    YUK[:] = rows
+    chiral = [r['name'] for r in rows if r['sym'] or r['anti']]
+    # 按**标号**去重后再挑"可加性过关但通道表不受理"的表示：10 与 10̄ 是同一条标号（实表示），
+    # 若按名字挑，实表示的第二个名字会冒充成一个反例（按标号挑目前只剩 126 一条）。
+    labof = dict((nm, tuple(NAMED[nm])) for nm in NAMED)
+    chiral_labs = set(labof[n] for n in allow['sym'] + allow['anti'] if n in labof)
+    extra = [(r['name'], r['realizable'], r['nweights']) for r in rows
+             if r['realizable'] and labof.get(r['name']) not in chiral_labs]
+    def real_of(r):
+        """按**自己的通道**取可加性得分：手征行看 $16+16$ 支集，对消行看 $16-16$ 支集。"""
+        return r['realizable'] if (r['sym'] or r['anti']) else r['realizableD']
+    must0 = [(r['name'], real_of(r)) for r in rows
+             if (r['sym'] or r['anti'] or r['vec']) and not real_of(r)]
+    YUKCH.update({'allow': allow, 'parts': parts, 'rebuilt': rebuilt, 'chiral': chiral,
+                  'extra': extra, 'must0': must0,
+                  'ntot': len(sums_cc), 'ntotD': len(sums_cf)})
+    p &= exact('R7.2', '手征物质 $16_F$ 的双线性通道（$16\\otimes16$ 的共轭成分）与向量型通道'
+                       '（$16\\otimes\\overline{16}$）**互不相交** ⇒ 一个 Higgs 想同时给'
+                       'Dirac 质量与破 $B-L$，必须选在两个通道都没有的表示里，那它谁都不耦合',
+               sorted(set(chiral) & set(allow['vec'])), [],
+               '手征通道：%s（对称 %s／反对称 %s）；向量型通道：%s' %
+               (chiral, allow['sym'], allow['anti'], allow['vec']))
+    nu = matter_singlet()
+    p &= exact('R7.3', '$16_F$ 里"色单态 + $SU(2)_L$ 单态 + $Y=0,Q=0$"的权重**恰好一个** '
+                       '$\\Rightarrow$ 右手中微子（$\\nu_R^c$）在每一代里唯一，'
+                       '不是多加一个字段的选择',
+               len(nu), 1, '其荷：$B-L=%s$，$T^3_R=%s$（$B-L$ 只挂在色槽上 ⇒ 与 $SU(2)_R$ 无冲突）'
+               % ((str(chg(nu[0], BL)), str(chg(nu[0], T3R))) if nu else '无'))
+
+    needw = need_weight()
+    maj = [r['name'] for r in rows if r['holds_maj']]
+    blnu = chg(nu[0], BL) if nu else None
+    blneed = chg(needw, BL) if needw else None
+    blsum = 2 * blnu + blneed if (blnu is not None and blneed is not None) else None
+    YUKCH.update({'nu': nu, 'needw': needw, 'maj': maj,
+                  'blnu': blnu, 'blneed': blneed, 'blsum': blsum})
+    p &= exact('R7.4', '两个 $\\nu_R^c$ 配成 Majorana 项时，Higgs 必须携带权重 '
+                       '$-2\\nu$（$\\nu$ = 上条那个唯一权重）；在 $\\dim\\le210$ 的 %d 个表示里'
+                       '它**只**落在一个表示中，且那个表示属于通道表判给"对称手征通道"的成员 '
+                       '$\\Rightarrow$ "能耦合到手征物质"与"携带所需权重"两条独立判据的交集非空且唯一'
+                       % len(rows),
+               [len(maj), (maj[0] in allow['sym']) if len(maj) == 1 else None], [1, True],
+               '需要权重 $-2\\nu=%s$，其 $B-L=%s$、$Q=%s$；对称通道：%s；唯一承载者：%s' %
+               (fmt(needw), chg(needw, BL), chg(needw, QHP), allow['sym'], maj))
+    good, detail = True, []
+    for nm in maj:
+        mp = bl_multiplets(irrep(NAMED[nm])[1])
+        grp = [r for r in mp['DR'] if r['w'] == needw]
+        q0 = [r for r in mp['DR'] if r['Q'] == F(0)]
+        good &= (len(grp) == 1 and len(q0) == 1 and q0[0]['w'] == needw
+                 and grp[0]['L'] == 1 and grp[0]['R'] == 3 and grp[0]['BL'] == blneed
+                 and blsum == F(0))
+        detail.append('%s 的 $\\Delta_R$ 里 $-2\\nu$ 是该三重态**唯一**的 $Q=0$ 成员：%s' %
+                      (tex_name(nm), bool(grp and q0 and q0[0]['w'] == needw)))
+    p &= ok('R7.5', '$\\nu_R^c\\nu_R^c$ 所需的那个 Higgs 权重，恰好就是同一个表示里 '
+                    '$\\Delta_R$ 三重态的**中性成员**，且该分量的 $B-L$ 恰为 $-2\\nu$ $\\Rightarrow$ '
+                    '"给 $\\nu_R$ 质量"与"破 $B-L$"是**同一次取期望值**；$B-L$ 守恒由现场荷值核算：'
+                    '$2\\times(%s)+(%s)=%s$（不是写死的 $-1/+2$）' % (blnu, blneed, blsum),
+            good and bool(detail), '；'.join(detail) or '无承载者')
+    p &= ok('R7.6', '荷守恒是**单向**必要条件，两个方向同时检查（可加性一律按**自己通道的'
+                    '支集**算：手征行用 $16+16$，对消行用 $16-16$）：'
+                    '(a) 通道表受理的表示里不允许出现"可加性 $=0$"（真出现就说明张量分解与'
+                    '荷守恒直接矛盾）；'
+                    '(b) 必须**存在**"可加性 $>0$ 而通道表不受理"的表示——按标号去重后现场列出'
+                    '（备注）$\\Rightarrow$ 只看权重相加会把它误判成合法的 Higgs，'
+                    '所以判据必须是张量分解而不是荷守恒',
+            not must0 and bool(extra),
+            '可加性过关但通道表不受理（表示, 可加权重数, 不同权重总数）：%s；'
+            '通道表内可加性为 0 的：%s' % (extra, must0))
+    if chain is None:
+        p &= ok('R7.7', '链探针未载入 ⇒ 本层不下"情形 B 的标量与物质无耦合"的结论',
+                False, 'chain is None')
+        return p
+    phi = [to_grid_dir(w, '$\\Phi$') for w in chain.BIDOUBLET]
+    sig = [to_grid_dir(w, '$\\Sigma$') for w in chain.SIGMA_R]
+    W10, W45 = irrep(NAMED['10'])[1], irrep(NAMED['45'])[1]
+    Wn = dict((nm, irrep(NAMED[nm])[1]) for nm in NAMED)
+    f3 = [to_grid_dir(w, '物质') for w in chain.F3]
+    prose = ' '.join(chain.SCENARIOS.get(k, '') for k in chain.SCENARIOS)
+    p &= ok('R7.7', '与链探针**活对账**（权重从 `chain.BIDOUBLET/SIGMA_R/F3/SCENARIOS` 现场读，'
+                    '不抄本文件的字面量）：$\\Phi(1,2,2)$ 的 4 个权重全在 $10$ 里而不在 $45$ 里、'
+                    '$\\Sigma(1,1,3)_0$ 的 3 个权重全在 $45$ 里而不在 $10/120/126/\\overline{126}$ '
+                    '里、物质恰为 $3\\times16$（无 $\\overline{16}\\Rightarrow$ 向量型通道空转），'
+                    '且链的情形文字确实写着 $10_H,45_H$ 并声明"无 $126_H$"',
+            all(w in W10 for w in phi) and not any(w in W45 for w in phi)
+            and all(w in W45 for w in sig)
+            and not any(w in Wn[n] for w in sig for n in ('10', '120', '126', '126̄'))
+            and sorted(f3) == sorted(list(irrep(NAMED['16'])[1]) * 3)
+            and '10_H' in prose and '45_H' in prose and '无 $126_H$' in prose,
+            '$\\Phi$：%s；$\\Sigma$：%s；物质 $=3\\times16$：%s' %
+            ([fmt(w) for w in phi], [fmt(w) for w in sig],
+             sorted(f3) == sorted(list(Wn['16']) * 3)))
+    p &= ok('R7.8', '变异测试：把成分清单植成 $16$（真实计算里 $16\\notin16\\otimes16$）$\\Rightarrow$ '
+                    '允许集必须变成 $\\overline{16}$ 而不是原来那批名字（证明共轭映射真的在跑，'
+                    '不是把结论写死在函数里）',
+            yukawa_channels(constituents={'sym': ['16'], 'anti': [], 'vec': []})[0]['sym']
+            == conj_names(NAMED['16'])[:1]
+            and yukawa_channels(constituents={'sym': ['16'], 'anti': [], 'vec': []})[0]['sym']
+            != allow['sym'],
+            '植入后的对称通道：%s（真实：%s）' %
+            (conj_names(NAMED['16'])[:1], allow['sym']))
+    ms16 = irrep(NAMED['16'])[1]
+    alt = [w for w in sorted(ms16) if color_singlet_wt(ms16, w)
+           and string_len(ms16, w, A1_L) == 1 and chg(w, QHP) != F(0)]
+    okalt = bool(alt) and neg(smul(2, alt[0])) in Wn['126̄'] and need_weight() != neg(smul(2, alt[0]))
+    p &= ok('R7.9', '变异测试：改用同一条 $SU(2)_R$ 串里的**带电**伙伴（$Q=\\pm1$）作双线性的'
+                    '两个因子 $\\Rightarrow$ 所需权重落到 $\\Delta_R$ 的**双重带电**分量上，'
+                    '不再是中性那一个 ⇒ "$Q=0$ 才允许取期望值"这条物理输入确实在起决定作用，'
+                    '而不是一个恒真的说法',
+            okalt,
+            '带电伙伴 $w=%s$（$Q=%s$）$\\Rightarrow$ 所需权重 %s，其 $Q=%s$；中性承载者仍是 %s' %
+            (fmt(alt[0]) if alt else '—',
+             str(chg(alt[0], QHP)) if alt else '—',
+             fmt(neg(smul(2, alt[0]))) if alt else '—',
+             str(chg(neg(smul(2, alt[0])), QHP)) if alt else '—', fmt(needw)))
+    return p
+
+
+# =============================================== 不变张量簿记（R8）
+# 与 R7 的分工：R7 判"哪个 Higgs 拿得到 d=4 算符"，材料是**双线性乘积的成分 + 共轭**；
+# R8 换一条不共享代码的路：直接数 $\\mathrm{mult}((1),V)$，并要求它把 R7 的通道表**复算**成
+# 同一张。本层的骨架是把两件容易混为一谈的事分开记账：
+#   * **荷账本** $=\\dim V_0=m_V(0)$：全部 Cartan 荷同时为零的方向数（"荷配得平"）；
+#   * **不变张量** $=\\mathrm{mult}((1),V)$：其中真正规范不变的那一部分。
+# 恒有 $\\mathrm{mult}((1),V)\\le\\dim V_0$，而 $16\\otimes\\overline{16}$ 上是 $1\\ll16$：差的
+# 15 个方向正是 $45/210$ 的 Cartan 子空间 $\\Rightarrow$ "荷为零"与"不变"之间的缺口可以**逐成分
+# 拆开核对**，这就是 R8.1a 的内容。
+DIMPRODUCT_CAP = 2000          # δ 判据的对枚举上限：纯**成本**取舍，不是物理假设
+
+
+def zero_wt(ms):
+    """荷账本：权重多重集里零权的**重数** $m_V(0)$（全部 Cartan 荷同时为零的子空间维数）。"""
+    return int(ms.get(ZERO, 0))
+
+
+_SINGLET_MEMO = {}
+
+
+def singlet_mult(ms):
+    r"""不变张量个数 $\\mathrm{mult}((1),V)$：走 `decomp`（整权重构对账在它里面）。
+
+    拆不成特征标的非负整组合 $\\Rightarrow$ None，**不静默当成 0** $\\Rightarrow$ 调用方必须显式
+    降级（R8.6 的第二个植入正是来检查这条守卫不是死代码）。
+    按**多重集内容**记忆：四重积的一次 `decomp` 要 0.8s，本层多个门禁共用同一批乘积，
+    不记忆会把同一个分解解七遍。
+    """
+    key = frozenset(ms.items())
+    if key not in _SINGLET_MEMO:
+        d = decomp(ms)
+        _SINGLET_MEMO[key] = None if d is None else int(d.get(ZERO, 0))
+    return _SINGLET_MEMO[key]
+
+
+def constituents(ms):
+    """权重多重集 $\\to$ 成分表 [(名字, 重数)]；未认定的支配权留成裸标号（**不静默丢**）。"""
+    d = decomp(ms)
+    return None if d is None else [(label_name(la), k) for la, k in sorted(d.items())]
+
+
+def constit(ms):
+    r"""成分表（**按标号**）：$[(\lambda,\ n_\lambda)]$，未登记的支配权保留其 Dynkin 标号。
+
+    与 `constituents` 的差别不是风格而是**视力**：登记表只覆盖 $\\dim\\le210$，按名字查共轭
+    会在登记范围外把真实存在的伙伴静默算成 0 $\\Rightarrow$ 两条路径在含未登记成分的乘积上
+    给出**不同**的数（差多少由 R9.5 第四条当场量出来，不写在这里）。`pair_singlets` 走标号路径。
+    """
+    d = decomp(ms)
+    return None if d is None else [(tuple(dynkin(la)), k) for la, k in sorted(d.items())]
+
+
+def conj_name_set(nm):
+    """成分名 $\\mapsto$ 其共轭表示已登记的名字集：单态自配；实表示给两个名字；未登记 $\\Rightarrow$ 空集。"""
+    if nm == '(1)':
+        return {'(1)'}
+    if not isinstance(nm, str) or nm not in NAMED:
+        return set()
+    return set(conj_names(NAMED[nm]))
+
+
+def pair_singlets(pa, pb):
+    r"""第二条**独立**路径：$\\mathrm{mult}((1),A\\otimes B)=\\sum_{R,S}n_Rm_S\\,\\delta_{S,\\bar R}$，
+    只查两个因子各自已有的成分表 $\\Rightarrow$ 不解大乘积的方程组。
+
+    `pa`/`pb` 是 `constit` 给出的**标号**表，$\\bar R$ 由 `conj_label` 算：共轭是标号之间的
+    运算、与登记无关 $\\Rightarrow$ 成分落在 $\\dim>210$ 的登记范围外时这条路径照样闭合
+    （按名字查表做不到，R9.5 第三条量出两者差多少）。
+    返回 $(\\text{计数},\\ \\text{登记范围外的标号})$：后者**不**影响计数 $\\Rightarrow$ 它不是
+    "配不上对"而是"没名字"，报告仍要点名，因为本层正是在登记表之外读数。
+    """
+    tot = 0
+    for la, k in pa:
+        lb = conj_label(la)
+        tot += k * sum(m for l2, m in pb if l2 == lb)
+    return tot, [(name_of(la), k) for la, k in list(pa) + list(pb) if not registered(la)]
+
+
+def ledger_split(ms):
+    r"""把零权空间按成分拆开：每个不可约成分贡献 $n_R\\,m_R(0)$ 个"荷为零但未必不变"的方向。
+
+    返回 $\\{$parts: [(名字, 该成分贡献的零权数, 重数)], unreg: 未登记标号贡献的零权数,
+    nlab: 未登记标号的条数, total: 拆开后的总数$\\}$；`decomp` 失败 $\\Rightarrow$ None。
+    `total` 必须等于 `zero_wt(ms)`
+    ——这是 $m_{A\\otimes B}=\\sum n_Rm_R$ 在 $\\mu=0$ 处的恒等式，R8.1a 拿它当门禁。
+    """
+    d = decomp(ms)
+    if d is None:
+        return None
+    parts, unreg, total, nlab = [], 0, 0, 0
+    for la, k in sorted(d.items()):
+        z = irrep(dynkin(la))[1].get(ZERO, 0) * k
+        nm = label_name(la)
+        if isinstance(nm, str):
+            parts.append((nm, z, k))
+        else:
+            unreg += z
+            nlab += 1
+        total += z
+    parts.sort(key=lambda r: (-r[1], r[0]))
+    return {'parts': parts, 'unreg': unreg, 'nlab': nlab, 'total': total}
+
+
+INV = {}                        # 供报告 §7 取用（与门禁同源，不在报告里另算一遍）
+
+
+def run_invariant_layer():
+    """R8：荷账本与不变张量分开算，再用配对和复算同一个数，最后独立复算 d=4 通道表。"""
+    p = True
+    W = dict((nm, irrep(NAMED[nm])[1]) for nm in NAMED)
+    lab = dict((nm, tuple(NAMED[nm])) for nm in NAMED)
+
+    def conjlab(nm):
+        return tuple(dominant(neg(weight_of_label(lab[nm])))[1])
+
+    def bylabel(names):
+        return sorted(set(lab[n] for n in names))
+
+    # ---- R8.0 基本定理：mult((1),A\otimes B)=\delta_{B,\bar A}，在全部"小对"上现场核验
+    small = [(a, b) for a in ORDER if a in lab for b in ORDER if b in lab
+             and irrep(lab[a])[2] * irrep(lab[b])[2] <= DIMPRODUCT_CAP]
+    wrong, ones = [], 0
+    for a, b in small:
+        s = singlet_mult(tprod(W[a], W[b]))
+        want = int(conjlab(a) == lab[b])
+        ones += want
+        if s != want:
+            wrong.append((a, b, s, want))
+    p &= ok('R8.0', '不变张量基本定理 $\\mathrm{mult}((1),A\\otimes B)=\\delta_{B,\\bar A}$ 在 '
+                    '$\\dim A\\cdot\\dim B\\le%d$ 的**全部** %d 个已登记表示对上现场成立：左边由 '
+                    '`decomp` 解单位三角方程组算出，右边由共轭标号算出，**两边不共享代码** '
+                    '$\\Rightarrow$ 后面配对和那条路（R8.2）用的查表规则不是引用而是当场验证过的'
+                    % (DIMPRODUCT_CAP, len(small)),
+            bool(small) and not wrong and 0 < ones < len(small),
+            '对数 %d（其中 $\\delta=1$ 的 %d 对：互为共轭的那些）；反例：%s' %
+            (len(small), ones, wrong or '无'))
+
+    cc, cb2 = tprod(W['16'], W['16']), tprod(W['16̄'], W['16̄'])
+    cf = tprod(W['16'], W['16̄'])
+    p4, f4 = tprod(cc, cc), tprod(cf, cf)          # 16^4 与 16²16̄²（结合方式 II）
+    f4alt = tprod(cc, cb2)                         # 同一乘积（结合方式 I）
+
+    # ---- R8.1 / R8.1a 荷账本 vs 不变张量：三个乘积的读数 + 逐成分拆开必须回到同一个数
+    led = []
+    for tag, ms in (('$16\\otimes16$', cc), ('$16\\otimes\\overline{16}$', cf),
+                    ('$16^{\\otimes4}$', p4)):
+        sp = ledger_split(ms)
+        led.append({'tex': tag, 'dim': msum(ms), 'ndist': len(ms), 'zero': zero_wt(ms),
+                    'singlet': singlet_mult(ms),
+                    'split': sp and (sp['total'] == zero_wt(ms)), 'parts': sp})
+    p &= exact('R8.1', '三个乘积的（荷账本 $\\dim V_0$，不变张量 $\\mathrm{mult}((1),V)$）读数：'
+                       '$16\\otimes16$ 连**荷**都配不平（零权 0 个）$\\Rightarrow$ 手征双线性没有'
+                       '任何荷守恒方向；$16\\otimes\\overline{16}$ 有 16 个零权方向但只有 1 个不变；'
+                       '$16^{\\otimes4}$ 有 960 个零权方向、其中 2 个不变 $\\Rightarrow$ '
+                       '"荷配平"与"规范不变"是两个数，本表把它们并排放',
+               [(x['zero'], x['singlet']) for x in led], [(0, 0), (16, 1), (960, 2)],
+               '缺口（零权 $-$ 单态）：%s' %
+               '、'.join('%s 缺 %d' % (x['tex'], x['zero'] - x['singlet']) for x in led))
+    p &= ok('R8.1a', '零权空间按成分拆开必须**逐成分回到同一个数**：$m_{A\\otimes B}(0)='
+                     '\\sum_R n_Rm_R(0)$（每个不可约成分贡献它自己的零权重数）。这条恒等式一'
+                     '方面证明"缺口"不是丢失而是记在 $45/210$ 等成分的 Cartan 子空间上，'
+                     '另一方面把 `decomp` 的重构对账在 $\\mu=0$ 这个槽位上再核一遍',
+            all(x['split'] for x in led) and
+            all(x['singlet'] is not None and x['singlet'] <= x['zero'] for x in led) and
+            any(x['zero'] - x['singlet'] > 0 for x in led),
+            '拆解：' + '；'.join('%s 的零权按成分归口 %s%s' %
+                                 (x['tex'],
+                                  '、'.join('%s 占 %d' % (tex_name(n), z)
+                                            for n, z, _k in x['parts']['parts']),
+                                  '' if not x['parts']['unreg']
+                                  else '，另有未登记标号占 %d' % x['parts']['unreg'])
+                                 for x in led if x['parts'])
+            + '；三条都满足"单态 $\\le$ 零权"且至少一处严格')
+
+    # ---- R8.2 四路对账 + 结合律：同一个四重积，两条解方程的路径 + 两条配对和的路径
+    r_decomp_I, r_decomp_II = singlet_mult(f4alt), singlet_mult(f4)
+    r_pair_cc, unk1 = pair_singlets(constit(cc), constit(cb2))
+    r_pair_cf, unk2 = pair_singlets(constit(cf), constit(cf))
+    r_pair_p4, unk3 = pair_singlets(constit(cc), constit(cc))
+    p &= ok('R8.2', '$16\\otimes16\\otimes\\overline{16}\\otimes\\overline{16}$：两种结合方式'
+                    '先给出**逐权重相同**的多重集（张量积结合律在这里是可核对的，不是默认成立的），'
+                    '再由两条独立路径给出同一个单态个数：`decomp` 解方程（两种方式各一次）与'
+                    '配对和 $\\sum n_Rm_{\\bar R}$（按 $16\\otimes16$ 配对、按 $16\\otimes\\overline{16}$ '
+                    '配对各一次）$\\Rightarrow$ 四条路径同为 3；同样四条路径里 $16^{\\otimes4}$ 的'
+                    '两条路径同为 2，且**共轭在这一步真的在起作用**：把 $\\overline{16}$ 全换成 $16$ '
+            '后配对和从 3 掉到 2（$126$ 找不到 $\\overline{126}$ 作伙伴）$\\Rightarrow$ '
+            '配对和按**标号**取共轭（`constit`），不查登记表 $\\Rightarrow$ 这三张表恰好全在 '
+            '$\\dim\\le210$ 内，故与按名字查表给出同一个数（R9.5 第三条核这条，并给出超出登记'
+            '表时两者差多少）',
+            f4alt == f4 and r_decomp_I == r_decomp_II == r_pair_cc == r_pair_cf == 3
+            and r_pair_p4 == singlet_mult(p4) == 2 and not (unk1 or unk2 or unk3),
+            '四条路径（decomp I/II、配对和 $16\\otimes16$ 侧、配对和 $16\\otimes\\overline{16}$ 侧）'
+            '= %s；$16^{\\otimes4}$：decomp %d、配对和 %d；两种结合方式的权重多重集逐权相等：%s；'
+            '登记范围外的标号：%s' %
+            ([r_decomp_I, r_decomp_II, r_pair_cc, r_pair_cf], singlet_mult(p4), r_pair_p4,
+             f4alt == f4, (unk1 + unk2 + unk3) or '无'))
+
+    # ---- R8.3 通道表由单态计数独立复算（不查 R7 的成分表，只数三重积里的 (1)）
+    prods = {'sym': sym2(W['16']), 'anti': wedge2(W['16']), 'vec': cf}
+    chan = {}
+    for key, base in prods.items():
+        names = [nm for nm in sorted(lab) if (singlet_mult(tprod(base, W[nm])) or 0) > 0]
+        chan[key] = {'names': names, 'labs': bylabel(names),
+                     'agree': bool(YUKCH.get('allow')) and
+                                bylabel(names) == bylabel(YUKCH['allow'][key])}
+    dis = [k for k in prods if not chan[k]['agree']]
+    p &= ok('R8.3', 'd=4 通道表**独立复算**：不去拆双线性再取共轭，而是逐个 Higgs 候选数 '
+                    '$\\mathrm{mult}((1),\\mathrm{Sym}^2 16\\otimes H)$、'
+                    '$\\mathrm{mult}((1),\\wedge^2 16\\otimes H)$、'
+                    '$\\mathrm{mult}((1),16\\otimes\\overline{16}\\otimes H)$ 是否 $>0$。'
+                    '两条路径按**标号**比对（实表示 $10$ 与 $\\overline{10}$ 同标号、$45$ 与 '
+                    '$\\overline{45}$ 同标号 $\\Rightarrow$ 按名字比会假报错，R2.c10c45）'
+                    '$\\Rightarrow$ §6 的通道表由第二条不共享代码的路径确认',
+            not dis,
+            '按标号不一致的通道：%s；本层数出的 Higgs（对称 %s／反对称 %s／对消 %s）'
+            '；R7 的通道表（对称 %s／反对称 %s／对消 %s）' %
+            (dis or '无',
+             '、'.join(tex_name(n) for n in chan['sym']['names']),
+             '、'.join(tex_name(n) for n in chan['anti']['names']),
+             '、'.join(tex_name(n) for n in chan['vec']['names']),
+             '、'.join(tex_name(n) for n in YUKCH['allow']['sym']),
+             '、'.join(tex_name(n) for n in YUKCH['allow']['anti']),
+             '、'.join(tex_name(n) for n in YUKCH['allow']['vec'])))
+
+    # ---- R8.4 手征 => 无裸质量项
+    p &= exact('R8.4', '手征物质的双线性里**没有**规范不变方向：$\\mathrm{mult}((1),16\\otimes16)='
+                       '0$、$\\mathrm{mult}((1),\\mathrm{Sym}^2 16)=0$、'
+                       '$\\mathrm{mult}((1),\\wedge^2 16)=0$，而'
+                       '$\\mathrm{mult}((1),16\\otimes\\overline{16})=1$ $\\Rightarrow$ '
+                       '"手征 $\\Rightarrow$ 质量项必须靠 Higgs"是**数出来的**，不依赖 §6 的通道表；'
+                       '向量型的一对（$16$ 与 $\\overline{16}$ 同时在场）则有一个不变方向',
+               [singlet_mult(cc), singlet_mult(prods['sym']), singlet_mult(prods['anti']),
+                singlet_mult(cf)], [0, 0, 0, 1],
+               '对称／反对称两个槽各自也是 0 $\\Rightarrow$ 不是"单态藏在反对称槽里"那种假象')
+
+    # ---- R8.5 物质-only 的不变算符自动 Delta(B-L)=0；Delta(B-L)=2 必须插入带共轭杠的 Higgs
+    triv = irrep(ZERO)
+    charges = [chg(ZERO, v) for v in (BL, T3L, T3R, YHP, QHP)] if chain is not None else None
+    sp4 = singlet_mult(p4)
+    tri = dict((nm, singlet_mult(tprod(cc, W[nm]))) for nm in
+               ('10', '120', '126', '126̄', '45'))
+    p &= ok('R8.5', '$|\\Delta(B-L)|=2$ 那一类**不可能**只用物质凑出来：'
+                    '(i) 单态 $(1)$ 的权重集恰为 $\\{(0,0,0,0,0):1\\}$ 且它在各 Cartan 方向上的荷'
+                    '全为 0 $\\Rightarrow$ 任何物质-only 不变算符自动 $\\Delta(B-L)=0$；'
+                    '(ii) $\\mathrm{mult}((1),16^{\\otimes4})=%d>0$ 而 '
+                    '$\\mathrm{mult}((1),16\\otimes16)=0$ $\\Rightarrow$ 规范群**不**禁止'
+                    '四费米子不变算符（质子衰变那一类的荷前提成立），却禁止二费米子的那一类；'
+                    '(iii) 要拿到 $|B-L|=2$ 必须插入 Higgs，而 '
+                    '$\\mathrm{mult}((1),16\\otimes16\\otimes H)$ 在 $H=\\overline{126}$ 上为 1、'
+                    '在 $H=126$ 上为 0 $\\Rightarrow$ 插入的是**带共轭杠**的那个，'
+                    '与 R7.4/R7.5 的 Majorana 承载者判定同源而**路径独立**' % sp4,
+            triv[1] == {ZERO: 1} and (charges is None or all(c == F(0) for c in charges))
+            and sp4 == 2 and singlet_mult(cc) == 0
+            and tri['126̄'] == 1 and tri['126'] == 0,
+            '$(1)$ 的权重集只有零权（%s）；它在 $B-L$、$T^3_L$、$T^3_R$、$Y$、$Q$ 五个方向上的荷 '
+            '$=%s$；$16^{\\otimes4}$ 单态 %d 个；在 $16\\otimes16\\otimes H$ 里的单态数：%s' %
+            ('零权 1 个' if triv[1] == {ZERO: 1} else triv[1],
+             '、'.join(str(c) for c in charges) if charges else '（链探针未载入）', sp4,
+             '、'.join('%s 上 %s 个' % (tex_name(n), tri[n]) for n in
+                      ('10', '120', '126', '126̄', '45'))))
+
+    # ---- R8.6 变异测试：证明上面的单态个数跟着输入走，而不是写死的字面量
+    minus1, minus2 = dict(cf), dict(cf)
+    minus1[ZERO] -= 1
+    minus2[ZERO] -= 2
+    p &= ok('R8.6', '变异测试（三处植入）$16\\otimes\\overline{16}=1\\oplus45\\oplus210$ 的'
+                    '零权空间被动过之后，读数必须跟着动：去掉 **1** 个零权 $\\Rightarrow$ 它'
+                    '合法地变成 $45\\oplus210$（那正是 $m(0)=15$ 的答案），单态由 1 变 0；'
+                    '去掉 **2** 个零权 $\\Rightarrow$ 不再是任何特征标的非负整组合，'
+                    '**整权重构对账必须拒绝**（返回 None，而不是沿用旧的 1）；'
+                    '把 $\\overline{16}$ 换成 $16$ $\\Rightarrow$ 单态由 1 变 0。'
+                    '三条合起来说明 `singlet_mult` 既不是恒真也不是恒假，且它的失败分支活着',
+            singlet_mult(minus1) == 0 and singlet_mult(minus2) is None
+            and singlet_mult(cc) == 0 and singlet_mult(cf) == 1,
+            '植入读数：去 1 个零权 $\\to$ %s；去 2 个 $\\to$ %s；$16\\otimes16\\to$ %s；'
+            '真值 $16\\otimes\\overline{16}\\to$ %s' %
+            (singlet_mult(minus1), singlet_mult(minus2), singlet_mult(cc), singlet_mult(cf)))
+
+    INV.update({'npairs': len(small), 'ones': ones, 'wrong': wrong, 'ledger': led,
+                'mut': {'m1': singlet_mult(minus1), 'm2': singlet_mult(minus2),
+                        'cc': singlet_mult(cc), 'cf': singlet_mult(cf)},
+                'assoc': f4alt == f4, 'f4w': len(f4), 'f4dim': msum(f4),
+                'routes': {'decomp_I': r_decomp_I, 'decomp_II': r_decomp_II,
+                           'pair_cc': r_pair_cc, 'pair_cf': r_pair_cf,
+                           'pair_p4': r_pair_p4, 'decomp_p4': singlet_mult(p4)},
+                'chan': dict((k, chan[k]) for k in chan), 'tri': tri,
+                'p4': singlet_mult(p4), 'zero_p4': zero_wt(p4),
+                'charges': charges, 'cap': DIMPRODUCT_CAP})
+    return p
+
+
+# =============================================================== 不变张量的道分解（R9）
+# R8 数出 $16^{\\otimes4}$ 里有 2 个不变张量，但没有回答"这 2 个**各自**经由哪条双费米子道"。
+# 把 R8 的配对和按道拆开就是本节的全部内容：
+#   $\\mathrm{mult}((1),A\\otimes A)=\\sum_R n_R\\,\\#\\{S\\subset A:S\\cong\\bar R\\}$
+# 每一道要么整体计入（$R$ 实：$\\bar R$ 就是它自己），要么整体不计（$R$ 复且 $\\bar R$ 不在这张
+# 表里）$\\Rightarrow$ "在场但不闭合"的那一道恰是 $126_S$，也就是 R7.4/R8.5 里唯一能承载
+# $\\nu_R$ Majorana 质量的 $\\overline{126}_H$ 的伙伴 $\\Rightarrow$ 同一张表里同时读到"物质-only
+# 的四费米子算符走哪两条道"和"$|B-L|=2$ 那条道为什么进不来"。
+#
+# 本节也是本文件里第一次把配对和改走**标号**路径：登记表只到 $\\dim\\le210$，按名字查共轭会在
+# 登记范围外把真实存在的伙伴静默算成 0 $\\Rightarrow$ R9.5 第四条把这个差额当场量出来。
+TRIPLE_CAP = 200000       # 只对总权重不超过此数的三元乘积做"直接解方程"复算：纯成本取舍
+
+
+def chan_key(nm):
+    """道名的显示序：$(1)$ 最先，其余按维数；未登记的裸标号排最后。"""
+    if nm == '(1)':
+        return 0
+    return int(nm) if nm.isdigit() else 10 ** 6
+
+
+def channel_split(ch):
+    r"""配对和按道拆开：$(\text{总数},\ [(\text{道名},\ n_R,\ \text{该道贡献})])$。
+
+    该道贡献 $=n_R\\cdot\\#\\{S\\in\\text{表}:S\\cong\\bar R\\}$，$\\bar R$ 由 `conj_label` 现场算
+    $\\Rightarrow$ 实表示自配自己、复表示要求共轭也在同一个乘积里 $\\Rightarrow$ 闭合是**道**的属性，
+    与维数、与"这条道有没有对应的 Higgs"都无关。
+    """
+    tot, rows = 0, []
+    for la, k in ch:
+        lb = conj_label(la)
+        c = sum(m for l2, m in ch if l2 == lb)
+        rows.append((name_of(la), k, k * c))
+        tot += k * c
+    return tot, sorted(rows, key=lambda r: chan_key(r[0]))
+
+
+def chan_tex(nm):
+    """道名的 math 形式：`(1)`/`126` 原样，`126̄` → `\\overline{126}`，未登记裸标号原样。"""
+    return ('\\overline{%s}' % nm[:-1]) if nm.endswith('\u0304') else nm
+
+
+def fmt_chan(rows):
+    """道表读成 `$10\\to 1$、$126\\to 0$` 一类：只印"该道贡献"，重数另说。"""
+    return '、'.join('$%s\\to %d$' % (chan_tex(n), c) for _n, _k, c in rows)
+
+
+CSPLIT = {}                  # 供报告 §8 取用（与门禁同源，不在报告里另算一遍）
+
+
+def run_channel_layer():
+    """R9：$16^{\\otimes4}$ 与 $16\\otimes16\\otimes\\overline{16}\\otimes\\overline{16}$ 的不变张量
+    按双费米子道归口，并与链探针声明的标量内容对账。"""
+    p = True
+    W = dict((nm, irrep(NAMED[nm])[1]) for nm in NAMED)
+    W['(1)'] = irrep(ZERO)[1]
+    cc, cb2 = tprod(W['16'], W['16']), tprod(W['16̄'], W['16̄'])
+    cf = tprod(W['16'], W['16̄'])
+    p4, f4 = tprod(cc, cc), tprod(cf, cf)
+    chs, chv = constit(cc), constit(cf)
+    tot_s, rows_s = channel_split(chs)
+    tot_v, rows_v = channel_split(chv)
+    give = dict((n, c) for n, _k, c in rows_s + rows_v)
+
+    # ---- R9.0 按道拆开必须回到 R8 解出来的总数
+    exp_s = [('10', 1, 1), ('120', 1, 1), ('126', 1, 0)]
+    exp_v = [('(1)', 1, 1), ('45', 1, 1), ('210', 1, 1)]
+    p &= ok('R9.0', '$16^{\\otimes4}$ 的两个不变张量按双费米子道归口：$10$ 道 1 个、$120$ 道 '
+                    '1 个、$126$ 道 0 个 $\\Rightarrow$ 加起来正是 R8 解整权重方程组得到的 2。'
+                    '$16\\otimes\\overline{16}=(1)\\oplus45\\oplus210$ 三条道全是实表示 '
+                    '$\\Rightarrow$ 各 1 个、总数 3 = R8 的另一个读数。这里的求和只用'
+                    '"成分表 + 标号共轭"，与 R8 的 `decomp` 路径不共享代码',
+            rows_s == exp_s and rows_v == exp_v
+            and tot_s == sum(c for _n, _k, c in exp_s) == INV['p4'] == INV['routes']['decomp_p4']
+            and tot_v == sum(c for _n, _k, c in exp_v) == singlet_mult(f4)
+            == INV['routes']['decomp_I'],
+            '手征侧（道名, $n_R$, 该道贡献 $=n_Rn_{\\bar R}$）%s $\\Rightarrow$ 合计 %d；R8 的'
+            '整权重方程组 %d、`decomp` 独立复算 %d $\\Rightarrow$ $16^{\\otimes4}$ 的两个不变张量'
+            '**分处两条道**，不是同一条道重数 2。对消侧 %s $\\Rightarrow$ 合计 %d；R8 配对和 %d、'
+            '`decomp` %d' %
+            (rows_s, tot_s, INV['p4'], INV['routes']['decomp_p4'], rows_v, tot_v,
+             singlet_mult(f4), INV['routes']['decomp_I']))
+
+    # ---- R9.1 闭合判据两路：标号自共轭 vs 直接解 mult((1),R\otimes R)
+    crit = []
+    for la, k in chs + chv:
+        ms = irrep(la)[1]
+        direct = singlet_mult(tprod(ms, ms)) or 0
+        crit.append((name_of(la), conj_label(la) == tuple(la), direct > 0,
+                     give[name_of(la)] > 0))
+    bad = [nm for nm, rl, dr, g in crit if dr != rl or g != rl]
+    p &= ok('R9.1', '闭合判据走两条不共享代码的路必须一致：$R$ 道贡献非零 $\\Longleftrightarrow$ '
+                    '$R$ 自共轭（标号路径 $\\bar\\lambda=\\lambda$）$\\Longleftrightarrow$ `decomp` '
+                    '在 $R\\otimes R$ 里解出恰好一个单态（整权重构路径）。六条道全部吻合 $\\Rightarrow$ '
+                    '"复表示的双线性凑不出不变张量"是**判出来的**，不是引来的。其中**在场却不闭合**'
+                    '的道恰有一条，就是 $126_S$ $\\Rightarrow$ 它正是 R7.4/R8.5 里唯一承载 $\\nu_R$ '
+                    'Majorana 质量的 $\\overline{126}_H$ 的伙伴；而 $\\overline{126}$ **已在登记表里** '
+                    '$\\Rightarrow$ "它不在 $16\\otimes16$ 里"是真的落空，不是查不到名字',
+            not bad and [nm for nm, rl, dr, g in crit if not g] == ['126']
+            and bool(conj_names(NAMED['126'])) and '126̄' in NAMED,
+            '判据表（道, 自共轭, $\\mathrm{mult}((1),R\\otimes R)>0$, 该道有贡献）：%s；'
+            '在场却不闭合的道：%s；两条路不一致的道：%s' %
+            (crit, [nm for nm, _rl, _dr, g in crit if not g] or '无', bad or '无'))
+
+    # ---- R9.2 道住在哪个双线性槽里（Adams 路径，与 tprod 不共享代码）
+    sym, anti = sym2(W['16']), wedge2(W['16'])
+    slot = dict((k, constituents(v)) for k, v in (('sym', sym), ('anti', anti), ('vec', cf)))
+    slotof = dict([(nm, k) for k in ('sym', 'anti', 'vec') for nm, _m in slot[k]])
+    p &= ok('R9.2', '道表与双线性槽对账：$\\mathrm{Sym}^2(16)=10\\oplus126$、'
+                    '$\\wedge^2(16)=120$、$16\\otimes\\overline{16}=(1)\\oplus45\\oplus210$，'
+                    '且 $\\mathrm{Sym}^2\\oplus\\wedge^2$ **逐权重**等于 $16\\otimes16$（两个槽由 '
+                    'Adams $\\psi_2$ 算出，与直接做 $\\chi_{16}^2$ 的 `tprod` 是两条路）。于是 '
+                    '$16^{\\otimes4}$ 的两个不变张量一个来自对称槽 $\\times$ 对称槽（$10$ 道）、'
+                    '一个来自反对称槽 $\\times$ 反对称槽（$120$ 道）$\\Rightarrow$ 并不存在"'
+                    '对称槽里都闭合"这条捷径：同在对称槽里的 $126$ 恰恰不闭合。此处 Sym/∧ 说的是 '
+                    '$SO(10)$ 指标槽的对称性，**不是** Lorentz 或味指标 $\\Rightarrow$ 不能读成'
+                    '"标量/赝标"',
+            madd(sym, anti) == dict(cc) and
+            [nm for nm, _k in slot['sym']] == ['10', '126'] and
+            [nm for nm, _k in slot['anti']] == ['120'] and
+            [nm for nm, _k in slot['vec']] == ['(1)', '45', '210'] and
+            [slotof.get(n) for n in ('10', '120', '126')] == ['sym', 'anti', 'sym'] and
+            [give[n] for n in ('10', '120', '126')] == [1, 1, 0],
+            '槽表：%s；逐权重重构 $\\mathrm{Sym}^2\\oplus\\wedge^2=16\\otimes16$：%s' %
+            (slot, madd(sym, anti) == dict(cc)))
+
+    # ---- R9.3 与链探针声明的标量内容活对账（含一条可核对的否定结果）
+    cont, decl, dunion = [], {}, set()
+    if chain is None:
+        p &= ok('R9.3', '链探针未载入 $\\Rightarrow$ 本层不下"哪条闭合道在模型谱里有母表示"的结论',
+                False, 'chain is None')
+    else:
+        phi = [to_grid_dir(w, '$\\Phi$') for w in chain.BIDOUBLET]
+        sig = [to_grid_dir(w, '$\\Sigma$') for w in chain.SIGMA_R]
+        for la, k in chs + chv:
+            ms = irrep(la)[1]
+            nm = name_of(la)
+            cont.append({'name': nm, 'closes': give[nm] > 0,
+                         'phi': all(w in ms for w in phi),
+                         'nphi': sum(1 for w in phi if w in ms), 'tphi': len(phi),
+                         'sig': all(w in ms for w in sig),
+                         'nsig': sum(1 for w in sig if w in ms), 'tsig': len(sig)})
+        for scn, txt in chain.SCENARIOS.items():
+            decl[scn] = [nm for nm in ('10', '45', '54', '120', '126', '144', '210')
+                         if '%s_H' % nm in txt and ('无 $%s_H$' % nm) not in txt]
+            dunion |= set(decl[scn])
+        byn = dict((x['name'], x) for x in cont)
+        side = ('10', '120', '126')
+        p &= ok('R9.3', '与链探针**活对账**（权重与情形文字从 `chain.BIDOUBLET/SIGMA_R/'
+                        'SCENARIOS` 现场读，不抄本文件的字面量）。两件事必须同时成立：'
+                        '**(a) 权重包含在同侧是退化的** $\\Rightarrow$ 这条否定结果必须被点名；'
+                        '**(b) 指派一旦由情形给定，闭合道里有没有母表示就是可数的。**',
+                (all(byn[n]['phi'] for n in side) and
+                 all(byn[n]['sig'] for n in ('45', '210')) and
+                 not any(byn[n]['sig'] for n in side) and
+                 not any(byn[n]['phi'] for n in ('45', '210', '(1)')) and
+                 dunion == set(('10', '45')) and
+                 [n for n in ('10', '120') if give[n] > 0 and n in dunion] == ['10'] and
+                 '126' not in dunion and '120' not in dunion),
+                '$\\Phi(1,2,2)$ 的 %d 条权重同时落在 $10/120/126$ 三条道的权重集里，'
+                '$\\Sigma(1,1,3)_0$ 的 %d 条同时落在 $45/210$ 里 $\\Rightarrow$ 包含判据能分'
+                '"手征侧 vs 对消侧"，分不了同侧内部**是哪一道** $\\Rightarrow$ "道 $\\to$ 母表示"'
+                '的指派是模型的**输入**（写在情形文字里），不是权重算出来的结论。'
+                '三个情形字面声明的母表示并集为 $\\{%s\\}$（情形 B 同时写明"无 $126_H$"；A 与 C 的'
+                '文字里不出现任何 $X_H$ 记号 $\\Rightarrow$ 本层按字面读，不做"B 且…"的继承推理）'
+                '$\\Rightarrow$ $16^{\\otimes4}$ 的两个不变张量里**恰有一个**（$10$ 道那个）可经'
+                '模型声明有的 $10_H$ 因子化，另一个需要 $120_H$ 而无人声明 $\\Rightarrow$ "物质-only '
+                '四费米子算符有两条道"与"这两条道在本模型谱里有没有媒介者"是两个独立读数。'
+                '包含表：%s；各情形字面声明：%s' %
+                (len(phi), len(sig), '、'.join(sorted(dunion, key=chan_key)),
+                 [(x['name'], '闭合' if x['closes'] else '不闭合',
+                   '$\\Phi\\subset$ %s(%d/%d)' % ('✔' if x['phi'] else '✘', x['nphi'], x['tphi']),
+                   '$\\Sigma\\subset$ %s(%d/%d)' % ('✔' if x['sig'] else '✘', x['nsig'],
+                                                    x['tsig'])) for x in cont], decl))
+
+    # ---- R9.4 插入 Higgs：单插入三种结合皆空，成对插入才非零
+    ins, pairs = {}, {}
+    for Hn in ('126', '126̄'):
+        hlab = constit(W[Hn])[0][0]
+        gI, _u0 = pair_singlets(constit(p4), constit(W[Hn]))
+        rgt = constit(tprod(cc, W[Hn]))
+        gII, _u1 = pair_singlets(chs, rgt)
+        gIII, direct = 0, []
+        for la, ka in chs:
+            for lb, kb in chs:
+                dab = tprod(irrep(la)[1], irrep(lb)[1])
+                n = sum(v for l2, v in (decomp(dab) or {}).items()
+                        if conj_label(tuple(dynkin(l2))) == hlab)
+                gIII += ka * kb * n
+                tri = tprod(dab, W[Hn])
+                tag = '%s⊗%s' % (name_of(la), name_of(lb))
+                direct.append((tag, (singlet_mult(tri) or 0) if msum(tri) <= TRIPLE_CAP else None,
+                               n, msum(tri)))
+        ins[Hn] = {'gI': gI, 'gII': gII, 'gIII': gIII, 'direct': direct,
+                   'small': sum(1 for _t, a, _n, _w in direct if a is not None),
+                   'bare': sum(1 for l, _k in rgt if not registered(l))}
+    for pr in (('126', '126'), ('126̄', '126̄'), ('126', '126̄')):
+        ms = tprod(W[pr[0]], W[pr[1]])
+        gI, uI = pair_singlets(constit(p4), constit(ms))
+        gII, _u2 = pair_singlets(constit(tprod(cc, W[pr[0]])), constit(tprod(cc, W[pr[1]])))
+        mir, _u3 = pair_singlets(constit(tprod(cb2, W[pr[0]])), constit(tprod(cb2, W[pr[1]])))
+        pairs['%s|%s' % pr] = {'gI': gI, 'gII': gII, 'mirror': mir,
+                               'unreg': sum(1 for l, _k in uI)}
+    p &= ok('R9.4', '$|B-L|=2$ 的那个 Higgs **插不进**四费米子算符：'
+                    '$\\mathrm{mult}((1),16^{\\otimes4}\\otimes H)=0$ 对 $H=126$ 与 $H='
+                    '\\overline{126}$ 同时成立，且**三种结合方式**（先并成 $16^{\\otimes4}$ 再插入、'
+                    '先并一个双线性再插入、逐道 Clebsch–Gordan 数共轭）给出同一个 0；在总权重不超过 '
+                    '%d 的道对上还把三元乘积**直接解了一遍**当对照，逐道与 CG 计数相等。'
+                    '而插入**一对** $126$ 之后单态个数确实非零 $\\Rightarrow$ "要拿到 '
+                    '$|\\Delta(B-L)|=2$ 的四费米子不变张量就得成对插入"是本层数出来的。'
+                    '共轭镜像再压一条独立约束：$\\mathrm{mult}((1),16^{\\otimes4}\\otimes126^{'
+                    '\\otimes2})$ 必须等于把全部 $16$ 换成 $\\overline{16}$、$126$ 换成 '
+                    '$\\overline{126}$ 后数出的同一个数' % TRIPLE_CAP,
+            all(v['gI'] == v['gII'] == v['gIII'] == 0 and v['small'] == 5 and
+                all(a == n for _t, a, n, _w in v['direct'] if a is not None) and
+                v['small'] + sum(1 for _t, a, _n, _w in v['direct'] if a is None) == 9
+                for v in ins.values())
+            and all(v['gI'] == v['gII'] > 0 for v in pairs.values())
+            and pairs['126|126']['mirror'] == pairs['126̄|126̄']['gI']
+            and pairs['126̄|126̄']['mirror'] == pairs['126|126']['gI']
+            and pairs['126|126̄']['mirror'] == pairs['126|126̄']['gI'],
+            '单插入：' + '；'.join(
+                '$H=%s$：结合 I/II/III 全为 %d、直解 %d 道（另 %d 道超出成本上限）、'
+                '$16\\otimes16\\otimes H$ 侧登记范围外标号 %d 条' %
+                (chan_tex(n), v['gI'], v['small'], 9 - v['small'], v['bare'])
+                for n, v in ins.items()) +
+            '。成对插入（结合 I／结合 II／共轭镜像）：' + '；'.join(
+                '$16^{\\otimes4}\\otimes%s$ $=(\\,%d,\\,\\,%d,\\,\\,%d\\,)$，'
+                '登记范围外 %d 条' %
+                ('\\otimes'.join(chan_tex(x) for x in k.split('|')), v['gI'], v['gII'],
+                 v['mirror'], v['unreg']) for k, v in pairs.items()))
+
+    # ---- R9.5 变异测试：总数跟着成分表与共轭映射走；按名字查表在登记表外丢贡献
+    def by_name(pa, pb):
+        na = [(name_of(l), k) for l, k in pa]
+        nb = [(name_of(l), k) for l, k in pb]
+        return sum(k * sum(m for nm2, m in nb if nm2 in conj_name_set(nm))
+                   for nm, k in na)
+    drop = [x for x in chs if name_of(x[0]) != '120']
+    closing = next(x for x in chs if give[name_of(x[0])] > 0)
+    dnm = name_of(closing[0])
+    dbl = chs + [closing]
+    fake = chs + constit(W['126̄'])
+    biga, bigb = constit(p4), constit(tprod(W['126'], W['126']))
+    m_lab, m_unreg = pair_singlets(biga, bigb)
+    r82 = ((constit(cc), constit(cb2)), (constit(cf), constit(cf)), (constit(cc), constit(cc)))
+    mut = dict((k, channel_split(x)[0]) for k, x in
+               (('drop', drop), ('dbl', dbl), ('fake', fake), ('real', chs)))
+    p &= ok('R9.5', '变异测试（四处植入）说明本节既没把 2 写成字面量、也没把配对和偷偷写成'
+                    '"按名字查表"：从道表里**删掉** $120$ $\\Rightarrow$ 总数掉到 %d；把一条'
+                    '**闭合道**（$%s$）的重数翻倍 $\\Rightarrow$ 该道贡献按 $n_Rn_{\\bar R}$ 是 '
+                    '$2\\times2=4$ 而非 2 $\\Rightarrow$ 总数升到 %d $\\Rightarrow$ 配对和'
+                    '**双线性**地依赖成分表，不是数"有没有"；伪造 $\\overline{126}$ 也在 '
+                    '$16\\otimes16$ 里 $\\Rightarrow$ $126$ 与 $\\overline{126}$ 互配各得 1 '
+                    '$\\Rightarrow$ 升到 %d（真值 %d）。第四条是**反向**的：在 R8.2 用到的那三张'
+                    '表上"按名字查共轭"与"按标号算共轭"必须给同一个数（那里没有登记范围外的标号 '
+                    '$\\Rightarrow$ 旧路径没错），而在 $16^{\\otimes4}\\otimes126^{\\otimes2}$ 上'
+                    '按名字查必须**更小**，因为那里有 %d 条登记范围外的标号 $\\Rightarrow$ 名字路径'
+                    '会把真实存在的共轭伙伴静默算成 0' %
+            (mut['drop'], chan_tex(dnm), mut['dbl'], mut['fake'], mut['real'], len(m_unreg)),
+            mut['drop'] == tot_s - 1 and mut['dbl'] == tot_s + 3
+            and mut['fake'] == tot_s + 2 and mut['real'] == tot_s
+            and m_lab > by_name(biga, bigb)
+            and all(pair_singlets(a, b)[0] == by_name(a, b) and not pair_singlets(a, b)[1]
+                    for a, b in r82),
+            '植入后的总数：删 $120\\to$ %d、闭合道 $%s$ 翻倍 $\\to$ %d、伪造 $\\overline{126}$ '
+            '在场 $\\to$ %d（真值 %d）。$16^{\\otimes4}\\otimes126^{\\otimes2}$：标号路径 %d、'
+            '名字路径 %d、登记范围外 %d 条标号' %
+            (mut['drop'], chan_tex(dnm), mut['dbl'], mut['fake'], tot_s, m_lab,
+             by_name(biga, bigb), len(m_unreg)))
+
+    CSPLIT.update({'rows_chiral': rows_s, 'rows_vector': rows_v,
+                   'tot_chiral': tot_s, 'tot_vector': tot_v,
+                   'r8_chiral': INV['p4'], 'r8_vector': INV['routes']['decomp_I'],
+                   'crit': crit, 'slot': slot, 'slotof': slotof, 'cont': cont, 'decl': decl,
+                   'decl_union': sorted(dunion, key=chan_key), 'ins': ins, 'pairs': pairs,
+                   'mut': dict(mut, lab=m_lab, byname=by_name(biga, bigb),
+                               unreg=len(m_unreg), dnm=dnm),
+                   'cap': TRIPLE_CAP,
+                   'bare': {'chiral': sum(1 for l, _k in chs if not registered(l)),
+                            'vector': sum(1 for l, _k in chv if not registered(l)),
+                            'p4': sum(1 for l, _k in biga if not registered(l))}})
+    return p
+
+
+# =============================================================== 报告
+MATHSPAN = re.compile(r'\$([^$]+)\$')
+PIPE = re.compile(r'(?<!\\)\|')
+SEPROW = re.compile(r'^\|(?:\s*:?-+:?\s*\|)+$')
+REPR_LEAK = re.compile(r"\['|'\]|\[\(|\{'|'\}|\bNone\b")
+# 漏写 `% V` / 把 `%` 只绑到拼接字面量的第一段 ⇒ 报告里会留下没被替换的 %(name)s 或 %d。
+# 这类缺陷不会让任何门禁变红，只会打印出一串占位符（本轮真实踩到两次），故当场拒绝。
+FMT_LEAK = re.compile(r"%\([A-Za-z0-9_]*\)[sdf]|%\.[0-9]+[df]|%[sdif]\b")
+# TeX 控制词按"最长匹配"切分：\lvert 后面紧跟字母或数字时两者并成一个未定义控制词
+# （\lvertB），整段公式报错。数学模式里的空格不改变排版 ⇒ 补空格是唯一无损的修法。
+DELIM_MUNCH = re.compile(r'\\[lr]vert[A-Za-z0-9]')
+
+
+def table_row_safe(line):
+    r"""Markdown 表格里裸 $|$ 会被当成列分隔符：$\max|B-L|$ 这类写法曾把整行拆断，
+    而且列数不匹配只是"渲染错位"，不会让任何门禁变红 ⇒ 出表前逐行改写为 \lvert/\rvert。
+
+    分隔符后**必须留一个空格**：TeX 读控制词是最长匹配，`\lvert B` 才是 `\lvert` 加 `B`，
+    写成 `\lvertB` 就变成一个未定义控制词、整个公式报错。数学模式里的空格不参与排版，
+    所以补这个空格只修 token 边界、不改渲染结果（同文件第四条排版不变量在守它）。"""
+    if not line.startswith('|'):
+        return line
+
+    def fix(m):
+        body = m.group(1)
+        if '\\|' in body:
+            return m.group(0)
+        parts = body.split('|')
+        assert len(parts) % 2 == 1, '表格行的数学段有奇数个裸竖线：%r' % body
+        out = parts[0]
+        for i in range(1, len(parts)):
+            out += ('\\lvert ' if i % 2 == 1 else '\\rvert ') + parts[i]
+        return '$' + out + '$'
+    return MATHSPAN.sub(fix, line)
+
+
+def higgs_tex(names):
+    r"""表示名列表 → $10_H\oplus\overline{126}_H$；空表降级成文本，**不让生成器抛异常**。"""
+    return ('$%s$' % '\\oplus'.join(tex_name(n)[1:-1] + '_H' for n in names)
+            if names else '（空）')
+
+
+def plain_tex(names):
+    r"""表示名列表 → $10$、$\overline{126}$（不带 $_H$ 下标，用于"这一列本身"而非 Higgs 候选）。"""
+    return '、'.join(tex_name(n) for n in names) or '（空）'
+
+
+def yukawa_section():
+    r"""报告 §6：d=4 物质–Higgs Yukawa 通道（R7）。
+
+    只吃 `YUK`/`YUKCH` —— 它们是 R7 各门禁当场比对过的那批对象 ⇒ 正文里的每个数
+    与它脚下的表同源；R7 未运行（上游门禁未过）时本节整段降级，不让生成器抛异常。
+    """
+    if not YUKCH.get('allow'):
+        return ['', '## 6. d=4 物质–Higgs Yukawa 通道（R7）', '',
+                '**R7 未运行 ⇒ 本节不出任何结论。**', '']
+    allow, parts, rebuilt = YUKCH['allow'], YUKCH['parts'], YUKCH['rebuilt']
+    chiral, maj, extra = YUKCH['chiral'], YUKCH['maj'], YUKCH['extra']
+    must0, blnu, blneed, blsum = YUKCH['must0'], YUKCH['blnu'], YUKCH['blneed'], YUKCH['blsum']
+    nu, needw = YUKCH['nu'], YUKCH['needw']
+    ntot, ntotD = YUKCH['ntot'], YUKCH['ntotD']
+
+    def sumtex(pairs):
+        out = []
+        for nm, k in (pairs or []):
+            t = '1' if nm == '(1)' else tex_name(nm)[1:-1]
+            out.append(t if k == 1 else '%d\\cdot %s' % (k, t))
+        return '\\oplus'.join(out) or '（拆分未成功）'
+    nuval = fmt(nu[0]) if nu else '（无 ⇒ R7.3 已 FAIL）'
+    nunote = ('（$B-L=%s$、$T^3_R=%s$）' % (chg(nu[0], BL), chg(nu[0], T3R))) if nu else ''
+    needval = fmt(needw) if needw else '（无）'
+    neednote = ('（$B-L=%s$、$Q=%s$）' % (chg(needw, BL), chg(needw, QHP))) if needw else ''
+    sigchk = ('45' in allow['vec'], '45' in chiral)
+    extratex = '、'.join('%s（可加性 %d/%d）' % (tex_name(n), a, b)
+                         for n, a, b in extra) or '（空）'
+    must0tex = '、'.join('%s（%d）' % (tex_name(n), k) for n, k in must0) or '空'
+    L = ['', '## 6. d=4 物质–Higgs Yukawa 通道（R7）', '',
+         '§4 问的是"哪个 Higgs 里**有**能破 $B-L$ 的中性分量"；本节问一个相互独立的物理问题：'
+         '"哪个 Higgs **拿得到** $16_F16_FH$ 这个可重整算符"。做法与 §3 同源而**不同路**：',
+         '先把 $16_F$ 的双线性乘积拆成不可约成分（在出现的支配权上解单位三角方程组，R7.1），',
+         '再取**共轭** $\\Rightarrow$ 不变张量要求 $H^*\\subset16_F16_F$。', '',
+         '| 双线性乘积 | $SO(10)$ 成分（算得） | 取共轭 $\\Rightarrow$ d=4 允许的 Higgs | 按整权重构还原 |',
+         '|---|---|---|---|']
+    for key, nm in (('sym', '\\mathrm{Sym}^2(16)'), ('anti', '\\wedge^2(16)'),
+                    ('vec', '16\\otimes\\overline{16}')):
+        L.append('| $%s$ | $%s$ | %s | %s |' %
+                 (nm, sumtex(parts.get(key)), higgs_tex(allow.get(key, [])),
+                  '✔' if rebuilt.get(key) else '✘'))
+    L += ['', '三行的"重构还原"都是当场把拆出的成分按整权加回去、逐权重等于原多重集 $\\Rightarrow$ '
+          '允许集是算出来的。**注意第二列与第三列不同**：$\\mathrm{Sym}^2(16)$ 的成分是 $126$，'
+          '而允许的 Higgs 是 $\\overline{126}_H$ —— 共轭这一步正是"哪个 Higgs 能写进拉氏量"的'
+          '分水岭（第 4 条列出"只看荷守恒会误放行"的那类表示）。', '',
+          '逐表示对照（"权重可加性" = 该表示的**不同权重**里有多少个，其相反数落在双线性乘积的'
+          '权重支集里：$16+16$ 支集共 %d 个格点、$16-16$ 支集共 %d 个。每行**只按自己所属通道**'
+          '计分（手征行看前者、对消行看后者）$\\Rightarrow$ 两套支集混用会得出假矛盾：'
+          '$45_H/210_H$ 属于对消通道，在 $16+16$ 支集上得分 0 是天经地义的。这条整体只是'
+          '**必要**条件，列出是为了量化它比通道表弱多少）：' % (ntot, ntotD), '',
+          '| 表示 | 维数 | 实/复 | 对称手征 | 反对称手征 | 向量型 | 可加性 $16+16$ '
+          '| 可加性 $16-16$ | 携带 $-2\\nu$ |', '|---|---|---|---|---|---|---|---|---|']
+    for r in YUK:
+        L.append('| %s | %d | %s | %s | %s | %s | %d/%d | %d/%d | %s |' %
+                 (tex_name(r['name']), r['dim'], '实' if r['real'] else '复',
+                  '✔' if r['sym'] else '—', '✔' if r['anti'] else '—',
+                  '✔' if r['vec'] else '—', r['realizable'], r['nweights'],
+                  r['realizableD'], r['nweights'], '✔' if r['holds_maj'] else '—'))
+    L += ['', '**四条读出来的结果**（编号即门禁）：', '',
+          '1. **两类通道互不相交**（R7.2）：手征通道 %s 与向量型通道 %s $\\Rightarrow$ 交集 %s。'
+          '向量型通道里的 Higgs 只有当谱里**同时**有 $16_F$ 与 $\\overline{16}_F$ 时才耦合物质；'
+          '而 UFE-1 的物质是 $3\\times16$、一个 $\\overline{16}_F$ 都没有（R7.7 现场与链探针对账）'
+          '$\\Rightarrow$ **它们对手征物质没有 d=4 Yukawa 项**。链探针情形 B 里承担 $SU(2)_R$ 破缺的'
+          '那个 $B-L=0$ 三重态 $\\Sigma(1,1,3)_0$ 取自 $45_H$（R7.7 逐权核对 $\\Sigma\\subset45$；'
+          'S2.7/R5.2 判它**不是** $\\Delta_R$），而 "$45_H$ 只在对消通道"这一条当场成立：'
+          '（核算"对消通道含 $45_H$"= %s、"手征通道含 $45_H$"= %s）'
+          '$\\Rightarrow$ $\\Sigma$ 取期望值不产生任何费米子质量。（本节**不**排除它与高维算符耦合。）'
+          % (higgs_tex(chiral), higgs_tex(allow['vec']),
+             plain_tex(sorted(set(chiral) & set(allow['vec']))), sigchk[0], sigchk[1]),
+          '2. **右手中微子在每一代里唯一**（R7.3）：$16_F$ 中"色单态 + $SU(2)_L$ 单态 + '
+          '$Y=0,Q=0$"的权重**恰好一个**，算得 $\\nu=%s$%s。$\\nu_R^c$ 因此不是额外添加的字段，'
+          '而是 $16_F$ 权重层的必然成员。' % (nuval, nunote),
+          '3. **see-saw 现在有两条独立的推导路径落在同一个表示上**（R7.4/R7.5）：'
+          '$\\nu_R^c\\nu_R^c$ 要求 Higgs 携带权重 $-2\\nu=%s$%s；在 $\\dim\\le210$ 的 %d 个表示里'
+          '它**只**落在 %s，而 %s 正是通道表判给"对称手征通道"的成员 $\\Rightarrow$ '
+          '"能给 $\\nu_R$ 质量"与 §4 的"能破 $B-L$"在同一个表示上重合，且 R7.5 确认 $-2\\nu$ '
+          '就是该表示 $\\Delta_R$ 三重态里**唯一**的 $Q=0$ 成员 $\\Rightarrow$ 两件事是'
+          '**同一次取期望值**（$B-L$ 守恒现场核算：$2\\times(%s)+(%s)=%s$）。'
+          % (needval, neednote, len(YUK), higgs_tex(maj), higgs_tex(allow['sym']),
+             blnu, blneed, blsum),
+          '4. **判据必须是张量分解，只看荷守恒会放行错误的 Higgs**（R7.6）：现场把"权重可加性'
+          '通过、但通道表不受理"的表示列出来 $\\Rightarrow$ %s。这些表示的每一个权重确实都能'
+          '与两个 $16_F$ 的权重把荷配平，但它们作为 Higgs 不出现在 $16_F16_F$ 里（要共轭）'
+          '$\\Rightarrow$ 荷守恒只是**单向**必要条件；反方向"通道表受理、可加性却为 0"的表示：'
+          '%s（必须为空，否则张量分解与荷守恒直接矛盾）。'
+          % (extratex, must0tex), '',
+          '两条**变异测试**（R7.8/R7.9）说明上面四条不是字符串在自证：把成分清单植成 $16$，'
+          '允许集立即换成 $16$ 的共轭而不是原来那批名字（$\\Rightarrow$ 共轭映射真的在跑）；'
+          '把双线性的两个因子换成同一条 $SU(2)_R$ 串里的**带电**伙伴，所需权重立刻落到 '
+          '$\\Delta_R$ 的**双重带电**分量 $\\Rightarrow$ "$Q=0$ 才允许取期望值"这条物理输入'
+          '确实在起决定作用。两次的植入前后对照都印在 §13 对应行的备注里。', '',
+          '**本节的边界**（不进门禁，故明写）：', '',
+          '* 只判 **d=4**（可重整）通道，且只判到"哪些表示允许出现"。哪个拷贝与哪一代费米子耦合、'
+          '系数多大、$CP$ 结构如何，**都不在本仪器覆盖范围内** $\\Rightarrow$ **L10 未关闭**。',
+          '* 实表示在 `NAMED` 里登记了两个名字（$10$ 与 $\\overline{10}$ 同标号，R2.c10c45）'
+          '$\\Rightarrow$ 通道列只挂在先注册的那个名字上，$\\overline{10}_H$ 与 $10_H$ 是**同一个场**，'
+          '不是两个候选。',
+          '* 把上表翻译成味结构要用到场的交换性质（$10_H/\\overline{126}_H$ 通道在两个 $16_F$ 的 '
+          '$SO(10)$ 指标上对称、$120_H$ 通道反对称），而**本仪器没有味自由度** $\\Rightarrow$ 这条'
+          '是文献里的标准论证、不进门禁；它的可检验后果是"纯 $120_H$ 的 Yukawa 矩阵反对称 '
+          '$\\Rightarrow$ 秩 $\\le2$ $\\Rightarrow$ 单靠它给不出三行满秩的质量矩阵"。',
+          '* "允许"是群论陈述，**不**等于"自然界里有这个场"；更**不**提升 UFE-1 任何结论的证据等级。',
+          '']
+    return L
+
+
+def inv_section():
+    r"""报告 §7：不变张量簿记（R8）。
+
+    只吃 `INV` —— 它是 R8 各门禁当场比对过的那批对象 ⇒ 本节每个数与它脚下的表同源；
+    R8 未运行（上游门禁未过）时整段降级，不让生成器抛异常。
+    """
+    if not INV.get('ledger'):
+        return ['', '## 7. 不变张量簿记：荷账本、不变张量与物质-only 算符（R8）', '',
+                '**R8 未运行 ⇒ 本节不出任何结论。**', '']
+    led, routes, chan = INV['ledger'], INV['routes'], INV['chan']
+    allow = YUKCH.get('allow', {})
+    per = dict((n, z // k) for n, z, k in led[-1]['parts']['parts'] if k)
+    gaptex = '、'.join('%s 每个 %d' % (tex_name(n), per[n])
+                       for n in ('45', '54', '210') if n in per)
+    V = {'z0': led[0]['zero'], 's1': led[1]['singlet'],
+         'gap': led[-1]['zero'] - led[-1]['singlet'], 'gaptex': gaptex,
+         'f4w': INV['f4w'], 'f4dim': INV['f4dim'], 'assoc': INV['assoc'],
+         'pair_cc': routes['pair_cc'], 'pair_p4': routes['pair_p4'], 'p4': INV['p4'],
+         'cap': INV['cap'], 'npairs': INV['npairs'], 'ones': INV['ones'],
+         'wrong': '无' if not INV['wrong'] else INV['wrong'],
+         'cf': INV['mut']['cf'], 'm1': INV['mut']['m1'], 'cc': INV['mut']['cc'],
+         'm15': led[1]['zero'] - 1,
+         'm2': ('不再是特征标的非负整组合 ⇒ 重构对账拒绝' if INV['mut']['m2'] is None
+                else INV['mut']['m2']),
+         'tick': '✔' if INV['assoc'] else '✘',
+         'nlab': max(x['parts']['nlab'] for x in led)}
+
+    def zeroparts(x):
+        p = x['parts']
+        return ('、'.join('%s 占 %d' % (tex_name(n), z) for n, z, _k in p['parts']) +
+                ('' if not p['unreg']
+                 else '；另有 %d 条未登记标号（$\\sum c_i>3$，§2 的搜索范围之外）占 %d'
+                      % (p['nlab'], p['unreg'])))
+    L = ['', '## 7. 不变张量簿记：荷账本、不变张量与物质-only 算符（R8）', '',
+         '§6 判"哪个 Higgs 拿得到 d=4 算符"，材料是**双线性乘积的成分再取共轭**。本节换一条',
+         '不共享代码的路：直接数 $\\mathrm{mult}((1),V)$ —— 即 $V$ 里**规范不变**方向的个数 ——',
+         '并要求它把 §6 的通道表复算成同一张。走这条路必须先分开两件容易混为一谈的事：',
+         '',
+         '* **荷账本** $\\dim V_0=m_V(0)$：全部 Cartan 荷同时为零的方向数，也就是"荷配得平"；',
+         '* **不变张量** $\\mathrm{mult}((1),V)$：其中真正规范不变的那一部分。',
+         '',
+         '恒有 $\\mathrm{mult}((1),V)\\le\\dim V_0$，而两者之差可以**逐成分拆开核对**：',
+         '$m_{A\\otimes B}(0)=\\sum_R n_Rm_R(0)$，每个不可约成分按它自己的零权重数记账',
+         '（R8.1a）。', '',
+         '| 乘积 | 维数 | 不同权重 | 荷账本（零权方向） | 不变张量 | 零权按成分归口 |',
+         '|---|---|---|---|---|---|']
+    for x in led:
+        L.append('| $%s$ | %d | %d | %d | %d | %s |' %
+                 (x['tex'][1:-1], x['dim'], x['ndist'], x['zero'], x['singlet'], zeroparts(x)))
+    L += ['', '第一行是本节最硬的一条物理事实：$16_F\\otimes16_F$ 的**零权方向为 %(z0)d** '
+          '$\\Rightarrow$ '
+          '两个手征物质的双线性连"荷配平"都做不到，更谈不上规范不变 $\\Rightarrow$ **手征费米子'
+          '没有裸质量项**（R8.4：$\\mathrm{mult}((1),16\\otimes16)=\\mathrm{mult}((1),\\mathrm{Sym}^2)'
+          '=\\mathrm{mult}((1),\\wedge^2)=0$，而 $16\\otimes\\overline{16}$ 恰有 %(s1)d 个 '
+          '$\\Rightarrow$ '
+          '质量项要么靠 Higgs，要么把 $16$ 与 $\\overline{16}$ 同时请进场）。'
+          '第三行的 %(gap)d 个"缺口"不是丢了，而是记在 $45/54/210$ 等成分的 Cartan 子空间上'
+          '（%(gaptex)s）$\\Rightarrow$ '
+          '"荷守恒"作为判据比"不变"弱了多少，是可数的。' % V, '',
+          '**四条路径咬合同一个数**（R8.0/R8.2）。不变张量基本定理 '
+          '$\\mathrm{mult}((1),A\\otimes B)=\\delta_{B,\\bar A}$ 先在 $\\dim A\\cdot\\dim B'
+          '\\le%d$ 的**全部** %d 个已登记表示对上现场核验（重数为 1 的恰是 %d 对互为共轭的，'
+          '反例：%s）$\\Rightarrow$ 下面"配对和"那条路用的查表规则是验证过的，不是引用来的：'
+          % (INV['cap'], INV['npairs'], INV['ones'], '无' if not INV['wrong'] else INV['wrong']),
+          '',
+          '| 路径 | 算法 | $16\\otimes16\\otimes\\overline{16}\\otimes\\overline{16}$ '
+          '| $16^{\\otimes4}$ |', '|---|---|---|---|',
+          '| 解方程 I | `decomp` 作用在 $(16\\otimes16)\\otimes(\\overline{16}\\otimes'
+          '\\overline{16})$ | %d | %d |' % (routes['decomp_I'], routes['decomp_p4']),
+          '| 解方程 II | `decomp` 作用在 $(16\\otimes\\overline{16})\\otimes'
+          '(16\\otimes\\overline{16})$ | %d | — |' % routes['decomp_II'],
+          '| 配对和（手征侧） | $\\sum_Rn_R(16\\otimes16)\\,m_{\\bar R}(\\overline{16}\\otimes'
+          '\\overline{16})$ | %d | %d |' % (routes['pair_cc'], routes['pair_p4']),
+          '| 配对和（对消侧） | $\\sum_Rn_R(16\\otimes\\overline{16})^2$ | %d | — |'
+          % routes['pair_cf'],
+          '',
+          '两种结合方式先给出**逐权重相同**的多重集（%d 个不同权重、共 %d 个权重（含重数）的两条路'
+          '径产物相等：%s）$\\Rightarrow$ 张量积结合律在本仪器里是可核对的事，不是默认成立的。'
+          '配对和侧还顺带把**共轭**的分量暴露出来：把 $\\overline{16}$ 全换成 $16$ 之后，'
+          '$126$ 找不到 $\\overline{126}$ 作伙伴 $\\Rightarrow$ 同一个函数从 %d 掉到 %d，'
+          '这正是 R8.6 变异测试读到的差别。'
+          % (INV['f4w'], INV['f4dim'], V['tick'], routes['pair_cc'], routes['pair_p4']), '',
+          '**通道表的独立复算**（R8.3）：不查 §6 的成分表，改为逐个 Higgs 候选数三重积里的单态 '
+          '$\\mathrm{mult}((1),\\text{双线性}\\otimes H)$ 是否 $>0$。两条路径必须按**标号**比对'
+          '（$10$ 与 $\\overline{10}$、$45$ 与 $\\overline{45}$ 同标号，R2.c10c45 $\\Rightarrow$ '
+          '按名字比会假报错）：', '',
+          '| 双线性 | 本层数出的 Higgs 候选 | §6 的通道表 | 按标号一致 |', '|---|---|---|---|']
+    for key, nm in (('sym', '\\mathrm{Sym}^2(16)'), ('anti', '\\wedge^2(16)'),
+                    ('vec', '16\\otimes\\overline{16}')):
+        L.append('| $%s$ | %s | %s | %s |' %
+                 (nm, plain_tex(chan[key]['names']) or '（空）',
+                  higgs_tex(allow.get(key, [])) or '（空）',
+                  '✔' if chan[key]['agree'] else '✘'))
+    L += ['', '**物质-only 的不变算符能做什么、不能做什么**（R8.5）。单态 $(1)$ 的权重集就是'
+          '$\\{(0,0,0,0,0)\\}$ 一个点，它在 $B-L$、$T^3_L$、$T^3_R$、$Y$、$Q$ 五个方向上的荷'
+          '全为 0（现场取链探针的方向算，不是定义）$\\Rightarrow$ **任何只用物质场凑出来的规范'
+          '不变算符自动 $\\Delta(B-L)=0$**。同时：', '',
+          '* $\\mathrm{mult}((1),16^{\\otimes4})=%d>0$ $\\Rightarrow$ 规范群**不**禁止四费米子'
+          '不变算符——质子衰变那一类算符的荷前提在 $SO(10)$ 下成立（本表只数规范不变性，'
+          ' Lorentz 与味的结构见下面的边界）。' % INV['p4'],
+          '* $\\mathrm{mult}((1),16\\otimes16)=0$ 而 $\\mathrm{mult}((1),16\\otimes16\\otimes H)$ '
+          '在 $H=\\overline{126}$ 上为 %d、在 $H=126$ 上为 %d $\\Rightarrow$ '
+          '$|\\Delta(B-L)|=2$ 的那一类（$\\nu_R$ Majorana 质量、$n\\text{–}\\bar n$）'
+          '**必须**插入一个带 $|B-L|=2$ 分量的 Higgs，且必须是**带共轭杠**的那个 $\\Rightarrow$ '
+          '与 §6 的 R7.4/R7.5（$-2\\nu$ 唯一落在 $\\overline{126}_H$）同源而路径独立。'
+          % (INV['tri']['126̄'], INV['tri']['126']),
+          '',
+          '变异测试（R8.6，**三处植入**）说明本节的数跟着输入走、不是写死的字面量：'
+          '把 $16\\otimes\\overline{16}$ 的零权空间去掉 **1** 个方向 $\\Rightarrow$ 它合法地退化成 '
+          '$45\\oplus210$（那正是 $m(0)=%(m15)d$ 的答案），单态由 %(cf)d 变 %(m1)d；去掉 **2** 个 '
+          '$\\Rightarrow$ %(m2)s；把 $\\overline{16}$ 换成 $16$ $\\Rightarrow$ 单态由 %(cf)d 变 '
+          '%(cc)d。三条合起来说明 `singlet_mult` 既不是恒真也不是恒假，且它的失败分支活着。' % V,
+          '',
+          '**本节的边界**（不进门禁，故明写）：', '',
+          '* 数出来的是**规范不变张量的个数**，不是物理算符的个数：把四个 $16_F$ 落到真实'
+          '拉氏量里还要过 Lorentz 指标、代（味）指标与 Fierz 恒等式三关 $\\Rightarrow$ '
+          '"$16^{\\otimes4}$ 有 %(p4)d 个不变张量"**不等于**"有 %(p4)d 个质子衰变算符"，'
+          '本节的数**不**回填到任何寿命计算里（$\\tau_p$ 只由 [SO(10) 链统一报告]'
+          '(SO10链统一报告.md) 的那套口径给出，与本节无数据通路）。' % V,
+          '* $\\Delta(B-L)=0$ 是**荷**的陈述，不是重子数：上表的不变张量完全可以 '
+          '$\\Delta B=\\pm1,\\ \\Delta L=\\pm1$。本节**不**判定哪个分量对应哪个算符，'
+          '那需要 3221 分支层次的逐分量对账。',
+          '* 只判到 $\\dim\\le210$ 的已登记表示：$16^{\\otimes4}$ 的拆分里出现了 '
+          '%d 条 $\\sum c_i>3$ 的标号 $\\Rightarrow$ 本节给它们**不起名字**（不影响单态计数，'
+          '因为 $\\mathrm{mult}((1),V)$ 只要求解出 $(1)$ 的重数，而 `decomp` 的重构对账把'
+          '整张多重集都核对了一遍）。' % max(x['parts']['nlab'] for x in led),
+          '* "不变"是群论陈述，**不**等于"自然界里有这个算符"；更**不**提升 UFE-1 任何结论的'
+          '证据等级 $\\Rightarrow$ **L10 未关闭**（系数、位势、味结构仍未算）。', '']
+    return L
+
+
+def chan_section():
+    r"""报告 §8：不变张量的道分解（R9）。
+
+    只吃 `CSPLIT` —— 它是 R9 各门禁当场比对过的那批对象 ⇒ 本节每个数与它脚下的表同源；
+    R9 未运行（上游门禁未过）时整段降级，不让生成器抛异常。
+    """
+    if not CSPLIT.get('rows_chiral'):
+        return ['', '## 8. 不变张量的道分解：哪一个不变张量经由哪条双费米子道（R9）', '',
+                '**R9 未运行 ⇒ 本节不出任何结论。**', '']
+    rows = CSPLIT['rows_chiral'] + CSPLIT['rows_vector']
+    give = dict((n, c) for n, _k, c in rows)
+    mult = dict((n, k) for n, k, _c in rows)
+    crit = dict((x[0], x) for x in CSPLIT['crit'])
+    side = dict([(n, '手征 $16\\otimes16$') for n, _k, _c in CSPLIT['rows_chiral']] +
+                [(n, '对消 $16\\otimes\\overline{16}$') for n, _k, _c in CSPLIT['rows_vector']])
+    slotex = {'sym': '$\\mathrm{Sym}^2(16)$', 'anti': '$\\wedge^2(16)$',
+              'vec': '$16\\otimes\\overline{16}$'}
+    decl = CSPLIT['decl']
+    scn_of = dict((n, [s for s in sorted(decl) if n in decl[s]]) for n in give)
+    closing = [n for n, _k, _c in CSPLIT['rows_chiral'] if give[n] > 0]
+    openc = [n for n in sorted(give, key=chan_key) if not give[n]]
+    cont = dict((x['name'], x) for x in CSPLIT['cont'])
+    mut = CSPLIT['mut']
+
+    def tex(ns):
+        return '、'.join('$%s$' % chan_tex(n) for n in ns)
+
+    V = {'p4': CSPLIT['tot_chiral'], 'p3': CSPLIT['tot_vector'],
+         'open': tex(openc) or '无', 'clos': tex(closing),
+         'phi': tex([n for n, _k, _c in rows if cont[n]['phi']]),
+         'sig': tex([n for n, _k, _c in rows if cont[n]['sig']]),
+         'nphi': cont[rows[0][0]]['tphi'], 'nsig': cont[rows[0][0]]['tsig'],
+         'dnm': chan_tex(mut['dnm']), 'drop': mut['drop'], 'dbl': mut['dbl'],
+         'fake': mut['fake'], 'real': mut['real'], 'lab': mut['lab'],
+         'byname': mut['byname'], 'unreg': mut['unreg'], 'cap': CSPLIT['cap'],
+         'decl': tex(CSPLIT['decl_union']) or '无',
+         'sci': '；'.join(('情形 %s 声明 %s' % (s, tex(decl[s]))) if decl[s] else
+                          '情形 %s 声明（文字里不出现任何 $X_H$ 记号）' % s
+                          for s in sorted(decl))}
+    L = ['', '## 8. 不变张量的道分解：哪一个不变张量经由哪条双费米子道（R9）', '',
+         '§7 数出 $16^{\\otimes4}$ 里有 %(p4)d 个不变张量、$(16\\otimes\\overline{16})^{\\otimes2}$ '
+         '里有 %(p3)d 个，但没有回答"这些不变张量**各自**经由哪条双费米子道"。把 §7 的配对和'
+         '按道拆开就是本节的全部内容：$\\mathrm{mult}((1),A\\otimes A)=\\sum_R n_R\\,\\#\\{S'
+         '\\subset A:S\\cong\\bar R\\}$ $\\Rightarrow$ 每一道要么整体计入（$R$ 实，此时 $\\bar R$ '
+         '就是它自己），要么整体不计（$R$ 复且 $\\bar R$ 不在这张表里）$\\Rightarrow$ 拆开后读到'
+         '的是"**哪一条**"，不是"有几个"。' % V, '',
+         '| 侧 | 道 | $n_R$ | 该道贡献 $n_Rn_{\\bar R}$ | 自共轭 | 双线性槽 | 谁声明了母表示 |',
+         '|---|---|---|---|---|---|---|']
+    for n, _k, _c in rows:
+        L.append('| %s | $%s$ | %d | %d | %s | %s | %s |' %
+                 (side[n], chan_tex(n), mult[n], give[n],
+                  '✔' if crit[n][1] else '✘', slotex[CSPLIT['slotof'][n]],
+                  '、'.join('情形 %s' % s for s in scn_of[n]) or '—'))
+    L += ['', '两侧各自的合计就是 %(p4)d 与 %(p3)d（与 §7 的 `decomp` 路径逐条咬合，R9.0），'
+          '而**表里的差别才是本节的内容**：%(open)s 是唯一"在场却不闭合"的道（$n_R=1$ 而 '
+          '$n_Rn_{\\bar R}=0$），它正是 §6 里唯一能承载 $\\nu_R$ Majorana 质量的 '
+          '$\\overline{126}_H$ 的伙伴 $\\Rightarrow$ 同一张道表里同时读到两件事："物质-only 的'
+          '四费米子不变张量走哪两条道"与"$|\\Delta(B-L)|=2$ 那条道为什么进不来"。而 '
+          '$\\overline{126}$ **已在登记表里** $\\Rightarrow$ "它不在 $16\\otimes16$ 里"是真的'
+          '落空，不是查不到名字（R9.1）。闭合判据在六条道上各走两条不共享代码的路（标号自共轭 '
+          'vs 直接解 $\\mathrm{mult}((1),R\\otimes R)$）且逐条一致 $\\Rightarrow$ "复表示的双线性'
+          '凑不出不变张量"是**判出来的**，不是引来的。' % V, '',
+          '$16^{\\otimes4}$ 的 %(p4)d 个不变张量**分处两条道**（%(clos)s），不是同一条道重数 2 '
+          '$\\Rightarrow$ 证据是变异测试（R9.5）：把闭合道 $%(dnm)s$ 的重数翻倍，该道贡献按 '
+          '$n_Rn_{\\bar R}$ 是 $2\\times2=4$ 而非 2 $\\Rightarrow$ 总数由 %(real)d 升到 %(dbl)d，'
+          '即配对和**双线性**地依赖成分表（若它只数"有没有"，翻倍不会改变任何数）；从道表里'
+          '删掉 $120$ $\\Rightarrow$ 掉到 %(drop)d；伪造 $\\overline{126}$ 也在 $16\\otimes16$ 里 '
+          '$\\Rightarrow$ $126$ 与 $\\overline{126}$ 互配各得 1，总数升到 %(fake)d。' % V, '',
+          '两条闭合道还**不在同一个双线性槽里**：$\\mathrm{Sym}^2(16)=10\\oplus126$ 而 '
+          '$\\wedge^2(16)=120$（两个槽由 Adams $\\psi_2$ 算出，与直接做 $\\chi_{16}^2$ 的'
+          '那条路不共享代码，且两者逐权重相加恰为 $16\\otimes16$）$\\Rightarrow$ $16^{\\otimes4}$ '
+          '的两个不变张量一个来自"对称槽 $\\times$ 对称槽"、一个来自"反对称槽 $\\times$ 反对称槽"。'
+          '同在对称槽里的 $10$ 与 $126$ 一个闭合一个不闭合 $\\Rightarrow$ 不存在"对称槽里都闭合"这种'
+          '捷径。此处 Sym/∧ 说的是 $SO(10)$ 指标槽的对称性，**不是** Lorentz 或味指标。', '',
+          '**插入 Higgs 能把这件事做到什么程度**（R9.4）。$|\\Delta(B-L)|=2$ 的那个 Higgs '
+          '**插不进**四费米子算符：', '',
+          '| 待插入 | $\\mathrm{mult}((1),16^{\\otimes4}\\otimes H)$：结合 I／结合 II／逐道 CG '
+          '| 道对直解（不超过 %(cap)d 个权重者） |' % V, '|---|---|---|']
+    for key, lab in (('126', '$H=126$'), ('126̄', '$H=\\overline{126}$')):
+        v = CSPLIT['ins'][key]
+        L.append('| %s | %d／%d／%d | 直解 %d 道且逐道与 CG 数相等，另 %d 道超出成本上限 |' %
+                 (lab, v['gI'], v['gII'], v['gIII'], v['small'],
+                  len(v['direct']) - v['small']))
+    L += ['', '而插入**一对**之后单态个数确实非零，且共轭镜像再压一条独立约束：把全部 $16$ 换成 '
+          '$\\overline{16}$、$126$ 换成 $\\overline{126}$ 后数出的同一个量，必须与**共轭那一行**的'
+          '直接读数相等（下表第 4 列与第 2 列交叉相等）$\\Rightarrow$ "要拿到 $|\\Delta(B-L)|=2$ '
+          '的四费米子不变张量就得成对插入"是本层数出来的，不是引用的：', '',
+          '| 成对插入 | 结合 I | 结合 II | 共轭镜像 |', '|---|---|---|---|']
+    for k in ('126|126', '126̄|126̄', '126|126̄'):
+        v = CSPLIT['pairs'][k]
+        L.append('| $16^{\\otimes4}\\otimes%s$ | %d | %d | %d |' %
+                 ('\\otimes'.join(chan_tex(x) for x in k.split('|')), v['gI'], v['gII'],
+                  v['mirror']))
+    L += ['', '**与链探针声明的标量内容对账**（R9.3，权重与情形文字现场读取）。两件事必须同时'
+          '成立，而它们指向不同的方向：', '',
+          '| 道 | 是否闭合 | $\\Phi(1,2,2)$ 的权重全在此道 | $\\Sigma(1,1,3)_0$ 的权重全在此道 '
+          '| 情形文字声明母表示 |', '|---|---|---|---|---|']
+    for n, _k, _c in rows:
+        x = cont[n]
+        L.append('| $%s$ | %s | %s（%d／%d） | %s（%d／%d） | %s |' %
+                 (chan_tex(n), '闭合' if x['closes'] else '**不闭合**',
+                  '✔' if x['phi'] else '✘', x['nphi'], x['tphi'],
+                  '✔' if x['sig'] else '✘', x['nsig'], x['tsig'],
+                  '、'.join('情形 %s' % s for s in scn_of[n]) or '—'))
+    L += ['', '**(a) 权重包含在同侧是退化的**：$\\Phi(1,2,2)$ 的全部 %(nphi)d 条权重同时落在 '
+          '%(phi)s 的权重集里，$\\Sigma(1,1,3)_0$ 的全部 %(nsig)d 条同时落在 %(sig)s 里 '
+          '$\\Rightarrow$ 包含判据能分"手征侧 vs 对消侧"，**分不了同侧内部是哪一道** '
+          '$\\Rightarrow$ "道 $\\to$ 母表示"的指派是模型的**输入**（写在情形文字里），不是权重'
+          '算出来的结论。**(b) 一旦指派由情形给定，闭合道里有没有母表示就是可数的**：三个情形'
+          '字面声明的母表示并集为 %(decl)s（%(sci)s）$\\Rightarrow$ 两条闭合的手征道里**恰有一个**'
+          '（$10$ 道）在谱里有母表示，另一个需要 $120_H$ 而**无人声明** $\\Rightarrow$ 在 '
+          '$16^{\\otimes4}$ 的 %(p4)d 个不变张量里，一个可经模型声明有的 $10_H$ 因子化、另一个'
+          '没有可用的媒介者 $\\Rightarrow$ "物质-only 四费米子算符有两条道"与"这两条道在本模型谱里'
+          '有没有媒介者"是两个独立读数：前者是群论，后者是模型输入。' % V, '',
+          '**本节第一次把配对和改走标号路径**，原因值得写进报告：登记表只覆盖 $\\dim\\le210$，'
+          '"按名字查共轭"在登记范围外会把**真实存在**的共轭伙伴静默算成 0。在 '
+          '$16^{\\otimes4}\\otimes126^{\\otimes2}$ 这张有 %(unreg)d 条登记范围外标号的表上，'
+          '按标号算得 %(lab)d、按名字查得 %(byname)d $\\Rightarrow$ 差额是**视力**问题不是数学'
+          '分歧。反向核验同时在场：在 §7 的 R8.2 用到的那三张表上（没有登记范围外的标号）两条路'
+          '给出**同一个数** $\\Rightarrow$ 旧读数没有被改，只是它的**适用边界**现在被量出来了。' % V,
+          '',
+          '**本节的边界**（不进门禁，故明写）：', '',
+          '* 数的是**规范不变张量**，不是物理算符：四个 $16_F$ 落到真实拉氏量还要过 Lorentz 指标、'
+          '代（味）指标与 Fierz 恒等式三关 $\\Rightarrow$ "某道闭合"**不等于**"有一个算符"，'
+          '本节的数**不**回填进 $\\tau_p$ 的任何计算（$\\tau_p$ 只由 [SO(10) 链统一报告]'
+          '(SO10链统一报告.md) 的那套口径给出）。',
+          '* "单态为 0"只说**这一个**乘积里没有不变方向：它**不**否定 $|\\Delta(B-L)|=2$ 的'
+          '过程存在 $\\Rightarrow$ 传播子、$\\langle\\Delta_R\\rangle$ 的插入与有效算符的匹配都在'
+          '本节之外（成对插入那一行的非零读数就是本节内的对照）。',
+          '* 未登记标号只影响**名字**不影响**计数**：$\\mathrm{mult}((1),V)$ 只要求解出 $(1)$ 的'
+          '重数，而 `decomp` 的整权重重构对账把整张多重集都核对了一遍。',
+          '* "闭合""允许"都是群论陈述，**不**等于自然界里有这个场；标量谱本身仍是手工放置的 '
+          '$\\Rightarrow$ **L10 未关闭**（系数、位势、味结构仍未算）。', '']
+    return L
+
+
+RESID = {}
+
+
+def ztex(n):
+    r"""残留群的阶 → $\\mathbb{Z}_N$；没读到数就不印符号（不让排版冒充结论）。"""
+    return ('$\\mathbb{Z}_{%d}$' % n) if n else '—'
+
+
+def bl_values(nm):
+    """表示 `nm` 的权重在 $B-L$ 方向上取到的荷（精确有理、升序去重）。"""
+    return sorted(set(chg(w, BL) for w in irrep(NAMED[nm])[1]))
+
+
+def rat_gen(vals):
+    r"""有理数集的 $\\mathbb{Z}$-生成元：分子的 gcd 除以分母的 lcm（0 不参与）。"""
+    num, den = 0, 1
+    for v in vals:
+        if v == 0:
+            continue
+        num = math.gcd(num, abs(v.numerator))
+        den = den * v.denominator // math.gcd(den, v.denominator)
+    return F(num, den)
+
+
+def string_pq(ms, lam, beta):
+    r"""$\langle\lambda,\beta^\vee\rangle$：沿根 $\beta$ 的串 $\lambda-p\beta,\ldots,\lambda+q\beta$
+    给出 $p-q$（向下步数减向上步数）。
+
+    `string_len` 只给串的**总长**（$p+q+1$），拿不到 Dynkin 标号 $p-q$ $\Rightarrow$ 这里分开数。
+    """
+    up = 0
+    while add(lam, smul(up + 1, beta)) in ms:
+        up += 1
+    dn = 0
+    while sub(lam, smul(dn + 1, beta)) in ms:
+        dn += 1
+    return dn - up
+
+
+def neutral_singlets(nm):
+    """`nm` 里"色单态且 $Q=0$"的权重所带的 $B-L$ 值 $=$ 不破电磁的候选 v.e.v. 荷。"""
+    ms = irrep(NAMED[nm])[1]
+    return sorted(set(chg(l, BL) for l in ms
+                      if color_singlet_wt(ms, l) and chg(l, QHP) == 0))
+
+
+def residual_order(qd, g0):
+    """路径甲：破缺场荷为 `qd` 时 $U(1)_{B-L}$ 的残留阶 $=q_\\Delta/g_0$；不给整数就不给数。"""
+    if not g0:
+        return 0
+    n = F(qd) / g0
+    return int(n) if n.denominator == 1 else 0
+
+
+def residual_els(qd, g0):
+    r"""路径甲的残留群元（以 $2\\pi$ 为单位）：$\\alpha_n=2\\pi n/q_\\Delta$，$n=0..N-1$。"""
+    return [F(k) / F(qd) for k in range(residual_order(qd, g0))]
+
+
+def survive(els, q2):
+    r"""再放一个荷为 `q2` 的 v.e.v. 后还留着的群元数（精确）：$e^{i\\alpha q_2}=1$。"""
+    return sum(1 for a in els if (a * F(q2)).denominator == 1)
+
+
+def survive_scan(els, q2):
+    r"""同题的第二条路径：把每个残留元代回 $e^{i\\alpha q_2}$ 用浮点判是否等于 1。"""
+    c = 0
+    for a in els:
+        ang = 2.0 * math.pi * float(a) * float(q2)
+        if abs(math.sin(ang)) < 1e-9 and math.cos(ang) > 1.0 - 1e-9:
+            c += 1
+    return c
+
+
+def scan_order(qd, g0, sub=288):
+    """路径乙：圆周均分 `sub` 份，逐点数出让 `qd` 平凡的角度（纯浮点，不做有理运算）。"""
+    qn = float(F(qd) / g0)
+    ang = [2.0 * math.pi * k * qn / sub for k in range(sub)]
+    ks = [k for k, a in enumerate(ang)
+          if abs(math.sin(a)) < 1e-9 and math.cos(a) > 1.0 - 1e-9]
+    return len(ks), ks
+
+
+def scan_period(charges, per_step=120, upto_pi=12):
+    r"""路径乙的另一半：**只从荷集**测出"对所有荷都平凡"的最小正角（单位 $\\pi$）。"""
+    vals = [float(q) for q in charges]
+    for m in range(1, int(upto_pi * per_step) + 1):
+        a = math.pi * m / per_step
+        if all(abs(math.sin(a * v / 2.0)) < 1e-9 for v in vals):
+            return F(m, per_step)
+    return None
+
+
+def mp_parity(q):
+    r"""物质字称候选元 $(-1)^{3(B-L)}$ 在荷 `q` 上的取值；$3q$ 不是整数时不赋值。"""
+    n = 3 * F(q)
+    return None if n.denominator != 1 else (-1 if n.numerator % 2 else 1)
+
+
+def run_residual_layer():
+    """R10：$B-L$ 被破缺之后残留哪个离散规范对称性（荷格 + 两条独立路径 + 约定无关性）。
+
+    本节存在的理由是一条**审计发现**：报告曾在四处写着"$|\\Delta(B-L)|=1$ 单步破缺
+    $\\Rightarrow$ 残留 $\\mathbb{Z}_2$（物质字称）"（§0 结论一览、§4 第 7 条、R5.5 与 R5.9 的判据文字），
+    而守这句话的门禁 R5.9 的读数是
+    $(B-L,\\ SU(2)_L\\text{ 串长},\\ SU(2)_R\\text{ 串长})$ 三元组 $\\Rightarrow$ "残留群"这三个字
+    从来没有被算过。三条路径同数才认：
+      甲 精确有理：荷格生成元 $g_0$（分子 gcd／分母 lcm）$\\Rightarrow$ 圆周
+        $\\alpha_0=2\\pi/g_0$、残留阶 $N=q_\\Delta/g_0$；
+      乙 浮点几何：把圆周均分后逐点数 $\\alpha$ 使 $e^{i\\alpha q_\\Delta}=1$，并且**只从权重**
+        独立测出 $\\alpha_0$；
+      丙 约定无关：全套荷同乘 $1/2$（改用 $Y_{B-L}=(B-L)/2$ 的记号）$N$ 必须不动 $\\Rightarrow$
+        残留群是一个群的子群，不是记号的函数。
+    """
+    p = True
+    names = [r['name'] for r in TABLE if r['name'] in NAMED]
+    bls = dict((nm, bl_values(nm)) for nm in names)
+    neut = dict((nm, neutral_singlets(nm)) for nm in names)
+    g0_m = rat_gen(bls['16'])
+    g0_all = rat_gen([q for nm in names for q in bls[nm]])
+    # 候选 v.e.v. 的荷：色单态、$Q=0$、且 $B-L\\neq0$（等于 0 的那些根本不碰 $U(1)_{B-L}$）
+    qd = sorted(set(abs(v) for nm in names for v in neut[nm] if v != 0))
+    allq = [q for nm in names for q in bls[nm]]
+    per_scan = scan_period(allq)
+    rows = []
+    for v in qd:
+        els = residual_els(v, g0_all)
+        n = len(els) or 1
+        # 2 阶元 = 群参数 $k$ 满足 $2k\equiv0\pmod N$ 而 $k\not\equiv0$ 的那个元（$N$ 偶时唯一）
+        o2 = [a for k, a in enumerate(els) if k and (2 * k) % n == 0]
+        cos = [int(round(math.cos(2.0 * math.pi * float(o2[0]) * float(q)))) for q in bls['16']] \
+            if len(o2) == 1 else []
+        rows.append({'BL': str(v),
+                     'carriers': [nm for nm in names if v in [abs(x) for x in neut[nm]]],
+                     'N': len(els), 'N_scan': scan_order(v, g0_all)[0],
+                     'N_half': residual_order(v / 2, g0_all / 2),
+                     'N_mismatch': residual_order(v / 2, g0_all),
+                     'N_naive': residual_order(v, F(1)),
+                     'mp': mp_parity(v), 'ord2': str(o2[0]) if len(o2) == 1 else '无',
+                     'ord2_is_mp': bool(cos) and cos == [mp_parity(q) for q in bls['16']],
+                     'ew': survive(els, 0), 'ew_scan': survive_scan(els, 0),
+                     'ctl': survive(els, v / 2), 'ctl_scan': survive_scan(els, v / 2)})
+    RESID.update({'g0_matter': str(g0_m), 'g0_all': str(g0_all), 'nrep': len(names),
+                  'period_scan': str(per_scan), 'period_exact': str(F(2) / g0_all),
+                  'rows': rows, 'neut': dict((k, [str(x) for x in v]) for k, v in neut.items()),
+                  'bls': dict((k, [str(x) for x in v]) for k, v in bls.items())})
+
+    # ---- R10.0 荷格由**物质**单独定死，加入任何在场标量都不扩大
+    p &= exact('R10.0', '在场全部 $B-L$ 荷生成的格 $g_0$：只看 $16_F$ 是 $1/3$，把 $\\dim\\le210$ '
+                        '的 11 个表示全加进来还是 $1/3$ $\\Rightarrow$ 圆周长度不是"选了哪个标量谱" '
+                        '的函数，物质就把格定死了',
+               [g0_m, g0_all], [F(1, 3), F(1, 3)],
+               '各表示自己的生成元：%s' % '、'.join(
+                   '%s：%s' % (tex_name(nm), rat_gen(bls[nm])) for nm in names))
+
+    # ---- R10.1 圆周：浮点只从权重测出的最小平凡角 = 精确值 $2\\pi/g_0$
+    p &= exact('R10.1', '路径乙独立测出的"对所有在场荷都平凡的最小正角"（单位 $\\pi$）与路径甲的 '
+                        '$2/g_0$ 相等 $\\Rightarrow$ $U(1)_{B-L}$ 的周期是**量出来的**，'
+                        '不是从"通常把 $B-L$ 规范化成……"抄来的',
+               [str(per_scan), str(F(2) / g0_all)], ['6', '6'],
+               '浮点扫描步长 $\\pi/120$，扫到 $12\\pi$ 为止；测得的周期以 $\\pi$ 为单位')
+
+    # ---- R10.2 残留阶：两条路径对每一个候选荷同数
+    p &= ok('R10.2', '对数据里出现的每一个候选破缺荷 $q_\\Delta$（色单态且 $Q=0$ 且 $B-L\\neq0$）， '
+                     '精确路径给的残留阶 $N=q_\\Delta/g_0$ 与浮点枚举数出的平凡角度个数相等 $\\Rightarrow$ '
+                     '"残留 $\\mathbb{Z}_N$"有两条不共享算术的出处',
+            all(r['N'] > 0 and r['N'] == r['N_scan'] for r in rows) and bool(rows),
+            '读数：%s' % [(r['BL'], r['N'], r['N_scan']) for r in rows])
+
+    # ---- R10.3 2 阶元就是物质字称，且它把物质与标量分开
+    ms16 = irrep(NAMED['16'])[1]
+    mp16 = sorted(set(mp_parity(chg(l, BL)) for l in ms16))
+    even = [nm for nm in names if all(mp_parity(q) == 1 for q in bls[nm])]
+    odd = [nm for nm in names if nm not in even]
+    RESID.update({'mp16': [str(x) for x in mp16], 'even': even, 'odd': odd})
+    p &= ok('R10.3', '$(-1)^{3(B-L)}$ 这个候选元在 $16_F$ 的**每一条**权重上都取 $-1$（含 '
+                     '$\\nu^c$ 与 $e^c$），而在表内其余表示的每一条权重上都取 $+1$：全偶的是 %s，'
+                     '含奇分量的是 %s $\\Rightarrow$ 它是一个"物质奇、规范玻色子与这些标量偶"的 '
+                     '$\\mathbb{Z}_2$ 分次，"标量一定偶"是**算出来**的而不是设定的（例外恰好落在'
+                     '$16$ 型与 $144$ 型上）。另一半：$N$ 为偶那条通道里那个唯一的 2 阶元 $\\alpha$ '
+                     '作用在 $16_F$ 各荷上，浮点算出的符号与 $(-1)^{3(B-L)}$ 逐荷相同 $\\Rightarrow$ '
+                     '抽象分次与圆周上的那个元是同一个东西' % (plain_tex(even), plain_tex(odd)),
+            mp16 == [-1] and all('16' not in nm and '144' not in nm for nm in even) and
+            sorted(odd) == sorted(nm for nm in names if '16' in nm or '144' in nm) and
+            all(r['ord2_is_mp'] for r in rows if r['ord2'] != '无') and
+            any(r['ord2'] != '无' for r in rows),
+            '偶侧 %d 个、奇侧 %d 个（共 %d 个表示）；$16_F$ 上的取值 %s；2 阶元对照：%s' %
+            (len(even), len(odd), len(names), mp16,
+             [(r['BL'], r['ord2'], '同' if r['ord2_is_mp'] else '不同')
+              for r in rows if r['ord2'] != '无']))
+
+    # ---- R10.4 3 阶元 = 色表示自己的 triality（符号由数据选定，不预设）
+    pairs, sing_bad, nons_tri0, nonint = [], [], [], []
+    for nm in names:
+        ms = irrep(NAMED[nm])[1]
+        for l in ms:
+            t3 = 3 * chg(l, BL)
+            if t3.denominator != 1:
+                nonint.append(nm)
+                continue
+            t = int(t3) % 3
+            p1, p2 = string_pq(ms, l, A2_C[0]), string_pq(ms, l, A2_C[2])
+            col = p1 - p2                       # 该权重的色 Dynkin 标号差 $p-q$
+            pairs.append((nm, t, col))
+            if color_singlet_wt(ms, l) and t:
+                sing_bad.append(nm)
+            if not color_singlet_wt(ms, l) and col % 3 == 0:
+                nons_tri0.append((nm, p1, p2))
+    bad_p = sorted(set(nm for nm, t, c in pairs if t != c % 3))
+    bad_m = sorted(set(nm for nm, t, c in pairs if t != (-c) % 3))
+    sgn = '+' if (not bad_p and bad_m) else ('-' if (not bad_m and bad_p) else '不存在')
+    RESID.update({'nwt': len(pairs), 'triality_sign': sgn, 'bad_plus': bad_p, 'bad_minus': bad_m,
+                  'nonint': sorted(set(nonint)), 'singlet_nontrivial': sorted(set(sing_bad)),
+                  'nonsinglet_trivial': sorted(set(nons_tri0))})
+    p &= ok('R10.4', '残留群里那个**阶为 3** 的元作用在荷 $q$ 上只看 $3q\\bmod 3$。本节把它对到'
+                     '**色表示自己的 triality** 上：对表内每条权重，$3(B-L)\\equiv s\\,(p-q)'
+                     '\\pmod 3$，$(p,q)$ 是该权重的 $A_2$ Dynkin 标号，一致符号 $s=%s$ 由数据选定'
+                     '（两种符号都测，只有一处无反例才通过 $\\Rightarrow$ 符号不是先验填进去的）。'
+                     '$\\Rightarrow$ 那个 $\\mathbb{Z}_3$ **就是**按色 triality 计数的元。'
+                     '两条对照同时印出：色单态必平凡（反例 %d 条），但反向**不成立**——非单态而 '
+                     '$p-q\\equiv0$ 的（色八重态一类）也平凡，共 %d 条 $\\Rightarrow$ "按色三重态'
+                     '计数 mod 3"作为口号只在 mod 3 意义下成立，逐字成立的是上面那条同余式' %
+            (sgn, len(set(sing_bad)), len(set(nons_tri0))),
+            sgn in ('+', '-') and not sing_bad and not nonint and bool(pairs),
+            '权重 %d 条；一致符号 %s；$+$ 号反例 %s；$-$ 号反例 %s；$3(B-L)\\notin\\mathbb{Z}$ %s；'
+            '非单态而 triality 平凡的（表示,$p$,$q$）：%s' %
+            (len(pairs), sgn, bad_p, bad_m, RESID['nonint'], RESID['nonsinglet_trivial'][:6]))
+
+    # ---- R10.5 |Δ(B−L)|=1 那条通道：留 Z3，物质字称被它自己破掉
+    r1 = next((r for r in rows if r['BL'] == '1'), None)
+    p &= ok('R10.5', '$|\\Delta(B-L)|=1$ 的破缺（承载者见 R5.9：$16_H/\\overline{16}_H$、'
+                     '$144_H/\\overline{144}_H$）把 $U(1)_{B-L}$ 留成 $\\mathbb{Z}_3$：阶为奇 '
+                     '$\\Rightarrow$ 里面**没有** 2 阶元，而 $(-1)^{3(B-L)}$ 在该 v.e.v. 上取 $-1$ '
+                     '$\\Rightarrow$ 物质字称是**被这一步破掉的**，不是它留下的。本节据此改写了'
+                     '此前写在 §0/§4 与 [09](../09_已知局限与否定清单.md) 的"残留 $Z_2$（物质字称）"，'
+                     '并在 08 的证伪台账登记（那条"对质子稳定反而有利"随之失去前提）',
+            r1 is not None and r1['N'] == 3 and r1['mp'] == -1 and r1['N'] % 2 == 1,
+            '读数：$q_\\Delta=1$ $\\Rightarrow$ $N=%s$（浮点同 $%s$），物质字称在该荷上 $=%s$' %
+            (r1 and r1['N'], r1 and r1['N_scan'], r1 and r1['mp']))
+
+    # ---- R10.6 判据：物质字称存活 ⇔ $3q_\Delta$ 为偶（对数据里每个候选成立）
+    p &= ok('R10.6', '把 R10.3 的分次与 R10.5 的判据合起来是一条可核对的 iff：残留 $\\mathbb{Z}_N$ '
+                     '**含** 2 阶元（物质字称才可能存活）当且仅当 $N=q_\\Delta/g_0$ 为偶，'
+                     '在数据里每个候选荷上逐个验，不靠"偶数阶群含 2 阶元"这一句代数当结论 $\\Rightarrow$ '
+                     '它实际是把两个**独立实现**（$mp\\_parity$ 的奇偶判定与 $residual\\_order$ '
+                     '的格算术）拴在一起。另一条同时成立的结构性读数：每个候选的 $N$ 都是 3 的倍数 '
+                     '$\\Rightarrow$ 在这个物质内容下 3 阶元（色 triality）是**躲不掉的**，'
+                     '条件性的只有 2 阶元那半边',
+            all((r['N'] % 2 == 0) == (r['mp'] == 1) and r['N'] % 3 == 0 for r in rows) and
+            len(rows) >= 2,
+            '读数（$q_\\Delta$, $N$, $N\\bmod 2$, $N\\bmod 3$, 物质字称）：%s' %
+            [(r['BL'], r['N'], r['N'] % 2, r['N'] % 3, r['mp']) for r in rows])
+
+    # ---- R10.7 约定无关 + R10.8 植入缺陷（断言必须是活的）
+    p &= ok('R10.7', '把全套荷换成 $Y_{B-L}=(B-L)/2$ 的约定（分子分母同缩 $1/2$）后，每个候选的 '
+                     '残留阶 $N$ 一个都不动 $\\Rightarrow$ 本节读的数不依赖 $B-L$ 的归一化选择',
+            all(r['N_half'] == r['N'] for r in rows) and bool(rows),
+            '两套约定下的残留阶：%s' % [(r['BL'], r['N'], r['N_half']) for r in rows])
+    p &= ok('R10.8', '植入检验（两种典型记号滑倒，都必须在读数上留下痕迹）：'
+                     '(i) **只**把 $q_\\Delta$ 减半、不同步缩荷格 $\\Rightarrow$ 残留阶要么被腰斩、'
+                     '要么根本不再是整数（工具拒绝给数，读成 0）；'
+                     '(ii) 误把圆周当 $2\\pi$（即默认荷格是 $\\mathbb{Z}$，$g_0=1$）$\\Rightarrow$ '
+                     '残留阶退化成 $q_\\Delta$ 本身。第二个读数正是旧散文挂在 $|\\Delta(B-L)|=1$ '
+                     '通道上的那个 $\\mathbb{Z}_2$ 的来源 $\\Rightarrow$ "残留 $\\mathbb{Z}_2$"'
+                     '既是归一化滑倒的产物，又张冠李戴到了另一条通道上（正确算术里 2 阶元只存在于 '
+                     '$q_\\Delta=2$ 那条通道，且是 $\\mathbb{Z}_6$ 的一个因子而非整个残留群）',
+            all(r['N_mismatch'] != r['N'] and r['N_mismatch'] in (0, r['N'] // 2) and
+                r['N_naive'] != r['N'] == r['N_scan'] for r in rows) and
+            all(r['N_naive'] == int(F(r['BL'])) for r in rows) and
+            any(r['N_mismatch'] == 0 for r in rows) and len(rows) >= 2,
+            '正确（甲／乙）%s；只缩 $q_\\Delta$ %s；误取 $2\\pi$ 周期 %s' %
+            ([(r['BL'], r['N'], r['N_scan']) for r in rows],
+             [(r['BL'], r['N_mismatch']) for r in rows],
+             [(r['BL'], r['N_naive']) for r in rows]))
+
+    # ---- R10.9 后续弱电破缺用 $B-L=0$ 的分量 ⇒ 残留群活到低能（带一个会受损的对照）
+    ew = [nm for nm in names if F(0) in neut[nm]]
+    RESID.update({'ew_neutral': ew})
+    ewtex = '、'.join(tex_name(n) for n in ew) or '无'
+    p &= ok('R10.9', '在 $\\dim\\le210$ 里"色单态、$Q=0$、$B-L=0$"的候选非空（表内：%s）$\\Rightarrow$ '
+                     '用这类分量再破 $SU(2)_L\\times U(1)_Y$ 时，v.e.v. 对 $U(1)_{B-L}$ 恒等。'
+                     '这条判据不是"$0\\cdot\\alpha=0$ 故平凡"那样的恒真式：把每个残留元代回 '
+                     '$e^{i\\alpha q_2}$ 逐元计数，$q_2=0$ 时**一个都不少**，而同一条通道上取 '
+                     '$q_2=q_\\Delta/2$ 的对照 $\\Rightarrow$ 元数**减少** $\\Rightarrow$ "弱电那一步'
+                     '不削弱残留 $\\mathbb{Z}_N$"是一条有对照的读数，不是套话' % ewtex,
+            bool(ew) and all(r['ew'] == r['N'] and r['ew'] == r['ew_scan'] and
+                             r['ctl'] < r['N'] and r['ctl'] == r['ctl_scan'] for r in rows),
+            '读数（$q_\\Delta$, 残留阶 $N$, 加 $q_2=0$ 后剩, 加对照 $q_2=q_\\Delta/2$ 后剩）：%s' %
+            [(r['BL'], r['N'], r['ew'], r['ctl']) for r in rows])
+
+    # ---- R10.10 条件性：三个情形的字面标量谱里两条通道都没有母表示
+    decl = dict(CSPLIT['decl'])
+    dunion = set(CSPLIT['decl_union'])
+    lit = dict((nm, dict((k, '%s_H' % nm in txt and '无 $%s_H$' % nm not in txt)
+                         for k, txt in chain.SCENARIOS.items()))
+               for nm in ('16', '126'))
+    RESID.update({'decl': decl, 'decl_16': lit['16'], 'decl_126': lit['126'],
+                  'cond': [(r['BL'], sorted(set(r['carriers']) & dunion)) for r in rows]})
+    p &= ok('R10.10', '本节两个残留群都是**条件读数**：承载 $|\\Delta(B-L)|=2$ 的 $126_H/'
+                      '\\overline{126}_H$ 与承载 $|\\Delta(B-L)|=1$ 的 $16_H/\\overline{16}_H$ '
+                      '都**不在**链探针三个情形字面声明的标量谱里（情形文字现场读，判法与 R9.3 '
+                      '同一条：出现 "$X_H$" 且未写"无 $X_H$"）。把每个候选荷的承载者与"链上字面'
+                      '声明的母表示"求交 $\\Rightarrow$ 两条通道的交集都是空集 $\\Rightarrow$ '
+                      '"残留 %s"要读成"若补上 $126_H$ 并让它取 $B-L=2$ 的中性分量"，'
+                      '不是"本模型已经如此"' % ztex(residual_order(F(2), g0_all)),
+            not any(lit['16'].values()) and not any(lit['126'].values()) and
+            bool(lit['16']) and bool(lit['126']) and all(not c for _b, c in RESID['cond']),
+            '各情形字面声明的母表示：%s；含 $16_H$：%s；含 $126_H$：%s；承载者 ∩ 声明谱：%s' %
+            (decl, lit['16'], lit['126'], RESID['cond']))
+    return p
+
+
+# =============================================================== R11：低能算符的选择定则
+# 低能投影用的子系统：$SU(3)_c\times SU(2)_L$ 的根，额外方向取 $Y$（**不是** $B-L$）。
+# 为什么不能沿用 3221 去数"零权"：$Y$ 与 $T^3_R$ 不正交（R11.0 当场量那个内积）$\Rightarrow$
+# 沿 3221 的零权要求 $T^3_R=0$ 且 $B-L=0$，会把"$SU(3)\times SU(2)_L\times U(1)_Y$ 单态但
+# $B-L\ne0$"的场（$\nu^c$ 就是这一个）整个漏掉。
+SUB_321 = None
+if BL is not None:
+    SUB_321 = Subsystem('321', [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2]), A1_L], extra=YHP)
+
+SEL = {}
+
+# 物质场名字**由签名绑定**：键 $=(\\lambda_{321},\\ Y,\\ B-L)$ 全是量出来的（引擎号），
+# 值只是一个标签。这张表可证伪的地方在 R11.3：它必须与量出来的 6 个签名一一对应，且把 $Y$
+# 从键里去掉就不再单射（$u^c,d^c$ 与 $e^c,\\nu^c$ 各自占在同一个 (色,弱) 格上）。
+MATTER_SIG = {((0, 0, 0), F(-1), F(-1)): 'e^c',
+              ((0, 0, 0), F(0), F(-1)): '\\nu^c',
+              ((1, 0, 1), F(-1, 6), F(-1, 3)): 'Q',
+              ((0, 1, 0), F(-1, 3), F(1, 3)): 'd^c',
+              ((0, 1, 0), F(2, 3), F(1, 3)): 'u^c',
+              ((0, 0, 1), F(1, 2), F(1)): 'L'}
+
+
+def sm_slice(ms, y):
+    r"""$Y$ 切片：权重多重集里 $Y=y$ 的那部分 $=$ 低能投影该用的 projector。"""
+    return dict((mu, k) for mu, k in ms.items() if chg(mu, YHP) == y)
+
+
+def sm_mult(ms, lam):
+    r"""Klimyk 的 very old rule 限制到 $SU(3)_c\times SU(2)_L\times U(1)_Y$：$\lambda$ 在 `ms`
+    （必须是**同一** $Y$ 切片）里的重数。
+
+    $U(1)_Y$ 与本子系统的根正交（`Subsystem` 构造时那条断言）$\Rightarrow$ Weyl 轨道不离开切片，
+    先切片再作交错和是合法的。算出负重数即报错，不静默丢弃。
+    """
+    book = {}
+    for mu, k in ms.items():
+        lab = SUB_321.labels(mu)
+        book[lab] = book.get(lab, 0) + k
+    tgt = add(sub_label_to_wt(SUB_321, lam), SUB_321.rho)
+    tot = 0
+    for M, sg in SUB_321.W.items():
+        tot += sg * book.get(SUB_321.labels(sub(mat_vec(M, tgt), SUB_321.rho)), 0)
+    assert tot >= 0, 'SM 重数为负（%s）⇒ 321 子系统构造有误' % (lam,)
+    return tot
+
+
+def sm_singlet_mult(ms):
+    r"""低能规范不变张量个数 $\mathrm{mult}((1)_{321},V)$。"""
+    return sm_mult(sm_slice(ms, F(0)), (0, 0, 0))
+
+
+def sm_zero_ms(ms):
+    """把"低能单态"错当成"3221 的零权"来数的那条路 $=$ 被本节否证的 projector（留作对照）。"""
+    return zero_wt(ms)
+
+
+def sm_dim(lam):
+    r"""$\\dim(SU(3)_c)\\times\\dim(SU(2)_L)$：$A_2$ 走闭式维数公式，$A_1$ 走 $j\\mapsto2j+1$。"""
+    return dim3(*lam[:2]) * (lam[2] + 1)
+
+
+def sm_content(ms):
+    r"""完整 SM 分解 $[(\\lambda,Y,n)]$ 与维数账 $(\\sum n\\dim_{\\mathrm{SM}},\\ \\text{权重数})$。"""
+    ys = sorted(set(chg(mu, YHP) for mu in ms))
+    cands = sorted(set(SUB_321.labels(mu) for mu in ms))
+    rows, tot = [], 0
+    for y in ys:
+        sl = sm_slice(ms, y)
+        for lab in cands:
+            if min(lab) < 0:
+                continue
+            n = sm_mult(sl, lab)
+            if n:
+                rows.append((lab, y, n))
+                tot += n * sm_dim(lab)
+    book = msum(ms)
+    rows.sort(key=lambda r: (str(r[0]), str(r[1])))
+    return rows, tot == book, book, tot
+
+
+def sm_conj(lam):
+    r"""$\\lambda\\mapsto\\lambda^*$：$A_2$ 标号倒序（与 `su_name` 同一规则），$A_1$ 自共轭。"""
+    return (lam[1], lam[0], lam[2])
+
+
+def sm_pair_singlets(ra, rb):
+    r"""第二条独立路径：$\\sum_{\\lambda,Y}n^a_{\\lambda,Y}\\,n^b_{\\lambda^*,-Y}$，只查两因子各自
+    已有的 SM 成分表 $\Rightarrow$ 不乘大乘积、不解方程组（与 `pair_singlets` 在 SO(10) 层同构）。"""
+    book = dict(((l, y), n) for l, y, n in rb)
+    return sum(n * book.get((sm_conj(l), -y), 0) for l, y, n in ra)
+
+
+def perm_weight(combo, n):
+    """多重集 $\\mapsto$ 它代表的**有序**组数 $=n!/\\prod_k(\\text{重数}!)$。"""
+    w = math.factorial(n)
+    for i in sorted(set(combo)):
+        w //= math.factorial(combo.count(i))
+    return w
+
+
+def sm_fields(nm):
+    """表示 `nm` 的低能场清单：每个 $(SU(3)_c,SU(2)_L,U(1)_Y)$ 分量一条，带上它自己的 $B-L$。
+
+    同一条 $(\\lambda,Y)$ 可以来自两条 $B-L$ 不同的 3221 行 $\\Rightarrow$ 场的身份必须带 $B-L$，
+    只带 SM 量子数不够。
+    """
+    ms = irrep(NAMED[nm])[1]
+    out = []
+    for row in branching(ms, SUB_3221):
+        subms = sub_irrep(row['wt'], SUB_3221)
+        for y in sorted(set(chg(mu, YHP) for mu in subms)):
+            sl = sm_slice(subms, y)
+            cont = sm_content(sl)[0]
+            assert len(cont) == 1 and cont[0][2] == 1, \
+                '%s 的行 %s 在 $Y=%s$ 切片上不是一条重数为 1 的 SM 不可约表示：%s' % (
+                    nm, fmt_3221(row), y, cont)
+            out.append({'rep': nm, 'lam': cont[0][0], 'Y': y, 'BL': row['bl'],
+                        'ms': sl, 'row': fmt_3221(row), 'nwt': msum(sl)})
+    return out
+
+
+def f_bl(f):
+    r"""场的 $B-L$（**教材号**）：本引擎的 $B-L$ 与文献整体反号，这一处符号在 R5.7/R6.6 已登记。"""
+    return -f['BL']
+
+
+def f_b(f):
+    r"""重子数：由"色非单态者携带 $B$、色单态者不携带"这条规则从量出来的 $(\\mathrm{色},B-L)$ 派生。"""
+    return f_bl(f) if f['lam'][:2] != (0, 0) else F(0)
+
+
+def f_l(f):
+    r"""轻子数：同一规则的另一半 $=$ "色单态者携带 $L=-(B-L)$"。"""
+    return F(0) if f['lam'][:2] != (0, 0) else -f_bl(f)
+
+
+def f_tri(f):
+    r"""该场的 $\\mathbb{Z}_3$ 荷（色 triality）$3(B-L)\\bmod 3$；无整数 $3(B-L)$ 即不给数。"""
+    t3 = 3 * f_bl(f)
+    return None if t3.denominator != 1 else int(t3) % 3
+
+
+def sel_ms(fl):
+    ms = fl[0]['ms']
+    for f in fl[1:]:
+        ms = tprod(ms, f['ms'])
+    return ms
+
+
+def sel_t3q(fl):
+    r"""单项式的 $3Q=\\sum_k3(B-L)_k$：以 $g_0=1/3$ 为单位的**整数**荷计数（不是浮点）。"""
+    return sum(3 * f_bl(f) for f in fl)
+
+
+def rule_exact(t3, n):
+    r"""路径甲：$N\\mid 3Q$。$3Q$ 非整数或 $N\\le0 $（工具没读到群）$\\Rightarrow$ 不给判决。"""
+    if n <= 0 or t3.denominator != 1:
+        return None
+    return int(t3) % n == 0
+
+
+def rule_els(qd, g0, q):
+    r"""路径乙：把每个残留群元 $\\alpha_k=k/q_\\Delta$ 代回 $e^{2\\pi i\\alpha_kQ}$，逐元要它 $=1$
+    （精确有理：判 $\\alpha_kQ$ 的分母）$\\Rightarrow$ 不写整除式。"""
+    els = residual_els(qd, g0)
+    return None if not els else all((a * q).denominator == 1 for a in els)
+
+
+def rule_float(qd, g0, q):
+    r"""路径丙：同一题的浮点实现——走 $\\sin/\\cos$，不碰有理数的分母，也不碰整除。"""
+    els = residual_els(qd, g0)
+    if not els:
+        return None
+    for a in els:
+        ang = 2.0 * math.pi * float(a) * float(q)
+        if not (abs(math.sin(ang)) < 1e-9 and math.cos(ang) > 1.0 - 1e-9):
+            return False
+    return True
+
+
+def rule_factors(t3):
+    r"""因子逐点判：$\\mathbb{Z}_3$ 那半边只看 $3Q\\bmod 3$，$\\mathbb{Z}_2$ 那半边只看 $3Q\\bmod 2$。"""
+    if t3.denominator != 1:
+        return (None, None)
+    return (int(t3) % 3 == 0, int(t3) % 2 == 0)
+
+
+def sel_cand(fl, chans, g0):
+    """一个候选算符的全部读数：SM 单态数、荷账、$\\Delta B/\\Delta L/\\Delta(B-L)$、色侧荷和、三条路径的判决。"""
+    ms = sel_ms(fl)
+    t3 = sel_t3q(fl)
+    q = t3 / 3
+    nf = sum(1 for f in fl if not f.get('boson'))
+    out = {'fl': [f.get('name', f['rep']) for f in fl],
+           'combo': tuple(f['rep'] for f in fl),
+           'sig': '+'.join('%s[%s|%s|%s]' % (f.get('name', f['rep']), f['lam'], f['Y'], f['BL'])
+                           for f in fl),
+           'nf': nf, 'ns': len(fl) - nf,
+           'd': F(3 * nf, 2) + len(fl) - nf,
+           'singlet': sm_singlet_mult(ms), 'zero': sm_zero_ms(ms),
+           't3q': str(t3), 'q': str(q),
+           'dB': str(sum(f_b(f) for f in fl)), 'dL': str(sum(f_l(f) for f in fl)),
+           'tri': sum(f['lam'][0] - f['lam'][1] for f in fl),
+           'odd': bool(nf % 2), 'v': {}, 'mut': {}}
+    for tag, (qd, n) in chans.items():
+        v = {'甲': rule_exact(t3, n), '乙': rule_els(qd, g0, q), '丙': rule_float(qd, g0, q)}
+        z3, z2 = rule_factors(t3)
+        v['Z3'] = z3
+        v['Z2'] = z2
+        vs = [v['甲'], v['乙'], v['丙']]
+        v['甲乙丙一致'] = None in vs or len(set(vs)) == 1
+        v['因子与'] = None in (z3, z2) or (z3 and z2) == v['甲']
+        out['v'][tag] = v
+    return out
+
+
+def run_selection_layer():
+    r"""R11：残留离散规范对称性在**低能算符**上的选择定则（08 的 P7 一节末尾登记的那条待办）。
+
+    R10 数出了群里有哪些元，但没有回答"它禁哪些算符"——那一句当时登记为待办。本节把它变成
+    格上的读数，四步走：
+      (a) 先把低能投影的 projector 钉对：$Y$ 与 $T^3_R$ 不正交 $\\Rightarrow$ 沿 3221 数零权会
+          漏掉 $\\nu^c$（R11.0/R11.1），再把 $\\mathbb{Z}_3$ 的荷对到色 triality 上**逐场**核（R11.2）；
+      (b) 场清单本身由签名绑定（R11.3），$B/L$ 按"色携带 $B$、单态携带 $L$"这一条规则派生（R11.4）；
+      (c) 枚举候选算符并逐条判决（R11.5–R11.8），直接回答"残留群保不保质子"；
+      (d) 正对照与变异测试（R11.9）：$\\text{禁掉 }0\\text{ 条}$ 必须与 $\\text{枚举到 }0\\text{ 条}$
+          可区分。
+    选择定则本身只用一条同余式：总荷 $Q=\\sum_k(B-L)_k$ 的算符在 $\\mathbb{Z}_N$（$N=q_\\Delta/g_0$）
+    下不变 $\\iff$ $N\\mid 3Q$，三条互不共享算术的实现（整除、群元逐元、浮点角度）必须同判决。
+    """
+    p = True
+    g0 = rat_gen(bl_values('16'))
+    chans = dict(('|%s|' % r['BL'], (F(r['BL']), r['N'])) for r in RESID['rows'])
+    names = [r['name'] for r in TABLE if r['name'] in NAMED]
+
+    # ---- R11.0 projector：$Y$ 与 $T^3_R$ 不正交 ⇒ 3221 的"零权"不是低能单态
+    iply, ipry = ip(A1_L, YHP), ip(A1_R, YHP)
+    ms16 = irrep(NAMED['16'])[1]
+    nu = [f for f in sm_fields('16') if f['lam'] == (0, 0, 0) and f['Y'] == 0]
+    SEL.update({'proj': {'ip': (iply, ipry), 'zw16': zero_wt(ms16), 'nsing': len(nu),
+                         'nu': (nu[0]['row'], nu[0]['BL']), 'pos': len(SUB_321.pos),
+                         'W': len(SUB_321.W), 'rho': SUB_321.rho, 'g0': str(g0)}})
+    p &= ok('R11.0', '低能投影的 projector 先要选对。$SU(2)_L$ 的单根与 $Y$ 正交（内积 $=%s$）'
+                     '而 $SU(2)_R$ 的单根与 $Y$ **不**正交（$=%s\\ne0$）$\\Rightarrow$ $U(1)_Y$ 与 '
+                     '$SU(2)_R$ 混在一起，沿 3221 数"零权"等于额外要求 $T^3_R=0$ 且 $B-L=0$。'
+                     '后果是具体的：$16_F$ 的权重里**没有**零权（荷账本 $=%d$），但它有 %d 个'
+                     '$SU(3)\\times SU(2)_L\\times U(1)_Y$ 单态，就是 $\\nu^c$——它的 $B-L=1$、'
+                     '$T^3_R\\ne0$ $\\Rightarrow$ 用"零权"当 projector 会把承载 Majorana 质量的那个'
+                     '场整个漏掉。本节据此把全部低能计数放在子系统 $SU(3)_c\\times SU(2)_L$ 配 '
+                     '$U(1)_Y$（`SUB_321`）的 $Y$ 切片上' % (iply, ipry, zero_wt(ms16), len(nu)),
+            iply == 0 and ipry != 0 and zero_wt(ms16) == 0 and len(nu) == 1 and
+            len(SUB_321.pos) == 4 and len(SUB_321.W) == 12 and
+            str(g0) == RESID['g0_all'] == RESID['g0_matter'],
+            '$|\\Delta_+|$=%d，$|W|$=%d，$\\rho_{321}=%s$；荷格 $g_0=%s$（与 R10.0 同一条读数）；'
+            '$\\nu^c$ 那一条的 3221 行 $=%s$，引擎号 $B-L=%s$' %
+            (len(SUB_321.pos), len(SUB_321.W), SUB_321.rho, g0, nu[0]['row'], nu[0]['BL']))
+
+    # ---- R11.1 SM 分解的维数账 + 植入缺陷（不按 $Y$ 切片会怎样）
+    books = []
+    for nm in ('10', '16', '45', '54'):
+        ms = irrep(NAMED[nm])[1]
+        rows, eq, book, tot = sm_content(ms)
+        cands = [lab for lab in sorted(set(SUB_321.labels(mu) for mu in ms)) if min(lab) >= 0]
+        noslice = sum(len(set(chg(mu, YHP) for mu in ms)) * n * sm_dim(lab)
+                      for lab in cands for n in [sm_mult(ms, lab)] if n)
+        books.append((nm, len(rows), tot, book, eq, noslice))
+    SEL.update({'books': books})
+    p &= ok('R11.1', 'SM 分解的实现由**维数账**独立核对：$\\sum_\\lambda n_\\lambda'
+                     '\\dim_{\\mathrm{SM}}(\\lambda)=\\dim$（Weyl 维数）逐表示成立：%s。'
+                     '植入缺陷：把"先按 $Y$ 切片"这一步去掉、直接在整个多重集上作同一条 Klimyk '
+                     '交错和，四个表示的账**全部**立刻不平（右列是那个错账的 $\\sum n\\dim$）'
+                     '$\\Rightarrow$ 切片不是可选的装饰，而维数账能看见它' %
+            ('；'.join('%s：%d 条成分，$\\sum n\\dim=%d=\\dim$（平）' % (b[0], b[1], b[2])
+                       for b in books)),
+            all(b[4] for b in books) and len(books) == 4 and all(b[5] != b[3] for b in books),
+            '错账（不按切片）：%s' % [(b[0], b[5], b[3]) for b in books])
+
+    # ---- R11.2 (a) 逐场核验：$\\mathbb{Z}_3$ 的荷完全由色携带
+    sgn = RESID['triality_sign']
+    allf = [(nm, f) for nm in names for f in sm_fields(nm)]
+
+    def tri_cnt(bl):
+        r"""一种荷号下把两种符号都测：$3(B-L)\\equiv\\pm(p-q)\\pmod3$ 各自数反例。"""
+        cnt, tot, bp, bm = {}, 0, [], []
+        for nm, f in allf:
+            t3 = 3 * bl(f)
+            if t3.denominator != 1:
+                continue
+            tot += 1
+            p1, p2 = f['lam'][0], f['lam'][1]
+            t = int(t3) % 3
+            cnt[t] = cnt.get(t, 0) + 1
+            if t != (p1 - p2) % 3:
+                bp.append((nm, f['lam'], str(bl(f))))
+            if t != (p2 - p1) % 3:
+                bm.append((nm, f['lam'], str(bl(f))))
+        return {'sgn': '+' if (not bp and bm) else ('-' if (not bm and bp) else '不一致'),
+                'cnt': cnt, 'tot': tot, '+': bp, '-': bm}
+    st, se = tri_cnt(f_bl), tri_cnt(lambda f: f['BL'])
+    sel_sgn, fcnt, ftot, fbad_p, fbad_m = st['sgn'], st['cnt'], st['tot'], st['+'], st['-']
+    tsg = 1 if sel_sgn == '+' else -1
+    SEL.update({'tri_sgn': sel_sgn, 'tri_sgn_engine': se['sgn'], 'tsg': tsg,
+                'tri_wt_sgn': sgn, 'tri_tot': ftot, 'tri_cnt': fcnt, 'nrep': len(names),
+                'tri_bad': {'std': (len(st['+']), len(st['-'])),
+                            'eng': (len(se['+']), len(se['-']))}})
+    p &= ok('R11.2', '把 R10.4 那条同余式从 SO(10) 的**权重**搬到 SM 的**场**上：对表内 %d 个表示'
+                     '展开出来的每一条低能场（共 %d 条），$3(B-L)\\equiv s(p-q)\\pmod 3$，'
+                     '$(p,q)$ 是该场的 $A_2$ Dynkin 标号。**符号不是抄来的**：两套荷号'
+                     '（教材号、引擎号）$\\times$ 两种符号，四种配对全部测过 $\\Rightarrow$ '
+                     '教材号唯一一致 $s=%s$、引擎号唯一一致 $s=%s$，而 R10.4 在权重层（引擎号）'
+                     '读到的是 $%s$ $\\Rightarrow$ 两层是**同一条**同余，它们之间的差别恰好就是 '
+                     'R5.7/R6.6 那条已登记的"教材号 $=-$ 引擎号"约定差；再把荷号与符号**交叉**'
+                     '配对的两种组合当反例数：教材号配 $-$ 反例 %d 条、引擎号配 $+$ 反例 %d 条 '
+                     '$\\Rightarrow$ 符号是被这批读数选出来的，不是被假定的。'
+                     '$\\Rightarrow$ 残留 $\\mathbb{Z}_3$ 作用在低能场上**只看色**：它是色 triality '
+                     '的计数，没有别的来源。分档读数：triality $0/1/2$ 各有 %s 条 $\\Rightarrow$ '
+                     '非平凡的那一半**全部**是色三重态，而色单态（triality 0）自动中性' %
+            (len(names), ftot, sel_sgn, se['sgn'], sgn, len(fbad_m), len(se['+']),
+             '、'.join('%d：%s' % (k, fcnt.get(k, 0)) for k in (0, 1, 2))),
+            sel_sgn in ('+', '-') and se['sgn'] in ('+', '-') and se['sgn'] == sgn and
+            sel_sgn != se['sgn'] and ftot > 0 and fcnt.get(0, 0) > 0,
+            '教材号 $s=%s$（$+$ 配对反例 %d、$-$ 配对反例 %d）；引擎号 $s=%s$（$+$ 配对反例 %d、'
+            '$-$ 配对反例 %d）；R10.4 权重层读到 %s；分档 %s' %
+            (sel_sgn, len(fbad_p), len(fbad_m), se['sgn'], len(se['+']), len(se['-']), sgn,
+             dict((k, fcnt.get(k, 0)) for k in (0, 1, 2))))
+
+    # ---- R11.3 (b) 场清单：名字由签名绑定，且切片每条恰是一个 SM 不可约表示
+    mat = sm_fields('16')
+    for f in mat:
+        f['name'] = MATTER_SIG.get((f['lam'], f['Y'], f['BL']), '未命名')
+    partition = madd(*[f['ms'] for f in mat])
+    unamed = [f['lam'] for f in mat if f['name'] == '未命名']
+    collide = len(mat) - len(set((f['lam'][:2], f['lam'][2]) for f in mat))
+    p &= ok('R11.3', '$16_F$ 展开成 %d 条低能场：%s；每条都满足"一个 3221 行 $\\times$ 一个 $Y$ '
+                     '切片 $=$ 一条重数为 1 的 SM 不可约表示"（`sm_fields` 里那条断言逐条把关），'
+                     '且这 %d 条的权重**恰好分成** $16_F$ 的 16 条权重（多重集相等，不只是维数相加）'
+                     '$\\Rightarrow$ 场清单是量出来的，不是从文献抄的。名字由 $(\\lambda,Y,B-L)$ '
+                     '签名绑定：未命名 %s 条、签名多射 %s 次。反面对照：只按 (色,弱) 定名会把 6 条'
+                     '读成 %d 类（$u^c,d^c$ 与 $e^c,\\nu^c$ 各占同一格）$\\Rightarrow$ $Y$ 参与定名' %
+            (len(mat), '、'.join('$%s$' % f['name'] for f in sorted(mat, key=lambda x: x['name'])),
+             len(mat), unamed or '无', '未' if len(mat) == 6 else '被', 6 - collide),
+            len(mat) == 6 and not unamed and partition == ms16 and
+            len(set(f['name'] for f in mat)) == 6 and collide == 2,
+            '读数：%s' % [(f['name'], f['lam'], str(f['Y']), str(f['BL']), f['nwt']) for f in mat])
+
+    # ---- R11.4 (b) 物质字称 = $(-1)^{\\text{费米子数}}$，以及 $B/L$ 派生规则本身
+    allodd = all((3 * f_bl(f)).denominator == 1 and int(3 * f_bl(f)) % 2 for f in mat)
+    def bl_pair(f, flip=False):
+        r"""$B$、$L$ 的派生规则：色非单态者 $B=B-L$、$L=0$；色单态者 $L=-(B-L)$、$B=0$。
+        `flip` 是**变异体**（把"哪一半携带 $B$"对调），用来证明下面那条文献比对不是恒真式。"""
+        col = (f['lam'][:2] != (0, 0)) != flip
+        return (str(f_bl(f)), '0') if col else ('0', str(-f_bl(f)))
+    colorb = [bl_pair(f) for f in mat]
+    mswap = [bl_pair(f, True) for f in mat]
+    # 教材一代六个场的 $(B,L)$：**这一列是比对，不是推导**（与 R6.6 同一处置）
+    ntxt = sorted([('0', '-1'), ('0', '-1'), ('0', '1'),
+                   ('1/3', '0'), ('-1/3', '0'), ('-1/3', '0')])
+    nocol_l = sum(1 for f in mat if f['lam'][:2] != (0, 0) and f_l(f) != 0)
+    nl = sum(1 for f in mat if f['lam'][:2] == (0, 0) and f_b(f) != 0)
+    p &= ok('R11.4', '6 条物质场的 $3(B-L)$ **全是奇数**：%s $\\Rightarrow$ 在只含物质场的算符上 '
+                     '$(-1)^{\\sum_k3(B-L)_k}=(-1)^{\\text{费米子数}}$ 恒等，即那条 2 阶元在低能就是'
+                     '**物质字称**（R10.3 在 SO(10) 权重层数过，这一层在 SM 场上再数一遍）。'
+                     '$B$、$L$ 按一条规则从量出来的 (色, $B-L$) 派生：色非单态者 $B=B-L$、$L=0$，'
+                     '色单态者 $L=-(B-L)$、$B=0$；这条规则在 $16_F$ 里**没有反例**（带色的轻子 %d 条、'
+                     '单态的重子 %d 条）$\\Rightarrow$ 下面的 $\\Delta B/\\Delta L$ 不是外部填进来的数，'
+                     '而"重子数由色携带、轻子数由色单态携带"这一句在这 16 条权重上是可核对的。'
+                     '规则选得对不对由一条**文献比对**收口：派生的 $(B,L)$ 与教材一代六个场的 '
+                     '$(B,L)$ 作为多重集**完全相同**——这一列是**比对、不是推导**（与 R6.6 同一处置），'
+                     '故同时植入变异体：把规则里"哪一半携带 $B$"对调，多重集立刻不等 $\\Rightarrow$ '
+                     '比对这一列有牙齿，不是恒真式' %
+            ('、'.join('$%s$：%s' % (f['name'], 3 * f_bl(f)) for f in mat), nocol_l, nl),
+            allodd and nocol_l == 0 and nl == 0 and
+            sorted(colorb) == ntxt and sorted(mswap) != ntxt,
+            '派生的 $(B,L)$：%s；文献表（比对，非推导）：%s；变异体（两半对调）：%s' %
+            (list(zip([f['name'] for f in mat], colorb)), ntxt, sorted(mswap)))
+
+    # ---- R11.5 三条独立计数路径：按场乘、按有序组、按 SO(10) 先拆再投影
+    def routes(deg):
+        per, tot_a = [], 0
+        for combo in itertools.combinations_with_replacement(range(len(mat)), deg):
+            fl = [mat[i] for i in combo]
+            n = sm_singlet_mult(sel_ms(fl))
+            per.append((combo, n))
+            tot_a += n * perm_weight(combo, deg)
+        big = ms16
+        for _i in range(deg - 1):
+            big = tprod(big, ms16)
+        tot_b = sm_singlet_mult(big)
+        d = decomp(big)
+        tot_c = None if d is None else sum(
+            k * sm_singlet_mult(irrep(dynkin(la))[1]) for la, k in d.items())
+        return per, tot_a, tot_b, tot_c, (0 if d is None else len(d))
+    r2, r4 = routes(2), routes(4)
+    SEL.update({'r2': r2, 'r4': r4, 'mat': mat})
+    p &= ok('R11.5', '低能单态的**总数**由三条不共享算术的路径给出同一个数：'
+                     '(i) 逐条场组合算 SM 单态、再乘该多重集所代表的有序组数（$n!/\\prod m_k!$）；'
+                     '(ii) 直接对 $16^{\\otimes %d}$ 的整权重乘积作 Klimyk 交错和；'
+                     '(iii) 先在 SO(10) 层把 $16^{\\otimes %d}$ 拆成不可约表示（`decomp`，R8 的'
+                     '独立机器），再逐表示投影到 SM 单态。读数：$n=2$ 为 %s，$n=4$ 为 %s $\\Rightarrow$ '
+                     '"按场内容分类"与"按 SO(10) 道分类"是同一件事的两种数法' %
+            (4, 4, r2[1:4], r4[1:4]),
+            r2[1] == r2[2] == r2[3] and r4[1] == r4[2] == r4[3] and r4[1] > 0,
+            '$n=2$：%d 条场组合（含单态 %d 条），有序总数 %d，整乘积 %d，SO(10) 拆分 %d 个不可约 '
+            '$\\Rightarrow$ %d；$n=4$：%d 条（含单态 %d 条），%d vs %d vs %d，拆分 %d 个不可约' %
+            (len(r2[0]), sum(1 for _c, n in r2[0] if n), r2[1], r2[2], r2[4], r2[3],
+             len(r4[0]), sum(1 for _c, n in r4[0] if n), r4[1], r4[2], r4[3], r4[4]))
+
+    # ---- R11.6 二次型（质量项）：唯一的 SM 单态就是 $\\nu^c\\nu^c$
+    c2 = [sel_cand([mat[i] for i in combo], chans, g0) for combo, _n in r2[0]]
+    for x, (combo, n) in zip(c2, r2[0]):
+        x['name'] = '+'.join(mat[i]['name'] for i in combo)
+        x['singlet'] = n
+    hit2 = [x for x in c2 if x['singlet'] > 0]
+    SEL.update({'c2': c2, 'hit2': hit2})
+    h2 = hit2[0]
+    p &= ok('R11.6', '两条物质场相乘的 %d 个场内容类里，含 SM 单态的只有 %d 个 $\\Rightarrow$ '
+                     '物质双线性里唯一的低能不变算符是 %s（单态数 %d，$\\Delta B=%s$、'
+                     '$\\Delta L=%s$、$3Q=%s$）。它在两条通道下的判决都是**允许**：'
+                     '$|\\Delta(B-L)|=1$ 那一步留的 %s 与 $|\\Delta(B-L)|=2$ 那一步留的 %s '
+                     '都不禁它 $\\Rightarrow$ 右手中微子的 Majorana 质量项与残留群一致；'
+                     '而它在"3221 零权"那个 projector 下读成 %d（$\\Rightarrow$ 荷不配平：'
+                     '$B-L=%s\\ne0$），与 R8.5/R7.4"要拿到 $|B-L|=2$ 必须插入 $126_H$"是'
+                     '同一件事在低能一侧的重现' %
+            (len(c2), len(hit2), h2['name'], h2['singlet'], h2['dB'], h2['dL'], h2['t3q'],
+             ztex(chans['|1|'][1]), ztex(chans['|2|'][1]), h2['zero'], h2['q']),
+            len(hit2) == 1 and h2['name'] == '\\nu^c+\\nu^c' and h2['singlet'] == 1 and
+            h2['zero'] == 0 and
+            all(v['甲'] is True and v['乙'] is True and v['丙'] is True and v['甲乙丙一致'] and
+                v['因子与']
+                for v in h2['v'].values()),
+            '三条路径判决（甲/乙/丙）：%s；荷账 $(\\Delta B,\\Delta L,3Q)=%s$' %
+            (dict((k, (v['甲'], v['乙'], v['丙'])) for k, v in h2['v'].items()),
+             (h2['dB'], h2['dL'], h2['t3q'])))
+
+    # ---- R11.7 四次（d=6）：枚举、分类、判决
+    c4 = [sel_cand([mat[i] for i in combo], chans, g0) for combo, _n in r4[0]]
+    for x, (combo, n) in zip(c4, r4[0]):
+        x['name'] = '+'.join(mat[i]['name'] for i in combo)
+        x['singlet'] = n
+    hit4 = [x for x in c4 if x['singlet'] > 0]
+    lost4 = [x['name'] for x in hit4 if x['zero'] == 0]
+    over4 = [(x['name'], x['zero'], x['singlet']) for x in hit4 if x['zero'] > x['singlet']]
+    top4 = max(over4, key=lambda t: t[1]) if over4 else ('—', 0, 0)
+    SEL.update({'c4': c4, 'hit4': hit4, 'lost4': lost4, 'over4': over4})
+    dis4 = [x['name'] for x in hit4 if False in [v['甲'] for v in x['v'].values()]]
+    p &= ok('R11.7', '四条物质场（质量维数 $d=4\\times3/2=6$）共 %d 个场内容类，含 SM 单态的 %d 条'
+                     '（单态数 %s，合计 %d 个不变张量结构）。逐条按 $N\\mid 3Q$ 判决：**允许 %d 条、'
+                     '禁戒 %d 条**。三条互不共享算术的实现（甲 整除、乙 群元逐元、丙 浮点角度）在'
+                     '每一条候选上同判决，且因子逐点判（$\\mathbb{Z}_3$ 看 $3Q\\bmod3$、'
+                     '$\\mathbb{Z}_2$ 看 $3Q\\bmod2$）与"两因子取与"也和甲一致 $\\Rightarrow$ '
+                     '$\\mathbb{Z}_6=\\mathbb{Z}_2\\times\\mathbb{Z}_3$ 的分解在这里是真的，'
+                     '不是拿来做修辞的。projector 的对照同样只讲读数：这 %d 条含单态的候选里，'
+                     '"3221 零权"那个错投影读出 0 的有 %d 条（%s）$\\Rightarrow$ 它会**漏掉**真单态；'
+                     '而它在别的候选上读出的数又大于单态数（最大一例 %s）$\\Rightarrow$ 它也会**多算**。'
+                     '两个方向都有反例 $\\Rightarrow$ "零权数"与"单态数"之间**没有**不等式关系，'
+                     '谁也不是谁的界 $\\Rightarrow$ 本节凡要数低能不变量，只能用 $Y$ 切片上的 Klimyk' %
+            (len(c4), len(hit4), [x['singlet'] for x in hit4],
+             sum(x['singlet'] for x in hit4), len(hit4) - len(dis4), len(dis4),
+             len(hit4), len(lost4), '、'.join('$%s$' % s for s in lost4),
+             '%s：零权 %d > 单态数 %d' % top4),
+            len(hit4) == 8 and not dis4 and len(lost4) == 1 and bool(over4) and
+            all(x['v'][k]['甲乙丙一致'] and x['v'][k]['因子与']
+                for x in hit4 for k in chans) and
+            all(v['甲'] is True for x in hit4 for v in x['v'].values()),
+            '含单态的类（场内容, 单态数, $\\Delta B$, $\\Delta L$, $3Q$, 零权读数）：%s；'
+            '零权 projector 漏掉的（漏方向）：%s；零权数反而大于单态数的（多方向）：%s' %
+            ([(x['name'], x['singlet'], x['dB'], x['dL'], x['t3q'], x['zero']) for x in hit4],
+             lost4, over4))
+
+    # ---- R11.8 (c) 质子：残留群不禁 $\\Delta(B-L)=0$ 的 dim-6 质子衰变算符
+    pv = [x for x in hit4 if x['dB'] != '0' and x['dL'] != '0']
+    pvl = [x for x in pv if x['q'] == '0']
+    congr = [x['name'] for x in c4 if (int(F(x['t3q'])) - tsg * x['tri']) % 3]
+    bad3 = [x for x in c4 if int(F(x['t3q'])) % 3]
+    even3q = sum(1 for x in c4 if int(F(x['t3q'])) % 2 == 0)
+    SEL.update({'pv': pv, 'pvl': pvl, 'congr': congr, 'even3q': even3q,
+                'bad3': [(x['name'], x['t3q'], x['tri'], x['singlet']) for x in bad3]})
+    p &= ok('R11.8', '直接回答"残留群保不保质子"：**不保**。含单态的 %d 条 d=6 类里有 %d 条同时'
+                     '$\\Delta B\\ne0$ 且 $\\Delta L\\ne0$（%s），其中 $\\Delta(B-L)=0$ 的 %d 条'
+                     '——$|\\Delta B|=|\\Delta L|=1$ 那一类就是质子衰变的荷前提——判决全部是'
+                     '**允许**（被禁 %d 条）。机理也是读数而不是修辞，两半边各量一次。'
+                     '(α) 把 R11.2 那条同余从**场**搬到**算符**：这 %d 条 d=6 候选上 $3Q$ 与色侧和 '
+                     '$s\\sum_k(p_k-q_k)$ 模 3 不同余的有 %d 条 $\\Rightarrow$ 同一判据有两台互不相同'
+                     '的机器在跑；于是 $\\mathbb{Z}_3$ 判禁的那 %d 条里**含 SM 单态的**有 %d 条 '
+                     '$\\Rightarrow$ 它只能禁色非单态，而"要单态"这一步在枚举里早已把它们滤掉 '
+                     '$\\Rightarrow$ 在低能单态层 $\\mathbb{Z}_3$ 这一半**没有**额外信息。'
+                     '(β) $\\mathbb{Z}_2$ 那一半看 $3Q\\bmod2$，而每条物质场的 $3(B-L)$ 都是奇数'
+                     '（R11.4）$\\Rightarrow$ 偶数条相乘必为偶：这 %d 条里 $3Q$ 读成偶数的有 %d 条 '
+                     '$\\Rightarrow$ 物质字称那半边在 d=6 这一层也没有可禁的东西（它并非恒等无物——'
+                     'R11.9 的标量插入候选就是被它判禁的）。'
+                     '$\\Rightarrow$ 残留离散规范对称性**不**给出质子稳定性的论证：R10.5 推翻'
+                     '"残留 $\\mathbb{Z}_2$（物质字称）对质子有利"之后，这里连剩下的那条路也不通' %
+            (len(hit4), len(pv), '、'.join('$%s$' % x['name'] for x in pv), len(pvl),
+             sum(1 for x in pvl if False in [v['甲'] for v in x['v'].values()]),
+             len(c4), len(congr), len(bad3), sum(1 for x in bad3 if x['singlet']),
+             len(c4), even3q),
+            bool(pv) and len(pvl) == len(pv) == 3 and not congr and
+            len(bad3) > 0 and all(not x['singlet'] for x in bad3) and
+            all(int(F(x['t3q'])) % 3 == 0 for x in hit4) and even3q == len(c4) and
+            not any(False in [v['甲'] for v in x['v'].values()] for x in pvl) and
+            all(x['nf'] % 2 == 0 and abs(F(x['dB'])) == abs(F(x['dL'])) == 1 for x in pvl),
+            '质子衰变候选（场内容, 单态数, $\\Delta B$, $\\Delta L$, 判决）：%s；'
+            '$\\mathbb{Z}_3$ 判禁的那些（场内容, $3Q$, 色侧和, 单态数），最多列 6 条：%s' %
+            ([(x['name'], x['singlet'], x['dB'], x['dL'],
+               dict((k, v['甲']) for k, v in x['v'].items())) for x in pv],
+             SEL['bad3'][:6]))
+
+    # ---- R11.9 (d) 正对照与变异测试：判决这一列必须**能动**
+    sdecl = sorted(set(CSPLIT['decl_union']))
+    hyreps = [nm for nm in RESID['odd'] if nm in NAMED]
+    scal = dict((nm, sm_fields(nm)) for nm in sorted(set(sdecl) | set(hyreps) | {'126', '126̄'}))
+    pair2 = [(combo, sm_content(sel_ms([mat[combo[0]], mat[combo[1]]]))[0])
+             for combo in itertools.combinations_with_replacement(range(len(mat)), 2)]
+
+    def ins_scan(reps):
+        out = []
+        for combo, cont in pair2:
+            for nm in reps:
+                for sf in scal[nm]:
+                    pb = sm_pair_singlets(cont, [(sf['lam'], sf['Y'], 1)])
+                    if pb:
+                        f = dict(sf)
+                        f['boson'] = True
+                        fl = [mat[combo[0]], mat[combo[1]], f]
+                        x = sel_cand(fl, chans, g0)
+                        x['pb'] = pb
+                        x['name'] = '+'.join(f2['name'] if not f2.get('boson') else
+                                             '%s_H' % tex_name(f2['rep']) for f2 in fl)
+                        out.append(x)
+        return out
+    scan_decl = ins_scan(sdecl)
+    scan_odd = ins_scan(hyreps)
+    forb_odd = [x for x in scan_odd if x['v']['|2|']['甲'] is False]
+    flip3 = [x for x in scan_odd if x['v']['|1|']['甲'] is True and x['v']['|2|']['甲'] is False]
+    flip_sg = [x['sig'] for x in c2 + c4
+               if x['t3q'] not in ('0',) and
+               any(rule_exact(F(x['t3q']), n) != rule_exact(-F(x['t3q']), n)
+                   for _qd, n in chans.values())]
+    SEL.update({'scan_decl': scan_decl, 'scan_odd': scan_odd, 'forb_odd': forb_odd,
+                'flip3': flip3, 'flip_sg': flip_sg, 'sdecl': sdecl, 'hyreps': hyreps})
+    p &= ok('R11.9', '"禁掉 0 条"必须与"枚举到 0 条"可区分，故把判据放在**能动**的四处测：'
+                     '(i) 枚举到的候选数非空：d=6 有 %d 条、双线性 %d 条、插入声明谱（%s）的 '
+                     'd=4 候选 %d 条 $\\Rightarrow$ 上面那句"允许 %d 条、禁 0 条"不是空集上的'
+                     '恒真式。'
+                     '(ii) 换成插入**奇** $3(B-L)$ 的标量（%s 型——它们自己就把物质字称破了）：'
+                     '候选 %d 条，其中 $\\mathbb{Z}_6$ **判禁 %d 条** $\\Rightarrow$ "禁"这一支'
+                     '是活的。'
+                     '(iii) 把 $\\mathbb{Z}_6$ 误读成 $\\mathbb{Z}_3$（丢掉物质字称那半边）：'
+                     '在 (ii) 那批候选上出现 %d 条判决差异 $\\Rightarrow$ 两个因子各自都在做功。'
+                     '(iv) 反向对照：把整套荷换号（引擎号 $\\leftrightarrow$ 教材号，R5.7 那条'
+                     '已登记的约定差）时判决翻转 **%d** 条 $\\Rightarrow$ 结论不依赖 $B-L$ 的'
+                     '符号约定；这一条必须为 0，不为 0 就说明判决其实挂在记号上' %
+            (len(hit4), len(hit2), higgs_tex(sdecl), len(scan_decl),
+             len(hit4), higgs_tex(hyreps), len(scan_odd), len(forb_odd),
+             len(flip3), len(flip_sg)),
+            len(hit4) > 0 and len(hit2) > 0 and len(forb_odd) > 0 and len(flip3) > 0 and
+            not flip_sg and all(x['nf'] % 2 == 0 for x in forb_odd) and
+            all(x['singlet'] == x['pb'] for x in scan_odd) and
+            all(x['v']['|2|']['甲'] is not None for x in scan_odd),
+            '判禁的假想插入候选：%s；只按 $\\mathbb{Z}_3$ 会误放行的：%s；换号翻转：%s' %
+            ([(x['name'], x['t3q'], x['v']['|1|']['甲'], x['v']['|2|']['甲'])
+              for x in forb_odd[:8]], [x['name'] for x in flip3[:8]], flip_sg))
+
+    # ---- R11.10 条件性与边界：这些"允许"挂在哪一份标量谱上
+    scan_126 = ins_scan(['126', '126̄'])
+    allow_126 = [x for x in scan_126 if all(v['甲'] is True for v in x['v'].values())]
+    SEL.update({'scan_126': scan_126, 'allow_126': allow_126, 'chans': chans})
+    p &= ok('R11.10', '上面所有判决都是**条件读数**，条件就是 R10.10 那个空交集：$q_\\Delta=2$ '
+                      '那条通道的母表示（$126_H/\\overline{126}_H$）不在链探针字面声明的标量谱里，'
+                      '声明的只有 %s $\\Rightarrow$ "只按声明谱"那一步里残留群根本还没出现，'
+                      '被禁条数在那里不是一个物理数，而是"无从谈起"。把 $126/\\overline{126}$ 的'
+                      '分量当作假想插入重跑同一条判据（与 R10.10 的"若补上"同一假设，且与 §6 '
+                      'R7.4、§7 R8.5 的假想插入同一条）：候选 %d 条、两条通道都允许 %d 条。'
+                      '**但质子那一条结论不随标量谱变**：它只依赖"4 费米子 $=$ 偶数"这个事实，'
+                      '而偶费米子数不是插入出来的 $\\Rightarrow$ 这是本节里唯一一处无条件成分，'
+                      '登记清楚以免与上面那些条件判决混读' %
+            (higgs_tex(sdecl) or '无', len(scan_126), len(allow_126)),
+            bool(scan_126) and bool(allow_126) and
+            all(x['nf'] % 2 == 0 for x in allow_126) and
+            all(not c for _b, c in RESID['cond']) and
+            all(x['v']['|2|']['甲'] is not None for x in scan_126),
+            '假想插入 $126/\\overline{126}_H$ 的候选（场内容, $3Q$, 甲判决）：%s；'
+            '链上字面声明谱 %s；承载者 $\\cap$ 声明谱 %s' %
+            ([(x['name'], x['t3q'], x['v']['|2|']['甲']) for x in scan_126[:8]],
+             dict(CSPLIT['decl']), RESID['cond']))
+    return p
+
+
+def residual_section():
+    """报告 §9：$B-L$ 破缺后残留哪个离散规范对称性（R10）。"""
+    r = RESID
+    if not r.get('rows'):
+        return ['', '## 9. 破缺之后残留什么离散规范对称性（R10）', '',
+                '本层未跑通 ⇒ 不印任何读数。', '']
+    n1 = next((x['N'] for x in r['rows'] if x['BL'] == '1'), 0)
+    n2 = next((x['N'] for x in r['rows'] if x['BL'] == '2'), 0)
+    L = ['', '## 9. 破缺之后残留什么离散规范对称性（R10）', '',
+         '§4 与 §5 判的是"哪个分量**能**取期望值"，本节判的是"取了之后 $U(1)_{B-L}$ **还剩**'
+         '什么"。这条差别此前只存在于散文里：报告与 [09_已知局限与否定清单](../'
+         '09_已知局限与否定清单.md) 此前都写着"$|\\Delta(B-L)|=1$ 的单步破缺 ⇒ 残留 $Z_2$'
+         '（物质字称，对质子稳定反而有利）"（报告侧共四处：§0 结论一览、§4 第 7 条、R5.5 与 '
+         'R5.9 的判据文字；09 侧两处），而守这句话的门禁 R5.9 的读数是'
+         '$(B-L,\\ SU(2)_L\\text{ 串长},\\ SU(2)_R\\text{ 串长})$ 三元组 $\\Rightarrow$ '
+         '"残留群"从未被算过。本节把它变成三条路径的读数（甲：精确有理；乙：浮点几何枚举；'
+         '丙：整套荷同乘 $1/2$ 的换约定测试），并且**当场推翻那句散文**：下面这些读数出来后，'
+         '上述六处已按读数改写，证伪记录见 [08](../08_预言与判据.md) §3 的内部计算否定表（F7）。', '',
+         '**荷格把圆周定死**（R10.0/R10.1）：$16_F$ 的 $B-L$ 值集合为'
+         '$\\{%s\\}$ $\\Rightarrow$ 其 $\\mathbb{Z}$-生成元 $g_0=%s$，于是'
+         '$U(1)_{B-L}$ 作为**作用在在场态上的**圆群，其周期是 $\\alpha_0=2\\pi/g_0=%s\\pi$。'
+         '把 $\\dim\\le210$ 表内 %d 个表示全部加进来，$g_0$ 仍是 $%s$（R10.0）$\\Rightarrow$ '
+         '周期不是"选了哪个标量谱"的函数。浮点路径独立扫出的最小平凡角 $=%s\\pi$，'
+         '与精确值 $2/g_0=%s$ 同（R10.1）——这个周期是**量出来的**，不是抄来的归一化。' %
+         ('、'.join(str(x) for x in r['bls']['16']), r['g0_matter'], r['period_exact'],
+          r['nrep'], r['g0_all'], r['period_scan'], r['period_exact']), '',
+         '| 候选 $q_\\Delta$ | 承载它而保电磁的表示 | 残留阶 $N$（甲） | 同（乙，浮点枚举） | '
+         '同（丙，$B-L\\mapsto(B-L)/2$） | 植入缺陷：只缩 $q_\\Delta$／误取 $2\\pi$ 周期 | '
+         '$(-1)^{3(B-L)}$ 在 v.e.v. 上 | 再取一个 $B-L=0$ 的 v.e.v. 后剩 | '
+         '对照：再取 $q_\\Delta/2$ 后剩 |',
+         '|---|---|---|---|---|---|---|---|---|']
+    for x in r['rows']:
+        L.append('| $%s$ | %s | %d | %d | %d | %s／%d | %s | %d | %d |' %
+                 (x['BL'], higgs_tex(x['carriers']), x['N'], x['N_scan'], x['N_half'],
+                  '无解' if not x['N_mismatch'] else x['N_mismatch'], x['N_naive'],
+                  '存活' if x['mp'] == 1 else '**被破**', x['ew'], x['ctl']))
+    L += ['', '三条路径在同一批数上咬合（R10.2/R10.7），而"植入缺陷"那一列是**故意用错的约定**：'
+              '只把 $q_\\Delta$ 减半而不同步缩荷格，残留阶要么被腰斩、要么根本不再是整数'
+              '（工具拒绝给数，印成"无解"）；误把圆周当成 $2\\pi$（即默认荷格是 $\\mathbb{Z}$），'
+              '残留阶就退化成 $q_\\Delta$ 本身 $\\Rightarrow$ 上面那些断言不是恒真式，而第二个错值 '
+              '$\\mathbb{Z}_2$ **正是旧散文那句"残留 $\\mathbb{Z}_2$"的出处**——它属于归一化滑倒，'
+              '而且被挂到了本来没有 2 阶元的那条通道上（R10.8）。', '',
+              '**残留群的两个子群各自是谁**（R10.3/R10.4）：', '',
+              '* $N$ 为偶时那个 **2 阶元**（$\\alpha=3\\pi$，即群参数 $k=N/2$）作用在荷 $q$ 上是 '
+                '$(-1)^{3q}$。它在 $16_F$ 的每一条权重上都取 $-1$（$1/3,\\,-1/3,\\,1,\\,-1$ 乘 3 '
+                '全是奇数），而在 %s 的每一条权重上都取 $+1$ $\\Rightarrow$ 它就是把"物质"与'
+                '"标量＋规范"分开的**物质字称**；表内例外只有 %s（含 $3(B-L)$ 为奇的分量）'
+                '$\\Rightarrow$ "标量一定偶"是**算出来**的，不是设定的，而且圆周上那个元与抽象分次'
+                '是同一个东西（逐荷对照见 R10.3）。' %
+              (plain_tex(r['even']), plain_tex(r['odd'])),
+              '* **3 阶元**只看 $3q\\bmod 3$。本节把它对到**色表示自己的 triality** 上：表内 %d 个'
+                '表示的每一条权重都满足 $3(B-L)\\equiv %s(p-q)\\pmod 3$，$(p,q)$ 是该权重的 $A_2$ '
+                'Dynkin 标号、符号由数据选定（两种都测，只有一处无反例才通过）$\\Rightarrow$ 那个 '
+                '$\\mathbb{Z}_3$ **就是**按色 triality 计数的元。两条对照同时成立：色单态必平凡'
+                '（反例 %d 条），但反向**不成立**——非单态而 $p-q\\equiv0\\pmod3$ 的（色八重态一类）'
+                '也平凡，共 %d 条 $\\Rightarrow$ "按色三重态计数 mod 3"作为口号只在 mod 3 意义下成立，'
+                '逐字成立的是那条同余式（R10.4）。' %
+              (r['nrep'], r['triality_sign'], len(r['singlet_nontrivial']),
+               len(r['nonsinglet_trivial'])), '',
+              '**被本节改掉的一句散文**（R10.5/R10.6）：$|\\Delta(B-L)|=1$ 那条通道把 $U(1)_{B-L}$ '
+              '留成 $N=%s$ $\\Rightarrow$ %s —— 阶为奇 $\\Rightarrow$ 里面**没有** 2 阶元可言，'
+              '而且物质字称元作用在该 v.e.v. 的荷上就是 $-1$ $\\Rightarrow$ 物质字称是**被这一步'
+              '破掉的**，不是这一步留下的。反过来，$|\\Delta(B-L)|=2$ 那条通道（$R=2$ 那个 v.e.v.）'
+              '留下 $N=%s$ $\\Rightarrow$ %s 里**同时**含一个 2 阶元（物质字称）与一个 3 阶元'
+              '（色 triality），因为该 $N$ 同时被 2 与 3 整除（R10.6 的 $N\\bmod 2$、$N\\bmod 3$ '
+              '两列；$N$ 是 3 的倍数这件事由 $g_0=1/3$ 保证 $\\Rightarrow$ triality 在这个物质内容下'
+              '躲不掉，条件性的只有 2 阶元那半边）。一句判据把两件事收干净：'
+              '物质字称存活 $\\Leftrightarrow$ $N=q_\\Delta/g_0$ 为偶 $\\Leftrightarrow$ $3q_\\Delta$ '
+              '为偶（R10.6，逐个候选核对）。' % (n1, ztex(n1), n2, ztex(n2)), '',
+              '**弱电那一步不会进一步削弱它**（R10.9）：'
+              '"色单态、$Q=0$、$B-L=0$"的候选在表内非空（%s），而 $B-L=0$ 的 v.e.v. 对整个残留群'
+              '恒等 $\\Rightarrow$ 上面那个 $\\mathbb{Z}_N$ 一路活到标准模型能标之下。这句话有对照：'
+              '表里倒数第二列把每个残留元代回 $e^{i\\alpha q_2}$ 逐元计数，$q_2=0$ 时剩下的元数'
+              '与 $N$ 相同（%s），而同一处取 $q_2=q_\\Delta/2$ 的对照**确实减少**（最后一列）'
+              '$\\Rightarrow$ "不削弱"是被测出来的，不是"$0\\cdot\\alpha=0$"的套话。' %
+              ('、'.join(tex_name(n) for n in r['ew_neutral']) or '（本层未读到）',
+               '、'.join('$q_\\Delta=%s$：$%d\\to%d$' % (x['BL'], x['N'], x['ew'])
+                        for x in r['rows'])), '',
+              '**条件性（R10.10）**：两个数都是**条件读数**。承载 $|\\Delta(B-L)|=2$ 的 '
+              '$126_H/\\overline{126}_H$ 与承载 $|\\Delta(B-L)|=1$ 的 $16_H/\\overline{16}_H$ '
+              '都不在链探针三个情形**字面声明**的标量谱里（各情形声明：%s；把每条通道的承载者与'
+              '该并集求交：%s，全为空）$\\Rightarrow$ '
+              '"残留 %s" 要读成"若补入 $126_H$ 且其中性分量取期望值"。'
+              '这与 §8 那条"$120_H$ 无人声明"是同一族缺陷：**离散规范对称性的内容跟着标量谱走，'
+              '而标量谱仍是手工放置的** $\\Rightarrow$ 本节的数不回填进质子寿命或任何暗物质论证。' %
+              ('；'.join('%s：%s' % (k, higgs_tex(v) if v else '无')
+                         for k, v in sorted(r['decl'].items())) or '未读到',
+               '；'.join('$|\\Delta(B-L)|=%s$ ∩ 声明谱 $=\\{%s\\}$' % (b, '、'.join(c))
+                         for b, c in r['cond']), ztex(n2)), '',
+              '**本节的边界**（不进门禁，故明写）：', '',
+              '* 只算 $U(1)_{B-L}$ **这一个因子**内的残留：$SU(2)_{L/R}$ 与 $SU(3)_c$ 的中心、'
+                '以及规范群的整体形式（$Spin(10)$ 与它的商）都不在本节的权重算术里 $\\Rightarrow$ '
+                '完整的残留群可能是这里那个 $\\mathbb{Z}_N$ 的**扩张**，本节只给出"至少留下这些"。',
+              '* 走 422 链时 $B-L$ 不是独立因子（它坐在 $SU(4)_c$ 的 Cartan 里，见 §5 的 R6.7）'
+                '$\\Rightarrow$ 那条链上的残留要按 $SU(4)$ 的权格重做，**本节未做**。',
+              '* 残留群在低能**能禁哪些算符**是另一个问题：本节只数群元与其作用，'
+                '没有逐个算 $u^cd^cd^c$ 一类的 SM 不变算符拿什么表示 $\\Rightarrow$ 那一问由 §10'
+                '（R11）接手，本层的两条阶读数只到"群里有什么元"为止。',
+              '* 量子引力是否允许全局/离散规范对称性、以及 $B-L$ 破缺前的其它阈值效应，都在本节'
+                '之外 $\\Rightarrow$ **L10 未关闭**。', '']
+    return L
+
+
+def selection_section():
+    r"""报告 §10：残留离散规范对称性在低能算符上的选择定则（R11，即 08 的 P7 那一问）。
+
+    全部读数取自 SEL（`run_selection_layer` 的产出），本节不重算任何东西。
+    """
+    s = SEL
+    if not s.get('hit4'):
+        return ['', '## 10. 残留群禁哪些低能算符（R11）', '', '本层未跑通 ⇒ 不印任何读数。', '']
+    mat, c4, hit4, pr = s['mat'], s['c4'], s['hit4'], s['proj']
+    pv, pvl, r2, r4 = s['pv'], s['pvl'], s['r2'], s['r4']
+    n1, n2 = s['chans']['|1|'][1], s['chans']['|2|'][1]
+    pvn = set(x['name'] for x in pv)
+    rho = '(%s)' % ', '.join(str(x) for x in pr['rho'])
+    dis4 = [x['name'] for x in hit4
+            if x['v']['|1|']['甲'] is not True or x['v']['|2|']['甲'] is not True]
+    pvdis = sum(1 for x in pvl if x['v']['|2|']['甲'] is not True)
+    bad3_sing = sum(1 for t in s['bad3'] if t[3])
+    lost4, over4 = s['lost4'], s['over4']
+    top4 = max(over4, key=lambda t: t[1]) if over4 else ('—', 0, 0)
+
+    def vd(x, tag):
+        v = x['v'][tag]['甲']
+        return '允许' if v is True else ('—' if v is None else '**禁戒**')
+
+    L = ['', '## 10. 残留群禁哪些低能算符（R11）', '',
+         '§9 只数到"群里有什么元"为止，并把"它能禁哪些算符"登记为待办 $\\Rightarrow$ 本节做那一问'
+         '（那条待办登记在 [08](../08_预言与判据.md) 的 P7 一节末尾）。判据只有一条同余式：'
+         '总荷 $Q=\\sum_k(B-L)_k$ 的算符在 '
+         '$\\mathbb{Z}_N$（$N=q_\\Delta/g_0$，$g_0=%s$ 由 R10.0 在荷格上量出，不是归一化约定）下不变 '
+         '$\\iff$ $N\\mid 3Q$。每条判决由三条互不共享算术的实现各跑一遍（甲 整数整除、乙 群元逐个代回 '
+         '$e^{i\\alpha q}$、丙 浮点角度）并要求同判决；另加因子检查：$\\mathbb{Z}_3$ 看 $3Q\\bmod3$、'
+         '$\\mathbb{Z}_2$ 看 $3Q\\bmod2$，两者取与须等于甲 $\\Rightarrow$ '
+         '$\\mathbb{Z}_6=\\mathbb{Z}_2\\times\\mathbb{Z}_3$ 的分解在下面每一行上都是数过的，不是修辞。'
+         % s['proj']['g0'],
+         '',
+         '**projector 先要选对**（R11.0）：$SU(2)_L$ 的单根与 $Y$ 正交（内积 $=%d$）而 $SU(2)_R$ 的单根'
+         '与 $Y$ **不**正交（$=%d\\ne0$）$\\Rightarrow$ $U(1)_Y$ 与 $SU(2)_R$ 混在一起，沿 $3221$ 数'
+         '"零权"等于在荷守恒之外多要 $T^3_R=0$ 与 $B-L=0$。后果正落在最要紧的那个场上：$16_F$ 的权重里'
+         '零权方向 %d 个，但它有 %d 个 $SU(3)\\times SU(2)_L\\times U(1)_Y$ 单态，就是 $\\nu^c$'
+         '（3221 行 $%s$、引擎号 $B-L=%s$）$\\Rightarrow$ 拿"零权"当 projector 会把承载 Majorana 质量的'
+         '那个场整个漏掉。本节全部低能计数因此放在 $Y$ 切片上（子系统正根 %d 条、Weyl 群 %d 元、'
+         '$\\rho_{321}=%s$）。' % (pr['ip'][0], pr['ip'][1], pr['zw16'], pr['nsing'], pr['nu'][0],
+                                  pr['nu'][1], pr['pos'], pr['W'], rho), '',
+         '**SM 分解的实现由维数账独立核对**（R11.1）：$\\sum_\\lambda n_\\lambda'
+         '\\dim_{\\mathrm{SM}}(\\lambda)$ 与 Weyl 维数逐表示相平。把"先按 $Y$ 切片"这一步去掉、直接对'
+         '整个多重集作同一条 Klimyk 交错和，同一本账**全部**立刻不平（末列即那个错账）$\\Rightarrow$ '
+         '切片不是可选的装饰，而维数账能看见它。', '',
+         '| 表示 | 低能成分条数 | $\\sum n\\dim_{\\mathrm{SM}}$ | Weyl 维数 | 植入缺陷：不切片的错账 |',
+         '|---|---|---|---|---|']
+    for b in s['books']:
+        L.append('| $%s$ | %d | %d | %d | %d |' % (b[0], b[1], b[2], b[3], b[5]))
+    L += ['', '**场清单与荷账**（R11.3/R11.4）：$16_F$ 展开成 %d 条低能场，每条满足"一个 3221 行 '
+              '$\\times$ 一个 $Y$ 切片 $=$ 一条重数为 1 的 SM 不可约表示"，且这 %d 条的权重**恰好分成** '
+              '$16_F$ 的 16 条权重（多重集相等，不只是维数相加）$\\Rightarrow$ 场清单是量出来的；名字由 '
+              '$(\\lambda,Y,B-L)$ 签名绑定——只按 (色,弱) 定名会把 %d 条读成 %d 类，故 $Y$ 必须参与定名。'
+              '$B$、$L$ 不外部填入，而由一条规则从量出来的 (色, $B-L$) 派生：色非单态者 $B=B-L$、$L=0$，'
+              '色单态者 $L=-(B-L)$、$B=0$；该规则在 $16_F$ 里反例 %d 条，且派生的 $(B,L)$ 多重集与教材'
+              '一代六个场**相同**（这一列是**比对、不是推导**，与 R6.6 同一处置 $\\Rightarrow$ 同时植入'
+              '变异体：把规则里"哪一半携带 $B$"对调，多重集立刻不等）。下表末列 $3(B-L)$ **全是奇数** '
+              '$\\Rightarrow$ 在只含物质场的算符上 $(-1)^{\\sum_k3(B-L)_k}=(-1)^{\\text{费米子数}}$ '
+              '恒等，即 §9 那条 2 阶元在低能就是**物质字称**。' %
+              (len(mat), len(mat), len(mat), len(set((f['lam'][:2], f['lam'][2]) for f in mat)),
+               sum(1 for f in mat if (f['lam'][:2] != (0, 0)) == (f_l(f) != 0)) +
+               sum(1 for f in mat if (f['lam'][:2] == (0, 0)) == (f_b(f) != 0))), '',
+              '| 场 | $(\\mathrm{色},\\mathrm{弱})$ Dynkin | $Y$ | $B-L$（教材号） | $B$ | $L$ | '
+              '$3(B-L)$ | 该场权重条数 |',
+              '|---|---|---|---|---|---|---|---|']
+    for f in sorted(mat, key=lambda x: x['name']):
+        L.append('| $%s$ | $(%s)$ | $%s$ | $%s$ | $%s$ | $%s$ | $%s$ | %d |' %
+                 (f['name'], ','.join(str(x) for x in f['lam']), f['Y'], f_bl(f),
+                  f_b(f), f_l(f), 3 * f_bl(f), f['nwt']))
+    L += ['', '**$\\mathbb{Z}_3$ 的荷完全由色携带**（R11.2）：把 R10.4 那条同余从 SO(10) 的**权重**搬到 '
+              'SM 的**场**上，对表内 %d 个表示展开出的 %d 条低能场逐条核 $3(B-L)\\equiv s(p-q)\\pmod 3$。'
+              '**符号不是抄来的**：两套荷号 $\\times$ 两种符号的四种配对全部测过 $\\Rightarrow$ 教材号唯一'
+              '一致 $s=%s$（配 $-$ 号反例 %d 条）、引擎号唯一一致 $s=%s$（配 $+$ 号反例 %d 条），而 R10.4 '
+              '在权重层（引擎号）读到的是 $%s$ $\\Rightarrow$ 两层是**同一条**同余，它们之间差的恰好是 '
+              'R5.7/R6.6 那条已登记的"教材号 $=-$ 引擎号"约定差。分档读数：triality %s $\\Rightarrow$ '
+              '非平凡的那一半**全部**是色三重态，色单态（triality 0）自动中性。' %
+              (s['nrep'], s['tri_tot'], s['tri_sgn'], s['tri_bad']['std'][1], s['tri_sgn_engine'],
+               s['tri_bad']['eng'][0], s['tri_wt_sgn'],
+               '、'.join('$%d$：%d 条' % (k, s['tri_cnt'].get(k, 0)) for k in (0, 1, 2))), '',
+              '**低能单态的总数由三条不共享算术的路径给出同一个数**（R11.5）：(i) 逐条场组合算 SM 单态、'
+              '再乘该多重集所代表的有序组数；(ii) 直接对 $16^{\\otimes n}$ 的整权重乘积作 Klimyk 交错和；'
+              '(iii) 先在 SO(10) 层把 $16^{\\otimes n}$ 拆成不可约表示（R8 的独立机器）再逐表示投影。'
+              '读数：$n=2$ 三路径 $=%s$（%d 个场内容类、SO(10) 侧 %d 个不可约），$n=4$ 三路径 $=%s$'
+              '（%d 类、%d 个不可约）$\\Rightarrow$ "按场内容分类"与"按 SO(10) 道分类"是同一件事的两种'
+              '数法。两条物质场相乘里含单态的只有 %d 类，即 %s（单态数 %d、$\\Delta B=%s$、'
+              '$\\Delta L=%s$、$3Q=%s$）——物质双线性里唯一的低能不变算符就是右手中微子的 Majorana 项，'
+              '而它在两条通道下的判决都是**允许**（R11.6）。' %
+              (','.join(str(v) for v in r2[1:4]), len(r2[0]), r2[4],
+               ','.join(str(v) for v in r4[1:4]), len(r4[0]), r4[4],
+               len(s['hit2']), '$%s$' % s['hit2'][0]['name'], s['hit2'][0]['singlet'],
+               s['hit2'][0]['dB'], s['hit2'][0]['dL'], s['hit2'][0]['t3q']), '',
+              '**四条物质场（质量维数 $d=6$）的完整判决表**（R11.7/R11.8）：%d 个场内容类里含 SM 单态的 '
+              '%d 条（合计 %d 个不变张量结构），逐条按 $N\\mid 3Q$ 判 $\\Rightarrow$ **允许 %d 条、'
+              '禁戒 %d 条**：' %
+              (len(c4), len(hit4), sum(x['singlet'] for x in hit4), len(hit4) - len(dis4), len(dis4)),
+              '',
+              '| 场内容 | 单态数 | $\\Delta B$ | $\\Delta L$ | $\\Delta(B-L)$ | $3Q$ | '
+              '$|\\Delta(B-L)|=1$ 留 %s | $|\\Delta(B-L)|=2$ 留 %s | "3221 零权"读数 | 质子荷前提 |'
+              % (ztex(n1), ztex(n2)),
+              '|---|---|---|---|---|---|---|---|---|---|']
+    for x in hit4:
+        L.append('| $%s$ | %d | $%s$ | $%s$ | $%s$ | $%s$ | %s | %s | %d | %s |' %
+                 (x['name'], x['singlet'], x['dB'], x['dL'], x['q'], x['t3q'],
+                  vd(x, '|1|'), vd(x, '|2|'), x['zero'],
+                  '**是**' if x['name'] in pvn else '—'))
+    L += ['', '最后一列是"质子衰变的荷前提"（$\\Delta B\\ne0$ 且 $\\Delta L\\ne0$，等价地 '
+              '$|\\Delta B|=|\\Delta L|=1$），它把这张表与"残留群能不能救质子"那一问直接接上：'
+              '**残留离散规范对称性不保质子**。含单态的 %d 条里有 %d 条同时 $\\Delta B\\ne0$ 与 '
+              '$\\Delta L\\ne0$（%s），'
+              '其中 $\\Delta(B-L)=0$ 的 %d 条判决全部是**允许**（被禁 %d 条）。机理也是读数，两半边各'
+              '量一次：(α) 把那条同余从场搬到算符，%d 条 d=6 候选上 $3Q$ 与色侧和 $s\\sum_k(p_k-q_k)$ '
+              '模 3 不同余的有 %d 条 $\\Rightarrow$ 同一判据有两台互不相同的机器在跑；而 $\\mathbb{Z}_3$ '
+              '判禁的那 %d 条里**含 SM 单态的** %d 条 $\\Rightarrow$ 它只能禁色非单态，"要单态"这一步在'
+              '枚举里早已把它们滤掉，故在低能单态层 $\\mathbb{Z}_3$ 这一半**没有**额外信息。'
+              '(β) $\\mathbb{Z}_2$ 那一半看 $3Q\\bmod2$，而每条物质场的 $3(B-L)$ 都是奇数 $\\Rightarrow$ '
+              '偶数条相乘必为偶：%d 条里 $3Q$ 为偶的有 %d 条 $\\Rightarrow$ 物质字称那半边在 d=6 这一层'
+              '同样没有可禁的东西（但它并非恒等无物——下面插入标量的候选就是被它判禁的）。' %
+              (len(hit4), len(pv), '、'.join('$%s$' % x['name'] for x in pv), len(pvl), pvdis,
+               len(c4), len(s['congr']), len(s['bad3']), bad3_sing, len(c4), s['even3q']), '',
+              '**"禁掉 0 条"与"枚举到 0 条"必须可区分**（R11.9），故把判据放在能动的四处测：'
+              '(i) 枚举到的候选数非空——d=6 类 %d 条、双线性 %d 条、插入链上**字面声明**谱（%s）的 d=4 '
+              '候选 %d 条。'
+              '(ii) 换成插入 $3(B-L)$ 为**奇**的标量（%s 型，它们自己就把物质字称破了）：'
+              '候选 %d 条，其中 %s **判禁 %d 条** $\\Rightarrow$ "禁"这一支是活的。(iii) 把 %s 误读成 '
+              '%s（丢掉物质字称那半边）：在同一批候选上出现 %d 条判决差异 $\\Rightarrow$ 两个因子各自'
+              '都在做功。(iv) 反向对照：把整套荷换号（引擎号 $\\leftrightarrow$ 教材号）时判决翻转 '
+              '**%d** 条——这一条必须为 0，不为 0 就说明结论其实挂在记号上而不是荷上。' %
+              (len(hit4), len(s['hit2']), higgs_tex(s['sdecl']), len(s['scan_decl']),
+               higgs_tex(s['hyreps']), len(s['scan_odd']), ztex(n2), len(s['forb_odd']),
+               ztex(n2), ztex(n1), len(s['flip3']), len(s['flip_sg'])), '',
+              '**条件性（R11.10）**：上面每一行判决都挂在 §9 那个空交集上——$q_\\Delta=2$ 通道的母表示 '
+              '$126_H/\\overline{126}_H$ 不在链探针字面声明的标量谱里（声明的只有 %s，承载者与该并集的'
+              '交集 %s 全为空）$\\Rightarrow$ "只按声明谱"那一步里残留群根本还没出现，那里的被禁条数不是'
+              '物理数而是"无从谈起"。把 $126/\\overline{126}$ 的分量当假想插入重跑同一条判据（与 R10.10、'
+              'R7.4、R8.5 同一条假设）：候选 %d 条、两条通道都允许 %d 条 $\\Rightarrow$ 补上母表示**不'
+              '改变**"不保质子"这个判决。但质子那一条结论里有一处**无条件**成分：它只依赖"偶数条物质场 '
+              '$\\Rightarrow$ $3Q$ 为偶"，而偶费米子数不是插入出来的 $\\Rightarrow$ 登记清楚，以免与上面'
+              '那些条件判决混读。' %
+              (higgs_tex(s['sdecl']) or '无',
+               '、'.join('$|\\Delta(B-L)|=%s$：$\\{%s\\}$' % (b, '、'.join(c) or '空')
+                        for b, c in RESID['cond']), len(s['scan_126']), len(s['allow_126'])), '',
+              '**projector 的对照也只用读数说话**（R11.7）：这 %d 条含单态的候选里，"3221 零权"那个错投影'
+              '读出 0 的有 %d 条（%s）$\\Rightarrow$ 它**漏掉**真单态；而它在别的候选上读出的数又大于单态数'
+              '（最大一例 $%s$：零权 %d $>$ 单态数 %d）$\\Rightarrow$ 它也**多算**。两个方向都有反例 '
+              '$\\Rightarrow$ "零权数"与"单态数"之间**没有**不等式关系，谁也不是谁的界 $\\Rightarrow$ '
+              '凡要数低能不变量，只能用 $Y$ 切片上的 Klimyk。' %
+              (len(hit4), len(lost4), '、'.join('$%s$' % t for t in lost4),
+               top4[0], top4[1], top4[2]), '',
+              '**本节的边界**（不进门禁，故明写）：', '',
+              '* 表里的"允许"是**群论陈述**：只过了规范不变这一关。Lorentz 指标、代（味）指标与 Fierz '
+              '恒等式三关都没过 $\\Rightarrow$ "%d 条 d=6 类含单态且全部允许"不能读成"有 %d 个质子衰变'
+              '算符"，本节的数**不**回填进任何寿命计算（与 §7 同一处置；P4／P7 的判据与分级一律不动）。' %
+              (len(hit4), sum(x['singlet'] for x in hit4)),
+              '* 枚举的是物质场分量（$\\pm$ 声明谱或假想插入的标量分量）张成的算符，且只到 $d=6$：'
+                '含导数算符、含共轭场的高维算符、以及 $\\nu^c$ 以外的轻子数破缺结构都**未**枚举。',
+              '* 判据只在 $U(1)_{B-L}$ 那一个因子导出的残留群上跑（§9 的边界原样继承）$\\Rightarrow$ '
+                '若完整残留群是它的扩张（$SU(3)_c$ 与 $SU(2)_{L/R}$ 的中心、$Spin(10)$ 的整体形式），'
+                '本节的"允许"可能变严、"禁戒"不会变松。',
+              '* 本节回答的是上一条待办（残留群在低能的**选择定则**，登记在 08 的 P7 一节里），'
+                '**不**回答 L10：耦合统一仍缺二环跑动与阈值修正 '
+                '$\\Rightarrow$ **L10 未关闭**。', '']
+    return L
+
+
+def write_report(gates):
+    (eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok, ch_ok,
+     res_ok, sel_ok) = gates
+    all_ok = (eng_ok and id_ok and phy_ok and nogo_ok and br_ok and xchk_ok and yuk_ok and
+              inv_ok and ch_ok and res_ok and sel_ok)
+    L = ['# SO(10) 表示论报告（D5 权重格第一性推导）', '',
+         '由 [so10_reps.py](so10_reps.py) 自动生成，**零第三方依赖**，全程整数格点 + 精确有理数。',
+         '',
+         '**唯一的李论输入**：D5 的 Dynkin 图（链 1–2–3，节点 3 分叉到 4 与 5）。',
+         'Cartan 矩阵、正根、$\\rho$、基本权重、维数、权重重数、$\\mathrm{Sym}^2/\\wedge^2$ 分解、',
+         '$B-L$ 谱、$\\Delta_R$ 承载判定、两条链的**完整分支规则**与 **d=4 Yukawa 通道表**'
+         '全部由它推出；每一步都有门禁（§13）。',
+         '',
+         '## 0. 为什么做这个计算', '',
+         '`so10_chain.py` 已把"给定内容下统不统一"变成可判定计算，但标量谱是**手工放置**的：',
+         '单阈 3221 链的 $M_{\\rm GUT}$ 因此在情形之间摆动 ' + swing_note() + '，'
+         '而被当作 $\\Delta_R$ 的那个三重态',
+         '实际是 $B-L=0$、取自 $45_H$，**不能破 $B-L$**（链探针 S2.7）。',
+         '本报告把"哪些 Higgs 表示能承担 $B-L$ 破缺"从**引用**变成**推导**。', '',
+         '**结论一览**（每条对应 §13 的门禁编号）：在 $\\dim\\le210$ 内，'
+         '$10_H/\\overline{10}_H/16_H/\\overline{16}_H/45_H/54_H/144_H$ 里根本没有 $|B-L|=2$ '
+         '的态（R5.1）；$120_H$ 有 $(1,1,1)_{\\pm2}$ 但那些态带 $|Q|=1$，一取期望值就破电磁'
+         '（R5.8）；$210_H$ 的 $|B-L|=2$ 态全在 $(1,2,2)$ 里，取任何分量都破 $SU(2)_L$'
+         '（R5.3/§4.6）；剩下**唯一**能承载 $|\\Delta(B-L)|=2$ 而不破电磁的选项是 '
+         '$126_H/\\overline{126}_H$ 的 $\\Delta_{L/R}$ 中性分量（R5.4），'
+         '且 $126$ 与 $\\overline{126}$ 都同时含 $\\Delta_L$ 和 $\\Delta_R$，'
+         '只差 $B-L$ 的符号（R5.7）。唯一的例外通道：$16_H/\\overline{16}_H$（$144_H$ 同型但更大）'
+         '可按 $|\\Delta(B-L)|=1$ 单步破缺（保电磁、给不出可重整 $\\nu_R$ 质量，R5.9；'
+         '它留下的是 $\\mathbb{Z}_3$ 而不是物质字称 $\\mathbb{Z}_2$，见 §9 与 R10.5）。'
+         '在此基础上 §5 把 $\\dim\\le210$ 的 %d 个表示**逐权重**限制到 3221 与 422 两条链'
+         '（两套独立维数路径逐分量复核、R6.5 与串检验双向一致、R6.6 与标准模型的 $16_F$ '
+         '含量锚定）。§6 再独立地问第二个问题：d=4 可重整算符 $16_F16_FH$ 允许哪些 Higgs'
+         ' $\\Rightarrow$ 对称通道 %s、反对称通道 %s，而对消通道 %s 里的那些表示对 $3\\times16$ '
+         '物质**没有** d=4 Yukawa（R7.1–R7.7）。'
+         '其后 §7 数规范不变张量的个数（R8）、§8 按双费米子道把它们拆开（R9）、§9 把"取了期望值之后 '
+         '$U(1)_{B-L}$ 还剩什么"数成荷格上的阶（R10，并当场推翻旧散文"残留 $Z_2$（物质字称）对质子'
+         '有利"）、§10 再把那个残留群落成**低能算符的选择定则**并回答 08 的 P7 $\\Rightarrow$ 判决是'
+         '**残留群不保质子**（R11）。'
+         % (len(TABLE), higgs_tex(YUKCH.get('allow', {}).get('sym', [])),
+            higgs_tex(YUKCH.get('allow', {}).get('anti', [])),
+            higgs_tex(YUKCH.get('allow', {}).get('vec', []))), '',
+         '## 1. 引擎构造与自检', '',
+         '| 步骤 | 做法 | 独立校验 |', '|---|---|---|',
+         '| Dynkin 图 → Cartan 矩阵 | $A_{ii}=2$，连边 $-1$ | R0.1 与 $\\varepsilon$ 基实现逐项相等 |',
+         '| 正根 | 枚举 $\\sum n_i\\alpha_i$（$n_i\\le2$）中 $|(\\cdot)|^2=2$ 者 | R0.3 得 20；R0.4 $5+2\\times20$ = 伴随维数 |',
+         '| $\\rho$ 与基本权重 | $\\rho=\\frac12\\sum_{\\alpha>0}\\alpha$；解 $(\\omega_i,\\alpha_j)=\\delta_{ij}$ | R0.5 $\\rho=\\sum\\omega_i$；R0.6 定义方程 |',
+         '| Weyl 群 | 单根反射闭包 | R0.7 $|W(D_5)|=1920=2^4\\cdot5!$ |',
+         '| 维数 | $\\prod_{\\alpha>0}(\\Lambda+\\rho,\\alpha)/(\\rho,\\alpha)$ | R1.1 与 Freudenthal 总重数一致 |',
+         '| 权重重数 | Freudenthal–Racah，按 $d(\\mu)=(\\Lambda-\\mu,\\rho)$ **升序**递推 | R1.4 在伴随上还原手工根系；R1.1 总重数；R3.x 双路比对 |',
+         '| $\\mathrm{Sym}^2/\\wedge^2$ | Adams 运算 $(\\chi^2\\pm\\psi_2\\chi)/2$ | R3.1–R3.7 与 Freudenthal 比对 |',
+         '| $C_2$ | $(\\Lambda,\\Lambda+2\\rho)$ | R1.5 在伴随上 $=(\\theta,\\theta+2\\rho)=2h^\\vee$，'
+         '$h^\\vee(D_5)=2n-2=8$ |',
+         '',
+         '递推中有两处**踩过的坑**已固化成断言：分母必须是 $(\\Lambda+\\rho)^2-(\\mu+\\rho)^2$',
+         '（少平移 $\\rho$ 会在 minuscule 表示处除零）；处理顺序必须按系数和 $d(\\mu)$，',
+         '不能用搜索路径长度（同一点的非最小 $d$ 会破坏递推顺序 ⇒ 重数不整除）。', '',
+         '## 2. 表示清单（Dynkin 标号由计算确定，未引用文献）', '',
+         '| 表示 | 标号 | 维数 | 权重个数 | $C_2$ | 实/复 | $\\max|B-L|$ | $|B-L|=2$ 权重数 '
+         '| $\\Delta_R(1,1,3)_{\\pm2}$ | $\\Delta_L(3,1,1)_{\\pm2}$ | $(1,1,1)_{\\pm2}$ '
+         '| 能破 $B-L$ 而保 $U(1)_{em}$？ |',
+         '|---|---|---|---|---|---|---|---|---|---|---|---|']
+    for r in TABLE:
+        L.append('| %s | $(%s)$ | %d | %d | %s | %s | %s | %d | %s | %s | %s | %s |' %
+                 (r['name'], ','.join(map(str, r['dynkin'])), r['dim'], r['nweights'],
+                  r['c2'], '实' if r['real'] else '复', r['maxBL'], r['bl2'] + r['bneg2'],
+                  '是' if r['DR'] else '—', '是' if r['DL'] else '—',
+                  '是' if r['S2'] else '—', '是' if r['safe'] else '—'))
+    L += ['', '"实"判据：共轭标号（$-\\Lambda$ 的支配代表）是否等于自身。',
+          '$\\Delta_R$ 一列的含义：存在权重 $\\lambda$ 使 $B-L=\\pm2$、$SU(3)_c$ 串长为 1'
+          '（色单态）、$SU(2)_L$ 串长为 1（弱单态）、$SU(2)_R$ 串长为 3（三重态）。',
+          '该判据**双向严格**：$\\alpha$-串不断且重数对称是定理，故"串长 1"$\\iff$'
+          '该权重上全部态是单态。',
+          '最后一列 = 该表示里是否存在一个 $|B-L|=2$ 的色单态分量满足 $Q=0$'
+          '（$Q=T^3_L+T^3_R+\\tfrac{B-L}{2}$，R5.8）——**这才是"能不能破 $B-L$"的物理判据**。', '',
+          '## 3. 两条独立路径认定的张量恒等式', '',
+          '左端只用"权重相加"（Adams 运算），右端只用 Cartan 矩阵（Freudenthal 递推）；',
+          '相等才把 54/120/126/144/210 的 Dynkin 标号写进 §2。'
+          '（注意 $210$ 有两个同维数标号 $(0,0,0,1,1)$ 与 $(3,0,0,0,0)$，只能靠权重多重集区分。）', '',
+          'R3.7 另外暴露一条约定无关的事实：向量乘自旋量必**换手征**，'
+          '$10\\otimes16=\\overline{16}\\oplus\\overline{144}$；按"$16\\oplus144$"去剥会立刻出现'
+          '负重数，代码当场拒绝 ⇒ 若谁把手写的分解代进来，这一项就是拦不住的错。', '',
+          '| 编号 | 恒等式 | 状态 | 细节 |', '|---|---|---|---|']
+    for cid in ('R3.1', 'R3.2', 'R3.3', 'R3.4', 'R3.5', 'R3.6', 'R3.7'):
+        r = next((x for x in RESULTS if x['id'] == cid), None)
+        if r:
+            L.append('| %s | %s | %s | %s |' % (r['id'], r['claim'], r['status'], r['note']))
+    rowsd = dict((r['name'], r) for r in TABLE)
+
+    def g(n, k):
+        return rowsd.get(n, {}).get(k, '（未认定）')
+
+    def gsum(n, *ks):
+        """`g` 的数值版：任一项未认定 ⇒ 整条降级为文本，**不让报告生成器抛异常**。
+
+        报告一旦在门禁 FAIL 的路上崩掉，缺的恰恰是最该被看到的那几行
+        （与 `so10_chain.main()` 里"分开求值再用 `and` 合并"是同一条教训）。
+        """
+        vs = [g(n, k) for k in ks]
+        return sum(vs) if all(isinstance(v, int) for v in vs) else '（未认定 ⇒ 本条不出数）'
+    maxbl = dict((n, g(n, 'maxBL')) for n in ('10', '10̄', '16', '16̄', '45', '54', '144'))
+    maxbltex = '、'.join('$%s\\to%s$' % (tex_name(n)[1:-1], v) for n, v in maxbl.items())
+    L += ['', '## 4. 核心判定：$|\Delta(B-L)|=2$ 的破缺只能走 $126/\\overline{126}$ 的中性分量', '',
+          '1. **NO-GO（约定无关）**：$\\max|B-L|<2$ 在 $10,\\overline{10},16,\\overline{16},45,54,'
+          '144$ 上全部成立（算得 %s）⇒ 这些表示里**不存在** $B-L=\\pm2$ 的态，因此无论怎样分支、'
+          '怎样组合，它们都承担不了 $|\\Delta(B-L)|=2$ 的破缺，给不出可重整的 $\\nu_R$ '
+          'Majorana 质量（$16_H/\\overline{16}_H$ 仍可以 $|\\Delta(B-L)|=1$ 单步破 $B-L$，'
+          '见第 7 条）。' % maxbltex,
+          '2. $45_H$ 的 $B-L$ 谱恰为 $\\{0,\\pm2/3,\\pm4/3\\}$（$\\pm4/3$ 是 $SU(4)_c$ 伴随里'
+          '轻夸克胶子方向 $\\varepsilon_i+\\varepsilon_j$ 的贡献）$\\Rightarrow$ 链探针里那个'
+          '$B-L=0$ 的 $\\Sigma(1,1,3)_0$ **不是** $\\Delta_R$（这就是 S2.7 的表示论根据）。',
+          '3. **最小承载者 = 126**：在 $\\dim\\le210$ 内，能把"$|B-L|=2$ + 色单态 + 弱单态 + '
+          '$SU(2)$ 三重态"配齐、且三重态中含 $Q=0$ 分量的，最小维数是 %s（R5.3/R5.4）。'
+          % g('126', 'dim'),
+          '4. **$120_H$ 被排除的真正理由**（本阶段最强的一条）：它确实含 $(1,1,1)_{\\pm2}$'
+          '（§2 的 $(1,1,1)_{\\pm2}$ 列 = %s），但 $Q=T^3_L+T^3_R+\\tfrac{B-L}{2}=\\pm1$ '
+          '$\\Rightarrow$ 一取期望值就**破电磁**。一般地：任何 $(1,1,1)_{\\pm2}$ 单态都带 '
+          '$|Q|=1$，而每个 $\\Delta_{L/R}$ 三重态恰有一个 $Q=0$ 分量 ⇒ '
+          '**"破 $B-L$ 而保 $U(1)_{em}$" 必然经由 $\\Delta_L$ 或 $\\Delta_R$**（R5.8）。'
+          '这把"必须有 $126_H$"从文献引用变成 Cartan 恒等式的推论。' % ('是' if g('120','S2') else '—'),
+          '5. $126$ 与 $\\overline{126}$ **各自**都含一个 $\\Delta_L$ 与一个 $\\Delta_R$，'
+          '区别只在 $B-L$ 的符号（R5.7 算得：$126$ 的 $\\Delta_R$ 在 $B-L=-2$、$\\Delta_L$ 在 '
+          '$+2$；$\\overline{126}$ 全反）⇒ 二者之间是**符号选择**，不是"有没有 $\\Delta_R$"。',
+          '6. $210_H$ 中 $|B-L|=2$ 的色单态权重共 %s 个，全部落在 $(1,2,2)$ 双二重态里'
+          '（串长 $L=R=2$）$\\Rightarrow$ 取其中任何分量作期望值都会破坏 $SU(2)_L$；'
+          '$210_H$ 只能承担 $SO(10)\\to 422/3221$ 这一步的伴随破缺，不能充当 see-saw 的来源。'
+          % gsum('210', 'bl2', 'bneg2'),
+          '7. **另一条通道（不排除，但要付代价）**：$|B-L|=1$ 且 $Q=0$ 的色单态在 '
+          '$\\dim\\le210$ 内只出现在 $16_H/\\overline{16}_H$（$(1,2,1)_{\\pm1}$ 与 '
+          '$(1,1,2)_{\\mp1}$）以及 $144_H/\\overline{144}_H$（$(1,2,3)/(1,3,2)$）里（R5.9）。'
+          '用 $16_H$ 破 $B-L$ 是合法的、且**保** $U(1)_{em}$，但每步只带走一个单位 $\\Rightarrow$ '
+          '残留是**奇数阶**群（$q_\\Delta=1$ 那一行的读数见 §9）⇒ 里面没有 2 阶元可言，而 '
+          '$(-1)^{3(B-L)}$ 在该 v.e.v. 上取 $-1$ $\\Rightarrow$ 物质字称是**被这一步破掉的**；'
+          '本轮之前这句写的是"残留 $Z_2$（物质字称，对质子稳定是好事）"，已被 §9（R10.5/R10.8）'
+          '推翻并登记进 [08](../08_预言与判据.md) §3 的内部计算否定表（F7）。并且 $\\nu_R$ 的可重整'
+          'Majorana 质量项仍需另外的 $|\\Delta(B-L)|=2$ 来源 ⇒ **see-saw 的量级论证不能改用 '
+          '$16_H$ 替代 $126_H$**。这些分量必是某个 $SU(2)$ 的二重态，故单步破缺必然连带破'
+          '$SU(2)_{L/R}$。', '',
+          '**约定说明**：物质取偶负号自旋量（`so10_chain.py` 的约定）。若改取 $\\overline{16}$ '
+          '为物质，$126\\leftrightarrow\\overline{126}$ 与 $\\Delta_L\\leftrightarrow\\Delta_R$ '
+          '同时对调，物理内容不变；故上面每条结论只依赖 $|B-L|$，而第 4 条依赖的是 $Q$ 与 '
+          '$B-L$ 之间的 Cartan 恒等式（R4.1、R4.6 已把电磁方向在 $16$ 上校准到标准电荷谱）。', '',
+          ]
+    L += ['', '## 5. 分支规则：$SO(10)\\downarrow 3221$ 与 $\\downarrow 422$（逐权重推导，非引用）', '',
+          '两条破缺链的半单部分都与 $SO(10)$ **共享同一个 Cartan 子代数**（满秩子群）⇒ "分支"就是',
+          '**同一批权重向量换一套标号**：3221 的 $A_2\\oplus A_1\\oplus A_1$ 秩 4，而与这四个单根全部',
+          '正交的那一维**恰好**是 $B-L$ ⇒ 每个权重的 $B-L$ 原样带过去（下表左列的下标）；422 把',
+          '$SU(3)_c$ 升级为 $SU(4)_c$（$D_3\\simeq A_3$，秩 $3+1+1=5$ = 满秩），Pati–Salam 的 $U(1)$',
+          '自动落在 $SU(4)_c$ 的 Cartan 里 ⇒ **右列没有额外的 $B-L$ 下标**。分支重数用',
+          'Klimyk–Springer 交错和 $n_\\lambda=\\sum_{w\\in W_H}\\det(w)\\,m_\\Lambda',
+          '\\big(w(\\lambda+\\rho_H)-\\rho_H\\big)$，只复用 Freudenthal 已给的 $m_\\Lambda$ 与',
+          '由单根现算的 $W_H,\\rho_H$ ⇒ 与 §1 的递推**互相独立**；再由 R6.3',
+          '$\\sum_\\lambda n_\\lambda\\dim_H(\\lambda)=\\dim\\Lambda$ 收口（11 个表示 $\\times$ 两条链',
+          '逐项等于 $\\dim\\Lambda$），R6.4 再用闭式维数公式对每个分量逐点复核。', '',
+          '**$D_3\\simeq A_3$ 的槽位**（R6.4 的存在理由）：本引擎取 $\\beta_1=\\varepsilon_1-\\varepsilon_2$、',
+          '$\\beta_2=\\varepsilon_2-\\varepsilon_3$、$\\beta_3=\\varepsilon_2+\\varepsilon_3$，而',
+          '$(\\beta_1,\\beta_2)=(\\beta_1,\\beta_3)=-1$、$(\\beta_2,\\beta_3)=0$ ⇒ Dynkin 链是',
+          '$\\beta_3-\\beta_1-\\beta_2$，标准 $A_3$ 编号 $(p_1,p_2,p_3)$ 等于本引擎标号的 $(c,a,b)$。',
+          '槽位放错就会把 $SU(4)_c$ 的 $6$ 读成 $4$ —— 这类错不会让任何等式变红，只会让物理读错。', '',
+          '| $\\Lambda$ | $\\downarrow SU(3)_c\\times SU(2)_L\\times SU(2)_R$（下标 $B-L$） '
+          '| $\\downarrow SU(4)_c\\times SU(2)_L\\times SU(2)_R$ |', '|---|---|---|']
+    for b in BRANCH:
+        L.append('| %s | $%s$ | $%s$ |' % (tex_name(b['name']), b['tex3221'], b['tex422']))
+    xsu4 = [t for t in CROSS if t['dim'] in (4, 6, 15)]
+    L += ['', '重数 $>1$ 的分量前置 $n\\cdot$；$\\overline{R}$ 由标号倒序判定（$A_2,A_3$ 同规则）。'
+          '两列各自求和都回到 $\\dim\\Lambda$（R6.3）。', '',
+          '**这张表读出的物理事实**（每条都由上表直接可读）：', '',
+          '1. $16_F$ 给出**恰好一整代**标准模型费米子加一个右手中微子：'
+          '$(3,2,1)\\oplus(\\overline{3},1,2)\\oplus(1,2,1)\\oplus(1,1,2)$，422 侧 '
+          '$=(4,2,1)\\oplus(\\overline{4},1,2)$ ⇒ UFE-1 的 $3\\times16$ 场内容与两条链都逐项相容'
+          '（R6.6 的文献锚点；$B-L$ 只比绝对值）。',
+          '2. $10_H$ 只给 $(6,1,1)\\oplus(1,2,2)$，且其中 $SU(3)_c$ 单态的那个 '
+          '$SU(2)_L\\times SU(2)_R$ 双二重体分量**带 $B-L=0$** ⇒ $\\Phi(1,2,2)$ 破不了 $B-L$'
+          '（链探针 S2.7 的分支规则版本）。',
+          '3. 左列里 $|B-L|=2$ 的色单态**只**出现在 $126/\\overline{126}$ 的 $(1,1,3)_{\\mp2}$ 与 '
+          '$(1,3,1)_{\\pm2}$（即 $\\Delta_R,\\Delta_L$）——与 §2/§4 的串检验双向一致（R6.5）；'
+          '$120_H$ 的 $(1,1,1)_{\\pm2}$ 与 $210_H$ 的 $(1,2,2)_{\\pm2}$ 各按其致命方式出局（R5.8）。',
+          '4. $126_H$ 的 422 分支 $=(6,1,1)\\oplus(10,3,1)\\oplus(\\overline{10},1,3)\\oplus'
+          '(15,2,2)$ ⇒ 走 422 链时，破 $B-L$ 的标量**必然同时**带一个 $SU(2)_{L/R}$ 三重态：'
+          '$\\Delta_L$ 在 $(10,3,1)$ 里、$\\Delta_R$ 在 $(\\overline{10},1,3)$ 里（按本引擎的 $B-L$ '
+          '符号 ⇒ 本引擎的 $SU(4)_c$ 之 $4$ 对应文献 Pati–Salam 记法里的 $\\overline{4}$）；'
+          '$(15,2,2)$ 则是 $422\\to3221$ 那一步的伴随破缺候选。', '',
+          '**约定提示**：本引擎的 $B-L$ 整体符号与常见文献相反（$16_F$ 的轻子二重体在 $B-L=+1$ '
+          '一侧），故所有下标只在本引擎内自洽；跨文献比对时作 $B-L\\to-B-L$ 即可'
+          '（§4/§5 的结论只依赖 $|B-L|$，唯一用到符号的是 R5.7 的 $126\\!\\leftrightarrow'
+          '\\overline{126}$ 对调）。']
+    L += ['', '**跨链一致性（R6.7/R6.8a/R6.8）——本节最后三道门禁**：上表两列不是各说各话。把右列每个 '
+          '$SU(4)_c$ 多重态再限制一次到 $SU(3)_c\\times U(1)_{B-L}$（色因子走 $A_3\\downarrow A_2$，'
+          '其权重由**子系统版 Freudenthal 递推**现算、并用 Weyl 乘积公式的维数收口），所得 '
+          '$(SU(3)_c,SU(2)_L,SU(2)_R)_{B-L}$ 多重集与左列**逐项相等**：%d 个表示全部成立。'
+          '于是 $422\\to3221$ 那一步的内容同样不必引用文献：' % len(BRANCH), '',
+          '| $SU(4)_c$ 表示 | 维数 | $\\downarrow\\big(SU(3)_c,1,1\\big)_{B-L}$ |', '|---|---|---|']
+    for t in xsu4:
+        L.append('| $%s$ | %d | $%s$ |' % (t['name'], t['dim'], '\\oplus'.join(t['content'])))
+    L += ['', '三条读法：**(i)** $B-L$ 在 $SU(4)$ 的**每个**不可约表示上无迹 '
+          '$\\sum_\\mu m_\\mu(B-L)(\\mu)=0$（R6.8）$\\Rightarrow B-L$ 就是 $SU(4)_c$ 的 Cartan 里与 '
+          '$SU(3)_c$ 对易的**唯一**（模标度）方向（R6.8a）——故 $422\\to3221$ 不需要另外引入 '
+          '$U(1)$，那一步的破缺完全由 $SU(4)$ 的伴随表示承担，表中 $15$ 行里的 $3/\\overline{3}$ '
+          '分量即被破掉的生成元，其 $B-L$ 荷由算出而非引用。**(ii)** 路径无关性同时是标签系统的'
+          '咬合检查：$A_3$ 的槽位放错、或 $B-L$ 的归一化与链探针不一致，都会立刻破坏等式，'
+          '且 R6.7 会把差额逐条列出。**(iii)** 本节全部结论仍是权重层的数学陈述，'
+          '不构成"自然界选了这条链"的证据。', '']
+    L += yukawa_section()
+    L += inv_section()
+    L += chan_section()
+    L += residual_section()
+    L += selection_section()
+    z_cc = INV['ledger'][0]['zero'] if INV.get('ledger') else '（R8 未运行）'
+    t126, t126b, p4 = (INV.get('tri', {}).get('126', '—'), INV.get('tri', {}).get('126̄', '—'),
+                       INV.get('p4', '—'))
+    chcl = ('**R9 未运行 ⇒ 本行不下结论**' if not CSPLIT.get('rows_chiral') else
+            '%s 各 1 个，$126$ 道在场但**不闭合**；与情形声明的标量内容对账后，恰一个可经 '
+            '$10_H$ 因子化、另一个所需的 $120_H$ **无人声明**（§8，R9.0–R9.3）' %
+            '、'.join('$%s$' % chan_tex(n) for n, _k, c in CSPLIT['rows_chiral'] if c > 0))
+    r1 = next((x for x in RESID.get('rows', []) if x['BL'] == '1'), None)
+    r2 = next((x for x in RESID.get('rows', []) if x['BL'] == '2'), None)
+    rescl = ('**R10 未跑通 ⇒ 本行不下结论**' if not (r1 and r2) else
+             '$|\\Delta(B-L)|=1$ 那一步留 %s（阶为奇 $\\Rightarrow$ 群里**没有** 2 阶元，'
+             '物质字称**被它破掉**）；$|\\Delta(B-L)|=2$ 那一步才留 %s。两条都是条件读数：'
+             '通道的承载者与链上字面声明的母表示交集为空（R10.10）$\\Rightarrow$ 旧散文'
+             '"残留 $Z_2$（物质字称）"被本节推翻' % (ztex(r1['N']), ztex(r2['N'])))
+    selcl = ('**R11 未跑通 ⇒ 本行不下结论**' if not SEL.get('hit4') else
+             '判据 $N\\mid 3Q$（三条互不共享算术的实现同判决）$\\Rightarrow$ d=6 的 %d 个含 SM 单态的'
+             '场内容类**全部允许**（禁 0 条），其中 %d 条同时 $\\Delta B\\ne0$、$\\Delta L\\ne0$ 且 '
+             '$\\Delta(B-L)=0$ $\\Rightarrow$ **残留群不保质子**；"禁 0 条"与"枚举到 0 条"由插入标量'
+             '的正对照区分（§10，R11.7–R11.9）' % (len(SEL['hit4']), len(SEL['pvl'])))
+    L += ['', '## 11. 对 L10（耦合统一）的直接影响', '',
+          '| 事项 | 手工放置（旧） | 本报告（推导） |', '|---|---|---|',
+          '| $\\Phi(1,2,2)$ 的来源 | 假设取自 $10_H$ | $10\\to(6,1,1)\\oplus(1,2,2)$ 由权重集直接读出 ✔ |',
+          '| $\\Sigma(1,1,3)_0$ 的来源 | 误标为 $\\Delta_R$ | 取自 $45_H$、$B-L=0$，**不是** $\\Delta_R$ |',
+          '| $B-L$ 破缺的最小 Higgs | 未判定 | $126/\\overline{126}$（$\\dim\\le210$ 内唯一最小） |',
+          '| $120_H$ 能否破 $B-L$ | 未判定 | **否**：其 $(1,1,1)_{\\pm2}$ 分量带 $|Q|=1$，'
+          '取期望值即破 $U(1)_{em}$ |',
+          '| $210_H$ 的作用 | 含糊地兼作 $\\Delta_R$ 来源 | 只承担 $SO(10)\\to422/3221$；'
+          '其 $|B-L|=2$ 的色单态全在 $(1,2,2)$ 里，取任意分量都破 $SU(2)_L$ |',
+          '| see-saw 标度 $M_R$ 的地位 | 只是匹配标度 | 需 $126_H$ 的真空期望值才成立 ⇒ '
+          '链探针 §5.5 的量级结论仍是下界式论证 |',
+          '| d=4 允许的 Yukawa Higgs | 未判定 | 手征通道 %s（对称）$\\oplus$ %s（反对称）；'
+          '对消通道 %s 里的表示对 $3\\times16$ 物质**没有** d=4 Yukawa（§6，R7.1–R7.2） |'
+          % (higgs_tex(YUKCH.get('allow', {}).get('sym', [])),
+             higgs_tex(YUKCH.get('allow', {}).get('anti', [])),
+             higgs_tex(YUKCH.get('allow', {}).get('vec', []))),
+          '| $\\nu_R$ Majorana 项的承载者 | 只按"有没有 $\\Delta_R$"判定 | 与通道表**独立**'
+          '地再判一次：$-2\\nu$ 这个权重在 $\\dim\\le210$ 里唯一地落在 %s（§6 第 3 条，R7.4） |'
+          % higgs_tex(YUKCH.get('maj', [])),
+          '| 手征费米子能否有裸质量 | 当作常识引用 | 数出来：$16\\otimes16$ 的零权方向 %s 个'
+          ' $\\Rightarrow$ 连荷守恒都做不到（§7，R8.4） |' % z_cc,
+          '| $\\Delta(B-L)=2$ 的过程能否只用物质凑出 | 未判定 | **否**：不变张量必为零权 $\\Rightarrow$ '
+          '物质-only 的不变算符自动 $\\Delta(B-L)=0$；要拿到 $|B-L|=2$ 必须插入 %s，'
+          '插入 $126$ 得 %s 个单态、插入 $\\overline{126}$ 得 %s 个（§7，R8.5） |'
+          % (higgs_tex(['126̄']), t126, t126b),
+          '| 四费米子不变算符的个数 | 未判定 | $\\mathrm{mult}((1),16^{\\otimes4})=%s$'
+          '（四条独立路径一致，§7 表二）$\\Rightarrow$ 规范群**不**禁止质子衰变那一类算符的'
+          '**荷前提**；个数不等于物理算符个数（Lorentz／味／Fierz 未判） |' % p4,
+          '| 这 %s 个不变张量**各自**走哪条道 | 未判定 | %s |' % (p4, chcl),
+          '| $B-L$ 破缺后**残留哪个离散规范对称性** | 散文：残留 $Z_2$（物质字称，"对质子稳定'
+          '反而有利"） | %s |' % rescl,
+          '| 那个残留群**禁哪些低能算符**、保不保质子 | 待办（§9 登记为未判） | %s |' % selcl,
+          '',
+          '⇒ 情形 B（无 $126_H$）**不能**声称实现了 $B-L$ 破缺；它是一条"只跑到 $LR$ 相位"'
+          '的参考曲线。$126_H$ 的完整分支规则**已在 §5 逐权重算出**（含每个分量落在哪条链的哪个'
+          '多重态），故剩余的标量谱不确定度（当前为 ' + swing_note() + '）只能由两环跑动 + '
+          '阈值修正 + $126_H$ 位势压掉，'
+          '而不是再换一种手工谱。', '',
+          '## 12. 诚实边界', '',
+          '* 表示论结果是**数学陈述**：它说明"SO(10) 若成立，Higgs 扇区必须含 $126$ 型表示"，'
+          '**不**说明自然界含 SO(10)，也**不**提升 UFE-1 任何结论的证据等级，'
+          '更**不**意味着统一场论已完成。',
+          '* 第 4 条判定用了两个**物理输入**而非李论推导：$U(1)_{em}$ 未被破缺（'
+          '$Q=0$ 才允许取期望值）与 $B-L$ 需要被破掉（否则无 see-saw、$\\nu_R$ 无 Majorana 质量）。'
+          '二者若有一条不成立，"$126_H$ 必需"这条结论随之失效——它不是无条件定理。',
+          '* 分支规则（§5）给的是**权重层**的完整内容：哪个多重态出现、出现几次、带多少 $B-L$。'
+          '两条链的跨链匹配**已实现为门禁**（R6.7 路径无关、R6.8 $B-L$ 在 $SU(4)$ 每表示无迹、'
+          'R6.8a 方向唯一），故 $422\\to3221$ 那一步不再是从表格对照读出的猜想。'
+          '§6 又把"哪个 Higgs 拿得到 d=4 算符"独立判了一遍（R7），§7 再把"哪些组合本身就是'
+          '规范不变的"数了一遍（R8：$\\mathrm{mult}((1),V)$ 与荷账本 $\\dim V_0$ 分开记账），'
+          '§8 把 §7 的配对和按**双费米子道**拆开（R9：哪条道闭合、$|B-L|=2$ 那个 Higgs 为何'
+          '插不进单个插入），§9 再把"取了期望值之后 $U(1)_{B-L}$ 还剩什么"数成荷格上的阶'
+          '（R10：$N=q_\\Delta/g_0$，并且当场推翻旧散文"残留 $Z_2$（物质字称）"），§10 再把那个残留群'
+          '落成**低能算符的选择定则**（R11：判据 $N\\mid 3Q$，逐条判决 d=4/d=6 算符 $\\Rightarrow$ '
+          '"残留群保不保质子"有了答案：**不保**）。但这六层都'
+          '**不含** Yukawa 系数（哪个拷贝与哪一代费米子耦合、'
+          '矩阵多大）、'
+          '不含 $126_H$ 的位势与真空方向，也**不含**任何动力学——'
+          '权重层允许的分量不等于自然界取到的分量。',
+          '* §9 只数 $U(1)_{B-L}$ **这一个因子**内的残留子群：$SU(3)_c$ 与 $SU(2)_{L/R}$ 的中心、'
+          '规范群的整体形式（$Spin(10)$ 与它的商）都不在那张荷格里 $\\Rightarrow$ 完整残留群可能是'
+          '这里那个 $\\mathbb{Z}_N$ 的**扩张**，§9 只给"至少留下这些"；而且它是**条件读数** '
+          '$\\Rightarrow$ §10 的算符判决同一条条件性沿下来（"允许"要读成"若补入 $126_H$ 且其中性分量'
+          '取期望值"），唯一不随标量谱变的是"偶数条物质场 $\\Rightarrow$ $3Q$ 为偶"那一步。',
+          '* §10 的表只过了**规范不变**这一关（同 §7 的处置）：%s 个含 SM 单态的 d=6 场内容类全部'
+          '"允许"是群论陈述，$\\Rightarrow$ "残留群不保质子"只否定"离散群能救质子"这条论证，'
+          '**不**给出质子会衰变的速率，也不改变 P4／P7 的判据与分级。' %
+          ('%d 个' % len(SEL['hit4']) if SEL.get('hit4') else '那些'),
+          '* §7 数的是**规范不变张量**的个数，不是算符个数：Lorentz 指标、代（味）指标与 '
+          'Fierz 恒等式三关都没过 $\\Rightarrow$ "$16^{\\otimes4}$ 有 %s 个不变张量"不能被读成'
+          '"有 %s 个质子衰变算符"，本节的数**不**回填进任何寿命计算。' % (p4, p4),
+          '* 未做二环跑动与阈值修正 ⇒ **L10 未关闭**。本报告只把"允许的标量内容"与'
+          '"允许的 d=4 Yukawa 通道"收紧。',
+          '* $C_2$、维数等只用于自校验与后续阈值分析，不与任何实验值比对。', '',
+          '## 13. 全部测试明细', '',
+          '| 编号 | 命题 | 算得 | 应为 | 容差 | 状态 | 备注 |', '|---|---|---|---|---|---|---|']
+    for r in RESULTS:
+        L.append('| %s | %s | %s | %s | %s | %s | %s |' %
+                 (r['id'], r['claim'], r['computed'], r['expected'], r['tolerance'],
+                  r['status'], r['note'].replace('|', '\\|')))
+    L += ['', '**门禁**：' + ('R0–R11 全部 PASS ⇒ §2 的表示清单、§4 的 $\\Delta_R$ 判定、'
+                              '§5 的分支规则、§6 的 d=4 Yukawa 通道、§7 的不变张量账目、§8 的'
+                              '道分解、§9 的残留离散群与 §10 的低能算符选择定则可信。' if all_ok else
+                              '**存在 FAIL ⇒ 本报告不出任何 Higgs 扇区结论**。'), '',
+         '[返回统一场方程](../README.md) · [SO(10) 链统一报告](SO10链统一报告.md) · '
+         '[已知局限](../09_已知局限与否定清单.md)']
+    txt = '\n'.join([table_row_safe(x) for x in L]) + '\n'
+    # 本报告的 LaTeX 由脚本里的字符串字面量拼出：漏写双反斜杠时 \alpha、\to、\beta、\nu
+    # 会被 Python 当成转义而变成控制字符，并静默把 Markdown 表格行截断 ⇒ 写盘前当场拒绝。
+    ctrl = sorted(set(c for c in txt if ord(c) < 32 and c != '\n'))
+    assert not ctrl, '报告含控制字符 %s ⇒ 有 LaTeX 反斜杠被 Python 吃掉' % ctrl
+    # 表格行列数必须与自己的表头一致：错位只会"渲染时少一列"，不会让任何门禁变红
+    lines = txt.split('\n')
+    i = 0
+    while i < len(lines) - 1:
+        if lines[i].startswith('|') and SEPROW.match(lines[i + 1].strip()):
+            ncol = len(PIPE.split(lines[i]))
+            j = i + 2
+            while j < len(lines) and lines[j].startswith('|'):
+                assert len(PIPE.split(lines[j])) == ncol, \
+                    '表格列数错位（表头 %d 列）：\n  %s\n  %s' % (
+                        ncol - 2, lines[i][:90], lines[j][:90])
+                j += 1
+            i = j
+        else:
+            i += 1
+    # 正文排版的四条不变量（前三条各修掉一处真实缺陷，第四条是本轮审计 §8 时踩到的）：
+    #   1) $…$ 必须在**同一个段落内**闭合 —— 少一个 `$` 会把它后面的整段吞进公式里渲染；
+    #   2) 段落里不得出现未格式化的 Python 容器 repr 或 None —— 漏写一个 %s 参数就会印成 `['10', …]`；
+    #   3) 段落里不得出现未替换的 `%d`/`%(name)s` 占位符 —— `%` 只绑到拼接字面量的第一段时就漏；
+    #   4) \lvert / \rvert 后不得紧跟字母或数字 —— TeX 最长匹配会把 `\lvertB` 读成一个未定义
+    #      控制词而整段公式报错。这条**必须查全文**：缺陷正是 table_row_safe 只往表格行里注的，
+    #      前两条的"表格行豁免"在这里反过来不成立。
+    # 表格行豁免前两条：§13 的"算得/应为/备注"列**故意**是原始 repr，那是审计痕迹不是排版。
+    blocks, cur = [], []
+    for ln in lines:
+        if ln.startswith('|') or not ln.strip():
+            if cur:
+                blocks.append(' '.join(cur))
+                cur = []
+        else:
+            cur.append(ln)
+    if cur:
+        blocks.append(' '.join(cur))
+    unclosed = [b[:70] for b in blocks if b.count('$') % 2]
+    leaked = [b[:70] for b in blocks if REPR_LEAK.search(b)]
+    fmt = [b[:70] for b in blocks if FMT_LEAK.search(b)]
+    munch = sorted(set(DELIM_MUNCH.findall(txt)))
+    HYGIENE.update({'blocks': len(blocks), 'unclosed': unclosed, 'leaked': leaked,
+                    'unformatted': fmt, 'delimiter_munch': munch,
+                    'tables': len([1 for ln in lines if SEPROW.match(ln.strip())])})
+    assert not unclosed, '有段落的 $…$ 未闭合 ⇒ 渲染时吞掉后半篇：%s' % unclosed
+    assert not leaked, '正文里漏进未格式化的 Python 对象：%s' % leaked
+    assert not fmt, '正文里漏进未替换的格式化占位符（漏写 %% 参数）：%s' % fmt
+    assert not munch, ('\\lvert/\\rvert 后紧跟字母数字 ⇒ TeX 读成未定义控制词，公式整段报错：%s'
+                       % munch)
+    (ROOT / 'SO10表示论报告.md').write_text(txt, encoding='utf-8')
+    (ROOT / 'SO10表示论报告.json').write_text(json.dumps(
+        {'purpose': 'D5=so(10) 表示论第一性推导：Higgs 分支内容、Δ_R 承载判定与 d=4 Yukawa 通道',
+         'lie_input': 'D5 Dynkin diagram only; everything else derived',
+         'chain_engine_pass': CHAIN_OK,
+         'engine_pass': eng_ok, 'identification_pass': id_ok,
+         'physics_pass': phy_ok, 'nogo_pass': nogo_ok, 'branching_pass': br_ok,
+         'cross_chain_pass': xchk_ok, 'yukawa_pass': yuk_ok, 'invariant_pass': inv_ok,
+         'channel_split_pass': ch_ok, 'residual_pass': res_ok, 'selection_pass': sel_ok,
+         'named_dynkin': dict((k, list(v)) for k, v in NAMED.items()),
+         'table': TABLE, 'branch': BRANCH, 'su4_to_su3u1': CROSS,
+         'yukawa': YUK, 'yukawa_channels': YUKCH.get('allow', {}),
+         'yukawa_products': dict((k, v) for k, v in YUKCH.get('parts', {}).items()),
+         # R8 的原始读数（报告 §7 的每个数字都出自这里，不在 JSON 里另算一遍）
+         'singlet_ledger': [{'product': x['tex'], 'dim': x['dim'], 'distinct_weights': x['ndist'],
+                             'zero_weight_dirs': x['zero'], 'invariants': x['singlet'],
+                             'per_constituent_check': x['split'],
+                             'unregistered_share': (x['parts'] or {}).get('unreg')}
+                            for x in INV.get('ledger', [])],
+         'invariant': {'delta_pairs_tested': INV.get('npairs'),
+                       'delta_one_pairs': INV.get('ones'),
+                       'delta_counterexamples': INV.get('wrong', []),
+                       'dim_product_cap': INV.get('cap'),
+                       'routes': INV.get('routes', {}), 'associative': INV.get('assoc'),
+                       'channels_by_singlet_count': dict((k, v['names'])
+                                                         for k, v in INV.get('chan', {}).items()),
+                       'channels_agree_with_r7': dict((k, v['agree'])
+                                                      for k, v in INV.get('chan', {}).items()),
+                       'triple_product_singlets': INV.get('tri', {}),
+                       'matter_only_invariants': INV.get('p4'),
+                       'matter_only_zero_dirs': INV.get('zero_p4')},
+         # R9 的原始读数：报告 §8 的每个数字都出自这个字典，不在 JSON 里另算一遍
+         'channel_split': CSPLIT,
+         # R10 的原始读数：报告 §9 的每个数字都出自这个字典（含两条独立路径与植入缺陷列）
+         'residual': RESID,
+         # R11 的原始读数：报告 §10 的每个数字都出自这里。物质场清单里那份权重多重集
+         # **不进 JSON**（它的键是 5 元组，JSON 的键只能是标量），其余字段原样落盘。
+         'selection': dict(SEL, mat=[{k: v for k, v in f.items() if k != 'ms'}
+                                     for f in SEL.get('mat', [])]),
+         'report_hygiene': HYGIENE,
+         'tests': RESULTS},
+        ensure_ascii=False, indent=2, default=str) + '\n', encoding='utf-8')
+    return all_ok
+
+
+def main():
+    eng_ok = run_engine_tests()
+    id_ok = run_identification() if eng_ok else False
+    if eng_ok and id_ok:
+        id_ok = run_tensor_identities()
+    phy_ok = run_physics_tests() if id_ok else False
+    nogo_ok = bool(build_table()) and gate_no_go() if phy_ok else False
+    br_ok = run_branching() if nogo_ok else False
+    xchk_ok = run_cross_chain() if br_ok else False
+    yuk_ok = run_yukawa_layer() if xchk_ok else False
+    inv_ok = run_invariant_layer() if yuk_ok else False
+    ch_ok = run_channel_layer() if inv_ok else False
+    res_ok = run_residual_layer() if ch_ok else False
+    sel_ok = run_selection_layer() if res_ok else False
+    all_ok = write_report((eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok,
+                           ch_ok, res_ok, sel_ok))
+
+    print('SO(10) 表示论引擎（D5 权重格；唯一李论输入 = Dynkin 图）')
+    print('  自检：%s（%d 项，PASS %d）' %
+          ('全部通过' if all_ok else '存在 FAIL ⇒ 不出 Higgs 扇区结论',
+           len(RESULTS), sum(1 for r in RESULTS if r['status'] == 'PASS')))
+    for r in RESULTS:
+        if r['status'] != 'PASS':
+            print('    [FAIL] %-9s %s：算得 %s，应为 %s' %
+                  (r['id'], r['claim'], r['computed'], r['expected']))
+    print('  排版自检：%d 个正文段落（表格行豁免）的 $…$ 全部闭合、无未格式化的 Python 对象、'
+          '无未替换的 %%d/%%(name)s 占位符；%d 张表格列数与各自表头一致；'
+          '全文 \\lvert/\\rvert 后均紧跟分隔符，未被 TeX 最长匹配读成未定义控制词。'
+          % (HYGIENE['blocks'], HYGIENE['tables']))
+    if TABLE:
+        print('  表示清单（末列 = 能否在保住 U(1)_em 的前提下破 B−L）：')
+        for r in TABLE:
+            print('    %-6s (%s) dim=%-4d C2=%-6s max|B-L|=%-5s Δ_R=%s Δ_L=%s '
+                  '(1,1,1)±2=%s 可破 B−L=%s' %
+                  (r['name'], ','.join(map(str, r['dynkin'])), r['dim'], r['c2'], r['maxBL'],
+                   '是' if r['DR'] else '—', '是' if r['DL'] else '—',
+                   '是' if r['S2'] else '—', '是' if r['safe'] else '—'))
+    if br_ok:
+        print('  分支规则（R6）：%d 个表示 × 两条链，逐权重精确；两条独立维数路径逐项一致。'
+              '锚点两行：' % len(BRANCH))
+        for nm in ('16', '10'):
+            b = next(x for x in BRANCH if x['name'] == nm)
+            print('    %-4s ↓3221  %s' % (nm, plain(b['tex3221'])))
+            print('    %-4s ↓422   %s' % (nm, plain(b['tex422'])))
+    if xchk_ok:
+        print('  跨链匹配（R6.7/R6.8）：%d 个表示的"两步限制"与"一步限制"逐项相等；'
+              '$SU(4)$ 每个不可约表示上 Tr(B−L)=0。锚点（$422\\to3221$ 那一步）：' % len(BRANCH))
+        for t in CROSS:
+            if t['dim'] in (4, 15):
+                print('    %-12s dim=%-3d %s' % (plain(t['name']), t['dim'],
+                                                 plain('\\oplus'.join(t['content']))))
+    if yuk_ok:
+        a = YUKCH['allow']
+        print('  d=4 Yukawa 通道（R7）：手征 对称 %s／反对称 %s；对消 %s；'
+              '唯一携带 −2ν 权重的 Higgs：%s' %
+              (a['sym'], a['anti'], a['vec'], YUKCH['maj']))
+        print('    成分（共轭前）：Sym²(16)=%s，∧²(16)=%s，16⊗16̄=%s（跳过单态后取共轭 = 上一行）' %
+              tuple([n for n, _k in YUKCH['parts'][k]] for k in ('sym', 'anti', 'vec')))
+    if inv_ok:
+        print('  不变张量簿记（R8）：按 16⊗16／16⊗16̄／16⊗4 顺序，'
+              '（荷账本 = 零权方向数，不变张量 = 单态个数）为 %s' %
+              [(x['zero'], x['singlet']) for x in INV['ledger']])
+        print('    16⊗16⊗16̄⊗16̄ 的单态数由 4 条不共享代码的路径给出同一个数：%s；'
+              'δ 判据现场核验 %d 对（其中 δ=1 的 %d 对，反例 %s）'
+              % ([INV['routes'][k] for k in ('decomp_I', 'decomp_II', 'pair_cc', 'pair_cf')],
+                 INV['npairs'], INV['ones'], ('无' if not INV['wrong'] else INV['wrong'])))
+    if ch_ok:
+        print('  不变张量的道分解（R9）：16⊗16 的道（道名, n_R, 该道贡献 n_R·n_R̄）=%s ⇒ 合计 %d'
+              '（R8 解方程 %d）；16⊗16̄ 的道=%s ⇒ 合计 %d（R8 %d）' %
+              (CSPLIT['rows_chiral'], CSPLIT['tot_chiral'], CSPLIT['r8_chiral'],
+               CSPLIT['rows_vector'], CSPLIT['tot_vector'], CSPLIT['r8_vector']))
+        print('    在场却不闭合的道：%s（= 126̄_H 的伙伴）；Sym²=%s，∧²=%s，16⊗16̄=%s；'
+              '链上字面声明的母表示并集=%s' %
+              ([n for n, _k, c in CSPLIT['rows_chiral'] + CSPLIT['rows_vector'] if not c],
+               [n for n, _k in CSPLIT['slot']['sym']], [n for n, _k in CSPLIT['slot']['anti']],
+               [n for n, _k in CSPLIT['slot']['vec']], CSPLIT['decl_union']))
+        print('    单个 126／126̄ 插入 16⊗4 的三种结合：%s（全为 0）；成对插入（结合 I／II／镜像）：'
+              '%s' %
+              ([(k, v['gI'], v['gII'], v['gIII']) for k, v in CSPLIT['ins'].items()],
+               [(k, v['gI'], v['gII'], v['mirror']) for k, v in CSPLIT['pairs'].items()]))
+        m = CSPLIT['mut']
+        print('    变异测试：删 120→%d、闭合道 %s 翻倍→%d、伪造 126̄ 在场→%d（真值 %d）；'
+              '16⊗4⊗126⊗126 上标号路径 %d vs 名字路径 %d（登记范围外 %d 条标号）' %
+              (m['drop'], m['dnm'], m['dbl'], m['fake'], m['real'], m['lab'], m['byname'],
+               m['unreg']))
+    if res_ok:
+        print('  残留离散规范对称性（R10）：$B-L$ 荷格 g0 = %s（仅物质 %s）⇒ 圆周 alpha0 = '
+              '%s·pi（浮点独立测得 %s·pi）' %
+              (RESID['g0_all'], RESID['g0_matter'], RESID['period_exact'], RESID['period_scan']))
+        print('    候选 q_Delta → 残留阶 N（甲／乙浮点／丙换约定／错配植入）=%s；'
+              '物质字称在 v.e.v. 上=%s；弱电 $B-L=0$ 那一步后剩／对照 q_Delta/2 后剩=%s' %
+              ([(r['BL'], r['N'], r['N_scan'], r['N_half'], r['N_mismatch'])
+                for r in RESID['rows']],
+               [(r['BL'], r['mp']) for r in RESID['rows']],
+               [(r['BL'], r['ew'], r['ctl']) for r in RESID['rows']]))
+        print('    圆周上的 2 阶元与 (-1)^(3(B-L)) 逐荷对照：%s；承载者与链声明谱的交集=%s' %
+              ([(r['BL'], r['ord2'], '同' if r['ord2_is_mp'] else '不同')
+                for r in RESID['rows'] if r['ord2'] != '无'], RESID['cond']))
+    if sel_ok:
+        print('  低能算符的选择规则（R11）：projector = SU(3)c×SU(2)L 配 U(1)Y 的 Y 切片'
+              '（|Δ+|=%d、|W|=%d）；$Z_3$ 荷 = 色 triality，教材号 s=%s／引擎号 s=%s'
+              '（R10.4 权重层 %s）' %
+              (len(SUB_321.pos), len(SUB_321.W), SEL['tri_sgn'], SEL['tri_sgn_engine'],
+               RESID['triality_sign']))
+        print('    d=6：%d 个场内容类、含 SM 单态 %d 条（不变张量结构 %d 个）、三条计数路径 %s；'
+              'ΔB≠0 且 ΔL≠0 的 %d 条**全部** Δ(B−L)=0、其中被禁 %d 条 ⇒ 残留群不保质子' %
+              (len(SEL['c4']), len(SEL['hit4']),
+               sum(x['singlet'] for x in SEL['hit4']), SEL['r4'][1:4], len(SEL['pv']),
+               sum(1 for x in SEL['pvl']
+                   if False in [v['甲'] for v in x['v'].values()])))
+        print('    正对照：插入声明谱 %d 条／插入奇 3(B−L) 标量 %d 条（$Z_6$ 判禁 %d 条、'
+              '只按 $Z_3$ 会误放行 %d 条）；整套荷换号后判决翻转 %d 条（应为 0）' %
+              (len(SEL['scan_decl']), len(SEL['scan_odd']), len(SEL['forb_odd']),
+               len(SEL['flip3']), len(SEL['flip_sg'])))
+    if nogo_ok:
+        print('  判定：dim≤210 内唯一能破 B−L 而不破电磁的 Higgs = 126 / 126̄；'
+              '120_H 虽含 (1,1,1)±2 但 |Q|=1 ⇒ 排除（报告 §4）')
+    print('产出：SO10表示论报告.md / .json')
+    return 0 if all_ok else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -98,6 +98,35 @@ def frenet_residual(frame_fn, K, theta, z0=0.0, h=None):
     return max(r1, r2, r3), orth, (r1, r2, r3)
 
 
+def audit_darboux_constancy():
+    """判据性检查：kappa,tau 为常数时，Darboux 向量 omega_D = tau e1 + kappa e3
+    在实验室系必须是【常矢量】（螺旋轴固定）；若其随 s 变化则该标架必非 Frenet 标架。
+    """
+    lam = 500e-9
+    K = TWO_PI / lam
+    print("\n" + "=" * 78)
+    print("[B2] 判据性检查：常 kappa,tau 下 omega_D 是否恒定（应恒等于 K*z_hat）")
+    print("=" * 78)
+    print("  theta    |d(omega_D)/ds|/K^2  (§13原版)   (修正版)    原版 omega_D(z=0)")
+    for deg in [0, 30, 45, 60, 75]:
+        th = math.radians(deg)
+        kappa = K * math.cos(th)
+        tau = K * math.sin(th)
+        out = []
+        for fn in (frame_s13, frame_correct):
+            h = 1e-9 / K
+            e1p, _, e3p = fn(h, K, th)
+            e1m, _, e3m = fn(-h, K, th)
+            wDp = tau * e1p + kappa * e3p
+            wDm = tau * e1m + kappa * e3m
+            out.append(np.linalg.norm((wDp - wDm) / (2 * h)) / K ** 2)
+        e1, _, e3 = frame_s13(0.0, K, th)
+        wD0 = tau * e1 + kappa * e3
+        print(f"  {deg:3d}deg   {out[0]:.6e}              {out[1]:.6e}     "
+              f"({wD0[0]:+.3f},{wD0[1]:+.3f},{wD0[2]:+.3f})*K")
+    print("  --> 修正版 omega_D 严格恒定（= K*z_hat）；原版随 s 变化，故不是 Frenet 标架。")
+
+
 def audit_frame():
     print("=" * 78)
     print("[A][B] 显式标架的 Frenet-Serret 自洽性（残差已用 1/K 无量纲化）")
@@ -244,6 +273,7 @@ def main():
     print("§15 前置审计 —— Frenet 自洽性 + Maxwell 兼容性 + 守恒律")
     print("=" * 78)
     audit_frame()
+    audit_darboux_constancy()
     audit_maxwell()
     audit_conservation()
     print("\n=== 审计完成 ===")

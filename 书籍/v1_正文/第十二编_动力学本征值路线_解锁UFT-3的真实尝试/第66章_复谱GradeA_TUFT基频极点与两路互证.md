@@ -195,3 +195,123 @@ SVD 后 $S_1/S_0\to0$（孤立单极），读出 $\omega_*$。因为它**不显�
 **标度性**：ω·M 无量纲，分数偏移 δRe/ω、δγ/γ 与黑洞质量 M 无关（自相似标度）。
 
 **定位**：本节只报 δω 比值（PASS），不涉泛音族存在性与第二峰——见第67章 §67.13。**D18 维持 v31 UPGRADE 不回退**（本轮为加性 δω PASS，不动物理阻尼升态）。
+
+
+## 66.10 v47 A4 SNR 精算（E497）：真实 PSD loudness 积分＋天线投影
+
+> 本轮（v5.7，2026-09-24）把 v43 异常根因表登记的 A4「ε/SNR」通道从 toy OOM 升级为**真实 PSD 精算**。数字照 organizer 已核验结果落盘（磁盘由 .v57pre.bak 恢复至 v5.6/E1–E496/勘误 #42 后重放；#42 held；物理四态 35/61/18/27 冻结；本轮不闭合新物理 E-number）。
+
+**PSD 来源（文档化）**：O4=aLIGO 设计灵敏度（aLIGOZeroDetHighPower）；Voyager=Voyager 设计灵敏度（LIGO-T1800043）；df=0.25 Hz，S_h=ASD² 对数插值；模板 H(f)=½[1/(γ+i2π(f−f₀))+1/(γ+i2π(f+f₀))]，ρ²=4∫|H|²/S_h df。
+
+**GR 极限 PASS**：ε=0 时退化为纯 GR 振铃，loudness=L_O4_GR=11.993。
+
+**ρ_req**=1/(ε√(1−ov²))=1/(0.4697×0.6320)=3.369≈3.37。
+
+**天线投影**（l=m=2，单探测器天空平均 ⟨F_+²⟩=⟨F_×²⟩=1/5）：edge-on/face-on=√(1/8)=0.3536、45°=0.729。
+
+**loudness 比**：W_TUFT/W_GR=1.3197；W_Voy/W_O4=4.3473（toy OOM 3.157）。
+
+**face-on D_max（60M☉，ρ_req=3.37 / ρ=8）**：O4 GR 3.560/1.499 Gpc；O4 TUFT 4.698/1.978；Voyager GR 15.48/6.517；Voyager TUFT 18.98/7.994。天线去投影（GR prompt, ρ_req）：face-on 3.56/15.48；45° 2.595/11.28；edge-on 1.259/5.472。
+
+**与 OOM 对比**：Voyager D_max=15.48 vs toy 11.24（+38%）；O4 GR face-on 3.56 Gpc 是校准锚（继承 toy 绝对激发 loudness 11.993）。
+
+**质量扫描（40–120M☉，GR 模）**（f[Hz]／τ[ms]／L／D_O4[Gpc]／D_Voy[Gpc]）：
+
+- 40 M☉：301.8／2.21／8.86／2.63／10.04；
+- 60 M☉：201.2／3.32／11.99／3.56／15.48；
+- 90 M☉：134.1／4.98／12.97／3.85／21.05；
+- 110 M☉：109.8／6.09／13.03／3.87／24.05；
+- 120 M☉：100.6／6.64／13.01／3.86／25.47。
+
+loudness 在 ~110 M☉ 达峰。
+
+**诚实标注（OPEN 边界）**：单主模近似（无泛音堆叠 E477 仅 n=1、无 M–χ 自旋简并、无多事件、无网络正交）；绝对振幅 OPEN——toy loudness 11.993 继承 E431 理论上界；SSOT E444 独立真实-PSD 严格锚点=1.91 SNR·Gpc，弱 6.28×；若采用 E444 严格双程穿垒振幅，全部 D_max 除以 6.28→O4 GR D(req)=0.567 Gpc、Voyager=2.465 Gpc；源激发能绝对标度仍是 E444/E489 OPEN。
+
+**四态分级**：PSD 来源文档化；GR 极限 PASS；真实 PSD loudness 积分已算；天线投影已算；单主模近似明示；绝对振幅 OPEN。本轮为 PSD/天线升级/灵敏度通道，不闭合新物理 E-number；E497 不进物理四态；#42 held。D18 v31 UPGRADE 无回退；联盟层维持 2/6、UFT-3 未解锁。
+
+
+## 66.11 v48 旋转 QNM Beyn 扩展（E498）：GR 门 A PASS / 门 B FAIL / 条件墙卡点
+
+> 本节为 v48 轮（SSOT v5.8，2026-09-24）增量 append，不覆盖前文；数字先 Read `_audit_v48_rotating_qnm_out.txt` 核对后照抄（脚本 `_audit_v48_rotating_qnm.py`；organizer 已核验；双精度；无 prior-project import、无运行时 qnm import）。磁盘权威口径 **v5.7 / E1–E497 / 勘误 #42** 为本轮起点，本轮升 **v5.8 / E1–E498 / 勘误 #42 held（本轮无新勘误）**；物理四态 **35/61/18/27 冻结**；禁止回退任何勘误与否定定理，只做无冲突增量。
+
+### 66.11.1 求导链：把局域帧拖曳嵌进紧化 pencil
+
+Kerr→Lense–Thirring 局域拖曳角速度 $\Omega_F(r)=2a/r^3$；守恒量 $K=(r^2+a^2)\omega-am$ 给出局域频率 $\omega-m\Omega_F$。龟坐标波动方程
+
+$$X''+\big[\omega^2-V-2m\omega\Omega_F\big]X=0=X''+\big[\omega^2-V-\tfrac{4am\omega}{r^3}\big]X=0,$$
+
+即 $O(a\omega)$ 修正为局域对角势 $-4am\omega/r^3$。两侧嵌法不同：
+
+- **GR（Jansen 紧化二次 pencil）**：$Q_1\leftarrow Q_1+\mathrm{diag}(-4am/r^3)$，companion $(M-\omega L_m)$ 线性化后做 Beyn rank-1 提取；
+- **TUFT（近壁线性 pencil）**：$Q_0\leftarrow Q_0+i\,m\,\mathrm{diag}(\Omega_F)\,(2gD+C_{10})$，pencil 保持线性，Beyn 直接绕 $e^{\pm 2/\rho}$ 本质奇点墙（第65章 §65.4、E443/A9）。
+
+### 66.11.2 GR 门 A（PASS）与门 B（FAIL）
+
+**门 A——$a=0$ 塌缩 Schwarzschild $l=2$ $n_0$**：在 v27 companion 线性化上扩展 Beyn（粗糙围道中心 $0.360-0.080i$、半径 $0.06$，把 $n_0$ 与 $n=1$ 泛音隔离）：
+
+$$\boxed{\ n_0=0.373671684418-0.088962315689i,\qquad |\mathrm{err}|=2.470\times10^{-13}\ }$$
+
+$N=40/60/90$ spread $=3.45\times10^{-11}$，复现到 **~12 位**（要求 $\ge6$ 位）⇒ **GR 门 A PASS**。
+
+**门 B——小 $a$ Kerr 慢转分裂斜率**：把 $O(a\omega)$ 对角项 $-4am\omega/r^3$ 加进 $Q_1$，测 (i) Rayleigh 分裂、(ii) 连续延拓光滑度：
+
+| 判据 | 测得 | 靶 / 阈值 | 判定 |
+|---|---|---|---|
+| (i) Rayleigh $c_{\rm rot}$ | $0.0481181+0.0181197i$，$\mathrm{split}/a=0.096236$ | $\mathrm{split}/a=0.2515323$（勘误 #42） | 实部仅靶值 $38\%$ |
+| (ii) 连续延拓 $\max|\mathrm{Im\ drift}|@a=0.02$ | $1.538\times10^{-2}$ | 阈值 $5\times10^{-3}$ | 超阈值 |
+
+⇒ **GR 门 B（分裂斜率 $\ge4$ 位）FAIL**。
+
+> **诊断（诚实，不硬凑 4 位）**：裸对角拖曳嵌入**复现实部符号**（$\mathrm{split}/a=+0.096$ 同号），但**不复现 $\ge4$ 位斜率**；直接打靶在 $O(a)$ 下**极点跳变**（条件墙）。缺的是 Teukolsky 的 $O(a)$ **虚部交叉项 $4i(r-1)K/\Delta$**——它必须经完整 Chandrasekhar 变换才能嵌进 Jansen 紧化 pencil。裸对角 $-4am\omega/r^3$ 只是实部对角势，承载不了该虚部交叉项。
+
+### 66.11.3 TUFT 侧（门 B 未过 → 仅诊断，不作物理读数）
+
+按铁律（GR 门 B 未过，旋转极点不得作物理读数），TUFT 侧只登记诊断值：
+
+- **静态再锚（$a=0$，本文件独立 pencil）**：Beyn 极 $=0.434445174-0.056449760i$，对 Grade A 参考 $0.434445178-0.056449760i$ $|d|=4.503\times10^{-9}$（与第66.3.2 中位极一致，本嵌入自洽）。
+- **旋转极原始（非微扰直 Beyn，门 B 未过 = UNTRUSTED）**：
+
+| $a$ | $m=+2$ 极 | $m=-2$ 极 | $\mathrm{split}/a$ |
+|---|---|---|---|
+| 0.10 | $0.376860600-0.097073912i$ | $0.366412304-0.141592932i$ | $0.104483$ |
+| 0.20 | $0.345849701-0.107141431i$ | $0.414460918-0.139554078i$ | $-0.343056$ |
+
+- **与 v44 一阶 $0.09832$ 对比**：$a=0.10$ 的 $0.1045$ 数值接近（差 ~6%），但 $a=0.20$ 符号翻转到 $-0.343$、$\mathrm{drift}(0.1\to0.2)=0.448$——**非物理**。$a=0.10$ 的"吻合"是不稳定算符下的**巧合**，不是 TUFT m 频裂的有效预言。
+
+### 66.11.4 卡点（条件墙实锤）与下一步
+
+- $\min\sigma_{\min}(L)=7.72\times10^{-12}$（条件数/本质奇点墙 DETECTED）；$m=-2$ 两路 $S_1/S_0=1.5\times10^{-4}/3.1\times10^{-5}$（退化 $>10^{-8}$）。
+- **$a$ 上限**：本嵌入下可信旋转混合 BVP 极点 $a<0.10$；$a=0.10$ $m=-2$ 已现退化，$a=0.20$ 符号翻转。
+- 残差发散模式＝**极点跳变 + $S_1/S_0$ 退化 + $\mathrm{split}/a$ 非符号稳定**；根因＝**$O(a)$ 算符未补全**（缺虚部 Teukolsky 交叉项 $4i(r-1)K/\Delta$），**非 Beyn 围道本身失败**（门 A 在同一围道机器上达 12 位即为反证）。
+- **下一步**：补全完整 Teukolsky–Chandrasekhar $O(a)$ 嵌入（把虚部交叉项正确折进 Jansen 紧化 pencil）后重过 GR 门 B，再切 TUFT 反射壁报 $m$ 频裂。
+
+### 66.11.5 四态分级
+
+GR 门 A（$n_0\ge6$ 位）= **PASS**（$|\mathrm{err}|=2.470\times10^{-13}$，~12 位）；GR 门 B（分裂 $\ge4$ 位）= **FAIL**（Rayleigh $\mathrm{split}/a=0.0962$ vs 靶 $0.25153$；延拓 $\max|\mathrm{Im\ drift}|=1.54\times10^{-2}$）。⇒ **GR 门 B FAIL → TUFT 旋转根不宣告**（铁律禁止物理读数）。本轮为**边界谱方法论扩展**（Beyn 围道向小旋转 $a$ 推广、局域拖曳对角嵌入的可行性诊断），**不消耗新物理 E 号、勘误不递增（#42 held）**；E498 不进物理四态，四态维持 **35/61/18/27** 冻结。D18 v31 UPGRADE 无回退；联盟层维持 **2/6**、UFT-3 未解锁。完整旋转混合 BVP（$a\ne0$）慢转求解器仍 **OPEN**。本轮合并报告：《TUFT_v48_旋转QNM合并报告.md》。
+
+
+## 66.12 v49 Chandrasekhar 变换补全 + TUFT 镜壁第一性原理旋转频裂（E499；门/方法学通道；append-only，2026-09-24）
+
+> 本节为 v49 轮 append-only 增量；先 Read `_audit_v49_chandrasekhar_mirror_out.txt` 核对后照抄（organizer 已核验；双精度；独立 Leaver 连分数、不 import qnm、无打靶标定、粗糙起步；wall 299.9s）。不回退 v6.0 诊断（v49 peel 为 Schwarzschild 专属／唯一可行路线＝完整非微扰 Kerr V_H＋完整 Kerr peel/Jansen＋反射壁 BC）——本节正是沿该路线用完整 Teukolsky 径向方程＋独立 Leaver CF 编码全部 O(a)，非在 Schwarzschild peel 骨架上打补丁。勘误 #42 held（本轮无新勘误）；E1–E499；物理四态 35/61/18/27 冻结。
+
+**① Chandrasekhar 求导链补全**：$s=-2$ Teukolsky 径向方程
+$$\Delta^2\frac{d}{dr}\left(\Delta^{-1}\frac{dR}{dr}\right)+\left[K^2+\frac{4i(r-1)K}{\Delta}-8i\omega r-\lambda\right]R=0.$$
+$a=0$ Schwarzschild peel 落到实势 RW/Zerilli。$O(a)$ 阶四组耦合全部由独立 Leaver CF 精确编码（故双 PASS）：(i) 虚部交叉项 $-4iam(r-1)/\Delta$（v48 缺口本体，$4i(r-1)K/\Delta$ 的反 $m$ 部分、关于 $m$ 反对称）；(ii) $\lambda$ 里 $m\ne0$ 对角项 $-2sm\,a\omega=+4ma\omega$；(iii) 分离常数 $\Delta\ell$ 混合 $_sA_{lm}(c)={}_sA_{lm}(0)+2cs\cdot H_l$；(iv) 视界拖曳 $\sigma_+=(2\omega r_+-ma)/(r_+-r_-)$、$\Omega_H=a/(2r_+)$。
+
+**② GR 门 A PASS**：$a=0,l=2,m=2,n=0$，$w=0.373671684418042-0.088962315688936i$，$|C_f|=9.9\times10^{-16}$、$|\mathrm{err}|=1.65\times10^{-15}$（**14.8 位**，要求 $\ge6$）。
+
+**③ GR 门 B PASS（v48 的 0.096 修到 0.2515）**：$\mathrm{splitR}/a$ Richardson $a^4=+0.25153232$（靶 $0.2515323$，$|\mathrm{err}|=1.8\times10^{-8}$，**7.7 位**，要求 $\ge4$）；$m=\pm2$ 在 $a=0.02$ 非退化 $|w_{+2}-w_{-2}|=5.03\times10^{-3}$、$|C_f|_{+2}=8.9\times10^{-16}/|C_f|_{-2}=4.0\times10^{-16}$（双根真实分立）；每-$m$ 复斜率 $c=+0.0628831+0.0009979i$、$\mathrm{splitI}/a=+0.003992$。v48（E498）门 B FAIL 的根因（缺 $O(a)$ 虚部交叉项 $4i(r-1)K/\Delta$）由完整 Chandrasekhar 变换闭合。
+
+**④ TUFT 静态锚 $<10^{-6}$ PASS（修正 v50 的 $2.35\times10^{-6}$ 漂移）**：$N=120$ Beyn $w=0.4344451764-0.0564497644i$，对 Grade-A 锚 $0.434445178-0.056449760i$ $|\mathrm{err}|=4.72\times10^{-9}$（**8.3 位**）；$N90\leftrightarrow N120$ 自洽 $|\delta w|=8.4\times10^{-10}$；$<10^{-6}$ 门槛 PASS。**但 11.6 位硬门仍 OPEN**（本审计 8.3 位）。
+
+**⑤ E475 第一性原理慢转场闭合（弃用 v50 手动 $0.04\cdot$barrier）**：
+$$\frac{d}{d\rho}\left[\rho^4 e^{2/\rho}h^{3/2}\frac{d\Omega_F}{d\rho}\right]=0,\quad \Omega_F(\infty)=0\ \Rightarrow\ \Omega_F/a=6\int_\rho^\infty\frac{dr'}{r'^4 e^{2/r'}h^{3/2}};$$
+远场 $\to 2/\rho^3$（GR Lense–Thirring）；折入 $Q1_{\rm rot}=Q1+a\cdot\mathrm{diag}(-2m\Omega_F)$。
+
+**⑥ TUFT 旋转极点（条件性第一性原理数）**：$a=0.10$ $w(m+2)=0.52049664-0.07171014i$、$w(m-2)=0.35835989-0.05760612i$、$\mathrm{splitR}/a_{\rm TUFT}=+1.621367$、$\mathrm{splitI}/a=-0.141040$；$a=0.20$ $w(m+2)=0.60685886-0.11175438i$、$w(m-2)=0.29304845-0.06337665i$、$\mathrm{splitR}/a=+1.569052$、$\mathrm{splitI}/a=-0.241889$；Rayleigh 一阶 $\mathrm{splitR}/a=1.635434$（与延拓@$a=0.1$ 差 $0.9\%$）。
+
+**⑦ 与 v44/v50 对照**：v44 一阶 $0.09832$、v50 手动 barrier $0.580493$、本审计第一性原理 $1.635$（Rayleigh）/$1.621$（延拓）；差异来源＝(a) v50 场被 lapse 压死在壁区 ~0.28、真空场方程 $\Omega_F/a\approx0.65$；(b) v50 静态锚未收敛；(c) 本数与 v54 独立 E475 结果吻合 4–5 位。相对同腔 GR $2/\rho^3$ 场（$\mathrm{splitR}/a=4.662$）抑制比 **0.35**（D27 拖曳塌缩稳健）。
+
+**⑧ 卡点（诚实，不伪闭合）**：(1) TUFT 静态 11.6 位硬门仍 OPEN（本审计 8.3 位；$<10^{-6}$ 已达）；(2) TUFT 旋转绝对值 1.62 无外部 Grade-A 锚，仅有 v54 内部互证——稳健的是相对抑制比 0.35，裸核绝对值不宣称；(3) @$a=0.2$ $\mathrm{splitR}/a$ 弯到 1.569（$O(a^2)$ 曲率 ~4%）、$\mathrm{splitI}/a=-0.24$ 偏大，慢转一阶渐近开始失真；(4) 原始输出轨迹行有一处 cosmetic 格式符（正确值在汇总行）。
+
+**⑨ E499（门/方法学通道）**：Chandrasekhar 变换补全（$s=-2$ Teukolsky 径向方程 $O(a)$ 四组耦合由独立 Leaver CF 精确编码）＋ TUFT 镜壁第一性原理旋转频裂（E475 真空场折入 $Q1_{\rm rot}$、Rayleigh/延拓双路 $\mathrm{splitR}/a=1.635/1.621$、相对 GR 抑制比 0.35）。本轮属门/方法学通道，**不新增物理 E 数进四态**；D18 v31 不回退；联盟层 2/6、UFT-3 未解锁。open_backlog：静态 11.6 位硬门 OPEN、旋转绝对值无外部 Grade-A 锚、@$a\ge0.2$ 慢转一阶渐近失真。本轮合并报告：《TUFT_v49_Chandrasekhar镜壁合并报告.md》。

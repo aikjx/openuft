@@ -5,6 +5,15 @@
 >
 > **边界红线（本 §13）**：以下为场标架微分几何 + 经典电磁动量密度（Minkowski 形式）的体系内自洽推导。所有「预言」在实验判决前仅是模型独有几何结构，不替代 QED；本模型把标准圆偏振平面波作为 $\tau=0$ 子空间特例包含在内。
 
+> ## ⚠️ 勘误（2026-09-24，依据 §15 审计）
+>
+> 本节存在**两处结构性缺陷**，已在 §15 坐实，阅读本节前必读：
+>
+> 1. **Part B 的显式标架不满足其自身声明的 Frenet 方程**（$\theta\neq0$ 时残差达 $O(1)$，$\theta=89^\circ$ 时 $1.414$；且 $\boldsymbol\omega_D$ 随 $s$ 变化，违反「常 $\kappa,\tau$ 下 Darboux 矢量必恒定」）。仅在 $\theta=0$ 成立。**已修正**，见 Part B 修正版公式；`momentum_darboux.py` 已同步更新。
+> 2. **本节的场拟设不是真空 Maxwell 解**（更严重）：$\theta\neq0$ 时存在纵向分量（$\theta=45^\circ$ 时 $\lvert E_z\rvert/\lvert E\rvert=50\%$），$\nabla\!\cdot\!\boldsymbol E\neq0$ 需非零电荷密度；$\theta=0$ 原写法中标架转动与传播相位同速抵消，$k_{\text{eff}}=0$，场根本不传播。**故 Part C2/C3 的实验判据不具备真空自由光子层面的理论基础**，Part C4-1「兼容麦克斯韦方程组」仅在 $\theta=0$ 且做相位补偿时成立。
+>
+> **不受影响的部分**：Part A 的耦合恒等式 $\boldsymbol p_\gamma\!\cdot\!\boldsymbol\omega_D=K^2S_z$（推导只用到正交归一性，已验至 $10^{-16}$），以及 §14 全部误差传播结论（只依赖 $S_z=\hbar\cos\theta$ 等标量关系）。
+
 ---
 
 ## 公理前置（场标架分支）
@@ -129,22 +138,32 @@ $$
 
 ## Part B：动量密度随弧长 $s$ 演化
 
-全局实验室坐标系下，局域基矢 $\boldsymbol e_3(s)$ 随弧长 $s$ 缓慢偏转（来自 Frenet 标架弯曲 + 扭转）：
+全局实验室坐标系下，局域基矢 $\boldsymbol e_3(s)$ 随弧长 $s$ 缓慢偏转（来自 Frenet 标架弯曲 + 扭转）。
+
+~~原（错误）式：$\boldsymbol e_3(s)=-\sin(Ks)\sin\theta\,\hat x+\cos(Ks)\sin\theta\,\hat y-\cos\theta\,\hat z$~~
+
+**修正版（§15.2）**——绕固定 Darboux 轴 $\boldsymbol\omega_D=K\hat z$ 以角速率 $K$ 匀角速转动，记 $\phi=Ks$：
 
 $$
-\boldsymbol e_3(s)=-\sin(Ks)\sin\theta\,\hat x+\cos(Ks)\sin\theta\,\hat y-\cos\theta\,\hat z
+\boxed{
+\begin{aligned}
+\boldsymbol e_1&=(\cos\theta\cos\phi,\ \cos\theta\sin\phi,\ \sin\theta)\\
+\boldsymbol e_2&=(-\sin\phi,\ \cos\phi,\ 0)\\
+\boldsymbol e_3&=(-\sin\theta\cos\phi,\ -\sin\theta\sin\phi,\ \cos\theta)
+\end{aligned}}
+\qquad \boldsymbol\omega_D=\tau\boldsymbol e_1+\kappa\boldsymbol e_3=K\hat z\ \text{（严格恒定）}
 $$
 
 代入单光子动量：
 
 $$
-\boldsymbol p_\gamma(s)=\hbar K\Big[-\sin(Ks)\sin\theta\,\hat x+\cos(Ks)\sin\theta\,\hat y-\cos\theta\,\hat z\Big]
+\boldsymbol p_\gamma(s)=\hbar K\Big[-\sin\theta\cos(Ks)\,\hat x-\sin\theta\sin(Ks)\,\hat y+\cos\theta\,\hat z\Big]
 $$
 
 动量矢量随 $s$ 出现**横向振荡分量**，来自标架的空间扭转。
 
 - 横向动量分量：周期性振荡，时间平均 $\langle p_x\rangle=\langle p_y\rangle=0$；
-- 轴向动量分量恒定：$p_z=-\hbar K\cos\theta$（负号来自基矢定义，可吸收进符号约定）。
+- 轴向动量分量恒定：$p_z=+\hbar K\cos\theta$（修正标架下为正；原错误标架给出 $-\hbar K\cos\theta$，符号差异已随标架修正确定）。数值复核：`momentum_darboux.py` 输出 $\langle p_z\rangle=+9.371\times10^{-28}$ kg·m/s（$\lambda=500$ nm, $\theta=\pi/4$）。
 
 > 关键结论：**单光子动量全局存在横向微扰振荡，但横向动量平均值为零；净动量沿实验室 $z$ 轴**。
 > 这保证了整体动量守恒，不破坏自由空间传播。
