@@ -1,0 +1,2944 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+材料复用 - Playwright版本
+作者：YMKJ团队 | 企业级稳定架构
+版本：4.0
+更新时间：2026-07-24
+
+架构说明：
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        开发人员只需关注两层                               │
+│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐            │
+│  │  【配置层】  │────▶│  【业务层】  │────▶│  【框架层】  │            │
+│  │ CONFIG字典   │     │ 业务方法     │     │ FlowPw       │            │
+│  │ (改参数)     │     │ (改逻辑)     │     │ (已封装)     │            │
+│  └──────────────┘     └──────────────┘     └──────────────┘            │
+│         ▲                    ▲                    ▲                    │
+│         │                    │                    │                    │
+│    30-75行              78-600+行            aibot_rpa/core          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+业务流程：
+1. csh()        → 初始化配置（时间窗、保存路径）
+2. yw_csh()     → 业务初始化（登录→导航）
+3. yw_cl()      → 业务处理（循环材料复用：执保→执行）
+"""
+
+# ============================================================
+# 【导入层】依赖导入必须在最前面
+# ============================================================
+import datetime
+import os
+from pathlib import Path
+import random
+import re
+import json
+import shutil
+import sys
+import time
+import traceback
+
+import pandas as pd
+
+from aibot_common.other_rpa import OTHER_RPA, parse_api_list, api_code_ok
+from aibot_rpa.core.flow_pw import FlowPw as _FrameworkFlowPw
+from aibot_rpa.utils.logger import LoggerInit
+
+g_log = LoggerInit.init(__name__)
+
+# ============================================================
+# 【开发速查】配置全部在这里，改完就能跑
+# ============================================================
+CONFIG = {
+    # -------- 密钥（环境变量优先，变量名格式：SDFY10_AUTH_CODE 等）--------
+    "AuthCode": "lmYXStbZEbJ2RrBf2ej0N",
+    "loginAcc": "18000850505",
+    "loginPW": "CYJun*123",
+
+    # -------- URL --------
+    "LOGIN_URL": "http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/basx",
+    "API_BASE_URL": "http://146.24.58.227:88/ymkj-api",
+
+    # -------- 业务配置 --------
+    "name": "材料复用",
+    "保存路径": "D:/机器人相关",
+    "Excel文件名": "材料复用.xlsx",
+    "start_time": "",
+    "end_time": "",
+    "目标材料关键词": "粤0606",
+    "目标目录名称": "财产保存申请书",
+    # 目标目录兜底列表：当「目标目录名称」在案件卷内不存在时，
+    # 按本列表顺序降级匹配（contains 模糊匹配）。业务规则：
+    # 财产保存申请书 → 申请执行材料收取清单 → 正卷分册 → 正卷。
+    # 用 | 分隔写入配置即可，留空则无兜底。
+    "目标目录兜底": "申请执行材料收取清单|正卷分册|正卷",
+
+    # 文书选择候选目录：
+    # 案号匹配目录：按顺序逐个检查，勾到即停止
+    # 全选目录：全部一起勾选（如财产保全申请书+裁定书一起选择），不再勾到即停止
+    # 案号匹配模式：勾选标题含执保案号的文书（勾到即停止）
+    # 全选模式：点击全选按钮一次性勾选所有文书
+    # 每个条目字段：
+    #   父目录 : 必填，当前要点击展开的目录名（contains 匹配）
+    #   全选 : 是否全选模式（True 时点击全选按钮一次性勾选所有文书）
+    "文书目录候选": [
+        {"父目录": "其他与执行工作相关的材料"},
+        {"父目录": "其他目录"},
+        {"父目录": "财产保全申请书", "全选": True},
+        {"父目录": "裁定书", "全选": True},
+    ],
+
+    # -------- 云表格配置（uniTable = [[表格ID, 表格名]]）--------
+    # 材料复用云表格：执保案号、执行案号、状态 三列
+    "uniTable": [["7Zif1fR3ACTZG35RZinV_", "材料复用"]],
+    "执保案号字段": "zbah",
+    "执行案号字段": "zxah",
+    "状态字段": "状态",
+
+    # -------- 浏览器配置 --------
+    "browser_engine": "playwright",
+    "browser_type": "chromium",
+    "executable_path": None,
+    "browser_path": r"D:/app/360Chrome/Chrome/Application/360chrome.exe",
+    "headless": False,
+    "record_video": True,
+    "video_dir": "./videos",
+    "video_path": "videos/material_reuse",
+
+    # -------- 运行配置 --------
+    "flowId": "flow_material_reuse",
+    "taskId": "task_material_reuse",
+    "live_push": True,
+    "live_push_mode": "shared_memory",
+    "live_server_host": "146.24.58.227",
+    "live_tcp_port": 31111,
+    "max_process_count": 500,
+    "api_max_retries": 3,
+    "reuse_max_retries": 2,
+
+    # -------- 登录状态持久化（按用户名称保存）--------
+    "login_state_path": "",
+    "storage_state_path": "",
+}
+
+
+def ensure_dir(path):
+    """确保目录存在：不存在则创建，已存在则跳过，同名文件则删除后重建"""
+    p = Path(path)
+    if p.exists() and p.is_file():
+        p.unlink()
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+# ============================================================
+# 【业务流程类】MaterialReuseFlow
+# 继承框架FlowPw，只需实现业务逻辑
+# ============================================================
+class MaterialReuseFlow(_FrameworkFlowPw):
+    """材料复用流程 - 企业级稳定架构
+
+    框架能力（已封装，无需关心）：
+    ✅ execute() → run_business() → run_business_async() 链路
+    ✅ ensure_login() 带状态持久化+重试
+    ✅ init_browser() 浏览器初始化+回退机制
+    ✅ _safe_cleanup() 安全资源清理
+    ✅ 信号处理（SIGINT/SIGTERM）
+
+    业务方法（只需实现）：
+    1. csh()        - 配置初始化
+    2. yw_csh()     - 业务初始化
+    3. yw_cl()      - 业务处理
+    """
+
+    def __init__(self, config_manager=None, **kwargs):
+        config = config_manager if config_manager else kwargs.pop("config", None)
+
+        # 准备下载目录（Playwright初始化前必须确定）
+        ls_id = str(random.randint(1, 1000000))
+        linux_root = os.environ.get("AIBOT_LINUX_ROOT", os.getcwd())
+        self._downloads_path = os.path.abspath(os.path.join(linux_root, "downloads_tmp", ls_id))
+        ensure_dir(self._downloads_path)
+        g_log.info(f"下载临时目录: {self._downloads_path}")
+
+        # 框架初始化前设置downloads_path
+        if hasattr(config, "load_dict"):
+            config.load_dict({"downloads_path": self._downloads_path})
+        elif isinstance(config, dict):
+            config["downloads_path"] = self._downloads_path
+
+        super().__init__(config, **kwargs)
+        self.create_directories()
+        self.other_rpa = OTHER_RPA
+        self.g_dict = {}
+
+    # ------------------------------------------------------------------ #
+    # 业务流程入口 - 进度日志一目了然
+    # ------------------------------------------------------------------ #
+    async def run_business_async(self):
+        """业务执行主入口 - 开发人员一眼看到进度"""
+        try:
+            g_log.info("=" * 60)
+            g_log.info("🚀 材料复用流程启动")
+            g_log.info("=" * 60)
+            self.g_dict["err"] = False
+
+            # ==================== 【1/3】初始化配置 ====================
+            g_log.info("")
+            g_log.info("┌──────────────────────────────────────────────────────────────┐")
+            g_log.info("│ 【1/3】初始化配置")
+            g_log.info("└──────────────────────────────────────────────────────────────┘")
+            self.csh()
+            if self.g_dict.get("err"):
+                raise Exception("配置初始化失败")
+            g_log.info(f"✅ 初始化完成: {self.g_dict.get('new_data')} | 云表格ID: {self.table_id}")
+
+            # ==================== 【2/3】业务初始化 ====================
+            g_log.info("")
+            g_log.info("┌──────────────────────────────────────────────────────────────┐")
+            g_log.info("│ 【2/3】业务初始化（登录→导航）")
+            g_log.info("└──────────────────────────────────────────────────────────────┘")
+            if not await self.yw_csh():
+                raise Exception(f"业务初始化失败: {self.g_dict.get('err_msg', '未知')}")
+            g_log.info("✅ 业务初始化完成")
+
+            # ==================== 【3/3】业务处理 ====================
+            g_log.info("")
+            g_log.info("┌──────────────────────────────────────────────────────────────┐")
+            g_log.info(f"│ 【3/3】业务处理（最大处理 {self.cfg('max_process_count', 500)} 条）")
+            g_log.info("└──────────────────────────────────────────────────────────────┘")
+            if not await self.yw_cl():
+                raise Exception(f"业务处理失败: {self.g_dict.get('err_msg', '未知')}")
+
+            # ==================== 完成 ====================
+            g_log.info("")
+            g_log.info("=" * 60)
+            g_log.info("🎉 流程执行完毕！")
+            g_log.info("=" * 60)
+            return True
+        except Exception as e:
+            g_log.info("")
+            g_log.info("=" * 60)
+            g_log.error(f"❌ 业务执行异常: {e}")
+            g_log.info("=" * 60)
+            return False
+        finally:
+            if "ls_dir" in self.g_dict:
+                shutil.rmtree(self.g_dict["ls_dir"], ignore_errors=True)
+
+    # ------------------------------------------------------------------ #
+    # 1. 初始化阶段 - csh()
+    # ------------------------------------------------------------------ #
+    def csh(self):
+        """配置初始化：处理时间窗、保存路径、Excel路径"""
+        try:
+            # 时间窗处理：都为空默认昨天，部分为空相互补全
+            start = self.cfg("start_time")
+            end = self.cfg("end_time")
+            if not start and not end:
+                yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+                yesterday = yesterday.strftime("%Y-%m-%d")
+                start = end = yesterday
+            else:
+                start = start or end
+                end = end or start
+
+            # 保存路径
+            save_dir = os.path.abspath(self.cfg("保存路径"))
+            ensure_dir(save_dir)
+
+            # Excel文件路径
+            excel_name = self.cfg("Excel文件名", "材料复用.xlsx")
+            excel_path = os.path.join(save_dir, excel_name)
+
+            # 保存到g_dict
+            self.g_dict.update({
+                "new_data": f"{start}至{end}",
+                "save_dir": save_dir,
+                "excel_path": excel_path,
+                "ls_dir": self._downloads_path,
+                "start_time": start,
+                "end_time": end,
+            })
+
+            g_log.info(f"时间窗: {self.g_dict['new_data']}")
+            g_log.info(f"云表格ID: {self.table_id}")
+            g_log.info(f"下载目录: {self._downloads_path}")
+        except Exception as e:
+            self.g_dict["err"] = True
+            g_log.error(f"初始化异常: {e}")
+            traceback.print_exc()
+
+    # ------------------------------------------------------------------ #
+    # 2. 业务初始化阶段 - yw_csh()
+    # ------------------------------------------------------------------ #
+    async def yw_csh(self):
+        """业务初始化：登录+导航到我的案件"""
+        try:
+            # 浏览器初始化
+            if not self.page:
+                g_log.info("🔧 初始化浏览器...")
+                if not self.init_browser():
+                    return False
+
+            # 手动加载登录状态（CDP模式下框架不自动加载storage_state）
+            await self._load_storage_state()
+
+            # 导航到登录页面
+            g_log.info("🌐 导航到登录页面...")
+            await self.page.goto(self.cfg("LOGIN_URL"), wait_until="networkidle")
+            await self.page.bring_to_front()
+
+            # 导航后注入localStorage（cookies已在导航前注入）
+            await self._inject_local_storage()
+
+            # 登录（框架ensure_login带状态持久化+重试）
+            # 若storage_state加载成功，ensure_login阶段1会检测到已登录状态并跳过登录
+            g_log.info("🔐 登录系统...")
+            await self.ensure_login(
+                login_func=self._do_login,
+                check_selector="//aside/div/div[2]/*",
+                max_tries=2,
+                delay=3
+            )
+
+            # 等待我的案件
+            g_log.info("📋 等待我的案件页面...")
+            await self.page.locator('//*[contains(text(),"我的案件")]').first.wait_for(timeout=20000)
+            await self.page.wait_for_timeout(1000)
+
+            # 导航到「执行辅助办案」并等待搜索表单加载（步骤1在此搜索执保案件）
+            g_log.info("🔎 导航到执行辅助办案...")
+            if not await self._navigate_to_zhibao_assist():
+                g_log.warning("导航到执行辅助办案失败，尝试在当前页面搜索")
+
+            # 检查云表格配置
+            if not self.table_id:
+                g_log.warning(f"未配置云表格ID（uniTable），请在CONFIG中填写")
+            else:
+                g_log.info(f"云表格ID: {self.table_id}")
+
+            return True
+        except Exception as e:
+            self.g_dict["err"] = True
+            self.g_dict["err_msg"] = str(e)
+            g_log.error(f"业务初始化异常: {e}")
+            traceback.print_exc()
+            return False
+
+    async def _do_login(self):
+        """执行登录操作"""
+        await self.page.bring_to_front()
+
+        login_acc = str(self.cfg("loginAcc"))
+        await self.page.locator("//*[@placeholder='用户名/手机号/身份证']").fill(login_acc)
+
+        pw = str(self.cfg("loginPW"))
+        if self.cfg("isPW", False):
+            pw = "0" + pw
+        await self.page.locator("//*[@type='password']").fill(pw)
+
+        login_btn = self.page.locator("//button[contains(translate(., ' ', ''),'登录')]")
+        await login_btn.first.click()
+
+        try:
+            await self.page.locator("//aside/div/div[2]/*").first.wait_for(timeout=15000)
+        except Exception:
+            await self.page.wait_for_load_state("networkidle")
+            await self.page.wait_for_timeout(3000)
+        await self.page.wait_for_timeout(1000)
+        return True
+
+    # ------------------------------------------------------------------ #
+    # 3. 业务处理阶段 - yw_cl()
+    # ------------------------------------------------------------------ #
+    async def yw_cl(self):
+        """业务处理：循环从云表格拉取材料复用记录并处理"""
+        try:
+            max_count = self.cfg("max_process_count", 500)
+            g_log.info(f"最大处理条数: {max_count}")
+
+            # 云表格字段
+            f_zb = self.cfg("执保案号字段", "执保案号")
+            f_zx = self.cfg("执行案号字段", "执行案号")
+            f_zt = self.cfg("状态字段", "状态")
+
+            # -------- 恢复机制：重置上次中断残留的"处理中"/"异常"记录 --------
+            recovery_payload = {
+                "uniId": self.table_id,
+                "pageSize": 500,
+                "reqParam": {
+                    "queryParam": [
+                        {"field": "zt", "value": ["处理中"], "sign": "=", "append": "or"},
+                        {"field": "zt", "value": ["异常"], "sign": "=", "append": "or"},
+                    ],
+                    "updateMap": {"zt": ""},
+                }
+            }
+            g_log.info("🔄 检查并恢复上次中断的残留记录...")
+            try:
+                recovery_resp = self.other_rpa.post_request(
+                    url=f"{self.cfg('API_BASE_URL')}/uni/universal/pull",
+                    payload=recovery_payload,
+                    auth_token=f'AuthCode {self.cfg("AuthCode")}'
+                )
+                g_log.info(f"恢复 pull 响应: code={recovery_resp.get('code')}, msg={recovery_resp.get('msg')}, 恢复数量={len(parse_api_list(recovery_resp))}")
+            except Exception as e:
+                g_log.warning(f"恢复步骤异常(不影响主流程): {e}")
+
+            # -------- 主查询：拉取未处理的记录 --------
+            skip_statuses = ["已完成", "搜索不到案号", "已移送", "找不到符合文书", "案件不存在", "案号为空", "案号格式异常", "归目未确认", "请在制卷目录中手动归目！", "处理异常"]
+            payload = {
+                "uniId": self.table_id,
+                "pageSize": 1,
+                "reqParam": {
+                    "queryParam": [{"field": "zt", "value": skip_statuses, "sign": "<>", "append": ""}],
+                    "updateMap": {"zt": "处理中"}
+                }
+            }
+            put_json = {"zt": "", "id": "", "uniId": self.table_id}
+
+            # 统计计数器（六维）
+            stats = {"success": 0, "error": 0, "skip": 0, "search_fail": 0, "no_material": 0, "moved": 0, "need_manual": 0}
+
+            process_count = 0
+            while process_count < max_count:
+                # 拉取数据
+                rqs_data = self.other_rpa.post_request(
+                    url=f"{self.cfg('API_BASE_URL')}/uni/universal/pull",
+                    payload=payload,
+                    auth_token=f'AuthCode {self.cfg("AuthCode")}'
+                )
+                g_log.info(f"pull 响应: code={rqs_data.get('code')}, msg={rqs_data.get('msg')}")
+                if not api_code_ok(rqs_data):
+                    g_log.error(f"pull 业务异常: code={rqs_data.get('code')}, msg={rqs_data.get('msg')}")
+                    raise Exception(f"pull 接口业务异常: code={rqs_data.get('code')}, msg={rqs_data.get('msg')}")
+
+                data_list = parse_api_list(rqs_data)
+                if not data_list:
+                    g_log.info(f"📊 无更多数据 (code={rqs_data.get('code')}, msg={rqs_data.get('msg')})")
+                    break
+
+                data = data_list[0]
+                put_json['id'] = data.get('id', '')
+                put_json["zt"] = ""
+
+                # 提取执保案号/执行案号
+                zb_ah = str(data.get(f_zb, '') or '').strip()
+                zx_ah = str(data.get(f_zx, '') or '').strip()
+
+                process_count += 1
+                g_log.info("──────────────────────────────────────────────────────────────")
+                g_log.info(f"【{process_count}/{max_count}】开始处理: 执保={zb_ah} | 执行={zx_ah}")
+
+                # 案号为空跳过
+                if not zb_ah or not zx_ah or zb_ah == 'nan' or zx_ah == 'nan':
+                    put_json["zt"] = "案号为空"
+                    self._put_status(put_json, "[案号为空]")
+                    stats["skip"] += 1
+                    continue
+
+                # 处理单个材料复用
+                try:
+                    result = await self._process_single_case(zb_ah, zx_ah)
+                except Exception as e:
+                    g_log.warning(f"处理异常: {e}")
+                    result = "处理异常"
+
+                # 回填云表格状态
+                put_json["zt"] = result
+                self._put_status(put_json, f"[处理{zb_ah}]")
+
+                # 统计
+                if result == "已完成":
+                    stats["success"] += 1
+                elif result in ("搜索不到案号", "案件不存在"):
+                    stats["search_fail"] += 1
+                elif result == "找不到符合文书":
+                    stats["no_material"] += 1
+                elif result == "已移送":
+                    stats["moved"] += 1
+                elif result in ("请在制卷目录中手动归目！", "归目未确认"):
+                    stats["need_manual"] += 1
+                else:
+                    stats["error"] += 1
+
+                g_log.info(f"【{process_count}/{max_count}】处理完毕: {result}")
+
+            # 汇总统计
+            g_log.info("")
+            g_log.info("┌──────────────────────────────────────────────────────────────┐")
+            g_log.info("│ 业务处理汇总")
+            g_log.info("├──────────────────────────────────────────────────────────────┤")
+            g_log.info(f"│ 总计处理: {process_count} 条")
+            g_log.info(f"│ ✅ 成功:   {stats['success']} 条")
+            g_log.info(f"│ ⏭️ 跳过:   {stats['skip']} 条")
+            g_log.info(f"│ ❌ 异常:   {stats['error']} 条")
+            g_log.info(f"│ 🔍 搜索失败: {stats['search_fail']} 条")
+            g_log.info(f"│ 📄 无材料:   {stats['no_material']} 条")
+            g_log.info(f"│ 📦 已移送:   {stats['moved']} 条")
+            g_log.info(f"│ 👤 待人工处理: {stats['need_manual']} 条")
+            g_log.info("└──────────────────────────────────────────────────────────────┘")
+
+            return True
+        except Exception as e:
+            self.g_dict["err"] = True
+            self.g_dict["err_msg"] = str(e)
+            g_log.error(f"业务处理异常: {e}")
+            traceback.print_exc()
+            return False
+
+    async def _process_single_case(self, zb_ah, zx_ah):
+        """处理单个案件的材料复用（法-重试机制，道-全维容错）"""
+        # 案号格式校验
+        zb_numbers = re.findall(r'\d+', zb_ah)
+        zx_numbers = re.findall(r'\d+', zx_ah)
+        if len(zb_numbers) < 3 or len(zx_numbers) < 3:
+            g_log.warning(f"案号格式异常: 执保={zb_ah}, 执行={zx_ah}")
+            return "案号格式异常"
+
+        max_retries = self.cfg("reuse_max_retries", 2)
+        last_result = "处理异常"
+
+        for retry in range(max_retries + 1):
+            if retry > 0:
+                g_log.info(f"🔄 材料复用重试第{retry}/{max_retries}次...")
+                await self._safe_reset_state()
+                await self.page.wait_for_timeout(2000)
+
+            try:
+                result = await self._do_reuse_once(zb_ah, zx_ah, zb_numbers, zx_numbers)
+                last_result = result
+                if result == "已完成":
+                    break
+                if result in ("搜索不到案号", "案件不存在", "找不到符合文书", "已移送", "案号格式异常", "请在制卷目录中手动归目！", "归目未确认"):
+                    break
+            except Exception as e:
+                g_log.warning(f"第{retry+1}次复用尝试异常: {e}")
+                last_result = "处理异常"
+
+        # ==================== 阶段3：状态重置（为下一条记录准备） ====================
+        g_log.info("【阶段3-状态重置】初始化页面状态")
+
+        try:
+            # 3.1 回到主页面
+            await self._back_to_main()
+            await self.page.wait_for_timeout(1000)
+
+            # 3.2 重新进入「执行辅助办案」（取消在办）
+            g_log.info("→ 重新进入「执行辅助办案」")
+            if await self._navigate_to_zhibao_assist():
+                # 等待搜索表单完全加载
+                await self.page.wait_for_timeout(2000)
+
+                # 重试获取搜索frame（「执行辅助办案」专用，必须含「在办」复选框）
+                sf = None
+                for sf_retry in range(3):
+                    sf = await self._get_search_frame(require_filter="zaiban")
+                    if sf:
+                        break
+                    g_log.info(f"等待搜索表单加载...({sf_retry+1}/3)")
+                    await self.page.wait_for_timeout(1500)
+
+                if sf:
+                    # 取消勾选「在办」（复用_step1_search_zhibao的Vue aty-checkbox处理模式）
+                    checkbox_found = False
+                    for cb_attempt in range(3):
+                        try:
+                            # 精确定位「在办」wrapper
+                            wrapper = sf.locator('.aty-checkbox-wrapper:has(span:text("在办"))').first
+                            if await wrapper.count() == 0:
+                                wrapper = sf.locator('.aty-checkbox-wrapper', has_text="在办").first
+
+                            if await wrapper.count() > 0:
+                                checkbox_found = True
+                                await wrapper.scroll_into_view_if_needed(timeout=3000)
+
+                                # 先尝试原生 uncheck
+                                in_input = wrapper.locator("input[type='checkbox']").first
+                                try:
+                                    if await in_input.count() > 0:
+                                        await in_input.uncheck(timeout=3000)
+                                        g_log.info("✅ 已取消「在办」勾选(原生)")
+                                except Exception:
+                                    # 兜底：强制点击 wrapper
+                                    await wrapper.click(force=True, timeout=3000)
+                                    g_log.info("✅ 已取消「在办」勾选(强制点击)")
+
+                                # 状态校验
+                                if not await wrapper.evaluate(
+                                    "el => el.classList.contains('aty-checkbox-wrapper-checked')"
+                                ):
+                                    g_log.info("✅ 「在办」状态已确认为未勾选")
+                                else:
+                                    g_log.warning("「在办」取消勾选后状态仍异常")
+                                break
+                            else:
+                                g_log.info(f"未找到「在办」复选框(第{cb_attempt+1}次)")
+                                await self.page.wait_for_timeout(1000)
+                        except Exception as e:
+                            g_log.warning(f"取消「在办」(第{cb_attempt+1}次)失败: {e}")
+                            await self.page.wait_for_timeout(1000)
+
+                    if not checkbox_found:
+                        g_log.warning("多次尝试未找到「在办」复选框")
+                else:
+                    g_log.warning("搜索表单加载失败")
+            else:
+                g_log.warning("导航到执行辅助办案失败")
+
+            g_log.info("✅ 状态重置完成，准备处理下一条")
+        except Exception as e:
+            g_log.warning(f"状态重置异常（不影响主流程）: {e}")
+
+        return last_result
+
+    async def _do_reuse_once(self, zb_ah, zx_ah, zb_numbers, zx_numbers):
+        """执行单次材料复用操作"""
+        try:
+            # 回到主页面
+            await self._back_to_main()
+            await self.page.wait_for_timeout(1000)
+
+            # 智能导航检测：如果已在执行辅助办案页面则跳过导航
+            already_on_zhibao = False
+            try:
+                current_url = self.page.url
+                if "basx" in current_url or "执行辅助办案" in current_url or "zhibao" in current_url.lower():
+                    already_on_zhibao = True
+                    g_log.info("当前已在执行辅助办案页面，跳过导航")
+                elif await self.page.locator('//*[contains(text(),"执行辅助办案")]').count() > 0:
+                    already_on_zhibao = True
+                    g_log.info("检测到执行辅助办案导航项，尝试直接点击刷新")
+                    await self.page.locator('//*[contains(text(),"执行辅助办案")]').first.click(timeout=5000)
+                    await self.page.wait_for_timeout(2000)
+                    already_on_zhibao = True
+            except Exception:
+                pass
+
+            if not already_on_zhibao:
+                # 不在目标页面时才导航
+                if not await self._navigate_to_zhibao_assist():
+                    g_log.error("无法导航到执行辅助办案页面")
+                    return "处理异常"
+                await self.page.wait_for_timeout(1000)
+
+            # 关闭可能存在的遮罩/弹窗
+            await self._dismiss_overlays()
+            await self.page.wait_for_timeout(500)
+
+
+            # ==================== 阶段1：入券（执保搜索→入券到执行案件） ====================
+            g_log.info("【阶段1-入券】执保侧搜索并选择材料")
+
+            # ---- 1.1 执保侧搜索并打开案件 ----
+            if not await self._step1_search_zhibao(zb_ah, zb_numbers):
+                return "搜索不到案号"
+
+            # ---- 1.2 进入案件详情（新标签页） ----
+            if not await self._step2_open_detail():
+                await self._back_to_main()
+                return "案件不存在"
+
+            # ---- 1.3 选择并勾选材料（勾选标题含案号的文书） ----
+            if not await self._step3_select_materials(zb_ah):
+                await self._back_to_main()
+                return "找不到符合文书"
+
+            # ---- 1.4 材料复用到执行案件（入券） ----
+            if not await self._step4_reuse_to_exec(zx_numbers, zx_ah):
+                await self._back_to_main()
+                return "入卷失败"
+
+            g_log.info("✅ 阶段1-入券完成")
+
+            # ==================== 阶段2：归目与移动（执行搜索→归目→移动→确定） ====================
+            g_log.info("【阶段2-归目】执行侧搜索、归目与移动")
+
+            # ---- 2.1 执行侧搜索、归目与移动 ----
+            step5_result = await self._phase2_guimu(zx_numbers, zx_ah)
+
+            await self._back_to_main()
+            return step5_result
+
+        except Exception as e:
+            g_log.error(f"处理案件失败: {e}")
+            traceback.print_exc()
+            try:
+                await self._back_to_main()
+            except Exception:
+                pass
+            return "处理异常"
+
+    # ---------- 步骤1：执保侧搜索 ----------
+    async def _step1_search_zhibao(self, an_hao, zb_numbers):
+        """执保侧搜索案件"""
+        # 获取搜索frame（「执行辅助办案」专用，必须含「在办」复选框）
+        sf = await self._get_search_frame(require_filter="zaiban")
+        if not sf:
+            g_log.error("未找到搜索表单frame（缺少「在办」复选框，表单未就绪）")
+            return False
+
+        
+        # 取消勾选「在办」（默认可能已勾选）——一旦「在办」勾选，结果会按在办状态过滤，
+        # 非在办的执保案号搜不到，正是之前"未找到执保案号"的根因，故每次进入都确认取消勾选。
+        # 关键：必须精确定位含"在办"文本的wrapper，不能用 .first 全局定位，
+        # 否则会误点其他选项（如"结案报结"）——副本(23)实测问题。
+        # 必须用 Playwright 原生 click/uncheck，发送真实 CDP 鼠标事件（JS el.click() 的 isTrusted:false，
+        # Vue aty-checkbox 组件不响应）。
+        try:
+            # 精确定位「在办」wrapper（不允许 fallback 到 .first，避免误点其他选项）
+            wrapper = sf.locator('.aty-checkbox-wrapper:has(span:text("在办"))').first
+            if await wrapper.count() == 0:
+                # 备选：has_text 匹配
+                wrapper = sf.locator('.aty-checkbox-wrapper', has_text="在办").first
+
+            if await wrapper.count() > 0:
+                try:
+                    await wrapper.scroll_into_view_if_needed(timeout=3000)
+                except Exception:
+                    pass
+
+                # 自定义 aty-checkbox 勾选态体现在 wrapper 的
+                # `aty-checkbox-wrapper-checked` 类上（<input>.checked 只是 property），
+                # 故用 classList 判定，不用 is_checked/is_selected
+                checked = await wrapper.evaluate(
+                    "el => el.classList.contains('aty-checkbox-wrapper-checked')"
+                )
+                if not checked:
+                    g_log.info("「在办」未勾选，无需操作")
+                else:
+                    ok = False
+                    for attempt in range(1, 5):
+                        try:
+                            # 精确操作「在办」wrapper 内的 checkbox（不用全局 .first）
+                            in_input = wrapper.locator("input[type='checkbox']").first
+                            if await in_input.count() > 0:
+                                try:
+                                    await in_input.uncheck(timeout=3000)
+                                except Exception:
+                                    # input 可能被 CSS 隐藏导致 actionability 失败，强制点击
+                                    await in_input.click(force=True, timeout=3000)
+                            else:
+                                # 直接原生点击 wrapper（force 绕过 actionability）
+                                await wrapper.click(force=True, timeout=3000)
+                            await self.page.wait_for_timeout(400)
+                            # 状态校验：classList 判定（不用 is_checked，该组件上永远 False）
+                            # 重新定位防止 stale
+                            wrapper = sf.locator('.aty-checkbox-wrapper:has(span:text("在办"))').first
+                            if await wrapper.count() == 0:
+                                wrapper = sf.locator('.aty-checkbox-wrapper', has_text="在办").first
+                            if await wrapper.count() > 0 and not await wrapper.evaluate(
+                                "el => el.classList.contains('aty-checkbox-wrapper-checked')"
+                            ):
+                                g_log.info(f"已取消勾选「在办」筛选(第{attempt}次尝试)")
+                                ok = True
+                                break
+                            g_log.warning(f"「在办」取消勾选后仍未取消，重试 {attempt}/4")
+                        except Exception as e:
+                            g_log.warning(f"「在办」取消勾选异常(重试 {attempt}/4): {e}")
+                        # 重试前重新定位（SPA/qiankun 重渲染可能 stale）
+                        await self.page.wait_for_timeout(300)
+                        wrapper = sf.locator('.aty-checkbox-wrapper:has(span:text("在办"))').first
+                        if await wrapper.count() == 0:
+                            wrapper = sf.locator('.aty-checkbox-wrapper', has_text="在办").first
+                    if not ok:
+                        g_log.error("「在办」筛选多次点击仍未能取消勾选")
+            else:
+                g_log.warning("未找到「在办」复选框 wrapper，跳过取消勾选")
+        except Exception as e:
+            g_log.warning(f"「在办」取消勾选失败: {e}")
+        await self.page.wait_for_timeout(1000)
+
+        # 填充年度（force点击绕过清除图标拦截）
+        year_input = sf.locator("//input[contains(@placeholder,'年度')]").first
+        await year_input.click(force=True, timeout=3000)
+        # await year_input.fill("")
+        await year_input.fill(zb_numbers[0])
+        await self.page.wait_for_timeout(600)
+
+        # 填充序号并回车触发查询（force点击绕过清除图标拦截）
+        num_input = sf.locator("//input[contains(@placeholder,'序号')]").first
+        await num_input.click(force=True, timeout=3000)
+        # await num_input.fill("")
+        await num_input.fill(zb_numbers[2])
+        await self.page.wait_for_timeout(600)
+
+        # 备选：点击查询按钮（若回车未触发）
+        try:
+            await sf.get_by_role("button", name=re.compile(r"查询")).first.click(timeout=5000)
+        except Exception:
+            try:
+                await sf.locator("//button/*[contains(text(),'查询')]").first.click(timeout=5000)
+            except Exception:
+                pass
+
+        # 等待结果中出现执保案号（已不勾选「在办」，默认状态应可搜到；
+        # 若一次没出来，自动重试点查询按钮，最多轮询 3 次）
+        case_loc = sf.locator(f"div:has-text('{an_hao}')").first
+        found = False
+        for _ in range(3):
+            try:
+                await case_loc.wait_for(state="visible", timeout=10000)
+                found = True
+                break
+            except Exception:
+                g_log.warning(f"未立即出现执保案号，重试查询({_ + 1}/3)...")
+                try:
+                    await sf.get_by_role("button", name=re.compile(r"查询")).first.click(timeout=5000)
+                except Exception:
+                    pass
+                await self.page.wait_for_timeout(1500)
+        if not found:
+            g_log.warning(f"未找到执保案号: {an_hao}")
+            return False
+        await self.page.wait_for_timeout(2000)
+
+        # 点击案号行（新标签页打开）
+        # 录制副本(12)做法：get_by_text(案号).click() —— 原生点击触发新标签页导航
+        # JS el.click() 在 CDP 下 isTrusted:false，可能不触发 <a target=_blank> 弹出新页
+        try:
+            async with self.page.context.expect_page(timeout=30000):
+                clicked = False
+                # 策略1（录制做法）：按文本定位案号并原生点击
+                case_text = sf.get_by_text(an_hao).first
+                if await case_text.count() > 0:
+                    try:
+                        await case_text.click(force=True, timeout=5000)
+                        clicked = True
+                    except Exception:
+                        pass
+                # 策略2：行内 <a> 链接原生点击
+                if not clicked:
+                    link = sf.locator(f"//tr[contains(., '{an_hao}')]//a").first
+                    if await link.count() > 0:
+                        try:
+                            await link.click(force=True, timeout=5000)
+                            clicked = True
+                        except Exception:
+                            pass
+                # 策略3（兜底）：JS 点击行内链接/行
+                if not clicked:
+                    link = sf.locator(f"//tr[contains(., '{an_hao}')]//a").first
+                    if await link.count() > 0:
+                        await link.evaluate("el => el.click()")
+                    else:
+                        row = sf.locator(f"//tr[contains(., '{an_hao}')]").first
+                        await row.evaluate("el => el.click()")
+            g_log.info(f"案号 {an_hao} 已在新标签页打开")
+        except Exception as e:
+            g_log.warning(f"点击案号链接失败: {e}")
+            await self.page.wait_for_timeout(2000)
+            if len(self.context.pages) <= 1:
+                return False
+
+        return True
+
+    # ---------- 步骤2：进入详情 ----------
+    async def _step2_open_detail(self):
+        """进入案件详情页"""
+        if not await self._switch_to_new_tab(timeout=20):
+            return False
+
+        # 等待「总对总」
+        try:
+            await self.page.wait_for_selector("//*[text()='总对总']/parent::*", timeout=30000)
+        except Exception:
+            g_log.warning("「总对总」未加载")
+            return False
+        await self.page.wait_for_timeout(1500)
+
+        # 点击「电子卷宗」
+        try:
+            await self.page.click("//*[@id='driver-page-2']/span[2]", timeout=10000)
+        except Exception:
+            try:
+                await self.page.locator("span:text('电子卷宗')").first.click(timeout=10000)
+            except Exception:
+                g_log.warning("点击电子卷宗失败")
+                return False
+        await self.page.wait_for_timeout(2000)
+        await self._dismiss_overlays()
+
+        # 进入材料树 iframe（动态异步，轮询等待就绪）
+        iframe2 = await self._wait_for_material_tree_frame(timeout=30)
+        if not iframe2:
+            g_log.warning("材料树iframe未就绪")
+            return False
+
+        await self.page.wait_for_timeout(1000)
+        await self._dismiss_overlays()
+        return True
+
+    # ---------- 步骤3：选择材料 ----------
+    async def _step3_select_materials(self, an_hao):
+        """选择并勾选材料
+
+        流程：
+        1. 若候选中存在「全选模式」目录，则点击「批量选择」按钮进入批量选择模式
+           （仅全选模式需要；案号匹配模式跳过以避免干扰DOM结构）
+        2. 遍历 CONFIG「文书目录候选」配置的所有目录
+        3. 案号匹配目录：勾到即停止
+        4. 全选目录：全部一起勾选（财产保全申请书+裁定书一起选择，不再勾到即停止）
+        5. 任一目录勾到文书即返回 True
+
+        Args:
+            an_hao: 执保案号
+        """
+        # 动态异步iframe，轮询等待就绪
+        iframe2 = await self._wait_for_material_tree_frame(timeout=30)
+        if not iframe2:
+            return False
+
+        candidates = self.cfg("文书目录候选", [])
+        if not candidates:
+            g_log.warning("未配置「文书目录候选」，跳过文书选择")
+            return False
+
+        # 仅当存在「全选模式」候选时才启用「批量选择」按钮
+        # ——案号匹配模式下该按钮会改变DOM结构，干扰文书定位，故跳过
+        has_any_quanxuan = any(bool((c or {}).get("全选", False)) for c in candidates)
+        if has_any_quanxuan:
+            g_log.info("【批量选择】检测到全选模式候选，点击「批量选择」按钮...")
+            if not await self._click_batch_select(iframe2):
+                g_log.warning("未成功点击「批量选择」按钮，继续尝试选择文书")
+            else:
+                g_log.info("✅ 已进入批量选择模式")
+                await self.page.wait_for_timeout(1000)
+        else:
+            g_log.info("【批量选择】所有候选均为案号匹配模式，跳过「批量选择」按钮以避免干扰DOM")
+
+        # 阶段1：案号匹配目录，勾到即停止
+        matched_success = False
+        for idx, cand in enumerate(candidates):
+            quanxuan = bool(cand.get("全选", False))
+            if quanxuan:
+                continue  # 跳过全选目录，阶段2处理
+            parent = (cand.get("父目录") or "").strip()
+            if not parent:
+                continue
+            g_log.info(f"[案号匹配] 检查候选目录({idx+1}/{len(candidates)})：{parent}")
+            try:
+                result = await self._select_in_dir(iframe2, parent, an_hao, quanxuan=False)
+                if result:
+                    g_log.info(f"✅ 已在目录「{parent}」勾到文书（案号匹配），停止后续案号匹配")
+                    matched_success = True
+                    break
+                else:
+                    g_log.info(f"目录「{parent}」未勾到文书，尝试下一候选")
+            except Exception as e:
+                g_log.warning(f"候选目录「{parent}」处理异常: {e}")
+
+        # 阶段2：全选目录，全部一起勾选（财产保全申请书+裁定书一起选择，不停止）
+        quanxuan_success_count = 0
+        for idx, cand in enumerate(candidates):
+            quanxuan = bool(cand.get("全选", False))
+            if not quanxuan:
+                continue
+            parent = (cand.get("父目录") or "").strip()
+            if not parent:
+                continue
+            g_log.info(f"[全选] 检查候选目录({idx+1}/{len(candidates)})：{parent}")
+            try:
+                result = await self._select_in_dir(iframe2, parent, an_hao, quanxuan=True)
+                if result:
+                    g_log.info(f"✅ 已在目录「{parent}」勾到文书（全选）")
+                    quanxuan_success_count += 1
+                else:
+                    g_log.info(f"目录「{parent}」未勾到文书")
+            except Exception as e:
+                g_log.warning(f"候选目录「{parent}」处理异常: {e}")
+
+        if quanxuan_success_count > 0:
+            g_log.info(f"✅ 全选目录共勾到 {quanxuan_success_count} 个目录的文书")
+
+        if matched_success or quanxuan_success_count > 0:
+            return True
+
+        g_log.warning("所有候选目录均未找到文书")
+        return False
+
+    async def _click_batch_select(self, iframe2):
+        """点击「批量选择」按钮进入批量选择模式
+
+        HTML 结构:
+        <div class="fd-index-aside-new-btns">
+          <div class="fd-index-aside-btns-content">
+            <ul class="fd-half-screen-btns-list">
+              <li class="fd-half-screen-btn-child-item">批量选择</li>
+            </ul>
+          </div>
+        </div>
+
+        注意：如果按钮已处于 active 状态，则跳过点击（避免反向关闭）。
+
+        Args:
+            iframe2: 材料树iframe
+        Returns:
+            bool: 是否成功点击或已激活
+        """
+        # 批量选择按钮选择器（多种策略）
+        selectors = [
+            # 策略1：通过 class 和文本精确定位
+            "li.fd-half-screen-btn-child-item:has-text('批量选择')",
+            # 策略2：通过文本模糊匹配
+            "li.fd-half-screen-btn-child-item >> text=批量选择",
+            # 策略3：通过 ul 容器内的 li 文本匹配
+            "ul.fd-half-screen-btns-list li:has-text('批量选择')",
+            # 策略4：XPath 兜底
+            "//li[contains(@class,'fd-half-screen-btn-child-item') and contains(text(),'批量选择')]",
+        ]
+
+        for sel_idx, sel in enumerate(selectors):
+            try:
+                btn = iframe2.locator(sel).first
+                if await btn.count() == 0:
+                    continue
+
+                if not await btn.is_visible():
+                    g_log.info(f"批量选择按钮不可见(选择器{sel_idx+1})，尝试下一个")
+                    continue
+
+                # 检查是否已激活（避免反向关闭）
+                btn_cls = await btn.get_attribute("class") or ""
+                if "active" in btn_cls:
+                    g_log.info(f"「批量选择」已激活(选择器{sel_idx+1})，跳过点击")
+                    return True
+
+                # 点击按钮
+                await btn.click(force=True, timeout=5000)
+                g_log.info(f"✅ 已点击「批量选择」按钮(选择器{sel_idx+1})")
+                await self.page.wait_for_timeout(800)
+
+                # 验证是否成功激活
+                btn_cls_after = await btn.get_attribute("class") or ""
+                if "active" in btn_cls_after:
+                    g_log.info("✅ 批量选择模式已激活")
+                    return True
+                else:
+                    g_log.warning("点击后未检测到 active 类，可能需要额外处理")
+                    return True  # 仍返回True，继续后续流程
+            except Exception as e:
+                g_log.info(f"批量选择按钮选择器{sel_idx+1}失败: {e}")
+                continue
+
+        # 兜底：通过 JS 点击
+        try:
+            result = await iframe2.evaluate("""
+            () => {
+                // 查找所有包含"批量选择"文本的 li 元素
+                const items = document.querySelectorAll('li.fd-half-screen-btn-child-item');
+                for (const item of items) {
+                    if (item.textContent.includes('批量选择')) {
+                        // 检查是否已激活
+                        if (item.classList.contains('active')) {
+                            return true;  // 已激活，直接返回
+                        }
+                        // 触发完整的点击事件序列
+                        item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+                        item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+                        item.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+                        item.click();
+                        return true;
+                    }
+                }
+                return false;
+            }
+            """)
+            if result:
+                g_log.info("✅ 已通过JS点击/激活「批量选择」按钮")
+                await self.page.wait_for_timeout(800)
+                return True
+        except Exception as e:
+            g_log.warning(f"JS点击批量选择按钮失败: {e}")
+
+        g_log.warning("所有批量选择按钮点击策略均失败")
+        return False
+
+    async def _select_in_dir(self, iframe2, parent, an_hao, quanxuan=False):
+        """在指定目录下勾选文书（返回是否勾到）
+
+        实现两种模式：
+        1. 案号匹配模式 (quanxuan=False):
+           - 点击展开父目录
+           - 遍历目录下 li.fd-thumb 文书
+           - 提取标题（span[title]优先, span.fd-name兜底）
+           - 仅勾选标题含 an_hao 的文书
+           - 勾到即返回 True
+
+        2. 全选模式 (quanxuan=True):
+           - 点击目录 checkbox 或全选按钮
+           - 一次性勾选目录下所有文书
+
+        Args:
+            iframe2: 材料树iframe
+            parent: 目标目录名（如"其他目录"、"财产保全申请书"）
+            an_hao: 执保案号（案号匹配模式使用）
+            quanxuan: 是否全选模式
+        Returns:
+            bool：是否成功勾选
+        """
+        await self._dismiss_ajax_loading(frame=iframe2)
+        await self._dismiss_overlays()
+
+        mode_desc = "全选模式" if quanxuan else f"按案号「{an_hao}」匹配"
+        g_log.info(f"查找目录「{parent}」（{mode_desc}）...")
+
+        # ========== 步骤1：点击展开父目录 ==========
+        if not await self._expand_directory(iframe2, parent):
+            return False
+
+        # 等待目录内容加载
+        await iframe2.wait_for_timeout(2000)
+        await self._dismiss_ajax_loading(frame=iframe2)
+
+        # ========== 步骤2：根据模式执行勾选 ==========
+        if quanxuan:
+            # 全选模式：点击目录 checkbox 或全选按钮
+            return await self._select_all_in_directory(iframe2, parent)
+        else:
+            # 案号匹配模式：遍历文书，只勾选标题含案号的
+            return await self._select_by_an_hao(iframe2, parent, an_hao)
+
+    async def _expand_directory(self, iframe2, parent):
+        """点击展开指定目录节点
+
+        Args:
+            iframe2: 材料树iframe
+            parent: 目录名
+        Returns:
+            bool: 是否成功展开
+        """
+        # 策略1：通过 fd-name 文本定位 li.fd-tree-node 并点击展开
+        try:
+            target_li = iframe2.locator(
+                f"li.fd-tree-node:has(span.fd-name:text('{parent}'))"
+            ).first
+            if await target_li.count() == 0:
+                g_log.warning(f"未找到包含「{parent}」的树节点")
+                return False
+
+            if not await target_li.is_visible():
+                g_log.warning(f"目标节点「{parent}」不可见")
+                return False
+
+            # 点击节点头部展开（不是checkbox，而是header）
+            header = target_li.locator("h3.fd-tree-node-header").first
+            if await header.count() > 0:
+                await header.click(force=True, timeout=3000)
+            else:
+                # 兜底：点击整个li
+                await target_li.click(force=True, timeout=3000)
+
+            g_log.info(f"✅ 已展开目录「{parent}」")
+            return True
+        except Exception as e:
+            g_log.warning(f"展开目录策略1失败: {e}")
+
+        # 策略2：XPath兜底
+        try:
+            target_li = iframe2.locator(
+                f"//li[contains(@class,'fd-tree-node')]"
+                f"//span[contains(@class,'fd-name') and contains(text(),'{parent}')]"
+                f"/ancestor::li[1]"
+            ).first
+            if await target_li.count() > 0:
+                header = target_li.locator(".//h3[contains(@class,'fd-tree-node-header')]").first
+                if await header.count() > 0:
+                    await header.click(force=True, timeout=3000)
+                else:
+                    await target_li.click(force=True, timeout=3000)
+                g_log.info(f"✅ 已通过XPath展开目录「{parent}」")
+                return True
+        except Exception as e:
+            g_log.warning(f"展开目录策略2失败: {e}")
+
+        # 策略3：JS点击兜底
+        try:
+            result = await iframe2.evaluate(f"""
+            (() => {{
+                const nodes = document.querySelectorAll('li.fd-tree-node');
+                for (const node of nodes) {{
+                    const nameSpan = node.querySelector('span.fd-name');
+                    if (nameSpan && nameSpan.textContent.includes('{parent}')) {{
+                        const header = node.querySelector('h3.fd-tree-node-header');
+                        if (header) {{
+                            header.dispatchEvent(new MouseEvent('mousedown', {{bubbles: true}}));
+                            header.dispatchEvent(new MouseEvent('mouseup', {{bubbles: true}}));
+                            header.click();
+                        }} else {{
+                            node.click();
+                        }}
+                        return true;
+                    }}
+                }}
+                return false;
+            }})()
+            """)
+            if result:
+                g_log.info(f"✅ 已通过JS展开目录「{parent}」")
+                return True
+        except Exception as e:
+            g_log.warning(f"展开目录策略3失败: {e}")
+
+        return False
+
+    async def _select_by_an_hao(self, iframe2, parent, an_hao):
+        """案号匹配模式：遍历目录下文书，仅勾选标题含案号的
+
+        Args:
+            iframe2: 材料树iframe
+            parent: 目录名（用于日志）
+            an_hao: 执保案号
+        Returns:
+            bool: 是否成功勾选到至少一条文书
+        """
+        g_log.info(f"目录「{parent}」下查找标题含「{an_hao}」的文书...")
+
+        # 限定在 fd-region-center 区域内搜索文书（Bug-02修复）
+        center = iframe2.locator("div.fd-region-center").first
+        if await center.count() == 0:
+            g_log.warning(f"未找到 fd-region-center 容器")
+            center = iframe2
+
+        docs = center.locator("ul.fd-node-list li.fd-thumb")
+        doc_count = await docs.count()
+        g_log.info(f"目录「{parent}」共 {doc_count} 个文书条目")
+
+        checked_count = 0
+        for idx in range(doc_count):
+            try:
+                doc = docs.nth(idx)
+
+                # 提取文书标题：优先 span[title]，兜底 span.fd-name
+                title = ""
+                try:
+                    title_el = doc.locator("span[title]").first
+                    if await title_el.count() > 0:
+                        title = (await title_el.get_attribute("title") or "").strip()
+                except Exception:
+                    pass
+
+                if not title:
+                    try:
+                        name_el = doc.locator("span.fd-name").first
+                        if await name_el.count() > 0:
+                            title = (await name_el.inner_text() or "").strip()
+                    except Exception:
+                        pass
+
+                if not title:
+                    continue
+
+                # 检查标题是否包含案号
+                if an_hao not in title:
+                    continue
+
+                g_log.info(f"  发现匹配文书: {title[:60]}")
+
+                # 勾选文书：点击 span.fd-ac-check-box-w
+                checkbox = doc.locator("span.fd-ac-check-box-w").first
+                if await checkbox.count() == 0:
+                    g_log.warning(f"  文书无勾选框，跳过: {title[:40]}")
+                    continue
+
+                # 检查是否已勾选
+                cb_cls = await checkbox.get_attribute("class") or ""
+                if "active" in cb_cls or "checked" in cb_cls:
+                    g_log.info(f"  文书已勾选: {title[:40]}")
+                    checked_count += 1
+                    continue
+
+                # 点击勾选（含重试）
+                for attempt in range(1, 5):
+                    try:
+                        await checkbox.scroll_into_view_if_needed(timeout=2000)
+                        await checkbox.click(force=True, timeout=3000)
+                        await iframe2.wait_for_timeout(300)
+
+                        # 验证勾选状态
+                        cb_cls_after = await checkbox.get_attribute("class") or ""
+                        if "active" in cb_cls_after or "checked" in cb_cls_after:
+                            g_log.info(f"  ✅ 已勾选文书(第{attempt}次): {title[:40]}")
+                            checked_count += 1
+                            break
+                        g_log.warning(f"  勾选后状态未变更(第{attempt}次)，重试...")
+                    except Exception as e:
+                        g_log.warning(f"  勾选异常(第{attempt}次): {e}")
+                    await iframe2.wait_for_timeout(300)
+
+            except Exception as e:
+                g_log.warning(f"  处理文书{idx}异常: {e}")
+                continue
+
+        if checked_count > 0:
+            g_log.info(f"✅ 目录「{parent}」共勾到 {checked_count} 条文书")
+            return True
+        else:
+            g_log.info(f"目录「{parent}」未找到标题含「{an_hao}」的文书")
+            return False
+
+    async def _select_all_in_directory(self, iframe2, parent):
+        """全选模式：勾选目录下所有文书
+
+        Args:
+            iframe2: 材料树iframe
+            parent: 目录名（用于日志）
+        Returns:
+            bool: 是否成功勾选
+        """
+        g_log.info(f"全选模式：目录「{parent}」...")
+
+        # 尝试点击目录 checkbox（全选当前目录）
+        try:
+            # 策略1：点击节点的 fd-tree-node-checkbox
+            target_li = iframe2.locator(
+                f"li.fd-tree-node:has(span.fd-name:text('{parent}'))"
+            ).first
+            if await target_li.count() > 0:
+                checkbox = target_li.locator("span.fd-tree-node-checkbox").first
+                if await checkbox.count() > 0:
+                    cb_cls = await checkbox.get_attribute("class") or ""
+                    if "checked" not in cb_cls:
+                        await checkbox.click(force=True, timeout=3000)
+                        g_log.info(f"✅ 已点击「{parent}」的全选checkbox")
+                    else:
+                        g_log.info(f"「{parent}」已勾选")
+                    await iframe2.wait_for_timeout(1000)
+                    return True
+        except Exception as e:
+            g_log.warning(f"全选策略1失败: {e}")
+
+        # 策略2：查找全选按钮（fd-checkbox-w）
+        try:
+            selectors = [
+                "div.fd-checkbox-w span.fd-check-box",
+                "label.el-checkbox:has-text('全选')",
+                "//label[contains(text(),'全选')]",
+            ]
+            for sel in selectors:
+                try:
+                    cb = iframe2.locator(sel).first
+                    if await cb.count() == 0:
+                        continue
+                    cb_cls = await cb.get_attribute("class") or ""
+                    if "active" in cb_cls or "is-checked" in cb_cls:
+                        g_log.info("全选按钮已勾选")
+                        return True
+                    await cb.click(force=True, timeout=3000)
+                    g_log.info(f"✅ 已点击全选按钮(选择器: {sel[:30]})")
+                    await iframe2.wait_for_timeout(1000)
+                    return True
+                except Exception:
+                    continue
+        except Exception as e:
+            g_log.warning(f"全选策略2失败: {e}")
+
+        # 策略3：兜底逐个勾选
+        g_log.info("回退到逐个勾选模式...")
+        center = iframe2.locator("div.fd-region-center").first
+        if await center.count() == 0:
+            center = iframe2
+
+        docs = center.locator("ul.fd-node-list li.fd-thumb")
+        doc_count = await docs.count()
+        checked_count = 0
+        for idx in range(doc_count):
+            try:
+                doc = docs.nth(idx)
+                checkbox = doc.locator("span.fd-ac-check-box-w").first
+                if await checkbox.count() == 0:
+                    continue
+                cb_cls = await checkbox.get_attribute("class") or ""
+                if "active" in cb_cls or "checked" in cb_cls:
+                    checked_count += 1
+                    continue
+                await checkbox.click(force=True, timeout=2000)
+                checked_count += 1
+            except Exception:
+                continue
+
+        if checked_count > 0:
+            g_log.info(f"✅ 回退全选成功：已勾选 {checked_count}/{doc_count} 条文书")
+            return True
+
+        g_log.warning(f"全选失败：目录「{parent}」无可用文书")
+        return False
+
+    # ---------- 步骤4：材料复用 ----------
+    async def _step4_reuse_to_exec(self, zx_numbers, zx_ah):
+        """材料复用到执行案件
+
+        参考codegen录制脚本（材料复用codegen.zib）：
+        1. 办案辅助 → 更多(×2) → 材料复用
+        2. 填序号 → 查询 → 点案号 → 点入卷 → 验证入卷成功
+        所有操作均在 iframe2 内完成，无需弹窗定位。
+        """
+        # 动态异步iframe，轮询等待就绪
+        iframe2 = await self._wait_for_material_tree_frame(timeout=30)
+        if not iframe2:
+            return False
+
+        await self._dismiss_ajax_loading(frame=iframe2)
+        await self._dismiss_overlays()
+        await self.page.wait_for_timeout(1000)
+
+        # ---- 1. 点击「办案辅助」展开菜单 ----
+        try:
+            await iframe2.locator("li").filter(has_text="办案辅助").first.click(timeout=10000)
+        except Exception:
+            try:
+                await iframe2.locator("span:text('办案辅助')").first.click(timeout=10000)
+            except Exception:
+                g_log.warning("未找到办案辅助")
+                return False
+        await self.page.wait_for_timeout(500)
+
+        # ---- 2. 点击「更多」展开隐藏菜单（codegen录制需点两次） ----
+        for _ in range(2):
+            try:
+                await iframe2.locator("a").filter(has_text="更多").first.click(timeout=3000)
+                await self.page.wait_for_timeout(300)
+            except Exception:
+                break
+
+        # ---- 3. 点击「材料复用」 ----
+        try:
+            await iframe2.get_by_title("材料复用").locator("span").first.click(timeout=10000)
+        except Exception:
+            try:
+                await iframe2.locator("//p[@title='材料复用']").first.click(timeout=10000)
+            except Exception:
+                g_log.warning("未找到材料复用按钮")
+                return False
+
+        # 等待搜索表单渲染
+        await self.page.wait_for_timeout(2000)
+
+        # ---- 4. 填充序号并查询 ----
+        # codegen只需填序号，不需要年度
+        try:
+            xh_input = iframe2.locator("input[placeholder='序号']").first
+            await xh_input.click(force=True, timeout=3000)
+            # await xh_input.fill("")
+            await xh_input.fill(zx_numbers[2])
+        except Exception as e:
+            g_log.warning(f"填充序号失败: {e}")
+            return False
+
+        # ---- 5. 点击查询 ----
+        try:
+            await iframe2.get_by_text("查询", exact=True).first.click(timeout=5000)
+        except Exception:
+            try:
+                await iframe2.locator("button:has-text('查询')").first.click(timeout=5000)
+            except Exception:
+                g_log.warning("点击查询失败")
+        await self.page.wait_for_timeout(2000)
+
+        # ---- 6. 等待执行案号出现 ----
+        try:
+            await iframe2.locator(f"span[title='{zx_ah}']").first.wait_for(timeout=20000)
+            g_log.info(f"执行案件已找到: {zx_ah}")
+        except Exception:
+            g_log.warning(f"执行案号不存在: {zx_ah}")
+            return False
+
+        # ---- 7. 点击执行案号（选中行） ----
+        try:
+            await iframe2.get_by_text(zx_ah, exact=True).first.click(timeout=10000)
+        except Exception as e:
+            g_log.warning(f"点击执行案号失败: {e}")
+        await self.page.wait_for_timeout(1000)
+
+        # ---- 8. 点击「入卷」按钮 ----
+        # HTML结构: ul.fd-tblist-ul > li.fd-list-item > div.fd-item > span.fd-zts(入卷)
+        # 在目标案号所在li内查找入卷按钮
+        try:
+            # 策略1：在目标行内精确查找入卷按钮
+            target_li = iframe2.locator(f"li.fd-list-item:has(span[title='{zx_ah}'])")
+            if await target_li.count() > 0:
+                ru_juan_btn = target_li.locator("span.fd-zts:has-text('入卷')").first
+                if await ru_juan_btn.count() > 0:
+                    await ru_juan_btn.click(timeout=10000)
+                    g_log.info("已点击入卷按钮（行内定位）")
+                else:
+                    raise Exception("行内未找到入卷按钮")
+            else:
+                raise Exception("未找到目标行")
+        except Exception:
+            # 策略2：参考codegen用nth定位（最后一个入卷通常是目标行的）
+            try:
+                all_rj = iframe2.get_by_text("入卷")
+                count = await all_rj.count()
+                if count > 0:
+                    await all_rj.nth(count - 1).click(timeout=10000)
+                    g_log.info(f"已点击入卷按钮(nth={count-1})")
+                else:
+                    g_log.warning("未找到入卷按钮")
+                    return False
+            except Exception as e:
+                g_log.warning(f"点击入卷失败: {e}")
+                return False
+
+        # ---- 9. 等待「入卷成功」提示 ----
+        try:
+            await iframe2.get_by_text("入卷成功").first.wait_for(timeout=15000)
+            g_log.info("✅ 入卷成功")
+        except Exception:
+            g_log.warning("未检测到「入卷成功」提示，请人工确认")
+
+        await self.page.wait_for_timeout(3000)
+        return True
+
+    # ---------- 阶段2：归目 ----------
+    async def _phase2_guimu(self, zx_numbers, zx_ah):
+        """执行侧归目与移动（阶段2）
+
+        流程：搜索执行案号 → 打开详情 → 点击「待入卷材料」→ 点击「归目」→ 检测提示
+        → 点击「移动」→ 选择目标目录 → 点击「确定」
+
+        返回值说明：
+        - "已完成"：归目+移动流程执行完毕
+        - "请在制卷目录中手动归目！"：移动流程失败，需人工干预
+        - "处理异常"：某步骤操作失败，归入异常统计
+        """
+        g_log.info("阶段2-归目：执行侧搜索并归目...")
+
+        # 回到主窗口
+        await self._back_to_main()
+        await self.page.wait_for_timeout(1000)
+
+        # 导航到「我的案件」并等待搜索表单加载（替代固定3秒等待）
+        if not await self._navigate_to_my_cases():
+            g_log.error("执行侧搜索：导航到「我的案件」失败")
+            return "处理异常"
+
+        # 获取搜索frame（「我的案件」专用，必须含「全选」复选框）
+        sf = await self._get_search_frame(require_filter="quanxuan")
+        if not sf:
+            g_log.error("执行侧搜索：未找到搜索表单frame（缺少「全选」复选框，表单未就绪）")
+            return "处理异常"
+
+        # 执行侧：勾选「全选」（覆盖所有状态：结案报结/已结案/已归档）
+        # 修复：取消 _do_quanxuan 标志位，每次校验实际class状态
+        # ——重试时页面已刷新，全选状态丢失，旧标志位会导致执行案件被状态过滤搜不到
+        try:
+            cb = sf.locator('label.el-checkbox:has-text("全选")').first
+            if await cb.count() > 0:
+                cls_attr = await cb.get_attribute("class") or ""
+                if "is-checked" not in cls_attr:
+                    await cb.click(timeout=5000)
+                    g_log.info("已点击「全选」筛选（执行侧）")
+                else:
+                    g_log.info("「全选」已勾选，无需重复操作")
+            else:
+                g_log.warning("未找到「全选」复选框")
+        except Exception as e:
+            g_log.warning(f"「全选」点击失败: {e}")
+        await self.page.wait_for_timeout(1000)
+
+        # 搜索执行案号
+        year_input = sf.locator("//input[contains(@placeholder,'年度')]").first
+        await year_input.click(force=True, timeout=3000)
+        await year_input.fill(zx_numbers[0])
+        await self.page.wait_for_timeout(600)
+
+        num_input = sf.locator("//input[contains(@placeholder,'序号')]").first
+        await num_input.click(force=True, timeout=3000)
+        await num_input.fill(zx_numbers[2])
+        await self.page.wait_for_timeout(600)
+
+        # 备选：点击查询按钮
+        try:
+            await sf.get_by_role("button", name=re.compile(r"查询")).first.click(timeout=5000)
+        except Exception:
+            try:
+                await sf.locator("//button/*[contains(text(),'查询')]").first.click(timeout=5000)
+            except Exception:
+                pass
+        await self.page.wait_for_timeout(1500)
+
+        # 等待执行案号（增加重试机制，与步骤1对齐）
+        case_loc = sf.locator(f"div:has-text('{zx_ah}')").first
+        found = False
+        for _ in range(3):
+            try:
+                await case_loc.wait_for(state="visible", timeout=15000)
+                found = True
+                break
+            except Exception:
+                g_log.warning(f"未立即出现执行案号，重试查询({_ + 1}/3)...")
+                try:
+                    await sf.get_by_role("button", name=re.compile(r"查询")).first.click(timeout=5000)
+                except Exception:
+                    pass
+                await self.page.wait_for_timeout(1500)
+        if not found:
+            g_log.warning(f"未找到执行案号: {zx_ah}")
+            return "搜索不到案号"
+
+        # 点击执行案号行
+        try:
+            async with self.page.context.expect_page(timeout=30000):
+                row = sf.get_by_role("row", name=re.compile(re.escape(zx_ah))).first
+                await row.locator("a").first.click(timeout=15000)
+        except Exception:
+            g_log.warning("点击执行案号链接失败")
+            return "处理异常"
+
+        # 切换到详情标签页
+        if not await self._switch_to_new_tab(timeout=20):
+            return "处理异常"
+        await self.page.wait_for_timeout(2000)
+
+        # 等待「总对总」加载
+        try:
+            await self.page.wait_for_selector("//*[text()='总对总']/parent::*", timeout=30000)
+        except Exception:
+            return "处理异常"
+
+        # 点击「电子卷宗」
+        try:
+            await self.page.click("//*[@id='driver-page-2']/span[2]", timeout=10000)
+        except Exception:
+            g_log.warning("点击电子卷宗失败")
+            return "处理异常"
+        await self.page.wait_for_timeout(2000)
+
+        # 进入材料树 iframe（动态异步，轮询等待就绪）
+        iframe2 = await self._wait_for_material_tree_frame(timeout=30)
+        if not iframe2:
+            g_log.warning("材料树iframe未就绪")
+            return "处理异常"
+        await self.page.wait_for_timeout(3000)
+        await self._dismiss_ajax_loading(frame=iframe2)
+        await self._dismiss_overlays()
+
+        # 1) 点击左侧树节点「待入卷材料」（原生点击一次即可）
+        # 注意：第一次「待入卷材料」是左侧树节点 div.fd-common-aside-tree-drj，
+        #       与后面右侧面板的全选复选框label不是同一个元素，不要混用选择器！
+        await iframe2.locator(
+            "div.fd-common-aside-tree-drj span.fd-tree-node-name"
+        ).first.click(timeout=10000)
+        g_log.info("已点击左侧「待入卷材料」树节点")
+
+        await self.page.wait_for_timeout(2000)
+
+        # 2) 归目→移动流程（右侧操作区，codegen录制顺序）：
+        #    勾选「待入卷材料」全选 → 移动 → 选目标目录 → 确定
+        # （原「点归目按钮+检测手动归目提示」步骤为死代码：检测结果从未被使用，
+        #   且日志实测归目点击无任何效果，已移除）
+        target_dir = self.cfg("目标目录名称", "财产保存申请书")
+        g_log.info(f"开始归目→移动流程，目标目录: {target_dir}")
+
+        move_success = False
+        for move_attempt in range(2):
+
+            # 4b) 点击「归目」按钮（右侧菜单，codegen录制定位）
+            try:
+                await iframe2.locator(
+                    "//p/span[contains(text(),'归目')]"
+                ).first.click(timeout=10000)
+                g_log.info("已点击「归目」")
+            except Exception as e:
+                g_log.warning(f"点击「归目」失败: {e}")
+                await self._close_move_dialog(iframe2)
+                continue
+
+            await self.page.wait_for_timeout(1500)  # 弹窗异步渲染
+
+            try:
+                # 4a) 勾选右侧面板「待入卷材料」全选复选框（第二次「待入卷材料」）
+                # 这是右侧的label复选框(div.fd-checkbox-w)，与左侧树节点不是同一元素！
+                # 已勾选(active)时跳过，避免重试时重复点击变成取消勾选
+                try:
+                    cb = iframe2.locator("div.fd-checkbox-w span.fd-check-box").first
+                    cb_cls = ""
+                    if await cb.count() > 0:
+                        cb_cls = await cb.get_attribute("class") or ""
+                    if "active" in cb_cls:
+                        g_log.info("「待入卷材料」已全选，跳过")
+                    else:
+                        await iframe2.locator(
+                            "//label/span[contains(text(),'待入卷材料')]"
+                        ).first.click(timeout=10000)
+                        g_log.info(f"已勾选右侧「待入卷材料」全选(第{move_attempt+1}次)")
+                except Exception as e:
+                    g_log.warning(f"勾选「待入卷材料」全选失败: {e}")
+                    await self._close_move_dialog(iframe2)
+                    continue
+                await self.page.wait_for_timeout(800)
+
+
+
+
+                # 4b) 点击「移动」按钮（右侧菜单，codegen录制定位）
+                try:
+                    await iframe2.locator(
+                        "//p/span[contains(text(),'移动')]"
+                    ).first.click(timeout=10000)
+                    g_log.info("已点击「移动」")
+                except Exception as e:
+                    g_log.warning(f"点击「移动」失败: {e}")
+                    await self._close_move_dialog(iframe2)
+                    continue
+
+                await self.page.wait_for_timeout(1500)  # 弹窗异步渲染
+
+                # 4c) 重新定位移动弹窗所在iframe（移动弹窗可能在新iframe内）
+                # 点击「移动」后会弹出新弹窗，弹窗内含移动树iframe（仍然是dzjz路径）
+                # 必须重新获取最新 frame（旧 iframe2 可能不含移动树）
+                move_frame = None
+                g_log.info("点击移动后，重新定位移动树iframe...")
+                for retry in range(15):  # 15秒超时，等异步创建
+                    # 每次尝试都重新遍历 frame（URL含dzjz即为移动弹窗）
+                    for fr in self.page.frames:
+                        url = fr.url or ""
+                        if "dzjz" in url:
+                            # 检查是否有 jsDzjzMoveTree
+                            try:
+                                has_tree = await fr.evaluate(
+                                    "() => !!document.getElementById('jsDzjzMoveTree')"
+                                )
+                                if has_tree:
+                                    move_frame = fr
+                                    g_log.info("✓ 找到移动树iframe（URL匹配）")
+                                    break
+                            except Exception:
+                                pass
+                    if move_frame:
+                        break
+                    await self.page.wait_for_timeout(1000)
+                if not move_frame:
+                    # fallback：如果遍历没找到，仍用原 iframe2 兜底
+                    move_frame = iframe2
+                    g_log.warning("未找到单独移动树iframe，继续使用原dzjz iframe")
+
+                # 等待移动树可见
+                try:
+                    move_tree = move_frame.locator("#jsDzjzMoveTree").first
+                    await move_tree.wait_for(state="visible", timeout=5000)
+                    g_log.info("移动树已加载")
+                except Exception:
+                    g_log.warning("移动树加载超时")
+                    await self._close_move_dialog(iframe2)
+                    continue
+
+                # 4d) 在移动树中选择目标目录（主目标优先，失败按兜底列表降级）
+                # 组装候选目录：主目标 + 兜底列表（去重、保序）
+                candidates = [target_dir]
+                fb_raw = self.cfg("目标目录兜底", "")
+                if fb_raw:
+                    for c in str(fb_raw).split("|"):
+                        c = c.strip()
+                        if c and c not in candidates:
+                            candidates.append(c)
+
+                target_clicked = False
+                chosen_dir = None
+                for cand in candidates:
+                    if await self._click_move_tree_dir(move_frame, cand):
+                        target_clicked = True
+                        chosen_dir = cand
+                        g_log.info(f"✅ 已选择目录「{cand}」(命中候选#{candidates.index(cand)+1})")
+                        break
+                    g_log.info(f"移动树中未找到目录「{cand}」，尝试下一候选")
+
+                if not target_clicked:
+                    g_log.warning(
+                        f"移动树中均未找到候选目录: {candidates}"
+                    )
+                    await self._close_move_dialog(iframe2)
+                    continue
+
+                await self.page.wait_for_timeout(800)
+
+                # 4e) 点击「确定」按钮（最强点击模式）
+                confirm_clicked = await self._click_confirm_btn(move_frame, iframe2)
+
+                await self.page.wait_for_timeout(3000)
+
+                if not confirm_clicked:
+                    g_log.warning("未找到「确定」按钮")
+                    await self._close_move_dialog(iframe2)
+                    continue
+
+                move_success = True
+                break
+
+            except Exception as e:
+                g_log.warning(f"归目→移动流程(第{move_attempt+1}次)失败: {e}")
+                await self._close_move_dialog(iframe2)
+                await self.page.wait_for_timeout(1500)
+
+        if not move_success:
+            g_log.warning("归目→移动流程未能自动完成，需人工确认")
+            return "请在制卷目录中手动归目！"
+
+        g_log.info("✅ 归目流程全部完成")
+        return "已完成"
+
+    async def _click_confirm_btn(self, move_frame, iframe2):
+        """最强点击模式：点击弹窗「确定」按钮并验证成功提示
+
+        综合策略，支持多种选择器和点击方式：
+        1. fd-operate-btn 确定按钮（主操作区）
+        2. window-btn confirm 确定按钮（弹窗底部）
+        3. 多种点击方式（普通/force/JS直点/dispatchEvent）
+        4. 点击后验证「移送成功」提示出现（与确定按钮同一iframe）
+
+        Args:
+            move_frame: 移动树iframe
+            iframe2: 材料树iframe
+        Returns:
+            bool：是否成功完成（点击+成功提示）
+        """
+        # 确定按钮选择器列表（按优先级）
+        confirm_selectors = [
+            # 主要选择器：fd-operate-btn 确定按钮
+            "//div/span[@class='fd-operate-btn' and text()='确定']",
+            # 弹窗底部确定按钮
+            ".fd-window-popup-footer span.window-btn.confirm",
+            # 通用确定按钮
+            "//span[contains(@class,'operate-btn') and text()='确定']",
+            "//span[contains(@class,'confirm') and text()='确定']",
+        ]
+
+        # 成功提示关键字（按优先级）
+        success_keywords = ["移送成功", "移动成功", "归目成功", "操作成功", "已完成"]
+
+        # 在多个frame中尝试
+        for frame_name, frame in [("move_frame", move_frame), ("iframe2", iframe2), ("page", self.page)]:
+            if frame is None:
+                continue
+
+            for sel_idx, sel in enumerate(confirm_selectors):
+                try:
+                    locator = frame.locator(sel).first
+                    if await locator.count() == 0:
+                        continue
+
+                    # 等待元素可见
+                    try:
+                        await locator.wait_for(state="visible", timeout=3000)
+                    except Exception:
+                        pass
+
+                    # 多种点击方式
+                    click_methods = [
+                        ("普通click", lambda: locator.click(timeout=2000)),
+                        ("force点击", lambda: locator.click(force=True, timeout=2000)),
+                        ("dispatchEvent", lambda: locator.evaluate("el => el.dispatchEvent(new MouseEvent('click', {bubbles: true}))")),
+                        ("JS直点", lambda: frame.evaluate(f'''
+                            () => {{
+                                const btn = document.evaluate(
+                                    "{sel}",
+                                    document, null,
+                                    XPathResult.FIRST_ORDERED_NODE_TYPE, null
+                                ).singleNodeValue;
+                                if (btn) {{ btn.click(); return true; }}
+                                return false;
+                            }}
+                        ''')),
+                    ]
+
+                    for method_name, click_fn in click_methods:
+                        try:
+                            result = await click_fn()
+                            if result is not None and result is not True:
+                                continue
+                            g_log.info(f"✅ 已点击「确定」({frame_name}/{sel_idx+1}/{method_name})")
+
+                            # 验证成功提示（与确定按钮同一iframe）
+                            await self.page.wait_for_timeout(500)
+                            success = await self._verify_success_tip(frame, success_keywords)
+                            if success:
+                                g_log.info(f"✅ 归目流程完成：检测到成功提示「{success}」")
+                                return True
+                            else:
+                                g_log.warning("点击成功但未检测到成功提示，尝试下一方式")
+                                continue
+                        except Exception as e:
+                            g_log.info(f"点击方式{method_name}异常: {e}")
+                            continue
+
+                except Exception as e:
+                    g_log.info(f"确定按钮选择器「{sel[:30]}...」在{frame_name}失败: {e}")
+                    continue
+
+        # 终极策略：在主页面查找所有iframe
+        try:
+            for iframe_idx in range(5):
+                try:
+                    target_iframe = self.page.locator("iframe").nth(iframe_idx).content_frame
+                    for sel in confirm_selectors:
+                        try:
+                            locator = target_iframe.locator(sel).first
+                            if await locator.count() > 0:
+                                await locator.click(force=True, timeout=2000)
+                                g_log.info(f"✅ 已点击「确定」(iframe{iframe_idx}/{sel[:30]})")
+
+                                # 验证成功提示
+                                await self.page.wait_for_timeout(500)
+                                success = await self._verify_success_tip(target_iframe, success_keywords)
+                                if success:
+                                    g_log.info(f"✅ 归目流程完成：检测到成功提示「{success}」")
+                                    return True
+                        except Exception:
+                            continue
+                except Exception:
+                    break
+        except Exception:
+            pass
+
+        g_log.warning("所有确定按钮点击策略均失败")
+        return False
+
+    async def _verify_success_tip(self, frame, keywords):
+        """验证成功提示是否出现
+
+        Args:
+            frame: 当前iframe/页面
+            keywords: 成功提示关键字列表
+        Returns:
+            str: 匹配到的关键字，None表示未检测到
+        """
+        # 选择器列表：查找包含成功关键字的元素
+        tip_selectors = [
+            # Toast提示
+            ".el-message",
+            ".el-message--success",
+            ".fd-message",
+            ".fd-toast",
+            ".fd-tip",
+            ".fd-dialog-message",
+            # 弹窗提示
+            ".fd-window-popup",
+            ".el-dialog",
+            # 通用文本
+            "//div[contains(@class,'success')]",
+            "//div[contains(@class,'tip')]",
+            "//div[contains(@class,'message')]",
+            "//span[contains(@class,'success')]",
+        ]
+
+        for sel in tip_selectors:
+            try:
+                locator = frame.locator(sel).first
+                if await locator.count() == 0:
+                    continue
+                text = await locator.inner_text() or ""
+                for kw in keywords:
+                    if kw in text:
+                        g_log.info(f"检测到成功提示: {kw}")
+                        return kw
+            except Exception:
+                continue
+
+        # 兜底：在整个iframe中搜索关键字
+        try:
+            body_text = await frame.locator("body").first.inner_text(timeout=2000) or ""
+            for kw in keywords:
+                if kw in body_text:
+                    g_log.info(f"全文检测到成功提示: {kw}")
+                    return kw
+        except Exception:
+            pass
+
+        return None
+
+    async def _click_move_tree_dir(self, move_frame, dir_name):
+        """在移动树 #jsDzjzMoveTree 中点击指定目录（三种定位兜底）
+
+        目录名按 contains 模糊匹配（同一卷内目录名唯一，模糊足够精准）。
+        命中规则：只点 directory 类节点（class 含 'fd-tree-node directory'），
+        避免误点 dossier/volume/booklet 等非目录节点。
+
+        Args:
+            move_frame: 移动树所在 iframe
+            dir_name: 目标目录名（模糊匹配）
+        Returns:
+            bool：是否成功点击
+        """
+        if move_frame is None or not dir_name:
+            return False
+
+        # 策略1：XPath 直接定位（精确 text 包含，限定 directory 节点）
+        try:
+            span = move_frame.locator(
+                f"//ul[@id='jsDzjzMoveTree']"
+                f"//li[contains(@class,'directory')]"
+                f"//span[contains(@class,'fd-name') and contains(text(),'{dir_name}')]"
+            ).first
+            await span.click(force=True, timeout=3000)
+            return True
+        except Exception:
+            pass
+
+        # 策略2：CSS 模糊定位（:has-text）
+        try:
+            span = move_frame.locator(
+                f"#jsDzjzMoveTree li.directory span.fd-name:has-text('{dir_name}')"
+            ).first
+            if await span.count() > 0:
+                await span.click(force=True, timeout=3000)
+                return True
+        except Exception:
+            pass
+
+        # 策略3：JS 兜底（展开所有节点后查找 directory 下的 fd-name 文本）
+        try:
+            result = await move_frame.evaluate(f"""
+                (() => {{
+                    const tree = document.getElementById('jsDzjzMoveTree');
+                    if (!tree) return false;
+                    // 展开所有节点（部分目录可能被折叠成 leaf）
+                    tree.querySelectorAll('li').forEach(n => {{
+                        n.classList.add('extend');
+                        n.classList.remove('leaf');
+                    }});
+                    // 仅在 directory 类节点的 fd-name 中匹配，避免误点父级
+                    const dirs = tree.querySelectorAll('li.directory span.fd-name');
+                    for (const s of dirs) {{
+                        if (s.textContent.includes('{dir_name}')) {{
+                            s.click();
+                            return true;
+                        }}
+                    }}
+                    return false;
+                }})()
+            """)
+            if result:
+                return True
+        except Exception:
+            pass
+
+        return False
+
+    async def _close_move_dialog(self, iframe2):
+        """关闭移动弹窗（用于重试前清理状态）"""
+        try:
+            # 尝试点击关闭按钮
+            close_btn = iframe2.locator("//div[contains(@class,'close')] | //span[contains(@class,'close')] | //button[contains(text(),'关闭')]").first
+            if await close_btn.count() > 0:
+                await close_btn.click(timeout=3000)
+                g_log.info("已关闭移动弹窗")
+                await self.page.wait_for_timeout(500)
+                return True
+            # 尝试按ESC关闭
+            await self.page.keyboard.press("Escape")
+            await self.page.wait_for_timeout(500)
+            g_log.info("已按ESC关闭弹窗")
+            return True
+        except Exception:
+            pass
+        return False
+    # ------------------------------------------------------------------ #
+    # 辅助方法
+    # ------------------------------------------------------------------ #
+    async def _load_storage_state(self):
+        """手动加载登录状态到当前context
+
+        框架在使用CDP连接自定义浏览器时，直接复用已有context（adapters.py L698-700），
+        跳过 _build_context_options()，导致 storage_state 从未被加载。
+        本方法在导航前手动注入cookies和localStorage，使ensure_login的阶段1
+        （_check_login_state_valid）能命中，跳过重复登录。
+        """
+        state_path = self.cfg("login_state_path", "")
+        if not state_path:
+            g_log.info("未配置登录状态路径，跳过加载")
+            return
+
+        sp = os.path.abspath(str(state_path))
+        if not os.path.isfile(sp):
+            g_log.info(f"登录状态文件不存在，将正常登录: {sp}")
+            return
+
+        try:
+            with open(sp, "r", encoding="utf-8") as f:
+                state = json.load(f)
+
+            # 注入cookies
+            cookies = state.get("cookies", [])
+            if cookies:
+                # Playwright add_cookies 需要的标准格式
+                normalized_cookies = []
+                for c in cookies:
+                    cookie = dict(c)
+                    # 确保 sameSite 合法
+                    same_site = cookie.get("sameSite", "Lax")
+                    if same_site not in ("Strict", "Lax", "None"):
+                        cookie["sameSite"] = "Lax"
+                    normalized_cookies.append(cookie)
+                await self.context.add_cookies(normalized_cookies)
+                g_log.info(f"已加载 {len(normalized_cookies)} 条cookies")
+
+            # 注入localStorage（需在页面导航后才能设置，此处先暂存）
+            origins = state.get("origins", [])
+            if origins:
+                self._pending_storage = origins
+                g_log.info(f"已暂存 {len(origins)} 个origin的localStorage（导航后注入）")
+
+            g_log.info(f"✅ 登录状态加载完成: {sp}")
+        except Exception as e:
+            g_log.warning(f"加载登录状态失败: {e}，将正常登录")
+
+    async def _inject_local_storage(self):
+        """导航后注入localStorage（由_load_storage_state暂存的数据）"""
+        origins = getattr(self, "_pending_storage", None)
+        if not origins:
+            return
+
+        try:
+            for origin in origins:
+                local_storage = origin.get("localStorage", [])
+                if not local_storage:
+                    continue
+                # 通过 evaluate 在当前页面设置 localStorage
+                script_parts = []
+                for item in local_storage:
+                    key = item.get("name", "")
+                    value = item.get("value", "")
+                    # 转义引号
+                    key_escaped = key.replace("\\", "\\\\").replace("'", "\\'")
+                    value_escaped = value.replace("\\", "\\\\").replace("'", "\\'")
+                    script_parts.append(f"localStorage.setItem('{key_escaped}', '{value_escaped}');")
+                if script_parts:
+                    script = "\n".join(script_parts)
+                    try:
+                        await self.page.evaluate(script)
+                    except Exception:
+                        pass
+                g_log.info(f"已注入 {len(local_storage)} 条localStorage")
+            self._pending_storage = None
+        except Exception as e:
+            g_log.warning(f"注入localStorage失败: {e}")
+
+    async def _get_search_frame(self, wait_timeout=15000, require_filter="auto"):
+        """获取搜索表单所在的frame（优先查找#app iframe，确保功能完整）
+
+        优化：
+        1. 优先在iframe中查找，因为主页面的表单可能是渲染不完整的占位符
+        2. 新增搜索表单完整性校验：必须具备序号输入框 + 至少一个筛选复选框
+           - 「执行辅助办案」页（_step1）：至少有「在办」复选框
+           - 「我的案件」页（_phase2_guimu）：至少有「在办」或「全选」复选框
+           - 目的：防止仅渲染占位元素、复选框未就绪时提前返回，导致后续操作失败
+        3. 通过 require_filter 参数控制校验严格度：
+           - "auto"（默认）：要求含「在办」或「全选」任一复选框（兼顾两页）
+           - "zaiban"：仅要求含「在办」复选框（执行辅助办案专用，最严格）
+           - "quanxuan"：仅要求含「全选」复选框（我的案件专用，最严格）
+           - "any"：任一复选框即可（兼容旧调用，不强制校验）
+           - "none"：不校验复选框（调试用）
+        """
+        # 构建复选框校验逻辑
+        async def _is_form_complete(f):
+            """检查 frame f 内的搜索表单是否完整（有序号输入框 + 目标复选框）"""
+            try:
+                has_input = await f.locator("input[placeholder='序号']").count() > 0
+                if not has_input:
+                    return False
+            except Exception:
+                return False
+
+            if require_filter == "none":
+                return True
+
+            try:
+                has_zaiban = await f.locator(
+                    ".aty-checkbox-wrapper:has(span:text('在办'))"
+                ).count() > 0
+            except Exception:
+                has_zaiban = False
+            try:
+                has_quanxuan = await f.locator(
+                    "label.el-checkbox:has-text('全选')"
+                ).count() > 0
+            except Exception:
+                has_quanxuan = False
+
+            if require_filter == "zaiban":
+                ok = has_zaiban
+            elif require_filter == "quanxuan":
+                ok = has_quanxuan
+            elif require_filter == "any":
+                ok = has_zaiban or has_quanxuan
+            else:  # auto
+                ok = has_zaiban or has_quanxuan
+
+            if not ok:
+                g_log.debug(
+                    f"表单完整性校验未通过: has_zaiban={has_zaiban}, "
+                    f"has_quanxuan={has_quanxuan}, require={require_filter}"
+                )
+            return ok
+
+        deadline = time.time() + wait_timeout / 1000
+        last_err = None
+        last_incomplete_reason = ""
+        while time.time() < deadline:
+            # 策略1：优先查找 #app iframe（功能最完整）
+            try:
+                iframe_el = self.page.locator("#app iframe").first
+                if await iframe_el.count() > 0:
+                    frame = iframe_el.content_frame
+                    if frame and await frame.locator("input[placeholder='序号']").count() > 0:
+                        if await _is_form_complete(frame):
+                            g_log.info("搜索表单在 #app iframe（完整性校验通过）")
+                            return frame
+                        last_incomplete_reason = "#app iframe 内表单不完整（复选框未就绪）"
+            except Exception as e:
+                last_err = e
+
+            # 策略2：遍历所有子frame（兜底）
+            try:
+                for frame in self.page.frames:
+                    try:
+                        if frame != self.page.main_frame:
+                            if await frame.locator("input[placeholder='序号']").count() > 0:
+                                if await _is_form_complete(frame):
+                                    g_log.info(f"搜索表单在子frame: {frame.url}")
+                                    return frame
+                                last_incomplete_reason = f"子frame {frame.url} 内表单不完整"
+                    except Exception:
+                        continue
+            except Exception as e:
+                last_err = e
+
+            # 策略3：主页面直接查找（最后兜底，仅当 require_filter != "zaiban" 时采用）
+            # ——「执行辅助办案」页主页面通常无「在办」复选框，禁止在主页面兜底
+            if require_filter != "zaiban":
+                try:
+                    if await self.page.locator("input[placeholder='序号']").count() > 0:
+                        if await _is_form_complete(self.page):
+                            g_log.info("搜索表单在主页面")
+                            return self.page
+                        last_incomplete_reason = "主页面表单不完整"
+                except Exception as e:
+                    last_err = e
+
+            # 未找到，等待500ms后重试
+            await self.page.wait_for_timeout(500)
+
+        suffix_parts = []
+        if last_incomplete_reason:
+            suffix_parts.append(f"最后未通过原因: {last_incomplete_reason}")
+        if last_err:
+            suffix_parts.append(f"最后错误: {last_err}")
+        suffix = (("，" + "，".join(suffix_parts)) if suffix_parts else "")
+        g_log.warning(
+            f"未找到包含完整搜索表单的frame（等待{wait_timeout}ms超时，"
+            f"require_filter={require_filter}）{suffix}"
+        )
+        return None
+
+    async def _navigate_to_my_cases(self, timeout=30000):
+        """导航到「我的案件」页面并等待搜索表单加载
+
+        修复：替代步骤5中固定的3秒等待，改为等待搜索表单元素出现
+        ——解决网络慢时搜索表单未加载导致后续操作失败的问题
+
+        Returns:
+            bool: True=导航成功且搜索表单已加载，False=失败
+        """
+        try:
+            # 精确定位「我的案件」导航项（避免匹配到面包屑等其他位置的同名文本）
+            # 优先在 aside 侧边栏中查找，兜底用全局 first
+            nav_item = self.page.locator("aside").locator("text=我的案件").first
+            try:
+                if await nav_item.count() == 0:
+                    nav_item = self.page.get_by_text("我的案件").first
+                await nav_item.click(timeout=10000)
+                g_log.info("已点击「我的案件」导航项")
+            except Exception:
+                # 兜底：全局文本点击
+                await self.page.get_by_text("我的案件").first.click(timeout=10000)
+                g_log.info("已点击「我的案件」（全局兜底）")
+
+            # 等待搜索表单加载（序号输入框出现即代表页面就绪）
+            try:
+                # 先在主页面等
+                await self.page.wait_for_selector(
+                    "input[placeholder='序号']",
+                    timeout=timeout,
+                    state="attached"
+                )
+                g_log.info("✅ 「我的案件」搜索表单已加载（主页面）")
+                return True
+            except Exception:
+                # 可能在 iframe 内，轮询查找
+                sf = await self._get_search_frame(wait_timeout=timeout, require_filter="quanxuan")
+                if sf:
+                    g_log.info("✅ 「我的案件」搜索表单已加载（iframe）")
+                    return True
+                g_log.warning("「我的案件」搜索表单未加载")
+                return False
+        except Exception as e:
+            g_log.error(f"导航到「我的案件」异常: {e}")
+            return False
+
+    async def _back_to_main(self):
+        """回到主页面，关闭多余标签"""
+        pages = self.context.pages
+        if len(pages) > 1:
+            for p in pages[1:]:
+                try:
+                    await p.close()
+                except Exception:
+                    pass
+        self.page = self.context.pages[0]
+
+    async def _switch_to_new_tab(self, timeout=20):
+        """切换到新标签页"""
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            pages = self.context.pages
+            if len(pages) > 1:
+                self.page = pages[-1]
+                g_log.info(f"切换到新标签页 (共{len(pages)}个标签)")
+                return True
+            await self.page.wait_for_timeout(500)
+        g_log.warning("未检测到新标签页")
+        return False
+
+    async def _iframe_detail(self, page=None):
+        """获取dzjz材料树iframe（最强匹配：URL帧通道 + 元素通道 双保险）
+
+        动态异步iframe的企业级定位策略（突破异步/重建/stale）：
+        通道1（最可靠）：page.frames 按URL匹配 —— 直接引用已加载的frame，
+            不受iframe元素DOM被重建/替换的影响，是异步iframe的最强解。
+        通道2：iframe元素 class=async-iframe 匹配（等待元素可见）
+        通道3：iframe元素 src 包含dzjz 匹配
+        通道4：main区域iframe 兜底
+        通道5：最后一个iframe 兜底
+        """
+        p = page or self.page
+        # 通道1：page.frames 按URL匹配（最强，摆脱iframe元素stale）
+        try:
+            for fr in p.frames:
+                url = fr.url or ""
+                if "dzjz" in url:
+                    g_log.info(f"✓ 通过page.frames按URL匹配dzjz frame: {url[:60]}")
+                    return fr
+        except Exception:
+            pass
+
+        # 通道2：iframe元素 class=async-iframe（等待可见）
+        try:
+            iframe_el = p.locator("iframe.async-iframe").first
+            if await iframe_el.count() > 0:
+                await iframe_el.wait_for(state="visible", timeout=5000)
+                g_log.info("✓ 通过class=async-iframe找到dzjz iframe")
+                return iframe_el.content_frame
+        except Exception:
+            pass
+
+        # 通道3：iframe元素 src 包含dzjz
+        try:
+            iframes = p.locator("iframe")
+            count = await iframes.count()
+            for i in range(count):
+                try:
+                    iframe_el = iframes.nth(i)
+                    src = await iframe_el.get_attribute("src") or ""
+                    if "dzjz" in src:
+                        g_log.info(f"✓ 通过src匹配找到dzjz iframe (index={i})")
+                        return iframe_el.content_frame
+                except Exception:
+                    continue
+        except Exception:
+            pass
+
+        # 通道4：按内容容器定位（fd-index-content-main-right 内，无需<main>角色）
+        try:
+            container = p.locator(".fd-index-content-main-right, .fd-region-content-main-right")
+            if await container.count() > 0:
+                iframe_el = container.locator("iframe").first
+                if await iframe_el.count() > 0:
+                    await iframe_el.wait_for(state="visible", timeout=5000)
+                    g_log.info("通过内容容器定位dzjz iframe（兜底）")
+                    return iframe_el.content_frame
+        except Exception:
+            pass
+
+        # 通道5：最后一个iframe（最终兜底）
+        try:
+            iframes = p.locator("iframe")
+            count = await iframes.count()
+            if count > 0:
+                g_log.info(f"使用最后一个iframe（兜底，index={count-1}）")
+                return iframes.nth(count - 1).content_frame
+        except Exception:
+            pass
+
+        g_log.error("未找到任何iframe")
+        return None
+
+    async def _reload_iframe(self):
+        """强制刷新dzjz iframe内容（异步加载卡死时的兜底）"""
+        try:
+            # 通过元素重新设置src或reload
+            iframe_el = self.page.locator("iframe.async-iframe").first
+            if await iframe_el.count() > 0:
+                src = await iframe_el.get_attribute("src")
+                if src:
+                    await iframe_el.evaluate("(el, s) => { el.src = s; }", src)
+                    g_log.info("已强制刷新dzjz iframe")
+                    return True
+        except Exception as e:
+            g_log.warning(f"刷新iframe失败: {e}")
+        return False
+
+    async def _wait_for_material_tree_frame(self, timeout=30):
+        """获取并等待材料树iframe就绪（最强：突破动态异步iframe）
+
+        动态异步iframe的content_frame可能：
+        1. 尚未加载完成（frame返回后内容才开始渲染）
+        2. 被SPA/qiankun重新创建（旧frame失效）
+        3. body的loading属性持久存在（不可作为完成信号）
+
+        最强处理策略：
+        - 通过page.frames URL匹配直接拿已加载的frame（通道1）
+        - 等待frame加载状态（domcontentloaded）
+        - 清理iframe内部遮罩（避免加载遮罩拦截渲染）
+        - 轮询材料树核心标记
+        - 超时过半尝试强制刷新iframe（兜底）
+
+        Returns:
+            frame对象（就绪） 或 None（超时）
+        """
+        markers = [
+            "ul.fd-yzw-aside-tab",
+            ".fd-index-aside-tab-container",
+            "ul.fd-node-list",
+            "li.fd-thumb",
+            "span.fd-name",
+        ]
+        deadline = time.time() + timeout
+        reload_at = deadline - timeout / 2
+        tried_reload = False
+        while time.time() < deadline:
+            try:
+                # 每次重新获取，避免拿到stale frame（通道1优先URL匹配）
+                iframe2 = await self._iframe_detail()
+                if iframe2:
+                    # 等待frame加载完成
+                    try:
+                        await iframe2.wait_for_load_state("domcontentloaded", timeout=3000)
+                    except Exception:
+                        pass
+                    # 清理iframe内部遮罩 + 移除loading遮罩（body[loading] pseudo-element）
+                    try:
+                        await iframe2.evaluate("""
+                        () => {
+                            // 移除body的loading属性，消除"页面数据加载中"遮罩
+                            const b = document.body;
+                            if (b) b.removeAttribute('loading');
+                            // 移除任何全屏加载遮罩元素
+                    document.querySelectorAll('.fd-eyeshield-modal, .el-loading-mask, .loading-mask, .fd-ajax-loading').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                        }
+                        """)
+                    except Exception:
+                        pass
+                    # 清理iframe内部拦截器（pointer-events）
+                    try:
+                        await self._dismiss_overlays(iframe=iframe2)
+                    except Exception:
+                        pass
+                    # 检查材料树核心标记
+                    for marker in markers:
+                        try:
+                            found = await iframe2.evaluate(
+                                "m => !!document.querySelector(m)", marker
+                            )
+                            if found:
+                                g_log.info(f"✓ 材料树iframe就绪({marker})")
+                                return iframe2
+                        except Exception:
+                            pass
+            except Exception:
+                pass
+            # 超时过半仍无内容，尝试强制刷新iframe
+            if not tried_reload and time.time() >= reload_at:
+                tried_reload = True
+                g_log.warning("材料树加载较慢，尝试强制刷新dzjz iframe...")
+                await self._reload_iframe()
+            await self.page.wait_for_timeout(1000)
+        g_log.warning("材料树iframe加载超时")
+        return None
+
+    async def _click_in_any_frame(self, selector, description="", timeout=8):
+        """企业级：在任意frame中查找并force点击指定选择器元素
+
+        参考SDFY12的 _switch_to_displayed_iframe + _enhanced_click 思路：
+        归目/移动按钮可能不在主材料树iframe（iframe2），而在另一个"显示的iframe"中。
+        这里遍历所有frame（含嵌套），找到匹配选择器且可见的元素并force点击。
+
+        Args:
+            selector: CSS或XPath选择器（如 "//p/span[contains(text(),'移动')]"）
+            description: 描述（用于日志）
+            timeout: 总超时（秒）
+        Returns:
+            bool：是否成功点击
+        """
+        deadline = time.time() + timeout
+        last_err = None
+        while time.time() < deadline:
+            for fr in self.page.frames:
+                try:
+                    loc = fr.locator(selector).first
+                    if await loc.count() > 0:
+                        if await loc.is_visible():
+                            await loc.click(force=True, timeout=3000)
+                            g_log.info(f"✓ 跨frame点击「{description}」在 [{fr.url[:50]}]")
+                            return True
+                except Exception as e:
+                    last_err = e
+            await self.page.wait_for_timeout(800)
+        g_log.warning(f"跨frame点击「{description}」失败: {selector} - {last_err}")
+        return False
+
+    async def _js_click_selector(self, frame, selector):
+        """JS直点增强版：选可见元素 + 完整鼠标事件序列 + 原生click兜底
+
+        原版缺陷：
+        ① querySelector 只取第一个匹配，可能命中隐藏模板节点——点了隐藏元素
+           返回true但无效果；
+        ② 部分fd系组件只监听 mousedown/mouseup，单个 click() 合成事件不触发。
+
+        本版：在所有匹配元素中选第一个可见元素，先派发完整鼠标事件序列
+        （mousedown→mouseup→click），再补原生 el.click()（兼容label默认激活行为）。
+
+        Args:
+            frame: 目标frame（可None）
+            selector: CSS选择器
+        Returns:
+            bool：是否成功触发
+        """
+        if frame is None:
+            return False
+        try:
+            script = """
+            (sel) => {
+                const els = Array.from(document.querySelectorAll(sel));
+                if (!els.length) return false;
+                // 优先可见元素（跳过隐藏模板/旧DOM节点）
+                const isVis = e => !!(e.offsetWidth || e.offsetHeight || e.getClientRects().length);
+                const el = els.find(isVis) || els[0];
+                const rect = el.getBoundingClientRect();
+                const opts = {
+                    bubbles: true, cancelable: true, view: window, button: 0,
+                    clientX: rect.left + rect.width / 2,
+                    clientY: rect.top + rect.height / 2
+                };
+                // 完整鼠标事件序列（部分组件只响应 mousedown/mouseup）
+                for (const type of ['mousedown', 'mouseup', 'click']) {
+                    el.dispatchEvent(new MouseEvent(type, opts));
+                }
+                // 原生click兜底（触发label默认激活等）
+                el.click();
+                return true;
+            }
+            """
+            return await frame.evaluate(script, selector)
+        except Exception:
+            return False
+
+    async def _js_click_by_text(self, frame, text, tag="span"):
+        """JS直点：在指定frame中按文本查找元素并用原生 el.click() 触发
+
+        用于无法用CSS选择器表达文本匹配的场景（如 label span 中含指定文字）。
+        """
+        if frame is None:
+            return False
+        try:
+            script = """
+            (args) => {
+                const {tag, text} = args;
+                const els = document.querySelectorAll(tag);
+                for (const el of els) {
+                    const t = (el.textContent || '').trim();
+                    if (t === text || t.includes(text)) {
+                        el.click();
+                        return true;
+                    }
+                }
+                return false;
+            }
+            """
+            return await frame.evaluate(script, {"tag": tag, "text": text})
+        except Exception:
+            return False
+
+    async def _click_by_text_any_frame(self, text, description="", timeout=8):
+        """企业级：在任意frame中按文本查找并点击
+
+        更宽松的文本匹配，适用于没有稳定选择器的按钮。
+        遍历所有frame，找到textContent包含目标文本的可见元素并点击。
+        """
+        escaped = str(text).replace("'", "\\'")
+        xpath = f"//*[contains(text(),'{escaped}')]"
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            for fr in self.page.frames:
+                try:
+                    loc = fr.locator(xpath).first
+                    if await loc.count() > 0:
+                        if await loc.is_visible():
+                            await loc.click(force=True, timeout=3000)
+                            g_log.info(f"✓ 跨frame按文本点击「{description}」在 [{fr.url[:50]}]")
+                            return True
+                except Exception:
+                    pass
+            await self.page.wait_for_timeout(800)
+        g_log.warning(f"跨frame按文本点击「{description}」失败")
+        return False
+
+    async def _dismiss_overlays(self, page=None, tries=2, iframe=None):
+        """关闭OCR弹窗、菜单遮罩等拦截指针事件的元素
+        
+        Args:
+            page: 主页面或iframe容器
+            tries: 重试次数
+            iframe: 可选的iframe对象，用于在iframe内部移除拦截元素
+        """
+        p = page or self.page
+        target = iframe or p
+        for _ in range(tries):
+            # 关闭显式弹窗（仅在主页面查找）
+            if not iframe:
+                for sel in [
+                    ".fd-popup-yzw-clfy .fd-popup-close",
+                    ".fd-popup-yzw-clfy .fd-clfy-con-r",
+                    "span.fd-icon-close",
+                    "div:has-text('OCR') + span",
+                    ".fd-popup-close",
+                    "span.fd-popup-close",
+                    ".ant-modal-close",
+                    ".el-dialog__headerbtn",
+                ]:
+                    try:
+                        el = p.locator(sel).first
+                        if await el.count() > 0 and await el.is_visible(timeout=500):
+                            await el.click(timeout=2000)
+                            await p.wait_for_timeout(300)
+                    except Exception:
+                        continue
+
+            # 隐藏/移除拦截器元素（树触发器等可能拦截点击）
+            # ——用 evaluate 在 DOM 层处理，移除 pointer-events 即可，不能 display:none
+            # （因为这些元素可能是目标按钮的父容器，隐藏后目标也消失）
+            # 注意：pointer-events 会继承！绝不能把 .fd-configMenuItem/.fd-menu-item
+            # （移动/归目按钮的祖先容器）放进列表，否则原生点击按钮全部失效。
+            blocker_selectors = [
+                ".fd-tree-item-trigger",
+                ".fd-tree-header-trigger",
+            ]
+            for bsel in blocker_selectors:
+                try:
+                    js = f"""
+                    (() => {{
+                        document.querySelectorAll('{bsel}').forEach(el => {{
+                            // 只处理可见的拦截元素
+                            if (el.offsetParent !== null) {{
+                                // 仅移除 pointer-events 拦截，不改变 display
+                                el.style.pointerEvents = 'none';
+                            }}
+                        }});
+                    }})()
+                    """
+                    await target.evaluate(js)
+                except Exception:
+                    pass
+
+    async def _dismiss_ajax_loading(self, frame=None, timeout=8000):
+        """关键修复：强制移除 .fd-ajax-loading 全屏加载遮罩
+
+        日志实测：点击材料目录节点（策略A/B的 span.fd-name）时被
+        '<div class="fd-ajax-loading show"> intercepts pointer events' 拦截，
+        原 _dismiss_overlays 的拦截器列表完全漏掉了该遮罩，导致目录永远
+        点不动，最终只能走策略C（而部分案件没有"财产保存申请书"目录 → 彻底失败）。
+
+        .fd-ajax-loading 是覆盖整个材料树的遮罩，display:none 不会影响业务节点，
+        因此可直接隐藏它。同时等待遮罩真正消失后再返回。
+        """
+        target = frame or self.page
+        deadline = time.time() + timeout / 1000.0
+        while time.time() < deadline:
+            try:
+                await target.evaluate(
+                    "() => { document.querySelectorAll('.fd-ajax-loading').forEach(el => { el.style.display = 'none'; }); }"
+                )
+                # 确认已无可见的 fd-ajax-loading
+                n = await target.evaluate(
+                    "() => { let n = 0; document.querySelectorAll('.fd-ajax-loading').forEach(el => { if (el.offsetParent !== null && getComputedStyle(el).display !== 'none') n++; }); return n; }"
+                )
+                if n == 0:
+                    return True
+            except Exception:
+                pass
+            await self.page.wait_for_timeout(200)
+        # 超时也兜底再清一次
+        try:
+            await target.evaluate(
+                "() => { document.querySelectorAll('.fd-ajax-loading').forEach(el => { el.style.display = 'none'; }); }"
+            )
+        except Exception:
+            pass
+        return False
+
+    async def _safe_reset_state(self):
+        """安全重置状态（法-容错恢复）
+
+        优化：重试时确保回到「执行辅助办案」且搜索表单已加载
+        ——避免页面未加载完成导致步骤1搜索失败
+        """
+        try:
+            # 关闭所有多余标签，只保留主页
+            await self._back_to_main()
+            await self.page.wait_for_timeout(1000)
+
+            # 刷新主页面
+            try:
+                await self.page.reload(timeout=30000)
+                await self.page.wait_for_load_state("domcontentloaded")
+                await self.page.wait_for_timeout(3000)
+            except Exception:
+                pass
+
+            # 等待我的案件加载
+            try:
+                await self.page.locator('//*[contains(text(),"我的案件")]').first.wait_for(timeout=20000)
+            except Exception:
+                pass
+
+            # 重新导航到「执行辅助办案」并等待搜索表单加载
+            if not await self._navigate_to_zhibao_assist():
+                g_log.warning("重置后导航到执行辅助办案失败，尝试在当前页面搜索")
+
+        except Exception as e:
+            g_log.warning(f"重置状态异常: {e}")
+
+    async def _navigate_to_zhibao_assist(self, timeout=30000):
+        """导航到「执行辅助办案」页面并等待搜索表单加载
+
+        修复：替代固定的3秒等待，改为等待搜索表单元素出现
+        ——解决刷新后页面未加载完成导致步骤1搜索失败的问题
+
+        Returns:
+            bool: True=导航成功且搜索表单已加载，False=失败
+        """
+        try:
+            # 精确定位「执行辅助办案」导航项
+            try:
+                await self.page.get_by_text("执行辅助办案").first.click(timeout=10000)
+                g_log.info("已点击「执行辅助办案」导航项")
+            except Exception as e:
+                g_log.warning(f"点击「执行辅助办案」失败，尝试展开菜单: {e}")
+                # 尝试展开侧边栏菜单
+                aside = self.page.locator("aside").first
+                if await aside.count() > 0:
+                    icons = aside.locator("i")
+                    ic_count = await icons.count()
+                    for i in range(min(ic_count, 5)):
+                        try:
+                            await icons.nth(i).click(timeout=3000)
+                            await self.page.wait_for_timeout(500)
+                        except Exception:
+                            continue
+                await self.page.get_by_text("执行辅助办案").first.click(timeout=10000)
+                g_log.info("已点击「执行辅助办案」（展开后）")
+
+            # 等待搜索表单加载（序号输入框出现即代表页面就绪）
+            try:
+                await self.page.wait_for_selector(
+                    "input[placeholder='序号']",
+                    timeout=timeout,
+                    state="attached"
+                )
+                g_log.info("✅ 「执行辅助办案」搜索表单已加载（主页面）")
+                return True
+            except Exception:
+                # 可能在 iframe 内，轮询查找
+                sf = await self._get_search_frame(wait_timeout=timeout, require_filter="zaiban")
+                if sf:
+                    g_log.info("✅ 「执行辅助办案」搜索表单已加载（iframe）")
+                    return True
+                g_log.warning("「执行辅助办案」搜索表单未加载")
+                return False
+        except Exception as e:
+            g_log.error(f"导航到「执行辅助办案」异常: {e}")
+            return False
+
+    def _put_status(self, put_json: dict, context=""):
+        """回填云表格状态（网络异常不崩溃）"""
+        try:
+            rqs_data = self.other_rpa.put_request(
+                f"{self.cfg('API_BASE_URL')}/uni/universal/edit",
+                payload=put_json,
+                auth_token=f'AuthCode {self.cfg("AuthCode")}'
+            )
+            g_log.info(f"回填状态{context}: code={rqs_data.get('code')}, msg={rqs_data.get('msg')}")
+            if not api_code_ok(rqs_data):
+                g_log.warning(f"回填业务异常{context}: code={rqs_data.get('code')}, msg={rqs_data.get('msg')}")
+        except Exception as e:
+            g_log.warning(f"回填状态{context}失败: {e}")
+
+    def _update_status_to_excel(self, excel_path, zb_ah, status, row_number=None):
+        """更新Excel状态（器-原子写入）"""
+        try:
+            df = pd.read_excel(excel_path)
+            if '状态' not in df.columns:
+                df['状态'] = ''
+
+            updated = False
+            if row_number is not None and row_number > 1:
+                target_index = row_number - 2
+                if 0 <= target_index < len(df):
+                    df.iloc[target_index, df.columns.get_loc('状态')] = status
+                    updated = True
+
+            if not updated and zb_ah:
+                for col in df.columns:
+                    try:
+                        mask = df[col].astype(str).str.strip() == str(zb_ah).strip()
+                        if mask.any():
+                            idx = mask.idxmax()
+                            df.loc[idx, '状态'] = status
+                            updated = True
+                            break
+                    except Exception:
+                        continue
+
+            if updated:
+                # 先写临时文件，再替换原文件（避免Excel被占用时Permission denied）
+                # 临时文件必须用 .xlsx 扩展名，否则 pandas 不识别 engine
+                # （日志副本15报错: "No engine for filetype: 'tmp'"）
+                tmp_path = excel_path.replace('.xlsx', f'_backup_{int(time.time())}.xlsx')
+                try:
+                    df.to_excel(tmp_path, index=False)
+                    # 尝试替换原文件
+                    replaced = False
+                    for attempt in range(3):
+                        try:
+                            os.replace(tmp_path, excel_path)
+                            replaced = True
+                            break
+                        except PermissionError:
+                            g_log.warning(f"Excel文件被占用(重试{attempt+1}/3)，等待2秒...")
+                            time.sleep(2)
+                        except Exception:
+                            break
+                    if not replaced:
+                        # 原文件被占用，保留临时文件并记录
+                        g_log.warning(f"Excel文件被占用，状态已写入备份: {tmp_path}")
+                        g_log.warning(f"请关闭Excel后手动替换: {tmp_path} → {excel_path}")
+                except Exception as write_err:
+                    g_log.error(f"写入Excel失败: {write_err}")
+                    # 最后兜底：尝试直接写
+                    try:
+                        df.to_excel(excel_path, index=False)
+                    except Exception as e2:
+                        g_log.error(f"更新Excel状态失败: {e2}")
+        except Exception as e:
+            g_log.error(f"更新Excel状态失败: {e}")
+
+    # ------------------------------------------------------------------ #
+    # 工具方法（业务逻辑后面，不干扰阅读）
+    # ------------------------------------------------------------------ #
+    def cfg(self, key, default=None):
+        """快速获取配置（优先从config_manager，其次从CONFIG字典）"""
+        try:
+            return self.config.get_config(key, default)
+        except Exception:
+            return CONFIG.get(key, default)
+
+    @property
+    def table_id(self):
+        """获取表格ID"""
+        try:
+            return self.cfg("uniTable", [[None]])[0][0]
+        except Exception:
+            return None
+
+    def create_directories(self):
+        """创建必要目录"""
+        for d in ["videos", "login_states"]:
+            ensure_dir(d)
+
+
+# ============================================================
+# 【入口层】main函数
+# ============================================================
+def main():
+    """程序主入口"""
+    exit_code = 0
+    flow = None
+    t0 = time.time()
+    try:
+        g_log.info("=== 材料复用 - 启动 ===")
+
+        os.environ.setdefault("AIBOT_LINUX_ROOT", os.getcwd())
+
+        # 加载配置
+        from aibot_rpa.config.manager import ConfigManager
+        config_manager = ConfigManager()
+        config_manager.load_config_args(CONFIG)
+
+        # 从环境变量加载密钥（SDFY10_ 前缀）
+        env_auth = os.environ.get("SDFY10_AUTH_CODE")
+        env_acc = os.environ.get("SDFY10_LOGIN_ACC")
+        env_pw = os.environ.get("SDFY10_LOGIN_PW")
+        if env_auth:
+            config_manager.load_dict({"AuthCode": env_auth})
+        if env_acc:
+            config_manager.load_dict({"loginAcc": env_acc})
+        if env_pw:
+            config_manager.load_dict({"loginPW": env_pw})
+
+        # isPW判定
+        final_pw = config_manager.get_config("loginPW", "")
+        if isinstance(final_pw, str) and final_pw.startswith("0") and final_pw.isdigit():
+            config_manager.load_dict({"isPW": True})
+
+        # 动态更新登录状态路径（按用户名称保存，绝对路径支持跨流程共用）
+        login_acc = config_manager.get_config("loginAcc", "")
+        if login_acc:
+            linux_root = os.environ.get("AIBOT_LINUX_ROOT", os.getcwd())
+            login_state_path = os.path.join(linux_root, "login_states", f"{login_acc}_state.json")
+            config_manager.load_dict({
+                "login_state_path": login_state_path,
+                "storage_state_path": login_state_path,
+            })
+            g_log.info(f"登录状态路径: {login_state_path}")
+
+        g_log.info(f"配置加载完成: {config_manager.get_config('name')}")
+
+        # 执行流程（框架负责execute→run_business→run_business_async）
+        flow = MaterialReuseFlow(config_manager=config_manager)
+        result = flow.execute()
+
+        if result is True:
+            g_log.info("✅ 流程执行成功！")
+            exit_code = 0
+        else:
+            g_log.error(f"❌ 流程执行失败！result={result}")
+            exit_code = 1
+    except KeyboardInterrupt:
+        g_log.warning("⚠️ 用户中断")
+        exit_code = 2
+    except Exception as e:
+        g_log.exception(f"💥 执行异常: {e}")
+        exit_code = 1
+    finally:
+        if flow:
+            flow.driver_quit()
+        g_log.info(f"=== 程序结束（耗时 {time.time() - t0:.1f}s）===")
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())

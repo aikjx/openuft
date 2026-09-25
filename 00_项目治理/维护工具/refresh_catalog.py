@@ -19,6 +19,11 @@ def main():
             body += '\n## ' + current + '\n\n'
             section = current
         target = os.path.relpath(p, CATALOG).replace('\\', '/')
+        # 链接目标里若有 ( ) 空格 #，Markdown 行内链接会被提前截断，verify.py 的
+        # 断链检查就会报假红（它按 [^\s)]+ 取目标）。这里只转义这四类字符，
+        # 中文与 / 保持原样以留住可读性；verify.py 一侧有 unquote，能原样还原。
+        target = (target.replace('(', '%28').replace(')', '%29')
+                        .replace(' ', '%20').replace('#', '%23'))
         body += '- [' + p.relative_to(ROOT).as_posix() + '](' + target + ')\n'
     (CATALOG / 'material_catalog.md').write_text(body, encoding='utf-8')
     print('Indexed {} files'.format(len(files)))

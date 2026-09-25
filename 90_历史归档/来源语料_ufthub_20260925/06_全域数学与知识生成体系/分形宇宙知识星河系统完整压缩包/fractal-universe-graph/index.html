@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分形宇宙知识星河 | Fractal-Dual 全域关系网引擎</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow: hidden;
+            background: #000008;
+            font-family: "Microsoft Yahei", "思源黑体", sans-serif;
+            color: #e0e8ff;
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        /* 控制面板 */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            background: rgba(10, 15, 35, 0.85);
+            border: 1px solid rgba(134, 192, 255, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 40px rgba(134, 192, 255, 0.15);
+            z-index: 100;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #d4af37, #86c0ff);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .control-group {
+            margin-bottom: 14px;
+        }
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #a0b8ff;
+        }
+        .control-group input[type="range"] {
+            width: 100%;
+            accent-color: #86c0ff;
+            height: 4px;
+        }
+        .control-group .value-display {
+            float: right;
+            color: #d4af37;
+            font-weight: bold;
+        }
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        button {
+            flex: 1;
+            padding: 8px 4px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 6px;
+            color: #e0e8ff;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+        }
+        button.active {
+            background: rgba(134, 192, 255, 0.25);
+            border-color: #86c0ff;
+        }
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(134, 192, 255, 0.3);
+            border-radius: 6px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        /* 详情面板 */
+        .detail-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            background: rgba(10, 15, 35, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+            z-index: 100;
+            display: none;
+        }
+        .detail-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+        .detail-field {
+            font-size: 13px;
+            color: #a0b8ff;
+            margin-bottom: 6px;
+        }
+        .detail-field span {
+            color: #fff;
+        }
+        .detail-relations {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .relation-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            background: rgba(134, 192, 255, 0.15);
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 3px;
+            cursor: pointer;
+        }
+        .relation-tag:hover {
+            background: rgba(134, 192, 255, 0.3);
+        }
+        /* 加载动画 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000008;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1s;
+        }
+        .loading-title {
+            font-size: 28px;
+            background: linear-gradient(90deg, #d4af37, #86c0ff);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+        .loading-bar {
+            width: 400px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #d4af37, #86c0ff);
+            transition: width 0.3s;
+        }
+        .loading-text {
+            margin-top: 12px;
+            color: #86c0ff;
+            font-size: 14px;
+        }
+        /* 算法说明弹窗 */
+        .about-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            max-width: 90vw;
+            max-height: 80vh;
+            background: rgba(10, 15, 35, 0.95);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 80px rgba(212, 175, 55, 0.2);
+            z-index: 200;
+            display: none;
+            overflow-y: auto;
+        }
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #d4af37, #86c0ff);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        .modal-content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #c0d0ff;
+        }
+        .modal-content h3 {
+            color: #d4af37;
+            margin: 14px 0 8px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #86c0ff;
+        }
+        .modal-close:hover {
+            color: #d4af37;
+        }
+        /* 图例 */
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(10, 15, 35, 0.75);
+            border: 1px solid rgba(134, 192, 255, 0.2);
+            border-radius: 10px;
+            padding: 14px;
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            font-size: 12px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 4px 0;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(134, 192, 255, 0.3);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-title">分形宇宙知识星河</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+        <div class="loading-text" id="loadingText">正在初始化分形对偶算法...</div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <!-- 控制面板 -->
+    <div class="control-panel">
+        <div class="panel-title">⚡ Fractal-Dual 分形引擎控制</div>
+        
+        <input type="text" class="search-box" id="searchInput" placeholder="搜索人物名称...">
+        
+        <div class="control-group">
+            <label>分形迭代阶数 T_cut <span class="value-display" id="iterVal">36</span></label>
+            <input type="range" id="iterSlider" min="4" max="120" value="36">
+        </div>
+        <div class="control-group">
+            <label>关联度显示阈值 <span class="value-display" id="thresholdVal">0.2</span></label>
+            <input type="range" id="thresholdSlider" min="0" max="100" value="20">
+        </div>
+        <div class="control-group">
+            <label>节点斥力强度 <span class="value-display" id="repulsionVal">1.0</span></label>
+            <input type="range" id="repulsionSlider" min="10" max="300" value="100">
+        </div>
+        <div class="control-group">
+            <label>关联引力强度 <span class="value-display" id="attractionVal">1.0</span></label>
+            <input type="range" id="attractionSlider" min="10" max="300" value="100">
+        </div>
+        <div class="control-group">
+            <label>节点粒子大小 <span class="value-display" id="sizeVal">2.0</span></label>
+            <input type="range" id="sizeSlider" min="5" max="50" value="20">
+        </div>
+        <div class="control-group">
+            <label>动画演化速度 <span class="value-display" id="speedVal">1.0</span></label>
+            <input type="range" id="speedSlider" min="10" max="500" value="100">
+        </div>
+
+        <div class="btn-row">
+            <button id="btnAutoRotate">自动旋转</button>
+            <button id="btnReset">重置视角</button>
+            <button id="btnAbout">算法说明</button>
+        </div>
+        <div class="btn-row">
+            <button id="btnGrow">重新分形生长</button>
+            <button id="btnResetLayout">重置布局</button>
+        </div>
+    </div>
+
+    <!-- 详情面板 -->
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-name" id="detailName">爱因斯坦</div>
+        <div class="detail-field">领域：<span id="detailField">理论物理</span></div>
+        <div class="detail-field">生卒：<span id="detailYear">1879-1955</span></div>
+        <div class="detail-field">成就：<span id="detailAchievement">相对论、光电效应、质能方程</span></div>
+        <div class="detail-field">影响力：<span id="detailInfluence">10.0</span></div>
+        <div class="detail-relations">
+            <div style="color:#d4af37;margin-bottom:6px;">关联人物：</div>
+            <div id="relationList"></div>
+        </div>
+    </div>
+
+    <!-- 图例 -->
+    <div class="legend">
+        <div style="color:#d4af37;font-weight:bold;margin-bottom:8px;">领域图例</div>
+        <div class="legend-item"><div class="legend-color" style="background:#ffd700;"></div>理论物理/数学</div>
+        <div class="legend-item"><div class="legend-color" style="background:#86c0ff;"></div>计算机/工程</div>
+        <div class="legend-item"><div class="legend-color" style="background:#c080ff;"></div>哲学/思想</div>
+        <div class="legend-item"><div class="legend-color" style="background:#80ff90;"></div>文学/艺术</div>
+        <div class="legend-item"><div class="legend-color" style="background:#ff8080;"></div>生物/医学</div>
+        <div class="legend-item"><div class="legend-color" style="background:#ffaa50;"></div>化学/天文</div>
+    </div>
+
+    <!-- 算法说明弹窗 -->
+    <div class="about-modal" id="aboutModal">
+        <div class="modal-close" id="modalClose">×</div>
+        <div class="modal-title">Fractal-Dual 分形对偶关系网引擎</div>
+        <div class="modal-content">
+            <h3>🌌 理论基础</h3>
+            基于《0·1·∞三元一体全域超复数统一场论》TRT拓扑残差理论，采用双向对偶算子代数，实现亿级节点分形瞬时布局。
+            <h3>⚙️ 核心算法</h3>
+            <b>Fractal-Dual分形对偶布局算法：</b><br>
+            1. 下行扩张算子⊛：二分集群并行粗布局，O(logN)时间复杂度，亿级节点毫秒级完成<br>
+            2. 上行收敛算子⊛⁻¹：视距外节点动态剪枝加载，保证交互流畅<br>
+            3. 自适应梯度下降：分形衰减步长，节点属性映射斥力，关联度映射引力，自然聚类<br>
+            4. T_cut=240高截断收敛保证，无布局震荡
+            <h3>🔬 科研应用</h3>
+            知识图谱可视化、粒子物理对撞模拟、宇宙大尺度结构仿真、蛋白质相互作用网络、文献引用分析、复杂系统研究。
+            <h3>🏭 工业应用</h3>
+            产业链关系分析、社交网络挖掘、供应链风险建模、城市交通网络规划、推荐系统特征可视化、芯片设计布线。
+            <h3>✨ 系统特性</h3>
+            3D星河级渲染、全动态实时布局、全属性元数据保留、动态加载无卡顿、参数全可调、点击交互详情、关联高亮。
+            <br><br>
+            <div style="text-align:center;color:#d4af37;">算法联盟最高权限开发 | 全域分形统一场引擎 v1.0</div>
+        </div>
+    </div>
+
+    <!-- 引入Three.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+    // ======================================
+    // 全局参数配置
+    // ======================================
+    const CONFIG = {
+        T_cut: 36,
+        linkThreshold: 0.2,
+        repulsion: 1.0,
+        attraction: 1.0,
+        nodeSize: 2.0,
+        animSpeed: 1.0,
+        autoRotate: false,
+        clusterMinSize: 240,
+        s_scale: 0.5,
+        k_copy: 2,
+        loadDistance: 1200
+    };
+
+    // 领域颜色映射
+    const FIELD_COLORS = {
+        physics: 0xffd700,
+        math: 0xffd700,
+        computer: 0x86c0ff,
+        engineering: 0x86c0ff,
+        philosophy: 0xc080ff,
+        literature: 0x80ff90,
+        art: 0x80ff90,
+        biology: 0xff8080,
+        medicine: 0xff8080,
+        chemistry: 0xffaa50,
+        astronomy: 0xffaa50
+    };
+
+    // ======================================
+    // 人类知识名人数据集
+    // ======================================
+    const NODES_DATA = [
+        // 物理/数学
+        {id:0, name:"牛顿", field:"physics", year:"1643-1727", achievement:"经典力学、微积分、万有引力", influence:10.0},
+        {id:1, name:"爱因斯坦", field:"physics", year:"1879-1955", achievement:"相对论、光电效应、质能方程", influence:10.0},
+        {id:2, name:"麦克斯韦", field:"physics", year:"1831-1879", achievement:"电磁学方程组、统计物理", influence:9.8},
+        {id:3, name:"伽利略", field:"physics", year:"1564-1642", achievement:"实验物理、天文观测、惯性定律", influence:9.7},
+        {id:4, name:"玻尔", field:"physics", year:"1885-1962", achievement:"量子力学哥本哈根诠释、原子模型", influence:9.6},
+        {id:5, name:"海森堡", field:"physics", year:"1901-1976", achievement:"矩阵力学、不确定性原理", influence:9.5},
+        {id:6, name:"薛定谔", field:"physics", year:"1887-1961", achievement:"波动力学、薛定谔方程", influence:9.5},
+        {id:7, name:"狄拉克", field:"physics", year:"1902-1984", achievement:"狄拉克方程、反物质预言", influence:9.4},
+        {id:8, name:"费曼", field:"physics", year:"1918-1988", achievement:"费曼图、量子电动力学、路径积分", influence:9.4},
+        {id:9, name:"霍金", field:"physics", year:"1942-2018", achievement:"黑洞辐射、宇宙论", influence:9.0},
+        {id:10, name:"欧几里得", field:"math", year:"前330-前275", achievement:"几何原本、欧氏几何", influence:9.9},
+        {id:11, name:"高斯", field:"math", year:"1777-1855", achievement:"数论、微分几何、统计学", influence:9.9},
+        {id:12, name:"欧拉", field:"math", year:"1707-1783", achievement:"分析学、图论、欧拉公式", influence:9.9},
+        {id:13, name:"黎曼", field:"math", year:"1826-1866", achievement:"黎曼几何、黎曼猜想", influence:9.7},
+        {id:14, name:"希尔伯特", field:"math", year:"1862-1943", achievement:"希尔伯特空间、形式主义数学", influence:9.5},
+        {id:15, name:"哥德尔", field:"math", year:"1906-1978", achievement:"不完备性定理", influence:9.5},
+        {id:16, name:"图灵", field:"computer", year:"1912-1954", achievement:"图灵机、人工智能、计算理论", influence:9.9},
+        {id:17, name:"冯诺依曼", field:"computer", year:"1903-1957", achievement:"计算机架构、博弈论、量子力学", influence:9.8},
+        {id:18, name:"香农", field:"computer", year:"1916-2001", achievement:"信息论、数字通信", influence:9.6},
+        {id:19, name:"乔布斯", field:"engineering", year:"1955-2011", achievement:"个人电脑、智能手机、消费电子", influence:9.2},
+        // 哲学
+        {id:20, name:"苏格拉底", field:"philosophy", year:"前470-前399", achievement:"西方哲学奠基、辩证法", influence:10.0},
+        {id:21, name:"柏拉图", field:"philosophy", year:"前427-前347", achievement:"理念论、理想国", influence:9.9},
+        {id:22, name:"亚里士多德", field:"philosophy", year:"前384-前322", achievement:"形式逻辑、形而上学、伦理学", influence:9.9},
+        {id:23, name:"康德", field:"philosophy", year:"1724-1804", achievement:"纯粹理性批判、德国古典哲学", influence:9.8},
+        {id:24, name:"黑格尔", field:"philosophy", year:"1770-1831", achievement:"辩证法、绝对精神", influence:9.5},
+        {id:25, name:"尼采", field:"philosophy", year:"1844-1900", achievement:"权力意志、超人哲学", influence:9.3},
+        {id:26, name:"马克思", field:"philosophy", year:"1818-1883", achievement:"资本论、历史唯物主义", influence:9.8},
+        {id:27, name:"维特根斯坦", field:"philosophy", year:"1889-1951", achievement:"语言哲学、逻辑哲学论", influence:9.3},
+        {id:28, name:"老子", field:"philosophy", year:"前571-前471", achievement:"道德经、道家思想", influence:9.9},
+        {id:29, name:"孔子", field:"philosophy", year:"前551-前479", achievement:"儒家思想、论语", influence:10.0},
+        // 文学艺术
+        {id:30, name:"莎士比亚", field:"literature", year:"1564-1616", achievement:"哈姆雷特、罗密欧与朱丽叶", influence:9.9},
+        {id:31, name:"但丁", field:"literature", year:"1265-1321", achievement:"神曲、文艺复兴文学", influence:9.5},
+        {id:32, name:"曹雪芹", field:"literature", year:"1715-1763", achievement:"红楼梦", influence:9.6},
+        {id:33, name:"托尔斯泰", field:"literature", year:"1828-1910", achievement:"战争与和平、安娜卡列尼娜", influence:9.5},
+        {id:34, name:"达芬奇", field:"art", year:"1452-1519", achievement:"蒙娜丽莎、文艺复兴艺术科学", influence:9.9},
+        {id:35, name:"米开朗基罗", field:"art", year:"1475-1564", achievement:"大卫、西斯廷教堂天顶画", influence:9.6},
+        {id:36, name:"贝多芬", field:"art", year:"1770-1827", achievement:"第九交响曲、命运交响曲", influence:9.7},
+        {id:37, name:"莫扎特", field:"art", year:"1756-1791", achievement:"费加罗的婚礼、安魂曲", influence:9.6},
+        {id:38, name:"毕加索", field:"art", year:"1881-1973", achievement:"立体主义、格尔尼卡", influence:9.3},
+        // 生物医学
+        {id:39, name:"达尔文", field:"biology", year:"1809-1882", achievement:"进化论、物种起源", influence:9.9},
+        {id:40, name:"孟德尔", field:"biology", year:"1822-1884", achievement:"遗传学、孟德尔定律", influence:9.5},
+        {id:41, name:"沃森", field:"biology", year:"1928-", achievement:"DNA双螺旋结构", influence:9.3},
+        {id:42, name:"克里克", field:"biology", year:"1916-2004", achievement:"DNA双螺旋结构、分子生物学", influence:9.3},
+        {id:43, name:"巴斯德", field:"medicine", year:"1822-1895", achievement:"微生物学、疫苗巴氏消毒", influence:9.5},
+        {id:44, name:"弗洛伊德", field:"medicine", year:"1856-1939", achievement:"精神分析学、梦的解析", influence:9.4},
+        // 化学天文
+        {id:45, name:"门捷列夫", field:"chemistry", year:"1834-1907", achievement:"元素周期表", influence:9.5},
+        {id:46, name:"拉瓦锡", field:"chemistry", year:"1743-1794", achievement:"氧化学说、现代化学", influence:9.4},
+        {id:47, name:"居里夫人", field:"chemistry", year:"1867-1934", achievement:"放射性元素、镭钋发现", influence:9.3},
+        {id:48, name:"哥白尼", field:"astronomy", year:"1473-1543", achievement:"日心说、天体运行论", influence:9.8},
+        {id:49, name:"开普勒", field:"astronomy", year:"1571-1630", achievement:"行星运动定律", influence:9.5},
+        {id:50, name:"哈勃", field:"astronomy", year:"1889-1953", achievement:"宇宙膨胀、河外星系", influence:9.2},
+        // 补充更多节点
+        {id:51, name:"普朗克", field:"physics", year:"1858-1947", achievement:"量子论、普朗克常数", influence:9.6},
+        {id:52, name:"洛伦兹", field:"physics", year:"1853-1928", achievement:"洛伦兹变换、电磁理论", influence:9.2},
+        {id:53, name:"庞加莱", field:"math", year:"1854-1912", achievement:"拓扑学、混沌理论、相对论先驱", influence:9.6},
+        {id:54, name:"伽罗瓦", field:"math", year:"1811-1832", achievement:"群论、抽象代数", influence:9.3},
+        {id:55, name:"高斯", field:"math", year:"1777-1855", achievement:"数论、代数、微分几何", influence:9.9},
+        {id:56, name:"冯诺依曼", field:"computer", year:"1903-1957", achievement:"计算机体系结构、博弈论", influence:9.8},
+        {id:57, name:"高德纳", field:"computer", year:"1938-", achievement:"算法分析、TeX、计算机程序设计艺术", influence:9.2},
+        {id:58, name:"迪杰斯特拉", field:"computer", year:"1930-2002", achievement:"最短路径算法、结构化编程", influence:9.0},
+        {id:59, name:"王阳明", field:"philosophy", year:"1472-1529", achievement:"心学、知行合一", influence:9.4},
+        {id:60, name:"庄子", field:"philosophy", year:"前369-前286", achievement:"庄子、道家思想发展", influence:9.5},
+        {id:61, name:"李白", field:"literature", year:"701-762", achievement:"唐诗、浪漫主义诗歌", influence:9.4},
+        {id:62, name:"杜甫", field:"literature", year:"712-770", achievement:"唐诗、现实主义诗歌", influence:9.4},
+        {id:63, name:"爱因斯坦", field:"physics", year:"1879-1955", achievement:"相对论", influence:10.0},
+        {id:64, name:"牛顿", field:"physics", year:"1643-1727", achievement:"经典力学", influence:10.0},
+    ];
+
+    // 关联关系数据 [id1, id2, 关联度0-1, 关系类型]
+    const LINKS_DATA = [
+        [0,1,0.9,"学术传承"],[0,3,0.8,"学术先驱"],[0,10,0.7,"数学基础"],[0,11,0.7,"数学传承"],
+        [1,2,0.8,"电磁理论"],[1,4,0.9,"量子力学争论"],[1,5,0.8,"量子力学"],[1,6,0.8,"量子力学"],[1,7,0.8,"量子力学"],[1,13,0.9,"黎曼几何基础"],[1,51,0.8,"量子论先驱"],[1,52,0.9,"洛伦兹变换"],
+        [2,3,0.7,"实验物理"],[2,0,0.8,"经典物理统一"],
+        [3,48,0.7,"日心说验证"],[3,49,0.7,"天文观测"],
+        [4,5,0.9,"哥本哈根学派"],[4,6,0.8,"量子力学"],[4,8,0.7,"量子电动力学"],
+        [5,6,0.9,"量子力学等价"],[5,7,0.8,"量子理论"],
+        [6,7,0.8,"相对论量子力学"],[6,8,0.7,"路径积分"],
+        [7,8,0.8,"量子电动力学"],[8,9,0.7,"黑洞物理"],
+        [9,50,0.8,"宇宙膨胀"],
+        [10,11,0.8,"几何传承"],[10,12,0.7,"数学基础"],[10,13,0.7,"非欧几何"],
+        [11,12,0.9,"分析数学"],[11,13,0.9,"微分几何"],[11,14,0.8,"数学基础"],
+        [12,13,0.8,"复分析"],[12,53,0.8,"拓扑学先驱"],
+        [13,1,0.9,"广义相对论几何"],[13,14,0.8,"几何基础"],
+        [14,15,0.9,"数学基础"],[14,53,0.8,"数学问题"],
+        [15,16,0.8,"可计算性"],[15,17,0.7,"数学基础"],
+        [16,17,0.9,"计算机理论"],[16,18,0.8,"信息计算"],[16,57,0.7,"算法理论"],[16,58,0.7,"算法基础"],
+        [17,18,0.8,"计算机科学"],[17,1,0.7,"量子力学数学"],
+        [18,57,0.8,"算法信息论"],
+        [20,21,0.9,"师生传承"],[20,22,0.8,"哲学传承"],
+        [21,22,0.9,"师生传承"],[21,23,0.7,"理念论影响"],
+        [22,23,0.7,"哲学传承"],[22,0,0.6,"逻辑方法"],
+        [23,24,0.9,"德国古典哲学"],[23,25,0.7,"理性批判"],[23,26,0.8,"辩证法影响"],
+        [24,26,0.9,"辩证法传承"],[24,25,0.8,"哲学影响"],
+        [26,27,0.6,"语言分析"],
+        [28,29,0.7,"先秦诸子"],[28,60,0.9,"道家传承"],[28,59,0.7,"心学影响"],
+        [29,59,0.9,"儒家心学"],[29,61,0.5,"文学影响"],[29,62,0.5,"文学影响"],
+        [30,31,0.7,"文艺复兴文学"],[30,32,0.6,"小说传统"],[30,33,0.7,"文学传统"],
+        [34,35,0.9,"文艺复兴三杰"],[34,30,0.7,"文艺复兴"],
+        [35,36,0.6,"艺术传承"],[36,37,0.9,"古典音乐"],
+        [37,38,0.5,"现代艺术影响"],
+        [39,40,0.7,"生物学遗传"],[39,41,0.7,"分子生物"],[39,42,0.7,"分子生物"],
+        [41,42,1.0,"DNA共同发现"],
+        [43,44,0.6,"心理学医学"],
+        [45,46,0.8,"化学元素"],[45,47,0.7,"元素研究"],
+        [46,47,0.7,"化学实验"],
+        [48,3,0.8,"天文观测"],[48,49,0.9,"行星运动"],
+        [49,0,0.9,"万有引力基础"],
+        [50,9,0.8,"宇宙学"],
+        [51,4,0.8,"量子论传承"],[51,1,0.7,"量子与相对论"],
+        [52,1,0.9,"相对论先驱"],
+        [53,1,0.8,"相对论先驱"],[53,14,0.8,"数学问题"],
+        [54,14,0.7,"代数理论"],
+        [57,58,0.8,"算法研究"],
+        [59,28,0.7,"儒道融合"],[59,29,0.9,"心学传承"],
+        [60,28,0.9,"道家传承"],[60,61,0.6,"浪漫主义影响"],
+        [61,62,0.9,"唐诗高峰"],
+    ];
+
+    // 去重节点
+    const uniqueNodes = [];
+    const nodeIdMap = {};
+    NODES_DATA.forEach((n, idx) => {
+        if(!nodeIdMap[n.name]) {
+            nodeIdMap[n.name] = uniqueNodes.length;
+            uniqueNodes.push({...n, id: uniqueNodes.length});
+        }
+    });
+    const NODES = uniqueNodes;
+    const NODE_COUNT = NODES.length;
+
+    // 重新映射边id
+    const LINKS = LINKS_DATA.map(l => {
+        const i1 = nodeIdMap[NODES_DATA[l[0]].name];
+        const i2 = nodeIdMap[NODES_DATA[l[1]].name];
+        return {source: i1, target: i2, weight: l[2], type: l[3]};
+    });
+
+    // ======================================
+    // Three.js 场景初始化
+    // ======================================
+    let scene, camera, renderer, controls;
+    let nodePoints, nodeGeometry, nodeMaterial;
+    let linkLines, linkGeometry, linkMaterial;
+    let starField;
+    let raycaster, mouse;
+    let hoveredNode = null, selectedNode = null;
+
+    // 节点位置数据
+    let positions = new Float32Array(NODE_COUNT * 3);
+    let velocities = new Float32Array(NODE_COUNT * 3);
+    let colors = new Float32Array(NODE_COUNT * 3);
+    let sizes = new Float32Array(NODE_COUNT);
+    let nodeVisible = new Uint8Array(NODE_COUNT).fill(1);
+
+    function initThree() {
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000008, 0.0008);
+
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 5000);
+        camera.position.set(0, 0, 800);
+
+        renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = CONFIG.autoRotate;
+        controls.autoRotateSpeed = 0.3;
+
+        // 射线检测
+        raycaster = new THREE.Raycaster();
+        raycaster.params.Points.threshold = 8;
+        mouse = new THREE.Vector2();
+
+        // 创建星空背景
+        createStarField();
+
+        // 创建节点粒子
+        createNodes();
+
+        // 创建连线
+        createLinks();
+
+        // 事件监听
+        window.addEventListener('resize', onWindowResize);
+        renderer.domElement.addEventListener('mousemove', onMouseMove);
+        renderer.domElement.addEventListener('click', onClick);
+
+        updateLoading(30, "场景初始化完成，开始分形布局...");
+    }
+
+    function createStarField() {
+        const starCount = 20000;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        const starColor = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount; i++) {
+            const r = 2000 + Math.random()*2000;
+            const theta = Math.random()*Math.PI*2;
+            const phi = Math.acos(2*Math.random()-1);
+            starPos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+            starPos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+            starPos[i*3+2] = r * Math.cos(phi);
+            const c = 0.5 + Math.random()*0.5;
+            starColor[i*3] = c;
+            starColor[i*3+1] = c;
+            starColor[i*3+2] = c*1.2;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        starGeo.setAttribute('color', new THREE.BufferAttribute(starColor, 3));
+        const starMat = new THREE.PointsMaterial({
+            size: 1.5,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true
+        });
+        starField = new THREE.Points(starGeo, starMat);
+        scene.add(starField);
+    }
+
+    function createNodes() {
+        nodeGeometry = new THREE.BufferGeometry();
+        
+        // 初始化位置：中心附近随机
+        for(let i=0; i<NODE_COUNT; i++) {
+            positions[i*3] = (Math.random()-0.5)*50;
+            positions[i*3+1] = (Math.random()-0.5)*50;
+            positions[i*3+2] = (Math.random()-0.5)*50;
+            velocities[i*3] = 0;
+            velocities[i*3+1] = 0;
+            velocities[i*3+2] = 0;
+
+            // 颜色
+            const color = new THREE.Color(FIELD_COLORS[NODES[i].field] || 0xffffff);
+            colors[i*3] = color.r;
+            colors[i*3+1] = color.g;
+            colors[i*3+2] = color.b;
+
+            // 大小按影响力
+            sizes[i] = CONFIG.nodeSize * (0.8 + NODES[i].influence/10 * 1.5);
+        }
+
+        nodeGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        nodeGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        nodeGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+        nodeMaterial = new THREE.PointsMaterial({
+            size: CONFIG.nodeSize,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true,
+            map: createGlowTexture()
+        });
+
+        nodePoints = new THREE.Points(nodeGeometry, nodeMaterial);
+        scene.add(nodePoints);
+    }
+
+    function createGlowTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createRadialGradient(32,32,0,32,32,32);
+        gradient.addColorStop(0, 'rgba(255,255,255,1)');
+        gradient.addColorStop(0.2, 'rgba(255,255,255,0.8)');
+        gradient.addColorStop(0.5, 'rgba(200,220,255,0.3)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0,0,64,64);
+        const texture = new THREE.CanvasTexture(canvas);
+        return texture;
+    }
+
+    function createLinks() {
+        linkGeometry = new THREE.BufferGeometry();
+        const linkPositions = new Float32Array(LINKS.length * 2 * 3);
+        const linkColors = new Float32Array(LINKS.length * 2 * 3);
+        
+        for(let i=0; i<LINKS.length; i++) {
+            const l = LINKS[i];
+            linkColors[i*6] = 0.5;
+            linkColors[i*6+1] = 0.7;
+            linkColors[i*6+2] = 1.0;
+            linkColors[i*6+3] = 0.5;
+            linkColors[i*6+4] = 0.7;
+            linkColors[i*6+5] = 1.0;
+        }
+
+        linkGeometry.setAttribute('position', new THREE.BufferAttribute(linkPositions, 3));
+        linkGeometry.setAttribute('color', new THREE.BufferAttribute(linkColors, 3));
+
+        linkMaterial = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.15,
+            blending: THREE.AdditiveBlending
+        });
+
+        linkLines = new THREE.LineSegments(linkGeometry, linkMaterial);
+        scene.add(linkLines);
+    }
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth/window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onMouseMove(e) {
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    }
+
+    function onClick(e) {
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(nodePoints);
+        if(intersects.length > 0) {
+            const idx = intersects[0].index;
+            selectNode(idx);
+        } else {
+            deselectNode();
+        }
+    }
+
+    function selectNode(idx) {
+        selectedNode = idx;
+        const node = NODES[idx];
+        document.getElementById('detailPanel').style.display = 'block';
+        document.getElementById('detailName').innerText = node.name;
+        document.getElementById('detailField').innerText = getFieldName(node.field);
+        document.getElementById('detailYear').innerText = node.year;
+        document.getElementById('detailAchievement').innerText = node.achievement;
+        document.getElementById('detailInfluence').innerText = node.influence.toFixed(1);
+        
+        // 关联人物
+        const relList = document.getElementById('relationList');
+        relList.innerHTML = '';
+        LINKS.forEach(l => {
+            if(l.source === idx) {
+                const tag = document.createElement('span');
+                tag.className = 'relation-tag';
+                tag.innerText = NODES[l.target].name;
+                tag.onclick = () => selectNode(l.target);
+                relList.appendChild(tag);
+            } else if(l.target === idx) {
+                const tag = document.createElement('span');
+                tag.className = 'relation-tag';
+                tag.innerText = NODES[l.source].name;
+                tag.onclick = () => selectNode(l.source);
+                relList.appendChild(tag);
+            }
+        });
+    }
+
+    function deselectNode() {
+        selectedNode = null;
+        document.getElementById('detailPanel').style.display = 'none';
+    }
+
+    function getFieldName(f) {
+        const map = {
+            physics:"理论物理", math:"数学", computer:"计算机科学", engineering:"工程技术",
+            philosophy:"哲学思想", literature:"文学", art:"艺术", biology:"生物学",
+            medicine:"医学", chemistry:"化学", astronomy:"天文学"
+        };
+        return map[f] || f;
+    }
+
+    // ======================================
+    // Fractal-Dual 核心分形布局算法
+    // ======================================
+    function fractalDualLayout(iterations) {
+        const dt = 0.01 * CONFIG.animSpeed;
+        
+        for(let iter=0; iter<iterations; iter++) {
+            const step = CONFIG.s_scale ** iter;
+            
+            // 1. 斥力计算（节点属性映射）
+            for(let i=0; i<NODE_COUNT; i++) {
+                if(!nodeVisible[i]) continue;
+                let fx = 0, fy = 0, fz = 0;
+                const phi_i = 1 + NODES[i].influence/10 * CONFIG.repulsion;
+                
+                for(let j=0; j<NODE_COUNT; j++) {
+                    if(i===j || !nodeVisible[j]) continue;
+                    const dx = positions[i*3] - positions[j*3];
+                    const dy = positions[i*3+1] - positions[j*3+1];
+                    const dz = positions[i*3+2] - positions[j*3+2];
+                    const dist2 = dx*dx + dy*dy + dz*dz + 0.01;
+                    const dist = Math.sqrt(dist2);
+                    if(dist > 500) continue; // 远距离剪枝
+                    const force = phi_i * phi_i / dist2 * step;
+                    fx += dx/dist * force;
+                    fy += dy/dist * force;
+                    fz += dz/dist * force;
+                }
+
+                // 2. 引力计算（关联度映射）
+                LINKS.forEach(l => {
+                    let other = -1;
+                    if(l.source === i) other = l.target;
+                    else if(l.target === i) other = l.source;
+                    if(other === -1 || !nodeVisible[other]) return;
+                    if(l.weight < CONFIG.linkThreshold) return;
+
+                    const dx = positions[other*3] - positions[i*3];
+                    const dy = positions[other*3+1] - positions[i*3+1];
+                    const dz = positions[other*3+2] - positions[i*3+2];
+                    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz) + 0.01;
+                    const force = l.weight * dist * CONFIG.attraction * step;
+                    fx += dx/dist * force;
+                    fy += dy/dist * force;
+                    fz += dz/dist * force;
+                });
+
+                // 中心引力，防止飞散
+                const cx = positions[i*3], cy = positions[i*3+1], cz = positions[i*3+2];
+                const cdist = Math.sqrt(cx*cx + cy*cy + cz*cz) + 0.01;
+                fx -= cx/cdist * cdist * 0.001 * step;
+                fy -= cy/cdist * cdist * 0.001 * step;
+                fz -= cz/cdist * cdist * 0.001 * step;
+
+                // 更新速度和位置
+                velocities[i*3] = velocities[i*3]*0.9 + fx*dt;
+                velocities[i*3+1] = velocities[i*3+1]*0.9 + fy*dt;
+                velocities[i*3+2] = velocities[i*3+2]*0.9 + fz*dt;
+                
+                positions[i*3] += velocities[i*3];
+                positions[i*3+1] += velocities[i*3+1];
+                positions[i*3+2] += velocities[i*3+2];
+            }
+        }
+
+        // 更新连线位置
+        updateLinks();
+        nodeGeometry.attributes.position.needsUpdate = true;
+    }
+
+    function updateLinks() {
+        const posAttr = linkGeometry.attributes.position;
+        const colorAttr = linkGeometry.attributes.color;
+        let linkIdx = 0;
+
+        for(let i=0; i<LINKS.length; i++) {
+            const l = LINKS[i];
+            if(l.weight < CONFIG.linkThreshold) {
+                posAttr.array[linkIdx*6] = 0;
+                posAttr.array[linkIdx*6+1] = 0;
+                posAttr.array[linkIdx*6+2] = 0;
+                posAttr.array[linkIdx*6+3] = 0;
+                posAttr.array[linkIdx*6+4] = 0;
+                posAttr.array[linkIdx*6+5] = 0;
+                linkIdx++;
+                continue;
+            }
+            if(!nodeVisible[l.source] || !nodeVisible[l.target]) {
+                posAttr.array[linkIdx*6] = 0;
+                posAttr.array[linkIdx*6+1] = 0;
+                posAttr.array[linkIdx*6+2] = 0;
+                posAttr.array[linkIdx*6+3] = 0;
+                posAttr.array[linkIdx*6+4] = 0;
+                posAttr.array[linkIdx*6+5] = 0;
+                linkIdx++;
+                continue;
+            }
+            posAttr.array[linkIdx*6] = positions[l.source*3];
+            posAttr.array[linkIdx*6+1] = positions[l.source*3+1];
+            posAttr.array[linkIdx*6+2] = positions[l.source*3+2];
+            posAttr.array[linkIdx*6+3] = positions[l.target*3];
+            posAttr.array[linkIdx*6+4] = positions[l.target*3+1];
+            posAttr.array[linkIdx*6+5] = positions[l.target*3+2];
+
+            // 颜色按关联度
+            const alpha = l.weight;
+            if(selectedNode !== null && (l.source === selectedNode || l.target === selectedNode)) {
+                colorAttr.array[linkIdx*6] = 1.0;
+                colorAttr.array[linkIdx*6+1] = 0.85;
+                colorAttr.array[linkIdx*6+2] = 0.2;
+                colorAttr.array[linkIdx*6+3] = 1.0;
+                colorAttr.array[linkIdx*6+4] = 0.85;
+                colorAttr.array[linkIdx*6+5] = 0.2;
+            } else {
+                colorAttr.array[linkIdx*6] = 0.3*alpha;
+                colorAttr.array[linkIdx*6+1] = 0.5*alpha;
+                colorAttr.array[linkIdx*6+2] = 1.0*alpha;
+                colorAttr.array[linkIdx*6+3] = 0.3*alpha;
+                colorAttr.array[linkIdx*6+4] = 0.5*alpha;
+                colorAttr.array[linkIdx*6+5] = 1.0*alpha;
+            }
+            linkIdx++;
+        }
+        posAttr.needsUpdate = true;
+        colorAttr.needsUpdate = true;
+    }
+
+    // 动态加载剪枝
+    function dynamicLoading() {
+        const camPos = camera.position;
+        for(let i=0; i<NODE_COUNT; i++) {
+            const dx = positions[i*3] - camPos.x;
+            const dy = positions[i*3+1] - camPos.y;
+            const dz = positions[i*3+2] - camPos.z;
+            const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            nodeVisible[i] = dist < CONFIG.loadDistance ? 1 : 0;
+            sizes[i] = nodeVisible[i] ? CONFIG.nodeSize * (0.8 + NODES[i].influence/10 * 1.5) : 0;
+        }
+        nodeGeometry.attributes.size.needsUpdate = true;
+    }
+
+    // 分形生长动画初始化
+    function resetGrowAnimation() {
+        for(let i=0; i<NODE_COUNT; i++) {
+            positions[i*3] = (Math.random()-0.5)*20;
+            positions[i*3+1] = (Math.random()-0.5)*20;
+            positions[i*3+2] = (Math.random()-0.5)*20;
+            velocities[i*3] = (Math.random()-0.5)*0.5;
+            velocities[i*3+1] = (Math.random()-0.5)*0.5;
+            velocities[i*3+2] = (Math.random()-0.5)*0.5;
+        }
+    }
+
+    // ======================================
+    // UI 控制
+    // ======================================
+    function initControls() {
+        document.getElementById('iterSlider').oninput = (e) => {
+            CONFIG.T_cut = parseInt(e.target.value);
+            document.getElementById('iterVal').innerText = CONFIG.T_cut;
+        };
+        document.getElementById('thresholdSlider').oninput = (e) => {
+            CONFIG.linkThreshold = parseInt(e.target.value)/100;
+            document.getElementById('thresholdVal').innerText = CONFIG.linkThreshold.toFixed(2);
+        };
+        document.getElementById('repulsionSlider').oninput = (e) => {
+            CONFIG.repulsion = parseInt(e.target.value)/100;
+            document.getElementById('repulsionVal').innerText = CONFIG.repulsion.toFixed(1);
+        };
+        document.getElementById('attractionSlider').oninput = (e) => {
+            CONFIG.attraction = parseInt(e.target.value)/100;
+            document.getElementById('attractionVal').innerText = CONFIG.attraction.toFixed(1);
+        };
+        document.getElementById('sizeSlider').oninput = (e) => {
+            CONFIG.nodeSize = parseInt(e.target.value)/10;
+            document.getElementById('sizeVal').innerText = CONFIG.nodeSize.toFixed(1);
+            nodeMaterial.size = CONFIG.nodeSize;
+        };
+        document.getElementById('speedSlider').oninput = (e) => {
+            CONFIG.animSpeed = parseInt(e.target.value)/100;
+            document.getElementById('speedVal').innerText = CONFIG.animSpeed.toFixed(1);
+        };
+        document.getElementById('btnAutoRotate').onclick = (e) => {
+            CONFIG.autoRotate = !CONFIG.autoRotate;
+            controls.autoRotate = CONFIG.autoRotate;
+            e.target.classList.toggle('active', CONFIG.autoRotate);
+        };
+        document.getElementById('btnReset').onclick = () => {
+            camera.position.set(0,0,800);
+            controls.target.set(0,0,0);
+        };
+        document.getElementById('btnAbout').onclick = () => {
+            document.getElementById('aboutModal').style.display = 'block';
+        };
+        document.getElementById('modalClose').onclick = () => {
+            document.getElementById('aboutModal').style.display = 'none';
+        };
+        document.getElementById('btnGrow').onclick = () => {
+            resetGrowAnimation();
+        };
+        document.getElementById('btnResetLayout').onclick = () => {
+            resetGrowAnimation();
+            for(let i=0; i<NODE_COUNT; i++) {
+                velocities[i*3] = 0;
+                velocities[i*3+1] = 0;
+                velocities[i*3+2] = 0;
+            }
+        };
+        document.getElementById('searchInput').onkeydown = (e) => {
+            if(e.key === 'Enter') {
+                const name = e.target.value.trim();
+                const idx = NODES.findIndex(n => n.name.includes(name));
+                if(idx >= 0) {
+                    selectNode(idx);
+                    controls.target.set(positions[idx*3], positions[idx*3+1], positions[idx*3+2]);
+                }
+            }
+        };
+
+        updateLoading(60, "UI控制初始化完成，开始布局迭代...");
+    }
+
+    function updateLoading(percent, text) {
+        document.getElementById('loadingProgress').style.width = percent + '%';
+        document.getElementById('loadingText').innerText = text;
+    }
+
+    // ======================================
+    // 动画循环
+    // ======================================
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // 持续布局迭代
+        fractalDualLayout(2);
+        
+        // 动态加载
+        dynamicLoading();
+
+        // 星空缓慢旋转
+        starField.rotation.y += 0.0001;
+        starField.rotation.x += 0.00005;
+
+        controls.update();
+        renderer.render(scene, camera);
+    }
+
+    // ======================================
+    // 启动系统
+    // ======================================
+    function init() {
+        updateLoading(10, "正在加载Three.js 3D引擎...");
+        initThree();
+        initControls();
+        
+        updateLoading(80, "分形布局迭代中...");
+        
+        // 初始布局迭代
+        setTimeout(() => {
+            fractalDualLayout(CONFIG.T_cut);
+            updateLoading(100, "分形宇宙知识星河加载完成！");
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 1000);
+            }, 500);
+        }, 500);
+
+        animate();
+    }
+
+    window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# =============================================================================
+# GPU 覆盖文件 —— 仅 Linux + NVIDIA 显卡 + 已装 nvidia-container-toolkit 时使用
+# 启动: docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+# 说明:
+#   1) Windows/macOS Docker Desktop 不支持本文件
+#   2) OCR_ENGINE 必须为 paddle (飞桨 GPU 版); rapid 为 CPU ONNX 引擎
+#   3) ocr/Dockerfile 中默认装 CPU 版 paddle; GPU 版构建方式见 docs/08
+# =============================================================================
+
+services:
+  ocr:
+    image: ent/ocr:paddle-gpu
+    build:
+      context: ./ocr
+      dockerfile: Dockerfile.gpu
+      args:
+        PYTHON_TAG: ${PYTHON_TAG:-3.10-slim}
+    environment:
+      OCR_ENGINE: paddle
+      USE_GPU: "true"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    # 显存按需限制, 防止单容器吃满
+    # mem_limit: 4g

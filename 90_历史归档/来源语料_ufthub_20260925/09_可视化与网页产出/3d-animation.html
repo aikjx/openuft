@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D 磁场闭环螺旋运动 — 真实动画</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%230a0e1a'/%3E%3Cpath d='M32 16 Q48 24 32 32 Q16 40 32 48' stroke='%23f59e0b' stroke-width='3' fill='none'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%23fbbf24'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #020408;
+    color: #e5e7eb;
+    font-family: 'Noto Sans SC', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+  }
+  #canvas-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+  .overlay {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .top-bar {
+    top: 0; left: 0; right: 0;
+    padding: 18px 32px;
+    background: linear-gradient(to bottom, rgba(2,4,8,0.95), transparent);
+  }
+  .top-bar h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.35em;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fbbf24, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .top-bar .subtitle {
+    color: #9ca3af;
+    font-size: 0.8em;
+    margin-top: 3px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .control-panel {
+    top: 90px;
+    left: 20px;
+    width: 240px;
+    background: rgba(10, 14, 25, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px;
+    padding: 16px;
+    backdrop-filter: blur(12px);
+    pointer-events: auto;
+  }
+  .control-panel h3 {
+    color: #fbbf24;
+    font-size: 0.85em;
+    margin-bottom: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .control-group {
+    margin-bottom: 12px;
+  }
+  .control-group label {
+    display: flex;
+    justify-content: space-between;
+    color: #9ca3af;
+    font-size: 0.75em;
+    margin-bottom: 5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .control-group label .val {
+    color: #fbbf24;
+    font-weight: 500;
+  }
+  .control-group input[type="range"] {
+    width: 100%;
+    height: 4px;
+    background: rgba(245, 158, 11, 0.2);
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .control-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px; height: 12px;
+    background: #f59e0b;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .info-panel {
+    top: 90px;
+    right: 20px;
+    width: 260px;
+    background: rgba(10, 14, 25, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px;
+    padding: 16px;
+    backdrop-filter: blur(12px);
+  }
+  .info-panel h3 {
+    color: #fbbf24;
+    font-size: 0.85em;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.78em;
+  }
+  .info-row .key { color: #9ca3af; font-family: 'JetBrains Mono', monospace; }
+  .info-row .val { color: #e5e7eb; font-family: 'JetBrains Mono', monospace; }
+  .legend {
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 14, 25, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px;
+    padding: 12px 18px;
+    backdrop-filter: blur(12px);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.75em;
+    color: #9ca3af;
+  }
+  .legend-swatch {
+    width: 22px; height: 4px;
+    border-radius: 2px;
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #fbbf24;
+    box-shadow: 0 0 6px #fbbf24;
+  }
+  .toggle-btn {
+    pointer-events: auto;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75em;
+    margin-top: 8px;
+    width: 100%;
+    font-family: 'Noto Sans SC', sans-serif;
+  }
+  .toggle-btn:hover { background: rgba(245, 158, 11, 0.25); }
+  @media (max-width: 768px) {
+    .control-panel, .info-panel { width: calc(100% - 40px); left: 20px; right: 20px; }
+    .info-panel { top: auto; bottom: 90px; }
+    .legend { bottom: 16px; flex-wrap: wrap; gap: 10px; padding: 10px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div class="overlay top-bar">
+  <h1>磁场闭环螺旋光速运动 — 三维动画</h1>
+  <div class="subtitle">Magnetic Spiral Closed-Loop Light-Speed Motion | B = A·J_m(κr)·e^{i(mθ-kz-ωt)}</div>
+</div>
+
+<div class="overlay control-panel">
+  <h3>参数控制</h3>
+  <div class="control-group">
+    <label>螺旋半径 a <span class="val" id="val-a">1.0</span></label>
+    <input type="range" id="slider-a" min="0.3" max="2.0" step="0.1" value="1.0">
+  </div>
+  <div class="control-group">
+    <label>螺距 b <span class="val" id="val-b">0.6</span></label>
+    <input type="range" id="slider-b" min="0.1" max="1.5" step="0.05" value="0.6">
+  </div>
+  <div class="control-group">
+    <label>螺旋臂 m <span class="val" id="val-m">3</span></label>
+    <input type="range" id="slider-m" min="1" max="6" step="1" value="3">
+  </div>
+  <div class="control-group">
+    <label>粒子流速 <span class="val" id="val-flow">1.5</span></label>
+    <input type="range" id="slider-flow" min="0.2" max="4.0" step="0.1" value="1.5">
+  </div>
+  <div class="control-group">
+    <label>磁感线亮度 <span class="val" id="val-bright">2.0</span></label>
+    <input type="range" id="slider-bright" min="0.5" max="3.0" step="0.1" value="2.0">
+  </div>
+  <button class="toggle-btn" id="btn-toggle-anim">暂停动画</button>
+</div>
+
+<div class="overlay info-panel">
+  <h3>实时物理量</h3>
+  <div class="info-row"><span class="key">光速 c</span><span class="val">3×10⁸ m/s</span></div>
+  <div class="info-row"><span class="key">角频率 ω</span><span class="val" id="info-omega">1.89 /τ</span></div>
+  <div class="info-row"><span class="key">纵向波数 k</span><span class="val" id="info-k">1.67 /λ</span></div>
+  <div class="info-row"><span class="key">径向波数 κ</span><span class="val" id="info-kappa">0.90 m⁻¹</span></div>
+  <div class="info-row"><span class="key">闭环条件</span><span class="val" style="color:#34d399">满足 ✓</span></div>
+  <div class="info-row"><span class="key">螺旋线速度</span><span class="val" style="color:#fbbf24">≈ c ✓</span></div>
+</div>
+
+<div class="overlay legend">
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: linear-gradient(to right, #7c2d12, #f59e0b, #fef08a)"></div>
+    <span>磁场强度 |B|</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot"></div>
+    <span>磁场能量流粒子</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: radial-gradient(circle, #1a0a20, #000); width: 10px; height: 10px; border-radius: 50%"></div>
+    <span>磁核</span>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+// ========== 场景初始化 ==========
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x020408);
+scene.fog = new THREE.FogExp2(0x020408, 0.012);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(7, 5, 9);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+container.appendChild(renderer.domElement);
+
+// 后处理：Bloom 辉光
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.8,  // strength
+  0.4,  // radius
+  0.85  // threshold
+);
+composer.addPass(bloomPass);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.minDistance = 3;
+controls.maxDistance = 25;
+controls.maxPolarAngle = Math.PI * 0.9;
+controls.target.set(0, 0, 0);
+
+// ========== 光照 ==========
+scene.add(new THREE.AmbientLight(0x2a2a40, 0.6));
+const mainLight = new THREE.PointLight(0xfbbf24, 3, 20);
+mainLight.position.set(5, 5, 5);
+scene.add(mainLight);
+const rimLight = new THREE.PointLight(0xf97316, 2, 15);
+rimLight.position.set(-5, -3, -5);
+scene.add(rimLight);
+
+// ========== 中心磁核 ==========
+const coreGeometry = new THREE.SphereGeometry(0.32, 32, 32);
+const coreMaterial = new THREE.MeshStandardMaterial({
+  color: 0x050208,
+  roughness: 0.2,
+  metalness: 0.9,
+  emissive: 0x2a0a30,
+  emissiveIntensity: 0.8
+});
+const core = new THREE.Mesh(coreGeometry, coreMaterial);
+scene.add(core);
+
+// 磁核外层辉光球
+const glowGeo = new THREE.SphereGeometry(0.55, 32, 32);
+const glowMat = new THREE.MeshBasicMaterial({
+  color: 0xf59e0b, transparent: true, opacity: 0.12,
+  side: THREE.BackSide
+});
+const coreGlow = new THREE.Mesh(glowGeo, glowMat);
+scene.add(coreGlow);
+
+// 磁核内发光点
+const innerCoreGeo = new THREE.SphereGeometry(0.12, 16, 16);
+const innerCoreMat = new THREE.MeshBasicMaterial({ color: 0xfef08a });
+const innerCore = new THREE.Mesh(innerCoreGeo, innerCoreMat);
+scene.add(innerCore);
+
+// ========== 坐标轴 ==========
+const axesHelper = new THREE.AxesHelper(3.5);
+axesHelper.material.opacity = 0.25;
+axesHelper.material.transparent = true;
+scene.add(axesHelper);
+
+// ========== 参数 ==========
+let params = {
+  a: 1.0,
+  b: 0.6,
+  m: 3,
+  flowSpeed: 1.5,
+  brightness: 2.0
+};
+let animating = true;
+let time = 0;
+const C_NORM = 1.0;
+
+// ========== 螺旋线系统 ==========
+let spiralLines = [];
+let particleSystems = [];
+let arrowCones = [];
+
+function getFieldColor(strength) {
+  const t = Math.pow(strength, 0.6);
+  const c1 = new THREE.Color(0x7c2d12);
+  const c2 = new THREE.Color(0xf59e0b);
+  const c3 = new THREE.Color(0xfef08a);
+  if (t < 0.5) return c1.lerp(c2, t * 2);
+  return c2.lerp(c3, (t - 0.5) * 2);
+}
+
+function fieldStrength(r) {
+  const kappa = 1.2;
+  const kr = kappa * r;
+  return Math.min(1.0, Math.abs(Math.sin(kr * 1.2) / (kr + 0.15)) * Math.exp(-kr * 0.2) * 1.8);
+}
+
+function getSpiralPoint(t, arm, rBase) {
+  const turns = 5;
+  const armOffset = (arm * Math.PI * 2) / params.m;
+  const angle = t * turns * Math.PI * 2 + armOffset;
+  const r = rBase * (1 + 0.08 * Math.sin(angle * 0.7));
+  return new THREE.Vector3(
+    r * Math.cos(angle),
+    r * Math.sin(angle),
+    t * turns * params.b * Math.PI * 2 - 3
+  );
+}
+
+function buildSpiralField() {
+  // 清理旧对象
+  spiralLines.forEach(l => { scene.remove(l); l.geometry.dispose(); l.material.dispose(); });
+  spiralLines = [];
+  particleSystems.forEach(p => { scene.remove(p); p.geometry.dispose(); p.material.dispose(); });
+  particleSystems = [];
+  arrowCones.forEach(c => { scene.remove(c); c.geometry.dispose(); c.material.dispose(); });
+  arrowCones = [];
+
+  const turns = 5;
+  const pointsPerTurn = 120;
+  const totalPoints = turns * pointsPerTurn;
+  const radialLayers = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+
+  // === 磁感线 ===
+  radialLayers.forEach((rBase) => {
+    for (let arm = 0; arm < params.m; arm++) {
+      const points = [];
+      const colors = [];
+
+      for (let i = 0; i <= totalPoints; i++) {
+        const t = i / totalPoints;
+        const angle = t * turns * Math.PI * 2 + (arm * Math.PI * 2) / params.m;
+        const r = rBase * (1 + 0.08 * Math.sin(angle * 0.7));
+        points.push(new THREE.Vector3(
+          r * Math.cos(angle),
+          r * Math.sin(angle),
+          t * turns * params.b * Math.PI * 2 - 3
+        ));
+        const strength = fieldStrength(r);
+        const c = getFieldColor(strength);
+        colors.push(c.r, c.g, c.b);
+      }
+
+      const geo = new THREE.BufferGeometry().setFromPoints(points);
+      geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      const mat = new THREE.LineBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: Math.min(1, params.brightness * 0.3 + 0.25),
+        blending: THREE.AdditiveBlending
+      });
+      const line = new THREE.Line(geo, mat);
+      scene.add(line);
+      spiralLines.push(line);
+    }
+  });
+
+  // === 粒子流（沿磁感线运动的能量粒子） ===
+  const particlesPerArm = 40;
+  for (let arm = 0; arm < params.m; arm++) {
+    const rBase = params.a * 0.9;
+    const positions = new Float32Array(particlesPerArm * 3);
+    const particleData = []; // 每个粒子的 t 值（沿螺旋线位置）
+
+    for (let i = 0; i < particlesPerArm; i++) {
+      const t = i / particlesPerArm;
+      const p = getSpiralPoint(t, arm, rBase);
+      positions[i * 3] = p.x;
+      positions[i * 3 + 1] = p.y;
+      positions[i * 3 + 2] = p.z;
+      particleData.push(t);
+    }
+
+    const pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const pMat = new THREE.PointsMaterial({
+      color: 0xfef08a,
+      size: 0.06,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true
+    });
+    const points = new THREE.Points(pGeo, pMat);
+    points.userData = { particleData, rBase, arm };
+    scene.add(points);
+    particleSystems.push(points);
+  }
+
+  // === 方向箭头 ===
+  for (let arm = 0; arm < params.m; arm++) {
+    for (let a = 1; a <= 3; a++) {
+      const t = a / 4;
+      const angle = t * turns * Math.PI * 2 + (arm * Math.PI * 2) / params.m;
+      const r = params.a * 0.9;
+      const x = r * Math.cos(angle);
+      const y = r * Math.sin(angle);
+      const z = t * turns * params.b * Math.PI * 2 - 3;
+
+      const dir = new THREE.Vector3(-r * Math.sin(angle), r * Math.cos(angle), params.b * Math.PI * 2).normalize();
+      const coneGeo = new THREE.ConeGeometry(0.05, 0.14, 8);
+      const coneMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.9 });
+      const cone = new THREE.Mesh(coneGeo, coneMat);
+      cone.position.set(x, y, z);
+      cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+      scene.add(cone);
+      arrowCones.push(cone);
+    }
+  }
+}
+
+buildSpiralField();
+
+// ========== 信息更新 ==========
+function updateInfo() {
+  const a = params.a, b = params.b;
+  const k = 1 / b;
+  const kappa = 0.9;
+  const omega = C_NORM * Math.sqrt(k * k + kappa * kappa);
+  document.getElementById('info-omega').textContent = omega.toFixed(2) + ' /τ';
+  document.getElementById('info-k').textContent = k.toFixed(2) + ' /λ';
+  document.getElementById('info-kappa').textContent = kappa.toFixed(2) + ' m⁻¹';
+}
+
+// ========== 控制面板 ==========
+document.getElementById('slider-a').addEventListener('input', e => {
+  params.a = parseFloat(e.target.value);
+  document.getElementById('val-a').textContent = params.a.toFixed(1);
+  buildSpiralField();
+  updateInfo();
+});
+document.getElementById('slider-b').addEventListener('input', e => {
+  params.b = parseFloat(e.target.value);
+  document.getElementById('val-b').textContent = params.b.toFixed(2);
+  buildSpiralField();
+  updateInfo();
+});
+document.getElementById('slider-m').addEventListener('input', e => {
+  params.m = parseInt(e.target.value);
+  document.getElementById('val-m').textContent = params.m;
+  buildSpiralField();
+});
+document.getElementById('slider-flow').addEventListener('input', e => {
+  params.flowSpeed = parseFloat(e.target.value);
+  document.getElementById('val-flow').textContent = params.flowSpeed.toFixed(1);
+});
+document.getElementById('slider-bright').addEventListener('input', e => {
+  params.brightness = parseFloat(e.target.value);
+  document.getElementById('val-bright').textContent = params.brightness.toFixed(1);
+  spiralLines.forEach(l => {
+    l.material.opacity = Math.min(1, params.brightness * 0.3 + 0.25);
+  });
+});
+document.getElementById('btn-toggle-anim').addEventListener('click', () => {
+  animating = !animating;
+  document.getElementById('btn-toggle-anim').textContent = animating ? '暂停动画' : '播放动画';
+});
+
+updateInfo();
+
+// ========== 动画循环 ==========
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const delta = clock.getDelta();
+
+  if (animating) {
+    time += delta * params.flowSpeed * 0.3;
+
+    // 粒子沿螺旋线流动
+    particleSystems.forEach(ps => {
+      const posAttr = ps.geometry.attributes.position;
+      const data = ps.userData.particleData;
+      const rBase = ps.userData.rBase;
+
+      for (let i = 0; i < data.length; i++) {
+        data[i] += delta * params.flowSpeed * 0.08;
+        if (data[i] > 1) data[i] -= 1;
+        const p = getSpiralPoint(data[i], ps.userData.arm, rBase);
+        posAttr.setXYZ(i, p.x, p.y, p.z);
+      }
+      posAttr.needsUpdate = true;
+    });
+
+    // 磁核脉动
+    const pulse = 1 + Math.sin(time * 2.5) * 0.06;
+    core.scale.setScalar(pulse);
+    innerCore.scale.setScalar(pulse * 1.2);
+    coreGlow.scale.setScalar(pulse * 1.15);
+    coreGlow.material.opacity = 0.1 + Math.sin(time * 2.5) * 0.05;
+
+    // 磁感线沿轴向缓慢移动（模拟传播）
+    spiralLines.forEach(l => {
+      l.position.z = -time * params.b * 0.5;
+    });
+    arrowCones.forEach(c => {
+      c.position.z = -time * params.b * 0.5;
+    });
+  }
+
+  controls.update();
+  composer.render();
+}
+
+animate();
+
+// ========== 自适应 ==========
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>

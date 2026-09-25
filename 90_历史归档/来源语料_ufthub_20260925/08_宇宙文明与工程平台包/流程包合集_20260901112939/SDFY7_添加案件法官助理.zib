@@ -1,0 +1,698 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+极简模版 - 优化版
+作者：YMKJ团队
+版本：2.5
+更新时间：2025-10-22
+
+最简化的RPA开发模版，完全使用aibot_common的浏览器操作组件
+"""
+
+import sys
+import os
+import json
+import time
+import datetime
+import random
+import re
+import shutil
+import requests
+import logging
+import traceback
+from pathlib import Path
+from operator import itemgetter
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+# 添加项目根目录到Python路径
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+
+from aibot_rpa.utils.logger import LoggerInit
+from aibot_rpa.core.flow import BaseFlow
+from aibot_rpa.utils.decorators import get_retry_count
+from aibot_rpa.browser.record_video import VideoRecorder
+from aibot_common.browser_rpa import BROWSER_RPA
+from aibot_common.mouse_rpa import MOUSE_RPA
+from aibot_common.page_rpa import PAGE_RPA
+from aibot_common.button_rpa import BUTTON_RPA
+from aibot_common.other_rpa import OTHER_RPA
+from aibot_common.getdata_rpa import GETDATA_RPA
+
+# ================================ 全局变量初始化 ================================
+g_log = LoggerInit.init(__name__)
+
+
+class MinimalRPAFlow(BaseFlow):
+    """极简RPA流程类 - 使用aibot_common"""
+
+    def __init__(self, config_manager=None, **kwargs):
+        super().__init__(config_manager=config_manager, **kwargs)
+        # 使用预导入的BROWSER_RPA实例
+        self.browser_rpa = BROWSER_RPA
+        self.button_rpa = BUTTON_RPA
+        self.page_rpa = PAGE_RPA
+        self.mouse_rpa = MOUSE_RPA
+        self.config_manager = config_manager
+        self.other_rpa = OTHER_RPA
+        self.get_data_rpa = GETDATA_RPA
+        self.g_dict = {}
+        self.main_window_handle = None
+
+    def start_data(self, table_id, auth_code):  # 初始化异常数据
+        print("--------------数据初始化")
+        payload = {
+            "uniId": table_id,
+            "pageSize": 1,
+            "reqParam": {
+                "queryParam": [
+                    {
+                        "field": "zt",
+                        "value": [
+                            "处理中"
+                        ],
+                        "sign": "=",
+                        "append": "or"
+                    }, {
+                        "field": "zt",
+                        "value": [
+                            "异常"
+                        ],
+                        "sign": "=",
+                        "append": "or"
+                    }
+                ],
+                "updateMap": {
+                    "zt": "",
+
+                }
+            }
+        }
+        while True:
+            rqs_data = self.other_rpa.post_request(
+                url="http://146.24.58.227:88/ymkj-api/uni/universal/pull",
+                payload=payload,
+                auth_token=f'AuthCode {auth_code}')
+            print(rqs_data)
+            data = rqs_data['data']['list']
+            if len(data) == 0:  # 判断是否还有数据需要操作
+                break
+
+    def csh(self):
+        try:
+            # 使用配置字典 读取参数
+            config_dict = self.config_manager.get_dict_config()
+            self.g_dict["config_dict"] = config_dict
+            
+            if not config_dict:
+                g_log.warning("配置字典为空，使用默认配置")
+                config_dict = {}
+            
+            # 获取AuthCode，确保配置正确传递
+            self.g_dict["auth_code"] = self._get_config_value(config_dict, "AuthCode", required=True)
+            g_log.info(f"获取到AuthCode: {self.g_dict['auth_code'][:6]}...")
+            
+            # 获取table_id
+            uni_table = self._get_config_value(config_dict, "uniTable", default=[["", ""]])
+            self.g_dict["table_id"] = uni_table[0][0] if uni_table and len(uni_table) > 0 else ""
+            g_log.info(f"获取到table_id: {self.g_dict['table_id']}")
+            
+            # 获取登录账号
+            self.g_dict["login_acc"] = str(self._get_config_value(config_dict, "loginAcc", required=True))
+            g_log.info(f"获取到登录账号: {self.g_dict['login_acc']}")
+            
+            # 获取登录密码
+            login_pw = self._get_config_value(config_dict, "loginPW", required=True)
+            is_pw = self._get_config_value(config_dict, "isPW", default=False)
+            if is_pw:
+                self.g_dict["login_pw"] = "0" + str(login_pw)
+            else:
+                self.g_dict["login_pw"] = str(login_pw)
+            g_log.info(f"获取到登录密码: ******")
+
+            # 获取时间范围配置
+            self.g_dict["start_time"] = self._get_config_value(config_dict, "start_time", default="")
+            self.g_dict["end_time"] = self._get_config_value(config_dict, "end_time", default="")
+            g_log.info(f"获取到时间范围: {self.g_dict['start_time']} 至 {self.g_dict['end_time']}")
+            
+            # 设置默认时间（如果未配置）
+            if self.g_dict["start_time"] == "" and self.g_dict["end_time"] == "":
+                new_data = datetime.datetime.now() - datetime.timedelta(days=1)
+                new_data_str = new_data.strftime("%Y-%m-%d")
+                self.g_dict["start_time"] = new_data_str
+                self.g_dict["end_time"] = new_data_str
+                g_log.info(f"未配置时间范围，使用默认值: {new_data_str}")
+            else:
+                if self.g_dict["start_time"] == "":
+                    self.g_dict["start_time"] = self.g_dict["end_time"]
+                elif self.g_dict["end_time"] == "":
+                    self.g_dict["end_time"] = self.g_dict["start_time"]
+            
+            # 获取保存路径
+            self.g_dict["save_dir"] = self._get_config_value(config_dict, "保存路径", default="D:/module/driver/86")
+            if not os.path.isdir(self.g_dict["save_dir"]):
+                os.makedirs(self.g_dict["save_dir"])
+                g_log.info(f"创建保存目录: {self.g_dict['save_dir']}")
+            
+            self.g_dict["new_data"] = self.g_dict["start_time"] + "至" + self.g_dict["end_time"]
+            self.g_dict["save_path"] = self.g_dict["save_dir"] + r"/法官助理" + self.g_dict["new_data"] + ".xlsx"
+            
+            # 创建临时下载目录
+            ls_id = random.randint(1, 1000000)
+            self.g_dict["ls_dir"] = f"D:/临时下载/{ls_id}"
+            if not os.path.isdir(self.g_dict["ls_dir"]):
+                os.makedirs(self.g_dict["ls_dir"])
+            g_log.info(f"创建临时下载目录: {self.g_dict['ls_dir']}")
+            
+            g_log.info("配置初始化完成")
+            
+        except Exception as e:
+            self.g_dict["err"] = True
+            g_log.error(f"配置初始化失败: {e}")
+            traceback.print_exc()
+    
+    def _get_config_value(self, config_dict, key, default=None, required=False):
+        """
+        安全获取配置值
+        :param config_dict: 配置字典
+        :param key: 配置键
+        :param default: 默认值
+        :param required: 是否必填
+        :return: 配置值
+        """
+        if key in config_dict:
+            value = config_dict[key]
+            if value is not None:
+                return value
+        
+        if required:
+            g_log.error(f"缺少必填配置项: {key}")
+            raise ValueError(f"缺少必填配置项: {key}")
+        
+        g_log.warning(f"配置项 {key} 未设置，使用默认值: {default}")
+        return default
+
+    def yw_csh(self):
+        try:
+            # 打开浏览器 - set driver first
+            # 从配置获取浏览器相关路径
+            executable_path = self.config_manager.get_config('executable_path', r'D:/module/driver/86/chromedriver.exe')
+            browser_path = self.config_manager.get_config('browser_path', r'D:/app/360Chrome/Chrome/Application/360chrome.exe')
+            g_log.info(f"配置的浏览器驱动路径: {executable_path}")
+            g_log.info(f"配置的浏览器路径: {browser_path}")
+
+            # 检查路径是否存在
+            if executable_path and os.path.exists(executable_path):
+                g_log.info(f"驱动路径存在: {executable_path}")
+            else:
+                g_log.warning(f"驱动路径不存在或未配置: {executable_path}")
+            
+            if browser_path and os.path.exists(browser_path):
+                g_log.info(f"浏览器路径存在: {browser_path}")
+            else:
+                g_log.warning(f"浏览器路径不存在或未配置: {browser_path}")
+
+            obj_json = self.browser_rpa.open_browser(
+                url="http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/home",
+                executable_path=executable_path,
+                browser_path=browser_path,
+                download_dir=self.g_dict["ls_dir"],
+                run_log=True,
+            )
+            self.driver = obj_json['driver']
+            g_log.info(f"浏览器初始化成功: {self.driver}")
+            
+            try:
+                self.driver.maximize_window()
+                g_log.info("窗口最大化成功")
+            except Exception as e:
+                g_log.warning(f"窗口最大化失败: {e}")
+            
+            # 保存主窗口句柄
+            self.main_window_handle = self.driver.current_window_handle
+            g_log.info(f"主窗口句柄: {self.main_window_handle}")
+
+            time.sleep(0.5)
+
+            # 登录一张网系统
+            # # 打开系统网址
+            # self.driver.get(
+            #     "http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/home")
+            # 输入账号、密码
+            self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                            value="//*[@placeholder='用户名/手机号/身份证']",
+                                            text=self.g_dict["login_acc"])
+            self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                            value="//*[@type='password']",
+                                            text=self.g_dict["login_pw"])
+            # 等待登录按钮可见并可点击
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH, value="//*[@id='pane-0']/form/div[4]/div/button", timeout=30)
+            # self.page_rpa.wait_element(driver=self.driver, by=By.XPATH, value="//span[contains(normalize-space(text()),'登 录')]", timeout=30)
+            time.sleep(1)
+            # 尝试点击登录按钮，增加重试机制
+            login_success = False
+            for attempt in range(3):
+                try:
+                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, 
+                                                 value="//span[contains(normalize-space(text()),'登 录')]",
+                                                 timeout=10)
+                    login_success = True
+                    break
+                except Exception as e:
+                    g_log.warning(f"登录按钮点击失败，尝试第 {attempt+1} 次: {e}")
+                    time.sleep(1)
+            
+            if not login_success:
+                g_log.error("登录按钮点击失败，尝试使用JavaScript点击")
+                try:
+                    # element = self.driver.find_element(By.XPATH, "//span[contains(normalize-space(text()),'登 录')]")
+                    element = self.driver.find_element(By.XPATH, "//*[@id='pane-0']/form/div[4]/div/button/span")
+                    self.driver.execute_script("arguments[0].click();", element)
+                    login_success = True
+                except Exception as e:
+                    g_log.error(f"JavaScript点击也失败: {e}")
+                    raise
+            
+            # 等待系统登录完成
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH, value="//aside/div/div[2]/*", timeout=60)
+            time.sleep(1)
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="//aside/div/div[2]/*")
+            # 等待我的案件出现
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                       value='//span/*[text()="我的案件"]')
+            time.sleep(0.5)
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value='//span/*[text()="我的案件"]')
+            # 等待数据加载完成
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH, value="//*[contains(text(),'粤')]")
+
+
+        except Exception as e:
+            self.g_dict["err"] = True
+            logging.info(e)
+            traceback.print_exc()
+
+    def yw_cl(self):
+        try:
+            # 开始循环写入数据
+            print("开始录入基本信息")
+            payload = {
+                "uniId": self.g_dict["table_id"],
+                "pageSize": 1,
+                "reqParam": {
+                    "queryParam": [
+                        {
+                            "field": "zt",
+                            "value": [
+                                "已完成","搜索不到案号","处理中","异常"
+                            ],
+                            "sign": "<>"
+                        }
+                    ],
+                    "updateMap": {
+                        "zt": "处理中",
+
+                    }
+                }
+            }
+            put_json = {
+                "zt": "",
+                "id": "",
+                "uniId": self.g_dict["table_id"]
+            }
+            action = ActionChains(driver=self.driver)
+
+            is_err = False
+            while True:
+                err_str = ""
+                rqs_data = self.other_rpa.post_request(
+                    url="http://146.24.58.227:88/ymkj-api/uni/universal/pull",
+                    payload=payload,
+                    auth_token='AuthCode {}'.format(self.g_dict["auth_code"]))
+                logging.info(rqs_data)
+                data = rqs_data['data']['list']
+                if len(data) == 0:  # 判断是否还有数据需要操作
+                    break
+                data = data[0]
+                put_json['id'] = data['id']
+                # 搜索案号
+                an_hao = data['ah']
+                fgzlName = data['fgzl']
+                if not re.search("执保|执\\d+|执恢", an_hao):
+                    # 回填状态
+                    put_json['zt'] = "已完成"
+                    rqs_data = self.other_rpa.put_request(
+                        "http://146.24.58.227:88/ymkj-api/uni/universal/edit",
+                        payload=put_json,
+                        auth_token='AuthCode {}'.format(self.g_dict["auth_code"]))
+                    continue
+                logging.info("当前案号------------------" + an_hao)
+                ah_list = re.findall("\\d+", an_hao)
+                ah_num = ah_list[2]
+                an_year = ah_list[0]
+                print(an_year)
+                print(ah_num)
+                time.sleep(1)
+                err_str = "进入总对总界面异常"
+                # 输入年份
+
+                # 输入年份
+                self.click_js("//div[contains(@class,' fullWidth')]/div[2]")
+                time.sleep(0.5)
+                self.click_js(f"//li/*[contains(text(),'{an_year}')]")
+                # 输入案号
+                self.input_js(f"//div[contains(@class,'fullWidth')]/div[4]/input", ah_num)
+
+                # 点击搜索
+                self.click_js("//button/*[contains(text(),'查询')]")
+                time.sleep(3)
+                action.send_keys(Keys.ENTER).perform()
+                # 点击案号
+                self.click_js(f"//div/a[contains(text(),'{an_hao}')]")
+                time.sleep(5)
+
+                all_handles = self.driver.window_handles
+                self.driver.switch_to.window(all_handles[-1])
+
+                try:
+                    # self.page_rpa.wait_js_element(self.driver, f"//a[contains(text(),'{an_hao}')]", driver=self.driver, timeout=30, visible=True)
+                    self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                               value=f"//span[contains(text(),'{an_hao}')]")
+                except Exception:
+                    err_str = "搜索不到案号"
+                    put_json['zt'] = "搜索不到案号"
+                    put_json['remark'] = err_str
+                    rqs_data = self.other_rpa.put_request(
+                        "http://146.24.58.227:88/ymkj-api/uni/universal/edit",
+                        payload=put_json,
+                        auth_token='AuthCode {}'.format(self.g_dict["auth_code"]))
+                    self.driver.switch_to.window(self.driver.window_handles[0])
+                    self.browser_rpa.close_all_other_tabs(self.driver)
+                    continue
+                # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                #                              value="//div[contains(@class,' fullWidth')]/div[2]")
+                # time.sleep(0.5)
+                # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                #                              value=f"//li/*[contains(text(),'{an_year}')]")
+                # # 输入案号
+                # self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                #                                 value="//div[contains(@class,'fullWidth')]/div[4]/input",
+                #                                 text=ah_num)
+                # # 点击搜索
+                # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                #                              value="//button/*[contains(text(),'查询')]")
+                # time.sleep(3.5)
+                # action.send_keys(Keys.ENTER).perform()
+                # # 等待数据搜索
+                # try:
+                #     # self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                #     #                            value=f"//a[contains(text(),'{an_hao}')]")
+                #     time.sleep(1)
+                # except Exception as e:
+                #     err_str = "搜索案件异常"
+                #     put_json['zt'] = "搜索不到案号"
+                #     put_json['remark'] = err_str
+                #     rqs_data = self.other_rpa.put_request(
+                #         "http://146.24.58.227:88/ymkj-api/uni/universal/edit",
+                #         payload=put_json,
+                #         auth_token='AuthCode {}'.format(self.g_dict["auth_code"]))
+                #     continue
+                # # 点击案号
+                # self.click_js(f"//div/a[contains(text(),'{an_hao}')]")
+                # time.sleep(5)
+
+                try:
+                    time.sleep(1)
+                    g_log.info(self.driver.window_handles)
+                    self.driver.switch_to.window(self.driver.window_handles[1])
+                    time.sleep(1)
+                    # 等待数据搜索
+                    self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                               value="//*[text()='执行组织']/parent::*", timeout=30)
+                    time.sleep(5)
+                    # 点击 执行组织
+                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                 value="//*[text()='执行组织']/parent::*")
+                    # 等待表格数据出现
+                    self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                               value="//*[text()='角色']",
+                                               timeout=60)
+                    time.sleep(1.5)
+                    # 点击 角色下拉框
+                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                 value="//*[@placeholder='请选择']//input")
+                    time.sleep(1)
+                    # 点击 法官助理
+                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                 value="//*[@class='dict-option__content']//li/span[text()='法官助理']")
+                    logging.info(fgzlName)
+                    # 点击 组织成员下拉框
+                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                 value="//*[@class='fd-value show']")
+                    time.sleep(1)
+                    action.send_keys(fgzlName).perform()
+                    time.sleep(0.5)
+                    action.send_keys(Keys.ARROW_UP).perform()
+                    time.sleep(0.5)
+                    action.send_keys(Keys.ENTER).perform()
+                    time.sleep(1)
+                    # 点击 完成
+                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                 value="//*[@class='el-button el-button--primary el-button--medium']")
+                    time.sleep(2)
+                    # 等待操作成功出现
+                    # self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                    #                            value="//*[text()='操作成功！']",
+                    #                            timeout=30)
+                    # 回填状态
+                    put_json['zt'] = "已完成"
+                    put_json['remark'] = ""
+
+                except Exception as e:
+                    traceback.print_exc()
+                    logging.error(f"{an_hao}执行异常{e}")
+                    logging.info("-------------------------有异常：" + an_hao)
+                    is_err = True
+
+                    put_json['zt'] = "异常"
+                    put_json['remark'] = err_str
+                rqs_data = self.other_rpa.put_request(
+                    "http://146.24.58.227:88/ymkj-api/uni/universal/edit",
+                    payload=put_json,
+                    auth_token='AuthCode {}'.format(self.g_dict["auth_code"]))
+                g_log.info(f"回填状态响应: {rqs_data.get('code')}")
+                g_log.info(f"回填数据: {put_json}")
+                
+                # 关闭当前窗口并切换回主窗口
+                try:
+                    self.driver.close()
+                    if self.main_window_handle and self.main_window_handle in self.driver.window_handles:
+                        self.driver.switch_to.window(self.main_window_handle)
+                        g_log.info("成功切换回主窗口")
+                    else:
+                        g_log.warning("主窗口句柄无效，尝试使用索引切换")
+                        if self.driver.window_handles:
+                            self.driver.switch_to.window(self.driver.window_handles[0])
+                except Exception as e:
+                    g_log.error(f"关闭窗口或切换回主窗口失败: {e}")
+                
+                if rqs_data.get('code') != 200:
+                    g_log.error("回填状态异常")
+                time.sleep(3.5)
+        except Exception as e:
+            self.g_dict["err"] = True
+            logging.info(e)
+            traceback.print_exc()
+    def click_js(self,xpath):
+        click_el = xpath
+        click = f'''
+            var el = document.evaluate("{click_el}",document,null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null).singleNodeValue;
+            if(el) el.click();
+        '''
+        self.driver.execute_script(click)
+
+    def input_js(self,xpath,input_text):
+        input_el = xpath
+        text = input_text
+        ipt = f'''
+            var el = document.evaluate("{input_el}",document,null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null).singleNodeValue;
+            if(el){{
+                el.value = '{text}';
+                el.dispatchEvent(new Event('input'));
+                el.dispatchEvent(new Event('change'));
+            }}
+        '''
+        self.driver.execute_script(ipt)
+
+    def wait_js(self,xpath):
+        wait_el = xpath
+        wait = f'''
+            var el = document.evaluate("{wait_el}",document,null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null).singleNodeValue;
+            return el;
+        '''
+        self.driver.execute_script(wait)
+    def run_business(self):
+        """实现具体的业务逻辑 - 完全使用aibot_common的浏览器操作组件"""
+        try:
+            g_log.info("开始执行业务逻辑...")
+            # self.config.set_config("base_url", "http://www.qq.com")
+            # self.init_browser()
+            g_log.info("重试次数：%d", get_retry_count())
+            g_log.info("业务逻辑执行中----")
+            self.g_dict["err"] = False
+            # 使用配置字典 读取参数
+            g_log.info("---------------初始化开始")
+            self.csh()
+            g_log.info("---------------初始化结束")
+            g_log.info("---------------业务初始化开始")
+            self.yw_csh()
+            g_log.info("---------------业务初始化开始结束")
+            g_log.info("---------------业务处理开始")
+            self.yw_cl()
+            g_log.info("---------------业务处理结束")
+            # 关闭谷歌浏览器
+            # self.driver.close()
+            time.sleep(1)
+            self.logger.info("流程执行完毕")
+            # 移除直接调用driver.quit()，避免与finally块中的driver_quit()重复
+            # shutil.rmtree(self.g_dict["ls_dir"])
+            if self.g_dict["err"]:
+                raise Exception("存在异常，进入重试")
+
+            g_log.info("业务逻辑执行完成")
+
+            return True
+        except Exception as e:
+            g_log.exception(f"业务逻辑执行异常: {e}")
+            return False
+        finally:
+            # 使用self.browser_rpa关闭浏览器
+            try:
+                g_log.info("使用self.browser_rpa关闭浏览器...")
+                self.browser_rpa.close_browser()
+                time.sleep(2)
+                if "ls_dir" in self.g_dict and self.g_dict["ls_dir"]:
+                    try:
+                        shutil.rmtree(self.g_dict["ls_dir"], ignore_errors=True)
+                    except Exception as e:
+                        g_log.warning(f"删除临时目录失败: {e}")
+            except Exception as e:
+                g_log.warning(f"关闭浏览器时出错: {e}")
+                # 降级使用原有的关闭方式
+                try:
+                    self.driver_quit()
+                finally:
+                    if "ls_dir" in self.g_dict and self.g_dict["ls_dir"]:
+                        try:
+                            shutil.rmtree(self.g_dict["ls_dir"], ignore_errors=True)
+                        except Exception as cleanup_error:
+                            g_log.warning(f"删除临时目录失败: {cleanup_error}")
+
+
+def main():
+    """主函数"""
+    from aibot_rpa.config.manager import ConfigManager
+
+    exit_code = 0
+    flow = None
+
+    try:
+        g_log.info("=== 程序启动 ===")
+
+        # 1. 初始化配置管理器
+        config_manager = ConfigManager()
+
+        # 2. 加载配置
+        config_template = {
+            "taskId": "minimal_demo_001",
+            "name": "法官助理",
+            # "log_path": "d:/rpa_profile/log/极简demo/demo.log",
+            # "video_path": "d:/rpa_profile/video/极简demo/demo.webm",
+            # "executable_path": "d:/code/ymkj/ymkj-aibot/chromedriver.exe",
+            # "browser_path": "D:/360浏览器/app/360Chrome/Chrome/Application/360chrome.exe",
+            "executable_path": "D:/module/driver/86/chromedriver.exe",
+            "browser_path": "D:/app/360Chrome/Chrome/Application/360chrome.exe",
+            "max_retries": 2,
+            "retry_delay": 2,
+            "timeout": 30,
+            "record_video": True,
+            "live_push": True,
+            "headless": False,
+            "start_time": "2025-11-20",
+            "AuthCode": "msWFxsuYxO7kWDiacB36A",
+            "loginPW": r"CYJun*123",
+            "loginAcc": r"18000850505",
+            "isPW":None,
+            "end_time": "2025-11-25",
+            "uniTable": [["3PcLi21YBck39LkoVMzfo", "添加案件法官助理"]],
+            "保存路径": "D:/module/driver/86"
+            # "base_url": "http://www.baidu.com",
+        }
+        s = config_template["loginPW"]
+        if s.startswith('0') and s.isdigit():
+            config_template['isPW'] = True
+
+        # 2. 加载配置（控制台没有就用config_template）
+        config_manager.load_config_args(config_template)
+        # 加载自定义配置
+        config_manager.load_dict({
+            "record_fps": 10,  # 降低帧率以确保更稳定的录制
+            "record_video": True,
+            "live_push": False  # 禁用直播推送，专注于本地录制
+        })
+        
+        # 如果TCP没有传递浏览器配置，使用默认值
+        if not config_manager.get_config('executable_path'):
+            config_manager.set_config('executable_path', r'D:/module/driver/86/chromedriver.exe')
+        if not config_manager.get_config('browser_path'):
+            config_manager.set_config('browser_path', r'D:/app/360Chrome/Chrome/Application/360chrome.exe')
+
+        g_log.info(f"配置加载完成: {config_manager.get_config('name', 'Unknown')}")
+
+        # 3. 执行流程
+        g_log.info("开始执行RPA流程...")
+        flow = MinimalRPAFlow(config_manager=config_manager)
+        result = flow.execute()
+
+        if result:
+            g_log.info("✅ RPA流程执行成功！")
+            g_log.info({"msg": "已完成"})
+            exit_code = 0
+        else:
+            g_log.error("❌ RPA流程执行失败！")
+            g_log.info({"error": "运行异常"})
+            exit_code = 1
+
+    except KeyboardInterrupt:
+        g_log.warning("⚠️ 用户中断程序执行")
+        exit_code = 2
+
+    except Exception as e:
+        g_log.exception(f"💥 程序执行异常: {e}")
+        exit_code = 1
+
+    finally:
+        # 确保关闭浏览器
+        try:
+            if flow and hasattr(flow, 'driver') and flow.driver:
+                flow.driver_quit()
+                g_log.info("浏览器已关闭")
+        except Exception as e:
+            g_log.warning(f"关闭浏览器时出错: {e}")
+        g_log.info("=== 程序结束 ===")
+
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())

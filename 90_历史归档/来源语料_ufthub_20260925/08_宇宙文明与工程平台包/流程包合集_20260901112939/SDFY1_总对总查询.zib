@@ -1,0 +1,968 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+总对总查询 - Playwright版本
+作者：YMKJ团队 | 架构优化
+版本：3.2 | 企业级稳定架构
+更新时间：2026-07-22
+
+架构说明：
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        开发人员只需关注两层                               │
+│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐            │
+│  │  【配置层】  │────▶│  【业务层】  │────▶│  【框架层】  │            │
+│  │ CONFIG字典   │     │ 业务方法     │     │ FlowPw       │            │
+│  │ (改参数)     │     │ (改逻辑)     │     │ (已封装)     │            │
+│  └──────────────┘     └──────────────┘     └──────────────┘            │
+│         ▲                    ▲                    ▲                    │
+│         │                    │                    │                    │
+│    30-69行              73-500+行            aibot_rpa/core          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+业务流程（人人一看就会）：
+1. csh()        → 初始化配置（时间窗、保存路径）
+2. yw_csh()     → 业务初始化（登录→导航→查询导出→上传）
+3. yw_cl()      → 业务处理（循环拉取并处理案件）
+"""
+
+# ============================================================
+# 【导入层】依赖导入必须在最前面
+# ============================================================
+import datetime
+import os
+import random
+import re
+import shutil
+import sys
+import time
+import traceback
+
+from aibot_common.other_rpa import OTHER_RPA
+from aibot_rpa.core.flow_pw import FlowPw as _FrameworkFlowPw
+from aibot_rpa.utils.logger import LoggerInit
+
+g_log = LoggerInit.init(__name__)
+
+# ============================================================
+# 【开发速查】配置全部在这里，改完就能跑
+# ============================================================
+CONFIG = {
+    # -------- 密钥（环境变量优先）--------
+    "AuthCode": "lmYXStbZEbJ2RrBf2ej0N",
+    "loginAcc": r"18000850505",
+    "loginPW": r"CYJun*123",
+
+    # -------- URL --------
+    "LOGIN_URL": "http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/basx",
+    "API_BASE_URL": "http://146.24.58.227:88/ymkj-api",
+
+    # -------- 业务配置 --------
+    "name": "总对总查询",
+    "保存路径": "./总对总查询下载",
+    "start_time": "2026-07-22",
+    "end_time": "2026-07-23",
+    "uniTable": [["rlXGyHEa17kZIaVg1wUgw", "总对总查询"]],
+    "书记员列表": [],  # 书记员姓名列表，启用时配置如 ["张三", "李四"]，系统会随机选择一名书记员
+
+    # -------- 浏览器配置 --------
+    "browser_engine": "playwright",
+    "browser_type": "chromium",
+    "executable_path": None,
+    # "browser_path": "/usr/bin/browser360ent-cn-stable",
+    "browser_path": r"D:\app\360Chrome\Chrome\Application\360chrome.exe",  # 服务器标准部署路径；本地自动探测
+    "browser_startup_timeout": 180000,  # 浏览器启动超时(ms)，360冷启动需更长时间，默认180秒
+    "headless": False,
+    "record_video": True,
+    "video_dir": "./videos",
+    "video_path": "videos/total_to_total_query",
+
+    # -------- 运行配置 --------
+    "flowId": "flow_total_to_total",
+    "taskId": "task_total_to_total",
+    "live_push": False,
+    "live_push_mode": "shared_memory",
+    "live_server_host": "localhost",
+    "live_tcp_port": 31111,
+    "max_process_count": 500,
+    "api_max_retries": 3,  # API连接重试次数（利用aibot_common内置的指数退避机制）
+    "download_excel": False,  # 是否下载Excel（当前流程已移除下载上传，直接跑业务处理）
+
+    # -------- 登录状态持久化（按用户名称保存）--------
+    # login_state_path/storage_state_path 在 main() 中根据 loginAcc 动态设置
+    # 路径格式: ./login_states/{用户名}_state.json
+    "login_state_path": "",
+    "storage_state_path": "",
+}
+
+
+# ============================================================
+# 【业务流程类】TotalToTotalQueryFlow
+# 继承框架FlowPw，只需实现业务逻辑
+# ============================================================
+class TotalToTotalQueryFlow(_FrameworkFlowPw):
+    """总对总查询流程 - 企业级稳定架构
+
+    框架能力（已封装，无需关心）：
+    ✅ execute() → run_business() → run_business_async() 链路
+    ✅ ensure_login() 带状态持久化+重试
+    ✅ init_browser() 浏览器初始化+回退机制
+    ✅ _safe_cleanup() 安全资源清理
+    ✅ 信号处理（SIGINT/SIGTERM）
+
+    业务方法（只需实现）：
+    1. csh()        - 配置初始化
+    2. yw_csh()     - 业务初始化
+    3. yw_cl()      - 业务处理
+    """
+
+    def __init__(self, config_manager=None, **kwargs):
+        config = config_manager if config_manager else kwargs.pop("config", None)
+
+        # 准备下载目录（Playwright初始化前必须确定）
+        ls_id = str(random.randint(1, 1000000))
+        linux_root = os.environ.get("AIBOT_LINUX_ROOT", os.getcwd())
+        self._downloads_path = os.path.abspath(os.path.join(linux_root, "downloads_tmp", ls_id))
+        os.makedirs(self._downloads_path, exist_ok=True)
+        g_log.info(f"下载临时目录: {self._downloads_path}")
+
+        # 框架初始化前设置downloads_path
+        if hasattr(config, "load_dict"):
+            config.load_dict({"downloads_path": self._downloads_path})
+        elif isinstance(config, dict):
+            config["downloads_path"] = self._downloads_path
+
+        super().__init__(config, **kwargs)
+        self.create_directories()
+        self.other_rpa = OTHER_RPA
+        self.g_dict = {}
+
+    # ------------------------------------------------------------------ #
+    # 业务流程入口 - 进度日志一目了然
+    # ------------------------------------------------------------------ #
+    async def run_business_async(self):
+        """业务执行主入口 - 开发人员一眼看到进度"""
+        try:
+            g_log.info("=" * 60)
+            g_log.info("🚀 总对总查询流程启动")
+            g_log.info("=" * 60)
+            self.g_dict["err"] = False
+
+            # ==================== 【1/3】初始化配置 ====================
+            g_log.info("")
+            g_log.info("┌──────────────────────────────────────────────────────────────┐")
+            g_log.info("│ 【1/3】初始化配置")
+            g_log.info("└──────────────────────────────────────────────────────────────┘")
+            self.csh()
+            if self.g_dict.get("err"):
+                raise Exception("配置初始化失败")
+            g_log.info(f"✅ 初始化完成: {self.g_dict.get('new_data')} | {self.g_dict.get('save_path')}")
+
+            # ==================== 【2/3】业务初始化 ====================
+            g_log.info("")
+            g_log.info("┌──────────────────────────────────────────────────────────────┐")
+            g_log.info("│ 【2/3】业务初始化（登录→导航）")
+            g_log.info("└──────────────────────────────────────────────────────────────┘")
+            if not await self.yw_csh():
+                raise Exception(f"业务初始化失败: {self.g_dict.get('err_msg', '未知')}")
+            g_log.info("✅ 业务初始化完成")
+
+            # ==================== 【3/3】业务处理 ====================
+            g_log.info("")
+            g_log.info("┌──────────────────────────────────────────────────────────────┐")
+            g_log.info(f"│ 【3/3】业务处理（最大处理 {self.cfg('max_process_count', 500)} 条）")
+            g_log.info("└──────────────────────────────────────────────────────────────┘")
+            if not await self.yw_cl():
+                raise Exception(f"业务处理失败: {self.g_dict.get('err_msg', '未知')}")
+
+            # ==================== 完成 ====================
+            g_log.info("")
+            g_log.info("=" * 60)
+            g_log.info("🎉 流程执行完毕！")
+            g_log.info("=" * 60)
+            return True
+        except Exception as e:
+            g_log.info("")
+            g_log.info("=" * 60)
+            g_log.error(f"❌ 业务执行异常: {e}")
+            g_log.info("=" * 60)
+            return False
+        finally:
+            # 清理临时目录
+            if "ls_dir" in self.g_dict:
+                shutil.rmtree(self.g_dict["ls_dir"], ignore_errors=True)
+
+    # ------------------------------------------------------------------ #
+    # 1. 初始化阶段 - csh()
+    # ------------------------------------------------------------------ #
+    def csh(self):
+        """配置初始化：处理时间窗、保存路径、下载目录"""
+        try:
+            # 时间窗处理：都为空默认昨天，部分为空相互补全
+            start = self.cfg("start_time")
+            end = self.cfg("end_time")
+            if not start and not end:
+                yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+                yesterday = yesterday.strftime("%Y-%m-%d")
+                start = end = yesterday
+            else:
+                start = start or end
+                end = end or start
+
+            # 保存路径
+            save_dir = os.path.abspath(self.cfg("保存路径"))
+            os.makedirs(save_dir, exist_ok=True)
+
+            # 组装文件名和下载目录
+            date_range = f"{start}至{end}"
+            save_path = os.path.join(save_dir, f"总对总查询_{date_range}.xlsx")
+
+            # 保存到g_dict
+            self.g_dict.update({
+                "new_data": date_range,
+                "save_path": save_path,
+                "ls_dir": self._downloads_path,
+                "start_time": start,
+                "end_time": end,
+            })
+
+            g_log.info(f"时间窗: {date_range}")
+            g_log.info(f"保存路径: {save_path}")
+            g_log.info(f"下载目录: {self._downloads_path}")
+        except Exception as e:
+            self.g_dict["err"] = True
+            g_log.error(f"初始化异常: {e}")
+            traceback.print_exc()
+
+    # ------------------------------------------------------------------ #
+    # 2. 业务初始化阶段 - yw_csh()
+    # ------------------------------------------------------------------ #
+    async def yw_csh(self):
+        """业务初始化：登录+导航"""
+        try:
+            # 浏览器初始化
+            if not self.page:
+                g_log.info("🔧 初始化浏览器...")
+                if not self.init_browser():
+                    return False
+
+            # 导航到登录页面（使 storage_state 生效）
+            # 浏览器上下文已加载 storage_state，但页面在 about:blank
+            # 必须导航到目标 URL 才能发送已保存的 cookies/localStorage
+            g_log.info("🌐 导航到登录页面...")
+            await self.page.goto(self.cfg("LOGIN_URL"), wait_until="networkidle")
+            await self.page.bring_to_front()
+
+            # 登录（框架ensure_login带状态持久化+重试）
+            # 若 storage_state 有效，_check_login_state_valid 将找到选择器并跳过登录
+            g_log.info("🔐 登录系统...")
+            await self.ensure_login(
+                login_func=self._do_login,
+                check_selector="//aside/div/div[2]/*",
+                max_tries=2,
+                delay=3
+            )
+
+            # 导航到案件列表
+            g_log.info("📋 导航到案件列表...")
+            await self.page.locator('//*[contains(text(),"我的案件")]').first.wait_for(timeout=20000)
+            await self.page.wait_for_timeout(3000)
+
+
+            # 查询导出（文件已存在则跳过直接上传）
+            if not self.cfg("download_excel", True):
+                g_log.info("⏭️ 已配置跳过下载Excel，直接进入业务处理")
+                return True
+
+            if not os.path.isfile(self.g_dict["save_path"]):
+                g_log.info("🔍 查询并导出数据...")
+                await self._query_and_export()
+            else:
+                g_log.info("📁 文件已存在，直接上传")
+                self._upload_excel()
+
+            return True
+        except Exception as e:
+            self.g_dict["err"] = True
+            self.g_dict["err_msg"] = str(e)
+            g_log.error(f"业务初始化异常: {e}")
+            traceback.print_exc()
+            return False
+
+    async def _do_login(self):
+        """执行登录操作 - isPW逻辑保持原始不变"""
+        # 注意：页面已在 yw_csh 中导航到 LOGIN_URL（使 storage_state 生效）
+        # 此处不再重复导航，避免破坏已加载的登录状态
+        await self.page.bring_to_front()
+
+        # loginAcc 强制转为字符串（环境变量可能返回数字类型）
+        login_acc = str(self.cfg("loginAcc"))
+        await self.page.locator("//*[@placeholder='用户名/手机号/身份证']").fill(login_acc)
+
+        # 原始逻辑：isPW为True时，密码前面补0
+        pw = str(self.cfg("loginPW"))
+        if self.cfg("isPW", False):
+            pw = "0" + pw
+        await self.page.locator("//*[@type='password']").fill(pw)
+
+        login_btn = self.page.locator("//button[contains(translate(., ' ', ''),'登录')]")
+        await login_btn.first.click()
+
+        try:
+            await self.page.locator("//aside/div/div[2]/*").first.wait_for(timeout=15000)
+        except Exception:
+            await self.page.wait_for_load_state("networkidle")
+            await self.page.wait_for_timeout(3000)
+        await self.page.wait_for_timeout(1000)
+        return True
+
+    async def _query_and_export(self):
+        """执行高级查询和导出操作"""
+        # 点击高级查询
+        await self.page.locator("//*[contains(text(),'高级查询')]").first.click()
+        await self.page.wait_for_timeout(1000)
+
+        # 选择日期类型（兼容多种文案）
+        date_input = self.page.locator("//input[contains(@content,'日期')]")
+        await date_input.wait_for(timeout=10000)
+        try:
+            await date_input.click(timeout=5000)
+        except Exception:
+            await date_input.evaluate("el => el.click()")
+        await self.page.wait_for_timeout(1500)
+
+        # 依次尝试选择日期类型
+        date_label = None
+        for label in ("立案日期", "收案日期"):
+            try:
+                await self.page.locator(f"//li/*[contains(text(),'{label}')]").first.click(timeout=3000)
+                date_label = label
+                break
+            except Exception:
+                continue
+        if not date_label:
+            try:
+                await self.page.locator("//li/*[contains(text(),'日期')]").first.click(timeout=3000)
+            except Exception:
+                pass
+
+        # 填充日期
+        start_input = self.page.locator("//*[@placeholder='开始日期']")
+        await start_input.evaluate("el => el.removeAttribute('readonly')")
+        await start_input.fill(self.g_dict["start_time"])
+
+        end_input = self.page.locator("//*[@placeholder='结束日期']")
+        await end_input.evaluate("el => el.removeAttribute('readonly')")
+        await end_input.fill(self.g_dict["end_time"])
+
+        await self.page.wait_for_timeout(1000)
+        await self.page.keyboard.press("Enter")
+        await self.page.wait_for_timeout(1000)
+
+        # 点击查询
+        await self.page.locator("//*[text()='查询']").first.click()
+
+        # 检查是否有数据
+        try:
+            await self.page.locator("//*[contains(text(),'粤')]").first.wait_for(timeout=15000)
+        except Exception:
+            g_log.info("查询结果为空，跳过导出")
+            return
+
+        # 导出操作
+        await self.page.locator("//span[text()='导出']").first.click()
+        await self.page.wait_for_timeout(500)
+        await self.page.locator("//i[text()='导出全部']").first.click()
+
+        # 等待导出对话框
+        dialog = self.page.locator("//div[@class='header-class'][contains(.,'案件列表导出列选择')]")
+        await dialog.wait_for(timeout=15000)
+        await self.page.wait_for_timeout(500)
+
+        # 确保全选取消
+        header_label = dialog.locator("label").first
+        is_all = await header_label.get_attribute("aria-checked") == "true"
+        if is_all:
+            await self.page.locator("//div[@class='header-class']/label/span").first.click()
+        else:
+            await self.page.locator("//div[@class='header-class']/label/span").first.click()
+            await self.page.wait_for_timeout(500)
+            await self.page.locator("//div[@class='header-class']/label/span").first.click()
+
+        # 选择案号和立案日期
+        await self.page.locator("//div[contains(text(),'案号')]/parent::div//label").first.click()
+        await self.page.locator("//div[contains(text(),'立案日期')]/parent::div//label").first.click()
+        await self.page.wait_for_timeout(1000)
+
+        # 下载文件（优先expect_download，失败则目录轮询）
+        downloaded_path = None
+        try:
+            async with self.page.expect_download(timeout=10000) as download_info:
+                await self.page.locator("//button[contains(@class,' el-button--primary')]/span[text()='导出']").first.click()
+            download = await download_info.value
+            downloaded_path = self.g_dict["save_path"]
+            await download.save_as(downloaded_path)
+            g_log.info(f"下载成功: {downloaded_path}")
+        except Exception:
+            g_log.warning("expect_download失败，轮询目录...")
+
+        # 目录轮询fallback
+        if not downloaded_path or not os.path.isfile(downloaded_path):
+            ls_dir = self.g_dict["ls_dir"]
+            down_file = None
+            for i in range(60):
+                if not self.page or self.page.is_closed():
+                    raise Exception("页面已关闭")
+                try:
+                    files = [f for f in os.listdir(ls_dir) if not f.endswith(('.crdownload', '.tmp', '.part'))]
+                except FileNotFoundError:
+                    files = []
+
+                if files:
+                    target = None
+                    for f in files:
+                        if '我的案件' in f or f.lower().endswith(('.xlsx', '.xls')):
+                            target = f
+                            break
+                    target = target or files[0]
+                    down_file = os.path.join(ls_dir, target)
+                    break
+                await self.page.wait_for_timeout(1000)
+
+            if not down_file:
+                raise Exception(f"下载超时，目录: {ls_dir}")
+            if os.path.isfile(self.g_dict["save_path"]):
+                os.remove(self.g_dict["save_path"])
+            shutil.move(down_file, self.g_dict["save_path"])
+            downloaded_path = self.g_dict["save_path"]
+
+        # 企业级：文件完整性检查
+        if not self._validate_excel_file(self.g_dict["save_path"]):
+            raise Exception(f"下载文件不完整: {self.g_dict['save_path']}")
+
+        # 上传数据
+        g_log.info("📤 上传Excel数据...")
+        self._upload_excel()
+
+        # 刷新回案件列表
+        await self.page.wait_for_timeout(1500)
+        await self.page.reload()
+        await self.page.locator('//*[contains(text(),"我的案件")]').first.wait_for(timeout=15000)
+        await self.page.locator("//td[@colid='col_4']").first.wait_for(timeout=15000)
+
+    def _validate_excel_file(self, file_path):
+        """企业级：验证下载的Excel文件完整性"""
+        try:
+            if not os.path.isfile(file_path):
+                g_log.error(f"文件不存在: {file_path}")
+                return False
+
+            file_size = os.path.getsize(file_path)
+            if file_size < 100:
+                g_log.error(f"文件太小({file_size}字节)，可能是不完整下载")
+                return False
+
+            # 尝试用openpyxl打开验证
+            try:
+                import openpyxl
+                wb = openpyxl.load_workbook(file_path)
+                wb.close()
+            except ImportError:
+                # openpyxl未安装，跳过内容验证
+                pass
+
+            g_log.info(f"文件完整性检查通过: {file_path} ({file_size}字节)")
+            return True
+        except Exception as e:
+            g_log.error(f"文件完整性检查失败: {e}")
+            return False
+
+    def _upload_excel(self):
+        """上传Excel数据到统一接口（利用aibot_common内置的指数退避重试）"""
+        url = f"{self.cfg('API_BASE_URL')}/uni/universal/importData"
+        max_retries = self.cfg("api_max_retries", 3)
+        g_log.info(f"上传Excel（重试次数: {max_retries}）")
+        code = self.other_rpa.upload_excel(
+            url=url,
+            file_path=self.g_dict["save_path"],
+            api_key=f'AuthCode {self.cfg("AuthCode")}',
+            extra_data={
+                'importType': 'INSERT',
+                'batchNum': 10000,
+                'uniId': self.table_id
+            },
+            max_retries=max_retries
+        )
+        if code.get('code') != 200 and "已存在" not in code.get("msg", ""):
+            raise Exception(f"上传失败: {code}")
+
+    # ------------------------------------------------------------------ #
+    # 3. 业务处理阶段 - yw_cl()
+    # ------------------------------------------------------------------ #
+    async def yw_cl(self):
+        """业务处理：循环拉取并处理案件（带断点续跑）"""
+        try:
+            max_count = self.cfg("max_process_count", 500)
+            g_log.info(f"最大处理条数: {max_count}")
+
+            payload = {
+                "uniId": self.table_id,
+                "pageSize": 1,
+                "reqParam": {
+                    "queryParam": [{"field": "zt", "value": ["处理中", "已完成", "未集约", "异常", "搜索不到案号"], "sign": "<>"}],
+                    "updateMap": {"zt": "处理中"}
+                }
+            }
+            put_json = {"zt": "", "id": "", "uniId": self.table_id}
+
+            # 统计计数器
+            stats = {"success": 0, "error": 0, "skip": 0}
+
+            process_count = 0
+            while process_count < max_count:
+                # 拉取数据
+                rqs_data = self.other_rpa.post_request(
+                    url=f"{self.cfg('API_BASE_URL')}/uni/universal/pull",
+                    payload=payload,
+                    auth_token=f'AuthCode {self.cfg("AuthCode")}'
+                )
+
+                data_list = rqs_data.get('data', {}).get('list', [])
+                if not data_list:
+                    g_log.info(f"📊 无更多数据")
+                    break
+
+                data = data_list[0]
+                put_json['id'] = data.get('id', '')
+                put_json['zt'] = ""
+
+                # 处理单个案件 - 显示进度
+                process_count += 1
+                g_log.info("──────────────────────────────────────────────────────────────")
+                g_log.info(f"【{process_count}/{max_count}】开始处理案件: {data['ah']}")
+                await self._process_case(data, put_json)
+                g_log.info(f"【{process_count}/{max_count}】案件处理完毕")
+
+                # 更新统计
+                if put_json['zt'] == "已完成":
+                    stats["success"] += 1
+                elif put_json['zt'] == "异常":
+                    stats["error"] += 1
+                else:
+                    stats["skip"] += 1
+
+            # 汇总统计
+            g_log.info("")
+            g_log.info("┌──────────────────────────────────────────────────────────────┐")
+            g_log.info("│ 业务处理汇总")
+            g_log.info("├──────────────────────────────────────────────────────────────┤")
+            g_log.info(f"│ 总计处理: {process_count} 条")
+            g_log.info(f"│ ✅ 成功:   {stats['success']} 条")
+            g_log.info(f"│ ❌ 异常:   {stats['error']} 条")
+            g_log.info(f"│ ⏭️ 跳过:   {stats['skip']} 条")
+            g_log.info("└──────────────────────────────────────────────────────────────┘")
+
+            return True
+        except Exception as e:
+            self.g_dict["err"] = True
+            self.g_dict["err_msg"] = str(e)
+            g_log.error(f"业务处理异常: {e}")
+            traceback.print_exc()
+            return False
+
+    
+
+    async def _process_case(self, data: dict, put_json: dict):
+        """处理单个案件"""
+        an_hao = data['ah']
+        put_json['id'] = data['id']
+
+        # 非执行类案件直接标记完成
+        if not re.search("执保|执\\d+|执恢", an_hao):
+            put_json['zt'] = "已完成"
+            self._put_status(put_json, f"[非执行{an_hao}]")
+            g_log.info(f"非执行案件，直接标记完成")
+            return
+
+        # 解析案号
+        ah_list = re.findall("\\d+", an_hao)
+        if len(ah_list) < 3:
+            put_json['zt'] = "异常"
+            put_json['remark'] = "案号格式异常"
+            self._put_status(put_json, f"[案号异常{an_hao}]")
+            g_log.warning(f"案号格式异常: {an_hao}")
+            return
+
+        an_year, ah_num = ah_list[0], ah_list[2]
+        g_log.info(f"解析案号: 年份={an_year}, 序号={ah_num}")
+
+        # 确保页面存活
+        if not (self.page and not self.page.is_closed()):
+            g_log.warning("页面不可用，重新初始化")
+            if not self.init_browser():
+                raise Exception("页面恢复失败")
+            await self.page.goto(self.cfg("LOGIN_URL"), wait_until="networkidle")
+
+        # 搜索案件
+        g_log.info("搜索案件...")
+        await self.page.locator("//div[contains(@class,'fullWidth')]/div[2]").first.click()
+        await self.page.wait_for_timeout(500)
+        await self.page.locator(f"//li/*[contains(text(),'{an_year}')]").first.click(timeout=5000)
+
+        await self.page.locator("//div[contains(@class,'fullWidth')]/div[4]/input").first.fill(ah_num)
+        await self.page.wait_for_timeout(1500)
+        await self.page.keyboard.press("Enter")
+
+        # 等待搜索结果
+        try:
+            await self.page.locator(f"//*[contains(text(),'{an_hao}')]").first.wait_for(timeout=15000)
+        except Exception:
+            put_json['zt'] = "搜索不到案号"
+            put_json['remark'] = "搜索无结果"
+            self._put_status(put_json, f"[搜索无结果{an_hao}]")
+            g_log.warning(f"搜索无结果: {an_hao}")
+            return
+
+        # 打开详情页
+        g_log.info("打开详情页...")
+        await self.page.locator(f"//div/a[contains(text(),'{an_hao}')]").first.click()
+        await self.page.wait_for_timeout(5000)
+
+        # 获取新页面
+        new_page = None
+        if len(self.context.pages) > 1:
+            new_page = self.context.pages[-1]
+        else:
+            try:
+                async with self.context.expect_page(timeout=15000) as page_info:
+                    new_page = await page_info.value
+            except Exception:
+                pass
+
+        if not new_page:
+            put_json['zt'] = "异常"
+            put_json['remark'] = "打开详情页失败"
+            self._put_status(put_json, f"[详情页失败{an_hao}]")
+            g_log.warning(f"打开详情页失败: {an_hao}")
+            return
+
+        original_page = self.page
+        self.page = new_page
+
+        try:
+            # 进入总对总页面
+            g_log.info("进入总对总页面...")
+            await self.page.wait_for_timeout(5000)
+            await self.page.locator("//*[contains(text(),'总对总')]/parent::*").first.click(timeout=30000)
+            await self.page.wait_for_timeout(6000)
+
+            # 等待表格数据出现
+            g_log.info("等待表格数据加载...")
+
+
+            iframe = self.page.frame_locator("iframe[src*='zgck']")
+            await self.page.wait_for_timeout(6000)
+
+            # 检查身份验证
+            try:
+                await iframe.locator("//table[@class='el-table-plus--body el-table__body']/tbody").first.wait_for(
+                    timeout=10000)
+            except Exception:
+                g_log.warning("表格数据为空")
+
+            # 抓取表格数据，判断是否已有手动查询或集约查询记录
+            is_sd, is_jy = await self._check_table_records(iframe)
+
+            # 未集约判断：is_sd=False 且案号匹配执\d+ 且 is_jy=False → 标记为"未集约"跳过
+            if not is_sd:
+                g_log.info(f"表格检查: is_sd={is_sd}, is_jy={is_jy}")
+                if bool(re.search("执\\d+", an_hao)) and not is_jy:
+                    put_json['zt'] = "未集约"
+                    self._put_status(put_json, f"[未集约{an_hao}]")
+                    g_log.info(f"执字案件未集约，跳过处理")
+                    return
+
+            # 点击新增
+            g_log.info("点击新增...")
+            await iframe.locator("//*[contains(text(),'新增')]").first.click(timeout=30000)
+            await self.page.wait_for_timeout(6000)
+
+            # 检查身份验证
+            try:
+                await iframe.locator("//label[@for='cxhy']/label[@class='el-checkbox ml2']").first.wait_for(timeout=15000)
+            except Exception:
+                put_json['zt'] = "异常"
+                put_json['remark'] = "身份未验证"
+                g_log.warning("身份未验证")
+                return
+
+            # 选择书记员（当前版本不选择，如需启用请取消注释并在CONFIG中配置书记员列表）
+            # g_log.info("选择书记员...")
+            # await self.page.locator("//input[contains(@placeholder, '请选择书记员')]").first.click(timeout=15000)
+            # clerks = self.cfg("书记员列表", [])
+            # if clerks:
+            #     name = clerks[random.randint(0, len(clerks) - 1)]
+            #     await self.page.locator(f"//span[contains(text(), '{name}') and contains(@class, 'el-tooltip')]").first.click(timeout=15000)
+
+            # 提交
+            g_log.info("提交...")
+            await iframe.locator("//button[contains(.,'提交')]").first.click(timeout=15000)
+
+            # 处理可能的确认对话框（Element UI MessageBox：点击提交后可能弹出"确定提交？"确认框）
+            # MessageBox可能渲染在iframe内或主页面（qiankun微前端环境）
+            await self._handle_submit_confirm(iframe)
+
+            # 等待提交完成：按钮hidden（对话框关闭）或检测到提示消息
+            submit_done = await self._wait_submit_complete(iframe, timeout=30000)
+            if not submit_done:
+                raise Exception("提交超时：按钮未隐藏且未检测到成功提示")
+
+            put_json['zt'] = "已完成"
+            put_json['remark'] = ""
+            g_log.info("✅ 案件处理成功")
+        except Exception as e:
+            g_log.error(f"{an_hao}处理异常: {e}")
+            put_json['zt'] = "异常"
+            put_json['remark'] = str(e)
+        finally:
+            # 回填状态
+            self._put_status(put_json, f"[处理{an_hao}]")
+
+            # 切回主页面
+            self.page = original_page
+            try:
+                if new_page and not new_page.is_closed():
+                    await new_page.close()
+            except Exception:
+                pass
+            await self.page.wait_for_timeout(3500)
+
+    # ------------------------------------------------------------------ #
+    # 业务辅助方法
+    # ------------------------------------------------------------------ #
+    async def _check_table_records(self,iframe):
+        """抓取总对总页面表格数据，判断是否已有手动查询或集约查询记录"""
+        is_sd = False
+        is_jy = False
+        try:
+            rows = iframe.locator("//table[@class='el-table-plus--body el-table__body']/tbody/tr")
+            count = await rows.count()
+            g_log.info(f"表格行数: {count}")
+            
+            for i in range(count):
+                cells = rows.nth(i).locator("td")
+                cell_count = await cells.count()
+                if cell_count >= 8:
+                    cell_text = await cells.nth(7).text_content()
+                    if cell_text and "手动查询" in cell_text:
+                        is_sd = True
+                    if cell_text and "集约查询" in cell_text:
+                        is_jy = True
+                if is_sd and is_jy:
+                    break
+        except Exception as e:
+            g_log.warning(f"表格数据抓取异常: {e}")
+        
+        return is_sd, is_jy
+
+    async def _handle_submit_confirm(self, iframe):
+        """处理提交后的确认对话框（Element UI MessageBox）
+
+        点击"提交"后系统可能弹出确认框（如"确定提交？"），
+        需点击"确定"才能真正执行提交。MessageBox可能渲染在iframe内或主页面。
+        """
+        # iframe内查找MessageBox确认按钮
+        confirm_selectors = [
+            "//div[contains(@class,'el-message-box')]//button[contains(@class,'el-button--primary')]",
+            "//div[@class='el-message-box__btns']/button[contains(@class,'el-button--primary')]",
+        ]
+        for sel in confirm_selectors:
+            try:
+                await iframe.locator(sel).first.click(timeout=3000)
+                g_log.info("已确认提交（iframe内MessageBox）")
+                return
+            except Exception:
+                continue
+
+        # 主页面查找MessageBox确认按钮（qiankun微前端可能渲染在主页面）
+        for sel in confirm_selectors:
+            try:
+                await self.page.locator(sel).first.click(timeout=2000)
+                g_log.info("已确认提交（主页面MessageBox）")
+                return
+            except Exception:
+                continue
+
+    async def _wait_submit_complete(self, iframe, timeout=30000):
+        """等待提交完成：按钮hidden（对话框关闭）或检测到成功提示消息
+
+        Returns:
+            True - 提交成功（按钮已隐藏 或 检测到成功提示）
+            False - 无法确认提交结果
+        Raises:
+            Exception - 检测到明确的失败提示
+        """
+        # 优先等待按钮隐藏（对话框关闭表示提交成功）
+        try:
+            await iframe.locator("//button/*[contains(text(),'提交')]").wait_for(state="hidden", timeout=timeout)
+            return True
+        except Exception:
+            g_log.warning("提交按钮未隐藏，检查提示消息...")
+
+        # 按钮未隐藏，检查el-message提示消息判断实际结果
+        msg_text = ""
+        for locator_scope in (iframe, self.page):
+            try:
+                msg_text = await locator_scope.locator(
+                    "//div[contains(@class,'el-message')]"
+                ).first.text_content(timeout=3000) or ""
+                if msg_text:
+                    break
+            except Exception:
+                continue
+
+        if "成功" in msg_text or "完成" in msg_text:
+            g_log.info(f"提交成功（提示: {msg_text}）")
+            return True
+        if msg_text and ("失败" in msg_text or "错误" in msg_text):
+            raise Exception(f"提交失败: {msg_text}")
+
+        # 未隐藏且无提示，可能仍在提交中，额外等待后最终检查
+        g_log.warning("未检测到提示消息，额外等待10秒后重试...")
+        await self.page.wait_for_timeout(10000)
+        try:
+            await iframe.locator("//button/*[contains(text(),'提交')]").wait_for(state="hidden", timeout=5000)
+            return True
+        except Exception:
+            return False
+
+    def start_data(self):
+        """初始化异常数据：将'处理中'和'异常'状态重置为空"""
+        g_log.info("--------------数据初始化")
+        payload = {
+            "uniId": self.table_id,
+            "pageSize": 1,
+            "reqParam": {
+                "queryParam": [
+                    {
+                        "field": "zt",
+                        "value": ["处理中"],
+                        "sign": "=",
+                        "append": "or"
+                    }, {
+                        "field": "zt",
+                        "value": ["异常"],
+                        "sign": "=",
+                        "append": "or"
+                    }
+                ],
+                "updateMap": {"zt": ""}
+            }
+        }
+        while True:
+            rqs_data = self.other_rpa.post_request(
+                url=f"{self.cfg('API_BASE_URL')}/uni/universal/pull",
+                payload=payload,
+                auth_token=f'AuthCode {self.cfg("AuthCode")}'
+            )
+            data = rqs_data.get('data', {}).get('list', [])
+            if len(data) == 0:
+                break
+
+    # ------------------------------------------------------------------ #
+    # 工具方法（业务逻辑后面，不干扰阅读）
+    # ------------------------------------------------------------------ #
+    def cfg(self, key, default=None):
+        """快速获取配置（优先从config_manager，其次从CONFIG字典）"""
+        try:
+            return self.config.get_config(key, default)
+        except Exception:
+            return CONFIG.get(key, default)
+
+    @property
+    def table_id(self):
+        """获取表格ID"""
+        try:
+            return self.cfg("uniTable", [[None]])[0][0]
+        except Exception:
+            return None
+
+    def _put_status(self, put_json: dict, context=""):
+        """安全回填状态（网络异常不崩溃）"""
+        try:
+            rqs_data = self.other_rpa.put_request(
+                f"{self.cfg('API_BASE_URL')}/uni/universal/edit",
+                payload=put_json,
+                auth_token=f'AuthCode {self.cfg("AuthCode")}'
+            )
+            g_log.info(f"回填状态{context}: {rqs_data.get('code')}")
+        except Exception as e:
+            g_log.warning(f"回填状态{context}失败: {e}")
+
+    def create_directories(self):
+        """创建必要目录"""
+        for d in ["videos", "login_states"]:
+            os.makedirs(d, exist_ok=True)
+
+
+# ============================================================
+# 【入口层】main函数
+# ============================================================
+def main():
+    """程序主入口"""
+    exit_code = 0
+    flow = None
+    t0 = time.time()
+    try:
+        g_log.info("=== 总对总查询 - 启动 ===")
+
+        os.environ.setdefault("AIBOT_LINUX_ROOT", os.getcwd())
+
+        # 加载配置
+        from aibot_rpa.config.manager import ConfigManager
+        config_manager = ConfigManager()
+        config_manager.load_config_args(CONFIG)
+
+        # isPW判定
+        final_pw = config_manager.get_config("loginPW", "")
+        if isinstance(final_pw, str) and final_pw.startswith("0") and final_pw.isdigit():
+            config_manager.load_dict({"isPW": True})
+
+        # 动态更新登录状态路径（按用户名称保存，绝对路径支持跨流程共用）
+        login_acc = config_manager.get_config("loginAcc", "")
+        if login_acc:
+            # 使用项目根目录下的 login_states 目录，支持其他流程共用登录状态
+            linux_root = os.environ.get("AIBOT_LINUX_ROOT", os.getcwd())
+            login_state_path = os.path.join(linux_root, "login_states", f"{login_acc}_state.json")
+            config_manager.load_dict({
+                "login_state_path": login_state_path,
+                "storage_state_path": login_state_path,
+            })
+            g_log.info(f"登录状态路径: {login_state_path}")
+
+        g_log.info(f"配置加载完成: {config_manager.get_config('name')}")
+
+        # 执行流程（框架负责execute→run_business→run_business_async）
+        flow = TotalToTotalQueryFlow(config_manager=config_manager)
+        result = flow.execute()
+
+        if result is True:
+            g_log.info("✅ 流程执行成功！")
+            exit_code = 0
+        else:
+            g_log.error(f"❌ 流程执行失败！result={result}")
+            exit_code = 1
+    except KeyboardInterrupt:
+        g_log.warning("⚠️ 用户中断")
+        exit_code = 2
+    except Exception as e:
+        g_log.exception(f"💥 执行异常: {e}")
+        exit_code = 1
+    finally:
+        if flow:
+            flow.driver_quit()
+        g_log.info(f"=== 程序结束（耗时 {time.time() - t0:.1f}s）===")
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())

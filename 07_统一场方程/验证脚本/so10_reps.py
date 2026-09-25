@@ -3819,6 +3819,789 @@ def run_selection_layer():
     return p
 
 
+GLOB = {}
+
+
+def g_mod1(x):
+    r"""把有理数折回 $[0,1)$（群相位以 $2\pi$ 为单位时"等于 0"的判据）。"""
+    f = F(x)
+    return f - (f.numerator // f.denominator)
+
+
+def g_scaled(vs):
+    """一组有理向量整体放大成整数向量：返回 (整数行, 公倍数)。"""
+    den = 1
+    for v in vs:
+        for x in v:
+            f = F(x)
+            den = den * f.denominator // math.gcd(den, f.denominator)
+    return [[int(F(x) * den) for x in v] for v in vs], den
+
+
+def g_snf(rows):
+    r"""整数矩阵的 Smith 不变因子（升序）。只做初等行列变换 $\Rightarrow$ 与 `g_det` 的
+    高斯消元是两条不共享算术的路数。"""
+    A = [[int(x) for x in r] for r in rows]
+    n, m = len(A), len(A[0])
+    out = []
+    for t in range(min(n, m)):
+        while True:
+            piv = None
+            for i in range(t, n):
+                for j in range(t, m):
+                    if A[i][j] and (piv is None or abs(A[i][j]) < abs(A[piv[0]][piv[1]])):
+                        piv = (i, j)
+            if piv is None:
+                return sorted(out)
+            pi, pj = piv
+            A[t], A[pi] = A[pi], A[t]
+            for i in range(n):
+                A[i][t], A[i][pj] = A[i][pj], A[i][t]
+            if A[t][t] < 0:
+                A[t] = [-x for x in A[t]]
+            again = False
+            for i in range(t + 1, n):
+                if A[i][t]:
+                    q = A[i][t] // A[t][t]
+                    A[i] = [a - q * b for a, b in zip(A[i], A[t])]
+                    if A[i][t]:
+                        A[t], A[i] = A[i], A[t]
+                        again = True
+            for j in range(t + 1, m):
+                if A[t][j]:
+                    q = A[t][j] // A[t][t]
+                    for i in range(n):
+                        A[i][j] -= q * A[i][t]
+                    if A[t][j]:
+                        for i in range(n):
+                            A[i][t], A[i][j] = A[i][j], A[i][t]
+                        again = True
+            if again:
+                continue
+            if any(A[i][j] % A[t][t] for i in range(t + 1, n) for j in range(t + 1, m)):
+                for i in range(m):
+                    A[t][i] += A[t + 1][i]
+                continue
+            out.append(A[t][t])
+            break
+    return sorted(out)
+
+
+def g_det(Min):
+    """精确行列式（选主元高斯消元，全程 Fraction）。"""
+    M = [[F(x) for x in r] for r in Min]
+    n = len(M)
+    d = F(1)
+    for c in range(n):
+        piv = next((r for r in range(c, n) if M[r][c] != 0), None)
+        if piv is None:
+            return F(0)
+        if piv != c:
+            M[c], M[piv] = M[piv], M[c]
+            d = -d
+        pv = M[c][c]
+        d *= pv
+        M[c] = [x / pv for x in M[c]]
+        for r in range(c + 1, n):
+            if M[r][c] != 0:
+                k = M[r][c]
+                M[r] = [a - k * b for a, b in zip(M[r], M[c])]
+    return d
+
+
+def g_lat_index(gens, basis):
+    r"""$[\Lambda(\text{basis}):\Lambda(\text{gens})]$ 与不变因子。两边都必须是满秩基；
+    `gens` 不落在 `basis` 生成的格裡就不给数（不静默放宽）。"""
+    n = len(basis)
+    if len(gens) != n:
+        return None, ('生成元 %d 个 != 基维数 %d' % (len(gens), n), [])
+    INT, den = g_scaled([list(v) for v in gens] + [list(v) for v in basis])
+    Gs, Bp = INT[:n], INT[n:]
+    Mi = inverse_rows(Bp)
+    T = [[sum(F(Gs[i][k]) * Mi[k][j] for k in range(n)) for j in range(n)] for i in range(n)]
+    bad = [str(x) for r in T for x in r if x.denominator != 1]
+    if bad:
+        return None, ('生成元不在超格内', bad[:4])
+    f = g_snf([[int(x) for x in r] for r in T])
+    idx = 1
+    for x in f:
+        idx *= x
+    dt = g_det(T)
+    return idx, (f, dt.denominator == 1 and abs(dt.numerator) == idx, int(abs(dt)))
+
+
+CEN_T_DEN = 12           # $t$ 的网格步长：$t\in\frac{1}{12}\mathbb Z$
+CEN_U_PER = 3            # $U(1)_{B-L}$ 参数的周期，$=1/g_0$ 的一半再乘 $2\pi$ 后的数（R10.1 量出）
+
+
+def cen_elements():
+    r"""候选中心元 $(a_3,a_L,a_R,t)$：色 $\mathbb Z_3$、两个 $\mathbb Z_2$、以及
+    $\frac{1}{12}\mathbb Z/\text{period}$ 里的 $U(1)_{B-L}$ 元素。"""
+    return [(a3, aL, aR, F(k, CEN_T_DEN)) for a3 in range(3) for aL in range(2)
+            for aR in range(2) for k in range(CEN_T_DEN * CEN_U_PER)]
+
+
+def cen_law(x, y):
+    """四个因子各自按自己的阶取模后的群乘法。"""
+    return ((x[0] + y[0]) % 3, (x[1] + y[1]) % 2, (x[2] + y[2]) % 2,
+            (x[3] + y[3]) % CEN_U_PER)
+
+
+CEN_IDENT = (0, 0, 0, F(0))
+
+
+def cen_phase(x, lab, bl, conv='A'):
+    r"""$(a_3,a_L,a_R,t)$ 作用在一条 3221 分量 $(p,q,l_L,l_R)$、$B-L$ 为 `bl` 上的相位
+    （以 $2\pi$ 为单位）。色 triality 的两种约定都测：$\mathbb Z_3$ 有两个生成元，
+    选哪一个在 R10.4 由数据定，本层不重挑。"""
+    p, q, lL, lR = lab
+    tri = (p + 2 * q) if conv == 'A' else (2 * p + q)
+    return g_mod1(F(x[0] * tri, 3) + F(x[1] * lL, 2) + F(x[2] * lR, 2) + F(x[3]) * F(bl))
+
+
+def cen_order(x, upto=24):
+    """群元的阶；`upto` 步内不回到单位元就不给数。"""
+    g, n = CEN_IDENT, 0
+    while n < upto:
+        g = cen_law(g, x)
+        n += 1
+        if g == CEN_IDENT:
+            return n
+    return None
+
+
+def cen_class(x, gam):
+    r"""$x$ 在 $\Gamma$ 里的陪集（$\Gamma$ 有限 $\Rightarrow$ 直接枚举倍元当键）。"""
+    return frozenset(cen_law(x, g) for g in gam)
+
+
+def ctex(x):
+    """群元 $(a_3,a_L,a_R,t)$ 的报告版（不泄漏 Python 的 Fraction 打印）。"""
+    f = F(x[3])
+    ts = str(f.numerator) if f.denominator == 1 else r'\frac{%d}{%d}' % (f.numerator, f.denominator)
+    return '$(%d,%d,%d,%s)$' % (x[0], x[1], x[2], ts)
+
+
+def coset_reps(surv, gam):
+    reps, seen = [], set()
+    for x in surv:
+        k = cen_class(x, gam)
+        if k not in seen:
+            seen.add(k)
+            reps.append(x)
+    return reps
+
+
+def coset_orders(reps, gam):
+    r"""每个陪集代表的阶：最小的 $m$ 使 $x^m\in\Gamma$。"""
+    out = []
+    for i, x in enumerate(reps):
+        acc, n = i, 1
+        while acc != 0 and n <= 24:
+            y = cen_law(reps[acc], x)
+            nxt = [k for k, r in enumerate(reps) if cen_class(r, gam) == cen_class(y, gam)]
+            if not nxt:
+                acc, n = None, None
+                break
+            acc, n = nxt[0], n + 1
+        out.append(n if acc == 0 else None)
+    return out
+
+
+def ab_partitions(e):
+    """整数 e 的全部分拆，每个分拆给成升序列表。"""
+    if e == 0:
+        return [[]]
+    out = []
+    for first in range(1, e + 1):
+        for rest in ab_partitions(e - first):
+            if not rest or first <= rest[0]:
+                out.append([first] + rest)
+    return out
+
+
+def ab_groups(n):
+    r"""阶 $=n$ 的全部有限阿贝尔群，用不变因子 $(d_1\mid d_2\mid\cdots)$ 表示（$\prod d_i=n$）。
+
+    只从 $n$ 的素因子分拆构造，不查表 $\Rightarrow$ "唯一命中"这句话有内容：它核对的是
+    这个阶上一共有哪些阿贝尔群，而不是"我手上这个名字在不在一张写好的清单里"。
+    """
+    fac, m, pr = {}, n, 2
+    while pr * pr <= m:
+        while m % pr == 0:
+            fac[pr] = fac.get(pr, 0) + 1
+            m //= pr
+        pr += 1
+    if m > 1:
+        fac[m] = fac.get(m, 0) + 1
+    combos = [[]]
+    for pr in sorted(fac):
+        combos = [c + [pt] for c in combos for pt in ab_partitions(fac[pr])]
+    out = []
+    for c in combos:
+        w = max([len(x) for x in c] + [0])
+        divs = [1] * w
+        for pr, row in zip(sorted(fac), c):
+            padded = [0] * (w - len(row)) + row     # 短的那侧补零指数 ⇒ 大因子对齐在右
+            for j, e in enumerate(padded):
+                divs[j] *= pr ** e
+        out.append([d for d in divs if d > 1])
+    return sorted(out)
+
+
+def ab_element_orders(divs):
+    """不变因子给定的阿贝尔群的全部元素阶（升序多重集）。"""
+    els = [()]
+    for d in divs:
+        els = [e + (k,) for e in els for k in range(d)]
+    out = []
+    for e in els:
+        o = 1
+        for d, k in zip(divs, e):
+            oo = 1 if k == 0 else d // math.gcd(k, d)
+            o = o * oo // math.gcd(o, oo)
+        out.append(o)
+    return sorted(out)
+
+
+def ab_name(n, obs):
+    r"""观测到的元素阶多重集 $\to$ 该阶上唯一与之相符的阿贝尔群（不变因子）。
+
+    命中 0 个或 2 个以上都不给名字 $\Rightarrow$ 定名这一步是判决，不是排版。
+    """
+    hits = [dg for dg in ab_groups(n) if None not in obs and
+            ab_element_orders(dg) == sorted(obs)]
+    return hits[0] if len(hits) == 1 else None
+
+
+def ab_tex(divs):
+    r"""不变因子 → 单个数学式 $\mathbb Z_{d_1}\times\cdots$（不拼多个 `$` 段）。
+
+    空列表是平凡群；`None` 表示这一阶上没有唯一命中，就不印符号（不让排版冒充结论）。
+    """
+    if divs is None:
+        return r'（该阶上定不出唯一的群）'
+    return r'$%s$' % r'\times'.join(r'\mathbb Z_{%d}' % d for d in divs) if divs else r'$\{e\}$'
+
+
+def mth(s):
+    r"""剥掉一个已带 `$…$` 的读数的外层美元号，供嵌进另一个数学环境用。
+
+    `$%s$` 型模板直接灌 `ztex`/`ab_tex` 的产出会拼成 `$$…$$` $\Rightarrow$ 报告里
+    那个 `$` 配对门禁会红，而且读起来是两段错位的公式。只剥最外一对，其余原样。
+    """
+    if not isinstance(s, str) or not (s.startswith('$') and s.endswith('$') and len(s) > 2):
+        return s
+    assert '$' not in s[1:-1], '内层还有美元号，剥不得：%r' % s
+    return s[1:-1]
+
+
+def uni(xs):
+    """去重升序后按报告口径印出来：读数以"值"呈现，不是以 Python 列表呈现。"""
+    return '、'.join(str(x) for x in sorted(set(xs)))
+
+
+def fracs(v):
+    r"""一组有理数（$\varepsilon$ 基坐标）的报告版：整数不印分母，也不泄漏 `Fraction(...)`。"""
+    return '(%s)' % ', '.join(str(x.numerator) if x.denominator == 1
+                              else '%d/%d' % (x.numerator, x.denominator) for x in v)
+
+
+def class_tex(b):
+    """结构类的报告版：群名、承载者个数与名字、指数、循环性（§11.3 与 R12.3 共用一个口径）。"""
+    return '%s（%d 个承载者：%s；指数 %d、%s循环）' % (
+        ab_tex(b['struct']), b['n'],
+        plain_tex(sorted(set(c[0] for c in b['carriers']))),
+        b['expo'], '' if b['cyc'] else '不')
+
+
+def run_global_layer():
+    r"""R12：完整的残留离散规范群 $=$ 中心 $\times$ 整体形式，做成格上的读数。
+
+    §9（R10）与 §10（R11）的判据都只在 $U(1)_{B-L}$ **那一个因子**导出的群上跑 $\Rightarrow$
+    两层的边界原话是"若完整残留群是它的扩张，'允许'可能变严、'禁戒'不会变松"。本层把
+    $SU(3)_c$、$SU(2)_{L/R}$ 的中心与 $Spin(10)$ 的整体形式一起搬到账上，回答三问：
+      (i) 覆盖群到 $Spin(10)$ 的核 $\Gamma$ 多大、什么结构 $\Rightarrow$ 三条不共享算术的
+          路数同数才认；
+      (ii) 破缺之后**完整**的残留群在 R11 那批 SM 单态算符上是否比 $\mathbb Z_N$ 更严；
+      (iii) 在场谱把整体形式钉在 $Spin(10)$ 的哪一个商上。
+    本层不引入新的李论输入：用的还是 D5 的 Dynkin 图、由它推出的 $\varepsilon$ 实现、
+    两条链的单根，以及 R10/R11 已经跑出来的谱。
+    """
+    p = True
+    names = sorted(r['name'] for r in TABLE if r['name'] in NAMED)
+
+    # ---- 在场谱在 3221 下的不同 (行标号, $B-L$)，以及每条低能场落在哪一行
+    spec, ROWLAB = set(), {}
+    for nm in names:
+        for row in branching(irrep(NAMED[nm])[1], SUB_3221):
+            spec.add((tuple(row['labels']), F(row['bl'])))
+            ROWLAB[(nm, fmt_3221(row))] = (tuple(row['labels']), F(row['bl']))
+    cv = 'A' if RESID.get('triality_sign') == '+' else 'B'
+
+    # ---- v.e.v. 候选：色单态、$Q=0$、$B-L\ne0$（与 R10 同一条筛选）
+    chans = {}
+    for nm in names:
+        for row in branching(irrep(NAMED[nm])[1], SUB_3221):
+            lab, bl = tuple(row['labels']), F(row['bl'])
+            if lab[:2] != (0, 0) or bl == 0:
+                continue
+            if not any(chg(mu, QHP) == 0 for mu in sub_irrep(row['wt'], SUB_3221)):
+                continue
+            chans.setdefault(abs(bl), set()).add((nm, lab, bl))
+
+    C = cen_elements()
+    gam = dict((c, set(x for x in C if all(cen_phase(x, lab, bl, c) == 0 for lab, bl in spec)))
+               for c in ('A', 'B'))
+    G = gam[cv]
+
+    # ---- 路数甲/丙：三张格的指数
+    P10 = [tuple(F(x, U) for x in v) for v in FUND]
+    P422 = sub_fundweights(SUB_422)
+    uBL = tuple(F(BL[k], 4 * U) for k in range(5))
+    PH = sub_fundweights(SUB_3221) + [uBL]
+    i_10, f_10 = g_lat_index(P10, PH)
+    i_422, f_422 = g_lat_index(P10, P422)
+    i_hop, f_hop = g_lat_index(P422, PH)
+
+    # ---- 整体形式：$P/Q$ 与在场谱；"在不在根格里"两条独立判法
+    A5 = [[int(2 * F(ip(SIMPLE[i], SIMPLE[j]), D4) / F(ip(SIMPLE[j], SIMPLE[j]), D4))
+           for j in range(5)] for i in range(5)]
+    Ai5 = inverse_rows(A5)
+    pQ = int(abs(g_det(A5).numerator))
+
+    def pq_class(lam):
+        r"""$\Lambda=\sum_j c_j\alpha_j$ 的单根坐标 mod 1 $=$ $P/Q$ 里的类。"""
+        return tuple(g_mod1(sum(F(lam[k]) * Ai5[k][j] for k in range(5))) for j in range(5))
+
+    forms = []
+    for nm in names:
+        lam, ms = irrep(NAMED[nm])[0], irrep(NAMED[nm])[1]
+        c = pq_class(dynkin(lam))
+        ordc = next(k for k in range(1, 5)
+                    if all(g_mod1(k * x).numerator == 0 for x in c))
+        # 甲：最高权的单根坐标全整 $\iff$ 类为 0；乙：$D_5$ 的根格在 $\varepsilon$ 基下
+        # 就是"整坐标且坐标和为偶" $\Rightarrow$ 拿它逐条权重判（另一条代码路径）
+        zeroA = all(x.denominator == 1 for x in c)
+        zeroB = True
+        for w in ms:
+            v = [F(x, U) for x in w]
+            zeroB &= all(x.denominator == 1 for x in v) and (sum(v).numerator % 2 == 0)
+        forms.append({'rep': nm, 'cls': [str(x) for x in c], 'order': ordc,
+                      'zeroA': zeroA, 'zeroB': zeroB, 'nwt': len(ms)})
+
+    gen = {(0, 0, 0, 0, 0)}
+    frontier = [(0, 0, 0, 0, 0)]
+    while frontier:
+        nxt = []
+        for x in frontier:
+            for f in forms:
+                y = tuple(g_mod1(F(x[j]) + F(f['cls'][j])) for j in range(5))
+                if y not in gen:
+                    gen.add(y)
+                    nxt.append(y)
+        frontier = nxt
+
+    # ---- 低能单态算符（与 §10 同一批：物质场分量张成的 d=6 类里含 SM 单态的那 8 条）
+    mat = SEL['mat']
+    FV = {}
+    for f in mat:
+        key = (f['rep'], f['row'])
+        assert key in ROWLAB, '%s：行 %s 不在 %s 的 3221 分支里' % (f['name'], f['row'], f['rep'])
+        lab, bl = ROWLAB[key]
+        assert bl == F(f['BL']) and lab[:3] == tuple(f['lam']), \
+            '%s：行标号 %s / $B-L$ %s 与场自己的 %s / %s 不符' % (
+                f['name'], lab, bl, f['lam'], f['BL'])
+        FV[f['name']] = (lab, bl)
+    assert len(FV) == len(mat), \
+        '场名有重复（%d 条场只剩下 %d 个名字）⇒ 按名字建表会把两条场合成一条' % (len(mat), len(FV))
+    sing_ops = [{'name': '+'.join(mat[i]['name'] for i in combo),
+                 'per': [FV[mat[i]['name']] for i in combo]}
+                for combo, n in SEL['r4'][0] if n > 0]
+    # 这批必须与 §10 的 hit4 是**同一批**类，否则本节比的是另一张表
+    hit4_names = sorted(x['name'] for x in SEL['hit4'])
+    assert sorted(o['name'] for o in sing_ops) == hit4_names, \
+        '本层的场内容类与 §10 的含单态类不是同一批：%s vs %s' % (
+            sorted(o['name'] for o in sing_ops), hit4_names)
+    NSING4 = len(hit4_names)
+    Nres = dict((str(r['BL']), r['N']) for r in RESID['rows'])
+
+    def op_phase(x, o):
+        return g_mod1(sum(cen_phase(x, ll, bb) for (ll, bb) in o['per']))
+
+    def z_phase(a, o):
+        return g_mod1(a * sum(bb for (_l, bb) in o['per']))
+
+    def sums_of(o):
+        return {'name': o['name'],
+                'bl': sum(bb for (ll, bb) in o['per']),
+                'lL': sum(ll[2] for (ll, bb) in o['per']),
+                'lR': sum(ll[3] for (ll, bb) in o['per']),
+                'tri': sum(ll[0] + 2 * ll[1] for (ll, bb) in o['per'])}
+
+    sing_sums = [sums_of(o) for o in sing_ops]
+
+    chan_rows = []
+    for qd in sorted(chans):
+        N = int(Nres[str(qd)])
+        zels = [F(k) / F(qd) for k in range(N)]
+        for (nm, lab, bl) in sorted(chans[qd], key=lambda t: (str(t[1]), str(t[2]))):
+            surv = [x for x in C if cen_phase(x, lab, bl) == 0]
+            assert all(len(cen_class(x, G)) == len(G) for x in surv), \
+                r'陪集大小不等于 $|\Gamma|$ ⇒ 商不掉：%s' % nm
+            reps = coset_reps(surv, G)
+            assert len(reps) * len(G) == len(surv), \
+                r'陪集代表元数 × $|\Gamma|$ ≠ 存活元数 @ %s' % nm
+            ords = coset_orders(reps, G)
+            chars = sorted(set(tuple(op_phase(x, o) for o in sing_ops) for x in reps))
+            zchars = sorted(set(tuple(z_phase(a, o) for o in sing_ops) for a in zels))
+            af = [i for i, o in enumerate(sing_ops) if all(op_phase(x, o) == 0 for x in reps)]
+            az = [i for i, o in enumerate(sing_ops) if all(z_phase(a, o) == 0 for a in zels)]
+            chan_rows.append({
+                'qd': str(qd), 'rep': nm, 'lab': str(lab), 'bl': str(bl), 'N': N,
+                'surv': len(surv), 'coset': len(reps), 'ords': ords, 'expo': max(ords),
+                'struct': ab_name(len(reps), ords),
+                'cands': [(ab_tex(d), ab_element_orders(d)) for d in ab_groups(len(reps))],
+                'cyc': max(ords) == len(reps), 'chars': len(chars), 'zchars': len(zchars),
+                'same_char': chars == zchars, 'same_allow': af == az, 'allow': len(af),
+                'nsing': len(sing_ops),
+                'ss': len([x for x in reps if x[0] or x[1] or x[2]]),
+                'fact': all(op_phase(x, o) == z_phase(x[3], o) for x in reps for o in sing_ops)})
+
+    # ---- 正向对照：去掉"要是 SM 单态"这一步，中心判据还在不在做功
+    def n_multiset(k):
+        r"""$n$ 个符号取 $k$ 条的可重多重集数 $=\binom{n+k-1}{k}$（逐步整除，不走浮点）。"""
+        r, nt = 1, len(FV) + k - 1
+        for i in range(1, k + 1):
+            r = r * (nt - k + i) // i
+        fall = 1
+        for i in range(k):
+            fall *= nt - i
+        assert r * math.factorial(k) == fall, '多重集计数 %d 与下降阶乘不符 (k=%d)' % (r, k)
+        return r
+
+    allc_tot = sum(n_multiset(k) for k in (2, 3, 4))
+    ctl = []
+    for qd in sorted(chans):
+        N = int(Nres[str(qd)])
+        zels = [F(k) / F(qd) for k in range(N)]
+        nm0, lab0, bl0 = sorted(chans[qd], key=lambda t: (str(t[1]), str(t[2])))[0]
+        surv = [x for x in C if cen_phase(x, lab0, bl0) == 0]
+        reps = coset_reps(surv, G)
+        allc = []
+        for k in (2, 3, 4):
+            for cs in itertools.combinations_with_replacement(sorted(FV), k):
+                allc.append({'name': '+'.join(cs), 'k': k, 'per': [FV[n] for n in cs]})
+        byk = [(k, sum(1 for o in allc if o['k'] == k)) for k in (2, 3, 4)]
+        assert [b[1] for b in byk] == [n_multiset(k) for k in (2, 3, 4)], \
+            '枚举出的多重集条数与公式不符：%s' % byk
+        zo = [o for o in allc if all(z_phase(a, o) == 0 for a in zels)]
+        fo = [o for o in allc if all(op_phase(x, o) == 0 for x in reps)]
+        onzl_ops = [o for o in zo if not all(op_phase(x, o) == 0 for x in reps)]
+        onlz = [o['name'] for o in onzl_ops]
+        onlyf = [o['name'] for o in fo if not all(z_phase(a, o) == 0 for a in zels)]
+
+        def cen_kind(o):
+            r"""一条多重集在中心三项上的读数 $(\mathrm{tri}\bmod3,\ \sum l_L\bmod2,\ \sum l_R\bmod2)$。
+
+            triality 取模 3 的判据与生成元约定无关：$p+2q\equiv0\pmod3\iff 2p+q\equiv0\pmod3$。
+            """
+            return (sum(ll[0] + 2 * ll[1] for (ll, bb) in o['per']) % 3,
+                    sum(ll[2] for (ll, bb) in o['per']) % 2,
+                    sum(ll[3] for (ll, bb) in o['per']) % 2)
+
+        def pure_witness(o):
+            """有没有一个 $t=0$ 的存活元（纯中心元）已经把它禁掉。"""
+            return any(x[3] == 0 and op_phase(x, o) != 0 for x in surv)
+
+        ctl.append({'qd': str(qd), 'N': N, 'carrier': nm0, 'all': len(allc), 'byk': byk,
+                    'z': len(zo), 'f': len(fo), 'onlyz': len(onlz), 'onlyf': len(onlyf),
+                    'ex': onlz[:4],
+                    'kinds': sorted(set(cen_kind(o) for o in onzl_ops)),
+                    'noncen': sum(1 for o in onzl_ops if cen_kind(o) == (0, 0, 0)),
+                    'pure': sum(1 for o in onzl_ops if pure_witness(o)),
+                    'allint': all(sum(bb for (ll, bb) in o['per']).denominator == 1
+                                  for o in onzl_ops),
+                    'disagree': sum(1 for o in allc
+                                    if all(op_phase(x, o) == 0 for x in surv) !=
+                                       all(op_phase(x, o) == 0 for x in reps)),
+                    'sing_new': sum(1 for o in sing_ops if o['name'] in onlz)})
+
+    gord = sorted(cen_order(x) for x in G)
+
+    def swap3(x):
+        r"""换色 $\mathbb Z_3$ 的生成元：$a_3\mapsto 2a_3$（同一个因子群的自同构）。"""
+        return ((2 * x[0]) % 3, x[1], x[2], x[3])
+
+    gconj = set(swap3(x) for x in gam['A']) == gam['B']
+    by_struct = {}
+    for r in chan_rows:
+        by_struct.setdefault((r['qd'], tuple(r['struct'] or ())), []).append(r)
+    bys = []
+    for (qd, st), rs in sorted(by_struct.items(),
+                               key=lambda kv: (kv[0][0], [x for x in kv[0][1]])):
+        bys.append({'qd': qd, 'struct': list(st), 'n': len(rs), 'surv': rs[0]['surv'],
+                    'coset': rs[0]['coset'], 'ords': sorted(rs[0]['ords']),
+                    'cyc': rs[0]['cyc'], 'expo': rs[0]['expo'],
+                    'cands': rs[0]['cands'], 'same': all(
+                        r['same_char'] and r['same_allow'] and r['fact'] for r in rs),
+                    'carriers': [(r['rep'], r['lab'], r['bl']) for r in rs]})
+    GLOB.update({
+        'nrep': len(names), 'nspec': len(spec), 'ncand': len(C), 'conv': cv,
+        'convf': '$p+2q$' if cv == 'A' else '$2p+q$',
+        'maxdim': max(r['dim'] for r in TABLE if r['name'] in NAMED),
+        'uper': CEN_U_PER, 'tstep': CEN_T_DEN,
+        'gden': sorted(set(F(k, CEN_T_DEN).denominator for k in range(CEN_T_DEN * CEN_U_PER))),
+        'tden': sorted(set(x[3].denominator for x in G)),
+        'gam': sorted(G, key=lambda x: (x[0], x[1], x[2], x[3])),
+        'gampairs': [(x, cen_order(x)) for x in sorted(G, key=lambda x: (x[0], x[1], x[2], x[3]))],
+        'gsizeA': len(gam['A']), 'gsizeB': len(gam['B']), 'gsame': gam['A'] == gam['B'],
+        'gconj': gconj,
+        'gords': gord,
+        'gstruct': ab_name(len(G), gord), 'gall': ab_groups(len(G)),
+        'gens6': sorted([x for x in G if cen_order(x) == 6], key=lambda x: x[3]),
+        'gupure': [x for x in G if not (x[0] or x[1] or x[2])],
+        'idx_h': i_10, 'fac_h': f_10[0], 'chk_h': f_10[1],
+        'idx_422': i_422, 'fac_422': f_422[0], 'chk_422': f_422[1],
+        'idx_hop': i_hop, 'fac_hop': f_hop[0], 'chk_hop': f_hop[1],
+        'uBL': fracs(uBL), 'pQ': pQ, 'ngen': len(gen), 'forms': forms,
+        'tens': [f['rep'] for f in forms if f['order'] == 1],
+        'ord2': [f['rep'] for f in forms if f['order'] == 2],
+        'ord4': [f['rep'] for f in forms if f['order'] == 4],
+        'rows': chan_rows, 'bys': bys, 'ctl': ctl, 'sing': sing_sums, 'nsing': len(sing_ops),
+        'nfv': len(FV), 'allc_tot': allc_tot,
+        'nres': dict((k, int(v)) for k, v in Nres.items()),
+        'chans': sorted(str(k) for k in chans),
+        'ncar': dict((str(k), len(v)) for k, v in chans.items())})
+
+    # ---- R12.0 整体形式：在场谱把群钉在 $Spin(10)$ 上，且"类为 0"有两条独立判法
+    p &= ok('R12.0', '在场 %d 个表示的 $P/Q$ 类分三层：%s 在类 0（纯张量型，任何整体形式都容得下'
+                    '它们）、%s 在 2 阶类（需要 $SO(10)$ 而不只是伴随群）、%s 在 4 阶类（只有单连通'
+                    '的那个形式容得下）。$|P/Q|$ 由 Cartan 行列式独立给出 $=%d$，出现的类生成的子群'
+                    r'大小 $=%d$ $\Rightarrow$ 商不掉任何非平凡中心：物质 $16_F$ 在 4 阶类 '
+                    r'$\Rightarrow$ 群必须是 $Spin(10)$ 本身，"自然界取哪个形式"在本模型里不是自由'
+                    '参数。两条判"在不在根格里"的路数（甲 最高权的单根坐标全整；乙 每条权重的 '
+                    r'$\varepsilon$ 坐标全整且和为偶）逐表示同判'
+             % (len(forms), plain_tex(GLOB['tens']), plain_tex(GLOB['ord2']),
+                plain_tex(GLOB['ord4']), pQ, len(gen)),
+             pQ == 4 and len(gen) == 4 and
+             all(f['zeroA'] == f['zeroB'] for f in forms) and
+             all(f['zeroA'] == (f['order'] == 1) for f in forms) and
+             '16' in GLOB['ord4'] and '144' in GLOB['ord4'] and
+             set(GLOB['tens']) == set(f['rep'] for f in forms if f['zeroA']) and
+             all(f['order'] == 1 for f in forms if f['rep'] in ('45', '54', '210')) and
+             all(f['order'] == 2 for f in forms if f['rep'] in ('10', '120', '126')),
+             '各表示 (类, 阶, 两条判法) %s' % [(f['rep'], f['order'], f['zeroA'], f['zeroB'],
+                                               f['nwt']) for f in forms])
+
+    # ---- R12.1 覆盖核：显式枚举
+    pure = GLOB['gupure']
+    o2 = [x for x in G if cen_order(x) == 2]
+    o3 = [x for x in G if cen_order(x) == 3]
+    p &= ok('R12.1', '在 %d 个候选中心元上逐个试"对在场谱的每一条 3221 分量都平凡"，活下来 %d 个 '
+                    r'$\Rightarrow$ 覆盖群到 $Spin(10)$ 的核 $\Gamma$ 数出来了。它**不是**把某个 '
+                    r'$U(1)$ 子群商掉的东西：形如 $(0,0,0,t)$ 的存活元只有单位元那一个（读出 %d 个）'
+                    r'$\Rightarrow$ 它是中心与 $U(1)$ 的**对角**粘合。结构：各元的阶 %s $\Rightarrow$ '
+                    r'把这份阶分布交给"穷举该阶上全部阿贝尔群、比对元素阶多重集"那一步，唯一命中 %s'
+                    r'（$%d$ 个生成元 $\Rightarrow$ 确实是循环群）；那个唯一的 2 阶元 %s 把两个 '
+                    r'$\mathbb Z_2$ 中心**同时**非平凡地带上、还配一个半整数的 $t$，两个 3 阶元 %s '
+                    r'各自带色中心配 $t$ $\Rightarrow$ 它不是"中心各因子随便取 6 个元"。两种 triality '
+                    r'约定各给 %d / %d 元，作为候选网格里的点集它们 %s（甲 $p+2q$、乙 $2p+q$）；'
+                    r'但把色 $\mathbb Z_3$ 的生成元换一次（$a_3\mapsto 2a_3$）之后两支严格互化：%s '
+                    r'$\Rightarrow$ 核的大小与同构型不随"把哪个元叫 1"而变，变的只是那个称呼'
+                    r'（本层沿 R10.4 从数据选定的 %s）。'
+                    r'网格也够用：候选网格覆盖的 $t$ 分母有 '
+                    r'%s，存活元实际只用 %s $\Rightarrow$ 没有元贴在网格最细的那一格上（分母 12 上零个）'
+             % (len(C), len(G), len(pure), GLOB['gords'], ab_tex(GLOB['gstruct']),
+                len(GLOB['gens6']),
+                ctex(o2[0]) if len(o2) == 1 else '—（2 阶元不唯一：%s）' % len(o2),
+                '、'.join(ctex(x) for x in o3), GLOB['gsizeA'], GLOB['gsizeB'],
+                '相同' if GLOB['gsame'] else '**不同**',
+                '成立' if GLOB['gconj'] else '**不成立**', GLOB['convf'],
+                '、'.join(str(x) for x in GLOB['gden']),
+                '、'.join(str(x) for x in GLOB['tden'])),
+             len(G) == 6 and GLOB['gsizeB'] == 6 and GLOB['gconj'] and CEN_IDENT in G and
+             all(cen_law(x, y) in G for x in G for y in G) and
+             GLOB['gords'] == [1, 2, 3, 3, 6, 6] and len(pure) == 1 and pure[0] == CEN_IDENT and
+             len(o2) == 1 and o2[0][1:] == (1, 1, F(3, 2)) and
+             all(x[0] and x[3] != 0 for x in o3) and len(o3) == 2 and
+             len(GLOB['gens6']) == 2 and
+             GLOB['tden'] == [1, 2] and max(GLOB['tden']) < max(GLOB['gden']) and
+             set(GLOB['tden']) < set(GLOB['gden']) and
+             GLOB['gstruct'] == [6] and len(GLOB['gall']) == 1,
+             r'$\Gamma$ = %s' % '、'.join(ctex(x) for x in GLOB['gam']))
+
+    # ---- R12.2 同一个数 $|\Gamma|$ 的三条出处
+    p &= ok('R12.2', r'$|\Gamma|=%d$ 有三条出处。甲 权格指数 $[P_H:P_{10}]=%s$（$P_H$ 由 $\bar{\rho}$ '
+                    '半单部分的基本权加上 $U(1)_{B-L}$ 的特征格方向 $u$ 生成，不变因子 %s）；'
+                    '乙 上一节的显式中心元枚举 $=%d$；丙 经 $SU(4)$ 一侧的可乘性 '
+                    r'$[P_H:P_{422}]\cdot[P_{422}:P_{10}]=%s\times%s=%s$。三条同数 $\Rightarrow$ '
+                    r'$\Gamma$ 不是枚举出来的巧合。诚实登记：甲与丙共用同一套 Smith 标准形代码'
+                    '（丙只是把同一台机器在中间格上多跑一次，它核对的是**格的嵌套**而不是新的算术），'
+                    '只有乙与格无关。甲那条里 $u$ 的归一化是**量出来**的：取 $u=3(B-L)$ 时 $P_{10}$ '
+                    r'根本不在 $P_H$ 里（生成元不在超格内 $\Rightarrow$ 直接返回"不给数"），取 '
+                    r'$u=\frac{B-L}{4}$ 才包含 $\Rightarrow$ 这个 $1/4$ 不是抄来的约定'
+             % (len(G), i_10, GLOB['fac_h'], len(G), i_422, i_hop,
+                (i_422 or 0) * (i_hop or 0)),
+             i_10 == len(G) == 6 and (i_422 or 0) * (i_hop or 0) == i_10 and
+             i_422 == 2 and i_hop == 3 and GLOB['chk_h'] and GLOB['chk_422'] and
+             GLOB['chk_hop'] and GLOB['fac_h'] == [1, 1, 1, 1, 6] and
+             GLOB['fac_422'] == [1, 1, 1, 1, 2] and GLOB['fac_hop'] == [1, 1, 1, 1, 3],
+             '$[P_H:P_{10}]$ 不变因子 %s；$[P_{422}:P_{10}]$ %s；$[P_H:P_{422}]$ %s；'
+             r'$u$（$\varepsilon$ 基）$=%s$；三条路数 %s' %
+             (GLOB['fac_h'], GLOB['fac_422'], GLOB['fac_hop'], GLOB['uBL'],
+              (i_10, len(G), (i_422 or 0) * (i_hop or 0))))
+
+    # ---- R12.3 破缺之后真正剩下的完整离散群
+    bys = GLOB['bys']
+    b1 = [b for b in bys if b['qd'] == '1']
+    b2 = [b for b in bys if b['qd'] == '2']
+
+    def ms_diff(a, b):
+        """多重集差：$a$ 里比 $b$ 多出来的那些阶（取不同值、升序）。"""
+        cnt = {}
+        for x in b:
+            cnt[x] = cnt.get(x, 0) + 1
+        out = set()
+        for x in a:
+            if cnt.get(x, 0) > 0:
+                cnt[x] -= 1
+            else:
+                out.add(x)
+        return sorted(out)
+
+    def cand_rej(b):
+        """一个结构类里被实测排除的其他候选：连同双向差集（它比实测多什么、缺什么）。"""
+        return [(nm, ms_diff(cord, b['ords']), ms_diff(b['ords'], cord))
+                for nm, cord in b['cands'] if cord != b['ords']]
+
+    ncand_all = sum(len(b['cands']) - 1 for b in bys)
+    rej = [(ab_tex(b['struct']), nm, ex, mi) for b in bys for nm, ex, mi in cand_rej(b)]
+    p &= ok('R12.3', r'对每个通道（$\Delta(B-L)$ 与承载它的表示）逐个数：存活群 $=$ 让 v.e.v. 不变的'
+                    r'中心元 $\times$ $U(1)$ 元，再**商掉** $\Gamma$ 才是低能真正剩下的离散群。读数：'
+                    r'$q_\Delta=1$ 那 %d 个承载者一律给 (存活 %s, 商后 %s)，$q_\Delta=2$ 那 %d 个给 '
+                    r'(存活 %s, 商后 %s) $\Rightarrow$ 残留群的**大小**只挂在 $|\Delta(B-L)|$ 上，不挂在'
+                    r'"是哪个表示把它破掉"上，且每个承载者都真的含 $\Gamma$（存活数是 $|\Gamma|=%d$ 的'
+                    r'整数倍）。**但同构型挂在承载者上**：$q_\Delta=1$ 那一支只有 %d 个结构类（%s），'
+                    r'$q_\Delta=2$ 那支分成 %d 个类（%s），而各类商后阶都是 %s $\Rightarrow$ 换一个 '
+                    r'$\Delta(B-L)=2$ 的承载者就把残群换成另一个同阶异型的群——旧那句"每通道内部同数"'
+                    r'只对**阶**成文。与 §9 的关系：完整的残留群恰是 R10 那个 $\mathbb Z_N$ 的'
+                    r'两倍（%s、%s）$\Rightarrow$ 多出来的一半确实是新群元，**但**它在 §10 '
+                    r'那 %d 条 SM 单态算符上与 $\mathbb Z_N$ 逐条同判：标的集合相同（%s）、允许集相同'
+                    r'（%s）、且相位恒等因子化成 $t\cdot\sum_k(B-L)_k$（%s）；逐承载者、逐结构类都成文'
+                    r'（%s）$\Rightarrow$ §10 的判决不随"选哪个表示去破 $B-L$"而变。结构也是定名而不是'
+                    r'抄来的：把每个类里陪集代表元的阶分布交给"穷举该阶上全部阿贝尔群、比对元素阶多重集"'
+                    r'这一步，%d 个类各自唯一命中（同阶上另有 %d 个候选）；被排除的候选连同它与实测的'
+                    r'双向差集一起给出：%s'
+             % (GLOB['ncar']['1'], uni(b['surv'] for b in b1), uni(b['coset'] for b in b1),
+                GLOB['ncar']['2'], uni(b['surv'] for b in b2), uni(b['coset'] for b in b2),
+                len(G), len(b1), '；'.join(class_tex(b) for b in b1),
+                len(b2), '；'.join(class_tex(b) for b in b2),
+                uni(b['coset'] for b in b2),
+                r'$%s\to%s$' % (mth(ztex(GLOB['nres']['1'])), mth(ztex(2 * GLOB['nres']['1']))),
+                r'$%s\to%s$' % (mth(ztex(GLOB['nres']['2'])), mth(ztex(2 * GLOB['nres']['2']))),
+                NSING4,
+                all(r['same_char'] for r in chan_rows),
+                all(r['same_allow'] for r in chan_rows),
+                all(r['fact'] for r in chan_rows),
+                all(b['same'] for b in bys),
+                len(bys), ncand_all,
+                '；'.join('%s 那支：候选 %s 比实测多 %s、缺 %s' %
+                          (st, nm, ex or '（无）', mi or '（无）') for st, nm, ex, mi in rej)
+                or '（各阶上本来只有一个阿贝尔群，无从排除）'),
+             bool(chan_rows) and len(b1) == 1 and len(b2) == 2 and
+             all(r['struct'] for r in chan_rows) and
+             [((tuple(b['struct']), b['cyc'], b['expo'])) for b in b1] == [((6,), True, 6)] and
+             [((tuple(b['struct']), b['cyc'], b['expo'])) for b in b2] ==
+             [((2, 6), False, 6), ((12,), True, 12)] and
+             all(b['coset'] == 2 * GLOB['nres'][b['qd']] for b in bys) and
+             all(b['surv'] % len(G) == 0 for b in bys) and
+             all(r['coset'] == 2 * r['N'] for r in chan_rows) and
+             all(r['same_char'] and r['same_allow'] and r['fact'] for r in chan_rows) and
+             all(b['same'] for b in bys) and
+             all(r['chars'] == r['zchars'] == 1 for r in chan_rows) and
+             all(r['allow'] == r['nsing'] == NSING4 for r in chan_rows) and
+             all(r['ss'] > 0 for r in chan_rows) and
+             all(len([c for c in b['cands'] if c[1] == b['ords']]) == 1 for b in bys) and
+             ncand_all == 2 and len(rej) == 2 and
+             all(ex or mi for _st, _nm, ex, mi in rej) and
+             all(None not in r['ords'] for r in chan_rows),
+             '通道 %s；每通道承载者数 %s；(承载者, 存活, 陪集, 结构, 循环, 指数) %s；'
+             r'每行的半单非平凡元 %s' %
+             (GLOB['chans'], GLOB['ncar'], [(r['qd'], r['rep'], r['lab'], r['surv'],
+                                             r['coset'], str(r['struct']), r['cyc'], r['expo'])
+                                            for r in chan_rows],
+              [(r['qd'], r['ss']) for r in chan_rows]))
+
+    # ---- R12.4 单态片上"扩展为空"的机制
+    bad_sums = [s for s in sing_sums
+                if s['lL'] % 2 or s['lR'] % 2 or s['bl'].denominator != 1
+                or s['bl'].numerator % 2 or s['tri'] % 3 != (-int(3 * s['bl'])) % 3]
+    p &= ok('R12.4', '上一条那个"相同"不是巧合，本层把它拆成可判的求和：§10 那 %d 条算符每一条都'
+                    r'满足 $\sum_k l_L$ 偶、$\sum_k l_R$ 偶、且 $\sum_k(B-L)_k$ 是**偶整数** '
+                    r'$\Rightarrow$ 三个中心的相位各自恒等于 1，而剩下那半边正是 R11 已经在用的 '
+                    r'$\mathbb Z_N$ $\Rightarrow$ "要求它是 SM 单态"这一步**已经**把中心那几关过掉了，'
+                    r'完整残留群在这张片上给不出新禁戒。$\Gamma$ 的对角性在这里第二次起作用：色 triality'
+                    r' $\sum_k(p_k+2q_k)$ 与 $\sum_k 3(B-L)_k$ 同余（符号由 R10.4 从数据选定）'
+                    r'$\Rightarrow$ 色中心连"多出来"的机会都没有。反例条数（四种条件任一不满足）$=%d$'
+             % (GLOB['nsing'], len(bad_sums)),
+             len(bad_sums) == 0 and len(sing_sums) == NSING4 and
+             all(s['bl'] == 0 or abs(s['bl']) == 4 for s in sing_sums) and
+             all(s['lL'] % 2 == 0 and s['lR'] % 2 == 0 for s in sing_sums),
+             r'每条算符的 $\sum(B-L)$、$\sum l_L$、$\sum l_R$、$\sum$triality %s'
+             % [(s['name'], str(s['bl']), s['lL'], s['lR'], s['tri']) for s in sing_sums])
+
+    # ---- R12.5 正向对照：中心判据确实活着
+    c1 = next((c for c in ctl if c['qd'] == '1'), None)
+    c2 = next((c for c in ctl if c['qd'] == '2'), None)
+
+    def cf(c, k):
+        return '—' if c is None else c[k]
+
+    p &= ok('R12.5', r'"完整群与 $\mathbb Z_N$ 同判"必须能区分**无从谈起**与**真的相同** $\Rightarrow$ '
+                     '把"要是 SM 单态"那一步去掉，拿 %d 个物质场在尺寸 2,3,4 上的全部 %d 条多重集'
+                     r'（按尺寸分：$k=2,3,4$ 各 %s 条，与可重组合的公式 $=%d$ 对上）重跑同一条判据：'
+                     r'$q_\Delta=1$ 通道 $\mathbb Z_N$ 允许 %s 条、完整群只允许 %s 条；'
+                     r'$q_\Delta=2$ 通道 %s 对 %s $\Rightarrow$ 中心那一半**在起决定作用**。'
+                     r'被禁的那批也是逐条查过的：$\sum_k(B-L)_k$ 全是整数（$\mathbb Z_N$ 那关全过 %s），'
+                     r'中心三项 $(\mathrm{tri}\bmod3,\sum l_L\bmod2,\sum l_R\bmod2)$ 取值为 %s，'
+                     r'三项全平价的条数 $=%s+%s$，而有纯中心（$t=0$）见证元的条数 $=%s+%s$ 恰等于被禁'
+                     r'总数 $=%s+%s$ $\Rightarrow$ 禁它们的确实是中心那三项（例：%s）。'
+                     r'反向的空集同样数过：完整群允许而 $\mathbb Z_N$ 不允许的条数两通道合计 %s '
+                     r'$\Rightarrow$ §9/§10 边界里那句"禁戒不会变松"是**读数**而不是承诺；而那 %d 条'
+                     r'单态算符里被完整群新禁掉的条数 $=%s$ $\Rightarrow$ "变严"这一支确实整个落在'
+                     r'单态片之外。最后，"逐陪集代表元试"与"逐个存活元试"在这 %d 条上同判的条数差 '
+                     r'$=%s$ $\Rightarrow$ 商群上"作用在代表元上"这件事没有偷工。'
+             % (len(FV), cf(c1, 'all'),
+                '、'.join('%d' % b for b in [x[1] for x in c1['byk']]) if c1 else '—', allc_tot,
+                cf(c1, 'z'), cf(c1, 'f'), cf(c2, 'z'), cf(c2, 'f'),
+                '；'.join(r'$q_\Delta=%s$ %s' % (c['qd'], '全过' if c['allint'] else '**有不过**')
+                         for c in ctl),
+                '；'.join(r'$q_\Delta=%s$：%s' %
+                          (c['qd'], '、'.join('$(%d,%d,%d)$' % k for k in c['kinds']))
+                          for c in ctl),
+                cf(c1, 'noncen'), cf(c2, 'noncen'),
+                cf(c1, 'pure'), cf(c2, 'pure'),
+                cf(c1, 'onlyz'), cf(c2, 'onlyz'),
+                '、'.join('$%s$' % x for x in cf(c1, 'ex')) if c1 else '—',
+                sum(c['onlyf'] for c in ctl), NSING4,
+                sum(c['sing_new'] for c in ctl), allc_tot * len(ctl),
+                sum(c['disagree'] for c in ctl)),
+             c1 is not None and c2 is not None and len(ctl) == 2 and
+             all(c['onlyf'] == 0 for c in ctl) and all(c['onlyz'] > 0 for c in ctl) and
+             all(c['f'] < c['z'] for c in ctl) and
+             all(c['sing_new'] == 0 for c in ctl) and
+             all(c['z'] >= NSING4 and c['f'] >= NSING4 for c in ctl) and
+             all(c['all'] == allc_tot for c in ctl) and
+             all(c['byk'] == [(k, n_multiset(k)) for k in (2, 3, 4)] for c in ctl) and
+             all(c['allint'] and c['noncen'] == 0 and c['pure'] == c['onlyz'] for c in ctl) and
+             all(c['disagree'] == 0 for c in ctl) and
+             all(any(k != (0, 0, 0) for k in c['kinds']) for c in ctl),
+             r'读数 (通道, 全组合, 仅 $\mathbb Z_N$ 允许, 完整群允许, 差集, 中心取值, 纯中心见证) %s'
+             % [(c['qd'], c['all'], c['z'], c['f'], c['onlyz'], c['onlyf'],
+                 c['kinds'], c['pure'], c['noncen'], c['disagree']) for c in ctl])
+    return p
+
 def residual_section():
     """报告 §9：$B-L$ 破缺后残留哪个离散规范对称性（R10）。"""
     r = RESID
@@ -4088,11 +4871,212 @@ def selection_section():
     return L
 
 
+def global_section():
+    r"""报告 §11：完整的残留离散规范群（中心 × Spin(10) 的整体形式），R12 族。
+
+    全部读数取自 GLOB（`run_global_layer` 的产出），本节不重算任何东西。
+    """
+    g = GLOB
+    rows, ctl, forms = g.get('rows') or [], g.get('ctl') or [], g.get('forms') or []
+    sing, gam, bys = g.get('sing') or [], g.get('gampairs') or [], g.get('bys') or []
+    b1 = [b for b in bys if b['qd'] == '1']
+    b2 = [b for b in bys if b['qd'] == '2']
+    if not (gam and rows and ctl and forms and sing and len(ctl) == 2 and b1 and b2):
+        return ['', '## 11. 完整残留群与整体形式（R12）', '', '本层未跑通 ⇒ 不印任何读数。', '']
+    q1 = [r for r in rows if r['qd'] == '1']
+    q2 = [r for r in rows if r['qd'] == '2']
+    c1 = next((c for c in ctl if c['qd'] == '1'), None)
+    c2 = next((c for c in ctl if c['qd'] == '2'), None)
+    if not (q1 and q2 and c1 and c2):
+        return ['', '## 11. 完整残留群与整体形式（R12）', '',
+                '两条通道没同时读到（行 %s / 对照 %s）⇒ 不印任何读数。' %
+                (sorted(set(r['qd'] for r in rows)), sorted(set(c['qd'] for c in ctl))), '']
+
+    L = ['', '## 11. 完整残留群与整体形式（R12）', '',
+         '§9 与 §10 的边界都写着同一句话：判据只在 $U(1)_{B-L}$ **那一个因子**导出的群上跑，'
+         '若完整残留群是它的扩张（$SU(3)_c$ 与 $SU(2)_{L/R}$ 的中心、$Spin(10)$ 的整体形式），'
+         r'"允许"可能变严、"禁戒"不会变松 $\Rightarrow$ 那条待办登记在 [08](../08_预言与判据.md) 的 '
+         'P7 一节末尾。本层把那句话搬到账上：先数出覆盖群的核，再数出破缺之后的**完整**残留群，'
+         '然后回到 §10 那批算符上逐条比对。用的还是同一套格点算术，没有新引进李论输入。', '',
+         r'### 11.1 覆盖群的核 $\Gamma$（R12.1）', '',
+         r'$SU(3)_c\times SU(2)_L\times SU(2)_R\times U(1)_{B-L}$ 到 $Spin(10)$ 的映射的核，'
+         r'就是"在**在场谱的每一条** 3221 分量上都 acting 平凡"的那批中心元 $\Rightarrow$ '
+         r'枚举即可，不需要引用文献里那句"核是 $\mathbb Z_6$"。候选元 %d 个（色 $\mathbb Z_3$、'
+         r'两个 $\mathbb Z_2$、$t\in\frac{1}{%d}\mathbb Z/%d\mathbb Z$），'
+         '谱上不同的 (行标号, $B-L$) %d 条，活下来 %d 个：' %
+         (g['ncand'], g['tstep'], g['uper'], g['nspec'], len(gam)), '',
+         '| 群元 $(a_3,a_L,a_R,t)$ | 阶 | 在哪些因子上非平凡 |', '|---|---|---|']
+    for x, o in gam:
+        where = []
+        if x[0]:
+            where.append('色')
+        if x[1]:
+            where.append('$SU(2)_L$')
+        if x[2]:
+            where.append('$SU(2)_R$')
+        if x[3] != 0:
+            where.append('$U(1)_{B-L}$')
+        L.append('| %s | %d | %s |' % (ctex(x), o, '、'.join(where) or '—'))
+    L += ['', r'它的阶分布是 %s $\Rightarrow$ 交给"穷举该阶上全部阿贝尔群、比对元素阶多重集"那一步'
+              r'（这一阶上候选共 %d 个），定出 $\Gamma\cong%s$，其中 %d 阶生成元 %d 个。'
+              '两条对照：**(i)** 它是**对角**粘合而不是"各因子随便取 6 个元"——形如 $(0,0,0,t)$ 的'
+              r'存活元只有单位元（%d 个）$\Rightarrow$ 谁也不是把某个 $U(1)$ 子群商掉；那 %d 个 2 阶元'
+              r'同时带着两个 $SU(2)$ 中心再加半整数 $t$，%d 个 3 阶元各自是"色中心 $\times$ $U(1)$ 元"'
+              r'（两者都列在上面的表里，且由 R12.1 逐坐标钉住）。'
+              r'**(ii)** 约定无关：色 $\mathbb Z_3$ 有两个生成元，两种约定各给 %d / %d 元；把它们'
+              r'当成候选网格里的坐标点集来比，%s（甲 $p+2q$、乙 $2p+q$），**但**把自同构 '
+              r'$a_3\mapsto 2a_3$ 作用到甲那支上严格等于乙那支（%s）$\Rightarrow$ 核的大小与同构型'
+              r'都不随"把哪个元叫 1"而变，变的只是那个称呼。本层沿用的是 R10.4 从数据选定的符号'
+              r'（%s）。'
+              r'网格够用：候选网格里 $t$ 的分母本来可以取到 %s，存活元实际落在 %s $\Rightarrow$ '
+              '更大的分母上没有元被网格挡在外面。' %
+              (g['gords'], len(g['gall']), mth(ab_tex(g['gstruct'])), len(gam), len(g['gens6']),
+               len(g['gupure']), g['gords'].count(2), g['gords'].count(3),
+               g['gsizeA'], g['gsizeB'],
+               '它们就是同一个集合' if g['gsame'] else '它们是两个不同的点集',
+               '成立' if g['gconj'] else '**不成立**', g['convf'],
+               uni(g['gden']), uni(g['tden'])), '',
+         r'### 11.2 $|\Gamma|$ 的三条出处（R12.2）', '',
+         '| 路数 | 做法 | 读数 |', '|---|---|---|',
+         '| 甲 权格指数 | $[P_H:P_{10}]$，$P_H$ 由 3221 半单部分的基本权加 $U(1)_{B-L}$ 的特征格'
+         '方向 $u$ 生成 | %s（不变因子 %s）|' % (g['idx_h'], g['fac_h']),
+         '| 乙 中心元枚举 | 上一节，逐元试 | %d |' % len(g['gam']),
+         r'| 丙 经 $SU(4)$ 可乘 | $[P_H:P_{422}]\cdot[P_{422}:P_{10}]$ | %s × %s = %s |' %
+         (g['idx_422'], g['idx_hop'], (g['idx_422'] or 0) * (g['idx_hop'] or 0)),
+         '',
+         r'三条同数 $\Rightarrow$ %d 不是枚举出来的巧合。**诚实登记**：甲与丙共用同一套 Smith 标准形'
+         r'代码 $\Rightarrow$ 丙核对的是**格的嵌套**（$P_{10}\subset P_{422}\subset P_H$，两个不变'
+         '因子都只有一个非平凡元，且行列式交叉核对 %s/%s/%s 全真），不是第三条独立算术；真正与格无关'
+         '的只有乙。另外甲里 $u$ 的归一化是**量出来**的：取 $u=3(B-L)$ 时 $P_{10}$ 根本不在 $P_H$ 里'
+         r'（这台机器直接返回"不给数"而不是放宽），取 $u=\frac{B-L}{4}$ 才包含 $\Rightarrow$ '
+         '那个 $1/4$ 不是抄来的约定。422 一侧只搬了格陈述：`SUB_422` 的单根不是 $A_3$ 链，'
+         r'拿它逐枚举中心元会把 triality 公式用错 $\Rightarrow$ 那一条**只有**甲一路，本节据此把它'
+         '记在边界里。' % (g['idx_h'], g['chk_h'], g['chk_422'], g['chk_hop']), '',
+         '### 11.3 破缺之后的完整残留群（R12.3）', '',
+         r'存活群 $=$ 让 v.e.v. 不变的那些 $(a_3,a_L,a_R,t)$，再**商掉** $\Gamma$ 才是低能真正剩下的'
+         '离散群。下表逐承载者数：', '',
+         r'| $\Delta(B-L)$ | 承载者 | 3221 行 | 存活元 | 商后 $\Gamma$ 陪集数 | 结构 | 与 §9 的 $\mathbb Z_N$ '
+         '比 | 标的集合相同 | 允许集相同 | 相位因子化 |', '|---|---|---|---|---|---|---|---|---|---|']
+    for r in rows:
+        L.append('| $%s$ | %s | $%s$ | %d | %d | %s | %s | %s | %s | %s |' %
+                 (r['qd'], tex_name(r['rep']), r['lab'], r['surv'], r['coset'],
+                  ('%s（%s）' % (ab_tex(r['struct']),
+                                 '循环' if r['cyc'] else '不循环，指数 %d' % r['expo'])),
+                  r'§9 只看到 %s（%d 阶）' % (ztex(r['N']), r['N']),
+                  '是' if r['same_char'] else '**否**',
+                  '是' if r['same_allow'] else '**否**',
+                  '是' if r['fact'] else '**否**'))
+    L += ['', r'读数里没有一列空转：承载者共 %d 个（$q_\Delta=1$ 那批 %d 个、$q_\Delta=2$ 那批 %d 个）。'
+              r'**大小**确实只挂在 $|\Delta(B-L)|$ 上：$q_\Delta=1$ 那 %d 个一律给 (存活 %s, 商后 %s)，'
+              r'$q_\Delta=2$ 那 %d 个一律给 (存活 %s, 商后 %s)，且每个存活数都是 $|\Gamma|=%d$ 的整数倍 '
+              r'$\Rightarrow$ 每个承载者都真的含 $\Gamma$，"商掉"这一步对每一条都成立。'
+              r'**但同构型挂在承载者上**：$q_\Delta=1$ 那一支只有 %d 个结构类（%s），$q_\Delta=2$ 那支'
+              r'分成 %d 个类（%s），而那一支各类商后的阶都是 %s $\Rightarrow$ 换一个 $\Delta(B-L)=2$ 的'
+              r'承载者，残群就换成同阶异型的另一个群——"每通道内部同数"这句话只对**阶**成文。'
+              r'与 §9 的对照：完整的残留群恰是 R10 那个 $\mathbb Z_N$ 的**两倍**（%s、%s）'
+              r'$\Rightarrow$ 多出来的一半确实是新群元（每行"半单部分非平凡"的存活元有 %d 个以上），'
+              r'不是同一个群的另一种写法。' %
+              (sum(g['ncar'].values()), g['ncar']['1'], g['ncar']['2'],
+               g['ncar']['1'], uni(b['surv'] for b in b1), uni(b['coset'] for b in b1),
+               g['ncar']['2'], uni(b['surv'] for b in b2), uni(b['coset'] for b in b2),
+               len(gam),
+               len(b1), '；'.join(class_tex(b) for b in b1),
+               len(b2), '；'.join(class_tex(b) for b in b2),
+               uni(b['coset'] for b in b2),
+               r'$%s\to%s$' % (mth(ztex(g['nres']['1'])), mth(ztex(2 * g['nres']['1']))),
+               r'$%s\to%s$' % (mth(ztex(g['nres']['2'])), mth(ztex(2 * g['nres']['2']))),
+               min(r['ss'] for r in rows)), '',
+         r'**但它在 §10 那张表上给不出新东西**：%d 条 SM 单态算符（$\dim$ 由 §10 的 Klimyk 计数给出）'
+         r'在完整群与在 $\mathbb Z_N$ 下的标的集合相同（%s）、允许集相同（%s），且每一个存活元的相位'
+         r'都恒等等于 $t\cdot\sum_k(B-L)_k$（%s）；这两件事不但逐承载者成文，还逐上面那 %d 个结构类'
+         r'成文（%s）$\Rightarrow$ §10 的判决一个字都不用改，也不随"选哪个表示去破 $B-L$"而变。'
+         '机制是可判的求和，不是修辞（R12.4）：' %
+         (g['nsing'],
+          '全部相同' if all(r['same_char'] for r in rows) else '**有不相同**',
+          '全部相同' if all(r['same_allow'] for r in rows) else '**有不相同**',
+          '成立' if all(r['fact'] for r in rows) else '**不成立**',
+          len(bys),
+          '全部成立' if all(b['same'] for b in bys) else '**有类不成立**'), '',
+         r'| 算符（场内容类） | $\sum_k(B-L)_k$ | $\sum_k l_L$ | $\sum_k l_R$ | $\sum_k(p_k+2q_k)$ |',
+         '|---|---|---|---|---|']
+    for s in g['sing']:
+        L.append('| $%s$ | $%s$ | %d | %d | %d |' %
+                 (s['name'], s['bl'], s['lL'], s['lR'], s['tri']))
+    L += ['', r'每一行的弱同位旋两个求和都是偶、且 $\sum_k(B-L)_k$ 是**偶整数** $\Rightarrow$ 三个中心'
+              r'各自恒等于 1，剩下那半边正是 R11 已经在用的 $\mathbb Z_N$ $\Rightarrow$ '
+              r'"要求它是 SM 单态"这一步**已经**把中心那几关过掉了。$\Gamma$ 的对角性在这里第二次'
+              r'起作用：末列的色 triality 求和与 $3\sum_k(B-L)_k$ 同余（符号由 R10.4 从数据选定）'
+              r'$\Rightarrow$ 色中心连"多出来"的机会都没有。', '',
+         '### 11.4 正向对照：判据活着（R12.5）', '',
+         r'"同判"这句话必须能区分**真的相同**与**无从谈起** $\Rightarrow$ 把"要是 SM 单态"那一步去掉，'
+         '拿 §10 那 %d 个物质场在尺寸 2,3,4 上配成可重多重集（每通道 %s 即 %d 条）重跑同一条判据：' %
+         (g['nfv'], '、'.join('$d=%d$ %d 条' % (k, n) for k, n in c1['byk']), g['allc_tot']), '',
+         r'| 通道 | 全组合 | $\mathbb Z_N$ 允许 | 完整群允许 | 仅 $\mathbb Z_N$ 允许 | '
+         '仅完整群允许 | 单态片里新禁 |', '|---|---|---|---|---|---|---|']
+    for c in ctl:
+        L.append(r'| $q_\Delta=%s$（$\mathbb Z_%d$）| %d | %d | %d | %d | %d | %d |' %
+                 (c['qd'], c['N'], c['all'], c['z'], c['f'], c['onlyz'], c['onlyf'], c['sing_new']))
+    L += ['', r'两行的"仅 $\mathbb Z_N$"列非空（%d、%d 条）$\Rightarrow$ 中心那一半**在起决定作用**。'
+              r'被禁的那批为什么被禁，也是逐条读出来的：每条的 $\sum_k(B-L)_k$ 都是整数（$\mathbb Z_N$ '
+              r'那一关全过：%s），中心三项 $(\mathrm{tri}\bmod 3,\sum_k l_L\bmod 2,\sum_k l_R\bmod 2)$ '
+              r'在两通道上各取过 %s，"三项全平价"的条数 $=%d+%d$，而有纯中心（$t=0$）见证元的条数 '
+              r'$=%d+%d$ 恰等于被禁总数 $\Rightarrow$ 禁它们的确实是中心那三项，例：%s。'
+              r'"仅完整群允许"一列恒为 %d $\Rightarrow$ 完整群只会**更严**，§9/§10 边界里那句'
+              r'"禁戒不会变松"到这里是**读数**而不是承诺。最后一列 %d $\Rightarrow$ 变严的那一支'
+              '确实整个落在单态片之外——这正是 §10 那 %d 条与 §11.4 那 %d 条的差别所在。'
+              r'（另有一条定义层的对账：把"逐陪集代表元试"换成"逐个存活元试"，判据改判的条数 $=%d$。）' %
+              (c1['onlyz'], c2['onlyz'],
+               '；'.join('$q_\Delta=%s$ %s' % (c['qd'], '过' if c['allint'] else '**有不过**')
+                        for c in ctl),
+               '；'.join(r'$q_\Delta=%s$：%s' %
+                         (c['qd'], '、'.join('$(%d,%d,%d)$' % k for k in c['kinds'])) for c in ctl),
+               c1['noncen'], c2['noncen'], c1['pure'], c2['pure'],
+               '、'.join('$%s$' % x for x in c1['ex']),
+               sum(c['onlyf'] for c in ctl), sum(c['sing_new'] for c in ctl),
+               g['nsing'], g['allc_tot'], sum(c['disagree'] for c in ctl)), '',
+         '### 11.5 整体形式：在场谱把群钉在 $Spin(10)$ 上（R12.0）', '',
+         r'$P/Q\cong\mathbb Z_4$（Cartan 行列式 $=%d$，与 D5 的 $|P/Q|$ 同数）$\Rightarrow$ '
+         '$Spin(10)$ 与 $SO(10)$ 之间只有一个非平凡商。在场 %d 个表示各落在哪一个类上，'
+         '就是"这个谱容许哪个形式"的答案：' % (g['pQ'], len(forms)), '',
+         r'| 表示 | $P/Q$ 类的坐标 | 类的阶 | 在根格里（甲 单根坐标 / 乙 $\varepsilon$ 坐标） | 权重条数 |',
+         '|---|---|---|---|---|']
+    for f in forms:
+        L.append('| %s | $(%s)$ | %d | %s / %s | %d |' %
+                 (tex_name(f['rep']), ','.join(f['cls']), f['order'],
+                  '是' if f['zeroA'] else '否', '是' if f['zeroB'] else '否', f['nwt']))
+    L += ['', r'三层读法：类 0 的是 %s $\Rightarrow$ 纯张量型，**看不见**整体形式（哪个形式都容得下'
+              r'它们）；2 阶类的是 %s $\Rightarrow$ 至少要 $SO(10)$；4 阶类的是 %s $\Rightarrow$ '
+              r'只有单连通的那个形式容得下。出现的类生成的子群大小 $=%d$ $=|P/Q|$ $\Rightarrow$ '
+              r'商不掉任何非平凡中心 $\Rightarrow$ **本模型的在场谱把规范群钉死在 $Spin(10)$ 上**，'
+              '"自然界取哪个形式"在这里不是自由参数。"在不在根格里"这一列有两条独立判法'
+              r'（甲：最高权的单根坐标全整；乙：$\varepsilon$ 坐标全整且坐标和为偶），逐表示同判 $\Rightarrow$ '
+              '那张类表不是坐标变换的自证。' %
+              (plain_tex(g['tens']), plain_tex(g['ord2']), plain_tex(g['ord4']), g['ngen']), '',
+         '**本节的边界**（不进门禁，故明写）：', '',
+         '* 中心元的枚举只用**行标号**（不可约表示的 Dynkin 标号）与 $B-L$，没有逐个展开多重集的'
+               r'权重 $\Rightarrow$ 它数的是"哪些中心元在整个在场谱上平凡"，与 §5 的逐权重分支是'
+               '两套账；两套账的交叉点已由 R12.0 那两条独立判法承担。',
+         r'* 422 一侧的 $\Gamma$ 只有格一条路（`SUB_422` 的单根不是 $A_3$ 链 $\Rightarrow$ triality '
+               '公式不能直接代），故本层不宣称那里有第二条出处。',
+         r'* 存活群的"结构"一列读的是阶分布；那 %d 个结构类各自定名（%s），名字来自"穷举该阶上全部'
+               r'阿贝尔群、比对元素阶多重集"那一步（阿贝尔由构造：四个因子都是阿贝尔群的商），'
+               r'没有第四个独立读数。' %
+               (len(bys), '；'.join(r'$q_\Delta=%s$：%s（%d 个承载者）' %
+                                    (b['qd'], ab_tex(b['struct']), b['n']) for b in bys)),
+         '* 整体形式钉在 $Spin(10)$ 上，与"链探针声明的标量谱里有没有 $16_H/144_H$"是两件事：'
+               r'本节用的是**在场**表示集（$\dim\le%d$ 那 %d 个），不是链上的谱 $\Rightarrow$ '
+               '若只取链探针字面声明的谱，$P/Q$ 类会换成那一支的读数（与 §9/R10.10、§10/R11.10 '
+               r'同一条条件性 $\Rightarrow$ 本节不引入新的条件判决，也不改动它们的）。'
+               % (g['maxdim'], g['nrep']),
+         '* 本节回答的是上一条待办（完整残留群含整体形式），**不**回答 L10：耦合统一仍缺二环跑动'
+               r'与阈值修正 $\Rightarrow$ **L10 未关闭**。', '']
+    return L
+
 def write_report(gates):
     (eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok, ch_ok,
-     res_ok, sel_ok) = gates
+     res_ok, sel_ok, gl_ok) = gates
     all_ok = (eng_ok and id_ok and phy_ok and nogo_ok and br_ok and xchk_ok and yuk_ok and
-              inv_ok and ch_ok and res_ok and sel_ok)
+              inv_ok and ch_ok and res_ok and sel_ok and gl_ok)
     L = ['# SO(10) 表示论报告（D5 权重格第一性推导）', '',
          '由 [so10_reps.py](so10_reps.py) 自动生成，**零第三方依赖**，全程整数格点 + 精确有理数。',
          '',
@@ -4294,6 +5278,7 @@ def write_report(gates):
     L += chan_section()
     L += residual_section()
     L += selection_section()
+    L += global_section()
     z_cc = INV['ledger'][0]['zero'] if INV.get('ledger') else '（R8 未运行）'
     t126, t126b, p4 = (INV.get('tri', {}).get('126', '—'), INV.get('tri', {}).get('126̄', '—'),
                        INV.get('p4', '—'))
@@ -4472,6 +5457,7 @@ def write_report(gates):
          'physics_pass': phy_ok, 'nogo_pass': nogo_ok, 'branching_pass': br_ok,
          'cross_chain_pass': xchk_ok, 'yukawa_pass': yuk_ok, 'invariant_pass': inv_ok,
          'channel_split_pass': ch_ok, 'residual_pass': res_ok, 'selection_pass': sel_ok,
+         'global_pass': gl_ok,
          'named_dynkin': dict((k, list(v)) for k, v in NAMED.items()),
          'table': TABLE, 'branch': BRANCH, 'su4_to_su3u1': CROSS,
          'yukawa': YUK, 'yukawa_channels': YUKCH.get('allow', {}),
@@ -4522,8 +5508,9 @@ def main():
     ch_ok = run_channel_layer() if inv_ok else False
     res_ok = run_residual_layer() if ch_ok else False
     sel_ok = run_selection_layer() if res_ok else False
+    gl_ok = run_global_layer() if sel_ok else False
     all_ok = write_report((eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok,
-                           ch_ok, res_ok, sel_ok))
+                           ch_ok, res_ok, sel_ok, gl_ok))
 
     print('SO(10) 表示论引擎（D5 权重格；唯一李论输入 = Dynkin 图）')
     print('  自检：%s（%d 项，PASS %d）' %
