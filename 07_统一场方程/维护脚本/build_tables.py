@@ -191,16 +191,21 @@ GUARD_TXT = (
     '（豁免的粒度是一处行内代码，不是整段）；把"两个反斜杠紧跟空格/花括号/方括号"与一处真翻倍'
     '放进同一行 ⇒ 只报后者（"范围是紧跟字母"这句话得被同一行测到，不是写在注释里）；'
     '基线此刻 %(bs_files)d 份文件：翻倍 %(bs_double)d 处（要求 0）、合法 %(bs_single)d 处、'
-    '豁免 %(bs_exempt)d 处（一条从不被走到的豁免分支等于没被核对过的说法））'
+    '豁免 %(bs_exempt)d 处（一条从不被走到的豁免分支等于没被核对过的说法）；四类接线 '
+    '%(cases_order)d 例：在临时快照里跑**真的** `build_tables.main()`，投放"台账锚点漂一位"与'
+    '"README 门禁数过期"两处缺陷 ⇒ 双缺陷同投必须 `[MUT]` 与 `[DOC]` 在同一次运行里会见血，'
+    '只投一处则只见血于自己那一族、另一族一条都不许多（两族不能互相顶包；上一版 `main()` 打完 '
+    '`[MUT]` 就直接 return ⇒ 台账一漂就把整批文档核对藏进下一次运行 = 第十七项当天那 7 处过期门禁数的来历））'
     '⇒ 当前 %(pass)d/%(cases_total)d PASS'
     % dict(GJ, n_planted=len(GJ.get('planted_hits') or []), n_live=len(GJ.get('live_hits') or []),
            n_retro_kinds=len(GJ.get('retro_kinds') or []))
     if all(k in GJ for k in ('cases_total', 'cases_slot', 'cases_delimiter', 'cases_doccheck',
-                             'cases_table', 'cases_backslash',
+                             'cases_table', 'cases_backslash', 'cases_order',
                              'bs_files', 'bs_single', 'bs_double', 'bs_exempt', 'bs_planted',
                              'pass', 'live_separators', 'retro_hits', 'retro_safe'))
     and GJ['cases_total'] == (GJ['cases_slot'] + GJ['cases_delimiter']
-                              + GJ['cases_doccheck'] + GJ['cases_table'] + GJ['cases_backslash'])
+                              + GJ['cases_doccheck'] + GJ['cases_table'] + GJ['cases_backslash']
+                              + GJ['cases_order'])
     and GJ['all_pass'] and GJ['pass'] == GJ['cases_total'] and not GJ.get('live_hits')
     and GJ['live_separators'] > 0 and GJ.get('planted_hits')
     and GJ['retro_hits'] > 0 and GJ.get('retro_kind_counts')
@@ -513,7 +518,7 @@ PHEN_DOC = """# 现象覆盖矩阵
    Python repr 直接印进散文 ⇒ 表示论引擎写盘前新增两条断言（全文段落级 `$` 配对、正文无 repr 泄漏），
    并把命中数打进控制台与 JSON 的 `report_hygiene` 字段：不变量若没有人打印，就等于没有不变量。
    第九项补第三条断言（正文不得出现未替换的 `%d`/`%(name)s` 占位符——`%` 只绑到拼接字面量的第一段时
-   就会漏，本轮真实踩到两次），并留下两条元层教训：**该断言自己的消息串犯了它要拦的错**（`% 参数`
+   就会漏，第九项当天真实踩到两次），并留下两条元层教训：**该断言自己的消息串犯了它要拦的错**（`% 参数`
    未转义 ⇒ 命中时抛 `ValueError` 而非可读消息）；**植入式核验的第一版是假绿的**——副本目录里没带
    兄弟脚本 `so10_chain.py` ⇒ 上游门禁 R2.0 未过 ⇒ R7/R8 整层不运行 ⇒ 植入的缺陷根本没进正文。
    ⇒ 核验一条防护之前，要先核验它真的在接收流量。
@@ -848,36 +853,35 @@ def main():
     mut_bad = check_mutation_ledger()
     for b in mut_bad:
         print('[MUT] %s' % b)
-    if mut_bad:
-        print('[FAIL] 变异核验台账不成立：%d 处（先跑 维护脚本/check_r11_mutation.py 再重跑本脚本）'
-              % len(mut_bad))
-        return 1
-    print('       SO(10) 读数：M_GUT %s；τ_p %s；门禁 %s' % (MGUT_BAND, TAU_BAND, GATES_TXT))
-    print('       %s' % YUK_TXT)
-    print('       %s' % INV_TXT)
-    print('       %s' % CHAN_TXT)
-    print('       排版防护的核验也走接线（缺失即非零退出）：%s' % GUARD_TXT)
-    print('       "修好前留着多少处未定义控制词"同样现算（摘掉全文分隔空格 = 回到修好前）：%s'
-          % RETRO_TXT)
-    print('       判据的外部变异核验走接线（台账缺失／引擎漂了即非零退出）：%s 例（变异体 %s、'
-          '良性 %s）verdict=%s，基线 %s/%s 项 PASS 且等于报告 JSON 的 tests 条数 %s，'
-          '锚定的引擎 %s 字节（与磁盘此刻一致）'
-          % (WJ['cases_total'], WJ['mutants'], WJ['benign'], WJ['verdict'],
-             MUT_BASE['pass'], MUT_BASE['gates'], WJ['engine_json_tests'], WJ['target_bytes']))
     tab_bad, ntab, nrow = check_tables()
     bs_bad, BS = check_bs_runs()
     doc_bad = check_docs()
+    if not mut_bad:
+        print('       SO(10) 读数：M_GUT %s；τ_p %s；门禁 %s' % (MGUT_BAND, TAU_BAND, GATES_TXT))
+        print('       %s' % YUK_TXT)
+        print('       %s' % INV_TXT)
+        print('       %s' % CHAN_TXT)
+        print('       排版防护的核验也走接线（缺失即非零退出）：%s' % GUARD_TXT)
+        print('       "修好前留着多少处未定义控制词"同样现算（摘掉全文分隔空格 = 回到修好前）：%s'
+              % RETRO_TXT)
+        print('       判据的外部变异核验走接线（台账缺失／引擎漂了即非零退出）：%s 例（变异体 %s、'
+              '良性 %s）verdict=%s，基线 %s/%s 项 PASS 且等于报告 JSON 的 tests 条数 %s，'
+              '锚定的引擎 %s 字节（与磁盘此刻一致）'
+              % (WJ['cases_total'], WJ['mutants'], WJ['benign'], WJ['verdict'],
+                 MUT_BASE['pass'], MUT_BASE['gates'], WJ['engine_json_tests'],
+                 WJ['target_bytes']))
     for b in doc_bad:
         print('[DOC] %s' % b)
     for b in tab_bad:
         print('[TABLE] %s' % b)
     for b in bs_bad:
         print('[BSRUN] %s' % b)
-    if doc_bad or tab_bad or bs_bad:
+    if doc_bad or tab_bad or bs_bad or mut_bad:
         print('[FAIL] 手写文档里的门禁数与仪器不一致：%d 处；表格行的列数与表头不一致：%d 处；'
-              '反斜杠翻倍：%d 处（改文档，别让表跑在文前面。三类**一起**判：先返回门禁数的那一版'
-              '会把列数缺陷藏进下一次运行 = 同族 fail-open）'
-              % (len(doc_bad), len(tab_bad), len(bs_bad)))
+              '反斜杠翻倍：%d 处；变异核验台账不成立：%d 处（改文档，别让表跑在文前面。四类**一起**判：'
+              '先返回门禁数的那一版会把列数缺陷藏进下一次运行、先返回台账的那一版会把文档里的过期'
+              '门禁数藏进下一次运行 = 同族 fail-open，台账一漂就整批跳过文档核对）'
+              % (len(doc_bad), len(tab_bad), len(bs_bad), len(mut_bad)))
         return 1
     now = led = 0
     for rel in HAND_DOCS:

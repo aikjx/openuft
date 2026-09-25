@@ -18,9 +18,21 @@
 成为下一个 fail-open 现场 ⇒ 这一组除了投放正例，还专门核对豁免（摘掉反引号必须立刻见血）与
 不在范围内的形态（`\\{`、`\\ ` 与一处真翻倍同放一行 ⇒ 只报那一处）。
 
+第 29~31 例（`ordering_checks()`）核的不是排版，而是**生成器自己的接线**：`build_tables.main()`
+把四类核对（台账 `[MUT]`、文档 `[DOC]`、表格 `[TABLE]`、反斜杠 `[BSRUN]`）算完之后才一次性决定退出码。
+来历是本轮 R16 那一刻——引擎从 505422 长到 524106 字节，外部台账按规则拒绝作证，而上一版 `main()`
+在打完 `[MUT]` 之后直接 return，把同一轮里 7 处等着被抓的过期门禁数整批藏掉：**台账一漂，文档核对失明**
+= 这个文件从第一天就在防的那一族 fail-open，只不过这一次藏在"防失效的那台仪器"自己身上。
+故这里在临时快照里投放两处缺陷，并要求 (i) 双缺陷同投 ⇒ 同一次运行里两族同时见血、(ii) 只投台账 ⇒
+只有 `[MUT]` 见血且 `[DOC]` 一条都不许多、(iii) 只投文档数 ⇒ 只有 `[DOC]` 见血且 `[MUT]` 一条都不许多。
+两条单投是必需的：合取的一例不能替两族各自作证，否则"两类都活着"这句话又是一次合取冒充两条不变量。
+投放的字节数与门禁数都**带本轮身份**（`那份引擎 N+1 字节`、`M+7 项门禁`）⇒ 即使运行在"台账本来就漂、
+文档本来就过期"的中间状态，断言读到的也只能是这一轮投进去的那一处。
+
 用法： python -B check_placeholder_guard.py     （0 = 防护按预期工作）
       同时把本脚本自己的读数写进同目录的 check_placeholder_guard.json，供 build_tables.py 接线。
 """
+import contextlib
 import importlib.util
 import io
 import json
@@ -442,6 +454,130 @@ def doc_check_checks(total):
         + [b[:120] for b in led_sick])
 
 
+def ordering_checks(prefix_total):
+    r"""第 29~31 例：`build_tables.main()` 的**四类一起判**这条接线（投放式核验，不是读源码）。
+
+    来历：R16 把引擎从 505422 字节长到 524106 字节，于是外部台账按规则拒绝作证（`[MUT]`）。那一刻
+    `main()` 在打完 `[MUT]` 之后**直接 return**，把 `check_tables/check_bs_runs/check_docs` 整批跳过
+    —— 而同一轮里恰好有 7 处手写文档的过期门禁数等着被抓。也就是说：**台账一漂，文档核对全部失明**，
+    正是这个文件从第一天就在防的那一族 fail-open，只不过这一次藏在"防失效的那台仪器"自己身上。
+    修法是把四类的判定都算完再一次性决定退出码；本组钉住修好的行为：
+
+      * 双缺陷同投 ⇒ **同一次运行**里 `[MUT]` 与 `[DOC]` 同时出现，且 `[DOC]` 点名投放的那一处；
+      * 只投过期台账 ⇒ `[MUT]` 单独会见血（投放的那条字节分支必须自己响）；
+      * 只投过期文档数 ⇒ `[DOC]` 单独会见血，且**不得**冒出 `[MUT]`（否则上一条与这一条互相顶包，
+        "两类各自活着"这句话就又变成一次合取冒充两条不变量）。
+
+    夹具的电流由"投放不中即 FAIL"保证： needle 不在 README 里时这一例直接判红，而不是少投一处
+    然后靠别的例蒙过去。文档核对所需的本轮例数在这里喂给 `bt.GJ`（`main()` 读的是全局），
+    否则本组会被上一轮的 JSON 数字污染成假红。同理还要投影 `bt.GUARD_TXT`：它按**上一轮**那份
+    guard JSON 算出，只要上一轮没全过它就是缺失值，而 `main()` 在"读数缺失"那处先于四类 return 1
+    ⇒ 本组恒读到零条投诉（自锁，见函数体内的登记）。投影只作用于临时快照里的矩阵文字，且
+    投影与否打印在 `order_readings` 里。
+    """
+    keep, keep_wj, keep_gj, keep_gt = bt.ROOT, bt.WJ, bt.GJ, bt.GUARD_TXT
+    total = prefix_total + len(ORDER_ASSERTS) + 6      # 本组例数 + doccheck 组那 6 例
+    tmp = Path(tempfile.mkdtemp(prefix='am_guard_order_'))
+    read = {'total': total, 'guard_txt_was_missing': keep_gt == bt.GUARD_MISSING}
+    try:
+        for rel in sorted(set(bt.HAND_DOCS) | set(bt.TABLE_DOCS)):
+            src = keep / rel
+            if src.exists():
+                (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(src, tmp / rel)
+        eng = keep / '验证脚本' / 'so10_reps.py'
+        (tmp / '验证脚本').mkdir(exist_ok=True)
+        shutil.copyfile(eng, tmp / '验证脚本' / 'so10_reps.py')
+        rp = tmp / 'README.md'
+        rtext = rp.read_text(encoding='utf-8')
+        needle = '%d 项门禁' % bt.GATE_TOTAL
+        drift = '%d 项门禁' % (bt.GATE_TOTAL + 7)
+        if rtext.count(needle) < 1:
+            return [('台账/文档双核对的夹具无法投放：README 里找不到 "%s"（改了措辞就来这里同步）'
+                     % needle, False, '本轮例数投影 %d' % total)], [], read
+        bt.ROOT = tmp
+        bt.GJ = dict(keep_gj, cases_total=total)
+        # 自锁的来历（本轮实测）：`GUARD_TXT` 是 `build_tables` 在 import 时按**磁盘上那份** guard JSON
+        # 算出的派生串，而它的成立条件里就写着 `all_pass` 与 `pass == cases_total`。于是只要有一轮核验
+        # 没全过（今天就是台账切锚点那一例），下一次 `main()` 就在"仪器/防护读数缺失"那处**先于四类**
+        # return 1 ⇒ 本组三例读到 `[MUT]`0/`[DOC]`0 ⇒ 又写出一份不全过的 JSON ⇒ **恒不解锁**：一台
+        # 只会红一次的仪器，第二次就已经不再核对它声称核对的东西。本组钉的是**判定次序**，不是矩阵
+        # 文字（矩阵只写进临时快照，不落磁盘），故把那一串投影成非缺失值，并把投影如实登记在
+        # `order_readings.guard_txt_was_missing` 里 —— 投影是夹具的电流需求，不是被检行为的豁免。
+        if bt.GUARD_TXT == bt.GUARD_MISSING:
+            bt.GUARD_TXT = '（harness 投影：本组只核四类一起判的次序，不取防护例数）'
+        # 台账"漂了"的形态：锚定的引擎字节数与磁盘那份差一位，其余照旧（真漂移就是这一项先动）。
+        # 投放的字节数要**自带身份**：本轮台账本来就可能是漂的（引擎刚改过、台账还没重跑），
+        # 那时基线那一次运行里已经有一条"切锚点"投诉 ⇒ 只要求"[MUT] 变多"会把投放读成重复，
+        # 故断言"投诉里出现的是**这一轮投进去的那个数**"（漂移方向也如实登记在注释里）。
+        if not isinstance(keep_wj.get('target_bytes'), int):
+            return [('台账里没有 target_bytes 锚点 ⇒ 本组投放没有出处'
+                     '（先跑 维护脚本/check_r11_mutation.py）', False,
+                     'bt.WJ 的键 %s' % sorted(keep_wj))], [], read
+        stale_bytes = keep_wj['target_bytes'] + 1
+        stale = dict(keep_wj, target_bytes=stale_bytes)
+        pin = '那份引擎 %d 字节' % stale_bytes
+
+        def planted(lines):
+            return [b for b in lines if '切锚点' in b and pin in b]
+
+        def run(text, ledger):
+            rp.write_text(text, encoding='utf-8')
+            bt.WJ = ledger
+            buf = io.StringIO()
+            try:
+                with contextlib.redirect_stdout(buf):
+                    rc = bt.main()
+            except Exception as e:
+                return 2, ['EXC %r' % (e,)], ['EXC %r' % (e,)], None
+            out = buf.getvalue()
+            return (rc, [x for x in out.split('\n') if x.startswith('[MUT]')],
+                    [x for x in out.split('\n') if x.startswith('[DOC]')], None)
+        rc0, mut0, doc0, _ = run(rtext, keep_wj)                       # 基线：不投放
+        rc1, mut1, doc1, _ = run(rtext.replace(needle, drift), stale)   # 双缺陷
+        rc2, mut2, doc2, _ = run(rtext, stale)                          # 只投台账
+        rc3, mut3, doc3, _ = run(rtext.replace(needle, drift), keep_wj)  # 只投文档数
+        docall1 = '\n'.join(doc1)
+        docall3 = '\n'.join(doc3)
+        read = {'total': total, 'needle': needle, 'drift': drift, 'pin': pin,
+                'guard_txt_was_missing': keep_gt == bt.GUARD_MISSING,
+                'baseline_rc': rc0, 'baseline_doc': len(doc0), 'baseline_mut': len(mut0),
+                'both_rc': rc1, 'both_mut': len(mut1), 'both_doc': len(doc1),
+                'ledger_rc': rc2, 'doconly_rc': rc3, 'doconly_mut': len(mut3)}
+        return [
+            ('双缺陷同投（README 门禁数改错 + 台账锚点漂了）⇒ **同一次** `main()` 运行里 [MUT] 与 '
+             '[DOC] 必须同时出现，且都点名投放处（台账那条要含本轮投进去的字节数、文档那条要含本轮'
+             '投进去的门禁数），退出码 1：先返回台账的那一版会把 7 处过期门禁数藏进下一次运行'
+             '（本轮实测：引擎从 505422 长到 524106 字节的那一刻，文档核对整批失明）',
+             rc1 == 1 and len(planted(mut1)) >= 1 and len(doc1) > len(doc0) and drift in docall1,
+             'rc=%s [MUT]%d（投放命中 %d）[DOC]%d ｜ 投诉 %s'
+             % (rc1, len(mut1), len(planted(mut1)), len(doc1),
+                [x[:90] for x in (planted(mut1) + [b for b in doc1 if drift in b])[:2]])),
+            ('只投过期台账、文档一字不动 ⇒ [MUT] 单独会见血（点名投进去的那个字节数）且退出码 1，'
+             '而 [DOC] 一条都不许多出来（台账这一族不靠文档作证，反之亦然：两类不互相顶包）',
+             rc2 == 1 and len(planted(mut2)) >= 1 and doc2 == doc0,
+             'rc=%s [MUT]%d（投放命中 %d）[DOC]%d（基线 %d）：%s'
+             % (rc2, len(mut2), len(planted(mut2)), len(doc2), len(doc0),
+                [x[:90] for x in (planted(mut2) + doc2)[:2]])),
+            ('只投过期文档数、台账保持此刻那份 ⇒ [DOC] 单独会见血且点名投进去的那个门禁数，'
+             '且 [MUT] 一条都不许多出来（两族不得互相顶包；基线那一次运行 [MUT]%d、[DOC]%d '
+             '是本例的前提，见读数）' % (len(mut0), len(doc0)),
+             rc3 == 1 and len(doc3) > len(doc0) and drift in docall3 and mut3 == mut0,
+             'rc=%s [MUT]%d [DOC]%d ｜ 基线 [MUT]%d [DOC]%d rc=%s ｜ %s'
+             % (rc3, len(mut3), len(doc3), len(mut0), len(doc0), rc0,
+                [x[:90] for x in (mut3 + [b for b in doc3 if drift in b])[:2]])),
+        ], ([('投放 %s → %s（README 里 %d 处命中）；投放台账锚点 → %s'
+              % (needle, drift, rtext.count(needle), pin))]
+            + [x[:120] for grp in (mut0 + doc0, mut1 + doc1, mut2 + doc2, mut3 + doc3) for x in grp]), read
+    finally:
+        bt.ROOT, bt.WJ, bt.GJ, bt.GUARD_TXT = keep, keep_wj, keep_gj, keep_gt
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+# 本组的例数要在 `doc_check_checks` 之前就知道（它把"本轮总例数"喂给被检函数）⇒ 断言清单提到模块级
+ORDER_ASSERTS = ('双缺陷同投', '只投过期台账', '只投过期文档数')
+
+
 def main():
     bad = []
     for name, text, want_toks, want_odd in CASES:
@@ -459,14 +595,17 @@ def main():
             bad.append(name)
     tbl_extra, tbl_notes = table_checks()
     bs_extra, bs_notes, bs_read = backslash_checks()
-    docs_extra, notes = doc_check_checks(
-        len(CASES) + len(extra) + 6 + len(tbl_extra) + len(bs_extra))
+    # 本组的例数要在 doccheck 组之前就知道（它把"本轮总例数"喂给被检函数）⇒ 用投影值，不是上一轮 JSON
+    ord_extra, ord_notes, ord_read = ordering_checks(
+        len(CASES) + len(extra) + len(tbl_extra) + len(bs_extra))
+    docs_extra, notes = doc_check_checks(ord_read['total'])
     for name, ok, detail in docs_extra:
         print('%s %s' % ('PASS' if ok else 'FAIL', name))
         if not ok:
             print('       %s' % detail)
             bad.append(name)
-    # 打印顺序 = 例号顺序：slot 1~8、delimiter 9~14、doccheck 15~20、table 21~24、backslash 25~28。
+    # 打印顺序 = 例号顺序：slot 1~8、delimiter 9~14、doccheck 15~20、table 21~24、backslash 25~28、
+    # order 29~31。
     # 表格组排在这里（不是最后）⇒ 文档里"第 21~24 例"那句以这一行为出处；任何一组加例都要同步改
     # 那一处，而例数本身由 GUARD_CASES 核对钉住（见 build_tables.check_docs）。
     for name, ok, detail in tbl_extra:
@@ -474,28 +613,45 @@ def main():
         if not ok:
             print('       %s' % detail)
             bad.append(name)
-    # 同上：本组（反斜杠翻倍）打印在最后 ⇒ 例号 25~28，文档里"第 21~24 例"那句仍然为真
+    # 同上：本组（反斜杠翻倍）打印在这里 ⇒ 例号 25~28，文档里"第 21~24 例"那句仍然为真
     for name, ok, detail in bs_extra:
         print('%s %s' % ('PASS' if ok else 'FAIL', name))
         if not ok:
             print('       %s' % detail)
             bad.append(name)
-    n = len(CASES) + len(extra) + len(tbl_extra) + len(docs_extra) + len(bs_extra)
+    # 同上：四类接线的投放式核验打印在最后 ⇒ 例号 29~31
+    for name, ok, detail in ord_extra:
+        print('%s %s' % ('PASS' if ok else 'FAIL', name))
+        if not ok:
+            print('       %s' % detail)
+            bad.append(name)
+    n = (len(CASES) + len(extra) + len(tbl_extra) + len(docs_extra) + len(bs_extra)
+         + len(ord_extra))
+    if n != ord_read['total']:
+        # 投影值与实际例数不一致 ⇒ 某一组的例数在运行时变了（加例/夹具塌了）。
+        # 文档里那句"N 例固定样例"下一次由 build_tables 对着这份 JSON 核对，而**本轮**的投放是照着
+        # 投影值喂给被检函数的 ⇒ 不钉住这一步，投影就等于一个没人核对的中间量（同一族的 fail-open）。
+        print('FAIL 例数账不平：投影 %d ≠ 实收 %d（各组 %d/%d/%d/%d/%d/%d）'
+              % (ord_read['total'], n, len(CASES), len(extra), len(docs_extra), len(tbl_extra),
+                 len(bs_extra), len(ord_extra)))
+        bad.append('例数账不平')
     print('=== %d/%d 例符合预期；防护规则：%s ==='
           % (n - len(bad), n, '接收流量' if not bad else '失灵'))
     # 本脚本自己的读数也进 JSON：覆盖矩阵里那句"可重跑的 N 例、当前 N/N PASS"由
     # build_tables.py 从这份文件接线，而不是手抄 —— 手抄正是本仓库登记过的失效族。
     (HERE / 'check_placeholder_guard.json').write_text(json.dumps(
         {'purpose': '核验四条"只错位不变红"的排版防护（未填槽位、\\lvert 分隔符、表格列数、'
-                    '紧跟字母的反斜杠串长度）确实在接收流量，并取证两条数字核对会见血',
+                    '紧跟字母的反斜杠串长度）确实在接收流量，并取证两条数字核对与"四类一起判"这条'
+                    '接线会见血',
          'cases_slot': len(CASES), 'cases_delimiter': len(extra),
          'cases_table': len(tbl_extra), 'cases_doccheck': len(docs_extra),
-         'cases_backslash': len(bs_extra),
+         'cases_backslash': len(bs_extra), 'cases_order': len(ord_extra),
          'cases_total': n,
          'pass': n - len(bad), 'all_pass': not bad, 'failed': bad,
          'live_separators': read['separators'], 'live_hits': read['hits'],
          'planted_hits': read['planted_hits'], 'doc_check_notes': notes,
          'table_check_notes': tbl_notes, 'backslash_check_notes': bs_notes,
+         'order_check_notes': ord_notes, 'order_readings': ord_read,
          # 第 6 条排版不变量的基线读数：文档里那句"翻倍 0 处 / 合法 N 处 / 豁免 M 处"以此为出处
          'bs_files': bs_read.get('files'), 'bs_single': bs_read.get('single'),
          'bs_double': bs_read.get('double'), 'bs_exempt': bs_read.get('exempt'),
@@ -517,7 +673,11 @@ def main():
                    '紧跟字母的反斜杠串长度必须是 1（check_bs_runs ⇒ raw 字面量里手写翻倍、'
                    'repr/str(容器) 把数据里合法的反斜杠翻倍，两条路落进文件后同形：MathJax 读成换行、'
                    '控制词降级成斜体字母，数值门禁两条都看不见；引用缺陷的行内代码可豁免，'
-                   '但豁免必须带读数且粒度是一处行内代码）']},
+                   '但豁免必须带读数且粒度是一处行内代码）',
+                   '生成器的四类核对（台账 [MUT] / 文档 [DOC] / 表格 [TABLE] / 反斜杠 [BSRUN]）'
+                   '必须**全部判完**再一次性决定退出码：任何一类先 return 都会把其余三类藏进下一次'
+                   '运行（实测：台账一漂就整批跳过文档核对 = 本轮 7 处过期门禁数差点无人看见）'
+                   '⇒ 双缺陷同投要同时见血、单缺陷只在自己那一族见血，两族不得互相顶包']},
         ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     return 1 if bad else 0
 

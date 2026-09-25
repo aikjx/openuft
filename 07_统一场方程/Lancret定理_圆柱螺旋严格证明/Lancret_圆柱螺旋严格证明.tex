@@ -1,0 +1,232 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,geometry}
+\geometry{margin=1in}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{rem}{Remark}[section]
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Om}{\sqrt{\kappa^{2}+\tau^{2}}}
+
+\title{Constant Curvature and Constant Torsion Implies a Circular Helix\\
+\large A self-contained differential-geometric proof}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a complete, fully explicit proof that a regular $C^{3}$ curve in
+$\R^{3}$ with constant non-zero curvature $\kappa$ and constant torsion
+$\tau$ is, up to a Euclidean motion, a circular helix. The degenerate cases
+(circle, line) are classified as well. All derivatives, the curvature, and the
+torsion are computed in closed form for the standard parametrisation
+$\mathbf r(t)=(a\cos\omega t,a\sin\omega t,ct)$, and the recovery of the curve
+from its Frenet--Serret data is carried out with correct bookkeeping of the
+axial component. No physical interpretation is imposed; this is pure
+differential geometry.
+\end{abstract}
+
+\section{Regularity and derivatives}
+\label{sec:der}
+
+Let $a>0$, $\omega\neq 0$, $c\in\R$, and
+\[
+\mathbf r(t)=\bigl(a\cos(\omega t),\,a\sin(\omega t),\,ct\bigr),\qquad t\in\R .
+\]
+
+\paragraph{First derivative.}
+\[
+\mathbf r'(t)=\bigl(-a\omega\sin(\omega t),\,a\omega\cos(\omega t),\,c\bigr).
+\]
+Hence
+\[
+|\mathbf r'(t)|^{2}=a^{2}\omega^{2}(\sin^{2}+\cos^{2})+c^{2}
+=a^{2}\omega^{2}+c^{2}=:v^{2},
+\]
+with $v=\sqrt{a^{2}\omega^{2}+c^{2}}>0$. The curve is regular everywhere.
+
+\paragraph{Second and third derivatives.}
+\[
+\mathbf r''(t)=\bigl(-a\omega^{2}\cos(\omega t),\,-a\omega^{2}\sin(\omega t),\,0\bigr),
+\]
+\[
+\mathbf r'''(t)=\bigl(a\omega^{3}\sin(\omega t),\,-a\omega^{3}\cos(\omega t),\,0\bigr).
+\]
+
+\section{Curvature}
+\label{sec:k}
+
+The curvature of a regular curve is
+\[
+\kappa=\frac{|\mathbf r'\times\mathbf r''|}{|\mathbf r'|^{3}}.
+\]
+The cross product is
+\[
+\mathbf r'\times\mathbf r''
+=\begin{vmatrix}
+\mathbf i&\mathbf j&\mathbf k\\
+-a\omega\sin & a\omega\cos & c\\
+-a\omega^{2}\cos & -a\omega^{2}\sin & 0
+\end{vmatrix}
+=\bigl(ca\omega^{2}\sin,\,-ca\omega^{2}\cos,\,a^{2}\omega^{3}\bigr).
+\]
+Its squared norm is
+\[
+|\mathbf r'\times\mathbf r''|^{2}
+=c^{2}a^{2}\omega^{4}+a^{4}\omega^{6}
+=a^{2}\omega^{4}(c^{2}+a^{2}\omega^{2})
+=a^{2}\omega^{4}v^{2},
+\]
+so $|\mathbf r'\times\mathbf r''|=a\omega^{2}v$. Therefore
+\[
+\boxed{\;\kappa=\frac{a\omega^{2}v}{v^{3}}
+=\frac{a\omega^{2}}{a^{2}\omega^{2}+c^{2}}\;}
+\]
+which is constant.
+
+\section{Torsion}
+\label{sec:t}
+
+The torsion is
+\[
+\tau=\frac{(\mathbf r'\times\mathbf r'')\cdot\mathbf r'''}{|\mathbf r'\times\mathbf r''|^{2}}.
+\]
+The scalar triple product is
+\[
+(\mathbf r'\times\mathbf r'')\cdot\mathbf r'''
+=(ca\omega^{2}\sin)(a\omega^{3}\sin)
++(-ca\omega^{2}\cos)(-a\omega^{3}\cos)
++(a^{2}\omega^{3})(0)
+=ca^{2}\omega^{5}(\sin^{2}+\cos^{2})
+=ca^{2}\omega^{5}.
+\]
+Using $|\mathbf r'\times\mathbf r''|^{2}=a^{2}\omega^{4}v^{2}$,
+\[
+\boxed{\;\tau=\frac{ca^{2}\omega^{5}}{a^{2}\omega^{4}v^{2}}
+=\frac{c\omega}{a^{2}\omega^{2}+c^{2}}\;}
+\]
+which is also constant.
+
+\begin{rem}
+The standard helix parametrisation $\mathbf r(t)=(R\cos t,R\sin t,Pt)$ has
+$R=a$ and $P=c/\omega$. Then $\kappa=R/(R^{2}+P^{2})$ and
+$\tau=P/(R^{2}+P^{2})$, which reduce to the two boxed formulas above.
+\end{rem}
+
+\section{Frenet--Serret as a constant-coefficient system}
+\label{sec:fs}
+
+Reparametrise by arc length $s=vt$. The Frenet frame
+$(\mathbf T,\mathbf N,\mathbf B)$ satisfies
+\[
+\frac{d}{ds}
+\begin{pmatrix}\mathbf T\\ \mathbf N\\ \mathbf B\end{pmatrix}
+=
+A
+\begin{pmatrix}\mathbf T\\ \mathbf N\\ \mathbf B\end{pmatrix},
+\qquad
+A=
+\begin{pmatrix}
+0 & \kappa & 0\\
+-\kappa & 0 & \tau\\
+0 & -\tau & 0
+\end{pmatrix},
+\]
+with constant $\kappa,\tau$. The matrix $A\in\mathfrak{so}(3)$; its
+characteristic polynomial is
+$\det(A-\lambda I)=-\lambda(\lambda^{2}+\kappa^{2}+\tau^{2})$, so the
+eigenvalues are $0,\pm i\Om$ with $\Om=\sqrt{\kappa^{2}+\tau^{2}}$.
+
+\section{Explicit recovery of the curve}
+\label{sec:rec}
+
+Because $A$ is constant, $\mathbf T(s)=e^{sA}\mathbf T(0)$. Up to a Euclidean
+motion (choice of initial frame and origin) we may align the helix axis with
+$\mathbf e_{3}$ and take
+\[
+\mathbf T(s)=\Bigl(-\frac{\kappa}{\Om}\sin(\Om s),\;
+\frac{\kappa}{\Om}\cos(\Om s),\;
+\frac{\tau}{\Om}\Bigr).
+\]
+One checks $|\mathbf T|=1$ and
+\[
+\mathbf T'(s)=\bigl(-\kappa\cos(\Om s),\,-\kappa\sin(\Om s),\,0\bigr)
+=\kappa\,\mathbf N(s),
+\]
+with $\mathbf N(s)=(-\cos(\Om s),-\sin(\Om s),0)$. The binormal
+$\mathbf B=\mathbf T\times\mathbf N$ is
+\[
+\mathbf B(s)=\Bigl(\frac{\tau}{\Om}\sin(\Om s),\;
+-\frac{\tau}{\Om}\cos(\Om s),\;
+\frac{\kappa}{\Om}\Bigr),
+\]
+and a direct computation verifies $\mathbf B'=-\tau\mathbf N$ and
+$\mathbf N'=-\kappa\mathbf T+\tau\mathbf B$; thus the Frenet--Serret
+equations hold with the prescribed constants.
+
+Integrating $\mathbf r'(s)=\mathbf T(s)$ gives
+\[
+\boxed{\;
+\mathbf r(s)=\frac{\kappa}{\kappa^{2}+\tau^{2}}
+\Bigl(\cos(\Om s),\,\sin(\Om s),\,0\Bigr)
++\frac{\tau}{\Om}\,s\,\mathbf e_{3}+\mathbf c\;}
+\tag{$\star$}
+\]
+with constant $\mathbf c$. This is exactly a circular helix of radius
+$R=\kappa/(\kappa^{2}+\tau^{2})$ and axis $\mathbf e_{3}$.
+
+\begin{rem}[Common sign/index slip]
+A frequently seen but \emph{incorrect} recovery formula writes the axial term
+as $(\tau/\kappa)\,s$. That is wrong unless $P=0$: the axial component of
+$\mathbf T$ is $\tau/\Om$, not $\tau/\kappa$. Substituting $(\star)$ back into
+the curvature and torsion formulas reproduces $\kappa$ and $\tau$
+exactly, confirming the corrected bookkeeping.
+\end{rem}
+
+\section{Uniqueness and degeneracies}
+\label{sec:uniq}
+
+\begin{thm}[Characterisation of constant $\kappa,\tau$ curves]
+\label{thm:main}
+Let $\gamma:I\to\R^{3}$ be a regular $C^{3}$ curve.
+\begin{enumerate}
+\item[(i)] If $\kappa\equiv\kappa_{0}>0$ and $\tau\equiv\tau_{0}$ are both
+constant, then $\gamma$ is, up to a Euclidean motion, the circular helix
+\eqref{star}.
+\item[(ii)] If $\kappa\equiv0$ then $\gamma$ is a straight line.
+\item[(iii)] If $\kappa>0$ is constant and $\tau\equiv0$ then $\gamma$ is a
+circle (planar constant-curvature curve).
+\end{enumerate}
+\end{thm}
+
+\begin{proof}
+The Frenet frame satisfies $\mathbf F'=A\mathbf F$ with the constant matrix
+$A$ of \S\ref{sec:fs}. Hence $\mathbf F(s)=e^{sA}\mathbf F(0)$; the tangent
+$\mathbf T(s)$ is therefore determined up to the initial frame, i.e.\ up to a
+proper rigid motion. Integrating $\mathbf T$ yields $\gamma$ up to a
+translation, giving the form \eqref{star}. Cases (ii) and (iii) follow from the
+Frenet equations: $\kappa=0$ implies $\mathbf T'=0$ (straight line);
+$\tau=0$ gives $\mathbf B'=0$, so the curve lies in the plane orthogonal to
+the constant $\mathbf B$ and has constant curvature there, hence a circle.
+\end{proof}
+
+\begin{rem}[On terminology]
+Lancret's theorem (1811) states the \emph{weaker} characterisation:
+$\tau/\kappa=\text{constant}$ iff the tangent makes a constant angle with a
+fixed direction (a \emph{general} helix). The present theorem requires
+$\kappa$ and $\tau$ \emph{each} to be constant and concludes the stronger
+statement that the curve is a \emph{circular} helix. A circular helix is a
+special case of a general helix, not the converse.
+\end{rem}
+
+\section{Conclusion}
+\label{sec:con}
+
+We have proved, with fully explicit derivatives and a correctly booked
+recovery formula, that constant curvature together with constant torsion
+characterises the circular helix (and its degenerate circle/line limits) among
+regular space curves, up to Euclidean motions. The result is a theorem of
+classical differential geometry; it entails no physical claim.
+\end{document}
