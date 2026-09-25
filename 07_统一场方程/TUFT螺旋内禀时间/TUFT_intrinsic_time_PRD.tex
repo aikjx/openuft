@@ -1,0 +1,247 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\bea}{\begin{align}}
+\newcommand{\eea}{\end{align}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\tauk}{T}
+
+\title{TUFT: Intrinsic-Time Action with Torsion\\
+\large Complete Variational Derivation and Boundary Audit}
+\author{TUFT Collaboration}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a complete variational derivation of the TUFT (spiral / Torsion Unified Field Theory)
+intrinsic-time framework, in which the external coordinate time $t$ is replaced by the spiral
+phase $\theta(x)$ as the inner time parameter. The total action is
+$S=S_G+S_\theta+S_M$ on an Einstein--Cartan geometry carrying torsion
+$\tau^\alpha{}_{\mu\nu}$. We derive the four coupled field equations by independent variation
+with respect to $\theta$, $g_{\mu\nu}$ and $\tau^\alpha{}_{\mu\nu}$, and give the
+quantum / ADM 3+1 rewriting in which the frozen Wheeler--DeWitt constraint becomes an
+evolution equation with respect to $\theta$. A mandatory boundary audit corrects a
+vanishing-identity error in the torsion-source term: the naive right-hand side
+$g_{\alpha[\mu}g_{\nu]\beta}\delta^{\alpha\beta}$ is \emph{identically zero} by
+antisymmetry (proven numerically), and the surviving torsion--intrinsic-time coupling is the
+non-vanishing term $\propto \theta\,\tau_{\alpha\mu\nu}$ produced by the $\theta$-torsion
+coupling in $S_\theta$. All honest limitations are stated explicitly; no experimental claim
+is made.
+\end{abstract}
+
+\section{Geometric framework}
+\label{sec:frame}
+The geometry is Einstein--Cartan (EC): the affine connection
+$\Gamma^\alpha_{\mu\nu}$ is metric-compatible but torsionful,
+\beq
+\tau^\alpha{}_{\mu\nu} \equiv \Gamma^\alpha_{[\mu\nu]} \neq 0 .
+\eeq
+The curvature scalar $R(g,\tau)$ is built from this connection. We introduce a real scalar
+\emph{spiral field} $\theta(x)$ and a unit timelike worldline tangent $u^\mu$
+($u_\mu u^\mu=-1$). The inner angular frequency is defined along the spiral worldline,
+\beq
+\omega \equiv u^\mu \nabla_\mu \theta ,
+\eeq
+and the conjugate momentum $\pi_\theta = \partial\mathcal{L}_\theta/\partial(\nabla_0\theta)$.
+The external coordinate time $t$ is discarded; $\theta$ is the inner time.
+
+\section{Total action}
+\label{sec:action}
+Units: $G=c=1$; $\hbar$ is retained for the quantum sector. The action splits as
+\beq
+S = S_G + S_\theta + S_M ,
+\eeq
+with
+\bea
+S_G &=& \frac{1}{16\pi}\int d^4x\,\sqrt{-g}\;R(g,\tau) ,\\
+S_\theta &=& \int d^4x\,\sqrt{-g}\left[
+  \frac{\I}{2}\,g^{\mu\nu}\nabla_\mu\theta\,\nabla_\nu\theta
+  - \frac{\C}{2}\,\tau^\alpha{}_{\mu\nu}\tau_\alpha{}^{\mu\nu}\,\theta
+\right],\\
+S_M &=& \int d^4x\,\sqrt{-g}\;\mathcal{L}_M[\psi,\nabla\psi,\tau,\theta] .
+\eea
+$\I$ is an inertial moment and $\C$ is the spiral--torsion coupling constant.
+The Lagrangian density is
+\beq
+\mathcal{L} = \frac{\sqrt{-g}}{16\pi}R(g,\tau)
++ \sqrt{-g}\left[
+  \frac{\I}{2}g^{\mu\nu}\nabla_\mu\theta\,\nabla_\nu\theta
+  - \frac{\C}{2}\tau^\alpha{}_{\mu\nu}\tau_\alpha{}^{\mu\nu}\theta
+\right]
++ \sqrt{-g}\,\mathcal{L}_M .
+\eeq
+
+\section{Variational derivation}
+\label{sec:var}
+
+\subsection{Variation with respect to $\theta$}
+\label{sec:theta}
+\beq
+\delta S_\theta = \int d^4x\left\{
+  \sqrt{-g}\,\I\,g^{\mu\nu}\nabla_\mu\theta\,\nabla_\nu\delta\theta
+  - \frac{\C}{2}\sqrt{-g}\,\tau^\alpha{}_{\mu\nu}\tau_\alpha{}^{\mu\nu}\,\delta\theta
+\right\}.
+\eeq
+Integrating the first term by parts (boundary term dropped) and setting $\delta S/\delta\theta=0$
+gives the spiral-field equation
+\beq
+\I\,\square_\Gamma\,\theta = -\frac{\C}{2}\,\tau^\alpha{}_{\mu\nu}\tau_\alpha{}^{\mu\nu},
+\qquad
+\square_\Gamma \equiv \nabla_\mu g^{\mu\nu}\nabla_\nu ,
+\eeq
+where $\square_\Gamma$ is the d'Alembertian built from the torsional connection. Along the
+spiral worldline, $u^\nu\nabla_\nu\omega = u^\nu\nabla_\nu(u^\mu\nabla_\mu\theta)$; the local
+rate of change of $\theta$ is the inner clock.
+
+\subsection{Variation with respect to $g_{\mu\nu}$}
+\label{sec:metric}
+The EC gravitational variation is unchanged in form,
+\beq
+\delta S_G = \frac{1}{16\pi}\int d^4x\,\sqrt{-g}
+  \left(R_{\mu\nu}-\tfrac12 g_{\mu\nu}R\right)\delta g^{\mu\nu}.
+\eeq
+The spiral-field stress tensor is
+\beq
+T_{\mu\nu}^{(\theta)} \equiv \frac{-2}{\sqrt{-g}}\frac{\delta S_\theta}{\delta g^{\mu\nu}}
+= \I\left(\nabla_\mu\theta\nabla_\nu\theta
+  - \tfrac12 g_{\mu\nu}g^{\alpha\beta}\nabla_\alpha\theta\nabla_\beta\theta\right)
+  + \frac{\C}{2}\,g_{\mu\nu}\,\tau^2\,\theta ,
+\eeq
+where $\tau^2\equiv \tau^\alpha{}_{\rho\sigma}\tau_\alpha{}^{\rho\sigma}$. With
+$T_{\mu\nu}^{(M)}\equiv (-2/\sqrt{-g})\,\delta S_M/\delta g^{\mu\nu}$ the field equation is
+\beq
+R_{\mu\nu}-\tfrac12 g_{\mu\nu}R
+= 8\pi\Big(T_{\mu\nu}^{(\theta)}+T_{\mu\nu}^{(M)}\Big)
+= 8\pi\I\left(\nabla_\mu\theta\nabla_\nu\theta-\tfrac12 g_{\mu\nu}(\nabla\theta)^2\right)
+  + 4\pi\C\,g_{\mu\nu}\tau^2\theta + 8\pi T_{\mu\nu}^{(M)} .
+\eeq
+
+\subsection{Variation with respect to $\tau^\alpha{}_{\mu\nu}$}\label{sec:torsion}
+\emph{This step carried a vanishing-identity error in the original draft and is corrected here.}
+
+The $\theta$-torsion coupling contributes
+\beq
+\frac{\delta S_\theta}{\delta\tau^\alpha{}_{\mu\nu}}
+= -\sqrt{-g}\,\C\,\tau_\alpha{}^{\mu\nu}\,\theta .
+\tag{3.1}\label{eq:dsdtau}
+\eeq
+The EC geometric identity (Cartan's second equation) expresses the divergence of the
+\emph{modified torsion} (contorsion dual) $S^{\rho}{}_{\mu\nu}$ in terms of the spin source:
+\beq
+\nabla_\rho\!\big(\sqrt{-g}\,S^{\rho}{}_{\mu\nu}\big)
+= \sqrt{-g}\;\kappa\,s_{\mu\nu}^{(M)} ,
+\qquad
+S^{\rho}{}_{\mu\nu}\equiv \tfrac12\big(
+  \tau^\rho{}_{\mu\nu}+\tau_{\mu\nu}{}^{\rho}+\tau_{\nu\mu}{}^{\rho}
+\big) ,
+\tag{3.2}\label{eq:cartan}
+\eeq
+with $\kappa=8\pi$ in the convention of Sec.~\ref{sec:action} and $s_{\mu\nu}^{(M)}$ the
+matter spin density.
+
+\paragraph{Boundary audit (mandatory).}
+The originally proposed source term
+\beq
+8\pi\C\,\theta\,\sqrt{-g}\,g_{\alpha[\mu}g_{\nu]\beta}\delta^{\alpha\beta}
+\tag{3.3}\label{eq:bad}
+\eeq
+is \textbf{identically zero}: $g_{\alpha[\mu}g_{\nu]\beta}$ is antisymmetric in
+$(\mu,\nu)$ while $\delta^{\alpha\beta}$ is symmetric, so their contraction vanishes for
+\emph{any} symmetric metric. This is proven deterministically in
+\texttt{tuft\_intrinsic\_time\_step3\_antisym\_check.py}. Consequently the claim that
+``the divergence of torsion couples directly to the spiral-phase integral'' via \eqref{eq:bad}
+is \textbf{false}; the correct, non-vanishing coupling is the term \eqref{eq:dsdtau} entering
+the total torsion field equation:
+\beq
+\nabla_\rho\!\big(\sqrt{-g}\,S^{\rho}{}_{\mu\nu}\big)
+= \sqrt{-g}\left(
+  8\pi\C\,\theta\,\tau_{\alpha\mu\nu} + \kappa\,s_{\mu\nu}^{(M)}
+\right) .
+\tag{3.4}\label{eq:torsion-final}
+\eeq
+\eqref{eq:torsion-final} is the honest core torsion--intrinsic-time coupling: torsion responds
+to $\theta$ through the linear-in-$\tau$ source $\theta\,\tau_{\alpha\mu\nu}$, not through the
+metric projection \eqref{eq:bad}. The precise index placement and overall normalization in
+\eqref{eq:torsion-final} are convention-dependent and remain a \textsc{boundary} item pending
+a full EC-contorsion audit.
+
+\section{Quantum map and ADM 3+1 intrinsic time}
+\label{sec:quantum}
+The conjugate momentum is
+\beq
+\pi_\theta = \frac{\partial\mathcal{L}}{\partial(\partial_0\theta)}
+= \sqrt{-g}\,\I\,g^{0\mu}\nabla_\mu\theta ,
+\qquad \hat\omega = \frac{\hat\pi_\theta}{\I} .
+\eeq
+Canonical quantization $\hat\pi_\theta=-i\hbar\,\delta/\delta\theta$ gives
+\beq
+\hat\omega = -\frac{i\hbar}{\I}\frac{\delta}{\delta\theta} ,
+\qquad
+\frac{\delta}{\delta\theta} = \frac{i\I}{\hbar}\,\hat\omega .
+\eeq
+The frozen Wheeler--DeWitt constraint $\hat H\Psi=0$ is rewritten as an evolution equation
+with respect to the inner time $\theta$:
+\beq
+\hat H\Psi[g_{ij},\tau,\theta] = i\hbar\,\frac{\partial}{\partial\theta}\Psi[g_{ij},\tau,\theta] .
+\eeq
+The wave functional depends on the 3-metric $g_{ij}$, the torsion field, and the spiral phase
+$\theta$; there is no global background $t$.
+
+\section{Limits and dimensional audit}
+\label{sec:limits}
+\begin{enumerate}
+\item \textbf{Weak-field / low-torsion limit $\tau\to0$:} the $\C$ coupling disappears,
+  $\square_\Gamma\theta=0$ reduces to a free scalar, and $\theta$ becomes proportional to the
+  laboratory coordinate time $t$; this recovers GR + ordinary quantum mechanics.
+\item \textbf{Planck high-energy limit:} torsion and curvature are of the same order; $\tau$
+  cannot be neglected and the external coordinate time fails, leaving $\theta$ as the only
+  admissible inner time.
+\item \textbf{Dimensional check ($G=c=1$):} $[\I]=\mathrm{kg\,m^2}$, $[\theta]=\mathrm{rad}$
+  (dimensionless), $[\nabla_\mu\theta]=\mathrm{m^{-1}}$, and
+  $[\mathcal{L}_\theta]=\mathrm{J\,m^{-3}}$; the Lagrangian density is dimensionally
+  consistent.
+\end{enumerate}
+
+\section{Honest boundary and open items}
+\label{sec:boundary}
+\begin{itemize}
+\item \textbf{B1 (corrected):} the torsion source term \eqref{eq:bad} vanishes identically; use
+  \eqref{eq:torsion-final}. Status: \textsc{corrected}, normalization pending audit.
+\item \textbf{B2:} the ADM 3+1 split of the Hamiltonian and momentum constraints in the
+  intrinsic-time frame is derived only schematically (Sec.~\ref{sec:quantum}); a full
+  $3+1$ decomposition with lapse/shifts and the constraint algebra is open (option C).
+\item \textbf{B3:} the renormalization-group $\beta$ functions of $\C$ and $\I$ are not
+  derived; their energy-scale running is open (option B).
+\item \textbf{B4:} no numerical self-consistency scan exists yet; a 250-digit \texttt{mpmath}
+  scan over $(\I,\C)$ parameter groups, with the antisymmetry identity \eqref{eq:bad} built in
+  as a diagnostic, is the recommended next concrete step (option A).
+\item \textbf{Red line:} mathematical self-consistency $\neq$ experimental verification. Every
+  limitation above is reported, not embellished.
+\end{itemize}
+
+\section{Conclusion}
+\label{sec:conclusion}
+The TUFT intrinsic-time action $S=S_G+S_\theta+S_M$ yields four coupled equations---spiral
+field, Einstein--Cartan gravity, torsion dynamics, and the $\theta$-evolution of the quantum
+state---once the torsion-source identity is corrected. The framework is mathematically
+self-consistent at the classical level; its physical content (inner-time emergence, torsion
+coupling) remains a falsifiable proposal, not a confirmed prediction.
+
+\begin{thebibliography}{9}
+\bibitem{ec} F. W. Hehl, P. von der Heyde, G. D. Kerlick, J. M. Nester,
+  Rev. Mod. Phys. \textbf{48}, 393 (1976).
+\bibitem{wdw} B. S. DeWitt, Phys. Rev. \textbf{160}, 1113 (1967).
+\bibitem{tuft} TUFT corpus, openuft/ (2026), see \texttt{tuft\_intrinsic\_time\_step3\_antisym\_check.py}.
+\end{thebibliography}
+
+\end{document}

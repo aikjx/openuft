@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-r"""R11、R12 与 R13 三层判据的**外部**变异核验：从引擎外面改那几条算术，看谁变红。
+r"""R11、R12、R13 与 R14 四层判据的**外部**变异核验：从引擎外面改那几条算术，看谁变红。
 
 为什么要有这个脚本：R11 的判据（$N\mid 3Q$）此前只在引擎内部被自己的门禁对照过，
 "把它写错会不会有人发现"只存在于某一次对话的口头里 —— 而一个没人能重跑的读数等于没人看守。
@@ -10,18 +10,22 @@ r"""R11、R12 与 R13 三层判据的**外部**变异核验：从引擎外面改
   * 基线（未植入）全绿，且它打印的门禁总数与磁盘上 `SO10表示论报告.json` 里的 `tests`
     条数**相等** —— 这条不是装饰：引擎的层是短路接线的（`sel_ok = run_selection_layer() if res_ok`），
     依赖缺失时它会只跑前几层就退出，若只要求"退出码非 0"就会把这种夹具塌陷当成捕获；
-  * 每个变异体都必须被**点名到它那一层**（R11.x、R12.x 或 R13.x，由每例自带的 `layer` 决定，
+  * 每个变异体都必须被**点名到它那一层**（R11.x、R12.x、R13.x 或 R14.x，由每例自带的 `layer` 决定，
     不是"任何一个 FAIL"）抓住（崩溃不算捕获），且它打印的读数至少动一个
     —— 门禁 PASS 数、或报告 §10 那句"允许 X 条、禁戒 Y 条"、或报告 §11 的三个读数
     （$\Gamma$ 的阶、$|\Gamma|$ 三条出处那一列、§11.5 那两条独立判法的同判列）、
     或报告 §12 的六个读数（候选群阶、核 $K$ 与其阶分布、同构型种数、集合相等的通道比、
-    唯一例外的承载者、物质字称实现者个数）。
+    唯一例外的承载者、物质字称实现者个数）、
+    或报告 §13 的十三处读数（乙账"甲账没有"的条件数、同态引理的比对方数与违例对数、形变加法
+    的例外对数、三条恒等事的违例三元组、§13.3 那张三条路 × 两种约定的核表、§13.4 的
+    "全部条件/单条最好/贪心核心/只半单/只 $U(1)$/两半之交"六张行数、两条即钉住的条件对数与
+    总对数、§13.5 的四档网格行数与候选元数）。
     这一条不是形式：只动三条路径里浮点那条的滑倒**不动**判决表（甲/乙仍然同意），动的是"甲乙丙一致"那条断言 $\Rightarrow$
     同一个数为什么要三台互不共享算术的机器各跑一遍，这里有一次实测读数；R13 的 h1 是同一族：
     路丙的 triality 号只出现在断言里、不出现在 §12 的任何数字里 $\Rightarrow$ 它动的只有 PASS 数，
     这正好把"门禁在看守报告里看不见的断言"这件事本身变成了读数；
   * 一条良性改动（只补尾注释，语义不动）不得误报，否则这台仪器是"永远红"而不是"能红"。
-    良性例现在三层各一条：只测 R11 那侧的良性改动，等于没核对 §11 与 §12 的读数在语义不动时**不**动。
+    良性例现在四层各一条：只测 R11 那侧的良性改动，等于没核对 §11、§12 与 §13 的读数在语义不动时**不**动。
 
 R12 那四个变异体各自钉住报告 §11 的一个断言，且都落在**门禁**上而不是 `assert` 上 $\Rightarrow$
 "报错"不会被当成"捕获"：色 $\mathbb Z_3$ 生成元换掉后两支不再互化（R12.1 的约定无关那条）、
@@ -46,10 +50,22 @@ $\Rightarrow$ 半群读数退化、"全组允许 $=$ 两半交集"在多数通�
 个场就已把实现者钉成那 2 个 $\Rightarrow$ 中性变异，已换成取反版）。良性例 b3 给 `Kset = set(K)`
 补尾注释，语义不动。
 
-命名边界（如实登记）：文件名与台账名仍叫 `check_r11_mutation`，因为它从 R11 起家；它此刻覆盖
-**三层**，这一件事由台账里的 `layers` 字段与每例的 `layer` 字段成文，不由文件名成文。
+R14 那五个变异体落在 §13 的五处算术语境上，各自钉住该层的一条断言，且同样只落在**门禁**上：
+乙账"其中多少条甲账没有"把差集读成交集（`set(condB) - set(spec)` 写成 `& set(spec)` ⇒ 304 掉到
+61，R14.1 的"乙账严格更细"这一半不再成立）；子多重态内部"在不在根格里"那条判法把标签差向量循环
+错位一位（$d_i$ 读成 $d_{i+1}$ ⇒ §13.2 的三条恒等事违例三元组从 0/0/0 变成 0/非零/0，而另两条
+判法照旧干净 —— 这正是"三条判法各守一件事"的可证伪形式）；冗余度里"单条最好的一条"把 `min` 写成
+`max`（R14.4 的 12 变成整格 432 ⇒ 那条"没有任何一条荷条件单独钉得住 $\Gamma$"被读成"最好的一条
+恰好什么都不钉"）；形变的加法封闭性检查把 `not in charA` 写成 `in charA`（R14.0 的 158 对例外与
+418 对命中整批互换 ⇒ 那条否定读数失去反向证据）；$t$ 网格把每档的周期 `den * CEN_U_PER` 写成
+`den`（候选元数 216/432/864/2160 整体缩 3 倍 ⇒ "核不随网格走"这条对照连候选格都没数对）。
+良性例 b4 给 `FULL = (1 << len(C)) - 1` 补尾注释，语义不动。
 
-用法：python 维护脚本/check_r11_mutation.py    （约数分钟：一台引擎 = 一次完整自检）
+命名边界（如实登记）：文件名与台账名仍叫 `check_r11_mutation`，因为它从 R11 起家；它此刻覆盖
+**四层**，这一件事由台账里的 `layers` 字段与每例的 `layer` 字段成文，不由文件名成文。
+
+用法：python 维护脚本/check_r11_mutation.py    （慢：每一例都要把整台引擎跑一次完整自检，
+      例数与层数不写死在这里 —— 由台账里的 `cases_total`、`layers`、`layer_mutants` 打印）
 产出：与维护脚本同目录的 check_r11_mutation.json（本脚本是唯一写入者）
 """
 import io
@@ -76,6 +92,7 @@ PAIR_RE = re.compile(r'允许 (\d+) 条、禁戒 (\d+) 条')
 BLOCK = '低能算符的选择规则（R11）'
 BLOCK2 = '完整残留离散规范群（R12）'
 BLOCK3 = '422 链残留按 SU(4) 权格重做（R13）'
+BLOCK4 = '行标号账与逐权重账（R14）'
 # 报告 §11 里那四个读数：每个都印自 GLOB，也就是印自被植入缺陷的那段算术的下游。
 G_SIZE_RE = re.compile(r'活下来 (\d+) 个')          # |Gamma|（R12.1 的枚举）
 G_FLAG_RE = re.compile(r'\*\*不成立\*\*|\*\*不同\*\*|定不出唯一的群')   # 同判/互化/定名失败
@@ -91,6 +108,22 @@ H_INT_RE = re.compile(r'在 (\d+)/(\d+) 条通道成立')    # R13.6 集合相�
 H_EXC_RE = re.compile(r'唯一例外是 (.+?) 那条')        # R13.6 唯一例外的承载者
 H_MP_RE = re.compile(r'实现者恰 (\d+) 个')             # R13.4 物质字称实现者个数
 H_TORD_RE = re.compile(r'\| \$(.+?)\$ \| \$(.+?)\$ \| (\d+) \|')  # §12.1 类表的"阶"列（R13.0）
+# 报告 §13 的读数：同样先切出 §13 那一节，避免与 §11/§12 的同类散文互相污染。
+SEC13_A, SEC13_B = '## 13.', '## 14.'
+I_NOV_RE = re.compile(r'（其中 (\d+) 条甲账没有）')            # R14.1：乙账严格更细的那一半
+I_HOMG_RE = re.compile(r'(\d+) 组\(群元, 条件\)')               # R14.0：同态引理比对了多少组
+I_HOMB_RE = re.compile(r'比对，违例 (\d+)。')                   # R14.0：其中违例几组
+I_ADD_RE = re.compile(r'有 (\d+) 对之和落在集合外')             # R14.0：那批形变不是子群
+I_MIS_RE = re.compile(r'违例 (\d+) / (\d+) / (\d+)')            # R14.2：三条恒等事的违例三元组
+I_KERN_RE = re.compile(r'^\| ([甲乙丙]) [^|]*\| (\d+) \| (\d+) \|$', re.M)  # R14.3：三条路 × 两约定
+I_ALLK_RE = re.compile(r'^\| 全部 (\d+) 条 \| (\d+) \|$', re.M)  # R14.4：整条件集的核
+I_ONEK_RE = re.compile(r'^\| 单条最好的一条 \| (\d+) \|$', re.M)  # R14.4：one_min
+I_CORE_RE = re.compile(r'^\| 贪心核心 (\d+) 条 \| (\d+) \|$', re.M)  # R14.4：核心长度与到位后的核
+I_HALF_RE = re.compile(r'^\| 只要求半单部分平凡 \| (\d+) \|$', re.M)  # R14.5：只半单
+I_GU_RE = re.compile(r'^\| 只要求 \$U\(1\)_\{B-L\}\$ 半边平凡 \| (\d+) \|$', re.M)  # R14.5：只 U(1)
+I_INT_RE = re.compile(r'^\| 两半之交 \| (\d+) \|$', re.M)       # R14.5：两半之交
+I_PAIR_RE = re.compile(r'条件对共 (\d+) 对（占 (\d+) 对的')      # R14.4：population 的大小
+I_GRID_RE = re.compile(r'^\| \$(\d+)/(\d+)\$ \| (\d+) \| (\d+) \| (\d+) \| (\S+) \|$', re.M)  # R14.6
 
 # 锚点：每条都必须在源文件里**恰好出现一次**，否则整轮判 INVALID（锚点漂了不等于没植入）。
 A_JIA = (b'    return int(t3) % n == 0', b'    return int(t3 / 3) % n == 0')
@@ -119,6 +152,18 @@ H_CLO = (b'        wcapc = wko & clo', b'        wcapc = wko | clo')
 H_MP = (b"          if all(FV[k]['sig'][i] == FV[k]['mpp'] for k in sorted(FV))]",
         b"          if all(FV[k]['sig'][i] != FV[k]['mpp'] for k in sorted(FV))]")
 H_OK = (b'    Kset = set(K)', b'    Kset = set(K)  # inert: benign case')
+# R14 侧：五个各钉住 §13 的一个断言，同样落在门禁条件上。
+I_NOV = (b'    novel = sorted(set(condB) - set(spec))',
+         b'    novel = sorted(set(condB) & set(spec))')
+I_ROOT = (b'                d = [int(lab0[i]) - int(lab[i]) for i in range(4)]',
+          b'                d = [int(lab0[i]) - int(lab[(i + 1) % 4]) for i in range(4)]')
+I_ONE = (b'    one_min = min(ker_size([mC[k]]) for k in spec)',
+         b'    one_min = max(ker_size([mC[k]]) for k in spec)')
+I_ADD = (b'               if tuple(g_mod1(F(a[i]) + F(b[i])) for i in range(4)) not in charA]',
+         b'               if tuple(g_mod1(F(a[i]) + F(b[i])) for i in range(4)) in charA]')
+I_GRID = (b'              for aR in range(2) for t in range(den * CEN_U_PER)]',
+          b'              for aR in range(2) for t in range(den)]')
+I_OK = (b'    FULL = (1 << len(C)) - 1', b'    FULL = (1 << len(C)) - 1  # inert: benign case')
 
 CASES = [
     ('ctl', '基线：不植入', 'baseline', None, 'both'),
@@ -145,6 +190,18 @@ CASES = [
     ('h4', 'R13：物质字称的实现者把相位判据取反（只数逐场都 ≠ 目标相位的元 ⇒ 个数偏离恰 2）',
      'mutant', H_MP, 'R13'),
     ('b3', '良性：给 Kset 那行补一条尾部注释（语义不动）', 'benign', H_OK, 'both'),
+    ('i1', 'R14：乙账"甲账没有"的条件把差集写成交集（304 掉到 61 ⇒ 乙账不再严格更细）',
+     'mutant', I_NOV, 'R14'),
+    ('i2', 'R14：子多重态内的标签差向量循环错位一位（"在不在根格里"那条判法读到错的分量 '
+           '⇒ 三条恒等事的违例三元组从 0/0/0 变成 0/非零/0，另两条判法照旧干净）',
+     'mutant', I_ROOT, 'R14'),
+    ('i3', 'R14：冗余度里"单条最好的一条"把 min 写成 max（核从 12 读成整格 432）',
+     'mutant', I_ONE, 'R14'),
+    ('i4', 'R14：形变的逐点加法封闭性把 not in 写成 in（158 对例外与 418 对命中整批互换）',
+     'mutant', I_ADD, 'R14'),
+    ('i5', 'R14：$t$ 网格每档的周期去掉 CEN_U_PER 因子（候选元数 216/432/864/2160 整体缩 3 倍）',
+     'mutant', I_GRID, 'R14'),
+    ('b4', '良性：给 FULL 那行补一条尾部注释（语义不动）', 'benign', I_OK, 'both'),
 ]
 
 
@@ -190,6 +247,8 @@ def run(d):
             rep = fh.read()
     a, bnd = rep.find(SEC12_A), rep.find(SEC12_B)
     sec12 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
+    a, bnd = rep.find(SEC13_A), rep.find(SEC13_B)
+    sec13 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
     m = TOTAL_RE.search(out)
     fails = FAIL_RE.findall(out)
     return {'exit': r.returncode,
@@ -198,10 +257,11 @@ def run(d):
             'fail_ids': fails,
             'r11_fail_ids': [x for x in fails if x.startswith('R11')],
             'layer_fail_ids': dict((k, [x for x in fails if x.startswith(k)])
-                                   for k in ('R11', 'R12', 'R13')),
+                                   for k in ('R11', 'R12', 'R13', 'R14')),
             'printed_r11_block': BLOCK in out,
             'printed_r12_block': BLOCK2 in out,
             'printed_r13_block': BLOCK3 in out,
+            'printed_r14_block': BLOCK4 in out,
             'report_pairs': sorted(set(tuple(int(x) for x in t) for t in PAIR_RE.findall(rep))),
             'report_global': {
                 'g_size': sorted(set(int(x) for x in G_SIZE_RE.findall(rep))),
@@ -217,26 +277,46 @@ def run(d):
                 'h_exc': sorted(set(H_EXC_RE.findall(sec12))),
                 'h_mp': sorted(set(H_MP_RE.findall(sec12))),
                 'h_tord': sorted(set(m[2] for m in H_TORD_RE.findall(sec12)))},
+            'report_r14': {
+                'i_nov': sorted(set(I_NOV_RE.findall(sec13))),
+                'i_hom': sorted(set(zip(I_HOMG_RE.findall(sec13),
+                                        I_HOMB_RE.findall(sec13)))),
+                'i_add': sorted(set(I_ADD_RE.findall(sec13))),
+                'i_mis': sorted(set(I_MIS_RE.findall(sec13))),
+                'i_kern': sorted(set(I_KERN_RE.findall(sec13))),
+                'i_sets': sorted(set(I_ALLK_RE.findall(sec13))),
+                'i_one': sorted(set(I_ONEK_RE.findall(sec13))),
+                'i_core': sorted(set(I_CORE_RE.findall(sec13))),
+                'i_half': sorted(set(I_HALF_RE.findall(sec13))),
+                'i_gu': sorted(set(I_GU_RE.findall(sec13))),
+                'i_int': sorted(set(I_INT_RE.findall(sec13))),
+                'i_pairs': sorted(set(I_PAIR_RE.findall(sec13))),
+                'i_grid': sorted(set(I_GRID_RE.findall(sec13)))},
             'traceback': 'Traceback' in out}
 
 
 def judge(case, res, base):
     _tag, _name, kind, _patch, layer = case
+    r14_live = (bool(res['report_r14']['i_nov']) and bool(res['report_r14']['i_kern'])
+                and bool(res['report_r14']['i_grid']) and bool(res['report_r14']['i_mis']))
     clean = (res['exit'] == 0 and res['pass'] == res['gates'] and not res['fail_ids']
              and not res['traceback']
              and res['printed_r11_block'] and res['printed_r12_block']
-             and res['printed_r13_block']
+             and res['printed_r13_block'] and res['printed_r14_block']
              and bool(res['report_pairs']) and bool(res['report_global']['g_size'])
-             and bool(res['report_r13']['h_size']) and bool(res['report_r13']['h_k']))
+             and bool(res['report_r13']['h_size']) and bool(res['report_r13']['h_k'])
+             and r14_live)
     if kind in ('baseline', 'benign'):
         return clean and (kind == 'baseline'
                           or (res['report_pairs'] == base['report_pairs']
                               and res['report_global'] == base['report_global']
                               and res['report_r13'] == base['report_r13']
+                              and res['report_r14'] == base['report_r14']
                               and res['pass'] == base['pass']))
     moved = [k for k, v in (('report_pairs', res['report_pairs'] != base['report_pairs']),
                             ('report_global', res['report_global'] != base['report_global']),
                             ('report_r13', res['report_r13'] != base['report_r13']),
+                            ('report_r14', res['report_r14'] != base['report_r14']),
                             ('gates_pass', res['pass'] != base['pass'])) if v]
     res['moved'] = moved
     return (res['exit'] != 0 and bool(res['layer_fail_ids'].get(layer))
@@ -262,11 +342,14 @@ def main():
                   'anchor_hits': hits if patch else 0})
         r['expect_caught'] = kind == 'mutant'
         res[tag] = r
-        print('[case] %s %-14s layer=%-5s exit=%s gates=%s/%s fail=%s pairs=%s glob=%s h12=%s' %
+        print('[case] %s %-14s layer=%-5s exit=%s gates=%s/%s fail=%s pairs=%s glob=%s h12=%s r14=%s' %
               (tag, kind, layer, r['exit'], r['pass'], r['gates'],
                r['layer_fail_ids'].get(layer) or r['fail_ids'], r['report_pairs'],
                r['report_global']['g_size'], r['report_r13']['h_k'] and
-               (r['report_r13']['h_size'], r['report_r13']['h_int'], r['report_r13']['h_mp'])))
+               (r['report_r13']['h_size'], r['report_r13']['h_int'], r['report_r13']['h_mp']),
+               r['report_r14']['i_nov'] and
+               (r['report_r14']['i_mis'], r['report_r14']['i_one'], r['report_r14']['i_add'],
+                r['report_r14']['i_grid'] and len(r['report_r14']['i_grid']))))
 
     anchor_bad = [k for k, v in anchors.items() if v != 1]
     fixture_bad = (res['ctl']['gates'] is None or (tests_on_disk is not None
@@ -280,7 +363,7 @@ def main():
     false_alarm = [t for t, r in res.items() if not r['expect_caught'] and not r['ok']]
     payload_layers = sorted(set(c[4] for c in CASES if c[4] != 'both'))
     # 覆盖面自己也要判：某一层的变异体被整批删掉时，例数的账照样自洽（baseline 1 + 变异体 + 良性），
-    # 但这台仪器已经悄悄退回单层 ⇒ "三层都看守"这句话就没有仪器背书了。
+    # 但这台仪器已经悄悄退回单层 ⇒ "四层都看守"这句话就没有仪器背书了。
     uncovered = [k for k in payload_layers
                  if not any(c[2] == 'mutant' and c[4] == k for c in CASES)]
     verdict = 'CAUGHT' if not missed and not false_alarm and not anchor_bad \
@@ -297,6 +380,7 @@ def main():
                'baseline_pairs': res['ctl']['report_pairs'],
                'baseline_global': res['ctl']['report_global'],
                'baseline_r13': res['ctl']['report_r13'],
+               'baseline_r14': res['ctl']['report_r14'],
                'layer_mutants': dict((k, sum(1 for c in CASES if c[2] == 'mutant' and c[4] == k))
                                      for k in payload_layers),
                'verdict': verdict,

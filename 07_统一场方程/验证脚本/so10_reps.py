@@ -62,7 +62,7 @@ $\\Rightarrow$ 残留离散规范对称性**不**给质子稳定性论证——�
 整数或半整数，$B-L=\\tfrac23(\\varepsilon_1+\\varepsilon_2+\\varepsilon_3)$ 取 $8$），
 于是格点运算全程整数、无浮点；内积 $\\langle a,b\\rangle:=144(a,b)$ 也是整数。
 
-诚实边界（详见报告 §14）：
+诚实边界（详见报告 §15）：
 - 表示论是**数学**，不是"自然界选了 SO(10)"的证据；本探针不提升任何证据等级，也不关闭 L10。
 - "$Q=0$ 才允许取期望值"与"$B-L$ 必须被破掉"是**物理输入**而非李论推论；两条任一改掉，
   "$126_H$ 必需"随之失效。$16_H/\\overline{16}_H$ 的 $|\\Delta(B-L)|=1$ 单步通道始终合法
@@ -536,7 +536,7 @@ QHP = add(T3L, add(T3R, half(BL))) if chain is not None else None
 def chain_band(scn=None):
     """现场调用链探针，解出单阈 3221 链各情形的 $M_{\\rm GUT}$（只收物理解）。
 
-    为什么必须是**活数**：本报告 §0/§13 的散文要引用"$M_{\\rm GUT}$ 的摆动倍数"。
+    为什么必须是**活数**：本报告 §0/§14 的散文要引用"$M_{\\rm GUT}$ 的摆动倍数"。
     2026-09-24 台账 F4（链探针情形 C 的 $b_2$ 重复计入）修复后，三情形区间从
     $3.8\\,(A/B)$ 倍变成 $8.7\\,(A/C)$ 倍，而本报告当时没跟着动 —— 写死数字就是这条复发路径。
     """
@@ -2494,7 +2494,7 @@ FMT_LEAK = re.compile(r"%\([A-Za-z0-9_]*\)[sdf]|%\.[0-9]+[df]|%[sdif]\b")
 DELIM_MUNCH = re.compile(r'\\[lr]vert[A-Za-z0-9]')
 # 紧跟字母的反斜杠串**长度必须是 1**。本报告的公式来自两条会各自翻倍的路：
 #   (1) r"""…""" 不消费任何转义 ⇒ 源码里手写的 `$\\nu$` 原样落进文件；
-#   (2) §15 的"算得/应为/备注"三列是 repr 转储（那是审计痕迹，故意保留），而 repr 会把数据里
+#   (2) §16 的"算得/应为/备注"三列是 repr 转储（那是审计痕迹，故意保留），而 repr 会把数据里
 #       本就合法的 `$\nu^c$` 里的反斜杠翻倍成 `$\\nu^c$` —— 本轮 67 处全部出自这条。
 # 两种翻倍落进文件后同形：MathJax 把 `\\` 读成换行、后面的控制词降级成斜体字母（`\nu` 显示成
 # "nu"）。数值门禁看不见，渲染才看得见 ⇒ 全文当场判：模式 = 两个及以上反斜杠紧跟字母；
@@ -2636,7 +2636,7 @@ def yukawa_section():
           '允许集立即换成 $16$ 的共轭而不是原来那批名字（$\\Rightarrow$ 共轭映射真的在跑）；'
           '把双线性的两个因子换成同一条 $SU(2)_R$ 串里的**带电**伙伴，所需权重立刻落到 '
           '$\\Delta_R$ 的**双重带电**分量 $\\Rightarrow$ "$Q=0$ 才允许取期望值"这条物理输入'
-          '确实在起决定作用。两次的植入前后对照都印在 §15 对应行的备注里。', '',
+          '确实在起决定作用。两次的植入前后对照都印在 §16 对应行的备注里。', '',
           '**本节的边界**（不进门禁，故明写）：', '',
           '* 只判 **d=4**（可重整）通道，且只判到"哪些表示允许出现"。哪个拷贝与哪一代费米子耦合、'
           '系数多大、$CP$ 结构如何，**都不在本仪器覆盖范围内** $\\Rightarrow$ **L10 未关闭**。',
@@ -5070,6 +5070,359 @@ def run_residual422_layer():
     return p
 
 
+G14 = {}                   # 报告 §13 的原始读数（与门禁同源，不在报告里另算一遍）
+
+PW_DEN = (6, 12, 24, 60)   # $t$ 网格步长的四个分母：核会不会跟着网格走，逐档数出来
+
+
+def run_perweight_layer():
+    r"""R14：把 3221 侧中心元的枚举从"行标号"搬到"逐权重"，做成两套账的交叉读数。
+
+    §11 那条边界的原文是"中心元的枚举只用行标号与 $B-L$，没有逐个展开多重集的权重
+    $\\Rightarrow$ 它数的是'哪些中心元在整个在场谱上平凡'，与 §5 的逐权重分支是两套账"。
+    本层不引入任何新的李论输入，只把那句话兑成读数：同一批候选中心元、同一个相位公式，
+    把"对谁平凡"从行标号条件换成**逐权重**条件——标签走 `Subsystem.labels`（`ipp` 现投影到
+    单根）、$B-L$ 走 `chg` 的点积，与 `branching` 的 Klimyk 交错和是两条互不共享算术的代码
+    路径。三问：
+      (i) 两套账各自的**形变**（一条条件即 $C\\to\\mathbb Q/\\mathbb Z$ 的一个特征标）集合
+          是否相等——这是比"核相等"强得多的statement：核相等只要求两个集合一样大；
+      (ii) 一条 3221 子多重态内部 $B-L$、Dynkin 标签、中心相位三件事是否恒定（三条判法走
+          三条算术：点积 / Cartan 逆矩阵判整 / 生成元上的相位比对）；
+      (iii) 核换不换数；那批条件里到底几条在起决定作用（冗余度）、把相位拆成两半各自要求
+          平凡会留下什么（半条件对照）、$t$ 的网格步长是不是判据的一部分（四档对照）。
+    """
+    p = True
+    names = sorted(r['name'] for r in TABLE if r['name'] in NAMED)
+    cv = 'A' if RESID.get('triality_sign') == '+' else 'B'
+    C = cen_elements()
+    GEN = [(1, 0, 0, F(0)), (0, 1, 0, F(0)), (0, 0, 1, F(0)), (0, 0, 0, F(1, CEN_T_DEN))]
+
+    def sig(lab, bl, c=None):
+        r"""条件 $\\to$ 形变：它在四个生成元上的相位（$\\in(\\mathbb Q/\\mathbb Z)^4$）。"""
+        return tuple(cen_phase(g, lab, bl, c or cv) for g in GEN)
+
+    def phase_of(sc, x):
+        r"""第三条算术路：只吃形变（生成元上的四个值）反读任意群元上的相位。"""
+        return g_mod1(F(x[0]) * sc[0] + F(x[1]) * sc[1] + F(x[2]) * sc[2] +
+                      F(int(x[3] * CEN_T_DEN)) * sc[3])
+
+    # ---- 甲账：R12.1 那批行标号条件，原样重数一遍并当场与 §11 的产出对账
+    ROWS = {}
+    for nm in names:
+        ROWS[nm] = [(tuple(r['labels']), F(r['bl']))
+                    for r in branching(irrep(NAMED[nm])[1], SUB_3221)]
+    nrow_all = sum(len(v) for v in ROWS.values())
+    spec = sorted(set(pr for v in ROWS.values() for pr in v))
+    owners = dict((k, [nm for nm in names if k in ROWS[nm]]) for k in spec)
+    gam_row = dict((c, set(x for x in C
+                     if all(cen_phase(x, lab, bl, c) == 0 for lab, bl in spec)))
+                   for c in ('A', 'B'))
+    G = gam_row[cv]
+
+    # ---- 同态引理：形变（四个生成元上的值）唯一决定整格上的取值
+    hom_bad = [(x, lab, bl) for x in C for lab, bl in spec
+               if phase_of(sig(lab, bl), x) != cen_phase(x, lab, bl, cv)]
+    charA = set(sig(*k) for k in spec)
+    add_out = [(a, b) for a in sorted(charA) for b in sorted(charA)
+               if tuple(g_mod1(F(a[i]) + F(b[i])) for i in range(4)) not in charA]
+
+    # ---- 乙账：逐权重。标签与 $B-L$ 都由权重当场算，不取行标号
+    A3221 = [[int(2 * ip(SUB_3221.simples[i], SUB_3221.simples[j]) /
+                  ip(SUB_3221.simples[j], SUB_3221.simples[j])) for j in range(4)]
+             for i in range(4)]
+    invA3 = inverse_rows(A3221)
+    assert all(sum(F(A3221[i][k]) * F(invA3[k][j]) for k in range(4)) == F(int(i == j))
+               for i in range(4) for j in range(4)), '3221 半单 Cartan 的逆没验成双向逆'
+    condB = {}
+    nsub, ndwt, nwtm, nwtmn, nwt, dimsum = 0, 0, 0, 0, 0, 0
+    bl_mis, root_mis, ph_mis = [], [], []
+    name_rows = []
+    for nm in names:
+        ms = irrep(NAMED[nm])[1]
+        mdim = sum(ms.values())
+        dimsum += mdim
+        wb, msub, mwtm, mwtmn, wrv, wsv = {}, 0, 0, 0, set(), set()
+        for row in branching(ms, SUB_3221):
+            sub = sub_irrep(row['wt'], SUB_3221)
+            nsub += 1
+            msub += 1
+            ndwt += len(sub)
+            lab0, bl0 = tuple(row['labels']), F(row['bl'])
+            wrv.add(sig(lab0, bl0))
+            for mu, k in sub.items():
+                nwtm += k
+                mwtm += k
+                mwtmn += k * row['n']
+                nwtmn += k * row['n']
+                lab, bl = SUB_3221.labels(mu), chg(mu, BL)
+                condB[(lab, bl)] = condB.get((lab, bl), 0) + 1
+                wb[(lab, bl)] = wb.get((lab, bl), 0) + 1
+                wsv.add(sig(lab, bl))
+                if bl != bl0:
+                    bl_mis.append((nm, lab0, lab, str(bl)))
+                d = [int(lab0[i]) - int(lab[i]) for i in range(4)]
+                if any(sum(F(invA3[i][j]) * d[j] for j in range(4)).denominator != 1
+                       for i in range(4)):
+                    root_mis.append((nm, lab0, lab))
+                if any(cen_phase(g, lab, bl, cv) != cen_phase(g, lab0, bl0, cv) for g in GEN):
+                    ph_mis.append((nm, lab0, lab))
+        nwt += len(wb)
+        name_rows.append({'rep': nm, 'nsub': msub, 'nwt': len(wb), 'nwtm': mwtm,
+                          'nwtmn': mwtmn, 'dim': mdim, 'nrow': len(set(ROWS[nm])),
+                          'chaR': len(set(sig(*k) for k in set(ROWS[nm]))),
+                          'chaW': len(wsv), 'eq': wrv == wsv})
+    charB = set(sig(*k) for k in condB)
+    novel = sorted(set(condB) - set(spec))
+    reps_n = [r['rep'] for r in name_rows if r['nwtmn'] != r['nwtm']]
+    assert len(condB) == 365 and nwt == 663 and ndwt == 811, \
+        '乙账对象数与探针读数不符：%d/%d/%d' % (len(condB), nwt, ndwt)
+    assert all(r['nwtmn'] == r['dim'] for r in name_rows), \
+        '逐表示的多重集对账不闭合：%s' % [r['rep'] for r in name_rows if r['nwtmn'] != r['dim']]
+
+    # ---- 核：乙账（两约定）+ 第三条算术路（由形变反读）
+    gam_wt = dict((c, set(x for x in C
+                    if all(cen_phase(x, lab, bl, c) == 0 for lab, bl in condB)))
+                  for c in ('A', 'B'))
+
+    def mask(sc):
+        m = 0
+        for i, x in enumerate(C):
+            if phase_of(sc, x) != 0:
+                m |= 1 << i
+        return m
+
+    FULL = (1 << len(C)) - 1
+    mC = dict((k, mask(sig(*k))) for k in spec)
+
+    def ker_size(ms):
+        u = 0
+        for m in ms:
+            u |= m
+        return bin(FULL & ~u).count('1')
+
+    gam_mask = dict((c, ker_size([mask(sig(lab, bl, c)) for lab, bl in spec]))
+                    for c in ('A', 'B'))
+    ess = [k for k in spec if ker_size([mC[y] for y in spec if y != k]) != len(G)]
+    one_pin = [k for k in spec if ker_size([mC[k]]) == len(G)]
+    one_min = min(ker_size([mC[k]]) for k in spec)
+    pairs = [(a, b) for i, a in enumerate(spec) for b in spec[i + 1:]
+             if ker_size([mC[a], mC[b]]) == len(G)]
+    order, used = [], set()
+    while ker_size([mC[k] for k in order]) != len(G) and len(order) < 8:
+        best = min((k for k in spec if k not in used),
+                   key=lambda k: (ker_size([mC[q] for q in order] + [mC[k]]), k[0], k[1]))
+        order.append(best)
+        used.add(best)
+    core_ess = all(ker_size([mC[q] for q in order if q != k]) != len(G) for k in order)
+    core_reps = sorted(set(n for k in order for n in owners[k]))
+    pair_reps = sorted(set(n for ab in pairs for k in ab for n in owners[k]))
+
+    # ---- 半条件对照：把相位拆成"半单部分"与"$U(1)_{B-L}$ 部分"各自要求平凡
+    def half_s(x, lab):
+        pp, qq, lL, lR = lab
+        tri = (pp + 2 * qq) if cv == 'A' else (2 * pp + qq)
+        return g_mod1(F(x[0] * tri, 3) + F(x[1] * lL, 2) + F(x[2] * lR, 2))
+
+    Gs = set(x for x in C if all(half_s(x, lab) == 0 for lab, bl in spec))
+    Gu = set(x for x in C if all(g_mod1(F(x[3]) * F(bl)) == 0 for lab, bl in spec))
+
+    # ---- 网格对照：$t$ 的步长换档（乙账按形变去重后参与，条件与形变一一对应到核为止）
+    repB = sorted(set(condB), key=lambda k: (sig(*k), k[0], k[1]))
+    keep, seen = [], set()
+    for k in repB:
+        if sig(*k) not in seen:
+            seen.add(sig(*k))
+            keep.append(k)
+    grid = []
+    for den in PW_DEN:
+        CC = [(a3, aL, aR, F(t, den)) for a3 in range(3) for aL in range(2)
+              for aR in range(2) for t in range(den * CEN_U_PER)]
+        ka = set(x for x in CC if all(cen_phase(x, lab, bl, cv) == 0 for lab, bl in spec))
+        kb = set(x for x in CC if all(cen_phase(x, lab, bl, cv) == 0 for lab, bl in keep))
+        grid.append({'den': den, 'ncand': len(CC), 'kA': len(ka), 'kB': len(kb),
+                     'embed': G <= ka and G <= kb,
+                     'same': ka == G and kb == G})
+
+    G14.update({'cv': cv, 'ncand': len(C), 'nrep': len(names), 'nrow_all': nrow_all,
+                'maxdim': GLOB.get('maxdim'),
+                'nspec': len(spec), 'charA': len(charA), 'charB': len(charB),
+                'hom_pairs': len(hom_bad) * 0 + len(C) * len(spec), 'hom_bad': len(hom_bad),
+                'add_out': len(add_out), 'nsub': nsub, 'nwt': nwt, 'nwtm': nwtm,
+                'ndwt': ndwt, 'nwtmn': nwtmn, 'reps_n': reps_n,
+                'detA3': abs(g_det(A3221)),
+                'dimsum': dimsum, 'ncond': len(condB), 'novel': len(novel),
+                'eqAB': charA == charB, 'onlyA': len(charA - charB), 'onlyB': len(charB - charA),
+                'name_rows': name_rows, 'eq_per_name': sum(1 for r in name_rows if r['eq']),
+                'bl_mis': len(bl_mis), 'root_mis': len(root_mis), 'ph_mis': len(ph_mis),
+                'gamA': len(gam_row['A']), 'gamB': len(gam_row['B']),
+                'wtA': len(gam_wt['A']), 'wtB': len(gam_wt['B']), 'gam': len(G),
+                'gam_mask': gam_mask[cv], 'gamMaskA': gam_mask['A'],
+                'gamMaskB': gam_mask['B'], 'gam_r12': len(GLOB.get('gam') or []),
+                'same_r12': gam_row[cv] == set(GLOB.get('gam') or []),
+                'ess': len(ess), 'one_pin': len(one_pin), 'one_min': one_min,
+                'pairs': len(pairs), 'pairs_tot': len(pairs) * 0 + len(spec) * (len(spec) - 1) // 2,
+                'pair_reps': pair_reps, 'core': [[list(map(str, k[0])), str(k[1]), owners[k]]
+                                                 for k in order],
+                'core_len': len(order), 'core_ess': core_ess, 'core_reps': core_reps,
+                'Gs': len(Gs), 'Gu': len(Gu), 'Gint': len(Gs & Gu), 'diag': len(G - (Gs | Gu)),
+                'grid': grid, 'keepB': len(keep),
+                'tden': sorted(set(x[3].denominator for x in G))})
+
+    # ---- R14.0 形变这个坐标用得正当，且这批形变不是子群
+    p &= ok('R14.0',
+            r'一条 3221 条件 $(p,q,l_L,l_R)_{B-L}$ 给出 $C\to\mathbb Q/\mathbb Z$ 的一个特征标'
+            r'$\Rightarrow$ 它由在四个生成元上的取值唯一决定。这条**同态引理**不是本层的假设：'
+            '在全部 %d 个候选群元 $\\times$ %d 条形变条件共 %d 组上，把"由四个生成元的值整线性'
+            '组合反读出来的相位"与 `cen_phase` 的原读法逐组比对，违例 %d $\\Rightarrow$ 本层拿那个'
+            '四元组当"形变"的坐标是恒等而不是近似。读数：在场 %d 个表示的 %d 条 3221 分支行去重成'
+            '%d 条条件，它们只给出 %d 种形变（一条子多重态内恒定，见 R14.2）。顺带一条否定读数：'
+            '%d 对形变之和仍在这 %d 个里、%d 对不在 $\\Rightarrow$ 这批形变**不是**对偶群的子群，'
+            '它只是荷表在中心格上的像（与 R13.6 那条"半群读数严格粗于逐元读数"同族）'
+            % (len(C), len(spec), len(C) * len(spec), len(hom_bad), len(names), nrow_all,
+               len(spec), len(charA), len(charA) ** 2 - len(add_out), len(charA), len(add_out)),
+            not hom_bad and len(spec) == 61 and nrow_all == 99 and len(charA) == 24 and
+            len(add_out) == 158 and len(charA) ** 2 - len(add_out) == 418 and
+            len(C) * len(spec) == 26352 and len(G) == 6,
+            '形变四元组（mod 1）%s；加法例外 %d 对' %
+            ([[str(x) for x in v] for v in sorted(charA)], len(add_out)))
+
+    # ---- R14.1 两套账合拢：形变集合相等（全局与逐表示）
+    p &= ok('R14.1',
+            '乙账（逐权重）把甲账那 %d 条分支行（即 %d 个子多重态）展开成权重：按子多重态去重 %d 条、'
+            '按重数而不含行重数 %d 条。把每条权重当场兑成 $(3221$ 标签 $,B-L)$ 条件：逐表示去重 %d 条、'
+            '全局去重 %d 条 $\\Rightarrow$ 其中 %d 条**根本不在**甲账那 %d 条行标号条件里'
+            '（它们是子多重态的非最高权，行标号那本账看不见）$\\Rightarrow$ 乙账严格更细。但两套账'
+            '的形变**按集合相等**：%d 种对 %d 种，乙独有 %d、甲独有 %d；而且 %d/%d 个表示'
+            '**各自**的两套账也集合相等 $\\Rightarrow$ 多出来的那 %d 条条件一条也没有产生新的特征标'
+            '。这正是 §11 那条边界的判决：它不是两本会给出不同答案的账，而是同一批 %d 个特征标的'
+            '两种记法 $\\Rightarrow$ **第十三项登记的边界 (b) 就此关掉**'
+            % (nrow_all, nsub, ndwt, nwtm, nwt, len(condB), len(novel), len(spec),
+               len(charA), len(charB), len(charB - charA), len(charA - charB),
+               sum(1 for r in name_rows if r['eq']), len(names), len(novel), len(charA)),
+            charA == charB and novel and len(novel) == 304 and len(spec) == 61 and
+            len(condB) == 365 and nsub == nrow_all == 99 and ndwt == 811 and nwt == 663 and
+            len(charA) == len(charB) == 24 and
+            not (charA - charB) and not (charB - charA) and
+            sum(1 for r in name_rows if r['eq']) == len(names) == 11 and
+            all(r['chaW'] == r['chaR'] for r in name_rows),
+            '甲条件 %d/形变 %d；乙条件 %d/形变 %d；乙独有 %d；甲独有 %d；逐表示相等 %d/%d' %
+            (len(spec), len(charA), len(condB), len(charB), len(charB - charA),
+             len(charA - charB), sum(1 for r in name_rows if r['eq']), len(names)))
+
+    # ---- R14.2 一条子多重态内部的三件恒等事（三条算术）+ 多重集对账
+    p &= ok('R14.2',
+            '子多重态内部必须恒定，而这三件事走三条互不共享算术的判法：甲 $B-L$ 用 `chg` 逐权重'
+            '点积（该行是否整条落在同一个 $B-L$ 上）、乙 拿 3221 半单 Cartan 的逆矩阵判"行最高权'
+            '减逐权重"的标签差**在不在根格里**（%s 由单根现算、$|\\det|=%d$，逆矩阵当场验成双向逆）、'
+            '丙 相位在四个生成元上逐条比对。读数（%d 个子多重态、按子多重态去重 %d 条权重）：'
+            '甲违例 %d、乙违例 %d、丙违例 %d $\\Rightarrow$ 三条同时为零 $\\Rightarrow$ "中心元在一条'
+            '子多重态上作用为标量"是从权重格**算出来**的，不是行标号表的定义重述。另有三条算术'
+            '之外的一条**多重集对账**：把逐权重账按行的重数 $n$ 求和得 %d 条，与母表示维数之和 %d'
+            '（即 $\\sum_\\lambda \\dim V_\\lambda$）**逐项相等** $\\Rightarrow$ 乙账展开的确实就是母'
+            '表示的权重多重集，不是一份自造的对象；不含 $n$ 的那份读数是 %d 条，两者之差 %d 条'
+            '全部来自行重数 $n>1$ 的那几行（逐表示对账后落在 %s 上）。诚实登记：重数在本层只进这一'
+            '条对账——相位是权重的标量函数，把一条条件重复 %d 次不会改变任何一次判定，所以本层是'
+            '**跨实现的对账**而不是新发现 $\\Rightarrow$ 它关掉的是"两套账"这条边界，不是任何物理判断'
+            % (A3221, abs(g_det(A3221)), nsub, ndwt, len(bl_mis), len(root_mis), len(ph_mis),
+               nwtmn, dimsum, nwtm, dimsum - nwtm, '、'.join('$%s$' % x for x in G14['reps_n']),
+               nwtm),
+            A3221 == [[2, -1, 0, 0], [-1, 2, 0, 0], [0, 0, 2, 0], [0, 0, 0, 2]] and
+            abs(g_det(A3221)) == 12 and not bl_mis and not root_mis and not ph_mis and
+            nsub == 99 and ndwt == 811 and nwt == 663 and len(condB) == 365 and
+            nwtm == 836 and nwtmn == dimsum == 877 and dimsum - nwtm == 41 and
+            all(r['nwtmn'] == r['dim'] for r in name_rows) and
+            all(r['nwt'] <= r['nwtm'] for r in name_rows) and
+            sum(r['nwtm'] for r in name_rows) == nwtm and
+            sum(r['dim'] for r in name_rows) == dimsum and
+            G14['reps_n'] == ['120', '144', '210'] and
+            sum(r['dim'] - r['nwtm'] for r in name_rows) == 41,
+            'Cartan %s；$|\\det|=%d$；子多重态 %d；按子多重态去重权重 %d；按重数不含 $n$ %d；'
+            '含 $n$ %d；母表示维数和 %d；违例 %d/%d/%d' % (
+                A3221, abs(g_det(A3221)), nsub, ndwt, nwtm, nwtmn, dimsum,
+                len(bl_mis), len(root_mis), len(ph_mis)))
+
+    # ---- R14.3 换账不换群：三条路 + 两种约定 + 与 §11 逐元相等
+    p &= ok('R14.3',
+            '核：把"对甲账 %d 条行标号条件平凡"换成"对乙账 %d 条逐权重条件平凡"，两种 triality '
+            '约定各数一遍 $\\Rightarrow$ 约定甲 %d 对 %d、约定乙 %d 对 %d（前 = 行标号账、'
+            '后 = 逐权重账）$\\Rightarrow$ 两约定下都换账不换群。再走**第三条**算术路：完全不碰 '
+            '`cen_phase`，只拿 %d 个形变按 R14.0 那条同态引理把整格相位反读出来取零点交集 '
+            '$\\Rightarrow$ %d 个 $\\Rightarrow$ 三条路同一个集合，且与 §11 的 $\\Gamma$（%d 个）'
+            '**逐元**相等 $\\Rightarrow$ 本层没有把 $\Gamma$ 数成第二个数，它数出来的是同一个'
+            % (len(spec), len(condB), len(gam_row['A']), len(gam_wt['A']),
+               len(gam_row['B']), len(gam_wt['B']), len(charA), gam_mask[cv], len(G)),
+            gam_row['A'] == gam_wt['A'] and gam_row['B'] == gam_wt['B'] and
+            gam_mask['A'] == gam_mask['B'] == len(G) and
+            len(gam_row['A']) == len(gam_row['B']) == 6 and
+            gam_row[cv] == set(GLOB.get('gam') or []) and
+            len(C) == GLOB.get('ncand') == 432 and cv == GLOB.get('conv') and
+            len(spec) == GLOB.get('nspec'),
+            '候选 %d；核（行标号/逐权重/形变反读/R12）%d/%d/%d/%d；约定 %s' %
+            (len(C), len(gam_row[cv]), len(gam_wt[cv]), gam_mask[cv],
+             len(GLOB.get('gam') or []), cv))
+
+    # ---- R14.4 冗余度：钉住核只需要两条，但"哪两条"是算法的产物
+    p &= ok('R14.4',
+            '%d 条条件（%d 种形变）里"删一条就让核变大"的有 %d 条 $\\Rightarrow$ 条件集严重超定。'
+            '单条最好的一条也只把核从 %d 收到 %d（$>\\Gamma$ 的 %d）$\\Rightarrow$ 没有任何一条荷'
+            '条件单独钉得住 $\\Gamma$。贪心规则（每步取使核最小的一条，并列按标签与 $B-L$ 的字典序'
+            '取第一个）%d 步到位，且到位后每删一条即变大 $\\Rightarrow$ 两条就够。但**核心不唯一**：'
+            '满足"两条即钉住"的条件对共 %d 对（占 %d 对的 %.1f%%），它们涉及全部 %d 个在场表示，'
+            '而贪心选出的那两条只挂在 %d 个表示上（%s）$\\Rightarrow$ "哪两条"是算法的产物、'
+            '"两条就够"才是读数（这条按本仓库的规矩登记：winner 不能替 population 作证）'
+            % (len(spec), len(charA), len(ess), len(C), one_min, len(G), len(order),
+               len(pairs), len(pairs) * 0 + len(spec) * (len(spec) - 1) // 2,
+               100.0 * len(pairs) / (len(spec) * (len(spec) - 1) // 2), len(pair_reps),
+               len(core_reps), '、'.join('$%s$' % x for x in core_reps)),
+            not ess and not one_pin and len(order) == 2 and core_ess and one_min == 12 and
+            len(pairs) == 213 and len(pair_reps) == len(names) == 11 and
+            core_reps == ['144', '16', '16̄'] and len(core_reps) < len(pair_reps) and
+            len(pairs) * 0 + len(spec) * (len(spec) - 1) // 2 == 1830,
+            '单条必需 %d；单条最小核 %d；两条即钉住 %d/%d 对；贪心核心 %s' %
+            (len(ess), one_min, len(pairs), len(spec) * (len(spec) - 1) // 2,
+             [[list(map(str, k[0])), str(k[1])] for k in order]))
+
+    # ---- R14.5 半条件对照：那 6 个元全是两半互相抵消出来的
+    p &= ok('R14.5',
+            '把相位拆成两半各自要求平凡：只要求**半单部分**（色 $\mathbb Z_3$ 与两个弱 '
+            r'$\mathbb Z_2$）平凡 $\\Rightarrow$ 活 %d 个；只要求 $U(1)_{B-L}$ **那半边**平凡 '
+            r'$\\Rightarrow$ 活 %d 个；两半都要求 $\\Rightarrow$ 活 %d 个（就是 $\Gamma$）。'
+            '两半之交只剩 %d 个（单位元）$\\Rightarrow$ **交比 $\Gamma$ 还小** $\\Rightarrow$ '
+            r'$\Gamma$ 里除单位元外那 %d 个元在两半上都非平凡，它们靠 $U(1)_{B-L}$ 那一项'
+            '与中心项**逐条互相抵消**才活下来 $\\Rightarrow$ R12.1 那句"它是中心与 $U(1)$ 的'
+            '对角粘合"从此是一个**计数**读数，不是描述。存活元实际只用 $t$ 的分母 %s'
+            % (len(Gs), len(Gu), len(G), len(Gs & Gu), len(G - (Gs | Gu)),
+               '、'.join(str(x) for x in sorted(set(x[3].denominator for x in G)))),
+            len(Gs) == 36 and len(Gu) == 12 and len(Gs & Gu) == 1 and
+            Gs & Gu == set([CEN_IDENT]) and len(G - (Gs | Gu)) == 5 and
+            all(x[1:] != (0, 0, 0) for x in G if x != CEN_IDENT) and
+            sorted(set(x[3].denominator for x in G)) == [1, 2],
+            '半单半边 %d；$U(1)$ 半边 %d；交 %d；全条件 %d；两半皆非平凡的核元 %d' %
+            (len(Gs), len(Gu), len(Gs & Gu), len(G), len(G - (Gs | Gu))))
+
+    # ---- R14.6 网格步长不是判据的一部分
+    p &= ok('R14.6',
+            r'$t$ 的网格步长是本层唯一的自由参数（默认 $1/%d$，周期 $%d$）。把它换成 %s 四档'
+            r'$\Rightarrow$ 候选元数 %s，逐档重数核：甲账 %s、乙账 %s $\\Rightarrow$ 四档全部'
+            '等于 $\Gamma$ 的 %d 个，且 $1/%d$ 那一档的核在原格里（旧核嵌入 %s）'
+            r'$\Rightarrow$ 核既不随网格加密而变小、也不随粗化而变大 $\\Rightarrow$ "哪个元贴在'
+            '网格最细那一格上"这种假象不存在（R12.1 那条"存活元只用分母 1、2"在这里以四档对照'
+            '重验一遍；乙账按形变去重成 %d 条代表条件参与）'
+            % (CEN_T_DEN, CEN_U_PER, '、'.join('$1/%d$' % d['den'] for d in grid),
+               '、'.join(str(d['ncand']) for d in grid),
+               '、'.join(str(d['kA']) for d in grid), '、'.join(str(d['kB']) for d in grid),
+               len(G), CEN_T_DEN, '、'.join('成立' if d['embed'] else '**不成立**'
+                                           for d in grid), len(keep)),
+            len(grid) == 4 and all(d['same'] and d['embed'] and d['kA'] == d['kB'] == len(G)
+                                   for d in grid) and
+            [d['ncand'] for d in grid] == [216, 432, 864, 2160] and
+            [d['den'] for d in grid] == list(PW_DEN) and len(keep) == len(charA) == 24,
+            '步长 %s；候选 %s；甲核 %s；乙核 %s' %
+            ([d['den'] for d in grid], [d['ncand'] for d in grid],
+             [d['kA'] for d in grid], [d['kB'] for d in grid]))
+    return p
+
+
 def residual_section():
 
     """报告 §9：$B-L$ 破缺后残留哪个离散规范对称性（R10）。"""
@@ -5529,7 +5882,13 @@ def global_section():
          '**本节的边界**（不进门禁，故明写）：', '',
          '* 中心元的枚举只用**行标号**（不可约表示的 Dynkin 标号）与 $B-L$，没有逐个展开多重集的'
                r'权重 $\Rightarrow$ 它数的是"哪些中心元在整个在场谱上平凡"，与 §5 的逐权重分支是'
-               '两套账；两套账的交叉点已由 R12.0 那两条独立判法承担。',
+               '两套账；两套账的交叉点已由 R12.0 那两条独立判法承担。'
+               + (r' 当年那条"两套账"现已做成读数（§13/R14）：把"对谁平凡"换成逐权重条件后甲账 '
+                  r'%d 条、乙账 %d 条（其中 %d 条甲账没有），两套账的形变**按集合相等**（%d 种），'
+                  r'三条独立算术路数出的核都是 $|\Gamma|=%d$ 且与本节逐元相等 $\Rightarrow$ 换账'
+                  r'不换群；本节这条边界因此关掉，判决不变。'
+                  % (G14['nspec'], G14['ncond'], G14['novel'], G14['charA'], G14['gam'])
+                  if G14.get('nspec') else ''),
          r'* 422 一侧的 $\Gamma$ 只有格一条路（`SUB_422` 的单根不是 $A_3$ 链 $\Rightarrow$ triality '
                '公式不能直接代），故本层不宣称那里有第二条出处。',
          r'* 存活群的"结构"一列读的是阶分布；那 %d 个结构类各自定名（%s），名字来自"穷举该阶上全部'
@@ -5542,8 +5901,122 @@ def global_section():
                '若只取链探针字面声明的谱，$P/Q$ 类会换成那一支的读数（与 §9/R10.10、§10/R11.10 '
                r'同一条条件性 $\Rightarrow$ 本节不引入新的条件判决，也不改动它们的）。'
                % (g['maxdim'], g['nrep']),
-         '* 本节回答的是 §14 那条边界（完整残留群含整体形式），**不**回答 L10：耦合统一仍缺二环跑动'
+         '* 本节回答的是 §15 那条边界（完整残留群含整体形式），**不**回答 L10：耦合统一仍缺二环跑动'
                r'与阈值修正 $\Rightarrow$ **L10 未关闭**。', '']
+    return L
+
+
+def perweight_section():
+    r"""报告 §13：行标号账与逐权重账的交叉（R14 层）。
+
+    全部读数取自 G14（`run_perweight_layer` 的产出），本节不重算任何东西。
+    """
+    g = G14
+    if not (g.get('name_rows') and g.get('grid') and g.get('core')):
+        return ['', '## 13. 行标号账与逐权重账（R14）', '', '本层未跑通 ⇒ 不印任何读数。', '']
+    L = ['', '## 13. 行标号账与逐权重账（R14）', '',
+         '§11 的边界里写着："中心元的枚举只用**行标号**与 $B-L$，没有逐个展开多重集的权重 '
+         r'$\Rightarrow$ 它与 §5 的逐权重分支是两套账。"本节去把这句话兑成读数：同一批候选中心元、'
+         '同一个相位公式，把"对谁平凡"从行标号条件换成**逐权重**条件（标签由 `ipp` 现投影到 3221 '
+         '的单根、$B-L$ 由 `chg` 现点积，与 `branching` 的 Klimyk 交错和互不共享算术），然后问'
+         '两套账给的**形变**（一条条件即 $C\\to\\mathbb Q/\\mathbb Z$ 的一个特征标）是不是同一批。'
+         '本节不引入新的李论输入，也不改动 §11 的任何判决。', '',
+         '### 13.1 两套账的对象数（R14.1）', '',
+         '| 记法 | 对象 | 条数 | 形变种数 |', '|---|---|---|---|',
+         '| 甲 分支行（未去重） | $\\dim\\le%d$ 在场 %d 个表示 ↓3221 | %d | %d |' %
+         (g['maxdim'], g['nrep'], g['nrow_all'], g['charA']),
+         '| 甲 行标号条件 | $(p,q,l_L,l_R)_{B-L}$ 去重 | %d | %d |' % (g['nspec'], g['charA']),
+         '| 乙 逐权重 | %d 个子多重态内的权重（按子多重态去重 %d 条、按重数 %d 条、含行重数 %d 条） '
+         '| %d（逐表示去重） | %d |' %
+         (g['nsub'], g['ndwt'], g['nwtm'], g['nwtmn'], g['nwt'], g['charB']),
+         '| 乙 逐权重条件 | 去掉重数与跨表示的重复 | %d（其中 %d 条甲账没有） | %d |' %
+         (g['ncond'], g['novel'], g['charB']),
+         '',
+         '两套账的形变**按集合相等**：乙独有 %d 种、甲独有 %d 种，且 %d/%d 个表示各自的两套账也'
+         '集合相等 $\\Rightarrow$ 逐权重那本多出来的 %d 条条件一条也没产生新的特征标 $\\Rightarrow$ '
+         '§11 那条"两套账"的边界关掉：同一批 %d 个特征标的两种记法，不是两本会给出不同答案的账。'
+         % (g['onlyB'], g['onlyA'], g['eq_per_name'], g['nrep'], g['novel'], g['charA']), '',
+         '| 表示 | 维数 | 子多重态 | 不同权重 | 按重数（不含行重数） | 按重数（含行重数） |'
+         ' 对账 | 行条件 | 行形变 | 权重形变 | 两套账相等 |',
+         '|---|---|---|---|---|---|---|---|---|---|---|']
+    for r in g['name_rows']:
+        L.append('| %s | %d | %d | %d | %d | %d | %s | %d | %d | %d | %s |' %
+                 (tex_name(r['rep']), r['dim'], r['nsub'], r['nwt'], r['nwtm'], r['nwtmn'],
+                  '是' if r['nwtmn'] == r['dim'] else '**否**',
+                  r['nrow'], r['chaR'], r['chaW'], '是' if r['eq'] else '**否**'))
+    L += ['', '### 13.2 子多重态内部的三件恒等事与多重集对账（R14.2）', '',
+          '一条 3221 子多重态内部，下面三件事必须恒定，而三条判法走三条互不共享的算术：'
+          r'$B-L$ 用 `chg` 逐权重点积；Dynkin 标签之差用 3221 半单 Cartan 的逆矩阵判"在不在'
+          r'根格里"（$|\det|=%d$，逆矩阵当场验成双向逆）；中心相位在四个生成元上逐条比对。'
+          '读数（%d 个子多重态、按子多重态去重 %d 条权重）：违例 %d / %d / %d $\\Rightarrow$ '
+          '三条同时为零 $\\Rightarrow$ "中心元在一条子多重态上作用为标量"是从权重格算出来的，'
+          '不是行标号表的定义重述。上一条的逐表示表里那一列"按重数（不含行重数）"对若干表示小于'
+          '维数（合计 %d 对 %d），因为分支行本身带重数 $n$；把 $n$ 乘回去就对上了'
+          '（合计 %d 对 %d，逐表示全对，见上表"对账"列）$\\Rightarrow$ 乙账展开的确是母表示的权重'
+          '多重集。行重数只影响哪几个表示需要乘 $n$：%s。' %
+          (g['detA3'], g['nsub'], g['ndwt'], g['bl_mis'], g['root_mis'], g['ph_mis'],
+           g['nwtm'], g['dimsum'], g['nwtmn'], g['dimsum'], '、'.join(g['reps_n'])), '',
+          '### 13.3 核与 $\\Gamma$：三条路、两种约定（R14.0/R14.3）', '',
+          '| 路数 | triality 约定甲 A | triality 约定乙 B |', '|---|---|---|',
+          '| 甲 行标号条件（R12.1 原路） | %d | %d |' % (g['gamA'], g['gamB']),
+          '| 乙 逐权重条件（本层新增） | %d | %d |' % (g['wtA'], g['wtB']),
+          '| 丙 形变反读整格（不碰 `cen_phase`） | %d | %d |' %
+          (g['gamMaskA'], g['gamMaskB']),
+          '',
+          '三条路 + 两种 triality 约定 $\\Rightarrow$ 都是 %d 个，且与 §11 的 $\\Gamma$'
+          '（%d 个）**逐元**相等（同一个集合，不是另一个数）$\\Rightarrow$ 换账不换群。'
+          '形变那套坐标用得正当，靠的是 R14.0 在同一次运行里验掉的同态引理：%d 组'
+          '(群元, 条件) 上"由四个生成元反读"与 `cen_phase` 原读法逐组比对，违例 %d。'
+          '而 %d 种形变在逐点加法下有 %d 对之和落在集合外 $\\Rightarrow$ 它们**不是**对偶群的'
+          '子群，只是荷表在中心格上的像。' %
+          (g['gam'], g['gam_r12'], g['hom_pairs'], g['hom_bad'], g['charA'], g['add_out']), '',
+          '### 13.4 冗余度：钉住核要几条（R14.4）', '',
+          '| 条件集 | 核的大小 |', '|---|---|',
+          '| 全部 %d 条 | %d |' % (g['nspec'], g['gam']),
+          '| 单条最好的一条 | %d |' % g['one_min'],
+          '| 贪心核心 %d 条 | %d |' % (g['core_len'], g['gam']),
+          '| 只要求半单部分平凡 | %d |' % g['Gs'],
+          '| 只要求 $U(1)_{B-L}$ 半边平凡 | %d |' % g['Gu'],
+          '| 两半之交 | %d |' % g['Gint'],
+          '',
+          '"删一条就让核变大"的条件 %d 条 $\\Rightarrow$ 严重超定；单条最多把核从 %d 收到 %d；'
+          '贪心规则（每步取使核最小的一条，并列按标签与 $B-L$ 的字典序）%d 步到位、到位后每删'
+          '一条即变大。但**核心不唯一**：两条即钉住的条件对共 %d 对（占 %d 对的 %.1f%%），涉及'
+          '全部 %d 个在场表示，而贪心选出的那两条只挂在 %d 个表示上（%s）$\\Rightarrow$ "哪两条"'
+          '是算法的产物、"两条就够"才是读数。' %
+          (g['ess'], g['ncand'], g['one_min'], g['core_len'], g['pairs'], g['pairs_tot'],
+           100.0 * g['pairs'] / g['pairs_tot'], len(g['pair_reps']), len(g['core_reps']),
+           '、'.join('$%s$' % x for x in g['core_reps'])), '',
+          '核心两条（形变坐标下的代表条件）：%s' %
+          '；'.join('$%s_{%s}$（属于 %s）' %
+                    ('(%s)' % ','.join(k[0]), k[1], '、'.join('$%s$' % x for x in k[2]))
+                    for k in g['core']), '',
+          '### 13.5 $t$ 的网格步长不是判据的一部分（R14.5/R14.6）', '',
+          '| $t$ 步长 | 候选元数 | 甲账核 | 乙账核 | 旧核嵌入 |', '|---|---|---|---|---|']
+    for d in g['grid']:
+        L.append('| $1/%d$ | %d | %d | %d | %s |' %
+                 (d['den'], d['ncand'], d['kA'], d['kB'], '是' if d['embed'] else '**否**'))
+    L += ['', '四档步长跨 %d 倍分辨率 $\\Rightarrow$ 核恒为 %d 个、且每档都包含 $1/%d$ 那一档的核 '
+              r'$\Rightarrow$ 核既不随网格加密变小、也不随粗化变大。把相位拆成两半各自要求平凡'
+              '是另一条对照：只半单 %d 个、只 $U(1)_{B-L}$ %d 个、两半都要求 %d 个，而**两半之交'
+              '只剩单位元 %d 个**——比 $\Gamma$ 还小 $\\Rightarrow$ $\Gamma$ 内除单位元外那 %d 个'
+              '元在两半上都非平凡，靠两项**逐条互相抵消**才活下来 $\\Rightarrow$ §11 那句"中心与 '
+              r'$U(1)$ 的对角粘合"从此是一个计数读数。存活元实际只用 $t$ 的分母 %s。' %
+              (g['grid'][-1]['ncand'] // g['grid'][0]['ncand'], g['gam'], CEN_T_DEN, g['Gs'],
+               g['Gu'], g['gam'], g['Gint'], g['diag'],
+               '、'.join(str(x) for x in g['tden'])), '',
+          '**本节的边界**（不进门禁，故明写）', '',
+          r'* 重数不进判定：相位是权重的标量函数，把一条条件按重数（本层合计 %d 条权重）重复计入'
+          r'不改变任何一次判定 $\Rightarrow$ 重数只出现在 R14.2 那条多重集对账里；本节因此是'
+          '**跨实现的对账**（与 R13.1 的甲乙两路同族），不是新发现；它关掉的是"两套账"这条边界，'
+          '不动任何物理判断。' % g['nwtm'],
+          '* 形变集合在逐点加法下不封闭（%d 对之和在集合外）$\\Rightarrow$ 本节不称它是某个'
+          '对偶群的子群；%d 这个数是荷表的像的大小，不是群论不变量。' % (g['add_out'], g['charA']),
+          '* 贪心核心依赖那条并列规则（标签、$B-L$ 字典序）$\\Rightarrow$ 换一条并列规则就换'
+          '一对代表元；本层因此只钉"两条就够"与"多少对够用"，不钉"哪两条"。',
+          '* 本节回答的是 §15 那条"两套账"边界，**不**回答 L10：耦合统一仍缺二环跑动与阈值'
+          '修正 $\\Rightarrow$ **L10 未关闭**；本节也不引入新的条件判决，§9/§10/§11/§12 那条'
+          '"允许要读成若相应标量取期望值"的条件性原样下来。', '']
     return L
 
 
@@ -5681,16 +6154,16 @@ def residual422_section():
 
 def write_report(gates):
     (eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok, ch_ok,
-     res_ok, sel_ok, gl_ok, g422_ok) = gates
+     res_ok, sel_ok, gl_ok, g422_ok, pw_ok) = gates
     all_ok = (eng_ok and id_ok and phy_ok and nogo_ok and br_ok and xchk_ok and yuk_ok and
-              inv_ok and ch_ok and res_ok and sel_ok and gl_ok and g422_ok)
+              inv_ok and ch_ok and res_ok and sel_ok and gl_ok and g422_ok and pw_ok)
     L = ['# SO(10) 表示论报告（D5 权重格第一性推导）', '',
          '由 [so10_reps.py](so10_reps.py) 自动生成，**零第三方依赖**，全程整数格点 + 精确有理数。',
          '',
          '**唯一的李论输入**：D5 的 Dynkin 图（链 1–2–3，节点 3 分叉到 4 与 5）。',
          'Cartan 矩阵、正根、$\\rho$、基本权重、维数、权重重数、$\\mathrm{Sym}^2/\\wedge^2$ 分解、',
          '$B-L$ 谱、$\\Delta_R$ 承载判定、两条链的**完整分支规则**与 **d=4 Yukawa 通道表**'
-         '全部由它推出；每一步都有门禁（§15）。',
+         '全部由它推出；每一步都有门禁（§16）。',
          '',
          '## 0. 为什么做这个计算', '',
          '`so10_chain.py` 已把"给定内容下统不统一"变成可判定计算，但标量谱是**手工放置**的：',
@@ -5698,7 +6171,7 @@ def write_report(gates):
          '而被当作 $\\Delta_R$ 的那个三重态',
          '实际是 $B-L=0$、取自 $45_H$，**不能破 $B-L$**（链探针 S2.7）。',
          '本报告把"哪些 Higgs 表示能承担 $B-L$ 破缺"从**引用**变成**推导**。', '',
-         '**结论一览**（每条对应 §15 的门禁编号）：在 $\\dim\\le210$ 内，'
+         '**结论一览**（每条对应 §16 的门禁编号）：在 $\\dim\\le210$ 内，'
          '$10_H/\\overline{10}_H/16_H/\\overline{16}_H/45_H/54_H/144_H$ 里根本没有 $|B-L|=2$ '
          '的态（R5.1）；$120_H$ 有 $(1,1,1)_{\\pm2}$ 但那些态带 $|Q|=1$，一取期望值就破电磁'
          '（R5.8）；$210_H$ 的 $|B-L|=2$ 态全在 $(1,2,2)$ 里，取任何分量都破 $SU(2)_L$'
@@ -5721,7 +6194,10 @@ def write_report(gates):
          ' 那个 $\\mathbb{Z}_N$ 的两倍，却在 §10 的 SM 单态片上逐条同判 $\\Rightarrow$ §10'
           ' 的判决一个字不用改）。§12 再把 422 那条链的残留按 $SU(4)$ 权格重做（中心元改在'
           '特征标格上枚举、不代 triality 公式）$\\Rightarrow$ 逐通道重跑 §10 判据无一改判'
-          '$\\Rightarrow$ 判决也不随"选哪条链破 $B-L$"而变（R13）。'
+          '$\\Rightarrow$ 判决也不随"选哪条链破 $B-L$"而变（R13）。§13 再把 3221 侧中心元的'
+          '枚举从行标号搬到逐权重多重集（标签现投影、$B-L$ 现点积，与 Klimyk 交错和互不共享算术）'
+          '$\\Rightarrow$ 两套账的形变按集合相等、三条算术路数出的核不换数 $\\Rightarrow$ §11 那条'
+          '"两套账"的边界关掉，§9/§10/§11/§12 的判决一个字不用改（R14）。'
 
          % (len(TABLE), higgs_tex(YUKCH.get('allow', {}).get('sym', [])),
             higgs_tex(YUKCH.get('allow', {}).get('anti', [])),
@@ -5893,6 +6369,7 @@ def write_report(gates):
     L += selection_section()
     L += global_section()
     L += residual422_section()
+    L += perweight_section()
     z_cc = INV['ledger'][0]['zero'] if INV.get('ledger') else '（R8 未运行）'
     t126, t126b, p4 = (INV.get('tri', {}).get('126', '—'), INV.get('tri', {}).get('126̄', '—'),
                        INV.get('p4', '—'))
@@ -5932,6 +6409,14 @@ def write_report(gates):
               (len(G422['rows']), G422['nsing'],
                sum(1 for c in G422['ctl'] if c['inter']), len(G422['ctl']),
                '、'.join(plain_tex([c['rep']]) for c in G422['ctl'] if not c['inter'])))
+    pwcl = ('**R14 未跑通 ⇒ 本行不下结论**' if not pw_ok else
+            r'把"对谁平凡"从行标号条件换成逐权重条件（标签由 `ipp` 现投影、$B-L$ 由 `chg` 现点积，'
+            r'与 Klimyk 交错和互不共享算术）$\Rightarrow$ 甲账 %d 条条件、乙账 %d 条（其中 %d 条'
+            r'甲账根本没有），但两套账的形变按集合相等（%d 种对 %d 种，且 %d/%d 个表示各自也相等）；'
+            r'核走三条独立算术路、两种 triality 约定都数出 %d 个，且与 §11 逐元相等'
+            r'$\Rightarrow$ **换账不换群**，那条"两套账"的边界关掉（§13，R14.0–R14.6）'
+            % (G14['nspec'], G14['ncond'], G14['novel'], G14['charA'], G14['charB'],
+               G14['eq_per_name'], G14['nrep'], G14['gam']))
     if GLOB.get('bys'):
         glbd = (r'* 当年那条边界已**做成读数**（§11，R12.0–R12.5）：把 $SU(3)_c$、'
         r'$SU(2)_{L/R}$ 的中心与 $Spin(10)$ 的整体形式一起放上荷格，在 %d 个候选中心元上'
@@ -5954,7 +6439,7 @@ def write_report(gates):
         r' 的中心、规范群的整体形式（$Spin(10)$ 与它的商）都不在那张荷格里 $\Rightarrow$ 完整残留群'
         r' 可能是这里那个 $\mathbb{Z}_N$ 的**扩张**，§9 只给"至少留下这些"'
         r'（R12 未跑通 ⇒ 本条仍是旧边界，没有读数）。')
-    L += ['', '## 13. 对 L10（耦合统一）的直接影响', '',
+    L += ['', '## 14. 对 L10（耦合统一）的直接影响', '',
           '| 事项 | 手工放置（旧） | 本报告（推导） |', '|---|---|---|',
           '| $\\Phi(1,2,2)$ 的来源 | 假设取自 $10_H$ | $10\\to(6,1,1)\\oplus(1,2,2)$ 由权重集直接读出 ✔ |',
           '| $\\Sigma(1,1,3)_0$ 的来源 | 误标为 $\\Delta_R$ | 取自 $45_H$、$B-L=0$，**不是** $\\Delta_R$ |',
@@ -5989,6 +6474,8 @@ def write_report(gates):
           '| **完整**残留群（中心 × 整体形式）是哪个群、会不会改判 | 旧边界登记为未判（只数了 '
           r'$U(1)_{B-L}$ 那一个因子） | %s |' % glcl,
            '| 第二条链（422）上残留换不换判 | 旧边界两处登记"未做"（§9/§11） | %s |' % g422cl,
+           '| 中心元枚举换到**逐权重**账上会不会换群 | 旧边界登记为"与 §5 是两套账"（§11） | %s |'
+           % pwcl,
 
           '',
           '⇒ 情形 B（无 $126_H$）**不能**声称实现了 $B-L$ 破缺；它是一条"只跑到 $LR$ 相位"'
@@ -5996,7 +6483,7 @@ def write_report(gates):
           '多重态），故剩余的标量谱不确定度（当前为 ' + swing_note() + '）只能由两环跑动 + '
           '阈值修正 + $126_H$ 位势压掉，'
           '而不是再换一种手工谱。', '',
-          '## 14. 诚实边界', '',
+          '## 15. 诚实边界', '',
           '* 表示论结果是**数学陈述**：它说明"SO(10) 若成立，Higgs 扇区必须含 $126$ 型表示"，'
           '**不**说明自然界含 SO(10)，也**不**提升 UFE-1 任何结论的证据等级，'
           '更**不**意味着统一场论已完成。',
@@ -6014,7 +6501,8 @@ def write_report(gates):
           '落成**低能算符的选择定则**（R11：判据 $N\\mid 3Q$，逐条判决 d=4/d=6 算符 $\\Rightarrow$ '
           '"残留群保不保质子"有了答案：**不保**），§11 再把那个群补全为中心 × 整体形式并逐条'
            '回判 §10（R12：完整群在 SM 单态片上与 §9/§10 的那个 $\\mathbb{Z}_N$ 同判），§12 再把 '
-           '422 那条链的残留按 $SU(4)$ 权格重做一遍（R13：核非平凡、14 条通道无一改判）。但这八层都'
+           '422 那条链的残留按 $SU(4)$ 权格重做一遍（R13：核非平凡、14 条通道无一改判），§13 再把'
+           ' 3221 侧中心元的枚举搬到逐权重账上（R14：两套账的形变集合相等、核不换数）。但这九层都'
           '**不含** Yukawa 系数（哪个拷贝与哪一代费米子耦合、'
           '矩阵多大）、'
           '不含 $126_H$ 的位势与真空方向，也**不含**任何动力学——'
@@ -6030,7 +6518,7 @@ def write_report(gates):
           '* 未做二环跑动与阈值修正 ⇒ **L10 未关闭**。本报告只把"允许的标量内容"与'
           '"允许的 d=4 Yukawa 通道"收紧。',
           '* $C_2$、维数等只用于自校验与后续阈值分析，不与任何实验值比对。', '',
-          '## 15. 全部测试明细', '',
+          '## 16. 全部测试明细', '',
           '| 编号 | 命题 | 算得 | 应为 | 容差 | 状态 | 备注 |', '|---|---|---|---|---|---|---|']
     for r in RESULTS:
         # 三个 repr 转储列先折回表示层的翻倍再进表格（备注列还要转义裸竖线，顺序：先折、后转义）
@@ -6038,10 +6526,10 @@ def write_report(gates):
                  (r['id'], md_unescape(r['claim']), md_unescape(r['computed']),
                   md_unescape(r['expected']), r['tolerance'], r['status'],
                   md_unescape(r['note']).replace('|', '\\|')))
-    L += ['', '**门禁**：' + ('R0–R13 全部 PASS ⇒ §2 的表示清单、§4 的 $\\Delta_R$ 判定、'
+    L += ['', '**门禁**：' + ('R0–R14 全部 PASS ⇒ §2 的表示清单、§4 的 $\\Delta_R$ 判定、'
                                '§5 的分支规则、§6 的 d=4 Yukawa 通道、§7 的不变张量账目、§8 的'
                                '道分解、§9 的残留离散群、§10 的低能算符选择定则、§11 的完整残留群'
-                               '/整体形式与 §12 的 422 链重做读数可信。' if all_ok else
+                               '/整体形式、§12 的 422 链重做读数与 §13 的两套账交叉读数可信。' if all_ok else
                               '**存在 FAIL ⇒ 本报告不出任何 Higgs 扇区结论**。'), '',
          '[返回统一场方程](../README.md) · [SO(10) 链统一报告](SO10链统一报告.md) · '
          '[已知局限](../09_已知局限与否定清单.md)']
@@ -6074,7 +6562,7 @@ def write_report(gates):
     #   4) \lvert / \rvert 后不得紧跟字母或数字 —— TeX 最长匹配会把 `\lvertB` 读成一个未定义
     #      控制词而整段公式报错。这条**必须查全文**：缺陷正是 table_row_safe 只往表格行里注的，
     #      前两条的"表格行豁免"在这里反过来不成立。
-    # 表格行豁免前两条：§15 的"算得/应为/备注"列**故意**是原始 repr，那是审计痕迹不是排版。
+    # 表格行豁免前两条：§16 的"算得/应为/备注"列**故意**是原始 repr，那是审计痕迹不是排版。
     blocks, cur = [], []
     for ln in lines:
         if ln.startswith('|') or not ln.strip():
@@ -6151,6 +6639,8 @@ def write_report(gates):
           'global': GLOB,
           # R13 的原始读数：报告 §12 的每个数字都出自这里
           'residual422': G422,
+          # R14 的原始读数：报告 §13 的每个数字都出自这里
+          'perweight': G14,
          'report_hygiene': HYGIENE,
 
          'tests': RESULTS},
@@ -6174,8 +6664,9 @@ def main():
     sel_ok = run_selection_layer() if res_ok else False
     gl_ok = run_global_layer() if sel_ok else False
     g422_ok = run_residual422_layer() if gl_ok else False
+    pw_ok = run_perweight_layer() if g422_ok else False
     all_ok = write_report((eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok,
-                           ch_ok, res_ok, sel_ok, gl_ok, g422_ok))
+                           ch_ok, res_ok, sel_ok, gl_ok, g422_ok, pw_ok))
 
     print('SO(10) 表示论引擎（D5 权重格；唯一李论输入 = Dynkin 图）')
     print('  自检：%s（%d 项，PASS %d）' %
@@ -6305,6 +6796,17 @@ def main():
                '、'.join(c['rep'] for c in G422['ctl'] if not c['inter']),
                [c['wcapc'] for c in G422['ctl'] if not c['inter']][0],
                [c['full'] for c in G422['ctl'] if not c['inter']][0]))
+    if pw_ok:
+        print('  行标号账与逐权重账（R14）：甲 %d 条条件 / 乙 %d 条（甲账没有 %d 条）⇒ 形变按集合'
+              '相等 %s（各 %d 种）；核走三条算术路、两种约定都 = %d 且与 §11 逐元相等 ⇒ 换账不换群' %
+              (G14['nspec'], G14['ncond'], G14['novel'], '是' if G14['eqAB'] else '**否**',
+               G14['charA'], G14['gam']))
+        print('    子多重态 %d 个、按子多重态去重权重 %d 条（按重数 %d 条、含行重数 %d 条 = 母表示维数和 %d 条）'
+              '⇒ 三条恒等事违例 %d/%d/%d；冗余度：删一条即变大的 %d 条、贪心核心 %d 条、两条即钉住 '
+              '%d/%d 对；$t$ 网格四档核恒 %d 个' %
+              (G14['nsub'], G14['ndwt'], G14['nwtm'], G14['nwtmn'], G14['dimsum'],
+               G14['bl_mis'], G14['root_mis'], G14['ph_mis'], G14['ess'], G14['core_len'],
+               G14['pairs'], G14['pairs_tot'], G14['gam']))
     if nogo_ok:
         print('  判定：dim≤210 内唯一能破 B−L 而不破电磁的 Higgs = 126 / 126̄；'
               '120_H 虽含 (1,1,1)±2 但 |Q|=1 ⇒ 排除（报告 §4）')
