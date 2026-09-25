@@ -1,6 +1,16 @@
 {
   "script": "check_r11_mutation.py",
   "target": "验证脚本/so10_reps.py",
+  "expected_layers": [
+    "R11",
+    "R12",
+    "R13",
+    "R14",
+    "R15",
+    "R16",
+    "R17",
+    "R18"
+  ],
   "layers": [
     "R11",
     "R12",
@@ -8,10 +18,11 @@
     "R14",
     "R15",
     "R16",
-    "R17"
+    "R17",
+    "R18"
   ],
-  "target_bytes": 552857,
-  "engine_json_tests": 139,
+  "target_bytes": 580831,
+  "engine_json_tests": 144,
   "anchor_counts": {
     "    return int(t3) % n == 0": 1,
     "        ang = 2.0 * math.pi * float(a) * float(q)": 1,
@@ -54,16 +65,25 @@
     "            js.append(0 if m == 2 else 1)": 1,
     "        return tuple(sorted((v for v in c.values() if v >= 2), reverse=True))": 1,
     "            a = ju[0] * jd[0]": 1,
-    "    ftab = [(n, s) + fermi_dim(n, s) for n in range(NEXP + 1) for s in fermi_parts(n)]": 1
+    "    ftab = [(n, s) + fermi_dim(n, s) for n in range(NEXP + 1) for s in fermi_parts(n)]": 1,
+    "                        SG[_m] * SIGM[_m][_a][_c] * SIGM[_m][_b][_d] for _m in range(4))": 1,
+    "        UU, DD = list(range(nu)), list(range(nu, nu + nd))": 1,
+    "                w *= PROP[(b[ia], b[ic], b[pa], b[pc])]": 1,
+    "            out[m] = out.get(m, F(0)) + F(e if g1 < g2 else -e)": 1,
+    "        for w in sorted(set(itertools.permutations(names))):": 1,
+    "    sanch = sig_val(4, [], [(0, 2), (1, 3)], [(0, 1)])": 1
   },
   "fixture_ok": true,
-  "cases_total": 43,
-  "mutants": 35,
-  "benign": 7,
-  "caught": 35,
-  "missed": [],
+  "cases_total": 49,
+  "mutants": 40,
+  "benign": 8,
+  "caught": 39,
+  "missed": [
+    "n1"
+  ],
   "false_alarm": [],
   "uncovered_layers": [],
+  "stale_layers": [],
   "baseline_pairs": [
     [
       8,
@@ -220,8 +240,8 @@
   },
   "baseline_r15": {
     "j_rows": [
-      189,
-      "21c19d3a9178"
+      197,
+      "fa7a8c5275f8"
     ],
     "j_zero": [
       [
@@ -657,6 +677,145 @@
       ]
     ]
   },
+  "baseline_r18": {
+    "m_rows": [
+      8,
+      "bcdb7b851f76"
+    ],
+    "m_tab": [
+      [
+        "2",
+        "2",
+        "370",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+      ],
+      [
+        "2",
+        "4",
+        "0",
+        "2",
+        "2",
+        "2",
+        "2",
+        "3",
+        "6",
+        "7"
+      ],
+      [
+        "2",
+        "6",
+        "0",
+        "5",
+        "5",
+        "5",
+        "5",
+        "15",
+        "30",
+        "40"
+      ],
+      [
+        "4",
+        "2",
+        "0",
+        "2",
+        "2",
+        "2",
+        "2",
+        "3",
+        "6",
+        "7"
+      ],
+      [
+        "4",
+        "4",
+        "0",
+        "4",
+        "4",
+        "4",
+        "4",
+        "9",
+        "36",
+        "41"
+      ],
+      [
+        "6",
+        "2",
+        "0",
+        "5",
+        "5",
+        "5",
+        "5",
+        "15",
+        "30",
+        "40"
+      ]
+    ],
+    "m_dis": [
+      [
+        "0",
+        "6"
+      ]
+    ],
+    "m_new": [
+      "0"
+    ],
+    "m_anch": [
+      [
+        "2",
+        "-2"
+      ]
+    ],
+    "m_rank": [
+      [
+        "1",
+        "2"
+      ]
+    ],
+    "m_brk": [
+      [
+        "3",
+        "2"
+      ]
+    ],
+    "m_mis": [
+      "0"
+    ],
+    "m_t3": [
+      [
+        "838",
+        "838",
+        "838",
+        "0",
+        "1218"
+      ]
+    ],
+    "m_pla": [
+      [
+        "3947",
+        "0"
+      ]
+    ],
+    "m_union": [
+      [
+        "948",
+        "838",
+        "110"
+      ]
+    ],
+    "m_scope": [
+      [
+        "370",
+        "468",
+        "5"
+      ]
+    ]
+  },
   "layer_mutants": {
     "R11": 4,
     "R12": 4,
@@ -664,14 +823,15 @@
     "R14": 5,
     "R15": 7,
     "R16": 6,
-    "R17": 5
+    "R17": 5,
+    "R18": 5
   },
-  "verdict": "CAUGHT",
+  "verdict": "INVALID",
   "cases": [
     {
       "exit": 0,
-      "gates": 139,
-      "pass": 139,
+      "gates": 144,
+      "pass": 144,
       "fail_ids": [],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -681,7 +841,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -690,6 +851,7 @@
       "printed_r15_block": true,
       "printed_r16_block": true,
       "printed_r17_block": true,
+      "printed_r18_block": true,
       "report_pairs": [
         [
           8,
@@ -846,8 +1008,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -1283,6 +1445,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "ctl",
       "claim": "基线：不植入",
@@ -1314,7 +1615,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": false,
       "printed_r12_block": false,
@@ -1323,6 +1625,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           7,
@@ -1395,6 +1698,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "m1",
       "claim": "甲：同余式右移一位，把 N|3Q 写成 N|Q（只动三条路径里的整除那条）",
@@ -1410,6 +1730,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -1433,7 +1754,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": false,
       "printed_r12_block": false,
@@ -1442,6 +1764,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -1514,6 +1837,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "m2",
       "claim": "丙：浮点那条把 2pi 周期写成 pi 半周期（只动三条路径里的浮点那条）",
@@ -1528,6 +1868,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -1560,7 +1901,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": false,
       "printed_r12_block": false,
@@ -1569,6 +1911,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           0,
@@ -1641,6 +1984,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "m3",
       "claim": "荷账丢掉求和号：sum_k 3(B-L)_k 写成只取第一条场",
@@ -1656,6 +2016,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -1679,7 +2040,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": false,
       "printed_r12_block": false,
@@ -1688,6 +2050,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           7,
@@ -1760,6 +2123,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "m4",
       "claim": "枚举改用 R11.1 那个错 projector 的零权当筛选条件",
@@ -1775,14 +2155,15 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
     },
     {
       "exit": 0,
-      "gates": 139,
-      "pass": 139,
+      "gates": 144,
+      "pass": 144,
       "fail_ids": [],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -1792,7 +2173,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -1801,6 +2183,7 @@
       "printed_r15_block": true,
       "printed_r16_block": true,
       "printed_r17_block": true,
+      "printed_r18_block": true,
       "report_pairs": [
         [
           8,
@@ -1957,8 +2340,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -2394,6 +2777,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "b1",
       "claim": "良性：给 f_tri 补一条尾部注释（语义不动）",
@@ -2422,7 +2944,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": false,
@@ -2431,6 +2954,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -2510,6 +3034,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "g1",
       "claim": "R12：换掉色 Z_3 生成元的甲侧 triality（p+2q 写成 p+q）⇒ 两支不再互化",
@@ -2524,6 +3065,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -2547,7 +3089,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": false,
@@ -2556,6 +3099,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -2635,6 +3179,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "g2",
       "claim": "R12：阿贝尔群的元素阶多重集把单位元读成最大阶（定名那一步失去唯一命中）",
@@ -2649,6 +3210,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -2670,7 +3232,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": false,
@@ -2679,6 +3242,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -2758,6 +3322,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "g3",
       "claim": "R12：格指数把不变因子取和而不是取积（三条出处不再同数）",
@@ -2772,6 +3353,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -2793,7 +3375,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": false,
@@ -2802,6 +3385,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -2881,6 +3465,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "g4",
       "claim": "R12：\"在不在根格里\"的第二条判法把坐标和的奇偶改成模 3（两条判法不再同判）",
@@ -2895,14 +3496,15 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
     },
     {
       "exit": 0,
-      "gates": 139,
-      "pass": 139,
+      "gates": 144,
+      "pass": 144,
       "fail_ids": [],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -2912,7 +3514,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -2921,6 +3524,7 @@
       "printed_r15_block": true,
       "printed_r16_block": true,
       "printed_r17_block": true,
+      "printed_r18_block": true,
       "report_pairs": [
         [
           8,
@@ -3077,8 +3681,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -3514,6 +4118,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "b2",
       "claim": "良性：给 cen_law 的 U(1) 分量补一条尾部注释（语义不动）",
@@ -3540,7 +4283,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -3549,6 +4293,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -3651,6 +4396,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "h1",
       "claim": "R13：路丙的标准 triality 号把 3b 写成 2b（丙与格读数不再成 q_lat = 3 q_std）",
@@ -3663,6 +4425,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -3684,7 +4447,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -3693,6 +4457,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -3795,6 +4560,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "h2",
       "claim": "R13：色类阶的枚举把类元读成对角粘合元（(ci,0,0) 写成 (ci,1,1) ⇒ 类表\"阶\"列漂移）",
@@ -3807,6 +4589,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -3828,7 +4611,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -3837,6 +4621,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -3932,6 +4717,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "h3",
       "claim": "R13：正向对照把两半\"交集\"写成\"并集\"（半群读数退化 ⇒ 集合相等不再成立）",
@@ -3945,6 +4747,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -3966,7 +4769,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -3975,6 +4779,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -4077,6 +4882,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "h4",
       "claim": "R13：物质字称的实现者把相位判据取反（只数逐场都 ≠ 目标相位的元 ⇒ 个数偏离恰 2）",
@@ -4090,14 +4912,15 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
     },
     {
       "exit": 0,
-      "gates": 139,
-      "pass": 139,
+      "gates": 144,
+      "pass": 144,
       "fail_ids": [],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -4107,7 +4930,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -4116,6 +4940,7 @@
       "printed_r15_block": true,
       "printed_r16_block": true,
       "printed_r17_block": true,
+      "printed_r18_block": true,
       "report_pairs": [
         [
           8,
@@ -4272,8 +5097,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -4709,6 +5534,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "b3",
       "claim": "良性：给 Kset 那行补一条尾部注释（语义不动）",
@@ -4735,7 +5699,8 @@
         ],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -4744,6 +5709,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -4933,6 +5899,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "i1",
       "claim": "R14：乙账\"甲账没有\"的条件把差集写成交集（304 掉到 61 ⇒ 乙账不再严格更细）",
@@ -4945,6 +5928,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -4966,7 +5950,8 @@
         ],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -4975,6 +5960,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -5164,6 +6150,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "i2",
       "claim": "R14：子多重态内的标签差向量循环错位一位（\"在不在根格里\"那条判法读到错的分量 ⇒ 三条恒等事的违例三元组从 0/0/0 变成 0/非零/0，另两条判法照旧干净）",
@@ -5176,6 +6179,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -5197,7 +6201,8 @@
         ],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -5206,6 +6211,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -5395,6 +6401,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "i3",
       "claim": "R14：冗余度里\"单条最好的一条\"把 min 写成 max（核从 12 读成整格 432）",
@@ -5407,6 +6430,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -5428,7 +6452,8 @@
         ],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -5437,6 +6462,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -5626,6 +6652,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "i4",
       "claim": "R14：形变的逐点加法封闭性把 not in 写成 in（158 对例外与 418 对命中整批互换）",
@@ -5638,6 +6681,7 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
@@ -5659,7 +6703,8 @@
         ],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -5668,6 +6713,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -5857,6 +6903,23 @@
         "l_seam": [],
         "l_scope": []
       },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
       "traceback": false,
       "id": "i5",
       "claim": "R14：$t$ 网格每档的周期去掉 CEN_U_PER 因子（候选元数 216/432/864/2160 整体缩 3 倍）",
@@ -5870,14 +6933,15 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
     },
     {
       "exit": 0,
-      "gates": 139,
-      "pass": 139,
+      "gates": 144,
+      "pass": 144,
       "fail_ids": [],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -5887,7 +6951,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -5896,6 +6961,7 @@
       "printed_r15_block": true,
       "printed_r16_block": true,
       "printed_r17_block": true,
+      "printed_r18_block": true,
       "report_pairs": [
         [
           8,
@@ -6052,8 +7118,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -6486,6 +7552,145 @@
           [
             "755",
             "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
           ]
         ]
       },
@@ -6500,8 +7705,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R15.1"
       ],
@@ -6515,7 +7720,8 @@
           "R15.1"
         ],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -6524,6 +7730,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -6680,8 +7887,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "eeb7bdb73120"
+          197,
+          "b33390ba4714"
         ],
         "j_zero": [
           [
@@ -7114,6 +8321,145 @@
           [
             "755",
             "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
           ]
         ]
       },
@@ -7132,8 +8478,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R15.2"
       ],
@@ -7147,7 +8493,8 @@
           "R15.2"
         ],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -7156,6 +8503,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -7312,8 +8660,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -7749,6 +9097,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "j2",
       "claim": "R15：把\"只取非点号字母\"读成\"至多含一个点号字母\"（$x['nd'] == 0$ 写成 $<= 1$ ⇒ \"扩基是超集、不是替换\"那条集合相等不再成立）",
@@ -7765,8 +9252,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R15.3"
       ],
@@ -7780,7 +9267,8 @@
           "R15.3"
         ],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -7789,6 +9277,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -7945,8 +9434,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "fae523e514b6"
+          197,
+          "4bd549729505"
         ],
         "j_zero": [
           [
@@ -8382,6 +9871,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "j3",
       "claim": "R15：把\"上移\"读成\"洛伦兹可行\"（真值判成 `is not None` ⇒ §14.3 的上移列读到别的数）",
@@ -8397,8 +10025,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R15.4"
       ],
@@ -8412,7 +10040,8 @@
           "R15.4"
         ],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -8421,6 +10050,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -8577,8 +10207,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "e5a85fe5f1d2"
+          197,
+          "5d96970b924d"
         ],
         "j_zero": [
           [
@@ -9014,6 +10644,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "j4",
       "claim": "R15：群禁集合把\"任一道判禁\"读成\"全部道判禁\"（any 写成 all ⇒ §14.5 的群禁列与\"指标禁 $=$ 群禁\"那条巧合整批改判）",
@@ -9030,8 +10799,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R15.5"
       ],
@@ -9045,7 +10814,8 @@
           "R15.5"
         ],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -9054,6 +10824,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -9210,8 +10981,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "40569cd31afc"
+          197,
+          "d74a26cb0c60"
         ],
         "j_zero": [
           [
@@ -9647,6 +11418,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "j5",
       "claim": "R15.5：\"不碰 $\\nu^c$（含其共轭）\"读成名字恰等于 $\\nu^c$（共轭半边漏掉 ⇒ §14.6 那条\"不碰\"的计数改变）",
@@ -9662,8 +11572,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R15.6"
       ],
@@ -9677,7 +11587,8 @@
           "R15.6"
         ],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -9686,6 +11597,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -9842,8 +11754,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -10279,6 +12191,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "j6",
       "claim": "R15：覆盖面把 $d_{\\min}$ 的上端读成下端（max 写成 min ⇒ \"六档实际探到 $d=8$\" 被读成\"只到 $d=3$\"）",
@@ -10294,8 +12345,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R15.4"
       ],
@@ -10309,7 +12360,8 @@
           "R15.4"
         ],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -10318,6 +12370,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -10474,8 +12527,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -10911,6 +12964,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "j7",
       "claim": "R15：机理等式的\"标量半边为奇\"把 mod 2 写成 mod 4（⇒ §14.5 那条集合等式判成\"不等\"）",
@@ -10926,8 +13118,8 @@
     },
     {
       "exit": 0,
-      "gates": 139,
-      "pass": 139,
+      "gates": 144,
+      "pass": 144,
       "fail_ids": [],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -10937,7 +13129,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -10946,6 +13139,7 @@
       "printed_r15_block": true,
       "printed_r16_block": true,
       "printed_r17_block": true,
+      "printed_r18_block": true,
       "report_pairs": [
         [
           8,
@@ -11102,8 +13296,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -11539,6 +13733,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "b5",
       "claim": "良性：给 §14 的 key 那行补一条尾部注释（语义不动）",
@@ -11550,15 +13883,16 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 133,
+      "gates": 144,
+      "pass": 137,
       "fail_ids": [
         "R16.1",
         "R16.2",
         "R17.1",
         "R17.2",
         "R17.3",
-        "R17.4"
+        "R17.4",
+        "R18.1"
       ],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -11576,6 +13910,9 @@
           "R17.2",
           "R17.3",
           "R17.4"
+        ],
+        "R18": [
+          "R18.1"
         ]
       },
       "printed_r11_block": true,
@@ -11585,6 +13922,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -11741,8 +14079,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "05b31229d981"
+          197,
+          "b2ec0ea40055"
         ],
         "j_zero": [
           [
@@ -12178,6 +14516,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "370"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "k1",
       "claim": "R16：把\"一类的缩法重数 $=$ 两侧重数之**积**\"写成**和**（$*$ 改成 $+$ ⇒ \"只有 1 条缩法 当且仅当两侧指标数都不超过 2\"不再成立，逐档表与 2261/668 整列漂移）",
@@ -12190,14 +14667,15 @@
         "report_r15",
         "report_r16",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R16.0"
       ],
@@ -12211,7 +14689,8 @@
         "R16": [
           "R16.0"
         ],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -12220,6 +14699,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -12376,8 +14856,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -12810,6 +15290,145 @@
           [
             "755",
             "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
           ]
         ]
       },
@@ -12828,8 +15447,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R16.0"
       ],
@@ -12843,7 +15462,8 @@
         "R16": [
           "R16.0"
         ],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -12852,6 +15472,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -13008,8 +15629,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -13445,6 +16066,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "k3",
       "claim": "R16：丙路钩长公式把 $(m+1)!\\,m!$ 写成 $m!\\,m!$（即把 Catalan 读成中心二项式 ⇒ 同上，钉的是第二张票）",
@@ -13460,8 +16220,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R16.0"
       ],
@@ -13475,7 +16235,8 @@
         "R16": [
           "R16.0"
         ],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -13484,6 +16245,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -13640,8 +16402,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -14077,6 +16839,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "k4",
       "claim": "R16：丁路把对角余乘的沿位**累加**写成**覆写**（$\\sum_iX^{(i)}T=0$ 变成逐位单独归零 ⇒ 显式零空间的维数读错；这一条复现本层写作时真踩过的伤）",
@@ -14092,8 +16993,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R16.0"
       ],
@@ -14107,7 +17008,8 @@
         "R16": [
           "R16.0"
         ],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -14116,6 +17018,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -14272,8 +17175,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "279263eaccaf"
+          197,
+          "1a3bc16ca4e3"
         ],
         "j_zero": [
           [
@@ -14709,6 +17612,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "k5",
       "claim": "R16：画线法的 $\\varepsilon_{10}$ 把 $-1$ 写成 $+1$（配对张量不再反对称 ⇒ 秩与 Plücker 关系数一起动、$(n-1)!!$ 那一列不动：钉住\"三个画线法只撑出两个独立缩法\"）",
@@ -14725,8 +17767,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 138,
+      "gates": 144,
+      "pass": 143,
       "fail_ids": [
         "R16.2"
       ],
@@ -14740,7 +17782,8 @@
         "R16": [
           "R16.2"
         ],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -14749,6 +17792,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -14905,8 +17949,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -15339,6 +18383,145 @@
           [
             "755",
             "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
           ]
         ]
       },
@@ -15357,8 +18540,8 @@
     },
     {
       "exit": 0,
-      "gates": 139,
-      "pass": 139,
+      "gates": 144,
+      "pass": 144,
       "fail_ids": [],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -15368,7 +18551,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -15377,6 +18561,7 @@
       "printed_r15_block": true,
       "printed_r16_block": true,
       "printed_r17_block": true,
+      "printed_r18_block": true,
       "report_pairs": [
         [
           8,
@@ -15533,8 +18718,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -15970,6 +19155,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "b6",
       "claim": "良性：给 §14.8 的 okc 那行补一条尾部注释（语义不动）",
@@ -15981,8 +19305,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 137,
+      "gates": 144,
+      "pass": 142,
       "fail_ids": [
         "R17.0",
         "R17.1"
@@ -15998,7 +19322,8 @@
         "R17": [
           "R17.0",
           "R17.1"
-        ]
+        ],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -16007,6 +19332,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -16163,8 +19489,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "dc2e3507eb90"
+          197,
+          "6db729490b40"
         ],
         "j_zero": [
           [
@@ -16600,6 +19926,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "l1",
       "claim": "R17：丁路 Grassmann 求值丢掉排序符号（$+(-1)^{\\#inv}c$ 写成 $+c$ ⇒ 同名槽的反对易不再现形，$\\varepsilon^{\\alpha\\beta}\\psi_\\alpha\\psi_\\beta$ 那类读数被读歪：这是本层写作时真踩过的伤）",
@@ -16616,8 +20081,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 137,
+      "gates": 144,
+      "pass": 142,
       "fail_ids": [
         "R17.0",
         "R17.1"
@@ -16633,7 +20098,8 @@
         "R17": [
           "R17.0",
           "R17.1"
-        ]
+        ],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -16642,6 +20108,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -16798,8 +20265,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "4fe9406a797f"
+          197,
+          "07af7427d6f7"
         ],
         "j_zero": [
           [
@@ -17235,6 +20702,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "l2",
       "claim": "R17：乙路 $\\Lambda^m(\\mathbb C^2)=0$ 的门槛从 $m\\ge3$ 挪到 $m\\ge4$（三元组不再自动归零 ⇒ 票二与票三在一整批用例上分手）",
@@ -17251,8 +20857,8 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 137,
+      "gates": 144,
+      "pass": 142,
       "fail_ids": [
         "R17.0",
         "R17.1"
@@ -17268,7 +20874,8 @@
         "R17": [
           "R17.0",
           "R17.1"
-        ]
+        ],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -17277,6 +20884,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -17433,8 +21041,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "a8675974736c"
+          197,
+          "b17bab6a4486"
         ],
         "j_zero": [
           [
@@ -17870,6 +21478,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "l3",
       "claim": "R17：乙路把\"$m$ 个同名槽给 $2j=0$\"读成 $2j=1$（$m=2$ 那一步的自旋记错 ⇒ 四槽两两同名这类锚点漂掉，甲/丁照旧）",
@@ -17886,11 +21633,14 @@
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 137,
+      "gates": 144,
+      "pass": 139,
       "fail_ids": [
         "R17.2",
-        "R17.3"
+        "R17.3",
+        "R18.2",
+        "R18.3",
+        "R18.4"
       ],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -17903,6 +21653,11 @@
         "R17": [
           "R17.2",
           "R17.3"
+        ],
+        "R18": [
+          "R18.2",
+          "R18.3",
+          "R18.4"
         ]
       },
       "printed_r11_block": true,
@@ -17912,6 +21667,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -18068,8 +21824,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "4e22061be69b"
+          197,
+          "9417a4369d6b"
         ],
         "j_zero": [
           [
@@ -18505,6 +22261,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "948",
+            "110",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "110"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "0"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "l4",
       "claim": "R17：名字分组的阈值把\"占 $\\ge2$ 槽\"写成\"占 $\\ge3$ 槽\"（成对全同从登记里消失 ⇒ 判据对一半的全同类瞎掉，§10 接缝的 16 条结构数读回 16）",
@@ -18515,14 +22410,15 @@
       "moved": [
         "report_r15",
         "report_r17",
+        "report_r18",
         "gates_pass"
       ],
       "ok": true
     },
     {
       "exit": 1,
-      "gates": 139,
-      "pass": 137,
+      "gates": 144,
+      "pass": 142,
       "fail_ids": [
         "R17.1",
         "R17.2"
@@ -18538,7 +22434,8 @@
         "R17": [
           "R17.1",
           "R17.2"
-        ]
+        ],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -18547,6 +22444,7 @@
       "printed_r15_block": false,
       "printed_r16_block": false,
       "printed_r17_block": false,
+      "printed_r18_block": false,
       "report_pairs": [
         [
           8,
@@ -18703,8 +22601,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -19140,6 +23038,145 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "l5",
       "claim": "R17：一类的存活数写成只算无点号侧（$j_u\\times j_d$ 写成 $j_u$ ⇒ \"两侧各自算秩再相乘\"这句话没有内容，无重复名字那一批不再被\"看不见\"）",
@@ -19155,8 +23192,8 @@
     },
     {
       "exit": 0,
-      "gates": 139,
-      "pass": 139,
+      "gates": 144,
+      "pass": 144,
       "fail_ids": [],
       "r11_fail_ids": [],
       "layer_fail_ids": {
@@ -19166,7 +23203,8 @@
         "R14": [],
         "R15": [],
         "R16": [],
-        "R17": []
+        "R17": [],
+        "R18": []
       },
       "printed_r11_block": true,
       "printed_r12_block": true,
@@ -19175,6 +23213,7 @@
       "printed_r15_block": true,
       "printed_r16_block": true,
       "printed_r17_block": true,
+      "printed_r18_block": true,
       "report_pairs": [
         [
           8,
@@ -19331,8 +23370,8 @@
       },
       "report_r15": {
         "j_rows": [
-          189,
-          "21c19d3a9178"
+          197,
+          "fa7a8c5275f8"
         ],
         "j_zero": [
           [
@@ -19768,9 +23807,4133 @@
           ]
         ]
       },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
       "traceback": false,
       "id": "b7",
       "claim": "良性：给 §14.9 的 ftab 那行补一条尾部注释（语义不动）",
+      "kind": "benign",
+      "layer": "both",
+      "anchor_hits": 1,
+      "expect_caught": false,
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": null,
+      "pass": null,
+      "fail_ids": [],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [],
+        "R14": [],
+        "R15": [],
+        "R16": [],
+        "R17": [],
+        "R18": []
+      },
+      "printed_r11_block": false,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
+      "printed_r14_block": false,
+      "printed_r15_block": false,
+      "printed_r16_block": false,
+      "printed_r17_block": false,
+      "printed_r18_block": false,
+      "report_pairs": [],
+      "report_global": {
+        "g_size": [],
+        "g_flag": 0,
+        "g_idx": [],
+        "g_root": []
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
+      "report_r14": {
+        "i_nov": [],
+        "i_hom": [],
+        "i_add": [],
+        "i_mis": [],
+        "i_kern": [],
+        "i_sets": [],
+        "i_one": [],
+        "i_core": [],
+        "i_half": [],
+        "i_gu": [],
+        "i_int": [],
+        "i_pairs": [],
+        "i_grid": []
+      },
+      "report_r15": {
+        "j_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "j_zero": [],
+        "j_par": [],
+        "j_mech": [],
+        "j_cover": [],
+        "j_eq": [],
+        "j_dln": []
+      },
+      "report_r16": {
+        "k_tri": [],
+        "k_t4": [],
+        "k_bin": [],
+        "k_sum": [],
+        "k_seam": [],
+        "k_d6": [],
+        "k_tower": []
+      },
+      "report_r17": {
+        "l_dis": [],
+        "l_unu": [],
+        "l_tab": [],
+        "l_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "l_anch": [],
+        "l_price": [],
+        "l_part": [],
+        "l_seam": [],
+        "l_scope": []
+      },
+      "report_r18": {
+        "m_rows": [
+          0,
+          "da39a3ee5e6b"
+        ],
+        "m_tab": [],
+        "m_dis": [],
+        "m_new": [],
+        "m_anch": [],
+        "m_rank": [],
+        "m_brk": [],
+        "m_mis": [],
+        "m_t3": [],
+        "m_pla": [],
+        "m_union": [],
+        "m_scope": []
+      },
+      "traceback": true,
+      "id": "n1",
+      "claim": "R18：sigma 传播子去掉度规号 G=(+1,-1,+1,-1)（只乘两份 sigma 分量 ⇒ 动的只有 sigma 那张票与两条教科书锚点，eps 道秩与 c_j0 预测一字不动）",
+      "kind": "mutant",
+      "layer": "R18",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_pairs",
+        "report_global",
+        "report_r13",
+        "report_r14",
+        "report_r15",
+        "report_r16",
+        "report_r17",
+        "report_r18",
+        "gates_pass"
+      ],
+      "ok": false
+    },
+    {
+      "exit": 1,
+      "gates": 144,
+      "pass": 143,
+      "fail_ids": [
+        "R18.0"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [],
+        "R14": [],
+        "R15": [],
+        "R16": [],
+        "R17": [],
+        "R18": [
+          "R18.0"
+        ]
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
+      "printed_r14_block": true,
+      "printed_r15_block": false,
+      "printed_r16_block": false,
+      "printed_r17_block": false,
+      "printed_r18_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "report_r14": {
+        "i_nov": [
+          "304"
+        ],
+        "i_hom": [
+          [
+            "26352",
+            "0"
+          ]
+        ],
+        "i_add": [
+          "158"
+        ],
+        "i_mis": [
+          [
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "i_kern": [
+          [
+            "丙",
+            "6",
+            "6"
+          ],
+          [
+            "乙",
+            "6",
+            "6"
+          ],
+          [
+            "甲",
+            "6",
+            "6"
+          ]
+        ],
+        "i_sets": [
+          [
+            "61",
+            "6"
+          ]
+        ],
+        "i_one": [
+          "12"
+        ],
+        "i_core": [
+          [
+            "2",
+            "6"
+          ]
+        ],
+        "i_half": [
+          "36"
+        ],
+        "i_gu": [
+          "12"
+        ],
+        "i_int": [
+          "1"
+        ],
+        "i_pairs": [
+          [
+            "213",
+            "1830"
+          ]
+        ],
+        "i_grid": [
+          [
+            "1",
+            "12",
+            "432",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "24",
+            "864",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "6",
+            "216",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "60",
+            "2160",
+            "6",
+            "6",
+            "是"
+          ]
+        ]
+      },
+      "report_r15": {
+        "j_rows": [
+          197,
+          "832e87f7017b"
+        ],
+        "j_zero": [
+          [
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "j_par": [
+          [
+            "0",
+            "0"
+          ]
+        ],
+        "j_mech": [
+          "相等"
+        ],
+        "j_cover": [
+          [
+            "6",
+            "1619",
+            "3",
+            "8"
+          ]
+        ],
+        "j_eq": [
+          [
+            "8",
+            "8",
+            "成立"
+          ]
+        ],
+        "j_dln": [
+          [
+            "46",
+            "12"
+          ]
+        ]
+      },
+      "report_r16": {
+        "k_tri": [
+          "0"
+        ],
+        "k_t4": [
+          [
+            "0",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "3",
+            "2",
+            "1"
+          ],
+          [
+            "5",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "15",
+            "5",
+            "10"
+          ]
+        ],
+        "k_bin": [
+          [
+            "2",
+            "0",
+            "8",
+            "8",
+            "0",
+            "1",
+            "8"
+          ],
+          [
+            "2",
+            "1",
+            "69",
+            "69",
+            "0",
+            "1",
+            "69"
+          ],
+          [
+            "2",
+            "2",
+            "478",
+            "478",
+            "0",
+            "1",
+            "478"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "0",
+            "79",
+            "33",
+            "46",
+            "2",
+            "125"
+          ],
+          [
+            "4",
+            "1",
+            "959",
+            "337",
+            "622",
+            "2",
+            "1581"
+          ]
+        ],
+        "k_sum": [
+          [
+            "2261",
+            "1.4193",
+            "668",
+            "2"
+          ]
+        ],
+        "k_seam": [
+          [
+            "8",
+            "2"
+          ]
+        ],
+        "k_d6": [
+          [
+            "16",
+            "8",
+            "8"
+          ]
+        ],
+        "k_tower": [
+          [
+            "2261",
+            "8874",
+            "57735",
+            "467236"
+          ]
+        ]
+      },
+      "report_r17": {
+        "l_dis": [
+          "0"
+        ],
+        "l_unu": [
+          "0"
+        ],
+        "l_tab": [
+          [
+            "0",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "3",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "（无）",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "5",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "2+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "2",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "6",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "2+2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "（无）",
+            "5",
+            "5",
+            "5"
+          ]
+        ],
+        "l_rows": [
+          50,
+          "43110633a839"
+        ],
+        "l_anch": [
+          "1, 1, 1",
+          "0, 0, 0",
+          "1, 1, 1",
+          "1, 1, 1"
+        ],
+        "l_price": [
+          [
+            "838",
+            "1028",
+            "838",
+            "190",
+            "0.8152"
+          ]
+        ],
+        "l_part": [
+          "1028, 838, 40, 110, 219, 40, 469, 0"
+        ],
+        "l_seam": [
+          [
+            "16",
+            "8"
+          ]
+        ],
+        "l_scope": [
+          [
+            "755",
+            "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "67babe6adb7c"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "3",
+            "3",
+            "3",
+            "9",
+            "24",
+            "30"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "1",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
+      "traceback": false,
+      "id": "n2",
+      "claim": "R18：带点侧槽位的起点从 nu 写回 0（eps 目录从此跨手性 ⇒ eps 道秩整列涨上去、\"新增结构\"照样读 0：复现本层写作时真踩过的伤，钉住它的是 R18.1 那个前置等式）",
+      "kind": "mutant",
+      "layer": "R18",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_r15",
+        "report_r18",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 144,
+      "pass": 143,
+      "fail_ids": [
+        "R18.0"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [],
+        "R14": [],
+        "R15": [],
+        "R16": [],
+        "R17": [],
+        "R18": [
+          "R18.0"
+        ]
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
+      "printed_r14_block": true,
+      "printed_r15_block": false,
+      "printed_r16_block": false,
+      "printed_r17_block": false,
+      "printed_r18_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "report_r14": {
+        "i_nov": [
+          "304"
+        ],
+        "i_hom": [
+          [
+            "26352",
+            "0"
+          ]
+        ],
+        "i_add": [
+          "158"
+        ],
+        "i_mis": [
+          [
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "i_kern": [
+          [
+            "丙",
+            "6",
+            "6"
+          ],
+          [
+            "乙",
+            "6",
+            "6"
+          ],
+          [
+            "甲",
+            "6",
+            "6"
+          ]
+        ],
+        "i_sets": [
+          [
+            "61",
+            "6"
+          ]
+        ],
+        "i_one": [
+          "12"
+        ],
+        "i_core": [
+          [
+            "2",
+            "6"
+          ]
+        ],
+        "i_half": [
+          "36"
+        ],
+        "i_gu": [
+          "12"
+        ],
+        "i_int": [
+          "1"
+        ],
+        "i_pairs": [
+          [
+            "213",
+            "1830"
+          ]
+        ],
+        "i_grid": [
+          [
+            "1",
+            "12",
+            "432",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "24",
+            "864",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "6",
+            "216",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "60",
+            "2160",
+            "6",
+            "6",
+            "是"
+          ]
+        ]
+      },
+      "report_r15": {
+        "j_rows": [
+          197,
+          "fa7a8c5275f8"
+        ],
+        "j_zero": [
+          [
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "j_par": [
+          [
+            "0",
+            "0"
+          ]
+        ],
+        "j_mech": [
+          "相等"
+        ],
+        "j_cover": [
+          [
+            "6",
+            "1619",
+            "3",
+            "8"
+          ]
+        ],
+        "j_eq": [
+          [
+            "8",
+            "8",
+            "成立"
+          ]
+        ],
+        "j_dln": [
+          [
+            "46",
+            "12"
+          ]
+        ]
+      },
+      "report_r16": {
+        "k_tri": [
+          "0"
+        ],
+        "k_t4": [
+          [
+            "0",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "3",
+            "2",
+            "1"
+          ],
+          [
+            "5",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "15",
+            "5",
+            "10"
+          ]
+        ],
+        "k_bin": [
+          [
+            "2",
+            "0",
+            "8",
+            "8",
+            "0",
+            "1",
+            "8"
+          ],
+          [
+            "2",
+            "1",
+            "69",
+            "69",
+            "0",
+            "1",
+            "69"
+          ],
+          [
+            "2",
+            "2",
+            "478",
+            "478",
+            "0",
+            "1",
+            "478"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "0",
+            "79",
+            "33",
+            "46",
+            "2",
+            "125"
+          ],
+          [
+            "4",
+            "1",
+            "959",
+            "337",
+            "622",
+            "2",
+            "1581"
+          ]
+        ],
+        "k_sum": [
+          [
+            "2261",
+            "1.4193",
+            "668",
+            "2"
+          ]
+        ],
+        "k_seam": [
+          [
+            "8",
+            "2"
+          ]
+        ],
+        "k_d6": [
+          [
+            "16",
+            "8",
+            "8"
+          ]
+        ],
+        "k_tower": [
+          [
+            "2261",
+            "8874",
+            "57735",
+            "467236"
+          ]
+        ]
+      },
+      "report_r17": {
+        "l_dis": [
+          "0"
+        ],
+        "l_unu": [
+          "0"
+        ],
+        "l_tab": [
+          [
+            "0",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "3",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "（无）",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "5",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "2+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "2",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "6",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "2+2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "（无）",
+            "5",
+            "5",
+            "5"
+          ]
+        ],
+        "l_rows": [
+          50,
+          "43110633a839"
+        ],
+        "l_anch": [
+          "1, 1, 1",
+          "0, 0, 0",
+          "1, 1, 1",
+          "1, 1, 1"
+        ],
+        "l_price": [
+          [
+            "838",
+            "1028",
+            "838",
+            "190",
+            "0.8152"
+          ]
+        ],
+        "l_part": [
+          "1028, 838, 40, 110, 219, 40, 469, 0"
+        ],
+        "l_seam": [
+          [
+            "16",
+            "8"
+          ]
+        ],
+        "l_scope": [
+          [
+            "755",
+            "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "-2",
+            "2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
+      "traceback": false,
+      "id": "n3",
+      "claim": "R18：sigma 线把点号侧的两个指标接反一位（P_{ij,pq} 读成 P_{ij,qp}，度规留着只接错一头⇒ 只有 sigma 单独秩那一列与它的去重条数动）",
+      "kind": "mutant",
+      "layer": "R18",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_r18",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 144,
+      "pass": 141,
+      "fail_ids": [
+        "R18.0",
+        "R18.2",
+        "R18.4"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [],
+        "R14": [],
+        "R15": [],
+        "R16": [],
+        "R17": [],
+        "R18": [
+          "R18.0",
+          "R18.2",
+          "R18.4"
+        ]
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
+      "printed_r14_block": true,
+      "printed_r15_block": false,
+      "printed_r16_block": false,
+      "printed_r17_block": false,
+      "printed_r18_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "report_r14": {
+        "i_nov": [
+          "304"
+        ],
+        "i_hom": [
+          [
+            "26352",
+            "0"
+          ]
+        ],
+        "i_add": [
+          "158"
+        ],
+        "i_mis": [
+          [
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "i_kern": [
+          [
+            "丙",
+            "6",
+            "6"
+          ],
+          [
+            "乙",
+            "6",
+            "6"
+          ],
+          [
+            "甲",
+            "6",
+            "6"
+          ]
+        ],
+        "i_sets": [
+          [
+            "61",
+            "6"
+          ]
+        ],
+        "i_one": [
+          "12"
+        ],
+        "i_core": [
+          [
+            "2",
+            "6"
+          ]
+        ],
+        "i_half": [
+          "36"
+        ],
+        "i_gu": [
+          "12"
+        ],
+        "i_int": [
+          "1"
+        ],
+        "i_pairs": [
+          [
+            "213",
+            "1830"
+          ]
+        ],
+        "i_grid": [
+          [
+            "1",
+            "12",
+            "432",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "24",
+            "864",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "6",
+            "216",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "60",
+            "2160",
+            "6",
+            "6",
+            "是"
+          ]
+        ]
+      },
+      "report_r15": {
+        "j_rows": [
+          197,
+          "fa7a8c5275f8"
+        ],
+        "j_zero": [
+          [
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "j_par": [
+          [
+            "0",
+            "0"
+          ]
+        ],
+        "j_mech": [
+          "相等"
+        ],
+        "j_cover": [
+          [
+            "6",
+            "1619",
+            "3",
+            "8"
+          ]
+        ],
+        "j_eq": [
+          [
+            "8",
+            "8",
+            "成立"
+          ]
+        ],
+        "j_dln": [
+          [
+            "46",
+            "12"
+          ]
+        ]
+      },
+      "report_r16": {
+        "k_tri": [
+          "0"
+        ],
+        "k_t4": [
+          [
+            "0",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "3",
+            "2",
+            "1"
+          ],
+          [
+            "5",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "15",
+            "5",
+            "10"
+          ]
+        ],
+        "k_bin": [
+          [
+            "2",
+            "0",
+            "8",
+            "8",
+            "0",
+            "1",
+            "8"
+          ],
+          [
+            "2",
+            "1",
+            "69",
+            "69",
+            "0",
+            "1",
+            "69"
+          ],
+          [
+            "2",
+            "2",
+            "478",
+            "478",
+            "0",
+            "1",
+            "478"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "0",
+            "79",
+            "33",
+            "46",
+            "2",
+            "125"
+          ],
+          [
+            "4",
+            "1",
+            "959",
+            "337",
+            "622",
+            "2",
+            "1581"
+          ]
+        ],
+        "k_sum": [
+          [
+            "2261",
+            "1.4193",
+            "668",
+            "2"
+          ]
+        ],
+        "k_seam": [
+          [
+            "8",
+            "2"
+          ]
+        ],
+        "k_d6": [
+          [
+            "16",
+            "8",
+            "8"
+          ]
+        ],
+        "k_tower": [
+          [
+            "2261",
+            "8874",
+            "57735",
+            "467236"
+          ]
+        ]
+      },
+      "report_r17": {
+        "l_dis": [
+          "0"
+        ],
+        "l_unu": [
+          "0"
+        ],
+        "l_tab": [
+          [
+            "0",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "3",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "（无）",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "5",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "2+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "2",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "6",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "2+2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "（无）",
+            "5",
+            "5",
+            "5"
+          ]
+        ],
+        "l_rows": [
+          50,
+          "43110633a839"
+        ],
+        "l_anch": [
+          "1, 1, 1",
+          "0, 0, 0",
+          "1, 1, 1",
+          "1, 1, 1"
+        ],
+        "l_price": [
+          [
+            "838",
+            "1028",
+            "838",
+            "190",
+            "0.8152"
+          ]
+        ],
+        "l_part": [
+          "1028, 838, 40, 110, 219, 40, 469, 0"
+        ],
+        "l_seam": [
+          [
+            "16",
+            "8"
+          ]
+        ],
+        "l_scope": [
+          [
+            "755",
+            "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "619",
+            "838",
+            "219",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "619",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
+      "traceback": false,
+      "id": "n4",
+      "claim": "R18：g_bracket 丢掉\"基元素按生成元升序落定\"那一次的换序符号（同名括号读成 +1-1=0 ⇒ 第三张票整批塌掉：与 R17 的 l1 是同一处伤在新坐标里的复现）",
+      "kind": "mutant",
+      "layer": "R18",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_r18",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 144,
+      "pass": 143,
+      "fail_ids": [
+        "R18.3"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [],
+        "R14": [],
+        "R15": [],
+        "R16": [],
+        "R17": [],
+        "R18": [
+          "R18.3"
+        ]
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
+      "printed_r14_block": true,
+      "printed_r15_block": false,
+      "printed_r16_block": false,
+      "printed_r17_block": false,
+      "printed_r18_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "report_r14": {
+        "i_nov": [
+          "304"
+        ],
+        "i_hom": [
+          [
+            "26352",
+            "0"
+          ]
+        ],
+        "i_add": [
+          "158"
+        ],
+        "i_mis": [
+          [
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "i_kern": [
+          [
+            "丙",
+            "6",
+            "6"
+          ],
+          [
+            "乙",
+            "6",
+            "6"
+          ],
+          [
+            "甲",
+            "6",
+            "6"
+          ]
+        ],
+        "i_sets": [
+          [
+            "61",
+            "6"
+          ]
+        ],
+        "i_one": [
+          "12"
+        ],
+        "i_core": [
+          [
+            "2",
+            "6"
+          ]
+        ],
+        "i_half": [
+          "36"
+        ],
+        "i_gu": [
+          "12"
+        ],
+        "i_int": [
+          "1"
+        ],
+        "i_pairs": [
+          [
+            "213",
+            "1830"
+          ]
+        ],
+        "i_grid": [
+          [
+            "1",
+            "12",
+            "432",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "24",
+            "864",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "6",
+            "216",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "60",
+            "2160",
+            "6",
+            "6",
+            "是"
+          ]
+        ]
+      },
+      "report_r15": {
+        "j_rows": [
+          197,
+          "fa7a8c5275f8"
+        ],
+        "j_zero": [
+          [
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "j_par": [
+          [
+            "0",
+            "0"
+          ]
+        ],
+        "j_mech": [
+          "相等"
+        ],
+        "j_cover": [
+          [
+            "6",
+            "1619",
+            "3",
+            "8"
+          ]
+        ],
+        "j_eq": [
+          [
+            "8",
+            "8",
+            "成立"
+          ]
+        ],
+        "j_dln": [
+          [
+            "46",
+            "12"
+          ]
+        ]
+      },
+      "report_r16": {
+        "k_tri": [
+          "0"
+        ],
+        "k_t4": [
+          [
+            "0",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "3",
+            "2",
+            "1"
+          ],
+          [
+            "5",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "15",
+            "5",
+            "10"
+          ]
+        ],
+        "k_bin": [
+          [
+            "2",
+            "0",
+            "8",
+            "8",
+            "0",
+            "1",
+            "8"
+          ],
+          [
+            "2",
+            "1",
+            "69",
+            "69",
+            "0",
+            "1",
+            "69"
+          ],
+          [
+            "2",
+            "2",
+            "478",
+            "478",
+            "0",
+            "1",
+            "478"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "0",
+            "79",
+            "33",
+            "46",
+            "2",
+            "125"
+          ],
+          [
+            "4",
+            "1",
+            "959",
+            "337",
+            "622",
+            "2",
+            "1581"
+          ]
+        ],
+        "k_sum": [
+          [
+            "2261",
+            "1.4193",
+            "668",
+            "2"
+          ]
+        ],
+        "k_seam": [
+          [
+            "8",
+            "2"
+          ]
+        ],
+        "k_d6": [
+          [
+            "16",
+            "8",
+            "8"
+          ]
+        ],
+        "k_tower": [
+          [
+            "2261",
+            "8874",
+            "57735",
+            "467236"
+          ]
+        ]
+      },
+      "report_r17": {
+        "l_dis": [
+          "0"
+        ],
+        "l_unu": [
+          "0"
+        ],
+        "l_tab": [
+          [
+            "0",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "3",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "（无）",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "5",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "2+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "2",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "6",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "2+2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "（无）",
+            "5",
+            "5",
+            "5"
+          ]
+        ],
+        "l_rows": [
+          50,
+          "43110633a839"
+        ],
+        "l_anch": [
+          "1, 1, 1",
+          "0, 0, 0",
+          "1, 1, 1",
+          "1, 1, 1"
+        ],
+        "l_price": [
+          [
+            "838",
+            "1028",
+            "838",
+            "190",
+            "0.8152"
+          ]
+        ],
+        "l_part": [
+          "1028, 838, 40, 110, 219, 40, 469, 0"
+        ],
+        "l_seam": [
+          [
+            "16",
+            "8"
+          ]
+        ],
+        "l_scope": [
+          [
+            "755",
+            "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "838",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "838",
+            "838",
+            "0"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
+      "traceback": false,
+      "id": "n5",
+      "claim": "R18：摆放不变性只在规范摆放上复核（permutations(names) 读成 names 自己一种 ⇒ 摆放对总数掉到与类数同量、跨摆放求并的\"虚高类数\"归零，R18.3 那句\"每一种摆放\"没有内容）",
+      "kind": "mutant",
+      "layer": "R18",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_r18",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 0,
+      "gates": 144,
+      "pass": 144,
+      "fail_ids": [],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [],
+        "R14": [],
+        "R15": [],
+        "R16": [],
+        "R17": [],
+        "R18": []
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
+      "printed_r14_block": true,
+      "printed_r15_block": true,
+      "printed_r16_block": true,
+      "printed_r17_block": true,
+      "printed_r18_block": true,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "report_r14": {
+        "i_nov": [
+          "304"
+        ],
+        "i_hom": [
+          [
+            "26352",
+            "0"
+          ]
+        ],
+        "i_add": [
+          "158"
+        ],
+        "i_mis": [
+          [
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "i_kern": [
+          [
+            "丙",
+            "6",
+            "6"
+          ],
+          [
+            "乙",
+            "6",
+            "6"
+          ],
+          [
+            "甲",
+            "6",
+            "6"
+          ]
+        ],
+        "i_sets": [
+          [
+            "61",
+            "6"
+          ]
+        ],
+        "i_one": [
+          "12"
+        ],
+        "i_core": [
+          [
+            "2",
+            "6"
+          ]
+        ],
+        "i_half": [
+          "36"
+        ],
+        "i_gu": [
+          "12"
+        ],
+        "i_int": [
+          "1"
+        ],
+        "i_pairs": [
+          [
+            "213",
+            "1830"
+          ]
+        ],
+        "i_grid": [
+          [
+            "1",
+            "12",
+            "432",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "24",
+            "864",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "6",
+            "216",
+            "6",
+            "6",
+            "是"
+          ],
+          [
+            "1",
+            "60",
+            "2160",
+            "6",
+            "6",
+            "是"
+          ]
+        ]
+      },
+      "report_r15": {
+        "j_rows": [
+          197,
+          "fa7a8c5275f8"
+        ],
+        "j_zero": [
+          [
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "j_par": [
+          [
+            "0",
+            "0"
+          ]
+        ],
+        "j_mech": [
+          "相等"
+        ],
+        "j_cover": [
+          [
+            "6",
+            "1619",
+            "3",
+            "8"
+          ]
+        ],
+        "j_eq": [
+          [
+            "8",
+            "8",
+            "成立"
+          ]
+        ],
+        "j_dln": [
+          [
+            "46",
+            "12"
+          ]
+        ]
+      },
+      "report_r16": {
+        "k_tri": [
+          "0"
+        ],
+        "k_t4": [
+          [
+            "0",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "1",
+            "1",
+            "1",
+            "0"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "3",
+            "2",
+            "1"
+          ],
+          [
+            "5",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "15",
+            "5",
+            "10"
+          ]
+        ],
+        "k_bin": [
+          [
+            "2",
+            "0",
+            "8",
+            "8",
+            "0",
+            "1",
+            "8"
+          ],
+          [
+            "2",
+            "1",
+            "69",
+            "69",
+            "0",
+            "1",
+            "69"
+          ],
+          [
+            "2",
+            "2",
+            "478",
+            "478",
+            "0",
+            "1",
+            "478"
+          ],
+          [
+            "3",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "0",
+            "79",
+            "33",
+            "46",
+            "2",
+            "125"
+          ],
+          [
+            "4",
+            "1",
+            "959",
+            "337",
+            "622",
+            "2",
+            "1581"
+          ]
+        ],
+        "k_sum": [
+          [
+            "2261",
+            "1.4193",
+            "668",
+            "2"
+          ]
+        ],
+        "k_seam": [
+          [
+            "8",
+            "2"
+          ]
+        ],
+        "k_d6": [
+          [
+            "16",
+            "8",
+            "8"
+          ]
+        ],
+        "k_tower": [
+          [
+            "2261",
+            "8874",
+            "57735",
+            "467236"
+          ]
+        ]
+      },
+      "report_r17": {
+        "l_dis": [
+          "0"
+        ],
+        "l_unu": [
+          "0"
+        ],
+        "l_tab": [
+          [
+            "0",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "（无）",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "3",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "4",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "4",
+            "（无）",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "5",
+            "2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "2+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "5",
+            "（无）",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "2",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "6",
+            "2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "2+2+2",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "6",
+            "3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "3+3",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "4+2",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "5",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "6",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "6",
+            "（无）",
+            "5",
+            "5",
+            "5"
+          ]
+        ],
+        "l_rows": [
+          50,
+          "43110633a839"
+        ],
+        "l_anch": [
+          "1, 1, 1",
+          "0, 0, 0",
+          "1, 1, 1",
+          "1, 1, 1"
+        ],
+        "l_price": [
+          [
+            "838",
+            "1028",
+            "838",
+            "190",
+            "0.8152"
+          ]
+        ],
+        "l_part": [
+          "1028, 838, 40, 110, 219, 40, 469, 0"
+        ],
+        "l_seam": [
+          [
+            "16",
+            "8"
+          ]
+        ],
+        "l_scope": [
+          [
+            "755",
+            "1233"
+          ]
+        ]
+      },
+      "report_r18": {
+        "m_rows": [
+          8,
+          "bcdb7b851f76"
+        ],
+        "m_tab": [
+          [
+            "2",
+            "2",
+            "370",
+            "1",
+            "1",
+            "1",
+            "1",
+            "1",
+            "2",
+            "2"
+          ],
+          [
+            "2",
+            "4",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "2",
+            "6",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ],
+          [
+            "4",
+            "2",
+            "0",
+            "2",
+            "2",
+            "2",
+            "2",
+            "3",
+            "6",
+            "7"
+          ],
+          [
+            "4",
+            "4",
+            "0",
+            "4",
+            "4",
+            "4",
+            "4",
+            "9",
+            "36",
+            "41"
+          ],
+          [
+            "6",
+            "2",
+            "0",
+            "5",
+            "5",
+            "5",
+            "5",
+            "15",
+            "30",
+            "40"
+          ]
+        ],
+        "m_dis": [
+          [
+            "0",
+            "6"
+          ]
+        ],
+        "m_new": [
+          "0"
+        ],
+        "m_anch": [
+          [
+            "2",
+            "-2"
+          ]
+        ],
+        "m_rank": [
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "m_brk": [
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "m_mis": [
+          "0"
+        ],
+        "m_t3": [
+          [
+            "838",
+            "838",
+            "838",
+            "0",
+            "1218"
+          ]
+        ],
+        "m_pla": [
+          [
+            "3947",
+            "0"
+          ]
+        ],
+        "m_union": [
+          [
+            "948",
+            "838",
+            "110"
+          ]
+        ],
+        "m_scope": [
+          [
+            "370",
+            "468",
+            "5"
+          ]
+        ]
+      },
+      "traceback": false,
+      "id": "b8",
+      "claim": "良性：给 §14.10 的 sanch 那行补一条尾部注释（语义不动）",
       "kind": "benign",
       "layer": "both",
       "anchor_hits": 1,
