@@ -1,47 +1,168 @@
 {
   "script": "check_r11_mutation.py",
   "target": "验证脚本/so10_reps.py",
-  "target_bytes": 299654,
-  "engine_json_tests": 103,
+  "layers": [
+    "R11",
+    "R12",
+    "R13"
+  ],
+  "target_bytes": 405848,
+  "engine_json_tests": 117,
   "anchor_counts": {
     "    return int(t3) % n == 0": 1,
     "        ang = 2.0 * math.pi * float(a) * float(q)": 1,
     "    return sum(3 * f_bl(f) for f in fl)": 1,
     "    hit4 = [x for x in c4 if x['singlet'] > 0]": 1,
-    "    return None if t3.denominator != 1 else int(t3) % 3": 1
+    "    return None if t3.denominator != 1 else int(t3) % 3": 1,
+    "    tri = (p + 2 * q) if conv == 'A' else (2 * p + q)": 1,
+    "            oo = 1 if k == 0 else d // math.gcd(k, d)": 1,
+    "        idx *= x": 1,
+    "and (sum(v).numerator % 2 == 0)": 1,
+    "            (x[3] + y[3]) % CEN_U_PER)": 1,
+    "    return (int(lab[2]) + 2 * int(lab[0]) + 3 * int(lab[1])) % 4": 1,
+    "    vord_pairs = [corder((ci, 0, 0)) for ci in range(len(V))]": 1,
+    "        wcapc = wko & clo": 1,
+    "          if all(FV[k]['sig'][i] == FV[k]['mpp'] for k in sorted(FV))]": 1,
+    "    Kset = set(K)": 1
   },
   "fixture_ok": true,
-  "cases_total": 6,
-  "mutants": 4,
-  "benign": 1,
-  "caught": 4,
+  "cases_total": 16,
+  "mutants": 12,
+  "benign": 3,
+  "caught": 12,
   "missed": [],
   "false_alarm": [],
+  "uncovered_layers": [],
   "baseline_pairs": [
     [
       8,
       0
     ]
   ],
+  "baseline_global": {
+    "g_size": [
+      6
+    ],
+    "g_flag": 5,
+    "g_idx": [
+      6
+    ],
+    "g_root": [
+      "否 / 否",
+      "是 / 是"
+    ]
+  },
+  "baseline_r13": {
+    "h_size": [
+      "16"
+    ],
+    "h_k": [
+      "$(0, 0, 0)$、$(1, 1, 1)$"
+    ],
+    "h_kord": [
+      "1, 2"
+    ],
+    "h_by": [
+      "3"
+    ],
+    "h_int": [
+      [
+        "13",
+        "14"
+      ]
+    ],
+    "h_exc": [
+      "$210$"
+    ],
+    "h_mp": [
+      "2"
+    ],
+    "h_tord": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "9"
+    ]
+  },
+  "layer_mutants": {
+    "R11": 4,
+    "R12": 4,
+    "R13": 4
+  },
   "verdict": "CAUGHT",
   "cases": [
     {
       "exit": 0,
-      "gates": 103,
-      "pass": 103,
+      "gates": 117,
+      "pass": 117,
       "fail_ids": [],
       "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": []
+      },
       "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
       "report_pairs": [
         [
           8,
           0
         ]
       ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
       "traceback": false,
       "id": "ctl",
       "claim": "基线：不植入",
       "kind": "baseline",
+      "layer": "both",
       "anchor_hits": 0,
       "expect_caught": false,
       "ok": true
@@ -58,21 +179,50 @@
         "R11.6",
         "R11.7"
       ],
+      "layer_fail_ids": {
+        "R11": [
+          "R11.6",
+          "R11.7"
+        ],
+        "R12": [],
+        "R13": []
+      },
       "printed_r11_block": false,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
       "report_pairs": [
         [
           7,
           1
         ]
       ],
+      "report_global": {
+        "g_size": [],
+        "g_flag": 3,
+        "g_idx": [],
+        "g_root": []
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
       "traceback": false,
       "id": "m1",
       "claim": "甲：同余式右移一位，把 N|3Q 写成 N|Q（只动三条路径里的整除那条）",
       "kind": "mutant",
+      "layer": "R11",
       "anchor_hits": 1,
       "expect_caught": true,
       "moved": [
         "report_pairs",
+        "report_global",
+        "report_r13",
         "gates_pass"
       ],
       "ok": true
@@ -87,20 +237,48 @@
       "r11_fail_ids": [
         "R11.6"
       ],
+      "layer_fail_ids": {
+        "R11": [
+          "R11.6"
+        ],
+        "R12": [],
+        "R13": []
+      },
       "printed_r11_block": false,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
       "report_pairs": [
         [
           8,
           0
         ]
       ],
+      "report_global": {
+        "g_size": [],
+        "g_flag": 3,
+        "g_idx": [],
+        "g_root": []
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
       "traceback": false,
       "id": "m2",
       "claim": "丙：浮点那条把 2pi 周期写成 pi 半周期（只动三条路径里的浮点那条）",
       "kind": "mutant",
+      "layer": "R11",
       "anchor_hits": 1,
       "expect_caught": true,
       "moved": [
+        "report_global",
+        "report_r13",
         "gates_pass"
       ],
       "ok": true
@@ -121,21 +299,52 @@
         "R11.8",
         "R11.10"
       ],
+      "layer_fail_ids": {
+        "R11": [
+          "R11.6",
+          "R11.7",
+          "R11.8",
+          "R11.10"
+        ],
+        "R12": [],
+        "R13": []
+      },
       "printed_r11_block": false,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
       "report_pairs": [
         [
           0,
           8
         ]
       ],
+      "report_global": {
+        "g_size": [],
+        "g_flag": 3,
+        "g_idx": [],
+        "g_root": []
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
       "traceback": false,
       "id": "m3",
       "claim": "荷账丢掉求和号：sum_k 3(B-L)_k 写成只取第一条场",
       "kind": "mutant",
+      "layer": "R11",
       "anchor_hits": 1,
       "expect_caught": true,
       "moved": [
         "report_pairs",
+        "report_global",
+        "report_r13",
         "gates_pass"
       ],
       "ok": true
@@ -150,42 +359,845 @@
       "r11_fail_ids": [
         "R11.7"
       ],
+      "layer_fail_ids": {
+        "R11": [
+          "R11.7"
+        ],
+        "R12": [],
+        "R13": []
+      },
       "printed_r11_block": false,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
       "report_pairs": [
         [
           7,
           0
         ]
       ],
+      "report_global": {
+        "g_size": [],
+        "g_flag": 3,
+        "g_idx": [],
+        "g_root": []
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
       "traceback": false,
       "id": "m4",
       "claim": "枚举改用 R11.1 那个错 projector 的零权当筛选条件",
       "kind": "mutant",
+      "layer": "R11",
       "anchor_hits": 1,
       "expect_caught": true,
       "moved": [
         "report_pairs",
+        "report_global",
+        "report_r13",
         "gates_pass"
       ],
       "ok": true
     },
     {
       "exit": 0,
-      "gates": 103,
-      "pass": 103,
+      "gates": 117,
+      "pass": 117,
       "fail_ids": [],
       "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": []
+      },
       "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
       "report_pairs": [
         [
           8,
           0
         ]
       ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
       "traceback": false,
       "id": "b1",
       "claim": "良性：给 f_tri 补一条尾部注释（语义不动）",
       "kind": "benign",
+      "layer": "both",
+      "anchor_hits": 1,
+      "expect_caught": false,
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 110,
+      "pass": 108,
+      "fail_ids": [
+        "R12.1",
+        "R12.5"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [
+          "R12.1",
+          "R12.5"
+        ],
+        "R13": []
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 7,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
+      "traceback": false,
+      "id": "g1",
+      "claim": "R12：换掉色 Z_3 生成元的甲侧 triality（p+2q 写成 p+q）⇒ 两支不再互化",
+      "kind": "mutant",
+      "layer": "R12",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_global",
+        "report_r13",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 110,
+      "pass": 108,
+      "fail_ids": [
+        "R12.1",
+        "R12.3"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [
+          "R12.1",
+          "R12.3"
+        ],
+        "R13": []
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 21,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
+      "traceback": false,
+      "id": "g2",
+      "claim": "R12：阿贝尔群的元素阶多重集把单位元读成最大阶（定名那一步失去唯一命中）",
+      "kind": "mutant",
+      "layer": "R12",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_global",
+        "report_r13",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 110,
+      "pass": 109,
+      "fail_ids": [
+        "R12.2"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [
+          "R12.2"
+        ],
+        "R13": []
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          11
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
+      "traceback": false,
+      "id": "g3",
+      "claim": "R12：格指数把不变因子取和而不是取积（三条出处不再同数）",
+      "kind": "mutant",
+      "layer": "R12",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_global",
+        "report_r13",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 110,
+      "pass": 109,
+      "fail_ids": [
+        "R12.0"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [
+          "R12.0"
+        ],
+        "R13": []
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": false,
+      "printed_r13_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 否"
+        ]
+      },
+      "report_r13": {
+        "h_size": [],
+        "h_k": [],
+        "h_kord": [],
+        "h_by": [],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [],
+        "h_tord": []
+      },
+      "traceback": false,
+      "id": "g4",
+      "claim": "R12：\"在不在根格里\"的第二条判法把坐标和的奇偶改成模 3（两条判法不再同判）",
+      "kind": "mutant",
+      "layer": "R12",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_global",
+        "report_r13",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 0,
+      "gates": 117,
+      "pass": 117,
+      "fail_ids": [],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": []
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "traceback": false,
+      "id": "b2",
+      "claim": "良性：给 cen_law 的 U(1) 分量补一条尾部注释（语义不动）",
+      "kind": "benign",
+      "layer": "both",
+      "anchor_hits": 1,
+      "expect_caught": false,
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 117,
+      "pass": 116,
+      "fail_ids": [
+        "R13.1"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [
+          "R13.1"
+        ]
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "traceback": false,
+      "id": "h1",
+      "claim": "R13：路丙的标准 triality 号把 3b 写成 2b（丙与格读数不再成 q_lat = 3 q_std）",
+      "kind": "mutant",
+      "layer": "R13",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 117,
+      "pass": 116,
+      "fail_ids": [
+        "R13.0"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [
+          "R13.0"
+        ]
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "traceback": false,
+      "id": "h2",
+      "claim": "R13：色类阶的枚举把类元读成对角粘合元（(ci,0,0) 写成 (ci,1,1) ⇒ 类表\"阶\"列漂移）",
+      "kind": "mutant",
+      "layer": "R13",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 117,
+      "pass": 116,
+      "fail_ids": [
+        "R13.6"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [
+          "R13.6"
+        ]
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [],
+        "h_exc": [],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "traceback": false,
+      "id": "h3",
+      "claim": "R13：正向对照把两半\"交集\"写成\"并集\"（半群读数退化 ⇒ 集合相等不再成立）",
+      "kind": "mutant",
+      "layer": "R13",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_r13",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 1,
+      "gates": 117,
+      "pass": 116,
+      "fail_ids": [
+        "R13.4"
+      ],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": [
+          "R13.4"
+        ]
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": false,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "10"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "traceback": false,
+      "id": "h4",
+      "claim": "R13：物质字称的实现者把相位判据取反（只数逐场都 ≠ 目标相位的元 ⇒ 个数偏离恰 2）",
+      "kind": "mutant",
+      "layer": "R13",
+      "anchor_hits": 1,
+      "expect_caught": true,
+      "moved": [
+        "report_r13",
+        "gates_pass"
+      ],
+      "ok": true
+    },
+    {
+      "exit": 0,
+      "gates": 117,
+      "pass": 117,
+      "fail_ids": [],
+      "r11_fail_ids": [],
+      "layer_fail_ids": {
+        "R11": [],
+        "R12": [],
+        "R13": []
+      },
+      "printed_r11_block": true,
+      "printed_r12_block": true,
+      "printed_r13_block": true,
+      "report_pairs": [
+        [
+          8,
+          0
+        ]
+      ],
+      "report_global": {
+        "g_size": [
+          6
+        ],
+        "g_flag": 5,
+        "g_idx": [
+          6
+        ],
+        "g_root": [
+          "否 / 否",
+          "是 / 是"
+        ]
+      },
+      "report_r13": {
+        "h_size": [
+          "16"
+        ],
+        "h_k": [
+          "$(0, 0, 0)$、$(1, 1, 1)$"
+        ],
+        "h_kord": [
+          "1, 2"
+        ],
+        "h_by": [
+          "3"
+        ],
+        "h_int": [
+          [
+            "13",
+            "14"
+          ]
+        ],
+        "h_exc": [
+          "$210$"
+        ],
+        "h_mp": [
+          "2"
+        ],
+        "h_tord": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "9"
+        ]
+      },
+      "traceback": false,
+      "id": "b3",
+      "claim": "良性：给 Kset 那行补一条尾部注释（语义不动）",
+      "kind": "benign",
+      "layer": "both",
       "anchor_hits": 1,
       "expect_caught": false,
       "ok": true

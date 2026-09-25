@@ -371,6 +371,10 @@ def doc_check_checks(total):
         # 站点普查打印在这里，**不抄进 README**：文档里抄一份"N 处"，下一次加站点它就是假话，
         # 而那正是这一族存在的理由。planted_hist 则钉住夹具自己有没有电 —— 投放点若落在一个
         # 没有台账记号的段落里，"段落级豁免吞不掉这一族"这句话就没被这一记证明过。
+        # 投放处数**从文本里数**而不是写死成 1：文档每多引一次当前台账读数，`replace` 就多改一处，
+        # 于是期望的投诉数也跟着多一处（上一版把"08 里恰好一处"当成常数，本轮 08 长到两处 ⇒ 该例
+        # 报"抓到 1+2"，看着像门禁失灵、其实是夹具自己过期了）。
+        r_sites, m_sites = rtext.count(want), mtext.count(mut_want)
         site_n = site_h = 0
         site_free = []
         for rel in bt.HAND_DOCS:
@@ -384,8 +388,8 @@ def doc_check_checks(total):
         planted_hist = any(bt.MUT_CASES.search(ln) and bt.HISTORIC.search(ln)
                            for _i, ln in bt.doc_blocks(mtext))
         census = ('站点普查：%d 处带那句例数、其中 %d 处所在段落被 HISTORIC 认成过去时（未认成的：%s）'
-                  '；投放那一处带台账记号=%s' % (site_n, site_h, '、'.join(site_free) or '无',
-                                                planted_hist))
+                  '；投放那一处带台账记号=%s；本次投放 README %d 处、08 %d 处（期望投诉数 = 投放处数）'
+                  % (site_n, site_h, '、'.join(site_free) or '无', planted_hist, r_sites, m_sites))
 
         def snap(r, m):
             rp.write_text(r, encoding='utf-8')
@@ -409,19 +413,22 @@ def doc_check_checks(total):
         ('手写文档里两处现在时例数与本脚本/变异台账此刻一致 ⇒ 数字核对无违规（两处都留原值）',
          not clean[0] and not clean[1],
          '违规 %d+%d 处：%s' % (len(clean[0]), len(clean[1]), (clean[0] + clean[1])[:2])),
-        ('同一份快照里改错两处（README 防护例数 −3、08 变异体数 +3）⇒ 两族各自点出一处'
-         '（一族抓到不替另一族作证）；且这一族的**每一处**站点所在段落都被 HISTORIC 认成过去时，'
-         '投放那一处也在其中 ⇒ 段落级豁免一旦扩到它就等于一处都不核对'
+        ('同一份快照里改错两处（README 防护例数 −3、08 变异体数 +3）⇒ 两族各自把**投放的那几处**全部点出'
+         '（一族抓到不能替另一族作证，一处投放漏抓就是那一处没在核对）；且这一族的**每一处**站点所在段落都被 '
+         'HISTORIC 认成过去时，投放那一处也在其中 ⇒ 段落级豁免一旦扩到它就等于一处都不核对'
          '（站点普查过期时这一例先响，别把"每一处"留在散文里当记忆）',
-         len(drift[0]) == 1 and len(drift[1]) == 1 and planted_hist and site_h == site_n,
-         '抓到 %d+%d 处、planted_hist=%s：%s ｜ %s'
-         % (len(drift[0]), len(drift[1]), planted_hist, (drift[0] + drift[1])[:2], census)),
+         len(drift[0]) == r_sites and len(drift[1]) == m_sites and r_sites >= 1 and m_sites >= 1
+         and planted_hist and site_h == site_n,
+         '抓到 %d+%d 处（投放 %d+%d 处）、planted_hist=%s：%s ｜ %s'
+         % (len(drift[0]), len(drift[1]), r_sites, m_sites, planted_hist,
+            (drift[0] + drift[1])[:2], census)),
         ('同段落里加一个"第X项"台账记号、数字改对 ⇒ 不得凭空报事（豁免不靠记号，数字对就是对）',
          not muted[0] and not muted[1],
          '误报 %d+%d 处：%s' % (len(muted[0]), len(muted[1]), (muted[0] + muted[1])[:2])),
-        ('"第X项"与改错的数字同段落 ⇒ 两处仍必须各自被抓（段落级豁免会把它们吞掉）',
-         len(bled[0]) == 1 and len(bled[1]) == 1,
-         '抓到 %d+%d 处：%s' % (len(bled[0]), len(bled[1]), (bled[0] + bled[1])[:2])),
+        ('"第X项"与改错的数字同段落 ⇒ 投放的每一处仍必须各自被抓（段落级豁免会把它们吞掉）',
+         len(bled[0]) == r_sites and len(bled[1]) == m_sites,
+         '抓到 %d+%d 处（投放 %d+%d 处）：%s'
+         % (len(bled[0]), len(bled[1]), r_sites, m_sites, (bled[0] + bled[1])[:2])),
         ('磁盘上那份真变异核验台账过文档门禁的六条分支：此刻无违规',
          not led_clean, '违规 %d 条：%s' % (len(led_clean), led_clean[:2])),
         ('把台账一次改错六处 ⇒ 六条分支各自出一条，且台账整个换成空的时"缺失不是通过"那条也出'

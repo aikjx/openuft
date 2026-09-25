@@ -62,7 +62,7 @@ $\\Rightarrow$ 残留离散规范对称性**不**给质子稳定性论证——�
 整数或半整数，$B-L=\\tfrac23(\\varepsilon_1+\\varepsilon_2+\\varepsilon_3)$ 取 $8$），
 于是格点运算全程整数、无浮点；内积 $\\langle a,b\\rangle:=144(a,b)$ 也是整数。
 
-诚实边界（详见报告 §12）：
+诚实边界（详见报告 §14）：
 - 表示论是**数学**，不是"自然界选了 SO(10)"的证据；本探针不提升任何证据等级，也不关闭 L10。
 - "$Q=0$ 才允许取期望值"与"$B-L$ 必须被破掉"是**物理输入**而非李论推论；两条任一改掉，
   "$126_H$ 必需"随之失效。$16_H/\\overline{16}_H$ 的 $|\\Delta(B-L)|=1$ 单步通道始终合法
@@ -536,7 +536,7 @@ QHP = add(T3L, add(T3R, half(BL))) if chain is not None else None
 def chain_band(scn=None):
     """现场调用链探针，解出单阈 3221 链各情形的 $M_{\\rm GUT}$（只收物理解）。
 
-    为什么必须是**活数**：本报告 §0/§11 的散文要引用"$M_{\\rm GUT}$ 的摆动倍数"。
+    为什么必须是**活数**：本报告 §0/§13 的散文要引用"$M_{\\rm GUT}$ 的摆动倍数"。
     2026-09-24 台账 F4（链探针情形 C 的 $b_2$ 重复计入）修复后，三情形区间从
     $3.8\\,(A/B)$ 倍变成 $8.7\\,(A/C)$ 倍，而本报告当时没跟着动 —— 写死数字就是这条复发路径。
     """
@@ -2494,7 +2494,7 @@ FMT_LEAK = re.compile(r"%\([A-Za-z0-9_]*\)[sdf]|%\.[0-9]+[df]|%[sdif]\b")
 DELIM_MUNCH = re.compile(r'\\[lr]vert[A-Za-z0-9]')
 # 紧跟字母的反斜杠串**长度必须是 1**。本报告的公式来自两条会各自翻倍的路：
 #   (1) r"""…""" 不消费任何转义 ⇒ 源码里手写的 `$\\nu$` 原样落进文件；
-#   (2) §13 的"算得/应为/备注"三列是 repr 转储（那是审计痕迹，故意保留），而 repr 会把数据里
+#   (2) §15 的"算得/应为/备注"三列是 repr 转储（那是审计痕迹，故意保留），而 repr 会把数据里
 #       本就合法的 `$\nu^c$` 里的反斜杠翻倍成 `$\\nu^c$` —— 本轮 67 处全部出自这条。
 # 两种翻倍落进文件后同形：MathJax 把 `\\` 读成换行、后面的控制词降级成斜体字母（`\nu` 显示成
 # "nu"）。数值门禁看不见，渲染才看得见 ⇒ 全文当场判：模式 = 两个及以上反斜杠紧跟字母；
@@ -2636,7 +2636,7 @@ def yukawa_section():
           '允许集立即换成 $16$ 的共轭而不是原来那批名字（$\\Rightarrow$ 共轭映射真的在跑）；'
           '把双线性的两个因子换成同一条 $SU(2)_R$ 串里的**带电**伙伴，所需权重立刻落到 '
           '$\\Delta_R$ 的**双重带电**分量 $\\Rightarrow$ "$Q=0$ 才允许取期望值"这条物理输入'
-          '确实在起决定作用。两次的植入前后对照都印在 §13 对应行的备注里。', '',
+          '确实在起决定作用。两次的植入前后对照都印在 §15 对应行的备注里。', '',
           '**本节的边界**（不进门禁，故明写）：', '',
           '* 只判 **d=4**（可重整）通道，且只判到"哪些表示允许出现"。哪个拷贝与哪一代费米子耦合、'
           '系数多大、$CP$ 结构如何，**都不在本仪器覆盖范围内** $\\Rightarrow$ **L10 未关闭**。',
@@ -4245,7 +4245,10 @@ def run_global_layer():
     for qd in sorted(chans):
         N = int(Nres[str(qd)])
         zels = [F(k) / F(qd) for k in range(N)]
-        for (nm, lab, bl) in sorted(chans[qd], key=lambda t: (str(t[1]), str(t[2]))):
+        # 键必须全序：$16$ 与 $144$ 同为 $(0,0,0,1)$，只排到 $(lab,bl)$ 时并列由 set 的散列序决定
+        # ⇒ 每次跑换一次行序，报告不能按行引用。第三键取 `names` 名次（与全文其余表同序）。
+        for (nm, lab, bl) in sorted(chans[qd],
+                                    key=lambda t: (str(t[1]), str(t[2]), names.index(t[0]))):
             surv = [x for x in C if cen_phase(x, lab, bl) == 0]
             assert all(len(cen_class(x, G)) == len(G) for x in surv), \
                 r'陪集大小不等于 $|\Gamma|$ ⇒ 商不掉：%s' % nm
@@ -4285,7 +4288,8 @@ def run_global_layer():
     for qd in sorted(chans):
         N = int(Nres[str(qd)])
         zels = [F(k) / F(qd) for k in range(N)]
-        nm0, lab0, bl0 = sorted(chans[qd], key=lambda t: (str(t[1]), str(t[2])))[0]
+        nm0, lab0, bl0 = sorted(chans[qd], key=lambda t: (str(t[1]), str(t[2]),
+                                                          names.index(t[0])))[0]
         surv = [x for x in C if cen_phase(x, lab0, bl0) == 0]
         reps = coset_reps(surv, G)
         allc = []
@@ -4600,9 +4604,474 @@ def run_global_layer():
              r'读数 (通道, 全组合, 仅 $\mathbb Z_N$ 允许, 完整群允许, 差集, 中心取值, 纯中心见证) %s'
              % [(c['qd'], c['all'], c['z'], c['f'], c['onlyz'], c['onlyf'],
                  c['kinds'], c['pure'], c['noncen'], c['disagree']) for c in ctl])
+    # ---- R12.6 行序不变量：这张表要能被按行引用 ⇒ 打印次序必须由数据决定，不能由进程散列决定
+    plain = [(r['qd'], r['lab'], r['bl']) for r in chan_rows]
+    full = [(r['qd'], r['lab'], r['bl'], names.index(r['rep'])) for r in chan_rows]
+    ncol = len(plain) - len(set(plain))
+    p &= ok('R12.6', 'R12 那张承载者表会把多个表示印在同一个 $(\\mathrm{lab},B-L)$ 键上（$16$ 与 '
+                    '$144$ 同为 $(0,0,0,1)$，且存活/商后/结构逐项同值）：只按 $(\\mathrm{lab},B-L)$ '
+                    '排时有 %d 对并列 $\\Rightarrow$ 并列项的先后由 set 的散列序决定，于是每次跑换一次'
+                    '行序，报告那张表和外部台账都不能按行引用。补上"表示在 `names` 里的名次"作第三键后'
+                    ' %d 行的键互不相同、且打印次序 $=$ 键的升序 $\\Rightarrow$ 行序是由数据决定的确定序。'
+                    '这里同时要求并列数不为 0 $\\Rightarrow$ 一旦这 %d 对并列从数据里消失，本判定自己'
+                    '报**不成立**，不会被一个空话题蒙过去'
+             % (ncol, len(chan_rows), ncol),
+             ncol > 0 and len(set(full)) == len(full) and full == sorted(full),
+             r'(通道, lab, $B-L$, 名次) 头 %d 行 %s；并列对数 %d' % (3, full[:3], ncol))
     return p
 
+
+G422 = {}                   # 报告 §12 的原始读数（与门禁同源，不在报告里另算一遍）
+
+
+def run_residual422_layer():
+    r"""R13：把 422 链的残留"按 $SU(4)$ 权格重做"做成格上的读数。
+
+    §9（R10）留过一条边界："走 422 链时 $B-L$ 不是独立因子（它坐在 $SU(4)_c$ 的 Cartan
+    里）⇒ 那条链上的残留要按 $SU(4)$ 的权格重做，本节未做"；§11（R12）又留了一条"422
+    一侧的 $\Gamma$ 只有格一条路"。本层用同一次计算把两条一起关掉：`SUB_422` 里
+    $SU(4)_c$ 的单根不是 $A_3$ 链（第三条是 $\varepsilon_2+\varepsilon_3$）⇒ triality
+    公式不能直接代 ⇒ 中心元必须先在那张权格上**数出来**。数法用**特征标向量**：中心元
+    由它在 $SU(4)$ 三个基本权上的作用 $v=(v_1,v_2,v_3)\in(\mathbb Q/\mathbb Z)^3$ 决定，
+    $v=A^{-1}m\ (\mathrm{mod}\ 1)$，$m$ 跑协权格 $\mathbb Z^3$ ⇒ 商掉行格是内置的，
+    有限枚举、无 BFS。三问：
+      (i) 色块中心在这张格上有几类、乘法结构、在场谱的核 ⇒ 与 R12 的格指数
+          $[P_{422}:P_{10}]=2$ 跨路对账（那边是 Smith 标准形，这边是特征标枚举）；
+      (ii) 这条链的 v.e.v. 通道有多少、逐通道商后残群是什么；
+      (iii) 物质字称在这张格上能不能实现、mod 核之后是否唯一；§10 那 8 条 SM 单态算符
+          在这条链上改不改判。
+    三条算术路：甲 行标号（`branching` 直接给）、乙 逐权重（`ipp` 现投影到块单根）、
+    丙 标准 triality 约定的槽位映射 ⇒ 甲乙必须逐条同表，丙要么整体同号要么登记分歧。
+    """
+    p = True
+    names = sorted(r['name'] for r in TABLE if r['name'] in NAMED)
+    blk = SUB_422.simples[:3]
+    A1L, A1R = SUB_422.simples[3], SUB_422.simples[4]
+
+    # ---- 色块 Cartan：由根算（不抄表），逆矩阵当场用 A·A⁻¹=I 验双向
+    A = [[int(2 * F(ip(blk[i], blk[j]), F(ip(blk[j], blk[j])))) for j in range(3)]
+         for i in range(3)]
+    detA = abs(g_det(A))
+    snfA = g_snf(A)
+    invA = inverse_rows(A)
+    assert all(sum(F(A[i][k]) * F(invA[k][j]) for k in range(3)) == F(int(i == j))
+               for i in range(3) for j in range(3)), '块 Cartan 的逆没有验成双向逆'
+
+    # ---- 中心类：特征标向量 v=A⁻¹m (mod 1)，m 跑协格；v 即群元，加法 mod 1
+    clsm = {}
+    for mm in itertools.product(range(6), repeat=3):
+        v = tuple(g_mod1(sum(F(invA[i][k] * mm[k]) for k in range(3))) for i in range(3))
+        if v not in clsm or mm < clsm[v]:
+            clsm[v] = mm
+    V = sorted(clsm)
+    vid = dict((v, i) for i, v in enumerate(V))
+    assert V[0] == (F(0), F(0), F(0)), '单位元必须排在第一位'
+
+    def vadd(a, b):
+        return tuple(g_mod1(F(a[k]) + F(b[k])) for k in range(3))
+
+    C = [(ci, aL, aR) for ci in range(len(V)) for aL in (0, 1) for aR in (0, 1)]
+
+    def cadd(x, y):
+        return (vid[vadd(V[x[0]], V[y[0]])], (x[1] + y[1]) % 2, (x[2] + y[2]) % 2)
+
+    def corder(x, upto=60):
+        y, n = x, 1
+        while y != (0, 0, 0) and n <= upto:
+            y = cadd(y, x)
+            n += 1
+        return n if y == (0, 0, 0) else None
+
+    vord_pairs = [corder((ci, 0, 0)) for ci in range(len(V))]
+    vords = sorted(vord_pairs)
+    full_ords = sorted(corder(x) for x in C)
+
+    def ph(c, h3, lL, lR):
+        ci, aL, aR = c
+        return g_mod1(sum(F(h3[k]) * V[ci][k] for k in range(3))
+                      + F(aL * lL, 2) + F(aR * lR, 2))
+
+    def sigA(labels):
+        return tuple(ph(c, labels[:3], labels[3], labels[4]) for c in C)
+
+    def sigB(mu):
+        return tuple(ph(c, [ipp(mu, b) for b in blk], ipp(mu, A1L), ipp(mu, A1R))
+                     for c in C)
+
+    # 路丙：甲表里那个 4 阶元的特征标（分量分母都整除 4）与槽位映射的标准 triality 号
+    ci4 = next(i for i in range(len(V)) if corder((i, 0, 0)) == 4)
+    w4 = [int(4 * V[ci4][k]) for k in range(3)]
+
+    def q_lat(lab):
+        return sum(w4[k] * int(lab[k]) for k in range(3)) % 4
+
+    def q_std(lab):
+        return (int(lab[2]) + 2 * int(lab[0]) + 3 * int(lab[1])) % 4
+
+    # ---- 在场谱 + 甲/乙/丙 三路交叉
+    spec, misAB, misLab, tri_bad, tri_bad1 = {}, 0, 0, [], []
+    for nm in names:
+        ms = irrep(NAMED[nm])[1]
+        for row in branching(ms, SUB_422):
+            lab = tuple(row['labels'])
+            wt = row['wt']
+            if ([ipp(wt, b) for b in blk] != list(lab[:3]) or
+                    ipp(wt, A1L) != lab[3] or ipp(wt, A1R) != lab[4]):
+                misLab += 1
+            if sigA(lab) != sigB(wt):
+                misAB += 1
+            if (3 * q_std(lab) - q_lat(lab)) % 4:
+                tri_bad.append(lab)
+            if (q_std(lab) - q_lat(lab)) % 4:
+                tri_bad1.append(lab)
+            spec.setdefault(lab, set()).add(nm)
+    spec_rows = sorted(spec)
+    uni_s3 = all((3 * q_std((a, b, c, 0, 0)) - q_lat((a, b, c, 0, 0))) % 4 == 0
+                 for a in range(4) for b in range(4) for c in range(4))
+    s1_bad = [lab for lab in spec_rows if (lab[1] + lab[2]) % 2]
+
+    # ---- 核 K：对整个在场 422 谱平凡的群元
+    sig_of = dict((k, sigA(list(k))) for k in spec_rows)
+    sig2rows = {}
+    for k in spec_rows:
+        sig2rows.setdefault(sig_of[k], []).append(k)
+    K = [c for i, c in enumerate(C) if all(sig_of[k][i] == 0 for k in spec_rows)]
+    Kset = set(K)
+    kords = sorted(corder(x) for x in K)
+
+    # ---- v.e.v. 通道：$Q=0$ 且在中心下非平凡的在场权重
+    chan = {}
+    unmatched = 0
+    for nm in names:
+        ms = irrep(NAMED[nm])[1]
+        for mu in ms:
+            if chg(mu, QHP) != 0:
+                continue
+            sb = sigB(mu)
+            if all(x == 0 for x in sb):
+                continue
+            rows = sig2rows.get(sb)
+            if not rows:
+                unmatched += 1
+                continue
+            d = chan.setdefault((nm, sb), {'nwt': 0, 'rows': sorted(rows)})
+            d['nwt'] += 1
+
+    chan_rows = []
+    for (nm, sb), d in sorted(chan.items(),
+                              key=lambda t: (names.index(t[0][0]), str(t[0][1]))):
+        surv = [c for c in C if sb[C.index(c)] == 0]
+        seen, reps422 = set(), []
+        for x in surv:
+            key = frozenset(cadd(k, x) for k in K)
+            if key not in seen:
+                seen.add(key)
+                reps422.append(x)
+        assert len(reps422) * len(K) == len(surv), \
+            '陪集数 × 核大小 ≠ 存活数 @ %s' % nm
+        ords = sorted(corder(x) for x in reps422)
+        chan_rows.append({'rep': nm, 'rank': names.index(nm), 'sb': sb,
+                          'rows': [[str(x) for x in r] for r in d['rows'][:3]],
+                          'nrows': len(d['rows']), 'nwt': d['nwt'],
+                          'surv': len(surv), 'quot': len(reps422), 'ords': ords,
+                          'struct': ab_name(len(reps422), ords),
+                          'cyc': max(ords) == len(reps422), 'expo': max(ords)})
+
+    # ---- 物质场经 16_F 的权重桥到 422 行（同 R6.7 的跨链对象）
+    def dom_rep(S, mu):
+        for M, _sg in S.W.items():
+            w = mat_vec(M, mu)
+            if S.dominant(w):
+                return S.labels(w)
+        raise KeyError(mu)
+
+    ms16 = irrep(NAMED['16'])[1]
+    bridge, rowlab = {}, {}
+    for mu in ms16:
+        bridge.setdefault(dom_rep(SUB_3221, mu), set()).add(dom_rep(SUB_422, mu))
+    for row in branching(ms16, SUB_3221):
+        rowlab[row['labels']] = row['bl']
+
+    FV = {}
+    for f in SEL['mat']:
+        keys = [lab for lab, bb in rowlab.items()
+                if lab[:3] == tuple(f['lam']) and F(bb) == F(f['BL'])]
+        assert len(keys) == 1, '场 %s 的 3221 桥行不唯一：%s' % (f['name'], keys)
+        row42 = sorted(bridge[keys[0]])
+        sigs = set(sigA(list(lab)) for lab in row42)
+        assert len(row42) == 1 and len(sigs) == 1, \
+            '场 %s 的 422 承载行或荷签名不唯一：%s' % (f['name'], row42)
+        FV[f['name']] = {'row42': tuple(int(x) for x in row42[0]),
+                         'sig': sigs.pop(), 'BL': F(f['BL']),
+                         'mpp': g_mod1(F(3 * (-int(f['BL'].numerator)),
+                                         2 * int(f['BL'].denominator)))}
+
+    # ---- 物质字称的实现者：逐场相位等于 $(-1)^{3(B-L)}$ 的群元
+    mp = [{'cand': c, 'order': corder(c)} for i, c in enumerate(C)
+          if all(FV[k]['sig'][i] == FV[k]['mpp'] for k in sorted(FV))]
+
+    # ---- SM 单态算符（与 §10 的 hit4 同一批，按名字核对）
+    sing = sorted(set('+'.join(SEL['mat'][j]['name'] for j in combo)
+                      for combo, n in SEL['r4'][0] if n > 0))
+    hit4_names = sorted(x['name'] for x in SEL['hit4'])
+    assert sing == hit4_names, \
+        '本层的场内容类与 §10 的含单态类不是同一批：%s vs %s' % (sing, hit4_names)
+    NSING = len(sing)
+
+    def op_sig(name):
+        tot = [F(0)] * len(C)
+        for part in name.split('+'):
+            s = FV[part]['sig']
+            tot = [g_mod1(tot[i] + s[i]) for i in range(len(C))]
+        return tot
+
+    for r in chan_rows:
+        surv = [c for c in C if r['sb'][C.index(c)] == 0]
+        r['allow'] = [s for s in sing if all(op_sig(s)[C.index(c)] == 0 for c in surv)]
+        r['nallow'] = len(r['allow'])
+
+    # ---- 正向对照：去掉"要是 SM 单态"，判据还在不在做功
+    fields = sorted(FV)
+    multic = [cs for k in (2, 3, 4)
+              for cs in itertools.combinations_with_replacement(fields, k)]
+
+    def allowed_by(subset):
+        ii = [C.index(c) for c in subset]
+        return set(cs for cs in multic
+                   if all(g_mod1(sum(FV[p]['sig'][i] for p in cs)) == 0 for i in ii))
+
+    ctls = []
+    for r in chan_rows:
+        surv = [c for c in C if r['sb'][C.index(c)] == 0]
+        full = allowed_by(surv)
+        wko = allowed_by([c for c in surv if c[0] == 0])              # 只带弱中心的元
+        clo = allowed_by([c for c in surv if c[1] == 0 and c[2] == 0])  # 只带色中心的元
+        wcapc = wko & clo
+        ctls.append({'rep': r['rep'], 'rank': r['rank'], 'all': len(multic),
+                     'full': len(full), 'weak': len(wko), 'color': len(clo),
+                     'ban': len(multic) - len(full),
+                     'inter': full == wcapc, 'wcapc': len(wcapc),
+                     'ex': sorted('+'.join(cs) for cs in multic if cs not in full)[:3]})
+    allc_tot = len(multic)
+
+    def n_ms(n, k):
+        r = 1
+        for i in range(1, k + 1):
+            r = r * (n + k - i) // i
+        return r
+
+    formula = sum(n_ms(len(FV), k) for k in (2, 3, 4))
+
+    byst = {}
+    for r in chan_rows:
+        byst.setdefault(tuple(r['struct'] or ()), []).append(r)
+    bys = []
+    for st, rs in sorted(byst.items(), key=lambda kv: list(kv[0])):
+        assert all(r['surv'] == rs[0]['surv'] and r['quot'] == rs[0]['quot'] for r in rs)
+        bys.append({'struct': list(st), 'n': len(rs),
+                    'surv': rs[0]['surv'], 'quot': rs[0]['quot'],
+                    'ords': sorted(rs[0]['ords']), 'cyc': rs[0]['cyc'],
+                    'expo': rs[0]['expo'],
+                    'carriers': [(r['rep'], r['rows'][0]) for r in rs]})
+
+    struct_cnt = {}
+    for r in chan_rows:
+        k2 = tuple(r['struct'])
+        struct_cnt[k2] = struct_cnt.get(k2, 0) + 1
+
+    G422.update({
+        'nrep': len(names), 'reps': names,
+        'A': A, 'det': int(detA), 'snf': [int(x) for x in snfA],
+        'ncls': len(V), 'classes': [[str(x) for x in v] for v in V],
+        'canon': [list(clsm[v]) for v in V], 'vords': vords,
+        'vord_pairs': vord_pairs, 'ncand': len(C),
+        'cords': full_ords, 'cstruct': ab_name(len(C), full_ords),
+        'nspec': len(spec_rows), 'misAB': misAB, 'misLab': misLab,
+        'ci4': ci4, 'w4': w4, 'unis3': uni_s3,
+        'tri_bad': [list(map(str, x)) for x in tri_bad],
+        'tri_bad1': [list(map(str, x)) for x in tri_bad1],
+        's1_pred': [list(map(str, x)) for x in s1_bad],
+        'K': [list(x) for x in K], 'kords': kords,
+        'idx_422': GLOB.get('idx_422'),
+        'unmatched': unmatched, 'nchan': len(chan_rows),
+        'nwt': sum(r['nwt'] for r in chan_rows),
+        'rows': [{k: v for k, v in r.items() if k != 'sb'} for r in chan_rows],
+        'bys': bys, 'nsing': NSING, 'sing': sing,
+        'fv': dict((k, {'row42': list(map(str, v['row42'])),
+                        'sig': [str(x) for x in v['sig']],
+                        'BL': str(v['BL']), 'mpp': str(v['mpp'])})
+                   for k, v in sorted(FV.items())),
+        'mp': [{'cand': list(x['cand']), 'order': x['order']} for x in mp],
+        'allc_tot': allc_tot, 'formula': formula,
+        'ctl': ctls})
+
+    # ---- R13.0 色块格与中心类的枚举
+    p &= ok('R13.0',
+            r'色块单根不是 $A_3$ 链（第三条是 $\varepsilon_2+\varepsilon_3$）⇒ 一切在'
+            '它自己的格上重算：Cartan %s 由根算出、' % (G422['A'],)
+            + r'$|\det|=%d$、Smith 不变因子 %s'
+            r'$\Rightarrow$ 协权格商行格给 %d 个类；全群（类 $\times$ 弱 $\times$ 弱）阶分布 %s'
+            '交给"穷举该阶上全部阿贝尔群、比对元素阶多重集"那一步唯一命中（ab 标准序升幂） '
+            r'$\mathbb Z_2\times\mathbb Z_2\times\mathbb Z_4$：两个弱 $\mathbb Z_2$ 与色中心 '
+            r'$\mathbb Z_4$ 的直积；%d 个候选群元对特征标加法封闭、每个阶都有数、单位元唯一 '
+            r'$\Rightarrow$ 中心元的枚举是**有限**的特征标向量法：没有 BFS，也没有代 triality 公式'
+            % (G422['det'], snfA, len(V), full_ords, len(C)),
+            A == [[2, -1, -1], [-1, 2, 0], [-1, 0, 2]] and detA == 4 and
+            snfA == [1, 1, 4] and len(V) == 4 and vords == [1, 2, 4, 4] and
+            len(C) == 16 and all(x for x in full_ords) and
+            ab_name(16, full_ords) == [2, 2, 4] and
+            all(0 <= cadd(x, y)[0] < len(V) for x in C for y in C) and
+            all(cadd((0, a, b), (0, c, d)) == (0, (a + c) % 2, (b + d) % 2)
+                for a in (0, 1) for b in (0, 1) for c in (0, 1) for d in (0, 1)),
+            'Cartan %s；det %s；SNF %s；类 %s；协格代表 %s；类阶 %s；全群阶 %s → %s' %
+            (A, detA, snfA, [[str(x) for x in v] for v in V],
+             [clsm[v] for v in V], vords, full_ords, G422['cstruct']))
+
+    # ---- R13.1 同一张荷表的三条算术路
+    p &= ok('R13.1',
+            '同一张 16 列荷表有三条算术路：甲 直接用 `branching` 的行标号，乙 把每条权重'
+            '经 ipp 现投影到块单根再算，丙 拿甲表里那个 4 阶元（特征标 $4v=%s$）对槽位映射的'
+            % (w4,)
+            + r'标准 triality 号 $q_{\rm std}=c+2a+3b$。读数：行标号 vs 逐权重错 %d 条、甲 vs 乙'
+            '错 %d 条（在场 %d 行）；丙在全部 %d 行上满足 '
+            r'$q_{\rm lat}\equiv 3q_{\rm std}\pmod 4$'
+            '（错 %d 条，且该同余在 $[0,4)^3$ 上恒成立），而 '
+            r'$q_{\rm lat}\equiv q_{\rm std}$'
+            ' 在 %d 个不同行上失败 $\\Rightarrow$ 失败行恰是 '
+            r'$b\not\equiv c\pmod 2$'
+            ' 的那批（按奇偶预测 %d 行；违例含跨表示重复共 %d 条，去重后与预测集合相等）'
+            r'$\Rightarrow$ triality 的符号约定在 422 这张格上也是**从数据选定**的'
+            r'（与 R10.4 同族：引擎号 $s=3$，即逆）'
+            % (misLab, misAB, len(spec_rows), len(spec_rows), len(tri_bad),
+               len(set(tri_bad1)), len(s1_bad), len(tri_bad1)),
+            misLab == 0 and misAB == 0 and len(spec_rows) == 30 and
+            not tri_bad and uni_s3 and ci4 == 2 and w4 == [2, 1, 3] and
+            sorted(set(tri_bad1)) == sorted(set(s1_bad)) and
+            len(set(tri_bad1)) == 8 and len(tri_bad1) == 10,
+            '甲乙错 %d/%d；行数 %d；$s=1$ 违例行 %s' %
+            (misAB, misLab, len(spec_rows), [list(map(str, x)) for x in tri_bad1]))
+
+    # ---- R13.2 在场谱的核：与 R12 格指数跨路对账
+    p &= ok('R13.2',
+            '对全部 %d 条在场 422 行逐行试"16 个群元哪个相位恒为 0"' % len(spec_rows)
+            + r'$\Rightarrow$ 核 $K=%s$、$|K|=%d$、阶分布 %s $\Rightarrow$ 它是把 $SU(4)$'
+            '中心元 $(0,0,2)$ 与两个弱 $\\mathbb Z_2$ **对角粘合**出来的那个 2 阶元，不是任一'
+            '因子的直积元。这个数与 §11 的格指数 '
+            r'$[P_{422}:P_{10}]=%s$ 跨路对账：那边是 Smith 标准形、这边是特征标枚举，两台机器'
+            r'$\Rightarrow$ 两条链的核各有两条独立出处（3221 侧见 R12.2：6=2x3），且四数同值'
+            % (G422['K'], len(K), kords, GLOB.get('idx_422')),
+            K == [(0, 0, 0), (1, 1, 1)] and len(K) == 2 and
+            GLOB.get('idx_422') == 2 and kords == [1, 2] and
+            all(cadd(x, y) in Kset for x in Kset for y in Kset) and
+            ab_name(2, kords) == [2],
+            'K %s；阶 %s；R12 格指数 %s；在场 %d 个表示' %
+            (K, kords, GLOB.get('idx_422'), len(names)))
+
+    # ---- R13.3 v.e.v. 通道与逐通道商后残群
+    neutral22 = [b for b in bys if tuple(b['struct']) == (2, 2)]
+    p &= ok('R13.3',
+            'v.e.v. 通道 $=$ 在场表示里 $Q=0$ 且在中心下非平凡的权重（按签名归并）：%d 条，'
+            % len(chan_rows)
+            + ('%d 个这样的权重全部落在谱行上（未落 %d 条）'
+               r'$\Rightarrow$ 甲乙两套账合拢。商后残群取 %d 种同构型：%s'
+               r'$\Rightarrow$ 与 3221 链（$\mathbb Z_6/\mathbb Z_2\times\mathbb Z_6/\mathbb Z_{12}$）'
+               '同族结论、不同族读数：**大小只挂在签名上、同构型挂在承载者上**；其中 '
+               r' %s 那一支恰落在 $SU(4)$ 中性 $(0,0,2)$ 行上的 %s 通道（$q_\Delta=2$ 的 '
+               r'$\Delta_R$ 位）；每通道存活数 $=$ 商后 $\times\,|K|$'
+               % (G422['nwt'], unmatched, len(bys),
+                  '、'.join('%s：%d 条（存活 %d、商后 %d、阶 %s；承载 %s）' %
+                            (ab_tex(b['struct']), b['n'], b['surv'], b['quot'], b['ords'],
+                                   plain_tex(sorted(set(x[0] for x in b['carriers']))))
+                            for b in bys),
+                  ab_tex(neutral22[0]['struct']) if neutral22 else '—',
+                  plain_tex(sorted(set(x[0] for x in neutral22[0]['carriers'])))
+                  if neutral22 else '—')),
+            len(chan_rows) == 14 and unmatched == 0 and len(bys) == 3 and
+            struct_cnt == {(4,): 6, (2, 2): 2, (2,): 6} and
+            all(r['struct'] and r['surv'] == r['quot'] * len(K) and
+                r['surv'] % len(K) == 0 for r in chan_rows) and
+            len(neutral22) == 1 and neutral22[0]['n'] == 2 and
+            set(x[0] for x in neutral22[0]['carriers']) == {'126', '126̄'} and
+            all(row[:3] == ['0', '0', '2'] for b in neutral22
+                for _nm, row in b['carriers']),
+            '通道 (承载者, 行数, 权重数, 存活, 商后, 结构, 循环) %s' %
+            [(r['rep'], r['nrows'], r['nwt'], r['surv'], r['quot'], r['struct'],
+              r['cyc']) for r in chan_rows])
+
+    # ---- R13.4 物质字称：可实现，且 mod K 唯一
+    p &= ok('R13.4',
+            r'%d 个物质场各自的 422 承载行唯一、整行一个荷签名，且全部是奇 $3(B-L)$' % len(FV)
+            + r'$\Rightarrow$ $(-1)^{3(B-L)}$ 的相位逐场都是 %s（与 R11 的荷账本同向）。'
+            '逐群元试"作用在 %d 个场上等于 ' % ('1/2', len(FV))
+            + r'$(-1)^{3(B-L)}$"$\Rightarrow$ 恰好 %d 个实现者（阶分布 %s）：'
+            '$(0,1,1)$（两个弱中心）与 $(1,0,0)$（色中心 '
+            r'$v=%s$）——两者相差核的非平凡元 $(1,1,1)$ $\Rightarrow$ **mod $K$ 唯一**'
+            r'$\Rightarrow$ 这条链上物质字称不是"有没有"的问题，而是同一个陪集换代表元'
+            % (len(mp), [x['order'] for x in mp],
+               ','.join(str(x) for x in V[1])),
+            len(FV) == 6 and all(v['mpp'] == F(1, 2) for v in FV.values()) and
+            len(mp) == 2 and [tuple(x['cand']) for x in mp] == [(0, 1, 1), (1, 0, 0)] and
+            all(x['order'] == 2 for x in mp) and cadd(mp[0]['cand'], K[1]) == mp[1]['cand'],
+            '实现者 %s；逐场 (422 行, $B-L$, mpp) %s' %
+            ([x['cand'] for x in mp],
+             [(k, v['row42'], str(v['BL']), str(v['mpp'])) for k, v in sorted(FV.items())]))
+
+    # ---- R13.5 8 条 SM 单态算符在这条链上逐通道全允许
+    p &= ok('R13.5',
+            '§10 那 %d 条含 SM 单态的 d=6 场内容类在本链是**同一批**类（按名字核对，'
+            'assert 已钉）' % NSING
+            + '⇒ 逐通道重跑判据：%d 条通道的允许数全部是 %s ' % (len(chan_rows),
+                                                                 uni(r['nallow'] for r in chan_rows))
+            + r'$\Rightarrow$ "残留群不保质子"不随选哪条链破 $B-L$ 而变：第二条链与第一条链'
+              '（§11 的 R12.3 回判）逐条同判 '
+              r'$\Rightarrow$ §10 的判决在两条链上都一个字不用改',
+            NSING == 8 and all(r['nallow'] == NSING and r['allow'] == sing
+                               for r in chan_rows),
+            '逐通道允许数 %s；类 %s' % ([r['nallow'] for r in chan_rows], sing))
+
+    # ---- R13.6 正向对照：判据在每条通道上都真的在禁东西
+    exc = [c for c in ctls if not c['inter']]
+    if len(exc) == 1:
+        excpart = ('唯一例外是 %s 那条通道：它的存活群元不被"只弱/只色"两半生成，两半交集放到 %d 条、'
+                   '逐元相位再收到 %d 条 '
+                   % (exc[0]['rep'], exc[0]['wcapc'], exc[0]['full']))
+        excpart += r'$\Rightarrow$ 对角型残群上"半群读数"严格粗于逐元读数（这条要记进边界）；'
+    elif not exc:
+        excpart = '全部通道都同判、无例外；'
+    else:
+        excpart = ('例外 %d 条（%s）——"恰好一条例外"的读数不再成立；'
+                   % (len(exc), '、'.join(c['rep'] for c in exc)))
+    p &= ok('R13.6',
+            '判决"允许全部 %d 条"必须排除"判了 0 条"' % NSING
+            + '⇒ 去掉"要是 SM 单态"那一步，拿 %d 个物质场在尺寸 2,3,4 上配成可重多重集' % len(FV)
+            + r'（公式 $\binom{n+k-1}{k}$ 合计 %d 条，与枚举 %d 一致）逐通道重跑：'
+            '全组允许 %s 条、被禁 %s 条 ⇒ 每条通道都禁了东西（最少的一支也禁 %d 条）。'
+            % (formula, allc_tot, uni(c['full'] for c in ctls),
+               uni(c['ban'] for c in ctls), min(c['ban'] for c in ctls))
+            + '交集结构按**集合相等**判定而不是数数："全组允许 $=$ （只带弱中心的元允许）'
+              r'$\cap$（只带色中心的元允许）"在 %d/%d 条通道成立；'
+              % (sum(1 for c in ctls if c['inter']), len(ctls)) + excpart +
+              '两半各有单独起作用的时候（弱半最多单独多禁 %d 条、色半 %d 条）'
+              % (max(c['weak'] - c['full'] for c in ctls),
+                 max(c['color'] - c['full'] for c in ctls)),
+            allc_tot == formula == 203 and len(ctls) == 14 and
+            all(c['all'] == allc_tot and c['ban'] > 0 and
+                c['full'] >= NSING for c in ctls) and
+            sum(1 for c in ctls if c['inter']) == 13 and
+            [c['rep'] for c in exc] == ['210'] and
+            all(c['wcapc'] == c['full'] for c in ctls if c['inter']) and
+            exc[0]['wcapc'] == 147 and exc[0]['full'] == 126 and
+            max(c['weak'] - c['full'] for c in ctls) > 0 and
+            max(c['color'] - c['full'] for c in ctls) > 0 and
+            min(c['ban'] for c in ctls) == 77 and max(c['ban'] for c in ctls) == 125,
+            '(通道, 全组合, 全组允许, 弱半, 色半, 两半交集, 被禁) %s；例子 %s' %
+            ([(c['rep'], c['all'], c['full'], c['weak'], c['color'], c['wcapc'],
+               c['ban']) for c in ctls], [c['ex'] for c in ctls[:2]]))
+    return p
+
+
 def residual_section():
+
     """报告 §9：$B-L$ 破缺后残留哪个离散规范对称性（R10）。"""
     r = RESID
     if not r.get('rows'):
@@ -4694,9 +5163,12 @@ def residual_section():
               '**本节的边界**（不进门禁，故明写）：', '',
               '* 只算 $U(1)_{B-L}$ **这一个因子**内的残留：$SU(2)_{L/R}$ 与 $SU(3)_c$ 的中心、'
                 '以及规范群的整体形式（$Spin(10)$ 与它的商）都不在本节的权重算术里 $\\Rightarrow$ '
-                '完整的残留群可能是这里那个 $\\mathbb{Z}_N$ 的**扩张**，本节只给出"至少留下这些"。',
+                '完整的残留群可能是这里那个 $\\mathbb{Z}_N$ 的**扩张**，本节只给出"至少留下这些"'
+                '（这条边界已由 §11/R12 做成读数：完整残群逐个中心元数出来了，且在 §10 的 SM '
+                '单态片上与这里那个 $\\mathbb{Z}_N$ 逐条同判）。',
               '* 走 422 链时 $B-L$ 不是独立因子（它坐在 $SU(4)_c$ 的 Cartan 里，见 §5 的 R6.7）'
-                '$\\Rightarrow$ 那条链上的残留要按 $SU(4)$ 的权格重做，**本节未做**。',
+                '$\\Rightarrow$ 那条链上的残留要按 $SU(4)$ 的权格重做（§12/R13 已把这条补成读数：'
+                '判决不换）。',
               '* 残留群在低能**能禁哪些算符**是另一个问题：本节只数群元与其作用，'
                 '没有逐个算 $u^cd^cd^c$ 一类的 SM 不变算符拿什么表示 $\\Rightarrow$ 那一问由 §10'
                 '（R11）接手，本层的两条阶读数只到"群里有什么元"为止。',
@@ -4900,7 +5372,7 @@ def global_section():
          '然后回到 §10 那批算符上逐条比对。用的还是同一套格点算术，没有新引进李论输入。', '',
          r'### 11.1 覆盖群的核 $\Gamma$（R12.1）', '',
          r'$SU(3)_c\times SU(2)_L\times SU(2)_R\times U(1)_{B-L}$ 到 $Spin(10)$ 的映射的核，'
-         r'就是"在**在场谱的每一条** 3221 分量上都 acting 平凡"的那批中心元 $\Rightarrow$ '
+         r'就是"在**在场谱的每一条** 3221 分量上都作用平凡"的那批中心元 $\Rightarrow$ '
          r'枚举即可，不需要引用文献里那句"核是 $\mathbb Z_6$"。候选元 %d 个（色 $\mathbb Z_3$、'
          r'两个 $\mathbb Z_2$、$t\in\frac{1}{%d}\mathbb Z/%d\mathbb Z$），'
          '谱上不同的 (行标号, $B-L$) %d 条，活下来 %d 个：' %
@@ -4950,8 +5422,10 @@ def global_section():
          '的只有乙。另外甲里 $u$ 的归一化是**量出来**的：取 $u=3(B-L)$ 时 $P_{10}$ 根本不在 $P_H$ 里'
          r'（这台机器直接返回"不给数"而不是放宽），取 $u=\frac{B-L}{4}$ 才包含 $\Rightarrow$ '
          '那个 $1/4$ 不是抄来的约定。422 一侧只搬了格陈述：`SUB_422` 的单根不是 $A_3$ 链，'
-         r'拿它逐枚举中心元会把 triality 公式用错 $\Rightarrow$ 那一条**只有**甲一路，本节据此把它'
-         '记在边界里。' % (g['idx_h'], g['chk_h'], g['chk_422'], g['chk_hop']), '',
+          r'拿它逐枚举中心元会把 triality 公式用错 $\Rightarrow$ 那一条**只有**甲一路，本节据此把它'
+          '记在边界里（该边界现已补：422 侧改用特征标格枚举中心元，与甲的 Smith 标准形 %s '
+          r'两台代码同数 $\Rightarrow$ 422 一侧现在也有两条独立出处，见 §12/R13）。' %
+          (g['idx_h'], g['chk_h'], g['chk_422'], g['chk_hop'], g['idx_422']), '',
          '### 11.3 破缺之后的完整残留群（R12.3）', '',
          r'存活群 $=$ 让 v.e.v. 不变的那些 $(a_3,a_L,a_R,t)$，再**商掉** $\Gamma$ 才是低能真正剩下的'
          '离散群。下表逐承载者数：', '',
@@ -5068,22 +5542,155 @@ def global_section():
                '若只取链探针字面声明的谱，$P/Q$ 类会换成那一支的读数（与 §9/R10.10、§10/R11.10 '
                r'同一条条件性 $\Rightarrow$ 本节不引入新的条件判决，也不改动它们的）。'
                % (g['maxdim'], g['nrep']),
-         '* 本节回答的是上一条待办（完整残留群含整体形式），**不**回答 L10：耦合统一仍缺二环跑动'
+         '* 本节回答的是 §14 那条边界（完整残留群含整体形式），**不**回答 L10：耦合统一仍缺二环跑动'
                r'与阈值修正 $\Rightarrow$ **L10 未关闭**。', '']
+    return L
+
+
+def residual422_section():
+    r"""报告 §12：422 链的残留按 $SU(4)$ 权格重做成格上读数（R13 层）。
+
+    全部读数取自 G422（`run_residual422_layer` 的产出），本节不重算任何东西。
+    """
+    g = G422
+    rows, ctl = g.get('rows') or [], g.get('ctl') or []
+    if not (rows and ctl and g.get('K') and g.get('mp') and g.get('fv')
+            and g.get('classes') and g.get('bys') and g.get('vord_pairs')):
+        return ['', '## 12. 422 链的残留离散群（R13）', '',
+                '本层未跑通 ⇒ 不印任何读数。', '']
+    ninter = sum(1 for c in ctl if c['inter'])
+    exc = [c for c in ctl if not c['inter']]
+    neutral = [b for b in g['bys'] if tuple(b['struct']) == (2, 2)]
+    L = ['', '## 12. 422 链的残留离散群（R13）', '',
+         '§9 与 §11 的边界都指向同一件待办：走 422 链时 $B-L$ 不在独立 $U(1)$ 因子里，'
+         '它坐在 $SU(4)_c$ 的 Cartan 中，而 `SUB_422` 的单根不是 $A_3$ 链（第三条是 '
+         r'$\varepsilon_2+\varepsilon_3$）$\Rightarrow$ triality 公式不能直接代，中心元必须先在那张'
+         '权格上**数出来**。本层用同一次计算关掉两条待办，且不引进新的李论输入：中心元改由它在 '
+         r'$SU(4)$ 三个基本权上的**特征标** $v=(v_1,v_2,v_3)\in(\mathbb Q/\mathbb Z)^3$ 表示，'
+         r'$v=A^{-1}m\;(\mathrm{mod}\;1)$，$m$ 跑协权格 $\mathbb Z^3$；不同的 $m$ 模掉行格给出不同'
+         '特征标，特征标 mod 1 相加即群乘法 ⇒ 有限枚举、无 BFS，"商掉行格"是内置的。', '',
+         '### 12.1 色块格与中心类（R13.0）', '',
+         r'Cartan 由块单根现算：%s，$|\det|=%d$、Smith 不变因子 %s $\Rightarrow$ 协权格商行格给 '
+         '%d 个类；类乘法即特征标 mod 1 加法：' % (g['A'], g['det'], g['snf'], g['ncls']), '',
+         '| 类（特征标 $v$ mod 1） | 协格典范代表 $m$ | 阶 |', '|---|---|---|']
+    for i, v in enumerate(g['classes']):
+        L.append('| $(%s)$ | $(%s)$ | %d |' %
+                 (', '.join(v), ', '.join(map(str, g['canon'][i])), g['vord_pairs'][i]))
+    L += ['', '全候选群 = 类 × 两个弱 $\\mathbb Z_2$，共 %d 个元，对特征标加法封闭；元素阶多重集 %s '
+              '交给"穷举该阶上全部阿贝尔群、比对元素阶多重集"那一步，唯一命中 %s（ab 标准序升幂）'
+              r'$\Rightarrow$ 中心就是色 $\mathbb Z_4$ 与两个弱 $\mathbb Z_2$ 的直积。'
+              '同一张 16 列荷表三条算术路：甲 行标号（`branching` 直给）、乙 逐权重（`ipp` 现投影到'
+              '块单根）：甲 vs 乙错 %d 条、行标号 vs 逐权重错 %d 条（在场 %d 行全对）；'
+              r'丙 标准 triality 号 $q_{\rm std}=c+2a+3b$（槽位映射）对方格读数 $q_{\rm lat}$'
+              r'（甲表里 4 阶元特征标 $4v=%s$）：全部行上满足 $q_{\rm lat}\equiv 3q_{\rm std}'
+              r'\pmod 4$，且该同余在 $[0,4)^3$ 上恒成立；取 $s=1$ 的违例行去重后与 '
+              r'$b\equiv c\pmod 2$ 的预测集合相等 $\Rightarrow$ 符号约定在这张格上也是**从数据'
+              '选定**的（与 R10.4 同族）。' %
+              (g['ncand'], g['cords'], ab_tex(g['cstruct']), g['misAB'], g['misLab'],
+               g['nspec'], ', '.join(map(str, g['w4']))), '',
+         r'### 12.2 在场谱的核 $K$ 与 §11 的跨路对账（R13.2）', '',
+         r'对全部 %d 条在场 422 行逐行试"哪个群元相位恒为 0" $\Rightarrow$ 核 $K=\{%s\}$'
+         r'（阶分布 %s）：非平凡元 $(1,1,1)$ 是把色类 #1（$v=(%s)$）与两个弱中心元**对角粘合**，'
+         r'不是任一因子的直积元。这个数与 §11 的格指数 $[P_{422}:P_{10}]=%s$ 对账：那边是 Smith '
+         r'标准形、这边是特征标枚举，两台代码、一张格、同一个数 $\Rightarrow$ 3221 侧已有两条独立'
+         '出处（R12.2：6 = 2×3），422 侧现在也有了。' %
+         (g['nspec'], '、'.join('$(%s)$' % ', '.join(map(str, x)) for x in g['K']),
+          g['kords'], ', '.join(g['classes'][1]), g['idx_422']), '',
+         '### 12.3 v.e.v. 通道与逐通道商后残群（R13.3）', '',
+         r'通道 $=$ 在场表示里 $Q=0$ 且在中心下非平凡的权重（按签名归并）：%d 条；'
+         r'%d 个这样的权重全部落在谱行上（未落 %d 条）'
+         r'$\Rightarrow$ 甲乙两套账合拢。每通道存活元 $=$ 商后陪集 $\times\,|K|$：' %
+         (g['nchan'], g['nwt'], g['unmatched']), '',
+         '| 承载者 | 代表 422 行 | 谱行数 | $Q=0$ 权重 | 存活元 | 商后 | 结构 | 循环 | 指数 | 允许（共 %d 条） |'
+         % g['nsing'],
+         '|---|---|---|---|---|---|---|---|---|---|']
+    for r in rows:
+        L.append('| %s | $(%s)$ | %d | %d | %d | %d | %s | %s | %d | %d |' %
+                 (plain_tex([r['rep']]), ', '.join(r['rows'][0]), r['nrows'], r['nwt'],
+                  r['surv'], r['quot'], ab_tex(r['struct']),
+                  '是' if r['cyc'] else '否', r['expo'], r['nallow']))
+    L += ['', '商后共 %d 种同构型：%s。与 3221 链同一族结论、不同族读数：**大小只挂在签名上、'
+              '同构型挂在承载者上**%s。' %
+          (len(g['bys']),
+           '；'.join('%s：%d 条（存活 %d、商后 %d、阶 %s；承载 %s）' %
+                     (ab_tex(b['struct']), b['n'], b['surv'], b['quot'], b['ords'],
+                      plain_tex(sorted(set(x[0] for x in b['carriers']))))
+                     for b in g['bys']),
+           '；其中 %s 那一支恰落在 $SU(4)$ 中性行 $(%s)$ 上（$q_\Delta=2$ 的 $\\Delta_R$ 位，承载 %s）'
+           % (ab_tex(neutral[0]['struct']), ', '.join(neutral[0]['carriers'][0][1]),
+              plain_tex(sorted(set(x[0] for x in neutral[0]['carriers']))))
+           if neutral else ''), '',
+         '### 12.4 物质场与物质字称（R13.4）', '',
+         r'6 个物质场经 `16` 的权重集桥到 422 行（与 R6.7 同一跨链对象）：每场承载行唯一、'
+         r'整行一个荷签名，且全部是奇 $3(B-L)$ $\Rightarrow$ $(-1)^{3(B-L)}$ 的相位逐场都是 '
+         '%s：' % uni(v['mpp'] for v in g['fv'].values()), '',
+         '| 场 | 422 承载行 | $B-L$ | 物质字称相位 |', '|---|---|---|---|']
+    for k in sorted(g['fv']):
+        d = g['fv'][k]
+        L.append('| %s | $(%s)$ | $%s$ | $%s$ |' %
+                 (k, ', '.join(d['row42']), d['BL'], d['mpp']))
+    L += ['', r'逐群元试"作用在 %d 个场上等于 $(-1)^{3(B-L)}$"：实现者恰 %d 个（%s，阶都是 2），'
+              r'而两者之差恰是核的非平凡元 $\Rightarrow$ 物质字称在这条链上 **mod $K$ 唯一**——它'
+              '不是"有没有"的问题，而是同一个陪集换代表元。' %
+              (len(g['fv']), len(g['mp']),
+               '、'.join('$(%s)$' % ', '.join(map(str, x['cand'])) for x in g['mp'])), '',
+         '### 12.5 同一批 SM 单态算符在第二条链上（R13.5）', '',
+         '§10 的含 SM 单态 d=6 场内容类（共 %d 条：%s）在本链按名字核对是**同一批**类；'
+         '逐通道重跑判据，允许数逐通道读数 %s ⇒ %d 条通道上**无一改判**（共 %d 条）'
+         r'$\Rightarrow$ §10 的判决（"残留群不保质子"）不随选哪条链破 $B-L$ 而变。' %
+         (g['nsing'], '、'.join(g['sing']), uni(r['nallow'] for r in rows),
+          len(rows), g['nsing']), '',
+         '### 12.6 正向对照：判据在每条通道上真的在禁东西（R13.6）', '',
+         r'去掉"要是 SM 单态"那一步，拿 %d 个物质场配成尺寸 2,3,4 的可重多重集（公式 '
+         r'$\sum_k\binom{n+k-1}{k}=%d$，与枚举 %d 一致），逐通道重跑判据：' %
+         (len(g['fv']), g['formula'], g['allc_tot']), '',
+         '| 承载者 | 全多重集 | 全组允许 | 只弱半 | 只色半 | 两半交集 | 被禁 | 集合相等 |',
+         '|---|---|---|---|---|---|---|---|']
+    for c in ctl:
+        L.append('| %s | %d | %d | %d | %d | %d | %d | %s |' %
+                 (plain_tex([c['rep']]), c['all'], c['full'], c['weak'], c['color'],
+                  c['wcapc'], c['ban'], '是' if c['inter'] else '**否**'))
+    if len(exc) == 1:
+        inter_txt = ('"全组允许 $=$ 只弱半 $\\cap$ 只色半"按**集合相等**判定：在 %d/%d 条通道成立；'
+                     '唯一例外是 %s 那条：它的存活群元不被"只弱/只色"两半生成，两半交集放到 %d 条、'
+                     r'逐元相位再收到 %d 条 $\Rightarrow$ 对角型残群上"半群读数"严格粗于逐元读数'
+                     % (ninter, len(ctl), plain_tex([exc[0]['rep']]), exc[0]['wcapc'],
+                        exc[0]['full']))
+    elif not exc:
+        inter_txt = ('"全组允许 $=$ 只弱半 $\\cap$ 只色半"在全部 %d 条通道上按集合相等成立，'
+                     '无例外' % ninter)
+    else:
+        inter_txt = ('"全组允许 $=$ 只弱半 $\\cap$ 只色半"只在 %d/%d 条通道上按集合相等成立，'
+                     '例外是 %s' % (ninter, len(ctl),
+                                   '、'.join(plain_tex([c['rep']]) for c in exc)))
+    L += ['', '每条通道至少禁 %d 条 ⇒ "全部允许"不是"判了 0 条"。%s。'
+              '两半各有单独起作用的时候：弱半最多单独多禁 %d 条、色半最多单独多禁 %d 条。' %
+              (min(c['ban'] for c in ctl), inter_txt,
+               max(c['weak'] - c['full'] for c in ctl),
+               max(c['color'] - c['full'] for c in ctl)), '',
+         '**边界**（与 §9–§11 的边界同族）：', '',
+         r'* 这仍是条件读数：承载集合是在场谱，"允许"要读成"若相应标量的 $SU(4)$ 中性分量取期望'
+         '值"；本层**不**提升任何物理结论的证据等级，也不改变 P4／P7 的判据与分级。',
+         '* 半群读数不总等价于逐元读数：本层实测到对角型存活群上"只弱 $\\cap$ 只色"严格更粗'
+         '（%d/%d 条一致）$\\Rightarrow$ 想用"生成元的两半"省掉逐元枚举，先得按通道判生成结构。'
+         % (ninter, len(ctl)),
+         '* 两条链逐条同判只说明"判决不随选链而变"，**不**说明残留群保质子；'
+         '导数算符（位势、跑动、阈值）与本层无关。',
+         r'* 本层不回答 L10：两环跑动与阈值修正仍缺 $\Rightarrow$ **L10 未关闭**。', '']
     return L
 
 def write_report(gates):
     (eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok, ch_ok,
-     res_ok, sel_ok, gl_ok) = gates
+     res_ok, sel_ok, gl_ok, g422_ok) = gates
     all_ok = (eng_ok and id_ok and phy_ok and nogo_ok and br_ok and xchk_ok and yuk_ok and
-              inv_ok and ch_ok and res_ok and sel_ok and gl_ok)
+              inv_ok and ch_ok and res_ok and sel_ok and gl_ok and g422_ok)
     L = ['# SO(10) 表示论报告（D5 权重格第一性推导）', '',
          '由 [so10_reps.py](so10_reps.py) 自动生成，**零第三方依赖**，全程整数格点 + 精确有理数。',
          '',
          '**唯一的李论输入**：D5 的 Dynkin 图（链 1–2–3，节点 3 分叉到 4 与 5）。',
          'Cartan 矩阵、正根、$\\rho$、基本权重、维数、权重重数、$\\mathrm{Sym}^2/\\wedge^2$ 分解、',
          '$B-L$ 谱、$\\Delta_R$ 承载判定、两条链的**完整分支规则**与 **d=4 Yukawa 通道表**'
-         '全部由它推出；每一步都有门禁（§13）。',
+         '全部由它推出；每一步都有门禁（§15）。',
          '',
          '## 0. 为什么做这个计算', '',
          '`so10_chain.py` 已把"给定内容下统不统一"变成可判定计算，但标量谱是**手工放置**的：',
@@ -5091,7 +5698,7 @@ def write_report(gates):
          '而被当作 $\\Delta_R$ 的那个三重态',
          '实际是 $B-L=0$、取自 $45_H$，**不能破 $B-L$**（链探针 S2.7）。',
          '本报告把"哪些 Higgs 表示能承担 $B-L$ 破缺"从**引用**变成**推导**。', '',
-         '**结论一览**（每条对应 §13 的门禁编号）：在 $\\dim\\le210$ 内，'
+         '**结论一览**（每条对应 §15 的门禁编号）：在 $\\dim\\le210$ 内，'
          '$10_H/\\overline{10}_H/16_H/\\overline{16}_H/45_H/54_H/144_H$ 里根本没有 $|B-L|=2$ '
          '的态（R5.1）；$120_H$ 有 $(1,1,1)_{\\pm2}$ 但那些态带 $|Q|=1$，一取期望值就破电磁'
          '（R5.8）；$210_H$ 的 $|B-L|=2$ 态全在 $(1,2,2)$ 里，取任何分量都破 $SU(2)_L$'
@@ -5109,7 +5716,13 @@ def write_report(gates):
          '其后 §7 数规范不变张量的个数（R8）、§8 按双费米子道把它们拆开（R9）、§9 把"取了期望值之后 '
          '$U(1)_{B-L}$ 还剩什么"数成荷格上的阶（R10，并当场推翻旧散文"残留 $Z_2$（物质字称）对质子'
          '有利"）、§10 再把那个残留群落成**低能算符的选择定则**并回答 08 的 P7 $\\Rightarrow$ 判决是'
-         '**残留群不保质子**（R11）。'
+         '**残留群不保质子**（R11）。§11 再把那个残留群补全到中心 × 整体形式上'
+         '（R12 $\\Rightarrow$ 在场谱把群钉在 $Spin(10)$ 上，完整残群在每个通道上恰是 §9'
+         ' 那个 $\\mathbb{Z}_N$ 的两倍，却在 §10 的 SM 单态片上逐条同判 $\\Rightarrow$ §10'
+          ' 的判决一个字不用改）。§12 再把 422 那条链的残留按 $SU(4)$ 权格重做（中心元改在'
+          '特征标格上枚举、不代 triality 公式）$\\Rightarrow$ 逐通道重跑 §10 判据无一改判'
+          '$\\Rightarrow$ 判决也不随"选哪条链破 $B-L$"而变（R13）。'
+
          % (len(TABLE), higgs_tex(YUKCH.get('allow', {}).get('sym', [])),
             higgs_tex(YUKCH.get('allow', {}).get('anti', [])),
             higgs_tex(YUKCH.get('allow', {}).get('vec', []))), '',
@@ -5279,6 +5892,7 @@ def write_report(gates):
     L += residual_section()
     L += selection_section()
     L += global_section()
+    L += residual422_section()
     z_cc = INV['ledger'][0]['zero'] if INV.get('ledger') else '（R8 未运行）'
     t126, t126b, p4 = (INV.get('tri', {}).get('126', '—'), INV.get('tri', {}).get('126̄', '—'),
                        INV.get('p4', '—'))
@@ -5298,7 +5912,49 @@ def write_report(gates):
              '场内容类**全部允许**（禁 0 条），其中 %d 条同时 $\\Delta B\\ne0$、$\\Delta L\\ne0$ 且 '
              '$\\Delta(B-L)=0$ $\\Rightarrow$ **残留群不保质子**；"禁 0 条"与"枚举到 0 条"由插入标量'
              '的正对照区分（§10，R11.7–R11.9）' % (len(SEL['hit4']), len(SEL['pvl'])))
-    L += ['', '## 11. 对 L10（耦合统一）的直接影响', '',
+    glcl = ('**R12 未跑通 ⇒ 本行不下结论**' if not GLOB.get('bys') else
+            r'中心 × 整体形式做成格上读数：覆盖群到 $Spin(10)$ 的核 $|\Gamma|=%d$（三条格路数同数）'
+            r'$\Rightarrow$ 在场谱把群钉在 $Spin(10)$。逐通道残群的**大小**只挂在 $|\Delta(B-L)|$ 上、'
+            r'**同构型**也挂在承载者上（$q_\Delta=1$：%s；$q_\Delta=2$：%s）$\Rightarrow$ 完整群恰是 '
+            r'§9 那个 $\mathbb{Z}_N$ 的两倍，却在 §10 的 %d 条 SM 单态算符上与 $\mathbb{Z}_N$ '
+            r'**逐条同判**（新禁 %d 条）；去掉"要是 SM 单态"那一步做正对照，中心三项多禁 %d 条'
+            r' $\Rightarrow$ 完整群不改 §10 的判决，也不随"选哪个表示破 $B-L$"而变（§11，R12.0–R12.5）' %
+            (len(GLOB['gam']),
+             '；'.join(class_tex(b) for b in GLOB['bys'] if b['qd'] == '1'),
+             '；'.join(class_tex(b) for b in GLOB['bys'] if b['qd'] == '2'),
+             GLOB['nsing'], sum(c['sing_new'] for c in GLOB['ctl']),
+             sum(c['onlyz'] for c in GLOB['ctl'])))
+    g422cl = ('**R13 未跑通 ⇒ 本行不下结论**' if not g422_ok else
+              r'$\Rightarrow$ 不换判：422 链按 $SU(4)$ 权格重做（中心元改在特征标格上枚举、不代 '
+              r'triality 公式）后逐通道重跑 §10 判据 $\Rightarrow$ %d 条通道上 §10 的 %d 条 SM '
+              '单态类**无一改判**。正向对照：两半交集 $=$ 全组允许按集合相等只在 %d/%d 条通道成立，'
+              '例外 %s $\\Rightarrow$ 对角型残群上半群读数严格粗于逐元读数（§12，R13.0–R13.6）' %
+              (len(G422['rows']), G422['nsing'],
+               sum(1 for c in G422['ctl'] if c['inter']), len(G422['ctl']),
+               '、'.join(plain_tex([c['rep']]) for c in G422['ctl'] if not c['inter'])))
+    if GLOB.get('bys'):
+        glbd = (r'* 当年那条边界已**做成读数**（§11，R12.0–R12.5）：把 $SU(3)_c$、'
+        r'$SU(2)_{L/R}$ 的中心与 $Spin(10)$ 的整体形式一起放上荷格，在 %d 个候选中心元上'
+        r'逐个试 $\Rightarrow$ 活下来的构成核 $\Gamma$，$|\Gamma|=%d$，三条格路数同数'
+        r'（%d $=|\Gamma|$ $=%d\times%d$）$\Rightarrow$ 群被在场谱钉在 $Spin(10)$ 本身；每个通道'
+        r'上完整残群恰是 §9 那个 $\mathbb{Z}_N$ 的**两倍**、同构型还挂在承载者上 $\Rightarrow$ '
+        r'"至少留下这些"当年确实是**下界**。但多出来那半边在 §10 的 %d 条 SM 单态算符上与 '
+        r'$\mathbb{Z}_N$ **逐条同判**（新禁 %d 条），去掉"要是 SM 单态"那一步才由中心多禁 %d 条 '
+        r'$\Rightarrow$ §10 的判决不因完整群而变。当年\"仍未做\"的 422 那条链现已做成格上读数'
+        r'（残留按 $SU(4)$ 权格重做、`SUB_422` 的单根不是 $A_3$ 链 $\Rightarrow$ triality 公式'
+        r'不能直接代；§12/R13 $\Rightarrow$ 逐通道判决不换）。而且这仍是条件读数 $\Rightarrow$ '
+        r'§10 的算符判决沿同一条条件性下来'
+        r'（"允许"要读成"若补入 $126_H$ 且其中性分量取期望值"），唯一不随标量谱变的是'
+        r'"偶数条物质场 $\Rightarrow$ $3Q$ 为偶"那一步。' %
+               (GLOB['ncand'], len(GLOB['gam']), GLOB['idx_h'], GLOB['idx_422'],
+                GLOB['idx_hop'], GLOB['nsing'], sum(c['sing_new'] for c in GLOB['ctl']),
+                sum(c['onlyz'] for c in GLOB['ctl'])))
+    else:
+        glbd = (r'* §9 只数 $U(1)_{B-L}$ **这一个因子**内的残留子群：$SU(3)_c$ 与 $SU(2)_{L/R}$'
+        r' 的中心、规范群的整体形式（$Spin(10)$ 与它的商）都不在那张荷格里 $\Rightarrow$ 完整残留群'
+        r' 可能是这里那个 $\mathbb{Z}_N$ 的**扩张**，§9 只给"至少留下这些"'
+        r'（R12 未跑通 ⇒ 本条仍是旧边界，没有读数）。')
+    L += ['', '## 13. 对 L10（耦合统一）的直接影响', '',
           '| 事项 | 手工放置（旧） | 本报告（推导） |', '|---|---|---|',
           '| $\\Phi(1,2,2)$ 的来源 | 假设取自 $10_H$ | $10\\to(6,1,1)\\oplus(1,2,2)$ 由权重集直接读出 ✔ |',
           '| $\\Sigma(1,1,3)_0$ 的来源 | 误标为 $\\Delta_R$ | 取自 $45_H$、$B-L=0$，**不是** $\\Delta_R$ |',
@@ -5330,13 +5986,17 @@ def write_report(gates):
           '| $B-L$ 破缺后**残留哪个离散规范对称性** | 散文：残留 $Z_2$（物质字称，"对质子稳定'
           '反而有利"） | %s |' % rescl,
           '| 那个残留群**禁哪些低能算符**、保不保质子 | 待办（§9 登记为未判） | %s |' % selcl,
+          '| **完整**残留群（中心 × 整体形式）是哪个群、会不会改判 | 旧边界登记为未判（只数了 '
+          r'$U(1)_{B-L}$ 那一个因子） | %s |' % glcl,
+           '| 第二条链（422）上残留换不换判 | 旧边界两处登记"未做"（§9/§11） | %s |' % g422cl,
+
           '',
           '⇒ 情形 B（无 $126_H$）**不能**声称实现了 $B-L$ 破缺；它是一条"只跑到 $LR$ 相位"'
           '的参考曲线。$126_H$ 的完整分支规则**已在 §5 逐权重算出**（含每个分量落在哪条链的哪个'
           '多重态），故剩余的标量谱不确定度（当前为 ' + swing_note() + '）只能由两环跑动 + '
           '阈值修正 + $126_H$ 位势压掉，'
           '而不是再换一种手工谱。', '',
-          '## 12. 诚实边界', '',
+          '## 14. 诚实边界', '',
           '* 表示论结果是**数学陈述**：它说明"SO(10) 若成立，Higgs 扇区必须含 $126$ 型表示"，'
           '**不**说明自然界含 SO(10)，也**不**提升 UFE-1 任何结论的证据等级，'
           '更**不**意味着统一场论已完成。',
@@ -5352,27 +6012,25 @@ def write_report(gates):
           '插不进单个插入），§9 再把"取了期望值之后 $U(1)_{B-L}$ 还剩什么"数成荷格上的阶'
           '（R10：$N=q_\\Delta/g_0$，并且当场推翻旧散文"残留 $Z_2$（物质字称）"），§10 再把那个残留群'
           '落成**低能算符的选择定则**（R11：判据 $N\\mid 3Q$，逐条判决 d=4/d=6 算符 $\\Rightarrow$ '
-          '"残留群保不保质子"有了答案：**不保**）。但这六层都'
+          '"残留群保不保质子"有了答案：**不保**），§11 再把那个群补全为中心 × 整体形式并逐条'
+           '回判 §10（R12：完整群在 SM 单态片上与 §9/§10 的那个 $\\mathbb{Z}_N$ 同判），§12 再把 '
+           '422 那条链的残留按 $SU(4)$ 权格重做一遍（R13：核非平凡、14 条通道无一改判）。但这八层都'
           '**不含** Yukawa 系数（哪个拷贝与哪一代费米子耦合、'
           '矩阵多大）、'
           '不含 $126_H$ 的位势与真空方向，也**不含**任何动力学——'
           '权重层允许的分量不等于自然界取到的分量。',
-          '* §9 只数 $U(1)_{B-L}$ **这一个因子**内的残留子群：$SU(3)_c$ 与 $SU(2)_{L/R}$ 的中心、'
-          '规范群的整体形式（$Spin(10)$ 与它的商）都不在那张荷格里 $\\Rightarrow$ 完整残留群可能是'
-          '这里那个 $\\mathbb{Z}_N$ 的**扩张**，§9 只给"至少留下这些"；而且它是**条件读数** '
-          '$\\Rightarrow$ §10 的算符判决同一条条件性沿下来（"允许"要读成"若补入 $126_H$ 且其中性分量'
-          '取期望值"），唯一不随标量谱变的是"偶数条物质场 $\\Rightarrow$ $3Q$ 为偶"那一步。',
+          glbd,
           '* §10 的表只过了**规范不变**这一关（同 §7 的处置）：%s 个含 SM 单态的 d=6 场内容类全部'
           '"允许"是群论陈述，$\\Rightarrow$ "残留群不保质子"只否定"离散群能救质子"这条论证，'
           '**不**给出质子会衰变的速率，也不改变 P4／P7 的判据与分级。' %
-          ('%d 个' % len(SEL['hit4']) if SEL.get('hit4') else '那些'),
+          ('%d' % len(SEL['hit4']) if SEL.get('hit4') else '那些'),
           '* §7 数的是**规范不变张量**的个数，不是算符个数：Lorentz 指标、代（味）指标与 '
           'Fierz 恒等式三关都没过 $\\Rightarrow$ "$16^{\\otimes4}$ 有 %s 个不变张量"不能被读成'
           '"有 %s 个质子衰变算符"，本节的数**不**回填进任何寿命计算。' % (p4, p4),
           '* 未做二环跑动与阈值修正 ⇒ **L10 未关闭**。本报告只把"允许的标量内容"与'
           '"允许的 d=4 Yukawa 通道"收紧。',
           '* $C_2$、维数等只用于自校验与后续阈值分析，不与任何实验值比对。', '',
-          '## 13. 全部测试明细', '',
+          '## 15. 全部测试明细', '',
           '| 编号 | 命题 | 算得 | 应为 | 容差 | 状态 | 备注 |', '|---|---|---|---|---|---|---|']
     for r in RESULTS:
         # 三个 repr 转储列先折回表示层的翻倍再进表格（备注列还要转义裸竖线，顺序：先折、后转义）
@@ -5380,9 +6038,10 @@ def write_report(gates):
                  (r['id'], md_unescape(r['claim']), md_unescape(r['computed']),
                   md_unescape(r['expected']), r['tolerance'], r['status'],
                   md_unescape(r['note']).replace('|', '\\|')))
-    L += ['', '**门禁**：' + ('R0–R11 全部 PASS ⇒ §2 的表示清单、§4 的 $\\Delta_R$ 判定、'
-                              '§5 的分支规则、§6 的 d=4 Yukawa 通道、§7 的不变张量账目、§8 的'
-                              '道分解、§9 的残留离散群与 §10 的低能算符选择定则可信。' if all_ok else
+    L += ['', '**门禁**：' + ('R0–R13 全部 PASS ⇒ §2 的表示清单、§4 的 $\\Delta_R$ 判定、'
+                               '§5 的分支规则、§6 的 d=4 Yukawa 通道、§7 的不变张量账目、§8 的'
+                               '道分解、§9 的残留离散群、§10 的低能算符选择定则、§11 的完整残留群'
+                               '/整体形式与 §12 的 422 链重做读数可信。' if all_ok else
                               '**存在 FAIL ⇒ 本报告不出任何 Higgs 扇区结论**。'), '',
          '[返回统一场方程](../README.md) · [SO(10) 链统一报告](SO10链统一报告.md) · '
          '[已知局限](../09_已知局限与否定清单.md)']
@@ -5415,7 +6074,7 @@ def write_report(gates):
     #   4) \lvert / \rvert 后不得紧跟字母或数字 —— TeX 最长匹配会把 `\lvertB` 读成一个未定义
     #      控制词而整段公式报错。这条**必须查全文**：缺陷正是 table_row_safe 只往表格行里注的，
     #      前两条的"表格行豁免"在这里反过来不成立。
-    # 表格行豁免前两条：§13 的"算得/应为/备注"列**故意**是原始 repr，那是审计痕迹不是排版。
+    # 表格行豁免前两条：§15 的"算得/应为/备注"列**故意**是原始 repr，那是审计痕迹不是排版。
     blocks, cur = [], []
     for ln in lines:
         if ln.startswith('|') or not ln.strip():
@@ -5457,7 +6116,7 @@ def write_report(gates):
          'physics_pass': phy_ok, 'nogo_pass': nogo_ok, 'branching_pass': br_ok,
          'cross_chain_pass': xchk_ok, 'yukawa_pass': yuk_ok, 'invariant_pass': inv_ok,
          'channel_split_pass': ch_ok, 'residual_pass': res_ok, 'selection_pass': sel_ok,
-         'global_pass': gl_ok,
+         'global_pass': gl_ok, 'residual422_pass': g422_ok,
          'named_dynkin': dict((k, list(v)) for k, v in NAMED.items()),
          'table': TABLE, 'branch': BRANCH, 'su4_to_su3u1': CROSS,
          'yukawa': YUK, 'yukawa_channels': YUKCH.get('allow', {}),
@@ -5488,7 +6147,12 @@ def write_report(gates):
          # **不进 JSON**（它的键是 5 元组，JSON 的键只能是标量），其余字段原样落盘。
          'selection': dict(SEL, mat=[{k: v for k, v in f.items() if k != 'ms'}
                                      for f in SEL.get('mat', [])]),
+         # R12 的原始读数：报告 §11 的每个数字都出自这里（元组由 default=str 落成字符串）
+          'global': GLOB,
+          # R13 的原始读数：报告 §12 的每个数字都出自这里
+          'residual422': G422,
          'report_hygiene': HYGIENE,
+
          'tests': RESULTS},
         ensure_ascii=False, indent=2, default=str) + '\n', encoding='utf-8')
     return all_ok
@@ -5509,8 +6173,9 @@ def main():
     res_ok = run_residual_layer() if ch_ok else False
     sel_ok = run_selection_layer() if res_ok else False
     gl_ok = run_global_layer() if sel_ok else False
+    g422_ok = run_residual422_layer() if gl_ok else False
     all_ok = write_report((eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok,
-                           ch_ok, res_ok, sel_ok, gl_ok))
+                           ch_ok, res_ok, sel_ok, gl_ok, g422_ok))
 
     print('SO(10) 表示论引擎（D5 权重格；唯一李论输入 = Dynkin 图）')
     print('  自检：%s（%d 项，PASS %d）' %
@@ -5612,6 +6277,34 @@ def main():
               '只按 $Z_3$ 会误放行 %d 条）；整套荷换号后判决翻转 %d 条（应为 0）' %
               (len(SEL['scan_decl']), len(SEL['scan_odd']), len(SEL['forb_odd']),
                len(SEL['flip3']), len(SEL['flip_sg'])))
+    if gl_ok:
+        print('  完整残留离散规范群（R12）：候选中心元 %d 个 ⇒ 核 |Gamma| = %d（三条格路数 %d = %dx%d）'
+              '⇒ 群钉在 Spin(10)；在场 %d 个表示按 P/Q 类分层：%s / %s / %s' %
+              (GLOB['ncand'], len(GLOB['gam']), GLOB['idx_h'], GLOB['idx_422'], GLOB['idx_hop'],
+               GLOB['nrep'], GLOB['tens'], GLOB['ord2'], GLOB['ord4']))
+        print('    逐通道残群（|Delta(B-L)|, 承载者, 存活, 商后, 结构, 循环, 指数）=%s；每通道承载者数=%s；'
+              '§9 的 N=%s ⇒ 商后阶 = 2N' %
+              ([(r['qd'], r['rep'], r['surv'], r['coset'], r['struct'], r['cyc'], r['expo'])
+                for r in GLOB['rows']], GLOB['ncar'], GLOB['nres']))
+        print('    与 §10 的对账：%d 条 SM 单态算符上中心新禁 %d 条；去掉单态的正对照（每通道全组合 %d 条）'
+              '由中心多禁 %s 条；逐陪集代表元 vs 逐个存活元分歧 %d 条' %
+              (GLOB['nsing'], sum(c['sing_new'] for c in GLOB['ctl']), GLOB['allc_tot'],
+               [c['onlyz'] for c in GLOB['ctl']], sum(c['disagree'] for c in GLOB['ctl'])))
+    if g422_ok:
+        print('  422 链残留按 SU(4) 权格重做（R13）：|det A| = %d、SNF %s ⇒ 中心类 %d 个；全候选群 '
+              '%d 元 ⇒ %s；在场谱的核 |K| = %d（与 §11 的格指数 [P_422:P_10] = %s 同数）' %
+              (G422['det'], 'x'.join(str(d) for d in G422['snf']), G422['ncls'],
+               G422['ncand'], 'x'.join('Z%d' % d for d in G422['cstruct']),
+               len(G422['K']), G422['idx_422']))
+        print('    通道 %d 条、Q=0 权重 %d 个全部落在谱行（未落 %d）⇒ §10 的 %d 条 SM 单态类在每条'
+              '通道无一改判；正向对照：全多重集 %d 条，两半交集 $=$ 全组允许按集合相等 %d/%d 条'
+              '成立，例外 %s（交集 %d vs 逐元 %d）⇒ 对角型残群上半群读数严格粗于逐元读数' %
+              (G422['nchan'], G422['nwt'], G422['unmatched'], G422['nsing'],
+               G422['allc_tot'], sum(1 for c in G422['ctl'] if c['inter']),
+               len(G422['ctl']),
+               '、'.join(c['rep'] for c in G422['ctl'] if not c['inter']),
+               [c['wcapc'] for c in G422['ctl'] if not c['inter']][0],
+               [c['full'] for c in G422['ctl'] if not c['inter']][0]))
     if nogo_ok:
         print('  判定：dim≤210 内唯一能破 B−L 而不破电磁的 Higgs = 126 / 126̄；'
               '120_H 虽含 (1,1,1)±2 但 |Q|=1 ⇒ 排除（报告 §4）')
