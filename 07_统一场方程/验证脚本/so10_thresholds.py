@@ -391,7 +391,7 @@ def gate_T3():
         p &= exact('T3.S%d' % (i + 1), 'SM 相位 %s：基线 + $H_D$ 的 $\\Delta b$ = 链探针 $b_{\\rm SM}(B)$'
                    % SMN[i], mine, C.b_SM('B')[i],
                    '$b_{\\rm SM}(C)-b_{\\rm SM}(B)=\\Delta b(H_D)$：情形 C 只是多留一个二重态')
-    p &= exact('T3.F1', '费米子跨 $t_B$ 连续：$(3/5)[T_{2R}+T_{B-L}/4](3\\times16)$ = $(3/5)T_Y(3\\times16)$',
+    p &= exact('T3.F1', '费米子跨 $t_B$ 连续：$(3/5)[T_{2R}+T_{B-L}/4]\\texttt{(3$\\times$16)}$ = $(3/5)T_Y(3\\times16)$',
                F(3, 5) * (C.factor_T(('SU', 2, 'R'), C.F3)
                           + C.factor_T(('U1', C.BL, 'B-L'), C.F3) / 4),
                F(3, 5) * C.factor_T(('U1', C.YHP, 'Y'), C.F3),
