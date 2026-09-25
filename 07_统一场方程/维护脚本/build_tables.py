@@ -178,18 +178,29 @@ GUARD_TXT = (
     '%(n_retro_kinds)d 种（文档里那句"N 处命中 / K 种"以此为出处，不是记忆）；文档核对 '
     '%(cases_doccheck)d 例：在临时快照里**同一份**投放两处过期数字（README 的例数改错 3、'
     '08 里那句变异核验例数的变异体数改错 +3）⇒ check_docs() 必须两族各自点出一处，'
-    '一族抓到不替另一族作证（那一族是后接的线，没被植过错的数字等于没被核对过）；表格列数 '
+    '一族抓到不替另一族作证（那一族是后接的线，没被植过错的数字等于没被核对过）；'
+    '同一组里另有两例核**这道读台账的门禁自己**：磁盘那份真台账过 `check_mutation_ledger()` 的六条分支'
+    '且无违规，再把台账一次改错六处 ⇒ 六条分支各自得出一条投诉（少哪条就是哪条已经死了）'
+    '⇒ 一台永不响的仪器不能替四份文档作证；表格列数 '
     '%(cases_table)d 例：把修好的表格行逐字节改回修前'
     '（裸竖线）与生成器上一版的"转义"（两个反斜杠）⇒ `check_tables()` 必须点出投放的那几行，'
-    '而一个反斜杠的合法转义不得报（否则它数的是竖线，不是**没被转义**的竖线））'
+    '而一个反斜杠的合法转义不得报（否则它数的是竖线，不是**没被转义**的竖线）；反斜杠翻倍 '
+    '%(cases_backslash)d 例：把生成报告里每一处合法的"单反斜杠紧跟字母"逐处改回翻倍 ⇒ '
+    '`check_bs_runs()` 必须点名该文件自己数出的 %(bs_planted)d 处，且折叠回去逐字节还原；'
+    '再摘掉 %(bs_exempt)d 处"引用缺陷的行内代码"的反引号 ⇒ 它们必须当场变成违规'
+    '（豁免的粒度是一处行内代码，不是整段）；把"两个反斜杠紧跟空格/花括号/方括号"与一处真翻倍'
+    '放进同一行 ⇒ 只报后者（"范围是紧跟字母"这句话得被同一行测到，不是写在注释里）；'
+    '基线此刻 %(bs_files)d 份文件：翻倍 %(bs_double)d 处（要求 0）、合法 %(bs_single)d 处、'
+    '豁免 %(bs_exempt)d 处（一条从不被走到的豁免分支等于没被核对过的说法））'
     '⇒ 当前 %(pass)d/%(cases_total)d PASS'
     % dict(GJ, n_planted=len(GJ.get('planted_hits') or []), n_live=len(GJ.get('live_hits') or []),
            n_retro_kinds=len(GJ.get('retro_kinds') or []))
     if all(k in GJ for k in ('cases_total', 'cases_slot', 'cases_delimiter', 'cases_doccheck',
-                             'cases_table',
+                             'cases_table', 'cases_backslash',
+                             'bs_files', 'bs_single', 'bs_double', 'bs_exempt', 'bs_planted',
                              'pass', 'live_separators', 'retro_hits', 'retro_safe'))
     and GJ['cases_total'] == (GJ['cases_slot'] + GJ['cases_delimiter']
-                              + GJ['cases_doccheck'] + GJ['cases_table'])
+                              + GJ['cases_doccheck'] + GJ['cases_table'] + GJ['cases_backslash'])
     and GJ['all_pass'] and GJ['pass'] == GJ['cases_total'] and not GJ.get('live_hits')
     and GJ['live_separators'] > 0 and GJ.get('planted_hits')
     and GJ['retro_hits'] > 0 and GJ.get('retro_kind_counts')
@@ -201,21 +212,29 @@ GUARD_TXT = (
 # "N 例（变异体 K、良性 M）"与上面的 GUARD_CASES 同族 —— 每加一个变异体它就过期 ⇒ 读 JSON，不抄。
 # target_bytes 是这台仪器当初切锚点时那份引擎的字节数：引擎一改，这份台账就是在为**另一份文件**作证
 # ⇒ 这里现比一次，漂了就报，于是"重跑变异核验"是一个被要求的动作而不是一句记忆。
+def mutation_ledger_view(wj):
+    """从一份台账字典导出文档门禁要用的四个量 —— 走函数是为了**能被喂一份改错的台账**：
+    这台核对自己的四条分支（字节漂／verdict／夹具／例数账）得有反例可投，不能只在磁盘那份好台账上跑过。"""
+    rows = wj.get('cases') or []
+    return (wj,
+            (wj.get('cases_total'), wj.get('mutants'), wj.get('benign')), rows,
+            dict((k, sum(1 for c in rows if c.get('kind') == k))
+                 for k in ('baseline', 'mutant', 'benign')),
+            next((c for c in rows if c.get('kind') == 'baseline'), {}))
+
+
 try:
-    WJ = json.loads((ROOT / '维护脚本' / 'check_r11_mutation.json').read_text(encoding='utf-8'))
+    _WJ0 = json.loads((ROOT / '维护脚本' / 'check_r11_mutation.json').read_text(encoding='utf-8'))
 except Exception as e:
     print('[warn] check_r11_mutation.json 不可读：%r' % (e,))
-    WJ = {}
-MUT_WANT = (WJ.get('cases_total'), WJ.get('mutants'), WJ.get('benign'))
-MUT_ROWS = WJ.get('cases') or []
-MUT_KIND = dict((k, sum(1 for c in MUT_ROWS if c.get('kind') == k))
-                for k in ('baseline', 'mutant', 'benign'))
-MUT_BASE = next((c for c in MUT_ROWS if c.get('kind') == 'baseline'), {})
+    _WJ0 = {}
+WJ, MUT_WANT, MUT_ROWS, MUT_KIND, MUT_BASE = mutation_ledger_view(_WJ0)
 
 
-def check_mutation_ledger():
+def check_mutation_ledger(wj=None):
     """台账的内部账 + 它锚定那份引擎有没有漂：读不到、不平、漂了就报（缺失不是通过）。"""
-    if not WJ:
+    wj, _want, rows, kinds, base = mutation_ledger_view(WJ if wj is None else wj)
+    if not wj:
         return ['变异核验台账不可读 ⇒ 文档里那句"N 例（变异体…、良性…）"没有出处'
                 '（先跑 维护脚本/check_r11_mutation.py）']
     bad = []
@@ -224,37 +243,37 @@ def check_mutation_ledger():
     except Exception as e:
         eng = None
         bad.append('读不到 so10_reps.py 的字节数：%r' % (e,))
-    if WJ.get('target_bytes') != eng:
+    if wj.get('target_bytes') != eng:
         bad.append('变异核验切锚点时那份引擎 %s 字节，此刻 %s ⇒ 台账在为另一份文件作证，'
-                   '重跑 维护脚本/check_r11_mutation.py' % (WJ.get('target_bytes'), eng))
-    if WJ.get('verdict') != 'CAUGHT' or WJ.get('missed') or WJ.get('false_alarm'):
+                   '重跑 维护脚本/check_r11_mutation.py' % (wj.get('target_bytes'), eng))
+    if wj.get('verdict') != 'CAUGHT' or wj.get('missed') or wj.get('false_alarm'):
         bad.append('变异核验此刻不是 CAUGHT：verdict=%s missed=%s false_alarm=%s'
-                   % (WJ.get('verdict'), WJ.get('missed'), WJ.get('false_alarm')))
-    if not WJ.get('fixture_ok') or not WJ.get('engine_json_tests'):
+                   % (wj.get('verdict'), wj.get('missed'), wj.get('false_alarm')))
+    if not wj.get('fixture_ok') or not wj.get('engine_json_tests'):
         bad.append('变异核验的基线夹具不成立：fixture_ok=%s engine_json_tests=%s'
                    '（基线打印的门禁数要等于报告 JSON 的 tests 条数，否则是夹具塌陷冒充捕获）'
-                   % (WJ.get('fixture_ok'), WJ.get('engine_json_tests')))
-    if not MUT_BASE or (MUT_BASE.get('gates'), MUT_BASE.get('pass'), MUT_BASE.get('exit')) != (
-            WJ.get('engine_json_tests'), WJ.get('engine_json_tests'), 0):
+                   % (wj.get('fixture_ok'), wj.get('engine_json_tests')))
+    if not base or (base.get('gates'), base.get('pass'), base.get('exit')) != (
+            wj.get('engine_json_tests'), wj.get('engine_json_tests'), 0):
         bad.append('台账里没有一条自洽的基线行：基线=%s 而报告 JSON 的 tests=%s（要 exit=0 且 PASS=门禁数'
-                   '=tests 条数）' % (MUT_BASE.get('id'), WJ.get('engine_json_tests')))
+                   '=tests 条数）' % (base.get('id'), wj.get('engine_json_tests')))
     # 例数的账要**从台账那几行里数出来**，不是拿声明去减：上一版在这里写 `mutants + benign == cases_total`，
     # 于是把一个真实存在的第 6 行（未打补丁的基线）算丢了 ⇒ 门禁在一份自洽的台账上报了假警。
     # 这里既比声明，也比 kind 计数，两边任何一边漂移（加例不改声明／改声明不加工）都留不住。
-    if (len(MUT_ROWS) != WJ.get('cases_total')
-            or MUT_KIND['baseline'] != 1
-            or MUT_KIND['mutant'] != WJ.get('mutants')
-            or MUT_KIND['benign'] != WJ.get('benign')
-            or 1 + (WJ.get('mutants') or 0) + (WJ.get('benign') or 0) != WJ.get('cases_total')):
+    if (len(rows) != wj.get('cases_total')
+            or kinds['baseline'] != 1
+            or kinds['mutant'] != wj.get('mutants')
+            or kinds['benign'] != wj.get('benign')
+            or 1 + (wj.get('mutants') or 0) + (wj.get('benign') or 0) != wj.get('cases_total')):
         bad.append('台账自己账不平：%d 行 cases 的 kind 计数 %s，声明是 cases_total=%s／mutants=%s／'
                    'benign=%s ⇒ 要 baseline 恰 1 行，且 1（基线）+ 变异体 + 良性 = 例数'
                    '（文档里那句"N 例（变异体 K、良性 M）"的 N 含那一例基线：它是未打补丁的那一份，'
                    '用来证明没植错时不报）'
-                   % (len(MUT_ROWS), MUT_KIND, WJ.get('cases_total'),
-                      WJ.get('mutants'), WJ.get('benign')))
-    if WJ.get('caught') != WJ.get('mutants'):
+                   % (len(rows), kinds, wj.get('cases_total'),
+                      wj.get('mutants'), wj.get('benign')))
+    if wj.get('caught') != wj.get('mutants'):
         bad.append('台账自己账不平：caught=%s 而 mutants=%s（每一个变异体都要被点名抓住）'
-                   % (WJ.get('caught'), WJ.get('mutants')))
+                   % (wj.get('caught'), wj.get('mutants')))
     return bad
 
 # 覆盖矩阵里"修好前的报告原地留着多少处未定义控制词"这一句：上一版把 20 写死在模板里，而修好前的
@@ -703,6 +722,62 @@ def check_tables():
     return bad, ntab, nrow
 
 
+# ---- 第 6 条排版不变量：紧跟字母的反斜杠串，长度必须是 1 --------------------------------
+# 翻倍有两个来源：raw 字面量不消费转义（源码里手写 `$\\nu$` 就原样落地），以及 str(容器) 会把
+# 元素里本就合法的反斜杠转义成两个（§13 的"算得/应为/备注"三列是 repr 转储 —— 本轮 67 处全出自这里）。
+# 两条路落进文件后同形：MathJax 把 `\\` 读成换行、后面的控制词降级成斜体字母。表示论引擎写盘前判
+# 自己一份（so10_reps 第五条），这里判**磁盘上此刻**的那几份 —— 理由与 check_tables() 相同：
+# 翻倍是排版层的事，一条数值门禁都看不见它。
+BSRUN = re.compile(r'\\+')
+BWORD = re.compile(r'[A-Za-z]+')
+
+
+def bs_sites(text, strip_code=True):
+    r"""→ (翻倍处数, 合法单反斜杠处数, [(行号, 串)])。逐处先摘掉行内代码：文档里"写两个反斜杠 =
+    一个字面反斜杠 + 一根照常分裂单元格的竖线"那类句子是在**引用**缺陷，不是缺陷。摘的时候用**等长
+    空白**顶掉，行号与列位置一概不动 —— 豁免不许移动读者的坐标（否则被顶掉的段落同时逃过定位）。
+    后面不跟字母的串（`\\{`、`\\ ` 这类转义花括号/换行）不在本条范围内。"""
+    def blank(m):
+        return ''.join('\n' if c == '\n' else ' ' for c in m.group(0))
+    body = CODE_SPAN.sub(blank, text) if strip_code else text
+    dbl = one = 0
+    hits = []
+    for i, ln in enumerate(body.split('\n'), 1):
+        for m in BSRUN.finditer(ln):
+            w = BWORD.match(ln[m.end():])
+            if not w:
+                continue
+            if len(m.group(0)) == 1:
+                one += 1
+            else:
+                dbl += 1
+                hits.append((i, m.group(0) + w.group(0)))
+    return dbl, one, hits
+
+
+def check_bs_runs(docs=None):
+    r"""(违规清单, 读数)。读数里的 `exempt` = 落在行内代码里、因而被豁免的翻倍处数 ——
+    豁免必须带读数，否则"这一段本来就在引用缺陷"只是一个没人能核对的说法。"""
+    bad = []
+    files = dbl = one = ex = 0
+    for rel in (docs or TABLE_DOCS):
+        p = ROOT / rel
+        if not p.exists():
+            bad.append('%s：不存在 ⇒ 核对不能对着一份读不到的文件说"没问题"' % rel)
+            continue
+        txt = p.read_text(encoding='utf-8')
+        d, s, hits = bs_sites(txt)
+        raw_d, _, _ = bs_sites(txt, strip_code=False)
+        files += 1
+        dbl += d
+        one += s
+        ex += raw_d - d
+        for i, tok in hits:
+            bad.append('%s:%d 反斜杠翻倍成 %s ⇒ MathJax 把它读成换行、后面的控制词降级成斜体字母'
+                       '（repr 转储或 raw 字面量多打一个，两条路数值门禁都看不见）' % (rel, i, tok))
+    return bad, {'files': files, 'double': dbl, 'single': one, 'exempt': ex}
+
+
 def main():
     write_csv(ROOT / '场元数据表.csv', META_HEADER, META)
     (ROOT / '06_场元数据表.md').write_text(
@@ -790,15 +865,19 @@ def main():
           % (WJ['cases_total'], WJ['mutants'], WJ['benign'], WJ['verdict'],
              MUT_BASE['pass'], MUT_BASE['gates'], WJ['engine_json_tests'], WJ['target_bytes']))
     tab_bad, ntab, nrow = check_tables()
+    bs_bad, BS = check_bs_runs()
     doc_bad = check_docs()
     for b in doc_bad:
         print('[DOC] %s' % b)
     for b in tab_bad:
         print('[TABLE] %s' % b)
-    if doc_bad or tab_bad:
-        print('[FAIL] 手写文档里的门禁数与仪器不一致：%d 处；表格行的列数与表头不一致：%d 处'
-              '（改文档，别让表跑在文前面。两类**一起**判：先返回门禁数的那一版会把列数缺陷'
-              '藏进下一次运行 = 同族 fail-open）' % (len(doc_bad), len(tab_bad)))
+    for b in bs_bad:
+        print('[BSRUN] %s' % b)
+    if doc_bad or tab_bad or bs_bad:
+        print('[FAIL] 手写文档里的门禁数与仪器不一致：%d 处；表格行的列数与表头不一致：%d 处；'
+              '反斜杠翻倍：%d 处（改文档，别让表跑在文前面。三类**一起**判：先返回门禁数的那一版'
+              '会把列数缺陷藏进下一次运行 = 同族 fail-open）'
+              % (len(doc_bad), len(tab_bad), len(bs_bad)))
         return 1
     now = led = 0
     for rel in HAND_DOCS:
@@ -818,6 +897,11 @@ def main():
           '（扫描范围 = 5 份手写文档 + 2 份生成的表 + 3 份生成的报告；判据是"奇数个前导反斜杠'
           '才算转义"，两个反斜杠等于没转义 ⇒ 生成器多打一个反斜杠就会多出列，而数值门禁全绿）'
           % (ntab, nrow))
+    print('       反斜杠翻倍核对：%d 份文件里"紧跟字母的反斜杠串"共 %d 处合法（长度为 1）、%d 处翻倍；'
+          '另有 %d 处翻倍落在行内代码里 —— 那是在**引用**缺陷本身（如"两个反斜杠等于没转义"），'
+          '按等长空白摘掉后行号与列位一概不动。判据只有一条：紧跟字母的串长度必须为 1；'
+          '`\\\\{`、`\\\\ ` 这类转义花括号/换行不在范围内'
+          % (BS['files'], BS['single'], BS['double'], BS['exempt']))
     return 0
 
 

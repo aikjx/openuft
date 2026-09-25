@@ -1585,8 +1585,8 @@ def gate_no_go():
 def conj_label(cs):
     r"""Dynkin 标号的共轭标号：$w_\lambda\mapsto-w_\lambda$ 再拉回主导室。
 
-    它对**任何**支配标号都算得出来，不需要这条标号已被登记 $\\Rightarrow$ 配对和
-    （`pair_singlets`）可以在 $\\dim>210$ 的成分上照样闭合；按名字查表做不到这件事，
+    它对**任何**支配标号都算得出来，不需要这条标号已被登记 $\Rightarrow$ 配对和
+    （`pair_singlets`）可以在 $\dim>210$ 的成分上照样闭合；按名字查表做不到这件事，
     R9.5 的第四条变异把这个差别当场量出来。
     """
     return tuple(dominant(neg(weight_of_label(cs)))[1])
@@ -1926,9 +1926,9 @@ _SINGLET_MEMO = {}
 
 
 def singlet_mult(ms):
-    r"""不变张量个数 $\\mathrm{mult}((1),V)$：走 `decomp`（整权重构对账在它里面）。
+    r"""不变张量个数 $\mathrm{mult}((1),V)$：走 `decomp`（整权重构对账在它里面）。
 
-    拆不成特征标的非负整组合 $\\Rightarrow$ None，**不静默当成 0** $\\Rightarrow$ 调用方必须显式
+    拆不成特征标的非负整组合 $\Rightarrow$ None，**不静默当成 0** $\Rightarrow$ 调用方必须显式
     降级（R8.6 的第二个植入正是来检查这条守卫不是死代码）。
     按**多重集内容**记忆：四重积的一次 `decomp` 要 0.8s，本层多个门禁共用同一批乘积，
     不记忆会把同一个分解解七遍。
@@ -1949,8 +1949,8 @@ def constituents(ms):
 def constit(ms):
     r"""成分表（**按标号**）：$[(\lambda,\ n_\lambda)]$，未登记的支配权保留其 Dynkin 标号。
 
-    与 `constituents` 的差别不是风格而是**视力**：登记表只覆盖 $\\dim\\le210$，按名字查共轭
-    会在登记范围外把真实存在的伙伴静默算成 0 $\\Rightarrow$ 两条路径在含未登记成分的乘积上
+    与 `constituents` 的差别不是风格而是**视力**：登记表只覆盖 $\dim\le210$，按名字查共轭
+    会在登记范围外把真实存在的伙伴静默算成 0 $\Rightarrow$ 两条路径在含未登记成分的乘积上
     给出**不同**的数（差多少由 R9.5 第四条当场量出来，不写在这里）。`pair_singlets` 走标号路径。
     """
     d = decomp(ms)
@@ -1967,13 +1967,13 @@ def conj_name_set(nm):
 
 
 def pair_singlets(pa, pb):
-    r"""第二条**独立**路径：$\\mathrm{mult}((1),A\\otimes B)=\\sum_{R,S}n_Rm_S\\,\\delta_{S,\\bar R}$，
-    只查两个因子各自已有的成分表 $\\Rightarrow$ 不解大乘积的方程组。
+    r"""第二条**独立**路径：$\mathrm{mult}((1),A\otimes B)=\sum_{R,S}n_Rm_S\\,\delta_{S,\bar R}$，
+    只查两个因子各自已有的成分表 $\Rightarrow$ 不解大乘积的方程组。
 
-    `pa`/`pb` 是 `constit` 给出的**标号**表，$\\bar R$ 由 `conj_label` 算：共轭是标号之间的
-    运算、与登记无关 $\\Rightarrow$ 成分落在 $\\dim>210$ 的登记范围外时这条路径照样闭合
+    `pa`/`pb` 是 `constit` 给出的**标号**表，$\bar R$ 由 `conj_label` 算：共轭是标号之间的
+    运算、与登记无关 $\Rightarrow$ 成分落在 $\dim>210$ 的登记范围外时这条路径照样闭合
     （按名字查表做不到，R9.5 第三条量出两者差多少）。
-    返回 $(\\text{计数},\\ \\text{登记范围外的标号})$：后者**不**影响计数 $\\Rightarrow$ 它不是
+    返回 $(\text{计数},\\ \text{登记范围外的标号})$：后者**不**影响计数 $\Rightarrow$ 它不是
     "配不上对"而是"没名字"，报告仍要点名，因为本层正是在登记表之外读数。
     """
     tot = 0
@@ -1987,9 +1987,9 @@ def ledger_split(ms):
     r"""把零权空间按成分拆开：每个不可约成分贡献 $n_R\\,m_R(0)$ 个"荷为零但未必不变"的方向。
 
     返回 $\\{$parts: [(名字, 该成分贡献的零权数, 重数)], unreg: 未登记标号贡献的零权数,
-    nlab: 未登记标号的条数, total: 拆开后的总数$\\}$；`decomp` 失败 $\\Rightarrow$ None。
+    nlab: 未登记标号的条数, total: 拆开后的总数$\\}$；`decomp` 失败 $\Rightarrow$ None。
     `total` 必须等于 `zero_wt(ms)`
-    ——这是 $m_{A\\otimes B}=\\sum n_Rm_R$ 在 $\\mu=0$ 处的恒等式，R8.1a 拿它当门禁。
+    ——这是 $m_{A\otimes B}=\sum n_Rm_R$ 在 $\mu=0$ 处的恒等式，R8.1a 拿它当门禁。
     """
     d = decomp(ms)
     if d is None:
@@ -2220,8 +2220,8 @@ def chan_key(nm):
 def channel_split(ch):
     r"""配对和按道拆开：$(\text{总数},\ [(\text{道名},\ n_R,\ \text{该道贡献})])$。
 
-    该道贡献 $=n_R\\cdot\\#\\{S\\in\\text{表}:S\\cong\\bar R\\}$，$\\bar R$ 由 `conj_label` 现场算
-    $\\Rightarrow$ 实表示自配自己、复表示要求共轭也在同一个乘积里 $\\Rightarrow$ 闭合是**道**的属性，
+    该道贡献 $=n_R\cdot\\#\\{S\in\text{表}:S\cong\bar R\\}$，$\bar R$ 由 `conj_label` 现场算
+    $\Rightarrow$ 实表示自配自己、复表示要求共轭也在同一个乘积里 $\Rightarrow$ 闭合是**道**的属性，
     与维数、与"这条道有没有对应的 Higgs"都无关。
     """
     tot, rows = 0, []
@@ -2492,6 +2492,24 @@ FMT_LEAK = re.compile(r"%\([A-Za-z0-9_]*\)[sdf]|%\.[0-9]+[df]|%[sdif]\b")
 # TeX 控制词按"最长匹配"切分：\lvert 后面紧跟字母或数字时两者并成一个未定义控制词
 # （\lvertB），整段公式报错。数学模式里的空格不改变排版 ⇒ 补空格是唯一无损的修法。
 DELIM_MUNCH = re.compile(r'\\[lr]vert[A-Za-z0-9]')
+# 紧跟字母的反斜杠串**长度必须是 1**。本报告的公式来自两条会各自翻倍的路：
+#   (1) r"""…""" 不消费任何转义 ⇒ 源码里手写的 `$\\nu$` 原样落进文件；
+#   (2) §13 的"算得/应为/备注"三列是 repr 转储（那是审计痕迹，故意保留），而 repr 会把数据里
+#       本就合法的 `$\nu^c$` 里的反斜杠翻倍成 `$\\nu^c$` —— 本轮 67 处全部出自这条。
+# 两种翻倍落进文件后同形：MathJax 把 `\\` 读成换行、后面的控制词降级成斜体字母（`\nu` 显示成
+# "nu"）。数值门禁看不见，渲染才看得见 ⇒ 全文当场判：模式 = 两个及以上反斜杠紧跟字母；
+# `\\{`、`\\ ` 这类换行/转义花括号不在本条范围内（今天全文 0 处，判据与范围由防护样例钉住）。
+BS_MUNCH = re.compile(r'\\{2,}[A-Za-z]+')
+# 同一判据的**改写**版：只吃反斜杠、不吃后面的控制词名（否则 `$\\nu$` 会被改成少一个字母的 `$u$`）。
+BS_RUN = re.compile(r'\\{2,}(?=[A-Za-z])')
+
+
+def md_unescape(s):
+    r"""把表示层的翻倍折回一个反斜杠：字面内容逐字不动，只改反斜杠个数（判据同 BS_MUNCH）。
+    用在 repr 转储的单元格上 —— 那里的翻倍不是读数的一部分，而是 str(container) 的转义产物。
+    替换式必须写成函数：re.sub 的字符串替换模板会把孤零零的一个反斜杠当成转义开头而直接抛错。
+    入参可以是数字（"算得/应为"两列有时就是裸数），故先 str() —— 与原来 `%s` 的语义逐字相同。"""
+    return BS_RUN.sub(lambda _m: chr(92), str(s))
 
 
 def table_row_safe(line):
@@ -2905,7 +2923,7 @@ RESID = {}
 
 
 def ztex(n):
-    r"""残留群的阶 → $\\mathbb{Z}_N$；没读到数就不印符号（不让排版冒充结论）。"""
+    r"""残留群的阶 → $\mathbb{Z}_N$；没读到数就不印符号（不让排版冒充结论）。"""
     return ('$\\mathbb{Z}_{%d}$' % n) if n else '—'
 
 
@@ -2915,7 +2933,7 @@ def bl_values(nm):
 
 
 def rat_gen(vals):
-    r"""有理数集的 $\\mathbb{Z}$-生成元：分子的 gcd 除以分母的 lcm（0 不参与）。"""
+    r"""有理数集的 $\mathbb{Z}$-生成元：分子的 gcd 除以分母的 lcm（0 不参与）。"""
     num, den = 0, 1
     for v in vals:
         if v == 0:
@@ -2956,17 +2974,17 @@ def residual_order(qd, g0):
 
 
 def residual_els(qd, g0):
-    r"""路径甲的残留群元（以 $2\\pi$ 为单位）：$\\alpha_n=2\\pi n/q_\\Delta$，$n=0..N-1$。"""
+    r"""路径甲的残留群元（以 $2\pi$ 为单位）：$\alpha_n=2\pi n/q_\Delta$，$n=0..N-1$。"""
     return [F(k) / F(qd) for k in range(residual_order(qd, g0))]
 
 
 def survive(els, q2):
-    r"""再放一个荷为 `q2` 的 v.e.v. 后还留着的群元数（精确）：$e^{i\\alpha q_2}=1$。"""
+    r"""再放一个荷为 `q2` 的 v.e.v. 后还留着的群元数（精确）：$e^{i\alpha q_2}=1$。"""
     return sum(1 for a in els if (a * F(q2)).denominator == 1)
 
 
 def survive_scan(els, q2):
-    r"""同题的第二条路径：把每个残留元代回 $e^{i\\alpha q_2}$ 用浮点判是否等于 1。"""
+    r"""同题的第二条路径：把每个残留元代回 $e^{i\alpha q_2}$ 用浮点判是否等于 1。"""
     c = 0
     for a in els:
         ang = 2.0 * math.pi * float(a) * float(q2)
@@ -2985,7 +3003,7 @@ def scan_order(qd, g0, sub=288):
 
 
 def scan_period(charges, per_step=120, upto_pi=12):
-    r"""路径乙的另一半：**只从荷集**测出"对所有荷都平凡"的最小正角（单位 $\\pi$）。"""
+    r"""路径乙的另一半：**只从荷集**测出"对所有荷都平凡"的最小正角（单位 $\pi$）。"""
     vals = [float(q) for q in charges]
     for m in range(1, int(upto_pi * per_step) + 1):
         a = math.pi * m / per_step
@@ -3270,12 +3288,12 @@ def sm_zero_ms(ms):
 
 
 def sm_dim(lam):
-    r"""$\\dim(SU(3)_c)\\times\\dim(SU(2)_L)$：$A_2$ 走闭式维数公式，$A_1$ 走 $j\\mapsto2j+1$。"""
+    r"""$\dim(SU(3)_c)\times\dim(SU(2)_L)$：$A_2$ 走闭式维数公式，$A_1$ 走 $j\mapsto2j+1$。"""
     return dim3(*lam[:2]) * (lam[2] + 1)
 
 
 def sm_content(ms):
-    r"""完整 SM 分解 $[(\\lambda,Y,n)]$ 与维数账 $(\\sum n\\dim_{\\mathrm{SM}},\\ \\text{权重数})$。"""
+    r"""完整 SM 分解 $[(\lambda,Y,n)]$ 与维数账 $(\sum n\dim_{\mathrm{SM}},\\ \text{权重数})$。"""
     ys = sorted(set(chg(mu, YHP) for mu in ms))
     cands = sorted(set(SUB_321.labels(mu) for mu in ms))
     rows, tot = [], 0
@@ -3294,12 +3312,12 @@ def sm_content(ms):
 
 
 def sm_conj(lam):
-    r"""$\\lambda\\mapsto\\lambda^*$：$A_2$ 标号倒序（与 `su_name` 同一规则），$A_1$ 自共轭。"""
+    r"""$\lambda\mapsto\lambda^*$：$A_2$ 标号倒序（与 `su_name` 同一规则），$A_1$ 自共轭。"""
     return (lam[1], lam[0], lam[2])
 
 
 def sm_pair_singlets(ra, rb):
-    r"""第二条独立路径：$\\sum_{\\lambda,Y}n^a_{\\lambda,Y}\\,n^b_{\\lambda^*,-Y}$，只查两因子各自
+    r"""第二条独立路径：$\sum_{\lambda,Y}n^a_{\lambda,Y}\\,n^b_{\lambda^*,-Y}$，只查两因子各自
     已有的 SM 成分表 $\Rightarrow$ 不乘大乘积、不解方程组（与 `pair_singlets` 在 SO(10) 层同构）。"""
     book = dict(((l, y), n) for l, y, n in rb)
     return sum(n * book.get((sm_conj(l), -y), 0) for l, y, n in ra)
@@ -3340,7 +3358,7 @@ def f_bl(f):
 
 
 def f_b(f):
-    r"""重子数：由"色非单态者携带 $B$、色单态者不携带"这条规则从量出来的 $(\\mathrm{色},B-L)$ 派生。"""
+    r"""重子数：由"色非单态者携带 $B$、色单态者不携带"这条规则从量出来的 $(\mathrm{色},B-L)$ 派生。"""
     return f_bl(f) if f['lam'][:2] != (0, 0) else F(0)
 
 
@@ -3350,7 +3368,7 @@ def f_l(f):
 
 
 def f_tri(f):
-    r"""该场的 $\\mathbb{Z}_3$ 荷（色 triality）$3(B-L)\\bmod 3$；无整数 $3(B-L)$ 即不给数。"""
+    r"""该场的 $\mathbb{Z}_3$ 荷（色 triality）$3(B-L)\bmod 3$；无整数 $3(B-L)$ 即不给数。"""
     t3 = 3 * f_bl(f)
     return None if t3.denominator != 1 else int(t3) % 3
 
@@ -3363,26 +3381,26 @@ def sel_ms(fl):
 
 
 def sel_t3q(fl):
-    r"""单项式的 $3Q=\\sum_k3(B-L)_k$：以 $g_0=1/3$ 为单位的**整数**荷计数（不是浮点）。"""
+    r"""单项式的 $3Q=\sum_k3(B-L)_k$：以 $g_0=1/3$ 为单位的**整数**荷计数（不是浮点）。"""
     return sum(3 * f_bl(f) for f in fl)
 
 
 def rule_exact(t3, n):
-    r"""路径甲：$N\\mid 3Q$。$3Q$ 非整数或 $N\\le0 $（工具没读到群）$\\Rightarrow$ 不给判决。"""
+    r"""路径甲：$N\mid 3Q$。$3Q$ 非整数或 $N\le0 $（工具没读到群）$\Rightarrow$ 不给判决。"""
     if n <= 0 or t3.denominator != 1:
         return None
     return int(t3) % n == 0
 
 
 def rule_els(qd, g0, q):
-    r"""路径乙：把每个残留群元 $\\alpha_k=k/q_\\Delta$ 代回 $e^{2\\pi i\\alpha_kQ}$，逐元要它 $=1$
-    （精确有理：判 $\\alpha_kQ$ 的分母）$\\Rightarrow$ 不写整除式。"""
+    r"""路径乙：把每个残留群元 $\alpha_k=k/q_\Delta$ 代回 $e^{2\pi i\alpha_kQ}$，逐元要它 $=1$
+    （精确有理：判 $\alpha_kQ$ 的分母）$\Rightarrow$ 不写整除式。"""
     els = residual_els(qd, g0)
     return None if not els else all((a * q).denominator == 1 for a in els)
 
 
 def rule_float(qd, g0, q):
-    r"""路径丙：同一题的浮点实现——走 $\\sin/\\cos$，不碰有理数的分母，也不碰整除。"""
+    r"""路径丙：同一题的浮点实现——走 $\sin/\cos$，不碰有理数的分母，也不碰整除。"""
     els = residual_els(qd, g0)
     if not els:
         return None
@@ -3394,7 +3412,7 @@ def rule_float(qd, g0, q):
 
 
 def rule_factors(t3):
-    r"""因子逐点判：$\\mathbb{Z}_3$ 那半边只看 $3Q\\bmod 3$，$\\mathbb{Z}_2$ 那半边只看 $3Q\\bmod 2$。"""
+    r"""因子逐点判：$\mathbb{Z}_3$ 那半边只看 $3Q\bmod 3$，$\mathbb{Z}_2$ 那半边只看 $3Q\bmod 2$。"""
     if t3.denominator != 1:
         return (None, None)
     return (int(t3) % 3 == 0, int(t3) % 2 == 0)
@@ -3434,14 +3452,14 @@ def run_selection_layer():
 
     R10 数出了群里有哪些元，但没有回答"它禁哪些算符"——那一句当时登记为待办。本节把它变成
     格上的读数，四步走：
-      (a) 先把低能投影的 projector 钉对：$Y$ 与 $T^3_R$ 不正交 $\\Rightarrow$ 沿 3221 数零权会
-          漏掉 $\\nu^c$（R11.0/R11.1），再把 $\\mathbb{Z}_3$ 的荷对到色 triality 上**逐场**核（R11.2）；
+      (a) 先把低能投影的 projector 钉对：$Y$ 与 $T^3_R$ 不正交 $\Rightarrow$ 沿 3221 数零权会
+          漏掉 $\nu^c$（R11.0/R11.1），再把 $\mathbb{Z}_3$ 的荷对到色 triality 上**逐场**核（R11.2）；
       (b) 场清单本身由签名绑定（R11.3），$B/L$ 按"色携带 $B$、单态携带 $L$"这一条规则派生（R11.4）；
       (c) 枚举候选算符并逐条判决（R11.5–R11.8），直接回答"残留群保不保质子"；
-      (d) 正对照与变异测试（R11.9）：$\\text{禁掉 }0\\text{ 条}$ 必须与 $\\text{枚举到 }0\\text{ 条}$
+      (d) 正对照与变异测试（R11.9）：$\text{禁掉 }0\text{ 条}$ 必须与 $\text{枚举到 }0\text{ 条}$
           可区分。
-    选择定则本身只用一条同余式：总荷 $Q=\\sum_k(B-L)_k$ 的算符在 $\\mathbb{Z}_N$（$N=q_\\Delta/g_0$）
-    下不变 $\\iff$ $N\\mid 3Q$，三条互不共享算术的实现（整除、群元逐元、浮点角度）必须同判决。
+    选择定则本身只用一条同余式：总荷 $Q=\sum_k(B-L)_k$ 的算符在 $\mathbb{Z}_N$（$N=q_\Delta/g_0$）
+    下不变 $\iff$ $N\mid 3Q$，三条互不共享算术的实现（整除、群元逐元、浮点角度）必须同判决。
     """
     p = True
     g0 = rat_gen(bl_values('16'))
@@ -3495,7 +3513,7 @@ def run_selection_layer():
     allf = [(nm, f) for nm in names for f in sm_fields(nm)]
 
     def tri_cnt(bl):
-        r"""一种荷号下把两种符号都测：$3(B-L)\\equiv\\pm(p-q)\\pmod3$ 各自数反例。"""
+        r"""一种荷号下把两种符号都测：$3(B-L)\equiv\pm(p-q)\pmod3$ 各自数反例。"""
         cnt, tot, bp, bm = {}, 0, [], []
         for nm, f in allf:
             t3 = 3 * bl(f)
@@ -4372,9 +4390,11 @@ def write_report(gates):
           '## 13. 全部测试明细', '',
           '| 编号 | 命题 | 算得 | 应为 | 容差 | 状态 | 备注 |', '|---|---|---|---|---|---|---|']
     for r in RESULTS:
+        # 三个 repr 转储列先折回表示层的翻倍再进表格（备注列还要转义裸竖线，顺序：先折、后转义）
         L.append('| %s | %s | %s | %s | %s | %s | %s |' %
-                 (r['id'], r['claim'], r['computed'], r['expected'], r['tolerance'],
-                  r['status'], r['note'].replace('|', '\\|')))
+                 (r['id'], md_unescape(r['claim']), md_unescape(r['computed']),
+                  md_unescape(r['expected']), r['tolerance'], r['status'],
+                  md_unescape(r['note']).replace('|', '\\|')))
     L += ['', '**门禁**：' + ('R0–R11 全部 PASS ⇒ §2 的表示清单、§4 的 $\\Delta_R$ 判定、'
                               '§5 的分支规则、§6 的 d=4 Yukawa 通道、§7 的不变张量账目、§8 的'
                               '道分解、§9 的残留离散群与 §10 的低能算符选择定则可信。' if all_ok else
@@ -4401,7 +4421,9 @@ def write_report(gates):
             i = j
         else:
             i += 1
-    # 正文排版的四条不变量（前三条各修掉一处真实缺陷，第四条是本轮审计 §8 时踩到的）：
+    # 正文排版的五条不变量（前四条各修掉一处真实缺陷，第五条关掉的是 09 第 8 项登记的那条待办）。
+    # **编号是引擎自查序列**，与文档里"第 N 条排版不变量"那条序列不同源：文档序列把表格列数算第 5 条、
+    # 把本条算第 6 条 ⇒ 引用编号必须连文件一起引，否则两个"第五条"会各自指错。
     #   1) $…$ 必须在**同一个段落内**闭合 —— 少一个 `$` 会把它后面的整段吞进公式里渲染；
     #   2) 段落里不得出现未格式化的 Python 容器 repr 或 None —— 漏写一个 %s 参数就会印成 `['10', …]`；
     #   3) 段落里不得出现未替换的 `%d`/`%(name)s` 占位符 —— `%` 只绑到拼接字面量的第一段时就漏；
@@ -4423,14 +4445,24 @@ def write_report(gates):
     leaked = [b[:70] for b in blocks if REPR_LEAK.search(b)]
     fmt = [b[:70] for b in blocks if FMT_LEAK.search(b)]
     munch = sorted(set(DELIM_MUNCH.findall(txt)))
+    # 第五条：紧跟字母的反斜杠串长度必须为 1（同上，全文判、不豁免表格行）
+    bs_hit = [(i, m.group(0)) for i, ln in enumerate(lines, 1) for m in BS_MUNCH.finditer(ln)]
     HYGIENE.update({'blocks': len(blocks), 'unclosed': unclosed, 'leaked': leaked,
                     'unformatted': fmt, 'delimiter_munch': munch,
+                    'backslash_munch_sites': len(bs_hit),
+                    'backslash_munch_kinds': sorted(set(t for _, t in bs_hit)),
+                    'backslash_munch_lines': sorted(set(i for i, _ in bs_hit)),
                     'tables': len([1 for ln in lines if SEPROW.match(ln.strip())])})
     assert not unclosed, '有段落的 $…$ 未闭合 ⇒ 渲染时吞掉后半篇：%s' % unclosed
     assert not leaked, '正文里漏进未格式化的 Python 对象：%s' % leaked
     assert not fmt, '正文里漏进未替换的格式化占位符（漏写 %% 参数）：%s' % fmt
     assert not munch, ('\\lvert/\\rvert 后紧跟字母数字 ⇒ TeX 读成未定义控制词，公式整段报错：%s'
                        % munch)
+    assert not bs_hit, ('%d 处、%d 种"两个及以上反斜杠紧跟字母"（行号:串 %s）⇒ raw 字面量里多打了'
+                        '一个反斜杠：MathJax 把 `\\\\` 读成换行，后面的控制词降级成斜体字母'
+                        % (len(bs_hit), len(set(t for _, t in bs_hit)),
+                           ', '.join('%d:%s' % (i, t) for i, t in bs_hit[:6]) +
+                           ('…' if len(bs_hit) > 6 else '')))
     (ROOT / 'SO10表示论报告.md').write_text(txt, encoding='utf-8')
     (ROOT / 'SO10表示论报告.json').write_text(json.dumps(
         {'purpose': 'D5=so(10) 表示论第一性推导：Higgs 分支内容、Δ_R 承载判定与 d=4 Yukawa 通道',
@@ -4503,8 +4535,11 @@ def main():
                   (r['id'], r['claim'], r['computed'], r['expected']))
     print('  排版自检：%d 个正文段落（表格行豁免）的 $…$ 全部闭合、无未格式化的 Python 对象、'
           '无未替换的 %%d/%%(name)s 占位符；%d 张表格列数与各自表头一致；'
-          '全文 \\lvert/\\rvert 后均紧跟分隔符，未被 TeX 最长匹配读成未定义控制词。'
-          % (HYGIENE['blocks'], HYGIENE['tables']))
+          '全文 \\lvert/\\rvert 后均紧跟分隔符，未被 TeX 最长匹配读成未定义控制词；'
+          '紧跟字母的反斜杠串长度 >1 的有 %d 处 / %d 种（要求 0 处 —— 翻倍只会在这条上现形：'
+          'raw 字面量里手写的，和 repr 转储把数据里的反斜杠翻倍，数值门禁两条都看不见）。'
+          % (HYGIENE['blocks'], HYGIENE['tables'], HYGIENE['backslash_munch_sites'],
+             len(HYGIENE['backslash_munch_kinds'])))
     if TABLE:
         print('  表示清单（末列 = 能否在保住 U(1)_em 的前提下破 B−L）：')
         for r in TABLE:

@@ -197,6 +197,47 @@ def plot_darboux_coupling():
 
 
 # ==================================================================
+# Frenet–Darboux 螺旋世界线求解器（§16 复用）
+# ==================================================================
+class FrenetDarbouxSolver:
+    """常 κ,τ 螺旋世界线的 Frenet–Darboux 几何。
+
+    【弧长参数化（与 §16 重校一致）】
+        Ω = √(κ²+τ²),  R = κ/Ω²,  P = τ/Ω²
+        r(s) = (R cos(Ωs), R sin(Ωs), P Ω s),    |dr/ds| = 1
+    注：§16 用户草稿 r(s)=κ/(κ²+τ²)(cos Ωs, sin Ωs, τ s) 第三分量少 √(κ²+τ²)
+    因子（仅当 τ=0 才等）；此处用单位速率正确形式，耦合结果只依赖 ω_D 模长
+    Ω，故不影响 §16.4 的耦合解析值。
+
+    Darboux 矢量：ω_D = τ t + κ b = Ω ẑ  （恒定，与 frenet_frame_lightspeed 的
+    ω_D = K ẑ 同一约定，K=Ω, θ=atan2(τ,κ)）。
+
+    eval(s) -> (r, t, n, b, ω_D, dω_D/ds)。
+    """
+
+    def __init__(self, kappa, tau):
+        self.kappa = float(kappa)
+        self.tau = float(tau)
+        self.Omega = math.sqrt(self.kappa ** 2 + self.tau ** 2)
+        self.R = self.kappa / (self.Omega ** 2)   # 螺旋半径
+        self.P = self.tau / (self.Omega ** 2)
+
+    def eval(self, s):
+        Om = self.Omega
+        phi = Om * s
+        cphi = math.cos(phi)
+        sphi = math.sin(phi)
+        r = np.array([self.R * cphi, self.R * sphi, self.P * Om * s])
+        t = np.array([-self.R * Om * sphi, self.R * Om * cphi, self.P * Om])
+        # |t|² = R²Om² + P²Om² = (R²+P²)Om² = Om²/Om² = 1  ✓
+        n = np.array([-cphi, -sphi, 0.0])
+        b = np.cross(t, n)
+        omegaD = self.tau * t + self.kappa * b
+        domegaD = np.zeros(3)
+        return r, t, n, b, omegaD, domegaD
+
+
+# ==================================================================
 # 主入口
 # ==================================================================
 def main():
