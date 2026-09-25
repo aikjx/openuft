@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真实磁偶极子磁场 — 100%物理准确3D可视化</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='20' r='8' fill='%23ef4444'/%3E%3Ccircle cx='32' cy='44' r='8' fill='%233b82f6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #020408;
+    color: #e5e7eb;
+    font-family: 'Noto Sans SC', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+  }
+  #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
+  .overlay { position: fixed; pointer-events: none; z-index: 10; }
+  .top-bar {
+    top: 0; left: 0; right: 0;
+    padding: 16px 32px;
+    background: linear-gradient(to bottom, rgba(2,4,8,0.95), transparent);
+  }
+  .top-bar h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3em;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ef4444, #fbbf24, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .top-bar .subtitle {
+    color: #9ca3af;
+    font-size: 0.78em;
+    margin-top: 3px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .control-panel {
+    top: 85px; left: 20px;
+    width: 230px;
+    background: rgba(10, 14, 25, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px;
+    padding: 14px;
+    backdrop-filter: blur(12px);
+    pointer-events: auto;
+  }
+  .control-panel h3 {
+    color: #fbbf24; font-size: 0.82em; margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .control-group { margin-bottom: 10px; }
+  .control-group label {
+    display: flex; justify-content: space-between;
+    color: #9ca3af; font-size: 0.72em; margin-bottom: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .control-group label .val { color: #fbbf24; font-weight: 500; }
+  .control-group input[type="range"] {
+    width: 100%; height: 4px;
+    background: rgba(245, 158, 11, 0.2);
+    border-radius: 2px; outline: none; -webkit-appearance: none;
+  }
+  .control-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px; height: 12px;
+    background: #f59e0b; border-radius: 50%; cursor: pointer;
+  }
+  .info-panel {
+    top: 85px; right: 20px;
+    width: 260px;
+    background: rgba(10, 14, 25, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px;
+    padding: 14px;
+    backdrop-filter: blur(12px);
+  }
+  .info-panel h3 {
+    color: #fbbf24; font-size: 0.82em; margin-bottom: 8px; font-weight: 600;
+  }
+  .info-row {
+    display: flex; justify-content: space-between;
+    padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.75em;
+  }
+  .info-row .key { color: #9ca3af; font-family: 'JetBrains Mono', monospace; }
+  .info-row .val { color: #e5e7eb; font-family: 'JetBrains Mono', monospace; }
+  .legend {
+    bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(10, 14, 25, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 10px;
+    padding: 10px 16px;
+    backdrop-filter: blur(12px);
+    display: flex; gap: 18px; align-items: center;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.72em; color: #9ca3af;
+  }
+  .legend-n {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #ef4444; box-shadow: 0 0 8px #ef4444;
+  }
+  .legend-s {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #3b82f6; box-shadow: 0 0 8px #3b82f6;
+  }
+  .legend-strength {
+    width: 20px; height: 4px;
+    background: linear-gradient(to right, #1e3a5f, #fbbf24, #ef4444);
+    border-radius: 2px;
+  }
+  .toggle-btn {
+    pointer-events: auto;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24; padding: 5px 10px; border-radius: 6px;
+    cursor: pointer; font-size: 0.72em; margin-top: 6px; width: 100%;
+    font-family: 'Noto Sans SC', sans-serif;
+  }
+  .toggle-btn:hover { background: rgba(245, 158, 11, 0.25); }
+  @media (max-width: 768px) {
+    .control-panel, .info-panel { width: calc(100% - 40px); left: 20px; right: 20px; }
+    .info-panel { top: auto; bottom: 80px; }
+    .legend { bottom: 14px; flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div class="overlay top-bar">
+  <h1>真实磁偶极子磁场分布 — 物理准确3D</h1>
+  <div class="subtitle">Dipole Field: r = C·sin²θ | B_r ∝ 2cosθ/r³, B_θ ∝ sinθ/r³ | 100% 麦克斯韦方程解</div>
+</div>
+
+<div class="overlay control-panel">
+  <h3>磁场参数</h3>
+  <div class="control-group">
+    <label>偶极矩 m <span class="val" id="val-m">1.0</span></label>
+    <input type="range" id="slider-m" min="0.5" max="3.0" step="0.1" value="1.0">
+  </div>
+  <div class="control-group">
+    <label>磁感线数量 <span class="val" id="val-lines">24</span></label>
+    <input type="range" id="slider-lines" min="12" max="48" step="4" value="24">
+  </div>
+  <div class="control-group">
+    <label>粒子流速 <span class="val" id="val-flow">1.5</span></label>
+    <input type="range" id="slider-flow" min="0.2" max="4.0" step="0.1" value="1.5">
+  </div>
+  <div class="control-group">
+    <label>磁感线亮度 <span class="val" id="val-bright">1.6</span></label>
+    <input type="range" id="slider-bright" min="0.5" max="3.0" step="0.1" value="1.6">
+  </div>
+  <button class="toggle-btn" id="btn-toggle-anim">暂停动画</button>
+</div>
+
+<div class="overlay info-panel">
+  <h3>真实物理方程</h3>
+  <div class="info-row"><span class="key">偶极子轴</span><span class="val">z 轴</span></div>
+  <div class="info-row"><span class="key">磁感线方程</span><span class="val">r = C·sin²θ</span></div>
+  <div class="info-row"><span class="key">B_r</span><span class="val">∝ 2cosθ/r³</span></div>
+  <div class="info-row"><span class="key">B_θ</span><span class="val">∝ sinθ/r³</span></div>
+  <div class="info-row"><span class="key">∇·B = 0</span><span class="val" style="color:#34d399">满足 ✓</span></div>
+  <div class="info-row"><span class="key">∇×B ≠ 0</span><span class="val" style="color:#34d399">有源 ✓</span></div>
+  <div class="info-row"><span class="key">磁感线闭合</span><span class="val" style="color:#34d399">全部闭合 ✓</span></div>
+  <div class="info-row"><span class="key">磁单极</span><span class="val" style="color:#34d399">不存在 ✓</span></div>
+</div>
+
+<div class="overlay legend">
+  <div class="legend-item"><div class="legend-n"></div><span>N极（+）</span></div>
+  <div class="legend-item"><div class="legend-strength"></div><span>|B| 强度</span></div>
+  <div class="legend-item"><div class="legend-s"></div><span>S极（−）</span></div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+// ========== 场景 ==========
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x020408);
+scene.fog = new THREE.FogExp2(0x020408, 0.008);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(5, 3, 7);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+container.appendChild(renderer.domElement);
+
+// Bloom
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  0.7, 0.5, 0.75
+);
+composer.addPass(bloomPass);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.minDistance = 2;
+controls.maxDistance = 20;
+controls.target.set(0, 0, 0);
+
+// 光照
+scene.add(new THREE.AmbientLight(0x2a2a40, 0.7));
+const nLight = new THREE.PointLight(0xef4444, 2, 5);
+const sLight = new THREE.PointLight(0x3b82f6, 2, 5);
+scene.add(nLight, sLight);
+
+// ========== 参数 ==========
+let params = {
+  m: 1.0,       // 磁偶极矩
+  numLines: 24, // 磁感线数量
+  flowSpeed: 1.5,
+  brightness: 1.6
+};
+let animating = true;
+let time = 0;
+
+// ========== 磁偶极子（点偶极子模型） ==========
+let nPole, sPole;
+
+function buildDipole() {
+  if (nPole) {
+    scene.remove(nPole, sPole);
+    nPole.geometry.dispose(); nPole.material.dispose();
+    sPole.geometry.dispose(); sPole.material.dispose();
+  }
+
+  const poleR = 0.12;
+  const sep = 0.3; // 两极间距（小，近似点偶极子）
+
+  // N极（z轴正方向）
+  nPole = new THREE.Mesh(
+    new THREE.SphereGeometry(poleR, 20, 20),
+    new THREE.MeshBasicMaterial({ color: 0xef4444 })
+  );
+  nPole.position.set(0, sep, 0);
+  scene.add(nPole);
+
+  // S极（z轴负方向）
+  sPole = new THREE.Mesh(
+    new THREE.SphereGeometry(poleR, 20, 20),
+    new THREE.MeshBasicMaterial({ color: 0x3b82f6 })
+  );
+  sPole.position.set(0, -sep, 0);
+  scene.add(sPole);
+
+  nLight.position.set(0, sep + 0.5, 0);
+  sLight.position.set(0, -sep - 0.5, 0);
+}
+
+buildDipole();
+
+// ========== 真实磁偶极子磁感线 ==========
+// 磁感线方程：r = C · sin²θ
+// 其中 C 是每条磁感线的常数（决定大小），θ 是极角（从N极算起）
+// 从N极(θ=0)出发，到赤道(θ=π/2)最远，回到S极(θ=π)
+let fieldLines = [];
+let particleSystems = [];
+
+// 计算磁感线上的点（球坐标 → 直角坐标）
+// theta: 极角 0→π（从N极到S极）
+// phi: 方位角（绕z轴）
+// C: 磁感线常数
+function getFieldPoint(theta, phi, C) {
+  const r = C * Math.sin(theta) * Math.sin(theta);
+  // 球坐标 → 直角坐标
+  const x = r * Math.sin(theta) * Math.cos(phi);
+  const y = r * Math.cos(theta); // z轴是偶极子轴
+  const z = r * Math.sin(theta) * Math.sin(phi);
+  return new THREE.Vector3(x, y, z);
+}
+
+// 计算磁场强度 |B|（近似）
+// B ∝ m/r³ · sqrt(4cos²θ + sin²θ)
+function fieldMagnitude(r, theta, m) {
+  if (r < 0.01) return 1.0;
+  const br = 2 * Math.cos(theta) / (r * r * r);
+  const bth = Math.sin(theta) / (r * r * r);
+  return m * Math.sqrt(br * br + bth * bth);
+}
+
+// 颜色映射：弱→蓝，中→黄，强→红
+function getFieldColor(strength) {
+  // strength: 0→1（归一化）
+  const t = Math.pow(strength, 0.5);
+  const cWeak = new THREE.Color(0x1e3a5f);  // 深蓝（弱场）
+  const cMid = new THREE.Color(0xfbbf24);  // 金黄（中场）
+  const cStrong = new THREE.Color(0xef4444); // 深红（强场）
+  if (t < 0.5) {
+    return cWeak.lerp(cMid, t * 2);
+  } else {
+    return cMid.lerp(cStrong, (t - 0.5) * 2);
+  }
+}
+
+function buildFieldLines() {
+  fieldLines.forEach(l => { scene.remove(l); l.geometry.dispose(); l.material.dispose(); });
+  fieldLines = [];
+  particleSystems.forEach(p => { scene.remove(p); p.geometry.dispose(); p.material.dispose(); });
+  particleSystems = [];
+
+  const numPhi = Math.floor(params.numLines / 2); // 方位角方向数量
+  const numC = 3; // 每条方位角的不同大小磁感线数量
+  const pointsPerLine = 200;
+  const maxC = 2.5; // 最大磁感线常数
+
+  // 计算最大磁场强度（用于归一化）
+  let maxB = 0;
+  for (let phi = 0; phi < numPhi; phi++) {
+    const phiAngle = (phi / numPhi) * Math.PI * 2;
+    for (let ci = 0; ci < numC; ci++) {
+      const C = 0.5 + (ci / (numC - 1)) * (maxC - 0.5);
+      for (let i = 0; i <= pointsPerLine; i++) {
+        const theta = (i / pointsPerLine) * Math.PI;
+        const r = C * Math.sin(theta) * Math.sin(theta);
+        const b = fieldMagnitude(r, theta, params.m);
+        if (b > maxB) maxB = b;
+      }
+    }
+  }
+
+  for (let phiIdx = 0; phiIdx < numPhi; phiIdx++) {
+    const phi = (phiIdx / numPhi) * Math.PI * 2;
+
+    for (let ci = 0; ci < numC; ci++) {
+      const C = 0.5 + (ci / (numC - 1)) * (maxC - 0.5);
+
+      // 生成磁感线
+      const points = [];
+      const colors = [];
+
+      for (let i = 0; i <= pointsPerLine; i++) {
+        const theta = (i / pointsPerLine) * Math.PI;
+        const p = getFieldPoint(theta, phi, C);
+        points.push(p);
+        const b = fieldMagnitude(p.length(), theta, params.m);
+        const normB = Math.min(1, b / maxB);
+        const c = getFieldColor(normB);
+        colors.push(c.r, c.g, c.b);
+      }
+
+      const geo = new THREE.BufferGeometry().setFromPoints(points);
+      geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      const mat = new THREE.LineBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: Math.min(1, params.brightness * 0.3),
+        blending: THREE.AdditiveBlending
+      });
+      const lineObj = new THREE.Line(geo, mat);
+      scene.add(lineObj);
+      fieldLines.push(lineObj);
+
+      // 粒子
+      const numParticles = 20;
+      const pPositions = new Float32Array(numParticles * 3);
+      const pColors = new Float32Array(numParticles * 3);
+      const particleTheta = [];
+
+      for (let i = 0; i < numParticles; i++) {
+        const theta = (i / numParticles) * Math.PI;
+        const p = getFieldPoint(theta, phi, C);
+        pPositions[i * 3] = p.x;
+        pPositions[i * 3 + 1] = p.y;
+        pPositions[i * 3 + 2] = p.z;
+        const b = fieldMagnitude(p.length(), theta, params.m);
+        const normB = Math.min(1, b / maxB);
+        const c = getFieldColor(normB);
+        pColors[i * 3] = c.r;
+        pColors[i * 3 + 1] = c.g;
+        pColors[i * 3 + 2] = c.b;
+        particleTheta.push(theta);
+      }
+
+      const pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+      pGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+      const pMat = new THREE.PointsMaterial({
+        size: 0.04,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true
+      });
+
+      const pointsObj = new THREE.Points(pGeo, pMat);
+      pointsObj.userData = { particleTheta, phi, C, maxB };
+      scene.add(pointsObj);
+      particleSystems.push(pointsObj);
+    }
+  }
+}
+
+buildFieldLines();
+
+// ========== 控制面板 ==========
+document.getElementById('slider-m').addEventListener('input', e => {
+  params.m = parseFloat(e.target.value);
+  document.getElementById('val-m').textContent = params.m.toFixed(1);
+  buildFieldLines();
+});
+document.getElementById('slider-lines').addEventListener('input', e => {
+  params.numLines = parseInt(e.target.value);
+  document.getElementById('val-lines').textContent = params.numLines;
+  buildFieldLines();
+});
+document.getElementById('slider-flow').addEventListener('input', e => {
+  params.flowSpeed = parseFloat(e.target.value);
+  document.getElementById('val-flow').textContent = params.flowSpeed.toFixed(1);
+});
+document.getElementById('slider-bright').addEventListener('input', e => {
+  params.brightness = parseFloat(e.target.value);
+  document.getElementById('val-bright').textContent = params.brightness.toFixed(1);
+  fieldLines.forEach(l => {
+    l.material.opacity = Math.min(1, params.brightness * 0.3);
+  });
+});
+document.getElementById('btn-toggle-anim').addEventListener('click', () => {
+  animating = !animating;
+  document.getElementById('btn-toggle-anim').textContent = animating ? '暂停动画' : '播放动画';
+});
+
+// ========== 动画 ==========
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const delta = clock.getDelta();
+
+  if (animating) {
+    time += delta;
+
+    // 粒子沿磁感线从N极→S极流动
+    particleSystems.forEach(ps => {
+      const posAttr = ps.geometry.attributes.position;
+      const colorAttr = ps.geometry.attributes.color;
+      const data = ps.userData.particleTheta;
+      const phi = ps.userData.phi;
+      const C = ps.userData.C;
+      const maxB = ps.userData.maxB;
+
+      for (let i = 0; i < data.length; i++) {
+        // 从 θ=0(N极) 流向 θ=π(S极)
+        data[i] += delta * params.flowSpeed * 0.3;
+        if (data[i] > Math.PI) data[i] -= Math.PI; // 循环
+        const p = getFieldPoint(data[i], phi, C);
+        posAttr.setXYZ(i, p.x, p.y, p.z);
+        const b = fieldMagnitude(p.length(), data[i], params.m);
+        const normB = Math.min(1, b / maxB);
+        const c = getFieldColor(normB);
+        colorAttr.setXYZ(i, c.r, c.g, c.b);
+      }
+      posAttr.needsUpdate = true;
+      colorAttr.needsUpdate = true;
+    });
+
+    // 磁极微弱脉动
+    const pulse = 1 + Math.sin(time * 2.5) * 0.08;
+    nPole.scale.setScalar(pulse);
+    sPole.scale.setScalar(pulse);
+  }
+
+  controls.update();
+  composer.render();
+}
+
+animate();
+
+// 自适应
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>

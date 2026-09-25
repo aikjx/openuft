@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>偏振电场矢量螺旋（场取向图，非光子空间轨迹）</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --line:#30363d;
+    --cyan:#22d3ee; --green:#3fb950; --red:#f85149;
+    --yellow:#e3b341; --txt:#c9d1d9; --dim:#8b949e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--txt);
+    font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+    line-height:1.6;
+  }
+  header{
+    padding:18px 24px 10px; border-bottom:1px solid var(--line);
+  }
+  h1{
+    font-size:19px; margin:0 0 6px; font-weight:600;
+  }
+  h1 .warn{color:var(--yellow);}
+  .sub{color:var(--dim); font-size:13px;}
+  .wrap{
+    display:grid; grid-template-columns:1fr 340px; gap:0;
+    height:calc(100vh - 74px); min-height:560px;
+  }
+  @media(max-width:900px){
+    .wrap{grid-template-columns:1fr; height:auto;}
+    #canvasBox{height:60vh;}
+  }
+  #canvasBox{position:relative; background:#010409;}
+  canvas{display:block; width:100%; height:100%;}
+  aside{
+    border-left:1px solid var(--line); overflow-y:auto;
+    padding:16px 18px; background:var(--panel);
+  }
+  .card{
+    border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; margin-bottom:14px; background:#0d1117;
+  }
+  .card h3{
+    margin:0 0 8px; font-size:13px; letter-spacing:.5px;
+    text-transform:uppercase; color:var(--dim);
+  }
+  .card p{margin:6px 0; font-size:13.5px;}
+  .legend-row{display:flex; gap:9px; align-items:flex-start; margin:7px 0; font-size:13px;}
+  .swatch{width:14px; height:14px; border-radius:3px; flex:0 0 14px; margin-top:5px;}
+  .sw-cyan{background:var(--cyan);}
+  .sw-green{background:var(--green);}
+  .sw-red{background:var(--red);}
+  .sw-yellow{background:var(--yellow);}
+  .tag{
+    display:inline-block; padding:1px 7px; border-radius:5px;
+    font-size:11.5px; font-weight:600; letter-spacing:.3px;
+  }
+  .tag-real{background:rgba(63,185,80,.15); color:var(--green); border:1px solid rgba(63,185,80,.4);}
+  .tag-no{background:rgba(248,81,73,.13); color:var(--red); border:1px solid rgba(248,81,73,.4);}
+  .warnbox{
+    border:1px solid rgba(248,81,73,.5); background:rgba(248,81,73,.07);
+    border-radius:8px; padding:12px 14px; font-size:13px;
+  }
+  .warnbox b{color:var(--red);}
+  .btn{
+    display:block; width:100%; padding:10px; margin:4px 0 10px;
+    background:#21262d; color:var(--txt); border:1px solid var(--line);
+    border-radius:7px; cursor:pointer; font-size:13.5px; font-weight:600;
+    transition:.15s;
+  }
+  .btn:hover{background:#30363d;}
+  .btn.active{background:rgba(34,211,238,.15); border-color:var(--cyan); color:var(--cyan);}
+  .btn.bad.active{background:rgba(248,81,73,.15); border-color:var(--red); color:var(--red);}
+  .readout{
+    font-family:ui-monospace,Consolas,monospace; font-size:12.5px;
+    color:var(--dim); margin-top:6px;
+  }
+  .readout span{color:var(--cyan);}
+  .footer-note{
+    font-size:11.5px; color:var(--dim); margin-top:10px;
+    border-top:1px dashed var(--line); padding-top:8px;
+  }
+  .hint{
+    position:absolute; left:14px; bottom:12px; font-size:11.5px;
+    color:var(--dim); background:rgba(1,4,9,.7); padding:5px 10px;
+    border-radius:6px; border:1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>偏振电场矢量螺旋 <span class="warn">（场取向图，非光子空间轨迹）</span></h1>
+  <div class="sub">x, y = E 分量数值（场矢量空间）；z = 真实空间位置。螺旋为场取向图案，随 z 以 c 平移。</div>
+</header>
+
+<div class="wrap">
+  <div id="canvasBox">
+    <canvas id="cv"></canvas>
+    <div class="hint">拖拽旋转视角 · 滚轮缩放</div>
+  </div>
+
+  <aside>
+    <button id="btnField" class="btn active">视图：场矢量空间（正确）</button>
+    <button id="btnWrong" class="btn bad">视图：若误读为真实空间轨迹</button>
+
+    <div class="card">
+      <h3>图例（三条红线）</h3>
+      <div class="legend-row">
+        <div class="swatch sw-cyan"></div>
+        <div><b>青色螺旋</b> = E 矢量尖端取向图案（场矢量空间）。整条图案随 z 以 c 平移。<span class="tag tag-real">真实偏振结构</span></div>
+      </div>
+      <div class="legend-row">
+        <div class="swatch sw-green"></div>
+        <div><b>绿色直线箭头</b> = 波前 / 能量 / 相位传播：沿 z 直线，速率 c。<span class="tag tag-real">真实传播</span></div>
+      </div>
+      <div class="legend-row">
+        <div class="swatch sw-red"></div>
+        <div><b>红色虚螺旋</b>（误读模式）= 把 x, y 当成光子真实横向空间坐标后得到的"轨迹"。<span class="tag tag-no">已被实验否决</span></div>
+      </div>
+      <div class="footer-note">
+        x, y 轴画的是电场分量的<b>数值大小</b>，不是光子的横向空间位置。这一点是整张图的根。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>固定 z 截面</h3>
+      <p>在某个 z 位置，E 矢量<b>原地旋转</b>（画圈），<b>没有任何横向位移</b>。</p>
+      <p class="readout">当前截面 z = <span id="zVal">0.00</span> λ<br>E 方向角 = <span id="angVal">0</span>°<br>横向位移 = <span>0</span>（无）</p>
+    </div>
+
+    <div class="card">
+      <h3>真实传播</h3>
+      <p>波前 / 能量 / 相位沿 z 前进，速率 <b>c</b>。</p>
+      <p class="readout">传播方向 = <span>+z</span><br>速率 = <span>c</span>（实测光速）</p>
+    </div>
+
+    <div class="warnbox">
+      <b>常见误读：</b>把 x, y 当成光子真实横向空间坐标 → 会推出路径速度 ≈6.36c 或前向 &lt;c → 与实测光速 c 冲突，<b>已被实验否决</b>。
+      <div class="footer-note" style="border:none;margin-top:8px;">
+        螺旋在"场矢量维度"里是真实的；螺旋在"光子轨迹维度"里不存在。二者不冲突。
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>一句话</h3>
+      <p>螺旋 = 场矢量取向随位置排成的形状；没有东西沿着螺旋本身跑。真实传播永远是沿 z 的直线，速率 c。</p>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* =========================================================
+   偏振电场矢量螺旋 3D 可视化
+   坐标定义：
+     z 轴 = 真实空间位置（光束传播方向）
+     x 轴 = E_x 分量数值（场矢量空间，非空间坐标）
+     y 轴 = E_y 分量数值（场矢量空间，非空间坐标）
+   螺旋 = E 矢量尖端在 {Ex, Ey, z} 中的轨迹
+   两种视图：
+     field  : x,y 解释为场分量（正确）
+     wrong  : x,y 误读为真实横向空间坐标（演示超光速矛盾）
+   ========================================================= */
+
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const box = document.getElementById('canvasBox');
+
+let W=0,H=0,DPR=1;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = box.clientWidth; H = box.clientHeight;
+  cv.width = W*DPR; cv.height = H*DPR;
+  cv.style.width = W+'px'; cv.style.height = H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize', resize);
+
+/* ---------- 3D 投影 ---------- */
+let rotY = -0.55, rotX = 0.38, zoom = 1.0;
+let dragging=false, lastX=0, lastY=0;
+
+function project(p){
+  // 先绕 Y 轴，再绕 X 轴
+  let x=p.x, y=p.y, z=p.z;
+  let cy=Math.cos(rotY), sy=Math.sin(rotY);
+  let x1 =  x*cy + z*sy;
+  let z1 = -x*sy + z*cy;
+  let cx=Math.cos(rotX), sx=Math.sin(rotX);
+  let y1 =  y*cx - z1*sx;
+  let z2 =  y*sx + z1*cx;
+  // 透视
+  const d = 14;
+  const f = d/(d + z2*0.28);
+  return {
+    X: W/2 + x1*58*zoom*f,
+    Y: H/2 - y1*58*zoom*f,
+    s: f
+  };
+}
+
+/* ---------- 场景尺寸 ---------- */
+const Z_MIN = -3.2, Z_MAX = 3.2;   // 真实空间 z 范围（单位：波长）
+const A = 1.0;                     // 场矢量振幅（归一化）
+const TURNS = 2.2;                 // 螺旋圈数
+const K = TURNS * 2*Math.PI / (Z_MAX - Z_MIN);
+
+let viewMode = 'field';            // 'field' | 'wrong'
+let phase = 0;                     // 动画相位
+
+/* 场矢量 E 在位置 z 的值 */
+function Efield(z){
+  const th = K*z + phase;
+  return { ex: A*Math.cos(th), ey: A*Math.sin(th), th };
+}
+
+/* ---------- 绘制辅助 ---------- */
+function line3(a,b,color,width,dash){
+  const p=project(a), q=project(b);
+  ctx.save();
+  ctx.strokeStyle=color; ctx.lineWidth=width||1;
+  if(dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(p.X,p.Y); ctx.lineTo(q.X,q.Y); ctx.stroke();
+  ctx.restore();
+}
+function label3(pos,text,color,dx,dy,font){
+  const p=project(pos);
+  ctx.save();
+  ctx.fillStyle=color; ctx.font=font||'12px system-ui';
+  ctx.fillText(text, p.X+(dx||0), p.Y+(dy||0));
+  ctx.restore();
+}
+
+/* ---------- 主渲染 ---------- */
+let t0 = performance.now();
+function render(now){
+  const dt = Math.min((now-t0)/1000, 0.05); t0 = now;
+  phase += dt * 1.5;   // 图案随 z 平移 → 用相位推进模拟
+
+  ctx.clearRect(0,0,W,H);
+
+  /* --- 背景网格（在 z-x 平面） --- */
+  ctx.save();
+  for(let z=Math.ceil(Z_MIN); z<=Z_MAX; z+=1){
+    line3({x:0,y:-1.4,z:z},{x:0,y:1.4,z:z}, 'rgba(48,54,61,.55)',1);
+  }
+  ctx.restore();
+
+  /* --- 坐标轴 --- */
+  const axisLen = 2.0;
+  // z 轴（真实空间）
+  line3({x:0,y:0,z:Z_MIN-0.3},{x:0,y:0,z:Z_MAX+0.3}, '#8b949e', 1.6);
+  label3({x:0,y:0,z:Z_MAX+0.5}, 'z = 空间位置（真实）', '#8b949e', -30, 18, '12px system-ui');
+
+  // x 轴（场分量数值）
+  line3({x:0,y:0,z:Z_MIN},{x:axisLen,y:0,z:Z_MIN}, '#22d3ee', 1.2, [4,3]);
+  label3({x:axisLen,y:0,z:Z_MIN}, 'x = Eₓ 数值（非空间坐标）', '#22d3ee', 6, 4, '11.5px system-ui');
+
+  // y 轴（场分量数值）
+  line3({x:0,y:0,z:Z_MIN},{x:0,y:axisLen,z:Z_MIN}, '#22d3ee', 1.2, [4,3]);
+  label3({x:0,y:axisLen,z:Z_MIN}, 'y = E_y 数值（非空间坐标）', '#22d3ee', 6, -4, '11.5px system-ui');
+
+  /* --- 真实传播：绿色直线箭头，沿 z --- */
+  line3({x:0,y:0,z:Z_MIN},{x:0,y:0,z:Z_MAX+0.1}, '#3fb950', 3.2);
+  // 箭头
+  (function(){
+    const p=project({x:0,y:0,z:Z_MAX+0.1});
+    ctx.save();
+    ctx.fillStyle='#3fb950';
+    ctx.beginPath();
+    ctx.moveTo(p.X,p.Y);
+    ctx.lineTo(p.X-8,p.Y+5);
+    ctx.lineTo(p.X-8,p.Y-5);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+  })();
+  label3({x:0,y:0,z:Z_MAX+0.25}, '真实传播：沿 z 直线，速率 c', '#3fb950', -60, -14, '12px system-ui');
+
+  /* --- 固定 z 截面：小圆盘 + E 矢量原地旋转 --- */
+  (function(){
+    const zCut = 0.0;
+    const p0 = project({x:0,y:0,z:zCut});
+    const rPix = 30*zoom*(project({x:0,y:0,z:zCut}).s);
+    ctx.save();
+    ctx.strokeStyle='rgba(227,179,65,.5)';
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.arc(p0.X,p0.Y, rPix, 0, Math.PI*2); ctx.stroke();
+    ctx.restore();
+    const E = Efield(zCut);
+    line3({x:0,y:0,z:zCut},{x:E.ex,y:E.ey,z:zCut}, '#e3b341', 2.5);
+    label3({x:E.ex,y:E.ey,z:zCut}, 'E 原地旋转', '#e3b341', 6, -6, '11.5px system-ui');
+  })();
+
+  /* --- 螺旋：E 矢量尖端轨迹 --- */
+  const N = 260;
+  ctx.save();
+  ctx.lineWidth = 2.6;
+  ctx.strokeStyle = (viewMode==='field') ? '#22d3ee' : '#f85149';
+  if(viewMode==='wrong') ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  for(let i=0;i<=N;i++){
+    const z = Z_MIN + (Z_MAX-Z_MIN)*i/N;
+    const E = Efield(z);
+    const pt = {x:E.ex, y:E.ey, z:z};
+    const q = project(pt);
+    if(i===0) ctx.moveTo(q.X,q.Y); else ctx.lineTo(q.X,q.Y);
+  }
+  ctx.stroke();
+  ctx.restore();
+
+  /* --- 若干位置的 E 矢量短线 --- */
+  for(let i=0;i<=40;i++){
+    const z = Z_MIN + (Z_MAX-Z_MIN)*i/40;
+    const E = Efield(z);
+    line3({x:0,y:0,z:z},{x:E.ex,y:E.ey,z:z},
+      (viewMode==='field')?'rgba(34,211,238,.35)':'rgba(248,81,73,.35)',1);
+  }
+
+  /* --- 误读模式：叠加"超光速路径"提示 --- */
+  if(viewMode==='wrong'){
+    ctx.save();
+    ctx.fillStyle='rgba(248,81,73,.9)';
+    ctx.font='bold 14px system-ui';
+    ctx.fillText('若 x,y 是真实空间坐标 → 路径速度 ≈6.36c（与实测 c 冲突）', 16, 28);
+    ctx.restore();
+  } else {
+    ctx.save();
+    ctx.fillStyle='rgba(34,211,238,.85)';
+    ctx.font='bold 14px system-ui';
+    ctx.fillText('螺旋 = 场取向图案，随 z 以 c 平移；无实体沿螺旋飞行', 16, 28);
+    ctx.restore();
+  }
+
+  /* --- 侧栏读数 --- */
+  const zCutRead = ((phase/K) % (Z_MAX-Z_MIN) + (Z_MAX-Z_MIN)) % (Z_MAX-Z_MIN) + Z_MIN;
+  const Eread = Efield(zCutRead);
+  document.getElementById('zVal').textContent = zCutRead.toFixed(2);
+  document.getElementById('angVal').textContent =
+    Math.round((Eread.th*180/Math.PI)%360 + 360)%360;
+
+  requestAnimationFrame(render);
+}
+
+/* ---------- 交互 ---------- */
+cv.addEventListener('mousedown', e=>{dragging=true; lastX=e.clientX; lastY=e.clientY;});
+window.addEventListener('mouseup', ()=>dragging=false);
+window.addEventListener('mousemove', e=>{
+  if(!dragging) return;
+  rotY += (e.clientX-lastX)*0.008;
+  rotX += (e.clientY-lastY)*0.008;
+  rotX = Math.max(-1.3, Math.min(1.3, rotX));
+  lastX=e.clientX; lastY=e.clientY;
+});
+cv.addEventListener('wheel', e=>{
+  e.preventDefault();
+  zoom *= (e.deltaY>0?0.93:1.07);
+  zoom = Math.max(0.4, Math.min(2.6, zoom));
+},{passive:false});
+
+/* 触屏 */
+cv.addEventListener('touchstart', e=>{
+  if(e.touches.length===1){dragging=true; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY;}
+},{passive:true});
+cv.addEventListener('touchmove', e=>{
+  if(dragging && e.touches.length===1){
+    rotY += (e.touches[0].clientX-lastX)*0.008;
+    rotX += (e.touches[0].clientY-lastY)*0.008;
+    rotX = Math.max(-1.3, Math.min(1.3, rotX));
+    lastX=e.touches[0].clientX; lastY=e.touches[0].clientY;
+  }
+},{passive:true});
+cv.addEventListener('touchend', ()=>dragging=false);
+
+/* 按钮 */
+const btnField = document.getElementById('btnField');
+const btnWrong = document.getElementById('btnWrong');
+btnField.addEventListener('click', ()=>{
+  viewMode='field'; btnField.classList.add('active'); btnWrong.classList.remove('active');
+});
+btnWrong.addEventListener('click', ()=>{
+  viewMode='wrong'; btnWrong.classList.add('active'); btnField.classList.remove('active');
+});
+
+/* ---------- 启动 ---------- */
+resize();
+requestAnimationFrame(render);
+</script>
+</body>
+</html>

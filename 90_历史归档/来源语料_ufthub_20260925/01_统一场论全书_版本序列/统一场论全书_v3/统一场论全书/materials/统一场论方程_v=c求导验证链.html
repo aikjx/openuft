@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>v=c 求导验证链 → 统一场论方程</title>
+<style>
+  :root{
+    --bg:#0a0e1c; --card:#10172e; --card2:#0d1326;
+    --gold:#ffc857; --amber:#ffb347; --cyan:#7dd3fc; --violet:#c084fc;
+    --text:#e8ecf8; --dim:#9aa7c7; --line:#2a3556;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65;padding:20px 14px 40px}
+  .wrap{max-width:760px;margin:0 auto}
+  h1{font-size:22px;text-align:center;color:var(--gold);letter-spacing:1px}
+  .sub{text-align:center;color:var(--dim);font-size:13px;margin:6px 0 18px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;font-size:12px;color:var(--dim);margin-bottom:20px}
+  .lg{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:18px;height:10px;border-radius:3px;display:inline-block}
+  .s1{background:var(--gold)} .s2{background:transparent;border:1.5px dashed var(--cyan)} .s3{background:transparent;border:1.5px dotted var(--violet)}
+  .layer{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0}
+  .chip{display:inline-block;font-size:12px;font-weight:600;color:#0a0e1c;background:var(--gold);border-radius:20px;padding:2px 12px;margin-bottom:8px}
+  .chip.cyan{background:var(--cyan)} .chip.violet{background:var(--violet)}
+  .layer h3{font-size:15px;color:#fff;margin-bottom:4px}
+  .note{font-size:13px;color:var(--dim);margin:4px 0 8px}
+  .f{font-family:"Cambria Math","STIX Two Text",Georgia,serif;font-size:16px;color:var(--amber);background:rgba(255,179,71,.07);border:1px solid rgba(255,179,71,.25);border-radius:10px;padding:8px 12px;margin:6px 0;overflow-x:auto;white-space:nowrap}
+  .f.gold{color:var(--gold)} .f.cyan{color:var(--cyan);border-color:rgba(125,211,252,.3);background:rgba(125,211,252,.06)} .f.violet{color:var(--violet);border-color:rgba(192,132,252,.35);background:rgba(192,132,252,.07)}
+  .f b{color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px;margin:6px 0}
+  .cell{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px}
+  .cell .t{color:var(--cyan);font-size:12px;margin-bottom:2px}
+  .cell .m{font-family:"Cambria Math",Georgia,serif;color:var(--amber)}
+  .arrow{text-align:center;color:var(--gold);font-size:18px;line-height:1;margin:2px 0}
+  .ok{color:#6ee7a8;font-size:12px}
+  .bnd{border:1.5px dashed var(--violet);border-radius:14px;padding:12px 14px;margin:14px 0;background:rgba(192,132,252,.05)}
+  .bnd h4{color:var(--violet);font-size:14px;margin-bottom:6px}
+  .bnd ul{padding-left:18px;font-size:13px;color:var(--dim)}
+  .bnd li{margin:4px 0}
+  .foot{font-size:11px;color:#5c6a8f;text-align:center;margin-top:18px}
+  sup,sub{font-size:.72em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>v = c 求导验证链 → 统一场论方程</h1>
+  <div class="sub">公设 → 运动学 → 波动学 → 场论统一 → 主方程 → 本源回环</div>
+  <div class="legend">
+    <span class="lg"><span class="sw s1"></span>已证实物理</span>
+    <span class="lg"><span class="sw s2"></span>严格数学推导</span>
+    <span class="lg"><span class="sw s3"></span>原创拓展假说</span>
+  </div>
+
+  <div class="layer">
+    <span class="chip">① 公设</span>
+    <h3>光速不变原理</h3>
+    <div class="note">一切惯性系中真空光速相同。这是洛伦兹变换与时空统一的唯一输入。</div>
+    <div class="f gold">v = c &nbsp;·&nbsp; ds² = c²dt² − dx² − dy² − dz² = 不变量</div>
+    <div class="f">γ(v) = (1 − β²)<sup>−1/2</sup>，&nbsp; β = v/c</div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="layer">
+    <span class="chip cyan">② 运动学支 · 求导验证</span>
+    <h3>γ、四速度、四动量</h3>
+    <div class="grid">
+      <div class="cell"><div class="t">γ 对速度的导数</div><div class="m">dγ/dv = (v/c²)·γ³</div></div>
+      <div class="cell"><div class="t">v→c 极限</div><div class="m">γ→∞ ⟹ 仅零质量可达 c</div></div>
+      <div class="cell"><div class="t">四速度</div><div class="m">u<sup>μ</sup> = γ(c, v⃗)</div></div>
+      <div class="cell"><div class="t">模长守恒（求导验证）</div><div class="m">u<sub>μ</sub>u<sup>μ</sup> = c² ⟹ u·a = 0</div></div>
+      <div class="cell"><div class="t">四动量</div><div class="m">p<sup>μ</sup> = (E/c, p⃗)</div></div>
+      <div class="cell"><div class="t">质壳条件</div><div class="m">E² = p²c² + m²c⁴</div></div>
+      <div class="cell"><div class="t">零质量极限</div><div class="m">v=c, m=0 ⟹ E = pc</div></div>
+      <div class="cell"><div class="t">能量变化率</div><div class="m">dE/dt = F·v（功-能自洽）</div></div>
+    </div>
+    <div class="ok">✓ 验证：γ(0)=1；dγ/dt = γ³(v·a)/c²；dE/dt = mγ³(v·a) = F·v</div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="layer">
+    <span class="chip cyan">③ 波动学支 · 求导验证</span>
+    <h3>d'Alembert 算符：c 进入场方程的通道</h3>
+    <div class="f cyan">□ ≡ ∂<sub>μ</sub>∂<sup>μ</sup> = (1/c²)·∂²/∂t² − ∇²</div>
+    <div class="grid">
+      <div class="cell"><div class="t">平面波代入验算</div><div class="m">□e<sup>i(kx−ωt)</sup> = 0 ⟹ ω = ck</div></div>
+      <div class="cell"><div class="t">相速 = 群速 = c</div><div class="m">v<sub>p</sub> = ω/k = c；v<sub>g</sub> = dω/dk = c</div></div>
+      <div class="cell"><div class="t">Maxwell 求导导出 c</div><div class="m">∇²E − μ₀ε₀∂²E/∂t² = 0 ⟹ c = 1/√(μ₀ε₀)</div></div>
+      <div class="cell"><div class="t">数值验算</div><div class="m">1/√(ε₀μ₀) = 299792458 m/s ✓</div></div>
+    </div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="layer">
+    <span class="chip">④ 四大相互作用 · 同一算符</span>
+    <h3>所有无质量场都以 c 传播</h3>
+    <div class="grid">
+      <div class="cell"><div class="t">电磁（U(1)）</div><div class="m">□A<sup>μ</sup> = 0</div></div>
+      <div class="cell"><div class="t">引力（线性化）</div><div class="m">□h̄<sub>μν</sub> = 0</div></div>
+      <div class="cell"><div class="t">强/弱（Yang-Mills）</div><div class="m">□A<sup>a</sup><sub>μ</sub> = 0</div></div>
+      <div class="cell"><div class="t">物质场（Klein-Gordon）</div><div class="m">(□ + m²c²/ħ²)φ = 0</div></div>
+    </div>
+    <div class="note">c 是唯一的传播速度公因子 —— “统一”的第一层含义：同一算符 + 同一速度。</div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="layer">
+    <span class="chip">⑤ 统一场论主方程（结构统一）</span>
+    <h3>自由场 / 有源耦合 / 时空几何</h3>
+    <div class="f gold">自由场统一： (□ + κ²)Φ = 0，&nbsp; κ = mc/ħ</div>
+    <div class="f">有源 + 规范耦合： D<sub>μ</sub>D<sup>μ</sup>Φ − κ²Φ = J，&nbsp; D<sub>μ</sub> = ∂<sub>μ</sub> − igA<sub>μ</sub></div>
+    <div class="f">时空几何： R<sub>μν</sub> − ½Rg<sub>μν</sub> + Λg<sub>μν</sub> = (8πG/c⁴)·T<sub>μν</sub></div>
+    <div class="note">统一的本质：二阶协变算符（□ 或 D²）＋ c 公因子 ＋ 质壳守恒 E² = p²c² + m²c⁴。引力以 c⁴ 作时空与能量的换算因子。</div>
+  </div>
+  <div class="arrow">▼</div>
+
+  <div class="layer">
+    <span class="chip violet">⑥ 本源回环（承接你的体系）</span>
+    <h3>本源振子 → 相对论完备化 → 粒子 = 谐振模式</h3>
+    <div class="f violet">本源振子： AΦ̈ + KΦ = 0 &nbsp;⟹&nbsp; 相对论完备化： A□Φ + (K/c²)Φ = 0</div>
+    <div class="grid">
+      <div class="cell"><div class="t">与 Klein-Gordon 对照</div><div class="m">K/A = m²c⁴/ħ²</div></div>
+      <div class="cell"><div class="t">识别静止能量</div><div class="m">ħω₀ = mc²</div></div>
+      <div class="cell"><div class="t">机电对偶闭环</div><div class="m">弹簧振子 ↔ LC 回路 ↔ 场的一个平面波模</div></div>
+    </div>
+    <div class="note">全宇宙 = 无穷多个这样的相对论谐振模式叠加 —— 粒子、质量、电荷都是该振荡流形的观测投影。</div>
+    <div class="bnd">
+      <h4>原创拓展层（假说，待可证伪检验）</h4>
+      <ul>
+        <li>涡旋拓扑解（环面涡旋 = 旋量拓扑荷）—— 数学自洽，暂无实验判据；</li>
+        <li>A□Φ + (K/c²)Φ = 0 的非线性/分形推广 —— 属于 openuft 体系原创内容；</li>
+        <li>单一“万有方程”在标准物理中尚未被证实 —— 以上统一指结构统一（算符 + 速度 + 守恒律），是严格成立的层面。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot">示意：实线=已证实物理 · 虚线=严格数学推导 · 点线=原创拓展假说（与用户自研体系一致）</div>
+</div>
+</body>
+</html>

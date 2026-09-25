@@ -1,0 +1,378 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+极简模版 - 优化版
+作者：YMKJ团队
+版本：2.5
+更新时间：2025-10-22
+
+最简化的RPA开发模版，完全使用aibot_common的浏览器操作组件
+"""
+
+import sys
+from pathlib import Path
+from selenium.webdriver.common.by import By
+
+# 添加项目根目录到Python路径
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+
+from aibot_rpa.utils.logger import LoggerInit
+from aibot_rpa.core.flow import BaseFlow
+from aibot_rpa.utils.decorators import get_retry_count
+from aibot_common.browser_rpa import BROWSER_RPA
+from aibot_common.mouse_rpa import MOUSE_RPA
+from aibot_common.page_rpa import PAGE_RPA
+from aibot_common.button_rpa import BUTTON_RPA
+import time
+from aibot_rpa.browser.record_video import VideoRecorder  # Add import
+import logging
+from selenium.webdriver.common.keys import Keys
+import traceback
+from operator import itemgetter
+import requests
+from selenium.webdriver.common.by import By
+import random
+import re
+import shutil
+import sys
+import os
+import json
+import time
+
+# ================================ 全局变量初始化 ================================
+g_log = LoggerInit.init(__name__)
+
+
+class MinimalRPAFlow(BaseFlow):
+    """极简RPA流程类 - 使用aibot_common"""
+
+    def __init__(self, config_manager=None, **kwargs):
+        super().__init__(config_manager=config_manager, **kwargs)
+        # 使用预导入的BROWSER_RPA实例
+        self.browser_rpa = BROWSER_RPA
+        self.button_rpa = BUTTON_RPA
+        self.page_rpa = PAGE_RPA
+        self.mouse_rpa = MOUSE_RPA
+        self.config_manager = config_manager
+        self.g_dict = {}
+
+    def csh(self):
+        try:
+            # 使用配置字典 读取参数
+            config_dict = self.config_manager.get_config()
+            self.g_dict["config_dict"] = config_dict
+            logging.info(config_dict)
+            self.g_dict["auth_code"] = config_dict["AuthCode"]
+            print(self.g_dict["auth_code"])
+            # self.g_dict["table_id"] = config_dict["uniTable"][0][0]
+            # print(self.g_dict["table_id"])
+
+            # self.g_dict["login_acc"] = "lijw0218"
+            self.g_dict["login_acc"] = str(config_dict["loginAcc"])
+            # self.g_dict["login_pw"] = "060218"
+            self.g_dict["isPW"] = None
+            # logging.info(config_dict["isPW"])
+            # logging.info("0"+str(config_dict["loginPW"]))
+            if config_dict["isPW"]:
+                logging.info("***********1")
+                self.g_dict["login_pw"] = "0"+str(config_dict["loginPW"])
+            else:
+                self.g_dict["login_pw"] = str(config_dict["loginPW"])
+
+            ls_id = random.randint(1, 1000000)
+            ls_id = str(ls_id)
+
+
+            self.g_dict["ls_dir"] = "D:/临时下载/" + ls_id
+            if not os.path.isdir(self.g_dict["ls_dir"]):
+                os.makedirs(self.g_dict["ls_dir"])
+        except Exception as e:
+            self.g_dict["err"] = True
+            logging.info(e)
+            traceback.print_exc()
+
+    def yw_csh(self):
+        try:
+            print(self.g_dict)
+            self.browser_dict = BROWSER_RPA.open_browser(
+                url="http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/home",
+                executable_path=r"D:/module/driver/86/chromedriver.exe",
+                browser_path=r"D:/app/360Chrome/Chrome/Application/360chrome.exe",
+                download_dir=self.g_dict["ls_dir"],
+                run_log=True
+            )
+
+            print(self.browser_dict)
+            self.driver = self.browser_dict["driver"]
+            self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                            value="//*[@placeholder='用户名/手机号/身份证']",
+                                            text=self.g_dict["login_acc"])
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="//*[@type='password']")
+            self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                            value="//*[@type='password']",
+                                            text=self.g_dict["login_pw"])
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="//*[@type='button']")
+            # 等待系统登录完成
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH, value="//aside/div/div[2]")
+            time.sleep(1)
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="//aside/div/div[2]")
+            # 等待我的案件出现
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                       value='//*[text()="待办"]')
+        except Exception as e:
+            self.g_dict["err"] = True
+            logging.info(e)
+            traceback.print_exc()
+
+    def yw_cl(self):
+        try:
+            # 点击待办
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="//*[text()='待办']")
+            time.sleep(0.5)
+            # 点击更多
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="(//*[contains(text(),'更多')])[1]")
+            # 等待待办
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                       value="//*[text()='类型']")
+            # 点击类型
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value="(//*[contains(@class,'yzw-babgpt-input yzw-babgpt-input')])[3]")
+            # 点击 查控审批
+            time.sleep(1.1)
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, idx=-1,
+                                         value="//*[text()='文书审批']")
+            # cksp_list = self.driver.find_elements(By.XPATH,"//*[text()='查控审批']")
+            # cksp_list[-1].click()
+            time.sleep(1)
+            # 点击一下类型 //*[contains(@class,"yzw-babgpt-dialog__header")]
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value="(//*[contains(@class,'yzw-babgpt-input yzw-babgpt-input')])[3]")
+            time.sleep(1)
+            sp_data_list = self.driver.find_elements(By.XPATH, "//*[@class='title-text link-text']")
+            while len(sp_data_list) > 0:
+                error_num = 0;
+                # try_idx = 4;
+                try_idx = random.randint(0,9);
+                try:
+                    self.driver.switch_to.default_content()
+                    #  未办
+                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                 value="//*[contains(text(),'未办')]")
+
+                    # 开始审批
+                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, idx=try_idx,
+                                                 value="//*[@class='title-text link-text']")
+                    time.sleep(5)
+                    # # 切换iframe
+                    tk_iframe = self.driver.find_element(By.XPATH, "//*[@class='yzw-app-window']")
+                    self.driver.switch_to.frame(tk_iframe)
+                    time.sleep(1)
+                    # 等待数据加载 开始审批
+                    self.page_rpa.wait_element(driver=self.driver, by=By.XPATH, timeout=20,
+                                               value='//*[contains(text(),"确定")]')
+                    try:
+                        self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                     value='//*[contains(text(),"确定")]')
+                        # self.click_js('//*[contains(text(),'确定')]')
+                        # self.click_js("//html/body/div[5]/div/div[1]/button/i")
+                        time.sleep(3)
+                        self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                     value='//*[contains(text(),"取消")]')
+                        # //*[@class(),"el-icon-close"]
+                        # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                        #                              value='//html/body/div[5]/div/div[1]/button/i')
+                    except Exception as ee:
+                        g_log.error(ee)
+
+                    try_idx = try_idx +1
+                    if try_idx > 9:
+                        try_idx = 0
+                    self.driver.switch_to.default_content()
+                    time.sleep(1)
+                except Exception as eee:
+                    g_log.error(eee)
+                    error_num  = error_num + 1
+                    if error_num > 50:
+                        traceback.print_exc()
+
+
+        except Exception as e:
+            self.g_dict["err"] = True
+            logging.info(e)
+            traceback.print_exc()
+    def click_js(self,xpath):
+        click_el = xpath
+        click = f'''
+            var el = document.evaluate("{click_el}",document,null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null).singleNodeValue;
+            if(el) el.click();
+        '''
+        self.driver.execute_script(click)
+
+    def input_js(self,xpath,input_text):
+        input_el = xpath
+        text = input_text
+        ipt = f'''
+            var el = document.evaluate("{input_el}",document,null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null).singleNodeValue;
+            if(el){{
+                el.value = '{text}';
+                el.dispatchEvent(new Event('input'));
+                el.dispatchEvent(new Event('change'));
+            }}
+        '''
+        self.driver.execute_script(ipt)
+
+    def wait_js(self,xpath):
+        wait_el = xpath
+        wait = f'''
+            var el = document.evaluate("{wait_el}",document,null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null).singleNodeValue;
+            return el;
+        '''
+        self.driver.execute_script(wait)
+    def run_business(self):
+        """实现具体的业务逻辑 - 完全使用aibot_common的浏览器操作组件"""
+        try:
+            g_log.info("开始执行业务逻辑...")
+            # self.config.set_config("base_url", "http://www.qq.com")
+            # self.init_browser()
+            g_log.info("重试次数：%d", get_retry_count())
+            g_log.info("业务逻辑执行中----")
+            self.g_dict["err"] = False
+            # 使用配置字典 读取参数
+            g_log.info("---------------初始化开始")
+            self.csh()
+            g_log.info("---------------初始化结束")
+            g_log.info("---------------业务初始化开始")
+            self.yw_csh()
+            g_log.info("---------------业务初始化开始结束")
+            g_log.info("---------------业务处理开始")
+            self.yw_cl()
+            g_log.info("---------------业务处理结束")
+            # 关闭谷歌浏览器
+            # self.driver.close()
+            time.sleep(1)
+            self.logger.info("流程执行完毕")
+            # 移除直接调用driver.quit()，避免与finally块中的driver_quit()重复
+            # shutil.rmtree(self.g_dict["ls_dir"])
+            self.logger.info(self.g_dict["err"])
+            if self.g_dict["err"]:
+                raise Exception("存在异常，进入重试")
+
+            g_log.info("业务逻辑执行完成")
+
+            return True
+        except Exception as e:
+            g_log.exception(f"业务逻辑执行异常: {e}")
+            return False
+        finally:
+            # 使用self.browser_rpa关闭浏览器
+            try:
+                g_log.info("使用self.browser_rpa关闭浏览器...")
+                try:
+                    shutil.rmtree(self.g_dict["ls_dir"])
+                except Exception as e:
+                    pass
+                self.driver.close()
+            except Exception as e:
+                g_log.warning(f"关闭浏览器时出错: {e}")
+                # 降级使用原有的关闭方式
+                self.driver_quit()
+
+
+def main():
+    """主函数"""
+    from aibot_rpa.config.manager import ConfigManager
+
+    exit_code = 0
+    flow = None
+
+    try:
+        g_log.info("=== 程序启动 ===")
+
+        # 1. 初始化配置管理器
+        config_manager = ConfigManager()
+
+        # 2. 加载配置
+        config_template = {
+            "taskId": "minimal_demo_001",
+            "name": "总对总签章",
+            # "log_path": "d:/rpa_profile/log/极简demo/demo.log",
+            # "video_path": "d:/rpa_profile/video/极简demo/demo.webm",
+            # "executable_path": "d:/code/ymkj/ymkj-aibot/chromedriver.exe",
+            # "browser_path": "D:/360浏览器/app/360Chrome/Chrome/Application/360chrome.exe",
+            # "executable_path": "D:/module/driver/86/chromedriver.exe",
+            # "browser_path": "C:/Users/mo/AppData/Local/360Chrome/Chrome/Application/360chrome.exe",
+            "max_retries": 2,
+            "retry_delay": 2,
+            "timeout": 30,
+            "record_video": True,
+            "live_push": True,
+            "headless": False,
+            # "start_time": "2025-10-11",
+            "AuthCode": "lmYXStbZEbJ2RrBf2ej0N",
+            "loginPW": r"CYJun*123",
+            "loginAcc": r"18000850505",
+            "isPW":None
+            # "end_time": "",
+            # "uniTable": [["poGx9GOTfc62cYm15LM2N", "总对总签章"]]
+            # "base_url": "http://www.baidu.com",
+        }
+        s = config_template["loginPW"]
+        if s.startswith('0') and s.isdigit():
+            config_template['isPW'] = True
+
+        # 2. 加载配置（控制台没有就用config_template）
+        config_manager.load_config_args(config_template)
+        # 加载自定义配置
+        config_manager.load_dict({
+            "executable_path": r"D:/module/driver/86/chromedriver.exe",
+            "browser_path": r"D:/app/360Chrome/Chrome/Application/360chrome.exe",
+            "record_fps": 10,  # 降低帧率以确保更稳定的录制
+            "record_video": True,
+            "live_push": False  # 禁用直播推送，专注于本地录制
+        })
+
+        g_log.info(f"配置加载完成: {config_manager.get_config('name', 'Unknown')}")
+
+        # 3. 执行流程
+        g_log.info("开始执行RPA流程...")
+        flow = MinimalRPAFlow(config_manager=config_manager)
+        result = flow.execute()
+
+        if result:
+            g_log.info("✅ RPA流程执行成功！")
+            g_log.info({"msg": "已完成"})
+            exit_code = 0
+        else:
+            g_log.error("❌ RPA流程执行失败！")
+            g_log.info({"error": "运行异常"})
+            exit_code = 1
+
+    except KeyboardInterrupt:
+        g_log.warning("⚠️ 用户中断程序执行")
+        exit_code = 2
+
+    except Exception as e:
+        g_log.exception(f"💥 程序执行异常: {e}")
+        exit_code = 1
+
+    finally:
+        # 确保关闭浏览器
+        try:
+            if flow and hasattr(flow, 'driver') and flow.driver:
+                flow.driver_quit()
+                g_log.info("浏览器已关闭")
+        except Exception as e:
+            g_log.warning(f"关闭浏览器时出错: {e}")
+        g_log.info("=== 程序结束 ===")
+
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())

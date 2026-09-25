@@ -1,0 +1,44 @@
+[workspace]
+members = [
+    "crates/operator-core",
+    "crates/operator-wasm",
+    "crates/operator-graph",
+    "crates/optimizer",
+    "crates/runtime",
+    "crates/derive",
+]
+resolver = "2"
+
+[workspace.package]
+version = "1.0.0"
+edition = "2021"
+license = "MIT"
+authors = ["Algorithm Alliance"]
+description = "Unified Operator System based on Category Theory"
+
+[workspace.dependencies]
+# Core dependencies
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+anyhow = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+# Math dependencies
+nalgebra = "0.32"
+ndarray = "0.15"
+num-traits = "0.2"
+approx = "0.5"
+
+# WASM dependencies
+wasmer = "4.2"
+wasmer-compiler-cranelift = "4.2"
+
+# Graph dependencies
+petgraph = "0.6"
+
+# Web server
+axum = "0.7"
+tower-http = { version = "0.5", features = ["cors", "fs"] }

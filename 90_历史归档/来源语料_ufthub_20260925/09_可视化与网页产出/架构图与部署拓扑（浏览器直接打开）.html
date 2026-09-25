@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企业级一体化平台 · 架构与部署图</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Microsoft YaHei","PingFang SC",Segoe UI,sans-serif; background:#f4f6fa; color:#1f2937; padding:28px; line-height:1.5; }
+  h1 { font-size:24px; text-align:center; margin-bottom:4px; }
+  .sub { text-align:center; color:#6b7280; font-size:13px; margin-bottom:24px; }
+  h2 { font-size:17px; margin:26px 0 12px; padding-left:10px; border-left:4px solid #2563eb; }
+  .canvas { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:22px; box-shadow:0 2px 10px rgba(0,0,0,.05); overflow-x:auto; }
+  .layer { border:2px dashed #cbd5e1; border-radius:10px; padding:14px 14px 16px; margin:10px 0; position:relative; }
+  .layer .tag { position:absolute; top:-11px; left:14px; background:#fff; padding:0 8px; font-size:12px; color:#475569; font-weight:bold; letter-spacing:1px; }
+  .row { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .box { border-radius:8px; padding:10px 14px; min-width:130px; text-align:center; font-size:13px; font-weight:600; border:1px solid; }
+  .box small { display:block; font-weight:400; font-size:11px; color:#64748b; margin-top:3px; }
+  .b-edge  { background:#eff6ff; border-color:#60a5fa; color:#1d4ed8; }
+  .b-app   { background:#f0fdf4; border-color:#4ade80; color:#15803d; }
+  .b-auto  { background:#fff7ed; border-color:#fb923c; color:#c2410c; }
+  .b-mw    { background:#faf5ff; border-color:#c084fc; color:#7e22ce; }
+  .b-store { background:#f1f5f9; border-color:#94a3b8; color:#334155; }
+  .b-client{ background:#fef2f2; border-color:#f87171; color:#b91c1c; }
+  .arrow { text-align:center; color:#2563eb; font-size:20px; font-weight:bold; margin:2px 0; }
+  .arrow span { font-size:11px; color:#6b7280; font-weight:400; margin-left:6px; }
+  table { border-collapse:collapse; width:100%; font-size:12.5px; margin-top:6px; }
+  th,td { border:1px solid #e5e7eb; padding:7px 9px; text-align:left; }
+  th { background:#f8fafc; color:#334155; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  code { background:#eef2ff; padding:1px 6px; border-radius:4px; font-size:12px; color:#3730a3; }
+  .legend { display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:#475569; margin:8px 0 0; justify-content:center; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:middle; }
+  @media (max-width:900px){ .grid2{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<h1>企业级一体化平台 · 逻辑架构 &amp; 容器部署拓扑</h1>
+<div class="sub">Nginx + Java(Spring Boot) + MySQL + Redis + Python Worker(RPA/IP任务) + Headless Chromium + OCR(飞桨/RapidOCR) ｜ x86_64 / ARM64 / 信创</div>
+
+<h2>一、逻辑分层架构（请求与任务流）</h2>
+<div class="canvas">
+  <div class="layer" style="border-color:#fca5a5;">
+    <div class="tag">调用方</div>
+    <div class="row">
+      <div class="box b-client">业务系统 / 前端<small>HTTP /api</small></div>
+      <div class="box b-client">定时任务 / 运维<small>LPUSH 任务报文</small></div>
+    </div>
+  </div>
+  <div class="arrow">▼ <span>唯一对外入口 :80</span></div>
+  <div class="layer" style="border-color:#60a5fa;">
+    <div class="tag">接入层 · ent-edge</div>
+    <div class="row"><div class="box b-edge">Nginx<small>反向代理 · 静态资源 · 限流 · HTTPS · gzip</small></div></div>
+  </div>
+  <div class="arrow">▼ <span>proxy_pass / keepalive</span></div>
+  <div class="layer" style="border-color:#4ade80;">
+    <div class="tag">应用层 · ent-core</div>
+    <div class="row">
+      <div class="box b-app">Java 后端 :8080<small>业务 API · 任务下发 · 结果查询(无状态可扩)</small></div>
+      <div class="box b-app">Python Worker ×N<small>队列消费 · 并发槽 · 代理出口</small></div>
+    </div>
+  </div>
+  <div class="arrow">▼ Worker 调用 ▼</div>
+  <div class="layer" style="border-color:#fb923c;">
+    <div class="tag">自动化能力层 · 仅内部可达</div>
+    <div class="row">
+      <div class="box b-auto">Headless Chromium :9222<small>CDP 常驻 · 截图/渲染/操作</small></div>
+      <div class="box b-auto">OCR 服务 :8000<small>PaddleOCR(x86) / RapidOCR(ARM信创)</small></div>
+    </div>
+  </div>
+  <div class="arrow">▼ 读写 / 队列 ▼</div>
+  <div class="layer" style="border-color:#c084fc;">
+    <div class="tag">中间件层 · 端口仅绑 127.0.0.1</div>
+    <div class="row">
+      <div class="box b-mw">Redis 7 :6379<small>任务队列 · 结果队列 · 缓存 · AOF</small></div>
+      <div class="box b-mw">MySQL 8 :3306<small>业务数据 · rpa_task 结果表</small></div>
+    </div>
+  </div>
+  <div class="arrow">▼ bind mount 落盘 ▼</div>
+  <div class="layer" style="border-color:#94a3b8;">
+    <div class="tag">持久化层 · 宿主机 ./data（备份/迁移就打包它）</div>
+    <div class="row">
+      <div class="box b-store">data/mysql</div>
+      <div class="box b-store">data/redis</div>
+      <div class="box b-store">data/shared 截图共享卷</div>
+      <div class="box b-store">data/ocr-models 模型</div>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="dot" style="background:#60a5fa"></i>接入</span>
+    <span><i class="dot" style="background:#4ade80"></i>应用</span>
+    <span><i class="dot" style="background:#fb923c"></i>自动化</span>
+    <span><i class="dot" style="background:#c084fc"></i>中间件</span>
+    <span><i class="dot" style="background:#94a3b8"></i>数据</span>
+  </div>
+</div>
+
+<h2>二、任务全链路时序（开页面 → 截图 → OCR → 落库）</h2>
+<div class="canvas">
+<table>
+  <tr><th>步骤</th><th>发起 → 接收</th><th>动作</th><th>性能要点</th></tr>
+  <tr><td>1</td><td>Java → MySQL/Redis</td><td>落 rpa_task(待执行) + LPUSH 任务队列</td><td>队列削峰</td></tr>
+  <tr><td>2</td><td>Worker → Redis</td><td>BRPOP 阻塞领取任务</td><td>多 Worker 竞争消费，天然扩容</td></tr>
+  <tr><td>3</td><td>Worker → Chromium</td><td>CDP 复用常驻浏览器，goto + actions</td><td>浏览器只启动一次，省数秒冷启动</td></tr>
+  <tr><td>4</td><td>Chromium → 共享卷</td><td>截图写 /data/&lt;task&gt;.png</td><td>三容器同挂一卷</td></tr>
+  <tr><td>5</td><td>Worker → OCR</td><td>POST /ocr 只传文件路径，不传图片字节</td><td>零序列化，IPC 开销 &lt;10ms</td></tr>
+  <tr><td>6</td><td>Worker → MySQL/Redis</td><td>status=2 + 识别文本回写 + 结果队列通知</td><td>单实例 OCR 串行，高并发扩副本</td></tr>
+</table>
+</div>
+
+<h2>三、单机容器部署拓扑（docker compose）</h2>
+<div class="canvas">
+<div class="grid2">
+  <div>
+    <table>
+      <tr><th>容器</th><th>网络</th><th>宿主机端口</th></tr>
+      <tr><td>ent-nginx</td><td>edge+core</td><td><b>0.0.0.0:80</b></td></tr>
+      <tr><td>ent-backend</td><td>core</td><td>不暴露</td></tr>
+      <tr><td>ent-worker</td><td>core</td><td>不暴露</td></tr>
+      <tr><td>ent-browser</td><td>core</td><td>不暴露 (9222 内部)</td></tr>
+      <tr><td>ent-ocr</td><td>core</td><td>不暴露 (8000 内部)</td></tr>
+      <tr><td>ent-redis</td><td>core</td><td>127.0.0.1:6379</td></tr>
+      <tr><td>ent-mysql</td><td>core</td><td>127.0.0.1:3306</td></tr>
+    </table>
+  </div>
+  <div>
+    <table>
+      <tr><th>平台</th><th>兼容情况</th></tr>
+      <tr><td>OS</td><td>Ubuntu/Debian/CentOS/openEuler/麒麟V10/统信UOS/Windows</td></tr>
+      <tr><td>x86_64</td><td>全组件，OCR 默认 PaddleOCR，可 GPU</td></tr>
+      <tr><td>ARM64</td><td>鲲鹏/飞腾/倚天 原生，OCR 默认 RapidOCR</td></tr>
+      <tr><td>LoongArch</td><td>换信创镜像源，详见 docs/08</td></tr>
+      <tr><td>交付</td><td>在线 install / 离线 offline-save 包</td></tr>
+    </table>
+  </div>
+</div>
+<p style="margin-top:12px;font-size:12.5px;color:#475569;">
+扩容方式：<code>docker compose up -d --scale worker=3 --scale ocr=2</code>；
+多机拆分：数据机只起 mysql/redis，自动化机起 browser/ocr/worker，应用机起 nginx/backend，改 <code>.env</code> 主机名即可。
+</p>
+</div>
+</body>
+</html>

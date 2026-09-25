@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>拓扑生命系统理论 · 可视化数值验证</title>
+    <style>
+        * {box-sizing: border-box; font-family: "Microsoft YaHei", sans-serif;}
+        body {background: #0a0e17; color: #e6edf7; padding: 20px; margin:0;}
+        .container {max-width: 1400px; margin: 0 auto;}
+        h1,h2,h3 {color: #87cefa;}
+        .grid-row {display: grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:24px;}
+        .card {background:#121926; padding:16px; border-radius:10px; border:1px solid #2a3b54;}
+        canvas {background:#060a10; border:1px solid #334460; width:100%;}
+        .control-group {margin:10px 0;}
+        input[type="range"] {width:100%;}
+        .num-panel {background:#1a273b; padding:10px; border-radius:6px; font-family:Consolas; font-size:14px; line-height:1.6;}
+        .split {grid-column: 1/-1;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>《拓扑生命系统确定性理论》核心公式 HTML 可视化仿真</h1>
+    <div class="num-panel split">
+        <h3>基础常数预计算</h3>
+        <div id="baseConst"></div>
+    </div>
+
+    <!-- 第一块：阴柔黄金螺旋 + 阳刚阶跃场 -->
+    <div class="grid-row">
+        <div class="card">
+            <h3>1. 阴柔拓扑场：黄金螺旋 Ψ_spiral(φ)</h3>
+            <canvas id="canvasSpiral" height="320"></canvas>
+        </div>
+        <div class="card">
+            <h3>2. 阳刚拓扑场：阶跃冲击 Ψ_shock</h3>
+            <canvas id="canvasShock" height="320"></canvas>
+            <div class="control-group">
+                <label>阶跃触发时刻 t0: <span id="t0Val">2.0</span></label>
+                <input type="range" id="t0Slider" min="0.5" max="4" step="0.1" value="2">
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二块：阴阳混合场 + 审美愉悦度P实时计算 -->
+    <div class="card split">
+        <h3>3. 造美机混合拓扑场 χ_target = αΨ_spiral + (1-α)Ψ_shock</h3>
+        <div class="control-group">
+            <label>阴柔权重 α = <span id="alphaVal">0.95</span> ｜ 清冷惊艳(0.95) / 野性带感(0.30)</label>
+            <input type="range" id="alphaSlider" min="0" max="1" step="0.01" value="0.95">
+        </div>
+        <canvas id="canvasMix" height="300"></canvas>
+        <div class="num-panel">
+            <strong>审美愉悦度泛函 P 实时计算：</strong>
+            <div id="pCalc"></div>
+        </div>
+    </div>
+
+    <!-- 第三块：爱情锁合积分 L_AB 双相位耦合 -->
+    <div class="grid-row">
+        <div class="card">
+            <h3>4. 双生物手性场 χ_A / χ_B 耦合动画</h3>
+            <canvas id="canvasLove" height="320"></canvas>
+            <div class="control-group">
+                <label>相位同步度(0=陌路,1=热恋): <span id="syncVal">1.0</span></label>
+                <input type="range" id="syncSlider" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
+        <div class="card">
+            <h3>拓扑锁合度 L_AB = ∮Γ χ_A·χ_B dt</h3>
+            <div class="num-panel" id="lCalc"></div>
+            <h4>分手熵增 ΔS_H 模型</h4>
+            <div class="num-panel" id="entropyCalc"></div>
+        </div>
+    </div>
+
+    <!-- 第四块：蒙娜丽莎视网膜临界梯度验证 -->
+    <div class="card split">
+        <h3>5. 蒙娜丽莎亚稳态梯度数值验算</h3>
+        <div class="num-panel" id="monalisaCalc"></div>
+    </div>
+</div>
+
+<script>
+// ====================== 基础常数定义 ======================
+const phi = (1 + Math.sqrt(5)) / 2;
+const dEye = 0.25; // 明视距离 0.25m
+const arcMin = Math.PI / (180 * 60); // 1角分弧度
+const epsRetina = dEye * Math.tan(arcMin);
+const brushMona = 30e-6; // 蒙娜丽莎笔触30微米
+const brushNormal = 500e-6; // 普通画作500微米
+const beta = 0.8; // 相干温度系数
+const T = 300; // 等效系统温度
+
+// 基础常数面板渲染
+document.getElementById('baseConst').innerHTML = `
+黄金分割 φ = ${phi.toFixed(10)}<br>
+人眼1角分弧度 = ${arcMin.toExponential(6)} rad<br>
+视网膜最小分辨尺度 ε_retina = ${(epsRetina * 1e6).toFixed(2)} μm
+`;
+
+// 蒙娜丽莎梯度计算面板
+function renderMonaLisa(){
+    const gradMona = brushMona / dEye;
+    const gradNorm = brushNormal / dEye;
+    const isSub = gradMona < epsRetina;
+    document.getElementById('monalisaCalc').innerHTML = `
+蒙娜丽莎笔触尺度: ${brushMona*1e6} μm<br>
+普通画作笔触尺度: ${brushNormal*1e6} μm<br>
+蒙娜丽莎拓扑梯度 ∇χ_mouth = ${gradMona.toExponential(4)}<br>
+普通画作拓扑梯度 ∇χ_norm = ${gradNorm.toExponential(4)}<br>
+临界判定: ${isSub ? "亚稳态晕涂效应(大脑持续拓扑积分，P累积更高)" : "边界清晰，美感快速饱和"}
+`;
+}
+renderMonaLisa();
+
+// ====================== 画布工具函数 ======================
+function getCtx(id){
+    return document.getElementById(id).getContext('2d');
+}
+function clearCanvas(ctx, w, h){
+    ctx.fillStyle = "#060a10";
+    ctx.fillRect(0,0,w,h);
+}
+
+// ====================== 1. 黄金螺旋绘制 ======================
+const cSpiral = getCtx('canvasSpiral');
+const spiralW = cSpiral.canvas.width;
+const spiralH = cSpiral.canvas.height;
+function drawSpiral(){
+    clearCanvas(cSpiral, spiralW, spiralH);
+    cSpiral.strokeStyle="#87cefa";
+    cSpiral.lineWidth=2;
+    cSpiral.beginPath();
+    const cx = spiralW/2, cy = spiralH/2;
+    let r = 0;
+    const maxTheta = 12 * Math.PI;
+    for(let theta=0; theta<maxTheta; theta+=0.02){
+        r = Math.pow(phi, theta / (2*Math.PI)) * 1.2;
+        const x = cx + r * Math.cos(theta);
+        const y = cy - r * Math.sin(theta);
+        if(theta===0) cSpiral.moveTo(x,y);
+        else cSpiral.lineTo(x,y);
+    }
+    cSpiral.stroke();
+}
+drawSpiral();
+
+// ====================== 2. 阶跃冲击场 ======================
+const cShock = getCtx('canvasShock');
+const shockW = cShock.canvas.width;
+const shockH = cShock.canvas.height;
+let t0 = 2.0;
+const t0Slider = document.getElementById('t0Slider');
+const t0Val = document.getElementById('t0Val');
+function drawShock(){
+    clearCanvas(cShock, shockW, shockH);
+    cShock.strokeStyle="#ff8888";
+    cShock.lineWidth=2;
+    cShock.beginPath();
+    const scaleX = shockW / 5;
+    const scaleY = shockH / 2.5;
+    const offY = shockH/2;
+    for(let px=0; px<shockW; px+=1){
+        const t = px / scaleX;
+        const theta = t >= t0 ? 1 : 0; // Heaviside阶跃
+        const y = offY - theta * scaleY * 0.8;
+        if(px===0) cShock.moveTo(px,y);
+        else cShock.lineTo(px,y);
+    }
+    cShock.stroke();
+    // 标注t0竖线
+    cShock.strokeStyle="#ffdd00";
+    cShock.lineWidth=1;
+    const x0 = t0 * scaleX;
+    cShock.beginPath();
+    cShock.moveTo(x0,0); cShock.lineTo(x0,shockH);
+    cShock.stroke();
+}
+t0Slider.oninput = ()=>{
+    t0 = parseFloat(t0Slider.value);
+    t0Val.innerText = t0.toFixed(1);
+    drawShock();
+}
+drawShock();
+
+// ====================== 3. 阴阳混合场 + P泛函计算 ======================
+const cMix = getCtx('canvasMix');
+const mixW = cMix.canvas.width;
+const mixH = cMix.canvas.height;
+let alpha = 0.95;
+const alphaSlider = document.getElementById('alphaSlider');
+const alphaVal = document.getElementById('alphaVal');
+const pCalcDom = document.getElementById('pCalc');
+
+// 螺旋基函数
+function psiSpiral(t){
+    return Math.cos(phi * t) * Math.exp(-0.08 * t);
+}
+// 阶跃基函数
+function psiShock(t){
+    return t >= t0 ? 1.2 : 0;
+}
+// 混合场
+function chiTarget(t){
+    return alpha * psiSpiral(t) + (1-alpha)*psiShock(t);
+}
+// 离散积分求P简化模型（一维替代体积积分）
+function calcP(){
+    let integral = 0;
+    const dt = 0.01;
+    let SH = 0;
+    for(let t=0; t<10; t+=dt){
+        const dChi = chiTarget(t);
+        integral += Math.abs(dChi) * dt;
+        SH += Math.abs(dChi) * dt * 0.02; // 简化拓扑熵
+    }
+    const P = integral * Math.exp(-beta * SH);
+    return {P, SH, integral};
+}
+
+function drawMix(){
+    clearCanvas(cMix, mixW, mixH);
+    cMix.strokeStyle="#99ffbb";
+    cMix.lineWidth=2;
+    cMix.beginPath();
+    const scaleX = mixW / 10;
+    const scaleY = mixH / 3;
+    const offY = mixH/2;
+    for(let px=0; px<mixW; px+=1){
+        const t = px / scaleX;
+        const val = chiTarget(t);
+        const y = offY - val * scaleY;
+        if(px===0) cMix.moveTo(px,y);
+        else cMix.lineTo(px,y);
+    }
+    cMix.stroke();
+    // 更新P数值面板
+    const res = calcP();
+    pCalcDom.innerHTML = `
+积分耦合项 ∫|∇χ_脑·Δχ_刺激|dV = ${res.integral.toFixed(4)}<br>
+系统拓扑信息熵 S_H = ${res.SH.toFixed(4)}<br>
+审美愉悦度 P = Integral · exp(-βS_H) = <strong>${res.P.toFixed(4)}</strong>
+`;
+}
+alphaSlider.oninput = ()=>{
+    alpha = parseFloat(alphaSlider.value);
+    alphaVal.innerText = alpha.toFixed(2);
+    drawMix();
+}
+drawMix();
+
+// ====================== 4. 爱情锁合 L_AB & 分手熵增 ΔS_H ======================
+const cLove = getCtx('canvasLove');
+const loveW = cLove.canvas.width;
+const loveH = cLove.canvas.height;
+let sync = 1.0;
+const syncSlider = document.getElementById('syncSlider');
+const syncVal = document.getElementById('syncVal');
+const lCalcDom = document.getElementById('lCalc');
+const entropyCalcDom = document.getElementById('entropyCalc');
+
+function chiA(t){ return Math.cos(1.2 * t); }
+function chiB(t){ return Math.cos(1.2 * t + (1-sync)*Math.PI); }
+
+function calcLAndEntropy(){
+    let L = 0;
+    let dSH = 0;
+    const dt = 0.01;
+    const breakTime = 6; // 破裂时刻
+    for(let t=0; t<10; t+=dt){
+        L += chiA(t) * chiB(t) * dt;
+        if(t > breakTime){
+            const gradDot = Math.abs( (-1.2*Math.sin(1.2*t)) * (chiB(t)-chiA(t)) );
+            dSH += gradDot * dt / T;
+        }
+    }
+    return {L, dSH};
+}
+
+function drawLove(){
+    clearCanvas(cLove, loveW, loveH);
+    const scaleX = loveW / 10;
+    const scaleY = loveH / 4;
+    const offY = loveH/2;
+    // 画χ_A 蓝色
+    cLove.strokeStyle="#66aaff"; cLove.lineWidth=2; cLove.beginPath();
+    for(let px=0;px<loveW;px++){
+        const t = px/scaleX;
+        const y = offY - chiA(t)*scaleY;
+        px===0 ? cLove.moveTo(px,y) : cLove.lineTo(px,y);
+    }
+    cLove.stroke();
+    // 画χ_B 橙色
+    cLove.strokeStyle="#ffaa66"; cLove.lineWidth=2; cLove.beginPath();
+    for(let px=0;px<loveW;px++){
+        const t = px/scaleX;
+        const y = offY - chiB(t)*scaleY;
+        px===0 ? cLove.moveTo(px,y) : cLove.lineTo(px,y);
+    }
+    cLove.stroke();
+    // 更新数值
+    const res = calcLAndEntropy();
+    lCalcDom.innerHTML = `
+同步度 sync = ${sync.toFixed(2)}<br>
+拓扑锁合度 L_AB = ∮Γ χ_A·χ_B dt = <strong>${res.L.toFixed(4)}</strong><br>
+判定：${res.L>0 ? "好感/热恋（场耦合吸引）" : "陌路（相位正交解耦）"}
+`;
+    entropyCalcDom.innerHTML = `
+分手熵增 ΔS_H = 1/T ∫|∇χ_A·Δχ_B|dV = <strong>${res.dSH.toFixed(5)}</strong><br>
+物理含义：锁合双螺旋撕裂，拓扑缺陷激增，对应心碎痛苦
+`;
+}
+syncSlider.oninput = ()=>{
+    sync = parseFloat(syncSlider.value);
+    syncVal.innerText = sync.toFixed(2);
+    drawLove();
+}
+drawLove();
+</script>
+</body>
+</html>

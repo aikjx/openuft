@@ -1,0 +1,831 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+E键材料下载上传 - 优化版
+作者：YMKJ团队
+版本：2.6
+更新时间：2025-10-22
+"""
+import subprocess
+import sys
+from pathlib import Path
+
+# PROJECT_ROOT = Path(__file__).resolve().parents[4]
+# sys.path.insert(0, str(PROJECT_ROOT / "src"))
+# sys.path.insert(0, str(PROJECT_ROOT))
+
+import pyautogui
+from selenium.webdriver.common.by import By
+
+from aibot_common.getdata_rpa import GETDATA_RPA
+
+from aibot_rpa.utils.logger import LoggerInit
+from aibot_rpa.core.flow import BaseFlow
+from aibot_rpa.utils.decorators import get_retry_count
+from aibot_common.browser_rpa import BROWSER_RPA
+from aibot_common.mouse_rpa import MOUSE_RPA
+from aibot_common.page_rpa import PAGE_RPA
+from aibot_common.button_rpa import BUTTON_RPA
+from aibot_common.other_rpa import OTHER_RPA
+import time
+from selenium.webdriver.common.keys import Keys
+import traceback
+import pandas as pd
+import random
+import re
+import shutil
+import os
+import datetime
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+g_log = LoggerInit.init(__name__)
+
+
+class MinimalRPAFlow(BaseFlow):
+    """E键材料下载上传流程类"""
+
+    def __init__(self, config_manager=None, **kwargs):
+        super().__init__(config_manager=config_manager, **kwargs)
+        self.browser_rpa = BROWSER_RPA
+        self.button_rpa = BUTTON_RPA
+        self.page_rpa = PAGE_RPA
+        self.mouse_rpa = MOUSE_RPA
+        self.config_manager = config_manager
+        self.other_rpa = OTHER_RPA
+        self.get_data_rpa = GETDATA_RPA
+        self.g_dict = {}
+        self.driver1 = None
+        self.driver = None
+
+    def _extract_case_numbers(self, an_hao):
+        """从案号中提取数字"""
+        numbers = re.findall(r'\d+', an_hao)
+        g_log.info(f"案号：{an_hao}, 提取的数字：{numbers}")
+        return numbers
+
+    def _resolve_driver(self, driver=None):
+        """获取当前可用浏览器，兼容下载端driver1和上传端driver。"""
+        if driver is not None:
+            return driver
+        driver = getattr(self.page_rpa, "driver", None)
+        if driver is not None:
+            return driver
+        if self.driver is not None:
+            return self.driver
+        if self.driver1 is not None:
+            return self.driver1
+        raise RuntimeError("浏览器driver未初始化")
+
+    def click_js(self, xpath):
+        click_el = xpath
+        click = f'''
+              var el = document.evaluate("{click_el}",document,null,
+              XPathResult.FIRST_ORDERED_NODE_TYPE,
+              null).singleNodeValue;
+              if(el) el.click();
+          '''
+        self.driver.execute_script(click)
+
+    def input_js(self, xpath, input_text):
+        input_el = xpath
+        text = input_text
+        ipt = f'''
+              var el = document.evaluate("{input_el}",document,null,
+              XPathResult.FIRST_ORDERED_NODE_TYPE,
+              null).singleNodeValue;
+              if(el){{
+                  el.value = '{text}';
+                  el.dispatchEvent(new Event('input'));
+                  el.dispatchEvent(new Event('change'));
+              }}
+          '''
+        self.driver.execute_script(ipt)
+
+    def wait_js(self, xpath):
+        wait_el = xpath
+        wait = f'''
+              var el = document.evaluate("{wait_el}",document,null,
+              XPathResult.FIRST_ORDERED_NODE_TYPE,
+              null).singleNodeValue;
+              return el;
+          '''
+        self.driver.execute_script(wait)
+
+    def csh(self):
+        """初始化配置"""
+        try:
+            config_dict = self.config_manager.get_dict_config()
+            self.g_dict["config_dict"] = config_dict
+
+            self.g_dict["auth_code"] = config_dict["AuthCode"]
+            self.g_dict["login_acc"] = str(config_dict["loginAcc"])
+
+            if config_dict["isPW"]:
+                self.g_dict["login_pw"] = "0" + str(config_dict["loginPW"])
+            else:
+                self.g_dict["login_pw"] = str(config_dict["loginPW"])
+
+            self.g_dict["start_time"] = config_dict["start_time"]
+            self.g_dict["end_time"] = config_dict["end_time"]
+
+            self.g_dict["save_dir"] = config_dict["保存路径"]
+            if not os.path.isdir(self.g_dict["save_dir"]):
+                os.makedirs(self.g_dict["save_dir"])
+
+            if self.g_dict["start_time"] == "" and self.g_dict["end_time"] == "":
+                new_data = datetime.datetime.now() - datetime.timedelta(days=1)
+                self.g_dict["start_time"] = new_data.strftime("%Y-%m-%d")
+                self.g_dict["end_time"] = self.g_dict["start_time"]
+            else:
+                if self.g_dict["start_time"] == "":
+                    self.g_dict["start_time"] = self.g_dict["end_time"]
+                elif self.g_dict["end_time"] == "":
+                    self.g_dict["end_time"] = self.g_dict["start_time"]
+
+            self.g_dict["new_data"] = self.g_dict["start_time"] + "至" + self.g_dict["end_time"]
+            self.g_dict["save_path"] = self.g_dict["save_dir"] + r"/总对总查询_" + self.g_dict["new_data"] + ".xlsx"
+
+            ls_id = str(random.randint(1, 1000000))
+            self.g_dict["ls_dir"] = "D:/临时下载/" + ls_id
+            if not os.path.isdir(self.g_dict["ls_dir"]):
+                os.makedirs(self.g_dict["ls_dir"])
+
+        except Exception as e:
+            self.g_dict["err"] = True
+            g_log.error(f"初始化失败: {e}")
+            traceback.print_exc()
+
+    def yw_csh(self):
+        try:
+            # 打开浏览器 - set driver first
+            # 打开系统网址
+
+            # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+            #                                         value='//*[text()="下载前询问每个文件的保存位置"]')
+            time.sleep(0.5)
+
+            # 读取Excel表格数据
+            excel_file = r"D:\机器人相关\E键下载.xlsx"
+            df = pd.read_excel(excel_file)
+
+            # 登录E键达系统------------------------------------------------------------------------
+            obj_json = self.browser_rpa.open_browser(
+                url="https://146.24.49.171/a/login",
+                executable_path=self.config_manager.get_config('executable_path', ''),
+                browser_path=self.config_manager.get_config('browser_path', ''),
+                # download_dir=self.g_dict["ls_dir"],
+                run_log=True,
+            )
+            self.driver1 = obj_json['driver']
+            g_log.info(self.driver1)
+            self.driver1.maximize_window()
+            action = ActionChains(driver=self.driver1)
+            time.sleep(5)
+
+            self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH, value="//*[@id='go_on']")
+
+            # 输入E键达账号、密码
+            self.button_rpa.enter_in_target(driver=self.driver1, by=By.XPATH,
+                                            value="//*[@id='username']",
+                                            text='J6500777')
+            self.button_rpa.enter_in_target(driver=self.driver1, by=By.XPATH,
+                                            value="//*[@id='password']",
+                                            text='ag*29219130')
+            self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH, value="//*[@id='login1btn']")
+            # 等待系统登录完成
+            self.page_rpa.wait_element(driver=self.driver1, by=By.XPATH, value="//*[@id='menu']/li[1]/a")
+            time.sleep(3)
+
+            try:
+                self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                             value="//button[contains(text(),'确定')]")
+                self.page_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                            value='//*[@id="myModal"]/div/div/div[3]/button')
+            except Exception as e:
+                g_log.error(f"失败：{e}")
+
+            do_once = False
+            do_gouxuan = False
+            # 遍历表格里面的数据
+            for index, row in df.iterrows():
+                an_hao = row[0]
+                download = row[1]
+                upload = row[2]
+                print(f"第{index + 1}行，案号：{an_hao},下载状态：{download},上传状态：{upload}")
+                numbers = re.findall(r'\d+', row[0])
+                print(f"数字：{numbers}")
+                if not row[1] == "已下载":
+                    # 切换第一个iframe
+                    one_iframe = self.driver1.find_element(By.XPATH, "//*[@id='mainFrame']")
+                    self.driver1.switch_to.frame(one_iframe)
+
+                    # 点击输入完整案号
+                    self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH, value="//*[@id='changeMode']")
+                    time.sleep(1.5)
+                    input_element = WebDriverWait(self.driver1, 10).until(
+                        EC.presence_of_element_located((By.XPATH, "//*[@id='ah']"))
+                    )
+                    input_element.clear()
+                    input_element.send_keys(an_hao)
+                    print(f"成功输入案号：{an_hao}")
+                    time.sleep(1.5)
+                    # 点击查询
+                    self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH, value="//*[@id='btnSubmit']")
+                    # 等待案号出现
+                    self.page_rpa.wait_element(driver=self.driver1, by=By.XPATH,
+                                               value='//*[@id="contentTable"]/tbody/tr/td[1]/a')
+                    self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                                 value="//*[@id='contentTable']/tbody/tr/td[1]/a")
+                    time.sleep(1.5)
+                    try:
+                        # 使用XPATH定位目标---已发送文书列表
+                        rows = self.driver1.find_elements(By.XPATH, "//*[@id='contentTable']/tbody/tr")
+                        if len(rows) == 0:
+                            print("没有找到文书")
+                            self.driver1.switch_to.default_content()
+                            # 切换回去第一个iframe
+                            one_iframe = self.driver1.find_element(By.XPATH, "//*[@id='mainFrame']")
+                            self.driver1.switch_to.frame(one_iframe)
+                            # 点击执行信息列表--重新输入案号
+                            self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                                         value='/html/body/ul/li[1]/a')
+                            continue
+                        self.driver1.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                        print(f"找到{len(rows)}个文书，开始处理...")
+                        for xuHao, wShu in enumerate(rows):
+                            cells = wShu.find_elements(By.TAG_NAME, "td")
+                            if len(cells) >= 2:
+                                case_number = cells[1].text.strip()
+                                kd_state = cells[3].text.strip()
+                                mz = cells[9].text.strip()
+                                print(kd_state)
+                                if kd_state == "已撤回":
+                                    print("撤回状态，不打印")
+                                    continue
+                                print(mz)
+                                print(f"\n{'=' * 50}")
+                                print(f"处理第{index + 1}/{len(rows)}个文书")
+                                print(f"案号：{case_number}")
+
+                                # 打印文书单元格的内容
+                                for i, cell in enumerate(cells):
+                                    print(f"第{i + 1}列：{cell.text.strip()}")
+                                # 点击下载链接
+                                links = wShu.find_elements(By.TAG_NAME, "td")
+                                print(links)
+                                print("=====================================")
+                                time.sleep(1.5)
+                                if links:
+                                    links[3].click()
+                                    time.sleep(2)
+                                    # 这一步操作不在one_iframe里面，需要退出iframe，回到主页面----------------------------------------
+                                    self.driver1.switch_to.default_content()
+                                    # 等待物流信息界面弹出
+                                    self.page_rpa.wait_element(driver=self.driver1, by=By.XPATH,
+                                                               value="//*[text()='物流信息']")
+                                    # 切换第二个iframe
+                                    two_iframe = self.driver1.find_element(By.XPATH, "//*[@id='jbox-iframe']")
+                                    self.driver1.switch_to.frame(two_iframe)
+                                    # 点击打印物流信息
+                                    self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                                                 value="/html/body/div[2]/button[1]")
+                                    time.sleep(3)
+                                    try:
+                                        # 获取所有窗口句柄
+                                        all_windows = self.driver1.window_handles
+                                        print(all_windows)
+                                        if len(all_windows) > 1:
+                                            # 切换到新窗口
+                                            self.driver1.switch_to.window(all_windows[1])
+                                            print(f"已切换到打印预览窗口:{self.driver1.title}")
+                                            # 在打印预览窗口中按回车---只做第一次
+                                            time.sleep(1)
+                                            if not do_once:
+                                                for _ in range(5):
+                                                    self.driver1.switch_to.active_element.send_keys(Keys.TAB)
+                                                    time.sleep(1)
+                                                time.sleep(1)
+                                                self.driver1.switch_to.active_element.send_keys(Keys.ENTER)
+                                                time.sleep(1)
+                                                self.driver1.switch_to.active_element.send_keys(Keys.DOWN)
+                                                time.sleep(1)
+                                                self.driver1.switch_to.active_element.send_keys(Keys.ENTER)
+                                                time.sleep(1)
+                                                for _ in range(4):
+                                                    self.driver1.switch_to.active_element.send_keys(Keys.TAB)
+                                                    time.sleep(1)
+                                                self.driver1.switch_to.active_element.send_keys(Keys.ENTER)
+                                                do_once = True
+                                            # 在打印窗口点回车
+                                            self.driver1.switch_to.active_element.send_keys(Keys.ENTER)
+                                            print(f"{repr(an_hao)}")
+                                            print(f"{repr(case_number)}")
+                                            # 构建保存路径----------------------------------
+                                            # 先创建文件夹
+                                            folder_path = rf"D:\机器人相关\E键文书下载\{an_hao}"
+                                            if not os.path.exists(folder_path):
+                                                os.makedirs(folder_path)
+
+                                            safe_filename = f"{case_number}_{mz}.pdf"
+                                            full_path = rf"{folder_path}\{safe_filename}"
+                                            # 清空
+                                            pyautogui.hotkey('ctrl', 'a')
+                                            # pyautogui.press('delete')
+                                            time.sleep(0.5)
+                                            # 使用剪贴板粘贴
+                                            subprocess.run(f'echo {full_path} | clip', shell=True)
+                                            time.sleep(0.5)
+                                            pyautogui.hotkey('ctrl', 'v')
+                                            time.sleep(0.5)
+                                            # 保存
+                                            pyautogui.press('enter')
+                                            time.sleep(1.5)
+                                            # 如果提示覆盖，确认覆盖
+                                            pyautogui.press('left')
+                                            time.sleep(1)
+                                            pyautogui.press('enter')
+                                            print(f"已保存到：{full_path}")
+                                            # 这一步操作不在one_iframe里面，需要退出iframe，关闭弹窗----------------------------------------
+                                            time.sleep(2)
+                                            # 关闭打印预览窗口，切回主窗口
+                                            time.sleep(1)
+                                            # self.driver1.close()
+                                            self.driver1.switch_to.window(all_windows[0])
+                                            print("已关闭打印预览窗口，返回主窗口")
+                                        else:
+                                            # 没有新窗口，尝试在当前页面处理
+                                            print("没有检测到新窗口，尝试在当前页面按回车")
+                                            self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+                                    except Exception as e:
+                                        print(f"处理打印预览窗口：{e}")
+                                    time.sleep(2)
+                                    self.driver1.switch_to.default_content()
+                                    time.sleep(2)
+                                    # 关闭物流信息弹窗
+                                    self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                                                 value='//*[@id="jbox"]/table/tbody/tr[2]/td[2]/div/a')
+                                    print("==========================================")
+                                    # 切换第一个iframe
+                                    one_iframe = self.driver1.find_element(By.XPATH, "//*[@id='mainFrame']")
+                                    self.driver1.switch_to.frame(one_iframe)
+                        # 重新退出iframe
+                        self.driver1.switch_to.default_content()
+                        time.sleep(2)
+                        # 切换回去第一个iframe
+                        one_iframe = self.driver1.find_element(By.XPATH, "//*[@id='mainFrame']")
+                        self.driver1.switch_to.frame(one_iframe)
+                        # 使用XPATH定位目标---公告发布列表
+                        # target_div_xpath1 = "table table-bordered table-condensed"
+                        # WebDriverWait(self.driver1, 10).until(
+                        #     EC.presence_of_element_located((By.CSS_SELECTOR, target_div_xpath1))
+                        # )
+                        # target_div1 = self.driver1.find_element(By.CSS_SELECTOR, target_div_xpath1)
+                        # # 在div内找table---公告发布列表
+                        # table1 = target_div1.find_element(By.TAG_NAME, "table")
+                        # tbody1 = table1.find_element(By.TAG_NAME, "tbody")
+                        # rows1 = tbody1.find_elements(By.TAG_NAME, "tr")
+                        # 判断公告文件是否已存在
+                        file_path = rf"D:\机器人相关\E键文书下载\{an_hao}\{case_number}_公告_罚金.pdf"
+                        if not os.path.exists(file_path):
+                            # 判断公告是否存在
+                            gongGao = self.driver1.find_elements(By.XPATH,
+                                                                 "//*[@id='undoggTd0']/a[1]")
+                            if gongGao:
+                                # 点击公告详情
+                                self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                                             value='//*[@id="undoggTd0"]/a[1]')
+                                # 这一步操作不在one_iframe里面，需要退出iframe，回到主页面----------------------------------------
+                                self.driver1.switch_to.default_content()
+                                # 等待公告信息界面弹出
+                                self.page_rpa.wait_element(driver=self.driver1, by=By.XPATH,
+                                                           value="//*[@class='jbox-title']")
+                                # 切换第二个iframe
+                                two_iframe = self.driver1.find_element(By.XPATH, "//*[@id='jbox-iframe']")
+                                self.driver1.switch_to.frame(two_iframe)
+                                # 点击打印公告信息
+                                self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                                             value="//*[@id='printid']/div[1]/div[3]/button")
+                                time.sleep(3)
+                                try:
+                                    # 获取所有窗口句柄
+                                    all_windows = self.driver1.window_handles
+                                    print(all_windows)
+                                    if len(all_windows) > 1:
+                                        # 切换到新窗口
+                                        self.driver1.switch_to.window(all_windows[1])
+                                        print(f"已切换到打印预览窗口:{self.driver1.title}")
+                                        # 在打印预览窗口中按回车
+                                        time.sleep(1)
+                                        self.driver1.switch_to.active_element.send_keys(Keys.ENTER)
+                                        # 构建保存路径----------------------------------
+                                        # 先创建文件夹
+                                        folder_path = rf"D:\机器人相关\E键文书下载\{an_hao}"
+                                        if not os.path.exists(folder_path):
+                                            os.makedirs(folder_path)
+
+                                        full_path = rf"{folder_path}\{case_number}_公告_罚金.pdf"
+                                        # 清空
+                                        pyautogui.hotkey('ctrl', 'a')
+                                        # pyautogui.press('delete')
+                                        time.sleep(0.5)
+                                        # 使用剪贴板粘贴
+                                        subprocess.run(f'echo {full_path} | clip', shell=True)
+                                        time.sleep(0.5)
+                                        pyautogui.hotkey('ctrl', 'v')
+                                        time.sleep(0.5)
+                                        # 保存
+                                        pyautogui.press('enter')
+                                        time.sleep(2)
+                                        # 如果提示覆盖，确认覆盖
+                                        # pyautogui.press('enter')
+                                        print(f"已保存到：{full_path}")
+                                        # 这一步操作不在one_iframe里面，需要退出iframe，关闭弹窗----------------------------------------
+                                        time.sleep(2)
+                                        # 关闭打印预览窗口，切回主窗口
+                                        time.sleep(1)
+                                        # self.driver1.close()
+                                        self.driver1.switch_to.window(all_windows[0])
+                                        print("已关闭打印预览窗口，返回主窗口")
+                                    else:
+                                        # 没有新窗口，尝试在当前页面处理
+                                        print("没有检测到新窗口，尝试在当前页面按回车")
+                                        self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+                                except Exception as e:
+                                    print(f"处理打印预览窗口：{e}")
+                                time.sleep(2)
+                                self.driver1.switch_to.default_content()
+                                time.sleep(2)
+                                # 关闭公告信息弹窗
+                                self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                                             value='//*[@id="jbox"]/table/tbody/tr[2]/td[2]/div/a')
+                                print("==========================================")
+                                time.sleep(2)
+                                # 切换回去第一个iframe
+                                one_iframe = self.driver1.find_element(By.XPATH, "//*[@id='mainFrame']")
+                                self.driver1.switch_to.frame(one_iframe)
+                            # 点击执行信息列表--重新输入案号
+                            self.mouse_rpa.click_element(driver=self.driver1, by=By.XPATH,
+                                                         value='/html/body/ul/li[1]/a')
+                        df.at[index, '下载状态'] = '已下载'
+                        time.sleep(2)
+                        df.to_excel(excel_file, index=False)
+                        self.driver1.switch_to.default_content()
+                    except Exception as e:
+                        print(f"失败：{e}")
+                        g_log.info(e)
+                        traceback.print_exc()
+                        return None
+            # 先遍历下载完全部案号的文书后再进行上传
+            # 进行上传操作================================================================================================
+            # 操作一张网系统==================================================================
+            obj_json1 = self.browser_rpa.open_browser(
+                url="http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/basx",
+                executable_path=self.config_manager.get_config('executable_path', ''),
+                browser_path=self.config_manager.get_config('browser_path', ''),
+                download_dir=self.g_dict["ls_dir"],
+                run_log=True,
+            )
+            self.driver = obj_json1['driver']
+            g_log.info(self.driver)
+            self.driver.maximize_window()
+            action = ActionChains(driver=self.driver)
+            # self.driver.get(
+            #     "http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/basx")
+            # 输入账号、密码
+            self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                            value="//*[@placeholder='用户名/手机号/身份证']",
+                                            text=self.g_dict["login_acc"])
+            self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                            value="//*[@type='password']",
+                                            text=self.g_dict["login_pw"])
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="//*[@type='button']")
+            # 等待系统登录完成
+            # self.page_rpa.wait_element(driver=self.driver, by=By.XPATH, value="//aside/div/div[2]/*")
+            time.sleep(8)
+            # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="//aside/div/div[2]/*")
+            for index, row in df.iterrows():
+                an_hao = row[0]
+                download = row[1]
+                upload = row[2]
+                print(f"第{index + 1}行，案号：{an_hao},下载状态：{download},上传状态：{upload}")
+                numbers = re.findall(r'\d+', row[0])
+                print(f"数字：{numbers}")
+                if row[2] not in ["已上传", "搜索不到案号"]:
+                    try:
+                        # # 一张网系统点击---办案
+                        # self.click_js('/html/body/div[1]/section/section/aside/div/div[2]/div')
+                        # # 等待我的案件界面加载
+                        # self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                        #                            value='//span/*[text()="我的案件"]')
+                        time.sleep(1)
+                        # if not do_gouxuan:
+                        #     #勾选全选
+                        #     # 勾选全选 - 使用page_rpa封装的set_element_check方法（最稳定的处理方式）
+                        #     xpath_patterns = [
+                        #         '//label//span[contains(text(),"全选")]',
+                        #         '//span[contains(text(),"全选")]/parent::label',
+                        #         '//*[@id="app"]/div/div/div[2]/div[3]/section/header/form/div[4]/div[3]/div/label',
+                        #         '//input[@type="checkbox"]'
+                        #     ]
+                        #
+                        #     check_success = False
+                        #     for xpath in xpath_patterns:
+                        #         try:
+                        #             self.page_rpa.set_element_check(
+                        #                 by=By.XPATH,
+                        #                 value=xpath,
+                        #                 driver=self.driver,
+                        #                 is_checked=True,
+                        #                 continue_on_error=True,
+                        #                 delay_before=0.3,
+                        #                 delay_after=0.2
+                        #             )
+                        #             check_success = True
+                        #             break
+                        #         except Exception as e:
+                        #             g_log.error(e)
+                        #             continue
+                        #
+                        #     if not check_success:
+                        #         # 最终兜底：直接使用JavaScript点击第一个可见的checkbox
+                        #         try:
+                        #             checkboxes = self.driver.find_elements(By.XPATH, '//input[@type="checkbox"]')
+                        #             for cb in checkboxes:
+                        #                 if cb.is_displayed():
+                        #                     self.driver.execute_script("arguments[0].click();", cb)
+                        #                     check_success = True
+                        #                     break
+                        #         except Exception:
+                        #             pass
+                        #
+                        #     if check_success:
+                        #         do_gouxuan = True
+                        # 搜索案号==============================================================
+                        # time.sleep(1.5)
+                        # # 输入年份
+                        # self.click_js("//div[contains(@class,' fullWidth')]/div[2]")
+                        # time.sleep(0.5)
+                        # self.click_js(f"//li/*[contains(text(),'{numbers[0]}')]")
+                        # # 输入案号
+                        # self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                        #                                 value="//div[contains(@class,'fullWidth')]/div[4]/input",
+                        #                                 text=numbers[2])
+                        # # 点击查询
+                        # self.click_js("//button/*[contains(text(),'查询')]")
+                        # time.sleep(2)
+                        # self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+                        # try:
+                        #     # 等待数据搜索
+                        #     self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                        #                                 value=f"//a[contains(text(),'{an_hao}')]")
+                        # except Exception as e:
+                        #     df.at[index,'上传状态'] = '搜索不到案号'
+                        #     continue
+                        # # 点击案号
+                        # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                        #                                  value=f"//a[contains(text(),'{an_hao}')]")
+                        # time.sleep(5)
+                        # time.sleep(1)
+                        # self.driver.switch_to.window(self.driver.window_handles[1])
+                        # time.sleep(1)
+                        time.sleep(2)
+                        # 输入年份
+                        self.click_js("//div[contains(@class,' fullWidth')]/div[2]")
+                        time.sleep(0.5)
+                        self.click_js(f"//li/*[contains(text(),'{numbers[0]}')]")
+                        # 输入案号
+                        self.input_js(f"//div[contains(@class,'fullWidth')]/div[4]/input", numbers[2])
+                        time.sleep(1)
+                        # 点击搜索
+                        self.click_js("//button/*[contains(text(),'查询')]")
+                        time.sleep(3)
+                        # action.send_keys(Keys.ENTER).perform()
+                        # 等待数据搜索
+                        self.click_js(f"//a[contains(text(),'{an_hao}')]")
+                        time.sleep(5)
+                        all_handles = self.driver.window_handles
+                        self.driver.switch_to.window(all_handles[-1])
+                        try:
+                            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                                       value=f"//span[contains(text(),'{an_hao}')]")
+                            time.sleep(5)
+                        except Exception as e:
+                            df.at[index, '上传状态'] = '搜索不到案号'
+                            continue
+
+                        # 点击电子卷宗
+                        self.click_js("//*[@id='driver-page-2']/span[2]")
+                        time.sleep(2)
+                        # 切换第三个iframe-----------------------------------------
+                        three_iframe = self.driver.find_element(By.XPATH,
+                                                                "//*[@id='app']/section/main/section/div/iframe")
+                        self.driver.switch_to.frame(three_iframe)
+                        # 等待我的常用加载
+                        self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                                   value="//*[text()='文书制作']")
+                        # 查找送达地址确认书文件夹
+                        time.sleep(5)
+                        # 输入 送达地址确认书、送达回证或其他送达凭证
+                        # self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                        #                                 value="//*[@class='fd-yzw-left-search-con']//*[@placeholder='搜索关键词']",
+                        #                                 text='送达地址确认书、送达回证或其他送达凭证')
+                        self.driver.find_element(By.XPATH,
+                                                 "//*[@class='fd-yzw-left-search-con']//*[@placeholder='搜索关键词']").send_keys(
+                            '送达地址确认书、送达回证或其他送达凭证')
+                        time.sleep(1)
+                        # 点击 目录
+                        self.click_js("//*[text()='目录']")
+                        time.sleep(1)
+                        # 点击 送达地址确认书
+                        self.click_js("//*[text()='送达地址确认书']")
+                        time.sleep(2)
+
+                        # 点击上传---
+                        self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                     value="//*[text()='上传']")
+                        time.sleep(2)
+                        # 点击添加文件
+                        # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                        #                                  value="//label[@class='fd-upload-btn']//span[text()='添加文件']/..")
+                        element = self.driver.find_element(By.XPATH, "//label[@class='fd-upload-btn']")
+                        actions = ActionChains(self.driver)
+                        actions.move_to_element(element).pause(0.5).click().perform()
+                        print("使用JS点击")
+                        print("=======================================================")
+                        folder_path1 = rf"D:\机器人相关\E键文书下载\{an_hao}"
+                        # 清空
+                        pyautogui.hotkey('ctrl', 'a')
+                        # pyautogui.press('delete')
+                        time.sleep(0.5)
+                        # 使用剪贴板粘贴
+                        subprocess.run(f'echo {folder_path1} | clip', shell=True)
+                        time.sleep(0.5)
+                        pyautogui.hotkey('ctrl', 'v')
+                        time.sleep(0.5)
+                        # 保存
+                        pyautogui.press('enter')
+                        time.sleep(2)
+                        # Tab 切换到文件列表
+                        for _ in range(11):
+                            pyautogui.press('tab')
+                            time.sleep(0.35)
+                        # 全选文件
+                        pyautogui.hotkey('ctrl', 'a')
+                        time.sleep(0.5)
+                        pyautogui.press('enter')
+                        # 如果提示覆盖，确认覆盖
+                        time.sleep(2)
+                        pyautogui.press('enter')
+                        print(f"{folder_path1}文件已上传")
+                        # 回填状态---
+                        df.at[index, '上传状态'] = '已上传'
+                        time.sleep(4)
+                        df.to_excel(excel_file, index=False)
+                        # 退出iframe，回到主页面
+                        self.driver.switch_to.default_content()
+                        self.driver.close()
+                        self.driver.switch_to.window(self.driver.window_handles[0])
+                    except Exception as e:
+                        print(f"失败：{e}")
+                        return None
+
+        except Exception as e:
+            self.g_dict["err"] = True
+            g_log.info(e)
+            traceback.print_exc()
+
+    def yw_cl(self):
+        """业务处理"""
+        try:
+            time.sleep(3.5)
+        except Exception as e:
+            self.g_dict["err"] = True
+            g_log.error(f"业务处理异常: {e}")
+            traceback.print_exc()
+
+    def run_business(self):
+        """执行业务逻辑"""
+        try:
+            g_log.info("开始执行业务逻辑...")
+            g_log.info("重试次数：%d", get_retry_count())
+
+            self.g_dict["err"] = False
+
+            g_log.info("---------------初始化开始")
+            self.csh()
+            g_log.info("---------------初始化结束")
+
+            g_log.info("---------------业务初始化开始")
+            self.yw_csh()
+            g_log.info("---------------业务初始化结束")
+
+            g_log.info("---------------业务处理开始")
+            self.yw_cl()
+            g_log.info("---------------业务处理结束")
+
+            time.sleep(1)
+            self.logger.info("流程执行完毕")
+
+            if self.g_dict["err"]:
+                raise Exception("存在异常，进入重试")
+
+            g_log.info("业务逻辑执行完成")
+            return True
+
+        except Exception as e:
+            g_log.exception(f"业务逻辑执行异常: {e}")
+            return False
+        finally:
+            try:
+                g_log.info("使用self.browser_rpa关闭浏览器...")
+                try:
+                    if "ls_dir" in self.g_dict:
+                        shutil.rmtree(self.g_dict["ls_dir"], ignore_errors=True)
+                except Exception:
+                    pass
+                self.browser_rpa.close_browser()
+            except Exception as e:
+                g_log.warning(f"关闭浏览器时出错: {e}")
+                self.driver_quit()
+
+
+def main():
+    """主函数"""
+    from aibot_rpa.config.manager import ConfigManager
+
+    exit_code = 0
+    flow = None
+
+    try:
+        g_log.info("=== 程序启动 ===")
+
+        config_manager = ConfigManager()
+
+        config_template = {
+            "taskId": "minimal_demo_001",
+            "name": "E键材料下载上传",
+            "executable_path": "D:/module/driver/86/chromedriver.exe",
+            "browser_path": "D:/app/360Chrome/Chrome/Application/360chrome.exe",
+            "max_retries": 2,
+            "retry_delay": 2,
+            "timeout": 30,
+            "record_video": True,
+            "live_push": True,
+            "headless": False,
+            "start_time": "2025-11-20",
+            "AuthCode": "2TR5gFSPA3DCbj374poHt",
+            "loginPW": r"CYJun*123",
+            "loginAcc": r"18000850505",
+            "isPW": None,
+            "end_time": "2025-11-25",
+            "uniTable": [["rlXGyHEa17kZIaVg1wUgw", "总对总查询"]],
+            "保存路径": "D:/module/driver/86"
+        }
+
+        s = config_template["loginPW"]
+        if s.startswith('0') and s.isdigit():
+            config_template['isPW'] = True
+
+        config_manager.load_config_args(config_template)
+        g_log.info(f"配置加载完成: {config_manager.get_config('name', 'Unknown')}")
+
+        g_log.info("开始执行RPA流程...")
+        flow = MinimalRPAFlow(config_manager=config_manager)
+        result = flow.execute()
+
+        if result:
+            g_log.info("✅ RPA流程执行成功！")
+            g_log.info({"msg": "已完成"})
+            exit_code = 0
+        else:
+            g_log.error("❌ RPA流程执行失败！")
+            g_log.info({"error": "运行异常"})
+            exit_code = 1
+
+    except KeyboardInterrupt:
+        g_log.warning("⚠️ 用户中断程序执行")
+        exit_code = 2
+
+    except Exception as e:
+        g_log.exception(f"💥 程序执行异常: {e}")
+        exit_code = 1
+
+    finally:
+        try:
+            if flow and hasattr(flow, 'driver') and flow.driver:
+                flow.driver_quit()
+                g_log.info("一张网系统浏览器已关闭")
+            if flow and hasattr(flow, 'driver1') and flow.driver1:
+                flow.driver_quit(flow.driver1)
+                g_log.info("E键达系统浏览器已关闭")
+        except Exception as e:
+            g_log.warning(f"关闭浏览器时出错: {e}")
+        g_log.info("=== 程序结束 ===")
+
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())

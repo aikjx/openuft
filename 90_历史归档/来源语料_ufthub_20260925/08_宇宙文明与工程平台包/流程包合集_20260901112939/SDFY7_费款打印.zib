@@ -1,0 +1,1265 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+极简模版 - 优化版
+作者：YMKJ团队
+版本：2.5
+更新时间：2025-10-22
+
+最简化的RPA开发模版，完全使用aibot_common的浏览器操作组件
+"""
+
+import sys
+from pathlib import Path
+from selenium.webdriver.common.by import By
+
+from aibot_common.getdata_rpa import GETDATA_RPA
+
+# 添加项目根目录到Python路径
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+
+from aibot_rpa.utils.logger import LoggerInit
+from aibot_rpa.core.flow import BaseFlow
+from aibot_rpa.utils.decorators import get_retry_count
+from aibot_common.browser_rpa import BROWSER_RPA
+from aibot_common.mouse_rpa import MOUSE_RPA
+from aibot_common.page_rpa import PAGE_RPA
+from aibot_common.button_rpa import BUTTON_RPA
+from aibot_common.other_rpa import OTHER_RPA
+import time
+from aibot_rpa.browser.record_video import VideoRecorder  # Add import
+import logging
+from selenium.webdriver.common.keys import Keys
+
+
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import traceback
+from operator import itemgetter
+import requests
+from selenium.webdriver.common.by import By
+import pandas as pd
+from selenium import webdriver
+import random
+import re
+import shutil
+import sys
+import os
+import json
+import time
+import datetime
+
+# ================================ 全局变量初始化 ================================
+g_log = LoggerInit.init(__name__)
+
+
+class PathNormalizer:
+    """企业级路径标准化器 - 开发专家联盟架构
+
+    统一将所有动态传入的服务器路径标准化为本地C盘路径。
+    支持日志、视频、程序、配置excel等路径类型的分类管理。
+
+    设计原则：
+    - 专家动态路径 -> 本地C盘路径的透明映射
+    - 路径分类管理，不同类型路径走不同标准化规则
+    - 支持批量配置字典标准化
+    - 支持单路径实时标准化
+    """
+
+    # 默认基础盘符
+    DEFAULT_DRIVE = "C:/"
+
+    # 路径分类映射表 - 专家联盟标准化路径定义
+    _CATEGORY_RULES = {
+        'executable': {
+            'base': 'C:/module/driver/86',
+            'file': 'chromedriver.exe',
+            'desc': '浏览器驱动'
+        },
+        'browser': {
+            'base': 'C:/app/360Chrome/Chrome/Application',
+            'file': '360chrome.exe',
+            'desc': '浏览器程序'
+        },
+        'download': {
+            'base': 'C:/临时下载',
+            'desc': '临时下载目录'
+        },
+        'export': {
+            'base': 'C:/机器人相关',
+            'file': '案号提取.xlsx',
+            'desc': 'Excel导出'
+        },
+        'config': {
+            'base': 'C:/module/driver/86',
+            'desc': '配置文件目录'
+        },
+    }
+
+    # 需要标准化的配置键映射
+    _CONFIG_KEY_MAP = {
+        'executable_path': 'executable',
+        'browser_path': 'browser',
+        'log_path': 'log',
+        'video_path': 'video',
+        '保存路径': 'config',
+    }
+
+    @classmethod
+    def normalize_path(cls, path, category=None):
+        """将任意路径标准化为C盘路径
+
+        Args:
+            path: 原始路径（可能是D盘、网络路径等）
+            category: 路径分类（executable/browser/download/export/config）
+
+        Returns:
+            str: 标准化后的C盘路径
+        """
+        if not path or not isinstance(path, str):
+            return path
+
+        # 移除盘符，保留相对路径部分
+        normalized = path
+        for drive in ['D:/', 'd:/', 'E:/', 'e:/']:
+            if path.startswith(drive):
+                normalized = cls.DEFAULT_DRIVE + path[len(drive):]
+                break
+
+        # 如果指定了分类，尝试使用分类规则
+        if category and category in cls._CATEGORY_RULES:
+            rule = cls._CATEGORY_RULES[category]
+            base = rule['base']
+            # 提取文件名
+            file_name = os.path.basename(path) if os.path.isfile(path) or '.' in os.path.basename(path) else ''
+            if file_name and file_name not in base:
+                normalized = os.path.join(base, file_name)
+            else:
+                normalized = base
+
+        return normalized.replace('\\', '/')
+
+    @classmethod
+    def normalize_config(cls, config_dict):
+        """批量标准化配置字典中的所有路径
+
+        Args:
+            config_dict: 包含各种路径配置的字典
+
+        Returns:
+            dict: 标准化后的配置字典
+        """
+        normalized = dict(config_dict)
+        for key, category in cls._CONFIG_KEY_MAP.items():
+            if key in normalized and isinstance(normalized[key], str):
+                original = normalized[key]
+                normalized[key] = cls.normalize_path(original, category)
+                g_log.info(f"[路径标准化] {key}: {original} -> {normalized[key]}")
+
+        return normalized
+
+    @classmethod
+    def get_path(cls, category, *parts):
+        """根据分类获取标准化路径
+
+        Args:
+            category: 路径分类
+            *parts: 路径附加部分
+
+        Returns:
+            str: 标准化后的完整路径
+        """
+        if category not in cls._CATEGORY_RULES:
+            raise ValueError(f"未知路径分类: {category}, 支持: {list(cls._CATEGORY_RULES.keys())}")
+
+        rule = cls._CATEGORY_RULES[category]
+        base = rule['base']
+
+        if parts:
+            return os.path.join(base, *parts).replace('\\', '/')
+        return base.replace('\\', '/')
+
+    @classmethod
+    def create_dir(cls, category, *parts):
+        """创建分类目录并返回路径
+
+        Args:
+            category: 路径分类
+            *parts: 路径附加部分
+
+        Returns:
+            str: 创建的目录路径
+        """
+        path = cls.get_path(category, *parts)
+        if not os.path.exists(path):
+            os.makedirs(path, exist_ok=True)
+            g_log.info(f"[路径标准化] 创建目录: {path}")
+        return path
+
+
+class EnterprisePathManager:
+    """企业级路径管理器 - 开发专家联盟
+
+    统一管理所有业务路径，支持：
+    - 专家动态服务器路径的标准化映射
+    - 环境隔离（开发/测试/生产）
+    - 路径验证与自动创建
+    - 统一的路径访问接口
+
+    使用方式：
+        paths = EnterprisePathManager.resolve_all()
+        driver_path = paths['executable_path']
+    """
+
+    # 环境配置 - 可根据部署环境调整
+    ENV_PROFILES = {
+        'local': {
+            'executable_path': r"C:/module/driver/86/chromedriver.exe",
+            'browser_path': r"C:/app/360Chrome/Chrome/Application/360chrome.exe",
+            'save_dir': r"C:/module/driver/86",
+            'download_dir': r"C:/临时下载",
+            'export_dir': r"C:/机器人相关",
+        },
+        'server': {
+            'executable_path': r"C:/module/driver/86/chromedriver.exe",
+            'browser_path': r"C:/app/360Chrome/Chrome/Application/360chrome.exe",
+            'save_dir': r"C:/module/driver/86",
+            'download_dir': r"C:/临时下载",
+            'export_dir': r"C:/机器人相关",
+        }
+    }
+
+    def __init__(self, env='local'):
+        self.env = env
+        self._paths = self.ENV_PROFILES.get(env, self.ENV_PROFILES['local'])
+        self._validate_paths()
+
+    def _validate_paths(self):
+        """验证并创建必要的目录结构"""
+        for key, path in self._paths.items():
+            if 'dir' in key or 'path' in key:
+                directory = os.path.dirname(path) if '.' in os.path.basename(path) else path
+                if directory and not os.path.exists(directory):
+                    os.makedirs(directory, exist_ok=True)
+                    g_log.info(f"[企业路径] 创建目录: {directory}")
+
+    def get(self, key, default=None):
+        """获取配置路径"""
+        value = self._paths.get(key, default)
+        if isinstance(value, str) and (value.startswith('D:/') or value.startswith('d:/')):
+            return PathNormalizer.normalize_path(value)
+        return value
+
+    def resolve_all(self):
+        """解析所有路径为标准化C盘路径"""
+        result = {}
+        for key, path in self._paths.items():
+            if isinstance(path, str):
+                result[key] = PathNormalizer.normalize_path(path)
+            else:
+                result[key] = path
+        return result
+
+    def with_config(self, config_dict):
+        """与配置字典合并，配置优先但路径会被标准化"""
+        normalized = PathNormalizer.normalize_config(config_dict)
+        for key in self._paths:
+            if key not in normalized:
+                normalized[key] = self._paths[key]
+        return normalized
+
+
+class MinimalRPAFlow(BaseFlow):
+    """极简RPA流程类 - 使用aibot_common"""
+
+    def __init__(self, config_manager=None, **kwargs):
+        super().__init__(config_manager=config_manager, **kwargs)
+        # 使用预导入的BROWSER_RPA实例
+        self.browser_rpa = BROWSER_RPA
+        self.button_rpa = BUTTON_RPA
+        self.page_rpa = PAGE_RPA
+        self.mouse_rpa = MOUSE_RPA
+        self.config_manager = config_manager
+        self.other_rpa = OTHER_RPA
+        self.get_data_rpa = GETDATA_RPA
+        self.g_dict = {}
+
+    def start_data(self, table_id, auth_code):  # 初始化异常数据
+        g_log.info("--------------数据初始化")
+        payload = {
+            "uniId": table_id,
+            "pageSize": 1,
+            "reqParam": {
+                "queryParam": [
+                    {
+                        "field": "zt",
+                        "value": [
+                            "处理中"
+                        ],
+                        "sign": "=",
+                        "append": "or"
+                    }, {
+                        "field": "zt",
+                        "value": [
+                            "异常"
+                        ],
+                        "sign": "=",
+                        "append": "or"
+                    }
+                ],
+                "updateMap": {
+                    "zt": "",
+
+                }
+            }
+        }
+        while True:
+            rqs_data = self.other_rpa.post_request(
+                url="http://146.24.58.227:88/ymkj-api/uni/universal/pull",
+                payload=payload,
+                auth_token=f'AuthCode {auth_code}')
+            g_log.info(rqs_data)
+            data = rqs_data['data']['list']
+            if len(data) == 0:  # 判断是否还有数据需要操作
+                break
+
+    def extract_all_pages_case_numbers(self,excel_path):
+        """提取所有页面的案号并写入excel"""
+        # 1、读取已存在的案号（如果文件存在）
+        existing_application_nos = set()
+        if os.path.exists(excel_path):
+            try:
+                existing_df = pd.read_excel(excel_path)
+                if '申请单号' in existing_df.columns:
+                    existing_application_nos = set(existing_df['申请单号'].astype(str).str.strip())
+                    g_log.info(f"已存在的申请单号数量：{len(existing_application_nos)}")
+            except Exception as e:
+                g_log.info(f"读取现有excel失败:{e}")
+
+        final_new_data = []
+        page_num = 1
+        while True:
+            g_log.info(f"\n{'='*50}")
+            g_log.info(f"正在处理第{page_num}页")
+            g_log.info(f"{'='*50}")
+
+            try:
+                #等待当前页面的数据
+                time.sleep(2)
+                #获取当前页面的数据
+                page_data = self.extract_current_page_data()
+                if not page_data:
+                    g_log.info("本页无数据，结束")
+                    break
+
+                g_log.info(f"本页原始数据：{len(page_data)}条")
+                new_in_page = 0
+
+                for item in page_data:
+                    application_no = item['申请单号'].strip()
+                    if application_no  in existing_application_nos:
+                        g_log.info(f"跳过重复申请单号：{application_no}")
+                        continue
+
+                    #真正新增
+                    g_log.info(f"新增，加入列表:{application_no}")
+                    final_new_data.append(item)
+                    existing_application_nos.add(application_no)  # 添加到集合，避免本页内重复
+                    new_in_page +=1
+                g_log.info(f"本页新增：{new_in_page}条,累计新增:{len(final_new_data)}条")
+
+                # 本页全部重复且非第一页，说明已到最后或循环回开头
+                if new_in_page == 0 and page_num > 1:
+                    g_log.info("本页全部重复，已达数据末尾，结束翻页")
+                    break
+
+                if not self.go_to_next_page():
+                    g_log.info("没有下一页")
+                    break
+                page_num += 1
+
+            except Exception as e:
+                g_log.info(f"处理第{page_num}页面出错:{e}")
+                continue
+        #保存只保存新的数据
+        if final_new_data:
+            g_log.info(f"最终all_data = {len(final_new_data)}")
+
+            self.save_to_excel(final_new_data,excel_path)
+            g_log.info(f"\n总计提取{len(final_new_data)}条案号，已保存到：{excel_path}")
+            return final_new_data
+        else:
+            g_log.info("没有新增数据")
+        return final_new_data
+
+    def extract_current_page_data(self):
+        #提取案号并写入Excel
+        #获取表格数据
+        tbody = self.driver.find_element(By.TAG_NAME,"tbody")
+        # if not forms:
+        #     g_log.info("未找到表单")
+        #     return None
+        # first_form = forms[0]
+        #获取表格
+        # table = first_form.find_element(By.XPATH,"//*[@id='pane-/czcl']/div/div[1]/div[6]/div[3]/table")
+        #获取tbody
+        # tbody = table.find_element(By.XPATH,"//*[@id='pane-/czcl']/div/div[1]/div[6]/div[3]/table/tbody")
+        #获取tbody中所有的行（tr）
+        rows = tbody.find_elements(By.TAG_NAME,"tr")
+        g_log.info(f"找到{len(rows)}行数据")
+        if len(rows) == 0:
+            g_log.info("tbody中没有数据行")
+            return None
+
+        #存储所有案号数据
+        page_data = []
+        #遍历每一行
+        for index,row in enumerate(rows):
+            #获取第一行
+            # first_row = rows[0]
+            cells = row.find_elements(By.TAG_NAME,"td")
+            if len(cells) >= 2:
+                #提取案号（第一列）
+                case_number = cells[1].text.strip()
+                application_no = cells[24].text.strip()
+                g_log.info(f"提取到的案号：{case_number},申请单号：{application_no}")
+
+                if application_no:
+                    g_log.info(f"第{index+1}行 - 申请单号:{application_no},案号:{case_number}")
+                    #写入excel
+                    page_data.append({
+                        "案号": case_number,
+                        "申请单号": application_no,
+                        "状态":""
+                    })
+                else:
+                    g_log.info(f"第{index+1}行申请单号为空，跳过")
+            else:
+                g_log.info(f"第{index+1}行列数不足，跳过")
+        return page_data
+
+    def go_to_next_page(self):
+        """翻到下一页"""
+        try:
+            # Element UI 分页：查找下一页箭头按钮
+            next_btn = self.driver.find_element(By.XPATH, '//button[contains(@class,"btn-next")]')
+            # 检查是否禁用（最后一页）
+            disabled = next_btn.get_attribute('disabled')
+            if disabled:
+                g_log.info("已到最后一页，翻页按钮已禁用")
+                return False
+            #滚动到按钮位置
+            self.driver.execute_script("arguments[0].scrollIntoView()", next_btn)
+            time.sleep(1)
+            #点击下一页
+            next_btn.click()
+            g_log.info("已点击下一页")
+
+
+            #等待页面加载完成（等待表格刷新）
+            time.sleep(3)
+
+            return True
+        except Exception as e:
+            # 降级：尝试箭头图标
+            try:
+                next_icon = self.driver.find_element(By.XPATH, '//i[contains(@class,"el-icon-arrow-right")]')
+                parent_btn = next_icon.find_element(By.XPATH, '..')
+                if parent_btn.get_attribute('disabled'):
+                    g_log.info("已到最后一页")
+                    return False
+                self.driver.execute_script("arguments[0].scrollIntoView()", next_icon)
+                time.sleep(1)
+                next_icon.click()
+                g_log.info("已点击下一页")
+                time.sleep(3)
+                return True
+            except Exception as e2:
+                g_log.info(f"翻页失败:{e2}")
+                return False
+
+    def save_to_excel(self,data,excel_path):
+        """保存数据到Excel"""
+        try:
+            if len(data)==0:
+                g_log.info("没有数据需要保存")
+                return
+            g_log.info(f"数据条数：{len(data)}")
+            g_log.info(f"保存路径：{excel_path}")
+
+            df = pd.DataFrame(data)
+            #添加序号列
+            df.insert(0,"序号",range(1,len(df)+1))
+            #检查文件是否存在
+            if os.path.exists(excel_path):
+                #文件存在，追加数据
+                existing_df = pd.read_excel(excel_path)
+                combined_df = pd.concat([existing_df,df],ignore_index=True)
+                combined_df.to_excel(excel_path,index=False)
+                g_log.info(f"追加{len(data)}条数据到现有文件")
+            else:
+                #文件不存在，创建新文件
+                df.to_excel(excel_path,index=False)
+                g_log.info(f"创建新文件，写入{len(data)}条数据")
+            g_log.info(f"数据已保存到:{excel_path}")
+
+        except Exception as e:
+            g_log.info(f"保存Excel出错:{e}")
+            import traceback
+            traceback.print_exc()
+    def read_cases_from_excel(self,excel_path,case_column='案号',app_column='申请单号',status_column='状态'):
+        """
+        :param excel_path:Excel文件路径
+        :param column_name: 案号所在的列名
+        :return: 案号列表
+        """
+        try:
+            df = pd.read_excel(excel_path)
+            if case_column not in df.columns:
+                g_log.info(f"错误：找不到列'{case_column}'")
+                g_log.info(f"可用列：{list(df.columns)}")
+                return None
+            result = []
+            for index,row in df.iterrows():
+                case_num = str(row[case_column]).strip() if pd.notna(row[case_column]) else ""
+                app_num = str(row[app_column]).strip() if app_column in df.columns and pd.notna(row[app_column]) else ""
+                status = ""
+                if status_column in df.columns and pd.notna(row[status_column]):
+                    status = str(row[status_column]).strip()
+
+                if app_num:
+                    result.append({
+                        '案号':case_num,
+                        '申请单号':app_num,
+                        '状态': status,
+                        '行号': index + 2
+                    })
+
+            g_log.info(f"从Excel读取到{len(result)}个案号")
+            return result
+        except Exception as e:
+            g_log.info(f"读取失败: {e}")
+            return None
+    def update_status_to_excel(self,excel_path,application_no,status="已完成",app_column='申请单号',status_column='状态',row_number=None):
+        try:
+            df = pd.read_excel(excel_path)
+            if status_column not in df.columns:
+                df[status_column] = ''
+
+            if row_number is not None and row_number > 1:
+                target_index = row_number - 2
+                if target_index >= 0 and target_index < len(df):
+                    df.iloc[target_index, df.columns.get_loc(status_column)] = status
+                    g_log.info(f"已更新第{row_number}行的状态为:{status}")
+                else:
+                    g_log.info(f"行号{row_number}超出范围，文件共有{len(df)}行数据")
+                    return
+            else:
+                g_log.info(f"未提供行号，无法精确更新状态，申请单号:{application_no}")
+                return
+
+            df.to_excel(excel_path,index=False)
+        except Exception as e:
+            g_log.info(f"更新状态失败:{e}")
+            import traceback
+            traceback.print_exc()
+
+    def find_rows_with_retry(self, rows_xpath, query_button_xpath, max_retries=3, retry_delay=2):
+        """查询结果短暂未刷新时重试，避免把未加载的数据误判为无数据。"""
+        rows = []
+        for retry_index in range(max_retries):
+            wait = WebDriverWait(self.driver,5)
+            # rows = self.driver.find_elements(By.XPATH, rows_xpath)
+            rows = wait.until(EC.presence_of_all_elements_located((By.XPATH,rows_xpath)))
+            if len(rows) > 0:
+                return rows
+            # if retry_index < max_retries - 1:
+            #     g_log.info(f"第{retry_index + 1}次查询未找到数据，重试中...")
+            #     time.sleep(retry_delay)
+            #     try:
+            #         self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value=query_button_xpath)
+            #     except Exception as e:
+            #         g_log.info(f"重试点击查询失败: {e}")
+            #     time.sleep(1.5)
+        return rows
+
+    def handle_modal_dialog(self,modal_selector):
+        """处理模态框弹窗"""
+        try:
+            #等待模态框出现
+            modal = WebDriverWait(self.driver,10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR,modal_selector))
+            )
+            g_log.info("模态框已出现")
+
+            #查找所有按钮
+            buttons = modal.find_elements(By.TAG_NAME,"button")
+            #点击包含打印文本的按钮
+            for button in buttons:
+                if "打印" in button.text:
+                    button.click()
+                    g_log.info("已点击打印按钮")
+                    return True
+            #如果没有找到打印按钮，点击第一个按钮
+            if buttons:
+                buttons[0].click()
+                g_log.info("已点击第一个按钮")
+                return True
+            return False
+
+        except Exception as e:
+            g_log.info(f"处理模态框失败:{e}")
+            return  False
+
+    # def handle_print_preview(self):
+    #     """处理打印预览窗口"""
+    #     try:
+    #         #获取所有窗口句柄
+    #         all_windows = self.driver.window_handles
+    #         if len(all_windows) > 1:
+    #             #切换到新窗口
+    #             self.driver.switch_to.window(all_windows[-1])
+    #             g_log.info(f"已切换到打印预览窗口:{self.driver.title}")
+    #             do_once = False
+    #             # 修改打印布局
+    #             if not do_once:
+    #                 g_log.info("执行一次")
+    #                 for _ in range(8):
+    #                     self.driver.switch_to.active_element.send_keys(Keys.TAB)
+    #                     time.sleep(1)
+    #                 self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+    #                 for _ in range(2):
+    #                     self.driver.switch_to.active_element.send_keys(Keys.TAB)
+    #                     time.sleep(1)
+    #                 self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+
+    #                 do_once = True
+    #             #在打印预览窗口中按回车
+    #             time.sleep(1)
+    #             self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+    #             g_log.info("已在打印预览窗口按回车")
+
+    #             #关闭打印预览窗口，切回主窗口
+    #             time.sleep(1)
+    #             self.driver.close()
+    #             self.driver.switch_to.window(all_windows[-1])
+    #             g_log.info("已关闭打印预览窗口，返回主窗口")
+    #         else:
+    #             #没有新窗口，尝试在当前页面处理
+    #             g_log.info("没有检测到新窗口，尝试在当前页面按回车")
+    #             self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+    #     except Exception as e:
+    #         g_log.info(f"处理打印预览窗口：{e}")
+
+    def _clean_extra_tabs(self, keep=2):
+        """清理多余tab，只保留前keep个窗口（默认：列表页+详情页）。"""
+        try:
+            handles = self.driver.window_handles
+            if len(handles) > keep:
+                g_log.info(f"检测到多余tab，当前{len(handles)}个，保留前{keep}个")
+                for h in handles[keep:]:
+                    try:
+                        self.driver.switch_to.window(h)
+                        self.driver.close()
+                    except Exception:
+                        pass
+                self.driver.switch_to.window(handles[keep - 1])
+                g_log.info(f"已清理，剩余{len(self.driver.window_handles)}个窗口")
+        except Exception as e:
+            g_log.info(f"清理tab失败: {e}")
+
+    def _safe_close_tab(self):
+        """安全关闭当前tab：先ESC关闭可能的原生弹窗/alert，再close。"""
+        try:
+            # 尝试关闭alert
+            try:
+                alert = self.driver.switch_to.alert
+                alert.dismiss()
+                time.sleep(0.3)
+            except Exception:
+                pass
+            # ESC关闭可能存在的原生打印对话框
+            try:
+                self.driver.switch_to.active_element.send_keys(Keys.ESCAPE)
+                time.sleep(0.3)
+            except Exception:
+                pass
+            self.driver.close()
+        except Exception as e:
+            g_log.info(f"close tab异常(可能是原生弹窗阻塞): {e}")
+            # 最后尝试：再ESC一次
+            try:
+                self.driver.switch_to.active_element.send_keys(Keys.ESCAPE)
+                time.sleep(0.5)
+                self.driver.close()
+            except Exception:
+                pass
+
+    def handle_print_and_close_preview(self):
+        """处理打印并关闭打印预览页"""
+        try:
+            #记录当前所有窗口
+            all_windows = self.driver.window_handles
+            g_log.info(f"当前窗口数量：{len(all_windows)}")
+
+            if len(all_windows) < 3:
+                g_log.info(f"窗口不足3个，无法关闭预览页，尝试切回详情页")
+                if len(all_windows) > 1:
+                    self.driver.switch_to.window(all_windows[1])
+                return True
+
+            preview_window = all_windows[2]
+            detail_window = all_windows[1]
+
+            #确保在打印预览页
+            self.driver.switch_to.window(preview_window)
+            g_log.info("已切换到打印预览页")
+            time.sleep(2)
+            self.driver.close()
+            g_log.info("已关闭打印预览页")
+            self.driver.switch_to.window(detail_window)
+            g_log.info("已返回详情页")
+
+            return True
+        except Exception as e:
+            g_log.info(f"处理失败：{e}")
+            return False
+
+    def confirm_print_preview(self, do_once=False):
+        """确认打印预览页，首次配置后关tab再开，后续直接打印。"""
+        try:
+            all_windows = self.driver.window_handles
+            if len(all_windows) > 1:
+                self.driver.switch_to.window(all_windows[-1])
+                g_log.info(f"已切换到打印预览窗口:{self.driver.title}")
+                # if not do_once:
+                #     g_log.info("首次打印，配置打印设置")
+                #     # 首次打印需要展开更多设置并调整纸张选项。
+                #     for _ in range(8):
+                #         self.driver.switch_to.active_element.send_keys(Keys.TAB)
+                #         time.sleep(0.6)
+                #     # 更多设置
+                #     self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+                #     time.sleep(0.6)
+                #
+                #     # 配置 最小化 ----
+                #     for _ in range(3):
+                #         self.driver.switch_to.active_element.send_keys(Keys.TAB)
+                #         time.sleep(0.6)
+                #     self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+                #     for _ in range(2):
+                #         self.driver.switch_to.active_element.send_keys(Keys.DOWN)
+                #         time.sleep(0.6)
+                #     self.driver.switch_to.active_element.send_keys(Keys.TAB)
+                #     # 配置 最小化 ----
+                #
+                #
+                #     for _ in range(5):
+                #         self.driver.switch_to.active_element.send_keys(Keys.TAB)
+                #         time.sleep(0.6)
+                #     self.driver.switch_to.active_element.send_keys(Keys.SPACE)
+                #     time.sleep(0.6)
+                #
+                #     # 关闭预览tab
+                #     self._safe_close_tab()
+                #     time.sleep(0.5)
+                #     # 清理多余的tab，只保留列表页+详情页
+                #     self._clean_extra_tabs(keep=2)
+                #     # 切回详情页
+                #     self.driver.switch_to.window(self.driver.window_handles[1])
+                #     g_log.info("配置完成，已关闭预览，重新点击打印")
+                #
+                #     # 点击操作
+                #     time.sleep(1.5)
+                #     query_button_xpath = '//*[@id="pane-/czcl"]/div/div/div/div[3]/div/div/div[2]/div/div[2]/button[3]/span'
+                #     rows_xpath = '//*[@id="pane-/czcl"]/div/div/div/div[1]/div[7]/div[3]/table/tbody/tr/td[2]/div/span'
+                #     rows = self.find_rows_with_retry(rows_xpath, query_button_xpath, max_retries=3)
+                #
+                #     # 重新点击打印打开预览窗口
+                #     time.sleep(1.5)
+                #     self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                #                                          value='//*[@id="print"]')
+                #     time.sleep(2)
+                #     # 切换到新打开的预览tab
+                #     self.driver.switch_to.window(self.driver.window_handles[-1])
+                #     g_log.info(f"已切换到新预览:{self.driver.title}")
+                #     do_once = True
+                time.sleep(2)
+                # 确认打印
+                self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+                g_log.info("已确认打印")
+                time.sleep(2)
+                # 关闭预览，返回详情页
+                # self._safe_close_tab()
+                # time.sleep(0.5)
+                # self.driver.switch_to.window(self.driver.window_handles[1])
+                g_log.info("已关闭打印预览，返回详情页")
+                return True, do_once
+
+            g_log.info("没有检测到新窗口，尝试在当前页面按回车")
+            self.driver.switch_to.active_element.send_keys(Keys.ENTER)
+            return True, do_once
+        except Exception as e:
+            g_log.info(f"处理打印预览窗口失败：{e}")
+            return False, do_once
+
+    def csh(self):
+        try:
+            # 使用配置字典 读取参数
+            config_dict = self.config_manager.get_dict_config()
+            self.g_dict["config_dict"] = config_dict
+            # logging.info("***********1")
+            # logging.info(config_dict)
+            # logging.info(config_dict["AuthCode"])
+            # logging.info(config_dict["uniTable"])
+            self.g_dict["auth_code"] = config_dict["AuthCode"]
+            g_log.info(self.g_dict["auth_code"])
+            # self.g_dict["table_id"] = config_dict["uniTable"][0][0]
+            # g_log.info(self.g_dict["table_id"])
+            logging.info(config_dict["loginAcc"])
+            # logging.info(config_dict["isPW"])
+            self.g_dict["login_acc"] = str(config_dict["loginAcc"])
+            # self.g_dict["login_pw"] = "060218"
+            if config_dict["isPW"]:
+                self.g_dict["login_pw"] = "0"+str(config_dict["loginPW"])
+            else:
+                self.g_dict["login_pw"] = str(config_dict["loginPW"])
+            logging.info(config_dict["loginPW"])
+
+            # self.start_data(self.g_dict["table_id"], self.g_dict["auth_code"]) # 初始化异常数据
+
+            # 使用配置字典 读取参数
+            self.g_dict["start_time"] = config_dict["start_time"]
+            self.g_dict["end_time"] = config_dict["end_time"]
+            logging.info(self.g_dict["start_time"])
+            logging.info(self.g_dict["end_time"])
+            self.g_dict["save_dir"] = PathNormalizer.normalize_path(config_dict["保存路径"], category='config')
+            if not os.path.isdir(self.g_dict["save_dir"]):
+                os.makedirs(self.g_dict["save_dir"])
+            if self.g_dict["start_time"] == "" and self.g_dict["end_time"] == "":
+                new_data = datetime.datetime.now()
+                new_data = datetime.timedelta(days=-1) + new_data
+                new_data = new_data.strftime("%Y-%m-%d")
+                self.g_dict["start_time"] = new_data
+                self.g_dict["end_time"] = new_data
+            else:
+                if self.g_dict["start_time"] == "":
+                    self.g_dict["start_time"] = self.g_dict["end_time"]
+                elif self.g_dict["end_time"] == "":
+                    self.g_dict["end_time"] = self.g_dict["start_time"]
+            self.g_dict["new_data"] = self.g_dict["start_time"] + "至" + self.g_dict["end_time"]
+            self.g_dict["save_path"] = self.g_dict["save_dir"] + r"/总对总查询_" + self.g_dict["new_data"] + ".xlsx"
+            ls_id = random.randint(1, 1000000)
+            ls_id = str(ls_id)
+            # 使用企业级路径标准化创建临时下载目录
+            self.g_dict["ls_dir"] = PathNormalizer.create_dir('download', ls_id)
+        except Exception as e:
+            self.g_dict["err"] = True
+            logging.info(e)
+            traceback.print_exc()
+
+    def yw_csh(self):
+        try:
+            # 打开浏览器 - set driver first
+            # 打开系统网址
+            # 使用企业级路径标准化获取驱动和浏览器路径
+            executable_path = self.config_manager.get_config('executable_path')
+            browser_path = self.config_manager.get_config('browser_path')
+            # 确保路径已标准化
+            executable_path = PathNormalizer.normalize_path(executable_path, 'executable')
+            browser_path = PathNormalizer.normalize_path(browser_path, 'browser')
+
+            obj_json = self.browser_rpa.open_browser(
+                url="http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/home",
+                executable_path=executable_path,
+                browser_path=browser_path,
+                download_dir=self.g_dict["ls_dir"],
+                run_log=True,
+            )
+            self.driver = obj_json['driver']
+            logging.info(self.driver)
+            self.driver.maximize_window()
+            action = ActionChains(driver=self.driver)
+
+            # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+            #                                         value='//*[text()="下载前询问每个文件的保存位置"]')
+            time.sleep(0.5)
+
+            # 登录一张网系统
+            # # 打开系统网址
+            # self.driver.get(
+            #     "http://babg-appweb-pre.oss-cn-hangzhou-yzwsouth-d01-a.res.zgf.yzwsouth.com/babgpt/index.html#/home")
+
+            # 输入账号、密码
+            self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                            value="//*[@placeholder='用户名/手机号/身份证']",
+                                            text=self.g_dict["login_acc"])
+            self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                            value="//*[@type='password']",
+                                            text=self.g_dict["login_pw"])
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="//*[@type='button']")
+            # 等待系统登录完成
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH, value="//aside/div/div[2]/*")
+            time.sleep(2)
+            # 点击费款管理-----------------
+            # self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, value="/html/body/div/section/section/section/main/div/div/div[2]/div[1]/div/div/div[2]/div[1]/div/div/div/div/div[1]/div/div")
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value="//div[contains(text(),'费款管理')]")
+
+            #切换费款管理页面
+            self.logger.info(self.driver.window_handles)
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            # 等待费款管理页面出现-----------------
+            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                       value='//*[@id="pane-/xnzhgl"]/div/div[2]/slot/div/button[1]/span')
+            time.sleep(1.5)
+            # 点击案款处理模块-------------------
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value='//*[@id="app"]/section/section/aside/div/div/div[1]/div/ul/li[2]/div/span')
+
+
+            time.sleep(1)
+            # 点击出账处理-------------------
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value='//*[@id="app"]/section/section/aside/div/div/div[1]/div/ul/li[2]/ul/li[3]/ul/li')
+
+            # 清空案号
+            input_element = self.driver.find_element(By.XPATH,"//input[@placeholder='年号']")
+            input_element.clear()
+            input_element.send_keys(" ")
+            input_element.send_keys(Keys.BACKSPACE)
+            input_element.send_keys("" + Keys.ENTER)
+            time.sleep(1)
+            #点击款项类别
+            dropdown = self.driver.find_element(By.XPATH,value='//*[@id="pane-/czcl"]/div/div/div/div[1]/div[2]/div[1]/div[2]/div/div[1]/input')
+            dropdown.click()
+            time.sleep(2)
+            option = self.driver.find_element(By.XPATH,value="//body/div/div/div/ul/li/span[text()='执行、调解款发放']")
+            option.click()
+            time.sleep(1)
+            # 点击查询
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value="//*[text()='查询']")
+            time.sleep(2)
+            # 点击页数 选200页
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value='//*[@id="pane-/czcl"]/div/div/div/div[2]/span[2]/div/div/input')
+            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                         value='/html/body/div[3]/div[1]/div[1]/ul/li[4]/span')
+            time.sleep(5)
+            # 使用企业级路径标准化获取导出Excel路径
+            excel_file = PathNormalizer.get_path('export', '案号提取.xlsx')
+            g_log.info(f"[企业路径] Excel导出路径: {excel_file}")
+            case_number = self.extract_all_pages_case_numbers(excel_file)
+            if case_number:
+                g_log.info("成功提取案号")
+            else:
+                g_log.info("提取失败")
+            #读取保存的excel
+            time.sleep(10)
+            case_list = self.read_cases_from_excel(excel_file)
+            df = pd.read_excel(excel_file)
+            do_once = False
+            if case_list:
+                for case in case_list:
+                    app_no = case['申请单号']
+                    g_log.info(app_no)
+                    if case['状态'] == '已完成' or case['状态'] == '审批单已移送' or case['状态'] == '没有查询到数据':
+                        g_log.info(f'跳过：{app_no}')
+                        continue
+                   #点击高级查询---------------------搜索申请单号
+                    try:
+                        self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                     value='//button/span[contains(text(),"高级查询")]')
+                        self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                                   value="//*[contains(text(),'申请单号')]/following-sibling::*/input")
+                        time.sleep(1)
+                        # 申请单号
+                        self.button_rpa.enter_in_target(driver=self.driver, by=By.XPATH,
+                                                        value='//*[contains(text(),"申请单号")]/following-sibling::*/input',
+                                                        text=app_no)
+                        time.sleep(0.5)
+                        # 点击查询
+                        query_button_xpath = '(//*[text()="查询"])[2]'
+                        self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                     value=query_button_xpath)
+                        rows=[]
+                        try:
+                            time.sleep(1.5)
+                            rows_xpath = "//*[@class='el-table__row']//span[contains(text(),'粤')]"
+                            rows = self.find_rows_with_retry(rows_xpath, query_button_xpath, max_retries=3)
+                            g_log.info(f"共查询到{len(rows)}条数据")
+                        except Exception as e:
+                            g_log.info(f"写入异常状态失败，跳过: {e}")
+                            self.update_status_to_excel(excel_file, app_no, "审批单已移送", row_number=case['行号'])
+                            continue
+
+
+                        if len(rows) ==0:
+                            try:
+                                self.update_status_to_excel(excel_file, app_no, "审批单已移送", row_number=case['行号'])
+                            except Exception as e:
+                                g_log.info(f"写入数据异常，跳过: {e}")
+                                continue
+
+                    except Exception as e:
+                        g_log.info(f"查询申请单号{app_no}失败: {e}")
+                        try:
+                            self.update_status_to_excel(excel_file, app_no, "异常", row_number=case['行号'])
+                            self._safe_close_tab()
+                        except Exception:
+                            g_log.info(f"写入异常状态失败", exc_info=True)
+                            self.driver_quit()
+                        continue
+
+                    for index,row in enumerate(rows):
+                        g_log.info(f"正在打印第{index}/{len(rows)}条数据")
+                        for close in range(3):
+                            #点击操作
+                            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, idx=index,
+                                                          value="//*[@class='el-table__row']//span[text()='操作']")
+                            self.page_rpa.wait_element(driver=self.driver, by=By.XPATH,
+                                                       value="//*[text()='打印审批单']")
+                            time.sleep(2)
+                            #调用弹窗参数
+                            g_log.info({type(self.driver)})
+                            g_log.info(f"{self.driver}")
+                            modal_selector = "body > div.el-dialog__wrapper > div"
+                            self.handle_modal_dialog(modal_selector)
+                            time.sleep(8)
+                            windows = self.driver.window_handles
+                            g_log.info(f"当前窗口数量：{len(windows)}")
+                            if len(windows) < 2:
+                                try:
+                                    # 点击关闭出账信息窗口
+                                    self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH, idx=index,
+                                                                 value="//*[text()='出账信息']/following-sibling::*")
+                                    # self.update_status_to_excel(excel_file, app_no, "审批单生成失败", row_number=case['行号'])
+                                except Exception:
+                                    g_log.info(f"点击关闭出账信息窗口异常", exc_info=True)
+                                    pass
+                                continue
+                            else:
+                                break
+
+                        windows = self.driver.window_handles
+                        g_log.info(f"当前窗口数量：{len(windows)}")
+                        if len(windows) > 2:
+                            self.driver.switch_to.window(windows[2])
+                            g_log.info("已切换到第三个窗口")
+                        else:
+                            g_log.info(f"没有第三个窗口，当前只有{len(windows)}个窗口")
+                        time.sleep(8)
+                        self.driver.refresh()
+                        time.sleep(4)
+                        g_log.info("-------------------------点击打印")
+                        #点击打印
+                        try:
+                            self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                         value='//*[@id="print"]')
+                            g_log.info("-------------------------点击打印按钮成功")
+                        except Exception as e:
+                            g_log.info(f"点击打印按钮失败: {e}")
+                            try:
+                                self.update_status_to_excel(excel_file, app_no, "打印失败", row_number=case['行号'])
+                            except Exception:
+                                g_log.info(f"写入打印失败状态异常", exc_info=True)
+                                continue
+                        time.sleep(2)
+                        print_success, do_once = self.confirm_print_preview(do_once)
+                        if not print_success:
+                            try:
+                                self.update_status_to_excel(excel_file, app_no, "打印失败", row_number=case['行号'])
+                            except Exception:
+                                g_log.info(f"写入打印失败状态异常", exc_info=True)
+                            continue
+
+                        # 打印完成
+                        try:
+                            self.update_status_to_excel(excel_file, app_no, "已完成", row_number=case['行号'])
+                        except Exception:
+                            g_log.info(f"写入已完成状态异常", exc_info=True)
+                        time.sleep(1.5)
+                        self._clean_extra_tabs(keep=2)
+                        time.sleep(1)
+                        self.mouse_rpa.click_element(driver=self.driver, by=By.XPATH,
+                                                 value='/html/body/div[*]/div/div[1]/button')
+                        time.sleep(1.5)
+
+
+        except Exception as e:
+            self.g_dict["err"] = True
+            logging.info(e)
+            traceback.print_exc()
+
+    def yw_cl(self):
+        try:
+            # 开始循环写入数据
+
+            time.sleep(3.5)
+        except Exception as e:
+            self.g_dict["err"] = True
+            logging.info(e)
+            traceback.print_exc()
+
+    def run_business(self):
+        """实现具体的业务逻辑 - 完全使用aibot_common的浏览器操作组件"""
+        try:
+            g_log.info("开始执行业务逻辑...")
+            # self.config.set_config("base_url", "http://www.qq.com")
+            # self.init_browser()
+            g_log.info("重试次数：%d", get_retry_count())
+            g_log.info("业务逻辑执行中----")
+            self.g_dict["err"] = False
+            # 使用配置字典 读取参数
+            g_log.info("---------------初始化开始")
+            self.csh()
+            g_log.info("---------------初始化结束")
+            g_log.info("---------------业务初始化开始")
+            self.yw_csh()
+            g_log.info("---------------业务初始化开始结束")
+            g_log.info("---------------业务处理开始")
+            self.yw_cl()
+            g_log.info("---------------业务处理结束")
+            # 关闭谷歌浏览器
+            # self.driver.close()
+            time.sleep(1)
+            self.logger.info("流程执行完毕")
+            # 移除直接调用driver.quit()，避免与finally块中的driver_quit()重复
+            # shutil.rmtree(self.g_dict["ls_dir"])
+            if self.g_dict["err"]:
+                raise Exception("存在异常，进入重试")
+
+            g_log.info("业务逻辑执行完成")
+
+            return True
+        except Exception as e:
+            g_log.exception(f"业务逻辑执行异常: {e}")
+            return False
+        finally:
+            # 使用self.browser_rpa关闭浏览器
+            try:
+                g_log.info("使用self.browser_rpa关闭浏览器...")
+                try:
+                    shutil.rmtree(self.g_dict["ls_dir"])
+                except Exception as e:
+                    pass
+                self.browser_rpa.close_browser()
+            except Exception as e:
+                g_log.warning(f"关闭浏览器时出错: {e}")
+                # 降级使用原有的关闭方式
+                self.driver_quit()
+
+
+def main():
+    """主函数"""
+    from aibot_rpa.config.manager import ConfigManager
+
+    exit_code = 0
+    flow = None
+
+    try:
+        g_log.info("=== 程序启动 ===")
+
+        # 1. 初始化配置管理器
+        config_manager = ConfigManager()
+
+        # 2. 加载配置
+        config_template = {
+            "taskId": "minimal_demo_001",
+            "name": "费款打印",
+            # "log_path": "d:/rpa_profile/log/极简demo/demo.log",
+            # "video_path": "d:/rpa_profile/video/极简demo/demo.webm",
+            # "executable_path": "d:/code/ymkj/ymkj-aibot/chromedriver.exe",
+            # "browser_path": "C:/app/app/360Chrome/Chrome/Application/360chrome.exe",
+            # "executable_path": "C:/module/driver/86/chromedriver.exe",
+            # "browser_path": "C:/Users/mo/AppData/Local/360Chrome/Chrome/Application/360chrome.exe",
+            "max_retries": 2,
+            "retry_delay": 2,
+            "timeout": 30,
+            "record_video": True,
+            "live_push": True,
+            "headless": False,
+            "start_time": "2025-11-20",
+            "AuthCode": "2TR5gFSPA3DCbj374poHt",
+            # "loginPW": r"040425a!",
+            # "loginAcc": r"18000850165",
+            "loginPW": r"315helen!",
+            "loginAcc": r"18000850608",
+            "isPW":None,
+            "end_time": "2025-11-25",
+            "uniTable": [["rlXGyHEa17kZIaVg1wUgw", "费款打印"]],
+            "保存路径": "C:/module/driver/86"
+            # "base_url": "http://www.baidu.com",
+        }
+        s = config_template["loginPW"]
+        if s.startswith('0') and s.isdigit():
+            config_template['isPW'] = True
+
+        # ==================== 企业级路径标准化处理 ====================
+        # 初始化企业路径管理器（将专家动态服务器路径统一标准化为C盘）
+        g_log.info("=== 初始化企业级路径管理器 ===")
+        path_mgr = EnterprisePathManager(env='local')
+
+        # 标准化config_template中的路径
+        config_template = PathNormalizer.normalize_config(config_template)
+
+        # 获取标准化的企业路径配置
+        enterprise_paths = path_mgr.resolve_all()
+        g_log.info(f"[企业路径] 标准化路径配置: {enterprise_paths}")
+
+        # 2. 加载配置（控制台没有就用config_template）
+        config_manager.load_config_args(config_template)
+
+        # 加载自定义配置 - 使用企业级路径标准化
+        custom_config = {
+            "executable_path": enterprise_paths['executable_path'],
+            "browser_path": enterprise_paths['browser_path'],
+            "record_fps": 10,
+            "record_video": True,
+            "live_push": False
+        }
+        # 再次确保所有路径都已标准化
+        custom_config = PathNormalizer.normalize_config(custom_config)
+        config_manager.load_dict(custom_config)
+
+        g_log.info(f"配置加载完成: {config_manager.get_config('name', 'Unknown')}")
+
+        # 3. 执行流程
+        g_log.info("开始执行RPA流程...")
+        flow = MinimalRPAFlow(config_manager=config_manager)
+        result = flow.execute()
+
+        if result:
+            g_log.info("✅ RPA流程执行成功！")
+            g_log.info({"msg": "已完成"})
+            exit_code = 0
+        else:
+            g_log.error("❌ RPA流程执行失败！")
+            g_log.info({"error": "运行异常"})
+            exit_code = 1
+
+    except KeyboardInterrupt:
+        g_log.warning("⚠️ 用户中断程序执行")
+        exit_code = 2
+
+    except Exception as e:
+        g_log.exception(f"💥 程序执行异常: {e}")
+        exit_code = 1
+
+    finally:
+        # 确保关闭浏览器
+        try:
+            if flow and hasattr(flow, 'driver') and flow.driver:
+                flow.driver_quit()
+                g_log.info("浏览器已关闭")
+        except Exception as e:
+            g_log.warning(f"关闭浏览器时出错: {e}")
+        g_log.info("=== 程序结束 ===")
+
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())
