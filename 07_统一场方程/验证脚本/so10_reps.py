@@ -6110,11 +6110,11 @@ def run_basis_layer():
                      'Lorentz 结构**；而且全档里 $d\\le6$ 且多缩法的类恰有 %d 条 $=$ 这 %d 条加它们的'
                      '点号孪生 %d 条 $\\Rightarrow$ "谁多重"是边界清楚的一批：四个指标全在同侧。'
                      '口径警告（这条把话说回上界）：$m\\ge2$ 的 %d 类里有 %d 类场内容含**重复名字**'
-                     '$\\Rightarrow$ Fermi 反对称、味指标、Fierz、EOM、全导数塔五道削减一道都没做，'
+                     '$\\Rightarrow$ Fermi 反对称、味指标、Fierz、EOM、全导数塔这五道削减本层一道都不做，'
                      '$m$ 是"不变张量空间的维数"而不是算符数。塔那一侧同样有数：往上走一层就'
                      '**全部** %d 类都变多重（%s）$\\Rightarrow$ 第十六项边界 (i) 的前半"完整塔未枚举"'
                      '现在带增长率，(ii) 的 Lorentz 半边已数成 %d 条差额（"数出 $m$ 条"不等于"选定其中'
-                     '哪一条"），味／Fierz／EOM／全总导数几关照旧。'
+                     '哪一条"），味、Fierz、EOM、全总导数几关照旧（Fierz 那道此后只把洛伦兹半边数成读数，见 14.10）。'
                      '本层不回填任何寿命、不改 P4／P7 的判据与分级，L10 保持 OPEN' %
             (len(okc), tot[3], '%.4f' % (tot[3] / float(len(okc))), tot[0], tot[1], tot[2],
              nkmax, tot[3] - len(okc),
@@ -6450,6 +6450,316 @@ def run_basis_layer():
             sum(v[0] for v in fact.values()) + sum(v[1] for v in fact.values()) == len(okc) == 1593
             and tot[3] == 2261,
             '逐档（判据类数、登记类数）：%s' % {k: (v[0], v[1]) for k, v in fact.items()})
+    # ---- R18 Fierz 恒等式：把"换道"做成一次可数的基变换 --------------------------
+    # 14.8/14.9 的全部读数只走 $\\varepsilon$ 道（同侧指标成对缩掉）。一条 Fierz 恒等式的內容
+    # 恰是**换到另一条道再写回来**：矢量（流-流）道 $P_{ij,pq}=\\sum_\\mu G_\\mu\\sigma^\\mu_{ip}
+    # \\sigma^\\mu_{jq}$ 吃掉一个不点指标加一个点指标。若它张成与 $\\varepsilon$ 道**同一个**
+    # $SL(2)_L\\times SL(2)_R$ 不变量空间，"只用 $\\varepsilon$ 画线"就从一直挂在计数里的**假设**
+    # 变成读数；两型生成元之间的线性关系条数 $=|(\\varepsilon\\text{ 画线})|+|(\\sigma\\text{ 画线})|-秩$
+    # 就是这道削减在此坐标里可数的内容（与 Schouten 不共族：那条比的是**同为 $\\varepsilon$** 的
+    # 画线之间）。三张不共享算术的票：$\\varepsilon$ 道秩（走 14.8 的显式零空间基）、$\\sigma$ 道
+    # **单独**秩（走显式 $\\sigma^\\mu$ 分量与 $\\mu$ 缩并）、两型并秩；预测值第四路独立取自 R16 的
+    # 特征标递推 $c_{j0}$。
+    # 约定显式写出（不当隐藏前提）：$i\\sigma^2$ 取实矩阵 $\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}$
+    # $\\Rightarrow$ 度规号并成 $G=(+1,-1,+1,-1)$（$\\sigma^2=i(i\\sigma^2)$ 再贡献一次 $-1$）；
+    # 带点侧与不带点侧同用一份 $\\varepsilon$ 矩阵（与 14.8 两侧同用 $c_{j0}$ 的口径一致）；
+    # 全程精确分数，无浮点、无模约化。
+    SIGM = ((F(1), F(0)), (F(0), F(1))), ((F(0), F(1)), (F(1), F(0))), \
+            ((F(0), F(-1)), (F(1), F(0))), ((F(1), F(0)), (F(0), F(-1)))
+    SG = (F(1), F(-1), F(1), F(-1))
+    E2 = {(0, 1): F(1), (1, 0): F(-1)}
+    PROP = {}
+    for _a in (0, 1):
+        for _b in (0, 1):
+            for _c in (0, 1):
+                for _d in (0, 1):
+                    PROP[(_a, _b, _c, _d)] = sum(
+                        SG[_m] * SIGM[_m][_a][_c] * SIGM[_m][_b][_d] for _m in range(4))
+    NSIG, NSIGT = 6, 8             # 单侧槽位上限／两侧合计上限（$(6,4)$ 一档按代价登记为界外）
+    sig_cache, scnt = {}, collections.Counter()
+
+    def sig_val(n, elines, slines, mpair):
+        """一条画线的张量分量：$\\sigma$ 线的 $\\mu$ 已并成 $P$，故每个分量只乘一次传播子。"""
+        out = [F(0)] * (1 << n)
+        for t in range(1 << n):
+            b = [(t >> i) & 1 for i in range(n)]
+            w = F(1)
+            for i, j in elines:
+                w *= E2.get((b[i], b[j]), F(0))
+                if not w:
+                    break
+            if not w:
+                continue
+            for a, c in mpair:
+                ia, pa = slines[a]
+                ic, pc = slines[c]
+                w *= PROP[(b[ia], b[ic], b[pa], b[pc])]
+                if not w:
+                    break
+            out[t] = w
+        return out
+
+    def sig_pair(nu, nd):
+        """$(\\nu,\\dot\\nu)$ 一档的三票与账：预测／$\\varepsilon$ 道秩／$\\sigma$ 道单独秩／并秩／
+        两型生成元条数／道间关系条数。按档缓存 $\\Rightarrow$ 每档只算一次。"""
+        if (nu, nd) in sig_cache:
+            return sig_cache[(nu, nd)]
+        UU, DD = list(range(nu)), list(range(nu, nu + nd))
+        el, sl = [], []
+        for pu in matchings(UU):
+            for pd in matchings(DD):
+                el.append((list(pu) + list(pd), [], []))
+        for r in range(2, min(nu, nd) + 1, 2):
+            if (nu - r) % 2 or (nd - r) % 2:
+                continue
+            for su in itertools.combinations(UU, r):
+                for sd in itertools.combinations(DD, r):
+                    for bij in itertools.permutations(sd):
+                        vv = list(zip(su, bij))
+                        ru = [z for z in UU if z not in su]
+                        rd = [z for z in DD if z not in sd]
+                        for pu in matchings(ru):
+                            for pd in matchings(rd):
+                                for mp in matchings(list(range(r))):
+                                    sl.append((list(pu) + list(pd), vv, list(mp)))
+        n = nu + nd
+        ev = [v for v in (sig_val(n, *s) for s in el) if any(v)]
+        seen, uv = set(), []
+        for v in (sig_val(n, *s) for s in sl):
+            k = tuple(v)
+            if any(v) and k not in seen:
+                seen.add(k)
+                uv.append(v)
+        r_e = q_rank(ev) if ev else 0
+        r_s = q_rank(uv) if uv else 0
+        r_a = q_rank(ev + uv) if (ev or uv) else 0
+        sig_cache[(nu, nd)] = (cg_j0(nu) * cg_j0(nd), r_e, r_s, r_a, len(ev), len(uv),
+                               len(ev) + len(uv) - r_a)
+        return sig_cache[(nu, nd)]
+
+    def g_mul(a, b):
+        """两个 Grassmann 元素（掩码 $\\to$ 精确分数）的外积。"""
+        out = {}
+        for ma, ca in a.items():
+            for mb, cb in b.items():
+                if ma & mb:
+                    continue                               # 同一生成元取两次 $=0$
+                m, inv = ma, 0
+                for i in [k for k in range(64) if (mb >> k) & 1]:
+                    inv += bin(m & ((1 << i) - 1)).count('1')
+                    m |= 1 << i
+                v = out.get(m, F(0)) + (ca * cb if inv % 2 == 0 else -ca * cb)
+                if v:
+                    out[m] = v
+                elif m in out:
+                    out.pop(m)
+        return out
+
+    def g_bracket(x, y):
+        """$(\\psi_x\\psi_y)=\\varepsilon^{ab}\\psi_{x,a}\\psi_{y,b}$；同名槽共用一对生成元。
+        基元素按生成元**升序**落定 $\\Rightarrow$ $g_1>g_2$ 时要再吃一次换序符号，
+        否则同名的那条被算成 $+1-1=0$（本层写作时真踩过这一伤）。"""
+        out = {}
+        for a, b, e in ((0, 1, 1), (1, 0, -1)):
+            g1, g2 = 2 * x + a, 2 * y + b
+            m = (1 << g1) | (1 << g2)
+            out[m] = out.get(m, F(0)) + F(e if g1 < g2 else -e)
+            if not out[m]:
+                out.pop(m)
+        return out
+
+    def chan_grass(names):
+        """第三张票（与甲／乙／丁都不共算术）：固定**内容**，把"哪两个名字缩在一起"的每一道
+        写成 Grassmann 单项式，数这些单项式的秩 $=$ 该内容下独立洛伦兹标量的条数。"""
+        idx = {}
+        for s in names:
+            idx.setdefault(s, len(idx))
+        vecs, nch = [], 0
+        for ms in matchings(list(range(len(names)))):
+            nch += 1
+            v = {0: F(1)}
+            for i, j in ms:
+                v = g_mul(v, g_bracket(idx[names[i]], idx[names[j]]))
+            if v:
+                vecs.append(v)
+        if not vecs:
+            return 0, nch
+        cols = sorted(set().union(*[set(v) for v in vecs]))
+        return q_rank([[v.get(c, F(0)) for c in cols] for v in vecs]), nch
+
+    def place_ranks(names):
+        """§14.9 那句"秩只依赖组大小的多重集、不依赖槽位编号"要**每一种摆放**都验一遍；
+        顺带把"跨摆放求并"的秩也数出来（它是构造伪影的度量，不是一张票，见 R18.3 的登记）。"""
+        n = len(names)
+        basis = fermi_basis(n)
+        ranks, allimg = [], []
+        for w in sorted(set(itertools.permutations(names))):
+            pos = collections.OrderedDict()
+            for i, s in enumerate(w):
+                pos.setdefault(s, []).append(i)
+            gs = [g for g in pos.values() if len(g) >= 2]
+            cur = []
+            for v in basis:
+                img = [list(v)]
+                for g in gs:
+                    img = [z for z in (fermi_antisym(y, n, g) for y in img) if any(z)]
+                    if not img:
+                        break
+                cur += img
+            ranks.append(q_rank(cur) if cur else 0)
+            allimg += cur
+        return ranks, (q_rank(allimg) if allimg else 0)
+
+    # 表格档：三票相等这条读数**不只**在类集真出现的档上核（类集只有 $(2,2)$ 一档两侧皆非空），
+    # 而是把 $2\\le\\nu,\\dot\\nu\\le%d$、$\\nu+\\dot\\nu\\le%d$ 的全部偶档都算一遍。哪些档有类挂着，
+    # 由下面逐类填的 `scnt` 那一列明说 $\\Rightarrow$ "档"与"类"是两件事，不能混着报。
+    stier = [(nu, nd) for nu in range(2, NSIG + 1, 2) for nd in range(2, NSIG + 1, 2)
+             if nu + nd <= NSIGT]
+    for _nu, _nd in stier:
+        sig_pair(_nu, _nd)
+    # ---- 逐类读数：票 A（Grassmann 道）与票 B（摆放不变性）铺满 14.9 判定的那批类；
+    #      票 C（$\\sigma$ 道换基）在 $(\\nu,\\dot\\nu)$ 档上缓存后挂回类
+    sg_ab, sg_abx, sg_n, sg_ch, sg_pl, sg_place = 0, [], 0, 0, [], 0
+    sg_un, sg_ungt = 0, 0
+    ssig, ssig_m, ssig_rel, ssig_new, ssig_bad, ssig_mp = 0, 0, 0, 0, [], []
+    sskip = {'形状不符': 0, '单侧空': 0, '奇侧': 0, '超档': 0}
+    for bn in BST_BINS:
+        for x in rep[bn]:
+            if not (x['ok'] and x['kmin'] == 0):
+                continue
+            if len(x['fnu']) != x['nu'] or len(x['fnd']) != x['nd']:
+                sskip['形状不符'] += 1
+                continue
+            sg_n += 1
+            r17u = fermi_dim(x['nu'], fermi_sizes(x['fnu']))[0]
+            r17d = fermi_dim(x['nd'], fermi_sizes(x['fnd']))[0]
+            gu, cu = chan_grass(x['fnu'])
+            gd, cd = chan_grass(x['fnd'])
+            sg_ab += gu * gd
+            sg_ch += cu * cd
+            if gu != r17u or gd != r17d:
+                sg_abx.append((bkey(bn), x['fnu'], x['fnd'], r17u, gu, r17d, gd))
+            pu_r, pu_un = place_ranks(x['fnu'])
+            pd_r, pd_un = place_ranks(x['fnd'])
+            sg_place += len(pu_r) * len(pd_r)
+            sg_un += pu_un * pd_un
+            if pu_un * pd_un > r17u * r17d:
+                sg_ungt += 1
+            if len(set(pu_r)) != 1 or pu_r[0] != r17u or \
+               len(set(pd_r)) != 1 or pd_r[0] != r17d:
+                sg_pl.append((bkey(bn), x['fnu'], x['fnd'], pu_r, pd_r, r17u, r17d))
+            if not x['nu'] or not x['nd']:
+                sskip['单侧空'] += 1
+                continue
+            if x['nu'] > NSIG or x['nd'] > NSIG or x['nu'] + x['nd'] > NSIGT:
+                sskip['超档'] += 1
+                continue
+            if x['nu'] % 2 or x['nd'] % 2:
+                sskip['奇侧'] += 1
+                continue
+            pred, r_e, r_s, r_a, ne, ns, nrel = sig_pair(x['nu'], x['nd'])
+            scnt[(x['nu'], x['nd'])] += 1
+            ssig += 1
+            ssig_m += pred
+            ssig_rel += nrel
+            ssig_new += r_a - r_e
+            if len({pred, r_e, r_s, r_a}) != 1:
+                ssig_bad.append(((x['nu'], x['nd']), pred, r_e, r_s, r_a))
+            if pred != mpat(x):
+                ssig_mp.append(((x['nu'], x['nd']), x['fl'], pred, mpat(x)))
+    stab = [[k[0], k[1], scnt.get(k, 0)] + list(sig_cache[k]) for k in stier]
+    srows = [r for r in stab if len({r[3], r[4], r[5], r[6]}) != 1]
+    sback = [r for r in stab if r[2] > 0]
+    sreal = sorted(set((x['nu'], x['nd']) for bn in BST_BINS for x in rep[bn]
+                       if x['ok'] and x['kmin'] == 0))
+
+
+    def _rt(v, w):
+        for i in range(len(v)):
+            if v[i] or w[i]:
+                return None if not w[i] else v[i] / w[i]
+        return F(0)
+
+
+    # 两条教科书锚点（同一分量空间里比：$\\sigma$ 道的两条画线 vs 一条 $\\varepsilon$ 画线）
+    sanch = sig_val(4, [], [(0, 2), (1, 3)], [(0, 1)])
+    scrss = sig_val(4, [], [(0, 3), (1, 2)], [(0, 1)])
+    seps = sig_val(4, [(0, 1), (2, 3)], [], [])
+    sanchr = (_rt(sanch, seps), _rt(scrss, seps), q_rank([sanch, seps, scrss]),
+              sorted(g_bracket(0, 0).items()), sorted(g_bracket(0, 1).items()))
+    BASIS.update({'r18': (stab, srows, sback, sg_ab, sg_abx, sg_n, sg_place, sg_pl, sg_ch,
+                          ssig, ssig_m, ssig_rel, ssig_new, ssig_bad, ssig_mp, sskip,
+                          sanchr, len(stier), sg_un, sg_ungt, sskip['单侧空'], sreal)})
+    p &= ok('R18.0', 'Fierz 这道削减要三张不共享算术的票：$\\varepsilon$ 道秩（走 14.8 的显式零空间'
+                     '基）、$\\sigma$ 道**单独**秩（走显式 $\\sigma^\\mu$ 分量与 $\\mu$ 缩并）、两型'
+                     '生成元的并秩；预测值第四路独立取自 R16 的特征标递推 $c_{j0}$。'
+                     '$\\nu,\\dot\\nu$ 的 %d 个表格档上，四数（预测、$\\varepsilon$ 道秩、'
+                     '$\\sigma$ 道单独秩、并秩）**不全等**者 %d 档 $\\Rightarrow$ 两型道各自都是'
+                     '该不变量空间的**完备**生成集，"只用 $\\varepsilon$ 画线"从此是一条读数而不是假设。'
+                     '锚点：$(2,2)$ 档同向 $\\sigma$ 道 $\\div\\varepsilon$ 道 $=%s$、交叉道 $\\div'
+                     '\\varepsilon$ 道 $=%s$（即完备性关系 $\\sigma^\\mu_{\\alpha\\dot\\beta}'
+                     '\\sigma_{\\mu\\gamma\\dot\\delta}=2\\,\\varepsilon_{\\alpha\\gamma}'
+                     '\\varepsilon_{\\dot\\beta\\dot\\delta}$ 的系数与符号），三条生成元的秩 $=%d$'
+                     '（$\\Rightarrow$ 关系 %d 条）；同名 Grassmann 括号 $(\\psi\\psi)=%s$（必须非零：'
+                     '若基元素不按生成元升序落定、漏掉那一次换序符号，它读成 $+1-1=0$），异名括号'
+                     '$(\\psi_x\\psi_y)=%s$（两条互不重合的基元素、符号相反）' %
+            (len(stier), len(srows), sanchr[0], sanchr[1], sanchr[2], 3 - sanchr[2],
+             sanchr[3], sanchr[4]),
+            not srows and not ssig_bad and len(stier) >= 6 and len(sback) >= 1 and
+            sanchr[0] == F(2) and sanchr[1] == F(-2) and sanchr[2] == 1 and
+            sanchr[3] == [(3, F(2))] and sanchr[4] == [(6, F(-1)), (9, F(1))],
+            '表格档表（$\\nu$、$\\dot\\nu$、类数、预测、eps 秩、sigma 单独秩、并秩、eps 条数、'
+            'sigma 去重条数、道间关系）：%s' % stab)
+    p &= ok('R18.1', 'Fierz 在 $\\varepsilon$ 坐标里的**增益**是一个差额：$\\sigma$ 道并进并秩之后'
+                     '新增结构 %d 条（挂类的档 %d 个、覆盖 %d 个类、档上预测秩合计 %d 条、道间关系'
+                     '合计 %d 条 $=$ 每类 %s 条 $\\times$ 类数）。这一条必须**与前置判据同写**：只断言'
+                     '"新增 $=0$"会放过一份非法的 $\\varepsilon$ 目录 $\\Rightarrow$ 写作时实测把带点侧'
+                     '槽位的起点写错一档（目录跨手性），$\\varepsilon$ 秩从 1/2/2/4/5/5 涨到 '
+                     '2/6/5/17/20/14 而"新增"仍读 0 $\\Rightarrow$ 保护这条读数的是前置等式，不是它'
+                     '自己。前置违例 %d 档。还要核到类上：档上的预测值与 14.8 逐类登记的缩法重数'
+                     '不符 %d 条 $\\Rightarrow$ 本层读的是 R16 那张表，不是另起炉灶' %
+            (ssig_new, len(sback), ssig, ssig_m, ssig_rel,
+             sorted(set(r[9] for r in sback)), len(ssig_bad), len(ssig_mp)),
+            ssig_new == 0 and ssig > 0 and ssig_m > 0 and ssig_rel > 0 and
+            ssig_rel == sum(scnt[k] * sig_cache[k][6] for k in sig_cache if scnt.get(k)) and
+            not ssig_bad and not ssig_mp,
+            '逐档道间关系：%s；跨类新增合计=%d' %
+            ([[r[0], r[1], r[2], r[9]] for r in stab], ssig_new))
+    p &= ok('R18.2', '第三张不共族的票要独立复现 14.9：把"哪两个名字缩在一起"的每一道写成 '
+                     'Grassmann 单项式（同名槽共用一对反对易生成元）再数秩 $\\Rightarrow$ 它与甲'
+                     '（显式投影）、乙（$\\Lambda^m(\\mathbb C^2)$ 表示论）、丁（同侧 Grassmann 求值）'
+                     '都不共享算术。14.9 判定过的 %d 个类上逐类相乘后合计 %d 条，与 14.9 公布的'
+                     '存活合计 %d 条不等者 %d 类 $\\Rightarrow$ 这条道在此**没有**给出 14.9 之外的'
+                     '结构。道单项式共 %d 条（每类两侧接法数之积），故 %d 条道里独立标量只有 %d 条' %
+            (sg_n, sg_ab, ftot[1], len(sg_abx), sg_ch, sg_ch, sg_ab),
+            sg_n == sum(v[0] for v in fact.values()) == 838 and
+            sg_ab == ftot[1] == 838 and not sg_abx and sg_ch > sg_ab,
+            '违例前 3 条（档、两侧名字、14.9 秩、Grassmann 道秩）：%s' % sg_abx[:3])
+    p &= ok('R18.3', '"秩只依赖组大小的多重集、不依赖槽位编号"这句要**每一种摆放**都成立才算数：'
+                     '逐类枚举两侧的全部不同摆放（合计 %d 个摆放对）各自投影一次，违例 %d 类'
+                     '$\\Rightarrow$ 14.9 那句"按 $(n,\\text{组大小})$ 缓存"被逐摆放复核过，而不是'
+                     '只在规范摆放上复核过。反向登记一条：把同一份内容下**不同摆放**的像空间求并会'
+                     '**虚高**（并成合计 %d 条，比 14.9 大的类 %d 个）$\\Rightarrow$ 那是把不同的槽位'
+                     '空间识别成同一个空间的构造伪影，不是新增结构，故它不是一张票，只是一条要写'
+                     '下来的数' %
+            (sg_place, len(sg_pl), sg_un, sg_ungt),
+            not sg_pl and sg_place >= sg_n > 0 and sg_un >= sg_ab and sg_ungt > 0,
+            '摆放违例前 3 条：%s；并成虚高类数=%d（与 14.9 的"缩减类" %d 是**两个不同的量**，'
+            '此处只登记自己那个数，不比大小）' % (sg_pl[:3], sg_ungt, len(fshr)))
+    p &= ok('R18.4', '管辖范围也是一个数：14.9 判定的 %d 个类里，$\\sigma$ 道换基覆盖 %d 个，界外'
+                     '登记 %s $\\Rightarrow$ 类集上真正出现的 $(\\nu,\\dot\\nu)$ 只有 %s 这 %d 档，'
+                     '其中两侧皆非空的只有 $(2,2)$ 一档 $\\Rightarrow$ 本层的换基读数**挂类的**就只有'
+                     '那一档，其余 %d 个表格档是算术复核、不挂在类上（把它们当类集读数就是虚报覆盖面）。'
+                     '五道削减到此过了两道（Fermi 在 14.9、Fierz 的洛伦兹半边在本节），味指标、EOM、'
+                     '全总导数塔三关照旧 $\\Rightarrow$ **类数仍然不是算符数**；且本层只比价过 $\\sigma$ '
+                     '这一条道。本层不回填任何寿命、不改 P4／P7 的判据与分级，L10 保持 OPEN' %
+            (sg_n, ssig, sskip, sreal, len(sreal), len(stier) - len(sback)),
+            ssig + sskip['单侧空'] + sskip['超档'] + sskip['奇侧'] == sg_n == 838 and
+            sskip['形状不符'] == 0 and sg_ab == ftot[1] and ssig > 0 and
+            sskip['单侧空'] == sg_n - ssig and len(sreal) == 5 and (2, 2) in sreal,
+            '类集 $(\\nu,\\dot\\nu)$ 档与类数：%s；表格档 %d 个、挂类档 %d 个' %
+            (sorted(scnt.items()) and [[list(k), v] for k, v in sorted(scnt.items())],
+             len(stier), len(sback)))
     return p
 
 
@@ -7319,14 +7629,14 @@ def basis_section():
               tuple([t6[3]] + [x[1] for x in r6[10][1:]] + [r6[10][1][2]]), '',
           '* 口径警告：$m$ 是**不变张量空间的维数**，不是算符数。$m\\ge2$ 的 %d 类里有 %d 类场内容'
               '含重复名字 $\\Rightarrow$ 五道削减里只有第一道（Fermi 反对称）在 14.9 数成了读数，'
-              '味指标、Fierz 恒等式、EOM 场重定义、全导数塔四道仍未做。本层据此把本节边界清单里 (ii) '
+              'Fierz 恒等式的洛伦兹半边在 14.10 数成读数（味半边没做），味指标、EOM 场重定义、全导数塔照常未做。本层据此把本节边界清单里 (ii) '
               '的"Lorentz 收缩的具体形式"那一半变成读数；"数出 $m$ 条"不等于"选定其中哪一条"。'
               % (t6[1], t6[5]), '']
     # ---- 14.9：Fermi 反对称（R17 层）
     r7, fs = B['r17'], B['r17'][17]
     gz = lambda t: '+'.join(str(m) for m in t) or '（无）'
     L += ['', '### 14.9 Fermi 反对称：五道削减里的第一道做成读数（R17.0–R17.4）', '',
-          '上一节的口径警告留着"五道削减一道都没做"，本节兑现第一道。同一个外尔场占多个槽位时，'
+          '上一节的口径警告留着"这五道削减本层一道都不做"，本节兑现第一道。同一个外尔场占多个槽位时，'
           '那些槽位上的系数张量必须**完全反对称**（外尔场算符反对易）$\\Rightarrow$ 不反对称的缩法代入'
           '即零。判据 $=$ 在 14.8 的不变张量空间上逐组施加 $A_g=\\sum_{\\sigma\\in S_g}'
           '\\mathrm{sgn}(\\sigma)\\,\\sigma$ 之后数**像的秩**。三张互不共享算术的票：甲 显式投影'
@@ -7397,7 +7707,7 @@ def basis_section():
                  sum(v[0] for v in r7[13].values()), sum(v[1] for v in r7[13].values()),
                  sum(v[0] for v in r7[13].values()) + sum(v[1] for v in r7[13].values()))), '',
           '* 本节把 Fermi 反对称这一道做成读数，关掉的是 09 第十七项第 5 条那五道削减里的 **Fermi 一道**；'
-          '味指标、Fierz 恒等式、EOM 场重定义与全总导数塔四道照常未做 $\\Rightarrow$ **类数仍然不是'
+          '味指标、EOM 场重定义与全总导数塔照常未做；Fierz 恒等式的洛伦兹半边已在 14.10 数成读数（味半边照常未做） $\\Rightarrow$ **类数仍然不是'
           '算符数**，14.8 那句"低估了 %d 条"从此要再乘一个 Fermi 因子。本层不回填任何寿命、'
           '不改 P4／P7 的判据与分级 $\\Rightarrow$ **L10 未关闭**。' % (t6[3] - r6[8]), '']
     L += ['', '**本节的边界**（不进门禁，故明写）', '',
@@ -7405,8 +7715,8 @@ def basis_section():
           '缩法总数，因此"往上还有多少"现在是数、不是猜想）；同一个 $d_{\\min}$ 内的多个独立收缩'
           '在 14.8 里已经数成 %d 条差额。场的内容到 $n_f=4$、标量插入到 $n_s=2$ 为止 $\\Rightarrow$ '
           '**类数仍然不是算符数**，本节给的是覆盖面，不是算符清单。' % (B['r16tot'][3] - B['r16'][8]),
-          '* 判决仍只过**规范不变**加**洛伦兹指标**这两关（后者见 14.8 的 $m$）：味指标、Fierz '
-          '恒等式、EOM 与全总导数四关都没过（与 §7/§10 同一处置）。',
+          '* 判决仍只过**规范不变**加**洛伦兹指标**这两关（后者见 14.8 的 $m$）：Fierz '
+          '恒等式此后只过了洛伦兹半边（14.10，味半边没过），仍未过的三关是味指标、EOM 与全总导数（与 §7/§10 同一处置）。',
           '* 本节所有"在场"都指链探针字面声明的那份谱 %s，而 %s 都不在其中 $\\Rightarrow$ 14.5 那条'
           '巧合是挂在**偶荷**标量谱上的条件读数；$B-L$ 破缺承载者的缺位（R10.10/R11.10）原样下来。'
           % (higgs_tex(B['cover'][5]), higgs_tex(B['cover'][6])),
@@ -7414,10 +7724,76 @@ def basis_section():
           '加权的结构数只在纯费米子三档与特征标路线核对过，含标量插入的三档那一列只是登记、不参与'
           '任何判定。',
           '* 本节关掉的是 09 第十二项边界 (iii) 的后半（14.1–14.7）与第十六项边界 (i) 的后半、'
-          '(ii) 的 Lorentz 半边（14.8）、第十七项第 5 条那五道削减里的 Fermi 一道（14.9），'
+          '(ii) 的 Lorentz 半边（14.8）、第十七项第 5 条那五道削减里的 Fermi 一道（14.9）与 Fierz 一道的洛伦兹半边（14.10），'
           '**不**回答 L10：耦合统一仍缺'
           '二环跑动与阈值'
           '修正 $\\Rightarrow$ **L10 未关闭**；本节不回填任何寿命、不改 P4／P7 的判据与分级。', '']
+    # ---- 14.10：Fierz 恒等式（R18 层）
+    r8 = B['r18']
+    L += ['', '### 14.10 Fierz 恒等式：把"换一条道再写回来"做成基变换读数（R18.0–R18.4）', '',
+          '14.8 与 14.9 的全部数都只在 $\\varepsilon$ 道里数（同侧指标成对缩掉）。一条 Fierz 恒等式'
+          '的**内容**恰是换到另一条道再写回来：矢量（流-流）道把一条 $\\sigma^\\mu_{\\alpha\\dot\\beta}$ '
+          '与它的 $\\mu$ 缩并伙伴 $\\sigma_{\\mu\\,\\gamma\\dot\\delta}$ 放在一起，吃一个不点指标加一个点'
+          '指标。本节把这条道显式建出来，比的是**两条道各自能否张满同一个** $SL(2)_L\\times SL(2)_R$ '
+          '**不变量空间** $\\Rightarrow$ 若两型生成元的秩都等于第四路（特征标递推 $c_{j0}$）的预测，'
+          '"缩法只用 $\\varepsilon$ 写"就从挂在 14.8 计数里的**假设**变成一条读数；两型生成元之间的'
+          '线性关系条数 $=|$画线$|_\\varepsilon+|$画线$|_\\sigma-$秩就是这道削减在此坐标里可数的内容。'
+          '它与 Schouten 不共族：14.8 那条比的是**同为 $\\varepsilon$** 的画线之间的关系，'
+          '本节比的是**跨画线类型**。',
+          '',
+          '约定（显式写出，不当隐藏前提）：$i\\sigma^2$ 取实矩阵 $\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}$ '
+          '$\\Rightarrow$ 度规号并成 $G=(+1,-1,+1,-1)$；带点侧与不带点侧同用一份 $\\varepsilon$ 矩阵'
+          '（与 14.8 两侧同用 $c_{j0}$ 的口径一致）；全程精确分数，无浮点、无模约化。'
+          '四张票各自走的算术：$\\varepsilon$ 道秩（14.8 的显式零空间基）、$\\sigma$ 道**单独**秩'
+          '（显式 $\\sigma^\\mu$ 分量 $+$ 预计算的传播子）、两型**并秩**、$c_{j0}$ **预测**。',
+          '',
+          '| $\\nu$ | $\\dot\\nu$ | 挂类数 | 预测 | $\\varepsilon$ 道秩 | $\\sigma$ 道单独秩 | 并秩 |'
+          ' $\\varepsilon$ 画线 | $\\sigma$ 去重 | 道间关系 |',
+          '|---|---|---|---|---|---|---|---|---|---|']
+    for r in r8[0]:
+        L.append('| %d | %d | %d | %d | %d | %d | %d | %d | %d | %d |' % tuple(r))
+    L += ['', '四数（预测、$\\varepsilon$ 道秩、$\\sigma$ 道单独秩、并秩）**不全等**的表格档 %d 个'
+              '$\\Rightarrow$ 在全部 %d 个表格档上，两型道各自都是该不变量'
+              '空间的**完备**生成集，且两型的并也不更大（新增结构 %d 条）。两条锚点写进 R18.0 的断言：'
+              '$(2,2)$ 档同向 $\\sigma$ 道 $\\div\\varepsilon$ 道 $=%s$、交叉道 $\\div\\varepsilon$ 道 '
+              '$=%s$ $\\Rightarrow$ 这就是完备性关系 $\\sigma^\\mu_{\\alpha\\dot\\beta}'
+              '\\sigma_{\\mu\\gamma\\dot\\delta}=2\\,\\varepsilon_{\\alpha\\gamma}'
+              '\\varepsilon_{\\dot\\beta\\dot\\delta}$（系数与符号都对得上），三条生成元的秩 $=%d$ '
+              '$\\Rightarrow$ 其中关系 %d 条；同名场的 Grassmann 括号 $(\\psi\\psi)$ 按基元素展开为 %s'
+              '（掩码的第 $g$ 位 $=$ 第 $g$ 个反对易生成元），它必须非零'
+              '$\\Rightarrow$ 写作时漏掉一次换序符号就会把它算成 $+1-1=0$，这一伤在 14.9 与本层'
+              '都出现过。' %
+              (len(r8[1]), r8[17], r8[12], r8[16][0], r8[16][1], r8[16][2], 3 - r8[16][2],
+               '、'.join('掩码 %d 的系数 $%s$' % (m, c) for m, c in r8[16][3])), '',
+          '这条读数**必须与前置判据同写**。只断言"新增 $=0$"是放过缺陷的：写作时实测把带点侧槽位的'
+          '起点写错一档（$\\varepsilon$ 目录跨了手性，于是"画线"根本不是 $SL(2)_L\\times SL(2)_R$ '
+          '不变的），$\\varepsilon$ 道秩从 1/2/2/4/5/5 涨到 2/6/5/17/20/14，而"新增"**照样读 0** '
+          '$\\Rightarrow$ 保护这条读数的是"目录秩 $=$ 预测"那面前置等式，不是它自己；本层因此把两件事'
+          '写进同一条门禁（R18.1）。反向还要核到类上：表格档的预测值与 14.8 逐类登记的缩法重数不符 '
+          '%d 条 $\\Rightarrow$ 本节读的是 R16 那张表，不是另起炉灶。' % len(r8[14]), '',
+          '第三张**不共族**的票要独立复现 14.9：固定内容，把"哪两个名字缩在一起"的每一道写成 '
+          'Grassmann 单项式（同名槽共用一对反对易生成元），数这些单项式的秩。14.9 判定过的 %d 个类上'
+          '逐类相乘后合计 %d 条 $=$ 14.9 公布的存活合计 %d 条（逐类不等 %d 类），而道单项式共 %d 条 '
+          '$\\Rightarrow$ 换道在此**没有**给出 14.9 之外的结构：Fierz 的洛伦兹半边已经被 14.8 的 '
+          'Schouten 关系与 14.9 的反对称化吃干净，本节给出的是"这件事是数出来的"这一层保证。' %
+              (r8[5], r8[3], B['r17'][14][1], len(r8[4]), r8[8]), '',
+          '摆放不变性也顺带复核：把 14.9 那句"秩只依赖组大小的多重集、不依赖槽位编号"用在'
+          '**每一种摆放**上（两侧共 %d 个摆放对，逐摆放各投影一次），违例 %d 类。反向登记一条：'
+          '把同一份内容下不同摆放的像空间**求并**会虚高（并成合计 %d 条 $>$ 存活合计 %d 条，虚高的类 '
+          '%d 个）$\\Rightarrow$ 那是把不同的槽位空间识别成同一个空间的**构造伪影**，不是新增结构，'
+          '所以它不是一张票，只是一条必须写下来的数（把它当票数，就是把"并起来更大"误读成"Fierz 有'
+          '增益"）。' % (r8[6], len(r8[7]), r8[18], r8[3], r8[19]), '',
+          '管辖范围：**类集上真正出现的 $(\\nu,\\dot\\nu)$ 只有 %s 这 %d 档**，其中两侧皆非空'
+          '的只有 $(2,2)$ 一档 $\\Rightarrow$ 本层的换基读数**挂类的**只有那 %d 个类（占 14.9 判定'
+          '类数的 $%.4f$），其余 %d 个类是单侧场（$\\sigma$ 线无处可放），其余 %d 个表格档只是算术'
+          '复核、不挂在类上 $\\Rightarrow$ 把表格档当类集读数就是虚报覆盖面。' %
+              ('、'.join('$(%d,%d)$' % t for t in r8[21]), len(r8[21]), r8[9],
+               r8[9] / float(r8[5]), r8[20], r8[17] - len(r8[2])), '',
+          '* 本节把五道削减里的 **Fierz 一道（洛伦兹半边）**做成读数，关掉的是 09 第十七项第 5 条'
+          '那五道削减里 Fierz 那一道的**洛伦兹半边**：味指标那一半没有 $\\Rightarrow$ 引擎不带味自由度'
+          '（R7/R9 的边界文本原样有效），EOM 场重定义与全总导数塔两关照旧，'
+          '**类数仍然不是算符数**。本层不回填任何寿命、不改 P4／P7 的判据与分级 $\\Rightarrow$ '
+          '**L10 未关闭**。']
     return L
 
 
@@ -8275,6 +8651,17 @@ def main():
                r7[14][0] - r7[14][1], r7[14][1] / float(r7[14][0]),
                r7[14][2], r7[14][3], r7[14][4], r7[14][6], r7[14][7], r7[14][5], r7[18],
                sum(e[2] for e in r7[15]), sum(e[4] for e in r7[15]), len(r7[17][0])))
+        r8 = BASIS['r18']
+        print('    $\\varepsilon$ 道→$\\sigma$ 道换基（R18）：%d 个表格档上四数（预测／$\\varepsilon$ 秩／'
+              '$\\sigma$ 单独秩／并秩）不全等 %d 档、新增结构 %d 条、道间关系合计 %d 条；锚点 同向÷$'
+              '\\varepsilon$ $=%s$、交叉÷$\\varepsilon$ $=%s$、三生成元秩 %d、同名括号 %s；第三张票在 '
+              '14.9 的 %d 类上复现存活 %d 条（逐类不等 %d 类、道单项式 %d 条）；摆放 %d 个违例 %d 类、'
+              '并成合计 %d 条（比 14.9 大的类 %d 个 $=$ 构造伪影）；类集档 %s 覆盖 %d 类、界外 %s' %
+              (r8[17], len(r8[1]), r8[12], r8[11], r8[16][0], r8[16][1], r8[16][2],
+               '、'.join('掩码 %d 系数 %s' % (m, c) for m, c in r8[16][3]),
+               r8[5], r8[3], len(r8[4]), r8[8], r8[6], len(r8[7]), r8[18], r8[19],
+               '、'.join('$(%d,%d)$' % t for t in r8[21]), r8[9],
+               '、'.join('%s %d' % (k, v) for k, v in sorted(r8[15].items()))))
     if nogo_ok:
         print('  判定：dim≤210 内唯一能破 B−L 而不破电磁的 Higgs = 126 / 126̄；'
               '120_H 虽含 (1,1,1)±2 但 |Q|=1 ⇒ 排除（报告 §4）')
