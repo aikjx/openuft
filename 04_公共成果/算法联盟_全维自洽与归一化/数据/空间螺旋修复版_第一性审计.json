@@ -10,11 +10,11 @@
   "mpmath dps=50 独立复算"
  ],
  "counts": {
-  "total": 39,
+  "total": 42,
   "PASS": 3,
   "FAIL": 22,
-  "BOUNDARY": 6,
-  "INFO": 7
+  "BOUNDARY": 7,
+  "INFO": 9
  },
  "checks": [
   {
@@ -96,6 +96,26 @@
    "name": "层级升维拒绝 L1→L3 批量升维（§9-3 的红旗）",
    "ok": true,
    "note": ""
+  },
+  {
+   "name": "C25 数值复核：N 取 4695/18907/1e9 三量级均可反解合法 ωA 命中 α",
+   "ok": true,
+   "note": "约束数 1 < 未知量数 2 ⇒ 系统欠定，α 不具选择力（与 C25 falsified 判据一致）"
+  },
+  {
+   "name": "C25 拓扑路径给出 N≈137.036，但 N 的『第一性推导』仍是理论未闭合目标",
+   "ok": true,
+   "note": "N=137 目前是手填目标值；三条推导路径(拓扑绕数/Dirac谱流/量子相位)未互相收口 ⇒ α 仍属测量锚"
+  },
+  {
+   "name": "C35 数值复核：修复版线性 Φ 退化为牛顿律（进动≈0），无法解释水星 43″/世纪",
+   "ok": true,
+   "note": "要复现 43″ 必须把 ∇Φ/Φ₀ 取为 1+3GM/(c²r) —— 即把 GR 的 GM/c² 作为自由形状参数导入 ⇒ 拟合而非推导"
+  },
+  {
+   "name": "C25/C35 经层级升维审查仍被封顶 L1（无构造推导+无带误差棒预言）",
+   "ok": true,
+   "note": ""
   }
  ],
  "rows": [
@@ -103,7 +123,7 @@
    "state": "PASS",
    "tag": "§0-1 基线引用属实",
    "statement": "修复版所引原体系评级 H4/O5/C1/U0 与 L0=2/L1=7/L2=2/L3=0 与档案一致",
-   "detail": "核对 01_全维评级与诚实边界.md 全维汇总表逐字比对一致；claims.csv 现有 45 条主张、3 条 falsified",
+   "detail": "核对 01_全维评级与诚实边界.md 全维汇总表逐字比对一致；claims.csv 现有 47 条主张、3 条 falsified",
    "evidence": "档案核对（非负成果，如实计入）"
   },
   {
@@ -111,7 +131,7 @@
    "tag": "§0-2 基线 falsified 尚未在台账中撤销",
    "statement": "修复版宣称「原 falsified 缺陷清零」，但 claims.csv 中 C12、C21、C23 仍为 falsified",
    "detail": "openuft 维护契约：先改 claims.csv 再复跑引擎；申报先行而台账未动 ⇒ 申报不成立",
-   "evidence": "台账状态：{'pass': 13, 'open': 9, 'boundary': 5, 'falsified': 17, 'BOUNDARY': 1}"
+   "evidence": "台账状态：{'pass': 25, 'open': 10, 'boundary': 5, 'falsified': 4, 'BOUNDARY': 1, 'info': 2}"
   },
   {
    "state": "PASS",
@@ -367,9 +387,30 @@
   },
   {
    "state": "INFO",
+   "tag": "§9.6-1 C25 α 数值复核（确认 falsified 并给突破条件）",
+   "statement": "对任意 N 均可反解 ωA 使 α 命中观测 ⇒ 伪派生；唯一使其成立的是『由拓扑本征值推出 N=137』，而该步在提交理论中仍未闭合（C23/C27 亦 falsified）",
+   "detail": "I/O:{N,ωA}→α；终止:有限；复杂度 O(1)；拒绝:约束<未知量⇒欠定",
+   "evidence": "自实现 + 算例"
+  },
+  {
+   "state": "INFO",
+   "tag": "§9.6-2 C35 轨道进动数值复核（确认 falsified 并给突破条件）",
+   "statement": "RK4 积分 Binet 方程：线性 Φ 给出牛顿进动 0″（与观测 43″ 冲突）；GR 1PN 项 3GMu²/c² 给出 43″/世纪（匹配）但要求把 GM/c² 作为形状参数导入 ⇒ 框架只能『拟合』GR 而非『导出』",
+   "detail": "I/O:(gm,p,extra_coeff)→进动弧度；终止:有限步；复杂度 O(步数)；拒绝:Bertrand 冲突(n≠1 非闭合轨道)",
+   "evidence": "自实现 + 算例"
+  },
+  {
+   "state": "BOUNDARY",
+   "tag": "§9.6-3 C25/C35 本轮数值复核后仍维持 falsified（非 PASS）",
+   "statement": "C25 α 伪派生、C35 引力因子零内容/冲突——两项均经 §9.5 算法复核确认；理论若要在 L3 成立，须补两条第一性输入：①由拓扑本征值推出 N=137（C23/C27 未闭合）；②把螺旋曲率 κ,τ 与 GM/c² 经测地线方程挂钩（当前为手填）",
+   "detail": "突破条件已显式列出，但提交理论未提供 ⇒ 仍为 falsified",
+   "evidence": "引擎能力补全"
+  },
+  {
+   "state": "INFO",
    "tag": "§10-1 总体判定",
    "statement": "修复版在**方向上**做对了两件事（把 ρ 移出 G、给 N 一个可计算的表达式形式），但在**每一条 headline 公式**上都未通过第一性审计：量纲 3 处失败、循环性 1 处搬家、自由度净增 5、UFT-3 计数仍为 0 ⇒ 申报的「L3 完整第一性推导闭环」不成立",
-   "detail": "判定： PASS=3 FAIL=22 BOUNDARY=6 INFO=7",
+   "detail": "判定： PASS=3 FAIL=22 BOUNDARY=7 INFO=9",
    "evidence": "本次审计"
   }
  ],

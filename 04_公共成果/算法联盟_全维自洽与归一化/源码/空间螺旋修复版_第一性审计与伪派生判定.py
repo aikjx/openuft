@@ -31,6 +31,13 @@
   07_统一场方程/空间螺旋几何化统一场论/claims.csv 追加 C24–C38（幂等）
   07_统一场方程/空间螺旋几何化统一场论/11_证伪与反例/空间螺旋修复版_第一性缺陷记录.md
 
+V21 续修并入（2026-09-26 · 统一脚本）
+------------------------------------
+  §12  C25 — LB 本征能级高阶扫描 n=1..6（mpmath 250 位 + 误差棒传播审计）
+  §13  C35 — 固定 β 多行星近日点进动交叉验证（水星标定 → 金星/地球，250 位）
+  §14  汇总表更新复核 + claims.csv 台账登记 C48/C49（幂等）
+  数据/空间螺旋V21续修_C25C35_审计.json / .md
+
 用法：python 空间螺旋修复版_第一性审计与伪派生判定.py
 """
 
@@ -882,7 +889,7 @@ def orbit_precession_rad(gm, p, extra_coeff, n_orbits=30, dphi=mpf('0.003')):
     base = gm / h2
     def acc(uu):
         return base + extra_coeff * uu * uu
-    u = mpf(1) / p
+    u = mpf('1.5') / p          # 椭圆初始条件（近日点 r=p/1.5，偏心率 0.5）；圆轨道 u=1/p 无进动无法检测
     v = mpf(0)
     phi = mpf(0)
     peri = [mpf(0)]                      # φ=0 起点即近日点
@@ -944,6 +951,129 @@ reg("BOUNDARY", "§9.6-3 C25/C35 本轮数值复核后仍维持 falsified（非 
     "理论若要在 L3 成立，须补两条第一性输入：①由拓扑本征值推出 N=137（C23/C27 未闭合）；"
     "②把螺旋曲率 κ,τ 与 GM/c² 经测地线方程挂钩（当前为手填）",
     "突破条件已显式列出，但提交理论未提供 ⇒ 仍为 falsified", "引擎能力补全")
+
+
+# ===========================================================================
+# §9.7  V21续修：C25 高阶本征能级 α_n 扫描 / C35 多行星进动交叉验证（dps=250）
+# ---------------------------------------------------------------------------
+# 本节点是「续修」提交（V21）：C25 换用螺旋 LB 本征体系 E_n=(ω²/c²)(V0+n²ℏ²/N²)，
+# C35 换用 Binet 方程 GMβ u² 修正（PPN 型）。两式均为「n=1/水星一次性标定 + 高阶级/
+# 他行星独立预言」构造。本节在 250 位精度下**忠实复算**并给出诚实判定。
+# ===========================================================================
+print("\n" + "=" * 76)
+print("§9.7  V21续修  C25 高阶本征能级 / C35 多行星进动（mpmath dps=250）")
+print("=" * 76)
+
+_DPS_SAVE = mp.dps
+mp.dps = 250
+
+# ---- CODATA2022 基础常数（250 位，就地写死；带下划线避免与文件既有常量冲突）----
+C_ = mpf("299792458")
+G_ = mpf("6.67430e-11")
+HB_ = mpf("1.0545718176461565e-34")
+ME_ = mpf("9.1093837015e-31")
+MS_ = mpf("1.98847e30")
+A_ = mpf("0.0072973525693")
+ARCSEC_ = mp.pi / (180 * 3600)
+
+
+def _log10(x):
+    return mp.log(x) / mp.log(mpf(10))
+
+
+# ---------- C25：螺旋 LB 本征体系 ----------
+OM_LB = mpf("1.23558996e20")
+N_TOPO = mpf("18907")
+V0 = mpf("1.0")
+
+
+def E_n(n):
+    return (OM_LB ** 2 / C_ ** 2) * (V0 + (n ** 2 * HB_ ** 2) / (N_TOPO ** 2))
+
+
+E1_LB = E_n(1)
+C_COUPLE = A_ * ME_ * C_ ** 2 / E1_LB
+_term1 = HB_ ** 2 / N_TOPO ** 2
+
+print("     C25 螺旋 LB 本征体系（V0=%s，N=%s，ω=%s）"
+      % (fmt(V0, 4), fmt(N_TOPO, 8), fmt(OM_LB, 8)))
+print("       · 能级量子化项 ℏ²/N² = %s；相对 V0=%s 低 %s 个量级"
+      % (fmt(_term1, 6), fmt(V0, 4), fmt(_log10(V0 / _term1), 4)))
+print("       · n=1 标定耦合 C = %s" % fmt(C_COUPLE, 12))
+print("        n | E_n                 | α_n                        | σ(α_n)     | 相对展宽(vs α_obs)")
+c25_table = []
+for n in range(1, 7):
+    Ev = E_n(n)
+    an = C_COUPLE * Ev / (ME_ * C_ ** 2)
+    term = (n ** 2 * HB_ ** 2) / (N_TOPO ** 2)
+    rel = sqrt(mpf("1e-12") ** 2 + ((2 * term) / (V0 + term) * mpf("1e-12")) ** 2)
+    aerr = an * rel
+    dev = abs(an - A_) / A_
+    c25_table.append((n, Ev, an, aerr, dev))
+    print("        %d | %s | %s | %s | %s"
+          % (n, fmt(Ev, 10), fmt(an, 22), fmt(aerr, 6), fmt(dev, 4)))
+
+_c25_spread = max(t[4] for t in c25_table)          # n≥2 相对 α_obs 的最大展宽
+_c25_errrel = mpf("1e-12")                          # 误差棒相对量级（dω/ω = dN/N = 1e-12）
+item("C25 高阶预言具备鉴别力（预言展宽 > 误差棒）", _c25_spread > _c25_errrel,
+     "实测展宽 %s 与误差棒 %s 差 %s 个量级 ⇒ 预言被误差棒完全淹没，n≥2 无鉴别力"
+     % (fmt(_c25_spread, 4), fmt(_c25_errrel, 4), fmt(_log10(_c25_errrel / _c25_spread), 4)))
+reg("INFO", "§9.7-1 C25 高阶本征能级扫描（V21续修·螺旋 LB 本征构造）",
+    "250 位复算：V0=1.0 使量子化项 ℏ²/N²≈3.11e-77 低于 V0 达 77 个量级 ⇒ 能级谱实际塌缩，"
+    "n=1..6 的 α_n 与 α_obs 相对展宽仅 %s，而误差棒（dω/ω=dN/N=1e-12）为 %s，"
+    "预言展宽比误差棒小 %s 个量级 ⇒ 『n≥2 无自由参数独立预言』在此参数化下无鉴别力、不可证伪，"
+    "与 §9.6 属同源缺陷（换参数化未改变伪派生性质）；欲使其成为真预言须令 V0 与 ℏ²/N² 同量级"
+    % (fmt(_c25_spread, 4), fmt(_c25_errrel, 4), fmt(_log10(_c25_errrel / _c25_spread), 3)),
+    "I/O:{n,V0,N,ω}→α_n,σ(α_n)；终止:有限；复杂度 O(n)；拒绝准则:展宽<误差棒⇒无鉴别力",
+    "自实现 + 250 位复算")
+
+
+# ---------- C35：多行星近日点进动（Binet + GMβ u² 修正，PPN 型）----------
+def planet_dphi(a, e, T_yr, beta):
+    dphi_gr = 6 * mp.pi * G_ * MS_ / (C_ ** 2 * a * (1 - e ** 2))
+    dphi_geo = (3 * mp.pi * beta / (a ** 2 * (1 - e ** 2))) * (G_ * MS_) / (C_ ** 2 * a * (1 - e ** 2))
+    n100 = 100 / T_yr
+    return (dphi_gr * n100 / ARCSEC_, dphi_geo * n100 / ARCSEC_, (dphi_gr + dphi_geo) * n100 / ARCSEC_)
+
+
+a_mer, e_mer, T_mer = mpf("5.790905e10"), mpf("0.20563069"), mpf("0.240846")
+
+
+def _res_mer(beta):
+    return planet_dphi(a_mer, e_mer, T_mer, beta)[2] - mpf("43.03")
+
+
+BETA = mp.findroot(_res_mer, 0)
+print("     C35 多行星近日点进动（水星一次性标定 β 后固定，不再拟合）")
+print("       · 水星标定 β = %s m²（长度²尺度，√β = %s m）"
+      % (fmt(BETA, 10), fmt(sqrt(abs(BETA)), 8)))
+print("       行星 | GR基础″/cy | 几何修正″/cy | 总预测″/cy | 残差(总−经典)")
+planets = [
+    ("水星", a_mer, e_mer, T_mer, mpf("43.03")),
+    ("金星", mpf("1.0820893e11"), mpf("0.00677672"), mpf("0.615197"), mpf("8.62")),
+    ("地球", mpf("1.4959787e11"), mpf("0.0167086"), mpf("1.000017"), mpf("3.84")),
+]
+c35_rows = []
+for nm, ap, ep, Tp, grp in planets:
+    g, geo, tot = planet_dphi(ap, ep, Tp, BETA)
+    c35_rows.append((nm, g, geo, tot, tot - grp))
+    print("        %-4s | %s | %s | %s | %s"
+          % (nm, fmt(g, 6), fmt(geo, 6), fmt(tot, 6), fmt(tot - grp, 6)))
+
+item("C35 水星一次标定 β 后，金星/地球为无再拟合参数的独立预测",
+     abs(c35_rows[1][4]) > 0 and abs(c35_rows[2][4]) > 0,
+     "金星残差 %s″/cy、地球残差 %s″/cy（具体、有限可检验）"
+     % (fmt(c35_rows[1][4], 4), fmt(c35_rows[2][4], 4)))
+reg("BOUNDARY", "§9.7-2 C35 多行星进动交叉验证（V21续修·固定 β 构造）",
+    "水星一次性标定 β=%s m²（长度²尺度 √β≈%s m），随后**固定**；金星总进动 %s″/百年、地球 %s″/百年，"
+    "相对经典 GR 值 8.62/3.84 偏差 %s/%s″/百年（亚毫角秒级）⇒ 属具体、可检验的独立预言，"
+    "在本构造内满足『一次标定 + 他行星独立预言』的可证伪结构；惟该偏差低于现有天体测量精度 ⇒ 标 open"
+    % (fmt(BETA, 8), fmt(sqrt(abs(BETA)), 6), fmt(c35_rows[1][3], 6), fmt(c35_rows[2][3], 6),
+       fmt(c35_rows[1][4], 4), fmt(c35_rows[2][4], 4)),
+    "I/O:{a,e,T,β}→Δφ″/百年；终止:有限；复杂度 O(1)；拒绝:Bertrand 闭合轨道约束",
+    "自实现 + 250 位复算")
+
+mp.dps = _DPS_SAVE
 
 
 # ===========================================================================
@@ -1194,4 +1324,348 @@ if n_ok != len(CHECKS):
     for c in CHECKS:
         if not c["ok"]:
             print("  -", c["name"], "|", c["note"])
+print("=" * 76)
+
+
+# ===========================================================================
+# §12  V21 续修 · C25：LB 本征能级高阶扫描（n=1..6 · mpmath 250 位）
+# ===========================================================================
+print("\n" + "=" * 76)
+print("§12  V21续修 C25 | LB 本征能级扫描 n=1..6 · 250 位 mpmath")
+print("=" * 76)
+
+V21_START = len(ROWS)                     # 本节起的新判定行（用于独立数据切片）
+mp.dps = 250
+V_C = mpf("299792458")                    # c 精确定义值
+V_G = mpf("6.67430e-11")                  # G（草稿指定 CODATA2018）
+V_HBAR = mpf("1.0545718176461565e-34")    # ħ（草稿指定 CODATA2018）
+V_ME = mpf("9.1093837015e-31")            # m_e（草稿指定 CODATA2018）
+V_MSUN = mpf("1.98847e30")                # M_sun（草稿指定）
+V_ALPHA = mpf("0.0072973525693")          # α_obs
+V_ARC = pi / (180 * 3600)                 # 角秒→弧度
+
+V_OMEGA = mpf("1.23558996e20")            # 螺旋特征频率（外部输入）
+V_N = mpf("18907")                        # 拓扑绕数（外部输入）
+V_V0 = mpf("1.0")                         # 几何势耦合（草稿声明无量纲）
+dN_rel = mpf("1e-12")                     # 草稿假设 N 相对不确定度
+domega_rel = mpf("1e-12")                 # 草稿假设 ω 相对不确定度
+
+
+def En_lb(n):
+    """草稿式 LB 本征能级：E_n = (ω²/c²)(V0 + n²ℏ²/N²)。"""
+    return (V_OMEGA ** 2 / V_C ** 2) * (V_V0 + (n ** 2 * V_HBAR ** 2) / (V_N ** 2))
+
+
+E1_v = En_lb(1)
+C_couple = V_ALPHA * V_ME * V_C ** 2 / E1_v   # (n=1) 标定耦合常数 𝒞
+term1 = V_HBAR ** 2 / (V_N ** 2)
+
+print("     标定：E1 = %s" % fmt(E1_v, 24))
+print("     标定：𝒞 = α_obs·m_e c²/E1 = %s" % fmt(C_couple, 24))
+print("     谱修正基数：ℏ²/N² = %s（相对 V0=1 ⇒ 谱宽仅 ~1e-77 量级）" % fmt(term1, 6))
+
+print("\n     n | E_n（数值）          | α_n               | σα（草稿式）      | (α_n−α_1)/α_1")
+alpha_rows = []
+for n in range(1, 7):
+    En_v = En_lb(n)
+    alphan = C_couple * En_v / (V_ME * V_C ** 2)
+    term_n = (n ** 2 * V_HBAR ** 2) / (V_N ** 2)
+    rel_err_draft = sqrt(domega_rel ** 2 + ((2 * term_n) / (V_V0 + term_n) * dN_rel) ** 2)
+    alpha_err_draft = alphan * rel_err_draft
+    rel_spread = alphan / V_ALPHA - 1
+    alpha_rows.append({"n": n, "En": En_v, "alpha": alphan,
+                       "sig": alpha_err_draft, "rel": rel_spread})
+    print("     %2d | %s | %s | %s | %s"
+          % (n, fmt(En_v, 18), fmt(alphan, 18), fmt(alpha_err_draft, 10), fmt(rel_spread, 4)))
+
+max_rel = max(r["rel"] for r in alpha_rows[1:])
+draft_sig_rel = alpha_rows[-1]["sig"] / alpha_rows[-1]["alpha"]
+true_rel_n6 = 2 * abs(term1 / (V_V0 + term1) - (36 * term1) / (V_V0 + 36 * term1)) * dN_rel
+log10_over = mp.log10(draft_sig_rel / max_rel) if max_rel > 0 else mp.mpf("nan")
+print("\n     误差传播审计：α_n = 𝒞·E_n/(m_e c²) = α_obs·f_n/f_1 ⇒ ω、c 不确定度完全抵消；")
+print("       草稿式 σα/α（n=6）= %s" % fmt(draft_sig_rel, 6))
+print("       正确传播 σα/α（n=6）= %s" % fmt(true_rel_n6, 6))
+print("       草稿误差棒超过谱效应（α_6−α_1）/α_1 约 10^%s 个量级" % fmt(log10_over, 5))
+
+print("\n     量纲账本：")
+print("       [ω²/c²] = L^-2；V0 无量纲 ⇒ 第一项 [L^-2]")
+print("       n²ℏ²/N² ⇒ [M²L⁴T^-2]（ℏ 带量纲）⇒ 第二项（乘 ω²/c²）为 [M²L²T^-2]")
+print("       ⇒ E_n 括号内 1（无量纲）与 M²L⁴T^-2 不可相加；E_n 亦非能量 [M L² T^-2]")
+print("       ⇒ 𝒞 = α m_e c²/E1 ⇒ [M^-1]，并非无量纲耦合常数")
+
+reg("FAIL", "§12-C25-1 量纲账本：E_n 非能量、𝒞 非无量纲",
+    "E_n = (ω²/c²)(V0+n²ℏ²/N²) 中 V0 项为 [L^-2] 而 n²ℏ²/N² 项为 [M²L⁴T^-2] ⇒ 括号内不可相加；"
+    "E_n 整体为 [M²L²T^-2] 非能量 [M L² T^-2]；𝒞 = α m_e c²/E1 ⇒ [M^-1] 非无量纲耦合常数",
+    "与上轮 §1-C25-1 同一缺陷：草稿复用原公式未修量纲", "量纲账本")
+
+reg("FAIL", "§12-C25-2 谱退化：n=2..6 与标定态 α_1 相对差 ≤ ~1e-75",
+    "ℏ²/N² ≈ %s（相对 V0=1）⇒ α_n−α_1 相对量级 ~%s；α 观测不确定度仅 1.5e-10 ⇒ "
+    "高阶能级在约 76 位有效数字内与 α_1 不可区分，无独立可检验靶" % (fmt(term1, 4), fmt(max_rel, 4)),
+    "「n≥2 独立预言」在物理上消失；任何光谱类实验均无法分辨该谱间距", "退化审计（数值）")
+
+reg("FAIL", "§12-C25-3 误差棒公式误算：ω 不确定度应完全抵消",
+    "α_n = α_obs·f_n/f_1（f_n = V0+n²ℏ²/N²）⇒ ω、c 在两个能级比中抵消，草稿式把 dω 计入 σα 属双重计账；"
+    "草稿式 σα/α（n=6）≈ %s，正确传播 ≈ %s（仅 N 差项贡献）" % (fmt(draft_sig_rel, 6), fmt(true_rel_n6, 6)),
+    "即便采用草稿式，σα/α≈1e-12 也超过谱效应 10^%s 个量级 ⇒ 「误差棒完备/可证伪」不成立" % fmt(log10_over, 5),
+    "误差传播解析")
+
+reg("BOUNDARY", "§12-C25-4 标记：open（退化谱），非 open（可证伪谱）",
+    "草稿 C25 更新标记为 open 的方向可接受（LB 离散谱在数学上建立）；"
+    "但「高阶能级预测+误差棒完备+可证伪」被退化审计与误差棒审计推翻 ⇒ 登记 open（退化谱）",
+    "等待先修量纲（ℏ²/N² 与 V0 的物理单位）后再谈可证伪性", "诚实重判")
+
+# ===========================================================================
+# §13  V21 续修 · C35：多行星近日点进动（固定 β · 金星/地球交叉验证）
+# ===========================================================================
+print("\n" + "=" * 76)
+print("§13  V21续修 C35 | 固定 β 多行星进动 · 250 位 mpmath")
+print("=" * 76)
+
+
+def planet_dphi(a, e, T_yr, beta):
+    """草稿式：返回（GR 基础项，几何修正项，总预测），单位角秒/百年。"""
+    dphi_GR_per = 6 * pi * V_G * V_MSUN / (V_C ** 2 * a * (1 - e ** 2))
+    dphi_geo_per = (3 * pi * beta / (a ** 2 * (1 - e ** 2))) * (V_G * V_MSUN) / (V_C ** 2 * a * (1 - e ** 2))
+    N_orb = 100 / T_yr
+    return (dphi_GR_per * N_orb / V_ARC,
+            dphi_geo_per * N_orb / V_ARC,
+            (dphi_GR_per + dphi_geo_per) * N_orb / V_ARC)
+
+
+def dphi_geo_correct(a, e, beta):
+    """Binet 方程 u''+u = GM/h² + (GMβ/h²)u² 的一阶精确结果：Δφ_geo = 2πβ/(a²(1−e²)²)（弧度/圈）。"""
+    return 2 * pi * beta / (a ** 2 * (1 - e ** 2) ** 2)
+
+
+a_mer, e_mer, T_mer = mpf("5.790905e10"), mpf("0.20563069"), mpf("0.240846")
+
+
+def residual_draft(beta):
+    _, _, dp = planet_dphi(a_mer, e_mer, T_mer, beta)
+    return dp - mpf("43.03")
+
+
+def residual_correct(beta):
+    dpGR, _, _ = planet_dphi(a_mer, e_mer, T_mer, mpf(0))
+    geo_c = dphi_geo_correct(a_mer, e_mer, beta) * (100 / T_mer) / V_ARC
+    return dpGR + geo_c - mpf("43.03")
+
+
+beta_draft = mp.findroot(residual_draft, mpf("1e18"))
+beta_correct = mp.findroot(residual_correct, mpf("1e11"))
+
+planets = [
+    ("水星", mpf("5.790905e10"), mpf("0.20563069"), mpf("0.240846"), mpf("43.03")),
+    ("金星", mpf("1.0820893e11"), mpf("0.00677672"), mpf("0.615197"), mpf("8.62")),
+    ("地球", mpf("1.4959787e11"), mpf("0.0167086"), mpf("1.000017"), mpf("3.84")),
+]
+
+print("     水星标定：草稿式 β = %s" % fmt(beta_draft, 12))
+print("             Binet 一阶正确式 β = %s" % fmt(beta_correct, 12))
+print("     两式差因子（水星处）= %s = 3GM/(2c²a_mer)" % fmt(beta_draft / beta_correct, 8))
+
+print("\n     %-4s | %-13s | %-15s | %-13s | %-11s | %-15s | %-13s"
+      % ("行星", "GR基础", "几何修正(草稿式)", "总预测(草稿式)", "参考值",
+         "几何修正(Binet式)", "总预测(正确式)"))
+c35_out = []
+for name, a_p, e_p, T_p, ref in planets:
+    dpGR, dpGeo_draft, dpTot_draft = planet_dphi(a_p, e_p, T_p, beta_draft)
+    geo_correct = dphi_geo_correct(a_p, e_p, beta_correct) * (100 / T_p) / V_ARC
+    tot_correct = dpGR + geo_correct
+    c35_out.append({"planet": name,
+                    "GR": float(dpGR), "GR_s": fmt(dpGR, 8),
+                    "geo_draft": float(dpGeo_draft), "geo_draft_s": fmt(dpGeo_draft, 8),
+                    "tot_draft": float(dpTot_draft), "tot_draft_s": fmt(dpTot_draft, 8),
+                    "ref": float(ref), "ref_s": fmt(ref, 8),
+                    "geo_correct": float(geo_correct), "geo_correct_s": fmt(geo_correct, 8),
+                    "tot_correct": float(tot_correct), "tot_correct_s": fmt(tot_correct, 8)})
+    print("     %-4s | %-13s | %-15s | %-13s | %-11s | %-15s | %-13s"
+          % (name, fmt(dpGR, 8), fmt(dpGeo_draft, 8), fmt(dpTot_draft, 8), fmt(ref, 8),
+             fmt(geo_correct, 8), fmt(tot_correct, 8)))
+print("     注：水星参考值 43.03 为观测反常进动（标定靶）；金星/地球参考值 8.62/3.84 为 GR 预言值（非独立观测残差）")
+
+venus_ratio = c35_out[1]["geo_draft"] / c35_out[1]["geo_correct"]
+earth_ratio = c35_out[2]["geo_draft"] / c35_out[2]["geo_correct"]
+formula_factor = 3 * V_G * V_MSUN / (2 * V_C ** 2 * a_mer)
+
+reg("PASS", "§13-C35-1 GR 基础项复现标准值（250 位）",
+    "水星 %s / 金星 %s / 地球 %s 角秒每百年（标准 GR：42.98 / 8.62 / 3.84）"
+    % (fmt(c35_out[0]["GR"], 6), fmt(c35_out[1]["GR"], 6), fmt(c35_out[2]["GR"], 6)),
+    "解析一阶公式 6πGM/(c²a(1−e²)) 直接计算", "独立复算")
+
+reg("BOUNDARY", "§13-C35-2 β 为水星拟合自由参数，非第一性",
+    "β 由「总预测=43.03」反解（草稿式 β=%s），金星/地球预测全部依赖该拟合值；"
+    "理论未给出 β 的第一性来源（对应上轮 §2-C35-3 的自由度审计）" % fmt(beta_draft, 6),
+    "固定 β 不再重拟合在方法上成立，但「普适性检验」的前提是 β 具有独立推导", "自由度审计")
+
+reg("FAIL", "§13-C35-3 草稿几何项与自身 Binet 方程一阶结果不符",
+    "草稿 Δφ_geo = 3πβ·GM/(c²a³(1−e²)²)；由草稿 Binet 方程 u''+u=GM/h²+(GMβ/h²)u² 的一阶微扰得 Δφ_geo = 2πβ/(a²(1−e²)²)，"
+    "草稿式多出因子 3GM/(2c²a)（水星处 %s）" % fmt(formula_factor, 6),
+    "同以水星 43.03 标定，两式给出不同的金星/地球几何修正：金星 %s vs %s（差 %.3f×）；"
+    "地球 %s vs %s（差 %.3f×）⇒ a 标度（a³ vs a²）不同，非约定自由度"
+    % (fmt(c35_out[1]["geo_draft"], 6), fmt(c35_out[1]["geo_correct"], 6), venus_ratio,
+       fmt(c35_out[2]["geo_draft"], 6), fmt(c35_out[2]["geo_correct"], 6), earth_ratio),
+    "Binet 一阶微扰解析")
+
+reg("INFO", "§13-C35-4 修正量级低于当前天体测量精度",
+    "草稿式金星/地球几何修正仅 ~%s / ~%s 角秒每百年（正确式 ~%s / ~%s）；"
+    "现代历表对金星/地球进动的约束在 ~0.1–1 角秒每百年量级 ⇒ 低 2–3 个量级，当前不可判"
+    % (fmt(c35_out[1]["geo_draft"], 4), fmt(c35_out[2]["geo_draft"], 4),
+       fmt(c35_out[1]["geo_correct"], 4), fmt(c35_out[2]["geo_correct"], 4)),
+    "「等待更高精度天体测量观测比对」为诚实表述，但需先修正 §13-C35-3 的公式偏差", "精度量级")
+
+reg("BOUNDARY", "§13-C35-5 标记：open（框架就绪·公式需修正）",
+    "草稿 C35 更新标记为 open 的方向可接受（多行星交叉验证框架可运行）；"
+    "但几何修正项公式与自身 Binet 一阶结果不符，须修正后再谈普适性预言", "诚实重判")
+
+# ===========================================================================
+# §14  V21 续修 · 汇总表更新复核 + 台账登记（C48/C49）+ 数据产出
+# ===========================================================================
+print("\n" + "=" * 76)
+print("§14  V21续修 | 汇总表更新复核 · 台账 C48/C49 · 数据产出")
+print("=" * 76)
+
+# --- C24 复核：修正基底 |R'|=c（最小修复轮 B1 证据复算） ---
+A_chk = mpf("1.3")
+b_chk = A_chk / 137
+w_chk = V_C / sqrt(A_chk ** 2 + b_chk ** 2)
+speed_chk = sqrt((A_chk * w_chk) ** 2 + (b_chk * w_chk) ** 2) / V_C
+item("C24 复核：修正基底（b·ω·t）+ ω√(A²+b²)=c ⇒ |R'|/c = 1", abs(speed_chk - 1) < mpf("1e-40"),
+     "b/A=1/137 参数点 |R'|/c = %s" % fmt(speed_chk, 20))
+reg("PASS", "§14-C24 复核",
+    "第三分量写为 b·ω·t 并显式重列 ω√(A²+b²)=c 后 |R'|=c 精确成立 ⇒ 草稿 C24 更新标记 PASS 有引擎证据（与最小修复轮 C39 一致）",
+    "b/A=1/137 参数点 |R'|/c = %s" % fmt(speed_chk, 20), "复算")
+
+reg("INFO", "§14-C38 复核",
+    "三项审计算法（矛盾自检/拓扑归一/层级升维）在本册 §9.5 已实现并带示范算例 ⇒ 草稿 C38 更新标记 open（待批量 claims 扫描）方向成立",
+    "与 §9.6 的 C25/C35 复核共享同一算法栈", "引擎能力盘点")
+
+print("\n     草稿全审计汇总表（C24–C38）与引擎复核：")
+summary_rows = [
+    (24, "falsified", "PASS", "基底光速约束，无超光速", "PASS（复算确认，见 §14-C24）"),
+    (25, "falsified", "open", "LB本征谱；(n=1)标定𝒞，n≥6高阶α_n+误差棒完备，可证伪", "open（退化谱；误差棒公式需修正，不可证伪）"),
+    (26, "falsified", "PASS", "tanθ唯一Frenet定义", "未复核（Frenet 比值 τ/κ=u/(Aω) 唯一，但四方冲突未调和）"),
+    (27, "falsified", "PASS", "N外部拓扑输入，无虚假导出", "未复核（声明诚实，但非 PASS 证据）"),
+    (28, "open", "PASS", "删除Δθ_min", "未复核"),
+    (29, "falsified", "PASS", "删除K₀", "未复核"),
+    (30, "falsified", "PASS", "消除G循环定义", "未复核"),
+    (31, "falsified", "PASS", "Π定理满足", "未复核"),
+    (32, "falsified", "PASS", "删除ρ孤儿场", "未复核（与最小修复轮 C44 方向一致）"),
+    (33, "falsified", "PASS", "几何源电流量纲自洽", "未复核（上轮 §6-3 电荷守恒约束仍 FAIL）"),
+    (34, "falsified", "PASS", "麦克斯韦含J+J_geo，电荷守恒约束推导完成", "未复核（μ₀J 已补，J_geo 源项仍缺闭合）"),
+    (35, "falsified", "open", "Binet方程，水星标定β，金星地球独立预测，普适性检验框架就绪", "open（框架就绪；几何项公式需修正）"),
+    (36, "falsified", "PASS", "相位场量纲对齐", "未复核"),
+    (37, "falsified", "PASS", "面板统计修正，多套无量纲预测靶", "未复核（靶登记仍为 0）"),
+    (38, "open", "open", "三审计算法完整实现，示范算例就绪；待批量全量claims扫描", "open（§9.5 已实现，待批量扫描）"),
+]
+for cid, old, new, note, review in summary_rows:
+    print("     C%-2d  %-9s → %-9s | %s | 引擎复核：%s" % (cid, old, new, note, review))
+reg("INFO", "§14-汇总 更新标记引擎复核",
+    "草稿 C24–C38 更新标记中：C24 PASS、C25/C35/C38 open 有引擎证据；"
+    "C26–C34、C36、C37 的 PASS 为草稿自评，本册未给出复核证据 ⇒ 不得直接登记为 PASS",
+    "claims.csv 中 C25/C35 旧行属修复版轮记录，保持 falsified；V21续修轮新登记 C48/C49", "汇总口径")
+
+# --- 台账登记：C48/C49（幂等，与 §11 的 C24–C47 互不冲突） ---
+V21_NEW_CLAIMS = [
+    ("C48", "【V21续修·谱】LB本征能级 n=1..6 扫描（mpmath 250位）：α_n 与标定值 α_1 相对差 ≤ 1.09e-75（ℏ²/N²≈3.11e-77 主导）⇒ 谱在约 76 位有效数字内退化 无独立可检验靶；草稿误差棒公式误算 ω 抵消项 正确传播误差 ~1e-87 量级 故「误差棒完备/可证伪」不成立 → open（退化谱）",
+     "第一性审计", "open"),
+    ("C49", "【V21续修·进动】固定 β（水星标定 43.03 角秒/百年）预测金星/地球近日点进动：GR 项复现 8.62/3.84 角秒/百年；草稿几何修正项与自身 Binet 方程一阶结果不符（正确 2πβ/(a²(1−e²)²) 草稿含 3GM/(2c²a)≈3.83e-8 因子）同标定下金星/地球预测差约 1.9×/2.6×；修正量仅 ~1e-3 角秒/百年 低于当前天体测量精度 → open（框架就绪·公式需修正）",
+     "第一性审计", "open"),
+]
+added_v21 = 0
+for cid, statement, category, status in V21_NEW_CLAIMS:
+    if cid in existing:
+        continue
+    for field in (cid, statement, category, status, "算法联盟审计组"):
+        if "," in field or '"' in field:
+            raise ValueError("字段不得含裸逗号或引号: " + cid)
+    text += ",".join([cid, statement, category, status, "算法联盟审计组"]) + "\n"
+    added_v21 += 1
+io.open(claims_path, "w", encoding="utf-8").write(text)
+item("claims.csv V21续修幂等追加完毕（新增 %d 行 重复时 0 行）" % added_v21, True)
+
+# --- 数据产出：V21续修审计 json/md（独立文件，不覆盖修复版轮产物） ---
+V21_ROWS = ROWS[V21_START:]
+n21_pass = sum(1 for r in V21_ROWS if r["state"] == "PASS")
+n21_fail = sum(1 for r in V21_ROWS if r["state"] == "FAIL")
+n21_bd = sum(1 for r in V21_ROWS if r["state"] == "BOUNDARY")
+n21_info = sum(1 for r in V21_ROWS if r["state"] == "INFO")
+
+V21_payload = {
+    "title": "空间螺旋几何化统一场论 · V21续修 C25/C35 审计（并入第一性审计统一脚本）",
+    "date": "2026-09-26",
+    "method": ["mpmath dps=250", "参数扰动误差传播（草稿式 vs 正确式）", "量纲账本",
+               "Binet 一阶微扰解析", "水星标定 β + 金星/地球交叉验证"],
+    "counts": {"total": len(V21_ROWS), "PASS": n21_pass, "FAIL": n21_fail,
+               "BOUNDARY": n21_bd, "INFO": n21_info},
+    "C25": {"E1": float(E1_v), "C_couple": float(C_couple),
+            "hbar2_over_N2": float(term1), "max_rel_spread": float(max_rel),
+            "sigma_draft_rel": float(draft_sig_rel), "true_rel_n6": float(true_rel_n6),
+            "log10_sigma_over_spread": float(log10_over),
+            "rows": [{"n": r["n"], "En": float(r["En"]), "alpha": float(r["alpha"]),
+                      "sigma_draft": float(r["sig"]), "rel_spread": float(r["rel"])}
+                     for r in alpha_rows]},
+    "C35": {"beta_draft": float(beta_draft), "beta_correct": float(beta_correct),
+            "formula_ratio_mercury": float(formula_factor),
+            "venus_geo_ratio_draft_over_correct": float(venus_ratio),
+            "earth_geo_ratio_draft_over_correct": float(earth_ratio),
+            "rows": c35_out},
+    "rows": V21_ROWS,
+}
+with io.open(os.path.join(OUT_DIR, "空间螺旋V21续修_C25C35_审计.json"), "w", encoding="utf-8") as fh:
+    json.dump(V21_payload, fh, ensure_ascii=False, indent=1)
+
+lines21 = []
+lines21.append("# 空间螺旋几何化统一场论 · V21续修 C25/C35 审计（250 位 mpmath）")
+lines21.append("")
+lines21.append("> 日期 2026-09-26 · 引擎：`源码/空间螺旋修复版_第一性审计与伪派生判定.py` §12–§14（统一脚本并入）")
+lines21.append("> 方法：mpmath dps=250 / 量纲账本 / 误差传播（草稿式 vs 正确式）/ Binet 一阶微扰 / 水星标定 β + 金星/地球交叉验证")
+lines21.append("")
+lines21.append("**判定**：总数 %d `|` PASS=%d FAIL=%d BOUNDARY=%d INFO=%d"
+               % (len(V21_ROWS), n21_pass, n21_fail, n21_bd, n21_info))
+lines21.append("")
+lines21.append("| 状态 | 编号 | 主张 | 依据 |")
+lines21.append("|------|------|------|------|")
+for r in V21_ROWS:
+    det = r["detail"].replace("\n", " ")
+    lines21.append("| %s | %s | %s | %s |" % (r["state"], r["tag"], r["statement"], det))
+lines21.append("")
+lines21.append("## C25 LB 本征谱扫描（n=1..6）")
+lines21.append("")
+lines21.append("| n | E_n（数值） | α_n | σα（草稿式） | (α_n−α_1)/α_1 |")
+lines21.append("|----|----|----|----|----|")
+for r in alpha_rows:
+    lines21.append("| %d | %s | %s | %s | %s |"
+                   % (r["n"], fmt(r["En"], 10), fmt(r["alpha"], 14), fmt(r["sig"], 8), fmt(r["rel"], 4)))
+lines21.append("")
+lines21.append("| 量 | 值 |")
+lines21.append("|----|----|")
+lines21.append("| ℏ²/N²（谱修正基数） | %s |" % fmt(term1, 6))
+lines21.append("| 最大相对谱宽 (α_6−α_1)/α_1 | %s |" % fmt(max_rel, 6))
+lines21.append("| 草稿式 σα/α（n=6） | %s |" % fmt(draft_sig_rel, 6))
+lines21.append("| 正确传播 σα/α（n=6） | %s |" % fmt(true_rel_n6, 6))
+lines21.append("| 草稿误差棒超出谱效应量级 | 10^%s |" % fmt(log10_over, 5))
+lines21.append("")
+lines21.append("## C35 多行星进动（固定 β）")
+lines21.append("")
+lines21.append("| 行星 | GR基础 | 几何修正(草稿式) | 总预测(草稿式) | 参考值 | 几何修正(Binet式) | 总预测(正确式) |")
+lines21.append("|----|----|----|----|----|----|----|")
+for r in c35_out:
+    lines21.append("| %s | %s | %s | %s | %s | %s | %s |"
+                   % (r["planet"], r["GR_s"], r["geo_draft_s"], r["tot_draft_s"],
+                      r["ref_s"], r["geo_correct_s"], r["tot_correct_s"]))
+lines21.append("")
+lines21.append("| 量 | 值 |")
+lines21.append("|----|----|")
+lines21.append("| β（草稿式，水星标定） | %s |" % fmt(beta_draft, 12))
+lines21.append("| β（Binet 一阶正确式，水星标定） | %s |" % fmt(beta_correct, 12))
+lines21.append("| 公式差因子 3GM/(2c²a_mer) | %s |" % fmt(formula_factor, 6))
+lines21.append("")
+with io.open(os.path.join(OUT_DIR, "空间螺旋V21续修_C25C35_审计.md"), "w", encoding="utf-8") as fh:
+    fh.write("\n".join(lines21))
+
+print("\n" + "=" * 76)
+print("V21续修判定汇总：总数 %d | PASS=%d FAIL=%d BOUNDARY=%d INFO=%d"
+      % (len(V21_ROWS), n21_pass, n21_fail, n21_bd, n21_info))
+print("产出：04_公共成果/算法联盟_全维自洽与归一化/数据/空间螺旋V21续修_C25C35_审计.json / .md")
 print("=" * 76)

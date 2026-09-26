@@ -58,6 +58,7 @@ HBAR = 1.054571817e-34
 ME = 9.1093837015e-31
 ALPHA = 7.2973525693e-3
 ALPHA_137 = 1.0 / 137.0            # 文献取整口径，仅作对比靶（见 README §5.3）
+EPS = sys.float_info.epsilon       # 双精度机器 epsilon（实测列噪声地板用）
 
 # ------------------------------------------------------------------ 螺旋几何（与 B 段同参数）
 A_M = 1e-15
@@ -97,28 +98,48 @@ def kinetic_bias(n, N):
     return (math.sin(x) / x) ** 2 - 1.0
 
 
+def meas_noise_floor(n, N):
+    """实测列 d_meas 的**绝对**浮点地板（先验，不依赖实测结果）。
+
+    k_fd 走的是 (1 - cos(2 pi n/N))，这是一次相消：cos 的舍入误差 ~eps 直接落在
+    u = 1-cos = 2 sin^2(x) 上，故 k_fd 的相对误差 ~ eps/u，传到 d = k_fd/k_cont - 1
+    上的绝对误差 ~ eps/u（因 k_fd/k_cont = 1+d ≈ 1）。小 n 端 u ~ x^2/2 ⇒ 地板 ~ 2eps/x^2：
+    **x 越小，实测列越不可信**，而收敛到 4 阶的读数恰好活在这一端。
+    另加 4·eps 常数项：h、k_cont 自身的常规舍入（在 x->Nyquist 端它才是主导）。
+    """
+    s = math.sin(math.pi * n / N)
+    if s == 0.0:
+        return float('inf')
+    return EPS / (2.0 * s * s) + 4.0 * EPS
+
+
 def energy(n, N, kind):
     return OFFSET + KIN * (k_cont(n) if kind == 'cont' else k_fd(n, N))
 
 
 def rayleigh_residual(n, N):
-    """第二条独立路：把解析本征向量代入实际差分矩阵，量残差。
+    """第二条独立路：把解析本征向量代入差分矩阵的**动能**部分，量残差。
 
-    v_j = cos(2 pi n j / N)（周期二阶差分的本征向量，退化对里取一条），
-    (Hv)_j = (2t + OFFSET) v_j - t (v_{j-1} + v_{j+1})，t = KIN/h^2。
-    残差归一到 |lam|。这条路与闭式公式互相独立：闭式写错就会被抓住。
+    v_j = cos(2 pi n j / N)（周期二阶差分的本征向量，退化对里取一条）。
+    H = OFFSET·I + T，T = -(hbar^2/2m)d^2/ds^2 的差分版，(Tv)_j = 2t v_j - t(v_{j-1}+v_{j+1})，
+    t = KIN/h^2。本判据核验的是 T v == (KIN * k_fd(n,N)) v。
+
+    **标度必须取在动能上，不是 |lam|。** 原先归一到 |lam| = OFFSET + 动能，而
+    OFFSET/动能 ~ 1.34e25（见 S2d），于是任何写错的 k_fd 都会在除法里被稀释成 0 ——
+    这条判据当时是瞎的（变异检验把它抓出来了：改 k_fd 的角度它照样全绿）。
     """
     h = L / N
     t = KIN / (h * h)
-    lam = OFFSET + 2.0 * t * (1.0 - math.cos(2.0 * math.pi * n / N))
+    lam_k = KIN * k_fd(n, N)              # 被测路口：全篇使用的 k_fd()
+    if lam_k == 0.0:
+        return 0.0
     worst = 0.0
     for j in range(N):
         v = math.cos(2.0 * math.pi * n * j / N)
         vm = math.cos(2.0 * math.pi * n * ((j - 1) % N) / N)
         vp = math.cos(2.0 * math.pi * n * ((j + 1) % N) / N)
-        hv = (2.0 * t + OFFSET) * v - t * (vm + vp)
-        rel = abs(hv - lam * v) / (abs(lam) * max(abs(v), 1e-30) + 1e-300)
-        worst = max(worst, rel)
+        tv = 2.0 * t * v - t * (vm + vp)  # 全程不引入 OFFSET：无相消
+        worst = max(worst, abs(tv - lam_k * v) / lam_k)
     return worst
 
 
@@ -171,11 +192,25 @@ def main(argv):
     # ---- 1) 闭式 == 矩阵谱（Rayleigh 残差），并复核 B 段口径 ----
     print('\n[1] 闭式与本征矩阵的一致性（独立第二条路：Rayleigh 残差）')
     for N in (32, 128, 1024):
-        worst = max(rayleigh_residual(n, N) for n in range(1, min(N // 2, 12) + 1))
-        judge('S1-N%d' % N, 'N=%d 前 12 条解析本征向量代入矩阵，最大相对残差 < 1e-12' % N,
-              worst < 1e-12, 'max rel residual = %r' % worst)
-        print('  N=%-5d max ||Hv-lam v||/|lam| = %r  %s'
-              % (N, worst, 'PASS' if worst < 1e-12 else 'FAIL'))
+        # 残差有它自己的浮点地板，而且是 S2a 那条地板的两项之和：
+        #   (a) tv = t(2 v_j - v_{j-1} - v_{j+1}) 是相消的（结果 ~ x^2 t），
+        #       归一到 KIN*k_fd 后给出 eps/(2 sin^2 x) = meas_noise_floor(n,N)；
+        #   (b) 本征向量本身是 cos(2 pi n j/N)，辐角带着 eps*(2 pi n j/N) 的舍入，
+        #       j 最大到 N ⇒ 相位误差上限 2 pi n eps，除以同一个 x^2 相消量 ⇒ (1 + pi n) 放大。
+        # 阈值不能写成人为的 1e-12：N=1024、n=1 时地板就有 1.2e-11，判据会恒红。
+        rel = [(rayleigh_residual(n, N),
+                meas_noise_floor(n, N) * (1.0 + math.pi * n), n)
+               for n in range(1, min(N // 2, 12) + 1)]
+        r_worst, f_worst, n_worst = max(rel, key=lambda t: t[0] / max(t[1], 1e-300))
+        ratio_floor = r_worst / max(f_worst, 1e-300)   # 地板被判空时不炸，直接按无穷倍红掉
+        ok = ratio_floor < 2.0
+        judge('S1-N%d' % N, 'N=%d 前 12 条解析本征向量代入差分矩阵的动能部分，'
+                            '残差归一到**动能本征值**（不是 |lam|），逐条 <= 2× 先验地板'
+                            '（地板 = eps/(2 sin^2 x) 的相消项 ×(1+pi n) 的辐角项）' % N,
+              ok, '最紧 n=%d：相对残差 %r vs 地板 %r（= %r 倍地板）'
+                  % (n_worst, r_worst, f_worst, ratio_floor))
+        print('  N=%-5d max ||Tv-KIN*k_FD v||/(KIN*k_FD) = %r（最紧 n=%d，地板 %r，%r 倍）%s'
+              % (N, r_worst, n_worst, f_worst, ratio_floor, 'PASS' if ok else 'FAIL'))
     # 与 B 段完全同一个 N=32 的最低几条能级对照（口径必须一致）
     b_row = [(n, energy(n, 32, 'fd'), energy(n, 32, 'cont')) for n in range(4)]
     print('  N=32 前 4 条：E_FD / E_cont')
@@ -205,39 +240,64 @@ def main(argv):
         print('  %-4d %-22r %-16r %-16r %-16r %-9s %s'
               % (n, dE, d_meas, d_ana, est, '—' if n == 0 else '%.9r' % ratio, note))
         if 1 <= n <= Nref // 2:
-            closed_gap.append(abs(d_meas - d_ana))
-    judge('S2a', '闭式 d=(sin x/x)^2-1 与差分本征值实测逐条吻合（<1e-12，非混叠区）',
-          closed_gap and max(closed_gap) < 1e-12,
-          'max |实测 - 闭式| = %r（n=1..%d）' % (max(closed_gap), Nref // 2))
-    # 阶比不是恒等于 4：展开参数是 x=pi n/N，d(x) = -x^2/3 + 2x^4/45 - ...，
+            closed_gap.append((abs(d_meas - d_ana), meas_noise_floor(n, Nref), n))
+    worst_a = max(closed_gap, key=lambda t: t[0] / max(t[1], 1e-300))
+    judge('S2a', '闭式 d=(sin x/x)^2-1 与差分本征值实测逐条吻合；容差用**先验浮点地板** '
+                 'eps/(2 sin^2 x) 而不是人为常数',
+          all(diff <= 2.0 * fl for diff, fl, _n in closed_gap),
+          '最紧 n=%d：|实测 - 闭式| = %r vs 地板 %r' % (worst_a[2], worst_a[0], worst_a[1]))
+    # 阶比不是恒等于 4：展开参数是 x=pi n/N，d(x) = -x^2/3 + 2x^4/45 - x^6/315 + ...，
     # 所以 d(x)/d(x/2) -> 4 只在 x->0 成立。正确的判据是"实测阶比 == 闭式阶比"，
-    # 而 x->4 的偏离量本身就是 Richardson 误差棒**自身**的误差，见 S2c/S2e。
+    # 容差由两列各自的地板相加给出（见 meas_noise_floor 的推导）。
     ratio_gap = []
     for r in rows:
         if 1 <= r['n'] <= Nref // 2:
-            ana = kinetic_bias(r['n'], Nref) / kinetic_bias(r['n'], 2 * Nref)
-            ratio_gap.append(abs(r['order_ratio'] - ana) / abs(ana))
-    judge('S2b', '实测阶比 d(N)/d(2N) 与闭式阶比逐条一致（<1e-9）；趋 4 只在小 x 端成立（勿把'
-                 'O(h^2) 当成全区间事实）', max(ratio_gap) < 1e-9,
-          'max 相对失配 = %r；n=%d 处阶比 = %r（x = %r）'
-          % (max(ratio_gap), nmax, rows[nmax]['order_ratio'], math.pi * nmax / Nref))
+            n = r['n']
+            d1, d2 = kinetic_bias(n, Nref), kinetic_bias(n, 2 * Nref)
+            ana = d1 / d2
+            tol = meas_noise_floor(n, Nref) / abs(d1) + meas_noise_floor(n, 2 * Nref) / abs(d2)
+            ratio_gap.append((abs(r['order_ratio'] - ana) / abs(ana), tol, n))
+    worst_b = max(ratio_gap, key=lambda t: t[0] / max(t[1], 1e-300))
+    judge('S2b', '实测阶比 d(N)/d(2N) 与闭式阶比逐条一致（相对容差 = 两列浮点地板之和）；'
+                 '趋 4 只在小 x 端成立——而小 x 端正是实测列被 (1-cos) 相消吃掉的一头',
+          all(rel <= 2.0 * tol for rel, tol, _n in ratio_gap),
+          '最紧 n=%d：相对失配 %r vs 地板 %r；x->0 端阶比趋 4（n=1 实测 %r），'
+          'x->Nyquist 端掉到 %r（n=%d, x=%r）'
+          % (worst_b[2], worst_b[0], worst_b[1], rows[1]['order_ratio'],
+             rows[nmax]['order_ratio'], nmax, math.pi * nmax / Nref))
+    # Richardson 估计量自身的误差 = 截断误差（级数下一阶）+ 两列浮点地板。
+    # 由 d(x) = -x^2/3 + 2x^4/45 - x^6/315 + ... 逐阶代入
+    #   R(x) = (d(x)-d(x/2))/3 = -x^2/12 + x^4/72 - x^6/960 + ...
+    #   d(x/2)              = -x^2/12 + x^4/360 - x^6/20160 + ...
+    #   R - d(x/2)          =  x^4/90  - x^6/1008 + ...
+    # 除以 |d(x/2)| ~ x^2/12 得**相对**自身失配 = (2/15) x^2 + O(x^4)，x = pi n/N。
+    RIC_C = 2.0 / 15.0
     ric_err = []
     for r in rows:
         if 1 <= r['n'] <= Nref // 2:
-            true2 = kinetic_bias(r['n'], 2 * Nref)
-            x2 = math.pi * r['n'] / (2 * Nref)
+            n = r['n']
+            true2 = kinetic_bias(n, 2 * Nref)
+            x = math.pi * n / Nref
+            floor_rel = (meas_noise_floor(n, Nref) + meas_noise_floor(n, 2 * Nref)) / 3.0 / abs(true2)
             ric_err.append((abs(abs(r['richardson_est']) - abs(true2)) / abs(true2),
-                            0.2667 * x2 * x2, r['n']))
+                            RIC_C * x * x * (1.0 + x * x) + floor_rel, n))
     worst = max(ric_err, key=lambda t: t[0] / max(t[1], 1e-300))
-    judge('S2c', 'Richardson 估计量的自身误差被先验界 0.2667 x^2 卡住（x=pi n/2N）⇒ 误差棒'
-                 '可只用两张网格算出，且**它自己的**误差棒有解析上界',
-          all(e <= b * 1.02 for e, b, _n in ric_err),
+    judge('S2c', 'Richardson 估计量的自身误差被先验界 (2/15)x^2 + 浮点地板卡住（x=pi n/N，'
+                 '系数由级数逐阶代入导出，非拟合）⇒ 误差棒可只用两张网格算出，且**它自己的**'
+                 '误差棒有解析上界',
+          all(e <= b for e, b, _n in ric_err),
           '最紧一例 n=%d：自身相对失配 %r vs 界 %r' % (worst[2], worst[0], worst[1]))
     # Richardson 可信区：自身失配 <= tol 的最大 n（先验式，不依赖本次扫描结果）
     for tol in (0.01, 0.05):
-        xz = math.sqrt(tol / 0.2667)
+        xz = math.sqrt(tol / RIC_C)
         print('  Richardson 误差棒自身失配 <= %g%% 要求 x <= %r ⇒ n <= %r（N=%d 时；'
-              '越过此线只有闭式偏差仍可用）' % (100 * tol, xz, xz * 2 * Nref / math.pi, Nref))
+              '越过此线只有闭式偏差仍可用）' % (100 * tol, xz, xz * Nref / math.pi, Nref))
+    print('  实测列的浮点地板（相对量，n=1..10）：%s'
+          % ', '.join('n=%d:%.2e' % (n, (meas_noise_floor(n, Nref) / abs(kinetic_bias(n, Nref))))
+                      for n in range(1, 11)))
+    print('  ⇒ 地板按 1/x^2 发散（x=pi n/N）：低阶端的"实测误差棒"是相消噪声主导，'
+          '能级越低越要报闭式，Richardson 两网格差分的读数只在高 x 端便宜')
+
     zero_at_total = all(energy(n, Nref, 'fd') == energy(n, Nref, 'cont')
                         for n in range(1, Nref // 2 + 1))
     judge('S2d', '按"整条能级"报误差棒在双精度下直接归零（OFFSET/动能 ~ %r）⇒ '
