@@ -386,6 +386,10 @@ def doc_check_checks(total):
         # 投放处数**从文本里数**而不是写死成 1：文档每多引一次当前台账读数，`replace` 就多改一处，
         # 于是期望的投诉数也跟着多一处（上一版把"08 里恰好一处"当成常数，本轮 08 长到两处 ⇒ 该例
         # 报"抓到 1+2"，看着像门禁失灵、其实是夹具自己过期了）。
+        # 同一族的第二处过期就在下面这段普查写下的当天：旧期望是 `site_h == site_n`（"每一处都被认成
+        # 过去时"），而第十九项给 09 的第 6 条新写了一句现在时的台账读数 ⇒ 普查变成 5 处里 4 处过去时、
+        # 1 处现在时，该例立刻判红**且红在错误一侧**（真文档反而多了一处被核对的站点）。期望必须键在
+        # "此刻文件里有什么"上，不是键在作者记住的段落属性上 ⇒ 改成两侧都要求非空。
         r_sites, m_sites = rtext.count(want), mtext.count(mut_want)
         site_n = site_h = 0
         site_free = []
@@ -426,11 +430,12 @@ def doc_check_checks(total):
          not clean[0] and not clean[1],
          '违规 %d+%d 处：%s' % (len(clean[0]), len(clean[1]), (clean[0] + clean[1])[:2])),
         ('同一份快照里改错两处（README 防护例数 −3、08 变异体数 +3）⇒ 两族各自把**投放的那几处**全部点出'
-         '（一族抓到不能替另一族作证，一处投放漏抓就是那一处没在核对）；且这一族的**每一处**站点所在段落都被 '
-         'HISTORIC 认成过去时，投放那一处也在其中 ⇒ 段落级豁免一旦扩到它就等于一处都不核对'
-         '（站点普查过期时这一例先响，别把"每一处"留在散文里当记忆）',
+         '（一族抓到不能替另一族作证，一处投放漏抓就是那一处没在核对）；且这一族必须**同时**有被 HISTORIC '
+         '认成过去时的站点和现在时的站点：投放落在那种"过去时"段落里也照样被抓（段落级豁免一旦扩到它就等于'
+         '一处都不核对），而现在时站点保证这一族在真文档里确有核对（普查过期时这一例先响，别把"每一处"留在'
+         '散文里当记忆）',
          len(drift[0]) == r_sites and len(drift[1]) == m_sites and r_sites >= 1 and m_sites >= 1
-         and planted_hist and site_h == site_n,
+         and planted_hist and site_h >= 1 and site_n - site_h >= 1,
          '抓到 %d+%d 处（投放 %d+%d 处）、planted_hist=%s：%s ｜ %s'
          % (len(drift[0]), len(drift[1]), r_sites, m_sites, planted_hist,
             (drift[0] + drift[1])[:2], census)),
