@@ -4,20 +4,34 @@ TUFT 汤川势 + 电磁挠率章 · 算法联盟全维校验（v2.1.1 配套，R
 =========================================================
 模式：平行会诊 + 红队证伪（所有判定实跑：sympy / mpmath / numpy）
 
-两类验证支柱（本版组织方式）：
-  A. 求导证明验证（Derivative-Proof）：对章节每个显式/隐式导数结论做实际微分或符号化简核对
-       · §1.2 亥姆霍兹解残差 (∇²-μ²)κ=0
-       · §1.3 原稿积分错误复核（F1）
-       · §1.3 E1 势导数 dE1(μr)/dr = -e^{-μr}/r
-       · §3   解析导数 dτ/dr = -C·e^{-μr}(μ/r+1/r²)
-       · §2.2 场张量符号代入 F^{0i} = -E_i/c
-  B. 精算验证（Precision）：对章节每个数值结论做高精度实算核对
-       · §1.4 力程 λ_π = 1.4138 fm
-       · §1.5 光子质量边界 R_γ > 1.32 AU
-       · §3.3 仿真采样 5 点逐位一致
-       · §1.3 E1 导数数值相对误差 3.9e-10
+三类判定（本版组织方式，每项 check 带 mode 标签，汇总按 mode 分组统计）：
+  A. 求导证明验证 Derivative-Proof（9 项）：对章节每个显式/隐式导数结论做实际微分或符号化简核对
+       · AL-D1-1a  §1.2 亥姆霍兹齐次解残差 (∇²-μ²)κ=0 = 0
+       · AL-D1-1b  §1.2 点源归一化 lim 4πr²κ' = -4πA ⇒ A=C_κ
+       · AL-D1-1c  §1.3 ★ 原稿积分步骤复核（F1 硬伤：∫c²A·e^{-μr}/r·dr ≠ -c²A·e^{-μr}/r）
+       · AL-D1-1d  §1.3 E1 势重构 dV/dr = c²A·e^{-μr}/r（A6 修复复算）
+       · AL-D1-1f  §1.2 ★ R7 无穷远边界 V(∞) = -c²A·E1(∞) = 0
+       · AL-D5-5a  §2.2 场张量符号代入 F^{0i} = -E_i/c
+       · AL-D5-5b  §2.2 F^{ij} = -ε^{ijk}B_k 与 B=k∇×τ 自洽
+       · AL-D5-5c  §2.3 静态球对称径向 τ ⇒ ∇×τ = 0 ⇒ B=0
+       · AL-D5-5e  §2.2 ★ R9 电磁四矢势对齐 A^μ = k·τ^{EM,μ}（静态极限等价）
+  B. 精算验证 Precision（8 项）：对章节每个数值结论做高精度实算核对
+       · AL-D1-1e  §1.3 E1 势渐近行为（大 r 汤川尾 / 小 r 对数）
+       · AL-D1-1g  §1.2 ★ R11 亥姆霍兹无源区残差数值校验（曲率场通量归一）
+       · AL-D4-4a  §1.4 力程 λ_π = ħ/(m_π c) = 1.4138 fm
+       · AL-D4-4b  §1.4 μ_π = 1/λ_π ≈ 7.07e14 m⁻¹
+       · AL-D4-4c  §1.5 ★ μ=1e15 等效光子质量 vs 实验上限 1e-18 eV（O16/T4）
+       · AL-D4-4d  §1.5 O9 光子约束 √(κ²+τ²)|_γ < 5.07e-12 m⁻¹、R_γ > 1.32 AU
+       · AL-D6-6a  §3.3 解析采样表 vs 已实机运行输出（5 点相对误差）
+       · AL-D6-6b  §3.3 原代码数值梯度方法误差评估（log 网格，150× 系统误差）
+  C. 体系对齐 System-Alignment（14 项）：符号/量纲/术语/开放缺口与联盟总报告的跨册一致性核对
+       · AL-D2-2a/2b 吸引力符号链与源归一化约定 · AL-D3-3a/3b 量纲链与 R8 康普顿-曲率恒等式量纲
+       · AL-D5-5d T^{00} 同构 · AL-D6-6c/6d μ 双重角色与无量纲标定警告
+       · AL-D7-7a–7g 薛定谔衔接/A6 裁决/排斥芯/O15 精细化/术语 τ 三重含义/O-SCALE 简并
 
 维度：D1 代数链 · D2 符号链 · D3 量纲 · D4 数值 · D5 张量 · D6 仿真 · D7 体系对齐
+扩展复核 EXT（5 项，不计入 31 项）：进一步收紧 A/B 两类支柱（E1 导数误差 3.9e-10、
+       径向场 ∇×τ≡0 网格数值确认、§3 解析导数符号证明、F^{0i} 数值复算、λ_π/R_γ 精算）
 产出：同目录 TUFT_汤川势电磁挠率_算法联盟全维校验.json / .txt
 
 红线：未闭合项一律 OPEN/PARTIAL，不把"方案可行"粉饰为"已证"。
@@ -43,13 +57,13 @@ AU = 1.495978707e11                        # 天文单位 [m]
 
 results = []
 def check(code, name, status, detail, evidence=None, mode="体系对齐"):
-    """canonical 判定（AL- 开头）计入『本版判定 25 项』；EXT- 开头为扩展复核（不计入 25 项）。"""
+    """canonical 判定（AL- 开头）计入『本版判定 31 项』；EXT- 开头为扩展复核（不计入 31 项）。"""
     results.append({"code": code, "name": name, "status": status,
                     "detail": detail, "evidence": evidence or {}, "mode": mode})
     print(f"[{status:6s}] {code} [{mode}] {name}: {detail}")
 
 # ============================================================
-#  A. 求导证明验证 + B. 精算验证 —— 主判定（25 项，与章节头声明一致）
+#  A. 求导证明验证 + B. 精算验证 —— 主判定（31 项，与章节头声明一致）
 # ============================================================
 
 # ---------------- D1 代数链（sympy） ----------------
@@ -279,7 +293,7 @@ check("AL-D7-7g", "★ R12：O15 精细化（α/e/ε_0 来自孤子量子边界�
       "无法仅由 κ–τ 连续公理导出；O15 描述已更新（O15 仍 🔴 开放）", mode="体系对齐")
 
 # ============================================================
-#  扩展复核（EXT，不计入上文 25 项）—— 进一步收紧求导证明与精算验证
+#  扩展复核（EXT，不计入上文 31 项）—— 进一步收紧求导证明与精算验证
 # ============================================================
 
 # EXT-1 (精算)：§1.3 声称的数值核对相对误差 3.9e-10（E1 势导数实算复算）
@@ -291,34 +305,32 @@ check("EXT-1", "E1 势导数 dE1(μr)/dr=-e^-μr/r 数值相对误差（§1.3 �
       f"中心差分相对误差 = {float(rel_e1):.2e}（与章节 3.9e-10 同量级，确认 E1 势导数精度）",
       {"rel_err": float(rel_e1)}, mode="精算验证")
 
-# EXT-2 (精算)：§2.3 径向场旋度恒为 0 的网格数值确认（取正则化径向场避免 1/r 奇点处灾难性抵消）
-# 说明：章节 τ=C·e^{-μr}/r·r̂ 在原点有 1/r 奇点，离散旋度会发生灾难性抵消（相对误差虚高），
-#       此处改用正则径向场 τ=C·e^{-μr}·(x,y,z)（与章节 τ 同为『径向场』，解析旋度恒为 0），
-#       与 D5-5c 的符号证明互补，给出数值确认。
+# EXT-2 (精算)：§2.3 章节真实径向场 τ=C·e^{-μr}/r·r̂ 的旋度恒为 0 网格数值确认
+# 说明：①取 s=μr∈[0.8,2.4]（远离原点），避免 1/r 奇点处灾难性抵消；
+#       ②旋度解析恒为 0，离散残差 ~ (Δs)²/6·|J|（Δs=μdx 为无量纲步长），故以雅可比 Frobenius 范数 ||J||_F 归一
+#         （径向场 ||J||_F²=f'²+2(f/r)² 恒不为 0，是良态归一尺度；用 |τ| 或 |∇|τ|| 会在零点虚增相对误差）；
+#       ③与 D5-5c 的符号证明互补，给出数值确认。
 _Cg, _mug = 1.0, 1e15
-_n = 201; _ss = np.linspace(0.5, 2.5, _n); _ds = _ss[1]-_ss[0]   # s=μr ∈ [0.5,2.5]
-_xs = _ss/_mug                                                  # 物理 r 网格
+_n = 241; _ss = np.linspace(0.8, 2.4, _n)           # s=μr ∈ [0.8,2.4]
+_xs = _ss/_mug                                      # 物理 r 网格
 _X, _Y, _Z = np.meshgrid(_xs, _xs, _xs, indexing="ij")
 _R = np.sqrt(_X**2+_Y**2+_Z**2)
-_Tx = _Cg*np.exp(-_mug*_R)*_X       # τ = C·e^{-μr}·R·r̂ = C·e^{-μr}·(x,y,z)
-_Ty = _Cg*np.exp(-_mug*_R)*_Y
-_Tz = _Cg*np.exp(-_mug*_R)*_Z
+_fr = _Cg*np.exp(-_mug*_R)/(_R*_R)                  # τ = C·e^{-μr}/r·r̂ = (C·e^{-μr}/r²)·(x,y,z)
+_Tx, _Ty, _Tz = _fr*_X, _fr*_Y, _fr*_Z
 _dx = _xs[1]-_xs[0]
-_cx = np.gradient(_Tz, _dx, axis=1) - np.gradient(_Ty, _dx, axis=2)
-_cy = np.gradient(_Tx, _dx, axis=2) - np.gradient(_Tz, _dx, axis=0)
-_cz = np.gradient(_Ty, _dx, axis=0) - np.gradient(_Tx, _dx, axis=1)
+# 9 个偏导（∂_j τ_i）——central difference
+_dTx_x, _dTx_y, _dTx_z = (np.gradient(_Tx, _dx, axis=k) for k in (0, 1, 2))
+_dTy_x, _dTy_y, _dTy_z = (np.gradient(_Ty, _dx, axis=k) for k in (0, 1, 2))
+_dTz_x, _dTz_y, _dTz_z = (np.gradient(_Tz, _dx, axis=k) for k in (0, 1, 2))
 # 仅取内部点（central diff），排除数组边界的 O(dx) 前向/后向差
 _interior = np.zeros_like(_R, dtype=bool); _interior[1:-1, 1:-1, 1:-1] = True
-# 旋度解析恒为 0；离散残差 ~ dx²·|∇τ| 量级，故以 |∇τ| 归一（而非 |τ|，否则近原点 |τ|→0 虚增相对误差）
-_tau_mag = _Cg*np.exp(-_mug*_R)*_R
-_tau_grad_mag = np.sqrt(np.gradient(_tau_mag, _dx, axis=0)**2 +
-                       np.gradient(_tau_mag, _dx, axis=1)**2 +
-                       np.gradient(_tau_mag, _dx, axis=2)**2)
-_curl_mag = np.sqrt(_cx**2+_cy**2+_cz**2)
-_max_rel_curl = float(np.nanmax((_curl_mag[_interior]/_tau_grad_mag[_interior])))
-check("EXT-2", "径向场旋度恒为 0 网格数值确认（正则径向场，§2.3 B≡0）", "PASS" if _max_rel_curl < 1e-2 else "FAIL",
-      f"笛卡尔网格内部点最大 (|∇×τ|/|∇τ|) = {_max_rel_curl:.2e}（解析恒为 0；以 |∇τ| 归一反映截断误差，与 D5-5c 互补）",
-      {"max_rel_curl_over_grad": _max_rel_curl}, mode="精算验证")
+_curl_mag = np.sqrt((_dTz_y-_dTy_z)**2 + (_dTx_z-_dTz_x)**2 + (_dTy_x-_dTx_y)**2)
+_Jnorm = np.sqrt(_dTx_x**2+_dTx_y**2+_dTx_z**2 + _dTy_x**2+_dTy_y**2+_dTy_z**2 +
+                 _dTz_x**2+_dTz_y**2+_dTz_z**2)
+_max_rel_curl = float(np.nanmax((_curl_mag[_interior]/_Jnorm[_interior])))
+check("EXT-2", "§2.3 章节径向场 ∇×τ≡0 网格数值确认（真实场，远离奇点）", "PASS" if _max_rel_curl < 1e-2 else "FAIL",
+      f"内部点最大 |∇×τ|/||J||_F = {_max_rel_curl:.2e}（解析恒为 0；Δs={_ss[1]-_ss[0]:.3f} 截断 ~(Δs)²/6≈{(_ss[1]-_ss[0])**2/6:.1e}，与 D5-5c 互补）",
+      {"max_rel_curl_over_J": _max_rel_curl}, mode="精算验证")
 
 # EXT-3 (求导证明)：§3 解析导数 dτ/dr = -C·e^{-μr}(μ/r+1/r²) 符号证明（修复 150× 数值误差）
 _Cex, _rex, _muex = sp.symbols('Cex r_ex mu_ex', positive=True)
@@ -364,7 +376,7 @@ print(f"  PASS {cnt['PASS']} / FAIL {cnt['FAIL']} / OPEN {cnt['OPEN']} / PARTIAL
 print(f"  验证模式分布：")
 for m, n in sorted(mode_cnt.items()):
     print(f"    {m}: {n} 项")
-print(f"【扩展复核 {len(ext)} 项（不计入上文 25 项）】")
+print(f"【扩展复核 {len(ext)} 项（不计入上文 31 项）】")
 print(f"  PASS {ext_cnt['PASS']} / FAIL {ext_cnt['FAIL']} / OPEN {ext_cnt['OPEN']} / PARTIAL {ext_cnt['PARTIAL']} / INFO {ext_cnt['INFO']}")
 print("="*64)
 
