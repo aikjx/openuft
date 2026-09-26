@@ -29,8 +29,10 @@
 | `run_all_checks.py` | 一键批量，聚合为 `audit_report.md` |
 | `run_all_checks.sh` | bash 包装（Linux/macOS/Git Bash） |
 | `patch_feasibility.py` | **矛盾修补方案可行性验算**（10 条），配套 [`01A_附录_体系不自洽点专项复盘.md`](../01A_附录_体系不自洽点专项复盘.md) |
+| `rerun_source_scripts.py` | **来源脚本复跑与「自陈 PASS」核验**：复跑归档里的 11 个原文脚本 + 静态扫描失败通路 + α/G 变异探针 + 归档产物比对（2026-09-26 新增） |
 | `audit_report.md` | **一键校验审计报告**（运行产物，非手写） |
 | `patch_feasibility_report.md` | **修补可行性报告**（运行产物，非手写） |
+| `source_scripts_rerun_report.md` | **来源脚本复跑报告**（运行产物，非手写） |
 
 ---
 
@@ -44,9 +46,15 @@ python run_all_checks.py --stdout   # 只打印不落盘
 python spiral_geometry_audit.py     # 只跑数值复算
 python csv_validate.py              # 只跑 CSV 校验
 bash run_all_checks.sh              # bash 环境等价入口
+
+python rerun_source_scripts.py      # 复跑来源脚本 → source_scripts_rerun_report.md
+python rerun_source_scripts.py --timeout 900   # 放宽单脚本超时
 ```
 
 退出码恒为 0：**审计脚本不因发现矛盾而失败**，矛盾体现在报告判定里。
+
+> `rerun_source_scripts.py` 需要被复跑的脚本自身依赖（`mpmath` / `sympy` / `numpy` + `matplotlib`）；
+> 其余脚本只用标准库。它把变异体写在临时目录，**不改归档**。
 
 ---
 
@@ -95,6 +103,42 @@ bash run_all_checks.sh              # bash 环境等价入口
 
 - `V9-01`：**0/23** 条 claim_id 被 `00/01` 文档显式引用。主张台账与评级条目之间
   目前没有交叉引用，属治理缺口（不影响 CSV 合法性）。补链建议见分支 A。
+
+### 4.5 来源脚本复跑：那些「自陈 PASS」里有没有信息量（2026-09-26）
+
+§4 复算的是**主张**，本节核验的是**「声称复算过那些主张」的那批脚本**：原文把 11 个
+「精算验证」脚本连同结果文件原样交给了 openuft，其「全部验证通过」此前只被标为「自陈，未纳入复算」。
+问题很具体：那句话是判据的输出，还是没有失败通路的程序的必然打印？完整读数见
+[`source_scripts_rerun_report.md`](source_scripts_rerun_report.md)（可复跑，退出码恒为 0）。
+
+| 读数 | 值 |
+|---|---|
+| 脚本总数 | 11 |
+| **基线即非零退出（跑不起来）** | **1 个**：`unified_field_theory_ultimate_verification.py` 第 194 行 `NameError: name 'G' is not defined`（脚本只定义了 `G_codata`），死在「8. ε₀ 几何化验证」，**从未跑到任何总结**；归档里也相应没有它的 `*_results.txt` |
+| 失败通路（assert / sys.exit / SystemExit） | **0 处 / 11 个脚本** —— 结构上不可能以失败告终 |
+| **自己打印了失败项**的脚本 | **4 个 / 8 条**（`full_verification.py` 13/16、`complete_verification.py` 21/22、`all_dimension_breakthrough.py` 2 条 ❌、`infinite_dimension_verification.py` 2 条） |
+| 不受任何条件分支约束的结论句 | **12 处**（写死在 `write()` / `print()` 里） |
+| α 改错 1e-8 后判定与失败项均不变的脚本 | **4 / 7**（有判定语句的脚本） |
+| α 改错 1e-8 后产物结论句逐字保留 | **3 / 3** |
+| 归档产物与复跑逐字节一致 | **5 / 5**（归档产物确为脚本真实输出，未被事后手改 —— 这是归档可信度的正面证据） |
+
+三条最该记住的：
+
+1. **失败项全是输入侧 / 阈值侧的。** `[FAIL] alpha = e²/(4πε₀ℏc)`、`G = 4πα³ℏcρ²/e²`、`G·e² = 4πα³ℏcρ²`
+   是 CODATA 常数彼此的互验（口径问题）；`infinite_dimension_verification.py` 用 `1e-90` 去卡一个**截断到 100 项**的级数。
+   把 α 改错 1e-8，这些失败项的**数目一个不变**（1→1、3→3、2→2）⇒ 与 α 的取值无关。
+2. **结论句与算出来的数没有耦合。** 12 处结论句都不在任何条件分支内；把 α 改错 1e-8，
+   产物里的结论句 **3/3 逐字保留**。最极端的一例：`infinite_dimension_verification.py`
+   同一次运行里 9 条条目判定中有 2 条打「失败」，紧接着第 198 行仍打「✅ 所有验证全部通过！」、
+   第 244 行仍往结果文件写「综合结论：所有验证全部通过！」——**归档的那份 txt 里没有任何失败痕迹**。
+3. **两处口径的代码层原型**（把已有的 X13 落到实处）：
+   `1.py` 第 106–112 行 `norm_total = ΣF_i / ΣF_j ≡ 1` —— 把恒等式当成「五力归一化 = 1」的检验；
+   `core_verification.py` 第 57 行把「四力」补到 `1/α⁷` 才够过 `1e-10` 阈值
+   （只取四力时缺口正是 X13 的 **2.836e-09**）。
+
+⇒ 这批脚本能证明的只有一件事：**作者自己的定义链在代数上自洽**。
+它不构成 α、G、ρ 取值的任何证据。本节不改变 §4 的任何判定，只把「原文献自陈的精算 PASS」
+这一栏从「未纳入复算」改写为「已核验：**无信息量**」。
 
 ---
 

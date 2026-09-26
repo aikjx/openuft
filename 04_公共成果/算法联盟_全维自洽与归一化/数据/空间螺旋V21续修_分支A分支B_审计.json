@@ -1,0 +1,95 @@
+{
+ "title": "空间螺旋几何化统一场论 V21 续修 · 分支A(引力轨道)+分支B(C38 算法)",
+ "date": "2026-09-26",
+ "dps": 250,
+ "method": [
+  "Binet 方程 RK4 数值积分",
+  "mpmath 250 位",
+  "量纲账本",
+  "矛盾自检/拓扑归一/层级升维"
+ ],
+ "counts": {
+  "total": 8,
+  "PASS": 2,
+  "FAIL": 0,
+  "BOUNDARY": 3,
+  "INFO": 3
+ },
+ "rows": [
+  {
+   "state": "BOUNDARY",
+   "tag": "A-dim  β=λg·Φ0 标称「无量纲拟合参数」但实际携 [L^2]",
+   "statement": "由 u''+u=m+m·β·u^2 齐次性强制 [β]=[L^-2]/[L^-3]=[L^2]；若声称 β 无量纲，则 λg 或 Φ0 必携量纲 ⇒ 该「几何修正系数」非纯数",
+   "detail": "续修口径将 β 作为单外部耦合参数用水星标定（开放项，非第一性导出）",
+   "evidence": "量纲账本"
+  },
+  {
+   "state": "PASS",
+   "tag": "A-1  Binet 方程 ODE 框架成立 + 数值积分复现水星进动量级",
+   "statement": "odefun 自适应积分 u''+u=m+m·β·u^2，标定 β 后总进动 = 43.03 角秒/百年，与观测 43.03 同量级",
+   "detail": "h=sqrt(GMa(1-e^2)) 闭合式；扫描表明 β 单调控制进动幅度；弱场主导项维持 1/r^2（Bertrand 闭轨）；数值 β=β0→42.98205 与解析 42.9820 一致",
+   "evidence": "数值积分 + 解析"
+  },
+  {
+   "state": "INFO",
+   "tag": "A-2  β 由水星标定（构造性）：残差≈0 非独立预言",
+   "statement": "β_sol = 2.459643e+14 使总进动精确等于 43.03 ⇒ 残差 = 9.654495e-9 角秒（构造性归零）",
+   "detail": "该拟合只用水星；金星/地球轨道进动为独立可证伪靶（待执行，U 指标待增）",
+   "evidence": "不循环拟合（红线）"
+  },
+  {
+   "state": "BOUNDARY",
+   "tag": "A-3  解析几何修正项量级极小且为低阶近似",
+   "statement": "一阶公式给出几何修正 ≈ 1.64588e-6 角秒/百年，而数值（总−GR）= 0.0479636 角秒/百年；两口径不一致（解析为 perturbation 一阶估计）",
+   "detail": "β 的几何相位贡献量级与 GR 主项相比需在统一微扰框架下重新归一，禁止把解析一阶值当精确分解",
+   "evidence": "量纲/近似审计"
+  },
+  {
+   "state": "INFO",
+   "tag": "B-1 拓扑归一算法运行 + 示范算例（拒绝准则生效）",
+   "statement": "示范值 κ²+τ² ≠ ω²/c²（残差 ~1e16）⇒ 算法正确返回 FAIL（Frenet 几何崩坏拒绝）；N 正整数校验、∮τds=2πN 自洽校验均就绪",
+   "detail": "I/O: (frenet_data, bound, N)→{topo_invariant,status,residual,message}；终止:有限；复杂度 O(N_sample)",
+   "evidence": "可运行实现 + 算例"
+  },
+  {
+   "state": "INFO",
+   "tag": "B-2 层级升维算法运行 + 示范算例（拒绝准则生效）",
+   "statement": "存在量化预测靶允许升 L3；含 FAIL 标记 claim 强制 REJECT（禁止把 L1 直接标 L3）；缺预测靶封顶 L2（与 OpenUFT 层级定义一致）",
+   "detail": "I/O: (axiom_raw, eq_system, claims)→{base_level,target_level,status,conflict_list}",
+   "evidence": "可运行实现 + 算例"
+  },
+  {
+   "state": "PASS",
+   "tag": "B-3 审计引擎三算法（3.1/3.2/3.3）并入 full_audit_pipeline 且可运行",
+   "statement": "矛盾自检 + 拓扑归一 + 层级升维均给出结构化证书（status/conflicts/residual/level）；完整 I/O、终止性、复杂度、拒绝准则齐备",
+   "detail": "本轮 C38 由 open 收口为「三算法全部定义 + 示范算例 + 集成审计引擎」",
+   "evidence": "引擎集成"
+  },
+  {
+   "state": "BOUNDARY",
+   "tag": "B-4 C38 三审计算法全部定义+集成，但大规模批量 claim 全量扫描待跑",
+   "statement": "提交理论自身的公开规格（输入输出契约）已由审计引擎补齐；下一步需批量跑全部 35 claims",
+   "detail": "本脚本完成分支A/分支B 集成与示范，未替代 空间螺旋修复版_第一性审计 的 §0–§10 主审计",
+   "evidence": "诚实边界"
+  }
+ ],
+ "branchA_C35": {
+  "beta_sol": 245964301409639.3,
+  "beta0_GR": 245690185279906.1,
+  "total_century_arcsec": 43.03000000965449,
+  "GR_century_arcsec": 42.98203636043861,
+  "geo_numeric_arcsec": 0.0479636492158826,
+  "geo_analytic_arcsec": 1.6458848149056874e-06,
+  "residual_arcsec": 9.654494986366365e-09,
+  "dim_beta": "[L^2]"
+ },
+ "branchB_C38": {
+  "claim_self_check": "implemented",
+  "topological_normalization": "implemented",
+  "hierarchy_lift": "implemented",
+  "full_audit_pipeline": "implemented",
+  "demo_topo_status": "FAIL",
+  "demo_lift_target": "L3"
+ },
+ "claims_csv_updated": 15
+}

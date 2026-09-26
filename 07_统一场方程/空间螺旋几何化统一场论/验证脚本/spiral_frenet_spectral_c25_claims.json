@@ -1,0 +1,160 @@
+{
+  "script": "spiral_frenet_spectral_c25.py",
+  "dps": 250,
+  "claims": [
+    {
+      "id": "A1",
+      "sec": "Frenet符号",
+      "title": "κ 闭式 κ=Aω²/c²",
+      "verdict": "PASS",
+      "detail": "sympy 推导 κ=A/(A**2 + b**2)，代入约束后 == A*w^2/c^2 : True"
+    },
+    {
+      "id": "A2",
+      "sec": "Frenet符号",
+      "title": "τ 闭式 τ=bω²/c²",
+      "verdict": "PASS",
+      "detail": "sympy 推导 τ=b/(A**2 + b**2)，代入约束后 == b*w^2/c^2 : True"
+    },
+    {
+      "id": "A3",
+      "sec": "Frenet符号",
+      "title": "κ²+τ²=ω²/c² 不变量",
+      "verdict": "PASS",
+      "detail": "(Aω²/c²)²+(bω²/c²)² - ω²/c² == 0 : True"
+    },
+    {
+      "id": "A4",
+      "sec": "Frenet符号",
+      "title": "tanθ=τ/κ=b/A 唯一第一性定义",
+      "verdict": "PASS",
+      "detail": "(τ/κ) - b/A == 0 : True"
+    },
+    {
+      "id": "A5",
+      "sec": "Frenet数值",
+      "title": "光速约束 |R'|=c (A=1.0e-15,b=1.0e-15)",
+      "verdict": "PASS",
+      "detail": "speed=2.99792e+8, c=2.99792e+8, |Δ|/c=0.0"
+    },
+    {
+      "id": "A6",
+      "sec": "Frenet数值",
+      "title": "κ²+τ²=ω²/c² 不变量 (A=1.0e-15,b=1.0e-15)",
+      "verdict": "PASS",
+      "detail": "κ=5.0e+14, τ=5.0e+14, κ²+τ²=5.0e+29, ω²/c²=5.0e+29"
+    },
+    {
+      "id": "A7",
+      "sec": "Frenet数值",
+      "title": "tanθ=τ/κ=b/A 唯一性",
+      "verdict": "PASS",
+      "detail": "τ/κ=1.0, b/A=1.0"
+    },
+    {
+      "id": "A8",
+      "sec": "Frenet数值",
+      "title": "矛盾自检(超光速/负值)",
+      "verdict": "PASS",
+      "detail": "无冲突标记"
+    },
+    {
+      "id": "A5",
+      "sec": "Frenet数值",
+      "title": "光速约束 |R'|=c (A=5.0e-16,b=2.0e-15)",
+      "verdict": "PASS",
+      "detail": "speed=2.99792e+8, c=2.99792e+8, |Δ|/c=0.0"
+    },
+    {
+      "id": "A6",
+      "sec": "Frenet数值",
+      "title": "κ²+τ²=ω²/c² 不变量 (A=5.0e-16,b=2.0e-15)",
+      "verdict": "PASS",
+      "detail": "κ=1.17647e+14, τ=4.70588e+14, κ²+τ²=2.35294e+29, ω²/c²=2.35294e+29"
+    },
+    {
+      "id": "A7",
+      "sec": "Frenet数值",
+      "title": "tanθ=τ/κ=b/A 唯一性",
+      "verdict": "PASS",
+      "detail": "τ/κ=4.0, b/A=4.0"
+    },
+    {
+      "id": "A8",
+      "sec": "Frenet数值",
+      "title": "矛盾自检(超光速/负值)",
+      "verdict": "PASS",
+      "detail": "无冲突标记"
+    },
+    {
+      "id": "A5",
+      "sec": "Frenet数值",
+      "title": "光速约束 |R'|=c (A=2.0e-15,b=5.0e-16)",
+      "verdict": "PASS",
+      "detail": "speed=2.99792e+8, c=2.99792e+8, |Δ|/c=0.0"
+    },
+    {
+      "id": "A6",
+      "sec": "Frenet数值",
+      "title": "κ²+τ²=ω²/c² 不变量 (A=2.0e-15,b=5.0e-16)",
+      "verdict": "PASS",
+      "detail": "κ=4.70588e+14, τ=1.17647e+14, κ²+τ²=2.35294e+29, ω²/c²=2.35294e+29"
+    },
+    {
+      "id": "A7",
+      "sec": "Frenet数值",
+      "title": "tanθ=τ/κ=b/A 唯一性",
+      "verdict": "PASS",
+      "detail": "τ/κ=0.25, b/A=0.25"
+    },
+    {
+      "id": "A8",
+      "sec": "Frenet数值",
+      "title": "矛盾自检(超光速/负值)",
+      "verdict": "PASS",
+      "detail": "无冲突标记"
+    },
+    {
+      "id": "B1",
+      "sec": "谱方程",
+      "title": "FD 数值对角化 vs FD 精确解析本征值一致",
+      "verdict": "PASS",
+      "detail": "N=32 全谱最大相对误差=7.683e-251 (dps=250，验证求解器本身正确)"
+    },
+    {
+      "id": "B1b",
+      "sec": "谱方程",
+      "title": "有限差分离散化误差(连续极限对照)",
+      "verdict": "BOUNDARY",
+      "detail": "N=32 前8模最大相对离散化误差=2.521e-24（=sinc² 修正量级，随 N 增大收敛，非缺陷）"
+    },
+    {
+      "id": "B2",
+      "sec": "谱方程",
+      "title": "本征值样本",
+      "verdict": "INFO",
+      "detail": "E0=4.094e+16, E1=4.094e+16, E2=4.094e+16 (J)"
+    },
+    {
+      "id": "C1",
+      "sec": "α分析",
+      "title": "无量纲能隙与螺旋几何参数脱耦",
+      "verdict": "PASS",
+      "detail": "三组(A,b)能隙=7.46e-26, 7.46e-26, 7.46e-26, 极差=3.84e-252, 理论值 (ℏ²/2m)/E_scale=7.46e-26"
+    },
+    {
+      "id": "C2",
+      "sec": "α分析",
+      "title": "候选模型 α=(ℏ²/2m)/E_scale 所需外部尺度",
+      "verdict": "BOUNDARY",
+      "detail": "若令能隙==α，则 E_scale=8.365e-37 J（=电子静能的 1.022e-23 倍）"
+    },
+    {
+      "id": "C3",
+      "sec": "α分析",
+      "title": "C25 结论：α 不能由螺旋几何单独钉定",
+      "verdict": "OPEN",
+      "detail": "自然电子尺度下能隙=7.46e-26，与 α=0.0073 相差 9.79e+22 倍；完美螺旋的几何参数在比值中完全抵消，α 必须由外部尺度（如 λ_e=ℏ/(m_e c)，本身是测量值）钉定。C25 保持 OPEN。"
+    }
+  ]
+}
