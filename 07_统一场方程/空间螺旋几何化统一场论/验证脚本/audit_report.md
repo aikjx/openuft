@@ -268,7 +268,7 @@ claims.csv / 现象覆盖矩阵.csv 均以 utf-8-sig 成功解析（自动剥离
 
 **V0-01 · [PASS] 行字段数一致性（防英文逗号错位）**
 
-claims.csv 38 行、矩阵 21 行，每行字段数均等于表头列数（5 / 5），无错位
+claims.csv 45 行、矩阵 21 行，每行字段数均等于表头列数（5 / 5），无错位
 
 **V2-01 · [PASS] claims.csv 表头契约**
 
@@ -280,7 +280,7 @@ claims.csv 38 行、矩阵 21 行，每行字段数均等于表头列数（5 / 5
 
 **V3-01 · [PASS] claim_id 唯一性**
 
-38 条主张，id 无重复
+45 条主张，id 无重复
 
 **V3-02 · [PASS] claim_id 编号格式**
 
@@ -288,7 +288,7 @@ claims.csv 38 行、矩阵 21 行，每行字段数均等于表头列数（5 / 5
 
 **V3-03 · [PASS] claim_id 连续性**
 
-C01–C38 连续无缺号
+C01–C45 连续无缺号
 
 **V4-01 · [PASS] 单元格禁英文逗号/双引号**
 
@@ -296,11 +296,11 @@ C01–C38 连续无缺号
 
 **V5-01 · [PASS] claims.csv status 值域**
 
-全部落在 {pass,open,boundary,falsified}；分布：boundary=4，falsified=16，open=8，pass=10
+全部落在 {pass,open,boundary,falsified}；分布：boundary=5，falsified=17，open=10，pass=13
 
 **V5-02 · [INFO] claims.csv status 分布统计（供横向对比矩阵计数）**
 
-pass=10 / open=8 / boundary=4 / falsified=16；合计 38 条。其中 falsified 为体系**自承**的内部矛盾条目。
+pass=13 / open=10 / boundary=5 / falsified=17；合计 45 条。其中 falsified 为体系**自承**的内部矛盾条目。
 
 **V6-01 · [PASS] 现象主键唯一性**
 
@@ -316,7 +316,7 @@ pass=10 / open=8 / boundary=4 / falsified=16；合计 38 条。其中 falsified 
 
 **V9-01 · [BOUNDARY] claim_id 在评级文档中的引用覆盖**
 
-2/38 被 00/01 文档显式引用；未引用：C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C13, C14, C16, C17, C18, C19, C20, C21, C22, C23, C24, C25, C26, C27, C28, C29, C30, C31, C32, C33, C34, C35, C36, C37, C38（不影响 CSV 合法性，但主张与评级条目的可追溯性有缺口）
+2/45 被 00/01 文档显式引用；未引用：C01, C02, C03, C04, C05, C06, C07, C08, C09, C10, C11, C13, C14, C16, C17, C18, C19, C20, C21, C22, C23, C24, C25, C26, C27, C28, C29, C30, C31, C32, C33, C34, C35, C36, C37, C38, C39, C40, C41, C42, C43, C44, C45（不影响 CSV 合法性，但主张与评级条目的可追溯性有缺口）
 
 **V9-02 · [PASS] 文档中出现的 C## 是否都已登记**
 
