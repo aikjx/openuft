@@ -10,11 +10,11 @@
   "mpmath dps=50 独立复算"
  ],
  "counts": {
-  "total": 35,
+  "total": 39,
   "PASS": 3,
   "FAIL": 22,
-  "BOUNDARY": 5,
-  "INFO": 4
+  "BOUNDARY": 6,
+  "INFO": 7
  },
  "checks": [
   {
@@ -76,6 +76,26 @@
    "name": "自由度总数由 3→8、约束由 1→0 ⇒ 「去拟合」准则未达成",
    "ok": true,
    "note": "新增自由度多于新增方程；按 openuft 方法论，合理情形应下降或持平"
+  },
+  {
+   "name": "矛盾自检捕获 V21 §0 叉乘错误（B_user 不正交于 T 与 N）",
+   "ok": true,
+   "note": "B_user=(ωb/c,0,ωA/c) 在 λ=0 处 B_user·T=ω²Ab/c² ≠ 0、B_user·N=−ωb/c ≠ 0 ⇒ 叉乘 x,y 分量 sin/cos 与符号均错位"
+  },
+  {
+   "name": "矛盾自检确认修正式 B_correct=T×N 满足正交+单位长",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "拓扑归一确认 κ²+τ²=ω²/c² 量纲自洽（Π 群存在）",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "层级升维拒绝 L1→L3 批量升维（§9-3 的红旗）",
+   "ok": true,
+   "note": ""
   }
  ],
  "rows": [
@@ -91,7 +111,7 @@
    "tag": "§0-2 基线 falsified 尚未在台账中撤销",
    "statement": "修复版宣称「原 falsified 缺陷清零」，但 claims.csv 中 C12、C21、C23 仍为 falsified",
    "detail": "openuft 维护契约：先改 claims.csv 再复跑引擎；申报先行而台账未动 ⇒ 申报不成立",
-   "evidence": "台账状态：{'pass': 13, 'open': 10, 'boundary': 5, 'falsified': 17}"
+   "evidence": "台账状态：{'pass': 13, 'open': 9, 'boundary': 5, 'falsified': 17, 'BOUNDARY': 1}"
   },
   {
    "state": "PASS",
@@ -312,16 +332,44 @@
   },
   {
    "state": "BOUNDARY",
-   "tag": "§9-3 「纠错算法」3 项均属 U（未展开）",
-   "statement": "3.1 矛盾自检 / 3.2 拓扑归一 / 3.3 层级升维 均未给出：输入格式、输出证书、终止性、复杂度、拒绝准则、任一算例",
-   "detail": "「层级升维算法」尤其不成立——把 L1 内容批量标为 L3 违反 openuft 层级定义（L3 要求第一性推导或可检验预言）",
+   "tag": "§9-3 「纠错算法」3 项提交版未给出规格（本册 §9.5 已补全）",
+   "statement": "提交版中 3.1 矛盾自检 / 3.2 拓扑归一 / 3.3 层级升维 均未给出输入格式·输出证书·终止性·复杂度·拒绝准则·算例；本册 §9.5 已作为审计引擎能力补全（含算例、捕获 §0 叉乘 bug、强制拒绝 L1→L3 升维），但提交理论自身仍缺公开规格",
+   "detail": "层级升维若把 L1 内容批量标为 L3 仍违反 openuft 层级定义（L3 要求第一性推导或可检验预言）",
    "evidence": "U 类判定"
+  },
+  {
+   "state": "INFO",
+   "tag": "§9.5-1 矛盾自检算法已实现并捕获 §0 叉乘 bug",
+   "statement": "algo_contradiction_selfcheck 对 ortho/unit/eq/sign 四类声明做有限步校验；喂入 V21 §0 的 B_user=(ω/c)(b cos,b sin,A) 报出与 T、N 均不正交且非单位长 ⇒ 叉乘展开式错误；修正式 B_correct=(ω/c)(b sin,−b cos,A) 全部通过",
+   "detail": "I/O: list[assertion]→list[finding]；终止:有限；复杂度 O(m)；拒绝:under-specified/unknown-kind",
+   "evidence": "自实现 + 算例"
+  },
+  {
+   "state": "INFO",
+   "tag": "§9.5-2 拓扑归一算法已实现",
+   "statement": "algo_topo_normalize 对 (qid,value,dim) 做 Buckingham Π 降维；κ,τ,ω,c 可构造无量纲不变量组 Π=(κ²+τ²)/(ω²/c²)；拒绝缺维量",
+   "detail": "I/O: list[(qid,value,dim)]→{pis,consistent,rejected}；终止:有限；复杂度 O(n·4)",
+   "evidence": "自实现 + 算例"
+  },
+  {
+   "state": "INFO",
+   "tag": "§9.5-3 层级升维算法已实现并强制拒绝违规升维",
+   "statement": "algo_hierarchy_uplift 实现 R1(禁跳级)/R2(identity·definition 封顶 L1)/R3(升 L3 需构造+可检验预言)；算例：不变量恒等式请求升 L3 被拒、α 本征(仅构造无预言)升 L3 被拒封顶 L2、θ 定义不得高于 L1",
+   "detail": "I/O:(claim_id,level,evidence_type,flags)→(allowed_level,decision,reason)；终止:O(1)",
+   "evidence": "自实现 + 算例"
+  },
+  {
+   "state": "BOUNDARY",
+   "tag": "§9.5-4 C38 三项算法本轮已补全（原 open → BOUNDARY）",
+   "statement": "矛盾自检/拓扑归一/层级升维均已给出输入格式·输出证书·终止性·复杂度·拒绝准则·算例；但本引擎能力补全不抵消 §24–§37 对提交理论 headline 公式的 falsified 判定",
+   "detail": "提交理论自身仍缺三项算法的公开规格；本册仅作为审计工具补齐",
+   "evidence": "引擎能力补全"
   },
   {
    "state": "INFO",
    "tag": "§10-1 总体判定",
    "statement": "修复版在**方向上**做对了两件事（把 ρ 移出 G、给 N 一个可计算的表达式形式），但在**每一条 headline 公式**上都未通过第一性审计：量纲 3 处失败、循环性 1 处搬家、自由度净增 5、UFT-3 计数仍为 0 ⇒ 申报的「L3 完整第一性推导闭环」不成立",
-   "detail": "判定： PASS=3 FAIL=22 BOUNDARY=5 INFO=4",
+   "detail": "判定： PASS=3 FAIL=22 BOUNDARY=6 INFO=7",
    "evidence": "本次审计"
   }
  ],
@@ -362,6 +410,10 @@
    "alpha_back": 0.0072973525693
   }
  ],
+ "fit_freedom_skipped_readingB": [
+  "137",
+  "1000"
+ ],
  "minimal_repair_paths": [
   {
    "item": "基底",
@@ -393,7 +445,7 @@
   },
   {
    "item": "算法",
-   "action": "给三项算法写清输入/输出/终止/复算脚本，否则维持 U 状态"
+   "action": "已完成：§9.5 给出三项算法的输入/输出/终止/复杂度/拒绝准则与算例，并捕获 §0 叉乘 bug（C38 由 open 转 BOUNDARY）"
   }
  ]
 }

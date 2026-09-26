@@ -1,0 +1,507 @@
+{
+  "script": "spiral_c25_alpha_n_scan.py",
+  "judgments": [
+    {
+      "id": "S1-N32",
+      "title": "N=32 前 12 条解析本征向量代入矩阵，最大相对残差 < 1e-12",
+      "verdict": "PASS",
+      "detail": "max rel residual = 0.0"
+    },
+    {
+      "id": "S1-N128",
+      "title": "N=128 前 12 条解析本征向量代入矩阵，最大相对残差 < 1e-12",
+      "verdict": "PASS",
+      "detail": "max rel residual = 0.0"
+    },
+    {
+      "id": "S1-N1024",
+      "title": "N=1024 前 12 条解析本征向量代入矩阵，最大相对残差 < 1e-12",
+      "verdict": "PASS",
+      "detail": "max rel residual = 0.0"
+    },
+    {
+      "id": "S2a",
+      "title": "闭式 d=(sin x/x)^2-1 与差分本征值实测逐条吻合（<1e-12，非混叠区）",
+      "verdict": "PASS",
+      "detail": "max |实测 - 闭式| = 9.88586924995094e-14（n=1..128）"
+    },
+    {
+      "id": "S2b",
+      "title": "实测阶比 d(N)/d(2N) 与闭式阶比逐条一致（<1e-9）；趋 4 只在小 x 端成立（勿把O(h^2) 当成全区间事实）",
+      "verdict": "FAIL",
+      "detail": "max 相对失配 = 4.2126033130159765e-08；n=40 处阶比 = 3.9049070831638546（x = 0.4908738521234052）"
+    },
+    {
+      "id": "S2c",
+      "title": "Richardson 估计量的自身误差被先验界 0.2667 x^2 卡住（x=pi n/2N）⇒ 误差棒可只用两张网格算出，且**它自己的**误差棒有解析上界",
+      "verdict": "FAIL",
+      "detail": "最紧一例 n=2：自身相对失配 8.031693052920444e-05 vs 界 4.016454305680133e-05"
+    },
+    {
+      "id": "S2d",
+      "title": "按\"整条能级\"报误差棒在双精度下直接归零（OFFSET/动能 ~ 1.3412108903494704e+25）⇒ 误差棒必须报在动能/能隙标度上；这不是\"误差很小\"，是\"该口径看不见误差\"",
+      "verdict": "PASS",
+      "detail": "n=1..128 全部 E_FD == E_cont（逐位相等）；g1 = 7.455949002467737e-26"
+    },
+    {
+      "id": "S3-N32",
+      "title": "N=32：镜像简并 E_{N-n}=E_n 成立（<1e-12）且 n=N 混叠回 n=0",
+      "verdict": "PASS",
+      "detail": "max |k(N-n)-k(n)|/k(n) = 5.7888112103549204e-15；k_FD(n=N)/OFFSET = 0.0"
+    },
+    {
+      "id": "S3-N1024",
+      "title": "N=1024：镜像简并 E_{N-n}=E_n 成立（<1e-12）且 n=N 混叠回 n=0",
+      "verdict": "PASS",
+      "detail": "max |k(N-n)-k(n)|/k(n) = 1.63774383712054e-13；k_FD(n=N)/OFFSET = 0.0"
+    },
+    {
+      "id": "S4a",
+      "title": "在自然电子尺度下读出 alpha 所需网格 N >= 1e12（即点阵上不可实现）",
+      "verdict": "PASS",
+      "detail": "tol=1% 时 N >= 5663025109958.39"
+    },
+    {
+      "id": "S4b",
+      "title": "n 与 E_scale 完全简并（换 n 只换所需的 E_scale，无任何约束剩下）⇒ C25 判定不升级",
+      "verdict": "PASS",
+      "detail": "n=1 与 n=2 所需 E_scale 之比 = 0.25（= 1/4，纯整数因子）"
+    }
+  ],
+  "inputs": {
+    "A_m": 1e-15,
+    "b_m": 1e-15,
+    "L_m": 8.885765876316732e-15,
+    "omega": 2.1198528000038325e+23,
+    "V0": 5e+29,
+    "E_scale_J": 8.187105776823886e-14,
+    "OFFSET_J": 4.093552888411943e+16,
+    "KIN_Jm2": 6.10426431498079e-39,
+    "g1": 7.455949002467737e-26,
+    "N_ref": 256,
+    "nmax": 40,
+    "tiers": [
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024,
+      2048
+    ]
+  },
+  "n_star_alpha": 312846427767.12103,
+  "N_needed_1pct": 5663025109958.39,
+  "scan_rows": [
+    {
+      "n": 0,
+      "dE_cont_J": 0.0,
+      "d_kin_measured": 0.0,
+      "d_kin_closed_form": 0.0,
+      "richardson_est": 0.0,
+      "order_ratio": NaN,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 1,
+      "dE_cont_J": 3.0521321574903944e-09,
+      "d_kin_measured": -5.0198396013216844e-05,
+      "d_kin_closed_form": -5.019839591435815e-05,
+      "richardson_est": 1.2549536180857248e-05,
+      "order_ratio": 3.999939929710735,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 2,
+      "dE_cont_J": 1.2208528629961578e-08,
+      "d_kin_measured": -0.00020078148841305932,
+      "d_kin_closed_form": -0.00020078148840307897,
+      "richardson_est": 5.019436413328082e-05,
+      "order_ratio": 3.9997590433008083,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 3,
+      "dE_cont_J": 2.7469189417413558e-08,
+      "d_kin_measured": -0.0004517129956033578,
+      "d_kin_closed_form": -0.0004517129956067567,
+      "richardson_est": 0.00011292314653718534,
+      "order_ratio": 3.9994578852833915,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 4,
+      "dE_cont_J": 4.883411451984631e-08,
+      "d_kin_measured": -0.000802932460777452,
+      "d_kin_closed_form": -0.0008029324607687904,
+      "richardson_est": 0.00020071699078813088,
+      "order_ratio": 3.9990363012232124,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 5,
+      "dE_cont_J": 7.630330393725987e-08,
+      "d_kin_measured": -0.0012543552717390158,
+      "d_kin_closed_form": -0.0012543552717431128,
+      "richardson_est": 0.00031354945648330313,
+      "order_ratio": 3.998494335272948,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 6,
+      "dE_cont_J": 1.0987675766965423e-07,
+      "d_kin_measured": -0.0018058726883002252,
+      "d_kin_closed_form": -0.0018058726882962395,
+      "richardson_est": 0.00045138656423228916,
+      "order_ratio": 3.9978320435260053,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 7,
+      "dE_cont_J": 1.4955447571702937e-07,
+      "d_kin_measured": -0.0024573518771894994,
+      "d_kin_closed_form": -0.002457351877190761,
+      "richardson_est": 0.0006141868071168247,
+      "order_ratio": 3.9970494935325243,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 8,
+      "dE_cont_J": 1.9533645807938524e-07,
+      "d_kin_measured": -0.003208635955037969,
+      "d_kin_closed_form": -0.003208635955039174,
+      "richardson_est": 0.0008019011647535057,
+      "order_ratio": 3.9961467642386217,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 9,
+      "dE_cont_J": 2.47222704756722e-07,
+      "d_kin_measured": -0.00405954403891253,
+      "d_kin_closed_form": -0.004059544038911289,
+      "richardson_est": 0.0010144731199147148,
+      "order_ratio": 3.995123947028755,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 10,
+      "dE_cont_J": 3.052132157490395e-07,
+      "d_kin_measured": -0.00500987130467639,
+      "d_kin_closed_form": -0.005009871304677227,
+      "richardson_est": 0.0012518386776457914,
+      "order_ratio": 3.993981145174918,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 11,
+      "dE_cont_J": 3.6930799105633773e-07,
+      "d_kin_measured": -0.006059389053059635,
+      "d_kin_closed_form": -0.006059389053060693,
+      "richardson_est": 0.0015139263869590682,
+      "order_ratio": 3.992718474143449,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 12,
+      "dE_cont_J": 4.3950703067861693e-07,
+      "d_kin_measured": -0.007207844783381731,
+      "d_kin_closed_form": -0.007207844783382655,
+      "richardson_est": 0.0018006573650271684,
+      "order_ratio": 3.9913360615504425,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 13,
+      "dE_cont_J": 5.158103346158768e-07,
+      "d_kin_measured": -0.008454962274965495,
+      "d_kin_closed_form": -0.00845496227496545,
+      "richardson_est": 0.002111945323889608,
+      "order_ratio": 3.9898340470845577,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 14,
+      "dE_cont_J": 5.982179028681175e-07,
+      "d_kin_measured": -0.009800441676164761,
+      "d_kin_closed_form": -0.00980044167616434,
+      "richardson_est": 0.00244769659965842,
+      "order_ratio": 3.9882125824705397,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 15,
+      "dE_cont_J": 6.867297354353388e-07,
+      "d_kin_measured": -0.01124395960099948,
+      "d_kin_closed_form": -0.011243959600998443,
+      "richardson_est": 0.00280781018422216,
+      "order_ratio": 3.986471831461877,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 16,
+      "dE_cont_J": 7.81345832317541e-07,
+      "d_kin_measured": -0.012785169233341456,
+      "d_kin_closed_form": -0.012785169233341942,
+      "richardson_est": 0.003192177759434496,
+      "order_ratio": 3.9846119698518945,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 17,
+      "dE_cont_J": 8.820661935147244e-07,
+      "d_kin_measured": -0.014423700438633467,
+      "d_kin_closed_form": -0.014423700438632836,
+      "richardson_est": 0.003600683733762392,
+      "order_ratio": 3.982633185427481,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 18,
+      "dE_cont_J": 9.88890819026888e-07,
+      "d_kin_measured": -0.016159159883067098,
+      "d_kin_closed_form": -0.01615915988306693,
+      "richardson_est": 0.004033205281384856,
+      "order_ratio": 3.980535677941755,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 19,
+      "dE_cont_J": 1.1018197088540323e-06,
+      "d_kin_measured": -0.017991131160222763,
+      "d_kin_closed_form": -0.017991131160223106,
+      "richardson_est": 0.00448961238373549,
+      "order_ratio": 3.978319659082993,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 20,
+      "dE_cont_J": 1.220852862996158e-06,
+      "d_kin_measured": -0.019919174925076315,
+      "d_kin_closed_form": -0.019919174925076555,
+      "richardson_est": 0.004969767873466642,
+      "order_ratio": 3.9759853524546744,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 21,
+      "dE_cont_J": 1.3459902814532646e-06,
+      "d_kin_measured": -0.021942829035350626,
+      "d_kin_closed_form": -0.021942829035350275,
+      "richardson_est": 0.005473527480815427,
+      "order_ratio": 3.973532993536626,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 22,
+      "dE_cont_J": 1.477231964225351e-06,
+      "d_kin_measured": -0.024061608700151723,
+      "d_kin_closed_form": -0.024061608700151615,
+      "richardson_est": 0.00600073988236403,
+      "order_ratio": 3.9709628296605293,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 23,
+      "dE_cont_J": 1.6145779113124188e-06,
+      "d_kin_measured": -0.02627500663583671,
+      "d_kin_closed_form": -0.026275006635836706,
+      "richardson_est": 0.0065512467521657335,
+      "order_ratio": 3.968275119971494,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 24,
+      "dE_cont_J": 1.7580281227144677e-06,
+      "d_kin_measured": -0.028582493229044815,
+      "d_kin_closed_form": -0.028582493229045047,
+      "richardson_est": 0.007124882815221028,
+      "order_ratio": 3.9654701353924913,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 25,
+      "dE_cont_J": 1.907582598431497e-06,
+      "d_kin_measured": -0.030983516706845897,
+      "d_kin_closed_form": -0.030983516706845626,
+      "richardson_est": 0.007721475903285511,
+      "order_ratio": 3.962548158586721,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 26,
+      "dE_cont_J": 2.0632413384635073e-06,
+      "d_kin_measured": -0.03347750331392988,
+      "d_kin_closed_form": -0.03347750331392951,
+      "richardson_est": 0.00834084701298813,
+      "order_ratio": 3.959509483922151,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 27,
+      "dE_cont_J": 2.225004342810498e-06,
+      "d_kin_measured": -0.03606385749677944,
+      "d_kin_closed_form": -0.03606385749677943,
+      "richardson_est": 0.008982810366231898,
+      "order_ratio": 3.9563544174259175,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 28,
+      "dE_cont_J": 2.39287161147247e-06,
+      "d_kin_measured": -0.03874196209475424,
+      "d_kin_closed_form": -0.03874196209475411,
+      "richardson_est": 0.00964717347286316,
+      "order_ratio": 3.953083276744243,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 29,
+      "dE_cont_J": 2.5668431444494225e-06,
+      "d_kin_measured": -0.041511178538009785,
+      "d_kin_closed_form": -0.041511178538009674,
+      "richardson_est": 0.010333737195581921,
+      "order_ratio": 3.949696391102093,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 30,
+      "dE_cont_J": 2.7469189417413553e-06,
+      "d_kin_measured": -0.04437084705219031,
+      "d_kin_closed_form": -0.044370847052189966,
+      "richardson_est": 0.01104229581706361,
+      "order_ratio": 3.9461941012529222,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 31,
+      "dE_cont_J": 2.9330990033482693e-06,
+      "d_kin_measured": -0.04732028686980441,
+      "d_kin_closed_form": -0.04732028686980416,
+      "richardson_est": 0.011772637109275997,
+      "order_ratio": 3.94257675943476,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 32,
+      "dE_cont_J": 3.125383329270164e-06,
+      "d_kin_measured": -0.05035879644821627,
+      "d_kin_closed_form": -0.05035879644821628,
+      "richardson_est": 0.01252454240495827,
+      "order_ratio": 3.9388447293203948,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 33,
+      "dE_cont_J": 3.32377191950704e-06,
+      "d_kin_measured": -0.05348565369416383,
+      "d_kin_closed_form": -0.053485653694163915,
+      "richardson_est": 0.013297786671238829,
+      "order_ratio": 3.934998385968036,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 34,
+      "dE_cont_J": 3.5282647740588977e-06,
+      "d_kin_measured": -0.05670011619472279,
+      "d_kin_closed_form": -0.05670011619472293,
+      "richardson_est": 0.014092138585363108,
+      "order_ratio": 3.931038115770427,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 35,
+      "dE_cont_J": 3.738861892925734e-06,
+      "d_kin_measured": -0.060001421454633046,
+      "d_kin_closed_form": -0.06000142145463283,
+      "richardson_est": 0.014907360612501551,
+      "order_ratio": 3.926964316400851,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 36,
+      "dE_cont_J": 3.955563276107552e-06,
+      "d_kin_measured": -0.0633887871398931,
+      "d_kin_closed_form": -0.06338878713989304,
+      "richardson_est": 0.015743209085608664,
+      "order_ratio": 3.9227773967579282,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 37,
+      "dE_cont_J": 4.178368923604351e-06,
+      "d_kin_measured": -0.06686141132753882,
+      "d_kin_closed_form": -0.06686141132753887,
+      "richardson_est": 0.016599434287307684,
+      "order_ratio": 3.9184777769110837,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 38,
+      "dE_cont_J": 4.407278835416129e-06,
+      "d_kin_measured": -0.07041847276150745,
+      "d_kin_closed_form": -0.07041847276150759,
+      "richardson_est": 0.01747578053376156,
+      "order_ratio": 3.9140658880414465,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 39,
+      "dE_cont_J": 4.64229301154289e-06,
+      "d_kin_measured": -0.0740591311144951,
+      "d_kin_closed_form": -0.07405913111449502,
+      "richardson_est": 0.01837198626050655,
+      "order_ratio": 3.9095421723834605,
+      "N": 256,
+      "aliased": false
+    },
+    {
+      "n": 40,
+      "dE_cont_J": 4.883411451984632e-06,
+      "d_kin_measured": -0.07778252725571035,
+      "d_kin_closed_form": -0.07778252725571033,
+      "richardson_est": 0.019287784110211342,
+      "order_ratio": 3.9049070831638546,
+      "N": 256,
+      "aliased": false
+    }
+  ]
+}

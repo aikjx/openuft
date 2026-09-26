@@ -1,0 +1,139 @@
+{
+ "title": "空间螺旋判定 · 总览与防回潮守卫",
+ "date": "2026-09-26",
+ "single_source_of_truth": {
+  "claims_csv": "07_统一场方程/空间螺旋几何化统一场论/claims.csv",
+  "archive": "07_统一场方程/空间螺旋几何化统一场论/修复版申报原文_2026-09-25.md",
+  "engines": [
+   "04_公共成果/算法联盟_全维自洽与归一化/数据/空间螺旋修复版_第一性审计.json",
+   "04_公共成果/算法联盟_全维自洽与归一化/数据/空间螺旋修复版_最小修复闭环.json"
+  ]
+ },
+ "stages": [
+  {
+   "name": "阶段一 · 第一性审计与伪派生判定",
+   "engine": "空间螺旋修复版_第一性审计与伪派生判定.py",
+   "counts": {
+    "total": 35,
+    "PASS": 3,
+    "FAIL": 22,
+    "BOUNDARY": 5,
+    "INFO": 4
+   }
+  },
+  {
+   "name": "阶段二 · 最小修复闭环与继承缺陷",
+   "engine": "空间螺旋修复版_最小修复闭环与继承缺陷审计.py",
+   "counts": {
+    "total": 10,
+    "PASS": 3,
+    "FAIL": 2,
+    "BOUNDARY": 1,
+    "INFO": 4
+   }
+  }
+ ],
+ "stages_total": {
+  "total": 45,
+  "PASS": 6,
+  "FAIL": 24,
+  "BOUNDARY": 6,
+  "INFO": 8
+ },
+ "claims": {
+  "total": 45,
+  "by_status": {
+   "pass": 13,
+   "open": 10,
+   "boundary": 5,
+   "falsified": 17
+  },
+  "audit_total": 22,
+  "audit_by_status": {
+   "falsified": 14,
+   "open": 4,
+   "pass": 3,
+   "boundary": 1
+  },
+  "baseline_by_status": {
+   "pass": 10,
+   "open": 6,
+   "boundary": 4,
+   "falsified": 3
+  }
+ },
+ "guards": [
+  {
+   "id": "G1",
+   "name": "claims.csv 每行恰 5 字段（无列错位）",
+   "ok": true,
+   "detail": "异常行：无"
+  },
+  {
+   "id": "G2",
+   "name": "claim_id 连续无缺号（C01–C45）",
+   "ok": true,
+   "detail": "缺号：无"
+  },
+  {
+   "id": "G3",
+   "name": "状态取值合法（boundary|falsified|open|pass|repaired）",
+   "ok": true,
+   "detail": "非法：无"
+  },
+  {
+   "id": "G4",
+   "name": "原 falsified 三条（C12/C21/C23）**未被改回**",
+   "ok": true,
+   "detail": "被改动：无（修复版申报声称「清零」，审计认定不成立 ⇒ 不得改回）"
+  },
+  {
+   "id": "G5",
+   "name": "审计组 falsified 集合不缩水（基线 14 条）",
+   "ok": true,
+   "detail": "与基线一致"
+  },
+  {
+   "id": "G6",
+   "name": "两阶段引擎产物齐备且判定总数符合预期",
+   "ok": true,
+   "detail": "阶段一 total=35（期望 35）；阶段二 total=10（期望 10）"
+  },
+  {
+   "id": "G7",
+   "name": "被审文本已归档（审计可溯源）",
+   "ok": true,
+   "detail": "路径：D:\\a10\\aikjx\\code\\my_lib\\openuft\\07_统一场方程\\空间螺旋几何化统一场论\\修复版申报原文_2026-09-25.md"
+  },
+  {
+   "id": "G8",
+   "name": "被审文本哈希未变（防篡改溯源）",
+   "ok": true,
+   "detail": "当前 0b78a4d980a9ff35… vs 基线 0b78a4d980a9ff35…"
+  }
+ ],
+ "guards_failed": 0,
+ "verdict": "申报不成立",
+ "baseline": {
+  "path": "04_公共成果/算法联盟_全维自洽与归一化/数据/空间螺旋判定_不变量基线.json",
+  "falsified_audit_ids": [
+   "C24",
+   "C25",
+   "C26",
+   "C27",
+   "C29",
+   "C30",
+   "C31",
+   "C32",
+   "C33",
+   "C34",
+   "C35",
+   "C36",
+   "C37",
+   "C43"
+  ],
+  "archive_sha256": "0b78a4d980a9ff351a12518379362f902cedae7f5d9e19611537bdc372d61137",
+  "shrink_detected": [],
+  "growth": []
+ }
+}
