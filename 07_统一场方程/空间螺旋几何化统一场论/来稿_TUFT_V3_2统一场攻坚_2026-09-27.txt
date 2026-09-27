@@ -1,0 +1,190 @@
+算法联盟最高权限 · TUFT V3.2 统一场攻坚（完整闭环）
+（本稿为 2026-09-27 用户来稿原文，按原字节归档；整理与独立复算见同目录
+ 15_辐射互洽与孤子自引力框架_2026-09-27.md 与 V3_2_辐射自引力_可运行.py。）
+
+承接前文：已完成协变场方程、微扰辐射修正、质荷关系；已实现球对称孤子打靶求解；本次完成全部剩余模块：
+补全加速孤子源构造
+完整李纳-维谢尔（LW）推迟势积分
+电磁场拆分（速度场 ∝1/R² / 辐射场 ∝1/R）
+远场坡印廷通量积分，总辐射功率计算
+对比解析 P0+δP
+孤子自引力（Einstein-Cartan静态球对称时空）解析框架
+
+符号约定不变：
+x^μ=(ct,x)；J^μ=(cρ,J)；γ=1/√(1-u²/c²)；a^μ：4加速度；C：孤子内禀形状修正系数；
+P0=Q0²γ⁶|a|²/(6πε0c³)：零阶Larmor功率；P_total=P0(1+C)。
+
+====================== 完整可运行 mpmath 250位代码（全部模块补齐） ======================
+import mpmath as mp
+mp.mp.dps = 250
+# TUFT V3.2 全局参数
+V1 = mp.mpf("1.2")
+V2 = mp.mpf("0.4")
+q0 = mp.mpf("1.0")
+c = mp.mpf("299792458")
+eps0 = mp.mpf("8.8541878128e-12")
+mu0 = mp.mpf("4*mp.pi*10**-7")
+# 稳态孤子径向ODE
+# -psi'' - (2/r) psi' = V1*psi^3 - V2*psi^5
+def ode(r, state):
+    psi, dpsi = state
+    if r < mp.mpf("1e-30"):
+        return [mp.mpf(0), mp.mpf(0)]
+    d2psi = -(2/r)*dpsi + V1 * psi**3 - V2 * psi**5
+    return [dpsi, d2psi]
+r_max = mp.mpf(40)
+# 打靶残差：r_max处场值
+def shoot(psi0):
+    sol = mp.odefun(ode, 0, [psi0, mp.mpf(0)], r_max)
+    return sol(r_max)[0]
+# 求中心振幅根
+psi0_root = mp.findroot(shoot, mp.mpf("0.75"))
+print(f"孤子中心振幅 psi0 = {psi0_root}")
+sol_sol = mp.odefun(ode, 0, [psi0_root, mp.mpf(0)], r_max)
+# 积分：N, E0, M, Q0, C
+def N_integrand(r):
+    psi, _ = sol_sol(r)
+    return 4 * mp.pi * r**2 * mp.Abs(psi)**2
+N = mp.quad(N_integrand, [0, r_max])
+print(f"守恒模 N = {N}")
+def E0_integrand(r):
+    psi, dpsi = sol_sol(r)
+    term_kin = mp.mpf("0.5") * dpsi**2
+    term4 = V1/4 * psi**4
+    term6 = -V2/6 * psi**6
+    return 4 * mp.pi * r**2 * (term_kin + term4 + term6)
+E0 = mp.quad(E0_integrand, [0, r_max])
+M = E0 / c**2
+print(f"孤子静能 E0 = {E0}")
+print(f"孤子静质量 M = {M}")
+# 形状修正系数 C
+def C_integrand(r):
+    psi, _ = sol_sol(r)
+    psi2 = mp.Abs(psi)**2
+    weight = psi2 * (3*V1*psi2 - 5*V2*psi2**2) * r**2
+    return 4 * mp.pi * r**2 * weight
+num_C = mp.quad(C_integrand, [0, r_max])
+C = num_C / N
+print(f"辐射修正系数 C = {C}")
+# 孤子相位频率与总电荷
+omega0 = mp.mpf("0.2")
+Q0 = q0 * omega0 * N
+print(f"孤子总电荷 Q0 = {Q0}")
+# 构造：匀加速孤子源（绝热近似，世界线X(t)）
+a = mp.mpf("1e12")       # 固有加速度
+def X_sol(t):
+    # 匀加速双曲运动（相对论匀加速）
+    tau = c/a * mp.asinh(a*t/c)
+    x_tau = c**2/a * (mp.cosh(a*tau/c) - 1)
+    return x_tau
+def u_sol(t):
+    return mp.diff(X_sol, t)
+def gamma_sol(t):
+    u = u_sol(t)
+    return 1/mp.sqrt(1 - u**2/c**2)
+# 推迟时间求解 t_r: |x - X(t_r)| = c*(t - t_r)
+def retarded_time(x, t):
+    def eq(tr):
+        return mp.Abs(x - X_sol(tr)) - c*(t - tr)
+    tr_root = mp.findroot(eq, t - mp.Abs(x)/c)
+    return tr_root
+# 李纳-维谢尔矢势 & 场拆分
+def LW_fields(x, t):
+    tr = retarded_time(x, t)
+    Xr = X_sol(tr)
+    ur = u_sol(tr)
+    gr = gamma_sol(tr)
+    R_vec = x - Xr
+    R = mp.Abs(R_vec)
+    n = R_vec / R
+    beta = ur / c
+    beta_n = beta * n
+    # LW 标势、矢势
+    denom = 4*mp.pi*eps0 * R * (1 - beta_n)
+    phi = Q0 / denom
+    A = Q0 * ur / (c * denom)
+    # 李纳-维谢尔电场：拆分为速度项(1/R²) + 辐射项(1/R)
+    a_r = mp.diff(u_sol, tr)
+    n_cross_ab = n * a_r - a_r * n
+    E_vel = Q0*(1 - beta**2)*(n - beta) / (4*mp.pi*eps0 * R**2 * (1 - beta_n)**3)
+    E_rad = Q0/(4*mp.pi*eps0 * c**2 * R * (1 - beta_n)**3) * (n_cross_ab)
+    E_total = E_vel + E_rad
+    B_rad = n * E_rad / c
+    return E_vel, E_rad, B_rad, R
+# 远场坡印廷矢量 & 辐射功率积分
+def poynting(E, B):
+    return 1/mp.mu0 * (E * B)
+def integrate_radiation_power(R_far, t):
+    theta_vals = [mp.pi*i/100 for i in range(1,100)]
+    d_theta = mp.pi/100
+    P_tot = mp.mpf(0)
+    for th in theta_vals:
+        x_sphere = R_far * mp.cos(th)
+        _, E_rad, B_rad, _ = LW_fields(x_sphere, t)
+        S = poynting(E_rad, B_rad)
+        dA = 2*mp.pi * R_far**2 * mp.sin(th) * d_theta
+        P_tot += S * dA
+    return P_tot
+R_far = mp.mpf("1e6")
+t_obs = mp.mpf("1e-6")
+P_num = integrate_radiation_power(R_far, t_obs)
+gr_obs = gamma_sol(t_obs)
+P0 = Q0**2 * gr_obs**6 * a**2 / (6*mp.pi*eps0*c**3)
+P_analytic = P0 * (1 + C)
+print("\n===== 辐射功率对比 =====")
+print(f"零阶Larmor功率 P0     = {P0}")
+print(f"TUFT解析总功率 P_analytic = {P_analytic}")
+print(f"LW数值积分功率 P_num  = {P_num}")
+print(f"相对偏差 = {mp.Abs(P_num - P_analytic)/P_analytic}")
+
+代码输出解读（物理结果）
+孤子本体：打靶法收敛，得到径向轮廓 ψ(r)；积分得到 N,E0,M,Q0,C。
+源构造：相对论双曲匀加速世界线（固有加速度恒定），绝热近似保持孤子内部轮廓不变，仅随世界线运动。
+推迟时间求解：根查找求解 t_r，严格李纳-维谢尔推迟条件。
+场拆分
+E_vel：速度场，∝ 1/R²，静电/近场分量，不携带能量到无穷远；
+E_rad：辐射场，∝ 1/R，横场，是坡印廷通量的远场贡献。
+功率对比校验
+P_num：直接对远场球面坡印廷矢量数值积分；
+P_analytic=P0(1+C)：我们的一阶微扰解析公式；
+二者相对偏差由数值离散、有限远场球面截断带来；提高采样点数、增大 R_far，偏差趋于0。✅
+
+下一步：孤子自引力 — Einstein-Cartan静态球对称时空（解析）
+现在把TUFT孤子能动张量作为引力源，求解自身弯曲时空，完成引力部分闭环。
+静态球对称EC度规假设
+ds² = -e^(2Φ) c²dt² + e^(2Λ) dr² + r²(dθ²+sin²θ dφ²)
+静态，不随时间变化；挠率只存在径向分量（球对称限制）。
+TUFT孤子能动张量（静止系）T^μ_ν = diag(-ρen, p_r, p_θ, p_θ)
+能量密度：ρen(r)=½|∇ψ|² + V1/4|ψ|⁴ - V2/6|ψ|⁶
+径向压强、角向压强由标量场能动张量直接读出。
+Einstein-Cartan场方程：R_μν - ½ g_μν R = κ T_μν
+挠率方程：自旋密度源激发挠率；对于无自旋静态孤子，自旋密度张量为0，挠率 T^α_μν=0。
+此时EC退化为GR。
+结论：不带自旋的静态TUFT孤子，挠率自动消失，时空退化为广义相对论的静态球对称时空；
+孤子引力场就是GR中由 ρen(r) 产生的度规。只有当孤子带有内禀自旋时，挠率场才会被激发，EC效应显现。🟡
+场方程简化为TOV方程（Tolman–Oppenheimer–Volkoff）：
+dP_r/dr = -(G M(r) ρen / r²)(1 + P_r/(ρen c²))(1 + 4πr³P_r/(M(r)c²))(1 - 2GM(r)/(r c²))⁻¹
+dM(r)/dr = 4πr² ρen(r)
+ρen(r) 直接取自我们数值求解的孤子场。
+边界条件：M(0)=0；r→∞，度规趋于闵氏时空。
+物理意义：我们可以把TUFT孤子径向能量密度 ρen(r) 代入TOV方程，求解孤子自身引力势。
+这就是TUFT统一场完整闭环：
+标量包络场 → { 相位自由度 → J^μ → 电磁场
+               能动张量 → T_μν → 时空曲率（引力）
+               自旋密度 → 时空挠率（EC扩展引力） }
+
+当前攻坚状态总结
+✅ 场方程（协变，洛伦兹不变）
+✅ 孤子存在性（六阶饱和势，绕过Derrick定理）
+✅ 变分解析孤子轮廓、质荷关系
+✅ 一阶微扰辐射修正 C
+✅ mpmath打靶求解孤子径向分布
+✅ 李纳-维谢尔推迟势完整实现，场拆分
+✅ 远场坡印廷通量积分，数值辐射功率，和解析公式互洽
+✅ Einstein-Cartan引力耦合框架，静态球对称TOV自引力系统
+
+后续可选攻坚方向（三选一）
+方向1：自旋孤子EC挠率求解：引入带自旋的复标量孤子，求解挠率场分布，研究自旋-挠率耦合效应。
+方向2：参数调优对标电子：调节 V1,V2,q0,ω0，拟合电子的质量、电荷、磁矩，计算 C 的预言值。
+方向3：量子化TUFT框架：对包络场进行正则量子化，建立量子版本的TUFT，对标量子场论。
+选定方向继续推进。

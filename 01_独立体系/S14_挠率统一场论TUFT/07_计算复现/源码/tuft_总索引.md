@@ -23,7 +23,7 @@
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
 | **合计** | **143** | **123** | **48** | **146** |
 
-## 二、脚本清单（31）
+## 二、脚本清单（32）
 
 - `r5_torsion_sim.py`
 - `tuft_B_UV完成_抑制检验.py`
@@ -37,6 +37,7 @@
 - `tuft_r4_scale_generation.py`
 - `tuft_r5_torsion_probe_audit.py`
 - `tuft_r6_torsion_generation.py`
+- `tuft_v32_adjoint_degeneracy_audit.py`
 - `tuft_三路线_ABC_全维分析修复优化.py`
 - `tuft_全书构建.py`
 - `tuft_全维度总验证.py`
@@ -67,7 +68,7 @@
 - `tuft_总索引.md`
 - `tuft_跨册缺陷族.md`
 
-## 四、原始报告（txt，21）
+## 四、原始报告（txt，22）
 
 - `tuft_B_UV完成_report.txt`
 - `tuft_B_根因溯源_report.txt`
@@ -79,6 +80,7 @@
 - `tuft_r4_report.txt`
 - `tuft_r5_report.txt`
 - `tuft_r6_report.txt`
+- `tuft_v32_adjoint_degeneracy_report.txt`
 - `tuft_三路线_ABC_report.txt`
 - `tuft_四力统一_report.txt`
 - `tuft_引力波_挠率扰动_report.txt`
