@@ -141,6 +141,21 @@ def EPS(i, j, k):
     return int(sp.LeviCivita(i + 1, j + 1, k + 1))
 
 
+def christoffel(g, coords):
+    """Gamma^rho_{mu nu} = (1/2) g^{rho delta}(d_mu g_{delta nu} + d_nu g_{mu delta} - d_delta g_{mu nu})。
+
+    g 为协变度规 sympy Matrix，coords 为坐标符号列表；返回 Gam[rho][mu][nu]。
+    """
+    n = len(coords)
+    ginv = g.inv()
+    Gam = [[[sp.Rational(1, 2) * sum(
+        ginv[r, d] * (sp.diff(g[d, b], coords[m])
+                      + sp.diff(g[d, m], coords[b])
+                      - sp.diff(g[b, m], coords[d])) for d in range(n))
+        for b in range(n)] for m in range(n)] for r in range(n)]
+    return Gam
+
+
 print("=" * 74)
 print("A 组 · 4 势 A^mu -> 麦克斯韦方程 4 维张量形式")
 print("=" * 74)
@@ -408,6 +423,21 @@ check("C6a 量纲 [nabla^2 Phi] = [4 pi G rho_mass] = T^-2",
 check("C6b 记号歧义核验：电荷密度 rho_em 代入 G rho 量纲不匹配（M^-1 T^-1 I != T^-2）",
       dmul(D_G, D_RHO) != dmul(dpow(D_LINV, 2), D_PHI),
       "[G rho_em] = " + dshow(dmul(D_G, D_RHO)))
+# C8 弱场测地线 -> 牛顿第二定律
+eps = sp.Symbol("epsilon", positive=True)
+Ph = sp.Function("Phi")(Xs, Ys, Zs)
+co_c = [t, Xs, Ys, Zs]
+gc = sp.zeros(4, 4)
+gc[0, 0] = 1 + 2 * eps * Ph / c ** 2
+for i in range(1, 4):
+    gc[i, i] = -(1 - 2 * eps * Ph / c ** 2)
+Gam_c = christoffel(gc, co_c)
+ok_c8 = True
+for i in (1, 2, 3):
+    first = sp.simplify(sp.diff(Gam_c[i][0][0], eps).subs(eps, 0))
+    ok_c8 = ok_c8 and is_zero(first - sp.diff(Ph, co_c[i]) / c ** 2)
+check("C8 弱场 Christoffel Gamma^i_{00} 一阶 = d^i Phi / c^2（代入测地线得 d^2 x^i / dt^2 = -d^i Phi）", ok_c8)
+
 Bd("C7 静态/低速极限的额外假设",
    "hbar_ij = 0（空间应力可忽略）与静态近似是牛顿极限的输入假设，非场方程本身；不满足时（如引力波、强场）牛顿极限不成立")
 
@@ -439,11 +469,13 @@ m_P = mpsqrt(HBAR_V * C_V / G_V)
 l_P = mpsqrt(HBAR_V * G_V / C_V ** 3)
 t_P = mpsqrt(HBAR_V * G_V / C_V ** 5)
 E_P_GeV = m_P * C_V ** 2 / mpf("1.602176634e-19") / mpf("1e9")
+T_P = m_P * C_V ** 2 / mpf("1.380649e-23")
 
 REF = [("m_P / kg", m_P, mpf("2.176434e-8")),
        ("l_P / m", l_P, mpf("1.616255e-35")),
        ("t_P / s", t_P, mpf("5.391247e-44")),
-       ("E_P / GeV", E_P_GeV, mpf("1.220890e19"))]
+       ("E_P / GeV", E_P_GeV, mpf("1.220890e19")),
+       ("T_P / K", T_P, mpf("1.416784e32"))]
 for name, val, ref in REF:
     rel = abs(val - ref) / ref
     check("D5 %s = %s（CODATA 参考 %s，相对偏差 %.2e）" % (name, mp.nstr(val, 10), mp.nstr(ref, 10), float(rel)),
@@ -464,17 +496,6 @@ print()
 print("=" * 74)
 print("E 组 · 黎曼张量代数对称性与 Bianchi 恒等式")
 print("=" * 74)
-
-
-def christoffel(g, coords):
-    n = len(coords)
-    ginv = g.inv()
-    Gam = [[[sp.Rational(1, 2) * sum(
-        ginv[r][d] * (sp.diff(g[d][b], coords[m])
-                      + sp.diff(g[d][m], coords[b])
-                      - sp.diff(g[b][m], coords[d])) for d in range(n))
-        for b in range(n)] for m in range(n)] for r in range(n)]
-    return Gam
 
 
 _RC = {}
@@ -513,10 +534,10 @@ th, ph, r0 = sp.symbols("theta phi r0", positive=True)
 co2 = [th, ph]
 g2 = sp.Matrix([[r0 ** 2, 0], [0, r0 ** 2 * sp.sin(th) ** 2]])
 G2 = christoffel(g2, co2)
-Rdn2 = [[[[sp.simplify(sum(g2[a][l] * riem(G2, co2, l, b, m, n_) for l in range(2)))
+Rdn2 = [[[[sp.simplify(sum(g2[a, l] * riem(G2, co2, l, b, m, n_) for l in range(2)))
            for n_ in range(2)] for m in range(2)] for b in range(2)] for a in range(2)]
 K = 1 / r0 ** 2
-ok_e1 = all(is_zero(Rdn2[a][b][m][n_] - K * (g2[a][m] * g2[b][n_] - g2[a][n_] * g2[b][m]))
+ok_e1 = all(is_zero(Rdn2[a][b][m][n_] - K * (g2[a, m] * g2[b, n_] - g2[a, n_] * g2[b, m]))
             for a in range(2) for b in range(2) for m in range(2) for n_ in range(2))
 check("E1 2 维球面常曲率关系 R_{rho sigma mu nu} = K (g_{rho mu} g_{sigma nu} - g_{rho nu} g_{sigma mu})，K = 1/r_0^2",
       ok_e1)
@@ -525,7 +546,7 @@ Ric2 = ricci(G2, co2)
 ok_e2 = all(is_zero(sp.expand(Ric2[m, n_] - K * g2[m, n_])) for m in range(2) for n_ in range(2))
 check("E2 Ricci = R^sigma_{mu sigma nu} = K g_{mu nu}（与专题 T1 缩并约定自洽）", ok_e2)
 ginv2 = g2.inv()
-Rscal2 = sp.simplify(sum(ginv2[a][b] * Ric2[a, b] for a in range(2) for b in range(2)))
+Rscal2 = sp.simplify(sum(ginv2[a, b] * Ric2[a, b] for a in range(2) for b in range(2)))
 check("E3 标量曲率 R = n(n-1)K = 2/r_0^2", is_zero(sp.expand(Rscal2 - 2 / r0 ** 2)),
       "R = " + str(Rscal2))
 
@@ -551,7 +572,7 @@ ok_e6 = all(is_zero(Ric4[m, n_]) for m in range(4) for n_ in range(4))
 check("E6 Schwarzschild 真空解：R_{mu nu} = 0（16 个分量全部为零）", ok_e6)
 
 ginv4 = g4.inv()
-Rscal4 = sp.simplify(sum(ginv4[a][b] * Ric4[a, b] for a in range(4) for b in range(4)))
+Rscal4 = sp.simplify(sum(ginv4[a, b] * Ric4[a, b] for a in range(4) for b in range(4)))
 check("E7 Schwarzschild 标量曲率 R = 0", is_zero(sp.expand(Rscal4)))
 Ein4 = sp.zeros(4, 4)
 for m in range(4):
@@ -569,7 +590,7 @@ def Rdn4(a, b, m, n_):
     key = (a, b, m, n_)
     if key in cache:
         return cache[key]
-    val = sp.simplify(sum(g4[a][l] * riem(G4, co4, l, b, m, n_) for l in range(4)))
+    val = sp.simplify(sum(g4[a, l] * riem(G4, co4, l, b, m, n_) for l in range(4)))
     cache[key] = val
     return val
 

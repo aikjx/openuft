@@ -604,6 +604,13 @@ RELATIONS = [
     ('实现:双向分形 bifuf', 'implements', '候裁定_bifuf', '**disputed**，见档案；裁定前结论不得引用', 'disputed'),
     ('候裁定_bifuf', 'independent', 's13_duality_fractal_uft',
      '仅名称相近：分形树自洽检查 vs 0/1 对偶基元，本体不同', 'active'),
+    # 共享基准：Nabla 算子量纲（02_共享基础/参考资料/NABLA_OPERATOR_DIMENSION.md）
+    ('实现:Nabla算子量纲条目', 'implements', '基准:Nabla算子量纲',
+     'NABLA_OPERATOR_DIMENSION.md + verify_nabla_dimension.py（[∇]=m⁻¹ 量纲审计与可复算核验）', 'active'),
+    ('候登记_ufe1', 'borrows_math', '基准:Nabla算子量纲',
+     'UFE-1 含 ∇/协变导数/曲率项，量纲与极限恢复以 [∇]=m⁻¹ 为标尺', 'active'),
+    ('s14_torsion_unified_field_tuft', 'borrows_math', '基准:Nabla算子量纲',
+     'TUFT 协变导数/挠率结构须区分曲率(GR)与挠率(Einstein-Cartan)量纲', 'active'),
 ]
 
 RELATION_DOC = '''# 体系关系图谱
@@ -667,6 +674,7 @@ def build_graph_html():
                     'p02_matter_source', 'p03_gauge_unification', 'p04_quantum_emergence'],
         '形式化核心 / 候登记': ['候登记_ufe1', '候登记_um',
                         '候登记_v21omega', '候裁定_bifuf'],
+        '共享基准 / 经典': ['基准:Nabla算子量纲', '实现:Nabla算子量纲条目'],
     }
     labels = {
         's01_triad_kinematics': 'S01 螺旋三重奏\n(数学框架)',
@@ -691,6 +699,8 @@ def build_graph_html():
         '候登记_um': 'UM 全域数学\n(候登记)',
         '候登记_v21omega': 'V21 Ω 元一方程\n(候登记)',
         '候裁定_bifuf': 'bifuf 双向分形\n(disputed)',
+        '基准:Nabla算子量纲': '基准:Nabla算子量纲\n([∇]=m⁻¹ 量纲标尺)',
+        '实现:Nabla算子量纲条目': '实现:Nabla算子量纲条目\n(参考资料·可复算核验)',
     }
     colors = {
         '螺旋 / 光速族': '#2563eb',
@@ -698,6 +708,7 @@ def build_graph_html():
         '对偶 / 挠率族': '#c2410c',
         '待完备与方向': '#64748b',
         '形式化核心 / 候登记': '#0f766e',
+        '共享基准 / 经典': '#166534',
     }
     # 布局：两列两行分区
     boxes = {
@@ -706,6 +717,7 @@ def build_graph_html():
         '对偶 / 挠率族': (60, 470, 430, 220),
         '待完备与方向': (530, 590, 430, 330),
         '形式化核心 / 候登记': (60, 710, 430, 210),
+        '共享基准 / 经典': (60, 940, 430, 150),
     }
     node_pos = {}
     for g, members in groups.items():
@@ -726,7 +738,7 @@ def build_graph_html():
         'independent': '#cbd5e1',
         'supersedes': '#a16207',
     }
-    svg_w, svg_h = 1020, 1120
+    svg_w, svg_h = 1020, 1260
     falsified_count = {'s14_torsion_unified_field_tuft': 3, 's13_duality_fractal_uft': 1}
     parts = []
     parts.append('<svg viewBox="0 0 {} {}" xmlns="http://www.w3.org/2000/svg" '
@@ -778,7 +790,7 @@ def build_graph_html():
                      if sid in falsified_count else '')
         parts.append('<title>{}</title></g>'.format(tip))
     # 图例
-    lx, ly = 60, 960
+    lx, ly = 60, 1110
     parts.append('<text x="{}" y="{}" font-size="13" font-weight="700" fill="#0f172a">关系类型</text>'.format(lx, ly))
     legend = [('version_of', '版本演进'), ('borrows_math', '借用数学（不转移证据）'),
               ('competes', '本体互斥'), ('implements', '实现'), ('falsified_by', '已证伪'),
@@ -793,13 +805,13 @@ def build_graph_html():
         parts.append('<line x1="{}" y1="{}" x2="{}" y2="{}" stroke="{}" stroke-width="2.4"/>'
                      .format(lx, yy - 4, lx + 30, yy - 4, edge_color[k]))
         parts.append('<text x="{}" y="{}" font-size="12" fill="#334155">{}</text>'.format(lx + 38, yy, name))
-    parts.append('<text x="640" y="980" font-size="13" font-weight="700" fill="#0f172a">阅读提醒</text>')
+    parts.append('<text x="640" y="1130" font-size="13" font-weight="700" fill="#0f172a">阅读提醒</text>')
     notes = ['本图不表示任何统一场论已经成立。',
              'S14 已登记多项 falsified，见其 claims.csv。',
              '候登记 / 候裁定节点未进入 sNN 注册，编号待裁定。',
              '实现（代码 / 书稿 / 图谱）不提升证据等级。']
     for i, n in enumerate(notes):
-        parts.append('<text x="640" y="{}" font-size="12" fill="#475569">· {}</text>'.format(1002 + i * 21, n))
+        parts.append('<text x="640" y="{}" font-size="12" fill="#475569">· {}</text>'.format(1152 + i * 21, n))
     parts.append('</svg>')
 
     html = '''<!DOCTYPE html>

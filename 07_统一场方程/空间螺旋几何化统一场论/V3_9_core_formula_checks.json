@@ -1,0 +1,441 @@
+{
+ "checks": {
+  "S1_frenet_helix": {
+   "kappa_from_param": "rho/(b**2 + rho**2)",
+   "tau_from_param": "b/(b**2 + rho**2)",
+   "doc_kappa": "rho/(b**2 + rho**2)",
+   "doc_tau": "b/(b**2 + rho**2)",
+   "resid_kappa": "0",
+   "resid_tau": "0",
+   "mutant_resid_kappa": "2*b**2*rho/(b**4 - rho**4)",
+   "mutant_resid_tau": "2*b/(b**2 + rho**2)",
+   "ell_identity_resid": "0",
+   "mutant_ell_resid": "-b**2 - rho**2 + sqrt(b**2 + rho**2)",
+   "note": "kappa=rho/(rho^2+b^2) and tau=b/(rho^2+b^2) reproduced from first principles"
+  },
+  "N1_theta_conflation": {
+   "resid_d_of_rho_over_ell_wrt_spiral_parameter": "0",
+   "resid_d_of_cos_theta_wrt_spiral_parameter": "-sin(theta)",
+   "pitch_angle_from_b_over_rho": "atan(b/rho)",
+   "cos_of_pitch": "rho/sqrt(b**2 + rho**2)",
+   "resid_cos_pitch_minus_rho_over_ell": "0",
+   "tan_of_pitch": "b/rho",
+   "verdict_note": "rho/ell = cos(pitch angle) identically; writing it as cos^2(theta) with the spiral parameter theta of 体系一 line 14 is a symbol reuse, verdict FAIL as written"
+  },
+  "S2_alpha_and_ntwist": {
+   "resid_tau_over_kappa_minus_b_over_rho": "0",
+   "N_twist_in_alpha": "alpha**2/(alpha**2 + 1)",
+   "resid_ntw_minus_alpha2_over_1_plus_alpha2": "0",
+   "mutant_ntw_resid": "alpha*(alpha - 1)/(alpha**3 + alpha**2 + alpha + 1)",
+   "N_twist_recomputed_from_alpha": "5.32485188924e-5",
+   "N_twist_doc_claimed_N_over_N_plus_1": "0.992753623188",
+   "doc_claim_over_recomputed": "18643.77909",
+   "tan_theta_implied_by_doc_claim": "11.70469991",
+   "tan_theta_of_theory": "0.00729735256433",
+   "verdict_note_reproduces_X5": "N_twist = b^2/(rho^2+b^2) = alpha^2/(1+alpha^2) ~ 5.3e-5, while the same section asserts N_twist = 137/138 ~ 0.9928; reading the second as the first gives tan(theta) = sqrt(137) ~ 11.7 vs the theory's own tan(theta) = alpha = 1/137 -> the two statements are mutually exclusive (X5 confirmed)",
+   "note": "alpha = tau/kappa = b/rho confirmed; N_twist = b^2/(rho^2+b^2) = alpha^2/(1+alpha^2)"
+  },
+  "S2_dimension_sweep": {
+   "unit_system": "SI base exponents over M,L,T,I (current as base I)",
+   "G_equals_alpha2_mu0_c2_rho2": {
+    "lhs": "M^-1*L^3*T^-2",
+    "rhs_with_rho_as_length": "M^1*L^5*T^-4*I^-2",
+    "required_rho_dim": "M^-1*T^1*I^1",
+    "verdict": "FAIL",
+    "already_registered_as": "X8"
+   },
+   "omega_c_over_ell_vs_c_k2t2_over_k": {
+    "omega_c_over_ell": "T^-1",
+    "omega_c_times_k2t2_over_k": "T^-1",
+    "note": "both are 1/T; the mismatch is geometric not dimensional (c/rho vs c/ell) -> X10",
+    "verdict": "BOUNDARY",
+    "already_registered_as": "X10"
+   },
+   "kappa_drive_rho_omega2_over_c2": {
+    "dims": "L^-1",
+    "expected": "L^-1",
+    "verdict": "PASS",
+    "already_registered_as": "not in the 01A ledger"
+   },
+   "A_hbar_omega2_over_mc_times_kappa": {
+    "dims": "L^2*T^-2",
+    "label_in_doc": "引力场的频率表达式",
+    "force_dims": "M^1*L^1*T^-2",
+    "freq_dims": "T^-1",
+    "verdict": "FAIL",
+    "already_registered_as": "X14"
+   },
+   "F_G_max": {
+    "dims": "M^-1*L^5*T^-2",
+    "force_dims": "M^1*L^1*T^-2",
+    "verdict": "FAIL",
+    "already_registered_as": "X15"
+   },
+   "F5_hbar_over2_domega_dt": {
+    "dims": "M^1*L^2*T^-3",
+    "force_dims": "M^1*L^1*T^-2",
+    "power_dims": "M^1*L^2*T^-3",
+    "verdict": "FAIL",
+    "already_registered_as": "X11"
+   },
+   "G_eff_propto_1_over_E2": {
+    "lhs_dims": "M^-1*L^3*T^-2",
+    "closure_G_E2_over_hbar_c5_dims": "dimensionless",
+    "verdict": "FAIL as written",
+    "note": "1/E^2 needs the pair of hbar,c factors shown in closure_G_E2_over_hbar_c5_dims to be a statement at all",
+    "already_registered_as": "not in the 01A ledger"
+   },
+   "e2_equals_4pi_eps0_hbar_c_alpha": {
+    "dims": "T^2*I^2",
+    "charge_dims": "T^1*I^1",
+    "verdict": "PASS_but_definition_of_alpha"
+   },
+   "eps0_mu0_equals_1_over_c2": {
+    "lhs": "L^-2*T^2",
+    "rhs": "L^-2*T^2",
+    "verdict": "PASS_in_SI"
+   },
+   "m_hbar_over_c_rhoC": {
+    "dims": "M^1",
+    "verdict": "PASS_but_definition_of_rho_C"
+   },
+   "p_hbar_over_ell": {
+    "dims": "M^1*L^1*T^-1",
+    "verdict": "PASS"
+   },
+   "G_hbar_c_over_mP2": {
+    "dims": "M^-1*L^3*T^-2",
+    "verdict": "PASS_but_definition_of_mP"
+   }
+  },
+  "S3_N_definitions": {
+   "alpha_inv_used": "137.035999177",
+   "N_A_at_primary_anchor": "18916.908420611",
+   "N_B_at_primary_anchor": "18916.908366968",
+   "N_A_minus_N_B": "5.3642805e-5",
+   "closed_form_alpha2_over_1_minus_alpha": "5.3642805e-5",
+   "N_A_at_alpha_137": "18907.0073529",
+   "N_B_at_alpha_137": "18907.0072993",
+   "doc_printed": {
+    "A": "18916.90839",
+    "B": "18907"
+   },
+   "verdict": "A and B agree to 2.8e-9 relative at fixed alpha; the printed 18907 is B evaluated at alpha=1/137 -> reproduces X1/X13 (rounding, not a definitional conflict)"
+  },
+  "S3_four_force_table": {
+   "F_hat_G": "0.99270265",
+   "F_hat_S": "0.0072441012",
+   "F_hat_W": "5.2862761e-5",
+   "F_hat_E": "3.857582023e-7",
+   "doc_printed_columns": {
+    "G": "0.9927",
+    "S": "0.00725",
+    "W": "5.29e-5",
+    "E": "3.86e-7"
+   },
+   "normalized_at_primary_anchor": {
+    "G": {
+     "printed": "0.9927",
+     "recomputed": "0.992702650251",
+     "gap": "2.65025e-6",
+     "half_ulp_of_printed": "5.0e-5",
+     "reachable_by_rounding": true
+    },
+    "S": {
+     "printed": "0.00725",
+     "recomputed": "0.00724410123043",
+     "gap": "-5.89877e-6",
+     "half_ulp_of_printed": "5.0e-6",
+     "reachable_by_rounding": false
+    },
+    "W": {
+     "printed": "5.29e-5",
+     "recomputed": "5.28627606901e-5",
+     "gap": "-3.72393e-8",
+     "half_ulp_of_printed": "5.0e-8",
+     "reachable_by_rounding": true
+    },
+    "E": {
+     "printed": "3.86e-7",
+     "recomputed": "3.8575820228e-7",
+     "gap": "-2.41798e-10",
+     "half_ulp_of_printed": "5.0e-10",
+     "reachable_by_rounding": true
+    }
+   },
+   "normalized_at_alpha_1_over_137": {
+    "G": {
+     "printed": "0.9927",
+     "recomputed": "0.992700732745",
+     "gap": "7.32745e-7",
+     "half_ulp_of_printed": "5.0e-5",
+     "reachable_by_rounding": true
+    },
+    "S": {
+     "printed": "0.00725",
+     "recomputed": "0.00724599074996",
+     "gap": "-4.00925e-6",
+     "half_ulp_of_printed": "5.0e-6",
+     "reachable_by_rounding": true
+    },
+    "W": {
+     "printed": "5.29e-5",
+     "recomputed": "5.28904434304e-5",
+     "gap": "-9.55657e-9",
+     "half_ulp_of_printed": "5.0e-8",
+     "reachable_by_rounding": true
+    },
+    "E": {
+     "printed": "3.86e-7",
+     "recomputed": "3.86061630879e-7",
+     "gap": "6.16309e-11",
+     "half_ulp_of_printed": "5.0e-10",
+     "reachable_by_rounding": true
+    }
+   },
+   "intensity_factor_at_primary_anchor": {
+    "G": {
+     "printed": "18769.0",
+     "recomputed": "18778.8650704",
+     "gap": "9.86507",
+     "half_ulp_of_printed": "0.5",
+     "reachable_by_rounding": false
+    },
+    "S": {
+     "printed": "137.0",
+     "recomputed": "137.035999177",
+     "gap": "0.0359992",
+     "half_ulp_of_printed": "0.5",
+     "reachable_by_rounding": true
+    },
+    "W": {
+     "printed": "1.0",
+     "recomputed": "1.0",
+     "gap": "0.0",
+     "half_ulp_of_printed": "0.5",
+     "reachable_by_rounding": true
+    },
+    "E": {
+     "printed": "0.0073",
+     "recomputed": "0.00729735256433",
+     "gap": "-2.64744e-6",
+     "half_ulp_of_printed": "5.0e-5",
+     "reachable_by_rounding": true
+    }
+   },
+   "intensity_factor_at_alpha_1_over_137": {
+    "G": {
+     "printed": "18769.0",
+     "recomputed": "18769.0",
+     "gap": "-4.37906e-47",
+     "half_ulp_of_printed": "0.5",
+     "reachable_by_rounding": true
+    },
+    "S": {
+     "printed": "137.0",
+     "recomputed": "137.0",
+     "gap": "0.0",
+     "half_ulp_of_printed": "0.5",
+     "reachable_by_rounding": true
+    },
+    "W": {
+     "printed": "1.0",
+     "recomputed": "1.0",
+     "gap": "0.0",
+     "half_ulp_of_printed": "0.5",
+     "reachable_by_rounding": true
+    },
+    "E": {
+     "printed": "0.0073",
+     "recomputed": "0.00729927007299",
+     "gap": "-7.29927e-7",
+     "half_ulp_of_printed": "5.0e-5",
+     "reachable_by_rounding": true
+    }
+   },
+   "not_reachable_normalized_anchor": [
+    "S"
+   ],
+   "not_reachable_normalized_137": [],
+   "not_reachable_intensity_anchor": [
+    "G"
+   ],
+   "not_reachable_intensity_137": [],
+   "sum_exact": "1.0",
+   "sum_resid": "0.0",
+   "mutant_sum_without_last_column": "-3.85758e-7",
+   "sum_of_printed_decimals": "1.000003286",
+   "printed_minus_one": "3.286e-6",
+   "verdict": "the four exact normalized strengths sum to 1 by construction (sum_resid, with the drop-one-column mutant beside it, so the sum is bookkeeping not physics). Judged against the doc's OWN printed precision (half a unit of the last stated digit): at alpha = 1/137 the unreachable normalized columns are [] and the unreachable intensity factors are []; at the inverse-structure anchor they are ['S'] and ['G']. Net-new (not in the 01A ledger): the printed 体系三 table is reproducible only under the truncated alpha, so its stated precision is a statement about the anchor choice, not about the arithmetic -- the same defect X1/X13 register for N, now visible in the force table. The four rounded columns overshoot 1 by 3.3e-6"
+  },
+  "S3_series_closure": {
+   "sum_alpha_n_from_minus2_to_infinity": "18916.908420611",
+   "equals_N_A_resid": "1.62199e-41",
+   "mutant_missing_last_term": "5.32514e-5",
+   "verdict": "definition A IS the closed form of the 体系七 series; B is its 4-term truncation"
+  },
+  "N2_asin_vs_sin_closure": {
+   "alpha": "0.0072973525643314",
+   "asin_of_alpha": "0.0072974173315348",
+   "asin_gt_alpha": true,
+   "one_over_asin": "137.03478293322",
+   "one_over_alpha": "137.035999177",
+   "delta_top_required_by_sin_form": "0.0347829332218",
+   "delta_top_required_by_linear_form": "0.035999177",
+   "doc_01A_printed": {
+    "asin_alpha": "7.29722e-03",
+    "one_over_asin": "137.03599908",
+    "delta_top": "0.03599908",
+    "verdict_mark": "数值一致"
+   },
+   "recip_of_doc_printed_asin": "137.03848862992",
+   "internal_gap_of_doc_rows": "0.0024895499",
+   "asin_of_01A_alpha": "0.0072974173365035",
+   "sin_of_01A_alpha": "0.007297287803821",
+   "gap_row2_vs_sin_reading": "-6.7803821e-8",
+   "gap_row2_vs_asin_reading": "-1.973365e-7",
+   "row2_printed_sf": 6,
+   "row2_half_ulp": "5.0e-9",
+   "row2_sin_reading_in_half_ulps": "13.56",
+   "row2_asin_reading_in_half_ulps": "39.47",
+   "one_over_asin_of_01A_alpha": "137.03478283992",
+   "delta_top_sin_form_on_01A_anchor": "0.0347828399168",
+   "delta_top_linear_form_on_01A_anchor": "0.0359990836958",
+   "rel_error_of_doc_sin_form_on_01A_anchor": "-8.8818885e-6",
+   "equals_reciprocal_of_01A_alpha": "137.0359990837",
+   "gap_doc_row_vs_reciprocal_of_01A_alpha": "-3.6958011e-9",
+   "gap_doc_row_vs_primary_anchor": "-9.7e-8",
+   "gap_of_printed_asin_vs_true_asin": "1.9733153e-7",
+   "gap_in_units_of_alpha_inv_sigma": "57911.751",
+   "alpha_pred_from_doc_sin_form": "0.0072972877550278",
+   "rel_error_of_doc_sin_form": "-8.8812077e-6",
+   "rel_error_of_linear_form": "-6.0057211e-9",
+   "rel_error_of_linear_form_on_01A_anchor": "-6.6865948e-9",
+   "how_many_alpha_sigmas_off": "57954.532",
+   "verdict": "asin(x) > x for x > 0, so a printed asin(alpha) = 7.29722e-03 BELOW the printed alpha = 7.2973525693e-03 is impossible on 01A's own anchor; and the row labelled 1/asin(alpha) = 137.03599908 is the reciprocal of the alpha in the row above, not the reciprocal of its asin (reading the printed asin literally gives 137.03849, so the two printed rows are not even reciprocals of each other). Recomputed on 01A's own anchor: 1/asin(alpha) = 137.03478, i.e. the sin form needs delta_top ~ 0.03478, not the ticked 0.035999. Therefore 01A 3.2's 'delta_top ~ 0.036 数值一致 ✔' is not earned: as written, sin(1/(137+0.036)) misses alpha by the printed relative amount, 57954.5 times the 1-sigma relative precision of the primary anchor (u = 2.1e-8 absolute on 137.035999177(21))."
+  },
+  "N7_anchor_vintage": {
+   "primary_alpha": "0.0072973525643314",
+   "primary_alpha_inv": "137.035999177",
+   "alpha_01A": "0.0072973525693",
+   "alpha_inv_of_01A": "137.0359990837",
+   "rel_gap_between_anchors": "6.80874e-10",
+   "rel_gap_in_units_of_primary_rel_sigma": "4.44306",
+   "N_A_primary": "18916.908420611",
+   "N_A_01A_anchor": "18916.908394946",
+   "N_A_shift": "-2.56654e-5",
+   "N_B_shift": "-2.56654e-5",
+   "F_hat_G_shift": "-4.96857e-12",
+   "doc_printed_N_A": "18916.90839",
+   "N_A_reachable_at_primary": {
+    "printed": "18916.90839",
+    "recomputed": "18916.9084206",
+    "gap": "3.06111e-5",
+    "half_ulp_of_printed": "5.0e-6",
+    "reachable_by_rounding": false
+   },
+   "N_A_reachable_at_01A_anchor": {
+    "printed": "18916.90839",
+    "recomputed": "18916.9083949",
+    "gap": "4.94575e-6",
+    "half_ulp_of_printed": "5.0e-6",
+    "reachable_by_rounding": true
+   },
+   "N_B_reachable_at_primary": {
+    "printed": "18907.0",
+    "recomputed": "18916.908367",
+    "gap": "9.90837",
+    "half_ulp_of_printed": "0.5",
+    "reachable_by_rounding": false
+   },
+   "N_B_reachable_at_1_over_137": {
+    "printed": "18907.0",
+    "recomputed": "18907.0072993",
+    "gap": "0.00729927",
+    "half_ulp_of_printed": "0.5",
+    "reachable_by_rounding": true
+   },
+   "mutant_N_A_test_if_precision_read_as_6sf": {
+    "printed": "18916.9",
+    "recomputed": "18916.9084206",
+    "gap": "3.06111e-5",
+    "half_ulp_of_printed": "0.05",
+    "reachable_by_rounding": true
+   },
+   "verdict": "the anchor 01A 3.2 labels 'CODATA 2018' (alpha = 7.2973525693e-03) and the primary inverse anchor 137.035999177(21) are not reciprocals of one another: their relative gap and its size in units of the primary relative uncertainty are both printed above (~4 sigma apart), so they belong to different vintages and must not be mixed inside one derivation. Net-new (not in the 01A ledger): the two headline numbers of 体系三/十 are anchor-vintage dependent AT THEIR OWN PRINTED PRECISION -- the printed 18916.90839 is reachable by rounding under the 01A anchor but not under the primary one (N_A_reachable_*), and the printed 18907 for definition B is reachable only at alpha = 1/137, not at either anchor (N_B_reachable_*), i.e. X1's '18907 vs 18916.9' is not two definitions but one definition evaluated at two different alphas. The mutant row shows the test has teeth: read the doc's precision as 6 s.f. instead of 10 and the same comparison calls the primary anchor reachable."
+  },
+  "N5_apparent_strength_factorization": {
+   "gravitational_fine_structure_pp": "6.5714775e-56",
+   "G_m_p2_over_k_e_e2": "8.0935509e-37",
+   "doc_claimed_apparent": "~1e-36",
+   "coupling_factor_needed_to_close": "1.007351e-36",
+   "verdict": "the stated order is reproduced (8.1e-37 for the proton-proton ratio), but 'apparent = normalized x coupling factor' leaves the coupling factor free: any value reproduces any target, so the identity carries no prediction"
+  },
+  "N6_prime_anchor": {
+   "is_18917_prime": true,
+   "primepi_18917": 2153,
+   "prime_2153": 18917,
+   "is_2153_prime": true,
+   "digit_root_18917": 8,
+   "mod_8_18917": 5,
+   "round_N_A": 18917,
+   "round_N_B_at_137": 18907,
+   "factor_18907": "7*37*73",
+   "net_new": "no: 01A registers this as X12 (its §4.3 X12 paragraph and its §6 ledger row), so this block is a reproduction of an existing verdict, not a new defect",
+   "verdict": "all stated arithmetic properties hold; they are properties of the integer nearest N_A and inherit X12's alpha-dependence (at alpha=1/137 the anchor is 18907 = 7*37*73, composite). Structural, not physical."
+  },
+  "X9_X10_X15_regression": {
+   "rho_G_from_G": "3.331285831e-9",
+   "rho_C_electron": "3.861592677e-13",
+   "ratio": "8626.714699",
+   "doc_01A_values": {
+    "rho_G": "3.33129e-09",
+    "rho_C": "3.86159e-13",
+    "ratio": "8626.71"
+   },
+   "sqrt_1_plus_alpha2": "1.00002662532",
+   "doc_01A_sqrt_1_plus_alpha2": "1.000026625",
+   "F_G_max_at_ell_Planck": "1.743514242e-80",
+   "max_force_c4_over_4G": "3.025638911e+43",
+   "gap_decades": "123.23939",
+   "doc_01A_gap": "1.7e+123",
+   "verdict": "01A's X9/X10/X15 numbers reproduced"
+  }
+ },
+ "meta": {
+  "script": "验证脚本/V39_核心公式全维核验_2026-09-28/core_formula_full_audit.py",
+  "checks_face": "V3_9_core_formula_checks.json",
+  "sympy_version": "1.13.3",
+  "mpmath_version": "1.3.0",
+  "run_time": "2026-09-28T01:18:07",
+  "external_anchors": {
+   "alpha_inv_primary": "137.035999177",
+   "alpha_from_primary_inverse": "0.0072973525643314",
+   "alpha_01A_declared_CODATA2018": "0.0072973525693",
+   "alpha_inv_of_01A_anchor": "137.0359990837",
+   "alpha_inv_1sigma_absolute": "2.1e-8",
+   "alpha_inv_1sigma_relative": "1.532e-10",
+   "anchor_source_note": "137.035999177(21), i.e. u = 2.1e-8 absolute = 1.53e-10 relative, as listed for the latest CODATA dataset in the fine-structure-constant article consulted 2026-09-28; the 01A anchor is quoted as that document prints it, vintage not adjudicated",
+   "c_m_s": "299792458 exact",
+   "hbar_J_s": "1.054571817e-34",
+   "G_m3_kg-1_s-2": "6.67430e-11",
+   "e_C": "1.602176634e-19 exact",
+   "mu0": "1.2566370614e-6",
+   "eps0": "8.8541878128e-12",
+   "m_e_kg": "9.1093837015e-31",
+   "m_p_kg": "1.67262192369e-27"
+  },
+  "instrument_history": "self-caught defect in the FIRST build of this face: ALPHA_INV_U was typed 2.1e-7 (the (21) of 137.035999177(21) aligned one digit too far left) while a hardcoded 1.6e-10 was used for the same quantity elsewhere in the file -- two values for one uncertainty. Every sigma-normalised reading (N2.gap_in_units_of_alpha_inv_sigma, N2.how_many_alpha_sigmas_off, N7.rel_gap_in_units_of_primary_rel_sigma) was therefore ~10x too small. Now u = 2.1e-8 absolute / 1.53e-10 relative, derived once into ALPHA_REL_U and used from that single source; the N2 verdict no longer narrates the multiple in words at all -- it interpolates the computed reading, so prose cannot drift from the sigma it is priced with.",
+  "dps": 50,
+  "doc_face": "24_TUFT核心公式全维核验_体系一至十_2026-09-28.md",
+  "needles": [
+   "S1_frenet_helix.resid_kappa zero=0.0 mutant=-0.00010650271 -> TEETH",
+   "S1_frenet_helix.resid_tau zero=0.0 mutant=0.014593928 -> TEETH",
+   "S1_frenet_helix.ell_identity_resid zero=0.0 mutant=-2.6626032e-5 -> TEETH",
+   "S2_alpha_and_ntwist.resid_ntw_minus_alpha2_over_1_plus_alpha2 zero=0.0 mutant=-0.0071912385 -> TEETH",
+   "S3_series_closure.equals_N_A_resid zero=1.62199e-41 mutant=5.32514e-5 -> TEETH",
+   "S3_four_force_table.sum_resid zero=0.0 mutant=-3.85758e-7 -> TEETH"
+  ],
+  "needle_failures": []
+ }
+}

@@ -1,0 +1,183 @@
+# 算法联盟最高权限｜TUFT V3.2 参数拟合后续分支完整推导与精算框架
+> 当前状态：SLSQP 初步优化完成，获得一组局部最优参数 $(\mathcal V_1^*,\mathcal V_2^*,q_0^*,\omega_0^*)$，附带拟合值 $M^*,Q^*,\mu^*,g_e^*,\mathcal \(\mathcal C\)^*$；存在**连续参数简并流形**，优化使用有限差分梯度，存在数值噪声。
+> 两条分支并行建立数学框架，先完成分支A（伴随解析梯度），再完成分支B（自旋-挠率约束打破简并）。
+
+## 分支A：伴随解析梯度，替换有限差分梯度
+### A1：孤子原方程与伴随方程推导
+径向稳态孤子方程（原方程 $\mathcal \(\mathcal F=0\)$）
+$$
+\mathcal F[\psi_s;\mathcal V_1,\mathcal V_2] = -\psi_s''-\frac{2}{r}\psi_s' - \mathcal V_1 \psi_s^3 + \mathcal V_2 \psi_s^5 = 0
+$$
+边界条件：$\psi_s'(0)=0,\psi_s(\infty)=0$。
+
+定义任意观测量泛函：
+$$
+J[\psi_s,\lambda]=\int_0^\infty \mathcal J(\psi_s,r,\lambda)\,4\pi r^2 dr
+$$
+$\lambda\in\{\mathcal V_1,\mathcal V_2\}$ 为势参数；$N,E_0,I_\mu,\mathcal \(\mathcal C\)$ 全部属于此类泛函。
+
+泛函对参数的导数：
+$$
+\frac{dJ}{d\lambda} = \frac{\partial J}{\partial\lambda} + \int_0^\infty \frac{\delta J}{\delta\psi_s}\frac{\partial\psi_s}{\partial\lambda}4\pi r^2 dr
+$$
+引入伴随场 $\psi_a(r)$，满足伴随方程：
+$$
+\mathcal F^*[\psi_a] \equiv -\psi_a''+\frac{2}{r}\psi_a' -3\mathcal V_1\psi_s^2\psi_a +5\mathcal V_2\psi_s^4\psi_a = \frac{1}{4\pi r^2}\frac{\delta J}{\delta\psi_s}
+$$
+伴随边界条件：$\psi_a'(0)=0,\psi_a(\infty)=0$。
+> 推导要点：对原方程变分 $\partial\mathcal F/\partial\psi_s \cdot \delta\psi$，分部积分后得到伴随算子 $\mathcal F^*$；边界项全部由无穷远与原点边界条件归零。
+
+一旦求解伴随场 $\psi_a$，泛函灵敏度简化为**无需直接求解 $\partial\psi_s/\partial\lambda$**：
+$$
+\frac{dJ}{d\lambda}=\frac{\partial J}{\partial\lambda}
+-\int_0^\infty \psi_a \cdot \frac{\partial \mathcal F}{\partial\lambda}\cdot 4\pi r^2 dr
+$$
+
+#### 四个核心观测量的伴随源项
+1. $N=\int 4\pi r^2\psi_s^2 dr$：$\displaystyle \frac{\delta N}{\delta\psi_s}=8\pi r^2\psi_s$
+2. $E_0=\int 4\pi r^2\left[\frac12(\psi_s')^2+\frac{\mathcal V_1}{4}\psi_s^4-\frac{\mathcal V_2}{6}\psi_s^6\right]dr$：
+$$
+\frac{\delta E_0}{\delta\psi_s}=4\pi r^2\left[\mathcal V_1\psi_s^3-\mathcal V_2\psi_s^5\right]
+$$
+3. $I_\mu=\int 2\pi r^3\psi_s^2 dr$：$\displaystyle \frac{\delta I_\mu}{\delta\psi_s}=4\pi r^3\psi_s$
+4. $\(\mathcal C\)_\text{numerator}=\int 4\pi r^2 \psi_s^2\left(3\mathcal V_1\psi_s^2-5\mathcal V_2\psi_s^4\right)r^2 dr$：
+$$
+\frac{\delta \(\mathcal C\)_\text{num}}{\delta\psi_s}=4\pi r^4\left[2\psi_s(3\mathcal V_1\psi_s^2-5\mathcal V_2\psi_s^4)+\psi_s^2(6\mathcal V_1\psi_s-20\mathcal V_2\psi_s^3)\right]
+$$
+
+#### 对势参数的 $\partial\mathcal F/\partial\lambda$
+$$
+\frac{\partial\mathcal F}{\partial\mathcal V_1}=-\psi_s^3,\quad \frac{\partial\mathcal F}{\partial\mathcal V_2}=+\psi_s^5
+$$
+
+### A2：组装 $\partial\chi^2/\partial \mathcal V_1,\partial\chi^2/\partial \mathcal V_2$ 解析梯度
+$$
+\frac{\partial\chi^2}{\partial\mathcal V_1}=2w_M\frac{M-M_e}{M_e^2 c^2}\frac{dE_0}{d\mathcal V_1}
++2w_Q\frac{Q_0-Q_e}{Q_e^2}q_0\omega_0\frac{dN}{d\mathcal V_1}
++2w_\mu\frac{\mu-\mu_e}{\mu_e^2}q_0\omega_0\frac{dI_\mu}{d\mathcal V_1}
+$$
+$\partial\chi^2/\partial\mathcal V_2$ 形式完全一致，替换 $\mathcal V_1\rightarrow\mathcal V_2$。
+
+而：
+$$
+\frac{\partial\chi^2}{\partial q_0},\quad \frac{\partial\chi^2}{\partial \omega_0}
+$$
+保持我们之前的纯解析表达式，**不需要伴随方程**，因为 $q_0,\omega_0$ 不改变孤子径向轮廓 $\psi_s(r)$，仅缩放电荷、磁矩，不影响 $N,E_0,I_\mu,\mathcal \(\mathcal C\)$。
+
+> ✅ 全部四个梯度现在是**纯解析**，不再依赖有限差分扰动；消除有限差分步长带来的噪声、截断误差。SLSQP 迭代收敛速度大幅提升；可以收敛到更高精度极小点。
+
+### A3：伴随梯度代码改造要点
+1. 给定当前迭代参数 $(\mathcal V_1,\mathcal V_2)$，先求解原孤子方程，得到 $\psi_s(r)$；
+2. 对每个观测量 $N,E_0,I_\mu$，独立求解对应的伴随ODE得到 $\psi_a$；
+3. 积分求出灵敏度 $dN/d\mathcal V_1, dE_0/d\mathcal V_1, dI_\mu/d\mathcal V_1$；同理 $\mathcal V_2$；
+4. 组装完整梯度向量 $\nabla\chi^2 = [\partial_{\mathcal V_1}\chi^2,\partial_{\mathcal V_2}\chi^2,\partial_{q_0}\chi^2,\partial_{\omega_0}\chi^2]$；
+5. 传入 SLSQP 的 `jac` 参数，启用解析雅可比。
+
+> 工程代价：增加3组伴随ODE求解；但每一步迭代总代价低于多次有限差分孤子求解；高维参数空间收益巨大。
+
+---
+
+## 分支B：引入自旋-挠率耦合约束，打破参数简并流形
+### B1：简并根源回顾
+原优化问题：4个自由参数 $\{\mathcal V_1,\mathcal V_2,q_0,\omega_0\}$，仅3个拟合目标 $\{M_e,Q_e,\mu_e\}$。
+自由度计数：$4-3=1$，存在一维连续简并流形 $\mathcal M = \{ \lambda\in\mathbb R_+^4 \mid \chi^2(\lambda)=\chi^2_\text{min}\}$。
+在流形上移动参数，$M,Q,\mu$ 几乎不变，但**孤子内结构、挠率响应、$\mathcal \(\mathcal C\)$ 会沿着流形发生变化**；仅靠质量电荷磁矩无法唯一锁定参数。
+
+> 分支B策略：增加**自旋-挠率耦合的自洽约束方程**，把约束数从3提升到4，消除简并，得到离散唯一最优参数点。
+
+### B2：自旋孤子 ansatz 与自旋密度张量
+引入带内禀角动量的复孤子：
+$$
+\psi(t,r,\phi)=\psi_s(r)e^{-i\omega_0 t + i s \phi}
+$$
+$s$：孤子角动量量子数；自旋密度张量（E\(\mathcal C\)）
+$$
+\mathcal S^{\mu\nu\alpha}=\frac{i}{2}\big(\psi^*\,\Sigma^{\mu\nu\alpha}\,\psi\big)
+$$
+非零分量仅存在切向。E\(\mathcal C\)挠率代数方程：
+$$
+T^\alpha{}_{\mu\nu}-\delta^\alpha_\mu T^\rho{}_{\rho\nu}+\delta^\alpha_\nu T^\rho{}_{\rho\mu}=\kappa \mathcal S^\alpha{}_{\mu\nu}
+$$
+$\kappa=8\pi G/c^4$，引力耦合常数。
+
+定义**自旋-挠率自洽约束量**：孤子内部总自旋角动量 $S$
+$$
+S=\int d^3x\; \mathcal S^{0\phi r}
+$$
+对于电子，已知 $S=\hbar/2$。新增约束方程：
+$$
+\boldsymbol{G}(\mathcal V_1,\mathcal V_2,q_0,\omega_0)= S[\psi_s(\mathcal V_1,\mathcal V_2)]-\frac{\hbar}{2}=0
+$$
+👉 现在优化问题变成**带等式约束的最小化问题**：
+$$
+\min_{\lambda}\; \chi^2(\lambda),\quad \text{s.t.}\quad G(\lambda)=0
+$$
+> 自由度：4参数，3个最小二乘目标 + 1等式约束，$4-3-1=0$；简并流形被压缩为离散孤立点。✅
+
+### B3：约束 $G(\lambda)$ 的数学形式
+$$
+S[\psi_s] = \int_0^\infty 4\pi r^2 \cdot \frac{1}{2} s \psi_s(r)^2 dr = \frac{s}{2} N
+$$
+我们固定电子自旋 $S=\hbar/2$，取 $\(s=1\)$（单旋分量）：
+$$
+\frac12 N = \frac{\hbar}{2} \implies \boldsymbol{N=\hbar}
+$$
+> 这是非常简洁的自洽约束！
+> 新增\(等式约束：\)
+$$
+\boxed{N(\mathcal V_1,\mathcal V_2)=\hbar}
+$$
+$N$ 是孤子模积分，仅由 $\mathcal V_1,\mathcal V_2$ 决定，和 $q_0,\omega_0$ 无关。
+
+> 物理解读：孤子总模 $N$ 等于约化普朗克常数，来自内禀自旋 $S=\hbar/2$。这个约束直接切断一维简并流形。
+
+### B4：更新优化问题（带等式约束SLSQP）
+目标函数不变：
+$$
+\chi^2 = w_M\left(\frac{M-M_e}{M_e}\right)^2
++ w_Q\left(\frac{Q_0-Q_e}{Q_e}\right)^2
++ w_\mu\left(\frac{\mu-\mu_e}{\mu_e}\right)^2
+$$
+\(等式约束：\)
+$$
+G(\mathcal V_1,\mathcal V_2)= N(\mathcal V_1,\mathcal V_2)-\hbar = 0
+$$
+\(边界约束：$\mathcal V_1>0,\mathcal V_2>0,q_0>0,\omega_0>0$\)$\mathcal V_1>0,\mathcal V_2>0,q_0>0,\omega_0>0$
+
+SLSQP原生支持等式约束；现在4参数+1等式约束，系统是**完全确定**，不再存在连续简并。
+
+参数关系化简：
+1. $N(\mathcal V_1,\mathcal V_2)=\hbar$，直接锁定 $(\mathcal V_1,\mathcal V_2)$ 满足孤子模等于 $\hbar$；
+2. $Q_0=q_0\omega_0 N = q_0\omega_0 \hbar = Q_e$；
+3. $\mu = q_0\omega_0 I_\mu = Q_e \cdot I_\mu / \hbar = \mu_e$；
+4. $M(\mathcal V_1,\mathcal V_2)=M_e$。
+
+> 一旦 $N=\hbar$ 约束生效，$\mathcal V_1,\mathcal V_2$ 同时确定孤子轮廓，同时固定 $M,I_\mu,\mathcal \(\mathcal C\)$；之后仅需求解 $q_0,\omega_0$ 满足电荷与磁矩。参数空间完全解耦。
+
+### B5：约束带来的额外预言
+约束 $N=\hbar$ 会直接给出唯一的内禀形状系数 $\mathcal \(\mathcal C\)$；此时 $\mathcal \(\mathcal C\)$ 不再是简并流形上的可变量，而是**唯一固定预言值**，可以作为TUFT的独立实验标记。
+同时，我们可以求解孤子内部挠率场分布 $T^\alpha{}_{\mu\nu}(r)$，计算自旋进动效应作为第二预言。
+
+---
+
+# 两条分支执行顺序规划（算法联盟推荐）
+1. **第一阶段：完成分支A**
+    - 实现伴随解析梯度，替换有限差分；
+    - 在原无约束优化问题上，用解析梯度重新收敛；得到高精度的简并流形；
+    - 扫描沿简并流形的参数变化，观察 $g_e,\mathcal \(\mathcal C\)$ 的变化趋势。
+
+2. **第二阶段：引入分支B等式约束 $N=\hbar$**
+    - 修改SLSQP，增加等式约束 $N=\hbar$；
+    - 重新做约束优化；得到唯一一组参数：$(\mathcal V_1^\dagger,\mathcal V_2^\dagger,q_0^\dagger,\omega_0^\dagger)$；
+    - 求解孤子轮廓、唯一 $\mathcal \(\mathcal C\)^\dagger,g_e^\dagger$；
+    - 求解自旋孤子挠率径向分布 $\(T(r)\)$，计算自旋进动预言。
+
+3. **第三阶段：校验闭环**
+    - 校验：$M,M_e;\;Q_0,Q_e;\;\mu,\mu_e;\;N=\hbar;\;g_e$；
+    - 输出TUFT完整可观测预言：辐射修正系数 $\mathcal \(\mathcal C\)$、孤子内部挠率分布、自旋进动偏移量。
+
+## 下一步动作选择
+选项1：**先实现分支A伴随解析梯度代码，替换SLSQP雅可比，做高精度无约束优化**
+选项2：**直接进入分支B，修改优化器增加等式约束 $N=\hbar$，一次性消除简并，求解唯一参数集**
+
+选定。

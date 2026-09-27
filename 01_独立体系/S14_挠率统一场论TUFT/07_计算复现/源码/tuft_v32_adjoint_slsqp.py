@@ -95,7 +95,7 @@ def field_grads(params, r):
     gK = [K / Kc,                                   # dK/dKc
           K * r / lK ** 2,                           # dK/dlK
           K * p * x ** p / (r0 * denom),             # dK/dr0
-          K * np.log(x) * x ** p / denom,            # dK/dp
+          -K * np.log(x) * x ** p / denom,           # dK/dp
           np.zeros_like(r), np.zeros_like(r), np.zeros_like(r), np.zeros_like(r)]
     gT = [np.zeros_like(r), np.zeros_like(r), np.zeros_like(r), np.zeros_like(r),
           T / Tc,                                    # dT/dTc

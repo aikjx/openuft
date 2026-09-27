@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "script": "验证脚本/V32_参数拟合后续分支_2026-09-27/branch_ab_symbolic_audit.py",
+    "run_time": "2026-09-28T00:00:54",
+    "subject": "来稿_TUFT_V3.2参数拟合后续分支_伴随梯度与自旋约束_2026-09-27.txt",
+    "method": "sympy exact symbolic derivation; every check prints a nonzero control",
+    "sympy_version": "1.13.3",
+    "scope": "仅算子代数/变分符号/自由度计数；未重解背景、未做电子拟合、不判定物理真实性"
+  },
+  "checks": {
+    "T1_el_sign": {
+      "deltaE0_over_4pir2": "V1*psi(r)**3 - V2*psi(r)**5 - Derivative(psi(r), (r, 2)) - 2*Derivative(psi(r), r)/r",
+      "resid_ed_minus_F_doc": "2*(V1 - V2*psi(r)**2)*psi(r)**3",
+      "resid_ed_minus_F_code": "0",
+      "F_doc_is_EL_equation": false,
+      "F_code_is_EL_equation": true,
+      "mutant_check": "ed-F_doc must be exactly 2P (nonzero): True",
+      "verdict": "PASS: 来稿 A1 的 F 与其自身 E0 的 EL 方程差 2P（非线性块符号相反）；F=0 其实是把 E0 的势能整体反号后（−V1/4ψ⁴+V2/6ψ⁶）的驻点方程，而来稿所写 E0 的势 +V1/4ψ⁴−V2/6ψ⁶ 在 ψ→∞ 无下界"
+    },
+    "T2_adjoint": {
+      "weighted_boundary_form": "4*pi*r*(-r*(u(r)*Derivative(v(r), (r, 2)) - v(r)*Derivative(u(r), (r, 2))) - 2*u(r)*Derivative(v(r), r) + 2*v(r)*Derivative(u(r), r))",
+      "resid_weighted_minus_boundary_total_derivative": "0",
+      "unweighted_formal_adjoint": "A(r)*v(r) - Derivative(v(r), (r, 2)) + 2*Derivative(v(r), r)/r - 2*v(r)/r**2",
+      "resid_来稿伴随_minus_完备无权伴随": "-2*v(r)/r**2",
+      "mutant_check": "self-adjoint resid==0 and gap==-2v/r^2 (nonzero): True",
+      "verdict": "PASS: 4πr²dr 加权下 L 自伴（差为全导数）；来稿 +2/r 版不是加权伴随，也不是完备无权伴随（缺 -2ψ_a/r²）"
+    },
+    "T3_envelope": {
+      "deltaE0_delta_psi_over_4pir2_on_F_doc": "2*(V1 - V2*psi(r)**2)*psi(r)**3",
+      "deltaE0_delta_psi_over_4pir2_on_F_code": "0",
+      "来稿源项_minus_正确值_on_F_doc": "4*pi*r**2*(-V1 + V2*psi(r)**2)*psi(r)**3",
+      "来稿源项_minus_正确值_on_F_code": "4*pi*r**2*(V1 - V2*psi(r)**2)*psi(r)**3",
+      "mutant_check": "on-doc==2P, on-code==0, 来稿 resid nonzero on both: True",
+      "verdict": "PASS: 来稿所列 4πr²P 在两个背景上都不等于 δE0/δψ（F_doc 上正确值是 2·4πr²P，F_code 上是 0）⇒ 包络定理给出 dE0/dV1=¼∫ψ⁴·4πr²dr、dE0/dV2=−1/6∫ψ⁶·4πr²dr，E0 不走伴随"
+    },
+    "T4_degeneracy": {
+      "analytic_null_direction": "t=(0,0,q0,-omega0) 即 dq0/q0 = -dw0/omega0（Pi=q0*omega0 不变）",
+      "J_times_t": "Matrix([[0], [0], [0]])",
+      "grad_Nhbar_times_t": "Matrix([[0]])",
+      "rank_J_of_targets": 3,
+      "rank_stacked_with_N_hbar": 3,
+      "nullity_after_constraint": 1,
+      "numeric_nullspace_basis": [
+        [
+          1.60626626139562e-14,
+          0.0,
+          -0.8181818181818181,
+          1.0
+        ]
+      ],
+      "来稿断言_4参数3目标1等式_自由度0": false,
+      "mutant_check": "J*t==0 and gradG*t==0 and rank stays 3 (not 4): True",
+      "verdict": "PASS: 简并方向 t=(0,0,q0,−ω0) 使 dM=dQ0=dμ=0；∇(N−ℏ) 在 (q0,ω0) 分量为 0 ⇒ ∇G·t≡0，加入 N=ℏ 后增广雅可比秩仍为 3（零度仍为 1）⇒ 不切断简并"
+    },
+    "T5_count": {
+      "profile_unknowns": 2,
+      "profile_equations_if_N_hbar_enforced": 3,
+      "over_determined": true,
+      "effective_independent_parameters": 3,
+      "least_squares_targets": 3,
+      "profile_count_note": "3 方程 / 2 未知 ⇒ generic 无解（需 1 个相容性条件）",
+      "degeneracy_note": "Π 固定时 q0/ω0 任意 ⇒ 1 维因子分解简并存活（见 T4）",
+      "verdict": "PASS: 来稿 \"4−3=1 流形 + 1 等式 ⇒ 0 自由度\" 的计数不成立：有效独立量已是 3（V1,V2,Π）对 3 目标；简并专属 (q0,ω0) 因子分解，而 N=ℏ 只作用于剖面并使其过定"
+    },
+    "T6_orbital_spin": {
+      "Lz_density_over_d3x": "f0**2*s",
+      "ratio_Lz_to_N": "s",
+      "来稿_S_equals_s_over_2_times_N": false,
+      "resid_ratio_minus_s": "0",
+      "consequence_for_s_1": "按轨道算符：L_z = s·N ⇒ s=1 与 S=ℏ/2 给 N=ℏ/2（非来稿的 N=ℏ）；1/2 只能来自旋量 2×2 表示，而标量场 Σ^{μνα}=0",
+      "mutant_check": "ratio == s exactly (no 1/2): True",
+      "verdict": "PASS: 相位缠绕 e^{isφ} 的 Noether 轨道角动量给出 L_z/N=s（无 1/2）；来稿 S=(s/2)N 的 1/2 属旋量自旋，标量 ansatz 下无定义 ⇒ N=ℏ 的数值目标不唯一"
+    }
+  }
+}

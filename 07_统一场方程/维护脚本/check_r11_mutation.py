@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-r"""R11、R12、R13、R14、R15、R16、R17、R18、R19、R20 与 R21 十一层判据的**外部**变异核验：从引擎外面改那几条算术，看谁变红。
+r"""R11、R12、R13、R14、R15、R16、R17、R18、R19、R20、R21 与 R22 十二层判据的**外部**变异核验：从引擎外面改那几条算术，看谁变红。
 
 为什么要有这个脚本：R11 的判据（$N\mid 3Q$）此前只在引擎内部被自己的门禁对照过，
 "把它写错会不会有人发现"只存在于某一次对话的口头里 —— 而一个没人能重跑的读数等于没人看守。
@@ -68,7 +68,7 @@ r"""R11、R12、R13、R14、R15、R16、R17、R18、R19、R20 与 R21 十一层�
     路丙的 triality 号只出现在断言里、不出现在 §12 的任何数字里 $\Rightarrow$ 它动的只有 PASS 数，
     这正好把"门禁在看守报告里看不见的断言"这件事本身变成了读数；
   * 一条良性改动（只补尾注释，语义不动）不得误报，否则这台仪器是"永远红"而不是"能红"。
-    良性例现在十一层各一条：只测 R11 那侧的良性改动，等于没核对 §11、§12、§13、§14、§14.8、§14.9、§14.10
+    良性例现在十二层各一条：只测 R11 那侧的良性改动，等于没核对 §11、§12、§13、§14、§14.8、§14.9、§14.10
     与 §14.10 续段、§14.11、§14.12
     的读数在语义不动时**不**动。
 
@@ -271,7 +271,7 @@ $C_2^{lat}$ 从 8 读成 5 $\Rightarrow$ 这是本层的一个变异针位"—�
 两者的共同形式是——**植针位必须在下游有一条会红的路径，assert 不算路径**。
 
 命名边界（如实登记）：文件名与台账名仍叫 `check_r11_mutation`，因为它从 R11 起家；它此刻覆盖
-**十一层**，这一件事由台账里的 `layers` 字段与每例的 `layer` 字段成文，不由文件名成文。
+**十二层**，这一件事由台账里的 `layers` 字段与每例的 `layer` 字段成文，不由文件名成文。
 
 用法：python 维护脚本/check_r11_mutation.py    （慢：每一例都要把整台引擎跑一次完整自检，
       例数与层数不写死在这里 —— 由台账里的 `cases_total`、`layers`、`layer_mutants` 打印）
@@ -311,6 +311,7 @@ BLOCK9 = '宽档接进引擎（R19）'
 BLOCK10 = '导数分布模去全总导数（R20）'
 # R21 的 stdout 摘要行标题（报告 §14.12 的标题另有字样，本条只处理 stdout）
 BLOCK11 = '两套归一化之间的翻译因子（R21）'
+BLOCK12 = 'f=2 这座桥的逐格核验（R22）'
 # 报告 §11 里那四个读数：每个都印自 GLOB，也就是印自被植入缺陷的那段算术的下游。
 G_SIZE_RE = re.compile(r'活下来 (\d+) 个')          # |Gamma|（R12.1 的枚举）
 G_FLAG_RE = re.compile(r'\*\*不成立\*\*|\*\*不同\*\*|定不出唯一的群')   # 同判/互化/定名失败
@@ -438,7 +439,36 @@ P_K0_RE = re.compile(r'\$k_\{\\min\}=0\$ 的类共 (\d+) 个')                  
 #   单值族（母格两数、甲乙、丙丁、两张口径对照、按维数歧义、$f_T$、$f_{C_2}$、对照集合、$U(1)$、母格 $C_2(\theta)$、b 主判据、非阿贝尔对照）各自在一行里只出现一次 $\Rightarrow$ set 的大小必须是 1；
 #   逐因子 $C_2$ 族 4 次命中而只有 3 条去重（$SU(2)_L$ 与 $SU(2)_R$ 的四元组在捕获字段上同形，因子名不在捕获组里）$\Rightarrow$ 这一族按命中次数判（存 (n, 去重集)）；
 #   逐 $b$ 行 3 条、逐格比值 8 条按次数判（比值那族捕获组含因子与标号 ⇒ 8 条互不相同）。
-SEC1412_A, SEC1412_B = '### 14.12', '## 15.'
+SEC1412_A, SEC1412_B = '### 14.12', '### 14.13'   # 上界必须是下邻居标题：旧值 '## 15.' 会把 §14.13 的 64 张表行吞进 §14.12 窗（实测 5→69），而 r21_live 钉的是 q_rows[0]==5 ⇒ 每一例都不 clean
+SEC1413_A, SEC1413_B = '### 14.13', '## 15.'
+R22_CELLS_RE = re.compile('名册 (\\d+) 格（链侧非零 (\\d+) 格）上三路不同的格 \\*\\*(\\d+)\\*\\* 个')
+R22_NOF_RE = re.compile('与乙不同 (\\d+) 格（要求 \\$=(\\d+)\\$，即每一格都偏）')
+R22_DROPN_RE = re.compile('把分支重数 \\$n\\$ 丢掉之后与甲不同 (\\d+) 格')
+R22_HIWT_RE = re.compile('代替其权重多重集后与甲不同 (\\d+) 格')
+R22_KSE_RE = re.compile('\\$n>1\\$ 的分支行共 (\\d+) 行')
+R22_BROWS_RE = re.compile('三因子 \\$=(\\d+)\\$ 行，违例 \\*\\*(\\d+)\\*\\* 行')
+R22_BCTL_RE = re.compile('与链侧不同的行 (\\d+) 行（要求 \\$=(\\d+)\\$，即每一行都偏）')
+#  §14.13 的两张表**分块**取指纹（数据行数 + sha1 前 12 位）。这把尺子与 §14.12/§14.11 用的
+#  `sorted(全部 | 行)` 不是同一把：后者把表头、分隔行与两张表并成一个集合（实测 §14.13 窗 64 行
+#  vs 分块口径 54/6）⇒ 注释必须点名这把尺子，否则指纹对不上会被读成"版面漂了"。
+def r22_table_fingers(win, want):
+    """按 Markdown 表块切窗：`want` 是第几张表（1 起），返回（数据行数, sha1 前 12 位）。
+    表头行**不进** sha1（只留数据行）；表头的列数不参与本读数。"""
+    blocks, cur = [], None
+    for ln in win.split('\n'):
+        if ln.startswith('|'):
+            if cur is None:
+                cur = []
+                blocks.append(cur)
+            cur.append(ln)
+        else:
+            cur = None
+    if len(blocks) < want:
+        return (0, '')
+    data = [l for l in blocks[want - 1] if not l.startswith('|---')][1:]
+    return (len(data), hashlib.sha1('\n'.join(data).encode('utf-8')).hexdigest()[:12])
+
+
 Q_DIM_RE = re.compile(r'\\dim\\mathfrak g=(\d+)\$、全量 (\d+) 个 Dynkin 标号')
 Q_MIS_RE = re.compile(r'个标号上甲乙不等的 (\d+) 个；丙丁在 (\d+) 对')
 Q_TRI_RE = re.compile(r'）上违例各 (\d+)、(\d+)')
@@ -761,11 +791,21 @@ CASES = [
      'mutant', Q_AMBTRUNC, 'R21'),
     ('b11', '良性：给 §14.12 的 `T21_BYKEY = dict((x[0], x) for x in T21_FAC)` 那行补一条尾部注释（语义不动）',
      'benign', Q_OK21, 'both'),
+    ('r1', 'R22（第十二层）mutant 例 r1：钉 jia = t22_T(ms, bs) / F(2) ⇒ 期望红 R22.0',
+     'mutant', (b'                jia = t22_T(ms, bs) / F(2)', b'                jia = t22_T(ms, bs)'), 'R22'),
+    ('r2', 'R22（第十二层）mutant 例 r2：钉 d[w] = d.get(w, 0) + k * n ⇒ 期望红 R22.0',
+     'mutant', (b'                d[w] = d.get(w, 0) + k * n', b'                d[w] = d.get(w, 0) + k'), 'R22'),
+    ('r3', 'R22（第十二层）mutant 例 r3：钉 t22_nkse += sum(1 for _l, n, _sm in pl ⇒ 期望红 R22.0',
+     'mutant', (b'                t22_nkse += sum(1 for _l, n, _sm in pl if n > 1)', b'                t22_nkse += sum(1 for _l, n, _sm in pl if n > 100)'), 'R22'),
+    ('r4', 'R22（第十二层）mutant 例 r4：钉 t22_bctl += 1 if lat * F(2) != clf els ⇒ 期望红 R22.1',
+     'mutant', (b'            t22_bctl += 1 if lat * F(2) != clf else 0', b'            t22_bctl += 1 if lat != clf else 0'), 'R22'),
+    ('b12', "R22（第十二层）benign 例 b12：钉 T22_STAGE = [('422', SUB_422, 'SU4'),  ⇒ 期望红 无（良性，两侧都必须绿）",
+     'benign', (b"    T22_STAGE = [('422', SUB_422, 'SU4'), ('3221', SUB_3221, 'SU3')]", b"    T22_STAGE = [('422', SUB_422, 'SU4'), ('3221', SUB_3221, 'SU3')]  # \xe4\xb8\xa4\xe6\xa1\xa3\xef\xbc\x9a\xe5\xaf\xb9\xe8\xa7\x92\xe5\xad\x90\xe7\xbe\xa4\xe5\x90\x84\xe5\x8f\x96\xe8\x87\xaa\xe5\xb7\xb1\xe7\x9a\x84\xe5\x9b\xa0\xe5\xad\x90"), 'R22'),
 ]
 
 # 这台仪器**应当**看守的层：写死在这里，不 from CASES 推（推出来的名单会被"删掉一整层变异体"这件事
 # 自己抹平 ⇒ 那条自查是空转的）。少一层、多一层都判 INVALID。
-EXPECTED_LAYERS = ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20', 'R21')
+EXPECTED_LAYERS = ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20', 'R21', 'R22')
 
 
 def read_source():
@@ -832,6 +872,15 @@ def run(d):
     # §14.12（R21）再单独开窗：下界 '## 15.'，上界就是本节标题 ⇒ 与 §14.11 那窗不重叠。
     a, bnd = rep.find(SEC1412_A), rep.find(SEC1412_B)
     sec1412 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
+    a, bnd = rep.find(SEC1413_A), rep.find(SEC1413_B)
+    sec1413 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
+    m22 = R22_CELLS_RE.search(sec1413)
+    n22 = R22_NOF_RE.search(sec1413)
+    d22 = R22_DROPN_RE.search(sec1413)
+    h22 = R22_HIWT_RE.search(sec1413)
+    k22 = R22_KSE_RE.search(sec1413)
+    br22 = R22_BROWS_RE.search(sec1413)
+    bc22 = R22_BCTL_RE.search(sec1413)
     p1411rows = sorted(l for l in sec1411.split('\n') if l.startswith('|'))
     qrows12 = sorted(l for l in sec1412.split('\n') if l.startswith('|'))
     krows10 = sorted(l for l in sec1410.split('\n') if l.startswith('|'))
@@ -846,7 +895,7 @@ def run(d):
             'r11_fail_ids': [x for x in fails if x.startswith('R11')],
             'layer_fail_ids': dict((k, [x for x in fails if x.startswith(k)])
                                    for k in ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17',
-                                             'R18', 'R19', 'R20', 'R21')),
+                                             'R18', 'R19', 'R20', 'R21', 'R22')),
             'printed_r11_block': BLOCK in out,
             'printed_r12_block': BLOCK2 in out,
             'printed_r13_block': BLOCK3 in out,
@@ -858,6 +907,7 @@ def run(d):
             'printed_r19_block': BLOCK9 in out,
             'printed_r20_block': BLOCK10 in out,
             'printed_r21_block': BLOCK11 in out,
+            'printed_r22_block': BLOCK12 in out,
             'report_pairs': sorted(set(tuple(int(x) for x in t) for t in PAIR_RE.findall(rep))),
             'report_global': {
                 'g_size': sorted(set(int(x) for x in G_SIZE_RE.findall(rep))),
@@ -981,6 +1031,25 @@ def run(d):
                            sorted(set(Q_BROW_RE.findall(sec1412)))),
                 'q_ratio': (len(Q_RATIO_RE.findall(sec1412)),
                             sorted(set(Q_RATIO_RE.findall(sec1412))))},
+            'report_r22': {
+                't_rows': r22_table_fingers(sec1413, 1),
+                't_b': r22_table_fingers(sec1413, 2),
+                'sorted_rows': (len(sorted(l for l in sec1413.split('\n') if l.startswith('|'))),
+                                hashlib.sha1('\n'.join(sorted(
+                                    l for l in sec1413.split('\n') if l.startswith('|')))
+                                    .encode('utf-8')).hexdigest()[:12]),
+                'cells': int(m22.group(1)) if m22 else -1,
+                'nonzero': int(m22.group(2)) if m22 else -1,
+                'bad': int(m22.group(3)) if m22 else -1,
+                'nof': int(n22.group(1)) if n22 else -1,
+                'nof_req': int(n22.group(2)) if n22 else -1,
+                'dropn': int(d22.group(1)) if d22 else -1,
+                'hiwt': int(h22.group(1)) if h22 else -1,
+                'kse': int(k22.group(1)) if k22 else -1,
+                'b_rows': int(br22.group(1)) if br22 else -1,
+                'b_bad': int(br22.group(2)) if br22 else -1,
+                'b_ctl': int(bc22.group(1)) if bc22 else -1,
+                'b_ctl_req': int(bc22.group(2)) if bc22 else -1},
             'traceback': 'Traceback' in out}
 
 
@@ -1037,6 +1106,13 @@ def judge(case, res, base):
                 and len(q21['q_ctr']) == 1 and len(q21['q_fa']) == 1
                 and len(q21['q_hd']) == 1 and len(q21['q_bf']) == 1
                 and len(q21['q_bc']) == 1)
+    q22 = res['report_r22']
+    r22_live = (q22['cells'] == 54 and q22['nonzero'] == 54 and q22['bad'] == 0 and
+                q22['nof'] == 54 and q22['nof_req'] == 54 and q22['dropn'] == 17 and
+                q22['hiwt'] == 54 and q22['kse'] == 123 and q22['b_rows'] == 6 and
+                q22['b_bad'] == 0 and q22['b_ctl'] == 6 and q22['b_ctl_req'] == 6 and
+                q22['t_rows'][0] == 54 and q22['t_b'][0] == 6 and
+                q22['sorted_rows'][0] == 64)
     clean = (res['exit'] == 0 and res['pass'] == res['gates'] and not res['fail_ids']
              and not res['traceback']
              and res['printed_r11_block'] and res['printed_r12_block']
@@ -1045,10 +1121,11 @@ def judge(case, res, base):
              and res['printed_r17_block'] and res['printed_r18_block']
              and res['printed_r19_block'] and res['printed_r20_block']
              and res['printed_r21_block']
+             and res['printed_r22_block']
              and bool(res['report_pairs']) and bool(res['report_global']['g_size'])
              and bool(res['report_r13']['h_size']) and bool(res['report_r13']['h_k'])
              and r14_live and r15_live and r16_live and r17_live and r18_live and r19_live
-             and r20_live and r21_live)
+             and r20_live and r21_live and r22_live)
     if kind in ('baseline', 'benign'):
         return clean and (kind == 'baseline'
                           or (res['report_pairs'] == base['report_pairs']
@@ -1062,6 +1139,7 @@ def judge(case, res, base):
                               and res['report_r19'] == base['report_r19']
                               and res['report_r20'] == base['report_r20']
                               and res['report_r21'] == base['report_r21']
+                              and res['report_r22'] == base['report_r22']
                               and res['pass'] == base['pass']))
     moved = [k for k, v in (('report_pairs', res['report_pairs'] != base['report_pairs']),
                             ('report_global', res['report_global'] != base['report_global']),
@@ -1074,6 +1152,7 @@ def judge(case, res, base):
                             ('report_r19', res['report_r19'] != base['report_r19']),
                             ('report_r20', res['report_r20'] != base['report_r20']),
                             ('report_r21', res['report_r21'] != base['report_r21']),
+                            ('report_r22', res['report_r22'] != base['report_r22']),
                             ('gates_pass', res['pass'] != base['pass'])) if v]
     res['moved'] = moved
     return (res['exit'] != 0 and bool(res['layer_fail_ids'].get(layer))
@@ -1118,7 +1197,7 @@ def main():
         r['expect_caught'] = kind == 'mutant'
         res[tag] = r
         print('[case] %s %-14s layer=%-5s exit=%s gates=%s/%s fail=%s pairs=%s glob=%s h12=%s '
-              'r14=%s r15=%s r16=%s r17=%s r18=%s r19=%s r20=%s r21=%s' %
+              'r14=%s r15=%s r16=%s r17=%s r18=%s r19=%s r20=%s r21=%s r22=%s' %
               (tag, kind, layer, r['exit'], r['pass'], r['gates'],
                r['layer_fail_ids'].get(layer) or r['fail_ids'], r['report_pairs'],
                r['report_global']['g_size'], r['report_r13']['h_k'] and
@@ -1162,7 +1241,8 @@ def main():
                 r['report_r21']['q_ctr'], r['report_r21']['q_fa'],
                 r['report_r21']['q_c2r'], r['report_r21']['q_hd'],
                 r['report_r21']['q_bf'], r['report_r21']['q_bc'],
-                r['report_r21']['q_brow'], r['report_r21']['q_ratio'])))
+                r['report_r21']['q_brow'], r['report_r21']['q_ratio']),
+               r['report_r22']['bad']))
 
     fixture_bad = (res['ctl']['gates'] is None or (tests_on_disk is not None
                    and res['ctl']['gates'] != tests_on_disk))
@@ -1206,6 +1286,7 @@ def main():
                'baseline_r19': res['ctl']['report_r19'],
                'baseline_r20': res['ctl']['report_r20'],
                'baseline_r21': res['ctl']['report_r21'],
+               'baseline_r22': res['ctl']['report_r22'],
                'layer_mutants': dict((k, sum(1 for c in CASES if c[2] == 'mutant' and c[4] == k))
                                      for k in payload_layers),
                'verdict': verdict,
