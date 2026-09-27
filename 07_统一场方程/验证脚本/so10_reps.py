@@ -470,7 +470,7 @@ def labels_upto(total):
     return out
 
 
-ALL_LABELS = labels_upto(3)                   # $\\sum c_i\\le3$：覆盖到 $\\dim 672$
+ALL_LABELS = labels_upto(3)                   # 56 个标号；维数最大 70070（不是只到常见那张小表示表的 672）
 DIMMAP = {}
 for _cs in ALL_LABELS:
     DIMMAP.setdefault(weyl_dim(weight_of_label(_cs)), []).append(_cs)
@@ -7088,6 +7088,262 @@ def run_basis_layer():
             len(td_ax) > 0,
             '代表系核对（$n$、$k$、代表数、并矩阵秩、甲路秩 $+$ 代表数）：%s'
             % [s for s in td_sec if s[0] <= 3])
+
+    # ---- R21 群论因子层：$T(R)$、$C_2(G)$ 与两引擎之间的翻译因子 ------------------
+    # 两环系数只用得到两个群论因子（$T(R)$、$C_2(G)$），但两引擎对它们的归一化**约定不同**：
+    # 链侧把 $T(4)=1/2$ 当种子、按投影模方之比定义指标，本引擎一切由 Dynkin 图导出。这个
+    # 差别在 R20 那轮咬过一口（本引擎的 $casimir2$ 恰为链侧 $b_{adj}$ 读数的两倍），而它在
+    # 报告里一直只是一句"两引擎荷约定同源"的散文。本层把那个倍数量成一个数 $f$，并要求：
+    # 母格四路一致（R21.0）、$f$ 在整张（因子 $\\times$ 表示）格上单值且 $C_2$ 一侧与 $T$
+    # 一侧同值（R21.1）、用 $f$ 翻译后逐条重现链侧的一环 $b$（R21.2）。
+    # 两环里剩下的 Yukawa 迹块不在本层口径内（照旧未关，见 §14.12 的边界清单）。
+    if chain is None or not CHAIN_OK:
+        BASIS.update({'r21': {'degraded': '链探针未载入或其引擎自检未通过'}})
+        p &= ok('R21.0', '翻译因子层需要链探针（$T$、$C_2$ 的外部对照在 `so10_chain.py`）',
+                False, '缺外部对照 $\\Rightarrow$ 本层不印读数（与 R6/R11 的缺链处置同一口径）')
+        return p
+
+    def t21_proj_sq(w, bs):
+        """$|P(w)|^2$ 由 Gram 逆给出：链侧"逐基向量除长度再相加"是另一段算术。"""
+        G = [[nrm(x, y) for y in bs] for x in bs]
+        c = [nrm(w, b) for b in bs]
+        x = _solve(G, c)
+        return sum(x[i] * c[i] for i in range(len(bs)))
+
+    def t21_tlat(bs, ms, denom=None):
+        """因子格上的 $T^{lat}(R)=\\sum_\\lambda m_\\lambda|P(\\lambda)|^2/\\mathrm{rank}$。"""
+        return (sum(t21_proj_sq(w, bs) * k for w, k in ms.items()) /
+                (len(bs) if denom is None else denom))
+
+    def t21_tchain(fac, ms):
+        """链侧读数：整数格点换回 $\\varepsilon$ 基的 Fraction 权重后交给 `chain.factor_T`。"""
+        ws = []
+        for w, k in ms.items():
+            ws += [tuple(F(x, U) for x in w)] * k
+        return chain.factor_T(fac, ws)
+
+    def t21_c2lat(simples):
+        """$C_2^{lat}(adj)=(\\theta,\\theta+2\\rho_{sub})$；$\\theta$ = 该子系统里唯一的"正根且支配"者。
+
+        支配性只看与各单根的内积（Dynkin 标号全非负）。**不能**用"在单根基下系数非负"当判据
+        —— 那正是 `positive_roots_of` 的构造方式，会把全部正根都留下。
+        """
+        pos = positive_roots_of(simples)
+        dom = [v for v in pos if all(F(2 * ip(v, a), ip(a, a)) >= 0 for a in simples)]
+        assert len(dom) == 1, '子系统最高根不唯一：%d 个候选' % len(dom)
+        return len(pos), nrm2(dom[0]) + 2 * nrm(dom[0], rho_of(pos))
+
+    T21_DG = len(ROOTS) + RANK                            # $\\dim\\mathfrak{so}(10)=45$
+    # 投影基刻意**非正交**、且与链侧那组正交基不同 $\\Rightarrow$ 两条路只在数值上相遇。
+    # $SU(4)$ 的单根取 $\\{\\varepsilon_1-\\varepsilon_2,\\varepsilon_2-\\varepsilon_3,
+    # \\varepsilon_2+\\varepsilon_3\\}$（$D_3=A_3$ 的基）。把第三个换成 $\\varepsilon_1+\\varepsilon_2$
+    # 就不是基（它在根格上指标 2）$\\Rightarrow$ 生成的"正根"只剩 4 个、最高根随之取错、
+    # $C_2^{lat}$ 从 8 读成 5 $\\Rightarrow$ 这是本层的一个变异针位。
+    T21_FAC = [
+        ('SU4', '$SU(4)$', [add(EPS[0], EPS[1]), add(EPS[1], EPS[2]), add(EPS[0], EPS[2])],
+         [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2]), add(EPS[1], EPS[2])], ('SU', 4)),
+        ('SU3', '$SU(3)_c$', [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2])],
+         [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2])], ('SU', 3)),
+        ('SU2L', '$SU(2)_L$', [add(EPS[3], EPS[4])], [add(EPS[3], EPS[4])], ('SU', 2, 'L')),
+        ('SU2R', '$SU(2)_R$', [sub(EPS[3], EPS[4])], [sub(EPS[3], EPS[4])], ('SU', 2, 'R')),
+    ]
+    T21_BYKEY = dict((x[0], x) for x in T21_FAC)
+
+    # ---- R21.0 母格 $D_5$：同一个 $T(R)$ 走四条不共享算术的路（56 个标号全量）----
+    t21_rows = []
+    for cs in sorted(ALL_LABELS, key=lambda c: (weyl_dim(weight_of_label(c)), c)):
+        _Lam, ms, d, tot, c2 = irrep(cs)
+        t21_rows.append((tuple(cs), d, F(c2) * d / T21_DG,
+                         sum(nrm2(w) * k for w, k in ms.items()) / RANK))
+    t21_mis = [[list(r[0]), r[1], str(r[2]), str(r[3])] for r in t21_rows if r[2] != r[3]]
+    # 两张对照都要打红：乙的分母写成 $2r$、甲的 $\\dim\\mathfrak g$ 换成正根数
+    t21_ctl1 = sum(1 for cs, d, jia, yi in t21_rows
+                   if jia != sum(nrm2(w) * k for w, k in irrep(cs)[1].items()) / (2 * RANK))
+    t21_ctl2 = sum(1 for cs, d, jia, yi in t21_rows
+                   if F(irrep(cs)[4]) * d / len(ROOTS) != yi)
+    # 按维数取表示有歧义 $\\Rightarrow$ 一律按标号取，并把"用了哪个标号"印进读数。
+    # 清单**不设维数上限**：印的句子说的是"这 56 个标号里哪些维数重复"，一道截断会把 17 个印成 6 个。
+    # 两条路各数一遍（DIMMAP 是模块级全量映射，t21_rows 是本层自己那张逐标号表）$\\Rightarrow$ 两份
+    # 清单必须逐位相等，否则那句话挂不住它点名的标号集。
+    t21_amb = sorted(d for d, cs in DIMMAP.items() if len(cs) > 1)
+    t21_dimcnt = {}
+    for cs, d, jia, yi in t21_rows:
+        t21_dimcnt[d] = t21_dimcnt.get(d, 0) + 1
+    t21_amb_rows = sorted(d for d, n in t21_dimcnt.items() if n > 1)
+    t21_amb_ok = t21_amb_rows == t21_amb
+    t21_dmax = max(r[1] for r in t21_rows)
+    t21_first = {}
+    for cs, d, jia, yi in t21_rows:
+        t21_first.setdefault(d, (cs, jia))
+    t21_pairs = [(10, 10), (10, 16), (16, 16), (10, 45), (16, 45), (45, 45), (10, 54)]
+    t21_tri = []
+    for pa, pb in t21_pairs:
+        if pa not in t21_first or pb not in t21_first:
+            t21_tri.append([pa, pb, '标号缺位'])
+            continue
+        ca, cb = t21_first[pa][0], t21_first[pb][0]
+        rhs = t21_first[pa][1] * irrep(cb)[2] + t21_first[pb][1] * irrep(ca)[2]
+        prod = tprod(irrep(ca)[1], irrep(cb)[1])
+        s2 = sum(nrm2(w) * k for w, k in prod.items()) / RANK   # 乙路直接吃张量积多重集
+        dc = decomp(prod)
+        s4 = None if dc is None else sum(F(irrep(dynkin(la))[4]) * irrep(dynkin(la))[2] /
+                                         T21_DG * kn for la, kn in dc.items())
+        t21_tri.append([pa, pb, list(ca), list(cb), str(rhs), str(s2), s2 == rhs,
+                        None if s4 is None else str(s4), s4 == rhs,
+                        '；'.join('(%s)$\\times$%d' % (','.join(map(str, dynkin(la))), kn)
+                                 for la, kn in sorted(dc.items()))])
+    t21_full = [r for r in t21_tri if len(r) == 10]
+    t21_tri_bad = sum(1 for r in t21_full if not r[6])
+    t21_ding_bad = sum(1 for r in t21_full if not r[8])
+    p &= ok('R21.0', '母格 $D_5$ 上同一个 $T(R)$ 走四条不共享算术的路：$\\sum c_i\\le3$ 的全量 '
+                     '%d 个 Dynkin 标号上，甲 $C_2(R)\\dim R/\\dim\\mathfrak g$（$\\dim\\mathfrak g='
+                     '%d$）与乙 $\\sum_\\lambda m_\\lambda(\\lambda,\\lambda)/r$ 不等的标号 %d 个'
+                     '；丙（把乙直接喂张量积多重集）与丁（先 `decomp` 再按成分加回 $\\Rightarrow$ '
+                     '分解表被指标读数反向复核）在 %d 对（%s）上违例各 %d、%d。两张对照都要在场：'
+                     '乙的分母写成 $2r$ 则与甲不等的标号 %d 个、甲的 $\\dim\\mathfrak g$ 换成正根数 '
+                     '$|\\Phi|=%d$ 则 %d 个（两者都要求 $>0$ $\\Rightarrow$ 这两张票不是恒等的装饰）。'
+                     '按维数取表示有歧义（同维多标号的维数共 %d 个：%s）$\\Rightarrow$ 本层一律按'
+                     '标号取，用了哪个标号随读数一起印出来。这句话的主语是本层那张逐标号表'
+                     '（维数最大 %d），所以清单不许被任何维数门槛截断：逐标号表自己数出的重复维数'
+                     '与上面那份%s' %
+            (len(t21_rows), T21_DG, len(t21_mis), len(t21_full),
+             '、'.join('%d$\\otimes$%d' % (r[0], r[1]) for r in t21_full),
+             t21_tri_bad, t21_ding_bad, t21_ctl1, len(ROOTS), t21_ctl2,
+             len(t21_amb), '、'.join(str(d) for d in t21_amb), t21_dmax,
+             '逐位相同' if t21_amb_ok else '不符（表里读成 %s）' % ('、'.join(str(d) for d in t21_amb_rows))),
+            len(t21_rows) == len(ALL_LABELS) and not t21_mis and len(t21_full) == len(t21_pairs) and
+            t21_tri_bad == 0 and t21_ding_bad == 0 and t21_ctl1 > 0 and t21_ctl2 > 0 and t21_amb_ok,
+            ('逐票样例（标号、维数、甲、乙，前 10 行）：%s；张量积逐对（左、右、积、丙、丁、成分表）：%s'
+             % ([[list(r[0]), r[1], str(r[2]), str(r[3])] for r in t21_rows[:10]],
+                '；'.join('[%d$\\otimes$%d 用 (%s)、(%s) 右 $=%s$ 丙 $=%s$ %s 丁 $=%s$ %s '
+                          '成分 %s]' % (r[0], r[1], ','.join(map(str, r[2])),
+                                         ','.join(map(str, r[3])), r[4], r[5],
+                                         '等' if r[6] else '不等',
+                                         r[7], '等' if r[8] else '不等', r[9])
+                         for r in t21_full))))
+
+    # ---- R21.1 翻译因子 $f$：整张（因子 $\\times$ 表示）格上的比值，且 $C_2$ 同值 ----
+    t21_ratio, t21_zero, t21_bothzero = [], [], []
+    for key, nm, bs, simp, chf in T21_FAC:
+        for cs, d, jia, yi in t21_rows:
+            ms = irrep(cs)[1]
+            tl = t21_tlat(bs, ms)
+            tc = t21_tchain(chf, ms)
+            if tl == 0 or tc == 0:
+                (t21_zero if tl != tc else t21_bothzero).append([key, d, list(cs)])
+                continue
+            t21_ratio.append([key, d, list(cs), str(tl), str(tc), tl / tc])
+    t21_fT = sorted(set(r[5] for r in t21_ratio))
+    # 逐格比值那几行要**跨因子**取样：`t21_ratio` 是因子主序，直接切前 8 行会全是 $SU(4)$，
+    # 而本节下一句是"比值不是从一两格里挑出来的"——证据自己必须先不是一格的证据。
+    t21_head, t21_seen = [], {}
+    for r in t21_ratio:
+        if t21_seen.get(r[0], 0) < 2:
+            t21_head.append(r)
+            t21_seen[r[0]] = t21_seen.get(r[0], 0) + 1
+    # 对照：把乙路那个"除 $2r$"的口径挪到本层的投影上 $\\Rightarrow$ 比值必须整体离开量到的 $f$
+    t21_ctl3 = sorted(set(t21_tlat(bs, irrep(cs)[1], 2 * len(bs)) /
+                          t21_tchain(chf, irrep(cs)[1])
+                          for key, nm, bs, simp, chf in T21_FAC for cs, d, jia, yi in t21_rows
+                          if t21_tchain(chf, irrep(cs)[1])))
+    t21_c2 = []
+    for key, nm, bs, simp, chf in T21_FAC:
+        npos, c2l = t21_c2lat(simp)
+        c2c = -F(3, 11) * chain.b_of(chf, [], [])          # 链侧那一项 = 手编的 $C_2(SU\\,N)=N$
+        t21_c2.append([nm, npos, str(c2l), str(c2c), c2l / c2c])
+    t21_fC = sorted(set(r[4] for r in t21_c2))
+    t21_ab = []
+    for anm, adir, achf in (('$U(1)_Y$', YHP, ('U1', chain.YHP, 'Y')),
+                            ('$U(1)_{B-L}$', BL, ('U1', chain.BL, 'B-L'))):
+        for cs, d, jia, yi in t21_rows:
+            if d not in (10, 16, 45, 54, 120, 126):
+                continue
+            ms = irrep(cs)[1]
+            mine = sum(nrm(w, adir) ** 2 * k for w, k in ms.items())
+            theirs = t21_tchain(achf, ms)
+            if theirs == 0:
+                continue
+            t21_ab.append([anm, d, list(cs), str(mine), str(theirs), F(mine) / theirs])
+    t21_fA = sorted(set(r[5] for r in t21_ab))
+    t21_f = t21_fT[0] if len(t21_fT) == 1 else None
+    p &= ok('R21.1', '两引擎之间的翻译因子是**量出来的**：非阿贝尔侧 %d 个（因子 $\\times$ 表示）'
+                     '组合上 $T^{lat}/T^{chain}$ 只取一个值 $f_T=%s$（两侧同时为零的组合 %d 个，'
+                     '一侧为零、另一侧非零的 %d 个）；另一条完全不相干的路——子系统正根给出的 '
+                     '$C_2^{lat}(adj)$ 对链侧表值——在 4 个因子上同样单值 $f_{C_2}=%s$，'
+                     '且与 $f_T$ 同值 $\\Rightarrow$ "$f=2$" 不是某一格的巧合，而是两套归一化约定'
+                     '之间的整体翻译。对照：把投影的分母按 $2r$ 口径改一次，比值集合变成 %s'
+                     '（要求离开 $f_T$）。阿贝尔侧 %d 格逐格比值集合 %s $\\Rightarrow$ 翻译因子在'
+                     '$U(1)$ 上是 $1$；诚实登记：这一格两侧只是换了求和容器（带重数的多重集对'
+                     '展开成表），算术同源，它记的是"阿贝尔侧不需要翻译"这句话，**不算**第二条'
+                     '独立路（它的牙齿在 R21.2 的 $b_1$ 那行以外，见该条）。$f$ 同时被钉为 2：'
+                     '这不是预期值而是回归销——链侧的种子 $T(4)=1/2$ 与本引擎由 Dynkin 图导出的'
+                     '归一化一旦有一侧被改动，$\\S$7/$\\S$10 那些引用环系数的句子就会在这里响' %
+            (len(t21_ratio), '、'.join(str(x) for x in t21_fT), len(t21_bothzero),
+             len(t21_zero), '、'.join(str(x) for x in t21_fC),
+             '、'.join(str(x) for x in t21_ctl3), len(t21_ab),
+             '、'.join(str(x) for x in t21_fA)),
+            len(t21_fT) == 1 and len(t21_fC) == 1 and t21_fC == t21_fT and t21_fA == [F(1)] and
+            not t21_zero and len(t21_ratio) > 100 and t21_ctl3 != t21_fT and t21_f == F(2),
+            '因子格逐条（四个因子各取前两格：因子、维数、标号、格侧、链侧、比值）：%s；$C_2$ 逐因子'
+            '（正根数、格上、链侧、比值）：%s；母格 $D_5$ 的 $casimir2(\\theta)=%d$、半值 $=%s$'
+            '（$h^\\vee$ 的格上读数）' %
+            ([[x[0], x[1], x[2], x[3], x[4], str(x[5])] for x in t21_head],
+             [[r[0], r[1], r[2], r[3], str(r[4])] for r in t21_c2],
+             casimir2(TH), str(F(casimir2(TH)) / 2)))
+
+    # ---- R21.2 用 $f$ 翻译后：链侧的一环 $b$ 三系数必须逐条重现 -------------------
+    t21_f3, t21_hd = grid_ms(chain.F3), grid_ms(chain.HD)   # 3 代费米子 + SM Higgs 二重态
+    t21_b = []
+    for tag, nm, bch, kk, pre in (
+            ('b1', '$b_1$（$\\alpha_1=(5/3)\\alpha_Y$）',
+             F(3, 5) * chain.b_of(('U1', chain.YHP, 'Y'), chain.F3, chain.HD), None, F(3, 5)),
+            ('b2', '$b_2$', chain.b_of(('SU', 2, 'L'), chain.F3, chain.HD), 'SU2L', F(1)),
+            ('b3', '$b_3$', chain.b_of(('SU', 3), chain.F3, []), 'SU3', F(1))):
+        if kk is None:
+            tf = sum(nrm(w, YHP) ** 2 * k for w, k in t21_f3.items())
+            ts = sum(nrm(w, YHP) ** 2 * k for w, k in t21_hd.items())
+            c2l, den = F(0), (t21_fA[0] if len(t21_fA) == 1 else F(1))
+        else:
+            row = T21_BYKEY[kk]
+            tf, ts = t21_tlat(row[2], t21_f3), t21_tlat(row[2], t21_hd)
+            c2l = t21_c2lat(row[3])[1]
+            den = t21_f if t21_f is not None else F(1)
+        num = pre * (F(2, 3) * tf + F(1, 3) * ts - F(11, 3) * c2l)
+        t21_b.append([tag, nm, '阿贝尔' if kk is None else '非阿贝尔', str(bch), str(num / den),
+                      bch == num / den, str(num), num != bch])
+    t21_nb = [r for r in t21_b if r[2] == '非阿贝尔']
+    t21_ab2 = [r for r in t21_b if r[2] == '阿贝尔']
+    p &= ok('R21.2', '翻译因子必须**够用**：把本层的格上读数按量到的 $f=%s$ 除回去，'
+                    '环系数三行逐条等于链侧真值（违例 %d 行）：%s。对照是"不翻译"那一列：'
+                    '非阿贝尔的 %d 行**全部**偏离链侧（$b_2$ 读成 %s 而非 %s、$b_3$ 读成 %s 而非 '
+                    '%s）$\\Rightarrow$ 这一格有牙；阿贝尔那 %d 行按 $f_{U(1)}=1$ 恒不偏离 $\\Rightarrow$ '
+                    '它是口径事实、不计入对照（把它当证据就是把恒真写成通过）。链侧三行的真值不在本层'
+                    '写死：它们由 `chain.b_of` 现场给出，而链探针自己的 S3.1-S3.3 已经把同一批真值'
+                    '钉在 SM 的 $b_1,b_2,b_3$ 上（那三个数归那条门禁持有，本条不转述）$\\Rightarrow$ '
+                    '本条只核"两条路是否同源"' %
+            ('、'.join(str(x) for x in t21_fT), sum(1 for r in t21_b if not r[5]),
+             '；'.join('%s %s 型：链侧 %s，格上$\\div f$ %s %s，不翻译 %s %s' %
+                       (r[0], r[2], r[3], r[4], '等' if r[5] else '不等', r[6],
+                        '偏' if r[7] else '不偏') for r in t21_b),
+             len(t21_nb), t21_nb[0][6], t21_nb[0][3], t21_nb[1][6], t21_nb[1][3], len(t21_ab2)),
+            len(t21_b) == 3 and all(r[5] for r in t21_b) and len(t21_nb) == 2 and
+            all(r[7] for r in t21_nb) and len(t21_ab2) == 1 and not t21_ab2[0][7],
+            '标量内容：本层只用 `chain.F3`（3 代）与 `chain.HD`（一个 Higgs 二重态），'
+            '即链侧 S3.1–S3.3 的同一批；破缺扇区的标量不在其中 $\\Rightarrow$ 本条是**约定桥**的核验，'
+            '不是 GUT 尺度阈值表的重算。$b_1$ 那行的链侧含 $(3/5)$ 前因子，本侧照同一式子构造')
+    BASIS.update({'r21': {
+        'roster': len(t21_rows), 'dim_g': T21_DG, 'mis': t21_mis,
+        'ctl_2r': t21_ctl1, 'ctl_phi': t21_ctl2, 'amb': t21_amb,
+        'dmax': t21_dmax, 'amb_n': len(t21_amb),
+        'pairs': t21_full, 'tri_bad': t21_tri_bad, 'ding_bad': t21_ding_bad,
+        'rows': [[list(r[0]), r[1], str(r[2]), str(r[3])] for r in t21_rows],
+        'n_ratio': len(t21_ratio), 'zero': t21_zero, 'bothzero': len(t21_bothzero),
+        'fT': t21_fT, 'ctl_ratio': t21_ctl3,
+        'c2': [[r[0], r[1], r[2], r[3], str(r[4])] for r in t21_c2], 'fC': t21_fC,
+        'ab': [[r[0], r[1], list(r[2]), r[3], r[4], str(r[5])] for r in t21_ab], 'fA': t21_fA,
+        'f': (str(t21_f) if t21_f is not None else '无单值'), 'b': t21_b, 'b_nb_dev': sum(1 for r in t21_nb if r[7]), 'b_nb': len(t21_nb),
+        'b_ab': len(t21_ab2), 'ratio_head': t21_head,
+        'casimir_th': casimir2(TH), 'h_dual': str(F(casimir2(TH)) / 2)}})
     return p
 
 
@@ -8231,6 +8487,78 @@ def basis_section():
           '**也**只是一根轴上的计数 $\\Rightarrow$ **L10 保持 OPEN**。这条守卫是否真会红，与 R11–R19 '
           '各层同法由外部变异台账的 **R20 层**逐例植入复核（数字只在那份台账的读数里，本节不转述）。' %
               (r0[0], r0[1], len(r0[8]) - 1), '']
+
+    # ---- 14.12 两套归一化之间的翻译因子（R21.0–R21.2）
+    r21 = B.get('r21') or {}
+    L += ['', '### 14.12 两套归一化之间隔着几：把翻译因子做成格上读数（R21.0–R21.2）', '']
+    if r21.get('degraded') is not None:
+        L += ['本节的外部对照是 `so10_chain.py`（因子 $T$、伴随表示的二次 Casimir、一环系数 $b$ 的'
+              '链侧真值都住在那边）$\\Rightarrow$ 对照缺位（%s）时本节**不印读数**，与 R6／R11 的'
+              '缺链处置同一口径 $\\Rightarrow$ **L10 保持 OPEN**。' % r21['degraded'], '']
+        return L
+    L += ['设定（刻意窄，且与 14.8–14.11 那几道削减正交）：本节不比"哪条路算得对"，它只把 §7／§10 '
+          '里那些引用环系数的句子底下的**两套归一化约定之间到底隔着几**变成量出来的数。左边是本引擎'
+          '的权格（母格 $D_5$、$\\dim\\mathfrak g=%d$、全量 %d 个 Dynkin 标号、维数最大 %d），右边是链探针的因子表值。'
+          '两把尺子各自先得是读数 $\\Rightarrow$ 先交代格侧。' % (r21['dim_g'], r21['roster'], r21['dmax']), '',
+          '**格侧：同一个 $T(R)$ 走四条不共享算术的路**（R21.0）。甲 $C_2(R)\\dim R/\\dim\\mathfrak g$、'
+          '乙 $\\sum_\\lambda m_\\lambda(\\lambda,\\lambda)/r$、丙"把乙直接喂进张量积多重集"、丁"先 `decomp` '
+          '再按成分加回"（丁让分解表被指标读数反向复核）。%d 个标号上甲乙不等的 %d 个；丙丁在 %d 对'
+          '（%s）上违例各 %d、%d。两张对照都要在场：把乙的分母按 $2r$ 口径写，则与甲不等的标号 %d 个；'
+          '把甲的 $\\dim\\mathfrak g$ 换成正根数，则 %d 个（两项都要求 $>0$ $\\Rightarrow$ 这两张票不是'
+          '恒等的装饰）。按维数取表示**有**歧义（同维多标号的维数：%s）$\\Rightarrow$ 本节一律按标号取，'
+          '用了哪个标号随读数一起印出来。这份清单是从那 %d 个标号全量里数出来的 %d 个，**不按维数截断**：'
+          '本层那张逐标号表自己数出的重复维数与它逐位相同，两路不符时 R21.0 直接红。' %
+              (r21['roster'], len(r21['mis']), len(r21['pairs']),
+               '、'.join('%d$\\otimes$%d' % (x[0], x[1]) for x in r21['pairs']),
+               r21['tri_bad'], r21['ding_bad'], r21['ctl_2r'], r21['ctl_phi'],
+               '、'.join(str(d) for d in r21['amb']), r21['roster'], len(r21['amb'])), '',
+          '**翻译因子是量出来的**（R21.1）。非阿贝尔侧在 %d 个（因子 $\\times$ 表示）组合上'
+          '$T^{lat}/T^{chain}$ 只取一个值 $f_T=%s$；两侧同时为零的组合 %d 个、一侧为零而另一侧非零的 '
+          '%d 个（后者要求为 $0$ $\\Rightarrow$ "零"这件事两侧同判，否则整张格都可以靠"两边都算不出" '
+          '蒙过去）。另一条**完全不相干**的路——子系统正根给出的 $C_2^{lat}(adj)$ 对链侧表值——在 %d '
+          '个因子上同样单值 $f_{C_2}=%s$，且与 $f_T$ 同一读数 $\\Rightarrow$ 这个 $2$ 不是某一格的巧合，'
+          '而是两套约定之间的整体翻译。对照：把投影的分母按 $2r$ 口径挪一次，比值集合变成 %s（要求'
+          '离开 $f_T$）。阿贝尔侧 %d 格逐格比值集合 %s $\\Rightarrow$ $U(1)$ 上不需要翻译；诚实登记：'
+          '那 %d 格两侧只是换了求和容器（带重数的多重集对展开成表），算术同源，它记的是"不需要翻译"'
+          '这句话，**不算**第二条独立路。逐因子读数：%s。母格 $D_5$ 上 $C_2(\\theta)=%s$、半值 %s'
+          '（$h^\\vee$ 的格上读数）。' %
+              (r21['n_ratio'], '、'.join(str(x) for x in r21['fT']), r21['bothzero'],
+               len(r21['zero']), len(r21['c2']), '、'.join(str(x) for x in r21['fC']),
+               '、'.join(str(x) for x in r21['ctl_ratio']), len(r21['ab']),
+               '、'.join(str(x) for x in r21['fA']), len(r21['ab']),
+               '；'.join('%s 正根 %d、格上 $%s$、链侧 $%s$、比值 %s' %
+                         (x[0], x[1], x[2], x[3], x[4]) for x in r21['c2']),
+               r21['casimir_th'], r21['h_dual']), '',
+          '**因子必须够用**（R21.2）：把本层的格上读数按量到的 $f=%s$ 除回去，链侧一环系数三行逐条'
+          '重现（违例 %d 行）；"不翻译"那一列是这台机器的牙——非阿贝尔的 %d 行**全部**偏离链侧（偏 '
+          '%d 行），而阿贝尔那 %d 行按 $f_{U(1)}=1$ 恒不偏离 $\\Rightarrow$ 那一行是口径事实、**不**计入'
+          '对照（把恒真当证据就是把通过写进通过率里）。链侧三行的真值不在本节写死：它们由 `chain.b_of` '
+          '现场给出，链探针自己的 S3.1–S3.3 已经把同一批真值钉在 SM 的 $b_1,b_2,b_3$ 上（那三个数归那条'
+          '门禁持有，本节不转述）$\\Rightarrow$ 本节只核"两条路是否同源"。' %
+              (r21['f'], sum(1 for x in r21['b'] if not x[5]), r21['b_nb'], r21['b_nb_dev'],
+               r21['b_ab']), '',
+          '| 系数 | 侧 | 链侧 | 格上 $\\div f$ | 译后 | 不翻译的值 | 不翻译 |',
+          '|---|---|---|---|---|---|---|']
+    for x in r21['b']:
+        L.append('| %s | %s | $%s$ | $%s$ | %s | $%s$ | %s |' %
+                 (x[1], x[2], x[3], x[4], '等' if x[5] else '**不等**', x[6],
+                  '偏' if x[7] else '不偏'))
+    L += ['', '格侧与链侧逐格比值（四个因子各取前两格，共 %d 行：因子、表示维数与所用标号、两侧之值与比值）：%s $\\Rightarrow$ 比值'
+             '不是从一两格里挑出来的。' % (len(r21['ratio_head']),
+                '；'.join('%s/$%d$（标号 (%s)）：$%s\\div %s=%s$' %
+                          (x[0], x[1], ','.join(map(str, x[2])), x[3], x[4], x[5])
+                          for x in r21['ratio_head'])), '',
+          '诚实边界（逐条）：(i) 本节把两环系数里的**群论因子**那一半（$T$、$C_2$、以及由 $C_2$ 主导的'
+          '一环 $b$）做成跨引擎读数，两环系数矩阵本身**没有**写进仓库——它要的外部数值无法在仓库内'
+          '核验，Yukawa 迹块在本引擎里也没有对应对象 $\\Rightarrow$ 第十项那半边照常未关，本节不产出'
+          '两环跑动数值；(ii) 阿贝尔那 %d 格是同一算式的两种容器，不计为第二条独立路；(iii) $b$ 三行'
+          '只用到 `chain.F3`（3 代）与 `chain.HD`（一个 Higgs 二重态），破缺扇区的标量不在其中 '
+          '$\\Rightarrow$ 本节核的是**约定桥**，不是 GUT 尺度阈值表的重算（阈值表在 §8 与 '
+          '`so10_thresholds.py`）；(iv) $f=2$ 这一枚是**回归销**不是预期值：它由两条独立路同时量出，'
+          '任何一侧归一化被改动，本节先响。本节不回填任何寿命、不改 P4／P7 的判据与分级，也不给任何'
+          '主张升证据级 $\\Rightarrow$ **L10 保持 OPEN**。这条守卫是否真会红，与 R11–R20 各层同法由'
+          '外部变异台账的 **R21 层**逐例植入复核（数字只在那份台账的读数里，本节不转述）。' %
+              len(r21['ab']), '']
     return L
 
 
@@ -9122,6 +9450,20 @@ def main():
                '/'.join(str(r[1]) for r in rz[8]), '/'.join(str(r[2]) for r in rz[8]),
                '/'.join(str(r[3]) for r in rz[8]), '/'.join(str(v) for v in rz[12]),
                rz[14], rz[21], rz[22]))
+        r21 = BASIS['r21']
+        print('    两套归一化之间的翻译因子（R21）：格侧 %d 个标号上四路违例 %d（甲乙）/%d（丙）/%d（丁）、'
+              '两张口径对照 %d（分母按 $2r$）与 %d（$\\dim\\mathfrak g$ 换正根数）个不等（都要求 >0）；'
+              '非阿贝尔 %d 格比值单值 $f_T=%s$、$C_2$ 路 %d 因子单值 $f_{C_2}=%s$（与 $f_T$ 同值 '
+              '$\\Rightarrow$ 整体翻译），阿贝尔 %d 格比值 %s；把格上读数按 $f$ 除回去后一环 $b$ 三行'
+              '等于链侧（违例 %d 行），不翻译时非阿贝尔 %d/%d 行偏离、阿贝尔 %d 行恒不偏（口径事实、'
+              '不计入对照）；母格 $D_5$ 的 $C_2(\\theta)=%s$、半值 %s' %
+              (r21['roster'], len(r21['mis']), r21['tri_bad'], r21['ding_bad'],
+               r21['ctl_2r'], r21['ctl_phi'], r21['n_ratio'],
+               '、'.join(str(x) for x in r21['fT']), len(r21['c2']),
+               '、'.join(str(x) for x in r21['fC']), len(r21['ab']),
+               '、'.join(str(x) for x in r21['fA']),
+               sum(1 for x in r21['b'] if not x[5]), r21['b_nb_dev'], r21['b_nb'],
+               r21['b_ab'], r21['casimir_th'], r21['h_dual']))
     if nogo_ok:
         print('  判定：dim≤210 内唯一能破 B−L 而不破电磁的 Higgs = 126 / 126̄；'
               '120_H 虽含 (1,1,1)±2 但 |Q|=1 ⇒ 排除（报告 §4）')

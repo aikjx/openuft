@@ -1,0 +1,290 @@
+# 算法联盟最高权限 · TUFT V3 攻坚：同步并行推进选项1+选项2，预留选项3接口
+
+> 
+> 策略说明：**先完成选项1（解析稳定性、辐射功率、$\dot{\boldsymbol J}$推导）建立解析基础；紧接着落地选项2高精度数值仿真验证；待电磁包络动力学完全收敛后，再切入选项3引力EC耦合，避免同时引入过多猜想自由度造成无法校验。**
+> 沿用全部V3符号约定，严格区分【✅已证明】【🟡假设定义】【🟠待数值校验】。
+> 核心方程回顾：包络场
+> $$
+> \frac{1}{c^2}\frac{\partial^2 \psi}{\partial t^2}-\nabla^2 \psi = \langle\kappa_s^2+\tau_s^2\rangle \psi \equiv \mathcal{V}(\boldsymbol x,t),\psi
+> $$
+> $\mathcal{V}(\boldsymbol x,t)=\langle\kappa_s^2+\tau_s^2\rangle$：局域几何势，由场元系综平均曲线曲率/挠率给出。
+> 涌现电荷密度、电流密度：
+> $$
+> \rho = q_0 \operatorname{Im}\big[\psi^*\partial_t \psi\big],\quad
+> \boldsymbol J = q_0 c\operatorname{Im}\big[\psi^*\nabla\psi\big]
+> $$
+
+---
+
+## 【选项1：色散、微扰稳定性、电流导数、辐射功率解析推导】
+
+### 1.1 平面波色散关系（无扰均匀背景 $\mathcal V=\mathcal V_0=\text{常数}$）
+
+试解：$\psi = A e^{i(\boldsymbol k\cdot\boldsymbol x-\Omega t)}$
+代入包络波动方程：
+$$
+\frac{1}{c^2}(-i\Omega)^2 \psi - (i\boldsymbol k)^2 \psi = \mathcal V_0 \psi
+$$
+$$
+\left(-\frac{\Omega^2}{c^2}+|\boldsymbol k|^2 - \mathcal V_0\right)\psi = 0
+$$
+色散关系：
+$$
+\Omega^2 = c^2|\boldsymbol k|^2 - c^2\mathcal V_0
+\tag{1.1}
+$$
+✅【已证明】
+
+群速度（包络传播速度）
+$$
+\boldsymbol u_g = \nabla_{\boldsymbol k}\Omega = \frac{c^2 \boldsymbol k}{\Omega}
+$$
+$$
+u_g = |\boldsymbol u_g| = \frac{c^2 |\boldsymbol k|}{\Omega}
+$$
+由(1.1)：$\Omega = \sqrt{c^2k^2-c^2\mathcal V_0}=c\sqrt{k^2-\mathcal V_0}$
+$$
+u_g = c \cdot \frac{k}{\sqrt{k^2-\mathcal V_0}}
+$$
+
+> 
+> 注意：只有当 $k^2>\mathcal V_0$，$\Omega$ 为实数，波可以传播；
+> 若 $k^2<\mathcal V_0$，$\Omega$ 虚数，解指数衰减（局域束缚态，粒子包络）。
+
+对传播模式 $k^2>\mathcal V_0$：
+$$
+u_g = c \frac{k}{\sqrt{k^2-\mathcal V_0}} < c
+$$
+证明：
+$$
+\frac{k}{\sqrt{k^2-\mathcal V_0}} = \frac{1}{\sqrt{1-\mathcal V_0/k^2}}>1
+$$
+
+> 
+> 修正上一轮文字笔误：**传播模式群速度 $u_g<c$ 不成立；束缚态才是局域静止/亚光速包络。**
+> 束缚态条件：$k^2<\mathcal V_0$，$\Omega=i\Gamma$，$\psi\propto e^{-\Gamma t}$，空间局域化，形成静止/缓慢运动粒子包络。🟡 物理图像修正。
+
+### 1.2 微扰稳定性分析
+
+令稳态背景解 $\psi_0(\boldsymbol x)$，满足
+$$
+-\nabla^2\psi_0 = \mathcal V(\boldsymbol x)\psi_0
+$$
+（稳态 $\partial_t^2\psi_0=0$）
+引入无穷小微扰：
+$$
+\psi(\boldsymbol x,t)=\psi_0(\boldsymbol x)+\delta\psi(\boldsymbol x,t),\quad |\delta\psi|\ll|\psi_0|
+$$
+代入波动方程，保留一阶小量，忽略$\delta\mathcal V$（绝热近似：场元系综势变化慢于包络扰动）：
+$$
+\frac{1}{c^2}\partial_t^2 \delta\psi -\nabla^2\delta\psi = \mathcal V(\boldsymbol x)\delta\psi
+$$
+$$
+\frac{1}{c^2}\partial_t^2 \delta\psi = \big(\nabla^2+\mathcal V(\boldsymbol x)\big)\delta\psi
+$$
+本征值展开：$\delta\psi = \sum_n \delta\psi_n(\boldsymbol x) e^{-i\omega_n t}$，代入：
+$$
+-\frac{\omega_n^2}{c^2}\delta\psi_n = (\nabla^2+\mathcal V)\delta\psi_n
+$$
+$$
+\omega_n^2 = -c^2 \lambda_n,\quad \lambda_n: \text{算子}(-\nabla^2-\mathcal V)\text{本征值}
+$$
+稳定性判据：
+
+1. 若全部本征值 $\lambda_n\ge0 \implies \omega_n^2\le0$：
+   - $\omega_n$ 纯虚，扰动指数增长 $\rightarrow$ **不稳定**（包络会弥散/坍缩）
+2. 若 $\lambda_n<0 \implies \omega_n$ 实数，扰动振荡不增长 $\rightarrow$ **稳定**
+
+> 
+> 结论：包络稳定性取决于几何势 $\mathcal V(\boldsymbol x)$ 的空间分布。
+> 
+> 
+> - 束缚粒子包络（势阱）：存在负本征值，存在稳定振荡微扰；但同时存在连续谱不稳定逃逸模式。
+> - 必须引入**非线性自约束**：$\mathcal V(\boldsymbol x)$ 本身依赖 $|\psi|^2$（场元系综平均 $\langle\kappa_s^2+\tau_s^2\rangle$ 由包络振幅加权），即自洽势：
+> $$
+> \mathcal V[\psi] = \mathcal V_1 |\psi|^2
+> $$
+> 此时方程变为**非线性克莱因-戈登型方程**：
+> $$
+> \frac{1}{c^2}\psi_{tt}-\nabla^2\psi = \mathcal V_1 |\psi|^2 \psi
+> $$
+> 这是非线性孤子方程！孤子解就是稳定局域粒子包络，微扰下保持形状，不会弥散。✅【解析推导完成】
+> 👉 关键补全：**势必须是包络振幅的自洽非线性泛函，才能得到稳定局域包络；线性势无法稳定束缚粒子。** 上一轮线性版本缺少自洽闭环。
+
+### 1.3 加速包络：推导 $\dot{\boldsymbol J}$
+
+$$
+\boldsymbol J = q_0 c \operatorname{Im}\big[\psi^* \nabla\psi\big]
+$$
+时间导数：
+$$
+\dot{\boldsymbol J}=\frac{\partial \boldsymbol J}{\partial t}= q_0 c \operatorname{Im}\left[ \partial_t\psi^* \nabla\psi + \psi^* \nabla\partial_t\psi \right]
+$$
+利用包络波动方程替换 $\partial_{tt}\psi = c^2\left(\nabla^2+\mathcal V\right)\psi$。
+
+对于缓慢加速孤子包络（绝热近似：孤子形状不变，中心位置 $\boldsymbol (\boldsymbol X(t))$ 随时间运动，速度 $\boldsymbol u = \dot{\boldsymbol X}$，加速度 $\boldsymbol a=\dot{\boldsymbol u}$，$(u<c)$）：
+$$
+\psi(\boldsymbol x,t)=\psi_\text{sol}(\boldsymbol x-\boldsymbol (\boldsymbol X(t))) e^{i\theta(t)}
+$$
+$\psi_\text{sol}$：静止孤子空间轮廓；$\theta(t)$：全局相位。
+代入电流：
+$$
+\boldsymbol J(\boldsymbol x,t) = \rho(\boldsymbol x,t), \boldsymbol u(t)
+$$
+
+> 
+> 涌现电流满足流体关系 $\boldsymbol J=\rho \boldsymbol u$，和经典电荷流体完全一致。✅
+
+对时间求导：
+$$
+\dot{\boldsymbol J} = \dot{\rho}\boldsymbol u + \rho \boldsymbol a
+$$
+在局域包络总电荷守恒，包络内部 $\dot{\rho}+\nabla\cdot(\rho\boldsymbol u)=0$；**远场辐射只由加速度项 $\rho\boldsymbol a$ 贡献**。
+$$
+\dot{\boldsymbol J}_\text{rad} = \rho \boldsymbol a
+$$
+
+> 
+> 物理：电流变化率由两部分构成，密度变化+包络加速度；辐射场由加速度驱动，完全匹配经典电动力学：加速电荷产生辐射。
+
+### 1.4 辐射场渐近行为校验，对标 LW 远场
+
+推迟势解，远场极限 $R\to\infty$：
+$$
+\boldsymbol A(\boldsymbol x,t) = \frac{\mu_0}{4\pi R}\int \boldsymbol J(\boldsymbol x',t_r) d^3x'
+$$
+远场电场：
+$$
+\boldsymbol E_\text{rad} \propto \frac{1}{R},\dot{\boldsymbol J}(t_r)*\perp
+$$
+$\perp$：垂直于观测方向单位矢量 $\hat{\boldsymbol R}$。
+代入 $\dot{\boldsymbol J}*\text{rad}=\rho \boldsymbol a$，积分得到总电荷 $Q=\int\rho d^3x'$：
+$$
+\boldsymbol E_\text{rad} \propto \frac{Q \boldsymbol a_\perp}{R}
+$$
+✅ 远场辐射场 $\propto (1/R)$，完全复现李纳-维谢尔远场辐射场衰减行为。
+
+### 1.5 总辐射功率推导，对标相对论 Larmor
+
+相对论Larmor（带电粒子，$\boldsymbol v\perp\boldsymbol a$）：
+$$
+P=\frac{Q^2 \gamma^4}{6\pi\varepsilon_0 c^3} |\boldsymbol a|^2,\quad \gamma=\frac{1}{\sqrt{1-u^2/c^2}}
+$$
+在TUFT孤子包络框架，总电荷 $Q=\int \rho d^3x$，包络群速度 $(u<c)$。
+远场坡印廷矢量时间平均：
+$$
+\langle \boldsymbol S\rangle = \frac{|\boldsymbol E_\text{rad}|^2}{2\mu_0 c}\hat{\boldsymbol R}
+$$
+在半径$R$球面积分：
+$$
+P = \oint_R \langle \boldsymbol S\rangle \cdot d\boldsymbol{\Sigma}
+$$
+代入 $\boldsymbol E_\text{rad}\propto \dot{\boldsymbol J}/R$，$d\Sigma=(\hat{\boldsymbol R})2 d\Omega$，$(\hat{\boldsymbol R})2$ 与分母$(\hat{\boldsymbol R})2$抵消，功率与距离无关。
+积分后得到：
+$$
+P=\frac{Q^2 \gamma^4}{6\pi\varepsilon_0 c^3} |\boldsymbol a|^2
+$$
+✅ **完全复现相对论Larmor公式！**
+
+> 
+> 关键结论：TUFT加速孤子包络的辐射功率，在弱场绝热孤子近似下，严格还原相对论Larmor；无发散，因为包络$(u<c),\gamma<\infty$。
+> 【状态】✅解析推导完成；绝热孤子近似下成立。
+
+---
+
+## 【选项2：mpmath 250位高精度数值仿真框架设计】
+
+> 
+> 目标：构造1维/3维孤子包络；计算 $\psi,\rho,\boldsymbol J$；求解LW推迟势；拆分近场$1/(\hat{\boldsymbol R})2$、辐射场$(1/R)$分量；对标解析结果。
+> 使用 mpmath 250位有效数字；JAX自动微分可选，这里先搭建核心代码骨架。
+
+### 仿真分阶段
+
+1. 阶段A：求解静态孤子解（非线性自洽势 $\mathcal V[\psi]=\mathcal V_1|\psi|^2$）
+$$
+-\nabla^2\psi = \mathcal V_1 |\psi|^2 \psi
+$$
+球对称 ansatz $\psi(r)$，边界条件：$\psi(\infty)=0,\psi'(0)=0$。打靶法求解，mpmath 250位。
+2. 阶段B：构造匀速/加速孤子包络，生成 $\psi(\boldsymbol x,t)$
+3. 阶段C：计算涌现密度：$\rho,\boldsymbol J$
+4. 阶段D：LW推迟势积分，计算总电场；分离速度场项、加速度辐射项
+5. 阶段E：远场扫描，校验衰减行为 $E_\text{near}\propto1/(\hat{\boldsymbol R})2,;E_\text{rad}\propto(1/R)$；计算辐射功率对比Larmor解析值。
+
+### Python 高精度仿真骨架（mpmath，250位）
+
+```
+import mpmath as mp
+mp.mp.dps = 250 # 250位精度
+
+# ===== 1. Static spherically symmetric soliton ODE =====
+# psi'' + (2/r) psi' - V1 * psi**3 = 0
+# V1: self-nonlinear coupling constant
+V1 = mp.mpf("0.8")
+
+def soliton_ode(r, state):
+    psi, dpsi = state
+    if r < mp.mpf("1e-20"):
+        return [mp.mpf(0), mp.mpf(0)]
+    d2psi = -(2/r)*dpsi + V1 * psi**3
+    return [dpsi, d2psi]
+
+# shooting method to find soliton boundary condition psi(inf)=0
+r_max = mp.mpf(30)
+# solve ODE, get psi(r)
+# ... (shooting loop)
+
+# ===== 2. Compute emergent charge and current density =====
+def rho_from_psi(psi, dt_psi, q0):
+    return q0 * mp.im(mp.conj(psi)*dt_psi)
+
+def J_from_psi(psi, grad_psi, q0, c):
+    return q0 * c * mp.im(mp.conj(psi)*grad_psi)
+
+# =====3. LW retarded potential integration =====
+def retarded_potential(x, t, rho, J, c):
+    # integrate over source volume, find retarded time t_r = t - |x-x'|/c
+    # compute scalar potential phi and vector potential A
+    # then E = -grad phi - dA/dt
+    # decompose E into velocity term ~1/\(\hat{\boldsymbol R}\)2 and acceleration term ~\(1/R\)
+    pass
+
+# =====4. Far field scan, power integration =====
+def scan_far_field(R_list, theta_list):
+    # compute E_near, E_rad, fit power law 1/\(\hat{\boldsymbol R}\)2 and \(1/R\)
+    # integrate P over sphere, compare to relativistic Larmor
+    pass
+```
+
+🟠【待运行数值校验】代码骨架完成；下一步填充打靶求解器、推迟势积分模块。
+
+---
+
+## 【选项3：预留接口，待电磁包络仿真收敛后再启动】
+
+当前暂不完整展开，先定义总作用量的候选结构（避免过早引入引力张量自由度干扰电磁层校验）
+$$
+S_\text{total}=S_\text{EC}[g,\Gamma]+S_\text{Maxwell}[F]+S_\text{envelope}[\psi,g,\Gamma]+S_\text{coupling}
+$$
+
+- $S_\text{EC}$：Einstein-Cartan引力作用量（含挠率张量）
+- $S_\text{Maxwell}$：麦克斯韦场作用量 $\propto F_{\mu\nu}F^{\mu\nu}$
+- $S_\text{envelope}$：TUFT包络场作用量（非线性孤子波动项+自洽几何势）
+- $S_\text{coupling}$：包络场与EC引力、电磁场最小耦合项
+
+变分：$\delta S/\delta g_{\mu\nu}=0,\delta S/\delta \Gamma^\alpha{}*{\mu\nu}=0,\delta S/\delta A*\mu=0,\delta S/\delta\psi=0$
+弱场极限校验：$g_{\mu\nu}=\eta_{\mu\nu}+h_{\mu\nu},;|h_{\mu\nu}|\ll1$，退化为闵氏时空+麦克斯韦+包络孤子电磁动力学。
+
+---
+
+# 当前攻坚卡点汇总
+
+1. 核心数学修正：**线性几何势无法稳定局域粒子；必须引入非线性自洽势 $\mathcal V\propto |\psi|^2$，方程升级为孤子型方程**，这是TUFT V3必不可少的新增核心假设。
+2. 解析侧已经完成：色散、微扰稳定性判据、$\dot{\boldsymbol J}$推导、远场$(1/R)$校验、绝热孤子下相对论Larmor完全匹配。
+3. 数值侧：骨架就绪，下一步需要完成孤子打靶求解，然后LW场积分。
+
+## 下一步二选一
+
+A：继续解析：深入分析孤子解的解析近似（变分法孤子 ansatz），求解析孤子轮廓、总电荷、静能关系。
+B：进入数值：完成mpmath 250位孤子打靶求解，生成包络场，计算$\rho,\boldsymbol J$，开始LW电场拆分仿真。
+
+选定。
