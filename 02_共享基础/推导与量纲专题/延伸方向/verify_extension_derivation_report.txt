@@ -39,7 +39,9 @@ C 组 · 弱场近似：爱因斯坦场方程 -> 牛顿泊松方程
 [PASS] C4 牛顿极限：nabla^2 Phi = 4 pi G rho
 [PASS] C5a 点源势 Phi = -GM/r 在 r > 0 处 nabla^2 Phi = 0
 [PASS] C5b 高斯通量：oint grad Phi . dS = 4 pi G M（散度定理 => nabla^2 Phi = 4 pi G rho）
-[FAIL] C6 量纲 [nabla^2 Phi] = [4 pi G rho] = T^-2
+[PASS] C6a 量纲 [nabla^2 Phi] = [4 pi G rho_mass] = T^-2
+[PASS] C6b 记号歧义核验：电荷密度 rho_em 代入 G rho 量纲不匹配（M^-1 T^-1 I != T^-2） | [G rho_em] = M^-1 T^-1 I
+[PASS] C8 弱场 Christoffel Gamma^i_{00} 一阶 = d^i Phi / c^2（代入测地线得 d^2 x^i / dt^2 = -d^i Phi）
 [BOUNDARY] C7 静态/低速极限的额外假设 | hbar_ij = 0（空间应力可忽略）与静态近似是牛顿极限的输入假设，非场方程本身；不满足时（如引力波、强场）牛顿极限不成立
 
 ==========================================================================
@@ -53,6 +55,7 @@ D 组 · 量纲分析推导普朗克单位
 [PASS] D5 l_P / m = 1.616255024e-35（CODATA 参考 1.616255e-35，相对偏差 1.48e-08）
 [PASS] D5 t_P / s = 5.391246447e-44（CODATA 参考 5.391247e-44，相对偏差 1.03e-07）
 [PASS] D5 E_P / GeV = 1.220890128e+19（CODATA 参考 1.22089e+19，相对偏差 1.05e-07）
+[PASS] D5 T_P / K = 1.416784162e+32（CODATA 参考 1.416784e+32，相对偏差 1.14e-07）
 [PASS] D6 [sqrt(hbar c / G)] = M
 [PASS] D7 [sqrt(hbar G / c^3)] = L
 [PASS] D8 [sqrt(hbar G / c^5)] = T
@@ -62,17 +65,29 @@ D 组 · 量纲分析推导普朗克单位
 ==========================================================================
 E 组 · 黎曼张量代数对称性与 Bianchi 恒等式
 ==========================================================================
-Traceback (most recent call last):
-  File "verify_extension_derivation.py", line 511, in <module>
-    G2 = christoffel(g2, co2)
-  File "verify_extension_derivation.py", line 468, in christoffel
-    Gam = [[[sp.Rational(1, 2) * sum(
-  File "verify_extension_derivation.py", line 468, in <listcomp>
-    Gam = [[[sp.Rational(1, 2) * sum(
-  File "verify_extension_derivation.py", line 468, in <listcomp>
-    Gam = [[[sp.Rational(1, 2) * sum(
-  File "verify_extension_derivation.py", line 468, in <listcomp>
-    Gam = [[[sp.Rational(1, 2) * sum(
-  File "verify_extension_derivation.py", line 469, in <genexpr>
-    ginv[r][d] * (sp.diff(g[d][b], coords[m])
-TypeError: 'Pow' object is not subscriptable
+[PASS] E1 2 维球面常曲率关系 R_{rho sigma mu nu} = K (g_{rho mu} g_{sigma nu} - g_{rho nu} g_{sigma mu})，K = 1/r_0^2
+[PASS] E2 Ricci = R^sigma_{mu sigma nu} = K g_{mu nu}（与专题 T1 缩并约定自洽）
+[PASS] E3 标量曲率 R = n(n-1)K = 2/r_0^2 | R = 2/r0**2
+[PASS] E4 代数对称性（2 维球面）：前对反对称 / 后对反对称 / 块交换对称
+[PASS] E5 Ricci 张量对称 Ric_{mu nu} = Ric_{nu mu}（2 维球面）
+[PASS] E6 Schwarzschild 真空解：R_{mu nu} = 0（16 个分量全部为零）
+[PASS] E7 Schwarzschild 标量曲率 R = 0
+[PASS] E8 Schwarzschild Einstein 张量 G_{mu nu} = 0
+[PASS] E9/E10 Schwarzschild 抽样对称性：前对反对称 / 后对反对称
+[PASS] E11 Schwarzschild 抽样第一 Bianchi R_{rho[sigma mu nu]} = 0
+[PASS] E12 n = 2 维黎曼张量独立分量数 = 1（公式 n^2(n^2-1)/12） | 实测 = 1
+[PASS] E12 n = 3 维黎曼张量独立分量数 = 6（公式 n^2(n^2-1)/12） | 实测 = 6
+[PASS] E13 n = 4 维独立分量数 = 20（公式 n^2(n^2-1)/12 = 20）
+[INFO] E14 计数法 | n = 4 用公式（双矢量空间 N = n(n-1)/2 = 6，对称矩阵 N(N+1)/2 = 21，减第一 Bianchi 约束 C(n,4) = 1 ⇒ 20）；n = 2,3 由线性约束秩实测验证
+[PASS] E15 3 维共形平直度规曲率非零（保证 Bianchi 验证非平凡）
+[PASS] E16 微分 Bianchi 恒等式 nab_[lambda R_{|rho sigma| mu nu] = 0（3 维，符号精确，抽样 3 组）
+[PASS] E17 微分 Bianchi 恒等式（Schwarzschild 真空解，r = 4M 数值代入，抽样 2 组） | 最大残差 = 0.000e+00
+[INFO] E18 缩并约定 | Ricci 采用专题 T1 约定 R_{mu nu} = R^sigma_{mu sigma nu}；本组 E2 在 2 维球面上给出 Ric = K g（n-1 = 1），与该约定自洽
+
+==========================================================================
+汇总
+==========================================================================
+PASS = 60
+FAIL = 0
+BOUNDARY = 3
+INFO = 3

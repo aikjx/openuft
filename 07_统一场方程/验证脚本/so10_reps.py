@@ -5429,6 +5429,245 @@ BST_BINS = ((2, 0), (3, 0), (4, 0), (2, 1), (2, 2), (4, 1))
 BST_CTL = ((2, 1), (3, 1), (4, 1))
 
 
+def run_translate_layer():
+    r"""R22：$f=2$ 这座桥必须在**阈值内容**上过，而不只在归一化常数上过。
+
+    R21 量到两引擎之间的翻译因子（$f_T=f_{C_2}=2$），但它的 $b$ 那三条吃的是链侧
+    `chain.F3`/`chain.HD` 这一小撮"跑动内容"，$SU(4)$ 档与破缺扇区的标量都不在其中
+    （该条自己登记了这个边界）。本层把同一座桥推到 **422 与 3221 两档**、推到声明谱
+    的全部四块 Higgs（$10_H,45_H,120_H,126_H$）与三代费米子上，并且要求三路同数：
+
+    * 甲＝母格 $D_5$ 上逐权重投影 ${\div}\,\mathrm{rank}$ 再 ${\div}f$（只吃 `irrep`）；
+    * 丙＝先按分支规则拆成分量、把分量的权重多重集**再走甲的同一套投影算术**；
+    * 乙＝链侧 `chain.factor_T` 吃同一批分量（指标/迹的第二套算术）。
+
+    甲与丙同用一个 $T^2$ 投影算子、但喂进去的名册不同（母表示 vs 分量并集）；乙与丙同用
+    一份分量名册、但算术不同。诚实登记：第四路（阈值机 `so10_thresholds` 的逐块 $\Delta b$）
+    本机也测到同数，但它不在变异沙箱的 `DEPS` 里（沙箱只拷 `so10_chain.py` 与
+    `so10_reps.py`）$\\Rightarrow$ 它留在探针侧，**不算**本层的一路。
+    """
+    p = True
+
+    def t22_solve(G, b):
+        n = len(G)
+        M = [[F(x) for x in G[i]] + [F(b[i])] for i in range(n)]
+        for c in range(n):
+            piv = next(r for r in range(c, n) if M[r][c] != 0)
+            M[c], M[piv] = M[piv], M[c]
+            pv = M[c][c]
+            M[c] = [x / pv for x in M[c]]
+            for r in range(n):
+                if r != c and M[r][c] != 0:
+                    k = M[r][c]
+                    M[r] = [x - k * y for x, y in zip(M[r], M[c])]
+        return [M[i][n] for i in range(n)]
+
+    def t22_psq(w, bs):
+        """$|P(w)|^2$：对投影基的 Gram 求逆后回代（基刻意非正交）。"""
+        G = [[nrm(x, y) for y in bs] for x in bs]
+        c = [nrm(w, b) for b in bs]
+        x = t22_solve(G, c)
+        return sum(x[i] * c[i] for i in range(len(bs)))
+
+    def t22_T(ms, bs):
+        return sum(t22_psq(w, bs) * k for w, k in ms.items()) / F(len(bs))
+
+    T22_BS = {'SU4': [add(EPS[0], EPS[1]), add(EPS[1], EPS[2]), add(EPS[0], EPS[2])],
+              'SU3': [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2])],
+              'SU2L': [add(EPS[3], EPS[4])], 'SU2R': [sub(EPS[3], EPS[4])]}
+    T22_CF = {'SU4': ('SU', 4), 'SU3': ('SU', 3),
+              'SU2L': ('SU', 2, 'L'), 'SU2R': ('SU', 2, 'R')}
+    T22_STAGE = [('422', SUB_422, 'SU4'), ('3221', SUB_3221, 'SU3')]
+    T22_SPEC = [('10_H', (1, 0, 0, 0, 0)), ('45_H', (0, 1, 0, 0, 0)),
+                ('120_H', (0, 0, 1, 0, 0)), ('126_H', (0, 0, 0, 0, 2))]
+    T22_FER = [('16_F', [c for c in ALL_LABELS if weyl_dim(weight_of_label(c)) == 16][0])]
+    T22_SAMP = [('S210', (0, 0, 0, 1, 1)), ('S560', (0, 1, 0, 1, 0)),
+                ('S945', (1, 0, 1, 0, 0)), ('S1200', (0, 0, 1, 1, 0))]
+
+    def t22_parts(ms, S):
+        return [(row['wt'], row['n'], sub_irrep(row['wt'], S)) for row in branching(ms, S)]
+
+    def t22_cmp(pl):
+        """分量权重多重集（带子系统重数 $\\times$ Klimky–Springer 分支重数）。"""
+        d = {}
+        for _l, n, sm in pl:
+            for w, k in sm.items():
+                d[w] = d.get(w, 0) + k * n
+        return d
+
+    def t22_chainT(fac, pl):
+        ws = [tuple(F(x, U) for x in w) for w, k in t22_cmp(pl).items() for _ in range(k)]
+        return chain.factor_T(T22_CF[fac], ws)
+
+    def t22_ws(cs, S):
+        """母表示在相位 $S$ 下的全部分量权重（含分支重数），仍是整数格点坐标。"""
+        return [w for row in branching(irrep(cs)[1], S)
+                for w, k in sub_irrep(row['wt'], S).items() for _ in range(k * row['n'])]
+
+    def t22_c2lat(key):
+        simp = {'SU4': [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2]), add(EPS[1], EPS[2])],
+                'SU3': [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2])],
+                'SU2L': [add(EPS[3], EPS[4])], 'SU2R': [sub(EPS[3], EPS[4])]}[key]
+        pos = positive_roots_of(simp)
+        dom = [v for v in pos if all(F(2 * nrm(v, a), nrm(a, a)) >= 0 for a in simp)]
+        assert len(dom) == 1, '子系统最高根不唯一：%d 个候选' % len(dom)
+        return nrm2(dom[0]) + 2 * nrm(dom[0], rho_of(pos))
+
+    # ---- R22.0 逐（相位 × 因子 × 表示）格的三路同数，三张对照都要在场 ----
+    t22_rows, t22_ctl_nof, t22_ctl_dropn, t22_ctl_hiwt = [], 0, 0, 0
+    t22_nkse = 0
+    for sname, S, colfac in T22_STAGE:
+        for fac in [colfac, 'SU2L', 'SU2R']:
+            bs = T22_BS[fac]
+            for rname, cs in T22_SPEC + T22_FER + T22_SAMP:
+                ms = irrep(cs)[1]
+                pl = t22_parts(ms, S)
+                jia = t22_T(ms, bs) / F(2)
+                bing = t22_T(t22_cmp(pl), bs) / F(2)
+                yi = t22_chainT(fac, pl)
+                nod = {}
+                for _l, _n, sm in pl:
+                    for w, k in sm.items():
+                        nod[w] = nod.get(w, 0) + k
+                ctl_dn = t22_T(nod, bs) / F(2)
+                ctl_hw = sum(t22_psq(lam, bs) * n for lam, n, _sm in pl) / F(len(bs)) / F(2)
+                same = (jia == bing == yi)
+                t22_rows.append([sname, rname, fac, str(jia), str(bing), str(yi), same])
+                t22_ctl_nof += 1 if t22_T(ms, bs) != yi else 0
+                t22_ctl_dropn += 1 if ctl_dn != jia else 0
+                t22_ctl_hiwt += 1 if ctl_hw != jia else 0
+                t22_nkse += sum(1 for _l, n, _sm in pl if n > 1)
+    t22_bad = sum(1 for r in t22_rows if not r[6])
+    t22_nz = sum(1 for r in t22_rows if r[5] != '0')
+    p &= ok('R22.0', '翻译因子必须**逐格**成立而不是只在归一化常数上成立：$422$ 与 $3221$ 两档 '
+                     '$\\times$ 各自三个因子 $\\times$ 名册（声明谱四块 Higgs $+$ 三代费米子的母 '
+                     '$16$ $+$ %d 个补格点样本）$=%d$ 格（其中链侧非零 %d 格）上，甲（母格投影'
+                     '${\\div}\\mathrm{rank}{\\div}f$）、丙（分量权重并集再走甲的同一套投影算术）、'
+                     '乙（链侧 `factor_T`，第二套算术）三路不同的格 %d 个。三张对照各数自己那一格'
+                     '动了多少：不翻译（甲去掉 ${\\div}f$）与乙不同的格 %d 个、把分支重数 $n$ 丢掉'
+                     '之后与甲不同的格 %d 个、用各分量的**最高权**代替其权重多重集后与甲不同的格 '
+                     '%d 个；名册里 $n>1$ 的分支行共 %d 行 $\\Rightarrow$ "丢 $n$" 这张票只在'
+                     '它有对象的行上有牙，分母必须一起印出来（若 $n>1$ 的行为零，这句话就没有支撑）'
+                     % (len(T22_SAMP), len(t22_rows), t22_nz, t22_bad,
+                        t22_ctl_nof, t22_ctl_dropn, t22_ctl_hiwt, t22_nkse),
+            len(t22_rows) == 6 * (len(T22_SPEC) + len(T22_FER) + len(T22_SAMP)) and
+            t22_bad == 0 and t22_ctl_nof == len(t22_rows) and
+            t22_ctl_dropn > 0 and t22_ctl_hiwt > 0 and t22_nkse > 0,
+            '逐格样例（相位、表示、因子、甲、丙、乙）：%s' %
+            [r[:6] for r in t22_rows[:6]])
+
+    # ---- R22.1 两档的一环 b：格路整式 ÷f 必须等于链侧逐分量 ----
+    t22_b, t22_bctl = [], 0
+    SC = [((1, 0, 0, 0, 0), 1), ((0, 1, 0, 0, 0), 1), ((0, 0, 0, 0, 2), 1)]
+    FE = [(T22_FER[0][1], 3)]
+    for sname, S, colfac in T22_STAGE:
+        for fac in [colfac, 'SU2L', 'SU2R']:
+            bs = T22_BS[fac]
+            tf = sum(t22_T(irrep(cs)[1], bs) * m for cs, m in FE)
+            ts = sum(t22_T(irrep(cs)[1], bs) * m for cs, m in SC)
+            c2l = t22_c2lat(fac)
+            lat = (F(2, 3) * tf + F(1, 3) * ts - F(11, 3) * c2l) / F(2)
+            clf = chain.b_of(T22_CF[fac],
+                             [tuple(F(x, U) for x in w) for cs, m in FE
+                              for _ in range(m) for w in t22_ws(cs, S)],
+                             [tuple(F(x, U) for x in w) for cs, m in SC
+                              for _ in range(m) for w in t22_ws(cs, S)])
+            t22_b.append([sname, fac, str(lat), str(clf), lat == clf, str(lat * F(2))])
+            t22_bctl += 1 if lat * F(2) != clf else 0
+    t22_bb = [r for r in t22_b if not r[4]]
+    p &= ok('R22.1', '把 $b$ 的**整条格路式子**（不只 $T$ 那一项）除以量到的 $f=2$，必须逐因子'
+                     '等于链侧那一套：两档 $\\times$ 三因子 $=%d$ 行，违例 %d 行（%s）。对照是'
+                     '"不翻译"那一列：格路整式不除 $f$ 时与链侧不同的行 %d 行（要求 $=%d$，'
+                     '即每一行都偏）$\\Rightarrow$ 这一格的牙在分母上。$U(1)$ 那一档按 R21.1 的'
+                     '口径**不进**本条（阿贝尔侧两侧同一算术，把它当独立路就是把恒真写成通过）'
+                     % (len(t22_b), len(t22_bb),
+                        '、'.join('%s/%s 格 %s 链 %s' % (r[0], r[1], r[2], r[3]) for r in t22_bb)
+                        or '无', t22_bctl, len(t22_b)),
+            len(t22_b) == 6 and not t22_bb and t22_bctl == len(t22_b),
+            '标量内容：$10_H+45_H+126_H$（声明谱里参与跑动的那三块，$120_H$ 不在其中——它是 '
+            'R9 判出"第二条闭合道的母表示缺位"才补进阈值探针的），费米子 $=3\\times16$；'
+            '两档各取其自己的对角子群因子')
+
+    # ---- R22.2（已作废，不进台账）：两跳"路径无关"在**权重账**上是恒等式 ----
+    # 实测：把第二跳的子群换掉、或把"直"那侧换成只跳一步，读数逐字节不变（针 q10/q12，
+    # 见 `r22_teeth2.out`）$\\Rightarrow$ 三条名册（直 3221 / 只跳 422 / 两跳）作为**母格权重
+    # 多重集**本来就相等（权重守恒），它判的不是路径无关。真正的路径无关由 R6.7 用**标签与
+    # 重数**判。这里把读数留着打印，但只作为 R22.0 的旁注，不登记成门禁、不注册变异例。
+    t22_hop = []
+    for rname, cs in T22_SPEC + T22_FER:
+        ms = irrep(cs)[1]
+        direct = t22_cmp(t22_parts(ms, SUB_3221))
+        n422 = len(set(lam for lam, _n, _sm in t22_parts(ms, SUB_422)))
+        two = {}
+        for lam, n, sm in t22_parts(ms, SUB_422):
+            for lam2, n2, sm2 in t22_parts(sm, SUB_3221):
+                for w, k in sm2.items():
+                    two[w] = two.get(w, 0) + k * n2 * n
+        t22_hop.append([rname, len(direct), len(two), direct == two, n422])
+
+    BASIS.update({'r22': {
+        'rows': [[r[0], r[1], r[2], r[3], r[4], r[5]] for r in t22_rows],
+        'cells': len(t22_rows), 'nonzero': t22_nz, 'bad': t22_bad,
+        'ctl_nof': t22_ctl_nof, 'ctl_dropn': t22_ctl_dropn, 'ctl_hiwt': t22_ctl_hiwt,
+        'kse_rows': t22_nkse, 'b': t22_b, 'b_ctl': t22_bctl,
+        'hop_note': [[r[0], r[1], r[2], r[3], r[4]] for r in t22_hop]}})
+    return p
+
+
+def translate_section(B):
+    """粘贴版：接在 basis_section() 的 `return L`（8562）之前。缩进与邻居一致（4 空格）。"""
+    r22 = B.get('r22') or {}
+    L = ['', '### 14.13 $f=2$ 这座桥要在**阈值内容**上过，而不只在归一化常数上过（R22.0–R22.1）', '']
+    if not r22.get('rows') or not r22.get('b'):
+        return L + ['R22 未产出读数 $\\Rightarrow$ 本节**不印读数**：缺位的对照不能印成通过，'
+                    '与 §14.12 降级那支同法（那条在 %s 处早退，本节在它之后，故两节可能同时降级）。'
+                    % 'basis_section 的 r21 守卫', '']
+    rows, bb = r22['rows'], r22['b']
+    L += ['§14.12 的 $b$ 三行只吃链侧那一小撮跑动内容（`chain.F3` 与 `chain.HD`，该条自己登记了这个'
+          '边界）。本层把同一座桥推到 $422$ 与 $3221$ **两档**、推到声明谱的全部四块 Higgs 与三代'
+          '费米子，并要求三路同数：甲＝母格逐权重投影 ${\\div}\\,\\mathrm{rank}{\\div}f$（只吃'
+          '`irrep`）、丙＝先按分支规则拆成分量、把分量权重多重集**再走甲的同一套投影算术**、'
+          '乙＝链侧 `chain.factor_T`（指标/迹的第二套算术）。逐格读数：名册 %d 格（链侧非零 %d 格）'
+          '上三路不同的格 **%d** 个（要求 $=0$）。三张对照各数自己那一格动了多少：不翻译（甲去掉 '
+          '${\\div}f$）与乙不同 %d 格（要求 $=%d$，即每一格都偏）、把分支重数 $n$ 丢掉之后与甲不同 '
+          '%d 格、以各分量最高权代替其权重多重集后与甲不同 %d 格；名册里 $n>1$ 的分支行共 %d 行 '
+          '$\\Rightarrow$ "丢 $n$" 这张票只在它有对象的行上有牙，分母必须一起印出来。'
+          % (r22['cells'], r22['nonzero'], r22['bad'], r22['ctl_nof'], r22['cells'],
+             r22['ctl_dropn'], r22['ctl_hiwt'], r22['kse_rows']), '',
+          '| 相位 | 表示 | 因子 | 甲（母格 $\\div f$） | 丙（分量并集走甲） | 乙（链侧 `factor_T`） | 三路 |',
+          '|---|---|---|---|---|---|---|']
+    for x in rows:
+        same = (x[3] == x[4] == x[5])
+        L.append('| %s | %s | %s | $%s$ | $%s$ | $%s$ | %s |' %
+                 (x[0], x[1], x[2], x[3], x[4], x[5], '等' if same else '**不等**'))
+    nb = sum(1 for x in bb if not x[4])
+    L += ['', '把 $b$ 的**整条格路式子**（不只 $T$ 那一项）除以量到的 $f$，必须逐因子等于链侧那一套：'
+          '两档 $\\times$ 三因子 $=%d$ 行，违例 **%d** 行。对照是"不翻译"那一列：格路整式不除 $f$ '
+          '时与链侧不同的行 %d 行（要求 $=%d$，即每一行都偏）$\\Rightarrow$ 这一格的牙在分母上。'
+          '$U(1)$ 那一档按 §14.12 的口径**不进**本条（阿贝尔侧两侧同一算术，把它当独立路就是把'
+          '通过写进通过率里）。标量内容取 $10_H+45_H+126_H$（声明谱里参与跑动的那三块，$120_H$ 不在'
+          '其中），费米子 $=3\\times 16$。' % (len(bb), nb, r22['b_ctl'], len(bb)), '',
+          '| 相位 | 因子 | 格路 $\\div f$ | 链侧 | 译后 | 不翻译的值 | 不翻译 |',
+          '|---|---|---|---|---|---|---|']
+    for x in bb:
+        L.append('| %s | %s | $%s$ | $%s$ | %s | $%s$ | %s |' %
+                 (x[0], x[1], x[2], x[3], '等' if x[4] else '**不等**', x[5],
+                  '偏' if x[5] != x[3] else '不偏'))
+    hop = r22.get('hop_note') or []
+    L += ['', '旁注（**不是门禁**）：三条名册"直接 $3221$／只跳 $422$／两跳"作为**母格权重多重集**'
+          '本来就相等（权重守恒），换子群或只跳一步都让读数逐字节不变 $\\Rightarrow$ 它判的不是路径'
+          '无关；真正的路径无关由 R6.7 用**标签与重数**判。故本条不登记成门禁、不注册变异例。逐表示：'
+          '%s。' % ('；'.join('%s：直接 %s 条、两跳 %s 条、相等 %s、$422$ 分量种数 %s' %
+                              (r[0], r[1], r[2], r[3], r[4]) for r in hop) or '无读数'), '',
+          '诚实边界（逐条）：(i) 本层的第四路（阈值机 `so10_thresholds` 的逐块 $\\Delta b$）本机也'
+          '测到同数，但它**不在**变异台账沙箱的 `DEPS`（只拷 `so10_chain.py` 与 `so10_reps.py`）里 '
+          '$\\Rightarrow$ 留在探针侧，不算本层的一路；(ii) 甲与丙共用同一个投影算子、只有名册不同，'
+          '乙与丙共用同一份分量名册、只有算术不同 $\\Rightarrow$ 三路的"独立性"是算术与容器两级，'
+          '不是三个互不相干的实现；(iii) 本层不回答 L10：两环跑动与阈值修正仍缺 $\\Rightarrow$ '
+          '**L10 保持 OPEN**，本节不给任何主张升证据级、不回填寿命。', '']
+    return L
+
+
 def run_basis_layer():
     r"""R15：把**算符基的覆盖面**做成读数（关掉 09 第十二项边界 (iii) 的后半；文档侧登记为第十六项）。
 
@@ -7137,8 +7376,9 @@ def run_basis_layer():
     # 投影基刻意**非正交**、且与链侧那组正交基不同 $\\Rightarrow$ 两条路只在数值上相遇。
     # $SU(4)$ 的单根取 $\\{\\varepsilon_1-\\varepsilon_2,\\varepsilon_2-\\varepsilon_3,
     # \\varepsilon_2+\\varepsilon_3\\}$（$D_3=A_3$ 的基）。把第三个换成 $\\varepsilon_1+\\varepsilon_2$
-    # 就不是基（它在根格上指标 2）$\\Rightarrow$ 生成的"正根"只剩 4 个、最高根随之取错、
-    # $C_2^{lat}$ 从 8 读成 5 $\\Rightarrow$ 这是本层的一个变异针位。
+    # 就不是基（它在根格上指标 2）$\\Rightarrow$ "正根"集与支配候选都随之变，而上面那条
+    # `assert len(dom) == 1` **直接抛**（实测 exit 1）——这一位是**会自爆**的变异针，
+    # 不是把 $C_2^{lat}$ 从 8 静默读成 5；那两个计数由第十一层台账该例的读数现场印出，本注释不转述。
     T21_FAC = [
         ('SU4', '$SU(4)$', [add(EPS[0], EPS[1]), add(EPS[1], EPS[2]), add(EPS[0], EPS[2])],
          [sub(EPS[0], EPS[1]), sub(EPS[1], EPS[2]), add(EPS[1], EPS[2])], ('SU', 4)),
@@ -8559,6 +8799,7 @@ def basis_section():
           '主张升证据级 $\\Rightarrow$ **L10 保持 OPEN**。这条守卫是否真会红，与 R11–R20 各层同法由'
           '外部变异台账的 **R21 层**逐例植入复核（数字只在那份台账的读数里，本节不转述）。' %
               len(r21['ab']), '']
+    L += translate_section(BASIS)
     return L
 
 
@@ -8696,10 +8937,10 @@ def residual422_section():
 
 def write_report(gates):
     (eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok, ch_ok,
-     res_ok, sel_ok, gl_ok, g422_ok, pw_ok, bs_ok) = gates
+     res_ok, sel_ok, gl_ok, g422_ok, pw_ok, bs_ok, tl_ok) = gates
     all_ok = (eng_ok and id_ok and phy_ok and nogo_ok and br_ok and xchk_ok and yuk_ok and
               inv_ok and ch_ok and res_ok and sel_ok and gl_ok and g422_ok and pw_ok and
-              bs_ok)
+              bs_ok and tl_ok)
     L = ['# SO(10) 表示论报告（D5 权重格第一性推导）', '',
          '由 [so10_reps.py](so10_reps.py) 自动生成，**零第三方依赖**，全程整数格点 + 精确有理数。',
          '',
@@ -9233,8 +9474,9 @@ def main():
     g422_ok = run_residual422_layer() if gl_ok else False
     pw_ok = run_perweight_layer() if g422_ok else False
     bs_ok = run_basis_layer() if pw_ok else False
+    tl_ok = run_translate_layer() if bs_ok else False
     all_ok = write_report((eng_ok, id_ok, phy_ok, nogo_ok, br_ok, xchk_ok, yuk_ok, inv_ok,
-                           ch_ok, res_ok, sel_ok, gl_ok, g422_ok, pw_ok, bs_ok))
+                           ch_ok, res_ok, sel_ok, gl_ok, g422_ok, pw_ok, bs_ok, tl_ok))
 
     print('SO(10) 表示论引擎（D5 权重格；唯一李论输入 = Dynkin 图）')
     print('  自检：%s（%d 项，PASS %d）' %
@@ -9464,6 +9706,15 @@ def main():
                '、'.join(str(x) for x in r21['fA']),
                sum(1 for x in r21['b'] if not x[5]), r21['b_nb_dev'], r21['b_nb'],
                r21['b_ab'], r21['casimir_th'], r21['h_dual']))
+        r22 = BASIS.get('r22') or {}
+        if r22:
+            print('    f=2 这座桥的逐格核验（R22）：名册 %d 格（链侧非零 %d 格）三路不同的格 '
+                  '%d 个（要求 0）、不翻译与乙不同 %d 格、丢分支重数 n 后与甲不同 %d 格、'
+                  '以最高权代替权重多重集后与甲不同 %d 格、n>1 的分支行共 %d 行；把整条格路 b '
+                  '除以 f 后等于链侧（违例 %d 行，要求 0），不翻译时 %d/%d 行全偏' %
+                  (r22['cells'], r22['nonzero'], r22['bad'], r22['ctl_nof'],
+                   r22['ctl_dropn'], r22['ctl_hiwt'], r22['kse_rows'],
+                   sum(1 for x in r22['b'] if not x[4]), r22['b_ctl'], len(r22['b'])))
     if nogo_ok:
         print('  判定：dim≤210 内唯一能破 B−L 而不破电磁的 Higgs = 126 / 126̄；'
               '120_H 虽含 (1,1,1)±2 但 |Q|=1 ⇒ 排除（报告 §4）')

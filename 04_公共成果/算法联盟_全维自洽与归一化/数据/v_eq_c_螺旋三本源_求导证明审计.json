@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "script": "v_eq_c_螺旋三本源_曲率挠率角频率_求导证明审计.py",
+    "elapsed_sec": 1.62,
+    "counts": {
+      "PASS": 14,
+      "FAIL": 9,
+      "BOUNDARY": 5,
+      "INFO": 1
+    },
+    "guard_baseline": {
+      "A-04": "FAIL",
+      "C-03": "FAIL",
+      "D-02": "FAIL",
+      "E-01": "FAIL",
+      "E-02": "FAIL",
+      "E-04": "FAIL",
+      "F-01": "FAIL"
+    }
+  },
+  "results": [
+    {
+      "id": "A-01",
+      "section": "A 螺旋几何",
+      "item": "标准螺旋的 kappa 与 tau",
+      "statement": "对 r(theta)=(a cos theta, a sin theta, b theta)：kappa = a/(a^2+b^2)，tau = b/(a^2+b^2)",
+      "verdict": "PASS",
+      "detail": "符号恒等：kappa^2 残差=0 (True)，tau 残差=0 (True)；这是纯微分几何，零拟合"
+    },
+    {
+      "id": "A-02",
+      "section": "A 螺旋几何",
+      "item": "反演：由 (kappa,tau) 定半径与螺距参数",
+      "statement": "a = kappa/(kappa^2+tau^2)，b = tau/(kappa^2+tau^2)，且 a^2+b^2 = 1/(kappa^2+tau^2)",
+      "verdict": "PASS",
+      "detail": "反演闭式符号恒等（残差 0）；空间扭转率 u = sqrt(kappa^2+tau^2) = 1/sqrt(a^2+b^2)"
+    },
+    {
+      "id": "A-03",
+      "section": "A 螺旋几何",
+      "item": "弧长参数化自洽性（修正版）",
+      "statement": "r(s) = (a cos(us), a sin(us), b u s) 满足 |dr/ds| == 1（s 确为弧长）",
+      "verdict": "PASS",
+      "detail": "|dr/ds|^2 - 1 符号残差 = 0 ==> 归一化成立（u = omega/c，非 omega）"
+    },
+    {
+      "id": "A-04",
+      "section": "A 螺旋几何",
+      "item": "原文参数化与式(1)的量纲冲突【原文缺陷 1】",
+      "statement": "原文写 cos(omega*s)：要求 [omega]=1/L；式(1) 给 omega=c*sqrt(kappa^2+tau^2) 量纲 1/T",
+      "verdict": "FAIL",
+      "detail": "弧长归一化解得 omega_required = sqrt(kappa^2+tau^2) = omega/c（False）；取 kappa=0.3,tau=0.4 (1/m) 时 |dr/ds| = 1.7987547e+8 != 1 ==> 同一符号兼作「空间扭转率」与「时间角频率」，差一个因子 c"
+    },
+    {
+      "id": "A-05",
+      "section": "A 螺旋几何",
+      "item": "式(1) 的正确读法（修正）",
+      "statement": "omega^2 = c^2 (kappa^2+tau^2) 应读作：时间角频率 = c x 空间扭转率 u",
+      "verdict": "PASS",
+      "detail": "theta(t) = u*s(t) = u*c*t ==> omega = d(theta)/dt = c*u；修正后 A-03 自洽"
+    },
+    {
+      "id": "A-06",
+      "section": "A 螺旋几何",
+      "item": "螺距公式核对",
+      "statement": "h = 2*pi*tau/(kappa^2+tau^2)",
+      "verdict": "PASS",
+      "detail": "h = 2*pi*b 且 b = tau/(kappa^2+tau^2)；原文该式正确（唯一不需要改的系数）"
+    },
+    {
+      "id": "B-01",
+      "section": "B 求导链",
+      "item": "一阶导 v = c T(s)",
+      "statement": "ds/dt = c  ==>  dr/dt = c * dr/ds = c T（速度只含切向）",
+      "verdict": "PASS",
+      "detail": "数值：|T| = 1 残差 2.67e-51；标架正交/右手性残差 6.68e-52（50 位精度，多组随机弧长）"
+    },
+    {
+      "id": "B-02",
+      "section": "B 求导链",
+      "item": "二阶导 dv/dt = c^2 kappa N",
+      "statement": "由 dT/ds = kappa N 且 ds/dt = c 得 dv/dt = c^2 kappa N（纯横向、无切向分量）",
+      "verdict": "PASS",
+      "detail": "dT/ds - kappa*N 最大分量残差 1.34e-51；且 T.(dT/ds)=0 ==> 加速度不含速度方向分量，这正是李纳-维谢尔「只有横向加速度」的几何来源"
+    },
+    {
+      "id": "B-03",
+      "section": "B 求导链",
+      "item": "jerk 闭式 d^3r/dt^3 = c^3 kappa(-kappa T + tau B)",
+      "statement": "三阶导数含曲率平方项与曲率x挠率项（辐射反作用的长度尺度由此进入）",
+      "verdict": "FAIL",
+      "detail": "dN/ds - (-kappa T + tau B) 残差 1.41e+00；由此 d^3r/dt^3 = -c^3 kappa^2 T + c^3 kappa tau B"
+    },
+    {
+      "id": "B-04",
+      "section": "B 求导链",
+      "item": "速度毕达哥拉斯分解的定量比值（本文新增）",
+      "statement": "v_旋转 = c*kappa/sqrt(kappa^2+tau^2)，v_平移 = c*tau/sqrt(kappa^2+tau^2)，平方和 = c^2",
+      "verdict": "PASS",
+      "detail": "相对残差 < 0.0e+00；原文只说「平移^2+旋转^2=c^2」，未给出该比例 —— 补上后分配由 (kappa:tau) 唯一确定，这是本册可算的第一性增量"
+    },
+    {
+      "id": "B-05",
+      "section": "B 求导链",
+      "item": "周期与旋转线速度的一致性",
+      "statement": "omega = c*sqrt(kappa^2+tau^2)，周期 2*pi/omega；旋转线速度 a*omega = v_旋转",
+      "verdict": "PASS",
+      "detail": "a*omega = (kappa/Omega2)*(c*sqrt(Omega2)) = c*kappa/sqrt(Omega2)，与 B-04 恒等"
+    },
+    {
+      "id": "C-01",
+      "section": "C 辐射层",
+      "item": "Liénard 功率式的平行/垂直分解",
+      "statement": "P = (q^2/6 pi eps0 c^3) * gamma^6 [a^2 - |v x a|^2/c^2] = (q^2/6 pi eps0 c^3) (gamma^6 a_par^2 + gamma^4 a_perp^2)",
+      "verdict": "PASS",
+      "detail": "符号恒等残差 0：垂直分量只带 gamma^4、平行分量带 gamma^6（韦斯科夫的两种形式等价）"
+    },
+    {
+      "id": "C-02",
+      "section": "C 辐射层",
+      "item": "曲率辐射公式的独立路径交叉核对",
+      "statement": "代入 a_perp = c^2 kappa 到 Liénard 得 P = q^2 c gamma^4 kappa^2/(6 pi eps0)，与标准曲率辐射 P = (2/3)(q^2 c/4 pi eps0) gamma^4/rho^2 同形",
+      "verdict": "PASS",
+      "detail": "kappa=1/rho, gamma=1e4, rho=1e6 m：两式相对差 0.00e+00（treated as identical）；该式 B-02 的 c^2 kappa 是辐射功率的**唯一**几何入口"
+    },
+    {
+      "id": "C-03",
+      "section": "C 辐射层",
+      "item": "原文的 P ~ kappa^2 漏 gamma^4【原文缺陷 2】",
+      "statement": "原文称辐射功率「严格匹配 P = q^2|dv/dt|^2/(6 pi eps0 c^3) ~ kappa^2」——这是非相对论 Larmor 式",
+      "verdict": "FAIL",
+      "detail": "同一 kappa 下 gamma=1e4 的实测倍率 = gamma^4 = 1.000e+16；同步/曲率辐射的 gamma^4 依赖是标准结果，漏掉它会使脉冲星、同步辐射光源的功率估计低 16 个量级。正确式：P = q^2 c gamma^4 kappa^2/(6 pi eps0)"
+    },
+    {
+      "id": "C-04",
+      "section": "C 辐射层",
+      "item": "非相对论极限回收原文口径",
+      "statement": "gamma -> 1 时 P = q^2 c kappa^2/(6 pi eps0) ~ kappa^2",
+      "verdict": "PASS",
+      "detail": "极限自洽：原文的 ~kappa^2 是 beta<<1 的子情形，不是通式；由此「kappa 非零 <=> 有辐射」的趋势判断仍成立（符号层保住）"
+    },
+    {
+      "id": "C-05",
+      "section": "C 辐射层",
+      "item": "公理 1 与 Liénard 公式的相容性边界",
+      "statement": "若严格令场元 |v| = c，则 gamma 发散、Liénard 式无定义",
+      "verdict": "BOUNDARY",
+      "detail": "自洽读法：辐射源 = 观测粒子（群包络 beta*c, beta<1），场元才是 v=c；两者不可混用。任何把 dv/dt = c^2 kappa 直接代到 |v|=c 的 Liénard 中的算法都会发散"
+    },
+    {
+      "id": "C-06",
+      "section": "C 辐射层",
+      "item": "1/R^2 近场与 1/R 远场：借用而非导出",
+      "statement": "E_速度 ~ 1/R^2、E_加速度 ~ 1/R 是 Liénard-Wiechert 势的结论",
+      "verdict": "BOUNDARY",
+      "detail": "{kappa,tau,omega} 是源的世界线几何量，不含源-场距离 R；1/R 依赖来自推迟势与波动方程的球面传播，须额外输入场方程（格林函数），本文未导出 ==> 属类比投影 [B]"
+    },
+    {
+      "id": "D-01",
+      "section": "D 退化极限",
+      "item": "tau = 0：圆运动（同步辐射）",
+      "statement": "tau=0 ==> omega = c*kappa，半径 1/kappa，向心加速度 c^2*kappa，v_平移 = 0",
+      "verdict": "PASS",
+      "detail": "数值：a = 0.500000 = 1/kappa，|dT/ds| = 2.0 = kappa，v_轴向 = 0.0"
+    },
+    {
+      "id": "D-02",
+      "section": "D 退化极限",
+      "item": "kappa -> 0 的「纯挠率螺旋」不成立【原文缺陷 3】",
+      "statement": "原文称 kappa->0 时 omega = c*tau，为「匀速螺旋、无辐射」",
+      "verdict": "FAIL",
+      "detail": "固定 tau 令 kappa->0：半径 a = kappa/(kappa^2+tau^2) -> 1.0e-9，轴向速度占比 -> 1.0e-9，曲线退化为**直线**（非螺旋）；此时 Frenet 挠率本身失去定义（0/0）。故「纯挠率 => 无辐射匀速螺旋」的前提不存在"
+    },
+    {
+      "id": "D-03",
+      "section": "D 退化极限",
+      "item": "kappa = tau = 0 的平直极限",
+      "statement": "原文称此时 omega=0 即「真空无激发场」",
+      "verdict": "BOUNDARY",
+      "detail": "a,b 同为 0/0 无定义，相应曲线不存在；omega=0 是式(1) 的算术结果，不是「真空无激发」的导出结论（缺方程 I，属类比外推）"
+    },
+    {
+      "id": "E-01",
+      "section": "E 作用量层",
+      "item": "作用量量纲审计【原文缺陷 4】",
+      "statement": "S = int [(1/2 lambda)(kappa^2-tau^2) + omega^2/(2c^2)] sqrt(-g) d^4x 应为作用量量纲",
+      "verdict": "FAIL",
+      "detail": "被积函数量纲 L^-2，乘 d^4x 得 (0, 1, 1, 0)，与作用量 M L^2 T^-1 不符：缺整体归一化因子（如 hbar 或 c^3/G 量纲），故不能直接作为变分原理的合法起点"
+    },
+    {
+      "id": "E-02",
+      "section": "E 作用量层",
+      "item": "变分只给平凡驻点，推不出 Einstein 方程",
+      "statement": "原文称 delta S = 0 ==> G_{mu nu}(kappa) = T_{mu nu}(kappa,tau,omega)",
+      "verdict": "FAIL",
+      "detail": "被积函数不含任何导数项 ==> delta S/delta kappa = kappa(1/lambda+1)，delta S/delta tau = tau(1-1/lambda)；要两者同时为零且非平凡需 lambda=-1 与 +1 同时成立。故唯一驻点为 kappa=tau=0（平凡真空）；无度规变分、无 Ricci 标量，Einstein 张量不可能由该作用量产生"
+    },
+    {
+      "id": "E-03",
+      "section": "E 作用量层",
+      "item": "lambda 不可识别",
+      "statement": "原文称「lambda 为几何耦合，可由真空边界条件自洽定出」",
+      "verdict": "FAIL",
+      "detail": "对所有 lambda，驻点方程都给同一个平凡解 kappa=tau=0；lambda 在变分问题中不可识别（flat direction）==> 该「自洽定出」没有可执行的方程"
+    },
+    {
+      "id": "E-04",
+      "section": "E 作用量层",
+      "item": "世界线曲率 != 时空曲率（范畴错配 witness）",
+      "statement": "第 1 步的 kappa 是 Frenet 曲线曲率，第 3 步却作为 Ricci/黎曼曲率进入 Einstein-Cartan",
+      "verdict": "FAIL",
+      "detail": "witness：Minkowski 度规 Christoffel 全零（True）==> Riemann=Ricci=0，但其中半径 R0 的圆轨道世界线 kappa = 1/R0 != 0。两者量纲虽同为 1/L（或平方 1/L^2），却是**点函数**与**曲线函数**两类不同对象，不能互认；EC 的挠率是三阶张量场 T^lambda_{mu nu}，与 Frenet 标量挠率 tau 同名不同物"
+    },
+    {
+      "id": "E-05",
+      "section": "E 作用量层",
+      "item": "1/2 系数替换的实质",
+      "statement": "把 omega^2/2c^2 代换成 (kappa^2+tau^2)/2 只是用式(1) 作替换",
+      "verdict": "PASS",
+      "detail": "替换本身符号正确（残差 0）；但它把唯一的时间项消掉了 ==> 拉氏密度不含任何导数，这正是 E-02 平凡驻点的技术来源：退化为一个纯代数极值问题"
+    },
+    {
+      "id": "F-01",
+      "section": "F 量纲层",
+      "item": "{kappa,tau,omega,c} 生成不了质量/电荷",
+      "statement": "公理 3 称电荷、质量是 {kappa,tau,omega} 的组合不变量",
+      "verdict": "FAIL",
+      "detail": "量纲秩分析：四者张成的空间中 M 分量与 Q 分量恒为 0（质量方程组解集 EmptySet，电荷方程组解集 EmptySet）==> 公理 3 的强表述在该量纲基下不可实现"
+    },
+    {
+      "id": "F-02",
+      "section": "F 量纲层",
+      "item": "质量需 hbar 作为外部锚",
+      "statement": "m = hbar*omega/c^2 是唯一可达到质量量纲的组合（需引入 hbar）",
+      "verdict": "BOUNDARY",
+      "detail": "量纲向量校验：hbar + omega - 2c = (1, 0, 0, 0) = 质量量纲；hbar 不在三本源内，故质量仍为外部输入（与既有 M02 普朗克锚定谬误同源）"
+    },
+    {
+      "id": "F-03",
+      "section": "F 量纲层",
+      "item": "电子锚的数值读数",
+      "statement": "若把式(1) 绑定到电子：sqrt(kappa^2+tau^2) = omega/c = m_e c/hbar",
+      "verdict": "INFO",
+      "detail": "omega = 7.7634407e+20 rad/s，sqrt(kappa^2+tau^2) = 2.5896051e+12 1/m，对应长度 3.8615927e-13 m（= 约化康普顿波长 3.8616e-13 m）；注意这只钉住了 kappa^2+tau^2 的**合成量**，kappa 与 tau 的分配仍是自由参数"
+    },
+    {
+      "id": "F-04",
+      "section": "F 量纲层",
+      "item": "B 场 ~ tau*b 的定位",
+      "statement": "原文称「磁场完全对应副法向，由挠率主导：B ~ tau b」",
+      "verdict": "BOUNDARY",
+      "detail": "这是**赋义/对标**（把 B 的方向指派给副法向），不是从变分原理或 Maxwell 方程导出；退一步：anyon 式的 tau 与磁通的定量关系在 Ferry-Serret 层无对应 ==> 属 [B] 诠释层"
+    }
+  ]
+}

@@ -70,7 +70,7 @@
 
 ## §17 全量 claims 批量审计（类别 → 证据型 → 层级）
 
-共 60 条主张；登记状态分布 {'pass': 16, 'open': 14, 'boundary': 9, 'falsified': 19, 'info': 2}；审计层级分布 {'L1': 13, 'L2': 5, 'L0': 8, '—': 34}。**L3 条目 = 0**。
+共 86 条主张；登记状态分布 {'pass': 17, 'open': 16, 'boundary': 18, 'falsified': 32, 'info': 3}；审计层级分布 {'L1': 24, 'L2': 5, 'L0': 14, '—': 43}。**L3 条目 = 0**。
 
 | ID | 登记状态 | 类别 | 证据型 | 审计层级 | 引擎复核 | 备注 |
 |----|---------|------|--------|---------|---------|------|
@@ -134,6 +134,32 @@
 | C58 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
 | C59 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
 | C60 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
+| C61 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
+| C62 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
+| C63 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
+| C64 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
+| C65 | falsified | 拓扑本源 | construction | L0 | — | 已证伪 ⇒ 封顶 L0 |
+| C66 | falsified | 几何表达式 | axiom | L0 | — | 已证伪 ⇒ 封顶 L0 |
+| C67 | falsified | 数学项命名 | convention | L0 | — | 已证伪 ⇒ 封顶 L0 |
+| C68 | falsified | 第一性锚点 | axiom | L0 | — | 已证伪 ⇒ 封顶 L0 |
+| C69 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
+| C70 | falsified | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
+| C71 | boundary | 场方程协变性 | axiom | L1 | — | — |
+| C72 | pass | 辐射 | axiom | L1 | — | — |
+| C73 | open | 辐射修正 | axiom | L1 | — | — |
+| C74 | boundary | 统一作用量 | axiom | L1 | — | — |
+| C75 | boundary | 数值实现 | axiom | L1 | — | — |
+| C76 | boundary | 数值验证 | axiom | L1 | — | — |
+| C77 | boundary | 数值验证 | axiom | L1 | — | — |
+| C78 | boundary | 数值验证 | axiom | L1 | — | — |
+| C79 | boundary | 数值验证 | axiom | L1 | — | — |
+| C80 | falsified | 符号核验 | axiom | L0 | — | 已证伪 ⇒ 封顶 L0 |
+| C81 | falsified | 符号核验 | axiom | L0 | — | 已证伪 ⇒ 封顶 L0 |
+| C82 | open | 理论推导 | construction | L1 | — | open ⇒ 封顶 L1 |
+| C83 | boundary | 数值验证 | axiom | L1 | — | — |
+| C84 | falsified | 元审计 | audit | — | — | 元判定（审计/复算信息） |
+| C85 | boundary | 一致性检查 | audit | — | — | 元判定（审计/复算信息） |
+| C86 | info | 第一性审计 | audit | — | — | 元判定（审计/复算信息） |
 
 ## 结论（不粉饰）
 

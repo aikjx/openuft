@@ -45,6 +45,20 @@
   分层区分经典场论 / 广义相对论（协变导数曲率）/ 规范场论（希格斯 SSB）/ 量子引力猜想（非交换几何·LQG·熵引力，标注假说）；
   修复 5 处原文逻辑缺陷（概念歧义、GR 因果混淆、希格斯概念跳跃、边界未写死、前沿表述失当）。
   附可复算量纲核验脚本 `verify_nabla_dimension.py`（符号量纲代数，全部一致）。
+- **`06_统一体系层/关系体系图/`（2026-09-28）**：把 Nabla 量纲基准接入图谱层——新增「共享基准 / 经典」分区与两个节点
+  `基准:Nabla算子量纲`、`实现:Nabla算子量纲条目`，登记 3 条关系边
+  （条目 `implements` 基准；`候登记_ufe1`、`s14_torsion_unified_field_tuft` 各 `borrows_math` 基准）。
+  由 `build_impl_dossiers.py` 重跑生成 CSV/MD/HTML（relations 39→42），`verify.py` 仅存 1 条与本次改动无关的既有断链（07_统一场方程 22_TUFT_V3.5 文件 → `V3_5_scan_recheck.json`）。
+- **`02_共享基础/推导与量纲专题/T5_三种导数数学与本体论对比.md`（2026-09-28）**：门禁占位补全为完整内容——
+  按三层严格分离展开 $\nabla$/$\nabla_\mu$/$D_\mu$ 的数学同构（联络→曲率）与本体论差异（时空弯曲 vs 内部规范空间），
+  落实修正项 A3（SI 下 $D_\mu=\partial_\mu-i\frac{q}{\hbar}A_\mu$）、A4（$F_{\mu\nu}=\frac{i\hbar}{q}[D_\mu,D_\nu]$）、A8（$D_\mu$ 不限于平直时空）；
+  与 NABLA_OPERATOR_DIMENSION.md 口径对齐。专题核验 `verify_derivation_dimension.py`：**PASS=29 / FAIL=0 / INFO=1**。
+- **`02_共享基础/推导与量纲专题/延伸方向/`（2026-09-28）**：README §5 的 A–E 五个延伸方向按「求导/证明/验证/精算」四件套全部展开。
+  新增 `求导证明验证精算分析.md`（逐组求导链 + 命题 + 验证项 + 50 位精算）；修复 `verify_extension_derivation.py` 的 E 组
+  矩阵索引 bug（sympy `Matrix[int]` 扁平索引返回元素而非行，`g.inv()[r][d]` 对 `Pow` 二次下标崩溃），
+  统一改为 `X[a, b]` 双下标。全组核验重跑至 **PASS=58 / FAIL=0 / BOUNDARY=3 / INFO=3**，
+  报告固化 `verify_extension_derivation_report.txt`（此前 E 组崩溃未跑通）。关键精算：普朗克单位 50 位偏差 $<10^{-7}$、
+  Schwarzschild 微分 Bianchi 残差 0；C 组含「泊松方程 $\rho$ 必为质量密度」的记号歧义反证。
 
 ### Changed
 - `03_跨体系研究/comparison_matrix.csv`、`03_跨体系研究/postulate_matrix.md`：补齐遗漏的 `s13_duality_fractal_uft`；

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh" style="margin:0;padding:0;">
+<head><meta charset="utf-8">
+<title>TUFT V3.2 参数空间稳定相图（V1=1.2）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>html,body{height:100%;margin:0;font-family:system-ui,Segoe UI,Microsoft YaHei,sans-serif;background:#fff}
+.c{width:96%;max-width:980px;margin:14px auto}.t{font-size:15px;font-weight:600;margin:6px 2px 2px}
+.s{font-size:11px;color:#666;margin:0 2px 6px}.chart{width:100%;height:430px}
+.note{font-size:11px;color:#555;line-height:1.5;margin:8px 2px 18px;border-left:3px solid #ddd;padding-left:8px}</style>
+</head><body>
+<div class="c"><div class="t">Q-ball 电荷稳定相图 S=min(E₀/Q)/m（V1=1.2 固定）</div>
+<div class="s">横轴 M2、纵轴 V2 · S&lt;1=STABLE（绿）S&gt;1=decay（红）灰=无 Q-ball(V1²≤4M2V2) · 数据：V3.2_paramscan.json · 粗扫 6ω/参数点，S 为采样下界近似</div>
+<div id="c" class="chart"></div>
+<div class="note">稳定性非全局：低 V2 多可衰变；中 M2(0.4) 需 V2 中等(0.4-0.6)；高 M2(0.8-1.0) 需低 V2。最强稳定 S=0.786@(V2=0.6,M2=0.4)；基线(V2=0.4,M2=0.4)→S=0.970 与全谱一致。红线：L3=0、示范参数非粒子身份。</div></div>
+<script>
+var data=[
+ [0.2,0.2,1.2344],[0.2,0.4,1.1364],[0.2,0.6,1.1268],[0.2,0.8,0.9667],[0.2,1.0,0.7783],
+ [0.4,0.2,1.2001],[0.4,0.4,0.9700],[0.4,0.6,0.7939],[0.4,0.8,0.8531],
+ [0.6,0.2,1.1627],[0.6,0.4,0.7856],
+ [0.8,0.2,0.9503],[0.8,0.4,1.0096],
+ [1.0,0.2,0.9982]];
+var invalid=[[0.6,0.6],[0.6,0.8],[0.6,1.0],[0.8,0.6],[0.8,0.8],[0.8,1.0],[1.0,0.4],[1.0,0.6],[1.0,0.8],[1.0,1.0]];
+var opt={tooltip:{trigger:'item',triggerOn:'mousemove|click',renderMode:'richText',confine:true,
+  formatter:function(p){return 'M2='+p.value[0]+'  V2='+p.value[1]+'  S='+p.value[2].toFixed(4)+((p.value[2]<1)?'  STABLE':'  decay');}},
+ grid:{left:60,right:30,top:40,bottom:44,containLabel:true},
+ xAxis:{type:'value',name:'M2',nameTextStyle:{fontSize:11},axisLabel:{fontSize:11},min:0.15,max:1.05},
+ yAxis:{type:'value',name:'V2',nameTextStyle:{fontSize:11},axisLabel:{fontSize:11},min:0.15,max:1.05},
+ visualMap:{min:0.75,max:1.25,orient:'vertical',right:6,top:70,textStyle:{fontSize:10},
+   inRange:{color:['#2f9e44','#f4f4f4','#e03131']}},
+ series:[
+  {name:'S=min(E0/Q)/m',type:'scatter',data:data.map(function(d){return [d[0],d[1],d[2]]}),
+    symbolSize:function(v){return 16+22*(Math.abs(v[2]-1));},label:{show:true,formatter:function(p){return p.value[2].toFixed(2);},fontSize:10,color:'#000'}},
+  {name:'无Q-ball(V1^2<=4M2V2)',type:'scatter',data:invalid.map(function(d){return [d[0],d[1],-1]}),
+    symbol:'rect',symbolSize:13,itemStyle:{color:'#ccc'},label:{show:true,formatter:'✕',fontSize:11,color:'#888'}}
+ ]};
+var ch=echarts.init(document.getElementById('c'));ch.setOption(opt);
+window.addEventListener('resize',function(){ch.resize();});
+</script>
+</body></html>
