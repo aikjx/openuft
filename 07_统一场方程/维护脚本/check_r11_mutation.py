@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-r"""R11、R12、R13、R14、R15、R16、R17、R18、R19 与 R20 十层判据的**外部**变异核验：从引擎外面改那几条算术，看谁变红。
+r"""R11、R12、R13、R14、R15、R16、R17、R18、R19、R20 与 R21 十一层判据的**外部**变异核验：从引擎外面改那几条算术，看谁变红。
 
 为什么要有这个脚本：R11 的判据（$N\mid 3Q$）此前只在引擎内部被自己的门禁对照过，
 "把它写错会不会有人发现"只存在于某一次对话的口头里 —— 而一个没人能重跑的读数等于没人看守。
@@ -68,8 +68,8 @@ r"""R11、R12、R13、R14、R15、R16、R17、R18、R19 与 R20 十层判据的*
     路丙的 triality 号只出现在断言里、不出现在 §12 的任何数字里 $\Rightarrow$ 它动的只有 PASS 数，
     这正好把"门禁在看守报告里看不见的断言"这件事本身变成了读数；
   * 一条良性改动（只补尾注释，语义不动）不得误报，否则这台仪器是"永远红"而不是"能红"。
-    良性例现在十层各一条：只测 R11 那侧的良性改动，等于没核对 §11、§12、§13、§14、§14.8、§14.9、§14.10
-    与 §14.10 续段、§14.11
+    良性例现在十一层各一条：只测 R11 那侧的良性改动，等于没核对 §11、§12、§13、§14、§14.8、§14.9、§14.10
+    与 §14.10 续段、§14.11、§14.12
     的读数在语义不动时**不**动。
 
 R12 那四个变异体各自钉住报告 §11 的一个断言，且都落在**门禁**上而不是 `assert` 上 $\Rightarrow$
@@ -258,8 +258,20 @@ None $\Rightarrow$ None 落进正文就撞上报告自己的**排版不变量 #2
 在 R18 这五张断言上不可测。**(ii)** 的教训是判据——对称性把一对判据变成同一个判据时，这一列就不再是
 那条判据的证据。
 
+R21 层（第十一层）的负面结果，同样**只进散文、不进例数**：本层最初想植的那枚针是把 $SU(4)$ 子系统
+单根基的第三个换成 $\varepsilon_1+\varepsilon_2$（它在根格上指标 2，故不成基）。落笔前重跑过两份临时
+副本实测：只换那一处 $\Rightarrow$ `exit 1`、traceback 末帧在 `so10_reps.py:7133` 的
+`assert len(dom) == 1`，消息"子系统最高根不唯一：2 个候选" $\Rightarrow$ **崩溃不算捕获**（判据要求
+`not traceback`），所以它当不得变异体，本层最终用的是 `q1`–`q5` 加一枚钉真缺陷的 `q6`。第二份副本把那条
+assert 换成打印 $\Rightarrow$ 同一处读到"正根 4 个、支配候选 2 个"（其余三个子系统照旧 pos=3/1/1 且 dom=1）。
+顺带一处**被实测推翻的散文**如实登记：引擎注释 `so10_reps.py:7138–7141` 说这一换"最高根随之取错、
+$C_2^{lat}$ 从 8 读成 5 $\Rightarrow$ 这是本层的一个变异针位"——"正根只剩 4 个"那半是对的，"读成一个错值"
+与"是针位"两半都不对（它崩，不给读数）。注释归下一轮引擎改动收（本轮字节数由台账 `target_bytes` 钉住）。
+教训与 R18 的 (iii) 同族而方向相反：那一例是"读数动了、却被渲染层先抓住"，这一例是"读数根本没机会动"，
+两者的共同形式是——**植针位必须在下游有一条会红的路径，assert 不算路径**。
+
 命名边界（如实登记）：文件名与台账名仍叫 `check_r11_mutation`，因为它从 R11 起家；它此刻覆盖
-**十层**，这一件事由台账里的 `layers` 字段与每例的 `layer` 字段成文，不由文件名成文。
+**十一层**，这一件事由台账里的 `layers` 字段与每例的 `layer` 字段成文，不由文件名成文。
 
 用法：python 维护脚本/check_r11_mutation.py    （慢：每一例都要把整台引擎跑一次完整自检，
       例数与层数不写死在这里 —— 由台账里的 `cases_total`、`layers`、`layer_mutants` 打印）
@@ -297,6 +309,8 @@ BLOCK7 = '缩法→Fermi 存活（R17）'
 BLOCK8 = r'$\varepsilon$ 道→$\sigma$ 道换基（R18）'
 BLOCK9 = '宽档接进引擎（R19）'
 BLOCK10 = '导数分布模去全总导数（R20）'
+# R21 的 stdout 摘要行标题（报告 §14.12 的标题另有字样，本条只处理 stdout）
+BLOCK11 = '两套归一化之间的翻译因子（R21）'
 # 报告 §11 里那四个读数：每个都印自 GLOB，也就是印自被植入缺陷的那段算术的下游。
 G_SIZE_RE = re.compile(r'活下来 (\d+) 个')          # |Gamma|（R12.1 的枚举）
 G_FLAG_RE = re.compile(r'\*\*不成立\*\*|\*\*不同\*\*|定不出唯一的群')   # 同判/互化/定名失败
@@ -401,7 +415,7 @@ N_UNCOV_RE = re.compile(r'后仍未覆盖的键：(\S+)')                       
 # '### 14.11'** $\\Rightarrow$ 两窗不重叠（同 §14.9/§14.10、§14.10/续段那两条教训）。实测 §14.11 全文
 # 对续段那十条正则每条 0 命中（不挪也不会脏），但"不脏"是这一版排版的巧合而不是结构性质。
 SEC19_B = '### 14.11'
-SEC1411_A, SEC1411_B = '### 14.11', '## 15.'
+SEC1411_A, SEC1411_B = '### 14.11', '### 14.12'  # 上界=下邻居标题，见 run() 里那扇窗的注释
 P_GRID_RE = re.compile(r'的 (\d+) 格整张网格上不全等的格子 (\d+) 个')          # R20.0：网格大小 + 四票违例
 P_INJ_RE = re.compile(r'的秩 \$=\\dim V_\{k-1\}\$，失败 (\d+) 格')               # R20.0：单射性是量出来的
 P_ANCH_RE = re.compile(r'\$\((\d+),(\d+)\)\\to(\d+)\$')                          # R20.0：六条教科书锚点
@@ -419,6 +433,32 @@ P_AX_RE = re.compile(r'的（类、层）格子共 (\d+) 个（格子总数 (\d+
 P_REFINE_RE = re.compile(r'逐类相乘，逐层 \[([\d, ]+)\]')                        # R20.1：带槽位归属
 P_BITE_RE = re.compile(r'的类数逐层 \[([\d, ]+)\]')                              # R20.1：商"咬到"的类数
 P_K0_RE = re.compile(r'\$k_\{\\min\}=0\$ 的类共 (\d+) 个')                       # R20.1：零阶类数（交叉核对）
+
+# §14.12（R21）的十五处读数：窗口用 SEC1412_A/B，正则逐条取自 r21_face_census2.py（那份工具是在落盘版面上跑过并复述过的）。条数按形状分开核：
+#   单值族（母格两数、甲乙、丙丁、两张口径对照、按维数歧义、$f_T$、$f_{C_2}$、对照集合、$U(1)$、母格 $C_2(\theta)$、b 主判据、非阿贝尔对照）各自在一行里只出现一次 $\Rightarrow$ set 的大小必须是 1；
+#   逐因子 $C_2$ 族 4 次命中而只有 3 条去重（$SU(2)_L$ 与 $SU(2)_R$ 的四元组在捕获字段上同形，因子名不在捕获组里）$\Rightarrow$ 这一族按命中次数判（存 (n, 去重集)）；
+#   逐 $b$ 行 3 条、逐格比值 8 条按次数判（比值那族捕获组含因子与标号 ⇒ 8 条互不相同）。
+SEC1412_A, SEC1412_B = '### 14.12', '## 15.'
+Q_DIM_RE = re.compile(r'\\dim\\mathfrak g=(\d+)\$、全量 (\d+) 个 Dynkin 标号')
+Q_MIS_RE = re.compile(r'个标号上甲乙不等的 (\d+) 个；丙丁在 (\d+) 对')
+Q_TRI_RE = re.compile(r'）上违例各 (\d+)、(\d+)')
+Q_CTL_RE = re.compile(r'口径写，则与甲不等的标号 (\d+) 个；把甲的 \$\\dim\\mathfrak g\$ 换成正根数，'
+                      r'则 (\d+) 个')
+Q_AMB_RE = re.compile(r'同维多标号的维数：([\d、]+)）')
+Q_F_RE = re.compile(r'只取一个值 \$f_T=([-\d/、]+)\$；两侧同时为零的组合 (\d+) 个、一侧为零而另一侧'
+                    r'非零的 (\d+) 个')
+Q_FC_RE = re.compile(r'个因子上同样单值 \$f_\{C_2\}=([-\d/、]+)\$')
+Q_CTR_RE = re.compile(r'比值集合变成 ([-\d/、]+)（要求离开')
+Q_FA_RE = re.compile(r'阿贝尔侧 (\d+) 格逐格比值集合 ([-\d/、]+) \$\\Rightarrow\$')
+Q_C2R_RE = re.compile(r'\$SU\((\d)\)[^$]*\$ 正根 (\d+)、格上 \$([-\d/]+)\$、链侧 \$([-\d/]+)\$、'
+                      r'比值 ([-\d/、]+)')
+Q_HD_RE = re.compile(r'\$C_2\(\\theta\)=([-\d/]+)\$、半值 (\d+)')
+Q_BF_RE = re.compile(r'一环系数三行逐条重现（违例 (\d+) 行）')
+Q_BC_RE = re.compile(r'非阿贝尔的 (\d+) 行\*\*全部\*\*偏离链侧（偏 (\d+) 行），而阿贝尔那 (\d+) 行')
+Q_BROW_RE = re.compile(r'^\| .+? \| (阿贝尔|非阿贝尔) \| \$([-\d/]+)\$ \| \$([-\d/]+)\$ \| '
+                       r'(等|\*\*不等\*\*) \| \$([-\d/]+)\$ \| (不偏|偏) \|$', re.M)
+Q_RATIO_RE = re.compile(r'([A-Za-z0-9]+)/\$(\d+)\$（标号 \(([\d,]+)\)）：\$([-\d/]+)\\div ([-\d/]+)'
+                       r'=([-\d/]+)\$')
 
 # 锚点：每条都必须在源文件里**恰好出现一次**，否则整轮判 INVALID（锚点漂了不等于没植入）。
 A_JIA = (b'    return int(t3) % n == 0', b'    return int(t3 / 3) % n == 0')
@@ -557,6 +597,28 @@ P_REPS = (b'        reps = [c + (0,) for c in td_comps(n - 1, k)]',
 P_OK = (b"    NSLOT = max(len(x['fl']) for x in okc)",
         b"    NSLOT = max(len(x['fl']) for x in okc)  # inert: benign case")
 
+# R21 侧六枚针全部落在**门禁条件所读的算术**上，不落 assert：撞断言会让引擎崩溃，而崩溃不是捕获
+# （判据要求 `not traceback`）。本层写作时真踩过：把 $SU(4)$ 的单根基换成非基，正根只剩 4 个、支配
+# 候选 2 个 $\Rightarrow$ 直接抛 子系统最高根不唯一 $\Rightarrow$ 那枚针当不得变异体，故换下面那五枚（`q1`–`q5`）；
+# 落地后又添一枚 `q6`——它钉的是本层实测到的第一个**真缺陷**（"同维多标号的维数"那份清单曾被一道维数
+# 门槛截断，把 17 个印成 6 个），针就是那个缺陷本身，同样不碰断言。
+# 上面那句"崩溃"不是回忆而是重跑：临时副本里换掉那一个单根 $\Rightarrow$ exit 1、traceback 末帧
+# `t21_c2lat`（源码 7133 行）、消息"子系统最高根不唯一：2 个候选"；再在副本里把该 assert 换成打印
+# $\Rightarrow$ 同一处读到 `pos=4 dom=2`（其余三个子系统照旧 pos=3/1/1 且 dom=1）。
+# ⇒ 引擎注释 `so10_reps.py:7138–7141` 那句"$C_2^{lat}$ 从 8 读成 5 $\Rightarrow$ 这是本层的一个变异针位"
+# 的**后果**部分是错的：它不会读成一个错值，而是当场崩（"正根只剩 4 个"那一半是对的）。下一轮改注释。
+Q_DG = (b'T21_DG = len(ROOTS) + RANK', b'T21_DG = len(ROOTS)         ')
+Q_DEN = (b'(len(bs) if denom is None else denom)', b'(RANK if denom is None else denom)')
+Q_NODE = (b'den = t21_f if t21_f is not None else F(1)', b'den = F(1)  # inert: no translation')
+Q_C2S = (b'c2c = -F(3, 11) * chain.b_of(chf, [], [])', b'c2c = F(3, 11) * chain.b_of(chf, [], [])')
+Q_CTL = (b't21_tlat(bs, irrep(cs)[1], 2 * len(bs))', b't21_tlat(bs, irrep(cs)[1], len(bs))')
+# 本层修过一次的真缺陷做成变异体钉住：清单曾被一道 `d <= 700` 截断 $\Rightarrow$ 把 17 个重复维数印成 6 个，
+# 而句子点名的主语是那 56 个标号全量。针＝把截断装回去（红 R21.0，且 §14.12 的 amb 清单由 17 项缩回 6 项）。
+Q_AMBTRUNC = (b't21_amb = sorted(d for d, cs in DIMMAP.items() if len(cs) > 1)',
+              b't21_amb = sorted(d for d, cs in DIMMAP.items() if len(cs) > 1 and d <= 700)')
+Q_OK21 = (b'T21_BYKEY = dict((x[0], x) for x in T21_FAC)',
+          b'T21_BYKEY = dict((x[0], x) for x in T21_FAC)  # inert: benign case')
+
 CASES = [
     ('ctl', '基线：不植入', 'baseline', None, 'both'),
     ('m1', '甲：同余式右移一位，把 N|3Q 写成 N|Q（只动三条路径里的整除那条）', 'mutant', A_JIA, 'R11'),
@@ -682,11 +744,28 @@ CASES = [
      'mutant', P_REPS, 'R20'),
     ('b10', '良性：给 §14.11 的 `NSLOT = max(len(x[\'fl\']) for x in okc)` 那行补一条尾部注释（语义不动）',
      'benign', P_OK, 'both'),
+    ('q1', 'R21：把母格的 dim g 读成正根数（`T21_DG = len(ROOTS) + RANK` 写成 `len(ROOTS)` ⇒ 甲那一路的分母错，56 个标号上甲乙由全等变 55 个不等）⇒ 只红 R21.0，钉住「格侧四路同数」这句话里真有东西，也钉住母格维数本身（45 与 40 在 §14.12 的设定段各自出现）', 
+     'mutant', Q_DG, 'R21'),
+    ('q2', 'R21：因子格的投影分母从子系统秩写成整格秩（`len(bs)` 写成 `RANK` ⇒ 四个因子各自的比值不再同值，非阿贝尔比值集合由单值 2 变成 2/5、4/5、6/5 三个值，`f` 定不出来）⇒ 红 R21.1（「只取一个值」没有内容）与 R21.2（无 `f` 可除，b 三行不等），钉的是单值性而不是数值 2', 
+     'mutant', Q_DEN, 'R21'),
+    ('q3', 'R21：环系数那一层不做翻译（`den = t21_f if … else F(1)` 写成 `den = F(1)` ⇒ b2、b3 读成链侧的两倍 -19/3、-14）⇒ 只红 R21.2，而 f_T 单值那句照旧绿 ⇒ 钉的是「因子够用」而不是「因子单值」', 
+     'mutant', Q_NODE, 'R21'),
+    ('q4', 'R21：C_2 那条独立路的链侧值丢掉负号（`c2c = -F(3, 11) * chain.b_of(…)` 去掉负号 ⇒ f_C2 由 2 读成 -2，与 f_T 不再同值）⇒ 只红 R21.1，钉的是「两条不相干的路线出同一个数」这句话——本层的全部主张就在这两个数相遇上', 
+     'mutant', Q_C2S, 'R21'),
+    ('q5', 'R21：把 2r 口径对照挪回正确分母（`t21_tlat(…, 2 * len(bs))` 写成 `len(bs)` ⇒ 对照集合与 f_T 同值，「要求离开 f_T」这条违例判据失效）⇒ 只红 R21.1：一台对照与主读数同形时，它就不再是证据', 
+     'mutant', Q_CTL, 'R21'),
+    ('q6', 'R21：给"同维多标号的维数"那份清单装回一道维数截断（`if len(cs) > 1` 写成 `… and d <= 700`）'
+            '⇒ 只红 R21.0（逐标号表自己数出的重复维数与模块级映射不符），而 §14.12 那条 amb 清单由 17 项'
+              '缩回 6 项 $\Rightarrow$ 钉的是「这句话的主语是那 56 个标号全量」：截断不是保守，是把一句全称陈述'
+              '悄悄换成一句局部陈述（本层落地后实测到的第一个真缺陷，针就是它自己）',
+     'mutant', Q_AMBTRUNC, 'R21'),
+    ('b11', '良性：给 §14.12 的 `T21_BYKEY = dict((x[0], x) for x in T21_FAC)` 那行补一条尾部注释（语义不动）',
+     'benign', Q_OK21, 'both'),
 ]
 
 # 这台仪器**应当**看守的层：写死在这里，不 from CASES 推（推出来的名单会被"删掉一整层变异体"这件事
 # 自己抹平 ⇒ 那条自查是空转的）。少一层、多一层都判 INVALID。
-EXPECTED_LAYERS = ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20')
+EXPECTED_LAYERS = ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20', 'R21')
 
 
 def read_source():
@@ -746,10 +825,15 @@ def run(d):
     sec1410 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
     b19 = rep.find(SEC19_B, a19)
     sec19 = rep[a19:b19] if (a19 >= 0 and b19 > a19) else ''
-    # §14.11（R20）再单独开窗：上界 '## 15.'，下界就是本节标题 ⇒ 与 §14.10 本段、续段两窗都不重叠。
+    # §14.11（R20）再单独开窗：下界本节标题、上界 '### 14.12'（R21 之前上界是 '## 15.'，那时
+    # 它是末节）⇒ 与 §14.10 本段、续段、§14.12 三窗都不重叠。
     a, bnd = rep.find(SEC1411_A), rep.find(SEC1411_B)
     sec1411 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
+    # §14.12（R21）再单独开窗：下界 '## 15.'，上界就是本节标题 ⇒ 与 §14.11 那窗不重叠。
+    a, bnd = rep.find(SEC1412_A), rep.find(SEC1412_B)
+    sec1412 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
     p1411rows = sorted(l for l in sec1411.split('\n') if l.startswith('|'))
+    qrows12 = sorted(l for l in sec1412.split('\n') if l.startswith('|'))
     krows10 = sorted(l for l in sec1410.split('\n') if l.startswith('|'))
     lrows = sorted(l for l in sec149.split('\n') if l.startswith('|'))
     trows = sorted(l for l in sec14.split('\n') if l.startswith('|'))
@@ -762,7 +846,7 @@ def run(d):
             'r11_fail_ids': [x for x in fails if x.startswith('R11')],
             'layer_fail_ids': dict((k, [x for x in fails if x.startswith(k)])
                                    for k in ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17',
-                                             'R18', 'R19', 'R20')),
+                                             'R18', 'R19', 'R20', 'R21')),
             'printed_r11_block': BLOCK in out,
             'printed_r12_block': BLOCK2 in out,
             'printed_r13_block': BLOCK3 in out,
@@ -773,6 +857,7 @@ def run(d):
             'printed_r18_block': BLOCK8 in out,
             'printed_r19_block': BLOCK9 in out,
             'printed_r20_block': BLOCK10 in out,
+            'printed_r21_block': BLOCK11 in out,
             'report_pairs': sorted(set(tuple(int(x) for x in t) for t in PAIR_RE.findall(rep))),
             'report_global': {
                 'g_size': sorted(set(int(x) for x in G_SIZE_RE.findall(rep))),
@@ -875,6 +960,27 @@ def run(d):
                 'p_refine': sorted(set(P_REFINE_RE.findall(sec1411))),
                 'p_bite': sorted(set(P_BITE_RE.findall(sec1411))),
                 'p_k0': sorted(set(P_K0_RE.findall(sec1411)))},
+            'report_r21': {
+                'q_rows': (len(qrows12),
+                           hashlib.sha1('\n'.join(qrows12).encode('utf-8')).hexdigest()[:12]),
+                'q_dim': sorted(set(Q_DIM_RE.findall(sec1412))),
+                'q_mis': sorted(set(Q_MIS_RE.findall(sec1412))),
+                'q_tri': sorted(set(Q_TRI_RE.findall(sec1412))),
+                'q_ctl': sorted(set(Q_CTL_RE.findall(sec1412))),
+                'q_amb': sorted(set(Q_AMB_RE.findall(sec1412))),
+                'q_f': sorted(set(Q_F_RE.findall(sec1412))),
+                'q_fc': sorted(set(Q_FC_RE.findall(sec1412))),
+                'q_ctr': sorted(set(Q_CTR_RE.findall(sec1412))),
+                'q_fa': sorted(set(Q_FA_RE.findall(sec1412))),
+                'q_c2r': (len(Q_C2R_RE.findall(sec1412)),
+                          sorted(set(Q_C2R_RE.findall(sec1412)))),
+                'q_hd': sorted(set(Q_HD_RE.findall(sec1412))),
+                'q_bf': sorted(set(Q_BF_RE.findall(sec1412))),
+                'q_bc': sorted(set(Q_BC_RE.findall(sec1412))),
+                'q_brow': (len(Q_BROW_RE.findall(sec1412)),
+                           sorted(set(Q_BROW_RE.findall(sec1412)))),
+                'q_ratio': (len(Q_RATIO_RE.findall(sec1412)),
+                            sorted(set(Q_RATIO_RE.findall(sec1412))))},
             'traceback': 'Traceback' in out}
 
 
@@ -920,6 +1026,17 @@ def judge(case, res, base):
                 and len(p20['p_lv']) == 1 and len(p20['p_book']) == 1 and len(p20['p_tow']) == 1
                 and len(p20['p_ax']) == 1 and len(p20['p_refine']) == 1
                 and len(p20['p_bite']) == 1 and len(p20['p_k0']) == 1)
+    # §14.12 的十五处读数：表格指纹 1（5 行＝表头 + 分隔 + 3 行 $b$）、逐因子命中 4 次（去重 3 条）、
+    # 逐 $b$ 行 3 次、逐格比值 8 次按**命中次数**核，其余各 1 条按 set 的大小核。
+    q21 = res['report_r21']
+    r21_live = (q21['q_rows'][0] == 5 and q21['q_c2r'][0] == 4 and q21['q_brow'][0] == 3
+                and q21['q_ratio'][0] == 8 and len(q21['q_dim']) == 1
+                and len(q21['q_mis']) == 1 and len(q21['q_tri']) == 1
+                and len(q21['q_ctl']) == 1 and len(q21['q_amb']) == 1
+                and len(q21['q_f']) == 1 and len(q21['q_fc']) == 1
+                and len(q21['q_ctr']) == 1 and len(q21['q_fa']) == 1
+                and len(q21['q_hd']) == 1 and len(q21['q_bf']) == 1
+                and len(q21['q_bc']) == 1)
     clean = (res['exit'] == 0 and res['pass'] == res['gates'] and not res['fail_ids']
              and not res['traceback']
              and res['printed_r11_block'] and res['printed_r12_block']
@@ -927,10 +1044,11 @@ def judge(case, res, base):
              and res['printed_r15_block'] and res['printed_r16_block']
              and res['printed_r17_block'] and res['printed_r18_block']
              and res['printed_r19_block'] and res['printed_r20_block']
+             and res['printed_r21_block']
              and bool(res['report_pairs']) and bool(res['report_global']['g_size'])
              and bool(res['report_r13']['h_size']) and bool(res['report_r13']['h_k'])
              and r14_live and r15_live and r16_live and r17_live and r18_live and r19_live
-             and r20_live)
+             and r20_live and r21_live)
     if kind in ('baseline', 'benign'):
         return clean and (kind == 'baseline'
                           or (res['report_pairs'] == base['report_pairs']
@@ -943,6 +1061,7 @@ def judge(case, res, base):
                               and res['report_r18'] == base['report_r18']
                               and res['report_r19'] == base['report_r19']
                               and res['report_r20'] == base['report_r20']
+                              and res['report_r21'] == base['report_r21']
                               and res['pass'] == base['pass']))
     moved = [k for k, v in (('report_pairs', res['report_pairs'] != base['report_pairs']),
                             ('report_global', res['report_global'] != base['report_global']),
@@ -954,6 +1073,7 @@ def judge(case, res, base):
                             ('report_r18', res['report_r18'] != base['report_r18']),
                             ('report_r19', res['report_r19'] != base['report_r19']),
                             ('report_r20', res['report_r20'] != base['report_r20']),
+                            ('report_r21', res['report_r21'] != base['report_r21']),
                             ('gates_pass', res['pass'] != base['pass'])) if v]
     res['moved'] = moved
     return (res['exit'] != 0 and bool(res['layer_fail_ids'].get(layer))
@@ -998,7 +1118,7 @@ def main():
         r['expect_caught'] = kind == 'mutant'
         res[tag] = r
         print('[case] %s %-14s layer=%-5s exit=%s gates=%s/%s fail=%s pairs=%s glob=%s h12=%s '
-              'r14=%s r15=%s r16=%s r17=%s r18=%s r19=%s r20=%s' %
+              'r14=%s r15=%s r16=%s r17=%s r18=%s r19=%s r20=%s r21=%s' %
               (tag, kind, layer, r['exit'], r['pass'], r['gates'],
                r['layer_fail_ids'].get(layer) or r['fail_ids'], r['report_pairs'],
                r['report_global']['g_size'], r['report_r13']['h_k'] and
@@ -1033,7 +1153,16 @@ def main():
                 r['report_r20']['p_lv'], r['report_r20']['p_book'], r['report_r20']['p_tow'],
                 r['report_r20']['p_sec'], r['report_r20']['p_live'], r['report_r20']['p_ax'],
                 r['report_r20']['p_refine'], r['report_r20']['p_bite'],
-                r['report_r20']['p_k0'], r['report_r20']['p_inj'])))
+                r['report_r20']['p_k0'], r['report_r20']['p_inj']),
+               r['report_r21']['q_f'] and
+               (r['report_r21']['q_rows'], r['report_r21']['q_dim'],
+                r['report_r21']['q_mis'], r['report_r21']['q_tri'],
+                r['report_r21']['q_ctl'], r['report_r21']['q_amb'],
+                r['report_r21']['q_f'], r['report_r21']['q_fc'],
+                r['report_r21']['q_ctr'], r['report_r21']['q_fa'],
+                r['report_r21']['q_c2r'], r['report_r21']['q_hd'],
+                r['report_r21']['q_bf'], r['report_r21']['q_bc'],
+                r['report_r21']['q_brow'], r['report_r21']['q_ratio'])))
 
     fixture_bad = (res['ctl']['gates'] is None or (tests_on_disk is not None
                    and res['ctl']['gates'] != tests_on_disk))
@@ -1046,7 +1175,7 @@ def main():
     false_alarm = [t for t, r in res.items() if not r['expect_caught'] and not r['ok']]
     payload_layers = sorted(set(c[4] for c in CASES if c[4] != 'both'))
     # 覆盖面自己也要判：某一层的变异体被整批删掉时，例数的账照样自洽（baseline 1 + 变异体 + 良性），
-    # 但这台仪器已经悄悄退回单层 ⇒ "十层都看守"这句话就没有仪器背书了。层的名单**不从 CASES 里推**：
+    # 但这台仪器已经悄悄退回单层 ⇒ "十一层都看守"这句话就没有仪器背书了。层的名单**不从 CASES 里推**：
     # 从 CASES 推的话，删掉一层的变异体就等于把那一层从"应有名单"里一起删掉，这条自查永远不会红
     # ⇒ 名单钉在 EXPECTED_LAYERS 上，两个方向都核（少一层、多一层都 INVALID）。
     uncovered = [k for k in EXPECTED_LAYERS
@@ -1076,6 +1205,7 @@ def main():
                'baseline_r18': res['ctl']['report_r18'],
                'baseline_r19': res['ctl']['report_r19'],
                'baseline_r20': res['ctl']['report_r20'],
+               'baseline_r21': res['ctl']['report_r21'],
                'layer_mutants': dict((k, sum(1 for c in CASES if c[2] == 'mutant' and c[4] == k))
                                      for k in payload_layers),
                'verdict': verdict,
