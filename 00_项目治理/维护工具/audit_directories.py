@@ -70,7 +70,12 @@ def main():
             if parent==ROOT:break
             recursive[parent]+=1
     records=[]
-    dirs=sorted({parent for path in files for parent in path.parents if parent!=ROOT and parent.is_relative_to(ROOT)})
+    # 兼容性修复（2026-09-26）：Path.is_relative_to 是 Python 3.9+ 的接口，
+    # 而本仓库固定使用 Python 3.8，旧写法在此处直接 AttributeError 使审计步骤不可用。
+    # 等价判定：目标路径等于根，或根本身出现在其祖先链中。
+    def _inside(path, root):
+        return path==root or root in path.parents
+    dirs=sorted({parent for path in files for parent in path.parents if parent!=ROOT and _inside(parent, ROOT)})
     # 顶层目录同样只看跟踪内容：一个目录若在磁盘上存在却毫无跟踪文件，
     # 它不会出现在审计表里，再告警就很费解。
     for _top in {p.relative_to(ROOT).as_posix().split('/')[0] for p in dirs}:
@@ -102,8 +107,22 @@ def main():
     payload={'directory_count':len(records),'file_count':len(files),'system_containers':len(registry),'research_modules':len(registry)-directions,'unformulated_directions':directions,'records':records}
     (OUT/'directory_audit.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     text='# 独立体系布局：全部目录审计\n\n[设计与最优性分析](../目录设计/INDEPENDENT_SYSTEMS_DESIGN.md) · [类型与扩展](../目录设计/SCALABILITY_REVIEW.md) · [机器清单](directory_audit.json)。\n\n当前扫描 {} 个实际目录、{} 个**git 已跟踪**文件（未跟踪与 .gitignore 忽略的内容如 __pycache__/ 不计入——本表每条记录都指回真实目录链接，计入未被 git 收录的目录会让发布流程在干净副本里读到断链）；{} 个研究模块与 {} 个待建模方向独立管理，另有模板。类型不证明科学状态或来源有效性。历史目录也逐项列出；不展开 ZIP。递归文件数不可相加作为总数。目录职责由路径规则判定，不表示逐篇科学审定。\n\n| 目录 | 主归属 | 直接/递归文件 | 职责 | 设置理由 | 边界 |\n|---|---|---:|---|---|---|\n'.format(len(records),len(files),len(registry)-directions,directions)
+    # Markdown 链接目标编码（2026-09-26 真缺陷修复）：来源封存区的目录名含**半角空格与括号**
+    # （如 `…v1.0完整包(ZIP)`、`GAQ-UFT V∞ 全域光速螺旋统一场论（完整项目ZIP）`）。
+    # verify.py 的链接正则为 `\[…\]\(([^\s)]+)\)` —— 目标串一遇空格或右括号即被截断，
+    # 于是**合法目录被判成断链**（实测 DIRECTORY_AUDIT.md 一次报 14 处，全部指向该两批来料）。
+    # 本文件此前长期是过期快照（未随来料刷新），所以缺陷一直被掩盖：只有真的跑一遍
+    # 维护序列（module_catalog → global_catalog → audit_directories → refresh_catalog → verify）
+    # 才会暴露。处理方式是对链接目标做**最小百分号编码**；verify.py 侧会 `unquote`
+    # 之后再判存在性，两端口径一致。
+    def link_target(rel_path):
+        out=rel_path.replace('%','%25')
+        for raw,encoded in ((' ','%20'),('(','%28'),(')','%29'),('<','%3C'),('>','%3E'),
+                            ('#','%23'),('?','%3F')):
+            out=out.replace(raw,encoded)
+        return out
     for r in records:
-        target=os.path.relpath(ROOT/r['path'],OUT).replace('\\','/')
+        target=link_target(os.path.relpath(ROOT/r['path'],OUT).replace('\\','/'))
         text+='| [{}]({}/) | {} | {}/{} | {} | {} | {} |\n'.format(r['path'],target,r['owner'],r['direct_files'],r['recursive_files'],r['role'],r['reason'],r['risk'])
     (OUT/'DIRECTORY_AUDIT.md').write_text(text,encoding='utf-8')
     print('Audited {} directories; {} independent containers'.format(len(records),len(registry)))

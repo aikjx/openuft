@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-r"""R11、R12、R13、R14、R15、R16、R17 与 R18 八层判据的**外部**变异核验：从引擎外面改那几条算术，看谁变红。
+r"""R11、R12、R13、R14、R15、R16、R17、R18、R19 与 R20 十层判据的**外部**变异核验：从引擎外面改那几条算术，看谁变红。
 
 为什么要有这个脚本：R11 的判据（$N\mid 3Q$）此前只在引擎内部被自己的门禁对照过，
 "把它写错会不会有人发现"只存在于某一次对话的口头里 —— 而一个没人能重跑的读数等于没人看守。
@@ -10,7 +10,11 @@ r"""R11、R12、R13、R14、R15、R16、R17 与 R18 八层判据的**外部**变
   * 基线（未植入）全绿，且它打印的门禁总数与磁盘上 `SO10表示论报告.json` 里的 `tests`
     条数**相等** —— 这条不是装饰：引擎的层是短路接线的（`sel_ok = run_selection_layer() if res_ok`），
     依赖缺失时它会只跑前几层就退出，若只要求"退出码非 0"就会把这种夹具塌陷当成捕获；
-  * 每个变异体都必须被**点名到它那一层**（R11.x、R12.x、R13.x、R14.x、R15.x、R16.x、R17.x 或 R18.x，由每例自带的 `layer` 决定，
+  * 每例的 id **唯一**：结果按 `res[tag]` 存 ⇒ 重复 id 让后写的例子顶掉先写的那个，被顶掉那几例
+    从此不进判决也不进 `payload['cases']`，而"例数 = 1 + 变异体 + 良性"那本账照旧自洽（它是从
+    `CASES` 数的）。这一条现在是判决条件（重复即 INVALID）而不是口头约定：接线 R19 那四例时
+    最初复用了 R18 的 `n1`–`n4`，预演脚本按 id 取例才暴露（它取到 R18 的机器、报出的 FAIL 全叫 R18.*）；
+  * 每个变异体都必须被**点名到它那一层**（R11.x、R12.x、R13.x、R14.x、R15.x、R16.x、R17.x、R18.x、R19.x 或 R20.x，由每例自带的 `layer` 决定，
     不是"任何一个 FAIL"）抓住（崩溃不算捕获），且它打印的读数至少动一个
     —— 门禁 PASS 数、或报告 §10 那句"允许 X 条、禁戒 Y 条"、或报告 §11 的三个读数
     （$\Gamma$ 的阶、$|\Gamma|$ 三条出处那一列、§11.5 那两条独立判法的同判列）、
@@ -30,13 +34,28 @@ r"""R11、R12、R13、R14、R15、R16、R17 与 R18 八层判据的**外部**变
     $n\le6$ 那张 $(n,\text{组大小})$ 表的 30 行行集合摘要、四条教科书锚点的三路读数、
     "共 838 类／缩法 1028 条／剩 838 条／吃掉 190 条／$\times0.8152$"那一组、六个分区数的方括号、
     §10 接缝那句"结构数从 16 到 8"、管辖范围那句"$k_{\min}\ne0$ 的 755 类／1233 条"）。
-    或报告 §14.10 的九处读数（那张十列表格的六行、"四数不全等的表格档 N 个"、"新增结构 N 条"、
+    或报告 §14.10 的九处读数（那张十列表格的十行（R19 把档位上限抬到 $\nu\le8$、$\nu+\dot\nu\le10$
+    之后这张表从 6 行变 10 行：新增的恰是 $(2,8)$、$(4,6)$、$(6,4)$、$(8,2)$ 四档）、"四数不全等的表格档 N 个"、"新增结构 N 条"、
     两条教科书锚点那一对 $2/-2$ 与三条生成元的秩及其关系条数、同名 Grassmann 括号的掩码与系数、
     第三张票那句"838 个类上逐类相乘后合计 838 条 $=$ 存活合计 838 条（逐类不等 0 类）、
     道单项式 1218 条"、摆放不变性的"两侧共 3947 个摆放对、违例 0 类"、跨摆放求并的
     "并成合计 948 条 $>$ 存活 838 条、虚高的类 110 个"、管辖范围的"挂类 370 个类／单侧空 468 个类／
-    其余 5 个表格档"）。
-    §14、§14.8、§14.9 与 §14.10 四者分开切片：逐档表那种 `$n_f=…$、$n_s=…$` 打头的六列行在 §14 里另有六行，
+    其余 5 个表格档"），或报告 §14.10 **续段**（第十九项边界 (ii) 的收口）的七处读数（"表格档从 N 个变
+    M 个"那一对、宽档那句"不全等 N 档"与"新增合计 N 条"、截断对照那十行"截断条数／全条数 秩 N 新增 N
+    退化与否"、非退化档里"新增 $=0$"者 N 档、结构性退化共 N 档、跨手性那句"比 N 个物理字段…违例 N
+    条"、覆盖面那句"仍读 N"的超档与挂类档数）。§14.10 本段的上界**改为续段那句加粗 lead-in**（原来是
+    `## 15.`）$\Rightarrow$ 两窗不重叠：一条只动宽档枚举的缺陷不会去改 §14.10 本段那九处读数，
+    反之亦然 —— 同一条理由在 §14.9/§14.10 已经记过一次（两张表并成一张数）。
+    或报告 §14.11 的十五处读数（那张 $k\le5$ 表格的行数与摘要、"$n\le5$、$k\le7$ 的 40 格整张网格上不全等
+    的格子 N 个"那一对、单射性"失败 N 格"、六条教科书锚点 $(n,k)\to$ 商维数、正对照"与甲路**不同判**的格子
+    N 个"、反向对照"每一格都被商空（违例 N 格）"、代表系并矩阵"同时成立（违例 N 格）"、$n=1$ 那条边界那一对、
+    "代表数非零的格 N 个"、逐层那三条列表（分布／幸存／被商掉）、两条各走各的和式账各自的违例层数、
+    "与 R16.1 的塔逐层相等（违例 N 层）"、"$\dim V_k>1$ 的（类、层）格子 N 个（格子总数 M）"、带槽位归属的
+    逐层列表、商"咬到"的类数逐层列表、$k_{\min}=0$ 的类数）。**续段（R19）的上界从 `## 15.` 挪到
+    `### 14.11`** $\Rightarrow$ §14.10 本段／续段／§14.11 三窗两两不重叠：实测 §14.11 全文对续段那十条正则
+    每条 0 命中（不挪这一版也不会串味），但"不串味"要是结构而不是巧合 —— 同一条理由在 §14.9/§14.10、
+    §14.10/续段已经各记过一次。
+    §14、§14.8、§14.9、§14.10 与 §14.11 五者分开切片：逐档表那种 `$n_f=…$、$n_s=…$` 打头的六列行在 §14 里另有六行，
     整节切片会串味（实测 12 行 vs 本节 6 行）；§14.9 那张三路表里"同名组大小"恰好是纯数字的那些行
     （$n=3$ 的 $3/2$、$n=4$ 的 $3$、$n=6$ 的 $4/3/2$）与 §14.8 的 $n=0..6$ 表**同形**（五个数字格），
     §14.8 的切片若一路取到 `## 15.` 就会把这两张表并成一张 $\Rightarrow$ 切片边界改为 `### 14.9`。
@@ -49,7 +68,8 @@ r"""R11、R12、R13、R14、R15、R16、R17 与 R18 八层判据的**外部**变
     路丙的 triality 号只出现在断言里、不出现在 §12 的任何数字里 $\Rightarrow$ 它动的只有 PASS 数，
     这正好把"门禁在看守报告里看不见的断言"这件事本身变成了读数；
   * 一条良性改动（只补尾注释，语义不动）不得误报，否则这台仪器是"永远红"而不是"能红"。
-    良性例现在八层各一条：只测 R11 那侧的良性改动，等于没核对 §11、§12、§13、§14、§14.8、§14.9 与 §14.10
+    良性例现在十层各一条：只测 R11 那侧的良性改动，等于没核对 §11、§12、§13、§14、§14.8、§14.9、§14.10
+    与 §14.10 续段、§14.11
     的读数在语义不动时**不**动。
 
 R12 那四个变异体各自钉住报告 §11 的一个断言，且都落在**门禁**上而不是 `assert` 上 $\Rightarrow$
@@ -160,6 +180,57 @@ R18.0 的锚点、R18.2 那个 $838=838$ 与 R18.4 的和式。**(e)** 摆放不
 与类数同量、跨摆放求并的"虚高类数"归零 $\Rightarrow$ R18.3 那句"要**每一种摆放**都成立才算数"没有内容了。
 良性例 b8 给 §14.10 锚点那三行里的 `sanch = sig_val(...)` 补一条尾部注释，语义不动。
 
+R19 那四个变异体钉的是**把宽档接进引擎**这一件事本身，而两扇窗的归属按预演实测写、不按"应当"写
+（预演 2026-09-26，六份引擎副本，四例全部点名到自己那一层）：**(b)** 只动宽档筛选那一条，**两扇窗的
+读数都不动** $\Rightarrow$ §14.10 本段那张表的行数与指纹、续段那几处读数逐字节等于基线，动的只有
+`gates_pass` 与 R19.0 的判决。原因是续段那几行读 `r19w`（按读数行自己筛 $\nu+\dot\nu>8$），而门禁读
+`wide`（按档位筛），R19.0 把这两个计数**并排**判 $\Rightarrow$ 这条缺陷只从门禁那一侧进得来，这一例就是
+"两扇窗各自独立"的见证；**(a)** 抬／压档位上限那一条**两扇窗一起动**（上限是两窗共用的输入：`stier`
+从 10 档缩回 8 档，本段那张表随之从 12 行变 10 行）$\Rightarrow$ 那条切片边界管的是**读数级**归属，
+不是"上限类缺陷只归续段"；**(c)**、**(d)** 两条只动续段那一侧。落点：**(a)** 档位上限 `NSIG, NSIGT = 8, 10` 退回 `6, 10`
+$\Rightarrow$ `stier` 少两档、`wide` 只剩 2 档 $\Rightarrow$ R19.0 的 `len(wide) == 4` 与 R19.2 的
+`len(r19) == 10` 同时判假（"边界 (ii) 已关掉"这句话的反义恰是"上限还没抬"）；**(b)** 宽档筛选
+`t[0] + t[1] > 8` 写成 `> 99` $\Rightarrow$ 一个宽档都不选 $\Rightarrow$ 只有 R19.0 红 $\Rightarrow$ 这一例
+兼作续段／本段那条切片边界的见证；**(c)** 截断对照的筛选 `sub = [e for e in el if (0, 1) in e[0]]`
+写成 `sub = list(el)`（"截断"截了个空）$\Rightarrow$ 残缺目录 $=$ 完整目录 $\Rightarrow$ 那台对照从此
+**永远不会新增**、非退化档的截断新增整批读 0 $\Rightarrow$ R19.1 判假，而宽档那句"新增合计 0 条"照旧绿
+$\Rightarrow$ 这正是 R18 记过的那条教训在第九层的复现：一台恒 0 的计数器与"完备"不可区分，保护"新增 $=0$"
+的是这台**会新增**的对照；**(d)** 手性比对的字段名单里误并进一个对照字段（把 `'tr_adds'` 追加进
+`R19_KEYS`）$\Rightarrow$ $(2,8)$ 与 $(8,2)$ 的截断新增（两个读数本来就不同，因为它不是手性标量）被当成
+物理字段比 $\Rightarrow$ R19.2 判假 $\Rightarrow$ 那句"豁免逐字写明"是有牙齿的：名单一重合豁免就消失。
+良性例 b9 给 `r19 = [r19_row(t) for t in stier]` 补一条尾部注释，语义不动。
+
+第十层（R20，§14.11 的十六处读数）的**实测落点**（预演逐例打印"动过的键"与"别层窗口是否被带动"）：
+**(p1)** 丁那张 Pascal 闭式把上标 $\binom{n+k-2}{n-2}$ 读成 $\binom{n+k-1}{n-2}$ $\Rightarrow$ 149/150、
+**只红 R20.0**，十六处里只动"四票不全等的格子"那一处（0 格→21 格）；**(p2)** 乙那条 Hilbert 递推把
+$1/(1-t)^{n-1}$ 的指数读成 $n$（`m = n - 1` 写成 `m = n`）$\Rightarrow$ 同样只红 R20.0、同一处读到 35 格。
+两例的六条教科书锚点、"单射性失败 0 格"、正对照 28 格、反向对照、逐层三条账与 5534/6372 **一字不动**
+$\Rightarrow$ 锚点与逐层那些计数走的是甲路的**枚举**，乙/丁两张票唯一的证人是那台互校计数器 —— 只有甲路坏时
+才会红的列，不该被拿去替四张票各自作证（这条设计上的分工也解释了为什么 p1/p2 只动一处）。**(p3)** 逐层
+第二条和式把"低一阶分布总数"读成当阶（`td_dim(n, k - 1)` 写成 `td_dim(n, k)`）$\Rightarrow$ 只红 R20.1、
+动的读数只有那两本账的违例对 $[0,0]\to[0,4]$（第二本账四层全不平、第一本账照旧 0），而分布／幸存／被商掉
+三条逐层列表**全部不动** $\Rightarrow$ 三条各走各的和式这一句是分计数器的正面见证，不是装饰（若两条恒等式
+共用一个计数器，这一例会被读成"0 违例"）。三例的"别层窗口"都读到**全无**（其余九层的窗口一个都没被带动）。
+**(p4)** 丙路那条独立核的**原始**针（`td_comps(n - 1, k)`→`td_comps(n - 1, k - 1)`）**崩溃而不判红**，
+这条负面结果如实登记（与 R13.2、R15(iii)、R18 那三条同族：只记散文、不进台账例数）：$k=0$ 那一列的
+代表元集合被搬空，而 $D$ 的列在该列仍取到非零像 $\Rightarrow$ 并矩阵求秩之前 `idx[c]` 先撞上不在枚举
+基里的向量（引擎 `so10_reps.py:7052` 报 `KeyError: (0,)`；把搬空槽由末槽挪到首槽的第二版针在同一处
+报 `KeyError: (1,)`）$\Rightarrow$ 两次独立预演都是门禁 `None/None`、§14.11 的十六处读数与其余九层窗口
+**全部空白**。**崩溃不算捕获**（这台仪器把 traceback 判成不合规），推论是：丙这类"代表元必须留在被行
+索引的那组基之内"的针只能往**陪集的重数**上打，不能往代表向量自身的内容上打。⇒ 换成"第一条代表取两次"
+（两条代表落在同一个陪集里 $\Rightarrow$ 正是本门禁立起来要抓的那种失效，而成员资格不动）后实测：只红
+R20.2，"违例格"那一处 $0\to33$（"代表数非零的格 28 个" $+$ $k=0$ 那一列的 NSLOT$=5$ 格），而网格四票、
+六锚点、两个对照、逐层三条账、$n=1$ 边界全照旧绿 $\Rightarrow$ 与 p1/p2/p3 同一族形状：一处动、余下全
+不动。同一台核上另有两枚探针一并登记：**(I1)** 撤掉"$n=1$ 时代表集合给空"那条边界 $\Rightarrow$ 也只红
+R20.2，"违例格" $0\to1$（故 p4 不是唯一可用的针，选它是因为它抓的正是门禁名字里那句话）；**(I2)** 把
+"$+1$ 落在末槽"改写成"$+1$ 落在首槽" $\Rightarrow$ `exit 0`、门禁 150/150 照旧全绿、十六处读数逐格对照
+值全等 $\Rightarrow$ **中性**，不得充当牙齿，但它划出边界：$D$ 的像在槽位置换下对称，这一族缺陷从秩上
+看不见 $\Rightarrow$ 丙的独立核测"代表元个数与并矩阵秩两条腿是否同时错位"，不测导数落在哪个槽上（那一件
+事由甲/乙两票与六锚点各自看住）。（I1/I2 那两行打印的"动过的键"名单不作数：探针是从 JSON 重建基线，
+元组被读成列表 $\Rightarrow$ 名单虚胖，逐格"基线→本例"对照才是判据。）
+良性例 b10 给 §14.11 的 `NSLOT = max(len(x['fl']) for x in okc)` 那行补一条尾部注释 $\Rightarrow$ exit 0、
+150/150、十六处读数与基线全等（动过的键为空列表）。
+
 一次**假红**如实登记（错在本仪器自己，不在引擎）：§14.9 锚点那一栏第一版写成 `sorted(set(...))`，
 而四条锚点里合法地有两条同值 $(1,1,1)$ $\Rightarrow$ 集合把 4 次出现折成 3 个不同值 $\Rightarrow$
 活体判据 `len(l_anch) == 4` **恒不满足** $\Rightarrow$ 基线被 `judge` 判成"不干净"，于是七个良性例**一次性全部误报**
@@ -188,7 +259,7 @@ None $\Rightarrow$ None 落进正文就撞上报告自己的**排版不变量 #2
 那条判据的证据。
 
 命名边界（如实登记）：文件名与台账名仍叫 `check_r11_mutation`，因为它从 R11 起家；它此刻覆盖
-**八层**，这一件事由台账里的 `layers` 字段与每例的 `layer` 字段成文，不由文件名成文。
+**十层**，这一件事由台账里的 `layers` 字段与每例的 `layer` 字段成文，不由文件名成文。
 
 用法：python 维护脚本/check_r11_mutation.py    （慢：每一例都要把整台引擎跑一次完整自检，
       例数与层数不写死在这里 —— 由台账里的 `cases_total`、`layers`、`layer_mutants` 打印）
@@ -224,6 +295,8 @@ BLOCK5 = '算符基覆盖面（R15）'
 BLOCK6 = '类数→缩法重数（R16）'
 BLOCK7 = '缩法→Fermi 存活（R17）'
 BLOCK8 = r'$\varepsilon$ 道→$\sigma$ 道换基（R18）'
+BLOCK9 = '宽档接进引擎（R19）'
+BLOCK10 = '导数分布模去全总导数（R20）'
 # 报告 §11 里那四个读数：每个都印自 GLOB，也就是印自被植入缺陷的那段算术的下游。
 G_SIZE_RE = re.compile(r'活下来 (\d+) 个')          # |Gamma|（R12.1 的枚举）
 G_FLAG_RE = re.compile(r'\*\*不成立\*\*|\*\*不同\*\*|定不出唯一的群')   # 同判/互化/定名失败
@@ -310,6 +383,42 @@ M_PLA_RE = re.compile(r'两侧共 (\d+) 个摆放对.*?违例 (\d+) 类')       
 M_UNION_RE = re.compile(r'并成合计 (\d+) 条 \$>\$ 存活合计 (\d+) 条，虚高的类 (\d+) 个')  # R18.3：伪影
 M_SCOPE_RE = re.compile(r'挂类的\*\*只有那 (\d+) 个类.*?其余 (\d+) 个类是单侧场'
                         r'.*?其余 (\d+) 个表格档')                                 # R18.4：管辖范围
+# 报告 §14.10 **续段**（R19）的读数：切片从续段那句加粗 lead-in 起、到 '## 15.' 止 $\Rightarrow$ 本段那九处
+# 读数不在窗口里，续段那七处读数也不在 §14.10 的窗口里（两条宽档变异体各自只该红一侧）。
+SEC19_A = '**第十九项边界 (ii) 的收口**'
+N_GRID_RE = re.compile(r'表格档从 (\d+) 个变 (\d+) 个')                        # R19.0：上限抬了多少格
+N_WROW_RE = re.compile(r'\$\((\d+),(\d+)\)\$ (\d+)/(\d+)/(\d+)/(\d+) 关系 (\d+)')  # R19.0：宽档逐档六读数
+N_DIS_RE = re.compile(r'）不全等 (\d+) 档、宽档上 \$\\sigma\$ 道并进后的新增合计 (\d+) 条')  # R19.0
+N_COV_RE = re.compile(r'这 (\d+) 档、挂类档 (\d+) 个、')                        # R19.0：覆盖面不跟着变宽
+N_OVER_RE = re.compile(r'落在网格外）仍读 (\d+)')                               # R19.0：超档那一个数
+N_CROW_RE = re.compile(r'\$\((\d+),(\d+)\)\$ (\d+)/(\d+) 秩 (\d+) 新增 (\d+) (退化|非退化)')  # R19.1
+N_CZ_RE = re.compile(r'"新增 \$=0\$"者 (\d+) 档、本条违例合计 (\d+) 档')          # R19.1
+N_DEG_RE = re.compile(r'结构性退化（共 (\d+) 档）')                              # R19.1：退化档数
+N_CHIR_RE = re.compile(r'镜像档要比 (\d+) 个物理字段（读数表共 (\d+) 个键，扣除 .{0,40}个）在全部 '
+                       r'(\d+) 档上逐字段相等，违例 (\d+) 条')                     # R19.2
+N_UNCOV_RE = re.compile(r'后仍未覆盖的键：(\S+)')                                # R19.2：名单覆盖自查
+# 报告 §14.11（R20）的读数：切片 '### 14.11' 到 '## 15.'。**同时把续段（R19）的上界从 '## 15.' 挪到
+# '### 14.11'** $\\Rightarrow$ 两窗不重叠（同 §14.9/§14.10、§14.10/续段那两条教训）。实测 §14.11 全文
+# 对续段那十条正则每条 0 命中（不挪也不会脏），但"不脏"是这一版排版的巧合而不是结构性质。
+SEC19_B = '### 14.11'
+SEC1411_A, SEC1411_B = '### 14.11', '## 15.'
+P_GRID_RE = re.compile(r'的 (\d+) 格整张网格上不全等的格子 (\d+) 个')          # R20.0：网格大小 + 四票违例
+P_INJ_RE = re.compile(r'的秩 \$=\\dim V_\{k-1\}\$，失败 (\d+) 格')               # R20.0：单射性是量出来的
+P_ANCH_RE = re.compile(r'\$\((\d+),(\d+)\)\\to(\d+)\$')                          # R20.0：六条教科书锚点
+P_PC_RE = re.compile(r'与甲路\*\*不同判\*\*的格子 (\d+) 个')                     # R20.0：正对照（丙路误写）
+P_ZERO_RE = re.compile(r'每一格都被商空（违例 (\d+) 格，要求 \$0\$）')           # R20.0：反向对照（逐槽全商）
+P_SEC_RE = re.compile(r'同时成立（违例 (\d+) 格）')                              # R20.2：代表系并矩阵求秩
+P_N1_RE = re.compile(r'处代表数为 \$(\d+)\$（违例 (\d+) 格）')                   # R20.2：$n=1$ 边界
+P_LIVE_RE = re.compile(r'代表数非零的格 (\d+) 个')                               # R20.2：这台核不是空转
+P_LV_RE = re.compile(r'导数分布共 \[([\d, ]+)\] 条、模去全总导数后幸存 \[([\d, ]+)\] 条、'
+                     r'被商掉 \[([\d, ]+)\] 条')                                  # R20.1：三条逐层列表
+P_BOOK_RE = re.compile(r'幸存 \$\+\$ 被商掉 \$=\$ 分布（违例 (\d+) 层）；被商掉 \$=\$ 低一阶分布总数'
+                       r'（那条走 \$V_\{k-1\}\$ 一侧，与上一条不同路，违例 (\d+) 层）')  # R20.1：两条和式账
+P_TOW_RE = re.compile(r'与 R16\.1 的塔逐层相等（违例 (\d+) 层）')                # R20.1：塔那侧逐层相等
+P_AX_RE = re.compile(r'的（类、层）格子共 (\d+) 个（格子总数 (\d+)）')           # R20.1：这根轴非空转
+P_REFINE_RE = re.compile(r'逐类相乘，逐层 \[([\d, ]+)\]')                        # R20.1：带槽位归属
+P_BITE_RE = re.compile(r'的类数逐层 \[([\d, ]+)\]')                              # R20.1：商"咬到"的类数
+P_K0_RE = re.compile(r'\$k_\{\\min\}=0\$ 的类共 (\d+) 个')                       # R20.1：零阶类数（交叉核对）
 
 # 锚点：每条都必须在源文件里**恰好出现一次**，否则整轮判 INVALID（锚点漂了不等于没植入）。
 A_JIA = (b'    return int(t3) % n == 0', b'    return int(t3 / 3) % n == 0')
@@ -426,6 +535,28 @@ M_PLAC = (b'        for w in sorted(set(itertools.permutations(names))):',
 M_OK = (b'    sanch = sig_val(4, [], [(0, 2), (1, 3)], [(0, 1)])',
         b'    sanch = sig_val(4, [], [(0, 2), (1, 3)], [(0, 1)])  # inert: benign case')
 
+# R19（§14.10 续段）：四个变异体各自只该红 R19.x 那一条/那两条门禁，且都不该动 §14.10 本段的读数。
+N_CAPS = (b'    NSIG, NSIGT = 8, 10', b'    NSIG, NSIGT = 6, 10')
+N_WIDE = (b'    wide = [t for t in stier if t[0] + t[1] > 8]',
+          b'    wide = [t for t in stier if t[0] + t[1] > 99]')
+N_SUB = (b'        sub = [e for e in el if (0, 1) in e[0]]', b'        sub = list(el)')
+N_KEYS = (b"                'eps_n', 'sig_uniq')", b"                'eps_n', 'sig_uniq', 'tr_adds')")
+N_OK = (b'    r19 = [r19_row(t) for t in stier]',
+        b'    r19 = [r19_row(t) for t in stier]  # inert: benign case')
+
+# R20（§14.11）侧：四个变异体各自只红 R20.0/20.1/20.2 中的一条门禁，且都不动 §14.10 与续段的读数
+# （甲路 td_* 是本节自己建的机器，与前面各层共用的 cg_j0 / mpat / q_rank 无关 ⇒ 四张票各自独立：
+#   改错一张、另三张照旧，这正是"票与票不共享算术"的可证伪形式）。
+P_DING = (b'            ding = 1 if k == 0 else (0 if n == 1 else math.comb(n + k - 2, n - 2))',
+          b'            ding = 1 if k == 0 else (0 if n == 1 else math.comb(n + k - 1, n - 2))')
+P_ROW = (b'        m = n - 1', b'        m = n')
+P_PV = (b'            pv += td_dim(n, k - 1)', b'            pv += td_dim(n, k)')
+P_REPS = (b'        reps = [c + (0,) for c in td_comps(n - 1, k)]',
+          b'        reps = [c + (0,) for c in td_comps(n - 1, k)][:1] + '
+          b'[c + (0,) for c in td_comps(n - 1, k)]')
+P_OK = (b"    NSLOT = max(len(x['fl']) for x in okc)",
+        b"    NSLOT = max(len(x['fl']) for x in okc)  # inert: benign case")
+
 CASES = [
     ('ctl', '基线：不植入', 'baseline', None, 'both'),
     ('m1', '甲：同余式右移一位，把 N|3Q 写成 N|Q（只动三条路径里的整除那条）', 'mutant', A_JIA, 'R11'),
@@ -519,11 +650,43 @@ CASES = [
            '掉到与类数同量、跨摆放求并的"虚高类数"归零，R18.3 那句"每一种摆放"没有内容）',
      'mutant', M_PLAC, 'R18'),
     ('b8', '良性：给 §14.10 的 sanch 那行补一条尾部注释（语义不动）', 'benign', M_OK, 'both'),
+    ('o1', 'R19：档位上限退回 $\nu\\le6$（$NSIG, NSIGT=8,10$ 写成 $6,10$）⇒ 宽档只剩 2 个、表格档只剩 8 个 '
+           '⇒ R19.0 的"四档"与 R19.2 的"十档"一起红（"边界 (ii) 已关掉"的反义就是"上限还没抬"）',
+     'mutant', N_CAPS, 'R19'),
+    ('o2', 'R19：宽档筛选 $t[0]+t[1]>8$ 写成 $>99$ ⇒ 一个宽档都不选、只有 R19.0 红，而 §14.10 本段那九处'
+           '读数一格都不动（实测：续段那几处读数也不动，动的只有 `gates_pass` 与判决 —— 续段读 `r19w`、'
+           '门禁读 `wide`，这一例兼作两扇窗各自独立的见证）',
+     'mutant', N_WIDE, 'R19'),
+    ('o3', 'R19：截断对照的筛选写成 `sub = list(el)`（"截断"截了个空）⇒ 那台对照从此永远不会新增、'
+           '非退化档的截断新增整批读 0 ⇒ R19.1 红而宽档那句"新增合计 0 条"照旧绿（复现 R18 那条'
+           '"恒 0 的计数器与完备不可区分"）',
+     'mutant', N_SUB, 'R19'),
+    ('o4', 'R19：把对照字段 `tr_adds` 误并进手性比对的物理字段名单 ⇒ $(2,8)$ 与 $(8,2)$ 的截断新增'
+           '（0 对 9，它本来就不是手性标量）被当成物理字段比 ⇒ R19.2 红：那句"豁免逐字写明"是有牙齿的',
+     'mutant', N_KEYS, 'R19'),
+    ('b9', '良性：给 §14.10 续段的 `r19 = [r19_row(t) for t in stier]` 那行补一条尾部注释（语义不动）',
+     'benign', N_OK, 'both'),
+    ('p1', 'R20：丁那张票的 Pascal 闭式把上标写成 $n+k-1$（$\\binom{n+k-2}{n-2}$ 读成 '
+           '$\\binom{n+k-1}{n-2}$）⇒ 四张票在 $n\\le5$、$k\\le7$ 的网格上不再同数，R20.0 红而甲/乙/丙'
+           '三条各自照旧（这张票不再是"闭式装饰"的反面见证）', 'mutant', P_DING, 'R20'),
+    ('p2', 'R20：乙那条 Hilbert 递推把 $1/(1-t)^{n-1}$ 的指数读成 $n$（`m = n - 1` 写成 `m = n`）'
+           '⇒ 商环级数与消元秩不再同数，R20.0 红（系数仍是整数 ⇒ 那条 `assert` 不会代劳，红的仍是读数）',
+     'mutant', P_ROW, 'R20'),
+    ('p3', 'R20：逐层那第二条和式把"低一阶分布总数"读成当阶（`td_dim(n, k - 1)` 写成 `td_dim(n, k)`）'
+           '⇒ "被商掉 $=$ 低一阶分布"那本账在每层都不平（R20.1 红），而第一本账"幸存 $+$ 被商掉 $=$ 分布"'
+           '与塔那一侧照旧绿 ⇒ 三条账确实是三条各走各的', 'mutant', P_PV, 'R20'),
+    ('p4', 'R20：丙路那条独立核里"第一条代表取两次"（两条代表落在同一个陪集里 $\Rightarrow$ 正是本条门禁'
+           '立起来要抓的那种失效）⇒ 个数与并矩阵秩两条腿同时错位，违例格 $0\\to33$（$\ge 1$ 阶且代表数'
+           '非零的 28 格 $+$ $k=0$ 那一列的 NSLOT$=5$ 格），只红 R20.2，而网格四票、逐层三条账、'
+           '$n=1$ 边界与"代表数非零的格 28 个"照旧绿',
+     'mutant', P_REPS, 'R20'),
+    ('b10', '良性：给 §14.11 的 `NSLOT = max(len(x[\'fl\']) for x in okc)` 那行补一条尾部注释（语义不动）',
+     'benign', P_OK, 'both'),
 ]
 
 # 这台仪器**应当**看守的层：写死在这里，不 from CASES 推（推出来的名单会被"删掉一整层变异体"这件事
 # 自己抹平 ⇒ 那条自查是空转的）。少一层、多一层都判 INVALID。
-EXPECTED_LAYERS = ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18')
+EXPECTED_LAYERS = ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20')
 
 
 def read_source():
@@ -576,8 +739,17 @@ def run(d):
     sec148 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
     a, bnd = rep.find(SEC149_A), rep.find(SEC149_B)
     sec149 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
-    a, bnd = rep.find(SEC1410_A), rep.find(SEC1410_B)
+    # §14.10 **续段**（R19）单独开窗：下界是那句加粗 lead-in。两窗**不重叠**——本段的上界就是续段的
+    # 下界 ⇒ 一条只动宽档枚举的缺陷不会记到 §14.10 本段那九处读数上，反之亦然（同 §14.9/§14.10 那条教训）。
+    a19 = rep.find(SEC19_A)
+    a, bnd = rep.find(SEC1410_A), (a19 if a19 > rep.find(SEC1410_A) else rep.find(SEC1410_B))
     sec1410 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
+    b19 = rep.find(SEC19_B, a19)
+    sec19 = rep[a19:b19] if (a19 >= 0 and b19 > a19) else ''
+    # §14.11（R20）再单独开窗：上界 '## 15.'，下界就是本节标题 ⇒ 与 §14.10 本段、续段两窗都不重叠。
+    a, bnd = rep.find(SEC1411_A), rep.find(SEC1411_B)
+    sec1411 = rep[a:bnd] if (a >= 0 and bnd > a) else ''
+    p1411rows = sorted(l for l in sec1411.split('\n') if l.startswith('|'))
     krows10 = sorted(l for l in sec1410.split('\n') if l.startswith('|'))
     lrows = sorted(l for l in sec149.split('\n') if l.startswith('|'))
     trows = sorted(l for l in sec14.split('\n') if l.startswith('|'))
@@ -590,7 +762,7 @@ def run(d):
             'r11_fail_ids': [x for x in fails if x.startswith('R11')],
             'layer_fail_ids': dict((k, [x for x in fails if x.startswith(k)])
                                    for k in ('R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17',
-                                             'R18')),
+                                             'R18', 'R19', 'R20')),
             'printed_r11_block': BLOCK in out,
             'printed_r12_block': BLOCK2 in out,
             'printed_r13_block': BLOCK3 in out,
@@ -599,6 +771,8 @@ def run(d):
             'printed_r16_block': BLOCK6 in out,
             'printed_r17_block': BLOCK7 in out,
             'printed_r18_block': BLOCK8 in out,
+            'printed_r19_block': BLOCK9 in out,
+            'printed_r20_block': BLOCK10 in out,
             'report_pairs': sorted(set(tuple(int(x) for x in t) for t in PAIR_RE.findall(rep))),
             'report_global': {
                 'g_size': sorted(set(int(x) for x in G_SIZE_RE.findall(rep))),
@@ -672,6 +846,35 @@ def run(d):
                 'm_pla': sorted(set(M_PLA_RE.findall(sec1410))),
                 'm_union': sorted(set(M_UNION_RE.findall(sec1410))),
                 'm_scope': sorted(set(M_SCOPE_RE.findall(sec1410)))},
+            'report_r19': {
+                'n_grid': sorted(set(N_GRID_RE.findall(sec19))),
+                'n_wrow': sorted(set(N_WROW_RE.findall(sec19))),
+                'n_dis': sorted(set(N_DIS_RE.findall(sec19))),
+                'n_cov': sorted(set(N_COV_RE.findall(sec19))),
+                'n_over': sorted(set(N_OVER_RE.findall(sec19))),
+                'n_crow': sorted(set(N_CROW_RE.findall(sec19))),
+                'n_cz': sorted(set(N_CZ_RE.findall(sec19))),
+                'n_deg': sorted(set(N_DEG_RE.findall(sec19))),
+                'n_chir': sorted(set(N_CHIR_RE.findall(sec19))),
+                'n_uncov': sorted(set(N_UNCOV_RE.findall(sec19)))},
+            'report_r20': {
+                'p_rows': (len(p1411rows),
+                           hashlib.sha1('\n'.join(p1411rows).encode('utf-8')).hexdigest()[:12]),
+                'p_grid': sorted(set(P_GRID_RE.findall(sec1411))),
+                'p_inj': sorted(set(P_INJ_RE.findall(sec1411))),
+                'p_anchor': sorted(set(P_ANCH_RE.findall(sec1411))),
+                'p_pc': sorted(set(P_PC_RE.findall(sec1411))),
+                'p_zero': sorted(set(P_ZERO_RE.findall(sec1411))),
+                'p_sec': sorted(set(P_SEC_RE.findall(sec1411))),
+                'p_n1': sorted(set(P_N1_RE.findall(sec1411))),
+                'p_live': sorted(set(P_LIVE_RE.findall(sec1411))),
+                'p_lv': sorted(set(P_LV_RE.findall(sec1411))),
+                'p_book': sorted(set(P_BOOK_RE.findall(sec1411))),
+                'p_tow': sorted(set(P_TOW_RE.findall(sec1411))),
+                'p_ax': sorted(set(P_AX_RE.findall(sec1411))),
+                'p_refine': sorted(set(P_REFINE_RE.findall(sec1411))),
+                'p_bite': sorted(set(P_BITE_RE.findall(sec1411))),
+                'p_k0': sorted(set(P_K0_RE.findall(sec1411)))},
             'traceback': 'Traceback' in out}
 
 
@@ -692,22 +895,42 @@ def judge(case, res, base):
                 and bool(res['report_r17']['l_dis']) and bool(res['report_r17']['l_unu'])
                 and bool(res['report_r17']['l_price']) and bool(res['report_r17']['l_part'])
                 and bool(res['report_r17']['l_seam']) and bool(res['report_r17']['l_scope']))
-    r18_live = (len(res['report_r18']['m_tab']) == 6 and res['report_r18']['m_rows'][0] == 8
+    r18_live = (len(res['report_r18']['m_tab']) == 10 and res['report_r18']['m_rows'][0] == 12
                 and bool(res['report_r18']['m_dis']) and bool(res['report_r18']['m_new'])
                 and len(res['report_r18']['m_anch']) == 1
                 and bool(res['report_r18']['m_rank']) and len(res['report_r18']['m_brk']) == 1
                 and bool(res['report_r18']['m_mis']) and bool(res['report_r18']['m_t3'])
                 and bool(res['report_r18']['m_pla']) and bool(res['report_r18']['m_union'])
                 and bool(res['report_r18']['m_scope']))
+    # 续段十处读数：档位对 1、宽档逐档行 4、"不全等/新增合计"1、覆盖面那句 1、超档 1、
+    # 截断对照逐档行 10、"非退化档里新增=0 者/本条违例"1、退化档数 1、跨手性 1、未覆盖键 1。
+    # 条数用 set 的大小核（这些读数各自在一行里只出现一次，不像 §14.9 那四条锚点会合法同值）。
+    n19 = res['report_r19']
+    r19_live = (len(n19['n_grid']) == 1 and len(n19['n_wrow']) == 4 and len(n19['n_dis']) == 1
+                and len(n19['n_cov']) == 1 and len(n19['n_over']) == 1
+                and len(n19['n_crow']) == 10 and len(n19['n_cz']) == 1 and len(n19['n_deg']) == 1
+                and len(n19['n_chir']) == 1 and len(n19['n_uncov']) == 1)
+    # §14.11 的十六处读数：表格指纹 1（32 行＝表头 + 分隔 + 30 格）、锚点 6 条、其余各 1 条
+    # （每条在自己的行里只出现一次 ⇒ 条数用 set 的大小核）。
+    p20 = res['report_r20']
+    r20_live = (p20['p_rows'][0] == 32 and len(p20['p_anchor']) == 6
+                and len(p20['p_grid']) == 1 and len(p20['p_inj']) == 1
+                and len(p20['p_pc']) == 1 and len(p20['p_zero']) == 1
+                and len(p20['p_sec']) == 1 and len(p20['p_n1']) == 1 and len(p20['p_live']) == 1
+                and len(p20['p_lv']) == 1 and len(p20['p_book']) == 1 and len(p20['p_tow']) == 1
+                and len(p20['p_ax']) == 1 and len(p20['p_refine']) == 1
+                and len(p20['p_bite']) == 1 and len(p20['p_k0']) == 1)
     clean = (res['exit'] == 0 and res['pass'] == res['gates'] and not res['fail_ids']
              and not res['traceback']
              and res['printed_r11_block'] and res['printed_r12_block']
              and res['printed_r13_block'] and res['printed_r14_block']
              and res['printed_r15_block'] and res['printed_r16_block']
              and res['printed_r17_block'] and res['printed_r18_block']
+             and res['printed_r19_block'] and res['printed_r20_block']
              and bool(res['report_pairs']) and bool(res['report_global']['g_size'])
              and bool(res['report_r13']['h_size']) and bool(res['report_r13']['h_k'])
-             and r14_live and r15_live and r16_live and r17_live and r18_live)
+             and r14_live and r15_live and r16_live and r17_live and r18_live and r19_live
+             and r20_live)
     if kind in ('baseline', 'benign'):
         return clean and (kind == 'baseline'
                           or (res['report_pairs'] == base['report_pairs']
@@ -718,6 +941,8 @@ def judge(case, res, base):
                               and res['report_r16'] == base['report_r16']
                               and res['report_r17'] == base['report_r17']
                               and res['report_r18'] == base['report_r18']
+                              and res['report_r19'] == base['report_r19']
+                              and res['report_r20'] == base['report_r20']
                               and res['pass'] == base['pass']))
     moved = [k for k, v in (('report_pairs', res['report_pairs'] != base['report_pairs']),
                             ('report_global', res['report_global'] != base['report_global']),
@@ -727,6 +952,8 @@ def judge(case, res, base):
                             ('report_r16', res['report_r16'] != base['report_r16']),
                             ('report_r17', res['report_r17'] != base['report_r17']),
                             ('report_r18', res['report_r18'] != base['report_r18']),
+                            ('report_r19', res['report_r19'] != base['report_r19']),
+                            ('report_r20', res['report_r20'] != base['report_r20']),
                             ('gates_pass', res['pass'] != base['pass'])) if v]
     res['moved'] = moved
     return (res['exit'] != 0 and bool(res['layer_fail_ids'].get(layer))
@@ -741,6 +968,24 @@ def main():
             anchors[patch[0].decode()] = src.count(patch[0])
     tests_on_disk = engine_json_tests()
 
+    # 例 id 唯一性是一条**结构**前提而不是排版洁癖：结果按 `res[tag]` 存，重复的 id 会让后写的例子把
+    # 先写的那个顶掉 ⇒ 被顶掉那几例既不进判决也不进 payload['cases']（JSON 里那几行变成同一例的重复
+    # 行），而"1 + 变异体 + 良性 = 例数"那本账是从 CASES 数的、照样自洽 ⇒ 台账缩了水却看不出来。
+    # 本仓库真踩过：R19 那四例最初复用了 R18 的 n1–n4，是预演脚本按 id 取例时才暴露（它取到 R18 的
+    # 机器、报出的 FAIL 全是 R18.*）。⇒ 现在把重复判成 INVALID，而不是靠人记得查重。
+    ids = [c[0] for c in CASES]
+    dup_ids = sorted(set(t for t in ids if ids.count(t) > 1))
+
+    # 这两条结构前提放在**跑任何一例之前**：锚点命中不等于 1（针写歪了、引擎里那行已经搬家）与
+    # 重复 id 都只需读一次盘就能判，而它们一旦成立，整轮五小时跑完的 verdict 必定是 INVALID。
+    # 本仓库为此付过一次学费：第十层第一版那枚丙路针把引擎打崩，而崩不崩要跑到那一例才知道
+    # ⇒ 判据本身改不了这件事，但"针根本不命中"这件事不必等到第五小时才发现。
+    anchor_bad = [k for k, v in anchors.items() if v != 1]
+    if anchor_bad or dup_ids:
+        print('结构前提未过 ⇒ 一例都不跑：锚点命中 != 1 的针 %s ｜ 重复 id %s' %
+              (anchor_bad, dup_ids))
+        return 1
+
     res = {}
     for tag, name, kind, patch, layer in CASES:
         d, hits = build(tag, patch)
@@ -753,7 +998,7 @@ def main():
         r['expect_caught'] = kind == 'mutant'
         res[tag] = r
         print('[case] %s %-14s layer=%-5s exit=%s gates=%s/%s fail=%s pairs=%s glob=%s h12=%s '
-              'r14=%s r15=%s r16=%s r17=%s r18=%s' %
+              'r14=%s r15=%s r16=%s r17=%s r18=%s r19=%s r20=%s' %
               (tag, kind, layer, r['exit'], r['pass'], r['gates'],
                r['layer_fail_ids'].get(layer) or r['fail_ids'], r['report_pairs'],
                r['report_global']['g_size'], r['report_r13']['h_k'] and
@@ -776,9 +1021,20 @@ def main():
                (r['report_r18']['m_dis'], len(r['report_r18']['m_tab']),
                 r['report_r18']['m_anch'], r['report_r18']['m_rank'], r['report_r18']['m_brk'],
                 r['report_r18']['m_new'], r['report_r18']['m_mis'], r['report_r18']['m_t3'],
-                r['report_r18']['m_pla'], r['report_r18']['m_union'], r['report_r18']['m_scope'])))
+                r['report_r18']['m_pla'], r['report_r18']['m_union'], r['report_r18']['m_scope']),
+               r['report_r19']['n_dis'] and
+               (r['report_r19']['n_grid'], r['report_r19']['n_wrow'], r['report_r19']['n_dis'],
+                r['report_r19']['n_cov'], r['report_r19']['n_over'], r['report_r19']['n_deg'],
+                r['report_r19']['n_chir'], r['report_r19']['n_uncov'],
+                len(r['report_r19']['n_crow'])),
+               r['report_r20']['p_grid'] and
+               (r['report_r20']['p_rows'], r['report_r20']['p_grid'],
+                r['report_r20']['p_anchor'], r['report_r20']['p_pc'], r['report_r20']['p_zero'],
+                r['report_r20']['p_lv'], r['report_r20']['p_book'], r['report_r20']['p_tow'],
+                r['report_r20']['p_sec'], r['report_r20']['p_live'], r['report_r20']['p_ax'],
+                r['report_r20']['p_refine'], r['report_r20']['p_bite'],
+                r['report_r20']['p_k0'], r['report_r20']['p_inj'])))
 
-    anchor_bad = [k for k, v in anchors.items() if v != 1]
     fixture_bad = (res['ctl']['gates'] is None or (tests_on_disk is not None
                    and res['ctl']['gates'] != tests_on_disk))
     for tag, r in res.items():
@@ -790,7 +1046,7 @@ def main():
     false_alarm = [t for t, r in res.items() if not r['expect_caught'] and not r['ok']]
     payload_layers = sorted(set(c[4] for c in CASES if c[4] != 'both'))
     # 覆盖面自己也要判：某一层的变异体被整批删掉时，例数的账照样自洽（baseline 1 + 变异体 + 良性），
-    # 但这台仪器已经悄悄退回单层 ⇒ "八层都看守"这句话就没有仪器背书了。层的名单**不从 CASES 里推**：
+    # 但这台仪器已经悄悄退回单层 ⇒ "十层都看守"这句话就没有仪器背书了。层的名单**不从 CASES 里推**：
     # 从 CASES 推的话，删掉一层的变异体就等于把那一层从"应有名单"里一起删掉，这条自查永远不会红
     # ⇒ 名单钉在 EXPECTED_LAYERS 上，两个方向都核（少一层、多一层都 INVALID）。
     uncovered = [k for k in EXPECTED_LAYERS
@@ -798,12 +1054,13 @@ def main():
                  or not any(c[2] == 'mutant' and c[4] == k for c in CASES)]
     stale_layers = [k for k in payload_layers if k not in EXPECTED_LAYERS]
     verdict = 'CAUGHT' if not missed and not false_alarm and not anchor_bad \
-        and not fixture_bad and not uncovered and not stale_layers else 'INVALID'
+        and not fixture_bad and not uncovered and not stale_layers and not dup_ids else 'INVALID'
     payload = {'script': 'check_r11_mutation.py', 'target': '验证脚本/so10_reps.py',
                'expected_layers': list(EXPECTED_LAYERS),
                'layers': sorted(set(c[4] for c in CASES if c[4] != 'both')),
                'target_bytes': len(src), 'engine_json_tests': tests_on_disk,
                'anchor_counts': anchors, 'fixture_ok': not fixture_bad,
+               'duplicate_ids': dup_ids, 'cases_judged': len(res),
                'cases_total': len(CASES), 'mutants': sum(1 for c in CASES if c[2] == 'mutant'),
                'benign': sum(1 for c in CASES if c[2] == 'benign'),
                'caught': sum(1 for t, r in res.items() if r['expect_caught'] and r['ok']),
@@ -817,6 +1074,8 @@ def main():
                'baseline_r16': res['ctl']['report_r16'],
                'baseline_r17': res['ctl']['report_r17'],
                'baseline_r18': res['ctl']['report_r18'],
+               'baseline_r19': res['ctl']['report_r19'],
+               'baseline_r20': res['ctl']['report_r20'],
                'layer_mutants': dict((k, sum(1 for c in CASES if c[2] == 'mutant' and c[4] == k))
                                      for k in payload_layers),
                'verdict': verdict,
@@ -826,6 +1085,8 @@ def main():
     print('结论：%s ｜ %d 例（变异体 %d、良性 %d）｜ 基线报告读数 %s ｜ 台账 %s' %
           (verdict, len(CASES), payload['mutants'], payload['benign'],
            res['ctl']['report_pairs'], os.path.basename(OUT)))
+    print('id 查重：%s ｜ 判决覆盖：CASES %d 行、res %d 例（两数不等即说明有 id 互相顶掉）' %
+          (dup_ids or '无重复', len(CASES), len(res)))
     print('自检：%s（%d 例，PASS %d）' %
           ('全部通过' if verdict == 'CAUGHT' else '存在未捕获或误报', len(CASES),
            sum(1 for r in res.values() if r['ok'])))

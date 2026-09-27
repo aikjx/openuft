@@ -1,6 +1,6 @@
 # 共享基础
 
-[公共协议](研究规范/README.md) · [参考文献](参考资料/README.md) · [公共计算](公共计算/README.md) · [经典基准](经典基准/README.md)
+[公共协议](研究规范/README.md) · [参考文献](参考资料/README.md) · [公共计算](公共计算/README.md) · [经典基准](经典基准/README.md) · [推导与量纲专题](推导与量纲专题/README.md)
 
 候选体系专属代码、公设、论文和结论归 `01_独立体系`。共享只表示复用，不能授予某个体系科学认可。
 
@@ -14,6 +14,7 @@
 | [参考资料](参考资料/README.md) | 文献、术语、定理、数学工具 | BIBLIOGRAPHY、GLOSSARY、MATHEMATICS、THEOREMS、references.bib |
 | [研究规范](研究规范/README.md) | 研究方法与审计标准 | method_D/F/P/V（求导/第一性判据/证明/验证）、claim 模板、证据分层 |
 | [经典基准](经典基准/README.md) | 经典物理作用量与实验基准 | Einstein-Hilbert、Yang-Mills、Dirac、Higgs、SM 作用量；经典实验基准 |
+| [推导与量纲专题](推导与量纲专题/README.md) | 第一性推导与量纲审计 | 偏导→协变导数→黎曼曲率→爱因斯坦场方程；电磁 SI 量纲总表；光速量纲来源；磁矢势量纲反推；三种导数数学与本体论对比 |
 
 ## 使用规则
 

@@ -8,7 +8,9 @@
 本轮要回答的不是「β 对不对」，而是**这个交叉验证在仓库现有的数据下能不能做**，
 以及**它的判决力活在哪一条轴上**。三件事在代码里钉死：
 
-1. **β 在任何跨行星比值里精确约掉。** 两条候选几何式都对 β 线性，
+1. **β 在任何跨行星比值里精确约掉。** 只要律对 β **可分离**（f(β,a)=g(β)·h(a)，
+   几次幂都行）且两端共用同一个 β，比值里就约掉——线性只是它的特例（牙齿检验
+   实测：把草稿式改成 β² 时 [Q4] 仍绿，真正被检验的是"两端同一个 β"这件事）。
    所以「用金星/地球检验 β」检验的**不是 β 的数值**（那已由水星标定吃掉），
    而是几何项对 a 的**幂次**。⇒「β 普适性」的可检验内核是一个 SHAPE 检验。
 2. **仓库里没有金星/地球的观测残差。** 原脚本自己标注：
@@ -33,11 +35,13 @@
 
 红线
 ----
-* 「判据 PASS」只说明本仪器算对了，**不说明 β 普适性成立**。物理侧结论见 [Q8]：OPEN。
+* 「判据 PASS」只说明本仪器算对了，**不说明 β 普适性成立**。物理侧结论见 [Q9]：OPEN。
 * 本脚本不改 `claims.csv` 里 C35 的 status（那是台账的活）。
 * 只用标准库 `math`（本目录 README §1 红线：不引入 sympy / mpmath）。
   与 250 位版面的是非由 [Q1] 的双路对账判定，不由位数判定。
 * 退出码默认恒为 0（本目录约定）；加 `--strict` 时任何内部判据 FAIL 则退出码 1。
+* 每条判据的"牙齿"由同目录 `spiral_c35_beta_teeth.py` 检验（种缺陷要求按名字变红，
+  该驱动自己打印 CAUGHT/MISSED 与判据覆盖率；它不产物理读数，故不进版面）。
 
 运行：python spiral_c35_beta_universality.py [--h 0.0005] [--strict]
 """
@@ -60,14 +64,22 @@ GM = G * MSUN                        # m^3/s^2
 ARCSEC = math.pi / (180.0 * 3600.0)  # 角秒 -> 弧度
 JULIAN_YR = 365.25 * 86400.0         # 儒略年，定义值（非测量）
 MU_SUN = 3.0 * GM / (C * C)          # GR 的 β（米）：Binet u''+u=A+βu² 里 β=3GM/c²
+EPS = sys.float_info.epsilon         # 双精度机器 epsilon：[4] 的"约掉"判据地板
+G_SIG, MSUN_SIG = 6, 6               # G、MSUN 两行的字面有效数字位数（[8] 的误差棒用）
 
-EPS = sys.float_info.epsilon           # 双精度机器 epsilon：[4] 的"约掉"判据地板
 # 行星元：a [m]、e、T [年]、仓库内的"参考值"[角秒/百年]
 PLANETS = [
     ('水星', 5.790905e10, 0.20563069, 0.240846, 43.03),
     ('金星', 1.0820893e11, 0.00677672, 0.615197, 8.62),
     ('地球', 1.4959787e11, 0.0167086, 1.000017, 3.84),
 ]
+# 上表字面的**书写精度**（数出来的，不是外部目录的标称误差）：
+# (a 的有效数字位数, e 的小数位, T 的小数位, 参考值的小数位)
+ELEMENT_DIGITS = {
+    '水星': (7, 8, 6, 2),      # 5.790905e10 / 0.20563069 / 0.240846 / 43.03
+    '金星': (8, 8, 6, 2),      # 1.0820893e11 / 0.00677672 / 0.615197 / 8.62
+    '地球': (8, 7, 6, 2),      # 1.4959787e11 / 0.0167086 / 1.000017 / 3.84
+}
 # 250 位版面给出的 GR 基础项（角秒/百年），用于跨仪器对账
 GR250 = {'水星': 42.98203636043861, '金星': 8.624863899085765, '地球': 3.8388229840403927}
 # 仓库内水星的三个锚点（含标定靶）；[Q7] 的"噪声代理"就是它们之间的极差
@@ -129,7 +141,12 @@ def rk4_dphi(a, e, eps, h):
 
     A = 1/p，初值取未扰轨道的近星点 u=A(1+e)、u'=0。进动 = 下一次 u' 由正变零
     （u 的极大）相对 2π 的偏移。eps=0 的同一次积分作为**本底**一起返回：
-    数值色散与步长偏差全在相减里抵消，这样 [Q4] 测的是物理而不是求根器。
+    数值色散与步长偏差全在相减里抵消，这样 [Q3] 测的是物理而不是求根器。
+
+    φ 一律由 `圈数 × h` 乘出来，不做 `phi += h` 累加。这条**不是**本底来源：
+    牙齿检验实测两种写法在 h=5e-4 下把 [3] 的每一个读数打印得逐位相同，
+    即累加舍入在本仪器里低于打印精度；保留乘式只因为它让 φ 成为 h 的确定性
+    倍数。真正的本底来自 u' 的逐步舍入（∝ √(1/h)，网格越细越大，见 [Q3b]）。
     """
     A = 1.0 / semilatus(a, e)
 
@@ -138,6 +155,7 @@ def rk4_dphi(a, e, eps, h):
             return (up, A + eps_loc * u * u - u)
 
         u, up = A * (1.0 + e), 0.0
+        step = 0
         phi = 0.0
         prev = None
         while phi < 2.0 * math.pi + 0.5:
@@ -147,14 +165,14 @@ def rk4_dphi(a, e, eps, h):
             k4u, k4p = rhs(u + h_loc * k3u, up + h_loc * k3p)
             un = u + h_loc / 6.0 * (k1u + 2 * k2u + 2 * k3u + k4u)
             upn = up + h_loc / 6.0 * (k1p + 2 * k2p + 2 * k3p + k4p)
-            phin = phi + h_loc
+            phin = (step + 1) * h_loc
             if prev is not None and prev[1] > 0.0 and upn <= 0.0 and phi > math.pi:
-                # u' 由正转负：线性插值定根，再对根做二分细化
+                # u' 由正转负：把上一步的端点当根的左界，二分细化到 φ 的 ULP 以下
                 lo_u, lo_up = prev[0], prev[1]
                 lo_phi = phi
                 for _ in range(60):
                     mid = 0.5 * (lo_phi + phin)
-                    # 从 prev 点重积分半步（RK4 半步足够精细）
+                    # 从 lo 点重积分半步（RK4 半步足够精细）
                     hh = mid - lo_phi
                     k1 = rhs(lo_u, lo_up)
                     k2 = rhs(lo_u + 0.5 * hh * k1[0], lo_up + 0.5 * hh * k1[1])
@@ -168,6 +186,7 @@ def rk4_dphi(a, e, eps, h):
                         phin = mid
                 return lo_phi
             prev = (un, upn)
+            step += 1
             u, up, phi = un, upn, phin
         return float('nan')
 
@@ -176,9 +195,63 @@ def rk4_dphi(a, e, eps, h):
     return (phi_grav - phi_flat)
 
 
-def ulp_rel(value, decimals):
-    """把表格里"只给到第 decimals 位"当成 ±0.5 末位，返回相对不确定度。"""
-    return 0.5 * 10.0 ** (-decimals) / abs(value)
+def rk4_dphi_probe(a, e, eps, h, coarse):
+    """在 4 个网格上跑同一条路：coarse、h、h/2、h/4。
+
+    返回 (最细网格值 v, d1=|v(h)-v(h/2)|, d2=|v(h/2)-v(h/4)|, spread, q)。
+    spread = 四个值里的极差 = 本仪器的**实测本底**（含与 h 无关的那部分）。
+    q = min(d1,d2)/max(d1,d2)：若误差真由 h⁴ 截断支配，相邻两级之差要按 16 倍
+    衰减 ⇒ q≈1/16；q 明显大于 1/16 就说明"细化网格没在收敛"，即本底是舍入随机
+    漫步（步数 ∝ 1/h ⇒ 越细越大），Richardson 棒在这种本底上系统性偏小。
+    """
+    vs = [rk4_dphi(a, e, eps, coarse)]
+    vs += [rk4_dphi(a, e, eps, h / float(2 ** i)) for i in range(3)]
+    d1, d2 = abs(vs[1] - vs[2]), abs(vs[2] - vs[3])
+    hi = max(d1, d2)
+    q = 1.0 if hi == 0.0 else min(d1, d2) / hi
+    return vs[-1], d1, d2, max(vs) - min(vs), q
+
+
+def second_order_term(eps, a, e):
+    """一阶律 Δφ=2πx 被舍掉的下一阶项 = 5πx²，x = eps/p。推导如下（本轮独立做一遍）：
+
+    u''+u = A + eps·u²，圆轨道半径 u0 满足 u0 = A + eps·u0² ⇒ u0 = A + eps·A² + O(eps²)。
+    令 u = u0 + δ：δ'' + (1 - 2·eps·u0)δ = eps·δ²，且 δ' = 0 的解恰好落在
+    τ = nπ（把 δ 展开到 O(eps) 后 δ' = -aω sinθ·[1 - (2eps·a/(3ω²))cosθ]，
+    方括号项对小的 eps·a 不改根的位置）⇒ 近星点到近星点的相位 = 2π/ω。
+    ω² = 1 - 2eps·u0 = 1 - 2x - 2x²，故
+        Δφ = 2π[(1-2x-2x²)^(-1/2) - 1] = 2π[x + 2.5x² + O(x³)] = 2πx + 5πx²。
+    关键在 u0 的那位移：只按 ω²=1-2x 展开会得到 3πx²，**少了一项 2πx²**。
+    [Q3c] 用 eps×16 的实测把这两个候选分开。
+    """
+    x = eps / semilatus(a, e)
+    return 5.0 * math.pi * x * x
+
+
+# 本底用的 eps：小到 2π·eps/p ≈ 1e-22 弧度。**它测不出本底**（本轮实测：返回恰好
+# 0.0，因为右端按 `A + eps*u*u - u` 求值时 eps·u² 在加法里就被舍掉了）——
+# 这条只作打印用的反面教材，不当判据。
+EPS_NULL = 1.0e-12
+# 极差本底要跨足够宽的网格族才作数：coarse 这一点几乎不要钱。
+# 但**本底的数值随这一点而变**（牙齿检验 pc1 实测：0.02→0.05 时 [3] 的极差与容差
+# 都移动，而 13 条判决一条不动）⇒ 引用任何一条容差，必须把 H_COARSE 一起报出。
+H_COARSE = 0.02
+# eps 放大倍数：一阶项放大 C 倍、二阶项放大 C² 倍 ⇒ 用 (v(C)-C·v(1))/(C²-C) 解 B。
+C_SECOND = 16.0
+
+
+def rel_ulp_sig(sig_digits):
+    """一个给到 d 位**有效数字**的数，±0.5 末位对应的相对不确定度 = 0.5·10^(1-d)。
+
+    不能按"小数点后几位"算：a 是 1e11 量级，按小数位算会得到 1e-17 这种荒谬值，
+    等于把表格的取整精度当成无限精度。
+    """
+    return 0.5 * 10.0 ** (1.0 - sig_digits)
+
+
+def abs_ulp_dec(decimals):
+    """一个给到小数点后 k 位的数，±0.5 末位对应的**绝对**不确定度。"""
+    return 0.5 * 10.0 ** (-decimals)
 
 
 def max_abs_rel_drift(vals):
@@ -191,6 +264,23 @@ def max_abs_rel_drift(vals):
     if scale == 0.0:
         return 0.0
     return (max(vals) - min(vals)) / scale
+
+
+def json_finite(o, bag):
+    """版面必须是**严格** JSON：`NaN` / `Infinity` 是 Python 的扩展，jq 与 JS 的
+    `JSON.parse` 会因为它们打不开整份文件（C25 那一轮就因此写崩过一次版面）。
+    非有限浮点一律写成 null，并把原值记进 bag——null 也要能被追问是谁写的。
+    """
+    if isinstance(o, float):
+        if math.isfinite(o):
+            return o
+        bag.append(o)
+        return None
+    if isinstance(o, dict):
+        return dict((k, json_finite(v, bag)) for k, v in o.items())
+    if isinstance(o, (list, tuple)):
+        return [json_finite(v, bag) for v in o]
+    return o
 
 
 def main(argv):
@@ -237,24 +327,77 @@ def main(argv):
     print('  几何项标定靶（水星，角秒/百年）= %r' % geo_target)
     print('  β(Binet 一阶式, m²) = %r；β(草稿式) = %r；比值 = %r'
           % (beta_binet, beta_draft, beta_draft / beta_binet))
+    # 反面教材先放这里：想用一个"零信号"跑本来定本底，得到的会是 0.0——那不是准，
+    # 是信号在右端求值时就被舍掉了。本底只能用**有限信号**跨网格的极差来定。
+    v_null = rk4_dphi_probe(a0, e0, EPS_NULL, h, H_COARSE)[0]
+    print('  反面教材：eps=%r 的空实测返回恰好 %r（真信号 2π·eps/p=%r）——'
+          'εu² 在 `A + eps*u*u` 这一步就被舍掉 ⇒ 零信号测不出本底，只能实测极差'
+          % (EPS_NULL, v_null, 2.0 * math.pi * EPS_NULL / semilatus(a0, e0)))
     num_cases = []
     for label, eps, closed in (
-            ('GR（eps=3GM/c²）', MU_SUN, dphi_gr_per_orbit(*PLANETS[0][1:3])),
-            ('Binet 一阶（eps=β/p，水星标定 β）', beta_binet / semilatus(PLANETS[0][1], PLANETS[0][2]),
-             law_binet(beta_binet, PLANETS[0][1], PLANETS[0][2]))):
-        num = rk4_dphi(PLANETS[0][1], PLANETS[0][2], eps, h)
-        rel = abs(num - closed) / abs(closed)
-        num_cases.append((label, num, closed, rel))
-        print('  %-34s RK4=%r 闭式=%r 相对差=%r' % (label, num, closed, rel))
-    worst_num = max(num_cases, key=lambda t: t[3])
-    judge('Q3', 'RK4 数值积分复现闭式（相对差 <1e-6）⇒ 进动公式不是抄来的，是这条 ODE 的解',
-          worst_num[3] < 1e-6, '最差例「%s」相对差 %r（步长 h=%r，eps=0 同批积分作本底相减）'
-                               % (worst_num[0], worst_num[3], h))
+            ('GR（eps=3GM/c²）', MU_SUN, dphi_gr_per_orbit(a0, e0)),
+            ('Binet 一阶（eps=β/p，水星标定 β）', beta_binet / semilatus(a0, e0),
+             law_binet(beta_binet, a0, e0))):
+        num, d1, d2, spread, q = rk4_dphi_probe(a0, e0, eps, h, H_COARSE)
+        resid = abs(num - closed)
+        sec = second_order_term(eps, a0, e0)
+        tol = sec + 3.0 * spread
+        vC, _d1c, _d2c, spread_c, _qc = rk4_dphi_probe(a0, e0, C_SECOND * eps, h, H_COARSE)
+        b_meas = (vC - C_SECOND * num) / (C_SECOND * C_SECOND - C_SECOND)
+        b_bar = (C_SECOND * spread + spread_c) / (C_SECOND * C_SECOND - C_SECOND)
+        num_cases.append((label, num, closed, resid, resid / abs(closed),
+                          d1, d2, spread, q, sec, tol, b_meas, b_bar))
+        print('  %-34s RK4(h/4)=%r 闭式=%r' % (label, num, closed))
+        print('  %-34s 绝对残差=%r 相对=%r｜4 网格极差(本底)=%r、d1=%r d2=%r ⇒ q=%r'
+              % ('', resid, resid / abs(closed), spread, d1, d2, q))
+        print('  %-34s 容差 = 5πx²=%r + 3·本底=%r ⇒ %r；残差/容差 = %r'
+              % ('', sec, 3.0 * spread, tol, resid / tol))
+    worst_num = max(num_cases, key=lambda t: t[3] / t[10])
+    judge('Q3', 'RK4 数值积分复现一阶闭式：两例残差都落在**逐项推导**的容差'
+                '（该例一阶律被舍掉的 5πx² 项 + 3×跨 4 网格实测本底）之内'
+                '⇒ 进动公式不是抄来的，是这条 ODE 的解',
+          all(t[3] < t[10] for t in num_cases),
+          '最紧例「%s」残差 %r < 容差 %r（比 %r，越接近 1 越说明容差在咬）；'
+          'h=%r→%r 四档，eps=0 同批积分作本底相减'
+          % (worst_num[0], worst_num[3], worst_num[10], worst_num[3] / worst_num[10],
+             H_COARSE, h / 4.0))
+    judge('Q3b', '两例的相邻网格差比 q=%r/%r 都**大于** h⁴ 截断要求的 1/16=%r'
+                 '⇒ 本底是舍入随机漫步（步数 ∝ 1/h，网格越细本底越大），不是截断项；'
+                 'Richardson 的 2^p 外推在这种本底下系统性偏小，所以 [Q3] 的容差用极差。'
+                 '这条是**示警判据**：它哪天变红，说明本底被修掉了，容差该换回外推。'
+          % (num_cases[0][8], num_cases[1][8], 1.0 / 16.0),
+          all(t[8] > 1.0 / 16.0 for t in num_cases),
+          'q(GR)=%r、q(弱信号)=%r；d1/d2 分别 %r、%r（截断支配时应为 16）。'
+          '这条**只对当前网格族**作数：同一份代码加 `--h 0.002` 重跑，某一级相邻差'
+          '会恰好为 0 ⇒ q=0 ⇒ 本条变红而 [Q3]/[Q3c] 仍绿（牙齿检验实测），'
+          '所以它读的是"这一档网格上有没有反收敛"，不是普适的收敛性结论。'
+          % (num_cases[0][8], num_cases[1][8],
+             num_cases[0][5] / max(num_cases[0][6], 1e-300),
+             num_cases[1][5] / max(num_cases[1][6], 1e-300)))
+    b_meas, b_bar, b5 = num_cases[0][11], num_cases[0][12], num_cases[0][9]
+    b_naive = b5 * 3.0 / 5.0        # 只按 ω²=1-2x 展开（漏掉圆半径 u0=A+eps·A² 的位移）
+    dev5 = abs(b_meas - b5) / b_bar
+    dev3 = abs(b_meas - b_naive) / b_bar
+    print('  二阶系数实测（eps×%r 反解）：B=%r ±%r；5πx²=%r（偏 %r 棒）、3πx²=%r（偏 %r 棒）'
+          % (C_SECOND, b_meas, b_bar, b5, dev5, b_naive, dev3))
+    judge('Q3c', 'ODE 自己的二阶项能被这条数值路**钉出系数**：B=%r 与推导值 5πx²=%r 只差'
+                 '%r 个实测棒（<4），而漏掉圆半径位移的 3πx²=%r 差 %r 个棒（>4）'
+                 '⇒ [Q3] 容差里的物理项不是拟合出来的系数，是被独立复现的量'
+          % (b_meas, b5, dev5, b_naive, dev3),
+          dev5 < 4.0 and dev3 > 4.0,
+          '棒 b_bar=(%r·本底(GR)+本底(×%r))/240=%r；eps×%r 后 x=%r 仍 ≪1，三阶项可忽略。'
+          '两例残差的绝对值 %r vs %r 看着接近，主导源不同（GR 例含 5πx²=%r，'
+          '弱信号例该项 %r 可忽略、残差是本底）⇒ 不读成同源结论。'
+          % (C_SECOND, C_SECOND, b_bar, C_SECOND,
+             C_SECOND * MU_SUN / semilatus(a0, e0),
+             num_cases[0][3], num_cases[1][3], num_cases[0][9], num_cases[1][9]))
+    print('  ⇒ 同一个绝对本底折成相对差要放大 %r 倍（两例闭式信号之比）：信号越弱，'
+          '实测列越不可信，闭式是唯一可引用的读数（与 C25 同一课）。'
+          % (num_cases[0][2] / num_cases[1][2]))
 
     # ---- 4) β 在跨行星比值里精确约掉：可检验内核是幂次，不是数值 ----
     print('\n[4] β 普适性的可检验内核：跨行星比值对 β 的耦合（三条 λ 缩放）')
     inv_ratio = {}
-    spread = []
     for name, a, e, T, ref in PLANETS[1:]:
         vb_vals, vd_vals = [], []
         for lam in (0.4, 1.0, 1.7, 10.0):
@@ -264,19 +407,23 @@ def main(argv):
                            per_century_of(law_draft, lam * beta_draft, a0, e0, T0))
         drift = max(max_abs_rel_drift(vb_vals), max_abs_rel_drift(vd_vals))
         inv_ratio[name] = (vb_vals[0], vd_vals[0], drift)
-        spread.append((name, vb_vals, vd_vals))
         print('  %-3s β 缩放 0.4/1.0/1.7/10 下：binet 律比值=%r draft 律比值=%r 最大相对漂移=%r'
               % (name, vb_vals[0], vd_vals[0], drift))
     worst_drift = max(v[2] for v in inv_ratio.values())
+    # 四条 λ 各算一次比值，律内部乘除次数 <20 ⇒ 64·eps 是"纯舍入"的宽松上限
+    drift_floor = 64.0 * EPS
     judge('Q4', '把 β 乘 0.4/1.0/1.7/10 之后，金星/地球对水星的几何项比值不随 λ 动'
-                '（最大相对漂移 <1e-15，双精度内即"约掉"）⇒ β 普适性检验的载荷不是 β 的'
-                '大小，是 a 的幂次',
-          worst_drift < 1e-15,
-          '最大相对漂移 = %r；比值本身：金星 binet=%r draft=%r，地球 binet=%r draft=%r'
-          % (worst_drift, inv_ratio['金星'][0], inv_ratio['金星'][1],
+                '（最大相对漂移 < 64·eps = %r，双精度内即"约掉"）⇒ β 普适性检验的载荷'
+                '不是 β 的大小，是 a 的幂次' % drift_floor,
+          worst_drift < drift_floor,
+          '最大相对漂移 = %r（地板 %r）；比值本身：金星 binet=%r draft=%r，地球 binet=%r draft=%r'
+          % (worst_drift, drift_floor, inv_ratio['金星'][0], inv_ratio['金星'][1],
              inv_ratio['地球'][0], inv_ratio['地球'][1]))
     print('  注：这不是"恒等式所以无信息"。它说明的是——任何只用水星标定 β 的方案，'
           '在跨行星比值上自动失去对 β 的敏感度；能失去的敏感度只剩 a 的幂次。')
+    print('  负空间（[Q4] 看不见什么）：约掉的条件只是"两端共用同一个 β"，与该 β 的'
+          '幂次无关——牙齿检验实测把草稿式改成 β² 时本条仍绿。真正的反命题是'
+          '"两端不是同一个 β"，那条缺陷能红（把 λ 只乘比值的一端 ⇒ 本条红）。')
 
     # ---- 5) 两条候选式给出不同的金星/地球预言：幂次差 = a_M/a_p 的精确结构 ----
     print('\n[5] 同一水星标定下，两条几何式在金星/地球的预言差（§13-C35-3 的独立复现）')
@@ -284,9 +431,10 @@ def main(argv):
     for name, a, e, T, ref in PLANETS:
         vb = per_century_of(law_binet, beta_binet, a, e, T)
         vd = per_century_of(law_draft, beta_draft, a, e, T)
-        law_tab.append((name, vb, vd, vd / vb, a_ := PLANETS[0][1] / a))
-        print('  %-3s Binet 一阶=%r 草稿式=%r 草稿/Binet=%r 结构预期 a_水星/a_%s=%r'
-              % (name, vb, vd, vd / vb, name, PLANETS[0][1] / a))
+        struct_pred = PLANETS[0][1] / a          # 结构预期：两式之比 = a_水星/a_行星，与 e 无关
+        law_tab.append((name, vb, vd, vd / vb, struct_pred))
+        print('  %-3s Binet 一阶=%r 草稿式=%r 草稿/Binet=%r 结构预期 a_水星/a=%r'
+              % (name, vb, vd, vd / vb, struct_pred))
     struct = [(t[3] - t[4]) / t[4] for t in law_tab[1:]]
     judge('Q5', '草稿/Binet 的跨行星比 == a_水星/a_行星（相对偏差 <1e-12）⇒ 两式只差一个 1/a，'
                 '与 §13-C35-3 记的 0.535×/0.387× 同源',
@@ -306,7 +454,7 @@ def main(argv):
               % (name, ref, gr_pc[name], rel,
                  '参考值就是预言本身（取整），不可作观测量' if rel < 0.01 else '可能是独立观测'))
     mer_rel = abs(PLANETS[0][4] - gr_pc['水星']) / gr_pc['水星']
-    judge('Q6', '金星/地球的仓库参考值与 GR 预言之差 <1%（8.62/3.84 是预言的取整），'
+    judge('Q6', '金星/地球的仓库参考值与 GR 预言之差 <1%%（8.62/3.84 是预言的取整），'
                 '而水星的 43.03 与 GR 基础项差 %r%% ⇒ 只有水星是"待解释的数"，'
                 '金星/地球在本仓库**没有观测侧**' % (100.0 * mer_rel),
           all(t[3] < 0.01 for t in circular) and mer_rel > 0.0005,
@@ -329,23 +477,49 @@ def main(argv):
           '金星判决力 %r（=1/%r）、地球 %r（=1/%r）；注意锚点极差无统一出处，'
           '这一条只是**量级**判据' % (power_v, 1.0 / power_v, power_e, 1.0 / power_e))
 
-    # ---- 8) 误差棒：理论侧 vs 观测侧 ----
-    print('\n[8] 误差棒（把表格末位当 ±0.5 末位传播；进动只通过 p 依赖轨道元）')
-    bars = []
+    # ---- 8) 理论侧误差棒：三条腿分别算，再与 [7] 的观测噪声比大小 ----
+    print('\n[8] 理论侧误差棒（把字面书写精度当 ±0.5 末位传播；进动只通过 p、T 依赖轨道元）')
+    orbit_bars = []
     for name, a, e, T, ref in PLANETS:
-        sa = ulp_rel(a, 7 if a > 1e11 else 6)             # a 给到 8 位有效数字
-        se = 0.5 * 1e-8                                    # e 给到 8 位小数
-        # dln p = dln a 与 d ln(1-e²) = -2e de/(1-e²)；dln T 由 [2] 已知与 a 同一条腿
-        rel_p = math.hypot(sa, 2.0 * e * se / (1.0 - e * e))
-        sT = ulp_rel(T, 6)
-        rel_dphi = math.hypot(rel_p, sT)                   # Δφ_百年 ∝ 1/(p·T)
-        bars.append((name, rel_dphi, per_century(dphi_gr_per_orbit(a, e), T) * rel_dphi))
-        print('  %-3s 理论侧相对误差棒=%r ⇒ 绝对 %r 角秒/百年' % (name, rel_dphi, bars[-1][2]))
-    worst_bar = max(bars, key=lambda t: t[1])
-    judge('Q8', '理论侧误差棒（末位取整传播）最大 %r ⇒ 相对 %r，比 [7] 的信号还小 12 个量级以上：'
-                '**瓶颈完全不在轨道元精度**' % (worst_bar[2], worst_bar[1]),
-          worst_bar[1] < 1e-9,
-          '最大在 %s：相对 %r（观测侧在本仓库不存在，见 [6]）' % (worst_bar[0], worst_bar[1]))
+        da, de_dec, dT_dec, _dref = ELEMENT_DIGITS[name]
+        rel_a = rel_ulp_sig(da)                            # a 用有效数字口径
+        rel_p = math.hypot(rel_a, 2.0 * e * abs_ulp_dec(de_dec) / (1.0 - e * e))
+        rel_T = abs_ulp_dec(dT_dec) / T                    # T 用小数位口径再折成相对
+        rel_orbit = math.hypot(rel_p, rel_T)               # Δφ_百年 ∝ 1/(p·T)
+        orbit_bars.append((name, rel_orbit, gr_pc[name] * rel_orbit))
+        print('  轨道元腿 %-3s 相对 %r ⇒ 绝对 %r 角秒/百年（a %d 位、e %d 位小数、T %d 位小数）'
+              % (name, rel_orbit, orbit_bars[-1][2], da, de_dec, dT_dec))
+    worst_orbit = max(orbit_bars, key=lambda t: t[1])
+    da_mer, de_mer, dT_mer, _ = ELEMENT_DIGITS['水星']
+    leg_T = abs_ulp_dec(dT_mer) / PLANETS[0][3]
+    leg_a = rel_ulp_sig(da_mer)
+    judge('Q8a', '轨道元字面末位传播到 GR 基础项上最大相对 %r（绝对 %r 角秒/百年，在 %s）'
+                 '<1e-4 ⇒ 轨道元这条腿不是瓶颈' % (worst_orbit[1], worst_orbit[2], worst_orbit[0]),
+          worst_orbit[1] < 1e-4,
+          '水星相对 %r、金星 %r、地球 %r；水星这一行里 T 腿 %r 是 a 腿 %r 的 %r 倍'
+          '（a 按有效数字口径、T 只给到 6 位小数）'
+          % (orbit_bars[0][1], orbit_bars[1][1], orbit_bars[2][1], leg_T, leg_a, leg_T / leg_a))
+    # 几何项 = 43.03 − GR_水星 是**两个数之差** ⇒ 它的误差棒由三条腿合成：
+    #   ① 标定靶末位（43.03 只到 2 位小数）② GR 常数腿（G、M_sun 各 6 位）③ 轨道元腿(水星)
+    d_anchor = abs_ulp_dec(ELEMENT_DIGITS['水星'][3])
+    rel_const = math.hypot(rel_ulp_sig(G_SIG), rel_ulp_sig(MSUN_SIG))
+    bar_const = gr_pc['水星'] * rel_const
+    bar_orbit_mer = gr_pc['水星'] * orbit_bars[0][1]
+    bar_geo = math.hypot(d_anchor, bar_const, bar_orbit_mer)
+    rel_geo = bar_geo / geo_target
+    legs = max((('标定靶末位', d_anchor), ('常数腿', bar_const), ('轨道元腿', bar_orbit_mer)),
+               key=lambda t: t[1])
+    print('  几何项 %r = 43.03 − %r 的三条腿：靶末位 ±%r、常数腿 ±%r、轨道元腿 ±%r'
+          % (geo_target, gr_pc['水星'], d_anchor, bar_const, bar_orbit_mer))
+    print('  ⇒ 合成 ±%r（相对 %r），主导腿 = %s；c 是定义值、儒略年是定义值，不贡献' % (bar_geo, rel_geo, legs[0]))
+    bar_v = venus_gap * rel_geo
+    bar_e = earth_gap * rel_geo
+    judge('Q8b', '把 %r 的相对棒乘到两式之差上：金星 ±%r、地球 ±%r，均比 [7] 的观测噪声代理 '
+                 '%r 小一个量级以上 ⇒ 理论侧误差棒**不是**幂次之争的瓶颈，瓶颈在观测侧（[6]/[7]）'
+                 % (rel_geo, bar_v, bar_e, spread_mer),
+          bar_v < spread_mer / 10.0 and bar_e < spread_mer / 10.0,
+          '金星棒/噪声 %r、地球棒/噪声 %r；主导腿 %s 占合成棒的 %r'
+          % (bar_v / spread_mer, bar_e / spread_mer, legs[0], legs[1] / bar_geo))
 
     # ---- 9) 物理侧结论（不进 PASS 计数）----
     print('\n[9] 物理侧结论')
@@ -353,8 +527,10 @@ def main(argv):
         'β 普适性可检验的内核是几何项的 a 幂次（[Q4]），而本仓库：'
         '①金星/地球无观测残差（[Q6]，参考值即预言）；②两式之差在水星锚点极差之下（[Q7]）；'
         '③β 本身无第一性来源（承接 §13-C35-2 BOUNDARY）。⇒ 本轮把 C35 从「框架就绪」'
-        '推进到「**判决力已被定量定位：需要 ~1e-3 角秒/百年级历表残差 + β 的第一性式**」，'
-        '不升等级。')
+        '推进到「**判决力已被定量定位**：要分辨幂次之争，历表残差的噪声得压到两式之差之下，'
+        '即金星 %r / 地球 %r 角秒每百年（[Q5] 绝对差），而仓库水星锚点极差是 %r（[Q7]），'
+        '差 %r 倍 / %r 倍；此外还要 β 的第一性式」，不升等级。'
+        % (venus_gap, earth_gap, spread_mer, spread_mer / venus_gap, spread_mer / earth_gap))
     rec('Q9-mutual', '两条候选几何式互斥（复现 §13-C35-3 的 FAIL）', 'BOUNDARY',
         '同一水星标定下，金星几何项 Binet 一阶=%r vs 草稿=%r（差 %r×）；'
         '两式不可能同时为真，且差值不在同一 a 幂次上（[Q5]）⇒ 属公式缺陷，非约定自由度。'
@@ -375,23 +551,45 @@ def main(argv):
     out = {'script': 'spiral_c35_beta_universality.py',
            'inputs': {'GM': GM, 'c': C, 'M_sun': MSUN, 'beta_GR_m': MU_SUN,
                       'arcsec_rad': ARCSEC, 'julian_year_s': JULIAN_YR,
-                      'planets': PLANETS, 'gr250_anchors': GR250,
-                      'mercury_anchors': MERCURY_ANCHORS, 'h_rk4': h},
+                      'planets': PLANETS, 'element_digits': ELEMENT_DIGITS,
+                      'gr250_anchors': GR250,
+                      'mercury_anchors': MERCURY_ANCHORS, 'h_rk4': h,
+                      # [3] 的本底/容差是这 4 档网格的函数，引用时必须一起报出
+                      'rk4_grids': [H_COARSE, h, h / 2.0, h / 4.0],
+                      'c_second_for_2nd_order': C_SECOND},
            'gr_per_century': gr_pc,
            'beta_calibrated': {'binet_m2': beta_binet, 'draft': beta_draft},
            'law_table': [{'planet': t[0], 'geo_binet': t[1], 'geo_draft': t[2],
                           'ratio': t[3], 'structural_a_ratio': t[4]} for t in law_tab],
-           'rk4': [{'label': t[0], 'numeric': t[1], 'closed': t[2], 'rel': t[3]}
+           'rk4': [{'label': t[0], 'numeric_h_over_4': t[1], 'closed_first_order': t[2],
+                    'abs_resid': t[3], 'rel_resid': t[4], 'd_h_to_h2': t[5],
+                    'd_h2_to_h4': t[6], 'floor_spread_4_grids': t[7], 'q_adjacent': t[8],
+                    'second_order_term_5pi_x2': t[9], 'tolerance': t[10],
+                    'second_order_measured': t[11], 'second_order_bar': t[12]}
                    for t in num_cases],
+           'beta_lambda_drift': [{'planet': k, 'binet_ratio': v[0], 'draft_ratio': v[1],
+                                  'max_rel_drift': v[2]} for k, v in inv_ratio.items()],
            'venus_gap_arcsec_century': venus_gap,
+           'earth_gap_arcsec_century': earth_gap,
            'mercury_anchor_spread': spread_mer,
            'power': {'venus': power_v, 'earth': power_e},
+           'error_bars': {'orbit_relative': {t[0]: t[1] for t in orbit_bars},
+                          'anchor_half_ulp': d_anchor,
+                          'gr_constant_relative': rel_const,
+                          'geo_term_abs': bar_geo,
+                          'geo_term_relative': rel_geo,
+                          'dominant_leg': legs[0],
+                          'gap_abs_venus': bar_v, 'gap_abs_earth': bar_e},
            'judgments': JUDGE}
     face = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         'spiral_c35_beta_universality_claims.json')
+    nonfinite = []
+    out = json_finite(out, nonfinite)
     with open(face, 'w', encoding='utf-8') as f:
-        json.dump(out, f, ensure_ascii=False, indent=2)
+        json.dump(out, f, ensure_ascii=False, indent=2, allow_nan=False)
     print('\n已写出 %s（版面钉在脚本旁边，可从文件名找回产生者）' % face)
+    print('版面严格性：非有限浮点 %d 个已写成 null（`NaN` 字面量会让 jq / JSON.parse '
+          '打不开整份版面）' % len(nonfinite))
     return 1 if (strict and nfail) else 0
 
 

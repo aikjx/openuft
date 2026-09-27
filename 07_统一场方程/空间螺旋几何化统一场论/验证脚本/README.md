@@ -11,7 +11,7 @@
 | 项 | 要求 |
 |----|------|
 | Python | **3.8+**（实测 CPython 3.8 / 3.11 均可） |
-| 第三方库 | **无**。仅 `math / csv / os / re / sys / importlib` 标准库 |
+| 第三方库 | **无**。仅 `math / csv / json / os / re / sys / subprocess / tempfile / importlib` 标准库 |
 | 操作系统 | 与平台无关（脚本内已做 GBK 控制台 `errors="replace"` 保护） |
 | 网络 | 不需要 |
 
@@ -30,6 +30,12 @@
 | `run_all_checks.sh` | bash 包装（Linux/macOS/Git Bash） |
 | `patch_feasibility.py` | **矛盾修补方案可行性验算**（10 条），配套 [`01A_附录_体系不自洽点专项复盘.md`](../01A_附录_体系不自洽点专项复盘.md) |
 | `rerun_source_scripts.py` | **来源脚本复跑与「自陈 PASS」核验**：复跑归档里的 11 个原文脚本 + 静态扫描失败通路 + α/G 变异探针 + 归档产物比对（2026-09-26 新增） |
+| `spiral_c25_alpha_n_scan.py` | **C25 追加：高阶本征能级 α_n 高精度扫描 + 误差棒**（11 条判据）。离散波数 `(2/h²)(1−cos(2πn/N))` 对连续 `(2πn/L)²` 的偏置、Richardson 自身误差 (2/15)x²、1% 精度所需 `N ≥ 5.663e12`、以及"信号越弱实测列越不可信"的稀释比。**不改变 `claims.csv` 里 C25 的 status** |
+| `spiral_c25_scan_teeth.py` | 上者的**牙齿检验**（变异驱动器）：11 个变异体（8 个种缺陷要求按点名判据变红 + 3 个预期全绿的阳性对照）。规矩：未变异基线无判决行或 rc≠0 ⇒ 整轮 INVALID(2) |
+| `spiral_c35_beta_universality.py` | **C35 追加：水星标定 → 金星/地球交叉验证，检验 β 普适性**（13 条 PASS + 3 条 OPEN/BOUNDARY/INFO）。三条硬结论：①跨行星比值里 β 精确约掉 ⇒ 可检验内核是 a 的**幂次**（SHAPE）而非 β 的数值；②仓库里金星 8.62 / 地球 3.84 **是预言的取整、不是观测残差**；③两式之差 0.00229/0.00097 角秒每百年在水星锚点极差 0.13 之下 ⇒ 判决力 1/56.7、1/133.5，本仪器**测不出**幂次之争。**不改变 `claims.csv` 里 C35 的 status** |
+| `spiral_c35_beta_teeth.py` | 上者的**牙齿检验**（变异驱动器）：19 个变异体（15 个种缺陷 + 4 个阳性对照），并要求基线里每条 PASS 判据都被点名（覆盖率 13/13 才算收口） |
+| `spiral_c25_alpha_n_scan_claims.json` | C25 扫描的**版面**（运行产物，非手写）：钉在产生者脚本旁边，可从文件名找回是谁写的 |
+| `spiral_c35_beta_universality_claims.json` | C35 交叉验证的**版面**（运行产物，非手写） |
 | `audit_report.md` | **一键校验审计报告**（运行产物，非手写） |
 | `patch_feasibility_report.md` | **修补可行性报告**（运行产物，非手写） |
 | `source_scripts_rerun_report.md` | **来源脚本复跑报告**（运行产物，非手写） |
@@ -49,9 +55,24 @@ bash run_all_checks.sh              # bash 环境等价入口
 
 python rerun_source_scripts.py      # 复跑来源脚本 → source_scripts_rerun_report.md
 python rerun_source_scripts.py --timeout 900   # 放宽单脚本超时
+
+python spiral_c25_alpha_n_scan.py --strict --nmax 40   # C25 能级扫描（11 条判据）
+python spiral_c25_scan_teeth.py                        # C25 的牙齿检验
+python spiral_c35_beta_universality.py --strict        # C35 交叉验证（16 条判定）
+python spiral_c35_beta_teeth.py                        # C35 的牙齿检验（19 个变异体）
 ```
 
 退出码恒为 0：**审计脚本不因发现矛盾而失败**，矛盾体现在报告判定里。
+
+> **C25 / C35 这两台是例外，且是有意为之**：它们默认仍返回 0（守住本目录约定），
+> 但加 `--strict` 后任何内部判据 FAIL 就把退出码打到 1。原因是这两台的判据多为
+> **容差型**（"残差 ≤ 推导出的容差"），容差型判据有两种假绿——容差写大了什么都放过、
+> 或者根本没接在被测函数上；只有能非零退出的变异驱动器才逼得出"这条判据真的会红"。
+> 驱动器把变异体写在临时目录，**不改归档**，版面 JSON 也只落在临时目录。
+>
+> **版面（`*_claims.json`）为什么钉在脚本旁边而不是集中到 `数据/`**：引用真正携带的是
+> "这组数挂在哪份文件上"。同名文件放在产生者脚本旁边 ⇒ 从文件名就能找回是谁写的；
+> 集中存放会把这层 attachment 丢掉。（该规则来自 23o/23q 那一串"引用挂错版面"的教训。）
 
 > `rerun_source_scripts.py` 需要被复跑的脚本自身依赖（`mpmath` / `sympy` / `numpy` + `matplotlib`）；
 > 其余脚本只用标准库。它把变异体写在临时目录，**不改归档**。

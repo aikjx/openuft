@@ -172,6 +172,23 @@ def n_for_bias(tol, n):
     return x, (math.pi * n / x if x > 0 else float('inf'))
 
 
+def json_finite(o, bag):
+    """版面必须是**严格** JSON：`NaN` / `Infinity` 是 Python 的扩展，
+    jq 与 JS 的 `JSON.parse` 会因为它们打不开整份文件。非有限浮点一律写成 null，
+    并把原值记进 bag（不静默消失——null 也要能被追问是谁写的）。
+    """
+    if isinstance(o, float):
+        if math.isfinite(o):
+            return o
+        bag.append(o)
+        return None
+    if isinstance(o, dict):
+        return dict((k, json_finite(v, bag)) for k, v in o.items())
+    if isinstance(o, (list, tuple)):
+        return [json_finite(v, bag) for v in o]
+    return o
+
+
 def main(argv):
     strict = '--strict' in argv
     nmax = 40
@@ -230,7 +247,9 @@ def main(argv):
         dE = KIN * k_cont(n)                       # 连续谱上第 n 条与基态之差（可分辨量）
         est, d_meas, d_meas2 = richardson(n, Nref)
         d_ana = kinetic_bias(n, Nref)
-        ratio = (d_meas / d_meas2) if d_meas2 else float('nan')
+        # n=0 时 d_meas 与 d_meas2 都是零 ⇒ 阶比 0/0 无定义。版面写 null 而不是 NaN：
+        # `NaN` 是 Python 的 JSON 扩展，jq / JS 的 JSON.parse 读不了整份文件。
+        ratio = (d_meas / d_meas2) if d_meas2 else None
         aliased = n > Nref // 2
         note = '已越过 Nyquist（混叠区，非新能级）' if aliased else ''
         rows.append({'n': n, 'dE_cont_J': dE, 'd_kin_measured': d_meas,
@@ -361,10 +380,14 @@ def main(argv):
            "scan_rows": rows}
     face = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         'spiral_c25_alpha_n_scan_claims.json')
+    nonfinite = []
+    out = json_finite(out, nonfinite)
     with open(face, 'w', encoding='utf-8') as f:
-        json.dump(out, f, ensure_ascii=False, indent=2)
+        json.dump(out, f, ensure_ascii=False, indent=2, allow_nan=False)
     print('\n已写出 %s（**钉在脚本自己旁边**，不像 B 段那样落在 CWD：'
           '一份可被引用的版面必须能从文件名找回它）' % face)
+    print('版面严格性：非有限浮点 %d 个已写成 null（`NaN` 字面量会让 jq / JSON.parse '
+          '打不开整份版面）' % len(nonfinite))
     return 1 if (strict and nfail) else 0
 
 

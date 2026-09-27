@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-突破尝试：规格曲线钉死不可行性、自指近消去恒等与自然输入普查（定理 R）
+突破尝试：规格曲线钉死不可行性、自指近消去恒等与自然输入普查（定理 T）
 ============================================================================
 
 前情（`源码/突破_算子谱与量子化规格.py`，定理 F）：
@@ -16,14 +16,14 @@
          **α² = P/(2Q−P) = (A+c/2) / (1/2 + c/2 − A)**.
      旧式仅在 A→−c/2 的近消去极限下与精确解同阶（差 O(α²)）。
 
-  2. 【定理 R1 · 自指近消去恒等（精确代数恒等，非数值巧合）】
+  2. 【定理 T1 · 自指近消去恒等（精确代数恒等，非数值巧合）】
      规格方程等价于 **|P/Q| = 2α²/(1+α²)**，与 c 无关。
      即：**要求机制实现的近消去比例，恒等于"待预言的量 α²"的两倍**。
      在 c=−1 处，把 α 钉到 α_obs 所需的 A 相对精度 ≡ α²/(1+α²)（精确）。
      ⇒ "需要供给的精度" 恒等于 "待预言的量"（O(α²) 级）。这是一个**循环性**：
        要钉住 α，机制必须已经知道 α。
 
-  3. 【定理 R2 · 钉死不可行性，两路穷尽】
+  3. 【定理 T2 · 钉死不可行性，两路穷尽】
      (a) 离散拓扑输入（n,φ,N,c 由拓扑/量子化给有限离散数据）⇒ α 为代数数（Pell 型），
          全枚举确认 1/α_obs=137.036 不达（最近 1/α=137.0515，偏 1.13e-4 ≈ 7× 观测精度
          1.6e-5）⇒ 离散路被观测**可证伪否定**。
@@ -151,7 +151,7 @@ errata_near = {
 }
 
 # ===========================================================================
-# 二、定理 R1：自指近消去恒等（精确）
+# 二、定理 T1：自指近消去恒等（精确）
 # ===========================================================================
 # 规格方程 ⟺ P = 2Q·α²/(1+α²) ⟺ |P/Q| = 2α²/(1+α²)（与 c 无关）
 cancel_ratio = 2 * ALPHA_SQ / (1 + ALPHA_SQ)
@@ -166,8 +166,8 @@ A_natural = mpf("0.5") + c_demo / 2 * 0          # "自然"值 A = -c/2 = 0.5（
 rel_prec_required = abs(A_natural - A_req) / abs(A_natural)
 identity_check = rel_prec_required - ALPHA_SQ / (1 + ALPHA_SQ)   # 期望 = 0
 
-theorem_R1 = {
-    "name": "定理 R1（自指近消去恒等）",
+theorem_T1 = {
+    "name": "定理 T1（自指近消去恒等）",
     "statement": (
         "规格方程 ⟺ |P/Q| = 2α²/(1+α²)（与 c 无关）。"
         "即：机制必须实现的近消去比例，恒等于待预测量 α² 的两倍。"
@@ -184,7 +184,7 @@ theorem_R1 = {
 }
 
 # ===========================================================================
-# 三、定理 R2(a)：离散拓扑输入 —— 可证伪否定（含 φ 推广）
+# 三、定理 T2(a)：离散拓扑输入 —— 可证伪否定（含 φ 推广）
 # ===========================================================================
 import math
 
@@ -227,43 +227,68 @@ for cfr in CVAL_DISC:
                     "n": n, "N": N, "A": Av, "alpha_inv": 1.0 / a,
                 })
 
-disc_records.sort(key=lambda r: abs(r["alpha_inv"] - float(AINV)))
+for _r in disc_records:
+    _r["rel"] = abs(_r["alpha_inv"] - float(AINV)) / float(AINV)
+disc_records.sort(key=lambda r: r["rel"])
 disc_best = disc_records[0] if disc_records else None
 disc_below = [r for r in disc_records if r["alpha_inv"] <= float(AINV)]
 disc_above = [r for r in disc_records if r["alpha_inv"] >= float(AINV)]
 disc_lo = max(disc_below, key=lambda r: r["alpha_inv"]) if disc_below else None
 disc_hi = min(disc_above, key=lambda r: r["alpha_inv"]) if disc_above else None
 
-# 严格口径：只用"小绕数自然区间"（N ≤ 200）判定
-disc_small = [r for r in disc_records if r["N"] <= 200]
-disc_small_best = (min(disc_small, key=lambda r: abs(r["alpha_inv"] - float(AINV)))
-                   if disc_small else None)
+best_rel = disc_best["rel"] if disc_best else None
 
-if disc_best is not None:
-    best_rel = abs(disc_best["alpha_inv"] - float(AINV)) / float(AINV)
-else:
-    best_rel = None
+# --- 密度检验（关键诚实步骤）：命中数随枚举规模增长 ⇒ 大 N 命中＝丢番图逼近，无信息量 ---
+density_by_Ncap = []
+for Ncap in (100, 300, 600, 1200, 2400, 4000):
+    sub = [r for r in disc_records if r["N"] <= Ncap]
+    hits = [r for r in sub if r["rel"] < float(OBS_TOL_STRICT)]
+    density_by_Ncap.append({
+        "N_cap": Ncap,
+        "candidates_near_target": len(sub),
+        "hits_within_obs_tol": len(hits),
+        "best_rel": min((r["rel"] for r in sub), default=None),
+    })
 
-theorem_R2a = {
-    "name": "定理 R2(a)（离散拓扑输入：可证伪否定）",
+# --- 固定 c（拓扑固定）下的自然稀疏区（N ≤ 300）最佳 ---
+fixed_c_smallN = []
+for cfr in CVAL_DISC:
+    sub = [r for r in disc_records
+           if r["c"] == [cfr.numerator, cfr.denominator] and r["N"] <= 300]
+    if not sub:
+        continue
+    b = min(sub, key=lambda r: r["rel"])
+    fixed_c_smallN.append({"c": [cfr.numerator, cfr.denominator],
+                           "best_alpha_inv": b["alpha_inv"], "best_rel": b["rel"], "N": b["N"]})
+
+small_nat_best_rel = min((r["best_rel"] for r in fixed_c_smallN), default=None)
+
+theorem_T2a = {
+    "name": "定理 T2(a)（离散拓扑输入：稠密性 ⇒ 大 N 命中无信息量）",
     "enum_scope": "c ∈ {−1,−3/2,−2,−5/2,−3,−4,−5}; φ ∈ {0,1/2,1/3,2/3,1/4,3/4,1/5}; N ≤ %d" % NMAX,
     "best": disc_best,
     "best_relative_deviation": best_rel,
     "observational_tol": float(OBS_TOL_STRICT),
-    "miss_factor": (best_rel / float(OBS_TOL_STRICT)) if best_rel is not None else None,
-    "bracket": {"below": disc_lo, "above": disc_hi},
-    "small_N_best": disc_small_best,
+    "density_by_Ncap": density_by_Ncap,
+    "fixed_c_smallN_best": fixed_c_smallN,
+    "natural_region_best_rel": small_nat_best_rel,
+    "natural_region_miss_factor": (small_nat_best_rel / float(OBS_TOL_STRICT)
+                                   if small_nat_best_rel is not None else None),
     "verdict": (
-        "1/α_obs=137.036 在全枚举内不达；最近解偏离 %.2e ≈ %.1f× 观测精度 1.6e-5"
-        "⇒ 离散路被观测可证伪否定（大 N 逼近属丢番图逼近，非预言）"
-    ) % (best_rel, (best_rel / float(OBS_TOL_STRICT))) if best_rel is not None else "无记录",
+        "离散可达集随 N 增大而**稠密**（丢番图逼近）：N≤4000 已出现偏差 %.2e（%.1f× 观测精度）的命中，"
+        "该命中**无信息量**（可由任意目标复现，属定理 F 来源③/V₃ numerology）。"
+        "可证伪内容只在自然稀疏区（固定 c、N≤300）：最佳偏差 %.2e ≈ %.1f× 观测精度，无命中。"
+        "⇒ 离散路或退化为丢番图逼近（大 N），或须由外部**固定 c**（定理 F 输入壁垒）。"
+    ) % (best_rel, best_rel / float(OBS_TOL_STRICT),
+         small_nat_best_rel, small_nat_best_rel / float(OBS_TOL_STRICT))
+    if (best_rel is not None and small_nat_best_rel is not None) else "无记录",
 }
 
 # ===========================================================================
-# 四、定理 R2(b)：近消去归约（无标度）
+# 四、定理 T2(b)：近消去归约（无标度）
 # ===========================================================================
-theorem_R2b = {
-    "name": "定理 R2(b)（近消去归约：无标度壁垒适用）",
+theorem_T2b = {
+    "name": "定理 T2(b)（近消去归约：无标度壁垒适用）",
     "statement": (
         "规格方程只依赖比值 P/Q（c=-1 时 Q=-1/4 固定，故只需 P 的绝对值）。"
         "P→0⁻ 的近消去等价于\"小正质量平方/近临界\"精细调节（层级问题同型）。"
@@ -327,55 +352,68 @@ cand_best = cand_records[0] if cand_records else None
 cand_smallN = [r for r in cand_records if r["N"] <= 300]
 cand_smallN_best = min(cand_smallN, key=lambda r: r["rel_dev"]) if cand_smallN else None
 
+cand_density = []
+for Ncap in (100, 300, 600, 1200, 2400, 6000):
+    sub = [r for r in cand_records if r["N"] <= Ncap]
+    cand_density.append({
+        "N_cap": Ncap,
+        "hits_within_obs_tol": sum(1 for r in sub if r["rel_dev"] < float(OBS_TOL_STRICT)),
+        "best_rel": min((r["rel_dev"] for r in sub), default=None),
+    })
+
 natural_search = {
     "name": "突破候选普查（无调参自然组合）",
     "scope": "c 分母≤5、φ 分母≤10、N ≤ %d 的 (c, φ, n, N) 组合" % NCAND,
     "hits_within_obs_tol": len(cand_hits),
+    "density_by_Ncap": cand_density,
     "best_overall": cand_best,
     "best_small_N": cand_smallN_best,
     "obs_tol": float(OBS_TOL_STRICT),
     "verdict": (
-        "命中观测精度 1.6e-5 的自然组合数 = %d；最佳整体偏差 %.2e（N=%s）"
-        "⇒ 无调参自然命中（大 N 逼近属丢番图逼近）"
+        "命中观测精度 1.6e-5 的组合数 = %d，但其 N 均很大（最佳 N=%s）；"
+        "小绕数区（N≤300）最佳偏差 %.2e ≈ %.1f× 观测精度，无命中。"
+        "⇒ 命中由枚举稠密度驱动（丢番图逼近），非自然预言。"
     ) % (len(cand_hits),
-         cand_best["rel_dev"] if cand_best else float("nan"),
-         cand_best["N"] if cand_best else "-"),
+         cand_best["N"] if cand_best else "-",
+         cand_smallN_best["rel_dev"] if cand_smallN_best else float("nan"),
+         (cand_smallN_best["rel_dev"] / float(OBS_TOL_STRICT)) if cand_smallN_best else float("nan")),
 }
 
 # ===========================================================================
 # 六、汇总与产出
 # ===========================================================================
-theorem_R = {
-    "name": "定理 R（规格曲线钉死不可行性与自指近消去恒等）",
+theorem_T = {
+    "name": "定理 T（规格曲线钉死不可行性与自指近消去恒等）",
     "engine": "突破_规格曲线钉死与自指近消去.py（sympy 符号 + mpmath dps=50）",
     "exact_specification": str(alpha_sq_exact),
     "errata": (
         "旧文档 α²=|A+c/2|/|c+1/2| 非精确解；精确解 α²=P/(2Q−P)，"
         "旧式仅在近消去极限同阶（差 O(α²)）"
     ),
-    "R1": theorem_R1,
-    "R2a": theorem_R2a,
-    "R2b": theorem_R2b,
+    "T1": theorem_T1,
+    "T2a": theorem_T2a,
+    "T2b": theorem_T2b,
     "route_ledger": [
         ["量纲代数（锚集零空间）", "不可行", "定理 C"],
         ["几何作用量（旋钮零空间）", "不可行（无内点极小）", "定理 H"],
         ["算子谱+量子化（可固定 α）", "可行但需近消去", "定理 F"],
-        ["规格曲线钉死（本轮）", "不可由本公设闭合（离散被证伪/连续为输入）", "定理 R"],
+        ["规格曲线钉死（本轮）", "不可由本公设闭合（离散稠密/连续为输入/近消去自指）", "定理 T"],
     ],
     "honest_boundary": [
-        "定理 R1 是精确代数恒等（|P/Q|=2α²/(1+α²)），非数值巧合。",
-        "定理 R2(a) 的可证伪否定限于已枚举的 (c,φ,N) 网格与 N≤%d；更大 N 属丢番图逼近，不作预言。" % NCAND,
-        "定理 R2(b) 引用的定理 E/N 出自 openuft 既有体系（本书第十二/十四编），本轮只做对接，不重证。",
+        "定理 T1 是精确代数恒等（|P/Q|=2α²/(1+α²)），非数值巧合；所需精度恒等于待预测量 α²。",
+        "定理 T2(a) 的关键是**稠密性**：离散可达集随 N 增大而稠密，大 N \"命中\"无信息量（numerology）；"
+        "自然稀疏区（固定 c、N≤300）内无命中。此结论**修正**既有文档过强的\"可证伪否定\"表述。",
+        "定理 T2(b) 引用的定理 E/N 出自 openuft 既有体系（本书第十二/十四编），本轮只做对接，不重证。",
         "本引擎不解锁 UFT-3、不宣称推出 α；它把\"什么钉住 (A,c)\"判为不可由本公设闭合。",
     ],
     "next_real_question": (
         "剩余唯一出口：一条**既非齐次、又带独立无量纲锚**的耦合约束。"
-        "在本框架内已穷尽（定理 E/F/N + 本轮 R）；须引入强于世界线几何的新动力学公设。"
+        "在本框架内已穷尽（定理 E/F/N + 本轮 T）；须引入强于世界线几何的新动力学公设。"
     ),
 }
 
 report = {
-    "module": "突破_规格曲线钉死与自指近消去（定理 R）",
+    "module": "突破_规格曲线钉死与自指近消去（定理 T）",
     "alpha_obs": float(ALPHA),
     "alpha_obs_inv": float(AINV),
     "alpha_sq_obs": float(ALPHA_SQ),
@@ -384,7 +422,7 @@ report = {
     "sympy_alpha_sq_exact": str(alpha_sq_exact),
     "errata_checks": errata_checks,
     "errata_near_cancellation": errata_near,
-    "theorem_R": theorem_R,
+    "theorem_T": theorem_T,
     "natural_search": natural_search,
     "natural_search_top10": cand_records[:10],
     "discrete_top10": disc_records[:10],
@@ -395,7 +433,7 @@ with io.open(os.path.join(DATA, "突破_规格曲线钉死与自指近消去.jso
 
 # ---------------- Markdown ----------------
 L = []
-L.append("# 突破：规格曲线钉死不可行性、自指近消去恒等与自然输入普查（定理 R）\n")
+L.append("# 突破：规格曲线钉死不可行性、自指近消去恒等与自然输入普查（定理 T）\n")
 L.append("**引擎**：`源码/突破_规格曲线钉死与自指近消去.py`（可复跑，sympy + mpmath dps=50）\n")
 L.append("> 承接 `突破_算子谱与量子化规格.py`（定理 F）末句提出的真问题：")
 L.append("> **「什么把 (A,c) 钉在规格曲线上？」** 本轮正面攻之。\n")
@@ -414,7 +452,7 @@ for r in errata_checks:
 L.append("")
 L.append("> 近消去极限处（$A=%.9f$，$c=-1$）旧式与精确式同阶（都 $\\approx\\alpha^2$），故此前未被发现。\n"
          % errata_near["A"])
-L.append("## 二、定理 R1：自指近消去恒等（精确代数恒等）\n")
+L.append("## 二、定理 T1：自指近消去恒等（精确代数恒等）\n")
 L.append("规格方程两边同乘 $(2Q-P)$ 得 $P=2Q\\alpha^2/(1+\\alpha^2)$，即\n")
 L.append("$$\\boxed{\\ \\left|\\frac{P}{Q}\\right|=\\frac{2\\alpha^2}{1+\\alpha^2}\\ }\\qquad(\\text{与 }c\\text{ 无关})$$\n")
 L.append("- 要求机制实现的**近消去比例** $|P/Q|$ = **%.9f**；" % float(cancel_ratio))
@@ -423,21 +461,40 @@ L.append("  而 $\\alpha^2/(1+\\alpha^2)$ = **%.6e**，恒等残差 = **%.2e**�
          % (float(ALPHA_SQ / (1 + ALPHA_SQ)), float(abs(identity_check))))
 L.append("> **含义（循环性）**：\"需要供给的精度\" 恒等于 \"待预言的量\"（$O(\\alpha^2)$ 级）。")
 L.append("> 要钉住 α，机制必须**已经知道** α。这不是数值巧合，是代数恒等。\n")
-L.append("## 三、定理 R2(a)：离散拓扑输入 —— 可证伪否定\n")
+L.append("## 三、定理 T2(a)：离散拓扑输入 —— 稠密性 ⇒ 大 N 命中无信息量\n")
 L.append("枚举范围：$c\\in\\{-1,-3/2,-2,-5/2,-3,-4,-5\\}$、$\\varphi\\in\\{0,1/2,1/3,2/3,1/4,3/4,1/5\\}$、$N\\le%d$。\n" % NMAX)
 if disc_best is not None:
     L.append("| 量 | 值 |")
     L.append("| --- | --- |")
-    L.append("| 距离最近解 $(c,\\varphi,n,N)$ | (%s, %s, %d, %d) |" % (
+    L.append("| 全集最近解 $(c,\\varphi,n,N)$ | (%s, %s, %d, %d) |" % (
         "%d/%d" % tuple(disc_best["c"]), "%d/%d" % tuple(disc_best["phi"]),
         disc_best["n"], disc_best["N"]))
     L.append("| 预言 $1/\\alpha$ | **%.4f** |" % disc_best["alpha_inv"])
-    L.append("| 相对偏差 | **%.3e** |" % best_rel)
-    L.append("| 观测精度 1.6e-5 | 偏差为其 **%.1f 倍** |" % (best_rel / float(OBS_TOL_STRICT)))
+    L.append("| 相对偏差 | **%.3e**（%.1f× 观测精度） |" % (
+        best_rel, best_rel / float(OBS_TOL_STRICT)))
     L.append("")
-L.append("> ⇒ 全枚举内 $1/\\alpha_{\\rm obs}=137.036$ **不达**；离散路被观测**可证伪否定**")
-L.append("> （更大 $N$ 的逼近属丢番图逼近，非预言）。\n")
-L.append("## 四、定理 R2(b)：近消去归约（无标度壁垒适用）\n")
+L.append("**密度检验（关键）**——命中数随枚举上限增长：\n")
+L.append("| $N$ 上限 | 近靶候选数 | 命中数（偏差<1.6e-5） | 最佳偏差 |")
+L.append("| --- | --- | --- | --- |")
+for d in density_by_Ncap:
+    L.append("| %d | %d | %d | %s |" % (
+        d["N_cap"], d["candidates_near_target"], d["hits_within_obs_tol"],
+        ("%.2e" % d["best_rel"]) if d["best_rel"] is not None else "—"))
+L.append("")
+L.append("| 固定 $c$、自然稀疏区（$N\\le300$） | 最佳 $1/\\alpha$ | 偏差 |")
+L.append("| --- | --- | --- |")
+for r in fixed_c_smallN:
+    L.append("| $c$=%d/%d | %.4f | %.2e |" % (
+        r["c"][0], r["c"][1], r["best_alpha_inv"], r["best_rel"]))
+L.append("")
+L.append("> **诚实结论**：离散可达集随 $N$ 增大而**稠密**（丢番图逼近）——$N\\le4000$ 已出现偏差 $%.2e$（$%.1f\\times$ 观测精度）的\"命中\"，"
+         "但该命中**无信息量**（任意目标都可由足够大的 $N$ 命中，属定理 F 来源③ / $V_3$ 判 numerology）。" % (
+             best_rel, best_rel / float(OBS_TOL_STRICT)))
+L.append("> 可证伪内容只在自然稀疏区：**固定 $c$、$N\\le300$** 时最佳偏差 $%.2e\\approx%.1f\\times$ 观测精度，**无命中**。"
+         % (small_nat_best_rel, small_nat_best_rel / float(OBS_TOL_STRICT)))
+L.append("> ⇒ 离散路：**或退化为丢番图逼近（大 $N$，无预测力），或须由外部固定 $c$（定理 F 输入壁垒）**。")
+L.append("> （此结论**修正**了既有文档\"137.036 不落任何一支上 ⇒ 可证伪否定\"的过强表述——该\"否定\"只在 $c=-1,\\varphi=0$ 的受限集成立，扩集即稠密。）\n")
+L.append("## 四、定理 T2(b)：近消去归约（无标度壁垒适用）\n")
 L.append("规格方程只依赖比值 $P/Q$（$c=-1$ 时 $Q=-1/4$ 固定 ⇒ 只需 $P$ 的绝对值）。")
 L.append("$P\\to0^-$ 的近消去等价于**小正质量平方 / 近临界**精细调节（与层级问题同型）。")
 L.append("定理 E（齐次结构定不了绝对标度）+ 定理 N（纯相位 $Z$ ⇒ $\\beta\\equiv0$，无 RG 环）")
@@ -446,53 +503,64 @@ L.append("## 五、突破候选普查（无调参自然组合）\n")
 L.append("枚举 $c$ 分母 $\\le5$、$\\varphi$ 分母 $\\le10$、$N\\le%d$ 的全部组合。\n" % NCAND)
 L.append("| 量 | 值 |")
 L.append("| --- | --- |")
-L.append("| 命中观测精度 $1.6\\times10^{-5}$ 的组合数 | **%d** |" % len(cand_hits))
+L.append("| 命中观测精度 $1.6\\times10^{-5}$ 的组合数 | **%d**（$N$ 均很大） |" % len(cand_hits))
 if cand_best is not None:
     L.append("| 最佳整体 $1/\\alpha$ | %.4f（$c$=%d/%d, $\\varphi$=%d/%d, $n$=%d, $N$=%d）偏差 %.2e |" % (
         cand_best["alpha_inv"], cand_best["c"][0], cand_best["c"][1],
         cand_best["phi"][0], cand_best["phi"][1], cand_best["n"], cand_best["N"],
         cand_best["rel_dev"]))
 if cand_smallN_best is not None:
-    L.append("| 小绕数最佳（$N\\le300$） | %.4f（偏差 %.2e，$N$=%d） |" % (
-        cand_smallN_best["alpha_inv"], cand_smallN_best["rel_dev"], cand_smallN_best["N"]))
+    L.append("| 小绕数最佳（$N\\le300$） | %.4f（偏差 %.2e ≈ %.1f× 观测精度，$N$=%d） |" % (
+        cand_smallN_best["alpha_inv"], cand_smallN_best["rel_dev"],
+        cand_smallN_best["rel_dev"] / float(OBS_TOL_STRICT), cand_smallN_best["N"]))
 L.append("")
-L.append("> ⇒ **无调参自然命中**；所有接近解都在大 $N$（丢番图逼近）或需把 $(A,c)$ 调到规格曲线上。\n")
-L.append("## 六、定理 R 与路线总账\n")
+L.append("| $N$ 上限 | 命中数 | 最佳偏差 |")
+L.append("| --- | --- | --- |")
+for d in cand_density:
+    L.append("| %d | %d | %s |" % (
+        d["N_cap"], d["hits_within_obs_tol"],
+        ("%.2e" % d["best_rel"]) if d["best_rel"] is not None else "—"))
+L.append("")
+L.append("> ⇒ **命中由枚举稠密度驱动**（丢番图逼近）：小绕数自然区无命中，全部\"命中\"都在大 $N$。")
+L.append("> 即在无外部机制固定 $(A,c)$ 时，离散路**不产生预言**。\n")
+L.append("## 六、定理 T 与路线总账\n")
 L.append("| 路线 | 结论 | 封死者 |")
 L.append("| --- | --- | --- |")
-for row in theorem_R["route_ledger"]:
+for row in theorem_T["route_ledger"]:
     L.append("| %s | %s | %s |" % (row[0], row[1], row[2]))
 L.append("")
 L.append("**诚实边界（不美化）**：")
-for b in theorem_R["honest_boundary"]:
+for b in theorem_T["honest_boundary"]:
     L.append("- %s" % b)
 L.append("")
-L.append("> **下一个真问题**：%s" % theorem_R["next_real_question"])
+L.append("> **下一个真问题**：%s" % theorem_T["next_real_question"])
 L.append("")
 L.append("> **诚实立场**：本轮**没有**实现统一场论、**没有**解锁 UFT-3（联盟层仍 2/6）。")
-L.append("> 它把\"什么钉住 (A,c)\"从**未试出**升级为**已证不可由本公设闭合**：")
-L.append("> 离散输入被观测证伪，连续输入落到定理 F 输入壁垒，近消去本身是 $2\\alpha^2$ 级的自指循环。")
+L.append("> 它把\"什么钉住 (A,c)\"从**未试出**收窄为**不可由本公设闭合**：")
+L.append("> 离散输入退化为丢番图逼近（大 N 稠密、无预测力）或须外部固定 $c$（定理 F 输入壁垒）；")
+L.append("> 连续输入落到定理 F 输入壁垒；近消去本身是 $2\\alpha^2$ 级的**自指循环**（定理 T1 精确恒等）。")
 
 with io.open(os.path.join(DATA, "突破_规格曲线钉死与自指近消去.md"), "w", encoding="utf-8") as f:
     f.write("\n".join(L))
 
 # ---------------- 控制台 ----------------
-print("=== 定理 R：规格曲线钉死与自指近消去 ===")
+print("=== 定理 T：规格曲线钉死与自指近消去 ===")
 print("  [符号] u* = 2Q/P ; e''(u*) = -P^4/(8Q^3) ; 精确规格 alpha^2 = P/(2Q-P)")
 print("  [勘误] c=-2,A=0: 精确 alpha^2 = %s vs 旧式 %s (相对差 %s)" % (
     fmt(errata_checks[0]["alpha_sq_exact"], 8),
     fmt(errata_checks[0]["alpha_sq_doc_form"], 8),
     "%.3e" % errata_checks[0]["rel_diff"]))
-print("  [R1] |P/Q| = 2alpha^2/(1+alpha^2) = %s (c-independent)" % fmt(cancel_ratio, 8))
+print("  [T1] |P/Q| = 2alpha^2/(1+alpha^2) = %s (c-independent)" % fmt(cancel_ratio, 8))
 print("       所需 A 相对精度 = %s ; alpha^2/(1+alpha^2) = %s ; 残差 = %.2e" % (
     fmt(rel_prec_required, 8), fmt(ALPHA_SQ / (1 + ALPHA_SQ), 8), float(abs(identity_check))))
 if disc_best is not None:
-    print("  [R2a] 离散最佳 1/alpha = %.4f (偏差 %.2e = %.1fx 观测精度)" % (
+    print("  [T2a] 全集最近 1/alpha = %.4f (偏差 %.2e = %.1fx 观测精度) —— 大 N 稠密，无信息量" % (
         disc_best["alpha_inv"], best_rel, best_rel / float(OBS_TOL_STRICT)))
-print("  [R2b] 近消去 = 小正质量平方精细调节 ; 定理 E/N ⇒ 框架内无生成机制")
-print("  [普查] 命中观测精度组合数 = %d ; 最佳整体偏差 = %s (N=%s)" % (
+    print("        自然稀疏区(固定c,N<=300)最佳偏差 = %.2e = %.1fx 观测精度(无命中)" % (
+        small_nat_best_rel, small_nat_best_rel / float(OBS_TOL_STRICT)))
+print("  [T2b] 近消去 = 小正质量平方精细调节 ; 定理 E/N ⇒ 框架内无生成机制")
+print("  [普查] 命中观测精度组合数 = %d (N 均很大) ; 小绕数(N<=300)最佳偏差 = %s" % (
     len(cand_hits),
-    "%.2e" % cand_best["rel_dev"] if cand_best else "n/a",
-    cand_best["N"] if cand_best else "-"))
-print("定理 R：规格钉死不可由本公设闭合（离散被证伪 / 连续为输入 / 近消去为 2alpha^2 自指循环）")
+    ("%.2e" % cand_smallN_best["rel_dev"]) if cand_smallN_best else "n/a"))
+print("定理 T：规格钉死不可由本公设闭合（离散稠密/连续为输入/近消去为 2alpha^2 自指循环）")
 print("done: see 数据/突破_规格曲线钉死与自指近消去.md")

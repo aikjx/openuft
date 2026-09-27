@@ -1,0 +1,186 @@
+{
+  "canonical": {
+    "total": 10,
+    "PASS": 7,
+    "FAIL": 1,
+    "OPEN": 1,
+    "BOUNDARY": 1,
+    "mode_distribution": {
+      "求导证明": 7,
+      "体系对齐": 2,
+      "精算验证": 1
+    },
+    "kind_distribution": {
+      "计算型": 9,
+      "声明型": 1
+    }
+  },
+  "checks": [
+    {
+      "code": "AL-R19-1",
+      "name": "★ R19：时变记账直接推导——R9 遗留的「时变项指标约定」未声明（F14）",
+      "status": "PASS",
+      "detail": "由 F=dA（含度规）取 E_i := c·F_{0i}（**不经 E 映射**，避开 R15 指出的同义反复）：E_i=−kc∂_iτ^0−k∂_tτ^i。与 v2.1.1 §2.2 的 E=−k(c∇τ_t+∂_tτ) 逐分量比对：①∂_tτ 读作**上指标** τ^i（与 A^μ=kτ^μ 同位）⇒ 残差 ['0', '0', '0']（公式正确）；②统一读作**下指标** τ_i ⇒ 残差 ['2*k*Derivative(tau1(t, x, y, z), t)', '2*k*Derivative(tau2(t, x, y, z), t)', '2*k*Derivative(tau3(t, x, y, z), t)'] = ±2k∂_tτ_i ≠ 0（**时变项符号相反**）。⇒ F14 不是符号错误而是**约定未声明**（静态极限两种读法一致，故前两轮漏检，见 R19-9）；本册固定：A^μ=kτ^μ（全上指标），E=−kc∇τ^0−k∂_tτ^i，B=k∇×τ^μ，F^{0i}=k(∂_iτ^0+(1/c)∂_tτ^i)=−E_i/c",
+      "evidence": {
+        "E_from_F": [
+          "k*(-c*Derivative(tau0(t, x, y, z), x) + Derivative(tau1(t, x, y, z), t))",
+          "k*(-c*Derivative(tau0(t, x, y, z), y) + Derivative(tau2(t, x, y, z), t))",
+          "k*(-c*Derivative(tau0(t, x, y, z), z) + Derivative(tau3(t, x, y, z), t))"
+        ],
+        "residual_upper_reading": [
+          "0",
+          "0",
+          "0"
+        ],
+        "residual_lower_reading": [
+          "2*k*Derivative(tau1(t, x, y, z), t)",
+          "2*k*Derivative(tau2(t, x, y, z), t)",
+          "2*k*Derivative(tau3(t, x, y, z), t)"
+        ]
+      },
+      "mode": "求导证明",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-2",
+      "name": "R19：(E,B) ↔ F^{μν} ↔ τ 三向一致（含时变项）",
+      "status": "PASS",
+      "detail": "①B 与 F^{ij} 一致（B=k∇×τ^μ，F^{ij}=−ε^{ijk}B_k，逐分量检验 True）；②**双向重建**：τ→(E,B)→F^{μν} 与 τ→F^{μν} 逐分量相等（含 ∂_tτ）：True ⇒ 时变扇区记账自洽；注意 B 必须由**上指标** 3-矢量 τ^i 构造（用 τ_i 则整体反号，见 R19-5 的 Faraday 检验）",
+      "evidence": {
+        "B_equals_curl_upper": true,
+        "roundtrip_identity": true,
+        "B_tau": [
+          "k*(Derivative(tau2(t, x, y, z), z) - Derivative(tau3(t, x, y, z), y))",
+          "k*(-Derivative(tau1(t, x, y, z), z) + Derivative(tau3(t, x, y, z), x))",
+          "k*(Derivative(tau1(t, x, y, z), y) - Derivative(tau2(t, x, y, z), x))"
+        ]
+      },
+      "mode": "求导证明",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-3",
+      "name": "R19：洛伦兹不变量审计（I1=F_{μν}F^{μν}=2(B²−E²/c²)；I2=εF F ∝ E·B）",
+      "status": "PASS",
+      "detail": "sympy 符号：I1−2(B²−E²/c²) 残差 = 0；boost 下 I1′−I1 = 0（严格不变）；数值随机场（v/c=0.6，c=1）：I1 2.90191807→2.90191807、I2 6.82698151→6.82698151（差 <1e-12）⇒ I2 亦为洛伦兹不变量（∝E·B）｜(E,B)↔F 记账与洛伦兹结构相容",
+      "evidence": {
+        "I1_minus_standard": "0",
+        "I1_boost_diff": "0",
+        "I1_num": [
+          2.901918070048809,
+          2.9019180700488105
+        ],
+        "I2_num": [
+          6.82698150687466,
+          6.826981506874661
+        ]
+      },
+      "mode": "求导证明",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-4",
+      "name": "R19：E,B 的 boost 变换与标准变换式一致（映射洛伦兹协变的直接证据）",
+      "status": "PASS",
+      "detail": "由 F′=ΛFΛᵀ 提取（E′_i=−cF′^{0i}、B′_x=−F′^{23}…）与标准式（E′_∥=E_∥、E′_⊥=γ(E+v×B)_⊥、B′_⊥=γ(B−v×E/c²)_⊥）逐分量比对：与式 (+v) 一致 True、与式 (−v) 一致 False ⇒ 本次 Λ 对应标准式的速度**方向 +v**（两式互为 v↔−v 反演；差异只是 boost 方向约定，非结构错误）⇒ A^μ=kτ^μ 的记账与洛伦兹变换相容（R9 应收录而缺失的真检验）",
+      "evidence": {
+        "match_plus_v": true,
+        "match_minus_v": false,
+        "direction": "+v",
+        "Ep": [
+          "E_x",
+          "c*(-B_z*V + E_y)/sqrt(-V**2 + c**2)",
+          "c*(B_y*V + E_z)/sqrt(-V**2 + c**2)"
+        ],
+        "Bp": [
+          "B_x",
+          "(B_y*c**2 + E_z*V)/(c*sqrt(-V**2 + c**2))",
+          "(B_z*c**2 - E_y*V)/(c*sqrt(-V**2 + c**2))"
+        ]
+      },
+      "mode": "求导证明",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-5",
+      "name": "R19：齐次 Maxwell（Bianchi）自动成立——无需任何动力学",
+      "status": "PASS",
+      "detail": "对偶张量散度 ∂_μF̃^{μν}≡0（一般 τ 符号化简，四分量全 0：True）；投影 ∇·B=0（残差 0）、∂_tB+∇×E=0（三分量全 0：True）⇒ 齐次方程是 F=dA 的代数后果（Bianchi），**不含物理信息**；电磁扇区的物理内容全在非齐次源项（见 R19-6）——注意：∂_μF^{{μν}}=0 是**有源方程的真空形式**，不是恒等式（本册用对偶张量避免这一常见混淆）",
+      "evidence": {
+        "dual_divergence_zero": true,
+        "divB": "0",
+        "faraday_zero": true
+      },
+      "mode": "求导证明",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-6",
+      "name": "★ R19：非齐次 Maxwell 源项**不可由几何导出**（决定性判定）",
+      "status": "FAIL",
+      "detail": "①自由作用量 S=−¼∫F² 的 Euler–Lagrange：L 不显含 A_μ（规范不变）⇒ 方程只含 ∂L/∂(∂_μA_ν) 项；sympy 逐元验证 ∂L/∂G_{μν} = −F^{μν}（True）⇒ EL：∂_μF^{μν}=0（**无源**，且 ∂L/∂A_ν=0 无质量/源项），几何结构不含任何 J^ν；②「几何自源」J^ν=σ τ^ν 双重被排除：**不守恒**（∂_νJ^ν = σ·∂_ν τ^ν = Derivative(tau1(t, x, y, z), x) + Derivative(tau2(t, x, y, z), y) + Derivative(tau3(t, x, y, z), z) + Derivative(tau0(t, x, y, z), t)/c，一般 τ ≠0）且**非规范不变**（τ^ν→τ^ν+∂^νΛ ⇒ ∂^νΛ ≠ 0：True）；③δ(∂_μF^{μν})=0（F 规范不变）⇒ 方程 ∂_μF^{μν}=στ^ν 只在 σ=0 时协变 ⇒ **源项必须来自外部守恒电流（物质），不能由 κ–τ 几何/场自身产生**",
+      "evidence": {
+        "dLdG_equals_minus_Fup": true,
+        "div_selfsource": "Derivative(tau1(t, x, y, z), x) + Derivative(tau2(t, x, y, z), y) + Derivative(tau3(t, x, y, z), z) + Derivative(tau0(t, x, y, z), t)/c",
+        "gauge_violation": true
+      },
+      "mode": "求导证明",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-7",
+      "name": "R19：Proca 质量项破坏规范不变性 ⇒ 与 μ_EM=0/O16 一致（排除）",
+      "status": "PASS",
+      "detail": "δS_Proca = −∫m²A_μ∂^μΛ（A→A+∂Λ 一阶）= m**2*(-c*(A1(t, x, y, z)*Derivative(Lambda(t, x, y, z), x) + A2(t, x, y, z)*Derivative(Lambda(t, x, y, z), y) + A3(t, x, y, z)*Derivative(Lambda(t, x, y, z), z)) - A0(t, x, y, z)*Derivative(Lambda(t, x, y, z), t))/c ≠ 0（一般 A, Λ）⇒ 任何「有质量 τ^EM 场」路径都放弃规范不变性；电磁扇区被 O16/μ_EM=0 强制无质量 ⇒ Proca 自源路径被排除，与 R19-6 合流（唯一剩下的路是接受外部源）",
+      "evidence": {
+        "proca_gauge_violation": "m**2*(-c*(A1(t, x, y, z)*Derivative(Lambda(t, x, y, z), x) + A2(t, x, y, z)*Derivative(Lambda(t, x, y, z), y) + A3(t, x, y, z)*Derivative(Lambda(t, x, y, z), z)) - A0(t, x, y, z)*Derivative(Lambda(t, x, y, z), t))/c"
+      },
+      "mode": "求导证明",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-8",
+      "name": "R19：O17 收窄——τ^EM,μ 的最自然几何构造 τ_w u^μ 及自由度缺口",
+      "status": "OPEN",
+      "detail": "唯一自然的协变构造：τ^EM,μ ∝ τ_w·u^μ（世界线挠率 × 四速度「极化矢量」），τ_w 标量 × u^μ 四矢量 ⇒ 张量积自动是四矢量（协变性无需额外假设）；但**自由度计数** 4（τ_w：1；u^μ 在 u·u=1 下：3）≠ 无质量规范场物理自由度 2（横向 2）⇒ 要么 u^μ 为独立动力学场（多出 2 个自由度），要么该构造只是「沿一条世界线」的量、需全时空世界线族（纤维结构）才成为场。⇒ O17 由「无定义」收窄为「构造存在，自由度/纤维结构未闭合」；且该构造继承 R19-6 的无源性质（F=dA ⇒ 源仍需外部）",
+      "evidence": {
+        "dof_input": 4,
+        "dof_physical": 2,
+        "A_geo_forms": [
+          "tau_w*u0",
+          "tau_w*u1",
+          "tau_w*u2",
+          "tau_w*u3"
+        ]
+      },
+      "mode": "体系对齐",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-9",
+      "name": "R19：量纲审计 [k]=V·s（A=kτ ⇒ T·m）+ 静态回归到 v2.1.1",
+      "status": "PASS",
+      "detail": "量纲：[A]=T·m=V·s/m；[τ^EM]=m⁻¹ ⇒ [k]=[A]/[τ]=**V·s**（非无量纲；由 E=kc∇τ 的 [E]=V/m 独立复核）⇒ R9「k 含量纲」声明得到定量确认；静态回归：∂_tτ=0 时 E=−kc∇τ^0（逐分量检验 True）、B=k∇×τ^μ，与 v2.1.1 §2.3 完全一致 ⇒ 本册时变修正**不影响**已验证的静态仿真",
+      "evidence": {
+        "k_dimension": "[V·s]",
+        "static_regression": true,
+        "static_E": [
+          "-c*k*Derivative(tau0(t, x, y, z), x)",
+          "-c*k*Derivative(tau0(t, x, y, z), y)",
+          "-c*k*Derivative(tau0(t, x, y, z), z)"
+        ]
+      },
+      "mode": "精算验证",
+      "kind": "计算型"
+    },
+    {
+      "code": "AL-R19-10",
+      "name": "R19：诚实边界与开放项关系表",
+      "status": "BOUNDARY",
+      "detail": "本册闭合：时变记账（约定显式化）／协变性（I1、I2、boost 场变换）／齐次 Maxwell（Bianchi）／源项不可几何导出（自源与 Proca 双排除）／O17 收窄。本册**不**给出：源的微观形式（须外部守恒电流，O15/O17）、τ^EM 的动力学作用量（无源 ⇒ 需外加耦合）、量子化（α/e，O15）。⇒ 「补齐 Maxwell 源项」这一原目标被**判定为不可在几何内完成**（非未完成），与 O15（标度侧）、O17（类型学侧）三方一致",
+      "evidence": {},
+      "mode": "体系对齐",
+      "kind": "声明型"
+    }
+  ]
+}
