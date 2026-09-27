@@ -5,5 +5,6 @@
 - [当前目录审计](DIRECTORY_AUDIT.md) 与 [机器数据](directory_audit.json)：由 audit_directories.py 生成。
 - [体系拆分执行记录](independent_systems_execution.json)：历史命令与输出。
 - [本次目录迁移记录](layout_reorganization_20260909.json)：路径映射及迁移前后摘要。
+- [清理操作记录 2026-09-27](cleanup_ops_20260927.md)：全仓垃圾扫描分类、pyc 删除与门禁断链修复。
 
 审计文件描述检查范围和执行结果，不认证物理理论。目录结构变动后，从项目根运行 `python -B 00_项目治理/维护工具/audit_directories.py`。
