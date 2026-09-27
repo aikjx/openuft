@@ -43,13 +43,16 @@ ARCHIVE = os.path.join(SYS_DIR, "修复版申报原文_2026-09-25.md")
 ENGINE1 = os.path.join(DATA, "空间螺旋修复版_第一性审计.json")
 ENGINE2 = os.path.join(DATA, "空间螺旋修复版_最小修复闭环.json")
 
-STATUS_OK = {"pass", "open", "boundary", "falsified", "repaired"}
+# 状态白名单：2026-09-26 更新——引擎新增登记态 info（复算备注）与 BOUNDARY（大写，C38/C52）；
+# 后续若统一为小写 boundary，可移除大写项（当前守卫容纳两种写法，不做强制规范化）
+STATUS_OK = {"pass", "open", "boundary", "BOUNDARY", "falsified", "repaired", "info"}
 FIELD_COUNT = 5
 
 # 判定不变量：这些主张一旦被改回 pass/repaired，即视为回潮事故
 MUST_STAY_FALSIFIED = ["C12", "C21", "C23"]
-# 两阶段引擎的预期判定总数
-EXPECT_TOTAL = {"阶段一": 35, "阶段二": 10}
+# 两阶段引擎的预期判定总数（2026-09-26 更新：阶段一 42 = 35 判定行 + §9.5/§9.6 能力行 7；
+# 建议后续改为「基线快照 + 只禁缩水」模式，与本硬编码口径解耦）
+EXPECT_TOTAL = {"阶段一": 42, "阶段二": 10}
 # 不变量基线（首次运行自动建档；此后只许「不缩水」——见 G5）
 BASELINE = os.path.join(DATA, "空间螺旋判定_不变量基线.json")
 
@@ -168,7 +171,7 @@ if base is None or (not shrunk and not tampered):
         "archive_sha256": archive_sha,
         "falsified_audit_ids": cur_falsified_audit,
         "engines_total": EXPECT_TOTAL,
-        "baseline_revision": "2026-09-26 建档（C24–C45 阶段）",
+        "baseline_revision": "2026-09-26 重建：C26-C37 专项复核回退（8 条→falsified、C28→boundary）；C24/C25/C35 经引擎复核合法翻标；C53/C54 新增登记；V21续修③④ 新增 C55/C56/C58/C59 falsified；C60（EHT 光子环·无映射方程层）、C61（CMB 拓扑双谱·无映射方程层）新增登记；C62（数学链·C14 频率公式与光速约束冲突）新增登记；C63（频率链·C15 第五力恒零）新增登记；C64（开放项·C05 α 拓扑公式数值不命中）新增登记；C65–C70（总攻·C04/C13/C16/C22/C25/C35 六项开放项攻破定案）新增登记",
     }, ensure_ascii=False, indent=1) + "\n")
 
 # ---------------------------------------------------------------------------
@@ -212,9 +215,12 @@ print("     %-22s %6d %6d %6d %6d %6d"
          audit_status.get("open", 0), audit_status.get("boundary", 0),
          audit_status.get("falsified", 0)))
 
-verdict = "申报不成立" if audit_status.get("falsified", 0) >= 14 else "需复核"
-print("\n     结论：%s（本审计登记 falsified %d 条 / 合计 %d 条）"
-      % (verdict, audit_status.get("falsified", 0), len(audit_rows)))
+# 结论语义：修复版申报声称「清零全部 falsified」；只要现登记 falsified ≥ 基线集合大小，申报即不成立
+# （2026-09-26 改为按基线长度判定，不再硬编码 14）
+_base_n = len(base.get("falsified_audit_ids", [])) if base else len(cur_falsified_audit)
+verdict = "申报不成立" if audit_status.get("falsified", 0) >= _base_n else "需复核"
+print("\n     结论：%s（本审计登记 falsified %d 条 / 基线 %d 条 / 合计 %d 条）"
+      % (verdict, audit_status.get("falsified", 0), _base_n, len(audit_rows)))
 
 n_bad = sum(1 for g in GUARDS if not g["ok"])
 

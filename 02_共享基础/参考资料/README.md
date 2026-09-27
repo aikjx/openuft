@@ -14,6 +14,7 @@
 | [NUMERICAL_METHODS.md](NUMERICAL_METHODS.md) | mpmath / sympy / 蒙特卡洛的具体使用方法 | 数值工程师 |
 | [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md) | 完整参考书目 + 链接 | 学术参考 |
 | [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md) | 架构决策记录（为什么 4 方法而不是 5） | 贡献者 |
+| [NABLA_OPERATOR_DIMENSION.md](NABLA_OPERATOR_DIMENSION.md) | Nabla 算子量纲：分层审计与逻辑修复（[∇]=m⁻¹，经典/GR/规范/前沿四层） | 理论物理学家/贡献者 |
 
 ## 如何新增 doc
 

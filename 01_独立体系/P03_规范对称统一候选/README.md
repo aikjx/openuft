@@ -1,8 +1,12 @@
 # 规范对称统一候选
 
-编号：`p03_gauge_unification`；类型：`unformulated_direction`。
+编号：`p03_gauge_unification`；类型：`candidate_framework`（待完备理论框架）；状态：`unreviewed`。
 
-基础前提：保留原 H05 独立方向；需要具体群、表示和作用量。
+**2026-09-26 第一次公设建模（`gut-first-formulation`）**：已从待建模方向升级为有群/表示/破缺链/作用量骨架/可对标量的 GUT 候选。
+- 公设：[02_基础公设/postulates.md](02_基础公设/postulates.md)（A1 直积边界–A6 几何零贡献）
+- 精算：[07_计算复现/源码/p03_gut_first_formulation.py](07_计算复现/源码/p03_gut_first_formulation.py)（纯标准库）
+- 边界：[最小非SUSY SU5质子衰变排除记录](11_证伪与反例/最小SU5质子衰变排除记录.md)
+- 结论：SU5 5̄⊕10 装一代15态无反常[A]；SM 不汇聚、MSSM 2e16 GeV 汇聚；最小SU5被质子衰变排除；几何本体零贡献（定理Q），不统一引力、不给α，UFT 维持2/6。
 
 独立管理公设、推导、代码、数据、结论及发布，不继承其他体系的证据等级。当前科学状态：待审查；空模板不表示研究完成。
 

@@ -6475,8 +6475,8 @@ def run_basis_layer():
                 for _d in (0, 1):
                     PROP[(_a, _b, _c, _d)] = sum(
                         SG[_m] * SIGM[_m][_a][_c] * SIGM[_m][_b][_d] for _m in range(4))
-    NSIG, NSIGT = 6, 8             # 单侧槽位上限／两侧合计上限（$(6,4)$ 一档按代价登记为界外）
-    sig_cache, scnt = {}, collections.Counter()
+    NSIG, NSIGT = 8, 10            # 单侧槽位上限／两侧合计上限（R19：$\nu+\dot\nu>8$ 的四档接进引擎）
+    sig_cache, sig_ctl, scnt = {}, {}, collections.Counter()
 
     def sig_val(n, elines, slines, mpair):
         """一条画线的张量分量：$\\sigma$ 线的 $\\mu$ 已并成 $P$，故每个分量只乘一次传播子。"""
@@ -6533,6 +6533,14 @@ def run_basis_layer():
         r_e = q_rank(ev) if ev else 0
         r_s = q_rank(uv) if uv else 0
         r_a = q_rank(ev + uv) if (ev or uv) else 0
+        # R19 的正对照：把 $\\varepsilon$ 目录**截断**成"槽 0-1 已配对"那一族（锚在不点侧），
+        # 主判据那个 0 才不与恒零计数器混淆。$\\nu=2$ 时唯一的 $\\varepsilon$ 配对就是 $(0,1)$
+        # $\\Rightarrow$ 截断集 $=$ 全集，该档的"退化"是结构事实，改为要求截断秩 $=$ 完整秩。
+        sub = [e for e in el if (0, 1) in e[0]]
+        tv = [v for v in (sig_val(n, *s) for s in sub) if any(v)]
+        r_t = q_rank(tv) if tv else 0
+        r_ta = q_rank(tv + uv) if (tv or uv) else 0
+        sig_ctl[(nu, nd)] = (len(sub), len(el), r_t, r_ta - r_t, len(sub) == len(el))
         sig_cache[(nu, nd)] = (cg_j0(nu) * cg_j0(nd), r_e, r_s, r_a, len(ev), len(uv),
                                len(ev) + len(uv) - r_a)
         return sig_cache[(nu, nd)]
@@ -6759,6 +6767,327 @@ def run_basis_layer():
             '类集 $(\\nu,\\dot\\nu)$ 档与类数：%s；表格档 %d 个、挂类档 %d 个' %
             (sorted(scnt.items()) and [[list(k), v] for k, v in sorted(scnt.items())],
              len(stier), len(sback)))
+
+    # ---- R19 宽档：把 14.10 那条"两型道各自完备"推到 $\\nu+\\dot\\nu>8$ ----------------
+    # 第十九项边界 (ii) 的原文是"更宽档（$\\nu+\\dot\\nu>8$）没有核过"，此前只有草稿盘上一次运行
+    # 当证据 $\\Rightarrow$ 不进文档。本层把那台仪器接进引擎：档位上限抬到 $\\nu,\\dot\\nu\\le8$、
+    # $\\nu+\\dot\\nu\\le10$，于是 `stier` 从 6 档变 10 档，新增的恰是 $(2,8)$、$(4,6)$、$(6,4)$、
+    # $(8,2)$ 四档 $\\Rightarrow$ 那条边界从此是一条**关掉的读数**，不是一句口径。
+    wide = [t for t in stier if t[0] + t[1] > 8]
+
+    def r19_row(t):
+        pred, r_e, r_s, r_a, ne, ns, nrel = sig_cache[t]
+        ts, ta, rt, rad, deg = sig_ctl[t]
+        return {'nu': t[0], 'nd': t[1], 'pred': pred, 'eps_rank': r_e, 'sig_rank': r_s,
+                'union_rank': r_a, 'adds': r_a - r_e, 'relations': nrel, 'eps_n': ne,
+                'sig_uniq': ns, 'tr_sub': ts, 'tr_all': ta, 'tr_rank': rt,
+                'tr_adds': rad, 'tr_degenerate': deg}
+
+    r19 = [r19_row(t) for t in stier]
+    r19w = [x for x in r19 if x['nu'] + x['nd'] > 8]
+    # 字段分成两张名单，逐字写死：`R19_CTL` 那组**不参与**手性对称比对（截断锚 $(0,1)$ 两个都是
+    # 不点指标 $\\Rightarrow$ 那台对照本身不是手性标量，把它拉进对称判据会把一条真读数判成失败）。
+    # 两名单并上 `nu`/`nd` 必须覆盖读数表的全部键 $\\Rightarrow$ 以后多一个字段会在这条上响。
+    R19_KEYS = ('pred', 'eps_rank', 'sig_rank', 'union_rank', 'adds', 'relations',
+                'eps_n', 'sig_uniq')
+    R19_CTL = ('tr_sub', 'tr_all', 'tr_rank', 'tr_adds', 'tr_degenerate')
+    r19_uncov = sorted(set(r19[0]) - set(R19_KEYS) - set(R19_CTL) - {'nu', 'nd'})
+    r19_bad = [x for x in r19w
+               if len({x['pred'], x['eps_rank'], x['sig_rank'], x['union_rank']}) != 1]
+    r19_ch = []
+    for x in r19:
+        y = r19_row((x['nd'], x['nu']))
+        d = [k for k in R19_KEYS if x[k] != y[k]]
+        if d:
+            r19_ch.append([[x['nu'], x['nd']], [x['nd'], x['nu']], d])
+    r19_ctl_bad = [x for x in r19
+                   if (x['tr_degenerate'] and (x['nu'] != 2 or x['tr_rank'] != x['eps_rank']))
+                   or (not x['tr_degenerate'] and x['tr_adds'] <= 0)]
+    r19_deg = [x for x in r19 if x['tr_degenerate']]
+    BASIS.update({'r19': (r19, r19w, len(stier), NSIG, NSIGT, len(r19_bad),
+                          sum(x['adds'] for x in r19w), len(r19_ctl_bad), len(r19_ch),
+                          len(r19_deg), r19_uncov,
+                          [[x['nu'], x['nd'], x['tr_sub'], x['tr_all'], x['tr_rank'],
+                            x['tr_adds'], x['tr_degenerate']] for x in r19])})
+    p &= ok('R19.0', '第十九项边界 (ii) 写着"更宽档（$\\nu+\\dot\\nu>8$）没有核过"：本条把 %s '
+                     '这 %d 档接进引擎，逐档核那三张不共享算术的票加第四路预测 $\\Rightarrow$ 四数'
+                     '（预测、$\\varepsilon$ 道秩、$\\sigma$ 道单独秩、并秩）不全等 %d 档、宽档'
+                     '$\\sigma$ 道新增合计 %d 条 $\\Rightarrow$ 14.10 那条"两型道各自都是完备生成集"'
+                     '不依赖 $\\nu+\\dot\\nu\\le8$ 这条人为的档位截断。逐档（$\\nu$、$\\dot\\nu$、'
+                     '预测、$\\varepsilon$ 秩、$\\sigma$ 单独秩、并秩、道间关系）：%s' %
+            ('、'.join('$(%d,%d)$' % (x['nu'], x['nd']) for x in r19w), len(r19w),
+             len(r19_bad), sum(x['adds'] for x in r19w),
+             [[x['nu'], x['nd'], x['pred'], x['eps_rank'], x['sig_rank'], x['union_rank'],
+               x['relations']] for x in r19w]),
+            len(wide) == 4 and len(r19w) == 4 and len(stier) == 10 and not r19_bad and
+            all(x['adds'] == 0 and x['relations'] > 0 for x in r19w),
+            '全部 %d 个表格档（$\\nu$、$\\dot\\nu$、$\\varepsilon$ 秩、$\\sigma$ 单独秩、并秩、'
+            '新增、道间关系）：%s' % (len(r19),
+                                    [[x['nu'], x['nd'], x['eps_rank'], x['sig_rank'],
+                                      x['union_rank'], x['adds'], x['relations']]
+                                     for x in r19]))
+    p &= ok('R19.1', '宽档那个"新增 $=0$"必须与一台**会新增**的对照同时成立：把 $\\varepsilon$ 目录'
+                     '截断成"槽 $(0,1)$ 已配对"那一族后，$\\sigma$ 道的新增（逐档写成 '
+                     '"$(\\nu,\\dot\\nu)$ 截断条数/全条数 秩 截断秩 新增 退化与否"）：%s $\\Rightarrow$ 非退化档'
+                     '里新增读 0 者 %d 档；结构退化档（$\\nu=2$：不点侧只有两个槽，唯一的配对就是把 '
+                     '$(0,1)$ 配掉 $\\Rightarrow$ 截断集 $=$ 全集）共 %d 档，它们改为要求截断秩 $=$ '
+                     '完整秩，即"退化"这一说法本身被核过而不是被默许；本条违例合计 %d 档' %
+            ('；'.join('$(%d,%d)$ %d/%d 秩 %d 新增 %d %s' %
+                       (x['nu'], x['nd'], x['tr_sub'], x['tr_all'], x['tr_rank'], x['tr_adds'],
+                        '退化' if x['tr_degenerate'] else '非退化') for x in r19),
+             len([x for x in r19 if not x['tr_degenerate'] and x['tr_adds'] <= 0]),
+             len(r19_deg), len(r19_ctl_bad)),
+            not r19_ctl_bad and len(r19_deg) == len([x for x in r19 if x['nu'] == 2]) and
+            all(x['tr_sub'] <= x['tr_all'] for x in r19),
+            '截断秩与完整秩（逐档）：%s' % [[x['nu'], x['nd'], x['tr_rank'], x['eps_rank']]
+                                      for x in r19])
+    p &= ok('R19.2', '跨手性不变量：$(\\nu,\\dot\\nu)$ 与 $(\\dot\\nu,\\nu)$ 的**物理**读数要逐字段'
+                     '相等（比 %d 个字段 $\\times$ %d 档），违例 %d 条 $\\Rightarrow$ 换基读数不是某一'
+                     '次摆放的产物，且它与 R16 那条特征标递推一样对两侧同价。豁免逐字写明：截断对照'
+                     '那组字段 %s 不参与比对（它的锚 $(0,1)$ 两个都是不点指标 $\\Rightarrow$ 那台对照'
+                     '本身不是手性标量）；两名单并上 $(\\nu,\\dot\\nu)$ 后仍未覆盖的键：%s '
+                     '$\\Rightarrow$ 以后多出一个字段会在这条上响，不会静默落到某一侧' %
+            (len(R19_KEYS), len(r19), len(r19_ch), list(R19_CTL), r19_uncov or '无'),
+            not r19_ch and not r19_uncov and len(r19) == 10,
+            '违例（档、镜像档、不等字段）：%s' % (r19_ch[:6] or '无'))
+
+    # ---- R20 全总导数商：把"含 $k$ 个导数的结构模去全总导数还剩几条"做成逐类读数 ----------
+    # 设定（刻意窄，且与 14.8／14.9／14.10 三张口径**正交**）：一类有 $n$ 个**按位置可区分**的槽
+    # （场名逐位计，不做同名字段的对称化 $\\Rightarrow$ 与 R17 的 Fermi 反对称不是同一道削减），
+    # $k$ 个导数分给它们 $\\Rightarrow$ 一个"导数分布" $=$ 一个弱组合 $(k_1,\\dots,k_n)$，
+    # $\\dim V_k$ 由**枚举**给出（不是闭式）。全总导数 $=$ 乘上 $x_1+\\cdots+x_n$ 那一步线性映射
+    # $D:V_{k-1}\\to V_k$ $\\Rightarrow$ 本层数的是 $\\dim V_k/\\mathrm{im}\\,D$。四张不共享算术的票：
+    #   甲 显式把 $D$ 写成矩阵、在 $\\mathbb Q$ 上消元求秩（顺带**量出**单射性，不假设），商 $=\\dim V_k-$ 秩；
+    #   乙 商环 Hilbert 级数 $1/(1-t)^{n-1}$ 的系数**递推** $h_k=h_{k-1}(m+k-1)/k$；
+    #   丙 "用总导数把最后一个槽搬空"的双射 $\\Rightarrow$ 枚举 $k$ 分给 $n-1$ 个槽的方案数；
+    #   丁 Pascal 闭式 $\\binom{n+k-2}{n-2}$（与丙同数，但走的是二项式恒等式这条路）。
+    NSLOT = max(len(x['fl']) for x in okc)             # 类里最多的槽位数（导数只能落在槽上）
+    KMAXT = max(x['kmin'] + 2 * TSTEP for x in okc)    # 塔顶：与 R16 的逐层读数同一档截断
+    _DC = {}
+
+    def td_comps(n, k):
+        """全部弱组合：$k$ 分给 $n$ 个可区分槽。**枚举**而非闭式（甲丙两路的公共输入用它的长度）。"""
+        if (n, k) in _DC:
+            return _DC[(n, k)]
+        if n < 0:
+            out = []
+        elif n == 0:
+            out = [()] if k == 0 else []
+        else:
+            out = []
+            for first in range(k + 1):
+                for rest in td_comps(n - 1, k - first):
+                    out.append((first,) + rest)
+        _DC[(n, k)] = out
+        return out
+
+    def td_dim(n, k):
+        return len(td_comps(n, k))
+
+    def td_total_cols(n, k):
+        """$D$ 的列：基元 $e_{(k_1,\\dots,k_n)}\\mapsto\\sum_i$（第 $i$ 槽 $+1$）。"""
+        src, dst = td_comps(n, k - 1), td_comps(n, k)
+        if not src or not dst:
+            return []
+        idx = dict((c, j) for j, c in enumerate(dst))
+        out = []
+        for c in src:
+            v = [F(0)] * len(dst)
+            for i in range(n):
+                v[idx[c[:i] + (c[i] + 1,) + c[i + 1:]]] += F(1)
+            out.append(v)
+        return out
+
+    def td_slot_cols(n, k):
+        """**逐槽**偏导的像：每个 $(f,i)$ 一列（R20.0 用它做反向对照，见那条的最后一句）。"""
+        src, dst = td_comps(n, k - 1), td_comps(n, k)
+        if not src or not dst:
+            return []
+        idx = dict((c, j) for j, c in enumerate(dst))
+        out = []
+        for c in src:
+            for i in range(n):
+                v = [F(0)] * len(dst)
+                v[idx[c[:i] + (c[i] + 1,) + c[i + 1:]]] = F(1)
+                out.append(v)
+        return out
+
+    def td_row(n):
+        """乙路：$1/(1-t)^{n-1}$ 的系数递推 $h_k=h_{k-1}(n-1+k-1)/k$（精确整除，除不尽即当场失败）。"""
+        m = n - 1
+        out = [1]
+        for k in range(1, KMAXT + 1):
+            if m < 1:
+                out.append(0)
+                continue
+            prod = out[k - 1] * (m + k - 1)
+            assert prod % k == 0                      # Hilbert 级数的系数必是整数
+            out.append(prod // k)
+        return out
+
+    td_t = []
+    for n in range(1, NSLOT + 1):
+        gf = td_row(n)
+        row = []
+        for k in range(0, KMAXT + 1):
+            cols = td_total_cols(n, k)
+            rk = q_rank(cols) if cols else 0
+            jia = td_dim(n, k) - rk
+            yi = gf[k]
+            bing = td_dim(n - 1, k)
+            ding = 1 if k == 0 else (0 if n == 1 else math.comb(n + k - 2, n - 2))
+            row.append({'n': n, 'k': k, 'dim': td_dim(n, k), 'rank': rk, 'jia': jia,
+                        'yi': yi, 'bing': bing, 'ding': ding,
+                        'inj': rk == td_dim(n, k - 1),
+                        'slotrank': q_rank(td_slot_cols(n, k)) if cols else 0})
+        td_t.append(row)
+    def td_cell(n, k):
+        return td_t[n - 1][k]
+
+    td_flat = sum(td_t, [])
+    td_bad = [r for r in td_flat if not (r['jia'] == r['yi'] == r['bing'] == r['ding'])]
+    td_inj = [r for r in td_flat if not r['inj']]
+    td_anchor = [(1, 3, 0), (2, 1, 1), (2, 2, 1), (3, 1, 2), (3, 2, 3), (4, 2, 6)]
+    td_anchor_bad = [[n, k, w, td_cell(n, k)['jia']] for n, k, w in td_anchor
+                     if td_cell(n, k)['jia'] != w]
+    # 正对照一（丙路的牙齿）：把"搬空最后一个槽"误写成"搬空后两个槽"（即 $n-2$）⇒ 必须与甲路不同判
+    td_pc = [(r['n'], r['k']) for r in td_flat
+             if r['k'] >= 1 and td_dim(r['n'] - 2, r['k']) != r['jia']]
+    # 正对照二（反向）：**逐槽**全商（把每个槽的偏导都当关系）把每一格都归零 $\\Rightarrow$
+    # "留下东西"这件事是全总导数那一条**单独**做到的，不是任何一道商都行
+    td_zero = [r for r in td_flat if r['k'] >= 1 and r['slotrank'] != r['dim']]
+
+    p &= ok('R20.0', '导数分布的个数此前只在散文里（"全总导数塔那关照旧"）：本层把 $D:V_{k-1}\\to V_k$'
+                     '显式建成矩阵，$n\\le%d$、$k\\le%d$ 的整张网格上四张不共享算术的票（甲 消元秩、'
+                     '乙 Hilbert 递推、丙 搬空末槽的双射、丁 Pascal 闭式）不全等 %d 格 $\\Rightarrow$ '
+                     '"模去全总导数剩 %s"从此是读数。单射性是**量出来的**（秩 $=\\dim V_{k-1}$ 逐格核，'
+                     '失败 %d 格）$\\Rightarrow$ 商维数 $=\\dim V_k-\\dim V_{k-1}$ 这一步不是拿恒等式'
+                     '充数。六条教科书锚点（$(n,k)$ 与商维数）：%s $\\Rightarrow$ $n=1$ 时每个导数结构'
+                     '都是全总导数（商为 $0$）。两张对照：把丙路的"末槽"误写成"后两槽"有 %d 格与甲路'
+                     '不同判（这张票不是恒等的装饰）；把关系换成**逐槽**偏导则每一格归零（违例 %d 格，'
+                     '要求 0）$\\Rightarrow$ "商完还有东西"是全总导数独有的，不是任何一道商都行' %
+            (NSLOT, KMAXT, len(td_bad),
+             '$\\binom{n+k-2}{n-2}$',
+             len(td_inj),
+             '；'.join('$(%d,%d)\\to%d$' % (r[0], r[1], td_cell(r[0], r[1])['jia'])
+                       for r in ((1, 3), (2, 1), (2, 2), (3, 1), (3, 2), (4, 2))),
+             len(td_pc), len(td_zero)),
+            not td_bad and not td_inj and not td_anchor_bad and not td_zero and
+            len(td_pc) > 0 and len(td_t) == NSLOT and len(td_t[0]) == KMAXT + 1 and
+            [td_cell(n, 0)['jia'] for n in range(1, NSLOT + 1)] == [1] * NSLOT,
+            '商维数表（行 $n$、列 $k$）：%s' % [[r['n'], r['k'], r['dim'], r['rank'], r['jia']]
+                                          for r in sum(td_t, [])])
+
+    # ---- R20.1 挂到类与塔上：逐层数"分布条数 / 幸存条数 / 被商掉条数" ----------------
+    # 口径必须写死：`mpat` 只读两侧指标数 $(\\nu+k,\\dot\\nu+k)$，**看不见**导数落在哪个槽上
+    # （$\\Rightarrow$ 14.8 那条塔的 $2261/8874/57735/467236$ 是"每条分布共用一个洛伦兹计数"），
+    # 本条把被它忽略的那一根轴单独数一遍，两者相乘才是"带槽位归属"的条数。
+    td_lv = []
+    for i in range(TSTEP + 1):
+        pl = sv = rm = pv = bite = blind = refine = nk0 = k0bad = 0
+        for x in okc:
+            n, k = len(x['fl']), x['kmin'] + 2 * i
+            c = td_cell(n, k)
+            pl += c['dim']
+            sv += c['jia']
+            rm += c['dim'] - c['jia']
+            pv += td_dim(n, k - 1)                     # 另一条路：低一阶的分布总数
+            if c['jia'] < c['dim']:
+                bite += 1
+            if k == 0:
+                nk0 += 1
+                if c['dim'] != 1 or c['jia'] != 1:
+                    k0bad += 1
+            m = mpat(x, k)
+            blind += m
+            refine += m * c['jia']
+        td_lv.append([2 * i, pl, sv, rm, pv, bite, blind, refine, nk0, k0bad])
+    # 三条账分开计（同一个 len() 印两处会把两条不同的恒等式混成一条读数）
+    td_book = [r for r in td_lv if r[2] + r[3] != r[1]]
+    td_rm2 = [r for r in td_lv if r[3] != r[4]]
+    td_tower_bad = [i for i in range(TSTEP + 1) if td_lv[i][6] != tw[i][1]]
+    # 这根轴在**真实类**上是否退化：分布数 >1 的（类、层）格子数（若是 0，"另一根轴"就是空话）
+    td_ax = [x['kmin'] + 2 * i for x in okc for i in range(TSTEP + 1)
+             if td_dim(len(x['fl']), x['kmin'] + 2 * i) > 1]
+    td_gain = [r[0] for r in td_lv if r[7] > r[6]]
+    p &= ok('R20.1', '把这道商挂到 %d 个可构建类与 14.8 那条塔上逐层数（层号 $i\\le%d$、'
+                     '每层 $k=k_{\\min}+2i$）：导数分布共 %s 条，模去全总导数后幸存 %s 条，'
+                     '被商掉 %s 条 $\\Rightarrow$ "全总导数塔那关照旧"这句话从此逐层有数。'
+                     '三条账各走各的和式、逐条核：幸存 $+$ 被商掉 $=$ 分布（违例 %d 层）；'
+                     '被商掉 $=$ 低一阶分布总数（那条走 $V_{k-1}$ 一侧，与上一条不同路，违例 %d 层）；'
+                     '洛伦兹那一侧逐层 %s 与 R16.1 的塔逐层 %s 相等（违例 %d 层）$\\Rightarrow$ '
+                     '本层**不减**那条塔，它补的是塔口径忽略的另一根轴（导数落在哪个槽上）。'
+                     '这根轴不是空转：$\\dim V_k>1$ 的（类、层）格子共 %d 个 $\\Rightarrow$ 分布并非'
+                     '每类只有一种，塔把它们各读成一个洛伦兹计数；$k=0$ 的类共 %d 个，那里每类只有'
+                     '一种分布 $\\Rightarrow$ 商不动它（违例 %d 个）。带槽位归属的条数按'
+                     '"塔读数 $\\times$ 该类幸存分布数"逐类相乘得 %s（塔的裸读数 %s，严格大于塔的'
+                     '层号 %s——两者谁大是读数，本层不预设方向）；商"咬到"（幸存 $<$ 分布）的类数'
+                     '逐层 %s' %
+            (len(okc), TSTEP, [r[1] for r in td_lv], [r[2] for r in td_lv],
+             [r[3] for r in td_lv], len(td_book), len(td_rm2),
+             [r[6] for r in td_lv], [t[1] for t in tw], len(td_tower_bad),
+             len(td_ax), sum(r[8] for r in td_lv), sum(r[9] for r in td_lv),
+             [r[7] for r in td_lv], [r[6] for r in td_lv], td_gain,
+             [r[5] for r in td_lv]),
+            not td_book and not td_rm2 and not td_tower_bad and len(td_lv) == TSTEP + 1 and
+            sum(r[9] for r in td_lv) == 0 and all(r[3] > 0 for r in td_lv[1:]) and
+            len(td_ax) > 0,
+            '逐层（$2i$、分布、幸存、被商掉、低一阶分布数、咬到的类数、塔的洛伦兹总数、带槽位归属、'
+            '$k=0$ 类数、$k=0$ 违例）：%s' % td_lv)
+
+    # ---- R20.2 丙路那个代表系不是"数对了"就算完：它们必须两两不在同一个商里 ----------
+    # 丙路把 $k$ 个导数"搬空最后一个槽"，取的代表是末槽为 $0$ 的分布，共 $\\dim V_k^{(n-1)}$ 个。
+    # 只核对个数等于甲路，允许一种失效：代表之间有两条落在同一个陪集里、而陪集总数仍然对。
+    # 本条把代表向量与 $D$ 的列**并成一矩阵**求秩 $\\Rightarrow$ 秩 $=$ 甲路秩 $+$ 代表数 才说明
+    # 代表系线性无关且没有一个落在全总导数里（这才是"双射"而不是"同数"）。
+    td_sec = []
+    for r in td_flat:
+        n, k = r['n'], r['k']
+        reps = [c + (0,) for c in td_comps(n - 1, k)] if n >= 1 else []
+        dst = td_comps(n, k)
+        if not dst:
+            td_sec.append([n, k, 0, 0, 0])
+            continue
+        idx = dict((c, j) for j, c in enumerate(dst))
+        cols = td_total_cols(n, k) + [[F(1) if j == idx[c] else F(0)
+                                       for j in range(len(dst))] for c in reps]
+        rk = q_rank(cols)
+        td_sec.append([n, k, len(reps), rk, r['rank'] + len(reps)])
+    td_sec_bad = [s for s in td_sec if s[3] != s[4] or s[2] != td_cell(s[0], s[1])['jia']]
+    # 两轴正交的**实测**见证：在真实类上"槽位归属"这一维非退化的格子数（td_ax，见 R20.1）。
+    # 这里不再放"mpat 对同类的全部分布读同一个数"那种计数器 $\\Rightarrow$ 那是口径、按构造恒成立，
+    # 拿它当违例计数就是造一枚永不打红的假牙（记在案：一个恒为 0 的计数器不是证据）。
+    td_n1 = [s for s in td_sec if s[0] == 1 and s[1] >= 1 and s[2] != 0]
+    td_live = [s for s in td_sec if s[1] >= 1 and s[2] > 0]
+    BASIS.update({'r20': (NSLOT, KMAXT, len(td_t), td_anchor, len(td_bad), len(td_inj),
+                          len(td_pc), len(td_zero), td_lv, len(td_book), len(td_rm2),
+                          len(td_tower_bad), [r[5] for r in td_lv], [len(r) for r in td_t],
+                          len(td_ax), td_gain, sum(r[8] for r in td_lv),
+                          [[r['n'], r['k'], r['dim'], r['rank'], r['jia']] for r in td_flat
+                           if r['k'] <= 5], NSLOT * (KMAXT + 1),
+                          [r[6] for r in td_lv], [r[7] for r in td_lv],
+                          len(td_sec_bad), len(td_live), len(td_n1), sum(r[9] for r in td_lv))})
+    p &= ok('R20.2', '丙路的代表系要独立核：把"末槽搬空"的代表向量与 $D$ 的列并成一台矩阵求秩，'
+                     '整张网格（$n\\le%d$、$k\\le%d$，共 %d 格）上 秩 $=$ 甲路秩 $+$ 代表数 且 '
+                     '代表数 $=$ 甲路商维数 同时成立（违例 %d 格）$\\Rightarrow$ 代表两两不在同一个'
+                     '陪集里、也没有一个落在全总导数里 $\\Rightarrow$ 丙路是**双射**而不只是同数。'
+                     '$n=1$ 的边界单独钉：那里 $k\\ge1$ 的代表数为 $0$（只有一个场时每个导数结构'
+                     '都是全总导数），违例 %d 格；代表数非零的格共 %d 格 $\\Rightarrow$ 这道核不是'
+                     '空转。两轴正交这一句只拿实测的那条当证据（$\\dim V_k>1$ 的（类、层）格子 %d 个，'
+                     '见上一条），"洛伦兹那一侧看不见槽位"是口径、按构造成立，本层不把它写成违例数。'
+                     '诚实边界（逐条）：这数的是**离壳**导数分布模去全总导数，'
+                     '不含 EOM 场重定义、不做洛伦兹缩并（14.8 那一半照常未合）、不按同名字场对称化'
+                     '（与 R17 的 Fermi 反对称正交）、不带味指标 $\\Rightarrow$ 第十九项那句"味指标'
+                     '那一半没有"照旧未关，塔仍只数到 $k_{\\min}+2\\times%d$（$TSTEP=%d$ 那条截断不动），'
+                     '类数仍然不是算符数。不回填 $\\tau_p$、不改 P4／P7 的判据与分级，**L10 保持 OPEN**'
+                     '（全总导数只是五道削减里的一道，且这一道现在**也**只是一根轴上的计数）' %
+            (NSLOT, KMAXT, len(td_flat), len(td_sec_bad), len(td_n1), len(td_live),
+             len(td_ax), TSTEP, TSTEP),
+            not td_sec_bad and len(td_sec) == len(td_flat) and
+            all(s[2] >= 0 for s in td_sec) and len(td_n1) == 0 and len(td_live) > 0 and
+            len(td_ax) > 0,
+            '代表系核对（$n$、$k$、代表数、并矩阵秩、甲路秩 $+$ 代表数）：%s'
+            % [s for s in td_sec if s[0] <= 3])
     return p
 
 
@@ -7796,6 +8125,112 @@ def basis_section():
           '（R7/R9 的边界文本原样有效），EOM 场重定义与全总导数塔两关照旧，'
           '**类数仍然不是算符数**。本层不回填任何寿命、不改 P4／P7 的判据与分级 $\\Rightarrow$ '
           '**L10 未关闭**。']
+    # ---- 14.10 续：宽档接进引擎（R19.0–R19.2）
+    r9 = B['r19']
+    n_all = len(r9[0][0])
+    n_ctl = len(r9[11][0]) - 2
+    L += ['',
+          '**第十九项边界 (ii) 的收口**：上一段"管辖范围"那句只关了挂类那一头，另一头是**档位截断** '
+          '$\\Rightarrow$ $\\nu\\le6$、$\\nu+\\dot\\nu\\le8$ 是人为上限，边界 (ii) 的原文正是"更宽档'
+          '（$\\nu+\\dot\\nu>8$）没有核过"。本段把两个上限抬到 $\\nu\\le%d$、$\\nu+\\dot\\nu\\le%d$ '
+          '$\\Rightarrow$ 表格档从 %d 个变 %d 个，新增的恰是 %s 这 %d 档。逐档（$\\nu$、$\\dot\\nu$、'
+          '预测、$\\varepsilon$ 道秩、$\\sigma$ 道单独秩、并秩、道间关系）：%s $\\Rightarrow$ 四数'
+          '（预测、两型道各自的秩、并秩）不全等 %d 档、宽档上 $\\sigma$ 道并进后的新增合计 %d 条 '
+          '$\\Rightarrow$ "两型道各自都是该不变量空间的完备生成集"这句话**不依赖**那条人为的档位截断。' %
+              (r9[3], r9[4], r9[2] - len(r9[1]), r9[2],
+               '、'.join('$(%d,%d)$' % (x['nu'], x['nd']) for x in r9[1]), len(r9[1]),
+               '；'.join('$(%d,%d)$ %d/%d/%d/%d 关系 %d' %
+                         (x['nu'], x['nd'], x['pred'], x['eps_rank'], x['sig_rank'],
+                          x['union_rank'], x['relations']) for x in r9[1]),
+               r9[5], r9[6]),
+          '覆盖面**没有**跟着变宽：类集上真正出现的 $(\\nu,\\dot\\nu)$ 仍是 %s 这 %d 档、挂类档 %d 个、'
+          '"超档"（某类算出的档位落在网格外）仍读 %d $\\Rightarrow$ 本段新增的是**算术复核的档位**，'
+          '不是**挂类的覆盖面** $\\Rightarrow$ 把前者当后者报就是虚报。' %
+              ('、'.join('$(%d,%d)$' % t for t in r8[21]), len(r8[21]), len(r8[2]),
+               r8[15]['超档']),
+          '本段那台对照**必须会新增**，才撑得住上面那个 0：把 $\\varepsilon$ 目录截断成"槽 $(0,1)$ '
+          '已配对"那一族（只留下已经吃掉一对不点指标的画线），再问 $\\sigma$ 道能否在这份残缺目录上'
+          '多张出东西。逐档（截断条数／全条数、截断秩、新增、退化与否）：%s $\\Rightarrow$ 非退化档里'
+          '"新增 $=0$"者 %d 档、本条违例合计 %d 档 $\\Rightarrow$ "并秩不更大"这句话在残缺目录上**会红**，'
+          '于是它在完整目录上读 0 才有内容。截断锚 $(0,1)$ 两个坐标都是不点指标 $\\Rightarrow$ 不点侧只有'
+          '两个槽的那些档（$\\nu=2$）截断集 $=$ 全集，这台对照对它们结构性退化（共 %d 档）$\\Rightarrow$ '
+          '对这些档改为要求截断秩 $=$ 完整秩，"退化"这个说法被核过而不是被默许。' %
+              ('；'.join('$(%d,%d)$ %d/%d 秩 %d 新增 %d %s' %
+                         (x[0], x[1], x[2], x[3], x[4], x[5], '退化' if x[6] else '非退化')
+                         for x in r9[11]),
+               len([x for x in r9[0] if not x['tr_degenerate'] and x['tr_adds'] == 0]),
+               r9[7], r9[9]),
+          '跨手性也一并核：$(\\nu,\\dot\\nu)$ 与 $(\\dot\\nu,\\nu)$ 的镜像档要比 %d 个物理字段（读数表共 '
+          '%d 个键，扣除 $(\\nu,\\dot\\nu)$ 与对照那 %d 个）在全部 %d 档上逐字段相等，违例 %d 条 '
+          '$\\Rightarrow$ 换基读数不是某一次摆放的产物，且它与 R16 那条特征标递推一样对两侧同价。豁免逐字'
+          '写明：截断对照那组字段**不**参与这条比对（它的锚 $(0,1)$ 在不点侧 $\\Rightarrow$ 那台对照本身'
+          '不是手性标量，硬拉进对称判据会把一条真读数判成失败）；两张名单并上 $(\\nu,\\dot\\nu)$ 后仍未'
+          '覆盖的键：%s $\\Rightarrow$ 以后多出一个字段会在这条门禁上响，不会静默落到某一边。' %
+              (n_all - 2 - n_ctl, n_all, n_ctl, r9[2], r9[8],
+               '、'.join('`%s`' % k for k in r9[10]) if r9[10] else '无'),
+          '这条守卫是否真会红，与 R18 层同法由外部变异台账的 **R19 层**逐例植入复核（数字只在那份台账的'
+          '读数里，本段不转述）。本段不回填任何寿命、不改 P4／P7 的判据与分级，也不改上一段那条"只对'
+          '比价过 $\\sigma$ 这一条道"的边界 $\\Rightarrow$ **L10 保持 OPEN**。', '']
+
+    # ---- 14.11 导数分布模去全总导数（R20.0–R20.2）
+    r0 = B['r20']
+    n_ok = B['r16'][7]
+    L += ['', '### 14.11 导数落在哪个槽上：含 $k$ 个导数的结构模去全总导数后还剩几条'
+               '（R20.0–R20.2）', '',
+          '设定（刻意窄）：把一个类里的场**逐个当作可区分的槽**，$n$ 个槽分 $k$ 个导数 $\\Rightarrow$ '
+          '一个结构就是一个弱组合 $(k_1,\\dots,k_n)$、$\\sum_i k_i=k$，基元数 $\\dim V_k$ 由'
+          '**枚举**弱组合给出（不取闭式，闭式留在丁那张票上）。全总导数 $D:V_{k-1}\\to V_k$ 就是'
+          '乘上 $x_1+\\cdots+x_n$ 这一步 $\\Rightarrow$ 本节数的是商 $V_k/D(V_{k-1})$ 里还剩几条。'
+          '四张不共享算术的票（甲 精确分数消元取秩、乙 商环 Hilbert 级数 $1/(1-t)^{n-1}$ 的系数递推、'
+          '丙 "用总导数把最后一个槽搬空"的双射、丁 Pascal 闭式）在 $n\\le%d$、$k\\le%d$ 的 %d 格'
+          '整张网格上不全等的格子 %d 个 $\\Rightarrow$ 商维数从此是读数。' %
+              (r0[0], r0[1], r0[18], r0[4]),
+          '单射性是**量出来的**：逐格核 $D$ 的秩 $=\\dim V_{k-1}$，失败 %d 格 $\\Rightarrow$ "商维数 '
+          '$=\\dim V_k-\\dim V_{k-1}$"这一步不是拿恒等式充数。六条教科书锚点（$(n,k)$ 与商维数）：'
+          '%s $\\Rightarrow$ $n=1$ 时每个导数结构都是全总导数（商为 $0$）。两张对照都要在场：把丙路'
+          '的"末槽"误写成"后两槽"，与甲路**不同判**的格子 %d 个（要求 $>0$ $\\Rightarrow$ 这张票不是'
+          '恒等的装饰）；把关系换成**逐槽**偏导则每一格都被商空（违例 %d 格，要求 $0$）$\\Rightarrow$ '
+          '"商完还有东西"是全总导数独有的性质，不是任何一道商都行。' %
+              (r0[5], '；'.join('$(%d,%d)\\to%d$' % (a[0], a[1], a[2]) for a in r0[3]),
+               r0[6], r0[7]),
+          '丙路那个代表系另外独立核过（只核对个数会漏一种失效：两条代表落在同一个陪集里、而陪集总数'
+          '仍然对）：把代表向量与 $D$ 的列**并成一矩阵**求秩，%d 格上 秩 $=$ 甲路秩 $+$ 代表数 且 '
+          '代表数 $=$ 甲路商维数 同时成立（违例 %d 格）$\\Rightarrow$ 代表两两不在同一个陪集里、也没有'
+          '一个落在全总导数里 $\\Rightarrow$ 丙路是**双射**而不只是同数。$n=1$ 且 $k\\ge1$ 处代表数为 '
+          '$0$（违例 %d 格）、代表数非零的格 %d 个 $\\Rightarrow$ 这台核不是空转。' %
+              (r0[18], r0[21], r0[23], r0[22]), '',
+          '窗口内逐格读数（列＝槽数、导数阶、分布数、$D$ 的秩、商维数；$k\\le5$ 的 %d 格）：' %
+              len(r0[17]), '',
+          '| $n$ | $k$ | 分布数 $\\dim V_k$ | $D$ 的秩 | 商维数 |', '|---|---|---|---|---|']
+    for rw in r0[17]:
+        L.append('| %d | %d | %d | %d | %d |' % (rw[0], rw[1], rw[2], rw[3], rw[4]))
+    L += ['',
+          '挂到类上逐层数（层宽 %s，与 14.8 那条塔同一套层号，每层 $k=k_{\\min}+$ 层宽）：导数分布'
+          '共 %s 条、模去全总导数后幸存 %s 条、被商掉 %s 条 $\\Rightarrow$ "全总导数塔那关照旧"这句'
+          '话从此逐层有数。三条账各走各的和式、逐条核：幸存 $+$ 被商掉 $=$ 分布（违例 %d 层）；'
+          '被商掉 $=$ 低一阶分布总数（那条走 $V_{k-1}$ 一侧，与上一条不同路，违例 %d 层）；洛伦兹'
+          '那一侧逐层 %s 与 R16.1 的塔逐层相等（违例 %d 层）$\\Rightarrow$ **本层不减那条塔**，它补的'
+          '是塔口径看不见的那根轴（导数落在哪个槽上）。' %
+              ('、'.join(str(r[0]) for r in r0[8]), [r[1] for r in r0[8]],
+               [r[2] for r in r0[8]], [r[3] for r in r0[8]],
+               r0[9], r0[10], r0[19], r0[11]),
+          '这根轴非空转的实测：$\\dim V_k>1$ 的（类、层）格子共 %d 个（格子总数 %d）$\\Rightarrow$ '
+          '分布并非每类只有一种，而塔把它们各读成**一个**洛伦兹计数。带槽位归属的条数按"塔读数 $\\times$ '
+          '该类幸存分布数"逐类相乘，逐层 %s $\\Rightarrow$ 逐层严格大于塔的裸读数 %s（严格大于的层宽 '
+          '%s）$\\Rightarrow$ 商掉一部分分布不会让这条计数倒退。商"咬到"（幸存 $<$ 分布）的类数逐层 '
+          '%s：第一层 %d 个恰等于"零阶类"之外的那 %d 个类（$k_{\\min}=0$ 的类共 %d 个，那里每类只有'
+          '一种分布 $\\Rightarrow$ 商不动它，违例 %d 个），两者相等是交叉核对，不是同义反复。' %
+              (r0[14], n_ok * len(r0[8]), r0[20], r0[19], r0[15], r0[12], r0[12][0],
+               n_ok - r0[16], r0[16], r0[24]),
+          '诚实边界（逐条）：本节数的是**离壳**导数分布模去全总导数 $\\Rightarrow$ 不含 EOM 场重定义、'
+          '不做洛伦兹缩并（14.8 那一半照常未合）、不按同名字场对称化（与 14.9 的 Fermi 反对称正交 '
+          '$\\Rightarrow$ 同一个导数分布落在两个相同场上不会被识别成一条）、不带味指标（第十九项那句'
+          '"味指标那一半没有"照旧未关）；槽数与导数阶都只在本层网格上核（$n\\le%d$、$k\\le%d$），'
+          '塔仍只数到 $k_{\\min}+2\\times%d $ $\\Rightarrow$ **类数仍然不是算符数**。本节不回填任何'
+          '寿命、不改 P4／P7 的判据与分级 $\\Rightarrow$ 全总导数只是五道削减里的一道，这一道现在'
+          '**也**只是一根轴上的计数 $\\Rightarrow$ **L10 保持 OPEN**。这条守卫是否真会红，与 R11–R19 '
+          '各层同法由外部变异台账的 **R20 层**逐例植入复核（数字只在那份台账的读数里，本节不转述）。' %
+              (r0[0], r0[1], len(r0[8]) - 1), '']
     return L
 
 
@@ -8664,6 +9099,29 @@ def main():
                r8[5], r8[3], len(r8[4]), r8[8], r8[6], len(r8[7]), r8[18], r8[19],
                '、'.join('$(%d,%d)$' % t for t in r8[21]), r8[9],
                '、'.join('%s %d' % (k, v) for k, v in sorted(r8[15].items()))))
+        r9 = BASIS['r19']
+        print('    宽档接进引擎（R19）：$\\nu\\le%d$、$\\nu+\\dot\\nu\\le%d$ $\\Rightarrow$ 表格档 %d 个，'
+              '其中 $\\nu+\\dot\\nu>8$ 的 %d 档（逐档 预测／$\\varepsilon$ 秩／$\\sigma$ 单独秩／并秩、'
+              '道间关系）：%s $\\Rightarrow$ 四数不全等 %d 档、宽档新增合计 %d 条；截断正对照违例 %d 档'
+              '（结构退化 %d 档：截断锚在不点侧 $\\Rightarrow$ 那台对照不是手性标量）、跨手性违例 %d 条、'
+              '未覆盖键 %s' %
+              (r9[3], r9[4], r9[2], len(r9[1]),
+               '、'.join('$(%d,%d)$ %d/%d/%d/%d 关系 %d' %
+                         (x['nu'], x['nd'], x['pred'], x['eps_rank'], x['sig_rank'],
+                          x['union_rank'], x['relations']) for x in r9[1]),
+               r9[5], r9[6], r9[7], r9[9], r9[8],
+               '、'.join('`%s`' % k for k in r9[10]) if r9[10] else '无'))
+        rz = BASIS['r20']
+        print('    导数分布模去全总导数（R20）：$n\\le%d$、$k\\le%d$ 的 %d 格上四票不全等 %d 格、'
+              '$D$ 单射失败 %d 格、六锚点 %s；丙路误写"后两槽"不同判 %d 格、逐槽偏导商空违例 %d 格；'
+              '逐层 分布/幸存/被商掉 %s/%s/%s、咬到的类数 %s、$\\dim V_k>1$ 的（类、层）格子 %d 个；'
+              '代表系并矩阵秩违例 %d 格、代表数非零 %d 格' %
+              (rz[0], rz[1], rz[18], rz[4], rz[5],
+               '、'.join('$(%d,%d)\\to%d$' % (a[0], a[1], a[2]) for a in rz[3]),
+               rz[6], rz[7],
+               '/'.join(str(r[1]) for r in rz[8]), '/'.join(str(r[2]) for r in rz[8]),
+               '/'.join(str(r[3]) for r in rz[8]), '/'.join(str(v) for v in rz[12]),
+               rz[14], rz[21], rz[22]))
     if nogo_ok:
         print('  判定：dim≤210 内唯一能破 B−L 而不破电磁的 Higgs = 126 / 126̄；'
               '120_H 虽含 (1,1,1)±2 但 |Q|=1 ⇒ 排除（报告 §4）')
