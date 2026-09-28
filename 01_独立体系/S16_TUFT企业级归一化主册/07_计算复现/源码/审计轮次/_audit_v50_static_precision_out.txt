@@ -1,0 +1,112 @@
+================================================================================
+v50 AUDIT - Grade-A static fundamental-frequency precision push (>=11.6 hard digits)
+  mpmath dps=55 ; INDEPENDENT re-implementation (NO import of v27/v28/v49)
+  rough starts ; no loop calibration ; numbers verbatim from raw run
+================================================================================
+
+[GR GATE A] Schwarzschild l=2 n=0, independent Leaver, dps=55
+    w   = 0.373671684418041827 -0.088962315688935700i
+    ref = 0.373671684418041661 -0.088962315688934104i
+    |err|=1.605e-15  digits=14.8  |Cf|=1.35e-15  GATE A: PASS
+  -> the dps=55 machinery itself is good to 14.8 digits.
+
+[GEOMETRY] cm=-0.29 d=-0.05  rho_h=0.609901951359  beta=1.263762615826
+    B_OPT=3.5000+1.5000i  mu=0.6667  K_ASC=0.095699057525
+
+[NEAR-WALL FROBENIUS] (real b=1 tortoise table, log-space RK4, 80 steps/decade)
+    U-2=-1.345901e-01  U-1=3.771616e-02  U0=3.219574e-02
+    U1=1.353667e-02  U2=2.977645e-03
+    Frobenius a_k decay: a0=1  a1=-9.2e-2 ... a12=3.5e-10  (well-behaved)
+
+================================================================================
+ROUTE A: Beyn contour projection on single-domain Gauss-Chebyshev pencil
+================================================================================
+[A-N] pencil resolution scan, contour radius=0.006, nc=60, center=anchor
+    N= 60  w= 0.434445184187 -0.056449769182i  |w-anchor|=1.107e-08  (90s)
+    N= 90  w= 0.434445176454 -0.056449763220i  |w-anchor|=3.572e-09  (287s)
+    N=120  w= 0.434445176342 -0.056449764307i  |w-anchor|=4.615e-09  (706s)
+    N=90 vs N=120 agreement |dw|=1.093e-09  (9.0 digits)   <-- pencil discretization limit
+
+[A-R] contour radius scan, N=90, nc=60, center=anchor
+    radius=0.0040  w= 0.434445176454 -0.056449763220i
+    radius=0.0060  w= 0.434445176454 -0.056449763220i
+    radius=0.0100  w= 0.434445176454 -0.056449763220i
+    radius-scan spread |max-min|=1.041e-16  (16.0 digits)   <-- contour extraction machine-precision
+
+[A-nc] contour quadrature-point scan, N=90, radius=0.006
+    nc=40  w= 0.434445176454 -0.056449763220i
+    nc=60  w= 0.434445176454 -0.056449763220i
+    nc=80  w= 0.434445176454 -0.056449763220i
+    nc-scan spread |max-min|=1.688e-16  (15.8 digits)      <-- quadrature machine-precision
+
+[A-final] Beyn final: N=120, radius=0.006, nc=80
+    w_Beyn = 0.434445176342459 -0.056449764307446i
+    sigma_min(L(w)) = 0.000e+00  (generalized residual; pole satisfied to dps=55 roundoff)
+    |w - anchor| = 4.615e-09
+
+================================================================================
+ROUTE B: Lobatto spectral-element route (single panel, z in [-0.999,0.999])
+================================================================================
+    p=12  w= 0.4256017871743 -0.0810987413055i  |w-anchor|=2.62e-02
+    p=16  w= 0.4311984758334 -0.0603446557868i  |w-anchor|=5.07e-03
+    p=20  w= 0.4324174012631 -0.0566838194696i  |w-anchor|=2.04e-03
+    p=24  w= 0.4340711940274 -0.0561468802531i  |w-anchor|=4.81e-04
+    p=28  w= 0.4343522533915 -0.0563309255780i  |w-anchor|=1.51e-04
+    p=32  w= 0.4343775554082 -0.0564381695660i  |w-anchor|=6.86e-05
+    p=28 vs p=32 |dw|=1.10e-04  (3.96 digits)   <-- algebraic (slow) convergence
+    w_spec(p=32) = 0.4343775554082 -0.0564381695660i
+
+NOTE on multi-domain: a two-Lobatto-panel assembly (wall Frobenius panel + outer
+panel, C0 merged + C1 continuity) was attempted but hit mpmath matrix-assembly
+singularities (Q1 singular at the interface row).  The full P(s)=sum a_k s^{k mu}
+Frobenius peel is only valid on the near-wall panel; applying it on the single
+Gauss-Chebyshev domain made N=60 WORSE (|err| 1.1e-8 -> 1.0e-6) because the
+series diverges at large s.  This confirms the near-wall layer needs its own
+panel; a robust multi-domain C0/C1 matching remains the open bottleneck.
+
+================================================================================
+MUTUAL VERIFICATION  Route A (Beyn)  vs  Route B (spectral)
+================================================================================
+    w_Beyn   = 0.434445176342459 -0.056449764307446i
+    w_spec   = 0.4343775554082  -0.0564381695660i   (p=32, not yet converged)
+    |diff| = 6.86e-05  ->  mutual digits = 4.2
+    (using Beyn's OWN N-convergence as internal check: N90-vs-N120 = 9.0 digits)
+    GATE >=11.6 digits: NOT REACHED
+
+================================================================================
+ROTATING SIDE splitR/a @ a=0.1
+================================================================================
+    Not re-run to completion in this v50 pass (run halted at spectral-route
+    assembly; D: disk-full forced truncation of an intermediate build).
+    v49 double-precision reference: splitR/a = +1.621367, splitI/a = -0.141040.
+    To be re-done with the dps=50 static anchor once the multi-domain assembly
+    is fixed.
+
+================================================================================
+SUMMARY
+================================================================================
+  GR gate A ............ 14.8 digits  PASS  (validates dps=55 machinery)
+  Beyn contour radius .. 16.0 digits (extraction is machine-precision)
+  Beyn contour nc ...... 15.8 digits (quadrature is machine-precision)
+  Beyn pencil N-conv ...  9.0 digits (N90 vs N120)  <-- Beyn bottleneck
+  Spectral p-conv ......  ~4.0 digits at p=32 (algebraic, not converged)
+  MUTUAL ...............  4.2 digits (Beyn vs p=32 spectral)
+  11.6-hard gate .......  NOT REACHED
+  AUTHORITATIVE w0 .....  NOT DECLARED (two routes not mutually verified to 11.6)
+                          Best Beyn estimate: 0.434445176342 -0.056449764307i
+                          (9.0 digits internal; consistent with v49 static anchor
+                           0.4344451764-0.0564497644i)
+  WALL DIAGNOSIS .......  Near-wall layer discretization. The Beyn contour itself
+                          is exact to 16 digits; the limit is the single-domain
+                          Gauss-Chebyshev pencil, whose N=90->120 gain stalls at
+                          ~9 digits because the residual Frobenius corrections
+                          (beyond s^beta) are not peeled on a dedicated wall panel.
+                          The Lobatto spectral route converges only algebraically
+                          (~p^-2.4) and is far from converged at p=32.
+                          Bottleneck = discretization (both routes), NOT the Beyn
+                          extraction and NOT mpmath precision.
+  FOUR-STATE GRADE .....  RED (NOT REACHED). Honest report: 11.6 digits needs a
+                          robust two-domain element with the P(s) Frobenius peel
+                          confined to the wall panel; that assembly hit an
+                          mpmath Q1-singularity at the interface and was not
+                          resolved this pass.  No fake closure.

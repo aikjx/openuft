@@ -1,0 +1,90 @@
+﻿================================================================================
+T01 LINE 10 — v52 Beyn single-domain (8.4 dig) + E475 field TUFT split
+  double precision ; no qnm import ; no hardcoded target ; no loop calib
+  Grade-A anchor: 0.434445178 -0.056449760i
+================================================================================
+
+[GR GATE A] a=0, s=-2, l=2, m=2, n=0 (Leaver, independent solve)
+    w = 0.373671684418042 -0.088962315688936i
+    |err|=1.646e-15  14.8 digits  GATE A: PASS
+
+[GR GATE B] splitR/a -> 0.2515323 (Richardson a^4)
+    a= 0.005 splitR/a=+0.25153472
+    a= 0.010 splitR/a=+0.25154192
+    a= 0.020 splitR/a=+0.25157075
+    a= 0.040 splitR/a=+0.25168614
+    a= 0.080 splitR/a=+0.25214929
+    a^4 extrap: splitR/a=+0.25153232 err=1.80e-08 7.7 digits GATE B: PASS
+
+================================================================================
+[TUFT STATIC] v52 Beyn single-domain basis, b=(3.5+1.5j), simple s^beta peel
+  gate standard: >=6 digits AND N=90/120 interconsistency <=1e-9
+
+    N= 60  w=0.434445185166 -0.056449771298i  |err|=1.338e-08  7.9 digits
+    N= 90  w=0.434445176644 -0.056449763641i  |err|=3.885e-09  8.4 digits
+    N=120  w=0.434445176402 -0.056449764441i  |err|=4.720e-09  8.3 digits
+    N=90 vs N=120 interconsistency: |dw|=8.359e-10
+    worst digits across N=60/90/120: 7.9
+    GATE TUFT static: PASS (need >=6 dig & N-consist<=1e-9)
+
+================================================================================
+[E475 FIELD] first-principles Omega_F/a = 6 int_rho^inf dr'/(r'^4 e^{2/r'} h^{3/2})
+  near-wall divergent part analytically subtracted (h~HP*(r-rho_h)); no barrier.
+
+         rho        Omega_F/a     2/rho^3 (GR)      ratio
+      0.6299     3.6235052770     8.0022319296   0.452812
+      0.7000     1.7711370906     5.8309037901   0.303750
+      0.8000     1.1329105154     3.9062500000   0.290025
+      1.0000     0.6468592572     2.0000000000   0.323430
+      1.5000     0.2545804271     0.5925925926   0.429604
+      2.0000     0.1286670539     0.2500000000   0.514668
+      3.0000     0.0466539346     0.0740740741   0.629828
+      5.0000     0.0120141014     0.0160000000   0.750881
+     10.0000     0.0017272172     0.0020000000   0.863609
+
+================================================================================
+TRIPLE GATE: GR A(14.8) + GR B(7.7) + TUFT static(7.9, N-consist 8.36e-10)
+  GR Gate A:    PASS (14.8 dig, need >=11.6)
+  GR Gate B:    PASS (7.7 dig, need >=4.0)
+  TUFT static:  PASS (7.9 dig, need >=6 ; N-consist 8.36e-10, need <=1e-9)
+  =============  TRIPLE: PASS  =============
+
+================================================================================
+[TUFT ROTATING] triple gate passed
+  Beyn w0 (N=120) = 0.434445176402 -0.056449764441i
+  Rayleigh denominator |u Q1 v| = 8.761945e-01
+  residual |(Q0+w0 Q1)v| = 4.784e-09
+
+  computing E475 Omega_F on grid (120 nodes)...
+    E475 OmF range: [1.8437e-16, 2.8622e+01]
+
+  ---- bare-core three limit bands (per-(a m) complex c) ----
+  (i)   set-to-zero  : c=-0.000000e+00-0.000000e+00i  splitR/a=-0.000000
+  (ii)  GR 2R^-3     : c=+1.165620e+00-6.694591e-02i  splitR/a=4.662482
+  (iii) E475 field   : c=+4.088568e-01-2.513638e-02i  splitR/a=1.635427
+
+  Q spin slope (Rayleigh, E475) splitR/a = 1.635427
+
+  ---- non-perturbative continuation (direct pole at small a, E475 field) ----
+    m=+2: a=0.05:0.476579462-0.061291674i  a=0.10:0.520496426-0.071709974i  a=0.15:0.564575171-0.088584862i
+    m=-2: a=0.05:0.394972061-0.055741785i  a=0.10:0.358360311-0.057605784i  a=0.15:0.324441638-0.060574958i
+
+    a=0.05: Re w(+2)=0.476579462  Re w(-2)=0.394972061  |split|=0.081607401  split/a=1.632148
+    a=0.10: Re w(+2)=0.520496426  Re w(-2)=0.358360311  |split|=0.162136115  split/a=1.621361
+    a=0.15: Re w(+2)=0.564575171  Re w(-2)=0.324441638  |split|=0.240133532  split/a=1.600890
+
+================================================================================
+[TUFT FINAL RESULT]
+  static TUFT pole w0 (Beyn N=120) = 0.434445176 -0.056449764i
+  TUFT m=+/-2 frequency split |dRe w| @ a=0.10  = 0.162136115
+  Q spin slope splitR/a (Rayleigh E475)       = 1.635427
+  Q spin slope splitR/a (continuation a=0.05) = 1.632148
+  Rayleigh vs continuation relative diff      = 2.01e-03
+  bare-core three limit bands splitR/a:
+      (i)   set-to-zero : -0.000000
+      (ii)  GR 2R^-3    : 4.662482
+      (iii) E475 field  : 1.635427
+  -> band width (E475 - zero) = 1.635427 ; E475/GR ratio = 0.3508
+
+  wall time: 31.8s
+  -> tuft_v54_tuft_spin_final_out.txt

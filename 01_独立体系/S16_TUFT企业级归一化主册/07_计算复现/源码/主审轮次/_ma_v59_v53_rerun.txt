@@ -1,0 +1,94 @@
+﻿================================================================================
+T01 LINE 9 — DUAL-DOMAIN SPECTRAL assault on TUFT static pole
+  inner: Frobenius series on real near-wall axis (w-dependent recurrence)
+  outer: Chebyshev-Lobatto on complex contour s=s_c+b_out t
+  matching: C0/C1 Robin at s_c=0.30 ;  b_out=(3.5+1.5j) ;  t_far=60.0
+  Grade-A anchor: 0.434445178 -0.056449760i
+================================================================================
+
+  geometry: rho_h=0.6099019514  HP=3.640567  beta+=1.2637626158  mu=0.6667
+  Frobenius c_j (real near-wall fit):
+    c[-2] = -1.34589954e-01   (s^{-2 mu})
+    c[-1] = +3.77068108e-02   (s^{-1 mu})
+    c[+0] = +3.23845394e-02   (s^{+0 mu})
+    c[+1] = +1.18491172e-02   (s^{+1 mu})
+    c[+2] = +1.89222803e-02   (s^{+2 mu})
+    c[+3] = -1.49806053e-01   (s^{+3 mu})
+    c[+4] = +9.23585829e-01   (s^{+4 mu})
+    c[+5] = -3.54086286e+00   (s^{+5 mu})
+    c[+6] = +8.20224188e+00   (s^{+6 mu})
+    c[+7] = -9.91637258e+00   (s^{+7 mu})
+    c[+8] = +1.99147290e+00   (s^{+8 mu})
+    c[+9] = +7.85273615e+00   (s^{+9 mu})
+    c[+10] = -2.92555668e+00   (s^{+10 mu})
+    c[+11] = -8.35648517e+00   (s^{+11 mu})
+    c[+12] = +6.23423206e+00   (s^{+12 mu})
+
+[GR GATE A] a=0, s=-2, l=2, m=2, n=0 (independent Leaver solve)
+    w = 0.373671684418042 -0.088962315688936i
+    |err|=1.646e-15  14.8 digits  GATE A: PASS
+
+[GR GATE B] splitR/a -> 0.2515323 (Richardson a^4)
+    a= 0.005 splitR/a=+0.25153472
+    a= 0.010 splitR/a=+0.25154192
+    a= 0.020 splitR/a=+0.25157075
+    a= 0.040 splitR/a=+0.25168614
+    a= 0.080 splitR/a=+0.25214929
+    a^4 extrap: splitR/a=+0.25153232 err=1.80e-08 7.7 digits GATE B: PASS
+
+================================================================================
+[TUFT DUAL-DOMAIN] inner Frobenius + outer Lobatto, C0/C1 matching at s_c=0.30
+  outer: peeled F=e^{-iws}, backward shooting from t_far=60.0, complex Newton on R(w)=0.
+    N= 60  w=0.434463113701 -0.056488987781i  |err|=4.313e-05  4.4 digits
+    N= 90  w=0.434463113720 -0.056488987591i  |err|=4.313e-05  4.4 digits
+    N=120  w=0.434463113331 -0.056488985608i  |err|=4.313e-05  4.4 digits
+    N=90 vs N=120 agreement: |dw|=2.021e-09  (need <=1e-12)
+    worst digits across N=60/90/120: 4.4 (need >=11.6)
+    GATE TUFT static: FAIL
+
+================================================================================
+[E475 DERIVATION TRACEABILITY] variational chain
+  Static TUFT metric (O(a^0), stationary axisymmetric):
+    ds^2 = -A(\rho) dt^2 + B(\rho) d\rho^2 + C(\rho)(d\phi - \omega_F dt)^2
+    A=e^{-2/\rho},  B=e^{2/\rho} h(\rho),  h=1+c_m/\rho^2+d/\rho^3
+    (c_m=-0.29, d=-0.05 are the TUFT Schwarzschild deviations; at c_m=d=0
+     the geometry reduces to Schwarzschild in isotropic-like tortoise form.)
+  Linearise at O(a) in the rotational potential \omega_F.  The g_{t\phi}
+  vacuum Einstein equation (stationary axisymmetric, Carter-like) reduces to
+    d/d\rho [ (\rho^4 e^{2/\rho} h^{3/2}) d\omega_F/d\rho ] = 0
+  Derivation:
+   (i)  g_{t\phi} = -C \omega_F ; the O(a) vacuum equation for the off-diagonal
+        shift is  (\sqrt{-g} g^{tt} g^{\phi\phi} ... ) -> standard Carter form
+        d/d\rho( \sqrt{AB} C^2/(2\rho^2) d\omega_F/d\rho ) = 0.
+   (ii) Substitute A=e^{-2/\rho}, B=e^{2/\rho}h, C=\rho^2:
+        sqrt(AB)=1,  C^2/(2\rho^2)=\rho^2/2  ->  d/d\rho[\rho^2 d\omega_F/d\rho]=0
+        at GR.  The TUFT h^{3/2} Jacobian factor enters from the radial
+        measure sqrt{B}/(B) = h^{-1/2} combined with the B=e^{2/rho} h
+        lapse: sqrt{-g}_{t\phi} channel = \rho^2 e^{2/rho} h^{3/2}.
+   (iii) Integrate once:  \rho^4 e^{2/\rho} h^{3/2} d\omega_F/d\rho = const.
+        Boundary \omega_F(\infty)=0 fixes the const by matching to the
+        GR Lense-Thirring tail \omega_F ~ 2a/\rho^3; this fixes const=6a.
+   (iv) Hence  Omega_F(\rho)/a = 6 \int_\rho^\infty dr'/(r'^4 e^{2/r'} h(r')^{3/2}).
+  No manual Gaussian barrier; c_m/d corrections enter through h(r')^{3/2}.
+
+         rho        Omega_F/a     2/rho^3 (GR)      ratio
+      0.7000     1.7711370906     5.8309037901   0.303750
+      0.8000     1.1329105154     3.9062500000   0.290025
+      1.0000     0.6468592572     2.0000000000   0.323430
+      1.5000     0.2545804271     0.5925925926   0.429604
+      2.0000     0.1286670539     0.2500000000   0.514668
+      3.0000     0.0466539346     0.0740740741   0.629828
+      5.0000     0.0120141014     0.0160000000   0.750881
+     10.0000     0.0017272172     0.0020000000   0.863609
+
+================================================================================
+TRIPLE GATE: GR A(14.8) + GR B(7.7) + TUFT static(4.4)
+  GR Gate A:    PASS (14.8 dig, need >=11.6)
+  GR Gate B:    PASS (7.7 dig, need >=4.0)
+  TUFT static: FAIL (4.4 dig + interconverge 2.02e-09, need >=11.6 & <=1e-12)
+  =============  TRIPLE: FAIL  =============
+
+*** Triple gate NOT passed -> TUFT rotating numbers remain OPEN (honest). ***
+
+  wall time: 16.7s
+  -> tuft_v53_dual_domain_spectral_out.txt

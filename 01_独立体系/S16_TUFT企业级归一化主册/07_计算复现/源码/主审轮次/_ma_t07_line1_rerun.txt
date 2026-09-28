@@ -1,0 +1,165 @@
+﻿==============================================================================
+TUFT T07 LINE 1 -- Q_N uniqueness lock (microscopic spectrum)
+  double precision ; no pseudoclose ; E1-E498 frozen ; T07 numbering only
+==============================================================================
+  rho_h=0.609901951  beta=1.263762616  gamma=2/rho_h=3.279215613
+  ladder: m(Q)=M0*Q^0.75*exp[-gamma*(Q-1)], M0=1.000e+14 GeV
+  v_EW=246.22 GeV  m_Pl=1.2209e+19  g*=106.75
+  scales: m_e=5.110e-04 GeV  m_t=172.76 GeV
+
+==============================================================================
+[1] ACTIVE NEUTRINO MASS WINDOW (NuFIT 5.x, NH)
+==============================================================================
+  d m^2_21 = 7.420e-05 eV^2   -> m2 = sqrt = 0.0086 eV
+  d m^2_31 = 2.510e-03 eV^2   -> m3 = sqrt = 0.0501 eV
+  sin^2 t12 = 0.304   sin^2 t13 = 0.022
+  NH lightest m1 ~ 0 (free); sum = 0.0587 eV (< cosmology 0.12 eV: OK)
+  ==> seesaw-active m_nu window: [0.0086, 0.0501] eV
+                              = [8.614e-12, 5.010e-11] GeV
+
+==============================================================================
+[2] Q-LADDER SPECTRUM m(Q) (frozen T06 ladder)
+==============================================================================
+   Q= 1  m(Q)=1.0000e+14 GeV
+   Q= 2  m(Q)=6.3333e+12 GeV
+   Q= 3  m(Q)=3.2326e+11 GeV
+   Q= 4  m(Q)=1.5105e+10 GeV
+   Q= 5  m(Q)=6.7243e+08 GeV
+   Q= 6  m(Q)=2.9033e+07 GeV
+   Q= 7  m(Q)=1.2273e+06 GeV
+
+==============================================================================
+[3] SEESAW SCAN: m_nu window x m_D naturalness x M_R GUT window
+==============================================================================
+  type-I seesaw: m_nu = m_D^2 / M_R  ->  m_D = sqrt(m_nu * M_R)
+  naturalness band: m_e=5.110e-04 GeV  <= m_D <= m_t=172.76 GeV
+  GUT window imposed on M_R: [1.0e+14, 1.0e+16] GeV
+
+  Q_N=1:  M_R=1.0000e+14 GeV
+     required m_D = sqrt(m_nu*M_R) = [ 29.350,  70.781] GeV
+     y_nu=m_D/v_EW = [0.1192, 0.2875]   (y_e~2e-6, y_t~0.7)
+     naturalness m_D in [m_e,m_t]: PASS
+     GUT window M_R in [1e14,1e16]: PASS
+     lightest N_R M1=m(Q_N+2)=3.2326e+11 GeV (lepto driver)
+
+  Q_N=2:  M_R=6.3333e+12 GeV
+     required m_D = sqrt(m_nu*M_R) = [  7.386,  17.813] GeV
+     y_nu=m_D/v_EW = [0.0300, 0.0723]   (y_e~2e-6, y_t~0.7)
+     naturalness m_D in [m_e,m_t]: PASS
+     GUT window M_R in [1e14,1e16]: FAIL
+     lightest N_R M1=m(Q_N+2)=1.5105e+10 GeV (lepto driver)
+
+  Q_N=3:  M_R=3.2326e+11 GeV
+     required m_D = sqrt(m_nu*M_R) = [  1.669,   4.024] GeV
+     y_nu=m_D/v_EW = [0.0068, 0.0163]   (y_e~2e-6, y_t~0.7)
+     naturalness m_D in [m_e,m_t]: PASS
+     GUT window M_R in [1e14,1e16]: FAIL
+     lightest N_R M1=m(Q_N+2)=6.7243e+08 GeV (lepto driver)
+
+==============================================================================
+[4] LEPTOGENESIS WINDOW: K_N<1 out-of-equil vs >1 washout; M1 thermal floor
+==============================================================================
+  m_* (critical washout mass) = 1.600e-03 eV ; K_N = m_nu/m_*
+  vanilla thermal floor: M1 >= 1.0e+09 GeV
+  K_N<1 => out-of-equilibrium Sakharov-3 ; K_N>1 => washout-dominated
+
+  Q_N=1: M1=3.2326e+11 GeV = 323.26x floor ; thermal PASS
+     K_N(m_nu window) = [ 5.38, 31.31]  -> ALL >1 (washout; needs resonant M1~M2 or flavored/freeze-in)
+
+  Q_N=2: M1=1.5105e+10 GeV =  15.10x floor ; thermal PASS
+     K_N(m_nu window) = [ 5.38, 31.31]  -> ALL >1 (washout; needs resonant M1~M2 or flavored/freeze-in)
+
+  Q_N=3: M1=6.7243e+08 GeV =   0.67x floor ; thermal FAIL/MARGINAL
+     K_N(m_nu window) = [ 5.38, 31.31]  -> ALL >1 (washout; needs resonant M1~M2 or flavored/freeze-in)
+
+==============================================================================
+[5] DECAY / OBSERVABLE CONSTRAINTS
+==============================================================================
+  (a) mu->e gamma  MEG upper limit Br < 4.2e-13
+      type-I seesaw dipole: Br ~ (3a/32pi) |(YnuYnu^dag)_e|^2 (M_W/M_R)^2
+      -> scales as M_R^{-2}; non-discriminating, estimate per candidate:
+        Q_N=1: Br ~ 9.62e-31  (vs limit 4.2e-13) -> PASS, margin ~4.4e+17 orders below
+        Q_N=2: Br ~ 9.62e-31  (vs limit 4.2e-13) -> PASS, margin ~4.4e+17 orders below
+        Q_N=3: Br ~ 9.62e-31  (vs limit 4.2e-13) -> PASS, margin ~4.4e+17 orders below
+
+  (b) 0nu beta-beta  KamLAND-Zen half-life lower bound -> |m_bb| < ~0.05 eV
+      NH predicted |m_bb| ~ [0.0033, 0.0084] eV (Majorana-phase window)
+      -> below experimental bound; light-neutrino quantity, does NOT discriminate Q_N. PASS for all.
+
+==============================================================================
+[6] Q_N JUDGMENT TABLE  (candidate x constraint x exclude/survive)
+==============================================================================
+  Q_N |   M_R[GeV] | seesaw | GUTwin |    M1[GeV] |  therm | mu2eg | 0nubb | verdict
+  ----------------------------------------------------------------------------------
+    1 |   1.00e+14 |   PASS |   PASS |   3.23e+11 |   PASS |  PASS |  PASS | SURVIVE
+    2 |   6.33e+12 |   PASS |   FAIL |   1.51e+10 |   PASS |  PASS |  PASS | EXCLUDE (below GUT window)
+    3 |   3.23e+11 |   PASS |   FAIL |   6.72e+08 |   MARG |  PASS |  PASS | EXCLUDE (below GUT window)
+
+  Survivors under T06 premise (M_R in GUT window): Q_N = [1]
+  ==> Q_N = 1 uniquely survives.
+
+==============================================================================
+[7] I3 BRIDGE ELEVATION RULING
+==============================================================================
+  T06 state: lattice span 3.864e+05 vs observed 3.381e+05 (rel 14.3%) = FIT.
+  Q_N uniquely locked = 1 under GUT-window premise.
+  PARTIAL elevation: the IDENTIFICATION Q_N=1 (the anchor sector) is now
+  selected by an external phenomenological window, no longer merely fitted.
+  BUT the 14.3% span residual remains a numerical order-of-magnitude FIT;
+  the GUT window itself is an input, not a first-principles theorem.
+  ==> I3 bridge: CONDITIONAL, NOT elevated to strict theorem.
+
+==============================================================================
+[8] FOUR-STATE GRADING
+==============================================================================
+  (A) STRICT THEOREM:
+      - type-I seesaw m_nu = m_D^2/M_R algebraic exact.
+      - N_R gauge singlet => zero triangle anomalies; E142/E181-E189 vetoes
+        stand and are decoupled from g<->Q_N.
+      - K_N = m_nu/m_* independent of M_R at fixed m_nu (seesaw cancellation).
+
+  (B) CONDITIONAL THEOREM:
+      - IF M_R must lie in GUT window [1e14,1e16] GeV (T06 premise), THEN
+        Q_N=1 uniquely survives: M_R=1e14 sits at the lower GUT edge;
+        Q_N=2 (6.3e12) and Q_N=3 (3.2e11) fall below the window by factors
+        15.8 and 309.  Seesaw naturalness is satisfied by all three
+        (m_D in [m_e,m_t]); mu->e gamma and 0nu beta-beta are
+        non-discriminating (Br ~1e-30 vs limit 4e-13; m_bb ~1e-2 eV).
+
+  (C) DEFINITION IDENTIFICATION:
+      - Q_N=1 = lowest Hopf-charge sector of heavy N_R (M_R~1e14 GeV).
+      - The GUT window [1e14,1e16] as a selection rule is a phenomenological
+        input (conventional minimal-type-I/GUT seesaw), not derived here.
+
+  (D) OPEN PROPOSITION:
+      - If the GUT-window premise is relaxed to 'intermediate seesaw'
+        (M_R ~ 1e11-1e13), Q_N=1 AND Q_N=2 both survive (Q_N=3 marginal:
+        M1=6.7e8 GeV below the 1e9 thermal floor, needs resonant/freeze-in).
+      - Minimal extra input to close: a first-principles fix of M_R scale
+        (e.g. Hopf-soliton / gauge-unification prediction M_R=1e14 rather than
+        6e12).  Until then the integer lock is conditional, not strict.
+      - K_N = 5.4-31 >1 for all candidates: thermal decay washed out;
+        resonant leptogenesis (M2~M1) or freeze-in still required.
+      - I6 CP phase and I7 V(n,T) remain OPEN (unchanged from T06).
+      - The 14.3% lattice-span residual is NOT tightened by Q_N locking.
+
+==============================================================================
+[9] REPRODUCIBILITY CHECKSUM
+==============================================================================
+  gamma=2/rho_h        = 3.279215613
+  m2/m3 (NuFIT NH)     = 0.0086 / 0.0501 eV
+  Q_N=1: M_R=1.0000e+14  m_D=[29.350,70.781] GeV  M1=3.2326e+11  -> SURVIVE
+  Q_N=2: M_R=6.3333e+12  m_D=[7.386,17.813] GeV  M1=1.5105e+10  -> EXCLUDE (below GUT window)
+  Q_N=3: M_R=3.2326e+11  m_D=[1.669,4.024] GeV  M1=6.7243e+08  -> EXCLUDE (below GUT window)
+  survivors            = [1]
+  K_N window           = [5.38,31.31]
+
+  VERDICT: Under the T06-endorsed GUT-scale premise, Q_N=1 is the UNIQUE
+  surviving integer (Q_N=2,3 excluded for M_R below 1e14 GeV; Q_N=3 also
+  marginal on the thermal M1 floor).  The lock is CONDITIONAL on the GUT
+  window; without it Q_N=1,2 remain allowed (OPEN).  I3 bridge stays
+  CONDITIONAL (14.3% span residual unchanged).  No pseudoclose.
+
+[End of T07 line 1.]
+
+[written] D:\a10\aikjx\code\my_lib\tuft_t07_line1_QN_uniqueness_out.txt

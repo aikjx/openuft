@@ -1,0 +1,374 @@
+﻿================================================================================
+T04 LINE 2 -- M2 Born Rule : theorem-level non-derivability in CFT
+================================================================================
+  double precision ; numpy only ; anchors T17 / E333-E336 (v8, not redone)
+
+================================================================================
+[1] FORMAL FRAMEWORK : state space mismatch
+================================================================================
+
+  Classical Field Theory (CFT, TUFT 框架):
+    Lagrangian   L = L(phi, d_mu phi) ,  phi: Sigma -> R (or c-number C)
+    State space M = {all field configurations phi on spatial slice Sigma}
+    Dynamics    : deterministic Euler-Lagrange / Hamiltonian flow X_H on M
+    Pure state  = a SINGLE point phi0 in M (field IS in this configuration)
+    Mixed state = a probability MEASURE rho[phi] on M (epistemic ignorance)
+    Symplectic   : Liouville measure d^n phi d^n pi conserved by X_H
+
+  Quantum Mechanics (the substrate M2 presupposes):
+    State space H = complex separable Hilbert space
+    Pure state  = a RAY |psi> in H (not a point in configuration space)
+    Mixed state = density operator rho_Q on H, rho_Q = sum_i p_i |psi_i><psi_i|
+    Observable  = self-adjoint operator A, eigenbasis {|a>}, A|a>=a|a>
+    Born rule   : P(a) = |<a|psi>|^2 ,  sum_a P(a) = 1, P(a) >= 0
+
+  >> The very OBJECT <a|psi> does not exist in CFT.  There is no complex
+     vector psi and no basis |a> of mutually-exclusive outcome alternatives.
+     phi0 is a point, not a vector to be projected onto an outcome basis.
+
+================================================================================
+[2] DEMO A : off-diagonal coherence (why rho_C cannot mimic |psi><psi|)
+================================================================================
+
+  Take a 2-level truncated problem (two field modes / two outcomes a=0,1).
+
+  QM pure state:  |psi> = alpha |0> + beta |1> ,  |alpha|^2+|beta|^2 = 1
+    density matrix  rho_Q = |psi><psi| = [[ |a|^2 , a b* ],[ a* b , |b|^2 ]]
+    off-diagonal  rho_Q[0,1] = alpha* beta  (COHERENCE, generally nonzero)
+
+  CFT ensemble:  field IS in configuration 0 OR 1 with ignorance prob p0,p1.
+    classical probability measure on {config0, config1}:
+    rho_C = [[ p0 , 0 ],[ 0 , p1 ]]   -- DIAGONAL by construction
+    off-diagonal rho_C[0,1] = 0   (there is no 'both' in classical logic)
+
+  numeric (theta=0.9000, phi=1.3000 rad):
+    alpha = 0.621610+0.000000j
+    beta  = 0.209539+0.754781j
+    P0 = |alpha|^2 = 0.386399
+    P1 = |beta|^2 = 0.613601
+    sum P = 1.000000  (must be 1)
+
+    rho_Q[0,1] (quantum coherence) = 0.130252-0.469179j  MAG = 0.486924
+    rho_Q[1,0] = 0.130252+0.469179j
+
+  CFT analogue: field phi = c0 u0 + c1 u1 (BOTH modes actually present):
+    c0 = 0.621610+0.000000j, c1 = 0.209539+0.754781j
+    energy fraction f0 = E0/(E0+E1) = 0.386399
+    energy fraction f1 = E1/(E0+E1) = 0.613601
+
+  >> NUMERIC COINCIDENCE ALERT: f0 = 0.386399 == P0 = 0.386399.
+     But they are PHYSICALLY DIFFERENT OBJECTS:
+       - P0 = |alpha|^2 : probability that a MEASUREMENT yields outcome 0
+         EXCLUSIVELY (outcome 1 then does NOT occur).  Depends on phase
+         phi only through a basis rotation; sum over mutually exclusive a.
+       - f0 = E0/(E0+E1): deterministic fraction of field energy carried by
+         mode u0.  BOTH modes are simultaneously present and measurable;
+         there is no 'outcome 0 OR outcome 1' exclusivity.
+
+  >> The relative phase phi = 1.3000 enters rho_Q coherence |coh| = 0.486924.
+     In CFT, phi is a physical oscillation phase of the c-number field; it
+     controls spatial interference fringes, NOT a measurement outcome prob.
+     A classical time-averaged detector reading the field does NOT collapse
+     to outcome 0 or 1 -- it reads both c0 and c1 as deterministic numbers.
+
+================================================================================
+[3] DEMO B : normalization mismatch (why |phi|^2 cannot be Born-normalized)
+================================================================================
+
+  Born rule requires: sum_a P(a) = 1, P(a) >= 0, and psi freely rescalable
+     up to a global phase (rays).  Rescaling psi -> c psi does NOT change
+     any P(a) because |c|^2 cancels in the normalized projection.
+
+  CFT: |phi(x)|^2 integrated over Sigma = total charge / energy Q[phi],
+     which is a CONSERVED functional fixed by initial conditions.  Rescaling
+     phi -> c phi changes the physical energy by |c|^2 -- it is NOT a gauge
+     freedom.  You cannot normalize sum |P|^2 = 1 without changing physics.
+
+  linear field, mode amplitudes c = [0.7000, 0.3000]
+    total energy E = sum |c|^2 = 0.580000  (conserved, set by IC)
+
+  If we rescale to unit 'norm' c_norm = c/sqrt(E):
+    c_norm = [0.919145, 0.393919]
+    E_norm = 1.000000
+  >> E_norm = 1 is achieved ONLY by artifically dividing out the physical
+     energy.  In the quantum case this division is the Born normalization
+     (probabilities sum to 1).  In CFT the division DESTROYS the physical
+     amplitude: c_norm no longer represents the actual field strength.
+
+  In a NONLINEAR theory (Skyrme, TUFT topological sector), rescaling phi
+  changes the dynamics nonlinearly (V(phi), Skyrme term B^2).  The winding
+  number n and the effective potential V(n) are fixed integers/functionals;
+  there is no global-phase gauge that leaves them invariant.
+
+================================================================================
+[4] DEMO C : determinism (why no stochastic outcome map is available)
+================================================================================
+
+  CFT Hamiltonian flow X_H on M is deterministic: given phi(x,0), the entire
+  trajectory phi(x,t) is uniquely fixed.  Even chaos yields a deterministic
+  (if practically unpredictable) trajectory; classical probability is
+  EPISTEMIC (our ignorance), not ONTIC indeterminism.
+
+  Born rule is ONTIC-indeterministic: psi does NOT determine which single
+  outcome a occurs; it only fixes P(a).  No amount of additional classical
+  information (hidden phi degrees of freedom inside M) changes this: a fully
+  deterministic flow maps a definite initial point to a definite final point,
+  never to a stochastic 'outcome a with probability P(a)' unless stochastic
+  noise is added as an EXTERNAL postulate.
+
+  toy harmonic flow (deterministic):
+    IC (x0=1,p0=0) -> x(t) = [ 1.0000e+00  6.1232e-17 -1.0000e+00 -1.8370e-16  1.0000e+00]
+    IC (x0=0,p0=1) -> x(t) = [ 0.0000e+00  1.0000e+00  1.2246e-16 -1.0000e+00 -2.4493e-16]
+  >> two ICs give two EXACT, unique trajectories.  There is no map that
+     outputs 'outcome 0 with probability 0.5' from a single superposed IC.
+     A classical mixture rho = 0.5 delta(traj1) + 0.5 delta(traj2) is an
+     IGNORANCE distribution over two already-definite trajectories; it is
+     diagonal, has no coherence, and evolves by linear Liouville flow.
+
+================================================================================
+[5] THEOREM : structural non-derivability of Born rule inside CFT
+================================================================================
+
+  PROPOSITION (M2-non-derivable-in-CFT):
+  Let CFT be defined by L(phi, d_mu phi) with deterministic symplectic flow
+  X_H on real configuration manifold M, pure states = points of M, mixed
+  states = probability measures on M.  Then there does NOT exist a map
+
+       P : M x O  -> [0,1]
+
+  (O = set of measurement outcomes) that is
+    (i)   of the Born form P(a) = |<a|psi>|^2 with a complex Hilbert inner
+        product and outcome basis {|a>};
+    (ii)  derivable SOLELY from L and X_H (no extra postulate);
+    (iii) assigning non-trivial probabilities to outcomes NOT determined by
+        the initial field configuration phi(x,0).
+
+  PROOF (structural, by three independent obstructions):
+
+  Obstruction 1 -- State space is not a Hilbert space.
+     M is a real (or real-coded complex) infinite-dimensional manifold.
+     The inner product <a|psi> requires a complex vector space structure on
+     the STATE (not on the field values at a point).  A c-number field phi(x)
+     is a point in M; it is not a vector in a complex Hilbert space over M.
+     No operation in CFT projects a point phi0 onto 'outcome basis vectors'
+     {|a>} living in a Hilbert space -- those vectors do not exist.  [Demo A/B]
+
+  Obstruction 2 -- Classical probability measure is diagonal; no pure-state
+     coherence exists to which the Born modulus could correspond.
+     rho_C[phi] is a measure on configuration space; its matrix representation
+     in the configuration basis is diagonal (rho_C[a,b]=0 for a!=b), because
+     classical logic requires the field to be in ONE definite configuration.
+     The Born rule for a PURE state psi = sum_a c_a |a> requires off-diagonal
+     structure (coherence c_a* c_b) and yields P(a)=|c_a|^2.  A diagonal
+     classical measure has no off-diagonal entries; its 'probabilities' are
+     ignorance weights over already-definite configurations, not |amplitude|^2
+     projections.  You cannot manufacture an off-diagonal entry by adding
+     more classical degrees of freedom -- classical logic keeps it diagonal.
+     [Demo A: rho_Q[0,1]=0.4869 != 0, rho_C[0,1]=0 by construction]
+
+  Obstruction 3 -- No tensor-product factorization H_S(x)H_E, hence no
+     einselection / decoherence, hence no environment-derived Born rule.
+     Zurek-type derivations presuppose (a) factorization H=H_S(x)H_E of a
+     Hilbert space, (b) an interaction H_SE that correlates system states
+     with environment states, (c) tracing out the environment to obtain a
+     diagonal reduced density matrix and the Born rule via env-assisted
+     invariance.  CFT's configuration manifold M cannot be factored as a
+     tensor product of superposed outcome alternatives: splitting space into
+     regions is a spatial partition, not a Hilbert tensor product of mutually
+     exclusive superposed states.  There are no off-diagonal terms to decay
+     (Obstruction 2), so 'decoherence' has no object to act on.  Importing
+     H_S(x)H_E IS importing the Hilbert space -- i.e. importing QM.
+
+  Obstruction 4 -- Determinism.
+     X_H maps each phi(x,0) to a unique phi(x,t).  A stochastic outcome rule
+     P(a) not fixed by phi(x,0) cannot be a consequence of a deterministic
+     flow; it requires adding randomness externally.  [Demo C]
+
+  CONCLUSION OF PROOF: satisfying (i)-(iii) simultaneously requires the
+  Hilbert space, the inner product, the off-diagonal coherence, the tensor
+  product, and indeterminism -- i.e. it requires ADOPTING quantum mechanics
+  as a substrate.  Deriving Born from CFT while secretly assuming all of
+  these is CIRCULAR.  QED: M2 is structurally non-derivable inside CFT.
+
+================================================================================
+[6] THE THREE MISSING INGREDIENTS (task checklist)
+================================================================================
+
+  (a) No probability-amplitude structure:
+      CFT has no complex state vector psi, no outcome basis {|a>}, no inner
+      product <a|psi>.  phi(x) is a c-number configuration; |phi(x)|^2 is a
+      spatial energy/charge density.  [Obstruction 1 + Demo A]
+
+  (b) No system-environment decomposition:
+      M is a non-factorizable configuration manifold.  There is no H_S(x)H_E
+      tensor product of superposed alternatives.  Spatial splitting != Hilbert
+      factorization.  [Obstruction 3]
+
+  (c) No decoherence mechanism:
+      Classical rho_C is diagonal; there are no off-diagonal coherences to
+      suppress.  Decoherence presupposes quantum superpositions.  Skyrme
+      nonlinearity / topological solitons are deterministic classical solutions;
+      they do not select one outcome from a continuum, and do not mimic
+      einselection.  (Registers v8 T17: Skyrme nonlinearity != collapse.)
+
+================================================================================
+[7] BOUNDARY ANALYSIS : does TUFT-internal resource derive M2?
+================================================================================
+
+  TUFT as it stands = classical effective field theory (Skyrme-like nonlinear
+  field, topological winding n, variational potential V(n), deterministic PDE).
+  Within THIS framework:
+
+    Q1: Can M2 = P=|<a|psi>|^2 be derived from L_TUFT + X_H?
+        ANSWER: NO.  Theorem of Section 5 proves structural non-derivability.
+        This is not 'we did not find it'; it is 'the preconditions are absent
+        by construction'.  [strict theorem]
+
+    Q2: Is a boundary postulate required?
+        ANSWER: YES.  M2 must enter as an EXTERNAL quantum-mechanical postulate
+        (the Born rule axiom), OR TUFT must extend beyond pure classical field
+        theory to a quantum substrate -- e.g. a wavefunctional Psi[phi] on
+        configuration space with Hilbert inner product and unitary functional
+        Schroedinger evolution (second quantization / canonical quantization of
+        the classical field).  The latter is NO LONGER 'pure classical field
+        theory'; it is quantum field theory built ON TOP of the classical field.
+
+    Q3: What is the minimal boundary postulate?
+        POSTULATE M2-EXT (irreducible external input):
+          - The classical field configuration space M is promoted to the
+            argument space of a complex wavefunctional Psi[phi] in a Hilbert
+            space of functionals, with inner product (Psi, Phi)=int Dphi Psi* Phi.
+          - Time evolution of Psi is unitary (functional Schroedinger eq).
+          - Born rule: probability density for the field to be in configuration
+            phi is |Psi[phi]|^2 (and after einselection, |<a|Psi>|^2 for outcome a).
+        This postulate is NOT derivable from L(phi,d_mu phi); it is the quantum
+        bootstrap that converts the classical field theory into QFT.
+
+    Q4: Physical cost of the boundary postulate?
+        Cost 1: TUFT first-principles program cannot claim to derive the
+            measurement/probability sector.  M2 joins the irreducible-input set.
+        Cost 2: The classical field remains a c-number substrate; its quantum
+            nature (wavefunctional) is hand-fed, not emergent from V(n).
+        Cost 3: No prediction of WHICH basis is measured / why Born coefficients
+            have the observed values -- those require the einselection + Born
+            postulate package, external to the classical variational principle.
+
+================================================================================
+[8] FOUR-STATE GRADING  (no pseudoclose)
+================================================================================
+
+  [strict theorem]
+   S1  State space mismatch: CFT state space M is a real symplectic manifold
+       of field configurations; it is NOT a complex Hilbert space.  The object
+       <a|psi> does not exist in CFT.  (Definition of CFT state space.)
+   S2  Classical probability measure rho_C on M is diagonal in the configuration
+       basis (rho_C[a,b]=0 for a!=b); it has no pure-state off-diagonal
+       coherence.  Numerically: rho_Q[0,1] MAG = 0.486924 (nonzero), rho_C[0,1]=0.
+   S3  |phi(x)|^2 in CFT is a spatial energy/charge density integrated to a
+       CONSERVED functional Q[phi] fixed by IC; it is not a normalized
+       probability over mutually exclusive outcomes.  Rescaling phi changes
+       physical energy (and dynamics in the nonlinear/Skyrme case).
+   S4  Determinism: X_H maps each phi(x,0) to a unique trajectory.  A
+       stochastic outcome rule P(a) not fixed by IC cannot follow from a
+       deterministic flow; randomness must be added externally.
+   S5  M2-non-derivable theorem (Sec.5): satisfying Born form + derivability +
+       indeterminism requires importing Hilbert space, inner product, coherence,
+       tensor product, indeterminism = circular adoption of QM.  QED.
+
+  [conditional theorem]
+   C1  CONDITIONAL on promoting M to the argument space of a complex
+       wavefunctional Psi[phi] with Hilbert inner product and unitary
+       functional Schroedinger evolution, THEN |Psi[phi]|^2 is a probability
+       density over field configurations (canonical quantization).  This is an
+       EXTERNAL quantum postulate, not derived from L_TUFT.
+   C2  CONDITIONAL on additionally introducing H_S(x)H_E factorization and an
+       interaction H_SE, THEN environment-induced einselection can explain the
+       appearance of a classical diagonal reduced state and (via env-assisted
+       invariance) the Born rule.  Again: quantum substrate required.
+   C3  CONDITIONAL on a deterministic hidden-variable extension (e.g. Bohmian
+       trajectories over M), the Born rule can be derived as an equilibrium
+       distribution -- but that extension adds the wavefunctional and a
+       guidance equation, both external to pure CFT.
+
+  [definition recognition]
+   D1  'Born rule has no classical source' (T17/E333-E336) is a BOOKKEEPING
+       recognition: the quantum postulate set (Hilbert space, inner product,
+       unitary evolution, Born rule) is irreducible to the classical
+       Lagrangian.  Declaring M2 an external postulate M2-EXT is a
+       reclassification of the boundary, not a derivation.
+   D2  The numerical coincidence f0 = 0.386399 == P0 = 0.386399 is a dimensional
+       accident of choosing two normalized modes; it does NOT identify the
+       classical energy fraction with the quantum outcome probability.
+       [Demo A]
+
+  [open proposition]
+   O1  Whether TUFT's topological sector (winding n, V(n), topological
+       defects) could, via some EMERGENT-quantization route (entropic gravity,
+       path-integral-over-topological-sectors, f(R) -> QM limit), produce an
+       effective |amplitude|^2 measure WITHOUT hand-feeding the Hilbert space.
+       UNDECIDED; outside current pure-classical framework; no derivation shown.
+   O2  Whether nonlinear Skyrme dynamics could MIMIC einselection / outcome
+       selection through chaotic sensitivity or soliton branching.  NOT SHOWN;
+       structurally blocked by Obstruction 2 (no off-diagonal terms) and
+       Obstruction 4 (determinism).  Remains open but with strong structural
+       barriers.
+   O3  Whether the Born rule's specific numerical coefficients (e.g. why the
+       projection squared and not some other function |<a|psi>|^p) can be
+       constrained by TUFT's topological structure.  UNDECIDED; requires the
+       quantum substrate first.
+   O4  Whether a spontaneous-collapse / objective-reduction extension could
+       tie the Born rule to classical-field nonlinearity (GRW-type).  That
+       is physics BEYOND CFT and beyond TUFT; open, not addressed here.
+
+================================================================================
+[9] CONCLUSION : M2 status under TUFT pure classical field framework
+================================================================================
+
+  VERDICT: M2 (Born rule P=|<a|psi>|^2) is STRUCTURALLY NON-DERIVABLE inside
+  TUFT's pure classical field theory.  This is a THEOREM (Sec.5), not a
+  failure to find a derivation.
+
+  Reason chain:
+    (1) CFT state space M is a real symplectic manifold, not a Hilbert space.
+        -> <a|psi> does not exist.  [S1]
+    (2) Classical probability rho_C is diagonal; no pure-state coherence.
+        -> nothing corresponds to |psi><psi| off-diagonal structure.  [S2]
+    (3) No H_S(x)H_E factorization; no off-diagonal terms to decohere.
+        -> einselection / Zurek derivation has no object.  [S3/Obstruction 3]
+    (4) Deterministic flow -> no ontic-indeterministic outcome map.  [S4]
+    (5) Importing the Hilbert space, inner product, tensor product, and Born
+        rule = adopting QM as a substrate; circular as a 'derivation'.  [S5]
+
+  BOUNDARY: M2 requires the external postulate M2-EXT (quantum substrate /
+  wavefunctional on M).  TUFT's classical variational principle V(n) cannot
+  supply it.  M2 joins the irreducible-input set alongside the items already
+  registered in T02/T03 and T17/E333-E336.
+
+  No pseudoclose: escape hatches O1-O4 remain open.  The classical framework
+  is closed on the NON-DERIVABILITY side; the quantum substrate side is
+  explicitly handed out as boundary postulate.
+
+================================================================================
+REPRODUCIBILITY CHECKSUM
+================================================================================
+  theta                 = 0.900000 rad
+  phi (rel phase)       = 1.300000 rad
+  alpha                 = 0.621610+0.000000j
+  beta                  = 0.209539+0.754781j
+  P0 = |alpha|^2        = 0.386399
+  P1 = |beta|^2         = 0.613601
+  sum P                 = 1.000000  (must = 1)
+  |rho_Q[0,1]| coherence= 0.486924  (nonzero: QM pure state)
+  rho_C[0,1]            = 0        (diagonal: classical ignorance)
+  classical f0 = E0/Etot= 0.386399  (energy fraction, NOT outcome prob)
+  classical f1 = E1/Etot= 0.613601
+  E (c=[.7,.3])         = 0.580000  (conserved, IC-fixed)
+  E_norm (rescaled)     = 1.000000  (achieved only by dividing out physics)
+  det traj1 (x0=1,p0=0) = [ 1.0000e+00  6.1232e-17 -1.0000e+00 -1.8370e-16  1.0000e+00]
+  det traj2 (x0=0,p0=1) = [ 0.0000e+00  1.0000e+00  1.2246e-16 -1.0000e+00 -2.4493e-16]
+
+  M2 STATUS: structurally NON-DERIVABLE inside TUFT pure CFT [strict theorem S5].
+  Requires external postulate M2-EXT (quantum substrate).  No pseudoclose;
+  escape hatches O1-O4 remain open.
+
+[End of T04 line 2.]

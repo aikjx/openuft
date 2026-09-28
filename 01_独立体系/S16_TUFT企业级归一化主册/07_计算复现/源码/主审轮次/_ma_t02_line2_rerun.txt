@@ -1,0 +1,129 @@
+﻿==============================================================================
+T02 LINE 2 -- seesaw M_R x Yukawa stratification coupling
+  double precision ; TUFT-internal resources only ; no ad hoc flavon
+==============================================================================
+
+[0] TUFT INTERNAL GEOMETRY (derived from cm_t, d_t; not hardcoded)
+------------------------------------------------------------------------------
+  metric coeffs: cm_t = -0.2900 , d_t = -0.0500
+  BETA      = (1+sqrt(1+4/3))/2 = 1.26376262
+  RHO_H     = root(r^3 + cm_t r + d_t = 0) = 0.60990195
+  HP        = -2 cm_t/RHO_H^3 - 3 d_t/RHO_H^4 = 3.64056715
+  K_ASC     = ((3/2)/(e^{2/RHO_H} sqrt(HP)))^(2/3) = 9.56990575e-02
+
+  internal dimensionless ratios available as FN eps candidates:
+    RHO_H            =  6.09901951e-01
+    1/RHO_H          =  1.63960781e+00
+    BETA-1           =  2.63762616e-01
+    HP               =  3.64056715e+00
+    exp(-2/RHO_H)    =  3.76577836e-02
+    K_ASC            =  9.56990575e-02
+    |d_t|            =  5.00000000e-02
+    |cm_t|           =  2.90000000e-01
+    |d_t|/|cm_t|     =  1.72413793e-01
+
+[1] BRIDGE ARITHMETIC -- E145 geometric product x seesaw/FN factor
+------------------------------------------------------------------------------
+  target span            y_t/y_e = 3.400e+05
+  E145 geometric ceiling G_geom <= 1.0e+02
+  required residual      G_res    = target / G_geom
+
+  G_geom     G_res=target/Ggeom log10(G_res)  
+  10         3.400e+04      4.531         
+  30         1.133e+04      4.054         
+  100        3.400e+03      3.531         
+
+  ==> At E145 ceiling G_geom=1e2, seesaw/FN must supply G_res=3.400e+03
+      i.e. a ~10^3.53 multiplicative factor beyond Hopfion geometry.
+      This is the ~1e3 (actually ~10^3.53) gap to verify.
+
+[2] FROGGATT-NIELSEN horizontal-symmetry exponent accounting
+------------------------------------------------------------------------------
+  FN ansatz (algebraic):  y_ij ~ eps^{Q_i+Q_j},  eps = <S>/Lambda_h
+  span y_t/y_e = eps^{-(Q_e - Q_t)} = eps^{-dQ},  dQ integer.
+  For each integer dQ, solve eps = G_res^{-1/dQ}; then ask whether
+  that eps equals any TUFT-internal ratio (no ad hoc flavon).
+
+  Using G_res = 3.400e+03 (E145 ceiling case):
+
+  dQ    eps_req        closest internal ratio rel distance          
+  1     2.941176e-04   exp(-2/RHO_H)    1.270e+02             
+  2     1.714986e-02   exp(-2/RHO_H)    1.196e+00             
+  3     6.650287e-02   |d_t|            2.482e-01             
+  4     1.309575e-01   K_ASC            2.692e-01             
+  5     1.966546e-01   |d_t|/|cm_t|     1.233e-01             
+  6     2.578815e-01   BETA-1           2.281e-02             
+  7     3.129702e-01   |cm_t|           7.339e-02             
+  8     3.618805e-01   |cm_t|           1.986e-01             
+
+  best internal match: dQ=6, eps_req=2.578815e-01, ratio=BETA-1, rel-dist=2.281e-02
+  (rel-dist must be ~0 to IDENTIFY; O(0.1) means coincidence, not derivation)
+
+[3] Seesaw naturalness consistency (M_R ~ 1e14 GeV)
+------------------------------------------------------------------------------
+  m_D = y_t * v_EW = 244.770 GeV
+  M_R = 1.00e+14 GeV
+  exact light eigenvalue = -5.9912e-10 GeV = -5.9912e-01 eV
+  seesaw approx -m_D^2/M_R = -5.9912e-10 GeV = -5.9912e-01 eV
+  heavy eigenvalue ~ 1.0000e+14 GeV
+  (neutrino mass scale ~0.1-1 eV band: correct order -- seesaw scale
+   naturalness self-consistent; but M_R value itself remains P16 input.)
+
+[4] Can TUFT INTERNAL resources set the horizontal-breaking scale?
+------------------------------------------------------------------------------
+  Internal ratios are O(1e-2 .. O(1)):
+    exp(-2/RHO_H)=3.766e-02, K_ASC=9.570e-02, BETA-1=2.638e-01
+  FN eps required to cover G_res=3.40e+03 at small integer dQ:
+    dQ=2 -> eps=1.715e-02 ; dQ=3 -> eps=6.650e-02 ; dQ=4 -> eps=1.310e-01
+
+  Distance from internal set:
+    dQ=2 eps_req=1.715e-02  closest 'exp(-2/RHO_H)'=3.766e-02  rel=1.20
+    dQ=3 eps_req=6.650e-02  closest '|d_t|'=5.000e-02  rel=0.25
+    dQ=4 eps_req=1.310e-01  closest 'K_ASC'=9.570e-02  rel=0.27
+
+  Verdict: NO internal dimensionless ratio lands on eps_req at
+  matching precision. E479 (Buckingham-Pi) already proved {y} are
+  independent pi-DOF: a local covariant TUFT variational principle
+  cannot output 3.4e5. Coupling M_R to Yukawa stratification via FN
+  powers is algebraically available, but the exponent dQ / flavon
+  ratio eps is NOT derivable from (cm_t,d_t,BETA) geometry.
+  Missing internal resource = N_R Hopf identity (T10 open): until each
+  generation's N_R carries a distinct Hopf winding whose tension sets
+  M_R^(i) hierarchically, the 1e3.5 residual has no TUFT-internal source.
+
+==============================================================================
+[5] FOUR-STATE GRADING (no fake closure)
+==============================================================================
+
+  (A) STRICT THEOREM (proven, conditional-free algebra):
+      - 2x2 seesaw diagonalization: m_nu = -m_D^2/M_R + O(m_D^4/M_R^3)
+        [exact eigenvalues computed above; light=-5.9912e-10 GeV]
+      - E145 geometric ceiling: Hopfion integer-winding product <= O(1e2)
+        cannot alone reach 3.4e5 (gap = 3.40e+03 = 10^3.53).
+
+  (B) CONDITIONAL THEOREM (derivable GIVEN stated input):
+      - IF M_R carries a generation hierarchy M_R^(3)/M_R^(1) ~= 3.40e+03
+        (equiv. FN eps with dQ=6 matching), THEN the seesaw x Yukawa
+        chain reproduces y_t/y_e = G_geom(1e2) x G_res(3.40e+03) = 3.40e+05.
+        Bridge arithmetic closes exactly: 1e2 x 3.4e3 = 3.4e5.
+
+  (C) DEFINITION IDENTIFICATION:
+      - M_R ~ 1e14 GeV = Type-I seesaw naturalness scale (T10/P16);
+        FN eps = <S>/Lambda_h identified as horizontal-breaking ratio.
+        These are label identifications, not derivations.
+
+  (D) OPEN PROPOSITION (not closed; honest):
+      - Derivation of G_res=3400.00 (the ~1e3.5 gap) from TUFT INTERNAL
+        metric/topological quantities: BLOCKED. Best internal match
+        rel-dist = 0.02 (order-unity coincidence, not identification).
+      - N_R Hopf identity unresolved (T10): which Hopf winding assigns
+        M_R^(i) per generation so the tension ratio yields 3.4e3?
+      - E479 stands: {y} remain independent pi-DOF; no loop to close
+        them from (cm_t,d_t,BETA).  Status: 挂账/部分覆盖, NOT promoted.
+
+  Bridge verification: 1e3 factor gap --
+    arithmetic: YES (1e2 x 3.4e3 = 3.4e5 exactly, conditional theorem).
+    internal origin: NO (E479 blockade + N_R Hopf identity open).
+==============================================================================
+
+-> tuft_t02_line2_seesaw_coupling_out.txt written

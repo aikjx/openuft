@@ -1,0 +1,110 @@
+================================================================================
+v54 AUDIT — rotating m-split observable vs GR QNM template (m=+2 vs m=-2)
+  mpmath dps=40 ; independent write (no prior import) ; GR gate first
+================================================================================
+
+[1] DERIVATION CHAIN  (small-spin, leading order in a)
+--------------------------------------------------------------------------------
+  Kerr QNM in slow rotation: omega(a,m) = omega_0 + m*a*c_per_m + O(a^2)
+    omega_0 = static (a=0) fundamental;  c_per_m = frame-drag slope per (m a).
+  Split observable:
+    delta_omega(a) = omega(a,+2) - omega(a,-2)
+                   = [w0+2 a c] - [w0-2 a c] = 4 a c_per_m
+                   = a * ( splitR/a + i splitI/a ),
+    where  splitR/a = 4 Re(c_per_m),  splitI/a = 4 Im(c_per_m).
+
+  GR anchor (errata#42):
+    c_GR_per_m = (0.0628831 0.001996i)
+    check 4 Re(c) = 0.2515324  vs splitR/a = 0.2515323  -> match (rounding)
+    splitR/a = 0.2515323 ,  splitI/a = 0.007984
+
+  TUFT anchor (v49 direct continuation @ a=0.1):
+    c_TUFT_per_m = (splitR/a + i splitI/a)/4 = (0.40525 -0.03525i)
+    splitR/a = 1.621 ,  splitI/a = -0.141
+
+  Hz conversion (60 Msun): f_Hz = K * Re(w_M),  K = 32312.5/60.0 = 538.541666666666667 Hz
+  => split in Hz: delta_f_Hz = K * Re(delta_omega) = K * a * splitR/a.
+     Both modes share the same K(M); the slope RATIO TUFT/GR is therefore
+     M-independent and a-independent (linear regime).
+
+  GR limit (a=0):
+    omega(a=0,+2) = (0.37367168441804166 -0.0889623156889341i)
+    omega(a=0,-2) = (0.37367168441804166 -0.0889623156889341i)
+    delta_omega(a=0) = (0.0 0.0i)  -> ZERO split at a=0.  GR GATE: PASS
+
+[2] NUMERICAL TABLE  —  60 Msun  (K = 538.541666666666667 Hz)
+--------------------------------------------------------------------------------
+  GR  static w0 = (0.37367168441804166 -0.0889623156889341i)
+  TUFT static w0 = (0.434445178 -0.05644976i)   (already includes +16.26% freq / -36.6% damping shift)
+
+  --- GR    (splitR/a=0.2515323, splitI/a=0.007984) ---
+   a/M    w(+2) geom        w(-2) geom        f(+2)Hz   f(-2)Hz   df_Hz
+   0.1  (0.38624830441804166 -0.0885631156889341i)  (0.36109506441804166 -0.0893615156889341i)     208.01     194.46      13.55
+   0.2  (0.39882492441804166 -0.0881639156889341i)  (0.34851844441804166 -0.0897607156889341i)     214.78     187.69      27.09  <== EXTRAPOLATED (beyond v49 credible a<0.1)
+   0.3  (0.41140154441804166 -0.0877647156889341i)  (0.33594182441804166 -0.0901599156889341i)     221.56     180.92      40.64  <== EXTRAPOLATED (beyond v49 credible a<0.1)
+
+  --- TUFT  (splitR/a=1.621, splitI/a=-0.141) ---
+   a/M    w(+2) geom        w(-2) geom        f(+2)Hz   f(-2)Hz   df_Hz
+   0.1  (0.515495178 -0.06349976i)  (0.353395178 -0.04939976i)     277.62     190.32      87.30
+   0.2  (0.596545178 -0.07054976i)  (0.272345178 -0.04234976i)     321.26     146.67     174.60  <== EXTRAPOLATED (beyond v49 credible a<0.1)
+   0.3  (0.677595178 -0.07759976i)  (0.191295178 -0.03529976i)     364.91     103.02     261.89  <== EXTRAPOLATED (beyond v49 credible a<0.1)
+
+[3] OBSERVABLE ROBUSTNESS — discriminant
+--------------------------------------------------------------------------------
+  Suppression ratio 0.35 (v49):
+    TUFT splitR/a            = 1.621
+    same-cavity GR 2/rho^3   = 4.662
+    ratio = 0.347704847704847705  ~= 0.35  (naive same-cavity split pressed to 35%)
+
+  Discriminant: measured split-per-spin slope vs REAL GR baseline (0.2515323):
+    naive same-cavity / GR   = 18.5343989618828278  (before suppression)
+    TUFT (suppressed) / GR   = 6.44450036834235603  (after 0.35 suppression)
+
+  HONEST SIGN: TUFT predicts a LARGER m-split than GR, not smaller.
+    The 0.35 suppression cuts the excess from ~18.534x down to ~6.4445x GR.
+  => If dual m=+/-2 modes are resolved: a split slope ~6.4445x GR favours TUFT;
+     a slope ~1x GR favours GR.  (Not 'smaller' — reported as-is, no fake closure.)
+
+  M / a independence:
+    slope ratio = TUFT_splitR/a / GR_splitR/a = 6.44450036834235603 (dimensionless).
+    Both slopes are geometric (M-independent); both scale linearly with a,
+    so the ratio cancels a.  Direction: TUFT split excess is positive/larger,
+    consistent in sign with the v37 EHT c_m anchor direction.
+
+  Concrete (60 Msun, a=0.1):
+    GR   m=+/-2 split df = 13.54607 Hz
+    TUFT m=+/-2 split df = 87.2976 Hz
+    ratio = 6.4445
+
+[4] EXTRAPOLATION FLAGS / DETECTABILITY TIER / FOUR-STATE GRADE
+--------------------------------------------------------------------------------
+  v49 credible window: a/M < 0.1 (direct continuation).
+    a=0.1 : within credible window (v49 direct @a=0.1: splitR/a=1.621367). CONFIRMED.
+    a=0.2 : EXTRAPOLATED beyond a<0.1. v49 direct @a=0.2 gave splitR/a=1.569052
+            vs linear 1.621 -> ~3.2% drop, consistent with O(a^2)~4% correction.
+            Table uses linear ansatz 1.621; nonlinear O(a^2) uncertainty ~3-4%.
+    a=0.3 : EXTRAPOLATED further; v49 never computed here. Pure linear ansatz;
+            O(a^2) correction grows, trustworthy order-of-magnitude only.
+
+  Detectability tier (this signature = resolving two distinct m modes):
+    Needs high SNR to split f(+2) vs f(-2).
+    eps_strict interval = [0.0748115, 0.469746]
+    Voyager D_max: strict eps=0.07481 -> 2.46 Gpc ; toy eps=0.46975 -> 15.48 Gpc
+    => Resolvable at the LOUD/toy tier (eps~0.4697, D_max up to 15.48 Gpc, face-on)
+       where SNR is high enough to separate m=+2 / m=-2.
+    => At strict tier (eps=0.0748, 2.46 Gpc) the split is MARGINAL; needs nearby
+       events / network; listed alongside D_max two-tier as the loud-tier channel.
+
+  FOUR-STATE GRADE:
+    [CONFIRMED ] GR limit a=0 zero-split; static anchors w0照抄;
+                GR slope splitR/a=0.2515323 (errata#42); TUFT slope @a=0.1=1.621
+    [ESTIMATED ] suppression-ratio net effect 0.35 (cavity-mapping dependent);
+                discriminant ratio 6.4445x GR (M-/a-independent).
+    [EXTRAPOLATED] a=0.2 / a=0.3 linear ansatz beyond v49 a<0.1 (O(a^2)~3-4%).
+    [GATE-HELD ] detectability tier anchored to v53 eps interval / D_max;
+                no new physical E-number closed; errata#42 HELD (increment not rolled).
+
+  Discipline: no fake closure; numbers照抄; 另写 no-import; dps=40.
+================================================================================
+Raw output end.
+================================================================================

@@ -1,0 +1,311 @@
+﻿================================================================================
+T04 LINE 3 -- M3 linear->nonlinear deepening audit
+================================================================================
+  double precision ; numpy only
+  anchors: E333-E336 (classical field theory, no density matrix/amplitude)
+           P18  (e = Skyrme quartic coupling)
+           E484 (Thm J: e free direction; Derrick virial)
+           T17  (measurement/Born rule: untouched, principled non-closure)
+
+[1] SKYRME ACTION DECOMPOSITION
+
+  Skyrme SU(2) chiral field U(x) in compact SU(2) ~ S^3.
+  Left-current:  L_mu = U^-1 d_mu U   (Lie-algebra valued, L_mu in su(2))
+
+  L2 term (quadratic in L_mu, ~ sigma-model kinetic):
+      L2 = (f_pi^2 / 4) Tr(L_mu L^mu)
+    -> quadratic in field derivatives
+    -> EOM: linear wave equation (when L4 -> 0)
+
+  L4 term (quartic in L_mu, Skyrme stabilizing term):
+      L4 = (1 / (32 e^2)) Tr([L_mu, L_nu] [L^mu, L^nu])
+    -> quartic in field derivatives
+    -> EOM: NONLINEAR PDE (L4 does not cancel; it sources nonlinearity)
+
+  Topological charge (Wess-Zumino term, integral):
+      Q = (1 / 24 pi^2) int d^3x eps^{ijk} Tr(L_i L_j L_k)  in Z
+    -> Q is integer; selects winding sector; does NOT fix e (E483/E484)
+
+================================================================================
+[2] DERRICK SCALING: L2 ~ R^1, L4 ~ R^{-1}
+================================================================================
+
+  For a hedgehog ansatz U(r) with scale R (rescale r -> R r):
+    L_mu -> (1/R) L'_mu
+    L2 density ~ Tr(L_mu L^mu) ~ 1/R^2; integrate over volume ~ R^3
+       => E2(R) ~ f_pi^2 * R^1
+    L4 density ~ Tr([L_mu,L_nu]^2) ~ 1/R^4; integrate ~ R^3
+       => E4(R) ~ (1/e^2) * R^{-1}
+
+  Total skyrmion energy as function of scale R:
+      E(R) = A * f_pi^2 * R  +  B / (e^2 * R)
+    where A, B are dimensionless O(1) shape integrals (hedgehog profile).
+
+         R           E2(R)           E4(R)            E(R)
+  --------------------------------------------------------
+     0.100    1.000000e-01    1.000000e+01    1.010000e+01
+     0.250    2.500000e-01    4.000000e+00    4.250000e+00
+     0.500    5.000000e-01    2.000000e+00    2.500000e+00
+     0.750    7.500000e-01    1.333333e+00    2.083333e+00
+     1.000    1.000000e+00    1.000000e+00    2.000000e+00
+     1.500    1.500000e+00    6.666667e-01    2.166667e+00
+     2.000    2.000000e+00    5.000000e-01    2.500000e+00
+     3.000    3.000000e+00    3.333333e-01    3.333333e+00
+     5.000    5.000000e+00    2.000000e-01    5.200000e+00
+
+  -- analysis --
+  E2 ~ R^1: as R -> 0 (collapse), E2 -> 0 (unbounded below); as R -> inf,
+     E2 -> inf.  This is the Derrick instability: WITHOUT L4, the soliton
+     can shrink to zero radius and lose energy.
+  E4 ~ R^{-1}: as R -> 0, E4 -> inf (repulsive); as R -> inf, E4 -> 0.
+     L4 provides the REPULSIVE core that stabilizes a finite R*.
+
+================================================================================
+[3] DERRICK VIRIAL: equilibrium scale R*
+================================================================================
+
+  dE/dR = A f_pi^2 - B / (e^2 R^2) = 0
+    => R* = sqrt(B / A) / (f_pi e)
+    => E* = 2 sqrt(A B) * (f_pi / e)
+
+  R* = sqrt(B/A) / (f_pi e) = 1.000000  (in units f_pi=1, e=1)
+  E* = 2 sqrt(A B) * f_pi / e = 2.000000
+
+  Energy partition at R*:
+    E2(R*) = 1.000000
+    E4(R*) = 1.000000
+    E2/E*  = 0.500000  (should be 1/2 at virial balance)
+    E4/E*  = 0.500000  (should be 1/2 at virial balance)
+
+  KEY: this is a CLASSICAL MECHANICAL stability argument.  It decides
+  whether the skyrmion has a finite preferred radius.  It has NOTHING to
+  do with quantum measurement, wavefunction collapse, or Born rule.
+
+================================================================================
+[4] CLASSICAL NONLINEARITY = DETERMINISTIC EVOLUTION
+================================================================================
+
+  The Skyrme EOM (variation of L = L2 + L4) is a nonlinear hyperbolic
+  PDE for U(x,t).  Given smooth initial data U(x,0) and dU/dt(x,0) on a
+  Cauchy surface, the classical Cauchy problem has a UNIQUE solution
+  forward in time (well-posedness for semilinear wave equations, modulo
+  known blow-up caveats which are themselves deterministic).
+
+  Contrast table:
+
+                      property  classical nonlinear PDE  quantum measurement (collapse)
+  ----------------------------------------------------------------------------
+                 evolution law       deterministic PDE  non-deterministic (Born)
+                   state space  field U(x) in C^inf(S^3)     Hilbert space |psi>
+                 superposition  NOT preserved (nonlinear)  preserved (unitary part)
+                   probability                    NONE  |amp|^2 -> probability
+                     unitarity       energy conserving  BROKEN during collapse
+            time-reversibility         yes (classical)      no (arrow of time)
+              outcome given IC                  unique     stochastic ensemble
+
+  The nonlinearity in L4 makes the EOM nonlinear.  Nonlinearity in a
+  classical PDE means: superposition of two solutions is NOT a solution.
+  It does NOT mean: the solution randomly jumps between alternatives.
+  It does NOT mean: probabilities emerge.
+
+================================================================================
+[5] LINEAR vs NONLINEAR EOM: numerical contrast (toy 1D)
+================================================================================
+
+  Toy model: 1D field phi(x,t) on a ring.
+    Linear part (L2 analog):  phi_tt - phi_xx = 0   (wave eqn)
+    Nonlinear part (L4 analog): phi_tt - phi_xx - lambda phi^3 = 0
+  We integrate both from the SAME smooth initial data and show:
+    (a) both are deterministic (no randomness)
+    (b) nonlinear solution does NOT 'collapse' to one branch
+    (c) energy is conserved in both
+
+  Initial data: two smooth Gaussian bumps at x=1.0 and x=5.0.
+  Integrated to t = 2.0 ring units (CFL dt = 0.1 dx).
+
+                quantity    linear (lam=0)  nonlinear (lam=0.3)
+  ----------------------------------------------------------
+               E_initial      3.223079e+00      3.274564e+00
+                 E_final      3.226517e+00      3.242613e+00
+            |dE/E| drift      1.066644e-03      9.757419e-03
+         max|phi| at t=2      9.997222e-01      1.024030e+00
+
+  OBSERVATION:
+  - Both runs evolve DETERMINISTICALLY from the same initial data.
+  - Energy is conserved in both (drift ~ leapfrog discretization).
+  - The nonlinear solution DIFFERS from the linear one (nonlinear
+    interaction phase shifts, waveform distortion).
+  - BUT: nowhere does the nonlinear solution RANDOMLY pick one bump
+    and erase the other.  There is NO projection, NO Born rule, NO
+    measurement outcome.  Both bumps keep evolving together.
+
+  This is the essential point: L4 nonlinearity bends the wave, it does
+  NOT collapse it.  The classical field evolves as a single deterministic
+  configuration; there is no ensemble of alternatives to choose from.
+
+================================================================================
+[6] BOUNDARY ANALYSIS: how far does M3 hold in TUFT?
+================================================================================
+
+  M3 (linear -> nonlinear) as a measurement-problem requirement:
+    To explain wavefunction collapse, one needs a dynamics that
+    interpolates between unitary linear evolution (Schrodinger) and
+    non-deterministic probabilistic reduction (Born rule).
+
+  TUFT classical field theory provides:
+    (a) a NONLINEAR classical PDE for U(x,t)  -- YES, L4 does this
+    (b) a Hilbert space |psi>                  -- NO, absent
+    (c) a probability amplitude                -- NO, absent
+    (d) a Born rule |amp|^2 = probability       -- NO, absent
+    (e) a non-deterministic reduction event    -- NO, EOM is deterministic
+
+  Therefore M3 is PARTIALLY satisfied:
+    - The letter 'nonlinear' is present (L4 makes EOM nonlinear).
+    - The spirit 'nonlinear dynamics that produces probabilistic
+      outcomes from a superposition' is ABSENT.
+
+  TUFT's nonlinearity is the WRONG TYPE of nonlinearity for M3.
+  Skyrme L4 nonlinearity is:
+    - gauge-invariant, Lorentz-invariant, energy-conserving
+    - classical-field nonlinearity (analogous to phi^4 self-interaction)
+    - responsible for Derrick stability (finite R*)
+
+  What M3 would actually require (e.g. Weinberg nonlinear quantum
+  mechanics, GRW spontaneous collapse, Penrose-Diosi):
+    - nonlinearity in the SCHRODINGER equation for |psi>
+    - stochastic or non-unitary term
+    - explicit coupling to a 'measurement' pointer basis
+    - Born rule as an output (or postulate)
+  NONE of these exist in TUFT's classical field Lagrangian.
+
+================================================================================
+[7] IS A BOUNDARY POSTULATE NEEDED?
+================================================================================
+
+  To make M3 meaningful in TUFT, one would need to add, EXTERNAL to the
+  classical field Lagrangian:
+
+  POSTULATE M3 (measurement postulate, irreducible input):
+  ----------------------------------------------------------------
+  M3-a  A Hilbert space H for quantum states |psi> is POSTULATED, not
+        derived from the classical Skyrme field U(x).  The mapping
+        from U(x) configurations to |psi> amplitudes is NOT specified
+        by TUFT's variational principle.
+
+  M3-b  A Born rule |<a|psi>|^2 = prob(outcome a) is POSTULATED.
+        Nothing in L2+L4+WZ produces probabilities.
+
+  M3-c  A collapse/reduction dynamics is POSTULATED (e.g. GRW-style
+        stochastic term, or decoherence + classical branch selection).
+        The classical Skyrme EOM alone is unitary/deterministic.
+
+  PHYSICAL COST:
+  --------------
+  Cost 1 (derivability): TUFT's first-principles program cannot derive
+    quantum mechanics from a classical field.  The classical-to-quantum
+    bridge (canonical quantization, path integral, second quantization) is
+    an EXTERNAL step.  E333-E336 already registered this.
+
+  Cost 2 (type mismatch): even if one quantizes the Skyrme field, the
+    resulting quantum field theory has LINEAR unitary evolution on
+    Hilbert space (standard QFT).  The classical L4 nonlinearity becomes
+    an interaction vertex, NOT a collapse mechanism.  Nonlinearity in
+    the Lagrangian does NOT survive as nonlinearity in the Schrodinger
+    equation after canonical quantization -- it becomes a unitary
+    S-matrix interaction.
+
+  Cost 3 (Derrick vs measurement): L4's entire physical role in TUFT
+    is to stabilize the skyrmion scale (R* finite).  Invoking L4 as the
+    'nonlinearity for M3' is a category error: it solves a virial theorem,
+    not a measurement problem.
+
+================================================================================
+[8] FOUR-STATE GRADING  (no pseudoclose)
+================================================================================
+
+  [严格定理  STRICT THEOREM]
+   S1  Skyrme L4 term is quartic in L_mu; the EOM is nonlinear in U.
+       (Direct from variation of L4 = (1/32e^2) Tr([L,L]^2).)
+   S2  Derrick virial: E(R) = A f_pi^2 R + B/(e^2 R) has unique minimum
+       R* = sqrt(B/A)/(f_pi e), E* = 2 sqrt(AB) f_pi/e.  At minimum,
+       E2 = E4 = E*/2 (virial balance).  [recomputed above]
+   S3  Classical nonlinear PDE (semi-linear wave) with smooth Cauchy
+       data has a unique deterministic forward solution (modulo known
+       blow-up, which is itself deterministic).  No stochastic outcome.
+   S4  Energy is conserved in the classical evolution; the toy 1D
+       integration above shows |dE/E| ~ leapfrog error, in BOTH linear
+       and nonlinear runs.  No projection, no Born-rule jump.
+
+  [条件定理  CONDITIONAL THEOREM]
+   C1  CONDITIONAL on postulating a Hilbert space H, a Born rule, and
+       a collapse dynamics (M3-a/b/c above), THEN quantum measurement
+       can be formulated.  But these postulates are EXTERNAL to TUFT's
+       classical Lagrangian; they do not follow from L2+L4+WZ.
+   C2  CONDITIONAL on quantizing the Skyrme field (canonical or path
+       integral), the resulting QFT has LINEAR unitary evolution on H.
+       The classical L4 nonlinearity becomes a unitary interaction
+       vertex, NOT a collapse term.  This is standard QFT behavior.
+
+  [定义识别  DEFINITION RECOGNITION]
+   D1  'M3 is PARTIAL' is a bookkeeping recognition: TUFT has the
+       letter (nonlinear EOM) but not the spirit (probabilistic collapse).
+       Declaring 'nonlinear = solved M3' would be a category error.
+   D2  L4's physical role is Derrick stabilization (S2).  It is NOT
+       a measurement mechanism.  Attributing measurement power to L4
+       misidentifies its function.
+
+  [开放命题  OPEN PROPOSITION]
+   O1  Whether the classical Skyrme field U(x) can, in any limit,
+       YIELD a quantum Hilbert space and Born rule.  UNDECIDED.  This is
+       the long-standing classical-to-quantum emergence problem; TUFT
+       has no mechanism for it.  (E333-E336 registered this.)
+   O2  Whether a NONLINEAR Schrodinger equation (Weinberg-type) or a
+       GRW stochastic term could be added to TUFT and remain consistent
+       with observations.  NOT in TUFT's current postulate set.
+   O3  Whether decoherence (unitary entanglement with environment) plus
+       classical branch selection can substitute for explicit collapse
+       within TUFT.  Decoherence is itself a quantum process requiring
+       H, which TUFT lacks.  OPEN.
+   O4  Whether M1 (linearity/superposition) and M2 (Born rule) can be
+       satisfied independently of M3.  E333-E336 judged all three OPEN
+       together; this line deepens M3 only.  M1/M2 remain OPEN.
+
+================================================================================
+[9] CONCLUSION: M3 in TUFT -- PARTIAL, type-mismatched
+================================================================================
+
+  ANSWER: M3 (linear -> nonlinear) is PARTIALLY present in TUFT, but
+  the nonlinearity present is the WRONG TYPE for quantum measurement.
+
+  Reason chain:
+    (1) Skyrme L4 term makes the classical EOM nonlinear.        [strict S1]
+    (2) This nonlinearity solves Derrick scale instability:            [strict S2]
+        finite R* = sqrt(B/A)/(f_pi e), virial balance E2=E4=E*/2.
+    (3) Classical nonlinear PDE is deterministic, energy-conserving,     [strict S3/S4]
+        no probabilistic outcome, no wavefunction jump.
+    (4) TUFT has no Hilbert space, no |psi>, no Born rule.             [E333-E336]
+    (5) Quantizing Skyrme gives LINEAR unitary QFT; L4 becomes a        [conditional C2]
+        unitary interaction vertex, not a collapse term.
+    (6) => L4 nonlinearity cannot serve as M3's measurement mechanism.
+        M3 requires EXTERNAL postulates (H, Born, collapse dynamics).
+
+  Status: M3 joins the irreducible-input set.  It is NOT pseudoclosed.
+  The escape hatches O1-O4 remain open.  Skyrme L4 is registered as
+  Derrick stabilizer only, NOT as a measurement mechanism.
+
+================================================================================
+REPRODUCIBILITY CHECKSUM
+================================================================================
+  R*  = sqrt(B/A)/(f_pi e) = 1.000000
+  E*  = 2 sqrt(A B) f_pi/e = 2.000000
+  E2(R*) = 1.000000  (virial: E*/2 = 1.000000)
+  E4(R*) = 1.000000  (virial: E*/2 = 1.000000)
+  Toy 1D linear  |dE/E| = 1.066644e-03
+  Toy 1D nonlin  |dE/E| = 9.757419e-03
+  Toy 1D max|phi| linear  = 9.997222e-01
+  Toy 1D max|phi| nonlin  = 1.024030e+00
+
+  M3 STATUS: PARTIAL (wrong type of nonlinearity).  Requires external
+  postulates M3-a/b/c.  Escape hatches O1-O4 remain open.  No pseudoclose.
+
+[End of T04 line 3.]

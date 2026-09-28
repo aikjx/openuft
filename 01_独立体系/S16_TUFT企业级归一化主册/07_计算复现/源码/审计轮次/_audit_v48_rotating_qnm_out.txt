@@ -1,0 +1,77 @@
+================================================================================
+AUDIT v48 — extend Beyn contour to small rotation a (TUFT rotating QNM)
+  TUFT const: rho_h=0.609901951  hp=3.640567153  K_ASC=0.0956991  beta=1.263762616
+  GR gate: n0=0.373671684418042 -0.088962315688934i
+           splitR/a=0.2515323  per-m c=0.0628831 +0.0019960i
+================================================================================
+
+[1] GR GATE A — n0 at a=0 via extended Beyn on v27 companion linearization
+    rough contour centre 0.360-0.080i, radius 0.06 (isolates n0 from n=1 overtone)
+    N= 40  Beyn=0.373671684418 -0.088962315689i  dense=0.373671684417 -0.088962315689i  |err|=2.470e-13
+    N= 60  Beyn=0.373671684420 -0.088962315688i  dense=0.373671684418 -0.088962315687i  |err|=1.847e-12
+    N= 90  Beyn=0.373671684423 -0.088962315659i  dense=0.373671684426 -0.088962315777i  |err|=2.998e-11
+    best n0 = 0.373671684418 -0.088962315689i   |err| vs ground truth = 2.470e-13   (N spread=3.45e-11)
+    GATE A (n0>=6 digits): PASS
+
+[2] GR GATE B — small-a Kerr slow-rotation split slope
+    O(a w) diagonal -4 a m w / r^3 added to Q1; measure (i) Rayleigh + (ii) continuation
+    (i) Rayleigh c_rot = 0.0481181 +0.0181197i   split/a = 0.096236
+    (ii) direct continuation (track pole from a=0):
+        m=+2: a=0.00:0.3737-0.0890i  a=0.02:0.3810-0.0744i  a=0.05:0.3941-0.0655i  a=0.10:0.4170-0.0613i
+        m=-2: a=0.00:0.3737-0.0890i  a=0.02:0.3949-0.1043i  a=0.05:0.4066-0.0887i  a=0.10:0.4037-0.0700i
+    (ii) continuation c_rot@a=0.02 = -0.1742852 +0.3739633i   split/a = -0.348570
+    target c_rot = 0.0628831 +0.0019960i   split/a = 0.251532
+    Rayleigh-real within 2% of target: False (split/a=0.0962 vs 0.2515)
+    continuation smoothness (max|Im drift|@.02=1.538e-02 <5e-3): False
+    GATE B (split slope >=4 digits): FAIL
+
+    ===============  GR GATE OVERALL: FAIL  ===============
+    *** GR GATE B FAIL -> TUFT rotating poles NOT read as physical (iron law). ***
+    *** Diagnosis: bare-diagonal frame-drag embedding reproduces the real-part SIGN ***
+    *** but NOT the >=4-digit slope; direct pole JUMPS (condition wall) under O(a). ***
+    *** Missing the O(a) imaginary Teukolsky cross-term 4i(r-1)K/Delta, which needs  ***
+    *** the full Chandrasekhar transform into the Jansen-compactified pencil. Not faked.***
+
+================================================================================
+[3] TUFT static (a=0) re-anchor with THIS file's independent pencil
+    U_-2=-1.345899e-01 U_-1=+3.770545e-02 U_0=+3.234924e-02 U_1=+1.283687e-02 U_2=+3.906658e-03
+    static Beyn pole = 0.434445174 -0.056449760i   S1/S0=3.8e-12
+    Grade A target    = 0.434445178 -0.056449760i   |d|=4.503e-09
+
+================================================================================
+[4] TUFT rotating QNM — direct Beyn pole at small a (non-perturbative)
+    frame-drag correction on Q0; pencil stays linear; check condition-number wall
+    a=0.10 m=+2  pole=0.376860600 -0.097073912i   sigma_min(L)=7.72e-12  S1/S0=1.8e-13
+    a=0.10 m=-2  pole=0.366412304 -0.141592932i   sigma_min(L)=7.45e-08  S1/S0=1.5e-04
+    a=0.20 m=+2  pole=0.345849701 -0.107141431i   sigma_min(L)=3.81e-11  S1/S0=3.4e-08
+    a=0.20 m=-2  pole=0.414460918 -0.139554078i   sigma_min(L)=7.67e-08  S1/S0=3.1e-05
+
+================================================================================
+[5] Analysis: measured TUFT split slope vs v44 first-order 0.09832
+    a=0.10: m+2=(0.376860600-0.097073912i) m-2=(0.366412304-0.141592932i)  per-m c=0.0522415+0.2225951i  split/a=0.1044830
+    a=0.20: m+2=(0.345849701-0.107141431i) m-2=(0.414460918-0.139554078i)  per-m c=-0.1715280+0.0810316i  split/a=-0.3430561
+
+    measured TUFT split/a @a=0.10 = 0.104483
+    measured TUFT split/a @a=0.20 = -0.343056
+    v44 first-order estimate     = 0.098320
+    GR reference split/a         = 0.251532
+    drift of split/a (0.1->0.2)  = 4.475e-01
+    a=0.10 m+2 pole displacement from static = -0.057585 -0.040624i  (|d|=7.047e-02)
+    a=0.20 m+2 pole displacement from static = -0.088595 -0.050692i  (|d|=1.021e-01)
+
+    min sigma_min(L) across rotating runs = 7.718e-12
+    condition-number / essential-singularity wall: DETECTED (sigma_min collapsed)
+
+================================================================================
+[VERDICT v48]
+  GR gate A (n0>=6d)     : PASS   |err|=2.470e-13 (reproduced to ~12 digits)
+  GR gate B (split>=4d)   : FAIL   Rayleigh split/a=0.0962 (target 0.25153); continuation max|Im drift|=1.54e-02
+  TUFT static re-anchor  : 0.434445174 -0.056449760i (GradeA 0.434445178 -0.056449760i)
+  TUFT rotating poles    : UNTRUSTED — GR gate B not passed (iron law forbids physical reading)
+    raw diagnostic split/a@0.10=0.1045 @0.20=-0.3431 (NOT a validated TUFT prediction)
+    a!=0 operator, even under Beyn projection, shows the condition wall:
+    sigma_min(L)=7.72e-12; pole continuation non-smooth. Trusted rotating mixed-BVP pole
+    requires completing the O(a) operator (full Teukolsky-Chandrasekhar embed).
+  four-state             : unchanged (35/61/18/27); boundary-spectral methodology
+                           extension; no new physical E-number; no fake closure.
+  * numbers are raw * honest grading * small residual != physical root *

@@ -1,0 +1,35 @@
+﻿==============================================================================
+T01 LINE 5 — complete deturbed Teukolsky -> Jansen embedding, GR limit
+  M=1 s=-2 l=2 ; double precision ; no qnm import ; no hardcoded target solve
+  n0 ground truth (for grading only): 0.373671684418042 -0.088962315688934i
+==============================================================================
+
+[A] GATE A — a=0 n0 via Beyn on v24 Jansen companion linearization
+    N= 40  w=0.3736716844179 -0.0889623156891i  |err|=2.444e-13
+    N= 50  w=0.3736716844182 -0.0889623156888i  |err|=1.757e-13
+    N= 60  w=0.3736716844184 -0.0889623156862i  |err|=2.718e-12
+    best n0 = 0.3736716844182 -0.0889623156888i   |err|=1.757e-13   GATE A: PASS
+
+[B] GATE B — a->0 slow-rotation split (adjoint Rayleigh on a=0 eigenpair)
+    O(a) operator pieces (zero free constants):
+      (i)   Q1 += diag(-2 a m/(r^2+a^2))   K=(r^2+a^2)w-am kinetic
+      (ii)  Q1 += diag(+2 a m f/r^2)        Cook-Zhang _sA_lm O(a) diagonal
+      (iii) Q1 +=  i a m * 2(r-1)/r^3 * g D    (2 r w - m) derivative, smooth of Teukolsky 4i(r-1)K/Delta)
+    a=0 eigenpair: w=0.373671684418-0.088962315687i (|err|=1.91e-12)
+    per-(a m) coefficient c = 0.066420 +0.400435 i
+    => splitR/a=0.265681 (target 0.251532)  progradeR/a=0.132841 (target 0.12577)  splitI/a=1.601741 (target 2*0.00399)
+    GATE B (splitR/a >=4d): FAIL
+
+    ===============  GR GATE OVERALL: FAIL  ===============
+
+    *** GR gate not passed -> TUFT rotating numbers remain OPEN (honest, not faked). ***
+
+[VERDICT]
+  deturbed Teukolsky->Jansen O(a) operator:
+    Q1 += diag(-2 a m/(r^2+a^2))   [K=(r^2+a^2)w-am kinetic, (2rw-m) derivative coupling]
+    Q1 += diag(+2 a m f/r^2)       [Cook-Zhang _sA_lm O(a) diagonal]
+    peel W=f^{-2iw}e^{iwr}r^{2iw}  [ingoing horizon Omega_H=a/(r_+^2+a^2)]
+  gate A n0 |err|=1.757e-13 (PASS)
+  gate B splitR/a=0.265681 vs 0.251532 (FAIL)
+
+  -> tuft_v49_deturbed_teukolsky_jansen_out.txt

@@ -1,0 +1,206 @@
+﻿==============================================================================
+TUFT T07 LINE 3 -- micro-macro joint test (full dimension)
+  double precision ; no pseudoclose ; E1-E498 frozen
+==============================================================================
+  geometry: c_m=-0.290 d=-0.050 rho_h=0.609901951 beta=1.263762616
+  gamma = 2/rho_h = 3.279215613   (geometric PREDICTION, not fitted)
+  anchors: m_Pl=1.2209e+19  M_R(Q=1)=1.00e+14 GeV  v_EW=246.22
+  mu0 = M_R*exp(gamma)/m_Pl = 2.175030e-04   (P6 worldline-tension scale)
+
+==============================================================================
+[1] E140 full-spectrum Q assignment  (gamma FIXED geometrically)
+    m(Q) = m_Pl*mu0*Q^0.75*exp(-gamma Q) ; Q_R=1 -> M_R=1e14 GeV
+==============================================================================
+
+  particle      group     m_obs[GeV]   Q*cont      Q_int m(Qint)[GeV]   res_log
+  electron e    lepton    5.1100e-04   13.741         14   2.2167e-04    -0.363
+  muon mu       lepton    1.0566e-01   12.086         12   1.3925e-01    +0.120
+  tau tau       lepton    1.7769e+00   11.208         11   3.4641e+00    +0.290
+  up u          quark     2.1600e-03   13.294         13   5.5682e-03    +0.411
+  down d        quark     4.6700e-03   13.055         13   5.5682e-03    +0.076
+  strange s     quark     9.3000e-02   12.125         12   1.3925e-01    +0.175
+  charm c       quark     1.2700e+00   11.312         11   3.4641e+00    +0.436
+  bottom b      quark     4.1800e+00   10.941         11   3.4641e+00    -0.082
+  top t         quark     1.7276e+02    9.781         10   8.5643e+01    -0.305
+  proton p      baryon    9.3827e-01   11.407         11   3.4641e+00    +0.567
+  neutron n     baryon    9.3957e-01   11.406         11   3.4641e+00    +0.567
+
+  Frozen lattice anchors (T06 line1 endorsed): Q_t=10, Q_e=14, Q_nu=19.
+  top    m=172.76 GeV : continuous Q*=9.781, nearest int=10 (T06 froze Q_t=10)
+  electron m=5.11e-4 GeV: continuous Q*=13.741, nearest int=14 (T06 froze Q_e=14)
+  active nu m=5e-11 GeV : Q*=18.734, nearest int=19 (T06 froze Q_nu=19)
+
+  residual log10[m_pred/m_obs] across 11 particles:
+    min=-0.363  max=+0.567  RMS=0.353 dex   (O(0.3-0.5 dex) = factor ~2, ORDER-of-magnitude)
+  => integer-Q assignment is an OOM (order-of-magnitude) fit, NOT 6-digit.
+     Consistent with T06 line1 verdict (residuals O(few-30%..factor2)).
+
+  -- E143 (three-generation C_k = knot-crossing) boundary check --
+  E142 (g==Q) HARD VETOED ; E181-E189 (g==C_k) VETOED by v6 L4 (T14 closed:
+  N_g=3 is representation-theory INPUT). This round does NOT claim g==Q:
+  Q here is the Hopf/soliton mass-sector number; generation index g in {1,2,3}
+  stays external (T02 line3). The 11 particles do NOT snap to Q=1,2,3
+  (leptons span Q~12..13.5, quarks Q~9.7..13.3) -> no contradiction with
+  E143; g is decoupled from Q.  OPEN: whether 3 generations sit on one Q or
+  across Q's remains an input (same as T06 line1 section 4).
+
+==============================================================================
+[2] micro->macro bridge : soliton density -> v_flat -> BTFR
+==============================================================================
+  H0 = 67.700 km/s/Mpc = 2.1940e-18 s^-1 = 1.4441e-42 GeV
+  Omega_c = 0.262 (Omega_c h^2=0.120, h=0.677)
+  rho_crit = 3.711e-47 GeV^4 = 8.609e-27 kg/m^3
+  rho_DM   = 9.715e-48 GeV^4 = 2.254e-27 kg/m^3
+
+  DM-soliton candidate = baryon Skyrmion on E140 ladder:
+    Q_b = 11 , m_s = m(Q_b) = 3.4641e+00 GeV (over obs proton 0.938 by +0.57 dex)
+    equivalent soliton number density n_s = rho_DM/m_s = 2.805e-48 GeV^3 = 3.650e-01 m^-3
+    reduced Compton wavelength lambda_s = hbar/(m_s c) = 5.696e-17 m (microscopic;
+    -> 3.4-GeV soliton is COLD/collisionless DM, NOT fuzzy keV warm DM).
+  (n_s ~ O(0.1-1) m^-3 matches baryon-density scale; DM~5x baryons.
+   A heavier Q=1 N_R=1e14 GeV soliton would give n_s ~1e-61 m^-3 = far too
+   dilute.  The bridge self-consistently uses the Q~baryon soliton.)
+
+  -- v_flat prediction (BTFR: v_f^4 = G a0 M_b) --
+    a0 derived = c H0/(2 pi) = 1.0468e-10 m/s^2  (H0=67.7)
+    a0 ledger tabulated       = 1.0830e-10 m/s^2  ; derived/ledger = 0.967
+    a0 MOND reference        = 1.2000e-10 m/s^2   ; derived/MOND = 0.872
+
+    M_b[Msun]        v_f[m/s]    v_f[km/s]
+    1e+09          6.1052e+04       61.052
+    1e+10          1.0857e+05      108.568
+    1e+11          1.9306e+05      193.064
+    1e+12          3.4332e+05      343.321
+
+  BTFR slope check (log v_f vs log M_b):
+    model: v_f^4 = G a0 M_b  =>  d(log v)/d(log M_b) = 1/4  (v^4 vs M slope=4.000)
+    predicted slope = 4.000 ; observed = 4.19 +/- 0.10
+    tension = (4.19-4.00)/0.10 = +1.90 sigma
+    => 4.000 vs 4.19+/-0.10 : +1.9 sigma.  D3 'weak discriminator' stands;
+       model within ~2 sigma but NOT a precision match (honest).
+
+==============================================================================
+[3] parameter-space consistency : c_m / Lambda_n / mu0 joint fit
+==============================================================================
+
+  c_m interval (EHT/E486): [-0.369, -0.218], nominal -0.290
+  canonical Lambda_n/m_n = sqrt|c_m| = 0.5385 (nominal)
+  interval from c_m sweep : [0.4669, 0.6075]  (ledger 0.54 +/-0.10)
+
+  P11 bridge c_m = -alpha_s (Lambda_n/m_n)^2:
+    at canonical Lambda_n/m_n=sqrt|c_m|, alpha_s = |c_m|/(|c_m|) = 1.0000
+    ledger Skyrme alpha_sk ~ 0.5 ; ratio 2.000 = sqrt(2) -> the E483/E484
+    tautology (alpha_s=1 vs 0.5, off by sqrt(2)) is REPRODUCED, not fixed.
+
+  mu0 joint-fit test:
+    particle-spectrum mu0 = M_R exp(gamma)/m_Pl = 2.1750e-04 (this script)
+    cosmology bridge (a0 = c H0/(2 pi), v_f^4=G a0 M_b) contains NO mu0:
+      a0 set by H0 (cosmology), v_f by (a0, M_b).  mu0 never appears.
+    => mu0 (micro soliton mass scale) and a0/H0 (macro acceleration scale)
+       are DECOUPLED in the current postulate set.  There is NO single
+       parameter subset {c_m, mu0, Lambda_n} that particle spectrum AND
+       cosmology BOTH constrain simultaneously to a 6-digit point:
+         - particle spectrum fixes mu0 (via M_R=1e14 anchor) to O(few-x).
+         - c_m is fixed by EHT (interval, not point), decoupled from Q ladder.
+         - cosmology fixes a0=H0; it does NOT feed back into mu0.
+    SYSTEMATIC DEVIATION (explicit):
+      (i)  Q residuals O(few-x) (not precision) -> spectrum fit is OOM.
+      (ii) BTFR slope 4.000 vs obs 4.19+/-0.10 = +1.9 sigma (weak).
+      (iii) a0 derived 1.047e-10 vs MOND 1.200e-10 = -12.8% (by construction cH0/2pi; 
+          ledger tabulates 1.083e-10 ~ cH0/2pi at H0~70, 3.5% above derived).
+      (iv) P11 alpha_s=1 vs alpha_sk=0.5 = sqrt(2) tension (E483/E484).
+      (v)  mu0 <-> cosmology decoupled -> no joint single-parameter closure.
+
+==============================================================================
+[4] micro-macro consistency matrix
+==============================================================================
+  observable                         predicted      observed       status    
+  ---------------------------------------------------------------------------
+  Q_t / Q_e / Q_nu lattice           10 / 14 / 19   fit-anchored   COND (T06)
+  Q-ladder span m_t/m_e              3.864e+05      3.3808e5       COND (14%)
+  full-spectrum residual RMS         0.35 dex       PDG            OOM fit   
+  BTFR slope v^4~M                   4.000          4.19+/-0.10    ~1.9sig weak
+  a0 derived [m/s^2]                 1.047e-10      1.2e-10        -12.8% by cH0/2pi
+  c_m                                -0.29 [-0.369,-0.218] EHT ~-0.29     DOCKED (E486)
+  Lambda_n/m_n                       0.538 [0.467,0.607] 0.54+/-0.10    CONSISTENT
+  P11 alpha_s                        1.0            0.5 (Skyrme)   sqrt2 tension
+  mu0 vs a0 feedback                 none           --             DECOUPLED 
+  n_s (baryon soliton)               3.65e-01 m^-3  ~baryon density OOM ok    
+
+==============================================================================
+[5] discriminant prediction update (new D numbers; E1-E498 frozen)
+==============================================================================
+  D28: full-spectrum E140 Q-assignment -- leptons Q~12.0-13.5, quarks
+       Q~9.7-13.3, baryons Q~11.3; residuals O(few-x) = ORDER-OF-MAGNITUDE,
+       NOT precision.  Predictions are sector labels, not mass digits.
+  D29: micro-macro bridge -- baryon soliton (Q=11, E140 m_s=3.46 GeV; obs
+       baryon 0.94 GeV) gives n_s~0.37 m^-3; BTFR v_f^4=G a0 M_b reproduces
+       slope 4.000 within +1.9 sigma of obs 4.19+/-0.10 (weak, as D3).
+  D30: parameter DECOUPLING -- mu0 (micro) and a0=H0 (macro) do not feed
+       back through any current postulate; no single {c_m,mu0,Lambda_n}
+       point is jointly pinned to 6 digits.  P11 alpha_s=1 vs 0.5 sqrt(2)
+       tension reproduced (E483/E484), not resolved.
+
+==============================================================================
+[6] four-state grading
+==============================================================================
+
+  (A) STRICT THEOREM (arithmetically exact in-postulate):
+      - E140 m(Q)=m_Pl mu0 Q^0.75 exp(-gamma Q) algebra; gamma=2/rho_h.
+      - BTFR slope 4.000 is IDENTICAL to v_f^4=G a0 M_b (definition).
+      - P11 at canonical Lambda_n/m_n=sqrt|c_m| forces alpha_s=1 (tautology).
+      - E142/E181-E189/E143 vetoes stand; g decoupled from Q.
+
+  (B) CONDITIONAL THEOREM:
+      - IF gamma=2/rho_h is the Hopf e-folding AND mu0 fixed by M_R=1e14,
+        THEN the E140 ladder places leptons/quarks/baryons at integer Q with
+        O(few-x) residuals (order-of-magnitude).  Q_t=10/Q_e=14/Q_nu=19 (T06)
+        are consistent with continuous Q* within the OOM band.
+      - IF dark matter is the baryon-sector Skyrmion, THEN n_s~O(1) m^-3 and
+        BTFR slope 4.000 lands within 1.9 sigma of observed 4.19+/-0.10.
+
+  (C) DEFINITION IDENTIFICATION:
+      - mu0 = M_R exp(gamma)/m_Pl = worldline-tension scale anchored at Q=1.
+      - a0 = c H0/(2 pi) identified as the MOND critical acceleration.
+      - baryon = E140 Q~11 soliton (Skyrmion).  Label identifications,
+        not first-principles derivations.
+
+  (D) OPEN PROPOSITION (honest, no pseudoclose):
+      - Full-spectrum Q assignment is a FIT to observed masses; O(few-x)
+        residual is NOT at the TUFT 6-digit gate.  Why each particle sits at
+        its (non-integer, non-generational) Q* remains unexplained.
+      - mu0 <-> a0/H0 DECOUPLED: no current postulate ties the micro soliton
+        mass scale to the macro acceleration scale.  A single parameter set
+        simultaneously satisfying particle spectrum + cosmology at precision
+        is NOT established; D30 registers this as OPEN.
+      - BTFR slope 4.000 vs 4.19+/-0.10 (+1.9 sigma) is weak; the +0.19
+        offset could be baryon-fraction/systematic, not resolved.
+      - P11 alpha_s=1 vs Skyrme 0.5 (sqrt2) tension carried over from
+        E483/E484; NOT closed here.
+      - Whether 3 generations sit on one Q or span Q's remains external (T14).
+
+==============================================================================
+[7] reproducibility checksum
+==============================================================================
+  rho_h              = 0.609901951
+  gamma=2/rho_h      = 3.279215613
+  mu0                = 2.175030e-04
+  c_m nominal/interval= -0.290 / [-0.369, -0.218]
+  Lambda_n/m_n canon = 0.5385
+  P11 alpha_s canon  = 1.0000
+  H0                 = 67.700 km/s/Mpc = 1.4441e-42 GeV
+  rho_DM             = 9.7152e-48 GeV^4 = 2.2540e-27 kg/m^3
+  Q_b baryon soliton = 11  m_s=3.4641e+00 GeV  n_s=3.650e-01 m^-3
+  a0 TUFT            = 1.0468e-10 m/s^2
+  BTFR slope tension = +1.90 sigma
+  full-spectrum res RMS = 0.353 dex (OOM, NOT precision)
+
+  VERDICT: E140 ladder is an ORDER-OF-MAGNITUDE map of the particle spectrum
+  (leptons/quarks/baryons on integer Q within a factor ~2) and CONDITIONALLY
+  bridges to macro via the baryon-soliton density + BTFR (slope 4.000,
+  ~1.9 sigma from obs).  mu0 (micro) and a0=H0 (macro) are DECOUPLED: no
+  single parameter set is jointly pinned to 6 digits.  NOT strict theorem;
+  residuals and decoupling are OPEN.  No pseudoclose.
+
+[End of T07 line 3.]
+

@@ -1,0 +1,57 @@
+﻿================================================================================
+T01 LINE 6 — TUFT side rotating m-frequency split (Route A)
+  Kerr background + reflecting wall BC ; complete Teukolsky V + Jansen compact
+  TUFT reflecting wall bounded branch beta+ = 1.263763 (beta(beta-1)=1/3)
+  double precision ; no qnm import ; no hardcoded target in solver ; no loop calibration
+================================================================================
+
+[GR GATE A] a=0, s=-2, l=2, m=2, n=0  (independent solve from perturbed guess)
+    independent w = 0.373671684418042 -0.088962315688936i
+    reference     = 0.373671684418042 -0.088962315688934i
+    |err| = 1.646e-15   digits = 14.8   Cf residual = 9.93e-16
+    GATE A: PASS (need >=11.6)
+
+[GR GATE B] slow-rot splitR/a -> 0.2515323 (Richardson a^2 / a^4 four-trunc)
+    a= 0.005  splitR/a = +0.25153472
+    a= 0.010  splitR/a = +0.25154192
+    a= 0.020  splitR/a = +0.25157075
+    a= 0.040  splitR/a = +0.25168614
+    a= 0.080  splitR/a = +0.25214929
+    a^2 linear    : splitR/a = +0.25153218  err=1.18e-07  6.9 digits  PASS
+    a^4 four-trunc: splitR/a = +0.25153232  err=1.80e-08  7.7 digits  PASS
+
+    ===============  GR GATE OVERALL: PASS  ===============
+
+================================================================================
+[TUFT] GR gates passed -> reflecting-wall (bounded branch beta+=1.263763) spectral pencil
+    A=e^(-2/rho), B=e^(2/rho) h, h=1+cm/rho^2+d/rho^3, cm=-0.29 d=-0.05
+    wall rho_h=0.609901951 (B=0) ; near-wall s~(rho-rho_h)^(3/2), V~(1/3)/s^2
+    inner BC = reflecting Neumann bounded branch s^beta+  (NOT ingoing horizon)
+    U_-2=-1.346e-01 U_-1=+3.771e-02 U_0=+3.236e-02 U_1=+1.264e-02 U_2=+4.323e-03
+    static TUFT pole (a=0) = 0.434442828 -0.056449578i
+    Rayleigh denominator |u Q1 v| = 2.574e-05
+
+    ---- bare-core three limit bands (per-(a m) complex coefficient c) ----
+    (i)   set-to-zero : c = 0             splitR/a = 0.000000
+    (ii)  GR 2R^-3    : c = 0.584252 -0.676850i  splitR/a = 2.337008
+    (iii) real E475   : c = 0.145123 -0.105030i  splitR/a = 0.580493
+
+    ---- non-perturbative continuation (direct pole at small a) ----
+    m=+2: a=0.05:0.449000-0.067881i  a=0.10:0.463505-0.081383i  a=0.15:0.477658-0.097335i
+    m=-2: a=0.05:0.420023-0.046783i  a=0.10:0.405848-0.038621i  a=0.15:0.392000-0.031751i
+    a=0.05: |Re w(+2)-Re w(-2)| = 0.028978  split/a = 0.579552
+    a=0.10: |Re w(+2)-Re w(-2)| = 0.057657  split/a = 0.576575
+    a=0.15: |Re w(+2)-Re w(-2)| = 0.085659  split/a = 0.571059
+
+[TUFT RESULT]
+  static TUFT pole w0 = 0.434442828 -0.056449578i
+  TUFT m=+/-2 split |dRe| @ a=0.10      = 0.057657
+  Q spin slope split/a (real E475 field) = 0.580493  (Rayleigh 0.580493 ; cont@.05 0.579552)
+  bare-core three limit bands splitR/a:
+      set-to-zero : 0.000000
+      GR 2R^-3    : 2.337008
+      real E475   : 0.580493
+  -> band width (real - zero) = 0.580493 ; real/GR ratio = 0.2484
+
+  wall time: 0.4s
+  -> tuft_v50_tuft_spin_splitting_out.txt

@@ -1,0 +1,171 @@
+﻿==============================================================================
+T03 LINE 2 -- CP-violation resource check (CKM washout / net BAU)
+  double precision ; standard thermal history ; no fake closure
+==============================================================================
+
+[1] CKM MATRIX RECONSTRUCTION + JARLSKOG INVARIANT
+------------------------------------------------------------------------------
+  inputs: s12=0.22500 s23=0.04182 s13=0.00369 delta=1.200 rad
+
+  V_CKM (real part):
+      0.97435    0.22500    0.00134
+     -0.22486    0.97349    0.04182
+      0.00811   -0.04105    0.99912
+  V_CKM (imag part):
+      0.00000    0.00000   -0.00344
+     -0.00014   -0.00003    0.00000
+     -0.00335   -0.00077    0.00000
+
+  J = Im(V_us V_cb V_ub* V_cs*) = 3.150277e-05
+  G3-registered J               = 3.200e-05
+  ratio J/J_G3                  = 0.9845
+  (agreement within O(1); the 3x3 matrix delta=1.20 rad reproduces
+   the registered J ~ 3e-5 -- the ONLY source of complex phase in SM.)
+
+[2] WALL-CROSSING SCALE
+------------------------------------------------------------------------------
+  T_EW          = 100.0 GeV
+  alpha_w       = g^2/(4pi) = 0.0336
+  v_wall        = 0.150
+  L_wall ~ 1/(alpha_w T) = 2.9743e-01 GeV^-1
+  tau_wall = L_wall/v_w  = 1.9829e+00 GeV^-1
+
+[3] PER-FLAVOUR YUKAWA EQUILIBRATION kappa_f = Gamma_yuk * tau_wall
+------------------------------------------------------------------------------
+  Gamma_yuk,f ~ y_f^2 T/(4pi) ;  kappa_f = y_f^2/(4pi alpha_w v_w)
+  kappa>>1 -> equilibrated across wall (WASHED OUT); kappa<<1 -> frozen
+
+  flav y_f=m/v      Gamma_yuk[GeV] kappa_f      status    
+  u    8.943e-06    6.365e-10    1.262e-09    frozen    
+  d    1.911e-05    2.905e-09    5.760e-09    frozen    
+  s    3.780e-04    1.137e-06    2.255e-06    frozen    
+  c    5.163e-03    2.121e-04    4.206e-04    frozen    
+  b    1.138e-02    1.031e-03    2.044e-03    frozen    
+  t    6.626e-01    3.494e+00    6.928e+00    EQUILIBRIUM (washed)
+  e    2.077e-06    3.434e-11    6.809e-11    frozen    
+  mu   4.297e-04    1.469e-06    2.913e-06    frozen    
+  tau  7.220e-03    4.148e-04    8.224e-04    frozen    
+
+  gauge equilibration (SU2 doublets): Gamma_gauge ~ alpha_w^2 T
+    Gamma_gauge ~ 1.130e-01 GeV ; kappa_gauge ~ 2.241e-01
+  -> all LEFT-HANDED doublets are gauge-equilibrated across the wall;
+     flavour coherence required by the CKM loop is erased for light
+     generations.  Top Yukawa kappa_t ~ 6.93 -> top itself is in
+     equilibrium (washed).  NO flavour species is simultaneously
+     (i) out of equilibrium AND (ii) carrying the CKM phase.
+
+[4] NET CP-VIOLATING RESOURCE vs OBSERVED BAU
+------------------------------------------------------------------------------
+  intrinsic CKM phase strength:  J = 3.150e-05
+  additional light-flavour washout factor (transport calculation,
+  Gavela et al. 1994 / Huet & Nelson 1995): the CP-violating chemical
+  potential available to the sphaleron is further suppressed by the
+  product of small off-diagonal Yukawas / equilibrium ratios, ~1e-4.
+
+  Most generous possible CKM output (assuming strong FOPT):
+     Y_B^CKM,max ~ 1.0e-20   (Gavela/Huet-Nelson upper bound)
+  Observed:
+     Y_B^obs    = 8.70e-11   (Planck 2018)
+
+  gap = Y_B^obs / Y_B^CKM,max = 8.700e+09  = 10^9.94
+  -> CKM phase is ~9 orders of magnitude TOO WEAK, even under the
+     artificial assumption of a strong first-order EWPT.
+
+  REAL SM: lattice results (Kajantie et al. 1996, and modern 2010s
+  3-family lattice) show the EWPT is a CROSSOVER, not first-order:
+  there is no out-of-equilibrium bubble wall at all.
+  => Y_B^CKM(standard thermal history) = 0  exactly (Sakharov cond.
+     3 fails outright; cond. 2 already too weak by ~1e9 even if it
+     were met).
+
+[5] 'INPUT SET HAS A COMPLEX PHASE' != 'BAU CLOSES'
+------------------------------------------------------------------------------
+  G3 registers a 3x3 Yukawa matrix with delta=1.20 rad -> J=3.15e-05.
+  Complex phase present = TRUE.  Net BAU produced = FALSE.
+  The phase lives in the CKM flavour-mixing sector; the species that
+  carries it (light u,d,s,c) is gauge-Yukawa equilibrated at T~100GeV,
+  so the phase washes out before the sphaleron can convert it.
+  Owning a complex coupling on paper is not owning a CP source that
+  survives the plasma.
+
+[6] TUFT-INTERNAL CP SOURCE?
+------------------------------------------------------------------------------
+  TUFT geometry coefficients used so far (cm_t=-0.29, d_t=-0.05) are
+  REAL numbers.  The Hopfion winding / spectral quantities in v52-v60
+  are integer/real.  THERE IS NO BUILT-IN COMPLEX PHASE in the TUFT
+  internal geometry as currently registered.
+  => TUFT has no internal extra CP-violating source beyond the SM CKM
+     it inherits.  The CKM phase itself is washed out (sec.3-4).
+
+[7] MINIMAL POSTULATE (if washout is unbreakable) + PHYSICAL COST
+------------------------------------------------------------------------------
+  To source Y_B^obs = 8.7e-11, TUFT must POSTULATE, at minimum:
+
+    (P-a) A NEW CP-VIOLATING PHASE eta_new in some TUFT-internal
+          coupling (e.g. a complex Hopfion tension / complex entry in
+          the topological mass matrix), with effective strength
+          |Im| ~ O(0.1-1) -- i.e. ~10^9 times stronger than J=3.2e-05,
+          and NOT suppressed by light-flavour Yukawa washout (it must
+          couple to an out-of-equilibrium heavy sector).
+    (P-b) A FIRST-ORDER ELECTROWEAK PHASE TRANSITION (or equivalent
+          out-of-equilibrium departure: heavy particle freeze-out like
+          leptogenesis).  The SM Higgs potential alone gives a
+          crossover; extra scalars / modified potential required.
+
+  PHYSICAL COST:
+    - Two new free parameters enter (eta_new + a new scale/field).
+    - TUFT's geometric-prediction goal is weakened: eta_new is an
+      INPUT, not derived from (cm_t, d_t, winding integers).
+    - If eta_new is later 'identified' with a complex phase hidden in
+      the Hopfion spectral problem, that identification is a
+      DEFINITION move, not a derivation, until the complex eigenvalue
+      is actually shown to emerge from the TUFT ODE.
+    - Leptogenesis alternative: CP violation in heavy Majorana N_R
+      decays (T10 seesaw) is the standard route; that ties this line
+      to the SAME open N_R-Hopf identity flagged in T02 Line 2.
+
+==============================================================================
+[8] FOUR-STATE GRADING (no fake closure)
+==============================================================================
+
+  (A) STRICT THEOREM (proven, conditional-free):
+      - Jarlskog invariant from reconstructed CKM = 3.150e-05
+        (matches G3-registered 3.2e-05; algebra exact).
+      - SM CKM phase cannot source net BAU under standard thermal
+        history: (i) EWPT is a crossover (lattice) -> Sakharov #3
+        fails; (ii) even granting a strong FOPT, Y_B^CKM <= 1e-20,
+        which is 10^9.9 below Y_B^obs = 8.7e-11.  This is the
+        established SM-EWBG no-go (Gavela 1994; Huet-Nelson 1995).
+      - Per-flavour kappa table: no light quark is simultaneously
+        out-of-equilibrium and CKM-phased; top is equilibrated.
+
+  (B) CONDITIONAL THEOREM (derivable GIVEN stated input):
+      - IF TUFT postulates a new unsuppressed CP phase eta_new ~ O(0.1)
+        in an out-of-equilibrium heavy sector AND the EWPT (or N_R
+        freeze-out) is first-order/out-of-equilibrium, THEN the CP
+        resource CAN in principle close the 10^9.9 gap.  The arithmetic
+        of gap-closing is trivial once the new source is admitted;
+        the theorem is purely conditional on the postulate.
+
+  (C) DEFINITION IDENTIFICATION:
+      - Calling the complex CKM entry 'the TUFT CP source' is a
+        label, not a derivation -- sec.3 shows it washes out.
+      - Identifying eta_new with a future complex Hopfion eigenvalue
+        is likewise a label until that complex number is actually
+        computed from the TUFT ODE.
+
+  (D) OPEN PROPOSITION (honest, not closed):
+      - Does the TUFT spectral/Hopfion problem possess a complex
+        eigenvalue / phase NOT present in the real (cm_t,d_t) input?
+        Not demonstrated.  Current internal geometry is all-real.
+      - If CP is sourced via leptogenesis (N_R decay), this line
+        inherits T02 Line 2's open N_R-Hopf identity: the heavy
+        Majorana CP phase cannot be assigned until each generation's
+        N_R winding is specified.
+      - Conclusion: CP-violation resource for BAU is NOT available
+        from TUFT internals as currently registered.  Status: 挂账,
+        requires external postulate (P-a)+(P-b); DO NOT promote to
+        'BAU closed'.
+==============================================================================
+
+-> tuft_t03_line2_CP_violation_out.txt written

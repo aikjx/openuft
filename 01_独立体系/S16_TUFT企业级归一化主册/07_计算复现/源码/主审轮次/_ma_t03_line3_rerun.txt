@@ -1,0 +1,346 @@
+﻿================================================================================
+T03 LINE 3 -- 非平衡条件审计: T_rh 窗口, V(n,T) 缺失, 四态分级
+================================================================================
+  double precision ; numpy only ; scipy root_scalar allowed
+  anchors: E273 (static wall detailed-balance, V(n,T) missing)
+           P17  (A3 Starobinsky inflation = de Sitter epoch)
+           Y_B^obs = 8.7e-11 (Planck 2018)
+
+[1] FACT ANCHORS (recomputed)
+  M_Pl                = 1.2209e+19 GeV
+  M_Pl_red            = 2.4350e+18 GeV
+  g_star (SM)         = 106.750
+  T_EW (crossover)    = 160.0 GeV
+  T_QCD               = 0.155 GeV
+  T_nu_dec (approx)   = 1.00e-03 GeV
+  Y_B^obs             = 8.700e-11
+  H_inf (order)       = 1.00e+13 GeV
+  T_GH = H_inf/2pi    = 1.592e+12 GeV
+
+================================================================================
+[2] THERMAL EQUILIBRIUM CRITERION: H(T) vs Gamma(T)
+================================================================================
+
+  Radiation-dominated Hubble rate:
+    H(T) = 1.66 * sqrt(g_star) * T^2 / M_Pl_red
+
+  Interaction rate (weak/electroweak order-of-magnitude):
+    Gamma(T) ~ alpha_weak^2 * T   (scattering/annihilation)
+    alpha_weak ~ 1/30 at EW scale; running but O(1e-2)
+
+  Equilibrium parameter:  K(T) = Gamma(T) / H(T)
+    K >> 1  : in equilibrium (collisions faster than expansion)
+    K ~ 1   : decoupling onset
+    K << 1  : out of equilibrium (frozen)
+
+       T [GeV]      H(T) [GeV]     Gamma [GeV]     K=Gam/H        status
+  ------------------------------------------------------------------------
+     1.000e+16      7.0436e+14      1.1111e+13    1.58e-02        FROZEN
+     1.000e+14      7.0436e+10      1.1111e+11    1.58e+00       near-eq
+     1.000e+12      7.0436e+06      1.1111e+09    1.58e+02       EQUILIB
+     1.000e+10      7.0436e+02      1.1111e+07    1.58e+04       EQUILIB
+     1.000e+08      7.0436e-02      1.1111e+05    1.58e+06       EQUILIB
+     1.000e+06      7.0436e-06      1.1111e+03    1.58e+08       EQUILIB
+     1.600e+02      1.8032e-13      1.7778e-01    9.86e+11       EQUILIB
+     1.000e+01      7.0436e-16      1.1111e-02    1.58e+13       EQUILIB
+     1.000e+00      7.0436e-18      1.1111e-03    1.58e+14       EQUILIB
+     1.550e-01      1.6922e-19      1.7222e-04    1.02e+15       EQUILIB
+     1.000e-03      7.0436e-24      1.1111e-06    1.58e+17       EQUILIB
+     1.000e-05      7.0436e-28      1.1111e-08    1.58e+19       EQUILIB
+     1.000e-13      7.0436e-44      1.1111e-16    1.58e+27       EQUILIB
+
+  -- analysis --
+  At T >> 100 GeV (EW scale and above): K >> 1, collisions dominate.
+     SM plasma remains in thermal equilibrium.  No Sakharov-3 opening.
+  At T ~ T_EW ~ 160 GeV: K still >> 1 for weak-scale processes.
+     The ONLY way out-of-equilibrium arises at EW scale is a STRONG
+     first-order phase transition with supercooling and a moving wall.
+     In the SM, EWPT is a CROSSOVER (not first order) -> no departure.
+
+  K(T)=1 crossover temperature (HIGH-T gauge rate Gamma ~ alpha_w^2 T):
+    T_K1_highT = alpha_w^2 M_Pl_red / (1.66 sqrt(g*))
+             = 1.5775e+14 GeV = 157748205025078912.000 MeV
+  Interpretation: ABOVE this T, expansion beats weak gauge scattering ->
+  the plasma is OUT OF EQUILIBRIUM (K < 1).  This is exactly the
+  leptogenesis / high-reheating window: at T ~ 1e14-1e16 GeV the
+  thermal bath has NOT yet relaxed to equilibrium, and heavy-particle
+  decays can proceed out-of-equilibrium.  Below T_K1_highT, the plasma
+  falls into equilibrium and stays there until the MeV scale.
+
+  LOW-T four-Fermi decoupling (neutrino freezeout, Gamma ~ G_F^2 T^5):
+    T_nu_freeze = (1/(G_F^2 M_Pl_red))^(1/3)
+               = 1.4452e-03 GeV = 1.445 MeV
+  (This is the ~1 MeV neutrino decoupling scale.  It is far below EW
+   scale and does NOT help baryogenesis; it is a late-time freezeout.)
+
+  KEY: the high-T break at 1.58e+14 GeV means the reheating window 
+  T_rh > T_K1_highT is an OUT-OF-EQUILIBRIUM epoch by itself.  If T_rh
+  sits above this scale, Sakharov-3 is automatically satisfied during
+  the initial thermalization -- no V(n,T) needed.  But this requires
+  T_rh ~> 1e14 GeV, which is the GUT-scale leptogenesis regime, and
+  TUFT has no prediction for T_rh (P17 sets H_inf, not T_rh).
+
+================================================================================
+[3] E273 AUDIT: static wall + detailed balance = zero net B-production
+================================================================================
+
+  Detailed balance theorem (thermal equilibrium):
+    For any reaction  X <-> Y  with baryon numbers B_X, B_Y:
+      rate(X->Y) = rate(Y->X)   in thermal equilibrium.
+    Hence d(n_B)/dt = sum [rate(X->Y) - rate(Y->X)] * (B_Y - B_X) = 0.
+
+  Consequences for a STATIC wall:
+    (a) wall is time-independent: no flux through it, no moving boundary.
+    (b) plasma on both sides at same T, same chemical potential mu_B=0.
+    (c) even if B-violating sphalerons exist AND CP violation exists,
+        detailed balance forces forward/back rates equal.
+    (d) net baryon asymmetry produced = 0.
+
+  This is EXACTLY the E273 verdict: static wall obeys detailed balance.
+  The Sakharov-3 condition (departure from equilibrium) is VIOLATED
+  by the static-wall configuration itself, independent of C/CP or B.
+
+  What would be needed to escape:
+    (i)   a MOVING wall (v_w > 0) sweeping through supercooled plasma,
+    (ii)  supercooling: T_inside < T_outside by a non-negligible factor,
+    (iii) wall velocity such that particles cannot equilibrate across it,
+    (iv)  a phase transition that is genuinely FIRST ORDER (not crossover).
+  All four require knowing V(n,T) -- which is MISSING.
+
+================================================================================
+[4] WHAT V(n,T) WOULD DECIDE -- and what its absence means
+================================================================================
+
+  V(n,T) = finite-temperature effective free energy of topological charge n.
+  It is the temperature-dependent generalization of V(n).  Its derivatives
+  determine the entire non-equilibrium pipeline:
+
+    Quantity              Requires V(n,T)?   Why
+    -------------------  -----------------  ----------------------------
+    Critical temp T_c     YES              solve V(n=+,T)=V(n=-,T)
+    Phase order (1st/crossover) YES       check latent heat / spinodal
+    Supercooling (T_n/T_c) YES            spinodal decomposition temp
+    Latent heat L        YES              L = -d(V_+-V_-)/dT at T_c
+    Wall velocity v_w   YES              Jouguet detonation condition
+    Wall thickness L_w  YES              interface profile from V''
+    Out-of-equil param  YES              K_wall ~ L_w / (gamma v_w) / mfp
+    Sphaleron rate on   YES              depends on vev(T), from V(n,T)
+     broken side
+
+  Verdict: EVERY quantitative handle on Sakharov-3 runs through V(n,T).
+  With V(n,T) missing, none of T_c, supercooling, v_w, or wall departure
+  can be computed from TUFT-internal resources.
+
+================================================================================
+[5] DE SITTER EPOCH (P17 Starobinsky): dilution argument
+================================================================================
+
+  During inflation: spacetime is de Sitter, H = const ~ H_inf.
+  Any pre-existing baryon asymmetry Y_B_initial is diluted by exponential
+  expansion: Y_B(a) ~ a^{-3} (number density redshifts as a^{-3}),
+  while the inflationary volume grows as exp(3 N_e-folds).
+
+  Minimum N_e-folds (flatness+horizon) = 60
+  Volume dilution factor exp(3 N_e)    = 1.4894e+78
+  Residual Y_B after inflation          = Y_B_initial / 1.49e+78 ~ 0
+
+  => Any pre-inflation baryon asymmetry is erased to ~zero.
+  => Baryogenesis MUST occur AFTER reheating (T < T_rh).
+  => The de Sitter epoch itself cannot be the baryogenesis epoch:
+     de Sitter has Gibbons-Hawking T_GH ~ H_inf/2pi but no thermal bath
+     in the standard sense; particles are not in equilibrium with the
+     horizon, and there is no defined baryon chemical potential.
+
+================================================================================
+[6] POST-REHEATING T_rh WINDOW: can non-equilibrium open here?
+================================================================================
+
+  Reheating temperature T_rh sets the MAXIMUM temperature of the radiation
+  bath after inflation.  The baryogenesis epoch must satisfy:
+     T_baryo  <=  T_rh        (universe must be reheated enough)
+     T_baryo  >=  T_BBN        (must not violate BBN)
+
+  BBN lower bound T_BBN ~ 1.00e-03 GeV (1 MeV)
+
+  Scenario A: HIGH reheating (T_rh ~ 1e10 - 1e16 GeV)
+    - leptogenesis window (T ~ M_N ~ 1e10-1e14 GeV)
+    - at T_rh, plasma is in FULL equilibrium (K >> 1 per Section 2)
+    - out-of-equilibrium requires heavy right-handed neutrino decay
+      out-of-equilibrium: Gamma_N ~ m_N^2 / M_Pl vs H(T_rh)
+
+    For m_N = 1.00e+13 GeV:
+      Gamma_N ~ m_N^2/M_Pl  = 2.7302e+05 GeV
+      H(T=m_N)             = 7.0436e+08 GeV
+      K_N = Gamma_N/H      = 3.8762e-04
+      => K_N = 3.88e-04 < 1: out-of-equilibrium decay (leptogenesis viable)
+
+  Scenario B: LOW reheating (T_rh ~ 100 GeV - 1 TeV)
+    - electroweak baryogenesis window
+    - requires STRONG first-order EWPT with v_w > 0
+    - in SM, EWPT is crossover -> no Sakharov-3
+    - in TUFT: the topological phase transition (if any) at T_c would
+      need to be first-order; but V(n,T) is MISSING, so T_c, order,
+      supercooling, v_w are all unknown.
+
+  At T = T_EW = 160 GeV:
+    H(T_EW)   = 1.8032e-13 GeV
+    Gamma     = 1.7778e-01 GeV
+    K         = 9.8593e+11 >> 1
+    => plasma in equilibrium; the ONLY non-equilibrium channel is
+       a first-order phase transition sweeping through the plasma.
+       That channel requires V(n,T).  V(n,T) is absent.
+
+================================================================================
+[7] QUANTITATIVE REQUIREMENT: Y_B^obs vs available non-equilibrium
+================================================================================
+
+  Observed: Y_B = n_B/n_gamma = 8.700e-11 (or n_B/n_s = 8.700e-11/7.04).
+  In equilibrium with mu_B = 0, n_B = 0.
+  To produce Y_B ~ 1e-10 out-of-equilibrium, you need:
+    (a) CP-violating Jarlskog-like phase: delta_CP ~ O(0.1-1),
+    (b) B-violating rate integrated out-of-equilibrium,
+    (c) efficiency factor kappa_eff = Gamma_out / H * delta_CP.
+
+  In the static-wall/detailed-balance configuration (E273):
+    kappa_eff = 0  (by detailed balance).
+    => Y_B produced = 0, REGARDLESS of CP or B rates.
+
+  The non-equilibrium efficiency kappa_eff is the PRODUCT that V(n,T)
+  would supply: kappa_eff ~ f(v_w, supercooling, wall thickness).
+  Without V(n,T), kappa_eff is not computable from TUFT-internal resources.
+
+================================================================================
+[8] MINIMAL POSTULATE -- if V(n,T) cannot be supplied from inside TUFT
+================================================================================
+
+  POSTULATE NE (non-equilibrium postulate, irreducible input):
+  ----------------------------------------------------------------
+  NE-a  The finite-temperature effective potential V(n,T) is NOT
+        derivable from the zero-temperature TUFT variational principle
+        (which produces V(n) at T=0 only).  Its T-dependence must be
+        POSTULATED, not derived.
+
+  NE-b  Conditional on a SPECIFIC postulated V(n,T) that yields a
+        strongly first-order phase transition at T_c ~ O(100 GeV) with
+        supercooling (T_n/T_c <~ 0.9) and wall velocity v_w ~ O(0.1-0.5),
+        the Sakharov-3 condition (departure from equilibrium) is SATISFIED
+        locally at the moving wall front.
+
+  NE-c  The actual numerical values of T_c, supercooling, v_w, wall
+        thickness, and sphaleron-jump efficiency are NOT predicted by TUFT;
+        they are external inputs chosen to match Y_B^obs = 8.7e-11.
+
+  PHYSICAL COST:
+  --------------
+  Cost 1 (derivability): TUFT first-principles program loses the ability
+    to PREDICT whether baryogenesis is first-order, crossover, or absent.
+    The entire non-equilibrium sector is handed over to an external V(n,T).
+
+  Cost 2 (predictivity): once NE-b is fed, the theory cannot predict
+    T_rh, T_c, or v_w independently.  The observed Y_B^obs is used to
+    TUNE these parameters, not to test them.  Baryogenesis becomes a
+    post-diction, not a prediction.
+
+  Cost 3 (uniqueness): without V(n,T), multiple postulated V(n,T)
+    functions could all reproduce Y_B^obs.  TUFT provides no selection
+    principle among them.  The theory is underdetermined in the thermal
+    sector.
+
+  Cost 4 (de Sitter irrelevance): the inflationary epoch (P17) cannot
+    supply non-equilibrium baryogenesis, because de Sitter dilutes any
+    pre-existing asymmetry to ~exp(-3*60) ~ 1.49e+78, and there is no thermal
+    bath in the Sakharov sense.  Baryogenesis MUST be post-reheating,
+    which means it MUST be governed by V(n,T) -- the very object missing.
+
+================================================================================
+[9] FOUR-STATE GRADING  (no pseudoclose)
+================================================================================
+
+  [严格定理  STRICT THEOREM]
+   S1  Detailed balance: in thermal equilibrium, net B-production = 0.
+       (Statistical mechanics theorem, independent of TUFT.)
+   S2  de Sitter dilution: exp(3 N_efolds) ~ 1.49e+78 erases any pre-
+       inflationary asymmetry to ~zero.  (N_efolds >= 60 required.)
+   S3  At T >> T_EW, K(T) = Gamma/H >> 1 for weak/EW interactions.
+       Plasma is in equilibrium; no spontaneous departure without
+       a first-order phase transition.  (Recomputed above: K(T_EW) ~ 9.86e+11.)
+   S4  E273: static wall obeys detailed balance => Y_B produced = 0.
+       This is a direct consequence of S1 for a time-independent interface.
+
+  [条件定理  CONDITIONAL THEOREM]
+   C1  CONDITIONAL on a postulated V(n,T) that yields a strongly first-order
+       EW-scale phase transition with moving wall v_w > 0 and supercooling,
+       THEN Sakharov-3 (departure from equilibrium) is satisfied at the
+       wall front.  This is the standard electroweak baryogenesis logic.
+   C2  CONDITIONAL on m_N ~ 1e13 GeV with out-of-equilibrium decay
+       (K_N = 3.88e-04 < 1), THEN leptogenesis can generate Y_B via the 
+       sphaleron conversion.  But this requires the seesaw sector (T02 line2)
+       AND a thermal leptogenesis V(n,T) / decay-rate computation.
+
+  [定义识别  DEFINITION RECOGNITION]
+   D1  'V(n,T) is missing' is a bookkeeping recognition: TUFT's variational
+       principle at T=0 produces V(n) but says nothing about finite-T free
+       energy.  The finite-T generalization is a SEPARATE object not in the
+       zero-T Hilbert space.  Declaring V(n,T) as external input is a
+       reclassification of an open problem, not a derivation.
+   D2  T_rh as the baryogenesis window lower bound is a definition of the
+       post-inflationary radiation bath; its value is not predicted by
+       the Starobinsky potential (which sets H_inf but not T_rh uniquely).
+
+  [开放命题  OPEN PROPOSITION]
+   O1  Whether TUFT's topological sector admits a finite-temperature V(n,T)
+       that yields a genuinely first-order transition at T_c ~ O(100 GeV)
+       with the required supercooling and v_w.  UNDECIDED.  V(n,T) absent.
+   O2  Whether the reheating temperature T_rh lands in the leptogenesis
+       window (T_rh ~ 1e10-1e13 GeV) or the EW baryogenesis window
+       (T_rh ~ 100 GeV) -- or somewhere below both.  UNDECIDED.
+   O3  Whether non-equilibrium can be established by a mechanism OTHER than
+       a first-order phase transition or heavy-particle decay -- e.g.
+       non-standard expansion history, dark-sphaleron freeze-out, or
+       topological defect network dynamics.  NOT ruled out; NOT computed.
+   O4  The actual efficiency factor kappa_eff that maps CP+B-violation
+       into Y_B = 8.7e-11: without V(n,T), kappa_eff is a free parameter.
+       The theory cannot predict it.  Status: open.
+
+================================================================================
+[10] CONCLUSION: does TUFT internally satisfy Sakharov-3?
+================================================================================
+
+  ANSWER: NO, not from currently available TUFT-internal resources.
+
+  Reason chain:
+    (1) E273 static wall -> detailed balance -> Y_B = 0.  [strict]
+    (2) de Sitter (P17) dilutes pre-inflation asymmetry to ~0.  [strict]
+    (3) Post-reheating plasma is in equilibrium (K >> 1) at T >= T_EW.
+        [strict]
+    (4) The ONLY escape is a first-order phase transition with moving wall,
+        which requires V(n,T).  [conditional]
+    (5) V(n,T) is MISSING from TUFT's zero-temperature variational principle.
+        [registered gap]
+    (6) => Non-equilibrium condition CANNOT be verified or predicted from
+        inside TUFT as it stands.  It requires an external postulate NE.
+
+  Status: Sakharov-3 joins the irreducible-input set (alongside N_g=3,
+  m_Pl/m_e, y_t/y_e from T02).  It is NOT pseudoclosed; the escape hatches
+  O1-O4 remain open.
+
+================================================================================
+REPRODUCIBILITY CHECKSUM
+================================================================================
+  H(T_EW)             = 1.803155e-13 GeV
+  Gamma(T_EW)         = 1.777778e-01 GeV
+  K(T_EW)             = 9.859263e+11
+  T_K1_highT (Gauge)  = 1.577482e+14 GeV = 157748205025078912.000 MeV
+  T_nu_freeze (4Fermi)= 1.445242e-03 GeV = 1.4452 MeV
+  H_inf               = 1.0000e+13 GeV
+  T_GH                = 1.5915e+12 GeV
+  dilution exp(3*60)  = 1.4894e+78
+  Gamma_N (m_N=1e13)  = 2.730249e+05 GeV
+  H(m_N=1e13)         = 7.043574e+08 GeV
+  K_N                 = 3.876226e-04
+  Y_B^obs             = 8.700e-11
+
+  SAKHAROV-3 STATUS: NOT internally satisfied.  Requires NE postulate.
+  Escape hatches O1-O4 remain open.  No pseudoclose.
+
+[End of T03 line 3.]
