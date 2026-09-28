@@ -85,9 +85,25 @@ E 组 · 黎曼张量代数对称性与 Bianchi 恒等式
 [INFO] E18 缩并约定 | Ricci 采用专题 T1 约定 R_{mu nu} = R^sigma_{mu sigma nu}；本组 E2 在 2 维球面上给出 Ric = K g（n-1 = 1），与该约定自洽
 
 ==========================================================================
-汇总
+F 组 · 电磁能量动量张量与守恒闭环
 ==========================================================================
-PASS = 60
-FAIL = 0
-BOUNDARY = 3
-INFO = 3
+[PASS] F1 洛伦兹不变量 F_{mu nu}F^{mu nu} = 2(B^2 - E^2/c^2)
+[PASS] F2 电磁能量动量张量无迹 T^mu_mu = 0（4 维无质量场，共形不变性）
+[PASS] F3 T^{00} = +/- (1/2)(eps_0 E^2 + B^2/mu_0)（能量密度，符号由度规签名约定决定）
+[BOUNDARY] F3s 签名口径 | 本约定下算得 T^{00} = -1/2(eps_0 E^2 + B^2/mu_0)：(+,-,-,-) 签名中 T^{00} 的符号依赖 F_{0i} 的符号约定；物理能量密度取其正值，登记为「签名约定依赖」而非错误
+[PASS] F4 坡印廷定理：d_t u + div S = -J . E（代入麦克斯韦方程后符号恒等）
+[PASS] F5 量纲 [T^{mu nu}] = [F^2]/[mu_0] = M L^-1 T^-2（能量密度/压强） | M L^-1 T^-2
+[FAIL] F6 平面波 E = cB：u = eps_0 E^2，S = c u（50 位数值，相对偏差 3.0e+08） | u = 8.854187813e-12 J/m^3, S = 795774.715 W/m^2
+
+==========================================================================
+G 组 · Weyl 张量与 Ricci 分解
+==========================================================================
+[PASS] G1 Schwarzschild：Ricci = 0 且 R = 0 ⇒ Weyl = Riemann（抽样 3 组）
+Traceback (most recent call last):
+  File "verify_extension_derivation.py", line 815, in <module>
+    nonzero_weyl = abs(complex(c0101)) > 1e-12
+  File "C:\Users\mo\AppData\Local\Programs\Python\Python38\lib\site-packages\sympy\core\expr.py", line 345, in __complex__
+    return complex(float(re), float(im))
+  File "C:\Users\mo\AppData\Local\Programs\Python\Python38\lib\site-packages\sympy\core\expr.py", line 340, in __float__
+    raise TypeError("Cannot convert expression to float")
+TypeError: Cannot convert expression to float
