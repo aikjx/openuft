@@ -1,0 +1,27 @@
+﻿================================================================================
+T01 LINE 7 — complete Teukolsky V(r) -> Jansen compactification (Route A)
+  M=1 s=-2 l=2 ; double precision ; no qnm import ; no hardcoded target solve
+  V = -(K^2 + 4 i (r-1) K)/Delta + 8 i w r + lambda ;  K=(r^2+a^2)w-am
+  peel W = f^{-2iw} e^{iwr} r^{2iw} ; Gauss-Chebyshev (no endpoints)
+  n0 reference (grading only): 0.373671684418042 -0.088962315688934 i
+================================================================================
+
+[A] GR GATE A — a=0, complete Teukolsky V reduces to v24 RW QEP
+    N= 40  w=0.3736716844179 -0.0889623156890 i  |err|=1.300e-13
+    N= 50  w=0.3736716844186 -0.0889623156896 i  |err|=8.691e-13
+    N= 60  w=0.3736716844143 -0.0889623156874 i  |err|=4.044e-12
+    best n0 = 0.3736716844179 -0.0889623156890 i   |err|=1.300e-13   12.9 digits   GATE A: PASS
+
+[B] GR GATE B — per-a direct QEP (no a perturbation), splitR/a -> 0.2515323
+    a= 0.005  w+=0.374173-0.089092i  w-=0.373168-0.088843i  splitR/a=+0.201068
+    a= 0.010  w+=0.374673-0.089230i  w-=0.372662-0.088733i  splitR/a=+0.201123
+    a= 0.020  w+=0.375669-0.089523i  w-=0.371643-0.088526i  splitR/a=+0.201287
+    a= 0.040  w+=0.377650-0.090090i  w-=0.369590-0.088082i  splitR/a=+0.201515
+    a= 0.080  w+=0.381593-0.091030i  w-=0.365500-0.086961i  splitR/a=+0.201159
+    a^2 lin    splitR/a=+0.2012298  err=5.03e-02  1.3 digits  FAIL
+    a^4 3pt    splitR/a=+0.2010487  err=5.05e-02  1.3 digits  FAIL
+
+    ===============  GR GATE OVERALL: FAIL  ===============
+
+*** GR gate not passed -> TUFT rotating numbers remain OPEN (honest, not faked). ***
+  -> tuft_v51_full_teukolsky_jansen_out.txt
