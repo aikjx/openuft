@@ -37,6 +37,6 @@
 
 ## 建议保留的核心文件
 
-`TUFT_企业级归一化主册_v1.0.md`（SSOT）、`TUFT_归一化台账_v1.0.json`、`TUFT_v2.0_企业级规格.md`、`tuft_v2_verify.py`、`tuft_v4_line2_geodesic.py`、`tuft_v7_line2_c_deriv.py`、`tuft_v9_line1_leaver.py`、`tuft_v10_line1_scalar.py`、`tuft_v12_line1_rw.py`、`tuft_v13/v14_tuft_wall.py`（负面结果存档）、`tuft_v16_gr_reflection.py`、`tuft_v17_odd_potential.py`、`_ma_v13/v14/v16/v17_*`（审计代码）。
+`TUFT_归一化主册_v1.0.md`（SSOT）、`TUFT_归一化台账_v1.0.json`、`TUFT_v2.0_企业级规格.md`、`tuft_v2_verify.py`、`tuft_v4_line2_geodesic.py`、`tuft_v7_line2_c_deriv.py`、`tuft_v9_line1_leaver.py`、`tuft_v10_line1_scalar.py`、`tuft_v12_line1_rw.py`、`tuft_v13/v14_tuft_wall.py`（负面结果存档）、`tuft_v16_gr_reflection.py`、`tuft_v17_odd_potential.py`、`_ma_v13/v14/v16/v17_*`（审计代码）。
 
 调试产物（`_diag_*.py`、`_probe_v14*.py`、`_proto_*.py`、`_ricc*.py` 等）建议归档，其数字禁止引用。

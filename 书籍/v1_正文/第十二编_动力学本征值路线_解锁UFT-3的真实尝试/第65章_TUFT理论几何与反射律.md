@@ -1,6 +1,6 @@
 # 第65章 TUFT 理论几何与反射律：度规、壁、外垒与实频 IVP
 
-> **【整合体系】** TUFT（本源拓扑统一场论）动力学本征值路线攻坚（v1–v28，SSOT 主册 `TUFT_企业级归一化主册_v1.0.md` v3.7 / 台账 `TUFT_归一化台账_v1.0.json` E1–E459 / 勘误 #35）；可复跑脚本 `_ma_v17_strict_areal_indep.py`、`_audit_v28_damping_channel.py`（同一 IVP = DOP853 双精度）
+> **【整合体系】** TUFT（本源拓扑统一场论）动力学本征值路线攻坚（v1–v28，SSOT 主册 `TUFT_归一化主册_v1.0.md` v3.7 / 台账 `TUFT_归一化台账_v1.0.json` E1–E459 / 勘误 #35）；可复跑脚本 `_ma_v17_strict_areal_indep.py`、`_audit_v28_damping_channel.py`（同一 IVP = DOP853 双精度）
 > **【诚实分级】** 度规系数、壁/外垒位置、龟坐标与面积势严格求导=[A]（sympy/mpmath 真实数值，非拟合）；反射律 $|R|^2\equiv1$ 的实频恒等式解读=[B]（见第67章 §67.4 勘误 #31：实 $\omega$/实势/实初值 $\psi$ 为实 $\Rightarrow a=b^*$ 为平凡恒等式，非独立幺正性证明）；群延迟拱峰与外垒 S 矩阵隔离=[A]（IVP 实跑）
 > **【关键事实】** TUFT 度规 $A=e^{-2/\rho}$、$B=e^{2/\rho}(1+c_m/\rho^2+d/\rho^3)$（$c_m=-0.29$、$d=-0.05$）；壁 $\rho_h=0.6099M$（$B=0$，$P=\rho^3+c\rho+d=0$）；外垒 $R=3.268M$、$V_{\max}=0.148709$、$\sqrt{V}=0.38563$；龟坐标 $ds/d\rho=\sqrt{B/A}$、$L=6.9694M$；面积势 $V=3A(1+e^{-2\lambda})/R^2$ 严格求导；近壁 $s\sim(\rho-\rho_h)^{3/2}$、$V=(1/3)s^{-2}-0.134590\,s^{-4/3}+\cdots$；Frobenius $\beta(\beta-1)=1/3\Rightarrow\beta=1.263762616$；实频 IVP 反射 $|R|^2\equiv1$ 全频、$\||S|-1\|=6.66\times10^{-16}$（45 位独立复现 $8.8\times10^{-47}$）；$\tau$ 群延迟拱峰 $\omega^*=0.440$、$\tau_{\max}=33.9M$；外垒 S 矩阵隔离 $\varepsilon=0.4557$
 
