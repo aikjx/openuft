@@ -1,15 +1,16 @@
 {
   "meta": {
     "script": "v_eq_c_螺旋三本源_曲率挠率角频率_求导证明审计.py",
-    "elapsed_sec": 1.62,
+    "elapsed_sec": 1.7,
     "counts": {
-      "PASS": 14,
+      "PASS": 15,
       "FAIL": 9,
       "BOUNDARY": 5,
       "INFO": 1
     },
     "guard_baseline": {
       "A-04": "FAIL",
+      "A-04b": "FAIL",
       "C-03": "FAIL",
       "D-02": "FAIL",
       "E-01": "FAIL",
@@ -46,10 +47,18 @@
     {
       "id": "A-04",
       "section": "A 螺旋几何",
-      "item": "原文参数化与式(1)的量纲冲突【原文缺陷 1】",
-      "statement": "原文写 cos(omega*s)：要求 [omega]=1/L；式(1) 给 omega=c*sqrt(kappa^2+tau^2) 量纲 1/T",
+      "item": "横向：cos(omega*s) 与式(1) 冲突【原文缺陷 1】",
+      "statement": "原文写 cos(omega*s) 且令 omega = c sqrt(kappa^2+tau^2)",
       "verdict": "FAIL",
-      "detail": "弧长归一化解得 omega_required = sqrt(kappa^2+tau^2) = omega/c（False）；取 kappa=0.3,tau=0.4 (1/m) 时 |dr/ds| = 1.7987547e+8 != 1 ==> 同一符号兼作「空间扭转率」与「时间角频率」，差一个因子 c"
+      "detail": "cos 的自变量必须无量纲 ==> 要求 [omega]=1/L；式(1) 给 [omega]=1/T，实际 [omega*s] = (0, 1, -1, 0) != (0,0,0,0)。正确写法是 cos(u*s)，u = omega/c = sqrt(kappa^2+tau^2)。取 kappa=0.3,tau=0.4 (1/m) 代入原文式得 |dr/ds| = 1.7987547e+8 != 1（差 8.25 量级）"
+    },
+    {
+      "id": "A-04b",
+      "section": "A 螺旋几何",
+      "item": "轴向：第三分量缺一个 u 因子【原文缺陷 1b】",
+      "statement": "原文第三分量写 (tau/(kappa^2+tau^2))*s",
+      "verdict": "FAIL",
+      "detail": "量纲校验：tau/(kappa^2+tau^2) 为 (0, 1, 0, 0)，乘 s 得 (0, 2, 0, 0)（L^2），不能作为坐标分量。正确式：(tau/sqrt(kappa^2+tau^2))*s = b*u*s，量纲 (0, 1, 0, 0)"
     },
     {
       "id": "A-05",
@@ -88,8 +97,8 @@
       "section": "B 求导链",
       "item": "jerk 闭式 d^3r/dt^3 = c^3 kappa(-kappa T + tau B)",
       "statement": "三阶导数含曲率平方项与曲率x挠率项（辐射反作用的长度尺度由此进入）",
-      "verdict": "FAIL",
-      "detail": "dN/ds - (-kappa T + tau B) 残差 1.41e+00；由此 d^3r/dt^3 = -c^3 kappa^2 T + c^3 kappa tau B"
+      "verdict": "PASS",
+      "detail": "dN/ds - (-kappa T + tau B) 残差 1.34e-51；由此 d^3r/dt^3 = -c^3 kappa^2 T + c^3 kappa tau B"
     },
     {
       "id": "B-04",
@@ -97,7 +106,7 @@
       "item": "速度毕达哥拉斯分解的定量比值（本文新增）",
       "statement": "v_旋转 = c*kappa/sqrt(kappa^2+tau^2)，v_平移 = c*tau/sqrt(kappa^2+tau^2)，平方和 = c^2",
       "verdict": "PASS",
-      "detail": "相对残差 < 0.0e+00；原文只说「平移^2+旋转^2=c^2」，未给出该比例 —— 补上后分配由 (kappa:tau) 唯一确定，这是本册可算的第一性增量"
+      "detail": "相对残差 <= 1.0e-45（机器零）；原文只说「平移^2+旋转^2=c^2」，未给出该比例 —— 补上后速度在平移/旋转间的分配由 (kappa:tau) 唯一确定，这是本册可算的第一性增量"
     },
     {
       "id": "B-05",
@@ -121,7 +130,7 @@
       "item": "曲率辐射公式的独立路径交叉核对",
       "statement": "代入 a_perp = c^2 kappa 到 Liénard 得 P = q^2 c gamma^4 kappa^2/(6 pi eps0)，与标准曲率辐射 P = (2/3)(q^2 c/4 pi eps0) gamma^4/rho^2 同形",
       "verdict": "PASS",
-      "detail": "kappa=1/rho, gamma=1e4, rho=1e6 m：两式相对差 0.00e+00（treated as identical）；该式 B-02 的 c^2 kappa 是辐射功率的**唯一**几何入口"
+      "detail": "kappa=1/rho, gamma=1e4, rho=1e6 m：两式相对差 0.00e+00；这不是数值巧合 —— Liénard 路径（C-01）与文献曲率辐射式是两条独立推导，在此几何入口上同形，说明 c^2*kappa 是辐射功率唯一的几何入口（且自我吻接正确）"
     },
     {
       "id": "C-03",
@@ -169,7 +178,7 @@
       "item": "kappa -> 0 的「纯挠率螺旋」不成立【原文缺陷 3】",
       "statement": "原文称 kappa->0 时 omega = c*tau，为「匀速螺旋、无辐射」",
       "verdict": "FAIL",
-      "detail": "固定 tau 令 kappa->0：半径 a = kappa/(kappa^2+tau^2) -> 1.0e-9，轴向速度占比 -> 1.0e-9，曲线退化为**直线**（非螺旋）；此时 Frenet 挠率本身失去定义（0/0）。故「纯挠率 => 无辐射匀速螺旋」的前提不存在"
+      "detail": "固定 tau=1 令 kappa->0：半径 a = kappa/(kappa^2+tau^2) -> 1.0e-9，旋转分量占比 v_rot/c = kappa/sqrt(kappa^2+tau^2) -> 1.0e-9 ==> 运动全部转为轴向、曲线退化为**直线**（非螺旋），Frenet 挠率本身也失去定义。故「纯挠率 => 匀速螺旋、无辐射」的前提不存在"
     },
     {
       "id": "D-03",
@@ -185,7 +194,7 @@
       "item": "作用量量纲审计【原文缺陷 4】",
       "statement": "S = int [(1/2 lambda)(kappa^2-tau^2) + omega^2/(2c^2)] sqrt(-g) d^4x 应为作用量量纲",
       "verdict": "FAIL",
-      "detail": "被积函数量纲 L^-2，乘 d^4x 得 (0, 1, 1, 0)，与作用量 M L^2 T^-1 不符：缺整体归一化因子（如 hbar 或 c^3/G 量纲），故不能直接作为变分原理的合法起点"
+      "detail": "被积函数量纲 L^-2，乘 d^4x 得 (0, 1, 1, 0)（= L*T），与作用量 (1, 2, -1, 0)（= M L^2 T^-1）不符：缺整体归一化因子（如 hbar 或 c^3/G 量纲），故不能直接作为变分原理的合法起点"
     },
     {
       "id": "E-02",
@@ -231,9 +240,9 @@
       "id": "F-02",
       "section": "F 量纲层",
       "item": "质量需 hbar 作为外部锚",
-      "statement": "m = hbar*omega/c^2 是唯一可达到质量量纲的组合（需引入 hbar）",
+      "statement": "m = hbar*omega/c^2 可达到质量量纲，但 hbar 不在三本源内",
       "verdict": "BOUNDARY",
-      "detail": "量纲向量校验：hbar + omega - 2c = (1, 0, 0, 0) = 质量量纲；hbar 不在三本源内，故质量仍为外部输入（与既有 M02 普朗克锚定谬误同源）"
+      "detail": "量纲向量校验：hbar + omega - 2c = (1, 0, 0, 0) = (1, 0, 0, 0)（质量量纲）；hbar 为三本源之外的输入，故质量仍须外部锚定（与既有 M02 普朗克锚定谬误同源）"
     },
     {
       "id": "F-03",
@@ -249,7 +258,7 @@
       "item": "B 场 ~ tau*b 的定位",
       "statement": "原文称「磁场完全对应副法向，由挠率主导：B ~ tau b」",
       "verdict": "BOUNDARY",
-      "detail": "这是**赋义/对标**（把 B 的方向指派给副法向），不是从变分原理或 Maxwell 方程导出；退一步：anyon 式的 tau 与磁通的定量关系在 Ferry-Serret 层无对应 ==> 属 [B] 诠释层"
+      "detail": "这是**赋义/对标**（把 B 的方向指派给副法向），不是从变分原理或 Maxwell 方程导出；Frenet-Serret 层也没有 tau 与磁通的定量关系 ==> 属 [B] 诠释层"
     }
   ]
 }

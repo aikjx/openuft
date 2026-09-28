@@ -228,7 +228,7 @@ add("A-04", "A 螺旋几何", "横向：cos(omega*s) 与式(1) 冲突【原文�
 dim_b = dim_add(dim_mul(dimv("kappa"), -2), dimv("tau"))     # tau/(kappa^2+tau^2)
 dim_axis_doc = dim_add(dim_b, dimv("s"))                      # b*s
 ok_axis = list(dim_axis_doc) == list(dimv("s"))
-add("A-07", "A 螺旋几何", "轴向：第三分量缺一个 u 因子【原文缺陷 1b】",
+add("A-04b", "A 螺旋几何", "轴向：第三分量缺一个 u 因子【原文缺陷 1b】",
     "原文第三分量写 (tau/(kappa^2+tau^2))*s",
     "FAIL" if not ok_axis else "PASS",
     "量纲校验：tau/(kappa^2+tau^2) 为 %s，乘 s 得 %s（L^2），不能作为坐标分量。"
@@ -305,9 +305,9 @@ for kk, tt in cases_b:
 add("B-04", "B 求导链", "速度毕达哥拉斯分解的定量比值（本文新增）",
     "v_旋转 = c*kappa/sqrt(kappa^2+tau^2)，v_平移 = c*tau/sqrt(kappa^2+tau^2)，平方和 = c^2",
     "PASS" if ok_b4 else "FAIL",
-    "相对残差 < %.1e；原文只说「平移^2+旋转^2=c^2」，未给出该比例 —— 补上后"
-    "分配由 (kappa:tau) 唯一确定，这是本册可算的第一性增量"
-    % float(max(r[4] for r in rows_b4)))
+    "相对残差 <= %.1e（机器零）；原文只说「平移^2+旋转^2=c^2」，未给出该比例 —— "
+    "补上后速度在平移/旋转间的分配由 (kappa:tau) 唯一确定，这是本册可算的第一性增量"
+    % max(float(max(r[4] for r in rows_b4)), 1e-45))
 
 add("B-05", "B 求导链", "周期与旋转线速度的一致性",
     "omega = c*sqrt(kappa^2+tau^2)，周期 2*pi/omega；旋转线速度 a*omega = v_旋转",
@@ -343,9 +343,9 @@ add("C-02", "C 辐射层", "曲率辐射公式的独立路径交叉核对",
     "代入 a_perp = c^2 kappa 到 Liénard 得 P = q^2 c gamma^4 kappa^2/(6 pi eps0)，"
     "与标准曲率辐射 P = (2/3)(q^2 c/4 pi eps0) gamma^4/rho^2 同形",
     "PASS" if rel_diff < mp.mpf('1e-30') else "FAIL",
-    "kappa=1/rho, gamma=1e4, rho=1e6 m：两式相对差 %.2e（%s）；"
-    "该式 B-02 的 c^2 kappa 是辐射功率的**唯一**几何入口"
-    % (float(rel_diff), "treated as identical"))
+    "kappa=1/rho, gamma=1e4, rho=1e6 m：两式相对差 %.2e；这不是数值巧合 —— "
+    "Liénard 路径（C-01）与文献曲率辐射式是两条独立推导，在此几何入口上同形，"
+    "说明 c^2*kappa 是辐射功率唯一的几何入口（且自我吻接正确）" % float(rel_diff))
 
 # C-03：原文的 P ~ kappa^2 漏了 gamma^4（真 bug 定点）
 P_doc_nonrel = q_e ** 2 * _cv * kap_num ** 2 / (6 * mp.pi * eps0)          # 原文口径（gamma=1）
@@ -397,9 +397,10 @@ for epsv in ['1e-1', '1e-3', '1e-6', '1e-9']:
 add("D-02", "D 退化极限", "kappa -> 0 的「纯挠率螺旋」不成立【原文缺陷 3】",
     "原文称 kappa->0 时 omega = c*tau，为「匀速螺旋、无辐射」",
     "FAIL",
-    "固定 tau 令 kappa->0：半径 a = kappa/(kappa^2+tau^2) -> %s，轴向速度占比 -> %s，"
-    "曲线退化为**直线**（非螺旋）；此时 Frenet 挠率本身失去定义（0/0）。"
-    "故「纯挠率 => 无辐射匀速螺旋」的前提不存在"
+    "固定 tau=1 令 kappa->0：半径 a = kappa/(kappa^2+tau^2) -> %s，"
+    "旋转分量占比 v_rot/c = kappa/sqrt(kappa^2+tau^2) -> %s ==> 运动全部转为轴向、"
+    "曲线退化为**直线**（非螺旋），Frenet 挠率本身也失去定义。"
+    "故「纯挠率 => 匀速螺旋、无辐射」的前提不存在"
     % (mp.nstr(rows_d2[-1][1], 4), mp.nstr(rows_d2[-1][2], 4)))
 
 add("D-03", "D 退化极限", "kappa = tau = 0 的平直极限",
@@ -425,9 +426,9 @@ ok_dim = list(dim_action) == list(target_action)
 add("E-01", "E 作用量层", "作用量量纲审计【原文缺陷 4】",
     "S = int [(1/2 lambda)(kappa^2-tau^2) + omega^2/(2c^2)] sqrt(-g) d^4x 应为作用量量纲",
     "FAIL" if not ok_dim else "PASS",
-    "被积函数量纲 L^-2，乘 d^4x 得 %s，与作用量 M L^2 T^-1 不符：缺整体"
-    "归一化因子（如 hbar 或 c^3/G 量纲），故不能直接作为变分原理的合法起点"
-    % (str(tuple(dim_action)),))
+    "被积函数量纲 L^-2，乘 d^4x 得 %s（= L*T），与作用量 %s（= M L^2 T^-1）不符："
+    "缺整体归一化因子（如 hbar 或 c^3/G 量纲），故不能直接作为变分原理的合法起点"
+    % (str(dim_action), str(target_action)))
 
 # E-02 变分：无导数项 => 代数驻点，不产生 Einstein 张量
 lam = sp.symbols('lambda', positive=True)
@@ -486,8 +487,8 @@ Mat = sp.Matrix([[FR(0), FR(0), FR(0), FR(0)],    # M 行
                  [FR(-1), FR(-1), FR(0), FR(1)],  # L 行
                  [FR(0), FR(0), FR(-1), FR(-1)],  # T 行
                  [FR(0), FR(0), FR(0), FR(0)]])   # Q 行  列序 (kappa,tau,omega,c)
-want_mass = sp.Matrix([FR(1), FR(0), FR(0), FR(0)])
-want_charge = sp.Matrix([FR(0), FR(0), FR(0), FR(1)])
+want_mass = sp.Matrix(list(dimv("mass")))
+want_charge = sp.Matrix(list(dimv("charge")))
 sol_m = sp.linsolve((Mat, want_mass), sp.symbols('e1 e2 e3 e4'))
 sol_q = sp.linsolve((Mat, want_charge), sp.symbols('e1 e2 e3 e4'))
 add("F-01", "F 量纲层", "{kappa,tau,omega,c} 生成不了质量/电荷",
@@ -498,13 +499,13 @@ add("F-01", "F 量纲层", "{kappa,tau,omega,c} 生成不了质量/电荷",
     % (str(sol_m), str(sol_q)))
 
 # 加 hbar 后质量可达
-hbar_dim = sp.Matrix([FR(1), FR(2), FR(-1), FR(0)])
-check_dim = hbar_dim + dim_of("omega") - 2 * dim_of("c")
+check_dim = dim_add(dim_add(dimv("hbar"), dimv("omega")), dim_mul(dimv("c"), -2))
 add("F-02", "F 量纲层", "质量需 hbar 作为外部锚",
-    "m = hbar*omega/c^2 是唯一可达到质量量纲的组合（需引入 hbar）",
+    "m = hbar*omega/c^2 可达到质量量纲，但 hbar 不在三本源内",
     "BOUNDARY",
-    "量纲向量校验：hbar + omega - 2c = %s = 质量量纲；hbar 不在三本源内，"
-    "故质量仍为外部输入（与既有 M02 普朗克锚定谬误同源）" % str(tuple(check_dim)))
+    "量纲向量校验：hbar + omega - 2c = %s = %s（质量量纲）；hbar 为三本源之外的输入，"
+    "故质量仍须外部锚定（与既有 M02 普朗克锚定谬误同源）"
+    % (str(check_dim), str(dimv("mass"))))
 
 m_e = mp.mpf('9.1093837015e-31')
 hbar = mp.mpf('1.054571817e-34')
@@ -522,7 +523,7 @@ add("F-04", "F 量纲层", "B 场 ~ tau*b 的定位",
     "原文称「磁场完全对应副法向，由挠率主导：B ~ tau b」",
     "BOUNDARY",
     "这是**赋义/对标**（把 B 的方向指派给副法向），不是从变分原理或 Maxwell 方程导出；"
-    "退一步：anyon 式的 tau 与磁通的定量关系在 Ferry-Serret 层无对应 ==> 属 [B] 诠释层")
+    "Frenet-Serret 层也没有 tau 与磁通的定量关系 ==> 属 [B] 诠释层")
 
 # =========================================================================
 # 汇总与产物
@@ -538,7 +539,7 @@ print("总耗时 %s" % elapsed())
 print("=" * 96)
 
 # 自检：本册的关键不变量（防"只改声明不改台账"）
-GUARD = {"A-04": "FAIL", "C-03": "FAIL", "D-02": "FAIL",
+GUARD = {"A-04": "FAIL", "A-04b": "FAIL", "C-03": "FAIL", "D-02": "FAIL",
          "E-01": "FAIL", "E-02": "FAIL", "E-04": "FAIL", "F-01": "FAIL"}
 bad = [(k, v, next((x["verdict"] for x in RESULTS if x["id"] == k), None))
        for k, v in GUARD.items()
@@ -546,7 +547,7 @@ bad = [(k, v, next((x["verdict"] for x in RESULTS if x["id"] == k), None))
 if bad:
     print("[自检失败] 以下条目的判定与基线不符（禁止静默改判）：%s" % str(bad))
     sys.exit(1)
-print("[自检] 7 条不可回退基线全部在位")
+print("[自检] %d 条不可回退基线全部在位" % len(GUARD))
 
 json.dump({"meta": {"script": "v_eq_c_螺旋三本源_曲率挠率角频率_求导证明审计.py",
                     "elapsed_sec": round(time.time() - T_START, 2),
@@ -589,7 +590,8 @@ lines.append("## 定点缺陷与替代式")
 lines.append("")
 lines.append("| 编号 | 原文声称 | 判定 | 正确式 / 处理 |")
 lines.append("|---|---|---|---|")
-lines.append("| A-04 | `cos(omega*s)` 配 `omega = c sqrt(Omega2)` | FAIL | 应为 `cos(u s)`，u = omega/c；轴向分量补 u |")
+lines.append("| A-04 | `cos(omega*s)` 配 `omega = c sqrt(Omega2)` | FAIL | 应为 `cos(u s)`，u = omega/c |")
+lines.append("| A-04b | 第三分量 `(tau/Omega2)*s` | FAIL | 量纲为 L^2；应为 `(tau/sqrt(Omega2))*s = b*u*s` |")
 lines.append("| C-03 | `P ~ kappa^2` 严格匹配 Liénard | FAIL | `P = q^2 c gamma^4 kappa^2/(6 pi eps0)`；原文是 beta<<1 子情形 |")
 lines.append("| D-02 | `kappa->0` 为纯挠率匀速螺旋 | FAIL | 该极限下半径->0，曲线退化为直线，前提不存在 |")
 lines.append("| E-01 | 给定拉氏密度即为作用量 | FAIL | 量纲为 L^2 非 M L^2 T^-1，缺归一化因子 |")
