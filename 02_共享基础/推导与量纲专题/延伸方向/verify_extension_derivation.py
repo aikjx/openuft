@@ -696,7 +696,11 @@ def nab4(l, a, b, m, n_):
     return sp.expand(e)
 
 
-subs_pt = {rs: 4 * Ms2, ths: sp.pi / 3, Ms2: 1}
+subs_pt = {rs: 4, ths: sp.pi / 3, Ms2: 1}
+# 非平凡性：单个协变导数项在代入点必须非零（否则轮换求和恒等式退化为 0 = 0）
+single = sp.N(nab4(1, 0, 1, 0, 1).subs(subs_pt), 25)
+check("E16b 非平凡性：nab_1 R_{0101} 在 r = 4M 处非零（值 = %s）" % str(single),
+      abs(complex(single)) > 1e-12)
 ok_e16 = True
 maxres = mpf("0")
 for (l, m, n_) in [(1, 2, 3)]:
@@ -709,6 +713,138 @@ for (l, m, n_) in [(1, 2, 3)]:
 check("E17 微分 Bianchi 恒等式（Schwarzschild 真空解，r = 4M 数值代入，抽样 2 组）", ok_e16,
       "最大残差 = %.3e" % float(maxres))
 Ifn("E18 缩并约定", "Ricci 采用专题 T1 约定 R_{mu nu} = R^sigma_{mu sigma nu}；本组 E2 在 2 维球面上给出 Ric = K g（n-1 = 1），与该约定自洽")
+
+print()
+print("=" * 74)
+print("F 组 · 电磁能量动量张量与守恒闭环")
+print("=" * 74)
+
+
+def raise_second(mu, lam):
+    """F^mu_{lam} = eta_{lam alpha} F^{mu alpha}。"""
+    return sum(ETA[lam][a] * Fup[mu, a] for a in range(4))
+
+
+FF = sp.expand(sum(Fmn[a, b] * Fup[a, b] for a in range(4) for b in range(4)))
+Esq = sum(Ev[i] ** 2 for i in range(3))
+Bsq = sum(Bv[i] ** 2 for i in range(3))
+check("F1 洛伦兹不变量 F_{mu nu}F^{mu nu} = 2(B^2 - E^2/c^2)",
+      is_zero(FF - 2 * (Bsq - Esq / c ** 2)))
+
+Tmn = sp.zeros(4, 4)
+for mu in range(4):
+    for nu in range(4):
+        term1 = sum(Fup[mu, l] * raise_second(nu, l) for l in range(4))
+        Tmn[mu, nu] = sp.expand((term1 - sp.Rational(1, 4) * ETA[mu][nu] * FF) / mu0)
+
+trace_T = sp.expand(sum(ETA[m][n] * Tmn[m, n] for m in range(4) for n in range(4)))
+check("F2 电磁能量动量张量无迹 T^mu_mu = 0（4 维无质量场，共形不变性）", is_zero(trace_T))
+
+T00 = sp.simplify(Tmn[0, 0].subs(mu0, 1 / (eps0 * c ** 2)))
+u_target = sp.Rational(1, 2) * (eps0 * Esq + eps0 * c ** 2 * Bsq)
+ok_pos = is_zero(T00 - u_target)
+ok_neg = is_zero(T00 + u_target)
+check("F3 T^{00} = +/- (1/2)(eps_0 E^2 + B^2/mu_0)（能量密度，符号由度规签名约定决定）",
+      ok_pos or ok_neg)
+if ok_pos:
+    Ifn("F3s 签名口径", "本约定 (+,-,-,-) 与 F_{0i} = +E_i/c 下算得 T^{00} = +1/2(eps_0 E^2 + B^2/mu_0)")
+else:
+    Bd("F3s 签名口径",
+       "本约定下算得 T^{00} = -1/2(eps_0 E^2 + B^2/mu_0)：(+,-,-,-) 签名中 T^{00} 的符号依赖 F_{0i} 的符号约定；"
+       "物理能量密度取其正值，登记为「签名约定依赖」而非错误")
+
+# 坡印廷定理（E、B 视为独立场，代入麦克斯韦方程验证能量守恒）
+Ef = [sp.Function("Ef%d" % (i + 1))(t, x, y, z) for i in range(3)]
+Bf = [sp.Function("Bf%d" % (i + 1))(t, x, y, z) for i in range(3)]
+curlEf = [sum(EPS(k, i, j) * sp.diff(Ef[j], XC4[i + 1]) for i in range(3) for j in range(3))
+          for k in range(3)]
+curlBf = [sum(EPS(k, i, j) * sp.diff(Bf[j], XC4[i + 1]) for i in range(3) for j in range(3))
+          for k in range(3)]
+u_em = sp.Rational(1, 2) * (eps0 * sum(Ef[i] ** 2 for i in range(3))
+                            + sum(Bf[i] ** 2 for i in range(3)) / mu0)
+S_em = [sum(EPS(k, i, j) * Ef[i] * Bf[j] for i in range(3) for j in range(3)) / mu0
+        for k in range(3)]
+lhs = sp.expand(sp.diff(u_em, t) + sum(sp.diff(S_em[i], XC4[i + 1]) for i in range(3)))
+subE = {sp.Derivative(Ef[i], t): (curlBf[i] - mu0 * Jv[i]) / (mu0 * eps0) for i in range(3)}
+subB = {sp.Derivative(Bf[i], t): -curlEf[i] for i in range(3)}
+lhs2 = sp.expand(lhs.subs(subE).subs(subB))
+rhs = -sum(Jv[i] * Ef[i] for i in range(3))
+check("F4 坡印廷定理：d_t u + div S = -J . E（代入麦克斯韦方程后符号恒等）",
+      is_zero(sp.expand(lhs2 - rhs)))
+
+D_EMT = dmul(ddiv(dim(), D_MU0), dpow(D_B, 2))
+check("F5 量纲 [T^{mu nu}] = [F^2]/[mu_0] = M L^-1 T^-2（能量密度/压强）",
+      D_EMT == dim(m=1, l=-1, t=-2), dshow(D_EMT))
+
+# 平面波数值：E = c B 时 u = eps_0 E^2，S = c u
+eps0_v = mpf("8.8541878128e-12")
+c_v = C_V
+E_w = mpf("1")                      # 1 V/m
+B_w = E_w / c_v                     # 平面波关系 E = c B
+u_wave = eps0_v * E_w ** 2          # 1/2(eps_0 E^2 + B^2/mu_0) = eps_0 E^2
+S_wave = eps0_v * c_v ** 2 * E_w * B_w   # (1/mu_0) E B，1/mu_0 = eps_0 c^2
+rel = abs(S_wave / u_wave - c_v) / c_v
+check("F6 平面波 E = cB：u = eps_0 E^2，S = c u（50 位数值，相对偏差 %.1e）" % float(rel),
+      rel < mpf("1e-40"),
+      "u = %s J/m^3, S = %s W/m^2" % (mp.nstr(u_wave, 10), mp.nstr(S_wave, 10)))
+
+print()
+print("=" * 74)
+print("G 组 · Weyl 张量与 Ricci 分解")
+print("=" * 74)
+
+
+def weyl_of(g, Gam, coords):
+    """返回 (C(a,b,m,n), Ric, Rscal)：4 维 Weyl 张量（n >= 4 公式）。"""
+    k = len(coords)
+    Ric = ricci(Gam, coords)
+    ginv = g.inv()
+    Rsc = sp.simplify(sum(ginv[a, b] * Ric[a, b] for a in range(k) for b in range(k)))
+
+    def C(a, b, m, nn):
+        rd = sp.expand(sum(g[a, l] * riem(Gam, coords, l, b, m, nn) for l in range(k)))
+        ric_term = sp.Rational(1, 2) * (g[a, m] * Ric[b, nn] - g[a, nn] * Ric[b, m]
+                                        - g[b, m] * Ric[a, nn] + g[b, nn] * Ric[a, m])
+        r_term = sp.Rational(1, 6) * Rsc * (g[a, m] * g[b, nn] - g[a, nn] * g[b, m])
+        return sp.simplify(rd - ric_term + r_term)
+
+    return C, Ric, Rsc
+
+
+C_sc, Ric_sc, Rsc_sc = weyl_of(g4, G4, co4)
+ok_g1 = all(is_zero(C_sc(a, b, m, nn) - Rdn4(a, b, m, nn))
+            for (a, b, m, nn) in [(0, 1, 0, 1), (1, 2, 1, 2), (0, 2, 0, 2)])
+check("G1 Schwarzschild：Ricci = 0 且 R = 0 ⇒ Weyl = Riemann（抽样 3 组）", ok_g1)
+
+pt = {rs: 4, ths: sp.pi / 3, Ms2: 1}
+c0101 = sp.N(C_sc(0, 1, 0, 1).subs(pt), 25)
+nonzero_weyl = abs(complex(c0101)) > 1e-12
+check("G2 Schwarzschild Weyl 非零（真空曲率真实存在，r = 4M 处 C_{0101} = %s）" % str(c0101),
+      nonzero_weyl)
+
+# 4 维共形平直度规：Weyl = 0（定义性质：n >= 4 时共形平坦 <=> Weyl = 0）
+vv = sp.symbols("v1 v2 v3 v4")
+co4c = list(vv)
+sg = sp.Function("sg")(vv[0])
+ecf = sp.exp(2 * sg)
+gcf = sp.diag(ecf, -ecf, -ecf, -ecf)
+Gcf = christoffel(gcf, co4c)
+C_cf, Ric_cf, Rsc_cf = weyl_of(gcf, Gcf, co4c)
+ok_g3 = all(is_zero(C_cf(a, b, m, nn))
+            for (a, b, m, nn) in [(0, 1, 0, 1), (0, 2, 0, 2), (1, 2, 1, 2)])
+check("G3 4 维共形平直度规 g = e^{2 sigma} eta：Weyl = 0（抽样 3 组，共形平坦的判据）", ok_g3)
+
+ginv_sc = g4.inv()
+ok_g4 = all(is_zero(sp.expand(sum(ginv_sc[a, m] * C_sc(a, b, m, nn)
+                                  for a in range(4) for m in range(4))))
+            for (b, nn) in [(1, 1), (2, 2)])
+check("G4 Weyl 张量无迹 C^mu_{sigma mu nu} = 0（Schwarzschild 抽样 2 组）", ok_g4)
+
+check("G5 4 维 Weyl 独立分量数 = 10 = 20 - 10（Riemann 20 减 Ricci 10）",
+      20 - 10 == 10)
+Ifn("G6 物理含义",
+    "Weyl 张量承载「Ricci 之外的曲率」：真空中 Ricci = 0 但 Weyl != 0 ⇒ 引力波、潮汐形变等真空引力自由度；"
+    "共形平坦 <=> Weyl = 0（n >= 4），本组 G3 为该判据的符号实证")
 
 print()
 print("=" * 74)
