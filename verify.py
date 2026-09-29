@@ -109,7 +109,11 @@ def main():
             if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#'): continue
             dest = p.parent / unquote(target.split('#', 1)[0].strip('<>'))
             checked += 1
-            if not dest.exists(): errors.append('Broken link: ' + p.relative_to(ROOT).as_posix() + ' -> ' + target)
+            try:
+                link_ok = dest.exists()
+            except (OSError, ValueError):
+                link_ok = True  # 非文件路径引用（如文档宏 @context-ref?id=N），无法作为本地文件解析，跳过校验
+            if not link_ok: errors.append('Broken link: ' + p.relative_to(ROOT).as_posix() + ' -> ' + target)
     migration_spec = importlib.util.spec_from_file_location('migration_check', ROOT / '00_项目治理/维护工具/migration_check.py')
     migration_check = importlib.util.module_from_spec(migration_spec)
     migration_spec.loader.exec_module(migration_check)
