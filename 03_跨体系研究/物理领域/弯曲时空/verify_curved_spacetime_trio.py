@@ -2,12 +2,17 @@
 # 弯曲时空三重奏 · 求导证明验证 + 精算分析（openuft 跨体系研究/物理领域/弯曲时空）
 # 纯标准库。协变 Frenet-Serret + Schwarzschild 水星进动 GR 兼容标定。
 import math
+import sys
 
 def report(lines):
     txt = "\n".join(lines)
-    print(txt)
     with open("验证结果_弯曲时空三重奏.txt", "w", encoding="utf-8") as f:
         f.write(txt)
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+    print(txt)
 
 def main():
     L = []
