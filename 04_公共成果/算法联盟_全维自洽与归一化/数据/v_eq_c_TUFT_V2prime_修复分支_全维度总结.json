@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "script": "v_eq_c_TUFT_V2prime_修复分支_求导证明与全维度总结.py",
+    "elapsed_sec": 2.95,
+    "counts": {
+      "PASS": 8,
+      "FAIL": 4,
+      "BOUNDARY": 2,
+      "INFO": 3
+    },
+    "guard_baseline": {
+      "P-01": "PASS",
+      "P-03": "PASS",
+      "P-04": "PASS",
+      "P-05": "PASS",
+      "P-07": "PASS",
+      "P-08": "PASS",
+      "P-09": "PASS",
+      "S-01": "PASS",
+      "P-02": "FAIL",
+      "P-06": "BOUNDARY",
+      "S-02": "FAIL",
+      "S-03": "BOUNDARY",
+      "T-01": "FAIL",
+      "U-03": "FAIL"
+    },
+    "linked_from": "v_eq_c_TUFT_V2_双分量孤子_可证伪性审计.json",
+    "fix_equation": "box(Psi) + m^2 Psi - lam*|Psi|^2 Psi = 0, m = omega/c",
+    "key_numbers": {
+      "m_fix_perm": "2.58960507641e+12",
+      "soliton_A_over_sqrt_a_over_lam": "sqrt(2a/lam)",
+      "omega_k0_rad_s": "2.3274209733e+29",
+      "existence": "0 < Omega^2/c^2 < m^2"
+    }
+  },
+  "status_matrix": [
+    {
+      "item": "电荷/ U(1) 守恒",
+      "V1": "未涉及",
+      "V2": "FAIL F-03",
+      "V2p": "PASS P-07",
+      "note": "修复(i) 单独消除"
+    },
+    {
+      "item": "严格稳态孤子解",
+      "V1": "未涉及",
+      "V2": "FAIL F-04",
+      "V2p": "PASS P-04",
+      "note": "sech 精确解 + 存在条件"
+    },
+    {
+      "item": "电子宽度/稳定性",
+      "V1": "未涉及",
+      "V2": "FAIL F-04b (54~57 量级)",
+      "V2p": "PASS P-08",
+      "note": "Im(Omega)=0"
+    },
+    {
+      "item": "振幅比内生锁定",
+      "V1": "未涉及",
+      "V2": "FAIL A-06",
+      "V2p": "PASS P-09",
+      "note": "代价：lam"
+    },
+    {
+      "item": "运动方程有拉氏量",
+      "V1": "FAIL E-01/E-02",
+      "V2": "未给出",
+      "V2p": "PASS P-03",
+      "note": "Euler-Lagrange 可derive"
+    },
+    {
+      "item": "双分量干涉屏蔽",
+      "V1": "无此结构",
+      "V2": "FAIL A-03/B-02/C-05",
+      "V2p": "不再需要（对称性替上位）",
+      "note": "S-01 给 d_e=0"
+    },
+    {
+      "item": "EDM 数量级",
+      "V1": "FAIL 超 16.1 量级",
+      "V2": "FAIL 超 15.6 量级",
+      "V2p": "对称性给 0（待效率判据）",
+      "note": "见 S-01/S-02"
+    },
+    {
+      "item": "g-2 数值",
+      "V1": "FAIL 偏 74.2%",
+      "V2": "数值吻合但零预测力",
+      "V2p": "未闭合（映射仍未导出）",
+      "note": "属 jamming 的未闭合项"
+    },
+    {
+      "item": "beta / RG 缺口",
+      "V1": "未涉及",
+      "V2": "FAIL D-01/D-02",
+      "V2p": "未闭合",
+      "note": "delta_TUFT 仍无形式"
+    },
+    {
+      "item": "sigma_abs=0 ringdown",
+      "V1": "既有 WKB/时域数倌",
+      "V2": "FAIL E-01（已三重关闭）",
+      "V2p": "不在本册修复范围",
+      "note": "OPEN_v3/v4"
+    },
+    {
+      "item": "3D 稳定性",
+      "V1": "未涉及",
+      "V2": "未涉及",
+      "V2p": "BOUNDARY P-06",
+      "note": "Derrick -> 需 sextic"
+    }
+  ],
+  "results": [
+    {
+      "id": "P-01",
+      "section": "P 求导链",
+      "item": "公理 A1 -> 稳态条件 A2",
+      "statement": "A2 = kappa*grad(kappa) + tau*grad(tau) = 0 应是 A1 的微分推论",
+      "verdict": "PASS",
+      "detail": "d/ds(kappa^2+tau^2-Omega^2) - 2*(A2 左式) = 0（机器零） ==> 修复分支保留这一层（它是全体系唯一无可争议的地基，且与既有 OPEN5c §1 一致）"
+    },
+    {
+      "id": "P-02",
+      "section": "P 求导链",
+      "item": "修复动机：原 F4 的复数系数残差（复算第 ⑧ 层 F-03）",
+      "statement": "系数 Q=(kappa+i tau) omega/c 时，方程对 conj(Psi) 的适配残差应为零才 Hermitian",
+      "verdict": "FAIL",
+      "detail": "残差 = 2*I*omega*tau*conjugate(Psi(x))/c != 0 ==> 原 F4 不可 Hermitian，这是必须由 (i) 修复的根因；本册把它作为动因而非结论，处理方式是把 (kappa+i tau)(omega/c) 整体替换为实质量项 m^2=omega^2/c^2"
+    },
+    {
+      "id": "P-03",
+      "section": "P 求导链",
+      "item": "拉氏量 -> Euler-Lagrange -> V2' 运动方程（符号变分）",
+      "statement": "由 L = |Psi_t|^2/c^2 - |Psi_x|^2 - m^2|Psi|^2 + (lam/2)|Psi|^4 应推出 box(Psi)+m^2 Psi-lam|Psi|^2 Psi=0",
+      "verdict": "PASS",
+      "detail": "Euler-Lagrange 算得 EL 方程 = -lam*Psi(t, x)**2*PsiC(t, x) + m**2*Psi(t, x) - Derivative(Psi(t, x), (x, 2)) + Derivative(Psi(t, x), (t, 2))/c**2；与宣称的目标方程之差 = 0（机器零） ==> V2' 的运动方程是**变分推导的结果**而非写出即有：这一点原 F4 从未做到（无拉氏量可给复数系数）"
+    },
+    {
+      "id": "P-04",
+      "section": "P 求导链",
+      "item": "V2' 的精确稳态孤子解（回答「稳态解不存在」）",
+      "statement": "Psi = A sech(kx) e^{-i Omega t} 代入 V2' 方程应得零残差",
+      "verdict": "PASS",
+      "detail": "取 A = sqrt(2a/lam), k = sqrt(a), a = m^2 - Omega^2/c^2：符号残差 = 0（机器零）；数值兜底（无量纲化 a = 1.0, lam = 1.0, x = 0.7）残差 = 5.34553e-51。存在条件：0 < Omega^2/c^2 < m^2（即 0 < Omega < 7.7634407e+20 rad/s） ==> V2' 存在严格稳态孤子解；对比原 F4 两种约定下 Im(Omega) 皆非零，V2' 消除 F-04"
+    },
+    {
+      "id": "P-05",
+      "section": "P 求导链",
+      "item": "1D virial 定理（孤子为何在 D=1 成立）",
+      "statement": "静态解的动能积分 T = int f'^2 与势能积分 V = int (a f^2 - lam f^4/2) 应满足 Derrick 关系",
+      "verdict": "PASS",
+      "detail": "符号积分得 T 与 V 形式相同，T - V = 0（机器零）==> 1D 下 virial T = V 成立，与 Derrick 缩放论证在 D=1 相容（dE/dalpha|_1 = T - V = 0） ==> 这正是 P-04 能给出**解析**孤子的原因；3D 需另行处理（见 P-06）"
+    },
+    {
+      "id": "P-06",
+      "section": "P 求导链",
+      "item": "3D Derrick 障碍（为什么四次势不足以过渡到 3+1 维）",
+      "statement": "E(f_alpha) = alpha^{2-D} T + alpha^{-D} V 在 alpha=1 处应为驻点",
+      "verdict": "BOUNDARY",
+      "detail": "D=3 时 dE/dalpha|_1 = -T - 3*V；T = int|grad f|^2 > 0 故必须 V < 0，而纯四次势 V = int(m^2 f^2 - lam f^4/2) 在弱场区为正 ==> 3D 静态局域解不成立。修正式：加入六次项 V -> m^2|Psi|^2 - (lam/2)|Psi|^4 + (kappa/3)|Psi|^6（kappa>0 时能量有下界，且在中场区可给出 V<0 的势阱以满足 Derrick 条件），这是标准 sextic Q-ball；代价是多 1 个自由度（kappa）"
+    },
+    {
+      "id": "P-07",
+      "section": "P 求导链",
+      "item": "Noether 荷守恒（回答「电荷不守恒」）",
+      "statement": "j^mu = i g^{mu nu}(Psi* d_nu Psi - Psi d_nu Psi*) 在 V2' 运动方程上应满足 d_mu j^mu = 0",
+      "verdict": "PASS",
+      "detail": "在壳代入 V2' 方程化简后 d_mu j^mu = 0（机器零） ==> U(1) 恢复、电荷守恒恢复。这直接清除了第 ⑧ 层 F-03：     原 F4 做不到这一点不是细节问题，而是它没有 Hermitian 拉氏量（无对称性可守恒）"
+    },
+    {
+      "id": "P-08",
+      "section": "P 求导链",
+      "item": "线性化色散与稳定性（回答「电子宽度 296 eV / 511 keV」）",
+      "statement": "V2' 在小振幅极限应退化为 KG，其色散关系应给 Im(Omega_w) = 0",
+      "verdict": "PASS",
+      "detail": "平面波代入后 KG 分支给 disp = -Omega_w**2 + c**2*k**2 + c**2*m**2 = 0，解得 Omega_w = [c*sqrt(k**2 + m**2)]（k,m,c 皆正时为纯实数） ==> Im(Omega_w) = 0，寿命无穷、宽度 0，与电子作为稳定粒子相容。 自洽交叉：k=0 时 Omega_w = c*m = 7.7634407e+20 rad/s，恰等于锚点角频率 omega = m_e c^2/hbar = 7.7634407e+20 rad/s，与公理 A1 的输入闭合。 对比第 ⑧ 层：原 F4 在同一锚点给出 296 eV（约定 A）与 511 keV（约定 B）的宽度、与 PDG 寿命下限差 54~57 量级 ==> 该灾难由修复 (i)（复数系数 -> 实质量项）单独消除"
+    },
+    {
+      "id": "P-09",
+      "section": "P 求导链",
+      "item": "振幅锁定：由势给出而非注入",
+      "statement": "V2' 的孤子振幅 A 是否由方程唯一确定（V2 声称内生但线性方程做不到）",
+      "verdict": "PASS",
+      "detail": "A = sqrt(2a/lam)、k = sqrt(a)、a = m^2 - Omega^2/c^2：给定 (m, Omega, lam) 后 A **唯一确定**，不再是自由注入的边界条件 ==> V2 想要的「振幅被体系锁定」在 V2' 中真的成立。     代价见 T-01：必须引入 lam（非线性自洽势参数）—— 自由度 -1，闭合 +1，账必须付"
+    },
+    {
+      "id": "S-01",
+      "section": "S 突破层",
+      "item": "螺旋整周期平均 <r> = 0（对称性直接给 d_e = 0）",
+      "statement": "若 EDM 起源于电荷分布的一阶矩 <r>，则对称性窗口下的平均值是多少",
+      "verdict": "PASS",
+      "detail": "取对称窗口 s in [-pi/u, pi/u]：<x> = 0、<y> = 0、<z> = 0（三者皆机器零） ==> <r> = 0，于是 d_e = e<r> = 0。**不需要任何屏蔽因子 f'(r)**。     这是把 V2 的特设机制替换为对称性论证的关键一步：螺旋的周期性本身消灭一阶矩"
+    },
+    {
+      "id": "S-02",
+      "section": "S 突破层",
+      "item": "窗口依赖性：为何「<z> = b/2」不成立",
+      "statement": "<z> 是否是不依赖窗口选取的几何不变量",
+      "verdict": "FAIL",
+      "detail": "同一条螺旋（其中 b = tau/(kappa^2+tau^2)）：对称窗口给 0；半周期窗口 [0, pi/u] 给 <z> = pi*tau/(2*(kappa**2 + tau**2)) = pi*b/2；整周期窗口 [0, 2pi/u] 给 <z> = pi*tau/(kappa**2 + tau**2) = pi*b。三者互不相同 ==> <z> 不是几何不变量，而是**窗口/原点选取的函数**。     既有《书籍》第十编第 52 章把 V1 的 EDM 推导追溯到「<z> = b/2 固定偏移」这一无依据假设，本册从积分口径独立确认了该结论：该偏移量不是螺旋的几何不变量，故不能作为 EDM 推导的起点"
+    },
+    {
+      "id": "S-03",
+      "section": "S 突破层",
+      "item": "挠率的正确耦合对象",
+      "statement": "F2 的 T_{mu nu} = alpha*kappa*g_{mu nu} + beta*tau*S_{mu nu} 是否是挠率的正确宿主",
+      "verdict": "BOUNDARY",
+      "detail": "在 EC 理论的标准结论中挠率代数地由**自旋密度**（自旋流）决定，平坦时空 Euler-Lagrange 修正在于T^lam_{mu nu} 代数地联系到自旋张量；而 V2 的 F2 把 tau 乘上一个反对称的 S_{mu nu} 再与 tau 并行放置，既没有自旋流的旋量结构，也缺少 Cartan 代数约束（这已经是第 ⑧ 层 F-05/F-07 的判据）。 ==> 修复方向：宿主应为旋量的自旋/轴向流双线性量，而非「度规 + 挠率轴张量」的线性组合；     本册只给出归属判定，不展开推导（属下一轮的独立攻关项）"
+    },
+    {
+      "id": "T-01",
+      "section": "T 账本层",
+      "item": "自由度交换定理：闭合必须付费",
+      "statement": "声称「无自由参数的内生机制」在数学上是否可能",
+      "verdict": "FAIL",
+      "detail": "第 ⑧ 层 A-06 已证：线性齐次方程的解空间是**线性空间**，叠加系数不可识别 ==> 「振幅/叠加权重被内生锁定」与线性性在数学上不相容（不是未推导，是不可能）。 V2' 用 (iii) 线性->非线性换来了振幅可识别：A = sqrt(2a/lam) 由方程唯一确定。     账目：V2 的 8 项自由度中，f 与 f' 两项删除（-2）；新增 lam 与 kappa_6（+2，仅 3D 需要）； g-2 映射、gamma、alpha、beta、delta 共 5 项仍未闭合 ==> **不存在免费的机制**：每闭合一条硬伤支付至少一个自由度，这是本册给出的一般性原则"
+    },
+    {
+      "id": "T-02",
+      "section": "T 账本层",
+      "item": "修复的得失清单",
+      "statement": "V2' 相对 V2 消除了什么、留下什么",
+      "verdict": "INFO",
+      "detail": "消除：F-03（电荷不守恒）、F-04（无稳态解）、F-04b（电子宽度 296 eV / 511 keV 灾难）、以及 A-06 的一半（振幅不可识别 -> 可识别）。留下：g-2 的 2r 映射仍未导出（与第 ⑧ 层 B-05 同源）；绝对标度仍需外部锚定；EDM 虽由对称性给 0，但「螺旋对称性是否严格成立」依赖 S-02 的窗口齐性假设；alpha、质量层级、sigma_abs=0 三项不在本册修复范围内"
+    },
+    {
+      "id": "U-01",
+      "section": "U 台账层",
+      "item": "V1 / V2 / V2' 全维度状态矩阵",
+      "statement": "把三个版本的每一项放在同一把尺子下判决",
+      "verdict": "INFO",
+      "detail": "矩阵共 11 行（详见数据产物的 status_matrix 表）；V2' 判 PASS 5 行，全部属于「一致性」类；属于「预测力」类的缺口（g-2 的 2r 映射、delta_TUFT、绝对标度）一行未动"
+    },
+    {
+      "id": "U-02",
+      "section": "U 台账层",
+      "item": "修复净收益",
+      "statement": "V2' 相对 V2 的净改善是否为正",
+      "verdict": "INFO",
+      "detail": "矩阵 11 行中 V2' 判 PASS 5 行（其中 4 行对应被消除的硬伤 F-03/F-04/F-04b/A-06，另含 P-01 公理继承项）、未闭合/不适用 5 行。净收益为正且**可归因**：被消除的 4 条硬伤全部来自同一处修改 (i)+(ii)+(iii)，不是重新贴标签；但预测力类缺口一字未动 ==> 定位应写为「一致性修复」而非「物理性进展」"
+    },
+    {
+      "id": "U-03",
+      "section": "U 台账层",
+      "item": "未闭合清单（不得记为已解决）",
+      "statement": "哪些开放项在本轮之后仍然开放",
+      "verdict": "FAIL",
+      "detail": "① g-2 的 2r 映射无第一性来源（V2 与 V2' 同）；② delta_TUFT 无形式，beta 缺口不可求值；③ sigma_abs=0 已由 OPEN_v3/v4 三重关闭，不在本册范围；④ 绝对标度/质量层级/alpha 未受本册影响；⑤ 3D 稳定性需引入 sextic 并重新数值求解（本册只给 Derrick 判据，未给解）"
+    }
+  ]
+}

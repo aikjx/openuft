@@ -44,6 +44,8 @@
 | tuft_r27_report.txt | 4 | 0 | 5 | 11 |
 | tuft_r28_report.txt | 2 | 0 | 7 | 14 |
 | tuft_r29_report.txt | 4 | 8 | 1 | 3 |
+| tuft_r30_report.txt | 7 | 4 | 1 | 2 |
+| tuft_r31_report.txt | 1 | 8 | 7 | 3 |
 | tuft_r3_report.txt | 8 | 0 | 0 | 0 |
 | tuft_r4_report.txt | 9 | 3 | 0 | 12 |
 | tuft_r5_report.txt | 11 | 2 | 15 | 10 |
@@ -62,15 +64,16 @@
 | tuft_暴胀CMB_report.txt | 5 | 35 | 8 | 10 |
 | tuft_机电对偶_report.txt | 39 | 0 | 9 | 1 |
 | tuft_机电对偶_实验对标_report.txt | 18 | 0 | 6 | 4 |
+| tuft_求导证明验证_OPEN8_report.txt | 11 | 0 | 0 | 1 |
 | tuft_相位pi_全维求导精算_report.txt | 6 | 9 | 6 | 7 |
 | tuft_相位pi_闭合莫比乌斯_report.txt | 7 | 1 | 0 | 1 |
 | tuft_续篇_全维求导精算_report.txt | 17 | 5 | 4 | 11 |
 | tuft_续篇_双结交换仿真_report.txt | 5 | 0 | 0 | 6 |
 | tuft_色挠率_SU3_report.txt | 5 | 16 | 6 | 14 |
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
-| **合计** | **415** | **273** | **177** | **484** |
+| **合计** | **434** | **285** | **185** | **490** |
 
-## 二、脚本清单（82）
+## 二、脚本清单（86）
 
 - `_dbg_wall.py`
 - `_scratch_r28.py`
@@ -122,6 +125,9 @@
 - `tuft_r28_kerr_teukolsky_probe.py`
 - `tuft_r29_核心公式口径校准与结构可行性.py`
 - `tuft_r2_derivative_proof.py`
+- `tuft_r30_求导证明验证与全维度总结.py`
+- `tuft_r31_两条主线可行性与缺陷审计.py`
+- `tuft_r31_缺口定理N_RG流与CMB双谱_数值框架审计.py`
 - `tuft_r3_scale_degeneracy.py`
 - `tuft_r4_scale_generation.py`
 - `tuft_r5_torsion_probe_audit.py`
@@ -146,6 +152,7 @@
 - `tuft_暴胀CMB_全维求导精算.py`
 - `tuft_机电对偶_实验对标与压电实现.py`
 - `tuft_机电对偶_谐振同构_全维精算.py`
+- `tuft_求导证明验证_OPEN8.py`
 - `tuft_相位pi_全维求导精算.py`
 - `tuft_相位pi_闭合莫比乌斯验证.py`
 - `tuft_第一性归一化总览.py`
@@ -155,9 +162,11 @@
 - `tuft_跨册缺陷族检查.py`
 - `tuft_黑洞热力学_全维求导精算.py`
 
-## 三、报告文档清单（60）
+## 三、报告文档清单（64）
 
+- `TUFT_全维突破_全维度总结_20260930.md`
 - `TUFT_微观粒子拓扑导出_第十一部分.md`
+- `TUFT_核心公式体系_校准白皮书.md`
 - `TUFT拓扑统一场论_第四至十部分_完整整理.md`
 - `tuft_B_UV完成报告.md`
 - `tuft_B_根因溯源报告.md`
@@ -186,6 +195,8 @@
 - `tuft_R27_RW_Zerilli等谱_SUSY_文稿.md`
 - `tuft_R28_Kerr_Teukolsky结构探测_文稿.md`
 - `tuft_R29_核心公式口径校准与结构可行性_文稿.md`
+- `tuft_R30_求导证明验证与全维度总结_文稿.md`
+- `tuft_R31_两条主线审计与修正方案_文稿.md`
 - `tuft_r2_全维求导证明验证精算报告.md`
 - `tuft_r5_挠率探测实验_审计与修订.md`
 - `tuft_三路线_ABC_全维分析修复优化报告.md`
@@ -218,7 +229,7 @@
 - `挠率产生机制_阶段0_可行性判定.md`
 - `挠率探测实验设计_修复版.md`
 
-## 四、原始报告（txt，62）
+## 四、原始报告（txt，65）
 
 - `tuft_B_UV完成_report.txt`
 - `tuft_B_排查_线性化_report.txt`
@@ -258,6 +269,8 @@
 - `tuft_r27_report.txt`
 - `tuft_r28_report.txt`
 - `tuft_r29_report.txt`
+- `tuft_r30_report.txt`
+- `tuft_r31_report.txt`
 - `tuft_r3_report.txt`
 - `tuft_r4_report.txt`
 - `tuft_r5_report.txt`
@@ -276,6 +289,7 @@
 - `tuft_暴胀CMB_report.txt`
 - `tuft_机电对偶_report.txt`
 - `tuft_机电对偶_实验对标_report.txt`
+- `tuft_求导证明验证_OPEN8_report.txt`
 - `tuft_相位pi_全维求导精算_report.txt`
 - `tuft_相位pi_闭合莫比乌斯_report.txt`
 - `tuft_续篇_全维求导精算_report.txt`
