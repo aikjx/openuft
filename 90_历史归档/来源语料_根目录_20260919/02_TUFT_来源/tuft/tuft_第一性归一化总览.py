@@ -475,6 +475,19 @@ CURATED = {
     "tuft_暴胀CMB_report.txt": (
         "C", "L1",
         "35 处缺陷（三预言互斥、势能凹且无下界、F_T 量纲非法、代码 math domain error）"),
+    # ── 全维突破（诚实实验审计 / 边界加固）──
+    "tuft_beta_running_缺口_report.txt": (
+        "O", "L2",
+        "β 跑动 OPEN-7 深化：定理 N 实例化（QCD 扇区转化锁 [B]），升 [A] 需外部 RGE；边界加固非实验否决"),
+    "tuft_EDM_实验对接_OPEN6_report.txt": (
+        "O", "L3",
+        "EDM（OPEN-6）已被实验否决：TUFT 预言 2.257e-34 C·m ≈ 1.4e-13 e·cm，超 ACME 真实上限 1.1e-29 e·cm ~16 个量级（白皮书原 8.7e-34 为错误数字）"),
+    "tuft_g2_电子反常磁矩_OPEN5_report.txt": (
+        "O", "L3",
+        "g-2（OPEN-5）已被实验否决：TUFT α/(8π)=2.904e-4 vs 实验 1.160e-3，偏差 ~75%，超实验精度 ~10^11 倍"),
+    "tuft_sigma_abs0_ringdown_可检验性_OPEN_v2_report.txt": (
+        "O", "L3",
+        "σ_abs=0 ringdown（R20-R22 收口）：仅存可证伪窗口，临界两难——墙在视界时 ω_R+10%/τ3.4× 超 LIGO 精度；墙远离视界则无信号"),
 }
 
 # ── U：未展开占位（无实现/无推导的方向）────────────────────────────────────

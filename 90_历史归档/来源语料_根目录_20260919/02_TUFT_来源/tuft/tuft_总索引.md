@@ -12,11 +12,14 @@
 | tuft_B_自屏蔽_数值求解_report.txt | 2 | 2 | 1 | 18 |
 | tuft_D2_report.txt | 5 | 9 | 0 | 19 |
 | tuft_D3_尺度与K_sat_锚定_report.txt | 1 | 3 | 0 | 4 |
+| tuft_EDM_实验对接_OPEN6_report.txt | 1 | 3 | 0 | 3 |
 | tuft_O_SCALE_锚定方案_report.txt | 7 | 1 | 1 | 4 |
 | tuft_Q量子A_report.txt | 12 | 5 | 4 | 5 |
 | tuft_Q量子B_report.txt | 1 | 25 | 3 | 5 |
 | tuft_Q量子_report.txt | 10 | 30 | 5 | 11 |
+| tuft_beta_running_缺口_report.txt | 5 | 2 | 3 | 4 |
 | tuft_fermion_spin_report.txt | 0 | 0 | 0 | 0 |
+| tuft_g2_电子反常磁矩_OPEN5_report.txt | 1 | 2 | 0 | 3 |
 | tuft_knot_slsqp_report.txt | 3 | 0 | 0 | 1 |
 | tuft_r10_report.txt | 19 | 2 | 4 | 3 |
 | tuft_r11_report.txt | 11 | 4 | 2 | 5 |
@@ -45,6 +48,7 @@
 | tuft_r7_report.txt | 7 | 1 | 0 | 4 |
 | tuft_r8_report.txt | 6 | 1 | 0 | 5 |
 | tuft_r9_report.txt | 7 | 1 | 0 | 4 |
+| tuft_sigma_abs0_ringdown_可检验性_OPEN_v2_report.txt | 1 | 2 | 0 | 3 |
 | tuft_三路线_ABC_report.txt | 4 | 7 | 4 | 20 |
 | tuft_四力统一_report.txt | 17 | 19 | 9 | 14 |
 | tuft_引力波_挠率扰动_report.txt | 4 | 0 | 0 | 8 |
@@ -58,9 +62,9 @@
 | tuft_续篇_双结交换仿真_report.txt | 5 | 0 | 0 | 6 |
 | tuft_色挠率_SU3_report.txt | 5 | 16 | 6 | 14 |
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
-| **合计** | **400** | **244** | **170** | **458** |
+| **合计** | **408** | **253** | **173** | **471** |
 
-## 二、脚本清单（71）
+## 二、脚本清单（75）
 
 - `_dbg_wall.py`
 - `_scratch_r28.py`
@@ -78,11 +82,14 @@
 - `tuft_B_自屏蔽_数值求解.py`
 - `tuft_D2_挠率动力学_可行性判定.py`
 - `tuft_D3_尺度与K_sat_锚定.py`
+- `tuft_EDM_实验对接_OPEN6.py`
 - `tuft_O_SCALE_锚定方案设计.py`
 - `tuft_Q量子A_拓扑荷重定义.py`
 - `tuft_Q量子B_非微扰拓扑扇区.py`
 - `tuft_Q量子_全维求导精算.py`
+- `tuft_beta_running_缺口_定理N实例化.py`
 - `tuft_fermion_spin.py`
+- `tuft_g2_电子反常磁矩_OPEN5.py`
 - `tuft_knot_slsqp.py`
 - `tuft_r10_反常消除与链环CS对偶.py`
 - `tuft_r11_大统一求导证明与耦合拓扑约束.py`
@@ -113,6 +120,7 @@
 - `tuft_r7_拓扑UFT_链条精算.py`
 - `tuft_r8_红移修复_求导证明与归一化.py`
 - `tuft_r9_particle_derivation.py`
+- `tuft_sigma_abs0_ringdown_可检验性_OPEN_v2.py`
 - `tuft_v4_line34_quintessence_lambda_n.py`
 - `tuft_三路线_ABC_全维分析修复优化.py`
 - `tuft_全书构建.py`
@@ -196,7 +204,7 @@
 - `挠率产生机制_阶段0_可行性判定.md`
 - `挠率探测实验设计_修复版.md`
 
-## 四、原始报告（txt，52）
+## 四、原始报告（txt，56）
 
 - `tuft_B_UV完成_report.txt`
 - `tuft_B_排查_线性化_report.txt`
@@ -204,11 +212,14 @@
 - `tuft_B_自屏蔽_数值求解_report.txt`
 - `tuft_D2_report.txt`
 - `tuft_D3_尺度与K_sat_锚定_report.txt`
+- `tuft_EDM_实验对接_OPEN6_report.txt`
 - `tuft_O_SCALE_锚定方案_report.txt`
 - `tuft_Q量子A_report.txt`
 - `tuft_Q量子B_report.txt`
 - `tuft_Q量子_report.txt`
+- `tuft_beta_running_缺口_report.txt`
 - `tuft_fermion_spin_report.txt`
+- `tuft_g2_电子反常磁矩_OPEN5_report.txt`
 - `tuft_knot_slsqp_report.txt`
 - `tuft_r10_report.txt`
 - `tuft_r11_report.txt`
@@ -237,6 +248,7 @@
 - `tuft_r7_report.txt`
 - `tuft_r8_report.txt`
 - `tuft_r9_report.txt`
+- `tuft_sigma_abs0_ringdown_可检验性_OPEN_v2_report.txt`
 - `tuft_三路线_ABC_report.txt`
 - `tuft_四力统一_report.txt`
 - `tuft_引力波_挠率扰动_report.txt`
