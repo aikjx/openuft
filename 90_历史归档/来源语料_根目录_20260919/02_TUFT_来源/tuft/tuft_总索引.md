@@ -13,6 +13,7 @@
 | tuft_D2_report.txt | 5 | 9 | 0 | 19 |
 | tuft_D3_尺度与K_sat_锚定_report.txt | 1 | 3 | 0 | 4 |
 | tuft_EDM_实验对接_OPEN6_report.txt | 1 | 3 | 0 | 3 |
+| tuft_OSCALE_尺度锚定EDM连接_OPEN7_report.txt | 1 | 2 | 1 | 2 |
 | tuft_O_SCALE_锚定方案_report.txt | 7 | 1 | 1 | 4 |
 | tuft_Q量子A_report.txt | 12 | 5 | 4 | 5 |
 | tuft_Q量子B_report.txt | 1 | 25 | 3 | 5 |
@@ -42,6 +43,7 @@
 | tuft_r26_report.txt | 2 | 2 | 10 | 24 |
 | tuft_r27_report.txt | 4 | 0 | 5 | 11 |
 | tuft_r28_report.txt | 2 | 0 | 7 | 14 |
+| tuft_r29_report.txt | 4 | 8 | 1 | 3 |
 | tuft_r3_report.txt | 8 | 0 | 0 | 0 |
 | tuft_r4_report.txt | 9 | 3 | 0 | 12 |
 | tuft_r5_report.txt | 11 | 2 | 15 | 10 |
@@ -66,9 +68,9 @@
 | tuft_续篇_双结交换仿真_report.txt | 5 | 0 | 0 | 6 |
 | tuft_色挠率_SU3_report.txt | 5 | 16 | 6 | 14 |
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
-| **合计** | **410** | **263** | **175** | **479** |
+| **合计** | **415** | **273** | **177** | **484** |
 
-## 二、脚本清单（80）
+## 二、脚本清单（82）
 
 - `_dbg_wall.py`
 - `_scratch_r28.py`
@@ -87,6 +89,7 @@
 - `tuft_D2_挠率动力学_可行性判定.py`
 - `tuft_D3_尺度与K_sat_锚定.py`
 - `tuft_EDM_实验对接_OPEN6.py`
+- `tuft_OSCALE_尺度锚定EDM连接_OPEN7.py`
 - `tuft_O_SCALE_锚定方案设计.py`
 - `tuft_Q量子A_拓扑荷重定义.py`
 - `tuft_Q量子B_非微扰拓扑扇区.py`
@@ -117,6 +120,7 @@
 - `tuft_r26_leaver_wall_qnm.py`
 - `tuft_r27_rw_zerilli_susy.py`
 - `tuft_r28_kerr_teukolsky_probe.py`
+- `tuft_r29_核心公式口径校准与结构可行性.py`
 - `tuft_r2_derivative_proof.py`
 - `tuft_r3_scale_degeneracy.py`
 - `tuft_r4_scale_generation.py`
@@ -151,7 +155,7 @@
 - `tuft_跨册缺陷族检查.py`
 - `tuft_黑洞热力学_全维求导精算.py`
 
-## 三、报告文档清单（59）
+## 三、报告文档清单（60）
 
 - `TUFT_微观粒子拓扑导出_第十一部分.md`
 - `TUFT拓扑统一场论_第四至十部分_完整整理.md`
@@ -181,6 +185,7 @@
 - `tuft_R26_QNM全维验证_文稿.md`
 - `tuft_R27_RW_Zerilli等谱_SUSY_文稿.md`
 - `tuft_R28_Kerr_Teukolsky结构探测_文稿.md`
+- `tuft_R29_核心公式口径校准与结构可行性_文稿.md`
 - `tuft_r2_全维求导证明验证精算报告.md`
 - `tuft_r5_挠率探测实验_审计与修订.md`
 - `tuft_三路线_ABC_全维分析修复优化报告.md`
@@ -213,7 +218,7 @@
 - `挠率产生机制_阶段0_可行性判定.md`
 - `挠率探测实验设计_修复版.md`
 
-## 四、原始报告（txt，60）
+## 四、原始报告（txt，62）
 
 - `tuft_B_UV完成_report.txt`
 - `tuft_B_排查_线性化_report.txt`
@@ -222,6 +227,7 @@
 - `tuft_D2_report.txt`
 - `tuft_D3_尺度与K_sat_锚定_report.txt`
 - `tuft_EDM_实验对接_OPEN6_report.txt`
+- `tuft_OSCALE_尺度锚定EDM连接_OPEN7_report.txt`
 - `tuft_O_SCALE_锚定方案_report.txt`
 - `tuft_Q量子A_report.txt`
 - `tuft_Q量子B_report.txt`
@@ -251,6 +257,7 @@
 - `tuft_r26_report.txt`
 - `tuft_r27_report.txt`
 - `tuft_r28_report.txt`
+- `tuft_r29_report.txt`
 - `tuft_r3_report.txt`
 - `tuft_r4_report.txt`
 - `tuft_r5_report.txt`
