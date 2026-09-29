@@ -16,11 +16,11 @@
 
 ## 二、全量统计
 
-**报告数 60**（含总索引此前漏计的 4 份无汇总行报告）；**评级：H=5 · O=39 · C=16 · U=3（方向）**。
+**报告数 61**（含总索引此前漏计的 4 份无汇总行报告）；**评级：H=5 · O=40 · C=16 · U=3（方向）**。
 
-**计数合计（去重口径以报告为准）**：PASS=410 · FAIL=263 · BOUNDARY=175 · INFO=479。
+**计数合计（去重口径以报告为准）**：PASS=411 · FAIL=265 · BOUNDARY=176 · INFO=481。
 
-## 三、归一化明细（60 份报告）
+## 三、归一化明细（61 份报告）
 
 | 报告 | P/F/B/I | 读取 | 评级 | 层级 | 备注 |
 |---|---|---|---|---|---|
@@ -31,6 +31,7 @@
 | `tuft_D2_report.txt` | 5/9/0/19 | 汇总行 | **O** | L2 | 前置 D2 挠率动力学项：四类候选 C2(Proca)唯一健康；尺度困境定理（粒子尺度 λ~1e-27m vs 宏观探测 λ≳0.1m 冲突 26 量级）；F1/F5 判不可执行（退化为自洽推论）；与 R6/O-SCALE 一致，§13『卡面最大』获定量确证 |
 | `tuft_D3_尺度与K_sat_锚定_report.txt` | 1/3/0/4 | 汇总行 | **O** | L2 | 前置 #3 尺度与 K_sat 锚定：K_sat=1/l_P^2 无第一性推导（同 L 须外部锚定/普朗克锚定）；Planck 值 vs 电子尺度 (m_e c/hbar)^2 差 ~45 量级（5.7e44，与 O-SCALE A4 冲突同源）；作 UV 截断无效；TUFT 无第一性尺度 |
 | `tuft_EDM_实验对接_OPEN6_report.txt` | 1/3/0/3 | 汇总行 | **O** | L3 | EDM（OPEN-6）已被实验否决：TUFT 预言 2.257e-34 C·m ≈ 1.4e-13 e·cm，超 ACME 真实上限 1.1e-29 e·cm ~16 个量级（白皮书原 8.7e-34 为错误数字）；需压低因子 F_d=7.8e-17，与 g-2 所需 F_g=0.574 差 7.4e15（见 OPEN5b 双约束审计） |
+| `tuft_OSCALE_尺度锚定EDM连接_OPEN7_report.txt` | 1/2/1/2 | 汇总行 | **O** | L3 | O-SCALE 尺度锚定与 EDM 连接（OPEN7）：g-2=2tanθ 与 Ω 无关、EDM∝(Ω²/2)sin2θ 依赖尺度 ⇒ 存在『调Ω压EDM保g-2』数学通道(λ=8.84e-9)，但 Ω=m_ec/ħ∝m_e ⇒ 需 m_e 缩 1.13e8 倍，与测量精度(2.9e-11)矛盾~11量级 ⇒ 尺度三难无解；EDM 根源钉死为『尺度锚定+质量测量锁死』 |
 | `tuft_O_SCALE_锚定方案_report.txt` | 7/1/1/4 | 汇总行 | **O** | L2 | O-SCALE 锚定方案秩检验：简并秩=1（不可锁 L）；7 类锚定扫全场（A2 半内 L≈1.4e8 l_P；A4 冲突 1.13e45；A5/A7 亚普朗克；A6 宏观 9.3cm），跨 56 量级 ⇒ 最小锚定定理：须外部锚定 |
 | `tuft_Q量子A_report.txt` | 12/5/4/5 | 汇总行 | **O** | L2 | Q-TUFT 前置 A（拓扑荷重定义 W→Lk）：准入双检验淘汰 W=∫T∧T（连续形变失败：λ² 缩放；整性失败：可取 0.37），采纳 Lk（Hopf=−1.000000、残差 1e-15）；记法更正为『Lk∈ℤ、Tw∈½ℤ，承载半整者为 Tw』；守恒律两层独立否定（Σ_{W∈ℤ} 与 [Ŵ,Ĥ]=0 互斥；θ 真空瞬子 ΔN=±1）⇒ 『守恒⇒幺正』不成立。FAIL 均为『框架表述需更正』而非『结论被证伪』，更正路径已给 ⇒ 评级 O（诚实边界，非 C） |
 | `tuft_Q量子B_report.txt` | 1/25/3/5 | 汇总行 | **C** | L2 | Q-TUFT 非微扰拓扑扇区：25 项 FAIL 均为**真实缺陷**（非诚实边界）——W(λT)=λ²W(T) 二次齐次不可整值化；W=(1/8π²)∫T∧T 带质量量纲 −2 与 A/(4l_P²) 冲突；T∧T 为 4-形式不可积到 3 维 Σ（恒为 0）；⊕_{W∈Z} 写法与 W 取连续统矛盾；决定性反例（W 守恒但纯度 1.0→0.5、熵 0→0.693）证明「[Ŵ,Ĥ]=0 ⇒ 信息不丢失」是无效推理；S_topo=−ln D 与 Kitaev-Preskill 差恒定因子 2 且 Σd_W² 发散 ⇒ S_topo=−∞；τ=ℏ/(g²N) 量纲为作用量非时间；Wheeler-DeWitt 的 π^{ab}D_i h_{ab} 恒为零（挠率≠非度规性，实跑 max|Dg|=0）、哈密顿动能项系数写反（应为 2κ/√h）、Ω 身份三重冲突。继承性 FAIL：六块内容全建立在已被判否的 W 上 |
@@ -92,9 +93,9 @@
 | L0 | 代数恒等式（零物理内容） | 0 | — |
 | L1 | 回指 / 定性重述 | 7 | `tuft_三路线_ABC`, `tuft_四力统一`, `tuft_暴胀CMB`, `tuft_相位pi_全维求导精算`, `tuft_续篇_全维求导精算`, `tuft_色挠率_SU3`, `tuft_黑洞热力学` |
 | L2 | 定量计算（量纲/数值正确） | 44 | `tuft_B_UV完成`, `tuft_B_排查_线性化`, `tuft_B_根因溯源`, `tuft_D2`, `tuft_D3_尺度与K_sat_锚定`, `tuft_O_SCALE_锚定方案`, `tuft_Q量子A`, `tuft_Q量子B`, `tuft_Q量子`, `tuft_beta_running_缺口`, `tuft_fermion_spin`, `tuft_knot_slsqp`, `tuft_r10`, `tuft_r11`, `tuft_r12`, `tuft_r13`, `tuft_r14`, `tuft_r15`, `tuft_r16`, `tuft_r17`, `tuft_r18`, `tuft_r19`, `tuft_r1`, `tuft_r20`, `tuft_r21`, `tuft_r22`, `tuft_r23`, `tuft_r24`, `tuft_r25`, `tuft_r26`, `tuft_r27`, `tuft_r28`, `tuft_r3`, `tuft_r4`, `tuft_r5`, `tuft_r6`, `tuft_r7`, `tuft_r8`, `tuft_r9`, `tuft_收口_修复优化`, `tuft_机电对偶`, `tuft_机电对偶_实验对标`, `tuft_相位pi_闭合莫比乌斯`, `tuft_续篇_双结交换仿真` |
-| L3 | **可检验预言 / 判决** | 9 | `tuft_B_自屏蔽_数值求解`, `tuft_EDM_实验对接_OPEN6`, `tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b`, `tuft_g2_电子反常磁矩_OPEN5`, `tuft_sigma_abs0_ringdown_可检验性_OPEN_v2`, `tuft_sigma_abs0_ringdown_定量metric_OPEN_v3`, `tuft_sigma_abs0_尺度锚定冲突_OPEN_v4`, `tuft_孤子τκ锁定_微分方程证明_OPEN5c`, `tuft_引力波_挠率扰动` |
+| L3 | **可检验预言 / 判决** | 10 | `tuft_B_自屏蔽_数值求解`, `tuft_EDM_实验对接_OPEN6`, `tuft_OSCALE_尺度锚定EDM连接_OPEN7`, `tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b`, `tuft_g2_电子反常磁矩_OPEN5`, `tuft_sigma_abs0_ringdown_可检验性_OPEN_v2`, `tuft_sigma_abs0_ringdown_定量metric_OPEN_v3`, `tuft_sigma_abs0_尺度锚定冲突_OPEN_v4`, `tuft_孤子τκ锁定_微分方程证明_OPEN5c`, `tuft_引力波_挠率扰动` |
 
-**关键观察**：全仓库真正达到 **L3（可检验预言 / 判决）** 的仅 **9 处**——`tuft_B_自屏蔽_数值求解`、`tuft_EDM_实验对接_OPEN6`、`tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b`、`tuft_g2_电子反常磁矩_OPEN5`、`tuft_sigma_abs0_ringdown_可检验性_OPEN_v2`、`tuft_sigma_abs0_ringdown_定量metric_OPEN_v3`、`tuft_sigma_abs0_尺度锚定冲突_OPEN_v4`、`tuft_孤子τκ锁定_微分方程证明_OPEN5c`、`tuft_引力波_挠率扰动`。
+**关键观察**：全仓库真正达到 **L3（可检验预言 / 判决）** 的仅 **10 处**——`tuft_B_自屏蔽_数值求解`、`tuft_EDM_实验对接_OPEN6`、`tuft_OSCALE_尺度锚定EDM连接_OPEN7`、`tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b`、`tuft_g2_电子反常磁矩_OPEN5`、`tuft_sigma_abs0_ringdown_可检验性_OPEN_v2`、`tuft_sigma_abs0_ringdown_定量metric_OPEN_v3`、`tuft_sigma_abs0_尺度锚定冲突_OPEN_v4`、`tuft_孤子τκ锁定_微分方程证明_OPEN5c`、`tuft_引力波_挠率扰动`。
 其余大量「精算通过」实为 L1/L2；这与 openuft 归一化的结论同构：**实证价值高度集中**。
 
 ## 五、U 级：未展开方向（占位）
@@ -109,7 +110,7 @@
 
 1. **可信地基（H=5）**：R1 符号/数值、R2 拓扑量子化（含分支 A）、稳态结求解、双结交换、B 弱场线性化——
    构成可继续外推的地基；其中 **R1 引力扇区的自屏蔽已被 LIGO 判决排除**（见判决链）。
-2. **欠定层（O=39）**：R3 尺度简并（O-SCALE）、R4 攻克尝试、r6 挠率产生可行性、O-SCALE 锚定方案、收口（B 降级/A 等价/C 冻结）、D2 挠率动力学项、D3 尺度与 K_sat 锚定、**R10 LCS 框架**——
+2. **欠定层（O=40）**：R3 尺度简并（O-SCALE）、R4 攻克尝试、r6 挠率产生可行性、O-SCALE 锚定方案、收口（B 降级/A 等价/C 冻结）、D2 挠率动力学项、D3 尺度与 K_sat 锚定、**R10 LCS 框架**——
    共同特征是「与**已排除的 M02/普朗克锚定**同构」或「可行性未建立」或「**约束不唯一需外部物理输入**」：
    纯几何方程无尺度锚，自然锁定普朗克尺度；反常消除给 2 维解空间，超荷仍须外部条件（O-HYPERCHARGE）。
 3. **缺陷层（C=16）**：根因分四类——①**量纲/类型**（γ₅、质量式、F_T、T_H）；
