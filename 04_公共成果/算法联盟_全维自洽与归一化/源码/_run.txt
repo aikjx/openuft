@@ -1,0 +1,248 @@
+==============================================================================
+核心算法来料 · 软件正确性 / 第一性 双通道审计
+被审根: d:\a10\aikjx\code\my_lib\utf\10-统一场论核心公式\核心算法
+numpy: 1.24.3
+==============================================================================
+
+—— 通道 T ————————————————————————
+[T01] 史瓦西半径 r_s=2GM/c² 的量纲                                 PASS
+     target : 量子引力:183
+     evidence: 实算 L^1 == L^1
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T02] 霍金温度 T=ħc³/(8πGMk_B) 的量纲                             PASS
+     target : 量子引力:186
+     evidence: 实算 温度 K == 温度 K
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T03] 贝肯斯坦-霍金熵 S=k_B·A/(4l_p²) 的量纲                         PASS
+     target : 量子引力:361
+     evidence: 实算 M^1·L^2·T^-2·Θ^-1 == M^1·L^2·T^-2·Θ^-1
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T04] T 对偶 R'=α′/R 的量纲                                     PASS
+     target : 弦理论:348
+     evidence: 实算 L^1 == L^1
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T05] p-膜张力 ħc/l_p^(p+1) 的量纲（能量/体积）                        FAIL
+     target : 弦理论:178（p=2）
+     evidence: 实算 M^1·T^-2 ≠ 压强/能量密度 Pa
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T06] 弗里德曼 H²∝8πGρ/3 的量纲                                   FAIL
+     target : 宇宙学与天体物理:53
+     evidence: 实算 T^-2 ≠ 曲率 / Λ 的单位 m^-2
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T07] 光线偏折 4GM/(c²b) 应为无量纲                                 PASS
+     target : 暗物质与暗能量:237 / 宇宙学与天体物理:92
+     evidence: 实算 1 == 1
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T08] e⁺e⁻→μ⁺μ⁻ 截面 4πα²/(3s) 的形式量纲                         PASS
+     target : 量子场论:218
+     evidence: 实算 1 == 1
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T09] Logistic 映射 x←r·x(1−x) 应保持无量纲                        PASS
+     target : 复杂系统与非线性动力学:50
+     evidence: 实算 1 == 1
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+[T10] p-膜张力在 p=0（点粒子）时应退化为能量                               PASS
+     target : 弦理论:178（p=0）
+     evidence: 实算 能量 J == 能量 J
+     note   : 牙齿：此项为教科书已确立的结果，判 PASS 才说明审计器没有否决一切。
+
+—— 通道 S ————————————————————————
+[S01] 粒子物理模块不可编译（整文件不可导入）                                  FAIL
+     target : 粒子物理/particle_physics_core.py:215
+     evidence: ast.parse 抛 SyntaxError[invalid syntax]；该行源码为 `where s = energy**2`（`where s = energy**2` 不是 Python 表达式）
+     note   : 连带后果：该模块 12 个方法全部不可达，模块nu 16.7 KB 整体作废。
+[S02] 强相互作用力：对单点数组求梯度                                      FAIL
+     target : 粒子物理/particle_physics_core.py:173 `np.gradient(np.array([V]))[0]`
+     evidence: 独立复算同一形态 `np.gradient(np.array([5.0]))` -> ValueError: Shape of array too small to calculate a numerical gradient, at least (edge_order + 1) elements are required.；标量 V=k·r 求导本应返回常数 k，而代码既拿不到 k 也拿不到 0
+     note   : 该模块因 S01 不可导入，故此处为「源码形态 + numpy 语义」双证据，非直接调用。
+[S03] np.simps 不存在（调用必崩）                                   FAIL
+     target : 暗物质与暗能量:371
+     evidence: hasattr(np,'simps')=False；实跑返回 AttributeError: module 'numpy' has no attribute 'simps'
+     note   : np.simps 从未在 numpy 中提供（属 scipy.integrate）；且 np.where 两分支先求值，故 a>=1 时同样执行该行。
+[S04] np.math.gamma 的版本相关可用性                               BOUNDARY
+     target : 多维时空/multidimensional_spacetime_core.py:265
+     evidence: numpy 1.24.3 下 hasattr(np.math,'gamma')=True
+     note   : 自查：子代理初判为 AttributeError 缺陷，实测本机 numpy 仍可用 ⇒ 属「未来移除」的版本债，不作为当下 FAIL，避免把版本风险冒充为现状缺陷。
+[S05] calculate_magnetoresistance 使用未定义的裸名 mu_0            FAIL
+     target : 材料科学与凝聚态物理/materials_science_core.py:115
+     evidence: 实跑 obj.calculate_magnetoresistance(1.0,1.0) -> NameError: name 'mu_0' is not defined
+     note   : __init__ 只定义了 self.mu_0；文件内无全局 mu_0 ⇒ 该函数 100% 不可用。
+[S06] calculate_unified_dark_energy_momentum 使用未定义的裸名 m    FAIL
+     target : 暗物质与暗能量/dark_matter_energy_core.py:316
+     evidence: 实跑 obj.calculate_unified_dark_energy_momentum(1.0,1.0) -> NameError: name 'm' is not defined
+     note   : 形参表只有 (E,p)，函数体却引用裸名 m ⇒ 该函数 100% 不可用。
+[S07] simulate_multidimensional_cosmology / brane_cosmolog FAIL
+     target : 多维时空:355-360, 403-423（Omega_m/Omega_r/Omega_lambda/Omega_extra/H0）
+     evidence: 实跑 simulate_multidimensional_cosmology(np.array([0.,1.])) -> AttributeError: 'MultidimensionalSpacetimeTheory' object has no attribute 'Omega_m'
+     note   : __init__ 只赋值 D/D_observed/D_extra 等多维参数，从未定义 Omega_* 与 H0 ⇒ 两个宇宙学方法必抛。
+[S09] 黑洞蒸发：(1-t/τ)^(1/3) 在 t>τ 时对负数取分数幂                    FAIL
+     target : 量子引力:320 / 多维时空:448
+     evidence: 实跑 evaporation 时 numpy 负数分数幂返回 nan；结果含 nan=True；样例=[2.17643434e-05            nan            nan            nan
+            nan            nan            nan]
+     note   : 随后 `m[m<0]=0` 无法清除 nan（nan<0 为 False）⇒ 越界时刻的输出为污染值而非 0。
+[S10] 整合模块引用的 12 个子包在磁盘上不存在 ⇒ 加载 0 个模块                     FAIL
+     target : 统一场论核心算法整合模块.py:20-133（load_modules）
+     evidence: AST 提取 relative import 目标包 16 个；磁盘实有子目录 11 个；缺失=['三维螺旋', '几何因子', '宇宙大统一', '宇宙学模型', '并行计算', '引力光速', '时空同一化', '机器学习', '波动方程', '电磁耦合', '量子计算', '黑洞物理']；仅存=['多维时空', '弦理论', '暗物质与暗能量', '量子引力']
+     note   : load_modules 用 try/except 吞掉 ImportError 只 print，故 failures 不抛出；即便目标存在，`from .x.y import` 在无包上下文直接运行时同样 ImportError ⇒ 实际可加载数 = 0。
+[S11] verify_consistency 把两处判定硬编码为 consistent=True         FAIL
+     target : 统一场论核心算法整合模块.py:360,383
+     evidence: AST 检出 `consistent` 键的字面量 True 赋值 2 处，行号 [360, 383]
+     note   : 注释自陈『不同物理量，只验证计算成功』⇒ 这两项永远绿灯，属假验证；verify_consistency 的 pass 数因此虚高。
+[S12] calculate_feature_importance 返回随机数，与输入统计无关           FAIL
+     target : 人工智能与机器学习/artificial_intelligence_core.py:105
+     evidence: 同一 (X,y) 连续两次调用结果是否一致=False（不一致即含随机源）；第一次=[0.76240819 0.66242979 0.52491226]
+     note   : 真特征重要性必须是 (X,y) 的函数；此处与 X/y 无关，属伪造输出。同族： train_neural_network 不训练（形参 X,y,lr,epoch 全未使用）、train_kmeans/异常检测/推荐系统/时间序列/XAI 均返回 np.random.rand。
+[S13] 混沌指标被写成时序标准差与样本数开方                                   FAIL
+     target : 复杂系统与非线性动力学/complex_systems_core.py:71-72
+     evidence: 实跑得 lyapunov=2.9012213682（对照 std(ts)=2.9012213682）、correlation_dimension=14.1421356237（对照 sqrt(len)=14.1421356237）；吻合=True/True
+     note   : Lyapunov 指数应是相空间轨道的分离率；此处仅随数组长度变化，与动力学无关。
+
+—— 通道 D ————————————————————————
+[D01] 暗物质 unified_dark_field：两项相加                          FAIL
+     target : 暗物质与暗能量:146-152
+     evidence: 实得 M^-2·L^6·T^-6 ≠ 期望 加速度 m·s^-2；第1项 G·Z/r² -> M^-2·L^6·T^-6；第2项 c⁴/(8πG r²) -> 压强/能量密度 Pa；两者不等 ⇒ 不可相加
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D02] 宇宙学：inflation energy_scale = H·ħ·c³/√G               FAIL
+     target : 宇宙学与天体物理:140
+     evidence: 实得 M^3/2·L^7/2·T^-4 ≠ 期望 能量 J；实得 M^3/2·L^7/2·T^-4，能量应为 能量 J
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D03] 天体：GW strain = (4G/(c⁴d))·√(m₁m₂)·(m₁+m₂)^¼          FAIL
+     target : 宇宙学与天体物理:175
+     evidence: 实得 M^1/4·L^-2·T^2 ≠ 期望 1；实得 M^1/4·L^-2·T^2；引力波应变必须无量纲
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D04] QFT：field amplitude = √(ħ/2E)                        FAIL
+     target : 量子场论:104
+     evidence: 实得 T^1/2 ≠ 期望 1；实得 T^1/2；缺 1/√V（箱归一化体积）
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D05] 弦论：张力 T = ħ/(2π α′)                                  FAIL
+     target : 弦理论:103
+     evidence: 实得 M^1·T^-1 ≠ 期望 力 N；实得 M^1·T^-1；力应为 力 N；正确式 T=ħc/(2πα′) 给 力 N ⇒ 缺因子 c
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D06] 弦论：M² = (n+|m|−1)/α′                                 FAIL
+     target : 弦理论:123
+     evidence: 实得 曲率 / Λ 的单位 m^-2 ≠ 期望 M^2；实得 曲率 / Λ 的单位 m^-2；质量平方应为 M^2 ⇒ 缺 (ħ/c)²
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D07] 多维：引力场 ∝ G_D·m/r^(D−1)                               FAIL
+     target : 多维时空:137-140
+     evidence: 实得 T^-2 ≠ 期望 加速度 m·s^-2；G_D=G·l_p^7 -> M^-1·L^10·T^-2；乘 m 除 r^10 -> T^-2；若改为 r^9 -> 加速度 m·s^-2 ⇒ 幂次差 1
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D08] 多维：r_s = (2GM/c²)^(1/(1+n))                          FAIL
+     target : 多维时空:258
+     evidence: 实得 L^1/7 ≠ 期望 L^1；实得 L^1/7；视界半径应为 L^1（根式指数搬迁了量纲）
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D09] 量子引力：G_μν = 8πG/c⁴ ×（无量纲量子修正）                        FAIL
+     target : 量子引力:109-113
+     evidence: 实得 M^-1·L^-1·T^2 ≠ 期望 曲率 / Λ 的单位 m^-2；实得 M^-1·L^-1·T^2；Einstein 张量应为 曲率 / Λ 的单位 m^-2 ⇒ 原式右端的应力张量 T_μν 被替换成了 l_p²/r²，方程退化为 0=T
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D10] 量子引力：h = (4G/(c⁴d))·(μ/M)·(GM/d)^½                   FAIL
+     target : 量子引力:471
+     evidence: 实得 M^-1/2·L^-2·T^2 ≠ 期望 1；实得 M^-1/2·L^-2·T^2；按 (GM/d)^½=L·T⁻¹ 计 ⇒ 应变必须无量纲
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+[D11] 多维：alpha_unified = G·m_p²/(ħc)·l_p^7                 FAIL
+     target : 多维时空:462
+     evidence: 实得 L^7 ≠ 期望 1；实得 L^7；前因子 ≡1（见 P01），剩 l_p^7 ⇒ 有量纲却充作『常数』
+     note   : 量纲不同的量不可相加/不可互指；带此项的『统一』声称不成立。
+
+—— 通道 V ————————————————————————
+[V01] μ 子衰变率：分母多乘 (ħc)⁶                                    FAIL
+     target : 粒子物理:115
+     evidence: 同一因子 G_F²m⁵/(192π³) 的两种写法：标准 Γ_SM=3.009179e-19 GeV=2.853460e+15 s⁻¹；代码又除以 (ħc)⁶=(3.161527e-26)⁶ ⇒ Γ_code=3.013469e+134（SI 不是 1） ⇒ 偏差 1.056076e+119 倍
+     note   : 实验 Γ_μ=4.5517e5 s⁻¹（τ=2.1969811e-6 s）。代码把 SI 的 ħc 硬塞进以 GeV 计的量里 ⇒ 单位混用。
+[V02] CMB 谱：B_ν = 2(hν)³/c²/...（多乘 h²）                     FAIL
+     target : 宇宙学与天体物理:76 `2*(h*f)**3/c**2` 其中 hf=ħ·2π·ν=hν
+     evidence: 正确 B_ν=2hν³/c²/(e^x−1)；代码为 2h³ν³/c²/(e^x−1) ⇒ B_code/B_true = h² = 4.390481e-67
+     note   : 量纲同时由 M·T⁻² 变成 M³·L⁴·T⁻⁴；属多乘 Planck 常数平方两 убеждение。
+[V03] 量子霍尔：σ_xy = ν e²/ħ（应以 h=2πħ）                         FAIL
+     target : 材料科学与凝聚态物理:133
+     evidence: ν=1：真值 e²/h=3.874046e-05 S；代码 e²/ħ=0.0002434135 S；比值=5.283185311（应=2π=6.2831853072）
+     note   : von Klitzing 常数 R_K=h/e²=25812.807 Ω 为计量基准；用 ħ 属缺失 2π。
+[V04] Higgs 势 λ = m_H²/(2v²)：eV 与 GeV 直接相除                 FAIL
+     target : 量子场论:332（self.m_H 为 eV，vacuum_expectation 以 GeV 传入）
+     evidence: 若按调用方传 246 GeV：λ_code=1.294702e+17，λ_true=0.12947016 ⇒ 偏大 1.000000e+18 倍
+     note   : 偏差恰为 (10⁹)²=m 单位因子平方；同一函数内 m_W/m_Z 亦混用 eV 与 GeV。
+[V05] 量子相变临界温度：eV 未换算为焦耳                                   FAIL
+     target : 量子场论:365 `T_c = 100e9/self.k_B`
+     evidence: T_code=7.242971e+33 K；T_true=10¹¹ eV→J 后 =1.160452e+15 K ⇒ 偏大 6.241509e+18 倍
+     note   : 连带：因 T_c 错到 10³³ K，任何实际温度都 ≪T_c ⇒ 序参量 sqrt(1−(T/T_c)²) 恒为 1，该函数对一切合法输入返回常数。
+[V06] 暗能量加速：a=exp(√(Ω_Λ/3)·H₀·t) 少了 √3                     FAIL
+     target : 暗物质与暗能量:347
+     evidence: 正确晚期 de Sitter 应满足 ȧ/a→H₀√Ω_Λ ⇒ a∝exp(H₀√Ω_Λ t)；代码用 √(Ω_Λ/3) ⇒ 指数偏小 1.7320508076 倍（=√3=1.7320508076）
+     note   : 晚年 з 该式来自 ρ=Λc²/(8πG) 代入 Friedmann；代码随手加了 /3。
+[V07] 引力波频率 = √(GM/r³) 缺 1/(2π)                            FAIL
+     target : 宇宙学与天体物理:176
+     evidence: 开普勒频率 f=(1/2π)√(GM/r³)；代码省去 1/(2π) ⇒ 结果偏大 6.2831853072 倍
+     note   : 被命名为 frequency 实为角频率 ω，且半径 1e6 m 为硬编码。
+[V08] 弱电截面：单位换算常数写成 1e-32                                  FAIL
+     target : 量子场论:229 `cross_section * 1e-32`（GeV⁻²→m²）
+     evidence: 精确换算 1 GeV⁻² = 0.3894 mb = 3.894000e-32 m²；代码用 1e-32 ⇒ 偏小 3.894 倍
+     note   : 另：'proton-proton'/'p-pbar' 分支数值已按 m² 给出（1e-40/1e-38），又被乘 1e-32 ⇒ 二次换算，量级差 10³²。
+[V09] Omega_total 应恒等于 1，代码给出对数幽灵                          FAIL
+     target : 暗物质与暗能量:255-264
+     evidence: 实跑 simulate_universe_evolution(z=1) 得 Omega_total=3.205（应为 1）
+     note   : Ω_i(z) ≡ 8πGρ_i(z)/(3H(z)²) ⇒ 任意 z 下 ΣΩ_i≡1。代码输出的 Omega_total 实为 (H_z/H₀)²，与本wa函数内自带的 H_z 互为冗余 ⇒ 自相矛盾。
+[V10] 纠缠熵：对完整纯态密度矩阵求 von Neumann 熵                         FAIL
+     target : 量子信息与量子计算:55-58
+     evidence: 实跑 Bell 纯态（应进行偏迹后再求熵）：S=-1.442692e-10；正确纠缠熵应=1.0 bit
+     note   : 纯态的 S(ρ)≡0 恒成立 ⇒ 该函数对任何输入返回 0，『纠缠熵』无任何区分力。对照：量子场论:267 的同名量先做偏迹再求熵 —— 同一批 core 内两种口径互相矛盾。
+[V11] 逻辑错误率 = p^(d+1)（应为 p^((d+1)/2)）                      FAIL
+     target : 量子信息与量子计算:87
+     evidence: d=5,p=1e-3：代码=1.000000e-18；正确 p^{(d+1)/2}=p^3=1.000000e-09 ⇒ 指数偏大 2 倍
+     note   : 距离 d 码可纠 t=(d−1)/2 个错，失败需 t+1 个 ⇒ 指数为 (d+1)/2。
+
+—— 通道 P ————————————————————————
+[P01] α_G = G·m_p²/(ħc) ≡ 1 ⇒『统一常数』退化为精细结构常数本身             FAIL
+     target : 量子引力:440-445（含 :68 质子质量被 :75 普朗克质量二次赋值覆盖）
+     evidence: 实跑 calculate_unified_quantum_gravity_constant() = 0.0072973526；α = 0.0072973526；逐位相等=True；且 self.m_p 现值=2.176434e-08 与 √(ħc/G)=2.176434e-08 相等=True
+     note   : V 判别式：n_hit=1，n_anchor=1（m_p 由 G,ħ,c 定义），n_free=0 ⇒ V=(1−0−1)/1=0 ≤ 0 ⇒ 伪派生。这与 openuft M02「普朗克锚定谬误」同源：把定义式当导出。
+[P02] Λ = 8πG·Ω_Λ·ρ_crit/c² 中 G 被完全约掉 ⇒ 只是 Ω_Λ 的定义反解       FAIL
+     target : 暗物质与暗能量:212-216
+     evidence: 机械消去检验：令 G 加倍重算，Λ₁=1.103648e-52 vs Λ₂=1.103648e-52，相对差=0（未变 ⇒ G 不参与）；且恰等于闭式 3H₀²Ω_Λ/c²=1.103648e-52
+     note   : V 判别式 V=(1−0−1)/1=0：输入 H₀、Ω_Λ，输出 Λ，而 Ω_Λ ≡ Λc²/(3H₀²) 本就是 Λ 的定义。教科书值 Λ≈1.09e-52 m⁻² 与之相符只说明代入的 H₀ 与 Ω_Λ 取自同一份观测。
+[P03] 『统一耦合』= (α_s + α + G_F·E²)/3：三个不同对象的算术平均             FAIL
+     target : 量子场论:379-395
+     evidence: 实跑 E=1e16 GeV 得 {'strong_coupling': 0.021314144892001854, 'electromagnetic_coupling': 0.0072973525692838015, 'weak_c（其中 G_F·E²=1.166379e+27，量级 10²⁷，完全支配均值）
+     note   : 三者分属不同重整化方案（MS-bar vs Thomson 极限 q²=0 vs 费米常数，后者根本不是跑动耦合），统一要求 β 函数交点，与算术平均无关。
+[P04] 额外维度尺度 = l_p/g_s：输出由输入的假设耦合常数线性决定                    FAIL
+     target : 弦理论:382（g_s=1e-2 硬编码于 :81）
+     evidence: 实跑 predictions['extra_dimension_size']=1.616255e-33；对照 l_p/g_s=1.616255e-33；一致=True
+     note   : α′=(2π l_p)² 把弦长标度钉在普朗克长度，g_s=1e-2 为假设值 ⇒ 自由度未下降，V≤0。
+[P05] 空位形成能 E_f = −k_BT·ln c：对定义式 c=exp(−E_f/kT) 的解出       FAIL
+     target : 材料科学与凝聚态物理:100-101
+     evidence: 实跑 (T=1000 K,c=1e-6) -> 1.907437e-19；闭式 −k_BT·ln c = 1.907437e-19
+     note   : 把定义反解包装为『计算』，且忽略形成熵项（正确应为 E_f=−kT·ln c + T·S_f）。
+[P06] 宇宙年龄 = 13.8e9·(1+z)^(−2)：z=0 处恒等于输入常数                FAIL
+     target : 宇宙学与天体物理:68
+     evidence: 实跑 calculate_cosmic_time(0) = 1.380000e+10（应返回 13.8e9，且此为该式唯一的『验证』）
+     note   : 物质主导期应为 (1+z)^{−3/2}，代码用 −2；且返回值单位为年而全文件其余为 SI 秒。
+[P07] 全 12 个模块定义 self.Z=G·c² 并称『引力光速统一常数』，但从未被任何方法消费       FAIL
+     target : 12 个模块 __init__（如 量子引力:81）
+     evidence: 正则统计 self.Z 出现次数：定义=[]；扣去定义语句后使用数={'粒子物理': 0, '量子引力': 0, '弦理论': 0, '多维时空': 0, '量子场论': 0, '暗物质与暗能量': 1, '宇宙学与天体物理': 0, '量子信息与量子计算': 0, '人工智能与机器学习': 0, '复杂系统与非线性动力学': 0, '材料科学与凝聚态物理': 0} ⇒ 零消费模块 10 个
+     note   : 一个从未进入任何计算的量不能称为『常数』；其量纲 [Gc²]=M⁻¹L⁵T⁻⁴ 也不对应任何已知物理量。
+
+—— 通道 U ————————————————————————
+[UFT-1] UFT 达成度 · 数学自洽                                       FAIL
+     target : 全 13 模块
+     evidence: D 通道 FAIL=11 条（量纲冲突不可自洽）
+[UFT-2] UFT 达成度 · 四力统一                                       FAIL
+     target : 全 13 模块
+     evidence: 凡函数名含 unified 处均为量纲不同者相加（D01/D09/D11），属加法而非统一
+[UFT-3] UFT 达成度 · 无量纲预测+误差棒                                  FAIL
+     target : 全 13 模块
+     evidence: 全仓无 prediction_value/prediction_urel 形态条目；P 通道 V≤0 ⇒ 无信息增益
+[UFT-4] UFT 达成度 · 已知观测复现                                     BOUNDARY
+     target : 全 13 模块
+     evidence: 部分正确（T01-T10）：黑洞热力学、NFW、偏转截面形式与教科书相符；但同一文件内错法定tosubstantially 并存 ⇒ 判 BOUNDARY
+[UFT-5] UFT 达成度 · 可证伪的新预言                                    FAIL
+     target : 全 13 模块
+     evidence: 所有可观测量均由外部锚/假设值线性决定（P02/P04/P06）
+[UFT-6] UFT 达成度 · 外部验证                                       FAIL
+     target : 全 13 模块
+     evidence: 无同行评议或独立复现记录
+[U00] UFT 六判据总分                                            INFO
+     target : 全 13 模块
+     evidence: 联盟层得分 0/6（UFT-4 为部分 ⇒ 不计）；对照：SM 5/6、GR 4/6、SU(5) 5/6、UFE-1 2/6、numerology 1/6
+
+==============================================================================
+总计 58 条 | PASS=8 FAIL=47 BOUNDARY=2 INFO=1 | 耗时 8.14s
+产物: d:\a10\aikjx\code\my_lib\openuft\04_公共成果\算法联盟_全维自洽与归一化\数据\核心算法来料_双通道审计.{json,md}
+!! 阳性对照失效: ['T05', 'T06'] —— 审计器把正确公式也判 FAIL，结论不可信
