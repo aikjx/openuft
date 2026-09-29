@@ -1,0 +1,56 @@
+{
+  "title": "统一场论核心公式 · 公式层实证突破",
+  "object": "S17/.../圆周运动正电荷产生的引力场方程",
+  "focus_formula": "A = -q/(4π ε₀ c² r) · a_perp  （代码标注 m/s²）",
+  "timestamp": "2026-09-29T14:53:20",
+  "counts": {
+    "PASS": 1,
+    "FAIL": 3,
+    "BOUNDARY": 0,
+    "INFO": 2
+  },
+  "verdicts": [
+    {
+      "verdict": "PASS",
+      "code": "SELF-0",
+      "title": "量纲系统自检：库仑定律 F=q²/(4πε₀r²) 量纲 = 力",
+      "detail": "F_dim = M·L·T^-2  (期望 M·L·T^-2)\nε₀ 量纲定义正确，量纲代数可信。"
+    },
+    {
+      "verdict": "FAIL",
+      "code": "P1-DIM",
+      "title": "公式 A = -q/(4π ε₀ c² r)·a_perp 的真实量纲",
+      "detail": "factor = q/(ε₀ c² r)  →  M·T^-1·I^-1\nA_formula = factor·a   →  M·L·T^-3·I^-1\n加速度标准量纲          →  L·T^-2\n电场强度标准量纲        →  M·L·T^-3·I^-1\n结论：量纲 = 电场强度(N/C)，并非加速度(m/s²)；标注 m/s² 是量纲错配。"
+    },
+    {
+      "verdict": "INFO",
+      "code": "P2-FIX",
+      "title": "最小修正：乘 (q/m) 因子后量纲归位为加速度",
+      "detail": "A_corr = (q/m)·A_formula  →  L·T^-2\n即 A_corr = - q²/(4π ε₀ c² r m)·a_perp\n物理含义：运动电荷先产生『辐射电场』(N/C)，再乘 (q/m) 才转成加速度(m/s²)。\n原公式漏掉 (q/m) 因子 → 量纲落在电磁侧而非引力侧。"
+    },
+    {
+      "verdict": "FAIL",
+      "code": "P3-MAG",
+      "title": "数值量级：电子圆周运动的『引力场』 vs 真实牛顿引力场",
+      "detail": "向心加速度 a        = 1.000e+12 m/s²\n代码公式输出 A_code = 1.602e-14  （单位实为 N/C，却标 m/s²）\n真实牛顿引力场 g     = 6.080e-41 m/s²  （电子@1m）\n若强行把 A_code 当 m/s²：比真实引力场大 2.64e+26 倍\n同一电荷静电场 E     = 1.440e-09 N/C  → 『引力场』比静电场小 8.99e+04 倍，且形式正是辐射电场\n结论：代码值本质是辐射电场(电磁)，与真实引力场差 ~27 个数量级且量纲错位。"
+    },
+    {
+      "verdict": "FAIL",
+      "code": "P4-DOC",
+      "title": "文档矛盾：推导 md §4.1 声称量纲一致，实为错误代数",
+      "detail": "机器结果 A_formula = M·L·T^-3·I^-1 = N/C\n推导 md §4.1 声称  = L·T^-2 = m/s²\n作者自验证脚本 L52-58 已正确算出 = (kg·m)/(A·s)·(m/s²) = N/C，并标注『✗ 量纲可能不一致』\n两文件互相矛盾：推导 md 用错误量纲代数把矛盾粉饰成『一致』。"
+    },
+    {
+      "verdict": "INFO",
+      "code": "X-SYMPY",
+      "title": "sympy 交叉验证跳过",
+      "detail": "（未安装 sympy 或行为差异，不影响结论）：ImportError: cannot import name 'epsilon0' from 'sympy.physics.units' (C:\\Users\\mo\\AppData\\Local\\Programs\\Python\\Python38\\lib\\site-packages\\sympy\\physics\\units\\__init__.py)"
+    }
+  ],
+  "key_findings": [
+    "代码公式真实量纲 = 电场强度 N/C，并非加速度 m/s²（量纲错配）",
+    "根因：漏掉电荷-质量等价因子 (q/m)；修正后 A_corr=-q²/(4πε₀c²rm)·a 量纲归位",
+    "电子圆周运动：『引力场』数值本质为辐射电场，比真实牛顿引力场差 ~27 个数量级",
+    "文档矛盾：推导 md §4.1 用错误量纲代数把矛盾粉饰成『一致』，作者自验证脚本已发现"
+  ]
+}
