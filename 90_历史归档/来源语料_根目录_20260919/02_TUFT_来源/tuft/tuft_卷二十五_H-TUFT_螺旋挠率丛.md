@@ -77,10 +77,10 @@ FRG 从 4 维参数空间推广到**丛模空间**：`∂_k Γ_k[Ω,Ψ]=½Tr[∂
 |黑洞内部 I|高阶 QNM/回声与 TUFT 偏离|黑洞正则化否|⏳待检（但 D 已关）|
 |H-TUFT 拓扑手征 J|CMB-S4/宇宙线/高阶 QNM 联合排除拓扑信号域；或丛公理不自洽|H-TUFT 否|⏳待检（新预言未锚定量级，§0.3）|
 
-**CUR-09 条目**（标注 script_ref 为**预期脚本**，本卷 §11 仅给脚手架非落盘审计脚本）：
+**CUR-09 条目**（`tuft_helical_bundle_H_v1.py` 已落盘，SHA256=969a831364bd20b685f5ef7c162d46481b012a3052e88995cfb1b807fd954cda；本卷 §11 仅给脚手架，非预言审计脚本）：
 |entry_id|name|script_ref|category|status|core_prediction|observational_bound|falsification|cross_ref|uncertainty|
 |---|---|---|---|---|---|---|---|---|---|
-|CUR-09|螺旋挠率丛统一场论 H-TUFT|`tuft_helical_bundle_H_v1.py`（预期，未落盘）|公理体系+拓扑场论+数值仿真|⏳待检验|本体=4维底流形上的螺旋挠率主丛；四力=丛联络子纤维投影；粒子=丛上螺旋拓扑孤子；低能投影等价旧 TUFT；存在 CMB 手征极化、黑洞 QNM 手征分裂、对撞机拓扑相位等信号|CMB 大尺度手征约束弱；QNM 手征分裂未测；高能拓扑相位缺数据|CMB-S4+下一代引力波联合排除拓扑信号域；或丛公理数学不自洽→H-TUFT 否|卷25，卷20–24|丛群 G 假设、同伦类截断、低能投影近似、高阶上同调项忽略|
+|CUR-09|螺旋挠率丛统一场论 H-TUFT|`tuft_helical_bundle_H_v1.py`（已落盘，SHA256=969a8313…）|公理体系+拓扑场论+数值仿真（脚手架）|⏳待检验|本体=4维底流形上的螺旋挠率主丛；四力=丛联络子纤维投影；粒子=丛上螺旋拓扑孤子；低能投影等价旧 TUFT；存在 CMB 手征极化、黑洞 QNM 手征分裂、对撞机拓扑相位等信号|CMB 大尺度手征约束弱；QNM 手征分裂未测；高能拓扑相位缺数据|CMB-S4+下一代引力波联合排除拓扑信号域；或丛公理数学不自洽→H-TUFT 否|卷25，卷20–24|丛群 G 假设、同伦类截断、低能投影近似、高阶上同调项忽略|
 > 诚实注记：CUR-09 标 ⏳ 正确，但其**低能投影继承 TUFT 已关窗口**（B/D/C 已❌）。H-TUFT 整体未被观测否定，但也不是「未被排除的可行理论」——其低能投影部分已被排除。
 
 ## 11. 仿真引擎重构：丛截面求解 + 低能投影（脚手架，系数未导出）
@@ -98,7 +98,7 @@ def bundle_ode(s, y, Q_hel, g_coupling):
     dVdPsi = 2*g_coupling*(mod2 - Q_hel**2)*np.conj(Psi)  # V=g*(|Psi|^2-Q^2)^2 的 Wirtinger 梯度
     d2Psi = -2j*Q_hel*Omega*dPsi - dVdPsi
     d2Omega = -Q_hel*np.conj(Psi)*dPsi + Q_hel*Psi*np.conj(dPsi)
-    return [dPsi_r, Psi_i*0+dPsi_i, d2Psi.real, d2Psi.imag, dOmega, d2Omega.real]
+    return [dPsi_r, dPsi_i, d2Psi.real, d2Psi.imag, dOmega, d2Omega.real]
 def solve_htuft(Q_hel, g_coupling, s0, s1):
     y0 = [0.1,0.0,0.0,0.0,0.05,0.0]
     sol = solve_ivp(lambda s,y: bundle_ode(s,y,Q_hel,g_coupling),(s0,s1),y0,
@@ -107,11 +107,11 @@ def solve_htuft(Q_hel, g_coupling, s0, s1):
     Omega = sol.y[4,-1]
     tau_proj = Q_hel*abs(Psi)*Omega.real   # 发明投影式，无量纲、无物理标度
     return sol, tau_proj, abs(Psi), Omega.real
-# 实跑（2026-09-30）：
-# Q_hel=+1, g=0.12 -> |Psi|=1.154e+00, Omega=5.000e-02, tau_proj=5.769e-02
-# Q_hel=-1        -> tau_proj=-5.769e-02  (比 -1.0，纯代数符号反演，无手征分裂幅值)
+# 实跑（2026-09-30，落盘版 tuft_helical_bundle_H_v1.py，s1=6.95）：
+# Q_hel=+1, g=0.12 -> |Psi|=1.150e+00, Omega=5.000e-02, tau_proj=5.752e-02
+# Q_hel=-1        -> tau_proj=-5.752e-02  (比 -1.0，纯代数符号反演，无手征分裂幅值)
 ```
-**诚实解读**：`tau_proj=5.77e-2` 是无量纲脚手架输出，无物理标度/观测换算；`Q_hel=±1` 仅符号反演，**不给出任何手征分裂定量预言**。引擎须替换为「从 §5 作用量变分导出的真实丛演化方程」方可作预言使用。
+**诚实解读**：`tau_proj=5.75e-2` 是无量纲脚手架输出，无物理标度/观测换算；`Q_hel=±1` 仅符号反演，**不给出任何手征分裂定量预言**。引擎须替换为「从 §5 作用量变分导出的真实丛演化方程」方可作预言使用。脚手架已落盘：`tuft_helical_bundle_H_v1.py`（SHA256=969a831364bd20b685f5ef7c162d46481b012a3052e88995cfb1b807fd954cda），复跑命令 `python tuft_helical_bundle_H_v1.py`。
 
 ## 12. 附录
 ### 12.1 LaTeX 丛论骨架（PRD 格式，框架层）
@@ -182,7 +182,7 @@ graph TD
 ```
 
 ### 12.4 全局审计脚本（哈希 + 矩阵状态固化）
-复用卷十九 `tuft_卷十九_CURATED.json` 与 4 脚本 SHA256；CUR-09 的 `tuft_helical_bundle_H_v1.py` 为预期脚本，落盘后补哈希。
+复用卷十九 `tuft_卷十九_CURATED.json` 与 4 脚本 SHA256；本卷 CUR-09 已落盘 `tuft_helical_bundle_H_v1.py`，SHA256=969a831364bd20b685f5ef7c162d46481b012a3052e88995cfb1b807fd954cda，固化于同目录 `tuft_卷二十五_CURATED.json`。
 
 ---
 

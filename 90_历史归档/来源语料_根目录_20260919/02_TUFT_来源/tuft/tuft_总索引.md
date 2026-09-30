@@ -45,7 +45,7 @@
 | tuft_r28_report.txt | 2 | 0 | 7 | 14 |
 | tuft_r29_report.txt | 4 | 8 | 1 | 3 |
 | tuft_r30_report.txt | 7 | 4 | 1 | 2 |
-| tuft_r31_report.txt | 1 | 8 | 7 | 3 |
+| tuft_r31_report.txt | 6 | 19 | 9 | 5 |
 | tuft_r3_report.txt | 8 | 0 | 0 | 0 |
 | tuft_r4_report.txt | 9 | 3 | 0 | 12 |
 | tuft_r5_report.txt | 11 | 2 | 15 | 10 |
@@ -71,9 +71,9 @@
 | tuft_续篇_双结交换仿真_report.txt | 5 | 0 | 0 | 6 |
 | tuft_色挠率_SU3_report.txt | 5 | 16 | 6 | 14 |
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
-| **合计** | **434** | **285** | **185** | **490** |
+| **合计** | **439** | **296** | **187** | **492** |
 
-## 二、脚本清单（86）
+## 二、脚本清单（91）
 
 - `_dbg_wall.py`
 - `_scratch_r28.py`
@@ -98,9 +98,14 @@
 - `tuft_Q量子B_非微扰拓扑扇区.py`
 - `tuft_Q量子_全维求导精算.py`
 - `tuft_beta_running_缺口_定理N实例化.py`
+- `tuft_blackhole_torsion_core_OPEN_v1.py`
+- `tuft_cmb_inflation_bmode_OPEN_v1.py`
 - `tuft_fermion_spin.py`
+- `tuft_flavor_ckm_pmns_OPEN_v1.py`
 - `tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b.py`
 - `tuft_g2_电子反常磁矩_OPEN5.py`
+- `tuft_global_mcmc_nested_OPEN_v1.py`
+- `tuft_helical_bundle_H_v1.py`
 - `tuft_knot_slsqp.py`
 - `tuft_r10_反常消除与链环CS对偶.py`
 - `tuft_r11_大统一求导证明与耦合拓扑约束.py`
@@ -162,7 +167,7 @@
 - `tuft_跨册缺陷族检查.py`
 - `tuft_黑洞热力学_全维求导精算.py`
 
-## 三、报告文档清单（64）
+## 三、报告文档清单（74）
 
 - `TUFT_全维突破_全维度总结_20260930.md`
 - `TUFT_微观粒子拓扑导出_第十一部分.md`
@@ -206,6 +211,16 @@
 - `tuft_全维度验证总报告.md`
 - `tuft_关联分析_归一化.md`
 - `tuft_判据门禁.md`
+- `tuft_卷二十_突破修复融合互通.md`
+- `tuft_卷二十一_SM嵌入与味几何.md`
+- `tuft_卷二十九_H-TUFT公理假设截断全链路审计白皮书.md`
+- `tuft_卷二十二_量子引力相变与宇宙早期演化.md`
+- `tuft_卷二十五_H-TUFT_螺旋挠率丛.md`
+- `tuft_卷二十八_H-TUFT拓扑粒子谱系.md`
+- `tuft_卷二十八补_引擎诚实修订与形式歧义修复.md`
+- `tuft_卷二十六_H-TUFT量子化框架.md`
+- `tuft_卷二十四_奇点消解与黑洞内禀几何.md`
+- `tuft_卷十九_EDM修正与CURATED固化.md`
 - `tuft_四力统一_文稿_修订版.md`
 - `tuft_四力统一_精算报告.md`
 - `tuft_总索引.md`
