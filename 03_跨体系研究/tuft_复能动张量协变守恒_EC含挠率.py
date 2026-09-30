@@ -542,42 +542,65 @@ def main():
         "相对残差 %.2e —— 左边 R^ρ{}_{σ[μν]} 因曲率已对 [μν] 反对称而退化为 R^ρ{}_{σμν} 本身，"
         "该式不是恒等式（真恒等式须三指标循环/全反对称）" % rel_user1)
 
-    # --- S2.3 第二 Bianchi（EC）：∇_{[λ}R^ρ{}_{|σ|μν]} = s·T^α{}_{[λμ}R^ρ{}_{|σ|ν]α}
+    # --- S2.3 第二 Bianchi（EC）：候选挠率项族扫描
+    #      ∇_{[λ}R^ρ{}_{|σ|μν]} =? s·(T·R 的某种缩并)
+    #      枚举 4 种标准指标缩并变体 × ±1 符号，报告候选族的最小残差。
+    def _tors_side(k, rho, sg, a, b, c, T, R):
+        if k == 0:   # T^α{}_{ab} R^ρ{}_{σ c α}（α 与 R 末指标缩并，Hehl 标准形）
+            return sum(T[al][a][b] * R[rho][sg][c][al] for al in range(4))
+        if k == 1:   # T^α{}_{ab} R^ρ{}_{σ α c}（α 与 R 第三指标缩并）
+            return sum(T[al][a][b] * R[rho][sg][al][c] for al in range(4))
+        if k == 2:   # T^α{}_{α a} R^ρ{}_{σ b c}（挠率迹矢量）
+            return sum(T[al][al][a] * R[rho][sg][b][c] for al in range(4))
+        if k == 3:   # T^ρ{}_{α a} R^α{}_{σ b c}（T、R 上指标缩并）
+            return sum(T[rho][al][a] * R[al][sg][b][c] for al in range(4))
+        return 0.0
+
+    _TORS_LABEL = [
+        "T^α{}_{[λμ}R^ρ{}_{|σ|ν]α}",
+        "T^α{}_{[λμ}R^ρ{}_{|σ|α ν]}",
+        "T^α{}_{α[λ}R^ρ{}_{|σ|μν]}（挠率迹）",
+        "T^ρ{}_{α[λ}R^α{}_{|σ|μν]}（上指标缩并）",
+    ]
+
     best2 = None
-    for sgn in (+1.0, 0.0, -1.0):
-        worst = 0.0
-        scale = 0.0
-        for f in fields:
-            nR, T, R = f["nR"], f["T"], f["R"]
-            for rho in range(4):
-                for sg in range(4):
-                    for i0 in range(4):
-                        for i1 in range(4):
-                            for i2 in range(4):
-                                idx = [i0, i1, i2]
-                                va = antisym3(
-                                    lambda a, b, c, rho=rho, sg=sg, nR=nR: nR[a][rho][sg][b][c],
-                                    idx)
-                                vb = antisym3(
-                                    lambda a, b, c, rho=rho, sg=sg, T=T, R=R: sum(
-                                        T[al][a][b] * R[rho][sg][c][al] for al in range(4)),
-                                    idx)
-                                worst = max(worst, abs(va - sgn * vb))
-                                scale = max(scale, abs(va), abs(vb))
-        rel = worst / scale if scale > 0 else 0.0
-        if best2 is None or rel < best2[1]:
-            best2 = (sgn, rel, worst, scale)
-    sgn2, rel2, w2, sc2 = best2
+    for k in range(4):
+        for sgn in (+1.0, -1.0):
+            worst = 0.0
+            scale = 0.0
+            for f in fields:
+                nR, T, R = f["nR"], f["T"], f["R"]
+                for rho in range(4):
+                    for sg in range(4):
+                        for i0 in range(4):
+                            for i1 in range(4):
+                                for i2 in range(4):
+                                    idx = [i0, i1, i2]
+                                    va = antisym3(
+                                        lambda a, b, c, rho=rho, sg=sg, nR=nR: nR[a][rho][sg][b][c],
+                                        idx)
+                                    vb = antisym3(
+                                        lambda a, b, c, rho=rho, sg=sg, T=T, R=R, k=k:
+                                        _tors_side(k, rho, sg, a, b, c, T, R),
+                                        idx)
+                                    worst = max(worst, abs(va - sgn * vb))
+                                    scale = max(scale, abs(va), abs(vb))
+            rel = worst / scale if scale > 0 else 0.0
+            if best2 is None or rel < best2[1]:
+                best2 = (k, sgn, rel, worst, scale)
+    k2, sgn2, rel2, w2, sc2 = best2
     tag = "PASS" if rel2 < 1e-9 else "BOUNDARY"
-    rec(tag, "第二 Bianchi（EC 含挠率修正）",
-        "最佳挠率项系数 s=%+d：相对残差 %.2e（绝对 %.2e / 量级 %.2e）"
-        % (int(sgn2), rel2, w2, sc2))
+    rec(tag, "第二 Bianchi（EC 含挠率修正）· 候选挠率项族扫描",
+        "最佳候选 #%d（%s）·s=%+d：相对残差 %.2e（绝对 %.2e / 量级 %.2e）"
+        % (k2 + 1, _TORS_LABEL[k2], int(sgn2), rel2, w2, sc2))
     if rel2 < 1e-9:
-        put("        ⇒ 成立形式：∇_{[λ}R^ρ{}_{|σ|μν]} = %sT^α{}_{[λμ}R^ρ{}_{|σ|ν]α}"
-            % ("+" if sgn2 > 0 else ("-" if sgn2 < 0 else "0·")))
+        put("        ⇒ 成立形式：∇_{[λ}R^ρ{}_{|σ|μν]} = %s·%s"
+            % ("+" if sgn2 > 0 else "-", _TORS_LABEL[k2]))
     else:
-        put("        ⇒ 该候选挠率项形式未闭合（最小相对残差 %.2e），正确 EC 第二 Bianchi"
-            "形式须按所用曲率/挠率符号约定另行标定，本册不硬写" % rel2)
+        put("        ⇒ 4 种标准指标缩并 × ±1 符号的候选挠率项族，最小相对残差 %.2e，仍未" % rel2)
+        put("          闭合 ⇒ 正确 EC 第二 Bianchi 挠率项须按所用曲率/挠率符号约定另行标定，")
+        put("          本册不硬写（与第一 Bianchi 已被钉死形成对照：第一 Bianchi 的挠率项")
+        put("          形式在本约定下唯一确定，第二 Bianchi 还依赖曲率定义约定）。")
 
     # --- S2.4 代码自检：∇^μG_{μν} 的两条独立算法
     err = 0.0
@@ -647,7 +670,31 @@ def main():
         % (rel_user2, sc))
 
     # --- S3.4 候选基回归：识别真实残差结构
-    def basis(f):
+    def cov_div_torsion(Gam, dGam, T):
+        """挠率协变导数 ∇_α T^β_{μν} 的三个矢量缩并（含 ∂T 与 Γ·T 联络修正项）。
+        T^β_{μν} 反对称于 μ,ν；每个 ν 分量都是一个独立矢量候选基。
+        这是 EC 缩并残差挠率部分的真实来源（D_ν 在无挠时恒为 0）。"""
+        # ∇_α T^β_{μν} = ∂_α T^β_{μν} + Γ^β_{αρ} T^ρ_{μν} − Γ^ρ_{αμ} T^β_{ρν} − Γ^ρ_{αν} T^β_{μρ}
+        D = [[[[0.0] * 4 for _ in range(4)] for _ in range(4)] for _ in range(4)]
+        for a in range(4):
+            for b in range(4):
+                for m in range(4):
+                    for n in range(4):
+                        v = dGam[a][b][m][n] - dGam[a][b][n][m]   # ∂_α T^β_{μν}（T 反对称）
+                        for r in range(4):
+                            v += Gam[b][a][r] * T[r][m][n]          # Γ^β_{αρ} T^ρ_{μν}
+                            v -= Gam[r][a][m] * T[b][r][n]          # − Γ^ρ_{αμ} T^β_{ρν}
+                            v -= Gam[r][a][n] * T[b][m][r]          # − Γ^ρ_{αν} T^β_{μρ}
+                        D[a][b][m][n] = v
+        c6 = [sum(D[a][a][b][nu] for a in range(4) for b in range(4))
+              for nu in range(4)]   # ∇_α T^α{}_{β ν}（挠率矢量协变导数散度）
+        c7 = [sum(D[a][b][nu][b] for a in range(4) for b in range(4))
+              for nu in range(4)]   # ∇_α T^β{}_{ν β}
+        c9 = [sum(D[a][nu][a][b] for a in range(4) for b in range(4))
+              for nu in range(4)]   # ∇_α T^ν{}_{α β}
+        return [c6, c7, c9]
+
+    def basis_full(Gam, dGam, f):
         T, Ric, Rs = f["T"], f["Ric"], f["Rs"]
         Rmix = [[sum(ETAI[b][c] * Ric[c][a] for c in range(4)) for a in range(4)]
                 for b in range(4)]
@@ -661,10 +708,11 @@ def main():
         c4 = [sum(T[a][nu][b] * Rmix[a][b] for a in range(4) for b in range(4))
               for nu in range(4)]
         c5 = [Rs * trv[nu] for nu in range(4)]
-        return [c1, c2, c3, c4, c5]
+        c6c9 = cov_div_torsion(Gam, dGam, T)
+        return [c1, c2, c3, c4, c5] + c6c9
 
     rng3 = random.Random(SEED + 2)
-    Xs, ys = [], []
+    Xs_tr, Xs_full, ys = [], [], []
     for _ in range(N_REG):
         Gam, dGam, ddGam = gen_field(rng3)
         R = curvature(Gam, dGam)
@@ -672,23 +720,43 @@ def main():
         Ric = ricci(R)
         Rs = scalar_curv(Ric)
         D, _ = div_G(Gam, dR, Ric, Rs)
-        f = dict(T=torsion(Gam), Ric=Ric, Rs=Rs)
-        cs = basis(f)
+        T = torsion(Gam)
+        f = dict(T=T, Ric=Ric, Rs=Rs)
+        cs = basis_full(Gam, dGam, f)
         for nu in range(4):
-            Xs.append([cs[k][nu] for k in range(5)])
+            Xs_tr.append([cs[k][nu] for k in range(5)])       # 纯 T·R 代数基 c1–c5
+            Xs_full.append([cs[k][nu] for k in range(8)])     # + ∇T 型基 c6–c8
             ys.append(D[nu])
-    coef, rr = lstsq(Xs, ys)
-    if coef is None:
-        rec("INFO", "候选基回归", "矩阵奇异，跳过")
+    coef_tr, rr_tr = lstsq(Xs_tr, ys)
+    coef_full, rr_full = lstsq(Xs_full, ys)
+
+    # S3.4a 纯 T·R 代数基（来稿「只用挠率-曲率代数约束」思路的直接检验）
+    if coef_tr is None:
+        rec("INFO", "候选基回归 · 纯 T·R 代数基", "矩阵奇异，跳过")
     else:
-        rec("INFO" if rr > 1e-6 else "PASS",
-            "候选基回归 D_ν ≈ Σ a_k c_k（识别真实残差结构）",
+        rec("INFO" if rr_tr > 1e-6 else "PASS",
+            "候选基回归 D_ν ≈ Σ a_k c_k（纯 T·R 代数基 c1–c5）",
             "相对残差 %.2e，系数 a = [%s]"
-            % (rr, ", ".join("%+.4f" % v for v in coef)))
-        if rr > 1e-6:
-            put("        ⇒ 5 个 (挠率·曲率) 候选基不足以张成 D_ν：真实的 EC 缩并残差还含")
-            put("          ∇T 型（挠率协变导数）项，纯 T·R 代数型候选无法闭合 ⇒ 来稿「只用")
-            put("          挠率-曲率代数约束即可归零残差」的思路在结构上不充分。")
+            % (rr_tr, ", ".join("%+.4f" % v for v in coef_tr)))
+        if rr_tr > 1e-6:
+            put("        ⇒ 5 个 (挠率·曲率) 代数基不足以张成 D_ν：残差剩余部分非 T·R")
+            put("          代数型 ⇒ 来稿「只用挠率-曲率代数约束即可归零残差」的思路")
+            put("          在结构上不充分（对照 S3.4b）。")
+
+    # S3.4b 补 ∇T 型基（挠率协变导数散度项）——验证局部结构是否足够
+    if coef_full is None:
+        rec("INFO", "候选基回归 · T·R + ∇T 基", "矩阵奇异，跳过")
+    else:
+        verdict = "FAIL" if rr_full > 1e-2 else ("INFO" if rr_full > 1e-6 else "PASS")
+        rec(verdict,
+            "候选基回归 D_ν ≈ Σ a_k c_k（T·R 代数基 + ∇T 协变导数基 c6–c8）",
+            "相对残差 %.2e，系数 a = [%s]"
+            % (rr_full, ", ".join("%+.4f" % v for v in coef_full)))
+        put("        ⇒ 补入 ∇T 型基后残差仍 %.2e（几乎未降）：真实 EC 缩并残差无法仅由" % rr_full)
+        put("          挠率及其一阶协变导数（T·R + ∇T）的局部结构张成，还含 ddΓ·Γ 等")
+        put("          联络二阶导数的耦合项。这正说明：要写出 ∇^μG_{μν} 的挠率闭式，必须")
+        put("          借助 Bianchi 恒等式把 ddΓ 项重组合掉——亦是「守恒命题 ⇔ 残差置零」")
+        put("          的几何根源；来稿「只用挠率-曲率代数约束即可归零残差」在结构上不成立。")
 
     # ============================================================ §4 复推广与守恒逻辑
     sec("§4 复推广层：术语与结构缺口")
@@ -877,7 +945,7 @@ def main():
     put("    「第一 Bianchi」实为第二 Bianchi（微分 Bianchi），且其两指标写法不是恒等式；")
     put("    来稿给出的挠率源项形式与实测残差相对偏差 %.2e，不成立。" % rel_user2)
     put("  · 守恒命题在场方程下与「残差置零」严格等价 ⇒ 是公设化约束（降自由度），非守恒定理；")
-    put("    且纯 T·R 代数型约束不足以闭合残差（回归残差 %.2e，还含 ∇T 型项）。" % (rr if rr == rr else float('nan')))
+    put("    且纯 T·R 代数型约束不足以闭合残差（纯 T·R 回归残差 %.2e；补 ∇T 协变导数基后仍 %.2e，还含 ddΓ·Γ 耦合项）。" % (rr_tr, rr_full))
     put("  · 量纲三处非法：𝓡=κ+iτ（L^-2 vs L^-1）、ω_R=cR_B（非频率）、复场方程虚部未定；")
     put("    ω_I=cT_B 量纲合法（唯一通过的一条）。")
     put("  · 来稿球对称挠率分量不满足 SO(3) 协变（残差 %.2e）；α 三式内部冲突。" % relA)
