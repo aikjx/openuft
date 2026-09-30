@@ -2,10 +2,10 @@
  "meta": {
   "script": "v_eq_c_TUFT_转动无源定理与v48复现_第11层_定价.py",
   "layer": "第 ⑪ 层（v=c 求导验证链）",
-  "elapsed_sec": 46.6,
+  "elapsed_sec": 74.9,
   "counts": {
    "PASS": 12,
-   "FAIL": 5,
+   "FAIL": 6,
    "INFO": 2
   },
   "guard_baseline": {
@@ -18,6 +18,7 @@
    "V-04": "FAIL",
    "V-05": "PASS",
    "V-06": "PASS",
+   "V-07": "FAIL",
    "R-01": "PASS",
    "R-02": "PASS",
    "R-03": "PASS",
@@ -51,6 +52,12 @@
    "报告_门B数字": [
     50
    ],
+   "报告_§6一致性句": [
+    77
+   ],
+   "报告_v44一阶值": [
+    75
+   ],
    "10层_外区无源": [
     24
    ],
@@ -75,6 +82,7 @@
    "SEMI_FLOOR_planck": "1000.0",
    "DEC_BAR": "1.0",
    "SYMFLOOR": "1.0e-30",
+   "SIX_BAR": "0.1",
    "GRID_points": 4
   },
   "v48_run_rc": [
@@ -82,9 +90,25 @@
    0
   ],
   "v48_bytes": [
-   5279,
-   5279
+   5355,
+   5355
   ],
+  "v48_disk": {
+   "draw_d1_bytes": 5355,
+   "draw_d1_crlf": 76,
+   "draw_d2_bytes": 5355,
+   "draw_d2_crlf": 76,
+   "archive_bytes": 5351,
+   "archive_crlf": 76,
+   "channel": "read_pair(): len(raw bytes) 与 CRLF 条数，文本模式已弃用"
+  },
+  "six_agreement": {
+   "a010_from_draw": "-0.440001",
+   "v44_first_order_from_report": "0.09832",
+   "relative_gap": "5.47519",
+   "verdict": "FAIL",
+   "note": "v44 那枚是从报告正文**读**的，本层未重推其外"
+  },
   "v48_archive_vs_draw": {
    "diff_rows": 21,
    "total_lines": 77,
@@ -217,6 +241,23 @@
     "clean": true
    },
    {
+    "mutant": "M_SIX_AGREEMENT_ARCHIVE",
+    "why": "§6 的一致性改拿存档那枚来判",
+    "must_redden": [
+     "V-07"
+    ],
+    "must_stay": [
+     "V-04",
+     "V-06"
+    ],
+    "reddened": [
+     "V-07"
+    ],
+    "extra_reddened": [],
+    "not_reddened_by_this_mutant": [],
+    "clean": true
+   },
+   {
     "mutant": "M_GAP_FROM_MEMORY",
     "why": "第二跑的 Δ 用硬编记忆值而不是现读",
     "must_redden": [
@@ -343,7 +384,8 @@
     "V-03",
     "V-04",
     "V-05",
-    "V-06"
+    "V-06",
+    "V-07"
    ],
    "unarmed_rows": [
     "A-00",
@@ -353,7 +395,7 @@
     "T-01",
     "T-02"
    ],
-   "rows_total": 19,
+   "rows_total": 20,
    "note": "无臂行不得当作已被见证"
   },
   "carriers": {
@@ -426,7 +468,7 @@
    "item": "v48／⑩层／卷十四 锚点",
    "statement": "每个锚点须在其载体里现读到行号",
    "verdict": "PASS",
-   "detail": "现读行号：v48_seed循环@323；v48_rng@179,194；v48_自写输出@393；v48_缺交叉项@16,289,386；报告_照抄纪律@5；报告_门B数字@50；10层_外区无源@24；卷十四_T_B背景@162"
+   "detail": "现读行号：v48_seed循环@323；v48_rng@179,194；v48_自写输出@393；v48_缺交叉项@16,289,386；报告_照抄纪律@5；报告_门B数字@50；报告_§6一致性句@77；报告_v44一阶值@75；10层_外区无源@24；卷十四_T_B背景@162"
   },
   {
    "id": "A-02",
@@ -442,7 +484,7 @@
    "item": "两次现抽是否逐字节相同",
    "statement": "同环境同码两跑应可再生",
    "verdict": "PASS",
-   "detail": "两跑 rc=0/0，图像 5279/5279 B，不同行数=0"
+   "detail": "两跑 rc=0/0，图像（盘上字节）5355/5355 B、CRLF 76/76，不同行数=0"
   },
   {
    "id": "V-02",
@@ -450,7 +492,7 @@
    "item": "受检主张『存档图像今天可再生』",
    "statement": "存档对现抽逐字节比",
    "verdict": "FAIL",
-   "detail": "存档对现抽不同行数=21（行号 [10, 11, 12, 13, 37, 38, 39, 44, 45, 46]）；旋转极点最大位移 |Δpole|=0.0635313（格点 a=0.20, m=-2）"
+   "detail": "存档不同行数=21（行号 [10, 11, 12, 13, 37, 38, 39, 44, 45, 46]）；存档盘上 5351 B、CRLF 76 对现抽盘上 5355 B、CRLF 76；旋转极点最大位移 |Δpole|=0.0635313（格点 a=0.20, m=-2）"
   },
   {
    "id": "V-03",
@@ -483,6 +525,14 @@
    "statement": "分桶判据不许只看能过的那几枚",
    "verdict": "PASS",
    "detail": "审查面 10/10 枚（须全数）；其中真在报告里的 10 枚"
+  },
+  {
+   "id": "V-07",
+   "section": "V 复现层",
+   "item": "受检主张『报告 §6 的微扰—非微扰一致性可再生』",
+   "statement": "a=0.10 那枚须与 v44 一阶现读值同门",
+   "verdict": "FAIL",
+   "detail": "现抽图像里 measured split/a@a=0.10 = -0.440001；v44 一阶（报告现读）= 0.09832 ⇒ 相对差 = 5.475 对门 0.1 ⇒ 报告 §6 那句「数值接近」（锚点 报告_§6一致性句）今天不成立；符号对照：现抽 负 对 v44 正"
   },
   {
    "id": "R-01",
