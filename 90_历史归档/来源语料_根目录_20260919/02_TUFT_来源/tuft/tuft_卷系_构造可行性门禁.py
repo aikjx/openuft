@@ -240,14 +240,17 @@ def v1_questions(ents):
 # ────────────────────────────────────────────────────────────────────────────
 # §V2 机扫 + 与人工矩阵对账
 # ────────────────────────────────────────────────────────────────────────────
-def v2_reconcile(ents, human):
+def v2_reconcile(ents, human, acc_map):
     I_("§V2 机扫全部 %d 条目 + 与人工覆盖矩阵对账" % len(ents))
     machine = {}
     for lt, fn, _d in QUESTIONS:
         machine[lt] = set(eid for eid in ents if fn(ents[eid]["blob"]))
-    I_("   覆盖率概览（机检命中数 / 人工矩阵记入数）：")
+    I_("   覆盖率概览（机检命中数 / 人工矩阵记入数 / 机检可靠性）：")
     for lt, _fn, _d in QUESTIONS:
-        I_("      [%s] 机器 %2d 条 ；人工 %2d 条" % (lt, len(machine[lt]), len(human.get(lt, set()))))
+        a = acc_map.get(lt, 0.0)
+        tag = "可用" if a == 1.0 else ("**弱**" if a >= 0.5 else "**不可用**")
+        I_("      [%s] 机器 %2d 条 ；人工 %2d 条 ；机检可靠性 %s（%.2f）"
+           % (lt, len(machine[lt]), len(human.get(lt, set())), tag, a))
 
     I_("   对账明细（只列**差异**；一致项不逐条罗列）：")
     stat = {}
@@ -390,8 +393,8 @@ def main():
        % (len(ents), len(human), "".join(sorted(human))))
 
     v0_crosscheck_cur21(ents)
-    v1_questions(ents)
-    machine, stat = v2_reconcile(ents, human)
+    acc_map = v1_questions(ents)
+    machine, stat = v2_reconcile(ents, human, acc_map)
     per = v3_completeness(ents, human)
     v4_proposal_gate()
 
