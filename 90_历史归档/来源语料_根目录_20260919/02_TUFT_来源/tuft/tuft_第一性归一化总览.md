@@ -16,11 +16,11 @@
 
 ## 二、全量统计
 
-**报告数 71**（含总索引此前漏计的 4 份无汇总行报告）；**评级：H=6 · O=43 · C=22 · U=3（方向）**。
+**报告数 72**（含总索引此前漏计的 4 份无汇总行报告）；**评级：H=6 · O=43 · C=23 · U=3（方向）**。
 
-**计数合计（去重口径以报告为准）**：PASS=467 · FAIL=335 · BOUNDARY=221 · INFO=859。
+**计数合计（去重口径以报告为准）**：PASS=474 · FAIL=336 · BOUNDARY=226 · INFO=876。
 
-## 三、归一化明细（71 份报告）
+## 三、归一化明细（72 份报告）
 
 | 报告 | P/F/B/I | 读取 | 评级 | 层级 | 备注 |
 |---|---|---|---|---|---|
@@ -78,9 +78,10 @@
 | `tuft_sigma_abs0_尺度锚定冲突_OPEN_v4_report.txt` | 0/3/0/2 | 汇总行 | **O** | L3 | σ_abs=0 尺度锚定冲突（OPEN_v4·理论攻坚）：TUFT 三尺度锚(曲率饱和/康普顿/挠率)给出壁在 1e-26M/1e-78M，与可检验所需 2.05M 差 26~78 量级 ⇒ 壁非 TUFT 可导出，σ_abs=0 属与尺度锚定冲突的外部唯象假设，逃生路径关闭 |
 | `tuft_三路线_ABC_report.txt` | 4/7/4/20 | 汇总行 | **C** | L1 | 机制 A/B/C 逐条分析 7 FAIL（A 缺旋量、EC 挠率不传播、黑洞 46.82%） |
 | `tuft_卷二十八补2_report.txt` | 2/5/1/6 | 汇总行 | **C** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
-| `tuft_卷系_构造可行性门禁_report.txt` | 5/0/10/89 | 汇总行 | **O** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
+| `tuft_卷二十八补3_report.txt` | 3/1/3/5 | 汇总行 | **C** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
+| `tuft_卷系_构造可行性门禁_report.txt` | 8/0/12/101 | 汇总行 | **O** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
 | `tuft_卷系_模态谱方向定理_report.txt` | 7/7/6/77 | 汇总行 | **C** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
-| `tuft_卷系_落盘前双检_report.txt` | 5/0/0/0 | 汇总行 | **H** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
+| `tuft_卷系_落盘前双检_report.txt` | 6/0/0/0 | 汇总行 | **H** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
 | `tuft_四力统一_report.txt` | 17/19/9/14 | 汇总行 | **C** | L1 | 19 处缺陷（维数不可相加、sin²θ_W 差 8.12%、三耦合不汇聚） |
 | `tuft_孤子τκ锁定_微分方程证明_OPEN5c_report.txt` | 1/2/1/2 | 汇总行 | **O** | L3 | 孤子 τ/κ 锁定微分方程证明（OPEN5c·方向C）：稳态条件⇔公理A微分(等价，非独立约束)；公理A仅约束圆 κ²+τ²=Ω²，τ/κ=tanθ 连续自由(非锁死，由额外孤子解选定)；但 EDM∝κτ=(Ω²/2)sin2θ，16量级超额来自 Ω²康普顿尺度，θ 仅给 O(1) 因子 ⇒ 调θ匹配g-2时EDM仍超15.9量级 ⇒ 方向2不可行，仅剩方向3 |
 | `tuft_引力波_挠率扰动_report.txt` | 4/0/0/8 | 汇总行 | **H** | L3 | B 弱场线性化 + 唯一可区分预言：标量呼吸模 ξ_thr~4e-12（后被排查报告修正：漏 exp(−u)） |
@@ -102,7 +103,7 @@
 |---|---|---|---|
 | L0 | 代数恒等式（零物理内容） | 0 | — |
 | L1 | 回指 / 定性重述 | 7 | `tuft_三路线_ABC`, `tuft_四力统一`, `tuft_暴胀CMB`, `tuft_相位pi_全维求导精算`, `tuft_续篇_全维求导精算`, `tuft_色挠率_SU3`, `tuft_黑洞热力学` |
-| L2 | 定量计算（量纲/数值正确） | 54 | `tuft_B_UV完成`, `tuft_B_排查_线性化`, `tuft_B_根因溯源`, `tuft_D2`, `tuft_D3_尺度与K_sat_锚定`, `tuft_O_SCALE_锚定方案`, `tuft_Q量子A`, `tuft_Q量子B`, `tuft_Q量子`, `tuft_beta_running_缺口`, `tuft_fermion_spin`, `tuft_htuft_blackhole_topology_v1`, `tuft_htuft_quantum_bundle_pathint_v1`, `tuft_knot_slsqp`, `tuft_r10`, `tuft_r11`, `tuft_r12`, `tuft_r13`, `tuft_r14`, `tuft_r15`, `tuft_r16`, `tuft_r17`, `tuft_r18`, `tuft_r19`, `tuft_r1`, `tuft_r20`, `tuft_r21`, `tuft_r22`, `tuft_r23`, `tuft_r24`, `tuft_r25`, `tuft_r26`, `tuft_r27`, `tuft_r28`, `tuft_r29`, `tuft_r30`, `tuft_r31`, `tuft_r3`, `tuft_r4`, `tuft_r5`, `tuft_r6`, `tuft_r7`, `tuft_r8`, `tuft_r9`, `tuft_卷二十八补2`, `tuft_卷系_构造可行性门禁`, `tuft_卷系_模态谱方向定理`, `tuft_卷系_落盘前双检`, `tuft_收口_修复优化`, `tuft_机电对偶`, `tuft_机电对偶_实验对标`, `tuft_求导证明验证_OPEN8`, `tuft_相位pi_闭合莫比乌斯`, `tuft_续篇_双结交换仿真` |
+| L2 | 定量计算（量纲/数值正确） | 55 | `tuft_B_UV完成`, `tuft_B_排查_线性化`, `tuft_B_根因溯源`, `tuft_D2`, `tuft_D3_尺度与K_sat_锚定`, `tuft_O_SCALE_锚定方案`, `tuft_Q量子A`, `tuft_Q量子B`, `tuft_Q量子`, `tuft_beta_running_缺口`, `tuft_fermion_spin`, `tuft_htuft_blackhole_topology_v1`, `tuft_htuft_quantum_bundle_pathint_v1`, `tuft_knot_slsqp`, `tuft_r10`, `tuft_r11`, `tuft_r12`, `tuft_r13`, `tuft_r14`, `tuft_r15`, `tuft_r16`, `tuft_r17`, `tuft_r18`, `tuft_r19`, `tuft_r1`, `tuft_r20`, `tuft_r21`, `tuft_r22`, `tuft_r23`, `tuft_r24`, `tuft_r25`, `tuft_r26`, `tuft_r27`, `tuft_r28`, `tuft_r29`, `tuft_r30`, `tuft_r31`, `tuft_r3`, `tuft_r4`, `tuft_r5`, `tuft_r6`, `tuft_r7`, `tuft_r8`, `tuft_r9`, `tuft_卷二十八补2`, `tuft_卷二十八补3`, `tuft_卷系_构造可行性门禁`, `tuft_卷系_模态谱方向定理`, `tuft_卷系_落盘前双检`, `tuft_收口_修复优化`, `tuft_机电对偶`, `tuft_机电对偶_实验对标`, `tuft_求导证明验证_OPEN8`, `tuft_相位pi_闭合莫比乌斯`, `tuft_续篇_双结交换仿真` |
 | L3 | **可检验预言 / 判决** | 10 | `tuft_B_自屏蔽_数值求解`, `tuft_EDM_实验对接_OPEN6`, `tuft_OSCALE_尺度锚定EDM连接_OPEN7`, `tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b`, `tuft_g2_电子反常磁矩_OPEN5`, `tuft_sigma_abs0_ringdown_可检验性_OPEN_v2`, `tuft_sigma_abs0_ringdown_定量metric_OPEN_v3`, `tuft_sigma_abs0_尺度锚定冲突_OPEN_v4`, `tuft_孤子τκ锁定_微分方程证明_OPEN5c`, `tuft_引力波_挠率扰动` |
 
 **关键观察**：全仓库真正达到 **L3（可检验预言 / 判决）** 的仅 **10 处**——`tuft_B_自屏蔽_数值求解`、`tuft_EDM_实验对接_OPEN6`、`tuft_OSCALE_尺度锚定EDM连接_OPEN7`、`tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b`、`tuft_g2_电子反常磁矩_OPEN5`、`tuft_sigma_abs0_ringdown_可检验性_OPEN_v2`、`tuft_sigma_abs0_ringdown_定量metric_OPEN_v3`、`tuft_sigma_abs0_尺度锚定冲突_OPEN_v4`、`tuft_孤子τκ锁定_微分方程证明_OPEN5c`、`tuft_引力波_挠率扰动`。
@@ -123,7 +124,7 @@
 2. **欠定层（O=43）**：R3 尺度简并（O-SCALE）、R4 攻克尝试、r6 挠率产生可行性、O-SCALE 锚定方案、收口（B 降级/A 等价/C 冻结）、D2 挠率动力学项、D3 尺度与 K_sat 锚定、**R10 LCS 框架**——
    共同特征是「与**已排除的 M02/普朗克锚定**同构」或「可行性未建立」或「**约束不唯一需外部物理输入**」：
    纯几何方程无尺度锚，自然锁定普朗克尺度；反常消除给 2 维解空间，超荷仍须外部条件（O-HYPERCHARGE）。
-3. **缺陷层（C=22）**：根因分四类——①**量纲/类型**（γ₅、质量式、F_T、T_H）；
+3. **缺陷层（C=23）**：根因分四类——①**量纲/类型**（γ₅、质量式、F_T、T_H）；
    ②**结构性**（势能凹无下界、维数不可相加、SU(3) 注入、代码不可运行）；
    ③**循环/重述**（N-n_s 互斥、ΛCDM 对比表、∇J 恒零）；④**量子化/拓扑**（Q-TUFT 拓扑荷 W 非整、挠率无动力学、曲率饱和≠UV 截止）。四条路线均无「可保留的超越 GR/标准模型」的独立预言。
 4. **未展开层（U=3）**：braid-group、色挠率解冻、特征映射约定——冻结或补齐前置后重开（挠率动力学 D2、尺度与 K_sat 锚定 D3 均已完成；R10 已闭合 braid 的**统计维数层**，n≥3 世界线的辫群表示仍未展开）。

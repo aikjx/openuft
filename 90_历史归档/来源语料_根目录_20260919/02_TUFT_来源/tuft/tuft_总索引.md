@@ -60,9 +60,10 @@
 | tuft_sigma_abs0_尺度锚定冲突_OPEN_v4_report.txt | 0 | 3 | 0 | 2 |
 | tuft_三路线_ABC_report.txt | 4 | 7 | 4 | 20 |
 | tuft_卷二十八补2_report.txt | 2 | 5 | 1 | 6 |
-| tuft_卷系_构造可行性门禁_report.txt | 5 | 0 | 10 | 89 |
+| tuft_卷二十八补3_report.txt | 3 | 1 | 3 | 5 |
+| tuft_卷系_构造可行性门禁_report.txt | 8 | 0 | 12 | 101 |
 | tuft_卷系_模态谱方向定理_report.txt | 7 | 7 | 6 | 77 |
-| tuft_卷系_落盘前双检_report.txt | 5 | 0 | 0 | 0 |
+| tuft_卷系_落盘前双检_report.txt | 6 | 0 | 0 | 0 |
 | tuft_四力统一_report.txt | 17 | 19 | 9 | 14 |
 | tuft_孤子τκ锁定_微分方程证明_OPEN5c_report.txt | 1 | 2 | 1 | 2 |
 | tuft_引力波_挠率扰动_report.txt | 4 | 0 | 0 | 8 |
@@ -77,9 +78,9 @@
 | tuft_续篇_双结交换仿真_report.txt | 5 | 0 | 0 | 6 |
 | tuft_色挠率_SU3_report.txt | 5 | 16 | 6 | 14 |
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
-| **合计** | **467** | **335** | **221** | **859** |
+| **合计** | **474** | **336** | **226** | **876** |
 
-## 二、脚本清单（114）
+## 二、脚本清单（116）
 
 - `_dbg_wall.py`
 - `_scratch_r28.py`
@@ -172,6 +173,7 @@
 - `tuft_全维度总验证.py`
 - `tuft_判据门禁.py`
 - `tuft_卷二十八补2_三代径向本征方程与稳定性阈值.py`
+- `tuft_卷二十八补3_分数电荷的Z6中心量子化.py`
 - `tuft_卷系_归一化总览.py`
 - `tuft_卷系_构造可行性门禁.py`
 - `tuft_卷系_模态谱方向定理.py`
@@ -193,10 +195,11 @@
 - `tuft_续篇_双结交换仿真.py`
 - `tuft_色挠率_SU3_全维求导精算.py`
 - `tuft_跨册缺陷族检查.py`
+- `tuft_跨线归一化清册.py`
 - `tuft_锚定编码账本.py`
 - `tuft_黑洞热力学_全维求导精算.py`
 
-## 三、报告文档清单（97）
+## 三、报告文档清单（98）
 
 - `TUFT_全维突破_全维度总结_20260930.md`
 - `TUFT_微观粒子拓扑导出_第十一部分.md`
@@ -251,6 +254,7 @@
 - `tuft_卷二十五_H-TUFT_螺旋挠率丛.md`
 - `tuft_卷二十八_H-TUFT拓扑粒子谱系.md`
 - `tuft_卷二十八补2_三代径向本征方程与稳定性阈值.md`
+- `tuft_卷二十八补3_分数电荷的Z6中心量子化.md`
 - `tuft_卷二十八补_引擎诚实修订与形式歧义修复.md`
 - `tuft_卷二十六_H-TUFT量子化框架.md`
 - `tuft_卷二十四_奇点消解与黑洞内禀几何.md`
@@ -296,7 +300,7 @@
 - `挠率产生机制_阶段0_可行性判定.md`
 - `挠率探测实验设计_修复版.md`
 
-## 四、原始报告（txt，71）
+## 四、原始报告（txt，72）
 
 - `tuft_B_UV完成_report.txt`
 - `tuft_B_排查_线性化_report.txt`
@@ -352,6 +356,7 @@
 - `tuft_sigma_abs0_尺度锚定冲突_OPEN_v4_report.txt`
 - `tuft_三路线_ABC_report.txt`
 - `tuft_卷二十八补2_report.txt`
+- `tuft_卷二十八补3_report.txt`
 - `tuft_卷系_构造可行性门禁_report.txt`
 - `tuft_卷系_模态谱方向定理_report.txt`
 - `tuft_卷系_落盘前双检_report.txt`

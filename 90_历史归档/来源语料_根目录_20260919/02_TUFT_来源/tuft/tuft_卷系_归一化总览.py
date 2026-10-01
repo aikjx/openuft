@@ -45,10 +45,10 @@ LEVEL = {
     "CUR-11": "L2", "CUR-12": "L2", "CUR-13": "L2",
     "CUR-14": "L2", "CUR-15": "L2", "CUR-16": "L2", "CUR-17": "L1", "CUR-18": "L2",
     "CUR-19": "L2", "CUR-20": "L2", "CUR-21": "L2", "CUR-22": "L1", "CUR-23": "L2",
-    "CUR-24": "L1",
+    "CUR-24": "L1", "CUR-25": "L1",
 }
 # 反回退：这些条目状态**必须是** ❌ 系（已排除/已关闭/已触发/核心失败）
-MUST_BE_EXCLUDED = {"CUR-01", "CUR-02", "CUR-03", "CUR-13", "CUR-14", "CUR-15", "CUR-18", "CUR-20", "CUR-21", "CUR-22", "CUR-23", "CUR-24"}
+MUST_BE_EXCLUDED = {"CUR-01", "CUR-02", "CUR-03", "CUR-13", "CUR-14", "CUR-15", "CUR-18", "CUR-20", "CUR-21", "CUR-22", "CUR-23", "CUR-24", "CUR-25"}
 
 
 def sha256_file(path):
