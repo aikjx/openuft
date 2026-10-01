@@ -45,8 +45,11 @@ TARGETS = [
     "tuft_htuft_cosmic_string_v1.py",
     "tuft_htuft_global_mcmc_v1.py",
     "tuft_htuft_darkmatter_soliton_v1.py",  # 补充卷A（CUR-14）
-    "tuft_htuft_particle_spectrum_v1.py",   # 卷28 CURATED 声明但 script_sha256=null（预期未落盘）
-    "tuft_htuft_scatter_amplitude_v1.py",   # 卷26 CURATED 标「预期，未落盘」
+    "tuft_htuft_vacuum_topology_lambda_v1.py",  # 补充卷B（CUR-15）
+    "tuft_htuft_flavor_ckm_topology_v1.py",  # 补充卷F（CUR-16）
+    "tuft_dimtrans_lambda_probe.py",        # 卷系突破：Λ 维度嬗变探针（非 CUR 条目）
+    "tuft_htuft_particle_spectrum_v1.py",   # 卷28（CUR-12，已落盘）
+    "tuft_htuft_scatter_amplitude_v1.py",   # 卷26（CUR-10，已落盘）
     "tuft_global_mcmc_nested_OPEN_v1.py",
 ]
 

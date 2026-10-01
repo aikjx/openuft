@@ -1,0 +1,30 @@
+{
+  "volume": 23,
+  "title": "TUFT 全局 MCMC 贝叶斯联合推断 · CURATED 固化",
+  "generated": "2026-09-30",
+  "red_line": "数学自洽 != 实验证实；本卷诚实结论是『8 通道联合证据 Z=0（严格）』——即主线 TUFT 被微观窗口正式排除，而非『联合拟合成功』",
+  "audit_ref": "tuft_卷二十九_H-TUFT公理假设截断全链路审计白皮书.md",
+  "note": "本 json 由卷系归一化审计（tuft_卷系_归一化总览.py）补全——CUR 序列中 CUR-06（卷二十二）之后、CUR-08（卷二十四）之前恰为缺口，对应卷二十三（全局 MCMC），此前无独立 *_CURATED.json（脚本 tuft_global_mcmc_nested_OPEN_v1.py 早已落盘并自述『TUFT 卷二十三·全局 MCMC 贝叶斯联合推断』）。内容与该脚本实现的诚实结论逐条对齐，不新增主张。关键诚实点（承脚本 docstring）：①8 通道状态分类 EDM/g2/ringdown=CLOSED、ns/r=OPEN、CKM/PMNS/f_NL=UNVALIDATED；②CLOSED 通道恒返回 logL=-inf ⇒ 全 8 通道联合似然对所有样本为 0 ⇒ Z_TUFT=0（严格，无需采样）；③CMB-only（ns/r）仅约束 tau_star≈2.7，对其余 18 个参数零约束（后验=先验）；④草稿『量化 TUFT 相对 ΛCDM 的统计优势』方向反了——诚实产出是统计劣势（含已关通道 ⇒ lnB=-inf）；⑤19 维平坦/对数平坦先验显式写入，无人工裁剪；⑥jax/dynesty 未装，用 numpy+解析慢滚导数重写，dynesty 缺失时改建证分析。",
+  "entries": [
+    {
+      "entry_id": "CUR-07",
+      "name": "TUFT 全局 MCMC 贝叶斯联合推断（主线，19 维参数，8 通道）",
+      "script_ref": "tuft_global_mcmc_nested_OPEN_v1.py",
+      "script_sha256": "5e389a6f6c478dc6770f063eefc04c604c004f879f16b9fa4d25cec197971b5b",
+      "category": "贝叶斯推断+MCMC+嵌套采样+多通道联合（诚实实现）",
+      "status": "❌ 已触发（8 通道联合 Z=0 严格 ⇒ 主线 TUFT 被微观窗口排除；CMB-only 仅约束 τ*）",
+      "core_prediction": "主线 TUFT 共享一套底层参数（19 维）可同时拟合微观 EDM/g-2、引力 ringdown、宇宙学 CMB（及未激活的味/CKM/PMNS/f_NL）。实测：含 CLOSED 三通道则联合 Z=0；CMB-only 仅 τ_star≈2.7 有约束",
+      "observational_bound": "Planck n_s=0.9649±0.0042、BICEP/Keck r<0.032；EDM/g-2/ringdown 三上限已足以排除",
+      "falsification_criterion": "全 8 通道 lnB(TUFT/ΛCDM)<0 且多通道后验冲突无法收敛 → 全局框架统计证伪（**已发生**：Z=0 ⇒ lnB=-∞）",
+      "cross_ref_volume": "卷23、卷19、卷30、卷29审计",
+      "uncertainty": "FRG 作用量 ansatz 截断、慢滚近似、CMB 轴仅由 tau_star 定（与 g3 相消 ⇒ 联合约束空壳）；CKM/PMNS/f_NL 前向映射未推导（UNVALIDATED，不激活不伪造）",
+      "audit_reclassification": {
+        "from": "⏳待检验（原稿乐观：量化相对 ΛCDM 的优势）",
+        "to": "❌已触发（8 通道 Z=0 严格 ⇒ 统计排除）",
+        "valid_domain": "低能/弱场；CMB-only 轴（单参数 τ*）可拟合",
+        "failure_regions": "全 8 通道联合（Z=0）、CKM/PMNS/f_NL（映射未推导）、模型比对（方向应为劣势）",
+        "evidence_grade": "O/L2（承卷二十九）"
+      }
+    }
+  ]
+}
