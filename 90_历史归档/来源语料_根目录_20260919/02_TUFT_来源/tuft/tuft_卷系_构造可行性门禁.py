@@ -2,23 +2,34 @@
 """
 tuft_卷系_构造可行性门禁.py
 ===========================
-TUFT / H-TUFT 卷系·**跨卷收口分析（第 3 轮）**：把 no-go 定理族 **A~J** 机器化为
+TUFT / H-TUFT 卷系·**跨卷收口分析（第 3 轮）**：把 no-go 定理族 **A~K** 机器化为
 一套可复跑的「**构造可行性门禁**」，并独立复核最新的补充卷I（CUR-21）。
 
 为何需要本工具（防回潮）：
-  · A~J 定理是整轮全维整理**最可靠的产出**（"世界不是数据的函数、拓扑不能编码连续量…"）；
+  · A~K 定理是整轮全维整理**最可靠的产出**（"世界不是数据的函数、拓扑不能编码连续量…"）；
   · 但 D~J 各卷的经验一致：**每卷都在重复同样的缺陷**（自由参数 vs 派生、已关窗口 vs 新通道、
     破缺量无源、同伦不唯一、约束自证、谱形方向不符、拓扑常数 ⇒ 无内生标度）；
-  · 因此**比新增卷更有价值的**，是把 A~J 变成**进入门槛**：新提案落盘前必须逐条自查。
+  · 因此**比新增卷更有价值的**，是把 A~K 变成**进入门槛**：新提案落盘前必须逐条自查。
 
-本册做七件事：
+本册做八件事：
   §V0 独立复核 CUR-21（BBN 畴壁上限）——含指出其"超限倍数"仅是**立方比恒等式**
-  §V1 定义 10 条**机检问句**（由定理陈述**独立**写出，**未按人工矩阵调参**）+ 用已知正/负样本自检
-  §V2 对全条目机扫，并与人工覆盖矩阵**对账**（报告一致率，暴露矩阵缺口）
+  §V1 定义 11 条**机检问句**（A~K；由定理陈述**独立**写出，**未按人工矩阵调参**）+ 用已知正/负样本自检
+  §V2 对全条目机扫，并与人工覆盖矩阵**对账**（报告**召回 + 精确度**，暴露矩阵缺口）
   §V3 覆盖完整性审计（未覆盖条目 / 引用不存在的条目 / ❌ 条目是否 ≥1 定理命中）
   §V4 新提案自查表：模板 + 校验器 + 结构性风险分级
   §V5 扇区重复登记审计（多头真源 ⇒ 唯一规范真源；见 `tuft_卷系_扇区真源登记.md`）
-  §V6 结论与边界
+  §V6 元条目账本联动（覆盖一致性 + 逐条目抄录；口径唯一归 `tuft_锚定编码账本.py`）
+  §V7 账本驱动的结构性交叉校验（D/E 的**必要条件**；**不给充分判定**）
+  §V8 结论与边界
+
+v1.3 变更（本轮）：
+  ⓪ 增补 **定理 K** 机检问句（共 **11** 条，A~K）；K 由横向卷（CUR-25）落盘
+     （「聚合不经复算 ⇒ 数字不可信」：手写/一次性聚合必漂移，可复算者即吻合）。
+  ① 新增 **§V7**：用账本 `n_net` 作 **D 的计数判据**——把 D 从「文本启发式（0.50）」
+     升级为「**两个独立产出物之间的必要性交叉校验**」。
+     诚实边界：`n_net ≤ 0` 的条目数（20）**远超**人工 D 行（11）⇒ `D ⊊ {n_net ≤ 0}`，
+     账本**只给必要条件**、**不可**替代人工 D 判定（§V7 会把该结构关系如实打印，防误用）。
+  ② §V6 从「计数抄录」升级为**逐条目帐目解析**（`kind / n_out / n_free / n_net`）。
 
 v1.2 变更（本轮）：
   ① 增补 **定理 J** 机检问句（共 **10** 条）；J 于 v1.1 由攻坚卷（CUR-22）落盘。
@@ -217,6 +228,11 @@ QUESTIONS = [
     ("J", lambda b: _has(b, ["拓扑常数", "拓扑耦合", "全导数", "α", "β"])
      and _has(b, ["内生", "标度", "尺度", "能标", "层级", "跑动", "维度嬗变"]),
      "是否在**保留「α 为拓扑常数」**的前提下声称**内生标度/打破 β≡0**？（→ 定理 J）"),
+    # K 陈述：「聚合不经复算 ⇒ 数字不可信」（手写/一次性聚合必漂移；可复算者即吻合）
+    #   ⇒ setting = 聚合/清册/合计口径，claim = 未经复算/可复跑核对。
+    ("K", lambda b: _has(b, ["聚合", "清册", "统计口径", "合计", "自报", "手写", "基准"])
+     and _has(b, ["复算", "可复跑", "漂移", "不可复算", "复跑", "机检"]),
+     "是否**未经复算**就采信聚合/清册数字（手写合计、自报标签、一次性统计）？（→ 定理 K）"),
 ]
 
 # 自检样本：由人工矩阵中**置信度高**的正样本与**明确不涉及**的负样本构成
@@ -231,6 +247,7 @@ SELF_CHECK = {
     "H": (["CUR-21", "CUR-19"], ["CUR-20"]),
     "I": (["CUR-12"], ["CUR-20"]),
     "J": (["CUR-22"], ["CUR-02"]),
+    "K": (["CUR-25"], ["CUR-01"]),
 }
 
 # ── §V5 扇区重复登记审计：同一「检测通道/议题」被 ≥2 条目登记的簇 ──────────────
@@ -286,19 +303,95 @@ def v6_ledger_linkage(ents):
     missing = sorted(set(ents) - ids)
     ghost = sorted(ids - set(ents))
     counts = dict((k, out.count(k)) for k in LEDGER_KINDS)
-    I_("   账本复跑成功（rc=%d）；种类计数（**文本抄录**，非重算）：%s" % (proc.returncode, counts))
+    # 解析逐条目账目行：`CUR-xx  状态类  kind  n_out  n_free  n_net  依据`
+    lmap = {}
+    row_re = re.compile(r"^(CUR-\d{2})\s+(\S+)\s+(\S+)\s+(\d+)\s+(\d+)\s+([+-]\d+)\s+(.*)$")
+    for line in out.splitlines():
+        m = row_re.match(line.strip())
+        if m:
+            lmap[m.group(1)] = {"kind": m.group(3), "n_out": int(m.group(4)),
+                                "n_free": int(m.group(5)), "net": int(m.group(6)),
+                                "basis": m.group(7)[:60]}
+    I_("   账本复跑成功（rc=%d）；解析到 **%d 条账目**；种类计数（**文本抄录**，非重算）：%s"
+       % (proc.returncode, len(lmap), counts))
     if missing or ghost:
         F_("V6 账本覆盖不一致：未入账 %s ；幽灵 %s ⇒ 须在账本中补齐（这是**结构性**缺口："
            "无账目即无法计净预言 `n_net`）" % (missing, ghost))
     else:
         P_("V6 账本覆盖一致（INV1）：%d 条目**全部入账**，无幽灵条目" % len(ents))
-    B_("V6 边界：本审计只做**覆盖一致性 + 计数抄录**，**不重算** `n_net = n_out − n_free`"
+    B_("V6 边界：本审计只做**覆盖一致性 + 逐条目抄录**，**不重算** `n_net = n_out − n_free`"
        "（计账口径由 `%s` 负责，避免双份口径）；账本**不含物理正确性判断**。" % LEDGER_SCRIPT)
-    return counts
+    return {"counts": counts, "map": lmap}
+
+
+# ── §V7 账本驱动的结构性交叉校验（D/E 的**必要条件**；v1.3 新增） ──────────────
+# 为什么需要：D 的关键词规则停在 0.50（见 §V1 与文档 §5⑧）——因为「是否重参数化」取决于
+# **自由参数计数**，而计数**不在文本中**；账本恰好提供了该计数（`n_net`）。
+# 但必须诚实：账本**不等价**于人工 D 行——`n_net ≤ 0` 的条目数远超人工 D 行数
+# （`D ⊊ {n_net ≤ 0}`）⇒ 账本只给 **必要条件**（撞 D 必有 `n_net ≤ 0`），**不给充分判定**。
+# 本审计**只校验必要性**（两个独立产出物之间的一致性），**不重算** `n_net`、**不扩张** D。
+EXCLUDED_MARKS = ("已排除", "已关闭", "已触发", "已证伪")
+
+
+def v7_ledger_crosscheck(ents, human, ledger):
+    I_("§V7 账本驱动的结构性交叉校验（D/E 的**必要条件**；**不给充分判定**）")
+    if not ledger or not ledger.get("map"):
+        B_("V7 账本不可用（§V6 已跳过）⇒ 本审计一并跳过（**容错**：与 §V6 同一设计）")
+        return None
+    lmap = ledger["map"]
+    res = {}
+
+    # (1) D-必要性：人工 D 行内**有账目**者须 `n_net ≤ 0`
+    d_row = sorted(human.get("D", set()))
+    d_led = [e for e in d_row if e in lmap]
+    d_bad = [e for e in d_led if lmap[e]["net"] > 0]
+    res["D_row"], res["D_with_ledger"] = d_row, d_led
+    if d_bad:
+        F_("V7a **D-必要性违反**：%s 被人工判为「重参数化/无派生力」，却在账本中 `n_net > 0`"
+           "（有净预言）⇒ 两个独立产出物**自相矛盾**，须复核" % "、".join(d_bad))
+    else:
+        P_("V7a D-必要性成立：人工 D 行 %d 条（其中 %d 条有账目）**全部满足** `n_net ≤ 0`"
+           "（无「被判重参数化却拥有净预言」的矛盾）" % (len(d_row), len(d_led)))
+
+    # (2) E-必要性：人工 E 行内**状态为「已排除/已关闭/已触发」**者须为 REPARAM 之外的真预言类
+    e_row = sorted(human.get("E", set()))
+    e_led = []
+    e_bad = []
+    for e in e_row:
+        if e not in lmap:
+            continue
+        st = ents[e]["status"]
+        if any(k in st for k in EXCLUDED_MARKS):
+            e_led.append(e)
+            if lmap[e]["kind"] not in ("PRED-EXCLUDED", "PRED-DERIVED"):
+                e_bad.append("%s(%s)" % (e, lmap[e]["kind"]))
+    res["E_excluded_with_ledger"] = e_led
+    if e_bad:
+        F_("V7b **E-必要性违反**：%s 状态为「已排除/已关闭/已触发」却**无净预言**"
+           "（账本种类非 PRED-*）⇒「被排除」无法解释" % "、".join(e_bad))
+    else:
+        P_("V7b E-必要性成立：E 行中状态属「已排除/已关闭/已触发」者 %d 条**全部**在账本中"
+           "为 PRED-EXCLUDED/PRED-DERIVED（「凡被排除者确有预言」）" % len(e_led))
+
+    # (3) 未入账者（元条目等）⇒ 提示，不判失败
+    no_led = sorted(set(d_row) - set(d_led))
+    if no_led:
+        B_("V7c 下列条目在人工 D 行内但**无账目**（多为元条目/账本自身）⇒ **不判失败**，仅提示：%s"
+           % "、".join(no_led))
+
+    # (4) 诚实标注：账本**不充分**
+    n_le0 = sorted(e for e in lmap if lmap[e]["net"] <= 0)
+    I_("   结构关系（**诚实标注，防误用**）：账本 `n_net ≤ 0` 共 **%d** 条 ；人工 D 行 **%d** 条"
+       "⇒ **D ⊊ {n_net ≤ 0}** ⇒ 账本**只给必要条件**，**不可**用它替代人工 D 判定"
+       % (len(n_le0), len(d_row)))
+    B_("V7 边界：① 本审计**只校验必要性**，**不扩张** D 行、**不重算** `n_net`（口径唯一归 `%s`）；"
+       "② 「账本无矛盾」**不等于**「D 判定正确」——D 的充分判定仍须人工（文本可判性上限见文档 §5⑧）；"
+       "③ 两个产出物（人工矩阵 / 账本）由**不同路径**独立产生 ⇒ 一致才有交叉验证价值。" % LEDGER_SCRIPT)
+    return res
 
 
 def v1_questions(ents):
-    I_("§V1 定理 A~J 机检问句（共 %d 条；由定理**陈述**推得关键词，按「claim ∩ setting」两集合取交；"
+    I_("§V1 定理 A~K 机检问句（共 %d 条；由定理**陈述**推得关键词，按「claim ∩ setting」两集合取交；"
        "**未按全矩阵调参**——避免过拟合）" % len(QUESTIONS))
     for lt, _fn, desc in QUESTIONS:
         I_("   [%s] %s" % (lt, desc))
@@ -530,9 +623,9 @@ def v4_check_file(path):
 def main():
     t0 = time.time()
     _lines.append("=" * 78)
-    _lines.append("TUFT / H-TUFT 卷系·跨卷收口分析（第 3 轮）：构造可行性门禁（定理 A~J 机器化）")
+    _lines.append("TUFT / H-TUFT 卷系·跨卷收口分析（第 3 轮）：构造可行性门禁（定理 A~K 机器化）")
     _lines.append("=" * 78)
-    I_("目标：把 no-go 定理族 A~J 变成**进入门槛**（防回潮），并独立复核最新的 CUR-21")
+    I_("目标：把 no-go 定理族 A~K 变成**进入门槛**（防回潮），并独立复核最新的 CUR-21")
 
     ents = load_entries()
     human = parse_human_matrix()
@@ -545,6 +638,7 @@ def main():
     per = v3_completeness(ents, human)
     clusters, multi = v5_sector_dedup(ents)
     ledger = v6_ledger_linkage(ents)
+    x7 = v7_ledger_crosscheck(ents, human, ledger)
     v4_proposal_gate()
 
     I_("§结论摘要")
@@ -559,6 +653,9 @@ def main():
     I_("   ⑤ 扇区审计：检出 **%d 个多重登记扇区**（%s）⇒ 每个已指定唯一规范真源，"
        "合并决策见 `tuft_卷系_扇区真源登记.md`（本轮补齐味扇区三重登记的 O-DEDUP）"
        % (len(multi), "、".join(multi)))
+    I_("   ⑥ 账本联动（§V6/§V7）：账本**覆盖一致**时，对 **D/E 做必要性交叉校验**；"
+       "诚实边界——账本 `n_net ≤ 0` 条目数**远超**人工 D 行 ⇒ **只给必要条件**，"
+       "**不可**用它替代人工判定（D 的充分判定仍受文本可判性上限约束）")
 
     B_("边界①：机检为**关键词启发式**，只用于对账与提醒；判定以 `tuft_卷系_结构障碍定理族.md` 人工矩阵为准。")
     B_("边界②：规则由定理陈述**独立写出**，**未按人工矩阵调参**——按「不过拟合」原则保留原规则并如实报告偏差。")
@@ -584,7 +681,9 @@ def main():
                    "multi_entry_sectors": multi,
                    "sector_canonical": SECTOR_CANON,
                    "sector_non_dup_exempt": sorted(NON_DUP_SECTORS),
-                   "ledger_kind_counts": ledger,
+                   "ledger_kind_counts": (ledger or {}).get("counts"),
+                   "ledger_n_net": (ledger or {}).get("map"),
+                   "ledger_crosscheck": x7,
                    "selfcheck_accuracy": acc_map},
                   fh, ensure_ascii=False, indent=2)
 
