@@ -16,11 +16,11 @@
 
 ## 二、全量统计
 
-**报告数 72**（含总索引此前漏计的 4 份无汇总行报告）；**评级：H=6 · O=43 · C=23 · U=3（方向）**。
+**报告数 73**（含总索引此前漏计的 4 份无汇总行报告）；**评级：H=6 · O=43 · C=24 · U=3（方向）**。
 
-**计数合计（去重口径以报告为准）**：PASS=474 · FAIL=336 · BOUNDARY=226 · INFO=876。
+**计数合计（去重口径以报告为准）**：PASS=479 · FAIL=338 · BOUNDARY=228 · INFO=884。
 
-## 三、归一化明细（72 份报告）
+## 三、归一化明细（73 份报告）
 
 | 报告 | P/F/B/I | 读取 | 评级 | 层级 | 备注 |
 |---|---|---|---|---|---|
@@ -43,6 +43,7 @@
 | `tuft_htuft_blackhole_topology_v1_report.txt` | 5/13/8/95 | 汇总行 | **C** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
 | `tuft_htuft_quantum_bundle_pathint_v1_report.txt` | 4/14/9/100 | 汇总行 | **C** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
 | `tuft_knot_slsqp_report.txt` | 3/0/0/1 | 行内标记 | **H** | L2 | 稳态结 SLSQP 收敛（chi²=2.7e-5）；结尺度为开放参数 |
+| `tuft_neutron_star_tov_scalar_field_eq_report.txt` | 3/2/2/2 | 汇总行 | **C** | L2 | 中子星分支A（TOV+式1标量曲率闭合，修复版）：修复原稿 8 项缺陷，首要的是 source 算而不用⇒ α=0 与 α=1.87 原逐字节相同、原『8项PASS』为空判；另修 SLy 断点写低5倍(EOS)、固定步长致表面亚毫米标高越界(ρ^Γ 变复数)、表面穿越判序。GR 基准 M_max=2.092 M⊙(≈文献2.05,PASS)，但 R(1.4M⊙)=17.5km vs 文献 11.3km(BOUNDARY·EOS标定局限)。实测额外引力源与 α 线性 extraRho/ρ≈1.7α：α=1.87 给 318% ⇒ gtt→0 成视界、星体坍缩(FAIL)，原稿『半径小0.3~0.6km』**未复现**；退到可存活 α≲1e-3 时 ΔR 仅 −0.02km(小1~2量级)而 M 变 +11% ⇒ 真实可观测量在质量不在半径。开放项 O-ALPHA(α=1.87被中子星排除)/O-CLOSURE(闭合非唯一)/O-EOS-CAL |
 | `tuft_r10_report.txt` | 19/2/4/3 | 汇总行 | **O** | L2 | R10 · LCS 框架（链环–陈-西蒙斯对偶）：【新公式】①最小 SM 立方反常约化为 18q(9q²−x²) ⇒ 反常消除直接锁定 x=±3q；②U(1)_em 未破缺唯一锁定 q=1/3 ⇒ 全部超荷=SM 且自动 Q(ν)=0（中微子电中性是结论非输入）；③每代 ΣQ≡0（对任意 q,x）；④含 ν_R 的 2 维通解 (q,x)（Jacobi 秩=4 ⇒ 维数=2）；⑤发现 B−L 之外的第二无反常方向 U(1)_{u−d}；⑥归一化 Hopf 闭式 𝓗_k=cos(2π/(k+2))/cos(π/(k+2))，𝓗_2=0、𝓗_3=φ^(−2)、𝓗_4=1/√3、𝓗_∞→1（sympy 符号证明 + mpmath 40 位）。【对接·非新物理】LCS-1：Lk = Abelian CS Wilson 环期望 exp(−2πi·Lk/k)；LCS-3：3+1 维辫群退化为 S_n ⇒ 统计仅 ±1 ⇒ k∈{1,2} 玻色/费米二分，据此把 TUFT 的「Lk 宇称 ⇒ 自旋-统计」定位为 k=2 分支的 Z_2 统计。【诚实负结论】Witten 约束 N_gen(N_c+1)≡0(mod 2) 在 N_c=3 时退化为恒真（不锁 N_gen）；TUFT 无 level k 取值机制；𝓗_k 与 Lk 关系未建立。开放项 O-HYPERCHARGE / O-LEVEL / O-NGEN / O-LCS-NORM |
 | `tuft_r11_report.txt` | 11/4/2/5 | 汇总行 | **O** | L2 | R11 大统一求导证明验证：【求导证明】Dirac 磁单极量子化 eg=n/2（环量 ∮A·dl=2πg(1−cosθ)→4πg，数值积分与球面积分磁通 4πg 双路复核，误差<1e-25）。【新公式】Dirac+反常消除 ⇒ 整数电荷超荷**离散族** q_p=p/(2−3p)，全族自动满足 [U(1)]³=0。【诚实互斥】观测 q=1/3 **不在**该族内（p=1/3∉ℤ）⇒ Dirac 路径（更本源）反而排除真实世界得分数量子数解 ⇒ 提出**约束强度守恒律**：本源性↑则唯一性↓，R10 的唯象条件（U(1)_em 未破缺 ⇒ q=1/3 唯一）不可替代。【证伪】level-k 编码耦合：α=4π/k、1/k、4π/k²、1/(2πk) 三耦合**联合**分别 3.5σ/74.3σ/159.6σ/312.3σ 全排除（瓶颈均为 α₂）；诚实注明 α₃ 单独对 4π/k 仅 0.6σ 属数值巧合，证伪由 α₂ 承担；更决定性的是**范畴论证**——k∈ℤ 而 α_i(μ) 连续跑动。【大统一判据】1-loop RGE：SM 三交点 ΔL=9.147 e-折（9.38e3 倍能标）⇒ 不汇聚；MSSM ΔL=0.130、M_GUT≈2.29e16 GeV、α_GUT≈1/24.3 ⇒ 汇聚但需超对称。TUFT 无汇聚机制（缺 FAIL）。【§7 盘点】18 项物理问题：已解 1 / 部分 4 / 未解 13 ⇒ 「所有物理秘密突破」未实现且不能实现（诚实 FAIL）。新增开放项 O-COUPLING / O-THETA / O-GUT / O-DIRAC |
 | `tuft_r12_report.txt` | 6/2/2/4 | 汇总行 | **O** | L2 | R12 大统一缺口正面反解：【求导证明·本册最扎实部分】β 系数由**场内容**逐场精确复现——SM b=(41/10, −19/6, −7)（Q_L/u_R/d_R/L/e_R/H 逐场累加）、MSSM Δb=(5/2, 25/6, 4)（gaugino+sfermion+Higgsino+额外Higgs 逐项），均为 sympy 精确有理数与文献逐个相等，非拟合。澄清超荷约定 a(Q=T3+Y, Y_Q=1/6) 与 b(R10/R11 用, Q=T3+Y/2, Y_Q=1/3) 差因子 2 ⇒ 跨册无矛盾。反解框架：D_i=1/α_i(M_Z)+(Δb_i/2π)L₁、L_ij=2π(D_i−D_j)/((b_i+Δb_i)−(b_j+Δb_j))、ΔL=max−min，独立复现 R11 缺口 ΔL=9.1467（e^ΔL=9.38e3）。MSSM 对照：ΔL=0.942、M_GUT=1.54e16 GeV、τ_p=3.52e34 年 ✓。【决定性结果】12 种最简表示 × n≤8 拷贝扫描：**单一表示不能实现大统一**——纯数学最优解 H-like(1,2,1/2) 标量×7 达 ΔL=0.050，但 M_GUT=5.1e13 GeV ⇒ τ_p=4.4e24 年，低于 Super-K 下限 2.4e34 达 5e9 倍 ⇒ **ΔL 小 ≠ 物理可行**，被质子衰变排除；而 τ_p 通过者（O₈）ΔL=20.5 根本不汇聚。⇒ 必须成套引入新态（MSSM 四类超伴子）。【诚实 FAIL】TUFT 未提供任何新态（O-NEWSTATE）。【唯一已识别 L3 路径】TUFT 须给出其结激发的 T(R) 与 Y² 具体有理数，方可反解 M_new/M_GUT 得可检验预言 |
@@ -79,9 +80,9 @@
 | `tuft_三路线_ABC_report.txt` | 4/7/4/20 | 汇总行 | **C** | L1 | 机制 A/B/C 逐条分析 7 FAIL（A 缺旋量、EC 挠率不传播、黑洞 46.82%） |
 | `tuft_卷二十八补2_report.txt` | 2/5/1/6 | 汇总行 | **C** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
 | `tuft_卷二十八补3_report.txt` | 3/1/3/5 | 汇总行 | **C** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
-| `tuft_卷系_构造可行性门禁_report.txt` | 8/0/12/101 | 汇总行 | **O** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
+| `tuft_卷系_构造可行性门禁_report.txt` | 8/0/12/107 | 汇总行 | **O** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
 | `tuft_卷系_模态谱方向定理_report.txt` | 7/7/6/77 | 汇总行 | **C** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
-| `tuft_卷系_落盘前双检_report.txt` | 6/0/0/0 | 汇总行 | **H** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
+| `tuft_卷系_落盘前双检_report.txt` | 8/0/0/0 | 汇总行 | **H** | L2 | （未列入人工审计坐标，按兜底规则自动评级） |
 | `tuft_四力统一_report.txt` | 17/19/9/14 | 汇总行 | **C** | L1 | 19 处缺陷（维数不可相加、sin²θ_W 差 8.12%、三耦合不汇聚） |
 | `tuft_孤子τκ锁定_微分方程证明_OPEN5c_report.txt` | 1/2/1/2 | 汇总行 | **O** | L3 | 孤子 τ/κ 锁定微分方程证明（OPEN5c·方向C）：稳态条件⇔公理A微分(等价，非独立约束)；公理A仅约束圆 κ²+τ²=Ω²，τ/κ=tanθ 连续自由(非锁死，由额外孤子解选定)；但 EDM∝κτ=(Ω²/2)sin2θ，16量级超额来自 Ω²康普顿尺度，θ 仅给 O(1) 因子 ⇒ 调θ匹配g-2时EDM仍超15.9量级 ⇒ 方向2不可行，仅剩方向3 |
 | `tuft_引力波_挠率扰动_report.txt` | 4/0/0/8 | 汇总行 | **H** | L3 | B 弱场线性化 + 唯一可区分预言：标量呼吸模 ξ_thr~4e-12（后被排查报告修正：漏 exp(−u)） |
@@ -103,7 +104,7 @@
 |---|---|---|---|
 | L0 | 代数恒等式（零物理内容） | 0 | — |
 | L1 | 回指 / 定性重述 | 7 | `tuft_三路线_ABC`, `tuft_四力统一`, `tuft_暴胀CMB`, `tuft_相位pi_全维求导精算`, `tuft_续篇_全维求导精算`, `tuft_色挠率_SU3`, `tuft_黑洞热力学` |
-| L2 | 定量计算（量纲/数值正确） | 55 | `tuft_B_UV完成`, `tuft_B_排查_线性化`, `tuft_B_根因溯源`, `tuft_D2`, `tuft_D3_尺度与K_sat_锚定`, `tuft_O_SCALE_锚定方案`, `tuft_Q量子A`, `tuft_Q量子B`, `tuft_Q量子`, `tuft_beta_running_缺口`, `tuft_fermion_spin`, `tuft_htuft_blackhole_topology_v1`, `tuft_htuft_quantum_bundle_pathint_v1`, `tuft_knot_slsqp`, `tuft_r10`, `tuft_r11`, `tuft_r12`, `tuft_r13`, `tuft_r14`, `tuft_r15`, `tuft_r16`, `tuft_r17`, `tuft_r18`, `tuft_r19`, `tuft_r1`, `tuft_r20`, `tuft_r21`, `tuft_r22`, `tuft_r23`, `tuft_r24`, `tuft_r25`, `tuft_r26`, `tuft_r27`, `tuft_r28`, `tuft_r29`, `tuft_r30`, `tuft_r31`, `tuft_r3`, `tuft_r4`, `tuft_r5`, `tuft_r6`, `tuft_r7`, `tuft_r8`, `tuft_r9`, `tuft_卷二十八补2`, `tuft_卷二十八补3`, `tuft_卷系_构造可行性门禁`, `tuft_卷系_模态谱方向定理`, `tuft_卷系_落盘前双检`, `tuft_收口_修复优化`, `tuft_机电对偶`, `tuft_机电对偶_实验对标`, `tuft_求导证明验证_OPEN8`, `tuft_相位pi_闭合莫比乌斯`, `tuft_续篇_双结交换仿真` |
+| L2 | 定量计算（量纲/数值正确） | 56 | `tuft_B_UV完成`, `tuft_B_排查_线性化`, `tuft_B_根因溯源`, `tuft_D2`, `tuft_D3_尺度与K_sat_锚定`, `tuft_O_SCALE_锚定方案`, `tuft_Q量子A`, `tuft_Q量子B`, `tuft_Q量子`, `tuft_beta_running_缺口`, `tuft_fermion_spin`, `tuft_htuft_blackhole_topology_v1`, `tuft_htuft_quantum_bundle_pathint_v1`, `tuft_knot_slsqp`, `tuft_neutron_star_tov_scalar_field_eq`, `tuft_r10`, `tuft_r11`, `tuft_r12`, `tuft_r13`, `tuft_r14`, `tuft_r15`, `tuft_r16`, `tuft_r17`, `tuft_r18`, `tuft_r19`, `tuft_r1`, `tuft_r20`, `tuft_r21`, `tuft_r22`, `tuft_r23`, `tuft_r24`, `tuft_r25`, `tuft_r26`, `tuft_r27`, `tuft_r28`, `tuft_r29`, `tuft_r30`, `tuft_r31`, `tuft_r3`, `tuft_r4`, `tuft_r5`, `tuft_r6`, `tuft_r7`, `tuft_r8`, `tuft_r9`, `tuft_卷二十八补2`, `tuft_卷二十八补3`, `tuft_卷系_构造可行性门禁`, `tuft_卷系_模态谱方向定理`, `tuft_卷系_落盘前双检`, `tuft_收口_修复优化`, `tuft_机电对偶`, `tuft_机电对偶_实验对标`, `tuft_求导证明验证_OPEN8`, `tuft_相位pi_闭合莫比乌斯`, `tuft_续篇_双结交换仿真` |
 | L3 | **可检验预言 / 判决** | 10 | `tuft_B_自屏蔽_数值求解`, `tuft_EDM_实验对接_OPEN6`, `tuft_OSCALE_尺度锚定EDM连接_OPEN7`, `tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b`, `tuft_g2_电子反常磁矩_OPEN5`, `tuft_sigma_abs0_ringdown_可检验性_OPEN_v2`, `tuft_sigma_abs0_ringdown_定量metric_OPEN_v3`, `tuft_sigma_abs0_尺度锚定冲突_OPEN_v4`, `tuft_孤子τκ锁定_微分方程证明_OPEN5c`, `tuft_引力波_挠率扰动` |
 
 **关键观察**：全仓库真正达到 **L3（可检验预言 / 判决）** 的仅 **10 处**——`tuft_B_自屏蔽_数值求解`、`tuft_EDM_实验对接_OPEN6`、`tuft_OSCALE_尺度锚定EDM连接_OPEN7`、`tuft_g2_EDM_屏蔽因子双约束可行性审计_OPEN5b`、`tuft_g2_电子反常磁矩_OPEN5`、`tuft_sigma_abs0_ringdown_可检验性_OPEN_v2`、`tuft_sigma_abs0_ringdown_定量metric_OPEN_v3`、`tuft_sigma_abs0_尺度锚定冲突_OPEN_v4`、`tuft_孤子τκ锁定_微分方程证明_OPEN5c`、`tuft_引力波_挠率扰动`。
@@ -124,7 +125,7 @@
 2. **欠定层（O=43）**：R3 尺度简并（O-SCALE）、R4 攻克尝试、r6 挠率产生可行性、O-SCALE 锚定方案、收口（B 降级/A 等价/C 冻结）、D2 挠率动力学项、D3 尺度与 K_sat 锚定、**R10 LCS 框架**——
    共同特征是「与**已排除的 M02/普朗克锚定**同构」或「可行性未建立」或「**约束不唯一需外部物理输入**」：
    纯几何方程无尺度锚，自然锁定普朗克尺度；反常消除给 2 维解空间，超荷仍须外部条件（O-HYPERCHARGE）。
-3. **缺陷层（C=23）**：根因分四类——①**量纲/类型**（γ₅、质量式、F_T、T_H）；
+3. **缺陷层（C=24）**：根因分四类——①**量纲/类型**（γ₅、质量式、F_T、T_H）；
    ②**结构性**（势能凹无下界、维数不可相加、SU(3) 注入、代码不可运行）；
    ③**循环/重述**（N-n_s 互斥、ΛCDM 对比表、∇J 恒零）；④**量子化/拓扑**（Q-TUFT 拓扑荷 W 非整、挠率无动力学、曲率饱和≠UV 截止）。四条路线均无「可保留的超越 GR/标准模型」的独立预言。
 4. **未展开层（U=3）**：braid-group、色挠率解冻、特征映射约定——冻结或补齐前置后重开（挠率动力学 D2、尺度与 K_sat 锚定 D3 均已完成；R10 已闭合 braid 的**统计维数层**，n≥3 世界线的辫群表示仍未展开）。

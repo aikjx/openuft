@@ -25,6 +25,7 @@
 | tuft_htuft_blackhole_topology_v1_report.txt | 5 | 13 | 8 | 95 |
 | tuft_htuft_quantum_bundle_pathint_v1_report.txt | 4 | 14 | 9 | 100 |
 | tuft_knot_slsqp_report.txt | 3 | 0 | 0 | 1 |
+| tuft_neutron_star_tov_scalar_field_eq_report.txt | 3 | 2 | 2 | 2 |
 | tuft_r10_report.txt | 19 | 2 | 4 | 3 |
 | tuft_r11_report.txt | 11 | 4 | 2 | 5 |
 | tuft_r12_report.txt | 6 | 2 | 2 | 4 |
@@ -61,9 +62,9 @@
 | tuft_三路线_ABC_report.txt | 4 | 7 | 4 | 20 |
 | tuft_卷二十八补2_report.txt | 2 | 5 | 1 | 6 |
 | tuft_卷二十八补3_report.txt | 3 | 1 | 3 | 5 |
-| tuft_卷系_构造可行性门禁_report.txt | 8 | 0 | 12 | 101 |
+| tuft_卷系_构造可行性门禁_report.txt | 8 | 0 | 12 | 107 |
 | tuft_卷系_模态谱方向定理_report.txt | 7 | 7 | 6 | 77 |
-| tuft_卷系_落盘前双检_report.txt | 6 | 0 | 0 | 0 |
+| tuft_卷系_落盘前双检_report.txt | 8 | 0 | 0 | 0 |
 | tuft_四力统一_report.txt | 17 | 19 | 9 | 14 |
 | tuft_孤子τκ锁定_微分方程证明_OPEN5c_report.txt | 1 | 2 | 1 | 2 |
 | tuft_引力波_挠率扰动_report.txt | 4 | 0 | 0 | 8 |
@@ -78,9 +79,9 @@
 | tuft_续篇_双结交换仿真_report.txt | 5 | 0 | 0 | 6 |
 | tuft_色挠率_SU3_report.txt | 5 | 16 | 6 | 14 |
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
-| **合计** | **474** | **336** | **226** | **876** |
+| **合计** | **479** | **338** | **228** | **884** |
 
-## 二、脚本清单（116）
+## 二、脚本清单（118）
 
 - `_dbg_wall.py`
 - `_scratch_r28.py`
@@ -129,6 +130,7 @@
 - `tuft_htuft_scatter_amplitude_v1.py`
 - `tuft_htuft_vacuum_topology_lambda_v1.py`
 - `tuft_knot_slsqp.py`
+- `tuft_neutron_star_tov_scalar_field_eq.py`
 - `tuft_r10_反常消除与链环CS对偶.py`
 - `tuft_r11_大统一求导证明与耦合拓扑约束.py`
 - `tuft_r12_大统一缺口反解与新态预言.py`
@@ -180,6 +182,7 @@
 - `tuft_卷系_落盘前双检.py`
 - `tuft_四力统一_全维求导精算.py`
 - `tuft_孤子τκ锁定_微分方程证明_OPEN5c.py`
+- `tuft_安装提交钩子.py`
 - `tuft_引力波_挠率扰动.py`
 - `tuft_总索引.py`
 - `tuft_收口_修复优化方案.py`
@@ -199,7 +202,7 @@
 - `tuft_锚定编码账本.py`
 - `tuft_黑洞热力学_全维求导精算.py`
 
-## 三、报告文档清单（98）
+## 三、报告文档清单（100）
 
 - `TUFT_全维突破_全维度总结_20260930.md`
 - `TUFT_微观粒子拓扑导出_第十一部分.md`
@@ -238,6 +241,7 @@
 - `tuft_r2_全维求导证明验证精算报告.md`
 - `tuft_r5_挠率探测实验_审计与修订.md`
 - `tuft_三路线_ABC_全维分析修复优化报告.md`
+- `tuft_中子星TOV标量场方程_修复版_文稿.md`
 - `tuft_全书_交付版.md`
 - `tuft_全景总报告.md`
 - `tuft_全维分析续篇_自旋统计泡利手性.md`
@@ -276,6 +280,7 @@
 - `tuft_暴胀CMB_精算报告.md`
 - `tuft_机电对偶_实验对标与压电实现_文稿.md`
 - `tuft_机电对偶_谐振同构_文稿.md`
+- `tuft_横向卷_语料全库跨线归一化清册.md`
 - `tuft_相位pi_全维求导精算报告.md`
 - `tuft_相位pi_文稿_修订版.md`
 - `tuft_第一性归一化总览.md`
@@ -300,7 +305,7 @@
 - `挠率产生机制_阶段0_可行性判定.md`
 - `挠率探测实验设计_修复版.md`
 
-## 四、原始报告（txt，72）
+## 四、原始报告（txt，73）
 
 - `tuft_B_UV完成_report.txt`
 - `tuft_B_排查_线性化_report.txt`
@@ -321,6 +326,7 @@
 - `tuft_htuft_blackhole_topology_v1_report.txt`
 - `tuft_htuft_quantum_bundle_pathint_v1_report.txt`
 - `tuft_knot_slsqp_report.txt`
+- `tuft_neutron_star_tov_scalar_field_eq_report.txt`
 - `tuft_r10_report.txt`
 - `tuft_r11_report.txt`
 - `tuft_r12_report.txt`
