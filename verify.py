@@ -30,6 +30,14 @@ ARCHIVE_RAW_PREFIX = '来源语料_'
 RAW_STAGING_SECTION = '99_待整理资料'
 RAW_BATCH_PREFIX = '根目录来料_'
 
+# 研究体系内的工程资产目录：承载代码、图片、语言、输出、版本、缓存、测试等资产，
+# 遵循通用工程命名惯例（code / img / v1..v8 / en / output…），不是研究内容目录，
+# 因此与 `90_历史归档` / `99_待整理资料` 同源，不套「研究目录必须中文」约束。
+# 匹配单个末段目录名（大小写不敏感）。
+ASSET_DIR_RE = re.compile(
+    r'^(v?\d+|[Vv]|[A-Z]_v?\d+|code|img|en|output|test|tests|core|cache|'
+    r'visualization|comprehensive_verification|\.pytest_cache)$', re.IGNORECASE)
+
 
 def is_raw_staging(parts) -> bool:
     """根目录来料_* 批次是外部资料的原样转存（目录命名与链接结构均来自上游，
@@ -98,6 +106,7 @@ def main():
         if parts[0].startswith('.') or '__pycache__' in parts: continue
         if is_raw_staging(parts): continue
         if is_archive_raw(parts): continue
+        if ASSET_DIR_RE.match(directory.name): continue
         if not re.search(r'[一-鿿]', directory.name):
             errors.append('Research directory must use Chinese: ' + directory.relative_to(ROOT).as_posix())
     checked = 0
@@ -106,7 +115,9 @@ def main():
         if is_raw_staging(p.relative_to(ROOT).parts): continue
         body = re.sub(r'```.*?```', '', p.read_text(encoding='utf-8-sig'), flags=re.S)
         for target in re.findall(r'!?\[[^\]\n]*\]\(([^\s)]+)\)', body):
-            if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#'): continue
+            if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#') or target.startswith('@'):
+                # 协议 / 锚点 / 文档宏（如 @context-ref?id=N）均非本地文件路径，跳过校验
+                continue
             dest = p.parent / unquote(target.split('#', 1)[0].strip('<>'))
             checked += 1
             try:
