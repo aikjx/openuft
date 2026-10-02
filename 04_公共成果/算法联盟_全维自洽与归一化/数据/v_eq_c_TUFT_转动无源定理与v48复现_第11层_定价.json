@@ -2,10 +2,10 @@
  "meta": {
   "script": "v_eq_c_TUFT_转动无源定理与v48复现_第11层_定价.py",
   "layer": "第 ⑪ 层（v=c 求导验证链）",
-  "elapsed_sec": 74.9,
+  "elapsed_sec": 188.3,
   "counts": {
    "PASS": 12,
-   "FAIL": 6,
+   "FAIL": 7,
    "INFO": 2
   },
   "guard_baseline": {
@@ -19,6 +19,7 @@
    "V-05": "PASS",
    "V-06": "PASS",
    "V-07": "FAIL",
+   "V-08": "FAIL",
    "R-01": "PASS",
    "R-02": "PASS",
    "R-03": "PASS",
@@ -58,6 +59,9 @@
    "报告_v44一阶值": [
     75
    ],
+   "台账_v58自证句": [
+    2624
+   ],
    "10层_外区无源": [
     24
    ],
@@ -65,7 +69,7 @@
     162
    ]
   },
-  "gap_delta_from_image": "0.61740057",
+  "gap_delta_from_image": "0.617401",
   "report_token_buckets": {
    "0.0481181": "逐字符可再生",
    "0.096236": "逐字符可再生",
@@ -105,7 +109,7 @@
   "six_agreement": {
    "a010_from_draw": "-0.440001",
    "v44_first_order_from_report": "0.09832",
-   "relative_gap": "5.47519",
+   "relative_gap": "5.475",
    "verdict": "FAIL",
    "note": "v44 那枚是从报告正文**读**的，本层未重推其外"
   },
@@ -140,6 +144,43 @@
     "0.20",
     "-2"
    ]
+  },
+  "ledger_v58": {
+   "file_bytes": 467824,
+   "file_crlf": 0,
+   "pin_min_sig": 4,
+   "pins": [
+    "0.25153",
+    "0.434445174",
+    "-0.056449760",
+    "0.434445178",
+    "0.1045",
+    "-0.3431",
+    "0.09832",
+    "0.0628831",
+    "0.2515323"
+   ],
+   "not_regenerated": [
+    "0.1045",
+    "-0.3431"
+   ],
+   "skipped": [
+    "2.470e-13",
+    "0.0962",
+    "1.54e-2",
+    "4.503e-9",
+    "0.10",
+    "0.20",
+    "7.72e-12",
+    "12.6",
+    "7.2",
+    "11.6",
+    "5.3",
+    "5.5",
+    "5.7"
+   ],
+   "claim_excerpt": "Read _audit_v48_rotating_qnm.py source first (self-contained: numpy/scipy only, no qnm import, no prior-project import); re-ran in project .venv, exit 0, ALL numbers reproduced digit-for-digit (incl. rewritten _audit_v48_rotating_qnm_out.txt identical)",
+   "verdict": "FAIL"
   },
   "mutant_report": [
    {
@@ -252,6 +293,24 @@
     ],
     "reddened": [
      "V-07"
+    ],
+    "extra_reddened": [],
+    "not_reddened_by_this_mutant": [],
+    "clean": true
+   },
+   {
+    "mutant": "M_LEDGER_SELF_PROVES",
+    "why": "台账自印的「全数逐位复现」改拿台账自己核（自证）",
+    "must_redden": [
+     "V-08"
+    ],
+    "must_stay": [
+     "V-02",
+     "V-04",
+     "V-07"
+    ],
+    "reddened": [
+     "V-08"
     ],
     "extra_reddened": [],
     "not_reddened_by_this_mutant": [],
@@ -385,7 +444,8 @@
     "V-04",
     "V-05",
     "V-06",
-    "V-07"
+    "V-07",
+    "V-08"
    ],
    "unarmed_rows": [
     "A-00",
@@ -395,7 +455,7 @@
     "T-01",
     "T-02"
    ],
-   "rows_total": 20,
+   "rows_total": 21,
    "note": "无臂行不得当作已被见证"
   },
   "carriers": {
@@ -446,6 +506,8 @@
     "v48_archived_out": "D:\\a10\\aikjx\\code\\my_lib\\openuft\\01_独立体系\\S16_TUFT归一化主册\\07_计算复现\\源码\\审计轮次\\_audit_v48_rotating_qnm_out.txt",
     "v48_report": "D:\\a10\\aikjx\\code\\my_lib\\openuft\\01_独立体系\\S16_TUFT归一化主册\\13_论文与成果\\合并报告\\TUFT_v48_旋转QNM合并报告.md",
     "const_file": "D:\\a10\\aikjx\\code\\my_lib\\openuft\\02_共享基础\\公共计算\\dimensional_transmutation_open7.py",
+    "s16_ledger": "D:\\a10\\aikjx\\code\\my_lib\\openuft\\01_独立体系\\S16_TUFT归一化主册\\13_论文与成果\\台账\\TUFT_归一化台账_v1.0.json",
+    "l11_postwrite_audit": "scratch/_L11_postwrite_audit.py",
     "draw_d1": "D:\\a10\\aikjx\\code\\my_lib\\scratch\\L11\\draw_d1.txt",
     "draw_d2": "D:\\a10\\aikjx\\code\\my_lib\\scratch\\L11\\draw_d2.txt",
     "diff_list": "D:\\a10\\aikjx\\code\\my_lib\\scratch\\L11\\archive_vs_draw_diff.txt"
@@ -468,7 +530,7 @@
    "item": "v48／⑩层／卷十四 锚点",
    "statement": "每个锚点须在其载体里现读到行号",
    "verdict": "PASS",
-   "detail": "现读行号：v48_seed循环@323；v48_rng@179,194；v48_自写输出@393；v48_缺交叉项@16,289,386；报告_照抄纪律@5；报告_门B数字@50；报告_§6一致性句@77；报告_v44一阶值@75；10层_外区无源@24；卷十四_T_B背景@162"
+   "detail": "现读行号：v48_seed循环@323；v48_rng@179,194；v48_自写输出@393；v48_缺交叉项@16,289,386；报告_照抄纪律@5；报告_门B数字@50；报告_§6一致性句@77；报告_v44一阶值@75；台账_v58自证句@2624；10层_外区无源@24；卷十四_T_B背景@162"
   },
   {
    "id": "A-02",
@@ -533,6 +595,14 @@
    "statement": "a=0.10 那枚须与 v44 一阶现读值同门",
    "verdict": "FAIL",
    "detail": "现抽图像里 measured split/a@a=0.10 = -0.440001；v44 一阶（报告现读）= 0.09832 ⇒ 相对差 = 5.475 对门 0.1 ⇒ 报告 §6 那句「数值接近」（锚点 报告_§6一致性句）今天不成立；符号对照：现抽 负 对 v44 正"
+  },
+  {
+   "id": "V-08",
+   "section": "V 复现层",
+   "item": "受检主张『台账 v5.8 块自印的全数逐位复现』",
+   "statement": "台账钉住的数须在今天的现抽图像里再生",
+   "verdict": "FAIL",
+   "detail": "台账 TUFT_归一化台账_v1.0.json 的 main_agent_v58_v48_rerun 块现读可比数 9 枚：0.25153、0.434445174、-0.056449760、0.434445178、0.1045、-0.3431、0.09832、0.0628831、0.2515323；被排除 13 枚（科学计数或位数不足）：2.470e-13、0.0962、1.54e-2、4.503e-9、0.10、0.20、7.72e-12、12.6、7.2、11.6、5.3、5.5、5.7；对本层现抽图像判不能再生 2 枚：0.1045、-0.3431｜台账自印的断言（锚点 台账_v58自证句）：Read _audit_v48_rotating_qnm.py source first (self-contained: numpy/scipy only, no qnm import, no prior-project import); re-ran in project .venv, exit 0, ALL numbers reproduced digit-for-digit (incl. rewritten _audit_v48_rotating_qnm_out.txt identical)"
   },
   {
    "id": "R-01",
@@ -612,7 +682,7 @@
    "item": "本轮未推进清单（不得记为已解决）",
    "statement": "诚实边界",
    "verdict": "INFO",
-   "detail": "①门 B 为何 FAIL 的**修法**未做（要补的是完整 Teukolsky–Chandrasekhar 嵌入）；②存档图像不可再生的**根因**未归因到具体 BLAS/LAPACK/NumPy/Python 版本（只实测两跑逐字节相同、与存档不同，且脚本用固定 seed 的 default_rng）；③ξ≠0 的第五力比价仍未取数；④v54 那条腿未做同样复现（本轮只判 v48）；⑤v48 报告的照抄数已分桶，但**报告之外**是否还有别的档案引这些数未普查；⑥TUFT 的 g-2 映射、绝对标度、质量层级、β 缺口一字未动；⑦未提出新方程；⑧S14 claims.csv 与算法联盟 README.md 未写（登记债）"
+   "detail": "①门 B 为何 FAIL 的**修法**未做（要补的是完整 Teukolsky–Chandrasekhar 嵌入）；②存档图像不可再生的**根因**未归因到具体 BLAS/LAPACK/NumPy/Python 版本（只实测两跑逐字节相同、与存档不同，且脚本用固定 seed 的 default_rng；V-08 另证该「存档」本身是 09-24 重跑改写过的产物，故根因要比的是两个环境而非一份原始输出）；③ξ≠0 的第五力比价仍未取数；④v54 那条腿未做同样复现（本轮只判 v48）；⑤v48 报告的照抄数已分桶，但**报告之外**是否还有别的档案引这些数未普查；⑥TUFT 的 g-2 映射、绝对标度、质量层级、β 缺口一字未动；⑦未提出新方程；⑧S14 claims.csv 与算法联盟 README.md 未写（登记债）"
   }
  ]
 }

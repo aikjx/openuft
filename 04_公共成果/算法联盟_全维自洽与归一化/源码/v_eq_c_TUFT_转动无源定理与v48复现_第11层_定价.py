@@ -69,6 +69,10 @@ V48_RPT = os.path.join(ROOT, "01_独立体系", "S16_TUFT归一化主册", "13_�
                        "合并报告", "TUFT_v48_旋转QNM合并报告.md")
 V14_PLAN = os.path.join(ROOT, "01_独立体系", "S14_挠率统一场论TUFT", "00_研究立项",
                         "卷十四_CMB与黑洞QNM联合约束_研究计划.md")
+LEDGER = os.path.join(ROOT, "01_独立体系", "S16_TUFT归一化主册", "13_论文与成果",
+                      "台账", "TUFT_归一化台账_v1.0.json")
+LEDGER_KEY = "main_agent_v58_v48_rerun"
+PIN_MIN_SIG = 4              # 台账块里参与比对的数至少几位有效数字（版本号／单双位小数不算）
 
 # 判据里显式声明的门槛（手感不算判据，全部印进版面）
 SEMI_FLOOR = mp.mpf(1000)        # 经典区视界半径下限（本轮声明，非外部天体数）
@@ -128,6 +132,7 @@ NEEDLES = {
     "报告_门B数字": (V48_RPT, "0.096236"),
     "报告_§6一致性句": (V48_RPT, "数值接近"),
     "报告_v44一阶值": (V48_RPT, "splitR/a_TUFT"),
+    "台账_v58自证句": (LEDGER, "ALL numbers reproduced"),
     "10层_外区无源": (TEN_MD, "代数解 K=J/A 无齐次自由度"),
     "卷十四_T_B背景": (V14_PLAN, "背景挠率"),
 }
@@ -138,10 +143,40 @@ NEEDLES = {
 # =========================================================================
 def read_pair(path):
     """**按字节读**再解码：文本模式会把 CRLF 折成 LF，于是「字节数」实为归一化字符数
-    （本轮在第一次正式运行的版面上自抓到：印 5,279 B 而盘上是 5,355 B）。"""
+    （本层第一次正式运行的版面上自抓到；那份版面已被后续运行覆盖，故此处不复述它的数字）。"""
     raw = open(path, "rb").read() if os.path.exists(path) else b""
     txt = raw.decode("utf-8", "replace")
     return txt, len(raw), txt.count("\r\n")
+
+
+def read_ledger_block():
+    """从 S16 归一化台账 json 里现读 v5.8 那一块，提取它**自印**的十进制 token。
+    提取规则（全部印进版面）：NUMRE 形如 `[+-]?d+.d+`；跳过科学计数（指数位会被 val_of
+    误算进有效位数，宁可不判）；跳过有效数字不足 PIN_MIN_SIG 的（版本号、单双位小数）。"""
+    raw = open(LEDGER, "rb").read() if os.path.exists(LEDGER) else b""
+    txt_all = raw.decode("utf-8-sig", "replace")
+    try:
+        blk = json.loads(txt_all).get(LEDGER_KEY)
+    except Exception:
+        blk = None
+    if not isinstance(blk, dict):
+        return "", [], [], "NA（台账或该块没读到）", len(raw), txt_all.count("\r\n")
+    btxt = json.dumps(blk, ensure_ascii=False)
+    claim = re.sub(r"\s+", " ", str(blk.get("method", "")))[:320]
+    pins, skipped, seen = [], [], set()
+    for m in NUMRE.finditer(btxt):
+        tok = m.group(0)
+        if tok in seen:
+            continue
+        seen.add(tok)
+        v, s = val_of(tok)
+        if "e" in tok.lower() or "E" in tok:
+            skipped.append(tok)
+        elif v is None or s < PIN_MIN_SIG:
+            skipped.append(tok)
+        else:
+            pins.append((tok, v, s))
+    return btxt, pins, skipped, claim, len(raw), txt_all.count("\r\n")
 
 
 def run_v48(tag):
@@ -537,6 +572,32 @@ def P_V07(ctx, mut=None):
     return ("PASS" if ok else "FAIL"), detail
 
 
+def P_V08(ctx, mut=None):
+    """受检主张：S16 台账 v5.8 块自印「re-ran ... ALL numbers reproduced digit-for-digit
+    (incl. rewritten _audit_v48_rotating_qnm_out.txt identical)」——它钉住的那些数今天还能从 v48 长出吗。
+    基线以现抽图像判；M_LEDGER_SELF_PROVES 改成以**台账块自己**判（拿断言对着自己核 ⇒ 恒真）。"""
+    pins = ctx["LEDGER_PINS"]
+    if "ALL numbers reproduced" not in ctx["LEDGER_CLAIM"]:
+        return "BOUNDARY", ("台账块里那句「ALL numbers reproduced digit-for-digit」断言没现读到"
+                            "（摘录被截断或该块已改写）⇒ 受检主张本身不在场，不许拿硬编文案顶上")
+    if not pins:
+        return "BOUNDARY", ("台账块里一枚可比数都没提取到（≥" + str(PIN_MIN_SIG)
+                            + " 位、不含科学计数）⇒ 判据空转，不许当成通过")
+    judge = ctx["LVALS"] if mut == "M_LEDGER_SELF_PROVES" else ctx["FVALS"]
+    who = "台账块自己" if mut == "M_LEDGER_SELF_PROVES" else "本层现抽图像"
+    miss = [t for t, v, s in pins if not same_print(v, judge, s)]
+    detail = ("台账 " + os.path.basename(LEDGER) + " 的 " + LEDGER_KEY + " 块现读可比数 "
+              + str(len(pins)) + " 枚：" + ("、".join(t for t, v, s in pins) or "<无>")
+              + "；被排除 " + str(len(ctx["LEDGER_SKIPPED"])) + " 枚（科学计数或位数不足）："
+              + ("、".join(ctx["LEDGER_SKIPPED"]) or "<无>")
+              + "；对" + who + "判不能再生 " + str(len(miss)) + " 枚："
+              + ("、".join(miss) or "<无>"))
+    detail += "｜台账自印的断言（锚点 台账_v58自证句）：" + ctx["LEDGER_CLAIM"]
+    if mut == "M_LEDGER_SELF_PROVES":
+        detail += "｜本臂把判据换成台账块自己（自证：每枚数当然在它自己的文本里）"
+    return ("PASS" if not miss else "FAIL"), detail
+
+
 def P_V05(ctx, mut=None):
     ray, tgt, dd = delta_from(ctx["d1"]["image"])
     ray2, tgt2, dd2 = delta_from(ctx["d2"]["image"])
@@ -672,6 +733,7 @@ ROWS = [
     ("V-05", "V 复现层", "缺口 Δ 是否可复现", "两跑各自现读 Δ 须相同", P_V05),
     ("V-06", "V 复现层", "审查面完整性（分母须为声明全数）", "分桶判据不许只看能过的那几枚", P_V06),
     ("V-07", "V 复现层", "受检主张『报告 §6 的微扰—非微扰一致性可再生』", "a=0.10 那枚须与 v44 一阶现读值同门", P_V07),
+    ("V-08", "V 复现层", "受检主张『台账 v5.8 块自印的全数逐位复现』", "台账钉住的数须在今天的现抽图像里再生", P_V08),
     ("R-01", "R 结构层", "BL 度规行列式（复现闸）", "det g 须恰为 −Σ²sin²θ 并在格点上为 0", P_R01),
     ("R-02", "R 结构层", "Carter 标架重建 g 且转动项非零", "det e=Σsinθ、e^Tηe=g、含 a 元非零", P_R02),
     ("R-03", "R 结构层", "受检主张『换成转动背景外区仍有挠率』", "代数块唯一解在 J=0 时必须恒零", P_R03),
@@ -688,6 +750,7 @@ MUT = {
     "M_TOKENS_ONLY_GATE": (["V-06"], ["V-03"], "只查报告 token 里最靠得住的前两枚（缩审查面＝挪分母）"),
     "M_JUDGE_VS_ARCHIVE": (["V-04"], ["V-06"], "把「可再生」改判为「对着 2026-09-24 存档核抄件」"),
     "M_SIX_AGREEMENT_ARCHIVE": (["V-07"], ["V-04", "V-06"], "§6 的一致性改拿存档那枚来判"),
+    "M_LEDGER_SELF_PROVES": (["V-08"], ["V-02", "V-04", "V-07"], "台账自印的「全数逐位复现」改拿台账自己核（自证）"),
     "M_GAP_FROM_MEMORY": (["V-05"], ["V-04"], "第二跑的 Δ 用硬编记忆值而不是现读"),
     "M_BL_FACTOR2": (["R-01"], ["R-04"], "g_{tφ} 放大 2 倍（符号写反不可测，故换成模）"),
     "M_TETRAD_TRIVIAL": (["R-02"], ["R-01"], "把两根含 a 的非对角元设零＝假装不转"),
@@ -741,7 +804,8 @@ def narrative_rows(ctx, base):
         ("T-02", "T 自由度层", "本轮未推进清单（不得记为已解决）", "诚实边界", "INFO",
          "①门 B 为何 FAIL 的**修法**未做（要补的是完整 Teukolsky–Chandrasekhar 嵌入）；"
          "②存档图像不可再生的**根因**未归因到具体 BLAS/LAPACK/NumPy/Python 版本"
-         "（只实测两跑逐字节相同、与存档不同，且脚本用固定 seed 的 default_rng）；"
+         "（只实测两跑逐字节相同、与存档不同，且脚本用固定 seed 的 default_rng；"
+         "V-08 另证该「存档」本身是 09-24 重跑改写过的产物，故根因要比的是两个环境而非一份原始输出）；"
          "③ξ≠0 的第五力比价仍未取数；④v54 那条腿未做同样复现（本轮只判 v48）；"
          "⑤v48 报告的照抄数已分桶，但**报告之外**是否还有别的档案引这些数未普查；"
          "⑥TUFT 的 g-2 映射、绝对标度、质量层级、β 缺口一字未动；⑦未提出新方程；"
@@ -814,6 +878,13 @@ def build_face(ctx, base, counts, mutant_rows, armed, unarmed, elapsed, v3):
              + str(ctx["d1"]["crlf"]) + "；现抽 d2 " + str(ctx["d2"]["bytes"]) + " B、CRLF "
              + str(ctx["d2"]["crlf"]) + "；存档 " + str(ctx["ARC_BYTES"]) + " B、CRLF "
              + str(ctx["ARC_CRLF"]) + " | A-01／V-01／V-02 同一 read_pair() 现读 |")
+    pins = ctx["LEDGER_PINS"]
+    miss8 = [t for t, v, s in pins if not same_print(v, ctx["FVALS"], s)]
+    L.append("| 台账 " + LEDGER_KEY + " 块的可比数 | 现读 " + str(len(pins)) + " 枚（提取规则见诚实边界）"
+             + "；今天在现抽图像里不能再生 " + str(len(miss8)) + " 枚："
+             + ("、".join(miss8) or "<无>") + " | V-08 现判 |")
+    L.append("| 台账文件盘上尺寸 | " + str(ctx["LEDGER_BYTES"]) + " B、CRLF " + str(ctx["LEDGER_CRLF"])
+             + "（本层只读不写） | read_ledger_block() 现读 |")
     L.append("| 所需视界 r₊（c₀=3/4） | r₊ " + str(ctx.get("SENSE")) + " " + ns(ctx.get("RR"), 5)
              + " ℓ_Pl | R-05 反解（8πc₀(ℓ_Pl/r₊)² ≥ Δ） |")
     L.append("| 所需质量上界 | M ≲ " + ns((ctx.get("RR") or 0) / 2, 4)
@@ -826,6 +897,15 @@ def build_face(ctx, base, counts, mutant_rows, armed, unarmed, elapsed, v3):
     L.append("| det e（Carter 标架） | " + str(ctx["EDE"]) + " | R-02 sympy 现算 |")
     L.append("| 符号恒等式格点数与门 | " + str(NPTS) + " 个有理格点、相对差门 " + ns(SYMFLOOR, 1)
              + " | 本轮显式声明（`GRID`/`SYMFLOOR`） |")
+    L.append("")
+    L.append("## 报告照抄 token 的逐枚分桶（V-04 的判决拆开印；桶名与台账 json 同一批字符串）")
+    L.append("")
+    L.append("| 报告里的 token | V-04 判它的桶 |")
+    L.append("|---|---|")
+    for t in sorted(ctx["BUCKET"]):
+        L.append("| " + t + " | " + BUCKET_NAME[ctx["BUCKET"][t]] + " |")
+    for t in sorted(ctx.get("OFF", [])):
+        L.append("| " + t + " | 不在任何 v48 图像里（须另有载体，本层不替它认账） |")
     L.append("")
     L.append("## 牙齿")
     L.append("")
@@ -865,6 +945,14 @@ def build_face(ctx, base, counts, mutant_rows, armed, unarmed, elapsed, v3):
     L.append("- 尺寸通道的自抓：本层第一次正式运行的版面把「字节数」印成了**归一化字符数**——起因是图像用文本模式读，"
              "CRLF 被折成 LF，于是数字对、单位假。本轮改成 `read_pair()` 按字节读、并把 CRLF 条数与字节数**并排印出**"
              "（见关键数表末行与 A-01／V-01／V-02 的细节），第一次运行那份版面的具体读数随它一起被覆盖、此处不复述。")
+    L.append("- V-08 的**来源**：台账 json 的 `" + LEDGER_KEY + "` 块自印「re-ran in project .venv, exit 0, "
+             "ALL numbers reproduced digit-for-digit (incl. **rewritten** " + os.path.basename(V48_OUT)
+             + " identical）」⇒ 本层所比的「存档图像」本身就是 2026-09-24 那次重跑的产物，不是 v48 的原始输出。"
+             "所以 V-02 那句要读成「今天的环境 ≠ 09-24 的环境」，而「09-24 重跑逐位相同」这一条今天由 V-08 否证。")
+    L.append("- V-08 的提取规则（现场执行、不手抄）：只取形如 `[+-]?d+.d+` 的 token，要求有效数字 ≥ "
+             + str(PIN_MIN_SIG) + " 位，**跳过科学计数**（指数位会被 `val_of` 误算进有效数字，宁可不判）。"
+             "被跳过的枚数与清单印在本层 stdout 的 `[台账]` 行。代价明写：静锚位移 `|d|` 与条件壁 `sigma_min` "
+             "两枚科学计数因此**不在 V-08 的覆盖面里**——它们是未判，不是通过。")
     L.append("- 本轮未写 S14 `claims.csv`、未写算法联盟 `README.md`（并发写者持有）⇒ 登记是欠账。")
     L.append("")
     L.append("**红线**：数学自洽 != 物理成立；判死一条路 != 否证 TUFT 本体；"
@@ -874,12 +962,14 @@ def build_face(ctx, base, counts, mutant_rows, armed, unarmed, elapsed, v3):
 
 
 def write_json(ctx, all_rows, counts, mutant_rows, armed, unarmed, delta, v3):
+    # 与版面同宽：json 里那些「版面上也印着的量」一律用版面用的 ns() 位数，
+    # 否则同一量在两个载体上是两种精度，截前缀那一枚就是引用债（本层写后审计第 1 版就抓到两处）。
     payload = {"meta": {"script": STEM + ".py", "layer": "第 ⑪ 层（v=c 求导验证链）",
                         "elapsed_sec": round(time.time() - T_START, 1),
                         "counts": counts,
                         "guard_baseline": {q["id"]: q["verdict"] for q in all_rows},
                         "prose_anchor_lines": {k: v for k, v in ctx["ANCH"].items()},
-                        "gap_delta_from_image": ns(delta, 8) if delta is not None else None,
+                        "gap_delta_from_image": ns(delta, 6) if delta is not None else None,
                         "report_token_buckets": {t: BUCKET_NAME[b] for t, b in
                                                  sorted(ctx["BUCKET"].items(), key=lambda x: x[0])},
                         "declared_thresholds": {"SEMI_FLOOR_planck": ns(SEMI_FLOOR, 4),
@@ -896,16 +986,26 @@ def write_json(ctx, all_rows, counts, mutant_rows, armed, unarmed, delta, v3):
                                      "archive_bytes": ctx["ARC_BYTES"],
                                      "archive_crlf": ctx["ARC_CRLF"],
                                      "channel": "read_pair(): len(raw bytes) 与 CRLF 条数，文本模式已弃用"},
-                        "six_agreement": {"a010_from_draw": ns((ctx.get("SIX") or {}).get("val"), 8),
-                                          "v44_first_order_from_report": ns((ctx.get("SIX") or {}).get("v44"), 8),
-                                          "relative_gap": ns((ctx.get("SIX") or {}).get("rel"), 6),
+                        "six_agreement": {"a010_from_draw": ns((ctx.get("SIX") or {}).get("val"), 6),
+                                          "v44_first_order_from_report": ns((ctx.get("SIX") or {}).get("v44"), 5),
+                                          "relative_gap": ns((ctx.get("SIX") or {}).get("rel"), 4),
                                           "verdict": {q["id"]: q["verdict"] for q in all_rows}.get("V-07", "NA"),
                                           "note": "v44 那枚是从报告正文**读**的，本层未重推其外"},
                         "v48_archive_vs_draw": {"diff_rows": v3["rows"],
                                                 "total_lines": v3["nline"],
                                                 "diff_row_numbers": v3["rowlist"],
-                                                "worst_pole_move": ns(v3["mv"], 8),
+                                                "worst_pole_move": ns(v3["mv"], 6),
                                                 "worst_cell": list(v3["where"])},
+                        "ledger_v58": {"file_bytes": ctx["LEDGER_BYTES"],
+                                       "file_crlf": ctx["LEDGER_CRLF"],
+                                       "pin_min_sig": PIN_MIN_SIG,
+                                       "pins": [t for t, v, s in ctx["LEDGER_PINS"]],
+                                       "not_regenerated":
+                                           [t for t, v, s in ctx["LEDGER_PINS"]
+                                            if not same_print(v, ctx["FVALS"], s)],
+                                       "skipped": ctx["LEDGER_SKIPPED"],
+                                       "claim_excerpt": ctx["LEDGER_CLAIM"],
+                                       "verdict": {q["id"]: q["verdict"] for q in all_rows}.get("V-08", "NA")},
                         "mutant_report": mutant_rows,
                         "teeth_coverage": {"armed_rows": armed, "unarmed_rows": unarmed,
                                            "rows_total": len(all_rows),
@@ -913,6 +1013,7 @@ def write_json(ctx, all_rows, counts, mutant_rows, armed, unarmed, delta, v3):
                         "carriers": {"constants": {k: {"value": v[0], "line": v[1]} for k, v in CONST.items()},
                                      "files": {"v48_script": V48_PY, "v48_archived_out": V48_OUT,
                                                "v48_report": V48_RPT, "const_file": CONST_FILE,
+                                               "s16_ledger": LEDGER, "l11_postwrite_audit": "scratch/_L11_postwrite_audit.py",
                                                "draw_d1": os.path.join(SCRATCH, "draw_d1.txt"),
                                                "draw_d2": os.path.join(SCRATCH, "draw_d2.txt"),
                                                "diff_list": os.path.join(SCRATCH, "archive_vs_draw_diff.txt")}},
@@ -982,12 +1083,19 @@ def main():
     arc_img, arc_bytes, arc_crlf = read_pair(V48_OUT)
     ctx["arc"], ctx["ARC_BYTES"], ctx["ARC_CRLF"] = arc_img, arc_bytes, arc_crlf
     ctx["rpt"] = open(V48_RPT, encoding="utf-8").read() if os.path.exists(V48_RPT) else ""
+    (ctx["LEDGER_BLOCK"], ctx["LEDGER_PINS"], ctx["LEDGER_SKIPPED"], ctx["LEDGER_CLAIM"],
+     ctx["LEDGER_BYTES"], ctx["LEDGER_CRLF"]) = read_ledger_block()
+    ctx["LVALS"] = numlist(ctx["LEDGER_BLOCK"])
     ctx["FVALS"] = numlist(ctx["d1"]["image"])
     ctx["AVALS"] = numlist(ctx["arc"])
     print("[现跑] d1 rc=" + str(ctx["d1"]["rc"]) + " 盘上 " + str(ctx["d1"]["bytes"]) + " B、"
           + str(ctx["d1"]["lines"]) + " 行；d2 rc=" + str(ctx["d2"]["rc"]) + " 盘上 "
           + str(ctx["d2"]["bytes"]) + " B；存档（" + os.path.basename(V48_OUT) + "）盘上 "
           + str(arc_bytes) + " B、CRLF " + str(arc_crlf))
+    print("[台账] " + os.path.basename(LEDGER) + " 盘上 " + str(ctx["LEDGER_BYTES"])
+          + " B、CRLF " + str(ctx["LEDGER_CRLF"]) + "；" + LEDGER_KEY + " 块可比数 "
+          + str(len(ctx["LEDGER_PINS"])) + " 枚、被排除 " + str(len(ctx["LEDGER_SKIPPED"]))
+          + " 枚：" + "、".join(ctx["LEDGER_SKIPPED"][:10]))
 
     base = compute(ctx)
     print("")
