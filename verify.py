@@ -56,6 +56,7 @@ def is_archive_raw(parts) -> bool:
 
 
 def main():
+    fast = '--fast' in sys.argv[1:]
     errors = []
     import importlib.util
     spec = importlib.util.spec_from_file_location('module_catalog', ROOT / '00_项目治理/维护工具/module_catalog.py')
@@ -110,21 +111,22 @@ def main():
         if not re.search(r'[一-鿿]', directory.name):
             errors.append('Research directory must use Chinese: ' + directory.relative_to(ROOT).as_posix())
     checked = 0
-    for p in ROOT.rglob('*.md'):
-        if '90_历史归档' in p.relative_to(ROOT).parts: continue
-        if is_raw_staging(p.relative_to(ROOT).parts): continue
-        body = re.sub(r'```.*?```', '', p.read_text(encoding='utf-8-sig'), flags=re.S)
-        for target in re.findall(r'!?\[[^\]\n]*\]\(([^\s)]+)\)', body):
-            if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#') or target.startswith('@'):
-                # 协议 / 锚点 / 文档宏（如 @context-ref?id=N）均非本地文件路径，跳过校验
-                continue
-            dest = p.parent / unquote(target.split('#', 1)[0].strip('<>'))
-            checked += 1
-            try:
-                link_ok = dest.exists()
-            except (OSError, ValueError):
-                link_ok = True  # 非文件路径引用（如文档宏 @context-ref?id=N），无法作为本地文件解析，跳过校验
-            if not link_ok: errors.append('Broken link: ' + p.relative_to(ROOT).as_posix() + ' -> ' + target)
+    if not fast:
+        for p in ROOT.rglob('*.md'):
+            if '90_历史归档' in p.relative_to(ROOT).parts: continue
+            if is_raw_staging(p.relative_to(ROOT).parts): continue
+            body = re.sub(r'```.*?```', '', p.read_text(encoding='utf-8-sig'), flags=re.S)
+            for target in re.findall(r'!?\[[^\]\n]*\]\(([^\s)]+)\)', body):
+                if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#') or target.startswith('@'):
+                    # 协议 / 锚点 / 文档宏（如 @context-ref?id=N）均非本地文件路径，跳过校验
+                    continue
+                dest = p.parent / unquote(target.split('#', 1)[0].strip('<>'))
+                checked += 1
+                try:
+                    link_ok = dest.exists()
+                except (OSError, ValueError):
+                    link_ok = True  # 非文件路径引用（如文档宏 @context-ref?id=N），无法作为本地文件解析，跳过校验
+                if not link_ok: errors.append('Broken link: ' + p.relative_to(ROOT).as_posix() + ' -> ' + target)
     migration_spec = importlib.util.spec_from_file_location('migration_check', ROOT / '00_项目治理/维护工具/migration_check.py')
     migration_check = importlib.util.module_from_spec(migration_spec)
     migration_spec.loader.exec_module(migration_check)
@@ -135,6 +137,8 @@ def main():
         if hashlib.sha256(source.read_bytes()).hexdigest() != record['source_sha256']: errors.append('Changed chapter source: ' + record['source'])
         excerpt = ''.join(source.read_text(encoding='utf-8').splitlines(keepends=True)[record['start_line']-1:record['end_line']])
         if excerpt.rstrip() + '\n' != (ROOT / record['derived_path']).read_text(encoding='utf-8'): errors.append('Chapter excerpt mismatch: ' + record['derived_path'])
+    if fast:
+        print('[fast] 本地链接全量扫描已跳过（identity/结构/迁移/溯源校验仍执行）')
     print('Systems/directions: {}; lifecycle stages: {}; local links: {}; snapshot originals: {}'.format(len(systems), len(layout['stages']), checked, snapshot_counts))
     for error in errors: print(error)
     print('PASS' if not errors else 'FAIL: {} issues'.format(len(errors)))

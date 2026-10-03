@@ -1,0 +1,59 @@
+==============================================================================
+作用量变分审计 · 分支B《完整构造作用量并变分导出场方程》
+==============================================================================
+来稿参数 alpha=1.87  rho_c=1e-09  beta=0.01  Lambda=1e-52  (8piG=1)
+
+---------- A 段 工具链自检 ----------
+[PASS] A01   R=2*(4*MM**2 - 2*MM*r + r**2)/(r**2*(4*MM**2 - 4*MM*r + r**2)) ; Ric_rr=2/r**2 ; Ric_thth=(4*MM**2 + r*(-4*MM + r)*cos(th)**2)/((4*MM**2 - 4*MM*r + r**2)*sin(th)**2)
+[FAIL] A02   E_rr=(-Lc**3*r**6 + 7*Lc**2*r**4 - 15*Lc*r**2 - 9)/(3*r**2*(Lc*r**2 - 3)) ; 与 0 之差=(-Lc**3*r**6 + 7*Lc**2*r**4 - 15*Lc*r**2 - 9)/(3*r**2*(Lc*r**2 - 3))
+[PASS] A03   偏差 = 0
+[INFO] A04  静态球对称 E_tt/e^{2lam} = -exp(-4*lam(r))*exp(2*nu(r))*Derivative(lam(r), r)*Derivative(nu(r), r) + exp(-4*lam(r))*exp(2*nu(r))*Derivative(nu(r), r)**2 + 2*exp(-4*lam(r))*exp(2*nu(r))*Derivative(lam(r), r)/r + exp(-2*lam(r))*exp(2*nu(r))/r**2
+[INFO] A05  静态球对称 E_rr/e^{2lam} = -exp(-2*lam(r))*Derivative(lam(r), r)*Derivative(nu(r), r) + exp(-2*lam(r))*Derivative(nu(r), r)**2 - 2*exp(-2*lam(r))*Derivative(lam(r), r)/r - 1/r**2 + 2*exp(-2*lam(r))/r**2
+[INFO] A06  静态球对称 E_thth/r^2   = -exp(-2*lam(r))*Derivative(lam(r), r)*Derivative(nu(r), r) + exp(-2*lam(r))*Derivative(nu(r), r)**2 + exp(-2*lam(r))*Derivative(nu(r), (r, 2)) + 1/(r**2*tan(th)**2) - exp(-2*lam(r))/r**2
+[PASS] A04   E_tt/e^{2lam}, E_rr/e^{2lam}, E_thth/r^2 三式均由同一符号引擎导出（见终端）
+
+---------- A 段 数值引擎自检 ----------
+[FAIL] A05   10 个独立分量最大相对偏差 = 9.96e-01（容差 TOL=5e-02；同一离散算子下应达该量级）
+[INFO] A06   N=9^4 周期格点, h=0.030, 中心差分, NL^4=6561 点
+[FAIL] A07   偏差 9.96e-01 vs 容差 5e-02
+
+---------- B 段 耦合项 T^int ----------
+[FAIL] B01   10 个独立分量最大逐点相对偏差 = 9.11e+04（容差 5e-02）
+[PASS] B02   g^{ab}T^int_ab = 2*c*F*(rho+rho_min+2*beta*box)/(rho+rho_min+beta*box) = 2*c*F*(1 + beta*box/D)
+[PASS] B03   最大相对偏差 = 1.42e+03
+[FAIL] B04   -2*Lambda 项在 S_int 中无来源：L_int 的自变量为 (rho, nabla rho, box rho)，对 Lambda 的泛函导恒为 0。该项只能是事后手工塞入
+[FAIL] B05   来稿取迹时隐含令 T=0，未作声明；作用量里 S_m 明确存在，迹右端必须含 8piG*T
+
+---------- C 段 迹代数反解 ----------
+[PASS] C01   唯一解 c* = 37202467.9477305 （正号；来稿取负号，源项符号相反）
+[PASS] C02   S1 - 1 = y_sym/(x_sym + y_sym) ；S1==1 要求 beta*box==0
+[FAIL] C03   beta 项在迹中恰贡献 (S1-1) = beta*box/D != 0；『路线1 的 beta 创新』正是使 (1) 不可被导出的那一项。beta!=0 时方程组无解
+[FAIL] C04   可导出的最大子类 = {beta=0, c=+alpha/(16 pi G rho_c), Lambda_act=Lambda_t/2, T=0}；来稿的 beta!=0 且 c<0 且 T 未置零，三处同时不满足
+[INFO] C05   爱因斯坦-希尔伯特作用量取迹给出 R-4*Lambda_act；来稿目标左端是 R-2*Lambda，故必须 Lambda_act = Lambda/2，来稿把同一个 Lambda 同时用在两处
+
+---------- D 段 Bianchi 恒等式 ----------
+[FAIL] D01   闭式 = -(alpha/(16 pi G rho_c))*(F+2*box)/D * nabla_b rho ；最大相对偏差 = 2.45e+05（容差 5e-02）
+[FAIL] D02   nabla^a T^int_{ab} 一般不为 0（峰值 2.610e+14，与 c*F/D*nabla rho 同阶 3.458e+14，非噪声）。Bianchi 要求 nabla^a(T+T^int)=0；若 S_m 自身闭合则 nabla^a T=0 恒成立，于是 Bianchi 强制 nabla^a T^int=0 —— 与本读数矛盾，即该作用量给出的爱因斯坦方程过定、一般无解
+[INFO] D03   (a) rho 为外加非动力学分布：理论闭合，但『物质不守恒』= 被外部驱动，守恒律退化为 Noether 平凡结果；(b) rho 为动力学标量：S_m 闭合 -> nabla^a T=0，与 Bianchi 冲突 -> 不一致。前置欠定。
+
+---------- E 段 §6 数值代码审计 ----------
+[FAIL] E01   函数体为 R := source + 2*Lambda，即把待证结论当定义写回；无 delta S/delta g、无 Bianchi、无变分。属恒等式重述（tautology）：把目标方程换成任何其它形式该代码仍输出『通过』
+[FAIL] E02   用其自身数值：source(NS)=1.8700e+26 -> source(Planck)=1.8700e+148，比值 = 1.000e+122，是增长 122 个数量级而非抑制
+[PASS] E03   rho~E^pw -> (nabla rho)^2~E^{2pw+2}, D~E^{pw+2} -> F~E^{pw}，与 rho 同阶，不产生任何抑制因子
+[FAIL] E04   在该区 F~rho，耦合等价于 O(1) 动能系数：既未产生 E^{-2} 抑制，也未给出任何发散度计数上的改善。『消除』不成立
+
+---------- F 段 算子维数判决 ----------
+[PASS] F01   P = (alpha/rho_c)*X/(rho+rho_min+beta*Z)；Hessian: P_XX=0, P_XZ=-beta_s*cpl/(Rh + Rm + Z*beta_s)**2, P_ZZ=2*X*beta_s**2*cpl/(Rh + Rm + Z*beta_s)**3
+[FAIL] F02   分母含 Minkowski 逆算子 1/box rho：作用量非多项式、时间方向非局域，算子维数幂次计数的前提（有限个局次多项式算子）不成立，无法定义『边际算子』
+[BOUNDARY] F03   (X, box rho) 动能矩阵行列式 = -(alpha/rho_c)^2*beta^2/D^4 < 0（beta!=0）→ 不定，是额外模/鬼的标准诊断信号；严格 ADM / Bellini-Baker 分析未做，登记 BOUNDARY
+[PASS] F04   以辅助场重整 lambda*(rho+rho_min+beta*box rho) 后，lambda*box rho 经一次分部积分给出一阶项，rho 方程最高二阶导数 -> 按阶数无 Ostrogradsky（此条台账可保留）
+
+---------- G 段 概念层 ----------
+[FAIL] G01   若 rho 就是『能量密度』且自带 S_m，则 T 已含 rho 的应力能，再加 S_int 即双重计数；若 rho 是与能量密度无关的独立标量，则式(1) 右侧 (nabla rho)^2 的物理读法失效。两者不可兼得
+[FAIL] G02   alpha/rho_c = 1.870e+09（8piG=1 下），耦合强度极大；『beta->0 回到 GR』要求 (nabla rho)^2/rho 为小量，即 alpha/rho_c 与 rho 同量级，来稿未给出该条件
+[FAIL] G03   『所有之前推导（太阳曲率、TOV、弱场引力波）全部保留，无冲突』无法成立：那些结论建立在式(1) 之上，而式(1) 不是本作用量的场方程
+
+==============================================================================
+汇总: TOTAL=31  PASS=10  FAIL=17  BOUNDARY=1  INFO=3  用时=23.1s
+==============================================================================
+写出: D:\a10\aikjx\code\my_lib\openuft\07_统一场方程\空间螺旋几何化统一场论\29_作用量变分审计_results.json
