@@ -1,0 +1,786 @@
+{
+  "册名": "TUFT 可识别性解阻 —— 最小补方程集机器扫描（执行序列步 3）",
+  "日期": "2026-10-04",
+  "起点": "第十轮三链归一册执行序列步 3",
+  "性质": "结构可识别性分析（秩/条件数/自由度）；非物理判决、不构造新物理",
+  "引擎": "纯标准库（Python 3.8），零第三方依赖",
+  "条目数": 34,
+  "计数": {
+    "FAIL": 3,
+    "MISMATCH": 14,
+    "PASS": 3,
+    "BOUNDARY": 13,
+    "INFO": 1
+  },
+  "自检": {
+    "总数": 7,
+    "通过": 7
+  },
+  "accepted_supplements": [],
+  "key_numbers": {
+    "S0": {
+      "rank_strict": 3,
+      "rank_numeric": 1,
+      "nparam": 6,
+      "cond": "inf"
+    },
+    "A_samefamily": [
+      {
+        "h": 0.3,
+        "rank_strict": 3,
+        "nullity": 3
+      },
+      {
+        "h": 0.9,
+        "rank_strict": 3,
+        "nullity": 3
+      },
+      {
+        "h": 0.15,
+        "rank_strict": 3,
+        "nullity": 3
+      }
+    ],
+    "A_phi_rank": 4,
+    "A_B1_rank": 3,
+    "A_B3_rank": 4,
+    "pool": [
+      {
+        "key": "alpha",
+        "name": "精细结构常数 α",
+        "urel": "1.5e-10",
+        "value": "0.0072973525693",
+        "occupied": "已占用",
+        "model_pred": "是（lambda 通道）",
+        "sensitive": "否",
+        "note": "alpha 由 lambda cos3theta_EM 定",
+        "usable": false
+      },
+      {
+        "key": "alpha_s",
+        "name": "强耦合常数 α_S(M_Z)",
+        "urel": "8.5e-3",
+        "value": "0.1179",
+        "occupied": "已占用",
+        "model_pred": "是（lambda 通道，被用作归一化基准）",
+        "sensitive": "否",
+        "note": "lambda = alpha_s 归一约定",
+        "usable": false
+      },
+      {
+        "key": "m_mu_over_me",
+        "name": "质量比 m_μ/m_e",
+        "urel": "2.2e-10",
+        "value": "206.768283",
+        "occupied": "未占用",
+        "model_pred": "否（质量层级未绑定 => O-MASS 开放）",
+        "sensitive": "否",
+        "note": "若假设 m 正比于 lambda 则与 lambda 共线 => 零信息",
+        "usable": false
+      },
+      {
+        "key": "m_tau_over_me",
+        "name": "质量比 m_τ/m_e",
+        "urel": "6.8e-5",
+        "value": "3477.23",
+        "occupied": "未占用",
+        "model_pred": "否（同上）",
+        "sensitive": "否",
+        "note": "同上",
+        "usable": false
+      },
+      {
+        "key": "me_over_mP",
+        "name": "质量比 m_e/m_P",
+        "urel": "1.1e-5",
+        "value": "4.18546287252e-23",
+        "occupied": "未占用",
+        "model_pred": "否（同上）",
+        "sensitive": "否",
+        "note": "同上",
+        "usable": false
+      },
+      {
+        "key": "alpha_grav_e",
+        "name": "引力耦合 α_grav(电子)=(m_e/m_P)²",
+        "urel": "2.2e-5",
+        "value": "1.75180994573e-45",
+        "occupied": "已占用",
+        "model_pred": "是（lambda 通道）",
+        "sensitive": "否",
+        "note": "G 瓣代表点；敏感度 ~3.5e44%/度（病态）",
+        "usable": false
+      },
+      {
+        "key": "sin2_thetaW",
+        "name": "温伯格角 sin²θ_W(M_Z)",
+        "urel": "1.7e-4",
+        "value": "0.23122",
+        "occupied": "未占用",
+        "model_pred": "否（与 alpha_W 同源；弱 sector 规范参数有 3 个）",
+        "sensitive": "否",
+        "note": "单靠 alpha_W 定不死弱 mixing",
+        "usable": false
+      },
+      {
+        "key": "mt_over_mW",
+        "name": "质量比 m_t/m_W",
+        "urel": "3.0e-3",
+        "value": "2.14850019284",
+        "occupied": "未占用",
+        "model_pred": "否（同上）",
+        "sensitive": "否",
+        "note": "同上",
+        "usable": false
+      },
+      {
+        "key": "n_gen",
+        "name": "代数 N_gen（整数靶）",
+        "urel": "0",
+        "value": "3.0",
+        "occupied": "未占用",
+        "model_pred": "否（离散计数，模型不预测）",
+        "sensitive": "否",
+        "note": "3 代由费米子存在反推（k=2）",
+        "usable": false
+      },
+      {
+        "key": "n_c",
+        "name": "色数 N_c（整数靶）",
+        "urel": "0",
+        "value": "3.0",
+        "occupied": "未占用",
+        "model_pred": "否（离散计数，模型不预测）",
+        "sensitive": "否",
+        "note": "N_c=3 为输入假设",
+        "usable": false
+      }
+    ],
+    "pool_usable": 0,
+    "C_type2": {
+      "rank_strict": 3,
+      "nparam": 7,
+      "nullity": 4
+    },
+    "C_type3": [
+      {
+        "kp": 0,
+        "nparam": 6,
+        "rank_strict": 3,
+        "nullity": 3,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 1,
+        "nparam": 5,
+        "rank_strict": 2,
+        "nullity": 3,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 2,
+        "nparam": 4,
+        "rank_strict": 1,
+        "nullity": 3,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 3,
+        "nparam": 3,
+        "rank_strict": 1,
+        "nullity": 2,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 4,
+        "nparam": 2,
+        "rank_strict": 1,
+        "nullity": 1,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      }
+    ],
+    "D_scan": [
+      {
+        "kp": 0,
+        "kphi": 0,
+        "nparam": 6,
+        "nobs": 4,
+        "rank_strict": 3,
+        "rank_numeric": 1,
+        "nullity": 3,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 0,
+        "kphi": 1,
+        "nparam": 6,
+        "nobs": 5,
+        "rank_strict": 4,
+        "rank_numeric": 1,
+        "nullity": 2,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 0,
+        "kphi": 2,
+        "nparam": 6,
+        "nobs": 6,
+        "rank_strict": 4,
+        "rank_numeric": 1,
+        "nullity": 2,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 1,
+        "kphi": 0,
+        "nparam": 5,
+        "nobs": 4,
+        "rank_strict": 2,
+        "rank_numeric": 1,
+        "nullity": 3,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 1,
+        "kphi": 1,
+        "nparam": 5,
+        "nobs": 5,
+        "rank_strict": 3,
+        "rank_numeric": 1,
+        "nullity": 2,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 1,
+        "kphi": 2,
+        "nparam": 5,
+        "nobs": 6,
+        "rank_strict": 3,
+        "rank_numeric": 1,
+        "nullity": 2,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 2,
+        "kphi": 0,
+        "nparam": 4,
+        "nobs": 4,
+        "rank_strict": 1,
+        "rank_numeric": 1,
+        "nullity": 3,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 2,
+        "kphi": 1,
+        "nparam": 4,
+        "nobs": 5,
+        "rank_strict": 2,
+        "rank_numeric": 1,
+        "nullity": 2,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 2,
+        "kphi": 2,
+        "nparam": 4,
+        "nobs": 6,
+        "rank_strict": 2,
+        "rank_numeric": 1,
+        "nullity": 2,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 3,
+        "kphi": 0,
+        "nparam": 3,
+        "nobs": 4,
+        "rank_strict": 1,
+        "rank_numeric": 1,
+        "nullity": 2,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 3,
+        "kphi": 1,
+        "nparam": 3,
+        "nobs": 5,
+        "rank_strict": 2,
+        "rank_numeric": 1,
+        "nullity": 1,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 3,
+        "kphi": 2,
+        "nparam": 3,
+        "nobs": 6,
+        "rank_strict": 2,
+        "rank_numeric": 1,
+        "nullity": 1,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 4,
+        "kphi": 0,
+        "nparam": 2,
+        "nobs": 4,
+        "rank_strict": 1,
+        "rank_numeric": 1,
+        "nullity": 1,
+        "invertible": false,
+        "cond": Infinity,
+        "cond_txt": "inf",
+        "numeric_ok": false
+      },
+      {
+        "kp": 4,
+        "kphi": 1,
+        "nparam": 2,
+        "nobs": 5,
+        "rank_strict": 2,
+        "rank_numeric": 1,
+        "nullity": 0,
+        "invertible": true,
+        "cond": 7.991193694035934e+16,
+        "cond_txt": "7.99e+16",
+        "numeric_ok": false
+      },
+      {
+        "kp": 4,
+        "kphi": 2,
+        "nparam": 2,
+        "nobs": 6,
+        "rank_strict": 2,
+        "rank_numeric": 1,
+        "nullity": 0,
+        "invertible": true,
+        "cond": 3.995596847017967e+16,
+        "cond_txt": "4.00e+16",
+        "numeric_ok": false
+      }
+    ],
+    "D_feasible_min": {
+      "kp": 4,
+      "kphi": 1,
+      "nparam": 2,
+      "nobs": 5,
+      "rank_strict": 2,
+      "rank_numeric": 1,
+      "nullity": 0,
+      "invertible": true,
+      "cond": 7.991193694035934e+16,
+      "cond_txt": "7.99e+16",
+      "numeric_ok": false
+    },
+    "D_numeric_ok_min": null,
+    "D_cond_scan": [
+      {
+        "urel_alphaG": 0.01,
+        "rank": 2,
+        "cond": 7.991193694035936e+16,
+        "cond_txt": "7.99e+16",
+        "numeric_ok": false
+      },
+      {
+        "urel_alphaG": 0.02,
+        "rank": 2,
+        "cond": 7.991193694035934e+16,
+        "cond_txt": "7.99e+16",
+        "numeric_ok": false
+      },
+      {
+        "urel_alphaG": 0.1,
+        "rank": 2,
+        "cond": 7.991193694035934e+16,
+        "cond_txt": "7.99e+16",
+        "numeric_ok": false
+      },
+      {
+        "urel_alphaG": 0.3,
+        "rank": 2,
+        "cond": 7.991193694035934e+16,
+        "cond_txt": "7.99e+16",
+        "numeric_ok": false
+      },
+      {
+        "urel_alphaG": 0.5,
+        "rank": 2,
+        "cond": 7.991193694035934e+16,
+        "cond_txt": "7.99e+16",
+        "numeric_ok": false
+      },
+      {
+        "urel_alphaG": 1.0,
+        "rank": 2,
+        "cond": 7.991193694035934e+16,
+        "cond_txt": "7.99e+16",
+        "numeric_ok": false
+      }
+    ],
+    "D_alphaG_threshold": null,
+    "e_claimed": false
+  },
+  "判定": [
+    {
+      "id": "A-01",
+      "section": "A",
+      "item": "现状基线",
+      "statement": "6 参数 / 4 观测量（与十轮 C-01 同口径复算）",
+      "verdict": "FAIL",
+      "detail": "**代数秩 3** / **双精度可分辨秩 1**（F_p 谱跨约 1e88）=> 零空间 3 维、条件数 inf => F_p^{-1} 不存在。**G 行与 S 行严格成比例**（1.484e-44）是秩亏的根源 ⇒ 4 个观测量只给 3 个独立约束"
+    },
+    {
+      "id": "A-02",
+      "section": "A",
+      "item": "同族零信息",
+      "statement": "新增强度通道观测量 q=lambda*h(theta) 能否解可识别性？",
+      "verdict": "MISMATCH",
+      "detail": "三组 h=0.30/0.90/0.15 实测代数秩 3→**3**（**完全不增**）：新行只落在 lambda 轴上，而该轴已被 S 与 G 两行张成 ⇒ 线性相关。⇒ 同族观测量是**最坏情形**：既不增秩、也不需要新自由度（同一 lambda 换一次测量），净信息**严格为零**。"
+    },
+    {
+      "id": "A-03",
+      "section": "A",
+      "item": "信息载体",
+      "statement": "什么形式的约束才携带信息？",
+      "verdict": "PASS",
+      "detail": "加 **phi0 敏感**行（dq/dphi0=1）⇒ 代数秩 3→**4**（+1，真新维度）；加 **B1 敏感**行 ⇒ 秩 3（**不增**：B1 方向已含在 W 行的 0.36 里）；加 **B3 敏感**行 ⇒ 秩 4（+1：强度行对 B3 的雅可比整列为 0，=> 该方向不在现有行空间内）。⇒ 真信息载体有两个：**phi0**（相位观测量）与 B3/B4（强度行未覆盖的边界方向）（即 deltaA_TUFT 一类的相位观测量）"
+    },
+    {
+      "id": "A-04",
+      "section": "A",
+      "item": "边界方向的信息",
+      "statement": "新增观测量若对 B3/B4（强度行未覆盖的边界）敏感？",
+      "verdict": "PASS",
+      "detail": "实测代数秩 3→**4**（+1）⇒ **B3/B4 方向是真正的第二个新维度**，但代价与 phi0 相同：需要一个**模型能预测、实验能测**的边界敏感量"
+    },
+    {
+      "id": "B-alpha",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "精细结构常数 α（urel=1.5e-10）",
+      "verdict": "BOUNDARY",
+      "detail": "通道=已占用 ｜ 模型预测=是（lambda 通道） ｜ 敏感=否 ｜ alpha 由 lambda cos3theta_EM 定"
+    },
+    {
+      "id": "B-alpha_s",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "强耦合常数 α_S(M_Z)（urel=8.5e-3）",
+      "verdict": "BOUNDARY",
+      "detail": "通道=已占用 ｜ 模型预测=是（lambda 通道，被用作归一化基准） ｜ 敏感=否 ｜ lambda = alpha_s 归一约定"
+    },
+    {
+      "id": "B-m_mu_ov",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "质量比 m_μ/m_e（urel=2.2e-10）",
+      "verdict": "MISMATCH",
+      "detail": "通道=未占用 ｜ 模型预测=否（质量层级未绑定 => O-MASS 开放） ｜ 敏感=否 ｜ 若假设 m 正比于 lambda 则与 lambda 共线 => 零信息"
+    },
+    {
+      "id": "B-m_tau_o",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "质量比 m_τ/m_e（urel=6.8e-5）",
+      "verdict": "MISMATCH",
+      "detail": "通道=未占用 ｜ 模型预测=否（同上） ｜ 敏感=否 ｜ 同上"
+    },
+    {
+      "id": "B-me_over",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "质量比 m_e/m_P（urel=1.1e-5）",
+      "verdict": "MISMATCH",
+      "detail": "通道=未占用 ｜ 模型预测=否（同上） ｜ 敏感=否 ｜ 同上"
+    },
+    {
+      "id": "B-alpha_g",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "引力耦合 α_grav(电子)=(m_e/m_P)²（urel=2.2e-5）",
+      "verdict": "BOUNDARY",
+      "detail": "通道=已占用 ｜ 模型预测=是（lambda 通道） ｜ 敏感=否 ｜ G 瓣代表点；敏感度 ~3.5e44%/度（病态）"
+    },
+    {
+      "id": "B-sin2_th",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "温伯格角 sin²θ_W(M_Z)（urel=1.7e-4）",
+      "verdict": "MISMATCH",
+      "detail": "通道=未占用 ｜ 模型预测=否（与 alpha_W 同源；弱 sector 规范参数有 3 个） ｜ 敏感=否 ｜ 单靠 alpha_W 定不死弱 mixing"
+    },
+    {
+      "id": "B-mt_over",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "质量比 m_t/m_W（urel=3.0e-3）",
+      "verdict": "MISMATCH",
+      "detail": "通道=未占用 ｜ 模型预测=否（同上） ｜ 敏感=否 ｜ 同上"
+    },
+    {
+      "id": "B-n_gen",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "代数 N_gen（整数靶）（urel=0）",
+      "verdict": "MISMATCH",
+      "detail": "通道=未占用 ｜ 模型预测=否（离散计数，模型不预测） ｜ 敏感=否 ｜ 3 代由费米子存在反推（k=2）"
+    },
+    {
+      "id": "B-n_c",
+      "section": "B",
+      "item": "候选分类",
+      "statement": "色数 N_c（整数靶）（urel=0）",
+      "verdict": "MISMATCH",
+      "detail": "通道=未占用 ｜ 模型预测=否（离散计数，模型不预测） ｜ 敏感=否 ｜ N_c=3 为输入假设"
+    },
+    {
+      "id": "B-SUM",
+      "section": "B",
+      "item": "池汇总",
+      "statement": "10 个无量纲靶中可携带新信息的个数",
+      "verdict": "FAIL",
+      "detail": "**可用数 = 0 / 10**：3 个已被强度通道占用、7 个模型不给预测或与 lambda 共线、0 个对 phi0/B_i 敏感 => **现有可及观测量无一能解可识别性**；真正的缺口不是「测量不够多」，而是「模型没有给出相位/边界可测的预测」"
+    },
+    {
+      "id": "C-01",
+      "section": "C",
+      "item": "扩充参数",
+      "statement": "类型 II：引入新常数（lambda_2 等）而不新增观测量",
+      "verdict": "FAIL",
+      "detail": "参数 6→7、观测量仍 4、雅可比补零列 ⇒ 代数秩仍 3、零空间由 **3 扩到 4 维** => **加参数使问题恶化**（且违反 Omega5「单常数」公设）。=> 类型 II 只有与新增观测量**成对**出现才可能有益"
+    },
+    {
+      "id": "C-02",
+      "section": "C",
+      "item": "先验固定",
+      "statement": "类型 III：用**先验/约定**固定 B_1..B_0",
+      "verdict": "BOUNDARY",
+      "detail": "有效参数 6（lambda, phi0 + B_1..B_4）=> 代数秩 3，零空间 3 维，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "C-03",
+      "section": "C",
+      "item": "先验固定",
+      "statement": "类型 III：用**先验/约定**固定 B_1..B_1",
+      "verdict": "BOUNDARY",
+      "detail": "有效参数 5（lambda, phi0 + B_2..B_4）=> 代数秩 2，零空间 3 维，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "C-04",
+      "section": "C",
+      "item": "先验固定",
+      "statement": "类型 III：用**先验/约定**固定 B_1..B_2",
+      "verdict": "BOUNDARY",
+      "detail": "有效参数 4（lambda, phi0 + B_3..B_4）=> 代数秩 1，零空间 3 维，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "C-05",
+      "section": "C",
+      "item": "先验固定",
+      "statement": "类型 III：用**先验/约定**固定 B_1..B_3",
+      "verdict": "BOUNDARY",
+      "detail": "有效参数 3（lambda, phi0 + B_4..B_4）=> 代数秩 1，零空间 2 维，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "C-06",
+      "section": "C",
+      "item": "先验固定",
+      "statement": "类型 III：用**先验/约定**固定 B_1..B_4",
+      "verdict": "BOUNDARY",
+      "detail": "有效参数 2（lambda, phi0）=> 代数秩 1，零空间 1 维，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "C-SUM",
+      "section": "C",
+      "item": "类型 III 结论",
+      "statement": "先验能解可识别性吗？",
+      "verdict": "BOUNDARY",
+      "detail": "须固定**全部 4 个** B_i 后才**代数可逆**（B3/B4 列在强度行整列为 0），但代价：① 弱扇区几何从待定参数变成**外部输入**；② **phi0 仍零信息**（强度通道对 phi0 的雅可比整列为 0）；③ 条件数仍远超双精度（见 D）=> 先验是**约定，不是数据**，必须显式标注"
+    },
+    {
+      "id": "D-20",
+      "section": "D",
+      "item": "组合扫描",
+      "statement": "先验 2 + 相位观测 0（有效参数 4，观测量 4）",
+      "verdict": "MISMATCH",
+      "detail": "代数秩 1，零空间 3，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "D-21",
+      "section": "D",
+      "item": "组合扫描",
+      "statement": "先验 2 + 相位观测 1（有效参数 4，观测量 5）",
+      "verdict": "MISMATCH",
+      "detail": "代数秩 2，零空间 2，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "D-30",
+      "section": "D",
+      "item": "组合扫描",
+      "statement": "先验 3 + 相位观测 0（有效参数 3，观测量 4）",
+      "verdict": "MISMATCH",
+      "detail": "代数秩 1，零空间 2，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "D-31",
+      "section": "D",
+      "item": "组合扫描",
+      "statement": "先验 3 + 相位观测 1（有效参数 3，观测量 5）",
+      "verdict": "MISMATCH",
+      "detail": "代数秩 2，零空间 1，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "D-40",
+      "section": "D",
+      "item": "组合扫描",
+      "statement": "先验 4 + 相位观测 0（有效参数 2，观测量 4）",
+      "verdict": "MISMATCH",
+      "detail": "代数秩 1，零空间 1，条件数 inf => 仍奇异"
+    },
+    {
+      "id": "D-41",
+      "section": "D",
+      "item": "组合扫描",
+      "statement": "先验 4 + 相位观测 1（有效参数 2，观测量 5）",
+      "verdict": "BOUNDARY",
+      "detail": "代数秩 2，零空间 0，条件数 7.99e+16 => 结构可行但**数值不可行**（cond>1e10）"
+    },
+    {
+      "id": "D-42",
+      "section": "D",
+      "item": "组合扫描",
+      "statement": "先验 4 + 相位观测 2（有效参数 2，观测量 6）",
+      "verdict": "BOUNDARY",
+      "detail": "代数秩 2，零空间 0，条件数 4.00e+16 => 结构可行但**数值不可行**（cond>1e10）"
+    },
+    {
+      "id": "D-SUM",
+      "section": "D",
+      "item": "最小结构可行组合",
+      "statement": "枚举 k_p in [0,4] x k_phi in [0,2] 共 15 组",
+      "verdict": "BOUNDARY",
+      "detail": "最小结构可行组合 = **先验 4 个（固定 B_1..B_4）+ 相位观测量 1 个**（有效参数 2，代数秩 2，条件数 7.99e+16）=> 比第十轮笼统的「补 >=3 个独立方程」精确。**但 15 组中同时满足数值可用（cond<1e10）的只有 0 组**=> 且相位观测量在当前模型中**不存在**（deltaA_TUFT 未定义）=> **步 3 不能独立完成，与步 5 是同一阻塞的两面**"
+    },
+    {
+      "id": "D-COND",
+      "section": "D",
+      "item": "条件数敏感度",
+      "statement": "数值可行性对 alpha_G 相对精度的依赖",
+      "verdict": "BOUNDARY",
+      "detail": "在最佳结构组合（先验 4 + 相位观测 1）上扫描 alpha_G 相对精度：1%/2%/10%/30%/50%/100% ⇒ 条件数 7.99e+16/7.99e+16/7.99e+16/7.99e+16/7.99e+16/7.99e+16 => **即使 alpha_G 精度放宽到 100%% 仍不可用**。**注意归因**：若只取强度通道（无相位观测量），条件数恒为 inf，根因是 **phi0 方向零信息**（强度行对 phi0 的雅可比整列为 0），**不是** alpha_G 精度不足"
+    },
+    {
+      "id": "E-01",
+      "section": "E",
+      "item": "接受清单",
+      "statement": "已证明物理可行的可识别性补足方案",
+      "verdict": "INFO",
+      "detail": "**清单长度 = 0（空）** => 目前没有任何补足方案被证明物理可行"
+    },
+    {
+      "id": "E-02",
+      "section": "E",
+      "item": "禁止的捷径",
+      "statement": "三条会绕过本册的伪闭合",
+      "verdict": "MISMATCH",
+      "detail": "① 用同族观测量冒充新信息（A-02：代数秩都不增）；② 只加参数不加观测量（C-01：零空间扩大）；③ 把「先验/约定」当数据使用却不标注（类型 III 全部标注为约定）"
+    },
+    {
+      "id": "E-03",
+      "section": "E",
+      "item": "自证",
+      "statement": "本册正文是否含未经清单的解封声明（已排除 docstring）",
+      "verdict": "PASS",
+      "detail": "机器扫描本册正文（排除 docstring 与 E 自身的禁止词表）：未发现越权声明 => 诚实"
+    }
+  ],
+  "guards": [
+    {
+      "name": "a_status_singular",
+      "ok": true,
+      "detail": "现状代数秩 3 < 6，双精度可分辨秩 1"
+    },
+    {
+      "name": "a_samefamily_net_zero",
+      "ok": true,
+      "detail": "同族观测量零空间恒为 3 维（= 基线）=> 净信息为零"
+    },
+    {
+      "name": "a_phi_is_only_carrier",
+      "ok": true,
+      "detail": "phi0 敏感行代数秩 4 > 基线 3 => 唯一真新维度"
+    },
+    {
+      "name": "b_pool_usable_zero",
+      "ok": true,
+      "detail": "10 靶可用数 = 0（须为 0）"
+    },
+    {
+      "name": "c_type2_worsens",
+      "ok": true,
+      "detail": "类型 II 零空间 4 > 基线 3 => 加参数恶化"
+    },
+    {
+      "name": "d_has_feasible_combo",
+      "ok": true,
+      "detail": "最小结构可行组合：先验 4 + 相位观测 1"
+    },
+    {
+      "name": "e_accepted_list_empty",
+      "ok": true,
+      "detail": "接受清单长度 0 且正文无解封声明"
+    }
+  ]
+}

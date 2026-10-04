@@ -1,0 +1,224 @@
+{
+  "册名": "deltaA_TUFT 五项前置闭合判定（执行序列步 5）",
+  "日期": "2026-10-04",
+  "起点": "第十二册步 3 结论：最小组合所需相位观测量在模型中不存在",
+  "性质": "前置闭合判定（区分缺推导 vs 缺自由度）；唯象层，非完整 QFT",
+  "引擎": "纯标准库（Python 3.8），零第三方依赖",
+  "条目数": 14,
+  "计数": {
+    "FAIL": 3,
+    "INFO": 1,
+    "MISMATCH": 1,
+    "PASS": 6,
+    "BOUNDARY": 3
+  },
+  "自检": {
+    "总数": 8,
+    "通过": 8
+  },
+  "closure": {
+    "P1": "缺自由度",
+    "P2": "缺自由度",
+    "P3": "条件闭合（输入 delta 待定）",
+    "P4": "可闭合",
+    "P5": "可闭合"
+  },
+  "key_numbers": {
+    "p2_points": 292,
+    "p2_a_gt_drift": 0.0,
+    "p3_coefs": [
+      {
+        "delta_deg": 0.0,
+        "cos_coef": 2.0,
+        "sin_coef": -0.0
+      },
+      {
+        "delta_deg": 29.999999999999996,
+        "cos_coef": 1.7320508075688774,
+        "sin_coef": -0.9999999999999999
+      },
+      {
+        "delta_deg": 45.0,
+        "cos_coef": 1.4142135623730951,
+        "sin_coef": -1.4142135623730951
+      }
+    ],
+    "p4": {
+      "A_exp": -0.119,
+      "sig_A": 0.0011,
+      "v_over_c": 0.001274,
+      "v_c_over_sigma": 1.158181818181818
+    },
+    "p5_worst_da": 0.0,
+    "p5_rate_ratio": [
+      1.0,
+      1.0000000000000004
+    ],
+    "p5_Ae": 0.9993453718139101,
+    "S_pts": [
+      {
+        "pE": 0.2,
+        "ratio": 1.1666666666666667
+      },
+      {
+        "pE": 0.4,
+        "ratio": 1.2857142857142858
+      },
+      {
+        "pE": 0.6,
+        "ratio": 1.375
+      },
+      {
+        "pE": 0.8,
+        "ratio": 1.4444444444444444
+      },
+      {
+        "pE": 0.95,
+        "ratio": 1.4871794871794872
+      }
+    ],
+    "S_Ae_eta1": 0.5
+  },
+  "判定": [
+    {
+      "id": "P1-01",
+      "section": "P1",
+      "item": "structure_freedom",
+      "verdict": "FAIL",
+      "detail": "框架内唯一手征自由度是一个复场 Omega 的 (g_L,g_R)，其 Lorentz 结构已由『手征』定义锁死为 V-A 型 => 候选集被压缩到 {V-A}。选 S/T/P = 引入与 Omega 无关的新算符 = 超出公设集的新输入，非推导结果 => P1 属缺自由度"
+    },
+    {
+      "id": "P1-02",
+      "section": "P1",
+      "item": "parity_eigen",
+      "verdict": "INFO",
+      "detail": "V(P=+1) b=1+pE；A(P=-1) b=1+pE (V-A 本身)；S(P=+1,新自由度) b=1 (各向同性)；T(P=-1,新自由度) b=1+3(pE)^2+3(pE)^3；P(P=-1,新自由度) b=1-pE => P-even(S,V) 无法单独产生宇称奇项；P-odd(A,T,P) 可以"
+    },
+    {
+      "id": "P1-03",
+      "section": "P1",
+      "item": "implication",
+      "verdict": "MISMATCH",
+      "detail": "若取 V-A（框架内唯一可得），deltaA_GT 恒等于 0（P2-02 机器复算）=> 分支3 的 deltaA 只能来自人为引入的 c_I/新结构 => (c_I,rho,phi_0) 三维族在 P1 未定前不可约化"
+    },
+    {
+      "id": "P2-01",
+      "section": "P2",
+      "item": "amplitude_structure",
+      "verdict": "FAIL",
+      "detail": "M = M_SM(V-A,g_SM) + M_TUFT(V-A,{g_L,g_R}) 是同一算符的两种耦合，非两个独立振幅；干涉为 |g_SM+g_L|^2 型（强度干涉），相位只进总率、不进归一化角不对称 => P2 不满足（需第二 Lorentz 结构或第二场）"
+    },
+    {
+      "id": "P2-02",
+      "section": "P2",
+      "item": "machine_recheck",
+      "verdict": "PASS",
+      "detail": "292 点（73 phi x 4 个 |g_L|）：归一化角不对称最大漂移 = 0.00e+00（逐位零）=> 独立确认 ADD-01R/B05，并为 P5 提供对照基线"
+    },
+    {
+      "id": "P3-01",
+      "section": "P3",
+      "item": "interference_structure",
+      "verdict": "PASS",
+      "detail": "M_1 = g_SM(V-A)、M_2 = rho e^{i phi}(S)，SM 内部实相对相位 delta 时 2Re(M_1^* M_2) = 2 rho g_SM [cos(phi)cos(delta) - sin(phi)sin(delta)]，含 cos 与 sin 两项，系数实测 ['2.0000/-0.0000', '1.7321/-1.0000', '1.4142/-1.4142'] => 公式可闭合"
+    },
+    {
+      "id": "P3-02",
+      "section": "P3",
+      "item": "odd_term_condition",
+      "verdict": "BOUNDARY",
+      "detail": "sin(phi) 系数正比于 sin(delta) => 宇称奇项要求 delta 不为零；delta=0（实耦合）时干涉项纯 cos => 只改率不改 A => delta 是否非零是物理输入，框架内无法确定（候选：强子矩阵元 CP 相位、末态相互作用）"
+    },
+    {
+      "id": "P3-03",
+      "section": "P3",
+      "item": "branch3_reinterpretation",
+      "verdict": "PASS",
+      "detail": "分支3 的 c_I 在本册口径下 = g_SM sin(delta) 的重参数化 => 「c_I 无输入来源」的判定（F04）依然成立，但含义被明确为 SM 与 TUFT 振幅间的实相对相位 => delta 一旦被指定，参数账 7->6 可能恢复"
+    },
+    {
+      "id": "P4-01",
+      "section": "P4",
+      "item": "reference_definition",
+      "verdict": "PASS",
+      "detail": "采用自由中子 A = (N'_p-N'_n)/(N'_p+N'_n) = -0.1190 ± 0.0011；口径：① 自由中子（无核终态效应）② 保留 -(v/c) 修正（量级 1.27e-03）③ 改用束缚核须引入终态效应与形状修正"
+    },
+    {
+      "id": "P4-02",
+      "section": "P4",
+      "item": "convention_sensitivity",
+      "verdict": "BOUNDARY",
+      "detail": "v/c = 1.27e-03 与 sig_A = 1.1e-03 之比 = 1.16（同量级）=> 口径选择直接改变 deltaA 的可比性；分支3 未声明口径 => 每个 deltaA 数值必须附口径标签"
+    },
+    {
+      "id": "P4-03",
+      "section": "P4",
+      "item": "closure",
+      "verdict": "PASS",
+      "detail": "可闭合：P4 属外部输入类前置（不依赖模型推导），本册已给数值与口径与转换因子量级 => 只需在分支3 产物补口径标签"
+    },
+    {
+      "id": "P5-01",
+      "section": "P5",
+      "item": "overall_phase_only_rate",
+      "verdict": "PASS",
+      "detail": "13 个 alpha：总率比值范围 1.0000~1.0000（改率），电子不对称最大漂移 = 0.00e+00（逐位零）=> 加入 S 结构后整体相位**依然只改率不改 A** => P5 闭合，且该结论对结构选择稳健"
+    },
+    {
+      "id": "S-01",
+      "section": "S",
+      "item": "sole_falsifiable_discriminator",
+      "verdict": "BOUNDARY",
+      "detail": "在 V-A + S 假设下（eta=|C_S/C_V|^2=1）：能谱形状 b(pE)=1+(1+eta)pE，与纯 V-A 的 b=1+pE 在端点区显著不同（比值 1.1667~1.4872）；电子不对称由 1.00 降至 0.50 => 联合判据 = 能谱形状 + 电子不对称，两者相关但非同义；**前提是 P1/P2 被人工指定**（若指定 T 或 P，形状项不同、判据随之改变）"
+    },
+    {
+      "id": "S-02",
+      "section": "S",
+      "item": "blocking_nature",
+      "verdict": "FAIL",
+      "detail": "五项前置：P4/P5 可闭合；P3 条件闭合（输入 delta 待定）；P1/P2 不可由框架内决定（需 Lorentz 结构与第二振幅 = 模型扩充）=> **阻塞是结构性的（缺自由度），不是工程性的（缺推导）** => 再努力推导也无法解除 MCMC 阻塞；出路只有三条：① 人工指定 O_TUFT 与 delta（新输入，超出 Ω5）② 扩充模型（第二场，参数账再加）③ 放弃 beta 通道的 deltaA 预言"
+    }
+  ],
+  "guards": [
+    {
+      "name": "p1_structure_not_free",
+      "ok": true,
+      "detail": "P1 判为缺自由度（框架内 Lorentz 结构锁死为 V-A）"
+    },
+    {
+      "name": "p2_no_two_independent_amplitudes",
+      "ok": true,
+      "detail": "P2 机器判定：单一复场只给同一算符的两种耦合"
+    },
+    {
+      "name": "p2_recheck_a_gt_drift_zero",
+      "ok": true,
+      "detail": "单结构加整体相位的 A 漂移 0.00e+00（逐位零）"
+    },
+    {
+      "name": "p3_cos_sin_expansion",
+      "ok": true,
+      "detail": "P3 系数：delta=30 度时 cos=1.7321（=2cos30）sin=-1.0000（=-2sin30）"
+    },
+    {
+      "name": "p4_convention_declared",
+      "ok": true,
+      "detail": "P4 口径敏感性 v/c 对 sig_A 比 1.16（同量级）=> 口径须显式标注"
+    },
+    {
+      "name": "p5_overall_phase_only_rate",
+      "ok": true,
+      "detail": "P5 在 (V-A)+(S) 下 A 漂移 0.00e+00（逐位零）=> 整体相位只改率"
+    },
+    {
+      "name": "s_blocking_is_structural",
+      "ok": true,
+      "detail": "P1/P2 判为缺自由度 => 阻塞结构性 => MCMC 不可靠努力推导解除"
+    },
+    {
+      "name": "n_no_vacuous_closure",
+      "ok": true,
+      "detail": "五项中仅 P4/P5 完全闭合、P3 条件闭合；P1/P2 未闭合 => 无空口闭合"
+    }
+  ]
+}
