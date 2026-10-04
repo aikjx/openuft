@@ -1,0 +1,188 @@
+{
+  "册": "TUFT_V3.5_C_L_C_R手征耦合构造与校验",
+  "生成时间": "2026-10-04 09:46:13",
+  "定位": "分支③前置：闭合 L/R 手征耦合构造 + 相位型否证 + η 构造",
+  "计数": {
+    "PASS": 11,
+    "FAIL": 1,
+    "BOUNDARY": 0,
+    "INFO": 0
+  },
+  "总计": 12,
+  "结构否证": {
+    "相位型max|Δ_P|": 0.0,
+    "结论": "Δ_P≡0，相位不是手征DOF"
+  },
+  "η构造": {
+    "公式": "Δ_P=2η/(1+η²)",
+    "表": [
+      {
+        "eta": 0.0,
+        "dp": 0.0,
+        "theo": 0.0
+      },
+      {
+        "eta": 0.3,
+        "dp": 0.5504587155963303,
+        "theo": 0.5504587155963302
+      },
+      {
+        "eta": 0.5,
+        "dp": 0.8,
+        "theo": 0.8
+      },
+      {
+        "eta": 0.8,
+        "dp": 0.975609756097561,
+        "theo": 0.975609756097561
+      },
+      {
+        "eta": 1.0,
+        "dp": 1.0,
+        "theo": 1.0
+      }
+    ],
+    "单调": true
+  },
+  "弱域": {
+    "窗口": "bump",
+    "边界W": 0.0,
+    "外导": 0.0,
+    "C∞": true
+  },
+  "自检": {
+    "总数": 6,
+    "通过": 6,
+    "项": [
+      {
+        "name": "hermiticity_form",
+        "ok": true,
+        "detail": "L_int=C_L O_L+C_R O_R+h.c. 自伴成立"
+      },
+      {
+        "name": "parity_law_cl_cr",
+        "ok": true,
+        "detail": "宇称不变 ⟺ η=0；η≠0 则 C_L(θ)≠C_R(−θ) 破缺"
+      },
+      {
+        "name": "phase_only_nogo",
+        "ok": true,
+        "detail": "相位型耦合 Δ_P≡0（结构否证）"
+      },
+      {
+        "name": "deltaP_eta_form",
+        "ok": true,
+        "detail": "Δ_P=2η/(1+η²) 机器验证成立"
+      },
+      {
+        "name": "deltaP_monotone",
+        "ok": true,
+        "detail": "Δ_P 随 η 单调，η 为手征强度 DOF"
+      },
+      {
+        "name": "bump_edges",
+        "ok": true,
+        "detail": "弱域相位窗口 C^∞（边界零化）"
+      }
+    ]
+  },
+  "条目": [
+    {
+      "id": "A-01",
+      "section": "形式自洽",
+      "item": "Hermiticity",
+      "statement": "L_int=C_L O_L+C_R O_R+h.c. 对任意复 C_L,C_R 自伴",
+      "verdict": "PASS",
+      "detail": "每项 (C·O+h.c.) 均为实可观测；无需对 C 强加实性（数学成立）"
+    },
+    {
+      "id": "A-02",
+      "section": "形式自洽",
+      "item": "宇称律（P 不变 ⟺ C_L(θ)=C_R(−θ)）",
+      "statement": "η=0 守恒 / η≠0 破缺",
+      "verdict": "PASS",
+      "detail": "η=0 ⇒ 宇称守恒成立；η=1 ⇒ C_L(θ)≠C_R(−θ)，宇称破缺（V−A 型）"
+    },
+    {
+      "id": "B-01",
+      "section": "相位型否证",
+      "item": "相位型 Δ_P 扫描",
+      "statement": "g_L=g_R*=g·e^{iφ}（仅相位差）",
+      "verdict": "FAIL",
+      "detail": "扫描 201 点 max|Δ_P|=0.00e+00 ≡ 0 ⇒ 相位不能产生手征不对称（补充原案否证）"
+    },
+    {
+      "id": "B-02",
+      "section": "相位型否证",
+      "item": "相位奇性也不能救",
+      "statement": "φ(−θ)=−φ(θ) 只改相位不改模",
+      "verdict": "PASS",
+      "detail": "|g_L|=|g_R| 由模决定；相位奇性不影响 Δ_P ⇒ 结构上无效"
+    },
+    {
+      "id": "C-00",
+      "section": "η构造",
+      "item": "Δ_P(η=0.0)",
+      "statement": "预测 2η/(1+η²)=0.0000",
+      "verdict": "PASS",
+      "detail": "η=0 ⇒ Δ_P=0.0000（还原补充无手征）"
+    },
+    {
+      "id": "C-03",
+      "section": "η构造",
+      "item": "Δ_P(η=0.3)",
+      "statement": "预测 2η/(1+η²)=0.5505",
+      "verdict": "PASS",
+      "detail": "Δ_P=0.5505"
+    },
+    {
+      "id": "C-05",
+      "section": "η构造",
+      "item": "Δ_P(η=0.5)",
+      "statement": "预测 2η/(1+η²)=0.8000",
+      "verdict": "PASS",
+      "detail": "Δ_P=0.8000"
+    },
+    {
+      "id": "C-08",
+      "section": "η构造",
+      "item": "Δ_P(η=0.8)",
+      "statement": "预测 2η/(1+η²)=0.9756",
+      "verdict": "PASS",
+      "detail": "Δ_P=0.9756"
+    },
+    {
+      "id": "C-10",
+      "section": "η构造",
+      "item": "Δ_P(η=1.0)",
+      "statement": "预测 2η/(1+η²)=1.0000",
+      "verdict": "PASS",
+      "detail": "η=1 ⇒ Δ_P=1.0000（V−A，C_R=0）"
+    },
+    {
+      "id": "C-05",
+      "section": "η构造",
+      "item": "Δ_P 单调性",
+      "statement": "随 η∈[0,1] 单调 0→1",
+      "verdict": "PASS",
+      "detail": "强度不等价参数 η 是唯一手征 DOF；相位 φ0 不进入 Δ_P"
+    },
+    {
+      "id": "D-01",
+      "section": "弱域局部化",
+      "item": "bump 窗口边界",
+      "statement": "|θ|=Δ 处 W=0 且导数→0",
+      "verdict": "PASS",
+      "detail": "W(Δ)=0.00e+00，外导≈0.00e+00 ⇒ C^∞ 光滑局部化（评审 B-07 落地）"
+    },
+    {
+      "id": "D-02",
+      "section": "弱域局部化",
+      "item": "破缺定位",
+      "statement": "手征不对称仅存于弱域",
+      "verdict": "PASS",
+      "detail": "W(θ)=0 处 C_L=C_R=0 ⇒ Δ_P 定义 0；破缺与弱耦合共存（与 V−A 同构）"
+    }
+  ],
+  "耗时": "0.0s"
+}

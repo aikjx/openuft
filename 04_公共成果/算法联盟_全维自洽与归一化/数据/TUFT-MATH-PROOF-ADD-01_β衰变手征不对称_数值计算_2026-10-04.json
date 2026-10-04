@@ -1,0 +1,67 @@
+{
+  "engine": "TUFT-MATH-PROOF-ADD-01 β 衰变手征不对称修正数值计算（分支 3）",
+  "date": "2026-10-04",
+  "dependencies": [
+    "ADD-02 三正瓣分区",
+    "ADD-01 B.3 手征耦合",
+    "分支4 N1 干涉项重定义",
+    "分支4 N6 相位边界"
+  ],
+  "inputs": {
+    "alpha_W": 0.01696,
+    "lambda": 0.1179,
+    "theta_W_deg": 212.757,
+    "theta_Wc_deg": 240.0,
+    "delta_W_deg": 60.0,
+    "DeltaA_neutron": 0.001,
+    "rho_natural_sqrt": 0.13023056476879763,
+    "rho_natural_g2": 0.02609230769230769
+  },
+  "guards": [
+    {
+      "name": "weak_rep_geometry",
+      "ok": true,
+      "note": "|Ω_weak|=0.01696 (α_W=0.01696, 差 0.0%)，φ_W=-0.45405·φ_0",
+      "detail": "几何：弱代表点 |Ω_weak|=α_W，φ_W 比例因子 −0.454"
+    },
+    {
+      "name": "deltaA_natural_magnitude",
+      "ok": true,
+      "note": "ρ(√α_W)=0.1302 ⇒ δA_max=0.260；ρ(g_2)=0.0261 ⇒ δA_max=0.052；两者均 >> ΔA=0.001（超出 52–260 倍）",
+      "detail": "自然幅值：δA=2ρcosφ，ρ=α_W/g_SM ⇒ δA~O(0.05–0.26) 远超 ΔA=0.001"
+    },
+    {
+      "name": "survival_rho_threshold",
+      "ok": true,
+      "note": "ρ_crit = ΔA/2 = 5.00e-04；自然 ρ = 0.0261 超出 52 倍 ⇒ 天然假设下被排除，须调谐 ρ 或 φ",
+      "detail": "存活阈值：要 |δA|<ΔA 对所有 φ_0 成立，需 ρ < ΔA/2 = 5e-4"
+    },
+    {
+      "name": "survival_phi0_fraction",
+      "ok": true,
+      "note": "φ_0∈[0,2π] 存活占比 1.3%（其余 φ_0 均被排除）",
+      "detail": "存活窗口：ρ=0.0261 下，|δA|<ΔA 的 φ_0 占比（cosφ_W 需 < 0.019）"
+    },
+    {
+      "name": "deltaA_parity_odd_needs_cI",
+      "ok": true,
+      "note": "c_I=1, φ_0=3.46 时 δA_odd=-0.052 >> ΔA；但 c_I 由模型未定 ⇒ δA_TUFT 是 (c_I, ρ, φ_0) 三维族，非唯一数值预言",
+      "detail": "宇称奇项 δA_odd=2ρ c_I sinφ_W：需 SM×TUFT 干涉虚部 c_I≠0；c_I 未定 ⇒ 预测非唯一"
+    },
+    {
+      "name": "deltaA_ci_over_phi0",
+      "ok": true,
+      "note": "δA_even 5%/50%/95% = -0.047 / 0.008 / 0.052；|δA|<ΔA 仅当 φ_0 落入 cosφ_W≈0 的窄窗",
+      "detail": "95% 区间：ρ=α_W/g_2=0.0261，φ_0∈[0,2π] 均匀先验下 δA_even 的分位数"
+    },
+    {
+      "name": "max_rho_for_survival",
+      "ok": true,
+      "note": "ρ_max=5.00e-04，自然 ρ=0.0261 ⇒ 须将 TUFT 顶角耦合压低 52 倍方存活",
+      "detail": "存活上限：存在 φ_0 使 |δA|<ΔA 的最大 ρ = ΔA/2 = 5e-4"
+    }
+  ],
+  "n_guards": 7,
+  "n_pass": 7,
+  "n_fail": 0
+}

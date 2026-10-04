@@ -1,0 +1,106 @@
+{
+  "engine": "TUFT-MATH-PROOF-ADD-01 自洽性校验引擎（分支 4）",
+  "date": "2026-10-04",
+  "dependency": [
+    "判定_TUFT_V3.5修复方案_全维审计与重整_2026-10-04",
+    "整理_TUFT-MATH-PROOF_双参量流形四力分区_实Ω构造与可证伪预言",
+    "突破_TUFT-MATH-PROOF-ADD-02_Omega正瓣重指派"
+  ],
+  "partition": {
+    "D_EM": "0°±30°",
+    "D_Strong": "120°±30°",
+    "D_Weak": "240°±30°",
+    "D_G": "三负瓣之并",
+    "theta_Wc_deg": 240.0,
+    "dtheta_W_deg": 60.0
+  },
+  "guards": [
+    {
+      "name": "chiral_asymmetry_identically_zero",
+      "ok": true,
+      "note": "A_chiral = 0 （恒等于 0）→ 与「不对称来自干涉相位」自相矛盾",
+      "detail": "N1：A_chiral=(|g_L|^2-|g_R|^2)/(|g_L|^2+|g_R|^2) 恒等于 0"
+    },
+    {
+      "name": "interference_deltaA_nonzero",
+      "ok": true,
+      "note": "θ=225°, φ=-0.125, |Ω|=0.7071：奇项 −2|Ω|c_I sinφ = 0.1763 ≠ 0；纯实 c 时该奇项 = 0 ⇒ δA_TUFT 非零要求 c_I≠0",
+      "detail": "N1 修正：把 A_obs 定义于 |M_SM+M_TUFT|^2 交叉项，δA_TUFT∝-2|Ω| c_I sinφ"
+    },
+    {
+      "name": "parity_omega_star_needs_odd_phase",
+      "ok": true,
+      "note": "φ(225°)=-0.1250, φ(−225°)=0.0000, −φ(225°)=0.1250 ⇒ φ(−θ)≠−φ(θ) （差 -0.1250，θ_W,c=240°≠0）；仅 θ_W,c=0 时成立",
+      "detail": "N2：PΩ=Ω* ⟺ 相位为奇函数 ⟺ θ_W,c=0；三正瓣下 θ_W,c=240°≠0 ⇒ 不成立"
+    },
+    {
+      "name": "parity_breaking_holds_POmega_ne_Omega",
+      "ok": true,
+      "note": "PΩ(225°)=|Ω|0.7071 e^{i0.0000} vs Ω(225°)=|Ω|0.7071 e^{i-0.1250} ⇒ PΩ≠Ω",
+      "detail": "N2 补充：宇称破缺本身（PΩ≠Ω）在三正瓣下仍成立"
+    },
+    {
+      "name": "sigma_delta_a_mismatch",
+      "ok": true,
+      "note": "√(0.0076²+0.02²)=0.0214 ⇒ 相对 2.1%，σ_computed=5.13e-15；引用 σ=6.50e-14，比值 12.7×",
+      "detail": "N3：λ+B 合成相对不确定度仅 2.1%，引用 σ 比预算大 ~13 倍"
+    },
+    {
+      "name": "alpha_scale_repeat",
+      "ok": true,
+      "note": "α(0)=7.297353e-03 vs α(M_Z)=7.815431e-03，相对差 -7.0995%（复现前置 C-01）",
+      "detail": "N4：Part C 标 μ=M_Z 却取 α(0)=1/137.036 ⇒ C-01 复现（差 7.10%）"
+    },
+    {
+      "name": "gz_interval_arithmetic",
+      "ok": true,
+      "note": "ΔE∈[2.60e+18,1.10e+19]；SM 基线反解 3.6400e+19 eV（两路一致 0.0 eV）——标准 GZK 常引 ~5e19，基线来源未交代",
+      "detail": "N5a：区间算术自洽（0.68±0.42→[0.26,1.10]），但 SM 基线未交代"
+    },
+    {
+      "name": "gz_falsify_window_narrow",
+      "ok": true,
+      "note": "TUFT 上界 4.74 e19，证伪阈值 5.0e19，余量 0.26 e19（窄窗口）",
+      "detail": "N5b：证伪窗口窄——CI 上界距证伪阈值 5.0e19 仅 0.26e19"
+    },
+    {
+      "name": "cos3theta_identity",
+      "ok": true,
+      "note": "κ,τ∈{1..4} 最大偏差 1.39e-16",
+      "detail": "基础：cos(3θ)=(κ³−3κτ²)/(κ²+τ²)^{3/2} 恒等"
+    },
+    {
+      "name": "omega_dimensionless_under_scaling",
+      "ok": true,
+      "note": "缩放 1e6 倍：0.1788854382 vs 0.1788854382",
+      "detail": "基础：Ω 无量纲（κ,τ→sκ,sτ 不变）"
+    },
+    {
+      "name": "real_omega_parity_even",
+      "ok": true,
+      "note": "Ω_real(−θ)=Ω_real(θ)=0.707107（偶）",
+      "detail": "基础：实 Ω 在 P 下为偶（PΩ_real=Ω_real），宇称破缺只来自相位"
+    },
+    {
+      "name": "parity_theta_flips",
+      "ok": true,
+      "note": "atan2(1,2)=0.463648 → atan2(−1,2)=-0.463648（=−θ）",
+      "detail": "基础：P:(κ,τ)→(κ,−τ) ⟺ θ→−θ"
+    },
+    {
+      "name": "amplitude_continuous_at_weak_boundary",
+      "ok": true,
+      "note": "弱域边界 |Ω| 两侧差最大 2.63e-15（连续）",
+      "detail": "基础：跨弱域边界 |Ω|=|λcos3θ| 连续（弱域边界恰为 cos3θ 零点，|Ω|→0）"
+    },
+    {
+      "name": "phase_discontinuous_at_weak_boundary",
+      "ok": true,
+      "note": "φ(210°⁺)=-0.2500, φ(210°⁻)=0.0000 ⇒ 相位跳变 0.2500 = φ_0/2 ≠ 0 ⇒ 「相位连续（φ光滑）✔」不成立",
+      "detail": "N6（新发现）：线性相位 ansatz 在弱域硬截断处相位不连续（跳变 φ_0/2）"
+    }
+  ],
+  "n_guards": 14,
+  "n_pass": 14,
+  "n_fail": 0
+}
