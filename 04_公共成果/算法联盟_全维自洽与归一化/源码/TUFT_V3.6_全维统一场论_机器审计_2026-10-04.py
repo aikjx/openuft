@@ -55,11 +55,11 @@ D_f = D_omega                                   # 2π 无量纲
 D_L_v36 = ddiv(D_c, dmul(D_f, D_sqrt))          # V3.6 的力程
 D_L_ok1 = ddiv(D_c, D_f)                        # 正确式 L = c/f
 D_L_ok2 = ddiv(dim(), D_sqrt)                   # 等价式 L = 1/sqrt(k^2+t^2)
-ok_c1 = (D_L_v36 == D_L)
+ok_c1 = (D_L_v36 == D_L)          # True = 量纲正确
 KEYS["C1_L_v36_dim"] = dfmt(D_L_v36)
 KEYS["C1_L_correct_dim"] = dfmt(D_L_ok1)
 KEYS["C1_L_correct_dim2"] = dfmt(D_L_ok2)
-add("C1", "PASS" if not ok_c1 else "FAIL",
+add("C1", "PASS" if ok_c1 else "FAIL",
     "力程式 L=c/(f√(κ²+τ²)) 的量纲",
     "V3.6 公理 G4 的力程量纲为 %s，应为 %s ⟹ **量纲错误（L²≠L）**。"
     "唯一闭合式为 L=c/f=2π/√(κ²+τ²)（%s）。"
@@ -137,7 +137,7 @@ for _ in range(200):
     max_antisym = max(max_antisym, m)
 KEYS["C6_max_antisym_of_symmetric_stress"] = max_antisym
 ok_c6 = max_antisym < 1e-15
-add("C6", "PASS" if ok_c6 else "FAIL",
+add("C6", "FAIL" if ok_c6 else "BOUNDARY",
     "预言5（挠率引力波额外偏振模）与 Einstein–Cartan 既有判定的一致性",
     "机器复核：200 个随机**对称**应力张量的反对称部分 max|T_μν−T_νμ| = %.1e（机器零）⟹ "
     "对称物质不激发挠率（回链本项目 J29：挠率只由自旋流激发）。"
@@ -168,10 +168,11 @@ b = {"1": 41.0 / 10.0, "2": -19.0 / 6.0, "3": -7.0}
 def inv_at(key, mu_over_mz):
     return a_inv[key] - b[key] / (2 * math.pi) * math.log(mu_over_mz)
 # 两两交点：解 α_i^{-1} = α_j^{-1}
+M_Z = 91.1876                                  # GeV，圈跑动的参考标度
 def cross(i, j):
-    # a_i - b_i/(2π) L = a_j - b_j/(2π) L  ⟹ L = 2π(a_i-a_j)/(b_i-b_j)
+    # a_i - b_i/(2π) L = a_j - b_j/(2π) L  ⟹ L = 2π(a_i-a_j)/(b_i-b_j)，L=ln(μ/M_Z)
     L = 2 * math.pi * (a_inv[i] - a_inv[j]) / (b[i] - b[j])
-    return math.exp(L)
+    return M_Z * math.exp(L)                   # 交点标度（GeV）
 c12, c13, c23 = cross("1", "2"), cross("1", "3"), cross("2", "3")
 KEYS["C8_MU_12_GeV"] = c12
 KEYS["C8_MU_13_GeV"] = c13

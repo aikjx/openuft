@@ -522,6 +522,42 @@ def sec_B():
         % (res_nonodd[0], spread, 2.0 * abs(math.sin(PHI0 * THETA_WC_DEFAULT / DTHETA_W_DEFAULT)),
            dP_nonodd))
 
+    # --- B03b 口径自查：三种口径并列（2026-10-04 第十一轮自纠） -------------
+    # B03 报「残差常数 0.4624、5 点散布 1.11e−16」，其成立条件是
+    #   ① **单位幅值**（B03 的 C_L/C_R 默认 amp=1，未乘 |λcos3θ|）
+    #   ② **全域线性** φ(−θ) 仍按 φ0(−θ−θ_W,c)/Δ 求（来料是**分段定义**：域外 φ=0）
+    #   ③ θ_W,c=20°（B03 用例参数），非 ADD-02 的 240°
+    # 来料原文口径（分段 + 真实幅值）下残差**随 θ 变化**。本条三口径并列。
+    def _resid(deg, amp_mode, seg_mode, tc=20.0, dth=60.0, phi0=0.7):
+        amp = 1.0 if amp_mode == "unit" else abs(lam_val(deg))
+        ph_in = phi0 * (deg - tc) / dth
+        if seg_mode:
+            img = wrap180(-deg)
+            ph_out = (phi0 * (img - tc) / dth) if abs(img - tc) <= dth / 2.0 else 0.0
+        else:
+            ph_out = phi0 * ((-deg) - tc) / dth
+        cl = amp * complex(math.cos(ph_in), math.sin(ph_in))
+        cr = amp * complex(math.cos(-ph_out), math.sin(-ph_out))
+        return abs(cl - cr)
+
+    degs = (215.0, 225.0, 235.0, 245.0, 255.0)
+    r1 = [_resid(d, "unit", False) for d in degs]        # B03 原口径
+    r2 = [_resid(d, "real", False) for d in degs]        # 真实幅值 + 全域线性
+    r3 = [_resid(d, "real", True) for d in degs]         # 真实幅值 + 分段（来料原文）
+    KEY["b03_unit_linear"] = {"v0": r1[0], "spread": max(r1) - min(r1)}
+    KEY["b03_real_linear"] = {"min": min(r2), "max": max(r2), "spread": max(r2) - min(r2)}
+    KEY["b03_real_segmented"] = {"min": min(r3), "max": max(r3), "spread": max(r3) - min(r3)}
+    add("B03b", sec, "caliber_selfcheck",
+        "B03「守恒残差与 θ 无关（常数 0.4624、散布 1.11e−16）」的成立条件？",
+        "CORRECTED",
+        "三口径机器并列：①**单位幅值 + 全域线性**（B03 原口径）残差恒 %.4f、spread=%.1e "
+        "⇒ 常数成立；②真实幅值 |λcos3θ| + 全域线性：spread=%.2e；③**真实幅值 + 分段定义**"
+        "（来料原文）spread=%.2e ⇒ 后两者**随 θ 变化**。⇒ B03 的「常数」只在"
+        "「单位幅值 + 全域线性 + θ_W,c=20°」三条件同时成立时有效，**不适用于来料分段定义"
+        "与真实幅值**；但三口径都给出「残差恒 ≠0 ⇒ P 破缺、Δ_P≡0 ⇒ 纯相位型」，"
+        "故 B03 的核心裁定不变、仅数值表述须按口径改写（自纠，2026-10-04 第十一轮）"
+        % (r1[0], max(r1) - min(r1), max(r2) - min(r2), max(r3) - min(r3)))
+
     # --- B04 手征强度不对称必须靠幅值 --------------------------------------
     eps = 0.1
     dP_eps = delta_P(18.0, PHI0, 0.0, 60.0, odd_phase=True, eps=eps)
@@ -660,8 +696,10 @@ def sec_C():
         "Δa_e = 2.4e−13 ± 0.65e−13 的 95% 区间",
         "PASS",
         "2σ: [%.3f, %.3f]e−13；严格 95%%（1.96 sigma）: [%.3f, %.3f]e−13 ⇒ 算术均正确，"
-        "但 σ 本身未从 J 与 Σ_p 导出（见 C04）" % (two[0] * 1e13, two[1] * 1e13,
-                                                  n96[0] * 1e13, n96[1] * 1e13))
+        "但 σ 本身未从 J 与 Σ_p 导出（见 C04）。"
+        "**继承声明（步1）**：g-2 窗口已关（链 A-④ D-02 物理层 FAIL）⇒ 本区间属推导层复核，"
+        "**不得当作可用预言**；重新开放须先证伪攻破册前提" % (two[0] * 1e13, two[1] * 1e13,
+                                                             n96[0] * 1e13, n96[1] * 1e13))
 
     # --- C04 sigma 缺推导：需要多大的 Jacobian 放大 ---------------------------
     sig_in_rel = math.sqrt((SIG_ALPHA_S / ALPHA_S) ** 2 + 0.02 ** 2)
@@ -686,7 +724,9 @@ def sec_C():
     add("C05", sec, "uhecr_interval",
         "ΔE_GZK = 0.68±0.21 (1e19 eV) ⇒ E_TUFT 区间",
         "PASS",
-        "0.68±0.42 = [%.2f, %.2f]；E0=5.00 ⇒ E_TUFT = [%.2f, %.2f]e19 eV ⇒ 算术正确"
+        "0.68±0.42 = [%.2f, %.2f]；E0=5.00 ⇒ E_TUFT = [%.2f, %.2f]e19 eV ⇒ 算术正确。"
+        "**继承声明（步1）**：UHECR 窗口已关（链 A-④ D-02 物理层 FAIL）=> 本区间属推导层复核，"
+        "**不得当作可用预言**"
         % (de2[0] / 1e19, de2[1] / 1e19, e_tuft[0] / 1e19, e_tuft[1] / 1e19))
 
     # --- C06 「≥5.0e19 即证伪」与「区间已剥离传播误差」冲突 ---------------------
@@ -734,6 +774,17 @@ def sec_C():
         "emcee = ensemble MCMC（系综马尔可夫链蒙特卡洛）；nested sampling 惯用 "
         "dynesty / UltraNest。二者是不同算法族，不能称「基于 emcee 的嵌套采样」；"
         "另：若 Σ_p 由同一批耦合数据后验拟合再当先验使用 ⇒ 数据双重计数")
+
+    # --- C10 步1 自证：关窗继承声明已落盘 ---------------------------------
+    src = open(os.path.abspath(__file__), encoding="utf-8", errors="replace").read()
+    has_g2 = ("窗口已关" in src) and ("链 A-④" in src)
+    has_beta = "不在关窗范围" in src
+    add("C10", sec, "window_closed_inherited",
+        "步1 自证：本册已在 g-2 / UHECR 区间处补「窗口已关（链 A-④ D-02）」继承声明",
+        "PASS" if (has_g2 and has_beta) else "FAIL",
+        "自证：g-2/UHECR 关窗声明=%s（%d 处）、β 通道单列声明=%s ⇒ %s"
+        % (has_g2, src.count("窗口已关"), has_beta,
+           "继承声明已落盘，勿删" if (has_g2 and has_beta) else "**声明缺失**"))
 
     return {"H": H, "Fp_eigs": eigs, "sigma_q": sig_q, "null_dof": 6 - rk}
 
@@ -987,6 +1038,13 @@ def do_guards():
           "bump 居中窗守恒残差机器零 ⇒ 复相位不破坏 P")
     guard("f05_branch3_gate_selfconsistent", abs(0.0261 / 5.00e-4 - 52.2) < 0.5,
           "门禁倍数 %.1f ≈ 52.2" % (0.0261 / 5.00e-4))
+    guard("b03b_unit_amplitude_linear_is_constant",
+          KEY.get("b03_unit_linear", {}).get("spread", 1.0) < 1e-12 and
+          KEY.get("b03_real_segmented", {}).get("spread", 0.0) > 1e-6,
+          "B03 原口径（单位幅值+全域线性）spread=%.1e ⇒ 常数成立；来料口径（真实幅值+分段）"
+          "spread=%.2e ⇒ 非常数（B03 口径自纠）"
+          % (KEY.get("b03_unit_linear", {}).get("spread", -1.0),
+             KEY.get("b03_real_segmented", {}).get("spread", -1.0)))
 
 
 # ===========================================================================

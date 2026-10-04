@@ -1,0 +1,69 @@
+{
+  "engine": "TUFT-MATH-PROOF-ADD-01 B.3 手征相位物理性补全（分支 3b）",
+  "date": "2026-10-04",
+  "dependencies": [
+    "分支3 beta衰变数值",
+    "ADD-02 三正瓣分区",
+    "审计 D-03"
+  ],
+  "inputs": {
+    "alpha_W": 0.01696,
+    "lambda_SM": -1.2756,
+    "g_SM_g2": 0.65,
+    "g_SM_sqrt_alphaW": 0.13023056476879766,
+    "DeltaA": 0.001
+  },
+  "guards": [
+    {
+      "name": "sm_beta_asymmetry_reference",
+      "ok": true,
+      "note": "A(lambda_SM)=-0.1195（实验 -0.1184；差 0.0011，O(高阶修正)）",
+      "detail": "参照：lambda_SM=-1.2756 => A_SM~-0.119（中子实验 ~-0.1184，关联系数有高阶修正）"
+    },
+    {
+      "name": "phase_only_lambda_pure_imaginary",
+      "ok": true,
+      "note": "lambda(phi)=-i*tan(phi)：实部=0（纯虚）-> T 破坏耦合，非实宇称不对称",
+      "detail": "核心：等幅反相 => lambda=g_A/g_V=-i*tan(phi)（纯虚，CP/T-奇）"
+    },
+    {
+      "name": "phase_only_std_A_not_produced",
+      "ok": true,
+      "note": "Re A(-ix)=0.0206（小正数 O(x^2)），与 SM A=-0.118（大负值）不同构；相位不产生标准实宇称不对称",
+      "detail": "后果：纯虚 lambda 下标准 A 的前导实宇称不对称消失（A 依赖 Re lambda）"
+    },
+    {
+      "name": "phase_only_replaces_VA",
+      "ok": true,
+      "note": "|g_R|=|g_L| => 右旋弱流占比 100%，与『弱作用纯左手』(M_WR>>M_W) 冲突",
+      "detail": "后果：全耦合读取下弱作用不再是 V-A（出现可比右旋分量），与左手弱作用冲突"
+    },
+    {
+      "name": "correction_reading_imaginary_axial",
+      "ok": true,
+      "note": "Im lambda(g_2)=0.0522，Im lambda(sqrt_alphaW)=0.2605 —— O(0.05-0.26) 的 T 破坏污染",
+      "detail": "修正读取：Im lambda ~ 2|Omega|sin(phi)/g_SM ~ O(0.05)（T 破坏轴矢污染）"
+    },
+    {
+      "name": "timereversal_excluded_by_EDM",
+      "ok": true,
+      "note": "粗估 d_n~theta_bar*1e-13 e*cm，theta_bar~0.05 => 5.0e-15 e*cm，超上限 1.8e-26 约 3e+11 倍（粗估，标假设）",
+      "detail": "约束：O(0.05) 的 CP/T-odd 轴矢耦合被中子 EDM 排除（数量级，标注假设）"
+    },
+    {
+      "name": "real_magnitude_axis_physical",
+      "ok": true,
+      "note": "g_SM in {0.65,0.130} 下 eps=0->1 的 deltaA>DeltaA（需 eps 调谐或 rho 压低），与分支 3 结论一致",
+      "detail": "补全：宇称不对称须来自实幅值差 eps；deltaA(eps) 可算且可证伪"
+    },
+    {
+      "name": "phase_assigned_to_CPT_odd_channel",
+      "ok": true,
+      "note": "D-03 的『相位 vs 手征性』区分：相位->CP/T-odd（受 d_n<1.8e-26 强约束）；实幅值差->标准宇称不对称 A。B.3 的『相位产生手征不对称』应改写为『幅值差产生宇称；相位产生 T-odd』",
+      "detail": "裁定：相位归 CP/T-odd（EDM 约束），幅值差归宇称（A 可测）；D-03 深度闭合"
+    }
+  ],
+  "n_guards": 8,
+  "n_pass": 8,
+  "n_fail": 0
+}

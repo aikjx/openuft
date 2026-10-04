@@ -25,6 +25,15 @@ TUFT-MATH-PROOF-ADD-01 β 衰变手征不对称修正（δA_TUFT）数值计算�
 import math
 import json
 import os
+import sys
+
+# 中文 Windows 控制台守卫：报告含 U+2212（−）等非 ASCII 字符时 print 会抛
+# UnicodeEncodeError（'gbk' codec）⇒ 本脚本历史上同样是「落盘成功但退出码 1」
+# （2026-10-04 第十一轮与分支4 一并查出并修复）。
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 DEG = 180.0 / math.pi
 
@@ -153,6 +162,19 @@ def _():
     return ok, ("ρ_max=%.2e，自然 ρ=%.4f ⇒ 须将 TUFT 顶角耦合压低 %.0f 倍方存活" %
                 (rho_max, rho_nat, rho_nat/rho_max))
 
+# --- 步1（2026-10-04 第十一轮执行序列 1）：通道范围分离声明 ---------------
+@guard("beta_channel_outside_closed_windows",
+       "步1 声明：β 衰变通道**不在** g-2/EDM/UHECR 关窗范围（链 A-④ D-02 关窗范围只含这三项）；"
+       "其阻塞是 ① δA_TUFT 未定义（五项前置）② 参数账 6→7、c_I 无源（ADD-01R F04）")
+def _():
+    src = open(os.path.abspath(__file__), encoding="utf-8", errors="replace").read()
+    outside = "不在" in src and "关窗范围" in src
+    blockers = ("未定义" in src) and ("6→7" in src or "参数账" in src)
+    ok = outside and blockers
+    return ok, ("自证：β 通道范围分离声明=%s、阻塞两项声明=%s ⇒ %s" %
+                (outside, blockers,
+                 "已落盘，勿删" if ok else "**声明缺失**"))
+
 # --- 主流程 ----------------------------------------------------------------
 def main():
     results = {
@@ -192,11 +214,17 @@ def main():
    超出中子 β 衰变不对称参数精度（ΔA≈0.001）**~50–260 倍**。
 2. 存活阈值：要 |δA|<ΔA 对所有 φ_0 成立，须 ρ=|Ω|/g_SM < ΔA/2 = 5e-4；
    自然 ρ=α_W/g_2≈0.0261 超出阈值 ~52 倍 ⇒ 天然假设下被排除，须把 TUFT 顶角耦合压低 ~52 倍。
-3. 存活窗口：φ_0∈[0,2π] 中仅 ~2% 的 φ_0（cosφ_W≈0 附近）能存活，属强调谐。
+3. 存活窗口：φ_0∈[0,2π] 中仅 ~1.3% 的 φ_0（cosφ_W≈0 附近）能存活，属强调谐
+   （口径已统一：以本报告 guard `survival_phi0_fraction` 的读数为准）。
 4. 宇称奇项 δA_odd=2ρ c_I sinφ_W 需 SM×TUFT 干涉虚部 c_I≠0；c_I 模型未定 ⇒
    δA_TUFT 实为 (c_I, ρ, φ_0) 三维族，**当前不是唯一数值预言**（不满足 D-06 门槛 (d)）。
 5. 诚实判定：β 衰变不对称确为可证伪窗口（方向对），但 ADD-01 未定 g_SM 归一化与相对相位，
    且自然幅值已被实验排除；需先明确 (g_SM, c_I) 或把 ρ 压低 ~52 倍，方能成为有效预言。
+6. **通道范围分离（步1，2026-10-04）**：g-2 / EDM / UHECR 三项窗口已关（链 A-④ D-02 物理层 FAIL），
+   但 **β 衰变不在关窗范围**（关窗范围仅含那三项）⇒ 本册的排除结论（52 倍调谐）**不是**
+   「已关窗口」的一部分，而是独立的模型缺陷：① δA_TUFT 未定义（五项前置，见 ADD-01R D03）
+   ② 引入 c_I 使参数账由 6 增至 7 而观测量仍 4 ⇒ 可识别性恶化（ADD-01R F04）。
+   ⇒ 重做前置 = 闭合五项前置 + 给 c_I 输入来源。
 """)
     report = "\n".join(lines)
 

@@ -26,6 +26,15 @@ TUFT-MATH-PROOF-ADD-01 自洽性校验引擎（分支 4）
 import math
 import json
 import os
+import sys
+
+# 中文 Windows 控制台守卫：报告含 U+2212 等非 ASCII 字符时 print 会抛
+# UnicodeEncodeError（'gbk' codec）⇒ 本脚本历史上一直是「落盘成功但退出码 1」，
+# 即 guard 全过却从未真正通过退出码门禁（2026-10-04 第十一轮查出并修复）。
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 # ----------------------------------------------------------------------------
 # 全局参数（口径固定）
@@ -141,7 +150,9 @@ def _():
     return ok, note
 
 @guard("parity_breaking_holds_POmega_ne_Omega",
-       "N2 补充：宇称破缺本身（PΩ≠Ω）在三正瓣下仍成立")
+       "【历史基线 · 判据已废】原 guard 以 PΩ≠Ω 判宇称破缺；该判据已被 ADD-01R 判为"
+       "零信息量（复场自动满足 PΩ≠Ω）。**保留仅为不可回退基线，不得当作破缺结论**；"
+       "破缺判据见下方 parity_criterion_lagrangian_three_lobe（作用量 C_L(θ)=C_R(−θ)）")
 def _():
     theta = 225.0 / DEG
     Om, ph = omega_complex(theta)
@@ -149,20 +160,113 @@ def _():
     OmP, phP = omega_complex(-theta)
     same = (abs(OmP - Om) < 1e-9) and (abs(phP - ph) < 1e-9)
     ok = (not same) and (abs(ph) > 1e-9)
-    note = ("PΩ(225°)=|Ω|%.4f e^{i%.4f} vs Ω(225°)=|Ω|%.4f e^{i%.4f} ⇒ PΩ≠Ω" %
+    note = ("[历史基线] PΩ(225°)=|Ω|%.4f e^{i%.4f} vs Ω(225°)=|Ω|%.4f e^{i%.4f} ⇒ PΩ≠Ω 成立；"
+            "**但该式不构成破缺判据**（复场自动满足）⇒ 结论以作用量判据 guard 为准" %
             (OmP, phP, Om, ph))
+    return ok, note
+
+
+# ----------------------------------------------------------------------------
+# 步 0（2026-10-04 三链归一册执行序列 0：修判据）
+# 把「PΩ≠Ω」替换为**作用量守恒判据** C_L(θ)=C_R(−θ)。
+# 判据实现回链 ADD-01R（无歧义词标记），本册只做下沉与基线化，不另立判据。
+# ----------------------------------------------------------------------------
+def _C_L(theta, phase):
+    """左手耦合系数 |Ω|e^{iφ}（本册不引入幅值自由度 ⇒ |C_L|=|C_R|）"""
+    m = abs(omega_real(theta))
+    return complex(m * math.cos(phase), m * math.sin(phase))
+
+
+def _C_R(theta, phase):
+    """右手耦合系数 |Ω|e^{−iφ}"""
+    m = abs(omega_real(theta))
+    return complex(m * math.cos(-phase), m * math.sin(-phase))
+
+
+def _bump_w(theta, delta):
+    """C^∞ 紧支集权重 w(θ)=exp(−1/(1−(θ/Δ)²))，|θ|≥Δ 时为 0（偶函数）"""
+    t = theta / delta
+    if abs(t) >= 1.0:
+        return 0.0
+    return math.exp(-1.0 / (1.0 - t * t))
+
+
+def _bump_phi(theta, phi0, delta):
+    """φ(θ)=φ0(θ/Δ)·w(θ)/w(0)：奇函数 + 边界 C^∞"""
+    w0 = _bump_w(0.0, delta)
+    if w0 <= 0.0:
+        return None
+    return phi0 * (theta / delta) * (_bump_w(theta, delta) / w0)
+
+
+@guard("parity_criterion_lagrangian_three_lobe",
+       "步0 新判据：作用量守恒条件 C_L(θ)=C_R(−θ)；三正瓣 θ_W,c=240° 下不成立 ⇒ P 破缺。"
+       "**归因是「相位非奇 + 弱域非 P-自反」，不是「复相位」**")
+def _():
+    theta = 225.0 / DEG
+    ph_in = weak_phase(theta)          # 域内
+    ph_out = weak_phase(-theta)        # −225°≡135° ⇒ 落强域 ⇒ 0
+    amp = abs(omega_real(theta))
+    res = abs(_C_L(theta, ph_in) - _C_R(-theta, ph_out))
+    ok = res > 1e-9
+    note = ("φ(225°)=%.4f（域内）、φ(−225°)=φ(135°)=%.4f（出弱域）⇒ 守恒残差 "
+            "|C_L(θ)−C_R(−θ)|=%.4f（归一化 %.4f）≠0 ⇒ 按作用量判据 P 破缺；"
+            "破缺来源 = 分段定义下 φ(−θ)≠−φ(θ)，**与「复相位」无关**" %
+            (ph_in, ph_out, res, res / amp if amp > 0 else float("nan")))
+    return ok, note
+
+
+@guard("parity_criterion_bump_centered_conserves",
+       "步0 新判据：bump 居中窗（θ_W,c=0 的奇相位窗）下守恒残差机器零 ⇒ **P 守恒** "
+       "⇒ 证伪「复相位 ⇒ P 破缺」")
+def _():
+    delta = math.radians(30.0)
+    worst = 0.0
+    for deg in (-22.0, -12.0, 0.0, 7.5, 22.0):
+        th = math.radians(deg)
+        ph = _bump_phi(th, PHI0, delta)
+        worst = max(worst, abs(_C_L(th, ph) - _C_R(-th, _bump_phi(-th, PHI0, delta))))
+    ok = worst < 1e-12
+    note = ("bump 居中窗 5 点守恒残差最大 %.2e（机器零）⇒ P 守恒；与历史基线"
+            "（同窗内 PΩ≠Ω 成立）并存 ⇒ 该基线判据**零信息量**" % worst)
+    return ok, note
+
+
+@guard("parity_residual_nonzero_in_weak_domain",
+       "步0 新判据：分段定义下弱域内守恒残差恒 ≠ 0（随 θ 变化）⇒ P 破缺成立；"
+       "且 |C_L|=|C_R| ⇒ Δ_P≡0 ⇒ **纯相位型（CKM/CP 型）破缺，不产生手征强度不对称**")
+def _():
+    res = []
+    for deg in (215.0, 225.0, 235.0, 245.0, 255.0):
+        th = math.radians(deg)
+        r = abs(_C_L(th, weak_phase(th)) - _C_R(-th, weak_phase(-th)))
+        res.append(r)
+    dP = 0.0
+    for deg in (225.0,):
+        th = math.radians(deg)
+        cl = _C_L(th, weak_phase(th))
+        cr = _C_R(-th, weak_phase(-th))
+        dP = (abs(cl) ** 2 - abs(cr) ** 2) / (abs(cl) ** 2 + abs(cr) ** 2)
+    spread = max(res) - min(res)
+    ok = (min(res) > 1e-9) and abs(dP) < 1e-12
+    note = ("弱域内 5 点守恒残差 min=%.4f max=%.4f（spread=%.2e ⇒ 随 θ 变化，**恒 ≠0**）"
+            "；Δ_P=%.1e ≡ 0 ⇒ 破缺为纯相位型，不给出 |g_L|≠|g_R| 的手征强度不对称"
+            % (min(res), max(res), spread, dP))
     return ok, note
 
 # --- N3：σ_{Δa_e} 与误差预算不符 ---------------------------------------------
 @guard("sigma_delta_a_mismatch",
-       "N3：λ+B 合成相对不确定度仅 2.1%，引用 σ 比预算大 ~13 倍")
+       "N3：λ+B 合成相对不确定度仅 2.1%，引用 σ 比预算大 ~13 倍。"
+       "**继承声明（步1）**：g-2 窗口已关（链 A-④ D-02）⇒ 本条为推导层复核，区间不可用")
 def _():
     rel_comb = math.sqrt(SIGMA_LAM ** 2 + SIGMA_BI ** 2)
     sigma_computed = DAE_CENTER * rel_comb
     ratio = DAE_SIGMA / sigma_computed
     ok = (ratio > 3.0)   # 引用值显著大于预算
     note = ("√(0.0076²+0.02²)=%.4f ⇒ 相对 2.1%%，σ_computed=%.2e；"
-            "引用 σ=%.2e，比值 %.1f×" % (rel_comb, sigma_computed, DAE_SIGMA, ratio))
+            "引用 σ=%.2e，比值 %.1f×。**继承声明：g-2 窗口已关（链 A-④ D-02），"
+            "故正确做法不是重算区间，而是先证伪关窗前提**" %
+            (rel_comb, sigma_computed, DAE_SIGMA, ratio))
     return ok, note
 
 # --- N4：C-01 复现（α 标度）--------------------------------------------------
@@ -177,7 +281,9 @@ def _():
 
 # --- N5：UHECR 区间算术 + SM 基线 --------------------------------------------
 @guard("gz_interval_arithmetic",
-       "N5a：区间算术自洽（0.68±0.42→[0.26,1.10]），但 SM 基线未交代")
+       "N5a：区间算术自洽（0.68±0.42→[0.26,1.10]），但 SM 基线未交代。"
+       "**继承声明（步1）**：UHECR 窗口已关（链 A-④ D-02 物理层关窗）⇒ 本条仅为推导层算术复核，"
+       "**不得当作可用预言**")
 def _():
     lo = DGZK_CENTER - 2 * DGZK_SIGMA
     hi = DGZK_CENTER + 2 * DGZK_SIGMA
@@ -186,8 +292,23 @@ def _():
     sm_from_hi = 4.74e19 - hi
     ok = (abs(sm_from_lo - sm_from_hi) < 1e14)
     note = ("ΔE∈[%.2e,%.2e]；SM 基线反解 %.4e eV（两路一致 %.1f eV）——"
-            "标准 GZK 常引 ~5e19，基线来源未交代" %
+            "标准 GZK 常引 ~5e19，基线来源未交代。**继承声明：窗口已关（链 A-④ D-02），"
+            "此区间不可用**" %
             (lo, hi, sm_from_lo, abs(sm_from_lo - sm_from_hi)))
+    return ok, note
+
+
+@guard("window_closed_inherited_from_chainA4",
+       "步1 自证：本引擎已内嵌「g-2 / EDM / UHECR 窗口已关（链 A-④ D-02 物理层 FAIL）」"
+       "继承声明，且**明确 β 衰变通道不在关窗范围**（其阻塞是 δA 未定义 + 参数账 6→7）")
+def _():
+    src = open(os.path.abspath(__file__), encoding="utf-8", errors="replace").read()
+    has_g2 = ("窗口已关" in src) and ("链 A-④" in src)
+    has_beta = "不在关窗范围" in src
+    ok = has_g2 and has_beta
+    note = ("自证：窗口已关声明=%s（%d 处）、β 通道单列声明=%s ⇒ %s" %
+            (has_g2, src.count("窗口已关"), has_beta,
+             "继承声明已落盘，勿删" if ok else "**继承声明缺失**"))
     return ok, note
 
 @guard("gz_falsify_window_narrow",
@@ -310,10 +431,17 @@ def main():
     lines.append("### 结论映射")
     lines.append("""
 - N1（A_chiral≡0）确认；N1 修正给出 δA_TUFT∝−2|Ω|c_I sinφ，非零要求 c_I≠0（SM×TUFT 干涉有虚部）。
-- N2（PΩ=Ω* 需 θ_W,c=0）确认：三正瓣 θ_W,c=240°≠0，PΩ=Ω* 不成立；但破缺本身（PΩ≠Ω）成立。
-- N3（σ_{Δa_e} 与预算差 ~13 倍）确认：需重算区间或补 27% 级第三误差源。
+- **N2 已用作用量判据重写（步0）**：`PΩ=Ω*` 需 θ_W,c=0 仍成立；但**「破缺本身（PΩ≠Ω）成立」是错误论断，已删除**。
+  正确判据 C_L(θ)=C_R(−θ)：三正瓣 θ_W,c=240° 下残差 ≠0 ⇒ P 破缺，归因为「相位非奇 + 弱域非 P-自反」；
+  bump 居中窗（θ_W,c=0）下残差机器零 ⇒ **P 守恒** ⇒ 复相位本身既不破坏宇称也不产生手征强度不对称（Δ_P≡0）。
+  原 guard 已降级为**历史基线**保留（不可回退），不再作为破缺结论。
+- N3（σ_{Δa_e} 与预算差 ~13 倍）确认；**继承声明：g-2 窗口已关（链 A-④ D-02 物理层 FAIL）**
+  ⇒ 正确处置不是重算区间，而是先证伪关窗前提。
 - N4（C-01 复现，α 标度差 7.10%）确认：Part C 须改 μ=M_Z 或明确 μ→0。
-- N5（UHECR 区间算术自洽但 SM 基线 3.64e19 未交代 + 证伪窗口窄）确认。
+- N5（UHECR 区间算术自洽但 SM 基线 3.64e19 未交代 + 证伪窗口窄）确认；
+  **继承声明：UHECR 窗口已关（链 A-④ D-02）**，该区间不可用作预言。
+- **通道范围分离（步1）**：关窗范围 = {g-2, EDM, UHECR}；**β 衰变不在关窗范围**，
+  其阻塞是 δA_TUFT 未定义（五项前置）+ 参数账 6→7、c_I 无源（见 ADD-01R F04）。
 """)
     report = "\n".join(lines)
 

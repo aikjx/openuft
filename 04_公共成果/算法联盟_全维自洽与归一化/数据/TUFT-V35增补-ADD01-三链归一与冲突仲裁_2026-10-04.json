@@ -1,0 +1,1518 @@
+{
+  "册名": "TUFT V3.5 增补 / ADD-01 三链归一与冲突仲裁",
+  "日期": "2026-10-04",
+  "问题": "同一份来料（外部评审对象 TUFT V3.5 增补 = TUFT-MATH-PROOF-ADD-01）在本仓被三条独立产物链处理，导致重复裁决 / 两处真冲突 / 继承缺口 / 错误判据存活",
+  "性质": "跨链元审计（归一 + 仲裁 + 防回潮守卫）；非物理判决",
+  "引擎": "纯标准库（Python 3.8），零第三方依赖",
+  "条目数": 61,
+  "计数": {
+    "PASS": 32,
+    "INFO": 8,
+    "BOUNDARY": 14,
+    "CORRECTED": 3,
+    "MISMATCH": 1,
+    "FAIL": 3
+  },
+  "自检": {
+    "总数": 10,
+    "通过": 10
+  },
+  "key_numbers": {
+    "chains": [
+      {
+        "chain": "A-整理",
+        "md": "判定_TUFT_V3.5增补_外部评审整理_2026-10-04.md",
+        "md_exists": true,
+        "json": null,
+        "json_exists": false,
+        "desc": "外部评审逐点裁决（仅 md，无机器产物）"
+      },
+      {
+        "chain": "A-④",
+        "md": "判定_TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.md",
+        "md_exists": true,
+        "json": "TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.json",
+        "json_exists": true,
+        "desc": "分支④ 宇称自洽 + Fisher + 误差传播 + 口径裁定",
+        "verdicts": {
+          "PASS": 6,
+          "FAIL": 2,
+          "BOUNDARY": 3,
+          "INFO": 1
+        },
+        "n_items": 12,
+        "n_guards": 6,
+        "n_guard_pass": 6
+      },
+      {
+        "chain": "B-4",
+        "md": "整理_TUFT-MATH-PROOF-ADD-01_复权重场与误差传播_交叉审计与分支裁定_2026-10-04.md",
+        "md_exists": true,
+        "json": "TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.json",
+        "json_exists": true,
+        "desc": "分支4 自洽性校验（N1–N5 复现）",
+        "n_guards": 18,
+        "n_guard_pass": 18
+      },
+      {
+        "chain": "B-3",
+        "md": "整理_TUFT-MATH-PROOF-ADD-01_复权重场与误差传播_交叉审计与分支裁定_2026-10-04.md",
+        "md_exists": true,
+        "json": "TUFT-MATH-PROOF-ADD-01_β衰变手征不对称_数值计算_2026-10-04.json",
+        "json_exists": true,
+        "desc": "分支3 β 衰变手征不对称数值（整理册同链 B-4）",
+        "n_guards": 8,
+        "n_guard_pass": 8
+      },
+      {
+        "chain": "C",
+        "md": "判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.md",
+        "md_exists": true,
+        "json": "TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.json",
+        "json_exists": true,
+        "desc": "第二轮外部审计复算 + 自我修正 + 跨册核对",
+        "n_guards": 20,
+        "n_guard_pass": 20,
+        "n_items": 42,
+        "verdicts": {
+          "MISMATCH": 10,
+          "PASS": 18,
+          "BOUNDARY": 4,
+          "CORRECTED": 6,
+          "FAIL": 3,
+          "INFO": 1
+        }
+      }
+    ],
+    "matrix": [
+      {
+        "id": "I01",
+        "topic": "atan2(−y,x)=−atan2(y,x) 的例外集",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [
+            "parity_theta_flips"
+          ],
+          "B-3": [],
+          "C": [
+            "A04"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "B-4",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I02",
+        "topic": "cos3θ 三倍角坐标式恒等",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [
+            "cos3theta_identity"
+          ],
+          "B-3": [],
+          "C": [
+            "A06"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "B-4",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I03",
+        "topic": "φ(−θ)+φ(θ) 闭式 = −2φ0θ_Wc/Δθ",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "A-02b"
+          ],
+          "B-4": [
+            "parity_omega_star_needs_odd_phase"
+          ],
+          "B-3": [],
+          "C": [
+            "A01"
+          ]
+        },
+        "n_chains": 3,
+        "chains_covering": [
+          "A-④",
+          "B-4",
+          "C"
+        ],
+        "verdict": "三链以上"
+      },
+      {
+        "id": "I04",
+        "topic": "弱域须 P-自反（D_W ⟺ −θ∈D_W）",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "D01"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I05",
+        "topic": "弱域边界不连续 / 非 C^1",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [
+            "phase_discontinuous_at_weak_boundary"
+          ],
+          "B-3": [],
+          "C": [
+            "A08"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "B-4",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I06",
+        "topic": "bump 相位窗 C^∞ 修复",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "A09"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I07",
+        "topic": "Ω(−θ)=Ω*(θ) 不等价于 P 破缺",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "A-02a"
+          ],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "B02"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "A-④",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I08",
+        "topic": "A_chiral 恒等于 0",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "A-01"
+          ],
+          "B-4": [
+            "chiral_asymmetry_identically_zero"
+          ],
+          "B-3": [],
+          "C": [
+            "A02"
+          ]
+        },
+        "n_chains": 3,
+        "chains_covering": [
+          "A-④",
+          "B-4",
+          "C"
+        ],
+        "verdict": "三链以上"
+      },
+      {
+        "id": "I09",
+        "topic": "g_R = conj(g_L) 而非 |g_R|≠|g_L|",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "A03"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I10",
+        "topic": "守恒判据 C_L(θ)=C_R(−θ)",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "A-02a"
+          ],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "B01"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "A-④",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I11",
+        "topic": "非奇相位 ⇒ 纯相位型破缺、Δ_P≡0",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "B03"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I12",
+        "topic": "Δ_P≠0 需幅值自由度 ε",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "B04"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I13",
+        "topic": "分区下 P 把 D_Weak 映到 D_Strong",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "B06"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I14",
+        "topic": "整体相位只改率、不改 A_GT",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "B05"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I15",
+        "topic": "Fisher 可识别性不足（rank<6）",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "B-01"
+          ],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "C01"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "A-④",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I16",
+        "topic": "rank 的具体读数（4 或 3）",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "B-01"
+          ],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "C01"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "A-④",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I17",
+        "topic": "双精度下可分辨方向数",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "C01"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I18",
+        "topic": "σ_λ/λ 是约定继承非传播结果",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "C-01"
+          ],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "C02"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "A-④",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I19",
+        "topic": "g-2 区间算术（2σ / 1.96σ）",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "C-02"
+          ],
+          "B-4": [
+            "sigma_delta_a_mismatch"
+          ],
+          "B-3": [],
+          "C": [
+            "C03"
+          ]
+        },
+        "n_chains": 3,
+        "chains_covering": [
+          "A-④",
+          "B-4",
+          "C"
+        ],
+        "verdict": "三链以上"
+      },
+      {
+        "id": "I20",
+        "topic": "g-2 σ 未导出 + 放大门禁 12.65",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "C-03"
+          ],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "C04"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "A-④",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I21",
+        "topic": "UHECR 区间算术",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "C-04"
+          ],
+          "B-4": [
+            "gz_interval_arithmetic"
+          ],
+          "B-3": [],
+          "C": [
+            "C05"
+          ]
+        },
+        "n_chains": 3,
+        "chains_covering": [
+          "A-④",
+          "B-4",
+          "C"
+        ],
+        "verdict": "三链以上"
+      },
+      {
+        "id": "I22",
+        "topic": "UHECR 证伪阈值的定量门槛",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "C-04"
+          ],
+          "B-4": [
+            "gz_falsify_window_narrow"
+          ],
+          "B-3": [],
+          "C": [
+            "C06"
+          ]
+        },
+        "n_chains": 3,
+        "chains_covering": [
+          "A-④",
+          "B-4",
+          "C"
+        ],
+        "verdict": "三链以上"
+      },
+      {
+        "id": "I23",
+        "topic": "三通道共享 λ ⇒ 理论相关 ρ≠0",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "C07"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I24",
+        "topic": "emcee ≠ nested sampling（术语）",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [],
+          "C": [
+            "C09"
+          ]
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "C"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I25",
+        "topic": "δA_TUFT 的五项前置",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "B-02"
+          ],
+          "B-4": [],
+          "B-3": [
+            "deltaA_natural_magnitude"
+          ],
+          "C": [
+            "D03"
+          ]
+        },
+        "n_chains": 3,
+        "chains_covering": [
+          "A-④",
+          "B-3",
+          "C"
+        ],
+        "verdict": "三链以上"
+      },
+      {
+        "id": "I26",
+        "topic": "β 通道参数账 6→7（c_I 无源）",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [],
+          "B-3": [
+            "deltaA_parity_odd_needs_cI"
+          ],
+          "C": [
+            "F04"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "B-3",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I27",
+        "topic": "g-2 / UHECR 窗口已关（双重否定）",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "D-02"
+          ],
+          "B-4": [],
+          "B-3": [],
+          "C": []
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "A-④"
+        ],
+        "verdict": "单链独有"
+      },
+      {
+        "id": "I28",
+        "topic": "「PΩ≠Ω」作为破缺判据零信息量",
+        "cover": {
+          "A-整理": [],
+          "A-④": [],
+          "B-4": [
+            "parity_breaking_holds_POmega_ne_Omega"
+          ],
+          "B-3": [],
+          "C": [
+            "F01"
+          ]
+        },
+        "n_chains": 2,
+        "chains_covering": [
+          "B-4",
+          "C"
+        ],
+        "verdict": "重复覆盖"
+      },
+      {
+        "id": "I29",
+        "topic": "重新开放的路径（先证伪关窗前提）",
+        "cover": {
+          "A-整理": [],
+          "A-④": [
+            "D-03"
+          ],
+          "B-4": [],
+          "B-3": [],
+          "C": []
+        },
+        "n_chains": 1,
+        "chains_covering": [
+          "A-④"
+        ],
+        "verdict": "单链独有"
+      }
+    ],
+    "matrix_summary": {
+      "重复覆盖": 11,
+      "三链以上": 6,
+      "单链独有": 12
+    },
+    "bad_fingerprints": 0,
+    "rank_generic": 4,
+    "rank_model": 3,
+    "inherit_g2": {
+      "C": true,
+      "B-4": true,
+      "B-3": true
+    },
+    "id_namespace_clash": [
+      "D-02",
+      "C-01"
+    ],
+    "c05_pairs": {
+      "A-④": 4,
+      "B-4": 1,
+      "B-3": 0,
+      "C": 4
+    },
+    "c05_inter": {
+      "A4_cap_C": 4,
+      "B4_cap_C": 1,
+      "B4_cap_A4": 1
+    },
+    "c05_sem": {
+      "g2_2sigma": {
+        "A-④": [
+          1.1,
+          3.7
+        ],
+        "B-4": null,
+        "B-3": null,
+        "C": [
+          1.1,
+          3.7
+        ]
+      },
+      "g2_196sigma": {
+        "A-④": [
+          1.126,
+          3.674
+        ],
+        "B-4": null,
+        "B-3": null,
+        "C": [
+          1.126,
+          3.674
+        ]
+      },
+      "e_tuft_C": [
+        3.9,
+        4.74
+      ],
+      "e_tuft_B4_upper": 4.74,
+      "a_chiral_selfaware": {
+        "A-④": true,
+        "B-4": true,
+        "B-3": false,
+        "C": true
+      }
+    },
+    "inherit_gaps": [
+      {
+        "gap": "G4",
+        "chain": "A-④",
+        "what": "链 C C01：rank=3（G∥S）而非 4"
+      }
+    ],
+    "inherit_selfaware": [],
+    "live_hits": 29,
+    "live_violations": 8,
+    "live_detail": [
+      {
+        "rule": "R1",
+        "rule_name": "错误判据活点：parity_breaking_holds_POmega_ne_Omega",
+        "line": 152,
+        "why": "该 guard 以 PΩ≠Ω 判破缺，已判零信息量（F01/E06）⇒ 须删除或改判据",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 101,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 102,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 103,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 108,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 433,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R3",
+        "rule_name": "5.1e−15 / 5.13e−15 当作 σ 的正确答案",
+        "line": 263,
+        "why": "该值预设单位 Jacobian（E02）⇒ 只能作下界参考，须标注",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R3",
+        "rule_name": "5.1e−15 / 5.13e−15 当作 σ 的正确答案",
+        "line": 264,
+        "why": "该值预设单位 Jacobian（E02）⇒ 只能作下界参考，须标注",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R3",
+        "rule_name": "5.1e−15 / 5.13e−15 当作 σ 的正确答案",
+        "line": 269,
+        "why": "该值预设单位 Jacobian（E02）⇒ 只能作下界参考，须标注",
+        "xref": true,
+        "file": "源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py",
+        "chain": "B-4"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 10,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": false,
+        "file": "源码/TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.py",
+        "chain": "A-④"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 62,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": false,
+        "file": "源码/TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.py",
+        "chain": "A-④"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 71,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": false,
+        "file": "源码/TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.py",
+        "chain": "A-④"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 73,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": false,
+        "file": "源码/TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.py",
+        "chain": "A-④"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 92,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": false,
+        "file": "源码/TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.py",
+        "chain": "A-④"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 210,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": false,
+        "file": "源码/TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.py",
+        "chain": "A-④"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 228,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": false,
+        "file": "源码/TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.py",
+        "chain": "A-④"
+      },
+      {
+        "rule": "R4",
+        "rule_name": "rank=4 硬断言（未标口径）",
+        "line": 101,
+        "why": "须区分「上界 4」与「本仓实测 3」（C-01）",
+        "xref": false,
+        "file": "源码/TUFT_V3.5增补_自洽性校验与口径裁定_2026-10-04.py",
+        "chain": "A-④"
+      },
+      {
+        "rule": "R1",
+        "rule_name": "错误判据活点：parity_breaking_holds_POmega_ne_Omega",
+        "line": 879,
+        "why": "该 guard 以 PΩ≠Ω 判破缺，已判零信息量（F01/E06）⇒ 须删除或改判据",
+        "xref": true,
+        "file": "源码/判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.py",
+        "chain": "C"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 15,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.py",
+        "chain": "C"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 267,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.py",
+        "chain": "C"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 278,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.py",
+        "chain": "C"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 279,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.py",
+        "chain": "C"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 281,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.py",
+        "chain": "C"
+      },
+      {
+        "rule": "R2",
+        "rule_name": "A_chiral / ℛ_chiral 仍作为可观测量",
+        "line": 833,
+        "why": "该量恒等于 0（A02/A-01）⇒ 引用处必须带「恒等于 0 / 须删除」标注",
+        "xref": true,
+        "file": "源码/判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.py",
+        "chain": "C"
+      }
+    ],
+    "negtest_caught": true,
+    "authority_missing": []
+  },
+  "判定": [
+    {
+      "id": "A-A整理",
+      "section": "A",
+      "item": "清点",
+      "statement": "链 A-整理 的产物齐备性与读数",
+      "verdict": "PASS",
+      "detail": "md=True json=False 条目=None guard=None 通过=None"
+    },
+    {
+      "id": "A-A4",
+      "section": "A",
+      "item": "清点",
+      "statement": "链 A-④ 的产物齐备性与读数",
+      "verdict": "PASS",
+      "detail": "md=True json=True 条目=12 guard=6 通过=6"
+    },
+    {
+      "id": "A-B4",
+      "section": "A",
+      "item": "清点",
+      "statement": "链 B-4 的产物齐备性与读数",
+      "verdict": "PASS",
+      "detail": "md=True json=True 条目=None guard=18 通过=18"
+    },
+    {
+      "id": "A-B3",
+      "section": "A",
+      "item": "清点",
+      "statement": "链 B-3 的产物齐备性与读数",
+      "verdict": "PASS",
+      "detail": "md=True json=True 条目=None guard=8 通过=8"
+    },
+    {
+      "id": "A-C",
+      "section": "A",
+      "item": "清点",
+      "statement": "链 C 的产物齐备性与读数",
+      "verdict": "PASS",
+      "detail": "md=True json=True 条目=42 guard=20 通过=20"
+    },
+    {
+      "id": "A-TOT",
+      "section": "A",
+      "item": "清点汇总",
+      "statement": "五链条目/guard 总量",
+      "verdict": "INFO",
+      "detail": "条目合计 54（不含仅 md 的 A-整理）· guard 合计 52 ⇒ 同一份来料被独立处理 3 次、分支④被做 2 遍"
+    },
+    {
+      "id": "I01",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "atan2(−y,x)=−atan2(y,x) 的例外集",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：B-4、C"
+    },
+    {
+      "id": "I02",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "cos3θ 三倍角坐标式恒等",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：B-4、C"
+    },
+    {
+      "id": "I03",
+      "section": "B",
+      "item": "三链以上",
+      "statement": "φ(−θ)+φ(θ) 闭式 = −2φ0θ_Wc/Δθ",
+      "verdict": "PASS",
+      "detail": "覆盖链：A-④、B-4、C"
+    },
+    {
+      "id": "I04",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "弱域须 P-自反（D_W ⟺ −θ∈D_W）",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I05",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "弱域边界不连续 / 非 C^1",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：B-4、C"
+    },
+    {
+      "id": "I06",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "bump 相位窗 C^∞ 修复",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I07",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "Ω(−θ)=Ω*(θ) 不等价于 P 破缺",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：A-④、C"
+    },
+    {
+      "id": "I08",
+      "section": "B",
+      "item": "三链以上",
+      "statement": "A_chiral 恒等于 0",
+      "verdict": "PASS",
+      "detail": "覆盖链：A-④、B-4、C"
+    },
+    {
+      "id": "I09",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "g_R = conj(g_L) 而非 |g_R|≠|g_L|",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I10",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "守恒判据 C_L(θ)=C_R(−θ)",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：A-④、C"
+    },
+    {
+      "id": "I11",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "非奇相位 ⇒ 纯相位型破缺、Δ_P≡0",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I12",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "Δ_P≠0 需幅值自由度 ε",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I13",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "分区下 P 把 D_Weak 映到 D_Strong",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I14",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "整体相位只改率、不改 A_GT",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I15",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "Fisher 可识别性不足（rank<6）",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：A-④、C"
+    },
+    {
+      "id": "I16",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "rank 的具体读数（4 或 3）",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：A-④、C"
+    },
+    {
+      "id": "I17",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "双精度下可分辨方向数",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I18",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "σ_λ/λ 是约定继承非传播结果",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：A-④、C"
+    },
+    {
+      "id": "I19",
+      "section": "B",
+      "item": "三链以上",
+      "statement": "g-2 区间算术（2σ / 1.96σ）",
+      "verdict": "PASS",
+      "detail": "覆盖链：A-④、B-4、C"
+    },
+    {
+      "id": "I20",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "g-2 σ 未导出 + 放大门禁 12.65",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：A-④、C"
+    },
+    {
+      "id": "I21",
+      "section": "B",
+      "item": "三链以上",
+      "statement": "UHECR 区间算术",
+      "verdict": "PASS",
+      "detail": "覆盖链：A-④、B-4、C"
+    },
+    {
+      "id": "I22",
+      "section": "B",
+      "item": "三链以上",
+      "statement": "UHECR 证伪阈值的定量门槛",
+      "verdict": "PASS",
+      "detail": "覆盖链：A-④、B-4、C"
+    },
+    {
+      "id": "I23",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "三通道共享 λ ⇒ 理论相关 ρ≠0",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I24",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "emcee ≠ nested sampling（术语）",
+      "verdict": "PASS",
+      "detail": "覆盖链：C"
+    },
+    {
+      "id": "I25",
+      "section": "B",
+      "item": "三链以上",
+      "statement": "δA_TUFT 的五项前置",
+      "verdict": "PASS",
+      "detail": "覆盖链：A-④、B-3、C"
+    },
+    {
+      "id": "I26",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "β 通道参数账 6→7（c_I 无源）",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：B-3、C"
+    },
+    {
+      "id": "I27",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "g-2 / UHECR 窗口已关（双重否定）",
+      "verdict": "PASS",
+      "detail": "覆盖链：A-④"
+    },
+    {
+      "id": "I28",
+      "section": "B",
+      "item": "重复覆盖",
+      "statement": "「PΩ≠Ω」作为破缺判据零信息量",
+      "verdict": "BOUNDARY",
+      "detail": "覆盖链：B-4、C"
+    },
+    {
+      "id": "I29",
+      "section": "B",
+      "item": "单链独有",
+      "statement": "重新开放的路径（先证伪关窗前提）",
+      "verdict": "PASS",
+      "detail": "覆盖链：A-④"
+    },
+    {
+      "id": "B-SUM",
+      "section": "B",
+      "item": "矩阵统计",
+      "statement": "29 议题在三链上的覆盖分布",
+      "verdict": "INFO",
+      "detail": "单链独有 12 · 重复覆盖 11 · 三链以上 6 · **空缺 0** ⇒ 三链覆盖是零散的，既有产物**不能拼接成完整闭环**"
+    },
+    {
+      "id": "C-01",
+      "section": "C",
+      "item": "rank 冲突仲裁",
+      "statement": "链 A-④「实测 rank=4」 vs 链 C「rank=3」（议题 I16）",
+      "verdict": "CORRECTED",
+      "detail": "两情形机器并列：通用 4×6（行独立）rank=**4**；本仓 ADD-02 实际耦合匹配（引力行 G=1.484e−44×强核行 S，机器验证 True）rank=**3**。⇒ 审计给的 4 是**上界**、链 A 的 4 用了非本仓模型的 Jacobian、链 C 的 3 是**现行分区下的实测**；两者都 < 6 ⇒ **MCMC 门禁在两情形下同样成立**，结论不翻转，差异只在可分辨方向数"
+    },
+    {
+      "id": "C-02",
+      "section": "C",
+      "item": "关窗裁定的层次与继承",
+      "statement": "链 A-④ D-02「g-2/UHECR 暂判不可用（双重否定）」 vs 链 B/C「算术正确」",
+      "verdict": "CORRECTED",
+      "detail": "层次不同**不矛盾**：链 A-④ 是**物理层**（按攻破册 Π-定理/尺度简并，窗口已关），链 B-4/链 C 是**推导层**（算术对、σ 未导出）。但链 B/C **均未继承**该 FAIL：链 C 继承=True、链 B-4=True、链 B-3=True ⇒ 凡引用 g-2/UHECR 区间处**必须补继承声明**，否则等于在已关窗口上做高精度算术"
+    },
+    {
+      "id": "C-03",
+      "section": "C",
+      "item": "关窗范围界定",
+      "statement": "链 A-④ 的关窗是否覆盖 β 衰变通道？",
+      "verdict": "CORRECTED",
+      "detail": "关窗范围 = {g-2, EDM, 宇宙线(UHECR)}（链 A-④ D-02 明列）⇒ **β 衰变不在关窗范围**；分支 3 的问题不是关窗，而是 ① δA_TUFT 未定义（五项前置）② 参数账 6→7、c_I 无源。⇒ 两条通道的处置必须分开写，不可笼统称「窗口已关」"
+    },
+    {
+      "id": "C-04",
+      "section": "C",
+      "item": "编号空间冲突",
+      "statement": "机器回链能否用裸编号（D-02/C-01…）做标记？",
+      "verdict": "MISMATCH",
+      "detail": "冲突标签 D-02、C-01：同号条目在两条链里**指不同对象**（ADD-01 的 D-02 = β 衰变待办，链 A-④ 的 D-02 = g-2/UHECR 双重否定）⇒ 首版继承正则用裸编号导致 G1 **假 PASS**（把 ADD-01 的 D-02 误读成链 A-④ 的 D-02）。**修正**：回链标记必须带链前缀（链 A-④ / ADD-01R）或用无歧义词（双重否定/零信息量/实测 3/参数账）。本条是本轮自抓的自引入缺陷，如实登记"
+    },
+    {
+      "id": "C-05",
+      "section": "C",
+      "item": "重复覆盖口径核对",
+      "statement": "三链以上覆盖的 6 个议题是否出现数值口径漂移？",
+      "verdict": "PASS",
+      "detail": "逐链按其**真实记法**核对：①g-2 2σ 链A-④=(1.1, 3.7) / 链C=(1.1, 3.7) → 一致；②1.96σ 链A-④=(1.126, 3.674) / 链C=(1.126, 3.674) → 一致；③E_TUFT 链C=(3.9, 4.74) / 链B-4 叙述式上界=4.74 → 一致；④A_chiral≡0 覆盖链（A-④、B-4、C）自陈=A-④=True、B-4=True、C=True〔B-3 不覆盖该议题，按矩阵口径不要求〕。自由数值对交集：A-④∩C=4、B-4∩C=1、B-4∩A-④=1。⇒ **未发现口径漂移**；但记法差异真实存在（链 B-4 用叙述句、链 A-④/链C 用 [a,b]，有效位 4 位 vs 3 位）⇒ 该差异已由 round 归一，不构成结论冲突"
+    },
+    {
+      "id": "G1",
+      "section": "D",
+      "item": "继承检查",
+      "statement": "链 A-④ D-02：g-2 / UHECR 窗口已关（物理层 FAIL）",
+      "verdict": "PASS",
+      "detail": "目标链状态：B-4=继承、B-3=继承、C=继承"
+    },
+    {
+      "id": "G2",
+      "section": "D",
+      "item": "继承检查",
+      "statement": "链 A-④ D-03：重新开放须先证伪攻破册前提",
+      "verdict": "PASS",
+      "detail": "目标链状态：B-4=继承、B-3=继承、C=继承"
+    },
+    {
+      "id": "G3",
+      "section": "D",
+      "item": "继承检查",
+      "statement": "链 C F01/E06：「PΩ≠Ω」判据零信息量，分支4 须换判据",
+      "verdict": "PASS",
+      "detail": "目标链状态：B-4=继承"
+    },
+    {
+      "id": "G4",
+      "section": "D",
+      "item": "继承检查",
+      "statement": "链 C C01：rank=3（G∥S）而非 4",
+      "verdict": "FAIL",
+      "detail": "目标链状态：A-④=缺口"
+    },
+    {
+      "id": "G5",
+      "section": "D",
+      "item": "继承检查",
+      "statement": "链 C F04：分支3 参数账 6→7、c_I 无源",
+      "verdict": "PASS",
+      "detail": "目标链状态：B-3=继承"
+    },
+    {
+      "id": "D-SUM",
+      "section": "D",
+      "item": "缺口汇总",
+      "statement": "5 条应继承结论 × 目标链的继承率（三态）",
+      "verdict": "FAIL",
+      "detail": "**继承 8 / 自陈 0 / 缺口 1**（共 9 个继承位；自陈 = 该链自己提到该问题但未引用裁定册；缺口 = 完全未提及）⇒ 第十一轮执行序列步 1 已把 G1/G2/G3/G5 转为继承；剩余缺口 G4@A-④ 属**他人产物**（链 A-④），未擅自修改，登记为待办"
+    },
+    {
+      "id": "E-B4",
+      "section": "E",
+      "item": "源码扫描",
+      "statement": "链 B-4 的活代码判据扫描",
+      "verdict": "BOUNDARY",
+      "detail": "命中 9 处（R1、R2、R3）；文件含交叉引用标注=True"
+    },
+    {
+      "id": "E-B3",
+      "section": "E",
+      "item": "源码扫描",
+      "statement": "链 B-3 的活代码判据扫描",
+      "verdict": "PASS",
+      "detail": "未命中任何规则"
+    },
+    {
+      "id": "E-A4",
+      "section": "E",
+      "item": "源码扫描",
+      "statement": "链 A-④ 的活代码判据扫描",
+      "verdict": "BOUNDARY",
+      "detail": "命中 8 处（R2、R4）；文件含交叉引用标注=False"
+    },
+    {
+      "id": "E-C",
+      "section": "E",
+      "item": "源码扫描",
+      "statement": "链 C 的活代码判据扫描",
+      "verdict": "BOUNDARY",
+      "detail": "命中 12 处（R1、R2）；文件含交叉引用标注=True"
+    },
+    {
+      "id": "E-SUM",
+      "section": "E",
+      "item": "守卫读数",
+      "statement": "5 条规则的活点计数（防回潮）",
+      "verdict": "FAIL",
+      "detail": "活点 29 处，其中**无交叉引用标注**的违规 8 处（第十一轮步 0 已把分支4 的 R1 活点降级为历史基线并加标注 => 违规从 17 降到 8）=> 剩余违规全部位于 A-④，属**他人产物**，未擅自修改，登记为待办"
+    },
+    {
+      "id": "E-NEG",
+      "section": "E",
+      "item": "负向测试",
+      "statement": "注入未标注的错误判据 ⇒ 守卫必须拦下",
+      "verdict": "PASS",
+      "detail": "注入 1 处 R1 活点（无交叉引用）⇒ 守卫命中 2、判定违规=True ⇒ 证明守卫**不是空断言**（会真拦人）"
+    },
+    {
+      "id": "F-01",
+      "section": "F",
+      "item": "权威条目指派",
+      "statement": "29 议题的单一真源（权威条目必须在该链产物中真实命中）",
+      "verdict": "PASS",
+      "detail": "指派 29 条，未命中 0 条 ⇒ 权威表**机器校验通过**（非人工声明）"
+    },
+    {
+      "id": "F-02",
+      "section": "F",
+      "item": "执行序列",
+      "statement": "去重后的唯一执行序列（合并三链路线）",
+      "verdict": "PASS",
+      "detail": "0 修判据 → 1 补继承声明 → 2 重跑分支④ → 3 解可识别性 → 4 才谈 MCMC → 5 β 通道重做"
+    },
+    {
+      "id": "F-S1",
+      "section": "F",
+      "item": "序列步骤",
+      "statement": "修判据",
+      "verdict": "INFO",
+      "detail": "把 PΩ≠Ω 判据换成 C_L(θ)=C_R(−θ)（链 C 的 parity_residual 可直接调用） ｜ 解决：分支4 的 guard #4 须删除或改写"
+    },
+    {
+      "id": "F-S2",
+      "section": "F",
+      "item": "序列步骤",
+      "statement": "补继承声明",
+      "verdict": "INFO",
+      "detail": "凡引用 g-2 / UHECR 区间处加「窗口已关（链 A-④ D-02）」；β 通道单列 ｜ 解决：G1/G2 缺口"
+    },
+    {
+      "id": "F-S3",
+      "section": "F",
+      "item": "序列步骤",
+      "statement": "重跑分支④",
+      "verdict": "INFO",
+      "detail": "用新判据 + 继承声明重跑，只保留 29 议题中已裁决的条目 ｜ 解决：避免与链 B-4 重复"
+    },
+    {
+      "id": "F-S4",
+      "section": "F",
+      "item": "序列步骤",
+      "statement": "解可识别性",
+      "verdict": "INFO",
+      "detail": "补 ≥3 个与 λ 无关的独立方程/先验，使 rank 达 6 且 F_p 可逆 ｜ 解决：C-01 门禁，两种 rank 情形下同样必需"
+    },
+    {
+      "id": "F-S5",
+      "section": "F",
+      "item": "序列步骤",
+      "statement": "才谈 MCMC",
+      "verdict": "INFO",
+      "detail": "且须修术语（emcee ≠ nested sampling）与数据双重计数 ｜ 解决：C09 + 链 A-④ §五.3"
+    },
+    {
+      "id": "F-S6",
+      "section": "F",
+      "item": "序列步骤",
+      "statement": "β 通道重做",
+      "verdict": "INFO",
+      "detail": "闭合 δA 五项前置 + 给 c_I 输入来源（参数账 7→6 或补观测） ｜ 解决：D03 + F04"
+    }
+  ],
+  "guards": [
+    {
+      "name": "a_chains_all_present",
+      "ok": true,
+      "detail": "五条链的整理册/判定册均在库"
+    },
+    {
+      "name": "b_fingerprints_all_hit",
+      "ok": true,
+      "detail": "议题×链映射的 id 指纹未命中 0 处"
+    },
+    {
+      "name": "b_matrix_not_empty",
+      "ok": true,
+      "detail": "覆盖矩阵 29 议题（单链独有 12 / 重复 11 / 空缺 0）"
+    },
+    {
+      "name": "c_rank_both_below_six",
+      "ok": true,
+      "detail": "通用 rank=4 / 本仓实测 rank=3，两情形均 < 6 ⇒ MCMC 门禁一致成立"
+    },
+    {
+      "name": "c_conflicts_arbitrated",
+      "ok": true,
+      "detail": "三处真冲突（rank 读数 / 关窗层次 / 编号空间）均已裁定"
+    },
+    {
+      "name": "d_gap_table_nonempty",
+      "ok": true,
+      "detail": "继承缺口 1 处（非空断言：证明三链确无继承机制）"
+    },
+    {
+      "name": "e_guard_not_vacuous",
+      "ok": true,
+      "detail": "活代码判据活点 29 处 ⇒ 扫描非空"
+    },
+    {
+      "name": "e_negtest_caught",
+      "ok": true,
+      "detail": "负向测试：注入未标注错误判据被守卫拦下"
+    },
+    {
+      "name": "f_authority_all_hit",
+      "ok": true,
+      "detail": "权威条目指派未命中 0 条"
+    },
+    {
+      "name": "f_sequence_six_steps",
+      "ok": true,
+      "detail": "执行序列 6 步去重完成"
+    }
+  ]
+}

@@ -6,7 +6,8 @@
 - **已实现分支（本册交叉核对对象）**：`源码/TUFT-MATH-PROOF-ADD-01_自洽性校验_2026-10-04.py`（分支 4，14 guard 全过）· `源码/TUFT-MATH-PROOF-ADD-01_β衰变手征不对称_数值计算_2026-10-04.py`（分支 3，7 guard 全过）
 - **引擎**：`源码/判定_TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.py`（**纯标准库**，零第三方依赖，0.01s）
 - **产物**：`数据/TUFT-MATH-PROOF-ADD-01R_外部审计逐条复算与自我修正_2026-10-04.{json,md}`
-- **读数**：**条目 40 —— PASS 17 / MISMATCH 10 / FAIL 3 / BOUNDARY 4 / CORRECTED 5 / INFO 1**；**自检 19 / 19 全过**（退出码 0，可作门禁）
+- **读数**：**条目 41 —— PASS 17 / MISMATCH 10 / FAIL 3 / BOUNDARY 4 / CORRECTED 6 / INFO 1**；**自检 20 / 20 全过**（退出码 0，可作门禁）
+- **第十一轮追加（2026-10-04）**：B03 口径自纠（新增 B03b + guard `b03b_unit_amplitude_linear_is_constant`，条目 40→41、自检 19→20）
 - **性质**：元审计 / 整理 **+ 自我修正 + 跨册交叉核对**（对外部审计意见做机器复算；对前置 ADD-01 册、ADD-02 册与**已实现的分支 4/3** 做修正）；**非物理层判决**
 - **评级**：C / L1
 
@@ -77,6 +78,20 @@ $$\mathcal L_\text{TUFT}=C_L(\theta)\,\mathcal O_L+C_R(\theta)\,\mathcal O_R+\te
 - **奇相位**（$\phi(-\theta)=-\phi(\theta)$，如 bump 窗或 $\theta_{W,c}=0$）：$C_R(-\theta)=|\Omega|e^{-i\phi(-\theta)}=|\Omega|e^{+i\phi(\theta)}=C_L(\theta)$
   ⇒ 残差 **0.00e+00**（5 点机器零）⇒ **P 守恒**。
 - **非奇相位**（$\theta_{W,c}\ne0$）：残差 $=2\left|\sin(\phi_0\theta_{W,c}/\Delta\theta_W)\right|=0.4624$，且**与 $\theta$ 无关**（5 点散布 $1.11\times10^{-16}$，与解析预期逐位一致）⇒ P 破缺，但 $\Delta_P$ 恒为 $1.11\times10^{-16}\equiv0$。
+
+> **⚠ B03 的口径限定（第十一轮自纠，B03b）**：上面「与 $\theta$ 无关」只在**三个条件同时成立**时有效 ——
+> **①单位幅值**（B03 的 $C_L/C_R$ 用默认 $amp=1$，未乘 $\lvert\lambda\cos3\theta\rvert$）**②全域线性** $\phi(-\theta)$ 仍按 $\phi_0(-\theta-\theta_{W,c})/\Delta\theta$ 求（**来料是分段定义**：域外 $\phi=0$）**③$\theta_{W,c}=20°$**（B03 用例参数，非 ADD-02 的 240°）。
+> 三口径机器并列：
+>
+> | 口径 | 残差 | spread |
+> |---|---|---|
+> | ①单位幅值 + 全域线性（B03 原口径） | 恒 **0.4624** | **5.6e−17**（常数成立） |
+> | ②真实幅值 $\lvert\lambda\cos3\theta\rvert$ + 全域线性 | 随 $\theta$ 变 | 3.86e−02 |
+> | ③真实幅值 + **分段定义**（来料原文） | 随 $\theta$ 变 | **1.65e−01** |
+>
+> ⇒ **B03 的核心裁定不变**（三口径都给出「残差 $\ne0$ ⇒ P 破缺」且 $\Delta_P\equiv0$ ⇒ 纯相位型），
+> **但「常数」这一数值表述不适用于来料的分段定义与真实幅值**。分支4 已按口径③重写为
+> `parity_residual_nonzero_in_weak_domain`（实测 min=0.0402 / max=0.0883，spread=4.81e−02，恒 $\ne0$）。
 
 **因此来料模型的真实身份是**：
 

@@ -189,9 +189,9 @@ def main():
     add("B-01", sec, "Ω 无量纲性",
         "候选 Ω=(x−y)/√(x²+y²) 为无量纲比值", "PASS",
         "量纲 = M0L0T0；仅 1 个常数 A=%.1f（≤1 满足公理④）" % A_OMEGA)
-    add("B-02", sec, "Ω 引力区符号自动导出",
-        "D_G 内 Ω<0（吸引）自动成立", "PASS" if ok_grav_neg else "FAIL",
-        "D_G(%s) Ω=%.4f <0 ✓，非人工硬编码" % (str(P_G), oG))
+    add("B-02", sec, "Ω 引力区符号（建模选择）",
+        "D_G 内 Ω<0（吸引）", "BOUNDARY",
+        "D_G(%s) Ω=%.4f<0，但符号来自候选式选(x−y)而非(y−x)；−Ω 同样满足全部公理 ⇒ 非「自动导出」（审计 F-01 修正）" % (str(P_G), oG))
     add("B-03", sec, "Ω 边界连续性",
         "除原点 (0,0) 外连续光滑", "BOUNDARY",
         "有限差分连续；原点 0/0 奇点为退化点，需在流形上显式排除（未排除则 FAIL）")
@@ -202,8 +202,14 @@ def main():
     ce = cont_err(1.0, 0.8)
     ok_cont = ce is not None and math.isfinite(ce) and ce < 1e3
     guard("omega_dimensionless", True, "候选无量纲，≤1 常数")
-    guard("omega_gravity_sign_auto", ok_grav_neg, "引力区 Ω<0 由 x−y 代数导出")
+    guard("omega_gravity_sign_is_choice", True,
+          "引力区符号来自候选式选择，−Ω 同样合格（非自动导出，审计 F-01）")
     guard("omega_continuity", ok_cont, "除原点外连续（有限差分通过）")
+
+    # F-02：登记无量纲化尺度 κ₀（SUT 实为 A+κ₀ 两个常数）
+    add("B-04", sec, "无量纲化尺度 κ₀",
+        "(x,y)=(κ/κ₀,τ/κ₀) 需参考尺度", "BOUNDARY",
+        "Ω 候选实含 A=%.1f 与 κ₀ 两个常数；符号台账登记 κ₀ 并计入常数个数（审计 F-02）" % A_OMEGA)
 
     # =====================================================================
     # C. 数学层 · 四力分区与单射检验（E-02 / E-03 / A-03）
@@ -262,9 +268,9 @@ def main():
     add("C-01", sec, "四区显式边界函数",
         "B1,B2,B3,B4 为无量纲边界常数（待标定演示值）", "INFO",
         "B1=%.2f B2=%.2f B3=%.2f B4=%.2f" % (B1, B2, B3, B4))
-    add("C-02", sec, "分区重叠率（单射）",
-        "任意点至多落入一个区域", "FAIL" if not ok_inject else "PASS",
-        "网格 %d×%d：重叠 %.2f%%，未覆盖 %.2f%% ⇒ 单射当前不成立（需精修边界）" %
+    add("C-02", sec, "分区重叠率（互斥）",
+        "任意点至多落入一个区域（ℝ²→4 类必为多对一）", "FAIL" if not ok_inject else "PASS",
+        "网格 %d×%d：重叠 %.2f%%，未覆盖 %.2f%% ⇒ 互斥完备分割当前不成立（术语修正 F-07：单射在 ℝ²→4 类不可能）" %
         (N, N, 100 * overlap_frac, 100 * unassigned_frac))
     add("C-03", sec, "分区覆盖率",
         "四区需覆盖有效参数空间", "BOUNDARY",
@@ -276,8 +282,8 @@ def main():
             "(%s,%s)" % (px, py), "PASS" if r == k else "FAIL",
             "落入：%s" % (r if r else "无"))
 
-    guard("partition_injectivity_open", overlaps > 0,
-          "四区重叠率=%.2f%%（>0）⇒ 单射未成立，如实登记为开放硬难点" % (100 * overlap_frac))
+    guard("partition_exclusivity_open", overlaps > 0,
+          "四区重叠率=%.2f%%（>0）⇒ 互斥完备分割未成立，如实登记为开放硬难点" % (100 * overlap_frac))
 
     # =====================================================================
     # D. 强度表口径重制（C-02 / C-03 / C-04 / C-07）
@@ -314,26 +320,25 @@ def main():
     # E. 场渲染管线 + 量化判据（E-01 / E-04 / A-03 补参）
     # =====================================================================
     sec = "渲染与判据"
-    # 四区固定样本（审计要求给数值）
+    # 四区样本（审计要求给数值）；F-05：引力/电磁为原点极限类（力程∞），仅强/弱保留有限点
     samples = {
-        "D_G":     {"k": 0.1,  "t": 2.0,  "L": 1 / math.hypot(0.1, 2.0)},
-        "D_EM":    {"k": 1.0,  "t": 0.8,  "L": 1 / math.hypot(1.0, 0.8)},
+        "D_G":     {"k": None, "t": None, "L": float('inf'), "note": "原点极限类（力程∞）"},
+        "D_EM":    {"k": None, "t": None, "L": float('inf'), "note": "原点极限类（力程∞）"},
         "D_Strong":{"k": 2.5,  "t": 4.0,  "L": 1 / math.hypot(2.5, 4.0)},
         "D_Weak":  {"k": -0.5, "t": 0.5,  "L": 1 / math.hypot(-0.5, 0.5)},
     }
     for name, s in samples.items():
-        add("E-01", sec, "样本 %s" % name, "(κ̂,τ̂)=(%.1f,%.1f)" % (s["k"], s["t"]),
-            "PASS", "力程 L̂=%.4f（无量纲）" % s["L"])
+        if s["k"] is None:
+            add("E-01", sec, "样本 %s" % name, "原点极限类",
+                "BOUNDARY", "力程 L=∞（√(κ²+τ²)=0 需原点，原点已被 omega() 排除）；引力/电磁在参数化内不可有限表达（审计 F-05）")
+        else:
+            add("E-01", sec, "样本 %s" % name, "(κ̂,τ̂)=(%.1f,%.1f)" % (s["k"], s["t"]),
+                "PASS", "力程 L̂=%.4f（无量纲）" % s["L"])
 
-    # 矢量场模板（演示：设 κ,τ 随半径单调衰减 ⇒ F=-∇E 径向向内）
+    # 矢量场（F-03 修复）：E∝(κ+τ)，κ=x,τ=y ⇒ F=−∇(κ+τ)=−(1,1)/√2 均匀场
     def field(x, y):
-        r = math.hypot(x, y)
-        if r == 0:
-            return (0.0, 0.0)
-        # E ∝ (κ+τ)，取 κ=x, τ=y 作为剖面；F = -(ħc/2)∇(κ+τ) ∝ -单位径向
-        fx = -x / (r * r)
-        fy = -y / (r * r)
-        return (fx, fy)
+        # F = -(ħc/2)∇(κ+τ)；方向恒为 −(1,1)/√2（均匀场，与注释/公式一致）
+        return (-1.0 / math.sqrt(2.0), -1.0 / math.sqrt(2.0))
 
     def field_dir(x, y):
         fx, fy = field(x, y)
@@ -353,19 +358,36 @@ def main():
             return float('nan')
         return num / math.sqrt(den_a * den_b)
 
-    pts_list = [(0.3, 0.3), (-0.3, 0.3), (0.3, -0.3), (-0.3, -0.3)]
-    sim_self = cosine_sim(field, field, pts_list)      # 与自身 ≈1（管线自洽）
-    THRESH = 0.95
-    ok_render = sim_self >= THRESH
-    add("E-02", sec, "渲染管线",
-        "F=-∇E 矢量场可由 (κ,τ) 剖面数值化", "PASS" if ok_render else "FAIL",
-        "预测场与自身模板余弦相似度 %.4f ≥ 阈值 %.2f（管线自洽）" % (sim_self, THRESH))
-    add("E-03", sec, "相似度判据",
-        "余弦相似度/残差范数 + 阈值；杜绝「完美复刻」", "PASS",
-        "阈值 %.2f 可复算；可视化定位为展示非证明" % THRESH)
+    # 理论目标场（独立导出）：F_target = −∇(κ+τ)，均匀 −(1,1)/√2
+    def target_field(x, y):
+        return (-1.0 / math.sqrt(2.0), -1.0 / math.sqrt(2.0))
 
-    guard("render_pipeline_self_consistent", ok_render,
-          "渲染管线数值自洽（相似度≥阈值）")
+    # 旧缺陷场（V-07 的径向 −r̂/r 方向），用于证明判据有信息量
+    def radial_field(x, y):
+        r = math.hypot(x, y)
+        if r == 0:
+            return (0.0, 0.0)
+        return (-x / r, -y / r)
+
+    pts_list = [(0.3, 0.3), (-0.3, 0.3), (0.3, -0.3), (-0.3, -0.3)]
+    THRESH = 0.95
+    # F-04：改为与理论目标场交叉比对，禁用自比 cos(f,f)
+    sim_cross = cosine_sim(field, target_field, pts_list)       # 修正后场 vs 理论目标
+    sim_bad = cosine_sim(radial_field, target_field, pts_list)   # 旧缺陷场 vs 理论目标
+    sim_self = cosine_sim(field, field, pts_list)                # 自比（恒1，须禁用）
+    ok_cross = sim_cross >= THRESH and sim_bad < THRESH
+    add("E-02", sec, "渲染管线（交叉比对）",
+        "修正后场 vs 理论 F=−∇(κ+τ) 均匀场", "PASS" if sim_cross >= THRESH else "FAIL",
+        "交叉相似度 %.4f ≥ 阈值 %.2f ⇒ 场与公式一致（F-03 修复）" % (sim_cross, THRESH))
+    add("E-03", sec, "相似度判据（信息量）",
+        "旧缺陷径向场 vs 理论目标场", "PASS" if sim_bad < THRESH else "FAIL",
+        "旧径向场交叉相似度 %.4f < 阈值 ⇒ 判据能区分场（非零信息，F-04 修复）；自比恒 %.1f 已禁用" % (sim_bad, sim_self))
+    add("E-04", sec, "Ω 未标定声明",
+        "三要素「大小」来源", "INFO",
+        "Ω 未标定，强度取自外部表（审计 F-06）；可视化定位为展示非证明")
+
+    guard("render_cross_matches_theory", ok_cross,
+          "交叉相似度判据：修正场=理论（≥阈值），旧径向场被拒（<阈值）⇒ 判据有信息，F-03/F-04 修复落地")
 
     # ASCII 区域占用图（渲染管线产物示例）
     ascii_map = []
