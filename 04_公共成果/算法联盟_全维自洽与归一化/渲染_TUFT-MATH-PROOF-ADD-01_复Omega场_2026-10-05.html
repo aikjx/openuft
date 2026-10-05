@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>TUFT 复Ω场：三瓣幅值 · 弱域相位跳变 · 分区</title>
+<style>
+  body{margin:0;padding:18px;font-family:"Microsoft YaHei",system-ui,sans-serif;background:#0d1117;color:#c9d1d9;}
+  h1{font-size:19px;color:#e6edf3;margin:0 0 4px;}
+  .sub{font-size:12px;color:#8b949e;margin-bottom:12px;}
+  .wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;}
+  .card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px;}
+  .legend{font-size:12px;line-height:1.7;margin-top:6px;}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:middle;}
+  .readout{font-size:13px;margin-top:10px;color:#e6edf3;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:8px;line-height:1.6;}
+  .readout b{color:#7ee787;}
+  .row2{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;}
+  canvas{background:#0d1117;border:1px solid #30363d;border-radius:8px;}
+  input[type=range]{width:220px;}
+  .ctl{font-size:13px;color:#c9d1d9;margin-top:8px;}
+  .note{font-size:12px;color:#8b949e;margin-top:10px;max-width:760px;line-height:1.6;}
+  .badge{display:inline-block;background:#238636;color:#fff;border-radius:4px;padding:1px 7px;font-size:11px;margin-left:6px;}
+  .red{color:#ff7b72;}
+  .grn{color:#7ee787;}
+</style>
+</head>
+<body>
+<h1>TUFT 复Ω场 Ω(θ)=λ·cos3θ·e<sup>iφ(θ)</sup></h1>
+<div class="sub">三分瓣分区（ADD-02）：EM=0°±30 · Strong=120°±30 · Weak=240°±30 · G=三负瓣 · 相位仅在弱域[210°,270°]非零 · λ=α<sub>s</sub>=0.1179</div>
+
+<div class="wrap">
+  <div class="card">
+    <canvas id="rose" width="380" height="380"></canvas>
+    <div class="legend">
+      <span class="sw" style="background:#1f6feb"></span>EM（0°±30）正瓣
+      <span class="sw" style="background:#bf8700"></span>Strong（120°±30）正瓣<br>
+      <span class="sw" style="background:#8957e5"></span>Weak（240°±30）正瓣
+      <span class="sw" style="background:#30363d"></span>G（负瓣区）<br>
+      <span class="sw" style="background:#ff7b72;border-radius:50%"></span>cos3θ 零点（相位跳变边界）
+    </div>
+    <div class="readout" id="roseRO">悬停玫瑰图查看 Ω 值</div>
+  </div>
+
+  <div class="card">
+    <canvas id="phase" width="400" height="240"></canvas>
+    <div class="legend">
+      <span class="sw" style="background:#58a6ff"></span>相位 φ(θ)（弱域内线性，其余为 0）
+      <span class="sw" style="background:#ff7b72"></span>跳变 φ<sub>0</sub>/2（N6：不连续）
+    </div>
+    <div class="ctl">
+      φ<sub>0</sub> = <b id="p0v">0.500</b>
+      <input type="range" id="p0" min="0" max="360" value="28.65" step="0.1">
+      <span style="font-size:12px;color:#8b949e">（相位跳变幅度 = φ<sub>0</sub>/2 = <b id="jumpv">0.250</b>，随滑块变化）</span>
+    </div>
+    <div class="readout" id="phaseRO">拖动滑块：弱域相位跳变幅度随 φ<sub>0</sub> 线性变化</div>
+  </div>
+</div>
+
+<div class="note">
+  <b>审计结论（分支 2，7/7 guard PASS）：</b>
+  ① Ω 是<b class="grn">纯角度场</b>（径向退化，幅值沿射线恒定）——极坐标玫瑰图最忠实；
+  ② 幅值 |Ω|=λ|cos3θ| 三正瓣，边界为 cos3θ 零点（30/90/150/210/270/330°）；
+  ③ <b class="red">N6 相位不连续</b>：相位在弱域[210°,270°]内线性、跨边界跳变 φ<sub>0</sub>/2（幅值连续但相位不连续），
+  与 ADD-01「相位连续✔」矛盾；
+  ④ 矢量场 F=−∇|Ω| <b class="grn">纯方位角</b>（无径向分量，仅在三瓣内环流）。
+</div>
+
+<script>
+(function(){
+  var LAMBDA=0.1179, PHI0=0.5;
+  var rose=document.getElementById('rose'), rctx=rose.getContext('2d');
+  var phase=document.getElementById('phase'), pctx=phase.getContext('2d');
+  var p0v=document.getElementById('p0v'), jumpv=document.getElementById('jumpv');
+  var roseRO=document.getElementById('roseRO'), phaseRO=document.getElementById('phaseRO');
+  var slider=document.getElementById('p0');
+
+  var ZEROS=[30,90,150,210,270,330];
+  var PART=[{n:'EM',a0:330,a1:30,c:'#1f6feb'},{n:'Strong',a0:90,a1:150,c:'#bf8700'},
+            {n:'Weak',a0:210,a1:270,c:'#8957e5'}];
+
+  function phi0(){ return slider.value*Math.PI/180.0; }
+
+  function phaseAt(thDeg){
+    var p=phi0();
+    var t=((thDeg%360)+360)%360;
+    if(t>=210&&t<=270){ return p*(t-240)/60; }
+    return 0;
+  }
+
+  function drawRose(){
+    var W=rose.width,H=rose.height,cx=W/2,cy=H/2,R=W*0.40;
+    rctx.clearRect(0,0,W,H);
+    // 分区扇区底色
+    for(var i=0;i<360;i++){
+      var mag=Math.abs(Math.cos(i*Math.PI/180*3));
+      var inWeak=(i>=210&&i<=270), inEM=(i>=330||i<=30), inSt=(i>=90&&i<=150);
+      var col;
+      if(inWeak) col='rgba(137,87,229,0.18)';
+      else if(inEM) col='rgba(31,111,235,0.16)';
+      else if(inSt) col='rgba(191,135,0,0.16)';
+      else col='rgba(48,54,61,0.25)';
+      var a0=i*Math.PI/180, a1=(i+1)*Math.PI/180;
+      rctx.beginPath();
+      rctx.moveTo(cx,cy);
+      rctx.arc(cx,cy,R,a0,a1);
+      rctx.closePath(); rctx.fillStyle=col; rctx.fill();
+    }
+    // 玫瑰幅值线 |cos3θ|
+    rctx.beginPath();
+    for(var d=0;d<=360;d++){
+      var r=LAMBDA*Math.abs(Math.cos(d*Math.PI/180*3));
+      var a=d*Math.PI/180-90;
+      var x=cx+Math.cos(a)*r/R*R, y=cy+Math.sin(a)*r/R*R;
+      if(d===0) rctx.moveTo(x,y); else rctx.lineTo(x,y);
+    }
+    rctx.strokeStyle='#58a6ff'; rctx.lineWidth=2; rctx.stroke();
+    // 边界零点
+    ZEROS.forEach(function(z){
+      var a=(z*Math.PI/180)-90;
+      var x1=cx+Math.cos(a)*(R+6), y1=cy+Math.sin(a)*(R+6);
+      var x2=cx+Math.cos(a)*(R-8), y2=cy+Math.sin(a)*(R-8);
+      rctx.beginPath(); rctx.moveTo(x1,y1); rctx.lineTo(x2,y2);
+      rctx.strokeStyle='#ff7b72'; rctx.lineWidth=1.5; rctx.stroke();
+    });
+    // 极轴/环
+    rctx.strokeStyle='#30363d'; rctx.lineWidth=1;
+    for(var rr=0.25;rr<=1;rr+=0.25){ rctx.beginPath(); rctx.arc(cx,cy,R*rr,0,6.2832); rctx.stroke(); }
+    rctx.beginPath(); rctx.moveTo(cx-R,cy); rctx.lineTo(cx+R,cy); rctx.stroke();
+    rctx.beginPath(); rctx.moveTo(cx,cy-R); rctx.lineTo(cx,cy+R); rctx.stroke();
+    // 中心标签
+    rctx.fillStyle='#8b949e'; rctx.font='11px sans-serif';
+    rctx.fillText('0°',cx+R-16,cy+14); rctx.fillText('90°',cx+6,cy-R+12);
+    rctx.fillText('180°',cx-R+4,cy+14); rctx.fillText('270°',cx+6,cy+R-4);
+    rctx.fillText('Weak',cx-14,cy-8);
+    rctx.fillStyle='#e6edf3'; rctx.font='12px sans-serif';
+    rctx.fillText('|Ω|=λ|cos3θ|',cx-R+8,18);
+  }
+
+  function drawPhase(){
+    var W=phase.width,H=phase.height,padL=44,padR=12,padT=14,padB=24;
+    var x0=padL,x1=W-padR,y0=padT,y1=H-padB;
+    var w=x1-x0,h=y1-y0;
+    pctx.clearRect(0,0,W,H);
+    // 轴
+    pctx.strokeStyle='#30363d'; pctx.beginPath();
+    pctx.moveTo(x0,y0); pctx.lineTo(x0,y1); pctx.lineTo(x1,y1); pctx.stroke();
+    pctx.fillStyle='#8b949e'; pctx.font='11px sans-serif';
+    pctx.fillText('φ',x0+4,y0+10);
+    // x 刻度
+    for(var a=0;a<=360;a+=60){
+      var px=x0+(a/360)*w;
+      pctx.beginPath(); pctx.moveTo(px,y1); pctx.lineTo(px,y1+4); pctx.stroke();
+      pctx.fillText(a+'°',px-8,y1+14);
+    }
+    // 相位曲线
+    var p=phi0();
+    pctx.beginPath();
+    for(var d=0;d<=360;d++){
+      var ph=phaseAt(d);
+      var px=x0+(d/360)*w, py=y1-h*(ph/p);
+      if(d===0) pctx.moveTo(px,py); else pctx.lineTo(px,py);
+    }
+    pctx.strokeStyle='#58a6ff'; pctx.lineWidth=2.2; pctx.stroke();
+    // 跳变标记
+    [210,270].forEach(function(z){
+      var px=x0+(z/360)*w;
+      var phIn=phaseAt(z+0.5), phOut=phaseAt(z-0.5);
+      var yIn=y1-h*(phIn/p), yOut=y1-h*(phOut/p);
+      pctx.beginPath(); pctx.moveTo(px,yIn); pctx.lineTo(px,yOut);
+      pctx.strokeStyle='#ff7b72'; pctx.lineWidth=2; pctx.stroke();
+    });
+    // 弱域底色
+    pctx.fillStyle='rgba(137,87,229,0.14)';
+    pctx.fillRect(x0+(210/360)*w,y0,(60/360)*w,h);
+    pctx.fillStyle='#e6edf3'; pctx.font='12px sans-serif';
+    pctx.fillText('弱域相位 φ(θ)=φ₀·(θ−240°)/60°',x0+4,y0+14);
+    var j=p/2;
+    pctx.fillStyle='#ff7b72';
+    pctx.fillText('跳变 ±φ₀/2 = ±'+j.toFixed(3),x0+(210/360)*w+6,y1-8);
+  }
+
+  function roseAt(e){
+    var rect=rose.getBoundingClientRect();
+    var x=e.clientX-rect.left,y=e.clientY-rect.top;
+    var cx=rose.width/2,cy=rose.height/2;
+    var dx=x-cx,dy=y-cy;
+    if(Math.hypot(dx,dy)>rose.width/2) return null;
+    var deg=(Math.atan2(dy,dx)*180/Math.PI+90+360)%360;
+    var ph=phaseAt(deg);
+    var mag=LAMBDA*Math.cos(deg*Math.PI/180*3);
+    var re=mag*Math.cos(ph), im=mag*Math.sin(ph);
+    return {deg:deg,re:re,im:im,mag:mag,ph:ph};
+  }
+
+  rose.addEventListener('mousemove',function(e){
+    var o=roseAt(e);
+    if(!o){ roseRO.textContent='悬停玫瑰图查看 Ω 值'; return; }
+    var zone=o.mag>0?'正瓣':'负瓣(G)';
+    roseRO.innerHTML='θ='+o.deg.toFixed(0)+'° · |Ω|='+o.mag.toFixed(4)+
+      ' · φ='+o.ph.toFixed(3)+' · Ω = '+o.re.toFixed(4)+(o.im>=0?'+':'−')+Math.abs(o.im).toFixed(4)+'i · <b>'+zone+'</b>';
+  });
+  rose.addEventListener('mouseleave',function(){ roseRO.textContent='悬停玫瑰图查看 Ω 值'; });
+
+  function update(){
+    p0v.textContent=(phi0()).toFixed(3);
+    jumpv.textContent=(phi0()/2).toFixed(3);
+    drawRose(); drawPhase();
+    phaseRO.innerHTML='φ₀='+(phi0()).toFixed(3)+' ⇒ 弱域相位跳变幅度 φ₀/2 = <b>'+(phi0()/2).toFixed(3)+'</b>（N6：幅值连续、相位不连续）';
+  }
+  slider.addEventListener('input',update);
+  update();
+})();
+</script>
+</body>
+</html>
