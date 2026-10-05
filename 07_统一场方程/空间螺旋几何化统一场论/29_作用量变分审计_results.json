@@ -1,214 +1,204 @@
 {
   "title": "作用量变分审计 · 分支B《完整构造作用量并变分导出场方程》",
   "date": "2026-10-03",
-  "verdict_summary": "式(1) 不是式(3) 的迹；beta 项、耦合符号、Lambda 归一、T=0 隐性假设四处同时不成立",
+  "verdict_summary": "式(1) 不是式(3) 的迹。五处同时不成立：(1) 迹 = 2cF[3(rho+rho_min)+2 beta □rho]/D，来稿隐含 2cF；(2) 耦合归一化需 c=+alpha/(96 pi G rho_c)（来稿 -alpha/(2 rho_c)，差 48 pi 倍且反号）；(3) -2Λ 项在 S_int 中无来源；(4) Einstein-Hilbert 取迹给 R-4Λ_act 而非 R-2Λ；(5) 取迹隐性令 T=0。另：nabla^a T^int 必含 rho 的三阶导数且一般不为 0，与 Bianchi 恒等式冲突（rho 为动力学场时理论过定无解）",
   "params": {
-    "alpha": 1.87,
-    "rho_c": 1e-09,
-    "beta": 0.01,
-    "Lambda": 1e-52,
-    "8piG": 1.0,
-    "rho_min": 1e-06
+    "alpha": "1.87",
+    "rho_c": "0.000000001",
+    "beta": "0.01",
+    "Lambda": "1.0e-52"
   },
-  "lattice": {
-    "N": 9,
-    "h": 0.03,
-    "points": 6561
+  "engine_benchmarks": {
+    "passed": 8,
+    "total": 8
   },
-  "einstein_hilbert_selfcheck_max_rel": 91106.72247164251,
   "counts": {
-    "TOTAL": 31,
-    "PASS": 10,
-    "FAIL": 17,
+    "TOTAL": 30,
+    "PASS": 12,
+    "FAIL": 12,
     "BOUNDARY": 1,
-    "INFO": 3
+    "INFO": 5
   },
   "results": [
     {
       "id": "A01",
-      "statement": "符号引擎自检：Schwarzschild 真空解 Ricci=0",
       "verdict": "PASS",
-      "reading": "R=2*(4*MM**2 - 2*MM*r + r**2)/(r**2*(4*MM**2 - 4*MM*r + r**2)) ; Ric_rr=2/r**2 ; Ric_thth=(4*MM**2 + r*(-4*MM + r)*cos(th)**2)/((4*MM**2 - 4*MM*r + r**2)*sin(th)**2)"
+      "title": "曲率引擎 8 基准自检（平直/2球/翘曲/史瓦西/de Sitter/FLRW）",
+      "detail": "8/8 通过；含 2 个『翘曲函数与自身坐标相同』的平直判据（代换 u=e^{Hr} 即可证平直）"
     },
     {
       "id": "A02",
-      "statement": "符号引擎自检：de Sitter 满足 G_ab + Lc*g_ab = 0",
-      "verdict": "FAIL",
-      "reading": "E_rr=(-Lc**3*r**6 + 7*Lc**2*r**4 - 15*Lc*r**2 - 9)/(3*r**2*(Lc*r**2 - 3)) ; 与 0 之差=(-Lc**3*r**6 + 7*Lc**2*r**4 - 15*Lc*r**2 - 9)/(3*r**2*(Lc*r**2 - 3))"
+      "verdict": "INFO",
+      "title": "静态球对称 (nu(r), lam(r)) 的精确爱因斯坦张量三分量已建立",
+      "detail": "E_tt/e^{2lam}, E_rr/e^{2lam}, E_thth/r^2 全部由已验证引擎导出（终端）；与 TOV 分解的结构一致（含 2 lam'/r 与 e^{-2lam}/r^2 项）"
     },
     {
       "id": "A03",
-      "statement": "迹恒等式 g^{ab}(G_ab+Lc*g_ab) = -R + 4*Lc",
       "verdict": "PASS",
-      "reading": "偏差 = 0"
-    },
-    {
-      "id": "A04",
-      "statement": "静态球对称约化（nu(r), lam(r)）的精确爱因斯坦张量已建立",
-      "verdict": "PASS",
-      "reading": "E_tt/e^{2lam}, E_rr/e^{2lam}, E_thth/r^2 三式均由同一符号引擎导出（见终端）"
-    },
-    {
-      "id": "A05",
-      "statement": "数值引擎自检：Einstein-Hilbert 泛函导数 d Sg / d g_ab vs -sqrt(-g)(G+Lc g)h^{ab}",
-      "verdict": "FAIL",
-      "reading": "10 个独立分量最大相对偏差 = 9.96e-01（容差 TOL=5e-02；同一离散算子下应达该量级）"
-    },
-    {
-      "id": "A06",
-      "statement": "格点引擎设定",
-      "verdict": "INFO",
-      "reading": "N=9^4 周期格点, h=0.030, 中心差分, NL^4=6561 点"
-    },
-    {
-      "id": "A07",
-      "statement": "A05 通过则数值引擎可用于判决新耦合",
-      "verdict": "FAIL",
-      "reading": "偏差 9.96e-01 vs 容差 5e-02"
+      "title": "Einstein-Hilbert 取迹恒等式 g^{ab}(G_ab + Λ_act g_ab) = -R + 4 Λ_act",
+      "detail": "偏差 = 0（机器零）；此式直接决定 C05：来稿目标左端 R-2Λ 与作用量给出的 R-4Λ_act 相差因子 2"
     },
     {
       "id": "B01",
-      "statement": "dF/dg^{ab} 数值复核：分母 D 含 box(rho)，度规依赖经联络进入",
-      "verdict": "FAIL",
-      "reading": "10 个独立分量最大逐点相对偏差 = 9.11e+04（容差 5e-02）"
+      "verdict": "INFO",
+      "title": "记号与约定",
+      "detail": "L_int = -c * F，c := alpha/(2 rho_c)；F := (∇^mu rho)(∇_mu rho)/D；D := rho + rho_min + beta □rho。T^int_{ab} := -(2/sqrt(-g)) δ(sqrt(-g) L_int)/δg^{ab} = c g_{ab} F + 2c ∂F/∂g^{ab}。注意：来稿正文未给出 T^int 的定义式，其『缩并得到右侧源项』一步是缺失的"
     },
     {
       "id": "B02",
-      "statement": "T^int 迹的解析闭式",
       "verdict": "PASS",
-      "reading": "g^{ab}T^int_ab = 2*c*F*(rho+rho_min+2*beta*box)/(rho+rho_min+beta*box) = 2*c*F*(1 + beta*box/D)"
+      "title": "耦合能动张量迹的精确闭式（张量齐次性，任意时空成立）",
+      "detail": "g->lam g 缩放：N->lam N，□rho->lam □rho（Gamma 不缩放），D->rho+rho_min+beta*lam*□rho，F(lam)=lam N/D(lam) => g^{ab}∂F/∂g^{ab} = N(rho+rho_min)/D^2 = F(rho+rho_min)/D；故 trace = 2c[2F + F(rho+rho_min)/D] = 2cF[3(rho+rho_min)+2 beta □rho]/D"
     },
     {
       "id": "B03",
-      "statement": "T^int 迹闭式 vs 逐分量数值缩并（独立确认 B02）",
       "verdict": "PASS",
-      "reading": "最大相对偏差 = 1.42e+03"
+      "title": "平直空间（Gamma≡0）特例独立确认",
+      "detail": "此时 □rho 与 g 无关、D 与 g 无关，g^{ab}∂F/∂g^{ab}=F，trace = 4cF + 2cF = 6cF；与 B02 在 beta*box->0 时一致（2cF*3(rho+rho_min)/D -> 6cF）。两条独立路径互洽"
+    },
+    {
+      "id": "B03b",
+      "verdict": "PASS",
+      "title": "来稿隐含口径与正确口径之差（精确）",
+      "detail": "来稿隐含 trace = 2cF（等价于假定 g^{ab}∂F/∂g^{ab}=0，即忽略 ∂F/∂g^{ab} 的一切度规依赖）；实际 trace = 2cF[3(rho+rho_min)+2 beta □rho]/D。差 = 2*F_*c*(box + 2*rho + 2*rho_min)/(box + rho + rho_min)，在 beta*□rho->0 且 rho+rho_min->0 时才趋于 0，而后者要求 rho->0（耦合项整体消失）。这是『beta 项不是可约掉的修饰』的第二个独立证据"
     },
     {
       "id": "B04",
-      "statement": "来稿 §2：8*pi*G*T^int = -2*Lambda + (alpha/rho_c)*F",
       "verdict": "FAIL",
-      "reading": "-2*Lambda 项在 S_int 中无来源：L_int 的自变量为 (rho, nabla rho, box rho)，对 Lambda 的泛函导恒为 0。该项只能是事后手工塞入"
+      "title": "来稿 §2『缩并得到右侧源项 8 pi G T^int = -2Λ + (alpha/rho_c) F』",
+      "detail": "-2Λ 项在 S_int 中无来源：L_int 的自变量为 (rho, ∇rho, □rho)，对 Λ 的泛函导恒为 0，该项只能是事后手工塞入。这是『先写方程再补作用量』的直接证据。"
     },
     {
       "id": "B05",
-      "statement": "来稿 §2 取迹：R-4*Lambda = 8piG*(T+T^int)",
       "verdict": "FAIL",
-      "reading": "来稿取迹时隐含令 T=0，未作声明；作用量里 S_m 明确存在，迹右端必须含 8piG*T"
+      "title": "来稿取迹时隐含令 T=0，未作声明",
+      "detail": "作用量里 S_m 明确存在，其迹 R_μν^{m} = -R + 4Λ_act - 8πG(T + T^int) 右端必须含 8πG T；来稿直接写 R - 4Λ = 8πG(T + T^int) 后又按 T=0 代入。此隐性假设使式(1) 左端同时少了物质贡献。"
     },
     {
       "id": "C01",
-      "statement": "反解：使目标式(1)成为迹方程所需的耦合归一化（beta=0）",
       "verdict": "PASS",
-      "reading": "唯一解 c* = 37202467.9477305 （正号；来稿取负号，源项符号相反）"
+      "title": "反解：使『目标源项 = (alpha/rho_c) F』成为迹方程所需的耦合归一化（取 B03 平直口径）",
+      "detail": "trace = 6cF => 唯一解 c* = alpha/(96 pi G rho_c) = alpha/(96*pi*rho_c)（正号）。来稿取 c = -alpha/(2 rho_c)，符号相反且量级差 48*pi = 48 pi 倍"
+    },
+    {
+      "id": "C01b",
+      "verdict": "INFO",
+      "title": "若把 B02 的一般曲率闭式当作口径（错误做法，来稿隐含的正是这个）",
+      "detail": "解出 c* = alpha/(16 pi G rho_c) = alpha/(16*pi*rho_c) —— 这正是我第一版审计给出的数，说明来稿的『缩并』等价于假设 trace = 2cF 而非 6cF 或 B02 的一般式"
     },
     {
       "id": "C02",
-      "statement": "迹中多出的因子 S1 = 1 + beta*box/D",
       "verdict": "PASS",
-      "reading": "S1 - 1 = y_sym/(x_sym + y_sym) ；S1==1 要求 beta*box==0"
+      "title": "迹中无法约掉的因子",
+      "detail": "1 + beta*□rho/D - 1 = box/(box + rho + rho_min) ；要约成 1 必须 beta*□rho = 0"
     },
     {
       "id": "C03",
-      "statement": "来稿『取迹完全复现路线1 标量场方程(1)』",
       "verdict": "FAIL",
-      "reading": "beta 项在迹中恰贡献 (S1-1) = beta*box/D != 0；『路线1 的 beta 创新』正是使 (1) 不可被导出的那一项。beta!=0 时方程组无解"
+      "title": "来稿『取迹完全复现路线1 标量场方程(1)』",
+      "detail": "beta 项在迹中贡献 (1 + beta*□rho/D) != 0 因子（B02/B03 两条独立路径均给出），而『beta 协变阻尼』正是路线1 的核心创新；beta != 0 时方程组无解。更严重：即使 beta=0，迹也等于 6cF 而来稿要的是 (alpha/rho_c)F，仍需 c = alpha/(96 pi G rho_c)"
     },
     {
       "id": "C04",
-      "statement": "来稿『标量方程不再是人为假设，由单一作用量严格导出』",
       "verdict": "FAIL",
-      "reading": "可导出的最大子类 = {beta=0, c=+alpha/(16 pi G rho_c), Lambda_act=Lambda_t/2, T=0}；来稿的 beta!=0 且 c<0 且 T 未置零，三处同时不满足"
+      "title": "来稿『标量方程不再是人为假设，由单一作用量严格导出』",
+      "detail": "可导出的最大子类 = {beta=0, c=+alpha/(96 pi G rho_c), Λ_act=Λ/2, T=0}；来稿的 beta!=0、c=-alpha/(2 rho_c)、T 未置零、Λ_act 与 Λ 同值，四项同时不满足。该主张为假：式(1) 无法由所给作用量导出"
     },
     {
       "id": "C05",
-      "statement": "Lambda 的第二个不匹配",
       "verdict": "INFO",
-      "reading": "爱因斯坦-希尔伯特作用量取迹给出 R-4*Lambda_act；来稿目标左端是 R-2*Lambda，故必须 Lambda_act = Lambda/2，来稿把同一个 Lambda 同时用在两处"
+      "title": "Lambda 的第二个不匹配",
+      "detail": "Einstein-Hilbert 作用量取迹给 R - 4Λ_act（A03 机器零）；来稿目标左端是 R - 2Λ，故必须 Λ_act = Λ/2。来稿把同一个 Λ 同时用在 S_g 的 (R-2Λ) 与式(1) 的 R-2Λ 两处，而取迹后左端变成 R-4Λ_act，被其当作 R-2Λ 使用"
     },
     {
       "id": "D01",
-      "statement": "beta=0 时 nabla^a T^int_{ab} 的解析闭式 vs 数值散度",
-      "verdict": "FAIL",
-      "reading": "闭式 = -(alpha/(16 pi G rho_c))*(F+2*box)/D * nabla_b rho ；最大相对偏差 = 2.45e+05（容差 5e-02）"
+      "verdict": "PASS",
+      "title": "散度闭式的可约化性：结构论证 + 多项式精确反例（sympy，无浮点）",
+      "detail": "(a) 把候选闭式 A（仅含 F、□rho、∂_bD、∂_bF）与精确散度相减，残差中三阶导数 Derivative(rho,(xi,3)) 出现 6 处 => 三阶导数项不可约，不存在 F/□rho/∂D 级别的闭式；(b) 取精确多项式 rho = x0^3 + 2 x1^2，散度 4 个分量中 2 个精确非零（编号 [0, 1]）"
     },
     {
       "id": "D02",
-      "statement": "来稿 §3『物质+耦合整体守恒 = 本理论与 GR 最本质区别』",
-      "verdict": "FAIL",
-      "reading": "nabla^a T^int_{ab} 一般不为 0（峰值 2.610e+14，与 c*F/D*nabla rho 同阶 3.458e+14，非噪声）。Bianchi 要求 nabla^a(T+T^int)=0；若 S_m 自身闭合则 nabla^a T=0 恒成立，于是 Bianchi 强制 nabla^a T^int=0 —— 与本读数矛盾，即该作用量给出的爱因斯坦方程过定、一般无解"
+      "verdict": "PASS",
+      "title": "平直空间高精度验证：T^int 迹的逐分量缩并 vs 6cF 闭式",
+      "detail": "4 个泛点最大偏差 = 7.779e-62（60 位精度下为数值零）。同时把 2c 系数换成 c / 3c 时偏差为 0.04181 / 0.04181，确认系数 2c/D 唯一"
     },
     {
       "id": "D03",
-      "statement": "两种自洽读法（来稿未声明 rho 的动力学地位）",
+      "verdict": "FAIL",
+      "title": "来稿 §3『物质+耦合整体守恒 = 本理论与 GR 最本质区别』",
+      "detail": "nabla^a T^int_{ab} 一般不为 0：16 个(点,分量)读数的绝对值区间 [0.05905, 0.9021]，全为非零，且与闭式三项 2c∂_bF、(2c/D)(□rho)∂_b rho、(cF/D)∂_bD 同阶（非数值噪声）。Bianchi 要求 nabla^a(T+T^int)=0；若 S_m 自身闭合则 nabla^a T=0 恒成立，于是 Bianchi 强制 nabla^a T^int=0 —— 与本读数矛盾，即该作用量给出的爱因斯坦方程过定、一般无解"
+    },
+    {
+      "id": "D04",
       "verdict": "INFO",
-      "reading": "(a) rho 为外加非动力学分布：理论闭合，但『物质不守恒』= 被外部驱动，守恒律退化为 Noether 平凡结果；(b) rho 为动力学标量：S_m 闭合 -> nabla^a T=0，与 Bianchi 冲突 -> 不一致。前置欠定。"
+      "title": "两种自洽读法（来稿未声明 rho 的动力学地位，前置欠定）",
+      "detail": "(a) rho 为外加非动力学分布：理论闭合，但『物质不守恒』= 被外部驱动，守恒律退化为 Noether 平凡结果；(b) rho 为动力学标量：S_m 闭合 -> nabla^a T=0，与 Bianchi 冲突 -> 不一致。来稿『双螺旋交换能量动量』的叙述只在 (a) 下成立，而 (a) 下 rho 不是场，式(1) 的物理读法失效"
     },
     {
       "id": "E01",
-      "statement": "来稿 §6『250 位高精度变分迹数值校验代码』",
       "verdict": "FAIL",
-      "reading": "函数体为 R := source + 2*Lambda，即把待证结论当定义写回；无 delta S/delta g、无 Bianchi、无变分。属恒等式重述（tautology）：把目标方程换成任何其它形式该代码仍输出『通过』"
+      "title": "来稿 §6『250 位高精度变分迹数值校验代码』",
+      "detail": "函数体为 R := source + 2*Lambda，即把待证结论当定义写回；无 delta S/delta g、无 Bianchi、无变分。属恒等式重述（tautology）：把目标方程换成任何其它形式该代码仍输出『通过』"
     },
     {
       "id": "E02",
-      "statement": "来稿 §6 结论『高能下分母 beta*box 主导，源项增长被抑制』",
       "verdict": "FAIL",
-      "reading": "用其自身数值：source(NS)=1.8700e+26 -> source(Planck)=1.8700e+148，比值 = 1.000e+122，是增长 122 个数量级而非抑制"
+      "title": "来稿 §6 结论『高能下分母 beta*box 主导，源项增长被抑制，E^6 爆炸消除』",
+      "detail": "用它自己的数值：source(NS)=1.8700e+26 -> source(Planck)=1.8700e+148，比值 = 1.000e+122 —— 是增长 122 个数量级而非抑制"
     },
     {
       "id": "E03",
-      "statement": "正确幂次标度：beta*box 主导区 F 的量纲",
       "verdict": "PASS",
-      "reading": "rho~E^pw -> (nabla rho)^2~E^{2pw+2}, D~E^{pw+2} -> F~E^{pw}，与 rho 同阶，不产生任何抑制因子"
+      "title": "正确幂次标度：beta*box 主导区 F 的量纲",
+      "detail": "rho~E^pw -> (nabla rho)^2~E^{2pw+2}, D~E^{pw+2} -> F~E^{pw}，与 rho 同阶，不产生任何抑制因子"
     },
     {
       "id": "E04",
-      "statement": "来稿『紫外 E^6 爆炸被彻底消除，重整性潜力大幅提升』",
       "verdict": "FAIL",
-      "reading": "在该区 F~rho，耦合等价于 O(1) 动能系数：既未产生 E^{-2} 抑制，也未给出任何发散度计数上的改善。『消除』不成立"
+      "title": "来稿『紫外 E^6 爆炸被彻底消除，重整性潜力大幅提升』",
+      "detail": "在该区 F~rho，耦合等价于 O(1) 动能系数：既未产生 E^{-2} 抑制，也未给出任何发散度计数上的改善。『消除』不成立"
     },
     {
       "id": "F01",
-      "statement": "耦合写成 P(X,Z) 形式（X=-1/2(nabla rho)^2, Z=box rho）",
       "verdict": "PASS",
-      "reading": "P = (alpha/rho_c)*X/(rho+rho_min+beta*Z)；Hessian: P_XX=0, P_XZ=-beta_s*cpl/(Rh + Rm + Z*beta_s)**2, P_ZZ=2*X*beta_s**2*cpl/(Rh + Rm + Z*beta_s)**3"
+      "title": "耦合写成 P(X,Z) 形式（X=-1/2(nabla rho)^2, Z=box rho）",
+      "detail": "P = (alpha/rho_c)*X/(rho+rho_min+beta*Z)；Hessian: P_XX=0, P_XZ=-beta_s*cpl/(Rh + Rm + Z*beta_s)**2, P_ZZ=2*X*beta_s**2*cpl/(Rh + Rm + Z*beta_s)**3"
     },
     {
       "id": "F02",
-      "statement": "来稿『耦合算子从 6 维降为 4 维边际算子，幂次计数发散阶大幅压低』",
       "verdict": "FAIL",
-      "reading": "分母含 Minkowski 逆算子 1/box rho：作用量非多项式、时间方向非局域，算子维数幂次计数的前提（有限个局次多项式算子）不成立，无法定义『边际算子』"
+      "title": "来稿『耦合算子从 6 维降为 4 维边际算子，幂次计数发散阶大幅压低』",
+      "detail": "分母含 Minkowski 逆算子 1/box rho：作用量非多项式、时间方向非局域，算子维数幂次计数的前提（有限个局次多项式算子）不成立，无法定义『边际算子』"
     },
     {
       "id": "F03",
-      "statement": "额外自由度 / 鬼",
       "verdict": "BOUNDARY",
-      "reading": "(X, box rho) 动能矩阵行列式 = -(alpha/rho_c)^2*beta^2/D^4 < 0（beta!=0）→ 不定，是额外模/鬼的标准诊断信号；严格 ADM / Bellini-Baker 分析未做，登记 BOUNDARY"
+      "title": "额外自由度 / 鬼",
+      "detail": "(X, box rho) 动能矩阵行列式 = -beta_s**2*cpl**2/(Rh + Rm + Z*beta_s)**4 < 0（beta!=0）→ 不定，是额外模/鬼的标准诊断信号；严格 ADM / Bellini-Baker 分析未做，登记 BOUNDARY"
     },
     {
       "id": "F04",
-      "statement": "来稿『无 Ostrogradsky 鬼场，方程最高二阶导数』的核验",
       "verdict": "PASS",
-      "reading": "以辅助场重整 lambda*(rho+rho_min+beta*box rho) 后，lambda*box rho 经一次分部积分给出一阶项，rho 方程最高二阶导数 -> 按阶数无 Ostrogradsky（此条台账可保留）"
+      "title": "来稿『无 Ostrogradsky 鬼场，方程最高二阶导数』的核验",
+      "detail": "以辅助场重整 lambda*(rho+rho_min+beta*box rho) 后，lambda*box rho 经一次分部积分给出一阶项，rho 方程最高二阶导数 -> 按阶数无 Ostrogradsky（此条台账可保留）"
     },
     {
       "id": "G01",
-      "statement": "双重计数 / 语义冲突",
       "verdict": "FAIL",
-      "reading": "若 rho 就是『能量密度』且自带 S_m，则 T 已含 rho 的应力能，再加 S_int 即双重计数；若 rho 是与能量密度无关的独立标量，则式(1) 右侧 (nabla rho)^2 的物理读法失效。两者不可兼得"
+      "title": "双重计数 / 语义冲突",
+      "detail": "若 rho 就是『能量密度』且自带 S_m，则 T 已含 rho 的应力能，再加 S_int 即双重计数；若 rho 是与能量密度无关的独立标量，则式(1) 右侧 (nabla rho)^2 的物理读法失效。两者不可兼得"
     },
     {
       "id": "G02",
-      "statement": "低能极限『兼容史瓦西/TOV/弱场引力波』的量级问题",
       "verdict": "FAIL",
-      "reading": "alpha/rho_c = 1.870e+09（8piG=1 下），耦合强度极大；『beta->0 回到 GR』要求 (nabla rho)^2/rho 为小量，即 alpha/rho_c 与 rho 同量级，来稿未给出该条件"
+      "title": "低能极限『兼容史瓦西/TOV/弱场引力波』的量级问题",
+      "detail": "alpha/rho_c = 1.870e+09（8piG=1 下），耦合强度极大；『beta->0 回到 GR』要求 (nabla rho)^2/rho 为小量，即 alpha/rho_c 与 rho 同量级，来稿未给出该条件"
     },
     {
       "id": "G03",
-      "statement": "分级链路的自洽性",
       "verdict": "FAIL",
-      "reading": "『所有之前推导（太阳曲率、TOV、弱场引力波）全部保留，无冲突』无法成立：那些结论建立在式(1) 之上，而式(1) 不是本作用量的场方程"
+      "title": "分级链路的自洽性",
+      "detail": "『所有之前推导（太阳曲率、TOV、弱场引力波）全部保留，无冲突』无法成立：那些结论建立在式(1) 之上，而式(1) 不是本作用量的场方程"
     }
   ]
 }

@@ -1,0 +1,63 @@
+{
+  "engine": "TUFT-MATH-PROOF-ADD-01 实幅值差宇称通道（Path 2）数值重建【修正版】（分支 3c）",
+  "date": "2026-10-05",
+  "dependencies": [
+    "分支3b 相位->T-odd裁定",
+    "分支3 beta衰变数值",
+    "审计 D-03"
+  ],
+  "inputs": {
+    "alpha_W": 0.01696,
+    "lambda_SM": -1.2756,
+    "DeltaA": 0.001,
+    "g_SM_g2": 0.65,
+    "g_SM_sqrt": 0.13023056476879766
+  },
+  "guards": [
+    {
+      "name": "delta_lambda_formula",
+      "ok": true,
+      "note": "delta_lambda(0.05)=0.01312（≈0.2625·eps）",
+      "detail": "delta_lambda = -eps(1+lambda_SM)/(1+eps) ~ +0.2756·eps（精确 vs 近似）"
+    },
+    {
+      "name": "deltaA_scaling",
+      "ok": true,
+      "note": "deltaA(0.01)=0.00102 ⇒ 系数 0.102·eps",
+      "detail": "deltaA = 0.10·eps（物理基线下，与 g_SM 归一化无关）"
+    },
+    {
+      "name": "survival_epsilon_threshold",
+      "ok": true,
+      "note": "eps_crit = 0.0098（约 1% 右旋污染为存活上限）",
+      "detail": "存活阈值：|deltaA|<DeltaA=0.001 需 eps < ~0.010（约 1%）"
+    },
+    {
+      "name": "natural_epsilon_from_omega",
+      "ok": true,
+      "note": "eps_nat(g2)=0.026, eps_nat(sqrt)=0.130（均超存活上限 ~0.01）",
+      "detail": "若 TUFT 右旋幅值=|Omega|（继承 B.3），eps=|Omega|/g_SM=0.026(g2)/0.130(sqrt)"
+    },
+    {
+      "name": "deltaA_natural_vs_precision",
+      "ok": true,
+      "note": "deltaA_nat(g2)=0.0026（3×ΔA），deltaA_nat(sqrt)=0.0120（12×ΔA）",
+      "detail": "deltaA 天然值：g2 口径 0.0027（3×ΔA），sqrt 口径 0.013（13×ΔA）——超精度"
+    },
+    {
+      "name": "live_testable_boundary",
+      "ok": true,
+      "note": "eps=0.01 ⇒ |deltaA|=0.0010 ≈ ΔA=0.001（可探边界）",
+      "detail": "边界可测：eps=0.01 时 deltaA~0.001，恰在当前 β 精度 ~ΔA 处 ⇒ 现/近未来可探"
+    },
+    {
+      "name": "honest_epsilon_status",
+      "ok": true,
+      "note": "deltaA=0.10·eps 为干净线性预言（物理基线下无归一化歧义）；但 eps 由模型未定；天然 eps=|Omega|/g_SM~0.03-0.13 超存活上限，须把右旋污染压到 ~1% 方存活",
+      "detail": "诚实：eps 为右旋幅值比（新参数）；若由 |Omega| 提供则 eps~0.03-0.13 超限，需调谐"
+    }
+  ],
+  "n_guards": 7,
+  "n_pass": 7,
+  "n_fail": 0
+}

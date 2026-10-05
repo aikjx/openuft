@@ -1,0 +1,103 @@
+{
+  "册": "TUFT_V3.5分支①修复版_独立再验收",
+  "生成时间": "2026-10-05 00:59:28",
+  "定位": "读取实际 SUT 源码验证 F-03/F-04，并登记验收册自指涉盲区",
+  "计数": {
+    "PASS": 4,
+    "FAIL": 0,
+    "BOUNDARY": 1,
+    "INFO": 0
+  },
+  "总计": 5,
+  "F03": {
+    "实际field vs 理论": 1.0,
+    "旧径向场被拒": 0.23570226039551587,
+    "均匀方向数": 1
+  },
+  "F04": {
+    "交叉比对": true,
+    "弃自比判据": true
+  },
+  "方法论": {
+    "验收册硬编码旧版": true
+  },
+  "自检": {
+    "总数": 7,
+    "通过": 7,
+    "项": [
+      {
+        "name": "sut_has_field",
+        "ok": true,
+        "detail": "SUT 含 1 个 field 定义（1）"
+      },
+      {
+        "name": "F03_fixed_uniform",
+        "ok": true,
+        "detail": "实际 field() 输出单一方向 [(-0.707107, -0.707107)]（均匀场）"
+      },
+      {
+        "name": "F03_cross_matches_theory",
+        "ok": true,
+        "detail": "实际 field() 与理论 F=−∇(κ+τ) 交叉余弦相似度 = 1.0000 ≥ 0.95 ⇒ V-07 已修"
+      },
+      {
+        "name": "F03_rejects_old",
+        "ok": true,
+        "detail": "旧缺陷径向场交叉相似度 = 0.2357 < 0.95 ⇒ 判据有信息量（能区分）"
+      },
+      {
+        "name": "F04_uses_cross",
+        "ok": true,
+        "detail": "SUT E-02 判据使用交叉比对（sim_cross / target_field）"
+      },
+      {
+        "name": "F04_no_self_criterion",
+        "ok": true,
+        "detail": "SUT 不再用 ok_render=sim_self 当判据（自比已弃用）"
+      },
+      {
+        "name": "audit_engine_self_referential",
+        "ok": true,
+        "detail": "验收册引擎含硬编码旧版 sut_field ⇒ 自指涉，重跑不能验证修复"
+      }
+    ]
+  },
+  "条目": [
+    {
+      "id": "A-01",
+      "section": "实际SUT读取",
+      "item": "从实际 SUT 抽取 field()",
+      "verdict": "PASS",
+      "detail": "exec 实际源码中的 field 定义；抽取成功，样本点实际调用 field()（非复刻）"
+    },
+    {
+      "id": "B-01",
+      "section": "F-03 交叉比对",
+      "item": "实际 field() vs 理论目标",
+      "verdict": "PASS",
+      "detail": "交叉相似度（6 点）1.0000 ≥ 0.95 ⇒ 实际代码与其声称的 E∝(κ+τ) 一致（F-03 修复确认）"
+    },
+    {
+      "id": "B-02",
+      "section": "F-03 交叉比对",
+      "item": "旧缺陷径向场被拒",
+      "verdict": "PASS",
+      "detail": "同判据对旧场：0.2357 < 0.95 ⇒ 判据非零信息（能区分正确场与旧缺陷场）"
+    },
+    {
+      "id": "C-01",
+      "section": "F-04 判据核验",
+      "item": "V-08 判据改为交叉比对",
+      "verdict": "PASS",
+      "detail": "读取实际 SUT 源码：E-02 判据=交叉相似度；旧 ok_render=sim_self 判据行已移除 ⇒ V-08 已修"
+    },
+    {
+      "id": "D-01",
+      "section": "方法论盲区",
+      "item": "验收册引擎自指涉盲区",
+      "verdict": "BOUNDARY",
+      "detail": "复刻旧版 sut_field：验收册用自己的硬编码 sut_field(径向) 做 V-07/V-08 计算（确认为硬编码旧版），AST 只查函数名 ⇒ 直接重跑它无法确认 F-03/F-04 是否已修，必须改读实际 SUT（本册即此做法）"
+    }
+  ],
+  "耗时": "0.0s"
+}

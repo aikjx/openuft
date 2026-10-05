@@ -1,0 +1,296 @@
+{
+  "册名": "三条出路代价矩阵与公设违背清单（第十四轮）",
+  "日期": "2026-10-05",
+  "起点": "步 5 的三条出路 + 两条更正/补充",
+  "更正": [
+    "出路 2 已由 ADD-05 白皮书正式结项（公理集内无解）",
+    "补充第四条路：修改公设集（否则无自洽出口）"
+  ],
+  "性质": "代价量化与布尔穷举；不代选、不排序、不推荐",
+  "引擎": "纯标准库（Python 3.8），零第三方依赖",
+  "条目数": 18,
+  "计数": {
+    "INFO": 5,
+    "MISMATCH": 3,
+    "FAIL": 7,
+    "PASS": 3
+  },
+  "自检": {
+    "总数": 8,
+    "通过": 8
+  },
+  "公设集": [
+    [
+      "Ω1",
+      "光滑（边界 C^∞）"
+    ],
+    [
+      "Ω2",
+      "无量纲（仅依赖 θ）"
+    ],
+    [
+      "Ω3",
+      "符号自洽（sign(Ω) 由公理唯一确定）"
+    ],
+    [
+      "Ω4",
+      "连续（跨分区边界）"
+    ],
+    [
+      "Ω5",
+      "自由常数 ≤ 1（单常数 λ）"
+    ]
+  ],
+  "key_numbers": {
+    "route1_deadlock": [
+      {
+        "delta_src": "自由常数",
+        "O_src": "锁定 V-A（框架内）",
+        "delta_ok": false,
+        "O_why": "δA_GT 恒为 0（P2-02 逐位零）⇒ 无预言",
+        "axiom_violation": 1,
+        "self_consistent": false,
+        "delta_why": "δ 成任意外参 ⇒ δA 数值可任意取 ⇒ 不构成预言"
+      },
+      {
+        "delta_src": "自由常数",
+        "O_src": "外部指定",
+        "delta_ok": false,
+        "O_why": "新增离散外部输入（选哪种 Lorentz 结构）",
+        "axiom_violation": 1,
+        "self_consistent": false,
+        "delta_why": "δ 成任意外参 ⇒ δA 数值可任意取 ⇒ 不构成预言"
+      },
+      {
+        "delta_src": "框架推导",
+        "O_src": "锁定 V-A（框架内）",
+        "delta_ok": false,
+        "O_why": "δA_GT 恒为 0（P2-02 逐位零）⇒ 无预言",
+        "axiom_violation": 0,
+        "self_consistent": false,
+        "delta_why": "框架内无该自由度（P2 不存在）⇒ 无法推导"
+      },
+      {
+        "delta_src": "框架推导",
+        "O_src": "外部指定",
+        "delta_ok": false,
+        "O_why": "新增离散外部输入（选哪种 Lorentz 结构）",
+        "axiom_violation": 0,
+        "self_consistent": false,
+        "delta_why": "框架内无该自由度（P2 不存在）⇒ 无法推导"
+      }
+    ],
+    "routes": [
+      {
+        "route": "①人工指定 𝒪+δ",
+        "new_const": 1,
+        "p": 7,
+        "nullity": 4,
+        "violation": 1,
+        "windows": 3,
+        "status": "死锁（穷举 4/4 全失败）",
+        "closed_conflict": false
+      },
+      {
+        "route": "②扩模型加第二场",
+        "new_const": 2,
+        "p": 8,
+        "nullity": 5,
+        "violation": 1,
+        "windows": 3,
+        "status": "已结项（公理集内无解）",
+        "closed_conflict": true
+      },
+      {
+        "route": "③放弃 β 通道",
+        "new_const": 0,
+        "p": 6,
+        "nullity": 3,
+        "violation": 0,
+        "windows": 2,
+        "status": "干净（零外部输入）",
+        "closed_conflict": false
+      },
+      {
+        "route": "④修改公设集（新增：允许外部输入）",
+        "new_const": 2,
+        "p": 8,
+        "nullity": 5,
+        "violation": 0,
+        "windows": 3,
+        "status": "自洽（唯一：有来源且零违背）",
+        "closed_conflict": false
+      }
+    ]
+  },
+  "判定": [
+    {
+      "id": "A-01",
+      "section": "A",
+      "item": "axiom_set",
+      "verdict": "INFO",
+      "detail": "公设集共 5 条：Ω1 光滑（边界 C^∞）；Ω2 无量纲（仅依赖 θ）；Ω3 符号自洽（sign(Ω) 由公理唯一确定）；Ω4 连续（跨分区边界）；Ω5 自由常数 ≤ 1（单常数 λ）。**Ω5 = 自由常数 ≤ 1** 是本册代价核算的唯一硬约束"
+    },
+    {
+      "id": "A-02",
+      "section": "A",
+      "item": "archived_baseline",
+      "verdict": "INFO",
+      "detail": "基线（步 3 归档）：p=6、rank_strict=3、rank_numeric=1、nullity=3、候选观测量可用数=0/10、最佳 cond=7.99e+16、数值可用组数=0/15 ⇒ **任何出路都继承这条基线**，出路只能改变它、不能绕开它"
+    },
+    {
+      "id": "A-03",
+      "section": "A",
+      "item": "numeric_rank_ceiling",
+      "verdict": "MISMATCH",
+      "detail": "rank_numeric=1（tol 下）vs rank_strict=3 ⇒ 双精度下**实际只有 1 个方向可分辨**；故一切 nullity 记账须区分「代数零空间」与「数值零空间」：代数 3 维、数值 5 维"
+    },
+    {
+      "id": "B-01",
+      "section": "B",
+      "item": "deadlock_statement",
+      "verdict": "FAIL",
+      "detail": "出路 1（人工指定 𝒪_TUFT 与 δ）存在**二难**：若 δ 取为**自由常数** ⇒ 违反 Ω5；若 δ 要求**框架内推导** ⇒ 需框架存在该自由度 = 前置 P2（第二振幅），而 P2 已证**不存在** ⇒ 两条子路都不通"
+    },
+    {
+      "id": "B-02",
+      "section": "B",
+      "item": "boolean_exhaustion",
+      "verdict": "FAIL",
+      "detail": "布尔穷举 δ 来源 × 𝒪_TUFT 来源 = **4 组**，其中自洽（既有来源又不违反公设）**0 组** ⇒ **出路 1 在全部组合下失败**，它不是「可行但代价高」，而是死锁"
+    },
+    {
+      "id": "B-03",
+      "section": "B",
+      "item": "combo_自由_锁定",
+      "verdict": "FAIL",
+      "detail": "δ=自由常数 / 𝒪=锁定 V-A（框架内） ⇒ 公设违背 1；δ 成任意外参 ⇒ δA 数值可任意取 ⇒ 不构成预言；δA_GT 恒为 0（P2-02 逐位零）⇒ 无预言"
+    },
+    {
+      "id": "B-03",
+      "section": "B",
+      "item": "combo_自由_外部",
+      "verdict": "FAIL",
+      "detail": "δ=自由常数 / 𝒪=外部指定 ⇒ 公设违背 1；δ 成任意外参 ⇒ δA 数值可任意取 ⇒ 不构成预言；新增离散外部输入（选哪种 Lorentz 结构）"
+    },
+    {
+      "id": "B-03",
+      "section": "B",
+      "item": "combo_框架_锁定",
+      "verdict": "FAIL",
+      "detail": "δ=框架推导 / 𝒪=锁定 V-A（框架内） ⇒ 公设违背 0；框架内无该自由度（P2 不存在）⇒ 无法推导；δA_GT 恒为 0（P2-02 逐位零）⇒ 无预言"
+    },
+    {
+      "id": "B-03",
+      "section": "B",
+      "item": "combo_框架_外部",
+      "verdict": "FAIL",
+      "detail": "δ=框架推导 / 𝒪=外部指定 ⇒ 公设违背 0；框架内无该自由度（P2 不存在）⇒ 无法推导；新增离散外部输入（选哪种 Lorentz 结构）"
+    },
+    {
+      "id": "C-01",
+      "section": "C",
+      "item": "route2_status",
+      "verdict": "FAIL",
+      "detail": "**更正上一轮表述**：出路 2（扩模型引入第二场）不是「代价高」，而是**已被正式结项**——ADD-05 白皮书与 OPEN-ΩH 册均载明：ω5 单常数约束下引入第二个结构化因子即违反 ω5，**公理集内无解**；ADD-02 册 OPEN-ΩH 亦已把耦合层级定价为「转移为 44 位精细调节」"
+    },
+    {
+      "id": "C-02",
+      "section": "C",
+      "item": "route2_param_cost",
+      "verdict": "INFO",
+      "detail": "若强行引入第二场 Ω′（幅值 μ′ + 相位 φ′）：新增自由常数 **2 个** ⇒ p: 6 → 8；β 通道仍不可用（δ 无来源）⇒ 观测量仍 4 ⇒ nullity = 8 − 3 = **5**（代数），比基线 3 恶化 2 维"
+    },
+    {
+      "id": "C-03",
+      "section": "C",
+      "item": "type2_precedent",
+      "verdict": "PASS",
+      "detail": "与步 3 的「类型 II 只加参数」读数一致：nparam 6→7 时 nullity 3→**4**（归档 C_type2）⇒ **加参数使问题恶化**这一结论在第二场上同样成立，不是本册新主张"
+    },
+    {
+      "id": "D-01",
+      "section": "D",
+      "item": "route3_cost",
+      "verdict": "PASS",
+      "detail": "出路 3（放弃 β 通道 δA 预言）：新增自由常数 **0**、公设违背 **0 条**、p 与 nullity 不变（6 / 3）⇒ **唯一零外部输入的干净解**；代价是**可证伪窗口 3 → 2**（g-2、UHECR），且 F-02「可证伪预言数量」进一步下降"
+    },
+    {
+      "id": "D-02",
+      "section": "D",
+      "item": "remaining_channels_rank",
+      "verdict": "MISMATCH",
+      "detail": "剩余 2 个通道并不独立提供 2 个约束：4 个耦合观测量中引力行与强核行**严格成比例**（比值 1.484e-44）⇒ 观测量有效数 4 → **3**；且 UHECR 另受 C06（证伪表述）阻塞 ⇒ **放弃 β 后可用的定量通道实为 1**"
+    },
+    {
+      "id": "E-01",
+      "section": "E",
+      "item": "fourth_route_found",
+      "verdict": "MISMATCH",
+      "detail": "**补充第四条路（上一轮未列出）**：若显式修改公设集（如把 Ω5 改为「≤ 3 个常数且须显式登记为外部输入」），则出路 1 的 δ 与 𝒪_TUFT **获得合法来源** ⇒ 公设违背 0 ⇒ 唯一「有来源 + 零违背」的自洽组合。这不是技术选择，而是**科学哲学层面的选择**（是否承认框架需要外部输入）"
+    },
+    {
+      "id": "E-02",
+      "section": "E",
+      "item": "cost_matrix",
+      "verdict": "INFO",
+      "detail": "代价向量（新增常数 / p / nullity / 公设违背 / 可证伪窗口 / 状态）：①人: 1个/7/4维/1条/3窗/死锁（穷举 4/4 全失败）；②扩: 2个/8/5维/1条/3窗/已结项（公理集内无解）；③放: 0个/6/3维/0条/2窗/干净（零外部输入）；④修: 2个/8/5维/0条/3窗/自洽（唯一：有来源且零违背）"
+    },
+    {
+      "id": "E-03",
+      "section": "E",
+      "item": "machine_reading",
+      "verdict": "INFO",
+      "detail": "机器枚举读数（**不构成推荐**）：零公设违背者有 2 条（③与④）；其中 ③ 无需任何新输入但窗口最少，④ 保留 3 窗口但须**改公设**；① 与 ② 均不可行 ⇒ **在现行公设集内，唯一自洽出口是 ③**；若不接受 ③，则必须走 ④（改公设）⇒ **真正的选择点是 ③ vs ④，不是 ① vs ② vs ③**"
+    },
+    {
+      "id": "E-04",
+      "section": "E",
+      "item": "engine_restraint",
+      "verdict": "PASS",
+      "detail": "**引擎自律**：本册不输出任何排序分、评分或推荐字段；E-03 只陈述布尔枚举结果与其逻辑含义，决策权保留给用户"
+    }
+  ],
+  "guards": [
+    {
+      "name": "a1_axiom_set_complete",
+      "ok": true,
+      "detail": "公设 5 条（Ω1–Ω5）"
+    },
+    {
+      "name": "b2_route1_deadlock_exhausted",
+      "ok": true,
+      "detail": "4 组穷举全部不自洽 ⇒ 出路 1 死锁"
+    },
+    {
+      "name": "c3_route2_already_closed",
+      "ok": true,
+      "detail": "出路 2 已由 ADD-05 / OPEN-ΩH 结项"
+    },
+    {
+      "name": "c4_nullity_arithmetic",
+      "ok": true,
+      "detail": "各路 nullity = p − min(rank_strict, nobs) 逐条自洽"
+    },
+    {
+      "name": "d5_route3_zero_violation",
+      "ok": true,
+      "detail": "出路 ③ 公设违背 0 条"
+    },
+    {
+      "name": "e6_route4_only_selfconsistent",
+      "ok": true,
+      "detail": "零违背且自洽者唯一（④）"
+    },
+    {
+      "name": "e7_no_recommendation_field",
+      "ok": true,
+      "detail": "引擎无 score/rank/recommend 字段 ⇒ 未代选"
+    },
+    {
+      "name": "e8_archived_numbers_used",
+      "ok": true,
+      "detail": "引用步 3 归档读数：rank_numeric=1、nullity=3、pool_usable=0"
+    }
+  ]
+}
