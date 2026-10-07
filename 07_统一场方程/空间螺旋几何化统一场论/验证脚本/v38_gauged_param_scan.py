@@ -59,7 +59,8 @@ def solve_gauged(w, init_f, QN_est):
         sR, dsR, uR, duR, qR = yb
         fR = sR / R
         fRprime = (dsR * R - sR) / (R * R)
-        return [ya[0], ya[2], duR, fRprime + beta * fR]
+        # 5 条件：s(0)=0, u(0)=0, q(0)=0, a'(R)=0, f'(R)+beta f(R)=0（q 由内部积分自由给出 QN）
+        return [ya[0], ya[2], ya[4], duR, fRprime + beta * fR]
 
     sol = solve_bvp(fun, bc, x, y0, tol=1e-8, max_nodes=50000)
     if not sol.success:

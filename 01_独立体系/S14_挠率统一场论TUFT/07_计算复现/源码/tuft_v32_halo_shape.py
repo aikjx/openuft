@@ -78,11 +78,17 @@ du = np.gradient(u, s)
 u_s = np.where(s>1e-9, u/s, 0.0)
 Ek_airy = (1.0/(2*R**2))*np.trapezoid((du-u_s)**2, s)/Iu
 # EM 几何因子：ρ∝ψ²∝u²/s²，U_es=(α/2)∫q²/r²dr，r 以 R 计
-q = np.array([np.trapezoid(4*np.pi*s[:i+1]**2*(u[:i+1]**2/s[:i+1]**2), s[:i+1])/np.trapezoid(4*np.pi*s**2*(u**2/s**2), s) for i in range(0,len(s),200)])
-sc = s[::200]
-# U_es/M_e = (α/2)·∫q²/s² ds·(λ_C/R)  [s 以 R 计]
-Int_es = np.trapezoid(q**2/sc**2, sc)
-c_geom_airy = (0.5*Int_es)   # c_geom = (U_es/M_e)/(α·λ_C/R)
+rho_unn = np.where(s>1e-12, u**2/s**2, 0.0)
+rho_unn[0] = (Q**(1/3.0)*airy(-a1)[1])**2   # u'(0)²=Q^{2/3}Ai'(−a₁)²
+Nrho = np.trapezoid(4*np.pi*s**2*rho_unn, s)
+# Q_in(r) 用 np.cumsum 向量化（O(N)）
+integrand = 4*np.pi*s**2*rho_unn
+q = np.cumsum(0.5*(integrand[1:]+integrand[:-1])*np.diff(s))
+q = np.concatenate(([0.0], q))/Nrho
+sc = s
+q_sq = np.where(sc>1e-9, q**2/sc**2, 0.0)
+Int_es = np.trapezoid(q_sq, sc)
+c_geom_airy = 0.5*Int_es   # c_geom = (U_es/M_e)/(α·λ_C/R)
 log("  Airy 晕: ⟨r⟩=%.6f·λ_C  E_k=%.3e M_P(%.1e·M_e)  c_geom=%.4f"
     % (langle_ok*r_target/lamC, Ek_airy, Ek_airy/M_nat, c_geom_airy))
 # 现象学形状（C0090 值）
