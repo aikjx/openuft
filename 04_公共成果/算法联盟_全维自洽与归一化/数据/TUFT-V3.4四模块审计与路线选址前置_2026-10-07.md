@@ -2,7 +2,7 @@
 
 日期：2026-10-07
 
-条目计数：FAIL=18  INFO=8  MISMATCH=2  PASS=3
+条目计数：FAIL=20  INFO=8  PASS=3
 
 ## 条目
 

@@ -30,16 +30,16 @@ from importlib.util import module_from_spec, spec_from_file_location
 
 H = os.path.dirname(os.path.abspath(__file__))
 _spec = spec_from_file_location("qroute2", os.path.join(H, "V3.2_Qball_route2.py"))
-Q = module_from_spec(_spec); _spec.loader.exec_module(Q)
+QR = module_from_spec(_spec); _spec.loader.exec_module(QR)
 
-V1, V2, M2 = Q.V1, Q.V2, Q.M2
+V1, V2, M2 = QR.V1, QR.V2, QR.M2
 OMAX = mp.sqrt(M2 / mp.mpf("2"))          # m=√(M2/2)=0.447
-RMAX = mp.mpf("30")                        # 自引力解需更大积分域
-STEPS = 2000
+RMAX = mp.mpf("20")                        # 自引力解更紧凑，20 已充足
+STEPS = 800
 P4PI = mp.mpf("4") * mp.pi
 
-def U(s2): return Q.U(s2)
-def dUd(s2): return Q.dUdw(s2)
+def U(s2): return QR.U(s2)
+def dUd(s2): return QR.dUdw(s2)
 
 def rhs(y, r, w2, g):
     """y=[m,Phi,sigma,dsigma]; 返回 y'（g=引力耦合，g→0 还原平直 Q-ball）。"""
@@ -90,27 +90,38 @@ def integrate(omega, sigma0, phi0=mp.mpf("0"), g=mp.mpf("1")):
     return rs, ys
 
 def shoot_sigma0(omega, g=mp.mpf("1"), guess=None):
-    """对给定 ω 打靶 σ(0) 使 σ(RMAX)→0（基态无节点）。"""
+    """对给定 ω 打靶 σ(0) 使 σ(RMAX)→0（基态无节点）。以平直 σ0 为种子窄括号二分。"""
+    # 平直解 σ0 作种子（g→0 极限解）
+    if guess is None:
+        QR.RMAX = mp.mpf("20"); QR.STEPS = 800
+        try:
+            guess = QR.shoot_sigma0(omega)
+        except Exception:
+            guess = None
+        if guess is None:
+            return None
     def end(s0):
         try:
             rs, ys = integrate(omega, s0, g=g)
             return ys[-1][2]
         except ValueError:
-            return mp.mpf("1")   # 视界→视为未收敛
-    # 向上扫描找首个 end 变号（σ 从正到过零/负，基态在有限 σ_c）
-    s0 = mp.mpf("0.05"); step = mp.mpf("0.02"); s0max = mp.mpf("3.5")
-    lo = hi = None; s_prev, e_prev = s0, end(s0)
-    while s0 <= s0max:
-        e = end(s0)
-        if e < 0:
-            lo, hi = s_prev, s0; break
-        if e_prev != e and abs(e_prev) > mp.mpf("1e-6") and abs(e) > mp.mpf("1e-6") and e_prev * e < 0:
-            lo, hi = s_prev, s0; break
-        s_prev, e_prev = s0, e; s0 += step
-    if lo is None:
-        return None
+            return mp.mpf("-1")   # 命中视界→视为过冲/坍缩（负信号，促成括号）
+    # 以种子为中心向两侧扩括号找变号
+    lo, hi = guess * mp.mpf("0.6"), guess * mp.mpf("1.4")
     flo, fhi = end(lo), end(hi)
-    for _ in range(50):
+    for _ in range(30):
+        if flo * fhi <= 0:
+            break
+        # 尚未变号：扩大区间
+        lo = lo * mp.mpf("0.85"); flo = end(lo)
+        if flo * fhi <= 0:
+            break
+        hi = hi * mp.mpf("1.15"); fhi = end(hi)
+        if flo * fhi <= 0:
+            break
+    else:
+        return None
+    for _ in range(45):
         mid = (lo + hi) / 2; fm = end(mid)
         if flo * fm <= 0:
             hi = mid; fhi = fm
@@ -167,20 +178,21 @@ def main():
         # 平直极限校验：g→0 应还原平直 Q-ball（M→E₀_flat, Q→2ωN_flat）
         gs = mp.mpf("0.0001")
         print("平直极限校验：g=%.4g 时应还原平直 Q-ball" % float(gs))
+        QR.RMAX = mp.mpf("20"); QR.STEPS = 800
         for omega in [mp.mpf("0.1"), mp.mpf("0.184147"), mp.mpf("0.3")]:
-            s0 = shoot_sigma0(omega, g=gs)
+            s0f = QR.shoot_sigma0(omega)
+            if s0f is None:
+                print("ω=%.5f 平直未收敛" % float(omega)); continue
+            s0 = shoot_sigma0(omega, g=gs, guess=s0f)
             if s0 is None:
-                print("ω=%.5f 未收敛" % float(omega)); continue
-            M, Q, R99, w_phys = observables(omega, s0, g=gs)
-            # 平直 Q-ball 参照
-            Q.RMAX = mp.mpf("30"); Q.STEPS = STEPS
-            s0f = Q.shoot_sigma0(omega)
-            Nf, Qf, E0f, Mf, arrf = Q.compute_profile(omega, s0f)
+                print("ω=%.5f GR未收敛" % float(omega)); continue
+            M, Qq, R99, w_phys = observables(omega, s0, g=gs)
+            Nf, Qf, E0f, Mf, arrf = QR.compute_profile(omega, s0f)
             print("-"*72)
-            print("ω=%.6f: g→0 解 σ0=%.6g  M=%.6g  Q=%.6g | 平直 σ0=%.6g E₀=%.6g Q_flat=%.6g"
-                  % (float(omega), float(s0), float(M), float(Q), float(s0f), float(E0f), float(Qf)))
-            print("         σ0 比=%.4f  M/E₀ 比=%.4f  Q/Q_flat 比=%.4f"
-                  % (float(s0/s0f), float(M/E0f), float(Q/Qf)))
+            print("ω=%.6f: g→0 σ0=%.6g M=%.6g Q=%.6g | 平直 σ0=%.6g E₀=%.6g Q=%.6g"
+                  % (float(omega), float(s0), float(M), float(Qq), float(s0f), float(E0f), float(Qf)))
+            print("         σ0比=%.4f  M/E₀比=%.4f  Q/Q_flat比=%.4f"
+                  % (float(s0/s0f), float(M/E0f), float(Qq/Qf)))
         return
 
     # 谱扫描 ω∈(0,m)

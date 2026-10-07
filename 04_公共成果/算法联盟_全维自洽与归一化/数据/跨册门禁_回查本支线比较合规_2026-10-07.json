@@ -1,0 +1,78 @@
+{
+  "tag": "跨册门禁_回查本支线比较合规",
+  "scenarios": 5,
+  "gate_agrees_with_prior": 5,
+  "all_match": true,
+  "details": [
+    {
+      "id": "S1_textbook_rawG",
+      "src": "四力本源 F4 / ESCAPE-AUDIT E9",
+      "desc": "教科书四力强度表：原始带量纲 G 直接与三规范力并列",
+      "expect": "FAIL",
+      "got": "FAIL",
+      "match": true,
+      "F4": "FAIL",
+      "E9": "PASS",
+      "E9_spread_dex": 0.0,
+      "violations": [
+        {
+          "item": "引力(raw G)",
+          "reason": "带量纲耦合 [dim=-2] 未化为无量纲（须 α(E)=c·E^2 且声明能标），不得进无量纲强度比较表"
+        }
+      ]
+    },
+    {
+      "id": "S2_ADD02_mixed_scale",
+      "src": "能标重算 T2 / ESCAPE-AUDIT E9",
+      "desc": "ADD-02 四力耦合表：α_s@M_Z / α_weak@M_Z / α_em@零能标 / α_G@电子",
+      "expect": "FAIL",
+      "got": "FAIL",
+      "match": true,
+      "F4": "PASS",
+      "E9": "FAIL",
+      "E9_spread_dex": 7.959935785502633,
+      "violations": [
+        {
+          "item": "table",
+          "reason": "混用能标：跨 7.96 dex（α_em(零能标) ~1e-06 GeV → α_s ~91.2 GeV）"
+        }
+      ]
+    },
+    {
+      "id": "S3_alpha2_vs_alphaem_MZ",
+      "src": "四力本源 F1",
+      "desc": "α₂(M_Z) 与 α_em(M_Z) 比较（同范畴同标度）→ 弱在高能强于电磁",
+      "expect": "PASS",
+      "got": "PASS",
+      "match": true,
+      "F4": "PASS",
+      "E9": "PASS",
+      "E9_spread_dex": 0.0,
+      "violations": []
+    },
+    {
+      "id": "S4_alphaG_conv_MZ",
+      "src": "四力本源 F4（正确化法）",
+      "desc": "α_G 先化 α_G(M_Z) 再与规范力同标度并列（合规写法）",
+      "expect": "PASS",
+      "got": "PASS",
+      "match": true,
+      "F4": "PASS",
+      "E9": "PASS",
+      "E9_spread_dex": 0.0,
+      "violations": []
+    },
+    {
+      "id": "S5_SM_three_at_MZ",
+      "src": "四力本源 F6 / F7",
+      "desc": "SM/MSSM 三规范耦合同取 M_Z（方法合规；是否共点是另一物理问题）",
+      "expect": "PASS",
+      "got": "PASS",
+      "match": true,
+      "F4": "PASS",
+      "E9": "PASS",
+      "E9_spread_dex": 0.0,
+      "violations": []
+    }
+  ]
+}

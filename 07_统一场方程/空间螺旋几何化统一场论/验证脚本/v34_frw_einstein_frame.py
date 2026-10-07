@@ -70,7 +70,7 @@ def build_EF(g, m, eta):
         # 用数值导数 dU/dτ
         Up_num = (m*m*tau+eta)/(4*kap**2*F**2) + (0.5*m*m*tau*tau+eta*tau)/(4*kap**2)*(-2)/(F**3)*(g/2)
         Hd = -kap*K*X*X
-        Xd = (Up_num - 0.5*Kp*X*X - 3*K*H*X)/K
+        Xd = (-Up_num - 0.5*Kp*X*X - 3*K*H*X)/K
         return [a*H, Hd, X, Xd]
     return rhs
 
@@ -82,7 +82,7 @@ def build_EF_sym(g, m, eta):
         Kp = Kpf(tau, kap, g, m, eta)
         Up = Upf(tau, kap, g, m, eta)
         Hd = -kap*K*X*X
-        Xd = (Up - 0.5*Kp*X*X - 3*K*H*X)/K
+        Xd = (-Up - 0.5*Kp*X*X - 3*K*H*X)/K
         return [a*H, Hd, X, Xd]
     return rhs
 

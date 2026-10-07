@@ -32,23 +32,19 @@ def EF_g0_syms(m, eta, kap):
     ff = lambda e: sp.lambdify(tau, e, 'numpy')
     return ff(F), ff(K), ff(U), ff(Kp), ff(Up)
 
-def build_rhs(g, m, eta, kap, f_m, with_rad):
+def build_rhs(g, m, eta, kap, rho_m0, rho_r0):
     Ff, Kf, Uf, Kpf, Upf = (EF_syms(g, m, eta, kap) if g != 0 else EF_g0_syms(m, eta, kap))
-    # 初值物质能量按约束占比 f_m 设；辐射占比固定 r0
-    r0 = 0.0001 if with_rad else 0.0
+    # 物质/辐射能量守恒：rho_m = rho_m0/a^3, rho_r = rho_r0/a^4（rho_m0 固定，非动态比例）
     def rhs(t, y):
         a, H, tau, X = y
         K_ = Kf(tau); U_ = Uf(tau); Kp_ = Kpf(tau); Up_ = Upf(tau)
-        rho_m = (f_m/(1.0-f_m-r0)) * (K_*X*X + U_) / a**3 if f_m>0 else 0.0
-        # 辐射初始占比 r0（相对场+物质）
-        rho_r = (r0/(1.0-f_m-r0)) * (K_*X*X + U_) / a**4 if r0>0 else 0.0
-        rho_tot = K_*X*X + U_ + rho_m + rho_r
-        p_tot = K_*X*X - U_ + (rho_r/3.0)  # 无压物质 p=0
+        rho_m = rho_m0 / a**3
+        rho_r = rho_r0 / a**4
         # EOM
         dad = a*H
         dHd = -kap*(K_*X*X + 0.5*rho_m + (2.0/3.0)*rho_r)
         dtaud = X
-        dXd = -(3.0*H*X + (0.5*Kp_*X*X - Up_)/K_)
+        dXd = -(3.0*H*X + (0.5*Kp_*X*X + Up_)/K_)
         return [dad, dHd, dtaud, dXd]
     return rhs, Ff
 
@@ -63,18 +59,18 @@ def solve_one(g, m, eta, kap, f_m, tau0, with_rad=False, tmax=600.0, a_stop=1e4)
     H0 = np.sqrt(kap*(rho0_field + rho_m0 + rho_r0)/3.0)
     if rho0_field + rho_m0 + rho_r0 <= 0:
         return None
-    rhs, _ = build_rhs(g, m, eta, kap, f_m, with_rad)
+    rhs, _ = build_rhs(g, m, eta, kap, rho_m0, rho_r0)
     events = [lambda t,y: y[0]-a_stop]
     events[0].terminal = True
     sol = solve_ivp(rhs, (0.0, tmax), [1.0, H0, tau0, X0], rtol=1e-11, atol=1e-13,
                     max_step=1.0, method='DOP853', events=events)
     t = sol.t; a = sol.y[0]; H = sol.y[1]; tau = sol.y[2]; X = sol.y[3]
-    # 约束残差 + w_tot 序列
+    # 约束残差 + w_tot 序列（rho_m0/rho_r0 固定）
     w_seq = []; cons_seq = []
     for i in range(len(t)):
         K_ = Kf(tau[i]); U_ = Uf(tau[i])
-        rho_m = (f_m/(1.0-f_m-r0)) * (K_*X[i]**2 + U_)/a[i]**3 if f_m>0 else 0.0
-        rho_r = (r0/(1.0-f_m-r0)) * (K_*X[i]**2 + U_)/a[i]**4 if r0>0 else 0.0
+        rho_m = rho_m0 / a[i]**3
+        rho_r = rho_r0 / a[i]**4
         rho_t = K_*X[i]**2 + U_ + rho_m + rho_r
         p_t = K_*X[i]**2 - U_ + rho_r/3.0
         w_seq.append(p_t/rho_t)
