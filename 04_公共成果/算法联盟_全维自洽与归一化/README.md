@@ -3067,6 +3067,15 @@ $$\boxed{\ \text{③ 的代价被低估：不只「窗口 3\to2」，还要丢�
 gate 与先前人工裁定 5/5 一致，可推广为常态化门禁。下一步：注册进 my_lib 主线 `_verify_all.py`；或回查并行分支（ADD-01/r14/r15/GAQ-V18）比较论断。
 未提交 git（用户未要求）。
 
+---
+
+## 增量登记（2026-10-07）：跨册门禁已注册进 my_lib 主线 _verify_all.py（常态化）
+
+**动作**：F4+E9 跨册门禁（引擎 `源码/跨册门禁_F4范畴与E9能标一致性校验器_2026-10-07.py` + 回查 `源码/跨册门禁_回查本支线比较合规_2026-10-07.py`）已注册为 my_lib 主线一键校验任务。
+- 新增 wrapper `scratch/_f4e9_gate.py`；`_verify_all.py` JOBS 新增 `("_f4e9_gate.py", "_f4e9_gate_out.txt", "跨册门禁_F4范畴与E9能标一致性", [...])`，JOBS 总数 42。
+- 单任务预验通过（RC=0，断言标记全命中）。该门禁自此随 my_lib 主线一键校验常态化运行。
+- 详细见 my_lib 主线 `scratch/_verify_all.py` 与 `MEMORY.md`（F4 条款「常态化注册」一行）。
+
 ## 相关入口
 
 - 跨体系公设矩阵：[`../../03_跨体系研究/postulate_matrix.md`](../../03_跨体系研究/postulate_matrix.md)
