@@ -1,0 +1,151 @@
+{
+  "title": "派生核算X：通用语言下的双边不变性与 O-23 闭合",
+  "engine": "派生核算X_通用语言下双边不变性与O-23闭合.py",
+  "explicit_c": {
+    "c_L_to_Python_bit": 44400,
+    "c_L_to_Python_byte": 5550,
+    "c_Python_to_L_bit": 23840,
+    "c_Python_to_L_byte": 2980,
+    "note": "L=μLisp（通用）；双向均由真实可运行解释器源码测长，显式可复核"
+  },
+  "bidirectional_checks": [
+    {
+      "direction": "forward K_Py<=K_L+c_L_to_Py",
+      "holds": true,
+      "K_L_bit": 624,
+      "K_Py_bit": 45256,
+      "c_bit": 44400,
+      "glue_bit": 856
+    },
+    {
+      "direction": "reverse K_L<=K_Py+c_Py_to_L",
+      "holds": true,
+      "K_Py_bit": 1448,
+      "K_L_bit": 25440,
+      "c_bit": 23840,
+      "glue_bit": 1600
+    }
+  ],
+  "O23_closed": true,
+  "O17_untouched": true,
+  "O24_new_open": "c 以源码字节×8 计量，未最优编码，仅显式上界",
+  "runtime_checks": {
+    "lisp_fact5": 120,
+    "lisp_twice_sq3": 81,
+    "pyeval_fact_output": "120",
+    "pyeval_assign_output": "20"
+  },
+  "provenance": {
+    "nu_min_pos_from_VIII": 10.643856189774723,
+    "C_obs_from_VIII": 8.151770915476666,
+    "bits_F_from_VIII_Mbit": 2.869048,
+    "ix_c_L_from_IX": 4656
+  },
+  "selfcheck": {
+    "n_ok": 20,
+    "n_all": 20,
+    "items": [
+      {
+        "name": "输入交叉核对：锚表与 V3 逐键一致（10 键）",
+        "ok": true,
+        "note": "零漂移"
+      },
+      {
+        "name": "IX 产物同源读取：c_{L→Python} / c_{BF→Python}",
+        "ok": true,
+        "note": "c_L=4656 bit、c_BF=9984 bit（IX 实测，非重算）"
+      },
+      {
+        "name": "VIII 产物同源读取：ν_min_pos / C_obs / K(F)",
+        "ok": true,
+        "note": "ν_min_pos=10.6439 bit、C_obs=8.1518 bit、K(F)=2.869 Mbit（VIII 实测）"
+      },
+      {
+        "name": "SRC_LISP 可编译（μLisp 解释器，非占位）",
+        "ok": true,
+        "note": "5550 字节"
+      },
+      {
+        "name": "SRC_PYEVAL 可编译（Python 子集求值器，非占位）",
+        "ok": true,
+        "note": "2980 字节"
+      },
+      {
+        "name": "μLisp 求值：递归阶乘 (fact 5) = 120",
+        "ok": true,
+        "note": "得 120"
+      },
+      {
+        "name": "μLisp 一等函数（高阶）成立：(twice sq 3) = 81",
+        "ok": true,
+        "note": "得 81"
+      },
+      {
+        "name": "py-run 装载为 μLisp 闭包",
+        "ok": true,
+        "note": "闭包类型 tuple"
+      },
+      {
+        "name": "c_{Python→L} 求值器运行：Python 阶乘 AST 输出 120",
+        "ok": true,
+        "note": "得 '120'"
+      },
+      {
+        "name": "c_{Python→L} 求值器运行：Python 赋值 AST 输出 20",
+        "ok": true,
+        "note": "得 '20'"
+      },
+      {
+        "name": "c_{L→Python} 显式可构造（>0 且有限）",
+        "ok": true,
+        "note": "44400 bit（5550 字节）"
+      },
+      {
+        "name": "c_{Python→L} 显式可构造（>0 且有限）",
+        "ok": true,
+        "note": "23840 bit（2980 字节）"
+      },
+      {
+        "name": "双向 c 均由可运行解释器测得，已非保守占位",
+        "ok": true,
+        "note": "两解释器均真运行通过（fact=120 / py-AST=120），无占位标记"
+      },
+      {
+        "name": "O-23 闭合：c_{Python→L} 已显式构造（逆向翻译存在）",
+        "ok": true,
+        "note": "IX 声称逆向不可构造；μLisp 通用性使之显式：23840 bit"
+      },
+      {
+        "name": "正向不变性 K_Python ≤ K_L + c_{L→Python} + glue 成立",
+        "ok": true,
+        "note": "K_L=624, K_Py=45256, c=44400, glue=856 bit"
+      },
+      {
+        "name": "逆向不变性 K_L ≤ K_Python + c_{Python→L} + glue 成立（O-23 闭合）",
+        "ok": true,
+        "note": "K_Py=1448, K_L=25440, c=23840, glue=1600 bit"
+      },
+      {
+        "name": "Chaitin 自检：双向 c ≪ K(F)（构造可证，非不可证大数）",
+        "ok": true,
+        "note": "c_max=44400 bit ≪ K(F)=2.869e+06 bit（≈ 2.869 Mbit）"
+      },
+      {
+        "name": "诚实边界：c(44400 bit) ≫ margin(11.13 bit) ⇒ 不声称闭合 O-17",
+        "ok": true,
+        "note": "O-17 维持既有降级，本册未动"
+      },
+      {
+        "name": "新 OPEN 登记：O-24 c 以源码字节×8 计量，未最优编码（仅显式上界）",
+        "ok": true,
+        "note": "严格最小 c 应取 K(解释器)；本册给显式上界，登记不掩盖"
+      },
+      {
+        "name": "红线：双边 c 显式构造不改变任何物理预言的可证伪状态",
+        "ok": true,
+        "note": "本册仅收紧「语言依赖的余项」，未给 TUFT 任何新实验支持"
+      }
+    ]
+  },
+  "elapsed_s": 8.183
+}

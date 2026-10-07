@@ -1,0 +1,94 @@
+# 外部来稿《TUFT V3.4 EC 作用量 + ADM-BSSN + 孤子色散 + g-2/EDM》变分与量纲审计
+
+日期：2026-10-07 · 轮次：r19 · 条目 30（CORRECTED=1 / FAIL=23 / INFO=2 / MISMATCH=3 / PASS=1）· 自检 17/17 · 退出码 0
+
+## 条目
+
+- **[FAIL] E-01** `e01_action_not_dimensionless` —— S = (1/2c^4)∫fR√-g d^4x 在两种时间坐标口径下均非无量纲：x^0=ct 口径 L^-5 M^1 T^2；dt 口径 L^-4 M^1 T^1 ⇒ 单位约定缺口（复发 30 号册 V04 的 SI/普朗克混用同族）
+- **[FAIL] E-02** `e02_f_is_force_not_curvature` —— f = kappa + tau*c = c^4/(8*pi*G) 的量纲是 L^1 M^1 T^-2（牛顿=力），而台账 [kappa] = L^-2 M^0 T^0 ⇒ r18 A-01 原样传导进作用量
+- **[FAIL] E-03** `e03_alpha_dimension_undeclared` —— tau^2 项要求 alpha 带量纲：x^0=ct 口径 [alpha] = L^-2 M^0 T^-4；dt 口径 [alpha] = L^-1 M^0 T^-5 ⇒ 两口径给出不同量纲且来料未声明（称「由 omega 定标」但未给式）
+- **[FAIL] E-04** `e04_el_tau2_sign_wrong` —— 变分复核：δS/δg^μν = (f/2c^4)√-g·G^E_μν - (alpha tau^2/4c^4)√-g·g_μν - (1/2)√-g·T_μν = 0 ⇒ 场方程的等效宇宙学项符号为 **+alpha tau^2/(2f)**，来料写 **-** ⇒ 符号反（该错误在 tau→0 极限不可见，只在孤子核心显形）
+- **[MISMATCH] E-05** `e05_t_convention_undeclared` —— T_μν 系数：来料写 1/f（量纲 L^-1 M^-1 T^2），真变分给 c^4/f（量纲 L^3 M^-1 T^-2，恰等于 [G]）⇒ 两者都自洽但**物质作用量的单位约定未登记**（差 c^4），属口径未声明而非算错
+- **[FAIL] E-06** `e06_vary_kappa_forces_R_zero` —— 对 kappa 变分：∂(fR)/∂kappa = R ⇒ EOM 为 **R = 0**（点态）⇒ 该作用量强制 Ricci 平直，与「含物质、含孤子」直接矛盾；曲率场 kappa 不是动力学场
+- **[FAIL] E-07** `e07_vary_tau_gives_algebraic_slave` —— 对 tau 变分：cR + 2*alpha*tau = 0 ⇒ **tau = -cR/(2 alpha)** 是代数从属量（slave），不是传播场 ⇒ 来料 ADM 段的 ∂_t tau 输运方程**无法从该作用量导出** ⇒ 作用量与演化系统不同源（本册最重一条）
+- **[MISMATCH] E-08** `e08_tau2_not_derivable_omega` —— alpha「由本征角频率 omega 定标」的式子未给出 ⇒ 孤子色散那节出现的 omega 无法回填作用量 ⇒ 跨节无闭合链
+- **[FAIL] A-01** `a01_ham_constraint_not_gr_limit` —— 哈密顿约束右端 -(Gamma/2) rho，Gamma = 8*pi*G/c^4 = 2.0766474428449720122477426E-43；标准 BSSN 为 16*pi*G*rho/c^2（系数 3.7327952873349762304436106E-26）⇒ 比值 = -2.7816251401340460804352249E-18（c=1 口径为 -0.25）⇒ **Einstein 极限不还原 GR（差 1/(4c^2) 且符号相反）**
+- **[MISMATCH] A-02** `a02_mom_constraint_missing_conformal_weight` —— 动量约束写成 ∇_j A~^ij + (2/3)∇^i K - A~^ij ∇_j phi = (Gamma/2) S^i，缺 e^(-2 phi) 权重；而 A~ 是对 gamma~ = e^(4 phi) gamma 定义的无迹外曲率 ⇒ 方程把 gamma~-联络下的导数与 gamma-下的 K 混用，**非张量方程**（标准式见 Baumgarte-Shapiro / Alcubierre et al. 2003）
+- **[FAIL] A-03** `a03_gamma_couple_role` —— Gamma_couple = 1/f 的量纲是 L^3 M^-1 T^-2（1/力），而 BSSN 中的耦合应为长度^-2 量 ⇒ 数值上恰被 rho/S^i 的量纲补偿而侥幸不炸，但物理口径是「把 1/力当 1/长度^2」
+- **[FAIL] A-04** `a04_no_constraints_no_initial_data` —— 新增 2 个演化方程（∂_t tau、∂_t kappa）却未给对应约束（约束违背方程）与初值 ⇒ 演化未知量由 6 增至 8，约束面未定义 ⇒ 数值积分无法启动（不可执行判据）
+- **[FAIL] A-05** `a05_kappa_eq_both_terms_dimension_broken` —— ∂_t kappa 左端量纲 L^-1 M^0 T^-1；右端 [alpha R] = L^-2 M^0 T^0（差 T/L = 1/c）、[(2/c^2)∇^2 kappa] = L^-6 M^0 T^2（差 T^3 L^-4）⇒ 两项都不齐
+- **[FAIL] A-06** `a06_kappa_eq_uses_R_as_independent_source` —— kappa 方程把 R 当独立源，但 R 已由场方程/哈密顿约束代数确定 ⇒ 循环；该项使该式实为约束的改写而非独立演化方程（与 A-04 叠加 ⇒ 系统既欠定又循环）
+- **[FAIL] A-07** `a07_tau_eq_nonzero_equilibrium` —— ∂_t tau = ... + (alpha/c) omega - eta*tau 的均匀稳态为 tau_inf = alpha*omega/(c*eta)，只要 omega ≠ 0 即非零 ⇒ 与正文「远离孤子耗散项主导、tau→0」**自相矛盾**；要 tau→0 必须 omega→0，即孤子性不能只靠径向 1/r^2 剖面维持
+- **[FAIL] A-08** `a08_tau_eq_source_term_dimension_broken` —— 输运项与阻尼项自洽：[beta ∂ tau] = L^-1 M^0 T^-1、[eta tau] = L^-1 M^0 T^-1、[∂_t tau] = L^-1 M^0 T^-1 ⇒ eta 是率；但**源项 [alpha omega/c] = L^-1 M^0 T^0 少一个时间标度** ⇒ 方程不可自治（这是本册唯一「看起来自洽」的演化方程也失败）
+- **[FAIL] S-01** `s01_dispersion_dimension_broken` —— omega = Lambda_0 r_s^2 / l_P^2 ⇒ [omega] = [Lambda_0] = L^1 M^1 T^-2（力），而角频率应为 L^-1 M^0 T^0 ⇒ 即便把 Lambda_0 修成 L^-2 也仍差 M*L ⇒ **缺时间标度，结构性破损**
+- **[CORRECTED] S-02** `s02_omega_collapses_to_1_over_c` —— 照抄来料两式代数化简：omega ≡ M^2 c^3 /(2 pi hbar) ⇒ **G 与 Lambda_0 被完全约掉** ⇒ 结果不含任何「基准」，且 [omega] = M L T^-2（力）≠ T^-1
+- **[FAIL] S-03** `s03_solar_soliton_frequency_absurd` —— 太阳质量代入其自身公式：r_s = 2.9533393820668785580965234E+3 m、omega = 1.6078449492107720388155604E+119 s^-1、T = 3.9078303602992038907973567E-119 s、hbar*omega = 1.0583027704936534210022497E+104 eV = 8.6682883718715421502816393E+75 倍普朗克能量 ⇒ 该式对任何天体级质量都不作物理预言
+- **[FAIL] S-04** `s04_macroscopic_frequency_needs_subplanck_mass` —— 使 omega = 1 s^-1 的质量为 4.9590325661043844032030717E-30 kg = 2.2785123671186053122715593E-22 倍普朗克质量 ⇒ 「宏观频率的孤子」只存在于**亚普朗克质量**，与来料「孤子越大频率越高」的定性叙述方向相反地失效
+- **[FAIL] S-05** `s05_horizon_conflation` —— 把「孤子视界 r_s」直接取为史瓦西半径 2GM/c^2 ⇒ 混用两个不同对象（挠率场零面 vs 几何视界）；且 r_s = 2.9533393820668785580965234E+3 m 仅为太阳半径的 4.2451335087924084491828710E-6 倍，1/r^2 剖面标度与天体半径无关 ⇒ 尺度脱钩
+- **[FAIL] G-01** `g01_delta_g_is_pure_unit_artifact` —— 来料代码的 tau_e = (1/c)(hbar/(m_e c))/lambda_e^2 ≡ m_e/hbar，代入 Delta g = tau_e*hbar/(m_e c) ⇒ **恒等于 1/c = 3.3356409519815204957557671E-9**（两路复算相对偏差 2.9979245800000000000000000E-60）⇒ 零物理信息量，且量纲是 1/速度
+- **[FAIL] G-02** `g02_delta_g_far_above_bsm_and_vs_31` —— Delta g = 1/c = 3.3356409519815204957557671E-9 比 31 号册 BSM 窗口 1e-12 高 3.3356409519815204957557671E+3 倍；而 31 号册已算几何 ECSK 耦合 y_geo = 1.7518093940215270980780162E-45 给出 delta a_e = 6.8088038069103054864304567E-137（比窗口低约 1e2）⇒ 本式要落窗口需 tau = 2.5896050748192269730194868E+0 m^-1，比几何值大 44 个量级 ⇒ 必须引入 ECSK 外的自由耦合（复发 31 号册 X-EXT-3）
+- **[FAIL] G-03** `g03_edm_dimension_broken` —— d_e ∝ (tau_e/(m_e c^2)) S·E 的量纲 = L^-3 M^2 T^0（动量），而 EDM 算符要求 d_e 量纲 L^-1 M^0 T^0 ⇒ 差 M*L^-1
+- **[FAIL] G-04** `g04_edm_operator_parity_mismatch` —— 算符 tau_e * S · E 的宇称本征值 = (-1)(pseudoscalar) × (-1)(axial) × (+1)(polar) = **+1（P 偶）**，而 EDM 算符 S·E 为 P 奇 ⇒ 不能直接等同；需先做显式分部展开提取 P 奇项（未给）⇒ 「赝标量天然引入 CP 破坏 ⇒ 对应 EDM 信号」这一步未成立
+- **[PASS] G-05** `g05_cross_product_regression_31` —— 跨册回归复算：本册用 y_geo = (m_e/M_Pl)^2 = 1.7518093940215270980780162E-45、delta a_e = y^2 m_e^2/(8 pi^2 m_tau^2)（m_tau = M_Pl）= 6.8088038069103054864304567E-137，与 31 号册读的 6.8e-137 **同量级一致**（1.2946774868096303574200963E-3）⇒ 31 号册读数可复用，本册不重算其窗口
+- **[FAIL] C-01** `c01_sample_code_not_runnable` —— 来料 mpmath 代码含 LaTeX 混入标识符（`\(\omega\)_sun`、`\(\omega\)`）⇒ 直接 SyntaxError；`Δg` 作标识符合法但不健壮 ⇒ 建议全 ASCII 命名后再复跑
+- **[INFO] C-02** `c02_hbar_truncation_inconsistent` —— 代码 hbar 取 1.0545718170000000000000000E-34（截断 10 位有效数字）而 G 取 4 位 ⇒ 与本库 CODATA 口径（hbar = 1.0545718176461565e-34）不一致；跨册数值纪律要求统一到高精度口径
+- **[FAIL] C-03** `c03_all_four_routes_blocked` —— 四条候选路径的共同前置未闭合：E-06/E-07（作用量与输运方程不同源）、A-01（约束非 GR 极限）、A-04（无约束无初值）、S-01（色散式量纲破损）⇒ 任一路径直接开工都会把不一致方程组求成无意义剖面
+- **[INFO] C-04** `c04_no_route_scored` —— 本册不对四条路径打分排序（同 30 号册 E-06）；但给出可执行性判定：路径 1（RG β）与既有 v7/能标册结论高度重复、且每步 +1 自由函数；路径 3（引力波）阻塞于 tau(t,r) 无解；路径 4（CMB）最不可证伪且依赖前三条 ⇒ 真正的前置是新增的 P0：把作用量与输运方程同源化（先裁决 kappa 是动力学场还是 slave）
+
+## 自检
+
+- [PASS] f_is_force —— dim(f) = L^1 M^1 T^-2, dim(kappa 台账) = L^-2 M^0 T^0
+- [PASS] action_not_dimensionless —— S 量纲：x^0=ct 口径 L^-5 M^1 T^2、dt 口径 L^-4 M^1 T^1
+- [PASS] el_t_coeff_correct_is_G —— dim(c^4/f) = L^3 M^-1 T^-2 = dim(G)；来料写 1/f = L^-1 M^-1 T^2，差 L^-4 M^0 T^4
+- [PASS] el_tau2_sign_mismatch —— correct=+1, claimed=-1
+- [PASS] vary_kappa_is_algebraic —— d/dkappa (fR) = R => EOM R=0
+- [PASS] vary_tau_is_slave —— EOM: cR + 2 alpha tau = 0
+- [PASS] ham_ratio_is_quarter —— c=1 口径比值 = -2.5000000000000000000000000E-1（应为 -0.25 才还原 GR）
+- [PASS] kappa_eq_terms_broken —— [alpha R] = L^-2 M^0 T^0、[2∇^2 kappa/c^2] = L^-6 M^0 T^2 vs [∂_t kappa] = L^-1 M^0 T^-1
+- [PASS] tau_eq_source_term_broken —— 输运/阻尼项 = L^-1 M^0 T^-1，源项 = L^-1 M^0 T^0（少一个时间标度）
+- [PASS] tau_equilibrium_not_vanishing —— 源项与阻尼项量纲不齐 ⇒ 稳态无定义；按数值对待则 tau_inf = alpha*omega/(c*eta) != 0
+- [PASS] dispersion_dimension_broken —— [Lambda_0 r_s^2/l_P^2] = L^1 M^1 T^-2 != T^-1
+- [PASS] omega_simplify_machine_zero —— Lambda_0 r_s^2/l_P^2 与 M^2c^3/(2 pi hbar) 相对偏差 = 0.0000000000000000000000000E+25
+- [PASS] omega_solar_absurd —— omega_sun = 1.6078449492107720388155604E+119 s^-1，hbar*omega = 8.6682883718715421502816393E+75 倍普朗克能量
+- [PASS] delta_g_is_inv_c —— Delta g ≡ 1/c = 3.3356409519815204957557671E-9（相对偏差 2.9979245800000000000000000E-60）
+- [PASS] delta_g_far_above_bsm —— Delta g / BSM 窗口 = 3.3356409519815204957557671E+3
+- [PASS] regression_31_agrees —— 本册 delta a_e(geo) = 6.8088038069103054864304567E-137 vs 31 号册 6.8e-137
+- [PASS] determinism —— 复算读数逐位一致
+
+## 关键数值
+
+```
+{
+  "Lambda0": "4.8154538867224223992518906E+42",
+  "l_P_m": "1.6162550244237053698265903E-35",
+  "m_P_kg": "2.1764343427178983261346808E-8",
+  "r_s_sun_m": "2.9533393820668785580965234E+3",
+  "r_s_over_R_sun": "4.2451335087924084491828710E-6",
+  "omega_sun": "1.6078449492107720388155604E+119",
+  "T_sun": "3.9078303602992038907973567E-119",
+  "hbar_omega_sun_eV": "1.0583027704936534210022497E+104",
+  "hbar_omega_over_E_pl": "8.6682883718715421502816393E+75",
+  "omega_simplified": "1.6078449492107720388155604E+119",
+  "M_for_omega_1s": "4.9590325661043844032030717E-30",
+  "M_for_omega_1s_over_MPl": "2.2785123671186053122715593E-22",
+  "gamma_couple": "2.0766474428449720122477426E-43",
+  "gamma_std": "3.7327952873349762304436106E-26",
+  "ham_ratio_full": "-2.7816251401340460804352249E-18",
+  "ham_ratio_c1": "-2.5000000000000000000000000E-1",
+  "delta_g_code": "3.3356409519815204957557671E-9",
+  "delta_g_over_bsm": "3.3356409519815204957557671E+3",
+  "tau_needed_for_bsm_per_m": "2.5896050748192269730194868E+0",
+  "y_geo": "1.7518093940215270980780162E-45",
+  "delta_a_e_geo": "6.8088038069103054864304567E-137",
+  "dims": {
+    "G": "L^3 M^-1 T^-2",
+    "f": "L^1 M^1 T^-2",
+    "kappa": "L^-2 M^0 T^0",
+    "tau": "L^-1 M^0 T^0",
+    "rho": "L^-3 M^1 T^0",
+    "el_t_claimed": "L^-1 M^-1 T^2",
+    "el_t_correct": "L^3 M^-1 T^-2",
+    "el_t_gap": "L^-4 M^0 T^4"
+  }
+}
+```

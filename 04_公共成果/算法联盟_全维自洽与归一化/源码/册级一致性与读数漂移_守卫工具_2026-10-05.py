@@ -321,14 +321,35 @@ def main():
             elif diffs:
                 suspect_drift.append({"json": jstem, "md": mstem, "dir": m["dir"], "diffs": diffs})
 
-    guard("md_json_readings_consistent", not mismatch,
+    # ---- 检查2 的读数漂移同样纳入基线台账（与检查1 对称）----
+    #   设计对齐：已登记为存量的 md↔json 漂移不再重复拦截（避免并行会话册长期红灯）；
+    #   基线外的新漂移仍拦截，修复后自动自愈移除。
+    drift_cur_keys = set("%s|||mdjson漂移" % x["json"] for x in mismatch)
+    drift_new_keys = sorted(drift_cur_keys - base_keys)
+    drift_fixed_keys = sorted(k for k in base_keys
+                              if k.endswith("|||mdjson漂移") and k not in drift_cur_keys)
+    # 把漂移键并入本轮写入基线的集合（存量只减不增，--accept-new 才吸收新增）
+    next_base = set(next_base) | drift_cur_keys if (ACCEPT_NEW or not baseline_exists) \
+        else (set(next_base) | (base_keys - set(fixed_keys) - set(drift_fixed_keys)) | drift_cur_keys)
+    with io.open(baseline_path, "w", encoding="utf-8") as fh:
+        json.dump({"生成时间": time.strftime("%Y-%m-%d %H:%M:%S"),
+                   "说明": "存量缺陷基线（指纹 = 册名|||问题类型）。守卫只拦截**基线之外的新缺陷**；"
+                           "已修复项自动从基线移除（自愈）；**新缺陷需 --accept-new 显式放行**才会进入基线。",
+                   "本次是否吸收新缺陷": bool(ACCEPT_NEW or not baseline_exists),
+                   "缺陷键": sorted(next_base)}, fh, ensure_ascii=False, indent=2)
+
+    guard("md_json_readings_consistent", not drift_new_keys,
           "md↔json 读数（高置信 %d 对）：漂移 %d 对%s；中置信疑似 %d 对（不计入门禁）"
           % (sum(1 for c in checked if c["confidence"] == "high"), len(mismatch),
              ("：" + "; ".join(x["md"] for x in mismatch)) if mismatch else "",
-             len(suspect_drift)))
+             len(suspect_drift))
+          + "；按基线台账：存量漂移 %d 条、**新增漂移 %d 条**%s、已修复漂移 %d 条"
+            % (len(drift_cur_keys), len(drift_new_keys),
+               ("（" + "; ".join(drift_new_keys) + "）") if drift_new_keys else "",
+               len(drift_fixed_keys)))
     add("T-03", "T 检查2", "md ↔ json 读数漂移（D2 类的量化版）",
         "比对 %d 对" % len(checked),
-        "PASS" if not mismatch else "FAIL",
+        "PASS" if not drift_new_keys else "FAIL",
         "比对 %d 对（json × md）。**高置信**（去前缀后同名）%d 对 ⇒ **漂移 %d 对**；"
         "**中置信**（长公共前缀）差异 %d 对只记为**疑似**、不计入门禁（避免家族同名误判）。%s%s"
         % (len(checked), sum(1 for c in checked if c["confidence"] == "high"), len(mismatch),

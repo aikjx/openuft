@@ -1,0 +1,160 @@
+{
+  "title": "派生核算XI：前缀码与不变性常数的收紧",
+  "engine": "派生核算XI_前缀码与不变性常数收紧.py",
+  "prefix_code": {
+    "c_{L→Python}": {
+      "bytes": 5550,
+      "naive_8x_bit": 44400,
+      "base_from_X_bit": 44400,
+      "order0_bit": 25967,
+      "order1_bit": 26418,
+      "best_order": 0,
+      "cbar_bit": 25967,
+      "rt0": true,
+      "rt1": true,
+      "ratio": 1.7098625178110678
+    },
+    "c_{Python→L}": {
+      "bytes": 2980,
+      "naive_8x_bit": 23840,
+      "base_from_X_bit": 23840,
+      "order0_bit": 13911,
+      "order1_bit": 14329,
+      "best_order": 0,
+      "cbar_bit": 13911,
+      "rt0": true,
+      "rt1": true,
+      "ratio": 1.713751707282007
+    }
+  },
+  "random_control": {
+    "order0_bit": 4903,
+    "naive_8x_bit": 4800,
+    "rt0": true,
+    "rt1": true,
+    "incompressible": true
+  },
+  "O24_tightened_not_closed": true,
+  "O17_untouched": true,
+  "O25_new_open": "c̄ 依赖模型（阶/量化），非最优前缀码",
+  "provenance": {
+    "nu_min_pos_from_VIII": 10.643856189774723,
+    "C_obs_from_VIII": 8.151770915476666,
+    "bits_F_from_VIII_Mbit": 2.869048,
+    "margin_from_VIII": 11.132085274298058,
+    "c_L_from_X": 44400,
+    "c_Py_from_X": 23840
+  },
+  "selfcheck": {
+    "n_ok": 21,
+    "n_all": 21,
+    "items": [
+      {
+        "name": "输入交叉核对：锚表与 V3 逐键一致（10 键）",
+        "ok": true,
+        "note": "零漂移"
+      },
+      {
+        "name": "X 产物同源读取：c_{L→Python} / c_{Python→L}（8×字节基线）",
+        "ok": true,
+        "note": "c_L=44400 bit、c_Py=23840 bit（X 实测，非重算）"
+      },
+      {
+        "name": "VIII 产物同源读取：ν_min_pos / C_obs / K(F)",
+        "ok": true,
+        "note": "ν_min_pos=10.6439 bit、C_obs=8.1518 bit、K(F)=2.869 Mbit（VIII 实测）"
+      },
+      {
+        "name": "X 引擎源码可读（同源取 SRC_LISP / SRC_PYEVAL）",
+        "ok": true,
+        "note": "μLisp 解释器 5550 B、Python 求值器 2980 B（与 X 引擎逐字节同源）"
+      },
+      {
+        "name": "Ξ-10-1a：gamma(n+1) 自定界往返一致（含 0 与大数）",
+        "ok": true,
+        "note": "10 个样本"
+      },
+      {
+        "name": "Ξ-10-1b：随机数据往返一致（order-0/1）",
+        "ok": true,
+        "note": "order-0=4903 bit、order-1=4822 bit（往返均一致）"
+      },
+      {
+        "name": "Ξ-11-4 反例对照：随机数据**不可压**（前缀码 > 8×字节）",
+        "ok": true,
+        "note": "order-0: 4903 bit > 8×600=4800 bit ⇒ 收紧来自真实冗余，非编码器取巧"
+      },
+      {
+        "name": "Ξ-10-2a c_{L→Python}：前缀码往返逐字节一致（order-0/1）",
+        "ok": true,
+        "note": "order-0=25967、order-1=26418 bit"
+      },
+      {
+        "name": "Ξ-10-2b c_{L→Python}：前缀码严格紧于 8×字节基线",
+        "ok": true,
+        "note": "c̄=25967 bit < 基线 44400 bit，收紧 1.710×"
+      },
+      {
+        "name": "Ξ-11-5 c_{L→Python}：码阶非普适改善，取 min(各阶)",
+        "ok": true,
+        "note": "order-0=25967、order-1=26418 ⇒ 本规模 order-0 较优（order-1 因上下文稀释反而变差）"
+      },
+      {
+        "name": "Ξ-10-2a c_{Python→L}：前缀码往返逐字节一致（order-0/1）",
+        "ok": true,
+        "note": "order-0=13911、order-1=14329 bit"
+      },
+      {
+        "name": "Ξ-10-2b c_{Python→L}：前缀码严格紧于 8×字节基线",
+        "ok": true,
+        "note": "c̄=13911 bit < 基线 23840 bit，收紧 1.714×"
+      },
+      {
+        "name": "Ξ-11-5 c_{Python→L}：码阶非普适改善，取 min(各阶)",
+        "ok": true,
+        "note": "order-0=13911、order-1=14329 ⇒ 本规模 order-0 较优（order-1 因上下文稀释反而变差）"
+      },
+      {
+        "name": "Ξ-11-2 c_{L→Python}：余项单调减（c−margin → c̄−margin）",
+        "ok": true,
+        "note": "余项 44389 → 25956 bit（margin=11.13），下界强度不变"
+      },
+      {
+        "name": "Ξ-11-2 c_{Python→L}：余项单调减（c−margin → c̄−margin）",
+        "ok": true,
+        "note": "余项 23829 → 13900 bit（margin=11.13），下界强度不变"
+      },
+      {
+        "name": "Ξ-11-3 双向对称：c̄_{L→Py} 与 c̄_{Py→L} 同时收紧（承 X 的 O-23 闭合）",
+        "ok": true,
+        "note": "c̄_{L→Py}=25967 bit、c̄_{Py→L}=13911 bit"
+      },
+      {
+        "name": "Ξ-11-6 诚实边界：c̄ 仍是**上界**（K 不可计算）⇒ O-24 只收紧不闭合",
+        "ok": true,
+        "note": "c̄_max=25967 bit 是 K(解释器) 的上界，非 K 本身；严格闭合需证不可压缩性（计数论证），本册未做"
+      },
+      {
+        "name": "Ξ-11-7 诚实边界：收紧后余项仍 ≫ 0 ⇒ 不声称闭合 O-17",
+        "ok": true,
+        "note": "c̄−margin=25956 bit ≫ 0（margin≈11.13 bit），语言无关下界数值仍不紧"
+      },
+      {
+        "name": "Ξ-11-8 新 OPEN 登记：O-25 c̄ 依赖模型（阶/量化），非最优前缀码",
+        "ok": true,
+        "note": "「最优前缀码」问题未决；本册取 min(各阶) 作为可复核上界"
+      },
+      {
+        "name": "Chaitin 自检：c̄ ≪ K(F)（构造可证，非不可证大数）",
+        "ok": true,
+        "note": "c̄_max=25967 bit ≪ K(F)=2.869e+06 bit（≈ 2.869 Mbit）"
+      },
+      {
+        "name": "红线：前缀码收紧不改变任何物理预言的可证伪状态",
+        "ok": true,
+        "note": "本册仅收紧「语言依赖的余项」数值，未给 TUFT 任何新实验支持"
+      }
+    ]
+  },
+  "elapsed_s": 2.802
+}

@@ -1,0 +1,268 @@
+{
+  "round": "r18",
+  "date": "2026-10-07",
+  "title": "外部来稿《TUFT V3.4：G 与 c 核心关系》量纲 / 自由度 / 符号冲突三表审计",
+  "counts": {
+    "items": 22,
+    "checks": 13,
+    "check_fail": 0
+  },
+  "verdicts": {
+    "FAIL": 10,
+    "BOUNDARY": 4,
+    "PASS": 2,
+    "CORRECTED": 2,
+    "INFO": 4
+  },
+  "items": [
+    {
+      "id": "A-01",
+      "verdict": "FAIL",
+      "slug": "a01_kappa_declared_vs_rhs",
+      "detail": "来料 §1 声明 [kappa]=m^-2，则右端 c^4/(8*pi*kappa) 量纲 = L^6 M^0 T^-4，而 [G] = L^3 M^-1 T^-2，差 Δ = L^3 M^1 T^-2 ⇒ 缺一个质量因子，式子不成立"
+    },
+    {
+      "id": "A-02",
+      "verdict": "FAIL",
+      "slug": "a02_doc_selfcheck_arithmetic",
+      "detail": "来料自带量纲核验段写「右侧量纲 m^2 s^-4」：c^4 为 m^4，除以 m^-2 应为 m^6（把除法当乘法，指数错 3）；即便修正为 m^6 仍与 [G] 不匹配 ⇒ 文内第一处自相矛盾"
+    },
+    {
+      "id": "A-03",
+      "verdict": "FAIL",
+      "slug": "a03_inverse_of_library_kappa",
+      "detail": "来料 kappa = c^4/(8*pi*G) 是本库主线 kappa_E = 8*pi*G/c^4 的数值倒数：乘积 = 1.0000000000000000000000000E+0（机器零）；但乘积量纲 = L^0 M^0 T^0 != 1 ⇒ 「互为倒数」只在数值层成立，量纲层不成立"
+    },
+    {
+      "id": "A-04",
+      "verdict": "FAIL",
+      "slug": "a04_missing_matter_source",
+      "detail": "要让 [kappa]=m^-2 成立，8*pi*G 唯一自然补齐项是物质密度：8*pi*G*rho/c^2 量纲 = L^-2 M^0 T^0（正是 [kappa]）；反解所需 rho* = c^6/(64*pi^2 G^2) = 2.5800792789579461252124056E+68 kg/m^3 ⇒ 缺的是物质源项（结构项）而非笔误，零成本修法不存在"
+    },
+    {
+      "id": "A-05",
+      "verdict": "FAIL",
+      "slug": "a05_kappa_mass_decoupling",
+      "detail": "来料 §2 给 r_s ∝ M，§1 给 kappa 与 M 无关：kappa(2M)/kappa(M) = 1.0000000000000000000000000E+0，而 GR 同一处 Ricci 标量 ∝ M^2、比值 = 4.0000000000000000000000000E+0 ⇒ 曲率与质量脱钩，与 §2 组合后自相矛盾"
+    },
+    {
+      "id": "A-06",
+      "verdict": "BOUNDARY",
+      "slug": "a06_implied_scale",
+      "detail": "若强行按 [kappa]=m^-2 解读：特征长度 1/sqrt(kappa) = 4.5570247342372106245431186E-22 m = 2.8194960976916814754761352E+13 lp；隐含密度 rho* = 5.0051505438691526755415374E-29 rho_Pl = 1.8324426697144503730201745E+65 rho_sun ⇒ 若真存在需宇宙学级输入，且落在强场/量子引力区"
+    },
+    {
+      "id": "B-07",
+      "verdict": "PASS",
+      "slug": "b07_schwarzschild_ok",
+      "detail": "§2 史瓦西式 GM/c^2 = r_s/2 逐位标准（[G]=L^3M^-1T^-2、[c^2]=L^2T^-2、[r_s]=L 相容）；其自由元集合 {G,c,M,r_s} 不含 kappa ⇒ 对 kappa 的约束数 = 0，不能用作 §1 的支持证据"
+    },
+    {
+      "id": "B-08",
+      "verdict": "PASS",
+      "slug": "b08_planck_two_identities",
+      "detail": "§3 两条普朗克式均为标准式，且机器验证恰为 2 条定义式恒等式：lp*c^2/mP = 6.6743000000000000000000000E-11（应 = G，相对偏差 1.4982844642883897936862293E-60）、lp*mP*c/hbar = 1.0000000000000000000000000E+0 ⇒ 5 个量秩为 3、亏 2 ⇒ 「G 与 c 是同一场两个分量」是定义式重述，非新的统一结论"
+    },
+    {
+      "id": "B-09",
+      "verdict": "CORRECTED",
+      "slug": "b09_doc_numeric_relerr",
+      "detail": "§6 数值 c^4/G 应为 1.2102555643382062881895930E+44，来料写 1.202e44 ⇒ 相对误差 -6.8213397082959150984493926E-3；4 位有效数字口径应写 1.210e44（普朗克力，单位 N）"
+    },
+    {
+      "id": "B-10",
+      "verdict": "FAIL",
+      "slug": "b10_unit_refutes_own_claim",
+      "detail": "§6 自己给出的单位 kg*m^-1*s^-2 = N，而 c^4/G 的量纲指数 = L^1 M^1 T^-2（力）⇒ 力不是曲率密度 ⇒ §6 的单位直接否证 §1 的 [kappa]=m^-2，这是文内第二处自相矛盾"
+    },
+    {
+      "id": "B-11",
+      "verdict": "INFO",
+      "slug": "b11_archive_reuse",
+      "detail": "数值不新增：c^4/G = 普朗克力已在 数据/空间螺旋修复版_第一性审计.json 的 planck_force_newton 归档，本轮 60 位值与其逐位一致 ⇒ 回链复用，不重复登记"
+    },
+    {
+      "id": "B-12",
+      "verdict": "CORRECTED",
+      "slug": "b12_selfcaught_force_to_energy",
+      "detail": "自抓本册首版缺陷：曾把 1 N 当 1 J 直接换算（隐含隐藏长度 1 m）⇒ 已改为显式 E = kappa*l_G（E = 2.1944142468372789889714502E+21 J = 1.3696456434760857502750338E+31 GeV = 1.1218418514154037872422905E+12 M_Pl），并加自检 newton_is_joule_per_meter；此条与 §6 单位批判互为一体：来料缺的正是这个长度"
+    },
+    {
+      "id": "C-12",
+      "verdict": "FAIL",
+      "slug": "c12_torsion_sum_illegal",
+      "detail": "§4 的 kappa + tau*c 不可加：[tau*c] = L^0 M^0 T^-1 != [kappa] = L^-2 M^0 T^0 ⇒ 复发已判 FAIL 的 C-02 / O-V34-C（30 号册 kappa=Lambda_0-c*tau 同型）"
+    },
+    {
+      "id": "C-13",
+      "verdict": "FAIL",
+      "slug": "c13_torsion_fix_needs_external_length",
+      "detail": "补齐 §4 所需因子量纲 = L^-2 M^0 T^1（台账 kappa 口径）或 L^-1 M^-1 T^3（kappa_E 口径）；在 hbar/c/mP 三标度上穷举单项式 b,d,e ∈ [-3,3]，命中数分别为 0 / 0 ⇒ 框架内不存在可构造的长度标度，与 O-SCALE 锚定定理同构"
+    },
+    {
+      "id": "C-14",
+      "verdict": "FAIL",
+      "slug": "c14_kappa_const_vs_field",
+      "detail": "§5「能量注入后曲率 kappa 上升」与 §1 硬矛盾：G、c 是常数 ⇒ kappa ≡ 4.8154538867224223992518906E+42 恒定（对 (G,c) 的 spread = 0）⇒ §1 与 §5 不能同时成立"
+    },
+    {
+      "id": "C-15",
+      "verdict": "INFO",
+      "slug": "c15_no_dynamical_content",
+      "detail": "自由度口径：kappa 由 (G,c) 完全决定 ⇒ 新增自由度 0；「替代能动张量本源项」属 L1 恒等重述；按 Ω5 口径（连续常数 1 / 节点 0）形式 PASS 但动力学内容为零"
+    },
+    {
+      "id": "C-16",
+      "verdict": "FAIL",
+      "slug": "c16_symbol_ledger_conflict",
+      "detail": "符号台账冲突：本库主线 kappa = 8*pi*G/c^4（21 号册 B5 表、31 号册 §二、V3.2_gravity_sector.py:15）vs 来料 kappa = c^4/(8*pi*G)，同一符号两义且互为倒数 ⇒ A-07 型台账冲突，代入场方程前必须先裁决口径"
+    },
+    {
+      "id": "C-17",
+      "verdict": "INFO",
+      "slug": "c17_defect_family_recurrence",
+      "detail": "缺陷族复发计数 = 5：总账 B4（2026/6/9，标题已自标量纲非齐次）/ claims C88+C30（falsified）/ 30 号册 V03+V04（FAIL，已修）/ 30 号册 C-02（FAIL）/ 本册 ⇒ 建议体例门禁新增「爱因斯坦系数方向」条款：凡 G_munu = 系数 * T_munu，机器核对系数为 8*pi*G/c^4"
+    },
+    {
+      "id": "D-18",
+      "verdict": "BOUNDARY",
+      "slug": "d18_route_r1",
+      "detail": "路线 R1（零成本）：把 §1 改写为 G = c^4*T_munu/(8*pi*G_munu)（尘埃情形 G = c^2*rho/(8*pi*kappa)）⇒ 可同时关闭 A-01/A-04/A-05/C-14；代价 0，收益 = 消除 4 条 FAIL，但不再有「本源项」宣称"
+    },
+    {
+      "id": "D-19",
+      "verdict": "BOUNDARY",
+      "slug": "d19_route_r2",
+      "detail": "路线 R2：声明 kappa ≡ 4.8154538867224223992518906E+42 为定值场并删除 §5；若改走「跑动 G」路线则代价 = +1 自由度，且与 G 的实验测量精度（相对约 1.5e-4）冲突"
+    },
+    {
+      "id": "D-20",
+      "verdict": "BOUNDARY",
+      "slug": "d20_route_r3",
+      "detail": "路线 R3（真挠率修正）：走 31 号册已验证的 ECSK 标准式 (1/2) g_tau * tau * R，kappa 保持 8*pi*G/c^4 不动 ⇒ 代价 = 新增 2 个自由参数 (g_tau, m_tau)，违反 Ω5 除非登记为外部输入"
+    },
+    {
+      "id": "D-21",
+      "verdict": "INFO",
+      "slug": "d21_no_route_scored",
+      "detail": "本册未对 R1/R2/R3 打分、排序或推荐（沿用 30 号册 E-06 纪律）；取舍权保留给用户"
+    }
+  ],
+  "selfcheck": [
+    {
+      "name": "kappa_inverse_machine_zero",
+      "verdict": "PASS",
+      "detail": "kappa_doc * kappa_E - 1 = 0.0000000000000000000000000E-34"
+    },
+    {
+      "name": "doc_relerr_in_band",
+      "verdict": "PASS",
+      "detail": "doc 1.202e44 vs 机器值 相对误差 = -6.8213397082959150984493926E-3"
+    },
+    {
+      "name": "kappa_doc_is_force_not_curvature",
+      "verdict": "PASS",
+      "detail": "dim(c^4/G) = L^1 M^1 T^-2, dim(kappa 声明) = L^-2 M^0 T^0"
+    },
+    {
+      "name": "kappa_e_is_inverse_force",
+      "verdict": "PASS",
+      "detail": "dim(8*pi*G/c^4) = L^-1 M^-1 T^2"
+    },
+    {
+      "name": "dust_term_closes_to_L2",
+      "verdict": "PASS",
+      "detail": "dim(8*pi*G*rho/c^2) = L^-2 M^0 T^0"
+    },
+    {
+      "name": "rho_star_reproduces_kappa_doc",
+      "verdict": "PASS",
+      "detail": "相对偏差 = 6.2299423285349160367432279E-60"
+    },
+    {
+      "name": "planck_identity_g_machine_zero",
+      "verdict": "PASS",
+      "detail": "lp*c^2/mP = 6.6743000000000000000000000E-11（相对偏差 1.4982844642883897936862293E-60）"
+    },
+    {
+      "name": "planck_identity_hbar_machine_zero",
+      "verdict": "PASS",
+      "detail": "lp*mP*c/hbar = 1.0000000000000000000000000E+0"
+    },
+    {
+      "name": "gr_curvature_scales_quadratic",
+      "verdict": "PASS",
+      "detail": "R(2Msun)/R(Msun) = 4.0000000000000000000000000E+0"
+    },
+    {
+      "name": "kappa_independent_of_mass",
+      "verdict": "PASS",
+      "detail": "kappa(2M)/kappa(M) = 1.0000000000000000000000000E+0"
+    },
+    {
+      "name": "no_internal_length_scale",
+      "verdict": "PASS",
+      "detail": "穷举 hbar^b c^d mP^e 命中数 = 0 / 0"
+    },
+    {
+      "name": "determinism_readouts",
+      "verdict": "PASS",
+      "detail": "复算读数逐位一致"
+    },
+    {
+      "name": "newton_is_joule_per_meter",
+      "verdict": "PASS",
+      "detail": "dim(N/J) = L^-1 M^0 T^0 ⇒ 1 N = 1 J/m，力→能量必须显式乘一个长度（本册取 l_G）"
+    }
+  ],
+  "key_numbers": {
+    "force_planck": "1.2102555643382062881895930E+44",
+    "kappa_doc": "4.8154538867224223992518906E+42",
+    "kappa_E": "2.0766474428449720122477426E-43",
+    "kappa_inverse_product": "1.0000000000000000000000000E+0",
+    "doc_relerr": "-6.8213397082959150984493926E-3",
+    "l_G_m": "4.5570247342372106245431186E-22",
+    "l_G_over_l_P": "2.8194960976916814754761352E+13",
+    "rho_star_kgm3": "2.5800792789579461252124056E+68",
+    "rho_star_over_rho_Pl": "5.0051505438691526755415374E-29",
+    "rho_star_over_rho_sun": "1.8324426697144503730201745E+65",
+    "kappa_lG_energy_J": "2.1944142468372789889714502E+21",
+    "kappa_lG_energy_GeV": "1.3696456434760857502750338E+31",
+    "kappa_lG_energy_over_MPl": "1.1218418514154037872422905E+12",
+    "lp_m": "1.6162550244237053698265903E-35",
+    "mp_kg": "2.1764343427178983261346808E-8",
+    "MPl_GeV": "1.2208901296987924250576244E+19",
+    "gr_curv_ratio_2M_1M": "4.0000000000000000000000000E+0",
+    "hits_x_tau": 0,
+    "hits_x_tau_kappaE": 0,
+    "dims": {
+      "G": "L^3 M^-1 T^-2",
+      "c": "L^1 M^0 T^-1",
+      "kappa_declared": "L^-2 M^0 T^0",
+      "tau": "L^-1 M^0 T^0",
+      "rho": "L^-3 M^1 T^0",
+      "rhs_c4_over_kappa": "L^6 M^0 T^-4",
+      "gap": "L^3 M^1 T^-2",
+      "kappa_E": "L^-1 M^-1 T^2",
+      "kappa_doc": "L^1 M^1 T^-2",
+      "inverse_product": "L^0 M^0 T^0",
+      "tau_times_c": "L^0 M^0 T^-1",
+      "fix_factor_tau": "L^-2 M^0 T^1",
+      "fix_factor_tau_kappaE": "L^-1 M^-1 T^3",
+      "dust_8piG_rho_c2": "L^-2 M^0 T^0"
+    }
+  },
+  "reused_defect_ids": [
+    "C-02",
+    "C-05",
+    "C-88",
+    "C-30",
+    "O-V34-C",
+    "O-V34-C/O-SCALE"
+  ],
+  "sibling_products": [
+    "数据/TUFT-V3.4四模块审计与路线选址前置_2026-10-07.json",
+    "../../../07_统一场方程/空间螺旋几何化统一场论/30_外部来稿审计_自标V3.4能量动量守恒与挠子量子场_2026-10-07.md",
+    "../../../07_统一场方程/空间螺旋几何化统一场论/31_外部来稿V3.4修复版_结构修正与能标窗口_2026-10-07.md"
+  ]
+}

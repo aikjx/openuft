@@ -1,0 +1,243 @@
+{
+  "round": "r20",
+  "date": "2026-10-07",
+  "title": "P0 同源化：kappa/tau 动力学化的最小闭合集、代价与下游影响",
+  "counts": {
+    "items": 20,
+    "checks": 14,
+    "check_fail": 0
+  },
+  "verdicts": {
+    "FAIL": 9,
+    "INFO": 8,
+    "PASS": 3
+  },
+  "items": [
+    {
+      "id": "P0-01",
+      "verdict": "FAIL",
+      "slug": "p01_tau_is_slave_reproduced",
+      "detail": "复现 r19 E-07：来料作用量无 τ 的 kinetic 项 ⇒ 对 τ 变分给 cR + 2ατ = 0 ⇒ τ = −cR/(2α) 是**代数从属量**，无传播（连带 31 号册已验证的最小闭合必须补 kinetic 项）"
+    },
+    {
+      "id": "P0-02",
+      "verdict": "FAIL",
+      "slug": "p02_kappa_forces_r_zero_reproduced",
+      "detail": "复现 r19 E-06：∂(fR)/∂κ = R ⇒ EOM 为 **R = 0** ⇒ 若要让 κ 成为动力学场，必须另加 κ 的 kinetic 项与 κR 耦合（来料完全没有）"
+    },
+    {
+      "id": "P0-03",
+      "verdict": "INFO",
+      "slug": "p03_minimal_closure_is_31_册_r3",
+      "detail": "让 τ 动力学化的**最小闭合集**已被 31 号册给出并验证：L ⊃ ½κR + ½g_τ τR + ½m_τ²τ² + ητ，EOM 为 □τ − m_τ²τ − η = −(g_τ/2)R ⇒ **本册不重新发明**，只补两块新内容：κ 的动力学化（31 号册未含）与下游影响（下述 P0-09）"
+    },
+    {
+      "id": "P0-04",
+      "verdict": "PASS",
+      "slug": "p04_z_tau_dimension_closes",
+      "detail": "kinetic 项量纲闭合：质量维数口径 [Z_τ] = 0（无量纲）；SI 读法 [Z_τ] = L^-2 M^0 T^2 = 1/c²，在 c=ħ=1 口径下质量维同为 0 ⇒ **两种口径一致**（首版曾误报为不一致，系本册公式错误，已修）"
+    },
+    {
+      "id": "P0-05",
+      "verdict": "PASS",
+      "slug": "p05_g_tau_and_eta_dims_regression_31",
+      "detail": "31 号册两个量纲回归：闭合残差 [g_τ τR] = 0、[η τ] = 0（拉氏量密度 4）⇒ 反解 [g_τ] 质量维 = 1、[η] 质量维 = 3，与 31 号册 F03 记录的 M¹ / M³ **逐项一致**"
+    },
+    {
+      "id": "C0-01",
+      "verdict": "FAIL",
+      "slug": "c01_first_order_vs_second_order_incompatible",
+      "detail": "ADM 段给的是**一阶对流方程**（∂_tτ = β∂τ + 源 − ητ，n² 系数 = 0），作用量导出的是**二阶 KG 型**（n² 系数 = 1）⇒ 两条方程不可能同时作为同一系统的演化方程（过约束）⇒ 「同源化」必须先舍弃其一"
+    },
+    {
+      "id": "C0-02",
+      "verdict": "FAIL",
+      "slug": "c02_eta_has_no_origin_in_action",
+      "detail": "输运方程的阻尼系数 η **不来自作用量**（来料作用量参数集 = {f, α}）⇒ 自由系数、无来源、可被任意实验界调小 ⇒ 复发 30 号册 D-03「挠率项自由系数 ⇒ 不可证伪」同型"
+    },
+    {
+      "id": "C0-03",
+      "verdict": "FAIL",
+      "slug": "c03_constant_source_violates_bc",
+      "detail": "输运方程源项 (α/c)ω 是**常数源**，在 τ=0 处取值 = 1.0000000000000000000000000E+0 ≠ 0 ⇒ 违反「τ(∞)=0 且无外源」的边界条件；KG 型源 ∝ g_τ 则在 g_τ→0 时消失（= 0.0000000000000000000000000E+25）⇒ 源项结构本身判死了输运方程这一支"
+    },
+    {
+      "id": "C0-04",
+      "verdict": "INFO",
+      "slug": "c04_omega_three_roles_undefined",
+      "detail": "ω 在来料中同时扮演三重角色（τ(r) 剖面的系数、α 的定标源、τ 方程的源）却**无任何方程定义**（承 r19 E-08）⇒ 在同源化之前 ω 不可计算"
+    },
+    {
+      "id": "G0-01",
+      "verdict": "FAIL",
+      "slug": "g01_extra_scalar_dof",
+      "detail": "补齐 kinetic 项后 τ 成为**真实标量自由度** ⇒ 极化数由 2（纯 EH）变为 3（2 螺旋 + 1 标量）⇒ 凡以纯 EH 真空为前提的既有计算都不再适用"
+    },
+    {
+      "id": "G0-02",
+      "verdict": "INFO",
+      "slug": "g02_dec_condition_violated",
+      "detail": "非最小耦合标量破坏 DEC（degenerate vacuum）：Z_tau*(grad tau)^2 + f_kappa*kappa*R 不构成常数组合（DEC_IS_CONST = False）⇒ 这是 G0-01 的标准机制（标量-张量混合 ⇒ 引力子与标量不可分离）"
+    },
+    {
+      "id": "G0-03",
+      "verdict": "FAIL",
+      "slug": "g03_invalidates_existing_gw_numerics",
+      "detail": "下游作废清单：TUFT 既有引力波数值链全部以纯 EH 真空为前提（R20 实频 RW 散射、R21/R22 时域 ringdown 与回声梳、R25–R27 Leaver 连分式 RW/Zerilli 精确 QNM）⇒ 若采纳动力学 τ/κ，这些计算**必须整体重算**或明确声明耦合→0 极限；否则 R21 的 τ=3.4×τ_GR、R25 的 |Δ|=4.46e−7 等读数不再可引用为 TUFT 预言"
+    },
+    {
+      "id": "G0-04",
+      "verdict": "INFO",
+      "slug": "g04_ghost_criterion_ready",
+      "detail": "闭合后的鬼判据（Hartle–Hawking / ADM 分解）已就绪可执行：L_H 展开中 n²·Z_τ·(∂τ)² 的系数必须 > 0（=0 或 <0 分别对应「无传播」与梯度不稳定性）⇒ 本册把该判据固化为门禁项（与 r19 P1 门禁并列）"
+    },
+    {
+      "id": "G0-05",
+      "verdict": "PASS",
+      "slug": "g05_gr_limit_recoverable",
+      "detail": "GR 极限可恢复：g_τ → 0.0000000000000000000000000E+25 时源项与耦合同时消失，退化为纯 EH ⇒ P1 门禁 (i)「GR 极限自检」可执行"
+    },
+    {
+      "id": "Q0-01",
+      "verdict": "FAIL",
+      "slug": "q01_tau_at_horizon_constant",
+      "detail": "来料剖面 τ(r)=ωℓ_P²/(c r²) 配合 ω=Λ₀r_s²/ℓ_P² ⇒ **τ(r_s) ≡ Λ₀/c = 1.6062625186929894011049106E+34**，与 r_s **完全无关**（两个不同质量的两个 r_s 逐位相同，相对差 0.0000000000000000000000000E+0）⇒ 场在「视界」处的取值是常数而非零，无法给出边界层厚度，且该量纲为 L^0 M^1 T^-1 ≠ 台账 [τ]=L^-1 M^0 T^0"
+    },
+    {
+      "id": "Q0-02",
+      "verdict": "INFO",
+      "slug": "q02_bc_test_criterion",
+      "detail": "P1 门禁 (ii) 的可执行形式：源项在 τ=0 处必须为 0（否则不存在 τ→0 的无源解）⇒ 输运方程（常数源）**不过关**、KG 型源（∝g_τ）**过关**"
+    },
+    {
+      "id": "Q0-03",
+      "verdict": "INFO",
+      "slug": "q03_profile_regression_test",
+      "detail": "P1 门禁 (iii) 的可执行形式：数值剖面验收必须附 GR 极限对照（τ≡0 时精确复现 r_s=2GM/c²，机器判据取相对偏差 ≤1e−10）⇒ 沿用 r19 P1 门禁"
+    },
+    {
+      "id": "X-01",
+      "verdict": "FAIL",
+      "slug": "x01_cost_ledger",
+      "detail": "最小闭合代价：τ 动力学化需 +2 个参数 (Z_τ, g_τ)；κ 也动力学化再 +2 (Z_κ, f_κ) ⇒ 共 4；再加初值与 2 条新约束。按 Ω5「自由常数 ≤1」口径，连续常数由 1 升至 3~5 ⇒ **违反 Ω5，必须逐项登记为 [C] 外部输入**"
+    },
+    {
+      "id": "X-02",
+      "verdict": "INFO",
+      "slug": "x02_not_new_discovery",
+      "detail": "本册不新增 claim：τ 的最小闭合形式来自 31 号册（已 PASS 5 / BOUNDARY 1 复算）；κ 的动力学化与下游作废清单为本册新增的分析结论，登记为分析性判断而非实验结论"
+    },
+    {
+      "id": "X-03",
+      "verdict": "INFO",
+      "slug": "x03_no_scoring",
+      "detail": "本册不代选「是否接受 +2~4 个自由参数与引力波链重算」这一取舍（同 30 号册 E-06）；但给出机器判定：四条候选路径在 P0 完成前均不可执行（P0-01/P0-02/C0-01/C0-03）"
+    }
+  ],
+  "selfcheck": [
+    {
+      "name": "tau_slave_reproduced",
+      "verdict": "PASS",
+      "detail": "EOM: cR + 2 alpha tau = 0 => tau = -cR/(2 alpha)"
+    },
+    {
+      "name": "kappa_r0_reproduced",
+      "verdict": "PASS",
+      "detail": "EOM: d(fR)/d kappa = R => R = 0"
+    },
+    {
+      "name": "z_tau_dimension_closes",
+      "verdict": "PASS",
+      "detail": "质量维数口径 [Z_tau]=0、SI 读法 L^-2 M^0 T^2（= 1/c²，质量维 0）⇒ 两口径一致"
+    },
+    {
+      "name": "g_tau_eta_dims_31",
+      "verdict": "PASS",
+      "detail": "闭合残差 g_tau=0、eta=0；反解质量维 g_tau=1、eta=3（对齐 31 号册 M^1 / M^3）"
+    },
+    {
+      "name": "order_mismatch_is_real",
+      "verdict": "PASS",
+      "detail": "一阶对流 n^2 系数 = 0、二阶 KG n^2 系数 = 1"
+    },
+    {
+      "name": "eta_absent_from_action",
+      "verdict": "PASS",
+      "detail": "作用量参数集 = {f, alpha}，无 eta"
+    },
+    {
+      "name": "bc_test_rejects_advection",
+      "verdict": "PASS",
+      "detail": "常数源在 tau=0 处 = 1.0000000000000000000000000E+0；KG 源在 g_tau->0 处 = 0.0000000000000000000000000E+25"
+    },
+    {
+      "name": "extra_dof_appears",
+      "verdict": "PASS",
+      "detail": "极化数 2 -> 3"
+    },
+    {
+      "name": "dec_not_const",
+      "verdict": "PASS",
+      "detail": "Z_tau*(grad tau)^2 + f_kappa*kappa*R 非常数组合"
+    },
+    {
+      "name": "gr_limit_recoverable",
+      "verdict": "PASS",
+      "detail": "g_tau -> 0 时源项消失"
+    },
+    {
+      "name": "tau_at_horizon_independent_of_rs",
+      "verdict": "PASS",
+      "detail": "tau(r_s) = Lambda0/c = 1.6062625186929894011049106E+34（与 r_s 无关，相对差 0.0000000000000000000000000E+0）"
+    },
+    {
+      "name": "tau_at_horizon_dim_broken",
+      "verdict": "PASS",
+      "detail": "[Lambda0/c] = L^0 M^1 T^-1 != [tau] = L^-1 M^0 T^0"
+    },
+    {
+      "name": "cost_ledger_counted",
+      "verdict": "PASS",
+      "detail": "tau 需 +2、kappa 再 +4"
+    },
+    {
+      "name": "determinism",
+      "verdict": "PASS",
+      "detail": "复算读数逐位一致"
+    }
+  ],
+  "key_numbers": {
+    "Lambda0": "4.8154538867224223992518906E+42",
+    "l_P_m": "1.6162550244237053698265903E-35",
+    "tau_at_horizon": "1.6062625186929894011049106E+34",
+    "tau_at_horizon_dim": "L^0 M^1 T^-1",
+    "r_s_sun_m": "2.9533393820668785580965234E+3",
+    "r_s_2sun_m": "5.9066787641337571161930468E+3",
+    "Z_tau_massdim": 0,
+    "Z_tau_si": "L^-2 M^0 T^2",
+    "g_tau_massdim": 0,
+    "eta_massdim": 0,
+    "order_advection": 1,
+    "order_kg": 2,
+    "n2_coeff_advection": 0,
+    "n2_coeff_kg": 1,
+    "dof_gr": 2,
+    "dof_after": 3,
+    "extra_params_tau": 2,
+    "extra_params_full": 4
+  },
+  "reused_defect_ids": [
+    "r19/E-06",
+    "r19/E-07",
+    "r19/E-08",
+    "r19/D-03",
+    "31 号册 R3/X-EXT-3",
+    "O-MASS",
+    "O-SCALE"
+  ],
+  "sibling_products": [
+    "数据/TUFT-V3.4_EC作用量与ADM约束_变分与量纲审计_2026-10-07.json",
+    "数据/TUFT-G与c核心关系_量纲自由度与符号冲突审计_2026-10-07.json",
+    "../../../07_统一场方程/空间螺旋几何化统一场论/31_外部来稿V3.4修复版_结构修正与能标窗口_2026-10-07.md"
+  ]
+}

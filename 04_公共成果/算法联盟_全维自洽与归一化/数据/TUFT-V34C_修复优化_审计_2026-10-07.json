@@ -1,0 +1,74 @@
+{
+  "title": "TUFT-V34C 修复优化审计（r21 续）",
+  "date": "2026-10-07",
+  "source_audit": "TUFT-V34C_能量动量守恒与挠子量子场_审计_2026-10-07",
+  "entries": 10,
+  "counts": {
+    "PASS": 7,
+    "INFO": 3
+  },
+  "self_check_pass": true,
+  "verdict": "方程层缺陷（G02/G03/G03b/G05/G01-结构/G04/G08）可由修正关闭；剩余 G06/G06b 为已关实验窗口、G07 为外部输入 ξ。",
+  "results": [
+    {
+      "key": "F01_stress_tensor_sign",
+      "status": "PASS",
+      "msg": "修正后 T^tt=+1/2 alpha tau^2 - eta tau；来稿漏 -eta tau 且反号，差 = -0.20（r21 读数 -0.2000）。应用修正后能动张量与场方程同源，符号闭合。",
+      "value": "-0.20"
+    },
+    {
+      "key": "F02_field_eq_source",
+      "status": "PASS",
+      "msg": "修正源项 RHS=-R/(2 alpha c^3)；SI 与 R 残差 -1.000e-80，符号负，自然单位 RHS=-R/(2 alpha) 一致（c^3 因子闭合）。来稿 +R/(2 alpha c) 量级差 c^2=8.99e16 且符号反，已修正。",
+      "value": "-4.6392513652462299108859251424530916301750844682480403429054696213659876383042104E-26"
+    },
+    {
+      "key": "F03_mass_scale_unified",
+      "status": "PASS",
+      "msg": "修正后 §II 质量项 -m_tau^2 tau 与 §3.1 声明 m_tau^2=3.828e+69 m^-2 同源；消除来稿 69 量级矛盾。",
+      "value": "3.828E+69"
+    },
+    {
+      "key": "F04_lagrangian_dimensional",
+      "status": "PASS",
+      "msg": "修正后引入长度标度 ell：质量项写为 alpha/2 (tau/ell)^2，与动能项 -alpha/2 (dtau)^2 同维 (L^-2)；SI 量纲闭合。ell 为外部锚定（普朗克/康普顿），非 TUFT 自生。",
+      "value": null
+    },
+    {
+      "key": "F05_conservation_coupling",
+      "status": "PASS",
+      "msg": "修正耦合用 contortion C^lambda(mu,nu) × T(mu,nu)；玩具检验 max|S_corr|=6.000e-2 ≠ 0，挠率真正进入守恒律（不像来稿 S·R 恒零）。注：具体耦合结构仍属开放项，须由作用量变分固定。",
+      "value": "0.060"
+    },
+    {
+      "key": "F06_delta_g_consistent",
+      "status": "PASS",
+      "msg": "修正后代码 delta_g = alpha/(8π) 与正文一致；残余 = 0.000e-80。仍须声明：delta_g≡alpha 只是重命名，不构成对 alpha 的独立拟合（与 r21 G04 判定一致）。",
+      "value": "0.00029035243322210945065914387366228398081280480512521539041515699624373717610499439"
+    },
+    {
+      "key": "F07_g2_window_closed",
+      "status": "INFO",
+      "msg": "修正后口径统一为 a_TUFT=alpha/(8π)=2.9035e-4，相对实验 -74.96%，窗口已关（与 openuft M02 归一化一致）。属实验排除，非方程缺陷；属诚实边界。",
+      "value": "-74.962106457617505022270140209107216577662539699391249235532987806364566602308762"
+    },
+    {
+      "key": "F08_EDM_window_closed",
+      "status": "INFO",
+      "msg": "EDM：TUFT 螺旋对称论证 d_e=0（不可证伪）；若给幅度则超 ACME2018 上限 1.28e16 倍（openuft M02 更正）。窗口已关，属实验排除。",
+      "value": null
+    },
+    {
+      "key": "F09_scalar_GW_xi",
+      "status": "INFO",
+      "msg": "标量极化 h_tau 需要挠率-度规耦合 ξ；作用量未给 ξ 变分来源 -> ξ 是未声明外部输入（占位 xi=1）。GW/PTA 上限要求 ξ<<1 或标量不与检验质量耦合；非 TUFT 独有缺陷。",
+      "value": "1"
+    },
+    {
+      "key": "F10_beta_c_removed",
+      "status": "PASS",
+      "msg": "修正：撤销 β_c 跑动（c 为常数），不再引入 +1 自由函数，Ω5 常数限额回到 1；β_G 量纲不齐随 β_c 撤销而消除。“非高斯紫外不动点”作为猜想单独登记，不进入核心方程。",
+      "value": null
+    }
+  ]
+}

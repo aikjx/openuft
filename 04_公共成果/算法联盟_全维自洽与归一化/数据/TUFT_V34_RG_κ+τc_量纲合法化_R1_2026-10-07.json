@@ -1,0 +1,40 @@
+{
+  "script": "TUFT_V34_RG_κ+τc_量纲合法化_R1_2026-10-07.py",
+  "rating": "C/L1",
+  "self_check": "5/5",
+  "checks": [
+    {
+      "check": "D3_RAW_MISMATCH",
+      "pass": true,
+      "info": "κ+τc : [L^-1] + [T^-1] 不同维 => 加法无定义（确认 D3 缺陷存在）"
+    },
+    {
+      "check": "R1a_HOMOGENEOUS",
+      "pass": true,
+      "info": "R1a κc+τc : [T^-1] + [T^-1] 同维(T^-1) => 合法可加"
+    },
+    {
+      "check": "R1b_HOMOGENEOUS",
+      "pass": true,
+      "info": "R1b κ+τc/c = κ+τ : [L^-1] + [L^-1] 同维(L^-1) => 合法可加"
+    },
+    {
+      "check": "BETA_G_DIMS",
+      "pass": true,
+      "info": "β_G = G*(4β_c/c − β_{κτ}/(κc+τc)) : 两项均无量纲 => [β_G]=[G]=L^3·M^-1·T^-2（合法）"
+    },
+    {
+      "check": "BETA_G_RAW_ILLEGAL",
+      "pass": true,
+      "info": "原稿 β_{κτ}/(κ+τc) : [T^-1] / [L^-1·T^-1] = [L] ≠ 无量纲 => 原 β_G 分母非法（须先修 D3）"
+    }
+  ],
+  "options": {
+    "R1a": "κc+τc（两项 T^-1），零成本，仅给 κ 补既有 c",
+    "R1b": "κ+τ（两项 L^-1），零成本，即 τc 除 c（=τ）",
+    "R2": "声明 κ 为定值场并删 §5（结构性，未实现）",
+    "R3": "走 ECSK ½g_ττ R（代价 +2 自由参数，违反 Ω5，未实现）"
+  },
+  "residual": "R1 仅使分母合法；β_c、β_{κτ} 量纲仍须显式声明（同 D4 性质），否则 β_G 数值不可信",
+  "next": "待用户裁决 R1a / R1b / R2 / R3 后，方可把 β_G 写回修订稿"
+}

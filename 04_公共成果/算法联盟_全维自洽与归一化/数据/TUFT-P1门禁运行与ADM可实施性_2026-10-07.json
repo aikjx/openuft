@@ -1,0 +1,190 @@
+{
+  "round": "r21",
+  "date": "2026-10-07",
+  "title": "P1 门禁运行 + 最小闭合底座的 ADM 可实施性",
+  "counts": {
+    "items": 12,
+    "checks": 10,
+    "check_fail": 0
+  },
+  "verdicts": {
+    "FAIL": 3,
+    "INFO": 5,
+    "PASS": 3,
+    "BOUNDARY": 1
+  },
+  "gates": [
+    {
+      "id": "g1_gr_limit",
+      "verdict": "FAIL",
+      "detail": "哈密顿约束右端 -(Gamma/2)rho 与标准 16*pi*G*rho/c^2 的比值在 c=1 口径为 -0.25（承 r19 A-01）⇒ GR 极限不还原 GR"
+    },
+    {
+      "id": "g2_source_vanishes",
+      "verdict": "FAIL",
+      "detail": "源项 (alpha/c)*omega 是常数源，tau=0 处取值 8637.4… != 0（承 r20 C0-03）⇒ 无 tau->0 无源解"
+    },
+    {
+      "id": "g3_constraints_initial",
+      "verdict": "FAIL",
+      "detail": "演化未知量 6->8 但未给 2 条新约束与初值（r19 A-04）⇒ 约束面未定义，门禁不可满足"
+    },
+    {
+      "id": "g4_frequency_dimension",
+      "verdict": "FAIL",
+      "detail": "omega = Lambda0 r_s^2/l_P^2 的量纲是力 M^1L^1T^-2 != T^-1；化简后 M^2c^3/(2 pi hbar) 同（r19 S-01/S-02）"
+    },
+    {
+      "id": "g5_no_ghost",
+      "verdict": "UNDECIDABLE",
+      "detail": "作用量无 tau 的 kinetic 项 => tau 不是传播场（n^2 系数 = 0，属『无传播』而非梯度不稳定）⇒ 判据不适用"
+    }
+  ],
+  "items": [
+    {
+      "id": "A-01",
+      "verdict": "FAIL",
+      "slug": "a01_gate_run_zero_pass",
+      "detail": "P1 门禁对来料原文的运行结果：**PASS 0 / FAIL 4 / UNDECIDABLE 1** ⇒ 路径 2（数值孤子剖面）在门禁未过时**不可执行**"
+    },
+    {
+      "id": "A-02",
+      "verdict": "INFO",
+      "slug": "a02_gate_run_ledger",
+      "detail": "逐条：g1 GR 极限（比值 -0.25，FAIL）· g2 源项归零（常数源 != 0，FAIL）· g3 约束初值（6->8 无新约束，FAIL）· g4 [omega]（= 力，FAIL）· g5 梯度不稳定性（tau 非传播场，判据不适用，UNDECIDABLE）"
+    },
+    {
+      "id": "A-03",
+      "verdict": "INFO",
+      "slug": "a03_gate_reuses_earlier_findings",
+      "detail": "本段不重算：全部读数直接引 r19 A-01/A-04/S-01/S-02 与 r20 C0-03 ⇒ 门禁化只是把既有判定固化为可执行判据，不产生新物理"
+    },
+    {
+      "id": "B-01",
+      "verdict": "PASS",
+      "slug": "b01_dirac_count_confirms_3_dof",
+      "detail": "Dirac 计数（严格）：相空间 = gamma(6) + K(6) + tau(1) + pi(1) = 14；一阶约束 4（1 H + 3 M）、二阶 0 ⇒ 物理相空间 = 14 - 2*4 = 6 ⇒ 物理构型自由度 = 3 = 2(引力子) + 1(标量) ⇒ **独立复核 r20 G0-01**"
+    },
+    {
+      "id": "B-02",
+      "verdict": "PASS",
+      "slug": "b02_tau_kinetic_adm_expansion_exact",
+      "detail": "tau kinetic 项的 ADM 展开**严格可得**：n^2 系数 = (sqrt(h)/2)·Z_tau，符号因子 5.000000E-1 × Z_tau(=1) = 5.000000E-1 > 0 ⇒ **该块无梯度不稳定性**；梯度项系数 -5.000000E-1·Z_tau（进 h_ij 方程）、shift 耦合项 -1.000000E+0·Z_tau/n（进动量约束）"
+    },
+    {
+      "id": "B-03",
+      "verdict": "BOUNDARY",
+      "slug": "b03_g_tau_block_needs_literature",
+      "detail": "(1/2) g_tau tau R 中 R = R_tilde + K^2 - K_ij K^ij，而 K ~ n^{-1} => 该块对 n^2 系数也有贡献；完整鬼判据需把 EH + g_tau tau K^2 一并展开。本册**不自行推导该系数**（避免编造），标 BOUNDARY 并指明须引权威文献核对（Koike-Maeda-Nakamura-Yajima, gr-qc/0105056 一类 ADM 鬼分析）。"
+    },
+    {
+      "id": "B-04",
+      "verdict": "INFO",
+      "slug": "b04_initial_value_requirements",
+      "detail": "初值需求清单：gamma_ij(6, 空间度规初值)、K_ij(6, 外曲率初值)、tau(1, 挠率标量初值)、pi_tau(1, 标量动量初值)（合计 14 个）；约束 H(1, 混合 Hamiltonian 约束（含 grad tau grad tau 交叉项）)、M_i(3, ADM 动量约束)（合计 4 条，H 约束因非最小耦合含 grad tau grad tau 交叉项）；规范固定：phi=0（去除 1 个标量的内部自由度）+ 3 个 shift 分量 + lapse ⇒ 需 5 个规范函数 ⇒ 演化系统与初值**可闭合**，这正是 r19 A-04 缺失的那部分"
+    },
+    {
+      "id": "B-05",
+      "verdict": "PASS",
+      "slug": "b05_closure_is_implementable_in_principle",
+      "detail": "结论（仅就形式）：31 号册闭合底座 + 上述初值/约束清单 ⇒ **方程组与初值问题形式上可闭合**（这是相对 r19 的实质推进：r19 判『不同源 + 无初值』，本册给出闭合后的最小可实施清单）；但**可实施 ≠ 已通过门禁**（A 段 0/5）"
+    },
+    {
+      "id": "C-01",
+      "verdict": "FAIL",
+      "slug": "c01_route2_direct_numerics_closed",
+      "detail": "路径 2（直接数值求解孤子剖面）选项**关闭**：门禁 0/5，且作用量与演化方程不同源（r19 E-06/E-07）⇒ 现在能做的只有「闭合底座 + 门禁全过」的版本"
+    },
+    {
+      "id": "C-02",
+      "verdict": "INFO",
+      "slug": "c02_minimum_items_to_pass_gate",
+      "detail": "要 P1 过关的最小项清单（4 项，按依赖序）：① 统一单位约定并把作用量修到 GR 极限可还原（修 r19 A-01 的 -1/4 与 E-04 的符号）② 源项改为 ∝ g_tau 或 ∝ tau（修常数源）③ 补 2 条新约束 + 初值 + 规范固定（修 A-04）④ 色散式补时间标度使 [omega]=T^-1（修 S-01）"
+    },
+    {
+      "id": "C-03",
+      "verdict": "FAIL",
+      "slug": "c03_upstream_chain_void_if_closed",
+      "detail": "若采纳闭合底座，**R20/R21/R22/R25–R27 的纯 EH 前提作废**（极化数 2->3、DEC 破坏）⇒ 重算代价必须计入决策（承 r20 G0-03，此处仅作门禁条目登记）"
+    },
+    {
+      "id": "C-04",
+      "verdict": "INFO",
+      "slug": "c04_no_scoring",
+      "detail": "本册不代选「是否接受闭合代价与重算」（同 30 号册 E-06）；只给门禁读数、最小清单与可实施性边界"
+    }
+  ],
+  "selfcheck": [
+    {
+      "name": "gate_run_consistent",
+      "verdict": "PASS",
+      "detail": "PASS=0 FAIL=4 UNDECIDABLE=1"
+    },
+    {
+      "name": "dirac_count_arithmetic",
+      "verdict": "PASS",
+      "detail": "14 - 2*4 = 6 ⇒ 3 物理构型自由度"
+    },
+    {
+      "name": "dirac_matches_dof_split",
+      "verdict": "PASS",
+      "detail": "3 = 2 + 1"
+    },
+    {
+      "name": "n2_coefficient_positive",
+      "verdict": "PASS",
+      "detail": "(sqrt(h)/2)·Z_tau 符号因子 = 5.000000E-1"
+    },
+    {
+      "name": "gradient_coeff_negative",
+      "verdict": "PASS",
+      "detail": "梯度项系数 = -5.000000E-1·Z_tau（进 h_ij 方程）"
+    },
+    {
+      "name": "iv_list_complete",
+      "verdict": "PASS",
+      "detail": "初值需求合计 14 = 相空间 14"
+    },
+    {
+      "name": "constraint_count_four",
+      "verdict": "PASS",
+      "detail": "约束合计 4 = 一阶 4"
+    },
+    {
+      "name": "no_fabricated_coefficient",
+      "verdict": "PASS",
+      "detail": "g_tau 块系数未自推、已指明文献核对来源"
+    },
+    {
+      "name": "minimum_items_four",
+      "verdict": "PASS",
+      "detail": "最小清单 4 项：单位/GR 极限 · 源项归零 · 约束与初值 · [omega]=T^-1"
+    },
+    {
+      "name": "determinism",
+      "verdict": "PASS",
+      "detail": "复算读数一致"
+    }
+  ],
+  "key_numbers": {
+    "gate_pass": 0,
+    "gate_fail": 4,
+    "gate_undecidable": 1,
+    "phase_space_total": 14,
+    "first_class_constraints": 4,
+    "physical_phase_dim": 6,
+    "physical_config_dof": 3,
+    "dof_split": "2 graviton + 1 scalar",
+    "n2_coeff_sign": "5.000000E-1",
+    "grad_coeff_sign": "-5.000000E-1",
+    "iv_count": 14,
+    "constraint_count": 4
+  },
+  "not_self_derived": [
+    "(1/2) g_tau tau K^2 对 n^2 系数的贡献（须引 Koike et al. gr-qc/0105056 一类文献核对）"
+  ],
+  "sibling_products": [
+    "数据/TUFT-P0同源化_最小闭合集与代价_2026-10-07.json",
+    "数据/TUFT-V3.4_EC作用量与ADM约束_变分与量纲审计_2026-10-07.json"
+  ]
+}

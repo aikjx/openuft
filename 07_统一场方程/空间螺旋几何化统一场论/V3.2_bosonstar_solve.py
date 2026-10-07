@@ -101,28 +101,35 @@ def shoot_sigma0(omega, g=mp.mpf("1"), guess=None):
         if guess is None:
             return None
     def end(s0):
+        """σ(RMAX)。命中视界（A≤0）→返回 None：坍缩区不可作合法负值参与括号。
+        只允许真实平滑过零（σ(RMAX) 连续穿越 0），杜绝视界峭壁伪根。"""
         try:
             rs, ys = integrate(omega, s0, g=g)
             return ys[-1][2]
         except ValueError:
-            return mp.mpf("-1")   # 命中视界→视为过冲/坍缩（负信号，促成括号）
-    # 以种子为中心向两侧扩括号找变号
-    lo, hi = guess * mp.mpf("0.6"), guess * mp.mpf("1.4")
-    flo, fhi = end(lo), end(hi)
-    for _ in range(30):
-        if flo * fhi <= 0:
+            return None
+    # 生成 σ0 网格，筛出非视界(非 None)且过零的相邻对 → 真实括号
+    s0 = guess * mp.mpf("0.05")
+    smax = guess * mp.mpf("3.0")
+    n = 120
+    step = (smax - s0) / n
+    prev = None; prev_v = None
+    lo = hi = None; flo = fhi = None
+    for i in range(n + 1):
+        cur = s0 + step * i
+        v = end(cur)
+        if v is None:
+            prev = cur; prev_v = None; continue
+        if prev_v is not None and prev_v * v < 0:
+            lo, hi, flo, fhi = prev, cur, prev_v, v
             break
-        # 尚未变号：扩大区间
-        lo = lo * mp.mpf("0.85"); flo = end(lo)
-        if flo * fhi <= 0:
-            break
-        hi = hi * mp.mpf("1.15"); fhi = end(hi)
-        if flo * fhi <= 0:
-            break
-    else:
+        prev, prev_v = cur, v
+    if lo is None:
         return None
-    for _ in range(45):
+    for _ in range(60):
         mid = (lo + hi) / 2; fm = end(mid)
+        if fm is None:
+            hi = mid; fhi = None; continue   # 缩到视界区，重取
         if flo * fm <= 0:
             hi = mid; fhi = fm
         else:
