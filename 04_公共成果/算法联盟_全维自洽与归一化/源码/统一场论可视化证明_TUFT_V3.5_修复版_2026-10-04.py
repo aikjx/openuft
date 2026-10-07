@@ -296,7 +296,8 @@ def main():
     # 四区代表点归属
     for k, (px, py) in pts.items():
         r = region(px, py)
-        add("C-04", sec, "代表点归属 %s" % k,
+        # id 加区名后缀：原 4 条共用 "C-04" ⇒ 条目 id 重复（依守卫工具检查1 修正）
+        add("C-04-%s" % k, sec, "代表点归属 %s" % k,
             "(%s,%s)" % (px, py), "PASS" if r == k else "FAIL",
             "落入：%s" % (r if r else "无"))
 
@@ -348,10 +349,11 @@ def main():
     }
     for name, s in samples.items():
         if s["k"] is None:
-            add("E-01", sec, "样本 %s" % name, "原点极限类",
+            # id 加样本名后缀：原 4 条共用 "E-01" ⇒ 条目 id 重复（依守卫工具检查1 修正）
+            add("E-01-%s" % name, sec, "样本 %s" % name, "原点极限类",
                 "BOUNDARY", "力程 L=∞（√(κ²+τ²)=0 需原点，原点已被 omega() 排除）；引力/电磁在参数化内不可有限表达（审计 F-05）")
         else:
-            add("E-01", sec, "样本 %s" % name, "(κ̂,τ̂)=(%.1f,%.1f)" % (s["k"], s["t"]),
+            add("E-01-%s" % name, sec, "样本 %s" % name, "(κ̂,τ̂)=(%.1f,%.1f)" % (s["k"], s["t"]),
                 "PASS", "力程 L̂=%.4f（无量纲）" % s["L"])
 
     # 矢量场（F-03 修复）：E∝(κ+τ)，κ=x,τ=y ⇒ F=−∇(κ+τ)=−(1,1)/√2 均匀场

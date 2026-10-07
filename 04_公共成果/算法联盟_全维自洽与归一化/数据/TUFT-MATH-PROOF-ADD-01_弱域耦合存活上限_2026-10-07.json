@@ -1,0 +1,60 @@
+{
+  "engine": "TUFT-MATH-PROOF-ADD-01 弱域耦合存活上限（模型无关约束，2026-10-07）",
+  "date": "2026-10-07",
+  "dependencies": [
+    "分支3c Path2 eps通道",
+    "分支3b 相位->T-odd",
+    "审计D-03"
+  ],
+  "inputs": {
+    "alpha_W": 0.01696,
+    "DeltaA": 0.001,
+    "eps_crit": 0.0098,
+    "d_n_lim": 1.8e-26,
+    "g_SM_g2": 0.65,
+    "g_SM_sqrt": 0.13
+  },
+  "bounds": {
+    "beta_channel": {
+      "max_Omega_g2": 0.00637,
+      "max_Omega_sqrt": 0.001274,
+      "suppression_g2": 2.662480376766091,
+      "suppression_sqrt": 13.312401883830455
+    },
+    "edm_channel": {
+      "max_Omega_g2": 5.85e-14,
+      "max_Omega_sqrt": 1.17e-14,
+      "suppression_g2": 289914529914.5299,
+      "suppression_sqrt": 1449572649572.6494
+    }
+  },
+  "guards": [
+    {
+      "name": "beta_channel_omega_bound",
+      "ok": true,
+      "note": "|Omega_W|<6.3700e-03 (g2=0.65); |Omega_W|<1.2740e-03 (sqrt=0.130)；天然 0.01696 超限（需压低 2.7x/13.3x）",
+      "detail": "beta 通道：|Omega_W| < eps_crit*g_SM（deltaA<DeltaA 的硬上限）"
+    },
+    {
+      "name": "edm_channel_omega_bound",
+      "ok": true,
+      "note": "|Omega_W|<5.85e-14 (g2); |Omega_W|<1.17e-14 (sqrt)；天然 0.01696 超限约 3e+11 倍（相位/T-odd 通道实质关闭）",
+      "detail": "EDM 通道（T-odd）：|Omega_W| < ~0.9e-13*g_SM（相位通道基本判死，粗估）"
+    },
+    {
+      "name": "combined_survival_window",
+      "ok": true,
+      "note": "beta 存活窗 |Omega_W|<6.4e-03；EDM 存活窗 <5.9e-14（差 1e+11 量级）=> 保留复 Omega 只能走幅值差 eps 通道，且须压低到 ~1e-3 以下",
+      "detail": "合并：beta 通道允许 |Omega_W|~1e-3 量级；EDM 通道仅 ~1e-13 => 相位结构必须舍弃"
+    },
+    {
+      "name": "model_independent_bound",
+      "ok": true,
+      "note": "|Omega_W|_max(beta) in [1.3e-3, 6.4e-3]（g_SM 两口径）；|Omega_W|_max(EDM)~1e-13。任何版本须满足 beta 上限，且不能把相位当宇称源。",
+      "detail": "模型无关：无论 B.3 如何改稿，弱域耦合存活上限由本册给定"
+    }
+  ],
+  "n_guards": 4,
+  "n_pass": 4,
+  "n_fail": 0
+}

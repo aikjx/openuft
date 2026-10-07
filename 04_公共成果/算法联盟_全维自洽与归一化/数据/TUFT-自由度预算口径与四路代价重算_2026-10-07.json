@@ -1,0 +1,273 @@
+{
+  "册名": "自由度预算口径与四路代价重算（第十五轮）",
+  "日期": "2026-10-07",
+  "起点": "第十四轮伏笔：④ 的低成本版本 + O-OMEGA-NODE 断言",
+  "性质": "独立机器检验 + 口径修正后的代价重算；不代选",
+  "引擎": "纯标准库（Python 3.8），零第三方依赖",
+  "条目数": 16,
+  "计数": {
+    "CORRECTED": 2,
+    "PASS": 5,
+    "INFO": 4,
+    "FAIL": 3,
+    "MISMATCH": 1,
+    "BOUNDARY": 1
+  },
+  "自检": {
+    "总数": 10,
+    "通过": 10
+  },
+  "key_numbers": {
+    "ratios": {
+      "EM": 0.061894423827820184,
+      "Weak": 0.14385072094995757,
+      "G_ADD02": 1.484e-44,
+      "G_MZ": 4.731e-34
+    },
+    "nodes": {
+      "S": [
+        120.0
+      ],
+      "EM": [
+        -28.817148,
+        28.817148
+      ],
+      "W": [
+        -147.243089,
+        -92.756911
+      ],
+      "G_zeros": [
+        30.0,
+        90.0,
+        150.0,
+        210.0,
+        270.0,
+        330.0
+      ],
+      "delta_G_ADD02": 4.9476957873904434e-45,
+      "delta_G_MZ": 1.5770426915465083e-34,
+      "global_counts": [
+        6,
+        12,
+        12,
+        6
+      ],
+      "cross_EM_in_S": [
+        91.182852,
+        148.817148
+      ],
+      "n_cone": 24,
+      "n_global": 5184,
+      "r_G_ADD02": 1.484308736217133e-44,
+      "r_G_MZ": 4.731128074639525e-34
+    },
+    "dof": {
+      "I_only_constant": 1,
+      "II_const_plus_nodes": 5
+    },
+    "routes": [
+      {
+        "route": 1,
+        "name": "人工指定 𝒪+delta",
+        "add_I": 1,
+        "add_II": 2,
+        "status": "死锁",
+        "dof_I_total": 2,
+        "dof_II_total": 7
+      },
+      {
+        "route": 2,
+        "name": "扩模型加第二场",
+        "add_I": 2,
+        "add_II": 2,
+        "status": "已结项",
+        "dof_I_total": 3,
+        "dof_II_total": 7
+      },
+      {
+        "route": 3,
+        "name": "放弃 beta 通道",
+        "add_I": 0,
+        "add_II": 0,
+        "status": "干净",
+        "dof_I_total": 1,
+        "dof_II_total": 5
+      },
+      {
+        "route": 4,
+        "name": "修改公设集",
+        "add_I": 2,
+        "add_II": 2,
+        "status": "账面合规",
+        "dof_I_total": 3,
+        "dof_II_total": 7
+      }
+    ]
+  },
+  "判定": [
+    {
+      "id": "A-01",
+      "section": "A",
+      "item": "scale_correction",
+      "verdict": "CORRECTED",
+      "detail": "**采用能标一致性册（2026-10-05）更正值**：四 α 不同能标 ⇒ ADD-02 的跨度 43.828 dex **高估 10.50 dex**；统一 M_Z 后 α_G=5.578e-35、span=33.325 dex、δ_G=1.577e-34 rad、引力/强=4.731e-34。**第十四轮册中 1.484e-44 的登记须更正为 M_Z 口径**"
+    },
+    {
+      "id": "A-02",
+      "section": "A",
+      "item": "rank_unaffected",
+      "verdict": "PASS",
+      "detail": "能标更正**不改变** rank=3 / nullity=3 / 可证伪窗口计数——因为「G 行 ∥ S 行」是**结构性质**（只依赖它是标量倍数，与倍数大小无关）⇒ 第十四轮结论不受影响，需更新的只是登记数值"
+    },
+    {
+      "id": "A-03",
+      "section": "A",
+      "item": "v35_precedent",
+      "verdict": "INFO",
+      "detail": "V3.5 册 C-03 已有构造性反例：取严格满足 P4（限 1 常数）的 Ω=c₀cos²θ，由 cos²θ_i=α_i/c₀ 反解节点 ⇒ 四目标数学上被命中（强 0.0000 / 弱 1.0058 / EM 1.3104，残差 6.158e-16）而引力节点 →π/2（残差 7.485e+04，失败）⇒ 结论「**限制常数个数无法限制预测力**」。**本册不逐位复现该表**（其 α 集能标未标识、残差定义未给出）⇒ 只引用结论"
+    },
+    {
+      "id": "B-01",
+      "section": "B",
+      "item": "strong_node",
+      "verdict": "PASS",
+      "detail": "强核 |cos3θ|=1 ⇒ 强核锥(120±30°)内节点 [120.0]（1 解，取瓣心）⇒ 与 ADD-02 册 θ_S=120° 一致"
+    },
+    {
+      "id": "B-02",
+      "section": "B",
+      "item": "light_nodes",
+      "verdict": "PASS",
+      "detail": "轻耦合节点独立复现：EM |cos3θ|=0.061894 ⇒ EM 锥内 [-28.817148, 28.817148]（2 解）；Weak |cos3θ|=0.143851 ⇒ Weak 锥内 [-147.243089, -92.756911]（2 解）⇒ 与 ADD-02 册 ±28.817° / 212.757°·267.243° **逐位一致**"
+    },
+    {
+      "id": "B-03",
+      "section": "B",
+      "item": "grav_node",
+      "verdict": "PASS",
+      "detail": "**关键增量**：引力节点 |cos3θ|=1.484309e-44（原始 α_G=1.750e-45 / λ）⇒ δ=arcsin(r)/3=4.9476957874e-45 rad ⇒ **复现 ADD-02 册 δ_G=4.9476957874e-45**（相对差 0.00e+00）；M_Z 统一口径 r=4.7311e-34 ⇒ δ=1.5770e-34 rad ⇒ 与能标一致性册 1.577e-34 一致 ⇒ **两种能标口径下引力节点均命中**"
+    },
+    {
+      "id": "B-04",
+      "section": "B",
+      "item": "degeneracy_cone",
+      "verdict": "FAIL",
+      "detail": "**扇区约束下的等价位数**：强 1 × EM 2 × Weak 2 × 引力 6（6 零点 G 侧）= **24 组等合格解** ⇒ λ 与全部节点不可分别识别 ⇒ 零预测力隐藏在此简并中"
+    },
+    {
+      "id": "B-05",
+      "section": "B",
+      "item": "ratio_truncation_lesson",
+      "verdict": "CORRECTED",
+      "detail": "**引用纪律修正**：用截断比值 1.484e-44 复现 δ_G 会产生 2.08e-4 相对误差；改用原始 α_G=1.750e-45 / λ 得 r=1.484309e-44 ⇒ 相对差 0.00e+00 ⇒ **ADD-02 册用的是原始 α 而非四舍五入比值**。本册一律「引用原始 α，不引用中间比值」"
+    },
+    {
+      "id": "B-06",
+      "section": "B",
+      "item": "cross_cone_ambiguity",
+      "verdict": "FAIL",
+      "detail": "**本册新发现（比 ADD-02 的 24 组更强）**：EM 比值 0.061894 在全域有 12 个解，其中 **[91.182852, 148.817148] 落在强核锥(120±30°)内** ⇒ **同一耦合值可归属不同扇区** ⇒ 扇区归属本身不唯一 ⇒ 不预加扇区约束时四力全局组合 = 6×12×12×6 = **5184 组**；即使预加扇区约束（24 组），模型仍无唯一预测"
+    },
+    {
+      "id": "C-01",
+      "section": "C",
+      "item": "axiom_effective",
+      "verdict": "FAIL",
+      "detail": "**独立机器判定（O-OMEGA-NODE / C-03 成立）**：现行 Ω5 只数连续常数 ⇒ λ=1 ⇒ **形式上 PASS**；但 1 个常数 + 4 个分区节点即命中全部四耦合 ⇒ 口径 I 自由度 = 1，口径 II 自由度 = 5（**相差 4 倍**）⇒ **「单常数」声明与实际自由度内容矛盾**"
+    },
+    {
+      "id": "C-02",
+      "section": "C",
+      "item": "three_calibers",
+      "verdict": "INFO",
+      "detail": "三口径计数：I（只数连续常数）= 1；II（常数+分区节点）= 5；III（+自由函数形状）= 5（当前 cos3θ 形状固定；若采纳 A1 动力学则形状自由 ⇒ 无界）⇒ **公设约束的对象必须写成 II 或 III，I 无效**"
+    },
+    {
+      "id": "C-03",
+      "section": "C",
+      "item": "v35_a4",
+      "verdict": "PASS",
+      "detail": "与 V3.5 册增广 A4「分区节点 θ_i 由外部理论给定」**一致**：节点既非预测亦非公设所约束 ⇒ 它是事实上的外部输入 ⇒ **当前模型已在使用未经声明的外部输入**（这一点与 Ω5 自洽性宣称冲突）"
+    },
+    {
+      "id": "D-01",
+      "section": "D",
+      "item": "recompute",
+      "verdict": "INFO",
+      "detail": "两口径下的自由度总量：人工指定 𝒪: 口径I=2 → 口径II=7；扩模型加第二: 口径I=3 → 口径II=7；放弃 bet: 口径I=1 → 口径II=5；修改公设集: 口径I=3 → 口径II=7"
+    },
+    {
+      "id": "D-02",
+      "section": "D",
+      "item": "route4_real_cost",
+      "verdict": "MISMATCH",
+      "detail": "**④ 的真实代价被第十四轮低估**：口径 I 下「公设违背 0 条」看似免费，但口径 II 下 ④ 同样 **+2 自由度**（δ 与 𝒪_TUFT）⇒ ④ 的唯一优势是「**把代价登记为合法**」，而非「代价更小」"
+    },
+    {
+      "id": "D-03",
+      "section": "D",
+      "item": "decision_precise",
+      "verdict": "INFO",
+      "detail": "③ vs ④ 的差异被精确化为单一问题：**是否承认 +2 个自由度的合法性**。③ = 不承认（自由度 5，且放弃 β 预言）；④ = 承认（自由度 7，保留 β 预言，但须声明「框架从此依赖 2 个外部输入」）⇒ 二者是同一物理内容的两种记账，不共存"
+    },
+    {
+      "id": "D-04",
+      "section": "D",
+      "item": "if_route4_then",
+      "verdict": "BOUNDARY",
+      "detail": "**若选 ④，必须同时处理 O-OMEGA-NODE**：仅把 Ω5 的数字从 1 改成 3 **不解决问题**，因为节点自由度仍不受限 ⇒ ④ 的最小可接受形式是「常数限额 **+ 节点/函数总自由度限额**」（即 V3.5 册的 A4），否则 ④ 只是把同一问题改写一遍"
+    }
+  ],
+  "guards": [
+    {
+      "name": "b1_strong_node_1",
+      "ok": true,
+      "detail": "强核锥内节点 1 解"
+    },
+    {
+      "name": "b2_light_nodes_2each",
+      "ok": true,
+      "detail": "EM 锥内 2 解 / Weak 锥内 2 解"
+    },
+    {
+      "name": "b3_delta_g_reproduced",
+      "ok": true,
+      "detail": "delta_G 复现相对差 0.00e+00（原始 α 口径）"
+    },
+    {
+      "name": "b4_cone_degeneracy_24",
+      "ok": true,
+      "detail": "扇区约束下等价位数 24"
+    },
+    {
+      "name": "b5_cross_cone_ambiguity_found",
+      "ok": true,
+      "detail": "跨扇区实现：EM 比值在强核锥内另有 2 解 [91.182852, 148.817148]"
+    },
+    {
+      "name": "c6_omega5_formal_pass_ineffective",
+      "ok": true,
+      "detail": "口径 I=1（形式 PASS）vs 口径 II=5（实际内容）"
+    },
+    {
+      "name": "d7_route4_cost_positive",
+      "ok": true,
+      "detail": "①②④ 在口径 II 下均 +2 自由度"
+    },
+    {
+      "name": "a8_scale_corrected_used",
+      "ok": true,
+      "detail": "采用 M_Z 口径：比值 4.731e-34、span 33.325"
+    },
+    {
+      "name": "d9_no_middle_option",
+      "ok": true,
+      "detail": "① 死锁（第十四轮 4/4 穷举）+ ② 已结项 ⇒ 中间选项不存在"
+    },
+    {
+      "name": "e10_engine_restraint",
+      "ok": true,
+      "detail": "引擎无 score/rank/recommend 字段 ⇒ 未代选"
+    }
+  ]
+}

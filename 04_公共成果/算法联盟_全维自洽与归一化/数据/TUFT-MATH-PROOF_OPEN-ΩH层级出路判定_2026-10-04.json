@@ -4,12 +4,23 @@
   "nature": "OPEN-ΩH@3D 出路判定（承接 ADD-04 §六 / ADD-05 §四）",
   "constraint": "ω5：Ω 仅含 1 个自由常数 λ",
   "P1_baseline": {
-    "delta_G_rad_loaded": 4.9476957873904434e-45,
-    "delta_G_rad_rederived": 4.947695787390468e-45,
-    "digits_loaded": 44.305597011128455,
-    "digits_rederived": 44.305597011128455,
-    "span_dex": 43.82847575640879,
+    "delta_G_rad_loaded": 1.5771362334288033e-34,
+    "delta_G_rad_rederived": 1.5771362334287953e-34,
+    "digits_loaded": 33.80213079058299,
+    "digits_rederived": 33.80213079058299,
+    "span_dex": 33.32500953586333,
     "cos3_EM": 0.061891433430398345,
+    "energy_scale_correction": {
+      "source": "能标一致性与四力跨度重算_2026-10-05（T3/T4）",
+      "span_dex_old_mixed_scale": 43.82847575640879,
+      "span_dex_corrected_MZ": 33.32500953586333,
+      "delta_G_rad_old_mixed_scale": 4.9476957873904434e-45,
+      "delta_G_rad_corrected_MZ": 1.5771362334288033e-34,
+      "overestimate_dex": 10.503466220545462,
+      "alpha_G_at_MZ": 5.578330857637678e-35,
+      "ratio_G_over_S_at_MZ": 4.73140870028641e-34,
+      "note": "ADD-02 旧值混用能标（高估 10.50 dex）已废止；结论方向不变（见 P4）"
+    },
     "verdict": "PASS"
   },
   "P2_single_constant_shape": {
@@ -21,20 +32,24 @@
     },
     "interior_ratio_max": 16.157324924855338,
     "achievable_dex_at_interior": 1.2083694587564815,
-    "required_dex": 43.82847575640879,
-    "gap_dex": 42.62010629765231,
+    "required_dex": 33.32500953586333,
+    "gap_dex": 32.11664007710685,
+    "structure_cap_dex_from_energy_scale_book": 1.21,
+    "cross_check_cap_agrees": true,
     "verdict": "PASS",
-    "note": "单常数形状下，四力 |Ω| 比值由几何固定为 O(1)，与 43.8 dex 差 ~42 个量级，不可能内生层级"
+    "note": "单常数形状下，四力 |Ω| 比值由几何固定为 O(1)（~1.21 dex）；与能标一致性册独立给出的「结构上限 1.21 dex」吻合（互证），与同能标要求 33.3 dex 差 32.1 dex，不可能内生层级"
   },
   "P3_two_routes": {
     "route_a_finetune": {
       "desc": "θ_G 精细调节到零点 δ_G",
-      "cost_digits": 44.305597011128455,
+      "cost_digits": 33.80213079058299,
       "nature": "外部精细调节（与基线等价）"
     },
     "route_b_second_constant": {
       "desc": "Ω=λ·cos3θ+μ·h(θ)，h(θ)=sinθ",
-      "mu_over_lambda_required": 1.4843087362171405e-44,
+      "mu_over_lambda_required": 4.731408700286386e-34,
+      "cross_check_T7_ratio_GS_MZ": 4.73140870028641e-34,
+      "cross_check_agrees": true,
       "omega5_violated": true,
       "nature": "μ 为自由外参，层级被编码为第二个常数 ⇒ 非内生推导"
     },
@@ -44,7 +59,8 @@
   "P4_closure": {
     "OPEN_OmegaH_3D": "正式结项为「层级外部输入」",
     "within_axiom_set": false,
-    "reason": "单常数 cos3θ 形状把四力 |Ω| 比值锁死在 O(1)（~1.2 dex），与观测 43.8 dex 差 ~42 个量级；达到观测层级只能靠 (a)44 位精细调节 或 (b) 违反 ω5 的第二个自由常数——二者均为外部输入。",
+    "reason": "单常数 cos3θ 形状把四力 |Ω| 比值锁死在 O(1)（1.21 dex，与能标一致性册独立给出的结构上限 1.21 dex 互证）；同能标要求 33.3 dex，缺口 32.1 dex；达到该层级只能靠 (a) 33.8 位精细调节 或 (b) 违反 ω5 的第二个自由常数——二者均为外部输入。",
+    "correction_does_not_overturn": "能标一致性册把跨度由 43.828 dex（混能标）更正为 33.325 dex（μ=M_Z），缺口由 42.6 dex 修正为 32.1 dex；修正后缺口仍 ≫ 结构上限 1.21 dex ⇒ **修正 ≠ 推翻**，「层级外部输入 / 公理集内无解」的结论方向不变。",
     "verdict": "PASS"
   },
   "summary": {

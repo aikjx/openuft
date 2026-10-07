@@ -187,9 +187,10 @@ def main():
     print("=" * 78)
 
     # ---------- 收集 ----------
+    SELF_MARK = ("册级一致性",)          # 本工具自身产物：不自我审计（避免自引用的陈旧读数噪声）
     jsons = {}
     for fn in sorted(os.listdir(data_dir)):
-        if fn.endswith(".json"):
+        if fn.endswith(".json") and not fn.startswith(SELF_MARK):
             p = os.path.join(data_dir, fn)
             try:
                 with io.open(p, encoding="utf-8") as fh:
@@ -233,21 +234,59 @@ def main():
         if s is not None and total is not None and s != total:
             probs.append("counts 之和 %d ≠ 总计 %s" % (s, total))
         if probs:
-            internal_bad.append({"册": stem, "问题": probs})
-    guard("json_internal_consistent", not internal_bad,
-          "json 内部自洽：%d/%d 份全部通过%s" %
-          (len(jsons) - len(internal_bad), len(jsons),
-           ("；异常 " + "; ".join(b["册"] for b in internal_bad)) if internal_bad else ""))
+            prob_types = []
+            for p in probs:
+                if "id 重复" in p:
+                    prob_types.append("id重复")
+                elif "自检" in p:
+                    prob_types.append("自检不等")
+                else:
+                    prob_types.append("counts不等")
+            internal_bad.append({"册": stem, "问题": probs, "类型": sorted(set(prob_types))})
+
+    # ---- 基线台账：存量登记 + 增量拦截 + 修复自愈 ----
+    baseline_path = os.path.join(out_dir, "册级一致性_存量缺陷基线_2026-10-05.json")
+    cur_keys = set()
+    for b in internal_bad:
+        for t in b["类型"]:
+            cur_keys.add("%s|||%s" % (b["册"], t))
+    base_keys = set()
+    baseline_exists = os.path.exists(baseline_path)
+    if baseline_exists:
+        try:
+            with io.open(baseline_path, encoding="utf-8") as fh:
+                base_keys = set(json.load(fh).get("缺陷键") or [])
+        except Exception:
+            base_keys = set()
+    new_keys = sorted(cur_keys - base_keys)
+    fixed_keys = sorted(base_keys - cur_keys)
+    # 关键设计：**基线只在显式放行（--accept-new）时才吸收新缺陷**。
+    #   否则「检测到新缺陷的那一跑」就会把它写进基线，下一跑立刻变绿 ⇒ 增量拦截形同虚设。
+    #   默认行为：基线**只减不增**（已修复项自动移除 = 自愈），新缺陷保持红灯直到被修好或被显式放行。
+    ACCEPT_NEW = ("--accept-new" in sys.argv)
+    next_base = set(cur_keys) if (ACCEPT_NEW or not baseline_exists) else (base_keys - set(fixed_keys))
+    with io.open(baseline_path, "w", encoding="utf-8") as fh:
+        json.dump({"生成时间": time.strftime("%Y-%m-%d %H:%M:%S"),
+                   "说明": "存量缺陷基线（指纹 = 册名|||问题类型）。守卫只拦截**基线之外的新缺陷**；"
+                           "已修复项自动从基线移除（自愈）；**新缺陷需 --accept-new 显式放行**才会进入基线。",
+                   "本次是否吸收新缺陷": bool(ACCEPT_NEW or not baseline_exists),
+                   "缺陷键": sorted(next_base)}, fh, ensure_ascii=False, indent=2)
+
+    guard("no_new_internal_defect", not new_keys,
+          "基线对照：存量 %d 条、新增 %d 条%s、已修复 %d 条%s"
+          % (len(cur_keys), len(new_keys), ("（" + "; ".join(new_keys) + "）") if new_keys else "",
+             len(fixed_keys), ("（" + "; ".join(fixed_keys) + "）") if fixed_keys else ""))
     add("T-02", "T 检查1", "json 内部自洽（自检数 / id 唯一 / counts 之和）",
         "%d 份 json" % len(jsons),
-        "PASS" if not internal_bad else "FAIL",
+        "PASS" if not new_keys else "FAIL",
         "逐份检查三项：①自检「通过 == 总数」；②条目 id 无重复；③counts 之和 == 总计。"
-        "结果：**%d/%d 份全部通过**%s。%s"
-        % (len(jsons) - len(internal_bad), len(jsons),
-           "" if not internal_bad else "（异常：" + "；".join(
-               "%s ⇒ %s" % (b["册"], "、".join(b["问题"])) for b in internal_bad) + "）",
-           "⇒ 说明各册脚本自身的落盘口径是一致的，**缺陷集中在 md 侧**。"
-           if not internal_bad else ""))
+        "结果：**%d/%d 份通过**，异常 %d 份（%s）。"
+        "按**基线台账**处置：存量 %d 条（登记，不拦截）、**新增 %d 条**（拦截）、已修复 %d 条。%s"
+        % (len(jsons) - len(internal_bad), len(jsons), len(internal_bad),
+           "；".join("%s ⇒ %s" % (b["册"], "、".join(b["问题"])) for b in internal_bad) or "无",
+           len(cur_keys), len(new_keys), len(fixed_keys),
+           "⇒ 说明各册脚本自身的落盘口径大体一致，**缺陷集中在 md 侧与个别旧册的 id  hygiene**。"
+           if not new_keys else "⇒ **新增缺陷必须立即修复**（见 T-06）。"))
 
     # ---------- 检查 2：md ↔ json 读数一致 ----------
     mismatch = []
@@ -311,7 +350,25 @@ def main():
         for mstem, m in mds.items():
             if pair_confidence(jstem, mstem) == "none":
                 continue
-            strongs = [w for w in STRONG_WORDS if w in m["text"]]
+            # 「引用行」识别：若某词**只**出现在替换表/引文行（含 → / 替换为 / 原措辞 等标记），
+            #   则它是被登记、被引用的对象，**不是本册的声称** ⇒ 不算嫌疑。
+            #   （首轮实测：不加这一步会产生 6 条误报，全部来自 W-01 替换表与对他人措辞的引用。）
+            QUOTE_MARKS = ("→", "替换为", "替换口径", "原措辞", "原写", "改为", "改写", "登记")
+            lines_all = m["text"].splitlines()
+            strongs = []
+            for w in STRONG_WORDS:
+                idxs = [i for i, ln in enumerate(lines_all) if w in ln]
+                if not idxs:
+                    continue
+                # 上下文窗口 ±2 行：替换表的**表体行**自身不带标记，靠邻近行识别
+                is_claim = False
+                for i in idxs:
+                    ctx = lines_all[max(0, i - 2): i + 3]
+                    if not any(any(mk in c for mk in QUOTE_MARKS) for c in ctx):
+                        is_claim = True
+                        break
+                if is_claim:
+                    strongs.append(w)
             if not strongs:
                 continue
             # 只在同册既出现「过强措辞」又出现「guard 否定措辞」时报嫌疑
@@ -344,6 +401,20 @@ def main():
         "⇒ 本工具把两条都变成了**可复跑的门禁**：退出码 0 = 无读数漂移；2 = 检出缺陷。"
         "它可作用于任意目录（`python <本脚本> <目录>`）⇒ 不是一次性审计，而是**仪器**。")
 
+    add("T-06", "T 基线", "**基线台账 + 增量拦截 + 修复自愈**（企业级门禁形态）",
+        "指纹 = 册名 ||| 问题类型；基线文件 `数据/册级一致性_存量缺陷基线_2026-10-05.json`",
+        "PASS" if not new_keys else "FAIL",
+        "为什么要有基线：仓内存在**非本轮管辖**的存量缺陷（旧册、并行会话册），"
+        "若一律判失败，守卫会长期红灯 ⇒ 失去拦截意义。"
+        "机制：①**首次运行**把当前异常全部写入基线（**登记而非拦截**）；"
+        "②此后运行只拦截**基线之外的新缺陷**（`no_new_internal_defect`）；"
+        "③某条缺陷被修好后，自动从基线移除（**自愈**，记入 `已修复`）。"
+        "本轮读数：存量 **%d** 条、新增 **%d** 条、已修复 **%d** 条；"
+        "本工具**不审计自身产物**（跳过 `册级一致性*`），避免自引用的陈旧读数噪声。%s"
+        % (len(cur_keys), len(new_keys), len(fixed_keys),
+           "" if not new_keys else
+           "**新增缺陷**：" + "；".join(new_keys) + " ⇒ 必须修复后方可放行。"))
+
     # ---------- 落盘 ----------
     counts = {"PASS": 0, "FAIL": 0, "BOUNDARY": 0, "INFO": 0}
     for r in RESULTS:
@@ -356,6 +427,11 @@ def main():
         "扫描目录": base,
         "覆盖": {"json份数": len(jsons), "md份数": len(mds), "比对对数": len(checked)},
         "检查1_json内部": {"异常": internal_bad, "异常数": len(internal_bad)},
+        "基线台账": {"基线文件": os.path.basename(baseline_path),
+                     "存量条数": len(cur_keys), "存量键": sorted(cur_keys),
+                     "新增条数": len(new_keys), "新增键": new_keys,
+                     "已修复条数": len(fixed_keys), "已修复键": fixed_keys,
+                     "首次建基线": not baseline_exists},
         "检查2_读数漂移": {"比对": checked, "漂移": mismatch, "漂移数": len(mismatch),
                            "疑似": suspect_drift, "疑似数": len(suspect_drift)},
         "检查3_措辞冲突嫌疑": {"嫌疑": suspects, "嫌疑数": len(suspects)},

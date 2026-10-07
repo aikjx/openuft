@@ -1,0 +1,284 @@
+{
+  "run_id": "GAQ_UFT_V18_弱场约化_PPN层证伪检验-2026-10-07",
+  "来料": "GAQ-UF(T) V18：弱场约化，还原牛顿引力与广义相对论弱场极限",
+  "summary_line": "条目 19 ｜ PASS = 3 ｜ FAIL = 8 ｜ BOUNDARY = 3 ｜ INFO = 3 ｜ CORRECTED = 2 ｜ 自检 20/20",
+  "counts": {
+    "PASS": 3,
+    "FAIL": 8,
+    "BOUNDARY": 3,
+    "INFO": 3,
+    "CORRECTED": 2
+  },
+  "n_entries": 19,
+  "guard_total": 20,
+  "guard_pass": 20,
+  "entries": [
+    {
+      "id": "A1",
+      "verdict": "FAIL",
+      "title": "来料 §二 加速度公式 a ∝ -c²∇δτ 量纲不闭合：得 T⁻²，非 L T⁻²",
+      "reading": "[c² grad(delta_tau)] = (0,0,-2,0) ; [a] = (0,1,-2,0) ; 差值 = (0, -1, 0, 0) ；恰缺 1 个长度幂次 L",
+      "note": "缺项是长度：正确形式只能是 a ∝ -c² ℓ grad(delta_tau) 或 -(c²/κ₀) grad(delta_tau)，其中 ℓ 是一个**新的外生长度标度**。"
+    },
+    {
+      "id": "A2",
+      "verdict": "BOUNDARY",
+      "title": "最小修复必须引入新的外生长度 ℓ；而 ℓ 一旦由 1/κ₀ 或 1/τ₀ 充当就与§C(κ≡0)冲突",
+      "reading": "候选 ℓ ∈ {1/κ₀, 1/τ₀, ℓ_α=α/c} 三种；ℓ_α 在场层PDE册 A2 已列为不可约参数之一",
+      "note": "来料未给出 ℓ；不能由 {α,β,c} 构造长度以外的东西补足加速度量纲（见 A3）。"
+    },
+    {
+      "id": "A3",
+      "verdict": "CORRECTED",
+      "title": "【合流登记·非本册主权】G 不可由 {α,β,c} 导出：质量维度恒缺（M 指数恒为 0）",
+      "reading": "rank(basis)=2 ; rank(basis∪{[G]})=3 ; 整数指数穷举 [-8,8]³ 命中数 = 0",
+      "note": "与 S03-C0034、S03-V18.5 §5.1 量纲封锁、场层PDE册 A2/A5/F2 同源；本册只做合流登记，不新宣判。"
+    },
+    {
+      "id": "B1",
+      "verdict": "PASS",
+      "title": "【机器定理·本册主权】F-S 体系中 τ 不参与 dT/ds：纯挠率扰动（κ≡0）下切线 T 恒定、轨迹严格直线",
+      "reading": "κ≡0、τ(x)=τ₀+δτ·sin(2πx/Λ) 积分 S=24：|ΔT|=0.000e+00 ；轨迹偏离直线 max=0.000e+00 ；标架正交归一漂移=2.220e-15",
+      "note": "在 ∂t T = cκN 中 τ 完全不出现；τ 只进入 ∂t N、∂t B 的**绕 T 项**（绕运动方向的 roll），而非**弯折项**。这是 F-S 标架的定义性事实，非数值巧合。"
+    },
+    {
+      "id": "B2",
+      "verdict": "FAIL",
+      "title": "来料 §二「外挠率扰动 δτ 耦合到曲率 κ，造成 T 缓慢转向」在给定方程组内不可导出",
+      "reading": "B1 机器读数 |ΔT|=0.000e+00 ⇒ δτ 对 T 的偏转为零",
+      "note": "V18 方程组中没有任何一项把 δτ 映到 κ（对照 B3）。该句是机制的**唯一支点**，支点在则该约化无任何轨迹偏转。"
+    },
+    {
+      "id": "B3",
+      "verdict": "FAIL",
+      "title": "方程组不存在 δτ → κ 的耦合通道：δτ 只出现在 N、B 方程，κ 方程与 T 方程均无源",
+      "reading": "逐式扫描 6 条方程：含 τ 的项为 ∂t N 的 +cτB、∂t B 的 -cτN、∂t κ 的 -βτκ；∂t T = cκN 与 ∂t τ = α∇²τ - βκ² 均不含 δτ 的外场输入",
+      "note": "注：∂t κ 的 -βτκ 项含 τ，但这是**乘性衰减**而非**加法源**：它只能把 κ 拉向 0，不能在 κ≡0 时生成 κ（机器：κ(0)=0 ⇒ ∂t κ=0 ⇒ κ≡0，见 C1）。"
+    },
+    {
+      "id": "B4",
+      "verdict": "PASS",
+      "title": "反向对照（非平凡性检验）：给 κ 加上空间扰动后 T 确实显著偏转 ⇒ B1 不是检验失效",
+      "reading": "κ(x)=κ₀+δκ·sin(2πx/Λ), τ=τ₀ 同参数：|ΔT|=0.103503 ；轨迹偏离直线 max=8.982022 ；漂移=8.73e-15",
+      "note": "对照组的偏转量级 O(1) vs 纯挠率组 O(1e-16)，跨越 16 个量级 ⇒ 检验判别力充分。"
+    },
+    {
+      "id": "C1",
+      "verdict": "PASS",
+      "title": "【机器】准静态无源 κ 方程 α∇²κ=0 在「局域正则 + 无穷远衰减」下唯一解为 κ≡0",
+      "reading": "径向 Laplace 解析解 Φ=A+B/r；同时满足衰减(A=0)与正则(B=0)者仅平凡解 ；数值积分与解析式相对残差=3.49e-11 ；9 组 (A,B) 扫描中非平凡组合合格数=0",
+      "note": "与场层PDE册 C2（最大值原理 κ≥0 分支被排除）为**同一结论的不同方法**，互为交叉印证。"
+    },
+    {
+      "id": "C2",
+      "verdict": "BOUNDARY",
+      "title": "唯一让 κ≠0 的办法是允许 κ∝B/r，而这在数学上等价于**给 κ 也手置一个 δ 点源**",
+      "reading": "∇²(1/r) = -4πδ³(r) ⇒ κ∝1/r 意味着 κ 方程右侧有源；与来料「只有 τ 手置了 -Kρ_m」不合",
+      "note": "若接受该点源，则 V18 的源结构被改写（κ 与 τ 双双外置源），不再是其自陈的一元论构图。"
+    },
+    {
+      "id": "C3",
+      "verdict": "FAIL",
+      "title": "连锁结论：κ≡0（C1）与 T 只由 κ 弯折（B1）联立 ⇒ **该约化产生的引力加速度恒为零**",
+      "reading": "链条：∇²κ=0 无源 → κ≡0 → ∂t T=cκN=0 → T 不转 → 直线 → a=0；即使 τ 场带源给出 τ∝-Φ∝-1/r，也不产生任何轨迹偏转",
+      "note": "这是本册对 V18 §一/§二 的最强否证：**测地线还原在机制层的入口是关闭的**，不是精度不够，而是结构上恒为零。"
+    },
+    {
+      "id": "D1",
+      "verdict": "FAIL",
+      "title": "【定量否证 1/3】光线偏折：单一标量势（γ=0）给出半值 0.8756″ vs GR/实测 1.7512″",
+      "reading": "4GM/(c²R☉)=1.7512″ ；γ=0 ⇒ 0.8756″ ；VLBI γ=0.99992±0.00023 ⇒ γ=0 偏离 4.347e+03 σ",
+      "note": "采用最大善意假设（承认涌现度规、给它 GR 的 g00 形式）**仍然**差因子 2；该因子 2 来自空间曲率自由度，而 V18 明确否认背景度规 ⇒ 该自由度不在理论内。"
+    },
+    {
+      "id": "D2",
+      "verdict": "FAIL",
+      "title": "【定量否证 2/3】水星近日点：PPN β 在 V18 中完全未定 ⇒ 进动**不可计算**；最省假设 (β=1, γ=0) 给 14.33″/世纪 vs 42.98″/世纪",
+      "reading": "GR 逐世纪=42.9820″（每轨 0.103520″ × 415.20 轨） ；(2+2γ-β)/3 因子：GR=1.0000 ，γ=0,β=1 ⇒ 0.3333 ；要复现 GR 需 β=-1.0（GR 为 β=+1，符号相反） ；偏离 2.865e+02 σ（按 ±0.1″ 保守计）",
+      "note": "**这是本册对来料 §七 第 1 条的直接答复：」用 δτ 计算复现进动」在给定方程下不可执行**——不是算错，而是 1PN 所需的第二个 PPN 势（β）在理论里不存在。"
+    },
+    {
+      "id": "D3",
+      "verdict": "FAIL",
+      "title": "【定量否证 3/3】Shapiro 时间延迟系数 (1+γ)/2：γ=0 ⇒ 0.5 vs GR 1.0",
+      "reading": "PPN 延迟 Δt ∝ (1+γ)·ln(...)；Cassini γ-1=(2.1±2.3)e-5 ⇒ γ=0 偏离 4.348e+04 σ",
+      "note": "与 D1 同源（同为 γ），单列为独立观测通道：偏折是空间型、Shapiro 是时间型。"
+    },
+    {
+      "id": "D4",
+      "verdict": "BOUNDARY",
+      "title": "引力红移 Δν/ν = ΔΦ/c² **形式上可还原**（只依赖 g00，不需 γ），但定量系数未定",
+      "reading": "红移只需 dt² 分量 -(1+2Φ/c²)；V18 未给出 τ 与 Φ 的定量映射 τ = -(K/4παG)Φ ⇒ K 未知 ⇒ 只能还原**形式**不能还原**数值**",
+      "note": "这是§七五项里唯一在纯标量层面可及的一项；也是本册唯一的非 FAIL 项（BOUNDARY）。"
+    },
+    {
+      "id": "D5",
+      "verdict": "FAIL",
+      "title": "【诚实更正】来料 §七「在所有已做的经典引力实验，GAQ弱场极限给出和GR一致的预测」为过度陈述",
+      "reading": "逐条：① 偏折 FAIL(D1) ② 进动 FAIL(D2，且不可计算) ③ Shapiro FAIL(D3) ④ 红移 BOUNDARY(D4，仅形式) ⑤ 引力波 → 已被场层PDE册 B3/E1 判无传播模式（回链）",
+      "note": "1/3 accepted + 1/3 wrong + 1/3 undetermined，不构成「与 GR 一致」。"
+    },
+    {
+      "id": "E1",
+      "verdict": "INFO",
+      "title": "【回链·合流】G 不可导出：本册 A3 ↔ S03-C0034 ↔ S03-V18.5 §5.1 ↔ 场层PDE A2/A5/F2 同源",
+      "reading": "本册只做机器复算，判定主权属既有判决",
+      "note": "四方均已确认：纯几何量集（κ,τ,Ω,c,α,β）的质量分量恒为 0。"
+    },
+    {
+      "id": "E2",
+      "verdict": "INFO",
+      "title": "【回链·合流】引力波不成立：本册依赖场层PDE B3（抛物型）+ E1（ω=-iαk² 纯虚）",
+      "reading": "本册 §D 因此未把引力波列为独立检验项，避免重复计数",
+      "note": "⇒ 来料 §三「挠率波动=引力波」与 §七第 4 条失去立足点，该判已由场层PDE 册完成。"
+    },
+    {
+      "id": "E3",
+      "verdict": "INFO",
+      "title": "【回链·合流】无 T_μν / 非变分：本册依赖场层PDE C1（Clairaut 残差 βκ）+ F1",
+      "reading": "本册 §C 的「κ 无源」是从**解的存在性**侧给出的第二条独立证据",
+      "note": "与 C1 Clairaut 侧互为交叉印证，方法不同、结论同向。"
+    },
+    {
+      "id": "E4",
+      "verdict": "CORRECTED",
+      "title": "【差异登记·非重复】S03-V18.5 的 V5-d 与本册 B1 是**不同层**的否证，勿合并亦勿视为重复",
+      "reading": "V5-d：k∥B ⇒ B 为常矢量 ⇒ τ≡0 ⇒ ∫τdS=0 ⇒ **光子能量为 0**（杀的是光子/能量层）；本册 B1：κ≡0 ⇒ T 恒定 ⇒ 轨迹直线 ⇒ **引力加速度为 0**（杀的是引力/测地线层）",
+      "note": "两条互补：V18 §二 的测地线与 §七 的光子图像分别被两册独立否决，互不代替。"
+    }
+  ],
+  "guards": [
+    {
+      "name": "A1_dimension_gap_is_one_length",
+      "ok": true,
+      "detail": "diff=(0, -1, 0, 0)"
+    },
+    {
+      "name": "A3_G_not_derivable_from_alpha_beta_c",
+      "ok": true,
+      "detail": "r_basis=2 r_aug=3 hits=0"
+    },
+    {
+      "name": "B1_pure_torsion_does_not_bend",
+      "ok": true,
+      "detail": "dT=0.000e+00 dev=0.000e+00"
+    },
+    {
+      "name": "B4_control_does_bend_nontrivial",
+      "ok": true,
+      "detail": "dT=0.103503 dev=8.982022"
+    },
+    {
+      "name": "B_integrator_fidelity",
+      "ok": true,
+      "detail": "drift_pure=2.22e-15 drift_ctrl=8.73e-15"
+    },
+    {
+      "name": "C1_radial_integrator_matches_analytic",
+      "ok": true,
+      "detail": "rel=3.49e-11"
+    },
+    {
+      "name": "C1_only_trivial_survives",
+      "ok": true,
+      "detail": "cases=9 nontrivial_pass=0"
+    },
+    {
+      "name": "D1_deflection_half_of_gr",
+      "ok": true,
+      "detail": "scalar=0.875622 gr=1.751243"
+    },
+    {
+      "name": "D1_gr_value_is_standard",
+      "ok": true,
+      "detail": "gr_arcsec=1.751243"
+    },
+    {
+      "name": "D2_gr_perihelion_is_standard",
+      "ok": true,
+      "detail": "per_century=42.981975"
+    },
+    {
+      "name": "D2_beta_sign_flip_needed",
+      "ok": true,
+      "detail": "beta_required=-1.000"
+    },
+    {
+      "name": "S01_entry_count_nonzero",
+      "ok": true,
+      "detail": "entries=19"
+    },
+    {
+      "name": "S02_ids_unique",
+      "ok": true,
+      "detail": "dup=0"
+    },
+    {
+      "name": "S03_verdict_vocabulary",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "S04_expected_fail_baseline",
+      "ok": true,
+      "detail": "missing=[]"
+    },
+    {
+      "name": "S05_expected_pass_baseline",
+      "ok": true,
+      "detail": "missing=[]"
+    },
+    {
+      "name": "S08_no_nan_in_readings",
+      "ok": true,
+      "detail": "bad=[]"
+    },
+    {
+      "name": "S09_all_guards_typed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "S10_selfcheck_after_sections",
+      "ok": true,
+      "detail": "guards=18"
+    },
+    {
+      "name": "S11_source_selfhash_stable",
+      "ok": true,
+      "detail": "GAQ_UFT_V18_弱场约化_PPN层证伪检验_2026-10-07.py"
+    }
+  ],
+  "key_numbers": {
+    "A_dim_gap": [
+      0,
+      -1,
+      0,
+      0
+    ],
+    "A3_hits": 0,
+    "B1_dT_pure": 0.0,
+    "B1_dev_pure": 0.0,
+    "B4_dT_ctrl": 0.10350319611099154,
+    "B4_dev_ctrl": 8.982022438477108,
+    "C1_resid": 3.488809888966874e-11,
+    "D1_defl_GR": 1.7512432813682448,
+    "D1_defl_scalar": 0.8756216406841224,
+    "D1_sigma": 4347.478260869565,
+    "D2_gr_century": 42.981975497467126,
+    "D2_scalar_century": 14.327325165822375,
+    "D2_beta_required": -1.0,
+    "D2_sigma": 286.5465033164475
+  },
+  "主权增量": [
+    "I1=§B 挠率不弯折切线",
+    "I2=§A 加速度量纲缺 L",
+    "I3=§D PPN 定量层"
+  ],
+  "合流回链": [
+    "源码/GAQ_UFT_V18_场层PDE_桥梁与孤子存在性_全维审计_2026-10-07.py",
+    "01_独立体系/S03_GAQ几何原子与作用量子/09_验证结果/S03_V18_5_FrenetSerret标架_机器验证判定_2026-10-07.md",
+    "S03-C0034 几何不可承载质量标度"
+  ],
+  "红线": "数学自洽 != 实验证实。本册只做来稿的可复算判定，不构造新理论，不提升任何 L3 计数。"
+}

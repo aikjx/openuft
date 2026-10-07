@@ -1,0 +1,151 @@
+{
+  "册": "TUFT_V3.5修复版_验收引擎盲区回修版",
+  "生成时间": "2026-10-07 10:34:21",
+  "定位": "把验收册引擎修复建议落地为可运行验收引擎：AST 抽取实际函数替代硬编码",
+  "承接": "判定_TUFT_V3.5修复版_验收引擎自指涉盲区回修_2026-10-07.md（D-02）",
+  "计数": {
+    "PASS": 10,
+    "FAIL": 0,
+    "BOUNDARY": 0,
+    "INFO": 0
+  },
+  "总计": 10,
+  "关键量": {
+    "V-07交叉相似度": 1.0,
+    "α(M_Z)/α_s": 0.0663,
+    "α_W/α_s": 0.1439,
+    "量纲": {
+      "L": [
+        0,
+        1,
+        0
+      ],
+      "E": [
+        1,
+        2,
+        -2
+      ],
+      "F": [
+        1,
+        1,
+        -2
+      ]
+    }
+  },
+  "核心结论": "修复建议落地成立：AST 抽取实际 field/omega/region 替代硬编码、V-07 交叉比对 1.0000、V-08 自比判据废弃；量纲全链闭合",
+  "红线": "不修改 SUT/历史验收册；AST 抽取 exec 仅函数体；退出码 0=自检过",
+  "自检": {
+    "总数": 7,
+    "通过": 7,
+    "项": [
+      {
+        "name": "sut_extracted",
+        "ok": true,
+        "detail": "AST 抽取实际函数（修复建议①）"
+      },
+      {
+        "name": "dims_L",
+        "ok": true,
+        "detail": "力程量纲 L（闭合）"
+      },
+      {
+        "name": "dims_E",
+        "ok": true,
+        "detail": "势能量纲 ML^2T^-2（闭合）"
+      },
+      {
+        "name": "dims_F",
+        "ok": true,
+        "detail": "力量纲 MLT^-2（自洽）"
+      },
+      {
+        "name": "v07_cross",
+        "ok": true,
+        "detail": "实际 field 是均匀场（V-07 交叉比对通过，替代硬编码）"
+      },
+      {
+        "name": "sort_ok",
+        "ok": true,
+        "detail": "弱>电磁排序正确"
+      },
+      {
+        "name": "no_self_compare",
+        "ok": true,
+        "detail": "V-08 自比判据废弃，交叉比对替代"
+      }
+    ]
+  },
+  "条目": [
+    {
+      "id": "A-01",
+      "section": "AST抽取",
+      "item": "AST 抽取 field/omega/region（替代硬编码）",
+      "verdict": "PASS",
+      "detail": "实际 SUT AST 抽取并独立命名空间 exec：field=True, omega=True, region=True（修复建议①落地，非硬编码复刻）"
+    },
+    {
+      "id": "B-01",
+      "section": "量纲",
+      "item": "力程量纲 L=1/√(κ²+τ²)=c/ω",
+      "verdict": "PASS",
+      "detail": "量纲 L^1 ⇒ 力程量纲闭合（修复式 c/(f√(κ²+τ²)) 为 L² 无效，正确式为 1/√(κ²+τ²)=c/ω）"
+    },
+    {
+      "id": "B-02",
+      "section": "量纲",
+      "item": "势能量纲 E=(ħc/2)(κ+τ)",
+      "verdict": "PASS",
+      "detail": "ħc=ML^3T^-2 × κ(L^-1)=ML^2T^-2 ⇒ 能量量纲闭合（修复旧式 (ħc²/2)(κ+τ) 的 ML³T⁻³ 错误）"
+    },
+    {
+      "id": "B-03",
+      "section": "量纲",
+      "item": "力量纲 F=−∇E",
+      "verdict": "PASS",
+      "detail": "ML^2T^-2 × ∇(L^-1)=MLT^-2 ⇒ 力量纲自洽"
+    },
+    {
+      "id": "C-01",
+      "section": "场验收",
+      "item": "实际 field vs 参考均匀场（V-07 修复）",
+      "verdict": "PASS",
+      "detail": "实际 SUT 抽取 field() 与参考均匀场 −(1,1)/√2 余弦相似度 **1.0000** ⇒ （旧硬编码径向 0.1173 FAIL；实际实现为均匀场 ⇒ V-07 修复成立）"
+    },
+    {
+      "id": "D-01",
+      "section": "强度口径",
+      "item": "电磁 α(M_Z)/α_s（非零能 1/137）",
+      "verdict": "PASS",
+      "detail": "α(M_Z)/α_s = 0.0663（口径统一 M_Z，修复零能 1/137 的 8.5x 低估）"
+    },
+    {
+      "id": "D-02",
+      "section": "强度口径",
+      "item": "α_W>α 排序",
+      "verdict": "PASS",
+      "detail": "α_W=0.01696 > α(M_Z)=0.0078186 ⇒ 排序方向正确（修复旧表颠倒）"
+    },
+    {
+      "id": "D-03",
+      "section": "强度口径",
+      "item": "引力参考质量标注",
+      "verdict": "PASS",
+      "detail": "引力耦合采用电子质量参考 α_G=G·m_e²/(ħc)，标注参考质量（统一口径 M_Z 后 span 33.3 dex）"
+    },
+    {
+      "id": "E-01",
+      "section": "判据替代",
+      "item": "自相似度判据废弃",
+      "verdict": "PASS",
+      "detail": "V-08 自比恒 1 零信息判据由 C-01 交叉比对替代（cos(实际field,参考场) 而非 cos(field,field)）"
+    },
+    {
+      "id": "E-02",
+      "section": "判据替代",
+      "item": "独立命名空间 exec",
+      "verdict": "PASS",
+      "detail": "AST 抽取函数体在独立命名空间 exec（含 math），避免整文件副作用（修复建议③）"
+    }
+  ],
+  "耗时": "0.1s"
+}

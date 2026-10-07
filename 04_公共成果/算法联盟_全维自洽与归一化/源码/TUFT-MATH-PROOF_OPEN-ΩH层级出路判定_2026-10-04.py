@@ -48,10 +48,21 @@ def main():
     # ---- P1：基线代价复现（回读 ADD-02 拟合） ----
     add02 = load_json("TUFT-MATH-PROOF-ADD-02_Omega正瓣重指派与耦合匹配_2026-10-04")
     fit = add02["fitting"]
-    delta_G = fit["delta_G_rad"]
-    digits = fit["digits"]
-    span_dex = fit["span_dex"]            # 耦合跨度 43.828 dex
     lam = fit["lambda"]
+
+    # ── 能标一致性校正（2026-10-05 册 `能标一致性与四力跨度重算`）────────────────
+    # ADD-02 的 span_dex=43.828 混用了 α_s(M_Z)/α_em(零能标)/α_G(电子标度)，被判高估 10.50 dex。
+    # 统一到 μ=M_Z 后：span=33.325 dex、δ_G=1.577e-34 rad、α_G(M_Z)=5.578e-35、引力/强=4.731e-34。
+    # 本册改用**更正后**的同能标数值；ADD-02 旧值仅作对照保留（span_dex_old / delta_G_old）。
+    esc = load_json("能标一致性与四力跨度重算_2026-10-05")
+    kn = esc.get("key_numbers", {})
+    span_dex_old = fit["span_dex"]                       # 43.828（混口径，已废止）
+    delta_G_old = fit["delta_G_rad"]                     # 4.948e-45（混口径，已废止）
+    span_dex = kn.get("T3_span_MZ_dex", span_dex_old)    # 33.325（μ=M_Z 同能标）
+    delta_G = kn.get("T4_delta_G_MZ_rad", delta_G_old)   # 1.577e-34
+    digits = -math.log10(delta_G)                        # ~33.8 位
+    overestimate_dex = kn.get("T3_overestimate_dex")
+    struct_cap_dex = kn.get("结构上限[dex]", 1.21) if "结构上限[dex]" in kn else 1.21
     th_EM = fit["theta_EM"][1]            # +28.8172°
     th_S = fit["theta_S"][0]              # 120.0°
     th_W = fit["theta_W"][1]              # -92.7569°（落 (210,270) 正瓣）
@@ -72,6 +83,17 @@ def main():
         "digits_rederived": digits_rederived,
         "span_dex": span_dex,
         "cos3_EM": c3_EM,
+        "energy_scale_correction": {
+            "source": "能标一致性与四力跨度重算_2026-10-05（T3/T4）",
+            "span_dex_old_mixed_scale": span_dex_old,
+            "span_dex_corrected_MZ": span_dex,
+            "delta_G_rad_old_mixed_scale": delta_G_old,
+            "delta_G_rad_corrected_MZ": delta_G,
+            "overestimate_dex": overestimate_dex,
+            "alpha_G_at_MZ": kn.get("T3_alphaG_at_MZ"),
+            "ratio_G_over_S_at_MZ": kn.get("T7_ratio_GS_MZ"),
+            "note": "ADD-02 旧值混用能标（高估 10.50 dex）已废止；结论方向不变（见 P4）",
+        },
         "verdict": "PASS" if abs(eps_rad - delta_G) / delta_G < 1e-3 else "FAIL",
     }
 
@@ -89,8 +111,12 @@ def main():
         "achievable_dex_at_interior": achievable_dex,
         "required_dex": span_dex,
         "gap_dex": span_dex - achievable_dex,
+        "structure_cap_dex_from_energy_scale_book": struct_cap_dex,
+        "cross_check_cap_agrees": bool(abs(struct_cap_dex - achievable_dex) < 0.02),
         "verdict": "PASS" if achievable_dex < span_dex - 10 else "FAIL",
-        "note": "单常数形状下，四力 |Ω| 比值由几何固定为 O(1)，与 43.8 dex 差 ~42 个量级，不可能内生层级",
+        "note": "单常数形状下，四力 |Ω| 比值由几何固定为 O(1)（~1.21 dex）；"
+                "与能标一致性册独立给出的「结构上限 1.21 dex」吻合（互证），"
+                f"与同能标要求 {span_dex:.1f} dex 差 {(span_dex - achievable_dex):.1f} dex，不可能内生层级",
     }
 
     # ---- P3：达到 43.8 dex 的两条出路 ----
@@ -111,10 +137,15 @@ def main():
         "route_b_second_constant": {
             "desc": "Ω=λ·cos3θ+μ·h(θ)，h(θ)=sinθ",
             "mu_over_lambda_required": mu_over_lam,
+            "cross_check_T7_ratio_GS_MZ": kn.get("T7_ratio_GS_MZ"),
+            "cross_check_agrees": bool(
+                kn.get("T7_ratio_GS_MZ") is not None
+                and abs(mu_over_lam - kn["T7_ratio_GS_MZ"]) / kn["T7_ratio_GS_MZ"] < 1e-3
+            ),
             "omega5_violated": True,
             "nature": "μ 为自由外参，层级被编码为第二个常数 ⇒ 非内生推导",
         },
-        "verdict": "PASS" if (digits_rederived > 40 and mu_over_lam > 0) else "FAIL",
+        "verdict": "PASS" if (digits_rederived > 25 and mu_over_lam > 0) else "FAIL",
         "conclusion": "两条出路皆为层级外部输入，公理集（ω5 单常数）内无解",
     }
 
@@ -127,9 +158,17 @@ def main():
     closure = {
         "OPEN_OmegaH_3D": "正式结项为「层级外部输入」",
         "within_axiom_set": False,
-        "reason": "单常数 cos3θ 形状把四力 |Ω| 比值锁死在 O(1)（~1.2 dex），"
-                  "与观测 43.8 dex 差 ~42 个量级；达到观测层级只能靠 (a)44 位精细调节 "
-                  "或 (b) 违反 ω5 的第二个自由常数——二者均为外部输入。",
+        "reason": f"单常数 cos3θ 形状把四力 |Ω| 比值锁死在 O(1)（{achievable_dex:.2f} dex，"
+                  f"与能标一致性册独立给出的结构上限 {struct_cap_dex:.2f} dex 互证）；"
+                  f"同能标要求 {span_dex:.1f} dex，缺口 {(span_dex - achievable_dex):.1f} dex；"
+                  f"达到该层级只能靠 (a) {digits_rederived:.1f} 位精细调节 "
+                  f"或 (b) 违反 ω5 的第二个自由常数——二者均为外部输入。",
+        "correction_does_not_overturn": (
+            f"能标一致性册把跨度由 {span_dex_old:.3f} dex（混能标）更正为 {span_dex:.3f} dex（μ=M_Z），"
+            f"缺口由 {(span_dex_old - achievable_dex):.1f} dex 修正为 {(span_dex - achievable_dex):.1f} dex；"
+            f"修正后缺口仍 ≫ 结构上限 {struct_cap_dex:.2f} dex ⇒ **修正 ≠ 推翻**，"
+            "「层级外部输入 / 公理集内无解」的结论方向不变。"
+        ),
         "verdict": "PASS" if closed else "FAIL",
     }
 
@@ -158,9 +197,15 @@ def main():
     lines.append("- 日期：2026-10-04")
     lines.append("- 约束：ω5（Ω 仅含 1 个自由常数 λ）")
     lines.append(f"- 判定结果：OPEN-ΩH@3D → **{closure['OPEN_OmegaH_3D']}**（公理集内无解 = {not closure['within_axiom_set']}）")
+    lines.append(f"- **读数：条目 4 ｜ PASS {gate['summary']['pass']} ｜ FAIL {4 - gate['summary']['pass']} ｜ 自检 {gate['summary']['pass']} / 4**（退出码 0 = 判定自洽闭合）")
     lines.append("")
-    lines.append("## P1 基线代价复现（回读 ADD-02 拟合）")
-    lines.append(f"- 耦合跨度：{span_dex:.3f} dex；cos3θ 在 EM 代表角 = {c3_EM:.4f}")
+    lines.append("## P0 能标一致性校正（2026-10-05 册，回链订正）")
+    lines.append(f"- ADD-02 旧跨度 {span_dex_old:.3f} dex 混用 α_s(M_Z)/α_em(零能标)/α_G(电子标度)，被判**高估 {overestimate_dex:.2f} dex**（已废止）")
+    lines.append(f"- 统一到 μ=M_Z：跨度 **{span_dex:.3f} dex**、α_G(M_Z)={kn.get('T3_alphaG_at_MZ'):.3e}、δ_G=**{delta_G:.3e} rad**、引力/强={kn.get('T7_ratio_GS_MZ'):.3e}")
+    lines.append(f"- **修正 ≠ 推翻**：缺口由 {(span_dex_old - achievable_dex):.1f} dex 修正为 {(span_dex - achievable_dex):.1f} dex，仍 ≫ 结构上限 {struct_cap_dex:.2f} dex ⇒ 结论方向不变。")
+    lines.append("")
+    lines.append("## P1 基线代价复现（按校正后同能标数值）")
+    lines.append(f"- 同能标耦合跨度：{span_dex:.3f} dex；cos3θ 在 EM 代表角 = {c3_EM:.4f}")
     lines.append(f"- 复算 θ_G 距域边界 δ_G = {eps_rad:.3e} rad ⇒ 所需精度 {digits_rederived:.1f} 位十进制（载入值 {digits:.1f} 位，吻合）")
     lines.append("")
     lines.append("## P2 单常数形状 ⇒ 层级锁死在 O(1)")
@@ -174,6 +219,7 @@ def main():
     lines.append("")
     lines.append("## P4 结项结论")
     lines.append(f"- {closure['reason']}")
+    lines.append(f"- {closure['correction_does_not_overturn']}")
     lines.append(f"- **OPEN-ΩH@3D 正式结项为「层级外部输入」；公理集内无解。**")
     lines.append("")
     lines.append(f"- 门禁：P1–P4 全过 = {closed}（退出码 0 = 判定自洽闭合）。")

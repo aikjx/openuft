@@ -1,0 +1,90 @@
+==============================================================================
+S03 V18.10 | branch 3: conservation law of the soliton topological transition
+==============================================================================
+run_id = S03-V18_10-2026-10-07
+input  = S03-V18.5 branch-3 mandate (topological phase transition)
+note   = renumbered from V18_6 to avoid a same-day collision
+
+VERDICT SUMMARY
+  PASS     = 0
+  FAIL     = 4
+  BOUNDARY = 2
+  INFO     = 7
+  items    = 13
+  self-check = 13/13
+
+------------------------------------------------------------------------------
+[BOUNDARY] V6-a
+    前置澄清：零模的必要条件取决于守恒量的选择。若取 m' ∝ ∫tau ds，零模条件是 ∫tau ds = 0（净扭转抵消），**不是** tau ≡ 0。V5-d 只否证了「能量来自 ∫tau dS 且 B 恒定」这一组合，**不得**外推为「零模 => tau ≡ 0」。本册 VER-2 给出 (ii) 的存在性构造。
+
+[INFO] V6-b-conv
+    步长收敛检验的**正面读数**：闭合残差在 6000 → 48000 步之间**逐位一致**（差 < 1e-6 相对量），说明本构造族的 RK4 积分已达机器精度，残差是真实的物理结果而非积分误差。由此排除「伪根来自数值误差」这一解释；粗扫描阶段出现的 gz 符号变化属**判据错误**——闭合要求位置矢量差的**三分量同时为零**，而只监视单个分量 gz 的变号会把「该分量过零」误读为「曲线闭合」。教训：求根/判根时必须使用全矢量残差，单分量变号不是闭合证据。
+
+[FAIL] V6-b
+    在 61 个 amp 网格点（步长 0.05，RK4 步数 48000）上用**全矢量残差**搜索，最小非平凡残差为 0.157046 m（出现在 amp = 0.05，远离闭合），**未找到非平凡闭合零模解**：唯一闭合且 ∫tau ds = 0 的解是 amp = 0 的平面圆（积分器验证：闭合误差 2.6e-14 m、TC = 6.283185）。⇒ 在本构造族（kappa 常数、tau 单谐波）内，**闭合零模只能是平面圆**，即退化回 V5-d 的 tau ≡ 0 情形。这是构造族的性质，**不是「零模必为平面」的一般性证明**——一般 tau(s) 的闭合零模是否存在，本册未判定。
+
+[BOUNDARY] V6-b-Lk
+    平面圆的 Gauss 双积分给出 Lk = 0（原始值 0.000000），为整数 0；Tw = 0。由 Călugăreanu–White 关系 Tw = Lk·Wr 得 Wr = 0。在**本册构造族内**零模的缠绕数为 0；但由于未找到非平凡闭合零模，「零模是否允许 Lk ≠ 0」在本册**未判定**（不可外推）。
+
+[INFO] V6-c
+    三条定理的适用性边界已核定：Milnor 界 |Tw| <= TC/(2pi) 数值满足（TC/(2pi) = 1.000000 >> |Tw| = 0.0e+00）；Fáry–Milnor 要求 TC < 4π = 12.566371，本构造 TC = 6.283185 满足，故该闭合曲线为简单无自交；Călugăreanu–White 只对**闭合**曲线成立，开放螺旋的 Lk 无定义。推论：任何以 Lk 为守恒量的相变叙述，必须先证明光子螺旋闭合——而光子世界线在实验室系一般为开线。
+
+[FAIL] V6-d
+    守恒律候选集枚举结果：C1（Tw 守恒）与相变定义不相容、C6（能量守恒）与m' -> 0 不相容、C7 无鉴别力、C5 量纲不可算；C2/C3/C4 全部保留。其中 C4 是**连续族**（权重 w 自由），其末态 kappa'/kappa0 = 1 + w·alpha 连续覆盖 [1.0000000, 1.0072974]；Fáry–Milnor 约束只要求 kappa'/kappa0 < 2，即 w < 137，**对 [0,1] 内全部候选一律放行，不产生任何筛选力**。⇒ **不存在唯一守恒律；守恒量候选空间未被公设约束。**
+
+[FAIL] V6-e
+    可判决性判定：候选族的末态差异区间宽度仅 7.297e-03（0.73%），单看极端候选（C2 对 C4(w=1)）在原理上可被 1e-6 级长度比测量分辨；但候选族是**一维连续族**（自由权重 w），**任何单条数据都能被某个 w 拟合**（参数 1 vs 约束 1 ⇒ 欠定，与既有 S03-C0023 的不可证伪构造同型）。⇒ **守恒律不能由数据确定，只能由公设确定**；而在 GAQ 现有公设集内没有给出该权重的地方。
+
+[FAIL] V6-f
+    相变的能量/质量侧**不可算**：全部几何守恒量候选（Tw、TC、∫Omega ds、∫(kappa+w·tau) ds）量纲均为 1（机器枚举确认质量分量全为 0）；而相变的定义本身涉及静质量 m' 由非零变零。要写出能量收支必须引入具质量量纲的量，而唯一的此类输入（G）在既有判决 S03-C0027 / C0028 中已被判为外加初值。⇒ 分支三一旦被追问「能量从哪来」，立即落回公设边界。
+
+[INFO] V6-g-1
+    与 S03-V18.5 的关系：本册**修正**上一轮「分支三可行且建议作为下一步主线」的表述。更准确的表述是：分支三的**输入**（圆螺旋解析式、kappa/tau = u/v、切向速率恒等式）全部存活，故它是三条分支中唯一值得执行的；但本册执行结果表明它遭遇与 S03-C0023 同型的欠定阻塞（守恒量候选为含自由权重的一维连续族，单条数据无法定权重）。⇒ 「可行」应改读为「可执行且已执行，结论为不可判决」。
+
+[INFO] V6-g-2
+    与 S03-C0021 的关系：该条已否证「质量不可归结为结不变量」。本册的守恒量候选恰好都是**几何积分**（曲率与挠率的积分），属结/曲线不变量族，与 C0021 的射程一致；本册不重复该否证，只补充「即使退到几何积分层，候选仍非唯一」。
+
+[INFO] V6-g-3
+    与 S03-C0019 的关系：C0019 已把「内部扭结数取标准纽结不变量」的 8 种组合判为无解。本册的零模闭合螺旋给出 Lk = 0、Tw = 0、Wr = 0 的具体取值组合，属 C0019 射程之外的新数据点（该条否证的是『用结不变量标记身份』，本册给的是『用总扭转标记零模』）。
+
+[INFO] V6-g-4
+    与 S03-C0034（能力边界）一致：GAQ 几何可承载 kappa/tau/Omega/c 与 Z_2 手性，不可承载质量标度。本册把该边界具体到「相变的能量收支」这一问句上。
+
+[INFO] V6-g-5
+    与 S03-C0006 一致：几何挠率手性与螺旋性的接口仍未定义，故本册无法判定「相变是否改变手性」；若相变伴随手性翻转，守恒量候选集中必须再加入离散量（Z_2 投影），但那会继承 C0030/C0032 的全部困难。
+
+------------------------------------------------------------------------------
+KEY NUMBERS
+  amp* (non-trivial root)  = none on grid
+  amp grid size / scan steps = 61 / 48000
+  kappa0                 = 1.000000 1/m
+  arc length L           = 6.283185307 m
+  planar-circle closure  = 2.594e-14 m
+  final closure gap      = 2.594e-14 m
+  total twist Tw         = 0.000e+00
+  total curvature TC     = 6.283185307
+  tau range              = [-0.0000, -0.0000]
+  binormal path length   = 0.000000
+  Gauss Lk (raw / int)   = 0.000000 / 0
+  smallest non-trivial closure residual = 0.157046 m at amp = 0.05
+  step-size independence (6000 vs 48000) = True
+  kappa'/kappa0 C2       = 1.0000000000
+  kappa'/kappa0 C3       = 1.0000266253
+  C2 vs C3 spread        = 2.663e-05
+  C4 family range        = [1.0000000, 1.0072974]
+  family spread          = 7.297e-03
+  Fary-Milnor admissible w < 137.036
+  alpha_CODATA           = 7.297352569300e-03
+
+TRANSITION PICTURE THAT SURVIVES
+  initial (massive soliton) : tau0 ≠ 0, kappa0 > 0, Tw0 ≠ 0, m' > 0
+  final   (photon zero-mode): ∫tau ds = 0, kappa' > 0, Tw = 0, m' = 0
+  the transition MUST therefore be a *torsion release*: the net twisting
+  is transferred to curvature. Which weight w governs the transfer is a
+  free parameter (kappa' = kappa0·(1 + w·alpha)), and no admissible
+  conserved quantity contains a mass component, so the energy budget of
+  the release cannot be computed inside the framework.
+  VERDICT: the transition is *describable* (Tw = 0 is attained by the planar
+  circle, and the torsion-release picture is the only surviving one),
+  but *not adjudicable*: the conservation law is a one-parameter family and
+  the mass budget is not computable inside the framework.

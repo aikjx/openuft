@@ -111,7 +111,9 @@ def main():
         "sample_kappa": k_profile,
         "sample_tau": t_profile,
         "derived_from_field_equation": False,
-        "reason": "ADD-04 直接以该 ansatz 作最小径向构型，前无 TUFT 场方程导出；V3.6 OPEN-MAP 亦证实 x^μ→(κ,τ) 未给出",
+        "reason": "ADD-04 直接以该 ansatz 作最小径向构型，前无 TUFT 场方程导出；"
+                 "V3.6:OPEN-MAP 已终局裁定为 CLOSED-IMPOSSIBLE（结构性不可闭合，承重 E4+E9），"
+                 "故 x^μ→(κ,τ) 不是「尚未给出」而是「补不出来」",
         "verdict": "PASS" if not (k_profile == 0 and t_profile == 0) else "FAIL",
     }
 
@@ -147,6 +149,7 @@ def main():
     lines.append("")
     lines.append("- 日期：2026-10-04")
     lines.append("- 判定结果：OPEN-O-FIELD-A/B → **正式结项为「共存场/剖面外部输入」（公理集内无解）**")
+    lines.append(f"- **读数：条目 4 ｜ PASS {gate['summary']['pass']} ｜ FAIL {4 - gate['summary']['pass']} ｜ 自检 {gate['summary']['pass']} / 4**（退出码 0 = 判定自洽闭合）")
     lines.append("")
     lines.append("## P1 单点单力结构证明")
     for r in p1_rows:
@@ -161,7 +164,7 @@ def main():
     lines.append("")
     lines.append("## P3 κ(x),τ(x) 内生性")
     lines.append(f"- ansatz κ_i(ρ)=KS·cosθ_i·(ELL/ρ)：ρ={rho} 抽样 κ={k_profile:.4f}, τ={t_profile:.4f}")
-    lines.append("- 该剖面为 ADD-04 直接假定，前无 TUFT 场方程导出；V3.6 OPEN-MAP 证实 x^μ→(κ,τ) 未给出 ⇒ 非内生。")
+    lines.append("- 该剖面为 ADD-04 直接假定，前无 TUFT 场方程导出；且 `V3.6:OPEN-MAP` 已终局裁定为 **CLOSED-IMPOSSIBLE（结构性不可闭合，承重 E4+E9）** ⇒ x^μ→(κ,τ) 不是「尚未给出」而是「补不出来」⇒ 非内生。")
     lines.append("")
     lines.append("## P4 结项结论")
     lines.append(f"- OPEN-O-FIELD-A：{closure['OPEN_O_FIELD_A']}")

@@ -1,0 +1,98 @@
+==============================================================================
+S03 V18.5 | GAQ-UFT V18 Frenet-Serret helix-manifold upgrade: full audit
+==============================================================================
+run_id = S03-V18_5-2026-10-07
+input  = GAQ-UFT V18 upgrade draft (Frenet-Serret active frame)
+
+VERDICT SUMMARY
+  PASS     = 4
+  FAIL     = 4
+  BOUNDARY = 4
+  INFO     = 6
+  items    = 18
+  self-check = 11/11
+
+------------------------------------------------------------------------------
+[PASS] V5-a
+    圆螺旋曲率挠率解析式 kappa=R*w^2/c^2、tau=w*cz/c^2 与 Frenet-Serret 定义式 kappa=|r'xr''|/|r'|^3、tau=((r'xr'').r''')/|r'xr''|^2 在非对称相位上逐个相对偏差 0.00e+00 / 3.20e-16（浮点机器零）。来稿 §1 的解析式**正确**。
+
+[PASS] V5-b
+    kappa/tau = u/v 在圆螺旋上严格成立（rel.dev 0.00e+00）；且副法向与螺旋轴的夹角余弦 cos(theta) = B.z = u/c（rel.dev 1.23e-16）——即**副法向 B 一般不与轴向平行**（仅当 u=c 即 v=0 的平面圆时才平行，此时 tau=0）。
+
+[FAIL] V5-c-A
+    读法 A（保留 m'c = m*v_perp）无实解：联立 kappa/tau = v_perp/v_par 与 u^2+v^2=c^2 后唯一相容值被迫为 **alpha = sqrt(phi) = 1.272020**，与 alpha_CODATA = 0.007297353 相差 174.3 倍；把实验 alpha 代回同一方程残差 = -1.0001。=> 守恒式 m'c = m*v_perp 与「m ∝ kappa、m' ∝ tau、kappa/tau = alpha」三者在实数域**互不相容**。
+
+[PASS] V5-c-B
+    读法 B（守恒式改为 m'*v_perp = m*v_par）在圆螺旋几何下**恒成立**（rel.dev 0.00e+00，机器零）：因为 m/m' = kappa/tau = u/v 恰是等式本身。量纲 M*L/T（动量）闭合。故来稿 §2 的守恒式存在**变量槽位错位**：把切向速率 c 塞进了投影守恒式的轴向槽位。
+
+[INFO] V5-c-C
+    读法 C 的推论留给 VER-6 单独裁定（速度上限预言 vs 加速器实测）。
+
+[FAIL] V5-d
+    来稿 §3 的两条断言在本框架内互斥：(a) 能量来自挠率面积分、(b) 传播方向 k = 副法向 B。由 F-S 第三式 dB/ds = -tau*N，若 B 平行于固定传播方向则 B 为常矢量 => tau 恒为 0（机器复算平面圆 tau = 0.0e+00，B.z = 1.000000），于是 ∫tau dS = 0 => 光子能量为 0。反向亦真：tau 恒 0 即曲线平面、副法向恒定。=> **横螺旋零模 + 挠率型能量 在单条空间曲线的 F-S 实现下不可同时成立。**
+
+[BOUNDARY] V5-d-esc
+    可行出路有三条：(i) 光子能量改为曲率面积分 ∫kappa dS（kappa 不为 0，与 §1 的 H∝旋度更自洽）；(ii) 放弃 k 平行 B，改纵螺旋（则与光子横波性失去对应）；(iii) 推广到 4D **世界线**曲线（时间非外禀参数），此时「平面性」不再是约束，需 Bishop 标架或 Fermi-Walker 标架。本册不选定，仅登记。
+
+[PASS] V5-e
+    在 kappa(s)、tau(s) 强非恒定（±80%/+±50% 调制，20 万步显式欧拉）的 F-S 积分下，从轨迹反算的曲率与挠率相对偏差为 1.50e-04 / 4.19e-04（非平凡检验：证明积分链本身实现正确）；|dr/dt| 恒等于 c 与 v_par^2+v_perp^2=c^2 的残差 4.0e-16 / 7.1e-16 属**平凡恒等式**（|dr/dt|=|dr/ds|·ds/dt=1·c，与 kappa、tau 无关）；无投影运行的标架模漂移 4.5e-04 是显式欧拉的积分器误差，由逐步归一化补偿，**不构成物理结论**。=> **来稿 §5「强场失效」过度否定**：分解式 u^2+v^2=c^2 是 ds/dt=c 公设的恒等推论，与 kappa、tau 是否恒定无关；真正失效的只是「圆螺旋解析式 kappa=R*w^2/c^2」。
+
+[FAIL] V5-f
+    若同时采纳「v_perp/v_par = alpha_CODATA 对所有粒子相同」与「切向速率恒为 c」，则任何基元世界线的轴向投影速度上限为 0.9999733754 c，缺口 7981.9 m/s（≈8.0 km/s）；而加速器实测 1-beta ≈ 9e-9（缺口约 2.70 m/s），两者相差 2958.3 倍。=> **既有 GAQ 断言 v_perp/v_par = alpha = 1/137 被现有加速器数据否证**（该断言原被登记为「中可行性可检验预言」）。射程：只否证「投影速率之比为 alpha」这一条，不否证切向速率公设本身。
+
+[FAIL] V5-g
+    量纲封锁：(1) m' ∝ ∫tau ds 给出的 m' 无量纲（∫tau ds 的量纲恰为 1），而 m'c^2 缺一个质量幂次 ⇒ 必须引入具质量量纲的耦合常数 eta；(2) E ∝ H 中 H = ∫A·(∇×A)dV 的量纲是 M^2 L^4 T^-4 I^-2，与能量不同族，耦合常数不可能取为无量纲；(3) 唯一量纲闭合的是 m'c = m*v（动量）。本仓既有判决 S03-C0025/C0027/C0028 已裁定：纯几何量集 kappa/tau/Omega/c 的质量分量恒为 0，唯一携带质量量纲的可用量是 G 且其值须外加 ⇒ **「拓扑内禀质量 m'」在体系内无法取得非零质量量纲，除非外加 G 或 m_P**。
+
+[BOUNDARY] V5-h-1
+    H = ∫A·(∇×A) dV 的守恒（Kelvin/Helmholtz 型）只在**理想无耗散**（无磁阻/电阻率、无涡旋扩散、完美导体）下成立；来稿未声明该前提。在有耗散的真实场中 H 的耗散方程含 η·∫|∇×B|^2 项 ⇒ H 单调衰减。把 H 当作精确拓扑不变量使用需要显式声明理想化前提。
+
+[BOUNDARY] V5-h-2
+    本仓已登记 S03-C0006【BOUNDARY】几何挠率手性与弱螺旋性的定量关系未给出、接口未定义；来稿 §1 直接把 H 当作唯一守恒量使用，未处理与 C0006 的口径冲突。
+
+[BOUNDARY] V5-h-3
+    来稿未给出 H 与粒子螺旋度（±1）量子数之间的映射；连续 H 如何离散化为自旋量子数仍是缺口（与 S03-C0011 自旋统计缺口同源）。
+
+[INFO] V5-i-1
+    口径冲突（须裁决）：来稿自称 GAQ-UFT V18，但本仓 GAQ 谱系已用至 V22（utf/17-空间光速螺旋引力理论/v22/），且 S03 内部已用 V18_1..V18_4。本册按 S03 序列登记为 V18_5，不新开版本号。
+
+[INFO] V5-i-2
+    结论一致（交叉印证）：来稿 §1 的 kappa/tau = u/v 与本仓既有文档 「v_⊥/v_z = alpha = 1/137，由 kappa/tau = alpha 决定」（utf/17-空间光速螺旋引力理论/v_⊥^2+v_z^2=c^2_统一分解与全维度分析.md:114,355,361-365）同源；VER-6 否证的正是该既有断言，两册结论方向一致。
+
+[INFO] V5-i-3
+    差异（须登记）：既有文档取 kappa = rho/(rho^2+b^2)、tau = b/(rho^2+b^2)，与严格 F-S 曲率挠率只差一个共同因子（rho/R = v_⊥/c），故**比值 kappa/tau 不受影响**，但任何以 kappa 或 tau 的**绝对值**标定质量的步骤会引入 v_⊥/c 量级的系统偏差。
+
+[INFO] V5-i-4
+    既有能力边界复用：S03-C0034 已裁定 GAQ 几何可承载连续量 kappa/tau/Omega/c 与 Z_2 手性，不可承载质量标度。VER-7 的量纲封锁与该边界同源，本册把它精确落到 m' 这一个公式上。
+
+[INFO] V5-i-5
+    既有 Bishop 标架结论复用：4D 情形下 Frenet 标架在 kappa→0 处翻转，须改用 Bishop 标架（见 openuft 04_公共成果 TUFT_V3.5_W6W1结构层_Bishop标架与4D协变）。来稿 §5 提到的「强场」若升级到 4D 世界线，此坑立即生效。
+
+------------------------------------------------------------------------------
+KEY NUMBERS
+  alpha_forced_by_reading_A = 1.272019649514  (sqrt(phi))
+  alpha_CODATA             = 7.297352569300e-03
+  ratio_forced/measured    = 174.312
+  residual_A_at_CODATA     = -1.000053
+  rel.dev reading B        = 0.000e+00
+  v_par_ceiling / c        = 0.999973375386
+  speed_gap_GAQ            = 7981.8584 m/s
+  speed_gap_LEP            = 2.698e+00 m/s
+  discrepancy factor       = 2.958e+03
+  strong-field kappa recovery err  = 1.500e-04
+  strong-field tau recovery err    = 4.190e-04
+  strong-field speed err (trivial) = 3.976e-16
+  strong-field pythag err (trivial)= 7.121e-16
+  integrator drift (no projection) = 4.509e-04
+  dim[∫ tau ds]           = 1  (dimensionless)
+  dim[c^3 ∫ tau dt]       = M^0 L^2 T^-2  (short of E by M^1)
+  dim[H]                   = M^2 L^4 T^-4 I^-2
+  dim[m' c] = dim[m v]     = M^1 L^1 T^-1  (momentum, consistent)
+
+------------------------------------------------------------------------------
+DECISION ON THE THREE PROPOSED BRANCHES
+  branch 1 (field PDE + torsion gravity vs EC) : BLOCKED by V5-g; needs eta with
+             mass dimension, which the registry already ruled out as non-derivable.
+  branch 2 (photon spin vs helicity)           : BLOCKED by V5-d; the torsion-based
+             energy is incompatible with k || B. Only the 4D-worldline route survives.
+  branch 3 (soliton topological phase transition): viable, and it is the only branch
+             whose input survives V5-a/V5-b/V5-e. Recommended next.

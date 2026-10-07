@@ -1,0 +1,104 @@
+{
+  "册": "TUFT_V3.5修复版_验收引擎自指涉盲区回修",
+  "生成时间": "2026-10-07 10:07:45",
+  "定位": "回修验收册引擎自指涉盲区：AST 抽取实际 SUT field() 替代硬编码复刻",
+  "承接": "TUFT_V3.5修复版_验收审计与修复清单_2026-10-04.py + 独立再验收_2026-10-05.py",
+  "计数": {
+    "PASS": 4,
+    "FAIL": 1,
+    "BOUNDARY": 3,
+    "INFO": 0
+  },
+  "总计": 8,
+  "关键量": {
+    "V-07交叉相似度(实际field vs 均匀场)": 1.0,
+    "V-08自相似度": 1.0
+  },
+  "核心结论": "验收册引擎自指涉盲区成立（硬编码 sut_field + AST 只查名）；从实际 SUT AST 抽取 field() 后 V-07 交叉相似度 1.0000（非硬编码径向 0.1173）⇒ 回修范式可行；V-08 自比恒 1 判据失效须废弃",
+  "诚实边界": "不修改 SUT/验收册引擎；AST 抽取 exec 仅针对函数体；修复建议待并入下一版",
+  "自检": {
+    "总数": 4,
+    "通过": 4,
+    "项": [
+      {
+        "name": "blindspot_confirmed",
+        "ok": true,
+        "detail": "验收册引擎自指涉盲区成立（硬编码复刻 + AST 只查名）"
+      },
+      {
+        "name": "sut_extracted",
+        "ok": true,
+        "detail": "实际 SUT 的 field/omega/region 均已 AST 抽取"
+      },
+      {
+        "name": "v07_cross_pass",
+        "ok": true,
+        "detail": "实际 field 是均匀场（V-07 交叉比对通过）"
+      },
+      {
+        "name": "v08_invalid",
+        "ok": true,
+        "detail": "V-08 自比恒 1，失效判据（须交叉比对替代）"
+      }
+    ]
+  },
+  "条目": [
+    {
+      "id": "A-01",
+      "section": "盲区确认",
+      "item": "验收册引擎自建硬编码 sut_field",
+      "verdict": "PASS",
+      "detail": "验收册引擎含硬编码 sut_field（径向 −(1/r²)(x,y)），是自建复刻非实际 SUT 实现"
+    },
+    {
+      "id": "A-02",
+      "section": "盲区确认",
+      "item": "AST 守卫只查函数名不查实现",
+      "verdict": "PASS",
+      "detail": "load_sut() 的 sut_has_verified_symbols 只核对函数名存在，不校验硬编码复刻与实际 SUT field() 实现一致 ⇒ 自指涉盲区确认"
+    },
+    {
+      "id": "B-01",
+      "section": "SUT 实抽",
+      "item": "AST 抽取 field/omega/region",
+      "verdict": "PASS",
+      "detail": "从实际 SUT 源码 AST 抽取并 exec：field=True, omega=True, region=True"
+    },
+    {
+      "id": "C-01",
+      "section": "重跑 V-07/V-08",
+      "item": "V-07 交叉比对（实际field vs 参考均匀场）",
+      "verdict": "PASS",
+      "detail": "实际 SUT 抽取 field() 与参考均匀场 −(1,1)/√2 余弦相似度 **1.0000** ⇒ （验收册硬编码径向 sut_field 得 0.1173 FAIL；实际实现为均匀场 ⇒ V-07 从 FAIL 转 PASS）"
+    },
+    {
+      "id": "C-02",
+      "section": "重跑 V-07/V-08",
+      "item": "V-08 自相似度判据",
+      "verdict": "FAIL",
+      "detail": "自比 cos(field,field)=**1.0000** 恒 1 ⇒ **零信息判据仍失效**，必须替换为对参考场的交叉比对（本册 C-01 即其替代）"
+    },
+    {
+      "id": "D-01",
+      "section": "回修判定",
+      "item": "盲区回修成立",
+      "verdict": "BOUNDARY",
+      "detail": "验收册引擎的 sut_field 应改为**从实际 SUT AST 抽取 field() 并 exec**（本册 B/C 段即回修范式），重跑 V-07 得 1.0000（非硬编码 0.1173）；V-08 自比恒 1 判据须废弃、由交叉比对替代"
+    },
+    {
+      "id": "D-02",
+      "section": "回修判定",
+      "item": "修复建议（登记给验收册引擎）",
+      "verdict": "BOUNDARY",
+      "detail": "① load_sut() 增加按符号名的 AST 抽取 exec（替代 sut_field/sut_omega/sut_region 硬编码复刻）② V-08 自相似度判据删除，改为 V-07 交叉比对 ③ 抽取函数体须在独立命名空间 exec，避免整文件副作用"
+    },
+    {
+      "id": "D-03",
+      "section": "回修判定",
+      "item": "不修改 SUT / 验收册引擎",
+      "verdict": "BOUNDARY",
+      "detail": "本册只验证回修范式可行，不改 SUT 也不改验收册引擎源码（并行编辑冲突规避）；修复建议待并入验收册引擎下一版"
+    }
+  ],
+  "耗时": "0.2s"
+}

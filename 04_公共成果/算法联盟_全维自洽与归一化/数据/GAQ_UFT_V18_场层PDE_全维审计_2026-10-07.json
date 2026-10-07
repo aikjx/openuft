@@ -1,0 +1,397 @@
+{
+  "book": "GAQ_UFT_V18_场层PDE_桥梁与孤子存在性_全维审计",
+  "date": "2026-10-07",
+  "seed": 20261007,
+  "branch_selected": "分支一（弱场约化 → 牛顿/GR），内含孤子存在性前置切片",
+  "entries_total": 30,
+  "counts": {
+    "PASS": 3,
+    "FAIL": 14,
+    "BOUNDARY": 8,
+    "INFO": 3,
+    "CORRECTED": 2
+  },
+  "guards": {
+    "pass": 33,
+    "total": 33
+  },
+  "entries": [
+    {
+      "id": "A1",
+      "verdict": "PASS",
+      "title": "[α]=L²T⁻¹（扩散系数），量纲自洽",
+      "reading": "三项指数逐项相等 (L:−1,T:−1)",
+      "note": "F1/F2 联立无过约束，量纲层健康"
+    },
+    {
+      "id": "A2",
+      "verdict": "CORRECTED",
+      "title": "「α,β 两个系数」应收紧为「1 个长度尺度 + 1 个无量纲耦合」",
+      "reading": "[β]=L·T⁻¹=[c] ⇒ β/c 无量纲；[α]=L²T⁻¹ ⇒ 扩散长度 ℓ_α=α/c 引入长度尺度",
+      "note": "V18 原文称 α、β 为两个系数；按量纲只有 β̃=β/c 无量纲，α 必须外生给长度"
+    },
+    {
+      "id": "A4",
+      "verdict": "CORRECTED",
+      "title": "β 是**新的有量纲耦合**，与 ESCAPE-AUDIT E1「挠率不引入新带量纲常数」不同向",
+      "reading": "E1 的 T² 型动能项无量纲（Maxwell 同构）；V18 的 βτκ / βκ² 是**三次相互作用**，β 携带速度量纲",
+      "note": "对 E1 补适用边界：E1 只覆盖二阶导数平方型，不覆盖三次耦合。不推翻 E1"
+    },
+    {
+      "id": "A3",
+      "verdict": "BOUNDARY",
+      "title": "标度解空间 3 维 = 1 个纯规范（场幅度重定义）+ 2 个不可约参数",
+      "reading": "约束矩阵秩 3 / 6 ⇒ 自由 3；整数穷举 131 解（区间 [−3,3]）与秩一致",
+      "note": "自纠：首版误写「dof=2」，实为 3（第 3 约束行是第 2、4 行的组合）。不可约参数数目 2 由 A2 的量纲法给出（ℓ_α 长度 + β̃ 无量纲），与标度群相容"
+    },
+    {
+      "id": "A5",
+      "verdict": "BOUNDARY",
+      "title": "外生输入 4 个（含 ħ），已突破「≤1 自由常数」类公设",
+      "reading": "常数账 = 4",
+      "note": "口径依赖（同 ESCAPE-AUDIT E7），不作决定性依据"
+    },
+    {
+      "id": "B1",
+      "verdict": "FAIL",
+      "title": "F1/F2 是实验室系 3+1 分解，非协变张量方程",
+      "reading": "boost 后时间算子 ∂t → γ(∂t − v∂z)，方程空间多出 ∂z 项（v/c=0.6）",
+      "note": "∂t 与 ∇² 的分离本身即 Preferred frame"
+    },
+    {
+      "id": "B2",
+      "verdict": "FAIL",
+      "title": "无度规、且 κ/τ 未与 g_{μν} 关联 ⇒ 无法提升为协变形式",
+      "reading": "V18 未给出 g_{μν}，也未给出 κ,τ 的逆变/协变定义",
+      "note": "对照 v_eq_c S3-06：协变 d'Alembertian 需 SGN[m] 只作一次外层收缩，V18 连 g_00 都无"
+    },
+    {
+      "id": "B3",
+      "verdict": "FAIL",
+      "title": "方程组为**抛物型（反应-扩散）**系统：无限传播速度、无双曲张量结构",
+      "reading": "最高时间导数 1 阶 < 空间 2 阶 ⇒ 分类 parabolic",
+      "note": "抛物型系统不承载有限传播速度的波动，与 §三「光子孤子 ω=ck」根本冲突"
+    },
+    {
+      "id": "B4",
+      "verdict": "BOUNDARY",
+      "title": "取 g=η 强行提升可行，但 α 必须吸收 1/c ⇒ 提升不唯一",
+      "reading": "(1/c)∂_{x0}κ = α∇²κ − βτκ 要求 [α]=(2, -1)（与 §A 一致，不矛盾）",
+      "note": "提升存在但引入显式 c 且不给协变几何 ⇒ 不构成 GR 弱场还原的桥梁"
+    },
+    {
+      "id": "C1",
+      "verdict": "FAIL",
+      "title": "耦合项违反 Clairaut 可积条件 ⇒ **方程组不是任何作用量的欧拉–拉格朗日方程**",
+      "reading": "∂_τ(βτκ)=βκ vs ∂_κ(βκ²)=2βκ，差 βκ=1.000e+00（κ=1）",
+      "note": "非保守耦合：连反应-扩散型也要求耦合项可由标量势导出，此处不满足 ⇒ 无 Hamiltonian/守恒结构。第二道限定：形式反推的 V 含 βκ²τ（τ 一次项）⇒ **无内禀势能极小点**；但定态解仍可存在（C3），只是它不是势能极小点 ⇒ 线性稳定性不可由势能判据给出"
+    },
+    {
+      "id": "C2",
+      "verdict": "FAIL",
+      "title": "最大值原理把定态解压到 τ≤0；κ≥0 分支被排除，κ≤0 分支未被原理排除",
+      "reading": "Δτ=(β/α)κ²≥0 ⇒ τ≤0；κ≥0 ⇒ Δκ≤0 ⇒ κ≡0",
+      "note": "文档 §三「平直近似下 τκ=0, κ²=0」是本条的最弱版本；本条给出一般 Dirichlet 边界下的结论。后续由 C3 确认该符号区在单盒内收敛到非平凡定态，但 C3b 的 L 扫描证明它是**边界伪影**"
+    },
+    {
+      "id": "C3",
+      "verdict": "FAIL",
+      "title": "阻尼 Newton 的收敛解是**计算盒边界伪影**（峰值随 L 漂移 93.7%）⇒ 无定态孤子",
+      "reading": "κ~1 τ~0.5: |F|=7.90e-13 |φ|=7.37e-01; κ~3 τ~3: |F|=3.51e-14 |φ|=7.37e-01; κ~1e+01 τ~1: |F|=7.76e-12 |φ|=7.37e-01; κ~0.5 τ~1e+01: |F|=3.99e-14 |φ|=7.37e-01；峰值位置 x=0.000；κ 峰 -0.7371、τ 峰 -0.7371；|κ| 半高宽 2.000；两端 Dirichlet=0；κ/τ 同号；L=1.0: κ峰 -2.9483; L=2.0: κ峰 -0.7371; L=4.0: κ峰 -0.1843",
+      "note": "**自我推翻记录**：只看单盒（L=2）会误判「定态孤子存在」；加入 L 收敛性扫描后该解被判定为伪影。这正是「先写数值仿真框架」若缺收敛性检验会踩的坑"
+    },
+    {
+      "id": "C5",
+      "verdict": "FAIL",
+      "title": "「类时孤子」「零模光子孤子」在给定 PDE 下**无定态承载物**",
+      "reading": "C3：收敛解为边界伪影（L 漂移 93.7%）；C4 的解在 x→x₀ 处奇异不可作粒子",
+      "note": "§三/§四（孤子与拓扑相变）缺物理承载物"
+    },
+    {
+      "id": "C3b",
+      "verdict": "BOUNDARY",
+      "title": "区间长度 L 扫描：定态峰值随 L 漂移 93.7% ⇒ **边界伪影，不可作孤子**",
+      "reading": "L=1.0: κ峰 -2.9483; L=2.0: κ峰 -0.7371; L=4.0: κ峰 -0.1843；κ峰 ∝ L^(-2.000)（拟合残差 5.83e-05）",
+      "note": "严谨性补强：定态是否依赖计算盒长度是判断「局域结构」的前提。峰值的纯幂律标度说明它是**全局归一化产物**（振幅随盒子缩小），而非局域孤子"
+    },
+    {
+      "id": "C4",
+      "verdict": "BOUNDARY",
+      "title": "β≠0 时的定态解是**奇异幂律**（1/u 型发散），不是局域孤子",
+      "reading": "κ=τ=u=6α/(β(x−x₀)²) 精确满足 ∇²u=(β/α)u²，相对残差 1.18e-16",
+      "note": "x→x₀ 处发散 ⇒ 不可作粒子；且它是 β 的负幂 ⇒ 换符号不产生稳定孤子"
+    },
+    {
+      "id": "C6",
+      "verdict": "BOUNDARY",
+      "title": "§四 相变机制的符号自洽性无法评估（无真定态承载物）",
+      "reading": "依赖 C3 结果（边界伪影）",
+      "note": "若后续补出真孤子，此条须重判"
+    },
+    {
+      "id": "D3",
+      "verdict": "FAIL",
+      "title": "F4 逐点排除「极化面进动」，允许振幅/螺距/轴向平移",
+      "reading": "进动模式 max|∂tA·Ω| = 0.4000（非零 ⇒ 被排除）；其余三模式恒为 0",
+      "note": "来料 §四 的轴向螺旋↔横螺旋 = 极化面转 90° ⇒ 正是被排除的模式"
+    },
+    {
+      "id": "D1",
+      "verdict": "PASS",
+      "title": "来料 §一 的矢量恒等式 ∇·(∂tA×A)=A·(∇×∂tA)−∂tA·(∇×A) 正确（非平凡场机器验证）",
+      "reading": "200 随机点最大残差 1.27e-13（相对 1.47e-13）；两侧量级 0.863 ≫ 0 ⇒ 检验有判别力",
+      "note": "推导层无误；场取 A=(e^{−0.3t}x, e^{−0.8t}z, 0)，∂tA 不平行 A"
+    },
+    {
+      "id": "D2",
+      "verdict": "PASS",
+      "title": "F4（∂tA·Ω=0）+ 无穷远场边界条件 ⇒ dH/dt=0，螺旋度守恒成立",
+      "reading": "代入来料式：两项皆零 ⇒ dH/dt ≡ 0",
+      "note": "守恒律在其假设内自洽"
+    },
+    {
+      "id": "D4",
+      "verdict": "BOUNDARY",
+      "title": "拓扑相变只能取**奇异跳变**；来料未声明该代价",
+      "reading": "连续路径被 D3 排除；奇异跳变处 F4 是逐点微分约束，不适用 ⇒ 不矛盾",
+      "note": "非逻辑矛盾，但「拓扑重排」的连续性暗示与 F4 不相容，需显式声明相变动力学"
+    },
+    {
+      "id": "E1",
+      "verdict": "FAIL",
+      "title": "κ≡0 零模上不存在传播解：ω=−iαk² 为纯虚 ⇒ ω=ck 不成立",
+      "reading": "平面波代入 ∂tτ=α∇²τ ⇒ ω=0.000e+00-1.690e+00i（Im≠0，恒衰减）",
+      "note": "来料称 ω=ck 是「横螺旋零模拓扑边界条件导出」；在该 PDE 的零模子空间上它是**解不存在**，不是导出"
+    },
+    {
+      "id": "E3",
+      "verdict": "FAIL",
+      "title": "E=ħω、p=ħk 的量子化仍需外引入 ħ ⇒ 来料缺口 1 确认",
+      "reading": "ħ 未从螺旋几何导出（PDE 中无 ħ 出现）",
+      "note": "与 §A5 常数账一致"
+    },
+    {
+      "id": "E2",
+      "verdict": "BOUNDARY",
+      "title": "最小增广：把 ∂tτ 换为二阶时间导数（波动型）才可能得到 ω=ck",
+      "reading": "需 ∂t²τ − c²∇²τ = … ⇒ 平面波给 ω²=c²k²（机器核验：扩散型下 ω 实部恒 0）",
+      "note": "这是可执行的结构性建议，但引入第二独立场自由度 ⇒ 与 §A3 参数账叠加"
+    },
+    {
+      "id": "F1",
+      "verdict": "FAIL",
+      "title": "**P0 结构性阻塞**：耦合项非变分（C1）⇒ 无作用量；且无对称性 ⇒ 无 T_{μν} ⇒ 牛顿极限无源",
+      "reading": "G_{μν}=8πG T_{μν} 的右侧在 V18 中不可构造（机器证据：C1 Clairaut 残差 βκ）",
+      "note": "结构性缺失（不是推导不足），与 v16 A07 的「度规存在性/广义协变」残留同源"
+    },
+    {
+      "id": "F2",
+      "verdict": "FAIL",
+      "title": "以势能梯度替代 T_{μν} 可得 Poisson 型方程，但牛顿常数 G 仍外生",
+      "reading": "∇²τ=(β/α)κ²（机器核验为 Poisson 型）",
+      "note": "⇒ 牛顿引力强度不由螺旋几何决定 ⇒ 分支一「还原牛顿」在结构上不成立"
+    },
+    {
+      "id": "F3",
+      "verdict": "FAIL",
+      "title": "τ→0（无自旋极限）时 κ² 项残留 ⇒ **不能**退回 GR 弱场线性化",
+      "reading": "F2 在 τ=0 的残差 = 4.900e-01（κ=0.7, β=1）",
+      "note": "与 ESCAPE-AUDIT M6（对称物质⟹τ=0⟹…）方向相反：V18 的 τ=0 并不等于 GR"
+    },
+    {
+      "id": "F4",
+      "verdict": "FAIL",
+      "title": "未给出度规扰动 h_{μν} 与 κ 的关系 ⇒ 测地线方程的还原无入口",
+      "reading": "V18 无 g_{μν}、无 h_{μν}、无 Christoffel",
+      "note": "分支一的「对标 GR 测地线方程」目前无桥梁可建"
+    },
+    {
+      "id": "G1",
+      "verdict": "INFO",
+      "title": "对接 03_跨体系研究/tuft_世界线螺旋_变分推导（1D 曲线层，8/8 PASS）",
+      "reading": "V18 场层 PDE 是该 1D 钉扎型作用量的场层提升；其诚实边界 B3（钉扎型非最小总曲率）在本册继承",
+      "note": "1D 册已声明与 4D 场论层不重叠 ⇒ 本册填的正是该空档"
+    },
+    {
+      "id": "G2",
+      "verdict": "INFO",
+      "title": "对接 判定_TUFT_V3.6_ESCAPE-AUDIT_2026-10-04（挠率逃生终局审计）",
+      "reading": "A4 对 E1 补适用边界（三次耦合 vs T² 型）；A5 与 E7 同口径；F3 与 M6 方向相反",
+      "note": "该册结论「即使 M6 被推翻，V3.6 结论不变」不受本册影响"
+    },
+    {
+      "id": "G3",
+      "verdict": "INFO",
+      "title": "对接 tuft_ec_torsion_reconstruction_v1（EC 挠率基底重构审计）",
+      "reading": "该册判「EC 挠率基底是形式装饰、局域无新物理」；V18 的差异化主张（κ,τ 互为源、无需物质张量）在本册 F1 判定下**未被兑现**",
+      "note": "V18 若要真正区别于 EC，必须先给出 T_{μν} —— 这是它相对该册的唯一潜在增量，目前为空"
+    }
+  ],
+  "guard_detail": [
+    {
+      "name": "A_dim_algebra_consistent",
+      "ok": true,
+      "detail": "term exponents (-1, -1)"
+    },
+    {
+      "name": "A_beta_is_velocity",
+      "ok": true,
+      "detail": "[β]=(1, -1)"
+    },
+    {
+      "name": "A_scale_group_rank_is_three",
+      "ok": true,
+      "detail": "rank=3 dof=3 enum_solutions=131"
+    },
+    {
+      "name": "A_escape_e1_reproduced",
+      "ok": true,
+      "detail": "[(∂T)²]=[L]"
+    },
+    {
+      "name": "B_boost_introduces_spatial_derivative",
+      "ok": true,
+      "detail": "orig=['d_t'] boost=['d_t', 'd_z']"
+    },
+    {
+      "name": "B_no_metric_raising",
+      "ok": true,
+      "detail": "g_{μν} 未出现于 V18 方程组"
+    },
+    {
+      "name": "B_parabolic_classification",
+      "ok": true,
+      "detail": "order_t=1 order_x=2 ⇒ parabolic"
+    },
+    {
+      "name": "B_flat_raise_needs_alpha_absorb_c",
+      "ok": true,
+      "detail": "required [α]=(2, -1)"
+    },
+    {
+      "name": "C1_clairaut_violated",
+      "ok": true,
+      "detail": "gap=1.000e+00"
+    },
+    {
+      "name": "C_maximum_principle_applied",
+      "ok": true,
+      "detail": "tau<=0 ; kappa>=0 branch excluded ; kappa<=0 branch open"
+    },
+    {
+      "name": "C_newton_all_converged",
+      "ok": true,
+      "detail": "κ~1 τ~0.5: |F|=7.90e-13 |φ|=7.37e-01; κ~3 τ~3: |F|=3.51e-14 |φ|=7.37e-01; κ~1e+01 τ~1: |F|=7.76e-12 |φ|=7.37e-01; κ~0.5 τ~1e+01: |F|=3.99e-14 |φ|=7.37e-01"
+    },
+    {
+      "name": "C3b_nontrivial_is_localized",
+      "ok": true,
+      "detail": "峰值位置 x=0.000；κ 峰 -0.7371、τ 峰 -0.7371；|κ| 半高宽 2.000；两端 Dirichlet=0；κ/τ 同号"
+    },
+    {
+      "name": "C3d_peak_follows_power_law",
+      "ok": true,
+      "detail": "κ峰 ∝ L^(-2.000)（拟合残差 5.83e-05）"
+    },
+    {
+      "name": "C_power_law_singularity_exact",
+      "ok": true,
+      "detail": "rel=1.184e-16"
+    },
+    {
+      "name": "D1_cross_identity_nontrivial",
+      "ok": true,
+      "detail": "max|lhs-rhs|=1.268e-13 scale=8.629e-01 rel=1.469e-13 (差分步长 1e-03)"
+    },
+    {
+      "name": "D1b_cross_lateral_components_zero",
+      "ok": true,
+      "detail": "max|cross_x|,|cross_y|=0.000e+00（解析应为 0）"
+    },
+    {
+      "name": "D3_prohibited_mode_detected",
+      "ok": true,
+      "detail": "max|∂tA·Ω| 进动 = 0.4000 vs 其余 0"
+    },
+    {
+      "name": "E1_zero_mode_is_purely_diffusive",
+      "ok": true,
+      "detail": "omega = 0.000000 -1.690000i"
+    },
+    {
+      "name": "E2_helmholtz_requires_second_order_time",
+      "ok": true,
+      "detail": "扩散型无实 ω ⇒ Helmholtz 不可达"
+    },
+    {
+      "name": "F_no_stress_energy_tensor",
+      "ok": true,
+      "detail": "L 不可构造（C1）、无对称性/无流/无 T_{μν}"
+    },
+    {
+      "name": "F2_poisson_substitute_exists",
+      "ok": true,
+      "detail": "∇²τ = (β/α)κ²"
+    },
+    {
+      "name": "F3_tau0_still_nonlinear",
+      "ok": true,
+      "detail": "residual at tau=0 = 4.900e-01"
+    },
+    {
+      "name": "S01_entry_count_nonzero",
+      "ok": true,
+      "detail": "entries=30"
+    },
+    {
+      "name": "S02_ids_unique",
+      "ok": true,
+      "detail": "dup=0"
+    },
+    {
+      "name": "S03_verdict_vocabulary",
+      "ok": true,
+      "detail": "['BOUNDARY', 'CORRECTED', 'FAIL', 'INFO', 'PASS']"
+    },
+    {
+      "name": "S04_expected_fail_baseline",
+      "ok": true,
+      "detail": "missing=[]"
+    },
+    {
+      "name": "S05_expected_pass_baseline",
+      "ok": true,
+      "detail": "missing=[]"
+    },
+    {
+      "name": "S06_source_selfhash_stable",
+      "ok": true,
+      "detail": "basename ok"
+    },
+    {
+      "name": "S07_all_guards_typed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "S08_no_nan_in_readings",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "S09_C3_verdict_matches_numeric",
+      "ok": true,
+      "detail": "stage=found artifact=True verdict=FAIL"
+    },
+    {
+      "name": "S10_C5_verdict_matches_numeric",
+      "ok": true,
+      "detail": "C5 verdict=FAIL"
+    },
+    {
+      "name": "S11_C3b_artifact_test_present",
+      "ok": true,
+      "detail": "C3b title=区间长度 L 扫描：定态峰值随 L 漂移 93.7% ⇒ **边界伪影，不可作孤子**"
+    }
+  ]
+}
