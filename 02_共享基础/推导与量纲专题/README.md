@@ -84,21 +84,21 @@ python verify_derivation_dimension.py
 
 ---
 
-## 5. 延伸方向（A–E 已展开）
+## 5. 延伸方向（A–F 已展开）
 
-> 五个方向已按「求导 / 证明 / 验证 / 精算」四件套展开，核验脚本
-> [`延伸方向/verify_extension_derivation.py`](延伸方向/verify_extension_derivation.py) 为权威验证源，
-> 逐项分析见 [`延伸方向/求导证明验证精算分析.md`](延伸方向/求导证明验证精算分析.md)，运行报告见
-> [`延伸方向/verify_extension_derivation_report.txt`](延伸方向/verify_extension_derivation_report.txt)。
-> 结果：**PASS = 60 / FAIL = 0 / BOUNDARY = 3 / INFO = 3**。
->
-> 每个方向另有**长篇推导文档**（完整求导步骤 + 量纲总表 + 本体论定位 + 物理边界）与目录索引
-> [`延伸方向/README.md`](延伸方向/README.md)：
+> 六个方向已按「求导 / 证明 / 验证 / 精算」四件套展开，核验脚本
+> [`延伸方向/verify_extension_derivation.py`](延伸方向/verify_extension_derivation.py) 为 A–E 权威验证源、
+> [`延伸方向/verify_extension_F_curved_gauge.py`](延伸方向/verify_extension_F_curved_gauge.py) 为 F 权威验证源，
+> 逐项分析见 [`延伸方向/求导证明验证精算分析.md`](延伸方向/求导证明验证精算分析.md) 与
+> [`延伸方向/F_弯曲时空规范协变导数.md`](延伸方向/F_弯曲时空规范协变导数.md)，
+> 目录索引见 [`延伸方向/README.md`](延伸方向/README.md)。
+> 结果：**合计 PASS = 68 / FAIL = 0 / BOUNDARY = 3 / INFO = 3**（A–E：60；F：8）。
 > [A · 麦克斯韦 4 维张量形式](延伸方向/A_麦克斯韦方程的4维张量形式.md) ｜
 > [B · 最小耦合原理](延伸方向/B_最小耦合原理.md) ｜
 > [C · 弱场近似与牛顿泊松方程](延伸方向/C_弱场近似与牛顿泊松方程.md) ｜
 > [D · 普朗克单位的量纲推导](延伸方向/D_普朗克单位的量纲推导.md) ｜
-> [E · 黎曼对称性与 Bianchi 恒等式](延伸方向/E_黎曼对称性与Bianchi恒等式.md)
+> [E · 黎曼对称性与 Bianchi 恒等式](延伸方向/E_黎曼对称性与Bianchi恒等式.md) ｜
+> [F · 弯曲时空规范协变导数](延伸方向/F_弯曲时空规范协变导数.md)
 
 | 标号 | 方向 | 状态 |
 |---|---|---|
@@ -107,6 +107,7 @@ python verify_derivation_dimension.py
 | C | 弱场近似：爱因斯坦场方程退化为牛顿引力泊松方程 $\nabla^2\Phi=4\pi G\rho$ 的完整推导 | ✅ 已展开（C1–C8，含散度定理闭环、测地线退化、质量密度记号反证，PASS 9 / BOUNDARY 1） |
 | D | 量纲分析推导普朗克质量、普朗克长度 | ✅ 已展开（D1–D10，含 $E_P,T_P$ 50 位精算比对 CODATA，PASS 13 / BOUNDARY 1） |
 | E | 黎曼张量代数对称性与 Bianchi 恒等式详细证明 | ✅ 已展开（E1–E18，球面 + 3 维共形平直 + Schwarzschild + 微分 Bianchi，PASS 16 / INFO 2） |
+| F | 弯曲时空规范协变导数 $D_\mu=\nabla_\mu-i\frac{q}{\hbar}A_\mu$（A8 具体实现）：标量/矢量对易子、弯曲规范协变、动量平移 | ✅ 已展开（F1–F8，Schwarzschild 背景，PASS 8；标量无曲率项 / 矢量含曲率项） |
 
 **本轮补充登记的审计项**：A9（规范变换约定对不完整）、A10（$\rho$ 记号歧义：质量密度 vs 电荷密度）、A11（$\partial_\mu$ 分量异构的口径声明）——均为表述/记号层，非量纲数值错误，详见
 [`量纲审计与修正清单.md`](量纲审计与修正清单.md)。

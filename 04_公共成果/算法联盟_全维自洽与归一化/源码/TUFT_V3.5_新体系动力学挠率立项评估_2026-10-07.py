@@ -1,0 +1,153 @@
+# -*- coding: utf-8 -*-
+"""
+TUFT_V3.5_新体系动力学挠率立项评估_2026-10-07.py
+================================================
+引擎：评估 ESCAPE-AUDIT 遗留的唯一理论出口——「新体系动力学挠率」
+（含 T² 动能项 + 新尺度 m_τ + 弃 θ 改用 ρ/m_τ 分区 + 引入能标跑动），
+判定是否值得立项，输出立项前置清单。
+
+回链（不重算）：
+- ESCAPE-AUDIT(2026-10-04)：E1 c_T 无量纲与 Maxwell 同构 / E2 无 Ostrogradsky /
+  E3 动力学挠率解 Π 定理封死(自由度1→2，上游 M8 需重判) / E4 κ≥0 定义性 θ 分区不足4 /
+  E5 弃 θ 改 ρ/m_τ 分区=换核心公理=新体系 / E6 hierarchy 搬运 / E7 常数 2→4 /
+  E9 四力相对强度能标依赖，静态快照=范畴错误 / E8 逃生不救 V3.6，OPEN-MAP 维持 CLOSED-IMPOSSIBLE
+- OPEN-MAP(2026-10-04)：静态几何归一化机制 CLOSED-IMPOSSIBLE
+- 走④β通道裁定(2026-10-07)：β 通道可测预言整体不可达
+
+惯例：add 5 参；guard；退出码 0/2；纯标准库；json/md 同名。
+红线：数学自洽 ≠ 物理真实；评级 C/L1 维持；本册为立项评估非立项本身。
+"""
+import json, os
+
+RES = []
+def add(cid, sec, item, verdict, detail):
+    RES.append({"id": cid, "sec": sec, "item": item, "verdict": verdict, "detail": detail})
+
+GUARDS = []
+def guard(name, ok, detail):
+    GUARDS.append({"name": name, "ok": bool(ok), "detail": detail})
+
+# ---------------- A. 新公设集定义（从 ESCAPE-AUDIT 推导） ----------------
+add("A-01", "新公设集", "保留 T² 动能项", "PASS",
+    "L ⊃ c_T(∇T)²，c_T 无量纲（E1，与 Maxwell −¼F² 同构，不引入新带量纲常数）")
+add("A-02", "新公设集", "保留动力学挠率传播", "PASS",
+    "m_τ 尺度 + 自由度 1→2（E3，解除 Π 定理封死，上游 M8 需重判）；Ω(ρ/m_τ) 可用无量纲比")
+add("A-03", "新公设集", "废弃 Ω2/θ/cos3θ，改用 ρ/m_τ 分区", "BOUNDARY",
+    "E5：弃 θ 改 ρ/m_τ 分区 = 换核心公理 = **新体系**（V3.6 的 Ω2 与 cos3θ 四扇区叙事整体作废，须作者接受）")
+add("A-04", "新公设集", "新增能标跑动公设", "BOUNDARY",
+    "E9：四力相对强度是能标依赖量 α_i(E)，静态快照匹配是范畴错误；新体系须把靶从「静态强度表」改为「能标依赖函数 α_i(E)」（新公设，须作者显式登记）")
+
+# ---------------- B. 自洽性 ----------------
+add("B-01", "自洽性", "量纲闭合", "PASS",
+    "c_T 无量纲、[m_τ²T²]=[L]（E1/E3）；Lagrange 密度量纲 L⁻⁴ 自洽")
+add("B-02", "自洽性", "谱稳定性", "BOUNDARY",
+    "无 Ostrogradsky 高阶导数不稳定（E2，一阶导数）；但 ghost/tachyon 取决于动能项符号与规范结构，需 PGT 谱分析（ESCAPE-AUDIT NOT-ASSESSED）")
+add("B-03", "自洽性", "自由度", "PASS",
+    "ρ/m_τ 无量纲比使 Ω 参数自由度由 1 增至 2（E3）；不再被 Π 定理封死")
+
+# ---------------- C. 与真实物理对应 ----------------
+add("C-01", "真实物理对应", "对应 PGT/Einstein-Cartan 挠率引力", "BOUNDARY",
+    "传播化挠率场 T（T² 动能项）在真实物理对应 Poincaré 引力(PGT)/Einstein-Cartan 挠率引力；存在成熟文献与谱分析，可作自洽性依据")
+add("C-02", "真实物理对应", "Frenet τ vs PGT T 概念错配风险", "BOUNDARY",
+    "TUFT 原 τ 是曲线 Frenet 挠率（几何，κ≥0 定义性致 E4）；PGT 的 T 是时空联络挠率（规范场，可负可正、无 κ 定义性限制）——新体系须明确采用哪种挠率，前者重蹈 E4，后者是真正的动力学出路")
+
+# ---------------- D. hierarchy 与可证伪 ----------------
+add("D-01", "hierarchy", "hierarchy 仍未解释", "BOUNDARY",
+    "E6：新体系（ρ/m_τ 分区）仍要面对四力强度跨度 ~10³⁹，θ 调参/λ 分层/ρ 跨量级三条路都回到同一 hierarchy——新体系不解释它，只是换存放位置，须作为开放项而非待搬运项")
+add("D-02", "可证伪预言", "能标依赖函数 α_i(E) 预言", "BOUNDARY",
+    "新体系若能给出 α_i(E) 的能标依赖函数（含挠率传播修正），可测于能标扫描实验——比 V3.6 静态分区更接近可证伪；这是新体系的最大增量点")
+add("D-03", "可证伪预言", "物质耦合与 β 通道关系", "BOUNDARY",
+    "若新体系挠率也耦合物质，S/T 耦合约束（走④β通道裁定）仍适用，β 可测两难仍存在；可测预言须走能标扫描或非 β 通道")
+
+# ---------------- E. 立项判定 ----------------
+add("E-01", "立项判定", "是否值得立项", "BOUNDARY",
+    "条件性值得：满足量纲/谱/自由度三条必要得分（E1/E2/E3），且有真实物理对应（PGT）；但 hierarchy 未解释、可证伪预言待构造、ghost 待 PGT 谱分析、须弃 V3.6 核心（E5）——立项须作者拍板接受这四点代价")
+add("E-02", "立项判定", "立项前置清单", "BOUNDARY",
+    "① 明确 Frenet τ vs PGT T（C-02）② 构造 α_i(E) 能标依赖预言（D-02）③ PGT 谱分析排 ghost/tachyon（B-02）④ hierarchy 定位为开放项（D-01）⑤ 新常数登记（c_T+m_τ 进 Ω5'，E7）⑥ 作者显式登记新公设集（A-03/A-04）")
+add("E-03", "立项判定", "本册定位", "PASS",
+    "本册为「立项评估」非立项本身；立项与否须作者拍板；若立项，属**新体系**，须按目录体例重新提交全维审计，评级另起")
+
+# ---------------- 自检 ----------------
+guard("e1_quoted", any(x["id"] == "A-01" and x["verdict"] == "PASS" for x in RES), "T² 动能 c_T 无量纲已登记（回链 E1）")
+guard("e3_quoted", any(x["id"] == "A-02" and x["verdict"] == "PASS" for x in RES), "动力学挠率解 Π 定理已登记（回链 E3）")
+guard("new_system_marked", any(x["id"] == "A-03" and x["verdict"] == "BOUNDARY" for x in RES), "弃 θ=新体系已登记（回链 E5）")
+guard("e9_quoted", any(x["id"] == "A-04" and x["verdict"] == "BOUNDARY" for x in RES), "能标跑动公设已登记（回链 E9）")
+guard("pgf_anchored", any(x["id"] == "C-01" and x["verdict"] == "BOUNDARY" for x in RES), "PGT/Einstein-Cartan 对应已登记")
+guard("concept_risk", any(x["id"] == "C-02" and x["verdict"] == "BOUNDARY" for x in RES), "Frenet τ vs PGT T 错配风险已登记")
+guard("hierarchy_open", any(x["id"] == "D-01" and x["verdict"] == "BOUNDARY" for x in RES), "hierarchy 定位为开放项已登记")
+guard("predictable_alpha", any(x["id"] == "D-02" and x["verdict"] == "BOUNDARY" for x in RES), "α_i(E) 能标预言为新体系增量点已登记")
+guard("assess_not_founding", any(x["id"] == "E-03" and x["verdict"] == "PASS" for x in RES), "本册为评估非立项已定位")
+guard("new_audit_required", any(x["id"] == "E-02" for x in RES), "立项前置清单含重审计要求")
+
+ok_all = all(g["ok"] for g in GUARDS)
+n_pass = sum(1 for x in RES if x["verdict"] == "PASS")
+n_fail = sum(1 for x in RES if x["verdict"] == "FAIL")
+n_bound = sum(1 for x in RES if x["verdict"] == "BOUNDARY")
+
+out = {
+    "title": "TUFT V3.5 · 新体系动力学挠率立项评估",
+    "generated": "2026-10-07",
+    "engine": "TUFT_V3.5_新体系动力学挠率立项评估_2026-10-07.py",
+    "count": {"total": len(RES), "pass": n_pass, "fail": n_fail, "boundary": n_bound},
+    "assessment": "条件性值得立项：量纲/谱/自由度三条得分(E1/E2/E3) + PGT 真实物理对应；代价=弃 V3.6 核心(θ/cos3θ)+hierarchy 未解释+可证伪预言待构造+ghost 待谱分析+常数+2",
+    "precondition_list": "①Frenetτ vs PGT T ②α_i(E) 能标预言 ③PGT 谱分析 ④hierarchy 开放项 ⑤常数登记 ⑥新公设显式登记",
+    "note": "本册为立项评估非立项；立项属新体系须重审计，评级另起",
+    "redline": "数学自洽 ≠ 物理真实；评级 C/L1 维持；回链不重算",
+    "items": RES,
+    "guards": GUARDS,
+    "guard_summary": {"total": len(GUARDS), "pass": sum(1 for g in GUARDS if g["ok"]), "ok": ok_all},
+}
+
+base = os.path.splitext(os.path.abspath(__file__))[0]
+with open(base + ".json", "w", encoding="utf-8") as f:
+    json.dump(out, f, ensure_ascii=False, indent=2)
+
+md = [
+    "# TUFT V3.5 · 新体系动力学挠率立项评估（机器产物）",
+    "",
+    "- 生成时间：2026-10-07",
+    "- 条目 %d ｜ PASS %d ｜ FAIL %d ｜ BOUNDARY %d ｜ 自检 %d / %d" % (len(RES), n_pass, n_fail, n_bound, sum(1 for g in GUARDS if g["ok"]), len(GUARDS)),
+    "- **评估：条件性值得立项**——量纲/谱/自由度三条得分(E1/E2/E3) + PGT 真实物理对应",
+    "- 代价：弃 V3.6 核心(θ/cos3θ) + hierarchy 未解释 + 可证伪预言待构造 + ghost 待谱分析 + 常数+2",
+    "",
+    "## 立项前置清单",
+    "",
+    "1. 明确 **Frenet τ vs PGT T**（概念错配风险，C-02）；",
+    "2. 构造 **α_i(E) 能标依赖预言**（新体系最大增量点，D-02）；",
+    "3. **PGT 谱分析** 排 ghost/tachyon（B-02）；",
+    "4. **hierarchy 定位为开放项**（不搬运，D-01）；",
+    "5. 新常数 **c_T+m_τ 进 Ω5'** 登记（E7）；",
+    "6. 作者显式登记**新公设集**（弃 θ 改 ρ/m_τ + 能标跑动，A-03/A-04）。",
+    "",
+    "## 条目",
+    "",
+    "| ID | 节 | 条目 | 判定 | 摘要 |",
+    "|---|---|---|---|---|",
+]
+for x in RES:
+    md.append("| %s | %s | %s | %s | %s |" % (x["id"], x["sec"], x["item"], x["verdict"], x["detail"]))
+md += [
+    "",
+    "## 自检",
+    "",
+    "| 基线 | 结果 | 取证 |",
+    "|---|---|---|",
+]
+for g in GUARDS:
+    md.append("| %s | %s | %s |" % (g["name"], "PASS" if g["ok"] else "FAIL", g["detail"]))
+md += [
+    "",
+    "## 诚实边界",
+    "",
+    "1. 本册为「立项评估」非立项本身；立项与否须作者拍板；",
+    "2. 若立项，属**新体系**，须按目录体例重新提交全维审计，评级另起（不沿用 V3.6 评级）；",
+    "3. 新体系不解释 hierarchy（E6），只须作为开放项诚实登记；能标跑动为新公设（E9），须作者显式登记；",
+    "4. 若采用 Frenet τ 而非 PGT T，重蹈 E4（κ≥0 定义性）——C-02 概念错配是本册关键提醒；",
+    "5. 红线：数学自洽 ≠ 物理真实；评级 C/L1 维持（对 V3.6 而言）。",
+]
+with open(base + ".md", "w", encoding="utf-8") as f:
+    f.write("\n".join(md))
+
+print("items=%d pass=%d fail=%d boundary=%d guards=%d/%d ok=%s"
+      % (len(RES), n_pass, n_fail, n_bound, sum(1 for g in GUARDS if g["ok"]), len(GUARDS), ok_all))
+raise SystemExit(0 if ok_all else 2)

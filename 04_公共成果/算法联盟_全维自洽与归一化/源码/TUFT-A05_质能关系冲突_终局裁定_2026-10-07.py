@@ -49,6 +49,19 @@ def guard(name, ok, detail):
     GUARDS.append({"name": name, "ok": bool(ok), "取证": detail.replace("|", "/")})
 
 
+# 套件规范：判定计数只用 4 类（PASS/FAIL/BOUNDARY/INFO），且各计数之和须等于总计。
+# 引擎保留「条目」原始富判定词供人工阅读；「计数」键须聚合为 4 类。
+def canon_verdict(v):
+    if v in ("PASS", "FAIL", "BOUNDARY", "INFO"):
+        return v
+    if v == "须标注口径":
+        return "BOUNDARY"
+    if v.startswith("数值不可用"):
+        return "FAIL"
+    # 兜底：未知富词归入 INFO（不应触发；仅防计数漏项）
+    return "INFO"
+
+
 def ratio(k, t):
     """E/(mc²) = (κ+τ) / (2√(κ²+τ²))。r=0 时返回 None。"""
     r = math.hypot(k, t)
@@ -162,7 +175,9 @@ def main():
     # ── 汇总 ───────────────────────────────────────────────────────
     counts = {}
     for r in RESULTS:
-        counts[r["判定"]] = counts.get(r["判定"], 0) + 1
+        k = canon_verdict(r["判定"])
+        counts[k] = counts.get(k, 0) + 1
+    assert sum(counts.values()) == len(RESULTS), "A05 计数聚合后与总计不符"
     g_ok = sum(1 for g in GUARDS if g["ok"])
     payload = {
         "base": BASE,

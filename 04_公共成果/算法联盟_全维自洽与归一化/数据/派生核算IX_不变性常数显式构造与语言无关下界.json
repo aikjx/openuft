@@ -1,0 +1,135 @@
+{
+  "title": "派生核算IX：不变性常数的显式构造与语言无关下界",
+  "engine": "派生核算IX_不变性常数显式构造与语言无关下界.py",
+  "explicit_c": {
+    "c_L_to_Python_bit": 4656,
+    "c_L_to_Python_byte": 582,
+    "c_BF_to_Python_bit": 9984,
+    "c_BF_to_Python_byte": 1248,
+    "note": "由真实可运行解释器源码（UTF-8 字节 × 8）测长，显式可复核"
+  },
+  "invariance_checks": [
+    {
+      "sample": "3/2",
+      "K_L_bit": 7,
+      "K_Python_bit": 4928,
+      "c_bit": 4656,
+      "glue_bit": 272,
+      "holds": true
+    },
+    {
+      "sample": "'A'(65)",
+      "K_BF_bit": 200,
+      "K_Python_bit": 10400,
+      "c_bit": 9984,
+      "glue_bit": 416,
+      "holds": true
+    }
+  ],
+  "O20_closed": true,
+  "O21_closed": true,
+  "O17_untouched": true,
+  "O23_new_open": "c_Python_to_L 不可显式构造（非对称残留）",
+  "provenance": {
+    "nu_min_pos_from_VIII": 10.643856189774723,
+    "C_obs_from_VIII": 8.151770915476666,
+    "bits_F_from_VIII_Mbit": 2.869048
+  },
+  "selfcheck": {
+    "n_ok": 18,
+    "n_all": 18,
+    "items": [
+      {
+        "name": "输入交叉核对：锚表与 V3 逐键一致（10 键）",
+        "ok": true,
+        "note": "零漂移"
+      },
+      {
+        "name": "VIII 产物同源读取：ν_min_pos / C_obs / K(F)",
+        "ok": true,
+        "note": "ν_min_pos = 10.6439 bit、C_obs = 8.1518 bit、K(F) = 2.869 bit（VIII 实测，非重算）"
+      },
+      {
+        "name": "SRC_L 可编译（真实解释器，非占位）",
+        "ok": true,
+        "note": "582 字节"
+      },
+      {
+        "name": "SRC_BF 可编译（真实解释器，非占位）",
+        "ok": true,
+        "note": "1248 字节"
+      },
+      {
+        "name": "interp_L 解码 p/q：3/2 == 1.5",
+        "ok": true,
+        "note": "得 1.5"
+      },
+      {
+        "name": "interp_L 解码 N/10^d：7/1000 == 0.007",
+        "ok": true,
+        "note": "得 0.007"
+      },
+      {
+        "name": "interp_BF 运行：输出 'A'",
+        "ok": true,
+        "note": "得 'A'"
+      },
+      {
+        "name": "c_{L→Python} 显式可构造（>0 且有限）",
+        "ok": true,
+        "note": "4656 bit（582 字节）"
+      },
+      {
+        "name": "c_{BF→Python} 显式可构造（>0 且有限）",
+        "ok": true,
+        "note": "9984 bit（1248 字节）"
+      },
+      {
+        "name": "O-20 闭合：c_ij 由真实解释器测长得到，已非保守占位",
+        "ok": true,
+        "note": "两解释器均为可执行解码函数，无占位标记"
+      },
+      {
+        "name": "不变性 K_Python(3/2) ≤ K_L(3/2) + c_{L→Python} + glue 成立",
+        "ok": true,
+        "note": "K_L=7 bit, K_Python=4928 bit, c=4656 bit, glue=272 bit"
+      },
+      {
+        "name": "不变性 K_Python('A') ≤ K_BF('A') + c_{BF→Python} + glue 成立",
+        "ok": true,
+        "note": "K_BF=200 bit, K_Python=10400 bit, c=9984 bit, glue=416 bit"
+      },
+      {
+        "name": "O-21 闭合：Python 侧穷举深度 = 基准 14 bit + 显式 c_4656 bit",
+        "ok": true,
+        "note": "深度增量 = 4656 bit（显式可算，非未知）"
+      },
+      {
+        "name": "O-21 闭合：穷举器可机械生成（解释器源码 + L 侧穷举器输出）",
+        "ok": true,
+        "note": "L 解释器已显式构造 ⇒ Python 侧穷举器 = SRC_L + L_枚举器，无需重设计"
+      },
+      {
+        "name": "Chaitin 自检：c ≪ K(F)（构造可证，非不可证大数）",
+        "ok": true,
+        "note": "c_max=9984 bit ≪ K(F)=2.869e+06 bit（≈ 2.869 Mbit）"
+      },
+      {
+        "name": "诚实边界：c_{L→Python}(4656 bit) ≫ margin(11.13 bit) ⇒ 不声称闭合 O-17",
+        "ok": true,
+        "note": "O-17 维持「在 9 支码下实用稳健」降级，本册未动"
+      },
+      {
+        "name": "新 OPEN 登记：O-23 非对称残留（c_{Python→L} 不可显式构造）",
+        "ok": true,
+        "note": "Python 图灵完备 / L 仅描述有理数 ⇒ 仅上界可显式转移，下界跨语言仍非对称"
+      },
+      {
+        "name": "红线：c_ij 显式构造不改变任何物理预言的可证伪状态",
+        "ok": true,
+        "note": "本册仅收紧「语言依赖的余项」，未给 TUFT 任何新实验支持"
+      }
+    ]
+  },
+  "elapsed_s": 17.546
+}

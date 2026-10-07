@@ -45,6 +45,19 @@ def guard(name, ok, detail):
     GUARDS.append({"name": name, "ok": bool(ok), "取证": detail.replace("|", "/")})
 
 
+# 套件规范：判定计数只用 4 类（PASS/FAIL/BOUNDARY/INFO），且各计数之和须等于总计。
+# 引擎保留「条目」原始富判定词供人工阅读；「计数」键须聚合为 4 类。
+def canon_verdict(v):
+    if v in ("PASS", "FAIL", "BOUNDARY", "INFO"):
+        return v
+    if v.startswith("未闭环"):
+        return "FAIL"
+    if v in ("部分", "真闭环", "转 ADD-01", "复发"):
+        return "BOUNDARY"
+    # 兜底：未知富词归入 INFO（不应触发；仅防计数漏项）
+    return "INFO"
+
+
 # 原始 9 条声称（依据：主册 §1.6，行号 L86–L97）+ 漏列的 B-01
 CLAIMS = [
     {"id": "A-03", "声称": "κ,τ,f 数值缺失", "状态": "未闭环",
@@ -114,7 +127,9 @@ def main():
 
     counts = {}
     for r in RESULTS:
-        counts[r["判定"]] = counts.get(r["判定"], 0) + 1
+        k = canon_verdict(r["判定"])
+        counts[k] = counts.get(k, 0) + 1
+    assert sum(counts.values()) == len(RESULTS), "T4 计数聚合后与总计不符"
     g_ok = sum(1 for g in GUARDS if g["ok"])
     payload = {
         "base": BASE,

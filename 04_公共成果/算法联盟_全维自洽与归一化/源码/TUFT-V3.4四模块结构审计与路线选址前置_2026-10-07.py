@@ -18,6 +18,7 @@ import json
 import math
 import time
 import random
+import io
 
 try:
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -53,6 +54,7 @@ C_U = (1, 0, -1)       # 光速
 RATE_U = (0, 0, -1)    # s^-1
 INV_LEN_U = (-1, 0, 0)
 AREA_U = (2, 0, 0)
+U = lambda L, M, T: (L, M, T)
 
 
 def addu(a, b):
@@ -238,6 +240,255 @@ def sec_B():
     add('B-08', 'B', 'anomaly_coefficient_unlocked', 'INFO',
         '1/(16π^2) 系数：既未声明 R̃ 的定义约定（ε-缩并与形式语言之间差 2 的幂次因子），也未给出任何推导；'
         '而它直接乘在全部定量结果上 => 登记为 [C] 外部输入，必须先锁定（连同 C1..C3 / D1..D2）才谈得上 Y_B 定量')
+
+
+def sec_C():
+    # §三 克尔剖面：τ 量纲先核
+    # [ω]=T^-1, [ℓ_P²]=L², [1/c]=T/L => [ω ℓ_P²/c] = L ；[a² sin²θ/Σ²] = L²/L⁴ = L^-2
+    tau_first = addu(addu(U(0, 0, -1), U(2, 0, 0)), U(-1, 0, 1))   # [ω ℓ_P²/c] = L
+    tau_total_unit = addu(tau_first, U(-2, 0, 0))                   # *[a² sin²θ/Σ²]=L^-2 => L^-1
+    KEY['kerr'] = {'tau_profile_unit': tau_first, 'tau_total_unit': tau_total_unit}
+    add('C-01', 'C', 'tau_profile_dimension_ok', 'PASS',
+        'τ(r,θ) 剖面量纲自洽（仅此一格通过）：[ω ℓ_P²/c] = L，[a² sin²θ/Σ²] = L^-2 '
+        '=> [τ] = L^-1，与《单位约定与符号规范 v1.0》的台账（[τ]=L^-1）一致')
+    # κ = Λ_0 - c τ ：量纲混排
+    # [κ]=L^-1, [Λ_0]=L^-1, [c·τ] = (L T^-1)(L^-1) = T^-1
+    add('C-02', 'C', 'kappa_def_mixes_dimensions', 'FAIL',
+        'κ = Λ_0 - c·τ 量纲混排：左端 [κ]=L^-1，右端第二项 [c·τ] = (L·T^-1)(L^-1) = T^-1，'
+        '两项不可相减。同册 §一 又把 c 当作带 β_c 的跑动耦合（跑动量须有量纲），'
+        '而本式又要求 c 无量纲才能相减 => c 在两份需求间互斥（登记 O-V34-C）。'
+        '《符号规范 v1.0》已把 c 列为 L·T^-1，本式违反该台账')
+    # 「κ+τc = Λ_0 是守恒律」实为定义式
+    add('C-03', 'C', 'definitional_identity_mislabelled_law', 'FAIL',
+        '「κ+τc=Λ_0 是保持常数的强几何守恒律」实为**定义式**而非定律：κ 本就被定义为 Λ_0 - cτ，'
+        '二者之和恒等于 Λ_0、与任何机动无关 => 该「守恒律」的信息量为零，属过度陈述（claims 级 over-claim）')
+    # 与核心恒等式 κ²+τ²=Ω² 相容性
+    # 代入 κ = Λ_0 - cτ（取 c=1 量纲兼容口径），得 (Λ_0-τ)² + τ² = Ω²
+    # => 2τ² - 2Λ_0 τ + (Λ_0² - Ω²) = 0 => τ 至多两个与 (r,θ) 无关的常数值
+    Lambda0 = 1.0
+    c1 = 1.0
+    taus = [0.0, 0.2, 0.5, 0.8, 1.0]
+    vals = [(Lambda0 - c1 * t) ** 2 + t ** 2 for t in taus]
+    mean = sum(vals) / float(len(vals))
+    spread_pct = (max(vals) - min(vals)) / mean * 100.0
+    KEY['kerr']['core_id_spread_pct'] = spread_pct
+    add('C-04', 'C', 'conflict_with_core_identity', 'FAIL',
+        '与核心恒等式 κ²+τ²=Ω² 冲突：联立 κ=Λ_0-cτ 得 2τ²-2Λ_0τ+(Λ_0²-Ω²)=0，'
+        '是关于 τ 的**常系数二次方程** => τ 至多取两个与 (r,θ) 无关的常数值；'
+        '而所设 τ(r,θ) 沿视界连续变化。数值示证（Λ_0=1, c=1，τ/Λ_0 取 0~1 五点）：'
+        'κ²+τ² 相对展布 %.2f%% => 两条关系至多取其一：要么放弃非均匀剖面，要么放弃核心恒等式'
+        % spread_pct)
+    # 熵式对齐 BH 熵 => 确定 Λ_0 所需量纲
+    # S_Kerr = 2π Λ_0 A /(ħ c)；Bekenstein-Hawking S = k_B c³ A/(4G ħ)
+    # 要求 [Λ_0] + [A] - [ħ c] = [c³]/[4G ħ] （即每面积量纲 L^-2）
+    req_Lambda0 = addu(addu(U(2, 0, 0), U(3, 0, -3)), subu(U(0, 0, 0), addu(HB_U, C_U)))
+    # = (2,0,0)+(3,0,-3) - (3,1,-2) = (2,0,0) - (3,1,-2) = (-1,-1,2)  -> 即 (M L T^-2)=N
+    Fplanck_over_8pi = C_SI ** 4 / (8.0 * math.pi * G_SI)  # = c⁴/(8πG)，单位 N
+    KEY['kerr']['req_Lambda0_unit'] = req_Lambda0
+    add('C-05', 'C', 'entropy_aligns_to_force_unit', 'FAIL',
+        '熵式与 BH 熵对齐的反解：Bekenstein–Hawking 为 S = k_B c³ A/(4G ħ)；使 TUFT 式与其一致须'
+        'Λ_0 = c⁴/(8πG) = %.4e N（= 普朗克力/8π），而 §三 的 Λ_0 是曲率、须取 L^-1 '
+        '=> **同一 Λ_0 被要求两个互斥量纲**（机器核验所需量纲 = %s 而非台账的 L^-1）。'
+        '且这一步是**用已知 BH 熵反解 Λ_0**（逆构造），扣除后新增预言为零'
+        % (Fplanck_over_8pi, req_Lambda0))
+    add('C-06', 'C', 'entropy_loses_G', 'FAIL',
+        '熵式的信息论清算：TUFT 式 S = 2π Λ_0 A/(ħ c) 中**不含 G**；要复现 BH 熵必须令 Λ_0 = c⁴/(8πG)，'
+        '即把 G 吸收进 Λ_0。但 Λ_0 在 §三 内无任何取值约束（可任意缩放）'
+        '=> 该「TUFT 得 BH 熵」为构造性拟合，不提供独立的引力熵预言；'
+        '且 §四 又用 G 作引力耦合，同一框架下 G 既出现又消失，口径不自洽')
+
+
+def sec_D():
+    # §四 坍缩率 Γ ∝ G ∫[(Δκ)+c(Δτ)]² dV
+    # 逐项量纲：G=(3,-1,-2); Δκ=L^-1 => (Δκ)²=(-2,0,0); dV=(3,0,0)
+    expr = addu(addu(G_U, U(-2, 0, 0)), U(3, 0, 0))  # (4,-1,-2)
+    missing = subu(RATE_U, expr)                                # (-4,1,1)
+    sol = solve_mix(missing, [G_U, HB_U, C_U])
+    KEY['collapse'] = {'expr_unit': expr, 'missing_unit': missing, 'missing_solution': sol}
+    add('D-01', 'C', 'collapse_rate_dimension_gap', 'FAIL',
+        '坍缩率量纲不足：G∫[(Δκ)+c(Δτ)]² dV 的量纲为 %s（率应为 s^-1 = %s）；'
+        '最小补齐因子的量纲为 %s，机器解出 = G^{%d} ħ^{%d} c^{%d} = c⁴/(G² ħ) '
+        '=> 补上后 Γ ∝ G·c⁴/(G² ħ) = c⁴/(G ħ)，**Γ 对 G 的依赖由「正比」翻转为「反比」**'
+        '（G 越小坍缩越快），与文本「引力驱动坍缩」的单调性相反'
+        % (expr, RATE_U, missing, sol[0], sol[1], sol[2]))
+    add('D-02', 'D', 'collapse_rate_misses_matter', 'FAIL',
+        '坍缩率表达式不含任何物质属性（质量、尺度、自旋、密度 ρ），只含几何场差 Δκ、Δτ；'
+        '而文本要区分「微观 vs 宏观」=> 该判别在公式层面无支撑：无物质量纲则无从区分大小，'
+        '且 Δκ、Δτ 与物质的**源关系**（κ,τ ← 物质能量动量）从未给出 => 表达式不可算、不可测')
+    add('D-03', 'D', 'torsion_term_unfalsifiable', 'FAIL',
+        '新增挠率项 c(Δτ)² 是一**自由系数**（c 既是跑动耦合又在此处当放大因子），'
+        '任何实验界都可通过调 c 规避 => 在当前状态下该 TUFT 增量**不可证伪**；'
+        '要在 §四 产出可检验预言，须先把 c 由作用量变分固定（回链 D-01 量纲修复 + §三 O-V34-C）')
+    # 回链：既有 V2 双分量螺旋驻波孤子可证伪性审计、V3.6 动力学挠率终局审计
+    add('D-04', 'D', 'backlink_existing_audits', 'INFO',
+        '回链：本段「孤子/退相干」命题在既有产物已审计 —— '
+        '源码/v_eq_c_TUFT_V2_双分量螺旋驻波孤子_可证伪性审计.py（31 PASS/6 BOUNDARY/0 FAIL）；'
+        '源码/TUFT_V3.6_ESCAPE-AUDIT_动力学挠率逃生路线终局审计_2026-10-04.py（结论：动力学挠率每引入 1 个常数即 +1 自由度，'
+        '遇 E4/E9 阻塞）。本册不重算，二者结论直接继承：孤子/退相干路线在 TUFT 当前形态下仍属不可证伪或阻塞')
+
+
+def sec_E():
+    # 四候选路线的前置缺口矩阵（有依赖，无打分）
+    KEY['routes'] = {
+        'r1_kerr_plot': {
+            'desc': '克尔剖面二维绘图（等高线）',
+            'prereq_open': ['C-03', 'C-04', 'C-05', 'C-06', 'O-V34-C'],
+            'value': '仅产出图像',
+            'verdict': '可做但价值为零',
+            'note': '剖面是定义在式 κ=Λ_0-cτ 上的；该式与核心恒等式 κ²+τ²=Ω² 冲突、且 Λ_0 量纲未定'
+                    '=> 画出的图没有判定地位，只是指定函数的可视化'
+        },
+        'r2_YB_ODE': {
+            'desc': 'Y_B 完整 ODE 时间演化积分',
+            'prereq_open': ['B-02', 'B-03', 'B-04', 'B-07', 'D2_torsion_dynamics'],
+            'value': '最高（有唯一外部靶 Y_B=8.7e-11，且可接标准宇宙学脚手架）',
+            'verdict': '阻塞于上游',
+            'note': '须先有 τ_bg(t) 的动力学方程；而挠率动力学是 TUFT 已知开放项'
+                    '（ESCAPE-AUDIT 结论：引入动力学挠率每 +1 常数、遇 E4/E9 阻塞；C2 仅 Proca 健康）'
+                    '且本册 B 段的量纲三重口径必须先闭合'
+        },
+        'r3_soliton_decoherence': {
+            'desc': '孤子退相干时间定量 + 实验判据',
+            'prereq_open': ['D-01', 'D-02', 'D-03'],
+            'value': '中（可接 Diósi–Penrose 实验边界）',
+            'verdict': '当前不可证伪',
+            'note': '新增挠率项系数自由 => 任何实验界可规避；须先把 §四 量纲补齐且系数固定'
+        },
+        'r4_write_paper': {
+            'desc': '整合撰写 TUFT V3.4 完整论文（PRD 格式）',
+            'prereq_open': ['G0_all'],
+            'value': '交付物',
+            'verdict': '暂缓',
+            'note': '把四条未闭合的 Cauchy 量化缺陷固化成「交付」会污染产物；'
+                    '须先完成 G0 关闭清单'
+        },
+    }
+    add('E-01', 'E', 'route1_kerr_plot', 'INFO',
+        '路线1（克尔剖面绘图）：可实现，但 C-03/C-04/C-06 未解时，剖面是定义在式 κ=Λ_0-cτ 上的图像，'
+        '没有判定地位（只是指定函数的可视化）。前置 = 先解 C-03/C-04 的恒等式冲突与 C-05/C-06 的 Λ_0 口径')
+    add('E-02', 'E', 'route2_YB_ODE', 'INFO',
+        '路线2（Y_B 全 ODE 演化）：信息价值最高（唯一外靶 Y_B=8.7e-11，可接 H(T)/s(T)/sphaleron 标准脚手架），'
+        '但阻塞于两处上游：① τ_bg(t) 动力学方程（挠率动力学，TUFT 已知开放项，ESCAPE-AUDIT 判 +1 常数/遇 E4/E9 阻塞）；'
+        '② B 段量纲三重口径与参数自由度账未闭合。=> 当前不可独立执行')
+    add('E-03', 'E', 'route3_soliton_decoherence', 'INFO',
+        '路线3（孤子退相干 + 实验判据）：可接 Diósi–Penrose 实验边界，但新增挠率项系数自由（D-03），'
+        '任何实验界可通过调 c 规避 => 当前不可证伪。前置 = D-01 量纲修复 + 源关系 + 系数固定')
+    add('E-04', 'E', 'route4_write_paper', 'INFO',
+        '路线4（写 V3.4 论文）：会把四条未闭合的量化缺陷（A~D 共 4 处 FAIL 簇、约 17 条 FAIL）固化成交付；'
+        '按既有轮次纪律（体例门禁/收口门禁），应在 G0 完成后才动笔')
+    add('E-05', 'E', 'common_prereq_G0', 'INFO',
+        '四条路线的共同前置 G0（零/低成本关闭清单，位于「选路」之前）：'
+        '① 量纲表闭环（A-02/B-02/B-03/D-01 的缺口，含 β 符号台账 F2 级修复）；'
+        '② 符号台账：β 双重重载改名（A-07）、c 的口径登记 O-V34-C；'
+        '③ 给出 κ,τ ← 物质的源关系（§四 缺、§三 隐含但未写）；'
+        '④ 把 C1..C3 / D1..D2 / 1/(16π²) / Λ_0 / 手征耦合 β / Γ 的量纲因子 登记为 [C] 外部输入并逐项给来源')
+    add('E-06', 'E', 'no_scoring_no_choice', 'INFO',
+        '红线声明：本册**未对任何路线打分、排序或推荐**（引擎无 score/rank/recommend 字段）；'
+        '四路线的取舍权保留给用户。本册只给「依赖矩阵 + 共同前置 G0 + 各路线阻塞点」，'
+        '不代选；E-02 vs E-04 一类裁决由用户拍板')
+
+
+# ===== 自检（约 12 项，全部为机器可读的硬判据）=====
+def run_guards():
+    guard('uv_constraint_not_satisfied', abs(KEY['uv']['Q']) > 1e-6,
+          'A-02：默认系数约束 Q = %.6e ≠ 0' % KEY['uv']['Q'])
+    guard('uv_newton_returns_trivial', abs(KEY['uv']['newton_root']) < 1e-20 and KEY['uv']['newton_steps'] >= 50,
+          'A-03：示例代码 findroot 实际落到 G* = %.3e（平凡高斯不动点）' % KEY['uv']['newton_root'])
+    guard('uv_ray_residuals_zero', KEY['uv']['ray_residual_max'] < 1e-12,
+          'A-04：齐次退化构造的系数，4 个 λ 残差均 <= %.1e' % KEY['uv']['ray_residual_max'])
+    ft = KEY['finetune_check']
+    guard('uv_finetuning_fraction_small', ft['abs_frac'] < 0.05,
+          'A-06：随机系数满足约束 |Q|<1e-3 的比例 %.3f%%' % (100.0 * ft['abs_frac']))
+    b = KEY['baryon']
+    guard('yb_scan_far_above_obs', min(b['scan_YB']) > 1e6 * Y_OBS,
+          'B-06：示例 4 组合 Y_B 最小 %.4f > 1e6 × 观测' % min(b['scan_YB']))
+    guard('yb_triple_spread_large', b['spread_dex'] > 6.0,
+          'B-05：βτ 三个口径跨度 %.2f 个量级' % b['spread_dex'])
+    k = KEY['kerr']
+    guard('kerr_core_id_spread', k['core_id_spread_pct'] > 10.0,
+          'C-04：κ²+τ² 沿视界相对展布 %.2f%%' % k['core_id_spread_pct'])
+    guard('kerr_Lambda0_unit_conflict', k['tau_total_unit'] == INV_LEN_U and k['req_Lambda0_unit'] != INV_LEN_U,
+          'C-05：Λ_0 在本册须取 ' + str(k['req_Lambda0_unit']) + '、与台账 L^-1 互斥')
+    cl = KEY['collapse']
+    guard('collapse_missing_solution_found', cl['missing_solution'] == (-2, -1, 4),
+          'D-01：最小补齐因子解 G^{%d} ħ^{%d} c^{%d}' % cl['missing_solution'])
+    guard('no_scoring_fields', not any('score' in r['item'] or 'rank' in r['item'] or 'recommend' in r['item']
+                                      for r in RES),
+          'E-06：引擎不含 score/rank/recommend 字段（自检 1/1）')
+    guard('determinism_Q', abs(KEY['uv']['Q'] - (C1D * (-D1D / D2D) ** 2 + C2D * (-D1D / D2D) + C3D)) < 1e-15,
+          '确定性：Q 两次计算一致')
+    return all(g['ok'] for g in GRD)
+
+
+def write_outputs():
+    os.makedirs(DATA, exist_ok=True)
+    stamp = time.strftime('%Y-%m-%d')
+    base = 'TUFT-V3.4四模块审计与路线选址前置_' + stamp
+    counts = {}
+    for r in RES:
+        counts[r['verdict']] = counts.get(r['verdict'], 0) + 1
+    out = {
+        'title': 'TUFT V3.4 四模块结构审计 + 路线选址前置（第十七轮）',
+        'date': stamp, 'counts': counts, 'results': RES,
+        'guards': GRD, 'key_numbers': KEY,
+        'routes': KEY.get('routes', {}),
+    }
+    jpath = os.path.join(DATA, base + '.json')
+    with io.open(jpath, 'w', encoding='utf-8') as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
+    mpath = os.path.join(DATA, base + '.md')
+    with io.open(mpath, 'w', encoding='utf-8') as f:
+        f.write('# ' + out['title'] + '\n\n')
+        f.write('日期：' + stamp + '\n\n')
+        f.write('条目计数：' + '  '.join('%s=%d' % (k, v) for k, v in sorted(counts.items())) + '\n\n')
+        f.write('## 条目\n\n')
+        for r in RES:
+            f.write('- **[%s] %s** `%s/%s` —— %s\n' % (r['verdict'], r['id'], r['section'], r['item'], r['detail']))
+        f.write('\n## 自检\n\n')
+        for g in GRD:
+            f.write('- [%s] %s —— %s\n' % ('PASS' if g['ok'] else 'FAIL', g['name'], g['detail']))
+        f.write('\n## 关键数值\n\n')
+        f.write('```\n' + json.dumps(KEY, ensure_ascii=False, indent=2) + '\n```\n')
+    return jpath, mpath, counts
+
+
+# ===== 主流程（含 A-06 的随机抽样，须先执行再写 KEY）=====
+if __name__ == '__main__':
+    import io
+    t0 = time.time()
+    sec_A()
+    sec_B()
+    # A-06 随机抽样结果回填到 KEY（供自检读取，不污染来料常数）
+    rnd = random.Random(20261007)
+    tot = hits = hits_rel = 0
+    for _ in range(20000):
+        a1 = rnd.uniform(-1, 1); a2 = rnd.uniform(-1, 1); a3 = rnd.uniform(-1, 1)
+        b1 = rnd.uniform(-1, 1); b2 = rnd.uniform(-1, 1)
+        if abs(b2) < 0.1:
+            continue
+        tot += 1
+        kk = -b1 / b2
+        q = a1 * kk * kk + a2 * kk + a3
+        scale = abs(a1 * kk * kk) + abs(a2 * kk) + abs(a3)
+        if abs(q) < 1e-3:
+            hits += 1
+        if scale > 0 and abs(q) / scale < 1e-3:
+            hits_rel += 1
+    KEY['finetune_check'] = {'samples': tot, 'abs_hits': hits, 'abs_frac': hits / float(tot),
+                             'rel_hits': hits_rel, 'rel_frac': hits_rel / float(tot)}
+    sec_C()
+    sec_D()
+    sec_E()
+    ok = run_guards()
+    jpath, mpath, counts = write_outputs()
+    n_fail = counts.get('FAIL', 0)
+    n_pass = counts.get('PASS', 0)
+    print('\n==== 第十七轮 TUFT V3.4 审计 完成 ====')
+    print('条目：' + '  '.join('%s=%d' % (k, v) for k, v in sorted(counts.items())))
+    print('自检通过：%s  退出码：%d' % (ok, 0 if ok else 1))
+    print('数据产物：\n  ' + jpath + '\n  ' + mpath)
+    print('耗时 %.2fs' % (time.time() - t0))
+    sys.exit(0 if ok else 1)
 
 
 # ---APPEND-HERE---
