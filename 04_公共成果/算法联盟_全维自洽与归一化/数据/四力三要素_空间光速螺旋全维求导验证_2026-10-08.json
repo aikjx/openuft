@@ -1,0 +1,571 @@
+{
+  "title": "四力三要素 · 空间光速螺旋（v=c）全维求导验证",
+  "date": "2026-10-08",
+  "engine": "源码/四力三要素_空间光速螺旋全维求导验证_2026-10-08.py",
+  "counts": {
+    "PASS": 19,
+    "FAIL": 5,
+    "BOUNDARY": 1
+  },
+  "total_items": 25,
+  "guards": {
+    "total": 18,
+    "ok": 18
+  },
+  "items": [
+    {
+      "id": "A-01",
+      "status": "PASS",
+      "title": "速率分解 |dr/dt|^2 = (R*Omega)^2 + u^2 = c^2",
+      "expect": "c = 2.997925E+8",
+      "actual": "|r'| = 2.997925E+8 m/s，相对偏差 2.001e-16",
+      "note": "闭式反解出的 (R,u,Omega) 使弧长速率精确等于 c，公设 P1 与参数化自洽"
+    },
+    {
+      "id": "A-02",
+      "status": "PASS",
+      "title": "Frenet 曲率 kappa = |r' x r''|/|r'|^3 = R*Omega^2/c^2",
+      "expect": "kappa = 1.000000E+12 m^-1",
+      "actual": "解析导数 1.000000E+12 / 有限差分 1.000000E+12，相对偏差 9.000e-16 / 3.173e-08",
+      "note": "三路（闭式、解析导数、纯数值差分）一致"
+    },
+    {
+      "id": "A-03",
+      "status": "PASS",
+      "title": "Frenet 挠率 tau = det(r',r'',r''')/|r' x r''|^2 = u*Omega/c^2",
+      "expect": "tau = 6.000000E+11 m^-1",
+      "actual": "解析导数 6.000000E+11（偏差 1.667e-16）/ 有限差分 6.000212E+11（偏差 3.530e-05，三阶差分固有精度）",
+      "note": "解析路机器精度一致；差分路仅到量级（h^3~1e-80 的浮点抵消，非理论问题）"
+    },
+    {
+      "id": "A-04",
+      "status": "PASS",
+      "title": "三重奏 kappa^2 + tau^2 = (Omega/c)^2（v=c 特化）",
+      "expect": "两边逐位相等",
+      "actual": "相对偏差 0.000000E+6（60 位）",
+      "note": "回链第 7 章式 (4)：三重奏是 v=c 螺旋的数学恒等式，求导即得"
+    },
+    {
+      "id": "A-05",
+      "status": "PASS",
+      "title": "逆映射闭式 Omega=c*rho, R=kappa/rho^2, u=tau*c/rho（rho=sqrt(k^2+t^2)）",
+      "expect": "回代 (kappa,tau) 复原",
+      "actual": "最大相对偏差 3.333333E-60（60 位）",
+      "note": "给定 (kappa,tau) 唯一确定螺旋三参量 (R,u,Omega)：自由度 0"
+    },
+    {
+      "id": "A-06",
+      "status": "PASS",
+      "title": "加速度分解 a = c^2*kappa*N（切向 0、副法向 0）",
+      "expect": "|a| = c^2*kappa = 8.987552E+28 m/s^2",
+      "actual": "a·T = 0.000e+00, a·N = 8.987552E+28, a·B = 0.000e+00（|a| 归一）",
+      "note": "**tau 在加速度（=力）中系数严格为 0**：v=c 常量使切向导数为零、副法向无分量"
+    },
+    {
+      "id": "A-07",
+      "status": "PASS",
+      "title": "三阶 jerk 分解 j = -c^3*kappa^2*T + c^3*kappa*tau*B",
+      "expect": "j·B = c^3*kappa*tau = 1.616640E+49",
+      "actual": "j·T = -2.694400E+49, j·B = 1.616640E+49, |j·N|/|j·B| = 0.000e+00",
+      "note": "tau 只在【三阶】副法向出现；标准力学是二阶的 ⇒ tau 进不到力"
+    },
+    {
+      "id": "A-08",
+      "status": "PASS",
+      "title": "康普顿闭合：Omega=omega 且 E=hbar*omega=m*c^2 ⇒ sqrt(kappa^2+tau^2) = m*c/hbar",
+      "expect": "hbar*Omega = m*c^2",
+      "actual": "电子 rho=2.589605E+12 m^-1（康普顿波长 3.861593E-13 m）、Omega=7.763441E+20 s^-1；相对偏差 2.443e-60",
+      "note": "频率映射公设一旦采取，几何不变量 rho 被质量锁死为康普顿波数"
+    },
+    {
+      "id": "B-01",
+      "status": "PASS",
+      "title": "力的大小 |F| = m*c^2*kappa（由 A-06 求导直接得到）",
+      "expect": "[m][c]^2[kappa] = L^1 M^1 T^-2 = [力]",
+      "actual": "L^1 M^1 T^-2 = 力量纲 ✓；质子 @ kappa=1.000000E+12 m^-1 ⇒ |F| = 1.503278E+2 N",
+      "note": "这是本册唯一一条【纯求导、无需任何外部耦合输入】的三要素读数"
+    },
+    {
+      "id": "B-02",
+      "status": "PASS",
+      "title": "自力标度 F_self = m^2*c^3/hbar = alpha*(m*c^2/r_classical)",
+      "expect": "两路恒等（比值 = 1）",
+      "actual": "电子 F_self = 2.120137E-1 N（r_e=2.817940E-15 m，比值 1.000000E+0）｜质子 F_self = 7.147950E+5 N",
+      "note": "求导+康普顿映射给出的力的量级是【自力】标度（电子 ~0.212 N），它不是引力、不是电磁、与任何已知相互作用都不对应"
+    },
+    {
+      "id": "B-03",
+      "status": "PASS",
+      "title": "力的方向 F ∥ N（主法向），对螺旋恒指向轴：N·r̂ = -1",
+      "expect": "N·r̂ = -1 恒成立",
+      "actual": "5 个时刻 N·r̂ = ['-1.000000000000000', '-1.000000000000000', '-1.000000000000000', '-1.000000000000000', '-1.000000000000000']，最大偏差 0.000e+00",
+      "note": "**方向要素在求导层恒为向心、零信息量**：它不随 kappa/tau/Omega 变化，因此【排斥型力（同号电荷相斥）无法由该几何导出】"
+    },
+    {
+      "id": "B-04",
+      "status": "PASS",
+      "title": "距离（编码层）：kappa = alpha*ƛ_C/r^2 ⇒ |F| = alpha*hbar*c/r^2 逐位还原库仑",
+      "expect": "F = k_e*e^2/r^2 = 2.307078E+2 N（r=1 fm）",
+      "actual": "编码式得 2.307078E+2 N，相对偏差 6.528982E-11；恒等式 alpha*hbar*c = k_e*e^2 自检 1.000000E+0",
+      "note": "**注意这是编码不是导出**：求导只给 |F|=m*c^2*kappa；把 kappa 取成 alpha*ƛ_C/r^2 就把耦合 alpha 与康普顿波长塞回了几何"
+    },
+    {
+      "id": "B-05",
+      "status": "FAIL",
+      "title": "距离（求导层）：Omega=omega 常数 ⇒ rho=kappa_max 常数 ⇒ |F| 常数（不衰减）",
+      "expect": "四力均需 |F| ∝ 1/r^2",
+      "actual": "为还原 1/r^2，所需 kappa 从 r=1 fm 的 1.534698E+12 变到 r=1 m 的 1.534698E-18（跨 1.000000E+30 倍），⇒ 三重奏要求 Omega 同步跨 1.000000E+30 倍，与 Omega=omega（内禀单色频率）正面冲突",
+      "note": "**求导层给不出 1/r^2**：v=c 螺旋 + 内禀频率 ⇒ 力是常数，与四种已知力全不符"
+    },
+    {
+      "id": "B-06",
+      "status": "FAIL",
+      "title": "四力反解表（三重奏可编码条件 kappa <= rho = m*c/hbar）",
+      "expect": "4/4 可编码",
+      "actual": "3/4 可编码；越界：弱 (alpha_2(M_Z), r=1 am)",
+      "note": "越界者所需曲率超过质子康普顿波数 ⇒ 该力无法由质子螺旋承载"
+    },
+    {
+      "id": "B-07",
+      "status": "FAIL",
+      "title": "引力编码的螺旋尺度：R = 1/kappa 与周期 T = 2*pi/Omega 是否落在物理可达范围",
+      "expect": "R ≲ 可观测宇宙、T ≲ 宇宙年龄",
+      "actual": "R = 8.050779E+53 m = 9.148612E+26 倍可观测宇宙；T = 1.687318E+46 s = 3.878892E+28 倍宇宙年龄",
+      "note": "**几何编码引力需要一个比可观测宇宙还大的螺旋半径、比宇宙年龄还长的周期**⇒ 该编码无物理承载物（与 ADD-04 的「标度是编码非推导」同构）"
+    },
+    {
+      "id": "C-01",
+      "status": "FAIL",
+      "title": "三约束互斥（动力学推广）：{v=c 螺旋}{Omega=omega 内禀频率}{F ∝ 1/r^2} 三者不相容",
+      "expect": "三约束可同时成立",
+      "actual": "1/r^2 要求 F(1fm)/F(10fm) = 1.000000E+2，而 Omega=omega 常数（⇒ rho、kappa 上界常数）给 1.000000E+0，缺口 1.000000E+2 倍",
+      "note": "回链第 7 章三约束互斥定理（v_path=c, u=c, R>0 ⇒ ∅）：本册是它在【力】层面的推广版，互斥项由「轴向速度=c」换成「力的距离衰减」"
+    },
+    {
+      "id": "C-02",
+      "status": "FAIL",
+      "title": "传播速度–力大小互斥：由 kappa/tau = v_perp/v_par 得 F = m*c^2*rho*sqrt(1-beta^2)",
+      "expect": "既能以光速传播（beta≈1）又带非零力",
+      "actual": "beta=0 ⇒ F/Fmax=1（但不传播）；beta=1-1e-30 ⇒ F/Fmax=1.414e-15；回代残差 4.674e-16",
+      "note": "**求导硬结论：在 v=c 螺旋框架内，力与传播速度直接互斥**——引力必须以 c 传播（beta≈1），而 beta→1 时 F→0 ⇒ 该框架承载不了引力"
+    },
+    {
+      "id": "C-03",
+      "status": "PASS",
+      "title": "牙齿（负向测试）：固定 kappa、tau 跨 1.000000E+2 倍，加速度大小是否变化",
+      "expect": "|a| = c^2*kappa 与 tau 无关（若有人声称 tau 贡献力，本条会红）",
+      "actual": "tau/kappa ∈ [0.1, 0.6, 2.0, 10.0] 四条螺旋：|a| 相对极差 5.872e-16，a·B/|a| ≤ 4.893e-17",
+      "note": " teeth 生效：tau 对力的贡献被机器判为严格零，且该判定可被推翻（不是恒真断言）"
+    },
+    {
+      "id": "C-04",
+      "status": "BOUNDARY",
+      "title": "层次裁定：方向要素在两层上的结论相反，须分层引用",
+      "expect": "两层结论可统一",
+      "actual": "求导层（本册 B-03）：3D 力方向恒沿主法向、N·r̂ = -1，零信息；ADD-03 层：参数流形 (kappa,tau) 上 ƒ̂(θ) 跨度 360°——该跨度来自外加函数 Omega=lambda*cos3θ，非求导所得",
+      "note": "两条不矛盾但**不可混用**：把 ADD-03 的 360° 当作「力的方向已由几何导出」会越层；回链 突破_TUFT-MATH-PROOF-ADD-03_N5方向要素攻坚"
+    },
+    {
+      "id": "C-05",
+      "status": "PASS",
+      "title": "三要素二分账（本册总裁定）",
+      "expect": "求导可得项应被明确列出",
+      "actual": "派生（求导即得）：大小形式 |F|=m*c^2*kappa、方向 N（恒向心）、kappa/tau=v_perp/v_par、三重奏、逆映射；外部输入（求导不可得）：kappa 的空间剖型 kappa(r)、耦合系数 alpha、质量标度（康普顿锚）、有限力程截断、排斥型方向",
+      "note": "三要素中【大小与方向的「形式」可导】，【大小的具体数值、方向的可区分性、距离的衰减律】全为输入"
+    },
+    {
+      "id": "D-01",
+      "status": "PASS",
+      "title": "量纲审计：|F| = m*c^2*kappa",
+      "expect": "L^1 M^1 T^-2",
+      "actual": "L^1 M^1 T^-2 ✓",
+      "note": "力"
+    },
+    {
+      "id": "D-02",
+      "status": "PASS",
+      "title": "量纲审计：既有势能式 E = (hbar*c/2)(kappa+tau)",
+      "expect": "应为L^2 M^1 T^-2",
+      "actual": "L^2 M^1 T^-2 ✓ = 能量",
+      "note": "**自抓更正**：起稿时手算曾判该式为「动量」并据此断言 F=-grad(E) 少一次求导；机器兜底（Fraction 指数向量）确认 [hbar*c*kappa] = L^2 M^1 T^-2 = 【能量】，故 F = -grad(E) 量纲成立（能量/L = 力）。该式量纲层面无罪，其问题在别处（kappa,tau 的空间剖型为输入），本册不重复判它 FAIL"
+    },
+    {
+      "id": "D-03",
+      "status": "PASS",
+      "title": "量纲审计：Omega = c*sqrt(kappa^2+tau^2)",
+      "expect": "L^0 M^0 T^-1",
+      "actual": "L^0 M^0 T^-1 ✓",
+      "note": "角速度"
+    },
+    {
+      "id": "D-04",
+      "status": "PASS",
+      "title": "量纲审计：kappa = alpha*ƛ_C/r^2 = alpha*hbar/(m*c*r^2)",
+      "expect": "L^-1 M^0 T^0",
+      "actual": "L^-1 M^0 T^0 ✓",
+      "note": "曲率"
+    },
+    {
+      "id": "D-05",
+      "status": "PASS",
+      "title": "量纲审计：jerk 副法向项 c^3*kappa*tau",
+      "expect": "L^1 M^0 T^-3",
+      "actual": "L^1 M^0 T^-3 ✓",
+      "note": "加加速度（LT^-3）"
+    }
+  ],
+  "guard_list": [
+    {
+      "id": "g-A01",
+      "ok": true,
+      "desc": "速率分解残差 < 1e-12",
+      "detail": "2.001e-16"
+    },
+    {
+      "id": "g-A02",
+      "ok": true,
+      "desc": "曲率三路对拍 < 1e-6",
+      "detail": "9.000e-16 / 3.173e-08"
+    },
+    {
+      "id": "g-A03",
+      "ok": true,
+      "desc": "挠率对拍（解析<1e-9 且 差分<1e-3）",
+      "detail": "1.667e-16 / 3.530e-05"
+    },
+    {
+      "id": "g-A04",
+      "ok": true,
+      "desc": "三重奏残差 < 1e-40",
+      "detail": "0.000000E+6"
+    },
+    {
+      "id": "g-A05",
+      "ok": true,
+      "desc": "逆映射回代残差 < 1e-40",
+      "detail": "3.333333E-60"
+    },
+    {
+      "id": "g-A06",
+      "ok": true,
+      "desc": "加速度纯主法向、无 tau 分量",
+      "detail": "2.225e-16"
+    },
+    {
+      "id": "g-A07",
+      "ok": true,
+      "desc": "jerk 三阶分解对拍 < 1e-6",
+      "detail": "3.711e-16"
+    },
+    {
+      "id": "g-A08",
+      "ok": true,
+      "desc": "康普顿闭合残差 < 1e-15",
+      "detail": "2.443e-60"
+    },
+    {
+      "id": "g-B01",
+      "ok": true,
+      "desc": "[m c^2 kappa] == [力]",
+      "detail": "L^1 M^1 T^-2"
+    },
+    {
+      "id": "g-B02",
+      "ok": true,
+      "desc": "F_self 两路恒等（差值 < 1e-30）",
+      "detail": "0.000000E+0"
+    },
+    {
+      "id": "g-B03",
+      "ok": true,
+      "desc": "方向恒向心（N·r̂ = -1）",
+      "detail": "0.000e+00"
+    },
+    {
+      "id": "g-B04",
+      "ok": true,
+      "desc": "kappa=alpha*ƛ_C/r^2 还原库仑 < 1e-7（残差=CODATA 常数不确定度）",
+      "detail": "6.528982E-11"
+    },
+    {
+      "id": "g-B05",
+      "ok": true,
+      "desc": "所需 kappa 随距离剧烈变化（>1e10 倍）⇒ 常力定理成立",
+      "detail": "1.000000E+30"
+    },
+    {
+      "id": "g-B07",
+      "ok": true,
+      "desc": "引力编码尺度超宇宙（两条都超）",
+      "detail": "R/R_univ=9.148612E+26, T/T_age=3.878892E+28"
+    },
+    {
+      "id": "g-C01",
+      "ok": true,
+      "desc": "常力 vs 1/r^2 缺口 > 10 倍",
+      "detail": "1.000000E+2"
+    },
+    {
+      "id": "g-C02",
+      "ok": true,
+      "desc": "F ∝ sqrt(1-beta^2) 回代正确且 beta→1 时 F→0",
+      "detail": "4.674e-16 / 1.414e-15"
+    },
+    {
+      "id": "g-C03",
+      "ok": true,
+      "desc": "tau 零贡献牙齿（可被推翻）",
+      "detail": "spread=5.872e-16, aB=4.893e-17"
+    },
+    {
+      "id": "g-D00",
+      "ok": true,
+      "desc": "量纲审计全部通过（5/5）",
+      "detail": "5/5"
+    }
+  ],
+  "key_numbers": {
+    "A": {
+      "sample": {
+        "kappa_m^-1": 1000000000000.0,
+        "tau_m^-1": 600000000000.0,
+        "tau_over_kappa": 0.6,
+        "rho_m^-1": 1166190378969.06,
+        "Omega_s^-1": 3.49615080207086e+20,
+        "R_m": 7.352941176470588e-13,
+        "u_m/s": 154241947.15018502
+      },
+      "triad_rel_err": 0.0,
+      "inverse_map": {
+        "Omega": "3.496151E+20",
+        "R": "7.352941E-13",
+        "u": "1.542419E+8"
+      },
+      "accel_decomp": {
+        "a_dot_T": 0.0,
+        "a_dot_N": 0.9999999999999998,
+        "a_dot_B": 0.0
+      },
+      "jerk_decomp": {
+        "j_dot_T": "-2.694400E+49",
+        "j_dot_B": "1.616640E+49",
+        "j_dot_N_over_jB": 0.0
+      },
+      "compton_e": {
+        "rho_m^-1": "2.589605E+12",
+        "Omega_s^-1": "7.763441E+20",
+        "compton_wl_m": "3.861593E-13",
+        "hbar_Omega_J": "8.187106E-14",
+        "mc2_J": "8.187106E-14",
+        "rel_err": 2.4428657141106122e-60
+      },
+      "compton_p": {
+        "rho_m^-1": "4.754910E+15",
+        "Omega_s^-1": "1.425486E+24",
+        "compton_wl_m": "2.103089E-16",
+        "hbar_Omega_J": "1.503278E-10",
+        "mc2_J": "1.503278E-10",
+        "rel_err": 0.0
+      }
+    },
+    "B": {
+      "self_e": {
+        "rho_m^-1": "2.589605E+12",
+        "F_self_N": "2.120137E-1",
+        "compton_wl_m": "3.861593E-13",
+        "classical_radius_m": "2.817940E-15",
+        "alpha_mc2_over_re_N": "2.120137E-1",
+        "ratio": "1.000000E+0"
+      },
+      "self_p": {
+        "rho_m^-1": "4.754910E+15",
+        "F_self_N": "7.147950E+5",
+        "compton_wl_m": "2.103089E-16",
+        "classical_radius_m": "1.534698E-18",
+        "alpha_mc2_over_re_N": "7.147950E+5",
+        "ratio": "1.000000E+0"
+      },
+      "direction_dot": [
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "encoding": {
+        "kappa": "1.534698E+12",
+        "F": "2.307078E+2",
+        "F_coulomb": "2.307078E+2"
+      },
+      "kappa_needed_table": [
+        {
+          "r_m": "1e-15",
+          "kappa_needed": "1.534698E+12",
+          "Omega_needed": "4.600910E+20"
+        },
+        {
+          "r_m": "1e-10",
+          "kappa_needed": "1.534698E+2",
+          "Omega_needed": "4.600910E+10"
+        },
+        {
+          "r_m": "1",
+          "kappa_needed": "1.534698E-18",
+          "Omega_needed": "4.600910E-10"
+        }
+      ],
+      "force_table": [
+        {
+          "force": "强 (alpha_s≈1, r=1 fm)",
+          "alpha": "1.000000E+0",
+          "r_m": "1.000000E-15",
+          "kappa_m^-1": "2.103089E+14",
+          "Omega_s^-1": "6.304903E+22",
+          "R_m": "4.754910E-15",
+          "lambda_m": "2.987598E-14",
+          "hbar_Omega_eV": "4.149962E+7",
+          "period_s": "9.965555E-23",
+          "kappa_over_rho": "4.422984E-2",
+          "encodable": true
+        },
+        {
+          "force": "电磁 (alpha, r=1 Å)",
+          "alpha": "7.297353E-3",
+          "r_m": "1.000000E-10",
+          "kappa_m^-1": "1.534698E+2",
+          "Omega_s^-1": "4.600910E+10",
+          "R_m": "6.515939E-3",
+          "lambda_m": "4.094085E-2",
+          "hbar_Omega_eV": "3.028374E-5",
+          "period_s": "1.365640E-10",
+          "kappa_over_rho": "3.227607E-14",
+          "encodable": true
+        },
+        {
+          "force": "弱 (alpha_2(M_Z), r=1 am)",
+          "alpha": "3.380400E-2",
+          "r_m": "1.000000E-18",
+          "kappa_m^-1": "7.109282E+18",
+          "Omega_s^-1": "2.131309E+27",
+          "R_m": "1.406612E-19",
+          "lambda_m": "8.838002E-19",
+          "hbar_Omega_eV": "1.402853E+12",
+          "period_s": "2.948040E-27",
+          "kappa_over_rho": "1.495145E+3",
+          "encodable": false
+        },
+        {
+          "force": "引力 (alpha_G(质子), r=1 m)",
+          "alpha": "5.906149E-39",
+          "r_m": "1.000000E+0",
+          "kappa_m^-1": "1.242116E-54",
+          "Omega_s^-1": "3.723770E-46",
+          "R_m": "8.050779E+53",
+          "lambda_m": "5.058454E+54",
+          "hbar_Omega_eV": "2.451030E-61",
+          "period_s": "1.687318E+46",
+          "kappa_over_rho": "2.612280E-70",
+          "encodable": true
+        }
+      ],
+      "gravity_scale": {
+        "R_over_universe": "9.148612E+26",
+        "T_over_age": "3.878892E+28"
+      }
+    },
+    "C": {
+      "exclusion": {
+        "needed_ratio": "1.000000E+2",
+        "helix_ratio": "1.000000E+0",
+        "gap": "1.000000E+2",
+        "F_upper_bound_N": "7.147950E+5"
+      },
+      "beta_table": [
+        {
+          "beta": 0.0,
+          "F_over_Fmax": "1.000000e+00",
+          "kappa": "4.754910e+15",
+          "R": "2.103089e-16"
+        },
+        {
+          "beta": 0.5,
+          "F_over_Fmax": "8.660254e-01",
+          "kappa": "4.117873e+15",
+          "R": "1.821329e-16"
+        },
+        {
+          "beta": 0.9,
+          "F_over_Fmax": "4.358899e-01",
+          "kappa": "2.072617e+15",
+          "R": "9.167153e-17"
+        },
+        {
+          "beta": 0.99,
+          "F_over_Fmax": "1.410674e-01",
+          "kappa": "6.707626e+14",
+          "R": "2.966772e-17"
+        },
+        {
+          "beta": 0.999999,
+          "F_over_Fmax": "1.414213e-03",
+          "kappa": "6.724457e+12",
+          "R": "2.974216e-19"
+        },
+        {
+          "beta": 1.0,
+          "F_over_Fmax": "1.414214e-15",
+          "kappa": "6.724459e+00",
+          "R": "2.974217e-31"
+        }
+      ],
+      "tau_teeth": {
+        "acc_spread": "5.872e-16",
+        "a_dot_B_max": "4.893e-17"
+      }
+    },
+    "D": {
+      "dim_rows": [
+        {
+          "id": "D-01",
+          "expr": "|F| = m*c^2*kappa",
+          "dim": "L^1 M^1 T^-2",
+          "want": "L^1 M^1 T^-2",
+          "ok": true,
+          "note": "力"
+        },
+        {
+          "id": "D-02",
+          "expr": "既有势能式 E = (hbar*c/2)(kappa+tau)",
+          "dim": "L^2 M^1 T^-2",
+          "want": "L^2 M^1 T^-2",
+          "ok": true,
+          "note": "能量"
+        },
+        {
+          "id": "D-03",
+          "expr": "Omega = c*sqrt(kappa^2+tau^2)",
+          "dim": "L^0 M^0 T^-1",
+          "want": "L^0 M^0 T^-1",
+          "ok": true,
+          "note": "角速度"
+        },
+        {
+          "id": "D-04",
+          "expr": "kappa = alpha*ƛ_C/r^2 = alpha*hbar/(m*c*r^2)",
+          "dim": "L^-1 M^0 T^0",
+          "want": "L^-1 M^0 T^0",
+          "ok": true,
+          "note": "曲率"
+        },
+        {
+          "id": "D-05",
+          "expr": "jerk 副法向项 c^3*kappa*tau",
+          "dim": "L^1 M^0 T^-3",
+          "want": "L^1 M^0 T^-3",
+          "ok": true,
+          "note": "加加速度（LT^-3）"
+        }
+      ]
+    }
+  }
+}
