@@ -30,6 +30,15 @@
 | [running_unify_verify.py](源码/running_unify_verify.py) | V1.7 统一跑动（三耦合、SM 单圈不统一、CP² 候选负面、MSSM 对照） | python running_unify_verify.py |
 | [全域统一场论_全维精算_mp.py](源码/全域统一场论_全维精算_mp.py) | V1.8 50 位精算（P1–P10 共 25 项闭式核查，全 PASS / 机器零） | python 全域统一场论_全维精算_mp.py |
 
+### 对话产出追加脚本
+
+| 脚本 | 覆盖 | 命令 |
+|---|---|---|
+| [openuft_rge_sim.py](源码/openuft_rge_sim.py) | 对话推导·重整化群耦合统一三线检验（SM vs MSSM，RK4 数值积分，纯标准库） | python openuft_rge_sim.py |
+| [openuft_unified.py](源码/openuft_unified.py) | 对话推导·统一场论完成引擎（耦合统一、质子衰变、黑洞熵、轴子、费米子质量、真空能、戈德斯通，全谱数值，纯标准库） | python openuft_unified.py |
+
+> 注：以上为候选推导配套代码，代码可运行不自动提升证据等级；输出以 claims.csv 登记为准。
+
 ## 运行记录
 
 - [run_template.json](运行记录/run_template.json)：全套复现命令与环境（Python 3.14.7 + numpy 2.5.2，谱方法/保守晶格原生实现，无第三方求解器依赖）。

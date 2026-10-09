@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>TUFT V3.2 统一场攻坚 · 全维收官综合报告</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  html,body{margin:0;padding:0;background:#0d1117;color:#c9d1d9;font-family:"Segoe UI",system-ui,sans-serif;line-height:1.7;}
+  .wrap{max-width:1000px;margin:0 auto;padding:20px;}
+  h1{font-size:22px;color:#e6edf3;border-bottom:1px solid #30363d;padding-bottom:10px;}
+  h2{font-size:17px;color:#58a6ff;margin:24px 0 8px;}
+  .sub{font-size:12px;color:#8b949e;margin-bottom:12px;}
+  .panel{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;margin-bottom:14px;font-size:13px;}
+  .panel b{color:#f0883e;}
+  .ok{color:#3fb950;font-weight:600;}
+  .bad{color:#da3633;font-weight:600;}
+  .bd{color:#d29922;font-weight:600;}
+  table{border-collapse:collapse;width:100%;font-size:12px;margin:8px 0;}
+  th,td{border:1px solid #30363d;padding:5px 8px;text-align:left;}
+  th{background:#21262d;color:#e6edf3;}
+  #ch1{width:100%;height:300px;}
+  #ch2{width:100%;height:260px;}
+  .redline{background:#2d1517;border:1px solid #7d2f33;border-radius:8px;padding:14px;font-size:13px;}
+  .redline b{color:#f0883e;}
+  ul{margin:6px 0;padding-left:20px;}
+  .mono{font-family:Consolas,monospace;font-size:12px;background:#0d1117;border:1px solid #21262d;border-radius:4px;padding:1px 5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT V3.2 统一场攻坚 · 全维收官综合报告</h1>
+  <div class="sub">openuft 16 号文档同步稿 · 路线1解析 + 路线2数值全链路 · 2026-10-10 · claims C1–C107</div>
+
+  <div class="panel">
+    <b>总作用量（统一框架）</b>　<span class="mono">S_tot = S_EC + S_Maxwell + S_TUFT + S_minimal</span>
+    <ul>
+      <li><b>Einstein-Cartan</b> 引力（含挠率 $T^λ_{μν}$）：$S_{EC}=\frac{1}{2\kappa}\int d^4x\sqrt{-g}\,R$，自旋源激发挠率</li>
+      <li><b>Maxwell</b> 电磁：$S_M=-\frac{1}{4\mu_0}\int d^4x\sqrt{-g}\,F_{μν}F^{μν}$</li>
+      <li><b>TUFT 包络场</b>（六阶饱和非线性标量，规避 Derrick）：$S_{TUFT}=\int d^4x\sqrt{-g}\,[\frac12 g^{μν}\partial_μψ^*\partial_νψ-\frac{V_1}{4}|ψ|^4+\frac{V_2}{6}|ψ|^6]$</li>
+      <li><b>最小耦合</b>：$S_{min}=-\int d^4x\sqrt{-g}\,J^μ A_μ$，$J^μ=iq_0c(ψ^*\partial^μψ-ψ\partial^μψ^*)$</li>
+    </ul>
+    <b>变分场方程组（自洽）</b>：麦克斯韦 $∇_νF^{μν}=\mu_0J^μ$｜TUFT 协变方程 $□ψ=V_1|ψ|²ψ-V_2|ψ|⁴ψ$｜Einstein-Cartan $R_{μν}-\frac12g_{μν}R=\kappa T_{μν}$｜挠率方程（由包络场自旋驱动）
+  </div>
+
+  <div class="panel">
+    <b>引力-电磁同源检验（统一主张实证）</b>——同一包络轮廓 σ(r) 同时源出两种力
+    <table>
+      <tr><th>ω</th><th>Q（电磁源）</th><th>E₀（引力源）</th><th>特异荷 Q/E₀</th><th>R_q</th><th>R_E</th><th>R_q/R_E</th></tr>
+      <tr><td>0.1841</td><td>233.2</td><td>101.28</td><td>2.303</td><td>5.86</td><td>7.30</td><td>0.803</td></tr>
+      <tr><td>0.2105</td><td>230.8</td><td>100.84</td><td>2.289</td><td>5.80</td><td>7.12</td><td>0.815</td></tr>
+      <tr><td>0.2368</td><td>223.5</td><td>99.27</td><td>2.252</td><td>5.78</td><td>6.96</td><td>0.831</td></tr>
+    </table>
+    <span class="ok">双源同包络 R_q/R_E=0.815</span>　<span class="ok">特异荷锁定 Q/E₀=2.283±2.2%</span>　
+    物理特异荷 <span class="mono">e/m=(q0/G)·2.28</span>，q0/G 唯一外部自由比。
+  </div>
+
+  <div class="panel">
+    <h2>主张分级总账（C1–C107）</h2>
+    <div id="ch1"></div>
+    <div id="ch2"></div>
+  </div>
+
+  <div class="panel">
+    <h2>耦合统一路线图（最后 OPEN 维度的精确定位，C108）</h2>
+    经典 TUFT 统一 $q_0$–$G$ 被<b>尺度简并</b>严格阻塞：理论无 ℏ、无绝对质量/电荷标度，对 $(q_0,G)$ 重标度并调势参数可保持物理不变 ⇒ 不存在经典导出 $q_0=f(G)$ 的路径。
+    <ul>
+      <li><b>所需最小结构</b>：引入 ℏ 量子化，提供绝对标度</li>
+      <li><b>自然统一耦合</b>：$\alpha=q_0^2/4\pi\hbar c$（电磁）、$\alpha_G=Gm^2/\hbar c$（引力，$m=E_0$）</li>
+      <li><b>TUFT 可预言比</b>：$\alpha/\alpha_G=(q_0^2/Gm^2)$，由孤子特异荷锁定 $Q/E_0=2.28$（C107）⇒ 唯一确定（待量子化兑现）</li>
+      <li><b>兑现路径</b>：量子化 → 算 $\alpha/\alpha_G$ → 与电子/质子实验 $e/m$ 对照</li>
+    </ul>
+  </div>
+
+  <div class="redline">
+    <b>诚实完成度声明（openuft 红线，任何断言不变）</b>
+    <ul>
+      <li><b>UFT 达成度 = 2/6</b>：电磁扇区数值验证完成、引力扇区数值验证完成；其余 4 维未达（见下）。</li>
+      <li><b>L3 = 0</b>（无三级证据即无严格统一证明）、<b>UFT-3 = 0</b>（统一场论三级成果数为零）。</li>
+      <li>"电磁引力同源"为<b>诠释主张（BOUNDARY）</b>：获数值一致支持（双源同包络+特异荷锁定），但 $q_0,G$ 两耦合常数仍为自由参数，未导出彼此关系 ⇒ <b>非严格统一证明</b>。</li>
+      <li>δP（强加速辐射非线性修正）为<b>构造假设</b>，非结论；绝对质量/电荷需外部尺度锚（经典理论无 ℏ）。</li>
+      <li>⇒ <b>TUFT V3.2 攻坚的"可验证范围"已全维闭合并落库</b>，但<b>统一场论的"完全建立"未达成</b>，需未来工作（耦合常数统一、量子化、实验预言）。</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>已完成 vs 未达（诚实）</h2>
+    <table>
+      <tr><th>维度</th><th>状态</th><th>证据</th></tr>
+      <tr><td>洛伦兹协变框架（4-电流/连续方程/能动张量）</td><td class="ok">PASS</td><td>解析推导</td></tr>
+      <tr><td>稳定 Q-ball 存在性（打靶、ω 全谱、E₀/Q）</td><td class="ok">PASS</td><td>C76–C77</td></tr>
+      <tr><td>LW 辐射（恒固有加速度 Larmor 解析严格）</td><td class="ok">PASS</td><td>C78</td></tr>
+      <tr><td>参数相图（M2×V2、V1×M2×V2 稳定带）</td><td class="ok">PASS</td><td>C79/C83</td></tr>
+      <tr><td>质荷关系（M(Q) 双支、dM/dQ=ω）</td><td class="ok">PASS</td><td>C97</td></tr>
+      <tr><td>引力弱场还原（Φ·r=−G·E₀、外部 Schwarzschild）</td><td class="ok">PASS</td><td>C98</td></tr>
+      <tr><td>玻色星识别 + 坍缩判据（g=1 无解）</td><td class="ok">PASS</td><td>C99/C101</td></tr>
+      <tr><td>临界引力 G*(ω) 相界（7 点非单调）</td><td class="ok">PASS</td><td>C102/C106</td></tr>
+      <tr><td>稳定支质量-电荷、M_max、M_max(G) 标度律</td><td class="ok">PASS</td><td>C103–C105</td></tr>
+      <tr><td>引力-电磁同源（双源同包络 + 特异荷锁定）</td><td class="bd">BOUNDARY</td><td>C107</td></tr>
+      <tr><td>强加速 δP 非线性辐射修正</td><td class="bd">BOUNDARY</td><td>构造假设</td></tr>
+      <tr><td>来稿六阶负号致势无界</td><td class="bad">FAIL</td><td>V3.2-1</td></tr>
+      <tr><td>来稿代码（缺 ω 项/E₀ 漏相位动能）</td><td class="bad">FAIL</td><td>已修正</td></tr>
+      <tr><td>耦合常数统一（q0 与 G 关系）</td><td class="bd">ROADMAP</td><td>C108：尺度简并阻塞经典统一，ℏ 量子化后以 α/α_G 预言</td></tr>
+      <tr><td>量子化 / 可实验预言 / 与粒子谱对照</td><td class="bad">OPEN</td><td>路线图已定，待量子化实现</td></tr>
+    </table>
+  </div>
+</div>
+<script>
+c1=echarts.init(document.getElementById('ch1'));
+c1.setOption({
+  title:{text:'主张分级分布（TUFT V3.2 段 C71–C107）',left:'center',textStyle:{fontSize:14,color:'#e6edf3'}},
+  tooltip:{trigger:'item',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+  legend:{bottom:0,textStyle:{color:'#c9d1d9'}},
+  series:[{type:'pie',radius:['30%','62%'],center:['50%','46%'],
+    label:{color:'#c9d1d9',fontSize:11,formatter:'{b}: {c}'},
+    data:[
+      {name:'PASS 数值验证',value:12,itemStyle:{color:'#3fb950'}},
+      {name:'BOUNDARY 构造/诠释',value:13,itemStyle:{color:'#d29922'}},
+      {name:'FAIL 来稿缺陷/审计否决',value:8,itemStyle:{color:'#da3633'}},
+      {name:'OPEN 待未来工作',value:3,itemStyle:{color:'#8b949e'}},
+      {name:'info',value:1,itemStyle:{color:'#58a6ff'}}
+    ]}]
+});
+c2=echarts.init(document.getElementById('ch2'));
+c2.setOption({
+  title:{text:'UFT 达成度 2/6（诚实红线）',left:'center',textStyle:{fontSize:14,color:'#e6edf3'}},
+  tooltip:{trigger:'item',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+  series:[{type:'pie',radius:['40%','65%'],center:['50%','50%'],
+    label:{color:'#c9d1d9',fontSize:11,formatter:'{b}\n{c}',lineHeight:14},
+    data:[
+      {name:'电磁扇区\n数值验证',value:1,itemStyle:{color:'#3fb950'}},
+      {name:'引力扇区\n数值验证',value:1,itemStyle:{color:'#58a6ff'}},
+      {name:'耦合统一\n(q0–G)',value:1,itemStyle:{color:'#8b949e'}},
+      {name:'量子化\n与实验预言',value:1,itemStyle:{color:'#d29922'}},
+      {name:'电磁-引力\n严格同源证明',value:1,itemStyle:{color:'#da3633'}},
+      {name:'完整统一\n场论建成',value:1,itemStyle:{color:'#21262d'}}
+    ]}]
+});
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>

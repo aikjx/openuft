@@ -36,7 +36,7 @@ RAW_BATCH_PREFIX = '根目录来料_'
 # 匹配单个末段目录名（大小写不敏感）。
 ASSET_DIR_RE = re.compile(
     r'^(v?\d+|[Vv]|[A-Z]_v?\d+|code|img|en|output|test|tests|core|cache|'
-    r'visualization|comprehensive_verification|\.pytest_cache)$', re.IGNORECASE)
+    r'visualization|comprehensive_verification|scripts|_shots|\.pytest_cache)$', re.IGNORECASE)
 
 
 def is_raw_staging(parts) -> bool:
