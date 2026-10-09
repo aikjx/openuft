@@ -2,7 +2,10 @@ import os
 import re
 from pathlib import Path
 
-root_dir = r"d:\a10\aikjx\code\my_lib\article\zh\2026\7\4\乖乖数学"
+# 源目录为库外路径，由环境变量 SRC_ROOT 指定
+root_dir = os.environ.get("SRC_ROOT", "")
+if not root_dir:
+    raise SystemExit("请先设置环境变量 SRC_ROOT 为待处理源目录（库外路径）")
 
 pattern = re.compile(r'\+\d+$')
 

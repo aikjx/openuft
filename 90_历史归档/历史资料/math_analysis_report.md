@@ -4,12 +4,11 @@
 
 ## 一、整体架构概览
 
-`d:\a10\aikjx\code\my_lib\math` 包含两大核心数学体系：
+`d:\a10\aikjx\code\my_lib\math` 包含核心数学体系：
 
 | 体系 | 核心定位 | 主要成果 |
 |------|----------|----------|
 | **SOM（本源螺旋数学）** | 数学本源公理体系 | 突破哥德尔不完备性、统一数学分支 |
-| **乖乖数学** | 数论难题破解 | 哥德巴赫猜想、黎曼猜想、素数算法 |
 
 ---
 
@@ -85,7 +84,7 @@ def som_prime_count(x):
 ### 3. 大素数生成算法（突破 2^64 限制）
 
 **自适应米勒-拉宾检验**支持任意大素数验证，关键代码位于：
-[prime_breakthrough.py](file:///d:/a10/aikjx/code/my_lib/math/乖乖数学//文档/素数合数双螺旋/code/prime_breakthrough.py)
+prime_breakthrough.py（库外源码，未随库登记）
 
 ---
 
@@ -119,7 +118,7 @@ def verify_single_k(k):
 | 三维导数 | ✅ 通过 | 完整验证 |
 | 对称不动点 | ❌ 需修正 | 原始公式存在31.5%反例 |
 
-核心验证代码：[goldbach_master_verifier.py](file:///d:/a10/aikjx/code/my_lib/math/乖乖数学/哥德巴赫猜想/2/mo/code/goldbach_master_verifier.py)
+核心验证代码：goldbach_master_verifier.py（库外源码，未随库登记）
 
 ---
 

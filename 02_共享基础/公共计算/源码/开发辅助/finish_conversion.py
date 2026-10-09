@@ -43,7 +43,10 @@ def convert_missing_pdfs(root_dir):
 
 
 if __name__ == "__main__":
-    root_dir = r"d:\a10\aikjx\code\my_lib\article\zh\2026\7\4\乖乖数学"
+    # 源目录为库外路径，由环境变量 SRC_ROOT 指定
+    root_dir = os.environ.get("SRC_ROOT", "")
+    if not root_dir:
+        raise SystemExit("请先设置环境变量 SRC_ROOT 为待处理源目录（库外路径）")
     print(f"处理遗漏的PDF转换")
     print(f"源目录: {root_dir}")
     convert_missing_pdfs(root_dir)

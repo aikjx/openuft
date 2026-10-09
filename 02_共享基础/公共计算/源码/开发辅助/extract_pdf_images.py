@@ -33,6 +33,10 @@ def extract_images_from_pdf(pdf_path, output_folder):
     doc.close()
 
 if __name__ == "__main__":
-    pdf_path = r"d:\a10\aikjx\code\my_lib\aikjxcz\2026\06\18\乖乖数学\2\·几何本源（补卷）(1).pdf"
-    output_folder = r"d:\a10\aikjx\code\my_lib\aikjxcz\2026\06\18\乖乖数学\2\images"
+    # PDF 与输出目录为库外路径，由环境变量 PDF_SRC_DIR 指定
+    src_dir = os.environ.get("PDF_SRC_DIR", "")
+    if not src_dir:
+        raise SystemExit("请先设置环境变量 PDF_SRC_DIR 为 PDF 所在目录（库外路径）")
+    pdf_path = os.path.join(src_dir, "·几何本源（补卷）(1).pdf")
+    output_folder = os.path.join(src_dir, "images")
     extract_images_from_pdf

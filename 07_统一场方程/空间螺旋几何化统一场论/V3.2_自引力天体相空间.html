@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>TUFT V3.2 · 自引力天体完整相空间 (G,ω)</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  html,body{margin:0;padding:0;background:#0d1117;color:#c9d1d9;font-family:"Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:980px;margin:0 auto;padding:20px;}
+  h1{font-size:20px;color:#e6edf3;}
+  .sub{font-size:12px;color:#8b949e;margin-bottom:12px;}
+  .panel{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;margin-bottom:16px;}
+  .panel h2{font-size:15px;color:#58a6ff;margin:0 0 6px 0;}
+  #chart1{width:100%;height:360px;}
+  .verdict{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;}
+  .verdict b{color:#f0883e;}
+  .ok{color:#3fb950;}
+  .bad{color:#da3633;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT V3.2 · 自引力天体完整相空间 $(G,\omega)$</h1>
+  <div class="sub">数据源：V3.2_bosonstar_Gstar.json（7 点相界）+ V3.2_bosonstar_MmaxG.json（M_max）· 2026-10-10</div>
+
+  <div class="panel">
+    <h2>G*(ω) 相界：稳定区（G&lt;G*）与坍缩区（G&gt;G*），叠加 M_max 标注</h2>
+    <div id="chart1"></div>
+  </div>
+
+  <div class="verdict">
+    <b>结论 PASS</b>：$G_*(\\omega)$ 相界 <span class="bad">非单调</span>——低 ω=0.16 下探 0.0173（低 ω 孤子更弥散、稳定区最窄），
+    中段 ω≈0.18–0.25 相界 ≈0.024–0.027，高 ω 缓升至 0.0314。完整状态图：<span class="ok">G&lt;G* 稳定玻色星</span>（M_max∝G）｜
+    G=G* 支关闭 ｜ <span class="bad">G&gt;G* 坍缩</span>（g=1≫G* 验证）。TUFT 自作用锚定孤子尺度使稳定区在 G 维度有界。
+    UFT 达成度 2/6、L3=0、UFT-3=0 不变。
+  </div>
+</div>
+<script>
+var gs=[[0.16,0.0173],[0.18,0.0242],[0.2064,0.0242],[0.22,0.0274],[0.25,0.0273],[0.28,0.0292],[0.30,0.0314]];
+var mm=[{omega:0.18,G:0.001,M:0.0987},{omega:0.16,G:0.0056,M:0.5055},{omega:0.12,G:0.014,M:1.094},{omega:0.30,G:0.02,M:1.308}];
+c1=echarts.init(document.getElementById('chart1'));
+c1.setOption({
+  title:{text:'(G,ω) 相空间：相界、稳定区与坍缩区',left:'center',textStyle:{fontSize:15,color:'#e6edf3'}},
+  tooltip:{trigger:'item',triggerOn:'mousemove|click',renderMode:'richText',confine:true,
+    formatter:function(p){return p.seriesName+'<br/>ω='+p.data[0]+'  G='+p.data[1]+(p.data[2]?('  M_max='+p.data[2]):'');}},
+  legend:{top:32,textStyle:{color:'#c9d1d9'}},
+  grid:{top:70,left:65,right:45,bottom:50,containLabel:true},
+  xAxis:{type:'value',name:'ω (相位频率)',min:0.10,max:0.34,nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#c9d1d9'},splitLine:{lineStyle:{color:'#21262d'}}},
+  yAxis:{type:'value',name:'引力耦合 G',min:0,max:0.035,nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#c9d1d9'},splitLine:{lineStyle:{color:'#21262d'}}},
+  series:[
+    {name:'G* 相界',type:'line',smooth:true,symbolSize:10,data:gs,
+      lineStyle:{color:'#f0883e',width:3},itemStyle:{color:'#f0883e'},
+      label:{show:true,position:'top',fontSize:10,color:'#f0883e',formatter:function(p){return p.data[1].toFixed(4);}},
+      markArea:{silent:true,itemStyle:{color:'rgba(240,136,62,0.06)'},
+        data:[[{xAxis:'0.10',yAxis:'0.035'},{xAxis:'0.34',yAxis:'0.000'},{name:'坍缩区 G>G*'}]],
+        label:{show:true,position:'insideTop',color:'#da3633',fontSize:12,formatter:'坍缩区 G>G*'}}},
+    {name:'暗物质锚 G=0.0056',type:'line',data:[[0.10,0.0056],[0.34,0.0056]],lineStyle:{color:'#3fb950',width:2,type:'dashed'},symbol:'none',
+      label:{show:true,position:'end',color:'#3fb950',fontSize:11,formatter:'稳定区深部（暗物质锚）'}},
+    {name:'M_max(G) 标注',type:'scatter',symbolSize:13,data:mm.map(function(d){return [d.omega,d.G,d.M];}),
+      itemStyle:{color:'#58a6ff'},
+      label:{show:true,position:'right',fontSize:10,color:'#58a6ff',formatter:function(p){return 'M_max='+p.data[2].toFixed(3);}}}
+  ]
+});
+window.addEventListener('resize',function(){c1.resize();});
+</script>
+</body>
+</html>
