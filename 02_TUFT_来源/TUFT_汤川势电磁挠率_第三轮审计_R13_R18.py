@@ -2,7 +2,7 @@
 """
 TUFT 汤川势 + 电磁挠率章 · 第三轮审计（R13–R18）
 ================================================
-上游：v2.1.1（R1–R12，主判定 31 项 + EXT 5 项）与《TUFT_汤川势电磁挠率_算法联盟全维校验.py》
+上游：v2.1.1（R1–R12，主判定 31 项 + EXT 5 项）与《TUFT_汤川势电磁挠率_本项目全维校验.py》
 
 本轮三块（全部实跑：sympy / mpmath / numpy 自写 Numerov）：
   A. 红队 v2.1.1 自身（AL-A1..A6，对应修复 R15–R18）
@@ -35,8 +35,8 @@ import mpmath as mp
 
 mp.mp.dps = 25
 HERE = os.path.dirname(os.path.abspath(__file__))
-V211_PY = os.path.join(HERE, "TUFT_汤川势电磁挠率_算法联盟全维校验.py")
-V211_JSON = os.path.join(HERE, "TUFT_汤川势电磁挠率_算法联盟全维校验.json")
+V211_PY = os.path.join(HERE, "TUFT_汤川势电磁挠率_本项目全维校验.py")
+V211_JSON = os.path.join(HERE, "TUFT_汤川势电磁挠率_本项目全维校验.json")
 
 # ---------------- 物理常数（与 v2.1.1 校验脚本同源） ----------------
 HBARC = 197.3269804          # MeV·fm

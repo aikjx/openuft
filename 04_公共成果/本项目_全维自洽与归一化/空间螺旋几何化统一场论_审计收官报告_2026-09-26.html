@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>空间螺旋几何化统一场论 · 审计收官报告 2026-09-26</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230E1420'/%3E%3Cpath d='M16 16m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0' fill='none' stroke='%23E4573D' stroke-width='2.4'/%3E%3Cpath d='M16 8c5 2 8 6 7 11c-1 5-6 8-11 6' fill='none' stroke='%23E8ECF2' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://miaoda.feishu.cn" crossorigin>
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1420; --panel:#161D2B; --panel2:#1B2434;
+  --ink:#E8ECF2; --ink2:#9AA5B5; --ink3:#6B7688;
+  --red:#E4573D; --amber:#E0A94E; --teal:#5FB8A8; --blue:#7A8AA0;
+  --line:#243048; --line2:#1C2536;
+  --serif:"Noto Serif SC",serif; --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:normal}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+section{padding:56px 0;border-top:1px solid var(--line2)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--red);text-transform:uppercase;margin-bottom:14px}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(34px,5.2vw,54px);line-height:1.18;letter-spacing:.01em}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(22px,3vw,30px);margin-bottom:8px;letter-spacing:.01em}
+h3{font-family:var(--serif);font-weight:700;font-size:17px;margin:26px 0 10px}
+p.lead{color:var(--ink2);font-size:15.5px;max-width:64ch;margin-top:14px}
+.sub{color:var(--ink3);font-size:13px;margin-top:6px}
+/* ===== 题头 ===== */
+.hero{padding:84px 0 56px;border-top:none;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg,transparent,var(--red) 30%,var(--red) 70%,transparent);opacity:.5}
+.hero .verdict-tag{display:inline-block;font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:#fff;background:var(--red);padding:5px 14px;border-radius:2px;margin-bottom:22px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:22px;font-family:var(--mono);font-size:12.5px;color:var(--ink2)}
+.hero .meta b{color:var(--ink);font-weight:600}
+/* ===== 数字格 ===== */
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:38px}
+.num{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:18px 16px 14px;position:relative}
+.num .v{font-family:var(--mono);font-weight:600;font-size:30px;line-height:1;color:var(--ink)}
+.num .v.red{color:var(--red)} .num .v.amber{color:var(--amber)} .num .v.teal{color:var(--teal)}
+.num .l{font-size:12.5px;color:var(--ink3);margin-top:8px}
+.num::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--line)}
+.num.acc::before{background:var(--red)} .num.warn::before{background:var(--amber)} .num.ok::before{background:var(--teal)}
+/* ===== 双图 ===== */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:26px}
+.card{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:20px 20px 12px}
+.card h3{margin:0 0 4px;font-size:15px}
+.card .cap{color:var(--ink3);font-size:12.5px;margin-bottom:10px}
+.chart{width:100%;height:340px}
+/* ===== 对比表 ===== */
+.table-scroll{overflow-x:auto;margin-top:18px}
+.table-scroll table{margin-top:0;min-width:560px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+caption{caption-side:bottom;text-align:left;color:var(--ink3);font-size:12px;padding-top:10px}
+th{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.04em;color:var(--ink2);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line2);color:var(--ink2);vertical-align:top}
+td b{color:var(--ink);font-weight:500}
+td .tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:2px;margin-right:6px;white-space:nowrap}
+.tag.f{background:rgba(228,87,61,.12);color:var(--red);border:1px solid rgba(228,87,61,.35)}
+.tag.o{background:rgba(224,169,78,.1);color:var(--amber);border:1px solid rgba(224,169,78,.3)}
+tr:hover td{background:rgba(255,255,255,.014)}
+/* ===== 缺失层示意 ===== */
+.chain{display:grid;grid-template-columns:1fr 92px 1fr 92px 1fr;align-items:stretch;gap:0;margin:30px 0 6px}
+.step{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:16px 14px;text-align:center}
+.step .t{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ink)}
+.step .d{font-size:12px;color:var(--ink3);margin-top:6px;line-height:1.5}
+.step.ok{border-color:rgba(95,184,168,.4)}
+.step.ok .t{color:var(--teal)}
+.step.dead{background:var(--panel2);border:1px dashed var(--red);position:relative}
+.step.dead .t{color:var(--red)}
+.step.dead .d{color:var(--ink2)}
+.arrow{align-self:center;text-align:center;color:var(--ink3);font-size:18px;display:flex;align-items:center;justify-content:center}
+.arrow svg{display:block}
+.arrow.break{color:var(--red);font-weight:700}
+.gap-note{margin-top:14px;font-size:13px;color:var(--ink2);background:rgba(228,87,61,.07);border-left:3px solid var(--red);padding:10px 14px;border-radius:0 4px 4px 0}
+/* ===== 守卫 ===== */
+.guards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.g{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:12px 12px 10px}
+.g .id{font-family:var(--mono);font-size:12px;color:var(--teal);font-weight:600}
+.g .nm{font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.45}
+.baseline{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.bc{font-family:var(--mono);font-size:11.5px;color:var(--red);background:rgba(228,87,61,.08);border:1px solid rgba(228,87,61,.25);padding:2px 8px;border-radius:2px}
+.bc.plus{color:var(--amber);border-color:rgba(224,169,78,.3);background:rgba(224,169,78,.06)}
+/* ===== 时间轴 ===== */
+.tl{display:grid;grid-template-columns:88px 26px 1fr;gap:0;margin-top:26px;position:relative;--date:88px;--axis:26px}
+.tl::before{content:"";position:absolute;top:0;bottom:0;left:calc(var(--date) + var(--axis)/2);width:2px;background:var(--line);transform:translateX(-50%)}
+.tl .row{display:contents}
+.tl .time{font-family:var(--mono);font-size:12.5px;color:var(--ink2);text-align:right;padding:14px 14px 14px 0;white-space:nowrap}
+.tl .dot{justify-self:center;position:relative;width:100%;height:40px}
+.tl .nd{position:absolute;top:20px;left:50%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:var(--panel2);border:2px solid var(--blue);box-sizing:border-box;z-index:1}
+.tl .dot.hot .nd{border-color:var(--red);background:var(--red)}
+.tl .dot.warn .nd{border-color:var(--amber)}
+.tl .txt{padding:12px 0 14px 14px;border-bottom:1px solid var(--line2)}
+.tl .txt .t{font-size:14px;color:var(--ink);font-weight:500}
+.tl .txt .d{font-size:12.5px;color:var(--ink3);margin-top:3px;line-height:1.55}
+.tl .row:last-child .txt{border-bottom:none}
+/* ===== 结论 ===== */
+.concl{background:linear-gradient(180deg,rgba(228,87,61,.06),rgba(228,87,61,.02));border:1px solid rgba(228,87,61,.3);border-radius:6px;padding:26px 28px;margin-top:26px}
+.concl .big{font-family:var(--serif);font-weight:900;font-size:24px;color:var(--red);margin-bottom:10px}
+.concl p{color:var(--ink2);font-size:14.5px;max-width:72ch}
+.concl p b{color:var(--ink)}
+.path{margin-top:22px;padding-top:18px;border-top:1px solid var(--line2)}
+.path .step-path{font-family:var(--mono);font-size:13.5px;color:var(--teal);line-height:2}
+/* ===== 页脚 ===== */
+footer{padding:40px 0 56px;color:var(--ink3);font-size:12px}
+footer .mono{font-family:var(--mono);font-size:11.5px;color:var(--ink2);line-height:2;word-break:break-all}
+/* ===== 响应式 ===== */
+@media(max-width:860px){
+  body{font-size:16px}
+  .nums{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .chain{grid-template-columns:1fr;gap:6px}
+  .arrow{transform:none;padding:0;height:26px}
+  .guards{grid-template-columns:repeat(2,1fr)}
+  .hero{padding:56px 0 44px}
+  section{padding:44px 0}
+  .wrap{padding:0 16px}
+}
+@media(max-width:480px){
+  .nums{grid-template-columns:1fr}
+  .guards{grid-template-columns:1fr}
+  .tl{grid-template-columns:64px 22px 1fr;--date:64px;--axis:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 视图：题头 ===== -->
+<header class="hero">
+  <div class="wrap">
+    <span class="verdict-tag">FALSIFIED · 申报不成立</span>
+    <h1>空间螺旋几何化统一场论<br>审计收官报告</h1>
+    <p class="lead">对《空间螺旋修复版·第一性审计与伪派生判定》纲领的整链审计：70 条主张台账、五个可计算模块攻坚、防回潮守卫闭环。结论收敛为单一判定——<b style="color:var(--red);font-weight:700">纲领缺少「几何对象 → 场方程 → 可观测」的映射层</b>，任何新预言在补齐该层之前均不可检验。</p>
+    <div class="meta">
+      <span>日期 <b>2026-09-26</b></span>
+      <span>精度 <b>mpmath 250 位</b></span>
+      <span>台账 <b>claims.csv · 70 条</b></span>
+      <span>守卫 <b>8/8 全绿</b></span>
+      <span>L3 层级 <b>0 条</b></span>
+    </div>
+    <div class="nums">
+      <div class="num acc"><div class="v red">26</div><div class="l">审计组 falsified 主张（基线 26 条）</div></div>
+      <div class="num warn"><div class="v amber">29</div><div class="l">台账 falsified 状态行（70 条中）</div></div>
+      <div class="num"><div class="v">5</div><div class="l">可计算模块攻坚（全部败于映射层）</div></div>
+      <div class="num ok"><div class="v teal">8/8</div><div class="l">防回潮守卫通过（EXIT=0）</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 视图：§1 审计链全景 ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker">§1 · Audit Chain</div>
+    <h2>审计链全景</h2>
+    <p class="lead">全量批量审计（C38 三审计算法：公理/恒等层、约定层、构造层 + 引擎证据表 + 8 项数值锚点复算）对 70 条主张逐条判定：无一条达到 L3（构造性推导 + 带误差棒的可检验预言）。</p>
+    <div class="grid2">
+      <div class="card">
+        <h3>主张状态分布</h3>
+        <div class="cap">70 条 · 六态 · 本审计组登记 47 条（falsified 26）</div>
+        <div class="chart" id="cStatus"></div>
+      </div>
+      <div class="card">
+        <h3>L 层级判定分布</h3>
+        <div class="cap">L3 = 0：全台账无「第一性推导闭环」主张</div>
+        <div class="chart" id="cLevel"></div>
+      </div>
+    </div>
+    <p class="sub">标记复核：PASS 20 / PARTIAL 2 / UNVERIFIED 0 / INFO 39；UFT-3 无量纲靶登记 1 条（不满足升 L3 条件）。数值锚点 8/8 复算一致（ρ、K₀、α_grav、ωA、ℏ²/N²、谱宽、|R'|/c、β_correct）。</p>
+  </div>
+</section>
+
+<!-- ===== 视图：§2 五模块攻坚 ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker">§2 · Module Assaults</div>
+    <h2>五个可计算模块：同一种死因</h2>
+    <p class="lead">粒子物理（α 谱）、天体物理（近日点进动、EHT 光子环）、宇宙学（CMB 双谱）、场论（引力泡、RG 流）——凡能被计算检验的模块，全部死于同一整层缺失。</p>
+    <div class="table-scroll">
+    <table>
+      <colgroup><col style="width:15%"><col style="width:22%"><col style="width:11%"><col style="width:33%"><col style="width:19%"></colgroup>
+      <thead><tr><th>模块</th><th>可观测靶</th><th>判定</th><th>死亡原因（引擎证据）</th><th>判别式</th></tr></thead>
+      <tbody>
+        <tr><td><b>C53 引力泡</b><br><span class="sub">Gauss 螺旋包</span></td><td>实验室能量 E≈1.14e16 J（≈2.72 Mt TNT）</td><td><span class="tag f">falsified</span></td><td>能量密度量纲非法×3 口径；高斯积分漏 π^(3/2)；自旋进动量纲 [LM]；σ/κ₀/τ₀/αg 四自由零约束；无作用量 ⇒ ansatz 非孤子</td><td>V = −4</td></tr>
+        <tr><td><b>C54 TUFT-RG</b><br><span class="sub">RG 流</span></td><td>紫外固定点 / 渐近安全</td><td><span class="tag f">falsified</span></td><td>精确定理：非平凡固定点存在 ⇔ b₅²(−b₂/b₁)=b₆²(−b₄/b₃)；给定系数 LHS/RHS=5.2478 不成立 ⇒ 仅原点；能标口径混用虚增 34.957</td><td>无固定点</td></tr>
+        <tr><td><b>C47/C51 轨道进动</b><br><span class="sub">Binet 方程</span></td><td>水星/金星/地球近日点进动</td><td><span class="tag o">open·零判别力</span></td><td>β₀=3h²/c² 分支与 GR 1PN 方程恒等（u² 系数精确相等）⇒ 零新内容；β_correct 无理论外推映射；修正量 1e-3 角秒/百年低于观测精度</td><td>判别力 = 0</td></tr>
+        <tr><td><b>C60 EHT 光子环</b><br><span class="sub">Schwarzschild 散射</span></td><td>Sgr A* 52.1 / M87* 39.7 μas</td><td><span class="tag f">falsified</span></td><td>GR 基准精确复现（b_crit/r_s=3√3/2）但 r_g/r_ph=1/3 精确 ⇒ β₀ 分支零新内容；纲领映射 8/8 FAIL（无测地线方程）</td><td>V = 0</td></tr>
+        <tr><td><b>C61 CMB 拓扑双谱</b><br><span class="sub">非高斯参数</span></td><td>f_NL、n_s、A_s、r（Planck）</td><td><span class="tag f">falsified</span></td><td>标准宇宙学靶已压 f_NL 到 O(1)，纲领连「涨落源从哪来」都无法回答；映射 8/8 FAIL（无引力涨落谱）</td><td>V = 0</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="sub">观测精度越高，失败越确定：CMB 非高斯已实测到 |f_NL|≲5（中心值 −0.9±5.1）、EHT 阴影角直径已测到 μas 级——而纲领的映射层为零。</p>
+  </div>
+</section>
+
+<!-- ===== 视图：§3 缺失层示意 ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker">§3 · Missing Layer</div>
+    <h2>失败的精确位置</h2>
+    <p class="lead">八个候选几何量（κ/τ、β、ω/A、N、Φ₀、ρ/K₀/α²K、GravBubble、RG 系数）无一能挂载到可观测：不是系数错、不是精度不够，而是<b style="color:var(--ink)">中间结构整体缺失</b>。</p>
+    <div class="chain">
+      <div class="step ok"><div class="t">几何对象</div><div class="d">κ/τ · ω/A · N · Φ₀ · ρ/K₀ · β · 泡参数 · RG 系数<br>（大量已证伪：量纲死亡 / 循环定义 / 外部输入）</div></div>
+      <div class="arrow break"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+      <div class="step dead"><div class="t">场方程（缺失）</div><div class="d">无作用量 → 无度规场方程<br>→ 无测地线 / 无引力涨落谱</div></div>
+      <div class="arrow break"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+      <div class="step ok"><div class="t">可观测</div><div class="d">α_n 谱 · 近日点进动 · EHT 光子环<br>· CMB 双谱 · f_NL / n_s</div></div>
+    </div>
+    <div class="gap-note"><b>断点</b>：几何量到可观测之间没有任何映射方程。现有五个可计算模块全部借用了外部理论（GR / 标准宇宙学）的场方程才做出「预测」——而这些预测要么与 GR 恒等（零内容），要么根本不可计算。</div>
+  </div>
+</section>
+
+<!-- ===== 视图：§4 守卫闭环 ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker">§4 · Guard Loop</div>
+    <h2>防回潮守卫：8/8 全绿</h2>
+    <p class="lead">守卫（EXIT=0，门禁可用）断言 8 条不变量，任一违反即失败。G5 用不变量基线判断「falsified 集合只许不缩水」——新增证伪自动记入，回潮改回则报警。</p>
+    <div class="guards">
+      <div class="g"><div class="id">G1</div><div class="nm">每行恰 5 字段（无列错位）</div></div>
+      <div class="g"><div class="id">G2</div><div class="nm">claim_id 连续无缺号（C01–C70）</div></div>
+      <div class="g"><div class="id">G3</div><div class="nm">状态取值合法（六态白名单）</div></div>
+      <div class="g"><div class="id">G4</div><div class="nm">原 falsified 三条未被改回</div></div>
+      <div class="g"><div class="id">G5</div><div class="nm">审计组 falsified 不缩水（基线 26 条）</div></div>
+      <div class="g"><div class="id">G6</div><div class="nm">两阶段引擎计数符合预期（42/10）</div></div>
+      <div class="g"><div class="id">G7</div><div class="nm">被审文本已归档（可溯源）</div></div>
+      <div class="g"><div class="id">G8</div><div class="nm">归档哈希未变（防篡改锚点）</div></div>
+    </div>
+    <h3>不变量基线 · falsified 集合（26 条）</h3>
+    <div class="baseline">
+      <span class="bc">C26</span><span class="bc">C27</span><span class="bc">C29</span><span class="bc">C30</span><span class="bc">C31</span>
+      <span class="bc">C33</span><span class="bc">C36</span><span class="bc">C37</span><span class="bc">C43</span><span class="bc">C53</span>
+      <span class="bc">C54</span><span class="bc">C55</span><span class="bc">C56</span><span class="bc">C58</span><span class="bc">C59</span>
+      <span class="bc">C60</span><span class="bc plus">C61</span><span class="bc plus">C62</span><span class="bc plus">C63</span><span class="bc plus">C64</span><span class="bc plus">C65</span><span class="bc plus">C66</span><span class="bc plus">C67</span><span class="bc plus">C68</span><span class="bc plus">C69</span><span class="bc plus">C70</span>
+    </div>
+    <p class="sub">C55/C56 由并发轮（V21续修③）登记（双圈 RG、泡动力学）；C58/C59（谱量纲、进动符号）；C60（EHT 光子环）、C61（CMB 双谱）由本审计链登记；C62（数学链·C14 频率公式与光速约束冲突）由本轮精算验证登记；C63（频率链·C15 第五力恒零）由本轮频率链精算验证登记；C64（开放项·C05 α 拓扑公式数值不命中）由本轮开放项精算验证登记；C65–C70（总攻·C04/C13/C16/C22/C25/C35 六项开放项攻破定案）由本轮总攻精算验证登记。归档 sha256 = 0b78a4d9…（未变）。</p>
+  </div>
+</section>
+
+<!-- ===== 视图：§5 推进时间轴 ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker">§5 · Timeline</div>
+    <h2>审计推进历程</h2>
+    <div class="tl">
+      <div class="row">
+        <div class="time">轮 ①</div><div class="dot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">V21续修 C25/C35 合并与审计</div><div class="d">LB 本征谱 n=1..6 并入统一脚本；发现谱在 76 位有效数字内退化（谱宽 1.09e-75）、草稿误差棒误算；Binet 方程 β₀≡GR 1PN 零内容。C25/C35 → open（退化谱 / 公式需修正）。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">轮 ②</div><div class="dot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">全量 claims 批量审计（54 条）</div><div class="d">C38 三审计算法引擎上线：L0=16/L1=34/L2=4/L3=0；评审 PASS 20 / FAIL 9 / PARTIAL 2 / INFO 23；与 V22 并发轮数值一致（8 锚点复算）。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">轮 ③</div><div class="dot warn"><span class="nd"></span></div>
+        <div class="txt"><div class="t">C26–C37 专项复核 + 守卫全绿</div><div class="d">发现 9 条「草稿自评 PASS」无引擎证据，逐条现场复算后否定（C26/C27/C29/C30/C31/C33/C36/C37 等）；回退写回 8 条 falsified、C28 boundary；守卫基线重建 11 条，8/8 绿。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">并发</div><div class="dot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">V21续修③④ 并发轮（C55/C56/C58/C59）</div><div class="d">双圈 RG（截断伪影定理）、泡动力学（σ 段方程不含 G）、谱量纲、进动符号——独立复算全部吻合，均 falsified；台账推进至 C59。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">轮 ④</div><div class="dot hot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">EHT 光子环攻坚（C60）</div><div class="d">GR 基准 250 位复现（θ_sh=52.1/39.7 μas、b_crit/r_s=3√3/2 精确）；散射角 RK4 七档收敛（弱场极限偏差 1.1e-5）；纲领映射 8/8 FAIL；V=0 ⇒ falsified（无映射方程层）。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">轮 ⑤</div><div class="dot hot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">CMB 拓扑双谱攻坚（C61）</div><div class="d">标准宇宙学靶基准（Planck 2018：f_NL、n_s、A_s、r）；映射 8/8 FAIL（与 EHT 逐项同型）；V=0 ⇒ falsified。三个「下一步选项」全部收口。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">轮 ⑥</div><div class="dot hot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">求导链 / 数学链精算验证（C62 登记）</div><div class="d">求导链 C02/C24/C39/C59/C58 四项全 PASS；数学链核心发现：C14 字面 ω=c/ρ 与光速约束 c/L 冲突（250 位相对差 2.66e-5 = √(1+α²)−1，仅 b=0 自洽）⇒ C62 falsified 登记；C42/C35/C10 复核 PASS。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">轮 ⑦</div><div class="dot hot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">频率链精算验证（C63 登记）</div><div class="d">C15 第五力双重失效：匀速螺旋 dω/dt≡0 ⇒ F₅≡0（250 位机器零）+ 量纲功率非力（X11）⇒ C63 falsified；C14 影响面扫描无新增污染（C10/C25/C26 全链相容）。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">轮 ⑧</div><div class="dot hot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">开放项精算验证（C64 登记）</div><div class="d">C05 α 拓扑公式数值不命中：Δ_top=1/4π²=0.02533 与精确反解 0.03478 差 27%~30%，α_pred 与 α_obs 相对差 6.9e-5（250 位）⇒ C64 falsified；C16 无量级对应、C13 条件式失败、C40 复算 PASS。</div></div>
+      </div>
+      <div class="row">
+        <div class="time">轮 ⑨</div><div class="dot hot"><span class="nd"></span></div>
+        <div class="txt"><div class="t">剩余开放项总攻（C65–C70 登记）</div><div class="d">六项开放项攻破定案：C04 N=137 手填非推导、C13 G 公式欠定+ρ 双口径差 1373 倍、C16 高阶力命名无量级对应、C22 ρ 由 G 反推、C25 V=−2 伪派生、C35 力律二分零内容/违反 Bertrand ⇒ 全部 falsified；C40/C45/C48/C49/C50/C51 复核 open 维持。</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 视图：§6 结论 ===== -->
+<section>
+  <div class="wrap">
+    <div class="kicker">§6 · Verdict</div>
+    <h2>结论</h2>
+    <div class="concl">
+      <div class="big">申报不成立 —— 且失败是结构性的</div>
+      <p>五个可计算模块（引力泡、RG 流、轨道进动、EHT 光子环、CMB 双谱）无一例外死于同一位置：<b>「几何对象 → 场方程 → 可观测」的映射层整体缺失</b>。这不是个别系数错误或精度不足，而是纲领缺少作用量、场方程与涨落谱的中间结构——因此任何「可检验预言就绪」的宣称都不成立。</p>
+      <p style="margin-top:12px">审计组未止步于否定：每个模块都给出了<b>可复算的数值证据</b>（量纲非法、恒等消去、固定点不存在、映射审查逐项 FAIL）与<b>体系级 open 前置条件</b>，使否定本身可复核、可重启。</p>
+      <div class="path">
+        <div style="font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ink);margin-bottom:8px">唯一可行路线</div>
+        <div class="step-path">作用量 → 场方程 → 测地线 / 引力涨落谱 → 带误差棒的预言<br>在补齐映射层之前，任何新观测靶（引力波、宇宙学距离、粒子截面）都会重复同一失败模式，不再值得单独攻坚。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>数据来源：claims.csv（70 条）· 批量审计引擎 · 防回潮守卫 · 五模块攻坚脚本（全部 mpmath 250 位 / 双精度 RK4 交叉验证）。</div>
+    <div class="mono" style="margin-top:10px">openuft/04_公共成果/本项目_全维自洽与归一化/ — 源码/空间螺旋_全量claims批量审计与L3层级判定.py · 空间螺旋判定_总览与防回潮守卫.py · 空间螺旋EHT光子环_攻坚审计.py · 空间螺旋CMB拓扑双谱_攻坚审计.py</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script>
+var RED="#E4573D", AMBER="#E0A94E", TEAL="#5FB8A8", BLUE="#7A8AA0", INK="#E8ECF2", INK2="#9AA5B5", GRID="rgba(255,255,255,.05)";
+var mono="JetBrains Mono",sans='"Noto Sans SC"';
+if(!window.echarts){document.getElementById("cStatus").outerHTML='<div class="chart" style="height:340px;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:13px">图表库加载失败 · 数据见正文表格</div>';document.getElementById("cLevel").outerHTML='<div class="chart" style="height:340px;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:13px">图表库加载失败 · 数据见正文表格</div>';}
+else{
+// --- 状态分布：横向条形（6 类，按量级降序） ---
+var s1=echarts.init(document.getElementById("cStatus"));
+s1.setOption({
+  animation:false,
+  grid:{left:8,right:44,top:8,bottom:8,containLabel:true},
+  xAxis:{type:"value",min:0,max:24,axisLine:{lineStyle:{color:GRID}},axisTick:{show:false},
+    axisLabel:{color:INK2,fontFamily:mono,fontSize:11},splitLine:{lineStyle:{color:GRID}}},
+  yAxis:{type:"category",data:["falsified 29","pass 16","open 14","boundary 6","BOUNDARY 3","info 2"],
+    axisLine:{show:false},axisTick:{show:false},
+    axisLabel:{color:INK,fontFamily:mono,fontSize:12,formatter:function(v){return v.split(" ")[0];}}},
+  series:[{type:"bar",barWidth:16,
+    data:[
+      {value:29,itemStyle:{color:RED}},
+      {value:16,itemStyle:{color:TEAL}},
+      {value:14,itemStyle:{color:AMBER}},
+      {value:6,itemStyle:{color:BLUE,opacity:.7}},
+      {value:3,itemStyle:{color:BLUE,opacity:.5}},
+      {value:2,itemStyle:{color:BLUE,opacity:.35}}
+    ],
+    label:{show:true,position:"right",color:INK,fontFamily:mono,fontSize:12},
+    tooltip:{trigger:"item",formatter:function(p){
+      var nm={29:"falsified 已证伪",16:"pass 原体系通过",14:"open 未闭合",6:"boundary 边界",3:"BOUNDARY 边界·大写",2:"info 复算备注"}[p.value];
+      return p.value+" 条 · "+nm;
+    }}
+  }]
+});
+window.addEventListener("resize",function(){s1.resize();});
+// --- L 层级：柱状图（0 基线） ---
+var s2=echarts.init(document.getElementById("cLevel"));
+s2.setOption({
+  animation:false,
+  grid:{left:8,right:20,top:20,bottom:8,containLabel:true},
+  xAxis:{type:"category",data:["L0 约定/证伪封顶","L1 恒等/公理","L2 构造推导","L3 完整闭环"],axisLine:{lineStyle:{color:GRID}},axisTick:{show:false},
+    axisLabel:{color:INK,fontSize:12,interval:0,formatter:function(v){return v.split(" ")[0];}}},
+  yAxis:{type:"value",min:0,axisLine:{show:false},axisTick:{show:false},
+    axisLabel:{color:INK2,fontFamily:mono,fontSize:11},splitLine:{lineStyle:{color:GRID}}},
+  series:[{type:"bar",barWidth:44,
+    data:[
+      {value:31,itemStyle:{color:AMBER}},
+      {value:35,itemStyle:{color:BLUE}},
+      {value:4,itemStyle:{color:TEAL}},
+      {value:0,itemStyle:{color:RED}}
+    ],
+    label:{show:true,position:"top",color:INK,fontFamily:mono,fontSize:12,formatter:function(p){return p.value===0?"0（无）":p.value;}},
+    tooltip:{trigger:"item",formatter:function(p){
+      var d={31:"约定层 / 证伪封顶",35:"恒等式 / 公理重述",4:"构造性推导（未带误差棒预言）",0:"构造性推导 + 带误差棒可检验预言"}[p.value];
+      return "L"+["0","1","2","3"][p.dataIndex]+" · "+p.value+" 条 — "+d;
+    }}
+  }],
+  graphic:{type:"text",left:"center",top:"94%",style:{text:"L3 = 0：UFT-3 完整第一性推导闭环为零",fill:INK2,fontSize:12,fontFamily:sans}}
+});
+window.addEventListener("resize",function(){s2.resize();});
+}
+</script>
+
+</body>
+</html>

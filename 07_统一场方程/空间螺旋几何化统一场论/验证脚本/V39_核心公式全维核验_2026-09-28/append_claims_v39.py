@@ -45,7 +45,7 @@ ROWS = [
      "与 checks.N6_prime_anchor" % FACE,
      "第一性审计", "info"),
 ]
-REVIEWER = "算法联盟审计组"
+REVIEWER = "本项目审计组"
 
 
 def parse(raw):

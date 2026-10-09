@@ -158,7 +158,7 @@ $$\boxed{\vec{A}(\vec{r}, t) = -\frac{q}{4\pi\varepsilon_0 c^2 \, r(t')} \left[ 
 
 ### 8.2 参考资料
 - [1] 张祥前. 统一场论核心文献[M]. 内部资料, 2026.
-- [2] 算法联盟. 加速运动正电荷产生加速度反向相反的引力场方程：严格求导、验证与统一性证明[R]. 内部研究报告, 2026.
+- [2] 本项目. 加速运动正电荷产生加速度反向相反的引力场方程：严格求导、验证与统一性证明[R]. 内部研究报告, 2026.
 - [3] J. D. Jackson. Classical Electrodynamics, 3rd ed. Wiley, New York, 1999.
 - [4] R. P. Feynman, R. B. Leighton, and M. Sands. The Feynman Lectures on Physics, Vol. II. Addison-Wesley, Reading, MA, 1964.
 

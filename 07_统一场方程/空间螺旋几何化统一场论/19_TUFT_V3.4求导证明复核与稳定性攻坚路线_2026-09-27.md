@@ -57,7 +57,7 @@ dE=\omega\,dQ_N+\frac{2E_{\rm EM}}{e}\,de+I_2\,d\mu^2-I_4\,d\lambda+I_6\,dg_6 .
 
 - `my_lib\_shots`（含嵌套 `_shots\_shots` 冗余）——项目级会话外截图工具输出目录
 - `my_lib\gr-gauge-notes\_shots`——讲义截图
-- `my_lib\openuft\04_公共成果\算法联盟_全维自洽与归一化\_shots`——会话外工具反复生成，致 `verify.py` 间歇 FAIL
+- `my_lib\openuft\04_公共成果\本项目_全维自洽与归一化\_shots`——会话外工具反复生成，致 `verify.py` 间歇 FAIL
 
 **处置（2026-09-27 执行）**：
 - **openuft 内 `_shots`**：按 openuft 既有先例（`判定_靶场登记列写入侧门禁_2026-09-26` §9.4），将 5 张截图并入中文目录 `_报告截图/`（同名但内容不同的更新版以 `_v2` 后缀保留，不覆盖旧版），移除 `_shots`。`verify.py` 由 FAIL:1 恢复 **PASS**（10822 本地链接）。根治需会话外截图工具改输出目录为中文名。

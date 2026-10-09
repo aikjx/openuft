@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 质子寿命 dim-6 归一 · 跨探针交叉验证（算法联盟 cross-check）
+# 质子寿命 dim-6 归一 · 跨探针交叉验证（本项目 cross-check）
 # E_P03 : p03_gut_2loop_proton_decay.py  C6=1e36 yr, a_ref=0.024
 # E_SO10: 07_统一场方程/验证脚本/so10_chain.py  锚 1e29 yr @10^14.6, a0=1/41
 import math

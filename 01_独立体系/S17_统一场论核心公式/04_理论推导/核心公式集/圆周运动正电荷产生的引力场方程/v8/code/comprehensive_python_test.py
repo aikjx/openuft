@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-算法联盟 | ZUFT 圆周运动电子场分析全面测试
+本项目 | ZUFT 圆周运动电子场分析全面测试
 
 该脚本对ZUFT框架下圆周运动电子的力场相互作用进行全面测试，
 包括力的大小、方向、变化率计算，参数敏感性分析，误差分析等。
@@ -28,7 +28,7 @@ class ZUFT_Tester:
     def __init__(self):
         self.results = {}
         print('=' * 90)
-        print('=== 算法联盟 | ZUFT 圆周运动电子场分析全面测试 ===')
+        print('=== 本项目 | ZUFT 圆周运动电子场分析全面测试 ===')
         print('=' * 90)
         print()
     

@@ -23,7 +23,7 @@ HERE = Path(__file__).resolve().parent
 DIR = HERE.parent
 ROOT = DIR.parent.parent
 DOC = DIR / "03_验证与可证伪性.md"
-JUDGE = ROOT / "04_公共成果" / "算法联盟_全维自洽与归一化"
+JUDGE = ROOT / "04_公共成果" / "本项目_全维自洽与归一化"
 
 SOURCES = [
     DIR / "11_证伪与反例" / "README.md",

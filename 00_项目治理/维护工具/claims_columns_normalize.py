@@ -6,7 +6,7 @@
 `prediction_value,prediction_urel,run_id,data_id,uncertainty,evidence_level,status,reviewer`），
 但历史数据行曾为 10/11/12/17 列（S12 rows=[11,12]、S13 rows=[10,11,17]）。
 未转义英文逗号会导致**列错位**，固定列号读取会静默误判
-（算法联盟已改用"行末两列定位 status"来规避）。
+（本项目已改用"行末两列定位 status"来规避）。
 
 **状态（2026-09-19）**：18 个体系的数据行已全部与 14 列 header 对齐，
 `新体系模板/claims.csv` 亦已同步为 14 列。本工具保留用于今后再出现列漂移时的复位。

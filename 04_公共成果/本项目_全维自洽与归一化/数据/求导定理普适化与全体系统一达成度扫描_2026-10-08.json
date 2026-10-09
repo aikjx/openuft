@@ -1,0 +1,892 @@
+{
+  "title": "求导定理普适化 + 全体系统一达成度扫描（第二十三轮）",
+  "date": "2026-10-08",
+  "engine": "源码/求导定理普适化与全体系统一达成度扫描_2026-10-08.py",
+  "counts": {
+    "PASS": 3,
+    "MISMATCH": 1,
+    "FAIL": 3,
+    "INFO": 2,
+    "BOUNDARY": 3
+  },
+  "total_items": 12,
+  "guards": {
+    "total": 4,
+    "ok": 4
+  },
+  "items": [
+    {
+      "id": "G-01",
+      "status": "PASS",
+      "title": "普适化 T1：任意 C^3 曲线、弧长速率恒 c ⇒ a = c^2*kappa(s)*N(s)，tau 不出现",
+      "expect": "所有剖型下 |d^2r/ds^2| = kappa(s) 且 二阶导·B = 0",
+      "actual": "6 种剖型（含 tau 跨 2.5 倍大幅调制、曲率阶跃）：kappa 匹配偏差 ≤ 4.351e-10，副法向分量 ≤ 5.253e-10，弧长速率偏差 ≤ 2.740e-11",
+      "note": "**tau 对力的零贡献是普适定理**（不依赖圆柱螺旋、不依赖剖型），上一册 C-03 牙齿测试由此从「一条曲线的测试」升格为「一般定理」"
+    },
+    {
+      "id": "G-02",
+      "status": "MISMATCH",
+      "title": "**自我修正**：上一册 B-03「方向恒向心、零信息量」的适用边界",
+      "expect": "上一册结论对所有 v=c 曲线成立",
+      "actual": "N(s) 共面性（三点行列式最大值）：圆柱螺旋 = 5.503e-14（共面 ✓ 方向退化）；一般曲线最大 = 7.998e-01（挠率大幅调制、曲率常数）⇒ 不共面、方向**可变**",
+      "note": "**修正**：方向退化是【圆柱螺旋的特例】。一般曲线下 N(s) 转向、方向要素可变；但 a 恒沿 +N(s)（局部曲率中心）⇒ 【排斥仍不可导出】不变，变的只是「方向恒定」这一过强表述。上一册 B-03 降级为圆柱螺旋特例，本册留痕"
+    },
+    {
+      "id": "G-03",
+      "status": "FAIL",
+      "title": "普适版传播–力互斥：{沿固定方向以 c 传播} ∧ {F ≠ 0} ⇒ ∅（任意曲线）",
+      "expect": "存在既沿固定方向光速传播、又带非零力的曲线",
+      "actual": "kappa≡0（取 T0=ẑ）：全程 T·ẑ = 1.000000000000（沿 z 以 c 传播 ✓），但 kappa=0 ⇒ F=0；6 条 kappa>0 曲线的切向偏离初值最大 1.763443 ⇒ 无法沿固定方向传播",
+      "note": "**普适版比圆柱螺旋版更强**：不需要定义「轴」与螺旋半径。T ≡ ẑ ⇒ dT/ds = 0 ⇒ kappa ≡ 0 ⇒ a = c^2 kappa N = 0。⇒ 任何以 v=c 螺旋为本体、又要求相互作用以 c 传播的方案，其力恒为零"
+    },
+    {
+      "id": "G-04",
+      "status": "PASS",
+      "title": "普适版力程：F(s) = m c^2 kappa(s)，力沿弧长的全部变化由 kappa(s) 承载",
+      "expect": "与弧长参数化一致",
+      "actual": "6 剖型逐点 |d^2r/ds^2| 与 kappa(s) 最大相对偏差 4.351e-10；tau(s) 大幅调制（0.2↔2.7，13 倍）时力曲线**不变**",
+      "note": "力程 = kappa(s) 的衰减律；求导只给「F ∝ kappa(s)」这一机制，kappa(s) 的具体函数形式（1/r^2、Yukawa、禁闭）仍是外部输入"
+    },
+    {
+      "id": "S-01",
+      "status": "INFO",
+      "title": "体系扫描规模（事实清点）",
+      "expect": "覆盖 01_独立体系 全部体系",
+      "actual": "扫描 22 个体系目录；命中总量：统一声称 4474、光速螺旋 1859、曲率 1935、挠率 2225、角速度/频率 13528、力 14671、平方反比 118、力程 53、排斥 64、作用量/变分 1121、求导/第一性 9533",
+      "note": "文本指纹=事实清点，不等于内容审计；只用于定位「哪些体系在求导层做了什么」"
+    },
+    {
+      "id": "S-02",
+      "status": "BOUNDARY",
+      "title": "求导层裁定 A：把 τ 当作「力的独立源」的体系（与本册 G-01 普适定理的关系）",
+      "expect": "0 个体系与本册定理冲突",
+      "actual": "14/22 个体系出现「挠率 × 力/统一」的窗口共现（总 869 处）",
+      "note": "按 G-01，τ 在二阶动力学对力贡献严格为零（任意曲线）。故这些体系中「τ 作为力的独立源」的表述，要么须升格到三阶 jerk 动力学，要么属术语性共现。**本册只登记冲突面，不逐册改判**（文本指纹不足以支撑内容级裁定）"
+    },
+    {
+      "id": "S-03",
+      "status": "BOUNDARY",
+      "title": "求导层裁定 B：平方反比与力程声称（与本册 G-04 / 常力定理的关系）",
+      "expect": "力程可由求导导出",
+      "actual": "3/22 个体系出现「平方反比」指纹；5/22 出现「力程」指纹",
+      "note": "求导只给 F(s)=m c^2 kappa(s)；1/r^2 与有限力程都装在 kappa(s) 里 ⇒ 是输入不是导出"
+    },
+    {
+      "id": "S-04",
+      "status": "BOUNDARY",
+      "title": "求导层裁定 C：排斥机制（与本册 G-02 修正后结论的关系）",
+      "expect": "排斥可由几何导出",
+      "actual": "6/22 个体系出现「排斥/斥力」指纹",
+      "note": "修正后的结论：一般曲线下方向可变，但 a 恒沿 +N（局部向心）⇒ **排斥仍需 N 之外的结构**（如双源反向缠绕 / 场层叠加），求导层给不出"
+    },
+    {
+      "id": "S-05",
+      "status": "FAIL",
+      "title": "总裁定：是否存在「已由求导完成四力统一」的体系",
+      "expect": "至少 1 个体系在求导层完成统一",
+      "actual": "0/22。求导层可导出的只有【F = m c^2 kappa(s) N(s)】一条形式；大小的具体数值、方向的排斥分支、距离的衰减律三者全部需要外部输入",
+      "note": "**「所有物理体系的统一场论」在求导层的诚实读数 = 形式统一已达成、物理统一未达成**。这与既有第十一编 UFT 达成度 2/6、定理 C/E/F 的方向一致，本册在求导层独立复现"
+    },
+    {
+      "id": "S-06",
+      "status": "INFO",
+      "title": "作用量/动力学现状（统一场论的最后一块）",
+      "expect": "有体系具备作用量",
+      "actual": "19/22 个体系出现「作用量/拉格朗日/变分」指纹",
+      "note": "没有作用量 ⇒ 无 Noether 荷、无 T_{μν}、无两体耦合 ⇒ 求导层永远停在「单体运动学」，这也解释了为什么 κ(x) 场构型（O-FIELD）在所有体系里都是外部假定"
+    },
+    {
+      "id": "M-01",
+      "status": "PASS",
+      "title": "最小增广：把「还差什么」形式化为集合覆盖并机器求最小解",
+      "expect": "最小覆盖集规模与成员",
+      "actual": "需求 4 项 ['大小·强度', '方向·排斥', '距离·力程', '动力学·量子化']；候选增广 5 条 ⇒ **最小规模 3**；最小解 3 个；**出现在全部最小解中的条目 = M3 排斥方向的几何承载物**（唯一不可替代）；各条出现频次 M1×2、M2×1、M3×3、M4×1、M5×2",
+      "note": "每条增广都对应本册求导层**证明过**的缺口（G-01 τ 零贡献 ⇒ 需 M3；G-04 力程 ⇒ 需 M1/M4；常力定理 ⇒ 需 M2；无作用量 ⇒ 需 M5），不是凭空开清单"
+    },
+    {
+      "id": "M-02",
+      "status": "FAIL",
+      "title": "M2（耦合 α 的第一性来源）在既有定理下的可行性",
+      "expect": "存在框架内可行路径",
+      "actual": "定理 C：纯量纲代数不可能产出可检验无量纲预言；定理 H：7 个初等几何作用量 5 个不能固定 α、其余只到阶 1 值、全局极小必在边界⇒ **M2 在既有公设集内已被封死**，只能靠引入新结构（非量纲、非几何作用量）",
+      "note": "这是「完成统一场论」的真正硬骨头：不是推导不够努力，而是已被 no-go 定理覆盖"
+    }
+  ],
+  "guard_list": [
+    {
+      "id": "g-G01",
+      "ok": true,
+      "desc": "tau 零贡献普适（6 剖型）",
+      "detail": "tau=5.253e-10 kappa=4.351e-10"
+    },
+    {
+      "id": "g-G02",
+      "ok": true,
+      "desc": "方向：圆柱螺旋共面退化、一般曲线可变（自我修正成立）",
+      "detail": "cyl=5.503e-14, gen_max=7.998e-01"
+    },
+    {
+      "id": "g-G03",
+      "ok": true,
+      "desc": "kappa≡0 ⇒ 沿固定方向传播速率 = c（互斥定理的极限端）",
+      "detail": "beta=1.000000000000"
+    },
+    {
+      "id": "g-M01",
+      "ok": true,
+      "desc": "最小增广规模 ≥2 且存在唯一不可替代条目（= 全部最小解的交集）",
+      "detail": "size=3, 交集=1 条: M3 排斥方向的几何承载物"
+    }
+  ],
+  "key_numbers": {
+    "G": {
+      "profiles": [
+        {
+          "profile": "常数（圆柱螺旋）",
+          "rel_err_d2r_vs_kappa": "2.212e-10",
+          "a_dot_B_over_abs_a": "2.981e-10",
+          "rel_err_speed": "2.362e-12",
+          "cos_accel_N_min": "1.000000000",
+          "cos_accel_N_max": "1.000000000"
+        },
+        {
+          "profile": "曲率正弦调制",
+          "rel_err_d2r_vs_kappa": "1.405e-10",
+          "a_dot_B_over_abs_a": "1.622e-10",
+          "rel_err_speed": "5.942e-12",
+          "cos_accel_N_min": "1.000000000",
+          "cos_accel_N_max": "1.000000000"
+        },
+        {
+          "profile": "挠率大幅调制、曲率常数",
+          "rel_err_d2r_vs_kappa": "3.858e-10",
+          "a_dot_B_over_abs_a": "4.058e-10",
+          "rel_err_speed": "1.360e-11",
+          "cos_accel_N_min": "1.000000000",
+          "cos_accel_N_max": "1.000000000"
+        },
+        {
+          "profile": "曲率线性增长+挠率余弦",
+          "rel_err_d2r_vs_kappa": "1.585e-10",
+          "a_dot_B_over_abs_a": "3.563e-10",
+          "rel_err_speed": "1.131e-11",
+          "cos_accel_N_min": "1.000000000",
+          "cos_accel_N_max": "1.000000000"
+        },
+        {
+          "profile": "曲率光滑阶跃(tanh)",
+          "rel_err_d2r_vs_kappa": "3.010e-10",
+          "a_dot_B_over_abs_a": "3.799e-10",
+          "rel_err_speed": "2.740e-11",
+          "cos_accel_N_min": "1.000000000",
+          "cos_accel_N_max": "1.000000000"
+        },
+        {
+          "profile": "强挠率弱曲率",
+          "rel_err_d2r_vs_kappa": "4.351e-10",
+          "a_dot_B_over_abs_a": "5.253e-10",
+          "rel_err_speed": "1.866e-12",
+          "cos_accel_N_min": "1.000000000",
+          "cos_accel_N_max": "1.000000000"
+        }
+      ],
+      "worst": {
+        "tau_component": "5.253e-10",
+        "kappa_match": "4.351e-10",
+        "unit_speed": "2.740e-11"
+      },
+      "dir_coplanarity": {
+        "常数（圆柱螺旋）": "5.503166e-14",
+        "曲率正弦调制": "9.272888e-02",
+        "挠率大幅调制、曲率常数": "7.998153e-01",
+        "曲率线性增长+挠率余弦": "2.886419e-01",
+        "曲率光滑阶跃(tanh)": "4.993739e-01",
+        "强挠率弱曲率": "6.553634e-03"
+      },
+      "tangent_deviation": {
+        "常数（圆柱螺旋）": "1.714985",
+        "曲率正弦调制": "1.763443",
+        "挠率大幅调制、曲率常数": "1.600550",
+        "曲率线性增长+挠率余弦": "1.338994",
+        "曲率光滑阶跃(tanh)": "1.557138",
+        "强挠率弱曲率": "0.166030"
+      },
+      "propagation": [
+        {
+          "profile": "常数（圆柱螺旋）",
+          "beta_mean": 0.02443400044896894,
+          "kappa_mean": 1.0
+        },
+        {
+          "profile": "曲率正弦调制",
+          "beta_mean": 0.0005876505054711128,
+          "kappa_mean": 1.1762854398255669
+        },
+        {
+          "profile": "挠率大幅调制、曲率常数",
+          "beta_mean": 0.43983697872520744,
+          "kappa_mean": 1.0
+        },
+        {
+          "profile": "曲率线性增长+挠率余弦",
+          "beta_mean": -0.005403992828650167,
+          "kappa_mean": 1.0000000000000007
+        },
+        {
+          "profile": "曲率光滑阶跃(tanh)",
+          "beta_mean": 0.14275183587121895,
+          "kappa_mean": 1.1500000000000004
+        },
+        {
+          "profile": "强挠率弱曲率",
+          "beta_mean": 0.005140176709453042,
+          "kappa_mean": 0.25
+        },
+        {
+          "profile": "直线（kappa≡0 极限）",
+          "beta_mean": 1.0,
+          "kappa_mean": 0.0
+        }
+      ]
+    },
+    "SCAN": {
+      "systems": [
+        {
+          "system": "P01_空间压缩与密度本体",
+          "files": 34,
+          "chars": 7372,
+          "counts": {
+            "统一声称": 0,
+            "光速螺旋本体": 1,
+            "曲率": 1,
+            "挠率": 0,
+            "角速度/频率": 0,
+            "力": 0,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 2,
+            "求导/第一性": 6,
+            "耦合常数": 0
+          },
+          "tau_force_cooccur": 0,
+          "kappa_force_cooccur": 0,
+          "claims_unified": false,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "P02_物体驱动与源场本体",
+          "files": 34,
+          "chars": 8230,
+          "counts": {
+            "统一声称": 6,
+            "光速螺旋本体": 14,
+            "曲率": 0,
+            "挠率": 0,
+            "角速度/频率": 0,
+            "力": 1,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 1,
+            "求导/第一性": 14,
+            "耦合常数": 0
+          },
+          "tau_force_cooccur": 0,
+          "kappa_force_cooccur": 0,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "P03_规范对称统一候选",
+          "files": 41,
+          "chars": 35666,
+          "counts": {
+            "统一声称": 9,
+            "光速螺旋本体": 11,
+            "曲率": 7,
+            "挠率": 5,
+            "角速度/频率": 8,
+            "力": 10,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 13,
+            "求导/第一性": 25,
+            "耦合常数": 33
+          },
+          "tau_force_cooccur": 5,
+          "kappa_force_cooccur": 7,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "P04_量子结构与时空涌现候选",
+          "files": 34,
+          "chars": 12309,
+          "counts": {
+            "统一声称": 8,
+            "光速螺旋本体": 14,
+            "曲率": 1,
+            "挠率": 0,
+            "角速度/频率": 0,
+            "力": 4,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 8,
+            "求导/第一性": 19,
+            "耦合常数": 0
+          },
+          "tau_force_cooccur": 0,
+          "kappa_force_cooccur": 1,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S01_螺旋三重奏与谱几何",
+          "files": 61,
+          "chars": 84855,
+          "counts": {
+            "统一声称": 69,
+            "光速螺旋本体": 28,
+            "曲率": 74,
+            "挠率": 21,
+            "角速度/频率": 377,
+            "力": 47,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 16,
+            "求导/第一性": 45,
+            "耦合常数": 1
+          },
+          "tau_force_cooccur": 12,
+          "kappa_force_cooccur": 27,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S02_空间光速螺旋统一力",
+          "files": 70,
+          "chars": 266619,
+          "counts": {
+            "统一声称": 11,
+            "光速螺旋本体": 216,
+            "曲率": 30,
+            "挠率": 44,
+            "角速度/频率": 561,
+            "力": 16,
+            "平方反比": 1,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 9,
+            "求导/第一性": 90,
+            "耦合常数": 119
+          },
+          "tau_force_cooccur": 3,
+          "kappa_force_cooccur": 3,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": true,
+          "has_repulsion": false
+        },
+        {
+          "system": "S03_GAQ几何原子与作用量子",
+          "files": 86,
+          "chars": 718922,
+          "counts": {
+            "统一声称": 16,
+            "光速螺旋本体": 22,
+            "曲率": 331,
+            "挠率": 188,
+            "角速度/频率": 288,
+            "力": 293,
+            "平方反比": 0,
+            "力程": 17,
+            "排斥": 5,
+            "作用量/变分": 105,
+            "求导/第一性": 348,
+            "耦合常数": 488
+          },
+          "tau_force_cooccur": 15,
+          "kappa_force_cooccur": 154,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": true
+        },
+        {
+          "system": "S04_IEG信息熵引力",
+          "files": 35,
+          "chars": 8588,
+          "counts": {
+            "统一声称": 0,
+            "光速螺旋本体": 0,
+            "曲率": 2,
+            "挠率": 0,
+            "角速度/频率": 2,
+            "力": 33,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 4,
+            "求导/第一性": 7,
+            "耦合常数": 0
+          },
+          "tau_force_cooccur": 0,
+          "kappa_force_cooccur": 2,
+          "claims_unified": false,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S05_HDU高维紧致化统一",
+          "files": 37,
+          "chars": 13952,
+          "counts": {
+            "统一声称": 0,
+            "光速螺旋本体": 0,
+            "曲率": 2,
+            "挠率": 0,
+            "角速度/频率": 2,
+            "力": 12,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 2,
+            "求导/第一性": 11,
+            "耦合常数": 0
+          },
+          "tau_force_cooccur": 0,
+          "kappa_force_cooccur": 2,
+          "claims_unified": false,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S06_TCL拓扑手征锁定",
+          "files": 38,
+          "chars": 15971,
+          "counts": {
+            "统一声称": 0,
+            "光速螺旋本体": 0,
+            "曲率": 0,
+            "挠率": 0,
+            "角速度/频率": 0,
+            "力": 4,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 0,
+            "求导/第一性": 7,
+            "耦合常数": 0
+          },
+          "tau_force_cooccur": 0,
+          "kappa_force_cooccur": 0,
+          "claims_unified": false,
+          "has_action": false,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S07_GAQ复曲率融合体系",
+          "files": 36,
+          "chars": 27424,
+          "counts": {
+            "统一声称": 6,
+            "光速螺旋本体": 0,
+            "曲率": 48,
+            "挠率": 10,
+            "角速度/频率": 18,
+            "力": 33,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 6,
+            "求导/第一性": 51,
+            "耦合常数": 71
+          },
+          "tau_force_cooccur": 8,
+          "kappa_force_cooccur": 16,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S08_GAQ常数几何化体系",
+          "files": 36,
+          "chars": 20294,
+          "counts": {
+            "统一声称": 1,
+            "光速螺旋本体": 0,
+            "曲率": 23,
+            "挠率": 11,
+            "角速度/频率": 30,
+            "力": 9,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 24,
+            "求导/第一性": 44,
+            "耦合常数": 53
+          },
+          "tau_force_cooccur": 2,
+          "kappa_force_cooccur": 6,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S09_GAQ粒子质量谱体系",
+          "files": 36,
+          "chars": 15580,
+          "counts": {
+            "统一声称": 0,
+            "光速螺旋本体": 0,
+            "曲率": 1,
+            "挠率": 0,
+            "角速度/频率": 4,
+            "力": 2,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 0,
+            "求导/第一性": 29,
+            "耦合常数": 15
+          },
+          "tau_force_cooccur": 0,
+          "kappa_force_cooccur": 0,
+          "claims_unified": false,
+          "has_action": false,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S10_频率本源与复螺旋宇宙",
+          "files": 36,
+          "chars": 127355,
+          "counts": {
+            "统一声称": 16,
+            "光速螺旋本体": 37,
+            "曲率": 225,
+            "挠率": 104,
+            "角速度/频率": 381,
+            "力": 251,
+            "平方反比": 0,
+            "力程": 8,
+            "排斥": 2,
+            "作用量/变分": 26,
+            "求导/第一性": 98,
+            "耦合常数": 236
+          },
+          "tau_force_cooccur": 67,
+          "kappa_force_cooccur": 129,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": true
+        },
+        {
+          "system": "S11_GMUFT几何自由度与耦合",
+          "files": 35,
+          "chars": 20977,
+          "counts": {
+            "统一声称": 0,
+            "光速螺旋本体": 7,
+            "曲率": 28,
+            "挠率": 11,
+            "角速度/频率": 190,
+            "力": 42,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 2,
+            "求导/第一性": 30,
+            "耦合常数": 3
+          },
+          "tau_force_cooccur": 10,
+          "kappa_force_cooccur": 21,
+          "claims_unified": false,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S12_空间光速螺旋统一体系",
+          "files": 42,
+          "chars": 86042,
+          "counts": {
+            "统一声称": 54,
+            "光速螺旋本体": 157,
+            "曲率": 35,
+            "挠率": 28,
+            "角速度/频率": 207,
+            "力": 266,
+            "平方反比": 0,
+            "力程": 13,
+            "排斥": 6,
+            "作用量/变分": 12,
+            "求导/第一性": 168,
+            "耦合常数": 97
+          },
+          "tau_force_cooccur": 16,
+          "kappa_force_cooccur": 23,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": true
+        },
+        {
+          "system": "S13_全域双向分形统一场论",
+          "files": 77,
+          "chars": 237648,
+          "counts": {
+            "统一声称": 62,
+            "光速螺旋本体": 3,
+            "曲率": 78,
+            "挠率": 2,
+            "角速度/频率": 30,
+            "力": 17,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 36,
+            "求导/第一性": 137,
+            "耦合常数": 79
+          },
+          "tau_force_cooccur": 1,
+          "kappa_force_cooccur": 8,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S14_挠率统一场论TUFT",
+          "files": 272,
+          "chars": 1304609,
+          "counts": {
+            "统一声称": 184,
+            "光速螺旋本体": 23,
+            "曲率": 605,
+            "挠率": 1614,
+            "角速度/频率": 2645,
+            "力": 468,
+            "平方反比": 8,
+            "力程": 2,
+            "排斥": 17,
+            "作用量/变分": 545,
+            "求导/第一性": 777,
+            "耦合常数": 1301
+          },
+          "tau_force_cooccur": 619,
+          "kappa_force_cooccur": 111,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": true,
+          "has_repulsion": true
+        },
+        {
+          "system": "S15_空间光速螺旋曲率挠率几何统一场论",
+          "files": 36,
+          "chars": 39349,
+          "counts": {
+            "统一声称": 32,
+            "光速螺旋本体": 68,
+            "曲率": 37,
+            "挠率": 53,
+            "角速度/频率": 41,
+            "力": 17,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 0,
+            "求导/第一性": 64,
+            "耦合常数": 122
+          },
+          "tau_force_cooccur": 44,
+          "kappa_force_cooccur": 27,
+          "claims_unified": true,
+          "has_action": false,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        },
+        {
+          "system": "S16_TUFT归一化主册",
+          "files": 270,
+          "chars": 1064805,
+          "counts": {
+            "统一声称": 37,
+            "光速螺旋本体": 19,
+            "曲率": 14,
+            "挠率": 19,
+            "角速度/频率": 596,
+            "力": 18,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 23,
+            "作用量/变分": 39,
+            "求导/第一性": 168,
+            "耦合常数": 251
+          },
+          "tau_force_cooccur": 11,
+          "kappa_force_cooccur": 4,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": true
+        },
+        {
+          "system": "S17_统一场论核心公式",
+          "files": 553,
+          "chars": 3897295,
+          "counts": {
+            "统一声称": 3963,
+            "光速螺旋本体": 1239,
+            "曲率": 363,
+            "挠率": 115,
+            "角速度/频率": 8138,
+            "力": 13112,
+            "平方反比": 109,
+            "力程": 13,
+            "排斥": 11,
+            "作用量/变分": 179,
+            "求导/第一性": 7348,
+            "耦合常数": 2547
+          },
+          "tau_force_cooccur": 56,
+          "kappa_force_cooccur": 214,
+          "claims_unified": true,
+          "has_action": true,
+          "has_inverse_square": true,
+          "has_repulsion": true
+        },
+        {
+          "system": "S18_曲率能量密度标量约束引力",
+          "files": 33,
+          "chars": 104389,
+          "counts": {
+            "统一声称": 0,
+            "光速螺旋本体": 0,
+            "曲率": 30,
+            "挠率": 0,
+            "角速度/频率": 10,
+            "力": 16,
+            "平方反比": 0,
+            "力程": 0,
+            "排斥": 0,
+            "作用量/变分": 92,
+            "求导/第一性": 47,
+            "耦合常数": 194
+          },
+          "tau_force_cooccur": 0,
+          "kappa_force_cooccur": 7,
+          "claims_unified": false,
+          "has_action": true,
+          "has_inverse_square": false,
+          "has_repulsion": false
+        }
+      ],
+      "totals": {
+        "systems_scanned": 22,
+        "grand": {
+          "统一声称": 4474,
+          "光速螺旋本体": 1859,
+          "曲率": 1935,
+          "挠率": 2225,
+          "角速度/频率": 13528,
+          "力": 14671,
+          "平方反比": 118,
+          "力程": 53,
+          "排斥": 64,
+          "作用量/变分": 1121,
+          "求导/第一性": 9533,
+          "耦合常数": 5610
+        },
+        "tau_force_cooccur_total": 869,
+        "kappa_force_cooccur_total": 762
+      }
+    },
+    "S": {
+      "aggregate": {
+        "n": 22,
+        "unified": 15,
+        "tau_force": 14,
+        "action": 19,
+        "inverse_square": 3,
+        "repulsion": 6
+      }
+    },
+    "M": {
+      "needs": [
+        "大小·强度",
+        "方向·排斥",
+        "距离·力程",
+        "动力学·量子化"
+      ],
+      "aug": {
+        "M1 κ(x) 场构型 + 叠加律（两体）": [
+          "距离·力程",
+          "动力学·量子化"
+        ],
+        "M2 耦合 α 的第一性来源": [
+          "大小·强度"
+        ],
+        "M3 排斥方向的几何承载物": [
+          "方向·排斥"
+        ],
+        "M4 有限力程截断机制": [
+          "距离·力程"
+        ],
+        "M5 作用量 / 变分原理": [
+          "动力学·量子化",
+          "大小·强度"
+        ]
+      },
+      "min_size": 3,
+      "min_covers": [
+        [
+          "M1 κ(x) 场构型 + 叠加律（两体）",
+          "M2 耦合 α 的第一性来源",
+          "M3 排斥方向的几何承载物"
+        ],
+        [
+          "M1 κ(x) 场构型 + 叠加律（两体）",
+          "M3 排斥方向的几何承载物",
+          "M5 作用量 / 变分原理"
+        ],
+        [
+          "M3 排斥方向的几何承载物",
+          "M4 有限力程截断机制",
+          "M5 作用量 / 变分原理"
+        ]
+      ],
+      "essential": [
+        "M3 排斥方向的几何承载物"
+      ],
+      "frequency": {
+        "M1 κ(x) 场构型 + 叠加律（两体）": 2,
+        "M2 耦合 α 的第一性来源": 1,
+        "M3 排斥方向的几何承载物": 3,
+        "M4 有限力程截断机制": 1,
+        "M5 作用量 / 变分原理": 2
+      },
+      "n_minimal_solutions": 3
+    }
+  }
+}

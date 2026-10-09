@@ -14,8 +14,8 @@ new_h1='<h1>TUFT 企业级归一化全维架构图 · <span style="color:#7ee787
 assert old_h1 in s, 'h1 not found'
 s=s.replace(old_h1,new_h1)
 # 3) sub line
-old_sub='<div class="sub">本源拓扑统一场论｜Frenet–Serret + Călugăreanu–White｜算法联盟攻坚 + MainAgent 归一化与独立复核（唯一独立审计方）｜<b style="color:#7ee787;">当前 v4.4 · E1–E479 · 勘误 #41 · 2026-09-20</b>｜<b>本图为唯一权威口径（single source of truth；文件名沿用 E1-E336）</b></div>'
-new_sub='<div class="sub">本源拓扑统一场论｜Frenet–Serret + Călugăreanu–White｜算法联盟攻坚 + MainAgent 归一化与独立复核（唯一独立审计方）｜<b style="color:#7ee787;">当前 v5.7 · E1–E497 · 勘误 #42 · 2026-09-24</b>｜<b>本图为唯一权威口径（single source of truth；文件名沿用 E1-E336）</b></div>'
+old_sub='<div class="sub">本源拓扑统一场论｜Frenet–Serret + Călugăreanu–White｜本项目攻坚 + MainAgent 归一化与独立复核（唯一独立审计方）｜<b style="color:#7ee787;">当前 v4.4 · E1–E479 · 勘误 #41 · 2026-09-20</b>｜<b>本图为唯一权威口径（single source of truth；文件名沿用 E1-E336）</b></div>'
+new_sub='<div class="sub">本源拓扑统一场论｜Frenet–Serret + Călugăreanu–White｜本项目攻坚 + MainAgent 归一化与独立复核（唯一独立审计方）｜<b style="color:#7ee787;">当前 v5.7 · E1–E497 · 勘误 #42 · 2026-09-24</b>｜<b>本图为唯一权威口径（single source of truth；文件名沿用 E1-E336）</b></div>'
 assert old_sub in s, 'sub not found'
 s=s.replace(old_sub,new_sub)
 # 4) stats E-range

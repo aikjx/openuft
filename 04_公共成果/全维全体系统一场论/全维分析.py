@@ -213,8 +213,8 @@ def discover_systems(root):
         },
         {
             "id": "S02",
-            "name": "大统一场论_算法联盟最高权限 v8 全维分析",
-            "path": "utf/大统一场论_算法联盟最高权限/v8",
+            "name": "大统一场论_本项目最高权限 v8 全维分析",
+            "path": "utf/大统一场论_本项目最高权限/v8",
             "thesis": "v8/统一场论全维分析/统一场论全维分析_总报告.md",
             "summary": "B1–Bn + A1–An 全维审计链；v16 A07 螺旋→EH 作用量 bootstrap；"
                        "TEGT、β函数、代质量层级、宇宙学全维度分析。",
@@ -244,7 +244,7 @@ def discover_systems(root):
         {
             "id": "S05",
             "name": "v16 A07 螺旋→EH 作用量 bootstrap",
-            "path": "utf/大统一场论_算法联盟最高权限/v8/统一场论全维分析",
+            "path": "utf/大统一场论_本项目最高权限/v8/统一场论全维分析",
             "thesis": "A07_螺旋世界几何作用量构造_精算.py",
             "summary": "EH 作用量在(度规+广义协变+≤2阶导+无鬼)假设下由 Lovelock 定理唯一确定；"
                        "螺旋公设贡献源 T^μν 与固定 G。",

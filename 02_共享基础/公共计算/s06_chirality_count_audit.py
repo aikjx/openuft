@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-S06 边界态计数矛盾（12 vs 6 vs 36）独立精算审计 —— 算法联盟
+S06 边界态计数矛盾（12 vs 6 vs 36）独立精算审计 —— 本项目
 纯标准库。用法: python s06_chirality_count_audit.py
 
 核验三件事:

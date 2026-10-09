@@ -81,7 +81,7 @@ CONST_K2L3 = E_ELECTRON / (4.0 * math.pi * ALPHA * J_ANALYTIC)   # 2.619e-21
 
 def main():
     sec("TUFT-R4 尺度生成机制：攻克开放项 O-SCALE")
-    put("  算法联盟 ROOT 红线 · 诚实量化打破 k^2*L^3 简并的三种机制")
+    put("  本项目 ROOT 红线 · 诚实量化打破 k^2*L^3 简并的三种机制")
     put("  常数: alpha=%.4e  E_electron(无量纲)=%.4e  l_P=%.3e m"
         % (ALPHA, E_ELECTRON, L_PLANCK))
     put("        K_E(无量纲)=%.4e  L_C(无量纲)=%.4e l_P  k^2*L^3=const=%.4e"

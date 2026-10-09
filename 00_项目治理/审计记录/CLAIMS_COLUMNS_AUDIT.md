@@ -82,7 +82,7 @@ S17（统一场论核心公式）40 行同现 `evidence_level 列单字母分级
 
 | 体系 | 空行 | 真错位行（非空且列数≠表头14） | 值语义污染 | 归类 |
 |---|---|---|---|---|
-| **S14** | 85 | **10 行**（列15，行152-158 等：整体右移 1 列，尾缀多余列「算法联盟审计」） | evidence_level 长文本（uncertainty 串列）+ status 串列（methodology/observational/structural_claim 等） | **行级右移 + 值污染 混合**（OPEN-B9） |
+| **S14** | 85 | **10 行**（列15，行152-158 等：整体右移 1 列，尾缀多余列「本项目审计」） | evidence_level 长文本（uncertainty 串列）+ status 串列（methodology/observational/structural_claim 等） | **行级右移 + 值污染 混合**（OPEN-B9） |
 | **S15** | 31 | **0**（非空行全 14 列） | evidence_level 列被单字母分级值污染（H） | **值语义污染，非行错位**（OPEN-B8 归类修正） |
 | **S17** | 41 | **0**（非空行全 14 列） | evidence_level 列单字母分级（40 行） | **值语义污染，非行错位**（OPEN-B10 归类修正） |
 

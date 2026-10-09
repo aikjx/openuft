@@ -242,7 +242,7 @@ def summary():
 
 
 sec("TUFT 全维度验证总账（R1 + R2 + R3 + R4 证据链收口）")
-put("  算法联盟 ROOT 红线 · sympy 符号求导 + mpmath 100位精算 + numpy 解析")
+put("  本项目 ROOT 红线 · sympy 符号求导 + mpmath 100位精算 + numpy 解析")
 put("  本轮修复：R1 费米量子化'假设'已升级为由 R2 闭合带拓扑定理支撑。")
 verify_r1_symbolic()
 verify_r2_topology()
@@ -257,7 +257,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 out_md = os.path.join(HERE, "tuft_全维度验证总报告.md")
 with io.open(out_md, "w", encoding="utf-8") as fh:
     fh.write("# TUFT 全维度验证总报告（R1 + R2 + R3 + R4 证据链收口）\n\n")
-    fh.write("> 算法联盟 ROOT 红线 · sympy 符号求导 + mpmath 100 位精算 + numpy 解析 · " +
+    fh.write("> 本项目 ROOT 红线 · sympy 符号求导 + mpmath 100 位精算 + numpy 解析 · " +
              __import__("datetime").datetime.now().strftime("%Y-%m-%d") + "\n\n")
     fh.write("## 本轮修复\n\n")
     fh.write("- **[修复]** R1 把费米量子化 `s=|Lk|` 标注为'假设，非纯拓扑导出'；现由 R2 的 Möbius "
