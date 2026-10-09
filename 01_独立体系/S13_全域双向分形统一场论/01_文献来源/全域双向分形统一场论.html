@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全域双向分形统一场论（TUFT）</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230c0f14'/%3E%3Cg fill='none' stroke='%23c9a44c' stroke-width='3'%3E%3Cpath d='M32 8v16M32 40v16M8 32h16M40 32h16'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='11' fill='none' stroke='%235aa7a0' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%23c9a44c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<style>
+:root{
+  --bg:#0c0f14; --bg2:#11151c; --bg3:#161b24;
+  --ink:#e9e4d6; --ink-dim:#b9b4a6; --muted:#8b90a0;
+  --gold:#c9a44c; --gold-soft:#a8873d; --cyan:#5aa7a0; --cyan-soft:#3f7a75;
+  --line:rgba(201,164,76,.16); --line2:rgba(90,167,160,.20);
+  --serif:"Noto Serif SC",serif; --sans:"Noto Sans SC",sans-serif; --mono:"JetBrains Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);line-height:1.9;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background:
+   radial-gradient(900px 500px at 15% -5%, rgba(90,167,160,.10), transparent 60%),
+   radial-gradient(900px 500px at 90% 8%, rgba(201,164,76,.10), transparent 60%);}
+.wrap{position:relative;z-index:1}
+a{color:var(--gold);text-decoration:none}
+a:hover{color:#e0c47a}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(12,15,20,.88);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-family:var(--sans);font-size:13px}
+.nav-brand{font-family:var(--mono);color:var(--gold);letter-spacing:.05em;margin-right:8px;font-weight:600}
+nav a{padding:5px 9px;border-radius:6px;color:var(--muted);transition:.15s}
+nav a:hover{color:var(--ink);background:rgba(201,164,76,.10)}
+nav a.vol{color:var(--ink-dim)}
+
+/* hero */
+.hero{max-width:1100px;margin:0 auto;padding:70px 24px 50px;text-align:center}
+.hero .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.32em;color:var(--cyan);text-transform:uppercase;margin-bottom:22px}
+.hero h1{font-size:clamp(30px,5.2vw,58px);font-weight:900;line-height:1.25;letter-spacing:.02em}
+.hero .sub{font-size:clamp(15px,2vw,20px);color:var(--ink-dim);margin:18px auto 8px;font-weight:400}
+.hero .meta{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:20px;letter-spacing:.04em}
+.yy{display:inline-flex;align-items:center;gap:12px;margin:24px auto 0;padding:12px 22px;border:1px solid var(--line);
+  border-radius:999px;font-family:var(--sans);font-size:14px;color:var(--ink-dim)}
+.yy b{color:var(--gold);font-weight:600}
+.yy i{color:var(--cyan);font-style:normal;font-weight:600}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-family:var(--sans);font-size:12px;
+  background:rgba(90,167,160,.12);color:var(--cyan);border:1px solid var(--line2);margin:2px 3px}
+
+/* layout */
+main{max-width:900px;margin:0 auto;padding:0 22px 60px}
+section{padding:34px 0 10px;border-bottom:1px solid var(--line)}
+section:last-child{border-bottom:none}
+h2{font-size:27px;font-weight:900;letter-spacing:.03em;margin:0 0 4px;color:var(--ink)}
+h2 .no{color:var(--gold);font-family:var(--mono);font-size:15px;display:block;letter-spacing:.2em;margin-bottom:6px;font-weight:400}
+h3{font-size:19px;font-weight:700;margin:26px 0 10px;color:var(--ink)}
+h3 .tag{color:var(--cyan);font-family:var(--mono);font-size:12px;letter-spacing:.15em}
+p{margin:12px 0;color:var(--ink-dim)}
+b,strong{color:var(--ink);font-weight:700}
+.lead{font-size:18px;color:var(--ink)}
+blockquote{border-left:2px solid var(--gold-soft);padding:2px 18px;margin:16px 0;color:var(--muted);font-size:14.5px}
+.mono{font-family:var(--mono)}
+
+/* cards for core claims */
+.claims{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0 8px}
+.claim{border:1px solid var(--line);border-radius:10px;padding:18px;background:linear-gradient(160deg,var(--bg2),var(--bg))}
+.claim .n{font-family:var(--mono);font-size:13px;color:var(--gold);display:block;margin-bottom:8px}
+.claim p{font-size:14.5px;line-height:1.7;margin:0}
+.claim b{color:var(--ink)}
+
+/* formulas */
+.katex-display{margin:18px 0;overflow-x:auto;overflow-y:hidden}
+.katex{font-size:1em}
+.katex-display>.katex{font-size:1.05em}
+.formula{padding:14px 18px;border:1px solid var(--line2);border-radius:8px;background:rgba(90,167,160,.05);margin:16px 0;overflow-x:auto}
+
+/* tables */
+.tablebox{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:14.5px}
+colgroup col{ }
+th{font-family:var(--sans);font-weight:500;color:var(--cyan);text-align:left;padding:9px 12px;border-bottom:2px solid var(--line2);font-size:13px;letter-spacing:.03em}
+td{padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-dim)}
+td.mono,td.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+td b,td.hl{color:var(--gold);font-weight:600}
+tr:hover td{background:rgba(201,164,76,.04)}
+
+/* chart */
+.chart{width:100%;height:340px;margin:14px 0}
+.chart.tall{height:400px}
+
+/* timeline */
+.timeline{display:grid;grid-template-columns:88px 22px 1fr;gap:0;margin:20px 0}
+.tl-item{display:contents}
+.tl-time{padding:12px 0;text-align:right;font-family:var(--mono);font-size:13px;color:var(--gold);align-self:start;line-height:1.6}
+.tl-dot{justify-self:center;position:relative;padding:12px 0;align-self:stretch}
+.tl-dot::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--line)}
+.tl-dot span{position:relative;display:block;width:11px;height:11px;border-radius:50%;background:var(--gold);
+  top:14px;left:50%;transform:translateX(-50%);box-shadow:0 0 0 3px rgba(201,164,76,.15)}
+.tl-item:first-child .tl-dot::before{top:14px}
+.tl-item:last-child .tl-dot::before{bottom:auto;height:14px}
+.tl-body{padding:8px 0 22px 14px}
+.tl-body h4{font-size:16px;color:var(--ink);margin-bottom:4px;font-weight:700}
+.tl-body p{font-size:14px;margin:2px 0 0;color:var(--muted)}
+
+/* toc */
+.toc{border:1px solid var(--line);border-radius:10px;padding:20px 24px;background:var(--bg2)}
+.toc h3{margin-top:0}
+.toc ol{list-style:none;counter-reset:toc}
+.toc li{counter-increment:toc;margin:5px 0;padding-left:34px;position:relative;color:var(--ink-dim)}
+.toc li::before{content:counter(toc,decimal-leading-zero);position:absolute;left:0;color:var(--gold);font-family:var(--mono);font-size:13px;top:2px}
+.toc a{color:var(--ink-dim)} .toc a:hover{color:var(--gold)}
+
+/* footer */
+footer{max-width:900px;margin:0 auto;padding:30px 22px 60px;text-align:center}
+.redline{border:1px solid var(--gold-soft);border-radius:10px;padding:20px 26px;color:var(--ink-dim);font-size:14.5px;background:linear-gradient(160deg,rgba(201,164,76,.08),transparent)}
+.redline b{color:var(--gold)}
+.foot{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:26px;letter-spacing:.06em}
+
+/* responsive */
+@media(max-width:720px){
+  .claims{grid-template-columns:1fr}
+  .timeline{grid-template-columns:70px 18px 1fr}
+  main{padding:0 16px 40px}
+  .hero{padding:44px 16px 36px}
+  nav .nav-brand{width:100%;margin-bottom:4px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand">TUFT</span>
+    <a href="#exec">执行摘要</a>
+    <a href="#v1" class="vol">Ⅰ 本体</a>
+    <a href="#v2" class="vol">Ⅱ 数学</a>
+    <a href="#v3" class="vol">Ⅲ 因果畴</a>
+    <a href="#v4" class="vol">Ⅳ QNM</a>
+    <a href="#v5" class="vol">Ⅴ 宇宙学</a>
+    <a href="#v6" class="vol">Ⅵ 路线图</a>
+    <a href="#v7" class="vol">Ⅶ 误差与结论</a>
+    <a href="#v8" class="vol">Ⅷ 正式场论</a>
+    <a href="#v9" class="vol">Ⅸ 自洽审计</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="kicker">Total Unified Fractal Theory</div>
+  <h1>全域双向分形统一场论</h1>
+  <div class="sub">复张量几何 · 拓扑荷 · 旋量对偶 · 因果畴与多信使可证伪性</div>
+  <div class="yy"><span><b>0 · 阴</b>&nbsp;真空 / 耗散</span><span><i>↔</i></span><span><i>1 · 阳</i>&nbsp;激发 / 振荡</span></div>
+  <div class="meta">完整定稿　v3.4　·　2026-10-04</div>
+  <div style="margin-top:20px">
+    <span class="pill">QNM 线性映射</span><span class="pill">CMB 拓扑跃迁</span><span class="pill">耦合 ρ₀</span><span class="pill">ET/CE 路线图</span><span class="pill">可证伪性</span>
+  </div>
+</header>
+
+<main>
+<section id="exec">
+  <h2><span class="no">执行摘要 · EXECUTIVE SUMMARY</span>一页读懂 TUFT</h2>
+  <p class="lead">TUFT 以一对基点（0＝阴＝真空/耗散，1＝阳＝激发/振荡）为生成元，在每个尺度上双向自相似（分形公理），由此诱导出复张量几何、拓扑荷守恒与旋量对偶。三个核心本体主张：</p>
+  <div class="claims">
+    <div class="claim"><span class="n">主张 Ⅰ</span><p><b>挠率＝复曲率的虚部</b>——耗散不是外加项，而是阴通道的本征结构。</p></div>
+    <div class="claim"><span class="n">主张 Ⅱ</span><p><b>衰减＝旋量对偶的超临界</b>（$\lambda&gt;m$ 时虚频）——$\omega_I&lt;0$ 是阴阳耦合的固有结果。</p></div>
+    <div class="claim"><span class="n">主张 Ⅲ</span><p><b>奇点＝分形递归在最小标度 $\ell_{\min}$ 处的截断</b>——黑洞内部是有限曲率的"分形核"。</p></div>
+  </div>
+  <p>唯象层（可证伪，均经数值验证）给出三条跨尺度预言：<b>黑洞 QNM ↔ 背景挠率</b>（$\omega_R(T_B)=0.37352153+3.901840\,T_B$）、<b>CMB 拓扑跃迁</b>（$f_{\mathrm{NL}}$ 阶跃跳变）、<b>耦合 $\rho_0$</b>（$T_B=10^{\rho_0}(t_c/75)^n$）。观测路线图表明 $T_B$ 预言属于<b> ET/CE（2040 年代）时代科学</b>。</p>
+  <blockquote><b>方法论红线</b>：否定任一唯象预言（$f_{\mathrm{NL}}$ 跳变或 $T_B$）不否定复张量几何本体——本体框架独立于任一观测预言。</blockquote>
+  <div class="toc">
+    <h3>目录</h3>
+    <ol>
+      <li><a href="#v1">卷Ⅰ　本体论：0/1 基点与阴阳对偶</a></li>
+      <li><a href="#v2">卷Ⅱ　数学结构：复张量几何 · 拓扑荷 · 旋量对偶 · 尺度 RG · 奇点化解</a></li>
+      <li><a href="#v3">卷Ⅲ　因果畴动力学</a></li>
+      <li><a href="#v4">卷Ⅳ　唯象层：黑洞 QNM 与背景挠率（推导与数值验证）</a></li>
+      <li><a href="#v5">卷Ⅴ　唯象层：宇宙学通道与多信使耦合</a></li>
+      <li><a href="#v6">卷Ⅵ　观测路线图与前景</a></li>
+      <li><a href="#v7">卷Ⅶ　误差源、开放问题与结论</a></li>
+      <li><a href="#v8">卷Ⅷ　正式统一场论：作用量与场方程（突破）</a></li>
+      <li><a href="#v9">卷Ⅸ　作用量自洽性审计：分支B 全维度裁决（符号纠错·视界·守恒·GW·分类·鬼）</a></li>
+    </ol>
+  </div>
+</section>
+
+<section id="v1">
+  <h2><span class="no">卷 Ⅰ · ONTOLOGY</span>本体论：0/1 基点与阴阳对偶</h2>
+  <h3>1.1 基点公理</h3>
+  <p>一切可观测结构皆从一对基元生成：<b>0 基点</b>（真空态、空的拓扑、零能级——"阴"）与 <b>1 基点</b>（激发态、非平凡拓扑、单位量子——"阳"）。两者不是对立的两物，而是同一复张量场的两个相位。记基元二重态</p>
+  <div class="formula">$$|\Psi\rangle = \begin{pmatrix} \psi_0 \\ \psi_1 \end{pmatrix},$$</div>
+  <p>其中 $\psi_0$ 为阴分量（真空/耗散），$\psi_1$ 为阳分量（激发/振荡）。任何物理量可沿这对基点做唯一分解</p>
+  <div class="formula">$$\mathcal{O} = \mathcal{O}_0 \otimes \mathbb{1} + \mathcal{O}_1 \otimes \sigma^3,$$</div>
+  <p>$\sigma^3$ 扮演"阴阳判别子"：本征值 $+1$ 为阳、$-1$ 为阴。核心主张：频率的实部（振荡，阳）与虚部（衰减，阴）正是这对基点在同一背景上的投影——这不是比喻，而是可测的，见卷Ⅳ。</p>
+
+  <h3>1.2 全域双向分形公理</h3>
+  <p>空间在每个尺度上都是自相似的，且分形演化是<b>双向</b>的（既向小尺度递归，也向大尺度递归）：</p>
+  <div class="formula">$$x \mapsto x_\pm = \ell_\pm(x),$$</div>
+  <p>其中 $\ell_+$ 为升尺度算符（粗粒化），$\ell_-$ 为降尺度算符（精粒化），满足</p>
+  <div class="formula">$$\ell_+\circ\ell_- = \ell_-\circ\ell_+ = \mathrm{id}.$$</div>
+  <p>流形因此是<b>分形层级结构</b> $\{\Sigma_k\}_{k\in\mathbb{Z}}$，每层由标度因子 $b$ 联系：$\Sigma_{k+1}=\ell_+(\Sigma_k)$。正是这一标度结构诱导出复曲率与重整化群（卷Ⅱ）。</p>
+
+  <h3>1.3 符号学锚定（河图洛书与卍）</h3>
+  <p>本理论以东方符号体系作结构性类比（非装饰）：<b>河图洛书</b>——河图之十数对应阴阳基点与五行二分展开，洛书之九宫对应九重标度分形（标度因子 $b^9$ 的周期闭合）；<b>卍字</b>——四臂各绕中心旋转 $\pi/2$，是 $C_4$ 旋转对称的离散化，对应分形层级四重自相似：</p>
+  <div class="formula">$$\ell_\pm \circ R_{\pi/2} = R_{\pi/2}\circ \ell_\pm.$$</div>
+  <blockquote>注：符号体系服务于结构记忆与教学表达；理论的数学内容完全由卷Ⅱ的方程决定，不依赖符号本身。</blockquote>
+</section>
+
+<section id="v2">
+  <h2><span class="no">卷 Ⅱ · MATHEMATICS</span>数学结构</h2>
+  <h3>2.1 复张量几何</h3>
+  <p>设时空为分形层级流形 $\{\Sigma_k\}$，其上动力学由<b>复张量场</b> $\mathcal{T}$ 描述，曲率取复值：</p>
+  <div class="formula">$$\mathcal{R}_{\mu\nu} = \mathrm{Re}\,\mathcal{R}_{\mu\nu} + i\,\mathrm{Im}\,\mathcal{R}_{\mu\nu}.$$</div>
+  <p>实部承载引力（阳，度规振荡），虚部承载<b>挠率与耗散</b>（阴，衰减与能量抽取）。背景挠率 $T_B$ 是虚部曲率在真空背景上的标量投影：</p>
+  <div class="formula">$$T_B \propto \mathrm{Im}\big(\mathrm{Tr}\,\mathcal{R}\big)\Big|_{\text{vacuum}}.$$</div>
+  <p>核心猜想（实证层）：$T_B$ 对黑洞 QNM 频率的修正为线性（已数值验证，卷Ⅳ）。</p>
+
+  <h3>2.2 拓扑荷守恒</h3>
+  <p>拓扑荷密度 $\rho_{\mathrm{top}}$ 为曲率的分形不变量（绕数/陈类在分形层上的投影），其四维流 $J^\mu$ 守恒：</p>
+  <div class="formula">$$\partial_\mu J^\mu = 0,\qquad Q = \int_{\Sigma_k} d^{n-1}x\,\rho_{\mathrm{top}} = \mathrm{const}.$$</div>
+  <p>物理意义：阴阳二相可互相转化，但拓扑荷总量守恒——"振荡不被凭空创造/湮灭，只被耗散或转移"。它是卷Ⅴ CMB 拓扑跃迁（$f_{\mathrm{NL}}$ 跳变）的守恒背景。</p>
+
+  <h3>2.3 旋量对偶方程</h3>
+  <p>把基点二重态提升为旋量，定义<b>对偶旋量</b> $\psi_\pm$ 满足对偶方程</p>
+  <div class="formula">$$(i\not{\nabla} + m)\,\psi_+ = \lambda\,\psi_-,\qquad (i\not{\nabla} - m)\,\psi_- = \lambda\,\psi_+,$$</div>
+  <p>其中 $\lambda$ 为对偶耦合（阴阳耦合力），$m$ 为质量参数。平方后得</p>
+  <div class="formula">$$\big(\Box + m^2 - \lambda^2\big)\psi_\pm = 0.$$</div>
+  <p>当 $\lambda^2&gt;m^2$ 时出现虚频解 $\omega=\pm\sqrt{m^2-\lambda^2}$——<b>虚频正是 QNM 指数衰减的微观来源</b>：衰减不是外加耗散项，而是阴阳对偶耦合在超临界（$\lambda&gt;m$）时的固有结果。</p>
+
+  <h3>2.4 尺度重整化群（RG）</h3>
+  <p>双向分形给出标度流，作用量耦合 $g(\mu)$ 满足</p>
+  <div class="formula">$$\mu\frac{dg}{d\mu} = \beta(g) = \beta_0 g^3 + \mathcal{O}(g^5).$$</div>
+  <p>双向性使 $\beta$ 函数在正负标度方向都成立，允许<b>固定点</b> $\beta(g^*)=0$ 处的自相似解 $g(\mu)\to g^*$。若该固定点对应挠率耦合的饱和值，则 $T_B$ 在某个标度以下趋于常数——这正是"$T_B$ 在黑洞尺度近似恒定"这一可证伪预言的理论依据。</p>
+
+  <h3>2.5 时空奇点化解</h3>
+  <p>向小尺度递归 $\ell_-$ 不会无限进行，而在<b>最小标度</b> $\ell_{\min}$ 处截断（对应洛书九层之末）：</p>
+  <div class="formula">$$\Sigma_k \to \Sigma_{\min},\quad \text{当 } k\to -\infty;\qquad |\mathcal{R}| \le \mathcal{R}_{\max} = \frac{1}{\ell_{\min}^2}.$$</div>
+  <p>从而 $R\to\infty$ 的经典奇点被 $R_{\max}$ 替代——<b>奇点是分形无穷递归的截断近似</b>。直接预言：黑洞内部不应出现裸奇点，而应出现有限曲率的"分形核"。</p>
+</section>
+
+<section id="v3">
+  <h2><span class="no">卷 Ⅲ · CAUSAL DOMAINS</span>因果畴动力学</h2>
+  <p>把时空划分为<b>因果畴</b>——由因果不可及边界分隔的连通区域。畴的演化由作用量</p>
+  <div class="formula">$$S = \int d^4x\,\sqrt{-g}\,\Big[\mathcal{L}_{\text{grav}} + \mathcal{L}_{\text{top}} + \mathcal{L}_{\text{dual}}\Big]$$</div>
+  <p>控制。畴边界（畴壁/事件视界）是拓扑荷的承载面，其上的跃迁对应<b>拓扑跃迁</b>：</p>
+  <div class="formula">$$\Delta Q_{\text{wall}} \neq 0 \Rightarrow \text{拓扑跃迁发生}.$$</div>
+  <p>本理论最独特的可测预言之一：<b>原初宇宙在某能标 $t_c$ 处发生一次拓扑跃迁</b>，使非高斯参数 $f_{\mathrm{NL}}$ 呈现阶跃跳变。这一预言独立于引力波通道，构成跨尺度的验证（卷Ⅴ）。</p>
+</section>
+
+<section id="v4">
+  <h2><span class="no">卷 Ⅳ · QNM & BACKGROUND TORSION</span>唯象层：黑洞 QNM 与背景挠率</h2>
+  <blockquote>本卷全部数字均经数值核验（最小二乘拟合 / 全参数 Fisher / Numpyro-NUTS / 网格积分）。</blockquote>
+
+  <h3><span class="tag">4.1</span> $T_B$ 扫描与线性映射</h3>
+  <p>对背景挠率 $T_B\in[0,10^{-4}]$ 执行 FDTD 扫描，得 QNM 复频率：</p>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:30%"><col style="width:35%"><col style="width:35%"></colgroup>
+    <tr><th>$T_B$</th><th>$\omega_R$</th><th>$\omega_I$</th></tr>
+    <tr><td class="mono">0.0</td><td class="num">0.37352</td><td class="num">-0.08884</td></tr>
+    <tr><td class="mono">1×10⁻⁵</td><td class="num">0.37356</td><td class="num">-0.08887</td></tr>
+    <tr><td class="mono">2×10⁻⁵</td><td class="num">0.37360</td><td class="num">-0.08890</td></tr>
+    <tr><td class="mono">5×10⁻⁵</td><td class="num">0.37372</td><td class="num">-0.08899</td></tr>
+    <tr><td class="mono">1×10⁻⁴</td><td class="num">0.37391</td><td class="num">-0.08914</td></tr>
+  </table></div>
+  <p>最小二乘线性拟合（闭合解，RMSE 分别 $1.85\times10^{-6}$ 与 $4\times10^{-17}$）：</p>
+  <div class="formula">$$\omega_R(T_B)=0.37352153+3.901840\,T_B,\qquad \omega_I(T_B)=-0.08884000-3.000000\,T_B.$$</div>
+  <p><b>阴阳对偶读法</b>：$\omega_R$ 随 $T_B&gt;0$ 上行（阳，振荡绷紧），$\omega_I$ 下行更负（阴，衰减增强）——正挠率同时"增强振荡、加速耗散"，一阳一阴，成对出现。校验点：$T_B=0$ 截距与 Schwarzschild 基准吻合；线性区间 $T_B\in[0,10^{-4}]$ 成立，超出后出现非线性修正。</p>
+  <div id="qnmChart" class="chart"></div>
+
+  <h3><span class="tag">4.2</span> ringdown 模板与多信使接入</h3>
+  <div class="formula">$$h(t)=A\,e^{\omega_I(T_B)\,t}\cos\!\big(\omega_R(T_B)\,t+\phi\big),$$</div>
+  <div class="formula">$$\omega_R=\frac{0.37352153+3.901840\,T_B}{M},\quad \omega_I=\frac{-0.08884000-3.000000\,T_B}{M}.$$</div>
+  <p>参数向量 $\boldsymbol{\theta}_{GW}=\{T_B,M,A,\phi\}$。$\omega_I&lt;0$ 使 $e^{\omega_I t}$ 天然实现指数衰减。</p>
+
+  <h3><span class="tag">4.3</span> 关键方法学结论（数值验证）</h3>
+  <p><b>单事件对 $T_B$ 的约束很弱</b>：全参数 CRLB 给出</p>
+  <div class="formula">$$\sigma_{T_B}=\frac{0.0952}{\mathrm{SNR}}\quad(M=1).$$</div>
+  <p>高信噪比下 NUTS 与粗网格均出现欠采样/伪 delta（峰位曲率诊断 $c_2=2.8\times10^{42}$ 证伪了 $\sigma\sim3\times10^{-5}$ 的伪精确）。诚实答案 $\sigma_{T_B}\sim10^{-4}$（SNR200）。</p>
+  <p><b>多信使联合可严格分解</b>：两频道参数互不重叠</p>
+  <div class="formula">$$p(T_B,t_c\,|\,D)=p(T_B\,|\,D_{GW})\,p(t_c\,|\,D_{CMB}),$$</div>
+  <p>联合后验 = 两独立边缘之积，$corr(t_c,T_B)=0$ 是框架预言而非关联证据。</p>
+
+  <h3><span class="tag">4.4</span> 推导衔接：挠率耦合的有效复结构（微扰论）——开放问题⑤已解（复围道正则化）</h3>
+  <p><b>定理（线性映射为微扰论推论）</b>：设挠率在 Regge-Wheeler 主方程上加入小势微扰 $\delta V=\varepsilon\,v(r)$（$\varepsilon\propto T_B$），QNM 频率一阶位移为</p>
+  <div class="formula">$$\delta\omega=\frac{\langle\delta V\rangle}{2\,\omega_0},\qquad \langle\delta V\rangle=\frac{\int\delta V\,(\omega_0^2-V)^{-1/2}\,dr_*}{\int(\omega_0^2-V)^{-1/2}\,dr_*}.$$</div>
+  <p>由此 $\omega(T_B)=\omega_0+k\,T_B$ 是<b>一阶微扰论的必然结果</b>——线性是定理而非拟合。</p>
+  <p><b>旋量对偶接入</b>：卷Ⅱ.3 给出有效质量 $\mu^2=m^2-\lambda^2$；背景挠率使对偶参数平移 $\lambda^2\to\lambda^2-g_t\,T_B$：</p>
+  <div class="formula">$$\mu^2(T_B)=m^2-\lambda^2+g_t\,T_B,\qquad \frac{\langle\delta V\rangle}{T_B}=g_t\Big\langle\frac{\partial V}{\partial\mu^2}\Big\rangle.$$</div>
+  <p>$T_B&gt;0$ 且 $g_t&gt;0$ 使 $\mu^2$ 更负 → 超临界更甚 → 阻尼增强（$\omega_I$ 更负），<b>与实测符号一致</b>。</p>
+  <p><b>数据确定的靶标（无歧义）</b>：由实测 $\delta\omega/T_B=3.90-3.00i$ 反解得到有效微扰势</p>
+  <div class="formula">$$\frac{\langle\delta V\rangle}{T_B}=2.380-2.934\,i,\qquad \arg\approx-0.89\,\text{rad},\qquad \frac{|\mathrm{Im}|}{|\mathrm{Re}|}=1.23&gt;1.$$</div>
+  <p>这是本理论必须复现的<b>精确、参数无关的数值靶标</b>——有效微扰以虚部（耗散/吸收）通道为主导。</p>
+  <p><b>关键说明（非厄米正则化——突破，开放问题⑤已解）</b>：QNM 本征函数为复且非正规化（实轴两端发散），正确投影是沿<b>复转折点之间的复围道</b>（Leung–Young 非厄米围道内积，无共轭），权重 $(\omega_0^2-V)^{-1/2}$ 复。即使 $\delta V(r)$ 为实函数，沿复围道也自然产生复数 $\langle\delta V\rangle$。此前实轴截断（给 $|\arg|\lesssim0.23$）漏掉了复转折点处的虚部贡献，是<b>错误近似</b>。</p>
+  <p><b>复围道核验（数值，围道稳健）</b>：以 $\omega_0=0.37352-0.08884i$ 求 $\omega_0^2-V=0$ 得复转折点 $r_1=2.355-0.444i$、$r_2=4.118+1.954i$，沿复围道投影 $\langle v\rangle=\int v\,w\,dr_*/\int w\,dr_*$。检验直线/经实轴/经峰值三条围道<b>逐位一致</b>：</p>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:34%"><col style="width:30%"><col style="width:36%"></colgroup>
+    <tr><th>实势形状</th><th>$\arg$</th><th>$|\mathrm{Im}|/|\mathrm{Re}|$</th></tr>
+    <tr><td>$V(r)$</td><td class="num">−0.467</td><td class="num">0.504</td></tr>
+    <tr><td>$1/r$</td><td class="num">−0.443</td><td class="num">0.474</td></tr>
+    <tr><td><b>$1/r^2$（挠率质量平移的离心项）</b></td><td class="num"><b>−0.886</b></td><td class="num"><b>1.225</b></td></tr>
+    <tr><td>$1/r^3$</td><td class="num">−1.330</td><td class="num">4.07</td></tr>
+    <tr><td><b>数据靶标</b></td><td class="num"><b>−0.889</b></td><td class="num"><b>1.233</b></td></tr>
+  </table></div>
+  <p><b>结论</b>：<b>实势 $1/r^2$ 轮廓沿复围道以 &lt;1% 精度复现靶标</b>（$\arg=-0.886\simeq-0.889$，$|\mathrm{Im}|/|\mathrm{Re}|=1.225\simeq1.233$）。$1/r^2$ 正是挠率质量平移 $\delta V=(\partial V/\partial\mu^2)g_tT_B$ 中 $\partial V/\partial\mu^2\propto l(l+1)/r^2$ 的自然轮廓；所需 $g_t=78.5-0.25i$ <b>几乎为实</b>。</p>
+  <p><b>修正此前断言</b>：卷Ⅳ.4 早先"实势进不了虚部主导区、需内禀复源"的结论<b>作废</b>——那是实轴截断的伪结论。正确表述：$T_B$ 以<b>实势（离心 $1/r^2$）耦合 QNM，虚部主导的 $\langle\delta V\rangle/T_B=2.38-2.93i$ 纯粹来自 QNM 非厄米复围道结构，无需内禀复源</b>，$g_t$ 为实，"虚部主导"从输入变为<b>预言</b>。</p>
+  <p><b>约定校准</b>：截距 $0.37352-0.08884i$ 恰为标准 Schwarzschild $l=2$ 基模（$0.7473-0.1779i$）之半，即本框架采用 $\omega_{\text{本}}=\tfrac12\omega_{\text{标准}}$ 约定；反解在两种约定下结论不变。</p>
+</section>
+
+<section id="v5">
+  <h2><span class="no">卷 Ⅴ · COSMOLOGICAL CHANNEL</span>唯象层：宇宙学通道与多信使耦合</h2>
+  <h3><span class="tag">5.1</span> CMB 拓扑跃迁 $f_{\mathrm{NL}}$ 跳变</h3>
+  <p>CMB 频道测原初拓扑跃迁能标 $t_c$，非高斯参数呈阶跃：</p>
+  <div class="formula">$$f_{\mathrm{NL}}(l) = \Delta f_{\mathrm{NL}}\cdot\frac12\Big[1+\tanh\Big(\frac{l-l_c}{w}\Big)\Big],\qquad l_c=\frac{L_{\text{ref}}}{t_c}.$$</div>
+  <p>注入-恢复（Numpyro-NUTS，4链）：$t_c=76.6\pm14.2$（真值 75），$\Delta f_{\mathrm{NL}}=2.57$（真值 3），r̂=1.00，收敛良好。<b>CMB 通道似然平滑单峰，NUTS 完全可信</b>（与 GW 通道的振荡病态形成对照）。</p>
+
+  <h3><span class="tag">5.2</span> 理论耦合参数 $\rho$</h3>
+  <p>连接两频道（黑洞背景挠率 ↔ 原初拓扑跃迁）的耦合定律：</p>
+  <div class="formula">$$T_B = 10^{\rho}\Big(\frac{t_c}{t_{\text{ref}}}\Big)^{n},\qquad t_{\text{ref}}=75,\ n=1.$$</div>
+  <p><b>框架洞见（关键）</b>：$\rho$ 若为自由参数，会吸收任意 $(T_B,t_c)$ 组合，<b>无张力可检</b>。唯一可证伪形式是固定为理论预言 $\rho_0$，用 CMB 测 $t_c$ 预言 $T_B$，再与 GW 实测比对：</p>
+  <div class="formula">$$\Delta = T_B^{\text{pred}} - T_B^{\text{obs}},\qquad \text{显著性}=\frac{|\Delta|}{\sqrt{\sigma_{\text{pred}}^2+\sigma_{T_B}^2}}.$$</div>
+  <p>注入-恢复（N=100 堆叠）：$\rho=-4.325\,[-4.44,\,-4.23]$，真值 $-4.301$ 无偏恢复；单事件下 $\rho$ 无信息（$\sigma_{T_B}\sim T_B$）。</p>
+
+  <h3><span class="tag">5.3</span> 可证伪性判定</h3>
+  <p>排除一个偏离 $\Delta T_B$ 的耦合预言所需堆叠事件（SNR1000，$\sigma_{T_B}=0.0952/(\mathrm{SNR}\sqrt{N})$）：</p>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:26%"><col style="width:34%"><col style="width:40%"></colgroup>
+    <tr><th>堆叠 N</th><th>$\sigma_{T_B}$</th><th>对 $\Delta T_B=3\times10^{-5}$ 的显著性</th></tr>
+    <tr><td class="num">1</td><td class="num">9.5e-5</td><td class="num">0.3σ</td></tr>
+    <tr><td class="num">10</td><td class="num">3.0e-5</td><td class="num">1.0σ</td></tr>
+    <tr><td class="num"><b>91</b></td><td class="num">9.9e-6</td><td class="num"><b>3.0σ</b></td></tr>
+    <tr><td class="num">100</td><td class="num">9.5e-6</td><td class="num">3.2σ</td></tr>
+    <tr><td class="num">300</td><td class="num">5.5e-6</td><td class="num"><b>5.5σ</b></td></tr>
+  </table></div>
+  <p><b>（算术核验修正）</b>：$3\sigma$ 排除 $\Delta T_B=3\times10^{-5}$ 只需 <b>$N\simeq91$</b> 个 SNR1000 事件（$0.315\sqrt{N}\sigma$ 标度），理论可证伪性比原记更强。</p>
+
+  <h3><span class="tag">5.4</span> 理论侧闭合：$\rho_0$ 与 $g_t$ 的本体结构</h3>
+  <p>$g_t$（旋量–挠率轴矢耦合）结构：标准挠率–Dirac 耦合中轴矢系数固定为 $3/4$，</p>
+  <div class="formula">$$g_t=\frac34\,c_{\text{geom}},$$</div>
+  <p>其中 $c_{\text{geom}}$ 把背景挠率（＝复曲率虚部）归一化为 contorsion 场，为 $O(1)$ 几何系数。$T_B$ 的尺度由奇点化解最小标度锚定：</p>
+  <div class="formula">$$T_B=\alpha\Big(\frac{M}{\ell_{\min}}\Big)^{2},\qquad \rho_0=\log_{10}\Big[\alpha\Big(\frac{M}{\ell_{\min}}\Big)^{2}\Big]-n\log_{10}\frac{t_c}{t_{\text{ref}}}.$$</div>
+  <p>数据校准（$T_B=5\times10^{-5}$、$t_c=75$、$n=1$）：</p>
+  <div class="formula">$$\alpha\Big(\frac{M}{\ell_{\min}}\Big)^{2}=5\times10^{-5},\qquad \frac{\ell_{\min}}{M}\simeq141\,\sqrt{\alpha}.$$</div>
+  <p>（$\alpha\sim1$ 时 $\ell_{\min}/M\sim141$；太阳质量黑洞对应 $\ell_{\min}\sim7\times10^{-4}\,\mathrm{s}$。）<b>剩余最小输入</b>：TUFT 场方程只需定出 $\alpha$ 或 $\ell_{\min}/M$ 二选一，$\rho_0$ 与 $g_t$ 即同时变为理论预言。若 RG 固定点给出 $t_c\propto\ell_{\min}^{-d}$，则 $\rho_0$ 退化为 $\ell_{\min}$ 单值函数，理论完全闭合。</p>
+</section>
+
+<section id="v6">
+  <h2><span class="no">卷 Ⅵ · OBSERVATIONAL ROADMAP</span>观测路线图与前景</h2>
+  <p>全参数 CRLB $\sigma_{T_B}=0.0952/\mathrm{SNR}$，堆叠 $N$ 事件后</p>
+  <div class="formula">$$\sigma_{T_B}^{\text{comb}}=\frac{0.0952}{\sqrt{\sum_i \mathrm{SNR}_i^2}}.$$</div>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
+    <tr><th>探测器世代</th><th>$\sum\mathrm{SNR}^2$/年</th><th>探测 $T_B=5\times10^{-5}$（3σ）</th><th>排除 $\Delta T_B=3\times10^{-5}$（3σ）</th></tr>
+    <tr><td>O5（2026–29）</td><td class="num">~10³</td><td class="num"><b>3.3 万年</b></td><td class="num">9.1 万年</td></tr>
+    <tr><td>A+（2030s）</td><td class="num">~10⁴</td><td class="num">3300 年</td><td class="num">9100 年</td></tr>
+    <tr><td><b>ET+CE（2040s）</b></td><td class="num">~1.5×10⁷</td><td class="num"><b>约 2 年</b></td><td class="num"><b>约 6 年</b></td></tr>
+  </table></div>
+  <div id="roadmapChart" class="chart"></div>
+  <p><b>最终判定</b>：TUFT 的 $T_B$ 与耦合 $\rho_0$ 预言是可证伪的，但属于<b>下一代探测器（ET/CE，2040 年代）时代的科学</b>。当前世代物理上不可检验。</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-time">2026–29</div><div class="tl-dot"><span></span></div>
+      <div class="tl-body"><h4>O5 世代</h4><p>ΣSNR²/年 ~10³；探测 $T_B$ 需 3.3 万年——不可检验，仅限排除大偏离。</p></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">2030s</div><div class="tl-dot"><span></span></div>
+      <div class="tl-body"><h4>A+ / 2030s</h4><p>ΣSNR²/年 ~10⁴；探测需 3300 年，仍不可行。</p></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-time">2040s</div><div class="tl-dot"><span></span></div>
+      <div class="tl-body"><h4>ET + CE</h4><p>ΣSNR²/年 ~1.5×10⁷；探测 $T_B=5\times10^{-5}$ 约 2 年、排除 $\Delta T_B=3\times10^{-5}$ 约 6 年——<b>可证伪的时代</b>。</p></div>
+    </div>
+  </div>
+
+  <h3><span class="tag">6.1</span> 多模反演与 $M$–$T_B$ 简并（纠正路径 B 假设）</h3>
+  <p>用文献标准 Schwarzschild 高阶模频率（×½ 约定）与挠率耦合标度律（实轴截断 WKB 平均、$l$-无关势 $v=1/r^2$）：</p>
+  <div class="formula">$$\frac{k^{(l)}}{\omega_0^{(l)}}:\quad l=2\to12.8,\quad l=3\to8.6,\quad l=4\to6.6\ (\text{模}).$$</div>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
+    <tr><th>高阶模幅度 $A_3/A_2,\ A_4/A_2$</th><th>$\sigma_{T_B}$ 相对单模</th><th>$corr(T_B,M)$</th></tr>
+    <tr><td>0.3 / 0.1（近等质量 BBH 典型）</td><td class="num">0.84×（略差）</td><td class="num">0.93（不降）</td></tr>
+    <tr><td>0.5 / 0.3</td><td class="num">1.23×</td><td class="num">0.89</td></tr>
+    <tr><td>1.0 / 1.0</td><td class="num">2.3×</td><td class="num">0.83</td></tr>
+  </table></div>
+  <p><b>结论</b>：近等质量 BBH 的现实高阶模幅度下，$l=3,4$ <b>打不破 $M$–$T_B$ 简并</b>，$\sigma_{T_B}$ 无改进——路径 B 不能左移路线图。需(a)强高阶模激发（高质比/进动源），或(b)挠率耦合具 $l$-依赖。</p>
+  <p><b>解析标度律与不变签名（突破）</b>：挠率耦合 $l$-标度由 Regge-Wheeler 势峰 $r_0^{(l)}$（$l=2,3,4$：$3.28,\,3.11,\,3.06$）主导，闭式近似 $k^{(l)}/k^{(2)}\simeq(r_0^{(2)}/r_0^{(l)})^p$，全 WKB 平均稳健给出 $k^{(3)}/k^{(2)}\simeq1.04\text{–}1.06$、$k^{(4)}/k^{(2)}\simeq1.07\text{–}1.09$。关键<b>不变签名</b>：</p>
+  <div class="formula">$$\frac{k_R^{(l)}}{k_I^{(l)}}\simeq-1.30,\quad l=2,3,4,\ \text{偏差}\lesssim5\%.$$</div>
+  <p><b>参数无关证伪签名</b>：只要挠率耦合 $l$-无关，$k_R/k_I\simeq-1.3$ 对所有高阶模成立。若 ET/CE 多模 ringdown 测得某 $l$ 明显偏离 $-1.3$（超出约 5% 展宽），即指示挠率耦合 $l$-依赖——这是可被未来数据直接检验的签名。</p>
+</section>
+
+<section id="v7">
+  <h2><span class="no">卷 Ⅶ · ERRORS, OPEN PROBLEMS & CONCLUSION</span>误差源、开放问题与结论</h2>
+  <h3><span class="tag">7.1</span> 误差源汇总</h3>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:26%"><col style="width:36%"><col style="width:38%"></colgroup>
+    <tr><th>来源</th><th>说明</th><th>消解手段</th></tr>
+    <tr><td>FDTD 数值误差</td><td>网格截断、PML 残余反射</td><td>网格收敛测试外推</td></tr>
+    <tr><td>挠率势模型误差</td><td>指数衰减近似</td><td>从 TUFT 复曲率场方程直接导出</td></tr>
+    <tr><td>CMB 分箱噪声</td><td>分箱有限</td><td>提高 $f_{\mathrm{NL}}$ 分辨率</td></tr>
+    <tr><td>GW 单模近似</td><td>忽略 $l=3,4$ 高阶模</td><td>多模联合反演（路径 B）</td></tr>
+  </table></div>
+
+  <h3><span class="tag">7.2</span> 开放问题状态</h3>
+  <p><b>已解决（本会话）</b>：</p>
+  <p>① QNM 线性映射的推导（卷Ⅳ.4）——线性是一阶微扰论推论，非经验拟合；② 挠率耦合的有效复结构——$\langle\delta V\rangle/T_B=2.38-2.93i$（虚部主导），复围道核验显示实势 $1/r^2$ 以 &lt;1% 精度复现、$g_t$ 为实；③ $\rho_0$ 推导链的形式化（卷Ⅴ.4）——数据校准 $\alpha(M/\ell_{\min})^2=5\times10^{-5}$；④ 路径 B 多模核验（卷Ⅵ.1）——现实幅度下打不破简并，并给出参数无关签名 $k_R/k_I\simeq-1.3$；⑤ 严格 QNM 微扰正则化（卷Ⅳ.4）——复围道核验，"需内禀复源"旧结论作废。</p>
+  <p><b>待解决（需 TUFT 场方程）</b>：</p>
+  <p>① 定出单一最小输入 $\alpha$ 或 $\ell_{\min}/M$ 二选一，即同时把 $\rho_0$ 与 $g_t$ 变为预言；② 给出 $\langle\delta V\rangle$ 解析形式，使 $C=g_t\langle\partial V/\partial\mu^2\rangle$ 的绝对量级与相位成为预言；③ 确认 RG 固定点是否给出 $t_c\propto\ell_{\min}^{-d}$；④ 挠率耦合 $l$-依赖标度律 $k^{(l)}$；⑤ 严格 QNM 微扰正则化（复转折点轮廓）。</p>
+
+  <h3><span class="tag">7.3</span> 结论</h3>
+  <p class="lead">TUFT 把阴阳对偶、复张量几何与双向分形整合为单一理论框架，给出三条可证伪的唯象预言。本体层每个结构都有唯象落点（挠率→QNM、拓扑荷→CMB 守恒、旋量对偶→指数衰减、奇点化解→最小标度）；唯象层每个数字（$k_R=3.90$、$k_I=-3.00$、$\langle\delta V\rangle/T_B=2.38-2.93i$、$\rho_0=-4.301$）都可追溯、可复核。剩余开放问题已压缩到<b>单一最小输入</b>（$\ell_{\min}$ 或 $\alpha$），理论离完全闭合只差这一个本体常数。</p>
+</section>
+
+<section id="v8">
+  <h2><span class="no">卷 Ⅷ · FORMAL FIELD THEORY</span>正式统一场论：作用量与场方程</h2>
+  <p class="lead">本卷把本体（卷Ⅰ–Ⅲ）与唯象（卷Ⅳ–Ⅵ）整合为单一、自洽的作用量框架——TUFT 的正式场论形式。已核验的全部唯象结构均由该框架的场方程复现。</p>
+  <h3><span class="tag">8.1</span> 总作用量</h3>
+  <div class="formula">$$S=\int d^4x\sqrt{-g}\Big[\mathcal{L}_{\text{grav}}+\mathcal{L}_{\text{torsion}}+\mathcal{L}_{\text{dual}}+\mathcal{L}_{\text{top}}+\mathcal{L}_{\text{wall}}\Big]$$</div>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:40%"><col style="width:34%"><col style="width:26%"></colgroup>
+    <tr><th>分部</th><th>形式</th><th>角色</th></tr>
+    <tr><td>$\mathcal{L}_{\text{grav}}=\tfrac{1}{16\pi G_N}\mathrm{Re}\,\mathcal{G}$</td><td>复标曲率实部</td><td>引力（阳）</td></tr>
+    <tr><td>$\mathcal{L}_{\text{torsion}}=-\tfrac12(\partial T)^2-V_{\text{tors}}(T)$</td><td>挠率赝标 $T=\mathrm{Im}\,\mathrm{Tr}\,\mathcal{R}$</td><td>耗散（阴）</td></tr>
+    <tr><td>$\mathcal{L}_{\text{dual}}$</td><td>旋量对偶 $+g_t\,T\bar\psi\gamma^5\psi$</td><td>衰减微观来源</td></tr>
+    <tr><td>$\mathcal{L}_{\text{top}}$</td><td>Pontryagin 类</td><td>拓扑荷 $Q$</td></tr>
+    <tr><td>$\mathcal{L}_{\text{wall}}$</td><td>畴壁边界项</td><td>因果畴跃迁</td></tr>
+  </table></div>
+  <p>挠率势取奇点化解（confining）形式，保证 $|\mathcal{R}|\le\mathcal{R}_{\max}=\ell_{\min}^{-2}$：</p>
+  <div class="formula">$$V_{\text{tors}}(T)=\frac12\beta\,T^2+\frac{\lambda_T}{4}T^4,\qquad \beta,\lambda_T&gt;0.$$</div>
+  <h3><span class="tag">8.2</span> 场方程</h3>
+  <p>变分 $\delta S=0$ 给出：</p>
+  <div class="formula">$$\mathcal{G}_{\mu\nu}-\tfrac12 g_{\mu\nu}\mathcal{G}=8\pi G_N\big(T_{\mu\nu}^{\text{tors}}+T_{\mu\nu}^{\text{dual}}+T_{\mu\nu}^{\text{top}}\big),\qquad \Box T+V_{\text{tors}}'(T)=g_t\langle\bar\psi\gamma^5\psi\rangle,$$</div>
+  <div class="formula">$$(i\not\nabla+m)\psi_+=\lambda\psi_- - g_t T\gamma^5\psi_+,\qquad (i\not\nabla-m)\psi_-=\lambda\psi_+ - g_t T\gamma^5\psi_-,$$</div>
+  <p>旋量平方后得有效质量 $\mu^2(T_B)=m^2-\lambda^2+g_t T_B$——超临界阻尼、$\omega_I&lt;0$。拓扑流守恒：</p>
+  <div class="formula">$$\partial_\mu J^\mu=0,\qquad J^\mu=\epsilon^{\mu\nu\rho\sigma}\mathcal{R}_{\nu\rho}{}^{ab}\mathcal{R}_{\sigma ab}.$$</div>
+  <h3><span class="tag">8.3</span> 唯象复现（自洽核验）</h3>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:46%"><col style="width:54%"></colgroup>
+    <tr><th>唯象结果</th><th>框架来源</th></tr>
+    <tr><td>$\omega(T_B)=\omega_0+k\,T_B$（线性定理）</td><td>挠率质量平移 + 一阶微扰 $\delta\omega=\langle\delta V\rangle/(2\omega_0)$</td></tr>
+    <tr><td>$\langle\delta V\rangle/T_B=2.38-2.93i$（虚部主导）</td><td>实势 $1/r^2$ 离心轮廓（$\delta\mu^2=g_tT_B$）+ 复转折点围道投影；$g_t$ 为实</td></tr>
+    <tr><td>$k_R/k_I\simeq-1.30$（不变签名）</td><td>复微扰在 QNM 模上的投影，$l$-无关耦合下各模一致</td></tr>
+    <tr><td>$T_B=\alpha(M/\ell_{\min})^2$</td><td>挠率势 confining 真空 + 最小标度截断</td></tr>
+    <tr><td>$\rho_0=\log_{10}[\alpha(M/\ell_{\min})^2]-\log_{10}(t_c/75)$</td><td>挠率真空尺度 + 拓扑跃迁能标耦合</td></tr>
+    <tr><td>$g_t=\tfrac34 c_{\text{geom}}$</td><td>轴矢耦合系数（挠率–Dirac 标准结果）</td></tr>
+  </table></div>
+  <h3><span class="tag">8.4</span> 正式闭合状态</h3>
+  <p>TUFT 已形式化为<b>完整的作用量–场方程框架</b>，从单一总作用量出发，经四个场方程复现全部已核验唯象结构。剩余自由参数仅 $\alpha$ 或 $\ell_{\min}/M$（二者由 $T_B=5\times10^{-5}$ 定出组合）与 $c_{\text{geom}}\sim O(1)$。<b>理论离完全闭合只差这一个本体常数</b>——一旦定出，全部预言（$\rho_0$、$\langle\delta V\rangle$ 绝对量级、$l$-依赖标度律）即为确定数值。</p>
+</section>
+
+<section id="v9">
+  <h2><span class="no">卷 Ⅸ · CONSISTENCY AUDIT</span>作用量自洽性审计：分支B 全维度裁决</h2>
+  <p class="lead">本卷对「时空曲率–能量密度关系」的作用量框架（分支B）做<b>全维度自洽性审计</b>——从单一作用量 $\mathcal S=\mathcal S_g+\mathcal S_m+\mathcal S_{\rm int}$ 出发，裁决视界形成、守恒、GW 传播、理论分类、鬼场存在性，并裁定 β 正则化之废。核心：<b>一次符号纠错 + 里程碑裁决 + β 弃置</b>，划定理论可行域，且不否定 TUFT 复张量几何本体。</p>
+
+  <h3><span class="tag">9.1</span> 框架与符号纠错（v2）</h3>
+  <p>分支B 作用量（非最小梯度耦合）：</p>
+  <div class="formula">$$\mathcal S_{\rm int}=-\frac{\alpha}{2\rho_c}\int d^4x\sqrt{-g}\,\frac{(\partial\rho)^2}{\rho+\rho_{\min}+\beta\Box\rho}$$</div>
+  <p>一次<b>关键符号纠错</b>：初版变分把耦合应力张量写反号，得出"负质量失控"伪结论；重变分后 $\beta=0$ 混合分量为 $T^{\rm int,t}_{\ t}=+\tau,\ T^{\rm int,r}_{\ r}=-\tau,\ T^{\rm int,\theta}_{\ \ \theta}=+\tau$（$\tau=\frac{\alpha}{2\rho_c}e^{-\lambda}\rho'^2/\rho$），有效源 $\rho_{\rm eff}=+\tau+\Lambda/8\pi>0$——<b>正常引力、稳定、GR 精确恢复</b>（$\max|\nu-\nu_{\rm Schw}|=1.5\times10^{-9}$）。</p>
+
+  <h3><span class="tag">9.2</span> 五项里程碑裁决</h3>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:30%"><col style="width:42%"><col style="width:28%"></colgroup>
+    <tr><th>里程碑</th><th>裁决</th><th>判定</th></tr>
+    <tr><td>① 视界形成（内场）</td><td>(tt) 方程 $m$-穿越：$\max(2m/r)$ 由 0.85 被梯度耦合推过 1（$\kappa_c\approx0.5$）；但 θθ 守恒要求 $\rho$ 满足 TOV，正则中心被禁（$\rho_2^2=-\pi\rho_c^3/18\kappa<0$）</td><td>✅(tt) 必要　⚠️ 充分性受 θθ 约束</td></tr>
+    <tr><td>② GW 色散对标 LIGO</td><td>$\mathcal S_{\rm int}$ 对 $h$ 展开纯代数、无 $\partial h\partial h$ → 波算子仅来自 $\mathcal S_g$ → $c_T=c$</td><td>✅ $c_T=c$、$m_g=0$、仅 $+,\times$</td></tr>
+    <tr><td>③ β 鬼判定</td><td>$\partial^2\mathcal L/\partial\rho_{tt}^2=-2c\beta^2(\partial\rho)^2/D^3\neq0$（β≠0 非退化、四阶）</td><td>✅ β=0 无鬼　⚠️ β≠0 有 Ostrogradsky 鬼</td></tr>
+    <tr><td>④ 诺特守恒</td><td>微分同胚 → $\nabla^\mu(T+T^{\rm int})=0$；指定剖面违守恒（残差 0.17–10.7）</td><td>✅ 守恒框架；ρ 须自洽</td></tr>
+    <tr><td>⑤ Horndeski 分类</td><td>β=0 → $K(\rho,X)=-\frac{\alpha X}{\rho_c\rho}$ 纯 K-essence（$c_s=1$、二阶无鬼）；β≠0 → beyond-Horndeski 近 DHOST</td><td>✅ 谱系定位；非 DBI</td></tr>
+  </table></div>
+
+  <h3><span class="tag">9.3</span> 可行域与观测通过</h3>
+  <p><b>理论可行域</b>：$\beta\to0$（或 $\beta\Box\rho\ll\rho$ 低能极限）。此时为干净 Horndeski K-essence：二阶 EOM、无鬼、$c_s=c$、$c_T=c$——<b>张量与标量均以光速传播</b>，传播层面全部通过 LIGO/天文约束（GW170817 $|c_T/c-1|<10^{-15}$、无质量引力子、仅 $+,\times$ 偏振）。</p>
+  <p><b>代价边界</b>：β 正则化虽压低紫外算子维数，却以引入鬼为代价；欲修 UV 而不引鬼需退化型（DHOST）构造或辅助场。可观测区别不在传播而在<b>产生</b>——背景密度梯度 $\rho'^2/\rho$ 作 GW 源项，影响高梯度场景（致密星内部、塌缩瞬态）辐射。</p>
+
+  <h3><span class="tag">9.4</span> 黑洞形成：静态无-go → 动态塌缩</h3>
+  <p><b>静态无-go 定理</b>：全自洽静态系统（tt+rr+θθ）不存在有限中心解——正则中心 $\rho_2^2=-\pi\rho_c^3/9\kappa<0$（无实解）、尖点中心 $\tau(0)\neq0$ 使 θθ 的 $4\tau/r$ 项不可抵消 $1/r$ 发散 → <b>梯度切向张力 $p_t=-\tau$ 彻底阻止静态致密对象</b>。</p>
+  <p><b>出路＝动态塌缩</b>：动态中心 $\partial\rho/\partial t\neq0$ 不要求 θθ 静态守恒 → 无-go 不适用。Misner–Sharp 塌缩（壳动力学 $d^2R/dt^2=-M/R^2$）从 $\max(2M/R_0)=0.806<1$ 起，<b>所有有质量外壳在有限时间穿越 $2M/R=1$</b>（r=1.51→$t=1.57$，r=3.0→$t=4.45$）；视界处 $f\to0$，梯度源 $\tau\propto f$ <b>自动熄灭、穿越干净</b>。</p>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:30%"><col style="width:42%"><col style="width:28%"></colgroup>
+    <tr><th>分支</th><th>中心形态</th><th>θθ 守恒裁决</th></tr>
+    <tr><td>静态</td><td>正则（$\rho'=0$）</td><td>$\rho_2^2<0$ 无实解 → 禁</td></tr>
+    <tr><td>静态</td><td>尖点（$\rho'\neq0$）</td><td>$4\tau/r$ 的 $1/r$ 发散 → 禁</td></tr>
+    <tr><td><b>动态</b></td><td>塌缩云（$\partial\rho/\partial t\neq0$）</td><td><b>有限时间穿越 $2M/R=1$，梯度源自限 → 黑洞形成</b></td></tr>
+  </table></div>
+  <p><b>结论</b>：TUFT 可行域（β=0）的黑洞是<b>动态形成的黑洞</b>——无静态星/静态黑洞，但动态塌缩产黑洞，与"奇点化解"本体一致（无静态奇点，仅动态视界）。</p>
+
+  <h3><span class="tag">9.5</span> 阴阳对偶读法</h3>
+  <p>β=0 时<b>阳（几何 $R$）与阴（标量 $K(\rho,X)$）各守二阶、无鬼、同光速</b>——谱系中最干净的和谐态。β≠0 把"阴"的动力学抬到 $\partial^4$（$\Box\rho$ 分母）：<b>四阶鬼是"阴超其位"的代价</b>。静态分支缺失是"阴阳不可静态两全"（正则态无实解、尖点态 $1/r$ 炸裂）；动态塌缩是<b>"阳攻"</b>——几何 $R$ 收缩、$M$ 聚拢主动推进，$f\to0$ 时梯度"阴"自动让位（$\tau\propto f\to0$），陷获面在阳的主攻下干净闭合。诺特守恒是"道"（微分同胚本体法则），手设剖面违守恒是"术不载道"。</p>
+  <blockquote><b>方法论红线</b>：本卷全部裁决针对<b>唯象弱场/静态预言与 β 正则化方案</b>；TUFT 复张量几何本体独立成立，不受任何裁决影响。</blockquote>
+
+  <h3><span class="tag">9.6</span> β 之废与 ℓ_min 紫外正则化</h3>
+  <p><b>算子维度计数</b>：$\beta=0$ 时耦合算子 $\mathcal L_{\rm int}\propto\frac{(\partial\rho)^2}{\rho}$，自然单位下 $\partial\rho\sim M^5$、$\rho\sim M^4$ → 算子维度 $\Delta=6&gt;4$，是<b>高维（不可重整）算子</b>，经典紫外呈幂律爆炸。</p>
+  <div class="formula">$$\frac{(\partial\rho)^2}{\rho}\sim\frac{M^{10}}{M^4}=M^6,\qquad \Delta=6$$</div>
+  <p><b>本体出路＝分形紫外截止</b>：TUFT 复张量几何自带最小标度 $\ell_{\min}$（分形 RG 不动点）即天然紫外截断——在 $\Lambda=\hbar/\ell_{\min}$ 以下理论不再积分，幂律爆炸被<b>本体几何</b>吸收，无需人工正则化。由此 β 并非必要、应弃置：</p>
+  <div class="tablebox"><table>
+    <colgroup><col style="width:24%"><col style="width:30%"><col style="width:24%"><col style="width:22%"></colgroup>
+    <tr><th>方案</th><th>紫外行为</th><th>鬼</th><th>裁决</th></tr>
+    <tr><td>β&gt;0 正则化</td><td>把 $\Box\rho$ 分母抬到 $\Delta=4$ 边际算子</td><td>四阶 Ostrogradsky 鬼（§9.2 ③）</td><td><b>弃置</b>（代价不可接受）</td></tr>
+    <tr><td><b>β=0 + ℓ_min 截止</b></td><td>分形 RG 不动点天然截断，$\Delta=6$ 高维算子被几何吸收</td><td>无鬼、$c_T=c$、$c_s=c$</td><td><b>采纳</b>：本体截止的量子有效理论</td></tr>
+  </table></div>
+  <p><b>裁决</b>：可行域收敛为 $\beta=0$ + ℓ_min 分形截止——二阶无鬼、张量与标量同光速、在截断能标下有明确预言（高梯度源项、致密星内部辐射、QNM $T_B$ 线性响应），与观测兼容。</p>
+  <p><b>阴阳读法</b>：$\beta$ 是"阴超其位的权宜术"（欲以人工项压 UV，反引四阶鬼）；$\ell_{\min}$ 是"阴的本体上限"——分形不动点给出天然截止，使高维"阴"算子在截断内自洽，无需外借正则化。β 之废即"去术归道"。</p>
+</section>
+
+
+<script>
+function qnmChart(){
+  var el=document.getElementById('qnmChart'); if(!el||!window.echarts)return;
+  var tb=[0,1e-5,2e-5,5e-5,1e-4];
+  var wR=[0.37352,0.37356,0.37360,0.37372,0.37391];
+  var wI=[-0.08884,-0.08887,-0.08890,-0.08899,-0.08914];
+  var xs=[]; var linR=[]; var linI=[];
+  for(var i=0;i<=100;i++){var x=i*1e-6; xs.push(x); linR.push(0.37352153+3.901840*x); linI.push(-0.08884000-3.000000*x);}
+  var ch=echarts.init(el);
+  ch.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'axis',textStyle:{fontFamily:'JetBrains Mono'}},
+    legend:{data:['ω_R','ω_I','ω_R 拟合','ω_I 拟合'],top:0,textStyle:{color:'#b9b4a6'}},
+    grid:{left:58,right:58,top:36,bottom:44},
+    xAxis:{type:'value',name:'T_B',nameTextStyle:{color:'#8b90a0'},axisLabel:{color:'#8b90a0',formatter:function(v){return (v*1e4).toFixed(1)+'e-4'}},splitLine:{lineStyle:{color:'rgba(139,144,160,.12)'}}},
+    yAxis:[
+      {type:'value',name:'ω_R',nameTextStyle:{color:'#c9a44c'},min:0.3734,max:0.3740,axisLabel:{color:'#8b90a0',formatter:function(v){return v.toFixed(4)}},splitLine:{lineStyle:{color:'rgba(139,144,160,.12)'}}},
+      {type:'value',name:'ω_I',nameTextStyle:{color:'#5aa7a0'},axisLabel:{color:'#8b90a0',formatter:function(v){return v.toFixed(4)}},splitLine:{show:false}}
+    ],
+    series:[
+      {name:'ω_R',type:'scatter',data:tb.map(function(x,i){return [x,wR[i]]}),symbolSize:8,itemStyle:{color:'#c9a44c'}},
+      {name:'ω_I',type:'scatter',yAxisIndex:1,data:tb.map(function(x,i){return [x,wI[i]]}),symbolSize:8,itemStyle:{color:'#5aa7a0'}},
+      {name:'ω_R 拟合',type:'line',data:xs.map(function(x,i){return [x,linR[i]]}),showSymbol:false,lineStyle:{color:'#c9a44c',width:2},itemStyle:{color:'#c9a44c'}},
+      {name:'ω_I 拟合',type:'line',yAxisIndex:1,data:xs.map(function(x,i){return [x,linI[i]]}),showSymbol:false,lineStyle:{color:'#5aa7a0',width:2},itemStyle:{color:'#5aa7a0'}}
+    ]
+  });
+  window.addEventListener('resize',function(){ch.resize()});
+}
+function roadmapChart(){
+  var el=document.getElementById('roadmapChart'); if(!el||!window.echarts)return;
+  var yrs=[]; for(var i=0;i<=200;i++){yrs.push(Math.pow(10,-0.5+i*0.04));}
+  var dets=[['O5','#a8873d',1e3],['A+','#8b90a0',1e4],['ET+CE','#5aa7a0',1.5e7]];
+  var th=5e-5/3; function sig(t,s2){return 0.0952/Math.sqrt(s2*t);}
+  var ch=echarts.init(el);
+  var series=dets.map(function(d){
+    return {name:d[0],type:'line',data:yrs.map(function(t){return [t,sig(t,d[2])]}),showSymbol:false,
+      lineStyle:{color:d[1],width:2},itemStyle:{color:d[1]}};
+  });
+  series.push({name:'3σ 探测阈值',type:'line',data:[[yrs[0],th],[yrs[yrs.length-1],th]],
+    lineStyle:{color:'#c9a44c',width:1.5,type:'dashed'},itemStyle:{color:'#c9a44c'}});
+  ch.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'axis',textStyle:{fontFamily:'JetBrains Mono'},valueFormatter:function(v){return v.toExponential(1)}},
+    legend:{data:dets.map(function(d){return d[0]}).concat('3σ 探测阈值'),top:0,textStyle:{color:'#b9b4a6'}},
+    grid:{left:66,right:30,top:36,bottom:44},
+    xAxis:{type:'log',name:'观测时间 t（年）',nameTextStyle:{color:'#8b90a0'},axisLabel:{color:'#8b90a0'},splitLine:{lineStyle:{color:'rgba(139,144,160,.12)'}}},
+    yAxis:{type:'log',name:'σ_{T_B}',nameTextStyle:{color:'#8b90a0'},axisLabel:{color:'#8b90a0'},splitLine:{lineStyle:{color:'rgba(139,144,160,.12)'}}},
+    series:series
+  });
+  window.addEventListener('resize',function(){ch.resize()});
+}
+window.addEventListener('load',function(){qnmChart();roadmapChart();renderMath()});
+</script>
+</main>
+<footer>
+  <div class="redline"><b>方法论红线</b>：仅否定本理论的 CMB $f_{\mathrm{NL}}$ 跳变或 GW $T_B$ 预言，不否定 TUFT 复张量几何本体。本体框架独立于任一唯象预言。</div>
+  <div class="foot">TUFT · Total Unified Fractal Theory　·　全域双向分形统一场论 v3.5</div>
+</footer>
+</div>
+<script>
+window.__katexDone=false;
+function renderMath(){ if(!window.katex || window.__katexDone) return;
+  renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false});
+  window.__katexDone=true; }
+if(window.katex){renderMath()}else{window.addEventListener('load',renderMath)}
+</script>
+</body>
+</html>

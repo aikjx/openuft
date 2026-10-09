@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>TUFT V3.2 · 稳定支玻色星质量-电荷关系（暗物质候选）</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  html,body{margin:0;padding:0;background:#0d1117;color:#c9d1d9;font-family:"Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:980px;margin:0 auto;padding:20px;}
+  h1{font-size:20px;color:#e6edf3;}
+  .sub{font-size:12px;color:#8b949e;margin-bottom:12px;}
+  .panel{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;margin-bottom:16px;}
+  .panel h2{font-size:15px;color:#58a6ff;margin:0 0 6px 0;}
+  #chart1,#chart2{width:100%;height:280px;}
+  .verdict{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;margin-top:6px;font-size:13px;line-height:1.7;}
+  .verdict b{color:#3fb950;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT V3.2 · 稳定支玻色星质量-电荷关系</h1>
+  <div class="sub">数据源：V3.2_bosonstar_MQ.py（完整 EKG，G=0.0056 暗物质锚，稳定区）· 2026-10-09</div>
+
+  <div class="panel">
+    <h2>① M(ω) 与 Q(ω)：质量缓降、电荷先升后降</h2>
+    <div id="chart1"></div>
+  </div>
+
+  <div class="panel">
+    <h2>② 质量-电荷关系 M(Q)：弱依赖，稳定暗物质候选</h2>
+    <div id="chart2"></div>
+  </div>
+
+  <div class="verdict">
+    <b>结论 PASS</b>：稳定支（G=0.0056）玻色星 M≈0.47–0.51（≈G·E₀，随 ω 缓降），Q≈192–204（峰值 203.7@ω≈0.22），
+    R99≈9.5，紧致度 2M/R99≈0.10 ≪ 1，M/M_max≈0.33–0.36 ≪ 1 ⇒ 远离坍缩，稳定暗物质候选。
+    UFT 达成度 2/6、L3=0、UFT-3=0 不变；绝对质量/电荷需外部尺度锚。
+  </div>
+</div>
+<script>
+var D = [
+  {w:0.18,M:0.50546,Q:199.68,R:9.64}, {w:0.19,M:0.50471,Q:201.77,R:9.61},
+  {w:0.20,M:0.50348,Q:203.09,R:9.56}, {w:0.21,M:0.50176,Q:203.72,R:9.54},
+  {w:0.22,M:0.49956,Q:203.73,R:9.51}, {w:0.23,M:0.49691,Q:203.17,R:9.49},
+  {w:0.24,M:0.49384,Q:202.12,R:9.46}, {w:0.25,M:0.49036,Q:200.64,R:9.46},
+  {w:0.27,M:0.48237,Q:196.62,R:9.46}, {w:0.29,M:0.47327,Q:191.60,R:9.51}
+];
+var ws = D.map(function(d){return d.w;});
+c1 = echarts.init(document.getElementById('chart1'));
+c1.setOption({
+  title:{text:'稳定支（G=0.0056）：M(ω) 与 Q(ω)',left:'center',textStyle:{fontSize:14,color:'#e6edf3'}},
+  tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+  legend:{top:30,textStyle:{color:'#c9d1d9'}},
+  grid:{top:70,left:60,right:70,bottom:40,containLabel:true},
+  xAxis:{type:'category',name:'ω',data:ws,axisLabel:{color:'#c9d1d9'},nameTextStyle:{color:'#8b949e'}},
+  yAxis:[
+    {type:'value',name:'M',min:0.46,max:0.52,axisLabel:{color:'#58a6ff'},nameTextStyle:{color:'#58a6ff'},splitLine:{lineStyle:{color:'#21262d'}}},
+    {type:'value',name:'Q',min:185,max:210,axisLabel:{color:'#f0883e'},nameTextStyle:{color:'#f0883e'},splitLine:{show:false}}
+  ],
+  series:[
+    {name:'M（引力质量）',type:'line',yAxisIndex:0,symbolSize:8,data:D.map(function(d){return d.M;}),
+      lineStyle:{color:'#58a6ff',width:3},itemStyle:{color:'#58a6ff'},
+      label:{show:true,position:'top',fontSize:9,color:'#58a6ff',formatter:function(p){return p.value.toFixed(3);}}},
+    {name:'Q（电荷）',type:'line',yAxisIndex:1,symbolSize:8,data:D.map(function(d){return d.Q;}),
+      lineStyle:{color:'#f0883e',width:3},itemStyle:{color:'#f0883e'},
+      label:{show:true,position:'top',fontSize:9,color:'#f0883e',formatter:function(p){return p.value.toFixed(1);}}}
+  ]
+});
+c2 = echarts.init(document.getElementById('chart2'));
+c2.setOption({
+  title:{text:'M(Q)：质量-电荷关系（弱依赖，稳定暗物质候选）',left:'center',textStyle:{fontSize:14,color:'#e6edf3'}},
+  tooltip:{trigger:'item',triggerOn:'mousemove|click',renderMode:'richText',confine:true,
+    formatter:function(p){return 'ω='+p.data[2]+'<br>Q='+p.data[0].toFixed(1)+'<br>M='+p.data[1].toFixed(4)+'<br>2M/R99='+p.data[3].toFixed(3);}},
+  grid:{top:60,left:70,right:40,bottom:50,containLabel:true},
+  xAxis:{type:'value',name:'Q',min:185,max:210,axisLabel:{color:'#c9d1d9'},nameTextStyle:{color:'#8b949e'},
+    splitLine:{lineStyle:{color:'#21262d'}}},
+  yAxis:{type:'value',name:'M',min:0.46,max:0.52,axisLabel:{color:'#c9d1d9'},nameTextStyle:{color:'#8b949e'},
+    splitLine:{lineStyle:{color:'#21262d'}}},
+  series:[
+    {name:'稳定支',type:'scatter',symbolSize:16,
+      data:D.map(function(d){return [+d.Q.toFixed(2), d.M, d.w, (2*d.M/d.R).toFixed(3)];}),
+      itemStyle:{color:'#3fb950'},
+      label:{show:true,position:'top',fontSize:9,color:'#8b949e',formatter:function(p){return 'ω='+p.data[2];}}}
+  ],
+  graphic:[
+    {type:'text',left:'center',top:262,style:{text:'M≈0.47–0.51 对 Q 弱依赖；紧致度≈0.10、M/Mmax≈0.35 ≪ 1 → 稳定',fill:'#8b949e',fontSize:12}}
+  ]
+});
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>
