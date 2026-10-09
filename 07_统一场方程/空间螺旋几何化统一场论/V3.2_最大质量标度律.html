@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>TUFT V3.2 · 最大质量标度律 M_max(G) 与 G 维度全图景</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  html,body{margin:0;padding:0;background:#0d1117;color:#c9d1d9;font-family:"Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:980px;margin:0 auto;padding:20px;}
+  h1{font-size:20px;color:#e6edf3;}
+  .sub{font-size:12px;color:#8b949e;margin-bottom:12px;}
+  .panel{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;margin-bottom:16px;}
+  .panel h2{font-size:15px;color:#58a6ff;margin:0 0 6px 0;}
+  #chart1,#chart2{width:100%;height:280px;}
+  .verdict{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;}
+  .verdict b{color:#f0883e;}
+  .ok{color:#3fb950;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT V3.2 · 最大质量标度律 $M_{max}(G)$</h1>
+  <div class="sub">数据源：V3.2_bosonstar_MmaxG.py（完整 EKG，稳定支转折点）· 2026-10-09</div>
+
+  <div class="panel">
+    <h2>① M_max(G)：弱 G 线性，近 G* 趋缓（坍缩前兆）</h2>
+    <div id="chart1"></div>
+  </div>
+
+  <div class="panel">
+    <h2>② 紧致度随 G 上升：从稀释深稳到失稳阈值</h2>
+    <div id="chart2"></div>
+  </div>
+
+  <div class="verdict">
+    <b>结论 PASS</b>：$M_{max}\\propto G^{0.95}$（弱 G，自作用锚定孤子尺度 $E_0≈100$）；近 $G_*$ 指数降至 0.5、
+    紧致度升至 ≈0.31 趋失稳。TUFT $M_{max}\\propto G$ <span class="ok">区别于 mini-boson 的 ∝1/G</span>
+    （自作用饱和质量上限）。G 维度全图景闭合：<span class="ok">G&lt;G* 稳定</span> ｜ G=G* 支关 ｜ G&gt;G* 坍缩。
+    UFT 达成度 2/6、L3=0、UFT-3=0 不变。
+  </div>
+</div>
+<script>
+var Gs=[0.001,0.0056,0.014,0.02];
+var Mm=[0.0987187,0.50551,1.09441,1.30841];
+var Cm=[0.0198,0.1040,0.2355,0.3140];
+c1=echarts.init(document.getElementById('chart1'));
+c1.setOption({
+  title:{text:'M_max(G)：弱 G ∝G^0.95，近 G* 趋缓',left:'center',textStyle:{fontSize:14,color:'#e6edf3'}},
+  tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+  legend:{top:30,textStyle:{color:'#c9d1d9'}},
+  grid:{top:70,left:60,right:50,bottom:45,containLabel:true},
+  xAxis:{type:'value',name:'G',min:0,max:0.026,nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#c9d1d9'},splitLine:{lineStyle:{color:'#21262d'}}},
+  yAxis:{type:'value',name:'M_max',min:0,max:1.5,nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#c9d1d9'},splitLine:{lineStyle:{color:'#21262d'}}},
+  series:[
+    {name:'M_max 数值',type:'scatter',symbolSize:14,data:Gs.map(function(g,i){return [g,Mm[i]];}),
+      itemStyle:{color:'#58a6ff'},
+      label:{show:true,position:'top',fontSize:10,color:'#58a6ff',formatter:function(p){return p.value[1].toFixed(3);}}},
+    {name:'线性拟合 ∝G (弱G)',type:'line',data:[[0,0],[0.014,1.378]],lineStyle:{color:'#3fb950',width:2,type:'dashed'},symbol:'none'},
+    {name:'G* ≈ 0.024（支关）',type:'line',data:[[0.024,0],[0.024,1.5]],lineStyle:{color:'#da3633',width:2,type:'dashed'},symbol:'none',
+      label:{show:true,position:'top',color:'#da3633',formatter:'G*≈0.024'}}
+  ],
+  graphic:[{type:'text',left:'center',top:262,style:{text:'近 G*：指数→0.5，增长趋缓（坍缩前兆）',fill:'#8b949e',fontSize:12}}]
+});
+c2=echarts.init(document.getElementById('chart2'));
+c2.setOption({
+  title:{text:'紧致度 2M/R99 随 G：从稀释到失稳阈值',left:'center',textStyle:{fontSize:14,color:'#e6edf3'}},
+  tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+  grid:{top:60,left:60,right:50,bottom:45,containLabel:true},
+  xAxis:{type:'value',name:'G',min:0,max:0.026,axisLabel:{color:'#c9d1d9'},nameTextStyle:{color:'#8b949e'},splitLine:{lineStyle:{color:'#21262d'}}},
+  yAxis:{type:'value',name:'紧致度 2M/R99',min:0,max:0.4,axisLabel:{color:'#c9d1d9'},nameTextStyle:{color:'#8b949e'},splitLine:{lineStyle:{color:'#21262d'}}},
+  series:[
+    {name:'紧致度@M_max',type:'line',symbolSize:10,data:Gs.map(function(g,i){return [g,Cm[i]];}),
+      lineStyle:{color:'#f0883e',width:3},itemStyle:{color:'#f0883e'},
+      areaStyle:{color:'rgba(240,136,62,0.12)'},
+      label:{show:true,position:'top',fontSize:10,color:'#f0883e',formatter:function(p){return p.value[1].toFixed(3);}},
+      markLine:{silent:true,symbol:'none',lineStyle:{color:'#da3633',width:2,type:'dashed'},
+        label:{formatter:'失稳阈值≈0.3-0.4',color:'#da3633',position:'insideEndTop'},data:[{yAxis:0.34}]}}
+  ]
+});
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>
