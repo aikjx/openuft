@@ -1,0 +1,90 @@
+{
+  "tests": [
+    {
+      "id": "T1",
+      "category": "Dirac代数",
+      "claim": "Weyl 基 {γ^μ,γ^ν}=2η^{μν}，γ5^2=1，{γ5,γ^μ}=0，Tr(γ^μγ^ν)=4η^{μν}",
+      "computed": "Clifford=True g5^2=True anti=True trace=True",
+      "expected": "all True",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "T2",
+      "category": "Levi-Civita约定",
+      "claim": "ε^{λμνρ}ε_{λμνσ} = -6 δ^ρ_σ（号差 (-,+,+,+)）",
+      "computed": "diag=['-6', '-6', '-6', '-6']",
+      "expected": "[-6,-6,-6,-6], off-diag 0",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "T3",
+      "category": "挠率不可约分解",
+      "claim": "T_{λμν}=⅓(t_μg_{λν}-t_νg_{λμ}) - ⅙ε_{λμνρ}S^ρ + q_{λμν}；q 反称/无迹/循环；重建恒等",
+      "computed": "anti=True tracefree=True cyclic=True reconstruct=True",
+      "expected": "all True (4+4+16=24)",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "T4",
+      "category": "Contorsion",
+      "claim": "K_{λμν}=½(T_{λμν}+T_{μλν}-T_{νλμ})，T^λ_{μν}=K^λ_{μν}-K^λ_{νμ}，t_μ=K^λ_{λμ}",
+      "computed": "roundtrip=False trace_rel=True",
+      "expected": "True/True",
+      "status": "FAIL",
+      "note": ""
+    },
+    {
+      "id": "T5",
+      "category": "二次不变量约化",
+      "claim": "T²=⅔t²-⅙S²+q²；交叉块对 T² 与 T_{λμν}T^{μλν} 均消失；各块独立核算",
+      "computed": "T2==⅔t²-⅙S²+q²:False | Tcross==Σ块:True | (C_tt,C_SS,C_qq)=(0,0,0)",
+      "expected": "T2: True；Tcross 块按系数表读",
+      "status": "FAIL",
+      "note": ""
+    },
+    {
+      "id": "T6",
+      "category": "Dirac 自旋流为轴矢量",
+      "claim": "γ^{[λ}γ^μγ^ν]} = c·ε^{λμνρ}γ5γ_ρ（c 一致）；迹/张量挠率轴投影=0、轴挠率≠0 ⇒ 最小耦合仅轴矢量挠率进自旋流",
+      "computed": "c_uniform=False c=(Fraction(0, 1), Fraction(1, 2)) traceProj0=True qProj0=True axialNZ=True",
+      "expected": "uniform c, trace0/q0 True, axial NZ True",
+      "status": "FAIL",
+      "note": ""
+    },
+    {
+      "id": "T7",
+      "category": "Fierz",
+      "claim": "(V−A)⊗(V−A) 自 Fierz（β↔δ 交换不变，L 与 R 各验）；16 基完备性 ΣΓ⊗Γ^A=4δδ",
+      "computed": "LL=False RR=False completeness=False",
+      "expected": "True/True/True",
+      "status": "FAIL",
+      "note": ""
+    },
+    {
+      "id": "T8",
+      "category": "手征流投影",
+      "claim": "P_Rγ^μP_L=γ^μP_L，P_Lγ^μP_L=0，P_Lγ^μ=γ^μP_R",
+      "computed": "vL=True lL=True r=True",
+      "expected": "True/True/True",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "T10",
+      "category": "系数精算",
+      "claim": "最小 EC 平方配方：交叉项 3/4、接触项 3/16、S=(κ²/2)J5（与 14 卷一致）",
+      "computed": "cross=3/4 const=3/16 sol=1/2",
+      "expected": "3/4, 3/16",
+      "status": "PASS",
+      "note": ""
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "pass": 5,
+    "fail": 4
+  }
+}
