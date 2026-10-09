@@ -155,18 +155,18 @@ def sigma_uv(mu, nu):
                    (0, F(1, 2)))  # (i/2)[γ^μ,γ^ν]
 
 def basis_pairs():
-    """返回 [(Γ_A, Γ^A)] 16 项：S,V,T,A,P。Γ^A 用度规升降。"""
+    """返回 [(Γ_A, Γ^A)] 16 项：S,V,T,A,P。Γ^A 用度规升降使 Tr(Γ_A Γ^B)=4δ_AB。"""
     pairs = []
     pairs.append((meye(), meye()))                                   # S: 1
     for mu in range(4):
-        pairs.append((GAM[mu], GAM[mu]))                             # V: γ^μ (对γ_ν=η γ^ν，Γ^μ=γ^μ)
+        pairs.append((GAM[mu], g_low(mu)))                           # V: γ^μ，Γ^A=γ_μ
     for mu in range(4):
         for nu in range(mu+1, 4):
             su = sigma_uv(mu, nu)
             sl = mscalar(su, MET[mu]*MET[nu])
             pairs.append((su, sl))                                   # T: σ^{μν}, σ_{μν}
     for mu in range(4):
-        pairs.append((mmul(G5, GAM[mu]), mmul(G5, GAM[mu])))         # A: γ5γ^μ
+        pairs.append((mmul(G5, GAM[mu]), mscalar(mmul(G5, g_low(mu)), -1)))  # A: γ5γ^μ，Γ^A=-γ5γ_μ
     pairs.append((G5, G5))                                           # P: γ5
     return pairs
 
@@ -206,16 +206,12 @@ def make_generic_torsion():
 
 
 def raise3(T):
+    """升三个指标：T^{abc} = η^{aa}η^{bb}η^{cc}T_{abc}（η 对角，直乘）。"""
     U = [[[F(0) for _ in range(4)] for _ in range(4)] for _ in range(4)]
     for a in range(4):
         for b in range(4):
             for c in range(4):
-                acc = F(0)
-                for i in range(4):
-                    for j in range(4):
-                        for k in range(4):
-                            acc += MET[a]*MET[i] * MET[b]*MET[j] * MET[c]*MET[k] * T[i][j][k]
-                U[a][b][c] = acc
+                U[a][b][c] = MET[a]*MET[b]*MET[c]*T[a][b][c]
     return U
 
 
@@ -364,11 +360,13 @@ def check_t3():
 # T4. Contorsion 互逆
 def check_t4():
     T = make_generic_torsion()
+    # 挠率反称于后两指标；contorsion K 取使 T_{λμν}=K_{λμν}-K_{λνμ} 与 t_μ=K^λ_{λμ}
+    # 同时成立的形式：K_{λμν} = ½(T_{λμν}+T_{μλν}+T_{νλμ})
     K = [[[F(0) for _ in range(4)] for _ in range(4)] for _ in range(4)]
     for lam in range(4):
         for mu in range(4):
             for nu in range(4):
-                K[lam][mu][nu] = F(1,2)*(T[lam][mu][nu] + T[mu][lam][nu] - T[nu][lam][mu])
+                K[lam][mu][nu] = F(1,2)*(T[lam][mu][nu] + T[mu][lam][nu] + T[nu][lam][mu])
     # 只升第一个指标：K^λ_{μν} = η^{λα}K_{αμν}
     def raise_first(M):
         R = [[[F(0) for _ in range(4)] for _ in range(4)] for _ in range(4)]
@@ -388,7 +386,7 @@ def check_t4():
     Ktrace = [sum(K1[a][a][mu] for a in range(4)) for mu in range(4)]
     ok_trace = all(t[mu] == Ktrace[mu] for mu in range(4))
     rec('T4', 'Contorsion',
-        'K_{λμν}=½(T_{λμν}+T_{μλν}-T_{νλμ})，T^λ_{μν}=K^λ_{μν}-K^λ_{νμ}，t_μ=K^λ_{λμ}',
+        'K_{λμν}=½(T_{λμν}+T_{μλν}+T_{νλμ})，T^λ_{μν}=K^λ_{μν}-K^λ_{νμ}，t_μ=K^λ_{λμ}',
         'roundtrip=%s trace_rel=%s' % (ok, ok_trace),
         'True/True', 'PASS' if ok and ok_trace else 'FAIL')
 
@@ -499,7 +497,8 @@ def check_t6():
     def rhs_gamma(lam, mu, nu):
         R = mzero()
         for rho in range(4):
-            R = madd(R, mscalar(mmul(G5, GAM[rho]), eps_upper(lam, mu, nu, rho)))
+            # 用降指标 γ_ρ = MET[ρ]γ^ρ：恒等式 γ^{[λ}γ^μγ^ν]} = c·ε^{λμνρ}γ5γ_ρ
+            R = madd(R, mscalar(mmul(G5, g_low(rho)), eps_upper(lam, mu, nu, rho)))
         return R
     # 由 (0,1,2) 定 c
     Gam0 = antisym3(0, 1, 2)
@@ -569,7 +568,8 @@ def check_t7():
                         accN = cadd(accN, cmul(GPL[mu][a][d], GlowPL[mu][c][b]))
                     M[a][b][c][d] = accM
                     N[a][b][c][d] = accN
-    ok_ll = all(ceq(M[a][b][c][d], N[a][b][c][d]) for a in range(4) for b in range(4) for c in range(4) for d in range(4))
+    ok_ll = all(ceq(M[a][b][c][d], (-N[a][b][c][d][0], -N[a][b][c][d][1]))
+                for a in range(4) for b in range(4) for c in range(4) for d in range(4))
     # 同样验证 P_R
     GPR = [mmul(GAM[mu], PR) for mu in range(4)]
     GlowPR = [mmul(g_low(mu), PR) for mu in range(4)]
@@ -585,7 +585,8 @@ def check_t7():
                         accN = cadd(accN, cmul(GPR[mu][a][d], GlowPR[mu][c][b]))
                     MR[a][b][c][d] = accM
                     NR[a][b][c][d] = accN
-    ok_rr = all(ceq(MR[a][b][c][d], NR[a][b][c][d]) for a in range(4) for b in range(4) for c in range(4) for d in range(4))
+    ok_rr = all(ceq(MR[a][b][c][d], (-NR[a][b][c][d][0], -NR[a][b][c][d][1]))
+                for a in range(4) for b in range(4) for c in range(4) for d in range(4))
     # (b) Fierz 完备性：Σ_A (Γ_A)_{αβ}(Γ^A)_{γδ} = 4 δ_{αδ}δ_{γβ}
     pairs = basis_pairs()
     ok_comp = True
@@ -596,14 +597,12 @@ def check_t7():
                     acc = Z
                     for GA, Gup in pairs:
                         acc = cadd(acc, cmul(GA[a][b], Gup[c][d]))
-                    target = cmul_scalar((F(4), F(0)), 1) if (a == d and c == b) else Z
-                    # target 应 4 δ_{αδ}δ_{γβ}
                     tgt = (F(4), F(0)) if (a == d and c == b) else Z
                     if not ceq(acc, tgt):
                         ok_comp = False
     rec('T7', 'Fierz',
-        '(V−A)⊗(V−A) 自 Fierz（β↔δ 交换不变，L 与 R 各验）；16 基完备性 ΣΓ⊗Γ^A=4δδ',
-        'LL=%s RR=%s completeness=%s' % (ok_ll, ok_rr, ok_comp),
+        '(V−A)⊗(V−A) 自 Fierz（β↔δ 交换，M=-N，L 与 R 各验）；16 基完备性 ΣΓ⊗Γ^A=4δδ',
+        'LL(M=-N)=%s RR(M=-N)=%s completeness=%s' % (ok_ll, ok_rr, ok_comp),
         'True/True/True', 'PASS' if ok_ll and ok_rr and ok_comp else 'FAIL')
 
 

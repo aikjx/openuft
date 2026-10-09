@@ -6,7 +6,7 @@
 import math, json, os
 H=1.054571817e-34; G=6.674e-11; C=2.99792458e8
 def gamma_dp(m,R,d): return (G*m*m*d*d)/(2.0*R**3*H)
-def rot_param(m,R,omega): return (2.0/5.0)*R*R*omega/(m*C)  # a=J/(mc)
+def rot_param(R,omega): return (2.0/5.0)*R*R*omega/C  # a=J/(mc)=(2/5)R²ω/c，m 抵消
 GUARDS=[]
 def guard(name,detail=""):
     def deco(fn): GUARDS.append({"name":name,"fn":fn,"detail":detail}); return fn
@@ -33,7 +33,7 @@ def _():
 @guard("torsion_negligible","转动参数极小 -> c·Δτ/Δκ ~ (a/R)² << 1（挠率被曲率压制）")
 def _():
     m=1e-6; R=1e-6; omega=1e9   # 宏观物体高速自转
-    a=rot_param(m,R,omega); ratio=(a/R)**2
+    a=rot_param(R,omega); ratio=(a/R)**2
     ok=ratio<1e-6
     return ok,"a=%.2e m, a/R=%.2e, (a/R)²=%.1e << 1（挠率远弱于曲率）"%(a,a/R,ratio)
 @guard("dp_limit","S->0 时 TUFT 退化 DP（挠率通道=0）")
@@ -42,8 +42,8 @@ def _():
 @guard("honest_verdict","自旋放大非自然预言：需极端自旋-质量比（实物体不可达）")
 def _():
     # 需要 c·Δτ~Δκ，即 a/R~O(1)（近 Kerr 极端）；实宏观物体 a/R<<1
-    m=1e-6; R=1e-6
-    omega_ext=rot_param(m,R,1.0)*C  # 反解 a/R=1 所需 omega（荒谬大）
+    R=1e-6
+    omega_ext=(5.0/2.0)*C/R   # a/R=1 -> omega=(5/2)c/R
     ok=True
     return ok,"a/R~1 需 omega=%.1e rad/s（不可达）——自旋放大是假设非预言"%(omega_ext)
 
@@ -53,7 +53,7 @@ def main():
     Gk_micro=gamma_dp(mp,Rm,dm); tau_micro=1/Gk_micro
     m=1e-6; R=1e-6; d=1e-6
     Gk_macro=gamma_dp(m,R,d); tau_macro=1/Gk_macro
-    a=rot_param(m,R,1e9); ratio=(a/R)**2
+    a=rot_param(R,1e9); ratio=(a/R)**2
     results={"engine":"TUFT_V3.4路线4_量子孤子退相干_审计裁定","date":"2026-10-09",
         "guards":grd,"n_pass":np_,"n_fail":nf,
         "computed":{"micro":{"Gamma":Gk_micro,"tau":tau_micro},
@@ -73,7 +73,7 @@ def main():
         "","### 审计裁定（路线4）",
         "1. **DP 微/宏分离成立**：质子坍缩时标 %.0e s（相干），1e-6kg 瞬时坍缩（%.0e s）——DP 曲率通道已主导。"%(tau_micro,tau_macro),
         "2. **「自旋放大」被证伪（自然意义下）**：宏观物体转动参数 a/R 极小（1e-6kg 高速自转 a/R~%.1e），c·Δτ/Δκ ~ (a/R)² ~ %.1e << 1——挠率通道天然被曲率压制。"%(a/R,ratio),
-        "3. **需极端假设才复活**：a/R~O(1)（近 Kerr 极端）需 omega~1e21 rad/s，实宏观物体不可达——V3.4「自旋大物体放大坍缩」是假设，非 TUFT 自然预言。",
+        "3. **需极端假设才复活**：a/R~O(1)（近 Kerr 极端）需 omega~7.5e14 rad/s，实宏观物体不可达——V3.4「自旋大物体放大坍缩」是假设，非 TUFT 自然预言。",
         "4. **结论**：路线4 不构成独立可证伪预言；DP 坍缩已覆盖其现象。TUFT 若保留此模块，需给出强挠率源（如孤子自旋密度集中）的具体机制——否则删除。",
         "5. **诚实价值**：审计排除了一个弱预言，避免把它写进统一场论正本——与「可证伪性系统性破产」攻破精神一致。" ]
     report="\n".join(L)

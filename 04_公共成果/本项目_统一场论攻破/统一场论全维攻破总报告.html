@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="margin:0;padding:0;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>统一场论全维攻破总报告</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0f17'/%3E%3Ctext x='16' y='22' font-size='16' fill='%234ad2e8' text-anchor='middle' font-family='monospace'%3E∇%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap">
+<style>
+  :root{
+    --bg:#0b0f17; --bg2:#0f1520; --card:#121a28; --card2:#0d1420;
+    --line:#1d2a3d; --line2:#24334a;
+    --txt:#dce6f5; --txt2:#8fa3bf; --txt3:#5b6f8c;
+    --cy:#4ad2e8; --cy-dim:#2a7f92;
+    --ok:#3ecf8e; --bad:#e08b6d; --neutral:#64748b;
+    --mono:'Noto Sans SC',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:'Noto Sans SC',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.65;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  a{color:var(--cy);text-decoration:none}
+  /* ---------- nav ---------- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(11,15,23,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:4px;overflow-x:auto;padding-top:12px;padding-bottom:12px}
+  nav .brand{font-weight:700;color:var(--cy);letter-spacing:.5px;margin-right:14px;white-space:nowrap;font-size:14px}
+  nav a{color:var(--txt2);font-size:13px;padding:5px 11px;border-radius:6px;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center}
+  nav a:hover{color:var(--txt);background:var(--card2)}
+  /* ---------- hero ---------- */
+  .hero{padding:72px 0 56px;border-bottom:1px solid var(--line);background:radial-gradient(1200px 500px at 70% -10%,rgba(42,127,146,.18),transparent 60%)}
+  .hero .kicker{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--cy);text-transform:uppercase;margin-bottom:18px}
+  .hero h1{font-size:clamp(30px,5vw,52px);font-weight:900;letter-spacing:-.5px;line-height:1.2}
+  .hero .eq{font-family:var(--mono);color:var(--cy);white-space:nowrap}
+  .hero .sub{margin-top:16px;color:var(--txt2);font-size:clamp(15px,2vw,18px);max-width:760px}
+  .statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:34px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .stat .n{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--cy);font-variant-numeric:tabular-nums}
+  .stat .n.bad{color:var(--bad)}
+  .stat .n.ok{color:var(--ok)}
+  .stat .l{color:var(--txt3);font-size:12px;margin-top:4px}
+  /* ---------- section ---------- */
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  .sec-h{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+  .sec-h .no{font-family:var(--mono);color:var(--cy-dim);font-size:13px;letter-spacing:1px}
+  .sec-h h2{font-size:clamp(22px,3vw,30px);font-weight:700;letter-spacing:-.3px}
+  .sec-sub{color:var(--txt2);font-size:14px;max-width:820px;margin-bottom:26px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:16px}
+  .mono{font-family:var(--mono)}
+  .badge{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;border:1px solid;line-height:1.5;white-space:nowrap}
+  .b-bad{color:var(--bad);border-color:rgba(224,139,109,.4)}
+  .b-ok{color:var(--ok);border-color:rgba(62,207,142,.4)}
+  .b-cy{color:var(--cy);border-color:rgba(74,210,232,.4)}
+  .b-nt{color:var(--neutral);border-color:rgba(100,116,139,.4)}
+  .chart{width:100%;height:420px;margin:8px 0 6px}
+  .chart.sm{height:340px}
+  .note{color:var(--txt3);font-size:12.5px;margin-top:6px}
+  /* ---------- table ---------- */
+  .tbl{width:100%;border-collapse:collapse;margin-top:6px;font-size:13.5px}
+  .tbl th,.tbl td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+  .tbl th{background:var(--card2);color:var(--cy);font-weight:500;white-space:nowrap}
+  .tbl td:first-child{white-space:nowrap;color:var(--txt);font-weight:500}
+  .tbl .hl{color:var(--bad)}
+  .tbl .p{color:var(--ok)}
+  .tbl .x{color:var(--neutral)}
+  .tblwrap{overflow-x:auto}
+  /* ---------- roots ---------- */
+  .roots{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .root{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .root .tag{font-family:var(--mono);color:var(--bad);font-size:12px;letter-spacing:1px}
+  .root h3{font-size:17px;margin:6px 0 10px;font-weight:600}
+  .root p{color:var(--txt2);font-size:13.5px}
+  .root .ev{margin-top:12px;padding-top:12px;border-top:1px solid var(--line2);color:var(--txt3);font-size:12.5px;font-family:var(--mono)}
+  /* ---------- family ---------- */
+  .fam{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .fam .f{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .fam .f .fh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .fam .f .fh b{font-size:15px}
+  .fam .f p{color:var(--txt2);font-size:13px}
+  .fam .f .verdict{margin-top:10px;font-size:12.5px;font-family:var(--mono);color:var(--bad)}
+  /* ---------- dual ---------- */
+  .dual{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .dual .half{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .dual h3{font-size:16px;margin-bottom:14px;color:var(--txt)}
+  .pill{margin:4px 0;padding:9px 12px;border:1px solid var(--line);border-radius:9px;display:flex;justify-content:space-between;align-items:center;font-size:13.5px}
+  .pill .k{color:var(--txt2)}
+  .pill .v{font-family:var(--mono);font-weight:600}
+  .pill.pass .v{color:var(--ok)}
+  .pill.fail .v{color:var(--bad)}
+  /* ---------- dui (duality) ---------- */
+  .dui{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+  .dui .side{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px;position:relative;overflow:hidden}
+  .dui .one{border-color:var(--cy-dim)}
+  .dui .zero{border-color:rgba(224,139,109,.35)}
+  .dui .side .sym{font-size:52px;font-weight:900;font-family:var(--mono);line-height:1}
+  .dui .one .sym{color:var(--cy)}
+  .dui .zero .sym{color:var(--bad)}
+  .dui .side h3{font-size:18px;margin:10px 0 8px}
+  .dui .side p{color:var(--txt2);font-size:14px}
+  .dui .side ul{margin-top:12px;padding-left:18px;color:var(--txt2);font-size:13.5px}
+  .dui .side li{margin:5px 0}
+  /* ---------- footer ---------- */
+  footer{padding:46px 0 60px;color:var(--txt3);font-size:13px}
+  footer .wrap{display:flex;flex-direction:column;gap:8px}
+  footer .files{font-family:var(--mono);line-height:1.9;word-break:break-all}
+  .concl{background:linear-gradient(180deg,rgba(42,127,146,.14),transparent);border:1px solid var(--line);border-radius:14px;padding:28px;margin-top:8px}
+  .concl .q{font-family:var(--mono);color:var(--cy);font-size:15px}
+  .concl p{margin-top:10px;color:var(--txt2);font-size:14.5px;max-width:860px}
+  @media(max-width:760px){
+    .dual,.dui{grid-template-columns:1fr}
+    .chart{height:380px}
+    .hero{padding:48px 0 40px}
+    section{padding:44px 0}
+    .fam{grid-template-columns:1fr}
+  }
+  @media(min-width:761px) and (max-width:1000px){
+    .fam{grid-template-columns:repeat(3,1fr)}
+  }
+</style>
+</head>
+<body>
+<nav><div class="wrap"><span class="brand">统一场论攻破①–⑭</span>
+  <a href="#hero">总裁定</a><a href="#attack">攻破总览</a><a href="#uft">UFT 判据</a><a href="#dual">双口径</a><a href="#roots">四根因</a><a href="#fam">家族专项</a><a href="#dui">0/1 对偶</a>
+</div></nav>
+
+<div class="hero" id="hero"><div class="wrap">
+  <div class="kicker">算法联盟最高权限 · 第一性原理审计 · 2026-10-09</div>
+  <h1>统一场论候选无一满足 <span class="eq">M1</span> 公设独有</h1>
+  <div class="sub">22 体系 + 全维全体系统一场论 + 核心理论层（UFE-1）+ 唯一存活候选（L6）——全部判死。<br><span class="eq">UFT-3 = 0</span> 是全部候选的第一性必然读数，不是覆盖度问题，而是预言前最后一步的结构性注入。</div>
+  <div class="statgrid">
+    <div class="stat"><div class="n bad">0/5</div><div class="l">候选满足 M1–M5 的过门数</div></div>
+    <div class="stat"><div class="n">18</div><div class="l">攻破①–⑯ 项（含⑬/⑭双子项）</div></div>
+    <div class="stat"><div class="n bad">1/6</div><div class="l">UFT 六判据通过数</div></div>
+    <div class="stat"><div class="n ok">15:1</div><div class="l">四根因族归并率</div></div>
+  </div>
+</div></div>
+
+<!-- ===== 视图：攻破①–⑭ ===== -->
+<section id="attack"><div class="wrap">
+  <div class="sec-h"><span class="no">01</span><h2>攻破①–⑯ 判定总览</h2></div>
+  <div class="sec-sub">每个攻破项的 M1–M5 过门数均为 0/5。判定类别高度集中：无预测（不给 / 空账本）、借实验值（MSSM/全息截断/五公设/Yukawa/f=mₑ/2e/常数重排/借用动力学）、有预测但错（被 Super-K / LHC / CMB / Langmuir 反驳）——没有一项落入「有预测且对」。18 个攻破项覆盖全部 22 体系（⑬/⑭ 为双子项）。</div>
+  <div class="card">
+    <div id="chart-attack" class="chart"></div>
+    <div class="note">数据：统一场论全维攻破总报告终版（2026-10-09，攻破①–⑯ 合并本线与并行线）。横向柱为攻破①–⑯ 的判定类别分布，底部列出每类全部攻破项。</div>
+  </div>
+</div></section>
+
+<!-- ===== 视图：UFT 判据 ===== -->
+<section id="uft"><div class="wrap">
+  <div class="sec-h"><span class="no">02</span><h2>UFT 六判据 · 仅 1/6 通过</h2></div>
+  <div class="sec-sub">六判据共享 0–1 量纲。仅 UFT-1 数学自洽严格成立（A2 承重墙 / T1–T8 恒等机器零）——但数学自洽只是必要条件，统一场论要的「第一性预言」在 UFT-3 之后全部为零。</div>
+  <div class="card">
+    <div id="chart-uft" class="chart sm"></div>
+    <div class="note">雷达图：UFT-1 数学自洽 = 1，其余（四力统一 / 常数派生 / 观测复现 / 可证伪预言 / 外部验证）全为 0。数据：终局收敛裁定 + 双口径对齐。</div>
+  </div>
+</div></section>
+
+<!-- ===== 视图：双口径对齐 ===== -->
+<section id="dual"><div class="wrap">
+  <div class="sec-h"><span class="no">03</span><h2>双口径对齐 · 互证而非单口径</h2></div>
+  <div class="sec-sub">本攻破线（五门槛 M1–M5）与仓库联盟层（UFT 六判据）独立判据，指向同一结论：统一场论未完成。</div>
+  <div class="dual">
+    <div class="half">
+      <h3>本攻破线 · 五门槛</h3>
+      <div class="pill fail"><span class="k">M1 公设独有</span><span class="v">失守（核心）</span></div>
+      <div class="pill fail"><span class="k">M2 无自由参数</span><span class="v">失守</span></div>
+      <div class="pill fail"><span class="k">M3 数值单点</span><span class="v">失守</span></div>
+      <div class="pill fail"><span class="k">M4 带误差带</span><span class="v">失守</span></div>
+      <div class="pill fail"><span class="k">M5 与观测吻合</span><span class="v">失守</span></div>
+    </div>
+    <div class="half">
+      <h3>仓库联盟层 · UFT 六判据</h3>
+      <div class="pill pass"><span class="k">UFT-1 数学自洽</span><span class="v">1（通过）</span></div>
+      <div class="pill fail"><span class="k">UFT-2 四力统一</span><span class="v">0</span></div>
+      <div class="pill fail"><span class="k">UFT-3 常数派生</span><span class="v">0（=0 必读）</span></div>
+      <div class="pill fail"><span class="k">UFT-4 观测复现</span><span class="v">0（代理不作数）</span></div>
+      <div class="pill fail"><span class="k">UFT-5 可证伪预言</span><span class="v">0（L6 未过）</span></div>
+      <div class="pill fail"><span class="k">UFT-6 外部验证</span><span class="v">0（0/22 reviewed）</span></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ===== 视图：四根因族 ===== -->
+<section id="roots"><div class="wrap">
+  <div class="sec-h"><span class="no">04</span><h2>四根因族 · 结构性障碍</h2></div>
+  <div class="sec-sub">终局收敛裁定归并出四根因族（归并率 15:1）——四条独立路线在换措辞重复同一批障碍，证明统一场论未完成是结构性，不是覆盖度不足。</div>
+  <div class="roots">
+    <div class="root"><div class="tag">R1</div><h3>标度外部性</h3><p>几何给形式，不给绝对标度。</p><div class="ev">TUFT 32.1 dex 缺口 · S13 借锚 · 螺旋剖型注入</div></div>
+    <div class="root"><div class="tag">R2</div><h3>力域计数破产</h3><p>单一有界几何量容不下四力。</p><div class="ev">Frenet κ≥0 半平面 3&lt;4 · 主法向恒向心 · 弱力越界 1495×</div></div>
+    <div class="root"><div class="tag">R3</div><h3>动力学缺失</h3><p>无第一性拉氏量。</p><div class="ev">TUFT 6 自由输入 · τ 只在三阶 jerk · S13 作用量借用</div></div>
+    <div class="root"><div class="tag">R4</div><h3>预言不判别</h3><p>安全到不可证伪。</p><div class="ev">TUFT 预言数 0 · 六册 0/40 · EDM 被排除 16.5 量级</div></div>
+  </div>
+</div></section>
+
+<!-- ===== 视图：家族专项 ===== -->
+<section id="fam"><div class="wrap">
+  <div class="sec-h"><span class="no">05</span><h2>空间光速螺旋家族专项</h2></div>
+  <div class="sec-sub">κ/τ/f/Ω 家族多次被独立审计——每次「升格为物理公设」都注入或出错。唯一成立的恒等是数学真 1，不引入物理本体。</div>
+  <div class="fam">
+    <div class="f"><div class="fh"><b>攻破⑫ 数值</b><span class="badge b-bad">注入+发散</span></div><p>α=b/ρ 循环 · G 插值 · 力层级 5 错 4 · 级数发散</p><div class="verdict">判死</div></div>
+    <div class="f"><div class="fh"><b>四力三要素</b><span class="badge b-bad">只向心</span></div><p>F=mc²κN̂ · τ 零贡献 · 力不衰减</p><div class="verdict">判死</div></div>
+    <div class="f"><div class="fh"><b>S15 预测</b><span class="badge b-bad">量纲非法</span></div><p>ε₀ 量纲非法 · 第四代 vs LHC</p><div class="verdict">判死</div></div>
+    <div class="f"><div class="fh"><b>S02/S12 动力学</b><span class="badge b-bad">闭式错</span></div><p>P=m(c−v) 低速错 · α=tanθ 闭式错</p><div class="verdict">判死</div></div>
+    <div class="f"><div class="fh"><b>S01 本体</b><span class="badge b-ok">恒等真 1</span></div><p>κ²+τ²=ω²/c² 恒等成立</p><div class="verdict">不引入物理本体</div></div>
+  </div>
+</div></section>
+
+<!-- ===== 视图：0/1 对偶 ===== -->
+<section id="dui"><div class="wrap">
+  <div class="sec-h"><span class="no">06</span><h2>0/1 阴阳对偶 · 总括</h2></div>
+  <div class="dui">
+    <div class="side one"><div class="sym">1</div><h3>数学自洽 · 永不失效</h3><p>几何恒等与 A2 承重墙的「1」稳定存在，但只是必要条件。</p><ul><li>κ²+τ²=ω²/c²</li><li>A2 承重墙（FLRW R&gt;0 / α→0 回归 GR 机器零）</li><li>T1–T8 恒等式</li></ul></div>
+    <div class="side zero"><div class="sym">0</div><h3>第一性预言 · 一次未现</h3><p>统一场论要的「1」——可检验且正确的第一性预言——在全部候选里从未出现。</p><ul><li>α/G/ε₀/f 全借实验</li><li>力层级 5 错 4 · 级数发散</li><li>色散被 Langmuir 反驳</li></ul></div>
+  </div>
+  <div class="concl">
+    <div class="q">M1 公设独有是唯一未破之门，也是唯一可能产生「1」的坐标。</div>
+    <p>攻破①–⑭ 未宣布统一场论不可能，只宣布现有体系无一满足第一性验收。需全新原理——能唯一确定群 / 空间 / 系数选择（O3），而非已知途径（等距 / 体积比 / 经验 / 凑分数）重复。全维全体系统一场论与 UFE-1 的诚实重写价值被完整保留；L6 给出可证伪判据并主动对撞 Langmuir，是方法论楷模。</p>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div>算法联盟最高权限 · 统一场论全维攻破总报告 · 攻破①–⑯ 独立复算（本线 ①–⑭ + 并行线 ⑬–⑯）· 2026-10-09</div>
+  <div class="files">产物：统一场论全维攻破总报告_终版.md · 全维全链攻破总账.md · 全维度统一场论纲领_v1.md · attack1–14_*.py（纯标准库可复跑）</div>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+/* ===== 攻破①–⑫ 判定类别分布 ===== */
+(function(){
+  var el=document.getElementById('chart-attack');if(!el||!window.echarts)return;
+  var c=echarts.init(el);
+  var categories=[
+    {name:'借实验值',value:6,color:'#d9a06b',items:['①S13锚(MSSM)','⑩S10几何(Wyler/π/Koide)','⑪完成版(G=ℏc/mₚ²)','⑬UFE-1(Yukawa 26)','⑭S17(常数重排/Z错数量级)','⑮S02/S12(借用动力学)']},
+    {name:'有预测但错',value:7,color:'#e08b6d',items:['②S13 sin²θ(-5.45%)','⑦S18(年龄5.72×)','⑧S10/S15(量纲非法)','⑨P03(质子衰变160×)','⑫空间螺旋(力层级错)','⑬S03(v⊥/v∥否证)','⑭L6(色散vs Langmuir)']},
+    {name:'无预测',value:5,color:'#64748b',items:['③S13费米子代(数字巧合)','④S13色SU(3)(选择性建模)','⑤S13 Yang-Mills(教科书)','⑥TUFT(弱域外部输入)','⑯剩余9体系(空账本/修错)']}
+  ];
+  c.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'axis',triggerOn:'click',renderMode:'richText',confine:true,
+      formatter:function(ps){if(!ps||!ps.length)return '';var d=ps[0];var it=categories[d.dataIndex].items.join(String.fromCharCode(10));return categories[d.dataIndex].name+String.fromCharCode(10)+'攻破项 '+d.value+' 个'+String.fromCharCode(10)+it;}},
+    grid:{left:16,right:48,top:24,bottom:16,containLabel:true},
+    xAxis:{type:'value',max:8,name:'攻破项数',nameTextStyle:{color:'#5b6f8c'},axisLine:{lineStyle:{color:'#1d2a3d'}},axisLabel:{color:'#8fa3bf',fontSize:11},splitLine:{lineStyle:{color:'rgba(29,42,61,.5)'}}},
+    yAxis:{type:'category',data:categories.map(function(d){return d.name}),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'#dce6f5',fontSize:13}},
+    series:[{type:'bar',data:categories.map(function(d,i){return {value:d.value,itemStyle:{color:d.color}}}),barWidth:26,
+      label:{show:true,position:'right',color:'#dce6f5',fontSize:14,fontWeight:700,fontFamily:'ui-monospace,monospace',formatter:function(p){return p.value+' 项'}}
+    }]
+  });
+})();
+
+/* ===== UFT 六判据雷达 ===== */
+(function(){
+  var el=document.getElementById('chart-uft');if(!el||!window.echarts)return;
+  var c=echarts.init(el);
+  var axes=['UFT-1 数学自洽','UFT-2 四力统一','UFT-3 常数派生','UFT-4 观测复现','UFT-5 可证伪预言','UFT-6 外部验证'];
+  c.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'item',triggerOn:'click',renderMode:'richText',confine:true},
+    radar:{indicator:axes.map(function(a){return {name:a,max:1}}),radius:'68%',
+      axisName:{color:'#8fa3bf',fontSize:12},
+      splitLine:{lineStyle:{color:'rgba(29,42,61,.7)'}},
+      splitArea:{areaStyle:{color:['rgba(29,42,61,.12)','rgba(29,42,61,.05)']}},
+      axisLine:{lineStyle:{color:'#1d2a3d'}}},
+    series:[{type:'radar',data:[{value:[1,0,0,0,0,0],name:'通过数',itemStyle:{color:'#4ad2e8'},areaStyle:{color:'rgba(74,210,232,.18)'}}]}]
+  });
+})();
+</script>
+</body>
+</html>

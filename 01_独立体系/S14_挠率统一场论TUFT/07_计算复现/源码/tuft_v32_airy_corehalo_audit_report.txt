@@ -1,0 +1,32 @@
+TUFT V3.2 攻破阶段 · Airy 晕核-晕 virial 平衡审计（C0108）
+运行时间: 2026-10-10
+R*=½λ_C=1.1946e+22 l_P; Airy U_es=0.3300%/U_mag=0.0816%/U_em=0.4116%; shell U_em=1.2152%
+
+=== P1 形状依赖的 R 缩放 ===
+  Airy 静电: U_es∝1/R（电荷分布缩放 ⟹ 自能∝1/R）
+  Airy 磁:   U_mag∝μ²·geo，μ=Q⟨r⟩∝R、geo∝1/R² ⟹ U_mag∝常数（不随 R 缩放）
+  ⟹ Airy 磁项不参与 virial（dU_mag/dR=0），平衡仅由静电项驱动
+
+=== P2 Airy virial 平衡 ===
+  平衡负压 P_airy = -U_es/(4πR*³) = -6.4474e-93 M_P/l_P³ (<0 内拉)
+  应力能 U_P,airy = (1/3)U_es = 0.1100%·M_e
+  稳定判据 d²E/dR² = 4U_es/R*² = 3.8715e-69 (>0 稳定极小 ✓)
+
+=== P3 对照 shell（C0100）===
+  shell U_P = (1/3)U_em = 0.4054%·M_e
+  Airy  U_P = (1/3)U_es = 0.1100%·M_e（磁项不参与）
+  ⟹ 应力能形状依赖：shell 0.4055% vs Airy 0.1100%（差 3.7 倍）
+
+=== P4 质量账本（Airy, 惯例敏感度）===
+  账本A（不计应力能）: M_core=1-U_em_airy=0.9959·M_e (C0107 ✓)
+  账本B（计应力能）:   M_core=1-U_em_airy-U_P_airy=0.9948·M_e
+  差值 U_P_airy=0.1100%·M_e 为 4/3 型惯例敏感度（Airy 下比 shell 的 0.4055% 小 3.7 倍）
+
+=== 结构结论 ===
+  C0100 的 virial 平衡数值形状依赖：shell U_P=0.4055%% vs Airy U_P=0.1100%%；
+  平衡半径 R*=½λ_C 在 Airy 下仍稳定（d²E/dR²>0）✓；但应力能只含静电贡献（磁项
+  不随 R 缩放、不参与 virial）。账本A 不变（M_core=0.9959），账本B Airy 下 M_core=0.9946。
+
+红线：模型层面构造性核验，非物理主张；α=e²/4π(HL)；U_es/U_mag 沿用 C0106/C0107；
+'应力能是否计入质量账本'为 4/3 型惯例选择；Airy 形状来自 C0096 conjecture 2.11；
+磁项∝常数假设基于 μ=Q⟨r⟩∝R、geo∝1/R²（C0107 数值支撑）。

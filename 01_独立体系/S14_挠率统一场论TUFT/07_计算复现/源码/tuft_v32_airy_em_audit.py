@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-TUFT V3.2 攻破阶段 · Airy 晕 EM 自能几何因子审计（C0105, 修正版）
+TUFT V3.2 攻破阶段 · Airy 晕 EM 自能几何因子审计（C0105, r空间修正版）
 ================================================================
-背景：质量账本（C0087/C0090/C0094）用壳层几何因子（U_es=αM_e，c=1）；C0096
-第一性导出 Airy 晕并报 c_geom=0.201。本脚本计算 Airy 晕真实 EM 自能几何因子
-c_geom=I_geom·R，审计是否与质量账本一致。修正版用 s 空间干净积分 + 均匀球/壳
-校验。
+质量账本（C0087/C0090/C0094）用壳层因子（U_es=αM_e，c=1）；C0096 Airy 晕报
+c_geom=0.201。审计 Airy 晕真实 EM 自能几何因子 c_geom 是否与质量账本一致。
 
-I_geom = ∫∫g g'/|r-r'|d³rd³r',  球对称: I_geom=∫4πR³s²g(s)P(s)ds
-P(s) = (4π/s)∫₀^s g s'²ds' + 4πR∫_s^∞ g s'ds'
-校验: 均匀球 c=6/5, 壳层 c=1, 均匀实心(体积)分布相应值。
+球对称 r 空间公式（干净版，先校验均匀球=6/5、壳层=1）：
+  g(r)=ψ²，∫g d³r=1
+  P(r) = (1/r)∫₀^r g4πr'²dr' + ∫_r^∞ g4πr'dr'
+  I_geom = ∫ g·P·4πr² dr
+  c_geom = I_geom·R
 """
 import numpy as np, io, math
 from scipy.special import airy
@@ -23,62 +23,44 @@ R     = 0.5*lamC
 Q     = 0.473401
 a1    = 2.338107410459767
 
-def geom_factor(s, u, R):
-    """u(s) 为晕形状 u=rψ（ψ=A u/(R s)），g=ψ²=A²u²/(R²s²)。"""
-    ds = s[1]-s[0]
-    A2 = 1.0/(4*np.pi*R*np.trapezoid(u**2, s))
-    A  = math.sqrt(A2)
-    g  = A2*u**2/(R**2*s**2)
-    # M1(s)=∫₀^s g s'² ds' = (A2/R²)∫₀^s u² ds'
-    M1 = (A2/R**2)*np.cumsum(u**2)*ds
+def I_geom_of(g, r):
+    """g(r) 归一化电荷密度，r 网格；返回 I_geom=∫∫g g'/|r-r'|d³rd³r'。"""
+    dr = r[1]-r[0]
+    M1 = np.cumsum(g*4*np.pi*r**2)*dr          # ∫₀^r g4πr'²dr'
     M1 = M1 - M1[0]
-    # M2(s)=∫_s^∞ g s' ds' = (A2/R²)∫_s^∞ u²/s' ds'  (反向)
-    M2tot = (A2/R**2)*np.trapezoid(u**2/s, s)
-    M2 = M2tot - (A2/R**2)*np.cumsum(u**2/s)*ds
-    # P(s) = (4π/s)M1 + 4πR·M2
+    M2tot = np.trapezoid(g*4*np.pi*r, r)
+    M2 = M2tot - np.cumsum(g*4*np.pi*r)*dr     # ∫_r^∞ g4πr'dr'
     with np.errstate(divide='ignore', invalid='ignore'):
-        P = np.where(s>0, (4*np.pi/s)*M1 + 4*np.pi*R*M2, 4*np.pi*R*M2)
-    integ = 4*np.pi*R**3*s**2*g*P
-    I = np.trapezoid(integ, s)
-    return I, A2, A
+        P = np.where(r>0, (1.0/r)*M1 + M2, M2)
+    return np.trapezoid(g*P*4*np.pi*r**2, r)
 
-# ---- 校验 1: 均匀球 g=3/(4πR³) (s∈[0,1])，期望 c=6/5 ----
-sv = np.linspace(1e-6, 1.0, 200000)
-gv = np.full_like(sv, 3.0/(4*np.pi*R**3))
-dsv = sv[1]-sv[0]
-M1v = np.cumsum(gv*sv**2)*dsv
-M2totv = np.trapezoid(gv*sv, sv)
-M2v = M2totv - np.cumsum(gv*sv)*dsv
-Pv = (4*np.pi/sv)*M1v + 4*np.pi*R*M2v
-Iv = np.trapezoid(4*np.pi*R**3*sv**2*gv*Pv, sv)
-cv = Iv*R
+# ---- 校验: 均匀球 (期望 c=6/5) ----
+rv = np.linspace(1e-6, R, 300000)
+gv = np.full_like(rv, 3.0/(4*np.pi*R**3))
+cv = I_geom_of(gv, rv)*R
 
-# ---- 校验 2: 壳层 g=δ 近似（薄球壳在 s∈[1,1+ε]）----
-se = np.linspace(1.0, 1.0+1e-5, 200000)
-ge = np.full_like(se, 1.0/(4*np.pi*R**3*3e-5))  # ∫g d³r=1
-dse = se[1]-se[0]
-M1e = np.cumsum(ge*se**2)*dse
-M2tot_e = np.trapezoid(ge*se, se)
-M2e = M2tot_e - np.cumsum(ge*se)*dse
-Pe = (4*np.pi/se)*M1e + 4*np.pi*R*M2e
-Ie = np.trapezoid(4*np.pi*R**3*se**2*ge*Pe, se)
-ce = Ie*R
+# ---- 校验: 薄壳层 (期望 c≈1) ----
+re = np.linspace(R, R+1e-5*R, 300000)
+ge = np.full_like(re, 1.0/(4*np.pi*R**2*1e-5*R))
+ce = I_geom_of(ge, re)*R
 
-log("TUFT V3.2 攻破阶段 · Airy 晕 EM 自能几何因子审计（C0105, 修正版）")
+log("TUFT V3.2 攻破阶段 · Airy 晕 EM 自能几何因子审计（C0105, r空间修正版）")
 log("运行时间: 2026-10-09")
 log("R=0.5λ_C=%.6e l_P, Q=%.6f, a₁=%.6f"%(R,Q,a1))
-log("校验 均匀球 c=% .6f (期望 6/5=%.6f)"%(cv, 6/5))
-log("校验 薄壳层 c=% .6f (期望 ~1)"%ce)
+log("校验 均匀球 c=% .6f (期望 6/5=%.6f)  薄壳层 c=% .6f (期望 ~1)"%(cv,6/5,ce))
 log("")
 
 # ---- Airy 晕 ----
 s = np.linspace(1e-5, 40, 400000)
+r = s*R
 u = airy(Q**(1/3.0)*s - a1)[0]
-I_geom, A2, A = geom_factor(s, u, R)
+Iu = np.trapezoid(u**2, s)
+A2 = 1.0/(4*np.pi*R*Iu)
+A  = math.sqrt(A2)
+g  = A2*u**2/(R**2*s**2)          # 密度 ψ²
+norm = np.trapezoid(g*4*np.pi*r**2, r)
+I_geom = I_geom_of(g, r)
 c_geom = I_geom*R
-# 归一检查
-ds = s[1]-s[0]
-norm = np.trapezoid(4*np.pi*R**3*s**2*(A2*u**2/(R**2*s**2)), s)
 
 log("=== P1 Airy 晕 EM 自能几何因子 ===")
 log("  A=%.3e, 归一 ∫4πr²g dr = %.6f (应=1)"%(A,norm))

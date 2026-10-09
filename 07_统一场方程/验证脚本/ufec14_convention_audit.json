@@ -1,0 +1,325 @@
+{
+  "tests": [
+    {
+      "id": "A1",
+      "group": "依赖图",
+      "claim": "依赖图的节点数应等于模块数 9（一个模块一个节点）",
+      "computed": "nodes=9 modules=9 dup={}",
+      "expected": "nodes=9 modules=9 dup={}",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "A2",
+      "group": "依赖图",
+      "claim": "模块编号集合应为 M1..M9",
+      "computed": "modules=[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+      "expected": "1..9",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "A3",
+      "group": "依赖图",
+      "claim": "字面读法下入度为 0 的模块应只有 M1、M3（其余模块都有上游依赖）",
+      "computed": "literal_zero=[1, 3]",
+      "expected": "want=[1, 3]",
+      "status": "PASS",
+      "note": "别名节点（Q/BH/COS）吞掉了 M8/M7/M6 的入边 ⇒ 字面读法把这三个模块读成无上游"
+    },
+    {
+      "id": "A4",
+      "group": "依赖图",
+      "claim": "依赖图应为有向无环图（无论字面读法还是按编号折叠）",
+      "computed": "cycle=False",
+      "expected": "False",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "A5",
+      "group": "依赖图",
+      "claim": "每个模块都应有一条路径指向 M9（实验接口）",
+      "computed": "all_reach=True",
+      "expected": "True",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "A6",
+      "group": "依赖图",
+      "claim": "M9 是汇点（不作为其它模块的上游）",
+      "computed": "edges_from_M9=0",
+      "expected": "0",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B1",
+      "group": "Dirac代数",
+      "claim": "Weyl 基 {γ^μ,γ^ν}=2η^{μν}、γ5²=1、{γ5,γ^μ}=0、P_L+P_R=1、P_R−P_L=γ5、P_Rγ^μ=γ^μP_L、P_Rγ^μP_R=0（⇒ 左右手交叉双线性为零，J5=JR−JL 成立）",
+      "computed": "cliff=True g5=True anti=True proj=True move=True cross=True",
+      "expected": "all True",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B2",
+      "group": "量纲",
+      "claim": "L_S 的两项各自给出同一个 [S]，且与挠率量纲 [T]=1 一致",
+      "computed": "from_quadratic=1 from_cross=1 torsion=1",
+      "expected": "[-1 term] both = 1",
+      "status": "PASS",
+      "note": "手算易错项：[1/κ²]=+2 ⇒ 二次项给 2+2[S]=4 ⇒ [S]=1；交叉项给 [S]+3=4 ⇒ [S]=1，一致"
+    },
+    {
+      "id": "B3",
+      "group": "量纲",
+      "claim": "四费米算符维数核算：2[J] + [κ²] = 6 − 2 = 4",
+      "computed": "dim=4",
+      "expected": "4",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B4",
+      "group": "平方配方",
+      "claim": "L_S = (3/4κ²)S² − (3/4)S·J 恒等于 (3/4κ²)(S−κ²J/2)² − (3κ²/16)J²（含体积权重 e）",
+      "computed": "identity=True extremum=True value=True",
+      "expected": "True/True/True",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B5",
+      "group": "平方配方",
+      "claim": "二次核非退化：∂²L/∂S∂S = (3/2)/κ² ≠ 0（⇒ 该局部核可做高斯积分）",
+      "computed": "second=True",
+      "expected": "True",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B6",
+      "group": "变分解",
+      "claim": "对 S 代数变分给出 S^μ = (κ²/2) J5^μ，与平方配方的极值点一致",
+      "computed": "S_sol=1/2*J^1*K^1",
+      "expected": "(1/2)·κ²·J",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B7",
+      "group": "手征块",
+      "claim": "同手征块系数 −3κ²/16、左右手交叉块系数 +2×(3κ²/16)=+3κ²/8",
+      "computed": "JR²=-3/16 JL²=-3/16 cross=3/8",
+      "expected": "−3/16, −3/16, +3/8",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B8",
+      "group": "变分解",
+      "claim": "∂(J5²)/∂ψ̄ = 2 J5_μ γ^μ γ^5 ψ ⇒ 有效方程中该项系数为 2×(3κ²/16)=3κ²/8",
+      "computed": "coef=3/8",
+      "expected": "3/8",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "C1",
+      "group": "算符落点",
+      "claim": "规范单态流两两相乘能落到的 Warsaw 矢量流型（flavor 未区分）应为 15 个",
+      "computed": "count=15 names=['Q_dd', 'Q_ed', 'Q_ee', 'Q_eu', 'Q_ld', 'Q_le', 'Q_ll', 'Q_lq^(1)', 'Q_lu', 'Q_qd^(1)', 'Q_qe', 'Q_qq^(1)', 'Q_qu^(1)', 'Q_ud^(1)', 'Q_uu']",
+      "expected": "15",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "C2",
+      "group": "算符落点",
+      "claim": "含 ν_R 时应扩到 νSMEFT 基底：条目数由 15 增到 21（命名以 νSMEFT 为准，本文不代选）",
+      "computed": "count=21 nu_involving=[('nu', 'u'), ('d', 'nu'), ('e', 'nu'), ('nu', 'nu'), ('Q', 'nu'), ('L', 'nu')]",
+      "expected": "21",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "C3",
+      "group": "算符落点",
+      "claim": "14 号册 2.3 节列举的算符名应覆盖 C1 的全部 15 个（文中用了\"例如\"，但列举须完整）",
+      "computed": "listed=15 missing=[] extra=[]",
+      "expected": "missing=[] extra=[]",
+      "status": "PASS",
+      "note": "修前缺 Q_eu、Q_ed（两个右手单态的跨味组合）；已按本门禁补入正文"
+    },
+    {
+      "id": "C4",
+      "group": "算符落点",
+      "claim": "非单态流的 Warsaw 成员（qq^(3)、lq^(3)、qu^(8)、qd^(8)、ud^(8)）在树级 EC 切片中系数为零",
+      "computed": "absent=['Q_qq^(3)', 'Q_lq^(3)', 'Q_qu^(8)', 'Q_qd^(8)', 'Q_ud^(8)']",
+      "expected": "these are not generated",
+      "status": "BOUNDARY",
+      "note": "这是可证伪签名而非缺陷：若观测到这些算符非零且无法由 RG 混合解释，则本切片被否证"
+    },
+    {
+      "id": "C5",
+      "group": "味结构",
+      "claim": "各代流在 J5² 中按\"求和后进平方\"出现 ⇒ 味道指标结构被单一系数钉死",
+      "computed": "same_pairs=5(6 味组合) cross_pairs=10(9 味组合) total=120",
+      "expected": "5(6) / 10(9) / 120",
+      "status": "PASS",
+      "note": "同一味组合内部系数全等 ⇒ 不是逐项拟合，而是 J5² 这一个结构的展开"
+    },
+    {
+      "id": "C6",
+      "group": "味结构",
+      "claim": "手征流之和 Σ_p j_p 在任意味道旋转下不变（Tr 型结构）⇒ 转到质量基后形式不变",
+      "computed": "unitary=True nonunitary_control_breaks=True",
+      "expected": "True/True",
+      "status": "PASS",
+      "note": "含独立旋转 U_u、U_d 各一（对应 CKM 两侧不同旋转）；反对照（非酉）必须破坏它"
+    },
+    {
+      "id": "C7",
+      "group": "味结构",
+      "claim": "推论：该切片的四费米算符在树级味道盲 ⇒ 不产生树级 FCNC",
+      "computed": "universality=PASS",
+      "expected": "PASS（条件性）",
+      "status": "PASS",
+      "note": "条件：环路 Yukawa 混合仍可在 G_F 量级以下重新引入味破坏，量级被 κ² 压低 ⇒ 观测不可达"
+    },
+    {
+      "id": "D1",
+      "group": "测度口径",
+      "claim": "经典消去与高斯积分的树级结果相同，且都不依赖 e 的具体取值",
+      "computed": "identity_proved_in_B4=True",
+      "expected": "True",
+      "status": "PASS",
+      "note": "恒等式含体积权重 w 已逐项证明 ⇒ 高斯积分的树级核与经典消去逐项同形"
+    },
+    {
+      "id": "D2",
+      "group": "测度口径",
+      "claim": "朴素坐标测度下 det ∝ Π_x e(x)^{-N_comp/2}：其依赖是 Σ ln e，不是 ∫ e",
+      "computed": "same_sum=True diff_prod=True (Σ=10, Π=24/16)",
+      "expected": "same_sum=True diff_prod=True",
+      "status": "PASS",
+      "note": "两个配置体积和相同而乘积不同 ⇒ Σ ln e 不能写成 ∫e 的仿射函数 ⇒ 不能只归入宇宙学项"
+    },
+    {
+      "id": "D3",
+      "group": "测度口径",
+      "claim": "分量数 N_comp=4 ⇒ 每点行列式指数为 −N_comp/2 = −2",
+      "computed": "exponent=-2",
+      "expected": "−2",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "D4",
+      "group": "测度口径",
+      "claim": "协变测度（以 ∫ e S² 为范数定义）下 e 依赖整体抵消 ⇒ 只留 ∝ 格点数的常数 ⇒ 归入宇宙学项",
+      "computed": "covariant_measure_residual=const_per_point",
+      "expected": "const ∝ #cells",
+      "status": "BOUNDARY",
+      "note": "文档 §2.2\"N[e] 可能重整化宇宙学项\"仅在协变测度下成立；朴素测度给的是 Σ ln e。这正是 §3\"完整联络测度、Jacobian\"那一行要做的事，本条把它量化为两种测度的函数形式差异"
+    },
+    {
+      "id": "E1",
+      "group": "能标口径",
+      "claim": "κ_g²=8πG=M_Pl^{-2} 只在\"约化普朗克质量\"口径下成立；两口径相差 √(8π)",
+      "computed": "M_reduced=2435323459338203406.66873423008351459284225474503655825159006 GeV M_planck=12208901282098640627.8125505239676172585069442495141668158133 GeV ratio=5.01325654926200100483153056962209050601397348121987996763941 sqrt8pi=5.01325654926200100483153056962209050601397348121987996763942",
+      "expected": "ratio = sqrt(8π) = 5.0145",
+      "status": "PASS",
+      "note": "这是 8π 口径陷阱：14 号册若不声明用约化质量，Λ_EC 会整体差 √(8π)=5.0145 倍"
+    },
+    {
+      "id": "E2",
+      "group": "能标口径",
+      "claim": "由 CODATA2022 字面量算出的两个普朗克质量与 PDG 参考值一致",
+      "computed": "dev_reduced=0.000132837510555813826995577036350962152876692006800103322406571 dev_planck=0.00000808566642307905540580522830557306028796383699182440713408142",
+      "expected": "< 1e-3",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "E3",
+      "group": "能标口径",
+      "claim": "Λ_EC = (4/√3) M̄_Pl，且 Λ_EC / M̄_Pl = 4/√3 = 2.3094 > 1",
+      "computed": "Lambda_EC=5624138619250889486.48392730582016442064395876375167027872197 GeV ratio=2.30940107675850305803659512200782982259040700508050750407441",
+      "expected": "2.3094",
+      "status": "PASS",
+      "note": "若改用非约化普朗克质量，同一公式给 2.82e19 GeV；\"已高于 reduced Planck\"只在约化口径下为真"
+    },
+    {
+      "id": "E4",
+      "group": "M9 数值",
+      "claim": "接触系数 a = 3/(16 M̄_Pl²)，反解 1/√a 与 Λ_EC 一致",
+      "computed": "a=3.16146200991780058361976393148906416461169779410107725466303E-38 GeV^-2  1/sqrt(a)=5624138619250889486.48392730582016442064395876375167027872196 GeV",
+      "expected": "= Λ_EC",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "E5",
+      "group": "M9 数值",
+      "claim": "与弱有效相互作用强度 G_F/√2 的比值（同一量纲，可直接比）",
+      "computed": "a=3.16146200991780058361976393148906416461169779410107725466303E-38  G_F/√2=0.00000824754288201549758998875125974183086137295870714363351779660  ratio=3.83321682001999686160382724180298100245572398582552258450967E-33",
+      "expected": "ratio ≈ 3.8e-33",
+      "status": "PASS",
+      "note": "G_F 为外部输入（PDG 1.1663787e-5 GeV^-2）"
+    },
+    {
+      "id": "E6",
+      "group": "M9 数值",
+      "claim": "若以现有 ~10 TeV 接触相互作用灵敏度为参照，要让该接触项达到同量级需灵敏度提升",
+      "computed": "needed_factor=316309352085493016611336137013.317891164182560216985964282661",
+      "expected": "~3e29",
+      "status": "PASS",
+      "note": "10 TeV 是声明的外部输入（复合/接触相互作用的现有量级），不是本理论推出"
+    },
+    {
+      "id": "E7",
+      "group": "M9 数值",
+      "claim": "|L_4ψ|/|L_kin| ~ (3/16)(E/M̄_Pl)² 在若干能标下的取值",
+      "computed": "1 TeV:3.161e-32 ; 13.6 TeV:5.847e-30 ; 1e10 GeV:3.161e-18",
+      "expected": "量级随 (E/M̄_Pl)²",
+      "status": "PASS",
+      "note": "普通粒子能标下该修正极小；E→M̄_Pl 时 EFT 本身已失效，不是\"效应变大\""
+    },
+    {
+      "id": "Z1",
+      "group": "分工",
+      "claim": "同目录 torsion_operator_basis.py 负责 24 分量 contorsion 指标代数与 Fierz 基底；本仪器负责归一化约定、量纲、算符落点、测度口径、能标数值与依赖图拓扑（互不共享代码）",
+      "computed": "sibling_exists=True",
+      "expected": "True（读数以该仪器自身输出为准）",
+      "status": "INFO",
+      "note": ""
+    },
+    {
+      "id": "Z9",
+      "group": "自检",
+      "claim": "条目状态计数自洽（PASS+FAIL+BOUNDARY+INFO = 总数）",
+      "computed": "True",
+      "expected": "True",
+      "status": "PASS",
+      "note": ""
+    }
+  ],
+  "summary": {
+    "total": 33,
+    "pass": 30,
+    "fail": 0,
+    "boundary": 2,
+    "info": 1
+  },
+  "key_numbers": {
+    "a_coeff_GeV_minus2": "3.16146200991780058361976393148906416461169779410107725466303E-38",
+    "ratio_to_weak_contact": "3.83321682001999686160382724180298100245572398582552258450967E-33",
+    "sensitivity_gap_vs_10TeV": "316309352085493016611336137013.317891164182560216985964282661",
+    "lambda_EC_GeV": "5624138619250889486.48392730582016442064395876375167027872197",
+    "reduced_planck_GeV": "2435323459338203406.66873423008351459284225474503655825159006",
+    "planck_GeV": "12208901282098640627.8125505239676172585069442495141668158133"
+  }
+}
