@@ -201,7 +201,6 @@ IMPL = '''# 实现方式总览
 | [GAQ 谱系](实现方式档案/GAQ谱系.md) | M1 M2 M6 | s03 s07 s08 s09 | `02_共享基础/公共计算/源码/` | 版本演进，逐版审查 |
 | [GAQ 成书](实现方式档案/GAQ成书.md) | M6 | s03 s07 s08 s09 | `GAQ-UFT_Complete_Book/` | 7 卷，含开放问题声明 |
 | [空间光速螺旋族](实现方式档案/空间光速螺旋族.md) | M2 M7 | s02 s10 s12 | `unified-field-theory*/`、`tan_arctan_unified_field/` | 展示层为主 |
-| [UM 统一场论](实现方式档案/UM.md) | M1 M6 | 候登记 | `uft/06-论文/` | 待迁入 |
 | [三分量统一场论库](实现方式档案/三分量统一场论库.md) | M5 | s01 s02 s12 跨体系 | `triad_uft/` | 跨体系代码库 |
 | [双向分形 bifuf](实现方式档案/双向分形bifuf.md) | M2 M4 | 候裁定 | `utf/17-空间光速螺旋引力理论/code/` | **认证存疑，见档案** |
 | [GMUFT 几何耦合](实现方式档案/GMUFT.md) | M1 M6 | s11 | `article/zh/2026/9/` | 场方程 OPEN |
@@ -362,7 +361,6 @@ ROADMAP = '''# 统一体系层路线图
 | B2 | 16 项实现方式档案 | 完成 |
 | B3 | 体系坐标逐项填写 | **部分完成**：`候登记_ufe1` 的 C8/C9 已按实际填写；其余体系仍需逐项核对 `system.json` 与 `claims.csv` 后回填，当前以占位登记 |
 | B4 | bifuf 与 s13 关系裁定 | **待裁定**：两份 JSON 结论互相矛盾，需独立复跑后定级 |
-| B5 | UM 与 V21Ω 是否登记为独立体系 | **待裁定**：候登记，需迁移原文并补齐 17 阶段 |
 | B6 | UFE-1（`07_统一场方程`）编号归属 | **待裁定**：现为顶层 section，未进入 `sNN` 注册；是否改登记为 `s15` 并由其维护者补 `system.json` + 17 阶段 + `claims.csv` |
 
 ## 第三阶段：关系图谱（本轮完成骨架）
@@ -405,7 +403,6 @@ IMPL_TABLE_ROWS = [
     ('GAQ 成书', 'M6', 's03 s07 s08 s09', 'GAQ-UFT_Complete_Book/', '7 卷约 102 万字；含开放问题声明', 'active', '实现方式档案/GAQ成书.md'),
     ('空间光速螺旋族展示', 'M2 M7', 's02 s10 s12', 'unified-field-theory/、unified-field-theory-full/、tan_arctan_unified_field/',
      '单页 HTML；α=tanθ=τ/κ', 'active', '实现方式档案/空间光速螺旋族.md'),
-    ('UM 统一场论', 'M1 M6', '候登记', 'uft/06-论文/', '三本源参数 {c,κ,τ}；32 维超复数', 'candidate', '实现方式档案/UM.md'),
     ('三分量统一场论库', 'M5', 's01 s02 s12（跨体系）', 'triad_uft/', '21 模块 Python 包；v4.0/v5.0/v5.1 发布包', 'active', '实现方式档案/三分量统一场论库.md'),
     ('双向分形 bifuf', 'M2 M4', '候裁定', 'utf/17-空间光速螺旋引力理论/code/', '三份 JSON 结论互相矛盾；含硬编码 True', 'disputed', '实现方式档案/双向分形bifuf.md'),
     ('GMUFT 几何耦合', 'M1 M6', 's11', 'article/zh/2026/9/', 'v2.1 修复版；完整场方程 OPEN', 'active', '实现方式档案/GMUFT.md'),
@@ -467,7 +464,6 @@ SYSTEMS_COORD = [
     ('p02_matter_source', '物体驱动与源场本体', '—', '—', '—', '—', '—', 'none', '—', '—', '0', 'conjecture'),
     ('p03_gauge_unification', '规范对称统一候选', '—', '—', '—', '—', '—', 'none', '—', '—', '0', 'conjecture'),
     ('p04_quantum_emergence', '量子结构与时空涌现候选', '—', '—', '—', '—', '—', 'none', '—', '—', '0', 'conjecture'),
-    ('', '统一场论 UM', '空间自身几何属性', 'c, κ, τ', '32 维超复数', '—', '—', 'partial', 'geometric', '—', '0', 'conjecture'),
     ('候登记_v21omega', 'V21 Ω 元一方程', '元一方程 N', 'N', '—', '—', '—', 'none', 'n_a', '—', '0', 'conjecture'),
     ('候登记_ufe1', '统一场方程 UFE-1', '规范联络的曲率（Einstein–Cartan + SM）', 'e, A, H, Ψ', '主丛 + 洛伦兹联络',
      'so(1,3)⊕su(3)⊕su(2)⊕u(1)', '4', 'complete', 'constant', '26', '13', 'numerical_check'),

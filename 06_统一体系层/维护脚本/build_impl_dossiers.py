@@ -234,35 +234,6 @@ DOSSIERS['空间光速螺旋族.md'] = '''# 实现方式档案：空间光速螺
 单页 HTML 的完整性不构成证据（八层 T3）。其中 α=τ/κ 的赋值关系需回到对应体系的 `claims.csv` 核对证据等级。
 '''
 
-DOSSIERS['UM.md'] = '''# 实现方式档案：统一场论（UM）
-
-[实现方式总览](../README.md) · 归属体系：**候登记**（未取得稳定编号）
-
-- **形态**：M1 符号推导 · M6 论文
-- **位置**：`uft/06-论文/统一场论-完整论文.md`（5.9 KB）；同源目录 `uft/01-核心公理/`、`uft/arxiv/`（main.tex + Makefile + build_package.py）
-- **状态**：candidate
-
-## 主张
-
-**（Universal Mathematics, UM）**：自定义完备公理系统，核心思想是"整个物理世界仅由空间自身的几何属性决定"。从 3 个第一性本源参数——光速 c、空间本征曲率 κ、空间本征挠率 τ——出发，声称推导全部基本物理常数、实现四力几何统一，并建立易经符号系统与量子物理的同构、意识科学的高维拓扑理论。
-
-配套：32 维超复数、O9 场方程。已做 arXiv 投稿打包。
-
-## 诚实评级（重要）
-
-论文顶部自印「本项目 ROOT 级权限认证 ✅ 通过 / 本源级（最高级别）」，并称"与 CODATA 2022 标准值误差均小于 10⁻⁵%"。
-
-按本仓库纪律：**自印认证横幅不构成审查**（见 [实现方式总览](../README.md) 使用纪律 2）。在无独立复跑脚本、无失败明细、无第三方评审记录的情况下，本实现一律按 `conjecture` 登记。
-
-"误差小于 10⁻⁵%"若来自用 CODATA 值反解本源参数再回算，属**循环拟合**，不构成预测验证。
-
-## 待办
-
-- 裁定是否登记为独立体系（路线图 B5）
-- 若登记：迁移原文至体系目录，补齐 17 阶段与 `system.json`（见 [接口约定](../../体系接口约定/统一接口约定.md)）
-- 核对 `uft` 与 `utf` 的同源关系（两者含同名 `01-核心公理`、`02-易经科学证明`，uft 是 utf 的较晚精简/审计版）
-'''
-
 DOSSIERS['三分量统一场论库.md'] = '''# 实现方式档案：三分量统一场论库（triad_uft）
 
 [实现方式总览](../README.md) · 归属体系：**跨体系代码库**（触及 s01、s02、s12 等）
@@ -599,7 +570,6 @@ RELATIONS = [
     ('候登记_ufe1', 'independent', 's13_duality_fractal_uft',
      '规范场论本体 vs 0/1 对偶基元，L1 无公设交集', 'active'),
     # 候登记 / 候裁定的具体化（原先指向泛化节点，图上不可见）
-    ('实现: UM', 'implements', '', 'uft/06-论文/', 'candidate'),
     ('实现:V21 Ω 元一方程', 'implements', '候登记_v21omega', 'V21_Ω…txt', 'candidate'),
     ('实现:双向分形 bifuf', 'implements', '候裁定_bifuf', '**disputed**，见档案；裁定前结论不得引用', 'disputed'),
     ('候裁定_bifuf', 'independent', 's13_duality_fractal_uft',
@@ -647,7 +617,7 @@ RELATION_DOC = '''# 体系关系图谱
 1. **把 `borrows_math` 当依赖**：s10/s12 借用 s01 的三重奏恒等式，但 s01 的数学结果不能为 s10/s12 的本体主张背书。
 2. **把 `implements` 当认证**：TUFT 主线跑了 17 个版本，不等于 s14 成立；s14 的 claims 中多项为 falsified。同理，UFE-1 有 47 项验证通过，不等于它已被证实。
 3. **把 `version_of` 当等价**：s03→s07→s08→s09 是同一研究逐版改公设，不是四个互相支持的独立证据。
-4. **把 `候登记` 当已登记**：`候登记_ufe1`、``、`候登记_v21omega` 与 `候裁定_bifuf` 尚未取得 `sNN` / `pNN` 编号。它们在图中出现只为标注关系，不表示身份已确立；`候裁定_bifuf` 在裁定前其结论不得引用。
+4. **把 `候登记` 当已登记**：`候登记_ufe1`、`候登记_v21omega` 与 `候裁定_bifuf` 尚未取得 `sNN` / `pNN` 编号。它们在图中出现只为标注关系，不表示身份已确立；`候裁定_bifuf` 在裁定前其结论不得引用。
 
 ## 待完成
 
@@ -672,7 +642,7 @@ def build_graph_html():
         '对偶 / 挠率族': ['s13_duality_fractal_uft', 's14_torsion_unified_field_tuft'],
         '待完备与方向': ['s11_gmuft_geometric_coupling', 'p01_space_compression',
                     'p02_matter_source', 'p03_gauge_unification', 'p04_quantum_emergence'],
-        '形式化核心 / 候登记': ['候登记_ufe1', '',
+        '形式化核心 / 候登记': ['候登记_ufe1',
                         '候登记_v21omega', '候裁定_bifuf'],
         '共享基准 / 经典': ['基准:Nabla算子量纲', '实现:Nabla算子量纲条目'],
     }
@@ -696,7 +666,6 @@ def build_graph_html():
         'p03_gauge_unification': 'P03 规范统一',
         'p04_quantum_emergence': 'P04 量子涌现',
         '候登记_ufe1': 'UFE-1 统一场方程\n(07 · 候登记)',
-        '': 'UM \n(候登记)',
         '候登记_v21omega': 'V21 Ω 元一方程\n(候登记)',
         '候裁定_bifuf': 'bifuf 双向分形\n(disputed)',
         '基准:Nabla算子量纲': '基准:Nabla算子量纲\n([∇]=m⁻¹ 量纲标尺)',
