@@ -29,6 +29,7 @@ import io
 import os
 import re
 import sys
+import time
 import shutil
 import hashlib
 import tempfile
@@ -392,7 +393,8 @@ def main():
     files_arch = walk(ARCHIVE_DIRS)
 
     p("TUFT 对称性定理适用域 + 自旋谱 + 传播子结构 普查（只读件）")
-    p("运行时间: 2026-10-10    脚本: %s" % os.path.basename(__file__))
+    p("运行时间: %s（本行由时钟现取，跨日复跑只允许这一行变化）    脚本: %s"
+      % (time.strftime("%Y-%m-%d"), os.path.basename(__file__)))
     p("作用域（分母现测，不猜）：")
     for d in LIVE_DIRS:
         base = os.path.join(ROOT, d)
@@ -601,18 +603,28 @@ def main():
     face = "\n".join(L) + "\n"
     if mode == "--check":
         bad = []
+        face_lines = face.split("\n")
         for path in (OUT_SRC, OUT_REC):
             if not os.path.isfile(path):
                 bad.append("ABSENT " + path)
                 continue
             disk = open(path, "rb").read().decode("utf-8").split("\n")
             if open(path, "rb").read() != face.encode("utf-8"):
-                bad.append("DIFF " + path)
-        if bad:
+                diff = [i for i, (a, b) in enumerate(zip(disk, face_lines)) if a != b]
+                extra = abs(len(disk) - len(face_lines))
+                stamp_only = (len(diff) + extra) == 1 and (
+                    not diff or (disk[diff[0]].startswith("运行时间:") and face_lines[diff[0]].startswith("运行时间:")))
+                bad.append("%s DIFF 行数=%d 仅时间戳行=%s %s" % (
+                    path, len(diff) + extra, stamp_only,
+                    "（跨日允许）" if stamp_only else "⟹ 实质差异，须重落面"))
+        if any(("⟹" in b) or ("ABSENT" in b) for b in bad):
             print("CHECK FAIL:")
             for b in bad:
                 print("  " + b)
             return 1
+        if bad:
+            for b in bad:
+                print("  允许项: " + b)
         print("CHECK OK 面字节一致  %d B" % len(face.encode("utf-8")))
         return 0
     for path in (OUT_SRC, OUT_REC):
