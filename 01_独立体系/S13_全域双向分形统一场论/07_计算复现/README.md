@@ -37,6 +37,8 @@
 | [openuft_rge_sim.py](源码/openuft_rge_sim.py) | 对话推导·重整化群耦合统一三线检验（SM vs MSSM，RK4 数值积分，纯标准库） | python openuft_rge_sim.py |
 | [openuft_unified.py](源码/openuft_unified.py) | 对话推导·统一场论完成引擎（耦合统一、质子衰变、黑洞熵、轴子、费米子质量、真空能、戈德斯通，全谱数值，纯标准库） | python openuft_unified.py |
 | [openuft_predictions_verify.py](源码/openuft_predictions_verify.py) | 候选预言五~八数值估算（质子衰变 tau_p~7.3e35 yr 可检验、轴子 ueV、暗能量 w(a)、耦合统一交点，conjecture·unreviewed） | python openuft_predictions_verify.py |
+| [openuft_w_of_a.py](源码/openuft_w_of_a.py) | 候选预言七·δw 显式形式构造（M6 穿壁补偿：ln 比值 282.98≈283 层；分支A w_A=-1-N a^{-3} 自洽排除、分支B w_B=-1 严格，conjecture·unreviewed） | python openuft_w_of_a.py |
+| [openuft_dimension_extremum.py](源码/openuft_dimension_extremum.py) | d=4 维数极值 V_eff(d)=(d-4)^2[A/(d-2)^2+B(d-6)^2] 求导验证（V'(4)≈0、V''(4)=8.5>0、V(4)=0 全局极小，conjecture·unreviewed） | python openuft_dimension_extremum.py |
 
 > 注：以上为候选推导配套代码，代码可运行不自动提升证据等级；输出以 claims.csv 登记为准。
 

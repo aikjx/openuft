@@ -1,0 +1,207 @@
+{
+  "title": "TUFT V4.0 攻破版 r29 关键修复路径(P0-1+P1-2) 修复后闭合性机器复核",
+  "date": "2026-10-10",
+  "r_series": "r31",
+  "counts": {
+    "PASS": 4,
+    "FAIL": 3,
+    "BOUNDARY": 0,
+    "INFO": 3,
+    "MISMATCH": 0
+  },
+  "guard_total": 5,
+  "guard_pass": 5,
+  "records": [
+    {
+      "id": "P01a",
+      "verdict": "FAIL",
+      "title": "修复前(料1)作用量两加项量纲不齐 (差 L^2)",
+      "detail": "term1=[(1/2kappa_G)R]=L^-4, term2=[(1/4)tau^2]=L^-2, 二者不可相加 => W14 成立",
+      "numbers": {
+        "term1": [
+          "0",
+          "-4",
+          "0",
+          "0"
+        ],
+        "term2": [
+          "0",
+          "-2",
+          "0",
+          "0"
+        ],
+        "equal": false
+      },
+      "tags": [
+        "W14",
+        "P0-1",
+        "量纲"
+      ]
+    },
+    {
+      "id": "P01b",
+      "verdict": "PASS",
+      "title": "P0-1 子修法A(移回括号)括号内齐次 L^-2, 整体 L^-4 闭合",
+      "detail": "L=(1/(2kappa_G))(R+alpha*tau^2), alpha无量纲 => 括号内 R 与 alpha*tau^2 同量纲 L^-2, 乘1/(2kappa_G)得 L^-4",
+      "numbers": {
+        "inside": [
+          "0",
+          "-2",
+          "0",
+          "0"
+        ],
+        "overall": [
+          "0",
+          "-4",
+          "0",
+          "0"
+        ],
+        "closed": true
+      },
+      "tags": [
+        "W14",
+        "P0-1",
+        "量纲",
+        "PASS"
+      ]
+    },
+    {
+      "id": "P01c",
+      "verdict": "PASS",
+      "title": "P0-1 子修法B(补系数)两项均 L^-4 齐次, 与 A 等价",
+      "detail": "L=(1/(2kappa_G))R + (1/(2kappa_G))alpha*tau^2, 两项同量纲 L^-4",
+      "numbers": {
+        "term1": [
+          "0",
+          "-4",
+          "0",
+          "0"
+        ],
+        "term2": [
+          "0",
+          "-4",
+          "0",
+          "0"
+        ],
+        "equal": true
+      },
+      "tags": [
+        "W14",
+        "P0-1",
+        "量纲",
+        "PASS"
+      ]
+    },
+    {
+      "id": "P01d",
+      "verdict": "PASS",
+      "title": "P0-1 是零新参数纯改写, 可闭合 W14 而不违 Omega5",
+      "detail": "两条子修法都不需要引入 kappa/tau 之外的符号; 若走'补系数'则 +1 外部标度(可选, 非必须)",
+      "tags": [
+        "W14",
+        "P0-1",
+        "零成本",
+        "PASS"
+      ]
+    },
+    {
+      "id": "P12a",
+      "verdict": "PASS",
+      "title": "L_fluct 显式化后三项量纲均 L^-4, 自洽",
+      "detail": "Proca型: (Z_tau/2)(dtau)^2 + (m_tau^2/2)tau^2 + lam tau^4; Z_tau无量纲, m_tau量纲L^-1(新质量), lam无量纲耦合",
+      "numbers": {
+        "dtau2": [
+          "0",
+          "-4",
+          "0",
+          "0"
+        ],
+        "mterm": [
+          "0",
+          "-4",
+          "0",
+          "0"
+        ],
+        "lamterm": [
+          "0",
+          "-4",
+          "0",
+          "0"
+        ]
+      },
+      "tags": [
+        "W10",
+        "W12",
+        "P1-2",
+        "量纲",
+        "PASS"
+      ]
+    },
+    {
+      "id": "P12b",
+      "verdict": "FAIL",
+      "title": "L_fluct 显式化引入 >=2 个新自由参数 (m_tau, lambda), 撞 Omega5",
+      "detail": "Z_tau 无量纲可吸收; m_tau 是新质量标度, lambda 是新耦合 => 至少 2 个未由 kappa/tau 定义的常数",
+      "numbers": {
+        "new_params": 2
+      },
+      "tags": [
+        "W10",
+        "W33",
+        "P1-2",
+        "Omega5",
+        "FAIL"
+      ]
+    },
+    {
+      "id": "P12c",
+      "verdict": "INFO",
+      "title": "引用 r15 读数: Omega5 口径 II 自由度 = 5, 模型已在使用未声明外部输入",
+      "detail": "r15《自由度预算口径与四路代价重算》判定: 口径II(常数+分区节点)下自由度=5, 当前模型已超; P1-2 再 +2 参数 => 与 r29 Y38(12 个未定义符号)互相印证",
+      "tags": [
+        "Omega5",
+        "r15",
+        "引用",
+        "INFO"
+      ]
+    },
+    {
+      "id": "P12d",
+      "verdict": "FAIL",
+      "title": "P1-2 与'无外挂场·无独立耦合·无额外参数'声明直接矛盾",
+      "detail": "r30 Y38 机器扫出来料自身式集有 12 个未由 kappa/tau 定义的独立符号(G, tau_chiral, tau_[a mu nu], f, g_em, g_weak, g_strong, g_geo, T^curv, T^tor, T^spiral, Psi); P1-2 再显式化 L_fluct 必然再登记 m_tau/lambda => 声明不可维持",
+      "tags": [
+        "Y38",
+        "P1-2",
+        "声明矛盾",
+        "FAIL"
+      ]
+    },
+    {
+      "id": "SUM1",
+      "verdict": "INFO",
+      "title": "关键路径净结果: P0-1(零成本量纲闭合) + P1-2(必撞Omega5) => 量纲可修, 但参数代价须登记外部输入",
+      "detail": "即 r29 第十三章'关键路径'的机器坐实: 叙述层/量纲层可零成本收敛, 但显式化动力学场必然引入 未声明自由参数, 与'无额外参数'叙事互斥; 这恰是 r29 判定册给的'方向丙(概念收缩)'的真实账单",
+      "tags": [
+        "关键路径",
+        "P0-1",
+        "P1-2",
+        "综合",
+        "INFO"
+      ]
+    },
+    {
+      "id": "SUM2",
+      "verdict": "INFO",
+      "title": "下一步三方向可执行性: 甲(叙述层零成本, 立刻消 W29/W36/W26) > 乙(P0-1零成本 + P0-2真工作量) > 丙(概念收缩承认+1场)",
+      "detail": "甲不触物理只改文本; 乙中 P0-1 已本册证零成本闭合, P0-2 是真实工作量(落料2四条路线); 丙须承认撞 Omega5, 是诚实但放弃'无参数'叙事",
+      "tags": [
+        "方向甲",
+        "方向乙",
+        "方向丙",
+        "可执行性",
+        "INFO"
+      ]
+    }
+  ]
+}
