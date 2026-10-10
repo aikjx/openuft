@@ -1,0 +1,229 @@
+{
+  "basename": "TUFT-pi螺旋本征值几何推导_全维审计_2026-10-10",
+  "date": "2026-10-10",
+  "round": "r25",
+  "topic": "TUFT 空间光速螺旋：pi 螺旋本征值的几何推导（前段第一~六章 + §4~§9）",
+  "entries": [
+    {
+      "id": "A1",
+      "verdict": "PASS",
+      "claim": "由幂级数定义的 cos/sin 出发，cos(theta)=1 且 sin(theta)=0 的最小正根存在且等于 2*pi",
+      "evidence": "Newton 迭代 theta0 = 6.2831853071795864769252868E+0；|theta0-2pi| = 0E+0；|cos(theta0)-1| = 0E+0",
+      "note": "作为『定义』这一层的确无逻辑循环：2*pi := theta0 是 pi 的一个合法等价定义（等价于『sin 的最小正零点之两倍』）。但这是数学上已知的等价定义之一，不改变 pi 的任何数值内容，也不使 pi 成为物理量。"
+    },
+    {
+      "id": "A2",
+      "verdict": "INFO",
+      "claim": "闭合『方程组』cos(theta0)=1 与 sin(theta0)=0 是两个独立约束",
+      "evidence": "在根处 |d(cos-1)/dtheta| = |sin| = 0.000000E-53（=0，故 cos-1 在该点为二重根），|d(sin)/dtheta| = |cos| = 1.000000E+0 ⇒ 局部只有一个有效方程（sin(theta)=0）；cos 条件由 sin^2+cos^2=1 与符号分支给出",
+      "note": "Jacobian 秩亏 ⇒ 来料『解超越方程组』实为解单个方程；并且 cos-1 是二重根，这决定了用 |cos-1|<eps 判定根的精度只能达到 sqrt(eps)（见 A3）。"
+    },
+    {
+      "id": "A3",
+      "verdict": "MISMATCH",
+      "claim": "来料第五章数值样例（step=1e-6, precision=1e-12）输出 theta0=6.283185307179586 / pi=3.141592653589793",
+      "evidence": "网格最近点残差 |n*h-2pi| = 3.071796E-7 ≫ 容差 1e-12；前 3000 圈内最佳网格残差 = 1.936300E-10（第 1950 圈）仍 >1e-12 ⇒ 该步长/容差组合下程序不返回首圈值；若按漂移后的第 k 圈返回 theta，则 pi=theta/2 得到的是 k*pi 而非 pi；单看 cos 条件则 n=1 处 |cos(h)-1| = 5.000000E-13 < 1e-12 ⇒ 首步即返回 pi≈5e-7；要由 |cos-1|<eps 判出 15 位 pi，需 eps≈5.000000E-31，而 IEEE double 在 1 附近的 ulp = 2.220446E-16 ⇒ 双精度下不可达",
+      "note": "来料印刷的输出样例无法由其自身代码产生：习题级事实，但直接影响『已数值验证』的可信度。"
+    },
+    {
+      "id": "A4",
+      "verdict": "FAIL",
+      "claim": "§3.3『pi 的数值由空间运动的动力学约束决定』",
+      "evidence": "在 (a,b,c) 的 18 组网格上（含 b=0 与 c=1 的量纲反常取值）反解 pi 完全一致，最大偏差 1.540769E-59 ⇒ pi 对全部动力学参数 (a,b,omega,v_z,c) 严格不敏感",
+      "note": "被机器直接否证：动力学参数可以自由变动而 pi 不动，说明 pi 来自所选解析函数族本身，不是动力学的产物。这也使『由 closure 涌现』失去筛选力（任意参数都给出同一 theta0）。"
+    },
+    {
+      "id": "B1",
+      "verdict": "FAIL",
+      "claim": "§8.1/§8.2『不依赖预先存在的圆概念；圆是闭合条件的导出结果』",
+      "evidence": "对 ansatz x=a*cos(u), y=a*sin(u)，恒有 x^2+y^2=a^2，最大残差 4.000000E-59（机器零），且该式对任意 u 成立、与 theta0 数值无关",
+      "note": "圆的形状在选择 cos/sin 作为轨道函数的那一刻就已确定；闭合条件只给 theta0 取了个名字。因此传统体系的因果顺序并未被反转，被换掉的只是『命名次序』。"
+    },
+    {
+      "id": "B2",
+      "verdict": "FAIL",
+      "claim": "§四章『周长公式 C=2*pi*r 是螺旋动力学的推导结果，不是前置公理』",
+      "evidence": "取同一族周期函数构建的邻近 ansatz x=a*cos^3(u), y=a*sin^3(u)，其闭合条件同样是 cos(u0)=1 且 sin(u0)=0 ⇒ u0=2*pi（与来料逐字相同），但它的周长 C = 6.000000000000060E+0 * a 而 2*pi*a = 6.283185307179586E+0 * a；比值 C/(2*pi*a) = 9.549296585514E-1（解析值 3/pi），步长收敛残差 3.186784E-12",
+      "note": "决定性反证：闭合条件完全相同的两条轨迹给出不同的 C/r ⇒ C=2*pi*r 不可能由闭合条件导出，它由所选的（圆）函数族决定。来料所谓『消除逻辑循环』不成立。"
+    },
+    {
+      "id": "B3",
+      "verdict": "FAIL",
+      "claim": "§8.2『寻找最小 T>0 使三维空间坐标 r(T)=r(0)；纯点集判据，不需要圆』",
+      "evidence": "b=0 ⇒ |z(T)-z(0)|=0.000000E-61 m; b=0.001 ⇒ |z(T)-z(0)|=6.283185E-3 m; b=0.5 ⇒ |z(T)-z(0)|=3.141593E+0 m; b=1.0 ⇒ |z(T)-z(0)|=6.283185E+0 m; b=3.0 ⇒ |z(T)-z(0)|=1.884956E+1 m ⇒ b≠0 时该判据无解；真正被使用的是 xy 投影闭合",
+      "note": "§8.2 的答辩与螺旋本体直接矛盾：圆柱螺旋 z(t)=v_z*t 单调，永不在三维闭合。若改用全文实际采用的投影闭合 cos(omega*T)=1，则该条件只涉及投影圆 ⇒ 平面圆正是被假定而非导出。"
+    },
+    {
+      "id": "B4",
+      "verdict": "INFO",
+      "claim": "§4『定义螺旋本征值 lambda_pi = Delta_s / Delta_phi』，宣称 pi 是闭合旋转轨道的本征谱元",
+      "evidence": "Delta_s/Delta_phi = 2*pi*lambda/(2*pi) = lambda，pi 在定义中严格抵消，9 组参数机器残差 1.000000E-59；且 lambda 随 (a,b) 连续取值于 (0, 无穷)，不构成离散谱",
+      "note": "『本征值』无对应算符、无离散性、且不含 pi：是尺度因子的重命名。可作为恒等式记账，但不得作为『pi 的谱起源』的证据。"
+    },
+    {
+      "id": "C1",
+      "verdict": "PASS",
+      "claim": "§4 圆柱螺旋 kappa=a/(a^2+b^2), tau=b/(a^2+b^2) 与 §7 kappa=r*omega^2/c^2, tau=v_z*omega/c^2 互洽",
+      "evidence": "由位置矢量独立复算（det 公式，非查表达式）：|r'|-1 = 0E+0；kappa 残差 1.000000E-60；tau 残差 2.000000E-60；标架正交性残差 1.000000E-60；|Omega|-1/lambda 残差 1.000000E-60；Frenet 第一式 dT/ds=kappa*N 中心差分残差 3.466667E-32",
+      "note": "这是全来料中唯一完全站得住的板块：§4 与 §7 两套写法严格互洽，且与标准微分几何一致。"
+    },
+    {
+      "id": "C2",
+      "verdict": "FAIL",
+      "claim": "§5『kappa = c_⊥/c^2，tau = c_∥/c^2，量纲自洽』",
+      "evidence": "量纲层：[c_⊥/c^2] = L^-1*T vs [kappa] = L ⇒ 不一致（多出一个 T，即比值因子具时间量纲）；数值层 (a,b)=(1,1): 来料式=2.358654336750E-9 / 正确式=5.000000000000E-1 比值=4.717308673499E-9; (a,b)=(1,0.25): 来料式=3.236047052743E-9 / 正确式=9.411764705882E-1 比值=3.438299993539E-9; (a,b)=(2,1): 来料式=2.983487966865E-9 / 正确式=4.000000000000E-1 比值=7.458719917163E-9；比值恰等于 lambda/c（= 一周期弧长除以光速，量纲 T）",
+      "note": "最小修复：右端补一个因子 omega ⇒ kappa = c_⊥*omega/c^2, tau = c_∥*omega/c^2（此时量纲 L^-1 且数值精确）。这是典型的『单位约定未登记』型缺陷（隐含要求 lambda = c 的数值），复发族同 r19 的 T_μν 系数 1/f vs c^4/f。"
+    },
+    {
+      "id": "C3",
+      "verdict": "FAIL",
+      "claim": "§5『联立得 omega = c*kappa；几何曲率直接对应角频率』",
+      "evidence": "b/a=0: 相对残差=0E+0; b/a=0.001: 相对残差=4.999996E-7; b/a=0.05: 相对残差=1.247661E-3; b/a=0.25: 相对残差=2.985750E-2; b/a=1: 相对残差=2.928932E-1; b/a=2: 相对残差=5.527864E-1; b/a=10: 相对残差=9.004963E-1；正确不变量 omega = c*sqrt(kappa^2+tau^2) 的最大相对残差 6.704555E-60",
+      "note": "omega=c*kappa 当且仅当 b=0（相对残差因子恰为 lambda/a = c/c_⊥）⇒ 只在 tau=0 的平面圆极限成立。而 b=0 时螺旋塌缩为圆、tau 恒 0，§6『pi 非平面专属』的前提同时消失 ⇒ 自我否证。正确式 omega = c*sqrt(kappa^2+tau^2) 即本库主线已知的 kappa^2+tau^2=(omega/c)^2；来料是把该恒等式丢掉 tau 后写成的新形式。"
+    },
+    {
+      "id": "C4",
+      "verdict": "MISMATCH",
+      "claim": "§5 的 kappa = c_⊥/c^2 与 §7 的 kappa = r*omega^2/c^2 描述同一物理量",
+      "evidence": "取 a=r=1, b=1：§5 式 = 2.358654336750E-9，§7 式 = 5.000000000000E-1；比值 4.717308673499E-9（= lambda/c，单位 s）",
+      "note": "同一份文稿的两章给出互相矛盾的曲率表达式（相差 lambda/c，约 10^-9 s 量级因子）；若不同 amoeba 章节被分别引用，读数会差 9 个量级。此为**跨节口径冲突**，须在数据字典登记。"
+    },
+    {
+      "id": "D1",
+      "verdict": "FAIL",
+      "claim": "§6『轨道闭合判据 ∮|Omega| ds = 2*pi*n（缠绕数），pi 来自闭合流形上标架转动的拓扑缠绕数』",
+      "evidence": "16 组 (a,b)（含 b=0 与极端轴径比）全部精确成立，与 2*pi 最大偏差 1.000000E-59；且 n 恒为 1，不随参数变化",
+      "note": "零筛选力：该式是 Omega=1/lambda 与 Delta_s=2*pi*lambda 两个定义的代数乘积，恒等式复读（本库缺陷族复发）。任何 (a,b) 都『满足』它 ⇒ 它不选中任何东西，也不是量子化条件。"
+    },
+    {
+      "id": "D2",
+      "verdict": "FAIL",
+      "claim": "§6 闭合缠饶判据 ∮|Omega| ds = 2*pi*n 具有一般性（对闭合轨道普遍成立）",
+      "evidence": "反例：光滑简单闭合（带深凹）曲线 rho(t)=1-0.8*exp(-(t-pi)^2/(2*0.5^2)) 的极坐标轨道，∮|kappa| ds = 1.011050404370693E+1 rad（2*pi=6.283185307179586E+0，4*pi=1.256637061435917E+1）；相对 2*pi 偏差 6.091367E-1，相对 4*pi 偏差 1.954317E-1；psi' 变号 2 次 ⇒ 切向角非单调；两条独立离散化互校：Simpson(N=4e4/1.6e5) 差 2.255877E-8，切向角全变差 1.011050403618737E+1；rho_min=0.2 >0（简单闭合），端点周期残差 0E+0",
+      "note": "真命题是 Fenchel 定理（∮|kappa| ds >= 2*pi，等号当且仅当凸平面曲线），而上界不存在、取值连续 ⇒ 不存在 2*pi 的整数量子化。来料把『圆形螺旋恰好等于 2*pi』读成了一般性判据。"
+    },
+    {
+      "id": "D3",
+      "verdict": "INFO",
+      "claim": "§6『一周的标架总旋转增量恰为 2*pi』是唯一的自然读数",
+      "evidence": "b/a=0: Darboux=6.283185307180E+0 vs 切向 indicatrix=6.283185307180E+0; b/a=0.5: Darboux=6.283185307180E+0 vs 切向 indicatrix=5.619851784833E+0; b/a=1: Darboux=6.283185307180E+0 vs 切向 indicatrix=4.442882938158E+0; b/a=3: Darboux=6.283185307180E+0 vs 切向 indicatrix=1.986917653159E+0 ⇒ 两种同样自然的『一周总转动』定义给出不同数值；只有选 Darboux 模长才恒等于 2*pi",
+      "note": "量的选择被调参到想要的结果（2*pi）；切向 indicatrix 读数在 b≠0 时严格小于 2*pi。属方法层面的自由度，须显式登记而不能作为证据。"
+    },
+    {
+      "id": "E1",
+      "verdict": "FAIL",
+      "claim": "§9『螺旋一圈闭合弧长 s0 = 2*pi*r，即粒子物质波波长 lambda』",
+      "evidence": "b/a=0: s0=6.283185307180E+0 vs 2*pi*r=6.283185307180E+0 比值=1.000000000000E+0; b/a=0.25: s0=6.476559171708E+0 vs 2*pi*r=6.283185307180E+0 比值=1.030776406404E+0; b/a=1: s0=8.885765876317E+0 vs 2*pi*r=6.283185307180E+0 比值=1.414213562373E+0; b/a=4: s0=2.590623668683E+1 vs 2*pi*r=6.283185307180E+0 比值=4.123105625618E+0；比值恰为 lambda_helix/r = sqrt(1+(b/a)^2)",
+      "note": "第三处隐式退化：此式成立的充要条件仍是 v_z=0（b=0）。连同 C3（omega=c*kappa）与 B3（三维闭合），同一份文稿在三处关键结论上都必须回到平面圆极限，而此时 tau≡0，『pi 不是平面专属常数』这一核心 claim 的前提已被自身取消。"
+    },
+    {
+      "id": "E2",
+      "verdict": "FAIL",
+      "claim": "§9『E = hbar*omega 不再是量子力学的独立公理，而是光速螺旋闭合几何的推论』",
+      "evidence": "沿来料自身的链条复算：由 {E=pc, p=h/lambda, omega=2*pi*c/lambda, hbar=h/(2*pi)} 得 E=pc=(h/lambda)c=(h*omega/(2*pi))=hbar*omega，数值残差 5.034117E-60（机器零，纯代数恒等）；（首跑曾读到 6.13E-10 的非零残差，根因是把 CODATA 只公布 10 位的 hbar 直接当常数用，其相对截断 6.127192E-10，本版已改用符号层 hbar=h/(2*pi)）；链条中唯一来自螺旋的项是 lambda = 2*pi*c/omega，而它正是 lambda=s0 的同义改写",
+      "note": "恒等式复读：{E=pc, p=h/lambda} 与 {E=hbar*omega, lambda=2*pi*c/omega} 互为代数重排，几何项在其中既非充分也非必要（换个传播模型同样可写出该链条）。真输入是两条：沿轨迹 E=pc 与德布罗意关系 p=h/lambda——两者皆非本框架推导所得。"
+    },
+    {
+      "id": "F1",
+      "verdict": "FAIL",
+      "claim": "前段第六章『h = 2*pi*c^3*r_e/G（pi 为螺旋闭合导出常数；h 由 r_e、c、G 共同给出）』",
+      "evidence": "量纲层：[c^3*r_e/G] = M*L*T^-1，而 [h] = M*L^2*T^-1 ⇒ 差一个长度量纲（所得是动量 M*L*T^-1 而非作用量）；数值层 c^3*r_e/G = 1.137596316635E+21 kg*m/s，得上式后比 h 大 1.716849189462E+54 倍；最小补维（再乘一个长度）c^3*r_e^2/G = 3.205678535581E+6 J*s，仍比 h 大 4.837978564989E+39 倍",
+      "note": "双重 FAIL：量纲不成立 + 即便补足量纲也差约 40 个量级。该式不得作为『普朗克常数几何导出』的证据。"
+    },
+    {
+      "id": "G1",
+      "verdict": "PASS",
+      "claim": "最小修复清单 M1–M4 全部可机器验证",
+      "evidence": "M1 omega = c*sqrt(kappa^2+tau^2) 最大相对残差 3.592595E-60；M2 kappa = c_⊥*omega/c^2, tau = c_∥*omega/c^2 最大相对残差 6.290000E-59；M3 明确声明『闭合』是 xy 投影闭合（三维闭合在 b≠0 无解，见 B3）；M4 撤回 ∮|Omega|ds=2*pi*n 的量子化读法（见 D2）",
+      "note": "四条修复后 §4/§7 的计算板块保持完全正确（C1 已 PASS），且不再产生跨章口径冲突（C4）。"
+    },
+    {
+      "id": "G2",
+      "verdict": "BOUNDARY",
+      "claim": "来料末尾六分支（A 复解析延拓 / B 量纲全表 / C 牛顿法提速 / D 非圆柱螺旋 / E 引力耦合 / F 参考文献）选哪条",
+      "evidence": "本册可判账：①依赖量纲核验的硬缺陷 2 处（C2 的 kappa=c_⊥/c^2、F1 的 h 式）⇒ B 为强制前置；②零信息量（恒等式复读 / 参数不敏感）条目 5 处：A1,B4,D1,D3,E2；③核心 claim『pi 非平面专属』已由 B2/B3/C3/D2 四面夹击判否；④A（复延拓）、C（换求根算法）、F（排版）三条不新增任何可证伪内容，属纯粹形式升级；⑤E（引力耦合）需要 T_μν，而 T_μν 须由作用量变分给出（[引用 r20] 最小闭合集代价 +2~4 参数，本册不重算）",
+      "note": "推荐次序：B（必做，清量纲账）→ D（决定性：它直接把核心 claim 判 FAIL，见 D2 的反例族）→ 保留 M1–M4 修复后再谈 E；A/C/F 可并行但不得计入『已验证』条目数。"
+    },
+    {
+      "id": "G3",
+      "verdict": "INFO",
+      "claim": "本册否证之后，来料中还剩什么",
+      "evidence": "仍然成立：①§4/§7 圆柱螺旋的 kappa、tau 计算与 Frenet 关系（C1 机器零）；②2*pi := theta0 作为 pi 的一个合法等价定义（A1，非新知识）；③不变量 omega = c*sqrt(kappa^2+tau^2)（M1，与主线三重奏同形式）；④欧氏平面的 C=2*pi*r 仍是标准恒等式——只是它由所选周期函数族而非由闭合条件给出（B2）",
+      "note": "不得宣称『pi 被物理推导』：pi 对所有动力学参数不敏感（A4），闭合条件不筛选 C/r（B2），量子化读数不成立（D2）。"
+    }
+  ],
+  "counts": {
+    "PASS": 3,
+    "INFO": 4,
+    "MISMATCH": 2,
+    "FAIL": 11,
+    "BOUNDARY": 1,
+    "CORRECTED": 0
+  },
+  "guards": [
+    {
+      "name": "A1_newton_root",
+      "ok": true,
+      "detail": "|theta0-2pi|=0.000000E-53"
+    },
+    {
+      "name": "C1_frenet_selfconsistency",
+      "ok": true,
+      "detail": "max res=2.000000E-60"
+    },
+    {
+      "name": "G1_repairs_verified",
+      "ok": true,
+      "detail": "worst=6.290000E-59"
+    },
+    {
+      "name": "tools_dsin",
+      "ok": true,
+      "detail": "8.414710E-1"
+    },
+    {
+      "name": "tools_dcos",
+      "ok": true,
+      "detail": "5.403023E-1"
+    },
+    {
+      "name": "tools_trig_identity",
+      "ok": true,
+      "detail": "max=1.000000E-60"
+    },
+    {
+      "name": "tools_sin_pi_over_6",
+      "ok": true,
+      "detail": "0.000000E-54"
+    },
+    {
+      "name": "tools_simpson_known",
+      "ok": true,
+      "detail": "value=3.999999999999986"
+    },
+    {
+      "name": "tools_dim_algebra",
+      "ok": true,
+      "detail": "energy=M*L^2*T^-2 action/momentum=L action/c3r_over_G=L"
+    },
+    {
+      "name": "tools_hbar_symbolic",
+      "ok": true,
+      "detail": "rel=6.127192E-10"
+    }
+  ],
+  "guard_pass": 10,
+  "guard_total": 10,
+  "key_numbers": {
+    "theta0_minus_2pi_root_residual": "见 A1",
+    "grid_step_1e-6_nearest_residual_to_2pi": "见 A3",
+    "kappa_section5_over_correct_ratio": "见 C2",
+    "omega_eq_c_kappa_relative_residual": "见 C3",
+    "closed_curve_total_curvature_counterexample": "见 D2",
+    "h_formula_dimension_defect": "见 F1"
+  },
+  "not_self_derived": {
+    "Fenchel_total_curvature_theorem": "引自标准微分几何教科书结论（∮|kappa|ds>=2*pi，等号 iff 凸平面曲线），本册只做数值示例，不重推证明",
+    "r20_minimal_closure_cost": "如需 T_mu_nu，最小闭合集代价 +2~4 个参数（[引用 r20]，本册不重算）"
+  }
+}

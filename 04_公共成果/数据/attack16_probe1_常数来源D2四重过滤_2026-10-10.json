@@ -1,0 +1,141 @@
+{
+  "probe": "attack16_probe1_常数来源D2四重过滤",
+  "date": "2026-10-10",
+  "items": [
+    {
+      "id": "B01",
+      "verdict": "FAIL",
+      "detail": "来源分类：DERIVED=1 ; 输入/拟合/假设/循环/认定=9 ——「自由参数=0」实为「每个常数都被标了来源名」",
+      "note": "仅 D2（场内容 1 圈 β）是场内真实计算；D1_S 依赖外部 A=0.4773；其余为观测锚/EDM 排除/结构假设/匹配律定义/认定 ⇒ 措辞应为「无拟合参数」，非「自由参数=0」"
+    },
+    {
+      "id": "B02",
+      "verdict": "PASS",
+      "detail": "证明 B01 的判负来自来源栏本身，而非无条件判负",
+      "note": ""
+    },
+    {
+      "id": "B03",
+      "verdict": "BOUNDARY",
+      "detail": "未检索到足够跨册证据（M3 证伪=True / C4=False），不作判定",
+      "note": "不代读、不推测"
+    }
+  ],
+  "self_checks": [
+    {
+      "name": "CHK-5a 真推导例 b0=11−(2/3)n_f (n_f=6) 得 7",
+      "ok": true,
+      "detail": "b0=7"
+    },
+    {
+      "name": "CHK-5b 真推导例 κ_g²=8πG/c⁴ 复现",
+      "ok": true,
+      "detail": "κ_g²=2.076647e-43"
+    },
+    {
+      "name": "CHK-B01 常数表解析非空",
+      "ok": true,
+      "detail": "解析行数=11"
+    },
+    {
+      "name": "CHK-B02 分类器无 UNKNOWN 残留",
+      "ok": true,
+      "detail": "UNKNOWN=0"
+    },
+    {
+      "name": "CHK-5c 来源栏改「场内容 1 圈 β」必判 DERIVED",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "computed": {
+    "n_rows": 11,
+    "tally": {
+      "INPUT_MEAS": 3,
+      "DERIVED": 1,
+      "DERIVED_DEP": 1,
+      "ASSUMED": 2,
+      "CIRCULAR": 2,
+      "IDENTIFIED": 1,
+      "FIT": 1
+    },
+    "n_derived": 1,
+    "n_derived_dep": 1,
+    "n_non_derived": 9,
+    "control_b0_su3_nf6": "7",
+    "control_kappa_g2": "2.07664744284497201224774264811029867040600168980610135468269E-43"
+  },
+  "table": [
+    {
+      "param": "λ",
+      "value": "0.1179",
+      "source": "α_s 锚定",
+      "cls": "INPUT_MEAS"
+    },
+    {
+      "param": "α_W, α_EM",
+      "value": "0.01696, 7.3e-3",
+      "source": "观测",
+      "cls": "INPUT_MEAS"
+    },
+    {
+      "param": "φ0",
+      "value": "0",
+      "source": "CP(EDM 排除)",
+      "cls": "INPUT_MEAS"
+    },
+    {
+      "param": "D2_S/W/EM",
+      "value": "-1.114/-0.504/+0.653",
+      "source": "场内容 1 圈 β",
+      "cls": "DERIVED"
+    },
+    {
+      "param": "D1_S",
+      "value": "0.5318",
+      "source": "不动点关系 -D2×0.4773",
+      "cls": "DERIVED_DEP"
+    },
+    {
+      "param": "C1,C2,C3",
+      "value": "0.12,-0.35,0.08",
+      "source": "β_G 结构",
+      "cls": "ASSUMED"
+    },
+    {
+      "param": "C4",
+      "value": "0.0597",
+      "source": "稳定性闭合",
+      "cls": "CIRCULAR"
+    },
+    {
+      "param": "β",
+      "value": "0.0597",
+      "source": "=C4",
+      "cls": "IDENTIFIED"
+    },
+    {
+      "param": "F1,F2,F3",
+      "value": "1,0,-1",
+      "source": "β_c=G-c, 钉死 s=1",
+      "cls": "ASSUMED"
+    },
+    {
+      "param": "τ_bg",
+      "value": "1.52e-5",
+      "source": "冻结匹配",
+      "cls": "FIT"
+    },
+    {
+      "param": "Λ₀",
+      "value": "0.03979",
+      "source": "1/8πG 匹配律",
+      "cls": "CIRCULAR"
+    }
+  ],
+  "red_lines": [
+    "判 INPUT/ASSUMED/CIRCULAR 不等于指称造假；给常数标来源是常规做法",
+    "本探针只判定「有来源名」≠「无外部输入」⇒ 「自由参数=0」措辞不成立",
+    "不产生新物理"
+  ]
+}

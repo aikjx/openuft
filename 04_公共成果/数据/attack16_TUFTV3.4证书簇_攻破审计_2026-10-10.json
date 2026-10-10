@@ -1,0 +1,354 @@
+{
+  "engine": "attack16_TUFTV3.4证书簇_攻破主引擎",
+  "date": "2026-10-10",
+  "target": "openuft/04_公共成果/算法联盟_全维自洽与归一化/（TUFT V3.4 完成验证证书簇）",
+  "items": [
+    {
+      "id": "A01",
+      "verdict": "MISMATCH",
+      "detail": "源码实有 TUFT_V3.4 引擎 20 个，证书称「全部 15 个引擎」",
+      "note": "未见于证书的引擎 20 个：TUFT_V3.4_MCMC嵌套采样_2026-10-10.py、TUFT_V3.4_RG流数值积分_2026-10-10.py、TUFT_V3.4_SM单圈跑动统一检验_2026-10-10.py、TUFT_V3.4_Tc物理来源检验_2026-10-10.py、TUFT_V3.4_Z3最小性选择_2026-10-10.py、TUFT_V3.4_挠率相变引力波_2026-10-10.py"
+    },
+    {
+      "id": "A02",
+      "verdict": "MISMATCH",
+      "detail": "net 三值 {7, 1, 0} 互斥：收支核算 net_free=7；拉氏量闭合 net_after=1；证书 R3 称 →0",
+      "note": "**全库无任何引擎算出 net=0** ——「0」是证书断言，不是引擎计算"
+    },
+    {
+      "id": "A03",
+      "verdict": "MISMATCH",
+      "detail": "证书称 4 个 AUDIT-FIND（exit 2）发现的问题「已由后续闭合引擎实质解决」，但其自身 json 仍记录 n_fail>0：背景挠率演化_审计=3、自由参数收支核算=1、拉氏量闭合可行性=1、RG流数值积分=2",
+      "note": "「已解决」未体现在被诊断引擎的自检计数中"
+    },
+    {
+      "id": "A04",
+      "verdict": "MISMATCH",
+      "detail": "全参数表同一格「观测」内 α_W=0.01696（≈α₁(M_Z)）与 α_EM=0.007297；α_EM 距 α(0)=4.83e-05、距 α(M_Z)=6.64e-02，**相差 1373 倍** ⇒ 它是零能标值",
+      "note": "**同一格混用两个能标**（M_Z vs 零能），违反 E9 能标一致性；残差 4.83e-05 由来料只写 3 位有效数字解释，不影响能标归属判定"
+    },
+    {
+      "id": "A05",
+      "verdict": "MISMATCH",
+      "detail": "Y_B 双值：路线1to2 Y_obs=8.7e-11；全参数总装 Y_B_screened=8.820642282674164e-11；相对差 1.368%",
+      "note": "同一证书簇两条链路给出不同 Y_B"
+    },
+    {
+      "id": "A06",
+      "verdict": "BOUNDARY",
+      "detail": "θ 未能在 v6.0/v7.0 中稳定检索到（v6=False / v7=True）",
+      "note": "不推测，记 BOUNDARY"
+    },
+    {
+      "id": "A07",
+      "verdict": "CORRECTED",
+      "detail": "v6.0「3+2+12+1」算术得 18 ≠ 声明 19；**v7.0 已自行纠正**为 3+2+6+3+4+1=19",
+      "note": "已自纠 ⇒ 记为 CORRECTED，不重复计入负面（避免过度指控）"
+    },
+    {
+      "id": "A08",
+      "verdict": "BOUNDARY",
+      "detail": "「19」在 v6.0（含 3 中微子质量、CKM/PMNS 含于上）与 v7.0（最小 SM：3+2+6+3+4+1）是**两套口径**",
+      "note": "口径不同 ⇒ 跨版本比较 19 无意义，记 BOUNDARY"
+    },
+    {
+      "id": "A09",
+      "verdict": "MISMATCH",
+      "detail": "v5.0 自定标准「把『统一作用量已写出』夸大成『所有常数已推出』是造假，本版拒绝」；v7.0/证书则宣称「无自由参数 / 自由参数=0」",
+      "note": "同一簇内诚实标准被**降级**（自定红线 → 自称完成）"
+    },
+    {
+      "id": "B.B01",
+      "verdict": "FAIL",
+      "detail": "来源分类：DERIVED=1 ; 输入/拟合/假设/循环/认定=9 ——「自由参数=0」实为「每个常数都被标了来源名」",
+      "note": "仅 D2（场内容 1 圈 β）是场内真实计算；D1_S 依赖外部 A=0.4773；其余为观测锚/EDM 排除/结构假设/匹配律定义/认定 ⇒ 措辞应为「无拟合参数」，非「自由参数=0」"
+    },
+    {
+      "id": "B.B02",
+      "verdict": "PASS",
+      "detail": "证明 B01 的判负来自来源栏本身，而非无条件判负",
+      "note": ""
+    },
+    {
+      "id": "B.B03",
+      "verdict": "BOUNDARY",
+      "detail": "未检索到足够跨册证据（M3 证伪=True / C4=False），不作判定",
+      "note": "不代读、不推测"
+    },
+    {
+      "id": "C.C01",
+      "verdict": "FAIL",
+      "detail": "α_G(E)=(E/M_P)^2 与 α_G≡G·E^2 相对差 = 1.843e-06（M_P≡1/√G 定义下 = 5.378e-60）",
+      "note": "因 M_P² ≡ 1/G，两式**逐字相同** ⇒ α_G 判别力 = 0；是定义式重排，非首原导出"
+    },
+    {
+      "id": "C.C02",
+      "verdict": "FAIL",
+      "detail": "Λ₀ = 0.039788735772973836 与 1/(8πG)(G=1) = 0.03978873577297384 相对差 = 5.172e-17",
+      "note": "总装原文自承「Λ₀=1/(8πG)，由克尔熵=BH 匹配律**定义**(非自由参数)」 ⇒ 是匹配律**定义**出来的，非导出；量纲 [1/G]=M² ≠ 无量纲"
+    },
+    {
+      "id": "C.C03",
+      "verdict": "FAIL",
+      "detail": "S_TUFT=2πΛ₀A 与 S_BH=A/(4G) 在 200 组随机 (A,G) 下最大相对差 = 9.612e-60",
+      "note": "代入 Λ₀=1/(8πG) 后 2πΛ₀ ≡ 1/(4G)，两式**恒等** ⇒ 「熵守恒律」是循环匹配，非新预言"
+    },
+    {
+      "id": "C.C04",
+      "verdict": "PASS",
+      "detail": "证明 C01–C03 的「恒等」判定来自式子本身，而非检测器无条件判恒等",
+      "note": ""
+    },
+    {
+      "id": "D.D01",
+      "verdict": "INFO",
+      "detail": "味秩 n_g=3 quark-only：实 36 - 秩 26 = 10",
+      "note": "= 6 质量 + 4 CKM（与闭式 ng^2+1 一致）"
+    },
+    {
+      "id": "D.D02",
+      "verdict": "INFO",
+      "detail": "味秩 n_g=3 +Y_e：实 54 - 秩 41 = 13",
+      "note": "= 6 夸克质量 + 3 带电轻子质量 + 4 CKM"
+    },
+    {
+      "id": "D.D03",
+      "verdict": "INFO",
+      "detail": "味秩 n_g=3 +Y_nu：实 72 - 秩 52 = 20",
+      "note": "= 20（+3 中微子质量 +4 PMNS）"
+    },
+    {
+      "id": "D.D05",
+      "verdict": "MISMATCH",
+      "detail": "v7.0 称「给定 Y_u,Y_d → 9 个费米子质量 + CKM4 = 13」；机器给 Y_u,Y_d 自由度 = 10",
+      "note": "10 ≠ 13：3 个带电轻子质量需第三个算符 Y_e（加 Y_e 后机器给 13）"
+    },
+    {
+      "id": "D.D06",
+      "verdict": "CORRECTED",
+      "detail": "「参数自由度从 19 层面被消除」：算符化前后物理自由度恒为 13（=6+3+4）",
+      "note": "是重参数化（换记账方式），不是自由度消元"
+    },
+    {
+      "id": "D.D07",
+      "verdict": "INFO",
+      "detail": "随机 Y_u,Y_d 的谱与 V_CKM=U_u U_d^† 可任意取遍 (6 质量, 4 CKM)",
+      "note": "算符空间 → 物理参数空间是满射，不存在额外约束 ⇒ 「给定算符则唯一」是恒真陈述"
+    },
+    {
+      "id": "F.F01",
+      "verdict": "FAIL",
+      "detail": "C4_required = 0.0597171652（令 bracket=0 反解）；声明 C4 = 0.0597；相对差 = 2.874e-04",
+      "note": "C4 是令「稳定性条件」成立的**反解值**，非由机制导出 ⇒ 标定"
+    },
+    {
+      "id": "F.F02",
+      "verdict": "FAIL",
+      "detail": "|bracket|<1e-3 ⇒ C4 可采纳带 = [0.058717, 0.060717]（相对带宽 3.35%）",
+      "note": "「稳定性闭合」只把 C4 钉到 ±1.67%，不是确定值；声明 C4=0.0597 落在带内"
+    },
+    {
+      "id": "F.F03",
+      "verdict": "FAIL",
+      "detail": "β = C4 为**认定**（来料来源栏原文「=C4」，无推导）；且同一旋钮 C4 同时决定 (a) UV 不动点存在性 (b) τ_bg=beta_tau/C4（→Y_B）",
+      "note": "一个旋钮承载两个「闭合」⇒ 「Y_B≈观测」不是独立检验"
+    },
+    {
+      "id": "F.F04",
+      "verdict": "FAIL",
+      "detail": "来料**自承**：「tau_bg=1.52e-05（由 Y_obs 反推，唯一值）」/「beta 成预言；但 tau_bg 仍由 Y_obs 反推（非 TUFT 首原导出），需背景挠率演化模型」",
+      "note": "τ_bg 由观测量 Y_obs 反推 ⇒ Y_B 是输入被改写为输出，不构成可证伪预言"
+    },
+    {
+      "id": "F.F05",
+      "verdict": "MISMATCH",
+      "detail": "Y_B 双值：Y_obs=8.7000e-11（路线1to2） vs Y_B_screened=8.820642e-11（全参数总装），相对差 1.368%",
+      "note": "同一证书簇内两条链路给出不同的 Y_B"
+    },
+    {
+      "id": "F.F06",
+      "verdict": "BOUNDARY",
+      "detail": "自定容差 0.01 dex = 2.33%；输入（τ_bg/beta_tau/T_freeze 均 3 位）合成不确定度 ≈ 1.00%",
+      "note": "容差未显著紧于输入精度 ⇒ 「≈观测」不构成高分辨力检验"
+    },
+    {
+      "id": "E01",
+      "verdict": "PASS",
+      "detail": "κ_g² = 8πG/c⁴ = 2.076647e-43（参考 2.0766e-43）",
+      "note": "量纲/数值复现"
+    },
+    {
+      "id": "E02",
+      "verdict": "PASS",
+      "detail": "b0(SU(3), n_f=6) = 11 − (2/3)·6 = 7",
+      "note": "来料称 7 ✓"
+    },
+    {
+      "id": "E03",
+      "verdict": "PASS",
+      "detail": "1/(16π²) = 0.00633257",
+      "note": ""
+    },
+    {
+      "id": "E04",
+      "verdict": "PASS",
+      "detail": "地球 R_s = 2GM/c² = 8.870103e-03 m = 8.870 mm",
+      "note": "来料称 8.870 mm ✓"
+    },
+    {
+      "id": "E05",
+      "verdict": "PASS",
+      "detail": "偏折 = 4GM/(c²R) = 1.75164″（来料 1.7512″，相对差 2.52e-04）",
+      "note": "残差由太阳质量/半径末位决定（消歧：非算术错）"
+    },
+    {
+      "id": "E06",
+      "verdict": "PASS",
+      "detail": "临界碰撞参数 = 3√3/2 = 2.598076 R_s；光子球 = 1.5 R_s（恒等式，复现）",
+      "note": ""
+    },
+    {
+      "id": "E07",
+      "verdict": "INFO",
+      "detail": "挠率修正 ~4.1e-41 属量级登记项（来料未给可复算闭式）",
+      "note": "不作数值判定，避免代读未提供材料"
+    }
+  ],
+  "self_checks": [
+    {
+      "name": "B.CHK-5a 真推导例 b0=11−(2/3)n_f (n_f=6) 得 7",
+      "ok": true,
+      "detail": "b0=7"
+    },
+    {
+      "name": "B.CHK-5b 真推导例 κ_g²=8πG/c⁴ 复现",
+      "ok": true,
+      "detail": "κ_g²=2.076647e-43"
+    },
+    {
+      "name": "B.CHK-B01 常数表解析非空",
+      "ok": true,
+      "detail": "解析行数=11"
+    },
+    {
+      "name": "B.CHK-B02 分类器无 UNKNOWN 残留",
+      "ok": true,
+      "detail": "UNKNOWN=0"
+    },
+    {
+      "name": "B.CHK-5c 来源栏改「场内容 1 圈 β」必判 DERIVED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "C.CHK-6a 检测器对 (E/M_P)^3 必判非恒等",
+      "ok": true,
+      "detail": "最大相对差=1.000e+00"
+    },
+    {
+      "name": "C.CHK-6b 检测器对 α_s 单圈 vs 实测必判非恒等",
+      "ok": true,
+      "detail": "最大相对差=4.372e-01"
+    },
+    {
+      "name": "C.CHK-2a 1/(8π) 60 位与公布值一致",
+      "ok": true,
+      "detail": "相对差=5.172e-17"
+    },
+    {
+      "name": "C.CHK-2b 3√3/2 与闭式一致",
+      "ok": true,
+      "detail": "相对差=2.298e-17"
+    },
+    {
+      "name": "C.CHK-4 E 扫描加密 40 点，结论不变",
+      "ok": true,
+      "detail": "加密后最大相对差=1.843e-06"
+    },
+    {
+      "name": "C.CHK-1 量纲表闭合：[1/G] = M^2 ≠ 无量纲",
+      "ok": true,
+      "detail": "[1/G]=(Fraction(2, 1), Fraction(0, 1), Fraction(0, 1))"
+    },
+    {
+      "name": "D.CHK-3a 机器秩与闭式一致(ng=3 三档)",
+      "ok": true,
+      "detail": "q:10/10 qe:13/13 qen:20/20"
+    },
+    {
+      "name": "D.CHK-10 ng=2 quark-only 必得 5",
+      "ok": true,
+      "detail": "实=16 秩=11 自由度=5"
+    },
+    {
+      "name": "D.CHK-3b ng=1 单 Yukawa 必得 1",
+      "ok": true,
+      "detail": "实=2 秩=1 自由度=1"
+    },
+    {
+      "name": "D.CHK-3c 换随机种子秩不变",
+      "ok": true,
+      "detail": "seed2 自由度=10 vs seed1=10"
+    },
+    {
+      "name": "F.CHK-F01 反解式复现来料 bracket",
+      "ok": true,
+      "detail": "计算=-1.716520e-05 来料=-1.716520e-05 相对差=6.796e-13"
+    },
+    {
+      "name": "F.CHK-F03 τ_bg = beta_tau/C4 复现来料",
+      "ok": true,
+      "detail": "相对差=1.096e-16"
+    },
+    {
+      "name": "F.CHK-F04 来料 self-admission 可检索",
+      "ok": true,
+      "detail": "命中=True"
+    },
+    {
+      "name": "F.CHK-8 net 记账器合成一致案例必判 0",
+      "ok": true,
+      "detail": "net(7,7)=0"
+    },
+    {
+      "name": "CHK-11 负判条目均带可检索细节",
+      "ok": true,
+      "detail": "缺细节条数=0"
+    },
+    {
+      "name": "CHK-13 22 体系 validated = 0",
+      "ok": true,
+      "detail": "体系数=22 validated=0"
+    },
+    {
+      "name": "CHK-14 §E 正向复算至少 6 条 PASS",
+      "ok": true,
+      "detail": "E 组 PASS=6"
+    },
+    {
+      "name": "CHK-12 输出文本无肯定式完成/突破结论",
+      "ok": true,
+      "detail": "命中=[]"
+    }
+  ],
+  "verdict_counts": {
+    "MISMATCH": 8,
+    "BOUNDARY": 4,
+    "CORRECTED": 2,
+    "FAIL": 8,
+    "PASS": 8,
+    "INFO": 5
+  },
+  "n_items": 35,
+  "n_self": 23,
+  "n_self_ok": 23,
+  "registry": {
+    "n_systems": 22,
+    "n_validated": 0
+  },
+  "red_lines": [
+    "数学自洽 ≠ 物理证实；本册是对来料的审计与可算判决，不产生新物理",
+    "22 体系零 validated 红线不变",
+    "不采信体系自报、不代读未提供材料、不升格未闭合项"
+  ]
+}

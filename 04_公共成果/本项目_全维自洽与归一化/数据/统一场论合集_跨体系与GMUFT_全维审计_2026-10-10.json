@@ -1,0 +1,838 @@
+{
+  "tag": "统一场论合集_跨体系与GMUFT_全维审计_2026-10-10",
+  "date": "2026-10-10",
+  "source": "《算法联盟 · 统一场论合集（完整体系整理）》",
+  "engine": "源码/统一场论合集_跨体系与GMUFT_全维审计_2026-10-10.py",
+  "key_numbers": {
+    "undefined_symbols": [
+      "L_int(tau,R,omega)",
+      "T^tau_munu",
+      "T^omega_munu",
+      "S_munu(指标未定义)",
+      "tau^{rho sigma}",
+      "C_tau(tau,gamma)",
+      "M^i_tau",
+      "S^tau_ij",
+      "Delta a_e(tau,omega)",
+      "d_e(tau,omega)",
+      "J_tau(tau)",
+      "M_kappa(kappa)",
+      "beta_i(omega,tau)",
+      "u^mu(是否动力学变量未声明)"
+    ],
+    "undefined_count": 14,
+    "entry_count": 33,
+    "verdict_count": {
+      "PASS": 7,
+      "BOUNDARY": 8,
+      "MISMATCH": 4,
+      "INFO": 5,
+      "FAIL": 9,
+      "CORRECTED": 0
+    },
+    "guard_total": 23,
+    "guard_failed": [],
+    "planck_exponent_of_S": "0",
+    "eight_pi": "2.513274122871835E+1",
+    "ym_antisym_residual": "0.0000000000000000000000000E+00",
+    "c4_over_8piG": "4.8154538867224223992518906E+42",
+    "ref": "4.8154538867224224E+42",
+    "rel_delta_vs_r18_r19_r22": "3.3886774364282034800649547E-27",
+    "planck_exp_S4": "0",
+    "planck_exp_S11": "0",
+    "kappa4": "L^1",
+    "kappa11": "L^(9/2)",
+    "value_at_omega_1": "-5.0000000000000000000000000E-1",
+    "closure": "2/3",
+    "mismatch_length_power": "-1",
+    "planck_div_tau": "-2",
+    "planck_omega_tau": "-2",
+    "planck_8piGS": "-1",
+    "compat_residual_good": [
+      "0.0000000000000000000000000E+00",
+      "1.0000000000000000000000000E-59",
+      "1.0000000000000000000000000E-57"
+    ],
+    "control_residual_bad": [
+      "2.1650635094610966169093079E+1",
+      "1.4400000000000000000000000E+2",
+      "7.7942286340599478208735085E+2"
+    ],
+    "exponents": {
+      "Box g": "-2",
+      "kappa g": "-1",
+      "tau d g": "-2",
+      "omega^2 g": "-2"
+    },
+    "bad_term": "kappa g",
+    "bad_mismatch": "-1",
+    "lhs_incoming": "6.0000000000000000000000000E+0",
+    "lhs_stdA": "1.8000000000000000000000000E+1",
+    "lhs_stdB": "-1.8000000000000000000000000E+1",
+    "delta_vs_A": "-1.2000000000000000000000000E+1",
+    "delta_vs_B": "2.4000000000000000000000000E+1",
+    "KijKij": "3.0000000000000000000000000E+0",
+    "Ksq": "9.0000000000000000000000000E+0",
+    "a_tuft_over_a_exp": "2.5037893542382493077228128E-1",
+    "div_M_at_r1": "5.0000000000000000000000000E-1"
+  },
+  "verdict_count": {
+    "PASS": 7,
+    "BOUNDARY": 8,
+    "MISMATCH": 4,
+    "INFO": 5,
+    "FAIL": 9,
+    "CORRECTED": 0
+  },
+  "entries": [
+    {
+      "id": "H01",
+      "verdict": "PASS",
+      "title": "EC 两场方程的指标结构与反对称性（代数恒等检验）",
+      "detail": "挠率定义 tau^alpha_munu = Gamma^alpha_munu - Gamma^alpha_numu 与 Cartan 方程 L^alpha_munu = tau^alpha_munu - delta^alpha_mu trace_nu + delta^alpha_nu trace_mu：逐分量穷举 4x4x4，L(mu,nu) + L(nu,mu) 残差为精确零 ⇒ 自由指标 (alpha 上, mu 下, nu 下) 与右端自旋密度 S^alpha_munu 匹配，mu/nu 反对称性成立。两式与 Einstein-Cartan 标准写法同型（符号整体依赖曲率与 S 的定义约定，来料已给足可判结构）。",
+      "numbers": {
+        "antisym_residual": "0.0000000000000000000000000E+00",
+        "free_indices": 3
+      },
+      "tags": [
+        "EC",
+        "指标",
+        "反对称"
+      ]
+    },
+    {
+      "id": "H02",
+      "verdict": "BOUNDARY",
+      "title": "EC 作用量：量纲齐次通过，但物质项是占位符",
+      "detail": "S_EC = (1/16 pi G) int d^4x sqrt(-g) R + S_matter(psi, g, Gamma)：在 Planck 单位制（M = L^-1, T = L）下前项量纲 L^0 ⇒ 无量纲，通过（自旋耦合所需的 1/G 因子正确）。但 S_matter 显含非度规联络 Gamma 而来料未给其形式 ⇒ 该项为占位符，「自旋作为挠率源」在本册内没有可计算实现；这与 GMUFT 段的 L_int 占位（H18）同型，两处占位叠加后，EC 基底与 GMUFT 扩展的连接点仍未闭合。",
+      "numbers": {
+        "planck_exponent_of_S": "0",
+        "S_matter": "未给出（占位符）"
+      },
+      "tags": [
+        "EC",
+        "作用量",
+        "占位符"
+      ]
+    },
+    {
+      "id": "H03",
+      "verdict": "MISMATCH",
+      "title": "KK 度规分解漏掉规范耦合常数；紧致半径与曲率同名",
+      "detail": "标准写法 ds^2 = g_munu dx dx + phi^2 (dx^5 + kappa_KK A_mu dx^mu)^2 中 dx^5 项系数为 1，规范耦合常数 kappa_KK 单列。来料写成 phi^2 (A_mu dx^mu + dx^5)^2，即把 kappa_KK 吸收进 A。后果：[A_mu] 随 kappa_KK 漂移，A 与规范场强的关系、以及与电磁耦合 g 的乘积均无固定口径（跨册代入必炸，A-07 型台账冲突）。另：紧致化周期写成 x^5 ~ x^5 + 2 pi R，其中 R 与本册曲率标量 R 同名 ⇒ 符号同名两义。群维数核对无误：dim SU(3)=8 / SU(2)=3 / SU(5)=24 / dim SO(10)=45。",
+      "numbers": {
+        "dim_SU3": 8,
+        "dim_SU2": 3,
+        "dim_SU5": 24,
+        "dim_SO10": 45,
+        "radius_symbol": "R（与曲率 R 同名）"
+      },
+      "tags": [
+        "KK",
+        "口径",
+        "符号冲突"
+      ]
+    },
+    {
+      "id": "H04",
+      "verdict": "PASS",
+      "title": "Weyl 规范变换自洽（反演一致 + 量纲一致）",
+      "detail": "g~ = e^{2 lambda} g 要求 lambda 无量纲（否则 e^{2lambda} 不是度规的规范等价）；A~_mu = A_mu - d_mu lambda 要求 [A_mu] = L^-1，与 U(1) 规范场联络的量纲一致。反演一致性（Weyl 变换与其逆变换复合为恒等）在数值上残差为精确零。本条为标准式逐字核对通过。",
+      "numbers": {
+        "inverse_residual": "0.0000000000000000000000000E+00",
+        "dim_A_mu": "L^-1",
+        "dim_lambda": "L^0"
+      },
+      "tags": [
+        "Weyl",
+        "标准式",
+        "量纲"
+      ]
+    },
+    {
+      "id": "H05",
+      "verdict": "BOUNDARY",
+      "title": "单位制口径混用：声明 c=hbar=G=1 但正文保留 8 pi G/c^4",
+      "detail": "开篇声明「取几何单位制 c=1, hbar=1, G=1」，而 GR 段仍写 G_munu = 8 pi G / c^4 T_munu。按声明代入得系数 8 pi = 2.513274122871835E+1，与标准归一不同（等价于把 G 归一为 1/(8pi)）。物理内容无错，但跨册引用若取「8 pi G/c^4」与取「G=1 的 8 pi」会得到不同的 Planck 标度，故口径必须声明（库内 r18 册 c^4/(8 pi G) 读数 4.8154538867224223992518906E+42 即依赖此口径）。",
+      "numbers": {
+        "eight_pi": "2.513274122871835E+1",
+        "declared_units": "c=hbar=G=1",
+        "used_units": "8 pi G / c^4"
+      },
+      "tags": [
+        "口径",
+        "单位制"
+      ]
+    },
+    {
+      "id": "H06",
+      "verdict": "PASS",
+      "title": "规范群维数逐个核对无误",
+      "detail": "dim SU(N) = N^2 - 1 ⇒ SU(3)=8 / SU(2)=3 / SU(5)=24；dim SO(10) = 10x9/2 = 45。来料对 SU(5)、SO(10) 的维数陈述与标准一致，无误。",
+      "numbers": {
+        "dims": {
+          "SU(3)_c": 8,
+          "SU(2)_L": 3,
+          "U(1)_Y": 1,
+          "SU(5)": 24,
+          "SO(10)": 45
+        }
+      },
+      "tags": [
+        "SM",
+        "GUT",
+        "群"
+      ]
+    },
+    {
+      "id": "H07",
+      "verdict": "PASS",
+      "title": "胶子场强 G^a_munu 的 Yang-Mills 结构与反对称性成立",
+      "detail": "来料 G^a_munu = d_mu G^a_nu - d_nu G^a_mu + g_s f^{abc} G^b_mu G^c_nu 与标准一致。机器检验（SU(2) 闭式 f^{abc} = -i eps^{abc}，取五个非零分量的多项式规范场、偏导**解析给出**，故残差不含差分误差）：F^a_munu + F^a_numu 最大残差 0.0000000000000000000000000E+00 ⇒ 结构常数反对称性使场强自动反对称于 mu/nu，通过。说明：该检验器对结构性错误敏感（把 f^{abc} 换为常数、漏掉 d_nu G^a_mu 项，或把 f^{abc} 的两个下指标误作对称时，残差立即离开机器零）。",
+      "numbers": {
+        "ym_antisym_residual": "0.0000000000000000000000000E+00",
+        "derivative": "解析偏导（无差分误差）",
+        "structure": "SU(2) closed form",
+        "test_field": "5 个非零分量的多项式场"
+      },
+      "tags": [
+        "SM",
+        "Yang-Mills",
+        "机器检验"
+      ]
+    },
+    {
+      "id": "H08",
+      "verdict": "BOUNDARY",
+      "title": "协变导数的超荷归一口径未声明（g' Y B /2 与 g' Y B）",
+      "detail": "来料 D_mu = d_mu - i g_s G - i g W - i g' Y B / 2 采用「Q = T3 + Y」且 Y 取 (1/6, 2/3, ...)的约定；另一通行写法用「Q = T3 + Y/2」且无 1/2。两套口径相差因子 2，直接决定 GUT 归一化因子（库内 R12 册已登记该约定分歧并导致 GUT 归一差 4 倍）。来料未声明约定 ⇒ 跨册代入Y_{ij} 汤川耦合与超荷时必炸（A-07 型台账冲突，本册新增登记）。",
+      "numbers": {
+        "written": "g' Y B / 2（Q = T3 + Y）",
+        "alternative": "g' Y B（Q = T3 + Y/2）",
+        "ratio": "2",
+        "xref": "库内 R12 册超荷约定门禁"
+      },
+      "tags": [
+        "SM",
+        "口径",
+        "超荷"
+      ]
+    },
+    {
+      "id": "H09",
+      "verdict": "BOUNDARY",
+      "title": "Higgs 势形式正确，但真空期望值的归一口径未声明",
+      "detail": "V(Phi) = -mu^2 Phi^dag Phi + lambda (Phi^dag Phi)^2：量纲检查 [mu^2] = [V] = M L^-1 T^-2、[lambda] = 无量纲（4 维）⇒ 通过。但极小条件给出 v^2 = mu^2/(2 lambda)（单分量）或 v^2 = mu^2/lambda（复双重态 1/sqrt2 归一），两者差 2 倍；来料未声明归一。另：Yukawa 项 L_Y = -Y_ij psi_bar_i Phi psi_j + h.c. 省略了 SU(2) 双重态指标收缩与T3 投影（真式为 -(Y + T3) 或 -Y_L L-bar_L Phi nu_R + ...），属示意级写法，不可直接代入计算。",
+      "numbers": {
+        "dim_mu2": "L^-4",
+        "dim_lambda": "L^0 (无量纲)",
+        "v2_option_single": "mu^2/(2 lambda)",
+        "v2_option_doublet": "mu^2/lambda",
+        "yukawa": "示意级（缺 SU(2) 指标收缩）"
+      },
+      "tags": [
+        "SM",
+        "Higgs",
+        "口径"
+      ]
+    },
+    {
+      "id": "H10",
+      "verdict": "PASS",
+      "title": "Einstein 场方程系数方向正确，且与库内锚点逐位一致",
+      "detail": "G_munu = 8 pi G / c^4 T_munu：量纲核验 [R_munu - g R] = L^-2，[G T / c^4] = L^-2（Planck 口径 L^-2）⇒ 齐次；系数方向（本库缺陷族高发点）取 8 pi G / c^4 为正确方向（若写成 8 pi / (G c^4) 即为反号）。独立复算 c^4/(8 pi G) = 4.8154538867224223992518906E+42，与 r18 / r19 / r22 三册锚点 4.8154538867224224E+42 的相对偏差 3.3886774364282034800649547E-27 ⇒ 逐位一致，构成本册的第三重交叉印证。",
+      "numbers": {
+        "c4_over_8piG": "4.8154538867224223992518906E+42",
+        "ref": "4.8154538867224224E+42",
+        "rel_delta_vs_r18_r19_r22": "3.3886774364282034800649547E-27",
+        "dim_lhs": "L^-2",
+        "dim_rhs": "L^-2"
+      },
+      "tags": [
+        "GR",
+        "系数方向",
+        "交叉印证"
+      ]
+    },
+    {
+      "id": "H11",
+      "verdict": "PASS",
+      "title": "minimal SU(5) 被质子衰变排除的陈述成立（量化 3.4 个量级）",
+      "detail": "Super-K 直接搜索下限 tau_p > 2.4e34 年，minimal SU(5) 的 X/Y 玻色子交换给出 tau_p ~ 1e31 年 ⇒ 已被排除 2.400000E+3 倍（3.4 个量级）。来料「SU(5) 最简版本被排除、SO(10) 是更优候选」的表述与实验现状一致。诚实补注：SO(10) 同样没有质子衰变实验支持，其地位是「理论结构更完整」（含右手中微子），不是「实验更优」。",
+      "numbers": {
+        "superk_lower_yr": "2.4e34",
+        "su5_tp_yr": "1e31",
+        "ratio": "2.400000E+3"
+      },
+      "tags": [
+        "GUT",
+        "实验"
+      ]
+    },
+    {
+      "id": "H12",
+      "verdict": "INFO",
+      "title": "SUSY-GUT 段无方程、零可验证内容",
+      "detail": "「加超对称解决规范耦合跑动与等级问题；LHC 未发现超对称粒子」是历史陈述，本册无法机裁定点（无作用量、无 β 函数、无预言数）。登记为信息项：它在本合集中的作用是叙事完整性，不构成可验证内容。",
+      "numbers": {
+        "equations": 0
+      },
+      "tags": [
+        "SUSY",
+        "零方程"
+      ]
+    },
+    {
+      "id": "H13",
+      "verdict": "BOUNDARY",
+      "title": "Polyakov 弦作用量：系数与量纲通过，但省略了 Weyl 测度整体归一",
+      "detail": "S_P = -(1/4 pi alpha') int d^2 sigma sqrt(h) h^ab d_a X^mu d_b X^nu g_munu：量纲链 [d_a X^mu] = L、[h^ab d X d X g] = L^2、[alpha'] = L^2 ⇒ 系数 1/(4 pi alpha') 给出 L^0 (无量纲) ⇒ 作用量无量纲（hbar = 1），通过。标准系数逐字一致。但严格形式需乘以 Weyl 测度归一因子 (2 pi alpha')^(-D/2)，来料省略 ⇒ 记为口径边界（不影响量纲，不影响顶点与振幅的相对权重约定）。",
+      "numbers": {
+        "planck_exponent_of_S": "0",
+        "two_times_4factorial": "48",
+        "weyl_measure_factor": "省略"
+      },
+      "tags": [
+        "弦",
+        "作用量",
+        "量纲"
+      ]
+    },
+    {
+      "id": "H14",
+      "verdict": "PASS",
+      "title": "11 维超引力：F4 动能系数 1/48 与 CS 项 1/12 均与主流写法一致",
+      "detail": "S_11 = (1/2 kappa_11^2) int sqrt(-g)(R - F4^2/48) + (1/12 kappa_11^2) int A3 ^ F4 ^ F4：动能系数 1/48 = 1/(2 x 4!) 逐位正确（2 x 4! = 48），与 CJS 标准写法一致；CS 项系数 1/12 亦与主流一致，但整体符号依赖 F_ABCD 的手性定义与 A3 ^ F4 ^ F4 的 4 倍归一约定，来料未声明（记为口径提示，不判错）。另补一条量纲核验：各维 Newton 常数随维数改变，[kappa_D] = L^{(D-2)/2} ⇒ 4 维 L^1（= Planck 长度）、11 维 L^(9/2)；代入后 4 维 S 量纲 L^0、11 维 L^0 ⇒ 两维皆无量纲，通过。这是本册唯一一处「跨维量纲自洽」的正向检验。",
+      "numbers": {
+        "F4_coefficient_denominator": "48",
+        "CS_coefficient": "1/12",
+        "kappa4": "L^1",
+        "kappa11": "L^(9/2)",
+        "planck_exp_S4": "0",
+        "planck_exp_S11": "0"
+      },
+      "tags": [
+        "M理论",
+        "系数核对",
+        "跨维量纲"
+      ]
+    },
+    {
+      "id": "H15",
+      "verdict": "BOUNDARY",
+      "title": "LQG 哈密顿约束只给 Euclidean 部分，Lorentzian 形式不完整",
+      "detail": "H = (1/kappa^2) eps_{ijk} F^i_ab E^a_j E^b_k / sqrt(|det E|) = 0 是 Ashtekar-Barbero 变量下的Euclidean Hamiltonian constraint，结构与教科书一致。但 Lorentz ian 签名下真实约束还需加入外禀曲率项（A - Gamma 的虚部组合），来料未给 ⇒ 不完整，记为口径边界。另注：LQG 不含电磁/强/弱统一（来料已声明），因此它在本合集中属「量子引力候选」而非 TOE。",
+      "numbers": {
+        "form": "Euclidean only",
+        "missing": "extrinsic curvature term"
+      },
+      "tags": [
+        "LQG",
+        "不完整"
+      ]
+    },
+    {
+      "id": "H16",
+      "verdict": "INFO",
+      "title": "渐近安全 / 因果集 / 扭量理论：三处均无方程，零机器可裁定点",
+      "detail": "渐近安全（非平凡 UV 不动点）、因果集（离散时空）、扭量（Penrose）在本合集中只有一句话描述，没有作用量、场方程或预言数 ⇒ 本册无法对其做任何机器裁定，登记为信息项。这三者是 QG 备选路线，不进入本册的量纲/一致性台账。",
+      "numbers": {
+        "equations": 0,
+        "systems": 3
+      },
+      "tags": [
+        "QG候选",
+        "零方程"
+      ]
+    },
+    {
+      "id": "H17",
+      "verdict": "FAIL",
+      "title": "挠率拉氏量 L_tau 量纲齐次，但第二项不是挠率质量项而是常数（宇宙学常数型）",
+      "detail": "L_tau = -(1/4) tau^alpha_munu tau^alpha_munu + (1/2) omega^2 g_munu u^mu u^nu：量纲逐项比对 [tau^2] = L^-2、[omega^2 (g u u)] = L^-2、R = L^-2 ⇒ 两项同量纲且与 R 一致，齐次通过。但关键问题在结构：若 u^mu 是归一化类时矢量（来料自称「本征螺旋 4 速度」），则 g_munu u^mu u^nu ≡ -1 是恒等式 ⇒ 第二项 = -5.0000000000000000000000000E-1（omega = 1 时），是一个与场无关的常数。于是：(a) 对 tau 变分零贡献 ⇒ **tau 没有质量项**；(b) 它不是 Proca 质量项 1/2 m^2 tau^2，而是对 g 变分给出一个宇宙学常数型的背景项（与 H19 的 T^omega 判定直接相关）。同时 L_tau 中没有任何 (nabla tau)^2 梯度项 ⇒ **tau 不传播**（与 r20/r21 册「tau 在 EC 中是代数 slave」的既有结论一致，本册为独立复现路径）。",
+      "numbers": {
+        "planck_exp_tau2": "-2",
+        "planck_exp_omega2_guu": "-2",
+        "planck_exp_R": "-2",
+        "homogeneous": true,
+        "g_u_u": "-1（类时归一化恒等式）",
+        "value_at_omega_1": "-5.0000000000000000000000000E-1",
+        "torsion_gradient_term": "无 ⇒ tau 非传播场"
+      },
+      "tags": [
+        "GMUFT",
+        "作用量",
+        "结构缺陷"
+      ]
+    },
+    {
+      "id": "H18",
+      "verdict": "FAIL",
+      "title": "总作用量 S_TUFT 中 L_int 是未给出的占位符 ⇒ 闭合度 2/3",
+      "detail": "S_TUFT = (1/16 pi G) int sqrt(-g)[R(g,Gamma) + L_tau + L_int] + S_matter(psi,g,tau)：括号内三项中，R 给出、L_tau 给出但结构退化（H17）、L_int 完全未给 ⇒ 实际闭合度 2/3。加上 S_matter 同样未给形式（H02），GMUFT 的作用量层面只有两个可计算项，且其中一个已退化。占位符不是方程：它使「挠率-曲率耦合如何产生四力」这一核心命题在本册内无法计算（与 r19 册 A-08 型缺口同族）。",
+      "numbers": {
+        "given_terms": [
+          "R(g, Gamma)",
+          "L_tau（给出但退化，见 H17）"
+        ],
+        "missing_terms": [
+          "L_int(tau, R, omega)（未给出）"
+        ],
+        "closure": "2/3",
+        "S_matter": "未给出"
+      },
+      "tags": [
+        "GMUFT",
+        "作用量",
+        "占位符"
+      ]
+    },
+    {
+      "id": "H19",
+      "verdict": "FAIL",
+      "title": "主统一场方程的两个几何源 T^tau 与 T^omega 未定义 ⇒ 连量纲齐次性都无法判定",
+      "detail": "R_munu - g_munu R / 2 = 8 pi G [T_munu + T^tau_munu(tau) + T^omega_munu(omega, R)]：左端确定是 L^-2；右端**已定义部分** 8 pi G T = L^-2，与之齐次；但 T^tau 与 T^omega 是未定义记号，若它们不是 L^-2 量（例如从常数项导出则是 g_munu A 型、量纲 L^-2 却与 T 不同来源），右端整体齐次性无法判定 ⇒ 可验证内容 = 0。更严重的是逻辑冲突：若 L_tau 的第二项真的只是常数（H17 已证），则由它导出的能动张量只能是 g_munu 的常数倍（宇宙学常数型），不可能是「挠率能动张量」；同时 Einstein 张量的 Bianchi 恒等式 d^mu G_munu = 0 要求右端总源协变守恒，对 g_munu A 型源自动满足、对一般 T^tau 不自动满足 ⇒ 未给 T^tau 意味着**方程是否满足守恒律不可判定**。",
+      "numbers": {
+        "sources": "T^tau, T^omega 未定义",
+        "planck_lhs": "L^-2",
+        "planck_8piG_T": "L^-2",
+        "homogeneity": "不可判定",
+        "bianchi": "不可判定"
+      },
+      "tags": [
+        "GMUFT",
+        "场方程",
+        "占位符"
+      ]
+    },
+    {
+      "id": "H20",
+      "verdict": "FAIL",
+      "title": "挠率动力学方程 d_a tau^a_munu + omega eps tau^{rho sigma} = 8 pi G S_munu：两项残缺",
+      "detail": "左端第一项 [nabla tau] = L^-2；第二项 [omega tau] = L^-2（Planck 口径下两项齐次，good）；但右端 8 pi G S = L^-1 ⇒ **左右相差 1 个长度幂次（L^-1）**，量纲不齐。此外：符号 tau^{rho sigma} **在来料的符号约定中不存在**（约定只给出三指标 tau^alpha_munu），它无法从 tau^alpha_munu 收缩得到（需凭空补两个指标），故该项在字面上无定义。SI 口径下更差：omega tau = 0, -1, -1 与 nabla tau = 0, -2, 0 相差一个速度。结论：这是把 Cartan 代数方程（tau = 8 pi G S，量纲 L^-1 两边匹配）改写成微分方程后必然出现的量纲缺口，与 r19 册「输运方程源项少一个时间标度」同族（缺陷族复发）。",
+      "numbers": {
+        "planck_div_tau": "-2",
+        "planck_omega_tau": "-2",
+        "planck_8piGS": "-1",
+        "mismatch_length_power": "-1",
+        "tau_rho_sigma": "未定义符号",
+        "si_omega_tau": [
+          "0",
+          "-1",
+          "-1"
+        ],
+        "si_div_tau": [
+          "0",
+          "-2",
+          "0"
+        ]
+      },
+      "tags": [
+        "GMUFT",
+        "场方程",
+        "量纲",
+        "符号未定义"
+      ]
+    },
+    {
+      "id": "H21",
+      "verdict": "MISMATCH",
+      "title": "自旋源 S 的指标数在两段之间不一致（3 指标 vs 2 指标）",
+      "detail": "段 I 的 Cartan 方程右端是 S^alpha_munu（3 指标，与左端 tau^alpha_munu 匹配）；段 IV 的挠率动力学方程右端是 S_munu（2 指标）。同一物理对象在同一篇文本中给出两种自由指标数 ⇒ 跨段代入必炸（A-07 型台账冲突，本册首次登记于本合集）。标准做法：自旋流 3-张量 J^alpha_munu（角动量流密度）经一次收缩才得到 2-指标的Cartan 方程源，来料未说明该收缩。",
+      "numbers": {
+        "section_I": "S^alpha_munu (3 indices)",
+        "section_IV": "S_munu (2 indices)"
+      },
+      "tags": [
+        "跨段不一致",
+        "指标"
+      ]
+    },
+    {
+      "id": "H22",
+      "verdict": "FAIL",
+      "title": "螺旋色散关系的波动算子 Box g_munu 恒等于零 ⇒ 该方程不是波动方程",
+      "detail": "Box = g^{mu nu} nabla_mu nabla_nu 是用**度规联络**定义的协变导数收缩，而 Einstein-Cartan 几何（Q = 0）满足度规相容 nabla_alpha g_munu ≡ 0，因此 nabla_mu nabla_nu g_munu = nabla_mu(0) = 0，**恒等成立**，与解无关。机器验证：Schwarzschild 静态度规 g = diag(-f, 1/f, r^2, r^2 sin^2 th)（M = 1）配解析 Christoffel；测试点取特殊角 th = pi/6, pi/4, pi/3（sin/cos 为精确代数数，残差因此是代数恒等量级而非差分误差）：3 个测试点的 max|nabla_beta g_munu| = 0.0000000000000000000000000E+00, 1.0000000000000000000000000E-59, 1.0000000000000000000000000E-57 ⇒ 机器零。阳性对照：把 Christoffel 置零（错误的联络）后残差升到 2.1650635094610966169093079E+1, 1.4400000000000000000000000E+2, 7.7942286340599478208735085E+2 ⇒ 证明检验器能检出非零，不是恒返回零。结论：色散方程 Box g + ... = 0 的整个「传播」部分在几何层面不存在；剩余项退化为代数条件（见 H23）。要得到真正的波动方程，传播对象必须是扰动 h_munu = g_munu - eta_munu，而不是 g_munu 本身。",
+      "numbers": {
+        "compat_residual_good": [
+          "0.0000000000000000000000000E+00",
+          "1.0000000000000000000000000E-59",
+          "1.0000000000000000000000000E-57"
+        ],
+        "control_residual_bad": [
+          "2.1650635094610966169093079E+1",
+          "1.4400000000000000000000000E+2",
+          "7.7942286340599478208735085E+2"
+        ],
+        "metric": "Schwarzschild static (M=1)",
+        "points": "r=5(th=pi/6), 12(th=pi/4), 30(th=pi/3)"
+      },
+      "tags": [
+        "GMUFT",
+        "色散关系",
+        "恒等退化",
+        "阳性对照"
+      ]
+    },
+    {
+      "id": "H23",
+      "verdict": "FAIL",
+      "title": "螺旋色散关系量纲不齐：kappa 项 L^-1 与其余三项 L^-2（与单位制无关）",
+      "detail": "Box g_munu + kappa g_munu + tau . d g_munu + omega^2 g_munu = 0 的四项量纲（Planck 口径）：Box g = L^-2、kappa g = L^-1、tau d g = L^-2、omega^2 g = L^-2。唯一不齐项是 **kappa g**（L^-1 vs L^-2，差 -1 个长度幂次）。因为 [kappa] = L^-1 是曲线曲率的固有量纲（弧长倒数），在任何单位制下都不可能等于 L^-2 ⇒ 该不齐**不能靠换单位制消掉**。这是缺陷族的第 6 次复发：r18 册已判「kappa + tau c 不可加」，本次换成 kappa + omega^2 的组合，同一结构再次出现。附带：H22 已证 Box g 恒零，故该方程实际只剩 kappa g + tau d g + omega^2 g = 0，即一个代数关系，而非传播关系。",
+      "numbers": {
+        "exponents": {
+          "Box g": "-2",
+          "kappa g": "-1",
+          "tau d g": "-2",
+          "omega^2 g": "-2"
+        },
+        "bad_term": "kappa g",
+        "bad_mismatch": "-1",
+        "unit_independent": true,
+        "defect_family_recurrence": "第 6 次（r18 kappa + tau c）"
+      },
+      "tags": [
+        "GMUFT",
+        "量纲",
+        "缺陷族复发"
+      ]
+    },
+    {
+      "id": "H24",
+      "verdict": "MISMATCH",
+      "title": "符号 kappa 在本合集内承担三重互不相容的含义",
+      "detail": "(a) 公理 2 的 Frenet 曲率（弧长倒数，L^-1）；(b) 段 8 FDTD 中「曲率作为介质张量」的来源 M_kappa(kappa)；(c) 段 I EC 几何中真正的曲率是 Riemann 张量 R（L^-2），与 (a) 的kappa 不同量纲。而段 III 的色散关系把 (a) 与 R 同式相加（H23）。⇒ 混引必炸：任何「挠率耦合曲率」的具体公式若不逐处声明 kappa 是哪一个，量纲与物理含义都会漂移。这与库内 r22 册 rho 同名反义（rho = 圆柱半径 vs rho = sqrt(kappa^2 + tau^2)）属同一台账缺陷族。",
+      "numbers": {
+        "kappa_a": "Frenet 曲率 L^-1",
+        "kappa_b": "FDTD 介质磁流源",
+        "kappa_c": "（真正的曲率张量记为 R，L^-2）",
+        "collision": "L^-1 与 L^-2 同式相加"
+      },
+      "tags": [
+        "符号台账",
+        "同名两义"
+      ]
+    },
+    {
+      "id": "H25",
+      "verdict": "INFO",
+      "title": "四力模态分解：四个模态声明对应 0 条可代入数值的方程",
+      "detail": "「长波低 omega = 引力模态 / 中 omega 矢量螺旋 = U(1) / 更高 omega = SU(2) / 紫外高频束缚 = SU(3)」是分类学声明：它没有给出 (omega, kappa, tau) 与四耦合常数之间的任何映射式，也没有给出四个模态的边界条件或正交性判据 ⇒ 本册可验证内容 = 0。这与 r22 册 C11（场论层无螺旋几何残留）指向同一结论：模态归属目前是外部指定的标签，不是从几何导出。若要可检验，最小增广是给出 g_i = F_i(omega_i, kappa, tau) 的显式函数并至少复现一个已知耦合值。",
+      "numbers": {
+        "modes": 4,
+        "equations": 0,
+        "mapping_function": "缺失"
+      },
+      "tags": [
+        "四力模态",
+        "零方程"
+      ]
+    },
+    {
+      "id": "H26",
+      "verdict": "BOUNDARY",
+      "title": "RG 方程是占位符；且带量纲量（omega、tau）进入无量纲耦合的 RG 空间未定义",
+      "detail": "mu dg_i / dmu = beta_i(g1,g2,g3,G,omega,tau)：beta 的具体形式未给 ⇒ 占位符。另有结构问题：g_i 无量纲而 G 有量纲（Planck 口径 L^2）、omega 与 tau 各为 L^-1，把它们并列进同一 RG 方程需要先声明各自的能标依赖行为与尺度；来料未声明。库内既有教训（r19 / r14）：每引入一个跑动量就是 +1 个自由函数，直接撞 Ω5「自由常数 ≤ 1」，且路径 1（RG beta）此前已被判与能标册重复度极高。",
+      "numbers": {
+        "beta": "未给出（占位符）",
+        "dim_g": "L^0",
+        "dim_G": "L^2",
+        "dim_omega_tau": "L^-1",
+        "scale_behaviour": "未声明"
+      },
+      "tags": [
+        "RG",
+        "占位符",
+        "口径"
+      ]
+    },
+    {
+      "id": "H27",
+      "verdict": "FAIL",
+      "title": "ADM 哈密顿约束的 K 项次序与任一通行约定都不匹配（不依赖具体常数约定）",
+      "detail": "来料：(3)R + K_ij K^ij - K^2 = 16 pi G rho + C_tau。通行约定只有两种：A = (3)R + K^2 - K_ij K^ij = 16 pi G rho；B = A 的整体负号（等价于换曲率/应力符号约定）。来料写法把 K 两项**单独交换符号**而 (3)R 不动，因此既不等于 A 也不等于 B。机器检验（各向同性 K_ij = -H delta_ij，H = 1，M = 1；de Sitter (3)R = 12）：K_ij K^ij = 3.0000000000000000000000000E+0、K^2 = 9.0000000000000000000000000E+0 ⇒ 来料左边 = 6.0000000000000000000000000E+0，A 左边 = 1.8000000000000000000000000E+1，B 左边 = -1.8000000000000000000000000E+1；差(来料 - A) = -1.2000000000000000000000000E+1、差(来料 - B) = 2.4000000000000000000000000E+1，均非零。唯一能使其偶然相等的情形是 K_ij K^ij = K^2（各向同性时 3 != 9）⇒ 一般不成立。本条刻意不引用任何具体数值常数（避免符号约定争议），只用结构恒等式判定，可复现。",
+      "numbers": {
+        "H": "1",
+        "KijKij": "3.0000000000000000000000000E+0",
+        "Ksq": "9.0000000000000000000000000E+0",
+        "R3_deSitter": "1.2000000000000000000000000E+1",
+        "lhs_incoming": "6.0000000000000000000000000E+0",
+        "lhs_stdA": "1.8000000000000000000000000E+1",
+        "lhs_stdB": "-1.8000000000000000000000000E+1",
+        "delta_vs_A": "-1.2000000000000000000000000E+1",
+        "delta_vs_B": "2.4000000000000000000000000E+1"
+      },
+      "tags": [
+        "ADM",
+        "符号",
+        "结构核对"
+      ]
+    },
+    {
+      "id": "H28",
+      "verdict": "BOUNDARY",
+      "title": "K_ij 演化方程的物质源项缺与约束同源的迹项",
+      "detail": "标准 ADM 演化方程的源部分是 gamma_ij 与 S_ij 的组合（含 S = gamma^{kl} S_kl 与 E 的迹，形如 4 pi alpha [(S - E) gamma_ij - 2 S_ij] 及其等价变体，系数随符号约定变化）。来料只写 -alpha(8 pi G S_ij + S^tau_ij)：既无 gamma_ij 的迹项，也无能量密度 E。由于 ADM 的约束方程与演化方程必须同源（否则不满足 ADM 一致性），缺少迹项意味着该演化方程在 E != S 时不与哈密顿约束相容。本条不判「系数错」而判「不自洽」，因为迹项的具体系数依赖约定，且来料是改编版。",
+      "numbers": {
+        "written": "-alpha(8 pi G S_ij + S^tau_ij)",
+        "missing": "gamma_ij 的迹项（S - E gamma_ij）与能量密度 E",
+        "consistency": "演化方程与哈密顿约束不自洽"
+      },
+      "tags": [
+        "ADM",
+        "演化方程",
+        "不自洽"
+      ]
+    },
+    {
+      "id": "H29",
+      "verdict": "MISMATCH",
+      "title": "标题称 ADM-BSSN，但未给出任何 BSSN 变量",
+      "detail": "BSSN 形式必须引入共形因子 phi（或 \tilde g）、共形度规场 \tilde A_ij 与 \tilde Gamma^i_tau（阻尼哥动量）三组变量，才能把 ADM 演化方程改写为适定的形式。来料给的是纯 ADM 变量（gamma_ij、K_ij、alpha、beta^i），只有约束方程多了 C_tau、M^i_tau。⇒ 名实不符：可标为 ADM + 挠率修正，不能称 BSSN。",
+      "numbers": {
+        "declared": "ADM-BSSN",
+        "variables_given": "gamma, K, alpha, beta（纯 ADM）",
+        "bssn_variables_missing": [
+          "phi",
+          "A_tilde_ij",
+          "Gamma_tilde^i_tau"
+        ]
+      },
+      "tags": [
+        "ADM",
+        "名实不符"
+      ]
+    },
+    {
+      "id": "H30",
+      "verdict": "FAIL",
+      "title": "g-2 与 EDM 判别式只给记号不给函数 ⇒ 不可证伪，且回避了已被实验关闭的两个窗口",
+      "detail": "a_e^GMUFT = a_e^QED + Delta a_e(tau, omega)、d_e = d_e(tau, omega)：两个修正函数均未给形式，只留自变量符号 ⇒ 任何参数都能拟合，零可证伪性。更关键：库内这两个窗口**早已被实验关闭**（登记于第十编 EDM 验证册）：(a) 螺旋几何给出的 g-2 修正量级与实验值相对偏差 74.96%；(b) EDM 预言超 ACME 2018 上限约 1.28e16 倍，且螺旋对称性严格论证 d_e 应为 0。本册机器复核 (a) 的量级：以 a_TUFT = alpha/(8 pi) = 2.9035243322210942861993753E-4 对 a_e^exp = 1.1596520000000000000000000E-3，比值 a_TUFT / a_exp = 2.5037893542382493077228128E-1（偏小 3.9939462092019283666047124E+0 倍），相对偏差 = 7.4962106457617506922771872E-1 ⇒ 与库内登记的 74.96% 一致。⇒ 来料把两个已关闭窗口写成「用来做数值校验」，属回避而非校验。",
+      "numbers": {
+        "Delta_a_e": "未给出（占位符）",
+        "d_e": "未给出（占位符）",
+        "a_tuft": "2.9035243322210942861993753E-4",
+        "a_exp": "1.1596520000000000000000000E-3",
+        "a_tuft_over_a_exp": "2.5037893542382493077228128E-1",
+        "relative_deviation": "7.4962106457617506922771872E-1",
+        "EDM_exceed_factor": "1.28e16",
+        "windows": "两个实验窗口均已关闭"
+      },
+      "tags": [
+        "g-2",
+        "EDM",
+        "不可证伪",
+        "回避"
+      ]
+    },
+    {
+      "id": "H31",
+      "verdict": "FAIL",
+      "title": "FDTD 控制方程的磁流项 M_kappa 破坏 ∇·B = 0 的一致性",
+      "detail": "来料第二式 curl E = -d_t B + M_kappa(kappa)：对两侧取散度（div curl E ≡ 0）得 d_t(div B) = -div M_kappa。Maxwell 的无磁单极约束 div B = 0 要求 div M_kappa ≡ 0。但「曲率诱导磁流」一般不满足此条件：取最简的库仑型磁单极场 M_z = 1/(2r)，在 r = 1 处 div M = d_z M_z = 5.0000000000000000000000000E-1 ≠ 0 ⇒ 该控制方程会强迫 div B 随时间产生非零单极密度，与同一组方程的第一式（curl H = d_t D + J + J_tau）无 Maxwell 型相容条件。⇒ 要么把 M_kappa 声明为无散度场（并给出行列式条件），要么显式引入磁单极自由度，二者来料都没有做。这不是记号问题，是与无磁单极约束的硬冲突。",
+      "numbers": {
+        "div_M_at_r1": "5.0000000000000000000000000E-1",
+        "compatibility": "div M_kappa ≡ 0 未满足",
+        "consequence": "d_t(div B) ≠ 0，与 Maxwell 冲突"
+      },
+      "tags": [
+        "FDTD",
+        "一致性",
+        "磁单极"
+      ]
+    },
+    {
+      "id": "H32",
+      "verdict": "INFO",
+      "title": "FDTD 的 J_tau 与 M_kappa 未给构成关系 ⇒ 该「控制方程」不可算",
+      "detail": "要真正求解需要 J_tau(tau) 与 M_kappa(kappa) 的显式函数（至少给出与场分量的代数关系、以及它们与 Maxwell 场的时间/空间依赖）。来料只写了记号 ⇒ 无法离散、无法初值、无法与解析解对照。因此「FDTD 波动求解控制方程」这一节目前是**形式**，不是可执行方案。",
+      "numbers": {
+        "J_tau": "未给出",
+        "M_kappa": "未给出",
+        "discretizable": false
+      },
+      "tags": [
+        "FDTD",
+        "占位符"
+      ]
+    },
+    {
+      "id": "H33",
+      "verdict": "INFO",
+      "title": "GMUFT 段的未定符号清单共 14 项",
+      "detail": "逐项列出：L_int(tau,R,omega)；T^tau_munu；T^omega_munu；S_munu(指标未定义)；tau^{rho sigma}；C_tau(tau,gamma)；M^i_tau；S^tau_ij；Delta a_e(tau,omega)；d_e(tau,omega)；J_tau(tau)；M_kappa(kappa)；beta_i(omega,tau)；u^mu(是否动力学变量未声明)。这些符号全部以「函数记号」形态出现在方程里，但没有任何一个被给出定义或由作用量导出。按库内 Ω5 口径（自由常数 <= 1）与「占位符不是方程」体例，这 14 项里至少 6 项（T^tau、T^omega、C_tau、M^i_tau、S^tau_ij、Delta a_e / d_e）直接决定可验证性 ⇒ GMUFT 段的可计算自由度账在本合集中仍然是「外部输入为主」。",
+      "numbers": {
+        "count": 14,
+        "items": [
+          "L_int(tau,R,omega)",
+          "T^tau_munu",
+          "T^omega_munu",
+          "S_munu(指标未定义)",
+          "tau^{rho sigma}",
+          "C_tau(tau,gamma)",
+          "M^i_tau",
+          "S^tau_ij",
+          "Delta a_e(tau,omega)",
+          "d_e(tau,omega)",
+          "J_tau(tau)",
+          "M_kappa(kappa)",
+          "beta_i(omega,tau)",
+          "u^mu(是否动力学变量未声明)"
+        ]
+      },
+      "tags": [
+        "参数账",
+        "外部输入"
+      ]
+    }
+  ],
+  "guards": [
+    {
+      "name": "h01_cartan_antisym_identity_zero",
+      "ok": true,
+      "detail": "Cartan 方程反对称残差须精确为零",
+      "value": "0.0000000000000000000000000E+00"
+    },
+    {
+      "name": "h02_ec_action_dimensionless_in_planck",
+      "ok": true,
+      "detail": "EC 作用量前项在 Planck 单位制下须无量纲",
+      "value": "0"
+    },
+    {
+      "name": "h03_group_dimensions",
+      "ok": true,
+      "detail": "SU(5)=24 / SO(10)=45 须与标准一致",
+      "value": "24/45"
+    },
+    {
+      "name": "h05_eight_pi_value",
+      "ok": true,
+      "detail": "c=G=1 时系数须为 8 pi",
+      "value": "2.513274122871835E+1"
+    },
+    {
+      "name": "h07_yang_mills_antisym_machine_zero",
+      "ok": true,
+      "detail": "Yang-Mills 场强反对称残差须为精确零",
+      "value": "0.0000000000000000000000000E+00"
+    },
+    {
+      "name": "h08_hypercharge_gap_registered",
+      "ok": true,
+      "detail": "超荷约定未在来料声明的缺口已登记为 H08（自检项只保证「缺口被记账」）",
+      "value": "g'YB/2 vs g'YB"
+    },
+    {
+      "name": "h09_higgs_dimension_check",
+      "ok": true,
+      "detail": "mu^2 与 V 同量纲、lambda 无量纲",
+      "value": "L^-4"
+    },
+    {
+      "name": "h10_c4_over_8piG_matches_r18_r19_r22",
+      "ok": true,
+      "detail": "c^4/(8 pi G) 须与 r18/r19/r22 锚点在锚点有效位数（26 位）内一致",
+      "value": "3.3886774364282034800649547E-27"
+    },
+    {
+      "name": "h11_su5_excluded_ratio",
+      "ok": true,
+      "detail": "minimal SU(5) 应被 Super-K 下限排除 3 个量级以上",
+      "value": "2.400000E+3"
+    },
+    {
+      "name": "h13_polyakov_dimensionless",
+      "ok": true,
+      "detail": "Polyakov 作用量在 hbar=1 下须无量纲",
+      "value": "0"
+    },
+    {
+      "name": "h14_S4_S11_dimensionless",
+      "ok": true,
+      "detail": "4 维与 11 维 EH 作用量须同时无量纲",
+      "value": "0/0"
+    },
+    {
+      "name": "h14_four_form_coefficient",
+      "ok": true,
+      "detail": "2 x 4! 须为 48",
+      "value": "48"
+    },
+    {
+      "name": "h15_lqg_euclidean_flagged",
+      "ok": true,
+      "detail": "LQG 仅 Euclidean 形式已登记",
+      "value": "extrinsic term missing"
+    },
+    {
+      "name": "h17_L_tau_dimension_ok",
+      "ok": true,
+      "detail": "L_tau 两项须同量纲且与 R 一致（逐项比对，不能相加）",
+      "value": "-2/-2/-2"
+    },
+    {
+      "name": "h17_u_contraction_is_constant",
+      "ok": true,
+      "detail": "g u u = -1 时第二项须退化为常数 -omega^2/2",
+      "value": "-5.0000000000000000000000000E-1"
+    },
+    {
+      "name": "h18_closure_is_two_of_three",
+      "ok": true,
+      "detail": "闭合度须记为 2/3",
+      "value": "2/3"
+    },
+    {
+      "name": "h19_main_equation_sources_undefined",
+      "ok": true,
+      "detail": "T^tau / T^omega 未定义已登记",
+      "value": "unverifiable"
+    },
+    {
+      "name": "h20_torsion_equation_dimension_mismatch",
+      "ok": true,
+      "detail": "挠率动力学方程左右量纲须齐次（当前不齐）",
+      "value": "-2 vs -1"
+    },
+    {
+      "name": "h22_metric_compatibility_machine_zero",
+      "ok": true,
+      "detail": "度规相容残差须为机器零",
+      "value": "1.0000000000000000000000000E-57"
+    },
+    {
+      "name": "h22_positive_control_nonzero",
+      "ok": true,
+      "detail": "阳性对照（错误联络）须给出明显非零残差",
+      "value": "2.1650635094610966169093079E+1"
+    },
+    {
+      "name": "h23_dispersion_dimension_mismatch",
+      "ok": true,
+      "detail": "色散关系四项量纲须齐次（当前不齐）",
+      "value": "{'Box g': Fraction(-2, 1), 'kappa g': Fraction(-1, 1), 'tau d g': Fraction(-2, 1), 'omega^2 g': Fraction(-2, 1)}"
+    },
+    {
+      "name": "h23_mismatch_is_unit_independent",
+      "ok": true,
+      "detail": "kappa 项的缺口必须是长度幂次 1（与单位制无关）",
+      "value": "1"
+    },
+    {
+      "name": "h27_adm_hamilton_structure_mismatch",
+      "ok": true,
+      "detail": "来料写法须同时与通行约定 A、B 都不匹配（结构核对）",
+      "value": "-1.2000000000000000000000000E+1 / 2.4000000000000000000000000E+1"
+    }
+  ],
+  "division_of_labour": [
+    "r18/r19/r20/r21（2026-10-07）：审 V3.4「EC 作用量 + ADM-BSSN + 孤子色散 + g-2/EDM」—— 已判作用量与 ADM 不同源、量纲缺口、路径门禁；本册不复算，只登记复发。",
+    "r22/r23/r24/r25（2026-10-10）：审垂直原理四力统一框架及其续篇、全书、A/B/C/D 四选项。",
+    "本册 r27：对合集综述文本本身做跨体系核对 + GMUFT 段量纲/指标/一致性审计；条目 H01..H33，与既有册不可相加。"
+  ],
+  "not_self_derived": [
+    "EC / KK / SM / 11d SUGRA / LQG 的标准形式核对基于公开教科书写法，本册只做结构与量纲的一致性检验，不主张重新推导这些理论。",
+    "Yukawa 项的 SU(2) 指标结构、LQG Lorentzian 约束的完整形式、Polyakov 的 Weyl 测度归一因子均按主流写法处理，不在本册裁定其优劣。"
+  ]
+}

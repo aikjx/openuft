@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>空间螺旋几何化统一场论 · 审计收官报告（六期·113条）</title>
+<style>
+:root{--bg:#0b0e14;--panel:#121826;--panel2:#0f1420;--line:#232b3d;--tx:#d7dde8;--tx2:#8a94a8;--ac:#7fb3ff;--ok:#4ade80;--bad:#f87171;--warn:#fbbf24;--purp:#a78bfa;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.55;padding:28px 20px 60px}
+.wrap{max-width:1120px;margin:0 auto}
+h1{font-size:24px;letter-spacing:1px;color:#fff;font-weight:700}
+.sub{color:var(--tx2);font-size:13px;margin-top:6px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;margin-left:10px;vertical-align:middle}
+.b-red{background:rgba(248,113,113,.14);color:var(--bad);border:1px solid rgba(248,113,113,.35)}
+.b-blue{background:rgba(127,179,255,.12);color:var(--ac);border:1px solid rgba(127,179,255,.3)}
+.b-pur{background:rgba(167,139,250,.12);color:var(--purp);border:1px solid rgba(167,139,250,.35)}
+.grid{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-top:22px}
+.cell{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 8px;text-align:center}
+.cell .num{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.cell .lab{font-size:11px;color:var(--tx2);margin-top:4px}
+.c-ok .num{color:var(--ok)} .c-bad .num{color:var(--bad)} .c-ac .num{color:var(--ac)} .c-pur .num{color:var(--purp)} .c-warn .num{color:var(--warn)}
+.panel{background:var(--panel2);border:1px solid var(--line);border-radius:10px;margin-top:20px;padding:18px 20px}
+h2{font-size:16px;color:#fff;margin-bottom:12px;border-left:3px solid var(--ac);padding-left:10px}
+h3{font-size:14px;color:var(--ac);margin:14px 0 8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+th{background:#1a2233;color:var(--tx2);text-align:left;padding:7px 9px;border:1px solid var(--line);font-weight:600}
+td{padding:7px 9px;border:1px solid var(--line);vertical-align:top}
+.tag{display:inline-block;padding:1px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.t-f{background:rgba(248,113,113,.14);color:var(--bad)}
+.t-p{background:rgba(74,222,128,.12);color:var(--ok)}
+.t-o{background:rgba(251,191,36,.12);color:var(--warn)}
+.t-b{background:rgba(127,179,255,.12);color:var(--ac)}
+.tl{position:relative;padding-left:0;list-style:none;margin-top:14px;--t:88px;--a:34px}
+.tl li{display:grid;grid-template-columns:var(--t) var(--a) 1fr;gap:0;padding:6px 0;align-items:start}
+.tl .t{color:var(--tx2);font-size:12px;text-align:right;padding-top:3px}
+.tl .ax{justify-self:center;position:relative;width:12px;height:12px;border-radius:50%;background:var(--ac);margin-top:5px;z-index:1}
+.tl .d{font-size:13px;padding-left:10px}
+.tl .d b{color:#fff;font-weight:600}
+.tl li::before{content:"";position:absolute;left:calc(var(--t) + var(--a)/2 - 1px);top:0;bottom:0;width:2px;background:var(--line)}
+.tl li:first-child::before{top:50%} .tl li:last-child::before{bottom:50%}
+.warn-box{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.35);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#fde68a;margin-top:10px}
+.red-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.35);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#fecaca;margin-top:10px}
+.foot{margin-top:26px;color:var(--tx2);font-size:11.5px;border-top:1px solid var(--line);padding-top:12px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:repeat(2,1fr)}.tl{--t:66px;--a:26px}.tl li{grid-template-columns:var(--t) var(--a) 1fr}}
+</style>
+</head>
+<body>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0e14'/%3E%3Cpath d='M14 46c10-2 18-16 36-18' stroke='%237fb3ff' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='28' r='6' fill='%23a78bfa'/%3E%3C/svg%3E">
+<div class="wrap">
+  <h1>空间螺旋几何化统一场论 · 审计收官报告
+    <span class="badge b-red">六期 · 113 条</span><span class="badge b-blue">守卫 7/8</span></h1>
+  <div class="sub">算法联盟审计组 · mpmath 250 位 · 2026-10-10 · 台账 claims.csv（C01–C113）</div>
+
+  <div class="grid">
+    <div class="cell c-ac"><div class="num">113</div><div class="lab">台账主张</div></div>
+    <div class="cell c-bad"><div class="num">39</div><div class="lab">falsified 合计</div></div>
+    <div class="cell c-ok"><div class="num">27</div><div class="lab">守卫基线（不缩水）</div></div>
+    <div class="cell c-bad"><div class="num">42</div><div class="lab">L0 层级</div></div>
+    <div class="cell c-pur"><div class="num">67</div><div class="lab">L1 层级</div></div>
+    <div class="cell c-ac"><div class="num">4</div><div class="lab">L2 层级</div></div>
+    <div class="cell c-bad"><div class="num">0</div><div class="lab">L3 层级</div></div>
+    <div class="cell c-ok"><div class="num">20</div><div class="lab">引擎 PASS</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>六期攻破定案（本轮登记 C112 / C113）</h2>
+    <table>
+      <tr><th style="width:56px">ID</th><th style="width:200px">对象</th><th style="width:80px">判定</th><th>证据（250 位 / 解析）</th></tr>
+      <tr>
+        <td>C112</td><td>C108「TUFT 可预言统一比」</td><td><span class="tag t-f">falsified</span></td>
+        <td>统一比 α/α_G=(q0²/Gm²) 含自由参数：m 无物理值（无 ℏ 锚、尺度简并自认）⇒ α_G=Gm²/ℏc 不可计算；q0 自由（自认无 q0=f(G) 路径）；C107 特异荷 q0/G=(e/m_e)/(Q/E0)=7.704e10 为实验 e/m 反推恒等；量子化后 α=q0²/4πℏc 仍为 e 的定义重写 ⇒ 无独立预测力</td>
+      </tr>
+      <tr>
+        <td>C113</td><td>C73「δP 强加速辐射修正」</td><td><span class="tag t-f">falsified</span></td>
+        <td>ε(a) 仅「≪1」无模型；刚性共加速相位相干 ⇒ 总远场恒等于点电荷 Larmor（δP≡0 形状无关，解析严格）⇒ V₂ 因子不成立；形变模型 δP/P=K·ε² 的 K 待定 ⇒ 无数值预言、无实验靶</td>
+      </tr>
+    </table>
+    <h3>关键数值</h3>
+    <table>
+      <tr><th>量</th><th>值</th><th>说明</th></tr>
+      <tr><td>α_G(e)=Gm_e²/ℏc</td><td>1.7518093940e-45</td><td>250 位复算（C45 一致）</td></tr>
+      <tr><td>物理靶 α/α_G(e)</td><td>4.165609e+42</td><td>统一比物理靶</td></tr>
+      <tr><td>C107 反推 q0/G</td><td>7.703986030539e+10</td><td>实验 e/m 反推（恒等重排）</td></tr>
+      <tr><td>强行反解所需 K_m</td><td>9.483597e-38</td><td>无 TUFT 来源（反解恒等）</td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>本轮工程修复（守卫抓出）</h2>
+    <table>
+      <tr><th style="width:70px">守卫</th><th>问题</th><th style="width:160px">处理</th></tr>
+      <tr><td>G2/G5</td><td>并发轮分支A/B 按草稿汇总表删除 C29–C33 五行（缺号 + falsified 缩水 4 条）</td><td>按五期定案恢复五行</td></tr>
+      <tr><td>G3</td><td>并发轮 8 条大写 PASS（C101–C106/C110/C111）超状态白名单</td><td>归一为小写 pass</td></tr>
+      <tr><td>G5</td><td>恢复行 reviewer 非本项目审计组（不计入守卫统计）</td><td>修正 reviewer</td></tr>
+      <tr><td>—</td><td>C87–C91 与 C29–C33 内容重复（并发轮重登记）</td><td>注明待合并，守卫不拦</td></tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>审计时间轴（轮①–轮⑩）</h2>
+    <ul class="tl">
+      <li><div class="t">09-25</div><div class="ax"></div><div class="d"><b>原始申报归档</b>：sha256=0b78a4…，审计锚点建档</div></li>
+      <li><div class="t">09-26</div><div class="ax"></div><div class="d"><b>轮①–②</b>：V21 续修合并 C25/C35；第一性审计与伪派生判定</div></li>
+      <li><div class="t">09-27</div><div class="ax"></div><div class="d"><b>轮③–⑦</b>：求导链 / 数学链 / 频率链 / 开放项 / 剩余开放项总攻（C62–C70）</div></li>
+      <li><div class="t">10-09</div><div class="ax"></div><div class="d"><b>轮⑧</b>：五期收官（70 条版数字格 26/29、守卫 8/8）</div></li>
+      <li><div class="t">10-10</div><div class="ax"></div><div class="d"><b>轮⑨</b>：并发轮推进（V3.2/UFE2、台账 106 条、C71–C111）</div></li>
+      <li><div class="t">10-10</div><div class="ax"></div><div class="d"><b>轮⑩（本轮）</b>：六期攻破 C108/C73 → 登记 C112/C113；恢复 C29–C33；PASS 归一；守卫 7/8</div></li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>守卫状态（G1–G8）</h2>
+    <table>
+      <tr><th style="width:56px">ID</th><th style="width:270px">检查</th><th style="width:80px">状态</th><th>说明</th></tr>
+      <tr><td>G1</td><td>每行恰 5 字段</td><td><span class="tag t-p">PASS</span></td><td>无列错位</td></tr>
+      <tr><td>G2</td><td>claim_id 连续无缺号</td><td><span class="tag t-p">PASS</span></td><td>C01–C113</td></tr>
+      <tr><td>G3</td><td>状态取值合法</td><td><span class="tag t-p">PASS</span></td><td>PASS 大写归一后合法</td></tr>
+      <tr><td>G4</td><td>C12/C21/C23 未被改回</td><td><span class="tag t-p">PASS</span></td><td>申报「清零」不成立</td></tr>
+      <tr><td>G5</td><td>审计组 falsified 不缩水</td><td><span class="tag t-p">PASS</span></td><td>基线 27 条，现 31 条（只增不减）</td></tr>
+      <tr><td>G6</td><td>两阶段引擎产物齐备</td><td><span class="tag t-p">PASS</span></td><td>阶段一 42 / 阶段二 10</td></tr>
+      <tr><td>G7</td><td>被审文本已归档</td><td><span class="tag t-p">PASS</span></td><td>路径存在</td></tr>
+      <tr><td>G8</td><td>归档哈希未变</td><td><span class="tag t-f">FAIL</span></td><td>见下</td></tr>
+    </table>
+    <div class="warn-box">
+      <b>G8 归档哈希变更</b>：`修复版申报原文_2026-09-25.md` 当前 sha256=00114477683c1b53… vs 基线 0b78a4d980a9ff35…。归档被并发轮改写（末尾混入审计判定表，非原文照录）；无原版备份，守卫防自愈故基线保留旧哈希。审计锚点失效风险登记；原始文本以终结报告引文与历史产物为准，待材料轮提供原版或确认新版归档后重建。
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>审计结论</h2>
+    <div class="red-box">
+      <b>修复版申报「清零全部 falsified」不成立</b>：本审计登记 falsified 31 条 / 基线 27 条，只增不减。<br>
+      TUFT 诚实红线不变：<b>UFT 达成度 2/6、L3=0、UFT-3=0</b>。本轮两处「可检验预言」（C108 统一比、C73 δP）经审计为恒等重排/不可检验，不改变红线。体系内数值自洽（C100–C111 并发轮定案）与审计结论（无 L3 独立预言）并行成立：数值自洽 ≠ 第一性预言。
+    </div>
+  </div>
+
+  <div class="foot">
+    产物：源码/空间螺旋_V3.2统一比与辐射修正攻破验证6.py · 数据/空间螺旋V3.2统一比与辐射修正_攻破精算验证6.json/.md · 批量审计 json/md/csv · 守卫日志 · 终结报告 113 条版<br>
+    本页为静态审计快照，数据源：claims.csv（只读）· 引擎判定表 · 守卫日志。
+  </div>
+</div>
+</body>
+</html>

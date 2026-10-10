@@ -1,0 +1,102 @@
+{
+  "probe": "attack16_probe3_味自由度秩计数",
+  "date": "2026-10-10",
+  "items": [
+    {
+      "id": "D01",
+      "verdict": "INFO",
+      "detail": "味秩 n_g=3 quark-only：实 36 - 秩 26 = 10",
+      "note": "= 6 质量 + 4 CKM（与闭式 ng^2+1 一致）"
+    },
+    {
+      "id": "D02",
+      "verdict": "INFO",
+      "detail": "味秩 n_g=3 +Y_e：实 54 - 秩 41 = 13",
+      "note": "= 6 夸克质量 + 3 带电轻子质量 + 4 CKM"
+    },
+    {
+      "id": "D03",
+      "verdict": "INFO",
+      "detail": "味秩 n_g=3 +Y_nu：实 72 - 秩 52 = 20",
+      "note": "= 20（+3 中微子质量 +4 PMNS）"
+    },
+    {
+      "id": "D05",
+      "verdict": "MISMATCH",
+      "detail": "v7.0 称「给定 Y_u,Y_d → 9 个费米子质量 + CKM4 = 13」；机器给 Y_u,Y_d 自由度 = 10",
+      "note": "10 ≠ 13：3 个带电轻子质量需第三个算符 Y_e（加 Y_e 后机器给 13）"
+    },
+    {
+      "id": "D06",
+      "verdict": "CORRECTED",
+      "detail": "「参数自由度从 19 层面被消除」：算符化前后物理自由度恒为 13（=6+3+4）",
+      "note": "是重参数化（换记账方式），不是自由度消元"
+    },
+    {
+      "id": "D07",
+      "verdict": "INFO",
+      "detail": "随机 Y_u,Y_d 的谱与 V_CKM=U_u U_d^† 可任意取遍 (6 质量, 4 CKM)",
+      "note": "算符空间 → 物理参数空间是满射，不存在额外约束 ⇒ 「给定算符则唯一」是恒真陈述"
+    }
+  ],
+  "self_checks": [
+    {
+      "name": "CHK-3a 机器秩与闭式一致(ng=3 三档)",
+      "ok": true,
+      "detail": "q:10/10 qe:13/13 qen:20/20"
+    },
+    {
+      "name": "CHK-10 ng=2 quark-only 必得 5",
+      "ok": true,
+      "detail": "实=16 秩=11 自由度=5"
+    },
+    {
+      "name": "CHK-3b ng=1 单 Yukawa 必得 1",
+      "ok": true,
+      "detail": "实=2 秩=1 自由度=1"
+    },
+    {
+      "name": "CHK-3c 换随机种子秩不变",
+      "ok": true,
+      "detail": "seed2 自由度=10 vs seed1=10"
+    }
+  ],
+  "computed": {
+    "ng3_quark_only": {
+      "nparam": 36,
+      "rank": 26,
+      "dof": 10,
+      "group_dim": 27
+    },
+    "ng3_plus_e": {
+      "nparam": 54,
+      "rank": 41,
+      "dof": 13,
+      "group_dim": 45
+    },
+    "ng3_plus_nu": {
+      "nparam": 72,
+      "rank": 52,
+      "dof": 20,
+      "group_dim": 54
+    },
+    "ng2_quark_only": {
+      "dof": 5
+    },
+    "ng1": {
+      "dof": 1
+    },
+    "v70_claim": 13,
+    "machine_quark_only": 10,
+    "rank_float_crosscheck": {
+      "q": 27,
+      "qe": 42,
+      "qen": 53
+    }
+  },
+  "red_lines": [
+    "本探针只做自由度计数，不判定质量数值能否被预言",
+    "「给定算符则唯一」是空命题（算符自由度 ≡ 测量数），不构成导出",
+    "不产生新物理"
+  ]
+}
