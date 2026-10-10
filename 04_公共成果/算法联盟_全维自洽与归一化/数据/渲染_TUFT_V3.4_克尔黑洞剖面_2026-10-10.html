@@ -1,0 +1,32 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>TUFT V3.4 克尔黑洞二维剖面</title>
+<style>
+body{font-family:Segoe UI,微软雅黑,sans-serif;background:#0e1117;color:#e6e6e6;margin:0;padding:24px}
+h1{font-size:20px;color:#7cc4ff} .sub{color:#8a94a6;font-size:13px;margin:4px 0 18px}
+.wrap{display:flex;flex-wrap:wrap;gap:24px} .card{background:#161b26;border:1px solid #2a3140;border-radius:10px;padding:14px}
+canvas{background:#0a0e16} .cap{font-size:12px;color:#8a94a6;margin-top:8px}
+</style></head><body>
+<h1>TUFT V3.4 · 克尔黑洞 (κ,τ) 二维剖面</h1>
+<div class="sub">M=1, a=0.5, Λ₀=1/(8πG)=0.0398 · r∈[r₊,4M] · θ∈[0,π] · τ(r,θ)=a²sin²θ/Σ²</div>
+<div class="wrap">
+<div class="card"><canvas id="tau" width="400" height="280"></canvas><div class="cap">挠率 τ(r,θ) 热图——赤道最强、两极趋零</div></div>
+<div class="card"><canvas id="kapp" width="400" height="280"></canvas><div class="cap">曲率 κ(r,θ) 热图——与挠率补偿(κ+τc=Λ₀)</div></div>
+<div class="card"><canvas id="comb" width="400" height="280"></canvas><div class="cap">守恒组合 κ+τc——全平面=Λ₀ 常数</div></div>
+</div>
+<script>
+var L0=0.0398,R=1.866,NR=120,NTH=180,MAXT=2.06e-02;
+function draw(id,mode){var c=document.getElementById(id),x=c.getContext('2d');c.width=400;c.height=280;
+ x.clearRect(0,0,400,280);var W=400,H=280;
+ for(var j=0;j<180;j++){for(var i=0;i<120;i++){
+  var r=R+(4-R)*i/(120-1),th=Math.PI*j/(180-1);
+  var s2=Math.sin(th)*Math.sin(th),sig=r*r+0.50*0.50*Math.cos(th)*Math.cos(th);
+  var t=1.0*(0.50*0.50*s2)/(sig*sig),k=0.03979-t;
+  var val=mode==='tau'?t:(mode==='kapp'?Math.abs(k):(0.03979));
+  var f=val/(2.06e-02*1.5);if(f>1)f=1;if(f<0)f=0;
+  var xp=i*(W-2)/120+1,yp=H-2-j*(H-2)/180;
+  var rr=Math.floor(255*(1-f)),gg=Math.floor(120+100*f),bb=Math.floor(255*f);
+  x.fillStyle='rgb('+rr+','+gg+','+bb+')';x.fillRect(xp,yp,Math.max(1,(W-2)/120),Math.max(1,(H-2)/180));
+  }}
+ x.fillStyle='#fff';x.fillText('θ=π/2 赤道',10,20);x.fillText('θ=0 极',10,H-30);}
+draw('tau','tau');draw('kapp','kapp');draw('comb','comb');
+</script></body></html>

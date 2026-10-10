@@ -1,0 +1,48 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>TUFT V3.4 复Ω场渲染</title>
+<style>
+body{font-family:Segoe UI,微软雅黑,sans-serif;background:#0e1117;color:#e6e6e6;margin:0;padding:24px}
+h1{font-size:20px;color:#7cc4ff} .sub{color:#8a94a6;font-size:13px;margin:4px 0 18px}
+.wrap{display:flex;flex-wrap:wrap;gap:24px} .card{background:#161b26;border:1px solid #2a3140;border-radius:10px;padding:14px}
+canvas{background:#0a0e16} .cap{font-size:12px;color:#8a94a6;margin-top:8px}
+.lbl{color:#7cc4ff} .weak{color:#ffb74d} .strong{color:#66bb6a} .em{color:#42a5f5}
+</style></head><body>
+<h1>TUFT V3.4 · 复权重场 Ω 几何渲染</h1>
+<div class="sub">Ω(θ)=λ·cos3θ · λ=α_s=0.1179 · 三瓣 Z3：EM@0°/Strong@120°/Weak@240° · 弱域 |Ω|≥α_W=0.01696 → Δθ_W=54.49°</div>
+<div class="wrap">
+<div class="card"><canvas id="polar" width="360" height="360"></canvas><div class="cap">极坐标 |Ω(θ)| 三瓣（幅值×放大5000倍）</div></div>
+<div class="card"><canvas id="field" width="360" height="360"></canvas><div class="cap">梯度力场 F=-∇E（cos3θ 势谷→瓣方向）</div></div>
+<div class="card"><canvas id="bar" width="360" height="300"></canvas><div class="cap">Ω(θ) 幅值 + Z3 分区着色（弱域高亮）</div></div>
+</div>
+<script>
+var L=0.1179,aW=0.01696,aWdeg=54.49;
+function draw_polar(){var c=document.getElementById('polar'),x=c.getContext('2d');
+ c.width=360;c.height=360;var cx=180,cy=180,R=130;x.clearRect(0,0,360,360);
+ for(var i=0;i<=360;i++){var th=i*Math.PI/180,o=L*Math.cos(3*th),r=o*5000*R/60;if(r<0)r=-r;
+  var col=abs(o)>=aW?'#ffb74d':(o>=0?'#66bb6a':'#8a94a6');
+  x.strokeStyle=col;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+r*Math.cos(th),cy+r*Math.sin(th));x.stroke();}
+ x.strokeStyle='#42a5f5';x.beginPath();x.arc(cx,cy,R,0,2*Math.PI);x.stroke();
+ x.fillStyle='#e6e6e6';x.fillText('EM 0°',cx+130,cy-6);x.fillText('Strong 120°',cx-70,cy-130);
+ x.fillText('Weak 240°',cx-140,cy+40);}
+function abs(x){return x<0?-x:x}
+function draw_field(){var c=document.getElementById('field'),x=c.getContext('2d');c.width=360;c.height=360;
+ var cx=180,cy=180,R=140;x.clearRect(0,0,360,360);x.strokeStyle='#2a3140';
+ for(var gx=-140;gx<=140;gx+=20){x.beginPath();x.moveTo(cx+gx,0);x.lineTo(cx+gx,360);x.stroke();
+  x.beginPath();x.moveTo(0,cy+gx);x.lineTo(360,cy+gx);x.stroke();}
+ for(var i=0;i<60;i++){for(var j=0;j<60;j++){var u=cx-140+280*i/59,v=cy-140+280*j/59;
+  var th=Math.atan2(v-cy,u-cx),o=L*Math.cos(3*th),do_=-3*L*Math.sin(3*th);
+  var fx=do_*Math.cos(th)-o*Math.sin(th),fy=do_*Math.sin(th)+o*Math.cos(th);
+  var nl=Math.sqrt(fx*fx+fy*fy)+1e-9;fx=-fx/nl*7;fy=-fy/nl*7;
+  x.strokeStyle='#5aa9e6';x.beginPath();x.moveTo(u,v);x.lineTo(u+fx,v+fy);x.stroke();}}
+ x.fillStyle='#ffb74d';x.beginPath();x.arc(cx,cy,3,0,7);x.fill();}
+function draw_bar(){var c=document.getElementById('bar'),x=c.getContext('2d');c.width=360;c.height=300;
+ x.clearRect(0,0,360,300);var y0=60,scale=2600;
+ for(var i=0;i<360;i++){var o=L*Math.cos(3*i*Math.PI/180),val=o*scale;
+  var sect=i<60||(i>=120&&i<180)||(i>=240&&i<300)?'#66bb6a':(i>=60&&i<120)?'#8a94a6':(i>=180&&i<240)?'#ffb74d':(i>=300&&i<360)?'#8a94a6':'#42a5f5';
+  if(abs(o)>=aW)sect='#ff7043';
+  x.fillStyle=sect;x.fillRect(i, y0-val*50, 1, val*50);}
+ x.fillStyle='#42a5f5';x.fillText('EM 0°',10,290);x.fillStyle='#66bb6a';x.fillText('Strong 120°',120,290);
+ x.fillStyle='#ffb74d';x.fillText('Weak 240°',225,290);x.fillStyle='#ff7043';x.fillText('弱域高亮(|Ω|≥α_W)',10,20);
+ x.strokeStyle='#e6e6e6';x.beginPath();x.moveTo(0,y0);x.lineTo(360,y0);x.stroke();}
+draw_polar();draw_field();draw_bar();
+</script></body></html>

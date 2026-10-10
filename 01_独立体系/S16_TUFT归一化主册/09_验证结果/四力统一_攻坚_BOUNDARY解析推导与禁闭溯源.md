@@ -49,7 +49,9 @@ $$ \begin{aligned}
 $$ -(b^2-\rho^2)^2+4\rho^2b^2=-(\rho^4-2\rho^2b^2+b^4)+4\rho^2b^2=-\rho^4+6\rho^2b^2-b^4 $$
 
 **最终紧凑形式**：
-$$ \boldsymbol{\nabla}\kappa\cdot\boldsymbol{\nabla}\tau =\frac{1}{(\rho^2+b^2)^4}\Big[ 2\rho b(\rho^2-b^2)\big(|\boldsymbol{\nabla}b|^2-|\boldsymbol{\nabla}\rho|^2\big)+\big(-\rho^4+6\rho^2b^2-b^4\big)\boldsymbol{\nabla}\rho\cdot\boldsymbol{\nabla}b \Big] $$
+$$ \boldsymbol{\nabla}\kappa\cdot\boldsymbol{\nabla}\tau =\frac{1}{(\rho^2+b^2)^4}\Big[ 2\rho b(\rho^2-b^2)\big(|\boldsymbol{\nabla}\rho|^2-|\boldsymbol{\nabla}b|^2\big)+\big(-\rho^4+6\rho^2b^2-b^4\big)\boldsymbol{\nabla}\rho\cdot\boldsymbol{\nabla}b \Big] $$
+
+> **⚠ 勘误（2026-10-10，独立复算逮获）**：上式第一项原整理稿写为 $(|\boldsymbol{\nabla}b|^2-|\boldsymbol{\nabla}\rho|^2)$，**整体符号反了**，正确为 $(|\boldsymbol{\nabla}\rho|^2-|\boldsymbol{\nabla}b|^2)$。精确分数定点（$\rho=1,b=4,\nabla\rho=(1,0),\nabla b=(0,4)$）真值 $+0.021551$，原式给 $-0.021551$，修正式给 $+0.021551$；随机光滑场修正残差 $6.9\times10^{-17}$、原式残差 $0.039$。交叉项系数 $-\rho^4+6\rho^2b^2-b^4$ 正确。**关键：正交零条件不变**（仍要求两项各自为零 ⟹ $|\nabla\rho|=|\nabla b|$ 与 $\nabla\rho\cdot\nabla b=0$），故路线 A 的柯西-黎曼闭合及全部后续结论不受影响。凭证：[母本紧凑式_独立复算核验.py](./母本紧凑式_独立复算核验.py)。
 
 ### 1.4 关键结论
 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>TUFT V3.2 · 半经典量子化：Q-ball 整数电荷谱</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  html,body{margin:0;padding:0;background:#0d1117;color:#c9d1d9;font-family:"Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:960px;margin:0 auto;padding:20px;}
+  h1{font-size:20px;color:#e6edf3;}
+  .sub{font-size:12px;color:#8b949e;margin-bottom:12px;}
+  .panel{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px;margin-bottom:16px;}
+  .panel h2{font-size:15px;color:#58a6ff;margin:0 0 6px 0;}
+  #ch1{width:100%;height:300px;}
+  .verdict{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;}
+  .ok{color:#3fb950;}
+  .bd{color:#d29922;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT V3.2 · 半经典量子化：Q-ball 整数电荷谱</h1>
+  <div class="sub">数据源：V3.2_Qball_scan.json（稳定窗）· 自由玻色子质量 m_free=√M2=0.6325 · 2026-10-10</div>
+  <div class="panel">
+    <h2>离散质量谱 M(n)：Q-ball = n 个标量量子的相干束缚态</h2>
+    <div id="ch1"></div>
+  </div>
+  <div class="verdict">
+    <span class="ok">结论 BOUNDARY（迈向量化第一步）</span>：电荷量子化 $Q\to n$（整数），核心稳定荷
+    <span class="ok">n∈[224,233]</span>，质量 <span class="ok">M∈[99.31,101.32]</span>；
+    每量子结合能 $\\Delta=\\sqrt{M_2}-E_0/Q\\approx0.19$（自由质量 <span class="ok">~31%</span>），
+    <span class="ok">E0/Q=0.43–0.46 ≪ m_free=0.63</span> ⇒ Q-ball 为<b>真实束缚态</b>。
+    完整 QFT 量子化（圈修正、α/α_G 预言）仍为 <span class="bd">OPEN</span>。红线不变。
+  </div>
+</div>
+<script>
+var n=[229,233,231,224,214,202];
+var M=[100.496,101.319,100.889,99.314,96.834,93.780];
+var EQ=[0.4389,0.4340,0.4367,0.4439,0.4533,0.4633];
+c1=echarts.init(document.getElementById('ch1'));
+c1.setOption({
+  title:{text:'离散质量谱 M(n)：束缚态 Q-ball',left:'center',textStyle:{fontSize:15,color:'#e6edf3'}},
+  tooltip:{trigger:'item',triggerOn:'mousemove|click',renderMode:'richText',confine:true,
+    formatter:function(p){return 'n='+p.data[0]+'<br/>M='+p.data[1].toFixed(3)+'<br/>E0/Q='+EQ[n.indexOf(p.data[0])].toFixed(4);}},
+  grid:{top:60,left:65,right:50,bottom:50,containLabel:true},
+  xAxis:{type:'value',name:'整数电荷 n',min:195,max:240,nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#c9d1d9'},splitLine:{lineStyle:{color:'#21262d'}}},
+  yAxis:{type:'value',name:'质量 M=E0',min:90,max:105,nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#c9d1d9'},splitLine:{lineStyle:{color:'#21262d'}}},
+  series:[
+    {name:'束缚态',type:'scatter',symbolSize:16,data:n.map(function(x,i){return [x,M[i]];}),
+      itemStyle:{color:'#58a6ff'},
+      label:{show:true,position:'top',fontSize:10,color:'#58a6ff',formatter:function(p){return 'n='+p.data[0];}},
+      markLine:{silent:true,symbol:'none',lineStyle:{color:'#3fb950',width:2,type:'dashed'},
+        label:{formatter:'n·m_free 自由量子',color:'#3fb950',position:'insideEndTop'},data:[{yAxis:147.7}]}}
+  ],
+  graphic:[{type:'text',left:'center',top:262,style:{text:'每量子结合能 Δ≈0.19（自由质量 ~31%），E0/Q≪m_free ⇒ 真实束缚态',fill:'#8b949e',fontSize:12}}]
+});
+window.addEventListener('resize',function(){c1.resize();});
+</script>
+</body>
+</html>

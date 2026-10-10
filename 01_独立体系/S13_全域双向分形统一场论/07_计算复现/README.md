@@ -36,6 +36,7 @@
 |---|---|---|
 | [openuft_rge_sim.py](源码/openuft_rge_sim.py) | 对话推导·重整化群耦合统一三线检验（SM vs MSSM，RK4 数值积分，纯标准库） | python openuft_rge_sim.py |
 | [openuft_unified.py](源码/openuft_unified.py) | 对话推导·统一场论完成引擎（耦合统一、质子衰变、黑洞熵、轴子、费米子质量、真空能、戈德斯通，全谱数值，纯标准库） | python openuft_unified.py |
+| [openuft_predictions_verify.py](源码/openuft_predictions_verify.py) | 候选预言五~八数值估算（质子衰变 tau_p~7.3e35 yr 可检验、轴子 ueV、暗能量 w(a)、耦合统一交点，conjecture·unreviewed） | python openuft_predictions_verify.py |
 
 > 注：以上为候选推导配套代码，代码可运行不自动提升证据等级；输出以 claims.csv 登记为准。
 
