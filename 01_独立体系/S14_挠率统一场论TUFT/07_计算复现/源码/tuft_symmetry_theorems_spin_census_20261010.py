@@ -24,6 +24,7 @@ TUFT 攻坚 · 对称性定理适用域 + 自旋谱 + 传播子结构 普查件�
   python tuft_symmetry_theorems_spin_census_20261010.py            # 跑并落面
   python tuft_symmetry_theorems_spin_census_20261010.py --check    # 只比对面字节，不改盘
   python tuft_symmetry_theorems_spin_census_20261010.py --mutant   # 植牙自检（临时目录，不碰活树）
+  python tuft_symmetry_theorems_spin_census_20261010.py --drift    # 漂移见证：面上分母 vs 现测分母（只读，不改面）
 """
 import io
 import os
@@ -33,6 +34,7 @@ import time
 import shutil
 import hashlib
 import tempfile
+import contextlib
 from fractions import Fraction
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +43,8 @@ ROOT = os.path.abspath(os.path.join(S14, "..", ".."))          # openuft/
 OUT_NAME = "tuft_symmetry_theorems_spin_census_20261010_report.txt"
 OUT_SRC = os.path.join(HERE, OUT_NAME)
 OUT_REC = os.path.join(S14, "09_验证结果", "原始运行记录", OUT_NAME)
+OUT_DRIFT_NAME = "tuft_symmetry_theorems_spin_census_20261010_漂移见证.txt"
+SNAP_NAME = "tuft_symmetry_theorems_spin_census_20261010_逐文件快照.tsv"
 
 LIVE_DIRS = ["00_项目治理", "01_独立体系", "02_TUFT_来源", "02_共享基础", "03_跨体系研究",
              "04_公共成果", "05_全球研究", "06_统一体系层", "07_统一场方程", "书籍"]
@@ -48,7 +52,9 @@ ARCHIVE_DIRS = ["90_历史归档", "99_待整理资料"]
 MD_PY = (".md", ".py", ".txt", ".csv")
 SKIP_DIR_NAMES = {".git", "__pycache__", ".venv", "node_modules", ".history", ".preview"}
 # 本轮载体：仪器自己的源码与两面，不许被自己的普查数到（否则 fixture 字符串会冒充语料陈述）
-SELF_PATHS = {os.path.abspath(OUT_SRC), os.path.abspath(OUT_REC), os.path.abspath(__file__)}
+SELF_PATHS = {os.path.abspath(OUT_SRC), os.path.abspath(OUT_REC),
+              os.path.abspath(os.path.join(S14, "09_验证结果", "原始运行记录", OUT_DRIFT_NAME)),
+              os.path.abspath(__file__)}
 SELF_EXCLUDED = []
 
 L = []
@@ -299,8 +305,9 @@ def theorem_census(files, tag="LIVE"):
     return out
 
 # ---------------------------------------------------------------- J4 自旋谱在册账
-DOF_NUM = re.compile(r"(\d{1,2}|[一二两三四五六七八九十])\s*(?:个|种)?\s*(?:物理)?(?:自由度|极化|偏振态|极化态)")
+DOF_NUM = re.compile(r"(\d{1,2}|[一二两三四五六七八九十])\s*\$?\s*(?:个|种)?\s*(?:物理)?(?:自由度|极化|偏振态|极化态)")
 CN_NUM = {"一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
+TORSION_ATTACHMENT = re.compile(r"挠率[^。，；\.]{0,14}(?:自由度|极化|偏振态)")
 GRAV = re.compile(r"引力子|自旋\s*[-–]?\s*2|spin\s*-?\s*2|h_\\mu\\nu|h_μν|度规扰动|张量横波")
 MASSLESS = re.compile(r"无质量|massless|p\^?2\s*=\s*0|p²\s*=\s*0|横向-?无迹|TT")
 MASSIVE = re.compile(r"有质量|大质量|massive|vDVZ|Fierz|Pauli")
@@ -317,7 +324,7 @@ def dof_census(files):
             n = int(n_raw) if n_raw.isdigit() else CN_NUM[n_raw]
             massless = bool(MASSLESS.search(line))
             massive = bool(MASSIVE.search(line))
-            sector = "挠率" if TORSION.search(line) and not re.search(r"引力子|h_μν|h_\\mu\\nu", line) else "引力"
+            sector = "挠率" if TORSION_ATTACHMENT.search(line) else "引力"
             if sector == "挠率":
                 verdict = "SECTOR-TORSION(非引力子)"
             elif massless and not massive:
@@ -369,6 +376,7 @@ def claims_census():
         n_data = 0
         stat = {}
         numeric = 0
+        numeric_wide = 0
         blob = "\n".join(lines)
         for ln in lines[1:]:
             cells = ln.split(",")
@@ -382,8 +390,21 @@ def claims_census():
                 numeric += 1
             except Exception:
                 pass
+            # 宽口径（与总账红线 5 同族）：除 id/revision/statement 外任一字段可 float 解析
+            wide = False
+            for j, cell in enumerate(cells):
+                if j in (0, 1, 2):
+                    continue
+                try:
+                    float(cell)
+                    wide = True
+                    break
+                except Exception:
+                    pass
+            if wide:
+                numeric_wide += 1
         effects = {k: len(re.findall("|".join(map(re.escape, v)), blob, re.I)) for k, v in NEW_EFFECTS.items()}
-        rows.append((s, n_data, numeric, stat, effects))
+        rows.append((s, n_data, numeric, numeric_wide, stat, effects))
     return rows
 
 # ---------------------------------------------------------------- 主流程
@@ -486,8 +507,9 @@ def main():
 
     # ---------------- J4
     p("\n=== J4 自旋谱在册账：所有「引力子/自旋-2 的 N 个自由度/极化」读数 vs J1 实算 ===")
-    p("  辖区声明：只认「N 个|种 (物理) 自由度|极化|偏振态|极化态」拼写（N 为阿拉伯数字或中文数词一/二/两/…）；"
-      "把读数写在 LaTeX 结构里的形态（例：$=3=2$（引力子极化）$+1$（标量））不在本件辖区内，须另配尺。")
+    p("  辖区声明：只认「N（裸数字或被一对 $ 包裹）+ 个|种 +(物理)+ 自由度|极化|偏振态|极化态」拼写，N 允许阿拉伯数字或中文数词；"
+      "读数嵌在算式结构里的形态（例：$=3=2$（引力子极化）$+1$（标量），物理自由度 $=14-2\\times4=6$）不在本件辖区内，须另配尺。"
+      "本辖区由 M6 变异体对定价（裸数型与 $ 包裹型同时命中，合法读数不误判）。")
     hits = dof_census(files_live)
     buckets = {}
     for n, verdict, sector, f, i, ln in hits:
@@ -540,6 +562,14 @@ def main():
                 susy_mention.append((rel(path), i, line.strip()))
     p("  超对称**构造**（超荷反交换子/超势/引力微子场项）在场行数：%d；纯提及行数：%d"
       % (len(susy_construct), len(susy_mention)))
+    tree_split = {}
+    for f, i, ln in susy_construct:
+        tree_split[f.split("/")[0] + "/" + f.split("/")[1] if f.count("/") > 1 else f.split("/")[0]] = \
+            tree_split.get(f.split("/")[0] + "/" + f.split("/")[1] if f.count("/") > 1 else f.split("/")[0], 0) + 1
+    p("  构造行按树分布：%s" % tree_split)
+    operative = [x for x in susy_construct if x[0].startswith(("07_统一场方程/", "01_独立体系/S1", "01_独立体系/P"))]
+    p("  ⟹ 落在**现役方程树**（07_统一场方程 + 各体系目录）里的构造行=%d；其余为历史综合报告/运行日志里的教科书复述行"
+      % len(operative))
     for f, i, ln in susy_construct[:6]:
         p("      [构造] %s:%d  %s" % (f, i, (ln[:110] + "…") if len(ln) > 110 else ln))
     for f, i, ln in susy_mention[:4]:
@@ -562,22 +592,24 @@ def main():
     cl = claims_census()
     tot_rows = sum(x[1] for x in cl)
     tot_num = sum(x[2] for x in cl)
-    p("  体系数=%d  claims 数据行=%d  预测字段可 float 解析的行=%d（口径：CSV 字段层，非正文层）" % (len(cl), tot_rows, tot_num))
+    tot_num_wide = sum(x[3] for x in cl)
+    p("  体系数=%d  claims 数据行=%d  窄口径（仅 prediction_value 列可 float）=%d  宽口径（id/revision/statement 之外任一字"
+      "段可 float）=%d ⟹ 总账红线 5 的「8 条」是宽口径，两把尺必须分开引" % (len(cl), tot_rows, tot_num, tot_num_wide))
     agg = {}
-    for _, _, _, stat, _ in cl:
+    for _, _, _, _, stat, _ in cl:
         for k, v in stat.items():
             agg[k] = agg.get(k, 0) + v
     p("  status 合计（行末反向索引口径，总账红线 4）：%s" % agg)
     eff_tot = {}
-    for _, _, _, _, effects in cl:
+    for _, _, _, _, _, effects in cl:
         for k, v in effects.items():
             eff_tot[k] = eff_tot.get(k, 0) + v
     p("  「真统一必给的」新效应名字命中数（全库 claims 正文）：")
     for k in NEW_EFFECTS:
         p("      %-24s %d" % (k, eff_tot.get(k, 0)))
-    for s, n, num, stat, effects in cl:
-        if num or any(v for v in effects.values()):
-            p("      · %-40s rows=%3d numeric=%d  新效应命中=%s" % (s, n, num, {k: v for k, v in effects.items() if v}))
+    for s, n, num, numw, stat, effects in cl:
+        if num or numw or any(v for v in effects.values()):
+            p("      · %-40s rows=%3d narrow=%d wide=%d  新效应命中=%s" % (s, n, num, numw, {k: v for k, v in effects.items() if v}))
 
     # ---------------- 判定块
     p("\n=== 判定汇总 ===")
@@ -595,7 +627,7 @@ def main():
          len([x for x in cens if x[0] == "HLS"]), len([x for x in cens if x[1] == "BARE"])))
     p("  D4 超对称构造行=%d（⟹ HLS 的「唯一出口」在本库内**未被取用**，只有提及）" % len(susy_construct))
     p("  D5 径向轮廓文件 %d 份，其中无推导渠道 %d 份（⟹ 距离律多数是假设而非极点推导）" % (len(rows), len(without)))
-    p("  D6 claims 数据行=%d，带数值预言=%d，新效应名字命中合计=%d" % (tot_rows, tot_num, sum(eff_tot.values())))
+    p("  D6 claims 数据行=%d，带数值预言（窄/宽口径）=%d/%d，新效应名字命中合计=%d" % (tot_rows, tot_num, tot_num_wide, sum(eff_tot.values())))
     n_judged = 6 + len(contra) + len(cens) + len(rows) + len(cl)
     p("  本轮实际判决的行数（PASS 只值这个数）：%d" % n_judged)
     p("  rc=0（普查件只读，不改任何活树文件）")
@@ -707,10 +739,179 @@ def mutant_selftest():
               % (r0, r1, shape, "PASS" if (r0 < 1e-3 and r1 < 1e-3 and shape > 0) else "FAIL"))
         if not (r0 < 1e-3 and r1 < 1e-3 and shape > 0):
             rc = 1
+        n += 1
+        # M6 = 辖区加宽的变异体对：裸数字与 LaTeX 包裹数字两型都必须能被判，合法读数不得被判
+        wide = os.path.join(tmp, "planted_wide.md")
+        with io.open(wide, "w", encoding="utf-8", newline="\n") as f:
+            f.write("甲：引力子无质量、自旋 2、5 个物理自由度\n\n"
+                    "乙：引力子：TT 投影 $p^2=0$，自旋-2 的 $5$ 个物理自由度\n\n"
+                    "丙：引力子无质量，$2$ 个极化（合法）\n")
+        _cache.pop(wide, None)
+        hits3 = dof_census([wide])
+        c3 = sum(1 for h in hits3 if h[1] == "CONTRADICTION")
+        ok3 = sum(1 for h in hits3 if h[1].startswith("MATCH"))
+        print("M6 加宽辖区（裸数/LaTeX 数两型）：候选行=%d CONTRADICTION=%d MATCH=%d（期望 3/2/1）%s"
+              % (len(hits3), c3, ok3, "PASS" if (len(hits3) == 3 and c3 == 2 and ok3 == 1) else "FAIL"))
+        if not (len(hits3) == 3 and c3 == 2 and ok3 == 1):
+            rc = 1
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     print("MUTANT 自检格数=%d  rc=%d" % (n, rc))
     return rc
+
+def drift_witness():
+    """漂移见证（只读，不覆盖已发布面）：把「面上印着的分母」与「此刻重新测到的分母」并列。
+    起因：本轮早期实跑的 stdout 被并发写者在 /tmp 覆盖 ⇒ 任何「语料在同轮内移动」的叙述都必须有盘面载体。"""
+    pubs = {}
+    if not os.path.isfile(OUT_SRC):
+        print("DRIFT FAIL: 已发布面不存在，无从对照：" + OUT_SRC)
+        return 1
+    txt = open(OUT_SRC, "rb").read().decode("utf-8")
+    for key, pat in (("CM 命中行", r"CM：活树命中 (\d+) 行"),
+                     ("WW 命中行", r"WW：活树命中 (\d+) 行"),
+                     ("HLS 命中行", r"HLS：活树命中 (\d+) 行"),
+                     ("J5 分母文件", r"仅扫 07_统一场方程，分母=(\d+) 文件"),
+                     ("J5 直积证据行", r"仅扫 07_统一场方程，分母=\d+ 文件）：(\d+) 行"),
+                     ("J6 轮廓文件", r"径向轮廓的活树文件：(\d+)"),
+                     ("J7 claims 行", r"claims 数据行=(\d+)")):
+        m = re.search(pat, txt)
+        pubs[key] = int(m.group(1)) if m else None
+    files_live = walk(LIVE_DIRS)
+    cens = theorem_census(files_live)
+    dp_files = {}
+    for path in files_live:
+        rr = rel(path)
+        if not rr.startswith("07_统一场方程/"):
+            continue
+        for line in read_lines(path):
+            if re.search(r"SO\(1,\s*3\).{0,12}\\times|G_\{?\\rm\s*int\}?\s*=|\[\s*\\mathfrak\{so\}\(1,3\),\s*\\mathfrak\{g\}_\{?\\rm\s*int\}?\]\s*=\s*0", line):
+                dp_files[rr] = dp_files.get(rr, 0) + 1
+    dp = sum(dp_files.values())
+    rows = profile_census(files_live)
+    cl = claims_census()
+    nows = {"CM 命中行": len([x for x in cens if x[0] == "CM"]),
+            "WW 命中行": len([x for x in cens if x[0] == "WW"]),
+            "HLS 命中行": len([x for x in cens if x[0] == "HLS"]),
+            "J5 分母文件": len([f for f in files_live if rel(f).startswith("07_统一场方程/")]),
+            "J5 直积证据行": dp,
+            "J6 轮廓文件": len(rows),
+            "J7 claims 行": sum(x[1] for x in cl)}
+    out = ["漂移见证 -- generated by %s --drift，不覆盖已发布面" % os.path.basename(__file__),
+           "取样时刻: %s" % time.strftime("%Y-%m-%d %H:%M:%S"),
+           "已发布面: %s  %d B  md5 %s" % (os.path.basename(OUT_SRC), len(txt.encode("utf-8")), md5(OUT_SRC)),
+           "",
+           "%-14s %10s %10s %8s" % ("分母", "面上值", "现测值", "差"),
+           "----"]
+    moved = 0
+    for k in ("CM 命中行", "WW 命中行", "HLS 命中行", "J5 分母文件", "J5 直积证据行", "J6 轮廓文件", "J7 claims 行"):
+        a, b = pubs[k], nows[k]
+        if a is None:
+            out.append("%-14s %10s %10d %8s  ← 面上未找到该读数（正则失效，非漂移）" % (k, "-", b, "-"))
+            continue
+        d = b - a
+        if d:
+            moved += 1
+        out.append("%-14s %10d %10d %+8d%s" % (k, a, b, d, "  ← 语料已移动" if d else ""))
+    out.append("")
+    out.append("位移候选定位（按 mtime 晚于已发布面筛文件；NEW＝该文件在面之后才诞生⇒它的命中全算增量；"
+               "MOD＝面之前就存在⇒它的当前命中数**不等于**增量，不许当成归因）：")
+    face_mt = os.path.getmtime(OUT_SRC)
+    by_file = {}
+    kind = {}
+    for code, cls, n, f, i, ln in cens:
+        p_ = os.path.abspath(os.path.join(ROOT, f.replace("/", os.sep)))
+        if os.path.getmtime(p_) > face_mt:
+            by_file.setdefault(f, {}).setdefault(code, 0)
+            by_file[f][code] += 1
+            # Windows 上 st_ctime 是创建时间：晚于面创建的文件＝新文件，其命中必为增量
+            kind[f] = "NEW" if os.path.getctime(p_) > face_mt else "MOD"
+    prof_new = []
+    for f in sorted(set(r[0] for r in rows)):
+        p_ = os.path.abspath(os.path.join(ROOT, f.replace("/", os.sep)))
+        if os.path.getmtime(p_) > face_mt:
+            prof_new.append((f, "NEW" if os.path.getctime(p_) > face_mt else "MOD"))
+    if not by_file and not prof_new:
+        out.append("  无文件命中 mtime 条件 ⇒ 位移来自并发写者或本件未点名的载体，须人工核。")
+    lb = {}
+    for f in sorted(by_file):
+        d = by_file[f]
+        out.append("  [%s] %s  CM %d / WW %d / HLS %d" % (kind[f], f, d.get("CM", 0), d.get("WW", 0), d.get("HLS", 0)))
+        if kind[f] == "NEW":
+            for code in ("CM", "WW", "HLS"):
+                lb[code] = lb.get(code, 0) + d.get(code, 0)
+    for f, kd in prof_new:
+        out.append("  [%s] %s  J6 轮廓文件（mtime 晚于面）" % (kd, f))
+    out.append("  ⟹ 只有 NEW 类可当增量（这是下界；MOD 类的增量未知，要精确分解须逐文件快照"
+               " ⇒ 本件已同时落 %s，下一轮 --drift 可现算）" % os.path.basename(SNAP_NAME))
+    out.append("  归因账单（下界==位移量 ⇒ 位移全部点得到文件名；下界<位移量 ⇒ 还有未点名的贡献者，不许写「归因完成」）：")
+    for code, dk in (("CM", "CM 命中行"), ("WW", "WW 命中行"), ("HLS", "HLS 命中行")):
+        if pubs[dk] is None:
+            out.append("     %s 面上无该读数 ⇒ 不比" % code)
+            continue
+        d, l = nows[dk] - pubs[dk], lb.get(code, 0)
+        out.append("     %s 位移 %+d／NEW 下界 %d ⇒ %s" % (
+            code, d, l, "闭合" if l == d else "未闭合，还差 %+d（未点名者）" % (d - l)))
+    if pubs["J6 轮廓文件"] is not None:
+        j6_new = sum(1 for _, kd in prof_new if kd == "NEW")
+        j6_d = nows["J6 轮廓文件"] - pubs["J6 轮廓文件"]
+        out.append("     J6 位移 %+d／NEW 文件 %d 枚 ⇒ %s" % (
+            j6_d, j6_new,
+            "闭合（这一项分母是文件数，每枚新文件恰好 +1；仍不排除「一枚掉出、一枚补上」的相消，那要靠快照逐文件比）"
+            if j6_new == j6_d else "未闭合，还差 %+d（多为 MOD 文件新长出的轮廓行）" % (j6_d - j6_new)))
+    out.append("")
+    out.append("结论：%d/%d 项分母在面落地后发生位移 ⇒ 本面所有行数只值「取样时刻」这一格，引用前现读"
+               % (moved, len(pubs)))
+    out.append("")
+    # 同轮闸门复跑：--check 的红不许只活在 stdout 里，抄进本面才有载体
+    saved_argv = list(sys.argv)
+    del SELF_EXCLUDED[:]          # 否则 main() 再走一遍 walk() 会把载体名单叠成两份
+    try:
+        sys.argv = [saved_argv[0], "--check"]
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            check_rc = main()
+    finally:
+        sys.argv = saved_argv
+    chk = " / ".join(x.strip() for x in buf.getvalue().splitlines() if x.strip())
+    out.append("同轮闸门复跑：--check rc=%d；判据输出：%s" % (check_rc, chk))
+    out.append("  （--check 的红是分母被上面的位移推着走，不是面被改坏：面 md5 仍是 %s）" % md5(OUT_SRC))
+    out.append("")
+    face = "\n".join(out) + "\n"
+    wp = os.path.join(S14, "09_验证结果", "原始运行记录",
+                      "tuft_symmetry_theorems_spin_census_20261010_漂移见证.txt")
+    with io.open(wp, "w", encoding="utf-8", newline="") as f:
+        f.write(face)
+    print(face)
+    b = open(wp, "rb").read()
+    print("WROTE %s  %d B  LF=%d  md5=%s" % (rel(wp), len(b), b.count(b"\n"), md5(wp)))
+    # 逐文件快照：下一轮拿它现算增量分解（本面落地时没留，所以本轮只能给下界）
+    snap = ["# 逐文件快照 -- generated by --drift（.tsv 不在 MD_PY 里，不会被自己的普查数到）",
+            "# 取样时刻\t" + time.strftime("%Y-%m-%d %H:%M:%S"),
+            "# 列：channel\tfile\tcount"]
+    per = {}
+    for code, cls, n, f, i, ln in cens:
+        per[(code, f)] = per.get((code, f), 0) + 1
+    for (code, f) in sorted(per):
+        snap.append("%s\t%s\t%d" % (code, f, per[(code, f)]))
+    for r in sorted(rows, key=lambda x: x[0]):
+        snap.append("J6\t%s\t%d" % (r[0], r[1]))
+    for f5 in sorted(dp_files):
+        snap.append("J5D\t%s\t%d" % (f5, dp_files[f5]))
+    for c in cl:
+        snap.append("J7\t%s\t%d" % (c[0], c[1]))
+    sp = os.path.join(S14, "09_验证结果", "原始运行记录", SNAP_NAME)
+    body_rows = len(snap) - 3
+    if body_rows < 50 or dp != sum(dp_files.values()):
+        print("DRIFT FAIL: 快照行数=%d（<50 视为空扫描）或 J5D 自和不符" % body_rows)
+        return 1
+    with io.open(sp, "w", encoding="utf-8", newline="") as f:
+        f.write("\n".join(snap) + "\n")
+    sb = open(sp, "rb").read()
+    print("SNAP 数据行=%d（CM/WW/HLS %d＋J6 %d＋J5D %d＋J7 %d）"
+          % (body_rows, len(per), len(rows), len(dp_files), len(cl)))
+    print("WROTE %s  %d B  LF=%d  md5=%s" % (rel(sp), len(sb), sb.count(b"\n"), md5(sp)))
+    return 0
+
 
 if __name__ == "__main__":
     try:
@@ -719,4 +920,6 @@ if __name__ == "__main__":
         pass
     if len(sys.argv) > 1 and sys.argv[1] == "--mutant":
         sys.exit(mutant_selftest())
+    if len(sys.argv) > 1 and sys.argv[1] == "--drift":
+        sys.exit(drift_witness())
     sys.exit(main())

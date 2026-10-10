@@ -170,3 +170,5 @@
   满足 A1–A6 且复现 D1–D4 的作用量 U_Q(ρ) 即合法预言 α。红线：框架/公理，无虚构预言。
   代码 `07_计算复现/源码/tuft_v32_alpha_framework.py`、运行记录
   `09_验证结果/原始运行记录/tuft_v32_alpha_framework_report.txt`，登记 `claims.csv` C0095。）
+- [TUFT V3.2 参数拟合：α 扩展攻防链与严格标准定位（分析 §三十八–§四十三）](tuft_v32_参数拟合_伴随梯度与自旋约束_分析.md)
+  （2026-10-11，C0119–C0126 主线攻破：β-γ 系统不动点自洽（C0119，示意 β(α*)=0、β'(α*)=1.55e-3>0 稳定 IR 不动点；γ_m∝β_α 关联 ⟹ γ_m(α*)=0 自动自洽，两 RG 未知收敛为一个 β_α）；候选 β 函数族筛选（C0120，C 型 ∝α²(α/α*-1) 唯一满足稳定 IR 不动点+自然系数，TUFT 挠率扇区需提供过零负 β 贡献）；挠率耦合圈贡献对 β 负面（C0121，λ²/β_QED=1.69e-45 差 45 数量级，排除 λ 圈贡献机制）；严格物理标准评估+V5.0 量纲审计（C0122，七障碍对照均未解决；反向发现 V5.0 F_T 量纲不闭合 ML³T⁻²）；挠率力量纲修复（C0123，F_T=-mc²∇(ℓ_P²T²) 量纲闭合（ℓ_P 幂次 4→2），V_T=mc²·ℓ_P²T² 量纲正确挠率耦合势候选）；真空能障碍量级审计负面（C0126，ρ_T=3.49e90 J/m³ 超暗能量 ~99 数量级，宇宙学常数问题未解决）。诚实定位：TUFT=低能电子两尺度结构已验证（C0034-C0121）+统一七障碍未解决，不宣称终结四力。代码 `07_计算复现/源码/tuft_v32_beta_gamma_fixedpoint.py`、`tuft_v32_beta_family_screening.py`、`tuft_v32_torsion_beta_contribution.py`、`tuft_v32_strict_standard_audit.py`、`tuft_v32_torsion_force_dimension.py`、`tuft_v32_vacuum_energy_audit.py`，运行记录 `09_验证结果/原始运行记录/*_report.txt`，登记 `claims.csv` C0119–C0123、C0126（C0124/25 并行占用）。）
