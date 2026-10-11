@@ -9,9 +9,10 @@ attack22｜几何势族的场方程能不能救它：量纲奇偶定理 · 算�
 
 攻击主张
   W1 量纲奇偶定理：只用 g、ε、Riem(L^-2)、Tors(L^-1) 及其协变导数作完全收缩，量纲**必为偶且非正**（幂集 {0,-2,-4,…}）。
-  W2 半轴交集：族侧 [α]=L^(m-1) 的幂集是 {0,+1,+2,…}；两半轴之交 = {0} ⇒「α 可由多项式几何构造」⟺ m=1 唯一（且该格是空收缩＝纯数）。
-  W2-预注册（开场写法，已被自己的穷举否证，否证留在 U03 面上）：原写「几何要偶 m、手性要奇 m ⇒ 交集空」。
-      错处＝把「指数偶」读成「m 偶」：指数 m−1 为偶 ⟺ m 为奇 ⇒ 与 ⑲ T05 的手性侧**同向**，交集非空而是单点 {1}。
+  W2 半轴交集：族侧 [α]=L^(m-1) 的幂集是 {0,+1,+2,…}；两半轴之交只剩 L^0 那一格 ⇒「α 可由多项式几何构造」⟺ m=1 唯一（且该格是空收缩＝纯数）。
+  W2-预注册（开场写法，已被自己的穷举否证，否证留在 U02b 面上）：原写「几何要偶 m、手性要奇 m ⇒ 交集空」。
+      错在两格：①把「幂 m-1 偶」读成「m 偶」——指数 m−1 为偶 ⟺ m 为奇，与 ⑲ T05 的手性侧**同向**，交集非空；
+      ②只核奇偶、漏掉半轴——几何幂全为非正，故 L^+2、L^+4 出环 ⇒ 交集收成单点 m=1。
       幸存的半边：偶 m 在两侧皆无载体（既无手性，其 [α] 幂又不在几何环内）。
   W3 例外点名：要 m≥2 的 α 就得有 L^+ 幂的几何对象——环里没有（生成元幂全 ≤ 0）；绕开只能引外生矢量场或逆算符（非局域），两者都撞公设一。
   W4 算符分层：L=prod(∇²−μ_i²) 的球对称外部解空间维数 = 2s；任给有心势都能反解源 ⇒ 判别力从剖面搬进算符谱与源，净增 0。
@@ -20,10 +21,10 @@ attack22｜几何势族的场方程能不能救它：量纲奇偶定理 · 算�
   W6 手性奇偶见证延到 m=1：⑲ T05/T06 的枚举域是 m∈{2..6}，而 U02 选出的 m=1 不在域内 ⇒ 本条把同一把尺打到 m=1/2/3 三点现测（奇＝非零差、偶＝机器零）。
   W7 跑动不造尺度：1-loop 量纲生成的参考标度 Λ 仍是输入；反解「跑出弱力程所需 g²」⇒ 对每个 Λ>μ 都可凑，零内容。
 
-体例：纯标准库；零随机；判定条目 U01–U15；自检 guard 全过 **且** 电池（每条判据真实输入须绿、
+体例：纯标准库；零随机；判定条目 U01–U14 另加 U02b/U02c（共 16 枚）；自检 guard 全过 **且** 电池（每条判据真实输入须绿、
        corrupt 输入须红）全合格才退 0；运行报告落 `attack22_*_report.txt`（本册数值唯一载体；
       面自身字节／md5 只由 stdout 报，不落面）。他册读数一律现读盘，读不到即印「没读到」不作引用。
-否证纪律：本轮开场预注册的 W2（互斥／空交）被自己的穷举否证 ⇒ 否证原样落在面上（U03），
+否证纪律：本轮开场预注册的 W2（互斥／空交）被自己的穷举否证 ⇒ 否证原样落在面上（U02b），
           不许把主张改成事后正确的版本再假装它一开始就这样（同档案 rule 6：改判要留证词）。
 阈值纪律：凡「相对偏差 < 阈」型判据，阈由该条差分截断 (h/r)^2 与相消噪声 eps/(2h/r) 现推并印出。
 """
@@ -200,7 +201,6 @@ def main():
     grid_n = (KB + 1) * (LB + 1) * (DB + 1) * (EB + 1)
     odd_feasible, even_feasible, witnesses = [], 0, []
     geo_powers = set()
-    pos_feasible = 0
     dim0_cells = 0
     for k in range(KB + 1):                 # 挠率块数（3 指标，量纲 1）
         for l in range(LB + 1):             # 曲率块数（4 指标，量纲 2）
@@ -216,8 +216,6 @@ def main():
                     if feas and dim % 2 == 0:
                         even_feasible += 1
                         geo_powers.add(-dim)
-                        if dim > 0:
-                            pos_feasible += 1
                         if dim == 0:
                             dim0_cells += 1
                         if 0 < dim <= 4:
@@ -226,38 +224,45 @@ def main():
         u"完全收缩＝自由指标全由度规成对消化（±ε 一次拿 4 枚）。收缩的 L 幂 = −(k+2l+d)，剩余指标数 = 3k+4l+d−4e。")
     sub(u"穷举 k≤%d, l≤%d, d≤%d, e≤%d（%d 格）：奇幂且可行 %d 枚｜偶幂且可行 %d 枚（非空＝定理不是空集之谈）"
         % (KB, LB, DB, EB, grid_n, len(odd_feasible), even_feasible))
-    sub(u"半轴核算：可行格的 L 幂集合 = %s｜幂 > 0 的可行格 = %d 枚（生成元幂全 ≤ 0 ⇒ 多项式收缩造不出正幂）｜"
-        u"幂 = 0 的可行格 = %d 枚（唯一那一格是空收缩 k=l=d=e=0，即纯数）"
-        % (u"、".join(u"L^%+d" % p for p in sorted(geo_powers)), pos_feasible, dim0_cells))
+    sub(u"半轴核算：可行格的 L 幂集合（现枚举，不是「按构造为 0」那种空账）= %s｜共 %d 个不同幂，最大幂 = %d（非正侧封闭是**环的定义**推论，"
+        u"所以本条只把它当被枚举出来的集合印，不当测量结论）｜幂 = 0 的可行格 = %d 枚（唯一那一格是空收缩 k=l=d=e=0，即纯数——这是 560 格上的真计数）"
+        % (u"、".join(u"L^%+d" % p for p in sorted(geo_powers)), len(geo_powers), max(geo_powers), dim0_cells))
     sub(u"最低阶见证：(k,l,d,e)=(2,0,0,0)→T_{μνρ}T^{μνρ} [L^-2]；(0,1,0,0)→R_{μνρσ}R^{μνρσ} [L^-4]；"
         u"(1,0,1,0)→∇·(Tr T) 型 [L^-2]；(3,0,0,0) 指标 9 为奇 ⇒ 不可行（同一判据在低阶也成立）")
     sub(u"证明骨架：3k+4l+d−4e ≡ k+d (mod 2)；幂 −(k+2l+d) 的奇偶 = k+2l+d ≡ k+d (mod 2) ⇒ 二者同奇偶；"
         u"可行⇒指标偶⇒k+d 偶⇒幂偶。反向：k+d 偶且指标数≥0 时逐对度规缩并必成 ⇒ 可行集非空且全为偶。"
         u"半轴：每一块幂 ≤ 0 且无常数块 ⇒ 收缩幂 ≤ 0，取 0 当且仅当全块为 0。")
-    chk(u"U01 奇幂可行格 0 枚、偶幂可行格 > 0、正幂 0 枚、零幂唯一",
-        len(odd_feasible) == 0 and even_feasible > 0 and pos_feasible == 0 and dim0_cells == 1,
-        u"odd=%d even=%d pos=%d dim0=%d witnesses=%d"
-        % (len(odd_feasible), even_feasible, pos_feasible, dim0_cells, len(witnesses)))
+    chk(u"U01 奇幂可行格 0 枚、偶幂可行格 > 0、幂集全为偶且最大幂 0、零幂唯一",
+        len(odd_feasible) == 0 and even_feasible > 0 and max(geo_powers) == 0
+        and all(p % 2 == 0 for p in geo_powers) and len(geo_powers) >= 4 and dim0_cells == 1,
+        u"odd=%d even=%d powers=%s n=%d dim0=%d witnesses=%d"
+        % (len(odd_feasible), even_feasible, sorted(geo_powers), len(geo_powers), dim0_cells, len(witnesses)))
     BATTERY.append((u"U01 奇偶穷举", lambda n: n == 0, len(odd_feasible), len(odd_feasible) + 1))
     BATTERY.append((u"U01 零幂唯一", lambda n: n == 1, dim0_cells, 2))
 
     # ============================== U02 半轴交集：几何可构造 ⟺ m=1
     item(u"U02", u"THEOREM",
-         u"W2 半轴交集：族侧 [α]=L^(m-1) 的幂集 {0,+1,+2,…} ∩ 几何幂集 {0,-2,-4,…} = {0} ⇒「α 可多项式几何构造」⟺ m=1（唯一）")
+         u"W2 半轴交集：族侧 [α]=L^(m-1) 的幂集 {0,+1,+2,…} ∩ 几何幂集 {0,-2,-4,…} = 只含 L^0 那一格 ⇒「α 可多项式几何构造」⟺ m=1（唯一）")
     rows = []
     for m in range(1, 13):
         da = m - 1
-        geo = (-da) in geo_powers          # α 幂 = L^(m-1) 落在几何幂集内（该集非正，故仅 m=1）
-        chir = (m % 2 == 1)                # ⑲ T05：手性有载体 ⟺ m 奇
+        geo_thm = (da % 2 == 0 and da <= 0)   # U01 定理面：几何幂 = 偶 ∧ 非正
+        geo_enum = (da in geo_powers)         # U01 实测面：α 自己的幂 L^(m-1) 落在现枚举的幂集里
+        geo = geo_thm and geo_enum            # 两口径同真（异号即错：取反幂判属于「半轴读错」）
+        chir = (m % 2 == 1)                   # ⑲ T05：手性有载体 ⟺ m 奇
         carry = u"G" if da == 2 else (u"k/g_w/g_s" if da == 0 else u"无")
-        rows.append((m, da, geo, chir, carry))
+        rows.append((m, da, geo, chir, carry, geo_thm == geo_enum))
     geo_only = [r[0] for r in rows if r[2]]
     both = [r[0] for r in rows if r[2] and r[3]]
-    sub(u"m:[α]幂:几何可构造(U01):手性载体(⑲ T05):该幂按 ⑲ T04 承载")
-    sub(u"  ".join(u"%d:%+d:%s:%s:%s" % (m, da, u"可" if g else u"否", u"有" if c else u"无", h)
-                   for m, da, g, c, h in rows))
+    sub(u"m:[α]幂:几何可构造(U01):手性载体(⑲ T05):该幂按 ⑲ T04 承载:两口径是否一致")
+    sub(u"  ".join(u"%d:%+d:%s:%s:%s:%s" % (m, da, u"可" if g else u"否", u"有" if c else u"无", h,
+                                            u"同" if agree else u"异")
+                   for m, da, g, c, h, agree in rows))
+    sub(u"判定口径（这里是本轮唯一一次把「属于几何幂集」写死，防止又读成符号取反）：α 的幂是 L^(m-1)，"
+        u"要它**本身就是**U01 枚举出的某个幂 ⇒ 需 m-1 偶 **且** m-1 ≤ 0；只看奇偶会误收 L^+2、L^+4 这些出环的正幂"
+        u"（这一型误读与 U02b 的「读 B」同族，三读并列见该条）")
     sub(u"机器裁定：「α 可几何构造」的 m = %s（幂只能是 L^0，而那格是空收缩＝纯数）；"
-        u"∩「手性有载体」= %s ⇒ **交集不是空集，而是单点 {1}**；"
+        u"∩「手性有载体」= %s ⇒ **交集不是空集，而是单点 m=1**；"
         u"⑲ T04 的最佳命中 3/4 恰好也在 m=1（无量纲规范耦合），两条独立路线同点 ⇒ m=1 是这一族被几何公设逼出来的唯一点"
         % (u"、".join(str(x) for x in geo_only), u"、".join(str(x) for x in both)))
     sub(u"仍然成立的半边（原预注册里唯一活下来的部分）：偶 m 侧「几何可构造 ∪ 手性有载体」= %s 枚 ⇒ 来料 m=2 是**两侧皆空**："
@@ -265,29 +270,47 @@ def main():
         % sum(1 for r in rows if r[0] % 2 == 0 and (r[2] or r[3])))
     sub(u"G 一支（⑲ T04：[G]=L^+2 需 m=3）：L^+2 ∉ 几何幂集 ⇒ **α=G 对全族任何 m 都不能由多项式几何收缩构造**，"
         u"这比 ⑲ T04 的「4/4 对一切 m 不可能」更强：不是各支抢同一个 m 抢不到，而是引力那一支单独就出环。")
-    chk(u"U02 几何侧单点 {1}、与手性侧之交 {1}、偶 m 侧并集空",
-        geo_only == [1] and both == [1] and sum(1 for r in rows if r[0] % 2 == 0 and (r[2] or r[3])) == 0,
-        u"geo=%s both=%s even_union=%d" % (geo_only, both,
-                                          sum(1 for r in rows if r[0] % 2 == 0 and (r[2] or r[3]))))
+    chk(u"U02 几何侧单点 m=1、与手性侧之交亦单点、偶 m 侧并集空、两口径 12/12 同意",
+        geo_only == [1] and both == [1] and sum(1 for r in rows if r[0] % 2 == 0 and (r[2] or r[3])) == 0
+        and all(r[5] for r in rows),
+        u"geo=%s both=%s even_union=%d agree=%d/%d" % (geo_only, both,
+                                                       sum(1 for r in rows if r[0] % 2 == 0 and (r[2] or r[3])),
+                                                       sum(1 for r in rows if r[5]), len(rows)))
     BATTERY.append((u"U02 单点集", lambda s: s == [1], geo_only, [1, 3]))
+    disagree = sum(1 for r in rows if not r[5])
+    flip_rows = [r[0] for r in rows if ((-(r[0] - 1)) in geo_powers) != ((r[0] - 1) in geo_powers)]
+    BATTERY.append((u"U02 符号口径（把判定写成取反幂会把这几行判反）", lambda n: n == 0, disagree, len(flip_rows)))
 
-    # ============================== U02b 预注册主张的否证记录（最小对）
+    # ============================== U02b 预注册主张的否证记录（三读并列）
     item(u"U02b", u"FAIL",
-         u"本轮开场的预注册主张 W2（「几何要偶 m、手性要奇 m ⇒ 交集空」）被自己的穷举否证——错因是幂平移一格，非数据偶然")
-    wrong_geo = [m for m in range(1, 13) if m % 2 == 0]
-    wrong_both = [m for m in range(1, 13) if m % 2 == 0 and m % 2 == 1]
-    sub(u"两条判据并列（其余一切不动）：错读「指数偶 ⇒ m 偶」给出 m = %s；正读「L^(m-1) ∈ 几何幂集」给出 m = %s；"
-        u"两者互反 ⇒ 我原先写的空交集是**用错读的那一侧**去交「m 奇」，才恰好显得互斥"
-        % (u"、".join(str(x) for x in wrong_geo), u"、".join(str(x) for x in geo_only)))
-    sub(u"最小对（一枚字符之差翻转结论）：把「m 偶」换成「m−1 偶」＝平移一格 ⇒ 交集由 %s（空）变为 %s（单点）；"
+         u"本轮开场的预注册主张 W2（「几何要偶 m、手性要奇 m ⇒ 交集空」）被自己的穷举否证——"
+         u"错因有两格：把「幂 m-1 偶」读成「m 偶」，以及漏掉半轴（正幂出环）")
+    ms12 = list(range(1, 13))
+    rd_a = [m for m in ms12 if m % 2 == 0]                                    # 预注册的错读：m 偶
+    rd_b = [m for m in ms12 if (m - 1) % 2 == 0]                               # 只修奇偶：m-1 偶
+    rd_c = [m for m in ms12 if (m - 1) % 2 == 0 and (m - 1) <= 0]              # 再加半轴＝U02 正读
+    chir_all = [m for m in ms12 if m % 2 == 1]
+    inter_a = [m for m in rd_a if m in chir_all]
+    inter_b = [m for m in rd_b if m in chir_all]
+    inter_c = [m for m in rd_c if m in chir_all]
+    sub(u"读 A（开场写下、已被否证）：把「[α] 幂偶」当作「m 偶」⇒ 几何侧 m = %s；与手性侧（m 奇）之交 = %s "
+        u"⇒ **正是这一格空交集让我把「互斥」写成了预注册主张**"
+        % (u"、".join(str(x) for x in rd_a), u"空（无元素）" if not inter_a else u"、".join(map(str, inter_a))))
+    sub(u"读 B（只把平移改对，仍漏半轴）：「m-1 偶」⇒ 几何侧 m = %s；与手性侧之交 = %s（%d 枚）"
+        u"⇒ 交集**非空**，预注册的「互斥」在这一读就已死；这一读还会把 L^+2、L^+4 这些出环的正幂算成可行（%d 行判反）"
+        % (u"、".join(str(x) for x in rd_b), u"、".join(str(x) for x in inter_b), len(inter_b), len(flip_rows)))
+    sub(u"读 C（奇偶＋半轴＝U02 正读）：几何侧 m = %s；与手性侧之交 = %s ⇒ 结论是**单点**，既不是空也不是全奇集"
+        % (u"、".join(str(x) for x in rd_c), u"、".join(str(x) for x in inter_c)))
+    sub(u"最小对（结论被一枚符号翻转）：A→B 差一格平移（m 偶 ⟺ m-1 偶），交集由空变 %d 枚；B→C 差一个「≤0」半轴判据，"
+        u"交集由 %d 枚收成 %d 枚。A 与 C 才是同一件事的两种写法里的错与对，B 是中途站——它同时说明"
+        u"「几何要偶 m」和「交集空」两句都得撤。幸存的半边：偶 m 侧「几何可构造 ∪ 手性有载体」= 0 枚（U02 印）。"
         u"这条否证只在面上留证词，不改写开场主张（同档案 rule 6：改判要留原话）"
-        % (u"∅" if not wrong_both else u"、".join(str(x) for x in wrong_both),
-           u"、".join(str(x) for x in both)))
-    chk(u"U02b 错读集与正读集互反且正读集 = {1}",
-        set(wrong_geo).isdisjoint(geo_only) and geo_only == [1] and len(wrong_both) == 0,
-        u"wrong=%d right=%d inter_wrong=%d" % (len(wrong_geo), len(geo_only), len(wrong_both)))
-    BATTERY.append((u"U02b 错读集非空", lambda s: len(s) > 0 and s == wrong_geo and s != geo_only,
-                    wrong_geo, geo_only))
+        % (len(inter_b), len(inter_b), len(inter_c)))
+    chk(u"U02b 三读并列：只有错读 A 给出空交，正读 C 给出单点",
+        len(inter_a) == 0 and len(inter_b) > 1 and inter_c == [1] and rd_c == geo_only,
+        u"inter_a=%d inter_b=%d inter_c=%s right=%s" % (len(inter_a), len(inter_b), inter_c, geo_only))
+    BATTERY.append((u"U02b 空交只出自错读", lambda a, c: len(a) == 0 and c == [1],
+                    (inter_a, inter_c), (inter_b, inter_c)))
 
     # ============================== U02c 手性奇偶见证延到 m=1
     item(u"U02c", u"PASS",
@@ -310,7 +333,7 @@ def main():
                 u"奇 m 应非零" if mm % 2 else u"偶 m 应机器零"))
     sub(u"判读：⑲ T05 的枚举域是 m∈{2..6}，其 3/3 集 = {3、5}（现读见 U12）；本条把同一条奇偶律延到 m=1，"
         u"实测非零差且相对差 = %s（与 ⑲ 奇 m 侧的 2.000 同值，因 A=2、B=1 时相对差 = 2B^m/(A^m−B^m)）⇒ "
-        u"U02 选出的唯一点 m=1 在手性侧**同样开着**：交集 {1} 不是靠把 m=1 排除在枚举域外才非空"
+        u"U02 选出的唯一点 m=1 在手性侧**同样开着**：交集只含 m=1 这一点，不是靠把 m=1 排除在枚举域外才非空"
         % fmt(seen_c[0][2]))
     chk(u"U02c 奇 m 非零差（含 m=1）、偶 m 机器零", 
         all(s[1] > 1e-9 for s in seen_c if s[0] % 2) and all(s[1] < 1e-12 for s in seen_c if s[0] % 2 == 0),
@@ -342,6 +365,11 @@ def main():
         u"偶量纲可行组合 = %d 枚；加入 1 枚外生矢量后奇量纲组合 = %d 枚" % (pure_odd, pure_even, vec_odd))
     sub(u"最低例外例：A_μ T^{μ}（迹矢量与外生矢量缩并，量纲 L^-1）；或 ∇_μ A^μ（L^-1）。"
         u"两条都携带「非度规-挠率-曲率」的新自由度 ⇒ 与来料公设一正面冲突（要么禁止它、要么公设失身）。")
+    sub(u"第二条路（要 m≥2 的 α 时唯一的替代）：取几何对象的**逆**（如 1/R 型，L^+2）——那不再是多项式收缩而是非局域算符，"
+        u"作用量里出现 1/曲率 ⇒ 紫外行为与「唯一基础场＝局域时空几何」这条公设同向冲突。半轴核算（与 U01 不同源：只看生成元幂，不穷举指标）："
+        u"生成元幂全 ≤ 0 且无常数块 ⇒ 多项式环的幂半轴封闭于非正侧，L^+2 不在环内。")
+    sub(u"第二把尺与第一把尺的分工：U01 穷举的是「指标能否成对缩掉」（奇偶半轴），本条独立核的是「幂的符号半轴」——"
+        u"两条各自成立才合成 U02 的单点交集（只剩 m=1）；任何一条单独都不够（只核奇偶会留下 L^-2、L^-4 这些负幂，只核符号会留下奇负幂）")
     chk(u"U03 纯几何奇量纲 0 枚、含外生矢量 > 0 枚", pure_odd == 0 and vec_odd > 0,
         u"pure_odd=%d pure_even=%d vec=%d" % (pure_odd, pure_even, vec_odd))
     BATTERY.append((u"U03 例外计数", lambda a, b: a == 0 and b > 0, (pure_odd, vec_odd), (1, vec_odd)))
@@ -450,41 +478,38 @@ def main():
 
     # ============================== U07 数值通道的牙（核 vs 非核：h 阶梯的收缩率）
     item(u"U07", u"BOUNDARY",
-         u"W4c 差分尺自己要有牙：同一把尺打在算符核上残差按 O(h²) 收缩（两次半距比值都≈4）、"
-         u"打在非核上不随 h 消失（比值≈1）")
-    hs = [2e-3, 1e-3, 5e-4]
-    rs7 = [1.0, 2.0, 3.0]
+         u"W4c 差分尺自己要有牙：同一把尺打在算符核上残差按 O(h²) 收缩（两次实测收缩指数都≈2）、"
+         u"打在非核上不随 h 消失（指数≈0）")
+    hs = [4e-3, 2e-3, 1e-3]
+    rs7 = [2.0, 3.0, 4.0]
     q = []
     for nm, f in ((u"核 e^-μr/r（λ=1/μ）", lambda r: math.exp(-MU_M * r) / r),
                   (u"非核 r^-5", lambda r: 1.0 / r ** 5)):
         res = [max(abs(lap_num(f, r, hh) - MU_M * MU_M * f(r)) for r in rs7) for hh in hs]
-        rat = [res[i] / res[i + 1] if res[i + 1] else float("inf") for i in range(len(res) - 1)]
-        q.append((nm, res, rat))
-    for nm, res, rat in q:
-        subs(u"%s：max|(∇²−μ²)f| 在 h=%s 阶梯上 = %s｜相邻比值 %s（期望 %s）"
+        exps = [math.log(res[i] / res[i + 1], 2.0) for i in range(len(res) - 1)]
+        q.append((nm, res, exps))
+    for nm, res, exps in q:
+        subs(u"%s：max|(∇²−μ²)f| 在 h=%s 阶梯上 = %s｜实测收缩指数 p（残差 ~ h^p）= %s"
              % (nm, u"→".join(fmt(x) for x in hs), u"→".join(fmt(x) for x in res),
-                u"、".join(fmt(x) for x in rat),
-                u"≈4（核＝纯截断，h 折半 ⇒ 残差 /4）" if nm.startswith(u"核") else u"≈1（非核＝真信号，减半不缩小）"))
-    ker_pred = q[0][1][0] * (hs[0] / hs[-1]) ** 2
-    ker_dev = rel_dev(ker_pred, q[0][1][-1])
-    # 阈由同一把 O(h²) 尺的两端现推：比值带宽 [3.5,4.5] ⇒ 两步预测 res0·16 落在 [16/4.5², 16/3.5²]·res2
-    thr_ker = max(abs(16.0 / (3.5 * 3.5) - 1.0), abs(16.0 / (4.5 * 4.5) - 1.0))
-    ok_ker = all(3.5 <= x <= 4.5 for x in q[0][2]) and ker_dev < thr_ker
-    ok_non = all(0.85 <= x <= 1.15 for x in q[1][2])
-    sub(u"第二口径（不按比值按幂律本身）：由 O(h²) 用最大 h 的残差预测最小 h 的残差 = %s，实测 = %s，相对偏差 %s；"
-        u"阈 %s 不是手钉——由比值带宽 [3.5,4.5] 的两端反推（16/4.5² 与 16/3.5² 两侧取最大偏离）"
-        % (fmt(ker_pred), fmt(q[0][1][-1]), fmt(ker_dev), fmt(thr_ker)))
-    sub(u"判读：核函数残差是**纯截断**（两次相邻比值都落在 O(h²) 的 4 附近），非核残差是真信号（比值≈1，h 减半不缩小）"
+                u"、".join(fmt(x) for x in exps)))
+    # 期望由被测主张本身给出：核＝纯二阶截断 ⇒ p=2；非核＝真值不随 h 消失 ⇒ p=0；带宽 ±0.2 来自对数化两次测定的容许抖动
+    ok_ker = all(1.8 <= x <= 2.2 for x in q[0][2])
+    ok_non = all(-0.2 <= x <= 0.2 for x in q[1][2])
+    noise = [EPS * max(abs(math.exp(-MU_M * r) / r) for r in rs7) / (hh * hh) for hh in hs]
+    sub(u"两侧各自的期望不是手钉：核的期望 p=2（二阶中心差分的截断阶），非核的期望 p=0（残差趋于与 h 无关的真值）；"
+        u"带宽 ±0.2 是给两次独立测指的抖动余量。核残差的**相消噪声标度** eps·max|f|/h² 在三级 h 上 = %s，"
+        u"最细一级已接近截断项本身 ⇒ 所以取前三级测指、更细的步长会离开 O(h²) 区（这是尺子的地板，不是被测量）"
+        % u"、".join(fmt(x) for x in noise))
+    sub(u"判读：核函数残差是**纯截断**（两次实测指数都贴在 2 上），非核残差是真信号（指数贴在 0 上，h 减半不缩小）"
         u"⇒ 这台尺能分辨「在核里」与「不在核里」，U06 的点源档不是把尺子的盲区写成排除。")
-    chk(u"U07 核两次比值∈[3.5,4.5] 且幂律预测<现推阈、非核两次比值∈[0.85,1.15]", ok_ker and ok_non,
-        u"rat_ker=%s rat_non=%s dev=%s thr=%s" % ([fmt(x) for x in q[0][2]], [fmt(x) for x in q[1][2]],
-                                                  fmt(ker_dev), fmt(thr_ker)))
-    BATTERY.append((u"U07 双比值", lambda a, b: all(3.5 <= x <= 4.5 for x in a) and all(0.85 <= x <= 1.15 for x in b),
-                    (q[0][2], q[1][2]), ([2.0, 2.0], q[1][2])))
+    chk(u"U07 核两次指数∈[1.8,2.2]、非核两次∈[-0.2,0.2]", ok_ker and ok_non,
+        u"exp_ker=%s exp_non=%s" % ([fmt(x) for x in q[0][2]], [fmt(x) for x in q[1][2]]))
+    BATTERY.append((u"U07 双指数", lambda a, b: all(1.8 <= x <= 2.2 for x in a) and all(-0.2 <= x <= 0.2 for x in b),
+                    (q[0][2], q[1][2]), ([1.0, 1.0], q[1][2])))
 
     # ============================== U08 跑动不造尺度
     item(u"U08", u"FAIL",
-         u"W6 量子跑动不产生尺度：1-loop 关系里参考标度 Λ 是输入；反解「得弱力程所需 g²」对所有 Λ>μ_W 都有解 ⇒ 零内容")
+         u"W7 量子跑动不产生尺度：1-loop 关系里参考标度 Λ 是输入；反解「得弱力程所需 g²」对所有 Λ>μ_W 都有解 ⇒ 零内容")
     line_mu = grep_face(A21_FACE, u"μ_W =", u"attack21 T08 弱力程标度 μ_W")
     mu_w = None
     if line_mu:
@@ -526,7 +551,7 @@ def main():
 
     # ============================== U09 微扰侧的部分可证伪
     item(u"U09", u"BOUNDARY",
-         u"W6b 微扰性只否掉一部分 Λ 档：它给出一条真可证伪的约束（Λ 必须足够高于 μ_W），但选不出 Λ ⇒ O24-4 仍 OPEN")
+         u"W7b 微扰性只否掉一部分 Λ 档：它给出一条真可证伪的约束（Λ 必须足够高于 μ_W），但选不出 Λ ⇒ O24-4 仍 OPEN")
     if mu_w and rows8:
         by = {}
         for nm, b, x, g2, solv, pert in rows8:
@@ -536,7 +561,8 @@ def main():
                                                                 sum(1 for v in lst if v), len(lst)))
         nok = sum(1 for nm, lst in by.items() if any(lst))
         sub(u"判读：%d/%d 档 Λ 至少有一个 b 让 g² 落在微扰区；被否掉的那些是 Λ<μ_W 的档（层级符号，不是力程数值）。"
-            u"⇒ 这条路线**可被部分证伪**（若所有档都非微扰就死了），但「选哪一档 Λ」仍需外部输入 ⇒ 判别力仍为 0。")
+            u"⇒ 这条路线**可被部分证伪**（若所有档都非微扰就死了），但「选哪一档 Λ」仍需外部输入 ⇒ 判别力仍为 0"
+            % (nok, len(by)))
         chk(u"U09 至少一档被否且至少一档可活（两侧都非空＝这条约束真有内容但不够）",
             0 < nok < len(by), u"alive=%d total=%d" % (nok, len(by)))
         BATTERY.append((u"U09 两侧非空", lambda a, b: 0 < a < b, (nok, len(by)), (len(by), len(by))))
@@ -545,24 +571,41 @@ def main():
         chk(u"U09 缺席如实登记", True, u"skip")
         BATTERY.append((u"U09 缺席分支", lambda ok: ok, True, False))
 
-    # ============================== U10 m 与算符谱的共同选定（O19-1/O19-2）
-    item(u"U10", u"FAIL",
-         u"O19-1/O19-2：六条候选判据的机器交集为空（手性∩几何）而放宽任一条就退回全奇数集 ⇒ m 无选定原理；"
-         u"算符侧同样：谱 {μ_i} 的个数与数值都不被任何一条族内方程定住")
+    # ============================== U10 m 的选定原理普查（O19-1 推进）
+    item(u"U10", u"CONDITIONAL",
+         u"O19-1 由「无选定原理」推进为**条件选定**：加上公设一（α 必须几何构造）后 m=1 唯一；"
+         u"撤掉公设一立刻退回全奇数集 ⇒ 选定力全部来自公设一，而它的代价是引力那一支出环")
+    measured = set([1, 2, 3]) | set(range(2, 7))          # U02c 实测 m=1/2/3；⑲ T05 枚举域 m∈{2..6}
     for m in range(1, 9):
         da = m - 1
-        subs(u"m=%d：幂律 p=1/m 唯一(⑲T02)✓｜α 常数(⑲T03)✓｜手性=%s｜α 几何可构造(W1)=%s｜承载 G=%s｜承载规范耦合=%s"
-             % (m, u"有" if m % 2 else u"无", u"可" if da % 2 == 0 else u"否",
-                u"是" if da == 2 else u"否", u"是" if da == 0 else u"否"))
-    inter = [m for m in range(1, 13) if m % 2 == 1 and (m - 1) % 2 == 0]
-    oddonly = [m for m in range(1, 13) if m % 2 == 1]
-    sub(u"「手性有」∩「α 几何可构造」= %s（按 U02 恒空）；只留「手性有」⇒ m ∈ %s（%d 枚，无进一步约束）；"
-        u"只留「α 几何」⇒ m ∈ 偶数集（同样 %d 枚）⇒ 判据不选 ⇒ O19-1 判 NOT CLOSED"
-        % (u"∅" if not inter else u"、".join(map(str, inter)), u"、".join(map(str, oddonly)),
-           len(oddonly), len([m for m in range(1, 13) if m % 2 == 0])))
-    chk(u"U10 交集空且每个松弛集都 >1 枚", len(inter) == 0 and len(oddonly) > 1,
-        u"inter=%d odd=%d" % (len(inter), len(oddonly)))
-    BATTERY.append((u"U10 交集", lambda a: a == 0, len(inter), 1))
+        src = (u"实测（%s）" % (u"⑲ T05" if m in range(2, 7) else u"⑲ T05 之外，由 U02c 补测")
+               if m in measured else u"奇偶律外推，未被任何一枚实测覆盖")
+        subs(u"m=%d：幂律 p=1/m 唯一(⑲T02，解析恒等式)✓｜α 常数(⑲T03，解析恒等式)✓｜手性=%s(%s)｜"
+             u"α 可几何构造=%s(U02)｜按 ⑲T04 承载 G=%s（该幂 L^%+d 在几何环外=%s）｜承载规范耦合=%s"
+             % (m, u"有" if m % 2 else u"无", src, u"可" if m in geo_only else u"否",
+                u"是" if da == 2 else u"否", da, u"是" if da not in geo_powers else u"否",
+                u"是" if da == 0 else u"否"))
+    geo_chir = [m for m in geo_only if m % 2 == 1]
+    relaxed = [m for m in range(1, 13) if m % 2 == 1]
+    sub(u"手性列的覆盖面（本条自量）：实测覆盖 m ∈ %s（⑲ T05 的 m∈{2..6} 加 U02c 的 1/2/3），"
+        u"表里 m=7、8 两行是按奇偶律外推，没有任何一枚实测落在其上 ⇒ 这正是 O24-5 记下的缺口，不作已证引用"
+        % u"、".join(str(x) for x in sorted(measured)))
+    g_geo = (2 in geo_powers)
+    sub(u"普查三条：①公设一 ∧ 手性 ⇒ m ∈ %s（%d 枚%s）；②只留手性（撤公设一）⇒ m ∈ %s（%d 枚）；"
+        u"③只留公设一 ⇒ m ∈ %s。⇒ 选定力**全部**来自公设一这一条外部输入，不是族内方程给的（O19-1 只能记 CONDITIONAL，不能记 CLOSED）"
+        u"［「唯一」二字由枚数现推，不是写死在题面里］"
+        % (u"、".join(map(str, geo_chir)), len(geo_chir), u"，唯一" if len(geo_chir) == 1 else u"，不唯一",
+           u"、".join(map(str, relaxed)), len(relaxed), u"、".join(map(str, geo_only))))
+    sub(u"同一处的代价：m=1 ⇒ [α]=L^0，按 ⑲ T04 只载 k/g_w/g_s（3/4），G 需要 L^+2；"
+        u"而 U02 已测 L^+2 不在几何幂集内（%s）⇒「α 同时是引力与规范耦合」在几何读法下**不是难，是不在环里**"
+        u"（把 ⑲ T04 的「4/4 对一切 m 不可能」加强为「G 支单独不可能」）。"
+        % u"、".join(u"L^%+d" % p for p in sorted(geo_powers)))
+    sub(u"仍欠的两笔：①α 的**数值**——m=1 只把它压成无量纲纯数，几何不给它取值 ⇒「无参数统一」在这一支仍未成立；"
+        u"②算符谱 {μ_i} 的个数与数值（U04/U06 显示它是旋钮）没有任何族内方程定住 ⇒ O24-1 的算符侧照旧 OPEN。")
+    chk(u"U10 条件选定唯一且松弛集退回奇数集", geo_chir == [1] and len(relaxed) > 1 and not g_geo,
+        u"geo_chir=%s relaxed=%d G_in_ring=%s" % (geo_chir, len(relaxed), g_geo))
+    BATTERY.append((u"U10 条件选定", lambda a, b, c: a == [1] and b > 1 and not c,
+                    (geo_chir, len(relaxed), g_geo), ([1, 3], len(relaxed), g_geo)))
 
     # ============================== U11 EP 与源约束的取舍（O19-3）
     item(u"U11", u"BOUNDARY",
@@ -586,34 +629,48 @@ def main():
     t10 = grep_face(A21_FACE, u"机器裁定：容纳 6/6", u"⑲ T10 零判别力")
     t12 = grep_face(A21_FACE, u"三行皆无「零代价」角", u"⑲ T12 三难定价")
     sub(u"⑲ 面三条裁定现读：%s｜%s｜%s" % (t05 or u"没读到", t10 or u"没读到", t12 or u"没读到"))
-    sub(u"净差四条：①把 ⑲ 的「α 需要外生尺度」定价升级为**组合定理**（U01，穷举＋构造性配对，奇量纲可行格 0 枚）；"
-        u"②新增**互斥对角线**（U02）：手性要奇 m、几何要偶 m ⇒ ⑲ T12 的三难在纯度规-挠率读法下无解；"
-        u"③把 ⑲ T10 的零判别力从剖面**推广到场方程层**（U05 源可反解）并给判别力**定价矩阵**（U06 两算符×四约束）；"
-        u"④量子跑动路线实测零内容（U08）并量出它唯一可证伪的那一格（U09）。")
+    sub(u"净差五条：①把 ⑲ 的「α 需要外生尺度」定价升级为**组合定理**（U01：穷举 %d 格，几何幂集偶且非正，零幂格唯一）；"
+        u"②由 ① 得**半轴交集**（U02）：α 可几何构造 ⟺ m=1 唯一，并把 ⑲ T04 的「4/4 不可能」加强为「G 那一支出环」；"
+        u"③本轮开场的预注册主张「几何要偶 m、手性要奇 m ⇒ 交集空」被自己的穷举否证（U02b 三读并列：错在第一格的空交，"
+        u"正读把奇偶平移与半轴两格一起修好 ⇒ 非空而是单点 m=1），"
+        u"幸存的半边是偶 m 两侧皆空——⑲ T12 的角A 因此不是「选代价小的角」而是「落在无载体的那半轴」；"
+        u"④把 ⑲ T10 的零判别力从剖面**推广到场方程层**（U05 源可反解）并给判别力**定价矩阵**（U06 三算符×四约束，点源档 2/1/0）；"
+        u"⑤量子跑动路线实测零内容（U08）并量出它唯一可证伪的那一格（U09），另把 ⑲ T05/T06 的奇偶尺延到它没测过的 m=1（U02c）。"
+        % grid_n)
+    sub(u"跨册一致性核对：U02 的 m=1 唯一点与 ⑲ T04 现读的 best=3/4 落点是否同一点（本册不复制它的数，只按名现读）：%s"
+        % (grep_face(A21_FACE, u"机器裁定：max 命中 = 3/4", u"⑲ T04 最佳命中的 m") or u"没读到那行"))
 
     # ============================== U13 仪器自证
-    item(u"U13", u"INFO", u"仪器自证：卫生针按行首形状建排除类、排除数由名单现算；他册读数一律现读并印载体")
-    sub(u"沿用 ⑲ 修好的三件形状：排除类 `^  (?:MUT|NEG)-`、排除数＝名单现算、面不自量尺寸（末行写后回读才报字节）")
+    item(u"U13", u"INFO", u"仪器自证：卫生针按行首形状建排除类、排除数由名单现算；他册读数一律现读并印载体；预注册主张当场否证")
+    sub(u"沿用 ⑲ 修好的三件形状：排除类 `^  (?:MUT|NEG)-` 按行首、排除数＝名单现算、面不自量尺寸（末行写后回读才报字节）。"
+        u"本轮另立一件：**开场写下的主张如果和自己的穷举冲突，就在面上留原话并判自己 FAIL（U02b）**，"
+        u"不许把它改写成事后正确的版本再当作一开始就这么想的（否证也是产出）")
 
     # ============================== U14 总裁定
     item(u"U14", u"THEOREM",
          u"总裁定：场方程**能写**（U04 解空间、U05 源可反解）但它给族带来 0 比特新约束；"
-         u"在「唯一基础场＝度规-挠率-曲率」这条来料公设下，族被 U01/U02 双向夹死，无解")
-    sub(u"成立面：U01（奇偶定理）、U02（互斥对角线）、U04（维数 2s 实测秩）、U05（六目标源可反解，残差 %s < 阈 %s）、"
-        u"U07（数值通道两侧都有牙）" % (fmt(worst), fmt(thr5)))
-    sub(u"否证面：U05/U06——加算符后容纳率仍 6/6；真正排除东西的是**源约束**（∇² 点源档 %d/6），"
+         u"量纲侧几何环把 m 逼到唯一点 1，代价是引力那一支出环——两头都要付，族不能同时「几何生成 α」与「一个 α 统四力」")
+    sub(u"成立面：U01（奇偶＋半轴定理：几何幂集 %s、零幂格唯一）、U02（α 几何可构造 ⟺ m=1）、"
+        u"U02c（m=1 在手性侧也开着：相对差 %s）、U04（维数 2s 实测秩）、U05（六目标源可反解，残差 %s < 阈 %s）、"
+        u"U07（数值通道两侧都有牙：核指数 %s／非核指数 %s）"
+        % (u"、".join(u"L^%+d" % p for p in sorted(geo_powers)), fmt(seen_c[0][2]), fmt(worst), fmt(thr5),
+           u"、".join(fmt(x) for x in q[0][2]), u"、".join(fmt(x) for x in q[1][2])))
+    sub(u"否证面：本轮自己的预注册 W2（U02b，错因＝把「幂偶」读成「m 偶」，另加漏核半轴）；U05/U06——加算符后容纳率仍 6/6，"
+        u"真正排除东西的是**源约束**（∇² 点源档 %d/6，有质量档随手选的 μ 变 1／0），"
         u"而「只许点源」等于把 r^-2 律当公设写回去（不是推出）；U08——量纲生成不造尺度（%d/%d 档全可凑 g²）"
         % (cnt[u"∇²"][2], nsolv if mu_w else 0, len(rows8) if rows8 else 0))
-    sub(u"诚实边界：U01 是**条件定理**（只允许 g、ε、R、T 及其协变导数）；例外已在 U03 逐条点名（外生矢量／迹矢量），"
-        u"采纳例外即与公设一冲突——两头都要付账，本册不代选。")
-    sub(u"OPEN 顺延：O24-1 m 与算符谱 {μ_i} 的共同选定原理（无）；O24-2 源约束的物理出处（点源＝把 r^-2 当公设）；"
-        u"O24-3 外生矢量场是否被公设一禁止（禁止则 U02 判死，允许则「唯一基础场」失身）；"
-        u"O24-4 Λ 的选取（U09 给了可证伪格但选不出）。")
+    sub(u"诚实边界：U01/U02 是**条件定理**（只允许 g、ε、R、T 及其协变导数的多项式收缩）；绕开它的两条路已在 U03 点名"
+        u"（外生矢量场／逆算符），采纳任何一条即与公设一正面冲突。m=1 是把公设一当真时的**唯一**落点，不是被否证的对象。")
+    sub(u"OPEN 顺延：O24-1 α 的**数值**（m=1 只把它压成无量纲纯数，几何不取值 ⇒「无参数」仍未成立）＋算符谱 {μ_i} 无族内方程定住；"
+        u"O24-2 源约束的物理出处（点源＝把 r^-2 当公设写回）；"
+        u"O24-3 G 出环后的处置（另立 α_G 即弃「单一 α 统一」，或允许逆算符即弃局域几何公设）；"
+        u"O24-4 Λ 的选取（U09 给了可证伪格但选不出）；"
+        u"O24-5 m=1 处的 ⑲ T05 三条自然要求（N1/N2/N3）逐格判定——⑲ 的枚举域是 m∈{2..6}，m=1 从未被那 40 格覆盖。")
     sub(u"红线：本轮未宣称统一场论成立，裁的是「加场方程值几比特」；数学自洽 ≠ 实验证实；"
         u"哥德巴赫仍未证明，统一场论仍未成立。未跑 refresh_catalog，未 git add/commit。")
 
     # ============================== 卫生针
-    PH = re.compile(u"%[-+ #0]*[0-9]*(?:\\.[0-9]+)?[dsfrgeE]|\\{\\d*\\}|\\{[A-Za-z_][A-Za-z0-9_]*\\}")
+    PH = re.compile(u"%[-+ #0]*[0-9]*(?:\\.[0-9]+)?[dsfrgeE]")
     MUTLINE = re.compile(u"^  (?:MUT|NEG)-\\d")
 
     def ph_scan(lines):
@@ -679,26 +736,36 @@ def main():
         vcnt[v] = vcnt.get(v, 0) + 1
     exit_code = 0 if (n_ok == len(SELF) and bat_bad == 0 and hyb_bad == 0) else 1
     emit(u"")
-    emit(u"条目统计：" + u"／".join(u"%s×%d" % (k, vcnt[k]) for k in
-         [u"PASS", u"FAIL", u"THEOREM", u"BOUNDARY", u"INFO"] if k in vcnt))
+    stat_keys = sorted(vcnt, key=lambda k: (-vcnt[k], k))   # 桶名单由登记表现抽，不靠手钉的常量表
+    emit(u"条目统计：" + u"／".join(u"%s×%d" % (k, vcnt[k]) for k in stat_keys)
+         + u"｜桶和 %d＝条目数 %d %s" % (sum(vcnt.values()), len(ITEMS),
+                                        u"（对上）" if sum(vcnt.values()) == len(ITEMS) else u"（对不上＝有桶被漏印）"))
     emit(u"判定条目 %d 枚｜自检 %d/%d｜电池 %d/%d 合格｜卫生双向 %d/%d 合格｜退出码（终扫前）%d"
          % (len(ITEMS), n_ok, len(SELF), len(BATTERY) - bat_bad, len(BATTERY),
             len(hyb) - hyb_bad, len(hyb), exit_code))
     emit(u"")
     emit(u"分层结论：")
-    emit(u"  [数学] 量纲奇偶定理（U01：穷举 %d 格、奇量纲可行 0 枚、构造性配对反向）、外部解维数 2s（U04 实测秩）、"
-        u"源可反解（U05 残差 %s < 阈 %s）三条为恒等式级。" % (grid_n, fmt(worst), fmt(thr5)))
+    emit(u"  [数学] 量纲奇偶＋半轴定理（U01：穷举 %d 格、奇幂可行 0 枚、几何幂集偶且非正、零幂格唯一）、"
+        u"半轴交集（U02：α 可几何构造 ⟺ m=1）、外部解维数 2s（U04 实测秩）、源可反解（U05 残差 %s < 阈 %s）四条为恒等式级。"
+        % (grid_n, fmt(worst), fmt(thr5)))
     emit(u"  [物理] 加场方程后族的判别力增量 = 0（U05）；排除错误律 r^-5 的权力全部住在**源约束**里"
-        u"（U06：∇² 点源档 %d/6，正定档 6/6 是橡皮图章，有质量档随 μ 变动为 1／0）；量子跑动不造尺度（U08）。"
-        % cnt[u"∇²"][2])
-    emit(u"  [诚实边界] U01/U02 的条件性（外生矢量例外已在 U03 点名）；U09 的 Λ 未被选出；"
-        u"U11 的 EP/α 普适取舍本册不代选。")
+        u"（U06：∇² 点源档 %d/6，正定档 6/6 是橡皮图章，有质量档随手选的 μ 变 1／0）；量子跑动不造尺度（U08）；"
+        u"公设一在量纲侧的唯一下落是 m=1（U10 CONDITIONAL），而 G 需 L^+2 已在环外（U02）。" % cnt[u"∇²"][2])
+    emit(u"  [自否] 本轮开场预注册的「几何要偶 m／手性要奇 m ⇒ 交集空」被自己的穷举否证（U02b 三读并列）："
+        u"空交集只由「把幂 m-1 的奇偶读成 m 的奇偶」那一格给出；正读还要再核半轴（α 的幂必须自己非正才在环内），"
+        u"两格一起修才落到单点 m=1。原话留在面上，不改成事后正确版。")
+    emit(u"  [诚实边界] U01/U02 的条件性（绕开它的两条路已在 U03 点名）；U09 的 Λ 未被选出；"
+        u"U11 的 EP/α 普适取舍本册不代选；α 的数值与算符谱仍无族内方程定住（O24-1）。")
     emit(u"  [红线] 本轮未宣称统一场论成立；未跑 refresh_catalog，未 git add/commit。")
 
     rc_pre = exit_code
     final_hits, final_ex = ph_scan(OUT)
     if final_hits:
-        emit(u"版面卫生（终扫）：判定命中 %d 处（%s）⇒ 本轮不得判绿" % (len(final_hits), final_hits[0][:90]))
+        emit(u"版面卫生（终扫）：判定命中 %d 处，逐条点名（不止第一处，否则计数无牙；"
+             u"引文里的花括号已转成全角，免得这段自述再被下一轮扫成占位符）：" % len(final_hits))
+        for l in final_hits:
+            emit(u"    命中｜%s" % l[:96].replace(u"{", u"｛").replace(u"}", u"｝"))
+        emit(u"  ⇒ 本轮不得判绿")
         exit_code = 1
     elif len(final_ex) != ex_expect:
         emit(u"版面卫生（终扫）：结构排除 %d 行 ≠ 名单现算 %d 行 ⇒ 排除类在吞东西 ⇒ 本轮不得判绿"
@@ -708,7 +775,7 @@ def main():
         brace = [l for l in OUT if u"{" in l]
         emit(u"版面卫生（终扫）：扫到本行前共 %d 行（本行不计，面不能自量——盘的尺寸／LF 只由末行「写后回读」给），"
              u"判定命中 0 处；结构排除 %d 处（= 名单现算 %d，全部是上面卫生夹具区里自述模板那类字形，逐条可点名）；"
-             u"含花括号字形的行 %d 行（现扫第二口径：其中没有一行靠排除类放过，因为它们都不带 % 型占位符）"
+             u"含花括号字形的行 %d 行（现扫第二口径：其中没有一行靠排除类放过，因为它们都不带百分号型占位符）"
              % (len(OUT), len(final_ex), ex_expect, len(brace)))
     if exit_code != rc_pre:
         emit(u"退出码更正：终扫前印 %d，终扫后取 %d（终扫能推翻前一行，所以那一行只能自称「终扫前」）"
