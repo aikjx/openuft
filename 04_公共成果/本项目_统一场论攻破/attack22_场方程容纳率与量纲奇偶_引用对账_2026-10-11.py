@@ -300,7 +300,8 @@ def main():
     say(u"")
     say(u"变异体（每枚把文档改坏一处，对应规则必须红；枚数由名单现算）：")
     muts = []
-    _dec = [t for t in sorted(set(NUM.findall(_d)), key=len, reverse=True) if u"." in t]
+    # 全长同分时必须由**字典序**定序：只用 key=len 会让 set 的哈希序决定变异位 ⇒ 面逐轮变形（CONTROL-C 实测抓到）
+    _dec = [t for t in sorted(set(NUM.findall(_d)), key=lambda z: (-len(z), z)) if u"." in t]
     if not _dec:
         fault(u"MUT-1", u"文档里没有可截短的小数（变异位没落地）")
     else:

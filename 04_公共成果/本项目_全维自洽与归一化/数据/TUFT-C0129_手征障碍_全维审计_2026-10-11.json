@@ -1,0 +1,109 @@
+{
+  "title": "TUFT-C0129 手征障碍 全维审计",
+  "date": "2026-10-11",
+  "verdict_counts": {
+    "PASS": 8,
+    "CORRECTED": 1,
+    "MISMATCH": 1,
+    "BOUNDARY": 2,
+    "INFO": 1
+  },
+  "items": [
+    {
+      "id": "T01",
+      "verdict": "PASS",
+      "detail": "P_L^2 = P_L（幂等）",
+      "machine": true
+    },
+    {
+      "id": "T02",
+      "verdict": "PASS",
+      "detail": "P_R^2 = P_R（幂等）",
+      "machine": true
+    },
+    {
+      "id": "T03",
+      "verdict": "PASS",
+      "detail": "P_L P_R = 0（正交）",
+      "machine": true
+    },
+    {
+      "id": "T04",
+      "verdict": "PASS",
+      "detail": "P_L + P_R = I（归一）",
+      "machine": true
+    },
+    {
+      "id": "T05",
+      "verdict": "PASS",
+      "detail": "su(2) 由 3 个泡利对易子张成，维度 = 3",
+      "machine": 3
+    },
+    {
+      "id": "T06",
+      "verdict": "PASS",
+      "detail": "so(1,3) 由 6 个 Lorentz 生成元张成，维度 = 6",
+      "machine": 6
+    },
+    {
+      "id": "T07",
+      "verdict": "CORRECTED",
+      "detail": "so(1,3)_C 含两个 su(2) 因子：A_i=(J_i+iK_i)/2 满足 [A_i,A_j]=iεA_k，B_i=(J_i-iK_i)/2 满足 [B_i,B_j]=iεB_k，且 [A_i,B_j]=0。即 Lorentz 代数复化后 = su(2)_L ⊕ su(2)_R。来料「so(1,3) ⊄ su(2)_L ⇒ 无手征代数载体」因同名混淆而误导：弱 SU(2)_L 是**内部**对称，与 Lorentz 的 su(2)_L（Weyl 旋量小群）并非同一对象。障碍不在「无 su(2) 代数」，而在「Lorentz su(2) 无法充当手征费米子专属耦合的弱规范群」。",
+      "machine": {
+        "max|[A,A]-iεA|": 0.0,
+        "max|[B,B]-iεB|": 0.0,
+        "max|[A,B]|": 0.0
+      }
+    },
+    {
+      "id": "T08",
+      "verdict": "MISMATCH",
+      "detail": "来料「Δdim=6 完全覆盖手征结构缺失」算术不自洽：TUFT 有 6 个 Lorentz 生成元，手征弱力所需 su(2)(3)+手征自由度(1)=4，二者并非「缺口 6」。真实缺口是「手征费米子专属耦合机制」（P_L 投影算符 + 仅左手态的规范耦合项），无法用生成元计数表达。",
+      "machine": {
+        "TUFT_generators": 6,
+        "chiral_weak_needed": 4
+      }
+    },
+    {
+      "id": "T09",
+      "verdict": "PASS",
+      "detail": "按来料自陈场内容 Φ_TUFT={g,Γ,R,T}（全为洛伦兹时空张量）与作用量 L_TUFT=(R+T^2)/16πG·√-g + L_matter，其中不含 γ5、P_L、W_μ^a，故 δL_TUFT/δP_L = 0（结构性复核：几何框架对左手手征自由度零耦合）。"
+    },
+    {
+      "id": "T10",
+      "verdict": "BOUNDARY",
+      "detail": "V_ST ⊥ V_INT（时空对称空间与内部规范对称空间严格正交）是标准模型的建模范式公设，本轮不重新证明，仅作为后续判定的前提承接（与 r27/GMUFT 册一致）。"
+    },
+    {
+      "id": "T11",
+      "verdict": "BOUNDARY",
+      "detail": "张量场 g_{μν},R,T^λ_{μν} 在宇称变换 P 下形式不变（P[g]=g, P[R]=R, P[T]=T），故纯几何理论天然宇称守恒；弱力宇称破缺源于内部手征耦合，非几何量。结构性判据。"
+    },
+    {
+      "id": "T12",
+      "verdict": "INFO",
+      "detail": "4.3「低能涌现手征对称」与 4.4「超对称逃逸封锁」为物理判称而非机器可证伪命题，本轮据实记为信息项/边界，不据以裁定通过或否决。"
+    },
+    {
+      "id": "T13",
+      "verdict": "PASS",
+      "detail": "最终否定结论（纯四维引力-挠率几何框架无法承载 SM 手征弱相互作用）成立，且与既有审计一致：R15/R16 已证结群可承载 su(2)/su(3) **表示**（群论层），但从未给出「仅耦合左手费米子」的动力学手征项（机制层）；维度/群论障碍此前已负面闭合。C0129 的终局方程 1/2/3 实质成立，仅方程 4 表述需按 T07 修正。"
+    },
+    {
+      "id": "SELF",
+      "verdict": "PASS",
+      "detail": "自检：条目数=13, PASS=8, FAIL=0, CORRECTED=1, MISMATCH=1, BOUNDARY=2, INFO=1",
+      "machine": {
+        "n_items": 13,
+        "n_pass": 8,
+        "n_fail": 0,
+        "n_corrected": 1,
+        "n_mismatch": 1,
+        "n_boundary": 2,
+        "n_info": 1
+      }
+    }
+  ],
+  "final": "Verified-Negative（终局否定成立，证明链 T07/T08 需更正）",
+  "exit_code": 0
+}
