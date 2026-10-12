@@ -1,0 +1,10 @@
+=== TUFT-r50_路线B演化方程M1M2修复与RK4数值演化_全维审计_2026-10-12 ===
+tally={'PASS': 15, 'FAIL': 1, 'BOUNDARY': 3, 'INFO': 4, 'CORRECTED': 2, 'MISMATCH': 0}
+guards=12/12 exit=0
+RK4 convergence order (mean)=3.9947  slopes=['3.961', '4.004', '4.008', '4.005']
+B1 errors=['2.2870e-06', '1.4686e-07', '9.1514e-09', '5.6881e-10', '3.5416e-11']
+B2 energy drift=4.3293e-04  max|u|_final=8.5477e-04
+B3 maxA=4.9086e-04 maxB=1.2508e-01 ratio=254.8 ; l_s=l_P source=3.0936e+34 blew_up=True
+B4 constraint bracket max=0.0000e+00 ; deviation=0.0000e+00
+
+one_line: M1（势项 d(V/c^4)/dkappa）+ M2（源项改结构，甲 ~rho*kappa / 乙 ~rho/l_s 两条均已实现）使路线B 第五节的 eq(10)(11) 与 ADM-BSSN 一阶系统量纲全部齐次（三项同为 L^-3、动量三项同为 L^-2 T^-1），r42 判的「演化系统无法数值积分」被解除；RK4 首次跑通：线性区对解析解收敛阶 3.99（误差 3.54e-11），周期网格非线性演化稳定、真空能量相对漂移 4.33e-04。但 M2 两条候选数值解不同且代价互斥（乙再 +1 外部长度、取 l_s=l_P 时源项放大至 3.09e+34 而数值发散），本册不代选；且约束面上 V=0 使动力学只存在于偏离约束面的初值。

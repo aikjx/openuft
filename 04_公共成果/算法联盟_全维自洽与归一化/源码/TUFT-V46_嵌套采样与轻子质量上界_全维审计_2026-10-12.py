@@ -404,6 +404,8 @@ def chi2_parts(delta):
             'chi_G': cg, 'chi_total': ce + cmu + cg}
 
 # 61 点对数均匀网格
+delta_a_e_exp = AE_EXP - AE_QED
+delta_a_mu_exp = AMU_EXP - AMU_QED
 GRID_N = 61
 grid = []
 for i in range(GRID_N):
@@ -417,26 +419,33 @@ for dv in grid:
 
 tot = [c[1]['chi_total'] for c in curve]
 diffs = [tot[i + 1] - tot[i] for i in range(len(tot) - 1)]
-n_pos = sum(1 for x in diffs if x > 0)
-mono_ratio = mp.mpf(n_pos) / mp.mpf(len(diffs))
+n_neg = sum(1 for x in diffs if x < 0)
+mono_ratio = mp.mpf(n_neg) / mp.mpf(len(diffs))
 argmin_idx = min(range(len(tot)), key=lambda k: tot[k])
 delta_argmin = curve[argmin_idx][0]
 chi2_at_lo = curve[0][1]
 chi2_at_star = chi2_parts(d_star)
 chi2_at_hi = curve[-1][1]
+rel_spread = (tot[-1] - tot[0]) / tot[0]
 
-guard('G11_chi2_is_monotone_on_prior', mono_ratio == 1,
-      'chi^2(delta) 在先验区间上单调递增比例 = %s ⇒ 无内部极小' % mp.nstr(mono_ratio, 6))
-guard('G12_argmin_at_prior_boundary', argmin_idx == 0,
-      'chi^2 极小点落在先验下界 delta=%s' % mp.nstr(curve[0][0], 6))
+# 拟合电子所要求的 delta（超出先验区间）： a^TUFT ∝ delta（kappa 在区间内近似常数）
+a_e_ref = a_tuft_B(ME, PRIOR_LOW)
+delta_fit = PRIOR_LOW * (delta_a_e_exp / a_e_ref)
+chi2_at_fit = chi2_parts(delta_fit)
+a_mu_at_fit = a_tuft_B(MMU, delta_fit)
 
-F('C02', 'chi^2(delta) 在先验区间上单调无极小 ⇒ 所谓 MAP 不是似然峰而是先验边界产物',
-  '用公理 1 一致化的 kappa（来料那版恒 inf，见 D03）算 chi^2(delta) = chi_e^2 + chi_mu^2 + chi_G^2。%d 点对数网格：差分全为正的比例 = %s（严格单调递增）⇒ chi^2 在 delta 先验区间上没有任何内部极小，极小值落在先验下界 delta = %s 处，chi^2_min = %s（其中 chi_e^2 = %s、chi_mu^2 = %s、chi_G^2 = %s）。来料宣称的 delta* = %s 处在同一网格上给出 chi^2 = %s，是下界处的 %s 倍。dynesty 给出的「后验」在这种似然下必然被先验形状支配（logL 随 delta 单调、跨界体积随 delta 缩小）。'
-  % (GRID_N, mp.nstr(mono_ratio, 6), mp.nstr(curve[0][0], 6),
-     mp.nstr(chi2_at_lo['chi_total'], 10), mp.nstr(chi2_at_lo['chi_e'], 10),
-     mp.nstr(chi2_at_lo['chi_mu'], 10), mp.nstr(chi2_at_lo['chi_G'], 10),
-     mp.nstr(d_star, 4), mp.nstr(chi2_at_star['chi_total'], 10),
-     mp.nstr(chi2_at_star['chi_total'] / chi2_at_lo['chi_total'], 8)))
+guard('G11_chi2_is_monotone_decreasing_on_prior', mono_ratio == 1,
+      'chi^2(delta) 在先验区间上严格单调递减，差分全负比例 = %s' % mp.nstr(mono_ratio, 6))
+guard('G12_argmin_at_prior_upper_boundary', argmin_idx == GRID_N - 1,
+      'chi^2 极小点落在先验上界 delta=%s' % mp.nstr(curve[-1][0], 6))
+
+F('C02', 'chi^2 在先验区间内近乎常数且单调无极小 ⇒ MAP 不可能是数据给的峰',
+  '用公理 1 一致化的 kappa（来料那版恒 inf，见 D03）算 chi^2(delta)。%d 点对数网格：差分全负比例 = %s（严格单调递减）⇒ 区间内无内部极小，极小值被推到先验上界 delta = %s；chi^2 从下界的 %s 变到上界的 %s，**相对变化仅 %s**（数值上等同一个常数函数）⇒ 似然在先验区间内对 delta 几乎无分辨力，嵌套采样得到的「后验」必然是先验形状本身，不是数据峰。来料宣称的 delta* = %s 在同一网格上 chi^2 = %s，既不是极小点也不在边界；真正的电子拟合点 delta_fit = %s 落在先验之外（比上界大 %s 倍）。'
+  % (GRID_N, mp.nstr(mono_ratio, 6), mp.nstr(curve[-1][0], 6),
+     mp.nstr(chi2_at_lo['chi_total'], 12), mp.nstr(chi2_at_hi['chi_total'], 12),
+     mp.nstr(rel_spread, 6), mp.nstr(d_star, 4),
+     mp.nstr(chi2_at_star['chi_total'], 12), mp.nstr(delta_fit, 6),
+     mp.nstr(delta_fit / PRIOR_HIGH, 6)))
 
 # ---- C01 chi_G 恒等式复读 ----
 rel_G = abs(G_th(d_star) - GEXP) / GEXP
@@ -447,14 +456,20 @@ Bn('C01', 'chi_G^2 ≡ 0 是恒等式复读，零检验力',
   % (mp.nstr(rel_G, 8), mp.nstr(chi2_at_lo['chi_G'], 8)))
 
 # ---- C03 chi^2 极小值真实读数 ----
-delta_a_e_exp = AE_EXP - AE_QED
-delta_a_mu_exp = AMU_EXP - AMU_QED
-F('C03', '「chi_e^2 ≈ 0、chi_mu^2 ≈ 0、总 chi^2 ≈ 0」不成立',
-  '机器在先验下界处给出 chi_e^2 = %s、chi_mu^2 = %s、总 chi^2 = %s（来料口径 sigma_e = 1e-12、sigma_mu = 4e-7）。原因：模型只能让 a^TUFT -> 0（唯一符号因子 cotT > 0，见 C04），于是残差退化为实验增量本身 Delta a_e = %s、Delta a_mu = %s，除以各自 sigma 后分别是 %s 与 %s。⇒ 「拟合成功」实际含义是「模型对 g-2 的贡献为零」，这与 V4.2 的结论完全同构。'
-  % (mp.nstr(chi2_at_lo['chi_e'], 8), mp.nstr(chi2_at_lo['chi_mu'], 8),
-     mp.nstr(chi2_at_lo['chi_total'], 8), mp.nstr(delta_a_e_exp, 8),
-     mp.nstr(delta_a_mu_exp, 8), mp.nstr(delta_a_e_exp / SIG_AE, 8),
-     mp.nstr(delta_a_mu_exp / SIG_AMU, 8)))
+F('C03', '「chi_e^2 ≈ 0、chi_mu^2 ≈ 0、总 chi^2 ≈ 0」不成立；先验区间内模型对 g-2 的贡献比实验增量小 14 个数量级',
+  '先验区间内 |a^TUFT| 的最大值出现在 delta = %s 处 = %s，而实验要求的 Delta a_e = %s、Delta a_mu = %s ⇒ 模型可达的贡献比实验增量小 %s 与 %s 个数量级。于是残差退化为实验增量本身：chi_e^2 ≈ (Delta a_e/sigma_e)^2 = %s、chi_mu^2 ≈ (Delta a_mu/sigma_mu)^2 = %s、chi_G^2 ≈ %s，总 chi^2 ≈ %s。来料的 sigma_e = 1e-12（比真实 a_e 实验不确定度紧得多）已是对残差最友好的取法，仍得 chi_e^2 ≈ 0.476，不是 0。'
+  % (mp.nstr(PRIOR_HIGH, 3), mp.nstr(abs(a_tuft_B(ME, PRIOR_HIGH)), 8),
+     mp.nstr(abs(delta_a_e_exp), 8), mp.nstr(abs(delta_a_mu_exp), 8),
+     mp.nstr(mp.log10(abs(delta_a_e_exp) / abs(a_tuft_B(ME, PRIOR_HIGH))), 6),
+     mp.nstr(mp.log10(abs(delta_a_mu_exp) / abs(a_tuft_B(MMU, PRIOR_HIGH))), 6),
+     mp.nstr((delta_a_e_exp / SIG_AE) ** 2, 8), mp.nstr((delta_a_mu_exp / SIG_AMU) ** 2, 8),
+     mp.nstr(chi2_at_lo['chi_G'], 8), mp.nstr(chi2_at_lo['chi_total'], 8)))
+Bn('C03b', '把先验放宽到 delta_fit 后，chi^2 也只降 75 倍、且被 mu 子残差重新抬起',
+  '电子单独拟合要求 delta_fit = %s（先验上界的 %s 倍）。机器在该点给出 a_mu^TUFT = %s、chi_e^2 = %s、chi_mu^2 = %s、总 chi^2 = %s。⇒ (1) a_mu^TUFT 的读数 %s 与 r42 册 N02 的 −2.94997e-8 **逐位独立复现**（同一物理结论由两条不同路径得到）；(2) 单参数无法同时满足两残差，最优点由电子决定、mu 子残差把 chi^2 抬到 %s。'
+  % (mp.nstr(delta_fit, 8), mp.nstr(delta_fit / PRIOR_HIGH, 6),
+     mp.nstr(a_mu_at_fit, 8), mp.nstr(chi2_at_fit['chi_e'], 8),
+     mp.nstr(chi2_at_fit['chi_mu'], 8), mp.nstr(chi2_at_fit['chi_total'], 8),
+     mp.nstr(a_mu_at_fit, 8), mp.nstr(chi2_at_fit['chi_total'], 8)))
 
 print('=' * 78)
 
@@ -490,11 +505,17 @@ for i in range(0, GRID_N, 12):
     rows_ratio.append({'delta': mp.nstr(dv, 6), 'ratio_num': mp.nstr(r_num, 20),
                        'ratio_th': mp.nstr(r_th, 20), 'rel_dev': mp.nstr(rel, 6)})
 max_rel = max(rel_devs)
+R42_MU = mp.mpf('-2.94997e-8')
+cross_rel = abs(a_mu_at_fit - R42_MU) / abs(R42_MU)
 guard('G15_ratio_invariance_reproduced', max_rel < mp.mpf('1e-20'),
       'a_mu/a_e 与 (m_mu/m_e)^2 的最大相对偏差 = %s（自能未改变结构）' % mp.nstr(max_rel, 6))
+guard('G20_cross_reproduce_r42_N02', cross_rel < mp.mpf('1e-5'),
+      '电子拟合点的 a_mu^TUFT = %s 与 r42 册 N02 的 −2.94997e-8 相对偏差 = %s'
+      % (mp.nstr(a_mu_at_fit, 8), mp.nstr(cross_rel, 6)))
 F('C05', 'a_mu/a_e ≡ (m_mu/m_e)^2 = 42753（V4.2 结论原样复现 ⇒ 梯度自能未改变函数结构）',
-  '公理 1 一致化后 kappa ≈ m + c^2 delta^2/(2 pi lP)（D06），故 m·kappa ≈ m^2 + 极小项 ⇒ a^TUFT ∝ m^2。机器在 %d 个 delta 点上验证 a_mu^TUFT/a_e^TUFT = (m_mu/m_e)^2 = %s，最大相对偏差 %s。⇒ 无论「梯度自能」怎么写，只要 kappa 保持这个形式，缪子外推就恒为电子的 42753 倍，符号与量级都不可能同时对上实验。'
-  % (len(rows_ratio), mp.nstr((MMU / ME) ** 2, 12), mp.nstr(max_rel, 8)))
+  '公理 1 一致化后 kappa ≈ m + c^2 delta^2/(2 pi lP)（D06），故 m·kappa ≈ m^2 + 极小项 ⇒ a^TUFT ∝ m^2。机器在 %d 个 delta 点上验证 a_mu^TUFT/a_e^TUFT = (m_mu/m_e)^2 = %s，最大相对偏差 %s；并独立复现 r42 册 N02 的读数：电子拟合点 delta_fit = %s 处 a_mu^TUFT = %s，与 r42 的 −2.94997e-8 相对偏差 %s。⇒ 无论「梯度自能」怎么写，只要 kappa 保持这个形式，缪子外推就恒为电子的 42753 倍，符号与量级都不可能同时对上实验；r42 的「g-2 窗口对量纲修复免疫」在 V4.6 依然成立。'
+  % (len(rows_ratio), mp.nstr((MMU / ME) ** 2, 12), mp.nstr(max_rel, 8),
+     mp.nstr(delta_fit, 6), mp.nstr(a_mu_at_fit, 10), mp.nstr(cross_rel, 6)))
 
 # ---- C06/C07 来料正文两处自相矛盾 ----
 amu_pred_from_claim = AMU_QED + AMU_TUFT_CLAIM
@@ -521,12 +542,16 @@ F('C07', '「电子完美匹配、chi_e^2 ≈ 0」实为 100 倍误差（与 r42
      mp.nstr((ae_resid_claim / SIG_AE) ** 2, 8)))
 
 READ['C02_C07'] = {
-    'grid_points': GRID_N, 'monotone_ratio': mp.nstr(mono_ratio, 12),
+    'grid_points': GRID_N, 'monotone_decreasing_ratio': mp.nstr(mono_ratio, 12),
     'argmin_delta': mp.nstr(delta_argmin, 12),
+    'chi2_relative_spread_on_prior': mp.nstr(rel_spread, 12),
     'chi2_at_prior_low': {k: mp.nstr(v, 20) for k, v in chi2_at_lo.items()},
     'chi2_at_delta_star': {k: mp.nstr(v, 20) for k, v in chi2_at_star.items()},
     'chi2_at_prior_high': {k: mp.nstr(v, 20) for k, v in chi2_at_hi.items()},
-    'chi2_star_over_low': mp.nstr(chi2_at_star['chi_total'] / chi2_at_lo['chi_total'], 20),
+    'delta_fit_for_electron': mp.nstr(delta_fit, 20),
+    'chi2_at_delta_fit': {k: mp.nstr(v, 20) for k, v in chi2_at_fit.items()},
+    'a_mu_at_delta_fit': mp.nstr(a_mu_at_fit, 20),
+    'r42_N02_cross_reproduce_rel_dev': mp.nstr(cross_rel, 12),
     'rel_resid_G': mp.nstr(rel_G, 12),
     'delta_a_e_exp': mp.nstr(delta_a_e_exp, 20), 'delta_a_mu_exp': mp.nstr(delta_a_mu_exp, 20),
     'sign_rows': sign_rows, 'ratio_rows': rows_ratio,

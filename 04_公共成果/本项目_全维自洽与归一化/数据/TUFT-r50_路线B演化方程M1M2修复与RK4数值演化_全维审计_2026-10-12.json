@@ -1,0 +1,305 @@
+{
+  "name": "TUFT-r50_路线B演化方程M1M2修复与RK4数值演化_全维审计_2026-10-12",
+  "round": "r50",
+  "date": "2026-10-12",
+  "entries": [
+    {
+      "id": "R01",
+      "name": "立项依据（机器检索确认）",
+      "verdict": "INFO",
+      "note": "r42 C3 判路线B 第五节演化方程三项量纲互异、G17 判「无法数值积分」、G20 判三下一步「均不可执行」；r41 已在其 V4-EC 套上复判 M1（其 M3）PASS，但 M5（源项）停在 R33 不代选；RK4 演化全库零命中。本册执行 M2 并首次上 RK4。"
+    },
+    {
+      "id": "R02",
+      "name": "阴性对照：[Box kappa] = L^-3",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-3 T^0",
+      "rhs_dim": "M^0 L^-3 T^0",
+      "note": "复现 r42 G11"
+    },
+    {
+      "id": "R03",
+      "name": "阴性对照：[dV/dkappa] = L T^-4（未修复）",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^1 T^-4",
+      "rhs_dim": "M^0 L^1 T^-4",
+      "note": "复现 r42 G12"
+    },
+    {
+      "id": "R04",
+      "name": "阴性对照：[S_kappa 原始] = L^-2（未修复）",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-2 T^0",
+      "rhs_dim": "M^0 L^-2 T^0",
+      "note": "复现 r42 G13"
+    },
+    {
+      "id": "R05",
+      "name": "修复前三向量纲互异（r42 C3 复现）",
+      "verdict": "FAIL",
+      "note": "L^-3 / L T^-4 / L^-2 无共同量纲；dV/dkappa 与 LHS 差 c^4，S_kappa 与 LHS 差 L^-1。此为修复前的既有状态，本册 R06/R07 将其修复。"
+    },
+    {
+      "id": "R06",
+      "name": "M1：势项写 d(V/c^4)/dkappa，与 Box kappa 同量纲",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-3 T^0",
+      "rhs_dim": "M^0 L^-3 T^0",
+      "note": "M^-0 L^-3 T^-0 = L^-3：[dV/dkappa]/c^4 = (L T^-4)/(L^4 T^-4)"
+    },
+    {
+      "id": "R07",
+      "name": "M2-甲：S = (4pi G/c^2) sin(theta) rho kappa ~ L^-3",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-3 T^0",
+      "rhs_dim": "M^0 L^-3 T^0",
+      "note": "(M^-1 L)(M L^-3)(L^-1) = L^-3"
+    },
+    {
+      "id": "R08",
+      "name": "M2-乙：S = (4pi G/c^2) sin(theta) rho / l_s ~ L^-3",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-3 T^0",
+      "rhs_dim": "M^0 L^-3 T^0",
+      "note": "(M^-1 L)(M L^-3)/(L) = L^-3"
+    },
+    {
+      "id": "R09",
+      "name": "M2 两条候选代价互斥（承接 r41 R33，本册不代选）",
+      "verdict": "BOUNDARY",
+      "note": "甲：S ~ rho*kappa，无新增自由度，但 kappa=0 处源项退化（方程在该点失去物质驱动）；乙：S ~ rho/l_s，处处非零，但引入第 2 个外部长度标度 l_s（外部输入 +1，撞 Omega5）。本册两条都实现、都给数值读数，裁决权归用户。"
+    },
+    {
+      "id": "R10",
+      "name": "修复后 eq(10) 三项齐次",
+      "verdict": "PASS",
+      "note": "Box kappa = d(V/c^4)/dkappa + S_kappa，三项均为 L^-3（M1+M2 联合效果）。eq(11) 的 Box tau 支结构同源，同修复适用。"
+    },
+    {
+      "id": "R11",
+      "name": "ADM 运动学：dt kappa = beta^k d_k kappa + alpha Pi_kappa",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-1 T^-1",
+      "rhs_dim": "M^0 L^-1 T^-1",
+      "note": "L^-1 T^-1 = (L T^-1)(L^-2)"
+    },
+    {
+      "id": "R11b",
+      "name": "★本册新发现：r42 的 Pi_kappa 定义笔误",
+      "verdict": "CORRECTED",
+      "note": "r42 脚本写 Pi_kappa := kappa/c，其量纲实为 L^-2 T^1（因 c = L T^-1，除以 c 引入 T^+1），与 ADM-BSSN 定义 Pi := (1/alpha)*d_t kappa 的 L^-2 不符；该笔误还使 r42 G17 判词「LHS = L^-2 T^-1」与脚本实算值（L^-2 T^0）自相矛盾。此矛盾在 r42 中未被暴露，原因是当时方程本就 FAIL、无人核对 LHS 的实际数值。本册按标准 ADM 定义取 Pi := d_t kappa / alpha = L^-2，并据此重算动量方程 LHS = L^-2 T^-1。"
+    },
+    {
+      "id": "R12",
+      "name": "ADM 动量 LHS：[dt Pi_kappa] = L^-2 T^-1",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-2 T^-1",
+      "rhs_dim": "M^0 L^-2 T^-1",
+      "note": "Pi := d_t kappa/alpha = L^-2（标准 ADM 定义，修正 R11b）"
+    },
+    {
+      "id": "R13",
+      "name": "ADM 动量项1：alpha * lap(kappa) = L^-2 T^-1",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-2 T^-1",
+      "rhs_dim": "M^0 L^-2 T^-1",
+      "note": "(L T^-1)(L^-3) = L^-2 T^-1"
+    },
+    {
+      "id": "R14",
+      "name": "ADM 动量项2：alpha * d(V/c^4)/dkappa = L^-2 T^-1（M1）",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-2 T^-1",
+      "rhs_dim": "M^0 L^-2 T^-1",
+      "note": "(L T^-1)(L^-3) = L^-2 T^-1"
+    },
+    {
+      "id": "R15",
+      "name": "ADM 动量项3：alpha * S_M2a = L^-2 T^-1（M2-甲）",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-2 T^-1",
+      "rhs_dim": "M^0 L^-2 T^-1",
+      "note": "(L T^-1)(L^-3) = L^-2 T^-1"
+    },
+    {
+      "id": "R16",
+      "name": "ADM 动量项3'：alpha * S_M2b = L^-2 T^-1（M2-乙）",
+      "verdict": "PASS",
+      "lhs_dim": "M^0 L^-2 T^-1",
+      "rhs_dim": "M^0 L^-2 T^-1",
+      "note": "(L T^-1)(L^-3) = L^-2 T^-1"
+    },
+    {
+      "id": "R17",
+      "name": "r42 G16/G17 FAIL 已被解除",
+      "verdict": "CORRECTED",
+      "note": "r42 G17 判「演化系统无法数值积分」。经 M1+M2 后，ADM-BSSN 一阶系统（运动学 R11 + 动量 R12-R16）全部分量同为 L^-2 T^-1 / L^-1 T^-1，量纲障碍解除 => 数值积分在前置条件上已获许可。本册 §六 即执行之。"
+    },
+    {
+      "id": "R18",
+      "name": "无量纲化约定",
+      "verdict": "INFO",
+      "note": "hat_kappa = kappa*L*, hat_t = t*c/L*, hat_omega = omega*L*/c；修复后方程 d^2_t u - d^2_x u = 2u(u^2 - w^2) + S_hat，量纲一致性已由 R06-R16 保证。"
+    },
+    {
+      "id": "R19",
+      "name": "B1 谐振子解析对拍（RK4）",
+      "verdict": "PASS",
+      "note": "修复后方程在真空线性区退化为 U'' = -Omega^2 U，Omega^2 = k^2 + 2*omega^2。RK4 数值解与解析解 U=A*cos(Omega*t) 对拍，dt 减半误差序列 ['2.287e-06', '1.469e-07', '9.151e-09', '5.688e-10', '3.542e-11']"
+    },
+    {
+      "id": "R20",
+      "name": "B2 周期网格非线性演化（真空）",
+      "verdict": "PASS",
+      "note": "N=128 周期网格、二阶中心差分 Laplacian、RK4 400 步（dt=0.25*dx，CFL 稳定）；数值解未发散（末态 max|u| = 8.548e-04，初值 1.000e-03），哈密顿量相对漂移 4.329e-04。"
+    },
+    {
+      "id": "R21",
+      "name": "B3 源项两条候选数值对比（不代选）",
+      "verdict": "BOUNDARY",
+      "note": "同为 rho_hat=0.5：甲（S~rho*kappa）末态 max|u|=4.9086e-04；乙 取 l_s=L*（宏观）末态 max|u|=1.2508e-01，甲/乙 比 254.8；乙 取 l_s=l_P 时源项放大至 3.094e+34，数值发散（不可用）。两条候选给出不同数值解 => 物理后果不同，须用户裁决。"
+    },
+    {
+      "id": "R22",
+      "name": "B4 约束面退化（V=0 的动力学后果）",
+      "verdict": "BOUNDARY",
+      "note": "初值恰在公理1 约束面（tau=0, u=w）时，约束括号 |u^2+tau^2-w^2| 最大值 = 0.000e+00，势项与其梯度恒为零；均匀初值演化 50 步后偏离约束面 0.000e+00（机器零量级）=> 确认 r39/r45 的「约束面上 V=0」发现，且此时方程退化为纯源项驱动。本册 B1/B2 的动力学均刻意取**偏离约束面**的初值（u<<w），否则无演化可谈。"
+    },
+    {
+      "id": "R23",
+      "name": "射程声明（不可越过）",
+      "verdict": "INFO",
+      "note": "①RK4 跑通只证明修复后方程**合法且可积**，不证明其物理正确；②B1 的 4 阶收敛是对**线性化**方程测得的，非线性区收敛性未证；③网格为 1+1 维平直背景、周期边界、tau=0，非真实 ADM-BSSN 3+1 时空演化；④M2 两条候选数值不同且代价互斥，本册不代选；⑤l0 定性（r42 M3）与「第一性导出 G」问题未被本册触及，仍不成立。"
+    },
+    {
+      "id": "R24",
+      "name": "解除 / 未解除的开放项",
+      "verdict": "INFO",
+      "note": "已解除：r42 G10/G14/G16/G17（量纲非齐次）与 X-R42-3（ADM-BSSN 齐次化）；部分解除：X-R42-2（M2 已执行但需裁决候选）；未解除：M3 / l0 定性 / 外部输入总账 / 与已关闭 g-2 窗口的关系。"
+    }
+  ],
+  "guards": [
+    {
+      "id": "G1",
+      "ok": true,
+      "text": "M1 修复：势项量纲达 L^-3"
+    },
+    {
+      "id": "G2",
+      "ok": true,
+      "text": "M2-甲 源项量纲达 L^-3"
+    },
+    {
+      "id": "G3",
+      "ok": true,
+      "text": "M2-乙 源项量纲达 L^-3"
+    },
+    {
+      "id": "G4",
+      "ok": true,
+      "text": "ADM-BSSN 一阶系统修复后完全量纲齐次（运动学+动量三项）"
+    },
+    {
+      "id": "G5",
+      "ok": true,
+      "text": "RK4 时间收敛阶 ~4（实测均值 3.995，逐档 ['3.96', '4.00', '4.01', '4.01']）"
+    },
+    {
+      "id": "G6",
+      "ok": true,
+      "text": "最细步长 RK4 误差 < 1e-6（实测 3.542e-11）"
+    },
+    {
+      "id": "G7",
+      "ok": true,
+      "text": "B2 网格演化数值稳定（未发散）"
+    },
+    {
+      "id": "G8",
+      "ok": true,
+      "text": "B2 真空能量守恒相对漂移 < 1e-3（实测 4.329e-04）"
+    },
+    {
+      "id": "G9",
+      "ok": true,
+      "text": "M2-甲 与 M2-乙 给出数值上不同的解（差异被检出，代价互斥成立）"
+    },
+    {
+      "id": "G10",
+      "ok": true,
+      "text": "M2-乙 对 l_s 极度敏感已量化：取 l_s=l_P 时源项放大至 3.094e+34（>1e30）"
+    },
+    {
+      "id": "G11",
+      "ok": true,
+      "text": "约束面上势项括号恒为机器零（V=0 确证）"
+    },
+    {
+      "id": "G12",
+      "ok": true,
+      "text": "约束面均匀初值演化后仍停在约束面（无自发动力学）"
+    }
+  ],
+  "numeric": {
+    "B1_kx": 2.0,
+    "B1_omega": 1.0,
+    "B1_Omega2": 6.0,
+    "B1_Omega": 2.449489742783178,
+    "B1_amplitude": 0.001,
+    "B1_T_end": 2.0,
+    "B1_dt_list": [
+      0.2,
+      0.1,
+      0.05,
+      0.025,
+      0.0125
+    ],
+    "B1_errors": [
+      2.2870328171684573e-06,
+      1.468570875743562e-07,
+      9.151428488352866e-09,
+      5.688111642668855e-10,
+      3.5416402314114234e-11
+    ],
+    "B1_slopes": [
+      3.9609922680793606,
+      4.004272126203472,
+      4.007975271189249,
+      4.005460209434597
+    ],
+    "B1_slope_mean": 3.99467496872667,
+    "B2_N": 128,
+    "B2_dx": 0.04908738521234052,
+    "B2_dt": 0.01227184630308513,
+    "B2_steps": 400,
+    "B2_E0": 9.404616328383349e-06,
+    "B2_E1": 9.408687878991758e-06,
+    "B2_energy_relative_drift": 0.000432931069832217,
+    "B2_max_abs_trace": [
+      0.0009995484813391847,
+      0.0009943480787849629,
+      0.000970670738398639,
+      0.000928956424603987
+    ],
+    "B2_max_abs_final": 0.0008547716126443258,
+    "B3_rho_hat": 0.5,
+    "B3_max_abs_M2a": 0.0004908586637692844,
+    "B3_max_abs_M2b_ls_macro": 0.1250805707775714,
+    "B3_M2b_over_M2a_ratio": 254.81993088821662,
+    "B3_M2b_ls_planck_source": 3.093571249586235e+34,
+    "B3_M2b_ls_planck_blew_up": true,
+    "B4_constraint_bracket_max": 0.0,
+    "B4_deviation_after_50_steps": 0.0
+  },
+  "tally": {
+    "PASS": 15,
+    "FAIL": 1,
+    "BOUNDARY": 3,
+    "INFO": 4,
+    "CORRECTED": 2,
+    "MISMATCH": 0
+  },
+  "guard_ok": "12/12",
+  "exit_code": 0,
+  "one_line": "M1（势项 d(V/c^4)/dkappa）+ M2（源项改结构，甲 ~rho*kappa / 乙 ~rho/l_s 两条均已实现）使路线B 第五节的 eq(10)(11) 与 ADM-BSSN 一阶系统量纲全部齐次（三项同为 L^-3、动量三项同为 L^-2 T^-1），r42 判的「演化系统无法数值积分」被解除；RK4 首次跑通：线性区对解析解收敛阶 3.99（误差 3.54e-11），周期网格非线性演化稳定、真空能量相对漂移 4.33e-04。但 M2 两条候选数值解不同且代价互斥（乙再 +1 外部长度、取 l_s=l_P 时源项放大至 3.09e+34 而数值发散），本册不代选；且约束面上 V=0 使动力学只存在于偏离约束面的初值。"
+}
