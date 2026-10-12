@@ -648,11 +648,11 @@ RESULTS = {
 
 def build_md():
     out = []
-    out.append("# TUFT「光速螺旋 κ-τ-ω 量子几何」全维审计（r39 · 2026-10-12）")
+    out.append("# TUFT「光速螺旋 κ-τ-ω 量子几何」全维审计（r40 · 2026-10-12）")
     out.append("")
-    out.append("- 引擎：`源码/TUFT-r39_光速螺旋曲率挠率量子几何_全维审计_2026-10-12.py`（纯标准库）")
-    out.append("- 数据：`数据/TUFT-r39_光速螺旋曲率挠率量子几何_全维审计_2026-10-12.{json,md,_report.txt}`")
-    out.append("- 判定：`判定_TUFT-r39-光速螺旋曲率挠率量子几何_全维审计_2026-10-12.md`")
+    out.append("- 引擎：`源码/TUFT-r40_光速螺旋曲率挠率量子几何_全维审计_2026-10-12.py`（纯标准库）")
+    out.append("- 数据：`数据/TUFT-r40_光速螺旋曲率挠率量子几何_全维审计_2026-10-12.{json,md,_report.txt}`")
+    out.append("- 判定：`判定_TUFT-r40-光速螺旋曲率挠率量子几何_全维审计_2026-10-12.md`")
     out.append("- 来料正本：`数据/TUFT-光速螺旋曲率挠率量子几何_来料全文_2026-10-12.md`")
     out.append("- 口径：Decimal 60 位 + Fraction 三维量纲 (M,L,T)；机器计算，非口头断言。")
     out.append("")
@@ -691,7 +691,7 @@ def build_md():
 
 def build_report():
     out = []
-    out.append("TUFT-r39 光速螺旋曲率挠率量子几何 全维审计 · 报告")
+    out.append("TUFT-r40 光速螺旋曲率挠率量子几何 全维审计 · 报告")
     out.append("日期: 2026-10-12")
     out.append("PASS = %d" % counts["PASS"])
     out.append("FAIL = %d" % counts["FAIL"])
@@ -715,7 +715,7 @@ def main():
     base = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.abspath(os.path.join(base, "..", "数据"))
     os.makedirs(data_dir, exist_ok=True)
-    stem = "TUFT-r39_光速螺旋曲率挠率量子几何_全维审计_2026-10-12"
+    stem = "TUFT-r40_光速螺旋曲率挠率量子几何_全维审计_2026-10-12"
     with open(os.path.join(data_dir, stem + ".json"), "w", encoding="utf-8") as f:
         json.dump(RESULTS, f, ensure_ascii=False, indent=2)
     with open(os.path.join(data_dir, stem + ".md"), "w", encoding="utf-8") as f:

@@ -1,0 +1,251 @@
+{
+  "summary": {
+    "round": "r42",
+    "title": "TUFT-V4.1 修复版（路线B）基础长度尺度 l0 全维审计",
+    "date": "2026-10-12",
+    "approach": "纯标准库 + mpmath + Fraction(M,L,T)",
+    "tally": {
+      "PASS": 13,
+      "FAIL": 5,
+      "BOUNDARY": 0,
+      "INFO": 2,
+      "CORRECTED": 0,
+      "MISMATCH": 0
+    },
+    "guard_total": 13,
+    "guard_pass": 13,
+    "exit_code": 0,
+    "one_line": "路线B 用新公理 l0 真实补回了上一轮缺失的 L^2（一~四节量纲全闭合、G_th 构造性等於 CODATA）；但五节演化方程(10)(11)与 ADM 动量方程仍量纲非齐次（LHS=L^-3，潜在项=L T^-4，源项=L^-2），且‘CODATA 匹配’是令 l0=l_P 的构造而非推导。"
+  },
+  "entries": [
+    {
+      "id": "G01",
+      "name": "eq(1) kappa^2+tau^2 = omega^2/c^2",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(-2, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(-2, 1), Fraction(0, 1))",
+      "note": "L^-2 = L^-2，自洽"
+    },
+    {
+      "id": "G02",
+      "name": "eq(2) tau = kappa*cot(theta)",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1))",
+      "note": "L^-1 = L^-1 * 1"
+    },
+    {
+      "id": "G03",
+      "name": "eq(3) omega = c*kappa*sin(theta)",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1))",
+      "note": "T^-1 = (L T^-1)(L^-1)"
+    },
+    {
+      "id": "G04",
+      "name": "eq(4) m = hbar*omega/c^2",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(1, 1), Fraction(0, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(1, 1), Fraction(0, 1), Fraction(0, 1))",
+      "note": "M = (M L^2 T^-1)(T^-1)/(L^2 T^-2)"
+    },
+    {
+      "id": "G05",
+      "name": "eq(5) m = hbar*kappa*sin(theta)/c",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(1, 1), Fraction(0, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(1, 1), Fraction(0, 1), Fraction(0, 1))",
+      "note": "M = (M L^2 T^-1)(L^-1)/(L T^-1)"
+    },
+    {
+      "id": "G06",
+      "name": "eq(6) kappa = m*c/(hbar*sin theta)",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1))",
+      "note": "L^-1 = (M)(L T^-1)/((M L^2 T^-1))"
+    },
+    {
+      "id": "G07",
+      "name": "eq(7) g = -c^2*l0^2*kappa*Rhat/R^2（L^2 修复点）",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(1, 1), Fraction(-2, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(1, 1), Fraction(-2, 1))",
+      "note": "L T^-2 = (L^2 T^-2)(L^2)(L^-1)(L^-2)  -- 上一轮缺失的 L^2 在此补回"
+    },
+    {
+      "id": "G08",
+      "name": "eq(8) G_th = c^3*l0^2/(hbar*sin theta)",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(-1, 1), Fraction(3, 1), Fraction(-2, 1))",
+      "rhs_dim": "(Fraction(-1, 1), Fraction(3, 1), Fraction(-2, 1))",
+      "note": "M^-1 L^3 T^-2 = (L^3 T^-3)(L^2)/((M L^2 T^-1))"
+    },
+    {
+      "id": "G09",
+      "name": "eq(9) nabla.g = -4*pi*G_th*rho",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(0, 1), Fraction(-2, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(0, 1), Fraction(-2, 1))",
+      "note": "T^-2 = (M^-1 L^3 T^-2)(M L^-3)"
+    },
+    {
+      "id": "G10",
+      "name": "eq(10) Box*kappa = dV/dkappa + S_kappa  -- 左右量纲一致?",
+      "verdict": "FAIL",
+      "lhs_dim": "(Fraction(0, 1), Fraction(-3, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(1, 1), Fraction(-4, 1))",
+      "note": "LHS=L^-3 ; RHS潜在项=L T^-4 -- 见 G11/G12"
+    },
+    {
+      "id": "G11",
+      "name": "eq(10) 项A: [Box*kappa] = L^-3",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(-3, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(-3, 1), Fraction(0, 1))",
+      "note": "独立核对"
+    },
+    {
+      "id": "G12",
+      "name": "eq(10) 项B: [dV/dkappa] = L T^-4",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(1, 1), Fraction(-4, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(1, 1), Fraction(-4, 1))",
+      "note": "独立核对"
+    },
+    {
+      "id": "G13",
+      "name": "eq(10) 项C: [S_kappa] = L^-2",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(-2, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(-2, 1), Fraction(0, 1))",
+      "note": "独立核对（来料自验项）"
+    },
+    {
+      "id": "G14",
+      "name": "eq(10)/(11) 三向量纲互异 -> 非齐次",
+      "verdict": "FAIL",
+      "note": "Box*kappa=L^-3 ; dV/dkappa=L T^-4 ; S_kappa=L^-2，三者无共同量纲，演化方程（10）（11）作为微分方程不合法（与 r40 同类‘源项单点校验但 LHS 未比’缺陷复发）。dV/dkappa 与 LHS 相差 c^4 因子；S_kappa 与 LHS 相差 L^-1。"
+    },
+    {
+      "id": "G15",
+      "name": "ADM 运动学: dt*kappa = beta^k d_k kappa + alpha*Pi_kappa",
+      "verdict": "PASS",
+      "lhs_dim": "(Fraction(0, 1), Fraction(-1, 1), Fraction(-1, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(-1, 1), Fraction(-1, 1))",
+      "note": "T^-1 L^-1 = (L T^-1)(L^-2) -- 运动学 OK"
+    },
+    {
+      "id": "G16",
+      "name": "ADM 动量: dt*Pi_kappa = ... - alpha*dV/dkappa - alpha*S_kappa",
+      "verdict": "FAIL",
+      "lhs_dim": "(Fraction(0, 1), Fraction(-2, 1), Fraction(0, 1))",
+      "rhs_dim": "(Fraction(0, 1), Fraction(2, 1), Fraction(-5, 1))",
+      "note": "LHS=L^-2 T^-1 ; 右端 -alpha*dV/dkappa = L^2 T^-5，与 LHS 差 c^4 -- 继承 G14 失配"
+    },
+    {
+      "id": "G17",
+      "name": "ADM 动量方程整体量纲失配",
+      "verdict": "FAIL",
+      "note": "dt*Pi_kappa 量纲 L^-2 T^-1；右端 alpha*D2kappa=L^-2 T^-1 一致，但 alpha*dV/dkappa=L^2 T^-5、alpha*S_kappa=L^-1 T^-1 均不匹配，演化系统无法数值积分。"
+    },
+    {
+      "id": "G18",
+      "name": "六、挠率贡献（弱场 tau<<kappa 退化牛顿）",
+      "verdict": "INFO",
+      "note": "tau=kappa*cot theta 与 eq(2) 一致；弱场 tau<<kappa 时退化为纯曲率引力。此为框架内自洽陈述，不产生新预言，标记 INFO。"
+    },
+    {
+      "id": "G19",
+      "name": "七、对标表声明‘全部方程量纲严格自洽’",
+      "verdict": "FAIL",
+      "note": "声明与实际审计冲突：一~四节（G01-G09）确实闭合；但五节演化方程（10）（11）与 ADM 动量方程（G14/G17）量纲非齐次。‘全部方程量纲严格自洽’仅对静力学/弱场极限成立。"
+    },
+    {
+      "id": "G20",
+      "name": "八、下一步三选项",
+      "verdict": "INFO",
+      "note": "①g-2 一阶挠率修正 ②RK4/ADM-BSSN 静态球对称初值演化 ③引力波 TUFT 偏振修正。三项均依赖 G14/G17 先被修复方可执行。"
+    }
+  ],
+  "guards": [
+    {
+      "id": "G1",
+      "ok": true,
+      "text": "c 量纲正确"
+    },
+    {
+      "id": "G2",
+      "ok": true,
+      "text": "hbar 量纲正确"
+    },
+    {
+      "id": "G3",
+      "ok": true,
+      "text": "G 标准量纲正确"
+    },
+    {
+      "id": "G4",
+      "ok": true,
+      "text": "g 加速度量纲正确"
+    },
+    {
+      "id": "G5",
+      "ok": true,
+      "text": "eq(7) 量纲闭合（L^2 修复点）：c^2*l0^2*kappa*(1/R^2) = g = L T^-2"
+    },
+    {
+      "id": "G6",
+      "ok": true,
+      "text": "eq(8) G_th 量纲闭合"
+    },
+    {
+      "id": "G7",
+      "ok": true,
+      "text": "Box*kappa = L^-3"
+    },
+    {
+      "id": "G8",
+      "ok": true,
+      "text": "dV/dkappa = L T^-4"
+    },
+    {
+      "id": "G9",
+      "ok": true,
+      "text": "S_kappa = L^-2"
+    },
+    {
+      "id": "G10",
+      "ok": true,
+      "text": "演化方程三项量纲互异被正确检出（非齐次）"
+    },
+    {
+      "id": "G11",
+      "ok": true,
+      "text": "l_P 精算与 CODATA 标称相差 < 1e-3"
+    },
+    {
+      "id": "G12",
+      "ok": true,
+      "text": "G_th(sin1,l0=lP) 与 Gexp 相对差 < 1e-30（构造性相等）"
+    },
+    {
+      "id": "G13",
+      "ok": true,
+      "text": "theta 无量纲"
+    }
+  ],
+  "numeric": {
+    "c": "299792458.0",
+    "hbar": "1.0545718176461565e-34",
+    "Gexp": "0.000000000066743",
+    "l_P_computed": "1.616255024423705369826590348262110723049436614127889794758980564716400341945973e-35",
+    "l_P_CODATA_nominal": "1.616255e-35",
+    "l_P_relative_error": "1.51113e-8",
+    "G_th_sin1": "0.000000000066743",
+    "G_th_relative_error_vs_Gexp": "0.0",
+    "l0_over_lP_for_universal_G": "l0 = l_P * sqrt(sin theta); sin theta=1 => l0=l_P",
+    "note": "G_th == G_exp 是构造性等式：令 l0=l_P 且 sin theta=1 时 G_th = c^3*l_P^2/hbar = c^3*(Gexp*hbar/c^3)/hbar = Gexp。这不是从 kappa,tau,omega,c,hbar 导出 G，而是用 G 定义 l0（或反之）。"
+  }
+}

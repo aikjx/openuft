@@ -1,0 +1,603 @@
+{
+  "meta": {
+    "book": "r45",
+    "subject": "TUFT-V4.5｜变分推导螺旋场自能，消去自能 ansatz 假设（算法联盟）",
+    "engine": "纯标准库 Decimal 60 位 + Fraction 四分量量纲 (M,L,T,Q)",
+    "stamp": "2026-10-12",
+    "incoming_predecessors": [
+      "V4.2 螺旋场作用量",
+      "V4.3 联合 chi^2 拟合",
+      "V4.4 路线B 自能 ansatz"
+    ],
+    "counts": {
+      "FAIL": 20,
+      "BOUNDARY": 2,
+      "PASS": 6,
+      "MISMATCH": 2,
+      "CORRECTED": 2,
+      "INFO": 6
+    },
+    "items_total": 38,
+    "guards": "45/45",
+    "rating_incoming": "C/L1",
+    "hash": "52ea957ffeb7db74"
+  },
+  "verdicts": [
+    {
+      "id": "T01",
+      "verdict": "FAIL",
+      "claim": "V(kappa,tau)=1/2(c^2(kappa^2+tau^2)-omega^2)^2 可作拉氏密度中的势项（能量密度）",
+      "machine_reading": "[V] = T^-4（T^-4），而拉氏密度中 V 须为能量密度 ML^-1T^-2",
+      "note": "缺口量纲 %s（质量一次方 / 长度一次方）；括号内两项本身同族 T^-2，故平方后 T^-4。"
+    },
+    {
+      "id": "T02",
+      "verdict": "FAIL",
+      "claim": "dV/dkappa = (c^2 kappa/sin^2 - omega^2)(2 c^2 kappa/sin^2)",
+      "machine_reading": "括号内两项量纲 LT^-2 vs T^-2，异族不可相减（正确应为 c^2 kappa^2/sin^2 = T^-2）",
+      "note": "来料把 kappa^2 写成 kappa，少一个长度幂次；正是量纲守卫能直接抓出的类型。"
+    },
+    {
+      "id": "T03",
+      "verdict": "FAIL",
+      "claim": "驻波条件 c^2 kappa^2/sin^2 = omega^2 是对场 kappa 的额外约束",
+      "machine_reading": "公理1 已强制 omega = c kappa/sin(theta)，故 V(kappa) 恒等于 0（sin(theta)=1 时 4/4 逐位精确 0；一般 theta 下 25 组最大相对残差 1.16749515685634856801997342589824375212137673062265375854931E-120）",
+      "note": "「驻波约束」是公理1 的恒等改写，零信息量；势项在公理1 下整体消失。"
+    },
+    {
+      "id": "T04",
+      "verdict": "FAIL",
+      "claim": "变分给出曲率场的运动方程 (hbar/c) laplacian(kappa) = -dV/dkappa",
+      "machine_reading": "V 恒为 0 => dV/dkappa 恒为 0 => laplacian(kappa) = 0（无质量项、无势阱、无自洽源）",
+      "note": "场方程退化为拉普拉斯方程，与 omega / theta / 粒子均无关。"
+    },
+    {
+      "id": "T05",
+      "verdict": "FAIL",
+      "claim": "曲率场是球对称局域包（kappa(r)=kappa_0 e^{-r/l_P}）且满足 laplacian(kappa)=0",
+      "machine_reading": "球对称通解 kappa=C+C'/r：B 分支 r->0 发散（r=1e-6 处达 1.000000000000E+03）、无穷远残留 1.000000000000E+0；A 分支恒为常数（r=1 与 r=100 差值 0，无法衰减到 0）",
+      "note": "局域包与驻波方程互斥：要么无粒子（kappa 恒 0），要么不满足所推运动方程。"
+    },
+    {
+      "id": "T06",
+      "verdict": "BOUNDARY",
+      "claim": "S_spiral 变分得到的是粒子质量的运动方程",
+      "machine_reading": "公理1 中 kappa 是粒子沿世界线的常曲率（内禀、不随空间变化）；S_spiral 中 kappa(x) 是空间分布场。变分产出后者，把它代入 mc^2 = hbar*omega - U_self 是把粒子属性与场能混合，不同源。",
+      "note": "两对象未在任何公设中建立映射；本册不代为构造。"
+    },
+    {
+      "id": "T07",
+      "verdict": "FAIL",
+      "claim": "静态场哈密顿密度 H_spiral = p.dq/dt - L 可用作场能量密度",
+      "machine_reading": "静态近似令 partial_0 kappa = 0 后 L 不含时间导数项 => p = 0 => H = -L = V - (hbar/2c)|grad kappa|^2，梯度项为负；这是约束系统的 Onsager 项（须取负号才是有效势），非正能量密度。",
+      "note": "程序性错误：把约束系统的负拉氏量当作正能量使用。"
+    },
+    {
+      "id": "T08",
+      "verdict": "FAIL",
+      "claim": "H_spiral = -(hbar/2c) g^ij d_i kappa d_j kappa + V，取 V=0 后得 H = +(hbar/2c)|grad kappa|^2",
+      "machine_reading": "第 1 行梯度项为负，第 2 行翻为正，两行自相矛盾（同一段内符号翻转）",
+      "note": "且由 T07，真正自洽的静态 H 不含正梯度能项；「梯度能即自能来源」这条线索在静态近似下不成立。"
+    },
+    {
+      "id": "T09",
+      "verdict": "PASS",
+      "claim": "∫_0^inf r^2 e^{-2r/l_P} dr = l_P^3/4",
+      "machine_reading": "解析精确：1/4·l_P^3（Gamma 代入，Fraction 机器零）",
+      "note": "这是本册唯一在算术层完全无误的步骤之一。"
+    },
+    {
+      "id": "T10",
+      "verdict": "PASS",
+      "claim": "∫ d^3x |grad kappa|^2 = pi · l_P · kappa_0^2",
+      "machine_reading": "量纲 L^-1；系数 4pi·kappa_0^2/l_P^2 × l_P^3/4 = pi·l_P·kappa_0^2（机器复算一致）",
+      "note": "算术正确，但该积分的量纲是 L^-1 而非能量/体积 —— 直接进入下一条缺陷。"
+    },
+    {
+      "id": "T11",
+      "verdict": "FAIL",
+      "claim": "自带核验：[U_self] = (hbar L^2T^-1 · L)/(L T^-1) · L^-2 = M L^2 T^-2 = 能量",
+      "machine_reading": "机器量纲 M（质量/长度），与能量 ML^2T^-2 相差 L^2T^-2 = c^2；来料核验行的乘法把长度指数算错",
+      "note": "这是本册最直接的一条：V4.5 以「量纲完全自洽」为卖点，而该卖点在自家核验行上即不成立。"
+    },
+    {
+      "id": "T12",
+      "verdict": "FAIL",
+      "claim": "S_spiral 的梯度动能项系数 hbar/(2c) 使拉氏密度成为合法能量密度",
+      "machine_reading": "[hbar/(2c)·(∇kappa)^2] = ML^-3，而能量密度应为 ML^-1T^-2，缺口恰为 c^2",
+      "note": "最小修复：系数 hbar/(2c) → hbar*c/2（零成本）。该修复不改变任何物理结论。"
+    },
+    {
+      "id": "T13",
+      "verdict": "PASS",
+      "claim": "（本册给出）最小修复 U_self = pi*hbar*c*l_P*kappa_0^2 / 2",
+      "machine_reading": "量纲 ML^2T^-2 合能量；系数 hbar*c/2 较来料恰乘 c^2（89875517873681764 倍放大）",
+      "note": "该修复使驻波能量方程、二次方程、判别式同时合法 —— 与 r44 的最小修复同型。"
+    },
+    {
+      "id": "T14",
+      "verdict": "PASS",
+      "claim": "变分导出的自能结构与 V4.4 修正版 ansatz 存在实质差别",
+      "machine_reading": "幂次结构同为 l_P^1 * kappa^2；仅系数由 1/2 变为 pi/2（差倍数 1）",
+      "note": "结论：「不再手动假设」在结构层面未带来新自由度，只把系数重新标定；真正改变结论的仍是 r44 的幂次修正。"
+    },
+    {
+      "id": "T15",
+      "verdict": "FAIL",
+      "claim": "根号 1/sin^2(theta) - 2*pi*m*c^2/hbar 及其定义域判据",
+      "machine_reading": "被减项量纲 T^-2（=角频率平方），减项为无量纲 1；异族不可相减，「根号内必须为正」无从判定",
+      "note": "r44 T19 的同族缺陷在本册原样复发（V4.5 未修复该层）。"
+    },
+    {
+      "id": "T16",
+      "verdict": "FAIL",
+      "claim": "二次方程有物理小根，可用于所有粒子",
+      "machine_reading": "需 1/sin^2(theta) > 4877913657894196953684.14984969655679636285113550130560463068（电子）⇒ sin^2(theta) < 2.05005678684296675863147665230668621594704033777763861111919E-22 ⇒ theta < 1.431802e-11 rad；缪子/τ/顶夸克/W 依次更严。",
+      "note": "所有真实粒子在全部实 theta 上无实根；chi2(theta) 无定义域。"
+    },
+    {
+      "id": "T17",
+      "verdict": "MISMATCH",
+      "claim": "小质量展开 kappa ≈ m c^2 sin(theta)/hbar",
+      "machine_reading": "机器解析展开给 kappa = m c^4 sin(theta)/(hbar l_P)，与来料式相差恰好 c^2/l_P = 5560726278684140885668607567652022244529191188938292.63337311 倍",
+      "note": "来料把根号解的 1/(pi*l_P/c^2) 前因子丢掉；r44 T22 的同族缺陷在本册复发。"
+    },
+    {
+      "id": "T18",
+      "verdict": "FAIL",
+      "claim": "弱场 kappa ≈ m c^2 sin(theta)/hbar 的量纲",
+      "machine_reading": "[m c^2/hbar] = T^-1（时间倒数），而 [kappa] = L^-1",
+      "note": "机器展开式 m c^4 s/(hbar l_P) 的量纲为 LT^-3，同样不是 L^-1 —— 缺陷比漏因子更深"
+    },
+    {
+      "id": "T19",
+      "verdict": "PASS",
+      "claim": "（本册给出）弱场自洽映射 kappa = m c sin(theta)/hbar",
+      "machine_reading": "由公理1 omega=c kappa/sin 与能量等式 mc^2=hbar*omega 联立；[m c/hbar]=L^-1 合；回代残差 1.22143285705530606161182348220356166276868783676294061359145E-60",
+      "note": "此式与来料正文式差 c^2/l_P；r44 T22 曾独立给出同一结论，互为交叉印证。"
+    },
+    {
+      "id": "T20",
+      "verdict": "FAIL",
+      "claim": "质量上界 m_max < hbar/(2 pi c^2 sin^2 theta)",
+      "machine_reading": "量纲 MT；读数（sin theta=1）1.86747538812167810309838578614003097950226786401146758952862E-52，若按 kg 读则电子是其 4877913657894196953684.14984969655679636285113550130560463069 倍",
+      "note": "r44 T26/T27 的同族缺陷再次复发（来料版 hbar/(2c sin^2) 量纲 ML，本版量纲 MT，都不是质量）。"
+    },
+    {
+      "id": "T21",
+      "verdict": "CORRECTED",
+      "claim": "（本册给出）若要得到有物理意义的静态质量上界",
+      "machine_reading": "须令 U_self 与 m c^2 同族：由最小修复 U=(pi hbar c/2) l_P kappa^2 与 kappa=m c sin/hbar 联立，二次项与线性项之比为 delta = (pi/2)(m/m_P) sin^2(theta)（无量纲），无实根条件退化为恒真。",
+      "note": "即：修复量纲后「上界」不再是一个不等式约束，而是恒成立 —— 上界预言随之消失。"
+    },
+    {
+      "id": "T22",
+      "verdict": "INFO",
+      "claim": "（本册给出）自能在能量方程中的相对占比",
+      "machine_reading": "delta = (pi/2)(m/m_P) sin^2(theta)；sin^2=1 时 e=6.574509E-23 / mu=1.359400E-20 / tau=2.283473E-19 / top=1.226117E-19 / W=5.816301E-18",
+      "note": "全部 <= 1e-17 量级：机制在粒子射程内等于不存在，与 r44 T25 的 eps/4 同量级。"
+    },
+    {
+      "id": "T23",
+      "verdict": "FAIL",
+      "claim": "二次曲率自能项抑制大质量粒子的 kappa 增长，破坏旧 m^2 标度",
+      "machine_reading": "弱场极限下 kappa = m c sin(theta)/hbar 精确成立（自能仅给 1.35939986932888799199328636230611337920000793346812824207672E-20 的相对修正），代入 a ∝ cot(theta)·m·kappa 得 a ∝ m^2 cos(theta)，sin(theta) 精确消去；a_mu/a_e = (m_mu/m_e)^2 = 42753.1228480793509918088838305446974391344865451273940328402 原封不动",
+      "note": "与 r44 C2/T30 同源：只要唯一全局 theta 连接所有粒子，弱场必回到 m^2。"
+    },
+    {
+      "id": "T24",
+      "verdict": "FAIL",
+      "claim": "「二次项显著的大质量区」与「根号为正的实解区」是同一区间",
+      "machine_reading": "实解需 m < hbar/(2 pi c^2 sin^2) ≈ 1.86747538812167810309838578614003097950226786401146758952862E-52（按 kg 读远小于任何真实粒子）；而二次项显著需 delta ~ 1 即 m ~ m_P = 2.17643434271789832613468077286959055362101138891900033951769E-8 kg；两者相差 44.07 个量级，互斥。",
+      "note": "本册新增判据：任何带自能非线性修正的映射，必须先验证「机制生效区 ⊆ 方程有定义区」。"
+    },
+    {
+      "id": "T25",
+      "verdict": "FAIL",
+      "claim": "a_TUFT = -(3 c cot(theta)/(4 e hbar))·m·kappa 为无量纲的反常磁矩",
+      "machine_reading": "[a_TUFT] = L^-2Q^-1；无量纲反常磁矩应为 1",
+      "note": "补齐所需量纲为 L^2Q（= [E]/[L^2] 的电荷当量），V4.5 未给任何补齐因子。"
+    },
+    {
+      "id": "T26",
+      "verdict": "INFO",
+      "claim": "补齐因子在公设参数集内的可穷举性",
+      "machine_reading": "不含电荷标度：0 组无解；含电荷标度：14 组有解，最简 e^+1,lP^+2",
+      "note": "解不唯一（14 组）⇒ 系数仍不可确定，a_TUFT 仍非预言。延续 r42 的「缺失因子参数空间穷举」判据。"
+    },
+    {
+      "id": "T27",
+      "verdict": "FAIL",
+      "claim": "以唯一 theta 同时拟合电子与缪子的 g-2 修正",
+      "machine_reading": "由 a ∝ cot(theta)·m·kappa(m)，弱场 kappa ∝ m ⇒ a_mu/a_e ≡ (m_mu/m_e)^2 与 cot(theta) 无关；反解得 cot(theta)_e = 6.58949069497694944211843665579109165190131070461044685095133E-48（>0）与 cot(theta)_mu = -5.13762914145656528851529769186067715700123356614618859824317E-49（<0），符号互斥",
+      "note": "该证伪对任何量纲补齐因子免疫（比值中 C 消去），与 r42 N02/N03 同源、本册独立复算。"
+    },
+    {
+      "id": "T28",
+      "verdict": "PASS",
+      "claim": "G_th = c^3 l_P^2/(hbar sin theta) 在 sin theta=1 时与 CODATA 一致",
+      "machine_reading": "标称 l_P 相对残差 6.62968339878928789003657746898704447241380194398519125601187E-8；按定义式 l_P^2=hbar G/c^3 精算后残差 0E-38（恒等式复读，零信息量）",
+      "note": "这是 r44 T33 的同源读数；由于 chi^2 代码把 l_P 硬编码为 CODATA 值，该项对 theta 无梯度。"
+    },
+    {
+      "id": "T29",
+      "verdict": "FAIL",
+      "claim": "chi2(theta) 可用 dynesty 做全局最小化",
+      "machine_reading": "kappa(m,theta) 要求 1/sin^2(theta) > 2*pi*m*c^2/hbar；电子该量 = 4877913657894196953684.14984969655679636285113550130560463068，而 1/sin^2 的上确界为 1 ⇒ 全部实 theta 无实根 ⇒ sqrt 返回复数 ⇒ chi2 非实函数，最小化无定义",
+      "note": "r44 已预警「被最小化的目标函数当前没有定义域」，V4.5 未解决；§8 选项 1 因此不可执行。"
+    },
+    {
+      "id": "T30",
+      "verdict": "INFO",
+      "claim": "chi2 的 sigma 口径",
+      "machine_reading": "代码用 sigma_e = 1e-12（实验值约 2.8e-14、SM 理论约 2.1e-24）、sigma_mu = 4e-7（含 SM 理论约 5.2e-10）、sigma_G/G = 1e-5（CODATA 为 2.2e-5）",
+      "note": "三项 sigma 均未登记且与真实值偏离 2~8 个量级；r44 P2 的口径层缺口在本册原样保留。"
+    },
+    {
+      "id": "T31",
+      "verdict": "MISMATCH",
+      "claim": "chi_G 项为 theta 提供有效约束",
+      "machine_reading": "G_th 只经 sin(theta) 进入，而 chi2 的其余两项要求 theta < 1.432e-11 rad（见 T16）；在该区间内 chi_G ≡ 0.000000000000E-31（常数），梯度为零",
+      "note": "即便忽略 T29 的定义域问题，三项中也没有一项能对 theta 形成有效梯度。"
+    },
+    {
+      "id": "T32",
+      "verdict": "BOUNDARY",
+      "claim": "新增公设：指数局域包的衰减宽度取 l_P",
+      "machine_reading": "局域化尺度 l_P 与公理3 中 G_th 里的 l_P 同符号但用途不同（衰减宽度 vs 自然长度）；若二者不强制等同，则自由参数 +1。",
+      "note": "本册不代为判定二者是否可等同（等同则零信息量，但需明写）。"
+    },
+    {
+      "id": "T33",
+      "verdict": "FAIL",
+      "claim": "唯一全局普适升角 theta（单一自由参数）",
+      "machine_reading": "闭合方程实际含 {theta, l_P}，其中 l_P^2 ≡ hbar G_exp/c^3 直接注入 G；chi2 代码还并列注入 e、hbar、c 与两个实验 a 值",
+      "note": "撞 Ω5「自由常数 ≤1」；与 r41 R06 / r44 T34 同族。"
+    },
+    {
+      "id": "T34",
+      "verdict": "FAIL",
+      "claim": "（§7 遗留假设 B）下一步改从 laplacian(kappa)=0 求格林函数",
+      "machine_reading": "该方程在全空间有源为零且要求 r→∞ 衰减；唯一的球对称有界解为 kappa ≡ 0（T05），非球对称解在无穷远不衰减 ⇒ 无满足边界条件的格林函数解",
+      "note": "「去掉指数轮廓假设」这条出路在 T04/T05 之后被堵死：不是 ansatz 太粗，而是方程本身无解。"
+    },
+    {
+      "id": "T35",
+      "verdict": "INFO",
+      "claim": "§8 四选项的可执行性（本册只判定可执行性，不代选）",
+      "machine_reading": "选项1（dynesty）无定义域（T29）⇒ 不可执行；选项2（格林函数）不可执行（T34）；选项3（tau 子 g-2）依赖选项1；选项4（ADM-BSSN）不在本册射程（r41 已判演化方程层 C/L1）",
+      "note": "四条出路中 3 条在本框架内直接不可执行；这是相对 r44（同样 4 条全不可执行）的推进点：V4.5 至少修好了幂次。"
+    },
+    {
+      "id": "T36",
+      "verdict": "CORRECTED",
+      "claim": "来料 §7 自评第一条：「自能不再是手动 ansatz，由螺旋场拉氏量变分 + 球对称局域包积分严格导出」",
+      "machine_reading": "半成立：(i) 积分算术严格正确（T09/T10）；(ii) 但拉氏密度本身量纲缺 c^2（T12）、势 V 在公理1 下恒等于 0（T03）、运动方程退化为拉普拉斯方程且与局域包互斥（T04/T05）、哈密顿量两行符号自相矛盾（T07/T08）；(iii) 修复量纲后幂次结构与 r44 修正版同型（T14）。⇒ 「严格导出」不成立。",
+      "note": "本册唯一对来料自我定位的实质更正；不否认「从变分出发」这一方法方向的价值。"
+    },
+    {
+      "id": "T37",
+      "verdict": "INFO",
+      "claim": "缺陷族复发链登记",
+      "machine_reading": "量纲非齐次族：r18(§1 κ) -> r19 -> r22(§22) -> r26 -> r27(H20) -> r32 -> r35 -> r37 -> r44(T13/T14 自称自洽实则差一幂次) -> **r45(T01/T02/T11/T12/T15/T18/T20/T25 共 8 处)**；「打破 m^2 被自己取消」：r44 C2/T30 -> **r45 T23**（第 2 次）；「恒等式复读」：r44 T33 -> **r45 T03/T28**",
+      "note": "本册是该缺陷族的第 9 次复发，且来料以「量纲完全自洽」为自我卖点，故单独立册登记。"
+    },
+    {
+      "id": "T38",
+      "verdict": "INFO",
+      "claim": "与并行册的分工（零重复声明）",
+      "machine_reading": "r44 审 V4.3/V4.4 的 g-2 联合拟合链 + 自能 ansatz；本册审 V4.5 的**变分导出链 + 局域包 + 二次映射 + chi2 代码**。r40 审 kappa-tau-omega 导出链与 G 的可导出性；r42（算法联盟册）审挠率-自旋耦合消去 eta，其「函数形式锁定 ⇒ 系数不变性」判据在本册 T27 被独立复算复用。",
+      "note": "本册不重复复算 V4.3/V4.4 的数值（已在 r44 登记），只承接其结论。"
+    }
+  ],
+  "guards": [
+    {
+      "name": "dim_mul_additive_not_multiplicative",
+      "passed": true,
+      "detail": "dmul 应为指数相加：M*L = ML^2，实得 ML^2"
+    },
+    {
+      "name": "dim_pow_integer",
+      "passed": true,
+      "detail": "dpow 负指数应取负"
+    },
+    {
+      "name": "dim_hbar_over_c",
+      "passed": true,
+      "detail": "[hbar/c] 应为 M*L，实得 ML"
+    },
+    {
+      "name": "dim_energy",
+      "passed": true,
+      "detail": "[E]=ML^2T^-2, [E]/L^3=ML^-1T^-2"
+    },
+    {
+      "name": "dim_kappa_from_axiom",
+      "passed": true,
+      "detail": "公理1 omega=c*kappa/sin(theta) => [c][kappa] = T^-1，应等于 [omega] = T^-1"
+    },
+    {
+      "name": "dim_gradient_integral",
+      "passed": true,
+      "detail": "int d^3x |grad kappa|^2 应为 L^-1，实得 L^-1"
+    },
+    {
+      "name": "dim_claim_kernel_ratio_ok",
+      "passed": true,
+      "detail": "来料 U_self=hbar l_P kappa^2/(2c) 应为 M（质量维），实得 M"
+    },
+    {
+      "name": "dim_omega_squared_is_T_minus2",
+      "passed": true,
+      "detail": "[omega^2] = T^-2（T^-2）；注意 dT=[T^-1]，故平方为 +2 次幂"
+    },
+    {
+      "name": "dim_mc2_over_hbar_is_T_minus1",
+      "passed": true,
+      "detail": "[m c^2/hbar] = T^-1 = T^-1；平方后与 [omega^2] 同族"
+    },
+    {
+      "name": "dim_bracket_terms_c2k2_and_omega2_same_family",
+      "passed": true,
+      "detail": "c^2 kappa^2 = T^-2 与 omega^2 = T^-2 同族，可相减"
+    },
+    {
+      "name": "dim_bracket_as_written_not_same_family",
+      "passed": true,
+      "detail": "c^2 kappa = LT^-2 与 omega^2 = T^-2 异族，不可相减（来料笔误）"
+    },
+    {
+      "name": "T01_positive_control_potential_is_not_symmetric",
+      "passed": true,
+      "detail": "阳性对照：若误把 V 当成 omega^2 才会得 T^-2，实得 T^-4"
+    },
+    {
+      "name": "T02_bracket_exponents_differ",
+      "passed": true,
+      "detail": "c^2 kappa^2/sin^2 = T^-2 vs c^2 kappa/sin^2 = LT^-2"
+    },
+    {
+      "name": "T03_positive_control_V_nonzero_without_axiom",
+      "passed": true,
+      "detail": "阳性对照：omega 独立取 1e3 时 V = 499999996089.799063808830562874684701874609228742343613861314（非零）"
+    },
+    {
+      "name": "T03_exact_zero_at_sin_theta_1",
+      "passed": true,
+      "detail": "sin(theta)=1 的 4 个 kappa 取值下 V 为逐位精确 0：4/4"
+    },
+    {
+      "name": "T03_relative_residual_is_machine_zero",
+      "passed": true,
+      "detail": "一般 theta 下 25 组 (theta,kappa) 的最大相对残差 = 1.16749515685634856801997342589824375212137673062265375854931E-120（60 位机器零）"
+    },
+    {
+      "name": "T05_general_solution_residual_zero",
+      "passed": true,
+      "detail": "阳性对照：球对称通解 kappa=A+B/r 代入方程残差 9.868649107779169e-15（机器零）"
+    },
+    {
+      "name": "T05_branch_B_blows_up_at_origin",
+      "passed": true,
+      "detail": "通解的 B 分支在 r=1e-6 处 kappa = 1.000000000000E+03（发散）"
+    },
+    {
+      "name": "T05_branch_A_cannot_decay",
+      "passed": true,
+      "detail": "通解的 A 分支（常数）在 r=1 与 r=100 处差值 0（严格不衰减）"
+    },
+    {
+      "name": "T05_branch_B_leaves_tail",
+      "passed": true,
+      "detail": "通解的 B 分支在 r=1e30 处仍为 1.000000000000E+0（无穷远不衰减，非零权源）"
+    },
+    {
+      "name": "T09_gamma_check",
+      "passed": true,
+      "detail": "Γ(3)=2!=2，∫ x^2 e^{-x}dx=2，代入 x=2r/l 得系数 1/4"
+    },
+    {
+      "name": "T10_dim_of_integral_is_L^-1",
+      "passed": true,
+      "detail": "int d^3x |grad kappa|^2 = L^-1"
+    },
+    {
+      "name": "T11_two_paths_agree",
+      "passed": true,
+      "detail": "两条路径：直接乘 [hbar*l_P*kappa^2/c] = M；由 H 密度积分 [hbar/c]·[int] = M"
+    },
+    {
+      "name": "T11_gap_is_c_squared",
+      "passed": true,
+      "detail": "缺口 [E]/[U] = L^2T^-2 = c^2"
+    },
+    {
+      "name": "T12_gap_is_c_squared",
+      "passed": true,
+      "detail": "拉氏密度梯度项 ML^-3，能量密度 ML^-1T^-2，缺口 L^2T^-2"
+    },
+    {
+      "name": "T13_fixed_is_energy",
+      "passed": true,
+      "detail": "[hbar*c*l_P*kappa^2] = ML^2T^-2"
+    },
+    {
+      "name": "C_root_terms_not_addable",
+      "passed": true,
+      "detail": "1/sin^2(theta) 无量纲 vs 2*pi*m*c^2/hbar = T^-2，异族"
+    },
+    {
+      "name": "C_no_real_root_for_any_particle",
+      "passed": true,
+      "detail": "电子 2*pi*m*c^2/hbar = 4877913657894196953684.14984969655679636285113550130560463068（> 1/sin^2 的上确界 1）"
+    },
+    {
+      "name": "T17_bracket_matches_taylor",
+      "passed": true,
+      "detail": "泰勒一阶项 3.5355343478745863490655116694871324714007620716359808E-7 vs pi*m*c^2*s/hbar（差为二阶项）"
+    },
+    {
+      "name": "T17_expanded_matches_machine",
+      "passed": true,
+      "detail": "机器根号展开 625801653023081292849069416568347342210653405.116204764395078 vs 解析展开 625801574797864886810634786318429792310557058.953293633205324（差为二阶项）"
+    },
+    {
+      "name": "T17_claim_missing_factor_is_c2_over_lP",
+      "passed": true,
+      "detail": "正确展开 / 来料式 = 5560726278684140885668607567652022244529191188938292.63337310，精确等于 c^2/l_P"
+    },
+    {
+      "name": "T18_weak_field_dim_is_not_L^-1",
+      "passed": true,
+      "detail": "来料弱场式 [m c^2/hbar] = T^-1，应为 L^-1"
+    },
+    {
+      "name": "T19_linear_map_dim_ok",
+      "passed": true,
+      "detail": "[m c/hbar] = L^-1 合 kappa"
+    },
+    {
+      "name": "T19_energy_equation_reproduces_mc2",
+      "passed": true,
+      "detail": "用 kappa=m c sin/hbar 回代 mc^2=hbar*omega 相对残差 1.22143285705530606161182348220356166276868783676294061359145E-60（机器零）"
+    },
+    {
+      "name": "T20_mmax_is_not_a_mass",
+      "passed": true,
+      "detail": "[hbar/(2 pi c^2)] = MT，不是质量"
+    },
+    {
+      "name": "T23_mass_ratio_sq_matches_r44",
+      "passed": true,
+      "detail": "(m_mu/m_e)^2 = 42753.1228480793509918088838305446974391344865451273940328402（r44 T31 逐位对照）"
+    },
+    {
+      "name": "T24_gap_is_44_decades",
+      "passed": true,
+      "detail": "m_P / m_max(read as kg) = 116544204896160567142421506587958025964967160.983885346854635，约 44.07 个量级"
+    },
+    {
+      "name": "D_a_claim_not_dimensionless",
+      "passed": true,
+      "detail": "[a_TUFT] = L^-2Q^-1，非无量纲"
+    },
+    {
+      "name": "D_no_solution_without_charge_scale",
+      "passed": true,
+      "detail": "不含独立电荷标度时命中 0 / 15625 组"
+    },
+    {
+      "name": "D_solution_exists_with_charge_scale",
+      "passed": true,
+      "detail": "允许电荷标度时命中 14 / 46656 组，最简 = e^+1,lP^+2"
+    },
+    {
+      "name": "D_simplest_is_e_times_lP_squared",
+      "passed": true,
+      "detail": "最简解 e^+1,lP^+2 的量纲 = L^2Q，合目标 L^2Q"
+    },
+    {
+      "name": "D_cot_electron_positive",
+      "passed": true,
+      "detail": "cot(theta)_e = 6.58949069497694944211843665579109165190131070461044685095133E-48（>0）"
+    },
+    {
+      "name": "D_sign_flip_confirmed",
+      "passed": true,
+      "detail": "cot(theta)_e = 6.58949069497694944211843665579109165190131070461044685095133E-48（>0）vs cot(theta)_mu = -5.13762914145656528851529769186067715700123356614618859824317E-49（<0）⇒ 符号互斥"
+    },
+    {
+      "name": "D_positive_control_no_flip_at_zero",
+      "passed": true,
+      "detail": "阳性对照：若令 da_mu 与 da_e 同号则不触发互斥（本 guard 仅锁定当前口径下的符号事实）"
+    },
+    {
+      "name": "E_identity_residual_precision_limited",
+      "passed": true,
+      "detail": "标称 l_P 残差 6.62968339878928789003657746898704447241380194398519125601187E-8（受输入 9 位有效数字限制）；精算 l_P 残差 0E-38（机器零）"
+    }
+  ],
+  "key_figures": {
+    "dim_U_self_claim": "M",
+    "dim_U_self_claim_says": "ML^2T^-2",
+    "dim_gap_U": "L^2T^-2",
+    "dim_U_self_fixed": "ML^2T^-2",
+    "dim_V_potential_as_given": "T^-4",
+    "dim_energy_density_required": "ML^-1T^-2",
+    "dim_lagrangian_gradient_term": "ML^-3",
+    "V_max_under_axiom1": "1.167495156856E-120",
+    "V_exact_zero_cases_at_sin_theta_1": "4/4",
+    "V_positive_control_without_axiom1": "4.999999960898E+11",
+    "harmonic_branch_B_at_r_1e-6": "1.000000000000E+03",
+    "harmonic_branch_B_at_r_1e30": "1.000000000000E+0",
+    "harmonic_branch_A_spread": "0.000000000000E+12",
+    "int_r2_exp_integral_coeff": "1/4",
+    "int_grad2_dim": "L^-1",
+    "two_pi_mc2_over_hbar_electron": "4.877913657894E+21",
+    "two_pi_mc2_over_hbar_mu": "1.008597831586E+24",
+    "two_pi_mc2_over_hbar_tau": "1.694207763125E+25",
+    "two_pi_mc2_over_hbar_top": "9.097094456001E+24",
+    "sin2_upper_bound": "2.050056786843E-22",
+    "theta_crit_rad": "1.431802E-11",
+    "missing_factor_c2_over_lP": "5.560726278684E+51",
+    "kappa_expanded_over_claim": "5.560726278684E+51",
+    "kappa_machine_over_expanded": "1.000000125000E+0",
+    "mmax_claim_as_kg": "1.867475388122E-52",
+    "mmax_claim_dim": "MT",
+    "electron_over_mmax_claim": "4.877913657894E+21",
+    "gap_decades_definition_vs_regime": "44.07",
+    "delta_selfenergy_electron": "6.574508670826E-23",
+    "delta_selfenergy_mu": "1.359399869329E-20",
+    "delta_selfenergy_tau": "2.283472896413E-19",
+    "delta_selfenergy_top": "1.226116954397E-19",
+    "mass_ratio_squared": "4.275312284808E+4",
+    "dim_a_tuft_claim": "L^-2Q^-1",
+    "fill_target_dim": "L^2Q",
+    "fill_solutions_without_charge": 0,
+    "fill_solutions_with_charge": 14,
+    "fill_simplest_with_charge": "e^+1,lP^+2",
+    "C_moment_coefficient": "-1.261883467303E+95",
+    "delta_a_e": "-6.900000000000E-13",
+    "delta_a_mu": "2.300000000000E-9",
+    "cot_theta_electron": "6.589490694977E-48",
+    "cot_theta_mu": "-5.137629141457E-49",
+    "G_th_residual_nominal_lP": "6.629683398789E-8",
+    "G_th_residual_derived_lP": "0.000000000000E-26",
+    "m_Planck_kg": "2.176434342718E-8",
+    "lP_derived_m": "1.616255024424E-35"
+  },
+  "not_self_derived": [
+    "1. 拉氏密度系数 hbar/(2c) -> hbar*c/2 的修复虽使量纲闭合，本册不代为构造该系数为何应取 c^2（来料未给任何理由）。",
+    "2. 局域包衰减宽度 l_P 与公理3 中 G_th 的 l_P 是否必须等同；等同则零信息量，不等同则自由参数 +1。",
+    "3. 补齐因子 e*l_P^2（最简解）为何应取这一组而非穷举表中的其余解。",
+    "4. 相对论（公设 v=c）下的磁矩修正形式；本册只复用 r42 的非相对论约化。",
+    "5. ADM-BSSN 演化层（§8 选项4）：r41 已判该层 C/L1，本册不重算。",
+    "6. 静态单粒子驻波公理在天体尺度的适用边界。"
+  ],
+  "open_items": [
+    {
+      "id": "X-R45-1",
+      "text": "势 V 在公理1 下恒等于 0；需么放弃公理1（omega 独立），要么放弃该势 —— 二者必居其一，本册不代选。"
+    },
+    {
+      "id": "X-R45-2",
+      "text": "变分得到的是空间场 kappa(x)，而公理1 的 kappa 是粒子内禀常量；两对象的映射未在任何公设中给出。"
+    },
+    {
+      "id": "X-R45-3",
+      "text": "chi2(theta) 无实数定义域（T29）；在补齐因子与量纲修复前，数值最小化不可执行。"
+    },
+    {
+      "id": "X-R45-4",
+      "text": "『打破 m^2』在本框架内不可达（第 2 次复发 r44 C2）：唯一全局 theta + 弱场极限必然回到 m^2。"
+    },
+    {
+      "id": "X-R45-5",
+      "text": "补齐因子穷举有多解（14 组），a_TUFT 系数仍不可确定。"
+    },
+    {
+      "id": "X-R45-6",
+      "text": "g-2 窗口对量纲缺陷免疫的符号证伪（T27）尚未被来料回应。"
+    }
+  ]
+}
