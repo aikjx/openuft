@@ -54,6 +54,14 @@ A25 = os.path.join(SCRATCH, "A25_susy")
 CENSUS = os.path.join(HERE, "tuft_symmetry_theorems_spin_census_20261010.py")
 FERMION = os.path.join(HERE, "tuft_fermion_spin.py")
 
+# --drift 归因用的三处登记对象（写盘语料，本仪器只读）
+LEDGER_PATH = os.path.join(ROOT, "04_公共成果", "本项目_统一场论攻破", u"全维全链攻破总账.md")
+README_PATH = os.path.join(ROOT, "04_公共成果", "本项目_统一场论攻破", u"README.md")
+CLAIMS_PATH = os.path.join(S14, "claims.csv")
+CAT_PATH = os.path.join(ROOT, "00_项目治理", "资料索引", "material_catalog.md")
+FACE_DRIFT = os.path.join(S14, "09_验证结果", "原始运行记录",
+                          "tuft_susy_exit_realizability_and_testable_spectrum_census_20261011_漂移见证.txt")
+
 L = []
 
 
@@ -381,6 +389,8 @@ def main():
     mine.add(os.path.abspath(DOC))
     for extra in (u"tuft_susy_exit_realizability_and_testable_spectrum_census_20261011_selftest_stdout.txt",):
         mine.add(os.path.abspath(os.path.join(S14, "09_验证结果", "原始运行记录", extra)))
+    # 漂移见证自己也是本轮载体：它一落地就成了下一趟的语料行 ⟹ 按名豁免（㉒ 债①的同族）
+    mine.add(os.path.abspath(FACE_DRIFT))
     files = [f for f in files if os.path.abspath(f) not in mine]
 
     if not os.path.isdir(A25):
@@ -742,6 +752,192 @@ def main():
         for i in diff[:6]:
             print(u"  DIFF L%d" % (i + 1))
         return 1 if diff else 0
+    if mode == u"--drift":
+        # 位移见证：按**读数标签**对齐比较，不按行位——面长了行会把位置错位读成整面位移
+        # （本轮实测：--check 报 157 行差，而真实读数位移远小于此；这就是 ㉒ 债①的另一型）
+        import datetime as _dt
+        # 每格 =（标签, 选行谓词, **锚在标签上的取数正则**）——取行内第一个数字会把「K1」「1356」这类
+        # 无关数字抓成读数（本轮第一版就在这三格上假位移：族行/非分级/K5带数值全抓到行首那个数）
+        PATS = [
+            (u"语料文件数", lambda ln: u"语料文件数=" in ln, u"语料文件数=(\\d+)"),
+            (u"提及", lambda ln: ln.strip().startswith(u"合计：提及"), u"合计：提及 (\\d+) 行"),
+            (u"族行", lambda ln: u"行／非分级花括号等式" in ln, u"）(\\d+) 行／非分级"),
+            (u"非分级", lambda ln: u"非分级花括号等式" in ln, u"非分级花括号等式 (\\d+) 行"),
+            (u"SUSY实现", lambda ln: u"超-Poincaré 的实现文件=" in ln, u"超-Poincaré 的实现文件=(\\d+)"),
+            (u"Clifford实现", lambda ln: u"克利福德／费米模的实现文件=" in ln, u"克利福德／费米模的实现文件=(\\d+)"),
+            (u"宽尺", lambda ln: u"判实现" in ln and u"个文件" in ln, u"判实现 (\\d+) 个文件"),
+            (u"紧尺", lambda ln: u"邻近检验）判" in ln, u"邻近检验）判 (\\d+) 个"),
+            (u"第二通道", lambda ln: u"独立口径＝guard 键名里含" in ln, u"：(\\d+) 个文件"),
+            (u"真键名", lambda ln: u"真 SUSY 键名=" in ln, u"真 SUSY 键名=(\\d+) 枚"),
+            (u"K5行数", lambda ln: ln.strip().startswith(u"行数="), u"^  行数=(\\d+)；"),
+            (u"K5带数值", lambda ln: u"带 prediction_value 的行数=" in ln, u"带 prediction_value 的行数=(\\d+)"),
+        ]
+
+        def readings(s):
+            ls = s.split(u"\n")
+            r = {}
+            for k, sel, pat in PATS:
+                hit = [i for i, ln in enumerate(ls) if sel(ln)]
+                if len(hit) != 1:
+                    r[k] = (None, u"题面命中 %d 枚（应为 1）NOT REACHED" % len(hit))
+                    continue
+                m = re.search(pat, ls[hit[0]])
+                if not m:
+                    r[k] = (None, u"L%d 上锚点未命中 NOT REACHED" % (hit[0] + 1))
+                    continue
+                r[k] = (int(m.group(1)), u"L%d" % (hit[0] + 1))
+            for nm in carrier_names:
+                hit = [i for i, ln in enumerate(ls)
+                       if ln.strip().startswith(nm) and u"提及=" in ln]
+                key = u"载体·" + nm.split(u".")[0][:18]
+                if len(hit) != 1:
+                    r[key] = (None, u"题面命中 %d 枚 NOT REACHED" % len(hit))
+                else:
+                    r[key] = (int(re.findall(u"提及=(\\d+)", ls[hit[0]])[0]), u"L%d" % (hit[0] + 1))
+            return r
+
+        W = []
+        def pw(s=u""):
+            W.append(s)
+
+        old_img = read_text(FACE_REC)
+        r_old, r_new = readings(old_img), readings(text)
+        moved = [k for k in r_old if r_old[k][0] != r_new[k][0]]
+        broken = [k for k in r_old if r_old[k][0] is None or r_new[k][0] is None]
+        pw(u"攻破㉕ 漂移见证：在册面 vs 复算面，按读数标签对齐（取样时刻 %s）"
+           % _dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        pw(u"  在册面 md5=%s %d B；复算面 md5=%s %d B；复算面**未覆盖**在册面（本档只写见证）"
+           % (md5(old_img.encode("utf-8")), len(old_img.encode("utf-8")),
+              md5(text.encode("utf-8")), len(text.encode("utf-8"))))
+        pw(u"  读数格数=%d｜位移=%d｜题面失效=%d（失效即 rc=1，不许当成「没位移」）"
+           % (len(r_old), len(moved), len(broken)))
+        pw(u"  逐格读数（在册 ⟹ 复算）：")
+        for k in sorted(r_old):
+            o_, lo = r_old[k]
+            n_, ln_ = r_new[k]
+            tag = u"位移" if (o_ is not None and n_ is not None and o_ != n_) else u"不动"
+            if o_ is None or n_ is None:
+                tag = u"失效"
+            pw(u"    %-12s 在册[%s]=%-8s 复算[%s]=%-8s ⟹ %s" % (k, lo, o_, ln_, n_, tag))
+        if broken:
+            pw(u"  ⚠ 失效题面：%s" % u"、".join(broken))
+            rc = 1
+            verdicts.append(u"--drift 有 %d 格题面失效" % len(broken))
+
+        # 归因：用**同一把尺**（模块级 scan）打在本轮四处登记的写前/写后图像上——只给下界
+        pw(u"")
+        pw(u"=== 归因（同尺 scan 打在写前备份 vs 现盘；备份缺席即印「不可归因」）===")
+        attr = os.path.join(SCRATCH, "A25_reg")
+        pairs = [(u"全维全链攻破总账.md", LEDGER_PATH, u"before__总账.md"),
+                 (u"README.md", README_PATH, u"before__README.md"),
+                 (u"claims.csv", CLAIMS_PATH, u"before__claims.csv"),
+                 (u"material_catalog.md", CAT_PATH, u"before__material_catalog.md")]
+        mod_paths = set(os.path.abspath(x[1]) for x in pairs)
+        tot_ment = tot_grad = 0
+        d_ment, d_grad = {}, {}
+        for nm, now_p, bk in pairs:
+            bp = os.path.join(attr, bk)
+            if not os.path.exists(bp):
+                pw(u"    %-24s 写前备份缺席 ⟹ 不可归因" % nm)
+                continue
+            b_txt = read_text(bp).replace(u"\r\n", u"\n").replace(u"\r", u"\n")
+            n_txt = read_text(now_p).replace(u"\r\n", u"\n").replace(u"\r", u"\n")
+            dm = scan(n_txt, False)[0] - scan(b_txt, False)[0]
+            dg = len(scan(n_txt, False)[1]) - len(scan(b_txt, False)[1])
+            tot_ment += dm
+            tot_grad += dg
+            d_ment[nm] = dm
+            d_grad[nm] = dg
+            pw(u"    %-24s Δ提及=%+d  Δ族行=%+d（写前 %d B ⟶ 现盘 %d B）"
+               % (nm, dm, dg, len(b_txt.encode("utf-8")), len(n_txt.encode("utf-8"))))
+        pw(u"  ⟹ 写前/写后通道（MOD）：Δ提及=%+d／Δ族行=%+d" % (tot_ment, tot_grad))
+        # 第二通道：在册面落地**之后**才进语料的文件（mtime 晚于面），整份计入——它们此前贡献 0；
+        # MOD 名单必须从这里剔掉，否则同一份文件在两条通道各算一次（本轮第一版重复计入了 31 行）
+        t_face = os.path.getmtime(FACE_REC)
+        new_f = [f for f in files
+                 if os.path.getmtime(f) > t_face + 1 and os.path.abspath(f) not in mod_paths]
+        nm_new = ng_new = 0
+        detail = []
+        for f in new_f:
+            txt = read_text(f).replace(u"\r\n", u"\n").replace(u"\r", u"\n")
+            a, gr, other, wide, impl = scan(txt, f.endswith(u".py"))
+            nm_new += a
+            ng_new += len(gr)
+            detail.append(u"%s 提及=%+d 族行=%+d" % (mod.rel(f), a, len(gr)))
+        pw(u"  NEW 通道（mtime 晚于在册面；本仪器排除的 %d 个路径不在此列，且 MOD 名单已剔除免重复计入）：文件 %d 份，Δ提及=%+d／Δ族行=%+d"
+           % (len(mine), len(new_f), nm_new, ng_new))
+        for d in detail[:14]:
+            pw(u"    %s" % d[:150])
+        if len(detail) > 14:
+            pw(u"    …另有 %d 份未印" % (len(detail) - 14))
+
+        def inv_rows(pth):
+            try:
+                with io.open(pth, "r", encoding="utf-8-sig", errors="replace", newline="") as fh:
+                    rd = list(csv.reader(fh))
+            except Exception:
+                return None
+            if not rd or not rd[0] or rd[0][0].strip().lower() != u"claim_id":
+                return None
+            n = 0
+            for r in rd[1:]:
+                if len(r) < 2 or not r[0].strip():
+                    continue
+                j = u" ".join(r)
+                if TOKEN.search(j) or ALG_CJK.search(j):
+                    n += 1
+            return n
+
+        i_now, i_old = inv_rows(CLAIMS_PATH), inv_rows(os.path.join(attr, u"before__claims.csv"))
+        pw(u"  claims 单文件口径（与 K5 同词根同过滤）：现盘 %s 行 − 写前 %s 行 ＝ %s"
+           % (i_now, i_old, (u"%+d" % (i_now - i_old)) if i_now is not None and i_old is not None else u"不可算"))
+        exp_ment = tot_ment + nm_new
+        exp_grad = tot_grad + ng_new
+        got_ment = (r_new[u"提及"][0] - r_old[u"提及"][0]
+                    if r_old[u"提及"][0] is not None and r_new[u"提及"][0] is not None else None)
+        got_grad = (r_new[u"族行"][0] - r_old[u"族行"][0]
+                    if r_old[u"族行"][0] is not None and r_new[u"族行"][0] is not None else None)
+        # 账面是**区间**不是恒等：下界＝有写前备份的 MOD 通道；上界＝下界＋NEW 通道整份计入。
+        # 没有备份又被别的写者改过的文件只能落在区间内部，mtime 给不出它们的逐文件增量。
+        pw(u"  对账（区间）：面「提及」位移 %s，界 [%d, %d]；面「族行」位移 %s，界 [%d, %d]"
+           % (got_ment, tot_ment, exp_ment, got_grad, tot_grad, exp_grad))
+        for k, got_, lo_, hi_ in ((u"提及", got_ment, tot_ment, exp_ment),
+                                  (u"族行", got_grad, tot_grad, exp_grad)):
+            if got_ is None or not (lo_ <= got_ <= hi_):
+                rc = 1
+                verdicts.append(u"--drift「%s」位移 %+d 落在界 [%d, %d] 之外 ⟹ 尺或名单有误" % (k, got_, lo_, hi_))
+                pw(u"    ⚠「%s」越界" % k)
+        pw(u"  精确通道（载体逐档贡献行只数那一份文件，MOD 增量必须逐字相等——这把尺的牙）：")
+        for nm, ckey in ((u"全维全链攻破总账.md", u"载体·全维全链攻破总账"),
+                         (u"README.md", u"载体·README")):
+            if ckey in r_old and r_old[ckey][0] is not None and r_new[ckey][0] is not None:
+                cg = r_new[ckey][0] - r_old[ckey][0]
+                ok = (cg == d_ment.get(nm))
+                pw(u"    %-12s 面 %d⟶%d（%+d） vs 同尺写前/写后 %+d ⟹ %s"
+                   % (ckey[3:], r_old[ckey][0], r_new[ckey][0], cg, d_ment.get(nm), u"逐字相等" if ok else u"不等"))
+                if not ok:
+                    rc = 1
+                    verdicts.append(u"--drift 载体「%s」的 MOD 增量与面读数不等（%+d vs %+d）" % (ckey[3:], cg, d_ment.get(nm)))
+        got_k5 = (r_new[u"K5行数"][0] - r_old[u"K5行数"][0]
+                  if r_old[u"K5行数"][0] is not None and r_new[u"K5行数"][0] is not None else None)
+        pw(u"  K5 账（面口径＝全库 claims.csv 多文件；单文件口径只算 S14）：面 %+d vs S14 单文件 %s ⟹ %s"
+           % (got_k5, (u"%+d" % (i_now - i_old)) if i_now is not None and i_old is not None else u"不可算",
+              u"同向" if got_k5 is not None and i_now is not None and i_old is not None and (i_now - i_old) <= got_k5 else u"越界"))
+        pw(u"  另：`--check` 的位置差在本轮为 %d 行（面长行 ⟹ 位置差是上界假象，读数位移见上表）"
+           % len([i for i in range(max(len([x for x in old_img.split(u"\n") if not x.startswith(u"运行时间")]),
+                                       len([x for x in text.split(u"\n") if not x.startswith(u"运行时间")])))
+                  if (old_img.split(u"\n")[i] if i < len(old_img.split(u"\n")) else u"∅") !=
+                     (text.split(u"\n")[i] if i < len(text.split(u"\n")) else u"∅")]))
+        pw(u"rc=%d" % rc)
+        wt = u"\n".join(W) + u"\n"
+        if u"\r" in wt:
+            rc = 1
+            wt = wt.replace(u"\r\n", u"\n").replace(u"\r", u"\n")
+        nn, mm = w(FACE_DRIFT, wt)
+        print(wt)
+        print(u"WROTE %s  %d B md5=%s  CR=%d"
+              % (os.path.relpath(FACE_DRIFT, ROOT).replace("\\", "/"), nn, mm, wt.count(u"\r")))
+        return rc
     if mode == u"--selftest":
         print(u"自检格数=%d（牙齿 5 图＋库内正对照 1＋K2 执行凭据 1＋K4 偶 n 4＋K4 奇 n 3×5〔标架见证/半值 framing 变异体 2 档/整性/winding〕＋开弧 2＋第二通道裁定 1）rc=%d"
               % (5 + 1 + 1 + 4 + 15 + 2 + 1, rc))

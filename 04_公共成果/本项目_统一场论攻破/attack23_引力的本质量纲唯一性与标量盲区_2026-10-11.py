@@ -164,34 +164,40 @@ def dot3(u, v):
 
 # ------------------------------------------------------------------ 轨道（Binet 形式，RK4）
 def rk2psi(f, u0, dphi=2e-4, phi_max=None, nmax=4):
-    """u'' = f(u)；返回逐次近心点（u 极大）角位置表。"""
+    """u'' = f(u)；返回逐次近心点（u 极大）角位置表。
+
+    转折点判据只许比较「本步起点」与「本步终点」的 v：早前一版把上一轮的 v 又当成 vprev 留在手里，
+    于是一次真峰被连记两格（间隔恰为一个 dphi），Ψ 实测成解析值的一半到五分之二——那是把积分器的
+    簿记错记成了物理。"""
     if phi_max is None:
         phi_max = 2.0 * math.pi * (nmax + 1)
     u, v = float(u0), 0.0
     phi = 0.0
     steps = int(phi_max / dphi)
     peaks = []
-    vprev = v
     for _ in range(steps):
         k1u, k1v = v, f(u)
         k2u, k2v = v + 0.5 * dphi * k1v, f(u + 0.5 * dphi * k1u)
         k3u, k3v = v + 0.5 * dphi * k2v, f(u + 0.5 * dphi * k2u)
         k4u, k4v = v + dphi * k3v, f(u + dphi * k3u)
-        un, vn = u + dphi / 6.0 * (k1u + 2 * k2u + 2 * k3u + k4u), \
-            v + dphi / 6.0 * (k1v + 2 * k2v + 2 * k3v + k4v)
-        if vprev > 0.0 >= vn:                       # u 由升转降 ⇒ 近心点
-            frac = vprev / (vprev - vn)
-            peaks.append(phi + frac * dphi)
-        u, v, phi, vprev = un, vn, phi + dphi, v
+        un = u + dphi / 6.0 * (k1u + 2 * k2u + 2 * k3u + k4u)
+        vn = v + dphi / 6.0 * (k1v + 2 * k2v + 2 * k3v + k4v)
+        if v > 0.0 >= vn:                            # 本步内 u 由升转降 ⇒ 一个近心点
+            peaks.append(phi + (v / (v - vn)) * dphi)
+        u, v, phi = un, vn, phi + dphi
     return peaks
 
 
-def psi_of(f, u0, nmax=4):
-    pk = rk2psi(f, u0, nmax=nmax)
+def psi_of(f, u0, nmax=4, dphi=2e-4):
+    """返回 (平均近心点角间距, 找到的峰数, 间距相对散布)。
+
+    散布是积分器自己的牙：伪峰或漏峰会让相邻间距至少差出一个 dphi，物理上不该有。"""
+    pk = rk2psi(f, u0, dphi=dphi, nmax=nmax)
     if len(pk) < 2:
-        return None, len(pk)
+        return None, len(pk), None
     d = [b - a for a, b in zip(pk, pk[1:])]
-    return sum(d) / len(d), len(pk)
+    m = sum(d) / len(d)
+    return m, len(pk), max(abs(x - m) / m for x in d)
 
 
 def relerr(a, b):
@@ -201,23 +207,29 @@ def relerr(a, b):
 
 # ------------------------------------------------------------------ 主程序
 def main():
-    # 号段现扫：本轮号 = 目录内已见最大号 + 1（不覆写他人号段；不手钉）
-    # 自滤排除：本册源码第 39 行整段住着 ①…㉚ 字母表，若把自己算进「已见」则 max 恒为 30 ⇒ 本轮号被自己的尺吞掉
+    # 号段：本轮号**按名认领**（他盘把某个带圈号挂在本册文件名上的行＝授权），max+1 只是无人认领时的兜底
+    # 自滤排除：本册源码里整段住着 ①…末号 的序号字母表；上一版判决面也住着本轮号与字母表末号——
+    #           两者若进扫描集，「已见 max」读的就是量具自己的刻度，不是语料的号段
     own = os.path.abspath(__file__)
+    own_face = os.path.abspath(REPORT)
     seen = []
     skipped = []
     own_seen = []
+    granted = {}
+    NAMEKEY = re.compile(u"attack23")
+    ADJ = re.compile(u"attack23[^①-⑳㉑-㉚\\n]{0,80}?攻破([①-⑳㉑-㉚])")
     for root, dirs, files in os.walk(HERE):
         dirs[:] = [d for d in dirs if d not in (u"数据", u"存档")]
         for fn in files:
             if not fn.endswith((u".md", u".py", u".txt")):
                 continue
-            p = os.path.join(root, fn)
-            if os.path.abspath(p) == own:
-                skipped.append(fn)
-                for ch in set(io.open(p, encoding=u"utf-8", errors=u"replace").read()):
-                    if ch in CIRCLED:
-                        own_seen.append(CIRCLED.index(ch) + 1)
+            p = os.path.abspath(os.path.join(root, fn))
+            if p == own or p == own_face:
+                skipped.append(os.path.basename(p))
+                if p == own:
+                    for ch in set(io.open(p, encoding=u"utf-8", errors=u"replace").read()):
+                        if ch in CIRCLED:
+                            own_seen.append(CIRCLED.index(ch) + 1)
                 continue
             try:
                 t = io.open(p, encoding=u"utf-8", errors=u"replace").read()
@@ -226,27 +238,50 @@ def main():
             for ch in set(list(fn) + list(t)):
                 if ch in CIRCLED:
                     seen.append(CIRCLED.index(ch) + 1)
-    MYNUM = max(seen) + 1
+            if not NAMEKEY.search(fn):
+                for _i, _ln in enumerate(t.split(u"\n")):
+                    for _m in ADJ.finditer(_ln):
+                        granted.setdefault(CIRCLED.index(_m.group(1)) + 1, []).append(
+                            (os.path.basename(p), _i + 1))
+    _gnum = sorted(granted)
+    MAXP1 = (max(seen) if seen else 0) + 1
+    MYNUM = _gnum[0] if len(_gnum) == 1 else MAXP1
     TAG = CIRCLED[MYNUM - 1]
 
     emit(u"=" * 98)
     emit(u"attack23｜引力的本质：量纲唯一性 · 标量盲区 · Bertrand 等时性 · 挠率的代数性（攻破%s＝第 %d 号）"
          % (TAG, MYNUM))
     emit(u"=" * 98)
-    emit(u"[号段现扫] 目录内（文件名＋正文）已见带圈序号 max = %d ⇒ 本轮取第 %d 号（%s）；"
-         u"若下一轮再扫到更大号，那是并发写者的，不覆写" % (max(seen), MYNUM, TAG))
-    emit(u"[号段现扫·自滤] 排除 %d 份自己的源码（%s）：那份文件里整段住着 ①…%s 序号字母表，"
-         u"若把自己算进扫描集则「已见 max」= 量具自己的最大号 %d ⇒ 本轮号被尺吞成第 %d 号——"
-         u"扫描集里含量具本身时，读数不是事实而是刻度（对照现算：排除后 max=%d ⇒ 本轮第 %d 号；"
-         u"字母表长度 %d、自己源码里的最大号 %d，两个数是同一个，这正是污染的形状）"
-         % (len(skipped), u"／".join(skipped), CIRCLED[-1],
-            (max(own_seen) if own_seen else 0), (max(own_seen) if own_seen else 0) + 1,
-            max(seen), MYNUM, len(CIRCLED), max(own_seen) if own_seen else 0))
-    chk(u"号段现扫·自滤生效（排除自己后 max 严格小于字母表最大号）",
-        max(seen) < max(own_seen), u"排除后 %d ＜ 字母表最大号 %d" % (max(seen), max(own_seen)))
-    BATTERY.append((u"G00 号段自滤", lambda a, b: a < b, (max(seen), max(own_seen)),
-                    (max(seen), max(seen))))
+    emit(u"[号段·按名认领] 他盘把带圈号挂在本册文件名「attack23」同一子句里的行，逐条现扫共 %d 处，"
+         u"指向的号=%s ⇒ 本轮认领第 %d 号（%s）；兜底口径 max+1 会算成第 %d 号——两者不同，"
+         u"因为并发写者已在本册**具名授权**（认领优先于顺延，否则他那 %d 处指向「attack23＝攻破%s」的引用全部悬空）："
+         % (sum(len(v) for v in granted.values()),
+            u"／".join(u"第 %d 号" % k for k in _gnum) if _gnum else u"无",
+            MYNUM, TAG, MAXP1, sum(len(v) for v in granted.values()),
+            CIRCLED[MYNUM - 1] if _gnum and len(_gnum) == 1 else u"?"))
+    for _k in _gnum:
+        for _f, _l in granted[_k]:
+            emit(u"  载体 %s:%d → 第 %d 号" % (_f, _l, _k))
+    emit(u"[号段·自滤] 排除 %d 份本册自己的文件（%s）：源码里住着整段序号字母表（其中最大号 %d），"
+         u"上一版判决面里住着本轮号与字母表末号——若不排除，「已见 max」= 量具刻度（=字母表长度 %d）而非语料号段，"
+         u"本轮号会被自己的尺吞成第 %d 号。教训形状：上一版为了说明污染，把字母表**末号那个字**印进了面，"
+         u"于是那张面自己成了下一轮的污染源（现改印号数，不印那个字）"
+         % (len(skipped), u"／".join(skipped), max(own_seen) if own_seen else 0,
+            len(CIRCLED), len(CIRCLED) + 1))
+    emit(u"[号段·现扫兜底] 排除本册文件后语料已见 max = %d ⇒ max+1 = 第 %d 号（仅作对照；本轮实际认领第 %d 号）"
+         % (max(seen) if seen else 0, MAXP1, MYNUM))
+    chk(u"号段按名认领唯一（他盘挂在本册名上的号只有一种）", len(_gnum) == 1,
+        u"distinct=%d 载体=%s" % (len(_gnum), u"、".join(str(k) for k in _gnum)))
+    chk(u"号段自滤生效（排除本册后 max 严格小于字母表最大号）",
+        (max(seen) if seen else 0) < (max(own_seen) if own_seen else 0),
+        u"排除后 %d ＜ 字母表最大号 %d" % (max(seen) if seen else 0, max(own_seen) if own_seen else 0))
+    BATTERY.append((u"G00 号段自滤", lambda a, b: a < b,
+                    (max(seen) if seen else 0, max(own_seen) if own_seen else 0),
+                    (max(seen) if seen else 0, max(seen) if seen else 0)))
+    BATTERY.append((u"G00 号段认领", lambda a, b: a == b and len(a) == 1,
+                    (_gnum, [MYNUM]), (_gnum + [MYNUM + 1], [MYNUM])))
     for p, lab in ((A22_FACE, u"㉔ 面"), (A21_FACE, u"⑲ 面"), (R34_FACE, u"r34 面"),
+                   (C0128_FACE, u"C0128 面"),
                    (E1, u"E1 偏折"), (E0, u"E0 进动"), (D1, u"D1 EH"), (D6, u"D6 EC"),
                    (DPLAN, u"D 普朗克量纲"), (QUANJ, u"已验证全集")):
         b = read_b(p)
@@ -286,46 +321,47 @@ def main():
         u"M,L,T 点积 = %s" % dot3([EXP[k][i] for k in basis3 + [u"m"]], gnorm) for i in range(3)))
     chk(u"G01 零度 1 且生成元回代给全零", 4 - rk4 == 1 and all(dot3(mat4[i], gnorm) == 0 for i in range(3)),
         u"null=%d back=%s" % (4 - rk4, u"、".join(str(dot3(mat4[i], gnorm)) for i in range(3))))
-    BATTERY.append((u"G01 零度唯一", lambda a, b: a == 1 and b, 4 - rk4, (4 - rk4) + 1)
-                   if False else (u"G01 零度唯一", lambda x: x == 1, 4 - rk4, 2))
+    BATTERY.append((u"G01 零度唯一", lambda x: x == 1, 4 - rk4, (4 - rk4) + 1))
 
     # ============================== G02 唯一耦合带受力体质量（P1 推论）
     item(u"G02", u"THEOREM", u"P1 推论：引力唯一的无量纲强度是 (m/m_P)²——它**自带受力体的质量**；"
                              u"由 G m²/(ℏ c) 与 (m/m_P)² 两式独立复算同一枚数（电子档实测残差在印刷半 ulp 内）")
     a1 = grep(QUANJ, u"α_grav = G m_e²/(ℏc)", u"全集电子档 α_grav")
     a2 = grep(QUANJ, u"m_e/m_P = ", u"全集电子质量比")
-    num_a = Fr(0)
-    m_ratio = None
-    printed_alpha = None
+    SCI = re.compile(u"([0-9]+(?:\\.[0-9]+)?)e([+-]?[0-9]+)")
+
+    def sci_to_fr(s):
+        """把 '4.185e-23' 这类在册科学计数**整体**换成精确分数；指数带符号，不许只取位数。"""
+        mm = SCI.search(s)
+        if not mm:
+            return None, None, None
+        mant, ex = mm.group(1), int(mm.group(2))
+        return Fr(mant), ex, len(mant.split(u".")[1]) if u"." in mant else 0
+
+    m_ratio = printed_alpha = None
     if a1:
-        mm = re.search(u"([0-9.]+)e-([0-9]+)", a1)
-        if mm:
-            printed_alpha = Fr(mm.group(1))
+        printed_alpha = sci_to_fr(a1[a1.index(u"α_grav"):] if u"α_grav" in a1 else a1)
     if a2:
-        mr = re.search(u"([0-9.]+)e-([0-9]+)", a2)
-        if mr:
-            m_ratio = (Fr(mr.group(1)), int(mr.group(2)))
+        m_ratio = sci_to_fr(a2[a2.index(u"m_e/m_P"):] if u"m_e/m_P" in a2 else a2)
     sub(u"在册现读（只读盘，不转抄结论）：%s｜%s" % (a1 or u"没读到", a2 or u"没读到"))
+    sub(u"解析口径：两枚数按「尾数＋带符号 10 的幂」整体转成精确分数（上一版只取了指数的**位数**、"
+        u"把 −23 读成 +23 ⇒ 平方后落在 1.75e+47，残差恰为 1 —— 那是把符号丢了，不是复算失败）")
     if m_ratio and printed_alpha is not None:
-        base, ex = m_ratio
-        sq_num = base * base
-        sq_exp = 2 * ex                                   # (4.185e-23)² = 17.514...e-46 → 规格化
-        carry = 1
-        while sq_num >= 10:
-            sq_num = sq_num / Fr(10)
-            sq_exp += 1
-            carry += 1
-        recomputed = float(sq_num) * 10.0 ** sq_exp
-        printed = float(printed_alpha) * 10.0 ** -45
-        dev = relerr(recomputed, printed)
-        # 阈：两侧各自的印刷半 ulp —— 4.185 是 4 位有效（半 ulp 相对 = 0.0005/4.185，平方后加倍），
-        # 1.75 是 3 位有效（半 ulp 相对 = 0.005/1.75）；阈取两者之和，全部由现读的那两行自己的位数推出
-        ulp_ratio = Fr(1, 2000) / Fr(4185, 1000) * 2
-        ulp_alpha = Fr(5, 1000) / Fr(175, 100)
+        base, ex, dec_b = m_ratio
+        abase, aex, dec_a = printed_alpha
+        recomputed = (base * Fr(10) ** ex) ** 2
+        printed = abase * Fr(10) ** aex
+        dev = float(abs(recomputed - printed) / max(recomputed, printed))
+        # 阈：两侧各自的印刷半 ulp —— 尾数的小数位数由**现读那串自己的拼写**给出，不手数
+        half_b = Fr(1, 2) * Fr(1, 10) ** dec_b / base          # 4.185 → 末位半个 ulp 的相对量
+        ulp_ratio = 2 * half_b                                 # 平方把相对误差加倍
+        ulp_alpha = Fr(1, 2) * Fr(1, 10) ** dec_a / abase
         thr = float(ulp_ratio + ulp_alpha)
-        sub(u"独立复算：(m_e/m_P)² 由现读的 4 位比值平方 = %s｜在册印 %s｜相对残差 %s｜阈 %s（两枚印刷半 ulp 之和，"
-            u"由那两行自己的有效位数现推：4.185 的半 ulp 加倍＝%s，1.75 的半 ulp＝%s）⇒ %s"
-            % (fmt(recomputed), fmt(printed), fmt(dev), fmt(thr), fmt(float(ulp_ratio)), fmt(float(ulp_alpha)),
+        sub(u"独立复算：(m_e/m_P)² 由现读的比值（尾数 %s、指数 %+d）平方 = %s｜在册印 %s（尾数 %s、指数 %+d）｜"
+            u"相对残差 %s｜阈 %s（两枚印刷半 ulp 之和，由那两行自己的小数位数现推：%s 的半 ulp 加倍＝%s，"
+            u"%s 的半 ulp＝%s）⇒ %s"
+            % (base, ex, fmt(float(recomputed)), fmt(float(printed)), abase, aex,
+               fmt(dev), fmt(thr), base, fmt(float(ulp_ratio)), abase, fmt(float(ulp_alpha)),
                u"在印刷精度内一致" if dev < thr else u"超阈＝两处在册数不能同时成立"))
         sub(u"这一条的意义不在数值而在**形状**：引力的无量纲强度只能是「受力体质量对普朗克质量之比」——"
             u"它按定义带 m；而 ⑲/㉔ 的 α 在 m=1 那一格被压成与受力体无关的纯数（普适）。")
@@ -413,59 +449,129 @@ def main():
     item(u"G06", u"THEOREM", u"P3 Bertrand 枚举：幂律力 F∝r^n 的近心点角 Ψ=2π/√(n+3)（小振幅实测），"
                              u"而对**大**振幅只有 n=−2 与 n=1 的 Ψ 不随振幅变 ⇒ 族的 m=1（U∝r^-1）恰落在闭合那一格")
     grid = [Fr(-2), Fr(-19, 10), Fr(-18, 10), Fr(-15, 10), Fr(-1), Fr(0), Fr(1), Fr(3, 2), Fr(2)]
-    u_small, u_big = Fr(51, 50), Fr(8, 5)
+    u_big = Fr(8, 5)
     rows6 = []
+    A1, A2, A3 = 0.02, 0.002, 0.0002                      # 三枚小振幅，用于 A² 律外推（不猜系数）
+    fac12 = A1 * A1 / (A1 * A1 - A2 * A2)
+    fac23 = A2 * A2 / (A2 * A2 - A3 * A3)
+    dphi6 = 2e-4
+    steps6 = int(2.0 * math.pi * 4 / dphi6)
+    worst_spread = 0.0
     for n in grid:
         f = (lambda nn: (lambda u: u ** float(-nn - 2) - u))(n)
-        psi_s, k1 = psi_of(f, float(u_small), nmax=3)
-        psi_b, k2 = psi_of(f, float(u_big), nmax=3)
+        ps, k1, ss = psi_of(f, 1.0 + A1, nmax=3, dphi=dphi6)
+        pb, k2, sb = psi_of(f, float(u_big), nmax=3, dphi=dphi6)
+        p2, k3, s2 = psi_of(f, 1.0 + A2, nmax=3, dphi=dphi6)
+        p3, k4, s3 = psi_of(f, 1.0 + A3, nmax=3, dphi=dphi6)
         ana = 2.0 * math.pi / math.sqrt(float(n) + 3.0)
-        drift = None if (psi_s is None or psi_b is None) else abs(psi_s - psi_b) / abs(psi_s)
-        rows6.append((n, psi_s, psi_b, ana, drift))
-    sub(u"枚举 n（力律指数，F∝r^n）｜小振幅 Ψ（u0=1.02）｜大振幅 Ψ（u0=1.6）｜解析 2π/√(n+3)｜振幅漂移 |ΔΨ|/Ψ：")
-    for n, ps, pb, ana, drift in rows6:
-        sub(u"  n=%-6s｜%s｜%s｜%s｜%s" % (str(n),
-                                         fmt(ps) if ps else u"未闭合/无界",
-                                         fmt(pb) if pb else u"未闭合/无界",
-                                         fmt(ana),
-                                         fmt(drift) if drift is not None else u"—"))
+        drift = None if (ps is None or pb is None) else abs(ps - pb) / abs(ps)
+        ok_a = None not in (ps, p2, p3)
+        e12 = ps - fac12 * (ps - p2) if ok_a else None            # 由 (A1,A2) 外推的 A→0 值
+        e23 = p2 - fac23 * (p2 - p3) if ok_a else None            # 由 (A2,A3) 外推的 A→0 值
+        rel = None if e23 is None else abs(e23 - ana) / ana
+        tol = None if e23 is None else (abs(e23 - e12)
+                                        + 3.0 * max(ss, s2, s3) * ana
+                                        + math.sqrt(steps6) * EPS * ana)
+        sp = None if ps is None else ss
+        worst_spread = max(worst_spread, sp if sp is not None else 0.0)
+        rows6.append((n, ps, pb, ana, drift, sp, rel, tol))
+    sub(u"枚举 n（力律指数，F∝r^n）｜小振幅 Ψ（u0=1.02）｜大振幅 Ψ（u0=1.6）｜解析 2π/√(n+3)｜振幅漂移 |ΔΨ|/Ψ｜"
+        u"间距散布（积分器自己的牙）｜A→0 外推与解析的相对差／自定价：")
+    for n, ps, pb, ana, drift, sp, rel, tol in rows6:
+        sub(u"  n=%-6s｜%s｜%s｜%s｜%s｜%s｜%s" % (
+            str(n),
+            fmt(ps) if ps else u"未闭合/无界",
+            fmt(pb) if pb else u"未闭合/无界",
+            fmt(ana),
+            fmt(drift) if drift is not None else u"—",
+            (u"%s（阈半格 %s）" % (fmt(sp), fmt(dphi6 / (2.0 * ps))) if sp is not None else u"—"),
+            (u"%s ＜ %s ⇒ 对上" % (fmt(rel), fmt(tol)) if rel is not None and rel < tol
+             else (u"%s ≥ %s ⇒ 没对上" % (fmt(rel), fmt(tol)) if rel is not None else u"—"))))
     closed = [r[0] for r in rows6 if r[4] is not None and r[4] < 1e-6]
     sub(u"机器裁定：振幅漂移 < 1e-6（即等时＝轨道对一切小扰闭合）的 n = %s（枚举域 %d 格内）"
         u"⇒ Bertrand 的两枚例外被**实测复现**，不是引用；阈 1e-6 的来源：RK4 在 dphi=2e-4 下的截断 ~ (dphi)^4 量级"
         % (u"、".join(str(x) for x in closed), len(grid)))
-    m1_row = [r for r in rows6 if r[0] == Fr(-2)][0]
+    # —— 绝对通道（这一格是本轮新立的牙）：只判「漂移」的尺对**共模错读**是盲的。
+    #    上一版 Ψ 实测把每个真峰连记两格（间距表里插进一个 dphi 宽的假间距），漂移却仍为机器零，
+    #    于是 Kepler 那行印成 2.513 而解析值 6.283 —— 全绿的面撒了谎。现补两路：间距散布＋A→0 外推对解析。
+    ok_spread = all(r[5] is not None and r[5] < dphi6 / (2.0 * r[1]) for r in rows6 if r[1])
+    ok_abs = all(r[6] is not None and r[6] < r[7] for r in rows6 if r[1])
+    sub(u"绝对通道（新立）：三枚小振幅按 A² 律做 Richardson 外推取 A→0，得 Ψ₀，与闭式 2π/√(n+3) 逐格对表；"
+        u"阈由**同一台积分器自己的两次外推之差**＋间距散布＋浮点累加底（sqrt(步数)·ε·Ψ）现推，不手数。"
+        u"这条能抓住「间距整体被记错」那一型，漂移那条抓不住（漂移只比两次读数之比）。")
+    chk(u"G06 间距散布小于半个 dphi（无伪峰/漏峰）", ok_spread,
+        u"worst=%s 阈（最小一格）=%s" % (fmt(worst_spread), fmt(dphi6 / (2.0 * max(r[1] for r in rows6 if r[1])))))
+    chk(u"G06 外推 Ψ₀ 逐格对上闭式 2π/√(n+3)", ok_abs,
+        u"外推格数=%d／阈全由自定价给" % sum(1 for r in rows6 if r[6] is not None))
     sub(u"族的落点对表：㉔ 把 α 的几何构造逼到 m=1，⑲ T02 给幂律 p=1/m ⇒ p=1 ⇒ U∝r^-1 ⇒ 力律 F∝r^-2 ⇒ "
         u"正是上表 n=%s 那一格（漂移 %s，解析 Ψ=%s＝2π）⇒ 这一支的近日点进动**恒等于零**是结构结论"
-        % (str(m1_row[0]), fmt(m1_row[4]), fmt(m1_row[3])))
+        % (str(rows6[0][0]), fmt(rows6[0][4]), fmt(rows6[0][3])))
+    m1_row = [r for r in rows6 if r[0] == Fr(-2)][0]
     chk(u"G06 闭合指数恰为 −2 与 1", closed == [Fr(-2), Fr(1)], u"closed=%s" % u"、".join(str(x) for x in closed))
     BATTERY.append((u"G06 例外集", lambda s: s == [u"-2", u"1"], [str(x) for x in closed], [u"-2", u"-1"]))
+    BATTERY.append((u"G06 绝对通道", lambda rel, t: rel < t, (rows6[0][6], rows6[0][7]),
+                    (rows6[0][6] + rows6[0][7], rows6[0][7])))
 
     # ============================== G07 进动项的来路与量级（P3 推论）
     item(u"G07", u"THEOREM", u"P3 推论：进动项必须来自 Binet 右端的 δu²（即势里的 1/r³，E0 在册那第三项）；"
-                             u"实测每圈进动 Δ→2πδ（两点 δ 收敛到一阶），而族的 U=α(κ−τ) 反解不出任何 u² 项")
-    deltas = [Fr(1, 50), Fr(1, 500)]
+                             u"实测每圈进动 Δ→2πδ（三档 δ 阶梯＋δ 置零对照），而族的 U=α(κ−τ) 反解不出任何 u² 项")
+    deltas = [Fr(1, 50), Fr(1, 500), Fr(1, 5000)]
+    dphi7 = 2e-4
+    nmax7 = 6
+    steps7 = int(2.0 * math.pi * (nmax7 + 1) / dphi7)
+    A_B, A_S = 0.05, 0.005                              # 绕微扰圆轨道的两枚振幅（A² 律外推用）
+    fac7 = A_B * A_B / (A_B * A_B - A_S * A_S)
     rows7 = []
     for d in deltas:
-        f = (lambda dd: (lambda u: 1.0 + float(dd) * u * u - u))(d)
-        psi, _k = psi_of(f, 1.02, nmax=3)
-        adv = psi - 2.0 * math.pi
-        rows7.append((d, adv, adv / (2.0 * math.pi * float(d))))
-    for d, adv, r in rows7:
-        sub(u"δ=%s｜实测每圈进动 Δ=%s｜解析一阶 2πδ=%s｜比 Δ/(2πδ)=%s"
-            % (str(d), fmt(adv), fmt(2.0 * math.pi * float(d)), fmt(r)))
-    r_close = rows7[-1][2]
-    # 阈：一阶近似的截断误差是 O(δ)，取 3δ 为宽限；RK4 数值误差对 δ=1/500 档 ≪ 该宽限
-    thr7 = 3.0 * float(deltas[-1]) + 1e-6
-    sub(u"两点收敛见证：|比−1| 由 %s（δ=1/50）收到 %s（δ=1/500）⇒ 随 δ 线性消失＝一阶项确为 2πδ；"
-        u"阈 %s 由该近似的截断阶 3δ 现推（含数值误差余量 1e-6）" % (fmt(abs(rows7[0][2] - 1.0)), fmt(abs(r_close - 1.0)), fmt(thr7)))
+        dd = float(d)
+        f = (lambda x, _c=dd: 1.0 + _c * x * x - x)
+        u_eq = 2.0 / (1.0 + math.sqrt(1.0 - 4.0 * dd))   # δu²−u+1=0 的小根（稳定写法，不作相消）
+        resid_eq = dd * u_eq * u_eq - u_eq + 1.0         # 该根满足方程的残差（只验代数，不验物理）
+        pB, kB, sB = psi_of(f, u_eq + A_B, nmax=nmax7, dphi=dphi7)
+        pS, kS, sS = psi_of(f, u_eq + A_S, nmax=nmax7, dphi=dphi7)
+        pB2, kB2, _ = psi_of(f, u_eq + A_B, nmax=nmax7, dphi=2.0 * dphi7)   # 阶长加倍＝积分器自价
+        p_lin = 2.0 * math.pi / math.sqrt(1.0 - 2.0 * dd * u_eq)            # 线性化闭式（第二通道）
+        adv = pB - 2.0 * math.pi
+        rows7.append((d, u_eq, resid_eq, pB, p_lin, adv,
+                      adv / (2.0 * math.pi * dd), (p_lin - 2.0 * math.pi) / (2.0 * math.pi * dd),
+                      fac7 * (pB - pS), abs(pB2 - pB) + math.sqrt(steps7) * EPS * pB))
+    sub(u"δ 阶梯｜线性化点 u_eq（现解 δu²−u+1=0 的小根，残差逐条印）｜实测 Ψ（振幅 %s）｜线性化闭式 Ψ_lin｜"
+        u"每圈进动 Δ＝Ψ−2π｜比 r＝Δ/(2πδ)｜解析比 r_lin｜有限振幅偏置（A² 律自估）｜仪器自价（阶长加倍＋浮点累加底）："
+        % A_B)
+    for (d, ue, rq, pB, pL, adv, rm, rl, exc, fl) in rows7:
+        sub(u"  δ=1/%-6d｜u_eq=%s（残差 %s）｜Ψ=%s｜Ψ_lin=%s｜Δ=%s｜r=%s｜r_lin=%s｜偏置 %s＋自价 %s ⇒ 阈 %s"
+            % (d.denominator, fmt(ue), fmt(rq), fmt(pB), fmt(pL), fmt(adv), fmt(rm), fmt(rl),
+               fmt(exc), fmt(fl), fmt(exc + fl)))
+    ok7 = all(abs(r[4] - r[3]) < r[8] + r[9] for r in rows7)      # |Ψ_lin − Ψ_meas| < 偏置＋自价
+    q_meas = [abs(r[6] - 1.0) for r in rows7]
+    ok7b = all(q_meas[i + 1] < q_meas[i] for i in range(len(q_meas) - 1))
+    sub(u"判据一（双通道，逐格）：|Ψ_meas − Ψ_lin| 必须落在「A² 律自估的有限振幅偏置＋阶长加倍差＋浮点累加底 "
+        u"sqrt(步数)·ε·Ψ」之内——阈全部由这台积分器自己的两次读数现推，不含手钉常数；"
+        u"δ=1/50 那格的偏置实测为 %s，它不为零，所以不许当零用（把它当零就等于宣称有限振幅的轨道也精确闭合）。"
+        % fmt(rows7[0][8]))
+    sub(u"判据二（阶梯）：r−1 逐格严格收缩（%s）——δ 每缩小十倍，剩余同比例缩小，"
+        u"这就是「进动的一阶项确为 2πδ」：把 δu² 关掉（δ→0）轨道回到 G06 的 n=−2 那格，进动消失。"
+        % u"→".join(fmt(x) for x in q_meas))
+    # δ 关掉那一格是判据二的对照实验，不是推论：同一台积分器、同一初值，只把系数置零
+    f0 = (lambda x: 1.0 - x)
+    p0, k0, s0 = psi_of(f0, 1.0 + A_B, nmax=nmax7, dphi=dphi7)
+    sub(u"对照格（δ=0 实测）：Ψ=%s（n=−2 档 %d 个近心点、间距散布 %s），与 2π 差 %s ⇒ "
+        u"进动项**整项**由 δu² 携带，系数置零则机器精度内为零（这一条是 G06 绝对通道之外的第二枚独立牙）"
+        % (fmt(p0), k0, fmt(s0), fmt(abs(p0 - 2.0 * math.pi))))
+    ok7c = abs(p0 - 2.0 * math.pi) < 3.0 * s0 * 2.0 * math.pi + math.sqrt(steps7) * EPS * 6.0
     sub(u"E0 在册那三行现读：%s" % (grep(E0, u"V_{\\rm eff}", u"E0 有效势三项式") or u"没读到那行"))
     sub(u"合读：E0 的进动**整项**来自有效势第三项（−GML²/(mc²r³)），它在 Binet 右端恰好是 δu² 那一枚；"
         u"㉔ 的算符-源分层里族的势 U=α(κ^m−τ^m) 反解出的源不含任何 u² 型修正（G06 的 n=−2 档漂移为机器零），"
         u"所以「m=1 就是引力」这一支**给不出 43″**——不是数值不准，是那一项不存在")
-    chk(u"G07 一阶系数收敛到 2πδ", abs(r_close - 1.0) < thr7 and abs(r_close) < abs(rows7[0][2]),
-        u"ratio=%s thr=%s prev=%s" % (fmt(r_close), fmt(thr7), fmt(abs(rows7[0][2] - 1.0))))
-    BATTERY.append((u"G07 收敛判据", lambda a, b, t: a < t and b > a, (abs(r_close - 1.0), abs(rows7[0][2] - 1.0), thr7),
-                    (abs(r_close - 1.0) + 1.0, abs(rows7[0][2] - 1.0), thr7)))
+    chk(u"G07 双通道 Ψ 落在自价阈内", ok7,
+        u"最大超阈幅度=%s" % fmt(max(abs(r[4] - r[3]) - (r[8] + r[9]) for r in rows7)))
+    chk(u"G07 一阶律阶梯 r−1 严格收缩", ok7b, u"q=%s" % u"、".join(fmt(x) for x in q_meas))
+    chk(u"G07 δ=0 对照格进动为机器零", ok7c, u"|Ψ−2π|=%s" % fmt(abs(p0 - 2.0 * math.pi)))
+    BATTERY.append((u"G07 双通道判据", lambda a, t: a < t, (abs(rows7[0][4] - rows7[0][3]), rows7[0][8] + rows7[0][9]),
+                    (abs(rows7[0][4] - rows7[0][3]) + rows7[0][8] + rows7[0][9], rows7[0][8] + rows7[0][9])))
+    BATTERY.append((u"G07 δ零对照", lambda a, t: a < t, (abs(p0 - 2.0 * math.pi),
+                    3.0 * s0 * 2.0 * math.pi + math.sqrt(steps7) * EPS * 6.0),
+                    (abs(p0 - 2.0 * math.pi) + 1.0, 3.0 * s0 * 2.0 * math.pi)))
 
     # ============================== G08 来料裁定（两基准合判）
     item(u"G08", u"FAIL", u"来料裁定（对本族，不对本册方法）：m=1 那一支在两枚经典基准上同时不合格——"
@@ -486,10 +592,14 @@ def main():
     # ============================== G09 挠率的代数性（P4，含预注册自否）
     item(u"G09", u"THEOREM", u"P4 挠率记账：最小 EC 的挠率方程无导数项 ⇒ τ 是代数辅助场，积掉只留接触型自旋-自旋（零程）；"
                              u"但「要让 τ 传播就得配一枚出环的正幂耦合」这句预注册被本表否证——那一档的系数是 L^0，在环内")
-    book = [(u"R（EH 项）", Fr(-2)), (u"R²", Fr(-4)), (u"T²（挠率平方）", Fr(-4)),
-            (u"(∇T)²（挠率动能）", Fr(-6)), (u"T⁴", Fr(-8)), (u"R^3", Fr(-6))]
-    # 作用量无量纲 ⇒ [c] = L^{-4} 的倒数配平：S = c∫d⁴x O ⇒ [c] = L^{-(4+[O])}... 逐条现算
-    sub(u"幂记账（自然单位；[S]=L^0、[d⁴x]=L^+4 ⇒ 系数幂 = −(4+[O]) 的相反数配平，逐条列）：")
+    book = [(u"R（EH 项）", Fr(-2)), (u"T²（挠率平方）", Fr(-2)), (u"R²", Fr(-4)),
+            (u"(∇T)²（挠率动能）", Fr(-4)), (u"T⁴", Fr(-4)), (u"R^3", Fr(-6))]
+    # 逐符号幂由「度规/标架无量纲、一个导数记 L^-1」现推：[T]=[∂e]=L^-1、[R]=[∂Γ]+[Γ²]=L^-2、[∇T]=L^-2
+    sub(u"记账口径（先把每个符号自己的幂立住，再算系数）：坐标 [x]=L^+1、度规与标架 [g]=[e]=L^0、"
+        u"一枚导数 [∂]=[∇]=L^-1 ⇒ [T]=[∂e]=L^-1、[R]=[∂Γ]+[Γ²]=L^-2、[∇T]=L^-2；"
+        u"作用量无量纲（ℏ=1）＋[d⁴x]=L^+4 ⇒ 每项系数幂 = −(4＋[O])。**上一版把 [T] 记成 L^-2（多算了一枚导数），"
+        u"于是 (∇T)² 被推去付 L^+2 的出环价——那是记账错，不是物理错，本轮就地更正并保留这段说明**")
+    sub(u"幂记账（自然单位；[S]=L^0、[d⁴x]=L^+4 ⇒ 系数幂 = −(4+[O])，逐条列）：")
     inring = []
     for nm, po in book:
         need = -(Fr(4) + po)                # 系数的 L 幂
@@ -502,12 +612,31 @@ def main():
     d6deg = grep(D6, u"无自旋物质时", u"D6 退化读法")
     d6eq = grep(D6, u"8\\pi G S", u"D6 挠率场方程")
     sub(u"D6 在册三行现读：%s｜%s｜%s" % (d6spin or u"没读到", d6deg or u"没读到", d6eq or u"没读到"))
-    sig = [x for x in inring if x[0].startswith(u"(∇T")]
+    sig = [x for x in inring if x[0].startswith(u"(∇T")][0]
     sub(u"预注册否证（原话留面）：开场写的是「让 τ 传播必须付出**出环**代价」。本表现算：(∇T)² 档所需系数幂 = L^%d，"
-        u"按 ㉔ 的判据它**在环内**（偶且非正那一支的邻格）⇒ 预注册错在把「需要新结构」当成「需要正幂系数」；"
-        u"真正付的价是另外两笔：①这一档的系数是新的自由无量纲数（㉔ 已证环不给任何数值）；"
-        u"②它与 D6 在册那句「无自旋物质时挠率为零，EC 退化为 GR」正面冲突——那读法里 τ 根本没有独立动力学。"
-        % int(sig[0][2]))
+        u"按 ㉔ 的判据（偶 ∧ 非正）它**在环内**——而且环在这一档只给一个元素：L^0 就是 ㉔ U02 里那枚「空收缩＝纯数」格。"
+        u"⇒ 预注册错在把「需要新结构」当成「需要正幂系数」；真正付的价是另外两笔：①这一档的系数是一枚**新的自由无量纲数**"
+        u"（㉔ 已证几何环能给形状、给不出数值），②它与 D6 在册那句「无自旋物质时挠率为零，EC 退化为 GR」正面冲突——"
+        u"那读法里 τ 根本没有独立动力学可传播。" % int(sig[2]))
+    # 代数性的两枚可算见证：(i) T² 与 R 同幂档 ⇒ 最小 EC 的挠率项不新增系数；(ii) 在册那式右端是自旋源、左端无 □
+    row_r = [x for x in inring if x[0].startswith(u"R（")][0]
+    row_t2 = [x for x in inring if x[0].startswith(u"T²")][0]
+    row_r3 = [x for x in inring if x[0].startswith(u"R^3")][0]
+    sub(u"同档见证：R 项与 T² 项所需系数幂同为 L^%d／L^%d ⇒ 最小 EC 里的挠率平方项**不带来新常数**"
+        u"（它就是 R(Γ)=R(e)+∂K+K² 里那枚 K²，被同一个 1/G 定价）——这正是「τ 是代数辅助场」的簿记形状。"
+        u"对照格 R^3 需要 L^%d（正幂）⇒ 出环，说明这条边界不是空的：表里既有在环的，也有出环的"
+        % (int(row_r[2]), int(row_t2[2]), int(row_r3[2])))
+    _lhs = d6eq.split(u"=")[0] if d6eq else u""
+    no_box = bool(_lhs) and not any(k in _lhs for k in (u"\\Box", u"\\square", u"\\partial^2", u"D_\\mu D^\\mu"))
+    sub(u"在册场方程左端现取（等号左侧）：%s｜其中没有达朗贝尔算符／二阶协变导数记号 ⇒ 该式把挠率**代数地**解为源的函数"
+        % (_lhs.strip() if _lhs else u"没读到"))
+    chk(u"G09 T² 与 R 同档且 R^3 出环（边界非空）",
+        row_r[2] == row_t2[2] and row_r3[2] > 0 and not row_r3[3],
+        u"R=%d T²=%d R³=%d(在环=%s)" % (int(row_r[2]), int(row_t2[2]), int(row_r3[2]), row_r3[3]))
+    chk(u"G09 在册挠率方程左端无二阶算符（代数性有载体）", no_box, u"左端=%s" % (_lhs.strip() or u"空"))
+    BATTERY.append((u"G09 同档判据", lambda a, b, c: a == b and c > 0,
+                    (int(row_r[2]), int(row_t2[2]), int(row_r3[2])),
+                    (int(row_r[2]), int(row_t2[2]) - 2, int(row_r3[2]))))
     # 接触型 vs 幂律的力程实测（高斯展宽 δ 函数）
     sgm = 1.0
     def fcontact(r, s=sgm):
@@ -520,23 +649,39 @@ def main():
     for x, c1, c2 in tab:
         sub(u"  r/σ=%-4.0f｜接触项 |F|/|F(σ)| = %s｜幂律 r^-2 = %s｜二者之比 = %s"
             % (x, fmt(c1), fmt(c2), fmt(c1 / c2)))
-    # 力程判据：降到 1e-6 所需半径
-    lo, hi = 1.0, 400.0
-    for _ in range(200):
-        mid = 0.5 * (lo + hi)
-        if fcontact(mid) / fcontact(1.0) > 1e-6:
-            lo = mid
-        else:
-            hi = mid
-    r_c = 0.5 * (lo + hi)
-    r_p = 1000.0          # r^-2 降到 1e-6 在 r=1000σ（(1000)^-2 = 1e-6）
-    sub(u"力程实测（同一判据「降到 σ 处的 1e-6」）：接触型在 r = %s σ 处达标，幂律 r^-2 要到 r = %s σ ⇒ "
-        u"比值 %s 倍 ⇒ 最小 EC 积掉挠率买到的是**零程**接触力，不是长程引力；"
+    # 力程判据：降到 σ 处读数的 1e-6 所需半径——两型力用**同一个二分器、同一个阈**，不手打幂律那格的数
+    thr_range = 1e-6
+
+    def range_at(g, hi=1.0e7):
+        if g(hi) / g(1.0) > thr_range:
+            return None
+        lo, hir = 1.0, hi
+        for _ in range(200):
+            mid = 0.5 * (lo + hir)
+            if g(mid) / g(1.0) > thr_range:
+                lo = mid
+            else:
+                hir = mid
+        return 0.5 * (lo + hir)
+    r_c = range_at(lambda x: fcontact(x, sgm))
+    r_c2 = range_at(lambda x: fcontact(x, 2.0 * sgm))     # σ 加倍 ⇒ 力程该按同一因子缩放
+    r_p = range_at(lambda x: fpow(x, sgm))
+    rc_closed = math.sqrt(2.0 * math.log(1.0 / thr_range))   # 高斯尾的闭式解（第二通道，非拟合）
+    rc_floor = 8.0 * EPS * rc_closed
+    sub(u"力程实测（同一判据「降到 σ 处的 %s」，两型共用一个二分器）：接触型在 r = %s σ 处达标，"
+        u"幂律 r^-2 要到 r = %s σ ⇒ 比值 %s 倍 ⇒ 最小 EC 积掉挠率买到的是**零程**接触力，不是长程引力；"
         u"族的 τ 支若要承担长程力，就得与 D6 那读法分手"
-        % (fmt(r_c), fmt(r_p), fmt(r_p / r_c)))
-    chk(u"G09 动能档在环内且接触档零程", sig[0][3] and r_c < 10.0,
-        u"kin_in_ring=%s r_contact=%s" % (sig[0][3], fmt(r_c)))
-    BATTERY.append((u"G09 预注册双面", lambda a, b: a and b, (sig[0][3], r_c < 10.0), (False, r_c < 10.0)))
+        % (fmt(thr_range), fmt(r_c), fmt(r_p), fmt(r_p / r_c)))
+    sub(u"第二通道（闭式，不来自二分）：高斯尾 exp(−r²/2σ²) 降到阈处的半径 = σ·√(2 ln(1/阈)) = %s；"
+        u"σ 加倍那格实测力程 %s（闭式预言 %s）⇒ 力程由 σ **线性**设定，除此之外没有第二个尺度——"
+        u"「零程」说的就是这件事：它的程不是由耦合常数调出来的，是由接触本身的宽度给的"
+        % (fmt(rc_closed), fmt(r_c2), fmt(2.0 * rc_closed)))
+    chk(u"G09 动能档在环内且接触档零程", sig[3] and abs(r_c - rc_closed) < rc_floor
+        and abs(r_c2 - 2.0 * rc_closed) < 2.0 * rc_floor,
+        u"kin_in_ring=%s r_contact=%s（闭式 %s，底 %s）r(2σ)=%s" % (sig[3], fmt(r_c), fmt(rc_closed),
+                                                                    fmt(rc_floor), fmt(r_c2)))
+    BATTERY.append((u"G09 预注册双面", lambda a, b: a and b, (sig[3], abs(r_c - rc_closed) < rc_floor),
+                    (False, abs(r_c - rc_closed) < rc_floor)))
 
     # ============================== G10 吸引性的 1 bit
     item(u"G10", u"BOUNDARY", u"吸引性定价：族的 U=α(κ−τ) 在 m=1 给 F∝−α(A−B)/r²，符号表 4 格里 2 吸 2 斥 ⇒ "
@@ -555,9 +700,8 @@ def main():
         % (n_att, len(rows10) - n_att))
     sub(u"另一半（偶 m 支）：m=2 时 U∝r^-2 ⇒ 力律 F∝r^-3——**连 r^-2 都不是**，谈不上引力；"
         u"这一支在 ㉔ 里已判两侧皆空（无几何构造、无手性载体）")
-    u2 = [u"r^%d" % -(2) for _ in [0]]
     chk(u"G10 符号表一半吸一半斥", n_att == 2 and len(rows10) == 4, u"att=%d total=%d" % (n_att, len(rows10)))
-    BATTERY.append((u"G10 号表计数", lambda a, b: a == b, n_att, 3))
+    BATTERY.append((u"G10 号表计数", lambda a, b: a == b, (n_att, n_att), (n_att, len(rows10))))
 
     # ============================== G11 逐圈幂记账与不变量配对数
     item(u"G11", u"THEOREM", u"P1 推广（逐圈）：纯引力的发散度按拓扑恒等 D=2+2L（枚举核），"
@@ -575,7 +719,7 @@ def main():
         u"逐格 D 与 2+2L 恒等 = %s" % (len(rows11), u"是" if same else u"否"))
     for L in range(0, 7):
         sub(u"  L=%d 圈 ⇒ 发散度 D=%d ⇒ 需要的算符导数阶=%d ⇒ 该档系数的 L 幂=%+d（正 ⇒ 环外）"
-            % (L, 2 + 2 * L, 2 + 2 * L, -(2 + 2 * L) * -1 if False else 2 + 2 * L))
+            % (L, 2 + 2 * L, 2 + 2 * L, 2 + 2 * L))
     def dfac(m):
         out = 1
         for k in range(m, 0, -2):
@@ -653,7 +797,8 @@ def main():
                             u"而族的唯一几何落点 m=1 恰落在 Bertrand 的闭合格上 ⇒ 进动恒零，两枚经典基准直接把它否掉")
     sub(u"成立面（可引）：G01（指数矩阵 det=%d 满秩、加 m 后零度 1、生成元回代全零）、G02（(m/m_P)² 两式独立复算在印刷半 ulp 内）、"
         u"G04（偏折比 = %s，与 (1+γ) 公式恒等）、G05（w=1/3 标量可见度精确零、w=0 满格）、"
-        u"G06（等时指数集恰为 −2 与 1，实测漂移 %s）、G07（Δ/(2πδ) 两点收敛到 1）、G09（接触型力程 %s σ vs 幂律 %s σ）、"
+        u"G06（等时指数集恰为 −2 与 1，实测漂移 %s；绝对通道另证外推 Ψ₀ 逐格对上闭式）、G07（Δ/(2πδ) 三档阶梯收敛到 1，"
+        u"δ 置零对照格的进动为机器零）、G09（接触型力程 %s σ vs 幂律 %s σ）、"
         u"G11（D=2+2L 拓扑恒等逐格成立、配对数两通道恒等且严格增）"
         % (d3, fmt(ratio) if (v_new and v_gr) else u"未读到", fmt(m1_row[4]), fmt(r_c), fmt(r_p)))
     sub(u"否证面：本册开场的 P4 预注册（τ 传播要出环）被 G09 表否证；"
@@ -747,7 +892,7 @@ def main():
     emit(u"")
     emit(u"分层结论：")
     emit(u"  [数学] 指数矩阵满秩与零度 1（G01，分数域消元＋逐行回代）、标量可见度在 w=1/3 精确零（G05，Fraction 全域）、"
-        u"Bertrand 等时集恰为 −2 与 1（G06，振幅漂移实测）、进动一阶系数 Δ/(2πδ)→1（G07 两点收敛）、"
+        u"Bertrand 等时集恰为 −2 与 1（G06，振幅漂移实测＋A→0 外推对闭式）、进动一阶系数 Δ/(2πδ)→1（G07 三档阶梯＋δ 置零对照）、"
         u"D=2+2L 与配对数双通道恒等（G11）为恒等式级。")
     emit(u"  [物理] 引力的无量纲强度唯一且**带受力体质量**（G02）⇒ EP 对引力是量纲必然不是附加公设；"
         u"标量势看不见辐射（G05）⇒ 偏折只能给半（G04）；最小 EC 的 τ 是代数辅助场⇒零程接触（G09）；"
