@@ -1,0 +1,267 @@
+{
+  "engine": "TUFT-V4 量纲全审计 + l0 公理重建（路线B）",
+  "date": "2026-10-12",
+  "rating": "O/L2",
+  "verdict": "路线B 修掉量纲缺 L² 硬伤，但引入自由常数 l0 使 G 退化为循环定义；χ² 拟合过参数化(dof=-1)，G 完全未被预言。不新增基础常数则框架底层不可挽救。",
+  "counts": {
+    "PASS": 18,
+    "FAIL": 4,
+    "BOUNDARY": 3,
+    "INFO": 6,
+    "CORRECTED": 0
+  },
+  "entries": [
+    {
+      "id": "D01",
+      "kind": "PASS",
+      "title": "G_th=c³l0²/(ℏ sinθ) 量纲 vs [G]",
+      "detail": "量纲=M^-1·L^3·T^-2，期望=M^-1·L^3·T^-2 → 匹配"
+    },
+    {
+      "id": "D02",
+      "kind": "PASS",
+      "title": "g=-c²l0²κ·R/R³ 量纲 vs [g]",
+      "detail": "量纲=L·T^-2，期望=L·T^-2 → 匹配"
+    },
+    {
+      "id": "D03",
+      "kind": "PASS",
+      "title": "κ²+τ²=ω²/c² 量纲（3维 Frenet κ,τ）",
+      "detail": "量纲=L^-2，期望=L^-2 → 匹配"
+    },
+    {
+      "id": "D04",
+      "kind": "PASS",
+      "title": "l0=l_P,sinθ=1 时 G_th 量纲 vs [G]",
+      "detail": "量纲=M^-1·L^3·T^-2，期望=M^-1·L^3·T^-2 → 匹配"
+    },
+    {
+      "id": "S:gth_recovers_G",
+      "kind": "PASS",
+      "title": "自检:l0=l_P,sinθ=1 时 G_th 数值 == CODATA G（相对差 0.000e-35）",
+      "detail": "通过"
+    },
+    {
+      "id": "S:l0_equals_lP",
+      "kind": "PASS",
+      "title": "自检:l0(θ=1) 数值 == 普朗克长度 l_P（相对差 0.000e+3）",
+      "detail": "通过"
+    },
+    {
+      "id": "D06",
+      "kind": "FAIL",
+      "title": "□κ (L⁻³) vs 源项 Gρ (T⁻²) 维度",
+      "detail": "量纲=L^-3，期望=T^-2 → 不匹配(差 L^-3·T^2)"
+    },
+    {
+      "id": "D06",
+      "kind": "BOUNDARY",
+      "title": "动态场方程源项维度残留",
+      "detail": "3维 Frenet κ(L⁻¹) 升为 4 维传播场时 □κ=L⁻³，而物质源 Gρ=T⁻²，差 L⁻¹；须把 κ 重新解释为 4 维时空曲率标量(L⁻²) 或引入 l0² 型因子，动态方程未闭合。"
+    },
+    {
+      "id": "N01",
+      "kind": "PASS",
+      "title": "原始式 sinθ=2πc³/(ℏG) 复算",
+      "detail": "sinθ = 2.4052e+70 ≈ 2.4e70，远超 [-1,1] ⇒ 与实验 G 矛盾（复算一致）"
+    },
+    {
+      "id": "N02",
+      "kind": "PASS",
+      "title": "c³/ℏ 量纲 vs [G] 缺口",
+      "detail": "c³/ℏ 量纲=M^-1·L·T^-2；G 量纲=M^-1·L^3·T^-2；比值量纲=L^-2 ⇒ 缺 L²（根因）"
+    },
+    {
+      "id": "S:l0_positive",
+      "kind": "PASS",
+      "title": "自检:l0 在 sinθ∈(0,1] 全为正实数",
+      "detail": "通过"
+    },
+    {
+      "id": "S:chi2_zero_1",
+      "kind": "PASS",
+      "title": "自检:sinθ=1e+0 拟合族上 G_th==G（相对残差 0.00e-36）",
+      "detail": "通过"
+    },
+    {
+      "id": "S:chi2_zero_0.5",
+      "kind": "PASS",
+      "title": "自检:sinθ=5e-1 拟合族上 G_th==G（相对残差 1.20e-59）",
+      "detail": "通过"
+    },
+    {
+      "id": "S:chi2_zero_0.1",
+      "kind": "PASS",
+      "title": "自检:sinθ=1e-1 拟合族上 G_th==G（相对残差 0.00e-36）",
+      "detail": "通过"
+    },
+    {
+      "id": "S:chi2_zero_0.01",
+      "kind": "PASS",
+      "title": "自检:sinθ=1e-2 拟合族上 G_th==G（相对残差 0.00e-36）",
+      "detail": "通过"
+    },
+    {
+      "id": "S:chi2_zero_0.00001",
+      "kind": "PASS",
+      "title": "自检:sinθ=1e-5 拟合族上 G_th==G（相对残差 0.00e-36）",
+      "detail": "通过"
+    },
+    {
+      "id": "S:chi2_zero_1E-10",
+      "kind": "PASS",
+      "title": "自检:sinθ=1e-10 拟合族上 G_th==G（相对残差 0.00e-36）",
+      "detail": "通过"
+    },
+    {
+      "id": "S:chi2_zero_1E-20",
+      "kind": "PASS",
+      "title": "自检:sinθ=1e-20 拟合族上 G_th==G（相对残差 0.00e-36）",
+      "detail": "通过"
+    },
+    {
+      "id": "X01",
+      "kind": "INFO",
+      "title": "χ² 拟合：模型过参数化",
+      "detail": "模型 G_th(l0,sinθ) 含 2 自由参数，CODATA G 仅 1 个数据点 ⇒ dof=-1（<0，过参数化）。"
+    },
+    {
+      "id": "X02",
+      "kind": "INFO",
+      "title": "χ² 拟合：G 沿整条族残差=0",
+      "detail": "对任意 sinθ∈(0,1]，取 l0=√(Gℏ sinθ/c³) 即 G_th≡G，χ²=0；G 完全未约束任一参数。"
+    },
+    {
+      "id": "X03",
+      "kind": "FAIL",
+      "title": "χ² 拟合结论：G 未被预言",
+      "detail": "路线B 把 G 的'第一性导出'降格为'用 l0 拟合 G'；l0 即普朗克长度（θ=1 时），等价于把 G 重新写回定义，循环定义。G 的预言力=0。"
+    },
+    {
+      "id": "X04",
+      "kind": "PASS",
+      "title": "χ² 拟合：拟合优度无意义",
+      "detail": "reduced χ² 需 dof>0；此处 dof<0 ⇒ 拟合优度不适用，进一步证明该形式无检验力。"
+    },
+    {
+      "id": "A01",
+      "kind": "INFO",
+      "title": "ADM 哈密顿约束（修正版）",
+      "detail": "16π G_th/c⁴ · (R_ijkl 约化) 出现在约束中；G_th 已含 l0²，故与 GR 形式同构，无新传播结构。"
+    },
+    {
+      "id": "A02",
+      "kind": "INFO",
+      "title": "ADM 动量约束（修正版）",
+      "detail": "∇_j(K^{ij}-γ^{ij}K) = 8π G_th/c⁴ · (T^{0i})；源项带 G_th，与 GR 同构。"
+    },
+    {
+      "id": "A03",
+      "kind": "INFO",
+      "title": "BSSN 演化方程（修正版）",
+      "detail": "∂_t γ̃_ij = -2α K̃_ij + ... ；∂_t K̃_ij = ... - α (Ã_ij + 1/3 γ̃_ij Ã - 8π G_th/c⁴ (ρ+S)) ... ；l0 只进入 G_th 系数，不引入新动力学项。"
+    },
+    {
+      "id": "A04",
+      "kind": "BOUNDARY",
+      "title": "ADM-BSSN 中 κ,τ 的角色未定义",
+      "detail": "修正版仅把 G 替换为 G_th，未给出 κ,τ 如何进入度规/外曲率的演化；κ,τ 与 ADM 变量(γ_ij, K_ij) 的映射仍是开放项（同 r19/r21 的 τ 动力学未闭合问题）。"
+    },
+    {
+      "id": "V01",
+      "kind": "PASS",
+      "title": "路线B 修掉量纲缺 L² 硬伤",
+      "detail": "G_th=c³l0²/(ℏ sinθ) 量纲匹配 G；g=-c²l0²κR/R³ 量纲匹配加速度（D01/D02 PASS）。"
+    },
+    {
+      "id": "V02",
+      "kind": "FAIL",
+      "title": "路线B 未实现 G 的第一性导出",
+      "detail": "新增自由常数 l0 后，G 被'交易'为 l0（θ=1 时 l0=l_P），不是从 κ,τ,ω 导出；代价=把'导出 G'降为'用 l0 拟合 G'，与路线A（普朗克长度循环）等价。"
+    },
+    {
+      "id": "V03",
+      "kind": "BOUNDARY",
+      "title": "动态场方程仍缺维度",
+      "detail": "3 维 Frenet κ(L⁻¹) 直接作 4 维传播场时 □κ=L⁻³ 与源项 T⁻² 差 L⁻¹（D06）；动态演化方程未闭合，须重新解释 κ 为 4 维曲率标量或补 l0² 型因子。"
+    },
+    {
+      "id": "V04",
+      "kind": "INFO",
+      "title": "来料手算误判纠错",
+      "detail": "来料称'κ²+τ²=ω²/c² 平方形式量纲不匹配'是手算错（误取 [κ]=L⁻²）；机器证明 3 维 Frenet κ,τ(L⁻¹) 下该式量纲自洽（D03）。真正 BUG 仅在于引力公理，不在几何恒等式。"
+    },
+    {
+      "id": "V05",
+      "kind": "FAIL",
+      "title": "框架底层不可挽救（不新增基础常数则）",
+      "detail": "不引入 l0（或等价普朗克长度）则 G 量纲缺 L²，数学上无解（sinθ 爆炸）；引入 l0 则 G 退化为循环定义。故'从 κ,τ,ω 第一性导出 G'在原公理集内不可达成，必须新增基础常数或接受 G 为外部输入。"
+    }
+  ],
+  "numerical": {
+    "sin_theta_wrong_formula": "2.405249e+70",
+    "planck_length_m": "1.616255e-35",
+    "l0_at_sin1_m": "1.616255e-35",
+    "G_recovered": "6.674300e-11",
+    "G_CODATA": "6.674300e-11",
+    "chi2_fit_rows": [
+      {
+        "sin_theta": "1",
+        "l0_m": "1.616255e-35",
+        "G_th": "6.674300e-11",
+        "rel_resid": "0.000e-35",
+        "chi2_per_point": "0.000e-73"
+      },
+      {
+        "sin_theta": "0.5",
+        "l0_m": "1.142865e-35",
+        "G_th": "6.674300e-11",
+        "rel_resid": "1.199e-59",
+        "chi2_per_point": "2.844e-109"
+      },
+      {
+        "sin_theta": "0.1",
+        "l0_m": "5.111047e-36",
+        "G_th": "6.674300e-11",
+        "rel_resid": "0.000e-35",
+        "chi2_per_point": "0.000e-73"
+      },
+      {
+        "sin_theta": "0.01",
+        "l0_m": "1.616255e-36",
+        "G_th": "6.674300e-11",
+        "rel_resid": "0.000e-35",
+        "chi2_per_point": "0.000e-73"
+      },
+      {
+        "sin_theta": "0.00001",
+        "l0_m": "5.111047e-38",
+        "G_th": "6.674300e-11",
+        "rel_resid": "0.000e-35",
+        "chi2_per_point": "0.000e-73"
+      },
+      {
+        "sin_theta": "1E-10",
+        "l0_m": "1.616255e-40",
+        "G_th": "6.674300e-11",
+        "rel_resid": "0.000e-35",
+        "chi2_per_point": "0.000e-73"
+      },
+      {
+        "sin_theta": "1E-20",
+        "l0_m": "1.616255e-45",
+        "G_th": "6.674300e-11",
+        "rel_resid": "0.000e-35",
+        "chi2_per_point": "0.000e-73"
+      }
+    ],
+    "dof": -1
+  },
+  "constants": {
+    "c": "299792458",
+    "hbar": "1.0545718176461565E-34",
+    "G": "6.67430E-11",
+    "G_sigma": "1.5E-15"
+  },
+  "self_checks_pass": true
+}
