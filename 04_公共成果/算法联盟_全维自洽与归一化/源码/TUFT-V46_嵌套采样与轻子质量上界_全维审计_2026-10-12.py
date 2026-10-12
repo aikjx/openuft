@@ -95,19 +95,19 @@ DIM_KAPPA_CURV = D(0, -1, 0, 0)     # 螺旋曲率 = 弧长倒数
 # ============ 条目累加器 ============
 ITEMS = []
 
-def P(cid, title, verdict, detail):
+def P(cid, title, detail):
     ITEMS.append({'id': cid, 'title': title, 'verdict': 'PASS', 'detail': detail})
     print('[PASS ] %-6s %s' % (cid, title))
 
-def F(cid, title, verdict, detail):
+def F(cid, title, detail):
     ITEMS.append({'id': cid, 'title': title, 'verdict': 'FAIL', 'detail': detail})
     print('[FAIL ] %-6s %s' % (cid, title))
 
-def Bn(cid, title, verdict, detail):
+def Bn(cid, title, detail):
     ITEMS.append({'id': cid, 'title': title, 'verdict': 'BOUNDARY', 'detail': detail})
     print('[BND  ] %-6s %s' % (cid, title))
 
-def I(cid, title, verdict, detail):
+def I(cid, title, detail):
     ITEMS.append({'id': cid, 'title': title, 'verdict': 'INFO', 'detail': detail})
     print('[INFO ] %-6s %s' % (cid, title))
 
@@ -159,7 +159,7 @@ READ = {}
 RANGES = [-4, -3, -2, -1, 0, 1, 2, 3, 4]
 homog_solutions = []
 for a, b, d in itertools.product(RANGES, repeat=3):
-    kd = D(a, b, d)
+    kd = D(a, b, d, 0)
     if t1_dim(kd) == t2_dim(kd):
         homog_solutions.append((kd, t1_dim(kd)))
 n_homog = len(homog_solutions)
@@ -407,7 +407,7 @@ def chi2_parts(delta):
 GRID_N = 61
 grid = []
 for i in range(GRID_N):
-    ex = MP_INV.log(PRIOR_LOW) + (MP_INV.log(PRIOR_HIGH) - MP_INV.log(PRIOR_LOW)) * mp.mpf(i) / mp.mpf(GRID_N - 1)
+    ex = mp.log(PRIOR_LOW) + (mp.log(PRIOR_HIGH) - mp.log(PRIOR_LOW)) * mp.mpf(i) / mp.mpf(GRID_N - 1)
     grid.append(mp.e ** ex)
 
 curve = []
