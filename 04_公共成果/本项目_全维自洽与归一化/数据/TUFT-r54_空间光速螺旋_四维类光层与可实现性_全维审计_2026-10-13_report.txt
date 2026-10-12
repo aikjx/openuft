@@ -1,0 +1,77 @@
+==============================================================================
+TUFT-r54 空间光速螺旋 —— 四维类光层 / 可实现性 / 洛伦兹协变性 全维审计
+==============================================================================
+PASS       13
+FAIL       4
+BOUNDARY   5
+MISMATCH   2
+INFO       2
+条目合计 26
+自检 38/38
+
+[PASS] N06  弧长参数化 |dr/ds|=1 成立（解析路径）
+[PASS] N07  kappa=R/L^2, tau=H/L^2 双路径对拍一致
+[PASS] N08  kappa^2+tau^2=1/L^2 成立（机器零）
+[PASS] N09  速度分解 v_z=cH/L, v_perp=cR/L, 合速度=c 且量纲齐次
+[PASS] N10  Omega/(c*kappa)=L/R=1/sin(theta) >= 1，来料更正 Omega!=c*kappa 正确
+[MISMATCH] N01  符号 ds 同册双义且取值直接矛盾：§1 的 ds=c dt>0 vs §2 的 ds^2=0
+[MISMATCH] N02  符号 tau 同册双义：§4 挠率 tau（量纲 L^-1）vs §6 固有时 tau（量纲 T）
+[BOUNDARY] N03  符号 s 双义：三维弧长参数 vs 四维世界线参数（同一 ds 冲突的上游）
+[BOUNDARY] N04  theta 口径未声明且先用后定义：§4 先写 c*kappa/sin(theta)，后写 sin(theta)=R/L
+[PASS] N05  sin(theta)=R/L 与速度分解自洽：v_perp=c sin(theta), v_z=c cos(theta)
+[PASS] N11  四维间隔 ds^2 = -c^2dt^2 + |v|^2dt^2 = 0 成立（类光）
+[PASS] N12  类光 <=> 三维速率 |v|=c 的双向等价（含超标假想值的反向对照）
+[INFO] N13  omega==Omega 的根因在 r51 已固化（Darboux 矢量平行于轴），本册引用不重算
+[FAIL] N14  【核心新发现】kappa, tau, omega, L 均非洛伦兹不变量；§4 称 omega 为"内禀"与洛伦兹变换冲突
+[PASS] N15  阳性对照：不变的是 L^2 - H^2 = R^2（而非 L、H、kappa、tau、omega 各自）
+[FAIL] N14b  【N14 的推论】螺旋的手性（挠率符号）不是洛伦兹不变量：boost 超过轴向速度即翻号
+[PASS] N16  第三路径交叉：有限差分从 boost 后曲线直接重算 kappa', tau'，与闭式一致
+[FAIL] N17  【核心新发现】真空无源场不可能给出严格的类光螺旋世界线：v_E/c<1 且等号仅当单平面波
+[BOUNDARY] N18  最接近的物理载体：光学涡旋（Bessel/拉盖尔-高斯）的能流线恰是圆柱螺旋，但其世界线类时
+[PASS] N19  补充限制：类光螺旋既不是有质量粒子的轨迹，也不是平直时空自由光子的轨迹
+[FAIL] N20  【两难定理】"有质量粒子 + 光速螺旋 + E=hbar*omega" 三件套不可兼得
+[PASS] N21  放弃类光后的定量后果：v=0.99c 时 L=0.99*hbar/(mc)、omega=0.99*m c^2/hbar
+[BOUNDARY] N22  库内"空间光速螺旋"同主题册的轻量文本扫描：登记候选冲突点，不代判定
+[BOUNDARY] N23  两个退化极限不对称：H->0 干净收敛到圆，R->0 是 Frenet 奇点（公式外推值非零）
+[INFO] N24  kappa^2+tau^2=(omega/c)^2 在本构型是"由定义直接推出"，非经验约束（L1 恒等重述）
+[PASS] N25  量纲总审计：来料全部式量纲齐次，本册**零量纲缺陷**（正面登记）
+
+--- guards ---
+OK   G0-1 dmul(L,L)=L^2
+OK   G0-2 dpow(L,-1)=L^-1
+OK   G0-3 [c/L]=T^-1
+OK   G0-4 [c*kappa]=T^-1
+OK   G0-5 [kappa^2]=L^-2
+OK   G0-6 无量纲比值 [sin theta]=1
+OK   G0-7 [hbar/(m c)]=L
+OK   G0-8 [m c^2/hbar]=T^-1
+OK   N06 弧长参数化残差<1e-40
+OK   N07 kappa 双路径<1e-40
+OK   N07 tau 双路径<1e-40
+OK   N08 恒等式残差<1e-40
+OK   N09 合速度=c 残差<1e-40
+OK   N10 比值=L/R
+OK   N01 ds 双义确为两个不同数值
+OK   N02 tau 双义量纲互异
+OK   N05 v_perp=c sin theta
+OK   N05 v_z=c cos theta
+OK   N11 四维间隔=0
+OK   N12 双向等价
+OK   N14 双路径（闭式 vs 参数化不变公式）一致
+OK   N14 omega 确实随 boost 改变（非数值噪声）
+OK   N14 类光性保持（|v'|=c 各 beta）
+OK   N15 不变量残差<1e-40
+OK   N14b 手性翻转阈值 = H/L（步长精度内）
+OK   N16 有限差分与闭式相对偏差<1e-5
+OK   N17 扫描值全部严格小于 1
+OK   N17 阳性对照：单平面波 v_E/c=1
+OK   N17 m=1 确有方位能流（螺旋性）
+OK   N17 标量双路径（离散 N=256 vs 解析 Bessel）一致
+OK   N19 螺旋曲率非零（与测地线互斥）
+OK   N20 L=hbar/(mc) 时 v 精确等于 c
+OK   N20 康普顿波长量纲=L
+OK   N21 同比例收缩
+OK   N23 R->0 时 tau 不趋于 0（伪影存在）
+OK   N23 H->0 时 kappa 收敛到 1/R
+OK   N24 定义式残差机器零
+OK   N25 全部量纲齐次

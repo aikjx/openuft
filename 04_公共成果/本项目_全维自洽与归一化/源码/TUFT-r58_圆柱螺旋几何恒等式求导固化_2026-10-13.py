@@ -36,7 +36,7 @@ except Exception:
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, '数据')
 os.makedirs(DATA, exist_ok=True)
-TAG = 'TUFT-r50_圆柱螺旋几何恒等式求导固化_2026-10-13'
+TAG = 'TUFT-r58_圆柱螺旋几何恒等式求导固化_2026-10-13'
 
 # ---------------- 高精度常量与 sin/cos（Decimal 无内建三角函数） ----------------
 PI = Decimal('3.1415926535897932384626433832795028841971693993751058209749445923078164062862')
@@ -597,7 +597,7 @@ I('S20', '分层登记：哪些是几何恒等式，哪些含物理公设',
 counts = {}
 for it in ITEMS:
     counts[it['verdict']] = counts.get(it['verdict'], 0) + 1
-summary = {'round': 'r50', 'title': '圆柱螺旋几何恒等式求导固化', 'date': '2026-10-13',
+summary = {'round': 'r58', 'title': '圆柱螺旋几何恒等式求导固化', 'date': '2026-10-13',
            'items': len(ITEMS), 'counts': counts,
            'guards_total': len(GUARDS),
            'guards_pass': sum(1 for g in GUARDS if g['ok'])}

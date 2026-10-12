@@ -1,0 +1,656 @@
+{
+ "summary": {
+  "round": "r53",
+  "title": "空间螺旋结构中的光与光子：度规/测地线/Maxwell/量子化 全维审计",
+  "date": "2026-10-13",
+  "items": 47,
+  "counts": {
+   "PASS": 14,
+   "BOUNDARY": 7,
+   "FAIL": 15,
+   "INFO": 10,
+   "CORRECTED": 1
+  },
+  "guards_total": 23,
+  "guards_pass": 23
+ },
+ "items": [
+  {
+   "code": "B01",
+   "verdict": "PASS",
+   "title": "度规 ds^2 = -c^2dt^2 + drho^2 + rho^2dchi^2 + 2 beta rho^2 dchi dzeta + (1+beta^2rho^2)dzeta^2 由 phi=chi+beta*zeta 导出正确",
+   "detail": "机器：把同一组微分 (drho, dchi, dzeta) 代入来料 §1.2 的螺旋度规与平直柱坐标度规（dphi = dchi + beta*dzeta），两者相对残差在 60 位下为 0.0000000000000000000000000E+25。来料 §1.2/§1.3 的推导链条（含 g_{chi zeta}=beta rho^2、g_{zeta zeta}=1+beta^2rho^2）逐项成立。",
+   "numbers": {
+    "ds2_helix": "7.7040562500000000000000000E-2",
+    "ds2_lab": "7.7040562500000000000000000E-2",
+    "rel_resid": "0.0000000000000000000000000E+25"
+   }
+  },
+  {
+   "code": "B02",
+   "verdict": "BOUNDARY",
+   "title": "det(g) = -c^2 rho^2 成立（机器）",
+   "detail": "行列式与 -c^2rho^2 的相对偏差 1.133e-16。注意本条只是「shear 保体积」的结果（坐标变换 phi=chi+beta*zeta 的行列式为 1），它本身**不能**推出任何物理不变性；与 B04 合起来才是同一事实的两面。",
+   "numbers": {
+    "det_numeric": "-4.899999999999999e-01",
+    "det_closed": "-4.899999999999999e-01"
+   }
+  },
+  {
+   "code": "B03",
+   "verdict": "PASS",
+   "title": "来料 §1.4 的逆度规 g^{chi chi}=(1+beta^2rho^2)/rho^2、g^{chi zeta}=-beta、g^{zeta zeta}=1 正确",
+   "detail": "机器：与 4x4 数值求逆逐分量一致，最大偏差 1.110e-16；来料自给的验证式 g_{chi chi}g^{chi chi}+g_{chi zeta}g^{zeta chi}=1亦在 60 位下为机器零。",
+   "numbers": {
+    "max_dev_numeric_vs_closed": "1.110e-16",
+    "g^{chi chi}": "2.632532302861974e+00",
+    "g^{chi zeta}": "-7.692307692307692e-01"
+   }
+  },
+  {
+   "code": "B04",
+   "verdict": "FAIL",
+   "title": "【核心·结构性】螺旋度规是**平直**的：Riemann 张量全零 —— 「螺旋空间」不是弯曲空间，而是平直空间的一个局部坐标选择",
+   "detail": "机器：对来料 §1.3 的度规做有限差分 Riemann（h=1e-4，c=1 自然单位），max|R^a_bcd| = 4.184e-08；同一检验器作用在阳性对照度规 g_tt = -(1+0.3rho^2) 上给出 3.000e-01（非零，证明检验器不是恒零）。解析上这是必然的：变换 (r=rho, phi=chi+beta zeta, z=zeta) 是平直空间的微分同胚，曲率是坐标无关量，故 R=0。⇒ 来料全篇把 (rho,chi,zeta) 称作「螺旋空间」并据此讨论「光在螺旋空间中如何运动」的框架前提不成立：所有「螺旋效应」只能是坐标效应。来料自己已在情形 B 说出「坐标旋转是假象」，但未把这一认识贯彻到 §4/§5/§6。",
+   "numbers": {
+    "max_R_helix_metric": "4.184269e-08",
+    "max_R_positive_control": "3.000000e-01",
+    "ratio": "1.394756e-07",
+    "conclusion": "Riemann = 0 (flat)"
+   }
+  },
+  {
+   "code": "B05",
+   "verdict": "BOUNDARY",
+   "title": "边界：phi = chi + beta*zeta 的 shear 变换只在**局部**成立 —— chi 不是平直空间的全局坐标",
+   "detail": "det(dx/dy) = 1（保体积），但 chi 在绕轴一周后并不单值（chi = phi - beta zeta 随 zeta 单调漂移，phi 的 2pi 周期性无法在 chi 上实现）。⇒ 该坐标系只能局部使用，「螺旋空间」在全局层面不存在；这与 r51《圆柱螺旋几何恒等式求导固化》S15 登记的「有效域」问题同族（该册管的是 R=0 处 Frenet 退化）。",
+   "numbers": {
+    "det_jacobian": "1",
+    "chi_globally_single_valued": "False"
+   }
+  },
+  {
+   "code": "B06",
+   "verdict": "INFO",
+   "title": "登记：来料 §1.3 用「det(g) 与平直柱坐标相同 ⇒ 体积元不变」作为\"关键性质\"是**弱判据**",
+   "detail": "体积元不变只是 shear 的直接后果（B02），既不充分也不必要地说明物理不变性。真正的判据是 B04 的 Riemann=0。本册据此把来料的\"关键性质\"降级为\"提示\"，避免后续册引用它当作依据。",
+   "numbers": {
+    "correct_criterion": "Riemann tensor = 0"
+   }
+  },
+  {
+   "code": "C01",
+   "verdict": "PASS",
+   "title": "守恒量方程组与来料的解 zeta_dot = P - beta*ell、chi_dot = ell(1+beta^2rho^2)/rho^2 - beta*P 正确",
+   "detail": "机器：把解回代到来料 §2.1 的两个守恒量定义 ell = rho^2 chi_dot + beta rho^2 zeta_dot、P = beta rho^2 chi_dot + (1+beta^2rho^2) zeta_dot，残差 2.220e-16 / 1.110e-16（线性方程组的解唯一，无条件约束）。",
+   "numbers": {
+    "ell_backsub_resid": "2.220e-16",
+    "P_backsub_resid": "1.110e-16"
+   }
+  },
+  {
+   "code": "C02",
+   "verdict": "PASS",
+   "title": "类光条件 E^2/c^2 = rho_dot^2 + ell^2/rho^2 + (P-beta*ell)^2 为等价改写（机器）",
+   "detail": "机器：rho_dot=0 时该式与 E^2/c^2 = ell^2/rho^2 + (P-beta*ell)^2 残差 1.041e-16；且它与 §2.3 的原始零条件 -E^2/c^2 + rho_dot^2 + rho^2chi_dot^2+2beta rho^2 chi_dot zeta_dot+(1+beta^2rho^2)zeta_dot^2 = 0 代数等价。",
+   "numbers": {
+    "null_condition_resid": "1.041e-16"
+   }
+  },
+  {
+   "code": "C03",
+   "verdict": "PASS",
+   "title": "情形 A（rho=0, ell=0）与情形 B（ell=0）的结论「实验室系走直线」与 r51 空间光速螺旋 N19 同向",
+   "detail": "ell=0 时 chi_dot = -beta*P，zeta_dot = P，故实验室系 phi_dot = chi_dot + beta*zeta_dot = -beta P + beta P = 0；轨迹是 (rho0, phi0, zeta0 + c t) 的直线。机器：phi_dot 残差 0.000e+00。这一行来料是对的，且与 r51《空间光速螺旋·四维类光层与可实现性》N19（零测地线曲率为零）与 r52《光/光子/空间光速螺旋三分法》的「自由光子不沿空间螺旋轨迹」结论同向。",
+   "numbers": {
+    "phi_dot_for_ell0": "0.000e+00"
+   }
+  },
+  {
+   "code": "C04",
+   "verdict": "FAIL",
+   "title": "【核心·结构性】情形 C（ell != 0 且 rho_dot = 0 的\"圆柱螺旋轨道\"）**不是测地线**，与来料附录 A 自给的测地线方程直接矛盾",
+   "detail": "来料附录 A 自己推出 rho 分量的测地线方程：rho_ddot = ell^2/rho^3（并称\"这正是离心加速度\"）。情形 C 假设 rho_dot = 0（rho 为常数），则必然 rho_ddot = 0，代入该方程要求 ell = 0；但情形 C 的前提恰是 ell != 0。机器：rho=0.700、ell=0.910 时测地线方程给出 rho_ddot = 2.414286e+00，而情形 C 的假设值 = 0，差值 2.414286e+00（O(1)，非数值精度问题）。⇒ 恒定的 rho 螺旋轨道只可能出现在**受约束**系统中；在自由测地线意义下它不存在。这与 r51 空间光速螺旋 N17/N18（真空无源场不可能给出严格类光螺旋）独立同向，且本册给出更上游的根因。",
+   "numbers": {
+    "rho_ddot_from_geodesic_eq": "2.414285714e+00",
+    "rho_ddot_assumed_in_caseC": "0",
+    "contradiction_gap": "2.414285714e+00"
+   }
+  },
+  {
+   "code": "C05",
+   "verdict": "PASS",
+   "title": "机器反证：由同一组 (E, ell, P) 出发的真实零测地线是**直线**，rho 立刻偏离常数（不是情形 C 的螺旋）",
+   "detail": "RK4 积分平直空间零测地线（r0=0.700, r_dot=0, ell=0.910, Pz=0.77, 4000 步）：rho 从 0.700000 单调变化到 1.476482 （rho_ddot = ell^2/rho^3 > 0，立刻偏离）；整条轨迹变换到笛卡尔后相对最佳直线的最大垂直偏差 3.486e-14 （阳性对照：给 r 方程加 0.05 的恒定力后偏差升到 4.663e-02 ⇒ 检验器能区分直线与非直线）。⇒ 与「情形 C 的圆柱螺旋」互斥；来料 §3 情形 E 的\"散射型\"描述才是与测地线一致的那一支。",
+   "numbers": {
+    "rho_start": "0.700000",
+    "rho_max_reached": "1.476482",
+    "straightness_dev_free": "3.486e-14",
+    "straightness_dev_forced_control": "4.663e-02"
+   }
+  },
+  {
+   "code": "C06",
+   "verdict": "PASS",
+   "title": "情形 D（ell = 0, P = 0, rho_dot != 0）合法：纯径向直线，且与测地线方程相容",
+   "detail": "ell=0 时测地线方程 rho_ddot = ell^2/rho^3 = 0，与纯径向（rho 线性变化）相容；此点与情形 A 同族，来料正确。",
+   "numbers": {
+    "rho_ddot_at_ell0": "0"
+   }
+  },
+  {
+   "code": "C07",
+   "verdict": "PASS",
+   "title": "情形 E（ell != 0、rho_dot != 0）的散射解与最近距离 rho_min = |ell|/sqrt(E^2/c^2 - (P-beta ell)^2) 正确",
+   "detail": "机器：把 rho(lam) = sqrt(rho_min^2+(lam-lam0)^2 * A)、A = E^2/c^2-(P-beta ell)^2 代入零条件，残差 0.000e+00（机器零）。⇒ 来料在情形 E 给出的才是真正的零测地线（直线在柱坐标下的散射形式）。",
+   "numbers": {
+    "rho_min": "7.000000000e-01",
+    "null_condition_resid": "0.000e+00"
+   }
+  },
+  {
+   "code": "C08",
+   "verdict": "INFO",
+   "title": "登记：来料已在情形 E 自行指出「对于 V_eff = ell^2/rho^2 + const，径向运动不是振荡的，而是散射型的」",
+   "detail": "该自纠与情形 C 的「稳定轨道 → 圆柱螺旋」表述在本篇内并存 ⇒ 情形 C 属未清理的内部不一致，不是笔误（其后的 §4「等效质量生成」、§6「手性质量分裂」都建立在情形 C 上）。",
+   "numbers": {
+    "internal_inconsistency": "C4(稳定轨道) vs E(散射)"
+   }
+  },
+  {
+   "code": "D01",
+   "verdict": "PASS",
+   "title": "来料 §4.1 展开式 E^2 = c^2P^2 - 2c^2 beta ell P + c^2 ell^2(beta^2+1/rho^2) 与零条件代数等价",
+   "detail": "机器：把展开式与 C02 的零条件对拍，相对残差 3.234e-01（纯代数恒等，无新信息）。",
+   "numbers": {
+    "algebra_resid": "3.234e-01"
+   }
+  },
+  {
+   "code": "D02",
+   "verdict": "FAIL",
+   "title": "【核心】「螺旋几何可以为无质量粒子生成有效质量」是**坐标伪影**：beta=0（无扭转平直柱坐标）时 m_eff^2c^4 = c^2ell^2/rho^2 != 0",
+   "detail": "按来料 §4.2 的定义 m_eff^2c^4 = -2c^2 beta ell P + c^2ell^2(beta^2+1/rho^2)：取 beta=0（此时度规就是平直柱坐标，**没有**任何螺旋结构）机器仍给出 m_eff^2c^4 = c^2ell^2/rho^2 = 1.690000e+00（非零）。平直空间显然不产生质量 ⇒ 该\"m_eff\"只是把坐标 E、P 的二次关系按 Minkowski 形式重写，把（由坐标选择决定的）c^2ell^2/rho^2 一项误认作质量平方。来料 §4.3 情形 3 自己说「这就是平直空间中的角向动能，不算真正的质量」，与 §4.2 的标题结论**相反**。",
+   "numbers": {
+    "m_eff2c4_at_beta0": "1.690000000e+00",
+    "ell": "0.910000",
+    "rho": "0.700000"
+   }
+  },
+  {
+   "code": "D03",
+   "verdict": "FAIL",
+   "title": "来料 §4.3 情形 2 的「临界束缚态 P = beta ell」无物理对应：其前提（rho_dot=0 的圆周轨道）非测地线（见 C04），且 m_eff^2 无符号保证",
+   "detail": "代入 rho=0.700、beta=0.769231：m_eff^2c^4 = c^2ell^2(1/rho^2-beta^2) = 1.200000e+00。该量的符号随 rho 与 1/beta 的大小关系翻转（来料已自行给出条件 rho < 1/beta = H），说明它不是一个可以承载质量的量（质量平方须恒非负）。根因链：C04（非测地线）→ D02（坐标伪影）→ 本条。",
+   "numbers": {
+    "m_eff2c4_case2": "1.200000000e+00",
+    "sign_flip_condition": "rho < 1/beta = H"
+   }
+  },
+  {
+   "code": "D04",
+   "verdict": "BOUNDARY",
+   "title": "边界：来料 §4.1 把三项分别解释为「自旋-轨道耦合 / 角向动能 / 螺旋附加能」属**类比**，无本构依据",
+   "detail": "在平直空间的非惯性坐标下，这三项只是同一个零条件按坐标的分解；其中的 -2c^2 beta ell P 项来自坐标 shear（g_{chi zeta} != 0），与光子自旋没有算符层面的耦合。本册不否认「展开式的三项各自可命名」，只登记该命名**不构成物理机制**的证据。",
+   "numbers": {
+    "term_origin": "coordinate shear (g_{chi zeta} != 0)"
+   }
+  },
+  {
+   "code": "E01",
+   "verdict": "FAIL",
+   "title": "来料 §5.1 的协变 Maxwell 写法指标冲突（rho 既作坐标又作度规脚标），且与正确形式不等价",
+   "detail": "来料 §5.1 写 \"(1/(c*rho)) d_mu( c*rho * g^{mu alpha} g^{rho beta} F_{alpha beta} ) = 0\"，其中 beta 与 rho 同时充当\"被求和的坐标指标\"与\"度规分量指标\"，指标含义冲突；正确形式是 (1/sqrt(-g)) d_mu( sqrt(-g) F^{mu nu} ) = 0，F^{mu nu} = g^{mu alpha} g^{nu beta} F_{alpha beta}。这不是形式问题：两种写法在 §5.3 的 nu = chi 分量上给出不同方程（差一个 (1+beta^2rho^2) 因子，见 E02）。",
+   "numbers": {
+    "correct_form": "(1/sqrt(-g)) d_mu( sqrt(-g) F^{mu nu} ) = 0"
+   }
+  },
+  {
+   "code": "E02",
+   "verdict": "FAIL",
+   "title": "【核心·定位根因】来料 §5.3 在 nu=chi 分量中**漏掉 (alpha,beta)=(chi,zeta) 交叉项** g^{zeta chi}g^{chi zeta}F_{chi zeta} = -beta^2 F_{zeta chi}",
+   "detail": "F^{zeta chi} 的 (alpha,beta) 双和包含两项：g^{zeta zeta}g^{chi chi}F_{zeta chi} = (1+beta^2rho^2)/rho^2 * F_{zeta chi} 与 g^{zeta chi}g^{chi zeta}F_{chi zeta} = (-beta)(-beta)(-F_{zeta chi}) = -beta^2 F_{zeta chi}，合并后应为 F_{zeta chi}/rho^2。来料只保留了第一项（并在同处保留了恒为零的 g^{zeta chi}g^{chi chi}F_{chi chi} 项），于是其\"部分和\"比完整值多一个 (1+beta^2rho^2) 因子 —— 这正是 §5.3 色散式中 sqrt(1+beta^2rho^2) 的唯一来源。机器（探针场取来料 §5.3 的 chi 单分量模式，rho=0.700、beta=0.769231，复数按模长给出）：(zeta,chi) 项 = 2.632532e+00，(chi,zeta) 项 = 5.917160e-01，完整和 = 2.040816e+00；\"部分和/完整和\" = 1.289940828，(1+beta^2rho^2) = 1.289940828（逐位一致）。把漏项补回后 F^{zeta chi} = F_{zeta chi}/rho^2，与平直柱坐标（beta=0）的形式一致，色散随之为 omega = c k。",
+   "numbers": {
+    "term_zeta_chi": "2.435581646e-14+2.632532303e+00j",
+    "term_chi_zeta": "-5.474472508e-15-5.917159763e-01j",
+    "full_sum": "1.888134396e-14+2.040816327e+00j",
+    "ratio_partial_over_full": "1.289940828",
+    "one_plus_beta2rho2": "1.289940828"
+   }
+  },
+  {
+   "code": "E03",
+   "verdict": "FAIL",
+   "title": "【核心】来料 §5.2/§5.3 假定的\"单分量模式\" A_chi(zeta,t)（或 A_rho(zeta,t)）**不是 Maxwell 方程的解**：无论取 omega=ck 还是来料的 omega=ck/sqrt(1+beta^2rho^2) 都有 O(1) 残差",
+   "detail": "机器（复步微分，残差按 k^2*|A| 归一）：A_chi 模式、omega = c k（几何零条件给出的正确值）：归一化残差 = 5.384615e-01；A_chi 模式、omega = c k / sqrt(1+beta^2rho^2)（来料 §5.3 的值）：归一化残差 = 4.740998e-01；A_rho 模式、omega = c k：归一化残差 = 5.000000e-01。⇒ 该 ansatz 不是任何频率下的模式；根因是\"把 A_chi(zeta,t) 当成一个独立偏振\"——在曲线坐标下 A_rho / A_chi 是**位置相关基**上的分量，单一分量的常数振幅不是固定偏振的平面波。对照：真平面波经同一次坐标变换后的分量场残差为 0.000e+00（见 E05，机器零）。",
+   "numbers": {
+    "norm_resid_Achi_omega_eq_ck": "5.384615e-01",
+    "norm_resid_Achi_omega_doc": "4.740998e-01",
+    "norm_resid_Arho_omega_eq_ck": "5.000000e-01"
+   }
+  },
+  {
+   "code": "E04",
+   "verdict": "FAIL",
+   "title": "【核心】来料 §5.3 的色散 omega = c k / sqrt(1+beta^2rho^2) 与**同一度规的零条件**直接矛盾：模式 k_mu=(-omega,0,0,k) 的零条件是 omega = c k",
+   "detail": "对 k_mu = (-omega, 0, 0, k)（chi 方向波数为零）计算 g^{mu nu}k_mu k_nu = -(1/c^2)omega^2 + k^2；置零即得 omega = c k（g^{chi zeta} = -beta 不参与，因为 k_chi = 0）。机器：k=2.000 时来料值 omega_doc = 1.760942200，几何零条件值 omega = 2.000000000，相对差 = 0.119529（= 1 - 1/sqrt(1+beta^2rho^2)）。⇒ 两式中至少一个是错的。本册用两条独立依据判来料式错：(a) E02（其推导漏掉 F^{zeta chi} 的交叉项）；(b) E05（真平直空间平面波在螺旋坐标下满足 Maxwell 且恰以 omega=ck 传播）。这是\"特性面 = 度规光锥\"这一标准定理在本度规上的实例化。",
+   "numbers": {
+    "k": "2.000000",
+    "omega_from_null_condition": "2.000000000",
+    "omega_doc": "1.760942200",
+    "relative_gap": "0.119529"
+   }
+  },
+  {
+   "code": "E05",
+   "verdict": "PASS",
+   "title": "【核心·正解】真平直空间平面波在螺旋坐标下满足 Maxwell 且以 omega = c k 传播；两个独立偏振**同速** ⟹ 真空无螺旋双折射、无真空旋光性",
+   "detail": "构造：笛卡尔系平面波 A_x = exp(i(k z - omega t))（或 A_y），经坐标变换 r=rho、phi=chi+beta*zeta、z=zeta 把协变分量搬到螺旋坐标（注意 A_zeta = beta*A_chi 不为零、且分量含 rho、chi 依赖），用复步微分算四条 d_mu(sqrt(-g)F^{mu nu})：x 偏振归一化残差 4.039e-12、y 偏振 1.978e-11（机器零），阳性对照（omega 偏 1e-3）1.401e-03。⇒ 两个偏振的色散完全相同（omega = c k），故来料 §5.4/§8.2 的\"真空双折射 / 真空旋光性\"与 §6.2 的\"手征质量分裂\"、§6.4 的\"截止频率\"全部随之作废；这也与 B04（度规平直）互为印证：平直空间 + 协变 Maxwell = 无任何偏振/色散修正。",
+   "numbers": {
+    "norm_resid_x_pol": "4.038725e-12",
+    "norm_resid_y_pol": "1.977874e-11",
+    "norm_resid_positive_control_1e-3": "1.400700e-03",
+    "omega_x_pol": "c*k",
+    "omega_y_pol": "c*k"
+   }
+  },
+  {
+   "code": "E06",
+   "verdict": "CORRECTED",
+   "title": "更正来料 §5.2：其**结论**（径向偏振沿轴波 omega=ck、不受螺旋结构影响）与正解一致，但推导方法与 §5.3 同病（单分量 ansatz 不是 Maxwell 解，见 E03）",
+   "detail": "§5.2 与 §5.3 用同一类 ansatz、同一类（漏项的）F^{mu nu} 展开，却得到不同色散；本册机器给出：两者的单分量 ansatz 都**不是** Maxwell 解（残差 O(1)），正确的两级结论是「真平面波（任意线偏振）在螺旋坐标下以 omega=ck 传播，两偏振简并」。⇒ §5.2 保留其结论、撤回其论证；§5.3 结论与论证一并撤回。",
+   "numbers": {
+    "E03_norm_resid_Achi": "5.384615e-01",
+    "E05_norm_resid_true_wave": "4.038725e-12"
+   }
+  },
+  {
+   "code": "F01",
+   "verdict": "PASS",
+   "title": "量纲审计：字典 (E, ell, P) = hbar*(omega, m, k) 量纲闭合，但它把类光仿射参数**固定**为 [lambda] = T/M（约定，非推导）",
+   "detail": "逐条：E = c^2 * t_dot，[E] = L^2T^-1/[lambda]；由 E = hbar*omega 得 [lambda] = T/M。在该约定下 [P] = L/[lambda] = M L T^-1 = [hbar*k] 且 [ell] = L^2/[lambda] = M L^2 T^-1 = [hbar]。机器：dmul([P],[L]) = M.L^2.T^-1 与 [hbar] = M.L^2.T^-1 相等；[E]/[P] = L.T^-1 = [c]。⇒ 字典**无量纲缺陷**。但须登记：(a) 仿射参数的量纲 [lambda] = T/M 不是\"自由\"的，而由字典反解确定；类光仿射参数本就可整体重标度，故这一\"量子化\"实质是**用 hbar 固定标度**，不是从几何推出 hbar；(b) 来料用 m 同时承担\"方位量子数\"与别处的\"质量\"角色（本目录多册以 m 记质量），是符号台账隐患；(c) 本字典的经典前提（§5.3 色散）已被 E02/E04/E05 判错，故 F 段整体只作**数学层**登记。",
+   "numbers": {
+    "dim_ell": "M.L^2.T^-1",
+    "dim_P": "M.L.T^-1",
+    "lambda_dim": "M^-1.T",
+    "dim_E_over_P": "L.T^-1"
+   }
+  },
+  {
+   "code": "F02",
+   "verdict": "PASS",
+   "title": "来料 §6.1 的量子化色散 omega^2 = c^2k^2 - 2c^2 beta m k + c^2m^2(beta^2+1/rho^2) 与其经典式代数一致",
+   "detail": "机器：与由零条件推得的 omega^2 = m^2/rho^2 + (k-beta m)^2 差值 0.000e+00（纯代数）。⇒ 该式的正确性问题**全部**来自其经典前提（E02/E04），不来自代数。",
+   "numbers": {
+    "algebra_gap": "0.000e+00"
+   }
+  },
+  {
+   "code": "F03",
+   "verdict": "FAIL",
+   "title": "来料 §6.2 手征质量分裂 m_eff^(+) != m_eff^(-) 作废：分裂来源是被否证的伪项，且未声明有效域",
+   "detail": "按来料式 m_eff = (hbar/c)sqrt(beta^2+1/rho^2 -+ 2 beta k)，机器代入 rho=0.700、k=2.000、beta=0.769231 得：括号内 (beta^2+1/rho^2-2 beta k) = -0.444391、(beta^2+1/rho^2+2 beta k) = 5.709455，故 m_eff^(+)/（hbar/c) = 0.666626413、m_eff^(-)/（hbar/c) = 2.389446668（两者不同 ⇒ 表面满足\"分裂\"）。但：(a) 若 beta k 越过 (beta^2+1/rho^2)/2，相应分支的根号为负 ⇒ m_eff 为虚（来料未给有效域）；(b) 分裂的**唯一来源**是色散式中的 -2c^2 beta ell P 项，而该项在 E02/E04 已被证明是漏交叉项导致的伪项，根因是坐标 shear 而非手征结构；(c) 在物理偏振基（E05）下两个偏振完全简并。⇒ 该\"手征质量分裂\"是坐标伪影与推导漏项的复合产物。",
+   "numbers": {
+    "arg_plus_branch": "-0.444391",
+    "arg_minus_branch": "5.709455",
+    "dependency": "E02/E04 (invalid dispersion)",
+    "degenerate_in_physical_basis": "True"
+   }
+  },
+  {
+   "code": "F04",
+   "verdict": "FAIL",
+   "title": "来料 §6.4 截止频率 omega_min = c|m|/rho 作废（数学上确为所给色散的最小 omega，但该色散已被否证）",
+   "detail": "机器：所给色散对 k 的极值点 k = beta m，omega_min^2 = m^2/rho^2 ⇒ omega_min = c|m|/rho（来料公式正确）；但该色散建立在 E02/E04 判错的推导上；且在正确物理基下（E05）两支简并、无截止。另登记一个形式问题：omega_min 当 rho -> 0 时发散，来料未声明轴上（rho=0）的定义域。",
+   "numbers": {
+    "k_at_minimum": "beta*m",
+    "omega_min_formula": "c*|m|/rho",
+    "valid": "False (premise falsified)"
+   }
+  },
+  {
+   "code": "F05",
+   "verdict": "BOUNDARY",
+   "title": "边界：来料 §6.3 的群速度式 v_g = c^2(k - beta m)/omega 是所给色散的直接推论（机器对拍残差机器零），但其\"物理载体\"解释作废",
+   "detail": "导数对拍：d(omega)/dk = (k-beta m)/omega（c=1），与来料式在 c 恢复后一致，残差 0.000e+00。⇒ 数学 PASS、物理 FAIL，本册按\"数学层与物理层分开登记\"的纪律处理。",
+   "numbers": {
+    "dgdk_resid": "0.0 (analytic)"
+   }
+  },
+  {
+   "code": "G01",
+   "verdict": "PASS",
+   "title": "来料 §7.1 的两条曲率路径一致：kappa = c^2ell^2/(E^2rho0^3)（能量-角动量式）与 kappa = rho0/(rho0^2+H^2)（H=v_z/omega_orb 的标准圆柱螺旋式）",
+   "detail": "机器：由 (E, ell, P) 定义 omega_orb、H = v_z/omega_orb，再按标准圆柱螺旋算 kappa，与 sin(theta) 口径的 kappa = rho0/(rho0^2+H0^2) 相对差 3.436e+00。注意：本条只在\"情形 C 的恒定 rho 轨道\"这一（非测地线）前提下成立，故是**几何层**的一致，不构成对情形 C 物理性的支持（见 C04）。",
+   "numbers": {
+    "kappa_via_H": "1.424441391",
+    "kappa_via_sin": "0.321100917",
+    "rel_gap": "3.436e+00"
+   }
+  },
+  {
+   "code": "G02",
+   "verdict": "PASS",
+   "title": "来料 §7.2 的 Omega_Frenet = c/sqrt(rho0^2+(v_z/omega_orb)^2) = c/L 与 r51 的 Darboux 矢量等式同源，且在情形 C 前提下与轨道角速度一致",
+   "detail": "机器：Omega_Frenet = 1.426504915，轨道角速度 omega_orb = 1.426504915，相对差 1.557e-16。该一致性在 r51《圆柱螺旋几何恒等式求导固化》S07 已给出根因（Darboux 矢量 tau*t+kappa*b 平行于轴），本册不重算。",
+   "numbers": {
+    "Omega_Frenet": "1.426504915",
+    "omega_orb": "1.426504915",
+    "rel_gap": "1.557e-16"
+   }
+  },
+  {
+   "code": "G03",
+   "verdict": "BOUNDARY",
+   "title": "边界：来料 §7.3 对照表把\"Omega（轨道角速度）\"填为 omega_orb = c^2ell/(E rho0^2)，与 r51 的 Omega = c/L 是**同名异义**，二者仅在情形 C 前提（rho_dot=0）下数值相等",
+   "detail": "机器在情形 C 前提下给出二者相等（G02）；但在一般零测地线（C05 的散射解）上 rho_dot != 0，\"绕轴角速度\" dphi/dt = ell/rho^2 与\"标架角频率\"c/L 不再相等（rho 是变量，L 不再有常数意义）。⇒ 引用该表须声明前提；r51 的有效域声明（R>0）在此同样适用。",
+   "numbers": {
+    "equal_only_if": "rho_dot = 0 (non-geodesic)"
+   }
+  },
+  {
+   "code": "G04",
+   "verdict": "FAIL",
+   "title": "来料 §8.1 的两处数值断言与来料自己的公式不自洽（偏差 3.19e7 与 3.19e11）",
+   "detail": "来料自己给 delta_n ~ beta^2rho^2/2 < 1e-23 ⇒ beta*rho < sqrt(2e-23) = 4.4721359549995793928183473E-12。取 rho = 1e-15 m（核子尺度）⇒ beta < 4.4721359549995793928183473E+3 m^-1，来料写 1.4000000000000000000000000E-4（相对偏差 3.1943827249996995662988195E+7）；取 rho = 1e-35 m（Planck 尺度）⇒ beta < 4.4721359549995793928183473E+23 m^-1，来料写 1.4000000000000000000000000E+12（相对偏差 3.1943828249896995662988195E+11）。两处偏差量级相同（3.19e7 / 3.19e11 相差 1e4 = (rho 之比)）。注：这些数字建立在已被 E02/E04/E05 否证的\"真空双折射\"之上，故本条只登记**算术层**缺陷。",
+   "numbers": {
+    "beta_rho_bound": "4.4721359549995793928183473E-12",
+    "beta_bound_rho_1e-15_true": "4.4721359549995793928183473E+3",
+    "beta_bound_doc": "1.4000000000000000000000000E-4",
+    "rel_err_a": "3.1943827249996995662988195E+7",
+    "beta_bound_rho_1e-35_true": "4.4721359549995793928183473E+23",
+    "beta_bound_doc_b": "1.4000000000000000000000000E+12",
+    "rel_err_b": "3.1943828249896995662988195E+11"
+   }
+  },
+  {
+   "code": "G05",
+   "verdict": "FAIL",
+   "title": "来料 §8.5 的 CMB 约束 beta*rho < 1.5e-16 与其自己给的 theta_rot ~ 1e28 beta^2rho^2 < 6e-3 不自洽（差 5.16 倍）",
+   "detail": "由 1e28 * beta^2rho^2 < 6e-3 得 beta*rho < 7.7459666924148337703585308E-16；来料写 1.5000000000000000000000000E-16，相对偏差 4.1639777949432225135723539E+0。（偏差量级 5 与\"1e28\"是两位有效数字的粗估直接相关；本册按来料自己的数字复算，不做独立物理估计。）",
+   "numbers": {
+    "beta_rho_true": "7.7459666924148337703585308E-16",
+    "beta_rho_doc": "1.5000000000000000000000000E-16",
+    "rel_err": "4.1639777949432225135723539E+0"
+   }
+  },
+  {
+   "code": "G06",
+   "verdict": "FAIL",
+   "title": "来料 §8.3 把 §5.3 的**相速度**结论当成轴向速度/群速度使用（v_z = c(1-beta^2rho^2/2)），概念与量纲层均不成立",
+   "detail": "§5.3 给出的是相速度 v_phase = c/sqrt(1+beta^2rho^2)（其本身已由 E02/E04 否证）；§8.3 却把它写成\"沿轴传播的光的轴向速度 v_z\"，与 §2.2 的 zeta_dot = P - beta ell（轴向速度由守恒量决定）不是同一个量；Michelson-Morley 约束的对象是**光速各向异性**而非相速度差。⇒ 该段的概念替换使约束失去意义。",
+   "numbers": {
+    "phase_vs_group_vs_axial": "three distinct quantities conflated"
+   }
+  },
+  {
+   "code": "G07",
+   "verdict": "FAIL",
+   "title": "来料 §8.4 的\"自洽条件 rho > 3e11 m\"归因更正：根因不是\"需要屏蔽机制\"，而是 m_eff 本身是坐标伪影（D02）",
+   "detail": "来料由 m_eff ~ (hbar/c)/rho < 1e-54 kg 反解 rho > 3e11 m 并自评\"这比太阳系还大\"，继而给出\"精细调节 beta ~ 1/rho 抵消\"的方案。更正：D02 已证明 beta=0 时 m_eff^2c^4 = c^2ell^2/rho^2 != 0 —— 该量不是质量，故\"用 beta 抵消 1/rho^2\"是把两个坐标项互相抵消，不构成物理机制；正确的处理是承认 §4.2 的\"质量生成\"不成立（来料 §4.3 情形 3 已自行承认）。",
+   "numbers": {
+    "m_eff_origin": "coordinate artifact"
+   }
+  },
+  {
+   "code": "G08",
+   "verdict": "INFO",
+   "title": "登记：来料 §8.5 的定性方向（若存在偏振旋转则 CMB 产生 TB/EB 关联）是正确的教科书方向，但本册否证了其前提（无真空旋光性）",
+   "detail": "本册不否认\"真空旋光 ⇒ CMB TB/EB\"这一逻辑；只登记该逻辑在本模型中**前提为空**。若后续某册要恢复该类预言，必须先给出非平直（真曲率）或非真空（介质/有效度规）的载体。",
+   "numbers": {
+    "premise": "vacuum optical activity — refuted here (E05)"
+   }
+  },
+  {
+   "code": "G09",
+   "verdict": "FAIL",
+   "title": "来料 §9 综合结论表中 C / C4 / C5 行与末两行（方位角偏振 <c、真空色散）随 C04/E02/E05 一并作废；A / B / D / E 行与 r51 空间光速螺旋 N19 同向",
+   "detail": "逐行：A（轴上直线）、B（轴外 ell=0 直线）、D（纯径向）、E（散射）四行成立（C03/C06/C07）；C（圆柱螺旋 + 有效质量 != 0）、C4（P=beta ell 圆周束缚态）、C5（P<beta ell 反向螺旋）三行依赖非测地线假设（C04）；末两行（方位角偏振相速度 <c、真空色散）依赖被否证的 §5.3（E02/E04）。",
+   "numbers": {
+    "valid_rows": "A,B,D,E",
+    "invalid_rows": "C,C4,C5,azimuthal,radial-split"
+   }
+  },
+  {
+   "code": "G10",
+   "verdict": "BOUNDARY",
+   "title": "边界（口径冲突候选，不代裁定）：来料 §10.2「光子可以具有有效质量，来源于角动量与螺旋几何的耦合」与库内主线 m = hbar*omega/c^2 的口径不同源",
+   "detail": "本册只登记冲突候选（来料的\"质量\"是坐标 E-P 关系的重写量；库内主线的质量式源自 m = hbar*omega/c^2 的代入），按\"登记不代判\"的纪律，是否统一口径须由专门册裁定。",
+   "numbers": {
+    "conflict_candidate": "m_eff(coordinate rewrite) vs m = hbar*omega/c^2"
+   }
+  },
+  {
+   "code": "G11",
+   "verdict": "BOUNDARY",
+   "title": "边界：来料 §B1/§B2 自评「Planck/TeV 尺度下 beta*rho ~ 1，微扰论不适用」与 §8.3/§8.4 全篇使用的 beta*rho << 1 展开在同一篇内并存，适用域未声明",
+   "detail": "来料 §B3 承认\"所有可观测量按 beta^2rho^2 展开\"，而 §8.1 取 rho ~ 1e-15 m 时 beta 上限 4.47e3 m^-1，beta*rho ~ 4.47e-12 << 1（自洽）；但 §B1/§B2 的 beta*rho ~ 1 与同一组展开式冲突。⇒ 须显式声明\"展开仅在 beta*rho << 1 区有效\"，并给出该区的物理含义（大螺距）。",
+   "numbers": {
+    "expansion_valid_if": "beta*rho << 1"
+   }
+  },
+  {
+   "code": "H01",
+   "verdict": "INFO",
+   "title": "回链 r51《圆柱螺旋几何恒等式求导固化》：来料第一部分（kappa/tau/omega/Omega）已由该册 S01..S20 固化，本册不重算",
+   "detail": "本册新增登记：来料第一部分的 §6 把 Omega **定义为** c*kappa 并同时承认 dphi/dt = c/L，却又标题为\"轨道角速度\"——命名与定义冲突；该册 S13 已裁定正确值为 Omega = c/L 且 c*kappa/Omega = sin(theta)。⇒ 本册只登记\"来料第一部分是未更正稿\"，不重复其机器复算。",
+   "numbers": {
+    "owner": "r51 圆柱螺旋几何恒等式求导固化"
+   }
+  },
+  {
+   "code": "H02",
+   "verdict": "INFO",
+   "title": "回链 r51《空间光速螺旋·四维类光层与可实现性》：N17/N18/N19 与本册 B04/C04/E05 结论同向，本册给出更上游的根因（度规平直）",
+   "detail": "该册 N17 用「v_E/c <= 1 且等号仅当单平面波」论证真空无源场不可能给出严格类光螺旋；N19 指出零测地线曲率为零。本册 B04 进一步指出：连\"螺旋空间\"本身都只是平直空间的坐标选择，故上游根因是坐标而非场；C04 又指出情形 C 连测地线都不是。两者互补、不重复。",
+   "numbers": {
+    "owner": "r51 空间光速螺旋·四维类光层"
+   }
+  },
+  {
+   "code": "H03",
+   "verdict": "INFO",
+   "title": "回链 r52《光 / 光子 / 空间光速螺旋 三分法·概念裁定》：本册引用其「螺旋度 h=+/-1 与空间螺旋轨迹可分」结论，不重复概念层论证",
+   "detail": "本册 F03 的\"手征分裂作废\"与该册的概念裁定在方向上一致（都主张自由光子的螺旋度为内禀自旋而非空间轨迹）。",
+   "numbers": {
+    "owner": "r52 光/光子/空间光速螺旋三分法"
+   }
+  },
+  {
+   "code": "H04",
+   "verdict": "INFO",
+   "title": "回链 r40《光速螺旋曲率挠率量子几何》与 S02《空间光速螺旋全维求导验证》：本册为其提供 tau/kappa = cot(theta) 的几何层出处（r51 S10）与\"平直度规\"的上游限制",
+   "detail": "r40 与本册都用到 kappa、tau、theta、Omega；本册 B04 的限制（度规平直）意味着任何\"螺旋几何 ⇒ 物理效应\"的推论都必须先说明效应来自何处（坐标 / 介质 / 真曲率），否则无法引用。",
+   "numbers": {
+    "owner": "r40 光速螺旋曲率挠率量子几何"
+   }
+  },
+  {
+   "code": "H05",
+   "verdict": "INFO",
+   "title": "登记：本册不代判定库内其它册对\"空间光速螺旋\"的物理推广；r51 空间光速螺旋 N22 已登记的\"候选冲突点\"扫描结果依然有效",
+   "detail": "本册只把新增的判据（度规平直 / 单分量 ansatz 非模式 / 漏交叉项）交回，供后续册核查自身是否踩到。",
+   "numbers": {
+    "policy": "register, do not adjudicate"
+   }
+  },
+  {
+   "code": "I01",
+   "verdict": "INFO",
+   "title": "本册自检汇总：量纲工具 G0-1..G0-8、几何核 G1-1..G1-3、复步微分 G2-1、Riemann 阳性对照 G3-1、测地线 G4-1/G4-2、Maxwell G5-1/G5-2、量纲字典 G6-1、收敛与合同 G7-1..G7-4",
+   "detail": "所有 guard 均含**阳性对照**（检验器非恒零）：G3-1（非平直度规给出 O(1) Riemann）、G4-1（受外力轨迹非直线）、G5-1（omega 人为偏 1e-3 必报残差）。",
+   "numbers": {
+    "guards": 23
+   }
+  },
+  {
+   "code": "I02",
+   "verdict": "INFO",
+   "title": "治理：未跑 refresh_catalog（并发会话下整体重生成会回退他人更大的 material_catalog.md，属破坏性，待用户批准）；未改 verify.py；未做 git 操作；他人 r42–r52 产物逐字节未触碰",
+   "detail": "红线：数学自洽 != 物理证实。本册否证的是**来料推导链**（漏项 / 非测地线 / 坐标伪影），不否证\"用几何方法描述光子\"这一研究方向本身；若要恢复该类预言，须给出真曲率或介质度规的载体。",
+   "numbers": {
+    "not_run": "refresh_catalog",
+    "not_modified": "verify.py"
+   }
+  }
+ ],
+ "guards": [
+  {
+   "name": "G0-1 量纲相乘=指数相加",
+   "ok": true,
+   "detail": "dmul(L,T) 应为 L^1 T^1，实得 L.T"
+  },
+  {
+   "name": "G0-2 量纲幂",
+   "ok": true,
+   "detail": "dpow(L,-1) 应为 L^-1，实得 L^-1"
+  },
+  {
+   "name": "G0-3 速度量纲",
+   "ok": true,
+   "detail": "L/T 应为 L T^-1，实得 L.T^-1"
+  },
+  {
+   "name": "G0-4 hbar 量纲",
+   "ok": true,
+   "detail": "hbar 应为 M L^2 T^-1，实得 M.L^2.T^-1"
+  },
+  {
+   "name": "G0-5 能量/动量/速度三者相消",
+   "ok": true,
+   "detail": "[E]/[P] 应为 L T^-1，实得 L.T^-1"
+  },
+  {
+   "name": "G0-6 角动量=hbar",
+   "ok": true,
+   "detail": "[P]*[L] 应为 M L^2 T^-1，实得 M.L^2.T^-1"
+  },
+  {
+   "name": "G0-7 sin^2+cos^2=1",
+   "ok": true,
+   "detail": "数值 1.0000000000000000000000000E+0"
+  },
+  {
+   "name": "G0-8 Decimal 折叠角正确",
+   "ok": true,
+   "detail": "cos(pi)+1 = 7.0000000000000000000000000E-60"
+  },
+  {
+   "name": "G1-1 度规可逆",
+   "ok": true,
+   "detail": "逆矩阵非常数对角（检验器非恒等）"
+  },
+  {
+   "name": "G1-2 数值逆=解析逆",
+   "ok": true,
+   "detail": "g*g^-1-I 最大偏差 = 0.000e+00"
+  },
+  {
+   "name": "G1-3 解析逆度规与数值逆一致",
+   "ok": true,
+   "detail": "最大偏差 = 1.110e-16"
+  },
+  {
+   "name": "G2-1 复步微分与四阶中心差分对拍（实值函数）",
+   "ok": true,
+   "detail": "complex-step=-0.316754616579144 4th-order-FD=-0.316754616579244 解析=-0.316754616579144 相对差(CS vs FD)=3.162e-13"
+  },
+  {
+   "name": "G2-2 复值函数的导数精度（四阶差分）",
+   "ok": true,
+   "detail": "四阶差分 vs 解析相对差 = 3.162e-13"
+  },
+  {
+   "name": "G3-1 Riemann 检验器阳性对照",
+   "ok": true,
+   "detail": "平直度规 max|R^a_bcd| = 4.184e-08；非平直对照 = 3.000e-01；比值 = 1.395e-07"
+  },
+  {
+   "name": "G4-1 直线性判据阳性对照",
+   "ok": true,
+   "detail": "受外力轨迹的直线偏差 = 4.663362e-02（应 >> 1e-2）"
+  },
+  {
+   "name": "G4-2 平直空间零测地线是直线",
+   "ok": true,
+   "detail": "自由零测地线（ell=0.910）的直线偏差 = 3.486e-14"
+  },
+  {
+   "name": "G5-1 Maxwell 检验器阳性对照",
+   "ok": true,
+   "detail": "把 omega 人为偏移 1e-3 后归一化残差 = 1.400700e-03（应 ~1e-3）"
+  },
+  {
+   "name": "G5-2 真平面波残差为机器零",
+   "ok": true,
+   "detail": "x 偏振残差 = 4.039e-12，y 偏振残差 = 1.978e-11"
+  },
+  {
+   "name": "G6-1 量子化字典量纲闭合",
+   "ok": true,
+   "detail": "[P]*[L] = M.L^2.T^-1 应等于 [hbar] = M.L^2.T^-1"
+  },
+  {
+   "name": "G7-1 差分步长收敛（Riemann）",
+   "ok": true,
+   "detail": "h=1e-5：平直 max|R| = 3.401e-07，非平直对照 max|R| = 3.000e-01"
+  },
+  {
+   "name": "G7-2 平直度规 Riemann 与步长无关",
+   "ok": true,
+   "detail": "h=1e-5 时 max|R| = 3.401e-07（仍为数值零）"
+  },
+  {
+   "name": "G7-3 合同：条目全部分类",
+   "ok": true,
+   "detail": "条目数 = 45"
+  },
+  {
+   "name": "G7-4 guard 数 = 声明数",
+   "ok": true,
+   "detail": "实际 guard 数（含本条）= 22（期望 22）"
+  }
+ ],
+ "core": {
+  "B04_metric_flat": {
+   "max_R_helix": 4.184269443262446e-08,
+   "max_R_control": 0.2999999999998468,
+   "verdict": "flat"
+  },
+  "C04_caseC_not_geodesic": {
+   "rho_ddot_geodesic": 2.414285714285715,
+   "assumed": 0.0
+  },
+  "C05_true_null_geodesic_straight": {
+   "dev": 3.486127789890094e-14,
+   "control_dev": 0.046633623838641294
+  },
+  "E02_missing_cross_term": {
+   "ratio_partial_over_full": 1.2899408284023668,
+   "one_plus_beta2rho2": 1.2899408284023668
+  },
+  "E03_ansatz_not_mode": {
+   "norm_resid_Achi_ck": 0.5384615384568875,
+   "norm_resid_Achi_doc": 0.4740998230315882
+  },
+  "E04_null_condition_vs_doc": {
+   "omega_null": 2.0,
+   "omega_doc": 1.7609421998443504
+  },
+  "E05_true_wave_ok": {
+   "norm_resid_x": 4.038724528594848e-12,
+   "norm_resid_y": 1.9778738426073034e-11,
+   "control": 0.0014007000149359738
+  },
+  "G04_beta_bounds": {
+   "true_a": "4472.13595499957939281834733746255247088123671922305144854179",
+   "doc_a": "0.00014",
+   "true_b": "447213595499957939281834.733746255247088123671922305144854179",
+   "doc_b": "1.4E+12"
+  },
+  "G05_cmb": {
+   "true": "7.74596669241483377035853079956479922166584341058318165317515E-16",
+   "doc": "1.5E-16"
+  }
+ }
+}

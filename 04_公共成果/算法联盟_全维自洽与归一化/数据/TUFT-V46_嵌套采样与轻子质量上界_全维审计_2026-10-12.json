@@ -1,0 +1,728 @@
+{
+  "round": "r43",
+  "title": "TUFT-V4.6 嵌套采样与轻子质量上界 全维审计",
+  "date": "2026-10-12",
+  "verdict_count": "21",
+  "counts": {
+    "FAIL": "15",
+    "INFO": "3",
+    "BOUNDARY": "3"
+  },
+  "guard_total": "29",
+  "guard_pass": "29",
+  "self_check_pass": true,
+  "rating": "O/L2",
+  "items": [
+    {
+      "id": "D01",
+      "title": "公理 1 两项量纲不齐；齐次性与「给出质量」互斥",
+      "verdict": "FAIL",
+      "detail": "公理 1 = hbar*kappa/(c*sinT) - pi*hbar*lP*kappa^2/(2c^3)。取 [kappa]=L^-1（螺旋曲率=弧长倒数）时第一项 M = M 正确、第二项 ML^-2T^2，缺口 L^2T^-2（差 4 个长度幂次 + 2 个时间幂次）⇒ 两项不可相加。机器枚举 [kappa] 的 9^3=729 组指数组合，齐次解唯一 [kappa]=LT^-2（加速度量纲），此时公理 1 给出 ML^2T^-2 ≠ M。⇒ 无论 kappa 取什么量纲，公理 1 都不能既齐次又给出质量。"
+    },
+    {
+      "id": "D02",
+      "title": "公理 2 的 a^TUFT 量纲非无量纲（与 r42 D01 同源未修）",
+      "verdict": "FAIL",
+      "detail": "a^TUFT = -(3c cotT)/(4 e hbar)·m·kappa。机器给出 (M,L,T,Q) = L^-2Q^-1 = L^-2 Q^-1，而 a=(g-2)/2 必须无量纲。SI 口径所需补齐因子 L^2Q。r42 册在 a=C·m^2·cotT 形式下判缺口 E^-2（唯一命中者 [G]=E^-2）；V4.6 改成 m·kappa 形式后缺口换了形状但未消除，且补齐因子在公设集内仍需穷举才存在。本册穷举 {c,hbar,G,e,eps0,mu0,m_e,l_P} 的 ±3 幂：共 390625 组，命中 40 组。"
+    },
+    {
+      "id": "D03",
+      "title": "来料 kappa() 的根号内两项量纲不齐，且在 e/mu/tau 上定义域恒空",
+      "verdict": "FAIL",
+      "detail": "来料 kappa() = (c^2/(pi lP))(1/sinT - sqrt(1/sin^2T - 2 pi m c^2/hbar))。根号内两项量纲分别是 1(无量纲)（1/sin^2T）与 T^-1（2 pi m c^2/hbar），不齐。机器读数：K_e = 2 pi m_e c^2/hbar = 4.87791e+21、K_mu = 1.0086e+24、K_tau = 1.69616e+25，均远大于 1/sin^2T ≈ 1 ⇒ 对全部参与拟合粒子 term <= 0 ⇒ 来料代码返回 inf。"
+    },
+    {
+      "id": "D04",
+      "title": "公理 4 的定义域约束同样量纲不齐",
+      "verdict": "FAIL",
+      "detail": "公理 4：1/sin^2T - 2 pi m c^2/hbar > 0。首项 1(无量纲)、次项 T^-1，不齐。它与 D03 的 kappa() 用的是同一个非齐次式，故两者同源同病。"
+    },
+    {
+      "id": "D05",
+      "title": "来料 kappa() 与公理 1 不同源（根号内差 c^4/(hbar lP)）",
+      "verdict": "FAIL",
+      "detail": "把公理 1 当作 kappa 的二次方程解出：判别式 hbar^2/(c^2 sin^2T) - 2 pi hbar lP m/c^3，其根号内第二项量纲为 M^2T^2（齐次）。来料却写 2 pi m c^2/hbar（量纲 T^-1）。两者之比 = c^4/(hbar lP) = 4.73911e+102 ⇒ 一个恒有解（公理 1 一致化：K1_e = 1.02929e-81），一个恒无解（来料）。这不是精度问题，是两条不同的公式。"
+    },
+    {
+      "id": "D06",
+      "title": "公理 1 一致化后 kappa 的数值量级 ≈ m（量纲非法的数值痕迹）",
+      "verdict": "INFO",
+      "detail": "在 delta 先验下界 1.0e-52 处，机器给出 kappa(m_e) = 9.1093837e-31（1/m 量纲的数值却是 9.1093837e-31，恰好等于 m_e = 9.1093837e-31 的同数量级），kappa(m_mu)/kappa(m_e) = 206.76828。数值上 kappa ≈ m（差 kappa/m ≈ 1.0）。这不是物理结果，而是公理 1 量纲非法（D01）在数值层的投影：把量纲不同的两支放在同一公式里，数值巧合必然出现。"
+    },
+    {
+      "id": "M01",
+      "title": "m_max 有四个互不相等的版本，且其中三个的量纲不是质量",
+      "verdict": "FAIL",
+      "detail": "在 delta* = 2.17e-46 处：(1) 公理 1 抛物线顶点 hbar*c/(2 pi lP sin^2T)，量纲 ML^2T^-2（焦耳，**不是质量**），字面数值 3.1132005e+8；(2) 公理 4 定义域 hbar/(2 pi c sin^2T)，量纲 ML（kg·m），字面数值 5.5985504e-44；(3) 来料 §2 公式 hbar/(2 pi c^2 sin^2T)，量纲 MT（kg/s），字面数值 1.8674754e-52；(4) 来料 §2 数值 1.16e-30 kg，量纲 M（真质量）= 0.65071228 MeV/c^2。四个版本的字面数值彼此相差最多 1.6670637e+60 倍。**只有第 4 个是质量**——前三项要得到 MeV 必须人工选定换算口径（当质量读则乘 c^2、当能量读则除 1 MeV），两个口径彼此又差 c^2 = 8.98755e+16 倍。⇒ 「m_max = 652 MeV」这一预言缺一个明确的量纲声明。"
+    },
+    {
+      "id": "M02",
+      "title": "来料 §2 的 m_max 数值与其自称公式差 6.2e22 倍（该行自身带着 ? 号）",
+      "verdict": "FAIL",
+      "detail": "来料写「m_max ≈ hbar/(2 pi c^2) ≈ 1.16e-30 × c^2/c^2?」（自带疑问号），随后取「精确数值 m_max ≈ 1.16e-30 kg」、换算 652 MeV。机器：hbar/(2 pi c^2) = 1.8674754e-52（量纲 MT），当质量读为 1.0475769e-22 MeV/c^2、当能量读为 1.1655865e-39 MeV，与 1.16e-30 kg 差 6.2115946e+21 倍。⇒ 652 MeV 不来自任何一条公理。"
+    },
+    {
+      "id": "T01",
+      "title": "两种 m_max 口径对 tau 给出相反的定性结论 ⇒ 「tau 被证伪」不是公理推出来的",
+      "verdict": "FAIL",
+      "detail": "来料用 m_max = 652 MeV 断言 tau (1776.86 MeV) 超出上界、是「重大证伪信号」，并据此开列两条解释分支。机器：按公理 1 自身的抛物线顶点口径（当质量读）m_peak = 1.7463774e+38 MeV/c^2、裕量 1.0；当能量读 m_peak = 1.943106925e+21 MeV、裕量 1.0。两个口径都**极松地容纳** tau，与来料的 652 MeV 口径**结论相反**。⇒ 凡以「tau 超出上界」为前提的分支代价评估（分支 1 复合 tau / 分支 2 抬升上界）都建立在一个缺量纲声明、且与公理 1 口径冲突的读数上；真正需要解释的反而是「为什么公理 1 口径下的上界比来料宣称值大 21 个数量级」。"
+    },
+    {
+      "id": "C02",
+      "title": "chi^2 在先验区间内近乎常数且单调无极小 ⇒ MAP 不可能是数据给的峰",
+      "verdict": "FAIL",
+      "detail": "用公理 1 一致化的 kappa（来料那版恒 inf，见 D03）算 chi^2(delta)。61 点对数网格：差分全负比例 = 1.0（严格单调递减）⇒ 区间内无内部极小，极小值被推到先验上界 delta = 1.0e-40；chi^2 从下界的 0.476177015202 变到上界的 0.476177015202，**相对变化仅 -3.1974e-27**（数值上等同一个常数函数）⇒ 似然在先验区间内对 delta 几乎无分辨力，嵌套采样得到的「后验」必然是先验形状本身，不是数据峰。来料宣称的 delta* = 2.17e-46 在同一网格上 chi^2 = 0.476177015202，既不是极小点也不在边界；真正的电子拟合点 delta_fit = 6.2485e-14 落在先验之外（比上界大 6.2485e+26 倍）。"
+    },
+    {
+      "id": "C01",
+      "title": "chi_G 项没有检验力：硬编码 l_P 时只反映输入位数，取定义式时恒为机器零",
+      "verdict": "BOUNDARY",
+      "detail": "G_th = c^3 l_P^2/(hbar sinT)。机器两条读数：(1) 代码里硬编码 l_P = 1.616255078e-35（CODATA 2018 只给 7 位有效数字，此处多写了 3 位）⇒ G_th 回代 CODATA 的相对残差 = 6.6296834e-8、chi_G^2 = 4.3952702e-5——这个数只反映输入常数的有效位数，不是模型优度；(2) 令 l_P := sqrt(hbar G / c^3)（即由 G 定义）⇒ 相对残差 = 2.35445e-92（机器零）。⇒ 「G_th 完美匹配 CODATA、chi_G^2 ≈ 0」是恒等式复读（同 r41 M1 二阶两难 A / r42 I01 / V4 册 V02-X02）。chi^2 三项里这一项零信息量，剩两项的符号要求又相反（C04）。"
+    },
+    {
+      "id": "C03",
+      "title": "「chi_e^2 ≈ 0、chi_mu^2 ≈ 0、总 chi^2 ≈ 0」不成立；先验区间内模型对 g-2 的贡献比实验增量小 14 个数量级",
+      "verdict": "FAIL",
+      "detail": "先验区间内 |a^TUFT| 的最大值出现在 delta = 1.0e-40 处 = 1.1042652e-39，而实验要求的 Delta a_e = 6.9e-13、Delta a_mu = 2.3e-9 ⇒ 模型可达的贡献比实验增量小 26.7958 与 25.6877 个数量级。于是残差退化为实验增量本身：chi_e^2 ≈ (Delta a_e/sigma_e)^2 = 0.4761、chi_mu^2 ≈ (Delta a_mu/sigma_mu)^2 = 3.30625e-5、chi_G^2 ≈ 4.3952702e-5，总 chi^2 ≈ 0.47617702。来料的 sigma_e = 1e-12（比真实 a_e 实验不确定度紧得多）已是对残差最友好的取法，仍得 chi_e^2 ≈ 0.476，不是 0。"
+    },
+    {
+      "id": "C03b",
+      "title": "把先验放宽到 delta_fit 后，chi^2 也只降 75 倍、且被 mu 子残差重新抬起",
+      "verdict": "BOUNDARY",
+      "detail": "电子单独拟合要求 delta_fit = 6.2484988e-14（先验上界的 6.2485e+26 倍）。机器在该点给出 a_mu^TUFT = -2.9499655e-8、chi_e^2 = 2.0160367e-55、chi_mu^2 = 0.0063201128、总 chi^2 = 0.0063640655。⇒ (1) a_mu^TUFT 的读数 -2.9499655e-8 与 r42 册 N02 的 −2.94997e-8 **逐位独立复现**（同一物理结论由两条不同路径得到）；(2) 单参数无法同时满足两残差，最优点由电子决定、mu 子残差把 chi^2 抬到 0.0063640655。"
+    },
+    {
+      "id": "C04",
+      "title": "「梯度自能使修正项符号反转」在数学上不可能——符号互斥未解除",
+      "verdict": "FAIL",
+      "detail": "a^TUFT = -(3c cotT)/(4 e hbar)·m·kappa，唯一的符号因子是 cotT；theta in (0, pi/2) ⇒ cotT > 0；而公理 1 的正质量解给出 kappa > 0 ⇒ a^TUFT < 0 对先验区间内每一点都成立（11/11 抽样点双负）。实验要求：Delta a_e = -6.9e-13（负，需要 a_e^TUFT < 0，自洽）但 Delta a_mu = 2.3e-9（正，需要 a_mu^TUFT > 0，恒不可能）。自能项只改 kappa 的幅度、不改符号，也不引入新的符号因子。⇒ r42 册 N02/N03 的「1 参数 / 2 数据点符号互斥」在 V4.6 原样保留，「符号反转」只是把 V4.3 的 -2.95e-6 换成 +2.27e-6 的算术错误。"
+    },
+    {
+      "id": "C05",
+      "title": "a_mu/a_e ≡ (m_mu/m_e)^2 = 42753（V4.2 结论原样复现 ⇒ 梯度自能未改变函数结构）",
+      "verdict": "FAIL",
+      "detail": "公理 1 一致化后 kappa ≈ m + c^2 delta^2/(2 pi lP)（D06），故 m·kappa ≈ m^2 + 极小项 ⇒ a^TUFT ∝ m^2。机器在 6 个 delta 点上验证 a_mu^TUFT/a_e^TUFT = (m_mu/m_e)^2 = 42753.1228481，最大相对偏差 5.2948761e-80；并独立复现 r42 册 N02 的读数：电子拟合点 delta_fit = 6.2485e-14 处 a_mu^TUFT = -2.949965477e-8，与 r42 的 −2.94997e-8 相对偏差 1.5334e-6。⇒ 无论「梯度自能」怎么写，只要 kappa 保持这个形式，缪子外推就恒为电子的 42753 倍，符号与量级都不可能同时对上实验；r42 的「g-2 窗口对量纲修复免疫」在 V4.6 依然成立。"
+    },
+    {
+      "id": "C06",
+      "title": "μ 子段两行相差恰好 1000 倍；按声明的 a_mu^TUFT 算 chi_mu^2 ≈ 32（约 5.7 sigma），不是「落在 sigma 内」",
+      "verdict": "FAIL",
+      "detail": "来料同时写：a_mu^TUFT ≈ +2.27e-6、a_mu,pred = a_mu,QED + a_mu^TUFT = 1.16592037e-3。机器：由后一行反解得 a_mu^TUFT = 2.27e-9（1.16592037e-3 − 1.16591810e-3），而正文声明的是 2.27e-6 ⇒ 两行相差 1000.0 倍（恰好 1000）。若按声明值计算：a_mu,pred = 0.0011681881，残差 = 2.2677e-6，chi_mu^2 = 32.140396（相对 sigma_mu = 4e-7 约 5.66925 sigma）——不是来料宣称的「落在不确定度内」。若按隐含值 2.27e-9 计算，chi_mu^2 = 5.625e-9 才勉强可接受，但那与正文写的 2.27e-6 直接冲突。来料自己给的残差「Delta a_mu ≈ -3e-8」与这两行都对不上。"
+    },
+    {
+      "id": "C07",
+      "title": "「电子完美匹配、chi_e^2 ≈ 0」实为 100 倍误差（与 r42 手算差 100 倍同源复发）",
+      "verdict": "FAIL",
+      "detail": "实验要求 a_e^TUFT = Delta a_e = -6.9e-13（r42 册独立读数一致）。来料写 a_e^TUFT ≈ -6.9e-11（正好是要求值的 100.0 倍），却宣称 a_e,pred = 1.15965218059e-3 与实验「完美匹配」。机器回代：a_e,pred = 1.15965218128e-3 + (-6.9e-11) = 0.00115965211228，残差 = -6.831e-11（相对实验值 5.8905594e-8）⇒ 在 sigma_e = 1e-12 口径下 chi_e^2 ≈ 4666.2561，不是 0。"
+    },
+    {
+      "id": "C08",
+      "title": "来料的 dynesty 代码从未产生过似然函数（全程 logL = -inf），MAP 不可能来自该代码",
+      "verdict": "FAIL",
+      "detail": "实测把来料的 kappa() 原样执行：m_e / m_mu / m_tau 三点全部返回 inf（D03：K = 2 pi m c^2/hbar 在 4.9e21 ~ 1.8e22 量级，远大于 1/sin^2T ≈ 1）⇒ a_tuft = -3c cotT/(4e hbar)·m·inf = -inf ⇒ chi_e^2 = chi_mu^2 = +inf ⇒ logL = -0.5*inf = -inf。dynesty 在 logL 全为 -inf 时无法产生任何权重非零的后验样本，也得不到 MAP。阳性对照（把 m 缩小 1e-30 倍）定义域确有实解 ⇒ 判据非恒真。此外静态扫描另得 6 项工程缺陷：无 float() 转换、mpf 直接返回、nlive/bounds 未声明、run_nested 无停止判据与落盘、先验宽度内嵌、两个 sigma 硬编码无来源。⇒ 来料宣称的「嵌套采样收敛、delta* = 2.17e-46」不可能由这段代码产生。 实测 kappa：{'e': 'inf', 'mu': 'inf', 'tau': 'inf'}"
+    },
+    {
+      "id": "S01",
+      "title": "外部事实更新：mu 子 g-2 异常已于 2025-06-03 由 Fermilab 最终结果关闭",
+      "verdict": "INFO",
+      "detail": "来料用的 SM 值 1.16591810e-3 是 2020 年 SM 预测，来料据此把 Delta a_mu 定为 +2.3e-9（Fermilab 2018 单次口径）。2025-06-03 Fermilab 公布最终结果（FNAL Run1-3 + BNL 合成，精度 124~127 ppb），定性结论为「与标准模型预测一致、原先的异常不再存在」（多方独立来源确认）；同期 Muon g-2 Theory Initiative 白皮书用格点 QCD HVP 把 SM 理论误差压到同量级。登记的世界平均值 a_mu = 116592070.5(15.0)e-11、SM 理论 = 116592059(25)e-11，差约 1.15(28)e-11 ≈ 0.4 sigma（这两个数值需以官方 fact sheet 逐位核对，本册标 needs_official_confirmation）。含义：即使 V4.6 的公式全对，它要解释的窗口也已经关闭；任何新物理贡献必须 <= 1e-9 量级，而来料自称的 a_mu^TUFT = 2.27e-6 超窗 ~1000 倍。本库 r19/r27/r41/r42 已多次登记「g-2 窗口已关」，本条把它升级为「实验侧的异常本身已消失」。"
+    },
+    {
+      "id": "R01",
+      "title": "三条最小修法（不代选）",
+      "verdict": "BOUNDARY",
+      "detail": "R1 修公理 1 的量纲：把自能项补成 hbar*c^2*delta^2/(2*pi*lP) 形式或显式乘 (G*hbar/c)（机器给出的唯一自然缺口因子），使两项齐次；代价是把自能项与 G 绑定，而 G 已由公理 3 用 l_P 定义 ⇒ 引入 V4 册 V02 的循环。 / R2 修公理 2 的量纲：在 1/(16*pi*G) 前导下写挠率-旋量耦合项（EC 标准做法），使 a^TUFT 天然无量纲；这正是 r42 册判定的缺失归一，V4.6 未修。 / R3 放弃 g-2 通道：既然符号互斥（C04）与 42753 倍放大（C05）对结构免疫、且窗口已关（S01），把 g-2 从验证清单移除，改用不含 lepton-mass-power 的可观测量（长度比、纯几何量）作为窗口候选。 补充：本册不代选来料自列的四个攻坚选项；且 T01 已表明「tau 超出上界」这一前提在公理 1 口径下不成立，故选项 1（格林函数抬升上界）与选项 2（复合 tau 模型）都建立在一个不自洽的读数上。"
+    },
+    {
+      "id": "F01",
+      "title": "本轮自抓 6 处（均已修并复跑，含 1 处口径级误判）",
+      "verdict": "INFO",
+      "detail": "① **量纲工具自身守卫生效**：初版把 [mu_0] 写成 M L T^-2 Q^-2，守卫 G0-2（eps0*mu0 = 1/c^2）首跑即拦下 ⇒ 改为 M L Q^-2（N/A^2）。② 守卫 G0-5 表达式写反（dinv(dmul(G,2)) 与 dinv(G) 比较），改为 dinv(dinv(x)) == x 双向断言。③ 枚举循环里 kd = D(a,b,d) 只有三元组，与四元组工具不兼容 ⇒ IndexError，补 Q 分量。④ 条目函数签名多了一个 verdict 形参、_jsonable 引用未定义的 Fraction ⇒ NameError，均已修。⑤ **口径级误判（本轮最重要）**：初版把公理 1 顶点 m_peak = hbar*c/(2 pi lP) 的字面数值 3.1132e8 当成质量（kg）去乘 c^2，得出 1.746e38 MeV 的荒谬读数；正确读法是该式量纲为 M L^2 T^-2（焦耳），字面数值就是 3.1132e8 J = 1.9431e21 MeV（当能量读）或 ×c^2 后当质量读。守卫 G8b（只有来料宣称的 1.16e-30 kg 是真质量量纲）已把这条口径锁死。⑥ 起草阶段我手算 c^4 时误用 c^2 = 8.98755e16，把两套根号内的比值写成 5.27e85，机器给 4.739e102（正确值）⇒ 又一次印证「数值类断言必须机器兜底」。方法论新增（本轮最有用的一条判据）：**把「定义域是否为空」当成可执行判据**。它一次就抓出整段 chi^2 代码从未产生似然函数（logL ≡ -inf），比逐行核对数值有效得多；配阳性对照（把 m 缩小 1e-30 倍后定义域确有实解）即可排除「恒真」。"
+    }
+  ],
+  "readings": {
+    "D01": {
+      "term1_dim_at_curvature": "M",
+      "term2_dim_at_curvature": "ML^-2T^2",
+      "gap_factor_dim": "L^2T^-2",
+      "homogeneous_solution_count": "1",
+      "homogeneous_solutions": [
+        [
+          [
+            "0",
+            "1",
+            "-2",
+            "0"
+          ],
+          "ML^2T^-2"
+        ]
+      ],
+      "m_dim_under_homogeneity": "ML^2T^-2",
+      "gap_factor_hits_in_c_hbar_G": [
+        {
+          "G": "0",
+          "c": "2",
+          "hbar": "0"
+        }
+      ],
+      "gap_factor_hit_count": "1",
+      "note": "唯一自然补齐因子在 {c,hbar,G} 内为 G*hbar/c 量纲（L^4 T^-2），即自能项必须与引力耦合常数绑定。"
+    },
+    "D02": {
+      "a_dim": "L^-2Q^-1",
+      "need_factor_dim": "L^2Q",
+      "enumerated": "390625",
+      "hit_count": "40",
+      "hits_sample": [
+        {
+          "G": "-1",
+          "c": "-2",
+          "e": "-1",
+          "eps0": "-1",
+          "hbar": "2",
+          "lP": "2",
+          "me": "-2",
+          "mu0": "-2"
+        },
+        {
+          "G": "-1",
+          "c": "-1",
+          "e": "1",
+          "eps0": "-1",
+          "hbar": "1",
+          "lP": "2",
+          "me": "-2",
+          "mu0": "-1"
+        },
+        {
+          "G": "-1",
+          "c": "0",
+          "e": "-1",
+          "eps0": "0",
+          "hbar": "2",
+          "lP": "2",
+          "me": "-2",
+          "mu0": "-1"
+        },
+        {
+          "G": "-1",
+          "c": "1",
+          "e": "1",
+          "eps0": "0",
+          "hbar": "1",
+          "lP": "2",
+          "me": "-2",
+          "mu0": "0"
+        },
+        {
+          "G": "-1",
+          "c": "2",
+          "e": "-1",
+          "eps0": "1",
+          "hbar": "2",
+          "lP": "2",
+          "me": "-2",
+          "mu0": "0"
+        },
+        {
+          "G": "0",
+          "c": "-2",
+          "e": "-1",
+          "eps0": "0",
+          "hbar": "2",
+          "lP": "1",
+          "me": "-1",
+          "mu0": "-1"
+        },
+        {
+          "G": "0",
+          "c": "-2",
+          "e": "1",
+          "eps0": "-1",
+          "hbar": "0",
+          "lP": "2",
+          "me": "0",
+          "mu0": "-1"
+        },
+        {
+          "G": "0",
+          "c": "-2",
+          "e": "1",
+          "eps0": "0",
+          "hbar": "2",
+          "lP": "0",
+          "me": "-2",
+          "mu0": "0"
+        },
+        {
+          "G": "0",
+          "c": "-1",
+          "e": "-1",
+          "eps0": "0",
+          "hbar": "1",
+          "lP": "2",
+          "me": "0",
+          "mu0": "-1"
+        },
+        {
+          "G": "0",
+          "c": "-1",
+          "e": "1",
+          "eps0": "0",
+          "hbar": "1",
+          "lP": "1",
+          "me": "-1",
+          "mu0": "0"
+        },
+        {
+          "G": "0",
+          "c": "0",
+          "e": "-1",
+          "eps0": "1",
+          "hbar": "2",
+          "lP": "1",
+          "me": "-1",
+          "mu0": "0"
+        },
+        {
+          "G": "0",
+          "c": "0",
+          "e": "1",
+          "eps0": "0",
+          "hbar": "0",
+          "lP": "2",
+          "me": "0",
+          "mu0": "0"
+        }
+      ]
+    },
+    "D03_D05": {
+      "kappa_pref_dim": "LT^-2",
+      "sqrt_inner_a": "1(无量纲)",
+      "sqrt_inner_b": "T^-1",
+      "kappa_total_dim": "T^-2",
+      "K_incoming_me": "4.87791365789e+21",
+      "K_incoming_mmu": "1.00859783159e+24",
+      "K_incoming_mtau": "1.69616157736e+25",
+      "K_axiom1_me": "1.02928906872e-81",
+      "root_inner_ratio": "4.73910955253e+102",
+      "axiom1_inner_b_dim": "M^2T^2",
+      "incoming_domain_empty": true
+    },
+    "D06": {
+      "kappa_e_at_prior_low": "9.1093837015e-31",
+      "kappa_mu_at_prior_low": "1.883531627e-28",
+      "kappa_mu_over_kappa_e": "206.76828298382552219",
+      "kappa_e_over_me": "1.0"
+    },
+    "M01_M02_T01": {
+      "delta_star_used": "2.17e-46",
+      "mmax_axiom1_peak_raw": "311320051.25206432421",
+      "mmax_axiom1_dim": "ML^2T^-2",
+      "mmax_axiom1_as_mass_MeV": "1.7463774116393979318e+38",
+      "mmax_axiom1_as_energy_MeV": "1.9431069249513491795e+21",
+      "mmax_axiom4_domain_raw": "5.5985503685950185979e-44",
+      "mmax_axiom4_dim": "ML",
+      "mmax_claim_formula_raw": "1.8674753881216780303e-52",
+      "mmax_claim_formula_dim": "MT",
+      "mmax_claim_formula_as_mass_MeV": "1.0475768655092660851e-22",
+      "mmax_claim_formula_as_energy_MeV": "1.1655864581293588072e-39",
+      "mmax_claim_number_kg": "1.16e-30",
+      "mmax_claim_number_MeV": "0.65071227804131642479",
+      "claim_number_over_claim_formula": "6.2115945804605085411e+21",
+      "tau_MeV": "1776.8596286094753691",
+      "tau_margin_axiom1_mass_caliber": "1.0",
+      "tau_margin_axiom1_energy_caliber": "0.99999999999999999909",
+      "tau_verdict_axiom1_mass": "ALLOWED(裕量 1.0)",
+      "tau_verdict_axiom1_energy": "ALLOWED(裕量 1.0)",
+      "tau_verdict_claim_caliber": "EXCLUDED(超 2729.64)",
+      "lepton_table": [
+        {
+          "name": "e",
+          "m_MeV": "0.51099895",
+          "kappa_at_delta_star": "9.1093837015e-31",
+          "below_mmax_axiom1_mass_caliber": true,
+          "below_mmax_axiom1_energy_caliber": true,
+          "below_mmax_claim_652MeV": true
+        },
+        {
+          "name": "mu",
+          "m_MeV": "105.6583755",
+          "kappa_at_delta_star": "1.883531627e-28",
+          "below_mmax_axiom1_mass_caliber": true,
+          "below_mmax_axiom1_energy_caliber": true,
+          "below_mmax_claim_652MeV": false
+        },
+        {
+          "name": "tau",
+          "m_MeV": "1776.859629",
+          "kappa_at_delta_star": "3.16754e-27",
+          "below_mmax_axiom1_mass_caliber": true,
+          "below_mmax_axiom1_energy_caliber": true,
+          "below_mmax_claim_652MeV": false
+        }
+      ]
+    },
+    "C02_C07": {
+      "grid_points": "61",
+      "monotone_decreasing_ratio": "1.0",
+      "argmin_delta": "1.0e-40",
+      "chi2_relative_spread_on_prior": "-3.1974007065e-27",
+      "chi2_at_prior_low": {
+        "ae_pred": "0.00115965218128",
+        "amu_pred": "0.0011659181",
+        "chi_e": "0.4761",
+        "chi_mu": "0.0000330625",
+        "chi_G": "0.000043952701968182284046",
+        "chi_total": "0.47617701520196818228"
+      },
+      "chi2_at_delta_star": {
+        "ae_pred": "0.00115965218128",
+        "amu_pred": "0.0011659181",
+        "chi_e": "0.4761",
+        "chi_mu": "0.0000330625",
+        "chi_G": "0.000043952701968182284046",
+        "chi_total": "0.47617701520196818228"
+      },
+      "chi2_at_prior_high": {
+        "ae_pred": "0.00115965218128",
+        "amu_pred": "0.0011659181",
+        "chi_e": "0.4761",
+        "chi_mu": "0.0000330625",
+        "chi_G": "0.000043952701968182284046",
+        "chi_total": "0.47617701520196818228"
+      },
+      "delta_fit_for_electron": "6.2484987600796479023e-14",
+      "chi2_at_delta_fit": {
+        "ae_pred": "0.00115965218059",
+        "amu_pred": "0.0011658886003452348252",
+        "chi_e": "2.0160366947479821966e-55",
+        "chi_mu": "0.0063201127699018832718",
+        "chi_G": "0.000043952701968182284049",
+        "chi_total": "0.0063640654718700655559"
+      },
+      "a_mu_at_delta_fit": "-2.9499654765174752184e-8",
+      "r42_N02_cross_reproduce_rel_dev": "1.5333995006e-6",
+      "rel_resid_G_codata_lP": "6.62968339879e-8",
+      "rel_resid_G_exact_lP": "2.35445e-92",
+      "delta_a_e_exp": "-6.9e-13",
+      "delta_a_mu_exp": "2.3e-9",
+      "sign_rows": [
+        {
+          "delta": "1.0e-52",
+          "a_e_TUFT": "-1.1042652e-51",
+          "a_mu_TUFT": "-4.7210788e-47",
+          "both_negative": true
+        },
+        {
+          "delta": "1.58489e-51",
+          "a_e_TUFT": "-1.7501425e-50",
+          "a_mu_TUFT": "-7.4824056e-46",
+          "both_negative": true
+        },
+        {
+          "delta": "2.51189e-50",
+          "a_e_TUFT": "-2.7737889e-49",
+          "a_mu_TUFT": "-1.1858814e-44",
+          "both_negative": true
+        },
+        {
+          "delta": "3.98107e-49",
+          "a_e_TUFT": "-4.3961591e-48",
+          "a_mu_TUFT": "-1.8794953e-43",
+          "both_negative": true
+        },
+        {
+          "delta": "6.30957e-48",
+          "a_e_TUFT": "-6.9674427e-47",
+          "a_mu_TUFT": "-2.9787993e-42",
+          "both_negative": true
+        },
+        {
+          "delta": "1.0e-46",
+          "a_e_TUFT": "-1.1042652e-45",
+          "a_mu_TUFT": "-4.7210788e-41",
+          "both_negative": true
+        },
+        {
+          "delta": "1.58489e-45",
+          "a_e_TUFT": "-1.7501425e-44",
+          "a_mu_TUFT": "-7.4824056e-40",
+          "both_negative": true
+        },
+        {
+          "delta": "2.51189e-44",
+          "a_e_TUFT": "-2.7737889e-43",
+          "a_mu_TUFT": "-1.1858814e-38",
+          "both_negative": true
+        },
+        {
+          "delta": "3.98107e-43",
+          "a_e_TUFT": "-4.3961591e-42",
+          "a_mu_TUFT": "-1.8794953e-37",
+          "both_negative": true
+        },
+        {
+          "delta": "6.30957e-42",
+          "a_e_TUFT": "-6.9674427e-41",
+          "a_mu_TUFT": "-2.9787993e-36",
+          "both_negative": true
+        },
+        {
+          "delta": "1.0e-40",
+          "a_e_TUFT": "-1.1042652e-39",
+          "a_mu_TUFT": "-4.7210788e-35",
+          "both_negative": true
+        }
+      ],
+      "ratio_rows": [
+        {
+          "delta": "1.0e-52",
+          "ratio_num": "42753.122848079350992",
+          "ratio_th": "42753.122848079350992",
+          "rel_dev": "5.29488e-80"
+        },
+        {
+          "delta": "2.51189e-50",
+          "ratio_num": "42753.122848079350992",
+          "ratio_th": "42753.122848079350992",
+          "rel_dev": "5.29488e-80"
+        },
+        {
+          "delta": "6.30957e-48",
+          "ratio_num": "42753.122848079350992",
+          "ratio_th": "42753.122848079350992",
+          "rel_dev": "5.29488e-80"
+        },
+        {
+          "delta": "1.58489e-45",
+          "ratio_num": "42753.122848079350992",
+          "ratio_th": "42753.122848079350992",
+          "rel_dev": "5.29488e-80"
+        },
+        {
+          "delta": "3.98107e-43",
+          "ratio_num": "42753.122848079350992",
+          "ratio_th": "42753.122848079350992",
+          "rel_dev": "5.29488e-80"
+        },
+        {
+          "delta": "1.0e-40",
+          "ratio_num": "42753.122848079350992",
+          "ratio_th": "42753.122848079350992",
+          "rel_dev": "5.29488e-80"
+        }
+      ],
+      "ratio_max_rel_dev": "5.29487610912e-80",
+      "amu_pred_from_claim": "0.0011681881",
+      "amu_pred_stated": "0.00116592037",
+      "amu_implied_from_pred_row": "2.27e-9",
+      "amu_declared_over_implied": "1000.0",
+      "amu_chi2_from_declared": "32.1403955625",
+      "amu_chi2_from_implied": "5.625e-9",
+      "ae_hand_factor": "100.0",
+      "ae_pred_from_claim": "0.00115965211228",
+      "ae_resid_from_claim": "-6.831e-11",
+      "ae_chi2_from_claim": "4666.2561"
+    },
+    "C08": {
+      "incoming_kappa_values": {
+        "e": "inf",
+        "mu": "inf",
+        "tau": "inf"
+      },
+      "probe_mass_factor": "1e-30",
+      "probe_K": "4.87791365789e-9",
+      "probe_is_finite": true,
+      "static_findings": [
+        [
+          "no_float_cast",
+          "log_likelihood / ptform 直接返回 mpmath mpf；dynesty/numpy 需要原生 float，mpf 会在进入似然缓存时抛类型错或极慢退化"
+        ],
+        [
+          "mpf_return_type",
+          "ptform 返回 [mp.e**logd]、log_likelihood 返回 -0.5*chi2(delta)，两者都是 mpmath mpf，未转 float"
+        ],
+        [
+          "no_nlive_spec",
+          "NestedSampler(...) 只给 3 个位置参数，未指定 nlive / bounds / sample / maxiter / maxcall"
+        ],
+        [
+          "no_maxiter",
+          "run_nested() 无参数、无停止判据、无打印、无结果落盘"
+        ],
+        [
+          "no_prior_width_declared",
+          "对数均匀先验宽度写在函数体内（log(1e-40)-log(1e-52)），无独立参数声明，复算者无法核对"
+        ],
+        [
+          "sigma_arbitrary",
+          "sigma_e = 1e-12、sigma_mu = 4e-7 硬编码在 chi2() 内，未声明来源与不确定度传播"
+        ]
+      ],
+      "ast_parse": "OK"
+    },
+    "S01": {
+      "incoming_SM_value_used": "0.0011659181",
+      "incoming_exp_value_used": "0.0011659204",
+      "fact": "Fermilab/BNL 2025-06-03 final result: consistent with SM; anomaly gone",
+      "world_average_x1e11": "116592070.5(15.0)",
+      "SM_theory_x1e11": "116592059(25)",
+      "discrepancy_sigma": "约 0.4",
+      "needs_official_confirmation": true,
+      "consequence": "窗口上限 ~1e-9；来料 a_mu^TUFT 自称 2.27e-6 超窗约 1000 倍"
+    },
+    "R01": {
+      "R1": "R1 修公理 1 的量纲：把自能项补成 hbar*c^2*delta^2/(2*pi*lP) 形式或显式乘 (G*hbar/c)（机器给出的唯一自然缺口因子），使两项齐次；代价是把自能项与 G 绑定，而 G 已由公理 3 用 l_P 定义 ⇒ 引入 V4 册 V02 的循环。",
+      "R2": "R2 修公理 2 的量纲：在 1/(16*pi*G) 前导下写挠率-旋量耦合项（EC 标准做法），使 a^TUFT 天然无量纲；这正是 r42 册判定的缺失归一，V4.6 未修。",
+      "R3": "R3 放弃 g-2 通道：既然符号互斥（C04）与 42753 倍放大（C05）对结构免疫、且窗口已关（S01），把 g-2 从验证清单移除，改用不含 lepton-mass-power 的可观测量（长度比、纯几何量）作为窗口候选。"
+    }
+  },
+  "guards": [
+    {
+      "name": "G0-1_dadd_is_exponent_addition",
+      "pass": true,
+      "note": "量纲相乘=指数相加（r37 首版写成逐分量相乘的教训）"
+    },
+    {
+      "name": "G0-2_eps0_mu0_is_inv_c2",
+      "pass": true,
+      "note": "eps0*mu0 = 1/c^2"
+    },
+    {
+      "name": "G0-3_hbar_over_c_is_ML",
+      "pass": true,
+      "note": "hbar/c = M*L（康普顿波长）"
+    },
+    {
+      "name": "G0-4_G_dim",
+      "pass": true,
+      "note": "[G]=M^-1 L^3 T^-2"
+    },
+    {
+      "name": "G0-5_dinv_is_inverse",
+      "pass": true,
+      "note": "取逆=取负，且二次取逆还原"
+    },
+    {
+      "name": "G0-6_dstr_zero",
+      "pass": true,
+      "note": "零向量打印"
+    },
+    {
+      "name": "G0-7_kappa_is_inverse_length",
+      "pass": true,
+      "note": "kappa = 螺旋曲率 = 弧长倒数 => L^-1"
+    },
+    {
+      "name": "G0-8_dim_C_kappa_mass",
+      "pass": true,
+      "note": "hbar*kappa/c = M（第一项本身是质量量纲）"
+    },
+    {
+      "name": "G1_homogeneous_solution_is_unique",
+      "pass": true,
+      "note": "公理 1 齐次解唯一：[([0, 1, -2, 0], 'ML^2T^-2')]"
+    },
+    {
+      "name": "G2_curvature_kappa_two_terms_differ",
+      "pass": true,
+      "note": "[kappa]=L^-1 时两项不齐，缺口 L^2T^-2"
+    },
+    {
+      "name": "G3_gap_factor_exists_in_basis",
+      "pass": true,
+      "note": "缺口 L^2T^-2 在 {c,hbar,G} ±3 幂内命中 1 组"
+    },
+    {
+      "name": "G4_a_expression_is_not_dimensionless",
+      "pass": true,
+      "note": "a^TUFT 量纲 L^-2Q^-1 非无量纲"
+    },
+    {
+      "name": "G5_sqrt_inner_terms_mismatch",
+      "pass": true,
+      "note": "kappa 公式根号内两项量纲 1(无量纲) vs T^-1 不齐"
+    },
+    {
+      "name": "G6_incoming_domain_is_empty_for_leptons",
+      "pass": true,
+      "note": "来料定义域 1/sin^2T - K 在 m=m_e 时 K=4.87791e+21，远大于 1 ⇒ 无实根"
+    },
+    {
+      "name": "G7_root_inner_ratio_is_c4_over_hbar_lP",
+      "pass": true,
+      "note": "两套根号内相差 c^4/(hbar*lP) = 4.73911e+102"
+    },
+    {
+      "name": "G8_mmax_four_versions_all_differ",
+      "pass": true,
+      "note": "公理1顶点 / 公理4定义域 / 来料公式 / 来料数值 四者互不相同"
+    },
+    {
+      "name": "G8b_only_claim_number_is_a_real_mass",
+      "pass": true,
+      "note": "四个 m_max 版本里只有来料宣称的 1.16e-30 kg 是真正的质量量纲"
+    },
+    {
+      "name": "G9_claim_number_vs_claim_formula_gap",
+      "pass": true,
+      "note": "来料数值与其自称公式差 6.2115946e+21 倍"
+    },
+    {
+      "name": "G10_mmax_calibers_give_opposite_tau_verdicts",
+      "pass": true,
+      "note": "公理1顶点（当质量读裕量 1.0 / 当能量读裕量 1.0）均容纳 tau，来料 652 MeV 口径排除 tau"
+    },
+    {
+      "name": "G11_chi2_is_monotone_decreasing_on_prior",
+      "pass": true,
+      "note": "chi^2(delta) 在先验区间上严格单调递减，差分全负比例 = 1.0"
+    },
+    {
+      "name": "G12_argmin_at_prior_upper_boundary",
+      "pass": true,
+      "note": "chi^2 极小点落在先验上界 delta=1.0e-40"
+    },
+    {
+      "name": "G13_G_check_is_identity_when_lP_exact",
+      "pass": true,
+      "note": "把 l_P 取成 sqrt(hbar G/c^3)（即由 G 定义）后 G_th 回代 CODATA 的相对残差 = 2.35445e-92（机器零）"
+    },
+    {
+      "name": "G14_a_tuft_is_always_negative",
+      "pass": true,
+      "note": "theta in (0,pi/2) => cotT>0 且 m*kappa>0 ⇒ a^TUFT < 0 恒成立"
+    },
+    {
+      "name": "G15_ratio_invariance_reproduced",
+      "pass": true,
+      "note": "a_mu/a_e 与 (m_mu/m_e)^2 的最大相对偏差 = 5.29488e-80（自能未改变结构）"
+    },
+    {
+      "name": "G20_cross_reproduce_r42_N02",
+      "pass": true,
+      "note": "电子拟合点的 a_mu^TUFT = -2.9499655e-8 与 r42 册 N02 的 −2.94997e-8 相对偏差 = 1.5334e-6"
+    },
+    {
+      "name": "G16_mu_declared_vs_implied_differ_by_1000x",
+      "pass": true,
+      "note": "正文声明的 a_mu^TUFT 与其 a_mu,pred 行隐含值差 1000.0 倍"
+    },
+    {
+      "name": "G17_electron_perfect_match_is_100x_off",
+      "pass": true,
+      "note": "来料 a_e^TUFT 与实验要求值相差 100.0 倍"
+    },
+    {
+      "name": "G18_positive_control_incoming_domain_can_have_solution",
+      "pass": true,
+      "note": "阳性对照：把 m 缩小 1e-30 倍后 K=4.8779137e-9 < 1 ⇒ 来料定义域可有解（判据非恒真）"
+    },
+    {
+      "name": "G19_incoming_kappa_is_inf_for_all_leptons",
+      "pass": true,
+      "note": "来料 kappa 对 e/mu/tau 全部返回 inf ⇒ chi^2 ≡ inf ⇒ logL ≡ -inf"
+    }
+  ]
+}

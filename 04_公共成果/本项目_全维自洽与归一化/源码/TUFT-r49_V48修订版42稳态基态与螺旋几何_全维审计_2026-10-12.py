@@ -34,7 +34,7 @@ mp.mp.dps = 80
 
 ROUND = 'r49'
 DATE = '2026-10-12'
-TAG = 'TUFT-r49_V48修订版42稳态基态与螺旋几何_全维审计'
+TAG = 'TUFT-r49_V48修订版42稳态基态与螺旋几何_全维审计_2026-10-12'
 SELF_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(SELF_DIR)
 OUTDIR = os.path.join(BASE, '数据')
@@ -85,21 +85,20 @@ def dim_of(power_map):
 
 # ---------------------------------------------------------------- 输出格式
 def fx(x, nd=26):
-    """定点科学计数法字符串（与库内 r 序列读数口径一致，25~26 位有效数字）"""
+    """强制科学计数法字符串（与库内 r 序列读数口径一致，26 位有效数字）"""
     x = mp.mpf(x)
     if x == 0:
         return '0.' + '0' * (nd - 1) + 'E+00'
-    s = mp.nstr(x, nd, strip_zeros=False)
+    ex = int(mp.floor(mp.log10(abs(x))))
+    mant = x / mp.mpf(10) ** ex
+    s = mp.nstr(mant, nd, strip_zeros=False)
     if 'e' in s:
-        mant, ex = s.split('e')
-    else:
-        mant, ex = s, '0'
-    ex = ex.lstrip('+')
-    neg = ex.startswith('-')
-    if neg:
-        ex = ex[1:]
-    ex = ex.rjust(2, '0')
-    return mant + 'E' + ('-' if neg else '+') + ex
+        s = s.split('e')[0]
+    if s.startswith('10'):          # 末位进位跨过 10 的情形
+        mant = mant / 10
+        ex += 1
+        s = mp.nstr(mant, nd, strip_zeros=False).split('e')[0]
+    return s + 'E' + ('-' if ex < 0 else '+') + str(abs(ex)).rjust(2, '0')
 
 
 def rel(a, b):
@@ -384,7 +383,7 @@ D_OMEGA = dpow(D_T, -1)
 # B-01 作用量约定
 guard('g15_lag_density_dim', D_LAG == (F(1), F(-2), F(-1), F(0)), dstr(D_LAG))
 P_('V10', '约定 S = ∫d^4x √-g ℒ（x^0 = c·t）下，[d^4x] = L^4，[ℒ] = J·s/m^4',
-   '机器 [S] = %s，[ℒ] = %s = M·L^-2·T^-1 ✓ 与来料自述「J·s/m^4」一致'
+   '机器 [S] = %s，[ℒ] = %s ✓ 与来料自述「J·s/m^4」一致（J·s·m^-4 = M·L^-2·T^-1 逐项核对通过）'
    % (dstr(D_S), dstr(D_LAG)))
 
 # B-02 动能项（修订核心）
@@ -760,19 +759,17 @@ def chi2_of(delta, sig_e, sig_mu, sig_g_rel):
 
 # 在 t = delta/delta_star 上扫描求最小
 def chi2_min(sig_e, sig_mu, sig_g_rel):
+    """在 t = delta/delta_star ∈ [-5, 5] 上粗扫 + 三分法细化（扫描区间必须覆盖真最小点）"""
     best = (mp.inf, None)
-    t = mp.mpf('-2')
-    while t <= mp.mpf('2'):
+    t = mp.mpf('-5')
+    step = mp.mpf('0.002')
+    while t <= mp.mpf('5'):
         v = chi2_of(t * delta_star, sig_e, sig_mu, sig_g_rel)
         if v < best[0]:
             best = (v, t)
-        t += mp.mpf('0.001')
-        if t > mp.mpf('0.3'):
-            break
-    # 局部细化
-    t0 = best[1]
-    lo, hi = t0 - mp.mpf('0.002'), t0 + mp.mpf('0.002')
-    for _ in range(60):
+        t += step
+    lo, hi = best[1] - step, best[1] + step
+    for _ in range(80):
         m1 = lo + (hi - lo) / 3
         m2 = hi - (hi - lo) / 3
         if chi2_of(m1 * delta_star, sig_e, sig_mu, sig_g_rel) < chi2_of(m2 * delta_star, sig_e, sig_mu, sig_g_rel):
@@ -798,13 +795,19 @@ M_('V41', 'χ^2 的判决强度（来料代码 σ 档 vs 真实 σ 档）',
 guard('g47_chi2_two_tier_orders_apart',
       (chi2_code < mp.mpf('1')) and (chi2_real > mp.mpf('100')),
       '%s vs %s' % (fx(chi2_code), fx(chi2_real)))
+guard('g48_fx_forces_scientific', 'E' in fx(c ** 2) and abs(mp.mpf(fx(c ** 2)) - c ** 2) < mp.mpf('1'),
+      fx(c ** 2))
+guard('g49_chi2_min_is_interior_not_boundary',
+      abs(t_code) < mp.mpf('4.5') and abs(t_real) < mp.mpf('4.5'),
+      't_code=%s t_real=%s' % (fx(t_code), fx(t_real)))
 
 # D-07 θ → π/2 ⇒ 挠率归零
 I_('V42', '拟合/相容性把 θ 推向 π/2 的后果',
-   'cotθ = tan δ；G 通道要求 sinθ ≈ 1 ⇒ δ ≲ %s rad ⇒ τ = κ·cotθ ≤ κ·%s'
-   ' ⇒ **挠率在最优构型处归零**，与「含挠率、兼容 EC」的卖点冲突'
+   '两档约束分开读：①G 通道只要求 sinθ ≈ 1 ⇒ δ ≲ %s rad ⇒ τ/κ = cotθ ≤ %s（很小但非零）；'
+   '②而一旦同时要求 a_TUFT 拟合电子残差，δ 必须降到 δ* = %s ⇒ τ/κ ≈ %s ⇒ **挠率实质归零**。'
+   ' ⇒ 本修订版的核心卖点「含挠率的螺旋」在它自己的拟合最优点上消失'
    '（r40「三条关系联立只能在 τ=0 的纯圆上相容」同族）'
-   % (fx(mp.sqrt(2 * res_G)), fx(mp.sqrt(2 * res_G))))
+   % (fx(mp.sqrt(2 * res_G)), fx(mp.sqrt(2 * res_G)), fx(delta_star), fx(delta_star)))
 
 # D-08 代码分支未指定
 def kappa_code(m, th=TH):

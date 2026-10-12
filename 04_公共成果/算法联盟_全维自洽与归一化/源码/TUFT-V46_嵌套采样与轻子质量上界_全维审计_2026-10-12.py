@@ -210,7 +210,8 @@ FULL_DIMS = {'c': DIM_C, 'hbar': DIM_HBAR, 'G': DIM_G, 'e': DIM_E,
 fkeys = sorted(FULL_DIMS)
 a_hits = []
 cnt = 0
-for pw in itertools.product([-3, -2, -1, 0, 1, 2, 3], repeat=len(fkeys)):
+POW2 = [-2, -1, 0, 1, 2]
+for pw in itertools.product(POW2, repeat=len(fkeys)):
     tot = D(0, 0, 0, 0)
     for k, p in zip(fkeys, pw):
         tot = dadd(tot, dmul(FULL_DIMS[k], p))
@@ -306,56 +307,75 @@ print('=' * 78)
 def kg_to_MeV(mkg):
     return mkg * C ** 2 / MEV_IN_J
 
+# 1) 公理 1 的顶点质量： m(kappa) 抛物线最大值 m_peak = hbar*c/(2*pi*lP*sin^2 T)
 def sinT(delta):
     return mp.sin(mp.pi / 2 - delta)
 
-# 1) 公理 1 的顶点质量： m(kappa) 抛物线最大值 m_peak = hbar*c/(2*pi*lP*sin^2 T)
 def mmax_axiom1(delta):
     return HBAR * C / (2 * MP_INV * LP * sinT(delta) ** 2)
 
-# 2) 公理 4 的定义域上界： m_max = hbar/(2*pi*c*sin^2 T)
 def mmax_axiom4(delta):
     return HBAR / (2 * MP_INV * C * sinT(delta) ** 2)
 
-# 3) 来料 §2 宣称的公式： m_max = hbar/(2*pi*c^2*sin^2 T)
 def mmax_claim_formula(delta):
     return HBAR / (2 * MP_INV * C ** 2 * sinT(delta) ** 2)
 
+def G_th(delta):
+    return C ** 3 * LP ** 2 / (HBAR * sinT(delta))
+
 d_star = DELTA_STAR_CLAIM
-M1 = mmax_axiom1(d_star)
-M2 = mmax_axiom4(d_star)
-M3 = mmax_claim_formula(d_star)
+M1 = HBAR * C / (2 * MP_INV * LP * sinT(d_star) ** 2)
+M2 = HBAR / (2 * MP_INV * C * sinT(d_star) ** 2)
+M3 = HBAR / (2 * MP_INV * C ** 2 * sinT(d_star) ** 2)
 M4 = MMAX_KG_CLAIM
 
-m1_MeV, m2_MeV, m3_MeV, m4_MeV = [kg_to_MeV(x) for x in (M1, M2, M3, M4)]
+dim_m1 = dadd(DIM_HBAR, DIM_C, dinv(DIM_LP))         # M L^2 T^-2 = 焦耳（不是质量）
+dim_m2 = dadd(DIM_HBAR, dinv(DIM_C))                 # M L = kg*m
+dim_m3 = dadd(DIM_HBAR, dmul(DIM_C, -2))             # M T = kg/s
+dim_m4 = DIM_M
+
+# 双口径换算：字面数值既可「当质量读」，也可「当能量读」，两者相差一个 c^2
+m1_as_mass_MeV = kg_to_MeV(M1)
+m1_as_energy_MeV = M1 / MEV_IN_J
+m3_as_mass_MeV = kg_to_MeV(M3)
+m3_as_energy_MeV = M3 / MEV_IN_J
+m4_MeV = kg_to_MeV(M4)
 MTAU_MeV = kg_to_MeV(MTAU)
 
 guard('G8_mmax_four_versions_all_differ',
       all(abs(x - M1) / M1 > mp.mpf('1e-6') for x in (M2, M3, M4)),
       '公理1顶点 / 公理4定义域 / 来料公式 / 来料数值 四者互不相同')
+guard('G8b_only_claim_number_is_a_real_mass',
+      dim_m4 == DIM_M and dim_m1 != DIM_M and dim_m2 != DIM_M and dim_m3 != DIM_M,
+      '四个 m_max 版本里只有来料宣称的 1.16e-30 kg 是真正的质量量纲')
 guard('G9_claim_number_vs_claim_formula_gap',
       abs(M4 / M3 - 1) > mp.mpf('1e6'),
       '来料数值与其自称公式差 %s 倍' % mp.nstr(M4 / M3, 8))
 
-F('M01', 'm_max 存在四个互不相等的版本（公理 1 / 公理 4 / 来料 §2 公式 / 来料 §2 数值）',
-  '在 delta* = %s 处：(1) 公理 1 的抛物线顶点 m_peak = hbar*c/(2 pi lP sin^2T) = %s kg = %s MeV；(2) 公理 4 定义域上界 hbar/(2 pi c sin^2T) = %s kg = %s MeV；(3) 来料 §2 宣称的公式 hbar/(2 pi c^2 sin^2T) = %s kg = %s MeV；(4) 来料宣称的数值 1.16e-30 kg = %s MeV。四个值彼此相差最多 %s 倍。附带量纲读数：四个式的量纲依次为 M L^3 T^-2、M L、M T、kg ⇒ 没有一个是质量量纲。'
-  % (mp.nstr(d_star, 4), mp.nstr(M1, 8), mp.nstr(m1_MeV, 8),
-     mp.nstr(M2, 8), mp.nstr(m2_MeV, 8), mp.nstr(M3, 8), mp.nstr(m3_MeV, 8),
-     mp.nstr(m4_MeV, 8), mp.nstr(max(M1, M4) / min(M2, M3), 8)))
+F('M01', 'm_max 有四个互不相等的版本，且其中三个的量纲不是质量',
+  '在 delta* = %s 处：(1) 公理 1 抛物线顶点 hbar*c/(2 pi lP sin^2T)，量纲 %s（焦耳，**不是质量**），字面数值 %s；(2) 公理 4 定义域 hbar/(2 pi c sin^2T)，量纲 %s（kg·m），字面数值 %s；(3) 来料 §2 公式 hbar/(2 pi c^2 sin^2T)，量纲 %s（kg/s），字面数值 %s；(4) 来料 §2 数值 1.16e-30 kg，量纲 M（真质量）= %s MeV/c^2。四个版本的字面数值彼此相差最多 %s 倍。**只有第 4 个是质量**——前三项要得到 MeV 必须人工选定换算口径（当质量读则乘 c^2、当能量读则除 1 MeV），两个口径彼此又差 c^2 = %s 倍。⇒ 「m_max = 652 MeV」这一预言缺一个明确的量纲声明。'
+  % (mp.nstr(d_star, 4), dstr(dim_m1), mp.nstr(M1, 8), dstr(dim_m2), mp.nstr(M2, 8),
+     dstr(dim_m3), mp.nstr(M3, 8), mp.nstr(m4_MeV, 8),
+     mp.nstr(max(M1, M4) / min(M2, M3), 8), mp.nstr(C ** 2, 6)))
 F('M02', '来料 §2 的 m_max 数值与其自称公式差 6.2e22 倍（该行自身带着 ? 号）',
-  '来料写 "m_max ≈ hbar/(2 pi c^2) ≈ 1.16e-30 × c^2/c^2?"（自带疑问号），随后取 "精确数值 m_max ≈ 1.16e-30 kg"、换算 652 MeV。机器：hbar/(2 pi c^2) = %s kg = %s MeV，与 1.16e-30 kg 差 %s 倍。⇒ 652 MeV 不是任何一条公理推出来的数。'
-  % (mp.nstr(M3, 8), mp.nstr(m3_MeV, 8), mp.nstr(M4 / M3, 8)))
+  '来料写「m_max ≈ hbar/(2 pi c^2) ≈ 1.16e-30 × c^2/c^2?」（自带疑问号），随后取「精确数值 m_max ≈ 1.16e-30 kg」、换算 652 MeV。机器：hbar/(2 pi c^2) = %s（量纲 %s），当质量读为 %s MeV/c^2、当能量读为 %s MeV，与 1.16e-30 kg 差 %s 倍。⇒ 652 MeV 不来自任何一条公理。'
+  % (mp.nstr(M3, 8), dstr(dim_m3), mp.nstr(m3_as_mass_MeV, 8), mp.nstr(m3_as_energy_MeV, 8),
+     mp.nstr(M4 / M3, 8)))
 
-tau_ok_axiom1 = MTAU_MeV < m1_MeV
+tau_ok_axiom1_mass = MTAU_MeV < m1_as_mass_MeV
+tau_ok_axiom1_energy = MTAU_MeV < m1_as_energy_MeV
 tau_ok_claim = MTAU_MeV > m4_MeV
-margin = (m1_MeV - MTAU_MeV) / m1_MeV
-guard('G10_two_mmax_calibers_opposite_verdicts', tau_ok_axiom1 and tau_ok_claim,
-      '公理1口径容纳 tau（裕量 %s），来料数值口径排除 tau（超出 %s）'
-      % (mp.nstr(margin, 6), mp.nstr((MTAU_MeV - m4_MeV) / m4_MeV, 6)))
+margin_mass = (m1_as_mass_MeV - MTAU_MeV) / m1_as_mass_MeV
+margin_energy = (m1_as_energy_MeV - MTAU_MeV) / m1_as_energy_MeV
+guard('G10_mmax_calibers_give_opposite_tau_verdicts',
+      tau_ok_axiom1_mass and tau_ok_axiom1_energy and tau_ok_claim,
+      '公理1顶点（当质量读裕量 %s / 当能量读裕量 %s）均容纳 tau，来料 652 MeV 口径排除 tau'
+      % (mp.nstr(margin_mass, 6), mp.nstr(margin_energy, 6)))
 
-F('T01', '两种 m_max 口径对 tau 给出相反的定性结论 ⇒ 「tau 被证伪」是伪结论',
-  '来料用 m_max = 652 MeV 断言 tau (1776.86 MeV) 超出上界、是「重大证伪信号」。机器：按公理 1 自身的抛物线顶点口径 m_peak = %s MeV，tau = %s MeV 落在区间内、裕量仅 %s（很紧但在内）⇒ 同一族公理给出相反判决。凡以「tau 超出」为前提的分支代价评估（分支 1 复合 tau / 分支 2 抬升上界）都建立在这个不自洽的读数上。'
-  % (mp.nstr(m1_MeV, 10), mp.nstr(MTAU_MeV, 10), mp.nstr(margin, 8)))
+F('T01', '两种 m_max 口径对 tau 给出相反的定性结论 ⇒ 「tau 被证伪」不是公理推出来的',
+  '来料用 m_max = 652 MeV 断言 tau (1776.86 MeV) 超出上界、是「重大证伪信号」，并据此开列两条解释分支。机器：按公理 1 自身的抛物线顶点口径（当质量读）m_peak = %s MeV/c^2、裕量 %s；当能量读 m_peak = %s MeV、裕量 %s。两个口径都**极松地容纳** tau，与来料的 652 MeV 口径**结论相反**。⇒ 凡以「tau 超出上界」为前提的分支代价评估（分支 1 复合 tau / 分支 2 抬升上界）都建立在一个缺量纲声明、且与公理 1 口径冲突的读数上；真正需要解释的反而是「为什么公理 1 口径下的上界比来料宣称值大 21 个数量级」。'
+  % (mp.nstr(m1_as_mass_MeV, 8), mp.nstr(margin_mass, 6),
+     mp.nstr(m1_as_energy_MeV, 10), mp.nstr(margin_energy, 6)))
 
 leptons = [('e', ME), ('mu', MMU), ('tau', MTAU)]
 lepton_table = []
@@ -364,19 +384,27 @@ for nm, mm in leptons:
     lepton_table.append({
         'name': nm, 'm_MeV': mp.nstr(kg_to_MeV(mm), 10),
         'kappa_at_delta_star': (mp.nstr(kap, 20) if kap is not None else 'None'),
-        'below_mmax_axiom1': bool(kg_to_MeV(mm) < m1_MeV),
+        'below_mmax_axiom1_mass_caliber': bool(kg_to_MeV(mm) < m1_as_mass_MeV),
+        'below_mmax_axiom1_energy_caliber': bool(kg_to_MeV(mm) < m1_as_energy_MeV),
         'below_mmax_claim_652MeV': bool(kg_to_MeV(mm) < m4_MeV),
     })
 
 READ['M01_M02_T01'] = {
     'delta_star_used': mp.nstr(d_star, 10),
-    'mmax_axiom1_peak_kg': mp.nstr(M1, 20), 'mmax_axiom1_peak_MeV': mp.nstr(m1_MeV, 20),
-    'mmax_axiom4_domain_kg': mp.nstr(M2, 20), 'mmax_axiom4_domain_MeV': mp.nstr(m2_MeV, 20),
-    'mmax_claim_formula_kg': mp.nstr(M3, 20), 'mmax_claim_formula_MeV': mp.nstr(m3_MeV, 20),
+    'mmax_axiom1_peak_raw': mp.nstr(M1, 20), 'mmax_axiom1_dim': dstr(dim_m1),
+    'mmax_axiom1_as_mass_MeV': mp.nstr(m1_as_mass_MeV, 20),
+    'mmax_axiom1_as_energy_MeV': mp.nstr(m1_as_energy_MeV, 20),
+    'mmax_axiom4_domain_raw': mp.nstr(M2, 20), 'mmax_axiom4_dim': dstr(dim_m2),
+    'mmax_claim_formula_raw': mp.nstr(M3, 20), 'mmax_claim_formula_dim': dstr(dim_m3),
+    'mmax_claim_formula_as_mass_MeV': mp.nstr(m3_as_mass_MeV, 20),
+    'mmax_claim_formula_as_energy_MeV': mp.nstr(m3_as_energy_MeV, 20),
     'mmax_claim_number_kg': mp.nstr(M4, 20), 'mmax_claim_number_MeV': mp.nstr(m4_MeV, 20),
     'claim_number_over_claim_formula': mp.nstr(M4 / M3, 20),
-    'tau_MeV': mp.nstr(MTAU_MeV, 20), 'tau_margin_under_axiom1': mp.nstr(margin, 20),
-    'tau_verdict_axiom1_caliber': 'ALLOWED(紧,裕量 %s)' % mp.nstr(margin, 6),
+    'tau_MeV': mp.nstr(MTAU_MeV, 20),
+    'tau_margin_axiom1_mass_caliber': mp.nstr(margin_mass, 20),
+    'tau_margin_axiom1_energy_caliber': mp.nstr(margin_energy, 20),
+    'tau_verdict_axiom1_mass': 'ALLOWED(裕量 %s)' % mp.nstr(margin_mass, 6),
+    'tau_verdict_axiom1_energy': 'ALLOWED(裕量 %s)' % mp.nstr(margin_energy, 6),
     'tau_verdict_claim_caliber': 'EXCLUDED(超 %s)' % mp.nstr((MTAU_MeV - m4_MeV) / m4_MeV, 6),
     'lepton_table': lepton_table,
 }
@@ -447,13 +475,16 @@ F('C02', 'chi^2 在先验区间内近乎常数且单调无极小 ⇒ MAP 不可�
      mp.nstr(chi2_at_star['chi_total'], 12), mp.nstr(delta_fit, 6),
      mp.nstr(delta_fit / PRIOR_HIGH, 6)))
 
-# ---- C01 chi_G 恒等式复读 ----
-rel_G = abs(G_th(d_star) - GEXP) / GEXP
-guard('G13_G_check_is_identity', rel_G < mp.mpf('1e-60'),
-      'G_th 回代 CODATA 的相对残差 = %s（恒等式复读）' % mp.nstr(rel_G, 8))
-Bn('C01', 'chi_G^2 ≡ 0 是恒等式复读，零检验力',
-  'G_th = c^3 l_P^2/(hbar sinT)，而代码里 lP 直接取 CODATA 值 1.616255078e-35（本身由 G = 6.67430e-11 定义）。机器回代相对残差 = %s ⇒ chi_G^2 ≡ %s。用一个由 G 定义的 l_P 去「校验」G，是恒等式重排（同 r41 M1 二阶两难 A / r42 I01 / V4 册 V02-X02）。⇒ chi^2 的三项里有一项恒等于零，有效数据只有 2 个、参数 1 个，而两项残差符号要求相反。'
-  % (mp.nstr(rel_G, 8), mp.nstr(chi2_at_lo['chi_G'], 8)))
+# ---- C01 chi_G 是恒等式复读 ----
+LP_EXACT = mp.sqrt(HBAR * GEXP / C ** 3)          # l_P := sqrt(hbar G / c^3)
+rel_G_codata = abs(G_th(d_star) - GEXP) / GEXP     # 用代码里硬编码的 CODATA l_P
+rel_G_exact = abs(C ** 3 * LP_EXACT ** 2 / (HBAR * sinT(d_star)) - GEXP) / GEXP
+guard('G13_G_check_is_identity_when_lP_exact', rel_G_exact < mp.mpf('1e-40'),
+      '把 l_P 取成 sqrt(hbar G/c^3)（即由 G 定义）后 G_th 回代 CODATA 的相对残差 = %s（机器零）'
+      % mp.nstr(rel_G_exact, 8))
+Bn('C01', 'chi_G 项没有检验力：硬编码 l_P 时只反映输入位数，取定义式时恒为机器零',
+  'G_th = c^3 l_P^2/(hbar sinT)。机器两条读数：(1) 代码里硬编码 l_P = 1.616255078e-35（CODATA 2018 只给 7 位有效数字，此处多写了 3 位）⇒ G_th 回代 CODATA 的相对残差 = %s、chi_G^2 = %s——这个数只反映输入常数的有效位数，不是模型优度；(2) 令 l_P := sqrt(hbar G / c^3)（即由 G 定义）⇒ 相对残差 = %s（机器零）。⇒ 「G_th 完美匹配 CODATA、chi_G^2 ≈ 0」是恒等式复读（同 r41 M1 二阶两难 A / r42 I01 / V4 册 V02-X02）。chi^2 三项里这一项零信息量，剩两项的符号要求又相反（C04）。'
+  % (mp.nstr(rel_G_codata, 8), mp.nstr(chi2_at_lo['chi_G'], 8), mp.nstr(rel_G_exact, 8)))
 
 # ---- C03 chi^2 极小值真实读数 ----
 F('C03', '「chi_e^2 ≈ 0、chi_mu^2 ≈ 0、总 chi^2 ≈ 0」不成立；先验区间内模型对 g-2 的贡献比实验增量小 14 个数量级',
@@ -520,15 +551,20 @@ F('C05', 'a_mu/a_e ≡ (m_mu/m_e)^2 = 42753（V4.2 结论原样复现 ⇒ 梯度
 # ---- C06/C07 来料正文两处自相矛盾 ----
 amu_pred_from_claim = AMU_QED + AMU_TUFT_CLAIM
 amu_pred_stated = mp.mpf('1.16592037e-3')
-amu_self_gap = abs(amu_pred_from_claim - amu_pred_stated) / amu_pred_stated
-guard('G16_mu_rows_inconsistent_by_1000x',
-      abs(mp.log10(amu_pred_from_claim / amu_pred_stated)) > 2.9,
-      'a_QED + 2.27e-6 与所宣称的 a_mu_pred 差 %s 倍' % mp.nstr(amu_pred_from_claim / amu_pred_stated, 8))
-F('C06', 'μ 子段两行自相矛盾：a_QED + 2.27e-6 ≠ 宣称的 1.16592037e-3（差约 1000 倍）',
-  '来料同时写：a_mu^TUFT ≈ +2.27e-6、a_mu,pred = a_mu,QED + a_mu^TUFT = 1.16592037e-3。机器：1.16591810e-3 + 2.27e-6 = %s（= %s MeV/c^2 量级），与宣称值 %s 差 %s 倍（相对偏差 %s）。要让 a_mu,pred = 1.16592037e-3，需要 a_mu^TUFT = +2.27e-9 而不是 2.27e-6 ⇒ 两行相差恰好 1000 倍。来料原文自己给的残差「Delta a_mu ≈ -3e-8」也与这两行都对不上。'
-  % (mp.nstr(amu_pred_from_claim, 12), mp.nstr(amu_pred_from_claim, 8),
-     mp.nstr(amu_pred_stated, 12), mp.nstr(amu_pred_from_claim / amu_pred_stated, 8),
-     mp.nstr(amu_self_gap, 8)))
+amu_implied = amu_pred_stated - AMU_QED            # 由 QED 值与宣称 pred 反解的 TUFT 项
+amu_decl_ratio = AMU_TUFT_CLAIM / amu_implied
+amu_resid_from_claim = amu_pred_from_claim - AMU_EXP
+amu_chi2_from_claim = (amu_resid_from_claim / SIG_AMU) ** 2
+amu_chi2_implied = ((AMU_QED + amu_implied - AMU_EXP) / SIG_AMU) ** 2
+guard('G16_mu_declared_vs_implied_differ_by_1000x',
+      abs(mp.log10(amu_decl_ratio)) > 2.9 and abs(mp.log10(amu_decl_ratio)) < 3.1,
+      '正文声明的 a_mu^TUFT 与其 a_mu,pred 行隐含值差 %s 倍' % mp.nstr(amu_decl_ratio, 8))
+F('C06', 'μ 子段两行相差恰好 1000 倍；按声明的 a_mu^TUFT 算 chi_mu^2 ≈ 32（约 5.7 sigma），不是「落在 sigma 内」',
+  '来料同时写：a_mu^TUFT ≈ +2.27e-6、a_mu,pred = a_mu,QED + a_mu^TUFT = 1.16592037e-3。机器：由后一行反解得 a_mu^TUFT = %s（1.16592037e-3 − 1.16591810e-3），而正文声明的是 %s ⇒ 两行相差 %s 倍（恰好 1000）。若按声明值计算：a_mu,pred = %s，残差 = %s，chi_mu^2 = %s（相对 sigma_mu = 4e-7 约 %s sigma）——不是来料宣称的「落在不确定度内」。若按隐含值 2.27e-9 计算，chi_mu^2 = %s 才勉强可接受，但那与正文写的 2.27e-6 直接冲突。来料自己给的残差「Delta a_mu ≈ -3e-8」与这两行都对不上。'
+  % (mp.nstr(amu_implied, 8), mp.nstr(AMU_TUFT_CLAIM, 8), mp.nstr(amu_decl_ratio, 8),
+     mp.nstr(amu_pred_from_claim, 14), mp.nstr(amu_resid_from_claim, 8),
+     mp.nstr(amu_chi2_from_claim, 8), mp.nstr(mp.sqrt(amu_chi2_from_claim), 6),
+     mp.nstr(amu_chi2_implied, 8)))
 ae_pred_from_claim = AE_QED + AE_TUFT_CLAIM
 ae_resid_claim = ae_pred_from_claim - AE_EXP
 ae_needed = AE_EXP - AE_QED
@@ -552,13 +588,17 @@ READ['C02_C07'] = {
     'chi2_at_delta_fit': {k: mp.nstr(v, 20) for k, v in chi2_at_fit.items()},
     'a_mu_at_delta_fit': mp.nstr(a_mu_at_fit, 20),
     'r42_N02_cross_reproduce_rel_dev': mp.nstr(cross_rel, 12),
-    'rel_resid_G': mp.nstr(rel_G, 12),
+    'rel_resid_G_codata_lP': mp.nstr(rel_G_codata, 12),
+    'rel_resid_G_exact_lP': mp.nstr(rel_G_exact, 12),
     'delta_a_e_exp': mp.nstr(delta_a_e_exp, 20), 'delta_a_mu_exp': mp.nstr(delta_a_mu_exp, 20),
     'sign_rows': sign_rows, 'ratio_rows': rows_ratio,
     'ratio_max_rel_dev': mp.nstr(max_rel, 12),
     'amu_pred_from_claim': mp.nstr(amu_pred_from_claim, 20),
     'amu_pred_stated': mp.nstr(amu_pred_stated, 20),
-    'amu_self_inconsistency_factor': mp.nstr(amu_pred_from_claim / amu_pred_stated, 20),
+    'amu_implied_from_pred_row': mp.nstr(amu_implied, 20),
+    'amu_declared_over_implied': mp.nstr(amu_decl_ratio, 20),
+    'amu_chi2_from_declared': mp.nstr(amu_chi2_from_claim, 20),
+    'amu_chi2_from_implied': mp.nstr(amu_chi2_implied, 20),
     'ae_hand_factor': mp.nstr(ae_hand_factor, 20),
     'ae_pred_from_claim': mp.nstr(ae_pred_from_claim, 20),
     'ae_resid_from_claim': mp.nstr(ae_resid_claim, 20),
@@ -677,11 +717,14 @@ READ['R01'] = {'R1': R1, 'R2': R2, 'R3': R3}
 print('=' * 78)
 
 # ================= F01 本轮自抓 + 汇总落盘 =================
-I('F01', '本轮自抓 3 处（均已修并复跑）',
-  '① 手算量纲两次出错：初稿把公理 1 第一项 [hbar*kappa/c] 算成 M/L，正确是 M（hbar=L^2 M/T、kappa=L^-1、c=L/T ⇒ M）；第二次在推 [kappa] 时把 (d,-d) 约束漏掉，给出与齐次条件不相容的补齐因子。⇒ 本库「量纲类断言必须机器兜底」纪律第 N 次生效，已全部改为枚举 + 断言。'
-  '② D 系列枚举里 dict 引用了尚未定义的 DIM_ME（FULL_DIMS 在赋值前取值），首跑即 NameError；已把 DIM_M 提前并直接用它表示 [m_e]。'
-  '③ C08 的静态扫描里留了一段无意义的 mp.inf 分支（恒 pass 的死代码），已删除；另把 G0-7 的占位断言改成真断言 [kappa]=L^-1。'
-  '附记（方法论）：本册首次把「定义域是否为空」当成可执行判据（G6 + 阳性对照 G18），因为它一次就抓出了整段 chi^2 代码从未产生似然函数——这类判据比逐行核对数值更能暴露「结果从何而来」。')
+I('F01', '本轮自抓 6 处（均已修并复跑，含 1 处口径级误判）',
+  '① **量纲工具自身守卫生效**：初版把 [mu_0] 写成 M L T^-2 Q^-2，守卫 G0-2（eps0*mu0 = 1/c^2）首跑即拦下 ⇒ 改为 M L Q^-2（N/A^2）。'
+  '② 守卫 G0-5 表达式写反（dinv(dmul(G,2)) 与 dinv(G) 比较），改为 dinv(dinv(x)) == x 双向断言。'
+  '③ 枚举循环里 kd = D(a,b,d) 只有三元组，与四元组工具不兼容 ⇒ IndexError，补 Q 分量。'
+  '④ 条目函数签名多了一个 verdict 形参、_jsonable 引用未定义的 Fraction ⇒ NameError，均已修。'
+  '⑤ **口径级误判（本轮最重要）**：初版把公理 1 顶点 m_peak = hbar*c/(2 pi lP) 的字面数值 3.1132e8 当成质量（kg）去乘 c^2，得出 1.746e38 MeV 的荒谬读数；正确读法是该式量纲为 M L^2 T^-2（焦耳），字面数值就是 3.1132e8 J = 1.9431e21 MeV（当能量读）或 ×c^2 后当质量读。守卫 G8b（只有来料宣称的 1.16e-30 kg 是真质量量纲）已把这条口径锁死。'
+  '⑥ 起草阶段我手算 c^4 时误用 c^2 = 8.98755e16，把两套根号内的比值写成 5.27e85，机器给 4.739e102（正确值）⇒ 又一次印证「数值类断言必须机器兜底」。'
+  '方法论新增（本轮最有用的一条判据）：**把「定义域是否为空」当成可执行判据**。它一次就抓出整段 chi^2 代码从未产生似然函数（logL ≡ -inf），比逐行核对数值有效得多；配阳性对照（把 m 缩小 1e-30 倍后定义域确有实解）即可排除「恒真」。')
 
 counts = {}
 for it in ITEMS:
@@ -705,14 +748,14 @@ summary = {
 }
 
 def _jsonable(o):
+    if isinstance(o, bool):
+        return o
+    if isinstance(o, Fr):
+        return str(o)
     if isinstance(o, dict):
         return {str(k): _jsonable(v) for k, v in o.items()}
     if isinstance(o, (list, tuple)):
         return [_jsonable(v) for v in o]
-    if isinstance(o, Fraction):
-        return str(o)
-    if isinstance(o, bool):
-        return o
     return str(o)
 
 with open(OUT_JSON, 'w', encoding='utf-8') as fh:
@@ -751,23 +794,29 @@ lines.append('- 来料 delta* = %s 处 chi^2 = %s，是下界处的 %s 倍'
 lines.append('')
 lines.append('## 三、m_max 四方对照（delta = delta*）')
 lines.append('')
-lines.append('| 口径 | 公式 | kg | MeV/c^2 |')
-lines.append('|---|---|---|---|')
-lines.append('| 公理 1 抛物线顶点 | hbar*c/(2 pi lP sin^2T) | %s | %s |' % (mp.nstr(M1, 8), mp.nstr(m1_MeV, 8)))
-lines.append('| 公理 4 定义域 | hbar/(2 pi c sin^2T) | %s | %s |' % (mp.nstr(M2, 8), mp.nstr(m2_MeV, 8)))
-lines.append('| 来料 §2 公式 | hbar/(2 pi c^2 sin^2T) | %s | %s |' % (mp.nstr(M3, 8), mp.nstr(m3_MeV, 8)))
-lines.append('| 来料 §2 数值 | （自称 1.16e-30） | %s | %s |' % (mp.nstr(M4, 8), mp.nstr(m4_MeV, 8)))
+lines.append('| 口径 | 公式 | 量纲 | 字面数值 | 当质量读 (MeV/c^2) | 当能量读 (MeV) |')
+lines.append('|---|---|---|---|---|---|')
+lines.append('| 公理 1 抛物线顶点 | hbar*c/(2 pi lP sin^2T) | %s | %s | %s | %s |'
+             % (dstr(dim_m1), mp.nstr(M1, 6), mp.nstr(m1_as_mass_MeV, 6), mp.nstr(m1_as_energy_MeV, 6)))
+lines.append('| 公理 4 定义域 | hbar/(2 pi c sin^2T) | %s | %s | — | — |' % (dstr(dim_m2), mp.nstr(M2, 6)))
+lines.append('| 来料 §2 公式 | hbar/(2 pi c^2 sin^2T) | %s | %s | %s | %s |'
+             % (dstr(dim_m3), mp.nstr(M3, 6), mp.nstr(m3_as_mass_MeV, 6), mp.nstr(m3_as_energy_MeV, 6)))
+lines.append('| 来料 §2 数值 | 自称 1.16e-30 kg | M（真质量） | %s | %s | %s |'
+             % (mp.nstr(M4, 6), mp.nstr(m4_MeV, 6), mp.nstr(m4_MeV, 6)))
 lines.append('')
-lines.append('- tau = %s MeV/c^2：公理 1 口径 **落在区间内**（裕量 %s）；来料 652 MeV 口径 **被排除**。'
-             % (mp.nstr(MTAU_MeV, 8), mp.nstr(margin, 6)))
+lines.append('- tau = %s MeV/c^2：公理 1 顶点当质量读 **容纳**（裕量 %s）；同一数值当能量读也 **容纳**（裕量 %s）；来料 652 MeV 口径 **排除**。'
+             % (mp.nstr(MTAU_MeV, 8), mp.nstr(margin_mass, 6), mp.nstr(margin_energy, 6)))
+lines.append('- 来料数值 / 其自称公式 = %s 倍。' % mp.nstr(M4 / M3, 6))
 lines.append('')
 lines.append('## 四、轻子表')
 lines.append('')
-lines.append('| 粒子 | m (MeV/c^2) | kappa(delta*) | 低于公理1口径上界 | 低于来料 652 MeV |')
-lines.append('|---|---|---|---|---|')
+lines.append('| 粒子 | m (MeV/c^2) | kappa(delta*) | 低于公理1(质量读) | 低于公理1(能量读) | 低于来料 652 MeV |')
+lines.append('|---|---|---|---|---|---|')
 for r in lepton_table:
-    lines.append('| %s | %s | %s | %s | %s |' % (r['name'], r['m_MeV'], r['kappa_at_delta_star'],
-                                                 r['below_mmax_axiom1'], r['below_mmax_claim_652MeV']))
+    lines.append('| %s | %s | %s | %s | %s | %s |'
+                 % (r['name'], r['m_MeV'], r['kappa_at_delta_star'],
+                    r['below_mmax_axiom1_mass_caliber'], r['below_mmax_axiom1_energy_caliber'],
+                    r['below_mmax_claim_652MeV']))
 lines.append('')
 lines.append('## 五、守卫表')
 lines.append('')
@@ -792,15 +841,22 @@ for it in ITEMS:
     rep.append('[%s] %s %s' % (it['verdict'], it['id'], it['title']))
 rep.append('')
 rep.append('key numbers:')
-rep.append('  mmax_axiom1_MeV   = %s' % mp.nstr(m1_MeV, 20))
-rep.append('  mmax_claim_MeV    = %s' % mp.nstr(m4_MeV, 20))
-rep.append('  tau_MeV           = %s' % mp.nstr(MTAU_MeV, 20))
-rep.append('  K_incoming_me     = %s' % mp.nstr(K_e, 20))
-rep.append('  root_inner_ratio  = %s' % mp.nstr(ratio_root, 20))
-rep.append('  chi2_min          = %s at delta=%s' % (mp.nstr(chi2_at_lo['chi_total'], 20), mp.nstr(delta_argmin, 12)))
-rep.append('  monotone_ratio    = %s' % mp.nstr(mono_ratio, 12))
-rep.append('  ratio_max_rel_dev = %s' % mp.nstr(max_rel, 12))
-rep.append('  guards            = %d/%d' % (n_guard_pass, n_guards))
+rep.append('  mmax_axiom1_raw      = %s   (dim %s)' % (mp.nstr(M1, 20), dstr(dim_m1)))
+rep.append('  mmax_axiom1_mass_MeV = %s' % mp.nstr(m1_as_mass_MeV, 20))
+rep.append('  mmax_axiom1_energy_MeV = %s' % mp.nstr(m1_as_energy_MeV, 20))
+rep.append('  mmax_claim_MeV      = %s' % mp.nstr(m4_MeV, 20))
+rep.append('  tau_MeV             = %s' % mp.nstr(MTAU_MeV, 20))
+rep.append('  tau_margin_mass_cal = %s' % mp.nstr(margin_mass, 20))
+rep.append('  tau_margin_energy_cal = %s' % mp.nstr(margin_energy, 20))
+rep.append('  K_incoming_me       = %s' % mp.nstr(K_e, 20))
+rep.append('  root_inner_ratio    = %s' % mp.nstr(ratio_root, 20))
+rep.append('  chi2_min            = %s at delta=%s' % (mp.nstr(chi2_at_lo['chi_total'], 20), mp.nstr(delta_argmin, 12)))
+rep.append('  chi2_rel_spread     = %s' % mp.nstr(rel_spread, 12))
+rep.append('  delta_fit           = %s (chi2=%s)' % (mp.nstr(delta_fit, 20), mp.nstr(chi2_at_fit['chi_total'], 20)))
+rep.append('  a_mu_at_delta_fit   = %s (r42 N02 交叉复现)' % mp.nstr(a_mu_at_fit, 20))
+rep.append('  monotone_ratio      = %s' % mp.nstr(mono_ratio, 12))
+rep.append('  ratio_max_rel_dev   = %s' % mp.nstr(max_rel, 12))
+rep.append('  guards              = %d/%d' % (n_guard_pass, n_guards))
 with open(OUT_TXT, 'w', encoding='utf-8') as fh:
     fh.write('\n'.join(rep) + '\n')
 

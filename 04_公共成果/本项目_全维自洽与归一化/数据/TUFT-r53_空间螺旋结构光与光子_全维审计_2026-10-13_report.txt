@@ -1,0 +1,81 @@
+TUFT-r53_空间螺旋结构光与光子_全维审计_2026-10-13 报告
+============================================================
+B01  PASS       度规 ds^2 = -c^2dt^2 + drho^2 + rho^2dchi^2 + 2 beta rho^2 dchi dzeta + (1+beta^2rho^2)dzeta^2 由 phi=chi+beta*zeta 导出正确
+B02  BOUNDARY   det(g) = -c^2 rho^2 成立（机器）
+B03  PASS       来料 §1.4 的逆度规 g^{chi chi}=(1+beta^2rho^2)/rho^2、g^{chi zeta}=-beta、g^{zeta zeta}=1 正确
+B04  FAIL       【核心·结构性】螺旋度规是**平直**的：Riemann 张量全零 —— 「螺旋空间」不是弯曲空间，而是平直空间的一个局部坐标选择
+B05  BOUNDARY   边界：phi = chi + beta*zeta 的 shear 变换只在**局部**成立 —— chi 不是平直空间的全局坐标
+B06  INFO       登记：来料 §1.3 用「det(g) 与平直柱坐标相同 ⇒ 体积元不变」作为"关键性质"是**弱判据**
+C01  PASS       守恒量方程组与来料的解 zeta_dot = P - beta*ell、chi_dot = ell(1+beta^2rho^2)/rho^2 - beta*P 正确
+C02  PASS       类光条件 E^2/c^2 = rho_dot^2 + ell^2/rho^2 + (P-beta*ell)^2 为等价改写（机器）
+C03  PASS       情形 A（rho=0, ell=0）与情形 B（ell=0）的结论「实验室系走直线」与 r51 空间光速螺旋 N19 同向
+C04  FAIL       【核心·结构性】情形 C（ell != 0 且 rho_dot = 0 的"圆柱螺旋轨道"）**不是测地线**，与来料附录 A 自给的测地线方程直接矛盾
+C05  PASS       机器反证：由同一组 (E, ell, P) 出发的真实零测地线是**直线**，rho 立刻偏离常数（不是情形 C 的螺旋）
+C06  PASS       情形 D（ell = 0, P = 0, rho_dot != 0）合法：纯径向直线，且与测地线方程相容
+C07  PASS       情形 E（ell != 0、rho_dot != 0）的散射解与最近距离 rho_min = |ell|/sqrt(E^2/c^2 - (P-beta ell)^2) 正确
+C08  INFO       登记：来料已在情形 E 自行指出「对于 V_eff = ell^2/rho^2 + const，径向运动不是振荡的，而是散射型的」
+D01  PASS       来料 §4.1 展开式 E^2 = c^2P^2 - 2c^2 beta ell P + c^2 ell^2(beta^2+1/rho^2) 与零条件代数等价
+D02  FAIL       【核心】「螺旋几何可以为无质量粒子生成有效质量」是**坐标伪影**：beta=0（无扭转平直柱坐标）时 m_eff^2c^4 = c^2ell^2/rho^2 != 0
+D03  FAIL       来料 §4.3 情形 2 的「临界束缚态 P = beta ell」无物理对应：其前提（rho_dot=0 的圆周轨道）非测地线（见 C04），且 m_eff^2 无符号保证
+D04  BOUNDARY   边界：来料 §4.1 把三项分别解释为「自旋-轨道耦合 / 角向动能 / 螺旋附加能」属**类比**，无本构依据
+E01  FAIL       来料 §5.1 的协变 Maxwell 写法指标冲突（rho 既作坐标又作度规脚标），且与正确形式不等价
+E02  FAIL       【核心·定位根因】来料 §5.3 在 nu=chi 分量中**漏掉 (alpha,beta)=(chi,zeta) 交叉项** g^{zeta chi}g^{chi zeta}F_{chi zeta} = -beta^2 F_{zeta chi}
+E03  FAIL       【核心】来料 §5.2/§5.3 假定的"单分量模式" A_chi(zeta,t)（或 A_rho(zeta,t)）**不是 Maxwell 方程的解**：无论取 omega=ck 还是来料的 omega=ck/sqrt(1+beta^2rho^2) 都有 O(1) 残差
+E04  FAIL       【核心】来料 §5.3 的色散 omega = c k / sqrt(1+beta^2rho^2) 与**同一度规的零条件**直接矛盾：模式 k_mu=(-omega,0,0,k) 的零条件是 omega = c k
+E05  PASS       【核心·正解】真平直空间平面波在螺旋坐标下满足 Maxwell 且以 omega = c k 传播；两个独立偏振**同速** ⟹ 真空无螺旋双折射、无真空旋光性
+E06  CORRECTED  更正来料 §5.2：其**结论**（径向偏振沿轴波 omega=ck、不受螺旋结构影响）与正解一致，但推导方法与 §5.3 同病（单分量 ansatz 不是 Maxwell 解，见 E03）
+F01  PASS       量纲审计：字典 (E, ell, P) = hbar*(omega, m, k) 量纲闭合，但它把类光仿射参数**固定**为 [lambda] = T/M（约定，非推导）
+F02  PASS       来料 §6.1 的量子化色散 omega^2 = c^2k^2 - 2c^2 beta m k + c^2m^2(beta^2+1/rho^2) 与其经典式代数一致
+F03  FAIL       来料 §6.2 手征质量分裂 m_eff^(+) != m_eff^(-) 作废：分裂来源是被否证的伪项，且未声明有效域
+F04  FAIL       来料 §6.4 截止频率 omega_min = c|m|/rho 作废（数学上确为所给色散的最小 omega，但该色散已被否证）
+F05  BOUNDARY   边界：来料 §6.3 的群速度式 v_g = c^2(k - beta m)/omega 是所给色散的直接推论（机器对拍残差机器零），但其"物理载体"解释作废
+G01  PASS       来料 §7.1 的两条曲率路径一致：kappa = c^2ell^2/(E^2rho0^3)（能量-角动量式）与 kappa = rho0/(rho0^2+H^2)（H=v_z/omega_orb 的标准圆柱螺旋式）
+G02  PASS       来料 §7.2 的 Omega_Frenet = c/sqrt(rho0^2+(v_z/omega_orb)^2) = c/L 与 r51 的 Darboux 矢量等式同源，且在情形 C 前提下与轨道角速度一致
+G03  BOUNDARY   边界：来料 §7.3 对照表把"Omega（轨道角速度）"填为 omega_orb = c^2ell/(E rho0^2)，与 r51 的 Omega = c/L 是**同名异义**，二者仅在情形 C 前提（rho_dot=0）下数值相等
+G04  FAIL       来料 §8.1 的两处数值断言与来料自己的公式不自洽（偏差 3.19e7 与 3.19e11）
+G05  FAIL       来料 §8.5 的 CMB 约束 beta*rho < 1.5e-16 与其自己给的 theta_rot ~ 1e28 beta^2rho^2 < 6e-3 不自洽（差 5.16 倍）
+G06  FAIL       来料 §8.3 把 §5.3 的**相速度**结论当成轴向速度/群速度使用（v_z = c(1-beta^2rho^2/2)），概念与量纲层均不成立
+G07  FAIL       来料 §8.4 的"自洽条件 rho > 3e11 m"归因更正：根因不是"需要屏蔽机制"，而是 m_eff 本身是坐标伪影（D02）
+G08  INFO       登记：来料 §8.5 的定性方向（若存在偏振旋转则 CMB 产生 TB/EB 关联）是正确的教科书方向，但本册否证了其前提（无真空旋光性）
+G09  FAIL       来料 §9 综合结论表中 C / C4 / C5 行与末两行（方位角偏振 <c、真空色散）随 C04/E02/E05 一并作废；A / B / D / E 行与 r51 空间光速螺旋 N19 同向
+G10  BOUNDARY   边界（口径冲突候选，不代裁定）：来料 §10.2「光子可以具有有效质量，来源于角动量与螺旋几何的耦合」与库内主线 m = hbar*omega/c^2 的口径不同源
+G11  BOUNDARY   边界：来料 §B1/§B2 自评「Planck/TeV 尺度下 beta*rho ~ 1，微扰论不适用」与 §8.3/§8.4 全篇使用的 beta*rho << 1 展开在同一篇内并存，适用域未声明
+H01  INFO       回链 r51《圆柱螺旋几何恒等式求导固化》：来料第一部分（kappa/tau/omega/Omega）已由该册 S01..S20 固化，本册不重算
+H02  INFO       回链 r51《空间光速螺旋·四维类光层与可实现性》：N17/N18/N19 与本册 B04/C04/E05 结论同向，本册给出更上游的根因（度规平直）
+H03  INFO       回链 r52《光 / 光子 / 空间光速螺旋 三分法·概念裁定》：本册引用其「螺旋度 h=+/-1 与空间螺旋轨迹可分」结论，不重复概念层论证
+H04  INFO       回链 r40《光速螺旋曲率挠率量子几何》与 S02《空间光速螺旋全维求导验证》：本册为其提供 tau/kappa = cot(theta) 的几何层出处（r51 S10）与"平直度规"的上游限制
+H05  INFO       登记：本册不代判定库内其它册对"空间光速螺旋"的物理推广；r51 空间光速螺旋 N22 已登记的"候选冲突点"扫描结果依然有效
+I01  INFO       本册自检汇总：量纲工具 G0-1..G0-8、几何核 G1-1..G1-3、复步微分 G2-1、Riemann 阳性对照 G3-1、测地线 G4-1/G4-2、Maxwell G5-1/G5-2、量纲字典 G6-1、收敛与合同 G7-1..G7-4
+I02  INFO       治理：未跑 refresh_catalog（并发会话下整体重生成会回退他人更大的 material_catalog.md，属破坏性，待用户批准）；未改 verify.py；未做 git 操作；他人 r42–r52 产物逐字节未触碰
+
+GUARD G0-1 量纲相乘=指数相加                           OK
+GUARD G0-2 量纲幂                                 OK
+GUARD G0-3 速度量纲                                OK
+GUARD G0-4 hbar 量纲                             OK
+GUARD G0-5 能量/动量/速度三者相消                        OK
+GUARD G0-6 角动量=hbar                            OK
+GUARD G0-7 sin^2+cos^2=1                       OK
+GUARD G0-8 Decimal 折叠角正确                       OK
+GUARD G1-1 度规可逆                                OK
+GUARD G1-2 数值逆=解析逆                             OK
+GUARD G1-3 解析逆度规与数值逆一致                         OK
+GUARD G2-1 复步微分与四阶中心差分对拍（实值函数）                 OK
+GUARD G2-2 复值函数的导数精度（四阶差分）                     OK
+GUARD G3-1 Riemann 检验器阳性对照                     OK
+GUARD G4-1 直线性判据阳性对照                           OK
+GUARD G4-2 平直空间零测地线是直线                         OK
+GUARD G5-1 Maxwell 检验器阳性对照                     OK
+GUARD G5-2 真平面波残差为机器零                          OK
+GUARD G6-1 量子化字典量纲闭合                           OK
+GUARD G7-1 差分步长收敛（Riemann）                     OK
+GUARD G7-2 平直度规 Riemann 与步长无关                  OK
+GUARD G7-3 合同：条目全部分类                           OK
+GUARD G7-4 guard 数 = 声明数                       OK
+
+PASS = 14
+FAIL = 15
+BOUNDARY = 7
+INFO = 10
+CORRECTED = 1
+MISMATCH = 0
+GUARD = 23 / 23
