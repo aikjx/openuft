@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四力统一方程 · 力-距离全览图谱</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f5f6f8;color:#1f2937;line-height:1.6;padding:20px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  header{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;border-radius:14px;padding:22px 28px;margin-bottom:16px;}
+  header h1{font-size:22px;}
+  header .eq{font-family:Consolas,"Courier New",monospace;font-size:16px;color:#fde68a;margin-top:10px;}
+  header .sub{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  .chartbox{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  #chart{width:100%;height:560px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{border:1px solid #e5e7eb;padding:6px 10px;text-align:left;}
+  th{background:#f1f5f9;}
+  .note{font-size:12.5px;color:#64748b;margin-top:10px;}
+  .badge{display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;}
+  .b-g{background:#fee2e2;color:#b91c1c;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>四力统一方程 · 力-距离全览图谱（log-log）</h1>
+  <div class="eq">F(r) = s·ℏc·Q₁Q₂·(1/r² + 1/(rλ))·e^(−r/λ)·r̂ ，  λ = ℏ/(m_c·c)</div>
+  <div class="sub">S02 空间光速螺旋统一力 · §18 · 数据来源：§18_verify.py 实跑（质子对；α=1/137.036，α_w=1/29，g²/4π=14.3，σ=0.18 GeV/fm）</div>
+</header>
+
+<div class="chartbox">
+  <div id="chart"></div>
+  <p class="note">纵轴为力的大小 |F|（N，对数），横轴为距离 r（m，对数）。引力/电磁（λ=∞）为斜率 −2 的直线（长程 1/r²）；弱力在 λ_W≈2.5×10⁻¹⁸ m、剩余强力在 λ_π≈1.5×10⁻¹⁵ m 处指数截断（虚线标出力程）；色禁闭为常数力 σ≈2.9×10⁴ N（示意，弦断裂处终止）。</p>
+</div>
+
+<div class="chartbox">
+  <h3 style="font-size:16px;margin-bottom:10px;">关键数值表（§18_verify.py 输出）</h3>
+  <table>
+    <tr><th>校验项</th><th>结果</th><th>判定</th></tr>
+    <tr><td>统一方程 λ→∞ 退化牛顿</td><td>相对偏差 1.3×10⁻¹⁶</td><td>✅</td></tr>
+    <tr><td>统一方程 λ→∞ 退化库仑</td><td>相对偏差 0</td><td>✅</td></tr>
+    <tr><td>弱力力程 λ_W</td><td>2.455×10⁻¹⁸ m</td><td>✅ 与 PDG 一致</td></tr>
+    <tr><td>剩余强力程 λ_π</td><td>1.462×10⁻¹⁵ m</td><td>✅ 与 PDG 一致</td></tr>
+    <tr><td>电磁/引力强度比（质子对）</td><td>1.236×10³⁶</td><td>✅</td></tr>
+    <tr><td>r=1 fm 库仑力（质子对）</td><td>2.31×10² N</td><td>✅</td></tr>
+    <tr><td>禁闭常数力 σ</td><td>2.88×10⁴ N（0.2–1.2 fm）</td><td>⚠ 示意（不满足齐次 Proca）</td></tr>
+  </table>
+  <p class="note">口径：曲线均为两质子对（Z₁Z₂=1，m₁m₂=m_p²）；弱/强曲线为 Yukawa 交换势梯度 |F|，未含核子结构因子；禁闭段为常数力示意。</p>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"
+        onerror="document.getElementById('chart').innerHTML='<p style=\'padding:24px\'>ECharts 加载失败（离线环境），请参照上方关键数值表。</p>';"></script>
+<script>
+var R=[1e-18,1.58489e-18,2.51189e-18,3.98107e-18,6.30957e-18,1e-17,1.58489e-17,2.51189e-17,3.98107e-17,6.30957e-17,1e-16,1.58489e-16,2.51189e-16,3.98107e-16,6.30957e-16,1e-15,1.58489e-15,2.51189e-15,3.98107e-15,6.30957e-15,1e-14,1.58489e-14,2.51189e-14,3.98107e-14,6.30957e-14,1e-13,1.58489e-13,2.51189e-13,3.98107e-13,6.30957e-13,1e-12,1.58489e-12,2.51189e-12,3.98107e-12,6.30957e-12,1e-11,1.58489e-11,2.51189e-11,3.98107e-11,6.30957e-11,1e-10,1.58489e-10,2.51189e-10,3.98107e-10,6.30957e-10,1e-09,1.58489e-09,2.51189e-09,3.98107e-09,6.30957e-09,1e-08,1.58489e-08,2.51189e-08,3.98107e-08,6.30957e-08,1e-07,1.58489e-07,2.51189e-07,3.98107e-07,6.30957e-07,1e-06,1.58489e-06,2.51189e-06,3.98107e-06,6.30957e-06,1e-05,1.58489e-05,2.51189e-05,3.98107e-05,6.30957e-05,0.0001,0.000158489,0.000251189,0.000398107,0.000630957,0.001,0.00158489,0.00251189,0.00398107,0.00630957,0.01,0.0158489,0.0251189,0.0398107,0.0630957,0.1,0.158489,0.251189,0.398107,0.630957,1,1.58489,2.51189,3.98107,6.30957,10,15.8489,25.1189,39.8107,63.0957,100,158.489,251.189,398.107,630.957,1000,1584.89,2511.89,3981.07,6309.57,10000,15848.9,25118.9,39810.7,63095.7,100000,158489,251189,398107,630957,1e+06];
+var F_EM=[2.30708e+08,9.18464e+07,3.65647e+07,1.45567e+07,5.79512e+06,2.30708e+06,918464,365647,145567,57951.2,23070.8,9184.64,3656.47,1455.67,579.512,230.708,91.8464,36.5647,14.5567,5.79512,2.30708,0.918464,0.365647,0.145567,0.0579512,0.0230708,0.00918464,0.00365647,0.00145567,0.000579512,0.000230708,9.18464e-05,3.65647e-05,1.45567e-05,5.79512e-06,2.30708e-06,9.18464e-07,3.65647e-07,1.45567e-07,5.79512e-08,2.30708e-08,9.18464e-09,3.65647e-09,1.45567e-09,5.79512e-10,2.30708e-10,9.18464e-11,3.65647e-11,1.45567e-11,5.79512e-12,2.30708e-12,9.18464e-13,3.65647e-13,1.45567e-13,5.79512e-14,2.30708e-14,9.18464e-15,3.65647e-15,1.45567e-15,5.79512e-16,2.30708e-16,9.18464e-17,3.65647e-17,1.45567e-17,5.79512e-18,2.30708e-18,9.18464e-19,3.65647e-19,1.45567e-19,5.79512e-20,2.30708e-20,9.18464e-21,3.65647e-21,1.45567e-21,5.79512e-22,2.30708e-22,9.18464e-23,3.65647e-23,1.45567e-23,5.79512e-24,2.30708e-24,9.18464e-25,3.65647e-25,1.45567e-25,5.79512e-26,2.30708e-26,9.18464e-27,3.65647e-27,1.45567e-27,5.79512e-28,2.30708e-28,9.18464e-29,3.65647e-29,1.45567e-29,5.79512e-30,2.30708e-30,9.18464e-31,3.65647e-31,1.45567e-31,5.79512e-32,2.30708e-32,9.18464e-33,3.65647e-33,1.45567e-33,5.79512e-34,2.30708e-34,9.18464e-35,3.65647e-35,1.45567e-35,5.79512e-36,2.30708e-36,9.18464e-37,3.65647e-37,1.45567e-37,5.79512e-38,2.30708e-38,9.18464e-39,3.65647e-39,1.45567e-39,5.79512e-40,2.30708e-40];
+var F_G=[1.86724e-28,7.43364e-29,2.95938e-29,1.17815e-29,4.69031e-30,1.86724e-30,7.43364e-31,2.95938e-31,1.17815e-31,4.69031e-32,1.86724e-32,7.43364e-33,2.95938e-33,1.17815e-33,4.69031e-34,1.86724e-34,7.43364e-35,2.95938e-35,1.17815e-35,4.69031e-36,1.86724e-36,7.43364e-37,2.95938e-37,1.17815e-37,4.69031e-38,1.86724e-38,7.43364e-39,2.95938e-39,1.17815e-39,4.69031e-40,1.86724e-40,7.43364e-41,2.95938e-41,1.17815e-41,4.69031e-42,1.86724e-42,7.43364e-43,2.95938e-43,1.17815e-43,4.69031e-44,1.86724e-44,7.43364e-45,2.95938e-45,1.17815e-45,4.69031e-46,1.86724e-46,7.43364e-47,2.95938e-47,1.17815e-47,4.69031e-48,1.86724e-48,7.43364e-49,2.95938e-49,1.17815e-49,4.69031e-50,1.86724e-50,7.43364e-51,2.95938e-51,1.17815e-51,4.69031e-52,1.86724e-52,7.43364e-53,2.95938e-53,1.17815e-53,4.69031e-54,1.86724e-54,7.43364e-55,2.95938e-55,1.17815e-55,4.69031e-56,1.86724e-56,7.43364e-57,2.95938e-57,1.17815e-57,4.69031e-58,1.86724e-58,7.43364e-59,2.95938e-59,1.17815e-59,4.69031e-60,1.86724e-60,7.43364e-61,2.95938e-61,1.17815e-61,4.69031e-62,1.86724e-62,7.43364e-63,2.95938e-63,1.17815e-63,4.69031e-64,1.86724e-64,7.43364e-65,2.95938e-65,1.17815e-65,4.69031e-66,1.86724e-66,7.43364e-67,2.95938e-67,1.17815e-67,4.69031e-68,1.86724e-68,7.43364e-69,2.95938e-69,1.17815e-69,4.69031e-70,1.86724e-70,7.43364e-71,2.95938e-71,1.17815e-71,4.69031e-72,1.86724e-72,7.43364e-73,2.95938e-73,1.17815e-73,4.69031e-74,1.86724e-74,7.43364e-75,2.95938e-75,1.17815e-75,4.69031e-76,1.86724e-76];
+var F_W=[1.02094e+09,3.74505e+08,1.2566e+08,3.56332e+07,7.48321e+06,941722,50879.5,699.519,1.07534,5.05137e-05,9.32444e-12,2.63021e-22,6.61596e-39,4.28184e-65,1.75138e-106,5.82558e-172,1.28e-275,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
+var F_S=[4.52098e+11,1.79983e+11,7.16527e+10,2.85254e+10,1.13561e+10,4.52088e+09,1.79973e+09,7.16423e+08,2.85151e+08,1.13459e+08,4.51088e+07,1.78999e+07,7.07088e+06,2.76416e+06,1.05588e+06,384161,126862,34939,6974.17,806.183,37.9207,0.417255,0.000449618,1.20074e-08,9.04654e-16,6.16217e-27,1.62956e-44,2.96845e-72,4.23348e-116,1.79309e-185,2.64356e-295,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
+var F_CONF=[null,null,null,null,null,null,null,null,null,null,null,null,28839.2,28839.2,28839.2,28839.2,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
+(function(){
+  var el = document.getElementById('chart');
+  if(!el || typeof echarts === 'undefined'){ return; }
+  var chart = echarts.init(el);
+  var option = {
+    tooltip: {
+      trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true,
+      formatter: function(params){
+        if(!params || !params.length){ return ''; }
+        var r = R[params[0].dataIndex];
+        var s = 'r = ' + Number(r).toExponential(2) + ' m';
+        for(var i=0;i<params.length;i++){
+          var p = params[i];
+          if(p.value == null || !isFinite(p.value)){ continue; }
+          s += String.fromCharCode(10) + p.marker + p.seriesName + '：' + Number(p.value).toExponential(2) + ' N';
+        }
+        return s;
+      }
+    },
+    legend: { top: 4, type: 'scroll', data: ['电磁(质子对)','引力(质子对)','弱核力(W交换)','强·剩余核力(π交换)','强·色禁闭σ(示意)'] },
+    grid: { left: 90, right: 30, top: 46, bottom: 66 },
+    xAxis: {
+      type: 'log', name: '距离 r (m)', nameLocation: 'middle', nameGap: 46,
+      min: 1e-18, max: 1e6,
+      axisLabel: { formatter: function(v){ return Number(v).toExponential(0); } }
+    },
+    yAxis: {
+      type: 'log', name: '力 |F| (N)', nameLocation: 'middle', nameGap: 60,
+      min: 1e-80, max: 1e12,
+      axisLabel: { formatter: function(v){ return Number(v).toExponential(0); } }
+    },
+    series: [
+      {
+        name: '电磁(质子对)', type: 'line', data: F_EM, showSymbol: false, lineStyle: { width: 2 },
+        markLine: {
+          symbol: 'none', silent: true,
+          label: { fontSize: 11, position: 'insideEndTop' },
+          data: [
+            { xAxis: 2.455e-18, label: { formatter: 'λ_W' } },
+            { xAxis: 1.462e-15, label: { formatter: 'λ_π' } }
+          ]
+        }
+      },
+      { name: '引力(质子对)', type: 'line', data: F_G, showSymbol: false, lineStyle: { width: 2 } },
+      { name: '弱核力(W交换)', type: 'line', data: F_W, showSymbol: false, lineStyle: { width: 2 } },
+      { name: '强·剩余核力(π交换)', type: 'line', data: F_S, showSymbol: false, lineStyle: { width: 2 } },
+      { name: '强·色禁闭σ(示意)', type: 'line', data: F_CONF, showSymbol: false, lineStyle: { width: 2, type: 'dashed' } }
+    ]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
+</script>
+</body>
+</html>
