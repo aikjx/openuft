@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§25 Weinberg角账目闭合：全修正链与GUT阈值带</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #fff; }
+  #chart { width: 986px; height: 420px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+<script>
+(function(){
+  var el = document.getElementById('chart');
+  if (!el || typeof echarts === 'undefined') { return; }
+  var chart = echarts.init(el);
+  var option = {
+    title: { text: 'sin²θ_W(m_Z) 账目闭合：全修正链 0.2318，GUT 阈值带 [0.2298, 0.2318] 包围实验', left: 'center', top: 6, textStyle: { fontSize: 15 } },
+    tooltip: {
+      trigger: 'axis',
+      triggerOn: 'mousemove|click',
+      renderMode: 'richText',
+      confine: true,
+      formatter: function(params){
+        if (!params || !params.length) { return ''; }
+        var p = params[0];
+        var txt = p.name.split('\n')[0] + '  sin²θ_W = ' + Number(p.value).toFixed(4);
+        if (p.name.indexOf('全修正链') >= 0) { txt += String.fromCharCode(10) + 'GUT 阈值带: [0.2298, 0.2318]  (M_Hc ∈ [0.03, 1]×M_GUT)'; }
+        return txt;
+      }
+    },
+    grid: { left: 75, right: 30, top: 72, bottom: 62, containLabel: true },
+    xAxis: {
+      type: 'category',
+      data: ['一循环\n(§24 锚点 0.2289)', '两循环规范\n(§24 0.2319)', '全修正链\n(§25 tanβ=5)', '实验\n(PDG 0.23122)'],
+      axisLabel: { interval: 0, fontSize: 11, lineHeight: 15 },
+      axisTick: { alignWithLabel: true }
+    },
+    yAxis: { type: 'value', name: 'sin²θ_W(m_Z)', min: 0.226, max: 0.234, axisLabel: { fontSize: 11 }, nameTextStyle: { fontSize: 11 } },
+    series: [{
+      name: 'sin²θ_W',
+      type: 'bar',
+      barWidth: 90,
+      data: [0.2289, 0.2319, 0.2318, 0.23122],
+      label: { show: true, position: 'top', fontSize: 11, formatter: function(p){ return Number(p.value).toFixed(4); } },
+      markLine: {
+        symbol: 'none', silent: true,
+        lineStyle: { type: 'dashed' },
+        label: { fontSize: 11, formatter: '实验 0.23122', position: 'insideEndTop' },
+        data: [{ yAxis: 0.23122 }]
+      },
+      markArea: {
+        silent: true,
+        itemStyle: { opacity: 0.12 },
+        label: { fontSize: 11, position: 'insideTop', formatter: 'GUT 阈值带 [0.2298, 0.2318]' },
+        data: [[{ yAxis: 0.2298 }, { yAxis: 0.2318 }]]
+      }
+    }]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){ if (chart) { chart.resize(); } });
+})();
+</script>
+</body>
+</html>
