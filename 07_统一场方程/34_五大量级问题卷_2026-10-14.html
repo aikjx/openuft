@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>34 · 五大量级问题卷：未解难题的量化审计</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%234ADE80'%3E34%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#0a3b1e);border:1px solid #166534;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#14532d;color:#bbf7d0;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--green);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#bbf7d0;margin-bottom:20px;}
+  .preview b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--green);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#86efac;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--green);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--green);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .chk{background:#0a1c12;border:1px solid #166534;border-left:4px solid var(--green);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#bbf7d0;}
+  .chk .mlab{color:var(--green);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 36 · openuft 统一场方程 34（零虚构）</span>
+  <h1>五大量级问题卷：未解难题的量化审计</h1>
+  <p>把物理最热门的未解难题变成一行可复算的量级差：每个难题=一个未解释的 10ⁿ。本卷给出每个 n 的 250 位现算、开放内核与候选路径。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算（34_orders_calc_results.json）</b>：层次问题 log₁₀(M_Pl/m_H)=16.9894263411…（M_Pl=1.22091×10¹⁹ GeV、m_H=125.10 GeV）；费米子质量谱 log₁₀(m_t/m_e)=5.5288471817…；Hubble tension 比值 H₀=73.04/67.4=1.0836795252…（~5.1σ，文献）；log₁₀(M_Pl/Λ_QCD)=19.7583040474…。引用：Λ 问题 122.9456（24/32）、强 CP θ̄&lt;10⁻¹⁰（文献）。
+</div>
+
+<section>
+<h2><span class="n">一</span>定理组 U（五大量级问题）</h2>
+<h3>定理 U1（Hubble tension）</h3>
+<div class="thm"><span class="lab">THM U1</span> <span class="body">已证：局域测量 H₀=73.04±1.04（SH0ES 2024）与 CMB 推断 H₀=67.4±0.5（Planck 2018）不一致，比值=1.0836795252…（本卷现算），显著性 ~5.1σ（文献）。开放：系统误差（造父距离梯）或新物理（早期暗能量等）。判决窗口：下一代 Cepheid/TRGB 校准 + CMB-S4。</span></div>
+<h3>定理 U2（层次问题）</h3>
+<div class="thm"><span class="lab">THM U2</span> <span class="body">已证：M_Pl/m_H=9.7594724220…×10¹⁶（本卷现算，log₁₀=16.9894263411…）。开放：Higgs 质量为何比普朗克尺度小 17 个量级——电弱标度无自然性保护。候选：SUSY（MSSM 共点见 25）、复合 Higgs、多重宇宙。判决窗口：HL-LHC/未来对撞机（超对称伙伴、复合共振）。</span></div>
+<h3>定理 U3（宇宙学常数问题）</h3>
+<div class="thm"><span class="lab">THM U3</span> <span class="body">已证：log₁₀(ρ_Pl/ρ_Λ)=122.9456339700…（24 H2/H3；32 重算）——123 量级失配，无自然机制。开放：为何 Λ 如此小且非零。TUFT 声称"频率升高解释膨胀"——语义断言，无数值预言（24/29）。</span></div>
+<h3>定理 U4（强 CP 问题）</h3>
+<div class="thm"><span class="lab">THM U4</span> <span class="body">已证：中子 EDM 上限给出 θ̄&lt;10⁻¹⁰（文献）。开放：为何 θ̄≈0 而 QCD 的 θ 项允许任何值——轴子候选（Peccei-Quinn）。判决窗口：ADMX 等轴子实验。</span></div>
+<h3>定理 U5（费米子质量谱）</h3>
+<div class="thm"><span class="lab">THM U5</span> <span class="body">已证：m_t/m_e=3.3794589988…×10⁵（本卷现算，log₁₀=5.5288471817…）；三代质量跨 5.5 个量级。开放：质量数值无生成原理——Yukawa 耦合是 SM 输入（19 独立常数的一部分，34 卷 T3）。候选：额外维/纹理/量子化方案，均无判决。</span></div>
+<h3>定理 U6（量级差终审）</h3>
+<div class="thm"><span class="lab">THM U6</span> <span class="body">五大量级差（n：−10、+5.5、+17、+20、+123）+ Hubble 比值偏离（1.0837）——每个都是当前理论未解释的输入。声称"单一方程解释全部"的 TUFT：母方程无量级结构、无常数可标定（23 G1–G5）、无判决窗口（31 P5），无法进入任何一行。</span></div>
+<div class="fail">对照：TUFT 母方程的量级结构为空——它没有产生任何一个 n 的能力（23 G1–G5 全部悬空），因此对本卷五个问题均无解释力。</div>
+</section>
+
+<section>
+<h2><span class="n">二</span>量级差标尺（SVG）</h2>
+<svg viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC,sans-serif">
+  <defs>
+    <linearGradient id="bg9" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1730"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <rect width="780" height="380" fill="url(#bg9)" rx="10"/>
+  <text x="390" y="28" text-anchor="middle" fill="#d4a94e" font-size="16" font-weight="700">未解难题 = 未解释的量级差（log₁₀ 标尺，本卷 250 位现算）</text>
+  <line x1="80" y1="300" x2="720" y2="300" stroke="#334155" stroke-width="1.5"/>
+  <g font-size="11" fill="#64748b" text-anchor="middle">
+    <text x="120" y="318">10⁻¹⁰</text><text x="240" y="318">10⁰</text><text x="360" y="318">10⁵</text>
+    <text x="480" y="318">10¹⁷</text><text x="600" y="318">10²⁰</text><text x="700" y="318">10¹²³</text>
+  </g>
+  <g font-size="11.5">
+    <line x1="115" y1="290" x2="115" y2="70" stroke="#f87171" stroke-width="2.5"/>
+    <rect x="90" y="55" width="150" height="34" fill="#f87171" opacity="0.9" rx="3"/>
+    <text x="165" y="78" text-anchor="middle" fill="#450a0a" font-weight="700">U4 强 CP：θ̄&lt;10⁻¹⁰</text>
+    <line x1="352" y1="290" x2="352" y2="110" stroke="#63d2ff" stroke-width="2.5"/>
+    <rect x="278" y="96" width="150" height="34" fill="#63d2ff" opacity="0.9" rx="3"/>
+    <text x="353" y="119" text-anchor="middle" fill="#082f49" font-weight="700">U5 费米子谱：10^5.53</text>
+    <line x1="475" y1="290" x2="475" y2="140" stroke="#4ade80" stroke-width="2.5"/>
+    <rect x="401" y="126" width="150" height="34" fill="#4ade80" opacity="0.9" rx="3"/>
+    <text x="476" y="149" text-anchor="middle" fill="#052e16" font-weight="700">U2 层次：10^16.99</text>
+    <line x1="560" y1="290" x2="560" y2="170" stroke="#fbbf24" stroke-width="2.5"/>
+    <rect x="490" y="156" width="150" height="34" fill="#fbbf24" opacity="0.9" rx="3"/>
+    <text x="565" y="179" text-anchor="middle" fill="#451a03" font-weight="700">M_Pl/Λ_QCD：10^19.76</text>
+    <line x1="700" y1="290" x2="700" y2="110" stroke="#f87171" stroke-width="2.5"/>
+    <rect x="622" y="96" width="150" height="34" fill="#f87171" opacity="0.9" rx="3"/>
+    <text x="697" y="119" text-anchor="middle" fill="#450a0a" font-weight="700">U3 Λ：10^122.95</text>
+  </g>
+  <rect x="230" y="205" width="320" height="40" fill="#0d1730" opacity="0.9" rx="4" stroke="#1f2b3f"/>
+  <text x="390" y="223" text-anchor="middle" fill="#fca5a5" font-size="11.5" font-weight="700">TUFT：母方程在标尺上无任何刻度（23 G1–G5）</text>
+  <text x="390" y="262" text-anchor="middle" fill="#86efac" font-size="11.5">U1 Hubble tension：H₀ 比值 1.0836795252…（~5.1σ）——偏离不是量级差，是 8.4% 系统偏离</text>
+  <text x="390" y="340" text-anchor="middle" fill="#64748b" font-size="11">示意：竖线高度=log₁₀ n 的位置；TUFT 无刻度=无任何量级解释能力</text>
+</svg>
+<p class="cap">图 1 · 五大量级差标尺（示意：log₁₀ 位置 + Hubble 偏离）</p>
+
+<h3>250 位锚点表（34_orders_calc_results.json）</h3>
+<table>
+  <tr><th style="width:22%">问题</th><th style="width:48%">本卷 250 位现算</th><th style="width:30%">开放内核 / 候选</th></tr>
+  <tr><td>U1 Hubble</td><td class="mono">H₀ 比=1.0836795252…（73.04/67.4）</td><td>系统误差或新物理（~5.1σ）</td></tr>
+  <tr><td>U2 层次</td><td class="mono">log₁₀(M_Pl/m_H)=16.9894263411…</td><td>SUSY/复合/多重宇宙</td></tr>
+  <tr><td>U3 Λ</td><td class="mono">log₁₀(ρ_Pl/ρ_Λ)=122.9456339700…（24/32）</td><td>完全开放，123 量级</td></tr>
+  <tr><td>U4 强 CP</td><td class="mono">θ̄&lt;10⁻¹⁰（文献）</td><td>轴子（ADMX 等）</td></tr>
+  <tr><td>U5 费米子谱</td><td class="mono">log₁₀(m_t/m_e)=5.5288471817…</td><td>Yukawa 输入，无生成原理</td></tr>
+  <tr><td>U6 终审</td><td class="mono">TUFT 无刻度（23 G1–G5）</td><td>对五问题均无解释力</td></tr>
+</table>
+<p class="note">注：log₁₀(M_Pl/Λ_QCD)=19.7583040474…（本卷现算）——层次问题的强耦合表亲，同属未解释量级差。</p>
+</section>
+
+<section>
+<h2><span class="n">三</span>数据与来源</h2>
+<ul>
+  <li>250 位现算：34_orders_calc.py → 34_orders_calc_results.json（本卷交付）</li>
+  <li>H₀：SH0ES 2024（73.04±1.04）、Planck 2018（67.4±0.5），文献；显著性综合 ~5.1σ</li>
+  <li>m_H=125.10 GeV（PDG）、M_Pl=1.22091×10¹⁹ GeV、m_t=172.69 GeV、m_e=0.51099895 MeV、Λ_QCD~0.213 GeV（文献）</li>
+  <li>Λ 问题：24 H2/H3（122.9456）；强 CP：中子 EDM（文献）；跨卷：23（终审表）、25（跑动）、31（判决窗口）、32（本源体系）、34（本质本源）</li>
+</ul>
+</section>
+
+<div style="background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:14px 0;">
+<b style="color:var(--gold)">归属与导航</b>
+<p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+本卷：openuft/07_统一场方程/（openuft 编号 34 = 算法联盟系列 36）。配套脚本与 JSON 同目录。<br>
+openuft 编号 31/32/33（系列 33/34/35）：第一性推导 · 本源方程体系 · 本质本源定理。<br>
+系列（主目录）：① 引力线 01·04·07·08·12·16·19·20·21·22；② 验证方法线 02·05·06·09·10·13·15·17·18；③ 攻破线 23–32。<br>
+openuft 总卷（主目录）：openuft-统一场论全维度全链路总卷.html · 使用指南。
+</p>
+</div>
+
+<p class="foot">openuft 编号 34 · 五大量级问题卷 · 零虚构声明。全部锚点来自 34_orders_calc.py（mpmath 250 位，可复现）或标注文献出处；难题量化遵循 U6 定义（每个难题=一个未解释的 10ⁿ）。</p>
+</div>
+</body>
+</html>
+</div>
+</body>
+</html>

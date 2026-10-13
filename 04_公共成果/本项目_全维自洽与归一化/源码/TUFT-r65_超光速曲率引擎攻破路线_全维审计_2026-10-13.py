@@ -288,11 +288,12 @@ guard("G11_rho_formula_dimensionally_closed", dsame(DIM_RHO_CLAIM, DIM_RHO_TRUE)
 
 # 能量密度 vs 质量密度：两者只差一个 T^-2，量纲装置必须能区分（防止再犯「L 指数误记」）
 guard("G11d_energy_vs_mass_density_differ",
-      dsame(dmul(DIM_RHO_TRUE, dpow(Q["T"], -2)), DIM_MASS_DENSITY)
+      dsame(dmul(DIM_RHO_TRUE, dpow(Q["c"], -2)), DIM_MASS_DENSITY)
       and not dsame(DIM_RHO_TRUE, DIM_MASS_DENSITY),
-      "能量密度 × T⁻² = 质量密度：ρ_E = M L⁻¹T⁻²、ρ_m = M L⁻³ ⇒ 二者相差恰一个 T⁻²")
+      "能量密度 ÷ c² = 等效质量密度（E=mc²）：ρ_E = M L⁻¹T⁻² × c⁻² = M L⁻³ ⇒ 二者相差恰一个 c⁻²")
 
-# 缺失因子穷举（r42 方法论二）：量纲已闭合 ⇒ 无需任何补齐因子
+# 缺失因子穷举（r42 方法论二）：量纲已闭合 ⇒ 不需要任何**非平凡**补齐因子
+# （穷举仍会命中若干「净量纲为零」的平凡组合，必须显式排除，否则 guard 会被平凡解污染）
 POOL = {"c": Q["c"], "l_P": Q["L"], "m_P": Q["M"], "G": Q["G"], "h": Q["h"]}
 PKEYS = list(POOL.keys())
 fill_hits = []
@@ -308,12 +309,27 @@ for a1 in range(-3, 4):
                             tot = dadd(tot, dpow(POOL[kk], Fr(pp)))
                     if dsame(tot, DIM_RHO_GAP):
                         fill_hits.append(dict((PKEYS[i], combo[i]) for i in range(5) if combo[i] != 0))
+FILL_NONTRIVIAL = [h for h in fill_hits if h]
 KN["dim_fill_need"] = dstr(DIM_RHO_GAP)
 KN["dim_fill_hits_count"] = len(fill_hits)
-KN["dim_fill_verdict"] = ("无需补齐（量纲已闭合）" if len(fill_hits) == 0
-                          else ("需补齐：" + jdump(fill_hits[:4])))
-guard("G11c_no_fill_factor_needed", len(fill_hits) == 0,
-      "量纲已闭合 ⇒ 补齐因子穷举（5^5=%d 组）应零命中，实测 %d 组" % (5 ** 5, len(fill_hits)))
+KN["dim_fill_nontrivial_count"] = len(FILL_NONTRIVIAL)
+KN["dim_fill_linear_dep_note"] = (
+    "零净量纲组合非平凡解 %d 组的来源是基本量量纲**线性相关**（l_P = h/(m_P c)、h = m_P c l_P），"
+    "属「同一物理量的不同写法」，**不是**量纲缺口所需的补齐因子" % len(FILL_NONTRIVIAL))
+KN["dim_fill_verdict"] = ("无需补齐（量纲已闭合，gap = 0）；穷举 %d 组中命中 %d 组零量纲组合，"
+                          "其中非平凡解 %d 组源于基本量线性相关（见 dim_fill_linear_dep_note）"
+                          % (5 ** 5, len(fill_hits), len(FILL_NONTRIVIAL)))
+guard("G11c_no_fill_needed_when_closed",
+      dsame(DIM_RHO_GAP, Z4) and any(not h for h in fill_hits),
+      "量纲已闭合（gap = 0）⇒ 无需任何补齐因子；穷举 %d 组中零量纲组合 %d 组（含平凡解）"
+      % (5 ** 5, len(fill_hits)))
+
+# 阳性对照：普朗克长度定义 l_P = h/(m_P c) 必须在本量纲装置下严格成立
+#（这正是「非平凡零量纲组合」的物理来源，必须机器确认而非假设）
+LP_DIM_DEF = dsub(Q["L"], dmul(Q["h"], dinv(dmul(Q["M"], Q["c"]))))
+KN["dim_lp_definition_residual"] = dstr(LP_DIM_DEF)
+guard("G11e_planck_length_definition_is_identity", dsame(LP_DIM_DEF, Z4),
+      "阳性对照：[ℓ_P] − [ℏ/(m_P c)] = " + dstr(LP_DIM_DEF) + " ⇒ 普朗克长度定义在量纲上恒等")
 
 DIM_RHO_NO_V = dmul(dmul(Q["c"], Q["c"]),
                     dmul(dinv(Q["G"]), dpow(D_F_PRIME, 2)))
@@ -414,9 +430,9 @@ KN["qi_constant_SI"] = e(QI_CONST, 20)
 QI_DIM = dmul(Q["h"], dpow(Q["c"], -3))
 KN["dim_hbar_over_c3"] = dstr(QI_DIM)
 KN["dim_rho_times_tau4"] = dstr(DIM_RHO_TIMES_TAU4)
-guard("G20_qi_constant_dimension_mismatch",
-      not dsame(QI_DIM, DIM_RHO_TIMES_TAU4),
-      "ℏ/c³ 量纲 = " + dstr(QI_DIM) + "，而 (ρ τ⁴) = " + dstr(DIM_RHO_TIMES_TAU4) + " ⇒ 差一个长度因子 L² ⇒ 纯数 3/(16π²) 需配长度")
+guard("G20_qi_constant_dimensionally_closed", dsame(QI_DIM, DIM_RHO_TIMES_TAU4),
+      "ℏ/c³ 量纲 = " + dstr(QI_DIM) + "，(ρ τ⁴) 量纲 = " + dstr(DIM_RHO_TIMES_TAU4)
+      + " ⇒ 齐次，故 |ρ| ≤ (3/16π²)(ℏ/c³)/τ⁴ 无需额外长度因子")
 
 RHO_LP4 = D(1) / (LP ** 4)
 RHO_PE = MPLANCK * C * C / (LP ** 3)

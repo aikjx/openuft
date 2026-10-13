@@ -117,36 +117,49 @@ M_AT_ENGINE_UNIV = M_AT_ENGINE / M_UNIV
 M_AT_PLANCK = m_neg(c, R_PLANCK, delta_opt(R_PLANCK))
 M_AT_DMAX = m_neg(c, DELTA_MAX, delta_opt(DELTA_MAX))
 
+Q01_DETAIL = (
+    '在族 (4,0)（rho <= ħc/δ⁴，b=0）下，QEI 给出的 δ 上界 %s m = %s ℓ_P '
+    '**与泡半径 R 无关**（因该族不含长度参量 L）。'
+    '而 M_neg = v_s²R²/(8Gδ) ∝ δ⁻¹ ⇒ δ 越大 M_neg 越小 ⇒ 最优取 δ 的最大值，'
+    '同时受几何约束 δ ≤ R（壳厚不能超过泡半径）。'
+    '⇒ **δ_opt = min(R, δ_max)**，机器据此扫描 %d 个 R：' +
+    '；'.join('R=%s → δ=%s m（薄壁 %s）→ M_neg = %s kg = %s M⊙'
+              % (r['R_label'], r['delta_m'], r['thin_wall'], r['M_neg_kg'], r['M_over_Msun'])
+              for r in Q_ROWS) +
+    '。⇒ **M_neg 随 R 单调**（R < δ_max 段 ∝ R，R ≥ δ_max 段 ∝ R²），'
+    '在 R → 0 时趋于 0、在 R 大时趋于天文量级。'
+) % (fv(DELTA_MAX, 8), fv(DELTA_MAX_OVER_LP, 6), len(Q_ROWS))
+
 PA('Q01', '幸存族 (4,0) 的 δ 最优选法：δ_opt = min(R, δ_max)，δ_max 与 R 无关',
-   '在族 (4,0)（rho <= ħc/δ⁴，b=0）下，QEI 给出的 δ 上界 %s m = %s ℓ_P '
-   '**与泡半径 R 无关**（因该族不含长度参量 L）。'
-   '而 M_neg = v_s²R²/(8Gδ) ∝ δ⁻¹ ⇒ δ 越大 M_neg 越小 ⇒ 最优取 δ 的最大值，'
-   '同时受几何约束 δ ≤ R（壳厚不能超过泡半径）。'
-   '⇒ **δ_opt = min(R, δ_max)**，机器据此扫描 12 个 R：' +
-   '；'.join('R=%s → δ=%s m（薄壁 %s）→ M_neg = %s kg = %s M⊙'
-             % (r['R_label'], r['delta_m'], r['thin_wall'], r['M_neg_kg'], r['M_over_Msun'])
-             for r in Q_ROWS) +
-   '。⇒ **M_neg 随 R 单调**（R < δ_max 段 ∝ R，R ≥ δ_max 段 ∝ R²），'
-   '在 R → 0 时趋于 0、在 R 大时趋于天文量级。'
-   % (fv(DELTA_MAX, 8), fv(DELTA_MAX_OVER_LP, 6)),
+   Q01_DETAIL,
    'delta_max=%s m (%s l_P) | rows=%d' % (fv(DELTA_MAX, 10), fv(DELTA_MAX_OVER_LP, 8),
                                           len(Q_ROWS)))
 
+M_AT_100M = m_neg(c, Decimal('100'), delta_opt(Decimal('100')))
+M_AT_100M_MSUN = M_AT_100M / M_SUN
+M_R64_BASE = Dc('0.846308')          # r64 E07 在 δ=1 m、R=100 m 下的读数
+Q02_JUMP = M_AT_ENGINE_MSUN / M_R64_BASE
+
+Q02_DETAIL = (
+    '取工程可行性门槛 R = %s m（泡必须至少能容纳宏观物体；1 m 是保守下限）：'
+    'δ_opt = %s m，机器算 M_neg = %s kg = %s M⊙ = **%s 倍可观测宇宙质量**。'
+    '作为对照，本册自算 R = 100 m 时为 %s M⊙（∝ R²，恰比 1 m 大 10⁴ 倍，与 r66 一致）。'
+    '⇒ **这是 r66 遗留问题的答案：那 1/5「不排除」的族，'
+    '虽然不被 QEI 排除，却被能量账以 %s 倍宇宙质量的门槛关闭。**'
+    '⇒ 与 r64 E07 的对照：r64 在 δ = 1 m、R = 100 m 下给 %s M⊙（乐观）；'
+    '而一旦施加 QEI(4,0) 的 δ ≤ 10 ℓ_P 约束，同一 R 的代价跳到 %s M⊙，'
+    '**跳升 %s 倍** —— 这正是 r66 M02 所说「能量账非 no-go 被 QEI 阻断」的机器实现。'
+) % (fv(R_ENGINE, 4), fv(delta_opt(R_ENGINE), 8), fv(M_AT_ENGINE, 10),
+     fv(M_AT_ENGINE_MSUN, 8), fv(M_AT_ENGINE_UNIV, 6),
+     fv(M_AT_100M_MSUN, 8), fv(M_AT_ENGINE_UNIV, 6),
+     fv(M_R64_BASE, 6), fv(M_AT_100M_MSUN, 8), fv(Q02_JUMP, 6))
+
 FA('Q02', '★工程可行性判决：宏观泡（R ≥ 1 m）在幸存族下需 %s 倍可观测宇宙质量的负能量 ⇒ 关闭'
    % fv(M_AT_ENGINE_UNIV, 4),
-   '取工程可行性门槛 R = %s m（泡必须至少能容纳宏观物体；1 m 是保守下限）：'
-   'δ_opt = %s m，机器算 M_neg = %s kg = %s M⊙ = **%s 倍可观测宇宙质量**。'
-   '作为对照，r66 在 R = 100 m 下给的是 %s M⊙（∝ R²，比 1 m 大 10⁴ 倍，机器自洽）。'
-   '⇒ **这是 r66 遗留问题的答案：那 1/5「不排除」的族，'
-   '虽然不被 QEI 排除，却被能量账以 %s 倍宇宙质量的门槛关闭。**'
-   '⇒ 与 r64 E07 的对照：r64 在 δ=1 m、R=100 m 下给 0.846 M⊙（乐观）；'
-   '而一旦施加 QEI(4,0) 的 δ ≤ 10ℓ_P 约束，同一 R 的代价从 0.846 M⊙ 跳到 %s M⊙，'
-   '**跳升 %s 倍** —— 这正是 r66 M02 所说的「能量账非 no-go 被 QEI 阻断」的机器实现。'
-   % (fv(R_ENGINE, 4), fv(delta_opt(R_ENGINE), 8), fv(M_AT_ENGINE, 10),
-      fv(M_AT_ENGINE_MSUN, 8), fv(M_AT_ENGINE_UNIV, 6), fv(M_AT_ENGINE_MSUN, 6),
-      fv(M_AT_ENGINE_UNIV, 6), fv(M_AT_ENGINE_MSUN / Dc('0.846308'), 6)),
-   'M_neg(R=1m)=%s kg = %s M_sun = %s M_univ'
-   % (fv(M_AT_ENGINE, 12), fv(M_AT_ENGINE_MSUN, 10), fv(M_AT_ENGINE_UNIV, 10)))
+   Q02_DETAIL,
+   'M_neg(R=1m)=%s kg = %s M_sun = %s M_univ | R=100m: %s M_sun | jump=%s'
+   % (fv(M_AT_ENGINE, 12), fv(M_AT_ENGINE_MSUN, 10), fv(M_AT_ENGINE_UNIV, 10),
+      fv(M_AT_100M_MSUN, 10), fv(Q02_JUMP, 8)))
 
 CO('Q03', '幸存族唯一通过 QEI 的解是普朗克尺度微观结构（M_neg 仅纳克~微克级），但非工程对象',
    '机器扫描显示 M_neg 在 R → 0 方向趋于 0：'
