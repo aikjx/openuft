@@ -129,8 +129,9 @@ def dsame(a, b):
 
 
 D_F_PRIME = (Fr(0), Fr(-1), Fr(0), Fr(0))          # df/dr
-DIM_RHO_TRUE = (Fr(1), Fr(-3), Fr(-2), Fr(0))     # 能量密度
-DIM_RHO_TIMES_TAU4 = (Fr(1), Fr(-3), Fr(2), Fr(0))
+DIM_RHO_TRUE = (Fr(1), Fr(-1), Fr(-2), Fr(0))     # 能量密度 = J/m^3 = M L^-1 T^-2
+DIM_MASS_DENSITY = (Fr(1), Fr(-3), Fr(0), Fr(0))   # 质量密度 = kg/m^3 = M L^-3
+DIM_RHO_TIMES_TAU4 = dmul(DIM_RHO_TRUE, dpow(Q["T"], 4))   # (rho tau^4) = M L^-1 T^2
 
 guard("G01_dim_add_is_sum", dadd(Q["L"], Q["T"]) == (Fr(0), Fr(1), Fr(1), Fr(0)),
       "量纲相加 = 分量相加")
