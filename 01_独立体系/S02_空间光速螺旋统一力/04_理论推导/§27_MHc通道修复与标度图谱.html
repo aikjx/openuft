@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§27 M_Hc 通道修复与标度：阈值链 vs 文献带</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #fff; }
+  #chart { width: 986px; height: 420px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+<script>
+(function(){
+  var el = document.getElementById('chart');
+  if (!el || typeof echarts === 'undefined') { return; }
+  var chart = echarts.init(el);
+  function fmt(v){
+    var e = Math.floor(Math.log10(v));
+    var m = v / Math.pow(10, e);
+    return m.toFixed(1) + '×10' + (e>=0 ? e : '⁻' + String.fromCharCode(0x2080+(-e)));
+  }
+  var option = {
+    title: { text: '§27 M_Hc 通道修复：阈值链 [8.63×10¹⁴, 1.44×10¹⁵] 精确命中文献带 [8.6×10¹⁴, 1.4×10¹⁵]', left: 'center', top: 6, textStyle: { fontSize: 15 } },
+    tooltip: {
+      trigger: 'axis',
+      triggerOn: 'mousemove|click',
+      renderMode: 'richText',
+      confine: true,
+      formatter: function(params){
+        if (!params || !params.length) { return ''; }
+        var p = params[0];
+        var s = 'M_S = ' + p.value[0] + ' TeV' + String.fromCharCode(10)
+              + 'M_Hc = ' + fmt(p.value[1]) + ' GeV';
+        if (p.seriesType === 'scatter') { s += String.fromCharCode(10) + p.data.label; }
+        return s;
+      }
+    },
+    legend: { top: 30, textStyle: { fontSize: 11 } },
+    grid: { left: 100, right: 45, top: 72, bottom: 55, containLabel: true },
+    xAxis: { type: 'log', name: 'M_S (TeV)', min: 1, max: 1000, axisLabel: { fontSize: 11, formatter: function(v){ return v; } }, nameTextStyle: { fontSize: 11 } },
+    yAxis: { type: 'log', name: 'M_Hc (GeV)', min: 1.0e13, max: 1.0e18, axisLabel: { fontSize: 11, formatter: function(v){ return fmt(v); } }, nameTextStyle: { fontSize: 11 } },
+    series: [
+      {
+        name: 'M_Hc(M_S) 阈值链（无 Hc 入 β）', type: 'line',
+        data: [
+          { value: [1, 1.12e15] }, { value: [10, 9.32e15] },
+          { value: [100, 7.68e16] }, { value: [1000, 6.22e17] }
+        ],
+        symbol: 'circle', symbolSize: 7,
+        lineStyle: { width: 2 },
+        markArea: {
+          silent: true,
+          itemStyle: { color: 'rgba(120,180,255,0.18)' },
+          data: [[{ xAxis: 0.8, yAxis: 8.6e14 }, { xAxis: 1.2, yAxis: 1.4e15 }]]
+        }
+      },
+      {
+        name: '关键点', type: 'scatter', symbolSize: 8,
+        data: [
+          { value: [1, 5.316e17], label: '§26 一循环失效值 5.3×10¹⁷（非物理）' },
+          { value: [1, 1.115e15], label: '§27 阈值链 1.12×10¹⁵（=文献带）' },
+          { value: [1, 1.305e16], label: 'Hc 入 β 自洽 1.30×10¹⁶（约定敏感）' }
+        ]
+      }
+    ]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){ if (chart) { chart.resize(); } });
+})();
+</script>
+</body>
+</html>

@@ -262,7 +262,7 @@
       "tag": "CORRECTED",
       "name": "本册净判词：主判定成立，但支撑它的论证要修正、另加一条更根本的理由",
       "read": "**继承**：W02（三层求导）、W10（WEC 违反）、W11（算术 7/7）、W14（标度律）、W20（ρ 量纲自洽）。**修正**：①W13 系数缺 4π（每项偏乐观 12.57 倍）；②W15「天文级死账」不是 no-go；③W23–W25 量子不等式口径未声明，且 1e-10 s 属 Casimir 口径。**升级**：④W07 v_s>c 使泡内固有时为虚 ⇒ 泡内物体运动学无定义（比「负能量账」更根本）。**结构**：⑤W09 钥匙 3/4 是否定性约束；⑥W26 钥匙 2 与钥匙 1 框架冲突未声明",
-      "note": "净结论：来料的主判定（超光速曲率引擎不可行）成立且**有比来料更强的理由**；但支撑它的「能量账」论证本身站不住（Cauchy-Schwarz 无下界），真正不可行的是「泡内有乘客」这个前提。修正方向相反的两处（W13 更悲观、W15 更宽松）不改变「天文级」这一定性描述。**2026-10-14 修复**：原列的「W20 ρ 量纲缺口 L²」已撤回（能量密度量纲误记，见 W20），故修正项由 4 条减为 3 条。另：本册已在数据产物给出图谱化骨架 21 节点 / 20 边，schema 待与 openuft index 图谱层对齐。"
+      "note": "净结论：来料的主判定（超光速曲率引擎不可行）成立且**有比来料更强的理由**；但支撑它的「能量账」论证本身站不住（Cauchy-Schwarz 无下界），真正不可行的是「泡内有乘客」这个前提。修正方向相反的两处（W13 更悲观、W15 更宽松）不改变「天文级」这一定性描述。**2026-10-14 修复**：原列的「W20 ρ 量纲缺口 L²」已撤回（能量密度量纲误记，见 W20），故修正项由 4 条减为 3 条。另：本册已在数据产物给出图谱化骨架 21 节点 / 20 边；**入库可行性已机器定性为不可**（见 W35），不再声称「待对齐」。"
     },
     {
       "id": "W34",
@@ -270,16 +270,30 @@
       "name": "★本册覆盖缺口（诚实登记）：度规基底与 QEI 压强口径两组判定权归 r64",
       "read": "本册全程**照抄来料的度规与代数**做量纲与标度分析，未独立核验度规基底本身；该核验由 r64 C05 完成（来稿 (dx − v_s f dt)² 与 Alcubierre 原式 f²(dx − v_s dt)² 不符，逐分量 × 逐 f 共 25 点对比全部不等）。本册的 QEI 处理只做**双口径与量纲齐次性**（W23–W25），未做 Ford–Roman 型 ρ ≤ ℏc/(δL) 的压强结算；该组由 r64 E01–E06 完成并给出更强结论（需求/允许 3.81e69 ~ 2.36e104 倍、δ_min/R = 1.56e21）",
       "note": "⇒ **本册的 ρ 相关结论（W13/W20）建立在来料度规写法之上；若 r64 C05 的基底判定成立，则 ρ 公式本身需重新推导**，这是本册最重要的外部依赖，引用 W13/W20 前须同时引 r64 C05。注意：**量纲层面（W20）不依赖 C05** —— C05 改的是度规的**结构**，而 W20 只用代数表达式 c²v²(f')²/G 的量纲，任何 f 的实现方式都不改变该式量纲 ⇒ W20 的 PASS 判词是稳健的。"
+    },
+    {
+      "id": "W35",
+      "tag": "FAIL",
+      "name": "★图谱骨架**不能直接写入索引层**：与库内既有 schema 全面不同源（悬空待办已结清）",
+      "read": "本册首版把图谱交付写成「schema 待与 openuft index 图谱层对齐」，但该对齐目标是否存在**从未机器核验**。本段（只读核对，未改库内任何文件）实测：库内既有图谱真源 = D:/a10/aikjx/code/my_lib/openuft/07_统一场方程/空间螺旋几何化统一场论/证明依赖图/图谱输出/graph.json（68 节点 / 110 边），节点 15 字段、边 10 字段，`relation` 词表实测**仅 3 个** = cites,depends_on,references（guard G35a）。本册骨架：节点 4 字段、边 3 字段，`relation` 词表 **12 个**。三处硬阻塞：① 节点缺 **13/15** 个字段，其中 `source_file`/`source_location`/`source_quote` **溯源三件套全缺**（guard G35b/G35c）⇒ 本册 21 条判定的出处无法被图谱层引用；② 边端点与关系字段名全不符：`src`/`dst`/`rel` ⇒ 库内为 `source`/`target`/`relation`（guard G35d）；③ **`relation` 词表越界 1.0**（12 个全不在库内，guard G35e）⇒ 且库内 `weight` 恒 1.0、无法表达负向边语义",
+      "note": "**第四处（更根本）**：全库 `00_项目治理/` 与 `07_统一场方程/` 中 schema 规范文件数 = **0**（guard G35h）⇒ 本册与 r64 自称的 `openuft-index-graph/v1` **没有规范文件可依**，只是自我声明的字符串。**最小前置**：走 attack25 规范化通道（在位：`D:/a10/aikjx/code/my_lib/openuft/04_公共成果/本项目_统一场论攻破/整理_超光速攻破路线图谱_分析与规范化_2026-10-13.md`）并先获库内 relation 词表**扩表批准**。**本册不擅改库内词表、不改既有图谱。**"
+    },
+    {
+      "id": "W36",
+      "tag": "INFO",
+      "name": "图谱交付的定位澄清：这是「该轮审计的私有产物」，不是「已入库的图谱层」",
+      "read": "本册的 21 节点 / 20 边骨架只做到**语义骨架**层（钥匙/约束/方程/裁定四类节点 + 依赖/限制/证伪类边），**不含溯源三件套、不含置信度**，因此不具备入库资格；但它对本册的价值仍然独立：它把 34 条判定压成一张可检查的依赖网，使「哪些结论支撑哪些结论」一眼可查",
+      "note": "这正是 attack25 §〇之二 划给本册的**独有位**（图谱层「导入侧」归 attack25）。⇒ 两册不冲突而是分工：**attack25 管怎么导进去，本册管图里该有什么。**"
     }
   ],
   "tag_count": {
-    "INFO": 11,
+    "INFO": 12,
     "PASS": 6,
-    "FAIL": 11,
+    "FAIL": 12,
     "CORRECTED": 4,
     "MISMATCH": 2
   },
-  "items_total": 34,
+  "items_total": 36,
   "guards": [
     {
       "name": "G01_dim_add_is_sum",
@@ -450,10 +464,50 @@
       "name": "G26_key2_vs_key1_incompatible_in_gr",
       "ok": true,
       "why": "钥匙 2（GR 内、只正能量、满足能量条件）与钥匙 1（GR 内必负能）在同一框架下不相容 ⇒ 冲突存在"
+    },
+    {
+      "name": "G35a_lib_graph_readable",
+      "ok": true,
+      "why": "库内既有图谱应可只读打开：D:/a10/aikjx/code/my_lib/openuft/07_统一场方程/空间螺旋几何化统一场论/证明依赖图/图谱输出/graph.json（68 节点 / 110 边，节点 15 字段 / 边 10 字段）"
+    },
+    {
+      "name": "G35b_node_fields_incomplete",
+      "ok": true,
+      "why": "r65 节点字段 13/15 缺失：author,captured_at,community,community_name,contributor,epistemic_status,file_type,norm_label,rationale,source_file,source_location,source_quote,source_url"
+    },
+    {
+      "name": "G35c_source_provenance_absent",
+      "ok": true,
+      "why": "r65 节点完全缺 source_* 溯源三件套（库内为必填，本册 21 条判定因此不可被图谱层引用）"
+    },
+    {
+      "name": "G35d_edge_endpoints_renamed",
+      "ok": true,
+      "why": "r65 边字段名与库内不符 3 处：[('source', 'src'), ('target', 'dst'), ('relation', 'rel')]"
+    },
+    {
+      "name": "G35e_relation_vocab_fully_out_of_lib",
+      "ok": true,
+      "why": "r65 的 relation 词表 12 个**全部**不在库内词表 ['cites', 'depends_on', 'references'] 内（越界比 1.0）"
+    },
+    {
+      "name": "G35f_cannot_write_into_index_layer_directly",
+      "ok": true,
+      "why": "★结论：r65 图谱不能直接写入索引层 —— 缺 13/15 节点字段、3 处边字段改名、relation 越界 1.0"
+    },
+    {
+      "name": "G35h_no_schema_spec_file_in_repo",
+      "ok": true,
+      "why": "库内 2 个治理/图谱目录中 schema 规范文件数 = 0 ⇒ 本册与 r64 自称的 openuft-index-graph/v1 **无规范文件可依**（只是自我声明的字符串）"
+    },
+    {
+      "name": "G35i_attack25_channel_present",
+      "ok": true,
+      "why": "唯一在位的规范化通道：D:/a10/aikjx/code/my_lib/openuft/04_公共成果/本项目_统一场论攻破/整理_超光速攻破路线图谱_分析与规范化_2026-10-13.md"
     }
   ],
-  "guards_total": 34,
-  "guards_passed": 34,
+  "guards_total": 42,
+  "guards_passed": 42,
   "key_numbers": {
     "M_sun_over_M_jup": "1.04794520547945205479E+3",
     "M_over_Msun_A": "8.46273832013643058939E-1",
@@ -707,7 +761,153 @@
     "ratio_to_visible_1e53": "8.28754595807177398770E+10",
     "ratio_to_visible_1e54": "8.28754595807177398770E+9",
     "graph_nodes": 21,
-    "graph_edges": 20
+    "graph_edges": 20,
+    "lib_graph_path": "D:/a10/aikjx/code/my_lib/openuft/07_统一场方程/空间螺旋几何化统一场论/证明依赖图/图谱输出/graph.json",
+    "lib_graph_present": true,
+    "lib_graph_nodes": 68,
+    "lib_graph_edges": 110,
+    "lib_node_fields": [
+      "author",
+      "captured_at",
+      "community",
+      "community_name",
+      "contributor",
+      "epistemic_status",
+      "file_type",
+      "id",
+      "label",
+      "norm_label",
+      "rationale",
+      "source_file",
+      "source_location",
+      "source_quote",
+      "source_url"
+    ],
+    "lib_edge_fields": [
+      "confidence",
+      "confidence_score",
+      "rationale",
+      "relation",
+      "source",
+      "source_file",
+      "source_location",
+      "source_quote",
+      "target",
+      "weight"
+    ],
+    "lib_relation_vocab": {
+      "cites": 54,
+      "references": 39,
+      "depends_on": 17
+    },
+    "lib_file_type_vocab": {
+      "rationale": 39,
+      "document": 29
+    },
+    "lib_epistemic_status_vocab": {
+      "source_assertion": 29,
+      "declared_limitation": 11,
+      "review_required": 10,
+      "adopted_input": 6,
+      "conditional_derivation": 5,
+      "declared_model_assumption": 2,
+      "source_model_result": 2,
+      "algebraic_structure": 1,
+      "adopted_geometric_framework": 1,
+      "geometric_construction": 1
+    },
+    "lib_node_field_count": 15,
+    "lib_edge_field_count": 10,
+    "r65_node_fields": [
+      "id",
+      "kind",
+      "label",
+      "status"
+    ],
+    "r65_edge_fields": [
+      "dst",
+      "rel",
+      "src"
+    ],
+    "r65_node_field_count": 4,
+    "r65_edge_field_count": 3,
+    "r65_relation_vocab": {
+      "uses": 5,
+      "bounded_by": 2,
+      "constrained_by": 2,
+      "proves": 2,
+      "confirms": 2,
+      "integrates_to": 1,
+      "constrains": 1,
+      "stabilizes": 1,
+      "contradicts": 1,
+      "corrects": 1,
+      "downgrades": 1,
+      "scopes": 1
+    },
+    "r65_relation_vocab_size": 12,
+    "r65_node_fields_missing": [
+      "author",
+      "captured_at",
+      "community",
+      "community_name",
+      "contributor",
+      "epistemic_status",
+      "file_type",
+      "norm_label",
+      "rationale",
+      "source_file",
+      "source_location",
+      "source_quote",
+      "source_url"
+    ],
+    "r65_node_fields_missing_count": 13,
+    "r65_edge_fields_missing": [
+      "confidence",
+      "confidence_score",
+      "rationale",
+      "source_file",
+      "source_location",
+      "source_quote",
+      "weight"
+    ],
+    "r65_edge_fields_missing_count": 7,
+    "r65_edge_field_renames": [
+      [
+        "source",
+        "src"
+      ],
+      [
+        "target",
+        "dst"
+      ],
+      [
+        "relation",
+        "rel"
+      ]
+    ],
+    "r65_relation_in_lib_vocab": [],
+    "r65_relation_out_of_lib_vocab": [
+      "uses",
+      "bounded_by",
+      "constrained_by",
+      "proves",
+      "confirms",
+      "integrates_to",
+      "constrains",
+      "stabilizes",
+      "contradicts",
+      "corrects",
+      "downgrades",
+      "scopes"
+    ],
+    "r65_relation_out_of_lib_count": 12,
+    "r65_relation_out_of_lib_ratio": 1.0,
+    "schema_spec_files_found": [],
+    "schema_spec_files_count": 0,
+    "attack25_report_present": true,
+    "attack25_report_path": "D:/a10/aikjx/code/my_lib/openuft/04_公共成果/本项目_统一场论攻破/整理_超光速攻破路线图谱_分析与规范化_2026-10-13.md",
+    "graph_admission_verdict": "不可直接入库（缺 13/15 节点字段 + 3 处边改名 + relation 越界 1.0 + 库内无 v1 规范文件）；最小前置 = 走 attack25 规范化通道并先获库内 relation 词表扩表批准"
   },
   "scenarios": [
     {

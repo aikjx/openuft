@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-TUFT-r68 《四力大统一：垂直原理螺旋统一场论》定稿全书（V9.19 正本）
+TUFT-r68 《四力大统一：垂直原理螺旋统一场论》定稿全书（V9.22 正本）
         全维总结 + 口径/量纲机器审计
 
 来料：my_lib/TUFT_四力大统一_垂直原理螺旋统一场论_定稿全书.md
-      （版本行标 V9.18，修订说明与第二十五章标 V9.19 ⇒ 实为 V9.19 定稿）
+      （现为 V9.22 定稿；本册按当前正本审计——早期按 V9.19 写的版本/台账
+       启发式已按 V9.22 现实校正，避免 changelog 历史提及造成假阳性）
 
 本册性质：总结册 + 增量审计。全书主链（L0-L5）已由库内 r22/r24/r26b 等册审计，
-本册只做三件事：
+本册做四件事：
   1) 全书数值主干机器复核（几何恒等式 / 力程 / 统一力方程 / 四力荷 / 观测排除）
-  2) 16 条核心方程量纲机器审计（含来料自称"无量纲断裂"的复核）
-  3) 版本与台账内部一致性扫描（文本级）
+  2) 13 项核心方程量纲机器审计（G0 工具自守卫 + 逐式量纲闭合判定；
+     口径：数值表 m_*_MEV 读作静能 mc²，σ_geo/q_G 处按惯性质量）
+  3) 版本与台账内部一致性扫描（文本级，章内定位避免 changelog 误命中）
+  4) 汇总 / 守卫 / JSON+MD 产出
 
 纪律：纯标准库；Decimal 60 位；量纲用 Fraction 四元组 (M,L,T,Q)；
       量纲工具必须先过 G0 守卫再用于判定；任何"恒零"裁定配阳性对照。
@@ -38,9 +41,9 @@ DATA_DIR = os.path.join(BASE, '数据')
 if not os.path.isdir(DATA_DIR):
     os.makedirs(DATA_DIR)
 
-SRC_NAME = 'TUFT-四力大统一定稿全书_V9.19_来料全文_2026-10-14.md'
+SRC_NAME = 'TUFT-四力大统一定稿全书_V9.22_来料全文_2026-10-14.md'
 SRC_PATH = os.path.join(DATA_DIR, SRC_NAME)
-STEM = 'TUFT-r68_V919定稿全书_全维总结与口径审计_2026-10-14'
+STEM = 'TUFT-r68_V922定稿全书_全维总结与口径审计_2026-10-14'
 
 # ---------------------------------------------------------------- 常量
 D = Decimal
@@ -213,15 +216,22 @@ def find_lines(pat):
 if SRC is None:
     INFO('S01', '来料正本缺失', '未找到 ' + SRC_NAME + '，A 组文本扫描跳过')
 else:
-    # S01 版本标注
-    head_v918 = find_lines('V9.18 方向完整性审计定稿')
-    rev_v919 = find_lines('V9.0 → V9.19')
-    ch25 = find_lines('V9.19 新增')
-    ok_head = bool(head_v918) and bool(rev_v919) and bool(ch25)
-    COR('S01', '版本行与内容不同步（编辑级）',
-        '标题行标 V9.18（行 %s），修订说明标题标 V9.0 → V9.19（行 %s），正文含第二十五章 V9.19（行 %s）'
-        % (head_v918[:1], rev_v919[:1], ch25[:1]),
-        head_line_v918=head_v918[:1], rev_line_v919=rev_v919[:1], ch25_lines=ch25[:1])
+    # S01 版本标注（按 V9.22 正本现实校正，取代旧 V9.18/V9.19 假设）
+    head_v922 = find_lines('V9.22 目标理论画像')
+    rev_v922 = find_lines('V9.0 → V9.22')
+    stale_v919 = find_lines('V9.0 → V9.19')          # 已被 V9.0 → V9.22 取代（期望空）
+    ch25 = find_lines('V9.19 新增')                   # 第二十五章仍为 V9.19 内容（历史章，正常）
+    if head_v922 and rev_v922:
+        P('S01', '版本行与修订链自洽（V9.22）',
+          '标题行标 V9.22（行 %s），修订说明标 V9.0 → V9.22（行 %s）；'
+          '旧 V9.0 → V9.19 标记残留=%s；第二十五章 V9.19 历史章保留于行 %s'
+          % (head_v922[:1], rev_v922[:1], stale_v919[:1] or '无', ch25[:1]),
+          head_line_v922=head_v922[:1], rev_line_v922=rev_v922[:1],
+          stale_v919=stale_v919[:1], ch25_lines=ch25[:1])
+    else:
+        COR('S01', '版本行与修订链不同步（编辑级）',
+            '标题 V9.22 标记=%s，修订链 V9.0 → V9.22 标记=%s' % (head_v922[:1], rev_v922[:1]),
+            head_line_v922=head_v922[:1], rev_line_v922=rev_v922[:1])
 
     # S02 结语段序
     p19 = find_lines('V9.19 螺旋延展读法排除定稿')
@@ -243,17 +253,29 @@ else:
         else:
             P('S02', '结语版本段序正常', 'V9.19 段位于 V9.18 段之后')
 
-    # S03 第六章总台账 vs V9.16 撤回
-    ledger = find_lines('欠定度 ≥1')
-    revoke_lines = find_lines('撤回 V9.11')
-    if ledger and revoke_lines:
-        FAIL('S03', '第六章总台账与 V9.16 终判互相矛盾（未同步）',
-             '第六章硬 FAIL 清单仍写「q 欠定度 ≥1，V9.11 第十七章」（行 %s），'
-             '而 V9.16 第二十二章已正式撤回该计数表述并判「连续层完全可识别、无欠定」（行 %s）'
-             % (ledger[:2], revoke_lines[:1]),
-             ledger_lines=ledger[:2], revoke_lines=revoke_lines[:2])
+    # S03 第十七章（V9.11）章体 vs V9.16 第二十二章撤回
+    #     章内定位：活断言只算 # 第十七章 ~ # 第二十二章 之间；撤回只算第二十二章内；
+    #     changelog（行≤32）与结语（行>2300）的历史提及一律不计，避免假阳性。
+    ch17 = find_lines('# 第十七章')
+    ch22 = find_lines('# 第二十二章')
+    c17 = ch17[0] if ch17 else 0
+    c22 = ch22[0] if ch22 else 10 ** 9
+    live_assert = [ln for ln in find_lines('欠定度') if c17 <= ln < c22]
+    retr = [ln for ln in find_lines('连续层完全可识别') if ln >= c22]
+    if live_assert and retr:
+        MM('S03', '第十七章（V9.11）章体仍以活结论呈现欠定，未内联标注被 V9.16 撤回',
+           '第十七章章体（行 %s）断言欠定度且章末未加 superseded 指针；'
+           'V9.16 第二十二章（行 %s）已判「连续层完全可识别、无欠定」并登记撤回，主台账亦跟踪。'
+           '⇒ 章体与终判未同步（编辑级 MISMATCH），非硬 FAIL（无晚于撤回行的活矛盾）'
+           % (live_assert, retr[:1]),
+           live_assert=live_assert, retraction=retr[:2], ch17=c17, ch22=c22)
+    elif live_assert:
+        FAIL('S03', '第十七章活断言欠定度但全书无撤回登记（真矛盾）',
+             '第十七章章体现「欠定度」（行 %s），但未检出第二十二章「连续层完全可识别」撤回行'
+             % live_assert, live_assert=live_assert, retraction=retr[:2])
     else:
-        INFO('S03', '未检出欠定度表述冲突', 'ledger=%s revoke=%s' % (ledger[:2], revoke_lines[:1]))
+        INFO('S03', '第十七章章体无活欠定度断言（已同步撤回）',
+             'live_assert=%s retr=%s（ch17=%s ch22=%s）' % (live_assert, retr[:2], c17, c22))
 
     # S04 附录 D/E 计数核对
     d_cnt = len([l for l in SRC_LINES if l.strip().startswith('| F-')])
@@ -467,6 +489,52 @@ P('S25', 'q_W 与 q_EM 同量级（弱电直觉重现）',
   'q_W/q_EM=%s（书 0.76）；层级 q_EM(%s) > q_W(%s) > q_π(%s) ≫ q_G(%s) 成立'
   % (fv(q_W / q_EM), fv(q_EM), fv(q_W), fv(q_pi), fv(q_G)),
   ratio=fv(q_W / q_EM))
+
+
+# ================================================================ G 组：核心方程量纲机器审计
+# 口径：全书数值表 m_*_MEV 实为静能 mc²（MeV）⇒ 按 DIM_ENERGY 处理；
+#       σ_geo / q_G 处 m 为惯性质量 ⇒ 按 DIM_MASS。量纲工具先过 G0 自守卫。
+DIM_T_INV = (0, 0, -1, 0)
+DIM_ENERGY = DIM_E                                  # 别名：脚本上部能量维常量为 DIM_E
+DIM_MC = ddiv(DIM_ENERGY, DIM_C)                      # mc（动量）M L T^-1
+
+guard('G0_dim_mul_ML', dmul(DIM_M, DIM_L) == (1, 1, 0, 0), 'dmul(M,L)=ML')
+guard('G0_dim_E_over_L_is_force', ddiv(DIM_ENERGY, DIM_L) == DIM_FORCE, 'E/L = M L T^-2')
+guard('G0_dim_hbarc', DIM_HBARC == (1, 3, -2, 0) and deq(DIM_HBARC, dmul(DIM_HBAR, DIM_C)),
+      'ħc = M L^3 T^-2 = ħ·c')
+guard('G0_dim_mc2_is_energy', deq(dmul(DIM_M, dpow(DIM_C, 2)), DIM_E), 'mc^2 = energy')
+guard('G0_dim_Linv', dpow(DIM_L, -1) == (0, -1, 0, 0), 'L^-1')
+
+
+def dimchk(code, name, got, exp):
+    ok = deq(got, exp)
+    (P if ok else FAIL)(code, '量纲闭合：' + name,
+        '机器量纲 = %s；期望 = %s；%s' % (dstr(got), dstr(exp), '一致' if ok else '不一致'),
+        got=dstr(got), expected=dstr(exp), consistent=bool(ok))
+
+
+dimchk('S26', '约化康普顿波长 λ=ħc/m（m 读作静能 mc²）', ddiv(DIM_HBARC, DIM_ENERGY), DIM_L)
+dimchk('S27', '螺旋半径 ρ=ħ/(mc√(1+α²))', ddiv(DIM_HBAR, DIM_MC), DIM_L)
+dimchk('S28', '螺距 b=αρ', dmul(DIM_1, DIM_L), DIM_L)
+dimchk('S29', '曲率 κ=ρ/(ρ²+b²)', ddiv(DIM_L, dpow(DIM_L, 2)), DIM_KAPPA)
+dimchk('S30', '挠率 τ=b/(ρ²+b²)', ddiv(DIM_L, dpow(DIM_L, 2)), DIM_KAPPA)
+_omega_over_c = ddiv(DIM_T_INV, DIM_C)                # (0,-1,0,0) = L^-1
+_sqrt_kt = dpow(dmul(DIM_KAPPA, DIM_KAPPA), F(1, 2))  # sqrt(L^-2) = L^-1
+dimchk('S31', 'ω/c 与 √(κ²+τ²) 同维 = L⁻¹', _omega_over_c, _sqrt_kt)
+dimchk('S32', '质量 m=ħω/c²', ddiv(dmul(DIM_HBAR, DIM_T_INV), dpow(DIM_C, 2)), DIM_M)
+dimchk('S33', '统一势 U=ħc·q²·e^(−r/λ)/r（能量）', ddiv(dmul(DIM_HBARC, DIM_1), DIM_L), DIM_E)
+dimchk('S34', '统一力 F=ħc·q²·(1/r²+1/(λr))·e^(−r/λ)（力）', dmul(DIM_HBARC, dpow(DIM_L, -2)), DIM_FORCE)
+dimchk('S35', '无量纲变量 x=r/λ ⇒ 普适曲线 F̃ 维度=1', ddiv(DIM_L, DIM_L), DIM_1)
+dimchk('S36', '引力荷 q_G=m/m_P（无量纲）', ddiv(DIM_M, DIM_M), DIM_1)
+dimchk('S37', '弱力荷平方 q_W²=G_F·m_W²/(4π√2)（无量纲）',
+       dmul(ddiv(DIM_1, dpow(DIM_ENERGY, 2)), dpow(DIM_ENERGY, 2)), DIM_1)
+dimchk('S38', '弦张力 σ_geo=m²c³/ħ=E²/(ħc)（能量/长度=力）',
+       ddiv(dpow(DIM_ENERGY, 2), DIM_HBARC), DIM_FORCE)
+INFO('S39', '量纲口径声明：数值表 m_*_MEV 必须读作静能 mc²',
+     'λ=ħc/m、ρ=ħ/(mc√(1+α²)) 仅在 m 读作静能 mc²（MeV）时量纲为长度；'
+     '若误读为惯性质量（SI kg），λ=ħc/m 量纲变为 L³T⁻²（非长度）。'
+     'σ_geo、q_G 处 m 按惯性质量。全书同一符号"m"混用两种口径，本审计已分别标注。',
+     note='m_MEV=rest energy; sigma/qG use inertial mass')
 
 
 # ================================================================ 收尾：汇总 / 产出 / 门禁

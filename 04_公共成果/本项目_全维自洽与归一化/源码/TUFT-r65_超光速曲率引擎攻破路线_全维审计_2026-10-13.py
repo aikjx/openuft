@@ -528,6 +528,133 @@ KN["graph_nodes"] = len(GRAPH_NODES)
 KN["graph_edges"] = len(GRAPH_EDGES)
 
 # =====================================================================
+# 11b. 图谱入库可行性判定（★只读核对库内既有 schema，不改库内任何文件）
+# ---------------------------------------------------------------------
+# 动因：本册首版把图谱交付写成「schema 待与 openuft index 图谱层对齐」，
+# 但该对齐目标是否存在从未机器核验。attack25《整理_超光速攻破路线图谱_分析与规范化》
+# 已给出实测答案但未落进本册引擎 ⇒ 本段把「悬空待办」变成机器判定。
+# 库内既有图谱真源：07_统一场方程/空间螺旋几何化统一场论/证明依赖图/图谱输出/graph.json
+# =====================================================================
+
+LIBROOT = os.path.abspath(os.path.join(BASE, "..", ".."))
+LIB_GRAPH_REL = os.path.join(LIBROOT, "07_统一场方程", "空间螺旋几何化统一场论",
+                             "证明依赖图", "图谱输出", "graph.json")
+LIB_GRAPH_PRESENT = os.path.isfile(LIB_GRAPH_REL)
+KN["lib_graph_path"] = LIB_GRAPH_REL.replace("\\", "/")
+KN["lib_graph_present"] = LIB_GRAPH_PRESENT
+
+
+def _tally(rows, key):
+    d = {}
+    for r in rows:
+        v = r.get(key)
+        d[v] = d.get(v, 0) + 1
+    return dict(sorted(d.items(), key=lambda kv: -kv[1]))
+
+
+LIB_N = LIB_E = 0
+LIB_N_FIELDS, LIB_E_FIELDS = [], []
+LIB_REL_VOCAB, LIB_FT_VOCAB, LIB_ES_VOCAB = {}, {}, {}
+if LIB_GRAPH_PRESENT:
+    with io.open(LIB_GRAPH_REL, encoding="utf-8") as _fh:
+        _g = json.load(_fh)
+    _nodes = _g.get("nodes", [])
+    _links = _g.get("links") or _g.get("edges") or []
+    LIB_N, LIB_E = len(_nodes), len(_links)
+    LIB_N_FIELDS = sorted(_nodes[0].keys()) if _nodes else []
+    LIB_E_FIELDS = sorted(_links[0].keys()) if _links else []
+    LIB_REL_VOCAB = _tally(_links, "relation")
+    LIB_FT_VOCAB = _tally(_nodes, "file_type")
+    LIB_ES_VOCAB = _tally(_nodes, "epistemic_status")
+KN["lib_graph_nodes"] = LIB_N
+KN["lib_graph_edges"] = LIB_E
+KN["lib_node_fields"] = LIB_N_FIELDS
+KN["lib_edge_fields"] = LIB_E_FIELDS
+KN["lib_relation_vocab"] = LIB_REL_VOCAB
+KN["lib_file_type_vocab"] = LIB_FT_VOCAB
+KN["lib_epistemic_status_vocab"] = LIB_ES_VOCAB
+KN["lib_node_field_count"] = len(LIB_N_FIELDS)
+KN["lib_edge_field_count"] = len(LIB_E_FIELDS)
+
+guard("G35a_lib_graph_readable", LIB_GRAPH_PRESENT and LIB_N > 0 and LIB_E > 0,
+      "库内既有图谱应可只读打开：%s（%d 节点 / %d 边，节点 %d 字段 / 边 %d 字段）"
+      % (KN["lib_graph_path"], LIB_N, LIB_E, len(LIB_N_FIELDS), len(LIB_E_FIELDS)))
+
+# --- r65 侧字段集与词表（机器提取，不手写） ---
+R65_N_FIELDS = sorted(set(k for _n in GRAPH_NODES for k in _n.keys()))
+R65_E_FIELDS = sorted(set(k for _e in GRAPH_EDGES for k in _e.keys()))
+R65_REL_VOCAB = _tally(GRAPH_EDGES, "rel")
+KN["r65_node_fields"] = R65_N_FIELDS
+KN["r65_edge_fields"] = R65_E_FIELDS
+KN["r65_node_field_count"] = len(R65_N_FIELDS)
+KN["r65_edge_field_count"] = len(R65_E_FIELDS)
+KN["r65_relation_vocab"] = R65_REL_VOCAB
+KN["r65_relation_vocab_size"] = len(R65_REL_VOCAB)
+
+N_MISSING = [f for f in LIB_N_FIELDS if f not in R65_N_FIELDS]
+E_MISSING = [f for f in LIB_E_FIELDS
+             if f not in R65_E_FIELDS and f not in ("source", "target", "relation")]
+E_RENAME = [(a, b) for a, b in (("source", "src"), ("target", "dst"), ("relation", "rel"))
+            if b in R65_E_FIELDS]
+REL_IN = [r for r in R65_REL_VOCAB if r in LIB_REL_VOCAB]
+REL_OUT = [r for r in R65_REL_VOCAB if r not in LIB_REL_VOCAB]
+KN["r65_node_fields_missing"] = N_MISSING
+KN["r65_node_fields_missing_count"] = len(N_MISSING)
+KN["r65_edge_fields_missing"] = E_MISSING
+KN["r65_edge_fields_missing_count"] = len(E_MISSING)
+KN["r65_edge_field_renames"] = E_RENAME
+KN["r65_relation_in_lib_vocab"] = REL_IN
+KN["r65_relation_out_of_lib_vocab"] = REL_OUT
+KN["r65_relation_out_of_lib_count"] = len(REL_OUT)
+KN["r65_relation_out_of_lib_ratio"] = fx(D(len(REL_OUT)) / D(len(R65_REL_VOCAB)))
+
+guard("G35b_node_fields_incomplete", len(N_MISSING) > 0,
+      "r65 节点字段 %d/%d 缺失：%s" % (len(N_MISSING), len(LIB_N_FIELDS), ",".join(N_MISSING)))
+guard("G35c_source_provenance_absent",
+      all(f in N_MISSING for f in ("source_file", "source_location", "source_quote")),
+      "r65 节点完全缺 source_* 溯源三件套（库内为必填，本册 %d 条判定因此不可被图谱层引用）"
+      % len(GRAPH_NODES))
+guard("G35d_edge_endpoints_renamed", len(E_RENAME) == 3,
+      "r65 边字段名与库内不符 %d 处：%s" % (len(E_RENAME), E_RENAME))
+guard("G35e_relation_vocab_fully_out_of_lib",
+      len(REL_IN) == 0 and len(REL_OUT) == len(R65_REL_VOCAB),
+      "r65 的 relation 词表 %d 个**全部**不在库内词表 %s 内（越界比 %s）"
+      % (len(R65_REL_VOCAB), sorted(LIB_REL_VOCAB), KN["r65_relation_out_of_lib_ratio"]))
+guard("G35f_cannot_write_into_index_layer_directly", True,
+      "★结论：r65 图谱不能直接写入索引层 —— 缺 %d/%d 节点字段、%d 处边字段改名、relation 越界 %s"
+      % (len(N_MISSING), len(LIB_N_FIELDS), len(E_RENAME), KN["r65_relation_out_of_lib_ratio"]))
+
+# --- 自称的 openuft-index-graph/v1 在库内是否有规范文件？ ---
+GOV_DIRS = [os.path.join(LIBROOT, "00_项目治理"), os.path.join(LIBROOT, "07_统一场方程")]
+V1_SPECS = []
+for _d in GOV_DIRS:
+    for _r, _ds, _fs in os.walk(_d):
+        if "node_modules" in _r:
+            continue
+        for _fn in _fs:
+            if _fn.endswith(".schema.json") or "schema" in _fn.lower():
+                V1_SPECS.append(os.path.join(_r, _fn).replace("\\", "/"))
+KN["schema_spec_files_found"] = V1_SPECS[:10]
+KN["schema_spec_files_count"] = len(V1_SPECS)
+guard("G35h_no_schema_spec_file_in_repo", len(V1_SPECS) == 0,
+      "库内 %d 个治理/图谱目录中 schema 规范文件数 = %d ⇒ 本册与 r64 自称的 "
+      "openuft-index-graph/v1 **无规范文件可依**（只是自我声明的字符串）"
+      % (len(GOV_DIRS), len(V1_SPECS)))
+
+# --- 最小前置通道：attack25 的规范化报告是否在位 ---
+A25_REL = os.path.join(LIBROOT, "04_公共成果", "本项目_统一场论攻破",
+                       "整理_超光速攻破路线图谱_分析与规范化_2026-10-13.md")
+KN["attack25_report_present"] = os.path.isfile(A25_REL)
+KN["attack25_report_path"] = A25_REL.replace("\\", "/")
+guard("G35i_attack25_channel_present", KN["attack25_report_present"],
+      "唯一在位的规范化通道：%s" % KN["attack25_report_path"])
+
+KN["graph_admission_verdict"] = (
+    "不可直接入库（缺 %d/%d 节点字段 + %d 处边改名 + relation 越界 %s + 库内无 v1 规范文件）；"
+    "最小前置 = 走 attack25 规范化通道并先获库内 relation 词表扩表批准"
+    % (len(N_MISSING), len(LIB_N_FIELDS), len(E_RENAME), KN["r65_relation_out_of_lib_ratio"]))
+
+# =====================================================================
 # 12. 装载条目段并输出
 # =====================================================================
 

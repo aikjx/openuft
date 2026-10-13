@@ -286,8 +286,8 @@ def build(ctx):
       "不改变「天文级」这一定性描述。**2026-10-14 修复**：原列的「W20 ρ 量纲缺口 L²」已撤回"
       "（能量密度量纲误记，见 W20），故修正项由 4 条减为 3 条。"
       "另：本册已在数据产物给出图谱化骨架 "
-      + str(KN["graph_nodes"]) + " 节点 / " + str(KN["graph_edges"]) + " 边，schema 待与 openuft index 图谱层对齐。")
-
+      + str(KN["graph_nodes"]) + " 节点 / " + str(KN["graph_edges"])
+      + " 边；**入库可行性已机器定性为不可**（见 W35），不再声称「待对齐」。")
     I("W34", "★本册覆盖缺口（诚实登记）：度规基底与 QEI 压强口径两组判定权归 r64",
       "本册全程**照抄来料的度规与代数**做量纲与标度分析，未独立核验度规基底本身；该核验由 r64 C05 完成"
       "（来稿 (dx − v_s f dt)² 与 Alcubierre 原式 f²(dx − v_s dt)² 不符，逐分量 × 逐 f 共 25 点对比全部不等）。"
@@ -297,5 +297,34 @@ def build(ctx):
       "则 ρ 公式本身需重新推导**，这是本册最重要的外部依赖，引用 W13/W20 前须同时引 r64 C05。"
       "注意：**量纲层面（W20）不依赖 C05** —— C05 改的是度规的**结构**，而 W20 只用代数表达式 c²v²(f')²/G 的量纲，"
       "任何 f 的实现方式都不改变该式量纲 ⇒ W20 的 PASS 判词是稳健的。")
+
+    F_("W35", "★图谱骨架**不能直接写入索引层**：与库内既有 schema 全面不同源（悬空待办已结清）",
+      "本册首版把图谱交付写成「schema 待与 openuft index 图谱层对齐」，但该对齐目标是否存在**从未机器核验**。"
+      "本段（只读核对，未改库内任何文件）实测：库内既有图谱真源 = " + KN["lib_graph_path"]
+      + "（" + str(KN["lib_graph_nodes"]) + " 节点 / " + str(KN["lib_graph_edges"]) + " 边），"
+      "节点 " + str(KN["lib_node_field_count"]) + " 字段、边 " + str(KN["lib_edge_field_count"])
+      + " 字段，`relation` 词表实测**仅 " + str(len(KN["lib_relation_vocab"])) + " 个** = "
+      + ",".join(sorted(KN["lib_relation_vocab"])) + "（guard G35a）。"
+      "本册骨架：节点 " + str(KN["r65_node_field_count"]) + " 字段、边 " + str(KN["r65_edge_field_count"])
+      + " 字段，`relation` 词表 **" + str(KN["r65_relation_vocab_size"]) + " 个**。三处硬阻塞："
+      "① 节点缺 **" + str(KN["r65_node_fields_missing_count"]) + "/" + str(KN["lib_node_field_count"])
+      + "** 个字段，其中 `source_file`/`source_location`/`source_quote` **溯源三件套全缺**"
+      "（guard G35b/G35c）⇒ 本册 " + str(KN["graph_nodes"]) + " 条判定的出处无法被图谱层引用；"
+      "② 边端点与关系字段名全不符：`src`/`dst`/`rel` ⇒ 库内为 `source`/`target`/`relation`（guard G35d）；"
+      "③ **`relation` 词表越界 " + str(KN["r65_relation_out_of_lib_ratio"]) + "**（" + str(KN["r65_relation_vocab_size"])
+      + " 个全不在库内，guard G35e）⇒ 且库内 `weight` 恒 1.0、无法表达负向边语义",
+      "**第四处（更根本）**：全库 `00_项目治理/` 与 `07_统一场方程/` 中 schema 规范文件数 = **"
+      + str(KN["schema_spec_files_count"]) + "**（guard G35h）⇒ 本册与 r64 自称的 `openuft-index-graph/v1` "
+      "**没有规范文件可依**，只是自我声明的字符串。**最小前置**：走 attack25 规范化通道（"
+      + ("在位" if KN["attack25_report_present"] else "缺失") + "：`" + KN["attack25_report_path"]
+      + "`）并先获库内 relation 词表**扩表批准**。**本册不擅改库内词表、不改既有图谱。**")
+
+    I("W36", "图谱交付的定位澄清：这是「该轮审计的私有产物」，不是「已入库的图谱层」",
+      "本册的 " + str(KN["graph_nodes"]) + " 节点 / " + str(KN["graph_edges"])
+      + " 边骨架只做到**语义骨架**层（钥匙/约束/方程/裁定四类节点 + 依赖/限制/证伪类边），"
+      "**不含溯源三件套、不含置信度**，因此不具备入库资格；但它对本册的价值仍然独立："
+      "它把 34 条判定压成一张可检查的依赖网，使「哪些结论支撑哪些结论」一眼可查",
+      "这正是 attack25 §〇之二 划给本册的**独有位**（图谱层「导入侧」归 attack25）。"
+      "⇒ 两册不冲突而是分工：**attack25 管怎么导进去，本册管图里该有什么。**")
 
     return ITEMS
