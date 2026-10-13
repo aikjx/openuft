@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>35 · 量子基础与测量问题卷：已证非局域与开放测量</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%234ADE80'%3E35%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#0a3b1e);border:1px solid #166534;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#14532d;color:#bbf7d0;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--green);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#bbf7d0;margin-bottom:20px;}
+  .preview b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--green);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#86efac;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--green);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--green);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .chk{background:#0a1c12;border:1px solid #166534;border-left:4px solid var(--green);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#bbf7d0;}
+  .chk .mlab{color:var(--green);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 37 · openuft 统一场方程 35（零虚构）</span>
+  <h1>量子基础与测量问题卷：已证非局域与开放测量</h1>
+  <p>把"量子力学最深的未解之谜"拆成三层：已证（贝尔非局域）、开放（测量问题）、框架（退相干定位量子-经典边界）。每一层都有可复算锚点或文献判决。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算（35_quantum_calc_results.json）</b>：CHSH 量子界 2√2=2.8284271247…（经典界=2，实验违背=局域隐变量被排除）；ℏ/2=5.272859085×10⁻³⁵ J·s（不确定性下界）；ζ(3)=1.2020569031…；CMB 光子数密度 n_γ=410.717806878… cm⁻³（文献 410.7 一致）——宇宙熵主来源 ~10⁹⁰ k_B（文献）。
+</div>
+
+<section>
+<h2><span class="n">一</span>定理组 V（量子基础与测量）</h2>
+<h3>定理 V1（贝尔非局域性：已证）</h3>
+<div class="thm"><span class="lab">THM V1</span> <span class="body">CHSH 不等式：局域隐变量理论受限于 S≤2；量子力学允许 S=2√2=2.8284271247…（本卷现算）。实验（Aspect 1982、Hensen 2015、Nobel 2022）测得 S&gt;2——局域实在论被排除。非局域关联已证，但 no-signaling 定理保证不可超光速通信。</span></div>
+<div class="chk"><span class="mlab">判定</span>：量子非局域性=已证事实；"量子纠缠即超光速通信"=错误推论（V4）。</div>
+<h3>定理 V2（测量问题：开放）</h3>
+<div class="thm"><span class="lab">THM V2</span> <span class="body">量子态演化（薛定谔方程）与测量坍缩（投影公设）之间的过渡无公认机制。候选：哥本哈根（现象学）、多世界（无坍缩）、客观坍缩（GRW/CSL，参数受实验限）。无判决实验——这是量子基础最大开放项。</span></div>
+<h3>定理 V3（量子-经典边界：退相干框架）</h3>
+<div class="thm"><span class="lab">THM V3</span> <span class="body">退相干机制（环境监测）定位量子-经典边界：宏观叠加因环境纠缠在极短时间尺度消失。时间尺度强依赖环境模型（不做数值声称）；它把"坍缩在哪里发生"转化为"退相干多快完成"。</span></div>
+<h3>定理 V4（EPR 悖论现状）</h3>
+<div class="thm"><span class="lab">THM V4</span> <span class="body">EPR 1935 的"不完备性"论证被贝尔实验推翻其结论前提（局域实在论）；纠缠关联非局域，但不可提取信号（no-signaling 定理）——相对论因果性完整保留。EPR 悖论=已解决的开放问题：答案是非局域但无信号。</span></div>
+<h3>定理 V5（不确定性原理：精确下界）</h3>
+<div class="thm"><span class="lab">THM V5</span> <span class="body">ΔxΔp≥ℏ/2=5.272859085×10⁻³⁵ J·s（本卷现算，CODATA 2022 ℏ=1.054571817×10⁻³⁴ J·s）。这是已证下界，不是观测限制——任何声称"绕过不确定性"的框架必须给出替代实验协议（31 P 判决标准）。</span></div>
+<h3>定理 V6（终审）</h3>
+<div class="thm"><span class="lab">THM V6</span> <span class="body">量子基础现状=一层已证（非局域）+一层开放（测量）+一层框架（退相干）。TUFT 声称"频率/挠率统一量子引力、解释测量"——无任何量子基础预言、无常数、无窗口（23 G1–G5、31 P5）：它无法进入 V1–V5 任何一行。</span></div>
+<div class="fail">对照：TUFT 对量子基础的声明=语义组合（"高频抑制引力"），无数值预言；CHSH、ℏ/2、n_γ 三个本卷锚点它一个都推不出来。</div>
+</section>
+
+<section>
+<h2><span class="n">二</span>量子基础全景图（SVG）</h2>
+<svg viewBox="0 0 780 360" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC,sans-serif">
+  <defs>
+    <linearGradient id="bga" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1730"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <rect width="780" height="360" fill="url(#bga)" rx="10"/>
+  <text x="390" y="28" text-anchor="middle" fill="#d4a94e" font-size="16" font-weight="700">量子基础：一层已证 + 一层开放 + 一层框架（THM V1–V6）</text>
+  <g font-size="12">
+    <rect x="50" y="60" width="210" height="120" fill="#4ade80" opacity="0.16" rx="6" stroke="#4ade80"/>
+    <text x="155" y="85" text-anchor="middle" fill="#4ade80" font-weight="700">已证层</text>
+    <text x="155" y="105" text-anchor="middle" fill="#bbf7d0">V1 贝尔非局域</text>
+    <text x="155" y="123" text-anchor="middle" fill="#bbf7d0">CHSH≤2√2=2.8284…</text>
+    <text x="155" y="141" text-anchor="middle" fill="#bbf7d0">实验违背·Nobel 2022</text>
+    <text x="155" y="159" text-anchor="middle" fill="#bbf7d0">V5 ΔxΔp≥ℏ/2=5.273e-35</text>
+    <rect x="290" y="60" width="210" height="120" fill="#fbbf24" opacity="0.16" rx="6" stroke="#fbbf24"/>
+    <text x="395" y="85" text-anchor="middle" fill="#fbbf24" font-weight="700">开放层</text>
+    <text x="395" y="105" text-anchor="middle" fill="#fde68a">V2 测量问题</text>
+    <text x="395" y="123" text-anchor="middle" fill="#fde68a">坍缩/多世界/GRW</text>
+    <text x="395" y="141" text-anchor="middle" fill="#fde68a">无判决实验</text>
+    <text x="395" y="159" text-anchor="middle" fill="#fde68a">V4 EPR：非局域无信号</text>
+    <rect x="530" y="60" width="210" height="120" fill="#63d2ff" opacity="0.16" rx="6" stroke="#63d2ff"/>
+    <text x="635" y="85" text-anchor="middle" fill="#63d2ff" font-weight="700">框架层</text>
+    <text x="635" y="105" text-anchor="middle" fill="#93c5fd">V3 退相干</text>
+    <text x="635" y="123" text-anchor="middle" fill="#93c5fd">环境纠缠抹消叠加</text>
+    <text x="635" y="141" text-anchor="middle" fill="#93c5fd">定位量子-经典边界</text>
+    <text x="635" y="159" text-anchor="middle" fill="#93c5fd">时间尺度模型依赖</text>
+  </g>
+  <rect x="200" y="210" width="380" height="52" fill="#0d1730" rx="6" stroke="#7f1d1d"/>
+  <text x="390" y="232" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="700">TUFT：无量子基础预言</text>
+  <text x="390" y="250" text-anchor="middle" fill="#fca5a5" font-size="11.5">无 CHSH·无 ℏ/2·无 n_γ（23 G1–G5、31 P5）</text>
+  <g stroke="#334155" stroke-width="1.5">
+    <line x1="260" y1="120" x2="290" y2="120"/>
+    <line x1="500" y1="120" x2="530" y2="120"/>
+  </g>
+  <text x="390" y="300" text-anchor="middle" fill="#64748b" font-size="11.5">宇宙熵主来源：CMB 光子 n_γ=410.717806878… cm⁻³（本卷现算）→ 总熵 ~10⁹⁰ k_B（文献）</text>
+  <text x="390" y="330" text-anchor="middle" fill="#64748b" font-size="11">示意：三层结构 + TUFT 无法进入任何一层</text>
+</svg>
+<p class="cap">图 1 · 量子基础全景（示意：已证/开放/框架三层 + TUFT 排除）</p>
+
+<h3>250 位锚点表（35_quantum_calc_results.json）</h3>
+<table>
+  <tr><th style="width:22%">锚点</th><th style="width:48%">本卷 250 位现算</th><th style="width:30%">判定</th></tr>
+  <tr><td>CHSH 量子界</td><td class="mono">2√2=2.8284271247…（经典界=2）</td><td>已证·实验违背</td></tr>
+  <tr><td>ℏ/2</td><td class="mono">5.272859085×10⁻³⁵ J·s</td><td>已证下界</td></tr>
+  <tr><td>ζ(3)</td><td class="mono">1.2020569031…</td><td>可复算常数</td></tr>
+  <tr><td>n_γ（CMB）</td><td class="mono">410.717806878… cm⁻³</td><td>文献 410.7 一致</td></tr>
+  <tr><td>宇宙总熵</td><td class="mono">~10⁹⁰ k_B（文献）</td><td>量级共识</td></tr>
+  <tr><td>V6 终审</td><td class="mono">TUFT 无锚点（23/31）</td><td>无量子基础解释力</td></tr>
+</table>
+<p class="note">注：n_γ 由 CODATA 2022 常数（k_B、ℏ、c）+ T_γ=2.72548 K 从第一性现算，与文献 410.7 cm⁻³ 一致——量子统计宇宙学的可复算锚点。</p>
+</section>
+
+<section>
+<h2><span class="n">三</span>数据与来源</h2>
+<ul>
+  <li>250 位现算：35_quantum_calc.py → 35_quantum_calc_results.json（本卷交付）</li>
+  <li>贝尔实验：Aspect 1982、Hensen 2015（无漏洞）、Nobel 2022（文献）；CHSH 理论界=量子力学标准结果</li>
+  <li>ℏ=1.054571817×10⁻³⁴ J·s（CODATA 2022）；T_γ=2.72548 K（Fixsen 2009，文献）</li>
+  <li>退相干/测量问题：Zurek 综述（文献）；宇宙熵 ~10⁹⁰ k_B：文献共识（Penrose/Lloyd）</li>
+  <li>跨卷：19（GR 推导）、23（终审表）、25（跑动）、30（量子引力候选）、31（判决窗口）、32（本源体系）、34（本质本源）</li>
+</ul>
+</section>
+
+<div style="background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:14px 0;">
+<b style="color:var(--gold)">归属与导航</b>
+<p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+本卷：openuft/07_统一场方程/（openuft 编号 35 = 算法联盟系列 37）。配套脚本与 JSON 同目录。<br>
+openuft 编号 31–34（系列 33–36）：第一性推导 · 本源方程体系 · 本质本源 · 五大量级问题。<br>
+系列（主目录）：① 引力线 01·04·07·08·12·16·19·20·21·22；② 验证方法线 02·05·06·09·10·13·15·17·18；③ 攻破线 23–32。<br>
+openuft 总卷（主目录）：openuft-统一场论全维度全链路总卷.html · 使用指南。
+</p>
+</div>
+
+<p class="foot">openuft 编号 35 · 量子基础与测量问题卷 · 零虚构声明。全部锚点来自 35_quantum_calc.py（mpmath 250 位，可复现）或标注文献出处；量子基础判定遵循 V6 三层结构定义（已证/开放/框架）。</p>
+</div>
+</body>
+</html>
+</div>
+</body>
+</html>
