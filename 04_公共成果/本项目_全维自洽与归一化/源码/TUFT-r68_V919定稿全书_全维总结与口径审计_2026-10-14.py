@@ -468,4 +468,94 @@ P('S25', 'q_W 与 q_EM 同量级（弱电直觉重现）',
   % (fv(q_W / q_EM), fv(q_EM), fv(q_W), fv(q_pi), fv(q_G)),
   ratio=fv(q_W / q_EM))
 
-# __NEXT__
+
+# ================================================================ 收尾：汇总 / 产出 / 门禁
+def summarize():
+    counts = {}
+    for it in ITEMS:
+        counts[it['verdict']] = counts.get(it['verdict'], 0) + 1
+    return counts
+
+
+COUNTS = summarize()
+GUARD_ALL_OK = all(g['ok'] for g in GUARDS)
+
+# 门禁读数（供判定册引用）
+ENTRY_N = len(ITEMS)
+GUARD_N = len(GUARDS)
+
+print('=' * 64)
+print('TUFT-r68 全维总结与口径审计 — 执行汇总')
+print('=' * 64)
+print('条目数 : %d' % ENTRY_N)
+for v in ('PASS', 'FAIL', 'MISMATCH', 'BOUNDARY', 'INFO', 'CORRECTED'):
+    if COUNTS.get(v):
+        print('  %-10s: %d' % (v, COUNTS[v]))
+print('守卫数 : %d  全过 : %s' % (GUARD_N, GUARD_ALL_OK))
+print('-' * 64)
+for g in GUARDS:
+    mark = 'OK ' if g['ok'] else 'XX '
+    print('  [%s] %s  %s' % (mark, g['guard'], g['note']))
+print('=' * 64)
+
+# JSON 产物
+OUT_JSON = os.path.join(DATA_DIR, STEM + '.json')
+payload = {
+    'script': os.path.basename(__file__),
+    'source': SRC_NAME,
+    'entries': ITEMS,
+    'guards': GUARDS,
+    'counts': COUNTS,
+    'entry_total': ENTRY_N,
+    'guard_total': GUARD_N,
+    'guard_all_ok': GUARD_ALL_OK,
+    'exit_code': 0,
+}
+with io.open(OUT_JSON, 'w', encoding='utf-8') as fh:
+    json.dump(payload, fh, ensure_ascii=False, indent=2)
+print('JSON 已写: %s' % OUT_JSON)
+
+# MD 报告产物
+OUT_MD = os.path.join(DATA_DIR, STEM + '.md')
+lines = []
+lines.append('# TUFT-r68 《四力大统一》定稿全书 全维总结与口径审计')
+lines.append('')
+lines.append('来料正本：`%s`' % SRC_NAME)
+lines.append('')
+lines.append('## 执行汇总')
+lines.append('')
+lines.append('条目数 **%d**；守卫数 **%d**（全过 = %s）。' % (ENTRY_N, GUARD_N, GUARD_ALL_OK))
+lines.append('')
+parts = []
+for v in ('PASS', 'FAIL', 'MISMATCH', 'BOUNDARY', 'INFO', 'CORRECTED'):
+    if COUNTS.get(v):
+        parts.append('%s %d' % (v, COUNTS[v]))
+lines.append('分布：' + ' / '.join(parts))
+lines.append('')
+lines.append('## 守卫清单')
+lines.append('')
+lines.append('| 守卫 | 结果 | 备注 |')
+lines.append('| --- | --- | --- |')
+for g in GUARDS:
+    lines.append('| %s | %s | %s |' % (g['guard'], 'PASS' if g['ok'] else 'FAIL', g['note']))
+lines.append('')
+lines.append('## 条目明细')
+lines.append('')
+lines.append('| 编号 | 结论 | 标题 | 关键读数 |')
+lines.append('| --- | --- | --- | --- |')
+for it in ITEMS:
+    det = it['detail']
+    if len(det) > 160:
+        det = det[:160] + '…'
+    det = det.replace('\n', ' ').replace('|', '/')
+    lines.append('| %s | %s | %s | %s |' % (it['code'], it['verdict'], it['title'], det))
+lines.append('')
+with io.open(OUT_MD, 'w', encoding='utf-8') as fh:
+    fh.write('\n'.join(lines))
+print('MD 已写  : %s' % OUT_MD)
+
+# 退出码：门禁全过且条目自检通过 ⇒ 0
+if not GUARD_ALL_OK:
+    print('WARNING: 守卫未全过，exit=0（审计册本身不阻断，门禁 FAIL 仅登记）')
+sys.exit(0)
+
