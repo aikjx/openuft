@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>31 · 第一性原理推导总卷：从量纲到判决的完整证明链</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%234ADE80'%3E31%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#0a3b1e);border:1px solid #166534;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#14532d;color:#bbf7d0;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--green);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#bbf7d0;margin-bottom:20px;}
+  .preview b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--green);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#86efac;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--green);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--green);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .steps{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 16px 10px 34px;margin:10px 0;font-size:13px;color:#c7d2fe;}
+  .steps li{margin:5px 0;}
+  .steps .math{font-family:Consolas,monospace;color:#93c5fd;}
+  .chk{background:#0a1c12;border:1px solid #166534;border-left:4px solid var(--green);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#bbf7d0;}
+  .chk .mlab{color:var(--green);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 33 · openuft 统一场方程 31（零虚构）</span>
+  <h1>第一性原理推导总卷：从量纲到判决的完整证明链</h1>
+  <p>不是宣称，是推导。本卷把系列 01–32 已建立的证明链压缩为一条完整链路：每条定理给出定义 → 求导/推导 → 250 位精算验证 → 判决窗口。TUFT 母方程在第一步（量纲）即断链。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算（31_firstprinciples_calc_results.json）</b>：地表 g=9.7982854791… m/s²；水星近日点进动 Δφ=42.9807346122…″/cy（文献 42.98″/cy）；太阳光偏折 θ=1.7511903257…″（文献 1.75″）。跨卷锚点：GW 啁啾 28.0955558 M☉（21）、M_W/M_Z=0.88144660（17）、M_GUT=2.009×10¹⁶ GeV（25）、弦 D=26/10 与 LQG A_min（26/30）。
+</div>
+
+<!-- R1 -->
+</div>
+</body>
+</html>
