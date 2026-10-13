@@ -280,12 +280,19 @@ DIM_RHO_CLAIM = dmul(dmul(dmul(dmul(Q["v"], Q["v"]), Q["c"]), Q["c"]),
 DIM_RHO_GAP = dsub(DIM_RHO_TRUE, DIM_RHO_CLAIM)
 KN["dim_rho_claim"] = dstr(DIM_RHO_CLAIM)
 KN["dim_rho_true"] = dstr(DIM_RHO_TRUE)
+KN["dim_mass_density"] = dstr(DIM_MASS_DENSITY)
 KN["dim_rho_gap"] = dstr(DIM_RHO_GAP)
-guard("G11_rho_formula_not_closed", not dsame(DIM_RHO_CLAIM, DIM_RHO_TRUE),
-      "ρ = c² v_s² (f')²/(32πG) 的量纲 = " + dstr(DIM_RHO_CLAIM) + "，应为 " + dstr(DIM_RHO_TRUE)
-      + "，缺口 = " + dstr(DIM_RHO_GAP))
+guard("G11_rho_formula_dimensionally_closed", dsame(DIM_RHO_CLAIM, DIM_RHO_TRUE),
+      "ρ = c² v_s² (f')²/(32πG) 的量纲 = " + dstr(DIM_RHO_CLAIM)
+      + " = 能量密度 [J/m³ = M L⁻¹T⁻²] ⇒ 量纲自洽，缺口 = " + dstr(DIM_RHO_GAP))
 
-# 缺失因子穷举（r42 方法论二）：补齐因子应具有量纲 L^-2
+# 能量密度 vs 质量密度：两者只差一个 T^-2，量纲装置必须能区分（防止再犯「L 指数误记」）
+guard("G11d_energy_vs_mass_density_differ",
+      dsame(dmul(DIM_RHO_TRUE, dpow(Q["T"], -2)), DIM_MASS_DENSITY)
+      and not dsame(DIM_RHO_TRUE, DIM_MASS_DENSITY),
+      "能量密度 × T⁻² = 质量密度：ρ_E = M L⁻¹T⁻²、ρ_m = M L⁻³ ⇒ 二者相差恰一个 T⁻²")
+
+# 缺失因子穷举（r42 方法论二）：量纲已闭合 ⇒ 无需任何补齐因子
 POOL = {"c": Q["c"], "l_P": Q["L"], "m_P": Q["M"], "G": Q["G"], "h": Q["h"]}
 PKEYS = list(POOL.keys())
 fill_hits = []
@@ -303,25 +310,18 @@ for a1 in range(-3, 4):
                         fill_hits.append(dict((PKEYS[i], combo[i]) for i in range(5) if combo[i] != 0))
 KN["dim_fill_need"] = dstr(DIM_RHO_GAP)
 KN["dim_fill_hits_count"] = len(fill_hits)
-KN["dim_fill_hits_sample"] = fill_hits[:8]
-if fill_hits:
-    best = sorted(fill_hits, key=lambda c: (len(c), sorted(c.items())))[0]
-    KN["dim_fill_best"] = best
-    KN["dim_fill_best_len"] = len(best)
-else:
-    KN["dim_fill_best"] = None
-    KN["dim_fill_best_len"] = 0
-guard("G11c_fill_exponent_search", len(fill_hits) > 0,
-      "±3 次幂穷举 5^5=%d 组，命中补齐因子 %d 组；最简 = %s"
-      % (5 ** 5, len(fill_hits), jdump(KN["dim_fill_best"])))
+KN["dim_fill_verdict"] = ("无需补齐（量纲已闭合）" if len(fill_hits) == 0
+                          else ("需补齐：" + jdump(fill_hits[:4])))
+guard("G11c_no_fill_factor_needed", len(fill_hits) == 0,
+      "量纲已闭合 ⇒ 补齐因子穷举（5^5=%d 组）应零命中，实测 %d 组" % (5 ** 5, len(fill_hits)))
 
 DIM_RHO_NO_V = dmul(dmul(Q["c"], Q["c"]),
                     dmul(dinv(Q["G"]), dpow(D_F_PRIME, 2)))
 KN["dim_rho_without_vs"] = dstr(DIM_RHO_NO_V)
 guard("G11b_positive_control_drop_vs2",
-      not dsame(DIM_RHO_NO_V, DIM_RHO_CLAIM),
-      "阳性对照：去掉 v_s² 后量纲 = " + dstr(DIM_RHO_NO_V) + " ≠ " + dstr(DIM_RHO_CLAIM)
-      + " ⇒ 检验器对 v_s² 的幂次有判别力")
+      dsame(DIM_RHO_NO_V, DIM_MASS_DENSITY),
+      "阳性对照：去掉 v_s² 后量纲 = " + dstr(DIM_RHO_NO_V)
+      + " = 质量密度（≠ 能量密度）⇒ 检验器对 v_s² 的幂次有判别力")
 
 DIM_MNEG = dmul(dmul(dmul(dpow(Q["v"], 2), dpow(Q["L"], 2)), dinv(Q["G"])), dpow(Q["L"], -1))
 guard("G12_m_neg_dimension_ok", dsame(DIM_MNEG, Q["M"]),
