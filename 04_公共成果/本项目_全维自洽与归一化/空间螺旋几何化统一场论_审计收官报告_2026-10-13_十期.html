@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>空间螺旋几何化统一场论 · 审计收官报告（十期·125条）</title>
+<style>
+:root{--bg:#0b0e14;--panel:#121826;--panel2:#0f1420;--line:#232b3d;--tx:#d7dde8;--tx2:#8a94a8;--ac:#7fb3ff;--ok:#4ade80;--bad:#f87171;--warn:#fbbf24;--purp:#a78bfa;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.55;padding:28px 20px 60px}
+.wrap{max-width:1120px;margin:0 auto}
+h1{font-size:24px;letter-spacing:1px;color:#fff;font-weight:700}
+.sub{color:var(--tx2);font-size:13px;margin-top:6px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;margin-left:10px;vertical-align:middle}
+.b-red{background:rgba(248,113,113,.14);color:var(--bad);border:1px solid rgba(248,113,113,.35)}
+.b-blue{background:rgba(127,179,255,.12);color:var(--ac);border:1px solid rgba(127,179,255,.3)}
+.b-green{background:rgba(74,222,128,.12);color:var(--ok);border:1px solid rgba(74,222,128,.35)}
+.grid{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-top:22px}
+.cell{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 8px;text-align:center}
+.cell .num{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.cell .lab{font-size:11px;color:var(--tx2);margin-top:4px}
+.c-ok .num{color:var(--ok)} .c-bad .num{color:var(--bad)} .c-ac .num{color:var(--ac)} .c-pur .num{color:var(--purp)} .c-warn .num{color:var(--warn)}
+.panel{background:var(--panel2);border:1px solid var(--line);border-radius:10px;margin-top:20px;padding:18px 20px}
+h2{font-size:16px;color:#fff;margin-bottom:12px;border-left:3px solid var(--ac);padding-left:10px}
+h3{font-size:14px;color:var(--ac);margin:14px 0 8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+th{background:#1a2233;color:var(--tx2);text-align:left;padding:7px 9px;border:1px solid var(--line);font-weight:600}
+td{padding:7px 9px;border:1px solid var(--line);vertical-align:top}
+.tag{display:inline-block;padding:1px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.t-f{background:rgba(248,113,113,.14);color:var(--bad)}
+.t-p{background:rgba(74,222,128,.12);color:var(--ok)}
+.t-o{background:rgba(251,191,36,.12);color:var(--warn)}
+.t-b{background:rgba(127,179,255,.12);color:var(--ac)}
+.tl{position:relative;padding-left:0;list-style:none;margin-top:14px;--t:88px;--a:34px}
+.tl li{display:grid;grid-template-columns:var(--t) var(--a) 1fr;gap:0;padding:6px 0;align-items:start}
+.tl .t{color:var(--tx2);font-size:12px;text-align:right;padding-top:3px}
+.tl .ax{justify-self:center;position:relative;width:12px;height:12px;border-radius:50%;background:var(--ac);margin-top:5px;z-index:1}
+.tl .d{font-size:13px;padding-left:10px}
+.tl .d b{color:#fff;font-weight:600}
+.tl li::before{content:"";position:absolute;left:calc(var(--t) + var(--a)/2 - 1px);top:0;bottom:0;width:2px;background:var(--line)}
+.tl li:first-child::before{top:50%} .tl li:last-child::before{bottom:50%}
+.warn-box{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.35);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#fde68a;margin-top:10px}
+.red-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.35);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#fecaca;margin-top:10px}
+.foot{margin-top:26px;color:var(--tx2);font-size:11.5px;border-top:1px solid var(--line);padding-top:12px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:repeat(2,1fr)}.tl{--t:66px;--a:26px}.tl li{grid-template-columns:var(--t) var(--a) 1fr}}
+</style>
+</head>
+<body>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0e14'/%3E%3Cpath d='M14 46c10-2 18-16 36-18' stroke='%237fb3ff' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='28' r='6' fill='%23a78bfa'/%3E%3C/svg%3E">
+<div class="wrap">
+  <h1>空间螺旋几何化统一场论 · 审计收官报告
+    <span class="badge b-red">十期 · 125 条</span><span class="badge b-green">open 归零</span><span class="badge b-blue">守卫 7/8</span></h1>
+  <div class="sub">算法联盟审计组 · 2026-10-13 · 台账 claims.csv（C01–C125）· mpmath 250 位 · 全维度全链路终极整理版</div>
+
+  <div class="grid">
+    <div class="cell c-ac"><div class="num">125</div><div class="lab">台账主张</div></div>
+    <div class="cell c-bad"><div class="num">60</div><div class="lab">falsified 合计</div></div>
+    <div class="cell c-ok"><div class="num">0</div><div class="lab">open 剩余</div></div>
+    <div class="cell c-bad"><div class="num">63</div><div class="lab">L0 层级</div></div>
+    <div class="cell c-pur"><div class="num">58</div><div class="lab">L1 层级</div></div>
+    <div class="cell c-ac"><div class="num">4</div><div class="lab">L2 层级</div></div>
+    <div class="cell c-bad"><div class="num">0</div><div class="lab">L3 层级</div></div>
+    <div class="cell c-ok"><div class="num">20</div><div class="lab">引擎 PASS</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>十期动作（C125 pass 全量层级复核 + 全维度全链路终极整理）</h2>
+    <div style="overflow-x:auto"><table style="table-layout:fixed;min-width:640px">
+      <tr><th style="width:7%">ID</th><th style="width:18%">动作</th><th style="width:10%">判定</th><th style="width:65%">内容</th></tr>
+      <tr><td>C125</td><td>pass 全量层级复核</td><td><span class="tag t-p">pass</span></td><td>31 条 pass 全部 ≤L2：L0 定义/恒等重述 10（C01/C02/C03/C07/C08/C10/C11/C17/C18/C20）、L1 数值自洽验证 14（C72/C93/C94/C95/C96/C101–C106/C110/C111）、L2 修复/删除判定 7（C24/C32/C90/C34/C39/C41/C44）——<b>无一达 L3 独立预言</b></td></tr>
+      <tr><td>—</td><td>全维度全链路终极整理</td><td><span class="tag t-p">成文</span></td><td>五维攻破矩阵（理论/结构/实验/数值/工程）+ 全链路时间线 + 台账全状态 + 守卫 G1–G8 + 终局判定——以最伟大科学家处理模式成文（可证伪性优先、证据分级 A/B/C、只认引擎、失误即修、红线诚实）</td></tr>
+    </table></div>
+  </div>
+
+  <div class="panel">
+    <h2>五维攻破矩阵（终局定案）</h2>
+    <div style="overflow-x:auto"><table style="table-layout:fixed;min-width:640px">
+      <tr><th style="width:14%">维度</th><th style="width:34%">关键定案</th><th style="width:52%">结论</th></tr>
+      <tr><td>理论层级</td><td>C121 三定理 no-go（CM/HLS/WW）</td><td>单标量 κ、τ 无内部规范群/超对称/自旋谱 ⇒ 原 TUFT 不可修复为真正统一场论</td></tr>
+      <tr><td>结构层级</td><td>C25/C35/C48/C49/C50/C51</td><td>伪派生/零内容/谱退化/公式错因子/阈值不可达/恒等无判别力</td></tr>
+      <tr><td>实验层级</td><td>C117 PPN 救活审判 + C118 普适矛盾</td><td>γ=β=1（=GR 重述）；第五力被 42μm/1e-15 封死；q0/G 预言自相矛盾 ⇒ 无存活夹缝</td></tr>
+      <tr><td>数值层级</td><td>250 位锚点全复算</td><td>sin(1/137) 不命中、谱宽 1.089e-75、q0/G 比值恒等——全部锚点偏差 ≤2.3e-7</td></tr>
+      <tr><td>工程层级</td><td>C101 收口 / C82 boundary</td><td>EKG 求解器修复后无稳定玻色星成立；S14 复现 5.491e-08 通过但物理声称开放</td></tr>
+    </table></div>
+  </div>
+
+  <div class="panel">
+    <h2>终态统计（引擎 + 守卫）</h2>
+    <div style="overflow-x:auto"><table style="table-layout:fixed;min-width:640px">
+      <tr><th style="width:24%">项目</th><th style="width:30%">数值</th><th style="width:46%">说明</th></tr>
+      <tr><td>台账</td><td>125 条 C01–C125</td><td>无缺号、无列错位</td></tr>
+      <tr><td>open 剩余</td><td><b>0</b></td><td>九期已归零，十期维持</td></tr>
+      <tr><td>falsified 合计</td><td>60（原体系 21 / 本审计 39）</td><td>基线 27 只增不减</td></tr>
+      <tr><td>状态分布</td><td>pass 31 · boundary 20 · BOUNDARY 9 · info 3 · repaired 2</td><td>无 open</td></tr>
+      <tr><td>L 层级</td><td>L0=63 · L1=58 · L2=4 · L3=0</td><td>UFT-3 登记 1 条（C45）</td></tr>
+      <tr><td>标记复核</td><td>PASS=20 · FAIL=9 · PARTIAL=2 · INFO=94</td><td>引擎三审计算法</td></tr>
+      <tr><td>守卫</td><td>7/8</td><td>G1–G7 全绿；G8 见下</td></tr>
+    </table></div>
+  </div>
+
+  <div class="panel">
+    <h2>审计时间轴（轮①–轮⑭）</h2>
+    <ul class="tl">
+      <li><div class="t">09-25</div><div class="ax"></div><div class="d"><b>原始申报归档</b>：sha256=0b78a4…，审计锚点建档</div></li>
+      <li><div class="t">09-26</div><div class="ax"></div><div class="d"><b>轮①–②</b>：V21 续修合并 C25/C35；第一性审计与伪派生判定</div></li>
+      <li><div class="t">09-27</div><div class="ax"></div><div class="d"><b>轮③–⑦</b>：求导链 / 数学链 / 频率链 / 开放项 / 剩余开放项总攻（C62–C70）</div></li>
+      <li><div class="t">10-09</div><div class="ax"></div><div class="d"><b>轮⑧</b>：五期收官（70 条版、守卫 8/8）</div></li>
+      <li><div class="t">10-10</div><div class="ax"></div><div class="d"><b>轮⑨–⑩</b>：并发轮推进；六期攻破 C108/C73 → C112/C113；恢复 C29–C33</div></li>
+      <li><div class="t">10-11</div><div class="ax"></div><div class="d"><b>并发</b>：V4.1 十二刀（63）、PPN 救活审判（64）、C114–C116 登记</div></li>
+      <li><div class="t">10-13</div><div class="ax"></div><div class="d"><b>轮⑪</b>：七期攻破 C115/C116 → C118/C119；64 号 no-go 登记 C117</div></li>
+      <li><div class="t">10-13</div><div class="ax"></div><div class="d"><b>轮⑫</b>：八期——C101 列错位修复；C100 收口；C120/C121 登记</div></li>
+      <li><div class="t">10-13</div><div class="ax"></div><div class="d"><b>轮⑬</b>：九期——16 条 open 全收口（C122/C123/C124）⇒ open 归零</div></li>
+      <li><div class="t">10-13</div><div class="ax"></div><div class="d"><b>轮⑭（本轮）</b>：十期——C125 pass 全量层级复核（全部 ≤L2）；全维度全链路终极整理成文</div></li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <h2>守卫状态（G1–G8）</h2>
+    <div style="overflow-x:auto"><table style="table-layout:fixed;min-width:640px">
+      <tr><th style="width:5%">ID</th><th style="width:26%">检查</th><th style="width:8%">状态</th><th style="width:61%">说明</th></tr>
+      <tr><td>G1</td><td>每行恰 5 字段</td><td><span class="tag t-p">PASS</span></td><td>无列错位</td></tr>
+      <tr><td>G2</td><td>claim_id 连续无缺号</td><td><span class="tag t-p">PASS</span></td><td>C01–C125</td></tr>
+      <tr><td>G3</td><td>状态取值合法</td><td><span class="tag t-p">PASS</span></td><td>含 repaired/BOUNDARY</td></tr>
+      <tr><td>G4</td><td>C12/C21/C23 未被改回</td><td><span class="tag t-p">PASS</span></td><td>申报「清零」不成立</td></tr>
+      <tr><td>G5</td><td>审计组 falsified 不缩水</td><td><span class="tag t-p">PASS</span></td><td>基线 27 条，现 39 条（只增不减）</td></tr>
+      <tr><td>G6</td><td>两阶段引擎产物齐备</td><td><span class="tag t-p">PASS</span></td><td>阶段一 42 / 阶段二 10</td></tr>
+      <tr><td>G7</td><td>被审文本已归档</td><td><span class="tag t-p">PASS</span></td><td>路径存在</td></tr>
+      <tr><td>G8</td><td>归档哈希未变</td><td><span class="tag t-f">FAIL</span></td><td>见下</td></tr>
+    </table></div>
+    <div class="warn-box">
+      <b>G8 归档哈希变更（承六–九期未解，全项目唯一未解工程项）</b>：`修复版申报原文_2026-09-25.md` 当前 sha256=00114477683c1b53… vs 基线 0b78a4d980a9ff35…。归档被并发轮改写，无原版备份，守卫防自愈故基线保留旧哈希。待材料轮提供 2026-09-25 原版或确认新版归档后重建基线。
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>终局判定</h2>
+    <div class="red-box">
+      <b>修复版申报「清零全部 falsified」不成立</b>：falsified 60 条（基线 27 只增不减），open 归零，pass 31 条全部 ≤L2。<br>
+      TUFT 诚实红线不变：<b>UFT 达成度 2/6、L3=0、UFT-3=0</b>。终局：TUFT 作为<b>唯象标量场玩具</b>自洽性成立（61 号收口边界）；作为<b>终极统一场论</b>已被理论（C121）/结构（63 号）/实验（C117）三线合流 no-go 封档——无"有内容且通过实验"的夹缝。<b>数值自洽 ≠ 第一性预言</b>。
+    </div>
+  </div>
+
+  <div class="foot">
+    产物：全维度全链路终极整理 md · 批量审计 json/md/csv（125 条）· 守卫日志 · 终结报告 125 条版 · 本收官 HTML 125 条版<br>
+    本页为静态审计快照，数据源：claims.csv（只读）· 引擎判定表 · 守卫日志。
+  </div>
+</div>
+</body>
+</html>

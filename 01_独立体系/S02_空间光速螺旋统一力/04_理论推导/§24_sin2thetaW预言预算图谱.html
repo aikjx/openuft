@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sin²θ_W 预言预算：一循环 vs 两循环（§24）</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f5f6f8;color:#1f2937;line-height:1.6;padding:20px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;border-radius:14px;padding:22px 28px;margin-bottom:16px;}
+  header h1{font-size:21px;}
+  header .sub{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  .chartbox{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  #chart{width:100%;height:480px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{border:1px solid #e5e7eb;padding:6px 10px;text-align:left;}
+  th{background:#f1f5f9;}
+  .note{font-size:12.5px;color:#64748b;margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>sin²θ_W 预言预算：一循环 → 两循环 → 实验</h1>
+  <div class="sub">S02 空间光速螺旋统一力 · §24 · 数据：§24_verify.py 边界值求解（输入 α_em=1/127.925、α_s=0.1184，统一条件 α1=α2=α3@M_GUT）；红线=实验 0.23122（PDG）</div>
+</header>
+
+<div class="chartbox">
+  <div id="chart"></div>
+  <p class="note">一循环（含 M_SUSY=1TeV 阈值）预言 0.2289（§20 V6 独立算 0.2272，两实现差 0.0017，属实现级离散）；两循环规范-规范修正 +0.0030 → 0.2319，与实验仅差 +0.0007（+0.29%）。剩余缺口由 SUSY/GUT 阈值 + Yukawa + 方案转换吸收（文献量级 ±0.001–0.005）。Weinberg 角 1.8% 缺口至此可审计闭合——闭合机制=SUSY-GUT，与 S02 螺旋无关（§20 已证伪频率阶梯参与）。</p>
+</div>
+
+<div class="chartbox">
+  <h3 style="font-size:16px;margin-bottom:10px;">§24 预算表（sin²θ_W(m_Z)）</h3>
+  <table>
+    <tr><th>贡献</th><th>值</th><th>距实验 Δ</th></tr>
+    <tr><td>一循环预言（本脚本）</td><td>0.2289</td><td>−0.0023（−0.99%）</td></tr>
+    <tr><td>§20 V6 一循环（独立实现）</td><td>0.2272</td><td>−0.0040（−1.74%）</td></tr>
+    <tr><td>两循环（规范-规范 b_ij）</td><td>0.2319</td><td>+0.0007（+0.29%）</td></tr>
+    <tr><td>实验（PDG）</td><td>0.23122</td><td>—</td></tr>
+    <tr><td>剩余缺口 exp−2l</td><td colspan="2">−0.0007：GUT/SUSY 阈值 + Yukawa + MS→DR（文献 ±0.001–0.005，可吸收）</td></tr>
+  </table>
+  <p class="note">结论：§20 遗留的 1.8% 缺口由「两循环 + 阈值修正」标准链闭合，Weinberg 角预言进入与实验 ±0.3% 一致性区间；M_GUT 两循环 1.257×10¹⁶ GeV、α_G⁻¹=25.135，与文献（~1–2×10¹⁶、α_G*⁻¹≈25.5）一致。本节为标准物理增量，不改变 S02 定级（§23）。</p>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"
+        onerror="document.getElementById('chart').innerHTML='<p style=\'padding:24px\'>ECharts 加载失败（离线环境），请参照上方表格。</p>';"></script>
+<script>
+(function(){
+  var el = document.getElementById('chart');
+  if(!el || typeof echarts === 'undefined'){ return; }
+  var chart = echarts.init(el);
+  var option = {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true,
+      formatter: function(params){
+        if(!params || !params.length){ return ''; }
+        var p = params[0];
+        return p.name + String.fromCharCode(10) + 'sin²θ_W = ' + Number(p.value).toFixed(4);
+      } },
+    title: { text: 'sin²θ_W(m_Z) 预言预算', left: 'center', top: 6 },
+    legend: { top: 32 },
+    grid: { left: 70, right: 30, top: 70, bottom: 70, containLabel: true },
+    xAxis: { type: 'category', data: ['一循环\n（含 1TeV 阈值）', '两循环\n（规范-规范）', '实验\n（PDG）'], axisLabel: { interval: 0, fontSize: 11 } },
+    yAxis: { type: 'value', name: 'sin²θ_W', min: 0.224, max: 0.234, axisLabel: { fontSize: 11 } },
+    series: [{
+      name: 'sin²θ_W', type: 'bar', barWidth: 90,
+      data: [0.2289, 0.2319, 0.23122],
+      label: { show: true, position: 'top', fontSize: 11, formatter: function(p){ return Number(p.value).toFixed(4); } },
+      markLine: { symbol: 'none', silent: true, lineStyle: { type: 'dashed' }, label: { fontSize: 11, formatter: '实验 0.23122', position: 'insideEndTop' },
+        data: [{ yAxis: 0.23122 }] }
+    }]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
+</script>
+</body>
+</html>

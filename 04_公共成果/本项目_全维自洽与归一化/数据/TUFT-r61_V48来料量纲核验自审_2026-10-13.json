@@ -1,0 +1,157 @@
+{
+  "audit": "TUFT-r61",
+  "subject": "V4.8 来料《量纲核验报告》自审",
+  "verdict": "FAIL",
+  "rating": "来料 C/L1：诊断方向对、论据与修正均错；与 r45/r42 同结论但更退步",
+  "counts": {
+    "PASS": 3,
+    "FAIL": 5,
+    "INFO": 1
+  },
+  "guard": {
+    "n_pass": 14,
+    "n_total": 14,
+    "all_pass": true
+  },
+  "dimensions": {
+    "hbar_over_c": "M·L",
+    "hbar_c": "M·L^3·T^-2",
+    "grad_kappa_sq": "L^-4",
+    "energy_density": "M·L^-1·T^-2",
+    "kinetic_orig": "M·L^-3",
+    "gap_orig": "L^2·T^-2",
+    "kinetic_correct": "M·L^-1·T^-2",
+    "kinetic_pasted_fix": "M·L^-3·T^-2",
+    "gap_pasted_fix": "L^2",
+    "clean_term1": "L^-4",
+    "clean_term2": "L^-2",
+    "V_over_c4": "L^-4",
+    "pasted_input_dim": "L^-4",
+    "pasted_claimed_result": "M·L^-1",
+    "pasted_literal_result": "M·L^-3",
+    "pasted_gap_claim": "T^-2"
+  },
+  "tests": [
+    {
+      "id": "T01",
+      "judge": "FAIL",
+      "claim": "来料 §2.1 称 [ℏ/(2c)|∇κ|²]=[kg·m⁻¹]",
+      "machine": "机器(按来料输入 [m⁻⁴]): M·L^-3；按来料结论 [m⁻²]: M·L^-1",
+      "note": "输入与结论自相矛盾：列了 [m⁻⁴] 却得出 [kg·m⁻¹]=[M L⁻¹]"
+    },
+    {
+      "id": "T02",
+      "judge": "FAIL",
+      "claim": "来料称缺口=[s⁻²]",
+      "machine": "机器缺口=L^2·T^-2；应为 L^2·T^-2",
+      "note": "缺口实为 c²=[L²T⁻²]，与 r45 T12 一致；[s⁻²] 错"
+    },
+    {
+      "id": "T03",
+      "judge": "PASS",
+      "claim": "原系数 ℏ/(2c) 确有量纲错误",
+      "machine": "动能项=M·L^-3 vs 能量密度 M·L^-1·T^-2",
+      "note": "来料『原系数错』的诊断方向对，但论据错"
+    },
+    {
+      "id": "T04",
+      "judge": "FAIL",
+      "claim": "来料修正系数 ℏc/l0² 修复作用量",
+      "machine": "动能项=M·L^-3·T^-2 ≠ 能量密度 M·L^-1·T^-2（差 L^2）",
+      "note": "ℏc/l0² 仍差 L²；正确系数应为 ℏc（无 l0）"
+    },
+    {
+      "id": "T05",
+      "judge": "FAIL",
+      "claim": "来料「干净版」方括号可相减",
+      "machine": "项1 L^-4=[L⁻⁴]；项2 L^-2=[L⁻²]",
+      "note": "两项目纲异族，不可相减 → 最终式本身不合法"
+    },
+    {
+      "id": "T06",
+      "judge": "PASS",
+      "claim": "正确最小修复 ℏc/2（r45 P1）量纲闭合",
+      "machine": "动能项=M·L^-1·T^-2 = 能量密度",
+      "note": "零新参数；与 r45 T13 同型"
+    },
+    {
+      "id": "T07",
+      "judge": "PASS",
+      "claim": "正确势项形式 (1/c⁴)(c²κ²/sin²θ−ω²)²",
+      "machine": "势内项=L^-4=[L⁻⁴]，与作用量梯度项同族",
+      "note": "来料漏 c⁴ 与平方，导致 [L⁻²]"
+    },
+    {
+      "id": "T08",
+      "judge": "FAIL",
+      "claim": "来料 §6 引入 l0 为新基本长度",
+      "machine": "l0 量纲=L",
+      "note": "r42 已裁：l0 要么自由常数(外部输入+1,撞Ω5)，要么=l_P(零信息)"
+    },
+    {
+      "id": "T09",
+      "judge": "INFO",
+      "claim": "来料「全部量纲验证通过 ✓」结论",
+      "machine": "引擎实测：T04/T05 直接推翻该结论",
+      "note": "来料自评结论不成立"
+    }
+  ],
+  "guards": [
+    {
+      "name": "energy_density_is_ML-1T-2",
+      "pass": true
+    },
+    {
+      "name": "mul_is_additive_not_multiplicative",
+      "pass": true
+    },
+    {
+      "name": "orig_gap_is_c^2",
+      "pass": true
+    },
+    {
+      "name": "correct_coeff_hbar_c_closes",
+      "pass": true
+    },
+    {
+      "name": "pasted_fix_does_NOT_close",
+      "pass": true
+    },
+    {
+      "name": "pasted_fix_off_by_L^2",
+      "pass": true
+    },
+    {
+      "name": "clean_bracket_mismatched_cannot_subtract",
+      "pass": true
+    },
+    {
+      "name": "clean_term1_is_L-4",
+      "pass": true
+    },
+    {
+      "name": "clean_term2_is_L-2",
+      "pass": true
+    },
+    {
+      "name": "correct_potential_form_L-4",
+      "pass": true
+    },
+    {
+      "name": "correct_action_closes",
+      "pass": true
+    },
+    {
+      "name": "pasted_step3_input_L-4",
+      "pass": true
+    },
+    {
+      "name": "pasted_step3_claimed_result_WRONG",
+      "pass": true
+    },
+    {
+      "name": "pasted_gap_claim_WRONG",
+      "pass": true
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 # 空间螺旋几何化统一场论 · 全量 claims 批量审计与 L3 层级判定
 
 > 日期 2026-09-26 · 引擎：`源码/空间螺旋_全量claims批量审计与L3层级判定.py`（可复跑，对 claims.csv 只读）
-> 对象：`07_统一场方程/空间螺旋几何化统一场论/claims.csv` 全部主张 113 条（C01–C113）
+> 对象：`07_统一场方程/空间螺旋几何化统一场论/claims.csv` 全部主张 127 条（C01–C127）
 > 方法：C38 三审计算法（R1 禁跳级 / R2 identity·definition 封顶 L1 / R3 升 L3 需构造推导+带误差棒预言）· 引擎证据登记表 · 数值锚点 mpmath dps=50
 
-**L 层级判定**：L0=42 ｜ L1=67 ｜ L2=4 ｜ **L3=0** ｜ 合计 113
+**L 层级判定**：L0=68 ｜ L1=55 ｜ L2=4 ｜ **L3=0** ｜ 合计 127
 
-**标记复核**：PASS=20 ｜ PARTIAL=2 ｜ UNVERIFIED=0 ｜ INFO(原体系人工)=82
+**标记复核**：PASS=20 ｜ PARTIAL=2 ｜ UNVERIFIED=0 ｜ INFO(原体系人工)=96
 
 **UFT-3**：登记在册的无量纲靶预测值 = **1** 条 ⇒ 全台账无 L3 主张（与既有口径一致）。
 
@@ -17,28 +17,28 @@
 | C01 | 几何定义 | pass | identity | INFO | **L1** | ALLOW |
 | C02 | 几何推导 | pass | construction | INFO | **L2** | ALLOW |
 | C03 | 几何参数化 | pass | parameterization | INFO | **L1** | ALLOW |
-| C04 | 拓扑本源 | open | construction | INFO | **L1** | REJECT-CAP |
-| C05 | 拓扑公式 | open | construction | INFO | **L1** | REJECT-CAP |
+| C04 | 拓扑本源 | falsified | construction | INFO | **L0** | FAIL |
+| C05 | 拓扑公式 | falsified | construction | INFO | **L0** | FAIL |
 | C06 | 归一化约定 | boundary | identity | INFO | **L1** | ALLOW |
 | C07 | 归一化计算 | pass | construction | INFO | **L1** | REJECT-CAP |
 | C08 | 恒等+诠释 | pass | identity | INFO | **L1** | ALLOW |
-| C09 | 量子闭合 | boundary | construction | INFO | **L1** | REJECT-CAP |
+| C09 | 量子闭合 | falsified | construction | INFO | **L0** | FAIL |
 | C10 | 几何+量子 | pass | identity | INFO | **L1** | ALLOW |
 | C11 | 单位制恒等式 | pass | identity | INFO | **L1** | ALLOW |
 | C12 | 常数重排 | falsified | construction | INFO | **L0** | FAIL |
-| C13 | 几何表达式 | open | construction | INFO | **L1** | REJECT-CAP |
-| C14 | 几何推导 | boundary | construction | INFO | **L1** | REJECT-CAP |
-| C15 | 唯象构造 | open | construction | INFO | **L1** | REJECT-CAP |
-| C16 | 数学项命名 | open | identity | INFO | **L1** | ALLOW |
+| C13 | 几何表达式 | falsified | construction | INFO | **L0** | FAIL |
+| C14 | 几何推导 | falsified | construction | INFO | **L0** | FAIL |
+| C15 | 唯象构造 | falsified | construction | INFO | **L0** | FAIL |
+| C16 | 数学项命名 | falsified | identity | INFO | **L0** | FAIL |
 | C17 | 组织框架 | pass | identity | INFO | **L1** | ALLOW |
 | C18 | 物理重述 | pass | identity | INFO | **L1** | ALLOW |
-| C19 | 数值定义 | boundary | definition | INFO | **L1** | ALLOW |
+| C19 | 数值定义 | falsified | definition | INFO | **L0** | FAIL |
 | C20 | 数学事实 | pass | identity | INFO | **L1** | ALLOW |
 | C21 | 内部冲突 | falsified | conflict | INFO | **L0** | FAIL |
-| C22 | 第一性锚点 | open | construction | INFO | **L1** | REJECT-CAP |
+| C22 | 第一性锚点 | falsified | construction | INFO | **L0** | FAIL |
 | C23 | 一致性检查 | falsified | construction | INFO | **L0** | FAIL |
 | C24 | 第一性审计 | pass | audit | PASS | **L2** | ALLOW |
-| C25 | 第一性审计 | open | audit | PASS | **L1** | REJECT-CAP |
+| C25 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
 | C26 | 第一性审计 | falsified | audit | FAIL | **L0** | FAIL |
 | C27 | 第一性审计 | falsified | audit | FAIL | **L0** | FAIL |
 | C28 | 第一性审计 | boundary | audit | FAIL | **L1** | REJECT-CAP |
@@ -53,23 +53,23 @@
 | C90 | 第一性审计 | pass | audit | INFO | **L1** | REJECT-CAP |
 | C91 | 第一性审计 | falsified | audit | INFO | **L0** | FAIL |
 | C34 | 第一性审计 | pass | audit | PARTIAL | **L1** | REJECT-CAP |
-| C35 | 第一性审计 | open | audit | PASS | **L1** | REJECT-CAP |
+| C35 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
 | C36 | 第一性审计 | falsified | audit | FAIL | **L0** | FAIL |
 | C37 | 第一性审计 | falsified | audit | FAIL | **L0** | FAIL |
 | C38 | 第一性审计 | BOUNDARY | audit | PASS | **L1** | REJECT-CAP |
 | C39 | 闭环修复 | pass | repair | PASS | **L2** | ALLOW |
-| C40 | 闭环修复 | open | repair | PASS | **L1** | REJECT-CAP |
+| C40 | 闭环修复 | falsified | repair | PASS | **L0** | FAIL |
 | C41 | 闭环修复 | pass | repair | PASS | **L2** | ALLOW |
-| C42 | 闭环修复 | boundary | repair | PASS | **L1** | REJECT-CAP |
+| C42 | 闭环修复 | falsified | repair | PASS | **L0** | FAIL |
 | C43 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
 | C44 | 闭环修复 | pass | repair | PASS | **L1** | REJECT-CAP |
-| C45 | 第一性审计 | open | audit | PASS | **L1** | REJECT-CAP |
+| C45 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
 | C46 | 第一性审计 | info | audit | PASS | **L0** | INFO |
 | C47 | 第一性审计 | info | audit | PASS | **L0** | INFO |
-| C48 | 第一性审计 | open | audit | PASS | **L1** | REJECT-CAP |
-| C49 | 第一性审计 | open | audit | PASS | **L1** | REJECT-CAP |
-| C50 | 第一性审计 | open | audit | PASS | **L1** | REJECT-CAP |
-| C51 | 第一性审计 | open | audit | PASS | **L1** | REJECT-CAP |
+| C48 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
+| C49 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
+| C50 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
+| C51 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
 | C52 | 第一性审计 | BOUNDARY | audit | PASS | **L1** | REJECT-CAP |
 | C53 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
 | C54 | 第一性审计 | falsified | audit | PASS | **L0** | FAIL |
@@ -91,7 +91,7 @@
 | C70 | 第一性审计 | falsified | audit | INFO | **L0** | FAIL |
 | C71 | 场方程协变性 | boundary | construction | INFO | **L1** | REJECT-CAP |
 | C72 | 辐射 | pass | construction | INFO | **L1** | REJECT-CAP |
-| C73 | 辐射修正 | open | construction | INFO | **L1** | REJECT-CAP |
+| C73 | 辐射修正 | falsified | construction | INFO | **L0** | FAIL |
 | C74 | 统一作用量 | boundary | construction | INFO | **L1** | REJECT-CAP |
 | C75 | 数值实现 | boundary | construction | INFO | **L1** | REJECT-CAP |
 | C76 | 数值验证 | boundary | construction | INFO | **L1** | REJECT-CAP |
@@ -100,7 +100,7 @@
 | C79 | 数值验证 | boundary | construction | INFO | **L1** | REJECT-CAP |
 | C80 | 符号核验 | falsified | construction | INFO | **L0** | FAIL |
 | C81 | 符号核验 | falsified | construction | INFO | **L0** | FAIL |
-| C82 | 理论推导 | open | construction | INFO | **L1** | REJECT-CAP |
+| C82 | 理论推导 | boundary | construction | INFO | **L1** | REJECT-CAP |
 | C83 | 数值验证 | boundary | construction | INFO | **L1** | REJECT-CAP |
 | C84 | 元审计 | falsified | construction | INFO | **L0** | FAIL |
 | C85 | 一致性检查 | boundary | construction | INFO | **L1** | REJECT-CAP |
@@ -112,9 +112,9 @@
 | C96 | 几何门禁 | pass | construction | INFO | **L1** | REJECT-CAP |
 | C97 | 数值验证 | boundary | construction | INFO | **L1** | REJECT-CAP |
 | C98 | 数值验证 | boundary | construction | INFO | **L1** | REJECT-CAP |
-| C99 | 数值验证 | boundary | construction | INFO | **L1** | REJECT-CAP |
-| C100 | 数值验证 | open | construction | INFO | **L1** | REJECT-CAP |
-| C101 | 12档)均无局域玻色星解(坍缩到视界或停留假真空平台)；解析佐证天然Q-ball 2M=202≫R=5.7、M/Mmax=71.6深陷视界内⇒g=1无稳定玻色星成立；求解器平直极限g→0还原Q-ball仍验证通过;数值验证 | pass | construction | INFO | **L1** | REJECT-CAP |
+| C99 | 数值验证 | falsified | construction | INFO | **L0** | FAIL |
+| C100 | 数值验证 | repaired | construction | INFO | **L1** | REJECT-CAP |
+| C101 | 数值验证 | pass | construction | INFO | **L1** | REJECT-CAP |
 | C102 | 数值验证 | pass | construction | INFO | **L1** | REJECT-CAP |
 | C103 | Q∈191.6-203.7)，紧致度2M/R99≈0.10、M/Mmax≈0.33-0.36远小于1⇒稳定暗物质候选;数值验证 | pass | construction | INFO | **L1** | REJECT-CAP |
 | C104 | 数值验证 | pass | construction | INFO | **L1** | REJECT-CAP |
@@ -127,6 +127,20 @@
 | C111 | 综合定稿 | pass | construction | INFO | **L1** | REJECT-CAP |
 | C112 | 尺度分析 | falsified | construction | INFO | **L0** | FAIL |
 | C113 | 辐射修正 | falsified | construction | INFO | **L0** | FAIL |
+| C114 | 数值验证 | BOUNDARY | construction | INFO | **L1** | REJECT-CAP |
+| C115 | 但理论不预言哪个粒子、q0/G绝对值需量子化+绝对尺度锚，完整粒子谱预言仍OPEN;数值验证 | falsified | construction | INFO | **L0** | FAIL |
+| C116 | 0.2894]，M(n)阶梯单调;C97经典关系dM/dQ=ω的量子兑现，自洽闭环;半经典能级梯为自洽量子结构，完整QFT谱(激发模式/圈修正/能级辐射展宽)仍OPEN;数值验证 | falsified | construction | INFO | **L0** | FAIL |
+| C117 | no-go封档 | BOUNDARY | construction | INFO | **L1** | REJECT-CAP |
+| C118 | 预言框架 | falsified | construction | INFO | **L0** | FAIL |
+| C119 | 量子化 | falsified | construction | INFO | **L0** | FAIL |
+| C120 | 合并收口 | repaired | construction | INFO | **L1** | REJECT-CAP |
+| C121 | no-go封档 | BOUNDARY | construction | INFO | **L1** | REJECT-CAP |
+| C122 | 第一性审计 | falsified | audit | INFO | **L0** | FAIL |
+| C123 | 第一性审计 | falsified | audit | INFO | **L0** | FAIL |
+| C124 | 辐射修正 | boundary | construction | INFO | **L1** | REJECT-CAP |
+| C125 | 层级复核 | pass | construction | INFO | **L1** | REJECT-CAP |
+| C126 | boundary再判定 | boundary | construction | INFO | **L1** | REJECT-CAP |
+| C127 | 终审 | boundary | construction | INFO | **L1** | REJECT-CAP |
 
 ## 二、标记复核要点（仅引擎证据支持的标记可登记 PASS）
 
@@ -134,8 +148,8 @@
 - **PARTIAL（2 条）**：C32（删除 ρ 方向通过，原量纲 FAIL 未撤销）、C34（μ₀J 已补，J_geo 源项未闭合）。
 - **FAIL（9 条，引擎证据否定当前标记）**：C26（§2-4 四方冲突）/C27（§3-1 floor 删除一方）/C28（§3-2 欠定非 pass）/C29（§4-1 K₀ 量纲失败）/C30（§4-3 循环搬家）/C31（§4-2 Π 定理）/C33（§6-1 α²K 量纲失败）/C36（§6-5 Φ₀ 量纲冲突）/C37（§9-1/§9-2 面板矛盾）——草稿汇总表标记 PASS 被统一脚本 §1–§9 判定**否定**；建议回退（C28 回 BOUNDARY，其余回 falsified）。
 - **UNVERIFIED（0 条）**：—（本轮专项复核已把全部 9 条升级为有引擎证据的 FAIL，详见组织文档《判定_空间螺旋C26-C37专项复核_2026-09-26.md》）。
-- **INFO（82 条）**：C01–C23 为原体系人工审计记录，非本引擎复核对象（本册仅作数值锚点交叉核对）。
-- **falsified（39 条）**：C12、C21、C23、C26、C27、C29、C30、C31、C33、C87、C88、C89、C91、C36、C37、C43、C53、C54、C55、C56、C58、C59、C60、C61、C62、C63、C64、C65、C66、C67、C68、C69、C70、C80、C81、C84、C92、C112、C113——已证伪，封顶 L0；守卫 G4/G5 不变量：不得改回。
+- **INFO（96 条）**：C01–C23 为原体系人工审计记录，非本引擎复核对象（本册仅作数值锚点交叉核对）。
+- **falsified（65 条）**：C04、C05、C09、C12、C13、C14、C15、C16、C19、C21、C22、C23、C25、C26、C27、C29、C30、C31、C33、C87、C88、C89、C91、C35、C36、C37、C40、C42、C43、C45、C48、C49、C50、C51、C53、C54、C55、C56、C58、C59、C60、C61、C62、C63、C64、C65、C66、C67、C68、C69、C70、C73、C80、C81、C84、C92、C99、C112、C113、C115、C116、C118、C119、C122、C123——已证伪，封顶 L0；守卫 G4/G5 不变量：不得改回。
 
 ## 三、台账完整性镜像（只读）
 
@@ -169,6 +183,6 @@
 2. **C26–C37 专项复核完成且回退已执行**：9 条草稿自评 PASS 被引擎证据否定（FAIL）（C32/C34 部分支持）；2026-09-26 已写回台账——C26/C27/C29/C30/C31/C33/C36/C37→falsified、C28→boundary、C32/C34 维持 pass；守卫 G5 缩水清零、基线已重建（11 条），与 V22 §17-CLAIMS-3 口径一致。
 3. **守卫状态**：G3/G5/G6 已修复（白名单扩 info/BOUNDARY、期望计数 42、回退执行、基线重建）；守卫实跑 **8/8 全绿（EXIT=0）**、结论「申报不成立」（falsified 17 条 = 基线 17 条）。
 4. **语义修正**：C25/C35 的 open 状态字虽与引擎一致，但草稿语义（可证伪谱/普适性就绪）已被 V21续修引擎推翻（退化谱/公式需修正），台账备注须采用引擎语义。
-5. **与 V22 §17 批量审计的关系**：V22 覆盖 C01–C49 并登记 C50/C51/C52；本册覆盖全部 113 条，两引擎 **L3=0 结论一致**。差异仅两处：①纯定义类主张 V22 记 L0、本册按 R2 封顶 L1（均 ≤ L1，不影响主结论）；②本册额外提供逐条**标记复核**（PASS/FAIL/PARTIAL/UNVERIFIED/INFO）与**台账完整性镜像**（G1–G8），V22 未覆盖。
-6. **V21 续修②（C53/C54）登记后**：falsified 集合由 4 条增至 39 条（新增引力泡公式层与 TUFT-RG 模块层），L3 仍为 0、无量纲靶登记仍为 0 ⇒ 「L3 完整第一性推导闭环」与本轮两个新模块均无关（两模块皆为量纲/参数层面的否定结论）。
+5. **与 V22 §17 批量审计的关系**：V22 覆盖 C01–C49 并登记 C50/C51/C52；本册覆盖全部 127 条，两引擎 **L3=0 结论一致**。差异仅两处：①纯定义类主张 V22 记 L0、本册按 R2 封顶 L1（均 ≤ L1，不影响主结论）；②本册额外提供逐条**标记复核**（PASS/FAIL/PARTIAL/UNVERIFIED/INFO）与**台账完整性镜像**（G1–G8），V22 未覆盖。
+6. **V21 续修②（C53/C54）登记后**：falsified 集合由 4 条增至 65 条（新增引力泡公式层与 TUFT-RG 模块层），L3 仍为 0、无量纲靶登记仍为 0 ⇒ 「L3 完整第一性推导闭环」与本轮两个新模块均无关（两模块皆为量纲/参数层面的否定结论）。
 7. **守卫修复已执行**：白名单扩入 `info`/`BOUNDARY`；期望计数更新为 42（35 判定行 + §9.5/§9.6 能力 7 行）；回退 9 条；基线重建（11 条，revision 注明回退与合法翻标）。后续若引擎新增状态或统一脚本行数变化，需同步守卫白名单与期望（或改「基线快照 + 只禁缩水」模式彻底解耦）。

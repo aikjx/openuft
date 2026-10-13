@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>扭转/Lorentz 破坏背景效应的实验约束量级</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f5f6f8;color:#1f2937;line-height:1.6;padding:20px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;border-radius:14px;padding:22px 28px;margin-bottom:16px;}
+  header h1{font-size:21px;}
+  header .sub{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  .chartbox{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  #chart{width:100%;height:520px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{border:1px solid #e5e7eb;padding:6px 10px;text-align:left;}
+  th{background:#f1f5f9;}
+  .note{font-size:12.5px;color:#64748b;margin-top:10px;}
+  .ok{color:#15803d;font-weight:600;} .no{color:#dc2626;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>扭转/Lorentz 破坏背景效应的实验约束量级</h1>
+  <div class="sub">S02 空间光速螺旋统一力 · §21 · 数据：文献量级（数量级对比，非精确值）；Y 轴对数刻度</div>
+</header>
+
+<div class="chartbox">
+  <div id="chart"></div>
+  <p class="note">越靠下约束越强。轴向扭转背景双折射（GRB 偏振）约束 Δn&lt;10⁻³⁷，是所有探针中最强——S02 动态 β 背景若在可测尺度即被此上限排除；若为普朗克尺度则效应被 ℓ_P² 抑制到不可观测。两条路都不可观测 → §21 分水岭判定：几何可物理化（扭转），但无可观测新预言。</p>
+</div>
+
+<div class="chartbox">
+  <h3 style="font-size:16px;margin-bottom:10px;">§21 分水岭判定</h3>
+  <table>
+    <tr><th>声明</th><th>判定</th></tr>
+    <tr><td>β=常数扭转度规：曲率 0 + 轴缺陷线（Burgers 2πβ₀），全局不同于闵氏时空</td><td class="ok">verified（sympy V1/V2）</td></tr>
+    <tr><td>β(ρ) 非均匀 ⇒ Riemann 非零，动态扭转即真实引力背景</td><td class="ok">verified（V3）</td></tr>
+    <tr><td>ECSK 自旋-挠率接触耦合；S02 τ↔自旋映射获理论框架（公设层）</td><td class="ok">verified（V4，文献）</td></tr>
+    <tr><td>“动力学 β 背景产生可观测新效应”</td><td class="no">falsified（双折射 Δn&lt;10⁻³⁷）</td></tr>
+    <tr><td>“S02 具备独立预言能力”</td><td class="no">falsified（无 β 能标来源，定级组织性语言）</td></tr>
+  </table>
+  <p class="note">定级结论：S02 = 组织性语言 + 扭转物理化通道（对应标准 ECSK/SME 文献）；几何不是假的，却也推不出新的可测物理。</p>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"
+        onerror="document.getElementById('chart').innerHTML='<p style=\'padding:24px\'>ECharts 加载失败（离线环境），请参照上方表格。</p>';"></script>
+<script>
+(function(){
+  var el = document.getElementById('chart');
+  if(!el || typeof echarts === 'undefined'){ return; }
+  var chart = echarts.init(el);
+  var option = {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true,
+      formatter: function(params){
+        if(!params || !params.length){ return ''; }
+        var p = params[0];
+        return p.name + String.fromCharCode(10) + '约束 ≤ 1e' + Math.round(Math.log10(p.value)) + '（量级）';
+      } },
+    title: { text: '扭转背景效应约束量级（log 刻度）', left: 'center', top: 6 },
+    legend: { top: 30 },
+    grid: { left: 60, right: 30, top: 66, bottom: 80 },
+    xAxis: { type: 'category', data: ['实验室偏振旋转', 'PVLAS 双折射', 'CPT-Lorentz(原子钟)', 'GRB 光子色散', '轴向扭转双折射(GRB 偏振)'],
+      axisLabel: { interval: 0, width: 120, overflow: 'break', fontSize: 11 } },
+    yAxis: { type: 'log', name: '约束上限（量级）', min: 1e-40, max: 1e-6 },
+    series: [{
+      name: '约束上限', type: 'bar',
+      data: [1e-8, 1e-22, 1e-28, 1e-36, 1e-37],
+      label: { show: true, position: 'top', fontSize: 11, formatter: function(p){ return '1e' + Math.round(Math.log10(p.value)); } }
+    }]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
+</script>
+</body>
+</html>

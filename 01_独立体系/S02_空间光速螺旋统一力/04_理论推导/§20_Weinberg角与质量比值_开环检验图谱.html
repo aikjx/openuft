@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weinberg 角候选来源对比 · 质量-耦合数值开环图谱</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f5f6f8;color:#1f2937;line-height:1.6;padding:20px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;border-radius:14px;padding:22px 28px;margin-bottom:16px;}
+  header h1{font-size:21px;}
+  header .sub{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  .chartbox{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+  #chart{width:100%;height:520px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{border:1px solid #e5e7eb;padding:6px 10px;text-align:left;}
+  th{background:#f1f5f9;}
+  .note{font-size:12.5px;color:#64748b;margin-top:10px;}
+  .ok{color:#15803d;font-weight:600;} .no{color:#dc2626;font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Weinberg 角候选来源对比（sin²θ_W）</h1>
+  <div class="sub">S02 空间光速螺旋统一力 · §20 · 数据：§20_verify.py 实跑（α=1/137.035999084、α_w=1/29、sin²θ_W(m_Z)=0.23122、m_W=80.369 GeV、m_Z=91.1876 GeV）</div>
+</header>
+
+<div class="chartbox">
+  <div id="chart"></div>
+  <p class="note">红线 = 实验测量 sin²θ_W(m_Z)=0.23122。α/α_w=0.2116 偏差 +8.5%（量级巧合、非精确关系）；SUSY-GUT 一循环+双阈值预言 0.2272（偏差 −1.7%）；文献两循环+阈值修正约 0.231（~1% 吻合）→ Weinberg 角的真正来源是 GUT 边界条件+跑动，不是 S02 数值巧合。</p>
+</div>
+
+<div class="chartbox">
+  <h3 style="font-size:16px;margin-bottom:10px;">§20 开环检验汇总</h3>
+  <table>
+    <tr><th>编号</th><th>检验项</th><th>结果</th><th>判定</th></tr>
+    <tr><td>V2</td><td>m_W/m_Z vs cosθ_W</td><td>0.88135 vs 0.87679（+0.52%）</td><td class="ok">树级成立至 0.5%（辐射修正）</td></tr>
+    <tr><td>V3</td><td>ρ = m_W²/(m_Z²cos²θ_W)</td><td>1.01043（SM: 1.0004±0.001）</td><td class="ok">W 质量张力量化（开环）</td></tr>
+    <tr><td>V4</td><td>α_G(M_GUT) vs α_GUT</td><td>1.73×10⁻⁶ vs 0.0392</td><td class="ok">引力缺席 GUT（差 4.4 数量级）</td></tr>
+    <tr><td>V5</td><td>S02 频率阶梯比值</td><td>595.4 / 1.573×10⁵ / 1.996×10¹⁴ / 1.189×10¹⁷</td><td class="no">≡ 质量比（身份重述，无预言）</td></tr>
+  </table>
+  <p class="note">结论：S02 的 ω↔m 公设是组织语言而非预言机制；质量数值仍由 Higgs 自发破缺+辐射修正+GUT 边界供给。</p>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"
+        onerror="document.getElementById('chart').innerHTML='<p style=\'padding:24px\'>ECharts 加载失败（离线环境），请参照上方表格。</p>';"></script>
+<script>
+(function(){
+  var el = document.getElementById('chart');
+  if(!el || typeof echarts === 'undefined'){ return; }
+  var chart = echarts.init(el);
+  var option = {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true,
+      formatter: function(params){
+        if(!params || !params.length){ return ''; }
+        var p = params[0];
+        return p.name + String.fromCharCode(10) + 'sin²θ_W = ' + Number(p.value).toFixed(5);
+      } },
+    title: { text: 'sin²θ_W 候选来源对比', left: 'center', top: 6 },
+    legend: { top: 30 },
+    grid: { left: 70, right: 30, top: 66, bottom: 70 },
+    xAxis: { type: 'category', data: ['α/α_w（S02 巧合）', 'SUSY-GUT 一循环预言', '实验测量（m_Z）', 'SUSY-GUT 两循环+阈值（文献）'],
+      axisLabel: { interval: 0, width: 130, overflow: 'break', fontSize: 11 } },
+    yAxis: { type: 'value', name: 'sin²θ_W', min: 0.20, max: 0.24 },
+    series: [{
+      name: 'sin²θ_W', type: 'bar',
+      data: [0.21163, 0.22716, 0.23122, 0.23150],
+      label: { show: true, position: 'top', fontSize: 11, formatter: function(p){ return Number(p.value).toFixed(4); } },
+      markLine: { symbol: 'none', silent: true, label: { fontSize: 11, formatter: '实验 0.23122', position: 'insideEndTop' },
+        data: [{ yAxis: 0.23122 }] }
+    }]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){ chart.resize(); });
+})();
+</script>
+</body>
+</html>
