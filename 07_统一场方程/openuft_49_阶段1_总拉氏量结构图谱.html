@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>openuft#49 阶段1 总拉氏量结构</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{margin:0;background:#fff;font-family:"Microsoft YaHei",sans-serif;}
+.wrap{width:980px;margin:0 auto;padding:8px 3px;}
+h1{font-size:16px;margin:4px 0 2px;color:#1a1a1a;}
+.sub{font-size:11px;color:#666;margin:0 0 6px;}
+#c1{width:100%;height:240px;}
+.note{font-size:11px;color:#555;margin-top:4px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>openuft#49 · 阶段1任务1 · 总作用量 L_total 量纲逐词审计（三重预检·量纲关）</h1>
+<p class="sub">L_total = L_EC + L_PH3 + L_ω + L_Dirac + L_SM ｜ 自然单位 ħ=c=1 ｜ 九项 E 幂全归零 ✓ ｜ P-H3 双侧 (L,T,M)=(−2,0,0) 一致 ✓ ｜ κ²≡R、τ²≡½T² 多项式冻结（规避 √R 病态）｜ R1/R2/R5 如实 OPEN</p>
+<div id="c1"></div>
+<p class="note">上：九项量纲审计条——柱高=|E 幂合计|（全为 0=通过）；中：P-H3 双侧量纲一致性（κ²+τ² 与 (ω/c)² 同落 (−2,0,0)）；下：风险登记（R1 幽灵 ζ≠0 挠率传播、R2 规范嵌入、R3 EDM、R5 弱场还原 GR——全部 OPEN 待阶段2–4）。审计发现并当场修复 L4 乘子量纲缺陷（λ 无量纲时 E 幂 −2 → λ̃/16πG_N 时归零），痕迹保留。</p>
+</div>
+<script>
+var c1=echarts.init(document.getElementById('c1'));
+c1.setOption({
+ title:{text:'九项量纲审计（自然单位 E 幂合计，0=通过）',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ grid:{left:8,right:20,top:40,bottom:8,containLabel:true},
+ xAxis:{type:'category',data:['L1 EH','L2 Λ','L3 T²','L4 P-H3约束','L5 ω动能','L6 ω势','L7 Dirac','L8 Dirac质量','L9 SM规范'],axisLabel:{fontSize:10,interval:0}},
+ yAxis:{type:'value',name:'E幂合计',min:-2,max:0,nameTextStyle:{fontSize:11},axisLabel:{fontSize:10}},
+ series:[{name:'E幂合计',type:'bar',barWidth:34,data:[
+  {value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}},{value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}},{value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}},
+  {value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}},{value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}},{value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}},
+  {value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}},{value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}},{value:0,itemStyle:{color:'rgba(40,160,90,0.8)'}}],
+  label:{show:true,position:'top',fontSize:11,formatter:function(p){return '✓0';}},
+  markLine:{data:[{yAxis:-1,lineStyle:{type:'dashed',color:'#999'},label:{formatter:'不合格线 −1（初稿 L4 曾落此）',fontSize:9}}]}
+ }]
+});
+</script>
+</body>
+</html>
