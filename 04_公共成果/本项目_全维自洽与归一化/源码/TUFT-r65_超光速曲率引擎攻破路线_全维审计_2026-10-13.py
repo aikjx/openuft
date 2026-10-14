@@ -248,6 +248,42 @@ guard("G08_uniform_saturates_cauchy_schwarz", abs(LB - UNI) < D("1e-18"),
       "均匀壳层（f' 为常数）恰好达到 Cauchy-Schwarz 下界")
 KN["cauchy_schwarz_bound_A"] = e(LB, 20)
 
+# --- δ 单调方向的承重化（2026-10-14 追加） ---------------------------------
+# 动因：r66 仲裁④ 指出本册【判定册】曾写「把过渡压缩到极薄层 ⇒ M_neg 可以任意小」，
+# 而 δ_supp 在【分母】⇒ δ→0 时 M_neg→∞，方向相反。条目段原文方向正确，
+# 但判定册与条目段自相矛盾。此处把单调性写成承重 guard，使该方向无法再被写反。
+# -----------------------------------------------------------------------
+DELTA_MONO = [D("1e-12"), D("1e-6"), D("1e-3"), D("1"), D("10"), D("100")]
+DELTA_MONO_ROWS = []
+_prev = None
+_mono_ok = True
+for _d in DELTA_MONO:
+    _m = m_neg_lower_bound(C, D("100"), _d)
+    DELTA_MONO_ROWS.append(dict(delta_m=e(_d, 6), M_lower_A=e(_m, 12),
+                                M_over_Msun=e(_m / MSUN, 12)))
+    if _prev is not None and not (_m < _prev):
+        _mono_ok = False
+    _prev = _m
+KN["delta_monotonic_rows"] = DELTA_MONO_ROWS
+KN["delta_monotonic_decreasing"] = _mono_ok
+KN["M_lower_delta_1e-12_Msun"] = DELTA_MONO_ROWS[0]["M_over_Msun"]
+KN["M_lower_delta_1m_Msun"] = DELTA_MONO_ROWS[3]["M_over_Msun"]
+KN["M_lower_delta_R_Msun"] = DELTA_MONO_ROWS[5]["M_over_Msun"]
+KN["M_lower_rise_decades_1m_to_1e-12"] = e(
+    (D(DELTA_MONO_ROWS[0]["M_lower_A"]) / D(DELTA_MONO_ROWS[3]["M_lower_A"])).ln() / D(10).ln(), 12)
+
+guard("G09b_delta_monotonic_direction", _mono_ok,
+      "M_neg 下界必须随 δ 单调【递减】（δ 在分母）：δ 越小 M_neg 越大")
+guard("G09c_thin_shell_raises_M_not_lowers_it",
+      D(DELTA_MONO_ROWS[0]["M_lower_A"]) > D(DELTA_MONO_ROWS[3]["M_lower_A"]),
+      "★压缩过渡到极薄层（δ: 1 m → 1e-12 m）使 M_neg 下界【升高】 "
+      + KN["M_lower_rise_decades_1m_to_1e-12"]
+      + " 个量级，而非降低 ⇒ 「极薄层 ⇒ M_neg 任意小」是错的")
+guard("G09d_small_M_requires_thick_shell",
+      D(DELTA_MONO_ROWS[5]["M_lower_A"]) < D(DELTA_MONO_ROWS[3]["M_lower_A"]),
+      "★要 M_neg 小必须 δ_supp 【大】：δ=R=100 m 时下界降到 "
+      + KN["M_lower_delta_R_Msun"] + " M_sun，但此时 f 的过渡占满整个泡、薄壁负能壳结构消失")
+
 scan = []
 for s in ["1", "1e-1", "1e-2", "1e-3", "1e-6", "1e-12"]:
     d0 = D(s)
@@ -653,6 +689,90 @@ KN["graph_admission_verdict"] = (
     "不可直接入库（缺 %d/%d 节点字段 + %d 处边改名 + relation 越界 %s + 库内无 v1 规范文件）；"
     "最小前置 = 走 attack25 规范化通道并先获库内 relation 词表扩表批准"
     % (len(N_MISSING), len(LIB_N_FIELDS), len(E_RENAME), KN["r65_relation_out_of_lib_ratio"]))
+
+# =====================================================================
+# 11c. 与第四册 r67 的口径对接（2026-10-14 追加）
+# ---------------------------------------------------------------------
+# r67 给出幸存族 (4,0) 的 QEI δ 上界 δ_max = 1.6205e-34 m = 10.03 ℓ_P（与 R 无关），
+# 并给出 δ_opt = min(R, δ_max)。本节做三件 r67 未做的事：
+#   ① 跨册 4π 对拍：把 r67/r66 的 M_neg 读数换算到本册 32πG 严格口径；
+#   ② δ_max 的双口径复算（K 在分子 / K 在分母）—— 两者差 1/K = 52.63 倍；
+#   ③ δ_opt = min(R, δ_max) 的分支逻辑与 M_neg(R) 扫描。
+# =====================================================================
+
+QI_K = D(3) / (D(16) * PI * PI)             # Klauber–Mague 系数 3/(16π²)
+BASE_DELTA2 = D(32) * PI * GEXP * HPLANCK / (C ** 3)   # δ² ∝ 的公共部分 = 6ħG/(πc³)
+DELTA_MAX_K_NUM = (BASE_DELTA2 * QI_K).sqrt()           # K 在分子
+DELTA_MAX_K_CANCEL = BASE_DELTA2.sqrt()                 # K 完全约掉（= r67 口径）
+DELTA_MAX_K_DEN = (BASE_DELTA2 / QI_K).sqrt()           # K 在分母
+KN["qi_coefficient_K"] = e(QI_K, 20)
+KN["delta_max_k_in_numerator_m"] = e(DELTA_MAX_K_NUM, 20)
+KN["delta_max_k_in_numerator_over_lP"] = e(DELTA_MAX_K_NUM / LP, 20)
+KN["delta_max_k_cancelled_m"] = e(DELTA_MAX_K_CANCEL, 20)
+KN["delta_max_k_cancelled_over_lP"] = e(DELTA_MAX_K_CANCEL / LP, 20)
+KN["delta_max_k_in_denominator_m"] = e(DELTA_MAX_K_DEN, 20)
+KN["delta_max_k_in_denominator_over_lP"] = e(DELTA_MAX_K_DEN / LP, 20)
+KN["delta_max_two_conventions_ratio"] = e(DELTA_MAX_K_CANCEL / DELTA_MAX_K_NUM, 20)
+KN["one_over_sqrt_K"] = e(D(1) / QI_K.sqrt(), 20)
+KN["one_over_K"] = e(D(1) / QI_K, 20)
+KN["four_pi"] = e(D(4) * PI, 20)
+
+guard("G36a_delta_max_reproduces_r67", abs(DELTA_MAX_K_CANCEL / LP - D("10.03")) < D("0.02"),
+      "K 【完全约掉】口径下 δ_max = " + KN["delta_max_k_cancelled_m"] + " m = "
+      + KN["delta_max_k_cancelled_over_lP"] + " ℓ_P ⇒ 逐位复现 r67 的 10.03 ℓ_P")
+guard("G36b_three_conventions_form_geometric_progression",
+      abs((DELTA_MAX_K_CANCEL / DELTA_MAX_K_NUM) - D(1) / QI_K.sqrt()) < D("1e-18")
+      and abs((DELTA_MAX_K_DEN / DELTA_MAX_K_CANCEL) - D(1) / QI_K.sqrt()) < D("1e-18"),
+      "★三种 K 约定的相邻比差均为 1/√K = " + KN["one_over_sqrt_K"]
+      + "（K = " + KN["qi_coefficient_K"] + "；因 δ_max √ 与 K 的幂次成比例数平方根）")
+
+# --- 跨册 4π 对拍：r67/r66 的「几何下界 8.463e-3 M⊙」 vs 本册 32πG 口径 ---
+R67_GEOM_MSUN = D("8.463e-3")                       # r67 §四 给的 R=100m、δ=R 读数（8G 口径）
+MY_GEOM = m_neg_lower_bound(C, D("100"), D("100"))  # 本册同一物理量（32πG 严格口径）
+KN["my_geom_lower_Msun"] = e(MY_GEOM / MSUN, 20)
+KN["r67_geom_over_4pi_Msun"] = e(R67_GEOM_MSUN / (D(4) * PI), 20)
+KN["r67_geom_lower_Msun"] = e(R67_GEOM_MSUN, 20)
+guard("G36c_cross_round_factor_4pi",
+      abs(R67_GEOM_MSUN / (D(4) * PI) / (MY_GEOM / MSUN) - D(1)) < D("1e-3"),
+      "★跨册对拍：r67 的 8G 口径读数 ÷ 4π = " + e(R67_GEOM_MSUN / (D(4) * PI), 20)
+      + " M⊙ 与本册 32πG 口径 " + KN["my_geom_lower_Msun"]
+      + " M⊙ 逐位一致 ⇒ r67/r66 的 M_neg 读数带 4π 因子（正是本册 W13 所指）")
+
+# --- δ_opt = min(R, δ_max) 分支与 M_neg(R) 扫描 ---
+R_SCAN = [LP, D("3") * LP, DELTA_MAX_K_CANCEL, D("1e-30"), D("1e-15"), D("1e-3"),
+          D("1"), D("100")]
+DUAL_CAP_ROWS = []
+_cap_ok = True
+for _R in R_SCAN:
+    _d = _R if _R < DELTA_MAX_K_CANCEL else DELTA_MAX_K_CANCEL
+    _M = m_neg_lower_bound(C, _R, _d)
+    if not (_d <= _R and _d <= DELTA_MAX_K_CANCEL):
+        _cap_ok = False
+    DUAL_CAP_ROWS.append(dict(R_m=e(_R, 8), delta_opt_m=e(_d, 8),
+                              thin_wall=bool(_R > _d),
+                              M_neg_A=e(_M, 12), M_over_Msun=e(_M / MSUN, 12)))
+KN["delta_dual_cap_rows"] = DUAL_CAP_ROWS
+KN["delta_opt_rule"] = "min(R, δ_max)"
+
+_RLP = DUAL_CAP_ROWS[0]
+_R1M = DUAL_CAP_ROWS[6]
+_R100 = DUAL_CAP_ROWS[-1]
+KN["M_neg_at_R_1m_Msun"] = _R1M["M_over_Msun"]
+KN["M_neg_at_R_lP_kg"] = _RLP["M_neg_A"]
+KN["M_neg_at_R_100m_Msun"] = _R100["M_over_Msun"]
+
+guard("G36d_dual_cap_branch_correct", _cap_ok,
+      "δ_opt = min(R, δ_max) 必须同时满足 δ_opt ≤ R（几何封顶）与 δ_opt ≤ δ_max（QEI 封顶）")
+guard("G36e_macro_bubble_costly_at_R_1m",
+      D(_R1M["M_over_Msun"]) > D("1e20"),
+      "★宏观泡 R = 1 m 时 M_neg = " + _R1M["M_over_Msun"] + " M⊙ ⇒ 远超任何工程门槛（与 r67 Q02 同向）")
+guard("G36f_planck_bubble_is_nanogram_scale",
+      D(_RLP["M_neg_A"]) < D("1e-3"),
+      "R = ℓ_P 时 M_neg 仅 " + _RLP["M_neg_A"] + " kg（纳克以下）⇒ 唯一便宜解是普朗克尺度泡沫")
+guard("G36g_M_neg_monotonic_in_R",
+      all(D(DUAL_CAP_ROWS[i]["M_neg_A"]) < D(DUAL_CAP_ROWS[i + 1]["M_neg_A"])
+          for i in range(len(DUAL_CAP_ROWS) - 1)),
+      "M_neg(R) 必须单调增（几何封顶段 ∝R、QEI 封顶段 ∝R²）")
 
 # =====================================================================
 # 12. 装载条目段并输出

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>46 · CMB 物理全景卷：黑体 · 维恩 · 极化</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%2363D2FF'%3E46%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#0b2a3a);border:1px solid #155e75;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#164e63;color:#a5f3fc;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--amber);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#fde68a;margin-bottom:20px;}
+  .preview b{color:var(--amber);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--amber);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#fcd34d;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--amber);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--amber);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .chk{background:#1a160a;border:1px solid #854d0e;border-left:4px solid var(--amber);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fde68a;}
+  .chk .mlab{color:var(--amber);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 48 · openuft 统一场方程 46（零虚构）</span>
+  <h1>CMB 物理全景卷：黑体 · 维恩 · 极化</h1>
+  <p>宇宙微波背景=宇宙学最强证据面：完美黑体已证、E 模已测、B 模窗口开放（43 卷 DD4 扩展）。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算（46_cmb_calc_results.json）</b>：ν_max=1.602289457218836×10¹¹ Hz、λ_max=1.0632152703377…×10⁻³ m（T=2.72548 K，维恩位移）。偶极 3.362 mK（40 卷 AA）。
+</div>
+
+<section>
+<h2><span class="n">一</span>定理组 GG（CMB 物理）</h2>
+<h3>定理 GG1（完美黑体：已证）</h3>
+<div class="thm"><span class="lab">THM GG1</span> <span class="body">COBE/FIRAS：CMB 谱黑体偏差&lt;10⁻⁵（文献）——宇宙微波背景=已知最完美黑体。大爆炸遗留辐射已证。</span></div>
+<h3>定理 GG2（维恩锚点：本卷现算）</h3>
+<div class="thm"><span class="lab">THM GG2</span> <span class="body">维恩位移（T=2.72548 K，Planck）：ν_max=b'·T=1.602289457218836×10¹¹ Hz；λ_max=b/T=1.0632152703377…×10⁻³ m——本卷 250 位现算。</span></div>
+<h3>定理 GG3（各向异性与偶极）</h3>
+<div class="thm"><span class="lab">THM GG3</span> <span class="body">偶极 3.362 mK（40 卷 AA，本系现算）；涨落 ΔT/T≈1.1×10⁻⁵（Planck）——宇宙学参数从功率谱提取（Ω_m、Ω_Λ 等，39 卷 Z）。</span></div>
+<h3>定理 GG4（极化：E 已测 B 未测）</h3>
+<div class="thm"><span class="lab">THM GG4</span> <span class="body">E 模极化已测（Planck）；原初 B 模 r&lt;0.036（BICEP/Keck 2021）未测——原初引力波窗口（43 卷 DD4 扩展）。</span></div>
+<h3>定理 GG5（TUFT 对照）</h3>
+<div class="thm"><span class="lab">THM GG5</span> <span class="body">TUFT——无 CMB 黑体谱、无极化、无涨落谱预言（23 G1–G5）。对照 GG1–GG4：真实宇宙学给出温度、谱型、极化与参数；TUFT 零个。</span></div>
+<h3>定理 GG6（判决窗口）</h3>
+<div class="thm"><span class="lab">THM GG6</span> <span class="body">B 模：CMB-S4/BICEP（r→0.001）/LiteBIRD；非高斯性：Planck 后继；谱畸变：PIXIE——全部独立于统一场论"突破"。</span></div>
+<div class="fail">结论：CMB=宇宙学最强证据面；完美黑体已证、E 模已测、B 模开放；TUFT 全零贡献。</div>
+</section>
+
+<section>
+<h2><span class="n">二</span>CMB 全景图（SVG）</h2>
+<svg viewBox="0 0 780 360" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC,sans-serif">
+  <defs>
+    <linearGradient id="bgg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1730"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <rect width="780" height="360" fill="url(#bgg2)" rx="10"/>
+  <text x="390" y="28" text-anchor="middle" fill="#d4a94e" font-size="16" font-weight="700">CMB：黑体已证 · 维恩现算 · 极化分层（THM GG1–GG6）</text>
+  <g font-size="12">
+    <rect x="40" y="55" width="220" height="175" fill="#4ade80" opacity="0.14" rx="6" stroke="#4ade80"/>
+    <text x="150" y="78" text-anchor="middle" fill="#4ade80" font-weight="700">GG1/GG2 已证+现算</text>
+    <text x="150" y="100" text-anchor="middle" fill="#bbf7d0">黑体偏差&lt;10⁻⁵</text>
+    <text x="150" y="118" text-anchor="middle" fill="#bbf7d0">ν_max=1.602289…×10¹¹ Hz</text>
+    <text x="150" y="136" text-anchor="middle" fill="#bbf7d0">λ_max=1.063215…×10⁻³ m</text>
+    <text x="150" y="158" text-anchor="middle" fill="#bbf7d0">T=2.72548 K（Planck）</text>
+    <text x="150" y="178" text-anchor="middle" fill="#bbf7d0">250 位现算</text>
+    <rect x="290" y="55" width="220" height="175" fill="#fbbf24" opacity="0.14" rx="6" stroke="#fbbf24"/>
+    <text x="400" y="78" text-anchor="middle" fill="#fbbf24" font-weight="700">GG3/GG4 分层</text>
+    <text x="400" y="100" text-anchor="middle" fill="#fde68a">偶极 3.362 mK（40）</text>
+    <text x="400" y="118" text-anchor="middle" fill="#fde68a">ΔT/T≈1.1×10⁻⁵</text>
+    <text x="400" y="136" text-anchor="middle" fill="#fde68a">E 模已测（Planck）</text>
+    <text x="400" y="158" text-anchor="middle" fill="#fde68a">B 模 r&lt;0.036 未测</text>
+    <text x="400" y="178" text-anchor="middle" fill="#fde68a">窗口：CMB-S4/LiteBIRD</text>
+    <rect x="540" y="55" width="220" height="175" fill="#63d2ff" opacity="0.14" rx="6" stroke="#63d2ff"/>
+    <text x="650" y="78" text-anchor="middle" fill="#63d2ff" font-weight="700">GG5/GG6 对照</text>
+    <text x="650" y="100" text-anchor="middle" fill="#93c5fd">TUFT：无谱无极化</text>
+    <text x="650" y="118" text-anchor="middle" fill="#93c5fd">（23 G1-G5）</text>
+    <text x="650" y="136" text-anchor="middle" fill="#93c5fd">窗口：PIXIE 谱畸变</text>
+    <text x="650" y="158" text-anchor="middle" fill="#93c5fd">非高斯性探测</text>
+    <text x="650" y="178" text-anchor="middle" fill="#93c5fd">独立判决</text>
+  </g>
+  <text x="390" y="270" text-anchor="middle" fill="#fca5a5" font-size="12.5" font-weight="700">TUFT：无 CMB 谱 · 无极化 · 无涨落预言（GG5）</text>
+  <text x="390" y="330" text-anchor="middle" fill="#64748b" font-size="11.5">示意：绿=已证 / 黄=已测+开放 / 蓝=对照窗口；ν_max、λ_max=本卷 250 位现算</text>
+</svg>
+<p class="cap">图 1 · CMB 物理全景（示意：已证/分层/对照三层）</p>
+
+<h3>250 位锚点表（46_cmb_calc_results.json）</h3>
+<table>
+  <tr><th style="width:26%">锚点</th><th style="width:46%">本卷现算 / 文献</th><th style="width:28%">判定</th></tr>
+  <tr><td>ν_max</td><td class="mono">1.602289457218836×10¹¹ Hz（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>λ_max</td><td class="mono">1.0632152703377…×10⁻³ m（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>T_CMB</td><td class="mono">2.72548 K（Planck）</td><td>已测</td></tr>
+  <tr><td>黑体偏差</td><td class="mono">&lt;10⁻⁵（COBE/FIRAS）</td><td>已证</td></tr>
+  <tr><td>偶极</td><td class="mono">3.362 mK（40 卷 AA 现算）</td><td>已测</td></tr>
+  <tr><td>B 模 r</td><td class="mono">&lt;0.036（BICEP/Keck 2021）</td><td>未测/开放</td></tr>
+</table>
+<p class="note">注：ν_max、λ_max 为 250 位 mpmath 现算（维恩常数+T=2.72548 K）；偶极与 40 卷 AA、B 模与 43 卷 DD4 一致——跨卷自洽。</p>
+</section>
+
+<section>
+<h2><span class="n">三</span>数据与来源</h2>
+<ul>
+  <li>250 位现算：46_cmb_calc.py → 46_cmb_calc_results.json（本卷交付）</li>
+  <li>T=2.72548 K、维恩常数 b'/b（Planck/CODATA）；黑体偏差、E 模、ΔT/T（文献）</li>
+  <li>偶极 3.362 mK（40 卷 AA 现算）；B 模 r&lt;0.036（43 卷 DD4）</li>
+  <li>跨卷：23（终审）、32（十谜）、39（总终卷）、40（张力）、43（GW 频谱）</li>
+</ul>
+</section>
+
+<div style="background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:14px 0;">
+<b style="color:var(--gold)">归属与导航</b>
+<p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+本卷：openuft/07_统一场方程/（openuft 编号 46 = 算法联盟系列 48）。配套脚本与 JSON 同目录。<br>
+openuft 编号 31–45（系列 33–47）：第一性推导 · 本源体系 · 本质本源 · 量级 · 量子基础 · 暗物质 · 质量谱 · 宇宙起源 · 总终卷 · 宇宙学张力 · 黑洞 · 中子星 · 引力波频谱 · 中微子 · 拓扑。<br>
+系列（主目录）：① 引力线 01·04·07·08·12·16·19·20·21·22；② 验证方法线 02·05·06·09·10·13·15·17·18；③ 攻破线 23–32。<br>
+openuft 总卷（主目录）：openuft-统一场论全维度全链路总卷.html · 使用指南。
+</p>
+</div>
+
+<p class="foot">openuft 编号 46 · CMB 物理全景卷 · 零虚构声明。全部锚点来自 46_cmb_calc.py（mpmath 250 位，可复现）或标注文献出处；CMB 判定遵循 GG 组（已证/已测/开放分层）。</p>
+</div>
+</body>
+</html>
+</div>
+</body>
+</html>

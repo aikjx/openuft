@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>42 · 中子星与致密天体全景卷：多信使 · 物态 · PTA</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%234ADE80'%3E42%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#0a1e3b);border:1px solid #1e40af;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#1e3a8a;color:#bfdbfe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--green);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#bbf7d0;margin-bottom:20px;}
+  .preview b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--green);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#86efac;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--green);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--green);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .chk{background:#0a1c12;border:1px solid #166534;border-left:4px solid var(--green);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#bbf7d0;}
+  .chk .mlab{color:var(--green);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 44 · openuft 统一场方程 42（零虚构）</span>
+  <h1>中子星与致密天体全景卷：多信使 · 物态 · PTA</h1>
+  <p>中子星=核物态与强场 GR 的唯一实验室：质量-半径已测、潮汐已约束、纳赫兹背景已现。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算（42_ns_calc_results.json）</b>：r_s(1.4 M_sun)=4.1345501051…km；r_s(2.08 M_sun)=6.1427601561…km；r_s(2.1 M_sun)=6.2018251576…km；紧凑度 r_s/R=0.4957837091…（PSR J0740+6620）。
+</div>
+
+<section>
+<h2><span class="n">一</span>定理组 CC（中子星与致密天体）</h2>
+<h3>定理 CC1（质量-半径：已测）</h3>
+<div class="thm"><span class="lab">THM CC1</span> <span class="body">中子星质量范围 1.4–2.1 M_sun（文献）。本卷 250 位现算史瓦西半径：r_s(1.4)=4.1345501051…km、r_s(2.08)=6.1427601561…km、r_s(2.1)=6.2018251576…km——远小于 NS 半径 10–13 km（NICER 2021：PSR J0030 R=12.71 km、PSR J0740 R=12.39 km）。</span></div>
+<h3>定理 CC2（紧凑度：强场 GR 检验）</h3>
+<div class="thm"><span class="lab">THM CC2</span> <span class="body">本卷 250 位现算紧凑度 r_s(2.08 M_sun)/R(12.39 km)=0.4957837091…≈0.50——极端紧凑、曲率巨大，是 GR 强场区（非 TUFT 可替代的弱场拟合）。</span></div>
+<h3>定理 CC3（GW170817 多信使：物态约束）</h3>
+<div class="thm"><span class="lab">THM CC3</span> <span class="body">双中子星合并+短伽马暴+kilonova 多信使（文献）；潮汐形变 Λ₁.₄≈190–640（文献，方程依赖）——物态方程（EoS）受约束但仍开放（核密度物态未知）。</span></div>
+<h3>定理 CC4（PTA 纳赫兹背景：新窗口）</h3>
+<div class="thm"><span class="lab">THM CC4</span> <span class="body">NANOGrav 2023 脉冲星计时阵列测得纳赫兹随机引力波背景信号（文献）；来源=超大质量黑洞双星或新物理——开放（31 卷判决窗口扩展）。</span></div>
+<h3>定理 CC5（TUFT 对照）</h3>
+<div class="thm"><span class="lab">THM CC5</span> <span class="body">TUFT"挠率自旋引力增强"——无 NS 物态方程、无潮汐形变 Λ、无 PTA 预言（23 G1–G5）。对照 CC1–CC4：真实理论给可测数；TUFT 零个。</span></div>
+<h3>定理 CC6（判决窗口）</h3>
+<div class="thm"><span class="lab">THM CC6</span> <span class="body">半径：NICER/未来 X 射线精度提升；潮汐：ET/CE 高精度 Λ；PTA：IPTA 联合数据+来源鉴别（SMBHB 质量函数 vs 相变/宇宙弦）。</span></div>
+<div class="fail">结论：致密天体=核物态+强场 GR 的活实验面；TUFT 全零贡献。</div>
+</section>
+
+<section>
+<h2><span class="n">二</span>致密天体尺度图（SVG）</h2>
+<svg viewBox="0 0 780 360" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC,sans-serif">
+  <defs>
+    <linearGradient id="bgc" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1730"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <rect width="780" height="360" fill="url(#bgc)" rx="10"/>
+  <text x="390" y="28" text-anchor="middle" fill="#d4a94e" font-size="16" font-weight="700">致密天体：质量-半径已测 · 物态开放 · PTA 新窗口（THM CC1–CC6）</text>
+  <g font-size="12">
+    <rect x="40" y="55" width="220" height="175" fill="#4ade80" opacity="0.14" rx="6" stroke="#4ade80"/>
+    <text x="150" y="78" text-anchor="middle" fill="#4ade80" font-weight="700">CC1 质量-半径</text>
+    <text x="150" y="100" text-anchor="middle" fill="#bbf7d0">r_s(1.4)=4.135 km</text>
+    <text x="150" y="118" text-anchor="middle" fill="#bbf7d0">r_s(2.08)=6.143 km</text>
+    <text x="150" y="136" text-anchor="middle" fill="#bbf7d0">r_s(2.1)=6.202 km</text>
+    <text x="150" y="158" text-anchor="middle" fill="#bbf7d0">NICER R=12.4-12.7 km</text>
+    <text x="150" y="178" text-anchor="middle" fill="#bbf7d0">250 位现算</text>
+    <rect x="290" y="55" width="220" height="175" fill="#fbbf24" opacity="0.15" rx="6" stroke="#fbbf24"/>
+    <text x="400" y="78" text-anchor="middle" fill="#fbbf24" font-weight="700">CC2 紧凑度</text>
+    <text x="400" y="100" text-anchor="middle" fill="#fde68a">r_s/R=0.49578…（现算）</text>
+    <text x="400" y="118" text-anchor="middle" fill="#fde68a">≈0.50 极端紧凑</text>
+    <text x="400" y="136" text-anchor="middle" fill="#fde68a">强场 GR 检验区</text>
+    <text x="400" y="158" text-anchor="middle" fill="#fde68a">CC3 GW170817</text>
+    <text x="400" y="178" text-anchor="middle" fill="#fde68a">Λ₁.₄=190-640（文献）</text>
+    <rect x="540" y="55" width="220" height="175" fill="#63d2ff" opacity="0.15" rx="6" stroke="#63d2ff"/>
+    <text x="650" y="78" text-anchor="middle" fill="#63d2ff" font-weight="700">CC4 PTA</text>
+    <text x="650" y="100" text-anchor="middle" fill="#93c5fd">NANOGrav 2023</text>
+    <text x="650" y="118" text-anchor="middle" fill="#93c5fd">纳赫兹 GW 背景</text>
+    <text x="650" y="136" text-anchor="middle" fill="#93c5fd">来源开放</text>
+    <text x="650" y="158" text-anchor="middle" fill="#93c5fd">SMBHB vs 新物理</text>
+    <text x="650" y="178" text-anchor="middle" fill="#93c5fd">窗口：IPTA</text>
+  </g>
+  <text x="390" y="268" text-anchor="middle" fill="#fca5a5" font-size="12.5" font-weight="700">TUFT"挠率自旋引力"：无物态 · 无 Λ · 无 PTA（CC5）</text>
+  <text x="390" y="330" text-anchor="middle" fill="#64748b" font-size="11.5">示意：绿=已测 / 黄=约束开放 / 蓝=新窗口；r_s 与紧凑度=本卷 250 位现算</text>
+</svg>
+<p class="cap">图 1 · 致密天体全景（示意：质量-半径/紧凑度/PTA 三块）</p>
+
+<h3>250 位锚点表（42_ns_calc_results.json）</h3>
+<table>
+  <tr><th style="width:26%">锚点</th><th style="width:46%">本卷现算 / 文献</th><th style="width:28%">判定</th></tr>
+  <tr><td>r_s(1.4 M_sun)</td><td class="mono">4.1345501051…km（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>r_s(2.08 M_sun)</td><td class="mono">6.1427601561…km（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>r_s(2.1 M_sun)</td><td class="mono">6.2018251576…km（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>紧凑度 r_s/R</td><td class="mono">0.4957837091…（PSR J0740，250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>Λ₁.₄</td><td class="mono">190–640（GW170817，文献）</td><td>约束开放</td></tr>
+  <tr><td>NANOGrav 2023</td><td class="mono">纳赫兹 GW 背景（文献）</td><td>新窗口开放</td></tr>
+</table>
+<p class="note">注：r_s 与紧凑度为 250 位 mpmath 现算（M_sun=1.988409870×10³⁰ kg，IAU 名义值；R=12.39 km，NICER 2021）；r_s 公式与 41 卷黑洞卷同式——跨卷自洽。</p>
+</section>
+
+<section>
+<h2><span class="n">三</span>数据与来源</h2>
+<ul>
+  <li>250 位现算：42_ns_calc.py → 42_ns_calc_results.json（本卷交付）</li>
+  <li>NICER 2021 半径、GW170817 Λ₁.₄、NANOGrav 2023 PTA（文献）；M_sun=1.988409870×10³⁰ kg（IAU 名义值）</li>
+  <li>NS 质量范围 1.4–2.1 M_sun（文献共识）</li>
+  <li>跨卷：21（GW 偏振）、31（判决窗口）、32（十谜 Q1/Q6）、41（黑洞 r_s 同式）</li>
+</ul>
+</section>
+
+<div style="background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:14px 0;">
+<b style="color:var(--gold)">归属与导航</b>
+<p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+本卷：openuft/07_统一场方程/（openuft 编号 42 = 算法联盟系列 44）。配套脚本与 JSON 同目录。<br>
+openuft 编号 31–41（系列 33–43）：第一性推导 · 本源体系 · 本质本源 · 量级 · 量子基础 · 暗物质 · 质量谱 · 宇宙起源 · 总终卷 · 宇宙学张力 · 黑洞。<br>
+系列（主目录）：① 引力线 01·04·07·08·12·16·19·20·21·22；② 验证方法线 02·05·06·09·10·13·15·17·18；③ 攻破线 23–32。<br>
+openuft 总卷（主目录）：openuft-统一场论全维度全链路总卷.html · 使用指南。
+</p>
+</div>
+
+<p class="foot">openuft 编号 42 · 中子星与致密天体全景卷 · 零虚构声明。全部锚点来自 42_ns_calc.py（mpmath 250 位，可复现）或标注文献出处；致密天体判定遵循 CC 组（已测/约束开放/新窗口分层）。</p>
+</div>
+</body>
+</html>
+</div>
+</body>
+</html>

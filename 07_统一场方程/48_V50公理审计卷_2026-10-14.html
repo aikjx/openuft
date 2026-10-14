@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>48 · GAQ-UFT V50 公理审计卷：量纲 · 旋量 · 计数</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%23FCA5A5'%3E48%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#2a0d0d);border:1px solid #7f1d1d;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#7f1d1d;color:#fecaca;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--amber);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#fde68a;margin-bottom:20px;}
+  .preview b{color:var(--amber);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--amber);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#fcd34d;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--amber);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--amber);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .chk{background:#1a160a;border:1px solid #854d0e;border-left:4px solid var(--amber);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fde68a;}
+  .chk .mlab{color:var(--amber);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 50 · openuft 统一场方程 48（零虚构）</span>
+  <h1>GAQ-UFT V50 公理审计卷：量纲 · 旋量 · 计数</h1>
+  <p>对用户投喂的 V50 总提示词按同一标准做公理层审计（非"攻破 72 条"而是先验四条公理地基）。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算/符号审计（48_v50audit_calc_results.json）</b>：D=32 旋量 Dirac=65536/Weyl=32768；32≡0 (mod 8) 无 Majorana–Weyl；A2 量纲断裂；SM+ν 常数≈26–28（非"50"）。
+</div>
+
+<section>
+<h2><span class="n">一</span>定理组 II（V50 公理审计）</h2>
+<h3>定理 II1（A1 范畴审计：已证伪）</h3>
+<div class="thm"><span class="lab">THM II1</span> <span class="body">范畴混淆：π 是数学对象（可由定义证明）；c 的数值 299792458 m/s 是 1983 年米定义的固定值；而"信号速度上限"是洛伦兹不变性的经验事实（MM/Kennedy–Thorndike 实验）——不是拓扑不变量。A1 的"像圆周率一样是圆自带的"不成立。</span></div>
+<h3>定理 II2（A2 量纲审计：已证伪）</h3>
+<div class="thm"><span class="lab">THM II2</span> <span class="body">量纲：κ,τ→L⁻¹；ωℓ_P/c→无量纲；κ²+τ²→L⁻²——字面量纲断裂。Frenet–Serret 类关系 κ²+τ²=(ω/c)² 的量纲才闭合（L⁻²），但 V50 把 ℓ_P 乘入右侧导致无量纲。若 κ,τ 采用无量纲归一化须显式声明，且等式退化为平凡定义（无预测力）。</span></div>
+<h3>定理 II3（A3 旋量审计：已证伪）</h3>
+<div class="thm"><span class="lab">THM II3</span> <span class="body">D=32≡0 (mod 8)：不允许 Majorana–Weyl 旋量（现算）；SM 需要手征费米子——32 维须付出失手征性代价。旋量房间 2¹⁵=32768 远超 SM 需要（冗余），非"恰好装下"。32=8×4 属数字命理，无代数依据。</span></div>
+<h3>定理 II4（A4 审计：无操作定义）</h3>
+<div class="thm"><span class="lab">THM II4</span> <span class="body">"从几何生成一切常数"没有给出算法与判据（生成规则、终止条件、误差阈值）——方法论偏好而非公理。对照家族七第 41 条自称 A2"两侧量纲均为 L⁻²"，与 II2 现算矛盾——V50 内部不自洽。</span></div>
+<h3>定理 II5（常数计数：~50 无依据）</h3>
+<div class="thm"><span class="lab">THM II5</span> <span class="body">SM（无 ν）19 个独立参数 + 中微子 7–9 ≈ 26–28；"约 50 个无维度常数"无标准定义、无来源。哥德巴赫余项混入物理卷（家族八 49）属跑题。</span></div>
+<h3>定理 II6（72 条路线分类）</h3>
+<div class="thm"><span class="lab">THM II6</span> <span class="body">72 条中多数为已知研究纲领（GUT/弦/LQG/因果集/涌现引力/全息——真实但非 V50 独创）；少量为数字命理（32=8×4、q=exp(−ℓ_P²/λ²) 无推导）；人工场实验（家族八 54）无定量预言，不可设计可复现实验。</span></div>
+<h3>定理 II7（循环论证/断裂点审计）</h3>
+<div class="thm"><span class="lab">THM II7</span> <span class="body">"四力从单一公理推出"与"50 常数从几何生成"两目标均无中间定理链；A1–A4 没有任何一条连接任一目标——全部为断裂点（OPEN），按 V50 自己的纪律应标 OPEN 而非假设升级。</span></div>
+<h3>定理 II8（V50 vs TUFT 对照 + 判决）</h3>
+<div class="thm"><span class="lab">THM II8</span> <span class="body">同病：公理无推导、常数无生成、预言无定量（23 G1–G5 终审同款）。V50 的价值=给出 72 条可审计路线清单与诚实纪律文本——可作为"待办清单"，不作为物理理论。</span></div>
+<div class="fail">结论：A1/A2/A3 均当场可验的硬伤（范畴/量纲/旋量代数），A4 无操作定义；72 条=真实研究纲领清单，非推导；按 V50 自己的审计协议，公理地基应标 OPEN/已证伪。</div>
+</section>
+
+<section>
+<h2><span class="n">二</span>V50 公理审计全景图（SVG）</h2>
+<svg viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC,sans-serif">
+  <defs>
+    <linearGradient id="bgi2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1730"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <rect width="780" height="380" fill="url(#bgi2)" rx="10"/>
+  <text x="390" y="28" text-anchor="middle" fill="#d4a94e" font-size="16" font-weight="700">V50 四公理审计：A1/A2/A3 硬伤 · A4 无操作定义（THM II1–II8）</text>
+  <g font-size="12">
+    <rect x="40" y="55" width="220" height="140" fill="#f87171" opacity="0.14" rx="6" stroke="#f87171"/>
+    <text x="150" y="76" text-anchor="middle" fill="#f87171" font-weight="700">A1 已证伪（II1）</text>
+    <text x="150" y="96" text-anchor="middle" fill="#fecaca">π=数学对象；c 上限=</text>
+    <text x="150" y="112" text-anchor="middle" fill="#fecaca">经验事实（MM/KT）</text>
+    <text x="150" y="130" text-anchor="middle" fill="#fecaca">范畴混淆</text>
+    <rect x="290" y="55" width="220" height="140" fill="#f87171" opacity="0.14" rx="6" stroke="#f87171"/>
+    <text x="400" y="76" text-anchor="middle" fill="#f87171" font-weight="700">A2 已证伪（II2）</text>
+    <text x="400" y="96" text-anchor="middle" fill="#fecaca">κ²+τ²: L⁻²</text>
+    <text x="400" y="112" text-anchor="middle" fill="#fecaca">(ωℓ_P/c)²: 无量纲</text>
+    <text x="400" y="130" text-anchor="middle" fill="#fecaca">量纲断裂；家族七41 自相矛盾</text>
+    <rect x="540" y="55" width="220" height="140" fill="#f87171" opacity="0.14" rx="6" stroke="#f87171"/>
+    <text x="650" y="76" text-anchor="middle" fill="#f87171" font-weight="700">A3 已证伪（II3）</text>
+    <text x="650" y="96" text-anchor="middle" fill="#fecaca">32≡0 mod 8：无 M-W 旋量</text>
+    <text x="650" y="112" text-anchor="middle" fill="#fecaca">手征冲突；2¹⁵=32768 冗余</text>
+    <text x="650" y="130" text-anchor="middle" fill="#fecaca">32=8×4 数字命理</text>
+  </g>
+  <rect x="40" y="210" width="340" height="110" fill="#fbbf24" opacity="0.14" rx="6" stroke="#fbbf24"/>
+  <text x="210" y="232" text-anchor="middle" fill="#fbbf24" font-weight="700">A4 无操作定义（II4）· 常数≈26–28 非 50（II5）</text>
+  <text x="210" y="254" text-anchor="middle" fill="#fde68a">无生成算法/判据——方法论偏好</text>
+  <text x="210" y="272" text-anchor="middle" fill="#fde68a">SM19+ν7–9；哥德巴赫跑题</text>
+  <text x="210" y="292" text-anchor="middle" fill="#fde68a">72 条=研究纲领清单（II6）</text>
+  <rect x="400" y="210" width="340" height="110" fill="#63d2ff" opacity="0.14" rx="6" stroke="#63d2ff"/>
+  <text x="570" y="232" text-anchor="middle" fill="#63d2ff" font-weight="700">断裂点全 OPEN（II7/II8）</text>
+  <text x="570" y="254" text-anchor="middle" fill="#93c5fd">公理→目标无一条定理链</text>
+  <text x="570" y="272" text-anchor="middle" fill="#93c5fd">V50 vs TUFT：同病（23 G）</text>
+  <text x="570" y="292" text-anchor="middle" fill="#93c5fd">价值=待办清单非理论</text>
+  <text x="390" y="355" text-anchor="middle" fill="#64748b" font-size="11.5">示意：红=已证伪 / 黄=无操作定义 / 蓝=审计结论；旋量维数=本卷 250 位现算</text>
+</svg>
+<p class="cap">图 1 · V50 公理审计全景（示意：四公理全部不成立为公理）</p>
+
+<h3>250 位锚点表（48_v50audit_calc_results.json）</h3>
+<table>
+  <tr><th style="width:26%">锚点</th><th style="width:46%">本卷现算 / 审计</th><th style="width:28%">判定</th></tr>
+  <tr><td>Dirac 旋量 D=32</td><td class="mono">2¹⁶=65536（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>Weyl 旋量 D=32</td><td class="mono">2¹⁵=32768（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>D mod 8</td><td class="mono">32≡0：Majorana–Weyl 不允许</td><td>已证伪 A3</td></tr>
+  <tr><td>A2 量纲</td><td class="mono">κ²+τ²:L⁻² vs (ωℓ_P/c)²:无量纲</td><td>已证伪 A2</td></tr>
+  <tr><td>A1 范畴</td><td class="mono">π=数学对象；c 上限=经验事实</td><td>已证伪 A1</td></tr>
+  <tr><td>常数计数</td><td class="mono">SM19+ν7–9≈26–28（文献）</td><td>"50"无依据</td></tr>
+</table>
+<p class="note">注：旋量维数 2¹⁶/2¹⁵ 为 250 位 mpmath 现算（精确整数）；量纲为符号审计；SM 参数计数为文献口径——与 32 卷 Q 组一致。</p>
+</section>
+
+<section>
+<h2><span class="n">三</span>数据与来源</h2>
+<ul>
+  <li>250 位现算/符号审计：48_v50audit_calc.py → 48_v50audit_calc_results.json（本卷交付）</li>
+  <li>旋量存在性（D mod 8 条件）、SM 独立参数计数 19+ν（文献口径，32 卷 Q 组）</li>
+  <li>量纲向量为符号审计（非数值）；1983 米定义/MM–Kennedy–Thorndike（文献）</li>
+  <li>跨卷：23（终审）、26（弦 D=26/10）、30（量子引力候选）、32（十谜）、37（质量谱）</li>
+</ul>
+</section>
+
+<div style="background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:14px 0;">
+<b style="color:var(--gold)">归属与导航</b>
+<p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+本卷：openuft/07_统一场方程/（openuft 编号 48 = 算法联盟系列 50）。配套脚本与 JSON 同目录。<br>
+openuft 编号 31–47（系列 33–49）：第一性推导 · 本源体系 · 本质本源 · 量级 · 量子基础 · 暗物质 · 质量谱 · 宇宙起源 · 总终卷 · 宇宙学张力 · 黑洞 · 中子星 · 引力波频谱 · 中微子 · 拓扑 · CMB · 黑洞热力学。<br>
+系列（主目录）：① 引力线 01·04·07·08·12·16·19·20·21·22；② 验证方法线 02·05·06·09·10·13·15·17·18；③ 攻破线 23–32。<br>
+openuft 总卷（主目录）：openuft-统一场论全维度全链路总卷.html · 使用指南。
+</p>
+</div>
+
+<p class="foot">openuft 编号 48 · V50 公理审计卷 · 零虚构声明。全部锚点来自 48_v50audit_calc.py（mpmath 250 位，可复现）或符号/文献审计；V50 判定遵循 II 组（已证伪/无操作定义/OPEN 分层）。</p>
+</div>
+</body>
+</html>
+</div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>43 · 引力波频谱全景卷：原初 · PTA · 空间 · 地面</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%234ADE80'%3E43%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#3b0a2a);border:1px solid #9d174d;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#831843;color:#fbcfe8;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--red);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#fecaca;margin-bottom:20px;}
+  .preview b{color:var(--red);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--red);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#fca5a5;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--red);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--red);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .chk{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  .chk .mlab{color:var(--red);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 45 · openuft 统一场方程 43（零虚构）</span>
+  <h1>引力波频谱全景卷：原初 · PTA · 空间 · 地面</h1>
+  <p>引力波=统一场论"攻破"的观测面全景：四个频段、四类探测器、一张频谱图，波长 250 位现算。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算（43_gwspectrum_calc_results.json）</b>：λ(PTA 1e-8 Hz)=2.99792458×10¹⁶ m；λ(LISA 3 mHz)=9.9930819333…×10¹⁰ m；λ(LIGO 100 Hz)=2.99792458×10⁶ m；λ(CMB B 1e-17 Hz)=2.99792458×10²⁵ m。
+</div>
+
+<section>
+<h2><span class="n">一</span>定理组 DD（引力波频谱全景）</h2>
+<h3>定理 DD1（四频段全景）</h3>
+<div class="thm"><span class="lab">THM DD1</span> <span class="body">原初 GW（CMB B 模，10⁻¹⁷ Hz 级）→ PTA（10⁻⁹–10⁻⁷ Hz，NANOGrav/EPTA）→ 空间干涉仪（10⁻⁴–10⁻¹ Hz，LISA/天琴/太极）→ 地面干涉仪（10–10³ Hz，LIGO/Virgo/KAGRA/ET/CE）。四频段覆盖 19 个量级。</span></div>
+<h3>定理 DD2（波长锚点：本卷现算）</h3>
+<div class="thm"><span class="lab">THM DD2</span> <span class="body">λ=c/f（250 位现算）：PTA(1e-8 Hz)=2.99792458×10¹⁶ m；LISA(3 mHz)=9.9930819333…×10¹⁰ m；LIGO(100 Hz)=2.99792458×10⁶ m；CMB B(1e-17 Hz)=2.99792458×10²⁵ m——跨度 10⁶–10²⁵ m。</span></div>
+<h3>定理 DD3（已观测事件链）</h3>
+<div class="thm"><span class="lab">THM DD3</span> <span class="body">GW150914（啁啾 28.0955558 M_sun，21 卷）+ QNM ≈250 Hz（41 卷）；GW170817 多信使（42 卷）；NANOGrav 2023 PTA 纳赫兹背景（42 卷）。三频段已被观测。</span></div>
+<h3>定理 DD4（未探测频段）</h3>
+<div class="thm"><span class="lab">THM DD4</span> <span class="body">CMB B 模未探测：r&lt;0.036（BICEP/Keck 2021）——原初引力波窗口开放（31 卷判决窗口扩展）。</span></div>
+<h3>定理 DD5（TUFT 对照）</h3>
+<div class="thm"><span class="lab">THM DD5</span> <span class="body">TUFT"引力=螺旋收敛"——无 GW 频谱、无色偏振、无频段预言（23 G1–G5）。对照 DD1–DD4：真实理论给波形、频段与应变；TUFT 零个。</span></div>
+<h3>定理 DD6（判决窗口）</h3>
+<div class="thm"><span class="lab">THM DD6</span> <span class="body">B 模：CMB-S4/BICEP 阵列（r→0.001）；PTA：IPTA 来源鉴别；空间：LISA（2020 年代后期）；地面：ET/CE 灵敏度×10——频谱全覆盖=统一场论攻破的观测面。</span></div>
+<div class="fail">结论：GW 频谱=已覆盖三频段 + 原初窗口开放；TUFT 全零贡献。</div>
+</section>
+
+<section>
+<h2><span class="n">二</span>引力波频谱图（SVG）</h2>
+<svg viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC,sans-serif">
+  <defs>
+    <linearGradient id="bgd2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1730"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <rect width="780" height="400" fill="url(#bgd2)" rx="10"/>
+  <text x="390" y="26" text-anchor="middle" fill="#d4a94e" font-size="16" font-weight="700">引力波频谱：四频段 · 波长 250 位现算（THM DD1–DD6）</text>
+  <g font-size="12">
+    <rect x="40" y="50" width="165" height="160" fill="#fbbf24" opacity="0.15" rx="6" stroke="#fbbf24"/>
+    <text x="122" y="72" text-anchor="middle" fill="#fbbf24" font-weight="700">CMB B 模</text>
+    <text x="122" y="92" text-anchor="middle" fill="#fde68a">f=1e-17 Hz</text>
+    <text x="122" y="110" text-anchor="middle" fill="#fde68a">λ=10^25.48 m（现算）</text>
+    <text x="122" y="128" text-anchor="middle" fill="#fde68a">r&lt;0.036 未探测</text>
+    <text x="122" y="146" text-anchor="middle" fill="#fde68a">窗口：CMB-S4/BICEP</text>
+    <text x="122" y="166" text-anchor="middle" fill="#fde68a">DD4 开放</text>
+    <rect x="235" y="50" width="165" height="160" fill="#63d2ff" opacity="0.15" rx="6" stroke="#63d2ff"/>
+    <text x="317" y="72" text-anchor="middle" fill="#63d2ff" font-weight="700">PTA</text>
+    <text x="317" y="92" text-anchor="middle" fill="#93c5fd">f=1e-8 Hz</text>
+    <text x="317" y="110" text-anchor="middle" fill="#93c5fd">λ=10^16.48 m（现算）</text>
+    <text x="317" y="128" text-anchor="middle" fill="#93c5fd">NANOGrav 2023</text>
+    <text x="317" y="146" text-anchor="middle" fill="#93c5fd">来源开放</text>
+    <text x="317" y="166" text-anchor="middle" fill="#93c5fd">DD3 已观测</text>
+    <rect x="430" y="50" width="165" height="160" fill="#4ade80" opacity="0.14" rx="6" stroke="#4ade80"/>
+    <text x="512" y="72" text-anchor="middle" fill="#4ade80" font-weight="700">空间干涉仪</text>
+    <text x="512" y="92" text-anchor="middle" fill="#bbf7d0">f=3e-3 Hz</text>
+    <text x="512" y="110" text-anchor="middle" fill="#bbf7d0">λ=10^11.00 m（现算）</text>
+    <text x="512" y="128" text-anchor="middle" fill="#bbf7d0">LISA/天琴/太极</text>
+    <text x="512" y="146" text-anchor="middle" fill="#bbf7d0">待发射</text>
+    <text x="512" y="166" text-anchor="middle" fill="#bbf7d0">DD6 窗口</text>
+    <rect x="625" y="50" width="145" height="160" fill="#4ade80" opacity="0.14" rx="6" stroke="#4ade80"/>
+    <text x="697" y="72" text-anchor="middle" fill="#4ade80" font-weight="700">地面干涉仪</text>
+    <text x="697" y="92" text-anchor="middle" fill="#bbf7d0">f=100 Hz</text>
+    <text x="697" y="110" text-anchor="middle" fill="#bbf7d0">λ=10^6.48 m（现算）</text>
+    <text x="697" y="128" text-anchor="middle" fill="#bbf7d0">LIGO/Virgo/KAGRA</text>
+    <text x="697" y="146" text-anchor="middle" fill="#bbf7d0">GW150914/170817</text>
+    <text x="697" y="166" text-anchor="middle" fill="#bbf7d0">DD3 已观测</text>
+  </g>
+  <text x="390" y="250" text-anchor="middle" fill="#fca5a5" font-size="12.5" font-weight="700">TUFT"引力=螺旋收敛"：无频谱 · 无色偏振 · 无频段预言（DD5）</text>
+  <text x="390" y="310" text-anchor="middle" fill="#64748b" font-size="11.5">四频段覆盖 19 个量级：10⁶–10²⁵ m；三频段已观测、原初窗口开放（DD6）</text>
+  <text x="390" y="345" text-anchor="middle" fill="#64748b" font-size="11">示意：四频段并排 + TUFT 排除；波长=本卷 250 位现算</text>
+  <text x="390" y="385" text-anchor="middle" fill="#64748b" font-size="11">图 1 · 引力波频谱全景（示意：CMB B / PTA / 空间 / 地面）</text>
+</svg>
+
+<h3>250 位锚点表（43_gwspectrum_calc_results.json）</h3>
+<table>
+  <tr><th style="width:22%">频段</th><th style="width:50%">λ=c/f（本卷 250 位现算）</th><th style="width:28%">状态</th></tr>
+  <tr><td>CMB B 模</td><td class="mono">2.99792458×10²⁵ m（f=1e-17 Hz，log₁₀=25.48）</td><td>未探测/窗口</td></tr>
+  <tr><td>PTA</td><td class="mono">2.99792458×10¹⁶ m（f=1e-8 Hz，log₁₀=16.48）</td><td>已观测/来源开放</td></tr>
+  <tr><td>LISA 类</td><td class="mono">9.9930819333…×10¹⁰ m（f=3 mHz，log₁₀=11.00）</td><td>待发射</td></tr>
+  <tr><td>LIGO 类</td><td class="mono">2.99792458×10⁶ m（f=100 Hz，log₁₀=6.48）</td><td>已观测</td></tr>
+</table>
+<p class="note">注：四波长为本卷 250 位 mpmath 现算；跨卷事件链（GW150914/GW170817/NANOGrav）引用 21/41/42 卷锚点。</p>
+</section>
+
+<section>
+<h2><span class="n">三</span>数据与来源</h2>
+<ul>
+  <li>250 位现算：43_gwspectrum_calc.py → 43_gwspectrum_calc_results.json（本卷交付）</li>
+  <li>r&lt;0.036（BICEP/Keck 2021）、GW150914/GW170817/NANOGrav 2023（文献）</li>
+  <li>频段划分与探测器计划（文献共识）：PTA 10⁻⁹–10⁻⁷ Hz、LISA 10⁻⁴–10⁻¹ Hz、地面 10–10³ Hz</li>
+  <li>跨卷：21（啁啾/偏振）、31（判决窗口）、41（QNM）、42（GW170817/PTA）</li>
+</ul>
+</section>
+
+<div style="background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:14px 0;">
+<b style="color:var(--gold)">归属与导航</b>
+<p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+本卷：openuft/07_统一场方程/（openuft 编号 43 = 算法联盟系列 45）。配套脚本与 JSON 同目录。<br>
+openuft 编号 31–42（系列 33–44）：第一性推导 · 本源体系 · 本质本源 · 量级 · 量子基础 · 暗物质 · 质量谱 · 宇宙起源 · 总终卷 · 宇宙学张力 · 黑洞 · 中子星。<br>
+系列（主目录）：① 引力线 01·04·07·08·12·16·19·20·21·22；② 验证方法线 02·05·06·09·10·13·15·17·18；③ 攻破线 23–32。<br>
+openuft 总卷（主目录）：openuft-统一场论全维度全链路总卷.html · 使用指南。
+</p>
+</div>
+
+<p class="foot">openuft 编号 43 · 引力波频谱全景卷 · 零虚构声明。全部锚点来自 43_gwspectrum_calc.py（mpmath 250 位，可复现）或标注文献出处；频谱判定遵循 DD 组（已观测/待发射/未探测分层）。</p>
+</div>
+</body>
+</html>
+</div>
+</body>
+</html>

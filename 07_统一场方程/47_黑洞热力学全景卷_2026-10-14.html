@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>47 · 黑洞热力学全景卷：霍金温度 · 贝肯斯坦熵</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%23F87171'%3E47%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#2a0d0d);border:1px solid #7f1d1d;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#7f1d1d;color:#fecaca;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--amber);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#fde68a;margin-bottom:20px;}
+  .preview b{color:var(--amber);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--amber);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#fcd34d;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--amber);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--amber);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .chk{background:#1a160a;border:1px solid #854d0e;border-left:4px solid var(--amber);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fde68a;}
+  .chk .mlab{color:var(--amber);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 49 · openuft 统一场方程 47（零虚构）</span>
+  <h1>黑洞热力学全景卷：霍金温度 · 贝肯斯坦熵</h1>
+  <p>黑洞热力学=引力与量子/统计物理最深的交汇面（41 卷几何观测卷的量子侧展开）。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算（47_bhth_calc_results.json）</b>：T_H(SgrA*)=1.4359461041…×10⁻¹⁴ K；S/k_B=1.9366950910…×10⁹⁰（r_s 与 41 卷一致）。
+</div>
+
+<section>
+<h2><span class="n">一</span>定理组 HH（黑洞热力学）</h2>
+<h3>定理 HH1（四定律：文献已建）</h3>
+<div class="thm"><span class="lab">THM HH1</span> <span class="body">黑洞热力学四定律（文献）：κ∝T（第零）、A∝S（第二）、dM=TdS+ΩdJ（第一）、κ 不可为零（第三）——引力与热力学通过表面积严格关联。</span></div>
+<h3>定理 HH2（霍金温度：本卷现算）</h3>
+<div class="thm"><span class="lab">THM HH2</span> <span class="body">T_H=ħc³/(8πGMk_B)。SgrA*（M=4.297×10⁶ M_sun）：T_H=1.4359461041…×10⁻¹⁴ K——本卷 250 位现算。远低于 CMB 2.7 K，恒星黑洞永不净增辐射。</span></div>
+<h3>定理 HH3（贝肯斯坦熵：本卷现算）</h3>
+<div class="thm"><span class="lab">THM HH3</span> <span class="body">S/k_B=A/(4l_P²)。SgrA*：S/k_B=1.9366950910…×10⁹⁰——本卷 250 位现算。黑洞熵=视界面积，引力=最大熵载体。</span></div>
+<h3>定理 HH4（霍金辐射与蒸发）</h3>
+<div class="thm"><span class="lab">THM HH4</span> <span class="body">t_ev∝M³（41 卷 PBH 蒸发现算：2.6654×10¹² yr 于 5×10¹¹ kg）；恒星黑洞蒸发时间&gt;宇宙年龄 10⁶⁷ 倍量级——理论预言、未观测。</span></div>
+<h3>定理 HH5（信息悖论：开放）</h3>
+<div class="thm"><span class="lab">THM HH5</span> <span class="body">纯态→热混合态（蒸发）——信息丢失？Page 曲线未测、保真性未决（文献）；量子引力候选（30 卷 N）各有方案但无判决。</span></div>
+<h3>定理 HH6（TUFT 对照 + 判决窗口）</h3>
+<div class="thm"><span class="lab">THM HH6</span> <span class="body">TUFT——无温度、无熵、无热力学（23 G1–G5）。窗口：黑洞影子精细结构（41）、引力波回响、蒸发末期 γ 暴——全部独立于统一场论"突破"。</span></div>
+<div class="fail">结论：黑洞热力学=已建理论框架+250 位现算温度/熵；信息悖论开放；TUFT 全零贡献。</div>
+</section>
+
+<section>
+<h2><span class="n">二</span>黑洞热力学全景图（SVG）</h2>
+<svg viewBox="0 0 780 360" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC,sans-serif">
+  <defs>
+    <linearGradient id="bgh2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1730"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <rect width="780" height="360" fill="url(#bgh2)" rx="10"/>
+  <text x="390" y="28" text-anchor="middle" fill="#d4a94e" font-size="16" font-weight="700">黑洞热力学：四定律已建 · 温度熵现算 · 信息开放（THM HH1–HH6）</text>
+  <g font-size="12">
+    <rect x="40" y="55" width="220" height="175" fill="#4ade80" opacity="0.14" rx="6" stroke="#4ade80"/>
+    <text x="150" y="78" text-anchor="middle" fill="#4ade80" font-weight="700">HH1 四定律已建</text>
+    <text x="150" y="100" text-anchor="middle" fill="#bbf7d0">κ∝T · A∝S</text>
+    <text x="150" y="118" text-anchor="middle" fill="#bbf7d0">dM=TdS+ΩdJ</text>
+    <text x="150" y="136" text-anchor="middle" fill="#bbf7d0">引力=热力学关联</text>
+    <text x="150" y="158" text-anchor="middle" fill="#bbf7d0">HH2 T_H=1.4359…e-14 K</text>
+    <text x="150" y="178" text-anchor="middle" fill="#bbf7d0">（250 位现算）</text>
+    <rect x="290" y="55" width="220" height="175" fill="#fbbf24" opacity="0.14" rx="6" stroke="#fbbf24"/>
+    <text x="400" y="78" text-anchor="middle" fill="#fbbf24" font-weight="700">HH3/HH4 熵与蒸发</text>
+    <text x="400" y="100" text-anchor="middle" fill="#fde68a">S/k_B=1.9367…e90</text>
+    <text x="400" y="118" text-anchor="middle" fill="#fde68a">（250 位现算）</text>
+    <text x="400" y="136" text-anchor="middle" fill="#fde68a">t_ev∝M³（41 卷）</text>
+    <text x="400" y="158" text-anchor="middle" fill="#fde68a">恒星黑洞&gt;10⁶⁷ 宇宙龄</text>
+    <text x="400" y="178" text-anchor="middle" fill="#fde68a">蒸发未观测</text>
+    <rect x="540" y="55" width="220" height="175" fill="#63d2ff" opacity="0.14" rx="6" stroke="#63d2ff"/>
+    <text x="650" y="78" text-anchor="middle" fill="#63d2ff" font-weight="700">HH5/HH6 开放</text>
+    <text x="650" y="100" text-anchor="middle" fill="#93c5fd">信息悖论：Page 未测</text>
+    <text x="650" y="118" text-anchor="middle" fill="#93c5fd">TUFT：无热力学</text>
+    <text x="650" y="136" text-anchor="middle" fill="#93c5fd">（23 G1-G5）</text>
+    <text x="650" y="158" text-anchor="middle" fill="#93c5fd">窗口：影子/回响/γ 暴</text>
+    <text x="650" y="178" text-anchor="middle" fill="#93c5fd">独立判决</text>
+  </g>
+  <text x="390" y="270" text-anchor="middle" fill="#fca5a5" font-size="12.5" font-weight="700">TUFT：无温度 · 无熵 · 无热力学（HH6）</text>
+  <text x="390" y="330" text-anchor="middle" fill="#64748b" font-size="11.5">示意：绿=已建 / 黄=现算+未观测 / 蓝=开放窗口；T_H、S/k_B=本卷 250 位现算</text>
+</svg>
+<p class="cap">图 1 · 黑洞热力学全景（示意：已建/现算/开放三层）</p>
+
+<h3>250 位锚点表（47_bhth_calc_results.json）</h3>
+<table>
+  <tr><th style="width:26%">锚点</th><th style="width:46%">本卷现算 / 文献</th><th style="width:28%">判定</th></tr>
+  <tr><td>T_H(SgrA*)</td><td class="mono">1.4359461041…×10⁻¹⁴ K（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>S/k_B(SgrA*)</td><td class="mono">1.9366950910…×10⁹⁰（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>r_s(SgrA*)</td><td class="mono">1.2690115572×10¹⁰ m（与 41 卷一致）</td><td>跨卷自洽</td></tr>
+  <tr><td>四定律</td><td class="mono">κ/A/dM/κ≠0（文献）</td><td>已建</td></tr>
+  <tr><td>信息悖论</td><td class="mono">Page 曲线未测（文献）</td><td>开放</td></tr>
+  <tr><td>蒸发</td><td class="mono">t_ev∝M³（41 卷 PBH 现算）</td><td>未观测</td></tr>
+</table>
+<p class="note">注：T_H、S/k_B 为 250 位 mpmath 现算（CODATA 2022 常数，M_sun 与 41 卷同源）；r_s 与 41 卷 BB1 一致——跨卷自洽。</p>
+</section>
+
+<section>
+<h2><span class="n">三</span>数据与来源</h2>
+<ul>
+  <li>250 位现算：47_bhth_calc.py → 47_bhth_calc_results.json（本卷交付）</li>
+  <li>CODATA 2022：ħ/c/G/k_B；M=4.297×10⁶ M_sun（41 卷同源 M_sun=1.988409870×10³⁰ kg）</li>
+  <li>四定律、霍金辐射、信息悖论、Page 曲线（文献共识）</li>
+  <li>跨卷：23（终审）、30（量子引力候选）、32（十谜）、39（总终卷）、41（黑洞观测）</li>
+</ul>
+</section>
+
+<div style="background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:14px 0;">
+<b style="color:var(--gold)">归属与导航</b>
+<p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+本卷：openuft/07_统一场方程/（openuft 编号 47 = 算法联盟系列 49）。配套脚本与 JSON 同目录。<br>
+openuft 编号 31–46（系列 33–48）：第一性推导 · 本源体系 · 本质本源 · 量级 · 量子基础 · 暗物质 · 质量谱 · 宇宙起源 · 总终卷 · 宇宙学张力 · 黑洞 · 中子星 · 引力波频谱 · 中微子 · 拓扑 · CMB。<br>
+系列（主目录）：① 引力线 01·04·07·08·12·16·19·20·21·22；② 验证方法线 02·05·06·09·10·13·15·17·18；③ 攻破线 23–32。<br>
+openuft 总卷（主目录）：openuft-统一场论全维度全链路总卷.html · 使用指南。
+</p>
+</div>
+
+<p class="foot">openuft 编号 47 · 黑洞热力学全景卷 · 零虚构声明。全部锚点来自 47_bhth_calc.py（mpmath 250 位，可复现）或标注文献出处；热力学判定遵循 HH 组（已建/现算/开放分层）。</p>
+</div>
+</body>
+</html>
+</div>
+</body>
+</html>
