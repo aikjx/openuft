@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>GAQ-UFT 家族七伤情报告</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{margin:0;background:#fff;font-family:"Microsoft YaHei",sans-serif;}
+.wrap{width:980px;margin:0 auto;padding:8px 3px;}
+h1{font-size:16px;margin:4px 0 2px;color:#1a1a1a;}
+.sub{font-size:11px;color:#666;margin:0 0 6px;}
+#c1{width:100%;height:230px;}
+#c2{width:100%;height:180px;}
+.note{font-size:11px;color:#555;margin-top:4px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>GAQ-UFT V50 · 家族七 · 第一轮伤情报告（A1–A4 三关检验）</h1>
+<p class="sub">A2 字面量纲断裂（L⁻² vs 无量纲，差 ℓ_P² 因子）已证伪 → 修正 κ²+τ²=(ω/c)² verified（=S02 §17）· A3 32 维 OPEN · A1 公设成立 · A4 纪律有效零实例</p>
+<div id="c1"></div>
+<div id="c2"></div>
+<p class="note">上：A1–A4 三关检验矩阵——量纲关（A2 字面 ✗ / 修正 ✓）、第一性原理关（A2 总开关宣称 ✗、A3 ✗）、数值对标关（A2 修正 ✓）；绿=通过、红=证伪、黄=OPEN。下：72 条攻击路线九家族状态——家族七已执行（P41–P48 对本轮 A1–A4）、家族三 #15/#16 与家族五 #29、家族八 #55 已由 S02 §19–§35 攻破链覆盖（绿），其余 OPEN 待后续轮次（黄）。数据源：GAQ-UFT_V50_家族七伤情报告_verify.py（exit 0，量纲幂向量自动审计）。</p>
+</div>
+<script>
+var c1=echarts.init(document.getElementById('c1'));
+c1.setOption({
+ title:{text:'A1–A4 三关检验矩阵',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:8,containLabel:true},
+ xAxis:{type:'category',data:['A1 光速约束','A2 三重奏(字面)','A2 三重奏(修正)','A3 32维流形','A4 本源几何化'],axisLabel:{fontSize:10,interval:0,width:90,overflow:'break'}},
+ yAxis:{type:'value',name:'关卡数',min:0,max:3,nameTextStyle:{fontSize:11},axisLabel:{fontSize:10}},
+ series:[{name:'量纲关',type:'bar',barWidth:20,data:[
+   {value:1,itemStyle:{color:'rgba(40,160,90,0.75)'}},{value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:1,itemStyle:{color:'rgba(40,160,90,0.75)'}},{value:1,itemStyle:{color:'rgba(230,180,60,0.7)'}},{value:1,itemStyle:{color:'rgba(230,180,60,0.7)'}}]},
+  {name:'第一性原理关',type:'bar',barWidth:20,data:[
+   {value:1,itemStyle:{color:'rgba(40,160,90,0.75)'}},{value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:1,itemStyle:{color:'rgba(40,160,90,0.75)'}},{value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:1,itemStyle:{color:'rgba(230,180,60,0.7)'}}]},
+  {name:'数值对标关',type:'bar',barWidth:20,data:[
+   {value:1,itemStyle:{color:'rgba(40,160,90,0.75)'}},{value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:1,itemStyle:{color:'rgba(40,160,90,0.75)'}},{value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}}]}
+ ]});
+var c2=echarts.init(document.getElementById('c2'));
+c2.setOption({
+ title:{text:'九家族 72 条路线状态（存在性标注）',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:8,containLabel:true},
+ xAxis:{type:'category',data:['一 几何化\n#1-8','二 量子化\n#9-14','三 规范弦\n#15-20','四 代数离散\n#21-26','五 现象学\n#27-34','六 宇宙学\n#35-40','七 第一性\n#41-48','八 计算实验\n#49-55','九 涌现信息\n#56-60'],axisLabel:{fontSize:10,interval:0}},
+ yAxis:{type:'value',name:'路线数',nameTextStyle:{fontSize:11},axisLabel:{fontSize:10}},
+ series:[
+  {name:'已攻破(S02链)',type:'bar',barWidth:18,stack:'s',data:[0,0,2,0,1,0,8,1,0],
+   itemStyle:{color:'rgba(40,160,90,0.75)'},label:{show:true,fontSize:9}},
+  {name:'OPEN',type:'bar',barWidth:18,stack:'s',data:[8,6,4,6,7,6,0,6,6],
+   itemStyle:{color:'rgba(230,180,60,0.65)'}}
+ ]
+});
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>
