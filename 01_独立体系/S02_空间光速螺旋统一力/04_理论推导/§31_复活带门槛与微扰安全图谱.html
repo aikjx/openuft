@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§31 复活带门槛与微扰安全：跑动抬升 Δb* 参数空间</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #fff; }
+  #chart { width: 986px; height: 420px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+<script>
+(function(){
+  var el = document.getElementById('chart');
+  if (!el || typeof echarts === 'undefined') { return; }
+  var chart = echarts.init(el);
+  var opt = {
+    title: { text: '§31 跑动抬升 Δb* 门槛：10TeV 一个 50/50̄ 对可达，1TeV 微扰界下消失', left: 'center', top: 6, textStyle: { fontSize: 15 } },
+    tooltip: {
+      trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true,
+      formatter: function(ps){
+        if (!ps || !ps.length) { return ''; }
+        var p = ps[0];
+        return 'M_S = ' + p.value[0] + ' TeV' + String.fromCharCode(10)
+             + 'Δb* = ' + p.value[1].toFixed(2);
+      }
+    },
+    legend: { top: 30, textStyle: { fontSize: 11 } },
+    grid: { left: 100, right: 50, top: 72, bottom: 55, containLabel: true },
+    xAxis: { type: 'log', name: 'M_S (TeV)', min: 1, max: 100,
+      axisLabel: { fontSize: 11 }, nameTextStyle: { fontSize: 11 } },
+    yAxis: { type: 'value', name: 'Δb*（复活带下界）', min: 0, max: 10,
+      axisLabel: { fontSize: 11 }, nameTextStyle: { fontSize: 11 } },
+    series: [
+      {
+        name: 'Δb*(M_extra=10M_GUT)', type: 'line', symbol: 'circle', symbolSize: 7, lineStyle: { width: 2 },
+        data: [[1, 8.41], [10, 3.80]]
+      },
+      {
+        name: 'Δb*(M_extra=100M_GUT)', type: 'line', symbol: 'circle', symbolSize: 7, lineStyle: { width: 2 },
+        data: [[1, 4.21], [10, 1.90]]
+      },
+      {
+        name: 'Δb*(M_extra=0.1M_Pl)', type: 'line', symbol: 'circle', symbolSize: 7, lineStyle: { type: 'dashed', width: 2 },
+        data: [[1, 5.77], [10, 2.61]]
+      },
+      {
+        name: '50/50̄ 对典型 Δb 带（O(1–10)）', type: 'line', symbol: 'none', lineStyle: { opacity: 0 }, stack: 'band',
+        data: [[1, 1.0], [100, 1.0]],
+        areaStyle: { color: 'rgba(120,180,255,0.18)' }
+      },
+      {
+        name: '1TeV 微扰安全界（M_Hc_eff=0.1M_Pl）', type: 'line', symbol: 'none',
+        lineStyle: { type: 'dotted', width: 1.5 },
+        markLine: {
+          symbol: 'none', silent: true, lineStyle: { type: 'dotted', width: 1.5 },
+          data: [{ yAxis: 9.25, label: { formatter: 'Δb*>9.25: M_Hc_eff>0.1M_Pl 非微扰', fontSize: 11 } }]
+        },
+        data: [[1, 10], [100, 10]]
+      }
+    ]
+  };
+  chart.setOption(opt);
+  window.addEventListener('resize', function(){ if (chart) { chart.resize(); } });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>§34 DMPM高阶VEV复活带参数区</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{margin:0;background:#fff;font-family:"Microsoft YaHei",sans-serif;}
+.wrap{width:980px;margin:0 auto;padding:8px 3px;}
+h1{font-size:16px;margin:4px 0 2px;color:#1a1a1a;}
+.sub{font-size:11px;color:#666;margin:0 0 6px;}
+#c1{width:100%;height:230px;}
+#c2{width:100%;height:180px;}
+.note{font-size:11px;color:#555;margin-top:4px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>§34 DMPM 高阶 VEV 复活带参数区（闭合 §33 窗口）</h1>
+<p class="sub">adjoint-DMPM：M_T^eff=V⁸/(⟨S⟩⁶μ′)，⟨S⟩=0.1M_Pl · 基础 DMPM：V⁴/(μ′M₅₀M₅₀′)，M₅₀=1e18 · 10TeV 复活带 M_T^eff∈[3.54e17,1.39e18]</p>
+<div id="c1"></div>
+<div id="c2"></div>
+<p class="note">上：μ′ 扫描下 M_T^eff（对数轴）——adjoint 版（V=2e16）蓝线穿过复活带 [3.54e17,1.39e18]（虚线区间），<b>TTP14 例子（μ′=10TeV，★）M_T^eff=7.76e17、κ=83.3 恰入带</b>；基础版（V=1e16）红线入带需 μ′∈[7.2e9,2.8e10] GeV。下：对应质子寿命 τ₅——复活带全区间超 Super-K 界限 6.6e33 达 4–5 个量级。μ~O(100)GeV 修正占比 1.3e-14% 可忽略；⟨θ₃⟩=2.06e15 GeV 与 PQ 标度正交。数据源：§34_verify.py（exit 0）＋TTP14-014 eq.2.9/2.13/4.6–4.12。</p>
+</div>
+<script>
+var c1=echarts.init(document.getElementById('c1'));
+c1.setOption({
+ title:{text:'DMPM M_T^eff vs μ′（对数轴）与 10TeV 复活带',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true,
+   valueFormatter:function(v){return v==null?'-':(Math.log10(v)).toFixed(1)+' (10^'+Math.log10(v).toFixed(1)+')';}},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:6,containLabel:true},
+ xAxis:{type:'log',name:'μ′ (GeV)',nameTextStyle:{fontSize:11},axisLabel:{fontSize:10},min:1e2,max:1e12},
+ yAxis:{type:'log',name:'M_T^eff (GeV)',nameTextStyle:{fontSize:11},axisLabel:{fontSize:10},min:1e16,max:1e20},
+ series:[
+  {name:'adjoint-DMPM (V=2e16)',type:'line',smooth:true,symbol:'none',data:[[1e2,7.76e19],[1e3,7.76e18],[1e4,7.76e17],[1e5,7.76e16],[1e6,7.76e15]],
+   markLine:{symbol:'none',data:[
+    {yAxis:3.54e17,lineStyle:{type:'dashed'},label:{formatter:'带上界',fontSize:10}},
+    {yAxis:1.39e18,lineStyle:{type:'dashed'},label:{formatter:'带下界',fontSize:10}}]}},
+  {name:'基础 DMPM (V=1e16)',type:'line',smooth:true,symbol:'none',data:[[1e9,1e19],[1e10,1e18],[1e11,1e17],[1e12,1e16]]},
+  {name:'TTP14 例子 ★',type:'scatter',symbolSize:12,data:[[1e4,7.76e17]],
+   label:{show:true,formatter:'κ=83.3 入带',fontSize:10,position:'right'}}
+ ]
+});
+var c2=echarts.init(document.getElementById('c2'));
+c2.setOption({
+ title:{text:'复活带内质子寿命 τ₅（Super-K 界限 6.6e33 年）',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ grid:{left:8,right:20,top:36,bottom:6,containLabel:true},
+ xAxis:{type:'category',data:['带下界\nM_T^eff=3.54e17','TTP14 例\nM_T^eff=7.73e17','带上界\nM_T^eff=1.39e18'],axisLabel:{fontSize:11}},
+ yAxis:{type:'log',name:'τ₅ (年)',nameTextStyle:{fontSize:11},axisLabel:{fontSize:10},min:1e33,max:1e40},
+ series:[{name:'τ₅',type:'bar',barWidth:40,label:{show:true,position:'top',fontSize:11,
+   formatter:function(p){return '6.5e37 / 3.1e38 / 1.0e39'.split(' / ')[p.dataIndex];}},
+   data:[6.5e37,3.1e38,1.0e39],
+   markLine:{symbol:'none',data:[{yAxis:6.6e33,label:{formatter:'Super-K 6.6e33',fontSize:10,position:'insideEndTop'}}],lineStyle:{type:'dashed',width:2}}}
+ ]
+});
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>

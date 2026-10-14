@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§28 质子衰变完整预言：dim-5 定标与可检验窗口 [67,132] TeV</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #fff; }
+  #chart { width: 986px; height: 420px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+<script>
+(function(){
+  var el = document.getElementById('chart');
+  if (!el || typeof echarts === 'undefined') { return; }
+  var chart = echarts.init(el);
+  function fmt(v){
+    var e = Math.floor(Math.log10(v));
+    return (v/Math.pow(10,e)).toFixed(1) + '×10' + e;
+  }
+  // 无 Hc 链谱（M_S 1/10/100 TeV 物理；输入 §27 阈值链）
+  var pts = [
+    [1, 6.45e26], [10, 4.51e30], [100, 3.06e34]
+  ];
+  // 平滑插值线（log-log，供参考；实际判定用网格点）
+  var option = {
+    title: { text: '§28 完整质子衰变预言：低能排除、可检验窗口 [67, 132] TeV', left: 'center', top: 6, textStyle: { fontSize: 15 } },
+    tooltip: {
+      trigger: 'axis',
+      triggerOn: 'mousemove|click',
+      renderMode: 'richText',
+      confine: true,
+      formatter: function(params){
+        if (!params || !params.length) { return ''; }
+        var p = params[0];
+        var s = 'M_S = ' + p.value[0] + ' TeV' + String.fromCharCode(10)
+              + 'τ_total = ' + fmt(p.value[1]) + ' yr';
+        if (p.seriesType === 'scatter') { s += String.fromCharCode(10) + p.data.label; }
+        return s;
+      }
+    },
+    legend: { top: 30, textStyle: { fontSize: 11 } },
+    grid: { left: 110, right: 45, top: 72, bottom: 55, containLabel: true },
+    xAxis: { type: 'log', name: 'M_S (TeV)', min: 1, max: 1000, axisLabel: { fontSize: 11 }, nameTextStyle: { fontSize: 11 } },
+    yAxis: { type: 'log', name: 'τ_total (yr)', min: 1e25, max: 1e40,
+      axisLabel: { fontSize: 11, formatter: function(v){ return fmt(v); } }, nameTextStyle: { fontSize: 11 } },
+    series: [
+      {
+        name: 'τ_total(M_S) 无Hc链谱', type: 'line',
+        data: [
+          { value: [1, 6.45e26] }, { value: [10, 4.51e30] }, { value: [100, 3.06e34] },
+          { value: [1000, 5.18e34], label: '10³TeV 文献假设谱' }
+        ],
+        symbol: 'circle', symbolSize: 7, lineStyle: { width: 2 },
+        markLine: {
+          symbol: 'none', silent: true, lineStyle: { type: 'dashed', width: 1.5 }, label: { fontSize: 11 },
+          data: [
+            { yAxis: 6.6e33, lineStyle: { type: 'dashed' }, label: { formatter: 'Super-K K⁺ν̄ 界 6.6×10³³ yr', position: 'insideEndTop' } },
+            { yAxis: 1.0e35, lineStyle: { type: 'dotted' }, label: { formatter: 'Hyper-K 灵敏度 ~10³⁵ yr', position: 'insideEndTop' } }
+          ]
+        },
+        markArea: {
+          silent: true, itemStyle: { color: 'rgba(120,180,255,0.20)' },
+          data: [[{ xAxis: 67, yAxis: 6.6e33 }, { xAxis: 132, yAxis: 1.0e35 }]]
+        }
+      },
+      {
+        name: '关键点', type: 'scatter', symbolSize: 8,
+        data: [
+          { value: [1, 6.45e26], label: '1TeV: τ=6.5×10²⁶ 被排除（dim-5 主导）' },
+          { value: [10, 4.51e30], label: '10TeV: τ=4.5×10³⁰ 被排除' },
+          { value: [67, 6.6e33], label: 'M_S*=67TeV Super-K 边界' },
+          { value: [100, 3.06e34], label: '100TeV: τ=3.1×10³⁴ 存活+可检验' },
+          { value: [131.5, 1.0e35], label: 'M_S†=132TeV 阈值链自洽上界' }
+        ]
+      }
+    ]
+  };
+  chart.setOption(option);
+  window.addEventListener('resize', function(){ if (chart) { chart.resize(); } });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>§36 S02全链体系收口总审计</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{margin:0;background:#fff;font-family:"Microsoft YaHei",sans-serif;}
+.wrap{width:980px;margin:0 auto;padding:8px 3px;}
+h1{font-size:16px;margin:4px 0 2px;color:#1a1a1a;}
+.sub{font-size:11px;color:#666;margin:0 0 6px;}
+#c1{width:100%;height:235px;}
+#c2{width:100%;height:175px;}
+.note{font-size:11px;color:#555;margin-top:4px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>§36 S02 全链体系收口总审计（§17–§35 十九节）</h1>
+<p class="sub">十二数值锚 12/12 在档自洽 · claims 110 条全带判词（86V/24F，§33–§35 列错位 15 条已修复）· 四件套全覆盖（含 §17 补件）· 定级「组织性语言」维持 · 门禁 PASS · git 首次提交</p>
+<div id="c1"></div>
+<div id="c2"></div>
+<p class="note">上：攻破链五段进度——几何基础（§17–§21）→ 统一方程与数值（§18–§20）→ 审计定级（§22–§23）→ GUT 谱学（§24–§30）→ 分裂与复活带（§31–§35），每段四件套完整（绿=完整、蓝=补件收口 §17）；横轴为节号。下：claims 判词构成——110 条 = 86 verified（含 §33–§35 修复后 15 条）+ 24 falsified（诚实证伪：坐标人为效应/量纲断裂/微扰排除），0 空判词；门禁 PASS（0 断链、18370 链接）。数据源：§36_verify.py（exit 0）＋claims.csv 全量盘点。</p>
+</div>
+<script>
+var c1=echarts.init(document.getElementById('c1'));
+c1.setOption({
+ title:{text:'攻破链五段覆盖（§17–§35 四件套状态）',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:8,containLabel:true},
+ xAxis:{type:'category',data:['17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35'],axisLabel:{fontSize:10}},
+ yAxis:{type:'value',name:'节内件数',min:0,max:5,nameTextStyle:{fontSize:11},axisLabel:{fontSize:10}},
+ series:[
+  {name:'四件套',type:'bar',barWidth:16,data:[
+    {value:4,itemStyle:{color:'rgba(60,150,220,0.55)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},
+    {value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},
+    {value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},
+    {value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}},{value:4,itemStyle:{color:'rgba(40,160,90,0.6)'}}],
+   label:{show:true,position:'top',fontSize:9}},
+  {name:'段边界',type:'line',symbol:'none',data:[2.5,2.5,8.5,8.5,13.5,13.5,20.5,20.5,26.5,26.5,35.5],lineStyle:{type:'dashed',width:1,color:'#999'},
+   markLine:{symbol:'none',data:[
+     {xAxis:5.5,lineStyle:{type:'dashed',color:'#aaa'},label:{formatter:'几何基础',fontSize:10,position:'insideEndTop'}},
+     {xAxis:10.5,lineStyle:{type:'dashed',color:'#aaa'},label:{formatter:'审计定级',fontSize:10,position:'insideEndTop'}},
+     {xAxis:15.5,lineStyle:{type:'dashed',color:'#aaa'},label:{formatter:'GUT 谱学',fontSize:10,position:'insideEndTop'}},
+     {xAxis:23.5,lineStyle:{type:'dashed',color:'#aaa'},label:{formatter:'统一方程',fontSize:10,position:'insideEndTop'}}]}}
+ ]
+});
+var c2=echarts.init(document.getElementById('c2'));
+c2.setOption({
+ title:{text:'claims 判词构成 + 门禁状态',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:8,containLabel:true},
+ xAxis:{type:'category',data:['verified','falsified','空判词','门禁断链'],axisLabel:{fontSize:11}},
+ yAxis:{type:'value',name:'条数',nameTextStyle:{fontSize:11},axisLabel:{fontSize:10}},
+ series:[{name:'数量',type:'bar',barWidth:44,
+  data:[{value:86,itemStyle:{color:'rgba(40,160,90,0.7)'}},{value:24,itemStyle:{color:'rgba(200,70,70,0.6)'}},{value:0,itemStyle:{color:'rgba(180,180,180,0.4)'}},{value:0,itemStyle:{color:'rgba(180,180,180,0.4)'}}],
+  label:{show:true,position:'top',fontSize:12}}]
+ });
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>

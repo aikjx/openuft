@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>§35 DMPM复活带唯象收口</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{margin:0;background:#fff;font-family:"Microsoft YaHei",sans-serif;}
+.wrap{width:980px;margin:0 auto;padding:8px 3px;}
+h1{font-size:16px;margin:4px 0 2px;color:#1a1a1a;}
+.sub{font-size:11px;color:#666;margin:0 0 6px;}
+#c1{width:100%;height:230px;}
+#c2{width:100%;height:180px;}
+.note{font-size:11px;color:#555;margin-top:4px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>§35 DMPM 复活带唯象收口（对撞机窗 + 质子隐藏 + 指纹区分）</h1>
+<p class="sub">μ′∈[5.6,22]TeV 弱双重态对（§34）· 对撞机灵敏度：HL-LHC ~4TeV / FCC-hh 84TeV ~10TeV / 100TeV ~20TeV · τ₅=3.1e38 年（Super-K 隐藏 4.7 量级）</p>
+<div id="c1"></div>
+<div id="c2"></div>
+<p class="note">上：μ′ 复活带区间 vs 对撞机可达区——HL-LHC（~4TeV）完全不可触（灰）；FCC-hh 84TeV 保守覆盖带下段 [5.6,10]TeV（绿）；100TeV 改进覆盖至 ~20TeV（蓝），带尾 [20,22]TeV 边缘（⚠ 标注：EW 双标量截面换算 O(1-10) 不确定）。下：质子寿命层级——DMPM 复活带 τ₅=3.1e38（隐藏 4.7 量级），dim-6 τ₆∈[2.4,2.93]e34 亦不可见（Super-K 6.6e33 / Hyper-K ~1e35 均不足）；对照 TeV 窗模型（2411.14051）T-伴子 ~TeV 可探+冷中子三重关联，两指纹正交可区分。数据源：§35_verify.py（exit 0）＋TTP14 / CERN FCC-hh 2025 / arXiv 2411.14051。</p>
+</div>
+<script>
+var c1=echarts.init(document.getElementById('c1'));
+c1.setOption({
+ title:{text:'μ′ 复活带 vs 对撞机可达区（对数轴）',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:6,containLabel:true},
+ xAxis:{type:'category',data:['复活带下界\n5.6 TeV','μ′=10 TeV\n(TTP14例)','复活带上界\n22 TeV'],axisLabel:{fontSize:11}},
+ yAxis:{type:'log',name:'μ′ (TeV)',nameTextStyle:{fontSize:11},axisLabel:{fontSize:10},min:1,max:100},
+ series:[
+  {name:'DMPM μ′ 区',type:'bar',barWidth:46,data:[5.6,10,22],
+   itemStyle:{color:'rgba(40,120,200,0.35)'},
+   markArea:{silent:true,data:[[{yAxis:5.6,label:{show:true,formatter:'复活带 μ′ 区',fontSize:10,color:'#333'}},{yAxis:22}]]},
+   label:{show:true,position:'top',fontSize:11}},
+  {name:'HL-LHC ~4TeV',type:'line',symbol:'none',data:[[0,4],[2,4]],lineStyle:{type:'dashed',width:2},markLine:{symbol:'none',data:[{yAxis:4,lineStyle:{type:'dashed',width:2},label:{formatter:'HL-LHC ~4TeV',fontSize:10,position:'insideEndTop'}}]}},
+  {name:'FCC84 ~10TeV',type:'line',symbol:'none',data:[[0,10],[2,10]],lineStyle:{width:2},markLine:{symbol:'none',data:[{yAxis:10,lineStyle:{width:2},label:{formatter:'FCC-hh 84TeV ~10TeV',fontSize:10,position:'insideEndTop'}}]}},
+  {name:'FCC100 ~20TeV',type:'line',symbol:'none',data:[[0,20],[2,20]],lineStyle:{width:2},markLine:{symbol:'none',data:[{yAxis:20,lineStyle:{width:2},label:{formatter:'FCC-hh 100TeV ~20TeV',fontSize:10,position:'insideEndTop'}}]}}
+ ]
+});
+var c2=echarts.init(document.getElementById('c2'));
+c2.setOption({
+ title:{text:'质子寿命层级（对数轴，年）',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:6,containLabel:true},
+ xAxis:{type:'category',data:['Super-K 界\n6.6e33','dim-6 τ₆\n2.4–2.9e34','Hyper-K 预期\n~1e35','DMPM τ₅\n3.1e38'],axisLabel:{fontSize:11}},
+ yAxis:{type:'log',name:'τ (年)',nameTextStyle:{fontSize:11},axisLabel:{fontSize:10},min:1e33,max:1e39},
+ series:[{name:'τ',type:'bar',barWidth:42,
+   data:[{value:6.6e33,itemStyle:{color:'rgba(200,60,60,0.4)'}},
+         {value:2.9e34,itemStyle:{color:'rgba(240,160,60,0.4)'}},
+         {value:1e35,itemStyle:{color:'rgba(240,200,60,0.4)'}},
+         {value:3.12e38,itemStyle:{color:'rgba(40,140,80,0.7)'}}],
+   label:{show:true,position:'top',fontSize:11,
+     formatter:function(p){return ['6.6e33','2.9e34','~1e35','3.1e38'][p.dataIndex];}}}
+ ]
+});
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>

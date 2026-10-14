@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§32 50 分解级 Δb_c1：分量贡献与分裂模型精确值</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #fff; }
+  #chart { width: 986px; height: 420px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div id="chart"></div>
+<script>
+(function(){
+  var el = document.getElementById('chart');
+  if (!el || typeof echarts === 'undefined') { return; }
+  var chart = echarts.init(el);
+  var cats = [
+    '(6,3,1/3)', '(3̄,1,1/3)', '(8,2,−1/2)', '(3,2,7/6)', '(6̄,1,−4/3)', '(1,1,2)',
+    '完整 50', 'S1 分裂(双)', 'S2 分裂(色)', '50+50̄ 对'
+  ];
+  var vals = [19.80, -1.20, -2.40, -2.40, -11.40, -2.40, 0.0, 15.0, -15.0, 30.0];
+  var opt = {
+    title: { text: '§32 50 分解级 Δb_c1 精确值：完整表示=0，分裂 ±15/±30', left: 'center', top: 6, textStyle: { fontSize: 15 } },
+    tooltip: {
+      trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true,
+      formatter: function(ps){
+        if (!ps || !ps.length) { return ''; }
+        var p = ps[0];
+        return p.name + ': Δb_c1 = ' + p.value;
+      }
+    },
+    grid: { left: 110, right: 110, top: 50, bottom: 60, containLabel: true },
+    xAxis: { type: 'value', name: 'Δb_c1 = 3·T2 − 2·T3 − T1', min: -16, max: 32,
+      axisLabel: { fontSize: 11 }, nameTextStyle: { fontSize: 11 } },
+    yAxis: { type: 'category', data: cats, axisLabel: { fontSize: 11 } },
+    series: [
+      {
+        name: 'Δb_c1', type: 'bar', barWidth: 14,
+        data: vals.map(function(v){ return { value: v }; }),
+        label: { show: true, position: 'right', fontSize: 11, formatter: function(p){ return p.value; } },
+        markLine: {
+          symbol: 'none', silent: true, lineStyle: { type: 'dotted', width: 1.5 },
+          data: [
+            { xAxis: 0, label: { formatter: '完整表示中性 Δb=0', fontSize: 10, position: 'insideEndTop' } },
+            { xAxis: 15, label: { formatter: 'S1 分裂 +15（10TeV 复活需 M_extra∈[1.8,2.2]M_GUT）', fontSize: 10, position: 'insideEndTop' } },
+            { xAxis: 30, label: { formatter: '50+50̄ 对 +30', fontSize: 10, position: 'insideEndTop' } }
+          ]
+        }
+      }
+    ]
+  };
+  chart.setOption(opt);
+  window.addEventListener('resize', function(){ if (chart) { chart.resize(); } });
+})();
+</script>
+</body>
+</html>
