@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>openuft#49 阶段1-2 场方程组与弱场还原</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{margin:0;background:#fff;font-family:"Microsoft YaHei",sans-serif;}
+.wrap{width:980px;margin:0 auto;padding:8px 3px;}
+h1{font-size:16px;margin:4px 0 2px;color:#1a1a1a;}
+.sub{font-size:11px;color:#666;margin:0 0 6px;}
+#c1{width:100%;height:250px;}
+.note{font-size:11px;color:#555;margin-top:4px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>openuft#49 · 阶段1-2 · 全变分场方程组 E1–E7 + 弱场还原 GR/牛顿（与实验一致·引力侧）</h1>
+<p class="sub">退化链 ✓（→EC→GR）｜ E1–E7 量纲核 6/6 ✓ ｜ 弱场 ω₀=0 冻结、∇²φ=4πG_Nρ（数值锚 g=9.82 vs 9.81）✓ ｜ R1 半开（ζ=0 无幽灵/ζ≠0 OPEN）、R3/R5 OPEN</p>
+<div id="c1"></div>
+<p class="note">上：E1–E7 场方程——变分来源（δλ̃/δω/δψ/δΓ/δg/Bianchi/SM）与量纲核状态（全 ✓）。下（图内右柱）：实验对标——已还原（牛顿 ✓、线性化引力波 ✓）vs OPEN（g-2、EDM、PPN、CMB）。数据源：openuft_49_阶段1-2_场方程组与弱场还原_verify.py（exit 0）。</p>
+</div>
+<script>
+var c1=echarts.init(document.getElementById('c1'));
+c1.setOption({
+ title:{text:'E1–E7 场方程量纲核 + 实验对标状态',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:8,containLabel:true},
+ xAxis:{type:'category',data:['E1 约束\nδλ̃','E2 ω\nδω','E3 Dirac\nδψ','E4 Cartan\nδΓ','E5 Einstein\nδg','E6 Bianchi\n一致性','E7 SM\nδSM'],axisLabel:{fontSize:10,interval:0,width:70,overflow:'break'}},
+ yAxis:{type:'value',name:'量纲核状态',min:0,max:3,nameTextStyle:{fontSize:11},axisLabel:{fontSize:10}},
+ series:[
+  {name:'量纲核通过',type:'bar',barWidth:22,data:[3,3,3,3,3,3,3],itemStyle:{color:'rgba(40,160,90,0.75)'},label:{show:true,position:'top',fontSize:10,formatter:'✓'}},
+  {name:'已还原GR侧',type:'bar',barWidth:22,data:[2,2,1,1,2,2,1],itemStyle:{color:'rgba(70,110,200,0.6)'}},
+  {name:'OPEN待阶段',type:'bar',barWidth:22,data:[1,1,2,2,1,1,1],itemStyle:{color:'rgba(230,180,60,0.65)'}}
+ ]
+});
+</script>
+</body>
+</html>
