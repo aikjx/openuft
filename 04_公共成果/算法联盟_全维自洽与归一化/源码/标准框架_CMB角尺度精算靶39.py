@@ -37,13 +37,16 @@ def c_s(a):
     return c / mp.sqrt(3*(1+R))
 
 def c_s_z(z):
-    R = 3*Obh2/(4*Ogh2)*(1+z)
+    # 标准：R=3ρ_b/4ρ_γ，ρ_b∝(1+z)³、ρ_γ∝(1+z)⁴ → R=R0/(1+z)（早期小、今天大）
+    R = 3*Obh2/(4*Ogh2)/(1+z)
     return c / mp.sqrt(3*(1+R))
 
 def E_z(z):
     return mp.sqrt(Om*(1+z)**3 + Or*(1+z)**4 + Ol)
 
-r_s = c/H0_si * mp.quad(lambda z: c_s_z(z)/c/E_z(z), [0, zstar])  # 共动声视界 m（z 变量积分，标准口径）
+# 声视界 r_s(z*)=∫_{z*}^{∞} c_s/H dz（从脱耦回望大爆炸；z→∞ 被积函数∝1/z²，1e5 截断足够）
+zmax = mp.mpf("1e5")
+r_s = c/H0_si * mp.quad(lambda z: c_s_z(z)/c/E_z(z), [zstar, zmax])
 D_A = c/H0_si * mp.quad(lambda z: 1/E_z(z), [0, zstar])  # 共动角直径距离 m
 theta = r_s/D_A
 theta_deg = theta * 180 / mp.pi
@@ -61,7 +64,7 @@ def theta_of(H0v, obv, ocv, zsv):
     orv = Orh2/hv**2
     olv = 1-omv-orv
     H0v_si = H0v*1000/mp.mpf("3.085677581491367e22")
-    rs = c/H0v_si*mp.quad(lambda z: (1/mp.sqrt(3*(1+3*obv/(4*Ogh2)*(1+z))))/mp.sqrt(omv*(1+z)**3+orv*(1+z)**4+olv), [0, zsv])
+    rs = c/H0v_si*mp.quad(lambda z: (1/mp.sqrt(3*(1+3*obv/(4*Ogh2)/(1+z))))/mp.sqrt(omv*(1+z)**3+orv*(1+z)**4+olv), [zsv, zmax])
     da = c/H0v_si*mp.quad(lambda z: 1/mp.sqrt(omv*(1+z)**3+orv*(1+z)**4+olv), [0, zsv])
     return rs/da*180/mp.pi
 
