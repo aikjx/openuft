@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>GAQ-UFT 家族一三四第三轮代数几何对撞</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{margin:0;background:#fff;font-family:"Microsoft YaHei",sans-serif;}
+.wrap{width:980px;margin:0 auto;padding:8px 3px;}
+h1{font-size:16px;margin:4px 0 2px;color:#1a1a1a;}
+.sub{font-size:11px;color:#666;margin:0 0 6px;}
+#c1{width:100%;height:220px;}
+#c2{width:100%;height:190px;}
+.note{font-size:11px;color:#555;margin-top:4px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>GAQ-UFT V50 · 家族一+三+四 · 第三轮代数几何对撞（A3 检验 / A2–Weyl / 八元数）</h1>
+<p class="sub">A3 32 维取得确定负面判词：旋量过载 65536 vs 48（1365 倍）+ Bott 8 周期平凡折叠（Cl(0,32)=R(16)⁴）+ 无超对称最大性；对照 10 维旋量 16=一代费米子、11 维 32=超荷；A2 修正形式=共形协变（权重 0）非 Weyl 规范不变，「电磁从 A2 长出」否（F=dω 独立，1918）；家族四 #21 OPEN/负面</p>
+<div id="c1"></div>
+<div id="c2"></div>
+<p class="note">上：各维数 Clifford 旋量谱（对数）——10 维复旋量 32/实 MW 16、11 维 32、26 维 8192、32 维 65536；红虚线=SM 三代费米子 48，10/11 维恰配粒子谱，32 维过载 1365 倍。下：三条数学反证链对 A3 的判定（旋量过载 ✗、Bott 折叠 ✗、超对称 ✗ → 负面）；右侧 A2–Weyl 对撞（共形协变 ✓、非规范不变、F=dω 独立 → 「电磁从 A2 长出」否）。数据源：GAQ-UFT_V50_家族一三四第三轮代数几何对撞_verify.py（exit 0）。</p>
+</div>
+<script>
+var c1=echarts.init(document.getElementById('c1'));
+c1.setOption({
+ title:{text:'各维数 Clifford 旋量谱 vs SM 费米子自由度（对数）',textStyle:{fontSize:14}},
+ tooltip:{trigger:'axis',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:8,containLabel:true},
+ xAxis:{type:'category',data:['10 维\n(实MW 16)','11 维\n(实 32)','26 维\n(玻色弦)','32 维\n(A3)'],axisLabel:{fontSize:10,interval:0}},
+ yAxis:{type:'log',name:'旋量分量(log)',nameTextStyle:{fontSize:11},axisLabel:{fontSize:10}},
+ series:[
+  {name:'复旋量',type:'bar',barWidth:26,data:[32,32,8192,65536],itemStyle:{color:'rgba(70,110,200,0.7)'},label:{show:true,position:'top',fontSize:9}},
+  {name:'SM 费米子自由度(48)',type:'line',data:[48,48,48,48],itemStyle:{color:'rgba(200,70,70,0.9)'},lineStyle:{type:'dashed'},markLine:{data:[{yAxis:48,label:{formatter:'SM 48',fontSize:9}}]}}
+ ]
+});
+var c2=echarts.init(document.getElementById('c2'));
+c2.setOption({
+ title:{text:'A3 三条反证链 + A2–Weyl 对撞判定',textStyle:{fontSize:14}},
+ tooltip:{trigger:'item',triggerOn:'mousemove|click',renderMode:'richText',confine:true},
+ legend:{top:26,textStyle:{fontSize:11}},
+ grid:{left:8,right:20,top:56,bottom:8,containLabel:true},
+ xAxis:{type:'category',data:['旋量过载\n65536 vs 48','Bott 8 周期\n平凡折叠','无超对称\n最大性','A2 共形协变\n(权重0)','A2 非 Weyl\n规范不变','F=dω 独立\n(1918)','八元数\n32=8×4'],axisLabel:{fontSize:10,interval:0,width:78,overflow:'break'}},
+ yAxis:{type:'value',name:'强度',min:0,max:3,nameTextStyle:{fontSize:11},axisLabel:{fontSize:10}},
+ series:[
+  {name:'反证(负面)',type:'bar',barWidth:20,data:[
+   {value:3,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:3,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:3,itemStyle:{color:'rgba(200,70,70,0.7)'}},
+   {value:0,itemStyle:{color:'rgba(40,160,90,0.7)'}},{value:0,itemStyle:{color:'rgba(230,180,60,0.7)'}},{value:0,itemStyle:{color:'rgba(150,150,150,0.6)'}},{value:0,itemStyle:{color:'rgba(230,180,60,0.7)'}}]},
+  {name:'支持(通过/独立)',type:'bar',barWidth:20,data:[
+   {value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}},{value:0,itemStyle:{color:'rgba(200,70,70,0.7)'}},
+   {value:2,itemStyle:{color:'rgba(40,160,90,0.7)'}},{value:2,itemStyle:{color:'rgba(230,180,60,0.7)'}},{value:2,itemStyle:{color:'rgba(150,150,150,0.6)'}},{value:1,itemStyle:{color:'rgba(230,180,60,0.7)'}}]}
+ ]
+});
+window.addEventListener('resize',function(){c1.resize();c2.resize();});
+</script>
+</body>
+</html>
