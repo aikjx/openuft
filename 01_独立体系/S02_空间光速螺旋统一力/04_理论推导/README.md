@@ -19,4 +19,10 @@
   - 脚本：[resonance_nonparaxial_verify.py](resonance_nonparaxial_verify.py)（V1–V4 全 PASS，exit 0）；数据：[§16_非傍轴共振修正数据.json](§16_非傍轴共振修正数据.json)；待并入 claim 行：[_s16_9_claims_rows.csv](_s16_9_claims_rows.csv)（S02-C0116）
   - 关联：[§16_OAM 涡旋真空场耦合](§16_OAM涡旋真空场耦合TUFT螺旋测地线.md)、[sec16_7 四力审计脚本](sec16_7_fourforce_audit.py)
 
+- §16.10 测试粒子近似自洽性（**开放项②条件闭合**）：[§16_10 攻破精算](§16_10_测试粒子近似自洽性_反作用判据_攻破精算.md)
+  - 唯一无量纲反馈参数 ε_rad=τ₀ω=q²ω/(6πε₀mc³)，τ₀ 三路径（q²/(6πε₀mc³)、2r_e/(3c)、2αħ/(3mc²)）机器零一致（2.10e-16）；反馈对共振判据的偏移为二阶 −ε_rad²/4。
+  - 失效阈值：ħω_c=205.554·mc²（=3/(2α)，与质量无关）、电子 E_S=1.3233e18 V/m（2.32e29 W/cm²，为现存最强激光 2.32e6 倍）⇒ 经典域内 ε~1e-8、偏移 ~1e-17，比 §16.9 非傍轴修正小 11–13 量级。
+  - 诚实边界：真·自洽反馈（场被反散射/真空非线性）属 QED 域，登记为框架外开放项 O-S02-BACKREACTION-QED；中性粒子 q=0 时该通道反馈恒零。
+  - 脚本：[resonance_backreaction_verify.py](resonance_backreaction_verify.py)（V1–V5 全 PASS，exit 0）；数据：[§16_测试粒子近似反作用判据数据.json](§16_测试粒子近似反作用判据数据.json)；待并入 claim 行：[_s16_10_claims_rows.csv](_s16_10_claims_rows.csv)（S02-C0117）
+
 > 治理待办：§17–§36 各节攻破产物（精算 md / verify.py / 数据 json / 图谱 html）尚未登记进本目录树，属在途登记债，由各节负责人按本节格式补登。
