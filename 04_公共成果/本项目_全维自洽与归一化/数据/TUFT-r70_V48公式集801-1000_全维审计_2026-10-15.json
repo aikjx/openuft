@@ -1,0 +1,498 @@
+{
+  "meta": {
+    "round": "r70",
+    "date": "2026-10-15",
+    "title": "openuft#49 ｜1000 核心理论体系公式集（公式 801-1000）· TUFT v4.8 条目集全维审计",
+    "source": "d:\\a10\\aikjx\\code\\my_lib\\openuft49_1000核心理论体系公式集_公式801-1000.md",
+    "source_copy": "d:\\a10\\aikjx\\code\\my_lib\\openuft\\04_公共成果\\本项目_全维自洽与归一化\\数据\\TUFT-r70_V48公式集801-1000_来料全文_2026-10-15.md",
+    "engine": "源码\\TUFT-r70_V48公式集801-1000_全维审计_2026-10-15.py",
+    "backend": "pure-stdlib: decimal(60) + fractions.Fraction dim4 (M,L,T,Q)"
+  },
+  "counts": {
+    "PASS": 8,
+    "FAIL": 10,
+    "MISMATCH": 0,
+    "CORRECTED": 0,
+    "INFO": 4,
+    "BOUNDARY": 5
+  },
+  "total": 27,
+  "verdict": "FAIL",
+  "guard_all_ok": true,
+  "guard_total": 19,
+  "guard_passed": 19,
+  "items": [
+    {
+      "code": "A01",
+      "kind": "PASS",
+      "title": "801 公理 κ²+τ²=ω² 量纲齐次（两边皆 L^-2）",
+      "detail": "LHS=L^-2 ; RHS=L^-2",
+      "numbers": {
+        "dim_LHS": "L^-2",
+        "dim_RHS": "L^-2",
+        "homogeneous": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "A02",
+      "kind": "FAIL",
+      "title": "802/938 张量版公理量纲非齐次：R_ab R^ab(L^-4) 与 T_acd T^acd(L^-2) 不可相加",
+      "detail": "两项差 L^-2 ；右端 ω²·g·u·u = L^-2 只与第二项同量纲 ⇒ 第一项无处安放。（本库「量纲非齐次」缺陷族跨册复发实例）",
+      "numbers": {
+        "dim_term1": "L^-4",
+        "dim_term2": "L^-2",
+        "gap": "L^-2",
+        "dim_RHS": "L^-2",
+        "term1_vs_RHS": "False",
+        "term2_vs_RHS": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "A03",
+      "kind": "INFO",
+      "title": "802 与 938 为同一式的重复登记（938「Axiom A3 张量提升版」= 802 原式）",
+      "detail": "机器比对：LHS 归一相等=True ；RHS 归一相等=True （ω² u^a u^b g_ab ↔ ω² g_ab u^a u^b 仅因子次序不同）⇒ 不产生新内容，属本库「恒等式复读」类零信息量条目。",
+      "numbers": {
+        "math_802": "R_{ab}R^{ab}+T_{acd}T^{acd}=\\omega^2\\,g_{ab}u^a u^b",
+        "math_938": "R_{ab}R^{ab}+T_{acd}T^{acd}=\\omega^2\\,u^a u^b g_{ab}",
+        "lhs_same": "True",
+        "rhs_same": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "A04",
+      "kind": "BOUNDARY",
+      "title": "803 旋量投影公理：φ、χ 的量纲来料未声明 ⇒ 无法唯一判定；按自然类比（φ↔曲率 L^-2、χ↔挠率 L^-1）与 802 同型不齐",
+      "detail": "若 [φ]=L^-2、[χ]=L^-1，则 φφ̄=L^-4、χχ̄=L^-2，与 802 同一缺陷；来料未给旋量量纲表，故本册不判 FAIL，登记为口径未声明。",
+      "numbers": {
+        "assumed_dim_phi": "L^-2",
+        "assumed_dim_chi": "L^-1",
+        "declared": "False"
+      },
+      "not_self_derived": true
+    },
+    {
+      "code": "A05",
+      "kind": "FAIL",
+      "title": "804 声明 [κ]=[τ]=[ω]=L^-1 与 802 不自洽：802 要求 ω² 与 R_ab R^ab(L^-4) 配对",
+      "detail": "802 若成立则 [ω²] 须同时是 L^-4 与 L^-2 ⇒ 804 的量纲表与 802 互斥；804 只覆盖 801，未覆盖 802。",
+      "numbers": {
+        "declared_in_804": "κ,τ,ω = L^-1",
+        "required_by_802": "ω² = L^-4 (第一项) 且 L^-2 (第二项)"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "A06",
+      "kind": "FAIL",
+      "title": "940 经典极限与 802 符号矛盾：号差 (-,+,+,+) 下 g_ab u^a u^b = -1 ⇒ 802 给 ω² = -R_ab R^ab，而 940 给 ω² = +R_ab R^ab",
+      "detail": "承重：τ→0（挠率冻结）时 802 退化为 R_ab R^ab = ω²·(-1) ⇒ ω² = -R_ab R^ab；940 却写 ω → +√(R_ab R^ab)。除非 R_ab R^ab ≡ 0（平凡解），否则两者必居其一为错；若 R_ab R^ab > 0 则 802 强制 ω 为虚数 ⇒ 经典极限不存在。",
+      "numbers": {
+        "signature": "(-,+,+,+)",
+        "g_u_u": "-1",
+        "from_802": "ω^2 = -R_ab R^ab",
+        "from_940": "ω^2 = +R_ab R^ab",
+        "sign_conflict": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "B01",
+      "kind": "FAIL",
+      "title": "835 与 801 联立 ⇒ k² ≡ 0：色散关系退化，几何波无传播模",
+      "detail": "801 给 ω²=κ²+τ²；代入 835（ω²=k²+κ²+τ²）得 k²=0.000000 ⇒ k≡0。⇒ 836 的 v_g=k/ω 恒为 0，「自动满足因果性」成为恒真命题（见 B02）；同时「UFT 几何波」在该联立下不存在有限波数的传播解。",
+      "numbers": {
+        "kappa": "1.234",
+        "tau": "0.567",
+        "omega_sq_801": "1.844245",
+        "k_sq_from_835": "0.000000",
+        "k": "0.000"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "B02",
+      "kind": "BOUNDARY",
+      "title": "836「v_g=k/ω 自动 ≤1」在 835 下算术为真，但结论只依赖 κ²+τ² 的正号，与 UFT 公理/挠率物理无关 ⇒ 零 UFT 判别力",
+      "detail": "正号口径：k=0.1/1/10/100 时 v_g 单调趋 1，max=0.999907800502688666627090773481725507785394815313257851193438 < 1 ✓。阳性对照（改号 ω²=k²−κ²−τ²）：同 k 下 v_g 最大 1.00935076387699011377669794445190863512904903964413968088426 > 1 ⇒ 判据非恒真、检验器有效。⇒ 836 的因果性来自色散式的符号选择，不是 UFT 的成就，也不是对任何 UFT 断言的检验。",
+      "numbers": {
+        "vg_plus": {
+          "0.1": "0.0734372561209429430068988196830061215720098212062142624385409",
+          "1": "0.592947849563754274404653301144026216571099943680239010055543",
+          "10": "0.990904392377126054709788286916792275334775941531601609448957",
+          "100": "0.999907800502688666627090773481725507785394815313257851193438"
+        },
+        "vg_max_plus": "0.999907800502688666627090773481725507785394815313257851193438",
+        "vg_negative_sign_control": {
+          "0.1": "n/a",
+          "1": "n/a",
+          "10": "1.00935076387699011377669794445190863512904903964413968088426",
+          "100": "1.00009222500660911620899471155179810938485134868020190097208"
+        },
+        "vg_max_negative_sign": "1.00935076387699011377669794445190863512904903964413968088426",
+        "positive_control_works": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "B03",
+      "kind": "INFO",
+      "title": "836 所「消解」的「超光速佯谬」对象本身不是佯谬：相速度 v_p=ω/k>1 不承载信号",
+      "detail": "机器读数：k=0.1 时 v_p=13.6170664975977847355827101903115685894291350922516765055353、k=100 时 v_p=1.00009220799884247473308914138407948827130538285937459111601（均 >1）；因果性约束的是群速度/信号速度而非相速度，属标准波物理，非 UFT 特有结论。",
+      "numbers": {
+        "vp_k0p1": "13.6170664975977847355827101903115685894291350922516765055353",
+        "vp_k100": "1.00009220799884247473308914138407948827130538285937459111601"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "C01",
+      "kind": "FAIL",
+      "title": "823 与 812+824 三方矛盾：812+824 强制 ∇^a G_ab ≡ 0，则 823 的挠率源 T^source_ab 必恒为零",
+      "detail": "812 给 G_ab = 8πG·T^tot_ab；824 给 ∇^a T^tot_ab = 0 ⇒ ∇^a G_ab = 8πG·∇^a T^tot_ab ≡ 0；而 823 写 ∇^a G_ab = T^source_ab 并称「挠率提供源」。⇒ 三者不能同时成立：要么放弃 824（总能动不守恒），要么 823 的源项必须重新安置（例如改写到物质侧或改为恒等式右端的 0）。本册不代选修法。",
+      "numbers": {
+        "has_812": "True",
+        "has_823": "True",
+        "has_824": "True",
+        "math_823": "\\nabla^a G_{ab}=T_{ab}^{\\text{source}}",
+        "contradiction": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "C02",
+      "kind": "FAIL",
+      "title": "823 张量型不匹配：左端 ∇^a G_ab 只剩 1 个自由下标 b，右端 T^source_ab 有 2 个（a,b）",
+      "detail": "逐项自由指标集合：左=[['b']] ，右=[['a', 'b']] ⇒ 两边张量型不同（(0,1) vs (0,2)），这是独立于量纲的结构错误。对照：812 左=[['a', 'b']] 右=[['a', 'b'], ['a', 'b'], ['a', 'b'], ['a', 'b']] ⇒ 812 的张量型正确，检验器有效。",
+      "numbers": {
+        "free_terms_left_823": "[['b']]",
+        "free_terms_right_823": "[['a', 'b']]",
+        "type_match_823": "False",
+        "free_terms_left_812": "[['a', 'b']]",
+        "free_terms_right_812": "[['a', 'b'], ['a', 'b'], ['a', 'b'], ['a', 'b']]",
+        "type_match_812": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "C03",
+      "kind": "PASS",
+      "title": "822 带挠率毕安基恒等式：量纲齐次（∇R 与 T·R 皆 L^-3）且逐项自由指标集一致",
+      "detail": "左逐项自由指标=[['a', 'b', 'c', 'd', 'e'], ['a', 'b', 'c', 'd', 'e'], ['a', 'b', 'c', 'd', 'e']] ；右逐项自由指标=[['a', 'b', 'c', 'd', 'e'], ['a', 'b', 'c', 'd', 'e']] ；量纲左=L^-3、右=L^-3 ⇒ 形式为教科书级正确。（本册只核形式，不核挠率项的系数与符号约定，登记 not_self_derived。）",
+      "numbers": {
+        "dim_LHS": "L^-3",
+        "dim_RHS": "L^-3",
+        "free_per_term_LHS": "[['a', 'b', 'c', 'd', 'e'], ['a', 'b', 'c', 'd', 'e'], ['a', 'b', 'c', 'd', 'e']]",
+        "free_per_term_RHS": "[['a', 'b', 'c', 'd', 'e'], ['a', 'b', 'c', 'd', 'e']]"
+      },
+      "not_self_derived": true
+    },
+    {
+      "code": "D01",
+      "kind": "FAIL",
+      "title": "819 畸变张量定义式与 820 不自洽：两种记号翻译均不能从挠率复原 K",
+      "detail": "精确算术（Fraction，无浮点）：复原残差 max|K_cand − K_true| —— 标准式=0（机器零）；819 翻译一=27/2 ；819 翻译二=31/4 。定义性质 2K_{a[bc]} = T_{abc} 的残差 —— 标准式=0 ；819 翻译一=27/2 ；819 翻译二=12 。⇒ 819 的第三项 −T_{bc}{}^a 应为 −T_{cb}{}^a 型（且第一项系数因 −T^a_{cb}=+T^a_{bc} 而被加倍），当前写法使 K 被系统放大，与 820 的 Γ = Γ_LC + K 不闭合。",
+      "numbers": {
+        "resid_restore_std": "0",
+        "resid_restore_819a": "27/2",
+        "resid_restore_819b": "31/4",
+        "resid_defprop_std": "0",
+        "resid_defprop_819a": "27/2",
+        "resid_defprop_819b": "12",
+        "antisym_K": "True",
+        "antisym_T": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "D02",
+      "kind": "PASS",
+      "title": "给出修正读数（不自推、机器验证）：K_{abc} = ½(T_{abc} + T_{bca} − T_{cab}) 精确复原 K 且满足定义性质",
+      "detail": "该式由「Γ = Γ_LC + K」+「T^a_{bc} = Γ^a_{[bc]} 的两倍」+「度规兼容 K_{abc}=−K_{bac}」三条唯一确定，本册用随机反对称 K 构造 T 后反向复原，残差精确为 0（Fraction 精确算术，无浮点误差可辩）。残差=0 / 0",
+      "numbers": {
+        "correct_form": "K_{abc} = 1/2 (T_{abc} + T_{bca} - T_{cab})",
+        "resid_restore": "0",
+        "resid_defprop": "0"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "D03",
+      "kind": "PASS",
+      "title": "挠率独立分量 = 4×C(4,2) = 24，与 contorsion 独立分量 24 相等 ⇒ 交叉印证 828 的「24」",
+      "detail": "T^a_{bc} 对 b,c 反对称 ⇒ 4×6=24 ；K_{abc} 对 a,b 反对称 ⇒ 6×4=24 ；两者相等是 Γ=Γ_LC+K 的必要条件。",
+      "numbers": {
+        "n_indep_torsion": "24",
+        "n_indep_contorsion": "24"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "E01",
+      "kind": "PASS",
+      "title": "828 算术自洽：10+24+1+1−1 = 35，与来料写的 35 一致",
+      "detail": "分项：度规对称张量分量 C(5,2)=10 ；挠率 24（D03 机器复核） ；ω 标量 1 ；乘子 λ 1 ；约束 κ²+τ²=ω² 减 1 。",
+      "numbers": {
+        "dof_claim": "35",
+        "dof_recomputed": "35"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "E02",
+      "kind": "FAIL",
+      "title": "828/829 把「场分量数」当作「物理自由度」：829 称低能退化到 GR 时 N_dof→10，而 GR 的物理自由度是 2",
+      "detail": "ADM 计数：h_ij 6 个分量 ⇒ 相空间 12 ；哈密顿约束 1 + 动量约束 3 共 4 条，各配 1 个规范自由度 ⇒ 减 8 ；余 4 / 2 = 2 个物理自由度（两个引力偏振）。⇒ 同一册内 828 用「分量数」、829 用「自由度」两个口径，10 与 2 差 5 倍 ⇒ 830 的「35 个场自由度」同样是分量数而非物理自由度。",
+      "numbers": {
+        "gr_phase_space": "12",
+        "gr_constraints": "8",
+        "gr_physical_dof": "2",
+        "claimed_829": "10",
+        "ratio": "5"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "E03",
+      "kind": "BOUNDARY",
+      "title": "828 的「−1」口径不自洽：标量约束在相空间里应减 2（1 约束 + 1 规范固定），不是减 1",
+      "detail": "若按相空间口径，κ²+τ²=ω² 一条标量约束应减 2；按分量配置口径则应说明 35 是「配置变量分量数」而非自由度。来料未声明口径 ⇒ 本册只登记不自洽，不代选口径。",
+      "numbers": {
+        "subtracted": "1",
+        "phase_space_convention": "2"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "F01",
+      "kind": "PASS",
+      "title": "964 版本链自洽：TUFT v4.8 = openuft#49 = 本公式集（与来料标题逐字一致）",
+      "detail": "机器：item(964) 含 v4.8 = True ；来料标题含 openuft#49 = True 。",
+      "numbers": {
+        "version": "v4.8",
+        "anchor": "openuft#49",
+        "self_consistent": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "F02",
+      "kind": "FAIL",
+      "title": "930 预测比 22/3 ≈ 7.3 算术正确，但「输入几何参数 = 3」的记账不成立：810 含自由函数 f(τ,ω)、811 新增乘子场 λ",
+      "detail": "机器：22/3 = 7.33333333333333333333333333333333333333333333333333333333333（来料写 ≈7.3 ✓ 算术）。但分母口径错误：810 的 𝓛 主干含未指定函数 f(τ,ω) —— 按本库 r15 纪律，一个自由函数是无穷维输入，不是「一个参数」；811 又引入乘子场 λ 作为新自由度。⇒ 真实输入 ≥ 3(κ,τ,ω 或等价) + 1(λ) + 1 个自由函数；在自由函数未被具体形式固定前，预测比 7.3 不可作为精简度指标引用。",
+      "numbers": {
+        "ratio_recomputed": "7.33333333333333333333333333333333333333333333333333333333333",
+        "ratio_claim": "7.3",
+        "free_function_in_810": "True",
+        "multiplier_field_in_811": "True"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "F03",
+      "kind": "FAIL",
+      "title": "991 全局不变量积分：被积函数由 801 恒等于 0 ⇒ I ≡ 0 恒成立（零判别力）；且量纲为 L²，名不副实",
+      "detail": "①恒零：801 给 κ²+τ²−ω² ≡ 0 ⇒ 对任意流形 M 积分恒为 0，不依赖 M 的拓扑/几何 ⇒ 不能用作任何判据或拓扑不变量。②量纲：被积函数 L^-2 × √−g d⁴x (L^4) = L^2 ≠ 无量纲 ⇒ 称为「全局不变量」需先除以体积元或补长度标度，来料未做。",
+      "numbers": {
+        "dim_integrand": "L^-2",
+        "dim_measure": "L^4",
+        "dim_I": "L^2",
+        "identically_zero": "True",
+        "discriminating_power": "0"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "F04",
+      "kind": "INFO",
+      "title": "991 是 801/806 的推论而非独立条目：806 已给 d(κ²+τ²−ω²)=0，991 只是其积分形式",
+      "detail": "⇒ 991 不新增内容，属「恒等式复读」类（与 A03 的 802↔938 同型）。",
+      "numbers": {
+        "derived_from": "801 / 805 / 806"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "F05",
+      "kind": "BOUNDARY",
+      "title": "880 χ²_tot = 六项直接相加：χ² 可加性以各数据集相互独立为前提，来料未声明独立性",
+      "detail": "六项：SM / CMB / a_e / d_e / GW / EHT。若存在共同系统误差或共享 nuisance 参数，简单求和会重复计权 ⇒ 需在联合似然里声明协方差。来料未声明 ⇒ 登记为口径未声明，不判错。",
+      "numbers": {
+        "n_terms": "6",
+        "independence_declared": "False"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "F06",
+      "kind": "PASS",
+      "title": "995 不动点稳定性判据 Re(λ_i) < 0 ⇒ 吸引（UV 吸引子），为标准线性稳定性判据",
+      "detail": "教科书级正确；本册只核判据形式，不核 β 函数的具体形式（来料未写出 β_κ/β_τ/β_ω 的显式表达）。",
+      "numbers": {
+        "criterion": "Re(lambda_i) < 0"
+      },
+      "not_self_derived": true
+    },
+    {
+      "code": "F07",
+      "kind": "BOUNDARY",
+      "title": "994 三个 β 同时为零 + 801 一条约束 ⇒ 4 个方程约束 3 个未知 (κ*,τ*,ω*) ⇒ 过约束",
+      "detail": "若约束 κ²+τ²=ω² 在不动点处仍需成立，则不动点求解变为 4 方程 / 3 未知，一般无解；除非其中一条 β 是另外两条的线性组合（来料未证明）。⇒ 需声明约束是否参与不动点定义。",
+      "numbers": {
+        "n_equations": "4",
+        "n_unknowns": "3"
+      },
+      "not_self_derived": false
+    },
+    {
+      "code": "F08",
+      "kind": "PASS",
+      "title": "882 收敛诊断 R̂ < 1.01（Gelman-Rubin）为标准阈值",
+      "detail": "教科书级正确；注意 R̂ 只诊断链间收敛，不保证遍历到真实后验（尤其多峰情形）。",
+      "numbers": {
+        "threshold": "1.01"
+      },
+      "not_self_derived": true
+    },
+    {
+      "code": "F09",
+      "kind": "INFO",
+      "title": "OPEN 标记覆盖率统计：200 条中 68 条带 OPEN（34.00%）",
+      "detail": "来料自述 OPEN = 「UFT 候选假设方程」。机器统计：条目总数 200 ，含 OPEN 68 ，占比 34.00% ；⇒ 该公式集的绝大多数条目是假设登记，不是已证结论；任何引用须连同此覆盖率一起引用。",
+      "numbers": {
+        "n_items": "200",
+        "n_open": "68",
+        "pct_open": "34.00"
+      },
+      "not_self_derived": false
+    }
+  ],
+  "guards": [
+    {
+      "name": "G0-0",
+      "ok": true,
+      "note": "来料条目 801-1000 连续无缺号（实得 200 条）"
+    },
+    {
+      "name": "G0-0b",
+      "ok": true,
+      "note": "关键条目公式体全部解析非空：801=True, 802=True, 803=True, 812=True, 822=True, 823=True, 824=True, 835=True, 836=True, 938=True, 940=True, 991=True"
+    },
+    {
+      "name": "G0-1",
+      "ok": true,
+      "note": "c·T = L"
+    },
+    {
+      "name": "G0-2",
+      "ok": true,
+      "note": "ħc ≠ G（差 M^2）"
+    },
+    {
+      "name": "G0-3",
+      "ok": true,
+      "note": "E/L^3 = 能量密度"
+    },
+    {
+      "name": "G0-4",
+      "ok": true,
+      "note": "能量 ≠ 能量密度（r66 定案）"
+    },
+    {
+      "name": "G0-5",
+      "ok": true,
+      "note": "能量密度 ≠ 质量密度"
+    },
+    {
+      "name": "G0-6",
+      "ok": true,
+      "note": "R_ab R^ab = L^-4"
+    },
+    {
+      "name": "G0-7",
+      "ok": true,
+      "note": "T_acd T^acd = L^-2"
+    },
+    {
+      "name": "G0-8",
+      "ok": true,
+      "note": "L^-4 ≠ L^-2（802 不齐的前提）"
+    },
+    {
+      "name": "G0-9",
+      "ok": true,
+      "note": "Einstein 方程量纲闭合：(G/c^4)·ρ_E = L^-2"
+    },
+    {
+      "name": "G0-10",
+      "ok": true,
+      "note": "ω^2 = L^-2"
+    },
+    {
+      "name": "G-C1",
+      "ok": true,
+      "note": "823 公式体解析非空（防空串导致两侧皆空 ⇒ 假 PASS；首版即踩此坑）"
+    },
+    {
+      "name": "G-C2",
+      "ok": true,
+      "note": "812 张量型自检：两边自由指标一致（检验器对正确式须判一致）"
+    },
+    {
+      "name": "G-C3",
+      "ok": true,
+      "note": "检验器非恒真：812 判一致且 823 判不一致（若解析器失灵，两者会同向 ⇒ 本守卫拦下）"
+    },
+    {
+      "name": "G-D1",
+      "ok": true,
+      "note": "K 对前两指标反对称、T 对后两指标反对称"
+    },
+    {
+      "name": "G-D2",
+      "ok": true,
+      "note": "标准 contorsion 精确复原 K 且满足 2K_{a[bc]}=T_{abc}"
+    },
+    {
+      "name": "G-D3",
+      "ok": true,
+      "note": "819 翻译一不自洽（阳性对照：必须非零，否则检验器恒真）"
+    },
+    {
+      "name": "G-D4",
+      "ok": true,
+      "note": "819 翻译二不自洽（同上）"
+    }
+  ],
+  "key_numbers": {
+    "n_items": 200,
+    "n_open": 68,
+    "pct_open": "34.00",
+    "dim_R_ab_R_ab": "L^-4",
+    "dim_T_acd_T_acd": "L^-2",
+    "dim_gap_802": "L^-2",
+    "signature": "(-,+,+,+)",
+    "g_u_u": "-1",
+    "k_sq_from_835_given_801": "0.000000",
+    "vg_max_plus_sign": "0.999907800502688666627090773481725507785394815313257851193438",
+    "vg_max_negative_sign_control": "1.00935076387699011377669794445190863512904903964413968088426",
+    "contorsion_resid_std_restore": "0",
+    "contorsion_resid_819a_restore": "27/2",
+    "contorsion_resid_819b_restore": "31/4",
+    "contorsion_correct_form": "K_{abc} = 1/2 (T_{abc} + T_{bca} - T_{cab})",
+    "n_indep_torsion": 24,
+    "dof_828_recomputed": 35,
+    "gr_physical_dof": 2,
+    "ratio_22_over_3": "7.33333333333333333333333333333333333333333333333333333333333",
+    "dim_I991": "L^2"
+  },
+  "not_self_derived": [
+    "A04",
+    "C03",
+    "F06",
+    "F08"
+  ]
+}
