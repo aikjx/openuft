@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>52 · 电弱统一与实验对照卷：Weinberg 角 · ρ=1 · W/Z 谱</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1220'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='%23D4A94E'%3E52%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;--line:#1f2b3f;--gold:#d4a94e;--amber:#fbbf24;--green:#4ade80;--red:#f87171;--blue:#63d2ff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#2a240a);border:1px solid #854d0e;border-radius:14px;padding:26px;margin-bottom:18px;}
+  .badge{display:inline-block;background:#713f12;color:#fde68a;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+  .banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--amber);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#fde68a;margin-bottom:20px;}
+  .preview b{color:var(--amber);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+  h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--amber);margin-right:6px;}
+  h3{font-size:14.5px;font-weight:700;color:#fcd34d;margin:14px 0 6px;}
+  p,li{font-size:13.5px;color:#cbd5e1;}
+  ul,ol{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  .thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--amber);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+  .thm .lab{color:var(--amber);font-weight:800;font-family:Consolas,monospace;}
+  .thm .body{color:#dbeafe;}
+  .chk{background:#1a160a;border:1px solid #854d0e;border-left:4px solid var(--amber);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fde68a;}
+  .chk .mlab{color:var(--amber);font-weight:700;font-family:Consolas,monospace;}
+  .fail{background:#1c0f0f;border:1px solid #7f1d1d;border-left:4px solid var(--red);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13px;color:#fecaca;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:12px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  .mono{font-family:Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+  svg{width:100%;max-width:780px;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:14px auto;}
+  .cap{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px;margin-bottom:14px;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:8px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:20px 0 8px;text-align:center;}
+  @media(max-width:560px){body{padding:14px 10px}.banner{padding:18px}.banner h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">算法联盟 · 系列 54 · openuft 统一场方程 52（零虚构）</span>
+  <h1>电弱统一与实验对照卷：Weinberg 角 · ρ=1 · W/Z 谱</h1>
+  <p>统一场论中唯一已被实验证实的统一：SU(2)_L×U(1)_Y→U(1)_em——方程与 PDG 数据 250 位对照。</p>
+</div>
+
+<div class="preview">
+<b>本卷 250 位现算（52_ew_calc_results.json）</b>：cosθ_W=0.881358868969…；sin²θ_W=0.223206544089…；ρ=1（精确）；α_W=0.032693273394…；g=0.640964733871…。
+</div>
+
+<section>
+<h2><span class="n">一</span>定理组 MM（电弱统一）</h2>
+<h3>定理 MM1（电弱统一=已证）</h3>
+<div class="thm"><span class="lab">THM MM1</span> <span class="body">电磁+弱=SU(2)_L×U(1)_Y→U(1)_em（Glashow–Salam–Weinberg，1979 诺奖）；证据链：中性流（Gargamelle 1973）→ W/Z（UA1/UA2 1983）→ LEP Z 峰精确检验（文献）——唯一已被实验证实的统一。</span></div>
+<h3>定理 MM2（Weinberg 角：本卷现算）</h3>
+<div class="thm"><span class="lab">THM MM2</span> <span class="body">cosθ_W=M_W/M_Z：M_W=80.369、M_Z=91.1876 GeV（PDG 2024）→ cosθ_W=0.881358868969…、sin²θ_W=0.223206544089…、sinθ_W=0.472447398225…（250 位现算）。</span></div>
+<h3>定理 MM3（ρ 参数：精确关系）</h3>
+<div class="thm"><span class="lab">THM MM3</span> <span class="body">ρ=M_W²/(M_Z²cos²θ_W)=1.000000000000…（树图精确，custodial 对称）——电弱统一用一个角锁定 W/Z 质量比（250 位现算）。</span></div>
+<h3>定理 MM4（耦合现算）</h3>
+<div class="thm"><span class="lab">THM MM4</span> <span class="body">α_W=α/sin²θ_W=0.032693273394…、g=√(4πα_W)=0.640964733871…（α=1/137.035999084，CODATA）——250 位现算。</span></div>
+<h3>定理 MM5（与实验一致：残差）</h3>
+<div class="thm"><span class="lab">THM MM5</span> <span class="body">树图 sin²θ_W 0.223206544089… vs PDG on-shell ≈0.22343——相对残差 −0.100%（方案依赖：MS-bar 0.2312 含辐射修正）；如实报告，不四舍五入掩盖。</span></div>
+<h3>定理 MM6（TUFT/V50 对照）</h3>
+<div class="thm"><span class="lab">THM MM6</span> <span class="body">TUFT/V50——无电弱统一、无 W/Z 质量预言、无 Weinberg 角（23/48/49）；统一场论"突破"对已证统一零贡献。</span></div>
+<div class="fail">结论：完成"力的统一"的诚实答案=电弱统一已证并与实验一致（本卷 250 位对照）；大统一/量子引力仍 OPEN——不为未证部分编造方程。</div>
+</section>
+
+<section>
+<h2><span class="n">二</span>电弱统一破缺链与玻色子谱（SVG）</h2>
+<svg viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans SC,sans-serif">
+  <defs>
+    <linearGradient id="bgm2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1730"/><stop offset="1" stop-color="#0a1420"/>
+    </linearGradient>
+  </defs>
+  <rect width="780" height="380" fill="url(#bgm2)" rx="10"/>
+  <text x="390" y="28" text-anchor="middle" fill="#d4a94e" font-size="16" font-weight="700">电弱统一：SU(2)_L×U(1)_Y→U(1)_em（THM MM1–MM6）</text>
+  <g font-size="12">
+    <rect x="40" y="55" width="220" height="130" fill="#4ade80" opacity="0.14" rx="6" stroke="#4ade80"/>
+    <text x="150" y="76" text-anchor="middle" fill="#4ade80" font-weight="700">统一群（MM1 已证）</text>
+    <text x="150" y="96" text-anchor="middle" fill="#bbf7d0">SU(2)_L × U(1)_Y</text>
+    <text x="150" y="112" text-anchor="middle" fill="#bbf7d0">→ U(1)_em（破缺）</text>
+    <text x="150" y="130" text-anchor="middle" fill="#bbf7d0">1979 诺奖 / 1983 W/Z</text>
+    <rect x="290" y="55" width="220" height="130" fill="#63d2ff" opacity="0.14" rx="6" stroke="#63d2ff"/>
+    <text x="400" y="76" text-anchor="middle" fill="#63d2ff" font-weight="700">Weinberg 角（MM2–MM3）</text>
+    <text x="400" y="96" text-anchor="middle" fill="#bae6fd">cosθ_W=0.881358868969…</text>
+    <text x="400" y="112" text-anchor="middle" fill="#bae6fd">sin²θ_W=0.223206544089…</text>
+    <text x="400" y="130" text-anchor="middle" fill="#bae6fd">ρ=1（精确，250 位现算）</text>
+    <rect x="540" y="55" width="220" height="130" fill="#fbbf24" opacity="0.14" rx="6" stroke="#fbbf24"/>
+    <text x="650" y="76" text-anchor="middle" fill="#fbbf24" font-weight="700">玻色子谱+耦合（MM4–MM5）</text>
+    <text x="650" y="96" text-anchor="middle" fill="#fde68a">M_W=80.369 M_Z=91.1876</text>
+    <text x="650" y="112" text-anchor="middle" fill="#fde68a">α_W=0.032693273394…</text>
+    <text x="650" y="130" text-anchor="middle" fill="#fde68a">残差 -0.100%（方案依赖）</text>
+  </g>
+  <text x="390" y="270" text-anchor="middle" fill="#fca5a5" font-size="12.5" font-weight="700">TUFT/V50：无电弱统一、无 W/Z 预言（MM6）</text>
+  <text x="390" y="330" text-anchor="middle" fill="#64748b" font-size="11.5">示意：绿=统一群已证 / 蓝=Weinberg 角现算 / 黄=谱+耦合+残差；全部数值=本卷 250 位现算</text>
+</svg>
+<p class="cap">图 1 · 电弱统一破缺链与玻色子谱（示意：已证/现算/对照三层）</p>
+
+<h3>250 位锚点表（52_ew_calc_results.json）</h3>
+<table>
+  <tr><th style="width:26%">锚点</th><th style="width:46%">本卷现算 / 文献</th><th style="width:28%">判定</th></tr>
+  <tr><td>cosθ_W</td><td class="mono">0.881358868969…（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>sin²θ_W</td><td class="mono">0.223206544089…（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>ρ 参数</td><td class="mono">1.000000000000…（树图精确）</td><td>精确关系</td></tr>
+  <tr><td>α_W</td><td class="mono">0.032693273394…（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>g=√(4πα_W)</td><td class="mono">0.640964733871…（250 位现算）</td><td>本卷现算</td></tr>
+  <tr><td>残差 vs on-shell</td><td class="mono">−0.100%（方案依赖，如实报告）</td><td>对照</td></tr>
+</table>
+<p class="note">注：全部数值=mpmath 250 位现算（M_W=80.369、M_Z=91.1876 GeV，PDG 2024）；ρ=1 为树图恒等式；残差方案依赖（MS-bar 0.2312 含辐射修正）——跨卷：17（电弱统一）、25（大统一）、48/49（V50）。</p>
+</section>
+
+<section>
+<h2><span class="n">三</span>数据与来源</h2>
+<ul>
+  <li>250 位现算：52_ew_calc.py → 52_ew_calc_results.json（本卷交付）</li>
+  <li>M_W=80.369、M_Z=91.1876 GeV（PDG 2024 世界均值）；α=1/137.035999084（CODATA 2018）</li>
+  <li>已证：Gargamelle 1973、UA1/UA2 1983、LEP Z 峰、1979 诺奖（文献）</li>
+  <li>跨卷：17（电弱统一）、25（大统一不共点）、48/49（V50 审计/修复）</li>
+</ul>
+</section>
+
+<div style="background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:14px 0;">
+<b style="color:var(--gold)">归属与导航</b>
+<p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+本卷：openuft/07_统一场方程/（openuft 编号 52 = 算法联盟系列 54）。配套脚本与 JSON 同目录。<br>
+openuft 编号 31–51（系列 33–53）：第一性推导 · 本源体系 · 本质本源 · 量级 · 量子基础 · 暗物质 · 质量谱 · 宇宙起源 · 总终卷 · 宇宙学张力 · 黑洞 · 中子星 · 引力波频谱 · 中微子 · 拓扑 · CMB · 黑洞热力学 · V50 公理审计 · V50 修复草案 · 恒星能量与太阳 · 大爆炸核合成。<br>
+系列（主目录）：① 引力线 01·04·07·08·12·16·19·20·21·22；② 验证方法线 02·05·06·09·10·13·15·17·18；③ 攻破线 23–32。<br>
+openuft 总卷（主目录）：openuft-统一场论全维度全链路总卷.html · 使用指南。
+</p>
+</div>
+
+<p class="foot">openuft 编号 52 · 电弱统一与实验对照卷 · 零虚构声明。全部锚点来自 52_ew_calc.py（mpmath 250 位，可复现）或标注文献出处；电弱判定遵循 MM 组（已证/现算/对照分层）。</p>
+</div>
+</body>
+</html>
+</div>
+</body>
+</html>

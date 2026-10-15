@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "target": "openuft#49 阶段1 总拉氏量",
+    "gate": "三重预检锁(量纲/旋量/250位数值)",
+    "mp_dps": 250,
+    "precision_warning": "G 有效位 ~5.4 位(u_r=2.2e-5)，普朗克量继承 u_r=1.1e-5；250 位为内部运算精度，非报告精度"
+  },
+  "constants_SI": {
+    "c": "299792458.0",
+    "G": "0.000000000066743",
+    "hbar": "0.0000000000000000000000000000000001054571817",
+    "m_e": "0.00000000000000000000000000000091093837139",
+    "u_r_G": "0.000022",
+    "l_P": "1.61625502393e-35",
+    "t_P": "5.39124644666e-44",
+    "m_P_kg": "2.17643434205e-8",
+    "m_P_GeV": "1.22089012821e+19",
+    "omega_P_s^-1": "1.85485863036e+43"
+  },
+  "A_identity": {
+    "kappa_E_over_hbar_c": "7.61570948891e+67",
+    "one_over_16pi_lP2": "7.61570948891e+67",
+    "rel_err": "1.2361e-251",
+    "verdict": "kappa_E/(hbar c) == 1/(16 pi l_P^2) 恒等；Planck 尺度必然注入"
+  },
+  "B_spinor": {
+    "correct_rule": "Weyl<=>n even; Majorana<=>(q-p) mod 8 in {0,1,2}; MW<=>n even and (q-p)%8==0",
+    "draft_M5_rule": "Weyl<=>n=2 mod 8; MW<=>n=2 mod 8",
+    "anchor_selfcheck": "7/7 PASS",
+    "draft_rule_anchor_mismatch": 4,
+    "n4_lorentzian": {
+      "correct_Weyl": true,
+      "correct_Majorana": true,
+      "correct_MW": false,
+      "draft_M5_Weyl": false
+    },
+    "contradiction": "M5(锁定) 判定 n=4 无 Weyl，P-H1 检验项1 声称 n=4 有 Weyl",
+    "weyl_divergence_count": 34,
+    "mw_divergence_count": 18,
+    "verdict": "FAIL"
+  },
+  "C_branch": {
+    "branch_ii_BD_omega": 0,
+    "gamma": "0.5",
+    "eta_Nordtvedt": "0.5",
+    "cassini_1sigma": "0.000023",
+    "llr_1sigma": "0.00019",
+    "gamma_excess_dex": 4.337242168318426,
+    "eta_excess_dex": 3.42021640338319,
+    "fifth_force_coupling": "0.333333333333",
+    "omega_BD_required": "43476.2608696",
+    "verdict": "分支(ii) 证伪（三重独立）"
+  },
+  "D_gminus2_EDM": {
+    "delta_a_e_exp": "0.00000000000013",
+    "d_e_bound_e_cm": "0.0000000000000000000000000000041",
+    "channel_A": {
+      "delta_a_e": "1.1093463e-47",
+      "deficit_dex": 34.06887622799968,
+      "scale_needed_GeV": "112.78166",
+      "scale_gap_dex": 17.03443811399984
+    },
+    "channel_B": {
+      "delta_a_e": "2.6504749e-25",
+      "deficit_dex": 11.690619654175357,
+      "scale_needed_GeV": "24891836.0",
+      "scale_gap_dex": 11.690619654175357
+    },
+    "EDM_counter": {
+      "hbar_over_2mec_cm": "1.9307963e-11",
+      "d_e_if_observable": "2.5100352e-24",
+      "excess_over_bound_dex": 5.7868959615886,
+      "theta_CP_max": "1.6334432e-6",
+      "EC_natural_d_e": "5.1175273e-36",
+      "EC_natural_deficit_dex": 5.903723692586756
+    },
+    "verdict": "无出路窗口：自然值不可检验(12~34 dex)，调到可观测则 EDM 超上限 5.79 dex"
+  },
+  "E_scale": {
+    "omega_P": "1.85485863036e+43",
+    "H_0_Planck2018": "2.19271126724e-18",
+    "gap_dex": 60.92732936685695,
+    "kappa_if_cosmological_m^-1": "7.31409749887e-27",
+    "verdict": "P-H5 循环；P-H3 与 P-H6 标度互斥 61 dex"
+  },
+  "F_circular": {
+    "cycles": [
+      "P-H5 -> P-H3 -> (G,hbar,c) -> kappa_E -> l_P -> P-H5",
+      "P-H6 <-> P-H3"
+    ],
+    "verdict": "2 处环"
+  },
+  "selfcheck": {
+    "pass": 22,
+    "total": 22,
+    "items": [
+      {
+        "name": "A1 kappa_E/(hbar c) == 1/(16 pi l_P^2)",
+        "ok": true,
+        "note": "相对偏差 1.2361e-251"
+      },
+      {
+        "name": "A2 m_P*l_P == hbar/c",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "A3 omega_P == c/l_P",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "A4 omega_P == 1/t_P",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "B1 判据锚点自检 7/7",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "B2 反向对照：草案判据至少 1 处锚点错（证明判据有判别力）",
+        "ok": true,
+        "note": "错 4/7"
+      },
+      {
+        "name": "B3 M5 与 P-H1 检验项1 硬矛盾（草案自锁定理判死自己的时空假设）",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "B4 草案 mod-8 判据与正确判据存在系统分歧（非个别笔误）",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "C1 分支(ii) PPN gamma 偏离 Cassini > 4 dex",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "C2 分支(ii) Nordtvedt eta 偏离 LLR > 3 dex",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "C3 自救所需 omega_BD > 4e4",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "D1 通道A 挠率 g-2 低于灵敏度 > 30 dex",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "D2 通道B 挠率 g-2 低于灵敏度 > 10 dex",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "D3 可观测 g-2 对应 EDM 超上限 > 5 dex",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "E1 omega_P 与 H_0 相差 > 55 dex",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "F1 P-H5 存在经 kappa_E 的前提环",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "F2 P-H6 与 P-H3 互为前提",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "G1 文档第59行 ω 场方程缺 ħ（量纲不闭合）",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "G2 符号表 λ_ω 量纲标注与量纲表互斥",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "G3 λ 单位制依赖性（N vs dyn 的 l_eff 相差 > 1 dex）",
+        "ok": true,
+        "note": "2.50 dex"
+      },
+      {
+        "name": "G4 250位锚点为定义式回代（残差必为机器零）",
+        "ok": true,
+        "note": ""
+      },
+      {
+        "name": "G5 锚点取值比普朗克标度低 > 40 dex（无来源）",
+        "ok": true,
+        "note": ""
+      }
+    ]
+  },
+  "final_verdict": {
+    "dimensional_gate": "PASS(含3处内部不一致)",
+    "spinor_gate": "FAIL",
+    "numeric_gate": "FAIL",
+    "action": "按#49第五部分第1条：标记证伪，全册退回，禁止进入阶段1-2变分"
+  }
+}
