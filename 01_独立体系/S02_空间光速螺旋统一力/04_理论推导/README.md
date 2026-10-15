@@ -28,5 +28,10 @@
   - S02 自由空间真空 Maxwell 框架内半整数 $l$ 被排除：单值性 $e^{i2\pi l}=1\Rightarrow l\in\mathbb Z$；矢量场自旋 1 的 $2\pi$ 因子 $+1$ 与半整数相位 $-1$ 不匹配（恰与自旋 1/2 旋量匹配但非 Maxwell）；半整数 $l$ 尝试解在分支切割处生成等效线源（无源 Maxwell 不可容纳）。
   - 合法例外（向错 / 介质分数阶涡旋 / 旋量耦合）登记为框架外开放项 O-S02-FRACTIONAL-VORTEX；光子 OAM $l$ 整数（玻色单值 + 自旋 1 双重约束），总角动量 $j=l\oplus s$ 光子 $s=1$ 整数 ⇒ $j$ 整数。
   - 脚本：[fractional_topological_charge_verify.py](fractional_topological_charge_verify.py)（V1–V4 全 PASS，exit 0）；数据：[§16_半整数拓扑荷排除数据.json](§16_半整数拓扑荷排除数据.json)；待并入 claim 行：[_s16_11_claims_rows.csv](_s16_11_claims_rows.csv)（S02-C0118）
+- §16.12 共振区外瞬态弛豫动力学（**开放项④部分闭合**）：[§16_12 攻破精算](§16_12_共振区外瞬态弛豫动力学_相位滑移主导_攻破精算.md)
+  - 可解下界模型（测试粒子近似 + ALD 阻尼）：失谐 $\Delta\omega=\omega_D-k\neq0$ 时相位滑移去相关时间 $\tau_\text{detune}=2\pi/|\Delta\omega|$；辐射阻尼率 $\gamma=\tau_0\omega^2$（沿用 §16.10），$\tau_\text{damp}=1/\gamma$；有效弛豫 $\tau_\text{eff}=\min(\tau_\text{detune},\tau_\text{damp})$。
+  - S02 参数域：电子光频 $\gamma=3.474\times10^7\ \text{s}^{-1}$（$\gamma/\omega_0=1.4755\times10^{-8}$）、$\tau_\text{damp}=2.879\times10^{-8}$ s；典型失谐 $\Delta\omega\sim10^{-3}\omega_0$ ⇒ $\tau_\text{detune}\sim2.7\times10^{-12}$ s，比值 $\sim10^{-4}\ll1$ ⇒ **相位滑移主导**，辐射反馈可忽略（与 §16.10 二阶小自洽）。
+  - 诚实边界：含介质/非线性/高阶反馈的完整多体弛豫登记为框架外开放项 O-S02-RELAXATION-FULL；§16 四个开放项（①②③④）现已全收口（①闭式 / ②条件闭合 / ③划定边界 / ④部分闭合）。
+  - 脚本：[transient_relaxation_verify.py](transient_relaxation_verify.py)（V1–V4 全 PASS，exit 0）；数据：[§16_瞬态弛豫数据.json](§16_瞬态弛豫数据.json)；待并入 claim 行：[_s16_12_claims_rows.csv](_s16_12_claims_rows.csv)（S02-C0119）
 
 > 治理待办：§17–§36 各节攻破产物（精算 md / verify.py / 数据 json / 图谱 html）尚未登记进本目录树，属在途登记债，由各节负责人按本节格式补登。
