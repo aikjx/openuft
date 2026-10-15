@@ -1,7 +1,7 @@
 # TUFT 复能动张量协变守恒（EC 含挠率联络）· 全维审订
 
 > 配套机器验证：`tuft_复能动张量协变守恒_EC含挠率.py`（纯标准库，seed=20260930，N_FIELD=12 / N_REG=24）。
-> 机器读数：`PASS = 8 · FAIL = 12 · BOUNDARY = 5 · INFO = 3`，见 `tuft_复能动张量协变守恒_report.txt`。
+> 机器读数：`PASS = 9 · FAIL = 12 · BOUNDARY = 5 · INFO = 4`，见 `tuft_复能动张量协变守恒_report.txt`。
 > 红线：数学自洽 ≠ 实验证实。负结论为**边界 / 缺陷判定**，不是对 TUFT 框架的证伪宣告；本册不改任何 claims 状态、不提升任何 L3 计数。
 
 ---
@@ -59,6 +59,15 @@ $$U_\nu = T^\alpha{}_{\alpha\beta}R^\beta{}_\nu - T^\alpha{}_{\nu\beta}R^\beta{}
 
 其几何含义：要写出 $\nabla^\mu G_{\mu\nu}$ 的挠率**闭式**，必须借助 Bianchi 恒等式把 $\mathrm{d}\mathrm{d}\Gamma$ 项**重组合掉**——这也正是「守恒命题 $\Leftrightarrow$ 残差置零」的几何根源。来稿「只用挠率-曲率代数约束即可归零残差」的思路在结构上**完全不成立**。
 
+**关键发现 4（受控验证 $\mathrm{d}\mathrm{d}\Gamma$）**：直接检验 $D$ 对联络二阶导数 $\mathrm{d}\mathrm{d}\Gamma$ 的依赖——固定 $(\Gamma,\partial\Gamma)$、令 $\mathrm{d}\mathrm{d}\Gamma\to0$：
+
+| 检验 | 结果 |
+|---|---|
+| $D$ 对 $\mathrm{d}\mathrm{d}\Gamma$ 的线性性 | 偏差 $1.00\times10^{-15}$（机器零，PASS） |
+| $\mathrm{d}\mathrm{d}\Gamma$ 项占比 $\lvert D-D\rvert_{\mathrm{d}\mathrm{d}\Gamma=0}\rvert/\lvert D\rvert$ | 均值 **0.644** · 最大 1.510 |
+
+即 $D$ 的约 **64%** 来自与挠率**独立**的 $\mathrm{d}\mathrm{d}\Gamma$ 项（挠率 $T$ 只由 $\Gamma$ 决定、不含 $\mathrm{d}\mathrm{d}\Gamma$）⇒ 该项**无法被任何 $T$ 的局部代数/导数基吸收**，从数值上解释了 §3 残差为何停在 $8.27\times10^{-1}$ 同一量级。
+
 ---
 
 ## 4. 复推广层（§4）
@@ -107,13 +116,13 @@ $$U_\nu = T^\alpha{}_{\alpha\beta}R^\beta{}_\nu - T^\alpha{}_{\nu\beta}R^\beta{}
 ## 8. 计数与红线
 
 ```
-PASS = 8   FAIL = 12   BOUNDARY = 5   INFO = 3
+PASS = 9   FAIL = 12   BOUNDARY = 5   INFO = 4
 ```
 
 核心结论：
 
 1. EC 下 $\nabla^\mu G_{\mu\nu}\neq0$ 的**方向判断正确**（残差 $\propto$ 挠率二次），但来稿引用的「第一 Bianchi」实为第二 Bianchi（微分 Bianchi），且其两指标写法不是恒等式；来稿挠率源项与实测残差相对偏差 $1.12\times10^{0}$，不成立。
-2. 守恒命题在场方程下与「残差置零」**严格等价** ⇒ 是公设化约束（降自由度），非守恒定理；且**纯 $T\cdot R$ 代数型约束不足以闭合残差**（纯 $T\cdot R$ 回归残差 $8.30\times10^{-1}$；补 $\nabla T$ 协变导数基后仍 $8.27\times10^{-1}$，还含 $\mathrm{d}\mathrm{d}\Gamma\cdot\Gamma$ 耦合项）。
+2. 守恒命题在场方程下与「残差置零」**严格等价** ⇒ 是公设化约束（降自由度），非守恒定理；且**纯 $T\cdot R$ 代数型约束不足以闭合残差**（纯 $T\cdot R$ 回归残差 $8.30\times10^{-1}$；补 $\nabla T$ 协变导数基后仍 $8.27\times10^{-1}$；受控验证 $\mathrm{d}\mathrm{d}\Gamma$ 项占 $D$ 的 **64%** ⇒ 还含联络二阶导数 $\mathrm{d}\mathrm{d}\Gamma\cdot\Gamma$ 耦合项）。
 3. 量纲三处非法：$\mathfrak{R}=\kappa+i\tau$（$[\mathrm{L}^{-2}]$ vs $[\mathrm{L}^{-1}]$）、$\omega_R=cR_B$（非频率）、复场方程虚部未定；仅 $\omega_I=cT_B$ 合法。
 4. 来稿球对称挠率分量不满足 SO(3) 协变（残差 $7.60\times10^{-1}$）；$\alpha$ 三式内部冲突。
 5. 两个「下一步」通道按本仓既有读数均为零信号 / 已关闭：CMB（$\beta\equiv0$ ⇒ 无跳变源）、QNM（$5.74\sigma$ 排除 + 尺度锚差 $26{\sim}78$ 量级）。

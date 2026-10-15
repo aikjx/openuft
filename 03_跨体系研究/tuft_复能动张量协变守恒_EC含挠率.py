@@ -758,6 +758,54 @@ def main():
         put("          借助 Bianchi 恒等式把 ddΓ 项重组合掉——亦是「守恒命题 ⇔ 残差置零」")
         put("          的几何根源；来稿「只用挠率-曲率代数约束即可归零残差」在结构上不成立。")
 
+    # --- S3.5 受控验证：D 对联络二阶导数 ddΓ 的依赖
+    #      D = ∇^μG_{μν} 经 dR 线性依赖 ddΓ；而挠率 T 只由 Γ（一阶）决定，与 ddΓ 独立。
+    def _D_of(Gam, dGam, ddGam):
+        R = curvature(Gam, dGam)
+        dR = d_curvature(Gam, dGam, ddGam)
+        Ric = ricci(R)
+        Rs = scalar_curv(Ric)
+        return div_G(Gam, dR, Ric, Rs)[0]
+
+    def _scale_dd(ddGam, eps):
+        return [[[[[eps * ddGam[a][b][c][d][e] for e in range(4)]
+                  for d in range(4)] for c in range(4)] for b in range(4)]
+                for a in range(4)]
+
+    rng5 = random.Random(SEED + 3)
+    max_ratio_dd = 0.0
+    sum_ratio_dd = 0.0
+    max_lin_err = 0.0
+    n_dd = 0
+    for _ in range(N_FIELD):
+        Gam, dGam, ddGam = gen_field(rng5)
+        D0 = _D_of(Gam, dGam, _scale_dd(ddGam, 0.0))   # ddΓ = 0
+        D1 = _D_of(Gam, dGam, ddGam)                   # 完整
+        den = max(amax(D1), amax(D0), 1e-300)
+        ratio = amax([D1[i] - D0[i] for i in range(4)]) / den
+        max_ratio_dd = max(max_ratio_dd, ratio)
+        sum_ratio_dd += ratio
+        n_dd += 1
+        for eps in (0.5, 2.0):
+            De = _D_of(Gam, dGam, _scale_dd(ddGam, eps))
+            pred = [D0[i] + eps * (D1[i] - D0[i]) for i in range(4)]
+            max_lin_err = max(max_lin_err,
+                              amax([De[i] - pred[i] for i in range(4)])
+                              / max(amax(De), 1e-300))
+    mean_ratio_dd = sum_ratio_dd / n_dd if n_dd else 0.0
+
+    rec("PASS" if max_lin_err < 1e-9 else "FAIL",
+        "D 对联络二阶导数 ddΓ 的线性性（受控检验）",
+        "偏差 %.2e ⇒ D = D|_{ddΓ=0} + L(ddΓ)，二阶导数项线性可分" % max_lin_err)
+    rec("INFO",
+        "ddΓ 项在 D 中的占比 |D−D|_{ddΓ=0}| / |D|",
+        "均值 %.3f · 最大 %.3f ⇒ 该项与挠率独立（T 只由 Γ 决定、不含 ddΓ）"
+        % (mean_ratio_dd, max_ratio_dd))
+    put("        ⇒ ddΓ 项在 D 中占 %.0f%%（均值）量级，而挠率 T 仅由 Γ（一阶）决定 ⇒ 该项" %
+        (100.0 * mean_ratio_dd))
+    put("          无法被任何 T 的局部代数/导数基吸收 ⇒ 从数值上解释了 S3.4b 的残差为何停在")
+    put("          同一量级，也说明 EC 恒等式的『闭式』必须显式含 ddΓ（或在 Bianchi 下重组合掉它）。")
+
     # ============================================================ §4 复推广与守恒逻辑
     sec("§4 复推广层：术语与结构缺口")
 
@@ -945,7 +993,9 @@ def main():
     put("    「第一 Bianchi」实为第二 Bianchi（微分 Bianchi），且其两指标写法不是恒等式；")
     put("    来稿给出的挠率源项形式与实测残差相对偏差 %.2e，不成立。" % rel_user2)
     put("  · 守恒命题在场方程下与「残差置零」严格等价 ⇒ 是公设化约束（降自由度），非守恒定理；")
-    put("    且纯 T·R 代数型约束不足以闭合残差（纯 T·R 回归残差 %.2e；补 ∇T 协变导数基后仍 %.2e，还含 ddΓ·Γ 耦合项）。" % (rr_tr, rr_full))
+    put("    且纯 T·R 代数型约束不足以闭合残差（纯 T·R 回归残差 %.2e；补 ∇T 协变导数基后仍"
+        " %.2e；受控验证 ddΓ 项占 D 的 %.0f%% ⇒ 还含联络二阶导数 ddΓ·Γ 耦合项）。"
+        % (rr_tr, rr_full, 100.0 * mean_ratio_dd))
     put("  · 量纲三处非法：𝓡=κ+iτ（L^-2 vs L^-1）、ω_R=cR_B（非频率）、复场方程虚部未定；")
     put("    ω_I=cT_B 量纲合法（唯一通过的一条）。")
     put("  · 来稿球对称挠率分量不满足 SO(3) 协变（残差 %.2e）；α 三式内部冲突。" % relA)
