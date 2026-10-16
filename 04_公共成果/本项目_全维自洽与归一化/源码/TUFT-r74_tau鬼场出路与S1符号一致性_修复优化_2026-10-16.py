@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-r72 · 2026-10-16 · r71 下游攻破（修复优化）
+r74 · 2026-10-16 · r71 下游攻破（修复优化）
+（编号：r72 已被并行会话于 2026-10-16 占用 ⇒ 后到者改号，取首空号 r74）
 《tau 鬼场三条出路判定 + 与 S1 几何恒等式符号一致性重证 + Omega5 优化二难》
 ==============================================================================
 继承（不重推）：
@@ -59,8 +60,8 @@ BASE = os.path.dirname(HERE)
 DATA = os.path.join(BASE, '数据')
 ROOT = os.path.dirname(BASE)
 
-STEM = 'TUFT-r72_tau鬼场出路与S1符号一致性_修复优化_2026-10-16'
-SRC_NAME = 'TUFT-r72_tau鬼场出路与S1符号一致性_修复优化_2026-10-16.py'
+STEM = 'TUFT-r74_tau鬼场出路与S1符号一致性_修复优化_2026-10-16'
+SRC_NAME = 'TUFT-r74_tau鬼场出路与S1符号一致性_修复优化_2026-10-16.py'
 R69_JSON = os.path.join(
     DATA, 'TUFT-r69_V48修正完整版公式集_全维审计_2026-10-15.json')
 R71_JSON = os.path.join(
@@ -302,14 +303,16 @@ def group_D():
         return (Decimal('0.5') * k * k + ((k * k + t * t) ** 2))
 
     def d2_dk2_m(h):
-        return (U_with_mass(Decimal(h), Decimal('0'))
+        hh = Decimal(h)
+        return (U_with_mass(hh, Decimal('0'))
                 - 2 * U_with_mass(Decimal('0'), Decimal('0'))
-                + U_with_mass(Decimal(-h), Decimal('0'))) / (Decimal(h) ** 2)
+                + U_with_mass(-hh, Decimal('0'))) / (hh ** 2)
 
-    ctrl = d2_dk2_m('1e-3')
+    ctrl = d2_dk2_m('1e-4')
     ctrl_ok = abs(ctrl - Decimal('1')) < Decimal('1e-6')
     entry('D4', 'PASS' if ctrl_ok else 'FAIL',
-          ('阳性对照：若势含二次项 (1/2)m^2 kappa^2（m=1），同一差分给 '
+          ('阳性对照（步长 1e-4，差分截断误差 O(h^2)=1e-8 量级）：'
+           '若势含二次项 (1/2)m^2 kappa^2（m=1），同一差分给 '
            + format(ctrl, '.6E') + ' ≈ m^2 = 1 ≠ 0 => 检验器非恒零，'
            'D3 的「无质量」是真结论不是检验器失灵'),
           format(ctrl, '.6E'), '阳性对照')
@@ -343,7 +346,7 @@ def main():
         'BOUNDARY' if COUNTS.get('BOUNDARY', 0) > 0 else 'PASS')
 
     payload = {
-        'round': 'r72',
+        'round': 'r74',
         'date': '2026-10-16',
         'source': 'r71 下游攻破（r69 所审 V4.8 修正完整版公式集）',
         'counts': dict(COUNTS),
@@ -374,7 +377,7 @@ def main():
     with io.open(jp, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    rlines = ['TUFT-r72 tau 鬼场出路与 S1 符号一致性 修复优化 运行报告',
+    rlines = ['TUFT-r74 tau 鬼场出路与 S1 符号一致性 修复优化 运行报告',
               'counts=' + str(COUNTS) + ' total=' + str(len(ENTRIES)) +
               ' verdict=' + verdict]
     for e in ENTRIES:
@@ -387,7 +390,7 @@ def main():
                  encoding='utf-8') as f:
         f.write('\n'.join(rlines))
 
-    ml = ['# 判定_TUFT-r72-tau鬼场出路与S1符号一致性_修复优化', '',
+    ml = ['# 判定_TUFT-r74-tau鬼场出路与S1符号一致性_修复优化', '',
           '日期：2026-10-16 · 评级：O/L2（r71 下游攻破）', '',
           '## 条目计数', '- 总条目：' + str(len(ENTRIES))]
     for k in sorted(COUNTS.keys()):

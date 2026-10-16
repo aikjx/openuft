@@ -1,0 +1,26 @@
+TUFT-r74 tau 鬼场出路与 S1 符号一致性 修复优化 运行报告
+counts={'PASS': 12, 'FAIL': 3, 'BOUNDARY': 3} total=18 verdict=FAIL
+[PASS] A1 : 跨册机器回读 r69 产物 S1_R1：【tanθ=κ/τ ⇒ sinθ=κ/√(κ²+τ²)；ω=cκ/sinθ 与 ω=c√(κ²+τ²) 在 250 位下多】=> S1 的 omega = c*sqrt(kappa^2 + tau^2) 确为【加号】
+[PASS] A2 : 来料 S2 作用量动能项 L = (hbar c/2)(kappa^2 - tau^2) - U 确为【减号】（r69 所审来料原式）
+[FAIL] A3 : ★新发现（r69/r71 均未登记）：同一来料内 kappa^2 与 tau^2 的相对符号【相反】—— S1 几何侧为加号 sqrt(kappa^2+tau^2)，S2 作用量侧为减号 (kappa^2-tau^2) => 上游符号冲突，比 r71 C4 鬼场更靠前（鬼场是该冲突在补导数后的表现）
+[FAIL] A4 : 物理后果数值化（kappa=1 固定，tau=0..1 扫描 5 点）：E = hbar*omega 对 tau 单调递增（True），而 L_kin 对 tau 单调递减（True）=> 自能与作用量动能对 tau 的依赖方向相反，不自洽
+    residual=-4.375000E-1
+[PASS] B1 : P1 同号化：L_kin = (hbar c/2)[(partial kappa)^2 + (partial tau)^2]。两项动能系数同为 +hbar c > 0 => 无鬼场，且系数为来料既有常数 => 零成本
+[BOUNDARY] B2 : P2 tau -> i*tau 复化：使 -(partial tau)^2 -> +(partial tau)^2 且(kappa^2-tau^2) -> (kappa^2+tau^2)，与 S1 加号一致；但代价 = 场由实变复（实自由度由 1 变 2）、tau 的物理诠释改变。本册不判定其是否可接纳，登记为不自推
+[BOUNDARY] B3 : P3 tau 非动力学（承 r19/r20「tau 非传播场」）：不给 tau 配动能项=> 无鬼场，但 tau 退化为代数 slave => 回到 r69 S3_R1 的「无传播自由度」阻塞 => 本路径只是把 r71 的鬼场换回 r69 的阻塞
+[PASS] B4 : P4 差结构移入势能：动能项同号（无鬼），而 (kappa^2 - tau^2) 的组合保留在势能 U 内 （如 U = lam1*kappa^4 + lam2*tau^4 + lam3*kappa^2*tau^2 再加 lam4*(kappa^2-tau^2)^2 型项）=> 既无鬼又保留来料差结构的痕迹
+[PASS] B5 : 推荐 P1/P4（同号化）：它是唯一同时满足【无鬼场】与【与 S1 的 kappa^2+tau^2 加号一致】的出路；P2 需改场的实/复性质、P3 只是把阻塞换个位置
+[PASS] C1 : 修复版 L = (hbar c/2)[(partial kappa)^2 + (partial tau)^2] - U：两项量纲同为 M^1 L^-1 T^-2（能量密度）=> 齐次
+[PASS] C2 : 无鬼场机器验证：均匀场构型下 H_kappa = H_tau = +(hbar/(2c))(partial_t)^2 均恒正（True）且随振幅单调递增（True）=> 哈密顿密度有下界（对照 r71 C4 的 H_tau 恒负）
+    residual=1.758836469795381E-35
+[PASS] C3 : 修复版 EOM 两条：hbar c □kappa + dU/dkappa = 0 与 hbar c □tau + dU/dtau = 0 => 两个独立传播标量自由度；对照 r69 原式（纯代数约束、0 个传播自由度）
+[FAIL] D1 : 三常数（lam1/lam2/lam3，均带 M L^3 T^-2）=> 撞 Omega5（承 r71 D1/D2）
+[PASS] D2 : 单常数方案：取 kappa<->tau 交换对称、U = lam*(kappa^2+tau^2)^2，则自由常数仅 1 个（lam）=> Omega5 合规
+[PASS] D3 : 机器：单常数四次势 U = lam*(kappa^2+tau^2)^2 在 (kappa,tau)=(0,0) 背景的二阶导数（= 质量项系数）随步长缩小趋于 0：2.000000E-4 / 2.000000E-6 / 2.000000E-8 => 两个模【均无质量】
+    residual=2.000000E-8
+[PASS] D4 : 阳性对照（步长 1e-4，差分截断误差 O(h^2)=1e-8 量级）：若势含二次项 (1/2)m^2 kappa^2（m=1），同一差分给 1.000000E+0 ≈ m^2 = 1 ≠ 0 => 检验器非恒零，D3 的「无质量」是真结论不是检验器失灵
+    residual=1.000000E+0
+[BOUNDARY] D5 : ★二难升级（本册最终裁定）：(a) Omega5 合规（单常数 lam）=> 谱只剩【两个自由无质量标量】，色散 omega = c k、无相互作用 => 物理内容贫乏、零判别力；(b) 要得到有质量/有结构的谱 => 需自发对称破缺背景 kappa0 != 0 或显式加二次项 => 再 +1 个常数 => 回到撞 Omega5。=> 两个方向都不通向可证伪预言
+[PASS] D6 : 修复净效果（相对来料原式）：量纲齐次 ✓、传播自由度 0 -> 2 ✓、鬼场 有 -> 无 ✓、与 S1 加号一致 ✓；未修复：参数账撞 Omega5、谱无结构。=> 修好了「是不是场论」，没修好「有没有可检验内容」
+
+GUARD G0: 自守卫（含量纲 + 跨册回链文件存在性）全过
