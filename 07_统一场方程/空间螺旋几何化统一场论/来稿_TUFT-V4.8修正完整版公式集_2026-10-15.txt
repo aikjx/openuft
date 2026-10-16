@@ -1,0 +1,164 @@
+# 来稿归档 · TUFT-V4.8 修正完整版公式集（2026-10-15）
+
+> **溯源说明**：本文为用户 2026-10-15 提交的《TUFT-V4.8 修正完整版公式集｜空间光速螺旋几何统一场量子几何框架》**原文照录**。
+> 聊天传输产生系统性 LaTeX 伪影（如 `\(\boldsy\(\mathrm{m}\)bol{T}\)` 实为 `\mathbf{T}`、`\(\mathrm{m}\)athr\(\mathrm{m}\){m}` 实为 `\mathrm{m}`、`TUF\(\boldsy\(\mathrm{m}\)bol{T}\)` 实为 `TUFT`、`\o\(\mathrm{m}\)ega` 实为 `\omega`、`i\(\mathrm{m}\)port` 实为 `import`）。
+> 本归档件已按显然意图归一上述伪影，**公式实质不受影响**；全部公式均按归一读法录入审计引擎 `验证脚本/v48_formula_audit_calc.py`。
+> 审计对象 = 本件 §二–§八（作用量层）+ 文末 mpmath 代码块；§一（几何层）与 §四/§五 的质能式已在库内另行机器验证，本卷仅作控制复算。
+
+---
+
+# TUFT-V4.8 修正完整版公式集｜空间光速螺旋几何统一场量子几何框架
+
+> 公理前提：时空本源是**光速螺旋曲线流形**，采用Frenet-Serret标架描述空间螺旋元，总传播速率约束 $v_\text{total}=c$；曲率$\kappa$、挠率$\tau$为流形双本源几何场，$\theta$为螺旋倾角（无量纲）。
+> 量纲基准（SI）
+> |物理量|符号|量纲|
+> | ---- | ---- | ---- |
+> |曲率|$\kappa$|$\mathrm{m}^{-1}$|
+> |挠率|$\tau$|$\mathrm{m}^{-1}$|
+> |光速|$c$|$\mathrm{m}\cdot s^{-1}$|
+> |角频率|$\omega$|$\mathrm{s}^{-1}$|
+> |倾角|$\theta$|无量纲|
+> |约化普朗克常数|$\hbar$|$\mathrm{kg}\cdot \mathrm{m}^2\cdot s^{-1}$|
+> |能量密度|$\mathcal{E}$|$\mathrm{kg}\cdot \mathrm{m}^{-1}\cdot s^{-2}$|
+> |哈密顿密度|$\mathcal{H}$|$\mathrm{kg}\cdot \mathrm{m}^{-1}\cdot s^{-2}$|
+
+## 一、Frenet-Serret 螺旋基础几何方程
+
+螺旋几何核心色散关系
+
+$$\omega = \frac{c\kappa}{\sin\theta}$$
+
+✅量纲核验：$[\mathrm{m}\cdot s^{-1}]\cdot[\mathrm{m}^{-1}]=\mathrm{s}^{-1}$，匹配角频率量纲。
+
+Frenet标架微分方程组（空间螺旋元，$\mathbf{T}$切矢，$\mathbf{N}$法矢，$\mathbf{B}$副法矢）
+
+$$
+\begin{cases}
+\dfrac{d\mathbf{T}}{ds} = \kappa \mathbf{N}\\[4pt]
+\dfrac{d\mathbf{N}}{ds} = -\kappa \mathbf{T}+\tau \mathbf{B}\\[4pt]
+\dfrac{d\mathbf{B}}{ds} = -\tau \mathbf{N}
+\end{cases}
+$$
+
+$s$：弧长参数，量纲$\mathrm{m}$。
+
+螺旋几何约束关系：倾角与曲率挠率的几何恒等式
+
+$$\tan\theta = \frac{\kappa}{\tau}$$
+
+> 大白话：倾角$\theta$描述螺旋"倾斜程度"；曲率管螺旋圈的弯曲程度，挠率管螺旋脱离平面的扭转程度。
+
+## 二、场作用量（第一性原理，几何→场）
+
+四维流形作用量
+
+$$S = \int \mathcal{L}\,d^4x$$
+
+拉格朗日密度（TUFT-V4.8修正版）
+
+$$\mathcal{L} = \frac{\hbar c}{2}\left(\kappa^2-\tau^2\right) - \mathcal{U}(\kappa,\tau)$$
+
+$\mathcal{U}(\kappa,\tau)$：几何势能密度，由螺旋拓扑自相互作用生成。
+
+## 三、核心统一场方程（欧拉–拉格朗日导出）
+
+对几何场变量$\kappa,\tau$变分得到场动力学方程：
+
+$$\frac{\delta \mathcal{L}}{\delta \kappa}-\partial_\mu\left(\frac{\delta \mathcal{L}}{\delta(\partial_\mu \kappa)}\right)=0$$
+
+$$\frac{\delta \mathcal{L}}{\delta \tau}-\partial_\mu\left(\frac{\delta \mathcal{L}}{\delta(\partial_\mu \tau)}\right)=0$$
+
+代入拉格朗日密度得到显式场方程：
+
+$$\hbar c \,\kappa - \frac{\partial \mathcal{U}}{\partial \kappa} -\partial_\mu\left(\frac{\delta \mathcal{L}}{\delta(\partial_\mu \kappa)}\right)=0$$
+
+$$-\hbar c \,\tau - \frac{\partial \mathcal{U}}{\partial \tau} -\partial_\mu\left(\frac{\delta \mathcal{L}}{\delta(\partial_\mu \tau)}\right)=0$$
+
+## 四、哈密顿密度与能量自能公式
+
+哈密顿密度（Legendre变换 $\mathcal{H}=\pi_\kappa \dot{\kappa}+\pi_\tau \dot{\tau}-\mathcal{L}$）
+
+$$\mathcal{H}= \pi_\kappa \dot{\kappa}+\pi_\tau \dot{\tau}-\frac{\hbar c}{2}\left(\kappa^2-\tau^2\right)+\mathcal{U}(\kappa,\tau)$$
+
+共轭动量：
+
+$$\pi_\kappa = \frac{\partial \mathcal{L}}{\partial \dot{\kappa}},\quad \pi_\tau = \frac{\partial \mathcal{L}}{\partial \dot{\tau}}$$
+
+单螺旋元自能：
+
+$$\mathcal{E} = \hbar \omega = \frac{\hbar c \kappa}{\sin\theta}$$
+
+> 大白话：螺旋几何弯曲程度直接对应量子能量；弯曲越大，频率越高，能量越高。
+
+结合几何恒等式 $\sin\theta=\dfrac{\kappa}{\sqrt{\kappa^2+\tau^2}}$，自能等价形式：
+
+$$\mathcal{E}=\hbar c\sqrt{\kappa^2+\tau^2}$$
+
+## 五、几何质量关系（TUFT核心质能映射）
+
+由 $\mathcal{E}=mc^2$，几何质量：
+
+$$m = \frac{\hbar}{c}\sqrt{\kappa^2+\tau^2}$$
+
+✅量纲核验：
+$[\hbar/c]=\mathrm{kg}\cdot \mathrm{m}$，$\sqrt{\kappa^2+\tau^2}$量纲$\mathrm{m}^{-1}$，整体量纲$\mathrm{kg}$。
+
+## 六、场守恒律
+
+几何场流守恒
+
+$$\partial_\mu J^\mu=0,\quad J^\mu = \kappa \partial^\mu \tau-\tau \partial^\mu \kappa$$
+
+$J^\mu$：几何拓扑流，对应螺旋扭转-弯曲耦合的守恒荷。
+
+## 七、耦合势能密度（自洽修正形式）
+
+$$\mathcal{U}(\kappa,\tau) = \lambda_1 \kappa^4 + \lambda_2 \tau^4 + \lambda_3 \kappa^2\tau^2$$
+
+$\lambda_1,\lambda_2,\lambda_3$：无量纲几何耦合常数，由第一性原理数值拟合/重整化群流确定。
+
+## 八、重整化群β函数框架
+
+$$\beta_{\lambda_i} = \mu\frac{d\lambda_i}{d\mu}$$
+
+$\mu$：重整化标度；$\beta_{\lambda_i}$描述耦合常数随能标跑动，用于嵌入SU(3)×SU(2)×U(1)规范群。
+
+---
+
+# 下一步：Python mpmath 250位高精度数值核验代码（TUFT核心公式）
+
+```python
+import mpmath as mp
+mp.mp.dps = 250 # 设置250位有效数字精算
+# 基础常数
+hbar = mp.mpf('1.0545718176461565e-34')
+c = mp.mpf('299792458')
+
+def E_spiral(kappa, tau):
+    return hbar * c * mp.sqrt(kappa**2 + tau**2)
+
+def mass_spiral(kappa, tau):
+    return (hbar / c) * mp.sqrt(kappa**2 + tau**2)
+
+# 示例测试参数
+kappa_test = mp.mpf('1e10')
+tau_test = mp.mpf('2e10')
+theta = mp.atan(kappa_test / tau_test)
+omega = c * kappa_test / mp.sin(theta)
+
+print("倾角 theta =", theta)
+print("角频率 omega =", omega)
+print("螺旋自能 E =", E_spiral(kappa_test,tau_test))
+print("几何质量 m =", mass_spiral(kappa_test,tau_test))
+```
+
+是否继续：
+
+1. 球对称静态解解析推导
+2. 重整化群β函数完整推导
+3. 四大力几何耦合映射
+4. 生成PRD格式LaTeX全文骨架
+5. FDTD波动求解器仿真代码
+6. ADM-BSSN演化模块
+
+你选择序号。
