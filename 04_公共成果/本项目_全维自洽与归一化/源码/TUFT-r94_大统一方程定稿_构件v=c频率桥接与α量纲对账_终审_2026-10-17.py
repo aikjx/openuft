@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-r91 · 2026-10-17 · 大统一方程定稿形态：构件、v=c 频率桥接、α 量纲对账与终审门
+r94 · 2026-10-17 · 大统一方程定稿形态：构件、v=c 频率桥接、α 量纲对账与终审门
 ==============================================================================
 背景（用户命题）：把「大统一方程」按全链更正正式写完 —— 曲率 κ、挠率 τ、
 频率/角速度 ω/Ω，v = c。本册把它做成一件可机器复算的定稿件：
@@ -43,7 +43,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(HERE)
 DATA = os.path.join(BASE, '数据')
 
-STEM = 'TUFT-r91_大统一方程定稿_构件v=c频率桥接与α量纲对账_终审_2026-10-17'
+STEM = 'TUFT-r94_大统一方程定稿_构件v=c频率桥接与α量纲对账_终审_2026-10-17'
 
 # ----------------------------------------------------------------------------
 # 结果容器
@@ -105,6 +105,7 @@ D_R2 = dp(L, -4)                                  # [R_abR^ab] = L^-4
 D_EDENS = dm(E, dm(dp(L, -1), dp(T, -2)))        # 能量密度 = M L^-1 T^-2
 D_ENERGY = dm(E, dm(dp(L, 2), dp(T, -2)))        # 能量 = M L^2 T^-2
 D_FORCE = dm(E, dm(L, dp(T, -2)))                 # 力 = M L T^-2
+D_ALPHA = dm(D_FORCE, dinv(dp(L, -3)))            # [α] = M L^4 T^-2（F = −α∇(κ²−τ²) 反解）
 D_LAMBDA = D_HBARC                                # [λ] = M L^3 T^-2（承 r77 B1）
 D_C1 = L                                          # [C₁] = L（承 r78 I03）
 
@@ -511,7 +512,7 @@ def build_payload():
             '②[α] 不能由 {ħ,c,G} 整数幂构造（穷举 0 命中，阳性对照 [力] 有解）⇒ α 为新独立量纲常数。'
             'v=c 桥接 Ω=cω 给出三类环境跨 21 个量级的时空频率；标度律 a√ρ=c/√(8πG) 机器成立。')
     return {
-        'round': 'r91',
+        'round': 'r94',
         'date': '2026-10-17',
         'source': '大统一方程定稿（承 r79 A2 力律 / r80/r85 拉氏量 / r76 route a / r90 适定性）',
         'generated_at': datetime.now(timezone.utc).isoformat(),
@@ -548,7 +549,7 @@ def write_outputs(payload):
     with io.open(jp, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    rl = ['TUFT-r91 大统一方程定稿（构件 / v=c 桥接 / α 对账 / 终审门）运行报告',
+    rl = ['TUFT-r94 大统一方程定稿（构件 / v=c 桥接 / α 对账 / 终审门）运行报告',
           'counts=' + str(payload['counts']) + ' total=' + str(payload['total']) + ' verdict=' + verdict,
           'meta=' + payload['meta_verdict']]
     for e in ENTRIES:
@@ -586,11 +587,11 @@ def write_outputs(payload):
 
 def write_judgment(payload):
     rows = read_ricci_rows()
-    D_ALPHA = dm(D_FORCE, dinv(dp(L, -3)))
+    # D_ALPHA 取模块级定义（函数内局部列表 L 会遮蔽全局量纲元组 L，故不在此重算）
     _, hits_alpha = enum_dims({'ħ': D_HBAR, 'c': D_C, 'G': D_G}, D_ALPHA)
     _, hits_force = enum_dims({'ħ': D_HBAR, 'c': D_C, 'G': D_G}, D_FORCE)
-    L = ['# 判定_TUFT-r91-大统一方程定稿_构件v=c频率桥接与α量纲对账_终审_2026-10-17', '',
-         '日期：2026-10-17 · **大统一方程定稿册**（应用户命题：曲率/挠率/频率/角速度，v=c）· **下轮从 r92 起**', '',
+    L = ['# 判定_TUFT-r94-大统一方程定稿_构件v=c频率桥接与α量纲对账_终审_2026-10-17', '',
+         '日期：2026-10-17 · **大统一方程定稿册**（应用户命题：曲率/挠率/频率/角速度，v=c）· **下轮从 r95 起**', '',
          '## 〇、一句话结论',
          '**大统一方程可以写完，本册已把它写成七式三层的可机器复算定稿件；但定稿不等于完成** —— '
          '终审门 **1/6**（仅数学自洽），并新发现两张欠条：`U` 是**总能量**（进拉氏量须再买体积标度）、'
@@ -653,10 +654,10 @@ def write_judgment(payload):
           'r83 (a)/(b) · 屏蔽选型与 λ 符号 ⇒ **全部待裁决，本册不代选**。',
           '- 任何一条被裁决后，本定稿件可在 1 秒内重算并给出新的终审门读数。',
           '- 治理：未改动任何他人文件字节（r76/r79/r82 全部只读机读）；未跑 `refresh_catalog`；未做 git 操作。'
-          '**下轮从 r92 起**。', '',
+          '**下轮从 r95 起**。', '',
           '## 八、红线', payload['red_line'], '',
           'GENERATED_AT=' + payload['generated_at'], 'MODULE=' + payload['module']]
-    jb = os.path.join(BASE, '判定_TUFT-r91-大统一方程定稿_构件v=c频率桥接与α量纲对账_终审_2026-10-17.md')
+    jb = os.path.join(BASE, '判定_TUFT-r94-大统一方程定稿_构件v=c频率桥接与α量纲对账_终审_2026-10-17.md')
     with io.open(jb, 'w', encoding='utf-8') as f:
         f.write('\n'.join(L))
     return jb

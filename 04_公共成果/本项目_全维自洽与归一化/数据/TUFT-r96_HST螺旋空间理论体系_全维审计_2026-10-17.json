@@ -1,0 +1,401 @@
+{
+  "round": "r96",
+  "title": "HST 螺旋空间理论体系（全 20 层）全维审计与精算",
+  "date": "2026-10-17",
+  "source": "数据/TUFT-HST螺旋空间理论体系_来料全文_2026-10-17.md",
+  "rows": [
+    {
+      "code": "H01",
+      "tag": "PASS",
+      "title": "A01 螺旋度规逐分量",
+      "claim": "ds^2 = -c^2dt^2 + d rho^2 + rho^2 dchi^2 + 2 beta rho^2 dchi dzeta + (1+beta^2 rho^2) dzeta^2",
+      "reading": "构造与来料 (1.1) 逐分量符合：最大相对偏差 0.0000000000000000000000000E+00",
+      "note": "度规由 phi=chi+beta*zeta 代入 Minkowski 柱坐标得到；本册按来料约定 x^0=t 故 g_tt=-c^2"
+    },
+    {
+      "code": "H02",
+      "tag": "PASS",
+      "title": "A02 行列式 det(g) = -c^2 rho^2 且与 beta 无关",
+      "claim": "定理 1.1：det(g) = -c^2 rho^2，体积元不受螺旋扭转影响",
+      "reading": "与闭式相对偏差 0.0000000000000000000000000E+25；beta=0.3 与 beta=2.7 两取值行列式相对偏差 0.0000000000000000000000000E+25",
+      "note": "机器确认；但该式只是 shear 变换保体积，不能作为物理判据（与 r53 B02 同型）"
+    },
+    {
+      "code": "H03",
+      "tag": "PASS",
+      "title": "A03 逆度规闭式",
+      "claim": "g^{chichi}=(1+beta^2 rho^2)/rho^2, g^{chizeta}=-beta, g^{zetazeta}=1",
+      "reading": "与 4x4 数值求逆逐分量最大相对偏差 0.0000000000000000000000000E+25",
+      "note": ""
+    },
+    {
+      "code": "H04",
+      "tag": "FAIL",
+      "title": "A04 螺旋度规 Riemann 曲率（承重）",
+      "claim": "定理 1.2：R_{mu nu} = 0（平直时空的坐标重参数化）",
+      "reading": "max|R^a_bcd| = 3.5012779664577570813346883E-25（数值零）；Ricci 标量 R = 3.5012779664577570813346883E-25；**阳性对照** 2D 球面 R_scalar = 5.0000000000000000000000078E-1 vs 期望 2/a^2 = 5.0000000000000000000000000E-1（相对偏差 1.5696158057763280368313330E-24）⇒ 计算器确实能算出非零曲率",
+      "note": "来料**已自陈**该点（定理 1.2）⇒ 本册不把它当\"新发现\"，而是作为后续 1-20 层预言的上游判据"
+    },
+    {
+      "code": "H05",
+      "tag": "PASS",
+      "title": "A05 Christoffel 非零分量",
+      "claim": "定理 1.3：Christoffel 符号仅 5 个独立非零分量",
+      "reading": "数值扫描（阈值 1E-15）非零 (a,b,c) 组合数 = 5；示例 G^1_22=1.300000E+0, G^1_23=3.900000E-1, G^1_33=1.170000E-1, G^2_12=7.692308E-1, G^2_13=2.307692E-1",
+      "note": "计数依赖\"独立\"的口径（是否把 (b,c) 对称与 beta 幂次归并分别计）；本册按上三角 (b<=c) 计"
+    },
+    {
+      "code": "H06",
+      "tag": "PASS",
+      "title": "A06 坐标变换 Jacobian",
+      "claim": "det(d(r,phi,z)/d(rho,chi,zeta)) = 1（保体积/保定向）",
+      "reading": "det J = 1.0000000000000000000000000E+0",
+      "note": "Jacobian 恒为 1 与 det(g) 与 beta 无关同源；但 chi 非单值 ⇒ 变换只能局部使用（与 r53 B05 同型）"
+    },
+    {
+      "code": "H07",
+      "tag": "FAIL",
+      "title": "A07 【承重】自陈平直与后续 20 层预言的张力",
+      "claim": "定理 1.2 自陈\"平直时空的坐标重参数化\"，但第三/四/十一/十七/十九层据此给出手征分裂、有效质量、零能模、暗能量、Hall 电导等物理预言",
+      "reading": "坐标重参数化不改变任何可观测量（微分同胚不变性）⇒ 除非额外声明**拓扑识别**（把 zeta 或 chi 周期化并做扭曲粘合），否则 beta 的一切效应可被坐标变换消去",
+      "note": "本册定位：这是 HST 全部预言的**单一点故障**；来料全文未出现任何\"识别/粘合/周期边界\"声明（见 G02）"
+    },
+    {
+      "code": "H08",
+      "tag": "PASS",
+      "title": "B01 第 18 层 FDTD 波动方程",
+      "claim": "d^2_t Phi = c^2[(1/rho) d_rho(rho d_rho Phi) + ((1+beta^2 rho^2)/rho^2) d^2_chi Phi - 2 beta d^2_{chi zeta} Phi + d^2_zeta Phi]",
+      "reading": "由 Box 算符独立展开逐项一致：sqrt(-g)=c rho 与 beta 无关，g^{chichi}=(1+beta^2 rho^2)/rho^2、2g^{chizeta}=-2 beta、g^{zetazeta}=1、g^{tt}=-1/c^2 ⇒ 移项后与来料 (18.1) 逐项相同",
+      "note": "这是来料中推导正确的一段，本册如实判 PASS"
+    },
+    {
+      "code": "H09",
+      "tag": "PASS",
+      "title": "B02 分离变量与径向 Bessel 方程",
+      "claim": "径向方程 (1/rho)(rho f') + [Q^2 - m^2/rho^2] f = 0，Q^2 = omega^2/c^2 - (k - beta m)^2",
+      "reading": "代回闭合：Q^2 与 K^2 相对偏差 2.7700831024930747922437673E-60（beta=0.3, m=3, k=2.7, K=1.9）",
+      "note": "来料 (3.2)(3.3) 自洽；径向解为 J_m(K rho)"
+    },
+    {
+      "code": "H10",
+      "tag": "FAIL",
+      "title": "B03 【承重】谱等价定理：beta 不可观测",
+      "claim": "第三/四层把 omega = c|k - beta m| 当作新色散、频率平移、新物理",
+      "reading": "因 e^{i(m chi + k zeta)} = e^{i(m phi + (k - beta m) z)}，实验室轴向波数 k_z = k - beta m，两坐标系谱**逐位相同**（36 组参数最大相对偏差 0.0000000000000000000000000E+25）⇒ 模式标签 (m,k,K) 只是 (m,k_z,K) 的重命名，谱完全相同 ⇒ 无识别时 beta 不进入任何可观测量",
+      "note": "与 A07 同源、与 r53 B04 同一根因；本册把它提升为可执行判据：**谱等价判据**"
+    },
+    {
+      "code": "H11",
+      "tag": "FAIL",
+      "title": "B04 【承重】有效质量：无能隙 ⇒ 严格无质量",
+      "claim": "定理 4.2：m_eff^2 c^4 = -2 hbar c^2 beta m p_z + hbar^2 c^2 beta^2 m^2（光子获得有效质量）",
+      "reading": "谱下确界 min_k omega = 0.0000000000000000000000000E+25（在 k = beta m, K = 0 处）⇒ 能隙 gap = 0 ⇒ m_phys = hbar*gap/c^2 = 0.0000000000000000000000000E-18 kg。**对照**：真正有质量粒子能隙 = m c^2/hbar = 7.7634407110501095135882002E+20 s^-1 > 0",
+      "note": "硬判据：**质量 = 能隙**，动量平移不产生能隙。omega = c|k - beta m| 是无质量谱沿 k 轴的平移，其\"m_eff\"是 k 的函数而非常数，属记账重命名"
+    },
+    {
+      "code": "H12",
+      "tag": "FAIL",
+      "title": "B05 m_eff^2 在整个物理波数区为负（快子型）",
+      "claim": "m_eff^2 = (hbar^2/c^2)(beta^2 m^2 - 2 beta m k)",
+      "reading": "变号点 k_* = beta m / 2 = 3.00000000E-29 m^-1；k > k_* 时 m_eff^2 < 0：k=1.00E+3 m^-1 ⇒ m_eff^2=-1.48488275E-110 kg^2; k=1.00E+7 m^-1 ⇒ m_eff^2=-1.48488275E-106 kg^2; k=1.00E+12 m^-1 ⇒ m_eff^2=-1.48488275E-101 kg^2",
+      "note": "负的质量平方意味着快子而非质量；可见光 k~1E7 m^-1 远超 k_*，故\"有效质量\"在该区无实数解"
+    },
+    {
+      "code": "H13",
+      "tag": "CORRECTED",
+      "title": "B06 定理 4.1「Delta omega = 2c beta 与波数无关」需加限定",
+      "claim": "定理 4.1：高频极限下 Delta omega = -2 c beta，与波数无关（普适常数）",
+      "reading": "令 u = k - beta m，机器给出精确分段：Delta omega/c = |u - beta| - |u + beta| ⇒ |u| >= beta 时恒为 -2 beta·sgn(u)（**平台区，与 k 无关**）；|u| < beta 时为 -2u（**过渡带，在 k = beta m 处过零**）。机器扫描：k=0.000E+3 ⇒ 3.59750950E-20; k=6.000E-29 ⇒ 3.59750950E-20; k=1.200E-28 ⇒ 3.59750950E-20; k=2.400E-28 ⇒ 0.00000000E-21; k=4.800E-28 ⇒ -3.59750950E-20; k=2.400E-25 ⇒ -3.59750950E-20; k=1.000E+7 ⇒ -3.59750950E-20 ⇒ 高频平台值确为 -2c beta（相对偏差 0.0000000000000000000000000E+25），但\"与波数无关\"在数学上不严格：存在宽度 2 beta = 1.2000E-28 m^-1 的例外带",
+      "note": "自我修正（本册自抓）：首版据此判 FAIL 过强。该例外带宽度 2beta 占可见光波数（1E7 m^-1）的 1.2000E-35 倍 ⇒ **物理上不可达**，定理 4.1 的实质结论（平台值 2c beta）成立，仅需把\"普适\"改为\"|k - beta m| >> beta 下普适\"。绝对值上界 2c beta = 3.59750950E-20 Hz（见 E02）"
+    },
+    {
+      "code": "H14",
+      "tag": "INFO",
+      "title": "B07 群速度模长恒为 c（\"减慢\"是轴向投影）",
+      "claim": "预言：携带大轨道角动量的光束轴向群速度可被减慢甚至反向",
+      "reading": "v_z = 2.895523982163E+8，但 |grad omega| = 2.997924580000E+8（与 c 相对偏差 3.3356409519815204957557671E-60）⇒ 轴向分量可任意（含反向），总群速度模长恒为 c",
+      "note": "不违反相对论；\"减慢\"是 K 分量分流的投影效应，非新物理"
+    },
+    {
+      "code": "H15",
+      "tag": "FAIL",
+      "title": "B08 零能模（k = beta m, K = 0）不存在非平凡正则解",
+      "claim": "第十一/十七层：零能模式具有非零静态能量密度与\"非平凡场分布\"，并被\"螺旋结构捕获\"",
+      "reading": "K=0 时径向方程退化为欧拉方程 f = A rho^{|m|} + B rho^{-|m|}：m>0 时两支分别在 rho→inf 与 rho→0 发散，**全域无正则解**；m=0 时 f = A + B ln rho，正则解只剩常数（均匀静场）。等价表述：J_m(K rho) 在 K→0 时对 m>0 恒为 0 ⇒ Dirichlet 边界下零能模场恒为零",
+      "note": "第十一层整层（拓扑荷 / 物理解释 / 量子化）与第十七层暗能量估算均建立在零能模之上 ⇒ 连带失效"
+    },
+    {
+      "code": "H16",
+      "tag": "PASS",
+      "title": "C01 电磁作用量系数",
+      "claim": "S_EM = -(1/(4 mu_0)) int F_{mu nu}F^{mu nu} sqrt(-g) d^4x",
+      "reading": "与 SI 标准拉氏密度 eps0 E^2/2 - B^2/(2 mu_0) 相对偏差 1.8346519061152875268768195E-30（取 E=3.7, B=1.9 代入 F^2 = 2(B^2 - E^2/c^2)）",
+      "note": ""
+    },
+    {
+      "code": "H17",
+      "tag": "PASS",
+      "title": "C02 beta 场作用量符号（第 16.2 式）",
+      "claim": "S_beta = int [-1/2 f(beta) (d beta)^2 - V(beta)] sqrt(-g) d^4x",
+      "reading": "在来料签名 (-,+,+,+) 下 (d beta)^2 = -betadot^2/c^2 + |grad beta|^2 ⇒ -1/2 (d beta)^2 = +betadot^2/(2c^2) - |grad beta|^2/2 ⇒ **动能项符号正确**",
+      "note": "本册首版曾疑其符号反了（误按 (+,+,+,+) 签名判断），机器核后为 PASS —— 记录以防回潮"
+    },
+    {
+      "code": "H18",
+      "tag": "CORRECTED",
+      "title": "C03 第 17.4 式 m_beta^2 的单位标注错误",
+      "claim": "m_beta^2 ~ 1.2 x 10^49 J/(m·kg)",
+      "reading": "机器量纲：[m_beta^2] = [V(beta)]/[beta^2] = M^1 L^1 T^-2（即牛顿 N = kg·m·s^-2）；来料标注 J/(m·kg) 的量纲为 L^1 T^-2，**缺一个长度幂次** ⇒ 标注错",
+      "note": "数值 1.2E49 本身复算正确（见 D02）；仅单位标注需更正。另 [f(beta)] = M^1 L^3 T^-2"
+    },
+    {
+      "code": "H19",
+      "tag": "BOUNDARY",
+      "title": "C04 第五层 Dirac 与自旋联络：R=0 ⇒ 纯规范",
+      "claim": "第五层：Tetrad + 自旋联络 + Dirac 方程，第 4.3 给出自旋-螺旋耦合 Delta E = 2 hbar c beta",
+      "reading": "Riemann 全零（A04）⇒ 曲率 2-形式 R^{ab} = 0 ⇒ 自旋联络为纯规范（可经局域 Lorentz 变换消去） ⇒ Dirac 方程与平直空间**局部等价**；非零效应只能来自全局（Wilson 环路 / 边界条件），而来料未声明任何拓扑识别 ⇒ 该耦合属坐标伪影",
+      "note": "判 BOUNDARY 而非 FAIL：一旦补充 S^1 识别（见 G02），该耦合可获 AB 相位型的合法身份"
+    },
+    {
+      "code": "H20",
+      "tag": "CORRECTED",
+      "title": "D01 第 17.2 式算术错误：beta 值错 3.17 倍",
+      "claim": "beta = (2.4 x 10^17)^{1/4} ~ 7 x 10^4 m^-1",
+      "reading": "机器复算：beta^4 = 4 pi rho_Lambda/(hbar c) = 2.3848674749308402715988071E+17 ⇒ beta = 2.2098666236767063309982444E+4 m^-1；来料报价 7E4 m^-1 ⇒ 相对偏差 6.84304768E-1（**beta 错 3.17 倍 = beta^4 错约 100 倍**）",
+      "note": "量级结论不受影响：正确值 2.209867E+4 与 CMB 上限 6.00E-29 仍差 3.6831E+32 倍（来料称 10^33 量级，机器给 3.7E32）"
+    },
+    {
+      "code": "H21",
+      "tag": "PASS",
+      "title": "D02 第 17.4 式 m_beta^2 数值",
+      "claim": "1/2 m_beta^2 beta_0^2 ~ 6 x 10^-10 ⇒ m_beta^2 ~ 1.2 x 10^49（来料单位标注见 C03）",
+      "reading": "机器复算 m_beta^2 = 2 rho_Lambda / beta_0^2 = 1.20000000E+49 [单位 M^1 L^1 T^-2]",
+      "note": ""
+    },
+    {
+      "code": "H22",
+      "tag": "BOUNDARY",
+      "title": "D03 第 17.1→17.2 依赖未声明假设 |delta beta| ~ beta",
+      "claim": "rho_zero ~ hbar c beta^4/(4 pi)",
+      "reading": "由 rho_zero = hbar c |delta beta| m_max^2/(4 pi R_max^2 L_z) 代入 m_max ~ beta R_max、L_z ~ 1/beta 得 rho_zero ~ hbar c |delta beta| beta^3/(4 pi)；只有再取 **|delta beta| ~ beta** 才化为 hbar c beta^4/(4 pi)",
+      "note": "|delta beta| 是独立量（涨落幅度），其取值未由理论给出 ⇒ 该估算含一个未声明外部输入"
+    },
+    {
+      "code": "H23",
+      "tag": "INFO",
+      "title": "D04 来料诚实面：定理 17.1 自认暗能量失败",
+      "claim": "定理 17.1：零能模式和 beta 场势能无法自然解释暗能量的量级，HST 面临与标准 Lambda CDM 相同的宇宙学常数问题",
+      "reading": "机器独立确认该自评成立（D01 复算的 beta 与 CMB 上限差 3.7E32 倍）",
+      "note": "本册如实登记：来料在第 17 层与附录 E.3 均作了诚实否定，未粉饰"
+    },
+    {
+      "code": "H24",
+      "tag": "CORRECTED",
+      "title": "E01 CMB 偏振旋转约束复算通过，但来料螺距的 Gly 换算错约 1000 倍",
+      "claim": "theta_rot = beta L；Planck 约束 theta < 6 x 10^-3 rad，L ~ 10^26 m ⇒ beta < 6 x 10^-29 m^-1；来料同段称螺距 p = 2pi/beta > 10^29 m ~ 10 Gly（可观测宇宙量级）",
+      "reading": "beta L = 6.00000000E-3 与约束值 6.00E-3 相对偏差 0.000000E+6 ⇒ beta 上界复算**通过**；但 p = 2pi/beta = 1.04719755E+29 m = 1.106889E+4 Gly（可观测宇宙直径约 9.3016E+1 Gly ⇒ p 为其 1.1900E+2 倍） ⇒ 来料\"~10 Gly\"**换算错约 1.107E+3 倍**（正确为 1.1069E+4 Gly ≈ 1.1 x 10^4 Gly，不止\"可观测宇宙量级\"而是其直径的 1.190E+2 倍）",
+      "note": "自我修正（本册自抓第 4 处）：首版备注硬编码\"机器给 11 Gly / 0.12 倍\"，与机器读数 1.106889E+4 Gly 相差 1000 倍 ⇒ 备注与读数互斥。机器定案：来料把 10^29 m 误当作 ~10 Gly，实为 ~1.1 x 10^4 Gly。**beta 上界本身（6E-29 m^-1）不受影响**，错的只是同一句里的单位换算"
+    },
+    {
+      "code": "H25",
+      "tag": "FAIL",
+      "title": "E02 手征分裂在上界下的绝对强度远低于任何现有精度",
+      "claim": "定理 4.1：Delta omega = 2 c beta 为普适常数，是 HST 的招牌预言",
+      "reading": "取 CMB 上界 beta = 6.00E-29 ⇒ |Delta omega| = 2 c beta = 3.59750950E-20 Hz；对照光学原子钟（f = 5E14 Hz、相对精度 1E-18 ⇒ 绝对精度 5.0000E-4 Hz）：差 1.3899E+16 倍 ⇒ **不可探测**",
+      "note": "即使取原子钟约束 beta < 1E-8 m^-1（来料 8.2 表），|Delta omega| = 5.9958E+0 Hz，仍比原子钟绝对精度低 8.3391E-5 倍"
+    },
+    {
+      "code": "H26",
+      "tag": "FAIL",
+      "title": "E03 费米子自旋分裂在上界下不可探测",
+      "claim": "Delta E_spin = 2 hbar c beta",
+      "reading": "beta = 6.00E-29 ⇒ Delta E = 3.79383213E-54 J = 2.36792376E-35 eV；对照原子光谱实测精度 ~1E-15 eV ⇒ 差约 4.2231E+19 倍",
+      "note": "与 E02 同型：所有\"普适常数\"型预言的系数都是 c·beta 或 hbar·c·beta，被 6E-29 上限压到不可探测"
+    },
+    {
+      "code": "H27",
+      "tag": "INFO",
+      "title": "E04 第 8.2 约束表：beta 上界跨 21 个量级",
+      "claim": "实验约束汇总表给出四条 beta 上限",
+      "reading": "机器读取四条上界：CMB TB/EB 6.00E-29、脉冲星 timing 1.00E-20、原子钟比较 1.00E-8、飞秒脉冲 OAM 3.00E-11 ⇒ 跨度 1.6667E+20 倍；CMB 最强",
+      "note": "跨度如此之大说明各探针依赖完全不同的假设链，不能交叉印证；本册未独立核实其中任何一条实验文献"
+    },
+    {
+      "code": "H28",
+      "tag": "FAIL",
+      "title": "F01 仿真脚本\"验证 1\"无检验：只是把待证公式打印成表",
+      "claim": "helical_wave_sim.py 的 verify_dispersion_analytical 声称\"解析验证色散关系\"",
+      "reading": "函数体扫描：含 assert/残差判定 = False；出现\"omega = c*abs(k - beta*m)\"直接赋值 = True ⇒ 该\"验证\"用待证公式本身生成数值再 print，**零判别力**",
+      "note": "这是本库反复出现的\"自证式验证\"模式（参 r19 g-2 Δg≡1/c、r43 恒等复读）"
+    },
+    {
+      "code": "H29",
+      "tag": "FAIL",
+      "title": "F02 脚本自身的\"零能模式\"给出 omega = c*K > 0，与理论层 omega = 0 矛盾",
+      "claim": "理论层（第十一/十七层）称零能模式 omega = 0；脚本实现 near-zero mode",
+      "reading": "源码含 \"omega_zero = c * K_zero\"（Dirichlet 边界下 K 由 Bessel 第一零点给出，K > 0）⇒ **脚本自己就否定了 omega = 0**；与本册 B08 独立推出的结论（K=0 时 Dirichlet 下 J_m(0)=0 ⇒ 场恒零，或 K>0 ⇒ omega>0）完全一致",
+      "note": "来料内部自相矛盾：文本层要 omega=0 的非平凡模，代码层给 omega=cK>0。两者不能同时成立"
+    },
+    {
+      "code": "H30",
+      "tag": "INFO",
+      "title": "F03 脚本参数与依赖登记（不运行）",
+      "claim": "helical_wave_sim.py：beta = 0.3（注释自陈\"放大以清晰展示效应\"），依赖 numpy/scipy/matplotlib",
+      "reading": "beta_code/beta_CMB上限 = 5.0000E+27 倍 ⇒ 演示值比实验上界大 27 个量级，**不能作为物理参数采信**；依赖 numpy/scipy/matplotlib = True ⇒ 超出本库纯标准库审计口径，本册只做静态审计不运行",
+      "note": "本库纪律：来料脚本一律保持\"来料原样、未运行\"落盘"
+    },
+    {
+      "code": "H31",
+      "tag": "FAIL",
+      "title": "G01 第十九层 AdS 维数不自洽（标 AdS₄ 实为 AdS₅）",
+      "claim": "第 19.1 节标题为 \"AdS₄-螺旋度规\"，度规写 ds^2 = (L^2/z^2)[-c^2dt^2 + d rho^2 + rho^2 d chi^2 + 2 beta rho^2 d chi d zeta + (1+beta^2 rho^2) d zeta^2 + dz^2]",
+      "reading": "机器读取该度规块并计数独立坐标微分：['chi', 'rho', 't', 'z', 'zeta'] ⇒ 体维数 = 5（含 AdS 径向 z）⇒ 该度规是 **AdS₅**（边界 4 维）而非 AdS₄（边界 3 维）",
+      "note": "维数错配会连带影响 19.2 纠缠熵与 19.4 费米子谱的标度维数；本册只登记不代修"
+    },
+    {
+      "code": "H32",
+      "tag": "FAIL",
+      "title": "G02 【承重】定理 19.1 的 A_z = beta 是纯规范，缺拓扑识别声明",
+      "claim": "定理 19.1：螺旋扭转等价于边界理论中的化学势，A_mu^bg = (0,0,0,beta)",
+      "reading": "常值规范场在单连通边界（R^3 或 R^4）上是**纯规范**（F = 0），可被规范变换消去 ⇒ 不改变任何规范不变量；仅当 zeta 方向被识别为 S^1（holonomy ∮ A_z d zeta = beta L_zeta 不可消去，Aharonov-Bohm 型）时才有物理效应",
+      "note": "**来料全文未出现任何周期识别/粘合声明** ⇒ 该拓扑输入是未声明的外部输入。与 A07/B03 同一根因：HST 的全部物理内容都押在\"是否做 S^1 识别\"这一个未声明的选择上"
+    },
+    {
+      "code": "H33",
+      "tag": "BOUNDARY",
+      "title": "G03 定理 19.3 的反常 Hall 电导与纯规范互斥",
+      "claim": "定理 19.3：sigma_xy ∝ beta，无需外磁场的 Hall 效应",
+      "reading": "Hall 电导是规范不变的可观测量；若 A_z = beta 为纯规范（G02），则 sigma_xy 必为 0 ⇒ 与定理 19.3 矛盾。唯一出路同样是 S^1 识别（此时 β 的 holonomy 给出拓扑输运）",
+      "note": "判 BOUNDARY：结论随 G02 的分支选择翻转，本册不代选"
+    },
+    {
+      "code": "H34",
+      "tag": "FAIL",
+      "title": "G04 PAPER_FRAMEWORK 摘要内部张力：平直与\"新物理\"并列",
+      "claim": "摘要同时声称 \"prove that the Ricci tensor vanishes identically (R_{mu nu}=0)\" 与 \"effective photon mass generation\"、\"zero-energy modes with topological character\"",
+      "reading": "机器扫描：含 R_{mu nu}=0 声明 = True；含 effective photon mass = True；含 topological character = True ⇒ 三条同段并列，但前一条（平直）在逻辑上取消后两条的\"新物理\"身份（除非补拓扑识别，见 G02）",
+      "note": "投稿定位层面：坐标重参数化框架本身不构成新物理；本册不给投稿建议，只登记张力"
+    },
+    {
+      "code": "H35",
+      "tag": "INFO",
+      "title": "H01 与 r53 / r58 / r59 的分工（零重复）",
+      "claim": "本册与既有产物是否重复",
+      "reading": "r53《空间螺旋结构中的光与光子》= 本批\"光篇\"的**同一份来料**（章节 0-10 + 附录 A/B 逐条对应）⇒ 本册不重审；r58/r59 = 圆柱螺旋**曲线**不变量（kappa/tau/omega/Omega），对象是曲线而非时空度规 ⇒ 不同对象；本册主体 = HST 1-20 层的几何自洽 / 波谱等价 / 有效质量 / 零能模 / 宇宙学 / 全息",
+      "note": "r53 的承重裁定 B04（Riemann 全零）与本册 A04 为同一根因的独立复算，互为交叉印证"
+    },
+    {
+      "code": "H36",
+      "tag": "INFO",
+      "title": "H02 符号台账：beta 的三重身份",
+      "claim": "beta 在 HST 全文中出现于多个层",
+      "reading": "① 第一层：螺旋扭转率 beta = 1/H_0（[beta] = L^-1）；② 第十六层：动力学标量场 beta(t)；③ 第十九层：边界规范场 A_z = beta / 化学势。三者量纲一致（L^-1）但**数学身份不同**（几何参数 / 场 / 规范势）",
+      "note": "跨层混引会改变命题性质：作为几何参数时它是常数坐标伪影，作为场时它是新自由度（撞\"自由常数\"约束），作为规范势时需拓扑识别才有意义。引用时必须声明取哪一重身份"
+    },
+    {
+      "code": "H37",
+      "tag": "INFO",
+      "title": "H03 来料诚实面汇总（如实登记，不粉饰也不掠美）",
+      "claim": "来料是否自陈了本册裁定的问题",
+      "reading": "是，共三处：① 定理 1.2 自陈\"平直时空的坐标重参数化\"；② 定理 17.1 自陈无法解释暗能量量级；③ 附录 E.3 自陈\"CMB 约束已排除宇宙学尺度螺旋\"。本册的增量在于：来料虽自陈了①，却仍在 3/4/11/17/19 层把坐标伪影当作可观测预言（A07/B03）",
+      "note": "诚实自陈与后续层仍使用该伪影并存 ⇒ 属\"自陈但未贯彻\"，不是蓄意夸大"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G0-1 量纲乘法为指数相加",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-2 [hbar c] = M L^3 T^-2",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-3 能量密度 = M L^-1 T^-2",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-4 [hbar G / c^3] = L^2",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-5 [beta] = L^-1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-6 矩阵求逆核对",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-7 行列式核对",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-8 sin^2+cos^2=1（自实现级数）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-9 dsin 与 math.sin 一致",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G0-10 eps0 mu0 c^2 = 1（容差 1E-9 按 CODATA 有效位）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G-A04 Riemann 计算器三档对照（球面非零 / 平直零 / 螺旋零）",
+      "ok": true,
+      "detail": "sphere R_scalar=5.0000000000000000000000078E-1 (expect 5.0000000000000000000000000E-1, rel 1.5696158057763280368313330E-24)"
+    },
+    {
+      "name": "G-B03 谱等价双路径（螺旋系 vs 实验室系）",
+      "ok": true,
+      "detail": "max rel = 0.0000000000000000000000000E+25"
+    },
+    {
+      "name": "G-B06 手征分裂三段结构（平台 ±2cβ / 过渡带过零）",
+      "ok": true,
+      "detail": "u=+beta: -3.59750950E-20; u=-beta: 3.59750950E-20; u=0: 0.00000000E-21"
+    },
+    {
+      "name": "G-D01 四次方根机器值 vs 来料报价",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "G-E01 螺距单位换算自洽（p = pitch_gly x Gly，且来料 ~10 Gly 偏离约 1000 倍）",
+      "ok": true,
+      "detail": "p = 1.106889E+4 Gly；来料 ~10 Gly ⇒ 偏差 1.107E+3 倍"
+    }
+  ],
+  "counts": {
+    "PASS": 10,
+    "FAIL": 13,
+    "CORRECTED": 4,
+    "INFO": 7,
+    "BOUNDARY": 3
+  },
+  "guard_total": 15,
+  "guard_pass": 15,
+  "key_numbers": {
+    "beta_CMB_upper_m^-1": "6.0000E-29",
+    "chiral_split_2cbeta_Hz": "3.59750950E-20",
+    "fermion_split_2hbarcbeta_eV": "2.36792376E-35",
+    "pitch_2pi_over_beta_Gly": "1.106889E+4",
+    "dark_energy_beta_true_m^-1": "2.20986662E+4",
+    "dark_energy_beta_claim_m^-1": "7E4",
+    "m_beta2_machine": "1.20000000E+49",
+    "ads_body_dim_from_metric": 5,
+    "helix_riemann_max_abs": "< 1E-20 (数值零)"
+  }
+}
