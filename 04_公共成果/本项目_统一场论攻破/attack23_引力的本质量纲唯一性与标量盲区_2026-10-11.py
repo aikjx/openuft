@@ -51,6 +51,9 @@ D6 = os.path.join(CLS, u"经典作用量", u"D6_爱因斯坦嘉当", u"README.md
 DPLAN = os.path.join(BASE, u"02_共享基础", u"推导与量纲专题", u"延伸方向",
                      u"D_普朗克单位的量纲推导.md")
 QUANJ = os.path.join(DOCS, u"统一理论体系_已验证正确内容整合全集.md")
+# 并发写者的同来料引力册（只读，不覆写、不重编他的号）：判定册＋复算面
+C0128_FACE = os.path.join(HERE, u"attack_引力本质_全维复算_2026-10-11_report.txt")
+C0128_MD = os.path.join(HERE, u"判定_引力本质_全维攻破_2026-10-11.md")
 
 EPS = sys.float_info.epsilon
 ITEMS = []
@@ -111,7 +114,10 @@ def stat_line(p, label):
     if b is None:
         sub(u"载体 %s 读不到 ⇒ 本条弃引" % label)
         return None
-    return u"%s｜盘上 %d B｜md5 %s" % (os.path.basename(p), len(b), hashlib.md5(b).hexdigest())
+    # 标签必须唯一：四枚经典基准都叫 README.md，只印 basename 会让「同一个名字挂着四个 md5」
+    # （类 119：派生标签不唯一 ⇒ 一个数指两个文件）。这里印**相对 BASE 的路径**，天然唯一。
+    rel = os.path.relpath(p, BASE).replace(u"\\", u"/")
+    return u"%s｜盘上 %d B｜md5 %s" % (rel, len(b), hashlib.md5(b).hexdigest())
 
 
 # ------------------------------------------------------------------ 精确线性代数
@@ -339,13 +345,17 @@ def main():
         return Fr(mant), ex, len(mant.split(u".")[1]) if u"." in mant else 0
 
     m_ratio = printed_alpha = None
+    dev02 = thr02 = _bad_dev = None
     if a1:
         printed_alpha = sci_to_fr(a1[a1.index(u"α_grav"):] if u"α_grav" in a1 else a1)
     if a2:
         m_ratio = sci_to_fr(a2[a2.index(u"m_e/m_P"):] if u"m_e/m_P" in a2 else a2)
     sub(u"在册现读（只读盘，不转抄结论）：%s｜%s" % (a1 or u"没读到", a2 or u"没读到"))
-    sub(u"解析口径：两枚数按「尾数＋带符号 10 的幂」整体转成精确分数（上一版只取了指数的**位数**、"
-        u"把 −23 读成 +23 ⇒ 平方后落在 1.75e+47，残差恰为 1 —— 那是把符号丢了，不是复算失败）")
+    sub(u"解析口径：两枚数按「尾数＋带符号 10 的幂」整体转成精确分数。上一版只取了指数的**位数**、把负号丢了，"
+        u"于是平方落在与在册完全不相干的那一侧、残差恰为 1 —— 那是解析器的错，不是复算失败；"
+        u"本面下面把那型错法**现算复演**一遍（读数与残差都由本面印），使这条教训挂在自己载体上，"
+        u"不去引已被本轮覆盖的旧版面")
+
     if m_ratio and printed_alpha is not None:
         base, ex, dec_b = m_ratio
         abase, aex, dec_a = printed_alpha
@@ -357,6 +367,18 @@ def main():
         ulp_ratio = 2 * half_b                                 # 平方把相对误差加倍
         ulp_alpha = Fr(1, 2) * Fr(1, 10) ** dec_a / abase
         thr = float(ulp_ratio + ulp_alpha)
+        dev02, thr02 = dev, thr   # 留给 G13 跨册对照：印的是**本册自己算出的**那对数，不是手抄
+        # 错法现算复演（在本面留载体，不引已被覆盖的旧版面）：只取指数的位数、丢掉符号 ⇒ 10^-23 读成 10^+23
+        _bad_sq = (base * Fr(10) ** abs(ex)) ** 2
+        _bad_dev = float(abs(_bad_sq - printed) / max(_bad_sq, printed))
+        sub(u"错法现算复演：把现读指数的**符号**丢掉（−%d 读成 +%d）再平方 ⇒ %s，与在册 %s 的相对残差 = %s"
+            u"（≈1，即「两枚数完全不相干」的形状）——症状与「在册两处自相矛盾」一模一样，"
+            u"所以本轮先把解析器放到已知成立的格上证它的形状（符号位必须进模式），再拿它判语料"
+            % (abs(ex), abs(ex), fmt(float(_bad_sq)), fmt(float(printed)), fmt(_bad_dev)))
+        chk(u"G02 错法复演落在「残差≈1」那一型（解析器教训有载体）", _bad_dev > 0.9,
+            u"错法残差=%s ＞ 0.9｜正法残差=%s ＜ 阈 %s" % (fmt(_bad_dev), fmt(dev), fmt(thr)))
+        BATTERY.append((u"G02 错法复演", lambda x: x > 0.9, _bad_dev, 0.5))
+
         sub(u"独立复算：(m_e/m_P)² 由现读的比值（尾数 %s、指数 %+d）平方 = %s｜在册印 %s（尾数 %s、指数 %+d）｜"
             u"相对残差 %s｜阈 %s（两枚印刷半 ulp 之和，由那两行自己的小数位数现推：%s 的半 ulp 加倍＝%s，"
             u"%s 的半 ulp＝%s）⇒ %s"
@@ -435,15 +457,29 @@ def main():
         sub(u"w=%-5s（p=wρ）｜T/ρ = %s｜T_μνT^μν/ρ² = %s｜标量可见度 = %s｜主动引力质量密度 (ρ+3p)/ρ = %s"
             % (str(w), tr, tst, vis, 1 + 3 * w))
     zero5 = [r for r in rows5 if r[3] == 0]
-    rad = [r for r in rows5 if r[0] == Fr(1, 3)][0]
+    # 「满」那一格必须取尘埃行（rows5[0]，w=0）的可见度；上一版误取了辐射行的 vis（=0）插进这句，
+    # 于是自己印出的表里 w=0 那行写 1、下一句写 0——同一张面上两处互相矛盾，判据 chk 反倒是对的。
     sub(u"机器裁定：可见度恰为 0 的 w = %s（辐射／光子气体）⇒ **纯标量势介导的力对光不作用**，"
         u"而同一张里 w=0（尘埃）可见度 = %s（满）⇒「苹果落地、光线不弯」在同一理论里是必然，不是漏设"
-        % (u"、".join(str(r[0]) for r in zero5), rad[3]))
+        % (u"、".join(str(r[0]) for r in zero5), rows5[0][3]))
     sub(u"同表的另一半：辐射的主动引力质量密度是能量密度的 2 倍（w=1/3 给 1+3w=2）——"
         u"这枚 2 与 G04 那枚 2 是同一件事的两个记账口（张量场耦合整个 T_μν，标量场只耦合它的迹）")
     chk(u"G05 辐射档精确零且尘埃档满格", len(zero5) == 1 and str(zero5[0][0]) == u"1/3"
         and rows5[0][3] == 1, u"zero=%s dust=%s" % (len(zero5), rows5[0][3]))
     BATTERY.append((u"G05 盲区判据", lambda z, d: z == 1 and d == 1, (len(zero5), int(rows5[0][3])), (0, 1)))
+    # 版面自洽的牙：上一版这句插错了变量（取到辐射行的 vis=0），于是**同一张面**上表里写 1、
+    # 散文写 0；那时 chk 只核 rows5 自己的现算值，永远绿——判据对「数从哪一行抄来」是盲的。
+    # 尺子改为从已印出的两行文本里把数**取回来**逐字比，抓的是版面而不是算式。
+    _row0_line = [l for l in OUT if l.startswith(u"  w=0")][-1]
+    _vis_row0 = _row0_line.split(u"标量可见度 = ")[1].split(u"｜")[0]
+    _sent5 = [l for l in OUT if u"（尘埃）可见度 = " in l][-1]
+    _vis_sent = _sent5.split(u"（尘埃）可见度 = ")[1].split(u"（满）")[0]
+    chk(u"G05 散文句与表行逐字同值（版面自相矛盾有牙）",
+        _vis_row0 == _vis_sent == str(rows5[0][3]),
+        u"表行=%s｜散文=%s｜现算=%s" % (_vis_row0, _vis_sent, str(rows5[0][3])))
+    BATTERY.append((u"G05 版面自洽", lambda a, b, c: a == b == c,
+                    (_vis_row0, _vis_sent, str(rows5[0][3])),
+                    (_vis_row0, u"0", str(rows5[0][3]))))
 
     # ============================== G06 Bertrand 等时性枚举（P3）
     item(u"G06", u"THEOREM", u"P3 Bertrand 枚举：幂律力 F∝r^n 的近心点角 Ψ=2π/√(n+3)（小振幅实测），"
@@ -492,13 +528,42 @@ def main():
         u"⇒ Bertrand 的两枚例外被**实测复现**，不是引用；阈 1e-6 的来源：RK4 在 dphi=2e-4 下的截断 ~ (dphi)^4 量级"
         % (u"、".join(str(x) for x in closed), len(grid)))
     # —— 绝对通道（这一格是本轮新立的牙）：只判「漂移」的尺对**共模错读**是盲的。
-    #    上一版 Ψ 实测把每个真峰连记两格（间距表里插进一个 dphi 宽的假间距），漂移却仍为机器零，
-    #    于是 Kepler 那行印成 2.513 而解析值 6.283 —— 全绿的面撒了谎。现补两路：间距散布＋A→0 外推对解析。
     ok_spread = all(r[5] is not None and r[5] < dphi6 / (2.0 * r[1]) for r in rows6 if r[1])
     ok_abs = all(r[6] is not None and r[6] < r[7] for r in rows6 if r[1])
+
+    def dup_psi(f, u0):
+        """把「每个真峰之后插一枚 dphi 宽的假间距」这一型注错打到积分结果上（即上一版的错法形状），
+        返回被污染后的平均间距——本面用它现算复演，好让那句教训有自己的载体，不去引已被覆盖的旧版面。"""
+        pk = rk2psi(f, u0, dphi=dphi6, nmax=3)
+        dd = [x for p in pk for x in (p, p + dphi6)]
+        sp = [b - a for a, b in zip(dd, dd[1:])]
+        return sum(sp) / len(sp), max(abs(x - sum(sp) / len(sp)) / (sum(sp) / len(sp)) for x in sp)
+
+    _f2 = (lambda nn: (lambda u: u ** float(-nn - 2) - u))(Fr(-2))
+    _badS, _badS_spread = dup_psi(_f2, 1.0 + A1)
+    _badB, _badB_spread = dup_psi(_f2, float(u_big))
+    _bad_drift = abs(_badS - _badB) / abs(_badS)
+    _bad_rel = abs(_badS - rows6[0][3]) / rows6[0][3]
     sub(u"绝对通道（新立）：三枚小振幅按 A² 律做 Richardson 外推取 A→0，得 Ψ₀，与闭式 2π/√(n+3) 逐格对表；"
         u"阈由**同一台积分器自己的两次外推之差**＋间距散布＋浮点累加底（sqrt(步数)·ε·Ψ）现推，不手数。"
         u"这条能抓住「间距整体被记错」那一型，漂移那条抓不住（漂移只比两次读数之比）。")
+    sub(u"共模错法在本面现算复演（n=−2 那格）：注错后 Ψ 读数 = %s（解析值 %s ⇒ 整列被记到一半，相对偏差 %s），"
+        u"而同一格的**振幅漂移**仍读 %s（正确读数 %s）——漂移这条尺对它完全看不见；"
+        u"绝对通道同一格读 %s ≥ 自定价阈 %s ⇒ 当场红。教训：上一版全绿的面就是在这一型上撒的谎，"
+        u"而它自己无从知道（比率尺无牙）"
+        % (fmt(_badS), fmt(rows6[0][3]), fmt(_bad_rel), fmt(_bad_drift), fmt(rows6[0][4]),
+           fmt(_bad_rel), fmt(rows6[0][7])))
+    chk(u"G06 变异体：共模注错被绝对通道抓住、被漂移尺放过（新牙确有牙）",
+        _bad_drift < 1e-6 and _bad_rel > rows6[0][7] and worst_spread < dphi6 / (2.0 * rows6[0][1]),
+        u"注错后漂移=%s（<1e-6＝放过）｜绝对通道偏差=%s（>自定价阈 %s＝抓住）"
+        % (fmt(_bad_drift), fmt(_bad_rel), fmt(rows6[0][7])))
+    # 注错格不许只把漂移乘 100：机器零乘以任何有限倍仍是机器零，那格判据第一臂照绿＝无牙夹具。
+    # 有牙的注错形状是「两尺同盲」——把绝对通道的读数换成漂移尺那个，b>t 立刻塌。
+    BATTERY.append((u"G06 新牙有牙", lambda a, b, t: a < 1e-6 and b > t,
+                    (_bad_drift, _bad_rel, rows6[0][7]),
+                    (_bad_drift, _bad_drift, rows6[0][7])))
+
+
     chk(u"G06 间距散布小于半个 dphi（无伪峰/漏峰）", ok_spread,
         u"worst=%s 阈（最小一格）=%s" % (fmt(worst_spread), fmt(dphi6 / (2.0 * max(r[1] for r in rows6 if r[1])))))
     chk(u"G06 外推 Ψ₀ 逐格对上闭式 2π/√(n+3)", ok_abs,
@@ -590,7 +655,8 @@ def main():
                     (bool(e0g), bool(e1g), False)))
 
     # ============================== G09 挠率的代数性（P4，含预注册自否）
-    item(u"G09", u"THEOREM", u"P4 挠率记账：最小 EC 的挠率方程无导数项 ⇒ τ 是代数辅助场，积掉只留接触型自旋-自旋（零程）；"
+    item(u"G09", u"THEOREM", u"P4 挠率记账：最小 EC 的挠率方程无导数项 ⇒ τ 是代数辅助场，积掉只留接触型自旋-自旋"
+                             u"（力程实测正比于宽度 σ，σ→0 即零程）；"
                              u"但「要让 τ 传播就得配一枚出环的正幂耦合」这句预注册被本表否证——那一档的系数是 L^0，在环内")
     book = [(u"R（EH 项）", Fr(-2)), (u"T²（挠率平方）", Fr(-2)), (u"R²", Fr(-4)),
             (u"(∇T)²（挠率动能）", Fr(-4)), (u"T⁴", Fr(-4)), (u"R^3", Fr(-6))]
@@ -664,24 +730,99 @@ def main():
                 hir = mid
         return 0.5 * (lo + hir)
     r_c = range_at(lambda x: fcontact(x, sgm))
-    r_c2 = range_at(lambda x: fcontact(x, 2.0 * sgm))     # σ 加倍 ⇒ 力程该按同一因子缩放
+    r_c2 = range_at(lambda x: fcontact(x, 2.0 * sgm))     # σ 加倍那格：力程应按**同一个方程**缩放
     r_p = range_at(lambda x: fpow(x, sgm))
-    rc_closed = math.sqrt(2.0 * math.log(1.0 / thr_range))   # 高斯尾的闭式解（第二通道，非拟合）
-    rc_floor = 8.0 * EPS * rc_closed
-    sub(u"力程实测（同一判据「降到 σ 处的 %s」，两型共用一个二分器）：接触型在 r = %s σ 处达标，"
-        u"幂律 r^-2 要到 r = %s σ ⇒ 比值 %s 倍 ⇒ 最小 EC 积掉挠率买到的是**零程**接触力，不是长程引力；"
-        u"族的 τ 支若要承担长程力，就得与 D6 那读法分手"
+    sub(u"力程实测（同一判据「降到 r=1 格读数的 %s」，两型力共用一个二分器、同一个阈）：接触型在 r = %s·σ 处达标，"
+        u"幂律 r^-2 要到 r = %s·σ ⇒ 比值 %s 倍 ⇒ 最小 EC 积掉挠率买到的是**程由宽度 σ 设定的接触力**（σ→0 即零程），"
+        u"不是长程引力；族的 τ 支若要承担长程力，就得与 D6 那读法分手"
         % (fmt(thr_range), fmt(r_c), fmt(r_p), fmt(r_p / r_c)))
-    sub(u"第二通道（闭式，不来自二分）：高斯尾 exp(−r²/2σ²) 降到阈处的半径 = σ·√(2 ln(1/阈)) = %s；"
-        u"σ 加倍那格实测力程 %s（闭式预言 %s）⇒ 力程由 σ **线性**设定，除此之外没有第二个尺度——"
-        u"「零程」说的就是这件事：它的程不是由耦合常数调出来的，是由接触本身的宽度给的"
-        % (fmt(rc_closed), fmt(r_c2), fmt(2.0 * rc_closed)))
-    chk(u"G09 动能档在环内且接触档零程", sig[3] and abs(r_c - rc_closed) < rc_floor
-        and abs(r_c2 - 2.0 * rc_closed) < 2.0 * rc_floor,
-        u"kin_in_ring=%s r_contact=%s（闭式 %s，底 %s）r(2σ)=%s" % (sig[3], fmt(r_c), fmt(rc_closed),
-                                                                    fmt(rc_floor), fmt(r_c2)))
-    BATTERY.append((u"G09 预注册双面", lambda a, b: a and b, (sig[3], abs(r_c - rc_closed) < rc_floor),
-                    (False, abs(r_c - rc_closed) < rc_floor)))
+    # 第二通道：把二分器实际监控的那个量**解析写成方程**再独立求根（Newton）。
+    # 上一版在这里套「高斯尾闭式」σ·√(2 ln 1/阈)=%s，与二分的 %s 差 7.2%%——那不是求根误差，是两条路监控的
+    # **不是同一个函数**（闭式丢了 |F| 里那枚 r 前置因子，也没归一到 r=1 格）。本轮就地改方程，不放宽阈。
+    L9 = math.log(1.0 / thr_range)
+
+    def H9(r, s):
+        # 判据 |F(r)|/|F(1)| = 阈 取对数后**移项到左端**：ln r − (r²−1)/2σ² − ln(阈) = 0
+        # （上一版在此写成 +ln(阈)，于是 Newton 在 r>1 的单调段上找不到零点、被下限钳位一路推向 r≈1，
+        #  回代那一步立刻把它抓出来了：这就是「对数方程与原始功能式必须是同一个函数」这条通道的用途）
+        return math.log(r) - (r * r - 1.0) / (2.0 * s * s) - math.log(thr_range)
+
+    def newton9(s, iters=80):
+        r = math.sqrt(1.0 + 2.0 * s * s * L9)
+        used = 0
+        for used in range(1, iters + 1):
+            rn = r - H9(r, s) / (1.0 / r - r / (s * s))
+            if rn <= 1.0:
+                rn = 0.5 * (1.0 + r)
+            if abs(rn - r) <= 8.0 * EPS * r:
+                return rn, used, H9(rn, s)
+            r = rn
+        return r, used, H9(r, s)
+
+    r_n, it_n, res_n = newton9(1.0)
+    r_n2, it_n2, res_n2 = newton9(2.0)
+    dn = relerr(r_c, r_n)
+    dn2 = relerr(r_c2, r_n2)
+    floor9 = 4096.0 * EPS
+    sub(u"方程现推：|F(r)| ∝ r·exp(−r²/2σ²)/σ²，判据 |F(r)|/|F(1)| = 阈 ⇒ 取对数移项 H(r;σ) = ln r − (r²−1)/2σ² − ln(阈) = 0"
+        u"（H 由功能式**自己取对数**写出，不来自二分器）。Newton 独立求根：σ=1 那格 %d 步收敛到 r=%s（收敛点残差 |H|=%s）；"
+        u"σ=2 那格 %d 步到 r=%s（残差 |H|=%s）"
+        % (it_n, fmt(r_n), fmt(abs(res_n)), it_n2, fmt(r_n2), fmt(abs(res_n2))))
+    sub(u"双通道吻合（同一方程、两种算法：二分 vs Newton）：σ=1 相对分歧 %s｜σ=2 相对分歧 %s｜底 %s（=4096·eps，"
+        u"两条路各自只能把根定到 r·eps 量级：二分 200 次早已触底，Newton 停在 8·eps）"
+        % (fmt(dn), fmt(dn2), fmt(floor9)))
+    back1 = fcontact(r_n, 1.0) / fcontact(1.0, 1.0)
+    back2 = fcontact(r_n2, 2.0) / fcontact(1.0, 2.0)
+    e_back1 = abs(back1 / thr_range - 1.0)
+    e_back2 = abs(back2 / thr_range - 1.0)
+    sub(u"回代原始功能式（Newton 的根**不是**从这条路来的）：σ=1 那格 |F(r_n)|/|F(1)|=%s、σ=2 那格 %s，"
+        u"与阈 %s 的相对偏差 %s／%s ⇒ H 与 fcontact 是同一个函数（若只对数抄对了函数抄错了，这一步立刻红）"
+        % (fmt(back1), fmt(back2), fmt(thr_range), fmt(e_back1), fmt(e_back2)))
+
+    def asymp9(s):
+        lead = math.sqrt(1.0 + 2.0 * s * s * L9)          # 丢掉 ln r 前置因子后的首阶根
+        x = 2.0 * s * s * math.log(lead) / (lead * lead)   # r = lead·√(1+x) 里的小量
+        pred = lead * (1.0 + 0.5 * x)
+        # 阈由本级展开自己的截断阶现推：√(1+x)=1+x/2−x²/8+…（交错、项绝对值递减）⇒ 余项 ≤ lead·x²/8；
+        # 再加「把 ln r 换成 ln lead」那一步 |Δx| ≤ s²·x/lead² ⇒ 贡献 lead·|Δx|/2 = s²·x/(2·lead)
+        return lead, x, pred, lead * x * x / 8.0 + s * s * x / (2.0 * lead)
+
+    lead1, x1, pred1, tol1 = asymp9(1.0)
+    lead2, x2, pred2, tol2 = asymp9(2.0)
+    e_asy1 = abs(r_c - pred1)
+    e_asy2 = abs(r_c2 - pred2)
+    sub(u"首阶预测（只吃阈给的 L=%s，不吃二分也不吃 Newton 的根）：r ≈ lead·(1+x/2)，lead=√(1+2σ²L)、x=2σ²ln(lead)/lead²"
+        u"｜σ=1：lead=%s、x=%s ⇒ 预测 %s，实测 %s，差 %s（阈 %s＝截断余项 x²/8 乘 lead ＋ 对数代换项）"
+        u"｜σ=2：lead=%s、x=%s ⇒ 预测 %s，实测 %s，差 %s（阈 %s）"
+        % (fmt(L9), fmt(lead1), fmt(x1), fmt(pred1), fmt(r_c), fmt(e_asy1), fmt(tol1),
+           fmt(lead2), fmt(x2), fmt(pred2), fmt(r_c2), fmt(e_asy2), fmt(tol2)))
+    q_meas = r_c2 / r_c
+    q_pred = pred2 / pred1
+    q_tol = (tol2 + q_meas * tol1) / r_c
+    sub(u"σ 加倍那格：实测 r=%s ⇒ 力程比 q=%s；纯线性会给 2.000000，首阶渐近给 %s（差 %s，阈 %s）——"
+        u"多出的那一截由方程里那枚 ln r 前置因子与 lead 的 +1 供给，是**函数形状**给的修正，不是第二尺度。"
+        u"照旧的结论：接触力的程正比于 σ（线性到 1%% 级），不由耦合常数调"
+        % (fmt(r_c2), fmt(q_meas), fmt(q_pred), fmt(abs(q_meas - q_pred)), fmt(q_tol)))
+    chk(u"G09 动能档在环内而 R^3 档出环（预注册被表否证，非簿记否证）",
+        sig[3] and (not row_r3[3]), u"(∇T)² 在环=%s｜R^3 在环=%s" % (sig[3], row_r3[3]))
+    BATTERY.append((u"G09 预注册双面", lambda a, b: a and b,
+                    (sig[3], not row_r3[3]), (False, not row_r3[3])))
+    chk(u"G09 力程双通道求根吻合（二分 vs Newton）", dn < floor9 and dn2 < floor9,
+        u"dn=%s dn2=%s 底=%s" % (fmt(dn), fmt(dn2), fmt(floor9)))
+    BATTERY.append((u"G09 双通道求根", lambda a, b, c, d: a < b and c < d,
+                    (dn, floor9, dn2, floor9), (dn * 1.0e6, floor9, dn2, floor9)))
+    chk(u"G09 阈回代原始功能式（对数方程未抄错函数）", e_back1 < floor9 and e_back2 < floor9,
+        u"e1=%s e2=%s 底=%s" % (fmt(e_back1), fmt(e_back2), fmt(floor9)))
+    BATTERY.append((u"G09 阈回代", lambda a, b, t: a < t and b < t,
+                    (e_back1, e_back2, floor9), (e_back1 + 1.0e-3, e_back2, floor9)))
+    chk(u"G09 力程首阶预测落在自己的截断余项内", e_asy1 < tol1 and e_asy2 < tol2,
+        u"e1=%s t1=%s｜e2=%s t2=%s" % (fmt(e_asy1), fmt(tol1), fmt(e_asy2), fmt(tol2)))
+    BATTERY.append((u"G09 首阶余项", lambda a, t1, b, t2: a < t1 and b < t2,
+                    (e_asy1, tol1, e_asy2, tol2), (e_asy1 + tol1, tol1, e_asy2, tol2)))
+    chk(u"G09 力程缩放与首阶渐近一致（σ 线性带修正）", abs(q_meas - q_pred) < q_tol,
+        u"q=%s 预测=%s 阈=%s" % (fmt(q_meas), fmt(q_pred), fmt(q_tol)))
+    BATTERY.append((u"G09 缩放判据", lambda a, t: a < t,
+                    (abs(q_meas - q_pred), q_tol), (abs(q_meas - q_pred) + q_tol, q_tol)))
 
     # ============================== G10 吸引性的 1 bit
     item(u"G10", u"BOUNDARY", u"吸引性定价：族的 U=α(κ−τ) 在 m=1 给 F∝−α(A−B)/r²，符号表 4 格里 2 吸 2 斥 ⇒ "
@@ -764,36 +905,200 @@ def main():
                     (max(tot), 1)))
 
     # ============================== G13 跨册定位
-    item(u"G13", u"INFO", u"跨册定位与净差（所有他册数现读并点名载体，读不到即弃引）")
+    item(u"G13", u"INFO", u"跨册定位与净差（所有他册数现读并点名载体，读不到即弃引；载体一律印相对路径，"
+                          u"因为四枚经典基准同名 README.md——只印 basename 就是一个标签指四个文件）")
     s22, s21, s34 = stat_line(A22_FACE, u"㉔ 面"), stat_line(A21_FACE, u"⑲ 面"), stat_line(R34_FACE, u"r34 面")
     subs(u"载体三条：%s｜%s｜%s" % (s22 or u"读不到", s21 or u"读不到", s34 or u"读不到"))
-    subs(u"经典基准与在册作用量载体：%s｜%s｜%s｜%s｜%s｜%s"
-         % tuple((stat_line(p, n) or u"读不到") for p, n in ((E1, u"E1"), (E0, u"E0"), (D1, u"D1"), (D6, u"D6"),
-                                                             (DPLAN, u"D 普朗克"), (QUANJ, u"全集"))))
+    _g13_paths = (E1, E0, D1, D6, DPLAN, QUANJ)
+    subs(u"经典基准与在册作用量载体：%s"
+         % u"｜".join((stat_line(p, n) or u"读不到") for p, n in ((E1, u"E1"), (E0, u"E0"), (D1, u"D1"),
+                                                                 (D6, u"D6"), (DPLAN, u"D 普朗克"), (QUANJ, u"全集"))))
+    _rels = [os.path.relpath(p, BASE).replace(u"\\", u"/") for p in _g13_paths]
+    chk(u"G13 载体标签唯一（相对路径，无一名多数）", len(set(_rels)) == len(_rels),
+        u"枚数=%d｜去重后=%d" % (len(_rels), len(set(_rels))))
+    BATTERY.append((u"G13 标签唯一", lambda a, b: a == b, (len(_rels), len(set(_rels))), (len(_rels) + 1, len(set(_rels)))))
+    s128f, s128m = stat_line(C0128_FACE, u"C0128 面"), stat_line(C0128_MD, u"C0128 判定册")
+    _grant_n = sum(len(v) for v in granted.values())
+    subs(u"姊妹册（并发写者同日同来料的引力册，本册**只引用、不复算、不改其文件**）：%s｜%s｜"
+         u"其盘面／其判定册里把「attack23＝攻破%s」具名挂在本册名上的行，本面开头现扫到 %d 处（逐条点名载体:行号）；"
+         u"他们那条独立路线（其 E3/E4/E5/E6）与本册 G01-G02、G04、G05、G09 落在同侧 ⇒ 记为多路确证而非本册独占；"
+         u"其 §16 把自旋-2 载体留作未落实＝本册 %s 的同一格"
+         % (s128f or u"读不到", s128m or u"读不到", TAG, _grant_n, u"O%d-1" % MYNUM))
+
+    def their_block(key):
+        """从他盘面里按节名现取（[E4] 那一节的全部正文行）；读不到返回 None，不转抄记忆里的数。"""
+        b = read_b(C0128_FACE)
+        if b is None:
+            return None
+        ls = b.decode(u"utf-8", u"replace").split(u"\n")
+        start = None
+        for i, ln in enumerate(ls):
+            if ln.strip().startswith(u"[%s]" % key):
+                start = i
+                break
+        if start is None:
+            return None
+        body = []
+        for ln in ls[start + 1:]:
+            s = ln.strip()
+            if not s or s.startswith(u"["):
+                break
+            body.append(s)
+        return u" ".join(body)
+
+    NUM13 = re.compile(u"([0-9]+(?:\\.[0-9]+)?)(?:e([+-]?[0-9]+))?", re.I)
+
+    def num_after(text, prefix):
+        """在「前缀」之后取第一枚数（支持带符号科学计数），并返回它的**有效小数位**（尾数位数−指数）；
+        半 ulp 由这一位现推，不手数。上一版在这一格用的是不含指数的模式，会把 3.143e-7 读成 3.143——
+        丢的正是数量级，同 G02 那个丢符号的错是同一族。"""
+        m = re.search(prefix + NUM13.pattern, text or u"")
+        if not m:
+            return None, None
+        tok = m.group(1)
+        ex = int(m.group(2)) if m.group(2) else 0
+        dec = len(tok.split(u".")[1]) if u"." in tok else 0
+        return float(tok) * 10.0 ** ex, dec - ex
+
+    t3, t4, t6 = their_block(u"E3"), their_block(u"E4"), their_block(u"E6")
+    their4, d4 = num_after(t4, u"比 = ")
+    their6, d6 = num_after(t6, u"比值 = ")
+    their_dev, d_dev = num_after(t3, u"相对偏差 ")
+    my4 = float(ratio) if (v_new and v_gr) else None
+    my6 = r_p / r_c
+    hal4 = 0.5 * 10.0 ** (-d4) / their4 if their4 else None
+    hal6 = 0.5 * 10.0 ** (-d6) / their6 if their6 else None
+    thr4 = hal4 + 64.0 * EPS if hal4 is not None else None
+    thr6 = hal6 + 64.0 * EPS if hal6 is not None else None
+    sub(u"跨册可比读数（本册现取他盘面正文，不复算也不转抄记忆）：其 E4 那节的偏折比=%s（有效小数位 %d ⇒ 半 ulp %s，"
+        u"阈 %s＝再加 64·eps 的本册浮点底）vs 本册 G04 的 %s；其 E6 那节的力程比=%s（半 ulp %s，阈 %s）vs 本册 G09 的 %s"
+        % (fmt(their4) if their4 else u"没读到那格", d4 if their4 else 0, fmt(hal4) if hal4 else u"-",
+           fmt(thr4) if thr4 else u"-", fmt(my4) if my4 else u"-",
+           fmt(their6) if their6 else u"没读到那格", fmt(hal6) if hal6 else u"-", fmt(thr6) if thr6 else u"-",
+           fmt(my6)))
+    chk(u"G13 与姊妹册在两枚可比读数上同值（各按对方的印刷半 ulp）",
+        their4 is not None and their6 is not None and my4 is not None
+        and relerr(my4, their4) < thr4 and relerr(my6, their6) < thr6,
+        u"e4=%s 阈=%s｜e6=%s 阈=%s"
+        % (fmt(relerr(my4, their4)) if (my4 and their4) else u"NA", fmt(thr4) if thr4 else u"NA",
+           fmt(relerr(my6, their6)) if their6 else u"NA", fmt(thr6) if thr6 else u"NA"))
+    BATTERY.append((u"G13 跨册同值", lambda a, t1, b, t2: a < t1 and b < t2,
+                    (relerr(my4, their4), thr4, relerr(my6, their6), thr6),
+                    (relerr(my4, their4) + thr4, thr4, relerr(my6, their6), thr6)))
+    sub(u"两条不可比之处（照实印，不并成一句「一致」）：其 E3 的相对偏差 %s（有效小数位 %d，阈 %s）由**常数表的高精度值**算出，"
+        u"本册 G02 的 %s（阈 %s）由**在册两行的印刷位数**算出——同一件事的两种货币：本册不把自己的阈套到他那格上，"
+        u"也不把两边的数并成一句相等，只各印各的（对照：%s）；其 E6 只印「零程」二字，本册把力程实测成 ∝ σ 并给了首阶渐近"
+        u"（G09 双通道），所以那一格本册比他盘多一步"
+        % (fmt(their_dev) if their_dev is not None else u"没读到那格", d_dev if their_dev is not None else 0,
+           fmt(0.5 * 10.0 ** (-d_dev) / their_dev) if (their_dev and d_dev is not None) else u"-",
+           fmt(dev02) if dev02 is not None else u"未复算", fmt(thr02) if thr02 is not None else u"-",
+           (u"本册侧一致（dev<thr）" if (dev02 is not None and thr02 is not None and dev02 < thr02)
+            else u"本册侧超阈或未复算——他册那格由他自己判，本册不把自己的阈套上去")))
+
     subs(u"净差五条：①把 ㉔「G 出环」由**半轴论证**升级为**量纲唯一性论证**（G01 的 3×4 指数矩阵零度=1），"
          u"这条路线完全不依赖「α 必须几何构造」那枚公设 ⇒ ㉔ U10 的 CONDITIONAL 在此升为**无条件排除**的一半"
          u"（排除「普适 α 就是引力」）；②指出那唯一一枚无量纲引力耦合自带受力体质量（G02），"
          u"于是 EP 对引力不是附加公设而是量纲必然——这与 ⑲ T09/㉔ U11 的「极差在谁身上」正是同一枚币的两面；"
          u"③给族的 m=1 落点配了两枚可算的经典否证（G04 偏折缺一倍、G06/G07 进动缺整项）；"
-         u"④把 ⑲/㉔ 里被当成长程候选的 τ 支，按最小 EC 现算成**零程接触**（G09），并当场否证自己开场的出环预注册；"
+         u"④把 ⑲/㉔ 里被当成长程候选的 τ 支，按最小 EC 现算成**接触力、程 ∝ 宽度 σ**（G09），并当场否证自己开场的出环预注册；"
          u"⑤逐圈幂记账把「一枚 α」的自由度问题抬成「无穷多枚前置系数」（G11）。")
-    sub(u"在册读法一致性核对（本册不复制它的数，只按名现读）：%s"
-        % (grep(DPLAN, u"不存在非平凡无量纲组合", u"D 专题满秩推论") or u"没读到那行"))
+    _d1row = grep(DPLAN, u"| D1 |", u"D 专题 D1 在册行")
+    sub(u"在册读法一致性核对（本册不复制它的数，只按名现读它自己的判定行）：%s" % (_d1row or u"没读到那行"))
+    chk(u"G13 与 D 专题在册 D1 行同向（该行存在且判 PASS）",
+        bool(_d1row) and (u"PASS" in _d1row) and (u"无非平凡无量纲组合" in _d1row),
+        u"现读行=%s" % (_d1row or u"空"))
+    BATTERY.append((u"G13 D1 在册行", lambda r: bool(r) and u"PASS" in r, _d1row, u"| D1 | 某行 | FAIL |"))
+
+
+    # OPEN 号段：本轮新登记的未决笔必须挂**本轮自己的号**（号由上面的认领现算，不手钉）；
+    # 上一版把前缀写成 O25——那是并发写者 ㉕ 那一轮的 namespace，本册的笔落进去就成了悬空引用。
+    # 名单定义放在 G14 之前：仪器自证要现数它的枚数，不许题面与名单两处各写一遍。
+    def oid(k):
+        return u"O%d-%d" % (MYNUM, k)
+
+    _open_desc = [
+        u"张量自由度（本册裁到「标量给不了 γ=1」，没有裁「这族能不能写出一个自旋-2 激发」——那需要线性化谱与螺旋度计数，本册未做）",
+        u"普朗克尺度的出处（G02 只用到 m_P 的定义，未解释它为何是这个值）",
+        u"主动引力质量 1+3w 与族的源约束（G05 那枚 2 与 ㉔ U06 点源档 2/6 之间是否有同一出处，未裁）",
+        u"逐圈幂记账在挠率存在时是否仍是 D=2+2L（G11 只算了纯度规拓扑）",
+        u"若采 G12 的③（给 τ 动能项），新的无量纲数与 ㉔ 的算符谱 {μ_i} 如何共同定价",
+    ]
 
     # ============================== G14 仪器自证
-    item(u"G14", u"INFO", u"仪器自证：本轮新立的两件形状——精确零空间（分数域高斯消元，回代逐点验零）与"
-                          u"「振幅漂移＝等时性」的 Bertrand 实测尺；旧沿用三件（面不自量、排除按行首、期望由名单现算）")
-    sub(u"为什么零空间要回代：行最简形的解如果只印不代，读者无法区分「算对了」与「消元把某行消丢了」⇒ "
-        u"本册对 M、L、T 三行逐条点积回代并印出全零（G01 第二通道）")
-    sub(u"为什么 Bertrand 用振幅漂移而不是「闭合与否」的布尔判定：u 在近心点的取值对任何有心力都周期返回（转折点），"
-        u"用它判闭合是**恒真**的尺；只有 Ψ 对振幅的依赖性才能区分 −2/1 与其余幂 ⇒ 本轮把尺子换成漂移，"
-        u"并让枚举里其余 %d 格必须非零才算有牙" % (len(grid) - 2))
+    # 每条 = (类别, 名称, 正文)；类别只允许 新立／沿用，件数由这个表现算（题面不许手钉）
+    INSTR = [
+        (u"沿用", u"零空间回代",
+         u"行最简形的解如果只印不代，读者无法区分「算对了」与「消元把某行消丢了」⇒ 本册对 M、L、T 三行逐条点积"
+         u"回代并印出全零（G01 第二通道）"),
+        (u"沿用", u"Bertrand 尺＝振幅漂移",
+         u"u 在近心点的取值对任何有心力都周期返回（转折点），用它判闭合是**恒真**的尺；只有 Ψ 对振幅的依赖性才能"
+         u"区分 −2 与 1 之外的幂 ⇒ 枚举里其余 %d 格必须非零才算有牙" % (len(grid) - 2)),
+        (u"新立", u"漂移只比两次读数之比，抓不住共模错读（本轮实测过）",
+         u"上一版的积分器把每个近心点计了两次（峰值判定吃了尚未写回的旧 v），间距表里因此插进假格，"
+         u"Ψ 整列被记错而「振幅漂移」这条尺仍读机器零——比率对共模误差是盲的。"
+         u"本面 G06 把那型注错**现算复演**了一遍：读数 %s 对解析值 %s（偏差 %s），同一格漂移却仍 %s；"
+         u"本轮补的两枚牙——间距散布必须小于半个 dphi（全表最坏格实测 %s）＋A→0 外推的 Ψ₀ 逐格对上闭式 2π/√(n+3)"
+         u"（绝对通道，阈由这台积分器自己的两次外推之差现推）——正是为这一型立的"
+         % (fmt(_badS), fmt(rows6[0][3]), fmt(_bad_rel), fmt(_bad_drift), fmt(worst_spread))),
+        (u"新立", u"科学计数解析必须吃符号与指数",
+         u"G02 上一版只取了指数的**位数**、把负指数读成正指数，平方后落在与在册完全不相干的那一侧、残差恰为 1——"
+         u"症状与「在册两数互相矛盾」一模一样。本面 G02 已把这一型错法现算复演（读数 %s、残差 %s），"
+         u"正法改为「尾数＋带符号 10 的幂」整体转成精确分数、阈由那两行自己的小数位数现推；"
+         u"教训形状：解析器的错会伪装成语料缺陷，先把解析器放到**已知成立**的格上证它的形状，再拿它去判语料"
+         % (fmt((float(m_ratio[0]) * 10.0 ** abs(m_ratio[1])) ** 2) if m_ratio else u"未读到", fmt(_bad_dev))),
+        (u"新立", u"取号按名认领，max+1 只作兜底并印出对照",
+         u"并发写者把他轮的号**具名挂在本册文件名**上（现扫 %d 处载体行）；若照 max+1 顺延会算成第 %d 号，"
+         u"他那 %d 处引用全部悬空。号段的真权威是「谁被点名」，不是「谁先扫到」——顺延只是没人点名时的默认"
+         % (_grant_n, MAXP1, _grant_n)),
+        (u"新立", u"登记号的 namespace 由本轮号现铸",
+         u"OPEN 未决笔的前缀上一版手写成 O25——那是并发写者 ㉕ 那一轮的号段，本册的笔落进去就是悬空引用；"
+         u"本轮改为「O＋本轮号＋－＋序号」现铸，并把「全部前缀＝本轮号」做成自检与电池（未决笔 %d 枚）"
+         % len(_open_desc)),
+        (u"新立", u"载体标签唯一（印相对 BASE 的路径）",
+         u"四枚经典基准的文件名都是 README.md，只印 basename 就成了「一个标签挂四个 md5」⇒ 现改印相对路径，"
+         u"并加一枚「去重前后枚数相等」的自检（标签 %d 枚）" % len(_rels)),
+        (u"新立", u"跨册对照只比可比读数，阈按对方的印刷位数",
+         u"姊妹册那两面里有两枚与本册同口径的数（偏折比、力程比），本册现取其节文并按其自己的小数位算半 ulp 对表；"
+         u"其余格（其 E3 用高精度常数、本册 G02 用在册印刷位数）是两种货币，只并布尔不并数值；"
+         u"这一格还当场抓住本册解析器的第三型错：不含指数的模式会把 3.143e-7 读成 3.143（丢的是数量级，"
+         u"与 G02 丢符号同族）"),
+        (u"新立", u"两条通道必须先证明它们监控同一个函数",
+         u"力程这一格上一版拿「高斯尾闭式」σ·√(2 ln 1/阈)=%s 当第二通道，与二分实测 %s 现算相对差 %s——"
+         u"那不是求根误差，是两条路量的不是同一个东西（闭式丢了 |F| 里那枚 r 前置因子，也没归一到 r=1 格）。"
+         u"本轮改为：由功能式自己取对数写出方程、Newton 独立求根（两算法分歧 %s，底 %s），"
+         u"再把 Newton 的根回代**原始功能式**验阈（偏差 %s——这一步正是抓住写反号的那枚牙），"
+         u"最后用只吃阈的首阶渐近预测（差 %s，余项由本级展开自己的 x²/8 定价＝%s）"
+         % (fmt(math.sqrt(2.0 * L9)), fmt(r_c), fmt(relerr(math.sqrt(2.0 * L9), r_c)),
+            fmt(dn), fmt(floor9), fmt(e_back1), fmt(e_asy1), fmt(tol1))),
+        (u"新立", u"版面自洽：判定核现算值，核不到「数抄错了行」",
+         u"本面 G05 上一版在结论句里把可见度插成了**辐射行**的那个 0，而它正上方四行的表里 w=0 那行印的是 1——"
+         u"同一张面上两处互相矛盾；当时那枚 chk 只比 rows5 自己的现算值（尘埃档==1），它绿得完全正确，"
+         u"却对「版面从哪一行取的字」全盲。本轮补的尺是把**已印出的两行文本**里的数取回来逐字比"
+         u"（表行=%s／散文=%s），注错格把散文侧硬换成 0 必须红；教训形状：chk 校的是算式，"
+         u"面给读者看的是文本，两者之间那一层（插值选哪个变量）原本没有针"
+         % (_vis_row0, _vis_sent)),
+    ]
+    _kinds = [a for a, _b, _c in INSTR]
+    _n_new = sum(1 for k in _kinds if k == u"新立")
+    _n_old = sum(1 for k in _kinds if k == u"沿用")
+    item(u"G14", u"INFO", u"仪器自证：本轮新立 %d 件形状＋沿用 %d 件（逐件点名「为什么要换尺」，"
+                          u"并把本轮被自家尺抓住的仪器错原样印出；件数由下面的登记表现算）"
+                          % (_n_new, _n_old))
+    for _kd, _nm, _tx in INSTR:
+        sub(u"[%s] %s：%s" % (_kd, _nm, _tx))
+    chk(u"G14 仪器件数＝题面数、类别只两型且标签不重",
+        len(INSTR) == _n_new + _n_old and set(_kinds) == set([u"新立", u"沿用"])
+        and len(set(b for _a, b, _c in INSTR)) == len(INSTR),
+        u"总数=%d 新立=%d 沿用=%d 名称去重=%d" % (len(INSTR), _n_new, _n_old, len(set(b for _a, b, _c in INSTR))))
+    BATTERY.append((u"G14 仪器件数", lambda a, b, c: a == b + c and b > 0 and c > 0,
+                    (len(INSTR), _n_new, _n_old), (len(INSTR) + 1, _n_new, _n_old)))
     sub(u"本轮预注册的下场：G09 那句「τ 要传播就出环」被自己的幂记账表否证（实为 L^0 档，在环内），"
         u"原话留在面上，判据改为「新增自由常数＋与在册读法冲突」——这是产出不是事故")
 
+
     # ============================== G15 总裁定
     item(u"G15", u"THEOREM", u"总裁定：在这族里，引力**不是**一种由几何造出的耦合——量纲唯一性只给它一枚带受力体质量的"
-                            u"无量纲强度 (m/m_P)²；它的两个候选载体（G、τ）一个需要正幂系数（环外），一个是代数辅助场（零程）；"
+                            u"无量纲强度 (m/m_P)²；它的两个候选载体（G、τ）一个需要正幂系数（环外），一个是代数辅助场（只给接触力）；"
                             u"而族的唯一几何落点 m=1 恰落在 Bertrand 的闭合格上 ⇒ 进动恒零，两枚经典基准直接把它否掉")
     sub(u"成立面（可引）：G01（指数矩阵 det=%d 满秩、加 m 后零度 1、生成元回代全零）、G02（(m/m_P)² 两式独立复算在印刷半 ulp 内）、"
         u"G04（偏折比 = %s，与 (1+γ) 公式恒等）、G05（w=1/3 标量可见度精确零、w=0 满格）、"
@@ -808,11 +1113,21 @@ def main():
         u"只有让质量从运动方程里消掉（测地线），一个与 m 无关的规律才可能存在；"
         u"而这族的势 U=α(κ^m−τ^m) 从头到尾是**一个标量势**，它做得到与 m 无关（剖面不含受力体，⑲ T09 读法 i），"
         u"但那正是它失去引力的地方——G02 说引力的荷必须是 m。两者不可兼得。")
-    sub(u"OPEN 顺延：O25-1 张量自由度（本册裁到「标量给不了 γ=1」，没有裁「这族能不能写出一个自旋-2 激发」——"
-        u"那需要线性化谱与螺旋度计数，本册未做）；O25-2 普朗克尺度的出处（G02 只用到 m_P 的定义，未解释它为何是这个值）；"
-        u"O25-3 主动引力质量 1+3w 与族的源约束（G05 那枚 2 与 ㉔ U06 点源档 2/6 之间是否有同一出处，未裁）；"
-        u"O25-4 逐圈幂记账在挠率存在时是否仍是 D=2+2L（G11 只算了纯度规拓扑）；"
-        u"O25-5 若采 G12 的③（给 τ 动能项），新的无量纲数与 ㉔ 的算符谱 {μ_i} 如何共同定价。")
+    _open_line = u"OPEN 顺延（号段前缀由本轮号 %d 现铸）：%s。" % (
+        MYNUM, u"；".join(u"%s %s" % (oid(i + 1), d) for i, d in enumerate(_open_desc)))
+    sub(_open_line)
+    _oid_re = re.compile(u"O([0-9]+)-([0-9]+)")
+    _pairs = _oid_re.findall(_open_line)
+    _rounds = sorted(set(int(a) for a, _b in _pairs))
+    _serials = sorted(int(b) for _a, b in _pairs)
+    chk(u"本轮 OPEN 号全部挂本轮号（不借他轮 namespace）",
+        _rounds == [MYNUM] and _serials == list(range(1, len(_open_desc) + 1)),
+        u"枚数=%d｜轮号集合=%s｜序号=%s" % (len(_pairs), _rounds, _serials))
+    BATTERY.append((u"G14 OPEN 号段前缀",
+                    lambda rs, se, mm, n: rs == [mm] and se == list(range(1, n + 1)),
+                    (_rounds, _serials, MYNUM, len(_open_desc)),
+                    ([25], _serials, MYNUM, len(_open_desc))))
+
     sub(u"红线：本轮未宣称统一场论成立，也未宣称「引力的本质已被解释」——裁的是「这族能给引力什么、代价是谁付」；"
         u"数学自洽 ≠ 实验证实；哥德巴赫仍未证明，统一场论仍未成立。未跑 refresh_catalog，未 git add/commit。")
 
@@ -895,13 +1210,14 @@ def main():
         u"Bertrand 等时集恰为 −2 与 1（G06，振幅漂移实测＋A→0 外推对闭式）、进动一阶系数 Δ/(2πδ)→1（G07 三档阶梯＋δ 置零对照）、"
         u"D=2+2L 与配对数双通道恒等（G11）为恒等式级。")
     emit(u"  [物理] 引力的无量纲强度唯一且**带受力体质量**（G02）⇒ EP 对引力是量纲必然不是附加公设；"
-        u"标量势看不见辐射（G05）⇒ 偏折只能给半（G04）；最小 EC 的 τ 是代数辅助场⇒零程接触（G09）；"
+        u"标量势看不见辐射（G05）⇒ 偏折只能给半（G04）；最小 EC 的 τ 是代数辅助场⇒接触力、程正比于宽度 σ（G09 实测）；"
         u"普遍吸引需 1 bit 外生定号（G10）；逐圈需要无穷多枚正幂前置系数，环一枚不给（G11）。")
     emit(u"  [自否] 开场预注册「让 τ 传播必须付出环代价」被自己的幂记账表否证（(∇T)² 档系数是 L^0，在环内）："
         u"改判后的价是「新增一枚无值自由常数＋与 D6 在册退化读法冲突」，原话留在面上（G09）。")
-    emit(u"  [诚实边界] G04/G05/G07/G08 用了两枚经典基准的在册读数（E1 0.875/1.75、E0 42.98），"
+    emit(u"  [诚实边界] G04/G05/G07/G08 用了两枚经典基准的在册读数（E1 那册的两枚偏折数、E0 那册的 GR 档进动，"
+        u"都已在各条目内点名载体现读，本行不转抄其数字以免与载体脱节），"
         u"判据不依赖其精度只依赖其存在与比值；G02 的复算只用全集那两行的**印刷位数**定阈；"
-        u"O25-1（自旋-2 谱与螺旋度计数）本册**没做**，不得从 G04 的「标量给不了 γ=1」推出「这族没有张量激发」。")
+        u"%s（自旋-2 谱与螺旋度计数）本册**没做**，不得从 G04 的「标量给不了 γ=1」推出「这族没有张量激发」。" % oid(1))
     emit(u"  [红线] 本轮未宣称统一场论成立；未跑 refresh_catalog，未 git add/commit。")
 
     rc_pre = exit_code
