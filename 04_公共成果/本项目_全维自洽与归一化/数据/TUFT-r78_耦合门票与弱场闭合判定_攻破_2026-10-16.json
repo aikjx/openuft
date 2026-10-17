@@ -1,0 +1,288 @@
+{
+ "round": "r78",
+ "date": "2026-10-16",
+ "topic": "V4.8 修正最小模型的耦合门票与弱场可检验性闭合判定",
+ "items": [
+  {
+   "id": "I01",
+   "kind": "INFO",
+   "title": "受理事实：801-1000 正本内无牛顿极限、无弱场、无源项、无 J_kappa",
+   "detail": "机器计数 {'牛顿': 0, 'Newton': 0, '弱场': 0, '源项': 0, 'J_\\\\kappa': 0}，阳性对照 {'引力': 13, '挠率': 62}；全集唯一涉及能动张量的是 824 号「nabla^a T_ab^tot = 0」。"
+  },
+  {
+   "id": "I02",
+   "kind": "FAIL",
+   "title": "耦合门票缺失：kappa 与物质之间无任何耦合项",
+   "detail": "一个场要「给出引力」必须先有与 T_{mu nu} 的耦合项；该集合只有 824 的守恒律，没有耦合项、没有弱场展开、没有牛顿极限定理。这是「未完成统一场论」最直接的一条证据。"
+  },
+  {
+   "id": "I03",
+   "kind": "PASS",
+   "title": "最小耦合项的量纲定价：线性耦合系数 [C_1] = L",
+   "detail": "要求 [L_int] = 能量密度 M^1 L^-1 T^-2、[kappa] = L^-1、[T] = M^1 L^-1 T^-2，则线性耦合 -C_1 kappa T 的 [C_1] = L^1；一般 -C_n kappa^n T 给 [C_n] = L^n。"
+  },
+  {
+   "id": "I04",
+   "kind": "FAIL",
+   "title": "耦合系数排除定理：{hbar, c, G} 整数幂构造不出长度，半幂唯一解就是 l_P",
+   "detail": "整数幂穷举（幂域 [-4,4]，共 729 组）命中 0 组；允许半幂后唯一解 G^1/2 * c^-3/2 * hbar^1/2，即 sqrt(hbar G / c^3) = l_P。⇒ 耦合系数只能是一个长度，而框架内唯一的长度由 G 通过 l_P 提供 ⇒ 必须输入 G。"
+  },
+  {
+   "id": "I05",
+   "kind": "BOUNDARY",
+   "title": "复现牛顿 G 是重排而非预言：C_req = sqrt(4pi) l_P，代回 G_eff 与 G 机器零",
+   "detail": "G_eff = C^2 c^3 / (4 pi hbar)；取 C = C_req = 5.7294748824150909812449608E-35 m，得 G_eff = 6.6743000000000000000000000E-11，与 CODATA G = 6.6743000000000000000000000E-11 相对偏差 1.4982844642883897936862293E-60（机器零）。但 l_P^2 = hbar G / c^3 ⇒ G 是输入不是输出，属「普朗克锚定循环」同族。"
+  },
+  {
+   "id": "I06",
+   "kind": "BOUNDARY",
+   "title": "若改用「新基本长度」ell，观测把它唯一锁定为 sqrt(4pi) l_P：自由度 0、预测力 0",
+   "detail": "由 G_eff = G 反解 ell = sqrt(4 pi hbar G / c^3) = sqrt(4 pi) l_P = 5.7294748824150909812449608E-35 m，与 C_req 相对偏差 0.0000000000000000000000000E+25。⇒ 新常数不带来任何自由度（被实验唯一确定），但也不带来任何预测（G 仍是外部输入）；其中的 sqrt(4 pi) 是格林函数归一化约定，非物理常数。"
+  },
+  {
+   "id": "I07",
+   "kind": "FAIL",
+   "title": "纯标量中介被光线偏折排除：PPN gamma = -1，超 Cassini 限 8.695652E+4 倍",
+   "detail": "单标量只与 T 的迹耦合，电磁场 T^mu_mu = 0 ⇒ PPN gamma = -1 ⇒ 零偏折（(1+gamma)/2 x 1.75 角秒 = 0 角秒），而 GR/实测为 1.75 角秒；|gamma - 1| = 2，Cassini 限 0.000023 ⇒ 超 8.695652E+4 倍。（Cassini 限与 1.75 角秒为外部实验事实，登记为 NS，不自推）"
+  },
+  {
+   "id": "I08",
+   "kind": "BOUNDARY",
+   "title": "力的方向在集合内未定义：耦合项的符号与整体归一化均未声明",
+   "detail": "两条号差约定下 T 的迹反号（(-,+,+,+) 给 T = -eps，(+,-,-,-) 给 T = +eps），而 801-1000 既未写 L_int 的形式也未写其符号；⇒ 即使按本册补上系数，吸引还是排斥仍是未声明输入。（同 r72 号差、r73 测度约定型的「口径缺失」，不代判哪一支）"
+  },
+  {
+   "id": "I09",
+   "kind": "FAIL",
+   "title": "三条出路在 Omega5 内无一闭合（本册承重裁定）",
+   "detail": "W1 把 kappa,tau 降为度规派生量（退化为 GR）：新常数 0，但框架失去本原性，相对 GR 零新增内容；W2 保留 kappa 传播并加张量扇区（标量-张量）：要过 Cassini 必须屏蔽，屏蔽机制需 +1 个自由函数（按 r15 口径，函数比常数更贵，直接撞 Omega5，且并入 r72 已记的 >=3 常数账）；W3 保持纯标量：已被 I07 排除。⇒ 「给出引力」这一步在当前公设集内没有零代价解。"
+  },
+  {
+   "id": "I10",
+   "kind": "INFO",
+   "title": "非线性耦合族同样要输入 G：kappa^n T 的系数 [C_n] = L^n，每升一阶多一个 l_P 幂",
+   "detail": "n = 1 需 L、n = 2 需 L^2 = l_P^2 = hbar G / c^3、n = 3 需 L^3 = l_P^3 = (hbar G / c^3)^{3/2}；阶数越高，G 的幂次越高，循环自洽的依赖越强，且不改变「无耦合项」这一原始缺口。"
+  },
+  {
+   "id": "I11",
+   "kind": "PASS",
+   "title": "独立引擎复现 r73 三条核心读数（交叉印证，非引用）",
+   "detail": "原式 hbar/(2c) 的缺口 = L^2 T^-2（不是 [s^-2]）；来料修正 hbar c / l_0^2 版仍差 L^2；hbar c / l_P^2 与 c^4/G 逐位同源（相对偏差 0.0000000000000000000000000E+25）。三条均由本册独立引擎重算得到。"
+  },
+  {
+   "id": "I12",
+   "kind": "INFO",
+   "title": "精度与口径登记：l_P 计算值 %s m 与 CODATA 字面值 %s m 相对偏差 %s",
+   "detail": "l_P 计算值 = 1.6162550239285500506848148E-35 m，CODATA 字面值 = 1.6162550000000000000000000E-35 m，相对偏差 = 1.4804934896216757134237076E-8。该偏差来自输入常数（G 只有 6 位有效数字）而非判据；本册所有判定均取相对判据，不把该量级的差异当作物理结论。"
+  },
+  {
+   "id": "I13",
+   "kind": "PASS",
+   "title": "阳性对照组汇总（证明各判据非恒真/非恒零）",
+   "detail": "计数判据：{'引力': 13, '挠率': 62} 非零 ⇒ 计数器工作；穷举判据：target=[hbar] 命中 1、[hbar c] 命中 1、L^2 命中 1 而 L 整数幂命中 0 ⇒ 穷举器有分辨力；符号判据：力 != 能量、异构相加抛 TypeError ⇒ 量纲工具自守有效。"
+  }
+ ],
+ "counts": {
+  "INFO": 3,
+  "FAIL": 4,
+  "PASS": 3,
+  "BOUNDARY": 3
+ },
+ "total": 13,
+ "verdict": "FAIL",
+ "guards": [
+  {
+   "tag": "G0-1 [G]",
+   "ok": true,
+   "detail": "M^-1 L^3 T^-2"
+  },
+  {
+   "tag": "G0-2 [hbar]",
+   "ok": true,
+   "detail": "M^1 L^2 T^-1"
+  },
+  {
+   "tag": "G0-3 [c]",
+   "ok": true,
+   "detail": "L^1 T^-1"
+  },
+  {
+   "tag": "G0-4 能量密度",
+   "ok": true,
+   "detail": "M^1 L^-1 T^-2"
+  },
+  {
+   "tag": "G0-5 力 != 能量",
+   "ok": true,
+   "detail": "M^1 L^1 T^-2 vs M^1 L^2 T^-2"
+  },
+  {
+   "tag": "G0-6 [hbar c]",
+   "ok": true,
+   "detail": "M^1 L^3 T^-2"
+  },
+  {
+   "tag": "G0-7 l_P^2",
+   "ok": true,
+   "detail": "L^2"
+  },
+  {
+   "tag": "G0-8 异构相加须抛错",
+   "ok": true,
+   "detail": "TypeError 已抛出"
+  },
+  {
+   "tag": "G0-9 l_P 计算 vs 字面",
+   "ok": true,
+   "detail": "rel=1.480493E-8"
+  },
+  {
+   "tag": "G0-10 [(hbar c/2)(grad kappa)^2] = 能量密度",
+   "ok": true,
+   "detail": "M^1 L^-1 T^-2"
+  },
+  {
+   "tag": "G0-11 [C_1] = L",
+   "ok": true,
+   "detail": "L^1"
+  },
+  {
+   "tag": "G0-12 [C_n] = L^n",
+   "ok": true,
+   "detail": "L^3"
+  },
+  {
+   "tag": "G0-13 整数幂 target=L 命中 0",
+   "ok": true,
+   "detail": "hits=0"
+  },
+  {
+   "tag": "G0-14 半幂 target=L 命中 1",
+   "ok": true,
+   "detail": "hits=1"
+  },
+  {
+   "tag": "G0-15 阳性对照 [hbar] 非空",
+   "ok": true,
+   "detail": "hits=1"
+  },
+  {
+   "tag": "G0-16 阳性对照 [hbar c] 非空",
+   "ok": true,
+   "detail": "hits=1"
+  },
+  {
+   "tag": "G0-17 阳性对照 L^2 非空",
+   "ok": true,
+   "detail": "hits=1"
+  },
+  {
+   "tag": "G0-18 半幂唯一解 sqrt(hbar G/c^3)",
+   "ok": true,
+   "detail": "G^1/2 * c^-3/2 * hbar^1/2"
+  },
+  {
+   "tag": "G0-19 G_eff==G（xi=sqrt(4pi)）",
+   "ok": true,
+   "detail": "rel=1.498284E-60"
+  },
+  {
+   "tag": "G0-20 新长度被观测唯一锁定",
+   "ok": true,
+   "detail": "rel=0.000000E+6"
+  },
+  {
+   "tag": "G0-21 C_req/l_P = sqrt(4pi)",
+   "ok": true,
+   "detail": "ratio=3.544908E+0"
+  },
+  {
+   "tag": "G0-22 G_eff 量纲 = [G]",
+   "ok": true,
+   "detail": "M^-1 L^3 T^-2"
+  },
+  {
+   "tag": "G0-23 原式 hbar/(2c) 缺口 = c^2",
+   "ok": true,
+   "detail": "L^2 T^-2"
+  },
+  {
+   "tag": "G0-24 hbar c/l_0^2 版仍差 L^2",
+   "ok": true,
+   "detail": "L^2"
+  },
+  {
+   "tag": "G0-25 hbar c/l_P^2 == c^4/G",
+   "ok": true,
+   "detail": "rel=0.000000E+6"
+  },
+  {
+   "tag": "G0-26 来料正本可读",
+   "ok": true,
+   "detail": "len=15895"
+  },
+  {
+   "tag": "G0-27 阳性对照计数非恒零",
+   "ok": true,
+   "detail": "{'引力': 13, '挠率': 62}"
+  },
+  {
+   "tag": "G0-28 缺失项计数为 0",
+   "ok": true,
+   "detail": "{'牛顿': 0, 'Newton': 0, '弱场': 0, '源项': 0, 'J_\\\\kappa': 0}"
+  },
+  {
+   "tag": "G0-29 纯标量超 Cassini 限 4 个量级以上",
+   "ok": true,
+   "detail": "ratio=8.695652E+4"
+  }
+ ],
+ "guard_all_ok": true,
+ "guard_total": 29,
+ "guard_pass": 29,
+ "key_numbers": {
+  "l_p_calc_m": "1.6162550239285500506848148E-35",
+  "l_p_literal_m": "1.6162550000000000000000000E-35",
+  "l_p_rel_dev": "1.4804934896216757134237076E-8",
+  "c_req_m": "5.7294748824150909812449608E-35",
+  "ell_req_m": "5.7294748824150909812449608E-35",
+  "sqrt_4pi": "3.5449077018110320545963350E+0",
+  "g_eff": "6.6743000000000000000000000E-11",
+  "g_literal": "6.6743000000000000000000000E-11",
+  "g_eff_rel_dev": "1.4982844642883897936862293E-60",
+  "hbc_over_lp2": "1.2102555643382062881895930E+44",
+  "c4_over_G": "1.2102555643382062881895930E+44",
+  "enum_int_len_hits": 0,
+  "enum_half_len_hits": 1,
+  "enum_half_len_solution": "G^1/2 * c^-3/2 * hbar^1/2",
+  "enum_hbar_hits": 1,
+  "enum_hbarc_hits": 1,
+  "enum_l2_hits": 1,
+  "dim_c1": "L^1",
+  "dim_gap_orig": "L^2 T^-2",
+  "dim_gap_hbarc_over_l02": "L^2",
+  "ppn_gamma_scalar": "-1",
+  "cassini_limit": "0.000023",
+  "cassini_excess_factor": "8.695652E+4",
+  "deflection_scalar_arcsec": "0",
+  "deflection_gr_arcsec": "1.75",
+  "incoming_missing_counts": {
+   "牛顿": 0,
+   "Newton": 0,
+   "弱场": 0,
+   "源项": 0,
+   "J_\\kappa": 0
+  },
+  "incoming_control_counts": {
+   "引力": 13,
+   "挠率": 62
+  }
+ },
+ "not_self_derived": [
+  "NS1：Cassini 的 |gamma-1| < 2.3e-5 限与太阳临边 1.75 角秒偏折为外部实验事实，本册引用不自推。",
+  "NS2：PPN gamma = -1 属纯标量（Nordstrom 型）引力的教科书结论，本册引用不自推。",
+  "NS3：kappa 与 T_{mu nu} 的耦合形式为本册为定价而构造的最小候选，来料原文未给出，不自推其物理意图。",
+  "NS4：CODATA 的 hbar / c / G / l_P 为实验测量值，非第一性导出。",
+  "NS5：屏蔽机制（chameleon / Vainshtein）是否能在标量-张量中救回 gamma=1，本册只记代价不建模。"
+ ]
+}
