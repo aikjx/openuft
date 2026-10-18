@@ -1,0 +1,804 @@
+{
+  "round": "r98",
+  "date": "2026-10-18",
+  "topic": "公式正确性四层次审查（外部评审长文整理 + 增量机读复算）",
+  "source_review": "数据/TUFT-四层次正确性评审_外部来料全文_2026-10-18.md",
+  "source_paper": "数据/TUFT-螺旋时空理论_来料全文_2026-10-17.md",
+  "cross_ref_round": "r95",
+  "items": [
+    {
+      "code": "MAP01",
+      "status": "PASS",
+      "title": "跨册引用机器校验：本册引用的 r95 条目状态逐条核对",
+      "detail": "r95 数据 JSON 读取=成功；引用 29 条，状态一致 29 条；不一致=无",
+      "section": "MAP"
+    },
+    {
+      "code": "MAP02",
+      "status": "INFO",
+      "title": "评审检查点覆盖图：20 个检查点中 r95 已覆盖 11 个、本册新增 8 个",
+      "detail": "量纲：式(2)耦合方程左右量纲→r95 K01-K04（FAIL）；量纲：k_E/k_B=c→来稿无定义式 ⇒ 本册 W01j 条件推演；量纲：Q_t=[m^3/s] 与 m_0=k_mQ_t→r95 T01 + 本册 W01b/W01c；量纲：alpha(4pi)^beta(1-eta) 无量纲→本册 W01d；量纲：gamma_total 无量纲→本册 W01e（来稿仅有 gamma_f）；约束可积：A_z 只是轴向分量？→r95 A03（完整两项）+ W01f；约束可积：完整 nabla_V V 含 -r*omega^2 e_r？→来稿 §一自列三分量 + r95 A05；拓扑荷：量子化/奇点/微分同胚→r95 T01-T04（全 FAIL）；场方程闭合：缺 V 的动力学方程→r95 外部输入#1（omega 无场方程）；极限：弱场低速→牛顿 1/r^2→r95 G03-G07 + 本册 N01a/N01b；极限：无驱动 f→0→r95 E05 + 本册 N02；极限：平坦时空→SR→本册 N03；极限：电磁→法拉第→本册 N04a/N04b；极限：GR→后牛顿 gamma,beta→来稿风险点4自陈未做 + 本册 N05；极限：量子 hbar→0→本册 N06；等效原理 Eotvos 1e-15→本册 W01h；预测唯一性：eta=0 极限→r95 M01 + 本册 P01a-P01d；独立实验清单→r95 E04-E06（射程两难）；与 Einstein-Aether/Finsler/拓扑缺陷/Floquet 关系→本册 R01-R04；同行评审与独立复现→库外过程 ⇒ S06 登记",
+      "section": "MAP"
+    },
+    {
+      "code": "N01a",
+      "status": "FAIL",
+      "title": "评审支（通量读法 V_r=Q/r^2）：A_r=-2Q^2/r^5，标度 1/r^5 ≠ 牛顿 1/r^2",
+      "detail": "机器：A(r)/A(2r)=3.200000E+1（理论 2^5=32）；阳性对照 V_r=sqrt(2GM/r) ⇒ A(r)/A(2r)=4.000000E+0（理论 4）且 A_r=-GM/r^2 严格成立；有限差分复核算子残差=1.499998E-6（一阶差分 O(h)，符合预期）⇒ 不是算子错误，是场结构错误。两族场只在 r_*=(2Q^2/GM)^(1/3) 一点相交，而 Q 无标定来源 ⇒ r_* 无机制：Q=1/1e3/1e6/1e9 m^3/s 时 r_*=1.7120E-5/1.7120E-3/1.7120E-1/1.7120E+1 m",
+      "section": "N"
+    },
+    {
+      "code": "N01a+",
+      "status": "PASS",
+      "title": "阳性对照：自由落体速度场 V_r=sqrt(2GM/r) 在 (V·∇)V 下严格给出牛顿 A_r=-GM/r^2",
+      "detail": "证明「∇_V V 算不出 1/r^2」不成立 —— 算不出 1/r^2 的是通量场结构；而该阳性对照同时也说明：要拿它当引力，必须输入 GM（G02 恒等重述，circular）。",
+      "section": "N"
+    },
+    {
+      "code": "N01b",
+      "status": "FAIL",
+      "title": "来稿支（原生读法）：V=r*omega*e_theta+v_z*e_z 无径向分量，静态引力只剩向轴的 A_r=-r*omega^2",
+      "detail": "机器：若输入开普勒 omega(r)=sqrt(GM/r^3)，则 A_r=-GM/r^2 数值复现（残差=3.372634E-70）—— 但这是把牛顿输入后再读出（circular，G02/G05 已判）；且 A_r 指向柱轴（r95 G07 FAIL），球对称引力须叠加连续族取向（来稿未给）。",
+      "section": "N"
+    },
+    {
+      "code": "N02",
+      "status": "FAIL",
+      "title": "无驱动极限：f→0 / omega_dot=0 ⇒ A_z=A_theta=0、dB/dt=0 ⇒ 耦合方程 rot(G)=0",
+      "detail": "机器：A_z=-0.0000E-66；A_theta=0.0000E+3；|dB/dt|_max=0.0000E-67 ⇒ rot(G)=-(1/c^2)*d(omega)/dt=0。日地系统恰是 omega_dot≈0 的静态系统 ⇒ 论文的「引力通道」在真实静态引力中给出零场（r95 E05 同结论，本册从极限回归路径独立复现）。A_r=-r*omega^2 虽存活，但向轴且需开普勒输入（N01b）。",
+      "section": "N"
+    },
+    {
+      "code": "N03",
+      "status": "BOUNDARY",
+      "title": "平坦时空极限：omega→0 ⇒ v_z→c 且 A=0（自由粒子），但仅覆盖类光扇区",
+      "detail": "机器：v_z/c 取 0.5 | 0.9 | 0.99 | 0.999 | 1.0 时所需 r*omega/c=sqrt(1-(v_z/c)^2)=8.660254E-1 | 4.358899E-1 | 1.410674E-1 | 4.471018E-2 | 0.000000E+5 —— 所有 subluminal 惯性运动都要求非零 (r,omega)；平直时空中无螺旋的自由粒子（r*omega=0）被公理(1)强制为 v_z=c。⇒ 狭义相对论的 massive 扇区在本框架无表示（不是算错，是定义域只含类光边界）。",
+      "section": "N"
+    },
+    {
+      "code": "N04a",
+      "status": "FAIL",
+      "title": "电磁极限甲：代入 B=k_B*omega 后 rot(G)=-(1/c^2)*d(omega)/dt 左右量纲不合",
+      "detail": "机器：[rot G]=T^-2 ；[(1/c^2)*d(omega)/dt]=L^-2 ；相差 L^-2 T^2（恰为 c^2 缺口，即 r95 K03 的机器体现）。按 K04 唯一修法删 1/c^2 后 [rot G]=T^-2=[d(omega)/dt] 量纲过 —— 但结构仍不是法拉第（N04b）。",
+      "section": "N"
+    },
+    {
+      "code": "N04b",
+      "status": "FAIL",
+      "title": "电磁极限乙：即便按 K04 修好量纲，论文方程在任何极限下都不是法拉第定律",
+      "detail": "结构清点 5 项全部不符：左侧对象：论文 G=A（加速度 LT^-2）vs 法拉第 E（场强 M L T^-2 Q^-1）；源项角色：电磁 F=qE（q 分离）vs 论文 F=k_i*Q*A ⇒ 论文的「场」应是 k_i*Q*A 而非 A；右侧对象：论文 d(omega)/dt（T^-2）vs 法拉第 dB/dt（M T^-2 Q^-1）；系数：论文需删 1/c^2（K04）vs 法拉第系数 1；麦克斯韦其余方程（高斯/安培/磁高斯）在论文中无对应",
+      "section": "N"
+    },
+    {
+      "code": "N05",
+      "status": "FAIL",
+      "title": "GR 极限：公式集无度规/线元 ⇒ 后牛顿参数 gamma,beta 在集内不可定义，太阳系检验通道结构缺席",
+      "detail": "机器（来稿全文检索）：度规/线元/ds^2/施瓦西命中 0 处；「后牛顿」仅出现 2 处且均为「未完成推导」自陈（风险点4）；黎曼曲率符号 4 处但论文明确「引力不来自它」。PPN 形式主义以 g_00,g_0i,g_ij 为输入，本公式集变量集 {r,omega,v_z,V,Q} 与度规无映射 ⇒ 不是「算出来不符」而是「无法计算」。",
+      "section": "N"
+    },
+    {
+      "code": "N06",
+      "status": "INFO",
+      "title": "量子极限：公式集不含 hbar ⇒ hbar→0 是空操作，评审之问#6 对该公式集不适定",
+      "detail": "机器：来稿 hbar/普朗克命中 0 处；量子/Floquet 命中 5 处且仅为驱动形式 H(t+T)=H(t) 的名义引用。实质问题相反：量子扇区整体缺席（无 hbar、无能标、无算符）⇒ 无冲突但亦无内容；与已知粒子物理的对照在库内另有册（r96/r97 等），本册不重复。",
+      "section": "N"
+    },
+    {
+      "code": "P01a",
+      "status": "FAIL",
+      "title": "区间 [2.58%,3.93%] 与论文自己的 beta=2/3 图景值内部不一致",
+      "detail": "机器（70 位，alpha=CODATA 7.2973525693e-3）：alpha*(4pi)^(1/2)=2.5868441325742093026693223E-2（=2.58684413E+0%，落入区间=True）；alpha*(4pi)^(2/3)=3.9443178553583952416203308E-2（=3.94431786E+0%，落入区间=False，超出上限相对 3.643220E-3）。区间端点反解 beta 窗口=[4.98953288E-1,6.65229857E-1]：含 1/2（=True）但不含 2/3（=False）⇒ 该区间既非 beta=2/3 的round/truncate 产物，只能由 beta≈6.65229857E-1 造出。",
+      "section": "P"
+    },
+    {
+      "code": "P01b",
+      "status": "FAIL",
+      "title": "评审诉求「eta=0 无自由参数极限」：即使 eta=0，单一自由参数 beta 仍可拟合任意目标值",
+      "detail": "机器：固定 alpha=alpha_FS、eta=0，对每个目标 t 解 beta=ln(t/alpha)/ln(4pi)：t=1.0000E-2→beta=1.244846E-1 | t=1.0000E-1→beta=1.034229E+0 | t=5.0000E-1→beta=1.670113E+0 | t=1.0000E+0→beta=1.943973E+0 | t=2.0000E+0→beta=2.217834E+0 | t=5.0000E+0→beta=2.579857E+0 | t=1.0000E+1→beta=2.853718E+0 | t=1.0000E+2→beta=3.763462E+0 | t=1.0000E+3→beta=4.673206E+0 | t=1.9000E+3→beta=4.926801E+0 ⇒ 10/10 命中 ⇒ 压缩 eta 不恢复判别力。",
+      "section": "P"
+    },
+    {
+      "code": "P01d",
+      "status": "INFO",
+      "title": "唯一当前可证伪读数：若锁定 H1（alpha=alpha_FS）、eta=0、beta∈{1/2,2/3}，则预测为两个点值",
+      "detail": "机器：beta=1/2 ⇒ m*/m0=2.58684413E+0%；beta=2/3 ⇒ m*/m0=3.94431786E+0%。两点差 1.357474E+0 个百分点，高精度质量比对（Penning 阱/原子干涉）在原理上可区分 —— 这是该公式集目前唯一不依赖自由参数的证伪通道。",
+      "section": "P"
+    },
+    {
+      "code": "W01a",
+      "status": "PASS",
+      "title": "评审量纲算式复核成立：耦合方程右端（[k_B]=T*s 口径）量纲 L^-2 ≠ 左端 T^-2",
+      "detail": "机器：[rot G]=T^-2 ；[1/(k_B c^2)·dB/dt]=L^-2 ；右端/左端=L^-2 T^2（恰为 [1/c^2]=L^-2T^2）⇒ 与 r95 K03 的 c^2 缺口是同一发现的对偶表述（K03：[k_B]_甲/[k_B]_乙=[c^2]；本式：右端/左端=[1/c^2]），修正方向一致：删 1/c^2（或 k_B 拆名）。评审独立算对。",
+      "section": "W"
+    },
+    {
+      "code": "W01b",
+      "status": "PASS",
+      "title": "评审 [Q_t]=[m^3/s] 复核成立：Q=(1/4pi)∮V·dS 量纲 L^3T^-1（1/4pi 无量纲）",
+      "detail": "机器：[Q]=L^3 T^-1（与 r95 T01 一致）",
+      "section": "W"
+    },
+    {
+      "code": "W01c",
+      "status": "INFO",
+      "title": "条件推演：若 m_0=k_m*Q_t 成立则 [k_m]=M L^-3 T",
+      "detail": "机器：[k_m]=[m_0]/[Q_t]=M L^-3 T。靶点差异：该式不在 r95 来稿中（来稿无 m_0、k_m、k_i、k_g 符号）⇒ 只作评审版公式集的条件量纲登记，不判来稿 FAIL。",
+      "section": "W"
+    },
+    {
+      "code": "W01d",
+      "status": "PASS",
+      "title": "alpha(4pi)^beta(1-eta) 无量纲复核成立（评审清单中直接 PASS 项）",
+      "detail": "机器：alpha 取「精细结构常数」或「速度比 v_theta/v_z」两种读法均无量纲；4pi 无量纲；beta 为无量纲实指数；(1-eta) 中 eta 无量纲 ⇒ 乘积无量纲。注意：无量纲只是必要条件，不带来判别力（P01b）。",
+      "section": "W"
+    },
+    {
+      "code": "W01e",
+      "status": "PASS",
+      "title": "增益系数量纲复核成立：来稿 gamma_f=f/f_ref 无量纲；gamma_total 若为各层增益之积亦无量纲",
+      "detail": "机器：[gamma_f]=1。靶点差异：gamma_total 符号不在来稿（来稿仅有 gamma_f）⇒ 按比例乘积的条件性质条件 PASS。",
+      "section": "W"
+    },
+    {
+      "code": "W01f",
+      "status": "CORRECTED",
+      "title": "评审「只取 A_z 却写 G=A，方向是否自洽」指控不准确（防过度指控）",
+      "detail": "文本证据：来稿 §一明确列出全部分量 A_r=-r*omega^2、A_theta=r*d(omega)/dt、A_z=式(2)，并定义 A=A_r e_r+A_theta e_theta+A_z e_z ≡ G（来稿第 56 行）⇒ 不存在「只取 A_z」。方向性问题的正确形态是 r95 G07：A_r 指向柱轴而非引力中心（球对称需连续族叠加，来稿未给）。本册据此把评审该条从「公式缺陷」下调为「表述不精确」，同时保留 G07 的方向 FAIL。",
+      "section": "W"
+    },
+    {
+      "code": "W01g",
+      "status": "PASS",
+      "title": "评审「高斯定理证明通量不变但需边界条件」复核成立",
+      "detail": "机器（文本证据）：来稿自陈「高斯散度定理证明微分同胚不变」；r95 T04 已判：对曲面形变不变 ≠ 拓扑不变量，成为拓扑荷需 div(V)=4*pi*q*delta^3 型奇点结构与量子化条件，来稿未给。评审与 r95 结论一致。",
+      "section": "W"
+    },
+    {
+      "code": "W01h",
+      "status": "BOUNDARY",
+      "title": "评审 Eotvos 论证的条件核验：k_g≡k_i 时等效原理参数恒零（空洞通过）；非空洞内容未定",
+      "detail": "机器：若 k_g≡k_i（含调制同步）则 Eotvos 参数 eta_E=(k_g-k_i)/k_i≡0，与拓扑荷调制幅度无关 ⇒ 公式层面与 1.00E-15 上限无冲突（tautological pass）。非空洞内容 = k_g,k_i 是否普适、是否跑动，而来稿 k_g/k_i 符号命中 2 处（仅在后续项清单提及 k_E,k_m）⇒ 靶点差异：k_g=k_i 属评审版公式集。且「同比例同步变化」本身是可证伪预测（不同物质拓扑荷不同 ⇒ 调制幅度可差），当前无实验数据。",
+      "section": "W"
+    },
+    {
+      "code": "W01i",
+      "status": "INFO",
+      "title": "靶点差异：V_r=Q/r^2 不是来稿公式，是评审从来稿 Q 定义反推的全局平均读法",
+      "detail": "文本证据：来稿 V=r*omega*e_theta+v_z*e_z（第 35 行）无径向分量；来稿 §三自陈「只有轴向 v_z 贡献」闭合面通量。机器：球面均匀 v_z 时 Q=R^2*v_z_bar（反解残差=0.000000E+6）⇒ 评审的 V_r=Q/r^2 是把全局积分量 Q 改写为局域径向场的一步，该步在来稿中不存在 ⇒ 1/r^5 结论归属 N01a（评审支），来稿原生支走 N01b。两支都 FAIL 但机制不同，都必须登记。",
+      "section": "W"
+    },
+    {
+      "code": "W01j",
+      "status": "PASS",
+      "title": "k_E/k_B=c 条件量纲一致：SI 中 [E]/[B]=[c]，同源映射下该比值天然是速度量纲",
+      "detail": "机器：[E]/[B]=L T^-1=[c] ⇒ 若 k_E,k_B 是 E=k_E*omega、B=k_B*omega 型同源映射常数，则 k_E/k_B 必须具有速度量纲，评审该问成立（条件 PASS：来稿未给 k_E 定义式，故只作条件判定；靶点差异已登记）。",
+      "section": "W"
+    },
+    {
+      "code": "R01",
+      "status": "INFO",
+      "title": "与 Einstein-Aether 的关系：共享「单位矢量优选场」结构，缺 Aether 的作用量与场方程",
+      "detail": "机器：来稿 |V|=c 常矢约束与 Aether 型理论的单位 timelike 优选场同型；来稿作用量/拉格朗日命中 1 处，且该唯一一处恰是来稿自陈「动力学拉格朗日缺失」（核心结论第 3 条）⇒ 无场方程、无 PPN 表达（N05）。Aether 型理论受太阳系 PPN 参数限制 —— 本框架连被检验的形式都不具备，但优选矢结构招来同一类实验问题（太阳系/等价原理）。须补文献对照（不自推，登记待办）。",
+      "section": "R"
+    },
+    {
+      "code": "R02",
+      "status": "INFO",
+      "title": "与 Finsler 几何的关系：无覆盖",
+      "detail": "机器：来稿 Finsler/芬斯勒命中 0 处 ⇒ 无 Finsler 函数 F(x,dx)，结构不重叠。",
+      "section": "R"
+    },
+    {
+      "code": "R03",
+      "status": "INFO",
+      "title": "与拓扑缺陷/涡旋的关系：名实不符（cross-ref T01-T04）",
+      "detail": "机器：Q 未量子化（r95 T03：随体积连续变）、无奇点结构（T04）⇒ 不构成标准拓扑荷（winding ∈ Z 型）。",
+      "section": "R"
+    },
+    {
+      "code": "R04",
+      "status": "INFO",
+      "title": "与 Floquet 拓扑绝缘体的关系：名义引用",
+      "detail": "机器：来稿能带/能隙命中 0 处；仅有 H(t+T)=H(t) 驱动形式与 T=2pi/(2*Delta_omega) 声明，无能带/能隙计算 ⇒ Floquet 只是驱动名义，与 Floquet 拓扑绝缘体的拓扑不变量体系无实质接轨。",
+      "section": "R"
+    },
+    {
+      "code": "S01",
+      "status": "FAIL",
+      "title": "六问①量纲对不对？—— 求导链与预测式过，耦合方程不过",
+      "detail": "机读：A01/A02/W01b/W01d/W01e/W01j PASS；K03/N04a FAIL（缺口恰为 c^2，唯一修法=删 1/c^2+拆名，r95 K04）。⇒ 答：部分不过；「量纲对也只是必要条件」的评审论断机器确认。",
+      "section": "S"
+    },
+    {
+      "code": "S02",
+      "status": "BOUNDARY",
+      "title": "六问②推导每步能否复现？—— 代数可 60 位复现，但含隐藏输入与算子混用",
+      "detail": "机读：A04 链式法则 60 位残差 7.04e-30（可复现）；G02 静态牛顿式是恒等重述（GM 被输入）；A08 D/Dt 与 nabla_V 混用；G05 1/r^2 必须额外输入 ⇒ 「无循环论证」不成立（输入即输出）。",
+      "section": "S"
+    },
+    {
+      "code": "S03",
+      "status": "FAIL",
+      "title": "六问③已知极限是否回到旧理论？—— 六通道全部未回归",
+      "detail": "机读：牛顿 G03/G04/G07+N01a/N01b FAIL；无驱动 N02 FAIL；SR 仅类光扇区 N03 BOUNDARY；电磁 N04a/N04b FAIL；GR/PPN 结构缺席 N05 FAIL；量子空操作 N06 INFO ⇒ 答：否。",
+      "section": "S"
+    },
+    {
+      "code": "S04",
+      "status": "FAIL",
+      "title": "六问④预测是否唯一、可证伪？—— 三参数零判别力；eta=0 后 beta 单参数仍零判别力；区间自相矛盾",
+      "detail": "机读：M01 三参数 10/10 拟合；P01b eta=0 后 beta 单参数 10/10；P01a 区间不含自己的 beta=2/3 图景值；P01d 唯一可证伪形态=锁定 (alpha,beta,eta) 后的两点读数。⇒ 答：否（除 P01d 通道）。",
+      "section": "S"
+    },
+    {
+      "code": "S05",
+      "status": "FAIL",
+      "title": "六问⑤是否有独立实验支持？—— 无，且实验射程处于两难",
+      "detail": "机读：E04 原子单位口径预言超灵敏度 5.56e11 倍（被排除）；E04b k_B 自由则不可证伪；E06 水星进动同型两难；评审开出的四类实验（Penning 阱/质量调制/Floquet 能隙/rot G 感应）中前两类对准 P01d 两点值可操作，后两类被 E04b/E05 的「自由则不可证伪」抵消。",
+      "section": "S"
+    },
+    {
+      "code": "S06",
+      "status": "INFO",
+      "title": "六问⑥是否经同行评审和独立复现？—— 库外过程，本册只登记状态：未做",
+      "detail": "库内机读无法判定同行评审状态 ⇒ 按纪律登记为「未做」而非猜测。",
+      "section": "S"
+    },
+    {
+      "code": "LAYER",
+      "status": "FAIL",
+      "title": "四层次总判决：L1 部分成立 / L2 FAIL / L3 FAIL / L4 未达到",
+      "detail": "与评审结论方向一致（「公理化假说框架+部分数学自洽+可证伪预测存疑」），两处机读修正：① P01a：可证伪预测区间与论文自己的 beta=2/3 图景值内部不一致（比评审论断更重）；② W01f：评审「只取 A_z」指控不准确（比评审论断更轻，方向问题在 G07 不在分量遗漏）。",
+      "section": "LAYER"
+    }
+  ],
+  "guards": [
+    {
+      "name": "g_ctrl_dim_alg_c2",
+      "ok": true,
+      "note": "dmul/dpow/deq 自洽：[c^2]=L^2T^-2"
+    },
+    {
+      "name": "g_ctrl_E_over_B_is_velocity",
+      "ok": true,
+      "note": "SI 中 [E]/[B]=LT^-1=[c]（电磁学已知恒等，量纲表自检）"
+    },
+    {
+      "name": "g_ctrl_kb_map_dim",
+      "ok": true,
+      "note": "[k_B]_map=M Q^-1（单位 T*s）"
+    },
+    {
+      "name": "g_ctrl_sphere_integral_controls",
+      "ok": true,
+      "note": "e_z·n 球面积分=-4.1633E-16（应 0）；e_r·n=1.2566E+1（应 4pi）"
+    },
+    {
+      "name": "g_map01_cross_citations_verified",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_n01a_flux_branch_1_over_r5",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_n01b_native_branch_needs_kepler_input",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_n02_drive_channel_dies_static",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_n03_subluminal_needs_nonzero_spiral",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_n04a_substituted_form_dimensionally_broken",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_n04b_not_faraday_any_limit",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_n05_no_metric_no_ppn",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_n06_no_hbar_in_formula_set",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_p01a_interval_excludes_own_beta23",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_p01b_eta0_single_beta_fits_all",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_p01d_two_point_predictions_distinct",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01a_review_arithmetic_confirmed",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01b_qt_dimension_confirmed",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01c_km_conditional_dim",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01d_product_dimensionless",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01e_gain_dimensionless",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01f_review_overcharge_corrected",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01g_gauss_not_topology",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01h_eotvos_vacuous_pass_flagged",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01i_vr_reconstruction_declared",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_w01j_ke_over_kb_is_velocity",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_r01_aether_relation_registered",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_r02_finsler_not_present",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_r03_topological_defect_not_matched",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_r04_floquet_nominal_only",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_s01_dimension_verdict_consistent",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_s02_hidden_inputs_flagged",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_s03_limits_all_fail",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_s04_prediction_not_unique",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_s05_no_independent_experiment",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_s06_peer_review_registered_only",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "name": "g_layer_verdict_machine_driven",
+      "ok": true,
+      "note": ""
+    }
+  ],
+  "counts": {
+    "PASS": 8,
+    "FAIL": 13,
+    "BOUNDARY": 3,
+    "INFO": 10,
+    "CORRECTED": 1,
+    "total": 35,
+    "guard_pass": 37,
+    "guard_total": 37
+  },
+  "cross_citations": [
+    {
+      "code": "A01",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "公理(1)三项同量纲"
+    },
+    {
+      "code": "A02",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "式(2) A_z 量纲为加速度"
+    },
+    {
+      "code": "A03",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "r 不固定完整展开两项均为加速度"
+    },
+    {
+      "code": "A04",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "式(2)≡公理(1)链式法则推论（60位）"
+    },
+    {
+      "code": "A05",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "直角坐标差分投影=(A_r,A_theta)"
+    },
+    {
+      "code": "A06",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "kappa^2+tau^2=(omega/c)^2 正面构造"
+    },
+    {
+      "code": "A07",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "kappa/tau≡v_theta/v_z"
+    },
+    {
+      "code": "A08",
+      "expected": "BOUNDARY",
+      "actual": "BOUNDARY",
+      "why": "D/Dt 与 nabla_V 算子混用"
+    },
+    {
+      "code": "G01",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "静态场仅 A_r 非零"
+    },
+    {
+      "code": "G02",
+      "expected": "INFO",
+      "actual": "INFO",
+      "why": "静态 A_z=牛顿能量守恒恒等重述（GM 被输入）"
+    },
+    {
+      "code": "G03",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "{公理(1),牛顿势,开普勒}三选二互斥"
+    },
+    {
+      "code": "G04",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "以地球标定 C ⇒ 水星 v_theta^2<0"
+    },
+    {
+      "code": "G05",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "开普勒检验：1/r^2 符合、1/r 差 19%"
+    },
+    {
+      "code": "G07",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "A_r 指向柱轴非球心"
+    },
+    {
+      "code": "K01",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "[k_B]_map=M Q^-1"
+    },
+    {
+      "code": "K02",
+      "expected": "PASS",
+      "actual": "PASS",
+      "why": "[k_B]_couple=M L^-2T^2Q^-1"
+    },
+    {
+      "code": "K03",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "同一 k_B 两口径差 c^2"
+    },
+    {
+      "code": "K04",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "c^2 缺口无非平凡补齐 ⇒ 唯一修法删 1/c^2 并拆名"
+    },
+    {
+      "code": "E04",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "45.22T@1MHz 预言超重力仪 5.56e11 倍"
+    },
+    {
+      "code": "E04b",
+      "expected": "BOUNDARY",
+      "actual": "BOUNDARY",
+      "why": "k_B 自由 ⇒ 不可证伪"
+    },
+    {
+      "code": "E05",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "静态 rot(G)=0 ⇒ 耦合方程零判别力"
+    },
+    {
+      "code": "E06",
+      "expected": "BOUNDARY",
+      "actual": "BOUNDARY",
+      "why": "水星进动两难"
+    },
+    {
+      "code": "T01",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "Q 量纲 L^3T^-1 非电荷"
+    },
+    {
+      "code": "T02",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "v_z 常数 ⇒ Q≡0"
+    },
+    {
+      "code": "T03",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "Q 随体积连续变，无量子化"
+    },
+    {
+      "code": "T04",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "缺拓扑不变性证明"
+    },
+    {
+      "code": "M01",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "三参数拟合任意目标值 10/10"
+    },
+    {
+      "code": "M02",
+      "expected": "BOUNDARY",
+      "actual": "BOUNDARY",
+      "why": "alpha 符号撞名"
+    },
+    {
+      "code": "M03",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "why": "m*/m0 与 f 无关 ⇒ 不可证伪"
+    }
+  ],
+  "coverage": [
+    {
+      "point": "量纲：式(2)耦合方程左右量纲",
+      "where": "r95 K01-K04（FAIL）",
+      "status": "已覆盖"
+    },
+    {
+      "point": "量纲：k_E/k_B=c",
+      "where": "来稿无定义式 ⇒ 本册 W01j 条件推演",
+      "status": "本册新增"
+    },
+    {
+      "point": "量纲：Q_t=[m^3/s] 与 m_0=k_mQ_t",
+      "where": "r95 T01 + 本册 W01b/W01c",
+      "status": "部分覆盖"
+    },
+    {
+      "point": "量纲：alpha(4pi)^beta(1-eta) 无量纲",
+      "where": "本册 W01d",
+      "status": "本册新增"
+    },
+    {
+      "point": "量纲：gamma_total 无量纲",
+      "where": "本册 W01e（来稿仅有 gamma_f）",
+      "status": "本册新增"
+    },
+    {
+      "point": "约束可积：A_z 只是轴向分量？",
+      "where": "r95 A03（完整两项）+ W01f",
+      "status": "已覆盖+本册修正"
+    },
+    {
+      "point": "约束可积：完整 nabla_V V 含 -r*omega^2 e_r？",
+      "where": "来稿 §一自列三分量 + r95 A05",
+      "status": "已覆盖"
+    },
+    {
+      "point": "拓扑荷：量子化/奇点/微分同胚",
+      "where": "r95 T01-T04（全 FAIL）",
+      "status": "已覆盖"
+    },
+    {
+      "point": "场方程闭合：缺 V 的动力学方程",
+      "where": "r95 外部输入#1（omega 无场方程）",
+      "status": "已覆盖"
+    },
+    {
+      "point": "极限：弱场低速→牛顿 1/r^2",
+      "where": "r95 G03-G07 + 本册 N01a/N01b",
+      "status": "已覆盖+本册深化"
+    },
+    {
+      "point": "极限：无驱动 f→0",
+      "where": "r95 E05 + 本册 N02",
+      "status": "已覆盖+本册深化"
+    },
+    {
+      "point": "极限：平坦时空→SR",
+      "where": "本册 N03",
+      "status": "本册新增"
+    },
+    {
+      "point": "极限：电磁→法拉第",
+      "where": "本册 N04a/N04b",
+      "status": "本册新增"
+    },
+    {
+      "point": "极限：GR→后牛顿 gamma,beta",
+      "where": "来稿风险点4自陈未做 + 本册 N05",
+      "status": "已覆盖+本册新增"
+    },
+    {
+      "point": "极限：量子 hbar→0",
+      "where": "本册 N06",
+      "status": "本册新增"
+    },
+    {
+      "point": "等效原理 Eotvos 1e-15",
+      "where": "本册 W01h",
+      "status": "本册新增"
+    },
+    {
+      "point": "预测唯一性：eta=0 极限",
+      "where": "r95 M01 + 本册 P01a-P01d",
+      "status": "已覆盖+本册深化"
+    },
+    {
+      "point": "独立实验清单",
+      "where": "r95 E04-E06（射程两难）",
+      "status": "已覆盖"
+    },
+    {
+      "point": "与 Einstein-Aether/Finsler/拓扑缺陷/Floquet 关系",
+      "where": "本册 R01-R04",
+      "status": "本册新增"
+    },
+    {
+      "point": "同行评审与独立复现",
+      "where": "库外过程 ⇒ S06 登记",
+      "status": "本册登记"
+    }
+  ],
+  "layers": [
+    {
+      "layer": "L1 逻辑正确（公理→定理可复现、无循环）",
+      "verdict": "PARTIAL",
+      "basis": "A01-A07 求导链 60 位复现；但 G02 恒等重述（GM 输入）、A08 算子混用 ⇒ 循环成分在，部分成立"
+    },
+    {
+      "layer": "L2 数学正确（量纲/可积/奇点/闭合）",
+      "verdict": "FAIL",
+      "basis": "A01/A02/W01d/W01e/W01j 量纲 PASS；K03/N04a 耦合方程量纲崩；T01-T04 Q 非拓扑；omega(r,t) 无场方程（外部输入#1）"
+    },
+    {
+      "layer": "L3 现象学正确（退化已知+可证伪预测）",
+      "verdict": "FAIL",
+      "basis": "极限六通道全败（S03）；预测零判别力+区间自相矛盾（S04）"
+    },
+    {
+      "layer": "L4 物理真理（独立实验+同行复现）",
+      "verdict": "NOT_REACHED",
+      "basis": "无独立验证（S05）、同行评审未做（S06）；红线：数学自洽≠实验证实"
+    }
+  ],
+  "external_inputs": [
+    {
+      "name": "Q 的绝对标度",
+      "desc": "N01a 匹配半径 r_*=(2Q^2/GM)^(1/3) 随 Q 无界滑动 ⇒ 需无来源标度（与 r95 外部输入#1 同型）"
+    },
+    {
+      "name": "GM / 开普勒 omega(r)",
+      "desc": "N01b 阳性对照复现牛顿的唯一通道是把 GM 输入后再读出（circular，cross-ref G02/G05）"
+    },
+    {
+      "name": "k_E,k_m,k_g,k_i",
+      "desc": "评审版公式集的常数：来稿无定义式 ⇒ 条件推演（W01c/W01j/W01h），不代造"
+    },
+    {
+      "name": "beta,eta",
+      "desc": "残余质量公式自由参数：P01b 证明 eta=0 后 beta 单参数仍足以拟合任意值"
+    },
+    {
+      "name": "区间端点 2.58%/3.93%",
+      "desc": "P01a：与 beta=2/3 图景值不一致，端点来源不明（反解 beta≈0.6652）"
+    },
+    {
+      "name": "[C] 级实验常数",
+      "desc": "Eotvos 上限 1.00E-15（Eotvos-Dicke 型组分差实验，近年最好读数约 1e-13~1e-15 量级（文献值，需核对））；45.22T@1MHz、1e-9 m/s^2（沿用 r95）"
+    }
+  ],
+  "key_numbers": {
+    "n01a_flux_scaling_ratio": "3.2000000000E+1",
+    "n01a_positive_control_ratio": "4.0000000000E+0",
+    "n01a_operator_residual_O_h": "1.4999980000E-6",
+    "n01a_rstar_earth_Q1e6_m": "1.7119749538E-1",
+    "n01b_kepler_input_residual": "3.3726337810E-70",
+    "p01a_beta_half_value": "2.5868441325742093026693223E-2",
+    "p01a_beta_23_value": "3.9443178553583952416203308E-2",
+    "p01a_beta_23_excess_over_interval": "3.6432201930E-3",
+    "p01a_beta_window_lo": "4.9895328850E-1",
+    "p01a_beta_window_hi": "6.6522985714E-1",
+    "p01d_point_beta_half_pct": "2.5868441326E+0",
+    "p01d_point_beta_23_pct": "3.9443178554E+0",
+    "w01a_kb_rhs_over_lhs": "L^-2 T^2",
+    "w01c_km_conditional": "M L^-3 T",
+    "w01j_E_over_B": "L T^-1"
+  },
+  "wrapper": {
+    "generated_at": "2026-10-18 10:20:19",
+    "module": "D:\\a10\\aikjx\\code\\my_lib\\openuft\\04_公共成果\\本项目_全维自洽与归一化\\源码\\TUFT-r98_公式正确性四层次审查_外部评审整理与增量复算_2026-10-18.py",
+    "input_mtimes": {
+      "TUFT-四层次正确性评审_外部来料全文_2026-10-18.md": "2026-10-18 10:12:34",
+      "TUFT-螺旋时空理论_来料全文_2026-10-17.md": "2026-10-17 23:10:21",
+      "TUFT-r95_螺旋时空理论_曲率挠率频率角速度_全维审计与攻破_2026-10-17.json": "2026-10-17 23:41:44"
+    }
+  }
+}
