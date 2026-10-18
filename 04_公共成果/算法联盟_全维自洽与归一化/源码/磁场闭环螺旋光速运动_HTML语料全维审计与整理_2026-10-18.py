@@ -279,14 +279,19 @@ I('A03', '内容分层：去重后 18 个独立文件中 UFT 物理相关 12 / �
   '。即该 HTML 层真正需要做物理审计的对象是 12 个。')
 
 shell = []
+shell_chars = {}
 for fn, (c, _) in CLASSIFY.items():
     if c == '空壳':
         p = os.path.join(SRC_HTML, '202609', fn)
         if os.path.exists(p):
             t = read_any(p)
             t = re.sub(r'(?is)<(script|style)\b.*?</\1>', ' ', t)
+            # 注释必须先于标签剥离：只剥标签时 HTML 注释的收尾 `-->` 会留在正文里，
+            # 实测把 RZZ8… 的「4 字符」读成「8 字符」（本册第八节自抓第 6 条）。
+            t = re.sub(r'(?s)<!--.*?-->', ' ', t)
             t = re.sub(r'(?s)<[^>]+>', ' ', t)
             t = re.sub(r'\s+', ' ', t).strip()
+            shell_chars[fn] = len(t)
             shell.append('%s(%d B, 正文 %d 字符)' % (fn, os.path.getsize(p), len(t)))
 I('A04', '两个豆包抓取页是零内容快照，不构成可审计来料',
   '；'.join(shell) + '。体积大（363 KB / 2.2 MB）全部来自内联 JS 与样式，无可提取物理文本。')
@@ -868,7 +873,8 @@ REGISTER = [
     ('全选.html', '无关', '司法流程状态词', 'ymkj RPA 残留，与 UFT 无关'),
     ('preview.html', '无关', '拓扑生命系统理论可视化', '与 UFT 无关'),
     ('38435587275432194.html / RZZ8dPhTao6Pktxgg9dcknHwnvf.html', '空壳', '豆包网页抓取快照',
-     '正文 19/4 字符，零可审计内容，建议标注为无效抓取'),
+     '正文 %d/%d 字符，零可审计内容，建议标注为无效抓取'
+     % (shell_chars['38435587275432194.html'], shell_chars['RZZ8dPhTao6Pktxgg9dcknHwnvf.html'])),
 ]
 
 I('R01', '整理结论：去重后 18 个独立文件 = 可登记 UFT 语料 12 / 工程 1 / 无关 3 / 空壳 2；零新增语料',
@@ -887,6 +893,28 @@ I('R03', '语料库健康度：HTML 层去重后 18 件中仅 12 件与 UFT 相�
   '无关/空壳共 5 个独立文件（西游记漫画、司法状态词、拓扑生命系统、两个豆包空壳），'
   '占去重后 18 个的 27.8%；若按体积算，两个豆包空壳占 HTML 层总体积的 88.5%（2.69 MB / 3.04 MB）。'
   '建议后续来料入库前先过「正文文本量 + 主题分类」预检。')
+
+# ---- 清点/归属三把交叉针：分类台账、归属登记表、盘上名单、空壳注记须两两复算一致
+guard('G9-1', set(os.path.basename(p) for p in cur) == set(CLASSIFY),
+      '清点覆盖：盘上 HTML 名单须与 CLASSIFY 台账逐字同集')
+
+reg_indep = {}
+for _r in REGISTER:
+    _objs = [n.strip() for n in _r[0].split(' / ') if n.strip() not in dup_names]
+    reg_indep[_r[1]] = reg_indep.get(_r[1], 0) + len(_objs)
+guard('G9-2', reg_indep == cls_indep,
+      '归属登记表按「/」展开并并入副本后，各分类对象数须等于分类计数：%r vs %r' % (reg_indep, cls_indep))
+
+guard('G9-3', sum(cls_indep.values()) == len(cur_md5),
+      '分类后的独立对象数须等于 md5 去重后的唯一哈希数：%d vs %d' % (sum(cls_indep.values()), len(cur_md5)))
+
+
+def _note_chars(s):
+    return [int(x) for x in re.findall(r'(\d+)\s*字符', s)]
+
+
+guard('G9-4', all(_note_chars(CLASSIFY[fn][1]) == [shell_chars[fn]] for fn in sorted(shell_chars)),
+      '空壳注记里的「N 字符」须逐一等于该文件实测正文长度：%r' % shell_chars)
 
 # ================================================================ 汇总与输出
 print('\n' + '=' * 78)
@@ -942,7 +970,8 @@ payload = dict(
     ),
     register_table=REGISTER,
     verdict='FAIL',
-    verdict_note='语料整理面：20 个 HTML 全部已在档案内、无新增语料，去重后 18 个独立文件中 11 个与 UFT 相关。'
+    verdict_note='语料整理面：%d 个 HTML 全部已在档案内、无新增语料，去重后 %d 个独立文件中 %d 个与 UFT 相关。'
+                 % (len(cur), sum(cls_indep.values()), cls_indep.get('UFT物理', 0)) +
                  '物理面：该族的承重主张（磁场沿螺旋线以光速运动）在其自身方程组内不可满足'
                  '（C01 全部模态倏逝）、其 v_总=c 证明循环（E01/E02）、其 ∇·B=0 验证对象偷换（F02/F03），'
                  '且同一语料库内的 deepseek 页已正面否证该读法（H03）。'

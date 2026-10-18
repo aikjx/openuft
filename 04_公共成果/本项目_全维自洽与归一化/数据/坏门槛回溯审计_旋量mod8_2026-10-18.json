@@ -1,0 +1,279 @@
+{
+  "tool": "坏门槛回溯审计_旋量mod8_scan_2026-10-18.py",
+  "corpus_sha2512_first12": null,
+  "quote_drift": [],
+  "canon_rule": "SO(1,D-1): Weyl<=>D even; Majorana(real)<=>D mod8 in {2,3,4}; MW<=>D mod8==2",
+  "canon_anchor_excluded": {
+    "D=6": "OPEN（文献口径分歧，不入判分锚）"
+  },
+  "canon_anchors": {
+    "2": [
+      true,
+      true,
+      true
+    ],
+    "4": [
+      true,
+      true,
+      false
+    ],
+    "10": [
+      true,
+      true,
+      true
+    ],
+    "26": [
+      true,
+      true,
+      true
+    ],
+    "32": [
+      true,
+      false,
+      false
+    ]
+  },
+  "rule_reads": {
+    "canon@49A": {
+      "rule": "R_49A",
+      "verdict": "PASS",
+      "n_anchors": 15,
+      "faults": []
+    },
+    "canon@disk52": {
+      "rule": "R_disk(n≡4)",
+      "verdict": "PASS",
+      "n_anchors": 6,
+      "faults": []
+    },
+    "canon@draft": {
+      "rule": "R_draft(M5)",
+      "verdict": "RED",
+      "n_anchors": 15,
+      "faults": [
+        {
+          "plane": [
+            1,
+            3
+          ],
+          "D": 4,
+          "channel": "Weyl",
+          "rule_says": false,
+          "canon_says": true
+        },
+        {
+          "plane": [
+            1,
+            31
+          ],
+          "D": 32,
+          "channel": "Weyl",
+          "rule_says": false,
+          "canon_says": true
+        }
+      ]
+    }
+  },
+  "attack_b1_anchors_recomputed": [
+    {
+      "plane": [
+        1,
+        3
+      ],
+      "expected": [
+        true,
+        true,
+        false
+      ],
+      "archived_got": [
+        true,
+        true,
+        false
+      ],
+      "archived_flag": "OK"
+    },
+    {
+      "plane": [
+        1,
+        1
+      ],
+      "expected": [
+        true,
+        true,
+        true
+      ],
+      "archived_got": [
+        true,
+        true,
+        true
+      ],
+      "archived_flag": "OK"
+    },
+    {
+      "plane": [
+        0,
+        4
+      ],
+      "expected": [
+        true,
+        false,
+        false
+      ],
+      "archived_got": [
+        true,
+        false,
+        false
+      ],
+      "archived_flag": "OK"
+    },
+    {
+      "plane": [
+        1,
+        9
+      ],
+      "expected": [
+        true,
+        true,
+        true
+      ],
+      "archived_got": [
+        true,
+        true,
+        true
+      ],
+      "archived_flag": "OK"
+    },
+    {
+      "plane": [
+        1,
+        10
+      ],
+      "expected": [
+        false,
+        true,
+        false
+      ],
+      "archived_got": [
+        false,
+        true,
+        false
+      ],
+      "archived_flag": "OK"
+    },
+    {
+      "plane": [
+        0,
+        8
+      ],
+      "expected": [
+        true,
+        true,
+        true
+      ],
+      "archived_got": [
+        true,
+        true,
+        true
+      ],
+      "archived_flag": "OK"
+    },
+    {
+      "plane": [
+        0,
+        2
+      ],
+      "expected": [
+        true,
+        true,
+        false
+      ],
+      "archived_got": [
+        true,
+        true,
+        false
+      ],
+      "archived_flag": "OK"
+    }
+  ],
+  "attack_b1_redo_faults": [],
+  "sites": [
+    {
+      "id": "S1",
+      "path": "07_统一场方程/48_v50audit_calc.py",
+      "line": 26,
+      "quote": "Majorana 允许但 Majorana–Weyl 不允许",
+      "class": "坏规则残留（正确口径下 D=32≡0 ⇒ Majorana 亦不允许）",
+      "disposition": "待勘误：verdict 字符串须整句替换；判词方向不受影响（A3 仍负面）"
+    },
+    {
+      "id": "S2",
+      "path": "07_统一场方程/openuft_49_hierarchical_axiom_system.md",
+      "line": 52,
+      "quote": "4≡4 (mod 8) → Weyl 存在、Majorana-Weyl 不存在",
+      "class": "坏规则残留（磁盘执行口径 A4 点名的 n≡4 版本，未替换为 (p,q) 双参数判据）",
+      "disposition": "待勘误：D=4 三值结论本身与 canon 一致 (T,T,F)，错在判据表述"
+    },
+    {
+      "id": "S3",
+      "path": "07_统一场方程/48_v50audit_calc_results.json",
+      "line": null,
+      "quote": "Majorana 允许",
+      "class": "坏规则产物（机读账本仍带 S1 的错句）",
+      "disposition": "待勘误：由 S1 脚本重跑再生，不得手改"
+    },
+    {
+      "id": "S4",
+      "path": "07_统一场方程/49A_ec_lagrangian_calc.py",
+      "line": 926,
+      "quote": "return D % 8 in (1, 2, 3, 4)",
+      "class": "修正规则（W/MW 与 canon 同；Majorana 集并入赝实 sM ⇒ 标签混用）",
+      "disposition": "登记口径缺陷：D≡1,5 (mod 8) 为 symplectic-Majorana 非普通 Majorana；其锚集恰缺 D∈{5,9,13} 判分位 ⇒ 该混用在 H1 内不可见"
+    },
+    {
+      "id": "S5",
+      "path": "07_统一场方程/49A_ec_lagrangian_calc.py",
+      "line": 936,
+      "quote": "6D：Weyl 有、Majorana 无（辛型）",
+      "class": "锚注记内部张力：同一 D≡6 在 S4 规则下判『有 Majorana』，注记却判『无』",
+      "disposition": "登记 OPEN（D=6 口径文献分歧，不入判分锚）"
+    },
+    {
+      "id": "S6",
+      "path": "07_统一场方程/openuft_49_阶段1_三重预检攻破卷_2026-10-15.md",
+      "line": 40,
+      "quote": "\\text{Majorana} \\iff (q-p)\\bmod 8 \\in \\{0,1,2\\}",
+      "class": "修正规则（双参 (p,q) 口径；与 canon 的换算未声明）",
+      "disposition": "须补：约定声明 + 换算引理；其 MW 通道在全枚举下与 canon 分歧 18 例（B4）"
+    },
+    {
+      "id": "S7",
+      "path": "07_统一场方程/_p49_attack_calc.py",
+      "line": 94,
+      "quote": "Majorana-Weyl   <=> n 为偶数 且 (q-p) mod 8 == 0",
+      "class": "修正规则（与 S6 同源）",
+      "disposition": "同 S6；B1 的 7/7 自检只覆盖其自身锚集"
+    },
+    {
+      "id": "S8",
+      "path": "04_公共成果/openuft_统一场论全部完成工作总账_2026-10-15.md",
+      "line": 106,
+      "quote": "M5 存在 3 个互斥版本",
+      "class": "指令源（本轮回溯的委托）",
+      "disposition": "本轮即其执行；执行后须回填状态"
+    },
+    {
+      "id": "S9",
+      "path": "01_独立体系/S02_空间光速螺旋统一力/04_理论推导/GAQ-UFT_V50_家族一三四第三轮代数几何对撞_verify.py",
+      "line": 32,
+      "quote": "32 mod 8=0",
+      "class": "非涉案（Bott 周期算术，非旋量存在性判据）",
+      "disposition": "免审通过：不在坏规则依赖链上"
+    }
+  ],
+  "verdicts_not_flipped": [
+    "旋量关 FAIL（判据级）维持——依据已换成正确判据，结论不变",
+    "D=4 三值结论（有 Weyl、有 Majorana、无 MW）与 canon 一致",
+    "A3『32 维负面』判词方向维持（其 Majorana 措辞待勘误，S1/S3）"
+  ],
+  "red_lines": "只读审计：未改动任何被审文件字节；未跑 refresh_catalog；未做 git 操作"
+}
