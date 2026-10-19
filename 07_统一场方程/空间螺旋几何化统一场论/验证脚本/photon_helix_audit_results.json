@@ -1,0 +1,335 @@
+{
+  "meta": {
+    "volume": "66 · 光子螺旋坐标解释判据",
+    "generated_by": "photon_helix_audit.py",
+    "python": "3.13.14",
+    "constants": {
+      "c_m_per_s": "299792458 (SI exact)",
+      "h_J_s": "6.62607015e-34 (SI exact)",
+      "e_C": "1.602176634e-19 (SI exact)",
+      "lambda_m": "5.0e-7 (selected example, NOT measured)",
+      "eps0_F_per_m": "8.8541878128e-12 (CODATA 2018, rel. unc. 1.5e-10 via mu0)",
+      "mu0_H_per_m": "1.25663706212e-6 (CODATA 2018)"
+    },
+    "energy_scale_eV": "2.479683969 (E9 能标声明：500 nm 光子)",
+    "counts": {
+      "PASS": 28,
+      "FAIL": 5,
+      "BOUNDARY": 2,
+      "INFO": 3,
+      "OPEN": 1
+    },
+    "controls_all_behaved": true
+  },
+  "results": [
+    {
+      "id": "A1",
+      "item": "版本A速度分解 |r_dot|^2 = c^2 + (R*Omega)^2",
+      "verdict": "PASS",
+      "detail": "39 点数值最大相对偏差 3.560e-16；符号层 R*Omega == c 精确成立：True",
+      "max_rel_err": 3.560480179371579e-16,
+      "RW_identically_c": true
+    },
+    {
+      "id": "A2",
+      "item": "版本A四维间隔 ds^2 = -(R*Omega)^2 dt^2（+--- 号差）",
+      "verdict": "PASS",
+      "detail": "符号层 ds^2/dt^2 = PiNum(-89875517873681764, pi^0)；R*Omega>0 时 ds^2<0（类空）：True",
+      "ds2_over_dt2": "PiNum(-89875517873681764, pi^0)",
+      "spacelike": true
+    },
+    {
+      "id": "A3",
+      "item": "IF 三个分量均为同一局部惯性系真实位置坐标 AND 该对象为标准光子 THEN 与零间隔条件冲突",
+      "verdict": "FAIL",
+      "detail": "R*Omega=c 时 |r_dot|/c = 1.414213562373095 > 1，轨迹为类空曲线，不能同时充当标准光子的零间隔世界线",
+      "v_over_c": 1.4142135623730951
+    },
+    {
+      "id": "A4",
+      "item": "定理：ds^2=0 且 dz/dt=c => 横向位移恒零",
+      "verdict": "PASS",
+      "detail": "ds^2/dt^2 = c^2 - (dx^2+dy^2)/dt^2 - c^2 = -(v_perp)^2；取零强迫 v_perp=0"
+    },
+    {
+      "id": "A5",
+      "item": "类光约束表 u^2 + (R*Omega)^2 = c^2（0 / 0.6c / c 三档）",
+      "verdict": "PASS",
+      "detail": "三档轴向速率 [1.0, 0.8, 0.0]",
+      "table": [
+        {
+          "v_perp_over_c": 0.0,
+          "u_axial_over_c": 1.0,
+          "check": 0.0
+        },
+        {
+          "v_perp_over_c": 0.6,
+          "u_axial_over_c": 0.8,
+          "check": 0.0
+        },
+        {
+          "v_perp_over_c": 1.0,
+          "u_axial_over_c": 0.0,
+          "check": 0.0
+        }
+      ]
+    },
+    {
+      "id": "A6",
+      "item": "ROOT 螺旋存在互斥两种参数化：版本A（轴向=c，类空）vs 版本B（总速=c，类光，04/65 号卷口径）",
+      "verdict": "BOUNDARY",
+      "detail": "两者数学后果互斥（A2 vs B3），来稿未声明采用哪一支；跨卷引用前必须先冻结口径"
+    },
+    {
+      "id": "B1",
+      "item": "版本A（轴向=c，类空）下 Frenet 标架可定义：kappa=tau=1/(2R)",
+      "verdict": "PASS",
+      "detail": "三档步长 [0.003, 0.001, 0.0003] 的相对误差 [['1.50e-06', '3.12e-10'], ['1.67e-07', '2.11e-09'], ['1.45e-08', '2.77e-07']]；最佳 1.666e-07（阈值 1e-6）；收敛阶 [2.0, -1.738, 2.028, -4.053]",
+      "kappa_1_per_m": 6283185.307179586,
+      "tau_1_per_m": 6283185.307179586,
+      "best_rel_err": 1.6664415302466932e-07,
+      "orders": [
+        2.0,
+        -1.738,
+        2.028,
+        -4.053
+      ]
+    },
+    {
+      "id": "B2",
+      "item": "在 R*Omega=c 的取参下 kappa == tau 为符号层精确结论",
+      "verdict": "PASS",
+      "detail": "b=c/Omega 且 R*Omega=c => b=R => kappa=tau=1/(2R)，与 R 的数值无关（结构性，非拟合）"
+    },
+    {
+      "id": "B3",
+      "item": "版本B（u_z^2+(R*Omega)^2=c^2，类光）下 ds^2==0 => Frenet 标架无定义",
+      "verdict": "FAIL",
+      "detail": "ds^2/dt^2 = 0 精确为零；ds/dlambda=0 使 T=dr/ds 为 0/0，kappa/tau 的定义场所不存在（65 号 B5 复发）",
+      "recurrence_of_65_B5": true
+    },
+    {
+      "id": "B4",
+      "item": "ROOT 螺旋二难：要么{类空+超光速+Frenet 有定义}，要么{类光+Frenet 无定义}",
+      "verdict": "FAIL",
+      "detail": "两支均已机算：A3（超光速）与 B3（Frenet 无定义）。任一支都不支撑「光子具有可用 kappa/tau 描述的内部螺旋几何」这一物理解释；且不存在的第三支需另行定义（当前未给出）"
+    },
+    {
+      "id": "C2a-match",
+      "item": "来稿声明值核对：5.99584916e14 Hz",
+      "verdict": "PASS",
+      "detail": "机算 5.99584916e+14 vs 声明 5.99584916e+14，相对差 0.000e+00，末位半刻度 8.339e-10",
+      "computed": 599584916000000.0,
+      "declared": 599584916000000.0,
+      "rel_err": 0.0,
+      "half_ulp": 8.339102379953801e-10
+    },
+    {
+      "id": "C2b-match",
+      "item": "来稿声明值核对：1.667820476e-15 s",
+      "verdict": "PASS",
+      "detail": "机算 1.66782047599e-15 vs 声明 1.667820476e-15，相对差 5.540e-12，末位半刻度 2.998e-10",
+      "computed": 1.6678204759907603e-15,
+      "declared": 1.667820476e-15,
+      "rel_err": 5.540003076222819e-12,
+      "half_ulp": 2.9979245799833914e-10
+    },
+    {
+      "id": "C2c-match",
+      "item": "来稿声明值核对：2.479683969 eV",
+      "verdict": "PASS",
+      "detail": "机算 2.47968396866 vs 声明 2.479683969，相对差 1.355e-10，末位半刻度 2.016e-10",
+      "computed": 2.479683968664005,
+      "declared": 2.479683969,
+      "rel_err": 1.3549903606611108e-10,
+      "half_ulp": 2.0163859840640848e-10
+    },
+    {
+      "id": "C2d-match",
+      "item": "来稿声明值核对：1.32521403e-27 kg*m/s",
+      "verdict": "PASS",
+      "detail": "机算 1.32521403e-27 vs 声明 1.32521403e-27，相对差 0.000e+00，末位半刻度 3.773e-09",
+      "computed": 1.32521403e-27,
+      "declared": 1.32521403e-27,
+      "rel_err": 0.0,
+      "half_ulp": 3.77297544910538e-09
+    },
+    {
+      "id": "C3-match",
+      "item": "来稿声明值核对：79.57747155 nm",
+      "verdict": "PASS",
+      "detail": "机算 79.5774715459 vs 声明 79.57747155，相对差 5.092e-11，末位半刻度 6.283e-11",
+      "computed": 79.57747154594767,
+      "declared": 79.57747155,
+      "rel_err": 5.0923014002483195e-11,
+      "half_ulp": 6.283185306859627e-11
+    },
+    {
+      "id": "C5-match",
+      "item": "来稿声明值核对：4.239705600e8 m/s",
+      "verdict": "PASS",
+      "detail": "机算 423970560.001 vs 声明 423970560，相对差 1.808e-12，末位半刻度 1.179e-10",
+      "computed": 423970560.00076646,
+      "declared": 423970560.0,
+      "rel_err": 1.807805068273486e-12,
+      "half_ulp": 1.179327168376974e-10
+    },
+    {
+      "id": "C2a",
+      "item": "f = c/lambda（精确有理数）",
+      "verdict": "PASS",
+      "detail": "f = 599584916000000 Hz（c 与 lambda 均为精确值，f 亦精确）",
+      "f_Hz": "599584916000000"
+    },
+    {
+      "id": "C2b",
+      "item": "T = 1/f",
+      "verdict": "PASS",
+      "detail": "T = 1/599584916000000 s = 1.66782047599076024787788357237 fs"
+    },
+    {
+      "id": "C2c",
+      "item": "E = h f",
+      "verdict": "PASS",
+      "detail": "E = 19864458571489287/50000000000000000000000000000000000 J = 2.47968396866400524475505489116 eV"
+    },
+    {
+      "id": "C2d",
+      "item": "p = h/lambda",
+      "verdict": "PASS",
+      "detail": "p = 1.32521403E-27 kg*m/s"
+    },
+    {
+      "id": "C3",
+      "item": "R = lambda/(2 pi)",
+      "verdict": "PASS",
+      "detail": "R = 79.5774715459476678844418816863 nm（由假设 R=lambda/(2pi) 推出，非实验测得）"
+    },
+    {
+      "id": "C4",
+      "item": "R*Omega = c 是定义重排（pi 精确相消）",
+      "verdict": "INFO",
+      "detail": "R*Omega = (lambda/2pi)(2pi c/lambda) = c，恒等式；相对偏差 0.000e+00。「半径恰使横向速率等于 c」不含经验信息，不得记为预言",
+      "rel_err": 0.0,
+      "is_identity": true
+    },
+    {
+      "id": "C5",
+      "item": "v_total = sqrt(2) c",
+      "verdict": "PASS",
+      "detail": "v = 423970560.000766477747888217181709494412279055772724939396001 m/s"
+    },
+    {
+      "id": "C6",
+      "item": "输入精度账（c/h/e 为 SI 2019 精确定义值；lambda 为算例设定）",
+      "verdict": "INFO",
+      "detail": "c,h,e 零不确定度 => 全部数值为定义推出的精确量；判定方向不依赖其数值（结构性结论，缩放不变）"
+    },
+    {
+      "id": "C7",
+      "item": "跨卷交叉：65 号 A4 的 E=hbar*c*sqrt(kappa^2+tau^2) 在 kappa=tau=1/(2R) 下与 h f 的比值",
+      "verdict": "BOUNDARY",
+      "detail": "比值 = 0.707106781186547524400844362104；与 1/sqrt(2) 的相对偏差 1.414e-30（机算确认为 1/sqrt(2)）。两套能量读数相差 sqrt(2)，跨卷登记未消解",
+      "E_geom_J": "2.80925867209986273532592134140E-19",
+      "E_photon_J": "3.9728917142978574E-19",
+      "ratio": "0.707106781186547524400844362104"
+    },
+    {
+      "id": "D1",
+      "item": "固定位置 z=z0：dphi/dt = -omega",
+      "verdict": "PASS",
+      "detail": "精确有理差分给出 -2000000000000000（期望 -2000000000000000）",
+      "dphi_dt": "-2000000000000000"
+    },
+    {
+      "id": "D2",
+      "item": "沿同一相位面 z=ct+z0：dphi/dt = k c - omega = 0",
+      "verdict": "PASS",
+      "detail": "k*c = 2000000000000000 与 omega = 2000000000000000 精确相等（k 定义为 omega/c），差 0",
+      "residual": "0"
+    },
+    {
+      "id": "D3",
+      "item": "「相位面采样」不等于建立光子静止参考系",
+      "verdict": "INFO",
+      "detail": "沿 z=ct+z0 采样只是沿一条光速路径求值；无惯性系可使光子静止，故该读数不构成内部时钟"
+    },
+    {
+      "id": "D4",
+      "item": "圆偏振平面波 S = epsilon0 c E0^2 z-hat 与相位无关",
+      "verdict": "PASS",
+      "detail": "24 个相位点最大相对偏差 4.346e-14；SI 闭合式 mu0*eps0*c^2-1 = -4.352e-14（阈值 5.0e-10，来自 mu0 的 CODATA 不确定度 1.5e-10）",
+      "max_rel_dev": 4.345927412879668e-14,
+      "SI_closure_residual": -4.3520742565306136e-14,
+      "tol": 5e-10
+    },
+    {
+      "id": "D5",
+      "item": "场方向旋转与轴向能流可共存，无需叠加光子质心横向速度",
+      "verdict": "PASS",
+      "detail": "D4 机读：能流恒沿轴向、与旋转相位无关；故圆偏振不构成「光子位置绕圈」的证据"
+    },
+    {
+      "id": "E1",
+      "item": "参数计数门 n_free <= n_obs - 1",
+      "verdict": "FAIL",
+      "detail": "净自由参数 1（R,Omega 加一条恒等约束）vs 登记观测 0；不满足门限（沿用 65 号 B9 口径）",
+      "n_free": 1,
+      "n_obs": 0
+    },
+    {
+      "id": "E2",
+      "item": "79.57747155 nm 不得称为「实验测得的光子半径」",
+      "verdict": "FAIL",
+      "detail": "该数值由附加假设 R=lambda/(2pi) 推出（C3/C4），无独立测量链；命名纪律 FAIL（来稿已自承，此处登记）"
+    },
+    {
+      "id": "E3",
+      "item": "把光学频率指定为内部旋转频率需要独立证据",
+      "verdict": "OPEN",
+      "detail": "Omega = 2 pi f 目前只是记号指定；若无可区分观测量（到达时间/偏振概率/散射分布），该指定不可检验"
+    },
+    {
+      "id": "CT1",
+      "item": "R=0 退化为标准光线（v=c, ds^2=0）",
+      "verdict": "PASS",
+      "detail": "ds^2/dt^2 = PiNum(0, pi^0)",
+      "control": true
+    },
+    {
+      "id": "CT2",
+      "item": "引擎区分力：版本B（类光）读 ds^2=0，版本A（类空）读 ds^2<0",
+      "verdict": "PASS",
+      "detail": "版本B ds^2/dt^2 = 0，与 A2 的 -(R*Omega)^2 < 0 互斥",
+      "control": true
+    },
+    {
+      "id": "CT3",
+      "item": "反向对照：「轴向=c 同时 ds^2=0」应被判矛盾",
+      "verdict": "PASS",
+      "detail": "声称下的 ds^2/dt^2 = PiNum(-89875517873681764, pi^0) != 0，引擎成功拒绝伪恒等式",
+      "control": true
+    },
+    {
+      "id": "CT4",
+      "item": "恒等式检测器双向标定（真恒等接受 / 伪恒等拒绝）",
+      "verdict": "PASS",
+      "detail": "R*Omega=c -> True；R*Omega=c/2 -> False",
+      "control": true
+    },
+    {
+      "id": "CT5",
+      "item": "Frenet 数值引擎已知锚点（R=1,b=2 => kappa=0.2, tau=0.4）",
+      "verdict": "PASS",
+      "detail": "三档扫描 ['h=3e-03 -> kappa=0.199999520000 tau=0.399999640106 rel=2.40e-06', 'h=1e-03 -> kappa=0.199999946661 tau=0.399999961284 rel=2.67e-07', 'h=3e-04 -> kappa=0.199999995153 tau=0.400000185271 rel=4.63e-07']；最佳相对误差 2.667e-07（阈值 1e-6，依据：tau 嵌套差分舍入 eps/h^3，实测地板 9.7e-08）",
+      "control": true
+    },
+    {
+      "id": "CT6",
+      "item": "量纲审计器分辨力：[hbar*c*kappa^2] 应判错（65 号 A6），[hbar*c*kappa] 应判对",
+      "verdict": "PASS",
+      "detail": "[R*Omega]=[c]：True；坏项 (Fraction(1, 1), Fraction(1, 1), Fraction(-2, 1)) != 拉氏量密度 (Fraction(1, 1), Fraction(-2, 1), Fraction(-1, 1))；良性项 (Fraction(1, 1), Fraction(2, 1), Fraction(-2, 1)) == 能量 (Fraction(1, 1), Fraction(2, 1), Fraction(-2, 1))",
+      "control": true
+    }
+  ]
+}
