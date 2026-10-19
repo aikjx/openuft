@@ -49,6 +49,7 @@
 | tuft_r29_report.txt | 4 | 8 | 1 | 3 |
 | tuft_r30_report.txt | 7 | 4 | 1 | 2 |
 | tuft_r31_report.txt | 6 | 19 | 9 | 5 |
+| tuft_r32_report.txt | 0 | 14 | 1 | 4 |
 | tuft_r3_report.txt | 8 | 0 | 0 | 0 |
 | tuft_r4_report.txt | 9 | 3 | 0 | 12 |
 | tuft_r5_report.txt | 11 | 2 | 15 | 10 |
@@ -66,6 +67,7 @@
 | tuft_卷系_模态谱方向定理_report.txt | 7 | 7 | 6 | 77 |
 | tuft_卷系_落盘前双检_report.txt | 8 | 0 | 0 | 0 |
 | tuft_四力统一_report.txt | 17 | 19 | 9 | 14 |
+| tuft_四力统一_空间运行方式穷举_OPEN9_report.txt | 11 | 36 | 14 | 1 |
 | tuft_孤子τκ锁定_微分方程证明_OPEN5c_report.txt | 1 | 2 | 1 | 2 |
 | tuft_引力波_挠率扰动_report.txt | 4 | 0 | 0 | 8 |
 | tuft_收口_修复优化_report.txt | 6 | 3 | 3 | 6 |
@@ -73,15 +75,17 @@
 | tuft_机电对偶_report.txt | 39 | 0 | 9 | 1 |
 | tuft_机电对偶_实验对标_report.txt | 18 | 0 | 6 | 4 |
 | tuft_求导证明验证_OPEN8_report.txt | 11 | 0 | 0 | 1 |
+| tuft_物质内容第一性_穷举判定_OPEN11_report.txt | 21 | 6 | 2 | 3 |
 | tuft_相位pi_全维求导精算_report.txt | 6 | 9 | 6 | 7 |
 | tuft_相位pi_闭合莫比乌斯_report.txt | 7 | 1 | 0 | 1 |
 | tuft_续篇_全维求导精算_report.txt | 17 | 5 | 4 | 11 |
 | tuft_续篇_双结交换仿真_report.txt | 5 | 0 | 0 | 6 |
 | tuft_色挠率_SU3_report.txt | 5 | 16 | 6 | 14 |
+| tuft_规范群来源_穷举判定_OPEN10_report.txt | 0 | 1 | 0 | 0 |
 | tuft_黑洞热力学_report.txt | 13 | 23 | 5 | 14 |
-| **合计** | **479** | **338** | **228** | **884** |
+| **合计** | **511** | **395** | **245** | **892** |
 
-## 二、脚本清单（118）
+## 二、脚本清单（122）
 
 - `_dbg_wall.py`
 - `_scratch_r28.py`
@@ -157,6 +161,7 @@
 - `tuft_r30_求导证明验证与全维度总结.py`
 - `tuft_r31_两条主线可行性与缺陷审计.py`
 - `tuft_r31_缺口定理N_RG流与CMB双谱_数值框架审计.py`
+- `tuft_r32_全空间穷举_力的统一场论.py`
 - `tuft_r3_scale_degeneracy.py`
 - `tuft_r4_scale_generation.py`
 - `tuft_r5_torsion_probe_audit.py`
@@ -181,6 +186,7 @@
 - `tuft_卷系_模态谱方向定理.py`
 - `tuft_卷系_落盘前双检.py`
 - `tuft_四力统一_全维求导精算.py`
+- `tuft_四力统一_空间运行方式穷举_OPEN9.py`
 - `tuft_孤子τκ锁定_微分方程证明_OPEN5c.py`
 - `tuft_安装提交钩子.py`
 - `tuft_引力波_挠率扰动.py`
@@ -190,6 +196,7 @@
 - `tuft_机电对偶_实验对标与压电实现.py`
 - `tuft_机电对偶_谐振同构_全维精算.py`
 - `tuft_求导证明验证_OPEN8.py`
+- `tuft_物质内容第一性_穷举判定_OPEN11.py`
 - `tuft_相位pi_全维求导精算.py`
 - `tuft_相位pi_闭合莫比乌斯验证.py`
 - `tuft_第一性归一化总览.py`
@@ -197,12 +204,13 @@
 - `tuft_续篇_全维求导精算.py`
 - `tuft_续篇_双结交换仿真.py`
 - `tuft_色挠率_SU3_全维求导精算.py`
+- `tuft_规范群来源_穷举判定_OPEN10.py`
 - `tuft_跨册缺陷族检查.py`
 - `tuft_跨线归一化清册.py`
 - `tuft_锚定编码账本.py`
 - `tuft_黑洞热力学_全维求导精算.py`
 
-## 三、报告文档清单（100）
+## 三、报告文档清单（101）
 
 - `TUFT_全维突破_全维度总结_20260930.md`
 - `TUFT_微观粒子拓扑导出_第十一部分.md`
@@ -238,6 +246,7 @@
 - `tuft_R29_核心公式口径校准与结构可行性_文稿.md`
 - `tuft_R30_求导证明验证与全维度总结_文稿.md`
 - `tuft_R31_两条主线审计与修正方案_文稿.md`
+- `tuft_R32_全空间穷举_力的统一场论_文稿.md`
 - `tuft_r2_全维求导证明验证精算报告.md`
 - `tuft_r5_挠率探测实验_审计与修订.md`
 - `tuft_三路线_ABC_全维分析修复优化报告.md`
@@ -305,7 +314,7 @@
 - `挠率产生机制_阶段0_可行性判定.md`
 - `挠率探测实验设计_修复版.md`
 
-## 四、原始报告（txt，73）
+## 四、原始报告（txt，77）
 
 - `tuft_B_UV完成_report.txt`
 - `tuft_B_排查_线性化_report.txt`
@@ -350,6 +359,7 @@
 - `tuft_r29_report.txt`
 - `tuft_r30_report.txt`
 - `tuft_r31_report.txt`
+- `tuft_r32_report.txt`
 - `tuft_r3_report.txt`
 - `tuft_r4_report.txt`
 - `tuft_r5_report.txt`
@@ -367,6 +377,7 @@
 - `tuft_卷系_模态谱方向定理_report.txt`
 - `tuft_卷系_落盘前双检_report.txt`
 - `tuft_四力统一_report.txt`
+- `tuft_四力统一_空间运行方式穷举_OPEN9_report.txt`
 - `tuft_孤子τκ锁定_微分方程证明_OPEN5c_report.txt`
 - `tuft_引力波_挠率扰动_report.txt`
 - `tuft_收口_修复优化_report.txt`
@@ -374,10 +385,12 @@
 - `tuft_机电对偶_report.txt`
 - `tuft_机电对偶_实验对标_report.txt`
 - `tuft_求导证明验证_OPEN8_report.txt`
+- `tuft_物质内容第一性_穷举判定_OPEN11_report.txt`
 - `tuft_相位pi_全维求导精算_report.txt`
 - `tuft_相位pi_闭合莫比乌斯_report.txt`
 - `tuft_续篇_全维求导精算_report.txt`
 - `tuft_续篇_双结交换仿真_report.txt`
 - `tuft_色挠率_SU3_report.txt`
+- `tuft_规范群来源_穷举判定_OPEN10_report.txt`
 - `tuft_黑洞热力学_report.txt`
 

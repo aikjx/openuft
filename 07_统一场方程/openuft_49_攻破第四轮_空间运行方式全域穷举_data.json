@@ -1,0 +1,217 @@
+{
+  "summary": {
+    "verdict": "PASS_running_invariance",
+    "selfcheck_passed": 13,
+    "selfcheck_total": 13,
+    "theorem": "三耦合一圈汇聚 <=> b_i 对 A_i 仿射（共线）；该条件与标度重参数化无关 => 与所有空间运行方式无关",
+    "SM_residual": 0.07227595725393378,
+    "MSSM_residual": 0.0009546359326125791,
+    "SM_sigma": 52.0569100604452,
+    "MSSM_sigma": 1.267455856403378,
+    "SM_crossing_spread_e_folds": 9.146910243419324,
+    "reparam_max_diff": 0.0,
+    "modes_tested": 5,
+    "modes_surviving": 0,
+    "gates_passed": 0
+  },
+  "checks": [
+    {
+      "check": "SM alpha_s 预言 ~0.0712",
+      "ok": true,
+      "detail": "got 0.07115"
+    },
+    {
+      "check": "SM 被判 ~52 sigma",
+      "ok": true,
+      "detail": "got 52.06"
+    },
+    {
+      "check": "MSSM alpha_s 预言 ~0.1169",
+      "ok": true,
+      "detail": "got 0.11686"
+    },
+    {
+      "check": "MSSM 通过 ~1.3 sigma",
+      "ok": true,
+      "detail": "got 1.27"
+    },
+    {
+      "check": "MSSM M_GUT ~2e16",
+      "ok": true,
+      "detail": "got 2.014e+16"
+    },
+    {
+      "check": "SM 不共线（残差 > 0.05）",
+      "ok": true,
+      "detail": "res=0.0723"
+    },
+    {
+      "check": "MSSM 共线（残差 < 0.02）",
+      "ok": true,
+      "detail": "res=0.00095"
+    },
+    {
+      "check": "SM 交叉标度离散 ~9.1 e-folds",
+      "ok": true,
+      "detail": "got 9.147"
+    },
+    {
+      "check": "重参数化不变（往返弥散差 < 1e-9）",
+      "ok": true,
+      "detail": "max diff=0.000e+00"
+    },
+    {
+      "check": "网格采样误差随 N 收敛（4001->16001）",
+      "ok": true,
+      "detail": "err 1.91e-03 -> 1.95e-04"
+    },
+    {
+      "check": "MSSM 重参数化不变（往返差 < 1e-9）",
+      "ok": true,
+      "detail": "max diff=0.000e+00"
+    },
+    {
+      "check": "所有空间运行方式均不能改变统一判决",
+      "ok": true,
+      "detail": "5/5 不能"
+    },
+    {
+      "check": "秩障碍：SM(4) > PGL4(C)(3) > PGL4(R)(2) > Spin(1,3)(1)",
+      "ok": true,
+      "detail": "4>3>2>1"
+    }
+  ],
+  "results": [
+    {
+      "name": "collinearity_det_SM",
+      "value": -40.5514486666666,
+      "detail": "非零 => 不共线 => 无三耦合汇聚"
+    },
+    {
+      "name": "collinearity_det_MSSM",
+      "value": -0.463232000000005,
+      "detail": "近零 => 共线 => 汇聚"
+    },
+    {
+      "name": "affine_residual_SM",
+      "value": 0.07227595725393378,
+      "detail": "归一残差"
+    },
+    {
+      "name": "affine_residual_MSSM",
+      "value": 0.0009546359326125791,
+      "detail": "归一残差"
+    },
+    {
+      "name": "SM_u12",
+      "value": 25.453039569629755,
+      "detail": "ln(M12/MZ)"
+    },
+    {
+      "name": "SM_u13",
+      "value": 28.611882446486273,
+      "detail": "ln(M13/MZ)"
+    },
+    {
+      "name": "SM_u23",
+      "value": 34.59994981304908,
+      "detail": "ln(M23/MZ)"
+    },
+    {
+      "name": "SM_crossing_spread_e_folds",
+      "value": 9.146910243419324,
+      "detail": "三交叉点在对数标度上的离散"
+    },
+    {
+      "name": "reparam_invariance_SM",
+      "value": {
+        "analytic_min_spread": 3.6532836636636645,
+        "u_star": 28.611882446486273,
+        "max_abs_diff": 0.0,
+        "grid_err_N4001": 0.0019110866453289077,
+        "grid_err_N16001": 0.00019519741512397104,
+        "grid_converging": true
+      },
+      "detail": "解析最小弥散经 s=u^2 / s=e^u-1 往返"
+    },
+    {
+      "name": "spatial_running_modes",
+      "value": [
+        {
+          "id": "M1",
+          "name": "固定螺旋（κ/τ=const, TUFT 原生）",
+          "form": "κ,τ 与 μ 无关",
+          "beta_eff": "β≡0",
+          "can_change_verdict": false,
+          "reason": "无跑动；三耦合为常数，除初始点外无交叉"
+        },
+        {
+          "id": "M2",
+          "name": "幂律螺旋（κ∝μ^a, τ∝μ^b）",
+          "form": "u_eff = F(u) 单调",
+          "beta_eff": "β_eff = β / F'(u)",
+          "can_change_verdict": false,
+          "reason": "单调重参数化：只改变汇聚点标度 M_GUT，不改变是否汇聚（共线判据不变）"
+        },
+        {
+          "id": "M3",
+          "name": "一般双参数几何（κ,τ 两函数）",
+          "form": "J = ∂(α_i)/∂(κ,τ)，rank J ≤ 2 < 3",
+          "beta_eff": "最多 2 个独立跑动率",
+          "can_change_verdict": false,
+          "reason": "秩亏：无法同时给出 3 个独立的 b_i；至少一耦合不受几何约束"
+        },
+        {
+          "id": "M4",
+          "name": "谱匹配几何（人为令 b_i 命中 SM）",
+          "form": "把 T(R),Y² 编码进几何",
+          "beta_eff": "可复现任意 b_i",
+          "can_change_verdict": false,
+          "reason": "需外部注入规范量子数（T(R),Y²）——这正是 R12/R14 的缺口，非几何导出"
+        },
+        {
+          "id": "M5",
+          "name": "振荡/Floquet 几何",
+          "form": "u_eff 非单调",
+          "beta_eff": "有效标度非单调",
+          "can_change_verdict": false,
+          "reason": "破坏能标序（μ 必须单调），非物理；且不改变 α 空间轨迹集合"
+        }
+      ],
+      "detail": "5 类空间运行方式"
+    },
+    {
+      "name": "rank_table",
+      "value": {
+        "SU(3)xSU(2)xU(1)": 4,
+        "Spin(1,3)": 1,
+        "Aut(Cl(1,3))=PGL4(R)": 2,
+        "Aut(Cl(1,3)C)=PGL4(C)": 3,
+        "SU(4)": 3,
+        "SU(5)": 4
+      },
+      "detail": "群秩：SM 需 4"
+    },
+    {
+      "name": "three_hard_gates",
+      "value": {
+        "G1_rank": {
+          "verdict": "FAIL",
+          "running_invariant": true,
+          "reason": "群秩为纯代数事实，与 κ(μ),τ(μ) 无关"
+        },
+        "G2_coupling": {
+          "verdict": "FAIL",
+          "running_invariant": true,
+          "reason": "共线判据仅依赖 (A_i,b_i)；SM 残差 0.072，52σ"
+        },
+        "G3_parameter": {
+          "verdict": "FAIL",
+          "running_invariant": true,
+          "reason": "参数计数不受标度重参数化影响"
+        }
+      },
+      "detail": "三硬门全部运行不变"
+    }
+  ]
+}

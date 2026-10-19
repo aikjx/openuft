@@ -1,0 +1,444 @@
+{
+ "blocked": {
+  "claim_ids": [
+   "S02-C0060",
+   "S02-C0064",
+   "S02-C0068",
+   "S02-C0073",
+   "S02-C0079",
+   "S02-C0088"
+  ],
+  "n": 6,
+  "reasons": {
+   "value_side_blocks": 6
+  }
+ },
+ "caliber": {
+  "as_written_relative": [
+   "ineq_bare"
+  ],
+  "authority": "换算规则取自已发表并钉住 md5 的 v4 面自己的 price()（源码/进门闸_v4_….py:127-132）",
+  "divide_by_100": [
+   "percent"
+  ],
+  "divide_by_abs_pv": [
+   "pm_abs",
+   "ineq_abs"
+  ],
+  "fixture_rel_v6_vs_v5": [
+   0.0001,
+   0.0004368719965050241
+  ],
+  "v5_conflict": "v5 把 ineq_bare 也归入 ÷|pv| 族（V5.CUR_SHAPES），与 v4 的 B 档规则冲突——v5 面已钉 md5 不可改，本册以 v6 工作单为准并在判定卷里点名",
+  "v5_rule_disagreement": [
+   {
+    "claim_id": "S02-C0057",
+    "factor": 4.368719965050241,
+    "pv": "0.2289",
+    "rel_v5": 0.0004368719965050241,
+    "rel_v6": 0.0001,
+    "shape": "ineq_bare",
+    "urel": "实现级 <1e-4"
+   }
+  ]
+ },
+ "controls": [
+  {
+   "detail": [
+    0,
+    4,
+    [
+     "empty"
+    ]
+   ],
+   "fired": true,
+   "name": "C1 删除支（照 v5 门禁建议「一并清空两列」）产出 0 条 ok，而换算支产出 4 条 ⇒ 换算是唯一出登记的支"
+  },
+  {
+   "detail": [
+    6,
+    [],
+    [],
+    [
+     "S02-C0060",
+     "S02-C0064",
+     "S02-C0068",
+     "S02-C0073",
+     "S02-C0079",
+     "S02-C0088"
+    ]
+   ],
+   "fired": true,
+   "name": "C2 被值侧挡住的 6 条一行都不许变 ok，且挡住的原因必须是值侧不是带侧"
+  },
+  {
+   "detail": [
+    [],
+    [
+     [
+      "S02-C0052",
+      "non_numeric"
+     ],
+     [
+      "S02-C0053",
+      "non_numeric"
+     ],
+     [
+      "S02-C0054",
+      "non_numeric"
+     ],
+     [
+      "S02-C0057",
+      "non_numeric"
+     ]
+    ]
+   ],
+   "fired": true,
+   "name": "C3 建议新串必须自己能被门禁解析；加一句注释即被门禁判成 non_numeric ⇒ 带注释的建议自己造新债"
+  },
+  {
+   "detail": {
+    "max_coarse_rel_diff": 0.0018079999999998982,
+    "max_rel_diff": 1.600078142899308e-12,
+    "n_diff": 4,
+    "worst": [
+     {
+      "claim_id": "S02-C0053",
+      "coarse_rel_diff": 0.0018079999999998982,
+      "proposed": 0.002156101768,
+      "rel_diff": 1.600078142899308e-12,
+      "v4_urel_B": 0.00215610176800345,
+      "verdict": "FLIP"
+     },
+     {
+      "claim_id": "S02-C0058",
+      "coarse_rel_diff": 0.0013759999999999925,
+      "proposed": 0.00215703192407,
+      "rel_diff": 1.1480209144432152e-12,
+      "v4_urel_B": 0.0021570319240724763,
+      "verdict": "FLIP"
+     },
+     {
+      "claim_id": "S02-C0052",
+      "coarse_rel_diff": 0.00029299999999993513,
+      "proposed": 0.0087374399301,
+      "rel_diff": 5.4995331205676126e-14,
+      "v4_urel_B": 0.00873743993010048,
+      "verdict": "FLIP"
+     }
+    ]
+   },
+   "fired": true,
+   "name": "C4 换算值必须复现 v4 面自己的 urel_B（最大相对偏差 1.6e-12 ≤ 1e-11），而粗到 %.3g 精度会把它推歪"
+  },
+  {
+   "detail": [
+    [
+     "S18-C0005",
+     "urel_zero_noninteger"
+    ],
+    [
+     "S18-C0006",
+     "urel_zero_noninteger"
+    ],
+    [
+     "S18-C0007",
+     "urel_zero_noninteger"
+    ]
+   ],
+   "fired": true,
+   "name": "C5 urel=0 的精确声明（3 条）不许被「换算」洗成 ok——填 0 仍停在 WARN"
+  },
+  {
+   "detail": {
+    "n_pointer": 50,
+    "sample": [
+     [
+      "S15-C0001",
+      "empty"
+     ],
+     [
+      "S15-C0002",
+      "empty"
+     ],
+     [
+      "S15-C0003",
+      "empty"
+     ],
+     [
+      "S15-C0004",
+      "empty"
+     ],
+     [
+      "S15-C0005",
+      "empty"
+     ],
+     [
+      "S15-C0006",
+      "empty"
+     ],
+     [
+      "S15-C0007",
+      "empty"
+     ],
+     [
+      "S15-C0008",
+      "empty"
+     ]
+    ]
+   },
+   "fired": true,
+   "name": "C6 指针搬家之后本列只剩 partial/empty，永远不产出 ok ⇒「搬家」≠「登记」"
+  },
+  {
+   "detail": {
+    "conv_ok": 4,
+    "ok_after": 4,
+    "sums": {
+     "pointer_in_urel": 50,
+     "urel_absent": 4,
+     "urel_other_currency": 16,
+     "urel_prose_band": 20,
+     "urel_zero_exact_noninteger": 3,
+     "value_unparseable": 14
+    }
+   },
+   "fired": true,
+   "name": "C7 闭合：各型之和 = 非空行 107，且修后 ok 全仓数（门禁现读）= 换算支产出的 ok 数"
+  },
+  {
+   "detail": {
+    "files": 23,
+    "ok_after": 4,
+    "ok_before": 0,
+    "rows": 462
+   },
+   "fired": true,
+   "name": "C8 分母由扫描现取（462 行 / 23 个文件），修后读数一律写成「ok/该分母」"
+  },
+  {
+   "detail": [
+    {
+     "claim_id": "S02-C0052",
+     "hit_A": false,
+     "hit_new": true,
+     "obs": 0.23122,
+     "proposed": 0.0087374399301,
+     "target": "sin2_thetaW",
+     "urel_A": 0.002,
+     "v4_B": "HIT"
+    },
+    {
+     "claim_id": "S02-C0053",
+     "hit_A": false,
+     "hit_new": true,
+     "obs": 0.23122,
+     "proposed": 0.002156101768,
+     "target": "sin2_thetaW",
+     "urel_A": 0.0005,
+     "v4_B": "HIT"
+    },
+    {
+     "claim_id": "S02-C0058",
+     "hit_A": false,
+     "hit_new": true,
+     "obs": 0.23122,
+     "proposed": 0.00215703192407,
+     "target": "sin2_thetaW",
+     "urel_A": 0.0005,
+     "v4_B": "HIT"
+    }
+   ],
+   "fired": true,
+   "name": "C9 换算后的带喂回观测载体自己的 hit_test：必须与 v4 面 B 档同为 HIT，且原样当相对吃必须 MISS"
+  },
+  {
+   "detail": {
+    "blocked": 6,
+    "nonempty": 107,
+    "order_rows": 107,
+    "with_proposal": 10
+   },
+   "fired": true,
+   "name": "C10 工作单必须逐行覆盖非空登记行，且每行的建议新串要么可解析要么为 None"
+  },
+  {
+   "detail": {
+    "corpus_disagreements": [
+     "S02-C0057"
+    ],
+    "fixture": [
+     "ineq_bare",
+     0.0001,
+     "0.2289",
+     0.0001,
+     0.0004368719965050241
+    ],
+    "shapes": [
+     "ineq_bare"
+    ]
+   },
+   "fired": true,
+   "name": "C11 换算规则以 v4 面自己的 price() 为准：夹具 `实现级 <1e-4` 在 v6 规则下原样吃（0.0001），在 v5 规则下除以声明值绝对值（0.000436871996505）——两档必须分叉，且语料里分歧的每一枚都只能是 ineq_bare 型"
+  }
+ ],
+ "controls_fired": "11/11",
+ "converted": {
+  "n": 10,
+  "not_ok_after_convert": [
+   "S02-C0054",
+   "S02-C0063",
+   "S02-C0067",
+   "S02-C0069",
+   "S02-C0074",
+   "S14-C0106"
+  ],
+  "yield_ok": 4
+ },
+ "distribution": {
+  "converted_rel_max": 0.2,
+  "converted_rel_min": 0.0001,
+  "cross_checked": 4,
+  "fixture_rel_v6_vs_v5": [
+   0.0001,
+   0.0004368719965050241
+  ],
+  "hits_replayed": 3,
+  "not_in_v4_admission": [
+   "S02-C0054",
+   "S02-C0063",
+   "S02-C0067",
+   "S02-C0069",
+   "S02-C0074",
+   "S14-C0106"
+  ],
+  "rel_ge_one": [],
+  "v5_rule_disagreement": [
+   {
+    "claim_id": "S02-C0057",
+    "factor": 4.368719965050241,
+    "pv": "0.2289",
+    "rel_v5": 0.0004368719965050241,
+    "rel_v6": 0.0001,
+    "shape": "ineq_bare",
+    "urel": "实现级 <1e-4"
+   }
+  ]
+ },
+ "generated_utc": "2026-10-18T16:32:40Z",
+ "hits_replayed": [
+  {
+   "claim_id": "S02-C0052",
+   "hit_A": false,
+   "hit_new": true,
+   "obs": 0.23122,
+   "proposed": 0.0087374399301,
+   "target": "sin2_thetaW",
+   "urel_A": 0.002,
+   "v4_B": "HIT"
+  },
+  {
+   "claim_id": "S02-C0053",
+   "hit_A": false,
+   "hit_new": true,
+   "obs": 0.23122,
+   "proposed": 0.002156101768,
+   "target": "sin2_thetaW",
+   "urel_A": 0.0005,
+   "v4_B": "HIT"
+  },
+  {
+   "claim_id": "S02-C0058",
+   "hit_A": false,
+   "hit_new": true,
+   "obs": 0.23122,
+   "proposed": 0.00215703192407,
+   "target": "sin2_thetaW",
+   "urel_A": 0.0005,
+   "v4_B": "HIT"
+  }
+ ],
+ "instrument": "openuft/04_公共成果/本项目_全维自洽与归一化/源码/进门闸_v6_换算工作单_修前修后ok计数预演_2026-10-19.py",
+ "rc": 0,
+ "single_sources": {
+  "band_conversion_cross_check": "数据/进门闸_v4_误差棒货币裁定_绝对与相对双向命中_2026-10-18.json（urel_B/verdict）",
+  "classification": "源码/靶场登记列校验_写入侧门禁.py（classify/parse_number/scan_registry）",
+  "hit_verdict": "源码/无量纲靶场审计.py（hit_test，3σ）",
+  "taxonomy": "源码/进门闸_v5_登记列欠账分型与破坏性建议针_2026-10-18.py（census/debt_of/VOCAB）"
+ },
+ "totals": {
+  "files": 23,
+  "nonempty_rows": 107,
+  "ok_rows_after_denominator_note": "分母 = rows（本册现取），修后=建议串喂回门禁的预演，未落他人台账",
+  "ok_rows_after_preview": 4,
+  "ok_rows_before": 0,
+  "rows": 462
+ },
+ "type_counts": {
+  "pointer_in_urel": 50,
+  "urel_absent": 4,
+  "urel_other_currency": 16,
+  "urel_prose_band": 20,
+  "urel_zero_exact_noninteger": 3,
+  "value_unparseable": 14
+ },
+ "v4_cross_check": {
+  "coarse_fmt": "%.3g",
+  "diffs": [
+   {
+    "claim_id": "S02-C0052",
+    "coarse_rel_diff": 0.00029299999999993513,
+    "proposed": 0.0087374399301,
+    "rel_diff": 5.4995331205676126e-14,
+    "v4_urel_B": 0.00873743993010048,
+    "verdict": "FLIP"
+   },
+   {
+    "claim_id": "S02-C0053",
+    "coarse_rel_diff": 0.0018079999999998982,
+    "proposed": 0.002156101768,
+    "rel_diff": 1.600078142899308e-12,
+    "v4_urel_B": 0.00215610176800345,
+    "verdict": "FLIP"
+   },
+   {
+    "claim_id": "S02-C0057",
+    "coarse_rel_diff": 0.0,
+    "proposed": 0.0001,
+    "rel_diff": 0.0,
+    "v4_urel_B": 0.0001,
+    "verdict": "MISS"
+   },
+   {
+    "claim_id": "S02-C0058",
+    "coarse_rel_diff": 0.0013759999999999925,
+    "proposed": 0.00215703192407,
+    "rel_diff": 1.1480209144432152e-12,
+    "v4_urel_B": 0.0021570319240724763,
+    "verdict": "FLIP"
+   }
+  ],
+  "fmt": "%.12g",
+  "not_in_v4_admission": [
+   "S02-C0054",
+   "S02-C0063",
+   "S02-C0067",
+   "S02-C0069",
+   "S02-C0074",
+   "S14-C0106"
+  ],
+  "tol_fmt": 1e-11
+ },
+ "work_order": {
+  "by_owner": {
+   "S02_空间光速螺旋统一力": 43,
+   "S10_频率本源与复螺旋宇宙": 3,
+   "S14_挠率统一场论TUFT": 8,
+   "S15_空间光速螺旋曲率挠率几何统一场论": 30,
+   "S17_统一场论核心公式": 20,
+   "S18_曲率能量密度标量约束引力": 3
+  },
+  "file": "openuft/04_公共成果/本项目_全维自洽与归一化/数据/进门闸_v6_逐行换算工作单_2026-10-19.csv",
+  "rows": 107
+ }
+}

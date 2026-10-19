@@ -65,6 +65,7 @@
 """
 
 import os
+import re
 import sys
 import csv
 import json
@@ -100,6 +101,89 @@ SUGGESTION = {
 }
 
 
+# ---------------------------------------------------------------------------
+# 一·B、误差棒列的「写法」分族与相对带换算（v7 · 2026-10-19 补档）
+# ---------------------------------------------------------------------------
+# 口径权威 = 进门闸 v4 的 price()：percent ÷100；带绝对单位的 ±／不等式写法 ÷声明值绝对值；
+# 无单位不等式（`实现级 <1e-4` 这一型）按「已是相对带」原样吃。
+# 债的来龙去脉见 `判定_进门闸_v6_换算工作单_修前修后ok计数预演_2026-10-19.md` §二／§四。
+
+BAND_NUM = re.compile(r"[-+]?\d+(?:\.\d*)?(?:[eE][-+]?\d+)?")
+PATH_FORM = re.compile(r"^\w+(?:\.\w+)?(?:/\w+(?:\.\w+)?)+\s*$")
+DIV_PCT = ("percent",)
+DIV_ABS = ("pm_abs", "ineq_abs")
+AS_WRITTEN = ("ineq_bare",)
+CONVERTIBLE = DIV_PCT + DIV_ABS + AS_WRITTEN
+
+
+def band_form(pu):
+    """误差棒列的拼写读成 (形状, 数)。指针/路径必须先判——带尺取的是**首枚数字**。"""
+    s = (pu or "").strip()
+    if not s:
+        return "empty", None
+    if PATH_FORM.match(s):
+        return "pointer", None
+    has_pct = "%" in s
+    pm = u"±" in s or "+/-" in s or u"正负" in s
+    ineq = bool(re.search(u"[<>≤≥]", s))
+    m = BAND_NUM.search(s.replace(",", ""))
+    if not m:
+        return "prose_only", None
+    try:
+        val = float(m.group(0))
+    except ValueError:
+        return "prose_only", None
+    if has_pct:
+        return "percent", val
+    if ineq and pm:
+        return "ineq_abs", val
+    if pm:
+        return "pm_abs", val
+    if ineq:
+        return "ineq_bare", val
+    return "bare_number", val
+
+
+def to_relative(shape, num, pv):
+    """按 v4 口径把该形状换成相对带，返回 (相对带或 None, 挡住原因或 None)。"""
+    if num is None:
+        return None, "no_numeral"
+    if shape in DIV_PCT:
+        return abs(float(num)) / 100.0, None
+    if shape in DIV_ABS:
+        v = parse_number(pv)
+        if v is None:
+            return None, "value_side_blocks"
+        av = abs(float(v))
+        return (abs(float(num)) / av, None) if av else (None, "pv_zero")
+    if shape in AS_WRITTEN or shape == "bare_number":
+        return abs(float(num)), None
+    return None, "shape_not_convertible"
+
+
+def advice(row):
+    """「建议去向」：可换算的写法给出换算后的相对带，**不许**建议清空两列。"""
+    flag = row["flag"]
+    if flag not in ("non_numeric", "partial"):
+        return SUGGESTION.get(flag, u"—")
+    pv = row.get("prediction_value", "")
+    pu = row.get("prediction_urel", "")
+    shape, num = band_form(pu)
+    if shape in CONVERTIBLE:
+        rel, why = to_relative(shape, num, pv)
+        if rel is not None:
+            cand = u"%.12g" % rel
+            after = classify(pv, cand)[0]
+            tail = (u"；照此填写后本门禁复算为 `%s`，该行可登记" % after
+                    if after == "ok"
+                    else u"；但照此填写后本门禁复算仍为 `%s`——挡住的是 `prediction_value`，"
+                    u"先修值列才谈得上登记（本档不给编造的数）" % after)
+            return (u"误差棒列是可换算的写法（形状 `%s`）：把 `prediction_urel` 填成相对带 `%s`"
+                    u"（现串「%s」，声明值「%s」）；**不要清空两列**，"
+                    u"也不许把绝对写法原样登记%s" % (shape, cand, pu, pv, tail))
+        return (u"误差棒列是可换算的写法（形状 `%s`），但换算依赖 `prediction_value`："
+                u"值列现串「%s」不可解析，先修值列再填相对带" % (shape, pv))
+    return SUGGESTION.get(flag, u"—")
 # ---------------------------------------------------------------------------
 # 一、单一真源：数值解析与逐行判定
 # ---------------------------------------------------------------------------
@@ -261,7 +345,7 @@ def render_md(P):
             a("| %s | `%s` | `%s` | `%s` | **%s** | %s | %s |"
               % (r["owner"], r["claim_id"], r["prediction_value"],
                  r["prediction_urel"] or "（空）", r["severity"], r["reason"],
-                 SUGGESTION.get(r["flag"], "—")))
+                 advice(r)))
     else:
         a("\n## 二、违规明细\n\n（无）\n")
     a("\n## 三、基线与防回潮\n")
