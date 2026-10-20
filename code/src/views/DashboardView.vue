@@ -11,12 +11,13 @@
       <div class="kv"><div class="k">正确核保留</div><div class="v" style="color:var(--ok)">{{ coresSurvive }}<small> / {{ cores.length }}</small></div></div>
       <div class="kv"><div class="k">黑名单</div><div class="v" style="color:var(--fail)">{{ blacklist.length }}<small> 条不可引用</small></div></div>
       <div class="kv"><div class="k">全物理域</div><div class="v">{{ domains.length }}<small> 个覆盖槽位</small></div></div>
+      <div class="kv"><div class="k">正确理论体系</div><div class="v" style="color:var(--theme-correct)">{{ counts.correctEquations }}<small> 条机读验证（r127/r128/r130/r131/r133）</small></div></div>
       <div class="kv"><div class="k">机读守卫</div><div class="v" style="color:var(--accent)">{{ counts.guards }}<small> 退出码 {{ counts.exitCode }}</small></div></div>
     </div>
 
     <div class="grid grid-2-1" style="margin-top:18px">
       <div class="card">
-        <div class="card-title">四主题攻破射程 <span class="tag tag-theme">核心</span></div>
+        <div class="card-title">{{ themes.length }} 主题攻破射程 <span class="tag tag-theme">核心</span></div>
         <div v-for="t in themes" :key="t.id" class="theme-row">
           <span class="dot" :style="{ background: t.color }"></span>
           <b style="min-width:92px;display:inline-block">{{ t.name }}</b>
@@ -27,7 +28,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">宇宙运动的本质 · 四条承重结论</div>
+        <div class="card-title">宇宙运动的本质 · {{ cosmic.pillars.length }} 条承重结论</div>
         <div v-for="p in cosmic.pillars" :key="p.title" class="pillar">
           <div class="pillar-h"><b>{{ p.title }}</b><span :class="verdictClass(p.verdict)">{{ p.verdict }}</span></div>
           <p class="dim" style="font-size:11.5px;line-height:1.6;margin:4px 0 0">{{ p.detail }}</p>

@@ -61,6 +61,7 @@ const navItems = [
   { to: '/ledger', icon: '▦', label: '正确核与账本' },
   { to: '/blacklist', icon: '⊘', label: '黑名单' },
   { to: '/essence', icon: '✦', label: '宇宙运动的本质' },
+  { to: '/correct', icon: '✔', label: '正确理论体系' },
   { to: '/workbench', icon: '⚒', label: '攻破工作台' },
   { to: '/glossary', icon: 'ⓘ', label: '术语表' }
 ]

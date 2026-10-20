@@ -5,7 +5,7 @@
   1. 机读继承账本：从《理论体系方程总汇_正确方程集_2026-10-14.md》解析各口径计数，
      并与该文件自称的头部数字逐项核对（抗漂移守卫：表格数字与文件内容不一致 ⇒ 非零退出）。
   2. 机读增量：扫描 04_公共成果/本项目_全维自洽与归一化/数据/TUFT-r1*.json，
-     汇总 r100–r123 攻破链的总判决分布；解析 65 号卷（V4.8）判定计数。
+     汇总 r100–r130 攻破链的总判决分布；解析 65 号卷（V4.8）判定计数。
   3. 应用 r111 + r112 降级：正确核 22 → 17 → 16（r111：f-桥接族 K-12/13/14/15 + K-09；
      r112：K-03 质量定义欠定）。
   4. 入账 r113「力的统一」攻破（零降级 + 黑名单 B-11 + §2.3 主题归纳，机读七轮判决：r120 方程层合流——
@@ -141,6 +141,36 @@ def extract_round(p):
             # r120 schema：候选方程验证通过数/总数（宣称「存在大统一方程」未确立 ⇒ 失败轮）
             vd = d["verdict"]
             verdict = "FAIL(derived)" if vd.get("n_pass", 0) < vd.get("n_equations", 1) else "PASS"
+    if verdict is None or verdict not in ("PASS", "FAIL", "BOUNDARY", "INFO", "OPEN", "CORRECTED", "DEAD", "ALIVE"):
+        # r127 schema：part1_correct_core.pass/total（正确核整理轮：11/11 过门 ⇒ PASS；
+        # 其 prose verdict 与 part2 断裂边界 FAIL 不计入本轮 verdict，由 counts 如实呈现）
+        pc = d.get("part1_correct_core")
+        if isinstance(pc, dict) and "pass" in pc and "total" in pc:
+            verdict = "PASS" if pc["pass"] == pc["total"] else "FAIL(derived)"
+    if verdict is None or verdict not in ("PASS", "FAIL", "BOUNDARY", "INFO", "OPEN", "CORRECTED", "DEAD", "ALIVE"):
+        # r129 schema：summary.verdict_micro/verdict_star = DEAD/ALIVE（κ-τ 第一性导出攻破轮；
+        # verdict_method=ALIVE 是判据方法存活，不是靶宣称存活，不计入本轮 verdict）
+        sm = d.get("summary")
+        if isinstance(sm, dict) and ("verdict_micro" in sm or "verdict_star" in sm):
+            verdict = "FAIL(derived)" if "DEAD" in (sm.get("verdict_micro"), sm.get("verdict_star")) else "PASS"
+    if verdict is None or verdict not in ("PASS", "FAIL", "BOUNDARY", "INFO", "OPEN", "CORRECTED", "DEAD", "ALIVE"):
+        # r130 schema：summary.verdict = SOUND-BUT-PREMISE-OPEN（正确理论推导链攻破：
+        # 18 条链 0 闭合、11 前提开放 ⇒ 理论在公设内自洽但无一条链从更底层闭合；
+        # 显式映射 BOUNDARY，计数取 summary 的前提分类计数器，不虚构 FAIL）
+        sm = d.get("summary")
+        if isinstance(sm, dict) and sm.get("verdict") == "SOUND-BUT-PREMISE-OPEN":
+            verdict = "BOUNDARY"
+            cnt = {}
+            for k in ("n_premise_open", "n_domain_limited", "n_conjectural", "n_closed"):
+                if k in sm:
+                    cnt[k[2:].replace("_", "-").upper()] = sm[k]
+            if cnt:
+                counts = cnt
+    if verdict is None or verdict not in ("PASS", "FAIL", "BOUNDARY", "INFO", "OPEN", "CORRECTED", "DEAD", "ALIVE"):
+        # r132 schema：跨卷综合判定册（元册，非加和）；无标准 verdict/counts/tally
+        # ⇒ 识别为元判定，标记 INFO（可读，不计入攻击轮 FAIL/PASS 计数，不虚构判决）
+        if isinstance(d.get("non_additivity_freeze"), (dict, list)) or "scope_note" in d:
+            verdict = "INFO"
     if not isinstance(counts, dict) or not counts:
         counts = d.get("counts") if isinstance(d.get("counts"), dict) else None
     if counts is None:
@@ -194,10 +224,11 @@ guard(len(chain_ok) == len(r_files) and len(r_files) >= 13,
       "g_chain_json_readable",
       "r 系列 JSON 须全部可读出判决或计数且不少于 13 份；实测 %d/%d" % (len(chain_ok), len(r_files)))
 add("D01", "PASS" if len(chain_ok) == len(r_files) else "FAIL",
-    "增量账本：r100–r123 攻破链机读（%d 份数据文件）" % len(r_files),
-    "判决分布（含派生规则 FAIL>0⇒失败轮）：%s ⇒ 增量以否定/边界为主，无一条把'统一已完成'变成 PASS"
+    "增量账本：r100–r130 攻破链机读（%d 份数据文件）" % len(r_files),
+    "判决分布（含派生规则 FAIL>0⇒失败轮）：%s ⇒ 增量以否定/边界为主；唯一 PASS = r127 正确核整理轮"
+    "（11/11 方程过门，其 part2 断裂边界 10 FAIL 由 counts 如实呈现）——没有任何一轮把『统一已完成』变成 PASS"
     % (dist or "空"),
-    chain=chain, dist=dist, rule="FAIL>0 ⇒ 该轮记失败（仅用于无显式 verdict 的旧 schema）")
+    chain=chain, dist=dist, rule="FAIL>0 ⇒ 该轮记失败（仅用于无显式 verdict 的旧 schema）；r127/r129 走显式 schema 路径（part1_correct_core / summary.verdict_micro/star）")
 
 # 65 号卷（V4.8）计数
 v48 = None
@@ -613,6 +644,29 @@ add("D03p", "PASS" if r123_ok else "FAIL",
     % (r123_verdict, r123_down, r123_keys),
     r123_json=[os.path.basename(p) for p in r123_jsons], r123_verdict=r123_verdict,
     r123_downgraded=r123_down, r123_keys=r123_keys)
+
+# §2.3 增补：正确理论体系 整理与攻破（r127/r128/r130 机审产物入账；零降级）
+r127_jsons = sorted(glob.glob(os.path.join(R_DATA, "TUFT-r127*.json")))
+r128_jsons = sorted(glob.glob(os.path.join(R_DATA, "TUFT-r128*.json")))
+r130_jsons = sorted(glob.glob(os.path.join(R_DATA, "TUFT-r130*.json")))
+def _cs_status(jsons):
+    if not jsons:
+        return None, None
+    v, c, _n = extract_round(jsons[0])
+    return round_class({"verdict": v, "counts": c}), c
+r127_s, r127_c = _cs_status(r127_jsons)
+r128_s, r128_c = _cs_status(r128_jsons)
+r130_s, r130_c = _cs_status(r130_jsons)
+cs_ok = (r127_s == "PASS" and bool(r128_s) and r128_s.startswith("FAIL") and r130_s == "BOUNDARY")
+add("D03q", "PASS" if cs_ok else "FAIL",
+    "正确理论体系 整理与攻破入账（r127 整理 PASS / r128 攻破 FAIL / r130 推导链 BOUNDARY，零降级 + 主题 T-correct）",
+    "机读三方：r127 verdict=%s（11/11 方程过门，part1_correct_core）、r128 verdict=%s（方程全集审计，tally=%s）、"
+    "r130 verdict=%s（18 条推导链 0 闭合、11 前提开放/3 域限/4 猜想，counts=%s）。结论：SM+GR 是宇宙运动的正确描述"
+    "（整理层 16 条机读验证），但同一套判据压测其自身得到 22 条断裂边界 + 18 条开放前提（攻破层）；正确 ≠ 完备——"
+    "断裂边界与开放前提就是未来任何新理论的最低任务清单。控制组双向对照（r130 另设扰动赋值反常非零反向对照）。"
+    "判定册：判定_TUFT-r127/r128/r130-正确理论体系_整理与攻破_2026-10-20.md"
+    % (r127_s, r128_s, r127_c, r130_s, r130_c),
+    cs_r127=r127_s, cs_r128=r128_s, cs_r130=r130_s)
 
 # §2.4 主题归纳：引力的本源（机读四轮判决；主题归属为本引擎声明式数据）
 THEME_GRAVITY = [

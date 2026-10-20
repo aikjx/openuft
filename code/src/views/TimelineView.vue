@@ -7,10 +7,9 @@
     <div class="toolbar">
       <div class="seg">
         <button :class="{active: filter==='all'}" @click="filter='all'">全部 {{ roundsAll.length }}</button>
-        <button :class="{active: filter==='T-photon'}" @click="filter='T-photon'">光子 {{ byTheme('T-photon').length }}</button>
-        <button :class="{active: filter==='T-force'}" @click="filter='T-force'">力的统一 {{ byTheme('T-force').length }}</button>
-        <button :class="{active: filter==='T-gravity'}" @click="filter='T-gravity'">引力 {{ byTheme('T-gravity').length }}</button>
-        <button :class="{active: filter==='T-spiral'}" @click="filter='T-spiral'">螺旋 {{ byTheme('T-spiral').length }}</button>
+        <button v-for="t in themes" :key="t.id" :class="{active: filter===t.id}" @click="filter=t.id">
+          <span class="dot" :style="{ background: t.hex }"></span>{{ t.name }} {{ byTheme(t.id).length }}
+        </button>
       </div>
     </div>
     <div class="timeline">

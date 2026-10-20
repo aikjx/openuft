@@ -64,6 +64,7 @@ const blacklist = computed(() => base.blacklist)
 const spiral = computed(() => base.spiral)
 const domains = computed(() => base.domains)
 const cosmic = computed(() => base.cosmicEssence)
+const correctSystem = computed(() => base.correctSystem)
 const criteria = computed(() => base.auditCriteria)
 const meta = computed(() => base.meta)
 
@@ -99,7 +100,7 @@ function clearUserRounds() {
 
 export function useOpenuft() {
   return {
-    state, meta, themes, cores, blacklist, spiral, domains, cosmic, criteria,
+    state, meta, themes, cores, blacklist, spiral, domains, cosmic, correctSystem, criteria,
     graph, roundsAll, allRounds, addUserRound, removeUserRound, clearUserRounds
   }
 }
