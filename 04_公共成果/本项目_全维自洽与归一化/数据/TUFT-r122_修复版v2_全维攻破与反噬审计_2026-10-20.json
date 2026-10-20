@@ -1,0 +1,183 @@
+{
+  "doc": "r122 修复版 v2.0 全维攻破与反噬审计",
+  "target": "07_统一场方程/68_修复版核心方程集_v2.0_2026-10-20.md",
+  "target_sha256_16": "f3957affa1e76393",
+  "generated_at": "2026-10-20T03:35:27.562864+00:00",
+  "criteria_total": 12,
+  "tally": {
+    "PASS": 11,
+    "FAIL": 0,
+    "BOUNDARY": 1,
+    "INFO": 0,
+    "OPEN": 0
+  },
+  "guards_total": 12,
+  "guards_passed": 12,
+  "exit_code": 0,
+  "criteria": [
+    {
+      "id": "G0",
+      "verdict": "PASS",
+      "item": "黑名单隔离：B-01~B-12 未被当作前提重新引入",
+      "detail": {
+        "B-01": {
+          "occurrences": 3,
+          "all_in_deny_context": true
+        },
+        "B-02": {
+          "occurrences": 1,
+          "all_in_deny_context": true
+        },
+        "B-03": {
+          "occurrences": 0,
+          "all_in_deny_context": true
+        },
+        "B-04": {
+          "occurrences": 2,
+          "all_in_deny_context": true
+        },
+        "B-05": {
+          "occurrences": 1,
+          "all_in_deny_context": true
+        },
+        "B-06": {
+          "occurrences": 2,
+          "all_in_deny_context": true
+        },
+        "B-07": {
+          "occurrences": 2,
+          "all_in_deny_context": true
+        },
+        "B-08": {
+          "occurrences": 1,
+          "all_in_deny_context": true
+        },
+        "B-09": {
+          "occurrences": 0,
+          "all_in_deny_context": true
+        },
+        "B-10": {
+          "occurrences": 2,
+          "all_in_deny_context": true
+        },
+        "B-11": {
+          "occurrences": 1,
+          "all_in_deny_context": true
+        },
+        "B-12": {
+          "occurrences": 5,
+          "all_in_deny_context": true
+        }
+      },
+      "interpretation": "修复版把黑名单仅作为 '不引用' 声明，未将其对象作为推导起点 ⇒ 旧账被判死的 12 条未借尸还魂"
+    },
+    {
+      "id": "G1",
+      "verdict": "PASS",
+      "item": "F1 波速非自毁：c 回归定义身份，波动方程群速 = c",
+      "c_check": 299792458.0,
+      "residual": 0.0,
+      "v_group_maxwell": 299792458.0,
+      "interpretation": "r115 的 '光速自毁 c√2' 失败模式不复现；c 为定义恒等（INFO 级，零新物理）"
+    },
+    {
+      "id": "G2",
+      "verdict": "PASS",
+      "item": "F2 电荷非欠定：e=g sinθ_W 锁定，m_W^t=m_Z cosθ_W",
+      "e_from_gsintw": 0.30282212087208876,
+      "e_meas": 0.30282212087208876,
+      "e_resid": 0.0,
+      "mw_tree": 79.95337920034909,
+      "mw_meas": 80.3692,
+      "mw_resid_ratio": 0.00517388252777079,
+      "interpretation": "电荷不再是 kk' 自由常数；树图 0.52% 残差 = 熟知一圈图修正（PHYS 级）"
+    },
+    {
+      "id": "G3",
+      "verdict": "PASS",
+      "item": "F3 质量有观测程序：m_p = 价夸克 + 胶子迹反常；Yukawa 非自由",
+      "sigma_q_mev": 8.99,
+      "frac_gluon": 0.9904185575661428,
+      "y_top_implied": 0.9936599232009806,
+      "interpretation": "质量不再由 dn/dΩ 无程序定义；胶子占比 99.04%（MSbar 方案依赖 ±0.5%，PHYS 级）"
+    },
+    {
+      "id": "G4",
+      "verdict": "PASS",
+      "item": "F4 四力不再强行合并：SM 三规范场 + GR 经典几何并列",
+      "flags": {
+        "qcd_term": true,
+        "ew_W": true,
+        "ew_B": true,
+        "einstein_hilbert": true,
+        "fourth_gauge_group_present": false
+      },
+      "interpretation": "引力是几何项（R√-g），不是规范曲率 ⇒ r114/r115 判死的 '引力=第4规范群' 路线未借尸还魂"
+    },
+    {
+      "id": "G5",
+      "verdict": "PASS",
+      "item": "F5 G 几何本源：G 作为耦合留在 EH 项，未被几何派生",
+      "flags": {
+        "G_in_EH_term": true,
+        "declared_input_constant": true
+      },
+      "interpretation": "B-12（G=2Z/c 循环恒等族）未 reintroduce；G 起源仍是 OPEN"
+    },
+    {
+      "id": "G6",
+      "verdict": "PASS",
+      "item": "F6 光子内态：规范场量子 + 偏振，非圆柱螺旋",
+      "photon_is_gauge_boson": true,
+      "helix_occurrences": 4,
+      "helix_all_replaced_context": true,
+      "interpretation": "继承 r53/r56/r116/r117：圆偏振是 Maxwell 解，零新增物理"
+    },
+    {
+      "id": "G7",
+      "verdict": "PASS",
+      "item": "F7 作用量量纲：恢复 [ℒ]=E/L³，正则动量非恒零",
+      "canonical_momentum_nonzero": true,
+      "dim_declared": true,
+      "interpretation": "V4.8 的 (M,L,T) 双基法令共轭动量恒零的旧失效模式被排除"
+    },
+    {
+      "id": "G8",
+      "verdict": "PASS",
+      "item": "F8 单位约定冒充物理：f-桥接族已删除，耦合仅 g,g',g_s",
+      "f_bridge_deleted": true,
+      "f_redef_occurrences": 1,
+      "f_redef_all_in_deny_context": true,
+      "couplings_only_gg_gp_gs": true,
+      "interpretation": "B-06（单位约定冒充物理）未 reintroduce；A'=fA 仅作为 '旧问题/已删除' 描述出现，活动耦合显式写为 g, g', g_s"
+    },
+    {
+      "id": "G9",
+      "verdict": "BOUNDARY",
+      "item": "过度宣称门：SM+GR 并列未被包装成已完成统一",
+      "unification_mentions": 2,
+      "denies_merge": true,
+      "open_items_listed": true,
+      "aspirational_label_boundary": true,
+      "interpretation": "v2.0 明确 '不是把四大力塞进一个群' 且列 10 条 OPEN ⇒ 诚实；但 '唯一有实验支持的统一场论框架' 是标签性表述（SM/GR 各自被支持，并列 ≠ 统一），记入 BOUNDARY 而非 PASS 满分"
+    },
+    {
+      "id": "G10",
+      "verdict": "PASS",
+      "item": "OPEN 真开放：与 r119（引力 4.18 dex 缺口）/r120（非 SUSY 52σ）锚点一致",
+      "anchor_gravity_gap_dex": 4.18,
+      "anchor_nonsusy_sigma": 52.0,
+      "interpretation": "修复版 §5 的 10 条 OPEN 与既有攻破册的定量结论不自相矛盾；'引力量子化/G 起源/味谱' 等确实未闭合"
+    },
+    {
+      "id": "G11",
+      "verdict": "PASS",
+      "item": "控制组·电弱统一：同款 ρ 判据判人类唯一已完成统一 ⇒ 通过",
+      "rho_ew_from_measured": 1.010428629841964,
+      "rho_tree": 1.0,
+      "rho_resid_ratio": 0.010428629841964021,
+      "mw_over_mz_exact": "4/5",
+      "interpretation": "ρ=1.01043（树级 1，0.52% 由 m_t/Higgs 圈修正解释）⇒ 电弱统一是真预言非 tautology；同一准则判 '四力统一' 在 52σ 失败 ⇒ 判据有判别力（非一律否定）"
+    }
+  ]
+}
