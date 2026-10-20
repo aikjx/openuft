@@ -1,0 +1,5394 @@
+{
+  "meta": {
+    "id": "r117",
+    "title": "空间光速螺旋实验室：相位沿世界线不变性与 de Broglie 内时钟门",
+    "date": "2026-10-20",
+    "engine": "TUFT-r117_空间光速螺旋实验室_相位不变性与内时钟门_2026-10-20.py",
+    "discipline": "verdict 由机读数值驱动；控制组失控 ⇒ 退出码 2"
+  },
+  "constants": {
+    "c": 299792458.0,
+    "h": 6.62607015e-34,
+    "hbar": 1.0545718176461565e-34,
+    "eV_J": 1.602176634e-19,
+    "m_e_kg": 9.1093837015e-31,
+    "m_mu_kg": 1.883531627e-28,
+    "tau_mu_s": 2.1969811e-06,
+    "m_gamma_limit_eV": 1e-18,
+    "E_Planck_GeV": 1.22089e+19,
+    "l_Planck_m": 1.616255e-35
+  },
+  "data": {
+    "c_defined": {
+      "value": 299792458.0,
+      "unit": "m/s",
+      "src": "SI 2019 定义值（精确）"
+    },
+    "m_gamma_limit": {
+      "value": 1e-18,
+      "unit": "eV/c^2",
+      "src": "PDG 2024 γ MASS"
+    },
+    "grb090510": {
+      "z": 0.903,
+      "E_gamma_GeV": 31.0,
+      "dt_lag_s": 0.86,
+      "src": "Fermi-LAT, Nature 462, 331 (2009)"
+    },
+    "liv_linear": {
+      "E_QG1_over_E_Pl": 7.6,
+      "CL": 0.95,
+      "src": "Vasileiou et al. 2013 (Fermi 4 GRB), 亚光速线性项 95% CL"
+    },
+    "liv_nature2009": {
+      "E_QG1_over_E_Pl": 1.2,
+      "src": "Nature 462, 331 (2009) 原始保守下限"
+    },
+    "structured_photon_delay": {
+      "delay_m_low": 1e-06,
+      "delay_m_high": 1e-05,
+      "distance_m": 1.0,
+      "src": "Giovannini et al., Science 347(6224), 857-860 (2015), DOI 10.1126/science.aaa3035；原文：'the delay is several micrometers over a propagation distance of ~1 meter'（Bessel 束与聚焦高斯束各测一次，均用时间关联光子对）",
+      "official_confirmation": true,
+      "r116_status": "解除 r116 B05 的 needs_official_confirmation：官方摘要数值已核对，δ ∈ [1e-6, 1e-5]，与 r116 B05 独立推出的 α²/2 上界量级相容",
+      "attribution": "有限横向尺寸导致的波矢修正（麦克斯韦 + 模式几何），非单光子内部动力学"
+    },
+    "gw170817": {
+      "lo": -3e-15,
+      "hi": 7e-16,
+      "src": "LIGO/Virgo GW170817 引力波速度与光速之差"
+    },
+    "neutron_charge_radius": {
+      "value": 0.84,
+      "unit": "fm",
+      "src": "PDG 中子均方电荷半径"
+    },
+    "cosmology": {
+      "H0": 67.4,
+      "Omega_m": 0.315,
+      "src": "Planck 2018 (平坦 ΛCDM)"
+    }
+  },
+  "lemmas": {
+    "L1_phase_along_null": {
+      "dphi": "0",
+      "is_exact_zero": true
+    },
+    "L2_internal_clock": {
+      "lhs": "-30/7",
+      "rhs": "-30/7",
+      "identical": true,
+      "omega_int_formula": "mc^2/hbar"
+    },
+    "L3_helix": {
+      "exact_v2_over_w2": "25",
+      "exact_R2": "25",
+      "exact_ok": true,
+      "speed_num": 299792457.82012004,
+      "c": 299792458.0,
+      "rel_err": 6.000149723512382e-10,
+      "omega_h": 0.0001,
+      "v_axial_over_c": 0.8,
+      "pass": true
+    }
+  },
+  "gates": [
+    {
+      "gate": "H1",
+      "name": "固有时门",
+      "photon_dtau_factor": "0",
+      "photon_internal_rate": 0.0,
+      "muon_dtau_factor": 0.0346358,
+      "verdict": "FAIL（对任何主张光子内部运行的 case：内部时标为精确零）",
+      "applies_to": "全部 case",
+      "selfcheck": true
+    },
+    {
+      "gate": "H2",
+      "name": "de Broglie 内时钟门",
+      "formula": "dΦ/dτ = -m c^2/ħ",
+      "photon_omega_int_upper_rad_s": 0.00151927,
+      "photon_T_int_lower_s": 4135.67,
+      "photon_T_int_lower_min": 68.9278,
+      "muon_omega_int_rad_s": 1.60523e+23,
+      "muon_T_int_s": 3.91419e-23,
+      "muon_oscillations_per_lifetime": 5.61287e+16,
+      "electron_omega_int_rad_s": 7.76344e+20,
+      "observed_omega_810nm_rad_s": 2325500000000000.0,
+      "ratio_observed_over_internal_max": 1.53067e+18,
+      "verdict": "FAIL（内部时钟比观测频率慢 1.531e+18 倍，无法解释 E = ħω）",
+      "applies_to": "主张内部运行产生观测频率的 case（O1）",
+      "selfcheck": true
+    },
+    {
+      "gate": "H3",
+      "name": "静质量门（内部运行的能量代价）",
+      "rows": [
+        {
+          "label": "可见光 810 nm",
+          "E_eV": 1.53067,
+          "m_eff_eV_over_c2": 1.53067,
+          "excess_over_PDG": 1.53067e+18
+        },
+        {
+          "label": "绿光 532 nm",
+          "E_eV": 2.33053,
+          "m_eff_eV_over_c2": 2.33053,
+          "excess_over_PDG": 2.33053e+18
+        },
+        {
+          "label": "GRB 31 GeV 光子",
+          "E_eV": 31000000000.0,
+          "m_eff_eV_over_c2": 31000000000.0,
+          "excess_over_PDG": 3.1e+28
+        }
+      ],
+      "PDG_limit_eV": 1e-18,
+      "min_excess_factor": 1.53067e+18,
+      "verdict": "FAIL（最温和一档仍超 PDG 上限 1.531e+18 倍）",
+      "applies_to": "主张内部运行产生观测频率的 case（O1/G2/G3）",
+      "selfcheck": true
+    },
+    {
+      "gate": "H4",
+      "name": "螺旋-光速几何门",
+      "formula": "v_ax/c = sqrt(1-(a/λ̄)^2);  a_max = λ̄·sqrt(2δ-δ^2)",
+      "lookback_time_s": 2.37813e+17,
+      "lookback_time_Gyr": 7.53583,
+      "delta_astro_conservative": 3.61629e-18,
+      "delta_LIV_linear_95CL": 3.34096e-19,
+      "delta_LIV_nature2009": 2.11594e-18,
+      "delta_lab_structured": 3e-06,
+      "bands": [
+        {
+          "band": "天文（GRB 时间差，保守）",
+          "delta": 3.61629e-18,
+          "a_over_R_max": 2.68935e-09,
+          "lambda_bar_m": 1.28916e-07,
+          "a_max_m": 3.46698e-16,
+          "a_max_fm": 0.346698,
+          "model_required_a_m": 1.28916e-07,
+          "conflict_factor_lambda_over_a": 371838000.0,
+          "wavelength_independent": true
+        },
+        {
+          "band": "天文（LIV 线性 95% CL）",
+          "delta": 3.34096e-19,
+          "a_over_R_max": 8.1743e-10,
+          "lambda_bar_m": 1.28916e-07,
+          "a_max_m": 1.05379e-16,
+          "a_max_fm": 0.105379,
+          "model_required_a_m": 1.28916e-07,
+          "conflict_factor_lambda_over_a": 1223350000.0,
+          "wavelength_independent": true
+        },
+        {
+          "band": "实验室（Giovannini 结构光束）",
+          "delta": 3e-06,
+          "a_over_R_max": 0.00244949,
+          "lambda_bar_m": 1.28916e-07,
+          "a_max_m": 3.15777e-10,
+          "a_max_fm": 315777.0,
+          "model_required_a_m": 1.28916e-07,
+          "conflict_factor_lambda_over_a": 408.249,
+          "wavelength_independent": true
+        }
+      ],
+      "branches": [
+        {
+          "branch": "a = 0",
+          "v_ax_over_c": 1.0,
+          "delta": 0.0,
+          "outcome": "无螺旋 ⇒ 无内部运行（传统）",
+          "consistent": true
+        },
+        {
+          "branch": "a = λ̄",
+          "v_ax_over_c": 0.0,
+          "delta": 1.0,
+          "outcome": "轴向不前进 ⇒ 光子静止 ⇒ m≠0，与 PDG m_γ 上限冲突",
+          "consistent": false
+        },
+        {
+          "branch": "0 < a ≤ a_max",
+          "v_ax_over_c": 1.0,
+          "delta": 3.61629e-18,
+          "outcome": "轴向慢于 c，但内部周期 ≠ 观测频率（自相矛盾）",
+          "consistent": false
+        },
+        {
+          "branch": "a > a_max",
+          "v_ax_over_c": null,
+          "delta": null,
+          "outcome": "轴向速度低于观测 δ 上限 ⇒ 与 GRB/LIV 数据冲突",
+          "consistent": false
+        }
+      ],
+      "surviving_branches": [
+        "a = 0"
+      ],
+      "verdict": "FAIL（四分支仅 a=0 存活；模型需求 a=λ̄ 与数据上限差 3.718e+08 倍）",
+      "applies_to": "GEOM = G2（质心走圆柱螺旋）",
+      "age_universe_s": 4.35085e+17,
+      "t_L_below_age": true,
+      "selfcheck": true
+    },
+    {
+      "gate": "H5",
+      "name": "真空色散 / 洛伦兹不变性门",
+      "E_QG1_GeV": 9.27876e+19,
+      "E_Planck_GeV": 1.22089e+19,
+      "delta_allowed_31GeV": 3.34096e-19,
+      "delta_model_full_helix": 1.0,
+      "delta_model_a_half_lambda_bar": 0.133975,
+      "excess_vs_allowed": 2.99315e+18,
+      "verdict": "FAIL（螺旋模型要求的速度偏离比观测允许值大 2.993e+18 倍）",
+      "applies_to": "主张 v 依赖内部频率的 case（O1/G2/G3）",
+      "selfcheck": true
+    },
+    {
+      "gate": "H6",
+      "name": "内部自由度门（极化态计数）",
+      "observed_photon_helicity_states": 2,
+      "massive_spin1_states": 3,
+      "missing_state": "0（纵向）",
+      "note": "若内部运行赋予有效静质量（见 H3），则应有 3 个极化态；纵向态从未被观测",
+      "verdict": "FAIL（内部运行 ⇒ 第 3 态，与观测 2 态冲突）",
+      "applies_to": "主张内部结构的 case（O1/O2）",
+      "selfcheck": true
+    },
+    {
+      "gate": "H7",
+      "name": "局域光速门（|v| ≤ c）",
+      "violations": [
+        "V3_superluminal",
+        "V4_axial_c_tang_gt_c"
+      ],
+      "note": "V4 即 r115-B1 已判的 √[(Rω)²+c²] = c√2 型（超光速 41.4%）",
+      "verdict": "FAIL（|v| > c 与 SR 及全部观测冲突）",
+      "applies_to": "VEL ∈ {V3, V4}",
+      "selfcheck": true
+    }
+  ],
+  "controls": [
+    {
+      "id": "Ctl1",
+      "target": "μ 子（有质量，有固有时）",
+      "prediction": "内部时钟必须存在（ω = m_μc²/ħ > 0）",
+      "omega_int_rad_s": 1.60523e+23,
+      "T_int_s": 3.91419e-23,
+      "oscillations_per_lifetime": 5.61287e+16,
+      "tau_mu_s": 2.1969811e-06,
+      "m_mu_c2_MeV": 105.6583755,
+      "observed": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "id": "Ctl2",
+      "target": "中子（已知有内部结构）",
+      "prediction": "内部结构必须可探测（电荷半径 > 0）",
+      "charge_radius_fm": 0.84,
+      "observed": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "id": "Ctl3",
+      "target": "Giovannini 2015 结构光束",
+      "prediction": "轴向必须慢于 c（真实现象），但归因 = 模式几何，不是内部时钟",
+      "delta_low": 1e-06,
+      "delta_high": 1e-05,
+      "slow_observed": true,
+      "expected_slow": true,
+      "attribution": "有限横向尺寸导致的波矢修正（麦克斯韦 + 模式几何），非光子内部动力学",
+      "discriminator": "该 δ 随束腰/模式变化，不随 E/h 的内部周期变化",
+      "pass": true
+    },
+    {
+      "id": "Ctl4",
+      "target": "GW170817 引力波（同为类光传播）",
+      "prediction": "与光子同结论：无内部时钟，|v−c|/c 受同一量级约束",
+      "bound_lo": -3e-15,
+      "bound_hi": 7e-16,
+      "expected_no_internal_clock": true,
+      "observed": true,
+      "pass": true
+    }
+  ],
+  "enumeration": {
+    "total": 180,
+    "coherent": 59,
+    "surviving": 15,
+    "rows": [
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H4"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": true,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": []
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "内部运行速率 ≡ 0，与 dτ = 0 一致"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "ω_int = mc²/ħ → 0，与主张一致"
+          },
+          "H3": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部运行 ⇒ 无约束能代价"
+          },
+          "H5": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "无内部频率 ⇒ 无 v(ν) 依赖"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "仅 2 个螺旋度态，与观测一致"
+          }
+        },
+        "failing_gates": [
+          "H7"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O1_periodic",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": false,
+            "verdict": "N/A",
+            "detail": "非螺旋轨迹"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R1：直线轨迹无横向分量，轴向速度必为 c"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R2：螺旋存在横向分量，|v|=c ⇒ 轴向必 < c"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G2_cyl_helix",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "|v| > c（r115-B1 型：横向分量未纳入速度预算）"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H7",
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2",
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "仿射参数具 λ→aλ+b 自由度 ⇒ 内部频率无洛伦兹不变量内容（不可定义）"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": true,
+        "reasons": [],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）"
+        ],
+        "survives": false,
+        "gates": {
+          "H7": {
+            "applicable": true,
+            "verdict": "PASS",
+            "detail": "|v| ≤ c"
+          },
+          "H1": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "实验室时 t 是外部坐标时，不属「内部」"
+          },
+          "H2": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "ω_int ≤ 0.001519 rad/s ≪ ω_obs"
+          },
+          "H3": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "m_eff = hν/c² 超 PDG 上限 ≥ 1.531e+18 倍"
+          },
+          "H5": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "δ 需求 ≥ 1，观测允许 ≤ 3.341e-19"
+          },
+          "H4": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "a 需求 = λ̄，数据上限 = 2.689e-09·λ̄"
+          },
+          "H6": {
+            "applicable": true,
+            "verdict": "FAIL",
+            "detail": "内部结构 ⇒ 第 3 个（纵向）极化态，未被观测"
+          }
+        },
+        "failing_gates": [
+          "H1",
+          "H2",
+          "H3",
+          "H5",
+          "H4",
+          "H6"
+        ]
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G3_toroidal",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R3：环面约束的轴向速度为零，只能归入 V2"
+        ],
+        "tags": [
+          "STATIC（轴向速度 = 0，光子不传播）",
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R4：类光世界线 dτ≡0，以固有时为标的内部演化速率恒为零",
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V3_superluminal",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      },
+      {
+        "ont": "O2_aperiodic",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V4_axial_c_tang_gt_c",
+        "coherent": false,
+        "reasons": [
+          "R6：模场/波包的相位依赖外部空间点与时刻，不构成内禀时标（范畴混淆）"
+        ],
+        "tags": [
+          "SR_VIOLATION（|v| > c）"
+        ],
+        "survives": false,
+        "gates": {}
+      }
+    ],
+    "by_ontology": {
+      "O0_none": {
+        "coherent": 39,
+        "surviving": 15
+      },
+      "O1_periodic": {
+        "coherent": 10,
+        "surviving": 0
+      },
+      "O2_aperiodic": {
+        "coherent": 10,
+        "surviving": 0
+      }
+    }
+  },
+  "verdict": {
+    "helix_internal_run": "FAIL",
+    "traditional": "PASS",
+    "surviving_cases": [
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G1_null_line",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G4_structured_mode",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T1_proper",
+        "vel": "V2_tangential_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T2_affine",
+        "vel": "V2_tangential_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V1_axial_c"
+      },
+      {
+        "ont": "O0_none",
+        "geom": "G5_wavepacket",
+        "clock": "T3_lab",
+        "vel": "V2_tangential_c"
+      }
+    ]
+  },
+  "guards": {
+    "total": 17,
+    "passed": 17,
+    "items": [
+      {
+        "name": "L1 沿类光世界线 dΦ ≡ 0",
+        "ok": true,
+        "detail": "dΦ = 0（精确零）"
+      },
+      {
+        "name": "L2 dΦ/dτ = −mc²/ħ 恒等式",
+        "ok": true,
+        "detail": "lhs = -30/7, rhs = -30/7"
+      },
+      {
+        "name": "L3 螺旋速率 ω√(a²+b²) = c",
+        "ok": true,
+        "detail": "相对误差 6.000e-10，v_ax/c = 0.800000"
+      },
+      {
+        "name": "门 H1 自检",
+        "ok": true,
+        "detail": "FAIL（对任何主张光子内部运行的 case：内部时标为精确零）"
+      },
+      {
+        "name": "门 H2 自检",
+        "ok": true,
+        "detail": "FAIL（内部时钟比观测频率慢 1.531e+18 倍，无法解释 E = ħω）"
+      },
+      {
+        "name": "门 H3 自检",
+        "ok": true,
+        "detail": "FAIL（最温和一档仍超 PDG 上限 1.531e+18 倍）"
+      },
+      {
+        "name": "门 H4 自检",
+        "ok": true,
+        "detail": "FAIL（四分支仅 a=0 存活；模型需求 a=λ̄ 与数据上限差 3.718e+08 倍）"
+      },
+      {
+        "name": "门 H5 自检",
+        "ok": true,
+        "detail": "FAIL（螺旋模型要求的速度偏离比观测允许值大 2.993e+18 倍）"
+      },
+      {
+        "name": "门 H6 自检",
+        "ok": true,
+        "detail": "FAIL（内部运行 ⇒ 第 3 态，与观测 2 态冲突）"
+      },
+      {
+        "name": "门 H7 自检",
+        "ok": true,
+        "detail": "FAIL（|v| > c 与 SR 及全部观测冲突）"
+      },
+      {
+        "name": "控制组 Ctl1",
+        "ok": true,
+        "detail": "内部时钟必须存在（ω = m_μc²/ħ > 0）"
+      },
+      {
+        "name": "控制组 Ctl2",
+        "ok": true,
+        "detail": "内部结构必须可探测（电荷半径 > 0）"
+      },
+      {
+        "name": "控制组 Ctl3",
+        "ok": true,
+        "detail": "轴向必须慢于 c（真实现象），但归因 = 模式几何，不是内部时钟"
+      },
+      {
+        "name": "控制组 Ctl4",
+        "ok": true,
+        "detail": "与光子同结论：无内部时钟，|v−c|/c 受同一量级约束"
+      },
+      {
+        "name": "枚举非空",
+        "ok": true,
+        "detail": "自洽 case 数 = 59"
+      },
+      {
+        "name": "存在存活解",
+        "ok": true,
+        "detail": "存活 case 数 = 15"
+      },
+      {
+        "name": "时标轴退化检验",
+        "ok": true,
+        "detail": "存活解覆盖 3 种时标 ⇒ 一旦 O0 成立，时标选择无判别力"
+      }
+    ]
+  }
+}
