@@ -4,23 +4,36 @@
       <div class="page-title">不可引用黑名单 · {{ blacklist.length }} 条</div>
       <div class="page-sub">黑名单对象不得作为任何推导的前提；若需讨论，只能以「已被 X 号卷判否」的形式出现。</div>
     </div>
+    <div class="toolbar">
+      <input v-model="q" class="bl-search" placeholder="检索黑名单对象 / 理由 / 来源…" />
+      <span class="dim" style="font-size:12px">{{ filtered.length }} / {{ blacklist.length }} 条</span>
+    </div>
     <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(380px,1fr))">
-      <div v-for="b in blacklist" :key="b.id" class="bl-card">
+      <div v-for="b in filtered" :key="b.id" class="bl-card">
         <div class="bl-head"><span class="mono bl-id">{{ b.id }}</span><span class="tag tag-fail">BAN</span></div>
         <div class="bl-item">{{ b.item }}</div>
         <div class="bl-reason"><span class="muted">理由 ▸ </span>{{ b.reason }}</div>
         <div class="bl-src"><span class="muted">来源 ▸ </span>{{ b.source }}</div>
       </div>
     </div>
+    <div v-if="!filtered.length" class="empty-state">无匹配黑名单条目。</div>
   </div>
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import { useOpenuft } from '@/composables/useOpenuft.js'
 const { blacklist } = useOpenuft()
+const q = ref('')
+const filtered = computed(() => {
+  const s = q.value.trim().toLowerCase()
+  if (!s) return blacklist.value
+  return blacklist.value.filter(b => (b.id + b.item + b.reason + b.source).toLowerCase().includes(s))
+})
 </script>
 
 <style scoped>
+.bl-search { max-width: 360px; }
 .bl-card { background: var(--panel); border: 1px solid var(--line-soft); border-left: 3px solid var(--fail); border-radius: 10px; padding: 13px 15px; }
 .bl-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .bl-id { font-size: 13px; font-weight: 700; }

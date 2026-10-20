@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-head">
-      <div class="page-title">攻破链时间线 · r53 → r121</div>
+      <div class="page-title">攻破链时间线 · {{ chainRange }}</div>
       <div class="page-sub">从边界裁定到命题穷举到退守封口到语料审计的完整攻击序列；每一环都是对「统一场论/光子内部运行」宣称的可机读判决。</div>
     </div>
     <div class="toolbar">
@@ -43,9 +43,14 @@ const filter = ref('all')
 const shown = computed(() => filter.value === 'all' ? roundsAll.value : roundsAll.value.filter(r => r.theme === filter.value))
 function byTheme(t) { return roundsAll.value.filter(r => r.theme === t) }
 function themeName(id) { const t = themes.value.find(x => x.id === id); return t ? t.name : id }
-function themeColor(id) { const t = themes.value.find(x => x.id === id); return t ? t.color : 'var(--boundary)' }
+function themeColor(id) { const t = themes.value.find(x => x.id === id); return t ? t.hex : '#f5b13d' }
 function verdictClass(v) { return (v === 'FAIL') ? 'tag-fail' : (v === 'PASS' ? 'tag-ok' : 'tag-boundary') }
-function extras(r) { const o = []; (r.blacklists||[]).forEach(b=>o.push('→ B '+b)); (r.downgrades||[]).forEach(k=>o.push('→ ↓'+k)); if (r.user) o.push('★ 用户攻破'); return o }
+function extras(r) { const o = []; (r.blacklists||[]).forEach(b=>o.push('→ B '+b)); (r.downgrades||[]).forEach(k=>o.push('→ ↓'+k)); if (r.user) o.push('★ 本地攻破轮'); return o }
+// 链射程由数据驱动（底座首轮 → 末轮；本地轮单列不计入区间）
+const chainRange = computed(() => {
+  const base = roundsAll.value.filter(r => !r.user)
+  return base.length ? `${base[0].id} → ${base[base.length - 1].id}` : '—'
+})
 </script>
 
 <style scoped>

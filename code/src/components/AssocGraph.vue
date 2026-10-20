@@ -76,7 +76,7 @@
 import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useOpenuft } from '@/composables/useOpenuft.js'
 
-const { graph, themes, roundsAll } = useOpenuft()
+const { graph, themes, roundsAll, blacklist: blacklistRef, cores: coresRef } = useOpenuft()
 
 const W = 920, H = 560
 const stage = ref(null)
@@ -216,10 +216,10 @@ function roundExtras(id) {
   ;(r.downgrades || []).forEach(k => out.push('→ 降级 ' + k))
   return out
 }
-function blItem(id) { const x = useOpenuft().blacklist.value.find(z => z.id === id); return x ? x.item : '' }
-function blReason(id) { const x = useOpenuft().blacklist.value.find(z => z.id === id); return x ? x.reason : '' }
-function blSource(id) { const x = useOpenuft().blacklist.value.find(z => z.id === id); return x ? x.source : '' }
-function coreDesc(id) { const c = useOpenuft().cores.value.find(z => z.id === id); return c ? c.desc : '' }
+function blItem(id) { const x = blacklistRef.value.find(z => z.id === id); return x ? x.item : '' }
+function blReason(id) { const x = blacklistRef.value.find(z => z.id === id); return x ? x.reason : '' }
+function blSource(id) { const x = blacklistRef.value.find(z => z.id === id); return x ? x.source : '' }
+function coreDesc(id) { const c = coresRef.value.find(z => z.id === id); return c ? c.desc : '' }
 
 function edgeColor(kind) {
   if (kind === 'member') return '#4c8dff'

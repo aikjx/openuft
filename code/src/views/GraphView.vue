@@ -4,7 +4,7 @@
       <div class="page-title">关联图谱 · 主题 — 攻破轮 — 正确核/黑名单</div>
       <div class="page-sub">点击节点查看判决详情，拖拽可固定位置；边色：蓝=隶属主题，红=登记黑名单，橙=降级正确核。</div>
     </div>
-    <div class="grid" style="grid-template-columns: 1fr 280px;">
+    <div class="grid graph-grid">
       <AssocGraph />
       <div class="card">
         <div class="card-title">节点清单 <span class="tag">{{ graph.nodes.length }}</span></div>
@@ -34,6 +34,8 @@ function focus(id) { window.dispatchEvent(new CustomEvent('focus-node', { detail
 </script>
 
 <style scoped>
+.graph-grid { grid-template-columns: 1fr 280px; }
+@media (max-width: 1100px) { .graph-grid { grid-template-columns: 1fr; } }
 .node-list { max-height: 520px; overflow-y: auto; font-size: 12px; }
 .nl-group { margin-bottom: 8px; }
 .nl-h { font-size: 11px; color: var(--text-mute); margin: 6px 0 3px; display: flex; align-items: center; gap: 6px; }

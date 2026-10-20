@@ -105,6 +105,11 @@ def main():
         if not directory.is_dir(): continue
         parts = directory.relative_to(ROOT).parts
         if parts[0].startswith('.') or '__pycache__' in parts: continue
+        # 前端工程依赖与构建产物不是本库资料目录，不参与"中文目录名"与断链治理
+        if set(x.lower() for x in parts) & {'node_modules', 'dist', '.vite', '.cache'}: continue
+        # code/ 是前端工程根（openuft/code）：src/components/views 等英文目录名是前端工程惯例，
+        # 不是"研究资料目录"，不适用目录名中文化规则。
+        if parts[0] == 'code': continue
         if is_raw_staging(parts): continue
         if is_archive_raw(parts): continue
         if ASSET_DIR_RE.match(directory.name): continue
@@ -115,6 +120,8 @@ def main():
         for p in ROOT.rglob('*.md'):
             if '90_历史归档' in p.relative_to(ROOT).parts: continue
             if is_raw_staging(p.relative_to(ROOT).parts): continue
+            # 第三方依赖包自带 md 不是本库文档，断链检查不应对它们生效
+            if set(x.lower() for x in p.relative_to(ROOT).parts) & {'node_modules', 'dist', '.vite', '.cache'}: continue
             body = re.sub(r'```.*?```', '', p.read_text(encoding='utf-8-sig'), flags=re.S)
             for target in re.findall(r'!?\[[^\]\n]*\]\(([^\s)]+)\)', body):
                 if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#') or target.startswith('@'):

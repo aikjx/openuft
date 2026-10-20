@@ -10,15 +10,15 @@
       <p class="thesis">{{ cosmic.thesis }}</p>
     </div>
 
-    <div class="grid" style="grid-template-columns: 1fr 1fr; margin-bottom:16px">
-      <div v-for="p in cosmic.pillars" :key="p.title" class="card pillar-card">
+    <div class="grid grid-2col" style="margin-bottom:16px">
+      <div v-for="p in cosmic.pillars" :key="p.title" class="card pillar-card" :style="{ borderTopColor: themeColor(p.theme) }">
         <div class="pillar-h"><b>{{ p.title }}</b><span :class="verdictClass(p.verdict)" style="margin-left:auto">{{ p.verdict }}</span></div>
         <p class="dim" style="font-size:12.5px;line-height:1.7;margin:8px 0 0">{{ p.detail }}</p>
         <div class="chip" :style="{ background: themeColor(p.theme)+'22', color: themeColor(p.theme) }">{{ themeName(p.theme) }}</div>
       </div>
     </div>
 
-    <div class="grid" style="grid-template-columns: 1fr 1fr">
+    <div class="grid grid-1-1">
       <div class="card">
         <div class="card-title">诚实边界 · 未解决项 <span class="tag tag-boundary">OPEN</span></div>
         <div v-for="b in cosmic.honestBoundary" :key="b" class="bound-row"><span class="dot dot-boundary"></span>{{ b }}</div>
@@ -36,7 +36,7 @@ import { useOpenuft } from '@/composables/useOpenuft.js'
 const { cosmic, themes } = useOpenuft()
 function verdictClass(v) { return (v==='FAIL'||v==='BAN'||v==='DOWN') ? 'tag-fail' : (v==='PASS'||v==='OK' ? 'tag-ok' : 'tag-boundary') }
 function themeName(id) { const t = themes.value.find(x => x.id === id); return t ? t.name : id }
-function themeColor(id) { const t = themes.value.find(x => x.id === id); return t ? t.color : 'var(--boundary)' }
+function themeColor(id) { const t = themes.value.find(x => x.id === id); return t ? t.hex : '#f5b13d' }
 </script>
 
 <style scoped>

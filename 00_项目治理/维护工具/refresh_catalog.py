@@ -11,7 +11,9 @@ CATALOG = ROOT / '00_项目治理/资料索引'
 # 本仓库自身带 .git（openuft 同时被外层 my_lib 跟踪），裸 rglob 会把仓库记账对象
 # 当成资料索引进正本索引，一次就写入数百条 .git/... 行（2026-09-23 / 2026-09-24 两次事故）。
 # 名字判据按目录段逐层做、大小写不敏感，好让嵌套仓库与子模块的 .git 一并排除。
-IGNORE_DIRS = {'__pycache__', '.git'}
+# 前端工程（openuft/code）的依赖与构建产物同理：node_modules / dist / .vite 不是本库资料，
+# 索引它们会一次写入数千条第三方路径并让 verify 的断链检查被第三方 md 淹没（2026-10-20）。
+IGNORE_DIRS = {'__pycache__', '.git', 'node_modules', 'dist', '.vite', '.cache'}
 
 
 def is_indexable(p):

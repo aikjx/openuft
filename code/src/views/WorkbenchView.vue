@@ -2,15 +2,16 @@
   <div>
     <div class="page-head">
       <div class="page-title">攻破工作台 · 持续突破机制</div>
-      <div class="page-sub">录入一个新宣称，套用本库沉淀的审计判据逐条自检，生成机读 verdict 并存为新的攻破轮——它立即进入关联图谱与攻破链。所有新增仅留存在本机浏览器（localStorage）。</div>
+      <div class="page-sub">录入一个新宣称，套用本库沉淀的审计判据逐条自检，生成机读 verdict 并存为新的攻破轮——它立即进入关联图谱与攻破链。所有新增仅留存在本机浏览器（localStorage），可导出为与 53 引擎同 schema 的 JSON。</div>
     </div>
 
-    <div class="grid" style="grid-template-columns: 1fr 1fr">
+    <div class="grid grid-1-1">
       <!-- form -->
       <div class="card">
         <div class="card-title">登记新宣称</div>
-        <label class="field">宣称标题</label>
-        <input v-model="form.title" placeholder="例如：某理论称光子内部存在 X 结构" />
+        <label class="field">宣称标题 <span class="req">*</span></label>
+        <input v-model="form.title" :class="{ 'input-error': err }" placeholder="例如：某理论称光子内部存在 X 结构" />
+        <div class="err-line" v-if="err">{{ err }}</div>
         <label class="field">关联主题</label>
         <select v-model="form.theme">
           <option v-for="t in themes" :key="t.id" :value="t.id">{{ t.name }}</option>
@@ -20,7 +21,7 @@
         <label class="field">内容与依据（文本/链接）</label>
         <textarea v-model="form.content" placeholder="粘贴关键推导或结论；工作台不重判，只记录你的判定"></textarea>
         <label class="field">自定义编号（可选，留空自动生成）</label>
-        <input v-model="form.id" placeholder="如 r122 / u-xxx" />
+        <input v-model="form.id" placeholder="如 r124 / u-xxx" />
 
         <div class="card-title" style="margin-top:16px">审计判据自检 <span class="tag">机读守卫</span></div>
         <div v-for="c in criteria" :key="c.id" class="crit">
@@ -39,10 +40,10 @@
         <div class="verdict-box" :class="'vb-'+computedVerdict">
           <span class="vb-label">机读判决</span>
           <span class="vb-val">{{ computedVerdict }}</span>
-          <span class="vb-sub">失败守卫视 {{ failCount }} · 通过 {{ passCount }} · 不适用 {{ naCount }}</span>
+          <span class="vb-sub">失败守卫 {{ failCount }} · 通过 {{ passCount }} · 不适用 {{ naCount }}</span>
         </div>
 
-        <div style="display:flex;gap:10px;margin-top:14px">
+        <div class="btn-row">
           <button class="btn btn-primary" @click="commit">登记为攻破轮</button>
           <button class="btn" @click="reset">重置</button>
         </div>
@@ -57,7 +58,10 @@
           </div>
         </div>
         <div class="card">
-          <div class="card-title">已登记的攻破轮 <span class="tag">{{ userRounds.length }}</span></div>
+          <div class="card-title">
+            已登记的攻破轮 <span class="tag">{{ userRounds.length }}</span>
+            <button v-if="userRounds.length" class="btn btn-sm" style="margin-left:auto" @click="exportJson">导出 JSON</button>
+          </div>
           <div v-if="!userRounds.length" class="empty-state">尚无新增。登记第一条即可让它在关联图谱中诞生节点。</div>
           <div v-for="r in userRounds" :key="r.id" class="ur-row">
             <div class="ur-head">
@@ -73,6 +77,7 @@
         </div>
       </div>
     </div>
+    <div class="toast" v-if="toast">✔ {{ toast }}</div>
   </div>
 </template>
 
@@ -84,6 +89,8 @@ const { themes, criteria, state, addUserRound, removeUserRound, clearUserRounds 
 const form = reactive({ title: '', theme: 'T-photon', target: '', content: '', id: '' })
 const guardState = reactive({})
 const guardNotes = reactive({})
+const err = ref('')
+const toast = ref('')
 criteria.value.forEach(c => { guardState[c.id] = 'na'; guardNotes[c.id] = '' })
 
 const failCount = computed(() => Object.values(guardState).filter(v => v === 'fail').length)
@@ -105,8 +112,9 @@ function buildConclusion() {
 }
 
 function commit() {
-  if (!form.title.trim()) { alert('请填写宣称标题'); return }
-  addUserRound({
+  if (!form.title.trim()) { err.value = '请填写宣称标题'; return }
+  err.value = ''
+  const rec = addUserRound({
     id: form.id.trim() || undefined,
     title: form.title.trim(),
     verdict: computedVerdict.value,
@@ -114,8 +122,31 @@ function commit() {
     target: form.target.trim() || '（未指定）',
     conclusion: buildConclusion()
   })
+  toast.value = `已登记攻破轮 ${rec.id}（verdict=${rec.verdict}）`
+  setTimeout(() => { toast.value = '' }, 4000)
   reset()
 }
+
+// 导出与 53 引擎 round 记录同 schema 的 JSON，便于真正入账本
+function exportJson() {
+  const payload = {
+    schema: 'openuft-user-rounds/v1',
+    exported: new Date().toISOString(),
+    source: 'openuft/code 攻破工作台（localStorage）',
+    rounds: state.userRounds.map(r => ({
+      id: r.id, title: r.title, verdict: r.verdict, theme: r.theme,
+      date: r.date, target: r.target, conclusion: r.conclusion,
+      blacklists: r.blacklists || [], downgrades: r.downgrades || [], user: true
+    }))
+  }
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = `openuft_user_rounds_${new Date().toISOString().slice(0, 10)}.json`
+  a.click()
+  URL.revokeObjectURL(a.href)
+}
+
 function reset() {
   form.title = ''; form.target = ''; form.content = ''; form.id = ''
   criteria.value.forEach(c => { guardState[c.id] = 'na'; guardNotes[c.id] = '' })
@@ -126,6 +157,17 @@ function verdictClass(v) { return (v === 'FAIL') ? 'tag-fail' : (v === 'PASS' ? 
 </script>
 
 <style scoped>
+.req { color: var(--fail); }
+.input-error { border-color: var(--fail) !important; }
+.err-line { font-size: 11.5px; color: var(--fail); margin-top: 5px; }
+.btn-row { display: flex; gap: 10px; margin-top: 14px; align-items: center; }
+.btn-sm { padding: 4px 10px; font-size: 11.5px; }
+.toast {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  background: var(--panel-2); border: 1px solid var(--ok); color: var(--text);
+  padding: 9px 18px; border-radius: 10px; font-size: 12.5px; z-index: 60;
+  box-shadow: var(--shadow);
+}
 .crit { padding: 9px 0; border-bottom: 1px solid var(--line-soft); }
 .crit-head { display: flex; align-items: center; gap: 10px; font-size: 13px; }
 .crit-desc { font-size: 11.5px; color: var(--text-mute); line-height: 1.55; margin: 5px 0; }

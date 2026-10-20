@@ -8,7 +8,8 @@ const routes = [
   { path: '/blacklist', name: 'blacklist', component: () => import('./views/BlacklistView.vue'), meta: { title: '不可引用黑名单' } },
   { path: '/essence', name: 'essence', component: () => import('./views/EssenceView.vue'), meta: { title: '宇宙运动的本质' } },
   { path: '/workbench', name: 'workbench', component: () => import('./views/WorkbenchView.vue'), meta: { title: '攻破工作台' } },
-  { path: '/glossary', name: 'glossary', component: () => import('./views/GlossaryView.vue'), meta: { title: '术语表' } }
+  { path: '/glossary', name: 'glossary', component: () => import('./views/GlossaryView.vue'), meta: { title: '术语表' } },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('./views/NotFoundView.vue'), meta: { title: '页面未找到' } }
 ]
 
 const router = createRouter({
