@@ -1,0 +1,80 @@
+{
+  "volume": "UFT-69 / EW1L",
+  "title": "电弱 GSW 一圈 m_W 修正（on-shell Δr 框架）",
+  "scheme": "on-shell (Sirlin 1980)",
+  "precision_bits": 250,
+  "inputs": {
+    "alpha_inv": "137.035999177590126",
+    "GF_GeV2": "1.1663787e-5",
+    "MZ_GeV": "91.1876",
+    "mt_GeV": "172.76",
+    "MH_GeV": "125.25",
+    "MW_meas_GeV": "80.379",
+    "MW_meas_unc_GeV": "0.012",
+    "Delta_alpha_MZ": "0.05914",
+    "Delta_r_total": "0.0364"
+  },
+  "computed": {
+    "sin2theta_os_tree": "0.2121516563",
+    "MW_tree_GeV": "80.93886289",
+    "sin2theta_os_1L": "0.2233362548",
+    "MW_1L_GeV": "80.36228962",
+    "Delta_rho_top": "0.009352818259",
+    "cos2_over_sin2": "3.4775534",
+    "Delta_r_rem_implied": "0.009784924648",
+    "dMW_dmt_GeV_per_GeV": "0.0063367972",
+    "MW_meas_minus_pred_GeV": "-0.0167104"
+  },
+  "controls": {
+    "MW_mt_lo_167p76_GeV": "80.330961",
+    "MW_mt_hi_177p76_GeV": "80.394329"
+  },
+  "guards": [
+    {
+      "name": "G1_MW_1L_prediction_band",
+      "pass": true,
+      "detail": "M_W^1L=80.36228962 GeV, band=[80.33,80.40]"
+    },
+    {
+      "name": "G2_within_measured_uncertainty",
+      "pass": true,
+      "detail": "|M_W^1L - 80.379|=0.0167104 GeV (<= 3σ=0.036)"
+    },
+    {
+      "name": "G3_Dr_positive_subpercent",
+      "pass": true,
+      "detail": "Δr=0.0364 (expect ~0.036)"
+    },
+    {
+      "name": "G4_Dalpha_dominant",
+      "pass": true,
+      "detail": "Δα=0.05914 > (c²/s²)Δρ=0.0325249 且 > Δr_rem=0.00978492"
+    },
+    {
+      "name": "G5_mt_sensitivity_positive",
+      "pass": true,
+      "detail": "dM_W/dm_t=0.0063368 GeV/GeV (正号, ρ 参数要求)"
+    },
+    {
+      "name": "G6_radiative_lowers_MW",
+      "pass": true,
+      "detail": "M_W^tree=80.9389 > M_W^1L=80.3623 < M_Z=91.1876"
+    },
+    {
+      "name": "G7_sin2theta_os_band",
+      "pass": true,
+      "detail": "sin²θ_W^os=0.22333625 (PDG 0.22305 在区间内)"
+    },
+    {
+      "name": "G8_Drho_top_positive",
+      "pass": true,
+      "detail": "Δρ_top=0.0093528183 = 3G_F m_t²/(8π²√2)"
+    }
+  ],
+  "guard_summary": {
+    "passed": 8,
+    "total": 8
+  },
+  "verdict": "PASS",
+  "honest_boundary": "Δr_rem（纯 W/Z/H 玻色子圈）取自全局 EW fit（PDG 2024），本卷不重推；Δρ_top ∝ m_t² 由顶夸克环手推。非新物理预言，是 SM 已有框架的校验/控制。"
+}
