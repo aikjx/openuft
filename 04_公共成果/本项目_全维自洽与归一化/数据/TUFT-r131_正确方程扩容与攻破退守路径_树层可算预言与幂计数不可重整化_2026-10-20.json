@@ -1,0 +1,249 @@
+{
+  "volume": "TUFT-r131",
+  "title": "正确方程扩容与攻破退守路径：树层可算预言与幂计数不可重整化",
+  "generated": "2026-10-20T21:53:03",
+  "engine": "D:\\a10\\aikjx\\code\\my_lib\\openuft\\04_公共成果\\本项目_全维自洽与归一化\\源码\\TUFT-r131_正确方程扩容与攻破退守路径_树层可算预言与幂计数不可重整化_2026-10-20.py",
+  "method": "mpmath 250-bit + Fraction symbolic + dimensional auditor + uncertainty propagation + sanity guard",
+  "controls": [
+    {
+      "id": "CT1",
+      "title": "恒等式检测器双向自反（M_W/M_Z=cosθ_W=4/5 Fraction 恒等；α(0)≠α(M_Z) 判非恒等）",
+      "verdict": "PASS",
+      "detail": "sinθ=3/5 ⇒ g=5e/3、g′=5e/4 ⇒ M_W/M_Z=(5/3)/(25/12)=4/5=cosθ 精确成立；α(0)≠α(M_Z) 判非恒等。",
+      "numbers": {
+        "mw_over_mz": "4/5",
+        "cos_theta": "4/5"
+      },
+      "source": ""
+    },
+    {
+      "id": "CT2",
+      "title": "控制组·GR 波速预言 v_g=c 与 GW170817 一致（|Δv/c| 限窗 [−3e-15, +7e-15]）",
+      "verdict": "PASS",
+      "detail": "Abbott et al. 2017（GW170817/GRB170817A）：−3e-15 ≤ Δv/c ≤ +7e-15；GR 预言 Δ=0 落窗内。",
+      "numbers": {
+        "delta_v_over_c_window": "[-3e-15, 7e-15]",
+        "GR_prediction": "0"
+      },
+      "source": ""
+    },
+    {
+      "id": "CT3",
+      "title": "量纲审计器自反（EH 作用量 M·L⁻¹·T⁻² 判对；V4.8 螺旋 ℒ M·L¹·T⁻² 判错）",
+      "verdict": "PASS",
+      "detail": "EH：[c⁴R/(16πG)] = M*L^-1*T^-2 = [ℒ] ✓；V4.8：[(ħc/2)(κ²−τ²)] = M*L*T^-2 ≠ [ℒ]（差 L²）✗ —— 与 65 号卷 A6 一致。",
+      "numbers": {
+        "L_dim": "M*L^-1*T^-2",
+        "EH_dim": "M*L^-1*T^-2",
+        "V48_dim": "M*L*T^-2"
+      },
+      "source": "EH 作用量；65 号卷 V4.8"
+    },
+    {
+      "id": "CT4",
+      "title": "sanity 守卫自反（ΛCDM 锚点闭合；真空能截断触发 121 dex 越界门）",
+      "verdict": "PASS",
+      "detail": "锚点 3Ω_Λ/R_Λ² 回代 Λ 一致（rel=0.0）；靶面越界 121.05 dex ⇒ 守卫双向有效。",
+      "numbers": {
+        "anchor_rel": "0.0",
+        "vacuum_dex": "121.046"
+      },
+      "source": ""
+    },
+    {
+      "id": "CT5",
+      "title": "控制组·排除性：SU(5) 预言 τ_p=4.589e31 yr < Super-K 下限 2.4e34 yr ⇒ 可排除",
+      "verdict": "PASS",
+      "detail": "正确体系自身的实验约束能排除错误统一候选（SU(5) 快 523 倍）⇒ 攻破判据有牙齿。",
+      "numbers": {
+        "tau_p_SU5": "4.589e31",
+        "tau_p_SK": "2.4e34",
+        "ratio": "522.99"
+      },
+      "source": ""
+    },
+    {
+      "id": "CT6",
+      "title": "树层公式自反：μ 寿命输入不确定度传播 u(τ)/τ=1.03e-6 ≪ 1e-4 ⇒ 树层残差（O6）落在 0.1%–1% 量级必归因辐射修正而非输入噪声",
+      "verdict": "PASS",
+      "detail": "传播律：τ ∝ m_μ⁻⁵G_F⁻² ⇒ u_rel = √((5u_mμ/m_μ)² + (2u_G_F/G_F)²) = 1.03457e-6（u_mμ=2.3e-9 GeV、u_G_F=6e-12 GeV⁻²，CODATA/PDG 2022）。该自反保证 O6 的残差门不是「拟合噪声伪装成物理修正」。",
+      "numbers": {
+        "u_rel_tau": "1.03457e-6",
+        "u_m_mu_rel": "2.18e-8",
+        "u_G_F_rel": "5.14e-7"
+      },
+      "source": "CODATA 2022；PDG 2022；不确定度传播律"
+    }
+  ],
+  "guards": [
+    {
+      "id": "G1",
+      "title": "恒等式检测器双向自反通过",
+      "verdict": "PASS",
+      "detail": "CT1 两方向正确。",
+      "numbers": {},
+      "source": ""
+    },
+    {
+      "id": "G2",
+      "title": "量纲审计器自反通过",
+      "verdict": "PASS",
+      "detail": "CT3 双向正确。",
+      "numbers": {},
+      "source": ""
+    },
+    {
+      "id": "G3",
+      "title": "sanity 守卫先过锚点、再触发靶面越界",
+      "verdict": "PASS",
+      "detail": "CT4 双向通过。",
+      "numbers": {},
+      "source": ""
+    },
+    {
+      "id": "G4",
+      "title": "控制组判别力（GR vs GW170817 + SU(5) 可排除 + 树层传播自反）",
+      "verdict": "PASS",
+      "detail": "CT2/CT5/CT6 三向通过。",
+      "numbers": {},
+      "source": ""
+    },
+    {
+      "id": "G5",
+      "title": "mpmath 250 位与 float64 交叉核对一致（残差/传播/Λ/Λm_p 四量）",
+      "verdict": "PASS",
+      "detail": "四个关键量用纯 float 公式独立重算一致（max diff < 1e-9）。",
+      "numbers": {
+        "d_resid": "1.448494102440634e-16",
+        "d_urel": "2.117582368135751e-22",
+        "d_Lambda": "1.57e-16",
+        "d_ratio": "2.7755575615628914e-17"
+      },
+      "source": ""
+    },
+    {
+      "id": "G6",
+      "title": "结构完整：tally==条目数，总判由 tally 派生",
+      "verdict": "PASS",
+      "detail": "条目 6，tally {'PASS': 3, 'FAIL': 2, 'INFO': 1}",
+      "numbers": {},
+      "source": ""
+    },
+    {
+      "id": "G7",
+      "title": "阈值依据：公布不确定度传播（CT6/O6）、量级门（0.1%–1% 残差带、Λ 0.02–0.5 GeV、Λ/m_p<0.2）",
+      "verdict": "PASS",
+      "detail": "O6 残差带 0.1%–1% 为已知 QED 修正量级；O8 Λ 带为「一环 vs MS-bar 差 <2.4 倍」的粗估门；B14 门 0.2 对应「Λ 与强子质量同标度」的结构判据。",
+      "numbers": {},
+      "source": ""
+    },
+    {
+      "id": "G8",
+      "title": "失控退出码逻辑",
+      "verdict": "PASS",
+      "detail": "controls_ok=True guards_ok=True exit=0",
+      "numbers": {},
+      "source": ""
+    }
+  ],
+  "items": [
+    {
+      "id": "O6",
+      "title": "μ 寿命树层 Fermi 预言：τ=192π³ℏ/(G_F²m_μ⁵)=2.1873472e-6 s vs 测量 2.1969811e-6 s ⇒ 残差 0.439%（QED 修正量级）",
+      "verdict": "PASS",
+      "detail": "树层 Γ=G_F²m_μ⁵/(192π³)=3.00918e-19 GeV（输入仅 G_F、m_μ、ℏ，无量纲拟合）。残差 0.439%：落在 0.1%–1% 带内且远超输入不确定度传播 1.0e-06（CT6）⇒ 归因已知 QED 辐射修正（量级 ~0.4%），不是拟合噪声。这是整理层最强形态：树层公式实质预言 + 残差归因可判。（完整 SM+QED 预言与测量一致到 ~1e-5 量级，本册不独立复算圈图，引用值登记。）",
+      "numbers": {
+        "tau_tree_s": "2.187347246e-6",
+        "tau_meas_s": "2.1969811e-6",
+        "Gamma_tree_GeV": "3.00918e-19",
+        "residual": "0.00438504",
+        "u_rel_tau": "1.03457e-6"
+      },
+      "source": "Fermi 有效理论；CODATA 2022；PDG 2022；CT6"
+    },
+    {
+      "id": "O7",
+      "title": "Higgs 机构：λ=m_H²/(2v²)=0.12938386（v=(√2G_F)^-1/2=246.21964 GeV 独立导出）⇒ 与 r127 V04 一致",
+      "verdict": "PASS",
+      "detail": "m_H=125.25 GeV 与 G_F 是两个独立输入；λ=0.12938386 由之比值导出，跨卷复算 r127 V04 给 0.129383（差 8.56e-7）。另注：g=2m_W/v 与 g(G_F)=√(8M_W²G_F/√2) 为定义恒等（0σ，无判别力，仅确认常数网闭合）。希格斯机制的树层结构（v、λ）因此机读自洽；其量子修正（β_λ、平庸性/稳定性边界）不在本册。",
+      "numbers": {
+        "lambda_H": "0.12938386",
+        "v_from_GF_GeV": "246.21964",
+        "lambda_r127_V04": "0.129383",
+        "abs_diff": "8.56e-7"
+      },
+      "source": "Higgs 机制；r127 V04；PDG 2022"
+    },
+    {
+      "id": "O8",
+      "title": "QCD 渐近自由：β₀=(33−2n_f)/3=23/3>0 ⇒ α_s 随能标下降；一环 Λ=0.0878271 GeV vs PDG Λ^(5)_MS-bar≈0.21 GeV（引用值）",
+      "verdict": "PASS",
+      "detail": "β₀=7.66667（n_f=5：M_Z 处 top 已退耦）>0 ⇒ 机读方向门：α_s(M_Z)=0.118 → α_s(1 TeV)=0.0438722（一环跑动）递减 ✓。一环 Λ=M_Z·exp(−2π/(β₀α_s))=0.0878271 GeV vs PDG MS-bar 引用值 ~0.21 GeV：差 2.4 倍属一环粗估（n_f 阈值匹配/两阶修正），不比 σ。约定声明：r127 V06 用 n_f=6 给 β₀=7.000；本册用 n_f=5 给 β₀=23/3——两者口径不同（top 退耦处理），都对且不可混用。",
+      "numbers": {
+        "beta0_nf5": "23/3",
+        "alpha_s_MZ": "0.118",
+        "alpha_s_1TeV_1loop": "0.0438722",
+        "Lambda_1loop_GeV": "0.0878271",
+        "Lambda_PDG_MS_GeV": "0.21",
+        "ratio_PDG_over_1loop": "2.391"
+      },
+      "source": "QCD β 函数；PDG 2022；r127 V06（n_f 约定差异已声明）"
+    },
+    {
+      "id": "B13",
+      "title": "GR 幂计数不可重整化：[G]=M^-1*L^3*T^-2 ⇒ ℏ=c=1 下 M 幂 -2；[κ]=M^-1 < 0 ⇒ 耦合负质量维",
+      "verdict": "FAIL",
+      "detail": "机读量纲链：[G]=m³kg⁻¹s⁻²=M^-1*L^3*T^-2；ℏ=c=1 下 [L]=[T]=M⁻¹ ⇒ [G] 的 M 幂 = -2 < 0 ⇒ [κ]=[√(16πG)]=M^-1。引力耦合质量维为负 ⇒ 幂计数不可重整：n 圈阶需 n 相关新反项（经典结果：纯引力顶角发散度随圈数增长，D=2+2L 量级，引用值）⇒ EH + SM 无共同 UV 完备框架（与 r128 B12 同一结论的机读量纲版）。",
+      "numbers": {
+        "G_dim_MLT": "M^-1*L^3*T^-2",
+        "G_M_power_natural": "-2",
+        "kappa_M_power_natural": "-1"
+      },
+      "source": "EH 作用量幂计数；r128 B12"
+    },
+    {
+      "id": "B14",
+      "title": "低能 QCD 非微扰：一环 Λ/m_p=0.09361 < 0.2 ⇒ ≲GeV 区微扰失效，SM 强作用低能区无解析预言",
+      "verdict": "FAIL",
+      "detail": "机读：一环 Λ=0.0878271 GeV（O8）/ m_p=0.938272 GeV = 0.09361。Λ_QCD 与强子质量同标度 ⇒ 微扰 QCD 在强子尺度以下失效（禁闭、手征对称破缺无解析处理）⇒ 「SM+GR 作为可解析预言的完备体系」在 ≲1 GeV 失效：必须让位给格点 QCD/手征微扰论等非微扰方法。这是正确体系的结构性边界（非错误）。",
+      "numbers": {
+        "Lambda_1loop_GeV": "0.0878271",
+        "m_p_GeV": "0.938272",
+        "ratio_Lambda_over_mp": "0.09361"
+      },
+      "source": "O8；QCD 低能结构"
+    },
+    {
+      "id": "B15",
+      "title": "退守路径图：8 条标准 BSM 退路登记——已封 1（额外维，r125 机读 36.10 dex）/ 未封 6 / 有效退路 1",
+      "verdict": "INFO",
+      "detail": "按攻破链惯例（封死一条路必须立刻堵退守路径）：对 r128/r127 各攻破 FAIL 项枚举标准退路并标注本仓库封死状态。已封：额外维（r125 KK 上界机读）。未封：SUSY、SUSY GUT、轴子、seesaw、人存/景观、弦/LQG。有效退路：EFT 框架（攻破目标仅「第一原理」定位）。本册不新增封死，只登记现状——诚实声明：**攻破层的多数退路尚未闭合**。",
+      "numbers": {
+        "n_retreats": 8,
+        "n_closed": 1,
+        "n_open": 6,
+        "n_info": 1,
+        "closed": [
+          "B3 引力耦合缺口"
+        ],
+        "open": [
+          "B2 等级问题",
+          "B7 质子衰变/SU(5)",
+          "B8 强 CP",
+          "B10 中微子质量",
+          "B1 宇宙学常数",
+          "B12/B13 量子引力"
+        ]
+      },
+      "source": "r125；r120；r128 B1–B12；攻破链惯例"
+    }
+  ],
+  "tally": {
+    "PASS": 3,
+    "FAIL": 2,
+    "INFO": 1
+  },
+  "verdict_total": "FAIL",
+  "exit_code": 0,
+  "note": "分工：r127（并行会话）SM 数值正确核 V01–V11；r128 方程全集 E1–E8 + B1–B12；r130（并行会话）推导链隐藏前提审计；本卷树层可算预言 O6–O8 + 结构攻破 B13–B15。四卷条目不可相加。整理层 PASS = 树层公式实质预言且残差归因可判；攻破层 FAIL = 结构性质失效边界。"
+}
