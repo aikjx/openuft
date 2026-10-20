@@ -1,0 +1,119 @@
+{
+  "doc": "r136 硬核审计 · 规范群与 μ² 符号的第一性原理可导出性精算",
+  "generated_at": "2026-10-21T04:58:07",
+  "scope_note": "硬核 ②③ 的可导出性精算（非加和）。文献项与本机计算分列。",
+  "checks": {
+    "G1": {
+      "b1": "41/10",
+      "b2": "-19/6",
+      "b3": "-7",
+      "n_f": "6",
+      "control_ng4": {
+        "b1": "163/30",
+        "b2": "-11/6",
+        "b3": "-17/3"
+      },
+      "verdict": "PASS",
+      "note": "一圈 β 系数（GUT 归一化）；b<0 ⇒ 渐近自由"
+    },
+    "G2": {
+      "b1": "41/10",
+      "b2": "-19/6",
+      "b3": "-7",
+      "af_SU3": true,
+      "af_SU2": true,
+      "af_U1": false,
+      "u1_landau_gev": 1.6879236510050291e+41,
+      "u1_landau_log10": 41.227352798511724,
+      "m_pl_gev": 1.2209e+19,
+      "log10_ratio_over_planck": 22.140672704777103,
+      "trans_planckian": true,
+      "verdict": "PASS",
+      "note": "U(1)_Y 非渐近自由 ⇒ 存在 Landau 极点；但跨普朗克 ⇒ 形式上的 UV 不完备，非经验上相关"
+    },
+    "G3": {
+      "n_f": "6",
+      "su_N_passing": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "control_n_f": "40",
+      "control_su_N_passing": [
+        8
+      ],
+      "non_unique": true,
+      "verdict": "PASS",
+      "note": "渐近自由是约束而非选择：本例下 SU(2)..SU(8) 全通过 ⇒ 不唯一确定 SU(3)"
+    },
+    "H1": {
+      "m_h_gev": 125.25,
+      "v_gev": 246.21964023926205,
+      "lambda_computed": 0.1293838555258301,
+      "lambda_r127": 0.12938347743146458,
+      "rel_diff": 2.9222770404436514e-06,
+      "tolerance_derived": 7.984031936127745e-05,
+      "tolerance_basis": "m_H 末位半刻度 0.005 GeV 传播（λ∝m_H²）⇒ 2×4.0e-5",
+      "mu2_gev2": -7843.78125,
+      "control_lambda_mH120": 0.11876462768336082,
+      "control_rel_diff": 0.08207268778757817,
+      "verdict": "PASS",
+      "note": "λ = m_H²/(2v²)、μ² = −m_H²/2 —— 二者均为由测量读出的输入，非导出"
+    },
+    "H2": {
+      "V_0": 0.0,
+      "V_v_mu2_0": 118880219.35874084,
+      "V_v_mu2_actual": -118880914.16061293,
+      "mu2_0_gives_no_EWSB": true,
+      "mu2_lt0_gives_EWSB": true,
+      "verdict": "PASS",
+      "note": "μ²=0（尺度不变）在树图不给 EWSB；辐射诱导（CW）为文献项，本册不重算"
+    }
+  },
+  "door_accounting": {
+    "gauge_group": {
+      "e": 0,
+      "a": 1,
+      "derivable": false,
+      "constraints_only": [
+        "异常抵消（定超荷比值，不定群）",
+        "渐近自由（约束 N_f<11N/2，不唯一）",
+        "秩障碍 r125：rank_SM=4 > rank_Cl(1,3)=2 ⇒ 需 Cl(1,11)"
+      ],
+      "uv_defect": "U(1)_Y 非渐近自由 ⇒ Landau 极点（跨普朗克 ⇒ 形式性）",
+      "delta": 1
+    },
+    "mu2_sign": {
+      "e": 0,
+      "a": 0,
+      "derivable": false,
+      "value_from_data": "μ² = −m_H²/2、λ = m_H²/(2v²)：由 (m_H, v) 读出",
+      "natural_escapes": [
+        "μ²=0（尺度不变）⇒ 树图无 EWSB ⇒ 被 v=246 GeV 排除",
+        "μ²~M_Pl² ⇒ 层级问题（r127 B07 = 16.99 dex）"
+      ],
+      "delta": 0
+    },
+    "non_derived_before": 37,
+    "combined_best_delta_with_r135": -1,
+    "u_conditions_still_fail": [
+      "U1",
+      "U2",
+      "U3",
+      "U4",
+      "U5",
+      "U6"
+    ]
+  },
+  "verdict": "HARD-CORE-NOT-DERIVABLE",
+  "verdict_detail": "②规范群：仅被约束、不被导出（e=0，且 U(1) 形式 UV 不完备）；③μ² 符号：由数据读出，自然逃逸被排除，不可消除（e=0，Δ=0）。硬核两块 Δ≥0 ⇒ 与 r135 引力侧合计最好仍 −1，UFT 完成度仍 1/7。",
+  "literature_items_not_recomputed": [
+    "Coleman–Weinberg 辐射诱导 EWSB 在 SM 中被排除（文献项，本册不重算 CW 有效势）"
+  ],
+  "non_additivity_freeze": true,
+  "exit_code": 0
+}
