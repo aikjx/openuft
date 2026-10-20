@@ -5,16 +5,20 @@
   1. 机读继承账本：从《理论体系方程总汇_正确方程集_2026-10-14.md》解析各口径计数，
      并与该文件自称的头部数字逐项核对（抗漂移守卫：表格数字与文件内容不一致 ⇒ 非零退出）。
   2. 机读增量：扫描 04_公共成果/本项目_全维自洽与归一化/数据/TUFT-r1*.json，
-     汇总 r100–r117 攻破链的总判决分布；解析 65 号卷（V4.8）判定计数。
+     汇总 r100–r121 攻破链的总判决分布；解析 65 号卷（V4.8）判定计数。
   3. 应用 r111 + r112 降级：正确核 22 → 17 → 16（r111：f-桥接族 K-12/13/14/15 + K-09；
      r112：K-03 质量定义欠定）。
-  4. 入账 r113「力的统一」攻破（零降级 + 黑名单 B-11 + §2.3 主题归纳，机读五轮判决）。
+  4. 入账 r113「力的统一」攻破（零降级 + 黑名单 B-11 + §2.3 主题归纳，机读六轮判决：r120 方程层合流——
+     所有力大统一方程式候选全集 9 方程 2 验证，无一被实验确立）。
   5. 入账 r114「引力的本源」常数层攻破（零降级 + §2.4 主题归纳，机读三轮判决）。
   6. 入账 r115「引力的本质/引力波几何本源」机制层攻破（零降级 + 黑名单 B-12 + §2.4 四轮判决）。
-  7. 入账 r116「光子内部运行」全情形穷举判决（36 格 + 五立场矩阵）与 r117「相位不变性 +
-     de Broglie 内时钟门」增补（七门全 FAIL + 180 组合枚举）⇒ §2.5 光子主题归纳（四轮机读）。
-  8. 汇总黑名单（不可引用登记册）。
-  9. 生成本卷 md + 数据 md + json + out.txt；所有数字由计算注入，禁手写。
+  7. 入账 r116「光子内部运行」全情形穷举判决（36 格 + 五立场矩阵）、r117「相位不变性 +
+     de Broglie 内时钟门」增补（七门全 FAIL + 180 组合枚举）、r118 纲领退守路径攻破（电子环形
+     光子模型 + OAM 避难所）与 r121 光子几何本源语料机审（13 项 FAIL + 黑名单 B-13）⇒ §2.5
+     光子主题归纳（六轮机读）。
+  8. 入账 r119 统一场论完成度总判定（七必要条件 1/7 + 电弱控制组 6/6）⇒ §3 达成度行交叉引用。
+  9. 汇总黑名单（不可引用登记册，B-01–B-13）。
+ 10. 生成本卷 md + 数据 md + json + out.txt；所有数字由计算注入，禁手写。
 
 红线：本卷是整理与合账，不产生新物理、不重判任何条目、不修改被引文件字节。
 """
@@ -126,7 +130,16 @@ def extract_round(p):
     if verdict is None:
         verdict = d.get("verdict")
     if isinstance(verdict, dict):
-        verdict = verdict.get("verdict_total") or verdict.get("helix_internal_run") or None
+        verdict = (verdict.get("verdict_total") or verdict.get("helix_internal_run")
+                   or verdict.get("T1") or None)
+        if verdict is None and "target_pass" in d.get("verdict", {}):
+            # r119 schema：七条必要条件通过数/总数
+            vd = d["verdict"]
+            verdict = "FAIL(derived)" if vd.get("target_pass", 0) < vd.get("target_total", 1) else "PASS"
+        if verdict is None and "n_pass" in d.get("verdict", {}):
+            # r120 schema：候选方程验证通过数/总数（宣称「存在大统一方程」未确立 ⇒ 失败轮）
+            vd = d["verdict"]
+            verdict = "FAIL(derived)" if vd.get("n_pass", 0) < vd.get("n_equations", 1) else "PASS"
     if not isinstance(counts, dict) or not counts:
         counts = d.get("counts") if isinstance(d.get("counts"), dict) else None
     if counts is None:
@@ -175,7 +188,7 @@ guard(len(chain_ok) == len(r_files) and len(r_files) >= 13,
       "g_chain_json_readable",
       "r 系列 JSON 须全部可读出判决或计数且不少于 13 份；实测 %d/%d" % (len(chain_ok), len(r_files)))
 add("D01", "PASS" if len(chain_ok) == len(r_files) else "FAIL",
-    "增量账本：r100–r117 攻破链机读（%d 份数据文件）" % len(r_files),
+    "增量账本：r100–r121 攻破链机读（%d 份数据文件）" % len(r_files),
     "判决分布（含派生规则 FAIL>0⇒失败轮）：%s ⇒ 增量以否定/边界为主，无一条把'统一已完成'变成 PASS"
     % (dist or "空"),
     chain=chain, dist=dist, rule="FAIL>0 ⇒ 该轮记失败（仅用于无显式 verdict 的旧 schema）")
@@ -284,6 +297,7 @@ THEME_FORCE = [
     ("r111", "TUFT-r111_*", "K-09 电荷定义欠定 ⇒ 电磁力几何化的 q 来源断裂；f-桥接族为单位约定"),
     ("r112", "TUFT-r112_*", "K-07 四力映射不可辨识（384 读法/0 约束）、C 无观测约束；K-03 降级"),
     ("r113", "TUFT-r113_*", "四分支源侧因子 0/4 ⇒ 结构上不可能是力定律；K-17 飞碟推进两种读数俱败"),
+    ("r120", "TUFT-r120_*", "所有力大统一方程式候选全集（9 方程 2 验证）：代数容量 SM 15 匹配 SU(5)/SO(10)/E6 但质子衰变最小 SU(5) 快 523 倍、引力缺口 4.18 量级 ⇒ 不存在被实验确立的大统一方程"),
 ]
 theme_rows = []
 theme_fail = 0
@@ -297,13 +311,14 @@ for rid, pat, note in THEME_FORCE:
     theme_rows.append((rid, vc, note))
     if vc.startswith("FAIL"):
         theme_fail += 1
-theme_ok = (len(theme_rows) == 5 and theme_fail == 5)
+theme_ok = (len(theme_rows) == 6 and theme_fail == 6)
 guard(theme_ok, "g_theme_force_all_fail",
-      "「力的统一」主题五轮须全部机读为 FAIL；实测 %s" % [(r, v) for r, v, _ in theme_rows])
+      "「力的统一」主题六轮须全部机读为 FAIL；实测 %s" % [(r, v) for r, v, _ in theme_rows])
 add("D03e", "PASS" if theme_ok else "FAIL",
-    "主题归纳：力的统一（机读五轮判决）",
-    "分布：%s ⇒ 主题轮次 %d/5 全部 FAIL，0 轮把该宣称升格；结构层（r113：分支无源）与映射层"
-    "（r112：不可辨识）合流 ⇒ 『力的统一』既无可能也无区分。"
+    "主题归纳：力的统一（机读六轮判决）",
+    "分布：%s ⇒ 主题轮次 %d/6 全部 FAIL，0 轮把该宣称升格；结构层（r113：分支无源）与映射层"
+    "（r112：不可辨识）合流 ⇒ 『力的统一』既无可能也无区分；方程层（r120：GUT 候选 9 方程仅 2 验证且无四力闭合、"
+    "质子衰变最小 SU(5) 超上限 523 倍）把最后出口也封死。"
     % (" / ".join("%s=%s" % (r, v) for r, v, _ in theme_rows), theme_fail),
     theme_rows=[{"round": r, "verdict": v, "note": n} for r, v, n in theme_rows])
 
@@ -431,6 +446,134 @@ add("D03j", "PASS" if r117_ok else "FAIL",
     r117_json=[os.path.basename(p) for p in r117_jsons], r117_verdict=r117_verdict,
     r117_downgraded=r117_down)
 
+# r118 轮入账（空间螺旋纲领退守路径攻破：电子环形光子模型 + OAM 避难所 + 协变性闭合）
+r118_jsons = sorted(glob.glob(os.path.join(R_DATA, "TUFT-r118*.json")))
+r118_verdict = None
+r118_down = []
+for p in r118_jsons:
+    v, c, n = extract_round(p)
+    r118_verdict = round_class({"verdict": v, "counts": c})
+    try:
+        d118 = json.load(open(p, encoding="utf-8"))
+        vd = d118.get("verdict")
+        if isinstance(vd, dict) and str(vd.get("T1", "")).startswith("FAIL"):
+            r118_verdict = "FAIL"
+        r118_down = list(d118.get("summary", {}).get("cores_downgraded", [])) if isinstance(d118.get("summary"), dict) else []
+    except Exception:
+        r118_down = []
+r118_ok = (len(r118_jsons) == 1 and r118_verdict in ("FAIL", "FAIL(derived)") and r118_down == [])
+guard(r118_ok, "g_r118_photon_theme",
+      "r118 数据 JSON 须恰 1 份、判决 FAIL、零降级；实测 json=%d verdict=%s downgraded=%s"
+      % (len(r118_jsons), r118_verdict, r118_down))
+add("D03l", "PASS" if r118_ok else "FAIL",
+    "r118 入账：纲领退守路径攻破（电子环形模型 + OAM 避难所，零降级 + §2.5 光子主题）",
+    "机读 r118：verdict=%s、cores_downgraded=%s。结论：T1  Williamson–van der Mark 电子环形光子模型五门四 FAIL"
+    "（结构半径超 LEP 点状上限 6.90e5 倍、拓扑裸电荷偏差 7.94%%、约束机制无来源、形状因子能标 1.02e6 eV 已被散射覆盖；"
+    "Zitterbewegung 归因更正为正负能干涉）；T2 OAM 避难所四门全 FAIL（光子合法算符表不含 L——SAM/OAM 分解不存在是原理性 no-go；"
+    "OAM 依赖参考轴随束宽消失；l 不进入 E–p 关系）；T3 r116 D02 分歧闭合（五套立场对 A1 收敛 5-0 全 FAIL）。"
+    "四控制组（质子/g-2 0.28 ppt/单光子能量/算符表）全 PASS。判定册："
+    "判定_TUFT-r118-空间螺旋纲领退守路径攻破_电子环形光子模型与OAM避难所_2026-10-20.md"
+    % (r118_verdict, r118_down),
+    r118_json=[os.path.basename(p) for p in r118_jsons], r118_verdict=r118_verdict,
+    r118_downgraded=r118_down)
+
+# r119 轮入账（统一场论完成度总判定：七条必要条件 + 电弱控制组）
+r119_jsons = sorted(glob.glob(os.path.join(R_DATA, "TUFT-r119*.json")))
+r119_verdict = None
+r119_down = []
+r119_ratio = None
+for p in r119_jsons:
+    v, c, n = extract_round(p)
+    r119_verdict = round_class({"verdict": v, "counts": c})
+    try:
+        d119 = json.load(open(p, encoding="utf-8"))
+        vd = d119.get("verdict")
+        if isinstance(vd, dict) and "target_pass" in vd:
+            r119_ratio = "%s/%s" % (vd.get("target_pass"), vd.get("target_total"))
+        r119_down = list(d119.get("summary", {}).get("cores_downgraded", [])) if isinstance(d119.get("summary"), dict) else []
+    except Exception:
+        r119_down = []
+r119_ok = (len(r119_jsons) == 1 and r119_verdict in ("FAIL", "FAIL(derived)") and r119_down == [])
+guard(r119_ok, "g_r119_completion",
+      "r119 数据 JSON 须恰 1 份、判决 FAIL、零降级；实测 json=%d verdict=%s downgraded=%s"
+      % (len(r119_jsons), r119_verdict, r119_down))
+add("D03m", "PASS" if r119_ok else "FAIL",
+    "r119 入账：统一场论完成度总判定（七必要条件 1/7，电弱控制组 6/6）",
+    "机读 r119：verdict=%s、cores_downgraded=%s、通过率=%s。结论：四力/大统一七条必要条件仅 U7（与精密观测相容）"
+    "通过 ⇒ 1/7（14.29%%）；U1 框架容纳 FAIL（SM 秩 4 > Cl(1,3) 极大秩 3）、U2 耦合汇聚 FAIL（SM 共线残差 0.0723，"
+    "α_s 偏 52.06σ）、U3 引力纳入 FAIL（α_G(M_GUT)=2.72e-06 vs α_GUT=0.0412，差 4.18 量级）、U4 质量导出 FAIL"
+    "（SM 约 19 个自由参数全为拟合输入）、U5 参数计数 FAIL、U6 判别力 FAIL（唯一预言链 τ_p=3.4e35 yr 超当前上限且超近期可及 0.53 量级）。"
+    "控制组：同一套判据判电弱统一 6/6 通过（M_W/M_Z=cosθ_W 精确恒等、e=gsinθ_W=g′cosθ_W Fraction 层验证）⇒ 判据有判别力。"
+    "判定册：判定_TUFT-r119-统一场论完成度总判定_七条必要条件与电弱控制组_2026-10-20.md"
+    % (r119_verdict, r119_down, r119_ratio),
+    r119_json=[os.path.basename(p) for p in r119_jsons], r119_verdict=r119_verdict,
+    r119_downgraded=r119_down, r119_pass_ratio=r119_ratio)
+
+# r120 轮入账（所有力大统一方程式候选全集与状态机判）
+r120_jsons = sorted(glob.glob(os.path.join(R_DATA, "TUFT-r120*.json")))
+r120_verdict = None
+r120_down = []
+r120_eq = None
+for p in r120_jsons:
+    v, c, n = extract_round(p)
+    r120_verdict = round_class({"verdict": v, "counts": c})
+    try:
+        d120 = json.load(open(p, encoding="utf-8"))
+        vd = d120.get("verdict")
+        if isinstance(vd, dict) and "n_pass" in vd:
+            r120_eq = "%s/%s" % (vd.get("n_pass"), vd.get("n_equations"))
+        r120_down = list(d120.get("summary", {}).get("cores_downgraded", [])) if isinstance(d120.get("summary"), dict) else []
+    except Exception:
+        r120_down = []
+r120_ok = (len(r120_jsons) == 1 and r120_verdict in ("FAIL", "FAIL(derived)") and r120_down == [])
+guard(r120_ok, "g_r120_gut",
+      "r120 数据 JSON 须恰 1 份、判决 FAIL、零降级；实测 json=%d verdict=%s downgraded=%s"
+      % (len(r120_jsons), r120_verdict, r120_down))
+add("D03n", "PASS" if r120_ok else "FAIL",
+    "r120 入账：所有力大统一方程式候选全集（9 方程 2 验证，零降级 + §2.3 扩轮）",
+    "机读 r120：verdict=%s、cores_downgraded=%s、方程验证=%s。结论：代数容量 SM 一代 Weyl 15 与 SU(5) 匹配（SO(10) 余 1、E6 余 12）；"
+    "耦合汇聚 SM 共线残差 0.0723（α_s 偏 52.06σ）vs MSSM 0.000954（1.27σ）；质子衰变最小 SU(5) 预言 τ_p≈4.59e31 yr，"
+    "比 Super-K 上限 2.4e34 yr 快 523 倍（MSSM 仅维度-6 给 2.79e36 yr 但维度-5 算符会显著加快）；引力缺口 4.18 量级"
+    "（继承 r119 U3）⇒ 不存在被实验确立的『所有力的大统一方程』，破缺链 ≥3 条中 2/3 不给 M_GUT 预言。"
+    "判定册：判定_TUFT-r120-所有力的大统一方程式_候选全集与状态机判_2026-10-20.md"
+    % (r120_verdict, r120_down, r120_eq),
+    r120_json=[os.path.basename(p) for p in r120_jsons], r120_verdict=r120_verdict,
+    r120_downgraded=r120_down, r120_equation_verified=r120_eq)
+
+# r121 轮入账（光子几何本源语料机审：H0–H8 × 传统数据精算对照）
+r121_jsons = sorted(glob.glob(os.path.join(R_DATA, "TUFT-r121*.json")))
+r121_verdict = None
+r121_down = []
+r121_counts = {}
+for p in r121_jsons:
+    v, c, n = extract_round(p)
+    r121_verdict = round_class({"verdict": v, "counts": c})
+    r121_counts = c or {}
+    try:
+        d121 = json.load(open(p, encoding="utf-8"))
+        vc121 = d121.get("verdict_count") if isinstance(d121.get("verdict_count"), dict) else {}
+        if vc121:
+            r121_counts = vc121
+            r121_verdict = "FAIL" if vc121.get("FAIL", 0) > 0 else "PASS"
+        r121_down = list(d121.get("summary", {}).get("cores_downgraded", [])) if isinstance(d121.get("summary"), dict) else []
+    except Exception:
+        r121_down = []
+r121_ok = (len(r121_jsons) == 1 and r121_verdict in ("FAIL", "FAIL(derived)") and r121_down == [])
+guard(r121_ok, "g_r121_photon_theme",
+      "r121 数据 JSON 须恰 1 份、判决 FAIL、零降级；实测 json=%d verdict=%s downgraded=%s"
+      % (len(r121_jsons), r121_verdict, r121_down))
+add("D03o", "PASS" if r121_ok else "FAIL",
+    "r121 入账：光子几何本源语料机审（动量双读法/Larmor 猝灭/κ 扫描，零降级 + §2.5 光子主题）",
+    "机读 r121：verdict_count=%s、cores_downgraded=%s。结论：《光子的几何本源与运动模型证明》语料 13 项 FAIL——"
+    "动量定义 P=m(C−V) 与结论1 V=C 互斥（⇒P=0 vs 验证节 p⃗=mC⃗ 需 V=0）；双电子动量-能量断裂 29.29%%；"
+    "自旋-光速-频率三接口互斥（κ=2π ⇒ p=0 不传播、κ=1 ⇒ v_z=0.917c、κ>2π 无实数解）；Larmor 辐射猝灭"
+    "（带电螺旋偶极子寿命 2.65e-19 s vs >4.35e17 s，缺口 1.64e36 倍）；传播速度自承随激发条件可变；"
+    "验证节对螺旋参数依赖 0（抄录）。黑名单候选 B-13。判定册："
+    "判定_TUFT-r121-光子几何本源语料_H0-H8假设空间与传统数据精算对照_攻破_2026-10-20.md"
+    % (r121_counts, r121_down),
+    r121_json=[os.path.basename(p) for p in r121_jsons], r121_verdict=r121_verdict,
+    r121_downgraded=r121_down)
+
 # §2.4 主题归纳：引力的本源（机读四轮判决；主题归属为本引擎声明式数据）
 THEME_GRAVITY = [
     ("r108", "TUFT-r108_*", "外部来料 TUFT V10 引力支：∇×(f(r)r̂)≡0 源项恒零、τ∝r^{−3/2} 代入自身方程残差 5/4≠0 ⇒ 无源无解，牛顿项是反解输入"),
@@ -466,10 +609,17 @@ add("D03g", "PASS" if theme_g_ok else "FAIL",
 # §2.5 主题归纳：光子的本质（光子专题四轮机读；r53/r56 为旧 schema，用专用容错提取器）
 def photon_verdict(p):
     """光子专题轮次的判决提取（显式字段路径，不猜）：r53 summary.counts / r56 verdict_summary /
-    r116 verdict_count / r117 verdict.helix_internal_run；均以 FAIL>0 或显式 FAIL 记失败轮。"""
+    r116 verdict_count / r117 verdict.helix_internal_run / r118 verdict.T1 / r121 顶层 verdict
+    字符串（+ counts）；均以 FAIL>0 或显式 FAIL 记失败轮。"""
     d = json.load(open(p, encoding="utf-8"))
-    if isinstance(d.get("verdict"), dict) and d["verdict"].get("helix_internal_run"):
-        return d["verdict"]["helix_internal_run"]
+    vd = d.get("verdict")
+    if isinstance(vd, str) and vd:
+        return vd
+    if isinstance(vd, dict):
+        if vd.get("helix_internal_run"):
+            return vd["helix_internal_run"]
+        if str(vd.get("T1", "")).startswith("FAIL"):
+            return "FAIL"
     for key in ("verdict_count",):
         vc = d.get(key)
         if isinstance(vc, dict) and vc:
@@ -488,6 +638,8 @@ THEME_PHOTON = [
     ("r56", "TUFT-r56_*", "光/光子/空间光速螺旋三分法概念裁定（16 条目 FAIL3）：τ 可被 boost 精确清零、v_z=c·cosθ<c、三约束互斥定理 {总速率=c, 轴向速率=c, R>0}⇒∅、ω↔f 映射公设未声明"),
     ("r116", "TUFT-r116_*", "「光子内部运行」36 格穷举（FAIL26/PASS2/BOUNDARY8）：光速预算把螺旋半径压到 1.1e-16 m、自转载荷定理 v_eq=c/√a、内禀性判据、唯一分歧格可归因到判据集缺口"),
     ("r117", "TUFT-r117_*", "相位不变性 + de Broglie 内时钟门（七门全 FAIL）：dΦ≡0 精确零、内时钟比观测频率慢 1.53e18 倍、180 组合枚举存活 15 例全为 O0_none"),
+    ("r118", "TUFT-r118_*", "纲领退守路径攻破（8 门 FAIL）：电子环形光子模型超 LEP 点状上限 6.90e5 倍、OAM 避难所四门全 FAIL（SAM/OAM 分解原理性不存在）、协变性分歧闭合 5-0"),
+    ("r121", "TUFT-r121_*", "《光子的几何本源与运动模型证明》语料机审（13 FAIL）：动量双读法互斥（P=0 vs mc）、双电子动量-能量断裂 29.29%、κ 扫描三接口无解、Larmor 辐射寿命缺口 1.64e36 倍"),
 ]
 theme_p_rows = []
 theme_p_fail = 0
@@ -500,14 +652,15 @@ for rid, pat, note in THEME_PHOTON:
     theme_p_rows.append((rid, vc, note))
     if vc.startswith("FAIL"):
         theme_p_fail += 1
-theme_p_ok = (len(theme_p_rows) == 4 and theme_p_fail == 4)
+theme_p_ok = (len(theme_p_rows) == 6 and theme_p_fail == 6)
 guard(theme_p_ok, "g_theme_photon_all_fail",
-      "「光子的本质」主题四轮须全部机读为 FAIL；实测 %s" % [(r, v) for r, v, _ in theme_p_rows])
+      "「光子的本质」主题六轮须全部机读为 FAIL；实测 %s" % [(r, v) for r, v, _ in theme_p_rows])
 add("D03k", "PASS" if theme_p_ok else "FAIL",
-    "主题归纳：光子的本质（机读四轮判决）",
-    "分布：%s ⇒ 主题轮次 %d/4 全部 FAIL，0 轮把该宣称升格；r53/r56 判边界（螺旋空间=平直坐标选择、"
-    "boost 消 τ、三约束互斥），r116/r117 判命题（36 格 + 七门：轨迹螺旋/自转/内禀时钟全败，"
-    "唯一成立的读法=Maxwell 圆偏振零新增）⇒『光子以圆柱螺旋方式内部运行』在本库证据链内无一个版本成立。"
+    "主题归纳：光子的本质（机读六轮判决）",
+    "分布：%s ⇒ 主题轮次 %d/6 全部 FAIL，0 轮把该宣称升格；边界轮（r53：螺旋空间=平直坐标选择；r56：boost 消 τ、"
+    "三约束互斥）、命题轮（r116：36 格穷举；r117：dΦ≡0 + 七门）、退守轮（r118：电子环形模型超 LEP 上限 6.90e5 倍 + "
+    "OAM 避难所原理性 no-go + 协变性分歧 5-0 闭合）、语料轮（r121：动量双读法互斥、κ 扫描无解、Larmor 缺口 1.64e36）"
+    "四层合流 ⇒ 『光子以圆柱螺旋方式内部运行』在本库证据链内无一个版本成立。"
     % (" / ".join("%s=%s" % (r, v) for r, v, _ in theme_p_rows), theme_p_fail),
     theme_photon_rows=[{"round": r, "verdict": v, "note": n} for r, v, n in theme_p_rows])
 
@@ -547,6 +700,9 @@ BLACKLIST = [    {"id": "B-01", "item": "UFE-1′（把 EC 引力写成 Yang–M
     {"id": "B-12", "item": "G=2Z/c「引力光速统一方程」族（张祥前常数 Z=dn/dVdt）",
      "reason": "反解闭环（Z=Gc/2 由 G 反解再「验证」G）；k 有 4 种互斥量纲读法（M / 1/G / √c / L⁻¹）；两版推导的 G 表达式差 8π；几何因子 2 的六读法无一闭合（真积分 0/1/π⁴，余者靠无来源插入系数 3/1、8）；宣称的独立吻合误差 0.045% 超 G 自身不确定度 20 倍 ⇒ 与 B-02（Gε₀ 循环恒等）同族",
      "source": "r115 判定册（A1–A5）"},
+    {"id": "B-13", "item": "《光子的几何本源与运动模型证明》「光子=静止质量为零的激发电子圆柱螺旋」族（模型一/二、E∝ω 无系数、p 自由、动量双读法）",
+     "reason": "动量定义 P=m(C−V) 与结论 V=C 互斥（⇒P=0 vs 验证节 p⃗=mC⃗ 需 V=0）；双电子动量-能量断裂 29.29%；κ=ω/f 扫描三接口无解（κ=2π⇒p=0 不传播、κ=1⇒v_z=0.917c、κ>2π 无实数解）；Larmor 辐射猝灭（带电螺旋偶极子寿命 2.65e-19 s vs >4.35e17 s，缺口 1.64e36 倍）；传播速度自承随激发条件可变；验证节对螺旋参数依赖 0（抄录）⇒ 与 B-04/B-05 同族（语料支整支不可引用）",
+     "source": "r121 判定册（A1–B7，13 项 FAIL）"},
 ]
 add("D04", "FAIL",
     "黑名单登记册（%d 条，不可引用）" % len(BLACKLIST),
@@ -630,7 +786,7 @@ vol.append("> 引擎：`53_core_ledger_calc.py` → `53_core_ledger_results.json
 vol.append("> 上游：[理论体系方程总汇_正确方程集_2026-10-14](../理论体系方程总汇_正确方程集_2026-10-14.md)（继承账本，只读）· [r111 判定册](../04_公共成果/本项目_全维自洽与归一化/判定_TUFT-r111-核心公式f桥接族与电荷定义_可辨识性与约定吸收攻破_2026-10-19.md)（r111 降级依据）· [r112 判定册](../04_公共成果/本项目_全维自洽与归一化/判定_TUFT-r112-正确核残余软肋_K-03质量定义_K-07力方程_K-11磁场登记_攻破_2026-10-19.md)（r112 降级依据）· [54 全物理现象覆盖矩阵](54_全物理现象覆盖矩阵_2026-10-19.md)（覆盖面对账）\n")
 vol.append("---\n")
 vol.append("## 0. 本卷是什么、不是什么\n")
-vol.append("**是**：把散在 10-14 总汇、r95–r117 攻破链、62–65 号螺旋线里的判定结果合到一本账，数字全部由引擎机读注入。")
+vol.append("**是**：把散在 10-14 总汇、r95–r121 攻破链、62–65 号螺旋线里的判定结果合到一本账，数字全部由引擎机读注入（末次同步 2026-10-20：入账 r118–r121）。")
 vol.append("**不是**：不重判任何方程、不产生新物理、不修改被引文件一个字节。凡本卷数字与上游文件不一致，以上游文件为准并触发本引擎守卫。\n")
 vol.append("## 1. 继承账本（机读 10-14 总汇，抗漂移核对）\n")
 vol.append("| 口径 | 机读值 | 自称值 | 守卫 |")
@@ -640,7 +796,7 @@ vol.append("| 22 体系健康度 | %s | H2/O10/C6/U4 | %s |" % (health_txt, "PAS
 vol.append("| TUFT 报告集 73 份 | %s | 479/338/228/884 | %s |" % (tuft_txt, "PASS" if tuft == (479, 338, 228, 884) else "FAIL"))
 vol.append("| v8 全维分析 272 项 | %s | 169/62/18/23 | %s |" % (v8_txt, "PASS" if v8 == (169, 62, 18, 23) else "FAIL"))
 vol.append("\n> 诚实备注（随继承一并转录）：22 体系里两个 H（s01/s13）来自体系自述与实跑记录，**非库级终审**；`01_独立体系/README.md` 仍标 `unreviewed`。\n")
-vol.append("## 2. 增量账本（2026-10-14 → 10-19）\n")
+vol.append("## 2. 增量账本（2026-10-14 → 10-20）\n")
 vol.append("### 2.1 r 系列攻破链（机读 %d 份数据文件）\n" % len(r_files))
 vol.append("| 文件 | 总判决 | 计数 |")
 vol.append("|---|---|---|")
@@ -653,32 +809,32 @@ vol.append("\n分布：%s。派生规则（本引擎声明）：旧 schema 无�
 vol.append("### 2.2 螺旋几何化子卷（62–65 号）\n")
 vol.append("65 号卷对 V4.8 公式集的机器审计：%s ⇒ 作用量层在 (M,L,T) 双基下不自洽（A6–A10 五连 FAIL）、共轭动量恒零、场方程只剩代数式（B1/B2）⇒ **V4.8 当前版本整支入黑名单**，正确下一步是 Step-1 维度修复而非任选续作选项。\n"
            % (("PASS=%d / FAIL=%d / BOUNDARY=%d / INFO=%d" % v48) if v48 else "读取失败"))
-vol.append("### 2.3 主题归纳：力的统一（机读五轮判决，守卫 g_theme_force_all_fail）\n")
+vol.append("### 2.3 主题归纳：力的统一（机读六轮判决，守卫 g_theme_force_all_fail）\n")
 vol.append("| 轮次 | 机读判决 | 该轮对「力的统一」的攻破点 |")
 vol.append("|---|---|---|")
 for r, v, n in theme_rows:
     vol.append("| %s | **%s** | %s |" % (r, v, n))
-vol.append("\n归纳：**五轮全部 FAIL，0 轮把该宣称升格**。结构层（r113：四分支源侧因子 0/4 ⇒ 分支不可能是力定律）与映射层（r112：384 读法/0 约束 ⇒ 不可辨识）合流 ⇒ 『力的统一』既无可能也无区分；应用层（r113：飞碟推进两种读数俱败）随之崩塌。方程层幸存物 = 牛顿第二定律的几何记号改写 + 三张外挂的教科书场公式（K-04/K-10/K-11）。\n")
+vol.append("\n归纳：**六轮全部 FAIL，0 轮把该宣称升格**。结构层（r113：四分支源侧因子 0/4 ⇒ 分支不可能是力定律）与映射层（r112：384 读法/0 约束 ⇒ 不可辨识）合流 ⇒ 『力的统一』既无可能也无区分；应用层（r113：飞碟推进两种读数俱败）随之崩塌。方程层（r120：候选全集 9 方程 2 验证——代数容量 SM 一代 Weyl 15 匹配 SU(5)（SO(10) 余 1、E6 余 12），但质子衰变最小 SU(5) 预言快 Super-K 上限 523 倍、引力缺口 4.18 量级、MSSM 控制组 1.27σ 通过证判据有判别力）⇒ 不存在被实验确立的『所有力的大统一方程』。方程层幸存物 = 牛顿第二定律的几何记号改写 + 三张外挂的教科书场公式（K-04/K-10/K-11）。\n")
 vol.append("### 2.4 主题归纳：引力的本源（机读四轮判决，守卫 g_theme_gravity_all_fail）\n")
 vol.append("| 轮次 | 机读判决 | 该轮对「引力的本源」的攻破点 |")
 vol.append("|---|---|---|")
 for r, v, n in theme_g_rows:
     vol.append("| %s | **%s** | %s |" % (r, v, n))
 vol.append("\n归纳：**四轮全部 FAIL，0 轮把该宣称升格**。常数层（r112：G=ħc/m_p² 重言残差 3.0e-50；r114：G=α²μ₀ 反解闭环、ρ_fit=3.33 nm 无基本尺度对应；r115：G=2Z/c 反解闭环 + k 四量纲互斥）、机制层（r114：m=ω²r³ 与开普勒常数同一性矛盾——八行星 ω²a³ 散布 1.5% 而方程要求质量全相等，实测跨 5750 倍；r115：拖拽/涡量/度规扰动/引力波方程机制全败、因子 2 六读法无一闭合、光速自毁 c√2、GW 公式零螺旋依赖）、本体层（r114：S12 公设零约束、GAQ 场方程右端恒零）三层合流 ⇒ 『引力的几何本源』无一个版本成立。正确核内引力内容 = K-04 牛顿记号改写一条；UFE-1′ 已由 B-01 勘误废除；G=2Z/c 族入黑名单 B-12。\n")
-vol.append("### 2.5 主题归纳：光子的本质（机读四轮判决，守卫 g_theme_photon_all_fail）\n")
+vol.append("### 2.5 主题归纳：光子的本质（机读六轮判决，守卫 g_theme_photon_all_fail）\n")
 vol.append("| 轮次 | 机读判决 | 该轮对「光子内部运行」的攻破点 |")
 vol.append("|---|---|---|")
 for r, v, n in theme_p_rows:
     vol.append("| %s | **%s** | %s |" % (r, v, n))
-vol.append("\n归纳：**四轮全部 FAIL，0 轮把该宣称升格**。边界轮（r53：螺旋空间度规 Riemann 全零=平直坐标选择、圆柱螺旋轨道与向心加速度矛盾；r56：τ 可被 boost 精确清零、v_z=c·cosθ<c、三约束互斥定理 {总速率=c, 轴向速率=c, R>0}⇒∅、ω↔f 映射公设未声明）与命题轮（r116：36 格穷举 FAIL26/PASS2/BOUNDARY8——光速预算把螺旋半径压到 1.1e-16 m（曲率半径 56 m ⇒ 轨迹必为直线）、自转载荷定理 v_eq=c/√a（实心球 1.5811c）、唯一分歧格归因到判据集缺洛伦兹协变性；r117：dΦ≡0 精确零 + de Broglie 内时钟被 m=0 锁死、七门全 FAIL、180 组合枚举存活 15 例全为 O0_none）合流 ⇒ 『光子以圆柱螺旋方式内部运行』无一个版本成立；唯一在机器判决中「成立」的内部样态是场矢量旋转（=Maxwell 圆偏振，零新增）与结构光能流螺旋（光束横模属性，非单光子）。\n")
+vol.append("\n归纳：**六轮全部 FAIL，0 轮把该宣称升格**。边界轮（r53：螺旋空间度规 Riemann 全零=平直坐标选择、圆柱螺旋轨道与向心加速度矛盾；r56：τ 可被 boost 精确清零、v_z=c·cosθ<c、三约束互斥定理 {总速率=c, 轴向速率=c, R>0}⇒∅、ω↔f 映射公设未声明）、命题轮（r116：36 格穷举 FAIL26/PASS2/BOUNDARY8——光速预算把螺旋半径压到 1.1e-16 m（曲率半径 56 m ⇒ 轨迹必为直线）、自转载荷定理 v_eq=c/√a（实心球 1.5811c）、唯一分歧格归因到判据集缺洛伦兹协变性；r117：dΦ≡0 精确零 + de Broglie 内时钟被 m=0 锁死、七门全 FAIL、180 组合枚举存活 15 例全为 O0_none）、退守轮（r118：Williamson–van der Mark 电子环形光子模型超 LEP 点状上限 6.90e5 倍、OAM 避难所四门全 FAIL——SAM/OAM 分解是原理性 no-go、协变性分歧 5-0 闭合）与语料轮（r121：《光子的几何本源与运动模型证明》13 项 FAIL——动量双读法互斥 P=0 vs mc、双电子动量-能量断裂 29.29%、κ 扫描三接口无解、Larmor 辐射寿命缺口 1.64e36 倍）四层合流 ⇒ 『光子以圆柱螺旋方式内部运行』无一个版本成立；唯一在机器判决中「成立」的内部样态是场矢量旋转（=Maxwell 圆偏振，零新增）与结构光能流螺旋（光束横模属性，非单光子）。语料支整支入黑名单 B-13。\n")
 vol.append("## 3. 更新后总账本\n")
-vol.append("| 指标 | 10-14 | 10-19（本卷） | 变动原因 |")
+vol.append("| 指标 | 10-14 | 10-19/20（本卷） | 变动原因 |")
 vol.append("|---|---|---|---|")
 vol.append("| 正确核 | 22 | **%d** | r111 降 5 条（f-桥接族 4 条单位重写 + K-09 欠定）；r112 降 1 条（K-03 欠定） |" % CORES_AFTER)
 vol.append("| H 级体系 | 2 | 2（不变） | 无新增体系级审计 |")
-vol.append("| 黑名单 | 2（UFE-1′、Gε₀） | **%d** | 新增 V4.8、V10、f-桥接族、K-09、α 四重身份、TUFT-A05、登记串缺陷族、K-03、K-17 修名（B-11）、G=2Z/c 循环恒等族（B-12） |" % len(BLACKLIST))
-vol.append("| 统一场论达成度 | 1/6 | **1/6（不变）** | 增量全为否定/边界；UFT-2~6 无一项转为达标 |")
-vol.append("| 主题归纳 | §2.3 五轮 / §2.4 四轮 | **§2.3 五轮 / §2.4 四轮 / §2.5 四轮** | 新增「光子的本质」主题（r53/r56/r116/r117 机读全 FAIL） |")
+vol.append("| 黑名单 | 2（UFE-1′、Gε₀） | **%d** | 新增 V4.8、V10、f-桥接族、K-09、α 四重身份、TUFT-A05、登记串缺陷族、K-03、K-17 修名（B-11）、G=2Z/c 循环恒等族（B-12）、光子几何本源语料族（B-13） |" % len(BLACKLIST))
+vol.append("| 统一场论达成度 | 1/6 | **1/6（不变）** | 增量全为否定/边界；UFT-2~6 无一项转为达标（r119 七必要条件机读 1/7，仅 U7 与精密观测相容通过；电弱控制组 6/6 证判据有判别力） |")
+vol.append("| 主题归纳 | §2.3 五轮 / §2.4 四轮 | **§2.3 六轮 / §2.4 四轮 / §2.5 六轮** | §2.3 补 r120 方程层（大统一方程候选全集）；§2.5 光子主题补 r118 退守轮 + r121 语料轮（r53/r56/r116/r117/r118/r121 机读全 FAIL） |")
 vol.append("\n## 4. 正确核 %d 条保留清单（按性质分组；机读分区守卫 g_groups_partition）\n" % CORES_AFTER)
 vol.append("| 组 | 条目 | 性质 |")
 vol.append("|---|---|---|")
@@ -695,7 +851,7 @@ vol.append("1. 引『正确核』必须引 %d 条版；引 17 条版须同时引
 vol.append("2. 黑名单对象不得作为任何推导的前提；若需讨论，只能以『已被 X 号卷判否』的形式出现。")
 vol.append("3. 引用『宇宙大统一方程的四力统一』或『光速飞行器推进』必须同时引 r113 判定册；单独引用 K-17 名称而不带 B-11 修名说明，按黑名单处理。")
 vol.append("4. 引用『引力/引力常数的几何本源』『空间螺旋生引力』（含 G=α²μ₀、G=ℏc/m_p²、m=ω²r³、G=2Z/c、GAQ 引力场方程）必须同时引 r114 + r115 判定册；单独引用而不带本册说明，按未决宣称或黑名单 B-12 处理。")
-vol.append("5. 引用『光子以圆柱螺旋方式运动 / 光子内部自转 / 光子携带内禀时钟（de Broglie 内时钟）/ 光子螺旋角频率=光子频率』必须同时引 r116 + r117 判定册；引用结构光坡印廷涡旋/OAM 须注明其为光束横模属性而非单光子内部运行（r116 B05）；单独引用而不带本册说明，按未决宣称处理。")
+vol.append("5. 引用『光子以圆柱螺旋方式运动 / 光子内部自转 / 光子携带内禀时钟（de Broglie 内时钟）/ 光子螺旋角频率=光子频率』必须同时引 r116 + r117 判定册；引用电子环形光子模型 / 光子 OAM 避难所须同时引 r118 判定册；引用『光子的几何本源』两种光子模型 / 光子静止于空间中须同时引 r121 判定册（黑名单 B-13）；引用结构光坡印廷涡旋/OAM 须注明其为光束横模属性而非单光子内部运行（r116 B05）；单独引用而不带本册说明，按未决宣称或黑名单处理。")
 vol.append("6. 本卷数字由引擎注入；若人工改动本卷任何数字，须重跑 `53_core_ledger_calc.py` 使其回归机读值。")
 vol.append("7. 覆盖面的定量读数见 54 号卷；两卷数字同源（都经本引擎族产出），不一致即触发守卫。\n")
 vol.append("## 7. 红线\n")
