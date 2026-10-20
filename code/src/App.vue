@@ -62,6 +62,7 @@ const navItems = [
   { to: '/blacklist', icon: '⊘', label: '黑名单' },
   { to: '/essence', icon: '✦', label: '宇宙运动的本质' },
   { to: '/correct', icon: '✔', label: '正确理论体系' },
+  { to: '/conclusion', icon: '◎', label: '最终结论' },
   { to: '/workbench', icon: '⚒', label: '攻破工作台' },
   { to: '/glossary', icon: 'ⓘ', label: '术语表' }
 ]

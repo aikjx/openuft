@@ -171,6 +171,17 @@ def extract_round(p):
         # ⇒ 识别为元判定，标记 INFO（可读，不计入攻击轮 FAIL/PASS 计数，不虚构判决）
         if isinstance(d.get("non_additivity_freeze"), (dict, list)) or "scope_note" in d:
             verdict = "INFO"
+    if verdict is None or verdict not in ("PASS", "FAIL", "BOUNDARY", "INFO", "OPEN", "CORRECTED", "DEAD", "ALIVE"):
+        # r136 schema：力的大统一方程 非GUT候选族补齐（终局账本）；verdict 落在 meta.verdict，summary 为 tally
+        # ⇒ 取 meta.verdict（FAIL），不虚构判决
+        mv = d.get("meta", {}).get("verdict") if isinstance(d.get("meta"), dict) else None
+        if mv in ("PASS", "FAIL", "BOUNDARY", "INFO", "OPEN", "CORRECTED", "DEAD", "ALIVE"):
+            verdict = mv
+    if verdict is None or verdict not in ("PASS", "FAIL", "BOUNDARY", "INFO", "OPEN", "CORRECTED", "DEAD", "ALIVE"):
+        # r137 schema：全链路总览/本质本源审计卷（元卷）；verdict 为 dict（data_layer/criterion_layer/new_physics）
+        # ⇒ 识别为元审计，标记 INFO（可读，不计入攻击轮 FAIL/PASS 计数，不虚构判决）
+        if isinstance(d.get("verdict"), dict) and ("new_physics" in d["verdict"] or "data_layer" in d["verdict"]):
+            verdict = "INFO"
     if not isinstance(counts, dict) or not counts:
         counts = d.get("counts") if isinstance(d.get("counts"), dict) else None
     if counts is None:

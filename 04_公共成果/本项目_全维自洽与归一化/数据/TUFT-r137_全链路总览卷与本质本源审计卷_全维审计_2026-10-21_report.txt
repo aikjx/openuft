@@ -1,0 +1,60 @@
+r135 guards=36/36
+[PASS] D_C1_a0  rel=4.795e-11
+[PASS] D_C2_E1  rel=5.041e-7
+[PASS] D_C3_r_e  rel=1.239e-10
+[PASS] D_C4_alpha  rel=4.875e-13
+[PASS] D_C5_sun  rel=3.276e-7
+[PASS] D_C6_sigma  rel=6.922e-11
+[PASS] D_C8_neutron  rel=0.0007335
+[PASS] D_C9_CMB  rel=2.382e-6
+[PASS] D_C10_SgrA  rel=2.274e-10
+[PASS] D_E1_S  rel=6.135e-17
+[PASS] D_E2_gap  rel=5.541e-18
+[PASS] D_E3_g/e  rel=6.687e-9
+[PASS] D_E4_T  rel=6.199e-7
+[PASS] D_E5_sun  rel=3.831e-18
+[PASS] D_E5_1kg  rel=2.491e-7
+[PASS] D_E6_ratio  rel=6.241e-17
+[PASS] D_E7_gap  rel=2.771e-17
+[PASS] C4_identity_al2  resid=1.746e-251
+[PASS] C4_identity_al3  resid=8.729e-252
+[PASS] C4_mutation_all_shift  eps_0 放大 1e-6 ⇒ 三式同时偏离 1.0e-6/1.0e-6/1.0e-6
+[PASS] C4_tol_swallows_version  2018/2022 版本差 6.852e-10 < 容差 1e-9
+[PASS] C7_C11_unguarded  missing=C7,C11
+[PASS] C10_tol_too_wide  4.3e6 vs 4.154e6(GRAVITY) 差 0.03515 < 容差 10%
+[PASS] C5_wien_derived  b_derived/b_lit-1 = 5.488e-10
+[PASS] C6_sigma_derived  rel=1.871e-9
+[PASS] C6_attribution  σ 残差 1.871e-9 ≈ 3×ħ 字面值截断误差 6.127e-10
+[PASS] C8_two_paths  rel=0.000735
+[PASS] C8_temp_convention  2200 m/s ⇔ T=293.581 K（ΔT=0.431 K）
+[PASS] E1_lower_unbounded  S/10^k 仍 PASS 的 k = [1, 10, 30, 60]；上界 ×10.5 ⇒ False
+[PASS] E2_rejects_canonical_120  文献常见口径 10^120 不满足 120 < gap ⇒ 被守卫拒绝
+[PASS] E4_lower_unbounded  M×10^k 的 T_H 仍 < 1e-7 的 k = [1, 5, 10]
+[PASS] E5_lower_unbounded  t/10^k 仍 PASS 的 k = [1, 10, 30, 60]
+[PASS] E5_upper_tight  ×1.05 ⇒ False（拒），×1.01 ⇒ True（受）
+[PASS] E5_display_bug  展示串 6.73e+01 yr vs 真值 2.096e+67 yr，差 3.113e+65 倍
+[PASS] E6_input_is_literal  分母取 1e34/1e35/1e36（±1 数量级）时 ratio 仍落在区间内
+[PASS] E7_single_sided  E_LHC = 14000/1e5 GeV 仍 PASS；1e6 GeV ⇒ False
+R01 PASS 数据层 17 项独立路径复算：17/17 逐条一致
+R02 FAIL C4「α 三式互证」是代数恒等：三条表达式为同一函数的三种写法
+R03 FAIL C4 变异测试：微扰一个输入，三式同时失效 ⇒ 有效独立判据数 = 1（非 3）
+R04 FAIL C4 容差 1e-9 大于 CODATA-2018/2022 版本差 6.852e-10 ⇒ 对常数版本漂移零判别力
+R05 FAIL 71 卷 11 个计算段中 C7（零点能）与 C11（kT/h）算出并入库但【无守卫】
+R06 FAIL C10 容差 10% 使 Sgr A* 质量的旧值 4.3e6 与现代值 4.154e6 不可区分
+R07 PASS C5 Wien 位移常数可由 hc/(k_B x) 反解得到（x=4.9651142317 为 5(1-e^-x)=x 之根）
+R08 PASS C6 σ 由 2π⁵k_B⁴/(15h³c²) 推出，残差 1.871e-9 可被归因定位：= 3×ħ 字面值 10 位截断误差
+R09 PASS C8 热中子波长双路径残差 0.000735，残差来源是温度口径：字面 2200 m/s ⇔ T=293.581 K
+R10 FAIL E1 接受区间 = (0, 1.1e78) ⇒ 向下 78 个数量级全部接受，仅上界 +10.5× 才失效
+R11 FAIL E2 区间 (120,126) 与文献常见「真空能差 120 个数量级」口径边界互斥
+R12 FAIL E4「T_H < 1e-7 K」单侧无下界 ⇒ 对任何 M > 0.62 M_☉ 的黑洞恒真
+R13 FAIL E5 接受区间 = (0, 2.2e67) yr：上界仅比真值高 5%，向下 67 个数量级全部接受
+R14 FAIL E5 守卫打印串把 log₁₀(t) 当物理值输出：「t_evap(sun) = 6.73e+01 yr」
+R15 FAIL E6 分母 1e35 J/K 是手填数量级估计（外部输入）：分母变动 ±1 个数量级，守卫照样通过
+R16 FAIL E7「能标差 > 14 个数量级」单侧 ⇒ 对撞机能标提到 1e5 GeV（100 TeV）仍判 PASS
+R17 BOUNDARY E3 g/e = 1/(2α) 是 Dirac 量子化条件在 n=1 下的代数重述，非独立预言
+R18 PASS 数据层总账：17 项读数（71 卷 9 项 + 72 卷 8 项）全部为教科书标准结果，逐条复算一致
+R19 INFO 两卷性质判定：71 = 14 层物理大厦综述 + 桥梁常数表；72 = 10 个本质问题三档自评
+R20 INFO 编号登记：71/72 入 07_统一场方程（接续 68/69/70）；本册取 r137（起草时 r135 为最小空号）
+R21 INFO 71 卷 9 条守卫的容差跨 8 个数量级：最紧 C4=1e-9，最松 C10=1e-1
+R22 INFO 外部输入账：71 卷 6 项、72 卷 6 项（合计 12 项），其中 2 项非推导值
+  report -> D:\a10\aikjx\code\my_lib\openuft\04_公共成果\本项目_全维自洽与归一化\数据\TUFT-r137_全链路总览卷与本质本源审计卷_全维审计_2026-10-21_report.txt

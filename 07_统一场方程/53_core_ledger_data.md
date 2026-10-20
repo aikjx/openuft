@@ -1,7 +1,7 @@
 # 53 数据产物｜核心公式体系总册合账（机器读数）
 
 - 角色：整理 + 合账（不重判）｜ 总读数：**FAIL** ｜ 条目 26 ｜ FAIL 2 / PASS 24 ｜ 守卫 22/22
-- 正确核：22 → **16**（降级 K-09、K-12、K-13、K-14、K-15、K-03）｜ r 链文件 34 份（分布 {'FAIL(derived)': 12, 'FAIL': 14, 'BOUNDARY': 3, 'BOUNDARY(derived)': 1, 'INFO': 3, 'PASS': 1}）｜ 黑名单 14 条
+- 正确核：22 → **16**（降级 K-09、K-12、K-13、K-14、K-15、K-03）｜ r 链文件 38 份（分布 {'FAIL(derived)': 12, 'FAIL': 15, 'BOUNDARY': 3, 'BOUNDARY(derived)': 1, 'INFO': 5, 'PASS': 1, 'PARTIAL-BREAKTHROUGH-BUT-CIRCULAR-SUSPECT': 1}）｜ 黑名单 14 条
 
 | 代号 | 读数 | 条目 | 机读依据 |
 |---|---|---|---|
@@ -11,7 +11,7 @@
 | L04 | **PASS** | 继承账本：v8 全维分析系 272 项 PASS169/FAIL62/INFO18/部分闭合23 | 机读 (169, 62, 18, 23) ⇒ 与自称一致（28/28 套件成功运行） |
 | L05 | **PASS** | r111 攻破靶点在继承清单中的存在性 | K-09/K-12/K-13/K-14/K-15 全部在 22 条清单内 ⇒ 降级操作有明确对象 |
 | L05b | **PASS** | r112 攻破靶点在继承清单中的存在性 | K-03 在 22 条清单内 ⇒ r112 降级操作有明确对象 |
-| D01 | **PASS** | 增量账本：r100–r130 攻破链机读（34 份数据文件） | 判决分布（含派生规则 FAIL>0⇒失败轮）：{'FAIL(derived)': 12, 'FAIL': 14, 'BOUNDARY': 3, 'BOUNDARY(derived)': 1, 'INFO': 3, 'PASS': 1} ⇒ 增量以否定/边界为主；唯一 PASS = r127 正确核整理轮（11/11 方程过门，其 part2 断裂边界 10 FAIL 由 counts 如实呈现）——没有任何一轮把『统一已完成』变成 PASS |
+| D01 | **PASS** | 增量账本：r100–r130 攻破链机读（38 份数据文件） | 判决分布（含派生规则 FAIL>0⇒失败轮）：{'FAIL(derived)': 12, 'FAIL': 15, 'BOUNDARY': 3, 'BOUNDARY(derived)': 1, 'INFO': 5, 'PASS': 1, 'PARTIAL-BREAKTHROUGH-BUT-CIRCULAR-SUSPECT': 1} ⇒ 增量以否定/边界为主；唯一 PASS = r127 正确核整理轮（11/11 方程过门，其 part2 断裂边界 10 FAIL 由 counts 如实呈现）——没有任何一轮把『统一已完成』变成 PASS |
 | D02 | **PASS** | 增量账本：65 号卷 TUFT-V4.8 机器审计计数 | V4.8 判定 (9, 18, 4, 5)（PASS/FAIL/BOUNDARY/INFO）⇒ 作用量层双基量纲不自洽、场方程退化为代数式 ⇒ 螺旋几何化线当前版本不可引用 |
 | D03b | **PASS** | 跨引擎一致性：r112 机读降级决定入账 | 机读 r112 数据 JSON：cores_downgraded=['K-03'] ⇒ 与本卷 DOWNGRADED 的 r112 部分一致（判定册：判定_TUFT-r112-正确核残余软肋_K-03质量定义_K-07力方程_K-11磁场登记_攻破_2026-10-19.md） |
 | D03 | **FAIL** | 应用 r111 + r112 降级：正确核 22 → 16 | 降级 6 条：K-09、K-12、K-13、K-14、K-15、K-03。r111 理由：f-桥接族为单位约定（重标度 A′=fA 完全吸收、残差 0）；K-09 电荷定义欠定（kk′ 有量纲无定值、Ω 无定义）。r112 理由：K-03 质量定义欠定（n/dn/dΩ 无观测程序、k 由外部 G 锚定、总立体角被 ∮dΩ=4π 锁死致「Ω 收缩导出质速关系」与其自身登记的总质量形式互斥）。判定依据见 r111/r112 判定册，本卷只入账不重判 |
@@ -40,7 +40,7 @@
 - g_inherit_v8_272 **PASS** v8 全维分析 272 项须为 169/62/18/23；实测 (169, 62, 18, 23)
 - g_r111_targets_present **PASS** r111 攻破的 5 条须在 22 正确核清单中；实测缺失 set()
 - g_r112_targets_present **PASS** r112 攻破的 K-03 须在 22 正确核清单中；实测缺失 set()
-- g_chain_json_readable **PASS** r 系列 JSON 须全部可读出判决或计数且不少于 13 份；实测 34/34
+- g_chain_json_readable **PASS** r 系列 JSON 须全部可读出判决或计数且不少于 13 份；实测 38/38
 - g_r112_cross_engine **PASS** r112 数据 JSON 的降级决定须恰为 {K-03} 且为本卷 DOWNGRADED 子集；实测 json=1 份 downgraded=['K-03']
 - g_groups_partition **PASS** 保留清单分区须与 22 条继承清单构成精确划分（grouped=16, downgraded=6, 22=22, 相交=set()）
 - g_r113_force_theme **PASS** r113 数据 JSON 须恰 1 份、判决 FAIL、零降级；实测 json=1 verdict=FAIL downgraded=[]

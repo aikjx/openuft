@@ -1,13 +1,13 @@
 53 core ledger | verdict=FAIL | entries=26 | guards=22/22
 cores 22 -> 16 (downgraded ['K-09', 'K-12', 'K-13', 'K-14', 'K-15', 'K-03'])
-chain dist={'FAIL(derived)': 12, 'FAIL': 14, 'BOUNDARY': 3, 'BOUNDARY(derived)': 1, 'INFO': 3, 'PASS': 1} files=34
+chain dist={'FAIL(derived)': 12, 'FAIL': 15, 'BOUNDARY': 3, 'BOUNDARY(derived)': 1, 'INFO': 5, 'PASS': 1, 'PARTIAL-BREAKTHROUGH-BUT-CIRCULAR-SUSPECT': 1} files=38
 L01   PASS      继承账本：正确核 22 条（机读行号）
 L02   PASS      继承账本：22 体系健康度分级 H2/O10/C6/U4
 L03   PASS      继承账本：TUFT 归档报告集 73 份 PASS479/FAIL338/BOUNDARY228/INFO884
 L04   PASS      继承账本：v8 全维分析系 272 项 PASS169/FAIL62/INFO18/部分闭合23
 L05   PASS      r111 攻破靶点在继承清单中的存在性
 L05b  PASS      r112 攻破靶点在继承清单中的存在性
-D01   PASS      增量账本：r100–r130 攻破链机读（34 份数据文件）
+D01   PASS      增量账本：r100–r130 攻破链机读（38 份数据文件）
 D02   PASS      增量账本：65 号卷 TUFT-V4.8 机器审计计数
 D03b  PASS      跨引擎一致性：r112 机读降级决定入账
 D03   FAIL      应用 r111 + r112 降级：正确核 22 → 16
@@ -33,7 +33,7 @@ GUARD g_inherit_tuft_73                PASS TUFT 73 报告口径须为 479/338/2
 GUARD g_inherit_v8_272                 PASS v8 全维分析 272 项须为 169/62/18/23；实测 (169, 62, 18, 23)
 GUARD g_r111_targets_present           PASS r111 攻破的 5 条须在 22 正确核清单中；实测缺失 set()
 GUARD g_r112_targets_present           PASS r112 攻破的 K-03 须在 22 正确核清单中；实测缺失 set()
-GUARD g_chain_json_readable            PASS r 系列 JSON 须全部可读出判决或计数且不少于 13 份；实测 34/34
+GUARD g_chain_json_readable            PASS r 系列 JSON 须全部可读出判决或计数且不少于 13 份；实测 38/38
 GUARD g_r112_cross_engine              PASS r112 数据 JSON 的降级决定须恰为 {K-03} 且为本卷 DOWNGRADED 子集；实测 json=1 份 downgraded=['K-03']
 GUARD g_groups_partition               PASS 保留清单分区须与 22 条继承清单构成精确划分（grouped=16, downgraded=6, 22=22, 相交=set()）
 GUARD g_r113_force_theme               PASS r113 数据 JSON 须恰 1 份、判决 FAIL、零降级；实测 json=1 verdict=FAIL downgraded=[]

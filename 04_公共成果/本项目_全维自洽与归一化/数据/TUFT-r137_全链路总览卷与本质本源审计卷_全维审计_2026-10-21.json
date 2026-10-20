@@ -1,0 +1,387 @@
+{
+  "volumes": {
+    "71_full_chain": [
+      "C10_SgrA_r_s",
+      "C1_Bohr_radius",
+      "C2_H_ground_state_eV",
+      "C3_classical_e_radius",
+      "C4_alpha_three_expressions",
+      "C5_sun_peak_500nm",
+      "C6_SB_constant",
+      "C8_thermal_neutron_1.8A",
+      "C9_CMB_peak"
+    ],
+    "72_essence": [
+      "E1_BH_entropy_sun",
+      "E2_vacuum_gap_123",
+      "E3_Dirac_g_over_e",
+      "E4_Hawking_T_sound",
+      "E5_evap_sun_1e67yr",
+      "E6_entropy_ratio",
+      "E7_LHC_to_Planck_gap"
+    ]
+  },
+  "key_numbers": {
+    "alpha_2018": "0.0072973525693",
+    "alpha_2022": "0.0072973525643",
+    "alpha_version_rel_diff": "6.8518e-10",
+    "a0_m": "5.291772098e-11",
+    "E1_eV": "-13.605693",
+    "r_e_m": "2.817940321e-15",
+    "alpha_1_2_3": [
+      "0.00729735256978",
+      "0.00729735256978",
+      "0.00729735256978"
+    ],
+    "al2_over_al1_resid": "1.75e-251",
+    "al3_over_al1_resid": "8.73e-252",
+    "lambda_max_sun_nm": "501.518",
+    "sigma_SB": "5.67037443e-8",
+    "lambda_neutron_A": "1.7982",
+    "neutron_2200ms_implies_T_K": "293.581",
+    "neutron_2200ms_implies_E_meV": "25.3",
+    "hbar_literal_truncation_rel": "6.127e-10",
+    "sigma_derived_rel_resid": "1.871e-9",
+    "lambda_CMB_mm": "1.06321",
+    "rs_SgrA_43e6_m": "1.2699359e+10",
+    "rs_SgrA_4154e6_m": "1.2268172e+10",
+    "sgrA_rel_diff": "0.03515",
+    "S_BH_sun_over_kB_log10": "77.0208",
+    "T_H_sun_K": "6.17007e-8",
+    "t_evap_sun_yr": "2.09568e+67",
+    "t_evap_galaxy_yr": "2.09568e+103",
+    "t_evap_1kg_s": "8.41148e-17",
+    "vacuum_gap_log10": "122.94",
+    "rho_theory_J_m3": "4.63295e+113",
+    "rho_obs_J_m3": "5.3239e-10",
+    "g_over_e": "68.518",
+    "E_Planck_GeV": "1.2208901e+19",
+    "LHC_gap_orders": "14.9405",
+    "E5_display_true_over_shown": "3.113e+65"
+  },
+  "entries": [
+    {
+      "code": "R01",
+      "status": "PASS",
+      "title": "数据层 17 项独立路径复算：17/17 逐条一致",
+      "detail": "两路径口径差异全部落在常数版本差（6.85e-10）量级内，无一例外"
+    },
+    {
+      "code": "R02",
+      "status": "FAIL",
+      "title": "C4「α 三式互证」是代数恒等：三条表达式为同一函数的三种写法",
+      "detail": "r_e/λ_C ≡ λ_C/a_0 ≡ e²/(4πε_0 ħc)；机器残差 1.75e-251 / 8.73e-252 ⇒ 无论输入如何必相等，「三式互证」不构成三个独立判据，只是同一判据记三次"
+    },
+    {
+      "code": "R03",
+      "status": "FAIL",
+      "title": "C4 变异测试：微扰一个输入，三式同时失效 ⇒ 有效独立判据数 = 1（非 3）",
+      "detail": "eps_0 ×(1+1e-6) ⇒ 三式偏离均 > 容差 1e-9，且偏离量逐位相同"
+    },
+    {
+      "code": "R04",
+      "status": "FAIL",
+      "title": "C4 容差 1e-9 大于 CODATA-2018/2022 版本差 6.852e-10 ⇒ 对常数版本漂移零判别力",
+      "detail": "两个版本的 α 都会被判 PASS；本库书籍/03 D-02 已校勘为 2022 值，来料仍用 2018 值"
+    },
+    {
+      "code": "R05",
+      "status": "FAIL",
+      "title": "71 卷 11 个计算段中 C7（零点能）与 C11（kT/h）算出并入库但【无守卫】",
+      "detail": "9/9 的「全通过」只覆盖 9/11 个计算项；C7 取 ω=1e14 rad/s 是演示性取值，C11 无接受区间 ⇒ 2/11 无任何判据"
+    },
+    {
+      "code": "R06",
+      "status": "FAIL",
+      "title": "C10 容差 10% 使 Sgr A* 质量的旧值 4.3e6 与现代值 4.154e6 不可区分",
+      "detail": "两者 r_s 差 0.03515（1.2704e10 vs 1.2268e10 m），远小于容差；该守卫只能拦截 30% 级错误，抓不住 3.5% 级的真实取值分歧"
+    },
+    {
+      "code": "R07",
+      "status": "PASS",
+      "title": "C5 Wien 位移常数可由 hc/(k_B x) 反解得到（x=4.9651142317 为 5(1-e^-x)=x 之根）",
+      "detail": "字面值 2.897771955e-3 与推导值残差 5.488e-10 ⇒ 该常数非手填，数据层成立"
+    },
+    {
+      "code": "R08",
+      "status": "PASS",
+      "title": "C6 σ 由 2π⁵k_B⁴/(15h³c²) 推出，残差 1.871e-9 可被归因定位：= 3×ħ 字面值 10 位截断误差",
+      "detail": "ħ 字面 1.054571817e-34 与 h/2π=1.0545718176…e-34 差 6.127e-10，经 h³ 放大 3 倍得 1.871e-9；σ 是推导量非手填常数，数据层成立，且本卷 σ 的精度上界由 ħ 输入位数决定"
+    },
+    {
+      "code": "R09",
+      "status": "PASS",
+      "title": "C8 热中子波长双路径残差 0.000735，残差来源是温度口径：字面 2200 m/s ⇔ T=293.581 K",
+      "detail": "2200 m/s 是 E=k_BT=25.3 meV（T=293.581 K，热中子惯例）对应的 √(2k_BT/m_n)；与室温 293.15 K 的 √(2k_BT/m_n)=2198.38 m/s 差 0.000735，落在容差 2% 内 ⇒ 数据层成立"
+    },
+    {
+      "code": "R10",
+      "status": "FAIL",
+      "title": "E1 接受区间 = (0, 1.1e78) ⇒ 向下 78 个数量级全部接受，仅上界 +10.5× 才失效",
+      "detail": "S/10, /10^10, /10^30, /10^60 全部仍判 PASS；该守卫只挡「熵比太阳黑洞熵大 10.5 倍」，挡不住任何小值 ⇒ 形同只写上界"
+    },
+    {
+      "code": "R11",
+      "status": "FAIL",
+      "title": "E2 区间 (120,126) 与文献常见「真空能差 120 个数量级」口径边界互斥",
+      "detail": "本册实算 122.94（Planck 硬截断口径）；若改用文献 120 口径 ⇒ 守卫判 FAIL。区间把「待检验量」当成「已知区间」，属区间口径自证"
+    },
+    {
+      "code": "R12",
+      "status": "FAIL",
+      "title": "E4「T_H < 1e-7 K」单侧无下界 ⇒ 对任何 M > 0.62 M_☉ 的黑洞恒真",
+      "detail": "M 放大 10/10^5/10^10 倍后 T_H 仍判 PASS；该守卫的真信息只有「太阳黑洞是冷的」，是常识复述而非可证伪判据"
+    },
+    {
+      "code": "R13",
+      "status": "FAIL",
+      "title": "E5 接受区间 = (0, 2.2e67) yr：上界仅比真值高 5%，向下 67 个数量级全部接受",
+      "detail": "t/10^k 对 k=1,10,30,60 全 PASS；×1.05 即被拒。即该守卫对「蒸发更快」敏感（5%% 级），对「蒸发更慢」完全无感"
+    },
+    {
+      "code": "R14",
+      "status": "FAIL",
+      "title": "E5 守卫打印串把 log₁₀(t) 当物理值输出：「t_evap(sun) = 6.73e+01 yr」",
+      "detail": "真值 2.096e+67 yr；展示值与真值差 3.113e+65 倍。属展示层真 bug（不影响守卫判定与 JSON，但会误导任何只读 stdout/report 的读者）"
+    },
+    {
+      "code": "R15",
+      "status": "FAIL",
+      "title": "E6 分母 1e35 J/K 是手填数量级估计（外部输入）：分母变动 ±1 个数量级，守卫照样通过",
+      "detail": "分母取 1e34/1e36 J/K 时比值仍落在 (1e18, 1e21) 内 ⇒ 守卫抓不住分母的 10 倍误差；分子 S_BH 是精确计算值（10^77.02 k_B），分母是 O(1) 估值，混合比精度不匹配"
+    },
+    {
+      "code": "R16",
+      "status": "FAIL",
+      "title": "E7「能标差 > 14 个数量级」单侧 ⇒ 对撞机能标提到 1e5 GeV（100 TeV）仍判 PASS",
+      "detail": "gap(1e5)=14.09 仍 > 14；直到 1e6 GeV（gap=13.09）才被拒 ⇒ 该守卫的分辨力为 100 TeV 量级，且阈值 14 本身来自 14 TeV 这一输入，属「把自己输入的数当成判别界限」"
+    },
+    {
+      "code": "R17",
+      "status": "BOUNDARY",
+      "title": "E3 g/e = 1/(2α) 是 Dirac 量子化条件在 n=1 下的代数重述，非独立预言",
+      "detail": "字面值 68.518 = 1/(2×7.2973525693e-3)；容差 1% 比常数版本差 6.852e-10 大 7 个数量级"
+    },
+    {
+      "code": "R18",
+      "status": "PASS",
+      "title": "数据层总账：17 项读数（71 卷 9 项 + 72 卷 8 项）全部为教科书标准结果，逐条复算一致",
+      "detail": "无一为本项目新物理；与《理论体系方程总汇_正确方程集》结论同向：本库被判「正确」的方程绝大多数是教科书物理在另一套记号下的复述"
+    },
+    {
+      "code": "R19",
+      "status": "INFO",
+      "title": "两卷性质判定：71 = 14 层物理大厦综述 + 桥梁常数表；72 = 10 个本质问题三档自评",
+      "detail": "均为整理/教学性产物；判据层缺陷不影响其数据层价值，但「9/9」「7/7 全通过」不可作为「已验证」引用"
+    },
+    {
+      "code": "R20",
+      "status": "INFO",
+      "title": "编号登记：71/72 入 07_统一场方程（接续 68/69/70）；本册取 r137（起草时 r135 为最小空号）",
+      "detail": "起草时 r118-r134 已占用、r135 为空 ⇒ 首版按 r135 起草；落盘前并行会话已占 r135/r136，按「后到者改号不覆盖他人」纪律改号 r137（他人产物未触碰）。两卷与书籍/03（同源对话）回链，与 68 卷（方程集）互补不重叠"
+    },
+    {
+      "code": "R21",
+      "status": "INFO",
+      "title": "71 卷 9 条守卫的容差跨 8 个数量级：最紧 C4=1e-9，最松 C10=1e-1",
+      "detail": "容差谱 C4:1e-9、C1:1e-6、C3:1e-5、C6:1e-5、C2:1e-4、C5:2e-2、C8:2e-2、C9:2e-2、C10:1e-1；同一卷内判据强度相差 8 个数量级，「9/9 全通过」不表示 9 条判据同样强度"
+    },
+    {
+      "code": "R22",
+      "status": "INFO",
+      "title": "外部输入账：71 卷 6 项、72 卷 6 项（合计 12 项），其中 2 项非推导值",
+      "detail": "71：mu_0 = 4pi*1e-7（SI-2019 前旧定义，非实测值）；T_sun = 5778 K（现代值 5772 K）；b_Wien 字面 2.897771955e-3；m_n = 1.6749275e-27；M_SgrA = 4.3e6 M_sun（旧值）；omega = 1e14 rad/s（C7 演示取值）。72：alpha 字面 7.2973525693e-3（CODATA-2018）；M_sun = 1.98847e30；H0 = 67.66 km/s/Mpc、Omega_L = 0.6889（Planck-2018）；S_thermal(sun) = 1e35 J/K（手填数量级估计）；E_LHC = 14 TeV；Planck 硬截断约定（UV cutoff = M_Pl）。非推导项 = 71 的 b_Wien 字面值（本册 R07 已用 hc/(k_B x) 独立反解验证）与 72 的 S_thermal 手填值（本册 R15 判其 ±1 数量级变动不可检出）"
+    }
+  ],
+  "guards": [
+    {
+      "name": "D_C1_a0",
+      "pass": true,
+      "detail": "rel=4.795e-11"
+    },
+    {
+      "name": "D_C2_E1",
+      "pass": true,
+      "detail": "rel=5.041e-7"
+    },
+    {
+      "name": "D_C3_r_e",
+      "pass": true,
+      "detail": "rel=1.239e-10"
+    },
+    {
+      "name": "D_C4_alpha",
+      "pass": true,
+      "detail": "rel=4.875e-13"
+    },
+    {
+      "name": "D_C5_sun",
+      "pass": true,
+      "detail": "rel=3.276e-7"
+    },
+    {
+      "name": "D_C6_sigma",
+      "pass": true,
+      "detail": "rel=6.922e-11"
+    },
+    {
+      "name": "D_C8_neutron",
+      "pass": true,
+      "detail": "rel=0.0007335"
+    },
+    {
+      "name": "D_C9_CMB",
+      "pass": true,
+      "detail": "rel=2.382e-6"
+    },
+    {
+      "name": "D_C10_SgrA",
+      "pass": true,
+      "detail": "rel=2.274e-10"
+    },
+    {
+      "name": "D_E1_S",
+      "pass": true,
+      "detail": "rel=6.135e-17"
+    },
+    {
+      "name": "D_E2_gap",
+      "pass": true,
+      "detail": "rel=5.541e-18"
+    },
+    {
+      "name": "D_E3_g/e",
+      "pass": true,
+      "detail": "rel=6.687e-9"
+    },
+    {
+      "name": "D_E4_T",
+      "pass": true,
+      "detail": "rel=6.199e-7"
+    },
+    {
+      "name": "D_E5_sun",
+      "pass": true,
+      "detail": "rel=3.831e-18"
+    },
+    {
+      "name": "D_E5_1kg",
+      "pass": true,
+      "detail": "rel=2.491e-7"
+    },
+    {
+      "name": "D_E6_ratio",
+      "pass": true,
+      "detail": "rel=6.241e-17"
+    },
+    {
+      "name": "D_E7_gap",
+      "pass": true,
+      "detail": "rel=2.771e-17"
+    },
+    {
+      "name": "C4_identity_al2",
+      "pass": true,
+      "detail": "resid=1.746e-251"
+    },
+    {
+      "name": "C4_identity_al3",
+      "pass": true,
+      "detail": "resid=8.729e-252"
+    },
+    {
+      "name": "C4_mutation_all_shift",
+      "pass": true,
+      "detail": "eps_0 放大 1e-6 ⇒ 三式同时偏离 1.0e-6/1.0e-6/1.0e-6"
+    },
+    {
+      "name": "C4_tol_swallows_version",
+      "pass": true,
+      "detail": "2018/2022 版本差 6.852e-10 < 容差 1e-9"
+    },
+    {
+      "name": "C7_C11_unguarded",
+      "pass": true,
+      "detail": "missing=C7,C11"
+    },
+    {
+      "name": "C10_tol_too_wide",
+      "pass": true,
+      "detail": "4.3e6 vs 4.154e6(GRAVITY) 差 0.03515 < 容差 10%"
+    },
+    {
+      "name": "C5_wien_derived",
+      "pass": true,
+      "detail": "b_derived/b_lit-1 = 5.488e-10"
+    },
+    {
+      "name": "C6_sigma_derived",
+      "pass": true,
+      "detail": "rel=1.871e-9"
+    },
+    {
+      "name": "C6_attribution",
+      "pass": true,
+      "detail": "σ 残差 1.871e-9 ≈ 3×ħ 字面值截断误差 6.127e-10"
+    },
+    {
+      "name": "C8_two_paths",
+      "pass": true,
+      "detail": "rel=0.000735"
+    },
+    {
+      "name": "C8_temp_convention",
+      "pass": true,
+      "detail": "2200 m/s ⇔ T=293.581 K（ΔT=0.431 K）"
+    },
+    {
+      "name": "E1_lower_unbounded",
+      "pass": true,
+      "detail": "S/10^k 仍 PASS 的 k = [1, 10, 30, 60]；上界 ×10.5 ⇒ False"
+    },
+    {
+      "name": "E2_rejects_canonical_120",
+      "pass": true,
+      "detail": "文献常见口径 10^120 不满足 120 < gap ⇒ 被守卫拒绝"
+    },
+    {
+      "name": "E4_lower_unbounded",
+      "pass": true,
+      "detail": "M×10^k 的 T_H 仍 < 1e-7 的 k = [1, 5, 10]"
+    },
+    {
+      "name": "E5_lower_unbounded",
+      "pass": true,
+      "detail": "t/10^k 仍 PASS 的 k = [1, 10, 30, 60]"
+    },
+    {
+      "name": "E5_upper_tight",
+      "pass": true,
+      "detail": "×1.05 ⇒ False（拒），×1.01 ⇒ True（受）"
+    },
+    {
+      "name": "E5_display_bug",
+      "pass": true,
+      "detail": "展示串 6.73e+01 yr vs 真值 2.096e+67 yr，差 3.113e+65 倍"
+    },
+    {
+      "name": "E6_input_is_literal",
+      "pass": true,
+      "detail": "分母取 1e34/1e35/1e36（±1 数量级）时 ratio 仍落在区间内"
+    },
+    {
+      "name": "E7_single_sided",
+      "pass": true,
+      "detail": "E_LHC = 14000/1e5 GeV 仍 PASS；1e6 GeV ⇒ False"
+    }
+  ],
+  "guard_summary": {
+    "total": 36,
+    "passed": 36
+  },
+  "verdict": {
+    "data_layer": "17/17 复算一致（PASS）",
+    "criterion_layer": "16 条守卫中 9 条判为单侧/无界/恒等/无守卫（FAIL）",
+    "new_physics": 0
+  }
+}
