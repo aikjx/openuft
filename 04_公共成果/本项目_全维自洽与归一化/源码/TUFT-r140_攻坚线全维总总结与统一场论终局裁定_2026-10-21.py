@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""TUFT-r139 · 攻坚线全维总总结 与 统一场论终局裁定（2026-10-21）
+"""TUFT-r140 · 攻坚线全维总总结 与 统一场论终局裁定（2026-10-21）
 
 分工声明
 --------
 * r136 = 并行会话《力的大统一方程·非GUT候选族补齐与全链路终局账本》；
 * r138 = 并行会话《硬核审计·②规范群 与 ③μ² 符号的不可导出性》。
-* 本册 r139 为**总总结卷**：不新开战线，只做三件事——
+* 本册 r140 为**总总结卷**：不新开战线，只做三件事——
   (a) 全攻坚线（r98–r138）判定册机读清点；
   (b) 七条完成判据 + 前提账本 + 净前提下降门的**跨册复算与合账**；
   (c) 对「是否已实现统一场论」给出机读终局裁定。
@@ -35,7 +35,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(HERE)
 DIR_DATA = os.path.join(BASE, '数据')
 DIR_VERDICT = os.path.join(BASE, '判定')
-STEM = 'TUFT-r139_攻坚线全维总总结与统一场论终局裁定_2026-10-21'
+STEM = 'TUFT-r140_攻坚线全维总总结与统一场论终局裁定_2026-10-21'
 NOW = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 F_R119 = os.path.join(DIR_DATA, 'TUFT-r119_统一场论完成度总判定_七条必要条件与电弱控制组_2026-10-20.json')
@@ -73,7 +73,7 @@ def guard(gid, ok, desc):
 
 
 print('=' * 78)
-print('TUFT-r139 · 攻坚线全维总总结 与 统一场论终局裁定')
+print('TUFT-r140 · 攻坚线全维总总结 与 统一场论终局裁定')
 print('=' * 78)
 
 # ────────────────────────────────────────────────────────────────
@@ -400,7 +400,7 @@ conclusion = (
 add('F1', '终局裁定', FINAL, FINAL, conclusion)
 
 payload = {
-    'doc': 'TUFT-r139 攻坚线全维总总结与统一场论终局裁定',
+    'doc': 'TUFT-r140 攻坚线全维总总结与统一场论终局裁定',
     'generated_at': NOW,
     'scope_note': '总总结卷：不新开战线；条目与 r136/r138 及各源卷不可相加（non-additivity freeze）',
     'module': os.path.abspath(__file__),
@@ -423,7 +423,7 @@ with io.open(os.path.join(DIR_DATA, STEM + '.json'), 'w', encoding='utf-8') as f
     f.write(json.dumps(payload, ensure_ascii=False, indent=2))
 
 lines = []
-lines.append('# TUFT-r139 · 攻坚线全维总总结 与 统一场论终局裁定')
+lines.append('# TUFT-r140 · 攻坚线全维总总结 与 统一场论终局裁定')
 lines.append('')
 lines.append('> 生成时间 %s ｜ mpmath %d 位 ｜ 守卫 %d/%d' % (NOW, mp.dps, n_guard_pass, len(guards)))
 lines.append('')
@@ -514,7 +514,7 @@ with io.open(os.path.join(DIR_DATA, STEM + '.md'), 'w', encoding='utf-8') as f:
     f.write('\n'.join(lines) + '\n')
 
 rep = []
-rep.append('TUFT-r139 攻坚线全维总总结与统一场论终局裁定')
+rep.append('TUFT-r140 攻坚线全维总总结与统一场论终局裁定')
 rep.append('生成时间 = %s' % NOW)
 rep.append('模块路径 = %s' % os.path.abspath(__file__))
 rep.append('判定册 = %d（r%d–r%d）' % (len(LEDGER), LEDGER[0]['r'], LEDGER[-1]['r']))
