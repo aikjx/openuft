@@ -1,0 +1,90 @@
+{
+  "doc": "## TUFT-r140 · 全维第一性原理求导精算（四力起源与费米子质量扇区）\n\n### 0. 方法纪律\nRG 演化用 RK4 + 自适应步长（|dα/dt|·h 自适应，h≤1e-2），量级 sanity 守卫 0<α<2；Yukawa 跨度比用 Fraction 精确；判据判别力由 MSSM 控制组保证（C2）。\n\n### A. 三规范耦合统一精算（U2 门）\n- 输入（GUT 归一化）：α1(M_Z)=0.01694, α2(M_Z)=0.03380, α3(M_Z)=0.1179。\n- SM 2-loop：α1=α2 交点约 M≈1.09e+13 GeV，但该处 α3/α12 偏差 0.054 dex ⇒ 三耦合非共线 ⇒ U2 FAIL。\n- MSSM 1-loop 控制组：三耦合在 M_GUT≈2.12e+16 GeV 汇聚，发散仅 0.19%（0.001 dex）⇒ 门可区分成立/失败体系（C2 PASS）。\n- 结论：SM 自身三耦合不共线（与 r127 B10 的 52σ 量级一致）；只有引入 SUSY（MSSM）才共线，而 SUSY 本身引入 ~105 新参数（U5 违，r119）。\n\n### B. 四力起源 g, g', g_s, G 的可导出性\n- g,g',g_s：规范对称固定相互作用*形式*（协变导数），但*数值*为测量输入，非对称原理导出。\n- G（牛顿常数）：自然单位 G=1/(8π M_Pl²)，M_Pl≈1.22e19 GeV 为测量尺度 ⇒ 输入。\n- 四路线审计：① RG/UV 不动点不固定整体尺度与 G；② landscape/弦论由模 VEV 定耦合但引入 10^500 真空（U5 超 ~496 dex）；③ anthropic 为环境选择、非预言；④ r135 由无质量自旋-2 导出 EH 从而“解释”G 的结构，但 G 已出现在源项中 ⇒ 循环。\n- 结论：四力起源是自由输入；任何“导出”路线要么引入新参数（违 U5），要么循环，要么非预言 ⇒ 不可从第一性原理导出。\n\n### C. 费米子质量与混合（U4 门）\n- 13 个 SM 费米子扇区参数（9 质量 + 3 混合角 + 1 CP 相位）全为拟合输入。\n- Yukawa 跨度（Fraction 精算）：m_t/m_e = 3.3896e+05 ⇒ 5.53 dex（e→t）；若计入中微子 m_t/m_nu = 3.4642e+12 ⇒ 12.5 dex。\n- 导出路线审计：家族对称（Froggatt-Nielsen）引入 U(1) 电荷+flavon VEV；RS/额外维引入紧化几何参数；弦论引入模空间参数 ⇒ 全部引入新参数（U5 违）。\n- 结论：费米子质量扇区无第一性原理导出 ⇒ U4 仍 FAIL。\n\n### D. 全维净前提记账（door）\n- r135（U1/EH+U4/SEP）：Δ=−1 但 circular-suspect ⇒ 不计入有效下降。\n- r138（U2/规范群+U3/μ²）：Δ≥0，hard-core-not-derivable。\n- r140（U5/参数+U4/费米子+四力起源）：Δ≥0，free-inputs-not-derivable。\n- 合计：有效净前提下降 = 0 ⇒ 完成度维持 1/7（仅 U7 PASS）。\n\n### 结论\n全维第一性原理求导扫描完成：四力起源与费米子质量扇区确认是自由输入，未产生任何非循环、无新参数的导出 ⇒ 统一场论“完成”作为科学目标仍 1/7（真正统一【未完成】）。",
+  "generated_at": "2026-10-21",
+  "scope_note": "全维第一性原理求导精算卷：覆盖四力起源与费米子质量扇区，补全 r135(引力/SEP)+r138(规范群/μ²) 的求导扫描；非加和攻击轮。",
+  "method": "2-loop RG (RK4, 自适应步长, 量级守卫) + Yukawa 跨度 Fraction 精算 + 四路线结构审计；每条机检带反向对照（有牙）",
+  "checks": [
+    {
+      "id": "C1",
+      "claim": "SM 三规范耦合在单一尺度共线",
+      "method": "2-loop RGE (RK4, 自适应步长, 量级守卫)",
+      "result": "FAIL",
+      "value": "α1=α2 交点 M≈1.09e+13 GeV 处 α3/α12 偏差 0.054 dex（非共线）",
+      "reverse": "扰动 α_s(M_Z)±δ 不改变非共线定性（对照：若取 MSSM 则三耦合在 2e16 GeV 汇聚 ⇒ 门有牙）"
+    },
+    {
+      "id": "C2",
+      "claim": "MSSM 控制组三耦合共线（判据判别力凭证）",
+      "method": "1-loop RGE 最小化三耦合发散",
+      "result": "PASS",
+      "value": "M_GUT≈2.12e+16 GeV，三耦合发散 0.19%（0.001 dex）",
+      "reverse": "若门不可信，MSSM 亦应 FAIL；实测 MSSM 收敛 ⇒ 门可区分成立/失败体系"
+    },
+    {
+      "id": "C3",
+      "claim": "四力起源 g,g',g_s,G 可由第一性原理导出（无新参数）",
+      "method": "结构审计：RG/UV不动点/landscape/anthropic 四路线",
+      "result": "FAIL",
+      "value": "g,g',g_s 数值为输入；G=1/(8πM_Pl²) 为输入尺度；landscape 引入 10^500 真空（U5 超 496 dex）；anthropic 非预言；r135 的 EH 导出 G 结构为循环",
+      "reverse": "若某路线可无新参数导出四耦合 ⇒ 须给出具体代数并过 C1 共线门；当前无"
+    },
+    {
+      "id": "C4",
+      "claim": "费米子质量与混合可由第一性原理导出（U4）",
+      "method": "Yukawa 跨度 Fraction 精算 + 导出路线审计",
+      "result": "FAIL",
+      "value": "9 质量+3 角+1 CP = 13 参数为拟合输入；Yukawa 跨度 5.53 dex（e→t），含中微子 12.5 dex；家族对称/RS/弦论路线均引入新参数（U5 违）",
+      "reverse": "若 Yukawa 可由对称破缺唯一确定 ⇒ 须列出破缺链且不新增自由参数；当前无"
+    },
+    {
+      "id": "C5",
+      "claim": "耦合统一数据门阈值非拍脑袋",
+      "method": "阈值由 α_s(M_Z) 末位半刻度 δ=0.0009 传播",
+      "result": "INFO",
+      "value": "σ 量级由 δα_s 线性传播；SM 非共线为数十σ量级（与 r127 B10 的 52σ 量级一致，非精确重算）",
+      "reverse": "若阈值过松 ⇒ 假绿；本册用输入不确定度派生，不放松迁就"
+    },
+    {
+      "id": "C6",
+      "claim": "阶数越高越闭合（1-loop vs 2-loop 同向比较）",
+      "method": "同 RK4/自适应/量级守卫，跑 1-loop 与 2-loop 两套 RGE，取 α1=α2 交点处 α3/α12 偏差",
+      "result": "INFO",
+      "value": "SM 1-loop 交点 gap=0.061 dex，2-loop gap=0.054 dex ⇒ 2-loop 偏差更小 ⇒ 趋势闭合，但仍远未共线（>0.05 dex）",
+      "reverse": "若 2-loop 比 1-loop 偏差更大（远离闭合）⇒ 须上报数值不稳定；实测趋势见 value（RK4 自适应步长已排除该风险）"
+    }
+  ],
+  "door_accounting": {
+    "r135": {
+      "targets": [
+        "U1(EH)",
+        "U4(SEP)"
+      ],
+      "delta": -1,
+      "kind": "circular-suspect"
+    },
+    "r138": {
+      "targets": [
+        "U2(规范群)",
+        "U3(μ²)"
+      ],
+      "delta": 0,
+      "kind": "hard-core-not-derivable"
+    },
+    "r140": {
+      "targets": [
+        "U5(参数)",
+        "U4(费米子)",
+        "四力起源(g,g',g_s,G)"
+      ],
+      "delta": 0,
+      "kind": "free-inputs-not-derivable"
+    },
+    "net_effective_decrease": 0,
+    "note": "唯一 Δ<0 为 r135 的 −1，但 circular（新前提由 EH 量子化导出）⇒ 不计入有效下降；r138/r140 确认四力起源与费米子质量为自由输入 ⇒ 净前提下降 = 0",
+    "completion_still": "1/7（仅 U7 PASS）"
+  },
+  "verdict": "FULL-DIMENSIONAL-DERIVATION-INCOMPLETE",
+  "verdict_detail": "全维第一性原理求导扫描（r135 引力/SEP + r138 规范群/μ² + r140 四力起源/费米子）完成：四力起源 (g,g',g_s,G) 与费米子质量扇区确认为自由输入，无任何非循环、无新参数的导出路线；唯一 Δ<0（r135 −1）为 circular-suspect，不计入有效净前提下降 ⇒ 统一场论完成度仍 1/7。",
+  "non_additivity_freeze": true,
+  "exit_code": 0
+}

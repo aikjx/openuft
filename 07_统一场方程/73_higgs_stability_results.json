@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "volume": "73",
+    "title": "Higgs 扇区：真空稳定性与平庸性边界（SM 有效场论窗口）",
+    "generated_at": "2026-10-21T10:05:43",
+    "method": "mpmath 250-bit + Fraction 符号层 + float64 独立交叉",
+    "sources": [
+      "arXiv:1412.8230v1 §2（β_λ GUT 约定）",
+      "arXiv:1202.5717 附录 A Eq.(21)-(24)（β 全集，MV+Arason）",
+      "arXiv:1307.3536v4（Buttazzo 基准 Eq.57/61/64/65/67, Table 2/3）"
+    ],
+    "module_path": "D:\\a10\\aikjx\\code\\my_lib\\openuft\\07_统一场方程\\73_higgs_stability_calc.py",
+    "module_mtime": "2026-10-21T10:04:46"
+  },
+  "inputs": {
+    "m_h_pole_GeV": [
+      "125.25",
+      "0.17"
+    ],
+    "m_t_pole_GeV": [
+      "172.57",
+      "0.29"
+    ],
+    "alpha_s_MZ": [
+      "0.118",
+      "0.0009"
+    ],
+    "alpha_MZ_inv": "127.95",
+    "sin2thetaW_MSbar": "0.23122",
+    "v_GeV": "246.22",
+    "M_Pl_GeV": "1.2209e+19",
+    "lam_NP_threshold": "3.1415927",
+    "benchmark_Buttazzo": {
+      "m_h": "125.15",
+      "m_t": "173.34",
+      "alpha_s": "0.1184",
+      "lam_NNLO_Mt": "0.12604",
+      "yt_NNLO_Mt": "0.94018",
+      "lam_LO_Mt": "0.12917",
+      "yt_LO_Mt": "0.99561",
+      "lam_MPl": "-0.0143",
+      "m_h_crit_GeV": "129.6"
+    }
+  },
+  "control_groups": [
+    {
+      "id": "CT1",
+      "desc": "双源 β_λ 恒等（S1 GUT 约定 vs S2 超荷约定，g1=√(5/3)g'）",
+      "value": "2.7279326e-253",
+      "threshold": "<1e-50",
+      "pass": true
+    },
+    {
+      "id": "CT2",
+      "desc": "LO 匹配对标 Buttazzo Table 3 LO（λ=0.12917, y=0.99561）",
+      "value": "dλ=6.9595435e-6, dy=2.7808535e-6",
+      "threshold": "<1e-4",
+      "pass": true
+    },
+    {
+      "id": "CT3",
+      "desc": "Case B 二圈 λ(M_Pl)<0 且对标 Eq.(61)（−0.0143，容许圈阶差 0.008）",
+      "value": "-0.0180273",
+      "threshold": "±0.008",
+      "pass": true
+    },
+    {
+      "id": "CT4",
+      "desc": "Case B 二圈 log10(Λ_λ/GeV) ∈ [9.0, 11.3]（文献 10^10–10^12 窗口，2Λ_V≈6e9 为下沿参考）",
+      "value": "9.1898",
+      "threshold": "[9.0,11.3]",
+      "pass": true
+    },
+    {
+      "id": "CT5",
+      "desc": "敏感度对标 Eq.(67)：dlog10Λ/dm_h≈+0.7（±0.5）、/dm_t≈−1.0（±0.7），符号须正确",
+      "value": "mh:0.5239 mt:-0.9008",
+      "threshold": "±0.5/±0.7",
+      "pass": true
+    },
+    {
+      "id": "CT6",
+      "desc": "m_h^crit（Case B 二圈）对标 Eq.(64) 129.6（容许匹配/圈阶差 ±3 GeV）",
+      "value": "131.048",
+      "threshold": "±3.0 GeV",
+      "pass": true
+    },
+    {
+      "id": "CT7",
+      "desc": "float64 独立重算 Λ_I 与 mpmath 一致（相对差）",
+      "value": "1.7389161e-13",
+      "threshold": "<1e-6",
+      "pass": true
+    },
+    {
+      "id": "CT8",
+      "desc": "反向对照：β_λ 中 y_t⁴ 项错符号 ⇒ 不得存在不稳定标度",
+      "value": "None",
+      "threshold": "None",
+      "pass": true
+    }
+  ],
+  "guards": [
+    {
+      "id": "G1",
+      "desc": "步长收敛（dt=0.005 vs 0.01，Λ_I 相对差）",
+      "value": "0.0",
+      "threshold": "<1e-4",
+      "pass": true
+    },
+    {
+      "id": "G2",
+      "desc": "单调性：Λ_I 随 m_h 增而增、随 m_t 增而减（方向先固定后检验）",
+      "value": "mh+1:5.9285 mh-1:5.6516 mt+1:5.5792",
+      "threshold": "定序",
+      "pass": true
+    },
+    {
+      "id": "G3",
+      "desc": "M_t 匹配点微扰性 λ<π、y<π",
+      "value": "λ=0.12938348 y=0.99119013",
+      "threshold": "<π",
+      "pass": true
+    },
+    {
+      "id": "G4",
+      "desc": "g₃(M_t)∈[0.9,1.2]、y_t^LO(M_t)∈[0.9,1.05]",
+      "value": "g3=1.16816 y=0.99119013",
+      "threshold": "区间",
+      "pass": true
+    },
+    {
+      "id": "G5",
+      "desc": "输入不确定度传播 σ(log10 Λ_I) 逐项量化",
+      "value": "mh:0.02436 mt:0.05973 a3:0.04017 tot:0.07599",
+      "threshold": ">0",
+      "pass": true
+    },
+    {
+      "id": "G6",
+      "desc": "结构完整：tally 合计 == 条目数",
+      "value": "10 vs 10",
+      "threshold": "相等",
+      "pass": true
+    },
+    {
+      "id": "G7",
+      "desc": "标度链 m_t < Λ_I < M_Pl 且 Λ_I > 10³ GeV",
+      "value": "609749.17",
+      "threshold": "链",
+      "pass": true
+    },
+    {
+      "id": "G8",
+      "desc": "阈值依据：输入 σ 传播或文献值 ± 声明倍数（禁拍脑袋）",
+      "value": "声明式",
+      "threshold": "声明",
+      "pass": true
+    },
+    {
+      "id": "G9",
+      "desc": "失控退出码：控制组或守卫未全过 ⇒ exit 2",
+      "value": "逻辑",
+      "threshold": "逻辑",
+      "pass": true
+    }
+  ],
+  "entries": [
+    {
+      "id": "H1",
+      "layer": "整理",
+      "claim": "Higgs 机制与 λ/y_t 提取：v=(√2G_F)^-1/2，λ(M_t)=m_h²/2v²、y_t=√2m_t/v；对标 Buttazzo Table 3 LO 列",
+      "reading": "λ=0.12917696（文献 0.12917）、y=0.99561278（文献 0.99561）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "H2",
+      "layer": "整理",
+      "claim": "二圈跑动结构：λ 自 M_t 起下降并过零（亚稳），λ(M_Pl)<0",
+      "reading": "单调:False；λ(M_t)=0.12938348，λ(M_Pl)=-0.0746255",
+      "verdict": "PASS"
+    },
+    {
+      "id": "H3",
+      "layer": "整理",
+      "claim": "不稳定标度 Λ_I（Case A LO 匹配 / Case B NNLO 匹配）+ 敏感度对标 Eq.(67)；圈阶对比 B1（一圈）/B2（二圈）同匹配",
+      "reading": "Case A: 609749.17 GeV；Case B2: 1.5480393e+9 GeV；Case B1(一圈): 54311958.0 GeV；敏感度 mh:0.5239/mt:-0.9008",
+      "verdict": "PASS"
+    },
+    {
+      "id": "H4",
+      "layer": "整理",
+      "claim": "绝对稳定性临界质量 m_h^crit（Case A/B 二圈）对标 Eq.(64/65)",
+      "reading": "Case B: 131.04826 GeV（文献 129.6±1.5）；Case A: 147.47096 GeV",
+      "verdict": "PASS"
+    },
+    {
+      "id": "H5",
+      "layer": "整理",
+      "claim": "平庸性/非微扰上界：m_h^triv（λ(M_Pl)=π 的临界 Higgs 质量，LO 匹配二圈，扫描+二分）；一圈解析双约定（y_t=g=0 纯四次型：λ(M_Pl)=π / Landau 极点在 M_Pl）",
+      "reading": "二圈数值: None（扫描窗内未捕获首个上穿点）；一圈解析(λ=π): 140.287 GeV；一圈解析(Landau@M_Pl): 144.05783 GeV",
+      "verdict": "INFO"
+    },
+    {
+      "id": "H6",
+      "layer": "整理",
+      "claim": "当前数据亚稳判定：m_h=125.25 低于绝对稳定临界值的 σ 距离（Case B 口径，σ 取文献合成值 1.5 GeV）",
+      "reading": "m_h^crit(B)=131.04826 GeV，z=3.866σ",
+      "verdict": "PASS"
+    },
+    {
+      "id": "B1",
+      "layer": "攻破",
+      "claim": "SM Higgs 扇区有效场论窗口：下有真空不稳定标度 Λ_I（亚稳），上界需视 m_h 而定；作为终极理论不能外推到任意高能",
+      "reading": "Λ_I(A)=609749.17 GeV、Λ_I(B)=1.5480393e+9 GeV；Λ_P(λ=π, A)=None GeV（对当前 m_h 不存在 ⇒ 只有下窗）",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "B2",
+      "layer": "攻破",
+      "claim": "不稳定标度的输入依赖：仅输入不确定度即使 log10 Λ_I 涂抹 ±σ（一阶传播）",
+      "reading": "σ(log10 Λ_I)=0.07599 dex（m_h:0.02436, m_t:0.05973, α₃:0.04017）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "B3",
+      "layer": "攻破",
+      "claim": "匹配/圈阶/方案依赖：LO 朴素匹配 vs NNLO 匹配的 Λ_I/m_h^crit 系统差（λ(M_t) 0.12917 vs 0.12604 = −1.1%；y_t 0.991 vs 0.940）；圈阶差单独量化",
+      "reading": "匹配差 Δlog10 Λ_I=3.405 dex、Δm_h^crit=16.42 GeV；圈阶差(1vs2圈, 同匹配)=1.455 dex",
+      "verdict": "BOUNDARY"
+    },
+    {
+      "id": "B4",
+      "layer": "攻破",
+      "claim": "与统一场论议程咬合：SM 两扇区断裂边界（QCD Λ_QCD≈0.226 GeV 非微扰 / Higgs Λ_I≈10^9-10^10 GeV 亚稳）须在任何统一方案中同时修补；near-criticality（m_h 距稳定边界 zσ）未解释",
+      "reading": "Λ_QCD(70 卷)=0.2262 GeV << Λ_I(B)=1.5480393e+9 GeV < M_Pl=1.2209e+19 GeV；z=3.87σ",
+      "verdict": "FAIL"
+    }
+  ],
+  "summary": {
+    "tally": {
+      "PASS": 6,
+      "INFO": 1,
+      "FAIL": 2,
+      "BOUNDARY": 1
+    },
+    "n_entries": 10,
+    "control_groups_pass": 8,
+    "guards_pass": 9,
+    "elapsed_s": 668.3
+  },
+  "exit_code": 0
+}

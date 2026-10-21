@@ -122,6 +122,36 @@
         这 {{ boundaryTotal }} 条断裂边界 + 37 条未导出前提，就是未来任何新理论的<b>最低任务清单与诚实起点</b>——而非本库已攻破的战果。
       </p>
     </div>
+
+    <!-- 终局裁定 r139 -->
+    <div class="card" v-if="capstone">
+      <div class="card-title">八 · 终局裁定（并行会话全维总总结 r139） <span class="tag tag-fail">{{ capstone.final_verdict }}</span></div>
+      <p class="dim" style="font-size:13px;line-height:1.8;margin:0 0 12px">
+        并行会话对 r{{ capstone.scope.r_min }}–r{{ capstone.scope.r_max }} 全 {{ capstone.scope.n_verdict_volumes }} 份判定册（其中 r98+ 攻坚线 {{ capstone.scope.n_volumes_r98plus }} 份）做穷尽汇总，机读裁定如下。本卷为 <span class="mono">non-additivity-freeze</span> 的总结卷，不与各源卷相加。
+      </p>
+      <div class="blk-h">七条机读必要条件（完成度 {{ capstone.completion.target_pass }}/{{ capstone.completion.target_total }}）</div>
+      <div class="grid grid-2col" style="margin-bottom:12px">
+        <div v-for="c in capstone.completion.criteria" :key="c.id" class="meth">
+          <div class="meth-k">{{ c.id }} <span :class="verdictTag(c.verdict)" style="font-size:11px;padding:2px 8px">{{ c.verdict }}</span></div>
+          <div class="dim meth-d">{{ c.name }}</div>
+        </div>
+      </div>
+      <div class="kvs" style="margin-bottom:12px">
+        <div class="kv"><div class="k">目标完成度</div><div class="v" style="color:var(--fail)">{{ capstone.completion.target_pass }}/{{ capstone.completion.target_total }}</div></div>
+        <div class="kv"><div class="k">电弱控制组</div><div class="v" style="color:var(--ok)">{{ capstone.completion.control_pass }}/{{ capstone.completion.control_total }}</div></div>
+        <div class="kv"><div class="k">前提账本闭合</div><div class="v">{{ (capstone.premise_ledger.closure * 100).toFixed(1) }}%</div></div>
+        <div class="kv"><div class="k">未导出前提</div><div class="v" style="color:var(--fail)">{{ capstone.premise_ledger.non_derived }}</div></div>
+      </div>
+      <p class="dim" style="font-size:12.5px;line-height:1.75;margin:0 0 12px">
+        <b>净前提下降门</b>：全库最好合计 Δ = <b>{{ capstone.gate.best_case_total_delta }}</b>（需 e={{ capstone.gate.need_e_for_closure }}、a={{ capstone.gate.need_a }} 才封口）⇒ 门未通过；
+        局部修补 r133 净前提变化 <b>+{{ capstone.gate.r133_net_premise_delta }}</b>，结构不可修补 = <b>{{ capstone.gate.r133_structural_unpatchable ? '成立' : '不成立' }}</b>。
+      </p>
+      <div class="kvs">
+        <div class="kv"><div class="k">终局守卫（本卷自校验）</div><div class="v" style="color:var(--accent)">{{ capstone.guards.capstone_self[0] }}/{{ capstone.guards.capstone_self[1] }}</div></div>
+        <div class="kv"><div class="k">全库守卫聚合</div><div class="v" style="color:var(--accent)">{{ capstone.guards.library_aggregate[0] }}/{{ capstone.guards.library_aggregate[1] }}</div></div>
+        <div class="kv"><div class="k">全维求导精算</div><div class="v" style="color:var(--ok)">r135/r138/r139/r140 合流</div></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -131,6 +161,7 @@ import { useOpenuft } from '@/composables/useOpenuft.js'
 
 const { meta, themes, correctSystem } = useOpenuft()
 const counts = computed(() => meta.value?.counts || {})
+const capstone = computed(() => meta.value?.capstone || null)
 const cs = computed(() => correctSystem.value || { equations: { equationTier: [], systemTier: [] }, boundaries: {}, chains: { summary: {} }, thesis: '' })
 
 const eqTotal = computed(() => (cs.value.equations?.equationTier?.length || 0) + (cs.value.equations?.systemTier?.length || 0))
