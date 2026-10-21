@@ -11,7 +11,11 @@
   S2 = arXiv:1202.5717 附录 A Eq.(21)-(24)（超荷 g' 约定，引自
        Machacek-Vaughn + Arason et al.）
   CT1：两源在 g1 = sqrt(5/3) g' 换算下逐项一致（残差 < 1e-50）。
-基准值来源：Buttazzo et al. arXiv:1307.3536v4（Eq.57/61/64/65/67, Table 2/3）。
+基准值来源：Buttazzo et al. arXiv:1307.3536v4（Eq.61/64/65/67, Table 2/3）。
+圈阶差声明：文献为 3-loop RGE + 2-loop 阈值（"full 3-loop NNLO RGE precision"）；
+本卷跑动只到 2-loop。端点量 λ(M_Pl)/m_h^crit 对标容差已含此差（CT3/CT6）；
+过零标度 Λ_λ 对圈阶敏感（机读：同匹配 1→2 圈差 1.455 dex），本卷 2-loop 读数
+低于文献 3-loop 值（~10^10 GeV）约 0.6 dex 属预期圈阶差，非引擎缺陷（CT4 依据）。
 
 口径声明（诚实边界，详见卷文 B3）：
   - 匹配：Case A = LO 朴素树匹配（λ(M_t)=m_h²/2v², y_t=√2m_t/v，即文献 Table 3
@@ -268,6 +272,36 @@ def crossing_from_traj(ts, sts, f, loop=2, y4_sign=-1, tol=mpf("1e-9")):
     return t_hi
 
 
+def crossing_up_from_traj(ts, sts, f, loop=2, y4_sign=-1, tol=mpf("1e-9")):
+    """在轨迹上找 f(state) 首次 >0 的 t（f 起点须 <=0；二分细化）。返回 t 或 None。
+
+    与 crossing_from_traj（首次 <=0）互补：用于 λ 自下向上穿越非微扰阈值 π
+    的探测。旧实现把 λ=π 交给「首次 <=0」探测器 ⇒ 因 λ 起点恒 <π（idx=0）
+    而永远返回 None——静默 bug：B1「Λ_P 不存在」的结论虽对但理由错误，
+    H5 的 m_h^triv 更因此完全失去机器依据。绕极点后 λ 从 +∞ 跌到 -∞，首个
+    >0 仍先于极点出现 ⇒ 探测器取到的必为真 π 穿越（非绕极伪影）。
+    """
+    idx = None
+    for i in range(len(sts)):
+        if f(sts[i]) > 0:
+            idx = i
+            break
+    if idx is None or idx == 0:
+        return None
+    t_lo = ts[idx - 1]
+    t_hi = ts[idx]
+    for _ in range(60):
+        if t_hi - t_lo < tol:
+            break
+        t_mid = (t_lo + t_hi) / 2
+        s_mid = _rk4_block(sts[idx - 1], t_mid - t_lo, loop, y4_sign)
+        if f(s_mid) > 0:
+            t_hi = t_mid
+        else:
+            t_lo = t_mid
+    return t_hi
+
+
 # ---------------------------------------------------------------------------
 # 跑动场景装配（带缓存，避免同参数重复全跑）
 # ---------------------------------------------------------------------------
@@ -323,7 +357,7 @@ def assemble(m_h, m_t, lam_match=None, y_match=None, loop=2, dt=mpf("0.01"),
         "state_Mt": s_mt,
         "lam_Mpl": sts[-1][0],
         "t_cross0": crossing_from_traj(ts, sts, f0, loop, y4_sign),
-        "t_cross_np": crossing_from_traj(ts, sts, fnp, loop, y4_sign),
+        "t_cross_np": crossing_up_from_traj(ts, sts, fnp, loop, y4_sign),
         "traj": (ts, sts),
     }
     if use_cache:
@@ -523,8 +557,9 @@ def main():
     lam_I_B = None if out_B["t_cross0"] is None else exp(out_B["t_cross0"])
     log_lamI_B = None if lam_I_B is None else log(lam_I_B) / log(10)
     ct4_ok = log_lamI_B is not None and mpf("9.0") < log_lamI_B < mpf("11.3")
-    cgs.append(("CT4", "Case B 二圈 log10(Λ_λ/GeV) ∈ [9.0, 11.3]（文献 10^10–10^12 窗口，"
-                       "2Λ_V≈6e9 为下沿参考）",
+    cgs.append(("CT4", "Case B 二圈 log10(Λ_λ/GeV) ∈ [9.0, 11.3]（文献 3-loop NNLO：λ=0 于 "
+                       "~10^10–10^12 ⇒ 上沿 11.3；本卷 2-loop 预期下移，先例=同匹配 1→2 圈机读差 "
+                       "1.455 dex ⇒ 下沿 9.0 留 0.8 dex 圈阶余量）",
                 fmt(log_lamI_B, 5), "[9.0,11.3]", ct4_ok))
 
     # CT5：敏感度对标 Eq.(67)（±0.5 GeV 局部导数）
@@ -611,21 +646,45 @@ def main():
     gds = []
     _log("[G1] 步长收敛 ...")
 
-    # G1 步长收敛
-    lam_I_fine = instability_scale(M_H, M_T, None, None, 2, mpf("0.005"))
+    # G1 步长收敛（双重：Λ_I + 高标回升结构 λ_min/t_min/λ(M_Pl)）
+    # 回升结构（H2）若为数值伪影，必随 dt 改变；机读验证其收敛后方可在卷文陈述。
+    out_g1_fine = assemble(M_H, M_T, None, None, 2, mpf("0.005"))
+    lam_I_fine = (None if out_g1_fine["t_cross0"] is None
+                  else exp(out_g1_fine["t_cross0"]))
+    tr_g1 = assemble(M_H, M_T, None, None, 2, DT)["traj"]   # 同键缓存命中
     g1_rel = (abs(lam_I_fine - lam_I_A_mp) / lam_I_A_mp) if (lam_I_fine and lam_I_A_mp) else mpf("1")
-    g1_ok = g1_rel < mpf("1e-4")
-    gds.append(("G1", "步长收敛（dt=0.005 vs 0.01，Λ_I 相对差）", fmt(g1_rel), "<1e-4", g1_ok))
+    lam_c = [s[0] for s in tr_g1[1]]
+    lam_f = [s[0] for s in out_g1_fine["traj"][1]]
+    ic = min(range(len(lam_c)), key=lambda i: lam_c[i])
+    if_ = min(range(len(lam_f)), key=lambda i: lam_f[i])
+    d_lam_min = abs(lam_c[ic] - lam_f[if_])
+    d_t_min = abs(tr_g1[0][ic] - out_g1_fine["traj"][0][if_])
+    d_lam_mpl = abs(lam_c[-1] - lam_f[-1])
+    # 阈值依据：极值/末端值 <1e-6（RK4 四阶 + 250 位，收敛差应远低于此）；
+    # t_min <0.05 = 5×粗网格 dt=0.01（argmin 的网格量化 ~1 格，声明式放宽 5 格）。
+    g1b_ok = (d_lam_min < mpf("1e-6") and d_t_min < mpf("0.05")
+              and d_lam_mpl < mpf("1e-6"))
+    g1_ok = g1_rel < mpf("1e-4") and g1b_ok
+    gds.append(("G1", "步长收敛：Λ_I（dt=0.005 vs 0.01）+ 回升结构（λ_min/t_min/λ(M_Pl)）双重",
+                f"Λ_I rel={fmt(g1_rel)}；dλmin={fmt(d_lam_min, 3)} "
+                f"dtmin={fmt(d_t_min, 4)} dλ(M_Pl)={fmt(d_lam_mpl, 3)}",
+                "<1e-4 / <1e-6 / <0.05 / <1e-6", g1_ok))
 
     # G2 单调性（方向先固定：Λ_I 随 m_h 增而增、随 m_t 增而减）
-    lA0 = log_scale(M_H, M_T)
-    lAh = log_scale(M_H + 1, M_T)
-    lAl = log_scale(M_H - 1, M_T)
-    lAt = log_scale(M_H, M_T + 1)
-    g2_ok = (lAh is not None and lAl is not None and lAt is not None
-             and lAh > lA0 and lAl < lA0 and lAt < lA0)
-    gds.append(("G2", "单调性：Λ_I 随 m_h 增而增、随 m_t 增而减（方向先固定后检验）",
-                f"mh+1:{fmt(lAh, 5)} mh-1:{fmt(lAl, 5)} mt+1:{fmt(lAt, 5)}", "定序", g2_ok))
+    # 操作点 = Case B（NNLO 匹配 @ 文献锚点，扰动约定同 CT5）——与头条
+    # Λ_I/m_h^crit/敏感度（CT3-CT6）完全同锚点；其 ±1 GeV 扫描同时供
+    # G5 的 σ(B) 复用（中心差导数），零新增成本。
+    # Case A 操作点（LO 匹配 @ 本卷输入）由 G5 的 σ(A) 扫描覆盖。
+    lB0 = log_scan(BM_M_H, BM_M_T)
+    lBh = log_scan(BM_M_H + 1, BM_M_T)
+    lBl = log_scan(BM_M_H - 1, BM_M_T)
+    lBt = log_scan(BM_M_H, BM_M_T + 1)
+    lBtm = log_scan(BM_M_H, BM_M_T - 1)
+    g2_ok = (lBh is not None and lBl is not None and lBt is not None
+             and lBh > lB0 and lBl < lB0 and lBt < lB0)
+    gds.append(("G2", "单调性：Λ_I 随 m_h 增而增、随 m_t 增而减（方向先固定后检验；Case B 文献锚点）",
+                f"mh+1:{fmt(lBh, 5)} mh-1:{fmt(lBl, 5)} mt+1:{fmt(lBt, 5)} mt-1:{fmt(lBtm, 5)}",
+                "定序", g2_ok))
 
     # G3 微扰区监护（M_t 匹配点 λ < π、y < π）
     g3_ok = lam_lo_now < LAM_NP and y_lo_now < LAM_NP
@@ -639,25 +698,44 @@ def main():
     gds.append(("G4", "g₃(M_t)∈[0.9,1.2]、y_t^LO(M_t)∈[0.9,1.05]",
                 f"g3={fmt(g3_mt)} y={fmt(y_lo_now)}", "区间", g4_ok))
 
-    # G5 输入不确定度传播（一阶，逐项贡献量化）
-    def dlog_a3():
+    # G5 输入不确定度传播（一阶，逐项贡献量化；双操作点）
+    # Case B = NNLO 匹配 @ 文献锚点（同 CT3-CT6/CT5 头条口径）：复用 G2 的
+    #   ±1 GeV 扫描（中心差导数），零新增成本；
+    # Case A = LO 匹配 @ 本卷输入（同 H3 的 Case A 读数锚点）：独立扫描。
+    # 两操作点的锚点与匹配均不同 ⇒ σ 差同时含两类约定差，精确分解见 B3。
+    def dlog_a3_at(l0_ref, scan, mh_a, mt_a):
+        """临时扰动 A3_MZ（+输入 σ），返回 Δlog10Λ_I；finally 保证全局还原。"""
         global A3_MZ
         old = A3_MZ
-        A3_MZ = old + D_A3
         try:
-            v_new = log_scale(M_H, M_T)
+            A3_MZ = old + D_A3
+            v_new = scan(mh_a, mt_a)
         finally:
             A3_MZ = old   # 异常路径也必须还原，否则全局污染后续全部读数
-        return None if v_new is None else (v_new - lA0)
+        return None if v_new is None else (v_new - l0_ref)
 
-    d_a3 = dlog_a3()
-    sig_mh = abs(lAh - lA0) * D_M_H if lAh is not None else mpf("0")
-    sig_mt = abs(lAt - lA0) * D_M_T if lAt is not None else mpf("0")
-    sig_a3 = abs(d_a3) if d_a3 is not None else mpf("0")
-    sig_tot = sqrt(sig_mh ** 2 + sig_mt ** 2 + sig_a3 ** 2)
-    g5_ok = sig_tot > 0
-    gds.append(("G5", "输入不确定度传播 σ(log10 Λ_I) 逐项量化",
-                f"mh:{fmt(sig_mh, 4)} mt:{fmt(sig_mt, 4)} a3:{fmt(sig_a3, 4)} tot:{fmt(sig_tot, 4)}",
+    def sig_from(l0v, lhv, llv, ltv, ltmv, d_a3_v):
+        """中心差导数 × 输入 σ 的一阶传播；缺项记 0（并在读数中可见）。"""
+        s_mh = abs((lhv - llv) / 2) * D_M_H if (lhv is not None and llv is not None) else mpf("0")
+        s_mt = abs((ltv - ltmv) / 2) * D_M_T if (ltv is not None and ltmv is not None) else mpf("0")
+        s_a3 = abs(d_a3_v) if d_a3_v is not None else mpf("0")
+        return s_mh, s_mt, s_a3, sqrt(s_mh ** 2 + s_mt ** 2 + s_a3 ** 2)
+
+    scan_A = lambda mh, mt: log_scale(mh, mt)          # LO 朴素匹配 @ 本卷输入
+    lA0_g = scan_A(M_H, M_T)
+    lAh_g = scan_A(M_H + 1, M_T)
+    lAl_g = scan_A(M_H - 1, M_T)
+    lAt_g = scan_A(M_H, M_T + 1)
+    lAtm_g = scan_A(M_H, M_T - 1)
+    sig_mh_A, sig_mt_A, sig_a3_A, sig_A = sig_from(lA0_g, lAh_g, lAl_g, lAt_g, lAtm_g,
+                                                   dlog_a3_at(lA0_g, scan_A, M_H, M_T))
+    sig_mh_B, sig_mt_B, sig_a3_B, sig_B = sig_from(lB0, lBh, lBl, lBt, lBtm,
+                                                   dlog_a3_at(lB0, log_scan, BM_M_H, BM_M_T))
+    g5_ok = sig_A > 0 and sig_B > 0
+    gds.append(("G5", "输入不确定度传播 σ(log10 Λ_I) 逐项量化（双操作点）",
+                f"A: mh:{fmt(sig_mh_A, 4)} mt:{fmt(sig_mt_A, 4)} a3:{fmt(sig_a3_A, 4)} "
+                f"tot:{fmt(sig_A, 4)}；B: mh:{fmt(sig_mh_B, 4)} mt:{fmt(sig_mt_B, 4)} "
+                f"a3:{fmt(sig_a3_B, 4)} tot:{fmt(sig_B, 4)}",
                 ">0", g5_ok))
 
     # G7 标度 sanity
@@ -682,14 +760,23 @@ def main():
                     f"λ={fmt(lam_lo_bm)}（文献 {fmt(BM_LAM_LO)}）、y={fmt(y_lo_bm)}（文献 {fmt(BM_YT_LO)}）",
                     "PASS" if ct2_ok else "FAIL"))
 
-    # H2：跑动结构
+    # H2：跑动结构（含高标回升——机读发现，非先验预期）
+    # 陈述对象随读数修正：λ 并非全程单调递减，过零后触底回升（高标 y_t 衰减
+    # ⇒ 负驱动 −6y⁴ 减弱 ⇒ λ² 项主导 ⇒ β_λ 变正）。回升不改变亚稳判定
+    # （λ(M_Pl) 仍 <0），其收敛性由 G1（dt 减半）机读背书。
     ts_A, sts_A = assemble(M_H, M_T, None, None, 2, DT)["traj"]
     lam_traj = [s[0] for s in sts_A]
+    i_min = min(range(len(lam_traj)), key=lambda i: lam_traj[i])
     mono = all(lam_traj[i + 1] < lam_traj[i] for i in range(len(lam_traj) - 1))
     h2_ok = (lam_I_A_mp is not None) and (lam_traj[-1] < 0)
     entries.append(("H2", "整理",
-                    "二圈跑动结构：λ 自 M_t 起下降并过零（亚稳），λ(M_Pl)<0",
-                    f"单调:{mono}；λ(M_t)={fmt(lam_traj[0])}，λ(M_Pl)={fmt(lam_traj[-1], 6)}",
+                    "二圈跑动结构：λ 自 M_t 下降并过零（亚稳）⇒ 高标触底回升"
+                    "（y_t 衰减致 β_λ 变号）⇒ λ(M_Pl)<0；回升不改变亚稳判定"
+                    "（文献 §4.1：β_λ 于 10^17–10^18 GeV 消失，与本卷触底位置互为印证）",
+                    f"λ(M_t)={fmt(lam_traj[0])}；过零 Λ_I={fmt(lam_I_A_mp)} GeV；"
+                    f"触底 t={fmt(ts_A[i_min], 4)}（μ≈{fmt(exp(ts_A[i_min]), 5)} GeV）"
+                    f"λ={fmt(lam_traj[i_min], 6)}；回升至 λ(M_Pl)={fmt(lam_traj[-1], 6)}；"
+                    f"全程单调递减:{mono}（dt 收敛验证见 G1）",
                     "PASS" if h2_ok else "FAIL"))
 
     # H3：Λ_I 与敏感度（Case A/B + 圈阶对比 B1/B2）
@@ -748,31 +835,37 @@ def main():
     _log("[H4] m_h^crit(A) =", fmt(mh_crit_A, 6))
 
     # H5：m_h^triv（平庸性上界）
-    # 设计要点：λ0 超过临界值后 Landau 极点掉到 M_Pl 以下，固定步长 RK4 绕过极点
-    # 把 λ(M_Pl) 甩成巨大负值，f 从 +∞ 跌到 −∞ ⇒ 端点同号的二分必败。
-    # 稳健做法：1 GeV 步长扫描取「首个由负转正」区间，再在该区间内二分。
-    # 扫描区间 [185,210]：λ(M_Pl)=π 约在 m_h≈200（λ0≈0.33），绕极点约在 203 之后。
-    def mh_triv(m_t, loop=2, lo=mpf("185"), hi=mpf("210"), step=mpf("1")):
-        def f(mh):
-            return lam_at_mpl(mh, m_t, None, None, loop, DT) - LAM_NP
+    # 定义：λ 在 M_Pl 以下首次触及非微扰上界 π 的临界 m_h（LO 匹配二圈，
+    # 与 H4 Case A 同约定）。
+    # 实现：t_cross_np（上穿探测器，见 crossing_up_from_traj）由 None 转非
+    # None 的首个 m_h ⇒ 扫描 [148,208]（148 > m_h^crit(A)，其下 λ(M_Pl)<0
+    # 永不及 π）步长 5 GeV 取 bracket + 二分 22 步细化。
+    # 为什么不用 λ(M_Pl)−π 判据：m_h 超过临界后 Landau 极点掉到 M_Pl 以下，
+    # 固定步长 RK4 绕极点把 λ(M_Pl) 甩成巨大值（正负不定）⇒ f 不连续，
+    # 端点判据必败（旧版扫描窗 [185,210] 即因此全错位：窗内 λ(M_Pl)−π 恒
+    # ≈ +9，真实穿越点在 150–185 之间，旧版报告 INFO/None）。
+    def mh_triv(m_t, loop=2, lo=mpf("148"), hi=mpf("208"), step=mpf("5")):
+        def has_np(mh):
+            return assemble(mh, m_t, None, None, loop, DT)["t_cross_np"] is not None
         m = lo
-        f_prev = f(m)
-        _log("[H5] 扫描 m_h =", fmt(m), " λ(M_Pl)-π =", fmt(f_prev, 4))
+        prev = has_np(m)
+        _log("[H5] 扫描 m_h =", fmt(m), " π上穿存在:", prev)
         while m < hi:
             m_next = m + step
-            f_next = f(m_next)
-            _log("[H5] 扫描 m_h =", fmt(m_next), " λ(M_Pl)-π =", fmt(f_next, 4))
-            if f_prev <= 0 < f_next:
-                a, b, fa = m, m_next, f_prev
+            if m_next > hi:
+                m_next = hi
+            cur = has_np(m_next)
+            _log("[H5] 扫描 m_h =", fmt(m_next), " π上穿存在:", cur)
+            if (not prev) and cur:
+                a, b = m, m_next
                 for _ in range(22):
                     mid = (a + b) / 2
-                    fm = f(mid)
-                    if fa * fm <= 0:
+                    if has_np(mid):
                         b = mid
                     else:
-                        a, fa = mid, fm
+                        a = mid
                 return (a + b) / 2
-            m, f_prev = m_next, f_next
+            m, prev = m_next, cur
         return None
 
     _log("[H5] m_h^triv 扫描+二分 ...")
@@ -784,10 +877,11 @@ def main():
     mh_triv_analytic_pi = sqrt(2 * lam0_pi) * V
     mh_triv_1loop_analytic = sqrt(4 * MPI ** 2 * V ** 2 / (3 * L_an))  # Landau 极点在 M_Pl
     triv_A_s = (f"{fmt(mh_triv_A)} GeV" if mh_triv_A is not None
-                else "None（扫描窗内未捕获首个上穿点）")
+                else "None（[148,208] 扫描内 λ 未触 π ⇒ LO 匹配窗口内无平庸性上界）")
     entries.append(("H5", "整理",
-                    "平庸性/非微扰上界：m_h^triv（λ(M_Pl)=π 的临界 Higgs 质量，LO 匹配二圈，"
-                    "扫描+二分）；一圈解析双约定（y_t=g=0 纯四次型：λ(M_Pl)=π / Landau 极点在 M_Pl）",
+                    "平庸性/非微扰上界：m_h^triv（λ 在 M_Pl 以下首触 π 的临界 Higgs "
+                    "质量，LO 匹配二圈，上穿谓词扫描+二分）；一圈解析双约定"
+                    "（y_t=g=0 纯四次型：λ(M_Pl)=π / Landau 极点在 M_Pl）交叉",
                     f"二圈数值: {triv_A_s}；一圈解析(λ=π): {fmt(mh_triv_analytic_pi)} GeV；"
                     f"一圈解析(Landau@M_Pl): {fmt(mh_triv_1loop_analytic)} GeV",
                     "INFO"))
@@ -804,38 +898,80 @@ def main():
     # B1：双窗
     out_np = assemble(M_H, M_T, None, None, 2, DT)
     lam_P_A = None if out_np["t_cross_np"] is None else exp(out_np["t_cross_np"])
+    lam_P_B = None if out_B["t_cross_np"] is None else exp(out_B["t_cross_np"])
     b1_ok = lam_I_A_mp is not None and lam_I_A_mp < M_PL
     entries.append(("B1", "攻破",
                     "SM Higgs 扇区有效场论窗口：下有真空不稳定标度 Λ_I（亚稳），上界需视 m_h 而定；"
                     "作为终极理论不能外推到任意高能",
                     f"Λ_I(A)={fmt(lam_I_A_mp)} GeV、Λ_I(B)={fmt(lam_I_B)} GeV；"
-                    f"Λ_P(λ=π, A)={fmt(lam_P_A)} GeV（对当前 m_h 不存在 ⇒ 只有下窗）",
+                    f"Λ_P(λ=π)：A={fmt(lam_P_A)}、B={fmt(lam_P_B)} GeV"
+                    f"（当前 m_h 下均不存在 ⇒ 只有下窗；上窗临界质量 m_h^triv(A)="
+                    f"{fmt(mh_triv_A)} GeV，见 H5）",
                     "FAIL" if b1_ok else "PASS"))
 
-    # B2：输入敏感度
-    b2_ok = sig_tot > mpf("0.2")
+    # B2：输入敏感度（双操作点；头条 Case B 定 verdict）
+    # 阈值 0.2 dex ≅ 因子 1.6：输入涂抹若达此量级，则「Λ_I 处于 10^9–10^10」
+    # 的位次声明不再由输入精度担保，须与匹配系统差（B3）合并解读（声明式阈值）。
+    b2_ok = sig_B > mpf("0.2")
     entries.append(("B2", "攻破",
-                    "不稳定标度的输入依赖：仅输入不确定度即使 log10 Λ_I 涂抹 ±σ（一阶传播）",
-                    f"σ(log10 Λ_I)={fmt(sig_tot, 4)} dex（m_h:{fmt(sig_mh, 4)}, "
-                    f"m_t:{fmt(sig_mt, 4)}, α₃:{fmt(sig_a3, 4)}）",
+                    "不稳定标度的输入依赖：仅输入不确定度即使 log10 Λ_I 涂抹 ±σ"
+                    "（一阶传播，中心差导数；Case A/B 双操作点——脆弱性本身随匹配"
+                    "约定而变，与 B3 咬合）",
+                    f"σ(log10 Λ_I)：Case B={fmt(sig_B, 4)} dex（m_h:{fmt(sig_mh_B, 4)}, "
+                    f"m_t:{fmt(sig_mt_B, 4)}, α₃:{fmt(sig_a3_B, 4)}）；"
+                    f"Case A={fmt(sig_A, 4)} dex（m_h:{fmt(sig_mh_A, 4)}, m_t:{fmt(sig_mt_A, 4)}, "
+                    f"α₃:{fmt(sig_a3_A, 4)}）",
                     "FAIL" if b2_ok else "PASS"))
 
-    # B3：匹配/圈阶/方案依赖
-    d_lamI_dex_AB = (abs(log(lam_I_A_mp) - log(lam_I_B)) / log(10)
-                     if (lam_I_A_mp and lam_I_B) else mpf("0"))
-    d_lamI_dex_loop = (abs(log(lam_I_B1) - log(lam_I_B)) / log(10)
+    # B3：匹配/圈阶/方案依赖（三分分解：匹配约定差 / 输入锚点差 / 合计）
+    # 为什么补测 A_BM（LO 匹配 @ 文献锚点）：原「匹配差」直接相减 A_our 与
+    # B_BM，混入了本卷输入与文献锚点的差（本卷 m_t 低 0.77 GeV，单独贡献
+    # ~0.9 dex）⇒ 标注为「匹配差」属错标。补测后：
+    #   Δ匹配 = B_BM − A_BM（同锚点，只变匹配约定）——真正的匹配系统差；
+    #   Δ输入 = A_BM − A_our（同 LO 匹配，只变输入锚点）；
+    #   Δ合计 = B_BM − A_our（原读数；两项之和为近似，机读分项如实报告）。
+    # m_h^crit 同法分解（A_BM 临界质量：括号二分 [110,150]；该窗内 λ0 均
+    # 低于 m_h^triv≈177 ⇒ 无 Landau 绕极，λ(M_Pl) 连续可二分）。
+    _log("[B3] A_BM 操作点（LO 匹配 @ 文献锚点）...")
+    out_A_BM = assemble(BM_M_H, BM_M_T, None, None, 2, DT)
+    lam_I_A_BM = None if out_A_BM["t_cross0"] is None else exp(out_A_BM["t_cross0"])
+    mh_crit_A_BM = mh_crit(BM_M_T, lam_lo_bm, y_lo_bm, BM_M_H, 2,
+                           mpf("110"), mpf("150"))
+    _log("[B3] Λ_I(A_BM) =", fmt(lam_I_A_BM), " m_h^crit(A_BM) =", fmt(mh_crit_A_BM, 6))
+
+    def _lg(x):
+        return None if x is None else log(x) / log(10)
+
+    d_lam_match = (abs(_lg(lam_I_B) - _lg(lam_I_A_BM))
+                   if (lam_I_B and lam_I_A_BM) else mpf("0"))
+    d_lam_inputs = (abs(_lg(lam_I_A_BM) - _lg(lam_I_A_mp))
+                    if (lam_I_A_BM and lam_I_A_mp) else mpf("0"))
+    d_lamI_dex_AB = (abs(_lg(lam_I_B) - _lg(lam_I_A_mp))
+                     if (lam_I_B and lam_I_A_mp) else mpf("0"))
+    d_lamI_dex_loop = (abs(_lg(lam_I_B1) - _lg(lam_I_B))
                        if (lam_I_B1 and lam_I_B) else mpf("0"))
+    d_crit_match = (abs(mh_crit_A_BM - mh_crit_B)
+                    if (mh_crit_A_BM and mh_crit_B) else mpf("0"))
+    d_crit_inputs = (abs(mh_crit_A - mh_crit_A_BM)
+                     if (mh_crit_A and mh_crit_A_BM) else mpf("0"))
     d_crit = abs(mh_crit_A - mh_crit_B) if (mh_crit_A and mh_crit_B) else mpf("0")
-    b3_ok = d_lamI_dex_AB > mpf("0.05") or d_crit > mpf("0.5")
+    # 阈值：0.05 dex ≈ 12%（约定差可感知下限）；0.5 GeV（临界质量位移可感知下限）
+    b3_ok = (d_lam_match > mpf("0.05") or d_crit_match > mpf("0.5")
+             or d_lamI_dex_loop > mpf("0.05"))
     entries.append(("B3", "攻破",
-                    "匹配/圈阶/方案依赖：LO 朴素匹配 vs NNLO 匹配的 Λ_I/m_h^crit 系统差"
-                    "（λ(M_t) 0.12917 vs 0.12604 = −1.1%；y_t 0.991 vs 0.940）；圈阶差单独量化",
-                    f"匹配差 Δlog10 Λ_I={fmt(d_lamI_dex_AB, 4)} dex、Δm_h^crit={fmt(d_crit, 4)} GeV；"
-                    f"圈阶差(1vs2圈, 同匹配)={fmt(d_lamI_dex_loop, 4)} dex",
+                    "匹配/圈阶/方案依赖：LO 朴素匹配 vs NNLO 匹配的系统差（同锚点隔离）"
+                    "＋ 输入锚点差（同匹配隔离）＋ 合计；λ(M_t) 0.12917 vs 0.12604 "
+                    "= −1.1%、y_t 0.991 vs 0.940；圈阶差单独量化",
+                    f"匹配差（同锚点）Δlog10 Λ_I={fmt(d_lam_match, 4)} dex、"
+                    f"Δm_h^crit={fmt(d_crit_match, 4)} GeV；"
+                    f"输入锚点差（同匹配）Δlog10 Λ_I={fmt(d_lam_inputs, 4)} dex、"
+                    f"Δm_h^crit={fmt(d_crit_inputs, 4)} GeV；"
+                    f"合计 Δlog10 Λ_I={fmt(d_lamI_dex_AB, 4)} dex、Δm_h^crit={fmt(d_crit, 4)} GeV；"
+                    f"圈阶差(1vs2圈, 同匹配同锚点)={fmt(d_lamI_dex_loop, 4)} dex",
                     "BOUNDARY" if b3_ok else "INFO"))
 
     # B4：与统一场论议程咬合
-    lam_qcd = mpf("0.2262")  # 70 卷 Λ_QCD 二圈读数（跨卷引用，注明出处）
+    lam_qcd = mpf("0.22623372")  # 70 卷 Λ_QCD 二圈机读值（跨卷引用，注明出处）
     b4_ok = lam_qcd < lam_I_B < M_PL if lam_I_B else False
     entries.append(("B4", "攻破",
                     "与统一场论议程咬合：SM 两扇区断裂边界（QCD Λ_QCD≈0.226 GeV 非微扰 / "

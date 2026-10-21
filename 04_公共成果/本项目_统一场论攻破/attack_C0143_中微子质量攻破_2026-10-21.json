@@ -1,0 +1,96 @@
+{
+  "name": "C0143_neutrino_mass",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "Δm²₂₁=7.53e-5、Δm²₃₂=2.453e-3 eV²；KATRIN<0.8 eV；Σmν<0.12 eV；马约拉纳未定",
+      "verdict": "PASS",
+      "detail": "PDG/Planck 只引用；本册只做 sqrt 与比值换算"
+    },
+    {
+      "id": "E2",
+      "claim": "m_ν≈y²v²/M_R；反解 M_R≈1e15 GeV（GUT 标度）；Δm² 比值≈32.6；回代恒等闭合",
+      "verdict": "PASS",
+      "detail": "Schur complement 推导 + Decimal 48 位精算；不采信库内 SO(10) 自报"
+    },
+    {
+      "id": "E3",
+      "claim": "几何供给 0：seesaw 需 ν_R 粒子 + M_R 标度（≥2 新输入）；(ℏ,G,c) nullity=0 纯数不可生成",
+      "verdict": "PASS",
+      "detail": "撞 C1/C2；nullity 引用 C0142"
+    },
+    {
+      "id": "E4",
+      "claim": "Dirac 需 ν_R+y_ν（≥2 新输入，y_ν~2e-13）；严格无质量被振荡观测否决",
+      "verdict": "PASS",
+      "detail": "撞 C1/C3"
+    },
+    {
+      "id": "E5",
+      "claim": "P06 结构性负面：中微子质量需 ν_R 粒子 + M_R 标度外部输入，几何供给 0；马约拉纳未定",
+      "verdict": "PASS",
+      "detail": "撞 C1/C2"
+    }
+  ],
+  "E1_observation": {
+    "dm2_21_eV2": "0.0000753",
+    "dm2_32_eV2": "0.002453",
+    "katrin_mnu_upper_eV": "0.8",
+    "planck_sum_mnu_upper_eV": "0.12",
+    "nubbbdb_majorana_status": "undetermined"
+  },
+  "E2_seesaw": {
+    "v2_GeV2": "60624.2884",
+    "MR_demo_GeV": "1E+13",
+    "mnu_demo_eV": "6.06242884",
+    "mnu_atm_eV": "0.0495277699881591680774219664986052975012307865621",
+    "MR_inferred_GeV": "1224046396889941.29255185602344336965082854242132",
+    "mnu_check_eV": "0.0495277699881591680774219664986052975012307865621",
+    "ratio_dm2_32_21": "32.5763612217795484727755644090305444887118193891"
+  },
+  "E3_geometry_supply": {
+    "new_particles": "1",
+    "new_scales": "1",
+    "nullity_hbarGc": "0",
+    "geometry_supply": "zero"
+  },
+  "E4_alternatives": {
+    "dirac_new_inputs": "2",
+    "dirac_y_nu": "2.03070424823328730403704004548777516042563561043E-13",
+    "massless_vetoed_by_oscillation": "True",
+    "dm2_nonzero": "True"
+  },
+  "guards": [
+    {
+      "id": "G1",
+      "desc": "Δm²₃₂/Δm²₂₁ ≈ 32.6（比值精算，误差<1%）",
+      "pass": true
+    },
+    {
+      "id": "G2",
+      "desc": "KATRIN 上界 m_ν<0.8 eV 与大气标度 √Δm²₃₂≈0.05 eV 相容",
+      "pass": true
+    },
+    {
+      "id": "G3",
+      "desc": "几何常数 (ℏ,G,c) nullity = 0（纯数不可生成，引用 C0142）",
+      "pass": true
+    },
+    {
+      "id": "G4",
+      "desc": "seesaw/Dirac 新输入计数 ≥ 2（ν_R 粒子 + M_R 标度或 Yukawa）",
+      "pass": true
+    },
+    {
+      "id": "G5",
+      "desc": "v²/M_R 反解回代恒等闭合（Decimal 48 位，m_ν_check ≈ √Δm²₃₂）",
+      "pass": true
+    },
+    {
+      "id": "G6",
+      "desc": "振荡观测 Δm²≠0（否决严格无质量方案）",
+      "pass": true
+    }
+  ],
+  "exit_code": 0
+}
