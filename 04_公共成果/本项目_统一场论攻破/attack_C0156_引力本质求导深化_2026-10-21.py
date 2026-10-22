@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-attack_C0156_引力本质第一性原理深化_2026-10-21.py
+attack_C0156_引力本质求导深化_2026-10-21.py
 把引力本质既有裁定（C0128 引用式结论：E1–E7 = PASS6/STRUCT1，自旋-2 几何耦合）
 升级为「从最小公设出发、每步可核验」的完整推导链 + 数值精算。
 
@@ -365,8 +365,8 @@ def main():
          sum(1 for g in guards if g[2]), len(guards)))
     w("退出码 0（第一性原理求导深化完成，读数送判定册与推导册）。")
 
-    report_path = os.path.join(BASE, "attack_C0156_引力本质第一性原理深化_2026-10-21_report.txt")
-    json_path = os.path.join(BASE, "attack_C0156_引力本质第一性原理深化_2026-10-21.json")
+    report_path = os.path.join(BASE, "attack_C0156_引力本质求导深化_2026-10-21_report.txt")
+    json_path = os.path.join(BASE, "attack_C0156_引力本质求导深化_2026-10-21.json")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(rep) + "\n")
     with open(json_path, "w", encoding="utf-8") as f:

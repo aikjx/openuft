@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-attack_C0158_量子计算本质第一性原理深化_2026-10-21.py
+attack_C0158_量子计算本质求导深化_2026-10-21.py
 
 第一性原理求导深化：量子计算本质（判定 C0158）。
 
@@ -360,8 +360,8 @@ def main():
       % (len(entries), len(entries), sum(1 for g in guards if g[2]), len(guards)))
     w("退出码 0（第一性原理求导深化完成，读数送判定册与推导册）。")
 
-    report_path = os.path.join(BASE, "attack_C0158_量子计算本质第一性原理深化_2026-10-21_report.txt")
-    json_path = os.path.join(BASE, "attack_C0158_量子计算本质第一性原理深化_2026-10-21.json")
+    report_path = os.path.join(BASE, "attack_C0158_量子计算本质求导深化_2026-10-21_report.txt")
+    json_path = os.path.join(BASE, "attack_C0158_量子计算本质求导深化_2026-10-21.json")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(rep) + "\n")
 

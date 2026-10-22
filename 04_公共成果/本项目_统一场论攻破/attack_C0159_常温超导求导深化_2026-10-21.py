@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-attack_C0159_常温超导第一性原理深化_2026-10-21.py
+attack_C0159_常温超导求导深化_2026-10-21.py
 独立求导：把 C0153「引用式结论」升级为从 BCS 约化哈密顿量出发、每步可核验的
 完整求导链 + 数值精算（Decimal 48 位 + Fraction）。
 
@@ -394,8 +394,8 @@ def main():
       % (len(entries), len(entries), sum(1 for gg in guards if gg[2]), len(guards)))
     w("退出码 0（审计完成，读数送判定册与推导册）。")
 
-    report_path = os.path.join(BASE, "attack_C0159_常温超导第一性原理深化_2026-10-21_report.txt")
-    json_path = os.path.join(BASE, "attack_C0159_常温超导第一性原理深化_2026-10-21.json")
+    report_path = os.path.join(BASE, "attack_C0159_常温超导求导深化_2026-10-21_report.txt")
+    json_path = os.path.join(BASE, "attack_C0159_常温超导求导深化_2026-10-21.json")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(rep) + "\n")
     with open(json_path, "w", encoding="utf-8") as f:

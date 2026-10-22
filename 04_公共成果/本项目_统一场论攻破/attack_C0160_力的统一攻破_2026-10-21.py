@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-attack_C0160_力的统一第一性原理_2026-10-21.py
+attack_C0160_力的统一攻破_2026-10-21.py
 独立复算：四种基本力（引力/电磁/弱/强）的统一（P08+P13+P01 汇总线 · Top100 T017/T019/T034/T035）
 
 定位：判定号 C0160（已现扫 attack_C016* 空号）。核心问题三问：
@@ -349,8 +349,8 @@ def main():
       % (len(entries), len(entries), sum(1 for g in guards if g[2]), len(guards)))
     w("退出码 0（审计完成，读数送判定册与总账）。")
 
-    report_path = os.path.join(BASE, "attack_C0160_力的统一第一性原理_2026-10-21_report.txt")
-    json_path = os.path.join(BASE, "attack_C0160_力的统一第一性原理_2026-10-21.json")
+    report_path = os.path.join(BASE, "attack_C0160_力的统一攻破_2026-10-21_report.txt")
+    json_path = os.path.join(BASE, "attack_C0160_力的统一攻破_2026-10-21.json")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(rep) + "\n")
     with open(json_path, "w", encoding="utf-8") as f:

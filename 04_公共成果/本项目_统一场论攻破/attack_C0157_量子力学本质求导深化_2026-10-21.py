@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-attack_C0157_量子力学本质第一性原理深化_2026-10-21.py
+attack_C0157_量子力学本质求导深化_2026-10-21.py
 第一性原理求导深化：「量子力学本质」· C0157（C0154 引用式结论的推导链升级）
 
 【核心红线，先于一切读数】
@@ -471,8 +471,8 @@ def main():
       % (len(entries), len(entries), sum(1 for g in guards if g[2]), len(guards)))
     w("退出码 0（第一性原理求导链闭合，读数送判定册与总账）。")
 
-    report_path = os.path.join(BASE, "attack_C0157_量子力学本质第一性原理深化_2026-10-21_report.txt")
-    json_path = os.path.join(BASE, "attack_C0157_量子力学本质第一性原理深化_2026-10-21.json")
+    report_path = os.path.join(BASE, "attack_C0157_量子力学本质求导深化_2026-10-21_report.txt")
+    json_path = os.path.join(BASE, "attack_C0157_量子力学本质求导深化_2026-10-21.json")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write("\n".join(rep) + "\n")
     with open(json_path, "w", encoding="utf-8") as f:
