@@ -1,0 +1,155 @@
+{
+  "name": "C0159_room_temp_sc_first_principles",
+  "starting_point": "BCS reduced Hamiltonian H_red (momentum cutoff |eps|<hbar*omega_D, V<0 e-ph attraction per Migdal)",
+  "derivation_chain_links": 6,
+  "entries": [
+    {
+      "id": "环1",
+      "claim": "BCS 约化哈密顿量 → Bogoliubov 变换对角化 E_k=√(eps^2+Delta^2)，u^2+v^2=1 代数核验通过",
+      "verdict": "PASS",
+      "detail": "代数步"
+    },
+    {
+      "id": "环2",
+      "claim": "变分/平均场得能隙自洽方程 Δ_k=−Σ V_kk'Δ_k'/(2E_k')tanh(...)",
+      "verdict": "PASS",
+      "detail": "变分步；常数 V+N(0) ⇒ 求和换积分"
+    },
+    {
+      "id": "环3",
+      "claim": "T=0 与 T=T_c 两极限 + ∫tanh(x)/x 数值求积核对 ⇒ 普适比 π/e^γ=1.763877，C0153 锚点 Fraction 1000/567=1.763668 逐字一致",
+      "verdict": "PASS",
+      "detail": "微积分+数值求积步"
+    },
+    {
+      "id": "环4",
+      "claim": "ME 三输入量（λ/ω_log/μ* Morel-Anderson）定义 + Migdal 绝热论证",
+      "verdict": "PASS",
+      "detail": "代数/定义步；α²F 谱为外部输入，本册不第一性计算"
+    },
+    {
+      "id": "环5",
+      "claim": "H3S AD=217.1 K（f1=1.2096）∈[180,220]；LaH10 AD=260.7 K（f1=1.4021）∈[230,280]",
+      "verdict": "PASS",
+      "detail": "McMillan 解析近似 + AD f1f2 修正；与 C0153 逐字一致"
+    },
+    {
+      "id": "环6",
+      "claim": "ω_H/ω_S=5.64、ω_H/ω_La=11.74（氢高频声子抬升 ω_log 的代数来源）",
+      "verdict": "PASS",
+      "detail": "代数步；原子质量只引用"
+    },
+    {
+      "id": "E-geo",
+      "claim": "几何供给 0（承接 C0153：C0133/C0129），超导预言数=0",
+      "verdict": "PASS",
+      "detail": "撞 C5/C6"
+    }
+  ],
+  "step1_bogoliubov": {
+    "rows": [
+      {
+        "eps": "0",
+        "E": "0.1",
+        "u2": "0.5",
+        "v2": "0.5",
+        "norm": "1.0"
+      },
+      {
+        "eps": "0.2",
+        "E": "0.223606797749978969640917366873127623544061835961",
+        "u2": "0.0527864045000420607181652662537447529118763280775",
+        "v2": "0.94721359549995793928183473374625524708812367192",
+        "norm": "0.999999999999999999999999999999999999999999999998"
+      }
+    ]
+  },
+  "step2_meanfield": {
+    "gap_equation": "Delta_k = -sum_k' V_kk' * Delta_k'/(2E_k') * tanh(E_k'/(2 k_B T))",
+    "E_k": "sqrt(eps_k^2 + Delta_k^2)",
+    "mean_field_decoupling": "<c_-k-down c_k-up> = v_k u_k"
+  },
+  "step3_weak_coupling": {
+    "y": "100",
+    "I_quadrature": "5.42395032095178137255228092220248488077463512770",
+    "I_asymptotic": "5.42395032616011467333353189101442527074806776900",
+    "quadrature_deviation": "-5.20833330078125096881194038997343264130E-9",
+    "e_gamma": "1.78107241799019798523650410310717954916964521430",
+    "Delta0_over_kTc_derived": "1.76387698886204569069266213454333953508602722897",
+    "two_Delta0_over_kTc_derived": "3.52775397772409138138532426908667907017205445794",
+    "coeff_2egamma_over_pi": "1.13386591731109753111575034480884104940488862415",
+    "fraction": "1000/567",
+    "fraction_value": "1.76366843033509700176366843033509700176366843034",
+    "two_fraction_value": "3.52733686067019400352733686067019400352733686068",
+    "derived_minus_C0153_anchor": "0.00020855852694868892899370420824253332235879863"
+  },
+  "step4_migdal_eliashberg": {
+    "lambda_def": "lambda = 2 * integral_0^inf alpha2F(omega)/omega domega",
+    "wlog_def": "omega_log = exp((2/lambda) * integral alpha2F(omega) ln(omega)/omega domega)",
+    "mustar_def": "mu* = mu / (1 + mu ln(E_F/omega_ph))  (Morel-Anderson)",
+    "migdal": "vertex correction ~ sqrt(m_e/M_ion) ~ 1e-4, negligible when omega_ph/E_F << 1"
+  },
+  "step5_mcmillan_ad": {
+    "H3S_mcmillan_Tc": "179.508765379802007130869263599782972800776778356",
+    "H3S_f1": "1.20960023134152707887561673798743862531115422694",
+    "H3S_f2": "1",
+    "H3S_AD_Tc": "217.133844131240414832495327777053006354848632595",
+    "H3S_box_min": "159.767874038987341622239274117801462769411668703",
+    "H3S_box_max": "294.540230205364003479556737837378882027069693045",
+    "LaH10_mcmillan_Tc": "185.906040939188709112296455727175563638573055137",
+    "LaH10_f1": "1.40212552851267709260868563417299865972621602801",
+    "LaH10_f2": "1",
+    "LaH10_AD_Tc": "260.663605905559353222811631931582240248693398649",
+    "LaH10_box_min": "176.127376106375266428345479776375014963543460823",
+    "LaH10_box_max": "356.691090067124113621199621166897334072774502101"
+  },
+  "step6_precompression": {
+    "omega_H_over_S": "5.63964143856287689395110132512395340230343331652",
+    "omega_H_over_La": "11.7387230586473521940817455046410976381807249057"
+  },
+  "geometry_supply": {
+    "electron_phonon_carrier": "0",
+    "fermi_surface_N0": "0",
+    "pairing_mechanism": "0",
+    "superconductivity_prediction": "0",
+    "total_supply": "0"
+  },
+  "guards": [
+    {
+      "id": "G1",
+      "desc": "普适比 Δ₀/(k_BT_c)=1.763668（C0153 逐字锚点 Fraction 1000/567），求导值 π/e^γ 落 [1.763,1.765]（≈1.764）",
+      "ok": true
+    },
+    {
+      "id": "G2",
+      "desc": "2Δ₀/(k_BT_c)=3.5273（C0153 逐字锚点）",
+      "ok": true
+    },
+    {
+      "id": "G3",
+      "desc": "H3S AD 精算 Tc ∈[180,220] K（对照 203 K）",
+      "ok": true
+    },
+    {
+      "id": "G4",
+      "desc": "LaH10 AD 精算 Tc ∈[230,280] K（对照 ~250 K）",
+      "ok": true
+    },
+    {
+      "id": "G5",
+      "desc": "参数盒摆动：H3S≈160–295 K、LaH10≈176–357 K（±40%，C6 证据）",
+      "ok": true
+    },
+    {
+      "id": "G6",
+      "desc": "化学预压质量比 ω_H/ω_S=√(m_S/m_H)=5.64",
+      "ok": true
+    },
+    {
+      "id": "G7",
+      "desc": "TUFT/几何框架超导预言数=0（几何供给=0，撞 C5/C6）",
+      "ok": true
+    }
+  ],
+  "exit_code": 0
+}

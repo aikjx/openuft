@@ -1,0 +1,104 @@
+{
+  "name": "C0156_gravity_first_principles",
+  "postulates": [
+    "P1 metric manifold + deltaS=0",
+    "P2 Noether symmetry->conserved current",
+    "P3 (hbar,G,c) unique fundamental scales"
+  ],
+  "derivation_chain_steps": 5,
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "EH 作用量变分 δg_μν → G_μν=8πG T_μν/c^4；量纲闭合 L^-2，G 由 c^4/G 涌现",
+      "verdict": "PASS",
+      "detail": "变分法+量纲分析；复算 C0128 E1 量纲闭合"
+    },
+    {
+      "id": "E2",
+      "claim": "Noether 时空平移守恒 ∂_μ T^{μν}=0 ⇒ 引力唯一耦合能动张量（唯一守恒二阶张量源）",
+      "verdict": "PASS",
+      "detail": "Noether；标量/矢量被结构排除"
+    },
+    {
+      "id": "E3",
+      "claim": "线性化得 Fierz-Pauli 无质量自旋-2；标量(w=1/3 可见度=0)/矢量(规范)被排除",
+      "verdict": "PASS",
+      "detail": "表示论+attack23 标量盲区；自旋-2 唯一性"
+    },
+    {
+      "id": "E4",
+      "claim": "(ℏ,G,c) det=-2 满秩 nullity0；加 m nullity=1 ⇒ 唯一耦合 (m/m_P)^2，计数=1",
+      "verdict": "PASS",
+      "detail": "量纲零度；复现 C0128 E3"
+    },
+    {
+      "id": "E5",
+      "claim": "m_P=2.176434e-8 kg；偏折比 α_GR/α_N=2.0000（h_tt+h_xx=2Φ vs 牛顿 1Φ）",
+      "verdict": "PASS",
+      "detail": "测地线推导；复现 C0128 E4 偏折比=2"
+    },
+    {
+      "id": "E6",
+      "claim": "求导链 5 步闭合于成熟 GR；对 TUFT/几何框架结构性负面保持，裁定不变",
+      "verdict": "STRUCT",
+      "detail": "E5 保持结构性负面；撞 C2(绝对标度)/C3(零自由参数)"
+    }
+  ],
+  "d1_eh_variation": {
+    "dim_integrand_L2": "(0, 2, 0)",
+    "dim_c4_over_G": "(1, 1, -2)",
+    "dim_T": "(1, -1, -2)",
+    "dim_rhs_Gmunu": "(0, -2, 0)",
+    "efe_closed": "True"
+  },
+  "d2_noether": {
+    "conserved_current": "T^{μν}",
+    "conservation": "∂_μ T^{μν} = 0",
+    "unique_source": true,
+    "candidates": {
+      "scalar_source": "trace-only T (标量只耦合 T^μ_μ) —— 见 (3) 排除",
+      "vector_source": "gauge vector —— 规范自由度破坏等效原理",
+      "rank2_symmetric": "T^{μν} —— Noether 时空平移守恒流，唯一合格源"
+    }
+  },
+  "d3_linearized_spin2": {
+    "linearization": "g_μν = η_μν + h_μν, |h_μν| << 1",
+    "action": "Fierz-Pauli (massless spin-2)",
+    "helicity_massless_spin2": "2",
+    "scalar_excluded": "True",
+    "vector_excluded": "True",
+    "scalar_visibility": {
+      "0": "1",
+      "1/3": "0",
+      "1/2": "1/7",
+      "1": "1",
+      "-1/3": "3"
+    },
+    "zero_visibility_w": "['1/3']",
+    "radiation_invisible_to_scalar": "True"
+  },
+  "d4_dimension_uniqueness": {
+    "det3": "-2",
+    "rank3": "3",
+    "nullity3": "0",
+    "rank4": "3",
+    "nullity4": "1",
+    "generator_hbarGc_m": "(-1, 1, -1, 2)",
+    "backsub_MLT": {
+      "M": "0",
+      "L": "0",
+      "T": "0"
+    },
+    "combo_count": "1",
+    "unique_combo": "G m^2 / (ℏ c) = (m/m_P)^2"
+  },
+  "d5_planck_deflection": {
+    "m_P_kg": "2.17643434205112666864587676045836413979661010263E-8",
+    "ratio": "2",
+    "me_over_mP_sq": "1.75180939509489451456006592168406864682527409654E-45",
+    "Gme2_over_hc": "1.75180939509489451456006592168406864682527409654E-45"
+  },
+  "guards_passed": 8,
+  "guards_total": 8,
+  "exit_code": 0
+}

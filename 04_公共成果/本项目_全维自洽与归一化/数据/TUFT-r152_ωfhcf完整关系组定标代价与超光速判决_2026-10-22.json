@@ -1,0 +1,843 @@
+{
+  "id": "TUFT-r152",
+  "title": "{ω,f,h,c} 完整关系组的定标代价：三式联立 ⇒ v = √2·c 超光速判决",
+  "generated": "2026-10-22 03:07:53",
+  "verdict": "SCALE-FIXING-AND-CAUSALITY-MUTUALLY-EXCLUSIVE-SQRT2-C",
+  "counts": {
+    "FAIL": 10,
+    "PASS": 2,
+    "INFO": 2,
+    "BOUNDARY": 2
+  },
+  "controls_ok": true,
+  "items": [
+    {
+      "id": "A1",
+      "title": "量纲审计：h·f=c 在 h=【速度】口径下不成立，在 h=【螺距】口径下成立",
+      "status": "FAIL",
+      "metrics": {
+        "speed_ok": false,
+        "pitch_ok": true,
+        "wr_ok": true,
+        "rows": [
+          {
+            "eq": "ω = 2πf",
+            "lhs": "(M^0, L^0, T^-1)",
+            "rhs": "(M^0, L^0, T^-1)",
+            "ok": true,
+            "note": "恒等，两者量纲同为 T⁻¹"
+          },
+          {
+            "eq": "ωr = c",
+            "lhs": "(M^0, L^1, T^-1)",
+            "rhs": "(M^0, L^1, T^-1)",
+            "ok": true,
+            "note": "T⁻¹·L = LT⁻¹ ✓"
+          },
+          {
+            "eq": "h·f = c（h=螺距 L）",
+            "lhs": "(M^0, L^1, T^-1)",
+            "rhs": "(M^0, L^1, T^-1)",
+            "ok": true,
+            "note": "L·T⁻¹ = LT⁻¹ ✓ 量纲成立"
+          },
+          {
+            "eq": "h·f = c（h=速度 LT⁻¹）",
+            "lhs": "(M^0, L^1, T^-2)",
+            "rhs": "(M^0, L^1, T^-1)",
+            "ok": false,
+            "note": "LT⁻¹·T⁻¹ = LT⁻² ≠ LT⁻１ ⇒ 量纲【不成立】"
+          },
+          {
+            "eq": "v² = (rω)² + u²",
+            "lhs": "(M^0, L^2, T^-2)",
+            "rhs": "(M^0, L^2, T^-2)",
+            "ok": true,
+            "note": "(LT⁻¹)² 两边一致 ✓"
+          }
+        ]
+      },
+      "note": "h 作速度时 h·f 量纲为 LT⁻²，与 c(LT⁻¹) 不符；作螺距时为 LT⁻¹ ✓"
+    },
+    {
+      "id": "A2",
+      "title": "来料口径冲突：v1 轨迹式中的 h 是速度，关系组要求 h 是螺距",
+      "status": "FAIL",
+      "metrics": {
+        "h_speed_times_f": 100000000000.0,
+        "h_pitch_times_f": 100000.0,
+        "equals_c_pitch": true,
+        "dimension_of_speed_reading": "(M^0, L^1, T^-2)",
+        "conflict": true
+      },
+      "note": "v1 的 r⃗=(..., h t) 中 h 与 t 相乘 ⇒ h 必为速度 LT⁻¹；而 h·f=c 要求 h 为螺距 L ⇒ 同一符号两种互斥量纲"
+    },
+    {
+      "id": "A3",
+      "title": "量纲审计分辨力自检：ωr=c 与 v²=(rω)²+u² 必须判通过",
+      "status": "PASS",
+      "metrics": {
+        "wr_ok": true
+      },
+      "note": "证明量纲门不是恒失败（否则 A1 的失败无意义）"
+    },
+    {
+      "id": "B1",
+      "title": "★核心：{ωr=c} ∧ {h·f=c} ⇒ v = √2·c",
+      "status": "FAIL",
+      "metrics": {
+        "v_over_c": 1.414213562373095,
+        "v": 423970560.00076646,
+        "excess_frac": 0.4142135623730949,
+        "excess_pct": 41.421356237309496,
+        "is_superluminal": true,
+        "matches_sqrt2": true
+      },
+      "note": "u = h·f = c 且 rω = c ⇒ v = √(c²+c²) = √2·c = 4.239706e+08 m/s，超光速 41.4214%"
+    },
+    {
+      "id": "B2",
+      "title": "三式再叠加 v=c：要求 c² = 2c² ⇒ 不可能",
+      "status": "FAIL",
+      "metrics": {
+        "need_v2": 8.987551787368176e+16,
+        "have_v2": 1.7975103574736352e+17,
+        "impossible": true,
+        "deficit": 8.987551787368176e+16
+      },
+      "note": "需要 v²=8.987552e+16，实际 1.797510e+17，缺口 8.987552e+16"
+    },
+    {
+      "id": "B3",
+      "title": "放宽为 h·f=u（u 自由）：回到 r151 结论（v=c 仅当 u=0）",
+      "status": "INFO",
+      "metrics": {
+        "rows": [
+          [
+            0.0,
+            1.0,
+            true
+          ],
+          [
+            0.0001,
+            1.000000005,
+            false
+          ],
+          [
+            0.001,
+            1.000000499999875,
+            false
+          ],
+          [
+            0.1,
+            1.004987562112089,
+            false
+          ],
+          [
+            0.5,
+            1.118033988749895,
+            false
+          ],
+          [
+            1.0,
+            1.414213562373095,
+            false
+          ]
+        ],
+        "only_u0_gives_c": true
+      },
+      "note": "跨卷一致性检查：与 r151 的 A2 结论一致"
+    },
+    {
+      "id": "B4",
+      "title": "完整组把『统一参数』锁死为 τ/κ = 1（螺距角 45°）",
+      "status": "FAIL",
+      "metrics": {
+        "tan_alpha": 1.0,
+        "alpha_deg": 45.0,
+        "tau_over_kappa": 1.0,
+        "kappa_equals_tau": true,
+        "cost": "v = √2·c（超光速 41.42%）"
+      },
+      "note": "v1 称 τ/κ=tanα 是纯几何『统一参数』；完整组给出唯一值 1，但该值只在 v=√2·c 的超光速构型下取得"
+    },
+    {
+      "id": "C1",
+      "title": "电子参数点精算",
+      "status": "FAIL",
+      "metrics": {
+        "m": 9.1093837015e-31,
+        "omega": 1.552688142210022e+21,
+        "f": 2.4711799291289675e+20,
+        "r": 1.9307963386214167e-13,
+        "h_pitch": 1.2131551185982227e-12,
+        "lambda": 1.2131551185982227e-12,
+        "u": 299792458.0,
+        "v": 423970560.00076646,
+        "v_over_c": 1.414213562373095,
+        "h_over_2pi_r": 1.0,
+        "h_over_lambda": 1.0
+      },
+      "note": "f=2.471180e+20 Hz、r=1.930796e-13 m、h=1.213155e-12 m、v=4.239706e+08 m/s = 1.4142135624 c；h/(2πr)=1.000000000000、h/λ=1.000000000000"
+    },
+    {
+      "id": "C2",
+      "title": "尺度扫描（5 个质量，跨 ~60 量级）",
+      "status": "INFO",
+      "metrics": {
+        "rows": [
+          {
+            "name": "电子 e⁻",
+            "m": 9.1093837015e-31,
+            "f": 2.4711799291289675e+20,
+            "r": 1.9307963386214167e-13,
+            "h": 1.2131551185982227e-12,
+            "v_over_c": 1.4142135623730951
+          },
+          {
+            "name": "μ 子 μ⁻",
+            "m": 1.883531627e-28,
+            "f": 5.109616308900882e+22,
+            "r": 9.337971524251878e-16,
+            "h": 5.867220548004076e-15,
+            "v_over_c": 1.4142135623730951
+          },
+          {
+            "name": "质子 p⁺",
+            "m": 1.67262192369e-27,
+            "f": 4.537463633421426e+23,
+            "r": 1.0515445510334946e-16,
+            "h": 6.607049272898408e-16,
+            "v_over_c": 1.4142135623730951
+          },
+          {
+            "name": "地球",
+            "m": 5.9722e+24,
+            "f": 1.6201294463327772e+75,
+            "r": 2.9450394658507435e-68,
+            "h": 1.8504228700897405e-67,
+            "v_over_c": 1.4142135623730951
+          },
+          {
+            "name": "太阳",
+            "m": 1.98892e+30,
+            "f": 5.395512304343771e+80,
+            "r": 8.843173530334961e-74,
+            "h": 5.5563297994640055e-73,
+            "v_over_c": 1.4142135623730951
+          }
+        ]
+      },
+      "note": "所有质量点的 v/c 恒为 √2（与质量无关）—— 这是标度不变的量纲后果"
+    },
+    {
+      "id": "D1",
+      "title": "参数计数门：n_自由 ≤ n_观测 − 1",
+      "status": "FAIL",
+      "metrics": {
+        "n_free": 1,
+        "n_obs": 0,
+        "gate": false,
+        "verdict": "FAIL（自由度耗尽）"
+      },
+      "note": "1 ≤ 0−1 = -1 → False"
+    },
+    {
+      "id": "D2",
+      "title": "控制组：SU(5) 应通过同门（证明门有分辨力）",
+      "status": "PASS",
+      "metrics": {
+        "n_free": 2,
+        "n_obs": 3,
+        "gate": true,
+        "tree_sin2thetaW": 0.375,
+        "measured": 0.23121,
+        "deviation": 0.621902166861295
+      },
+      "note": "SU(5) 2 ≤ 3−1 → True（口径沿用 r149/r151）"
+    },
+    {
+      "id": "D3",
+      "title": "因果门：v ≤ c 必须成立",
+      "status": "FAIL",
+      "metrics": {
+        "v_over_c": 1.414213562373095,
+        "causal": false,
+        "excess_pct": 41.421356237309496
+      },
+      "note": "v/c = 1.4142135624，超出 41.4214%"
+    },
+    {
+      "id": "E1",
+      "title": "修复定价：{KEEP,DEL,FLIP}³ 全枚举 27 种",
+      "status": "FAIL",
+      "metrics": {
+        "n_total": 27,
+        "n_survivors": 0,
+        "survivors": [],
+        "enumeration": [
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "KEEP",
+            "v=c": "KEEP",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "无代价"
+            ]
+          },
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "KEEP",
+            "v=c": "DEL",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "KEEP",
+            "v=c": "FLIP",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "v=−c 对速率无意义"
+            ]
+          },
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "DEL",
+            "v=c": "KEEP",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "螺距 h 不再由 f 定标"
+            ]
+          },
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "DEL",
+            "v=c": "DEL",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "螺距 h 不再由 f 定标",
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "DEL",
+            "v=c": "FLIP",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "螺距 h 不再由 f 定标",
+              "v=−c 对速率无意义"
+            ]
+          },
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "FLIP",
+            "v=c": "KEEP",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "h·f=−c（轴向反向，速率不变）"
+            ]
+          },
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "FLIP",
+            "v=c": "DEL",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "h·f=−c（轴向反向，速率不变）",
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "KEEP",
+            "h·f=c": "FLIP",
+            "v=c": "FLIP",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "h·f=−c（轴向反向，速率不变）",
+              "v=−c 对速率无意义"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "KEEP",
+            "v=c": "KEEP",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "KEEP",
+            "v=c": "DEL",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）",
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "KEEP",
+            "v=c": "FLIP",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）",
+              "v=−c 对速率无意义"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "DEL",
+            "v=c": "KEEP",
+            "v_over_c": 0.1414213562373095,
+            "superluminal": false,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）",
+              "螺距 h 不再由 f 定标"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "DEL",
+            "v=c": "DEL",
+            "v_over_c": 0.1414213562373095,
+            "superluminal": false,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）",
+              "螺距 h 不再由 f 定标",
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "DEL",
+            "v=c": "FLIP",
+            "v_over_c": 0.1414213562373095,
+            "superluminal": false,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）",
+              "螺距 h 不再由 f 定标",
+              "v=−c 对速率无意义"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "FLIP",
+            "v=c": "KEEP",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）",
+              "h·f=−c（轴向反向，速率不变）"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "FLIP",
+            "v=c": "DEL",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）",
+              "h·f=−c（轴向反向，速率不变）",
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "DEL",
+            "h·f=c": "FLIP",
+            "v=c": "FLIP",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "半径 r 不再由 f 定标（尺度外输）",
+              "h·f=−c（轴向反向，速率不变）",
+              "v=−c 对速率无意义"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "KEEP",
+            "v=c": "KEEP",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "KEEP",
+            "v=c": "DEL",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同",
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "KEEP",
+            "v=c": "FLIP",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同",
+              "v=−c 对速率无意义"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "DEL",
+            "v=c": "KEEP",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同",
+              "螺距 h 不再由 f 定标"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "DEL",
+            "v=c": "DEL",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同",
+              "螺距 h 不再由 f 定标",
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "DEL",
+            "v=c": "FLIP",
+            "v_over_c": 1.004987562112089,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": false,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同",
+              "螺距 h 不再由 f 定标",
+              "v=−c 对速率无意义"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "FLIP",
+            "v=c": "KEEP",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同",
+              "h·f=−c（轴向反向，速率不变）"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "FLIP",
+            "v=c": "DEL",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同",
+              "h·f=−c（轴向反向，速率不变）",
+              "放弃『总速=光速』公设 ⇒ 版本 A 超光速"
+            ]
+          },
+          {
+            "ωr=c": "FLIP",
+            "h·f=c": "FLIP",
+            "v=c": "FLIP",
+            "v_over_c": 1.414213562373095,
+            "superluminal": true,
+            "tau_nonzero": true,
+            "scale_fixed": true,
+            "valid": false,
+            "cost": [
+              "ωr=−c，几何后果与 KEEP 同",
+              "h·f=−c（轴向反向，速率不变）",
+              "v=−c 对速率无意义"
+            ]
+          }
+        ]
+      },
+      "note": "存活解 0 个"
+    },
+    {
+      "id": "E2",
+      "title": "最小完备修复集",
+      "status": "FAIL",
+      "metrics": {
+        "minimal_set": [],
+        "n": 0,
+        "conclusion": "无存活解：『尺度确定』要求 ωr=c 与 h·f=c 同时在场，而这直接推出 v=√2·c 超光速 ⇒ **定标与因果不可兼得**"
+      },
+      "note": "**定标与因果不可兼得**"
+    },
+    {
+      "id": "G1",
+      "title": "BOUNDARY：本卷在欧氏 3-空间轨迹层判决，未处理 4D 零世界线",
+      "status": "BOUNDARY",
+      "metrics": {},
+      "note": "若采用 4D 读法则 ds²≡0 ⇒ Frenet 无定义（65 号卷 B5、r149 A2）；本卷的 3D 读法已是对靶最有利的读法"
+    },
+    {
+      "id": "G2",
+      "title": "BOUNDARY：h 的【螺距】读法由本卷代为补明，来料未显式区分",
+      "status": "BOUNDARY",
+      "metrics": {},
+      "note": "若来料明确声明 h 为螺距（而非速度），A2 的口径冲突降级为符号标注问题；但 B1 的超光速结论不受影响（它只依赖 u = h·f = c）"
+    }
+  ],
+  "dim_audit": [
+    {
+      "eq": "ω = 2πf",
+      "lhs": "(M^0, L^0, T^-1)",
+      "rhs": "(M^0, L^0, T^-1)",
+      "ok": true,
+      "note": "恒等，两者量纲同为 T⁻¹"
+    },
+    {
+      "eq": "ωr = c",
+      "lhs": "(M^0, L^1, T^-1)",
+      "rhs": "(M^0, L^1, T^-1)",
+      "ok": true,
+      "note": "T⁻¹·L = LT⁻¹ ✓"
+    },
+    {
+      "eq": "h·f = c（h=螺距 L）",
+      "lhs": "(M^0, L^1, T^-1)",
+      "rhs": "(M^0, L^1, T^-1)",
+      "ok": true,
+      "note": "L·T⁻¹ = LT⁻¹ ✓ 量纲成立"
+    },
+    {
+      "eq": "h·f = c（h=速度 LT⁻¹）",
+      "lhs": "(M^0, L^1, T^-2)",
+      "rhs": "(M^0, L^1, T^-1)",
+      "ok": false,
+      "note": "LT⁻¹·T⁻¹ = LT⁻² ≠ LT⁻１ ⇒ 量纲【不成立】"
+    },
+    {
+      "eq": "v² = (rω)² + u²",
+      "lhs": "(M^0, L^2, T^-2)",
+      "rhs": "(M^0, L^2, T^-2)",
+      "ok": true,
+      "note": "(LT⁻¹)² 两边一致 ✓"
+    }
+  ],
+  "scan": [
+    {
+      "name": "电子 e⁻",
+      "m": 9.1093837015e-31,
+      "f": 2.4711799291289675e+20,
+      "r": 1.9307963386214167e-13,
+      "h": 1.2131551185982227e-12,
+      "v_over_c": 1.4142135623730951
+    },
+    {
+      "name": "μ 子 μ⁻",
+      "m": 1.883531627e-28,
+      "f": 5.109616308900882e+22,
+      "r": 9.337971524251878e-16,
+      "h": 5.867220548004076e-15,
+      "v_over_c": 1.4142135623730951
+    },
+    {
+      "name": "质子 p⁺",
+      "m": 1.67262192369e-27,
+      "f": 4.537463633421426e+23,
+      "r": 1.0515445510334946e-16,
+      "h": 6.607049272898408e-16,
+      "v_over_c": 1.4142135623730951
+    },
+    {
+      "name": "地球",
+      "m": 5.9722e+24,
+      "f": 1.6201294463327772e+75,
+      "r": 2.9450394658507435e-68,
+      "h": 1.8504228700897405e-67,
+      "v_over_c": 1.4142135623730951
+    },
+    {
+      "name": "太阳",
+      "m": 1.98892e+30,
+      "f": 5.395512304343771e+80,
+      "r": 8.843173530334961e-74,
+      "h": 5.5563297994640055e-73,
+      "v_over_c": 1.4142135623730951
+    }
+  ],
+  "controls": [
+    {
+      "id": "F1",
+      "desc": "只留 ωr=c、u=0：v 必须 = c（与 r151 结论一致）",
+      "value": 1.0,
+      "expect": "=1",
+      "ok": true
+    },
+    {
+      "id": "F2",
+      "desc": "只留 h·f=c（u=c）且 rω=0.1c：v 必须 > c",
+      "value": 1.004987562112089,
+      "expect": ">1",
+      "ok": true
+    },
+    {
+      "id": "F3",
+      "desc": "三式联立：v/c 必须 = √2 ≈ 1.4142135624",
+      "value": 1.414213562373095,
+      "expect": "1.4142135624",
+      "ok": true
+    },
+    {
+      "id": "F4",
+      "desc": "因果门：v>c 必须被判定为违反因果",
+      "value": 41.421356237309496,
+      "expect": ">40%",
+      "ok": true
+    },
+    {
+      "id": "F5",
+      "desc": "量纲门：h 作【速度】时 h·f=c 必须判失败，作【螺距】时必须通过",
+      "value": 1.0,
+      "expect": "speed=否 / pitch=是",
+      "ok": true
+    },
+    {
+      "id": "F6",
+      "desc": "反向控制：勾股式写成减号 ⇒ 必须显著≠正确值",
+      "value": 1.0,
+      "expect": ">1e-3",
+      "ok": true
+    },
+    {
+      "id": "F7",
+      "desc": "量纲审计分辨力：ωr=c 必须判通过（证明审计非恒失败）",
+      "value": 1.0,
+      "expect": "True",
+      "ok": true
+    },
+    {
+      "id": "F8",
+      "desc": "完整组把螺距角锁死为 45°（τ/κ=1）",
+      "value": 45.0,
+      "expect": "45.0",
+      "ok": true
+    }
+  ],
+  "guards": [
+    {
+      "name": "守卫1：条目数 ≥ 12",
+      "ok": true
+    },
+    {
+      "name": "守卫2：存在 FAIL 条目",
+      "ok": true
+    },
+    {
+      "name": "守卫3：控制组 ≥ 7 项",
+      "ok": true
+    },
+    {
+      "name": "守卫4：修复枚举数 = 27",
+      "ok": true
+    }
+  ]
+}

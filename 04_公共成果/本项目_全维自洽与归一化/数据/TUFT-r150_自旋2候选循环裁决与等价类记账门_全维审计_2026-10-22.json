@@ -1,0 +1,180 @@
+{
+ "doc": "TUFT-r150 自旋-2 候选循环裁决与等价类记账门 全维审计（2026-10-22）",
+ "generated_at": "2026-10-22",
+ "scope_note": "只攻 r135 唯一存活候选；不改 r133/r135/r138 任何字节；不触碰并行卷 r141-r145。",
+ "checks": [
+  {
+   "id": "A01",
+   "verdict": "PASS",
+   "title": "FP(m=0) 算子与线性化 Einstein 张量恒等关系 EFP=-2G1",
+   "detail": "符号逐分量化简残差 0 个分量；两者解空间完全相同 => 无质量自旋-2 方程 <==> 线性化真空爱因斯坦方程"
+  },
+  {
+   "id": "A02",
+   "verdict": "PASS",
+   "title": "TT 规范平面引力波在真空解上 G1 与 EFP 同时机器零",
+   "detail": "h11=-h22=A cos(kz-wt), w=k（沿 z 传播的横波）；max|G1|=0.000e+00, max|EFP|=0.000e+00（阈值 1e-60）"
+  },
+  {
+   "id": "A03",
+   "verdict": "PASS",
+   "title": "线性化 Einstein 张量的规范不变性（机器验证）",
+   "detail": "xi^1=B sin(qy-qt)；max|dG1|=0.000e+00（阈值 1e-50）=> 规范自由度真实存在，是 4 个非物理分量"
+  },
+  {
+   "id": "A04",
+   "verdict": "INFO",
+   "title": "自由度计数：对称张量 10 - 坐标规范 4 - 约束方程 4",
+   "detail": "10-4-4=2；其中 4 个约束中 1 个冗余（Bianchi），故物理自由度 = 2（helicity ±2），与无质量自旋-2 表示一致；本卷 TT 波正是这 2 个偏振之一 + 规范变换不改变物理内容"
+  },
+  {
+   "id": "B01",
+   "verdict": "PASS",
+   "title": "方向1(自旋-2=>EH) 前提集是否含 EH（真循环判据）",
+   "detail": "dir1 前提 = ['massless_spin2_free_FP', 'self_coupling_consistency']；EH_action 是否在内：False => Deser 迭代从 FP 自由作用量出发构建 EH，EH 不在前提内"
+  },
+  {
+   "id": "B02",
+   "verdict": "PASS",
+   "title": "方向2(EH=>自旋-2) 前提集是否含自旋-2（真循环判据）",
+   "detail": "dir2 前提 = ['EH_action', 'flat_background_expansion']；massless_spin2 是否在内：False => 线性化只输入 EH+平直展开，自旋-2 是结论非前提"
+  },
+  {
+   "id": "B03",
+   "verdict": "PASS",
+   "title": "r135 的「循环指控」判定：判据误设（实为等价/互导，非恶性循环）",
+   "detail": "恶性循环要求「结论出现在前提中」；两方向前提均不含对方结论 => 不是 ex nihilo 的循环，而是「同一物理结构的两种互导表述」（等价类）。r135 以「EH 量子化给出引力子」作为循环理由，属把「一致性检验」误当「逻辑依赖」。"
+  },
+  {
+   "id": "C01",
+   "verdict": "INFO",
+   "title": "r135 条目记账 Delta=-1（复现）",
+   "detail": "消除 {EH形式, SEP}=2，新增 {存在无质量自旋-2}=1 => Delta=-1，门通过"
+  },
+  {
+   "id": "C02",
+   "verdict": "PASS",
+   "title": "等价类记账下 Delta=0：r135 的 -1 是记账转移而非独立前提下降",
+   "detail": "由 A01/A02 已证 FP(m=0)<==>线性化 EH（同一结构）；由 B01/B02 已证两方向互导且无环。故「假设自旋-2存在」与「假设 EH+SEP」是同一独立公理的两个名字 => 独立公理数未减少，Delta=0。与 r32 Z19「外部输入减少是记账转移」同族。"
+  },
+  {
+   "id": "C03",
+   "verdict": "PASS",
+   "title": "判决：r135 是「真循环」还是「判据误设」的最终裁定",
+   "detail": "双重结论：(i) 不是恶性循环（结论不在前提中）；(ii) 但其 Delta=-1 是条目记账的伪下降，等价类口径下 Delta=0。r135 同时误判了两件事——循环判据与下降记账，两者方向相反但都导致「出口关闭」。"
+  },
+  {
+   "id": "D01",
+   "verdict": "INFO",
+   "title": "r150 对 U1-U7 的影响：不翻转任何一条，仍 1/7",
+   "detail": "U1_EH形式=FAIL（仅被等价类重命名，非第一性导出）；U2_规范群=FAIL（r138：仅被约束不被导出，delta=1）；U3_mu2符号=FAIL（r138：由数据读出，delta=0）；U4_SEP=FAIL（同 U1，等价类重命名）；U5_常数派生=FAIL（未触及）；U6_可证伪预言=FAIL（未触及）；U7_数学自洽=PASS => 通过 1/7"
+  },
+  {
+   "id": "D02",
+   "verdict": "PASS",
+   "title": "加强判定：候选层穷尽后当前无任何候选通过净下降门",
+   "detail": "r133 局部修补 +11、r138 硬核 +1/+0、r135 等价类重算 0 => 攻坚线可实施候选的门通过数 = 0。UFT-NOT-ACHIEVED 由「暂定（唯一候选存疑）」升级为「结构性关闭（候选层穷尽后无门通过）」。"
+  },
+  {
+   "id": "D03",
+   "verdict": "FAIL",
+   "title": "被推翻命题：「r135 是唯一通过净下降门的候选」",
+   "detail": "该命题在条目记账下成立（Delta=-1），但在等价类记账下不成立（Delta=0）=> 本卷据 A/B/C 三段机器判定推翻它。这是本卷唯一 FAIL 条目，记录被审对象 r135 的结论失败；不表示本卷机器判定失败（守卫全过）。"
+  }
+ ],
+ "guards": [
+  {
+   "id": "VG1_symbolic_identity",
+   "pass": true,
+   "msg": "EFP+2*G1 逐分量符号化简为 0（残差分量数=0）"
+  },
+  {
+   "id": "VG2_numeric_residue",
+   "pass": true,
+   "msg": "TT 引力波场 G1/EFP 最大绝对残差 0.000e+00 / 0.000e+00"
+  },
+  {
+   "id": "VG3_gauge_invariance",
+   "pass": true,
+   "msg": "G1 在 delta h=d_mu xi_nu+d_nu xi_mu 下最大变化 0.000e+00"
+  },
+  {
+   "id": "VG4_no_cycle",
+   "pass": true,
+   "msg": "循环判据：EH∈dir1前提=False, spin2∈dir2前提=False => is_cycle=False"
+  },
+  {
+   "id": "VG5_equivalence",
+   "pass": true,
+   "msg": "互导且无环 => is_equivalence=True"
+  },
+  {
+   "id": "VG6_entry_delta",
+   "pass": true,
+   "msg": "条目记账 Delta=-1（与 r135 一致）"
+  },
+  {
+   "id": "VG7_equivalence_delta",
+   "pass": true,
+   "msg": "等价类记账 Delta=0"
+  }
+ ],
+ "guard_summary": {
+  "pass": 7,
+  "total": 7
+ },
+ "counts": {
+  "PASS": 9,
+  "INFO": 3,
+  "FAIL": 1
+ },
+ "door_accounting": {
+  "route": "无质量自旋-2 => EH/SEP（Deser / 线性化 双向）",
+  "r135_entry_ledger": {
+   "eliminated": 2,
+   "added": 1,
+   "delta": -1,
+   "passes_door": true
+  },
+  "r150_equivalence_ledger": {
+   "eliminated": 1,
+   "added": 1,
+   "identified_structures": 1,
+   "delta": 0,
+   "passes_door": false
+  },
+  "cycle_test": {
+   "EH_in_dir1_premises": false,
+   "spin2_in_dir2_premises": false,
+   "is_cycle": false,
+   "is_equivalence": true
+  },
+  "physical_identity": {
+   "symbolic_residue_components": 0,
+   "numeric_max_abs_G1": "0.0",
+   "numeric_max_abs_EFP": "0.0",
+   "gauge_max_delta": "0.0",
+   "dof_physical": 2
+  },
+  "u_conditions": {
+   "U1_EH形式": "FAIL（仅被等价类重命名，非第一性导出）",
+   "U2_规范群": "FAIL（r138：仅被约束不被导出，delta=1）",
+   "U3_mu2符号": "FAIL（r138：由数据读出，delta=0）",
+   "U4_SEP": "FAIL（同 U1，等价类重命名）",
+   "U5_常数派生": "FAIL（未触及）",
+   "U6_可证伪预言": "FAIL（未触及）",
+   "U7_数学自洽": "PASS"
+  },
+  "u_passed": 1,
+  "candidates_passing_door_after_r150": 0,
+  "r133_patch_delta": 11,
+  "r138_hardcore_delta": {
+   "gauge_group": 1,
+   "mu2_sign": 0
+  }
+ },
+ "verdict": "R135-EXIT-CLOSED-EQUIVALENCE-LEDGER",
+ "verdict_detail": "r135 自旋-2 候选：A 段机器证明 FP(m=0) 与线性化 EH 逐分量恒等（符号零 + 数值 <1e-60 + 规范不变 <1e-50），二者同一物理结构；B 段证明两方向前提均不含对方结论 => 非恶性循环而是等价/互导；C 段据此重算：条目记账 Delta=-1（复现 r135），等价类记账 Delta=0（门未通过）。故 r135 的 -1 是记账转移（r32 Z19 同族），唯一存活出口关闭；U1-U6 仍全 FAIL，UFT 完成度仍 1/7。",
+ "non_additivity_freeze": "本卷条目不可与 r135/r138/r140 相加。r150 的 Delta=0 是对 r135 单一候选的重记账，不是新增一个「-1 的抵消项」；非加和冻结继续有效。",
+ "exit_code": 0
+}
