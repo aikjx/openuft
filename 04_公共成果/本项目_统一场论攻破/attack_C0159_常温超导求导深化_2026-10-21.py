@@ -21,9 +21,18 @@ attack_C0159_常温超导求导深化_2026-10-21.py
   环6 (代数) 化学预压：ω∝1/√m ⇒ ω_H/ω_S=√(m_S/m_H)=5.64、ω_H/ω_La=√(m_La/m_H)=11.74。
 
 数值精算全部与 C0153 判定册逐字一致：
-  普适比 1.763668 / 3.5273；H3S AD=217.1 K（λ=2.2, ω_log=1250 K, μ*=0.13, f1=1.2096）；
-  LaH10 AD=260.7 K（λ=3.5, ω_log=1000 K, μ*=0.12, f1=1.4021）；
-  参数盒 ±40%（H3S 160–295 K、LaH10 176–357 K）；ω_H/ω_S=5.64。
+  普适比 1.763668 / 3.5273；
+  H3S AD=203.8 K（λ=2.2, ω_log=1250 K, μ*=0.13, f1=1.1353）；
+  LaH10 AD=232.9 K（λ=3.5, ω_log=1000 K, μ*=0.12, f1=1.2527）；
+  参数盒仍数倍摆动（H3S 151.8–271.5 K、LaH10 160.9–312.0 K）；ω_H/ω_S=5.64。
+
+⚠️ 2026-10-22 修正（→C0181 判定册）：环5 的 Allen–Dynes f1 指数原写成 1/2（.sqrt()），
+  与 Allen–Dynes(1975) 原文及本库《常温超导_核心公式理论体系_2026-10-21.md》§4.2.2 /
+  环10 所写的 1/3 不一致（库内自相矛盾）。改回标准 1/3 后仅环5 读数变化：
+  H3S 217.1→203.8 K、LaH10 260.7→232.9 K；环1–4（普适比/BCS 推导）与环6（质量比）
+  不受影响；裁定不变（结构性负面，撞 C5/C6）。
+  历史读数（f1 取 1/2 时）：H3S AD=217.1 K（f1=1.2096）、LaH10 AD=260.7 K（f1=1.4021）、
+  参数盒 ±40%（H3S 160–295 K、LaH10 176–357 K）—— 见判定册「§八 后续更正指针」。
 
 纯标准库（Decimal 48 位 + Fraction 精确），零外部依赖、零网络、零随机，退出码 0。
 诚实边界：不宣称室温常压超导已解决；实验值与 DFT 中心参数只引用不复算；
@@ -190,11 +199,15 @@ def mcmillan_tc(wlog, lam, mustar):
 
 
 def allen_dynes_f1(lam, mustar):
-    """Allen-Dynes (1975) f1=[1+(λ/Λ1)^{3/2}]^{1/2}，Λ1=2.46(1+3.8μ*)。
-    f2 依赖声子谱二阶矩 ω2，本册按 ω2=ω_log 取 f2=1（与 C0153 同口径）。"""
+    """Allen-Dynes (1975) f1=[1+(λ/Λ1)^{3/2}]^{1/3}，Λ1=2.46(1+3.8μ*)。
+    f2 依赖声子谱二阶矩 ω2，本册按 ω2=ω_log 取 f2=1（与 C0153 同口径）。
+
+    ⚠️ 2026-10-22 修正（→C0181）：原实现写成 ^{1/2}（.sqrt()），已改回标准 1/3。
+    Python 3.8 的 Decimal 无分数幂，用 (ln x)/3 的 exp 形式实现立方根。
+    """
     lam1 = Decimal("2.46") * (1 + Decimal("3.8") * mustar)
     r = lam / lam1
-    f1 = (1 + r ** Decimal("1.5")).sqrt()
+    f1 = ((1 + r ** Decimal("1.5")).ln() / Decimal(3)).exp()
     return f1, Decimal("1")
 
 
@@ -325,16 +338,21 @@ def main():
     w("  H3S（λ=%s, ω_log=%s K, μ*=%s）：McMillan Tc=%s K，f1=%s，f2=%s"
       % (H3S_LAM, fv(H3S_WLOG, "0f"), H3S_MUSTAR,
          fv(s5["H3S_mcmillan_Tc"], "1f"), fv(s5["H3S_f1"], "4f"), fv(s5["H3S_f2"], "1f")))
-    w("    ⇒ AD 精算 Tc=%s K ∈[180,220]（对照实验 203 K）；参数盒 %s–%s K（~±40%%）"
-      % (fv(s5["H3S_AD_Tc"], "1f"), fv(s5["H3S_box_min"], "0f"), fv(s5["H3S_box_max"], "0f")))
+    _h_lo = (s5["H3S_box_min"] / s5["H3S_AD_Tc"] - 1) * 100
+    _h_hi = (s5["H3S_box_max"] / s5["H3S_AD_Tc"] - 1) * 100
+    w("    ⇒ AD 精算 Tc=%s K ∈[180,220]（对照实验 203 K）；参数盒 %s–%s K（相对中心 %s%%–%s%%）"
+      % (fv(s5["H3S_AD_Tc"], "1f"), fv(s5["H3S_box_min"], "0f"), fv(s5["H3S_box_max"], "0f"),
+         format(_h_lo, "+.0f"), format(_h_hi, "+.0f")))
     w("  LaH10（λ=%s, ω_log=%s K, μ*=%s）：McMillan Tc=%s K，f1=%s，f2=%s"
       % (LAH10_LAM, fv(LAH10_WLOG, "0f"), LAH10_MUSTAR,
          fv(s5["LaH10_mcmillan_Tc"], "1f"), fv(s5["LaH10_f1"], "4f"), fv(s5["LaH10_f2"], "1f")))
     w("    ⇒ AD 精算 Tc=%s K ∈[230,280]（对照实验 ~250 K）；参数盒 %s–%s K（无可靠误差带）"
       % (fv(s5["LaH10_AD_Tc"], "1f"), fv(s5["LaH10_box_min"], "0f"), fv(s5["LaH10_box_max"], "0f")))
-    entries.append(("环5", "H3S AD=%s K（f1=1.2096）∈[180,220]；LaH10 AD=%s K（f1=1.4021）∈[230,280]"
-                    % (fv(s5["H3S_AD_Tc"], "1f"), fv(s5["LaH10_AD_Tc"], "1f")), "PASS",
-                    "McMillan 解析近似 + AD f1f2 修正；与 C0153 逐字一致"))
+    entries.append(("环5", "H3S AD=%s K（f1=%s）∈[180,220]；LaH10 AD=%s K（f1=%s）∈[230,280]"
+                    % (fv(s5["H3S_AD_Tc"], "1f"), fv(s5["H3S_f1"], "4f"),
+                       fv(s5["LaH10_AD_Tc"], "1f"), fv(s5["LaH10_f1"], "4f")), "PASS",
+                    "McMillan 解析近似 + AD f1f2 修正（f1 指数 1/3 标准，2026-10-22 按 C0181 修正）；"
+                    "与 C0153 修正后读数逐字一致"))
 
     # ---- 环6 ----
     s6 = step6_precompression()
@@ -368,11 +386,12 @@ def main():
          Decimal("180") <= s5["H3S_AD_Tc"] <= Decimal("220")),
         ("G4", "LaH10 AD 精算 Tc ∈[230,280] K（对照 ~250 K）",
          Decimal("230") <= s5["LaH10_AD_Tc"] <= Decimal("280")),
-        ("G5", "参数盒摆动：H3S≈160–295 K、LaH10≈176–357 K（±40%，C6 证据）",
-         Decimal("155") <= s5["H3S_box_min"] <= Decimal("165")
-         and Decimal("290") <= s5["H3S_box_max"] <= Decimal("300")
-         and Decimal("170") <= s5["LaH10_box_min"] <= Decimal("180")
-         and Decimal("350") <= s5["LaH10_box_max"] <= Decimal("365")),
+        ("G5", "参数盒摆动（C0181 修正 f1 指数后基准）：H3S≈152–271 K、LaH10≈161–312 K"
+                "（仍数倍摆动、无可靠误差带，C6 证据）",
+         Decimal("146") <= s5["H3S_box_min"] <= Decimal("158")
+         and Decimal("265") <= s5["H3S_box_max"] <= Decimal("278")
+         and Decimal("155") <= s5["LaH10_box_min"] <= Decimal("167")
+         and Decimal("305") <= s5["LaH10_box_max"] <= Decimal("319")),
         ("G6", "化学预压质量比 ω_H/ω_S=√(m_S/m_H)=5.64",
          abs(s6["omega_H_over_S"] - Decimal("5.64")) < Decimal("0.01")),
         ("G7", "TUFT/几何框架超导预言数=0（几何供给=0，撞 C5/C6）",

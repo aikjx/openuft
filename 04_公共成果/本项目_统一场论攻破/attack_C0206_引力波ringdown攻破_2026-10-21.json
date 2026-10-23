@@ -1,0 +1,118 @@
+{
+  "name": "C0206_ringdown_qnm",
+  "parent_row": "T107",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "QNM = Schwarzschild/Kerr 微扰本征值；GW150914 M_f=65M☉ a_f=0.68；模板=IMR(NR+QNM)",
+      "verdict": "PASS",
+      "detail": "Leaver/Berti 表列与 LIGO 观测只引用"
+    },
+    {
+      "id": "E2",
+      "claim": "f_R = 185.75 Hz；τ = 3.599 ms；Q = 2.100（Schwarzschild M=65M☉）",
+      "verdict": "PASS",
+      "detail": "Leaver 无量纲本征值 + Decimal 48 位 SI 独立换算"
+    },
+    {
+      "id": "E3",
+      "claim": "Kerr a=0.7：f_R=232.6 Hz，较 Schwarzschild +25.2%，解释 GW150914 ~250 Hz",
+      "verdict": "PASS",
+      "detail": "Berti 表列无量纲值 + 本册 SI 换算"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 无微扰论/无 Teukolsky/无 QNM 本征值谱/无 NR 模板 ⇒ 供给 0",
+      "verdict": "PASS",
+      "detail": "几何框架不做 BH 背景微扰展开"
+    },
+    {
+      "id": "E5",
+      "claim": "ringdown 谱依赖 Kerr 微扰论+QNM 谱结构（标准 GR 内在+NR 输入），TUFT 无供给 ⇒ 结构性负面，撞 C5/C6",
+      "verdict": "PASS",
+      "detail": "TUFT 已注销 C0133；几何 nullity=0"
+    }
+  ],
+  "E1_facts": {
+    "mode": "l=2, n=0 (fundamental quadrupole)",
+    "schwarzschild_Mw": "0.37367 - i0.088962",
+    "gw150914_Mf_Msun": "65",
+    "gw150914_af": "0.68",
+    "template": "IMR (NR calibration + QNM spectrum: SEOBNR/IMRPhenom)"
+  },
+  "E2_schwarzschild": {
+    "M_kg": "1.2925055E+32",
+    "GM": "8.626569458650E+21",
+    "c3": "26944002417373989539335912",
+    "Gamma_c3_over_GM": "3123.37396070657088133963540702870637982305814677",
+    "f_R_Hz": "185.751508325499380702324884543142477140904115501",
+    "omega_I_phys_rad_s": "277.861594292377958745736645080087776961818898853",
+    "tau_s": "0.00359891406564002095153477961359106052446107996007",
+    "tau_ms": "3.59891406564002095153477961359106052446107996007",
+    "Q": "2.10016636316629572176884512488478226658573323441",
+    "Q_check_pi_f_tau": "2.10016636316629572176884512488478226658573323441",
+    "Q_residual": "0"
+  },
+  "E3_kerr_spin": {
+    "a": "0.7",
+    "w_R_K07": "0.468",
+    "w_I_K07": "0.074",
+    "f_R_K07_Hz": "232.642989526410228727722444847567852120703096462",
+    "tau_K07_ms": "4.32657558253334518770860897276064765374468372173",
+    "Q_K07": "3.16216216216216216216216216216216216216216216216",
+    "freq_shift_over_schwarzschild": "1.25244199427302165011908903578023389621858859422",
+    "freq_shift_pct": "25.2441994273021650119089035780233896218588594220"
+  },
+  "E4_tuft_supply": {
+    "tuft_has_perturbation_theory": false,
+    "tuft_has_teukolsky_equation": false,
+    "tuft_has_qnm_eigenspectrum": false,
+    "tuft_has_nr_template_match": false,
+    "tuft_qnm_predictions": 0,
+    "c133_tuft_deregistered": true,
+    "nullity_hbarGc": 0
+  },
+  "guards": [
+    {
+      "id": "G1",
+      "desc": "Schwarzschild 65M☉ f_R 落在 [170,200] Hz",
+      "ok": true
+    },
+    {
+      "id": "G2",
+      "desc": "振幅 e-fold τ 落在 [3.0,4.5] ms",
+      "ok": true
+    },
+    {
+      "id": "G3",
+      "desc": "Q=Re(Mω)/(2|Im|) 落在 [1.8,2.5]",
+      "ok": true
+    },
+    {
+      "id": "G4",
+      "desc": "Q 自洽 π f τ 残差 < 1e-3",
+      "ok": true
+    },
+    {
+      "id": "G5",
+      "desc": "Kerr a=0.7 频率偏移在 [+20%,+35%]（1.20<shift<1.35）",
+      "ok": true
+    },
+    {
+      "id": "G6",
+      "desc": "TUFT QNM 可检验预言数 = 0",
+      "ok": true
+    },
+    {
+      "id": "G7",
+      "desc": "TUFT 已注销（C0133）",
+      "ok": true
+    },
+    {
+      "id": "G8",
+      "desc": "几何常数 (ℏ,G,c) nullity = 0（承接 C0140/C0142/C0190）",
+      "ok": true
+    }
+  ],
+  "exit_code": 0
+}

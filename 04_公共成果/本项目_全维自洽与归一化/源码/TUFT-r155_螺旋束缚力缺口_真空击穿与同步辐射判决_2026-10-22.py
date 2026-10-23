@@ -207,13 +207,34 @@ def A4_schwinger():
 
 
 def A5_identity():
-    """r/r_e = 1/(2α) 是精确恒等式 ⇒ 降 INFO（不是预言）"""
+    """r/r_e = 1/(2α) 是精确恒等式 ⇒ 降 INFO（不是预言）
+    ★自抓（本卷自纠）：初版用**绝对**阈值 1e-9 判 r/r_e（量级 68.5）与 1/(2α_公布) 相等
+      ⇒ 相对阈值 1.5e-11，远低于**公布常数舍入地板**（K_E 末位 ±14、α 末位 ±11，
+      各自相对 ~1.5e-10）⇒ 机读偏差 6.1e-10 被误判为恒等式不成立。
+    正确做法（r154 常数舍入地板纪律）分两层：
+      ① 同源常数层：α_implied = K_E q²/(ħ c) 与 r/r_e = ħc/(2K_E q²) 用**同一组**
+         常数 ⇒ 代数恒等，偏差应为机器零（这才是恒等式的机检）；
+      ② 公布常数层：与独立公布的 α（CODATA 2018）比较，偏差受双方舍入限制
+         ⇒ 只能登记 BOUNDARY，**不得计入判据**。
+    """
     d = dynamics(M_E)
+    alpha_implied = K_E * Q_E * Q_E / (HBAR * C)      # 同源常数
+    inv2a_implied = 1.0 / (2.0 * alpha_implied)
+    inv2a_published = 1.0 / (2.0 * ALPHA)
+    dev_internal = abs(d["r_over_r_e"] / inv2a_implied - 1.0)
+    dev_published = abs(d["r_over_r_e"] / inv2a_published - 1.0)
     return {"r_over_r_e": d["r_over_r_e"],
-            "one_over_2alpha": 1.0 / (2.0 * ALPHA),
-            "dev": abs(d["r_over_r_e"] - 1.0 / (2.0 * ALPHA)),
-            "is_identity": abs(d["r_over_r_e"] - 1.0 / (2.0 * ALPHA)) < 1e-9,
-            "derivation": "r/r_e = [ħ/(2mc)]·[4πε₀mc²/e²] = 2πε₀ħc/e² = 1/(2α)"}
+            "alpha_implied": alpha_implied,
+            "alpha_published": ALPHA,
+            "inv2a_implied": inv2a_implied,
+            "inv2a_published": inv2a_published,
+            "dev_internal": dev_internal,
+            "dev_published_rel": dev_published,
+            "is_identity": dev_internal < 1e-12,
+            "rounding_floor_note":
+                "与公布 α 的相对偏差 %.3e 来自 K_E/α 各自舍入（~1e-10 量级）"
+                "⇒ 登记 BOUNDARY，不计入判据" % dev_published,
+            "derivation": "r/r_e = [ħ/(2mc)]·[4πε₀mc²/e²] = ħc/(2k_e e²) = 1/(2α)"}
 
 
 # ============================================================
@@ -270,19 +291,24 @@ def B4_scan():
 
 
 def B5_scaling_laws():
-    """P ∝ m²、τ ∝ 1/m³ 的标度律机读验证"""
+    """P ∝ m²、τ ∝ 1/m 的标度律机读验证
+    ★自抓（本卷自纠，机读抓出的分析错误）：初版把 τ 的标度误写为 **1/m³**
+      （τ = mc²/P、P ∝ m² ⇒ τ ∝ m/m² = **1/m**）——机读 tau_dev = 0.9999997
+      立即抓出（质子/电子 τ 比 = 1836.15 = 质量比，而非质量比³ = 6.19e9）。
+      已改为 1/m 并机读确认。保留此记录：判据抓出了卷作者自己的分析笔误。
+    """
     d_e = dynamics(M_E)
     d_p = dynamics(M_P)
     r_P = d_p["P_closed"] / d_e["P_closed"]
     r_m = (M_P / M_E) ** 2
     r_tau = d_e["tau_coord"] / d_p["tau_coord"]
-    r_m3 = (M_P / M_E) ** 3
+    r_m1 = M_P / M_E
     return {"P_ratio": r_P, "m2_ratio": r_m,
             "P_dev": abs(r_P / r_m - 1.0),
-            "tau_ratio": r_tau, "m3_ratio": r_m3,
-            "tau_dev": abs(r_tau / r_m3 - 1.0),
+            "tau_ratio": r_tau, "m1_ratio": r_m1,
+            "tau_dev": abs(r_tau / r_m1 - 1.0),
             "P_scales_as_m2": abs(r_P / r_m - 1.0) < 1e-9,
-            "tau_scales_as_1_over_m3": abs(r_tau / r_m3 - 1.0) < 1e-9}
+            "tau_scales_as_1_over_m": abs(r_tau / r_m1 - 1.0) < 1e-9}
 
 
 # ============================================================
@@ -360,7 +386,9 @@ def D2_repair_pricing():
                 scale_ok = (a_X != "DEL")
                 # (4) 不击穿真空
                 if a_X == "REPLACE":
-                    r_new = 2.0 * HBAR / (m_C := M_E) / C   # r 放大到 ħ/(mc)
+                    r_new = 2.0 * HBAR / (m_C := M_E) / C   # r 放大到 2ƛ_C = 2ħ/(mc)
+                    # 真空门最小需求：E/E_c = ħ/(mcr) < 1 ⇒ r > ƛ_C = ħ/(mc)；
+                    # 取 2ƛ_C（E/E_c = 1/2）干净过门。★自纠：初版注释误写 ħ/(mc)。
                     ratio = (HBAR / (M_E * C * r_new))
                     vac_ok = ratio < 1.0
                     ratio_val = ratio
@@ -389,7 +417,7 @@ def D2_repair_pricing():
                 if a_X == "DEL":
                     cost.append("半径外输 ⇒ 尺度不定标（r151 结论）")
                 if a_X == "REPLACE":
-                    cost.append("放大半径到 ħ/(mc) ⇒ 放弃康普顿半径定标、"
+                    cost.append("放大半径到 2ƛ_C=2ħ/(mc)（真空门要求 r>ƛ_C）⇒ 放弃康普顿半径定标、"
                                 "且 τ/κ=1 与 ωr=c 的取值需整体重调")
                 out.append({"辐射": a_R, "力": a_F, "半径": a_X,
                             "life_ok": life_ok, "force_ok": force_ok,
@@ -426,10 +454,12 @@ def lep_control():
       LEP2：E = 104.5 GeV、弯转半径 ρ = 3096 m
       已知每圈能量损失 U₀ ≈ 88.46·E[GeV]⁴/ρ[m] keV
       P = U₀ / (2πρ/c)
+    ★自抓（本卷自纠）：初版 γ = E_gev*1e9/(m c²) 漏乘 eV→J 换算（1 eV = Q_E J）
+      ⇒ γ 虚高 6.24e18 倍、P_公式虚报 1.28e70 W ⇒ 假的控制组失败。已补 Q_E。
     """
     E_gev = 104.5
     rho = 3096.0
-    gamma = E_gev * 1e9 / (M_E * C * C)
+    gamma = E_gev * 1e9 * Q_E / (M_E * C * C)   # eV → J 再除以 mc²
     a = C * C / rho                     # 超相对论圆周运动：横向加速度
     P_formula = Q_E ** 2 * gamma ** 4 * a ** 2 / (6.0 * math.pi * EPS0 * C ** 3)
     U0_keV = 88.46 * E_gev ** 4 / rho       # 标准同步辐射损失公式
@@ -478,11 +508,18 @@ def control_group():
                     ok=abs(p_rel / p_nr - 1.0) < 1e-9))
 
     # F5 库仑力锚点
+    # ★自抓（本卷自纠）：初版阈值取 1e-12，低于 K_E 公布值舍入地板
+    #   （CODATA K_E=8.9875517923(14)e9，末位 ±14 ⇒ 相对 ~1.6e-10；
+    #     机读 ke²/r² 与 e²/(4πε₀r²) 偏差 4.32e-12 即该地板的实现）
+    #   ⇒ 按 r154 纪律放宽到 1e-8（约 60 倍余量）并显式披露地板来源。
     r = d["r"]
     F_em_direct = Q_E ** 2 / (4.0 * math.pi * EPS0 * r * r)
-    out.append(dict(id="F5", desc="库仑力锚点：ke²/r² 必须与 e²/(4πε₀r²) 一致",
-                    value=abs(F_em_direct / d["F_em"] - 1.0), expect="<1e-12",
-                    ok=abs(F_em_direct / d["F_em"] - 1.0) < 1e-12))
+    dev5 = abs(F_em_direct / d["F_em"] - 1.0)
+    out.append(dict(id="F5",
+                    desc="库仑力锚点：ke²/r² 必须与 e²/(4πε₀r²) 一致"
+                         "（阈值按 K_E 公布值舍入地板 ~1.6e-10 取 1e-8）",
+                    value=dev5, expect="<1e-8（舍入地板 4.3e-12 实测）",
+                    ok=dev5 < 1e-8))
 
     # F6 电子寿命实验下限
     out.append(dict(id="F6", desc="已知锚点：电子寿命实验下限 > 6.6e28 yr",
@@ -607,18 +644,19 @@ def build_ledger():
 
     b4 = B4_scan()
     led.add("B4", "质量扫描（4 个质量点）：E/E_c 恒为 2.0000000000（标度不变）；"
-                  "P ∝ m²、τ ∝ 1/m³（质子 τ=3.605e−23 s）",
+                  "P ∝ m²、τ ∝ 1/m（质子 τ=3.605e−23 s）",
             "FAIL", {"rows": b4["rows"], "spread_ratio": b4["spread_ratio"],
                      "scale_invariant": b4["scale_invariant"],
                      "tau_monotone": b4["tau_monotone"]},
             "★与质量无关 ⇒ 不是『电子恰好特殊』，而是该几何结构的通病")
 
     b5 = B5_scaling_laws()
-    led.add("B5", "标度律机读验证：P ∝ m²（偏差 %.2e）、τ ∝ 1/m³（偏差 %.2e）"
+    led.add("B5", "标度律机读验证：P ∝ m²（偏差 %.2e）、τ ∝ 1/m（偏差 %.2e）"
                   % (b5["P_dev"], b5["tau_dev"]),
-            "INFO" if (b5["P_scales_as_m2"] and b5["tau_scales_as_1_over_m3"])
+            "INFO" if (b5["P_scales_as_m2"] and b5["tau_scales_as_1_over_m"])
             else "GUARD-FAIL",
-            b5, "P = e²c/(6πε₀r²)、r ∝ 1/m ⇒ P ∝ m²；τ = mc²/P ∝ 1/m³")
+            b5, "P = e²c/(6πε₀r²)、r ∝ 1/m ⇒ P ∝ m²；τ = mc²/P ∝ m/m² = 1/m"
+                 "（★初版误写 1/m³，机读 tau_dev=0.9999997 抓出后自纠）")
 
     c1 = C1_radiation_dilemma()
     led.add("C1", "★两难①（辐射）：真实经典加速 ⇒ 必辐射（1.24 MW / 6.6e−20 s，"
@@ -915,8 +953,13 @@ def build_judge(led, allok):
     a("τ                = %.6e s" % b3["tau"])
     a("寿命缺口          = %.6e 倍 (%.2f 量级)" % (b3["gap"], b3["gap_in_orders"]))
     a("E/E_c 四质量离散度 = %.3e" % B4_scan()["spread_ratio"])
-    a("LEP 正对照偏差     = %.6f (P_公式 %.4e W vs P_已知 %.4e W)"
-      % (lep["dev"], lep["P_formula"], lep["P_known"]))
+    b5m = B5_scaling_laws()
+    a("τ 标度（质子/电子） = %.6f = 质量比 %.6f（偏差 %.2e）⇒ **τ ∝ 1/m**"
+      % (b5m["tau_ratio"], b5m["m1_ratio"], b5m["tau_dev"]))
+    a("A5 恒等式：同源常数偏差 %.3e（机器零）；与公布 α 偏差 %.3e（舍入地板，BOUNDARY）"
+      % (A5_identity()["dev_internal"], A5_identity()["dev_published_rel"]))
+    a("LEP 正对照偏差     = %.6f (P_公式 %.4e W vs P_已知 %.4e W, γ=%.6e)"
+      % (lep["dev"], lep["P_formula"], lep["P_known"], lep["gamma"]))
     a("修复 27 组合       存活 %d / 零代价 %d" % (d2["n_survivors"], d2["n_zero_cost"]))
     a("```")
     a("")
@@ -933,7 +976,35 @@ def build_judge(led, allok):
     a("6. 本卷**不**宣称靶体系已被完全证伪 —— 只判决：")
     a("   **该螺旋在动力学上不可能存在，且此结论与读法无关。**")
     a("")
-    a("## 06. 红线")
+    a("## 06. 自抓与更正（机读/控制组抓出的本卷自身缺陷，全部已修）")
+    a("")
+    a("**初版引擎以退出码 2 中止（控制组 F3/F5 失败、守卫 8 失败、B5/A5 两项 GUARD-FAIL）。"
+      "按「控制组失败先分代码错还是期望错」纪律逐项排查，五处全部是本卷自身缺陷：**")
+    a("")
+    a("1. **F3 LEP 正对照 · 单位 bug（代码错）**：γ = E[GeV]·1e9/(m c²) 漏乘 eV→J 换算"
+      "（1 eV = Q_E J）⇒ γ 虚高 **6.24e18** 倍、P_公式虚报 **1.28e70 W**"
+      "（对照值 8.41e−06 W）⇒ 假的控制组失败。补乘 Q_E 后 γ=2.045e+05，"
+      "P_公式/P_已知 偏差 **3.1e−05**（<5% 门限）。LEP 锚点本身（U₀=3.4073 GeV/圈）"
+      "经两条独立路径互证，期望值无误。")
+    a("2. **B5 标度律 · 分析笔误（卷作者错，机读抓出）**：初版把 τ 标度写成 **1/m³**，"
+      "但 τ = mc²/P、P ∝ m² ⇒ τ ∝ m/m² = **1/m**。机读 tau_dev = **0.9999997**"
+      "（质子/电子 τ 比 1836.15 = 质量比，而非质量比³ 6.19e9）立即抓出。"
+      "已改为 1/m 并机读确认。**保留此记录：判据抓出了卷作者自己的分析错误。**")
+    a("3. **A5 恒等式 · 阈值低于常数舍入地板（门限错）**：初版以**绝对**阈值 1e-9 判"
+      " r/r_e（量级 68.5）≡ 1/(2α_公布)，相对门限 1.5e-11，远低于公布常数舍入地板"
+      "（K_E 末位 ±14、α 末位 ±11，各自相对 ~1.5e-10；机读相对偏差 6.1e-10）"
+      "⇒ 恒等式被误判为不成立。已改为**同源常数**机检"
+      "（α_implied = K_E q²/(ħc)，偏差机器零）+ 与公布 α 的偏差登记 BOUNDARY。"
+      "**这是 r154「常数舍入地板」纪律在本卷的第二次实例（不同常数对）。**")
+    a("4. **F5 库仑锚点 · 同一族门限错**：阈值 1e-12 低于 K_E 舍入地板"
+      "（机读 ke²/r² vs e²/(4πε₀r²) 偏差 **4.32e-12** 即该地板的实现）"
+      "⇒ 放宽到 1e-8 并披露地板来源。**与 A5 同源：都是「用公布常数的两种"
+      "互相独立的舍入表示做相等性判断」时忘了留舍入余量。**")
+    a("5. **D2 修复枚举 · 注释与代码不一致（文档错）**：注释写「放大到 ħ/(mc)」，"
+      "代码实为 2ħ/(mc) = 2ƛ_C。已统一为 2ƛ_C 并注明真空门最小需求 r > ƛ_C。"
+      "结论不受影响（任何 r > ƛ_C 均过真空门，存活解计数不变）。")
+    a("")
+    a("## 07. 红线")
     a("")
     a("- 数学自洽 ≠ 实验证实。")
     a("- **几何可行 ≠ 动力学可行**（本卷与前四卷的分工）。")

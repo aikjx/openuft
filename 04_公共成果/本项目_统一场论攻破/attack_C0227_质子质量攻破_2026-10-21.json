@@ -1,0 +1,125 @@
+{
+  "name": "C0227_proton_mass_trace_anomaly",
+  "mother_row": "T344",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "m_p=938.272 MeV；uud 流质量 u/d/s 与 σ_πN/σ_sN/EM/v 均外部引用",
+      "verdict": "PASS",
+      "detail": "PDG/CODATA/lattice 只引用不复算"
+    },
+    {
+      "id": "E2",
+      "claim": "裸 Yukawa 流质量 ~0.958%、σ_πN ~4.881%、迹反常/胶子余项 ~95.008%（Decimal 逐字）",
+      "verdict": "PASS",
+      "detail": "标准 QCD 算术复核；QCD 输入显式计数（u,d,s,σ_πN,σ_sN,EM,v）"
+    },
+    {
+      "id": "E3",
+      "claim": "m_q→0 手征极限残留 892.5 MeV ≈ 95.119% 质量 ⇒ 主体来自 QCD 迹反常/禁闭",
+      "verdict": "PASS",
+      "detail": "迹反常公式 + 手征极限算术；β 系数 9 来自 n_f=3"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 无 QCD/胶子/β跑动/G²凝聚/迹反常结构，供给=0",
+      "verdict": "PASS",
+      "detail": "承接 C0133/C0140/C0178/C0194"
+    },
+    {
+      "id": "E5",
+      "claim": "质子质量分解依赖 QCD 迹反常/能动量张量结构，TUFT 无供给 ⇒ 结构性负面",
+      "verdict": "PASS",
+      "detail": "撞 C1/C7"
+    }
+  ],
+  "E1_facts": {
+    "m_p_MeV": "938.27208816",
+    "quark_current_mass_2GeV": {
+      "u": "2.16",
+      "d": "4.67",
+      "s": "93.4"
+    },
+    "sigma_piN_MeV": "45.8",
+    "sigma_sN_MeV": "48.0",
+    "nucleon_EM_MeV": "1.04",
+    "vev_v_GeV": "246.22",
+    "note": "uud；流质量为 2 GeV MS-bar；σ 项为 lattice 显式手征破缺能"
+  },
+  "E2_decomposition": {
+    "current_mass_uud_MeV": "8.99",
+    "frac_current_yukawa": "0.00958144243385717044860323365840494086471770804893",
+    "pct_current": "0.958144243385717044860323365840494086471770804893",
+    "sigma_piN_MeV": "45.8",
+    "frac_sigma": "0.0488131327553568861563991214187926909459478341091",
+    "pct_sigma": "4.88131327553568861563991214187926909459478341091",
+    "trace_anomaly_MeV": "891.43208816",
+    "frac_trace": "0.950078446762862084114285265343750007774930206339",
+    "pct_trace": "95.0078446762862084114285265343750007774930206339",
+    "budget_check_MeV": "938.27208816",
+    "budget_gap_MeV": "0E-8",
+    "strange_extra_MeV": "2.2",
+    "pct_explicit_band_hi": "5.11578683898936798145667648057215974979365946995"
+  },
+  "E3_trace_anomaly": {
+    "beta_coef_1loop_nf3": "9",
+    "theta_anomaly_form": "theta_mu^mu = (beta(g)/(2g)) G^a_{mu nu} G^{a mu nu} = (9/(32 pi^2))<G^2>",
+    "m_p_chiral_MeV": "892.47208816",
+    "pct_chiral_remains": "95.1186867244643113843600878581207309054052165891",
+    "interpret": "m_q->0 时仍残留 ~95% 质量 ⇒ 质量主体来自 QCD 迹反常/禁闭，非 Higgs"
+  },
+  "E4_supply": {
+    "tuft_has_qcd": "False",
+    "tuft_has_gluon_field": "False",
+    "tuft_has_beta_running": "False",
+    "tuft_has_G2_condensate": "False",
+    "tuft_has_EMT_trace_anomaly": "False",
+    "nullity_hbarGc": "0",
+    "supply": "zero"
+  },
+  "E5_verdict": {
+    "core_dependency": "QCD 迹反常 <theta^mu_mu>=(beta/2g)G^2 + 能动量张量迹（标准强作用算术）",
+    "tuft_supply": "zero",
+    "structural_negative": "True",
+    "crash_points": "['C1', 'C7']",
+    "note": "撞 C1（粒子内容须公设唯一确定：无夸克/胶子自由度）/ C7（数学自洽≠实验证实，无 QCD 算术供给）"
+  },
+  "guards": [
+    {
+      "id": "G1",
+      "desc": "裸 Yukawa 流质量占 m_p < 2%（uud=2u+d）",
+      "ok": true
+    },
+    {
+      "id": "G2",
+      "desc": "σ_πN 显式破缺占比落在 4%–6% 带",
+      "ok": true
+    },
+    {
+      "id": "G3",
+      "desc": "迹反常/胶子余项占 m_p > 90%（质量主体）",
+      "ok": true
+    },
+    {
+      "id": "G4",
+      "desc": "手征极限残留（m_p−σ_πN）≈ 892 MeV 且 > 94%",
+      "ok": true
+    },
+    {
+      "id": "G5",
+      "desc": "配分闭合：σ_πN+EM+迹反常余项 回到 m_p（残差 < 1e-6 MeV）",
+      "ok": true
+    },
+    {
+      "id": "G6",
+      "desc": "m_p 引用 = 938.272 MeV（CODATA）",
+      "ok": true
+    },
+    {
+      "id": "G7",
+      "desc": "TUFT 对 QCD 迹反常供给 = 0",
+      "ok": true
+    }
+  ],
+  "exit_code": 0
+}

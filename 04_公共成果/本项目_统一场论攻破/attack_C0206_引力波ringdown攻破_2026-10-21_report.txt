@@ -1,0 +1,67 @@
+==========================================================================
+attack_C0206 · 双黑洞并合 ringdown 准正则模 QNM（母册 T107）攻破
+==========================================================================
+
+[E1] QNM 事实（标准微扰表列 / LIGO 观测只引用不复算）
+  模 = l=2, n=0 (fundamental quadrupole)
+  Schwarzschild 无量纲复频率 Mω = 0.37367 - i0.088962（Leaver 表列）
+  Kerr a=0.7 l=m=2,n=0：Mω ≈ 0.468 - i0.074（Berti-Cardoso-Will 表列）
+  GW150914 残留：M_f = 65 M☉、a_f = 0.68
+  观测模板 = IMR (NR calibration + QNM spectrum: SEOBNR/IMRPhenom)
+  => ringdown 谱 = Kerr QNM 本征值 ω_lmn(M,a) + NR 波形标定（标准 GR 内在性质）。
+
+[E2] Schwarzschild QNM 频率与阻尼独立精算（本册核心，M=65 M☉）
+  换算：t_SI = t_geom·GM/c^3 ⇒ Ω = Re(Mω)·c^3/(GM)，f=Ω/2π
+  M = 1.2925e+32 kg；GM = 8.6266e+21 m^3/s^2；c^3 = 2.6944e+25 m^3/s^3
+  Gamma = c^3/(GM) = 3.123374e+3 s^-1
+  f_R = 0.37367 · Gamma/(2π) = 185.751508 Hz
+  阻尼率 |Im(Mω)|·Gamma = 2.778616e+2 rad/s
+  τ = 1/阻尼率 = 3.598914e-3 s = 3.5989 ms（振幅 e-fold）
+  Q = Re(Mω)/(2|Im(Mω)|) = 2.100166（自洽 π f τ = 2.100166，残差 0.00e+2）
+  => Schwarzschild 65 M☉ ringdown 频率 ~186 Hz、阻尼 ~3.6 ms、Q~2.1；
+     与 GW150914 实测 ringdown ~250 Hz 的差距由 Kerr 自旋修正解释（见 E3）。
+
+[E3] Kerr 转动修正（a=0.7）
+  无量纲本征值 Re(Mω): Schwarzschild 0.37367 -> Kerr a=0.7 0.4680（表列引用）
+  f_R(a=0.7) = 232.642990 Hz；τ(a=0.7) = 4.3266 ms；Q(a=0.7) = 3.1622
+  频率偏移 f(a=0.7)/f(Schw) = 1.2524（即 +25.24%）；阻尼变缓（τ 增大、Q 上升）
+  => 自旋 a≈0.7 把 65 M☉ ringdown 从 ~186 Hz 抬到 ~233 Hz，与 GW150914 ~250 Hz（a_f=0.68）量级吻合——标准 Kerr 微扰论 + NR 的内在结果。
+
+[E4] QNM 供给检查（TUFT/几何框架）
+    BH 微扰论（标量-矢量-张量分解）？  False
+    Teukolsky 方程？                   False
+    QNM 本征值谱 ω_lmn(M,a)？          False
+    NR 波形模板 / 匹配滤波？           False
+    TUFT 可检验 ringdown 预言数？       0
+    TUFT 注销状态（C0133）？            True
+  => ringdown 谱是 Kerr 时空上线性微扰方程的复本征值问题；几何框架只给场方程，
+     不做黑洞背景微扰展开，不求解本征值，供给 = 0。E2/E3 算术是标准 GR 结果。
+
+[E5] 裁定
+  ringdown 谱 = Kerr 微扰论（Teukolsky 方程复本征值 ω_lmn(M,a)）+ NR 波形输入。
+  这是标准 GR 的内在性质：一旦给定 (M,a)，QNM 谱即由史瓦西/Kerr 微扰唯一确定，
+  无需也不容许外部参数——E2/E3 复算的 ~186 Hz（Schw）/~233 Hz（a=0.7）即其必然推论。
+  TUFT/几何框架供给检查（E4）：无微扰论、无 Teukolsky、无 QNM 谱、无 NR 模板，
+  不能给出任何可检验 ringdown 频率 + 误差带。
+  => **T107 结构性负面（对 TUFT/几何框架）**；撞 **C5**（无单点可检验预言）/
+     **C6**（无误差带）。与 C0190（引力波量子性）、C0169（EHT 阴影）同口径登记。
+
+[守卫] 自检 8/8
+  [OK] G1   Schwarzschild 65M☉ f_R 落在 [170,200] Hz
+  [OK] G2   振幅 e-fold τ 落在 [3.0,4.5] ms
+  [OK] G3   Q=Re(Mω)/(2|Im|) 落在 [1.8,2.5]
+  [OK] G4   Q 自洽 π f τ 残差 < 1e-3
+  [OK] G5   Kerr a=0.7 频率偏移在 [+20%,+35%]（1.20<shift<1.35）
+  [OK] G6   TUFT QNM 可检验预言数 = 0
+  [OK] G7   TUFT 已注销（C0133）
+  [OK] G8   几何常数 (ℏ,G,c) nullity = 0（承接 C0140/C0142/C0190）
+
+[诚实边界 / 红线]
+  本册不宣称解决任何物理难题；Leaver/Berti 无量纲 QNM 本征值与 LIGO 观测只引用；
+  E2/E3 的 SI 换算算术为本册独立 Decimal 精算；TUFT 已注销（C0133），
+  不把标准 GR 微扰结果写成 TUFT 预测/修正。
+  红线不变：已攻破 = 对 TUFT/几何框架结构性负面闭合；有预测且对 = 0/22；
+  UFT-3=0 保持；数学自洽 ≠ 实验证实。
+
+条目 5（PASS 5）；守卫 8/8；退出码 0。
+退出码 0（审计完成，读数送判定册与总账）。
