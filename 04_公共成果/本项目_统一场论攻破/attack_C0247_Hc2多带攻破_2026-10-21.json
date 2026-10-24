@@ -1,0 +1,108 @@
+{
+  "name": "C0247_Hc2_multiband_landau_break",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "MgB2 Tc=39K、Δσ=7.2/Δπ=2.5 meV、斜率0.36T/K、Hc2(0)=13.2T；Φ0=h/2e 精确常数",
+      "verdict": "PASS",
+      "detail": "实验值只引用不复算"
+    },
+    {
+      "id": "E2",
+      "claim": "Φ0=h/2e 精算闭包 2.067834e-15 Wb；H_c2^single(0)=Φ0/(2πξ²)=13.164 T（ξ=5nm）",
+      "verdict": "PASS",
+      "detail": "GL 轨道上临界场标准算术；ξ 为外部输入"
+    },
+    {
+      "id": "E3",
+      "claim": "两带比值 σ=4.28/π=1.49（单带=3.528）；Landau 破缺比=1.357（实测13.2T/WHH9.73t）",
+      "verdict": "PASS",
+      "detail": "带间耦合 λ_eff 为外部输入；上弯=多带贡献"
+    },
+    {
+      "id": "E4",
+      "claim": "WHH H_c2(0)=9.69 T；T=30K 线性=3.24 T；反推 ξ=4.99 nm 闭环",
+      "verdict": "PASS",
+      "detail": "Werthamer-Helfand-Hohenberg 标准公式"
+    },
+    {
+      "id": "E5",
+      "claim": "供给 0：TUFT 无超导凝聚/相干长度/多带费米面/λ_eff，H_c2 预言=0",
+      "verdict": "PASS",
+      "detail": "撞 C5/C6"
+    }
+  ],
+  "E1_facts": {
+    "MgB2_Tc_K": "39",
+    "Delta_sigma_meV": "7.2",
+    "Delta_pi_meV": "2.5",
+    "dHc2_dT_T_per_K": "0.36",
+    "Hc2_ab_0_measured_T": "13.2",
+    "Phi0_quoted_Wb": "2.067833848E-15"
+  },
+  "E2_single_band": {
+    "Phi0_calc_Wb": "2.06783384846192932308111541214749734017154565493E-15",
+    "xi_m": "5.0E-9",
+    "xi2_m2": "2.500E-17",
+    "Hc2_single_0_T": "13.1642391390181313961470243648838626705727669477"
+  },
+  "E3_two_band": {
+    "kBTc_meV": "3.36075997218000",
+    "gap_ratio_sigma": "4.28474515264452390131120786205435756267993769081",
+    "gap_ratio_pi": "1.48775873355712635462194717432442970926386725375",
+    "whh_predicted_0_T": "9.72972",
+    "landau_break_ratio": "1.35666802333469000135666802333469000135666802333"
+  },
+  "E4_landau_whh": {
+    "T_check_K": "30",
+    "Hc2_linear_at_30K_T": "3.24",
+    "WHH_0_T": "9.6876",
+    "xi_back_nm": "4.99322251623390491739546880096888783454787506881"
+  },
+  "E5_supply": {
+    "condensate_supply": "0",
+    "coherence_length_concept": "0",
+    "fermi_surface_multiband": "0",
+    "interband_lambda_eff": "0",
+    "Hc2_prediction_count": "0",
+    "total_supply": "0"
+  },
+  "guards": [
+    {
+      "id": "G1",
+      "desc": "Φ0=h/(2e) 精算闭包 ≈ 2.067834e-15 Wb（与文献 2.067833848e-15 偏差<1e-6）",
+      "ok": true
+    },
+    {
+      "id": "G2",
+      "desc": "单带 H_c2(0)=Φ0/(2πξ²) ∈[12,14] T（ξ=5nm）",
+      "ok": true
+    },
+    {
+      "id": "G3",
+      "desc": "WHH 近 Tc 斜率外推 H_c2(0)∈[9,10.5] T",
+      "ok": true
+    },
+    {
+      "id": "G4",
+      "desc": "两带 σ 能隙比 ≠ 单带 3.528（多带指纹，σ∈[4.0,4.6]）",
+      "ok": true
+    },
+    {
+      "id": "G5",
+      "desc": "Landau 破缺比 >1（实测 13.2T 高于 WHH 直线外推，上弯）",
+      "ok": true
+    },
+    {
+      "id": "G6",
+      "desc": "实测 H_c2(0) 反推 ξ ≈ 5.0 nm（闭环，±5%）",
+      "ok": true
+    },
+    {
+      "id": "G7",
+      "desc": "TUFT/几何框架 H_c2 预言数 = 0（供给 = 0）",
+      "ok": true
+    }
+  ],
+  "exit_code": 0
+}

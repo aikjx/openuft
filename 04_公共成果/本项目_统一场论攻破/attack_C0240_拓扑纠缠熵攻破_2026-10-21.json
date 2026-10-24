@@ -1,0 +1,178 @@
+{
+  "name": "C0240_topological_entanglement_entropy",
+  "mother_row": "T523 拓扑纠缠熵（α 项）在有隙体系中的普适提取 切分熵+常数项 C7",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "有隙 2D 切分熵 S=αL−γ，γ=ln D（总量子维数）；KP 组合 K=−γ；Z₂ D=√2、双半子 D=2、Fibonacci D=φ（Kitaev–Preskill/Levin–Wen，只引用）",
+      "verdict": "PASS",
+      "detail": "标准量子信息/拓扑序结果只引用；ln2 基线衔接 C0154 E2-5 逐位对齐"
+    },
+    {
+      "id": "E2",
+      "claim": "γ=ln D 精算：Z₂ γ=(1/2)ln2=0.3465735903、双半子 γ=ln2=0.6931471806、Fibonacci γ=ln φ=0.4812118251（nats）",
+      "verdict": "PASS",
+      "detail": "Decimal.ln()/sqrt() 48 位；D=√2、2、φ 为文献外部输入显式计数；S(L)=αL−γ 扫点 L=10…80"
+    },
+    {
+      "id": "E3",
+      "claim": "L=80：有隙 S=αL−γ=39.653 nats vs 临界 (1/12)ln80=0.365 nats；量级比 108.6（O(L)/O(ln L)）",
+      "verdict": "PASS",
+      "detail": "c/6=1/12 引用 C0235 E2 不复算；同点 Decimal 对比"
+    },
+    {
+      "id": "E4",
+      "claim": "KP 组合：周长容斥精确消面积项（残差 0），K=−γ=-0.3465735903；反演 γ_ext=−K=0.3465735903 与 E2 的 ln√2 逐位闭合（残差 1.800e-47）",
+      "verdict": "PASS",
+      "detail": "L 形三正方形容斥几何；Decimal 48 位逐位复算；K=−γ 为 KP 2006 标准结果"
+    },
+    {
+      "id": "E5",
+      "claim": "T523 结构性负面：γ=ln D 与 KP K=−γ 算术自洽，但 D=√2/2/φ 为拓扑序文献输入、ρ_A/Hilbert/任意子融合规则 TUFT 全不供给",
+      "verdict": "PASS",
+      "detail": "撞 C7（母册 T523 登记口径）"
+    }
+  ],
+  "baseline": {
+    "ln2": "0.693147180559945309417232121458176568075500134360",
+    "ref_C0154": "Bell S=ln2 / CHSH 2√2（C0154 E2-5）",
+    "ref_C0235": "c/6=1/12 Ising、1/6 FF；面积律/对数律/体律三律"
+  },
+  "E1_formulas": {
+    "tee_law": "有隙 2D 基态切分熵：S(R)=α|∂R|−γ（边界长度 L=周长，α 面积律系数，γ 普适常数项）——Kitaev–Preskill 2006 / Levin–Wen 2006",
+    "gamma_def": "γ=ln D，D 为该拓扑序的总量子维数（topological order 的拓扑不变量）",
+    "kp_combo": "KP 提取：K=S_A+S_B+S_C−S_AB−S_BC−S_CA+S_ABC=−γ（三区域两两交界于一点；面积项按周长容斥消去，仅留拓扑常数项）",
+    "lw_combo": "Levin–Wen 三互信息 I(A:B)+I(A:C)−I(A:BC)=γ 同构（互信息组合等价）",
+    "D_z2": "Z₂ toric code（真空+e+m 4 个任意子，d_e=d_m=1、d_ε=√2）⇒ D=√2",
+    "D_dsemi": "双半子 double semion（d_s=1、d_{\bar s}=1、d_x=2sin(π/5) 型）⇒ D=2",
+    "D_fib": "Fibonacci 任意子（单一 τ 任意子，τ×τ=1+τ）⇒ D=φ=(1+√5)/2（黄金比）",
+    "origin": "Kitaev–Preskill / Levin–Wen（标准量子信息/拓扑序结果，只引用）"
+  },
+  "E2_gamma_of_D": {
+    "D_z2": "1.41421356237309504880168872420969807856967187538",
+    "gamma_z2": "0.346573590279972654708616060729088284037750067182",
+    "D_dsemi": "2",
+    "gamma_dsemi": "0.693147180559945309417232121458176568075500134360",
+    "D_fib": "1.61803398874989484820458683436563811772030917980",
+    "gamma_fib": "0.481211825059603447497758913424368423135184334382",
+    "identity_half_ln2": "0.346573590279972654708616060729088284037750067180",
+    "identity_residual": "2E-48",
+    "fib_self_residual": "-1E-47",
+    "rows": [
+      {
+        "L": "10",
+        "S_z2": "4.65342640972002734529138393927091171596224993282",
+        "S_ds": "4.30685281944005469058276787854182343192449986564",
+        "S_fib": "4.51878817494039655250224108657563157686481566562"
+      },
+      {
+        "L": "20",
+        "S_z2": "9.65342640972002734529138393927091171596224993282",
+        "S_ds": "9.30685281944005469058276787854182343192449986564",
+        "S_fib": "9.51878817494039655250224108657563157686481566562"
+      },
+      {
+        "L": "40",
+        "S_z2": "19.6534264097200273452913839392709117159622499328",
+        "S_ds": "19.3068528194400546905827678785418234319244998656",
+        "S_fib": "19.5187881749403965525022410865756315768648156656"
+      },
+      {
+        "L": "80",
+        "S_z2": "39.6534264097200273452913839392709117159622499328",
+        "S_ds": "39.3068528194400546905827678785418234319244998656",
+        "S_fib": "39.5187881749403965525022410865756315768648156656"
+      }
+    ]
+  },
+  "E3_gapped_vs_critical": {
+    "L": "80",
+    "alpha": "0.5",
+    "S_gapped_alphaL_minus_gamma": "39.6534264097200273452913839392709117159622499328",
+    "S_critical_c_over_6_lnL": "0.365168886222823467689140651588241159318966824309",
+    "ratio_gap_over_crit": "108.589279935322275612046672549586303866525568958",
+    "scaling": {
+      "gapped_2d": "O(αL) 线性（边界长度），常数项 −γ 为普适部分",
+      "critical_1d": "O((c/6)ln L) 对数（C0235 口径）"
+    }
+  },
+  "E4_kp_extraction": {
+    "perimeters": {
+      "pA": 40,
+      "pB": 40,
+      "pC": 40,
+      "pAB": 60,
+      "pAC": 60,
+      "pBC": 80,
+      "pABC": 80
+    },
+    "perimeter_combo_zero": "0",
+    "S_A": "19.6534264097200273452913839392709117159622499328",
+    "S_AB": "29.6534264097200273452913839392709117159622499328",
+    "S_BC": "39.6534264097200273452913839392709117159622499328",
+    "S_ABC": "39.6534264097200273452913839392709117159622499328",
+    "K_combo": "-0.3465735902799726547086160607290882840377500672",
+    "gamma_extracted": "0.3465735902799726547086160607290882840377500672",
+    "gamma_expected": "0.346573590279972654708616060729088284037750067182",
+    "extract_residual": "1.8E-47"
+  },
+  "E5_ruling": "T523 structural negative vs TUFT: S(R)=alpha|L|-gamma with gamma=ln D (Kitaev-Preskill/Levin-Wen); D=sqrt2 (Z2 toric code), D=2 (double semion), D=phi (Fibonacci) are literature external inputs from anyon fusion rules; the KP combination K=S_A+S_B+S_C-S_AB-S_BC-S_CA+S_ABC=-gamma cancels the area term exactly by perimeter inclusion-exclusion and recovers gamma bit-for-bit, but all of it rides on the reduced density matrix rho_A over a tensor-product Hilbert space plus a topologically ordered state; TUFT supplies no topological order, no anyon model, no quantum-state basis (C0168), no tensor-product carrier (C0154); hits C7 per mother row T523",
+  "guards": [
+    {
+      "id": "G1",
+      "desc": "Z₂ γ=ln√2=(1/2)ln2 恒等式精确成立（残差 <1e-30）",
+      "ok": true
+    },
+    {
+      "id": "G2",
+      "desc": "Z₂ γ≈0.3465735902799726（±1e-15 带）",
+      "ok": true
+    },
+    {
+      "id": "G3",
+      "desc": "双半子 γ=ln2≈0.6931471805599453（±1e-15 带，衔接 C0154 基线）",
+      "ok": true
+    },
+    {
+      "id": "G4",
+      "desc": "Fibonacci φ²=φ+1（Decimal 数值残差 <1e-25）",
+      "ok": true
+    },
+    {
+      "id": "G5",
+      "desc": "Fibonacci γ=ln φ≈0.481211825（±1e-9 带）",
+      "ok": true
+    },
+    {
+      "id": "G6",
+      "desc": "KP 周长容斥组合精确=0（面积项消去）",
+      "ok": true
+    },
+    {
+      "id": "G7",
+      "desc": "KP 组合 K=−γ_Z2（提取残差 <1e-25）",
+      "ok": true
+    },
+    {
+      "id": "G8",
+      "desc": "提取值 γ_ext=−K 与 E2 的 ln√2 同一读数（K=−γ 复核一致）",
+      "ok": true
+    },
+    {
+      "id": "G9",
+      "desc": "有隙 S=αL−γ ≫ 临界 S=(1/12)ln L（L=80，量级比 > 50）",
+      "ok": true
+    },
+    {
+      "id": "G10",
+      "desc": "γ=ln D≥0（三拓扑序皆非负，D≥1）",
+      "ok": true
+    },
+    {
+      "id": "G11",
+      "desc": "TUFT 供给 = 0（C0133 注销 + C0168 无离散态基 + C0154 无张量积载体引用）",
+      "ok": true
+    }
+  ],
+  "exit_code": 0
+}

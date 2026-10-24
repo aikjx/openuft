@@ -148,26 +148,72 @@ def group_A():
         mm_num = lambda t: kc * (n_fun(O0 + h, t) - n_fun(O0 - h, t)) / (2.0 * h)
         num = (mm_num(t0 + h) - mm_num(t0 - h)) / (2.0 * h)
         floor_errs.append(abs(num - dm_analytic) / abs(dm_analytic))
-    a0_ok = errs[0] < TOL_DERIV and errs[0] > errs[1] > errs[2]
-    print("[A0] 求导复核：n = n₀(1+αΩ)(1+βt+γt²+δt³)，m = k·∂n/Ω，dm/dt = k·∂²n/(∂Ω∂t)")
+    # ★★判据改「理论预测逐档比对」，不用硬编码阈值：
+    #   中心差分的相对误差可**解析预测** = 截断 (h²/6)|m'''|/|m'| + 舍入 eps·|m|/(2h·|m'|)。
+    #   （中心差分可分辨的极限量级 ≈ eps^{2/3} ≈ 3.7e-11；把阈值写死成 1e-10/1e-13 都是拍脑袋，
+    #     一旦 h_opt 的常数因子差 2 倍就会卡在边界上假绿/假红。故改为「实测 vs 预测」一致性检验。）
+    # 拆成两项：截断（渐近精确项，∝h²）与舍入（**最坏界**，∝1/h）。
+    # ★★再修正：pred = 截断 + 舍入界 是**上界**而非精确值 —— 舍入的真实实现常常远小于其最坏界，
+    #   故在「舍入界 ≲ 截断」的档位上它才紧。因此：
+    #     · 双侧一致性（|实测−预测|/预测 < 25%）只在 舍入界 ≤ 25%×截断 的档位上检验；
+    #     · 其余档位做**单侧**上界检验（实测 ≤ 1.05×上界）——这才是上界的正确用法。
+    #   其余档位若也要求双侧相符，等于把「上界」误当「精确值」，会制造假红。
+    def _tru_rel(h):
+        return (h * h / 6.0) * abs(m3) / abs(dm_analytic)
+
+    def _rnd_rel(h):
+        return _eps * abs(m_of_t(t0)) / (2.0 * h * abs(dm_analytic))
+
+    hs = (h0, h0 / 2.0, h0 / 4.0)
+    trus = [_tru_rel(h) for h in hs]
+    rnds = [_rnd_rel(h) for h in hs]
+    preds = [trus[i] + rnds[i] for i in range(3)]
+    gaps = [abs(errs[i] - preds[i]) / preds[i] for i in range(3)]
+    sel = [i for i in range(3) if rnds[i] <= 0.25 * trus[i]]
+    a0_consistent = len(sel) >= 2 and max(gaps[i] for i in sel) < 0.25
+    a0_bounded = all(errs[i] <= 1.05 * preds[i] for i in range(3))
+    a0_ratio = errs[0] / errs[1]            # 截断主导 ⇒ h 折半 ⇒ 误差 ÷4
+    a0_h2 = 3.0 < a0_ratio < 5.0
+    a0_mono = errs[0] > errs[1] > errs[2]
+    a0_mag = max(errs) < 1e-8               # 量级 sanity 守卫（宽松档，防止整套公式写错）
+    a0_ok = a0_consistent and a0_bounded and a0_h2 and a0_mono and a0_mag
+    print("[A0] 求导复核：n = n₀(1+αΩ)(1+βt+γt²+δt³)，m = k·∂n/∂Ω，dm/dt = k·∂²n/(∂Ω∂t)")
     print("     解析 dm/dt = k·n₀·α·(β+2γt+3δt²) = {:.10e} kg/s".format(dm_analytic))
     print("     h_opt = {:.3e}，取 4·h_opt = {:.3e}".format(h_opt, h0))
     print("     主判据（内层解析 + 外层自适应差分）残差 = {:.3e} → {:.3e} → {:.3e}".format(*errs))
+    print("     理论预测（截断+舍入界）            = {:.3e} → {:.3e} → {:.3e}".format(*preds))
+    print("       其中 截断 ∝h²                    = {:.3e} → {:.3e} → {:.3e}".format(*trus))
+    print("             舍入界 ∝1/h                = {:.3e} → {:.3e} → {:.3e}".format(*rnds))
+    print("     两侧一致性档位（舍入界≤25%截断）  = {}，其偏离 = [{}]".format(
+        [i + 1 for i in sel], ", ".join("{:.3f}".format(gaps[i]) for i in sel)))
+    print("     单侧上界检验（实测 ≤ 1.05×上界）   = {}".format(a0_bounded))
+    print("     折半比 errs[0]/errs[1] = {:.3f}（截断主导 ⇒ 应 ≈ 4）".format(a0_ratio))
     print("     数值地板（内外层皆差分）残差 = {:.3e} → {:.3e} → {:.3e}（舍入二次放大，仅登记）".format(
         *floor_errs))
-    out.update({"A0_res": errs[0], "A0_mono": errs[0] > errs[1] > errs[2],
+    out.update({"A0_res": errs[0], "A0_mono": a0_mono, "A0_consistent": a0_consistent,
+                "A0_bounded": a0_bounded, "A0_h2": a0_h2, "A0_mag": a0_mag,
+                "A0_ratio": a0_ratio, "A0_preds": preds, "A0_gaps": gaps,
+                "A0_sel": [i + 1 for i in sel], "A0_sel_gap": max(gaps[i] for i in sel),
                 "A0_dm": dm_analytic, "A0_ok": a0_ok, "A0_errs": errs,
                 "A0_floor": floor_errs, "A0_h_opt": h_opt, "A0_h0": h0})
 
     if a0_ok:
         add("A0", "求导层", "求导本身正确：dm/dt = k·∂²n/(∂Ω∂t)（★先给靶应得的 PASS）", "PASS",
             "先复核「求导」这一步：取 n(Ω,t) = n₀(1+αΩ)(1+βt)、k = m_e（按文档口径），"
-            "则 ∂n/∂Ω = n₀α(1+βt)、∂²n/(∂Ω∂t) = n₀αβ ⇒ 解析 dm/dt = k·n₀·α·β = **{:.6e} kg/s**。"
-            "用**自适应中心差分**（解析求截断≈舍入平衡点 h_opt = {:.2e}，取 4·h_opt）双向数值复核，"
-            "残差 **{:.3e}**，三档折半单调下降（{:.2e} → {:.2e} → {:.2e}）⇒ **该求导在形式上正确**。"
+            "则 ∂n/∂Ω = n₀α(1+βt+γt²+δt³)、∂²n/(∂Ω∂t) = n₀α(β+2γt+3δt²)"
+            " ⇒ 解析 dm/dt = **{:.6e} kg/s**。"
+            "用**自适应中心差分**（解析求截断≈舍入平衡点 h_opt = {:.2e}，取 4·h_opt 保证起始落在"
+            "截断主导区）数值复核，残差 **{:.3e} → {:.2e} → {:.2e}**，三档折半单调下降，"
+            "折半比 **{:.3f} ≈ 4** ⇒ 确证处于 h² 截断区；且实测残差与**解析预测的误差模型**"
+            "（截断 (h²/6)|m'''| ∝ h²，舍入最坏界 eps|m|/(2h) ∝ 1/h）逐档相符："
+            "在舍入界 ≤ 25% 截断的档位（第 {} 档）上双侧偏离仅 **{:.3f}**，"
+            "其余档位亦满足单侧上界 ⇒ **该求导在形式上正确**。"
             "**这是本卷对靶有利的结论，诚实登记。** 本卷指控的不是这一步求导，而是下面两点："
-            "求导所依赖的记号（A1）与「验证」的方法论（B3/C1）。".format(
-                dm_analytic, h_opt, errs[0], errs[0], errs[1], errs[2]))
+            "求导所依赖的记号（A1）与「验证」的方法论（B3/C1）。"
+            "（方法附注：中心差分可分辨的极限量级 ≈ eps^(2/3) ≈ 3.7e−11，故本卷**不**用 1e−13 这类"
+            "拍脑袋阈值；且「截断+舍入界」是**上界**而非精确值 ⇒ 只在截断主导档做双侧比对。）".format(
+                dm_analytic, h_opt, errs[0], errs[1], errs[2], a0_ratio,
+                "、".join(str(i + 1) for i in sel), max(gaps[i] for i in sel)))
     else:
         add("A0", "求导层", "求导复核", "FAIL", "残差 {:.2e}".format(errs[0]))
 
@@ -502,12 +548,17 @@ def group_guards(A, B, C, D):
     guard("G1 verdict 由机读驱动：FAIL {} / PASS {}（两者都须 > 0）".format(n_fail, n_pass),
           n_fail > 0 and n_pass > 0, "机读累加 FAIL={} PASS={}".format(n_fail, n_pass))
 
-    guard("G2 求导残差守卫：残差 {:.3e} 须 < {:.0e} 且三档单调（真算）".format(
-        A["A0_res"], TOL_DERIV), A["A0_res"] < TOL_DERIV and A["A0_mono"],
-        "残差 = {:.4e}，单调 = {}".format(A["A0_res"], A["A0_mono"]))
+    # G2：残差必须单调 + 折半比 ≈ 4（真算：证明处在 h² 截断主导区，而不是撞上舍入地板）
+    guard("G2 求导收敛守卫：残差 {:.3e} → {:.2e} → {:.2e}，须单调且折半比 ≈ 4（真算）".format(
+        A["A0_errs"][0], A["A0_errs"][1], A["A0_errs"][2]), A["A0_mono"] and A["A0_h2"],
+        "单调 = {}，折半比 = {:.4f}".format(A["A0_mono"], A["A0_ratio"]))
 
-    guard("G3 解析一致性守卫：数值 dm/dt 与闭式 k·n₀·α·β 必须逐位相符",
-          A["A0_res"] < 1e-13, "相对残差 = {:.3e}".format(A["A0_res"]))
+    # G3：误差模型守卫 —— 双侧一致性只在「舍入界 ≤ 25% 截断」的档位上检验（至少 2 档），
+    #     其余档位做单侧上界检验。★不把「上界」当「精确值」用，否则制造假红。
+    guard("G3 误差模型守卫：截断主导档（{}）实测须与解析预测双侧相符，其余档须 ≤ 上界（真算）".format(
+        A["A0_sel"]), A["A0_consistent"] and A["A0_bounded"] and A["A0_mag"],
+        "双侧档 {} 最大偏离 {:.3f}；单侧上界 = {}；量级守卫 = {}".format(
+            A["A0_sel"], A["A0_sel_gap"], A["A0_bounded"], A["A0_mag"]))
 
     # G4：三重口径比值必须 = 4π·(m_p/m_e)（真算）
     g4 = abs(B["B1_ratio"] - B["B1_check"]) / B["B1_check"] < 1e-12 and B["B1_ratio"] > 1e4
@@ -738,7 +789,10 @@ def write_outputs(payload, outdir):
         payload["key_numbers"]["k_ratio_closed_form"]))
     V.append("")
     V.append("**循环验证（B3）**：k 由「假设 dn/dΩ = 1」定出后原路代回 ⇒ 残差恒为 0。")
-    V.append("扫描 dn/dΩ ∈ {0.5, 1, 2, 10, 100} ⇒ 代回残差全部为 [{}] ⇒ **判据零分辨力**。".format(
+    # ★转义纪律（与既有 `%` 双纪律同类）：`.format()` 串里的**字面花括号**必须双写，
+    #   否则 `{0.5, 1, 2, 10, 100}` 会被当成字段引用 ⇒ AttributeError: 'str' object has no
+    #   attribute '0.5, 1, 2, 10, 100'。
+    V.append("扫描 dn/dΩ ∈ {{0.5, 1, 2, 10, 100}} ⇒ 代回残差全部为 [{}] ⇒ **判据零分辨力**。".format(
         ", ".join("{:.1e}".format(x) for x in payload["key_numbers"]["circular_scan_residuals"])))
     V.append("")
     V.append("**自由度（B2）**：若 k 因粒子而异 ⇒ 8 种粒子、8 个观测 vs **16 个自由参数**"
