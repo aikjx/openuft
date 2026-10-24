@@ -109,6 +109,9 @@ D_Z = d_div(d_pow(D_L, 4), d_mul(D_M, d_pow(D_T, 3)))          # 论文 Z
 D_ZP = d_div(d_mul(D_M, d_pow(D_L, 4)),
              d_mul(d_pow(D_T, 3), d_pow(D_Q, 2)))              # 论文 Z'
 D_U = d_div(D_M, d_mul(D_L, d_pow(D_T, 2)))                    # 能量密度
+# 预计算（供 C3 跨文件裁决引用，避免在字符串里内联元组运算）
+F_DIM_FROM_E = d_div(D_EF, d_div(D_ACC, D_T))                  # 由 E = −f·dA/dt
+F_DIM_FROM_GEOM = d_div(D_M, D_Q)                              # 由 f = k/k′
 
 
 def d_str(a):
@@ -174,9 +177,27 @@ def _has_judge(txt):
     return any(w in txt for w in JUDGE_WORDS)
 
 
+def _is_banner_print(node):
+    """分隔线：`print("=" * 50)` / `print("-" * 60)` 之类（单参数、单字符重复 ≥3 次）。"""
+    if not (isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)):
+        return False
+    v = node.value
+    if getattr(v.func, "id", None) != "print" or len(v.args) != 1:
+        return False
+    a = v.args[0]
+    if not (isinstance(a, ast.BinOp) and isinstance(a.op, ast.Mult)):
+        return False
+    left = a.left
+    if isinstance(left, ast.Constant) and isinstance(left.value, str) and len(left.value) == 1:
+        return True
+    return False
+
+
 def analyze_print_coupling(src):
-    """返回 (顶层判定 print 条数, If 体内判定 print 条数)。
-    顶层 ⇒ **无条件** ⇒ 与计算脱钩；If 体内 ⇒ 由判定驱动 ⇒ 耦合。"""
+    """返回 (顶层**结论性** print 行号, 顶层**分节标题**行号, If 体内判定 print 条数)。
+    顶层 ⇒ **无条件** ⇒ 与计算脱钩；If 体内 ⇒ 由判定驱动 ⇒ 耦合。
+    ★首跑教训：顶层里有 `print("6. 统一能量方程的量纲一致性验证")` 这种**分节标题**，
+      它与随后紧邻的 `print("=" * 50)` 构成 banner ⇒ 必须剔除，否则虚增 1 条假阳性。"""
     tree = ast.parse(src)
     if_lines = set()
     for node in ast.walk(tree):
@@ -184,11 +205,21 @@ def analyze_print_coupling(src):
             for sub in ast.walk(node):
                 if _is_strlit_print(sub):
                     if_lines.add(sub.lineno)
-    top, inif = [], []
+    banner_after = set()
+    for i, nd in enumerate(tree.body):
+        if i + 1 < len(tree.body) and _is_banner_print(tree.body[i + 1]):
+            banner_after.add(nd.lineno)
+    top, head, inif = [], [], []
     for node in ast.walk(tree):
         if _is_strlit_print(node) and _has_judge(node.value.args[0].value):
-            (inif if node.lineno in if_lines else top).append(node.lineno)
-    return top, inif
+            ln = node.lineno
+            if ln in if_lines:
+                inif.append(ln)
+            elif ln in banner_after:
+                head.append(ln)
+            else:
+                top.append(ln)
+    return top, head, inif
 
 
 def analyze_has_computation(src):
@@ -305,21 +336,35 @@ def group_A():
         "本卷指控的是：它从何而来（B1/B2），以及它被乘上 c² 之后声称的物理结论（B3–B5）。")
 
     # ---- A2 低速退化（相对论侧正确，用于与 B3 对照）----
+    # ★首跑教训：我原先把阈值拍成 1e−6，但相对差的理论值是 **¾β² 量级**（O(β²) 而非 O(β⁴)），
+    #   β≈0.02 时它本就是 3.0e−04 ⇒ 判据是错的，不是理论错。改为「实测 vs 解析预测」一致性
+    #   （承 r164 的同款纪律：不用拍脑袋阈值）。解析：rel = (3t²+t⁴)/(1−t²)，t = 参数。
     t = F(1, 100)
     beta, sq, gam = pyth_beta(t)
     k_rel = (gam - 1)                      # (γ−1)·m₀c² 的系数
     k_new = F(1, 2) * beta * beta          # ½m₀v² 的系数（单位 m₀c²）
-    low_rel = abs(float(k_rel - k_new) / float(k_new))
+    low_exact = (k_rel - k_new) / k_new    # Fraction 精确
+    low_pred = (3 * t * t + t ** 4) / (1 - t * t)
+    low_gap = abs(low_exact - low_pred) / low_pred
+    low_rel = float(low_exact)
+    a2_ok = low_gap < F(1, 10 ** 9)
     out.update({"A2_beta": float(beta), "A2_k_rel": float(k_rel),
-                "A2_k_newton": float(k_new), "A2_low_dev": low_rel})
-    print("[A2] 低速对照：β = {:.6f} ⇒ (γ−1) = {:.8e}，½β² = {:.8e} ⇒ 相对差 {:.3e}".format(
-        float(beta), float(k_rel), float(k_new), low_rel))
+                "A2_k_newton": float(k_new), "A2_low_dev": low_rel,
+                "A2_low_pred": float(low_pred), "A2_low_gap": float(low_gap)})
+    print("[A2] 低速对照：β = {:.6f} ⇒ (γ−1) = {:.8e}，½β² = {:.8e} ⇒ 相对差 {:.3e}"
+          "（解析预测 {:.3e}，偏离 {:.2e}）".format(
+              float(beta), float(k_rel), float(k_new), low_rel,
+              float(low_pred), float(low_gap)))
     add("A2", "低速退化层",
-        "低速极限下相对论动能 (γ−1)m₀c² → ½m₀v²（相对差 {:.2e}，控制组口径）".format(low_rel),
-        "PASS" if low_rel < 1e-6 else "FAIL",
-        "β = {:.6f}（t = 1/100）⇒ (γ−1) = {:.10e} 与 ½β² = {:.10e} 的相对差仅 **{:.3e}**（O(β⁴) 量级）"
-        " ⇒ 相对论动能的低速退化**正确**。本条为控制组锚点：证明本卷的动能判据在正常理论上**不恒判零**。".format(
-            float(beta), float(k_rel), float(k_new), low_rel))
+        "低速极限下相对论动能 (γ−1)m₀c² → ½m₀v²，且与**解析预测 (3t²+t⁴)/(1−t²)** 逐位相符",
+        "PASS" if a2_ok else "FAIL",
+        "β = {:.6f}（t = 1/100）⇒ (γ−1) = {:.10e} 与 ½β² = {:.10e} 的相对差为 **{:.6e}**，"
+        "而解析预测 **{:.6e}**（= (3t²+t⁴)/(1−t²)，由 γ−1 = 2t²/(1−t²) 与 ½β² = 2t²/(1+t²)² 相减得），"
+        "Fraction 层偏离 **{:.2e}** ⇒ 相对论动能的低速退化**正确**。"
+        "★注意：该相对差是 **O(β²) ≈ ¾β²** 量级（不是 O(β⁴)），β→0 时才趋于 0 —— "
+        "本卷故**不**用「< 1e−6」这类拍脑袋阈值（那会让 β=0.02 这一档假红）。"
+        "本条为控制组锚点：证明本卷的动能判据在正常理论上**不恒判零**。".format(
+            float(beta), float(k_rel), float(k_new), low_rel, float(low_pred), float(low_gap)))
     return out
 
 
@@ -469,28 +514,36 @@ def group_C():
     src_vs = open(F_VS, encoding="utf-8").read()
 
     # ---- C1 ★结论硬编码（ast 静态分析）----
-    top_cv, inif_cv = analyze_print_coupling(src_cv)
+    top_cv, head_cv, inif_cv = analyze_print_coupling(src_cv)
     n_detached = len(top_cv)
+    n_header = len(head_cv)
     n_coupled = len(inif_cv)
     print("[C1] comprehensive_verification.py：")
-    print("     顶层（**无条件**）含判定词的 print = {} 条，行号 {}".format(n_detached, top_cv))
-    print("     if/else 体内含判定词的 print      = {} 条".format(n_coupled))
+    print("     顶层（**无条件**）**结论性** print = {} 条，行号 {}".format(n_detached, top_cv))
+    print("     顶层**分节标题**（后随分隔线，已剔除）= {} 条，行号 {}".format(n_header, head_cv))
+    print("     if/else 体内含判定词的 print        = {} 条".format(n_coupled))
     c1_detached = n_detached > 0
-    out.update({"C1_top": n_detached, "C1_inif": n_coupled, "C1_top_lines": top_cv})
+    out.update({"C1_top": n_detached, "C1_head": n_header,
+                "C1_inif": n_coupled, "C1_top_lines": top_cv,
+                "C1_head_lines": head_cv})
     add("C1", "验证方法论层",
-        "★结论硬编码：6 条「验证总结」是**顶层无条件 print**，与上方 6 组 if/else 判定**完全脱钩**",
+        "★结论硬编码：**{} 条结论**是顶层无条件 print，与上方 6 组 if/else 判定**完全脱钩**".format(
+            n_detached),
         "FAIL",
         "用 **ast 静态分析**机读 `comprehensive_verification.py`：该脚本在第 45/71/87/103/119/136 行"
-        "共 6 处用 `if/else` 判定量纲，并在分支内 print **{}** 条判定；"
-        "但第 147–153 行的「验证结果总结」共 **{}** 条判定语句（行号 {}）位于 **module 顶层**，"
-        "**不在任何 if/else 之内**。"
-        "⇒ **无论上方 6 组判定算出 ✅ 还是 ❌，这 6 条总结的输出都完全不变**"
-        " ⇒ 该脚本的「结论」不依赖它的「计算」 ⇒ **判据零分辨力**。"
-        "★统计口径：只统计**参数全为字符串字面量**的 print（天然排除"
+        "共 6 处用 `if/else` 判定量纲，并在分支内 print **{}** 条判定（行号 {}）；"
+        "但下列 **{}** 条**结论**语句位于 **module 顶层**、**不在任何 if/else 之内**（行号 {}）："
+        "第 148–153 行的「验证结果总结」6 条，以及第 156–158 行的「结论」3 条。"
+        "⇒ **无论上方 6 组判定算出 ✅ 还是 ❌，这 {} 条结论的输出都完全不变**"
+        " ⇒ 该脚本的「结论」不依赖它的「计算」 ⇒ **判据零分辨力**。".format(
+            n_coupled, inif_cv, n_detached, top_cv, n_detached)
+        + "★统计口径：只统计**参数全为字符串字面量**的 print（天然排除"
         " `print(f\"正确能量密度量纲: {{expr}}\")` 这类打印期望值的语句），并只在含判定词"
-        "（正确/错误/一致/不一致/可以相加/✅/❌）的语句中计数。"
+        "（正确／错误／一致／不一致／可以相加／无法直接相加／✅／❌）的语句中计数；"
+        "**分节标题**（后随 `print(\"=\" * N)` 分隔线者，如实得的第 {} 行）已剔除，"
+        "不计入结论数 —— 首跑曾把它计入 ⇒ 虚增一条假阳性，已修。"
         "★这是本线既有纪律「守卫的 ok 禁写死 True」的**同款病，出现在靶的代码里**。".format(
-            n_coupled, n_detached, top_cv))
+            head_cv))
 
     # ---- C2 ★纯 print 的「验证总结」----
     st = analyze_has_computation(src_vs)
@@ -546,10 +599,7 @@ def group_C():
             claims["comprehensive_verification.py"]["f"], claims["verification_summary.py"]["f"], truth["f"],
             claims["comprehensive_verification.py"]["zp"], claims["verification_summary.py"]["zp"], truth["zp"],
             claims["comprehensive_verification.py"]["unified"], claims["verification_summary.py"]["unified"], truth["unified"],
-            d_str(D_EF and (D_EF[0] - (D_ACC[0] - D_T[0]), D_EF[1] - (D_ACC[1] - D_T[1]),
-                            D_EF[2] - (D_ACC[2] - D_T[2]), D_EF[3] - (D_ACC[3] - D_T[3]))),
-            d_str(D_M and (D_M[0] - D_Q[0], D_M[1] - D_Q[1], D_M[2] - D_Q[2], D_M[3] - D_Q[3])),
-            d_str(D_ZP), d_str(D_U)))
+            d_str(F_DIM_FROM_E), d_str(F_DIM_FROM_GEOM), d_str(D_ZP), d_str(D_U)))
 
     # ---- C4 执行留痕（BOUNDARY，防过度指控）----
     code_files = sorted(os.listdir(CODEDIR))
@@ -685,7 +735,9 @@ def group_E():
     min_cost = 99
     for mask in range(32):
         cost = bin(mask).count("1")
-        if mask == 0:
+        # ★首跑教训：零代价计数必须是「**不动任何动作仍能判活**」的组合数，
+        #   而不是 mask==0 的出现次数（后者恒为 1，与存活无关 ⇒ 假数字）。
+        if mask == 0 and survives(mask, False):
             zero += 1
         if survives(mask, False):
             loose.append((mask, cost))
@@ -743,12 +795,16 @@ def run_controls(A, B, C):
     control("U2 量纲运算器反对照：[mc³] 应 ≠ 能量量纲（证明非恒判正确）",
             e2 != (1, 2, -2, 0), "实得 {} ≠ M^1 L^2 T^-2 Q^0".format(d_str(e2)))
 
-    # U3 动能判据正对照：相对论动能低速 → ½m₀v²
+    # U3 动能判据正对照：相对论动能低速 → ½m₀v²，且相对差须 = 解析预测 (3t²+t⁴)/(1−t²)
+    # ★与 A2 同款修正：相对差是 O(β²) ≈ ¾β² 量级，β=0.02 时本就 ~3e−4
+    #   ⇒ 判「小于某拍脑袋阈值」是错的，应判「等于解析预测」。
     t = F(1, 100)
     beta, sq, gam = pyth_beta(t)
-    dev = abs(float((gam - 1) - F(1, 2) * beta * beta) / float(F(1, 2) * beta * beta))
-    control("U3 动能判据正对照：相对论 (γ−1)m₀c² 在 β={:.4f} 应 ≈ ½β²m₀c²".format(float(beta)),
-            dev < 1e-6, "相对差 {:.3e}".format(dev))
+    ex = ((gam - 1) - F(1, 2) * beta * beta) / (F(1, 2) * beta * beta)
+    pr = (3 * t * t + t ** 4) / (1 - t * t)
+    u3_ok = abs(ex - pr) / pr < F(1, 10 ** 9)
+    control("U3 动能判据正对照：相对论 (γ−1)m₀c² 在 β={:.4f} 与 ½β²m₀c² 的相对差须 = 解析预测".format(
+        float(beta)), u3_ok, "实测 {:.6e} vs 解析 {:.6e}".format(float(ex), float(pr)))
 
     # U4 动能判据反对照：靶式差值必须**全为 0**（证明判据能识别「动能恒零」）
     zs = []
@@ -781,13 +837,15 @@ def run_controls(A, B, C):
            "if r == 2:\n"
            "    print(\"中间量正常\")\n"
            "print(\"一致性检查通过\")\n")
-    t_good, i_good = analyze_print_coupling(good)
-    t_bad, i_bad = analyze_print_coupling(bad)
-    control("U7 耦合检测器反对照：结论写在 if 体内 ⇒ 顶层判定 print 应为 0（判「耦合」）",
+    t_good, h_good, i_good = analyze_print_coupling(good)
+    t_bad, h_bad, i_bad = analyze_print_coupling(bad)
+    control("U7 耦合检测器反对照：结论写在 if 体内 ⇒ 顶层结论 print 应为 0（判「耦合」）",
             len(t_good) == 0 and len(i_good) == 2,
-            "顶层 {} 条 / if 内 {} 条".format(len(t_good), len(i_good)))
-    control("U8 耦合检测器正对照：结论写在顶层 ⇒ 顶层判定 print 应 ≥ 1（判「脱钩」）",
-            len(t_bad) >= 1, "顶层 {} 条 / if 内 {} 条".format(len(t_bad), len(i_bad)))
+            "顶层结论 {} 条 / 顶层标题 {} 条 / if 内 {} 条".format(
+                len(t_good), len(h_good), len(i_good)))
+    control("U8 耦合检测器正对照：结论写在顶层 ⇒ 顶层结论 print 应 ≥ 1（判「脱钩」）",
+            len(t_bad) >= 1, "顶层结论 {} 条 / 顶层标题 {} 条 / if 内 {} 条".format(
+                len(t_bad), len(h_bad), len(i_bad)))
 
     # U9 纯 print 检测器反对照：含真实计算的脚本应判「有计算」
     calc = ("x = 0\n"
@@ -862,11 +920,10 @@ def run_guards(A, B, C, D, E):
     guard("G8 防过度指控守卫：必须显式声明「依赖第三方库不是缺陷」（真查）", g8,
           "C4 含该声明 = {}".format(g8))
 
-    # G9 对靶有利分支单列：量纲 PASS 与质速关系 PASS 须各为独立条目
+    # G9 对靶有利分支单列：量纲 / 质速 / 低速三条 PASS 须各为独立条目
     g9 = (sum(1 for e in ENTRIES if e["verdict"] == "PASS") >= 3)
     guard("G9 对靶有利分支单列守卫：量纲/质速/低速三条 PASS 须**各自单列**，不得并入两难条目",
-          g9, "PASS 条目数 = {}".format(g9 and sum(
-              1 for e in ENTRIES if e["verdict"] == "PASS")))
+          g9, "PASS 条目数 = {}（须 ≥ 3）".format(n_pass))
 
     # G10 零分辨力记 INFO
     g10 = (n_info >= 1)
@@ -1025,9 +1082,9 @@ def write_outputs(payload):
          "",
          "| 项 | 表达式 | 实得 | 结论 |",
          "|---|---|---|---|",
-         "| ① | u_b = c³/(16πZ′)·\|B\|² | {} | ✓ |".format(d_str(A_UB)),
-         "| ③ | u_g = c/(16πZ)·\|A\|² | {} | ✓ |".format(d_str(A_UG)),
-         "| ④ | u_e = c/(16πZ′)·\|E\|² | {} | ✓ |".format(d_str(A_UE)),
+         r"| ① | u_b = c³/(16πZ′)·\|B\|² | {} | ✓ |".format(d_str(A_UB)),
+         r"| ③ | u_g = c/(16πZ)·\|A\|² | {} | ✓ |".format(d_str(A_UG)),
+         r"| ④ | u_e = c/(16πZ′)·\|E\|² | {} | ✓ |".format(d_str(A_UE)),
          "| ⑤ | Z′ = c/(8πε₀) | {}（与声明逐位相符） | ✓ |".format(d_str(A_ZP)),
          "| ⑥ | u_g = u_e = u_b | {} ⇒ 三项可加 | ✓ |".format(d_str(D_U)),
          "| ② | 耦合常数 f | 由 E=−f·dA/dt 得 **{}** ≠ 由 k/k′ 得 **{}** | ✗ |".format(
@@ -1095,15 +1152,16 @@ def write_outputs(payload):
           "### C1 结论硬编码（ast 静态分析）",
           "",
           "`comprehensive_verification.py` 在第 45 / 71 / 87 / 103 / 119 / 136 行共 6 处用 `if/else` "
-          "判定量纲，并在分支内 print **{}** 条判定；但第 147–153 行的「验证结果总结」共 **{}** 条判定语句"
-          "（行号 {}）位于 **module 顶层**，**不在任何 if/else 之内**。".format(
+          "判定量纲，并在分支内 print **{}** 条判定；但 **{}** 条**结论**语句"
+          "（第 148–153 行的「验证结果总结」6 条 + 第 156–158 行的「结论」3 条；行号 {}）"
+          "位于 **module 顶层**，**不在任何 if/else 之内**。".format(
               C_INIF, C_TOP, C_LINES),
           "",
           "⇒ **无论上方 6 组判定算出 ✅ 还是 ❌，这 6 条总结的输出都完全不变**"
           " ⇒ 结论不依赖计算 ⇒ **判据零分辨力**。",
           "",
           "★统计口径：只统计**参数全为字符串字面量**的 print（天然排除"
-          " `print(f\"正确能量密度量纲: {{expr}}\")` 这类打印期望值的语句）。"
+          " `print(f\"正确能量密度量纲: {expr}\")` 这类打印期望值的语句）。"
           "★这是本线既有纪律「守卫的 ok 禁写死 True」的**同款病，出现在靶的代码里**。",
           "",
           "### C2 「验证结果总结」不含任何验证",

@@ -1,0 +1,47 @@
+TUFT-r166 统一场论能量方程精算 —— 运行报告
+======================================================================
+
+  dim_checks_passed                            6
+  dim_checks_total                             7
+  f_dim_from_E                                 M^1 L^0 T^1 Q^-1
+  f_dim_from_geom                              M^1 L^0 T^0 Q^-1
+  derivation_rank                              1
+  kinetic_gap_exact_zero                       True
+  kinetic_devs                                 [-1.0, -1.0, -1.0, -1.0]
+  photon_E_hf_J                                3.313035075e-19
+  photon_E_target_J                            0.0
+  photon_dev                                   -1.0
+  work_dev                                     -1.0
+  cv_top_level_judgement_prints                9
+  cv_if_body_judgement_prints                  13
+  cv_top_lines                                 [148, 149, 150, 151, 152, 153, 156, 157, 158]
+  vs_has_computation                           False
+  vs_ast_stats                                 {'assign': 0, 'if': 0, 'compare': 0, 'binop': 0, 'call': 0}
+  cross_file_opposite_count                    3
+  repair_loose                                 1
+  repair_strict                                0
+  repair_zero_cost                             0
+  repair_min_cost                              5
+
+条目统计：BOUNDARY=2 / FAIL=12 / INFO=1 / PASS=3
+控制组：10 / 10
+守卫  ：10 / 10
+
+  [PASS] A0 — 量纲审计 7 项：能量密度三项与 Z′ 定义**全部正确**（★先给靶应得的 PASS）
+  [PASS] A1 — 质速关系 m = m₀/√(1−β²) 与狭义相对论**数学形式完全一致**（★先给靶应得的 PASS）
+  [PASS] A2 — 低速极限下相对论动能 (γ−1)m₀c² → ½m₀v²，且与**解析预测 (3t²+t⁴)/(1−t²)** 逐位相符
+  [FAIL] B1 — ★「第一性原理推导」是**同一个方程的 4 次重写**（对数线性秩 = 1）
+  [FAIL] B2 — ★两难：「动量数值绝对守恒」是冗余假设还是循环前提（两支都不利）
+  [FAIL] B3 — ★★能量绝对性 ⇒ **动能恒为零**：靶式「运动能量 − 静止能量」在所有 β 下**精确为 0**
+  [FAIL] B4 — ★光子分支：能量方程给 E = m₀c² = **0**，与文档自述的 E = mc² > 0 **直接矛盾**
+  [FAIL] B5 — ★能量恒定 ⇒ 力**永远不做功** ⇒ 理论内无法加速任何物体（偏差 -100.00%）
+  [FAIL] C1 — ★结论硬编码：**9 条结论**是顶层无条件 print，与上方 6 组 if/else 判定**完全脱钩**
+  [FAIL] C2 — ★「验证结果总结」脚本 66 行 **100% 是 print**，不含任何计算、判定或赋值
+  [FAIL] C3 — ★同一目录下两份「验证总结」对同一批量的 **3 项结论全部相反**（第三方裁决：summary 三条全错）
+  [BOUNDARY] C4 — 「验证」无执行留痕：code/ 8 个脚本无任何输出/日志/结果文件 ⇒ BOUNDARY（内容可及性）
+  [INFO] C5 — 零分辨力 ⇒ INFO：comprehensive 的 6 条结论**恰好全对**，但因与计算脱钩 ⇒ 对也是白对
+  [FAIL] D1 — ★与 r162 A6 冲突：同一理论的静止动量，一处判 **0**、一处用 **m₀c = 2.730925e-22**
+  [FAIL] D2 — 质速关系的「几何来源」依赖已判无定义的量：m₀ = k·dn/dΩ 中的 Ω
+  [BOUNDARY] D3 — 若取 r163 来料的 k = 4π m_p ⇒ E = N·m_p c² 使**能量量子化**（台阶 1.889074e-09 J）
+  [FAIL] E1 — 修复定价：32 组合 ⇒ 宽松 1 / 严格 0 / 零代价 0（最小代价 5）
+  [FAIL] E2 — ★修复即自杀（第十四度）：唯一存活路径要求「能量绝对性」与「验证结论手写」同时作废

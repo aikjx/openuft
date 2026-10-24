@@ -420,8 +420,8 @@ def main():
         "框架内不存在。" % c_res, theta_points=len(c_rows), max_res=c_res)
 
     add("D1", "κ 与距离无固定比例：椭圆轨道 ρ/r 跨 %.4f 倍" % ror_span, "FAIL",
-        "开普勒椭圆（e=%.1f）上 ρ/r = p(u²+u'²)^{3/2}/u²，从 %.6f（φ=0°）到 %.6f"
-        "（φ=180°）跨 %.4f 倍；仅当 e=0（圆轨道）才有 ρ≡r（控制组 C2）。"
+        "开普勒椭圆（e=%.1f）上 ρ/r = p(u²+u'²)^{3/2}/u²，从 %.6f（φ=180°，远心点）"
+        "到 %.6f（φ=45°）跨 %.4f 倍；仅当 e=0（圆轨道）才有 ρ≡r（控制组 C2）。"
         "⇒ 「κ ∝ 1/r」只在圆轨道这一零测集上成立。"
         % (ECC, min(ror), max(ror), ror_span),
         rho_over_r_min=min(ror), rho_over_r_max=max(ror), span=ror_span,
@@ -553,7 +553,7 @@ def report_and_write(R):
     for r in d_circ:
         w("   φ=%-7.1f ρ/r=%.6f" % (r["phi"], r["rho_over_r"]))
     w("")
-    w("[E1] 出口：两体相对运动字典 ⇒ κ_rel 随 m₂/m₁ 变化 %.1f 倍" % R["e_span"])
+    w("[E1] 出口：两体相对运动字典 ⇒ κ_rel 随 m₂/m₁（1→100）降至 %.4f 倍" % R["e_span"])
     for r in e_rows:
         w("   m₂/m₁=%-8.4g μ/m₁=%.6f κ_rel=%.6e ρ_rel=%.6e"
           % (r["m2_over_m1"], r["mu_over_m1"], r["kappa_rel"], r["rho_rel"]))
@@ -655,7 +655,7 @@ def report_and_write(R):
     b("- 机读 ρ/r 与**正确**闭式最大偏差 **%.1e**（机器零 ⇒ 工具可信）；"
       "与**错误**式 1−e·cosφ 最大偏差 **%.4f**（O(1) ⇒ 判据有分辨力，D2）；"
       % (R["pred_dev"], R["naive_dev"]))
-    b("- ρ/r 从 **%.6f**（φ=0°）到 **%.6f**（φ=180°）跨 **%.4f 倍**"
+    b("- ρ/r 从 **%.6f**（φ=180°，远心点）到 **%.6f**（φ=45°）跨 **%.4f 倍**"
       "（闭式跨度 %.4f，逐位一致）；"
       % (min(r["rho_over_r"] for r in d_rows), max(r["rho_over_r"] for r in d_rows),
          R["ror_span"], R["closed_span"]))
@@ -676,8 +676,8 @@ def report_and_write(R):
         b("| %-8.4g | %.6f | %.6e | %.6e |"
           % (r["m2_over_m1"], r["mu_over_m1"], r["kappa_rel"], r["rho_rel"]))
     b("")
-    b("- 改用**两体相对运动**作 Frenet 对象后，κ_rel 随 m₂/m₁ 变化 **%.1f 倍**"
-      "（1→100）⇒ 源信息可以进入几何量；" % R["e_span"])
+    b("- 改用**两体相对运动**作 Frenet 对象后，κ_rel 随 m₂/m₁（1→100）**降至 %.4f 倍**"
+      "⇒ 源信息可以进入几何量；" % R["e_span"])
     b("- 但这是**更换字典对象**（= 换框架），且更换后三重奏退化为相对运动学恒等式。")
     b("")
     b("### 2.6 框架量表穷举（F1）")
