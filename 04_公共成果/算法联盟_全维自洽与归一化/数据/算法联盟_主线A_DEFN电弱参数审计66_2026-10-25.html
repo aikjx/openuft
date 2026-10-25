@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟66期 · 主线A DEFN电弱参数审计</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#f85149;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:320px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #d29922;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第66期 —— 主线A DEFN 层电弱参数审计</h1>
+<div class="sub">本源四层判据审计 ｜ 2026-10-25 ｜ mpmath dps=40 ｜ 对标 主线A §3.1 vs PDG 2024</div>
+
+<div class="hero">
+  核心结论：<span class="big">"定义闭合"表述过强 —— 电弱参数实为实验输入锁定</span>
+  <div class="dim">v↔G_F 定义式互锁（残差 1e-46，口径自洽），但锁定的是实验输入（μ 衰变 G_F、对撞机 m_W/m_Z）非首原<br>
+  sin²θ_W(on-shell)=0.22320268 vs PDG 0.22339(10)，偏差 ≈1.9σ</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  证据与修复
+  <table>
+    <tr><th>量</th><th>来源</th><th>判定</th></tr>
+    <tr><td>G_F</td><td>μ 衰变实验测定</td><td class="fail">实验输入</td></tr>
+    <tr><td>v=(√2G_F)^(-1/2)</td><td>G_F 定义式</td><td class="open">定义式（依赖实验 G_F）</td></tr>
+    <tr><td>g=2m_W/v</td><td>实验 m_W</td><td class="fail">实验输入</td></tr>
+    <tr><td>sin²θ_W(on-shell)</td><td>实验 m_W/m_Z</td><td class="fail">实验输入 + 1.9σ 偏差</td></tr>
+  </table>
+</div>
+
+<div class="verdict">
+  <b>诚实审计：</b>电弱参数数值全部来自实验测定（μ 衰变 G_F、对撞机 m_W/m_Z），非几何/公理首原；
+  它们只是"定义式相互锁定"（v↔G_F 残差 1e-46），但锁定的是实验输入而非首原 → 严格层级应为 FIELD/实验输入，非纯 DEFN。
+  sin²θ_W(on-shell)=0.22320268 vs PDG on-shell 0.22339(10) 偏差 ≈1.9σ（0.084%），数值口径已标注修正。
+  §3 文首"不构成统一证据"诚实红线保留——本审计是层级精确化（DEFN→FIELD/实验输入），非推翻。
+  本源红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'sin²θ_W 口径对比：主线A vs PDG 2024',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  legend:{data:['主线A on-shell','PDG on-shell','PDG MS-bar'],textStyle:{color:'#8b949e'},top:26},
+  xAxis:{type:'category',data:['sin²θ_W'],axisLabel:{color:'#e6edf3',fontSize:12}},
+  yAxis:{type:'value',min:0.21,max:0.24,name:'',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[
+    {name:'主线A on-shell',type:'bar',barWidth:40,data:[{value:0.22320268,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'0.2232',color:'#e6edf3'}}]},
+    {name:'PDG on-shell',type:'bar',barWidth:40,data:[{value:0.22339,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'0.2234',color:'#e6edf3'}}]},
+    {name:'PDG MS-bar',type:'bar',barWidth:40,data:[{value:0.23122,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'0.2312',color:'#e6edf3'}}]}
+  ]
+});
+window.addEventListener('resize',()=>{c1.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第66期 ｜ 主线A DEFN 电弱参数 ｜ DEFN→FIELD/实验输入 ｜ 诚实边界：不伪造闭合</div>
+</body>
+</html>

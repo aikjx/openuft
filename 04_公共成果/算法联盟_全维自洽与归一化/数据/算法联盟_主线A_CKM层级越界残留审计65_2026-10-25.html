@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟65期 · 主线A CKM层级越界残留审计</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#f85149;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:320px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #f85149;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第65期 —— 主线A CKM 层级越界残留审计</h1>
+<div class="sub">本源四层判据审计收口 ｜ 2026-10-25 ｜ mpmath dps=40 ｜ 对标 主线A §2.4 vs PDG CKM 实验值</div>
+
+<div class="hero">
+  核心结论：<span class="big">CKM 层级【已证】DERIV 越界 —— 几何给幂次、λ 数值是实验输入</span>
+  <div class="dim">几何首原导出幂次结构（V_us~λ, V_cb~Aλ², V_ub~Aλ³，无参数）【有效】<br>
+  λ=0.2253 是 PDG 实验输入、前因子 A=0.826 实验拟合 → "无自由参数首原"不成立</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  证据与修复
+  <table>
+    <tr><th>成分</th><th>来源</th><th>判定</th></tr>
+    <tr><td>幂次结构（λ, λ², λ³）</td><td>味标架错位几何</td><td class="pass">首原导出【有效】</td></tr>
+    <tr><td>λ 数值（0.2253）</td><td>PDG 实验输入</td><td class="fail">非几何首原</td></tr>
+    <tr><td>前因子 A（0.826）</td><td>实验拟合</td><td class="fail">非几何首原</td></tr>
+    <tr><td>主线A CKM 层级</td><td>DERIV【已证】</td><td class="fail">越界残留（已降级 FIELD/有效）</td></tr>
+  </table>
+</div>
+
+<div class="verdict">
+  <b>诚实审计：</b>几何首原导出的只有幂次结构（无参数）；λ 数值与前因子 A 均系实验输入/拟合，非几何首原。
+  V_ub 严格偏差 162.4%（幂次级非数值级），明示"层级正确、数值实验"本质。
+  已落地降级：§2.4【已证】→【有效-幂次结构几何首原；λ数值实验输入】、本源矩阵 CKM 行→FIELD/有效、
+  已证列表/文末同步。与 63(α*/G*)、64(θ=2) 协同完成 DERIV 层全面审计收口：仅普朗克簇/克尔熵为真正无参数首原。
+  本源红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'CKM 幂次计算值 vs PDG 实验值',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  legend:{data:['计算值(λ^k)','PDG 实验'],textStyle:{color:'#8b949e'},top:26},
+  xAxis:{type:'category',data:['V_us (λ)','V_cb (Aλ²)','V_ub (Aλ³)'],axisLabel:{color:'#e6edf3',interval:0,fontSize:12}},
+  yAxis:{type:'log',name:'矩阵元',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[
+    {name:'计算值(λ^k)',type:'bar',barWidth:34,data:[
+      {value:0.2253,itemStyle:{color:'#d29922'}},
+      {value:0.04193,itemStyle:{color:'#d29922'}},
+      {value:0.009446,itemStyle:{color:'#f85149'}}]},
+    {name:'PDG 实验',type:'bar',barWidth:34,data:[
+      {value:0.2253,itemStyle:{color:'#3fb950'}},
+      {value:0.0412,itemStyle:{color:'#3fb950'}},
+      {value:0.0036,itemStyle:{color:'#3fb950'}}]}
+  ]
+});
+window.addEventListener('resize',()=>{c1.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第65期 ｜ 主线A CKM 层级 ｜ DERIV→FIELD 降级 ｜ 诚实边界：不伪造闭合</div>
+</body>
+</html>

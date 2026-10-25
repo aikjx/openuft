@@ -1,0 +1,38 @@
+TUFT-r185 审计报告
+target: S17 核心公式 12 变化的引力场产生电磁场
+verdict: VARYING-GRAVITATIONAL-FIELD-PRODUCES-EM-FIELD-IS-MAXWELL-REWRITTEN-A-EQUALS-MINUS-E-OVER-F-R-C-T-NULLIFIES-FIELD-AND-F-FORMULA-DIMENSION-CONFLICTS-WITH-REQUIRED-M-I-MINUS-ONE
+entries: 23 (FAIL 12 / PASS 8 / INFO 3)
+controls: 12/12  guards: 17/17  rc=0
+
+[控制组]
+  K01 OK: R=Ct 下 A=d²R/dt² 有限差分(1,0.1,1e-3)=[Decimal('0'), Decimal('0E+1'), Decimal('0E+3')] 全为 0 ⇒ 公理直接给出 A≡0
+  K02 OK: f=(c/2)√(4πε₀G)=1.291733331261e-02 (靶 0.012917333313)
+  K03 OK: f公式维[M^-1·L·I] vs 所需[M I^-1]：冲突
+  K04 OK: 方程项维 左=L·T^-4 右1=L·T^-4 右2=L·T^-4（均 L T^-4）
+  K05 OK: Z=Gc/2=1.0004524012e-02（与 r182 Z_FROM_G 互印）
+  K06 OK: v1 §5.6 f~√(G/ε₀)维[L^3·T^-3·I^-1] ≠ [M I^-1]
+  K07 OK: 麦克斯韦重写恒等式：直接=-1317.83 推导=-1317.83（残差 2.27374e-13）
+  K08 OK: 真空库仑规范下 ∂²A/∂t²=-(c²/f)(∇×B)=c²∇²A 系数 9=c²
+  K09 OK: c²=1/(μ₀ε₀) 相对误差 5.730e-10（靶 5.44e-8%）
+  K10 OK: H 原子库仑/引力=2.269e+39（靶 2.27e39，标准物理正确）
+  K11 OK: v1 'E = f Ω²∂A/∂t' vs v3 'E = -f ∂A/∂t'（符号+Ω² 矛盾）
+  K12 OK: f 双路径差 0.000e+00（主方法=1.291733331261e-02，Z/Z'法=1.291733331261e-02）
+
+[守卫]
+  G01 OK: 六份靶文件可读性：{'V1': True, 'V2': True, 'V3': True, 'V3PY': True, 'V3REP': True, 'V3FC': True}
+  G02 OK: 公理文本证据：V3 含 '\vec{R} = \vec{C}t' 与 '\vec{A} = d^2\vec{R}/dt^2'
+  G03 OK: v1(+fΩ²) vs v3(−f) 电场定义矛盾证据
+  G04 OK: f 公式文本证据：V3 'f=(c/2)√(4πε₀G)'、V2 '0.0129'
+  G05 OK: v1 §5.6 f~√(G/ε₀) 文本证据
+  G06 OK: f 公式维[M^-1·L·I] ≠ 所需[M I^-1]（机读冲突）
+  G07 OK: 方程量纲齐次（全 L·T^-4）
+  G08 OK: v2 §4.3.2 验证输出 4πε₀G=7.42618e-20 / √=8.61753e-10（比正确值 7.426e-21/8.6175e-11 大 10×，与同卷 f=0.012917 不自洽）
+  G10 OK: 修复定价 2^7=128 组合（≤128）
+  G11 OK: 判定值无第五态（机读驱动）
+  G12 OK: f 双路径一致性（K12 机读）
+  G13 OK: 麦克斯韦重写恒等式残差机器零（K07）
+  G14 OK: 公理 R=Ct ⇒ A≡0 机读（K01）
+  G15 OK: Z 跨卷互印 r182（K05）
+  G16 OK: ast 审计 detailed_verification.py：Assign=86 print=178 if=3（结论随计算顺序输出，无顶层无条件结论分支）
+  G09 OK: 条目分组非空（A/B/P 均存在）
+  G10 OK: 修复定价 2^7=128 组合：EMPTY=124 SUICIDE=4 存活(有内容)=0

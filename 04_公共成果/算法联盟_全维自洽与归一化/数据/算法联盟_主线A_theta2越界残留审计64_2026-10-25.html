@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟64期 · 主线A θ=2越界残留审计</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#f85149;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:340px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #f85149;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第64期 —— 主线A θ=2 越界残留审计</h1>
+<div class="sub">本源四层判据审计 ｜ 2026-10-25 ｜ mpmath dps=40 ｜ 对标 主线A §2.2 vs 权威定本 §8/附录C.1</div>
+
+<div class="hero">
+  核心结论：<span class="big">θ=2 的"截断/坐标无关"越界 —— 玩具模型内普适，跨截断数值相关</span>
+  <div class="dim">玩具模型 β_g=2g−Bg²/(2π) 内 θ=2 场重定义不变（普适）<br>
+  essential RG θ=2.296、EH θ=1.689±2.486i → 数值 2 单截断特例；主线A 7 处已对齐权威定本。</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  证据与修复
+  <table>
+    <tr><th>方案</th><th>θ</th><th>判定</th></tr>
+    <tr><td>玩具模型（单耦合截断）</td><td>2.000000</td><td class="pass">普适（场重定义不变）</td></tr>
+    <tr><td>essential RG</td><td>2.296</td><td class="fail">跨截断反例</td></tr>
+    <tr><td>EH 双耦合</td><td>1.689 ± 2.486i</td><td class="fail">跨截断反例</td></tr>
+    <tr><td>主线A 7 处表述</td><td>"截断无关"</td><td class="fail">越界残留（已修复对齐）</td></tr>
+  </table>
+</div>
+
+<div class="verdict">
+  <b>诚实审计：</b>θ=2 仅在玩具模型（单耦合截断）内满足场重定义不变（普适数学性质）；
+  跨截断/方案 θ 依赖（essential 2.296、EH 1.689±2.486i）→ 数值 2 是单截断特例非普适。
+  主线A 7 处（L18/L84/L93/L205/L222/L231/L238）与权威定本 §8 已勘误状态内部不一致，属越界残留；
+  已落地降级：§2.2 由【已证-方案闭合】降【有效-玩具模型内坐标无关】、本源矩阵 θ=2 降 FIELD、
+  文末/已证/PASS守卫全部对齐。与 63 期 α*/G* 协同完成 DERIV 层全面审计。本源红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'θ 跨截断对比：玩具模型 vs 真实方案',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['玩具模型\n(单耦合截断)','essential RG','EH 双耦合(实部)'],axisLabel:{color:'#e6edf3',interval:0,fontSize:12}},
+  yAxis:{type:'value',name:'θ',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[
+    {value:2.000,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'2.000\n(普适)',color:'#3fb950',fontSize:12,lineHeight:16}},
+    {value:2.296,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'2.296\n(反例)',color:'#f85149',fontSize:12,lineHeight:16}},
+    {value:1.689,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'1.689±2.486i\n(反例)',color:'#f85149',fontSize:12,lineHeight:16}}],
+    barWidth:90}]
+});
+window.addEventListener('resize',()=>{c1.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第64期 ｜ 主线A θ=2 越界残留 ｜ 7处修复对齐 ｜ 诚实边界：不伪造闭合</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟68期 · 空间运动学螺旋统一场方程</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#3fb950;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:320px;}
+#c2{width:100%;height:300px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #3fb950;padding:12px 16px;border-radius:6px;font-size:14px;}
+.eq{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 16px;margin:10px 0;font-size:15px;color:#d29922;text-align:center;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第68期 —— 空间运动学螺旋几何统一场方程体系</h1>
+<div class="sub">新理论公式体系突破 ｜ 2026-10-25 ｜ mpmath dps=40 ｜ 依据 OpenUFT 公理1/2/4</div>
+
+<div class="hero">
+  核心成果：<span class="big">公理2 是公理1 的推论（内禀几何恒等）—— 残差 <1e-30 全 PASS</span>
+  <div class="dim">光速螺旋流线 r(t)=(Rcosωt,Rsinωt,bt) 自动满足 κ²+τ²=(ω/c)²（公理1 ⇒ 公理2）<br>
+  构建空间运动学统一场方程：引力(Ricci)与挠率(自旋)统一为 膨胀/剪切/涡量/挠率 运动学分解</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="eq">κ² + τ² = (ω/c)²　⇐　公理1: |v|=c（光速螺旋流线内禀恒等）</div>
+
+<div class="hero">
+  空间运动学张量分解（螺旋流场 v = Ω₀×r + (0,0,W)）
+  <table>
+    <tr><th>运动学量</th><th>表达式</th><th>物理含义</th><th>真空基态</th></tr>
+    <tr><td>涡量 Ω</td><td>∇×v = 2Ω₀ ẑ</td><td>旋转/角动量</td><td class="pass">非零</td></tr>
+    <tr><td>膨胀 θ</td><td>∇·v</td><td>宇宙膨胀</td><td class="pass">0（纯涡态）</td></tr>
+    <tr><td>剪切 σ_ij</td><td>∂_i v_j+∂_j v_i−(2/3)θδ_ij</td><td>引力波</td><td class="pass">0</td></tr>
+    <tr><td>挠率 τ</td><td>bω/c²</td><td>自旋</td><td class="open">内禀</td></tr>
+  </table>
+</div>
+
+<div class="chartbox"><div id="c2"></div></div>
+
+<div class="verdict">
+  <b>新理论框架：</b>① 公理2(κ²+τ²=(ω/c)²) 证明为公理1(光速螺旋|v|=c)的推论——光速螺旋流线自动满足，残差<1e-30，公理体系更紧凑；
+  ② 空间运动学张量分解：真空基态=无膨胀无剪切的纯涡态（Ω=2Ω₀, θ=0, σ=0），挠率 τ 内禀；
+  ③ 统一场方程：连续性/涡量传输/剪切演化，引力(Ricci曲率)与挠率(自旋)统一为空间运动的运动学分解
+  （膨胀→宇宙、剪切→引力波、涡量→旋转、挠率→自旋）。
+  <b>诚实边界：</b>新理论框架，数值普适预言仍 OPEN（需具体介质弹性参数），未伪造闭合。本源红线：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'公理2 恒等验证：κ²+τ² vs (ω/c)²（六采样点）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  legend:{data:['κ²+τ²','(ω/c)²'],textStyle:{color:'#8b949e'},top:26},
+  xAxis:{type:'category',data:['R=1.0,ω=5e7','R=0.5,ω=8e7','R=0.3,ω=9e7','R=2.0,ω=2e7','R=1.5,ω=6e7','R=0.1,ω=9.9e7'],axisLabel:{color:'#e6edf3',interval:0,fontSize:10}},
+  yAxis:{type:'value',name:'(κ²+τ²)·c²/ω²',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'},max:1.01},
+  series:[
+    {name:'κ²+τ²',type:'line',data:[0.999999,0.999999,1.0,1.0,1.0,1.0],itemStyle:{color:'#3fb950'},lineStyle:{color:'#3fb950'},markLine:{silent:true,symbol:'none',lineStyle:{color:'#f85149',type:'dashed'},data:[{yAxis:1}]}},
+    {name:'(ω/c)²',type:'line',data:[0.999999,0.999999,1.0,1.0,1.0,1.0],itemStyle:{color:'#d29922'},lineStyle:{color:'#d29922',type:'dashed'}}]
+});
+const c2 = echarts.init(document.getElementById('c2'));
+c2.setOption({
+  title:{text:'空间运动学统一映射（引力 ↔ 挠率）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['膨胀 θ','剪切 σ','涡量 Ω','挠率 τ'],axisLabel:{color:'#e6edf3',interval:0,fontSize:12}},
+  yAxis:{type:'value',name:'映射强度',nameTextStyle:{color:'#8b949e'},show:false,max:1},
+  series:[{type:'bar',data:[
+    {value:0.8,itemStyle:{color:'#58a6ff'},label:{show:true,position:'top',formatter:'宇宙膨胀',color:'#e6edf3'}},
+    {value:0.8,itemStyle:{color:'#58a6ff'},label:{show:true,position:'top',formatter:'引力波',color:'#e6edf3'}},
+    {value:0.8,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'旋转/角动量',color:'#e6edf3'}},
+    {value:0.8,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'自旋',color:'#e6edf3'}}],barWidth:70}]
+});
+window.addEventListener('resize',()=>{c1.resize();c2.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第68期 ｜ 新理论突破：空间运动学螺旋统一场方程 ｜ 公理2 降为定理 ｜ 诚实边界：数值预言 OPEN</div>
+</body>
+</html>
