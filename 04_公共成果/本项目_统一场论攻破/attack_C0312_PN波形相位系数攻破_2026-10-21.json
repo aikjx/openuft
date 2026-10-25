@@ -1,0 +1,51 @@
+{
+  "id": "C0312",
+  "title": "PN波形相位系数攻破",
+  "date": "2026-10-21",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "PN 相位系数闭式（equal-mass）",
+      "value": "ψ0=1、ψ1=6.441798942、ψ15=16π=50.26548246（0PN/1PN/1.5PN 纯常数）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "收敛性",
+      "value": "@v=0.1：1PN 修正 0.064417989——PN 展开在牛顿收敛半径内低阶主导",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "TUFT 供给=0",
+      "value": "0",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_PN1",
+      "passed": true,
+      "note": "1PN 系数 ψ1=3715/756+55η/9=6.4417989（η=1/4 equal-mass）"
+    },
+    {
+      "name": "G2_PN15",
+      "passed": true,
+      "note": "1.5PN 系数 16π=50.265482（tail 效应精确常数）"
+    },
+    {
+      "name": "G3_CONV",
+      "passed": true,
+      "note": "收敛检查 @v=0.1：1PN 修正 0.064418（~6.4%）——PN 展开低阶主导成立"
+    },
+    {
+      "name": "G4_TUFT_ZERO",
+      "passed": true,
+      "note": "TUFT 无 PN 展开/无波形供给 → 结构性负面，撞 C7"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT 结构性负面闭合",
+  "note": "口径：非自旋圆形轨道 PN 相位系数（0PN/1PN/1.5PN），η=1/4；v=0.1 收敛检查",
+  "precision": "mpmath 250 位"
+}

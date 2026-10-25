@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟62期 · 渐近安全G0预测力攻破</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:23px;color:#3fb950;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:340px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #d29922;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第62期 —— 渐近安全 G₀ 预测力上限</h1>
+<div class="sub">UV 完备边界 ｜ 2026-10-25 ｜ mpmath dps=40 + RK4 ｜ 对标 主线A(G=公理输入) / §12 UV-精算</div>
+
+<div class="hero">
+  核心结论：<span class="big">渐近安全机制不预测 G₀ 数值 —— G₀ 为连续自由标定值（连续族），非首原可导出</span>
+  <div class="dim">EH 截断 NGFP 临界超曲面维数=2（需 (G₀,Λ₀) 两个实验输入）；RK4 沿临界轨迹积分：IR 端 g(k→0) 随初始扰动连续变化<br>
+  渐近安全提供 UV 完备（反遮蔽）但不提供 G₀ 数值本源 → 证实主线A"G=公理输入"判定。</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  判定
+  <table>
+    <tr><th>命题</th><th>结论</th><th>判定</th></tr>
+    <tr><td>渐近安全机制预测 G₀ 数值</td><td>否（临界超曲面维数=2）</td><td class="fail">已证</td></tr>
+    <tr><td>IR 端 G₀ 唯一确定</td><td>否（RK4 连续族）</td><td class="fail">已证</td></tr>
+    <tr><td>渐近安全提供 UV 完备</td><td>是（反遮蔽 G~g\*/k²）</td><td class="pass">有效</td></tr>
+    <tr><td>G₀ 数值本源</td><td>需实验标定（不可首原预测）</td><td class="open">边界</td></tr>
+    <tr><td>主线A"G=公理输入"判定</td><td>证实（两条独立路径交叉）</td><td class="pass">有效</td></tr>
+  </table>
+</div>
+
+<div class="verdict">
+  <b>诚实审计：</b>EH 截断 NGFP 有 2 个相关方向（θ=1.48±3.04i），UV 临界超曲面维数=2，固定轨迹需 (G₀,Λ₀) 两个实验输入；
+  本卷 RK4 沿临界轨迹积分证实 IR 端 g(k→0) 随初始扰动连续变化（C=0.05→2.68e-4、0.10→3.75e-4、0.20→4.78e-5、0.40→1.61e-4、0.80→5.44e-7），G₀ 为连续自由标定值；
+  渐近安全提供 UV 完备（反遮蔽）但不预测 G₀，与主线A"G=公理输入"四层判据一致并交叉验证。本源红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'RK4 沿临界轨迹：不同初始扰动 → IR 端 g(k→0) 连续族',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['C=0.05','C=0.10','C=0.20','C=0.40','C=0.80'],axisLabel:{color:'#e6edf3',interval:0,fontSize:12}},
+  yAxis:{type:'log',name:'IR 端 g(k→0)',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e',formatter:'1e{value}'}},
+  series:[{type:'bar',data:[
+    {value:2.684e-4,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'2.68e-4',color:'#e6edf3'}},
+    {value:3.747e-4,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'3.75e-4',color:'#e6edf3'}},
+    {value:4.777e-5,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'4.78e-5',color:'#e6edf3'}},
+    {value:1.607e-4,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'1.61e-4',color:'#e6edf3'}},
+    {value:5.436e-7,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'5.44e-7',color:'#e6edf3'}}],
+    barWidth:70}]
+});
+window.addEventListener('resize',()=>{c1.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第62期 ｜ 渐近安全 G₀ 预测力 ｜ G₀ 连续族、非首原可导出 ｜ 诚实边界：不伪造闭合</div>
+</body>
+</html>

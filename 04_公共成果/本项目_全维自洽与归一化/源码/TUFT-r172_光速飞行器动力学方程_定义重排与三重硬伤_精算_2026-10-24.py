@@ -16,7 +16,7 @@ r170（《物理常数本质本源》，09:14:06）与 r171（《常数 k′ 量
   ② 物理层：能量方程、动量守恒、伽利略不变性、v→c 自限 四条可算判据
   ③ 方法论层：自称「验证」的脚本 vs 机器审计（assert=0 / diff=0 / 量纲硬编码）
 
-分层铁律：本卷条目**不可与 r159–r169 相加**。
+分层铁律：本卷条目**不可与 r159–r171 相加**。
 治理红线：数学自洽 ≠ 实验证实；本卷只做可算判决，不产生新物理。
 纯标准库（本环境无 numpy / sympy / mpmath），Python 3.8。
 """
@@ -830,7 +830,7 @@ def run_guards(A, B, C, D, E):
           n_pass >= 3, "PASS 条目数 = {}".format(n_pass))
 
     g10b = any(("分层铁律" in r) and ("相加" in r) for r in REDLINE)
-    guard("G11 分层铁律守卫：须显式声明本卷条目不可与 r159–r169 相加（真查 REDLINE）",
+    guard("G11 分层铁律守卫：须显式声明本卷条目不可与 r159–r171 相加（含并行会话 r170/r171；真查 REDLINE）",
           g10b, "含分层声明 = {}".format(g10b))
 
 
@@ -840,7 +840,7 @@ REDLINE = [
     "不宣称「张祥前体系全错」，只判决本卷所列命题。",
     "A0/A1/A2/A3 四条代数层结论**靶是对的**，已诚实记为 PASS。",
     "B6 的「电磁力隐含」按防过度指控原则记 BOUNDARY，不作缺陷证据。",
-    "分层铁律：本卷条目不可与 r159–r169 相加。",
+    "分层铁律：本卷条目不可与 r159–r171 相加。",
 ]
 
 
@@ -940,7 +940,7 @@ def write_outputs(payload):
     L.append("")
     L.append("- 编号：**{}**　日期：{}".format(payload["id"], payload["date"]))
     L.append("- 靶：`{}`".format(payload["target"]))
-    L.append("- 分层：本卷条目**不可与 r159–r169 相加**")
+    L.append("- 分层：本卷条目**不可与 r159–r171 相加**")
     L.append("")
     L.append("## 一、判词")
     L.append("")
@@ -1007,7 +1007,7 @@ def write_outputs(payload):
     V.append("")
     V.append("- 编号：**{}**　日期：{}".format(payload["id"], payload["date"]))
     V.append("- 靶：`{}`".format(payload["target"]))
-    V.append("- 分层：本卷条目**不可与 r159–r169 相加**")
+    V.append("- 分层：本卷条目**不可与 r159–r171 相加**")
     V.append("")
     V.append("## 一、判词")
     V.append("")

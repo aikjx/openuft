@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟59期 · 挠率不传播断言攻破</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#3fb950;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:340px;}
+#c2{width:100%;height:340px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #3fb950;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第59期 —— 攻破"挠率不传播"断言</h1>
+<div class="sub">空间运动学边界 ｜ 2026-10-25 ｜ mpmath dps=40 ｜ 对标 §7(挠率不传播) + §12 OPEN-7</div>
+
+<div class="hero">
+  核心结论：<span class="big">§7"挠率不传播"断言【有效-结构成立】 —— 传播挠率被 LIGO 决定性排除</span>
+  <div class="dim">最小 EC：挠率由自旋密度代数确定 T=(κ²/2)S，无动能项、无 k² 传播子、真空 T=0<br>
+  传播挠率预测 6 极化模，被 GW170817 纯张量偏好 Bayes>10²⁰（GRB 先验 ~10²⁶）压倒性排除。</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  判定
+  <table>
+    <tr><th>命题</th><th>结论</th><th>判定</th></tr>
+    <tr><td>最小 EC 中挠率代数确定</td><td>是（T=(κ²/2)S，无动能项）</td><td class="pass">有效</td></tr>
+    <tr><td>代数挠率传播子</td><td>无 k² 动量依赖，非传播</td><td class="pass">有效</td></tr>
+    <tr><td>传播挠率预测</td><td>最多 6 极化模</td><td class="fail">被排除</td></tr>
+    <tr><td>GW170817 排除传播挠率</td><td>Bayes>10²⁰（GRB ~10²⁶）</td><td class="fail">决定性</td></tr>
+    <tr><td>§7"挠率不传播"断言</td><td>【有效-结构成立】</td><td class="pass">支持收口</td></tr>
+  </table>
+</div>
+
+<div class="chartbox"><div id="c2"></div></div>
+
+<div class="verdict">
+  <b>诚实审计：</b>权威定本 §7"挠率为代数自旋关系、不传播"在最小 EC（Sciama–Kibble）中正确成立【有效】——
+  挠率由自旋密度代数确定，无动能项、无动量依赖传播子、真空 T=0，不产生额外引力波极化模；
+  与 LIGO–Virgo–KAGRA GW170817 纯张量偏好完全一致，强化 57 期 α_τ 压制结论。
+  诚实边界：若引入传播挠率（(∇T)² 或曲率平方），挠率变传播并预测最多 6 极化模，该类理论被 Bayes>10²⁰ 压倒性排除。
+  OPEN-7 精确化：代数挠率预测零额外模与观测一致。本源红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'极化模计数：GR vs 传播挠率 EC',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['GR（已观测）','传播挠率 EC（被排除）'],axisLabel:{color:'#e6edf3',interval:0,fontSize:12}},
+  yAxis:{type:'value',name:'极化模数',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[
+    {value:2,itemStyle:{color:'#3fb950'}},
+    {value:6,itemStyle:{color:'#f85149'}}],
+    label:{show:true,position:'top',color:'#e6edf3',formatter:(p)=>p.value+' 模'},
+    barWidth:80}]
+});
+const c2 = echarts.init(document.getElementById('c2'));
+c2.setOption({
+  title:{text:'GW170817 纯张量 vs 其他极化（ln Bayes）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['vs 矢量','vs 标量','GRB先验 vs 矢量','GRB先验 vs 标量'],axisLabel:{color:'#e6edf3',interval:0,fontSize:11}},
+  yAxis:{type:'value',name:'ln Bayes',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[
+    {value:46.1,itemStyle:{color:'#f85149'}},
+    {value:46.1,itemStyle:{color:'#f85149'}},
+    {value:59.9,itemStyle:{color:'#f85149'}},
+    {value:59.9,itemStyle:{color:'#f85149'}}],
+    label:{show:true,position:'top',color:'#e6edf3',formatter:(p)=>p.value.toFixed(1)},
+    barWidth:60}]
+});
+window.addEventListener('resize',()=>{c1.resize();c2.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第59期 ｜ 挠率不传播断言 ｜ 诚实边界：最小EC有效、传播挠率被观测排除、OPEN-7精确化</div>
+</body>
+</html>

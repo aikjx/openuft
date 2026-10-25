@@ -1,0 +1,54 @@
+TUFT-r176_核力场定义方程_定义求导与量纲阶数错位_精算_2026-10-25
+target: d:\a10\aikjx\code\my_lib\openuft\01_独立体系\S17_统一场论核心公式\04_理论推导\核心公式集\18-核力场定义方程\1.md
+target_lines: 189
+
+A01  PASS      求导链 d/dt(r/r³) = (ṙ − 3 r̂ ṙ)/r³ 的算术正确性（解析 vs 中心差分）
+A02  FAIL      步骤 4『dr/dt = c』与分子里的标量 ṙ 重复计数：由公设 ṙ = c·r̂ 被唯一决定
+A03  FAIL      严格代入公设后 D = −(Gmc/r³)(ĉ − 3cosθ r̂) ⇒ θ=0 时 D = +2(Gmc/r³) r̂（反向加倍）
+A04  FAIL      简化式 D ≈ −Gmc/r³ 的成立条件是 c ⊥ r̂（ṙ=0），不是靶声称的 ṙ ≪ c
+B01  FAIL      量纲缺口（目标/实得）= T¹：D 比加速度多带一个 T⁻¹（急动度 ≠ 加速度）
+B02  FAIL      阶数错位：D = dA/dt 是引力的三阶时间导（jerk），核力项 m·dc/dt 是二阶（力）
+B03  FAIL      补齐因子唯一化：整数幂网格内命中 0，闭式解需半整数幂 t_P；且 t_P 口径差 58 量级
+B04  INFO      D 恒为无旋场（D = −∇[Gm(x·c)/r³]），∇×D 机器零 ⇒ 形式保守但零信息
+C01  PASS      1/r³ 确实比 1/r² 衰减得快（比值 = 1/r，单调递减）
+C02  BOUNDARY  1/r³ 只是幂律、无截断：1–10 fm 与 Yukawa 量级相近，50 fm 处强 1e10 倍
+C03  FAIL      无零点、无硬核、无饱和：|D| 在 r→0 单调发散，结合能无下界
+C04  FAIL      非中心力：r×D = −Gm(r×c)/r³ ≠ 0（θ≠0）⇒ 角动量不守恒
+C05  BOUNDARY  c 的方向两难：固定 ⇒ |D| 各向异性 2 倍（100%）；各向同性 ⇒ 场无确定方向
+C06  FAIL      强度折算恰为引力：a_eff = |D|·(r/c) = Gm/r²，比核力弱 38.2 量级
+C07  FAIL      『做功量级 ~ mc²』不成立：靶自写式量纲为功率，且差 15.4 量级；需 r₀ = 1.93e−23 m
+D01  FAIL      项位错：展开式 F = (c−v)ṁ + m ċ − m v̇ 中，m ċ 是**第二项**，靶称之为第三项
+D02  BOUNDARY  D 与 m·dc/dt 无一阶关系；若沿用上游『c 恒定』公设则核力项恒为零
+D03  INFO      靶自承『高度推测性/猜测』，并自列四项未描述（电荷无关性、自旋依赖、饱和性、精确势）
+
+CTRL C1   PASS 2.9536165102624174e-11
+CTRL C2   PASS 10/10
+CTRL C3   PASS 1.332268e-15
+CTRL C4   PASS 2.000000e+00
+CTRL C5   PASS 2.307692e-02
+CTRL C6   PASS 3.239434e-16
+CTRL C7   PASS 2.028535e+00
+CTRL C8   PASS power=0 model=1
+CTRL C9   PASS lines=189 code=3
+CTRL C10  PASS 1.185542e-16
+GUARD PASS G1 量纲工具自检 10/10 ok=10/10
+GUARD PASS G2 求导残差 <1e−9 且步长收敛单调 resid=7.732153e-12
+GUARD PASS G3 恒等式残差 <1e−12 max=1.332268e-15
+GUARD PASS G4 θ=0：|D|/(Gmc/r³)=2 且 D 与靶简化式严格反向（反号×加倍） ratio=2.000000e+00 cos(D,−ĉ)=-1.000000e+00 dev=3.000000e+00
+GUARD PASS G5 量纲缺口 [a]/[D] == T¹（等价：D 多带 T⁻¹） gap=T^1
+GUARD PASS G6 三基整数网格命中 0 且加 l_P 后命中 ≥1 hits3=0 hits4=2
+GUARD PASS G7 a_eff ≡ Gm/r²（相对差 <1e−15） rel=1.185542e-16
+GUARD PASS G8 强度差 38 量级 ±0.6 且库仑 36.1 口径 ±0.3 N/s=38.229 N/C=36.092
+GUARD PASS G9 角动量：θ=0 归一化力矩 ~0 且 θ=90° = 1（双条件） tau0_norm=3.239434e-16 tau90_norm=1.000000e+00
+GUARD PASS G10 无旋残差 <1e−8 curl_rel=3.314196e-15
+GUARD PASS G11 1/r³ 零点 0 个且单调递减 nz=0 mono=True
+GUARD PASS G12 功率差 15.4 量级 ±0.6 且 r₀*/r_nuc 差 7.7 量级 ±0.6 log10=1.542902e+01 r0star=1.929707e-23
+GUARD PASS G13 整数幂网格规模可复算（343 / 2401） 7^3=343 7^4=2401
+GUARD PASS G14 控制组全过（10/10） ok=10/10
+GUARD PASS G15 条目数 = 18 且分层铁律声明存在 items=18
+
+items: 18
+stat: {"PASS": 2, "FAIL": 11, "INFO": 2, "BOUNDARY": 3}
+controls: 10/10
+guards: 15/15
+verdict: NUCLEAR-FORCE-FIELD-IS-JERK-OF-GRAVITY-FIELD-DIMENSION-GAP-T-PLUS-ONE-D-EXCESS-T-MINUS-ONE-SIGN-FLIPS-AT-THETA-ZERO-NOT-CENTRAL-NOT-SHORT-RANGE-AND-STRENGTH-IS-GRAVITATIONAL

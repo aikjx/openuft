@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟61期 · 定本汇总表越界残留审计</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#3fb950;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:340px;}
+#c2{width:100%;height:300px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #d29922;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第61期 —— 定本 L177 汇总表越界残留审计</h1>
+<div class="sub">定本制式审计 ｜ 2026-10-25 ｜ mpmath dps=40 ｜ 对标 §10 汇总表 L177 vs §8 正文</div>
+
+<div class="hero">
+  核心结论：<span class="big">L177 汇总表"θ=2 截断无关【方案闭合】"为越界残留 —— 已降级为【有效-存在性成立】</span>
+  <div class="dim">与 §8 正文（已勘误）内部不一致，且已被 56期（θ=2.296/1.689±2.486i）与 60期（g\*=0.707 vs 0.403）证伪<br>
+  已落地：L177 降级 + 附录 C 新增 C.3，达成正文/汇总表/附录三处制式一致。</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  判定
+  <table>
+    <tr><th>命题</th><th>结论</th><th>判定</th></tr>
+    <tr><td>L177 与 §8 正文一致性</td><td>内部不一致（正文已勘误、表未同步）</td><td class="fail">BROKEN</td></tr>
+    <tr><td>θ=2 截断无关</td><td>θ=2.296 / 1.689±2.486i（证伪）</td><td class="fail">越界</td></tr>
+    <tr><td>g\* 数值截断相关</td><td>0.707 vs 0.403（43.1%）</td><td class="fail">已证</td></tr>
+    <tr><td>NGFP 存在性跨截断</td><td>成立（渐近安全核心保持）</td><td class="pass">有效</td></tr>
+    <tr><td>修复后制式一致</td><td>正文/汇总表/附录对齐</td><td class="pass">达成</td></tr>
+  </table>
+</div>
+
+<div class="chartbox"><div id="c2"></div></div>
+
+<div class="verdict">
+  <b>诚实审计：</b>L177 汇总表"θ=2 截断无关【方案闭合】"为越界残留，与 §8 正文（已勘误）内部不一致；
+  已落地修复——L177 状态由【方案闭合】降为【有效-存在性成立】、附录 C 新增 C.3、标题/文末句同步 56/57/60/61 期；
+  不推翻 NGFP 存在性，正文数字口径不静默改写；达成正文/汇总表/附录三处制式一致。本源红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'L177 越界残留证据（θ 与 g\* 数值截断相关）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['essential RG θ','EH θ','optimized g*','sharp g*'],axisLabel:{color:'#e6edf3',interval:0,fontSize:12}},
+  yAxis:{type:'value',name:'θ / g\* 值',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[
+    {value:2.296,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'2.296',color:'#f85149'}},
+    {value:1.689,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'1.689',color:'#f85149'}},
+    {value:0.707,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'0.707',color:'#d29922'}},
+    {value:0.403,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'0.403',color:'#d29922'}}],
+    barWidth:60}]
+});
+const c2 = echarts.init(document.getElementById('c2'));
+c2.setOption({
+  title:{text:'修复前后 L177 状态（制式一致达成）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['修复前','修复后'],axisLabel:{color:'#e6edf3',interval:0,fontSize:12}},
+  yAxis:{type:'value',name:'',nameTextStyle:{color:'#8b949e'},show:false,max:10},
+  series:[{type:'bar',data:[
+    {value:6,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'【方案闭合】\n(越界残留)',color:'#f85149',fontSize:12,lineHeight:16}},
+    {value:3,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'【有效-存在性成立】\n(制式一致)',color:'#3fb950',fontSize:12,lineHeight:16}}],
+    barWidth:90}]
+});
+window.addEventListener('resize',()=>{c1.resize();c2.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第61期 ｜ 定本 L177 越界残留审计 ｜ 制式一致达成 ｜ 诚实边界：不伪造闭合</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟63期 · α*/G*层级审计</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#f85149;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:340px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #f85149;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第63期 —— α*/G*=0.4773 层级审计</h1>
+<div class="sub">本源四层判据审计 ｜ 2026-10-25 ｜ mpmath dps=40 ｜ 对标 主线A §2.5 / 附录B M3</div>
+
+<div class="hero">
+  核心结论：<span class="big">α*/G*=0.4773 的【已证-几何】DERIV 标注属越界残留 —— 应降级为 FIELD</span>
+  <div class="dim">0.4773 由不动点线性关系 β_α=0 导出（−D1/D2=0.477379，数值自洽有效）<br>
+  但支撑的 D1/D2/C1–C4 是 V3.4 硬编码场内容输入；且附录B M3 已证伪其 su(3) Casimir 首原来源、登记为方案相关。</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  证据链
+  <table>
+    <tr><th>来源</th><th>结论</th></tr>
+    <tr><td>本卷复算</td><td>0.4773=−D1/D2=0.477379（不动点线性，数值自洽）</td></tr>
+    <tr><td>V3.4 RG 流脚本 L7–9</td><td>D1/D2/C1–C4 全部硬编码场内容输入（非几何首原）</td></tr>
+    <tr><td>本源精算脚本 L101</td><td>ratio_fp=0.4773 硬编码输入（注释"已首原导出"非推导）</td></tr>
+    <tr><td>权威定本附录B M3</td><td>0.4773 方案相关，不能由 su(3) Casimir 首原</td></tr>
+  </table>
+</div>
+
+<div class="verdict">
+  <b>诚实审计：</b>0.4773 数值本身为代数关系（不动点线性，有效）；但其"无参数首原"地位被否定——
+  支撑的 β 系数是场内容输入，且 M3 已证伪 su(3) Casimir 首原来源、登记为方案相关。
+  主线A §2.5 的【已证-几何】DERIV 标注违反四层判据（FIELD 需场内容输入、OPEN 不得升为已证），
+  应降级为 FIELD（依赖场内容 β 系数）或 DEFN。与 60 期（g* 截断相关）协同：UV 侧耦合比值不具数值普适性。
+  本源红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'α*/G* 层级判定：已证 → 越界 → FIELD',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['主线A标注','实际来源','正确层级'],axisLabel:{color:'#e6edf3',interval:0,fontSize:12}},
+  yAxis:{type:'value',show:false,max:10},
+  series:[{type:'bar',data:[
+    {value:9,itemStyle:{color:'#f85149'},label:{show:true,position:'top',formatter:'【已证-几何】\n(越界残留)',color:'#f85149',fontSize:12,lineHeight:16}},
+    {value:5,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'场内容输入\n+D1/D2方案相关',color:'#d29922',fontSize:12,lineHeight:16}},
+    {value:3,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'【FIELD】\n(制式一致)',color:'#3fb950',fontSize:12,lineHeight:16}}],
+    barWidth:90}]
+});
+window.addEventListener('resize',()=>{c1.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第63期 ｜ α*/G* 层级审计 ｜ 越界残留修复 ｜ 诚实边界：不伪造闭合</div>
+</body>
+</html>
