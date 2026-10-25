@@ -1,12 +1,14 @@
-# 判定_TUFT-r188_四力还原链路闭环式_牛顿极限系数与alpha_s_alpha_G口径_2026-10-25
+# 判定_TUFT-r190_四力还原链路闭环式_牛顿极限系数与alpha_s_alpha_G口径_2026-10-25
 
 **审计对象**：`07_统一场方程/03_四力还原.md`（10,736 B，只读）
-**引擎**：`04_公共成果/本项目_全维自洽与归一化/源码/TUFT-r188_四力还原链路闭环式_牛顿极限系数与alpha_s_alpha_G口径_2026-10-25.py`
+**引擎**：`04_公共成果/本项目_全维自洽与归一化/源码/TUFT-r190_四力还原链路闭环式_牛顿极限系数与alpha_s_alpha_G口径_2026-10-25.py`
 **数据**：同茎 `{json, md, _report.txt}`（`…/数据/`）
 **运行**：退出码 0；条目 29（PASS 17 / FAIL 4 / BOUNDARY 2 / INFO 6 / CORRECTED 0）；守卫 35/35；控制组 12/12；①池 12/12；累计供给 0/12
 
+**编号说明**：r188 = S13 残余路径一–三第一性审计，r189 = S13 口径归一化修复与归属审计（两条并行链）。本册承 r187（02_变分推导）取主线序列下一号 **r190**，与 S13 兄弟链不重叠、不合并计数。
+
 **判定串**：
-`R188-FOURFORCE-REDUCTION-AUDIT-NEWTON-FINAL-4PIG-OK-INTERMEDIATE-MIX-G00-R00-TWO-2X-CANCEL-FAIL-LABEL-MERCURY-42.980-ARCSEC-OK-DEFLECT-1.751-ARCSEC-OK-KAPPA2-2.0766E-43-SI-OK-GW-DIM-OK-MIXING-EIGEN-0-MZ-OK-COULOMB-MINUS4PI-OK-ALPHA-SCHEME-132.17-BOUNDARY-PHOTON-MASS-1E-18-EV-VS-GALACTIC-SCALE-FAIL-LABEL-GF-IDENTITY-OK-RWEAK-2.455E-18-OK-GV-ELECTRON-0.0376-OK-ALPHA-S-LO-0.13525-VS-0.118-FAIL-LO-LAMBDA-87.8MEV-2LOOP-POLE-243MEV-ASYMPTOFREEDOM-B0-23-3-OK-RPI-1.414FM-OK-ALPHA-G-5.58E-35-VS-5E-33-FAIL-90X-PLANCK-RATIO-1.34E17-OK-TUFT-SUPPLY-0`
+`R190-FOURFORCE-REDUCTION-AUDIT-NEWTON-FINAL-4PIG-OK-INTERMEDIATE-MIX-G00-R00-TWO-2X-CANCEL-FAIL-LABEL-MERCURY-42.980-ARCSEC-OK-DEFLECT-1.751-ARCSEC-OK-KAPPA2-2.0766E-43-SI-OK-GW-DIM-OK-MIXING-EIGEN-0-MZ-OK-COULOMB-MINUS4PI-OK-ALPHA-SCHEME-132.17-BOUNDARY-PHOTON-MASS-1E-18-EV-VS-GALACTIC-SCALE-FAIL-LABEL-GF-IDENTITY-OK-RWEAK-2.455E-18-OK-GV-ELECTRON-0.0376-OK-ALPHA-S-LO-0.13525-VS-0.118-FAIL-LO-LAMBDA-87.8MEV-2LOOP-POLE-243MEV-ASYMPTOFREEDOM-B0-23-3-OK-RPI-1.414FM-OK-ALPHA-G-5.58E-35-VS-5E-33-FAIL-90X-PLANCK-RATIO-1.34E17-OK-TUFT-SUPPLY-0`
 
 ---
 
@@ -153,7 +155,7 @@
 
 **E04（INFO）** 三判定：引力/电磁/弱/强 四扇区皆 C1；C2=0、C3=0；①池 12/12、累计供给 0/12。理由：所有数值皆标准常数输入或反演，两条「像预言」的读数（5E−33、α_s=0.1180）被 E02/D01 判为输入回填。
 
-**E05（INFO）** F-label 现成员：T210/T211、C0279 3.01 dB、R187 Δρ_t、**R188 A01/ B05/ D01**；F-exp：C0281 指数、R186 4E3 M☉、**R188 E02**。新增门禁三条：①「−½∇²h̄」必须先标 G_00 还是 R_00；②「上限+检验尺度」必须机核 Compton 波长；③跑动耦合必须标阶次与 Λ 的配套阶。
+**E05（INFO）** F-label 现成员：T210/T211、C0279 3.01 dB、R187 Δρ_t、**R190 A01/ B05/ D01**；F-exp：C0281 指数、R186 4E3 M☉、**R190 E02**。新增门禁三条：①「−½∇²h̄」必须先标 G_00 还是 R_00；②「上限+检验尺度」必须机核 Compton 波长；③跑动耦合必须标阶次与 Λ 的配套阶。
 
 ---
 
@@ -197,6 +199,6 @@
 
 ## §7 下一回合
 
-1. **r189**：`04_守恒律与诺特定理.md`（7.3 KB）——重点核 Noether 流的符号与 (C)/(E)/(YM) 三扇区的守恒式是否同源，检查「能量-动量张量对称性」与「挠率源 s_ab」的相容性。
-2. **r190**：`05_经典极限与现象推导.md`（52 KB）——按切片推进（先 §1–§3），每片独立四件套，避免整卷一次性吞读。
+1. **r191**：`04_守恒律与诺特定理.md`（7.3 KB）——重点核 Noether 流的符号与 (C)/(E)/(YM) 三扇区的守恒式是否同源，检查「能量-动量张量对称性」与「挠率源 s_ab」的相容性。
+2. **r192**：`05_经典极限与现象推导.md`（52 KB）——按切片推进（先 §1–§3），每片独立四件套，避免整卷一次性吞读。
 3. **可选**：把 A07 的 TT 分解做成单列测试（线性化算子零模计数），作为唯一「可机算但本册未做」的补项。

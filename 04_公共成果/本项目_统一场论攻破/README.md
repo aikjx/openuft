@@ -1187,7 +1187,13 @@ S13 尚未从三公理**生成**任何标准模型结构，只**重述 + 事后�
 
 ## 专项分析索引（2026-10-21）
 
-- [专项分析_空间是怎么运动的_TUFT机制评估_2026-10-21.md](专项分析_空间是怎么运动的_TUFT机制评估_2026-10-21.md) ——「空间的运动」三层拆解（度规演化/宇宙膨胀/引力波）+ TUFT 螺旋机制评估：供给=0、结构性负面、不占编号| [`专项分析_TUFT新公式体系突破_v1_2026-10-25.md`](专项分析_TUFT新公式体系突破_v1_2026-10-25.md) | **TUFT 正向突破 v1**（2026-10-25）：5 支新闭式 B1 三本源 Compton 衔接链（m=ℏ√κ/c）· B2 ∇κ⊥∇τ 垂直原理解析（Frenet）· B3 分形 RGE 对数周期（ln2=0.693147）· B4 Proca-Cornell 禁闭势统一闭式（V(0)=0.26667 GeV 有限核）· B5 四力分区尺度链（ln(α_em/α_g)=83.1）；mpmath 250 位、9/9 守卫、exit=0；红线保持、非攻破项不占 C 编号 |
+- [专项分析_空间是怎么运动的_TUFT机制评估_2026-10-21.md](专项分析_空间是怎么运动的_TUFT机制评估_2026-10-21.md) ——「空间的运动」三层拆解（度规演化/宇宙膨胀/引力波）+ TUFT 螺旋机制评估：供给=0、结构性负面、不占编号| [`专项分析_TUFT新公式体系突破_v1_2026-10-25.md`](专项分析_TUFT新公式体系突破_v1_2026-10-25.md) | **TUFT 正向突破 v1**（2026-10-25）：5 支新闭式 B1 三本源 Compton 衔接链（m=ℏ√κ/c）· B2 ∇κ⊥∇τ 垂直原理解析（Frenet）· B3 分形 RGE 对数周期（ln2=0.693147）· B4 Proca-Cornell 禁闭势统一闭式（V(0)=0.26667 GeV 有限核）· B5 四力分区尺度链（ln(α_em/α_g)=83.1）；mpmath 250 位、9/9 守卫、exit=0；红线保持、非攻破项不占 C 编号 || [`专项分析_TUFT新公式体系突破_v2_2026-10-25.md`](专项分析_TUFT新公式体系突破_v2_2026-10-25.md) | **TUFT 正向突破 v2**（2026-10-25）：B6 拓扑荷守恒/旋量对偶（Q=2 精确）· B7 分形×禁闭复合（相位重现 <1e-200）· B8 PPN 重导出（γ=β=1 精确）· B9 因果畴边界（r_s=2954.13 m、δr_s~3.2e-73）· B10 奇点化解（Φ(0)=−c² 精确）；mpmath 250 位、10/10 守卫、exit=0；红线保持、非攻破项不占 C 编号 || [`专项分析_TUFT新公式体系突破_v3_2026-10-25.md`](专项分析_TUFT新公式体系突破_v3_2026-10-25.md) | **TUFT 正向突破 v3**（2026-10-25）：B11 垂直原理×拓扑流（∇·J=0 精确）· B12 Sciama 自旋-挠率（κ²=2.07665e-43、T~4.96e-16 m⁻¹）· B13 三支复合禁闭势（V(0)=2.9e-21 GeV UV 自由）· B14 测地线进动（Δφ=42.999″/世纪）· B15 Rust 并行接口（Amdahl S=5.9259）；mpmath 250 位、7/7 守卫、exit=0；红线保持、非攻破项不占 C 编号 |
+| [`tuff_breakthrough_v3_2026-10-25.py`](tuff_breakthrough_v3_2026-10-25.py) | 突破 v3 精算引擎（mpmath 250 位、7/7 守卫） |
+| [`tuff_breakthrough_v3_2026-10-25.json`](tuff_breakthrough_v3_2026-10-25.json) | 突破 v3 数据（B11–B15 读数） |
+| [`tuff_breakthrough_v3_2026-10-25_report.txt`](tuff_breakthrough_v3_2026-10-25_report.txt) | 突破 v3 运行报告 |
+| [`tuff_breakthrough_v2_2026-10-25.py`](tuff_breakthrough_v2_2026-10-25.py) | 突破 v2 精算引擎（mpmath 250 位、10/10 守卫） |
+| [`tuff_breakthrough_v2_2026-10-25.json`](tuff_breakthrough_v2_2026-10-25.json) | 突破 v2 数据（B6–B10 读数） |
+| [`tuff_breakthrough_v2_2026-10-25_report.txt`](tuff_breakthrough_v2_2026-10-25_report.txt) | 突破 v2 运行报告 |
 | [`tuff_breakthrough_v1_2026-10-25.py`](tuff_breakthrough_v1_2026-10-25.py) | 突破 v1 精算引擎（mpmath 250 位、9/9 守卫） |
 | [`tuff_breakthrough_v1_2026-10-25.json`](tuff_breakthrough_v1_2026-10-25.json) | 突破 v1 数据（B1–B5 读数） |
 | [`tuff_breakthrough_v1_2026-10-25_report.txt`](tuff_breakthrough_v1_2026-10-25_report.txt) | 突破 v1 运行报告 |
