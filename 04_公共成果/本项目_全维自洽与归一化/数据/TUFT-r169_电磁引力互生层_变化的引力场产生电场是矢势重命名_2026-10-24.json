@@ -1,0 +1,162 @@
+{
+  "stem": "TUFT-r169_电磁引力互生层_变化的引力场产生电场是矢势重命名_2026-10-24",
+  "verdict": "VARYING-GRAVITATIONAL-FIELD-PRODUCES-ELECTRIC-FIELD-IS-A-VECTOR-POTENTIAL-RENAMING-FARADAY-LAW-CIRCULAR",
+  "items": [
+    {
+      "id": "A1",
+      "title": "E=−f∂A/∂t、B=f∇×A 是电磁矢势的重命名",
+      "status": "FAIL",
+      "note": "取 A_grav = A_EM/f，则靶式 E=−f·∂A_grav/∂t 与 B=f·∇×A_grav 逐位等于标准 Maxwell 的 E=−∂A_EM/∂t、B=∇×A_EM（E 残差 0.0e+00、B 残差 0.0e+00）。⇒ 靶所谓的『电场=引力场变化率』只是把电磁矢势 A_EM 重命名为 f·A_grav，零新增物理。",
+      "metrics": {
+        "res_E": 0.0,
+        "res_B": 0.0
+      }
+    },
+    {
+      "id": "A2",
+      "title": "法拉第定律是被 B 的定义重述，不是导出",
+      "status": "FAIL",
+      "note": "∇×E = −f·∂(∇×A_grav)/∂t = −∂(f·∇×A_grav)/∂t = −∂B/∂t，最后一步依赖 B≡f·∇×A_grav（这是靶自己的定义）。四相位残差 0.0e+00 ⇒ 法拉第定律是恒等式，被 B 的定义重述，非独立导出。",
+      "metrics": {
+        "res": 0.0
+      }
+    },
+    {
+      "id": "A3",
+      "title": "安培定律需额外假设 Maxwell 波动方程（循环）",
+      "status": "FAIL",
+      "note": "∇×B 与 μ0ε0·∂E/∂t 相等 ⟺ k²=ω²/c²（真空色散）。本组取 ω/k=0.5 m/s ≠ c，残差 1.000e+00（dispersion=3.595e+17）⇒ 安培定律不是无条件导出；色散对照 ω=kc 时残差 0.0e+00（由 Maxwell 波动方程本身保证）⇒ 『导出』实为把波动方程当隐藏前提的循环。",
+      "metrics": {
+        "res": 1.0,
+        "dispersion": 3.5950207149472704e+17,
+        "res_disp": 0.0
+      }
+    },
+    {
+      "id": "A4",
+      "title": "常数 f 数值三重矛盾",
+      "status": "FAIL",
+      "note": "靶文 f≈1.05e−8 kg/A；但 √(4πε0G)=8.617517e-11、且 (c/2)·√(4πε0G)=1.291733e-02。三者互斥（比值 1.2184e+02 与 8.1286e-07，均 ≠1）。靶自承『f 计算细节缺失』，本卷机读证实数值不自洽。",
+      "metrics": {
+        "f_paper": 1.05e-08,
+        "f_sqrt": 8.617517197589872e-11,
+        "f_c2": 0.012917333312613697
+      }
+    },
+    {
+      "id": "A5",
+      "title": "量纲 f=[M I⁻¹] 自洽（诚实记 PASS）",
+      "status": "PASS",
+      "note": "[E]=[M L T⁻³ I⁻¹]、[dA/dt]=[L T⁻³] ⇒ [f]=[M I⁻¹]，与 f=k'/(4πε0G) 量纲一致。量纲层面自洽，与 r168 的量纲清点不冲突。",
+      "metrics": {
+        "dim_f": "(1, 0, 0, -1)",
+        "dim_f_ok": true
+      }
+    },
+    {
+      "id": "B1",
+      "title": "与标准 Maxwell 不可区分（防过度指控）",
+      "status": "BOUNDARY",
+      "note": "A_grav（引力场=空间加速度）在电磁学语境无独立可观测量，A_EM=f·A_grav 使任意电磁现象都可等价描述 ⇒ 靶式与标准 Maxwell 零区分；本卷不判其『错』，只判其『非新内容』（与靶自承『公设实验支撑薄弱』一致）。",
+      "metrics": {}
+    },
+    {
+      "id": "R1",
+      "title": "修复定价：3 动作枚举",
+      "status": "INFO",
+      "note": "KEEP（E=−f∂A/∂t 仍作『电场起源』）⇒ A1/A2/A3 依旧成立，修不好；DEL（删『电场本质=引力场变化率』诠释）⇒ 退回标准 Maxwell 矢势表述；REPLACE（给 A_grav 补独立观测锚点）⇒ 需另立可检验预言 = 换框架。宣称域内成立 1 / 零代价 0 ⇒ 『修复可行 ≠ 修复后仍有内容』。",
+      "metrics": {
+        "survive": 1,
+        "zero_cost": 0
+      }
+    }
+  ],
+  "controls": [
+    {
+      "id": "C1",
+      "desc": "变量替换逐位一致（A_EM=f·A_grav ⇒ E/B 重命名）",
+      "value": "E=0.0e+00 B=0.0e+00",
+      "expect": "<1e-15",
+      "ok": true
+    },
+    {
+      "id": "C2",
+      "desc": "法拉第恒等式（B 定义重述）",
+      "value": "0.000e+00",
+      "expect": "<1e-15",
+      "ok": true
+    },
+    {
+      "id": "C3",
+      "desc": "安培定律非色散下不成立（残差 O(1)）",
+      "value": "1.000e+00",
+      "expect": "O(1)",
+      "ok": true
+    },
+    {
+      "id": "C4",
+      "desc": "安培定律色散 ω=kc 下成立（对照，残差 0）",
+      "value": "0.000e+00",
+      "expect": "<1e-15",
+      "ok": true
+    },
+    {
+      "id": "C5",
+      "desc": "f 数值三重矛盾（比值 ≠1）",
+      "value": "1.2184e+02 / 8.1286e-07",
+      "expect": "≠1",
+      "ok": true
+    },
+    {
+      "id": "C6",
+      "desc": "量纲 f=[M I⁻¹] 自洽",
+      "value": "True",
+      "expect": "True",
+      "ok": true
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1-变量替换零新增",
+      "ok": true,
+      "detail": "E=0.0e+00 B=0.0e+00"
+    },
+    {
+      "name": "G2-法拉第是恒等式",
+      "ok": true,
+      "detail": "res=0.0e+00"
+    },
+    {
+      "name": "G3-安培需色散假设",
+      "ok": true,
+      "detail": "非色散=1.000e+00 色散=0.0e+00"
+    },
+    {
+      "name": "G4-f 三重矛盾",
+      "ok": true,
+      "detail": "ratio=1.2184e+02"
+    },
+    {
+      "name": "G5-量纲自洽诚实记 PASS",
+      "ok": true,
+      "detail": "dim_f_ok=True"
+    },
+    {
+      "name": "G6-控制组全部通过",
+      "ok": true,
+      "detail": "6/6"
+    }
+  ],
+  "key_numbers": {
+    "res_rename_E": 0.0,
+    "res_rename_B": 0.0,
+    "res_faraday": 0.0,
+    "res_ampere_nondisp": 1.0,
+    "res_ampere_disp": 0.0,
+    "f_paper": 1.05e-08,
+    "f_sqrt": 8.617517197589872e-11,
+    "f_c2": 0.012917333312613697
+  },
+  "controls_ok": "6/6",
+  "guards_ok": "6/6"
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟57期 · 攻破α_τ挠率极化LIGO可观测性</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#d29922;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:360px;}
+#c2{width:100%;height:320px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #d29922;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第57期 —— 攻破 α_τ 挠率极化 LIGO 可观测性</h1>
+<div class="sub">待观测项审计 ｜ 2026-10-24 ｜ mpmath dps=60 ｜ 对标 §7(4.1e-41不可观测) + §12 OPEN-5(α_τ待观测)</div>
+
+<div class="hero">
+  核心结论：<span class="big">α_τ 在 LIGO 下原理上不可达 —— 被灵敏度压制 ~21-23 数量级，非证伪</span>
+  <div class="dim">κ_g² 精算核对正确（偏差 −0.017%）；但 §7 声称的 4.1×10⁻⁴¹ 隐含 s≈14.05 非真实中子星自旋参数，口径不自洽<br>
+  真实修正 ~κ_g²a²（~10⁻⁴⁴至10⁻⁴⁶），与 LIGO 灵敏度（~10⁻²³）差 21-23 数量级；OPEN-5 降温但维持结构可能。</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  判定
+  <table>
+    <tr><th>命题</th><th>结论</th><th>判定</th></tr>
+    <tr><td>κ_g² 精算值与 §7 一致</td><td>是（偏差 −0.017%）</td><td class="pass">确认</td></tr>
+    <tr><td>§7 声称 4.1×10⁻⁴¹ 隐含 s</td><td>s≈14.05，非真实自旋参数</td><td class="fail">口径不自洽</td></tr>
+    <tr><td>真实挠率极化修正</td><td>~10⁻⁴⁴ 至 10⁻⁴⁶</td><td class="fail">本卷</td></tr>
+    <tr><td>与 LIGO 灵敏度差距</td><td>~21–23 数量级</td><td class="fail">不可达</td></tr>
+    <tr><td>α_τ 在 LIGO 下可观测性</td><td>不可达（被灵敏度压制）</td><td class="fail">降温</td></tr>
+    <tr><td>OPEN-5 状态</td><td>降温为"被压制"，非证伪</td><td class="open">结构可能保持</td></tr>
+  </table>
+</div>
+
+<div class="chartbox"><div id="c2"></div></div>
+
+<div class="verdict">
+  <b>诚实审计：</b>κ_g² 精算核对正确（−0.017%）；但 §7 声称的 4.1×10⁻⁴¹ 隐含 s≈14.05 非真实中子星
+  自旋参数（a~0.05–0.7），口径不自洽，修正为 ~κ_g²a²（~10⁻⁴⁴至10⁻⁴⁶）。真实挠率极化应变与 LIGO
+  灵敏度差 ~21–23 数量级，α_τ 在 LIGO 下原理上不可达。OPEN-5 从"待观测"降温为"被灵敏度压制"，
+  但维持结构可能、不证伪（挠率为代数自旋关系、不传播）。本源红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'挠率极化修正 vs LIGO 灵敏度（对数应变）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['毫秒脉冲星','典型脉冲星','较快脉冲星','LIGO设计灵敏度','GW150914'],axisLabel:{color:'#e6edf3',interval:0,fontSize:11}},
+  yAxis:{type:'log',name:'应变 h',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[
+    {value:1.87e-44,itemStyle:{color:'#d29922'}},
+    {value:8.31e-45,itemStyle:{color:'#d29922'}},
+    {value:2.08e-45,itemStyle:{color:'#d29922'}},
+    {value:3e-23,itemStyle:{color:'#3fb950'}},
+    {value:1e-21,itemStyle:{color:'#58a6ff'}}],
+    label:{show:true,position:'top',color:'#e6edf3',formatter:(p)=>'~'+p.value.toExponential(0)},
+    barWidth:60}]
+});
+const c2 = echarts.init(document.getElementById('c2'));
+c2.setOption({
+  title:{text:'§7 隐含 s≈14 偏离真实中子星自旋范围',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['§7隐含s','真实范围上界(0.7)','典型(0.2)','毫秒(0.3)'],axisLabel:{color:'#e6edf3',interval:0,fontSize:11}},
+  yAxis:{type:'value',name:'无量纲自旋 s/a',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[
+    {value:14.05,itemStyle:{color:'#f85149'}},
+    {value:0.7,itemStyle:{color:'#3fb950'}},
+    {value:0.2,itemStyle:{color:'#3fb950'}},
+    {value:0.3,itemStyle:{color:'#3fb950'}}],
+    label:{show:true,position:'top',color:'#e6edf3',formatter:(p)=>p.value.toFixed(2)},
+    barWidth:60}]
+});
+window.addEventListener('resize',()=>{c1.resize();c2.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第57期 ｜ 攻破α_τ挠率极化LIGO可观测性 ｜ 诚实边界：被灵敏度压制、非证伪、结构可能保持</div>
+</body>
+</html>

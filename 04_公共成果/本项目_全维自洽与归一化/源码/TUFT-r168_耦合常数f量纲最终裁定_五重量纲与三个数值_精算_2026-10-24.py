@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""TUFT-r167｜耦合常数 f 的「量纲最终裁定」精算：同一目录内五重量纲与三个数值
+"""TUFT-r168｜耦合常数 f 的「量纲最终裁定」精算：同一目录内五重量纲与三个数值
 ================================================================================
-编号 r167（实测首空号；r165 被并行会话占用 ⇒ r166 已由本线整体改号占用）。
+编号 r168（起草前实测首空号；r165/r167 被并行会话占用、r166 已由本线整体改号占用 ⇒ 本卷取 r168）。
 
 靶：`01_独立体系/S17_统一场论核心公式/04_理论推导/核心公式集/常数 f 的量纲最终裁定/`
     · code/test/final_verdict.md（115 行，自称「最终裁定」）
@@ -19,7 +19,7 @@
   ② 量纲层：五重量纲的 (M,L,T,Q) 四元清点 + 代回检验
   ③ 方法论层：把 r166 的 ast 检测器**复用**到整个目录，统计硬编码结论的普遍性
 
-分层铁律：本卷条目不可与 r159–r166 相加。
+分层铁律：本卷条目不可与 r159–r167 相加。
 治理红线：数学自洽 ≠ 实验证实；本卷只做可算判决，不产生新物理。
 纯标准库（本环境无 numpy / sympy / mpmath）。
 """
@@ -28,12 +28,20 @@ import ast
 import json
 import math
 import os
+import re
 import sys
 import warnings
 from decimal import Decimal as DEC, getcontext
 from fractions import Fraction as F
 
 getcontext().prec = 60
+
+# GBK 控制台守卫：本卷含下标/箭头等字符，必须显式 UTF-8 + replace
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 # ============================== 常量（CODATA 2018） ==============================
 PI = DEC("3.14159265358979323846264338327950288419716939937510582097494")
@@ -356,7 +364,9 @@ def group_B():
         print("     {} {:<22s} {:<26s} {}  ({})".format(tag, src, where, s, txt))
     n_uniq = len(uniq)
     print("     ⇒ 互不相同的量纲口径数 = {}".format(n_uniq))
-    out.update({"B1_calibres": [(t, s, w, d_str(dm), tx)
+    # ★首跑曾存 d_str(dm)（字符串）而非 dm（四元组）⇒ 判定册渲染 d_str_si(dim) 时
+    #   把 18 字符的字符串当四元解包 ⇒ ValueError。JSON 侧四元组序列化为数组，无损。
+    out.update({"B1_calibres": [(t, s, w, dm, tx)
                                 for t, s, w, dm, tx in calibres],
                 "B1_n_uniq": n_uniq})
 
@@ -465,6 +475,162 @@ def group_B():
         "这不是「单位换算」能弥补的（不是同一量纲的不同单位），而是**两个不同的物理量**。"
         "⇒ **裁定书裁定的那个 f，不是方程里出现的那个 f。**".format(
             d_str(DIM_A_PER_KG), d_str(DIM_M_PER_I), d_str(forced), d_str(D_EF), d_str(need)))
+
+    # ---- B7 机读全目录 f 的数值宣称（卷名「三个数值」的下界检验）----
+    # ★纪律：数值宣称不得手抄；求值器也不得把噪声当读数。本组四层防假阳性（每层
+    #   都对应一次实跑抓到的噪声，见下方注释）：
+    #   ① 匹配环视 `(?<![A-Za-z/\[])` + 代码级 `/` 前导排除：排 "if =" 尾部 f、
+    #      "1/f ≈"、"[f] = 1"（首跑实得 5960.3 / 2.998e+08 / 7.53801e+09 / 1 等噪声）；
+    #   ② 片段截断：遇 `$`、`，`、`,`、`;`、`。`、`、` 即断（首跑曾把同行
+    #      `$c=2.998×10^8$` 当成 f 的值 —— 同行多变量串味）；
+    #   ③ 分层求值：RHS 按 `=`/`≈` 切段；**段内数字后跟单位者优先**（散文行
+    #      "f ≈ 0.129 m/s 以及 [f] = 1（无量纲）" 要取 0.129 而非末段的 1），
+    #      否则取最后一个有值段（链式 "f = a×10^x×b×10^y = 末值" 要取末值）；
+    #      `a × 10^{b}` 连乘时**不得**再把首数字乘一遍（首跑因此把
+    #      1.291733×10^{-2} 错算成 0.0166849）；段以 `\frac`/`√`/`{` 开头者不当数值；
+    #   ④ 含 `√`/`\sqrt`/`\frac` 的宣称式登记为「不可安全求值」层，不硬解
+    #      （其中 (c/2)√(4πε₀G) 与 √(Z/Z′)·(c/2) 两式已由 A0/A1 独立求值）。
+    f_pat = re.compile(r"(?<![A-Za-z/\[])\$?f\$?\s*(?:=|≈|\\approx)\s*([^。\n;；、，,]{0,140})")
+    cut_at = re.compile(r"[$，,;；。、]")
+    times10 = re.compile(r"([0-9]+(?:\.[0-9]+)?)\s*(?:\\times|×|\*)\s*10\^?\{?(-?[0-9]+)\}?")
+    seg_split = re.compile(r"=|≈|\\approx")
+    starts_num = re.compile(r"^\s*([0-9]+(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?)")
+    unit_tok = re.compile(r"kg/A|A·m/kg|m/s|C/kg|V/m|J·s|Hz|s\^?[-−]?[12]|s⁻¹|"
+                          r"\\text\{|[（(]无量纲|kg\b|C\b|T\b|N\b")
+    # ★`\{` 曾把 `\text{kg/A}` 的花括号也当「硬式」⇒ 8.6175e−11 被误删。
+    #   print 模板的判定改为「{标识符:格式}」专型；无量纲宣称按**原始行下文**判
+    #   （片段已在 `$` 处截断，片段内看不到「无量纲」三字）。
+    hard_form = re.compile(r"\\sqrt|√|\\frac|\\vec")
+    tmpl_form = re.compile(r"\{[A-Za-z_][A-Za-z_0-9]*[:.!}]")
+
+    def _seg_value(seg):
+        """取一个 = / ≈ 段的数值：仅当段以数字开头才求值。
+
+        `a × 10^{b}` 先抠出连乘，剩余部分的首数字再乘入 —— 防止把已进指数的
+        首数字重复乘一遍（首跑 1.291733×10^{-2} ⇒ 0.0166849 即此病）。
+        """
+        seg = seg.strip()
+        if not seg or not ("0" <= seg[0] <= "9"):
+            return None
+        prod, cnt, pos = 1.0, 0, 0
+        parts = []
+        for t2 in times10.finditer(seg):
+            parts.append(seg[pos:t2.start()])
+            prod *= float(t2.group(1)) * (10.0 ** int(t2.group(2)))
+            cnt += 1
+            pos = t2.end()
+        parts.append(seg[pos:])
+        rest = "".join(parts)
+        nm = starts_num.match(rest)
+        if nm is None:
+            # 尾部落单除式（如 `a × 10^x × b × 10^y / 2`）：靶文用 /2 表示折半
+            if cnt:
+                dm = re.search(r"/\s*([0-9]+(?:\.[0-9]+)?)", rest)
+                if dm and float(dm.group(1)) != 0.0:
+                    prod /= float(dm.group(1))
+                    return prod
+            return prod if cnt else None
+        v = float(nm.group(1))
+        return v * prod if cnt else v
+
+    raw_hits = []          # (file, lineno, value, snippet)
+    hard_hits = []         # (file, lineno, snippet) 不可安全求值的宣称式
+    for root, dirs, fs in os.walk(FDIR):
+        for fn in sorted(fs):
+            if not fn.lower().endswith(".md"):
+                continue
+            p = os.path.join(root, fn)
+            rel = os.path.relpath(p, FDIR)
+            try:
+                lines = open(p, encoding="utf-8").read().splitlines()
+            except OSError:
+                continue
+            for i, line in enumerate(lines, 1):
+                for m in f_pat.finditer(line):
+                    # 代码级排除「… / f ≈ 值」（分数里的 f，如 q_SI / f ≈ 7.75）
+                    if line[:m.start()].rstrip().endswith("/"):
+                        continue
+                    # `$f=1$（无量纲）`：按**首段原文**判无量纲宣称（片段已在 `$` 处截断，
+                    #   片段内看不到「无量纲」三字 ⇒ 必须看未截断的首段）
+                    if "无量纲" in seg_split.split(m.group(1))[0]:
+                        continue
+                    snip = cut_at.split(m.group(1))[0].strip()
+                    if not snip:
+                        continue
+                    if tmpl_form.search(snip):       # print 模板（{f:.6e}）不是宣称
+                        continue
+                    segs = [s for s in seg_split.split(snip) if s.strip()]
+                    val = None
+                    chosen_seg = None
+                    # 段内数字后跟单位者优先（散文行多语句），否则取最后一个有值段（链式末值）；
+                    # 含「无量纲」的段是**量纲宣称**（[f]=1）不是数值宣称，跳过。
+                    for s in segs:
+                        if "无量纲" in s:
+                            continue
+                        v = _seg_value(s)
+                        if v is None:
+                            continue
+                        val = v
+                        chosen_seg = s
+                        if unit_tok.search(s):
+                            break
+                    # 选定段自身含 √/\frac ⇒ 不是安全可求值式（如 `2.998e8 × √(…)/2`）
+                    if val is not None and chosen_seg is not None and hard_form.search(chosen_seg):
+                        val = None
+                    if val is not None:
+                        if val == val and abs(val) != float("inf"):
+                            raw_hits.append((rel, i, val, snip[:48]))
+                    elif hard_form.search(snip):
+                        hard_hits.append((rel, i, snip[:60]))
+    # 相对容差聚类（5e-3）：把 0.0129 与 0.012917（同数不同修约）并为同一宣称
+    raw_hits.sort(key=lambda h: h[2])
+    clusters = []
+    for rel, ln, v, snip in raw_hits:
+        if clusters and abs(v - clusters[-1]["v"]) <= 5e-3 * max(abs(v), abs(clusters[-1]["v"])):
+            clusters[-1]["hits"].append((rel, ln, v, snip))
+        else:
+            clusters.append({"v": v, "hits": [(rel, ln, v, snip)]})
+    n_vals = len(clusters)
+    print("[B7] 机读全目录 f 的数值宣称：可求值命中 {} 处，聚类后互异数值 {} 个".format(
+        len(raw_hits), n_vals))
+    for c in clusters:
+        hs = c["hits"]
+        print("     {:.6g}  （{} 处：{}）".format(
+            c["v"], len(hs), "；".join("{}:{}".format(r, l) for r, l, _, _ in hs[:4])))
+    print("     另有 {} 处含 √/\\frac 的宣称式（不可安全求值，未硬解）：{}".format(
+        len(hard_hits), "；".join("{}:{}".format(r, l) for r, l, _ in hard_hits[:6])))
+    out.update({"B7_n_values": n_vals,
+                "B7_n_hard": len(hard_hits),
+                "B7_hard_where": ["{}:{}".format(r, l) for r, l, _ in hard_hits[:10]],
+                "B7_values": [{"v": c["v"], "n_hits": len(c["hits"]),
+                               "where": ["{}:{}".format(r, l) for r, l, _, _ in c["hits"][:6]]}
+                              for c in clusters]})
+    add("B7", "量纲层",
+        "★机读全目录 f 的**数值宣称**：互异数值 **{}** 个（卷名「三个数值」只是下界）".format(n_vals),
+        "FAIL",
+        "用正则扫全部 .md 中 `f =`/`f ≈` 右侧，按 `=`/`≈` 切段求值"
+        "（`a × 10^{{−n}}` 连乘、`… = 末值` 链、段内数字后跟单位者优先；"
+        "含 `√`/`\\frac` 的宣称式与 print 模板 `{{f:.6e}}` 一律不当数值——前者登记为"
+        "不可安全求值层，后者是模板不是宣称），再按 5e−3 相对容差聚类，"
+        "得 **{} 个互异数值**：{}。"
+        "另有 **{} 处**含 √/\\frac 的宣称式未硬解（其中 (c/2)√(4πε₀G) 与 √(Z/Z′)·(c/2) "
+        "两式已由 A0/A1 独立求值）。"
+        "⇒ 卷名「三个数值」指三个被当作「最终裁定 / 主计算结果」的值（0.129 m/s、"
+        "8.6175e−11 kg/A、1.2917e−02 A·m/kg），机读实际还发现更多互异宣称。"
+        "同一个常数在同一目录里被算出 **{}** 个互不相同的数，且没有任何一处说明它们的关系。".format(
+            n_vals,
+            "、".join("{:.6g}（{} 处）".format(c["v"], len(c["hits"])) for c in clusters),
+            len(hard_hits),
+            n_vals))
+
+    # ---- B6 分层铁律（INFO：登记口径，不计入任何指控） ----
+    add("B6", "口径层",
+        "分层铁律：本卷（量纲层+方法论层）条目**不可与 r159–r167 相加**",
+        "INFO",
+        "★分层声明：本卷只裁「同一目录内 f 的量纲口径互斥 + 代回检验 + 结论硬编码的普遍性」这三层，"
+        "与 r159（量纲代数工具自检）、r160–r166（能量方程/耦合常数/验证方法论等平行主题）"
+        "**条目不可相加**——不得据本卷 FAIL 数堆叠出跨册「缺陷总数」。"
+        "同理，本卷的 5 种口径清点属**同一靶文档族内部**的互斥，不是对体系全局的定义清点。")
     return out
 
 
@@ -536,32 +702,61 @@ def group_C():
         "是同目录**多脚本互相否定**。）")
 
     # ---- C3 多版本论文 + 专门「修复方案」目录 ----
-    # ★首跑曾用 os.walk 递归统计，把 `论文/v1/验证` 等子目录也计入 ⇒ 实得 7。
-    #   正确口径：只数 FDIR 的**直接子目录**中名字以「论文」开头者。
-    subs = []
-    for root, dirs, fs in os.walk(FDIR):
-        for d in dirs:
-            subs.append(os.path.relpath(os.path.join(root, d), FDIR))
-    direct = [d.name for d in os.scandir(FDIR) if d.is_dir()]
-    has_fixdir = any("修复" in s for s in subs)
-    n_versions = sum(1 for d in direct if d.startswith("论文"))
-    print("[C3] 递归子目录数 {}；直接子目录 {} 个；含「修复」字样的目录 = {}；「论文」版本数 = {}".format(
-        len(subs), len(direct), has_fixdir, n_versions))
-    print("     直接子目录名单：{}".format(" / ".join(sorted(direct))))
-    out.update({"C3_subs": len(subs), "C3_has_fixdir": has_fixdir,
-                "C3_n_versions": n_versions})
+    # ★首跑曾用 os.walk 递归统计 ⇒ 实得 7（把 `论文/v1/验证` 等子目录也计入）；
+    #   二改「直接子目录名以论文开头」⇒ 实得 1（`论文` 是父目录、v1/v2/v3 在它下面）——
+    #   两种口径都与「同一标题 3 个版本」的待判命题不对应。
+    #   ★正确口径：**机读同一标题的三个 md 文件行数** + 「修复方案」目录的机读文件数/行数。
+    same_title = [
+        ("v1", os.path.join("论文", "v1", "验证",
+                            "张祥前统一场论耦合常数f的全面验证：量纲分析、数值计算与多维向量导数证明.md")),
+        ("v2", os.path.join("论文", "v2",
+                            "张祥前统一场论耦合常数f的全面验证：量纲分析、数值计算与多维向量导数证明.md")),
+        ("修复版", os.path.join("修复后的论文",
+                              "张祥前统一场论耦合常数f的全面验证：量纲分析、数值计算与多维向量导数证明（修复版）.md")),
+    ]
+    ver_rows = []
+    for tag, rel in same_title:
+        p = os.path.join(FDIR, rel)
+        n = sum(1 for _ in open(p, encoding="utf-8")) if os.path.isfile(p) else -1
+        ver_rows.append((tag, n, os.path.isfile(p)))
+    n_same_title = sum(1 for _, n, ok in ver_rows if ok and n > 0)
+    # 「修复方案」目录：机读文件数与行数
+    fixdir = os.path.join(FDIR, "修复方案")
+    fix_files = sorted(os.listdir(fixdir)) if os.path.isdir(fixdir) else []
+    fix_rows = [(f, sum(1 for _ in open(os.path.join(fixdir, f), encoding="utf-8")))
+                for f in fix_files if f.lower().endswith(".md")]
+    # 另有一篇**不同标题**的 v3（诚实登记，不计入「同一标题多版本」）
+    v3p = os.path.join(FDIR, "论文", "v3",
+                       "引力-电磁统一的几何动力学：基于几何不变量f的协变求导、普适法拉第定律与全维度验证.md")
+    v3_lines = sum(1 for _ in open(v3p, encoding="utf-8")) if os.path.isfile(v3p) else -1
+    print("[C3] 同一标题版本（机读行数）：{}".format(
+        " → ".join("{} {} 行".format(t, n) for t, n, _ in ver_rows)))
+    print("     ⇒ 同一标题版本数 = {}；「修复方案」目录 {} 个 md（{}）".format(
+        n_same_title, len(fix_rows),
+        " / ".join("{} {} 行".format(f, n) for f, n in fix_rows)))
+    print("     另有**不同标题**的 论文/v3（{} 行，不计入同标题版本）".format(v3_lines))
+    out.update({"C3_same_title_versions": ver_rows,
+                "C3_n_same_title": n_same_title,
+                "C3_fixdir_files": fix_rows,
+                "C3_v3_lines": v3_lines})
     add("C3", "方法论层",
-        "同一篇论文存在 **3 个版本**（论文/v1 972 行 → v2 659 行 → 修复版 642 行）"
-        "且另设**「修复方案/」**目录（3 份）",
+        "同一篇论文存在 **{} 个版本**（机读行数：{}）"
+        "且另设**「修复方案/」**目录（{} 个 md）".format(
+            n_same_title,
+            " → ".join("{} {} 行".format(t, n) for t, n, _ in ver_rows),
+            len(fix_rows)),
         "BOUNDARY",
-        "目录内 `论文/v1/`（972 行）、`论文/v2/`（659 行）、`修复后的论文/`（642 行）"
-        "是**同一标题**《张祥前统一场论耦合常数 f 的全面验证：量纲分析、数值计算与多维向量导数证明》"
-        "的三个版本；另设 `修复方案/` 目录（数学推导修复 237 行 · 与经典物理对应关系 258 行 · "
-        "实验验证可行性评估 282 行）。"
+        "目录内 {} 是**同一标题**《张祥前统一场论耦合常数 f 的全面验证：量纲分析、数值计算与"
+        "多维向量导数证明》的 {} 个版本；另设 `修复方案/` 目录（{}）。"
+        "此外还有一篇**不同标题**的 `论文/v3/`（{} 行），本卷不计入同标题版本、只如实登记。"
         "⇒ 一篇自称「全面验证」的论文需要**两个后续版本 + 一个专门的修复目录**。"
         "★记 **BOUNDARY**：论文多版本本身是正常学术修订，本卷**不**指控这一点；"
         "登记的是它与 `final_verdict.md`「最终裁定」的**确定性语气**"
-        "（「确保了……准确性」「奠定了坚实的数学和物理基础」）之间的张力。")
+        "（「确保了……准确性」「奠定了坚实的数学和物理基础」）之间的张力。".format(
+            "、".join("`{}`（{} 行）".format(t, n) for t, n, _ in ver_rows),
+            n_same_title,
+            "、".join("{} {} 行".format(f, n) for f, n in fix_rows),
+            v3_lines))
 
     # ---- C4 两难：f 非自由参数 vs f 满足方程 ----
     add("C4", "推导层",
@@ -841,9 +1036,11 @@ def run_guards(A, B, C, D, E):
     guard("G9 对靶有利分支单列守卫：数值/等价性/非自由参数三条 PASS 须**各自单列**",
           g9, "PASS 条目数 = {}（须 ≥ 3）".format(n_pass))
 
-    # G10 分层铁律
-    g10 = any("分层" in e["note"] or "不可相加" in e["note"] for e in ENTRIES)
-    guard("G10 分层铁律守卫：必须显式声明本卷条目不可与 r159–r166 相加（真查）", g10,
+    # G10 分层铁律（真查 REDLINE 单一出处，非写死 True）
+    # ★二次错：REDLINE 原文写「不可与 r159–r167 相加」，不含子串「不可相加」⇒ 恒 False。
+    #   判据改为「分层铁律」∧「相加」双关键词，避免被措辞顺序绑架。
+    g10 = any(("分层铁律" in r) and ("相加" in r) for r in REDLINE)
+    guard("G10 分层铁律守卫：必须显式声明本卷条目不可与 r159–r167 相加（真查 REDLINE）", g10,
           "含分层声明 = {}".format(g10))
 
 
@@ -852,16 +1049,21 @@ def build_payload(A, B, C, D, E):
     stats = {}
     for e in ENTRIES:
         stats[e["verdict"]] = stats.get(e["verdict"], 0) + 1
-    verdict = ("F-DIMENSION-FINAL-VERDICT-IS-SELF-CONTRADICTORY-FIVE-CALIBRES-THREE-VALUES"
+    # ★判词不用会漂移的计数：量纲口径机读 5 种（B1），数值机读 ≥3（B7，卷名取三个主要值）；
+    #   用 MULTIPLE-VALUES 而非具体数字，避免靶目录一改判词就失真。
+    verdict = ("F-DIMENSION-FINAL-VERDICT-IS-SELF-CONTRADICTORY-FIVE-CALIBRES-MULTIPLE-VALUES"
                "-AND-VERDICT-CALIBRE-FAILS-SUBSTITUTION")
     verdict_zh = (
         "库内自称「最终裁定」的文件给出了 f = 1.2917333313e−02 A·m/kg，但该量纲与它自己 §2.1 "
         "所采纳的支撑文件（[f] = M·T/Q）不一致，且代入该文件确认「✅ 一致」的方程 "
-        "E = −f·dA/dt 后量纲不相容；同一目录内 f 至少有 4 种互不相同的量纲口径"
-        "（无量纲 / A·m/kg / M·T·Q⁻¹ / [T⁻¹]）与 3 个互异数值，两轮「最终裁定」三重互斥，"
-        "且上一轮「0.129 m/s 且无量纲」自身内部矛盾；全目录 20 余个自称验证的脚本中，"
-        "多数把结论写成顶层无条件 print、与 if/else 判定脱钩。"
-        "数值与等价性两层靶是对的，已诚实记为 PASS。")
+        "E = −f·dA/dt 后量纲不相容；同一目录内 f 有 **{} 种**互不相同的量纲口径"
+        "（无量纲 / A·m/kg / M·T·Q⁻¹ / [T⁻¹] / kg·C⁻¹）与机读 **{} 个**互异数值"
+        "（{}），两轮「最终裁定」三重互斥，且上一轮「0.129 m/s 且无量纲」自身内部矛盾；"
+        "全目录 36 个自称验证的脚本中，21 个把结论写成顶层无条件 print、与 if/else 判定脱钩"
+        "（共 106 条），其中一个计算节点为 0 却有 8 条结论。"
+        "数值与等价性两层靶是对的，已诚实记为 PASS。".format(
+            B["B1_n_uniq"], B["B7_n_values"],
+            "、".join("{:.6g}".format(c["v"]) for c in B["B7_values"])))
     key_numbers = {
         "f_calc_decimal60": A["A0_f_calc"],
         "f_claim": A["A0_f_claim"],
@@ -869,6 +1071,8 @@ def build_payload(A, B, C, D, E):
         "Z_over_Zp_dim": A["A1_zz_dim"],
         "fourpi_eps0_G_dim": A["A1_fpg_dim"],
         "f_distinct_dimensions": B["B1_n_uniq"],
+        "f_distinct_values": B["B7_n_values"],
+        "f_value_clusters": B["B7_values"],
         "f_calibres": B["B1_calibres"],
         "verdict_dim": B["B2_verdict_dim"],
         "verdict_cited_dim": B["B2_cited_dim"],
@@ -892,7 +1096,7 @@ def build_payload(A, B, C, D, E):
         "repair_min_cost": E["E_min_cost"],
     }
     return {
-        "id": "TUFT-r167",
+        "id": "TUFT-r168",
         "title": "耦合常数 f 的「量纲最终裁定」精算：同一目录内五重量纲与三个数值",
         "date": "2026-10-24",
         "target": "S17 核心公式集 常数 f 的量纲最终裁定",
@@ -907,24 +1111,30 @@ def build_payload(A, B, C, D, E):
         "guards": GUARDS,
         "key_numbers": key_numbers,
         "not_closed": [
-            "本卷只审「常数 f 的量纲最终裁定」目录；若体系在别处另有 f 的权威定义，B1 的 4 种口径应重审。",
+            "本卷只审「常数 f 的量纲最终裁定」目录；若体系在别处另有 f 的权威定义，B1 的 5 种口径应重审。",
             "B3 的代回检验只针对方程 1（E = −f·dA/dt）；方程 2（磁矢势）与方程 3 未逐一代回，但三者共用同一个 f。",
             "C1 的 ast 扫描口径为「参数全为字符串字面量的 print」；若靶改用日志/返回值输出结论，该判据需改写。",
             "C3 记 BOUNDARY：论文多版本本身是正常学术修订，本卷不指控这一点。",
             "修复枚举限于本卷 5 个动作（32 组合），不排除第 6 种路径。",
         ],
-        "redline": [
-            "数学自洽 ≠ 实验证实；本卷只做可算判决，不产生新物理。",
-            "不宣称「张祥前体系全错」，只判决本卷所列命题。",
-            "A0 的数值 1.2917333313e−02 与 A1 的两公式等价性**靶是对的**，已诚实记为 PASS。",
-            "C3 的「多版本论文」与「依赖第三方库」按防过度指控原则记 BOUNDARY，不作缺陷证据。",
-            "分层铁律：本卷条目不可与 r159–r166 相加。",
-        ],
+        "redline": REDLINE,
     }
 
 
+# 红线清单上提为模块级常量，使 G10 守卫能真查（而非写死 True）——
+# ★首跑 G10 BAD 的根因：分层声明写在 payload["redline"] 里，而守卫只查 ENTRIES 的 note
+#   ⇒ 查错了容器。正确做法：单一出处 REDLINE，守卫与 payload 共用。
+REDLINE = [
+    "数学自洽 ≠ 实验证实；本卷只做可算判决，不产生新物理。",
+    "不宣称「张祥前体系全错」，只判决本卷所列命题。",
+    "A0 的数值 1.2917333313e−02 与 A1 的两公式等价性**靶是对的**，已诚实记为 PASS。",
+    "C3 的「多版本论文」与「依赖第三方库」按防过度指控原则记 BOUNDARY，不作缺陷证据。",
+    "分层铁律：本卷条目不可与 r159–r167 相加。",
+]
+
+
 def write_outputs(payload):
-    base = "TUFT-r167_耦合常数f量纲最终裁定_五重量纲与三个数值_精算_2026-10-24"
+    base = "TUFT-r168_耦合常数f量纲最终裁定_五重量纲与三个数值_精算_2026-10-24"
     datadir = os.path.join(_PROJ, "数据")
     os.makedirs(datadir, exist_ok=True)
     paths = {}
@@ -934,7 +1144,7 @@ def write_outputs(payload):
         json.dump(payload, f, ensure_ascii=False, indent=2)
     paths["json"] = p_json
 
-    L = ["TUFT-r167 耦合常数 f 量纲最终裁定 —— 运行报告", "=" * 70, ""]
+    L = ["TUFT-r168 耦合常数 f 量纲最终裁定 —— 运行报告", "=" * 70, ""]
     for k, v in payload["key_numbers"].items():
         L.append("  {:44s} {}".format(k, v))
     L.append("")
@@ -950,7 +1160,7 @@ def write_outputs(payload):
         f.write("\n".join(L))
     paths["report"] = p_rep
 
-    M = ["# TUFT-r167｜耦合常数 f 的「量纲最终裁定」精算：同一目录内五重量纲与三个数值",
+    M = ["# TUFT-r168｜耦合常数 f 的「量纲最终裁定」精算：同一目录内五重量纲与三个数值",
          "", "**判词**：`{}`".format(payload["verdict"]), "",
          "{}".format(payload["verdict_zh"]), "", "## 条目总表", "",
          "| 编号 | 层 | 结论 | 要点 |", "|---|---|---|---|"]
@@ -970,15 +1180,16 @@ def write_outputs(payload):
         f.write("\n".join(M))
     paths["md"] = p_md
 
-    V = ["# 判定册 · TUFT-r167｜耦合常数 f 的「量纲最终裁定」精算",
+    V = ["# 判定册 · TUFT-r168｜耦合常数 f 的「量纲最终裁定」精算",
          "",
          "## 一、编号与定位",
          "",
-         "- **编号 r167**（实测首空号；r165 被并行会话占用 ⇒ r166 已由本线占用）",
+         "- **编号 r168**（起草前实测首空号；r165/r167 被并行会话占用、r166 已由本线整体改号占用）",
          "- **靶**：S17 `04_理论推导/核心公式集/常数 f 的量纲最终裁定/`"
-         "（final_verdict.md 115 行 · 修复版论文 642 行 · f值详细分析 346 行 · "
+         "（final_verdict.md · 修复版论文 · f值详细分析 · "
          "传统物理的f/1.md · f求导出各个力/验证/1.md · 最终验证报告.md · "
-         "论文/v1 972 行 · 论文/v2 659 行 · 修复方案/ 3 份 · code/ 与 code/test/ 20+ 脚本）",
+         "同一标题论文 3 个版本（机读行数见 C3）+ 不同标题 v3 + 修复方案/ 4 份 · "
+         "code/ 与 code/test/ 共 36 个 .py（机读））",
          "- **分层**：本卷为**数值层 + 量纲口径层 + 方法论层**，与 r166（能量方程的验证方法论）"
          "**条目不可相加**",
          "",
@@ -1053,6 +1264,22 @@ def write_outputs(payload):
           "这不是单位换算能弥补的，而是**两个不同的物理量**。"
           "⇒ **裁定书裁定的那个 f，不是方程里出现的那个 f。**".format(B_FORCED, B_NEED),
           "",
+          "### B7 ★机读全目录 f 的数值宣称（卷名「三个数值」的下界检验）",
+          "",
+          "| 机读互异数值 | 命中处数 | 代表位置 |",
+          "|---|---|---|",
+          ] + [
+          "| **{:.6g}** | {} | {} |".format(
+              c["v"], c["n_hits"], "；".join(c["where"][:2])) for c in B7_VALUES
+          ] + [
+          "",
+          "另有 **{} 处**含 `√`/`\\frac` 的宣称式未硬解（其中 (c/2)√(4πε₀G) 与 "
+          "√(Z/Z′)·(c/2) 两式已由 A0/A1 独立求值）。".format(B7_NHARD),
+          "⇒ 卷名「三个数值」是**下界**：机读可求值宣称已有 **{}** 个互异数值"
+          "（0.00817 / 0.408 出自 `传统物理的f/2.md` 的 √(GM/r) 讨论，77.1576 出自 "
+          "`分析验证/Z.md` 与 `统一场论耦合常数f的作用、量纲与数值研究.md`），"
+          "且**没有任何一处说明它们之间的关系**。".format(B7_NVALS),
+          "",
           "## 五、★C 组：方法论层（ast 全目录扫描）",
           "",
           "| 指标 | 数值 |",
@@ -1069,8 +1296,10 @@ def write_outputs(payload):
           "",
           "- **C2**：裁定书 §2.5 自己判定 `dimension_verification.py`「**完全错误**」、"
           "`calculate_f.py`「单位错误」⇒ 同目录多脚本被「最终裁定」本身判错。",
-          "- **C3（BOUNDARY）**：同一论文 3 个版本 + 专门「修复方案/」目录；"
-          "★多版本本身是正常学术修订，本卷不指控，只登记与「最终裁定」确定性语气之间的张力。",
+          "- **C3（BOUNDARY）**：机读同一标题论文 **3 个版本**（{}）+ 专门「修复方案/」目录"
+          "（{} 个 md）+ 另一篇不同标题的 v3（{} 行）；"
+          "★多版本本身是正常学术修订，本卷不指控，只登记与「最终裁定」确定性语气之间的张力。".format(
+              C3_VERS, len(C3_FIX), C3_V3),
           "- **C4 两难**：f 由 G/ε₀/c 唯一决定 ⇒ 量纲必为 **{}**；"
           "方程 1 要求 **{}** ⇒ 两支都不利。".format(B_VD, B_CD),
           "",
@@ -1120,6 +1349,12 @@ B_NUNIQ = 0
 B_VD = B_CD = B_DIFF = B_DADT = B_LV = B_LC = ""
 B_FP = B_FN = B_RATIO = B_PUD = ""
 B_FORCED = B_NEED = ""
+B7_NVALS = 0
+B7_VALUES = []
+B7_NHARD = 0
+C3_VERS = ""
+C3_FIX = []
+C3_V3 = 0
 D_EF_STR = d_str(D_EF)
 C_FILES = C_POK = C_PBAD = C_DET = C_CMP = C_TTOP = 0
 E_LOOSE = E_STRICT = E_ZERO = 0
@@ -1129,11 +1364,13 @@ def main():
     global A0_F, A0_REL, A1_ZZ
     global B_CAL, B_NUNIQ, B_VD, B_CD, B_DIFF, B_DADT, B_LV, B_LC
     global B_FP, B_FN, B_RATIO, B_PUD, B_FORCED, B_NEED
+    global B7_NVALS, B7_VALUES, B7_NHARD
+    global C3_VERS, C3_FIX, C3_V3
     global C_FILES, C_POK, C_PBAD, C_DET, C_CMP, C_TTOP
     global E_LOOSE, E_STRICT, E_ZERO
 
     print("=" * 78)
-    print(" TUFT-r167｜耦合常数 f 的「量纲最终裁定」精算：同一目录内五重量纲与三个数值")
+    print(" TUFT-r168｜耦合常数 f 的「量纲最终裁定」精算：同一目录内五重量纲与三个数值")
     print(" 2026-10-24")
     print("=" * 78)
 
@@ -1148,10 +1385,16 @@ def main():
     B_FP, B_FN, B_RATIO = B["B4_f_prev"], B["B4_f_now"], B["B4_ratio"]
     B_PUD = d_str(d_div(D_L, D_T))
     B_FORCED, B_NEED = B["B5_forced"], B["B5_need"]
+    B7_NVALS = B["B7_n_values"]
+    B7_VALUES = B["B7_values"]
+    B7_NHARD = B["B7_n_hard"]
 
     C = group_C()
     C_FILES, C_POK, C_PBAD = C["C1_files"], C["C1_parse_ok"], C["C1_parse_bad"]
     C_DET, C_CMP, C_TTOP = C["C1_detached"], C["C1_compute"], C["C1_total_top"]
+    C3_VERS = " → ".join("{} {} 行".format(t, n) for t, n, _ in C["C3_same_title_versions"])
+    C3_FIX = [f for f, _ in C["C3_fixdir_files"]]
+    C3_V3 = C["C3_v3_lines"]
 
     D = group_D()
     E = group_E()

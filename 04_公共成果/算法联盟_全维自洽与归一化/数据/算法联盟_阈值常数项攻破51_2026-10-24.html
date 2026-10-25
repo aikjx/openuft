@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟51期 · 阈值常数项发散结构</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:26px;color:#f85149;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:360px;}
+#c2{width:100%;height:340px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #d29922;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第51期 —— 世界面单圈阈值常数项：模型依赖而非通用常数</h1>
+<div class="sub">阈值修正深化 ｜ 2026-10-24 ｜ mpmath dps=40 ｜ 对标 DKL1991/Kaplunovsky1988 + 50期</div>
+
+<div class="hero">
+  核心结论：<span class="big">"常数项"不是可补的通用常数 —— 朴素积分线性发散</span>
+  <div class="dim">I(cap) 斜率单调收敛到 −π/3≈−1.0472（精确命中 ln(τ₂|η|⁴)~−πτ₂/3 的物理结构）<br>
+  真常数项需具体紧化的 N=2 (2,2) 格点求和 ⇒ 模型依赖；50期"可作通用量补齐"假设被证伪。</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  判定
+  <table>
+    <tr><th>命题</th><th>结论</th><th>判定</th></tr>
+    <tr><td>积分机制正确</td><td>V→π/3=1.0472 精确锚定</td><td class="pass">机制验证</td></tr>
+    <tr><td>常数积分 I 有通用有限值?</td><td>否（线性发散）</td><td class="fail">发散</td></tr>
+    <tr><td>发散系数与物理结构</td><td>斜率→−π/3，精确吻合</td><td class="pass">数值证实</td></tr>
+    <tr><td>50期"常数项作通用量补齐"假设</td><td>被证伪</td><td class="fail">伪闭合排除</td></tr>
+    <tr><td>"常数项"真实来源</td><td>模型依赖的 (2,2) 格点求和</td><td class="open">模型层</td></tr>
+    <tr><td>常数项本身闭合缺口?</td><td>否（有限部分贡献仅 0.051≪2.37）</td><td class="open">仍 OPEN</td></tr>
+  </table>
+</div>
+
+<div class="chartbox"><div id="c2"></div></div>
+
+<div class="verdict">
+  <b>诚实审计：</b>本卷证伪了 50 期的隐含假设——朴素模不变积分线性发散（系数精确 =−π/3），无通用有限部分。
+  真"常数项"必须由具体紧化的 N=2 (2,2) 格点求和给出（扇形/W线/模稳定），模型级构造任务。
+  50期"0.67 缺口量级可覆盖"结论不变（模量部分已含主导量级），但完整阈值需模型构造 ⇒ 模型层 OPEN，未伪造闭合。
+  本源派生红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'阈值常数积分 I(cap) 线性发散 vs 拟合斜率→−π/3',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{trigger:'axis'},
+  legend:{data:['I(cap)','线性拟合 A\'·cap+B\'','参考 -π/3·cap'],textStyle:{color:'#8b949e'}},
+  xAxis:{type:'value',name:'cap(τ₂上限)',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  yAxis:{type:'value',name:'I',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[
+   {name:'I(cap)',type:'scatter',data:[[5,-2.94],[10,-6.82],[20,-15.46],[40,-34.08],[80,-73.17]],symbolSize:10,itemStyle:{color:'#f85149'}},
+   {name:'线性拟合 A\'·cap+B\'',type:'line',data:[[0,2.69],[80,-72.6]],lineStyle:{color:'#d29922',width:2,type:'dashed'}},
+   {name:'参考 -π/3·cap',type:'line',data:[[0,0],[80,-83.8]],lineStyle:{color:'#8b949e',width:1,type:'dotted'}}]
+});
+const c2 = echarts.init(document.getElementById('c2'));
+c2.setOption({
+  title:{text:'相邻斜率收敛到 −π/3≈−1.0472',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['5→10','10→20','20→40','40→80','−π/3 目标'],axisLabel:{color:'#e6edf3',interval:0,fontSize:11}},
+  yAxis:{type:'value',name:'ΔI/Δcap',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[
+    {value:-0.776,itemStyle:{color:'#f85149'}},
+    {value:-0.864,itemStyle:{color:'#f85149'}},
+    {value:-0.931,itemStyle:{color:'#d29922'}},
+    {value:-0.977,itemStyle:{color:'#3fb950'}},
+    {value:-1.047,itemStyle:{color:'#58a6ff'}}],
+    label:{show:true,position:'bottom',color:'#e6edf3',formatter:(p)=>p.value.toFixed(3)},
+    barWidth:50}]
+});
+window.addEventListener('resize',()=>{c1.resize();c2.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第51期 ｜ 阈值常数项发散结构 ｜ 诚实边界：模型依赖常数项、完整闭合需具体紧化、模型层 OPEN</div>
+</body>
+</html>

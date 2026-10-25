@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟52期 · 模量阈值符号方向</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:26px;color:#f85149;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:360px;}
+#c2{width:100%;height:340px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #d29922;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第52期 —— 模量阈值符号方向：纯模量阈值不能闭合 0.67 缺口</h1>
+<div class="sub">阈值修正深化 ｜ 2026-10-24 ｜ mpmath dps=30 ｜ 对标 50期(量级盲区) + 51期(常数项模型依赖)</div>
+
+<div class="hero">
+  核心结论：<span class="big">量级可覆盖，但符号结构性错误 —— 纯模量阈值不能闭合</span>
+  <div class="dim">Δ_mod(T,U) 结构恒正（|η|<1）；均匀分谱下 Δ1−Δ3>0 恒成立（b1>b3）<br>
+  而闭合缺口需 Δ1−Δ3=−2.373<0 —— 符号完全相反 ⇒ 需打破均匀分谱或引入模型依赖负项。</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  判定
+  <table>
+    <tr><th>命题</th><th>结论</th><th>判定</th></tr>
+    <tr><td>Δ_mod(T,U) 正定</td><td>是（结构恒正，|η|<1）</td><td class="pass">结构保证</td></tr>
+    <tr><td>均匀分谱 Δ1−Δ3 符号</td><td>恒正（b1>b3）</td><td class="fail">符号错误</td></tr>
+    <tr><td>闭合缺口所需符号</td><td>Δ1−Δ3<0</td><td class="pass">50期阶段A</td></tr>
+    <tr><td>纯模量阈值（均匀分谱）能否闭合</td><td>否（符号结构性错误）</td><td class="fail">不能闭合</td></tr>
+    <tr><td>50期"非硬障碍"</td><td>量级成立、符号未通过（盲区补全）</td><td class="fail">需修正</td></tr>
+    <tr><td>闭合所需条件</td><td>打破均匀分谱 或 (2,2)格点负项</td><td class="open">模型层 OPEN</td></tr>
+  </table>
+</div>
+
+<div class="chartbox"><div id="c2"></div></div>
+
+<div class="verdict">
+  <b>诚实审计：</b>本卷补上 50 期"只查量级未查符号"的盲区——量级匹配与符号方向是两个独立判据。
+  纯模量相关阈值 Δ_mod>0 恒正，均匀分谱下 Δ1−Δ3>0 与所需 −2.373 相反 ⇒ 纯模量阈值不能闭合 0.67 缺口。
+  闭合需具体模型的对称分谱或 (2,2) 格点负项（51期已证模型依赖）→ 模型层 OPEN，未伪造闭合。
+  本源派生红线不变：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'Δ_mod(T,U) 正定性扫描 —— 结构恒正',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['0.05','0.1','0.3','0.5','1','2','3','5','10','20','50'],name:'R²',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#e6edf3',interval:0,fontSize:10}},
+  yAxis:{type:'value',name:'Δ_mod',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[29.91,11.73,2.17,1.42,2.11,4.19,6.28,10.47,20.94,41.89,104.72],
+    itemStyle:{color:'#d29922'},label:{show:true,position:'top',color:'#e6edf3',formatter:(p)=>p.value.toFixed(1),fontSize:10}}]
+});
+const c2 = echarts.init(document.getElementById('c2'));
+c2.setOption({
+  title:{text:'均匀分谱 Δ1−Δ3 vs 闭合缺口所需（Δα⁻¹）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['闭合所需 Δ1−Δ3','均匀分谱 S=30','均匀分谱 S=60','闭合所需 Δ2−Δ3','均匀分谱 Δ2−Δ3 S=60'],axisLabel:{color:'#e6edf3',interval:0,fontSize:11}},
+  yAxis:{type:'value',name:'Δα⁻¹',nameTextStyle:{color:'#8b949e'},axisLabel:{color:'#8b949e'}},
+  series:[{type:'bar',data:[
+    {value:-2.373,itemStyle:{color:'#f85149'}},
+    {value:0.608,itemStyle:{color:'#d29922'}},
+    {value:1.216,itemStyle:{color:'#d29922'}},
+    {value:-0.989,itemStyle:{color:'#f85149'}},
+    {value:0.507,itemStyle:{color:'#d29922'}}],
+    label:{show:true,position:'top',color:'#e6edf3',formatter:(p)=>p.value.toFixed(3)},
+    barWidth:52}]
+});
+window.addEventListener('resize',()=>{c1.resize();c2.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第52期 ｜ 模量阈值符号方向 ｜ 诚实边界：符号结构性错误、闭合需模型不对称分谱或(2,2)格点负项、模型层 OPEN</div>
+</body>
+</html>

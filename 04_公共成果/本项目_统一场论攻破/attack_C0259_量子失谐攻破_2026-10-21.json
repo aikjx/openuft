@@ -1,0 +1,56 @@
+{
+  "id": "C0259",
+  "title": "量子失谐攻破",
+  "date": "2026-10-21",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "总互信息 I=S(A)+S(B)−S(AB)",
+      "value": "I=1.179798664161125（S(A)=S(B)=0.8812908992306927、S(AB)=0.5827831343002602）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "经典互信息 J_max（遍历 A 测量基）",
+      "value": "J_max=0.8812908992306927（θ=0° 最优）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "量子失谐 D=I−J_max",
+      "value": "D=0.2985077649304324>0（不可经典化量子关联）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 供给=0（无失谐/无关联分类）",
+      "value": "0",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_DISC_NONNEG",
+      "passed": true,
+      "note": "量子失谐 D=0.2985077649304324>0（总关联−经典关联）"
+    },
+    {
+      "name": "G2_J_BOUND",
+      "passed": true,
+      "note": "J_max=0.8812908992306927≤I=1.179798664161125（经典关联≤总关联）"
+    },
+    {
+      "name": "G3_DISC_POS",
+      "passed": true,
+      "note": "ρ=p|Φ+⟩+(1−p)|00⟩（p=0.6）：D=0.2985077649304324>0.05（量子关联不可经典化）"
+    },
+    {
+      "name": "G4_TUFT_ZERO",
+      "passed": true,
+      "note": "TUFT 无失谐/无量子关联分类供给 → 结构性负面，撞 C7"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT 结构性负面闭合",
+  "note": "口径：ρ=p|Φ+⟩⟨Φ+|+(1−p)|00⟩⟨00|（p=0.6）；D=I−J_max；A 侧测量基 θ 网格遍历（float 精度，特征值闭式解析）；比特单位"
+}
