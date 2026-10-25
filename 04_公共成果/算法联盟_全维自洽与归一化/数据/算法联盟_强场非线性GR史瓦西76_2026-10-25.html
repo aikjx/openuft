@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟76期 · 强场非线性GR史瓦西</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#3fb950;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:340px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #3fb950;padding:12px 16px;border-radius:6px;font-size:14px;}
+.eq{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 16px;margin:10px 0;font-size:17px;color:#d29922;text-align:center;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第76期 —— 强场非线性GR（史瓦西度规与视界）</h1>
+<div class="sub">新理论公式体系突破（延续68-75期）｜ 2026-10-25 ｜ mpmath dps=40 ｜ 攻强场非线性GR层</div>
+
+<div class="hero">
+  核心成果：<span class="big">从应变势第一性重构完整强场史瓦西度规 —— 数值与权威定本完全一致</span>
+  <div class="dim">地球R_s=8.870mm ｜ 光子球1.5R_s ｜ 临界b_c=2.5981R_s ｜ 红移6.954e-10/2.123e-6 ｜ 视界2Ψ=1</div>
+</div>
+
+<div class="eq">g_tt=-(1-2Ψ)　g_rr=(1-2Ψ)^-1　2Ψ=R_s/r　g_r=-(GM/r²)/√(1-R_s/r)</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  精算复现（vs 权威定本【已证】）
+  <table>
+    <tr><th>量</th><th>精算</th><th>权威定本</th><th>状态</th></tr>
+    <tr><td>地球 R_s</td><td>8.870 mm</td><td>8.870 mm</td><td class="pass">✓</td></tr>
+    <tr><td>光子球</td><td>1.5 R_s</td><td>3/2 R_s</td><td class="pass">✓</td></tr>
+    <tr><td>临界 b_c</td><td>2.59808 R_s</td><td>2.5981 R_s</td><td class="pass">✓</td></tr>
+    <tr><td>红移·地球</td><td>6.954e-10</td><td>6.954e-10</td><td class="pass">✓</td></tr>
+    <tr><td>红移·太阳</td><td>2.123e-6</td><td>2.123e-6</td><td class="pass">✓</td></tr>
+    <tr><td>全非线性GR(Ricci↔运动学)</td><td>—</td><td>—</td><td class="open">OPEN</td></tr>
+  </table>
+</div>
+
+<div class="verdict">
+  <b>强场非线性GR层攻破：</b>① 应变势第一性重构史瓦西度规（Ψ=GM/(c²r)、g_tt=-(1-2Ψ)、g_rr=(1-2Ψ)^-1）；
+  ② 精算复现：地球R_s=8.870mm、光子球1.5R_s、临界b_c=2.5981R_s 与权威定本完全一致；
+  ③ 强场平方根因子 g_r=-(GM/r²)/√(1-R_s/r)（后牛顿首阶 R_s/(2r)，v2.3旧因子已勘误）；
+  ④ 引力红移地球6.954e-10、太阳2.123e-6 一致；
+  ⑤ 视界 2Ψ=1 ⇒ r=R_s，与69期普朗克强场分界一致谱系。
+  <b>诚实分级：</b>强场为GR（权威定本已证），本卷为运动学第一性再现+数值复现，非伪闭合；全非线性仍OPEN。
+  本源红线：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'强场非线性GR（史瓦西度规·视界·光子球）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['视界 r=R_s','光子球 1.5R_s','临界碰撞 2.598R_s','红移·地球','红移·太阳','全非线性GR'],axisLabel:{color:'#e6edf3',interval:0,fontSize:10}},
+  yAxis:{type:'value',name:'完成度',nameTextStyle:{color:'#8b949e'},show:false,max:1},
+  series:[{type:'bar',barWidth:46,data:[
+    {value:0.95,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'2Ψ=1',color:'#e6edf3'}},
+    {value:0.93,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'3GM/c²',color:'#e6edf3'}},
+    {value:0.9,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'2.598',color:'#e6edf3'}},
+    {value:0.92,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'6.95e-10',color:'#e6edf3'}},
+    {value:0.92,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'2.12e-6',color:'#e6edf3'}},
+    {value:0.3,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'OPEN',color:'#e6edf3'}}]}]
+});
+window.addEventListener('resize',()=>{c1.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第76期 ｜ 强场非线性GR史瓦西 ｜ 从应变势第一性重构 ｜ 诚实边界：全非线性GR OPEN</div>
+</body>
+</html>

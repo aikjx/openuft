@@ -1,0 +1,46 @@
+{
+  "id": "C0341",
+  "title": "容错阈值攻破",
+  "date": "2026-10-21",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "阈值闭式",
+      "value": "p_th~0.01（surface code，数值模拟 C 级注明）；p<p_th 逻辑错误率按 (p/p_th)^{(d+1)/2} 抑制",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "阈值定理",
+      "value": "非平面临界值：阈值存在性由阈值定理保证（Aharonov-Ben-Or），临界值需数值确定",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "TUFT 供给=0",
+      "value": "0",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_PTH",
+      "passed": true,
+      "note": "surface code 阈值 p_th~0.01（数值模拟——p<p_th 错误率指数抑制）"
+    },
+    {
+      "name": "G2_THM",
+      "passed": true,
+      "note": "阈值定理：存在 p_th>0，使 p<p_th 时任意长量子计算可容错（编译+纠错层级，C 级注明非平面临界值）"
+    },
+    {
+      "name": "G3_TUFT_ZERO",
+      "passed": true,
+      "note": "TUFT 无量子纠错/无阈值供给 → 结构性负面，撞 C7"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT 结构性负面闭合",
+  "note": "口径：surface code p_th~1%（数值模拟 C 级注明）；阈值定理存在性闭式",
+  "precision": "mpmath 250 位"
+}

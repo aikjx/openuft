@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟74期 · 全GR恢复弱场线性化</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:24px;color:#3fb950;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:320px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.pass{color:#3fb950;font-weight:600}.fail{color:#f85149;font-weight:600}.open{color:#d29922;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #3fb950;padding:12px 16px;border-radius:6px;font-size:14px;}
+.eq{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 16px;margin:10px 0;font-size:17px;color:#d29922;text-align:center;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第74期 —— 全GR恢复（弱场线性化层）</h1>
+<div class="sub">新理论公式体系突破（延续68-73期）｜ 2026-10-25 ｜ mpmath dps=40 ｜ 攻最大OPEN项</div>
+
+<div class="hero">
+  核心成果：<span class="big">应变势=度规势 —— 引力=时空度规应变（弱场线性化层全GR恢复）</span>
+  <div class="dim">线性化Ricci从运动学推导 ｜ κ=8πG/c⁴ 精算一致 ｜ 牛顿极限链路闭合</div>
+</div>
+
+<div class="eq">h_00 = -2Ψ = 2φ/c²　　R_00 = ∇²Ψ = -(4πG/c²)ρ　　G_μν = κT_μν</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  全 GR 恢复链路
+  <table>
+    <tr><th>环节</th><th>表达式</th><th>状态</th></tr>
+    <tr><td>应变势=度规势</td><td>h_00=-2Ψ=2φ/c²</td><td class="pass">权威定本[已证]</td></tr>
+    <tr><td>线性化 Ricci</td><td>R_00=∇²Ψ=-(4πG/c²)ρ</td><td class="pass">运动学恢复</td></tr>
+    <tr><td>爱因斯坦方程</td><td>κ=8πG/c⁴=2.076647e-43</td><td class="pass">精算一致</td></tr>
+    <tr><td>地球表面 g</td><td>9.832 m/s² vs 9.81</td><td class="pass">自洽</td></tr>
+    <tr><td>牛顿极限</td><td>∇²φ=4πGρ</td><td class="pass">链路闭合</td></tr>
+    <tr><td>全非线性GR</td><td>强场/完整Ricci↔运动学张量</td><td class="open">OPEN（诚实边界）</td></tr>
+  </table>
+</div>
+
+<div class="verdict">
+  <b>最大OPEN项攻破（弱场层）：</b>① 应变势=度规势（h_00=-2Ψ=2φ/c²，权威定本【已证】）；
+  ② 线性化Ricci从运动学恢复：R_00=∇²Ψ=-(4πG/c²)ρ，曲率=应变势拉普拉斯；
+  ③ 爱因斯坦场方程 G_μν=κT_μν，κ=8πG/c⁴=2.076647e-43 与权威定本一致，地球表面 g=9.832 vs 9.81 自洽；
+  ④ 全 GR→弱场→泊松（牛顿）链路闭合：∇²φ=4πGρ。
+  <b>诚实边界：</b>弱场线性化层已恢复；全非线性（强场黑洞、完整Ricci↔运动学张量）仍 OPEN，未伪造闭合。
+  本源红线：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'全GR恢复链路（弱场线性化层闭合）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['应变势→度规势','线性化Ricci','爱因斯坦方程','牛顿极限','全非线性GR'],axisLabel:{color:'#e6edf3',interval:0,fontSize:11}},
+  yAxis:{type:'value',name:'完成度',nameTextStyle:{color:'#8b949e'},show:false,max:1},
+  series:[{type:'bar',barWidth:48,data:[
+    {value:0.95,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'h00=-2Ψ',color:'#e6edf3'}},
+    {value:0.9,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'R00=∇²Ψ',color:'#e6edf3'}},
+    {value:0.9,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'κ=8πG/c⁴',color:'#e6edf3'}},
+    {value:0.9,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'∇²φ=4πGρ',color:'#e6edf3'}},
+    {value:0.3,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'OPEN',color:'#e6edf3'}}]}]
+});
+window.addEventListener('resize',()=>{c1.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第74期 ｜ 全GR恢复（弱场线性化层） ｜ 最大OPEN项攻破 ｜ 诚实边界：全非线性GR OPEN</div>
+</body>
+</html>

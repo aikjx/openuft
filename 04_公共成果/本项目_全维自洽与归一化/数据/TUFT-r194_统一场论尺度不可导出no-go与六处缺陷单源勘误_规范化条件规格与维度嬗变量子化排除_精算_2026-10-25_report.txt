@@ -1,0 +1,35 @@
+==============================================================================
+TUFT-r194 · 尺度不可导出 no-go / 六处缺陷单源勘误
+==============================================================================
+
+[A] 量纲门禁
+[P] 六处缺陷（机读复核 + 幂等勘误）
+[S] 尺度不可导出：出处/借用/嬗变/量子化/判定/规格
+[E] 供给总账
+[F] 勘误落地
+
+A0     [dim] PASS : 量纲门禁：x=ln(μ/M_Z)/2π 无量纲；M=v×纯数；ℓ_EW·v=ħc
+P1     [repair] CORRECTED : 牛顿极限标签：T_00−½g_00T=1/2（≠ρc²）；与 G_00=2R_00 的 ½ 互消 ⇒ 终式系数 4πG 不变
+P2     [repair] CORRECTED : 光子质量尺度：1e−18 eV ⇒ λ_C=1.9733e+11 m = 1.3190 AU；1 kpc ⇒ 6.3949e-27 eV
+P3     [repair] CORRECTED : α_s 阶次：单圈+Λ=213 MeV ⇒ 0.13525（≠0.1180）；单圈自洽 Λ_LO=87.83 MeV ⇒ 213 MeV 属两圈口径
+P4     [repair] CORRECTED : α_G：G M_Z²/(ħc)=5.5785e-35，原文 5e−33 高 89.63×
+P5     [repair] CORRECTED : 自旋流恒等式：∂_λL=2T^[μν]、∂_λs=−2T^[μν]（12 对指标精确），系数绝对值恒为 2 ⇒ 原文 +1 差因子 −2
+P6     [repair] CORRECTED : B−L：无 ν_R 时 (B−L)³=-1、[grav]²(B−L)=-1；加 ν_R 后 0 / 0
+S1     [scale] PASS : 出处/秩：M*/v=14.397900、M_GUT/v=8.3091e+13、M_Z/v=0.357231，ℓ_EW·v=ħc（残差 0.0e+00）⇒ 所有尺度 = v×纯数；框架自供量纲输入 **0**
+S2     [scale] FAIL : R1 借用锚点：α_GUT / M_GUT / τ_p / 1/4 独立含量 / ℓ_sd ⇒ 供给 **0/5**
+S3     [scale] FAIL : R2 维度嬗变：6 次 0 命中；最近 lnΛ 间隙 M*=5.98 / M_GUT=13.26，两圈及以上指数位移上界 <0.48 ⇒ 1e-9 容差结构性不可达
+S4     [scale] FAIL : R3 整数/拓扑量子化：20 种形式 × 5 靶，反解整数性 1e-9 命中 **0**（正对照 True）
+S5     [verdict] PASS : 尺度判定：**CLOSED-NEGATIVE（no-go）**——当前清单无法设定尺度；缺失对象由「尺度方程」精化为「**无量纲归一化条件**」
+S6     [spec] INFO : 规格单：C1 显式破共形 / C2 只用框架自有内容 / C3 1e-9 命中或可证伪偏离 / C4 新增连续参数 ≤1；三条 R 路线中仅 R3 有可能满足
+E1     [ledger] FAIL : 框架自有供给仍 **0**：α_GUT 0 / M_GUT 0 / τ_p 0 / 1/4 独立含量 0 / ℓ_sd 0
+E2     [ledger] INFO : 本轮账目：记账缺陷 **6 处**单源勘误（P1–P6）；物理闭合 **0**；缺失对象 **1 个**（无量纲归一化条件）
+Q1     [selfcorr] INFO : 自纠 r192 D1 口径：x_GUT 混用 α₁=α₂ 交点（5.254789，M=1.9905e+16 GeV）与 α₁=α₃ 统一点（5.264898，M=2.1210e+16 GeV）；M_GUT=2.121e16 只对应后者 ⇒ 本卷统一到 α₁=α₃（α₁=α₂ 交点降为参考）
+F1     [patch] PASS : 07_统一场方程/03_四力还原.md：追加 r194 勘误节（4 条），本次已存在（幂等）
+F1     [patch] PASS : 07_统一场方程/04_守恒律与诺特定理.md：追加 r194 勘误节（2 条），本次已存在（幂等）
+F2     [patch] PASS : 正文原文逐字保留（前缀哈希一致；两卷原始字节未被改写）
+
+------------------------------------------------------------------------------
+控制组 19/19；守卫 12/12
+条目 19（CORRECTED 6 / FAIL 4 / INFO 3 / PASS 6）
+判词：R194-SCALE-NOT-DERIVABLE-FROM-CURRENT-INVENTORY-NO-GO-INPUTS-V-AND-MZ-ALL-SCALES-V-TIMES-PURE-NUMBER-MSTAR-14.3979-MGUT-8.3091E13-BORROWED-ANCHORS-5-SUPPLY-0-TRANSMUTATION-6-ONE-LOOP-0-HIT-NEAREST-LN-5.98-AND-13.26-VS-2LOOP-BOUND-LT-0.5-QUANTIZATION-20-FORMS-5-TARGETS-0-HIT-1E-9-MISSING-OBJECT-DIMENSIONLESS-NORMALIZATION-EQUATION-REPAIRS-6-PLUS-1-SELF-CORRECTION-R192-XGUT-ALPHA13-F-LABEL-F-SCALE-F-EXP-F-SIGN-BMINUSL-SUPPLY-0
+红线：记账修复 ≠ 物理闭合；尺度不可导出 no-go 只排除当前清单；供给仍 0；本卷条目不可与 r142–r193 相加
