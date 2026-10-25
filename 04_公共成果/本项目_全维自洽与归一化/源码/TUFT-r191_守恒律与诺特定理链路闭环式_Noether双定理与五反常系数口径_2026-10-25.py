@@ -270,14 +270,14 @@ def divJ_ident(t, x, modes):
 
 
 def divJ_fd(t, x, modes, h):
-    """∂·J 的中心差分路线：−∂_t J^t + ∂_x J^x（η^{tt}=−1）。"""
+    """∂·J 的中心差分路线：∂_t J^t + ∂_x J^x（J 的上标已由 ∂^t=−∂_t 定义）。"""
     tp = J_up(t + h, x, modes)[0]
     tm = J_up(t - h, x, modes)[0]
     xp = J_up(t, x + h, modes)[1]
     xm = J_up(t, x - h, modes)[1]
     dt = cscale(csub(tp, tm), D(1) / (2 * h))
     dx = cscale(csub(xp, xm), D(1) / (2 * h))
-    return csub(dx, dt)
+    return cadd(dt, dx)
 
 
 # =====================================================================
@@ -491,14 +491,18 @@ def main():
     div_on_fd = cabs(divJ_fd(T1[0], T1[1], mon, D("1E-20")))
 
     add("A01", "PASS",
-        "第一定理在壳守恒：双模在壳叠加 ∂·J=0（机器 <1E−200），J 的构造与差分互证",
+        "第一定理在壳守恒：双模在壳叠加 ∂·J=0（恒等式路线 <1E−200），差分路线受 h² 截断限",
         "φ=a₁e^{i(ω₁t−k₁x)}+a₂e^{i(ω₂t−k₂x)}，ω_j=√(k_j²+m²)、m=1。"
         "J^μ=i(φ*∂^μφ−φ∂^μφ*) 逐点机器算；∂·J 走两条独立路线："
-        "①恒等式 ∂·J=i(φ*□φ−φ□φ*)；②中心差分 ∂·J=−∂_tJ^t+∂_xJ^x（h=1E−20）。"
-        "在壳时 □φ=Σ(−q_j²)a_jE_j 且 q_j²=−m² ⇒ 两条路线都给 0（机器 "
-        + fs(div_on_ident, 6) + " / " + fs(div_on_fd, 6) +
-        "）⇒ 「∂_μJ^μ 在壳为零」是运动方程的后果，不是恒等式的后果。",
+        "①恒等式 ∂·J=i(φ*□φ−φ□φ*)（无差分、无截断）；②中心差分 "
+        "∂·J=∂_tJ^t+∂_xJ^x（h=1E−20）。"
+        "在壳时 □φ=Σ(−q_j²)a_jE_j 且 q_j²=−m² ⇒ ①给 0（机器 "
+        + fs(div_on_ident, 6) + "，限 1E−200 以下）；②受中心差分 h² 截断限制，"
+        "只能到 " + fs(div_on_fd, 6) + "（≈h²·J'''/6≈1E−41，不是恒等式路线的分辨率）。"
+        "两者同号同序 ⇒ 「∂_μJ^μ 在壳为零」是运动方程的后果，不是恒等式的后果；"
+        "注意「机器零」的严格程度取决于路线，不可把差分路线的截断当作精确 0。",
         {"divJ_ident": fs(div_on_ident, 6), "divJ_fd": fs(div_on_fd, 6),
+         "fd_floor": "h^2*|J'''|/6 ~ 1E-41", "h": "1E-20",
          "point": [fs(T1[0], 6), fs(T1[1], 6)], "m": fs(MASS, 6)})
 
     delta = D("1E-3")
@@ -508,8 +512,8 @@ def main():
     E2 = cexp_i(moff[1][0] * T1[0] - moff[1][1] * T1[1])
     R = cmul(cj(phi_o), cmul(a2, E2))
     pred = 2 * delta * R[1]
-    act = divJ_ident(T1[0], T1[1], moff)[1]
-    fd_off = divJ_fd(T1[0], T1[1], moff, D("1E-20"))[1]
+    act = divJ_ident(T1[0], T1[1], moff)[0]
+    fd_off = divJ_fd(T1[0], T1[1], moff, D("1E-20"))[0]
     res_pred = abs(act - pred)
 
     add("A02", "PASS",
@@ -517,29 +521,29 @@ def main():
         "把第二模的 ω₂² 取为 k₂²+m²−δ（δ=1E−3）。此时 □φ=m²φ−δa₂E₂，代入恒等式得"
         "∂·J=−iδ(φ*a₂E₂−c.c.)=2δ·Im(φ*a₂E₂)。机器：恒等式路线 " + fs(act, 6) +
         "、预测 " + fs(pred, 6) + "、差分路线 " + fs(fd_off, 6) +
-        "；残差 " + fs(res_pred, 6) + "。⇒ 守恒流确实「只在壳」；"
+        "（差分受 h² 截断限，绝对差仍 ~1E−40）；恒等式与预测的残差 " + fs(res_pred, 6) +
+        "。⇒ 守恒流确实「只在壳」；"
         "偏壳时残差与 δ 成正比（δ 与 2δ 的比值控制组见 K03）。",
         {"delta": fs(delta, 6), "divJ_ident": fs(act, 6), "pred_2delta": fs(pred, 6),
          "divJ_fd": fs(fd_off, 6), "resid": fs(res_pred, 6)})
 
     # ---- A03 阿贝尔第二定理代数核 ----
-    import random
-    rnd = random.Random(20261025)
     F = [[Fraction(0)] * 4 for _ in range(4)]
-    for mu in range(4):
-        for nu in range(mu + 1, 4):
-            v = Fraction(rnd.randint(-9, 9), rnd.randint(1, 5))
-            F[mu][nu] = v
-            F[nu][mu] = -v
+    fvals = {(0, 1): Fraction(3, 5), (0, 2): Fraction(-2, 7), (0, 3): Fraction(5, 9),
+             (1, 2): Fraction(-4, 3), (1, 3): Fraction(7, 4), (2, 3): Fraction(-5, 6)}
+    for (mu, nu), v in fvals.items():
+        F[mu][nu] = v
+        F[nu][mu] = -v
     O = [[Fraction(0)] * 4 for _ in range(4)]
-    for mu in range(4):
-        for nu in range(mu, 4):
-            v = Fraction(rnd.randint(-9, 9), rnd.randint(1, 5))
-            O[mu][nu] = v
-            O[nu][mu] = v
+    ovals = {(0, 0): Fraction(5, 2), (0, 1): Fraction(7, 3), (1, 1): Fraction(-3, 4),
+             (1, 2): Fraction(2, 5), (2, 2): Fraction(4, 3), (2, 3): Fraction(-1, 2),
+             (3, 3): Fraction(6, 5)}
+    for (mu, nu), v in ovals.items():
+        O[mu][nu] = v
+        O[nu][mu] = v
     S_exact = sum(O[nu][mu] * F[mu][nu] for mu in range(4) for nu in range(4))
     Fbad = [row[:] for row in F]
-    Fbad[0][0] = Fraction(3, 7)          # 塞入对称污染
+    Fbad[0][0] = Fraction(3, 7)          # 塞入对称污染（反对称张量对角本应为 0）
     S_bad = sum(O[nu][mu] * Fbad[mu][nu] for mu in range(4) for nu in range(4))
 
     add("A03", "PASS",
@@ -584,12 +588,14 @@ def main():
         return [sum(eta[mu][nu] * v[nu] for nu in range(4)) for mu in range(4)]
 
     h = [[Fraction(0)] * 4 for _ in range(4)]
-    for mu in range(4):
-        for nu in range(mu, 4):
-            v = Fraction(rnd.randint(-9, 9), rnd.randint(1, 6))
-            h[mu][nu] = v
-            h[nu][mu] = v
-    kk_low = [Fraction(rnd.randint(-9, 9), rnd.randint(1, 4)) for _ in range(4)]
+    hvals = {(0, 0): Fraction(2), (0, 1): Fraction(1, 3), (0, 2): Fraction(-2, 5),
+             (0, 3): Fraction(1, 7), (1, 1): Fraction(3), (1, 2): Fraction(3, 5),
+             (1, 3): Fraction(-1, 4), (2, 2): Fraction(-1), (2, 3): Fraction(2, 3),
+             (3, 3): Fraction(1, 2)}
+    for (mu, nu), v in hvals.items():
+        h[mu][nu] = v
+        h[nu][mu] = v
+    kk_low = [Fraction(1), Fraction(2, 5), Fraction(-3, 7), Fraction(1, 2)]
     kk_up = raise_v(kk_low)
     hsc = sum(eta[mu][nu] * h[mu][nu] for mu in range(4) for nu in range(4))
     k2 = sum(eta[mu][nu] * kk_low[mu] * kk_low[nu] for mu in range(4) for nu in range(4))
@@ -610,7 +616,8 @@ def main():
     add("A05", "PASS",
         "线性化收缩比安基：k^μG^(1)_{μν}(k) ≡ 0（任意有理 h、k 精确 0）；删迹项负对照非零",
         "线性化爱因斯坦张量 G^(1)_{μν}=½[k_μk_νh+k²h_{μν}−k_μk^λh_{λν}−k_νk^λh_{λμ}"
-        "−η_{μν}(k²h−k^λk^σh_{λσ})]。机器取随机有理对称 h（10 个独立分量）与随机有理 k，"
+        "−η_{μν}(k²h−k^λk^σh_{λσ})]。机器取固定有理对称 h（10 个独立分量全非零）与"
+        "固定有理 k=(1, 2/5, −3/7, 1/2)（k²=−1991/4900≠0、h=1/2≠0，排除退化），"
         "有理精确算 k^μG_{μν}：四个分量全 = 0（" + ", ".join(fr(x) for x in divG) +
         "）。负对照删去迹项 −η(k²h−k^λk^σh_{λσ}) ⇒ k^μG^{no-trace}_{μν} = " +
         ", ".join(fr(x) for x in divGnt) + " ≠ 0。"
@@ -632,8 +639,9 @@ def main():
     print("\n[B] 逐条对称性清单（§3.1–§3.7）")
 
     ron = rmodes_on()
-    tdiv_on = [cabs((Tdiv_fd(T1[0], T1[1], ron, nu, D("1E-20")), D(0)))
-               for nu in (0, 1)]
+    # 在壳判定用解析预测路线（精确到 sqrt 的 250 位舍入）；差分仅作旁证与截断说明
+    tdiv_on = [abs(Tdiv_pred(T1[0], T1[1], ron, nu)) for nu in (0, 1)]
+    tdiv_on_fd = [abs(Tdiv_fd(T1[0], T1[1], ron, nu, D("1E-20"))) for nu in (0, 1)]
     roff = rmodes_off(delta)
     tdiv_off_fd = [Tdiv_fd(T1[0], T1[1], roff, nu, D("1E-20")) for nu in (0, 1)]
     tdiv_off_pr = [Tdiv_pred(T1[0], T1[1], roff, nu) for nu in (0, 1)]
@@ -642,13 +650,16 @@ def main():
     add("B01", "PASS",
         "§3.1 在壳能量–动量守恒：∂^μT_μν=(□φ−m²φ)∂_νφ（机器双路线），在壳 0、偏壳 ∝δ",
         "实标量 φ=c₁cos(ω₁t−k₁x)+c₂cos(ω₂t−k₂x)，T_μν=∂_μφ∂_νφ−½η_μν(∂^αφ∂_αφ+m²φ²)。"
-        "机器：①差分路线 ∂^μT_μν=−∂_tT_{tν}+∂_xT_{xν}（h=1E−20）；②预测 (□φ−m²φ)∂_νφ。"
-        "双模在壳（ω_j²=k_j²+m²）⇒ 两分量 |∂·T| = "
-        + fs(tdiv_on[0], 6) + " / " + fs(tdiv_on[1], 6) + "（机器零）；"
+        "机器：①预测路线 (□φ−m²φ)∂_νφ（解析、无差分）；②差分路线 "
+        "∂^μT_μν=−∂_tT_{tν}+∂_xT_{xν}（h=1E−20，受 h² 截断限）。"
+        "双模在壳（ω_j²=k_j²+m²）⇒ 预测两分量 |∂·T| = "
+        + fs(tdiv_on[0], 6) + " / " + fs(tdiv_on[1], 6) + "（<1E−200；差分仅到 "
+        + fs(tdiv_on_fd[0], 6) + " / " + fs(tdiv_on_fd[1], 6) + "，≈1E−41 截断地板）；"
         "第二模偏壳 δ=1E−3 ⇒ 差分 " + fs(tdiv_off_fd[0], 6) + " / " + fs(tdiv_off_fd[1], 6)
-        + "，与预测残差 " + fs(t_res, 6) + "。"
+        + "，与预测残差 " + fs(t_res, 6) + "（该残差即差分 h² 截断地板，不是物理偏差）。"
         "⇒ 「∇̃_μT^μν=0 在壳」成立；含挠时用 ∇̃ 的替换不改变本条的代数核（挠率只改联络）。",
-        {"divT_on": [fs(x, 6) for x in tdiv_on],
+        {"divT_on_pred": [fs(x, 6) for x in tdiv_on],
+         "divT_on_fd": [fs(x, 6) for x in tdiv_on_fd],
          "divT_off_fd": [fs(x, 6) for x in tdiv_off_fd],
          "divT_off_pred": [fs(x, 6) for x in tdiv_off_pr],
          "resid": fs(t_res, 6)})
@@ -667,7 +678,9 @@ def main():
         + fr(ratio) + "（符号相反且差 2 倍）。**修复**（二选一）："
         "①第一行改 ∇̃_λs^{λμν}=−2T_{[μν]}；②第二行改 x^μT^{λν}−x^νT^{λμ}−2s^{λμν}"
         "（等价于把自旋角动量的定义整体乘 −2）。二者不可混用。"
-        "注：若把 s 的外在归一重定义，系数可被吸收，但「同一 s 同时满足两行」必不成立。",
+        "注：若把 s 的外在归一重定义，系数可被吸收，但「同一 s 同时满足两行」必不成立。"
+        "口径注：本册按 T_{[μν]}=½(T_{μν}−T_{νμ}) 计；若原文约定反号括号则偏差为 +2 而非 −2——"
+        "**无论哪种约定，因子 2 的偏差都在**，原文亦未声明括号定义。",
         {"coef_required": fr(coef_exp), "coef_doc": fr(coef_doc),
          "ratio": fr(ratio), "onshell_xterms": "0"})
 
@@ -691,7 +704,7 @@ def main():
     nullity = 5 - rank
     YQ = Fraction(1, 6)
     brA = (YQ, 2 * YQ, -4 * YQ, -3 * YQ, 6 * YQ)      # Y_Q,Y_u,Y_d,Y_L,Y_e
-    brB = (YQ, -4 * YQ, GateA := 2 * YQ, -3 * YQ, 6 * YQ)
+    brB = (YQ, -4 * YQ, 2 * YQ, -3 * YQ, 6 * YQ)      # u↔d 交换支
     def ok5(Y):
         r1 = 2 * Fraction(1, 2) * Y[0] + Fraction(1, 2) * Y[1] + Fraction(1, 2) * Y[2]
         r2 = 3 * Fraction(1, 2) * Y[0] + Fraction(1, 2) * Y[3]
@@ -877,7 +890,8 @@ def main():
         if i5 >= 0:
             sec5 = doc_txt[i5:]
     rows5 = [ln for ln in sec5.splitlines() if ln.startswith("| ")]
-    n_rows = max(0, len(rows5) - 2)
+    # 分隔行是 |---| 开头（不带空格），故以「| 」开头的只有表头 + 数据行
+    n_rows = max(0, len(rows5) - 1)
     hits = [nm for nm in TBL if nm in sec5]
     sec3_cnt = doc_txt.count("### 3.")
 
@@ -932,13 +946,16 @@ def main():
     # =================================================================
     # 控制组
     # =================================================================
+    # K03：在线性点上（t=x=0，两模相位同为 1）验 δ 与 2δ 的比值
+    dJ_d1 = abs(divJ_ident(D(0), D(0), modes_off(delta))[0])
+    dJ_d2 = abs(divJ_ident(D(0), D(0), modes_off(2 * delta))[0])
     control("K01 onshell_divJ_zero", div_on_ident < D("1E-200"),
             "|∂·J|=" + fs(div_on_ident, 6))
     control("K02 offshell_divJ_1e-3", abs(act) > D("1E-6"),
             "|∂·J|=" + fs(abs(act), 6))
     control("K03 divJ_linear_in_delta",
-            True, "δ 与 2δ 的 |∂·J| 比值 = " + fs(
-                abs(divJ_ident(T1[0], T1[1], modes_off(2 * delta))[1]) / abs(act), 9))
+            abs(dJ_d1 / dJ_d2 - D("0.5")) < D("1E-3"),
+            "|∂·J(δ)|/|∂·J(2δ)| = " + fs(dJ_d1 / dJ_d2, 12) + "（期望 0.5）")
     control("K04 divJ_pred_resid", res_pred < D("1E-200"),
             "残差=" + fs(res_pred, 6))
     control("K05 divJ_fd_agrees", abs(act - fd_off) < D("1E-25"),
@@ -1025,7 +1042,14 @@ def main():
     guard("G31 fail_entries_have_numbers",
           all(bool(e["numbers"]) for e in ENTRIES if e["level"] == "FAIL"),
           "FAIL=%d" % sum(1 for e in ENTRIES if e["level"] == "FAIL"))
-    guard("G32 verdict_driven_by_counts", True, "checked at summary")
+    cnt_now = {}
+    for e in ENTRIES:
+        cnt_now[e["level"]] = cnt_now.get(e["level"], 0) + 1
+    guard("G32 verdict_driven_by_counts",
+          len(ENTRIES) > 0 and (cnt_now.get("FAIL", 0) + cnt_now.get("PASS", 0)) > 0,
+          "entries=%d FAIL=%d PASS=%d" % (len(ENTRIES),
+                                          cnt_now.get("FAIL", 0),
+                                          cnt_now.get("PASS", 0)))
     guard("G33 no_decimal_in_exact_algebra",
           all(isinstance(x, Fraction) for x in (v1, v2, v3b, v4, v5, q3, q1, gBL, cBL)),
           "types ok")
@@ -1041,11 +1065,6 @@ def main():
         counts[e["level"]] = counts.get(e["level"], 0) + 1
     n_g = sum(1 for g in GUARDS if g["ok"])
     n_c = sum(1 for c in CONTROLS if c["ok"])
-
-    # G32 由计数机读驱动（不是写死）
-    GUARDS[-4]["ok"] = bool(len(ENTRIES) > 0 and (counts.get("FAIL", 0) + counts.get("PASS", 0)) > 0)
-    GUARDS[-4]["msg"] = "FAIL=%d PASS=%d" % (counts.get("FAIL", 0), counts.get("PASS", 0))
-    n_g = sum(1 for g in GUARDS if g["ok"])
 
     print("\n" + "=" * 78)
     print("条目 %d（PASS %d / FAIL %d / BOUNDARY %d / INFO %d / CORRECTED %d）"

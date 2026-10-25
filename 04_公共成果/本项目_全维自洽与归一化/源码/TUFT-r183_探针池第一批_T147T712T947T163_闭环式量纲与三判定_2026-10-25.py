@@ -82,19 +82,36 @@ def fs(x, nd=25):
 # =====================================================================
 # 0. 量纲机器（五元组 M, L, T, Q, K；K = 温度） + 自身守卫
 # =====================================================================
+NDIM = 5          # 五元组 M, L, T, Q, K —— 维数固定，长度不符必须 fail-fast
+
+
+def _dcheck(*arrs):
+    """length guard: zip() 对不等长元组会静默截断，故先验长度。
+    本库已有两次事故（r37 dpow 写成逐分量相乘、r44 dmul 逐分量相乘），
+    均属「量纲工具自身出错而无人兜底」⇒ 原语必须先被守卫。"""
+    for a in arrs:
+        if len(a) != NDIM:
+            raise ValueError("dimension tuple must have length %d, got %d: %r"
+                             % (NDIM, len(a), a))
+
+
 def dmul(a, b):
+    _dcheck(a, b)
     return tuple(x + y for x, y in zip(a, b))
 
 
 def ddiv(a, b):
+    _dcheck(a, b)
     return tuple(x - y for x, y in zip(a, b))
 
 
 def dpow(a, n):
+    _dcheck(a)
     return tuple(x * n for x in a)
 
 
 def dsqrt(a):
+    _dcheck(a)
     return tuple(Fraction(x, 2) for x in a)
 
 
@@ -166,14 +183,86 @@ def main():
     # =================================================================
     print("\n[A] 量纲机器自检（五元组 M,L,T,Q,K）")
 
+    # ---- A.1 原语自检：先证明「尺子本身」正确，再用它去审对象 ----
+    # G0-P0 长度：所有登记元组都必须是五元组（含基础常量）
+    bad_len = [k for k, v in DIM.items() if len(v) != NDIM]
+    bad_len += [n for n, v in (("ONE", ONE), ("LEN", LEN), ("TIM", TIM),
+                               ("TMP", TMP), ("MSS", MSS), ("Z", Z)) if len(v) != NDIM]
+    guard("G0-P0 all_tuples_are_5d", not bad_len, "长度异常项：" + repr(bad_len))
+
+    # G0-P1 单位元：1 * x = x
+    guard("G0-P1 mul_identity", dmul(ONE, DIM["G"]) == DIM["G"],
+          "ONE*G = " + dstr(dmul(ONE, DIM["G"])))
+
+    # G0-P2 逆元：x / x = 1（对含 M/L/T/Q/K 五项全非零的 eps0 也要成立）
+    d_self = ddiv(DIM["eps0"], DIM["eps0"])
+    guard("G0-P2 div_self_is_one", d_self == ONE, "eps0/eps0 = " + dstr(d_self))
+
+    # G0-P3 幂与连乘一致：x^2 = x*x，x^0 = 1，x^-1 = 1/x
+    ok_p3 = (dpow(DIM["e"], 2) == dmul(DIM["e"], DIM["e"])
+             and dpow(DIM["e"], 0) == ONE
+             and dpow(DIM["c"], -1) == ddiv(ONE, DIM["c"]))
+    guard("G0-P3 pow_matches_repeated_mul", ok_p3,
+          "e^2=" + dstr(dpow(DIM["e"], 2)) + " e*e=" + dstr(dmul(DIM["e"], DIM["e"]))
+          + " c^-1=" + dstr(dpow(DIM["c"], -1)) + " 1/c=" + dstr(ddiv(ONE, DIM["c"])))
+
+    # G0-P4 开方往返：(sqrt x)^2 = x（用奇指数的 G 与 kB 双向检验）
+    ok_p4 = (dmul(dsqrt(DIM["G"]), dsqrt(DIM["G"])) == DIM["G"]
+             and dmul(dsqrt(DIM["kB"]), dsqrt(DIM["kB"])) == DIM["kB"])
+    guard("G0-P4 sqrt_roundtrip", ok_p4,
+          "(sqrt G)^2 = " + dstr(dmul(dsqrt(DIM["G"]), dsqrt(DIM["G"]))))
+
+    # G0-P5 dstr 渲染：负指数只出现一个负号（历史坑：Fraction 自带负号又手工加负号 => L^--3）
+    s_neg = dstr(DIM["c"])
+    s_frac = dstr(dsqrt(DIM["hbar"]))
+    ok_p5 = ("--" not in s_neg) and ("--" not in s_frac) and (dstr(ONE) == "1")
+    guard("G0-P5 dstr_single_sign", ok_p5,
+          "c=" + s_neg + " sqrt(hbar)=" + s_frac + " ONE=" + dstr(ONE))
+
+    # G0-P6 负向对照：长度不符必须抛错（证明 G0-P0 的守卫不是死代码）
+    caught = False
+    try:
+        dmul((Fraction(0), Fraction(1)), DIM["c"])     # 4 元组 vs 5 元组
+    except ValueError:
+        caught = True
+    guard("G0-P6 length_mismatch_raises", caught,
+          "不等长元组竟被静默 zip 截断——_dcheck 未生效")
+
+    add("A12", "INFO", "第 0 节量纲机器的自身加固：6 条原语守卫 + 4 处弱检查升级",
+        "把「尺子本身」纳入被审范围：①四条原语加长度 fail-fast，杜绝 zip 静默截断"
+        "（库内已两次因量纲原语写错而全线失真：r37 的 dpow 写成逐分量相乘、r44 的 dmul 同理）；"
+        "②补齐单位元 / 逆元 / 幂-连乘一致 / 开方往返 / dstr 单符号 五项代数自检；"
+        "③G0-P6 是负向对照（不等长必须抛错），证明新守卫不是死代码；"
+        "④补 G0-1b 普朗克质量（r174 F03 使用）；⑤G0-2b 用 sqrt(hbar G/c^5) 独立复算普朗克时间，"
+        "与 l_P/c 构成双路径（此前 c^3 误写成 c 时两条会一起裂）；⑥G0-6b 以 N*m 交叉 W*s；"
+        "⑦G0-7 守卫名原写 is_L^-1 而断言判 L^+1（名字与判据不自锁）已改名并加 G0-7c 反向对照；"
+        "⑧G0-13 原只判「两口径不等」（恒真、零信息）升级为「比值恰 L^-1」；"
+        "⑨G0-12 的力字面量改由基本维构造，并加洛伦兹反向成对断言。"
+        "本轮未新增物理，只把自检从「间接」改为「直接可区分」。",
+        {"new_guards": ["G0-P0..G0-P6", "G0-1b", "G0-2b", "G0-6b", "G0-7c", "G0-12b"],
+         "fixed_weak_checks": ["G0-7 name direction", "G0-13 tautology", "G0-12 hardcoded N"]})
+
+    # 力的量纲从基本维构造（供 G0-6 / G0-12 复用，避免硬编码字面量）
+    d_N = dmul(MSS, dmul(LEN, dpow(TIM, -2)))          # N = M L T^-2
+
     # G0-1 普朗克长度 = sqrt(hbar G / c^3)
     d_pl = dsqrt(ddiv(dmul(DIM["hbar"], DIM["G"]), dpow(DIM["c"], 3)))
     guard("G0-1 planck_length_is_L", d_pl == DIM["r"],
           "得到 " + dstr(d_pl))
 
-    # G0-2 普朗克时间
+    # G0-1b 普朗克质量 = sqrt(hbar c / G)（r174 的 F03 要用，先验量纲）
+    d_mpl = dsqrt(ddiv(dmul(DIM["hbar"], DIM["c"]), DIM["G"]))
+    guard("G0-1b planck_mass_is_M", d_mpl == MSS, "得到 " + dstr(d_mpl))
+
+    # G0-2 普朗克时间（路径 a：t_P = l_P / c，仅检验 G0-1 的推论）
     d_pt = ddiv(DIM["r"], DIM["c"])
     guard("G0-2 planck_time_is_T", d_pt == TIM, "得到 " + dstr(d_pt))
+
+    # G0-2b 普朗克时间（路径 b：t_P = sqrt(hbar G / c^5)，不从 l_P 出发）
+    #   —— 若 G0-1 与 G0-2b 同时通过，说明 c^5 的指数与 l_P/c 自洽；
+    #      若曾把 G0-1 的 c^3 写错，两条会一起裂开（本册修正前的状态）。
+    d_ptb = dsqrt(ddiv(dmul(DIM["hbar"], DIM["G"]), dpow(DIM["c"], 5)))
+    guard("G0-2b planck_time_independent_path", d_ptb == TIM, "得到 " + dstr(d_ptb))
 
     # G0-3 普朗克温度 = sqrt(hbar c^5 / (G kB^2))
     d_tpl = dsqrt(ddiv(dmul(dpow(DIM["c"], 5), DIM["hbar"]),
@@ -189,21 +278,24 @@ def main():
     d_em = dmul(DIM["eps0"], dmul(DIM["mu0"], dpow(DIM["c"], 2)))
     guard("G0-5 eps0_mu0_c2_dimensionless", d_em == ONE, "得到 " + dstr(d_em))
 
-    # G0-6 焦耳 = W*s
-    d_j = dmul(DIM["W"], TIM)
-    guard("G0-6 joule_is_W_times_s",
-          d_j == (Fraction(1), Fraction(2), Fraction(-2), Fraction(0), Fraction(0)),
-          "得到 " + dstr(d_j))
+    # G0-6 焦耳：两条独立路径必须同时落到 M L^2 T^-2
+    d_j = dmul(DIM["W"], TIM)                          # 路径 a: J = W*s
+    d_j2 = dmul(d_N, LEN)                              # 路径 b: J = N*m（d_N 已由基本维构造）
+    d_E = (Fraction(1), Fraction(2), Fraction(-2), Fraction(0), Fraction(0))
+    guard("G0-6 joule_is_W_times_s", d_j == d_E, "得到 " + dstr(d_j))
+    guard("G0-6b joule_is_newton_metre", d_j2 == d_E,
+          "N*m = " + dstr(d_j2) + "（与 W*s 应为同一元组）")
 
-    # G0-7 热导(W/K) 与 热导率(W/m/K) 差且仅差 L^-1
+    # G0-7 热导 G_th(W/K) 与 热导率 k(W/m/K)：比值恰为 L^+1
+    #      （原守卫名写作 is_L^-1 与断言方向相反——属「名字与判据不自锁」缺陷，本轮改名）
     d_gap = ddiv(DIM["Gth"], DIM["kcond"])
-    guard("G0-7 thermal_conductance_minus_conductivity_is_L^-1", d_gap == LEN,
-          "实际差 " + dstr(d_gap) + "（应为 L^1：conductance = conductivity / L）")
-    if d_gap == LEN:
-        pass
-    # 说明：Gth / kcond = L^1，故 Gth = kcond * L
+    guard("G0-7 conductance_over_conductivity_is_L", d_gap == LEN,
+          "Gth/kcond = " + dstr(d_gap) + "（应为 L^+1：conductance = conductivity / L）")
     guard("G0-7b orientation", dmul(DIM["kcond"], LEN) == DIM["Gth"],
-          "kcond*L != Gth")
+          "kcond*L = " + dstr(dmul(DIM["kcond"], LEN)) + " != Gth")
+    # G0-7c 反方向必须**不**成立——配对断言，防方向信息丢失后两向都"通过"
+    guard("G0-7c reverse_direction_not_equal", ddiv(DIM["kcond"], DIM["Gth"]) != LEN,
+          "kcond/Gth 也等于 L：方向判别失效")
 
     # G0-8 k_B 与熵同量纲
     guard("G0-8 kB_is_entropy", DIM["kB"] == DIM["S"], "得到 " + dstr(DIM["kB"]))
@@ -225,15 +317,21 @@ def main():
         " 多一个 K^-1。本册量纲机用五元组（含 K）以杜绝该混用；四元组机器必然算错这一项。",
         {"quantum": dstr(DIM["Gth"]), "wrong": dstr(d_q_wrong)})
 
-    # G0-12 磁场量纲：F = q v B
-    d_B = ddiv((Fraction(1), Fraction(1), Fraction(-2), Fraction(0), Fraction(0)),
-               dmul(DIM["e"], DIM["c"]))
+    # G0-12 磁场量纲：F = q v B ⇒ B = F/(q c)（F 用 d_N，不再硬编码字面量）
+    d_B = ddiv(d_N, dmul(DIM["e"], DIM["c"]))
     guard("G0-12 tesla_dim", d_B == DIM["B"], "得到 " + dstr(d_B))
+    # G0-12b 反向：q v B 必须回到力的量纲（成对断言，防单方向巧合）
+    guard("G0-12b lorentz_roundtrip", dmul(DIM["e"], dmul(DIM["c"], d_B)) == d_N,
+          "q c B = " + dstr(dmul(DIM["e"], dmul(DIM["c"], d_B))))
 
     # G0-13 曲率 L^-1 与 L^-2 的二分（r174 A01/A02 的口径根源）
+    #      原断言只判「不等」（恒真、零信息）；升级为「比值恰为 L^-1」。
     kappa_F = (Fraction(0), Fraction(-1), Fraction(0), Fraction(0), Fraction(0))
     kappa_2 = (Fraction(0), Fraction(-2), Fraction(0), Fraction(0), Fraction(0))
-    guard("G0-13 kappa_two_calibres", kappa_F != kappa_2, "两种曲率口径竟相等")
+    d_kap_ratio = ddiv(kappa_2, kappa_F)
+    guard("G0-13 kappa_two_calibres_ratio_is_L^-1",
+          d_kap_ratio == (Fraction(0), Fraction(-1), Fraction(0), Fraction(0), Fraction(0)),
+          "L^-2 / L^-1 = " + dstr(d_kap_ratio) + "（应为 L^-1）")
 
     # G0-14 圆周运动：a^3 w^2 = G M 的量纲
     d_kepler = dmul(dpow(DIM["r"], 3), dpow(TIM, -2))

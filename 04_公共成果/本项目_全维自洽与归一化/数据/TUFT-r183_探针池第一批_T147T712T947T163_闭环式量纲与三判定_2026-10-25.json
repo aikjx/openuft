@@ -4,14 +4,14 @@
  "date": "2026-10-25",
  "scope": "探针池第一批 T147 / T712 / T947 / T163（承接 r174 F02：只锁定未落盘）",
  "counts": {
-  "entries": 29,
+  "entries": 30,
   "PASS": 8,
   "FAIL": 8,
   "BOUNDARY": 4,
   "CORRECTED": 1,
-  "INFO": 8,
-  "guards": 39,
-  "guards_ok": 39
+  "INFO": 9,
+  "guards": 51,
+  "guards_ok": 51
  },
  "verdicts": [
   {
@@ -36,6 +36,27 @@
   }
  ],
  "entries": [
+  {
+   "code": "A12",
+   "level": "INFO",
+   "title": "第 0 节量纲机器的自身加固：6 条原语守卫 + 4 处弱检查升级",
+   "detail": "把「尺子本身」纳入被审范围：①四条原语加长度 fail-fast，杜绝 zip 静默截断（库内已两次因量纲原语写错而全线失真：r37 的 dpow 写成逐分量相乘、r44 的 dmul 同理）；②补齐单位元 / 逆元 / 幂-连乘一致 / 开方往返 / dstr 单符号 五项代数自检；③G0-P6 是负向对照（不等长必须抛错），证明新守卫不是死代码；④补 G0-1b 普朗克质量（r174 F03 使用）；⑤G0-2b 用 sqrt(hbar G/c^5) 独立复算普朗克时间，与 l_P/c 构成双路径（此前 c^3 误写成 c 时两条会一起裂）；⑥G0-6b 以 N*m 交叉 W*s；⑦G0-7 守卫名原写 is_L^-1 而断言判 L^+1（名字与判据不自锁）已改名并加 G0-7c 反向对照；⑧G0-13 原只判「两口径不等」（恒真、零信息）升级为「比值恰 L^-1」；⑨G0-12 的力字面量改由基本维构造，并加洛伦兹反向成对断言。本轮未新增物理，只把自检从「间接」改为「直接可区分」。",
+   "numbers": {
+    "new_guards": [
+     "G0-P0..G0-P6",
+     "G0-1b",
+     "G0-2b",
+     "G0-6b",
+     "G0-7c",
+     "G0-12b"
+    ],
+    "fixed_weak_checks": [
+     "G0-7 name direction",
+     "G0-13 tautology",
+     "G0-12 hardcoded N"
+    ]
+   }
+  },
   {
    "code": "A11",
    "level": "INFO",
@@ -484,12 +505,57 @@
  ],
  "guards": [
   {
+   "name": "G0-P0 all_tuples_are_5d",
+   "ok": true,
+   "msg": "长度异常项：[]"
+  },
+  {
+   "name": "G0-P1 mul_identity",
+   "ok": true,
+   "msg": "ONE*G = M^-1 L^3 T^-2"
+  },
+  {
+   "name": "G0-P2 div_self_is_one",
+   "ok": true,
+   "msg": "eps0/eps0 = 1"
+  },
+  {
+   "name": "G0-P3 pow_matches_repeated_mul",
+   "ok": true,
+   "msg": "e^2=Q^2 e*e=Q^2 c^-1=L^-1 T^1 1/c=L^-1 T^1"
+  },
+  {
+   "name": "G0-P4 sqrt_roundtrip",
+   "ok": true,
+   "msg": "(sqrt G)^2 = M^-1 L^3 T^-2"
+  },
+  {
+   "name": "G0-P5 dstr_single_sign",
+   "ok": true,
+   "msg": "c=L^1 T^-1 sqrt(hbar)=M^1/2 L^1 T^-1/2 ONE=1"
+  },
+  {
+   "name": "G0-P6 length_mismatch_raises",
+   "ok": true,
+   "msg": "不等长元组竟被静默 zip 截断——_dcheck 未生效"
+  },
+  {
    "name": "G0-1 planck_length_is_L",
    "ok": true,
    "msg": "得到 L^1"
   },
   {
+   "name": "G0-1b planck_mass_is_M",
+   "ok": true,
+   "msg": "得到 M^1"
+  },
+  {
    "name": "G0-2 planck_time_is_T",
+   "ok": true,
+   "msg": "得到 T^1"
+  },
+  {
+   "name": "G0-2b planck_time_independent_path",
    "ok": true,
    "msg": "得到 T^1"
   },
@@ -514,14 +580,24 @@
    "msg": "得到 M^1 L^2 T^-2"
   },
   {
-   "name": "G0-7 thermal_conductance_minus_conductivity_is_L^-1",
+   "name": "G0-6b joule_is_newton_metre",
    "ok": true,
-   "msg": "实际差 L^1（应为 L^1：conductance = conductivity / L）"
+   "msg": "N*m = M^1 L^2 T^-2（与 W*s 应为同一元组）"
+  },
+  {
+   "name": "G0-7 conductance_over_conductivity_is_L",
+   "ok": true,
+   "msg": "Gth/kcond = L^1（应为 L^+1：conductance = conductivity / L）"
   },
   {
    "name": "G0-7b orientation",
    "ok": true,
-   "msg": "kcond*L != Gth"
+   "msg": "kcond*L = M^1 L^2 T^-3 K^-1 != Gth"
+  },
+  {
+   "name": "G0-7c reverse_direction_not_equal",
+   "ok": true,
+   "msg": "kcond/Gth 也等于 L：方向判别失效"
   },
   {
    "name": "G0-8 kB_is_entropy",
@@ -549,9 +625,14 @@
    "msg": "得到 M^1 T^-1 Q^-1"
   },
   {
-   "name": "G0-13 kappa_two_calibres",
+   "name": "G0-12b lorentz_roundtrip",
    "ok": true,
-   "msg": "两种曲率口径竟相等"
+   "msg": "q c B = M^1 L^1 T^-2"
+  },
+  {
+   "name": "G0-13 kappa_two_calibres_ratio_is_L^-1",
+   "ok": true,
+   "msg": "L^-2 / L^-1 = L^-1（应为 L^-1）"
   },
   {
    "name": "G0-14 kepler_dim",
