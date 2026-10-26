@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-r"""TUFT-r235 · 四力统一方程·宇宙学层：FRW 背景、距离-红移与 Λ 通道
+r"""TUFT-r237 · 四力统一方程·宇宙学层：FRW 背景、距离-红移与 Λ 通道
 2026-10-26
 
-〔编号说明〕收尾复核实测：r234 已被并行链《强场层·史瓦西完整测地线》占号
-（源码 22:37:26 落盘）——按「先占位者为权威」，本卷顺延取 **r235**
-（落盘前实测 r235–r236 空）。本线上一卷为 r233（黑洞热力学层）。
+〔编号说明〕本卷起草时实测 r235–r236 空；落盘收尾复核实测出现连续撞号：
+r235 已被并行链《总览合并轮·七层交互页统一入口》占号（源码 22:49:15 落盘），
+r236 又被并行链《warp 线外部核实闭环》（源码 23:04:34 落盘）占号——按
+「先占位者为权威」r235/r236 均归并行链，本卷顺延改号 **r237**。
+本线上一卷为 r233（黑洞热力学层）；r234 归并行链《强场层》（22:37:26）。
 
 用户诉求：「按这个方案开始宇宙学层分析」。
 
@@ -38,8 +40,8 @@ Etherington 对偶、Λ 项全部是教科书/文献内容（1917–2018）。�
   - 距离积分用两路独立求积（z 直积 vs x=ln(1+z) 代换）互印；
   - 年龄积分用两路（a 直积 vs x=−ln a 代换）互印；
   - S18 参数取该体系文稿自报值，本卷只做只读复算，不调参；
-  - 纯标准库 float64；对 r214–r234 及并行会话产物只读；
-    守卫失败即非零退出；条目不可与 r142–r234 相加。
+  - 纯标准库 float64；对 r214–r236 及并行会话产物只读；
+    守卫失败即非零退出；条目不可与 r142–r236 相加。
 """
 
 import json
@@ -55,13 +57,13 @@ except Exception:
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _PROJ = os.path.dirname(_HERE)
 _DATADIR = os.path.join(_PROJ, "数据")
-_TMPL = os.path.join(_HERE, "TUFT-r235_宇宙学层交互可视化模板_2026-10-26.html")
+_TMPL = os.path.join(_HERE, "TUFT-r237_宇宙学层交互可视化模板_2026-10-26.html")
 HTML_OUT = os.path.join(_PROJ, "四力统一方程_宇宙学层可视化_2026-10-26.html")
 
-MARKER = "R235-COSMO-LAYER"
-BASE = ("TUFT-r235_四力统一方程_宇宙学层_FRW背景距离红移与Lambda通道_"
+MARKER = "R237-COSMO-LAYER"
+BASE = ("TUFT-r237_四力统一方程_宇宙学层_FRW背景距离红移与Lambda通道_"
         "精算与交互可视化_2026-10-26")
-STEM = "TUFT-r235"
+STEM = "TUFT-r237"
 
 C = 2.99792458e8
 G = 6.67430e-11
@@ -317,7 +319,6 @@ def grm_dc(z, n=40000):
 
 
 s18_da_ratio = s18_dc(Z_STAR) / grm_dc(Z_STAR)
-s18_da_gr = grm_dc(Z_STAR)
 
 rel_s18_q = abs(s18_q - S18_Q_PUB)
 rel_s18_age = abs(s18_t / (S18_AGE_PUB * GYR) - 1.0)
@@ -403,9 +404,10 @@ control("C1", "参数敏感性：H0×1.1 ⇒ 年龄必 ×1/1.1（ΛCDM 结构恒
         {"ratio": c1_ratio})
 
 c2_age_drop = 1.0 - (t0_matter / t0)
-control("C2", "判别力：ΩΛ→0 ⇒ 年龄降到物质主导 9.31 Gyr（短 32%）且 q0 翻正",
-        abs(t0_matter / GYR - 9.312) < 0.01 and q0_matter > 0.1,
-        f"物质主导年龄 = {t0_matter/GYR:.6f} Gyr（比含 Λ 短 {c2_age_drop*100:.1f}%）；"
+control("C2", "判别力：ΩΛ→0 ⇒ 年龄降到物质主导 9.67 Gyr（短约 30%）且 q0 翻正",
+        abs(t0_matter / GYR - 9.67) < 0.05 and q0_matter > 0.1,
+        f"物质主导年龄 = {t0_matter/GYR:.6f} Gyr（Planck H0 口径；S18 文稿 H0=70 口径为 9.312）——"
+        f"比含 Λ 短 {c2_age_drop*100:.1f}%；"
         f"q0(无 Λ) = {q0_matter:.6f} > 0（减速）vs 含 Λ q0 = {q0:.6f} < 0（加速）——"
         "Λ 的存在正是年龄与加速符号的分水岭",
         {"age_matter_Gyr": t0_matter / GYR, "age_drop_pct": c2_age_drop * 100,
@@ -414,9 +416,6 @@ control("C2", "判别力：ΩΛ→0 ⇒ 年龄降到物质主导 9.31 Gyr（短 
 # ===========================================================================
 # S7 条目与判决
 # ===========================================================================
-rel_h0 = abs(H0 / (H0_KM * 1000.0 / MPC) - 1.0)
-
-
 def main():
     entry("H01", "INFO", "判定：宇宙学层 = ΛCDM 背景的机器复现，不是新理论",
           "FRW 度规、Friedmann 方程、距离-红移、Etherington 对偶、Λ 项全部为"
@@ -467,8 +466,8 @@ def main():
           f"观测 ρΛ = {rho_l:.4e} kg/m³，比值 {rho_ratio:.3e}（{log_ratio:.1f} 个数量级）。"
           "Λ 的数值没有任何框架内第一性来源；本卷不宣称解决，如实登记为"
           "『本质三层不可达』（r230）在宇宙学层的对应边界")
-    entry("H10", "INFO", "全方法总账 +1（15 轮）与判决",
-          "r214–r235 十五轮：形式统一逐层成立（静态中心力→禁闭/通道→传播→进动→量子谱→散射→"
+    entry("H10", "INFO", "全方法总账 +1（17 轮）与判决",
+          "r214–r237 十七轮：形式统一逐层成立（静态中心力→禁闭/通道→传播→进动→量子谱→散射→"
           "作用量→1PN→引力波→黑洞热力学→Λ 通道），动力学统一逐层 FAIL（四个 α+λ+σ 独立输入，"
           "供给 0；宇宙学 Λ 亦无第一性来源）。本卷新增边界：背景层可复现，"
           "但 H0 张力与宇宙学常数问题不可由本框架消解")
@@ -491,11 +490,13 @@ def main():
         ["r232", "引力波层", "四极/HT/啁啾三管线互印"],
         ["r233", "黑洞热力学层", "四定律+Smarr+面积定理+熵力母式（仅引力）"],
         ["r234（并行）", "强场层（史瓦西测地线）", "ISCO/光子球/1PN 失效曲线"],
-        ["r235", "宇宙学层（本卷）", "FRW 背景+距离-红移+S18 证伪复核+Λ 通道"],
+        ["r235（并行）", "总览合并轮（七层统一入口）", "纯整理/无新数值（只读引用）"],
+        ["r236（并行）", "warp 线外部核实（不同主题）", "零重叠，只读引用/不计入方法链"],
+        ["r237", "宇宙学层（本卷）", "FRW 背景+距离-红移+S18 证伪复核+Λ 通道"],
     ]
 
     res = {
-        "stem": STEM, "round": 235, "date": "2026-10-26",
+        "stem": STEM, "round": 237, "date": "2026-10-26",
         "method": ("Planck 2018 ΛCDM 背景双路年龄积分 + 距离-红移双路求积 + "
                    "Etherington 对偶 + S18 FLRW 只读复算 + Λ 通道交叉半径"
                    "——float64，纯标准库"),
@@ -544,7 +545,7 @@ def main():
     }
 
     parts = [
-        "R235-COSMO-LAYER-FRW-BACKGROUND-OK-AGE-ANCHOR-OK-DISTANCE-REDSHIFT-OK",
+        "R237-COSMO-LAYER-FRW-BACKGROUND-OK-AGE-ANCHOR-OK-DISTANCE-REDSHIFT-OK",
         "LAMBDA-RHOC-Q0-OK-S18-FLRW-REPRODUCED-OK-S18-FALSIFIED-OK",
         "LAMBDA-CHANNEL-FORM-ONLY-HUBBLE-TENSION-BOUNDARY-CC-PROBLEM-BOUNDARY",
         "VERDICT-STANDARD-BACKGROUND-NO-NEW-THEORY",
@@ -556,8 +557,10 @@ def main():
     res["source"] = {
         "engine": BASE + ".py",
         "inherits": ["r233（黑洞热力学层）", "r234（强场层，并行只读）",
-                     "r229（新颖性审计口径）", "r230（本质三层不可达）",
-                     "Planck 2018 / SH0ES 2022", "S18 续篇二 FLRW 文稿（只读）"],
+                     "r235（总览合并轮，并行只读）", "r236（warp 线，并行不同主题）",
+                     "r229（新颖性审计口径）",
+                     "r230（本质三层不可达）", "Planck 2018 / SH0ES 2022",
+                     "S18 续篇二 FLRW 文稿（只读）"],
     }
 
     os.makedirs(_DATADIR, exist_ok=True)
@@ -639,14 +642,14 @@ def cast_html(res):
         return False, f"模板缺失：{_TMPL}"
     with open(_TMPL, "r", encoding="utf-8") as f:
         tpl = f.read()
-    if "__R235_JSON__" not in tpl:
-        return False, "模板缺少 __R235_JSON__ 占位符"
-    html = tpl.replace("__R235_JSON__", json.dumps(res, ensure_ascii=False))
+    if "__R237_JSON__" not in tpl:
+        return False, "模板缺少 __R237_JSON__ 占位符"
+    html = tpl.replace("__R237_JSON__", json.dumps(res, ensure_ascii=False))
     with open(HTML_OUT, "w", encoding="utf-8", newline="\n") as f:
         f.write(html)
     text = open(HTML_OUT, "r", encoding="utf-8").read()
     problems = []
-    if "__R235_JSON__" in text:
+    if "__R237_JSON__" in text:
         problems.append("占位符未替换")
     if "http://" in text or "https://" in text:
         problems.append("发现外部 URL（应零依赖）")

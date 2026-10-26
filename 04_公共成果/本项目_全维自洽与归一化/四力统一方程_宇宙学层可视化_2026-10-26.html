@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>237 · 四力统一方程·宇宙学层（FRW 背景、距离-红移与 Λ 通道）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #4338ca;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:20px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c7d2fe;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .metric{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:10px;}
+  .metric .t{font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px;}
+  .bar{height:14px;border-radius:4px;margin:4px 0;position:relative;background:#111c31;}
+  .bar i{display:block;height:14px;border-radius:4px;}
+  .bar span{position:absolute;right:6px;top:-2px;font-size:11px;font-family:Consolas,monospace;color:#e2e8f0;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r237 · 宇宙学层 · FRW 背景 · 零外部依赖</span>
+  <h1>四力统一方程·宇宙学层<br>FRW 背景、距离-红移与 Λ 通道</h1>
+  <p>把引力线从太阳系/强场/黑洞推进到宇宙学背景：①ΛCDM 年龄双路积分；
+     ②距离-红移双路求积 + Etherington 对偶；③库内候选 S18 自报读数只读复算与观测对照；
+     ④Λ 作为第五通道并进静态力母式（UFE-4F-Λ），量化其交叉半径。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：ΛCDM 背景机器复现；S18 宇宙学证伪维持；Λ 通道只是形式重述</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>距离-红移：μ(z) 与 d_L(z)（Planck 2018 背景）</h3>
+  <canvas id="cvD" width="1000" height="460"></canvas>
+  <div class="read" id="readD"></div>
+  <p class="note">蓝线 = 距离模数 μ(z)（左轴，mag）；紫线 = 光度距离 d_L(z)/Gpc（右轴）。
+     两路独立求积（z 直积 vs x=ln(1+z) 代换）逐点互印；Etherington 对偶 d_L=(1+z)²d_A 在浮点内恒等。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>年龄-红移：t(z) 与 Λ 的分水岭</h3>
+  <canvas id="cvT" width="1000" height="420"></canvas>
+  <div class="read" id="readT"></div>
+  <p class="note">蓝线 = 年龄 t(z)；金虚线 = t0（13.797 Gyr 锚）；红虚线 = 无 Λ 物质主导年龄（Planck H0 口径 9.67 Gyr）。
+     ΩΛ→0 会使年龄短约 30%、q0 由负翻正——Λ 是加速符号与年龄的分水岭（控制组 C2）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>库内候选 S18：自报读数复现 vs 观测</h3>
+  <div id="s18Bars"></div>
+  <div class="read" id="readS"></div>
+  <p class="note">三条结构性冲突：年龄仅 17.5%、D_A 比 0.103（θ_s 放大约 9.6×）、q=+3.32（强减速）
+     而观测 q0=−0.527（加速）。本卷只读复算 S18 自报参数，不调参、不代做存活路径。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>Λ 通道：F_Λ/F_G = (r/r*)³ 的交叉尺度</h3>
+  <canvas id="cvL" width="1000" height="440"></canvas>
+  <div class="read" id="readL"></div>
+  <p class="note">UFE-4F-Λ：F = −GMm/r² + (Λc²/3)mr，r*=(3GM/Λc²)¹ᐟ³。
+     太阳系 1 AU 处比值 ~8×10⁻²³（可忽略）；银河系 ~0.52 Mpc、星系团 ~11 Mpc 才与引力同量级。
+     Λ 项是标准 GR 的换写法——形式重述，不是新物理。</p>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>r214–r237 全方法总账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§6</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = {"stem": "TUFT-r237", "round": 237, "date": "2026-10-26", "method": "Planck 2018 ΛCDM 背景双路年龄积分 + 距离-红移双路求积 + Etherington 对偶 + S18 FLRW 只读复算 + Λ 通道交叉半径——float64，纯标准库", "cosmo_verdict": "FRW 背景/距离-红移/Λ 全部机器复现（年龄 rel 1e−3、距离双路 1e−8、μ(1) 锚 44.16）；S18 自报读数逐项复现并维持宇宙学证伪；H0 张力 5σ 与宇宙学常数问题 123 量级无解——复现层，无新理论", "entries": [{"code": "H01", "level": "INFO", "title": "判定：宇宙学层 = ΛCDM 背景的机器复现，不是新理论", "detail": "FRW 度规、Friedmann 方程、距离-红移、Etherington 对偶、Λ 项全部为教科书/文献内容（1917–2018）；本卷以年龄双路、距离双路、S18 只读复算、Λ 通道四条管线互印——复现层，无新物理（承 r229/r233/r234）", "numbers": {}}, {"code": "H02", "level": "PASS", "title": "宇宙年龄锚：t0 与 t(z=1)", "detail": "t0 = 13.787029 Gyr（锚 13.797，rel 7.23e-04）；t(z=1) = 5.838306 Gyr（锚 5.93，rel 1.55e-02）；两路求积互印 rel 2.22e-14——年龄积分被 Ωm/ΩΛ/Ωr 与 H0 完全钉死", "numbers": {}}, {"code": "H03", "level": "PASS", "title": "距离-红移：d_L、μ、D_C 与 Etherington 对偶", "detail": "D_C(1100) = 13.861344 Gpc（锚 14.0，rel 9.90e-03）；d_L(1) = 6800.696 Mpc、μ(1) = 44.1628 mag（锚 44.16）；双路 max rel 2.45e-08；对偶 d_L=(1+z)²d_A 恒等 rel 2.22e-16", "numbers": {}}, {"code": "H04", "level": "PASS", "title": "Λ、临界密度与减速参数", "detail": "Λ = 1.090287e-52 m⁻²（锚 1.09e−52）；ρc = 8.532855e-27 kg/m³（锚 8.53e−27）；ρΛ = 5.8417e-27 kg/m³（能量密度 5.2502e-10 J/m³）；q0 = -0.526867（锚 −0.527）——加速膨胀的符号被 Λ 项给出", "numbers": {}}, {"code": "H05", "level": "PASS", "title": "S18（曲率-能量密度）FLRW 读数机器复现", "detail": "用 S18 自报参数机复现：q = 3.319735（自报 3.3203）；年龄 2.413693 Gyr（自报 2.4134）；R = -7.969723e-52 vs GR 1.543511e-35（比值 -5.163e-17，符号相反）；D_A 比 0.103193（自报 0.1039）——四读数逐项命中，S18 文稿数值可信（本卷不调参）", "numbers": {}}, {"code": "H06", "level": "FAIL", "title": "S18 宇宙学对照观测：维持『已被证伪』裁定", "detail": "年龄 2.4137 vs 13.797 Gyr（17.5%）；D_A 比 0.1032 vs 1（偏移约 9.6×）；q = 3.320（恒 >1 强减速）vs 观测 q0 = -0.527（<0 加速）——三条结构性冲突；且 α→0 给出 a∝t^{1/2} 而非 GR 物质主导 t^{2/3}（无 GR 极限）。存活路径（加 Λ/重定 ρmin）该体系自报未验证，本卷不代做", "numbers": {}}, {"code": "H07", "level": "PASS", "title": "UFE-4F-Λ：Λ 作为第五通道并进静态力母式", "detail": "F = −GMm/r² + (Λc²/3)mr，r*=(3GM/Λc²)¹ᐟ³：太阳 r*=111.4 pc、地球 1.607 pc、银河系 0.517 Mpc、星系团 11.14 Mpc；太阳系 1 AU 处 F_Λ/F_G = 8.240e-23（8×10⁻²³，可忽略）——Λ 只在 ≥Mpc 尺度与引力同量级。**形式重述，不是新物理**", "numbers": {}}, {"code": "H08", "level": "BOUNDARY", "title": "H0 张力：8.3%（≈5σ）——框架不解决", "detail": "Planck 2018 H0 = 67.4 ± 0.5 vs SH0ES H0 = 73.0 ± 1.0 km/s/Mpc：差 8.31%（合并 σ 口径 5.01σ）。本卷只把张力量化登记；ΛCDM 背景内无新物理自由度可消解，正是『动力学统一供给 0』在宇宙学尺度的同型边界", "numbers": {}}, {"code": "H09", "level": "BOUNDARY", "title": "宇宙学常数问题：ρP/ρΛ ≈ 8.8×10¹²²——无推导", "detail": "普朗克密度 ρP = c⁵/(ħG²) = 5.1548e+96 kg/m³，观测 ρΛ = 5.8417e-27 kg/m³，比值 8.824e+122（122.9 个数量级）。Λ 的数值没有任何框架内第一性来源；本卷不宣称解决，如实登记为『本质三层不可达』（r230）在宇宙学层的对应边界", "numbers": {}}, {"code": "H10", "level": "INFO", "title": "全方法总账 +1（17 轮）与判决", "detail": "r214–r237 十七轮：形式统一逐层成立（静态中心力→禁闭/通道→传播→进动→量子谱→散射→作用量→1PN→引力波→黑洞热力学→Λ 通道），动力学统一逐层 FAIL（四个 α+λ+σ 独立输入，供给 0；宇宙学 Λ 亦无第一性来源）。本卷新增边界：背景层可复现，但 H0 张力与宇宙学常数问题不可由本框架消解", "numbers": {}}], "guards": [{"id": "G1", "title": "年龄锚：t0 与 t(z=1) 命中 Planck 2018；两路求积互印", "ok": true, "detail": "t0 = 13.787029 Gyr（锚 13.797，rel 7.23e-04）；t(z=1) = 5.838306 Gyr（锚 5.93，rel 1.55e-02）；两路求积 rel 2.22e-14", "numbers": {"t0_Gyr": 13.787028885496476, "t1_Gyr": 5.83830569984021, "rel_t0": 0.0007227016382927998, "rel_t1": 0.015462782489003346, "rel_alt": 2.220446049250313e-14}}, {"id": "G3", "title": "Λ、ρc、q0 命中 Planck 2018", "ok": true, "detail": "Λ = 1.090287e-52 m⁻²（锚 1.09e−52，rel 2.63e-04）；ρc = 8.532855e-27 kg/m³（锚 8.53e−27，rel 3.35e-04）；q0 = -0.526867000（锚 −0.527，差 1.33e-04）", "numbers": {"Lambda": 1.0902870116528942e-52, "rho_c": 8.532855163739318e-27, "q0": -0.5268669999999999, "rel_lambda": 0.0002633134430223283, "rel_rhoc": 0.0003347202507992808}}, {"id": "G2", "title": "距离-红移：双路求积互印 + D_C(1100)/μ(1) 锚 + Etherington 对偶", "ok": true, "detail": "双路 max rel 2.45e-08；D_C(1100) = 13.861344 Gpc（锚 14.0，rel 9.90e-03）；μ(1) = 44.1628 mag（锚 44.16，差 2.77e-03）；对偶 max rel 2.22e-16", "numbers": {"max_quad_rel": 2.448209246441735e-08, "max_duality_rel": 2.220446049250313e-16, "DC1100_Gpc": 13.861343807730552, "mu1": 44.16276693874474, "DL1_Mpc": 6800.696407136526}}, {"id": "G4", "title": "S18 自报读数机器复现：q / 年龄 / R 符号与量值 / D_A 比", "ok": true, "detail": "q = 3.319735（自报 3.3203，差 5.65e-04）；年龄 2.413693 Gyr（自报 2.4134，rel 1.21e-04）；R = -7.969723e-52（自报 -7.971700e-52，rel 2.48e-04）；D_A 比 0.103193（自报 0.1039，rel 6.81e-03）", "numbers": {"q": 3.319735, "age_Gyr": 2.413692832806586, "R": -7.9697226728402e-52, "R_GR": 1.5435108513130125e-35, "DA_ratio": 0.10319279606706916, "rel_q": 0.0005649999999999267, "rel_age": 0.00012133620891119357, "rel_R": 0.0002480433483197375, "rel_DA": 0.006806582607611578}}, {"id": "G5", "title": "S18 与观测对照：年龄过短、D_A 比过小、q 符号相反 ⇒ 证伪成立", "ok": true, "detail": "年龄 2.413693 vs 13.797 Gyr（比值 0.1749）；D_A 比 0.103193 vs 1；q = 3.3197（>1 强减速）vs 观测 q0 = -0.5269（<0 加速）——三条结构性冲突远超容差，维持 S18『宇宙学尺度已被证伪』裁定", "numbers": {"age_ratio": 0.174943308893715, "DA_ratio": 0.10319279606706916, "q_s18": 3.319735, "q_obs": -0.5268669999999999}}, {"id": "G6", "title": "Λ 通道：1 AU 比率可忽略 + 银河系/星系团交叉半径命中", "ok": true, "detail": "太阳系 1 AU：F_Λ/F_G = 8.240e-23；银河系 r* = 0.5171 Mpc；星系团 r* = 11.14 Mpc；地球 r* = 1.607 pc——Λ 只在 ≥Mpc 尺度与引力同量级", "numbers": {"ratio_1au": 8.23959578485769e-23, "MW_rstar_Mpc": 0.517137737733198, "cluster_rstar_Mpc": 11.14139481697012, "Earth_rstar_pc": 1.6074505902729916}}, {"id": "G7", "title": "交互 HTML 生成且自含", "ok": true, "detail": "已生成 D:\\a10\\aikjx\\code\\my_lib\\openuft\\04_公共成果\\本项目_全维自洽与归一化\\四力统一方程_宇宙学层可视化_2026-10-26.html（28782 B），零外部 URL、JSON 已铸入", "numbers": {}}], "controls": [{"id": "C1", "title": "参数敏感性：H0×1.1 ⇒ 年龄必 ×1/1.1（ΛCDM 结构恒等）", "ok": true, "detail": "t0(H0) = 13.787029 Gyr；t0(1.1H0) = 12.533663 Gyr；比值 = 0.909090909091（应 1/1.1 = 0.909090909091）——年龄对 H0 的线性依赖被钉死", "numbers": {"ratio": 0.9090909090909091}}, {"id": "C2", "title": "判别力：ΩΛ→0 ⇒ 年龄降到物质主导 9.67 Gyr（短约 30%）且 q0 翻正", "ok": true, "detail": "物质主导年龄 = 9.671535 Gyr（Planck H0 口径；S18 文稿 H0=70 口径为 9.312）——比含 Λ 短 29.9%；q0(无 Λ) = 0.157742 > 0（减速）vs 含 Λ q0 = -0.526867 < 0（加速）——Λ 的存在正是年龄与加速符号的分水岭", "numbers": {"age_matter_Gyr": 9.671535328197715, "age_drop_pct": 29.850474612613098, "q0_matter": 0.1577415}}], "readings": {"params": {"H0_km": 67.4, "Om": 0.3153, "Or": 9.15e-05, "OL": 0.6846085, "q0": -0.5268669999999999, "Lambda": 1.0902870116528942e-52, "rho_c": 8.532855163739318e-27, "rho_L": 5.841665174364828e-27, "rho_L_energy": 5.250226827906904e-10, "age0_Gyr": 13.787028885496476, "age1_Gyr": 5.83830569984021, "age_matter_Gyr": 9.671535328197715, "q0_matter": 0.1577415, "tcmb_z1100": 3000.7754999999997}, "distances": {"rows": [{"z": 0.001, "DC_Mpc": 4.44690687583733, "DL_Mpc": 4.451353782713166, "DA_Mpc": 4.442464411425904, "mu": 28.242460561588146, "quad_rel": 1.0813572259849025e-13, "duality_rel": 2.220446049250313e-16}, {"z": 0.01, "DC_Mpc": 44.37416834736623, "DL_Mpc": 44.81791003083989, "DA_Mpc": 43.93482014590716, "mu": 33.257258002267356, "quad_rel": 5.88418203051333e-15, "duality_rel": 0.0}, {"z": 0.05, "DC_Mpc": 219.74362322558113, "DL_Mpc": 230.7308043868602, "DA_Mpc": 209.27964116722015, "mu": 36.815527900697056, "quad_rel": 1.3988810110276972e-14, "duality_rel": 0.0}, {"z": 0.1, "DC_Mpc": 434.09722914285516, "DL_Mpc": 477.5069520571407, "DA_Mpc": 394.63384467532285, "mu": 38.39489849444778, "quad_rel": 1.3988810110276972e-14, "duality_rel": 0.0}, {"z": 0.2, "DC_Mpc": 846.3046980865297, "DL_Mpc": 1015.5656377038356, "DA_Mpc": 705.2539150721082, "mu": 40.03353998912935, "quad_rel": 9.2148511043888e-15, "duality_rel": 1.1102230246251565e-16}, {"z": 0.3, "DC_Mpc": 1236.3283460943594, "DL_Mpc": 1607.2268499226673, "DA_Mpc": 951.0218046879688, "mu": 41.030385895069344, "quad_rel": 2.4424906541753444e-15, "duality_rel": 2.220446049250313e-16}, {"z": 0.5, "DC_Mpc": 1951.0916448419816, "DL_Mpc": 2926.6374672629727, "DA_Mpc": 1300.7277632279877, "mu": 42.331844641006526, "quad_rel": 3.3306690738754696e-16, "duality_rel": 0.0}, {"z": 0.7, "DC_Mpc": 2584.207281411578, "DL_Mpc": 4393.152378399683, "DA_Mpc": 1520.121930242105, "mu": 43.213881336097195, "quad_rel": 6.217248937900877e-15, "duality_rel": 0.0}, {"z": 1.0, "DC_Mpc": 3400.348203568263, "DL_Mpc": 6800.696407136526, "DA_Mpc": 1700.1741017841316, "mu": 44.16276693874474, "quad_rel": 0.0, "duality_rel": 0.0}, {"z": 1.5, "DC_Mpc": 4480.510080846097, "DL_Mpc": 11201.275202115241, "DA_Mpc": 1792.2040323384385, "mu": 45.24633733733148, "quad_rel": 2.220446049250313e-16, "duality_rel": 0.0}, {"z": 2.0, "DC_Mpc": 5309.856738417473, "DL_Mpc": 15929.57021525242, "DA_Mpc": 1769.9522461391578, "mu": 46.011020292796545, "quad_rel": 5.662137425588298e-15, "duality_rel": 2.220446049250313e-16}, {"z": 3.0, "DC_Mpc": 6502.752624307401, "DL_Mpc": 26011.010497229603, "DA_Mpc": 1625.6881560768502, "mu": 47.075786121772566, "quad_rel": 2.220446049250313e-16, "duality_rel": 0.0}, {"z": 5.0, "DC_Mpc": 7941.030304658612, "DL_Mpc": 47646.18182795167, "DA_Mpc": 1323.5050507764354, "mu": 48.390140518839104, "quad_rel": 8.881784197001252e-16, "duality_rel": 2.220446049250313e-16}, {"z": 1100.0, "DC_Mpc": 13861.343807730553, "DL_Mpc": 15261339.532311339, "DA_Mpc": 12.589776392125843, "mu": 60.91796327293028, "quad_rel": 2.448209246441735e-08, "duality_rel": 0.0}], "DC1100_Gpc": 13.861343807730552, "DL1_Mpc": 6800.696407136526, "mu1": 44.16276693874474, "max_quad_rel": 2.448209246441735e-08, "max_duality_rel": 2.220446049250313e-16}, "age_curve": [{"z": 0.0, "t_Gyr": 13.787028885496476}, {"z": 0.05, "t_Gyr": 13.087594036609906}, {"z": 0.1, "t_Gyr": 12.437061136961612}, {"z": 0.2, "t_Gyr": 11.266789026877566}, {"z": 0.3, "t_Gyr": 10.248190317400553}, {"z": 0.5, "t_Gyr": 8.5777976022685}, {"z": 0.7, "t_Gyr": 7.2838704921357875}, {"z": 1.0, "t_Gyr": 5.838305699834936}, {"z": 1.5, "t_Gyr": 4.25782992077871}, {"z": 2.0, "t_Gyr": 3.267772323988617}, {"z": 3.0, "t_Gyr": 2.1374502258700048}, {"z": 5.0, "t_Gyr": 1.1671005263205902}], "s18": {"q": 3.319735, "q_pub": 3.3203, "age_Gyr": 2.413692832806586, "age_pub": 2.4134, "R": -7.9697226728402e-52, "R_pub": -7.9717e-52, "R_GR": 1.5435108513130125e-35, "R_ratio": -5.1633732707875856e-17, "DA_ratio": 0.10319279606706916, "DA_pub": 0.1039, "age_over_obs": 0.174943308893715}, "lambda_channel": {"rows": [{"name": "太阳", "M_msun": 1.0, "M_kg": 1.9885e+30, "r_star_m": 3.437875221326884e+18, "r_star_Mpc": 0.00011141394816970128, "r_star_pc": 111.41394816970129}, {"name": "地球", "M_msun": 3.003268795574554e-06, "M_kg": 5.972e+24, "r_star_m": 4.960074249760435e+16, "r_star_Mpc": 1.6074505902729915e-06, "r_star_pc": 1.6074505902729916}, {"name": "银河系", "M_msun": 100000000000.0, "M_kg": 1.9884999999999998e+41, "r_star_m": 1.5957203238664916e+22, "r_star_Mpc": 0.517137737733198, "r_star_pc": 517137.7377331981}, {"name": "星系团", "M_msun": 1000000000000000.0, "M_kg": 1.9885e+45, "r_star_m": 3.4378752213268816e+23, "r_star_Mpc": 11.14139481697012, "r_star_pc": 11141394.816970121}], "ratio_1au": 8.23959578485769e-23}, "tension": {"H0_planck": 67.4, "H0_shoes": 73.0, "pct": 8.308605341246283, "sigma": 5.008792269599524}, "cc": {"rho_planck": 5.154848506403409e+96, "rho_L": 5.841665174364828e-27, "ratio": 8.824279298006672e+122, "log10": 122.94567924554087}, "ledger": [{"round": "r214", "method": "静态中心力（UFE-4F 母式）", "verdict": "形式统一 PASS；动力学 FAIL"}, {"round": "r221", "method": "禁闭 σr + 通道门（UFE-4F⁺）", "verdict": "r214 严格超集"}, {"round": "r222", "method": "传播层（色散/群速度）", "verdict": "质量-力程等价"}, {"round": "r226", "method": "量子束缚层（薛定谔谱）", "verdict": "引力『原子』无意义"}, {"round": "r227", "method": "散射层（动量空间镜像）", "verdict": "λ=∞ ⇔ 零质量载体"}, {"round": "r228", "method": "变分层（L 与诺特）", "verdict": "一个作用量生成中心力；辐射反作用无 L"}, {"round": "r229", "method": "新颖性审计", "verdict": "无新理论/无新方程"}, {"round": "r230", "method": "引力本质层", "verdict": "WEP 结构恒等 + 1PN 两件套"}, {"round": "r231（并行）", "method": "实验约束全景", "verdict": "参数空间合并（只读引用）"}, {"round": "r232", "method": "引力波层", "verdict": "四极/HT/啁啾三管线互印"}, {"round": "r233", "method": "黑洞热力学层", "verdict": "四定律+Smarr+面积定理+熵力母式（仅引力）"}, {"round": "r234（并行）", "method": "强场层（史瓦西测地线）", "verdict": "ISCO/光子球/1PN 失效曲线"}, {"round": "r235（并行）", "method": "总览合并轮（七层统一入口）", "verdict": "纯整理/无新数值（只读引用）"}, {"round": "r236（并行）", "method": "warp 线外部核实（不同主题）", "verdict": "零重叠，只读引用/不计入方法链"}, {"round": "r237", "method": "宇宙学层（本卷）", "verdict": "FRW 背景+距离-红移+S18 证伪复核+Λ 通道"}]}, "counts": {"entries": 10, "PASS": 5, "FAIL": 1, "BOUNDARY": 2, "INFO": 2, "guards": "7/7", "controls": "2/2"}, "verdict": "R237-COSMO-LAYER-FRW-BACKGROUND-OK-AGE-ANCHOR-OK-DISTANCE-REDSHIFT-OK-LAMBDA-RHOC-Q0-OK-S18-FLRW-REPRODUCED-OK-S18-FALSIFIED-OK-LAMBDA-CHANNEL-FORM-ONLY-HUBBLE-TENSION-BOUNDARY-CC-PROBLEM-BOUNDARY-VERDICT-STANDARD-BACKGROUND-NO-NEW-THEORY", "judgement": "CLOSED-INCREMENT（宇宙学层：FRW 背景双路年龄、距离-红移双路、S18 只读复算与证伪复核、Λ 通道交叉半径）；H0 张力与宇宙学常数问题为不可解边界；无新理论", "source": {"engine": "TUFT-r237_四力统一方程_宇宙学层_FRW背景距离红移与Lambda通道_精算与交互可视化_2026-10-26.py", "inherits": ["r233（黑洞热力学层）", "r234（强场层，并行只读）", "r235（总览合并轮，并行只读）", "r236（warp 线，并行不同主题）", "r229（新颖性审计口径）", "r230（本质三层不可达）", "Planck 2018 / SH0ES 2022", "S18 续篇二 FLRW 文稿（只读）"]}};
+
+(function(){
+  const c = R.counts, p = R.readings.params, s = R.readings.s18;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">t0 <b>${p.age0_Gyr.toFixed(3)}</b> Gyr</span>`+
+    `<span class="chip">q0 <b>${p.q0.toFixed(3)}</b></span>`;
+  const d = R.readings.distances, t = R.readings.tension;
+  document.getElementById("verdictLine").textContent =
+    `年龄 t0 = ${p.age0_Gyr.toFixed(3)} Gyr（锚 13.797，rel ${(Math.abs(p.age0_Gyr/13.797-1)).toExponential(1)}）；`+
+    `D_C(1100) = ${d.DC1100_Gpc.toFixed(3)} Gpc；μ(1) = ${d.mu1.toFixed(3)} mag；`+
+    `S18 q=${s.q.toFixed(3)} vs 观测 q0=${p.q0.toFixed(3)}；`+
+    `H0 张力 ${t.pct.toFixed(1)}%（${t.sigma.toFixed(1)}σ）；ρP/ρΛ ≈ 10^${R.readings.cc.log10.toFixed(0)}。`+
+    `全为教科书背景复现——无新理论。`;
+})();
+
+/* ---------- §1 距离-红移 ---------- */
+(function(){
+  const rows = R.readings.distances.rows.filter(r => r.z <= 2.0);
+  const cv = document.getElementById("cvD"), ctx = cv.getContext("2d");
+  const W=1000, H=460, PL=64, PR=70, PT=22, PB=42;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const zmax = 2.0;
+  let mumin=1e9, mumax=-1e9, dlmax=0;
+  rows.forEach(r => { mumin=Math.min(mumin,r.mu); mumax=Math.max(mumax,r.mu); dlmax=Math.max(dlmax,r.DL_Mpc/1000); });
+  mumin = Math.floor(mumin-0.5); mumax = Math.ceil(mumax+0.5); dlmax = dlmax*1.05;
+  const X = z => PL + z/zmax*(W-PL-PR);
+  const YM = m => PT + (1-(m-mumin)/(mumax-mumin))*(H-PT-PB);
+  const YD = d => PT + (1-d/dlmax)*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=5;i++){
+    const z=zmax*i/5, x=X(z);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(z.toFixed(1),x-8,H-PB+14);
+  }
+  for(let i=0;i<=4;i++){
+    const m=mumin+(mumax-mumin)*i/4, y=YM(m);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#63d2ff"; ctx.fillText(m.toFixed(1),6,y+3);
+  }
+  ctx.fillStyle="#63d2ff"; ctx.fillText("μ(z) [mag]",PL+8,PT+14);
+  ctx.fillStyle="#bb9af7"; ctx.fillText("d_L(z) [Gpc]",W-PR+6,PT+14);
+  ctx.strokeStyle="#bb9af7"; ctx.lineWidth=1.8; ctx.beginPath();
+  rows.forEach((r,i)=>{ const x=X(r.z), y=YD(r.DL_Mpc/1000); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  ctx.strokeStyle="#63d2ff"; ctx.lineWidth=2.2; ctx.beginPath();
+  rows.forEach((r,i)=>{ const x=X(r.z), y=YM(r.mu); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  rows.forEach(r=>{
+    const x=X(r.z);
+    ctx.fillStyle="#63d2ff"; ctx.beginPath(); ctx.arc(x,YM(r.mu),3.4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#bb9af7"; ctx.beginPath(); ctx.arc(x,YD(r.DL_Mpc/1000),3.0,0,Math.PI*2); ctx.fill();
+  });
+  const dd = R.readings.distances;
+  document.getElementById("readD").textContent =
+    `D_C(z=1100) = ${dd.DC1100_Gpc.toFixed(6)} Gpc（锚 14.0）\n`+
+    `d_L(z=1) = ${dd.DL1_Mpc.toFixed(3)} Mpc = ${(dd.DL1_Mpc/1000).toFixed(3)} Gpc\n`+
+    `μ(z=1) = ${dd.mu1.toFixed(4)} mag（锚 44.16）\n`+
+    `双路求积 max rel = ${dd.max_quad_rel.toExponential(2)}\n`+
+    `Etherington 对偶 max rel = ${dd.max_duality_rel.toExponential(2)}`;
+})();
+
+/* ---------- §2 年龄-红移 ---------- */
+(function(){
+  const A = R.readings.age_curve, p = R.readings.params;
+  const cv = document.getElementById("cvT"), ctx = cv.getContext("2d");
+  const W=1000, H=420, PL=70, PR=30, PT=22, PB=44;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const zmax = 5.0, tmax = Math.max(14.0, p.age0_Gyr*1.08);
+  const X = z => PL + z/zmax*(W-PL-PR);
+  const Y = t => PT + (1-t/tmax)*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=5;i++){
+    const z=zmax*i/5, x=X(z);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(z.toFixed(1),x-8,H-PB+14);
+  }
+  for(let i=0;i<=4;i++){
+    const t=tmax*i/4, y=Y(t);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(t.toFixed(1),6,y+3);
+  }
+  ctx.fillStyle="#94a3b8"; ctx.fillText("t(z) [Gyr]",PL+8,PT+14);
+  // 参考线
+  ctx.setLineDash([6,5]); ctx.strokeStyle="#d4a94e"; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(PL,Y(p.age0_Gyr)); ctx.lineTo(W-PR,Y(p.age0_Gyr)); ctx.stroke();
+  ctx.strokeStyle="#f87171";
+  ctx.beginPath(); ctx.moveTo(PL,Y(p.age_matter_Gyr)); ctx.lineTo(W-PR,Y(p.age_matter_Gyr)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle="#d4a94e"; ctx.fillText("t0 = "+p.age0_Gyr.toFixed(3)+" Gyr",PL+8,Y(p.age0_Gyr)-6);
+  ctx.fillStyle="#f87171"; ctx.fillText("无 Λ 物质主导 = "+p.age_matter_Gyr.toFixed(3)+" Gyr",PL+8,Y(p.age_matter_Gyr)-6);
+  // 年龄曲线
+  ctx.strokeStyle="#63d2ff"; ctx.lineWidth=2.3; ctx.beginPath();
+  A.forEach((r,i)=>{ const x=X(r.z), y=Y(r.t_Gyr); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  A.forEach(r=>{
+    const x=X(r.z);
+    ctx.fillStyle="#63d2ff"; ctx.beginPath(); ctx.arc(x,Y(r.t_Gyr),3.4,0,Math.PI*2); ctx.fill();
+  });
+  document.getElementById("readT").textContent =
+    `t0 = ${p.age0_Gyr.toFixed(6)} Gyr（锚 13.797）\n`+
+    `t(z=1) = ${p.age1_Gyr.toFixed(6)} Gyr（锚 5.93）\n`+
+    `无 Λ 物质主导 t0 = ${p.age_matter_Gyr.toFixed(6)} Gyr（短 ${(100*(1-p.age_matter_Gyr/p.age0_Gyr)).toFixed(1)}%）\n`+
+    `q0 = ${p.q0.toFixed(6)}（<0 加速） vs 无 Λ q0 = ${p.q0_matter.toFixed(6)}（>0 减速）`;
+})();
+
+/* ---------- §3 S18 对照条 ---------- */
+(function(){
+  const s = R.readings.s18, p = R.readings.params;
+  const rows = [
+    {t:"减速参数 q（S18 恒 >1 vs 观测 <0）", a:s.q, aL:"S18", b:p.q0, bL:"观测 q0", col:"#f87171", col2:"#4ade80", max:3.6},
+    {t:"宇宙年龄（Gyr）", a:s.age_Gyr, aL:"S18", b:13.797, bL:"观测", col:"#f87171", col2:"#4ade80", max:14.2},
+    {t:"CMB 角径距离比 D_A,S18/D_A,GR", a:s.DA_ratio, aL:"S18", b:1.0, bL:"观测", col:"#f87171", col2:"#4ade80", max:1.05},
+  ];
+  document.getElementById("s18Bars").innerHTML = rows.map(r=>{
+    const wa = Math.min(100, Math.abs(r.a)/r.max*100), wb = Math.min(100, Math.abs(r.b)/r.max*100);
+    return `<div class="metric"><div class="t">${r.t}</div>`+
+      `<div class="bar"><i style="width:${wa}%;background:${r.col}"></i><span>${r.aL} ${r.a.toPrecision(5)}</span></div>`+
+      `<div class="bar"><i style="width:${wb}%;background:${r.col2}"></i><span>${r.bL} ${r.b.toPrecision(5)}</span></div>`+
+      `</div>`;
+  }).join("");
+  document.getElementById("readS").textContent =
+    `S18 机复现：q=${s.q.toFixed(6)}（自报 ${s.q_pub}）  age=${s.age_Gyr.toFixed(6)} Gyr（自报 ${s.age_pub}）\n`+
+    `R_S18=${s.R.toExponential(3)} vs R_GR=${s.R_GR.toExponential(3)}（比值 ${s.R_ratio.toExponential(2)}，符号相反）\n`+
+    `D_A 比=${s.DA_ratio.toFixed(6)}（自报 ${s.DA_pub}）  age/观测=${(100*s.age_over_obs).toFixed(1)}%\n`+
+    `⇒ 三条结构性冲突，维持『S18 宇宙学尺度已被证伪』（r196/r197 只读口径）`;
+})();
+
+/* ---------- §4 Λ 通道 ---------- */
+(function(){
+  const rows = R.readings.lambda_channel.rows;
+  const cv = document.getElementById("cvL"), ctx = cv.getContext("2d");
+  const W=1000, H=440, PL=70, PR=30, PT=24, PB=44;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const xmin=-8, xmax=4, ymin=-24, ymax=12;
+  const X = lg => PL + (lg-xmin)/(xmax-xmin)*(W-PL-PR);
+  const Y = ly => PT + (1-(ly-ymin)/(ymax-ymin))*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let lg=xmin; lg<=xmax; lg+=2){
+    const x=X(lg); ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText("10^"+lg,x-16,H-PB+14);
+  }
+  for(let ly=ymin; ly<=ymax; ly+=6){
+    const y=Y(ly); ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText((ly>=0?"+":"")+ly,6,y+3);
+  }
+  ctx.fillStyle="#94a3b8"; ctx.fillText("log10(r/Mpc)",PL+8,H-PB+30);
+  ctx.fillStyle="#94a3b8"; ctx.fillText("log10(F_Λ/F_G)",PL+8,PT+12);
+  // y=0 线
+  ctx.strokeStyle="#d4a94e"; ctx.setLineDash([5,4]); ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(PL,Y(0)); ctx.lineTo(W-PR,Y(0)); ctx.stroke(); ctx.setLineDash([]);
+  const cols = ["#e0af68","#63d2ff","#bb9af7","#4ade80"];
+  rows.forEach((o,i)=>{
+    const lr = Math.log10(o.r_star_Mpc);
+    ctx.strokeStyle=cols[i%cols.length]; ctx.lineWidth=2.0; ctx.beginPath();
+    for(let k=0;k<=200;k++){
+      const xx=xmin+(xmax-xmin)*k/200, yy=3*(xx-lr);
+      if(yy<ymin-2||yy>ymax+2) continue;
+      const px=X(xx), py=Y(Math.max(ymin,Math.min(ymax,yy)));
+      k?ctx.lineTo(px,py):ctx.moveTo(px,py);
+    }
+    ctx.stroke();
+    const px=X(lr);
+    ctx.fillStyle=cols[i%cols.length]; ctx.beginPath(); ctx.arc(px,Y(0),4,0,Math.PI*2); ctx.fill();
+    ctx.fillText(o.name+" r*="+o.r_star_Mpc.toPrecision(3)+" Mpc", Math.max(PL,Math.min(W-PR-190,px+8)), Y(0)-8);
+  });
+  const lc = R.readings.lambda_channel;
+  document.getElementById("readL").textContent =
+    `F_Λ/F_G = (r/r*)³，r* = (3GM/Λc²)^(1/3)\n`+
+    `太阳余 1 AU：F_Λ/F_G = ${lc.ratio_1au.toExponential(3)}\n`+
+    rows.map(o=>`${o.name}: r* = ${o.r_star_Mpc.toPrecision(4)} Mpc（${o.r_star_pc.toPrecision(4)} pc）`).join("\n");
+})();
+
+/* ---------- §5 ledger ---------- */
+(function(){
+  let html="<tr><th style='width:110px'>卷</th><th>方法</th><th>读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;
+  });
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §6 边界卡 ---------- */
+(function(){
+  const t = R.readings.tension, cc = R.readings.cc;
+  const cards=[
+    {t:"复现层",b:"FRW/Friedmann/距离-红移/Etherington/Λ 全是教科书（1917–2018）——本卷无新物理（承 r229/r233/r234）。"},
+    {t:"H0 张力",b:`Planck ${t.H0_planck} vs SH0ES ${t.H0_shoes} km/s/Mpc：差 ${t.pct.toFixed(2)}%（${t.sigma.toFixed(2)}σ）。本卷只量化，不解决。`},
+    {t:"宇宙学常数问题",b:`ρP/ρΛ = ${cc.ratio.toExponential(2)}（${cc.log10.toFixed(0)} 个数量级）——Λ 的数值无框架内第一性来源。`},
+    {t:"S18 证伪维持",b:"年龄 2.41 Gyr、D_A 比 0.103、q=+3.32 三条结构性冲突；本卷只读复算其自报参数，不调参、不代做存活路径。"},
+    {t:"ΩΛ 口径",b:"为保证平坦取 ΩΛ=1−Ωm−Ωr=0.68461（与 Planck 0.6847 差 1e−4）——如实登记。"},
+    {t:"局部 vs 背景",b:"距离-红移只验背景均匀各向同性；扰动谱（CMB 功率谱/BAO 形状/LSS）不在本卷。"},
+  ];
+  document.getElementById("boundCards").innerHTML =
+    cards.map(c=>`<div class="card"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML =
+    `TUFT-r237 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

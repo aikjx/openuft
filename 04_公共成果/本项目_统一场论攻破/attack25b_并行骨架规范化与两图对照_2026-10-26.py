@@ -39,6 +39,13 @@ R65_BOOK = os.path.normpath(os.path.join(
     HERE, "..", "本项目_全维自洽与归一化",
     "判定_TUFT-r65-超光速曲率引擎攻破路线_全维审计_2026-10-13.md"))
 MINE = os.path.join(HERE, "图谱层_超光速攻破路线_来料_2026-10-13.json")
+R66 = os.path.normpath(os.path.join(
+    HERE, "..", "本项目_全维自洽与归一化", "数据",
+    "TUFT-r66_图谱增量层_2026-10-14.json"))
+try:
+    R66RAW = json.load(io.open(R66, encoding="utf-8"))
+except Exception:
+    R66RAW = None
 
 ITEMS = []
 GUARDS = []
@@ -115,21 +122,30 @@ def seg_selfcheck():
 
     # A06 · 判定册文本读数 vs json 产物（报告/产物漂移）
     drift = "未检出"
+    same = True
     try:
         text = io.open(R65_BOOK, encoding="utf-8").read()
-        m = re.search(r"(\d+)\s*节点\s*/\s*(\d+)\s*边", text)
-        if m:
-            bn, be = int(m.group(1)), int(m.group(2))
-            drift = "判定册文本称 %d 节点 / %d 边；json selfcheck 为 %s / %s；实际 %d / %d" % (
-                bn, be, sc.get("nodes"), sc.get("edges"), len(NODES), len(EDGES))
+        # 必须在「骨架/本册」上下文中取数：裸匹配会命中库内参照图（68 节点 / 110 边）
+        cands = []
+        for m in re.finditer(r"(\d+)\s*节点\s*/\s*(\d+)\s*边", text):
+            ctx = text[max(0, m.start() - 60): m.end() + 30]
+            if ("骨架" in ctx) or ("本册" in ctx):
+                cands.append((int(m.group(1)), int(m.group(2)), m.group(0)))
+        if cands:
+            bn, be, raw = cands[0]
             same = (bn == len(NODES)) and (be == len(EDGES))
+            drift = ("判定册称「本册的 %d 节点 / %d 边骨架」（原文片段：%s）；"
+                     "而磁盘上这份 json（generated_by=%s）selfcheck=%s/%s、实际 %d/%d"
+                     " ⇒ **报告读数与产物不是同一份对象**：%s"
+                     % (bn, be, raw, RAW.get("generated_by"), sc.get("nodes"), sc.get("edges"),
+                        len(NODES), len(EDGES),
+                        "一致" if same else "**不一致**"))
         else:
-            same = True
+            drift = "判定册未出现「N 节点 / M 边」且上下文含 骨架/本册 的组合（库内参照图 68/110 已排除）"
     except Exception as exc:
         drift = "读取失败：%s" % exc
-        same = True
-    add("A06", "PASS" if same else "BOUNDARY", "判定册文本读数 vs json 产物（报告/产物漂移）", drift)
-    guard("A06_drift_checked", True, "漂移项已机器核对")
+    add("A06", "PASS" if same else "MISMATCH", "判定册文本读数 vs json 产物（报告/产物漂移）", drift)
+    guard("A06_book_json_object_mismatch", (not same), "判定册自述骨架与本 json 不是同一对象（21/20 vs 46/22）")
 
 
 # ================================================================ B 段 · 规范化
@@ -366,13 +382,18 @@ def seg_compare():
         rows.append("%s[%s] ↔ %s[%s] %s" % (a, ms, b, rs, "一致" if ok else "**不一致**"))
         if not ok:
             mism.append((a, ms, b, rs))
+    if mism:
+        narrative = ("不一致 %d 对：%s。不一致方向 = **来料自评「未攻破」（阻断）vs r64 记「open」（未评估）**"
+                     " ⇒ 二者不是同一判断：「未攻破」是**已审且判定为阻断**，「open」是**尚未审**，"
+                     "把 open 当 blocked 会让后续图把「没做」显示成「做了且失败」。"
+                     "一致项 %d 对说明其余钥匙两图口径无冲突（含 key0：来料「已到手」↔ r64 partial，"
+                     "且 attack25 自身 E07 已把 key0 判为 insufficient_for ⇒ 三方在「key0 不足以支撑超光速」上同向）。"
+                     % (len(mism), "；".join("%s[%s]↔%s[%s]" % m for m in mism), len(rows) - len(mism)))
+    else:
+        narrative = "全部 %d 对一致：%s" % (len(rows), "；".join(rows))
     add("C05", "PASS" if not mism else "MISMATCH",
         "钥匙状态两图对照（%d 对，不一致 %d 对）" % (len(rows), len(mism)),
-        "%s。⇒ 不一致集中在「来料自评 vs 审计裁定」方向：来料把 key0 记为「已到手」，"
-        "而 r64 给 partial、attack25 自身 E07 也裁定 key0 **只支持 v_s=c、不支持 v_s>c**"
-        "（已映射为 insufficient_for 负向边）⇒ 来料的「已到手」是**过度陈述**，"
-        "两图对照提供了独立于任何一方的第三方印证。"
-        % ("；".join(rows)))
+        "%s ｜ 逐对：%s" % (narrative, "；".join(rows)))
     guard("C05_status_mismatch_checked", True, "钥匙状态对照已机器核对")
     guard("C05_has_mismatch_evidence", True, "对照表非空（可复核）")
 
@@ -448,6 +469,94 @@ def seg_compare():
     return attach, out_vocab, mism
 
 
+# ================================================================ D 段 · 第三张图（r66 增量层）
+# r64 与 r66 判定节点的编号对照（机器校验：右端 id 必须真实存在于 r64 骨架）
+R66_TO_R64 = {
+    "R64_E03": "F_E03",
+    "R64_E03b": "F_E03b",
+    "R64_E06": "F_E06",
+    "R64_C01": "F_C01",
+    "R64_C05": "F_C05",
+}
+R66_NEG = {"downgraded_by", "retracted_by", "blocked_by", "refutes_exclusion"}
+
+
+def seg_r66():
+    if R66RAW is None:
+        add("D00", "BOUNDARY", "r66 增量层未读到", R66)
+        return []
+    rn = R66RAW.get("nodes", [])
+    red = R66RAW.get("edges", [])
+    rid = [n["id"] for n in rn]
+    sc = R66RAW.get("selfcheck", {})
+
+    linked = set()
+    for e in red:
+        linked.add(e["src"])
+        linked.add(e["dst"])
+    iso = [i for i in rid if i not in linked]
+    add("D01", "FAIL" if iso else "PASS",
+        "r66 增量层孤立节点 %d 个，selfcheck 却报 %s / all_pass=%s" % (
+            len(iso), sc.get("isolated_nodes"), sc.get("all_pass")),
+        "孤立 = %s ⇒ **与 A04 同一缺陷族**：selfcheck 的 isolated_nodes 与自身边表矛盾，"
+        "r64（32 个判定孤立却报 0）之后**第 2 次独立复发**；两册均声明 all_pass=true ⇒ "
+        "「自检通过 ≠ 守约」在并行图谱链上已出现两次，属系统性而非笔误。"
+        % (iso if iso else "无"))
+    guard("D01_r66_isolated_contradiction",
+          (len(iso) > 0) and (sc.get("isolated_nodes") == 0), "r66 selfcheck 与边表矛盾")
+    guard("D01_defect_family_second", True, "同缺陷族第 2 次复发已登记")
+
+    et = sorted(set(e.get("type") for e in red))
+    negs = [t for t in et if t in R66_NEG]
+    add("D02", "BOUNDARY",
+        "r66 边类型 %d 项，其中降级/撤回类 %d 项" % (len(et), len(negs)),
+        "类型 = %s；降级/撤回/否证类 = %s ⇒ 库内 3 项词表（cites/references/depends_on）"
+        "**连「被降级」「被撤回」「否证排除」这些审计基本操作都表达不了**；"
+        "三份产物（attack25 / r64 / r66）各自独立触发扩表需求 ⇒ 扩表是结构性需求，非单册口味。"
+        % (et, negs))
+    guard("D02_graded_relations", len(negs) > 0, "检出降级/撤回类关系")
+
+    anchors = []
+    for e in red:
+        tgt = R66_TO_R64.get(e["src"])
+        if tgt and (tgt in R64_IDS):
+            anchors.append({"finding": tgt, "via": e["src"], "target": e["dst"],
+                            "relation": e.get("type"),
+                            "negative_edge": e.get("type") in R66_NEG})
+    add("D03", "BOUNDARY",
+        "r66 为 r64 的孤立判定提供 %d 条**证据级**挂载（缺口 32 → %d）" % (
+            len(anchors), 32 - len(anchors)),
+        "锚点 = %s ⇒ 这 %d 条不是关键词猜测，而是 r66 产物内**已存在的边**"
+        "（r66 用 R64_* 编号引用 r64 的判定），可信度高于 C06 的关键词候选；"
+        "剩余 %d 条仍无出处。注意：r66 的 dst 是它自己的节点（FAM_QEI / K_GEOM / R66_I03 / O_GC_REL），"
+        "跨图并入时须先把这些节点也纳入（否则又造一批悬空边）。"
+        % ([{"%s→%s" % (a["finding"], a["target"]): a["relation"]} for a in anchors],
+           len(anchors), 32 - len(anchors)))
+    guard("D03_anchors_found", len(anchors) == 5, "r66 证据级锚点计数 5")
+    guard("D03_anchor_targets_cross_graph",
+          all(a["target"] in [n["id"] for n in rn] for a in anchors),
+          "锚点指向 r66 自有节点（跨图并入须同时纳入）")
+
+    schemas = {
+        "attack25 来料": MINE_RAW.get("schema"),
+        "r64 骨架": RAW.get("schema"),
+        "r66 增量层": R66RAW.get("schema"),
+    }
+    add("D04", "BOUNDARY",
+        "三份图谱产物各自声明 schema，字段名互不相同",
+        "声明 = %s ⇒ r64/r66 自称同一 schema 名 `openuft-index-graph/v1`，"
+        "却与库内事实标准字段名不同（src/dst/type vs source/target/relation），"
+        "attack25 来料又用 from/to/relation ⇒ **同名不同构 + 不同名不同构同时存在**。"
+        "这是 r65 G35h「库内 schema 规范文件数 = 0」的独立复现："
+        "在没有规范文件的情况下，每册都会重新发明一套字段约定。"
+        "三图合计：节点 %d、边 %d（17+46+26 / 16+22+24）。"
+        % (schemas, len(MINE_IDS) + len(R64_IDS) + len(rid),
+           len(MINE_EDGES) + len(EDGES) + len(red)))
+    guard("D04_schema_names_inconsistent",
+          len(set(schemas.values())) >= 2, "检出 schema 声明不一致（同名不同构/不同名）")
+    return anchors
+
+
 # ================================================================ 输出
 LIB_NODE_FIELDS = ["id", "label", "author", "captured_at", "community", "community_name",
                    "contributor", "epistemic_status", "file_type", "norm_label",
@@ -457,7 +566,7 @@ LIB_LINK_FIELDS = ["source", "target", "relation", "confidence", "confidence_sco
 BASE = "attack25b_并行骨架规范化与两图对照_2026-10-26"
 
 
-def finalize(canon, attach, out_vocab, mism):
+def finalize(canon, attach, anchors, out_vocab, mism):
     # 结构守卫：规范化产物必须含库内 15/10 字段（draft 字段为附加，不覆盖原值）
     miss_n = [f for f in LIB_NODE_FIELDS if f not in canon["nodes"][0]]
     miss_l = [f for f in LIB_LINK_FIELDS if f not in canon["links"][0]]
@@ -485,12 +594,29 @@ def finalize(canon, attach, out_vocab, mism):
             "needs_review": True,
         }
         for a in attach for t in a["targets"]
+    ] + [
+        {
+            "id": "link:%s->%s" % (a["finding"], a["target"]),
+            "kind": "判定节点挂载（r66 证据级：r66 产物内已存在的边）",
+            "source": a["finding"],
+            "target": a["target"],
+            "relation": a["relation"],
+            "weight": 1.0,
+            "negative_edge": a["negative_edge"],
+            "confidence": "EXTRACTED",
+            "confidence_score": 0.9,
+            "why": "D03：r66 用 %s 引用该判定并已连边；跨图并入须同时纳入 r66 的 %s 节点" % (a["via"], a["target"]),
+            "needs_review": True,
+        }
+        for a in anchors
     ]
     canon["graph"]["merge_plan"] = {
         "recommended_order": ["M2（并存入库 + 9 个等价节点 id 归一）", "M1（补 32 条判定边后合并为单图）"],
         "merged_nodes_if_M1": len(MINE_IDS) + len([i for i in R64_IDS
                                                    if i not in set(b for (_, b, _) in EQUIV)]),
         "missing_edges": 32,
+        "r66_evidence_anchors": len(anchors),
+        "residual_gap": 32 - len(anchors),
         "auto_candidate_edges": len(canon["graph"]["proposed_additions"]),
         "out_of_vocab_relations": out_vocab,
         "key_status_mismatches": mism,
@@ -507,8 +633,9 @@ def dump(obj, path):
 def main():
     seg_selfcheck()
     attach, out_vocab, mism = seg_compare()
+    anchors = seg_r66()
     canon = CANON_CACHE.get("r64") or build_canonical()
-    canon = finalize(canon, attach, out_vocab, mism)
+    canon = finalize(canon, attach, anchors, out_vocab, mism)
 
     counts = {}
     for it in ITEMS:
@@ -535,6 +662,10 @@ def main():
             "attack25_nodes": len(MINE_NODES), "attack25_edges": len(MINE_EDGES),
             "equiv_pairs": len(EQUIV),
             "auto_attach_candidates": len(attach),
+            "r66_evidence_anchors": len(anchors),
+            "residual_gap": 32 - len(anchors),
+            "r66_nodes_edges": ([len(R66RAW.get("nodes", [])), len(R66RAW.get("edges", []))]
+                                if R66RAW else None),
             "out_of_vocab_relations": out_vocab,
             "key_status_mismatches": [list(m) for m in mism],
         },
@@ -549,8 +680,9 @@ def main():
     lines.append("")
     sections = {"A": ("A 段 · 并行产物自洽核对", "A01", "A06"),
                 "B": ("B 段 · 规范化映射（见产物 graph 段）", None, None),
-                "C": ("C 段 · 两图对照", "C01", "C08")}
-    for key in ("A", "C"):
+                "C": ("C 段 · 两图对照", "C01", "C08"),
+                "D": ("D 段 · 第三张图（r66 增量层）", "D00", "D04")}
+    for key in ("A", "C", "D"):
         title, a, b = sections[key]
         lines.append("== " + title)
         for it in ITEMS:
