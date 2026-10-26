@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>234 · 四力统一方程·强场层（史瓦西完整测地线：ISCO、光子球、1PN 失效曲线）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#3b0764);border:1px solid #7e22ce;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#4c1d95;color:#ddd6fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#e9d5ff;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r234 · 承 r230（1PN 层）遗留候选 · 强场层 · 几何单位 GM=c=1 · 零外部依赖</span>
+  <h1>四力统一方程·强场层<br>史瓦西完整测地线：ISCO、光子球与 1PN 失效曲线</h1>
+  <p>轨道方程 u″+u = 1/J²+3Mu² 对史瓦西 test-particle 是<b>严格</b>结果（非 1PN 截断）。
+     本卷数值探索：径向本征频率 κ=√(1−6/r) 多点对拍、ISCO=6M 翻转两面判别、
+     光子球 3M 双命运二分、以及 1PN 弱场公式 6πM/p 的失效曲线量化。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>有效势与三大特征半径（几何单位 M=1）</h3>
+  <canvas id="cvV" width="1000" height="470"></canvas>
+  <div class="read" id="readV"></div>
+  <p class="note">J²=16 的史瓦西有效势 V_eff = −1/r + 8/r² − 16/r³：极小（稳定圆）与极大（不稳定圆）
+     由 dV/dr=0 定位；视界 2M、光子球 3M、ISCO 6M 三条竖线——强场结构的全景。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>径向本征频率 κ/√(1−6/r)：ISCO 判据的曲线</h3>
+  <canvas id="cvK" width="1000" height="420"></canvas>
+  <div class="read" id="readK"></div>
+  <p class="note">数值峰回归（3 点，rel ≤1e−4 级）落在解析曲线上；κ² 在 r=6 翻负
+     ——r=6.01 有界振荡 vs r=5.99 指数发散（growth 对比见读数）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>1PN 失效曲线：弱场公式 6πM/p 在强场的爆发</h3>
+  <canvas id="cvF" width="1000" height="440"></canvas>
+  <div class="read" id="readF"></div>
+  <p class="note">四条 J² 递减轨道（近点 3.06M→5.00M）：严格数值进动相对弱场公式 6π/J² 的超额
+     从 +4.8% 单调爆发到 +80.6%——r230 的 1PN 层边界被数值量化。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>引力线五层读数账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R234_JSON__;
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">ISCO=6M · 光子球=3M · b_c=3√3M</span>`;
+})();
+
+/* ---------- §1 V_eff ---------- */
+const cvV=document.getElementById("cvV"), ctxV=cvV.getContext("2d");
+(function(){
+  const T=R.readings.v_eff;
+  ctxV.clearRect(0,0,1000,470);ctxV.fillStyle="#0d1730";ctxV.fillRect(0,0,1000,470);
+  const PL=60,PR=16,PT=18,PB=40;
+  let vmin=1e9,vmax=-1e9;
+  T.forEach(p=>{vmin=Math.min(vmin,p[1]);vmax=Math.max(vmax,p[1]);});
+  const X=r=>PL+(r-3)/(70-3)*(1000-PL-PR);
+  const Y=v=>PT+(vmax-v)/(vmax-vmin)*(470-PT-PB);
+  ctxV.strokeStyle="#1f2b3f";ctxV.font="10px Consolas";ctxV.fillStyle="#94a3b8";
+  [10,20,30,40,50,60,70].forEach(r=>{ctxV.beginPath();ctxV.moveTo(X(r),PT);ctxV.lineTo(X(r),470-PB);ctxV.stroke();
+    ctxV.fillText(String(r),X(r)-8,470-PB+13);});
+  [vmin,vmax].forEach(v=>ctxV.fillText(v.toFixed(3),8,Y(v)+3));
+  ctxV.strokeStyle="#63d2ff";ctxV.lineWidth=2;ctxV.beginPath();
+  T.forEach((p,i)=>{i?ctxV.lineTo(X(p[0]),Y(p[1])):ctxV.moveTo(X(p[0]),Y(p[1]));});
+  ctxV.stroke();
+  [[2,"视界 2M","#f87171"],[3,"光子球 3M","#e0af68"],[6,"ISCO 6M","#4ade80"]].forEach(m=>{
+    ctxV.strokeStyle=m[2];ctxV.setLineDash([4,4]);ctxV.beginPath();
+    ctxV.moveTo(X(m[0]),PT);ctxV.lineTo(X(m[0]),470-PB);ctxV.stroke();ctxV.setLineDash([]);
+    ctxV.fillStyle=m[2];ctxV.fillText(m[1],X(m[0])+3,PT+10);});
+  ctxV.fillStyle="#94a3b8";ctxV.fillText("r/M",480,470-8);
+  ctxV.save();ctxV.translate(14,250);ctxV.rotate(-Math.PI/2);ctxV.fillText("V_eff（J²=16）",-40,0);ctxV.restore();
+  document.getElementById("readV").textContent=
+    "V_eff = −1/r + J²/2r² − J²/r³（J²=16）：极小（r=12，稳定圆）与极大（r=4，不稳定圆）\n"+
+    "→ J²=12.5 时两根合并于 r=5（判别式归零）——ISCO=6M 是 J² 增大方向的稳定圆内边界";
+})();
+
+/* ---------- §2 κ 曲线 ---------- */
+const cvK=document.getElementById("cvK"), ctxK=cvK.getContext("2d");
+(function(){
+  const T=R.readings.kappa_curve, rows=R.readings.kappa_rows;
+  ctxK.clearRect(0,0,1000,420);ctxK.fillStyle="#0d1730";ctxK.fillRect(0,0,1000,420);
+  const PL=60,PR=16,PT=18,PB=40;
+  const X=r=>PL+(r-6.05)/(30-6.05)*(1000-PL-PR);
+  const Y=k=>PT+(1-k/0.8)*(420-PT-PB);
+  ctxK.strokeStyle="#1f2b3f";ctxK.font="10px Consolas";ctxK.fillStyle="#94a3b8";
+  [6.05,10,15,20,25,30].forEach(r=>{ctxK.beginPath();ctxK.moveTo(X(r),PT);ctxK.lineTo(X(r),420-PB);ctxK.stroke();
+    ctxV.fillText("",0,0);ctxK.fillText(String(r),X(r)-8,420-PB+13);});
+  [0,0.2,0.4,0.6,0.8].forEach(k=>{ctxK.beginPath();ctxK.moveTo(PL,Y(k));ctxK.lineTo(1000-PR,Y(k));ctxK.stroke();
+    ctxK.fillText(k.toFixed(1),8,Y(k)+3);});
+  ctxK.strokeStyle="#63d2ff";ctxK.lineWidth=2;ctxK.beginPath();
+  T.forEach((p,i)=>{i?ctxK.lineTo(X(p[0]),Y(p[1])):ctxK.moveTo(X(p[0]),Y(p[1]));});
+  ctxK.stroke();
+  ctxK.strokeStyle="#f87171";ctxK.setLineDash([4,4]);ctxK.beginPath();
+  ctxK.moveTo(X(6.05),Y(0));ctxK.lineTo(1000-PR,Y(0));ctxK.stroke();ctxK.setLineDash([]);
+  ctxK.fillStyle="#94a3b8";ctxK.fillText("r/M",480,420-8);
+  ctxK.fillStyle="#63d2ff";ctxK.fillText("κ_φ = √(1−6/r)",PL+10,PT+12);
+  ctxK.fillStyle="#f87171";ctxK.fillText("κ² 翻负线（r<6 无径向振荡 = ISCO）",PL+130,PT+12);
+  document.getElementById("readK").textContent=
+    rows.map(r=>`r=${r.r}: 数值 ${r.kappa_num} vs 解析 ${r.kappa_ana}（${r.rel}）`).join("\n")+
+    `\nISCO 两面：r=6.01 δ 增长 ${R.readings.isco.g_stable}×（有界）vs r=5.99 ${R.readings.isco.g_unstable}×（发散）`;
+})();
+
+/* ---------- §3 失效曲线 ---------- */
+const cvF=document.getElementById("cvF"), ctxF=cvF.getContext("2d");
+(function(){
+  const rows=R.readings.fail_rows;
+  ctxF.clearRect(0,0,1000,440);ctxF.fillStyle="#0d1730";ctxF.fillRect(0,0,1000,440);
+  const PL=60,PR=16,PT=18,PB=52;
+  const maxF=100;
+  const bw=110, gap=(1000-PL-PR-4*bw)/5;
+  rows.forEach((r,i)=>{
+    const x0=PL+gap+i*(bw+gap);
+    const hgt=r.fail_pct/maxF*(440-PT-PB);
+    ctxF.fillStyle="#e0af68";ctxF.fillRect(x0,440-PB-hgt,bw,hgt);
+    ctxF.fillStyle="#e9d5ff";ctxF.font="11px Consolas";
+    ctxF.fillText("+"+r.fail_pct+"%",x0+bw/2-24,440-PB-hgt-6);
+    ctxF.fillStyle="#94a3b8";ctxF.font="10px Consolas";
+    ctxF.fillText("J²="+r.J2,x0+10,440-PB+14);
+    ctxF.fillText("近点"+r.r_near+"M",x0-6,440-PB+26);
+  });
+  ctxF.strokeStyle="#475569";ctxF.beginPath();ctxF.moveTo(PL,440-PB);ctxJ2;ctxF.lineTo(1000-PR,440-PB);ctxF.stroke();
+  ctxF.fillStyle="#94a3b8";ctxF.font="10px Consolas";
+  ctxF.fillText("严格进动对弱场公式 6πM/p 的超额（%）：J²=160 → 12.5（轨道整体内移）",PL+10,PT+12);
+  document.getElementById("readF").textContent=
+    rows.map(r=>`J²=${r.J2}: 严格 ${r.d_num} vs 弱场 ${r.d_wpj} rad（近点 ${r.r_near}M）超额 +${r.fail_pct}%`).join("\n")+
+    "\n→ 单调爆发：1PN 公式的适用边界（r230 层）在近点≲5M 时彻底失效";
+})();
+
+/* ---------- §4 ledger ---------- */
+(function(){
+  let html="<tr><th>卷</th><th>方法</th><th>引力读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;});
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §5 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"test-particle 层",b:"本卷是史瓦西 test-particle 测地线——自引力/双体并合/数值相对论在框架外（r232 已登记绝热口径边界）。"},
+    {cls:"bnd",t:"视界注记",b:"r=2M 以坐标判据（u≥1/2）出现；视界的因果结构物理超出测地线层——黑洞热力学见并行 r233 卷。"},
+    {cls:"bnd",t:"1PN 失效≠GR 失败",b:"失效曲线量化的是「弱场公式 6πM/p」的适用边界——严格测地线方程本身仍然精确（同一条 1915 年理论）。"},
+    {cls:"bnd",t:"光子球判据窗口",b:"临界轨迹在光子球附近徘徊 ~ln(1/δ) 角——φ_max=12 不足（本轮自抓，二分偏移 0.4%）；φ_max=80 后 b_crit 二分到位。"},
+    {cls:"bnd",t:"无新理论",b:"ISCO/光子球/b_c 全部 1915 年教科书；本卷复现层（承 r229/r230/r232 判定）。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r234 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

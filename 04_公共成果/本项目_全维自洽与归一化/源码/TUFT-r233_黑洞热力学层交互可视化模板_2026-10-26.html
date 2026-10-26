@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>233 · 四力统一方程·黑洞热力学层（Bekenstein–Hawking、Smarr 与熵力母式）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;--teal:#2dd4bf;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b,#0f172a);border:1px solid #3730a3;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--teal);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:19px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--teal);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#99f6e4;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;} .bnd{color:var(--orange);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .eq{font-family:Consolas,monospace;font-size:12.5px;color:#fde68a;background:#0d1730;border:1px dashed #4c3f1d;
+      border-radius:8px;padding:10px 14px;margin:8px 0;white-space:pre-wrap;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r233 · 承 r232 引力波层 · 黑洞热力学层 · 零外部依赖</span>
+  <h1>四力统一方程·黑洞热力学层<br>Bekenstein–Hawking 四定律、Kerr Smarr 与熵力母式</h1>
+  <p>经典引力三层闭合后的下一道边界：几何 = 热力学 = 信息。四条独立管线互印——
+     ①熵/温度锚；②Kerr 热力学恒等式；③GW150914 并合面积定理；④熵力母式 F=T∇S 的因子链。
+     结论先说：四定律可复现，熵力母式只在引力通道成立，电磁/强/弱不可熵化。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：黑洞热力学四定律机器复现 · 熵力母式仅引力通道</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>Bekenstein–Hawking 熵：S ∝ M²（跨 9.8 个数量级）</h3>
+  <canvas id="cvS" width="1000" height="440"></canvas>
+  <div class="read" id="readS"></div>
+  <p class="note">S = A/(4ℓ_P²)·k_B，A = 4πr_s²，r_s = 2GM/c²。三点（太阳 / Sgr A* / M87*）
+     的 log–log 斜率机器读数应精确为 2；太阳值对锚 1.0490e77 k_B。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>Hawking 温度与蒸发时间：T ∝ 1/M、t ∝ M³</h3>
+  <canvas id="cvT" width="1000" height="440"></canvas>
+  <div class="read" id="readT"></div>
+  <p class="note">T = ħc³/(8πGMk_B)；蒸发 t = 5120πG²M³/(ħc⁴)。太阳 6.17e−8 K / 2.10e67 yr，
+     Sgr A* 1.44e−14 K，M87* 9.49e−18 K。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>Kerr 热力学：Smarr 恒等式 M = 2TS + 2ΩJ 与第一定律</h3>
+  <canvas id="cvK" width="1000" height="440"></canvas>
+  <div class="read" id="readK"></div>
+  <p class="note">几何单位 G=c=1；a/M 从 0 到 1。左轴 = 面积 A(a)/A(0)（1→0.5），
+     右轴 = 温度 T(a)/T(0)（1→0）。Smarr 残差与四点扰动第一定律残差见读数。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>熵力母式 F = T∇S：引力通道逐位复现牛顿</h3>
+  <div class="eq">S_screen = A/(4ℓ_P²)·k_B ,  N = A/ℓ_P² ,  T = 2E/(N k_B) = ħGM/(2πr²c k_B)
+ΔS = 2π k_B m c Δx / ħ   ⇒   F = T·ΔS/Δx = GMm/r²   （零自由参数）</div>
+  <canvas id="cvE" width="1000" height="440"></canvas>
+  <div class="read" id="readE"></div>
+  <p class="note">三点（太阳–地球 / 地球–月球 / 太阳–质子）的 F_ent 与 GMm/r² 逐位一致；
+     屏幕温度与 Unruh 温度 ħa/(2πck_B) 同式。因子 1/4 与 2π 由控制组 C1 钉死。</p>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>全方法总账（r214–r233，14 轮点名）</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§6</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R233_JSON__;
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">四定律 <b>复现</b> · 熵力 <b>仅引力</b></span>`;
+  const a = R.readings.anchors, ar = R.readings.area, em = R.readings.em;
+  document.getElementById("verdictLine").textContent =
+    `太阳 S = ${fmt(a[0].S)} k_B（锚 1.0490e77）；T = ${fmt(a[0].T)} K；` +
+    `GW150914 并合 A_f/A_i = ${ar.ratio.toFixed(4)} > 1；` +
+    `熵力 F=T∇S 与 GMm/r² 逐位一致（max rel ${R.readings.entropic[0].rel.toExponential(1)}）；` +
+    `电磁通道符号温度 T(±e)=±${Math.abs(em.T_pos).toFixed(3)} K ⇒ 不可熵化。` +
+    `复现层无新理论（承 r229/r232）。`;
+})();
+
+function fmt(x){
+  if(x===0) return "0";
+  const e=Math.floor(Math.log10(Math.abs(x)));
+  const m=(x/Math.pow(10,e)).toFixed(3);
+  return `${m}e${e}`;
+}
+function axes(ctx,W,H,PL,PR,PT,PB,xmin,xmax,ymin,ymax,xt,xl,yl){
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas"; ctx.fillStyle="#94a3b8";
+  for(let i=0;i<=5;i++){
+    const x=PL+i/5*(W-PL-PR), y=PT+i/5*(H-PT-PB);
+    ctx.beginPath();ctx.moveTo(x,PT);ctx.lineTo(x,H-PB);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(W-PR,y);ctx.stroke();
+    const xv=xmin+(xmax-xmin)*i/5, yv=ymax-(ymax-ymin)*i/5;
+    ctx.fillText(xt(xv),x-14,H-PB+14);
+    ctx.fillText(yl(yv),4,y+3);
+  }
+  ctx.fillStyle="#cbd5e1";ctx.fillText(xl,W-110,H-PB+28);
+}
+
+/* §1 S(M) log-log */
+(function(){
+  const cv=document.getElementById("cvS"), ctx=cv.getContext("2d");
+  const W=1000,H=440,PL=64,PR=30,PT=20,PB=40;
+  ctx.fillStyle="#0d1730";ctx.fillRect(0,0,W,H);
+  const P=R.readings.anchors;
+  const xs=P.map(p=>Math.log10(p.M_msun)), ys=P.map(p=>Math.log10(p.S));
+  const xmin=Math.min(...xs)-0.5, xmax=Math.max(...xs)+0.5;
+  const ymin=Math.min(...ys)-1.0, ymax=Math.max(...ys)+1.0;
+  const X=v=>PL+(v-xmin)/(xmax-xmin)*(W-PL-PR);
+  const Y=v=>PT+(1-(v-ymin)/(ymax-ymin))*(H-PT-PB);
+  axes(ctx,W,H,PL,PR,PT,PB,xmin,xmax,ymin,ymax,v=>v.toFixed(1),"\u2003log10(M/M\u2609)","log10(S/k_B)");
+  // 斜率 2 参考线（穿过太阳）
+  ctx.strokeStyle="#4c3f1d";ctx.lineWidth=1.5;ctx.setLineDash([6,5]);ctx.beginPath();
+  ctx.moveTo(X(xs[0]),Y(ys[0]));ctx.lineTo(X(xmax),Y(ys[0]+2*(xmax-xs[0])));ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.strokeStyle="#2dd4bf";ctx.lineWidth=2.2;ctx.beginPath();
+  P.forEach((p,i)=>{const x=X(Math.log10(p.M_msun)),y=Y(Math.log10(p.S));i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.stroke();
+  P.forEach((p,i)=>{
+    const x=X(Math.log10(p.M_msun)),y=Y(Math.log10(p.S));
+    ctx.fillStyle="#fde68a";ctx.beginPath();ctx.arc(x,y,4.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#e2e8f0";ctx.fillText(p.name,x+7,y-7);
+  });
+  ctx.fillStyle="#2dd4bf";ctx.fillText("实测斜率 "+R.readings.scaling.slope_S.toFixed(12),PL+10,PT+14);
+  ctx.fillStyle="#94a3b8";ctx.fillText("虚线 = 斜率 2 参考",PL+10,PT+30);
+  document.getElementById("readS").textContent=
+    P.map(p=>`${p.name}: M=${p.M_msun} M\u2609  S=${fmt(p.S)} k_B  T=${fmt(p.T)} K`).join("\n")+
+    `\nlog-log 斜率 S = ${R.readings.scaling.slope_S.toFixed(15)}（应 2）`+
+    `\n太阳对锚 1.0490e77 的相对差 = ${(Math.abs(P[0].S-1.0490e77)/1.0490e77).toExponential(2)}`;
+})();
+
+/* §2 T(M) log-log */
+(function(){
+  const cv=document.getElementById("cvT"), ctx=cv.getContext("2d");
+  const W=1000,H=440,PL=64,PR=30,PT=20,PB=40;
+  ctx.fillStyle="#0d1730";ctx.fillRect(0,0,W,H);
+  const P=R.readings.anchors;
+  const xs=P.map(p=>Math.log10(p.M_msun)), ys=P.map(p=>Math.log10(p.T));
+  const xmin=Math.min(...xs)-0.5, xmax=Math.max(...xs)+0.5;
+  const ymin=Math.min(...ys)-1.0, ymax=Math.max(...ys)+1.0;
+  const X=v=>PL+(v-xmin)/(xmax-xmin)*(W-PL-PR);
+  const Y=v=>PT+(1-(v-ymin)/(ymax-ymin))*(H-PT-PB);
+  axes(ctx,W,H,PL,PR,PT,PB,xmin,xmax,ymin,ymax,v=>v.toFixed(1),"\u2003log10(M/M\u2609)","log10(T_H/K)");
+  ctx.strokeStyle="#4c3f1d";ctx.lineWidth=1.5;ctx.setLineDash([6,5]);ctx.beginPath();
+  ctx.moveTo(X(xs[0]),Y(ys[0]));ctx.lineTo(X(xmax),Y(ys[0]-1*(xmax-xs[0])));ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.strokeStyle="#f7768e";ctx.lineWidth=2.2;ctx.beginPath();
+  P.forEach((p,i)=>{const x=X(Math.log10(p.M_msun)),y=Y(Math.log10(p.T));i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.stroke();
+  P.forEach((p,i)=>{
+    const x=X(Math.log10(p.M_msun)),y=Y(Math.log10(p.T));
+    ctx.fillStyle="#fde68a";ctx.beginPath();ctx.arc(x,y,4.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#e2e8f0";ctx.fillText(p.name,x+7,y-7);
+  });
+  ctx.fillStyle="#f7768e";ctx.fillText("实测斜率 "+R.readings.scaling.slope_T.toFixed(12),PL+10,PT+14);
+  ctx.fillStyle="#94a3b8";ctx.fillText("虚线 = 斜率 −1 参考",PL+10,PT+30);
+  document.getElementById("readT").textContent=
+    P.map(p=>`${p.name}: T=${fmt(p.T)} K  t_evap=${fmt(p.t_evap_yr)} yr`).join("\n")+
+    `\nlog-log 斜率 T = ${R.readings.scaling.slope_T.toFixed(15)}（应 −1）`+
+    `\n太阳蒸发 2.10e67 yr（锚 2.1e67）—— 蒸发时间 \u221d M\u00b3`;
+})();
+
+/* §3 Kerr */
+(function(){
+  const cv=document.getElementById("cvK"), ctx=cv.getContext("2d");
+  const W=1000,H=440,PL=64,PR=64,PT=20,PB=40;
+  ctx.fillStyle="#0d1730";ctx.fillRect(0,0,W,H);
+  const P=R.readings.kerr;
+  const amax=1.0;
+  const A0v=4*P[0].S; // A(0)=4S(0)，S=A/4
+  const X=a=>PL+a/amax*(W-PL-PR);
+  const YA=A=>PT+(1-(A/A0v-0.45)/0.60)*(H-PT-PB); // 0.45..1.05
+  const T0v=P[0].T;
+  const YT=t=>PT+(1-(t/T0v))*(H-PT-PB);
+  // grid
+  ctx.strokeStyle="#1f2b3f";ctx.lineWidth=1;ctx.font="10px Consolas";ctx.fillStyle="#94a3b8";
+  for(let i=0;i<=5;i++){
+    const x=PL+i/5*(W-PL-PR);ctx.beginPath();ctx.moveTo(x,PT);ctx.lineTo(x,H-PB);ctx.stroke();
+    ctx.fillText((i/5).toFixed(2),x-10,H-PB+14);
+    const y=PT+i/5*(H-PT-PB);ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(W-PR,y);ctx.stroke();
+    ctx.fillText((1.05-0.60*i/5).toFixed(2),4,y+3);
+    ctx.fillStyle="#f7768e";ctx.fillText((1.0-1.0*i/5).toFixed(2),W-PR+8,y+3);ctx.fillStyle="#94a3b8";
+  }
+  ctx.fillStyle="#cbd5e1";ctx.fillText("a/M",W-80,H-PB+28);
+  ctx.fillStyle="#63d2ff";ctx.fillText("A(a)/A(0)（左）",PL+8,PT+12);
+  ctx.fillStyle="#f7768e";ctx.fillText("T(a)/T(0)（右）",PL+150,PT+12);
+  // A/A0
+  ctx.strokeStyle="#63d2ff";ctx.lineWidth=2.2;ctx.beginPath();
+  P.forEach((p,i)=>{const x=X(p.a_over_M),y=YA(4*p.S);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.stroke();
+  // T/T0
+  ctx.strokeStyle="#f7768e";ctx.lineWidth=2.0;ctx.setLineDash([5,4]);ctx.beginPath();
+  P.forEach((p,i)=>{const x=X(p.a_over_M),y=YT(p.T);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.stroke();ctx.setLineDash([]);
+  P.forEach(p=>{
+    const x=X(p.a_over_M);
+    ctx.fillStyle="#63d2ff";ctx.beginPath();ctx.arc(x,YA(4*p.S),3.6,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#f7768e";ctx.beginPath();ctx.arc(x,YT(p.T),3.2,0,Math.PI*2);ctx.fill();
+  });
+  const sm=Math.max(...P.map(p=>p.smarr_rel));
+  const fl=Math.max(...R.readings.first_law.map(p=>p.rel));
+  document.getElementById("readK").textContent=
+    `a/M 全谱 Smarr 残差 max = ${sm.toExponential(2)}\n`+
+    `第一定律 dM = TdS + ΩdJ 四点扰动 max rel = ${fl.toExponential(2)}\n`+
+    `极端/Schwarzschild 面积 = ${R.readings.area.A_extr_over_schw.toFixed(12)}（应 0.5）\n`+
+    P.map(p=>`a/M=${p.a_over_M.toFixed(2)}  T=${fmt(p.T)}  S=${fmt(p.S)}  Ω=${fmt(p.Omega)}`).join("\n");
+})();
+
+/* §4 熵力 */
+(function(){
+  const cv=document.getElementById("cvE"), ctx=cv.getContext("2d");
+  const W=1000,H=440,PL=80,PR=30,PT=24,PB=54;
+  ctx.fillStyle="#0d1730";ctx.fillRect(0,0,W,H);
+  const P=R.readings.entropic;
+  // log10 F range
+  const vals=[]; P.forEach(p=>{vals.push(Math.log10(p.F_ent),Math.log10(p.F_newton));});
+  const ymin=Math.floor(Math.min(...vals))-0.5, ymax=Math.ceil(Math.max(...vals))+0.5;
+  const Y=v=>PT+(1-(v-ymin)/(ymax-ymin))*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f";ctx.lineWidth=1;ctx.font="10px Consolas";ctx.fillStyle="#94a3b8";
+  for(let i=0;i<=5;i++){
+    const y=PT+i/5*(H-PT-PB);ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(W-PR,y);ctx.stroke();
+    ctx.fillText((ymax-(ymax-ymin)*i/5).toFixed(1),6,y+3);
+  }
+  ctx.fillStyle="#cbd5e1";ctx.fillText("log10(F / N)",6,PT-8);
+  const bw=(W-PL-PR)/(P.length*3);
+  P.forEach((p,i)=>{
+    const x0=PL+i*(W-PL-PR)/P.length+bw*0.4;
+    const h1=H-PB-Y(Math.log10(p.F_ent));
+    const h2=H-PB-Y(Math.log10(p.F_newton));
+    ctx.fillStyle="#2dd4bf";ctx.fillRect(x0,H-PB-h1,bw,h1);
+    ctx.fillStyle="#bb9af7";ctx.fillRect(x0+bw+6,H-PB-h2,bw,h2);
+    ctx.fillStyle="#e2e8f0";ctx.fillText(p.name,PL+i*(W-PL-PR)/P.length+bw*0.4,H-PB+18);
+    ctx.fillStyle="#94a3b8";ctx.fillText("rel "+p.rel.toExponential(1),PL+i*(W-PL-PR)/P.length+bw*0.4,H-PB+33);
+  });
+  ctx.fillStyle="#2dd4bf";ctx.fillText("F_ent = T\u00b7\u0394S/\u0394x",W-320,PT+14);
+  ctx.fillStyle="#bb9af7";ctx.fillText("F_newton = GMm/r\u00b2",W-160,PT+14);
+  document.getElementById("readE").textContent=
+    P.map(p=>`${p.name}: F_ent=${fmt(p.F_ent)} N  F_newton=${fmt(p.F_newton)} N  rel=${p.rel.toExponential(2)}`).join("\n")+
+    `\n屏幕温度 vs Unruh 温度 max rel = ${Math.max(...P.map(p=>p.unruh_rel)).toExponential(2)}`;
+})();
+
+/* §5 ledger */
+(function(){
+  let html="<tr><th>卷</th><th>方法</th><th>读数/判决</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;
+  });
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* §6 边界卡 */
+(function(){
+  const cards=[
+    {t:"复现层",b:"Bekenstein–Hawking 熵（1973/74）、Hawking 温度（1974/75）、Smarr（1973）、面积定理（1971）、熵力（Verlinde 2011 / Jacobson 1995）全部为教科书/文献内容——本卷与 r229/r232 判定一致：无新理论。"},
+    {t:"熵化硬边界",b:"UFE-4F-T 只在引力通道成立。电荷通道的『温度』随 Q 变号（Q<0 ⇒ T<0），强/弱通道无几何视界与普适 Unruh 温度——『四力写进 F=T∇S』是形式套用，不是推导。"},
+    {t:"微观态计数 OPEN",b:"S = k_B lnΩ 的 Ω、Page 曲线、黑洞信息悖论的微观机制均未给出；1/4 系数是 Bekenstein–Hawking 校准，不是本框架推导。黑洞热力学是宏观有效定律。"},
+    {t:"半经典口径",b:"Hawking 辐射是半经典（量子场在弯曲背景）结果；完整量子引力、视界微观自由度、信息守恒仍在人类共同边界之外（与 r230 三层不可达同构）。"},
+    {t:"数值口径",b:"Kerr 段取 G=c=1、M 为长度单位；熵以 k_B 计；Bekenstein 界中质子/人的熵取量级值；第一定律残差用 |dM|+|TdS|+|ΩdJ| 作尺度（da-only 扰动避免 0/0 放大）。"},
+    {t:"Bekenstein 界不饱和",b:"太阳黑洞熵只到界的 ~4.2e−6（差 5.4 个量级）——界是上界不是等号；不能用它反推微观态数或『熵=面积』的精确系数。"}
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r233 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

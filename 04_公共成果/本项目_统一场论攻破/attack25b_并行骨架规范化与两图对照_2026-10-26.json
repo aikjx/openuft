@@ -1,0 +1,141 @@
+{
+ "book": "attack25b · 并行骨架（r64/r65 图谱）规范化与两图对照",
+ "date": "2026-10-26",
+ "inputs": {
+  "r64_skeleton": "TUFT-超光速曲率引擎_图谱结构_2026-10-13.json",
+  "r64_book": "判定_TUFT-r65-超光速曲率引擎攻破路线_全维审计_2026-10-13.md",
+  "attack25_raw": "图谱层_超光速攻破路线_来料_2026-10-13.json",
+  "attack25_canonical": "图谱层_超光速攻破路线_2026-10-13.json",
+  "note": "全部只读，未修改任何并行产物字节"
+ },
+ "items": [
+  {
+   "code": "A01",
+   "verdict": "PASS",
+   "title": "node_types 声明 vs 实际",
+   "detail": "声明 ['key', 'equation', 'finding']；实际 ['equation', 'finding', 'key']；越界 无"
+  },
+  {
+   "code": "A02",
+   "verdict": "FAIL",
+   "title": "edge_types 声明 3 个 vs 实际 6 个",
+   "detail": "声明 ['depends', 'blocks', 'status']；实际 ['blocks', 'depends', 'implies', 'limited_by', 'specializes', 'status']；**越界 ['implies', 'limited_by', 'specializes']** ⇒ 声明与实际不一致，而 selfcheck 未校验该项（all_pass 仍为 true）"
+  },
+  {
+   "code": "A03",
+   "verdict": "PASS",
+   "title": "selfcheck 计数 vs 实际长度",
+   "detail": "selfcheck 报 nodes=46/edges=22；实际 46/22"
+  },
+  {
+   "code": "A04",
+   "verdict": "FAIL",
+   "title": "孤立节点 32 个（其中判定节点 32 个），selfcheck 却报 0",
+   "detail": "全部孤立节点 = ['F_A01', 'F_A02', 'F_A03', 'F_A04', 'F_A05', 'F_B01', 'F_B02', 'F_B03', 'F_B04', 'F_C01', 'F_C02', 'F_C03', '…'] ⇒ **32 个审计判定（F_*）一个都没接入图**，selfcheck 的 isolated_nodes=0 与其自身边表矛盾（all_pass=true 不可信）。这正对应 r65 §十一 G35c「21 条判定的出处无法被图谱层引用」。"
+  },
+  {
+   "code": "A05",
+   "verdict": "FAIL",
+   "title": "并行骨架**没有目标节点**",
+   "detail": "46 节点中无任何 target/目标节点 ⇒ 该图记录了钥匙、方程与判定，但**没有「超光速引擎」这个被判定对象**，因而无法回答「目标是否达成」。attack25 的 17/16 骨架有 target_ftl ⇒ 合并时以其为根。"
+  },
+  {
+   "code": "A06",
+   "verdict": "BOUNDARY",
+   "title": "判定册文本读数 vs json 产物（报告/产物漂移）",
+   "detail": "判定册文本称 68 节点 / 110 边；json selfcheck 为 46 / 22；实际 46 / 22"
+  },
+  {
+   "code": "C01",
+   "verdict": "PASS",
+   "title": "两图语义等价对 9 对（机器校验两端 id 存在）",
+   "detail": "等价对 = ['key0↔K0(固有时间冻结)', 'key1↔K1(负能量工程)', 'key2↔K2(正能量亚光速泡)', 'key3↔K3(因果/时序保护)', 'key4↔K4(量子引力稳定化)', 'eq_metric↔EQ_METRIC(度规)', 'eq_propertime↔EQ_DTAU(固有时间)', 'eq_energy↔EQ_RHO(负能量密度)', 'eq_budget↔EQ_MNEG(负能量质量当量)']；越界 无。⇒ 两图并非互斥，而是**同一对象的两种粒度**：attack25 侧是「议程+目标」层，r64 侧是「方程+判定」层，共享 9 个对象。"
+  },
+  {
+   "code": "C02",
+   "verdict": "INFO",
+   "title": "attack25 独有 8 节点（目标节点 1 + 议程层 7）",
+   "detail": "独有 = ['target_ftl', 'agenda1', 'agenda2', 'agenda3', 'agenda4', 'agenda5', 'agenda6', 'agenda7'] ⇒ r64 骨架**没有目标节点、没有议程/执行层**，只能回答「各方程与判定之间什么关系」，不能回答「接下来做什么」。"
+  },
+  {
+   "code": "C03",
+   "verdict": "BOUNDARY",
+   "title": "r64 独有 37 节点（方程 5 + 审计判定 32）",
+   "detail": "独有方程 = ['EQ_P2MASS', 'EQ_QEI', 'EQ_BUBBLE_DTAU', 'EQ_RELVEL', 'EQ_WEC']；独有判定 32 个（['F_A01', 'F_A02', 'F_A03', 'F_A04', 'F_A05']…）。判定层是 r64 的独有价值，但 A04 已证这 32 个判定**全部孤立** ⇒ 价值当前为 0，须先解决挂载。"
+  },
+  {
+   "code": "C04",
+   "verdict": "BOUNDARY",
+   "title": "目标节点：attack25 有 ['target_ftl']（入边 3 条合取必要条件），r64 有 0 个",
+   "detail": "attack25 的 target_ftl 入边来自 ['key1', 'key3', 'key4']，均为「必要条件(∧)」= **合取门**；r64 无目标节点 ⇒ 其图内**没有任何节点代表「超光速引擎」本身**，因此 r64 的 32 条判定在语义上是「对某条方程/钥匙的判定」而非「对目标的判定」。合并时必须以 target_ftl 为根（C08）。"
+  },
+  {
+   "code": "C05",
+   "verdict": "MISMATCH",
+   "title": "钥匙状态两图对照（5 对，不一致 2 对）",
+   "detail": "key0[已到手] ↔ K0[partial] 一致；key1[未攻破] ↔ K1[blocked] 一致；key2[已攻破(纸上)] ↔ K2[claimed] 一致；key3[未攻破] ↔ K3[open] **不一致**；key4[未攻破] ↔ K4[open] **不一致**。⇒ 不一致集中在「来料自评 vs 审计裁定」方向：来料把 key0 记为「已到手」，而 r64 给 partial、attack25 自身 E07 也裁定 key0 **只支持 v_s=c、不支持 v_s>c**（已映射为 insufficient_for 负向边）⇒ 来料的「已到手」是**过度陈述**，两图对照提供了独立于任何一方的第三方印证。"
+  },
+  {
+   "code": "C06",
+   "verdict": "BOUNDARY",
+   "title": "判定节点自动挂载可行性：25/32 命中关键词候选（覆盖率 78.1%）",
+   "detail": "命中示例 = [{'F_A01→EQ_RHO': 'validates'}, {'F_A02→EQ_RELVEL': 'references'}, {'F_A03→EQ_RELVEL': 'references'}, {'F_A05→K1': 'insufficient_for'}, {'F_B02→K0': 'insufficient_for'}]。剩余 7 个判定在 r64 产物内**不含任何可定位到节点的文本线索**，无法机器挂载 ⇒ 结论：**判定层的接入不能由本册单方面完成**，最小修法在 r64 侧（源码导出时补 `finding_links` 字段，本册不擅改 r64 产物）。已把 25 条候选边写进规范化产物的 `graph.proposed_additions`（**不并入 links**）。"
+  },
+  {
+   "code": "C07",
+   "verdict": "BOUNDARY",
+   "title": "两图规范化后关系词表并集 9 项，其中 7 项越出库内 3 项词表",
+   "detail": "attack25 侧 = ['depends_on', 'insufficient_for', 'prerequisite', 'references', 'sub_agenda', 'validates']；r64 侧 = ['depends_on', 'implies', 'insufficient_for', 'limited_by', 'specializes']；并集 = ['depends_on', 'implies', 'insufficient_for', 'limited_by', 'prerequisite', 'references', 'specializes', 'sub_agenda', 'validates']；越界 = ['implies', 'insufficient_for', 'limited_by', 'prerequisite', 'specializes', 'sub_agenda', 'validates'] ⇒ **扩表需求不是 attack25 独有，r64 走同一通道后同样触发**（blocks/implies/specializes/limited_by 在库内 3 项词表中均无对应）。这是 r65 §十一 W35「最小前置 = 先获扩表批准」的独立复现：不是某一张图的口味问题，而是「审计类图谱」本身需要的语义维度库内词表不提供。"
+  },
+  {
+   "code": "C08",
+   "verdict": "INFO",
+   "title": "合并账：节点 54（17+37）、边 38（16+22）、**尚缺 32 条判定边**",
+   "detail": "最小方案 M2（推荐先做）：两图并存为两个 community，仅对 9 个等价节点做 id 归一（key0↔K0 … eq_budget↔EQ_MNEG），target_ftl 为唯一根，r64 的 32 判定**暂不入 links**。完整方案 M1：再补 32 条判定边（本册仅能机器生成 25 条候选，7 条须 r64 侧补字段后重导）。四条最小前置：① 扩表批准（C07 越界 7 项）② r64 产物补 finding_links 或人工裁定剩余 7 条③ 目标节点权属确认（r64 无 target，须并入 attack25 的 target_ftl）④ 钥匙状态口径统一（C05 不一致 2 对，建议以审计裁定为准、来料自评降级为 draft 字段）。"
+  }
+ ],
+ "counts": {
+  "PASS": 3,
+  "FAIL": 3,
+  "BOUNDARY": 5,
+  "INFO": 2,
+  "MISMATCH": 1
+ },
+ "guards": {
+  "total": 24,
+  "passed": 24,
+  "failed": []
+ },
+ "key_numbers": {
+  "r64_nodes": 46,
+  "r64_edges": 22,
+  "r64_findings_isolated": 32,
+  "attack25_nodes": 17,
+  "attack25_edges": 16,
+  "equiv_pairs": 9,
+  "auto_attach_candidates": 25,
+  "out_of_vocab_relations": [
+   "implies",
+   "insufficient_for",
+   "limited_by",
+   "prerequisite",
+   "specializes",
+   "sub_agenda",
+   "validates"
+  ],
+  "key_status_mismatches": [
+   [
+    "key3",
+    "未攻破",
+    "K3",
+    "open"
+   ],
+   [
+    "key4",
+    "未攻破",
+    "K4",
+    "open"
+   ]
+  ]
+ }
+}

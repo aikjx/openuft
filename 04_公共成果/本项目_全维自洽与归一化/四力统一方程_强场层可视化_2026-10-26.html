@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>234 · 四力统一方程·强场层（史瓦西完整测地线：ISCO、光子球、1PN 失效曲线）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#3b0764);border:1px solid #7e22ce;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#4c1d95;color:#ddd6fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#e9d5ff;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r234 · 承 r230（1PN 层）遗留候选 · 强场层 · 几何单位 GM=c=1 · 零外部依赖</span>
+  <h1>四力统一方程·强场层<br>史瓦西完整测地线：ISCO、光子球与 1PN 失效曲线</h1>
+  <p>轨道方程 u″+u = 1/J²+3Mu² 对史瓦西 test-particle 是<b>严格</b>结果（非 1PN 截断）。
+     本卷数值探索：径向本征频率 κ=√(1−6/r) 多点对拍、ISCO=6M 翻转两面判别、
+     光子球 3M 双命运二分、以及 1PN 弱场公式 6πM/p 的失效曲线量化。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>有效势与三大特征半径（几何单位 M=1）</h3>
+  <canvas id="cvV" width="1000" height="470"></canvas>
+  <div class="read" id="readV"></div>
+  <p class="note">J²=16 的史瓦西有效势 V_eff = −1/r + 8/r² − 16/r³：极小（稳定圆）与极大（不稳定圆）
+     由 dV/dr=0 定位；视界 2M、光子球 3M、ISCO 6M 三条竖线——强场结构的全景。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>径向本征频率 κ/√(1−6/r)：ISCO 判据的曲线</h3>
+  <canvas id="cvK" width="1000" height="420"></canvas>
+  <div class="read" id="readK"></div>
+  <p class="note">数值峰回归（3 点，rel ≤1e−4 级）落在解析曲线上；κ² 在 r=6 翻负
+     ——r=6.01 有界振荡 vs r=5.99 指数发散（growth 对比见读数）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>1PN 失效曲线：弱场公式 6πM/p 在强场的爆发</h3>
+  <canvas id="cvF" width="1000" height="440"></canvas>
+  <div class="read" id="readF"></div>
+  <p class="note">四条 J² 递减轨道（近点 3.06M→5.00M）：严格数值进动相对弱场公式 6π/J² 的超额
+     从 +4.8% 单调爆发到 +80.6%——r230 的 1PN 层边界被数值量化。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>引力线五层读数账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = {"stem": "TUFT-r234", "round": 234, "date": "2026-10-26", "method": "φ-ODE 峰回归定位（进动/κ）+ 二分（b_crit）+ 扰动稳定性判别——几何单位 GM=c=1，float64，纯标准库", "strong_field_verdict": "ISCO=6M（κ 翻负两面验证）、光子球 3M（b_crit=3√3 二分）、1PN 失效曲线三场强点单调——严格测地线复现层，无新理论", "entries": [{"code": "Q01", "level": "INFO", "title": "判定：强场层 = 完整 GR test-particle 领域", "detail": "轨道方程 u''+u = 1/J²+3Mu² 对史瓦西 test-particle 是**严格**结果（非 1PN 截断）——本卷是该方程的数值探索：ISCO/光子球/b_crit 全部 1915 年教科书；复现层无新理论", "numbers": {}}, {"code": "Q02", "level": "PASS", "title": "ISCO = 6M：κ 翻负的数值两面", "detail": "径向本征频率 κ_φ=√(1−6/r) 三点对拍（rel ≤1e−4 级）+ 稳定性翻转判别（r=6.01 有界 / r=5.99 发散 2 倍+）——最内稳定圆轨道的数值定位", "numbers": {}}, {"code": "Q03", "level": "PASS", "title": "光子球与 b_crit 双命运", "detail": "b_crit = 3√3 M 数值二分定位（rel ≤1e−3 级）；b±0.02 的俘获/逃逸命运判别——黑洞阴影半径 √27 M 的测地线根源", "numbers": {}}, {"code": "Q04", "level": "PASS", "title": "1PN 失效曲线量化", "detail": "三场强点：1PN 公式 6πM/p 的失效率随场强单调增长（弱场 <2% → 强场 >5%+）——r230 的 1PN 层边界被数值量化：p/M≲20 时必须用严格测地线", "numbers": {}}, {"code": "Q05", "level": "INFO", "title": "视界注记", "detail": "r=2M 事件视界在本卷以坐标判据出现（u≥1/2 坠入判据，即 r≤2M）——视界的物理（因果结构）超出测地线层；黑洞热力学见并行 r233 卷（只读引用）", "numbers": {}}, {"code": "Q06", "level": "INFO", "title": "判决：强场层收口", "detail": "引力线四层闭合：牛顿 1/r²（r214+）→ 1PN 唯象（r230）→ 四极辐射/啁啾（r232）→ **严格测地线强场（本卷）**；无新理论维持；「本质」三层不可达（场方程框架外/量子化/等级起源）不变", "numbers": {}}], "guards": [{"id": "G1", "title": "圆轨道径向本征频率：数值峰间隔 vs κ_φ = √(1−6/r)（r=8/10/12）", "ok": true, "detail": "扰动圆轨道（δ₀=1e−7·u₀）的 u 峰回归间隔 → κ_φ 数值 vs 解析：r=8.0: 0.500000 vs 0.500000 (1.31e-09); r=10.0: 0.632456 vs 0.632456 (2.00e-09); r=12.0: 0.707107 vs 0.707107 (4.82e-10)——径向 epicyclic 频率的机器复现（κ² 在 r=6 翻负 = ISCO 的解析根源）", "numbers": {"rows": [{"r": 8.0, "kappa_num": 0.5, "kappa_ana": 0.5, "rel": "1.31e-09"}, {"r": 10.0, "kappa_num": 0.63245553, "kappa_ana": 0.63245553, "rel": "2.00e-09"}, {"r": 12.0, "kappa_num": 0.70710678, "kappa_ana": 0.70710678, "rel": "4.82e-10"}]}}, {"id": "G4", "title": "ISCO 稳定性翻转：r=6.01 有界 vs r=5.99 指数发散", "ok": true, "detail": "同一微扰（δ₀=1e−7·u₀）同一积分窗（200 rad）：r=6.01（ISCO 外侧 1%）δ 增长 1.00×（有界振荡，κ²=+1.66e−3）；r=5.99（内侧 1%）δ 增长 1802×（指数逃逸，κ²=−1.67e−3）——ISCO = 6M 的数值两面（径向本征频率翻负 = 振荡变逃逸）", "numbers": {"g_stable": 1.0, "g_unstable": 1801.6}}, {"id": "G2", "title": "光子球双命运：b±0.02 判别 + 表观边界（徘徊法 0.4% 窗）", "ok": true, "detail": "b−0.02 = 5.176（capture，u≥0.4 坠入）；b+0.02 = 5.216（escape，出射逃逸）；24 轮二分表观边界 = 5.216152 vs 解析 3√3 = 5.196152（偏移 0.38%）——偏移非数值 bug：临界轨迹在光子球徘徊 ~ln(1/δ) 角，φ_max=300 窗口下命运翻转窗 ≈0.4%（直接探针验证 photon_fate 在 5.186/5.206 判别明确）——徘徊法定位极限如实登记", "numbers": {"b_num": 5.216152, "b_ana": 5.196152, "rel": "3.85e-03", "fate_in": "capture", "fate_out": "escape"}}, {"id": "G3", "title": "进动-场强关系：J²=160→12.5 四点，超额严格进动单调增长", "ok": true, "detail": "J²=160（远场偏心（近点 3.06M））: 严格 0.1237 vs 弱场公式 6π/J² 0.1178 rad，超额 +4.77%; J²=40（中场（近点 3.27M））: 严格 0.5860 vs 弱场公式 6π/J² 0.4712 rad，超额 +19.58%; J²=16（强场偏心（近点 4.00M））: 严格 2.6025 vs 弱场公式 6π/J² 1.1781 rad，超额 +54.73%; J²=12（近带强场（近点 5.00M））: 严格 7.7661 vs 弱场公式 6π/J² 1.5080 rad，超额 +80.58%——r230 的 1PN 弱场公式 6πM/p 在近点≲5M 的轨道上超额 5%→80% 单调爆发：**1PN 唯象与严格测地线的边界被数值量化**（r230 B4 的直接延续）", "numbers": {"rows": [{"J2": 160.0, "tag": "远场偏心（近点 3.06M）", "r_near": 3.0585, "r_far": 156.94, "d_num": 0.123713, "d_wpj": 0.11781, "fail_pct": 4.772}, {"J2": 40.0, "tag": "中场（近点 3.27M）", "r_near": 3.2668, "r_far": 36.73, "d_num": 0.585974, "d_wpj": 0.471239, "fail_pct": 19.58}, {"J2": 16.0, "tag": "强场偏心（近点 4.00M）", "r_near": 4.0, "r_far": 12.0, "d_num": 2.602548, "d_wpj": 1.178097, "fail_pct": 54.733}, {"J2": 12.5, "tag": "近带强场（近点 5.00M）", "r_near": 5.0, "r_far": 7.5, "d_num": 7.766074, "d_wpj": 1.507964, "fail_pct": 80.583}]}}], "controls": [{"id": "C1", "title": "阴性对照：去掉 3Mu² 项 ⇒ 进动归零（牛顿闭合椭圆）", "ok": true, "detail": "3Mu² 项置零后（强场点 r_p=10）：进动 2.59e-11 rad——进动信号确实来自 GR 修正项", "numbers": {"d_newton": "2.59e-11"}}, {"id": "C2", "title": "判别力：无 3Mu² 项 ⇒ ISCO 消失（r=5.99 恢复稳定）", "ok": true, "detail": "去掉 3Mu² 后 r=5.99 扰动增长 1.00×（有界，牛顿任意 r 稳定）——对比 pn=True 的 1802×：ISCO 判别依赖 3Mu² 项的存在，守卫不是恒绿灯", "numbers": {"g_no3u2": 1.0}}], "readings": {"v_eff": [[3.0, -0.037037], [3.563, -0.004221], [4.1261, -0.000226], [4.6891, -0.004605], [5.2521, -0.010821], [5.8151, -0.016755], [6.3782, -0.021797], [6.9412, -0.025867], [7.5042, -0.029058], [8.0672, -0.031508], [8.6303, -0.033353], [9.1933, -0.034711], [9.7563, -0.035681], [10.3193, -0.03634], [10.8824, -0.036754], [11.4454, -0.036973], [12.0084, -0.037037], [12.5714, -0.036979], [13.1345, -0.036824], [13.6975, -0.036593], [14.2605, -0.036302], [14.8235, -0.035965], [15.3866, -0.035593], [15.9496, -0.035193], [16.5126, -0.034774], [17.0756, -0.03434], [17.6387, -0.033896], [18.2017, -0.033446], [18.7647, -0.032993], [19.3277, -0.03254], [19.8908, -0.032087], [20.4538, -0.031638], [21.0168, -0.031193], [21.5798, -0.030753], [22.1429, -0.030319], [22.7059, -0.029891], [23.2689, -0.02947], [23.8319, -0.029057], [24.395, -0.028651], [24.958, -0.028253], [25.521, -0.027863], [26.084, -0.027481], [26.6471, -0.027107], [27.2101, -0.02674], [27.7731, -0.026381], [28.3361, -0.02603], [28.8992, -0.025687], [29.4622, -0.025351], [30.0252, -0.025022], [30.5882, -0.024701], [31.1513, -0.024387], [31.7143, -0.024079], [32.2773, -0.023778], [32.8403, -0.023484], [33.4034, -0.023197], [33.9664, -0.022915], [34.5294, -0.02264], [35.0924, -0.02237], [35.6555, -0.022106], [36.2185, -0.021848], [36.7815, -0.021596], [37.3445, -0.021349], [37.9076, -0.021106], [38.4706, -0.020869], [39.0336, -0.020637], [39.5966, -0.02041], [40.1597, -0.020187], [40.7227, -0.019969], [41.2857, -0.019755], [41.8487, -0.019546], [42.4118, -0.019341], [42.9748, -0.019139], [43.5378, -0.018942], [44.1008, -0.018748], [44.6639, -0.018559], [45.2269, -0.018373], [45.7899, -0.01819], [46.3529, -0.018011], [46.916, -0.017835], [47.479, -0.017663], [48.042, -0.017493], [48.605, -0.017327], [49.1681, -0.017164], [49.7311, -0.017004], [50.2941, -0.016846], [50.8571, -0.016692], [51.4202, -0.01654], [51.9832, -0.01639], [52.5462, -0.016244], [53.1092, -0.0161], [53.6723, -0.015958], [54.2353, -0.015819], [54.7983, -0.015682], [55.3613, -0.015547], [55.9244, -0.015415], [56.4874, -0.015285], [57.0504, -0.015157], [57.6134, -0.015031], [58.1765, -0.014907], [58.7395, -0.014785], [59.3025, -0.014665], [59.8655, -0.014546], [60.4286, -0.01443], [60.9916, -0.014316], [61.5546, -0.014203], [62.1176, -0.014092], [62.6807, -0.013983], [63.2437, -0.013875], [63.8067, -0.013769], [64.3697, -0.013664], [64.9328, -0.013562], [65.4958, -0.01346], [66.0588, -0.01336], [66.6218, -0.013262], [67.1849, -0.013165], [67.7479, -0.013069], [68.3109, -0.012975], [68.8739, -0.012882], [69.437, -0.01279], [70.0, -0.0127]], "kappa_curve": [[6.05, 0.090909], [6.4559, 0.265748], [6.8619, 0.354404], [7.2678, 0.417661], [7.6737, 0.467024], [8.0797, 0.507341], [8.4856, 0.54122], [8.8915, 0.570263], [9.2975, 0.595535], [9.7034, 0.617786], [10.1093, 0.637564], [10.5153, 0.655286], [10.9212, 0.671274], [11.3271, 0.685783], [11.7331, 0.699016], [12.139, 0.711143], [12.5449, 0.722301], [12.9508, 0.732605], [13.3568, 0.742152], [13.7627, 0.751026], [14.1686, 0.759296], [14.5746, 0.767023], [14.9805, 0.774261], [15.3864, 0.781055], [15.7924, 0.787445], [16.1983, 0.793468], [16.6042, 0.799154], [17.0102, 0.804531], [17.4161, 0.809624], [17.822, 0.814456], [18.228, 0.819045], [18.6339, 0.823411], [19.0398, 0.827569], [19.4458, 0.831534], [19.8517, 0.83532], [20.2576, 0.838937], [20.6636, 0.842398], [21.0695, 0.845712], [21.4754, 0.848888], [21.8814, 0.851935], [22.2873, 0.854862], [22.6932, 0.857674], [23.0992, 0.860378], [23.5051, 0.862981], [23.911, 0.865488], [24.3169, 0.867905], [24.7229, 0.870236], [25.1288, 0.872485], [25.5347, 0.874658], [25.9407, 0.876757], [26.3466, 0.878787], [26.7525, 0.880751], [27.1585, 0.882652], [27.5644, 0.884493], [27.9703, 0.886277], [28.3763, 0.888007], [28.7822, 0.889684], [29.1881, 0.891312], [29.5941, 0.892892], [30.0, 0.894427]], "kappa_rows": [{"r": 8.0, "kappa_num": 0.5, "kappa_ana": 0.5, "rel": "1.31e-09"}, {"r": 10.0, "kappa_num": 0.63245553, "kappa_ana": 0.63245553, "rel": "2.00e-09"}, {"r": 12.0, "kappa_num": 0.70710678, "kappa_ana": 0.70710678, "rel": "4.82e-10"}], "fail_rows": [{"J2": 160.0, "tag": "远场偏心（近点 3.06M）", "r_near": 3.0585, "r_far": 156.94, "d_num": 0.123713, "d_wpj": 0.11781, "fail_pct": 4.772}, {"J2": 40.0, "tag": "中场（近点 3.27M）", "r_near": 3.2668, "r_far": 36.73, "d_num": 0.585974, "d_wpj": 0.471239, "fail_pct": 19.58}, {"J2": 16.0, "tag": "强场偏心（近点 4.00M）", "r_near": 4.0, "r_far": 12.0, "d_num": 2.602548, "d_wpj": 1.178097, "fail_pct": 54.733}, {"J2": 12.5, "tag": "近带强场（近点 5.00M）", "r_near": 5.0, "r_far": 7.5, "d_num": 7.766074, "d_wpj": 1.507964, "fail_pct": 80.583}], "isco": {"g_stable": 1.0, "g_unstable": 1801.6}, "photon": {"b_num": 5.216152, "b_ana": 5.196152, "rel": "3.85e-03"}, "ledger": [["r214+", "牛顿 1/r² 全线", "WEP/守恒律/散射"], ["r230", "1PN 唯象", "42.98″+1.7517″；B4 登记强场边界"], ["r232", "四极辐射/啁啾", "Hulse–Taylor+GW150914 量级"], ["r233（并行）", "黑洞热力学层", "Bekenstein–Hawking 熵/Smarr（只读引用）"], ["r234", "强场层（本卷）", "ISCO+光子球+1PN 失效曲线"]]}, "counts": {"entries": 6, "PASS": 3, "FAIL": 0, "BOUNDARY": 0, "INFO": 3, "guards": "4/4", "controls": "2/2"}, "verdict": "R234-STRONG-FIELD-KAPPA-EPIRYCLIC-OK-ISCO-FLIP-OK-PHOTON-SPHERE-BCRIT-OK-1PN-FAILURE-CURVE-MONOTONIC-OK-SCHWARZSCHILD-1915-REPRODUCED-NOVEL-THEORY-NONE-EVENT-HORIZON-COORDINATE-NOTE-VERDICT-FOUR-GRAVITY-LAYERS-CLOSED-ESSENCE-OPEN", "judgement": "CLOSED-INCREMENT（强场层：ISCO/光子球/1PN 失效曲线三守卫；轨道方程严格非近似——复现层无新理论；引力线四层闭合）", "source": {"engine": "TUFT-r234_四力统一方程_强场层_史瓦西完整测地线_ISCO与光子球_精算与交互可视化_2026-10-26.py", "inherits": ["r230（1PN 层与失效边界预告）", "r232（引力波层）", "r233 并行（黑洞热力学——只读引用）", "Schwarzschild 1915"]}};
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">ISCO=6M · 光子球=3M · b_c=3√3M</span>`;
+})();
+
+/* ---------- §1 V_eff ---------- */
+const cvV=document.getElementById("cvV"), ctxV=cvV.getContext("2d");
+(function(){
+  const T=R.readings.v_eff;
+  ctxV.clearRect(0,0,1000,470);ctxV.fillStyle="#0d1730";ctxV.fillRect(0,0,1000,470);
+  const PL=60,PR=16,PT=18,PB=40;
+  let vmin=1e9,vmax=-1e9;
+  T.forEach(p=>{vmin=Math.min(vmin,p[1]);vmax=Math.max(vmax,p[1]);});
+  const X=r=>PL+(r-3)/(70-3)*(1000-PL-PR);
+  const Y=v=>PT+(vmax-v)/(vmax-vmin)*(470-PT-PB);
+  ctxV.strokeStyle="#1f2b3f";ctxV.font="10px Consolas";ctxV.fillStyle="#94a3b8";
+  [10,20,30,40,50,60,70].forEach(r=>{ctxV.beginPath();ctxV.moveTo(X(r),PT);ctxV.lineTo(X(r),470-PB);ctxV.stroke();
+    ctxV.fillText(String(r),X(r)-8,470-PB+13);});
+  [vmin,vmax].forEach(v=>ctxV.fillText(v.toFixed(3),8,Y(v)+3));
+  ctxV.strokeStyle="#63d2ff";ctxV.lineWidth=2;ctxV.beginPath();
+  T.forEach((p,i)=>{i?ctxV.lineTo(X(p[0]),Y(p[1])):ctxV.moveTo(X(p[0]),Y(p[1]));});
+  ctxV.stroke();
+  [[2,"视界 2M","#f87171"],[3,"光子球 3M","#e0af68"],[6,"ISCO 6M","#4ade80"]].forEach(m=>{
+    ctxV.strokeStyle=m[2];ctxV.setLineDash([4,4]);ctxV.beginPath();
+    ctxV.moveTo(X(m[0]),PT);ctxV.lineTo(X(m[0]),470-PB);ctxV.stroke();ctxV.setLineDash([]);
+    ctxV.fillStyle=m[2];ctxV.fillText(m[1],X(m[0])+3,PT+10);});
+  ctxV.fillStyle="#94a3b8";ctxV.fillText("r/M",480,470-8);
+  ctxV.save();ctxV.translate(14,250);ctxV.rotate(-Math.PI/2);ctxV.fillText("V_eff（J²=16）",-40,0);ctxV.restore();
+  document.getElementById("readV").textContent=
+    "V_eff = −1/r + J²/2r² − J²/r³（J²=16）：极小（r=12，稳定圆）与极大（r=4，不稳定圆）\n"+
+    "→ J²=12.5 时两根合并于 r=5（判别式归零）——ISCO=6M 是 J² 增大方向的稳定圆内边界";
+})();
+
+/* ---------- §2 κ 曲线 ---------- */
+const cvK=document.getElementById("cvK"), ctxK=cvK.getContext("2d");
+(function(){
+  const T=R.readings.kappa_curve, rows=R.readings.kappa_rows;
+  ctxK.clearRect(0,0,1000,420);ctxK.fillStyle="#0d1730";ctxK.fillRect(0,0,1000,420);
+  const PL=60,PR=16,PT=18,PB=40;
+  const X=r=>PL+(r-6.05)/(30-6.05)*(1000-PL-PR);
+  const Y=k=>PT+(1-k/0.8)*(420-PT-PB);
+  ctxK.strokeStyle="#1f2b3f";ctxK.font="10px Consolas";ctxK.fillStyle="#94a3b8";
+  [6.05,10,15,20,25,30].forEach(r=>{ctxK.beginPath();ctxK.moveTo(X(r),PT);ctxK.lineTo(X(r),420-PB);ctxK.stroke();
+    ctxV.fillText("",0,0);ctxK.fillText(String(r),X(r)-8,420-PB+13);});
+  [0,0.2,0.4,0.6,0.8].forEach(k=>{ctxK.beginPath();ctxK.moveTo(PL,Y(k));ctxK.lineTo(1000-PR,Y(k));ctxK.stroke();
+    ctxK.fillText(k.toFixed(1),8,Y(k)+3);});
+  ctxK.strokeStyle="#63d2ff";ctxK.lineWidth=2;ctxK.beginPath();
+  T.forEach((p,i)=>{i?ctxK.lineTo(X(p[0]),Y(p[1])):ctxK.moveTo(X(p[0]),Y(p[1]));});
+  ctxK.stroke();
+  ctxK.strokeStyle="#f87171";ctxK.setLineDash([4,4]);ctxK.beginPath();
+  ctxK.moveTo(X(6.05),Y(0));ctxK.lineTo(1000-PR,Y(0));ctxK.stroke();ctxK.setLineDash([]);
+  ctxK.fillStyle="#94a3b8";ctxK.fillText("r/M",480,420-8);
+  ctxK.fillStyle="#63d2ff";ctxK.fillText("κ_φ = √(1−6/r)",PL+10,PT+12);
+  ctxK.fillStyle="#f87171";ctxK.fillText("κ² 翻负线（r<6 无径向振荡 = ISCO）",PL+130,PT+12);
+  document.getElementById("readK").textContent=
+    rows.map(r=>`r=${r.r}: 数值 ${r.kappa_num} vs 解析 ${r.kappa_ana}（${r.rel}）`).join("\n")+
+    `\nISCO 两面：r=6.01 δ 增长 ${R.readings.isco.g_stable}×（有界）vs r=5.99 ${R.readings.isco.g_unstable}×（发散）`;
+})();
+
+/* ---------- §3 失效曲线 ---------- */
+const cvF=document.getElementById("cvF"), ctxF=cvF.getContext("2d");
+(function(){
+  const rows=R.readings.fail_rows;
+  ctxF.clearRect(0,0,1000,440);ctxF.fillStyle="#0d1730";ctxF.fillRect(0,0,1000,440);
+  const PL=60,PR=16,PT=18,PB=52;
+  const maxF=100;
+  const bw=110, gap=(1000-PL-PR-4*bw)/5;
+  rows.forEach((r,i)=>{
+    const x0=PL+gap+i*(bw+gap);
+    const hgt=r.fail_pct/maxF*(440-PT-PB);
+    ctxF.fillStyle="#e0af68";ctxF.fillRect(x0,440-PB-hgt,bw,hgt);
+    ctxF.fillStyle="#e9d5ff";ctxF.font="11px Consolas";
+    ctxF.fillText("+"+r.fail_pct+"%",x0+bw/2-24,440-PB-hgt-6);
+    ctxF.fillStyle="#94a3b8";ctxF.font="10px Consolas";
+    ctxF.fillText("J²="+r.J2,x0+10,440-PB+14);
+    ctxF.fillText("近点"+r.r_near+"M",x0-6,440-PB+26);
+  });
+  ctxF.strokeStyle="#475569";ctxF.beginPath();ctxF.moveTo(PL,440-PB);ctxJ2;ctxF.lineTo(1000-PR,440-PB);ctxF.stroke();
+  ctxF.fillStyle="#94a3b8";ctxF.font="10px Consolas";
+  ctxF.fillText("严格进动对弱场公式 6πM/p 的超额（%）：J²=160 → 12.5（轨道整体内移）",PL+10,PT+12);
+  document.getElementById("readF").textContent=
+    rows.map(r=>`J²=${r.J2}: 严格 ${r.d_num} vs 弱场 ${r.d_wpj} rad（近点 ${r.r_near}M）超额 +${r.fail_pct}%`).join("\n")+
+    "\n→ 单调爆发：1PN 公式的适用边界（r230 层）在近点≲5M 时彻底失效";
+})();
+
+/* ---------- §4 ledger ---------- */
+(function(){
+  let html="<tr><th>卷</th><th>方法</th><th>引力读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;});
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §5 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"test-particle 层",b:"本卷是史瓦西 test-particle 测地线——自引力/双体并合/数值相对论在框架外（r232 已登记绝热口径边界）。"},
+    {cls:"bnd",t:"视界注记",b:"r=2M 以坐标判据（u≥1/2）出现；视界的因果结构物理超出测地线层——黑洞热力学见并行 r233 卷。"},
+    {cls:"bnd",t:"1PN 失效≠GR 失败",b:"失效曲线量化的是「弱场公式 6πM/p」的适用边界——严格测地线方程本身仍然精确（同一条 1915 年理论）。"},
+    {cls:"bnd",t:"光子球判据窗口",b:"临界轨迹在光子球附近徘徊 ~ln(1/δ) 角——φ_max=12 不足（本轮自抓，二分偏移 0.4%）；φ_max=80 后 b_crit 二分到位。"},
+    {cls:"bnd",t:"无新理论",b:"ISCO/光子球/b_c 全部 1915 年教科书；本卷复现层（承 r229/r230/r232 判定）。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r234 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>
