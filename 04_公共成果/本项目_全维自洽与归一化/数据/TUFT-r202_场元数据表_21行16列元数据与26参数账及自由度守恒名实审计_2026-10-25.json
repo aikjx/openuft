@@ -1,16 +1,15 @@
 {
   "stem": "TUFT-r202_场元数据表_21行16列元数据与26参数账及自由度守恒名实审计_2026-10-25",
-  "verdict": "R202-FIELD-METADATA-21X16-CSV-IDENTICAL-OK-SYMBOLS-UNIQUE-OK-VIERBEIN-PROP-NO-DENOM-BOUNDARY-SPINSTAT-21-OK-QEQYT3-16-OK-GOLDSTONE-CHARGE-CONFLICT-FAIL-MULT-DOF-21-OK-PRE28-POST28-OK-GAUGE-11-HIGGS-4-OK-SM-SCOPE-UNSTATED-BOUNDARY-FERMION-32-OK-MASSES-9-PLUS-3-OK-PARAMS-19-PLUS-7-26-OK-INPUT-LOCATABLE-12-OF-26-FAIL-H-MASS-INPUT-MISMATCH-BOUNDARY-YNU-2.87185E-13-OK-LAMBDA-1.29384E-1-OK-NONPROP-4-OK-FIFTH-FORCE-WORDING-BOUNDARY-XREF-P2-BOUNDARY-SOURCES-14-1-6-OK-VIERBEIN-CROSSDOC-SPIN2-10-VS-SPIN1-6-FAIL-DIM-21-OK-GAMMA-BOUND-INFO-SIN2TW-OS-2.230519E-1-INFO-SUPPLY-0",
+  "verdict": "R202-FIELD-METADATA-21X16-CSV-IDENTICAL-OK-SYMBOLS-UNIQUE-OK-VIERBEIN-PROP-NO-DENOM-BOUNDARY-SPINSTAT-21-OK-QEQYT3-15-OK-GOLDSTONE-CHARGE-FIXED-OK-MULT-DOF-21-OK-PRE28-POST28-OK-GAUGE-11-HIGGS-4-OK-SM-SCOPE-UNSTATED-BOUNDARY-FERMION-32-OK-MASSES-9-PLUS-3-OK-PARAMS-19-PLUS-7-26-OK-INPUT-LOCATABLE-26-OF-26-OK-H-MASS-INPUT-MISMATCH-BOUNDARY-YNU-2.87185E-13-OK-LAMBDA-1.29384E-1-OK-NONPROP-4-OK-FIFTH-FORCE-WORDING-BOUNDARY-XREF-P2-BOUNDARY-SOURCES-14-1-6-OK-VIERBEIN-CROSSDOC-CONSISTENT-SPIN2-TEN-TO-TWO-OK-DIM-21-OK-GAMMA-BOUND-INFO-SIN2TW-OS-2.230519E-1-INFO-SUPPLY-0-THREE-FAILS-FIXED-OK",
   "counts": {
-    "PASS": 14,
+    "PASS": 17,
     "BOUNDARY": 5,
-    "FAIL": 3,
     "INFO": 2
   },
-  "guards_total": 54,
-  "guards_pass": 54,
-  "controls_total": 5,
-  "controls_pass": 5,
+  "guards_total": 56,
+  "guards_pass": 56,
+  "controls_total": 6,
+  "controls_pass": 6,
   "guard_list": [
     {
       "name": "G01 md_rows_21",
@@ -65,17 +64,17 @@
     {
       "name": "G11 Q_eq_Y_plus_T3_16",
       "ok": true,
-      "msg": "pass=16/16 fail=[] skip=['弱玻色子（未破缺）', 'W⁺ 玻色子', 'W⁻ 玻色子', 'Z 玻色子', '光子']"
+      "msg": "pass=15/15 fail=[] skip=['弱玻色子（未破缺）', 'W⁺ 玻色子', 'W⁻ 玻色子', 'Z 玻色子', '光子', 'Goldstone 玻色子']"
     },
     {
-      "name": "G12 goldstone_charge_conflict",
+      "name": "G12 goldstone_charge_ok",
       "ok": true,
-      "msg": "sym=G^± G⁰ Q=0 Y=0 H_Y=+1/2"
+      "msg": "sym=G^± G⁰ Q=+1 -1 0 Y=— note=三态合并行；被 W±/Z 吸收为纵向极化"
     },
     {
-      "name": "G13 goldstone_Y_zero_vs_H_half",
+      "name": "G13 goldstone_Y_dash_merged",
       "ok": true,
-      "msg": "Y_gold=0 Y_H=+1/2"
+      "msg": "Y_gold=— note=三态合并行；被 W±/Z 吸收为纵向极化"
     },
     {
       "name": "G14 multiplicity_times_doF_21",
@@ -113,9 +112,9 @@
       "msg": "4 vs 4"
     },
     {
-      "name": "G21 scope_excludes_gravity_36",
+      "name": "G21 scope_excludes_gravity_32",
       "ok": true,
-      "msg": "sm=28 sm+gravity=36"
+      "msg": "sm=28 sm+gravity(double)=32 vier=2 grav=2"
     },
     {
       "name": "G22 scope_not_declared",
@@ -173,14 +172,24 @@
       "msg": "rows=6"
     },
     {
-      "name": "G33 locatable_12_of_26",
+      "name": "G32b param_table_26",
       "ok": true,
-      "msg": "12"
+      "msg": "rows=26 locatable=26 bad=[]"
     },
     {
-      "name": "G34 missing_14",
+      "name": "G33 locatable_26_of_26",
       "ok": true,
-      "msg": "14"
+      "msg": "26"
+    },
+    {
+      "name": "G34 missing_0",
+      "ok": true,
+      "msg": "0"
+    },
+    {
+      "name": "G34b param_categories_8",
+      "ok": true,
+      "msg": "{'规范耦合': 3, 'Higgs 势': 2, 'Yukawa（夸克）': 6, 'Yukawa（带电轻子）': 3, 'Yukawa（中微子）': 3, 'CKM 混合': 4, 'PMNS 混合': 4, '引力': 1}"
     },
     {
       "name": "G35 h_mass_numeric_but_not_input",
@@ -218,9 +227,9 @@
       "msg": "{'推导': 14, '定义': 1, '输入': 6}"
     },
     {
-      "name": "G42 vierbein_crossdoc_mismatch",
+      "name": "G42 vierbein_crossdoc_consistent",
       "ok": true,
-      "msg": "01=True 06=spin1/dof6"
+      "msg": "01=True 06=spin2（等价）/dof2/note=基本变量；16-6 局域洛伦兹=10 分量，10-4 微分同胚=6，再减 4 约束=2 在壳（无质量张量）"
     },
     {
       "name": "G43 mass_dim_21",
@@ -255,7 +264,7 @@
     {
       "name": "G49 doc_readable",
       "ok": true,
-      "msg": "bytes=5536"
+      "msg": "bytes=7637"
     },
     {
       "name": "G50 four_sections",
@@ -265,17 +274,17 @@
     {
       "name": "G51 fail_entries_have_numbers",
       "ok": true,
-      "msg": "FAIL+BOUNDARY=8"
+      "msg": "FAIL+BOUNDARY=5"
     },
     {
-      "name": "G52 verdict_driven_by_counts",
+      "name": "G52 counts_sum_to_entries",
       "ok": true,
-      "msg": "PASS=14 FAIL=3"
+      "msg": "PASS=17 FAIL=0 entries=24"
     },
     {
       "name": "G53 control_group_nonempty",
       "ok": true,
-      "msg": "n=5"
+      "msg": "n=6"
     },
     {
       "name": "G54 no_new_physics",
@@ -308,6 +317,11 @@
       "name": "K05 remove_nuR_gives_30",
       "ok": true,
       "msg": "32-2=30"
+    },
+    {
+      "name": "K06 param_row_removal_detected",
+      "ok": true,
+      "msg": "25 < 26"
     }
   ],
   "entries": [
@@ -358,43 +372,44 @@
     {
       "code": "B02",
       "level": "PASS",
-      "title": "Q=Y+T3 在 16 个有确定量子数的行上精确成立（Fraction，零浮点）",
-      "detail": "机器：对每行取 Y（Fraction）、SU2 表示；双重态取 T3=±1/2、单态取 T3=0，求集合 {Y+T3} 与 `电荷Q` 列（按正则抓全部带符号分数）做集合相等：**16/16 通过**。逐项例：Q_L(+1/6)→{+2/3,−1/3}；L_L(−1/2)→{0,−1}；H(+1/2)→{0,+1}；u_R(+2/3)→{+2/3}；d_R(−1/3)→{−1/3}；e_R(−1)→{−1}；ν_R(0)→{0}。**显式跳过 5 行**：弱玻色子（未破缺）、W⁺ 玻色子、W⁻ 玻色子、Z 玻色子、光子 —— `W^i` 是伴随表示、行内只写代表元 Q=0；W±/Z/γ 是 EWSB 后的质量本征态，Y 不是其好量子数。这些行不能拿 Q=Y+T3 判错。控制组：把 d_R 超荷翻号 ⇒ 期望 +1/3 ≠ 表内 −1/3。",
+      "title": "Q=Y+T3 在 15 个有确定量子数的行上精确成立（Fraction，零浮点）",
+      "detail": "机器：对每行取 Y（Fraction）、SU2 表示；双重态取 T3=±1/2、单态取 T3=0，求集合 {Y+T3} 与 `电荷Q` 列（按正则抓全部带符号分数）做集合相等：**15/15 通过**。逐项例：Q_L(+1/6)→{+2/3,−1/3}；L_L(−1/2)→{0,−1}；H(+1/2)→{0,+1}；u_R(+2/3)→{+2/3}；d_R(−1/3)→{−1/3}；e_R(−1)→{−1}；ν_R(0)→{0}。**显式跳过 6 行**：弱玻色子（未破缺）、W⁺ 玻色子、W⁻ 玻色子、Z 玻色子、光子、Goldstone 玻色子 —— `W^i` 是伴随表示、行内只写代表元 Q=0；W±/Z/γ 是 EWSB 后的质量本征态；`Goldstone` 是三态合并行、破缺后 Y 不是好量子数（表中已把 Y 写 `—`）。这些行不能拿 Q=Y+T3 判错。控制组：把 d_R 超荷翻号 ⇒ 期望 +1/3 ≠ 表内 −1/3。",
       "numbers": {
-        "pass": 16,
+        "pass": 15,
         "fail": [],
         "skip": [
           "弱玻色子（未破缺）",
           "W⁺ 玻色子",
           "W⁻ 玻色子",
           "Z 玻色子",
-          "光子"
+          "光子",
+          "Goldstone 玻色子"
         ]
       }
     },
     {
       "code": "B03",
-      "level": "FAIL",
-      "title": "Goldstone 行把 `G^± G⁰` 三态的电荷写成 0、超荷写成 0，与符号及 H 的来源矛盾（F-label）",
-      "detail": "机器：该行 `符号=G^± G⁰`、`电荷Q=0`、`U1超荷Y=0`。`G^±` 按符号即带 ±1 电荷；三态电荷集应为 {+1,−1,0}。同时这三个自由度来自 `Higgs 二重态 H`（Y=+1/2）⇒ 破缺前其分量电荷为 {0,+1}（含共轭则 −1），把 Y 直接置 0 只对 `G⁰` 成立、对 `G^±` 不成立。⇒ 同一行内「符号 vs 电荷列」冲突 **1 处**。修复：`电荷Q` 写 `+1 −1 0`，`U1超荷Y` 写 `—`（破缺后不是好量子数），备注补「三态合并行」。注：这不影响 B02 的 Q=Y+T3 判定——B02 用的是该行**自己声明的** Y=0，故它自洽；缺陷在 Y=0 这个声明本身。",
+      "level": "PASS",
+      "title": "Goldstone 行电荷集 {+1,−1,0} 与符号 `G^± G⁰` 一致；Y 标 `—` 并声明三态合并（已修复）",
+      "detail": "机器：该行 `符号=G^± G⁰`、`电荷Q=+1 -1 0`（解析为 {+1,−1,0}）、`U1超荷Y=—`、备注含「三态合并行」。`G^±` 按符号即带 ±1、`G⁰` 为 0，三者与符号一一对应；这三个自由度来自 `Higgs 二重态 H`（Y=+1/2），破缺后已不是 U(1)_Y 本征态 ⇒ Y 写 `—` 而非 `0`，避免把 `0` 误读为「超荷为零」。⇒ 原「符号 vs 电荷列」冲突 1 处已消除，B02 也把该行显式排除在 Q=Y+T3 适用域外。",
       "numbers": {
         "symbol": "G^± G⁰",
-        "Q": "0",
-        "Y": "0",
+        "Q": "+1 -1 0",
+        "Y": "—",
         "H_Y": "+1/2",
-        "conflicts": 1
+        "conflicts": 0
       }
     },
     {
       "code": "B04",
       "level": "PASS",
       "title": "在壳自由度 = 多重态数 × 每单元极化数，21/21 成立（3 个例外已显式记账）",
-      "detail": "机器为每行显式建表（无质量矢量 2 / 有质量矢量 3 / 实标量 1 / 复二重态 4 / Weyl 2 / vierbein 6 / 非传播 0），逐行乘 `多重态数` 与 `在壳自由度` 对撞：**21/21**。三个须单列而非套用「标量 1」的单元：vierbein 6（16−6 局域洛伦兹−4 微分同胚）、`Higgs 二重态` 4（复二重态 = 4 实分量，不能按 1）、`Goldstone` 0（被 W±/Z 吸收）。控制组：把胶子多重态数改成 3 ⇒ 3×2=6 ≠ 表内 16（检测器有效）。",
+      "detail": "机器为每行显式建表（无质量矢量 2 / 有质量矢量 3 / 实标量 1 / 复二重态 4 / Weyl 2 / vierbein 2 / 非传播 0），逐行乘 `多重态数` 与 `在壳自由度` 对撞：**21/21**。三个须单列而非套用「标量 1」的单元：vierbein 2（16−6 局域洛伦兹=10 分量，10−4 微分同胚=6，再减 4 约束=2 无质量张量）、`Higgs 二重态` 4（复二重态 = 4 实分量，不能按 1）、`Goldstone` 0（被 W±/Z 吸收）。控制组：把胶子多重态数改成 3 ⇒ 3×2=6 ≠ 表内 16（检测器有效）。",
       "numbers": {
         "rows": 21,
         "mismatch": [],
         "exceptions": [
-          "vierbein:6",
+          "vierbein:2",
           "Higgs二重态:4",
           "Goldstone:0"
         ]
@@ -427,12 +442,13 @@
     {
       "code": "C03",
       "level": "BOUNDARY",
-      "title": "「28 玻色自由度」实际是 SM-only 口径：未含引力扇区 6+2=8（F-label）",
-      "detail": "机器：表内 `vierbein` 6 + `引力子（度规扰动）` 2 = 8；若并入则总数 = 36，而非 28。该节标题写「**玻色自由度**」、正文未加「仅物质+规范+Higgs」限定，也未说明引力子行是 vierbein 的线性化（两者不可相加，否则双计）。⇒ 读者会误以为 28 是全表玻色总量。修复：该节首句加「以下只计 SM 扇区；引力扇区见 vierbein/引力子两行，二者不可同时计入」。这是口径缺声明，不是数值错误 ⇒ 记 BOUNDARY。",
+      "title": "「28 玻色自由度」实际是 SM-only 口径：未含引力扇区（F-label）",
+      "detail": "机器：表内 `vierbein` 在壳 2 + `引力子（度规扰动）` 2 = 4，但两行指向**同一**无质量张量自由度（引力子行是 vierbein 行的线性化解），不可相加；若强行相加得 32，属双计。该节标题写「**玻色自由度**」、正文未加「仅物质+规范+Higgs」限定，⇒ 读者会误以为 28 是全表玻色总量。修复：该节首句加「以下只计 SM 扇区；引力扇区见 vierbein/引力子两行，二者是同一自由度、不可相加」。这是口径缺声明，不是数值错误 ⇒ 记 BOUNDARY。",
       "numbers": {
         "sm_only": 28,
-        "gravity_sector": 8,
-        "naive_total": 36
+        "vierbein": 2,
+        "graviton": 2,
+        "naive_double_count": 32
       }
     },
     {
@@ -457,6 +473,28 @@
       }
     },
     {
+      "code": "E02",
+      "level": "PASS",
+      "title": "26 个输入参数逐项可定位（表内行或 01 §3.3），「在表中标记为输入」的口径歧义已消除",
+      "detail": "机器：`06` 新增「输入参数定位」表 **26** 行、8 个类目；逐项检查：定位到本表行的必须命中真实行名（12 个质量参数 → u_R/d_R/e_R/ν_R），其余 14 个以 `—` + `01 §3.3` 交叉引用登记 ⇒ **26/26 可定位，缺 0**。同时 `来源=输入` 的场行仍为 **6** 行，语义已由约定行限定为「场行」而非「参数行」。⇒ 原句已改指为「12 个质量参数在本表逐行可定位；其余 14 个见 01 §3.3」，不再落空。控制组：删一行 ⇒ 25/26 会被抓。",
+      "numbers": {
+        "param_rows": 26,
+        "locatable": 26,
+        "missing": 0,
+        "input_rows": 6,
+        "categories": {
+          "规范耦合": 3,
+          "Higgs 势": 2,
+          "Yukawa（夸克）": 6,
+          "Yukawa（带电轻子）": 3,
+          "Yukawa（中微子）": 3,
+          "CKM 混合": 4,
+          "PMNS 混合": 4,
+          "引力": 1
+        }
+      }
+    },
+    {
       "code": "E01",
       "level": "PASS",
       "title": "19→26 的参数账精确：19=3+2+6+3+4+1、增量 7=3+4，与 01 §3.3、09 L1 三方一致",
@@ -466,18 +504,6 @@
         "new": 7,
         "total": 26,
         "doc01_sum": 26
-      }
-    },
-    {
-      "code": "E02",
-      "level": "FAIL",
-      "title": "「26 个输入参数…在表中标记为 `输入`」不成立：本表只能定位 12/26（F-input-blind）",
-      "detail": "机器：`来源` 列等于 `输入` 的行 **6** 行（6 个费米行）；这些行的质量列也只写 `输入`，可逐项定位的质量参数 = 9（u,d,c,s,t,b,e,μ,τ）+ 3（ν）= 12。其余 **14** 个参数——g₁,g₂,g₃、μ、λ、4 个 CKM、4 个 PMNS、G——在本表中**既无行也无列**。⇒ 原句「在表中标记为输入」若指本元数据表则不成立（12/26）；若指 `01 §3.3` 的输入参数清单则成立（26/26）。该句须改指：「26 个输入参数见 01 §3.3 清单；其中 12 个质量参数在本表 `来源=输入`」。这是**声明落空**，不是计数错误 ⇒ F-input-blind。",
-      "numbers": {
-        "input_rows": 6,
-        "locatable": 12,
-        "missing": 14,
-        "missing_classes": "g1,g2,g3,mu,lambda,CKM4,PMNS4,G"
       }
     },
     {
@@ -552,16 +578,16 @@
     },
     {
       "code": "F05",
-      "level": "FAIL",
-      "title": "vierbein 跨表不一致：01 §3.1 给「自旋 2（等价）、10（分量）」，本表给「自旋 1、在壳 6」（F-label）",
-      "detail": "机器：`01_作用量与场内容.md` §3.1 的 vierbein 行 = `自旋 2（等价）`、`自由度 10（分量）`；本表同一对象 = `自旋 1`、`在壳自由度 6`、备注「16 分量减去 6 个局域洛伦兹 gauge 余 10」。三处读数三套：①自旋 2 vs 1；②10 vs 6；③备注算到 10，与列值 6 差 **4**（未扣微分同胚）。⇒ 同一基本场在两份核心文档里不能同时取两种自旋与两种自由度，且本表自身的「注=10 / 列=6」也未闭合。修复：备注补「10 分量 − 4 微分同胚 = 6（其中传播 2）」；自旋列写「2（线性化后）/1（1-形式）」两口径并注明，或与 01 统一。",
+      "level": "PASS",
+      "title": "vierbein 跨表读数已统一：自旋 2（等价）一致；01 的 10 分量 = 本表 16−6 后的分量数，在壳为 2（已修复）",
+      "detail": "机器：`01_作用量与场内容.md` §3.1 的 vierbein 行 = `自旋 2（等价）`、`10（分量）`；本表同一对象 = `自旋 2（等价）`、`在壳自由度 2`，备注「16−6 局域洛伦兹=10 分量，10−4 微分同胚=6，再减 4 约束=2 在壳」。⇒ 三处读数现在是**同一条计数链**：16 分量 → 扣 6 局域洛伦兹 = 10（与 01 的「10（分量）」同值）→ 扣 4 微分同胚 = 6 → 扣 4 约束 = 2 在壳（无质量张量）。自旋列两文档同为 `2（等价）`。原「自旋 2 vs 1 / 10 vs 6 / 备注与列差 4」三处不一致全部消除。",
       "numbers": {
         "doc01_spin": "2（等价）",
         "doc01_dof": "10（分量）",
-        "doc06_spin": "1",
-        "doc06_dof": "6",
-        "doc06_note_arith": "16-6=10",
-        "gap": 4
+        "doc06_spin": "2（等价）",
+        "doc06_dof": "2",
+        "chain": "16-6=10; 10-4=6; 6-4=2",
+        "mismatch": 0
       }
     },
     {

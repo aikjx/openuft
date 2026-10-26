@@ -1,0 +1,583 @@
+{
+  "id": "r224",
+  "date": "2026-10-26",
+  "title": "四力统一运动方程（第二推进轮）：Proca 场方程机器验证、圆轨道稳定性解析判据、荷空间可加性与逃逸特性",
+  "target": {
+    "md": "§18_四力统一方程_力的本源与大小方向距离_攻破精算.md",
+    "py": "§18_verify.py",
+    "json": "§18_四力曲线数据.json",
+    "d5": "README.md"
+  },
+  "verdict": "R224-FOUR-FORCE-UNIFIED-EQUATION-OF-MOTION-SECOND-PUSH-PROCA-YUKAWA-FIELD-EQUATION-MACHINE-VERIFIED-LAPLACIAN-V-MINUS-V-OVER-LAMBDA-SQUARED-IS-EXACTLY-ZERO-AND-LINEAR-SIGMA-R-CORRECTLY-EXCLUDED-BOTH-PASS-BUT-HOMOGENEITY-HOLDS-ONLY-FOR-R-GREATER-ZERO-WHILE-THE-EQUATION-IS-USED-TO-DEFINE-POINT-PARTICLE-FORCES-CIRCULAR-ORBIT-STABILITY-CLOSED-FORM-CRITERION-STABLE-IFF-R-OVER-LAMBDA-LESS-THAN-GOLDEN-RATIO-PHI-1P6180339887-NUMERIC-ROOT-MATCHES-PHI-TO-5E-16-SOLAR-SYSTEM-HARD-BOUND-LAMBDA-GREATER-18P6-AU-YET-R223-LAMBDA-FIT-958-AU-SATISFIES-STABILITY-BUT-CONTRADICTS-MULTI-PLANET-PRECESSION-SO-THE-TWO-BOUNDS-SQUEEZE-YUKAWA-GRAVITY-INTO-NO-VIABLE-WINDOW-CHARGE-SPACE-ADDITIVITY-FAILED-FOUR-Q-ARE-THREE-INCOMPATIBLE-MATHEMATICAL-OBJECT-TYPES-CONTINUOUS-MASS-RATIO-DISCRETE-INTEGER-CHARGE-AND-TWO-UNIVERSAL-COUPLING-CONSTANTS-SO-Q1Q2-CANNOT-BE-COMPOSED-WEAK-AND-STRONG-CHANNELS-PREDICT-FORCE-INDEPENDENT-OF-BODY-IDENTITY-ZERO-CHARGE-COMPOSITION-RULES-IN-TARGET-POTENTIAL-DIVERGES-AT-ORIGIN-WITH-NO-CUTOFF-ESCAPE-VELOCITY-RATIO-EXP-MINUS-R-OVER-TWO-LAMBDA-UNTESTED-BY-TARGET-SUPERPOSITION-RULE-ABSENT-SO-EQUATION-OF-MOTION-NOT-CLOSED-FOR-ALL-FOUR-FORCES-TOGETHER-REPAIR-PRICING-16-COMBOS-SURVIVE-0-SUICIDE-1-EMPTY-15-LINE-27TH-DEGREE-FIX-EQUALS-SUICIDE",
+  "redline": "不可与 r142–r223 相加",
+  "entries": [
+    {
+      "id": "A1",
+      "layer": "L1 Proca 场方程机器验证",
+      "text": "机器验证 ∇²V − V/λ²（V = K e^{−r/λ}/r，K 归一）：用自写精确微分引擎走 「×r² → d/dr → ÷r²」得到 ∇²V = K e^{−r/λ}/(r λ²)，与 V/λ² **逐项完全相等**⇒ **残差机器为 0**，靶所称的场方程**成立**（对靶有利，单列 PASS）。",
+      "verdict": "PASS",
+      "note": "lapV=Term(1,r^-1,lam^-2*E) | residual=0"
+    },
+    {
+      "id": "A2",
+      "layer": "L1 Proca 场方程机器验证",
+      "text": "线性势 σr 的复算（靶自承「不满足齐次 Proca」）：∇²(σr) = 2σ/r，故 (∇² − 1/λ²)(σr) = σ(2/r − r/λ²) **非零** ⇒ 与靶自承一致，机器复算确认⇒ 禁闭项**确实被排除在该方程之外**（靶此处诚实，单列 PASS）。",
+      "verdict": "PASS",
+      "note": "residual=Term(2,r^-1,lam^0) + Term(-1,r^1,lam^-2)"
+    },
+    {
+      "id": "A3",
+      "layer": "L1 Proca 场方程机器验证",
+      "text": "「齐次」二字的**适用范围**：∇²V − V/λ² = 0 只在 **r > 0** 成立；r = 0 处 V ~ K/r 发散，此时 (∇² − 1/λ²)V = −4πK δ³(r)（**有源**）。靶把该式称为「**线性齐次** Proca 方程」——齐次性只在**挖去原点的区域**成立，而该方程正在被用来定义**点粒子之间的力** ⇒ 齐次性与使用场景**自相抵牾**。",
+      "verdict": "INFO",
+      "note": "齐次 ⊥ 点源：同一方程的两个互斥面相"
+    },
+    {
+      "id": "B1",
+      "layer": "L2 圆轨道稳定性",
+      "text": "**★本卷解析核心**：补齐运动方程后，有效势 U(r) = −μ e^{−r/λ}/r + h²/(2r²)（单位质量）。圆轨道条件 U′=0 给出 h² = μ e^{−x}(r²/λ + r)（x ≡ r/λ），代回二阶导得**闭式**：U″(r_c) = μ e^{−x}/r_c³ · **(−x² + x + 1)** ⇒ 圆轨道**稳定 ⟺ −x² + x + 1 > 0 ⟺ x < φ = (1+√5)/2 = 1.6180339887（黄金比）**。数值复核：闭式与直接二阶导在 8 个 x 点上相对差 ≤ 6.135e-12，二分求得的变号点 x = 1.6180339887 与 φ 相对差 5.489e-16 ⇒ 双路互印成立。",
+      "verdict": "PASS",
+      "note": "判据：r_c/λ < φ"
+    },
+    {
+      "id": "B2",
+      "layer": "L2 圆轨道稳定性",
+      "text": "**硬约束**：若 Yukawa 引力真作用于太阳系，则每一颗行星的**圆轨道必须稳定**⇒ λ > a/φ。**最外层行星给出的下界最硬**：海王星 a = 4.5034e12 m ⇒ **λ > 2.7833e+12 m = 18.61 AU**；地球 ⇒ λ > 0.618 AU，水星 ⇒ λ > 0.239 AU。这是**独立于 r223 进动约束**的第二条硬约束，且为**纯解析**（不依赖数值积分）。",
+      "verdict": "INFO",
+      "note": "λ > a_max/φ"
+    },
+    {
+      "id": "B3",
+      "layer": "L2 圆轨道稳定性",
+      "text": "与 r223 的 λ_fit = 957.9 AU 对照：稳定性下界 18.6 AU **被满足**（957.9 ≫ 18.6）⇒ 两条约束**互不冲突**，但 r223 已证该 λ_fit 与金星/地球/火星的进动观测冲突 6.96×/18.4×/64.1× ⇒ 本卷的稳定性判据**不能救**它：稳定性只排除 λ ≲ 18.6 AU，而冲突发生在 λ ≈ 958 AU 处 ⇒ **两个约束合起来把 Yukawa 引力的可用区间夹成「要么无稳定轨道，要么与多行星进动冲突」**。",
+      "verdict": "FAIL",
+      "note": "18.6 AU < λ 与 λ≈958 AU 冲突 共存 ⇒ 无可行区间"
+    },
+    {
+      "id": "C1",
+      "layer": "L3 荷空间可加性",
+      "text": "**★判决核心**：四个通道的 Q 是**三种不同数学对象类型**——引力 Q_g = m/m_P 是**连续量**（随物体质量变）；电磁 Q_e = √α·Z 是**离散整数×常数**（随物体电荷变）；弱 Q_w = g_W/√4π 与强 Q_π = g_π/√4π 是**普适耦合常数**（**不随物体变**）。依赖物体身份者 %d/4，不依赖者 %d/4 ⇒ 类型**不一致率 50%**。",
+      "verdict": "FAIL",
+      "note": "Q 的数学对象类型不一致"
+    },
+    {
+      "id": "C2",
+      "layer": "L3 荷空间可加性",
+      "text": "推论（致命）：把它们塞进同一个 **Q₁Q₂** 结构，意味着弱/强两个通道的力**不随物体身份变化**——任何两个物体之间的弱力强度完全相同，仅由 g_W/g_π 决定。这与实际弱相互作用（依赖**味/弱荷/手征**）矛盾 ⇒ 该结构在**弱与强两个通道上是错的**，不只是「缺参数」。",
+      "verdict": "FAIL",
+      "note": "Q₁Q₂ 对普适常数 ⇒ 力不随物体变 ⇒ 与实际不符"
+    },
+    {
+      "id": "C3",
+      "layer": "L3 荷空间可加性",
+      "text": "**四力能否同时作用于同一粒子**：需要一个「总荷」或「合成荷」的定义才能把四个 Q 放进一次测量。靶中「统一荷」0 处、「总荷」0 处、「合成荷」0 处、「同时作用」0 处 ⇒ **荷合成规则命中 0**；且四通道 Q 的数学对象类型不同（连续量 / 离散整数 / 普适常数）⇒ **无法定义 Q_total²** ⇒ 「把四力写进一个方程」在**同一次相互作用**的意义上**不成立**：它只是**一个模板 × 4 套互不相干的外部输入**。",
+      "verdict": "FAIL",
+      "note": "荷空间 = 4 个互不相交副本的直和，非 1 个"
+    },
+    {
+      "id": "D1",
+      "layer": "L4 原点发散",
+      "text": "点粒子极限：V = K e^{−r/λ}/r，r → 0 时 V ~ K/r ⇒ 引力通道（s = −1）V → **−∞**，势阱**无下界**；又因 ∇²V = V/λ²，Laplacian **同阶发散**（数值：r=1e−9 时 V ≈ 1e9、∇²V ≈ 1e9）⇒ 点粒子自能发散。靶**未提供任何截断、半径或重整化机制** ⇒ 「力的本源」在原点是**未定义**的。",
+      "verdict": "FAIL",
+      "note": "V(r→0)→−∞，无截断"
+    },
+    {
+      "id": "E1",
+      "layer": "L5 逃逸特性",
+      "text": "逃逸速度：v_esc = √(−2V/m)，与牛顿值之比 = **e^{−r/(2λ)}** ⇒ 力程截断使逃逸速度**系统性变小**。定量：r = λ 处降 **39.3%**，r = 2λ 处降 63.2%，r = 5λ 处降 91.8% ⇒ 这是**可观测**的距离特性（若 λ 有限）。靶**未给出任何逃逸/束缚能的检验**。",
+      "verdict": "INFO",
+      "note": "v_esc 比值 = e^{−r/2λ}"
+    },
+    {
+      "id": "F1",
+      "layer": "L6 叠加闭合性",
+      "text": "运动方程层面的**闭合性**审计：若强行让四力同时作用，需要 m r̈ = Σᵢ Fᵢ(r)，但①四个 Q 类型不同且无合成规则（C3）；②四个 λ 相差 596×（弱 2.455e−18 m vs 强 1.462e−15 m）而引力/电磁 λ=∞；③「线性/叠加原理/矢量和/合力」token 合计 **10** ⇒ 靶**未给出叠加规则** ⇒ 运动方程在「四力同框」意义上**未闭合**：用户命题「把所有力写进一个运动上面」在靶内**仍未被落实**。",
+      "verdict": "FAIL",
+      "note": "叠加规则缺失 ⇒ 运动方程未闭合"
+    },
+    {
+      "id": "G1",
+      "layer": "L7 修复定价",
+      "text": "2⁴ = 16 组合位掩码（必要条件：H0_给出荷合成规则与统一荷、H1_给出原点截断、H2_叠加规则与四通道同时作用、H3_参数第一性）⇒ EMPTY 15 / SUICIDE 1 / SURVIVE 0：齐备组合必然要求越过单极标量势与单一 Q₁Q₂ 结构（把原方程替换掉）⇒ **修复即自杀**；缺任一条件的 15 个组合下宣称不被满足。",
+      "verdict": "FAIL",
+      "note": "本线第 27 度「修复即自杀」"
+    }
+  ],
+  "controls": [
+    {
+      "id": "C01",
+      "text": "Proca 机器验证：∇²V − V/λ² 残差为零",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "id": "C02",
+      "text": "线性势复算：σr 不满足齐次 Proca（与靶自承一致）",
+      "ok": true,
+      "detail": "Term(2,r^-1,lam^0) + Term(-1,r^1,lam^-2)"
+    },
+    {
+      "id": "C03",
+      "text": "圆轨道闭式与数值二阶导相对差 < 1e−9",
+      "ok": true,
+      "detail": "6.135e-12"
+    },
+    {
+      "id": "C04",
+      "text": "数值二分变号点与 φ 相对差 < 1e−9",
+      "ok": true,
+      "detail": "5.489e-16"
+    },
+    {
+      "id": "C05",
+      "text": "符号模式：x<φ 判稳定、x>φ 判不稳定（全部一致）",
+      "ok": true,
+      "detail": "[(0.3, True), (0.8, True), (1.2, True), (1.6, True), (1.618, True), (1.65, False), (2.0, False), (3.0, False)]"
+    },
+    {
+      "id": "C06",
+      "text": "φ = (1+√5)/2 数值正确",
+      "ok": true,
+      "detail": "1.618033988750"
+    },
+    {
+      "id": "C07",
+      "text": "太阳系最硬下界来自海王星（最外层）",
+      "ok": true,
+      "detail": "2.7833e+12 m"
+    },
+    {
+      "id": "C08",
+      "text": "稳定性下界 18.6 AU 与 r223 的 λ_fit 957.9 AU 不冲突（下界被满足）",
+      "ok": true,
+      "detail": "18.61 AU < 957.9 AU"
+    },
+    {
+      "id": "C09",
+      "text": "荷类型不一致：依赖物体者 2、不依赖者 2",
+      "ok": true,
+      "detail": "dep=2 indep=2"
+    },
+    {
+      "id": "C10",
+      "text": "靶未给荷合成规则（统一荷/总荷/合成荷/同时作用 命中 = 0）",
+      "ok": true,
+      "detail": "{'统一荷': 0, '总荷': 0, '合成荷': 0, 'Q_total': 0, '叠加': 0, '同时作用': 0}"
+    },
+    {
+      "id": "C11",
+      "text": "原点发散：V(1e−9) 量级 ≥ 1e8 且与 ∇²V 同阶",
+      "ok": true,
+      "detail": "V=1.000e+09 lapV=1.000e+09"
+    },
+    {
+      "id": "C12",
+      "text": "逃逸速度比值为 e^{−r/2λ}：r=λ 处 ≈ 0.6065",
+      "ok": true,
+      "detail": "0.6065306597"
+    },
+    {
+      "id": "C13",
+      "text": "λ_W = ℏc/m_W 与靶自报 2.455e−18 m 一致",
+      "ok": true,
+      "detail": "2.4552623566100914283458"
+    },
+    {
+      "id": "C14",
+      "text": "λ_π = ℏc/m_π⁰ 与靶自报 1.462e−15 m 一致",
+      "ok": true,
+      "detail": "1.4619304054646083258979"
+    },
+    {
+      "id": "C15",
+      "text": "两短程通道 λ 跨度 > 100×",
+      "ok": true,
+      "detail": "595.4×"
+    },
+    {
+      "id": "C16",
+      "text": "修复定价 16 组合且 SURVIVE = 0",
+      "ok": true,
+      "detail": "{'EMPTY': 15, 'SUICIDE': 1, 'SURVIVE': 0}"
+    },
+    {
+      "id": "C17",
+      "text": "修复定价 EMPTY = 15 且 SUICIDE = 1",
+      "ok": true,
+      "detail": "{'EMPTY': 15, 'SUICIDE': 1, 'SURVIVE': 0}"
+    },
+    {
+      "id": "C18",
+      "text": "靶自验证脚本含 F_newton / F_coulomb 对照",
+      "ok": true,
+      "detail": "§18_verify.py"
+    },
+    {
+      "id": "C19",
+      "text": "本卷未改动任何靶文件（四份 sha256 导入期基线 vs 审计结束比对）",
+      "ok": true,
+      "detail": "四份逐位比对"
+    },
+    {
+      "id": "C20",
+      "text": "文本证据逐字命中 9/9",
+      "ok": true,
+      "detail": "miss=[]"
+    },
+    {
+      "id": "C21",
+      "text": "负对照证据串确未命中",
+      "ok": true,
+      "detail": "本词必然不出现在靶文中zoology"
+    },
+    {
+      "id": "C22",
+      "text": "D5 语境文件可读且含 P=m(c−v) 声明",
+      "ok": true,
+      "detail": "D5 README"
+    }
+  ],
+  "guards": [
+    {
+      "id": "G1",
+      "text": "每个 FAIL/INFO 条目都带 machine note（非空）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "G2",
+      "text": "verdict 由本卷数值嵌入驱动（含 φ 的 10 位与 SURVIVE 计数）",
+      "ok": true,
+      "detail": "len=1247"
+    },
+    {
+      "id": "G3",
+      "text": "分层红线短语在 docstring 中命中（渲染产物侧由 main 运行时复核）",
+      "ok": true,
+      "detail": "不可与 r142–r223 相加"
+    },
+    {
+      "id": "G4",
+      "text": "靶 4 份文件全部可读",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "G5",
+      "text": "文本证据 9/9 逐字命中 + 负对照确未命中",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "G6",
+      "text": "ast 自审：ctl/grd 未出现字面 True 作为 ok 参数",
+      "ok": true,
+      "detail": "clean"
+    },
+    {
+      "id": "G7",
+      "text": "控制组全部通过",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "G8",
+      "text": "闭式先与数值互印再用于下结论（顺序依赖已满足）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "G9",
+      "text": "对靶有利项（Proca 成立 / σr 被排除）单列 PASS 未被吞掉",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "G10",
+      "text": "修复定价组合数 = 16 且三类计数和为 16",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "G11",
+      "text": "条目分布断言：total=13 且 FAIL=7 / PASS=3 / INFO=3",
+      "ok": true,
+      "detail": "{'PASS': 3, 'INFO': 3, 'FAIL': 7}"
+    },
+    {
+      "id": "G12",
+      "text": "未触碰 r205–r223 并行产物（25 份 mtime 全早于本轮启动）",
+      "ok": true,
+      "detail": "touched=none"
+    }
+  ],
+  "key_numbers": {
+    "proca": {
+      "V": "Term(1,r^-1,lam^0*E)",
+      "lapV": "Term(1,r^-1,lam^-2*E)",
+      "lap_minus_V_over_lam2_zero": true,
+      "residual": "0",
+      "lap_sigma_r": "Term(2,r^-1,lam^0)",
+      "sigma_residual": "Term(2,r^-1,lam^0) + Term(-1,r^1,lam^-2)",
+      "sigma_not_zero": true
+    },
+    "circular": {
+      "phi": 1.618033988749895,
+      "root_numeric": 1.618033988749894,
+      "root_rel_to_phi": 5.489244514488465e-16,
+      "checks": [
+        {
+          "x": 0.3,
+          "numeric": 4.406004086982277e-21,
+          "closed": 4.406004086982274e-21,
+          "rel": 6.829919988036459e-16,
+          "stable": true
+        },
+        {
+          "x": 0.8,
+          "numeric": 1.3510271505968337e-22,
+          "closed": 1.3510271505968344e-22,
+          "rel": 5.220447347648034e-16,
+          "stable": true
+        },
+        {
+          "x": 1.2,
+          "numeric": 1.7580374001416005e-23,
+          "closed": 1.7580374001416002e-23,
+          "rel": 1.6716003179562731e-16,
+          "stable": true
+        },
+        {
+          "x": 1.6,
+          "numeric": 2.6166190951375213e-25,
+          "closed": 2.616619095137548e-25,
+          "rel": 1.0178131748449031e-14,
+          "stable": true
+        },
+        {
+          "x": 1.618,
+          "numeric": 4.721730580219301e-28,
+          "closed": 4.721730580248267e-28,
+          "rel": 6.13458300938578e-12,
+          "stable": true
+        },
+        {
+          "x": 1.65,
+          "numeric": -4.1135038949858367e-25,
+          "closed": -4.1135038949858367e-25,
+          "rel": 0.0,
+          "stable": false
+        },
+        {
+          "x": 2.0,
+          "numeric": -2.2450844573572536e-24,
+          "closed": -2.2450844573572503e-24,
+          "rel": 1.4725850739616974e-15,
+          "stable": false
+        },
+        {
+          "x": 3.0,
+          "numeric": -1.223585800822631e-24,
+          "closed": -1.2235858008226313e-24,
+          "rel": 1.5010879677787878e-16,
+          "stable": false
+        }
+      ],
+      "lam_test": 100000000000000.0,
+      "bounds": [
+        {
+          "name": "Mercury",
+          "a_m": 57909050000.0,
+          "lam_min_m": 35789761156.217094,
+          "lam_min_AU": 0.2392397765339122
+        },
+        {
+          "name": "Venus",
+          "a_m": 108209480000.0,
+          "lam_min_m": 66877136544.95197,
+          "lam_min_AU": 0.4470460457225744
+        },
+        {
+          "name": "Earth",
+          "a_m": 149597870000.0,
+          "lam_min_m": 92456568304.58823,
+          "lam_min_AU": 0.6180339858579834
+        },
+        {
+          "name": "Mars",
+          "a_m": 227936640000.0,
+          "lam_min_m": 140872590801.44882,
+          "lam_min_AU": 0.9416751063519571
+        },
+        {
+          "name": "Jupiter",
+          "a_m": 778547200000.0,
+          "lam_min_m": 481168631446.06213,
+          "lam_min_AU": 3.2164136374038788
+        },
+        {
+          "name": "Saturn",
+          "a_m": 1433537000000.0,
+          "lam_min_m": 885974590130.558,
+          "lam_min_AU": 5.922374335843792
+        },
+        {
+          "name": "Uranus",
+          "a_m": 2872462300000.0,
+          "lam_min_m": 1775279332802.697,
+          "lam_min_AU": 11.867009366482227
+        },
+        {
+          "name": "Neptune",
+          "a_m": 4503443700000.0,
+          "lam_min_m": 2783281273021.585,
+          "lam_min_AU": 18.605086155291012
+        }
+      ],
+      "lam_min_solar_m": 2783281273021.585,
+      "lam_min_solar_AU": 18.605086155291012,
+      "max_closed_rel": 6.13458300938578e-12,
+      "sign_pattern_ok": true
+    },
+    "charge": {
+      "defs": {
+        "gravity": {
+          "expr": "m/m_P",
+          "depends_on_body": true,
+          "kind": "连续量（随物体质量变化）"
+        },
+        "em": {
+          "expr": "sqrt(alpha)*Z",
+          "depends_on_body": true,
+          "kind": "离散整数 × 常数（随物体电荷变化）"
+        },
+        "weak": {
+          "expr": "g_W/sqrt(4*pi)",
+          "depends_on_body": false,
+          "kind": "普适耦合常数（不随物体变化）"
+        },
+        "strong": {
+          "expr": "g_pi/sqrt(4*pi)",
+          "depends_on_body": false,
+          "kind": "普适耦合常数（不随物体变化）"
+        }
+      },
+      "n_dep": 2,
+      "n_indep": 2,
+      "type_consistent": false,
+      "union_tokens": {
+        "统一荷": 0,
+        "总荷": 0,
+        "合成荷": 0,
+        "Q_total": 0,
+        "叠加": 0,
+        "同时作用": 0
+      },
+      "superpose_rules": 0,
+      "linear_tokens": {
+        "线性": 10,
+        "叠加原理": 0,
+        "矢量和": 0,
+        "合力": 0
+      },
+      "linear_total": 10
+    },
+    "escape": {
+      "rows": [
+        {
+          "x": 0.05,
+          "ratio": 0.9753099120283326,
+          "drop_pct": 2.4690087971667385
+        },
+        {
+          "x": 0.2,
+          "ratio": 0.9048374180359595,
+          "drop_pct": 9.51625819640405
+        },
+        {
+          "x": 0.5,
+          "ratio": 0.7788007830714049,
+          "drop_pct": 22.119921692859513
+        },
+        {
+          "x": 1.0,
+          "ratio": 0.6065306597126334,
+          "drop_pct": 39.346934028736655
+        },
+        {
+          "x": 1.618,
+          "ratio": 0.4453031467923587,
+          "drop_pct": 55.46968532076413
+        },
+        {
+          "x": 2.0,
+          "ratio": 0.36787944117144233,
+          "drop_pct": 63.212055882855765
+        },
+        {
+          "x": 3.0,
+          "ratio": 0.22313016014842982,
+          "drop_pct": 77.68698398515703
+        },
+        {
+          "x": 5.0,
+          "ratio": 0.0820849986238988,
+          "drop_pct": 91.79150013761011
+        }
+      ],
+      "at_lam": 0.6065306597126334,
+      "at_phi": 0.4452955792080202
+    },
+    "origin": {
+      "rows": [
+        {
+          "r": 0.1,
+          "V": 9.048374180359595,
+          "lapV": 9.048374180359595
+        },
+        {
+          "r": 0.001,
+          "V": 999.000499833375,
+          "lapV": 999.000499833375
+        },
+        {
+          "r": 1e-06,
+          "V": 999999.0000005,
+          "lapV": 999999.0000005
+        },
+        {
+          "r": 1e-09,
+          "V": 999999999.0,
+          "lapV": 999999999.0
+        }
+      ],
+      "diverges": true
+    },
+    "pricing": {
+      "counts": {
+        "EMPTY": 15,
+        "SUICIDE": 1,
+        "SURVIVE": 0
+      },
+      "n_combos": 16
+    },
+    "evidence": {
+      "n_hit": 9,
+      "neg_ok": true
+    }
+  },
+  "counts": {
+    "PASS": 3,
+    "INFO": 3,
+    "FAIL": 7
+  },
+  "not_closed": [
+    "本卷**不重复** r223 已判各项（求导恒等、Bertrand 闭合性、Δω ∝ λ⁻²、λ_fit=957.9 AU 的多行星崩坏、方向 dim=1、无量纲同构 2/4），只作指针引用；两卷条目**不可相加**。",
+    "圆轨道稳定性判据 x < φ 是在**检验粒子、圆轨道、单体中心力**近似下导出的；未含偏心率的一般有界轨道稳定性（对 e>0 需另做 Floquet 分析）、行星间摄动与非球对称项。",
+    "λ > a/φ 的下界是**必要条件**（稳定圆轨道存在），不是充分条件；它不与 r223 的进动约束冲突，但也不足以救后者。",
+    "荷空间可加性为**结构层**判决：若靶后续给出统一荷映射（如把四种荷嵌入同一个表示的权向量），C1–C3 需重审。",
+    "「齐次性只在 r>0」是对**措辞**的判决，不是对计算结果的质疑：靶的 ∇²V = V/λ² 计算本身正确（本卷 A1 PASS）。",
+    "逃逸速度比值 e^{−r/2λ} 未被靶检验，属**未行使的判别力**（与 r218 同型），不是靶的算术错误。",
+    "可视化为示意：图 1 的纵坐标取绝对值并走对数，过零点在 x=φ 处表现为谷底。"
+  ]
+}

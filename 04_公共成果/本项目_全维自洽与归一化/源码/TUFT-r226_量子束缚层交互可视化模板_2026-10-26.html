@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>226 · 四力统一方程·量子束缚层（同一势的薛定谔谱与四力束缚判决）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;--gray:#7aa2f7;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#2a1240);border:1px solid #7c3aed;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#4c1d95;color:#ddd6fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h2{font-size:16.5px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .eq{background:#0d1730;border:1px solid #7c3aed;border-left:5px solid var(--green);border-radius:8px;
+      padding:12px 16px;margin:10px 0;font-family:Consolas,monospace;font-size:13.5px;color:#c4b5fd;
+      overflow-x:auto;white-space:pre;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0;font-size:12.5px;}
+  .btn{background:#14532d;color:#bbf7d0;border:1px solid #166534;border-radius:8px;padding:4px 14px;font-size:12.5px;cursor:pointer;font-family:inherit;}
+  .btn:hover{background:#166534;}
+  .btn.on{background:#6d28d9;color:#ede9fe;border-color:#5b21b6;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c4b5fd;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;min-height:20px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .card.bnd{border-color:#92400e;} .card.bnd b{color:var(--orange);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+  @media(max-width:600px){.banner h1{font-size:17px;}section{padding:14px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r226 · 承 r214（UFE-4F）+ r221（UFE-4F⁺）· 量子束缚层 · 零外部依赖</span>
+  <h1>四力统一方程·量子束缚层<br>同一个势写进薛定谔方程：四力束缚态判决与波函数</h1>
+  <p>经典层回答「力的大小/方向/距离」，量子层把同一个 UFE-4F⁺ 势代入 iħ∂ψ/∂t = Ĥψ，
+     升级为「束缚态存在性 / 谱 / 半径」三读数——氢原子解析锚定求解器，氘核/J/ψ/χc1/Υ 提供实验对拍。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h2><span class="n">§1</span>统一量子方程与求解链</h2>
+  <div class="eq">iħ ∂ψ/∂t = [ −ħ²/(2μ)·∇² + U(r) ] ψ ,   U(r) = UFE-4F⁺（r221 同一势）
+径向：u'' = [ (2μ/(ħc)²)(U−E) + l(l+1)/r² ] u      ← Numerov 六阶积分
+本征：扫描 E → u(∞) 变号定位 + 二分；节点数标定 n；解析锚点 = 氢原子 E_n = −Ry/n²</div>
+  <p>求解器可信度由四条解析锚钉死：E_n 逐位（G1）、⟨r⟩₁ₛ=1.5a₀（G2）、2s/2p 简并（G3）、
+     μ 偏 10% ⇒ 谱恰偏 10% 的**定量阴性对照**（G6）。</p>
+  <div class="note" id="methNote"></div>
+</section>
+
+<section>
+  <h2><span class="n">§2</span>波函数交互图（u(r) 与势 U(r) 叠画）</h2>
+  <div class="ctrl" id="wfBtns"></div>
+  <canvas id="cvW" width="1000" height="520"></canvas>
+  <div class="read" id="readW"></div>
+  <p class="note">蓝线 = 约化径向波函数 u(r)（峰值归一）；暗金线 = 势 U(r)（右轴，仅示形状）。
+     氢 1s/2s 用 a₀ 单位，氘核与偶素用 fm/MeV——同一套求解器跨 11 个数量级的尺度。</p>
+</section>
+
+<section>
+  <h2><span class="n">§3</span>四力能级梯图（束缚态存在性/谱/半径一览）</h2>
+  <canvas id="cvL" width="1000" height="560"></canvas>
+  <p class="note" id="ladderNote"></p>
+</section>
+
+<section>
+  <h2><span class="n">§4</span>束缚判据 g = α·λ·μ₁ vs 临界值（Yukawa 型道）</h2>
+  <canvas id="cvG" width="1000" height="380"></canvas>
+  <p class="note">g &gt; g_crit=1.6798 才有 l=0 束缚态。弱力 10 个数量级地不够；
+     r214 的 α=14.6 参数超标 30 倍（给几十个束缚态）；
+     拟合出的 α_y 贴着临界——氘核是"近临界束缚"这一事实被机器复现。</p>
+</section>
+
+<section>
+  <h2><span class="n">§5</span>实验对拍表（引擎铸数）</h2>
+  <table id="expTable"></table>
+  <p class="note" id="expNote"></p>
+</section>
+
+<section>
+  <h2><span class="n">§6</span>诚实边界（不粉饰）</h2>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R223_JSON__;
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">float64 数值谱 + 氢原子解析锚（声明口径）</span>`;
+  document.getElementById("methNote").textContent =
+    `氘核道：α_146=${R.readings.deuteron.alpha_146} ⇒ g=${R.readings.deuteron.g_146}（半经典态数≈${R.readings.deuteron.N_total_sc}、最内态标度 ${R.readings.deuteron.E_inner_GeV} GeV）；`+
+    `拟合 α_y=${R.readings.deuteron.alpha_y_fit} ⇒ ⟨r⟩=${R.readings.deuteron.r_fit_fm} fm vs 实验 ${R.readings.deuteron.r_exp_fm} fm；`+
+    `cc̄：α_s*=${R.readings.charmonium.alpha_s}，m_c=${R.readings.charmonium.m_c} MeV`;
+})();
+
+/* ---------- §2 波函数 ---------- */
+const cvW=document.getElementById("cvW"), ctxW=cvW.getContext("2d");
+let wfIdx=0;
+function drawW(){
+  const wf=R.readings.wavefunctions[wfIdx];
+  ctxW.clearRect(0,0,1000,520);
+  ctxW.fillStyle="#0d1730";ctxW.fillRect(0,0,1000,520);
+  const PL=58,PR=58,PT=14,PB=34;
+  const rmax=wf.r[wf.r.length-1];
+  const umax=Math.max(...wf.u.map(Math.abs))*1.15;
+  let vs=wf.v.filter(v=>isFinite(v));
+  let vmin=Math.min(...vs), vmax=Math.max(...vs);
+  const X=x=>PL+x/rmax*(1000-PL-PR);
+  const Yu=y=>PT+(1-(y/umax+1)/2)*(520-PT-PB);      // u 轴：±umax
+  const Yv=v=>PT+((v-vmin)/(vmax-vmin))*(520-PT-PB); // V 轴：满幅
+  ctxW.strokeStyle="#1f2b3f";ctxW.font="10px Consolas";ctxW.fillStyle="#94a3b8";
+  for(let i=0;i<=5;i++){const x=rmax*i/5;
+    ctxW.beginPath();ctxW.moveTo(X(x),PT);ctxW.lineTo(X(x),520-PB);ctxW.stroke();
+    ctxW.fillText(x.toPrecision(3),X(x)-8,520-PB+13);}
+  ctxW.fillText(`r [${wf.unit}]`,460,520-6);
+  // V overlay
+  ctxW.strokeStyle="rgba(212,169,78,0.55)";ctxW.lineWidth=1.4;ctxW.beginPath();let st=false;
+  for(let i=0;i<wf.r.length;i++){const v=wf.v[i];if(!isFinite(v)){st=false;continue;}
+    const y=Yv(v); if(y<PT||y>520-PB){st=false;continue;}
+    if(!st){ctxW.moveTo(X(wf.r[i]),y);st=true;}else ctxW.lineTo(X(wf.r[i]),y);}
+  ctxW.stroke();
+  // u 曲线
+  ctxW.strokeStyle="#63d2ff";ctxW.lineWidth=2;ctxW.beginPath();st=false;
+  for(let i=0;i<wf.r.length;i++){const y=Yu(wf.u[i]);
+    if(!st){ctxW.moveTo(X(wf.r[i]),y);st=true;}else ctxW.lineTo(X(wf.r[i]),y);}
+  ctxW.stroke();
+  // E 线
+  ctxW.strokeStyle="#4ade80";ctxW.setLineDash([5,4]);
+  const yE=PT+0.78*(520-PT-PB);
+  ctxW.beginPath();ctxW.moveTo(PL,yE);ctxW.lineTo(1000-PR,yE);ctxW.stroke();ctxW.setLineDash([]);
+  ctxW.fillStyle="#4ade80";ctxW.fillText(`E = ${wf.E_mark} ${wf.E_unit}`,PL+6,yE-5);
+  ctxW.fillStyle="#d4a94e";ctxW.fillText("U(r)（右形）",1000-PR-86,PT+12);
+  ctxW.fillStyle="#63d2ff";ctxW.fillText("u(r)",PL+6,PT+12);
+  document.getElementById("readW").textContent=
+    `${wf.name}  ·  E = ${wf.E_mark} ${wf.E_unit}  ·  r 轴 0–${rmax.toPrecision(3)} ${wf.unit}`;
+}
+(function(){
+  const box=document.getElementById("wfBtns");
+  R.readings.wavefunctions.forEach((wf,i)=>{
+    const b=document.createElement("button");
+    b.className="btn"+(i===0?" on":"");b.textContent=wf.name.split("（")[0];
+    b.addEventListener("click",()=>{document.querySelectorAll("#wfBtns .btn").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");wfIdx=i;drawW();});
+    box.appendChild(b);});
+  cvW.addEventListener("mousemove",e=>{
+    const rect=cvW.getBoundingClientRect();
+    const px=(e.clientX-rect.left)*(1000/rect.width);
+    const wf=R.readings.wavefunctions[wfIdx];
+    const rmax=wf.r[wf.r.length-1];
+    const x=(px-58)/(1000-58-58)*rmax;
+    if(x<0||x>rmax)return;
+    let i=0;while(i<wf.r.length-1&&wf.r[i]<x)i++;
+    document.getElementById("readW").textContent=
+      `r=${wf.r[i].toPrecision(4)} ${wf.unit}   u/u_max=${wf.u[i].toFixed(4)}   U=${wf.v[i]} （${wf.name}）`;});
+  drawW();
+})();
+
+/* ---------- §3 能级梯图 ---------- */
+const cvL=document.getElementById("cvL"), ctxL=cvL.getContext("2d");
+(function(){
+  ctxL.clearRect(0,0,1000,560);ctxL.fillStyle="#0d1730";ctxL.fillRect(0,0,1000,560);
+  const cols=[
+    {title:"电磁（氢）", unit:"eV", color:"#63d2ff",
+     levels:[[R.readings.hydrogen.E1s_eV,"1s"],[R.readings.hydrogen.E2s_eV,"2s"],[R.readings.hydrogen.E3s_eV,"3s"]],
+     scale:[-14.5,0.3], x0:70, x1:250, note:"⟨r⟩₁s=1.5a₀"},
+    {title:"氘核道", unit:"MeV", color:"#4ade80",
+     levels:[[-2.2246,"拟合态（αy）"]], scale:[-3.2,0.3], x0:300, x1:480,
+     note:"纯α=14.6：≈"+R.readings.deuteron.N_total_sc+" 态 → FAIL"},
+    {title:"色道 cc̄", unit:"MeV", color:"#bb9af7",
+     levels:[[3096.900,"J/ψ 1S"],[3096.900+R.readings.charmonium.pwave,"χc1 预言"],[3686.097,"ψ(2S)"]],
+     scale:[3050,3760], x0:530, x1:710, note:"α_s*="+R.readings.charmonium.alpha_s},
+    {title:"弱 / 引力", unit:"—", color:"#f7768e",
+     levels:[], scale:[-1,1], x0:760, x1:940,
+     note:"弱：无束缚态（g=1e−10）\n引力：r~1e32 m > 宇宙"},
+  ];
+  ctxL.font="11px Consolas";
+  cols.forEach(c=>{
+    ctxL.fillStyle="#e2e8f0";ctxL.font="bold 12px sans-serif";
+    ctxL.fillText(c.title,(c.x0+c.x1)/2-30,26);ctxL.font="11px Consolas";
+    ctxL.strokeStyle="#1f2b3f";
+    ctxL.strokeRect(c.x0,40,c.x1-c.x0,440);
+    const Y=v=>40+(c.scale[1]-v)/(c.scale[1]-c.scale[0])*440;
+    c.levels.forEach(lv=>{
+      const y=Math.max(45,Math.min(475,Y(lv[0])));
+      ctxL.strokeStyle=c.color;ctxL.lineWidth=2.5;
+      ctxL.beginPath();ctxL.moveTo(c.x0+8,y);ctxL.lineTo(c.x1-8,y);ctxL.stroke();
+      ctxL.fillStyle="#cbd5e1";
+      ctxL.fillText(`${lv[1]} ${lv[0].toPrecision(6)} ${c.unit}`,c.x0+10,y-5);});
+    ctxL.fillStyle="#94a3b8";ctxL.font="10px Consolas";
+    c.note.split("\n").forEach((t,i)=>ctxL.fillText(t,c.x0+6,500+i*13));
+  });
+  document.getElementById("ladderNote").textContent=
+    "氢：束缚态无穷序列（−13.6/n² eV）；氘核道：自然界恰 1 个束缚态，r214 参数给 ≈"+
+    R.readings.deuteron.N_total_sc+" 个 ⇒ 量子层 FAIL；cc̄：Cornell 谱 1S/1P/2S（1P 为预言）；"+
+    "弱：无谱；引力：只存在宇宙尺度的『引力氢原子』";
+})();
+
+/* ---------- §4 g 判据图 ---------- */
+const cvG=document.getElementById("cvG"), ctxG=cvG.getContext("2d");
+(function(){
+  ctxG.clearRect(0,0,1000,380);ctxG.fillStyle="#0d1730";ctxG.fillRect(0,0,1000,380);
+  const bars=[
+    {n:"弱 α_W·λ_W·μ₁", lg:parseFloat(R.readings.g_bars.weak), c:"#bb9af7"},
+    {n:"氘核拟合 α_y",  lg:parseFloat(R.readings.g_bars.deuteron_fit), c:"#4ade80"},
+    {n:"r214 α=14.6",   lg:parseFloat(R.readings.g_bars.pion_146), c:"#f7768e"},
+  ];
+  const crit=parseFloat(R.readings.g_bars.g_crit);
+  const L0=-11,R1=2.4,PL=170,PR=60;
+  const X=v=>PL+(v-L0)/(R1-L0)*(1000-PL-PR);
+  ctxG.strokeStyle="#1f2b3f";ctxG.font="10px Consolas";ctxG.fillStyle="#94a3b8";
+  for(let v=-11;v<=2;v++){ctxG.beginPath();ctxG.moveTo(X(v),18);ctxG.lineTo(X(v),310);ctxG.stroke();
+    ctxG.fillText("1e"+v,X(v)-10,330);}
+  // g_crit 线
+  ctxG.strokeStyle="#fbbf24";ctxG.setLineDash([6,4]);ctxG.lineWidth=2;
+  ctxG.beginPath();ctxG.moveTo(X(crit),18);ctxG.lineTo(X(crit),310);ctxG.stroke();ctxG.setLineDash([]);
+  ctxG.fillStyle="#fbbf24";ctxG.fillText("g_crit=1.6798",X(crit)+5,30);
+  bars.forEach((b,i)=>{
+    const y=60+i*72;
+    ctxG.fillStyle=b.c;ctxG.fillRect(X(L0),y,X(Math.min(b.lg,R1))-X(L0),26);
+    ctxG.fillStyle="#cbd5e1";ctxG.font="11px Consolas";
+    ctxG.fillText(`${b.n} : g=10^${b.lg.toFixed(2)}`,8,y+17);});
+  ctxG.fillStyle="#f87171";ctxG.font="11px Consolas";
+  ctxG.fillText("α=14.6 给 g≈50.8 ⇒ ≈16 个束缚态 vs 自然界 1 个 ⇒ Q02 FAIL",8,352);
+})();
+
+/* ---------- §5 对拍表 ---------- */
+(function(){
+  const d=R.readings.deuteron,ch=R.readings.charmonium,bt=R.readings.bottomonium;
+  const rows=[
+    ["氢 1s", R.readings.hydrogen.E1s_eV+" eV", "−13.605693 eV", "解析精确（求解器锚）"],
+    ["氘核 E_B（αy 拟合）", "−2.2246 MeV", "−2.2246 MeV", "拟合目标（按构造命中）"],
+    ["氘核 ⟨r⟩（预言）", d.r_fit_fm+" fm", "1.975 fm", "错配 "+d.misfit+"× ⇒ 需排斥芯"],
+    ["J/ψ 1S–2S", ch.split_1S2S+" MeV", "589.197 MeV", "α_s* 校准目标"],
+    ["χc1（1P）预言", ch.pwave+" MeV", ch.exp_chi1+" MeV", "交叉预言（BOUNDARY）"],
+    ["Υ(2S) 分裂预言", bt.split_pred+" MeV", bt.exp_split+" MeV", "同一 α_s* 跨族（rel "+(bt.rel*100).toFixed(1)+"%）"],
+    ["弱束缚态", "0 个（g=10^"+R.readings.g_bars.weak+"）", "—", "判据+扫描两路确认"],
+  ];
+  let html="<tr><th>量</th><th>本卷数值</th><th>实验/解析</th><th>备注</th></tr>";
+  rows.forEach(r=>{html+=`<tr><td>${r[0]}</td><td class="mono">${r[1]}</td><td class="mono">${r[2]}</td><td>${r[3]}</td></tr>`;});
+  document.getElementById("expTable").innerHTML=html;
+  document.getElementById("expNote").textContent=
+    "⟨r⟩(J/ψ 1S) = "+ch.r1S_fm+" fm（晶格典型 ~0.4–0.5 fm，量级一致，本卷未引入晶格数据）";
+})();
+
+/* ---------- §6 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"Q02 FAIL",b:"r214 剩余核力参数（α=14.6）在量子层失效：g=50.8 ⇒ ≈16 个束缚态、最内态标度 −50 GeV——14.6 是 NNπ 耦合常数，不是中心势 α。"},
+    {cls:"bnd",t:"Q03 BOUNDARY",b:"单参数 α_y 能凑结合能（氘核是近临界束缚）但 ⟨r⟩ 错配 ~2×：核力必须有排斥芯+张量力，半径观测量定价出局。"},
+    {cls:"bnd",t:"势模型口径",b:"cc̄/bb̄ 是势模型（Cornell + 非相对论薛定谔），非格点 QCD：α_s* 是有效电荷，1P/Υ 偏差如实登记。"},
+    {cls:"bnd",t:"U30 继承",b:"动力学不统一 FAIL 不翻案：量子层零新增第一性输入（Q10），每个唯象标定件换来至少一个未参与标定的预言。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r223 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64 数值谱 + 解析锚）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

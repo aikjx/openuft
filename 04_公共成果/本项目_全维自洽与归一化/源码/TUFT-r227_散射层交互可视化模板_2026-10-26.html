@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>227 · 四力统一方程·散射层（力定律的动量空间镜像 + 全方法总账）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;--gray:#7aa2f7;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#3a1a0a);border:1px solid #b45309;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#7c2d12;color:#fed7aa;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h2{font-size:16.5px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .eq{background:#0d1730;border:1px solid #b45309;border-left:5px solid var(--green);border-radius:8px;
+      padding:12px 16px;margin:10px 0;font-family:Consolas,monospace;font-size:13.5px;color:#fcd34d;
+      overflow-x:auto;white-space:pre;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0;font-size:12.5px;color:#cbd5e1;}
+  .ctrl input[type=range]{width:220px;accent-color:#4ade80;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#fcd34d;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;min-height:20px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .card.bnd{border-color:#92400e;} .card.bnd b{color:var(--orange);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+  @media(max-width:600px){.banner h1{font-size:17px;}section{padding:14px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r227 · 承 r214（UFE-4F）+ r221（UFE-4F⁺）+ r226（量子束缚层）· 散射层 · 零外部依赖</span>
+  <h1>四力统一方程·散射层<br>力定律的动量空间镜像 + 全方法总账（r214–r226 十一轮）</h1>
+  <p>历史上「力的大小/方向/距离」正是在散射中被测出（卢瑟福发现原子核、G_F 定标）。
+     同一个 UFE-4F⁺ 势的两条散射管线——经典轨道 RK4 与量子 Born 振荡积分——
+     都由解析式（csc⁴ 与传播子 1/(q²+m²)）逐位钉死。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h2><span class="n">§1</span>承重式：一个势，两条散射管线，一个截面</h2>
+  <div class="eq">经典：m·d²r/dt² = Σᵢ Fᵢ(r)   →   θ(b)   →   dσ/dΩ = b/sinθ·|db/dθ|
+量子：f(q) = −(2μ/(ħc)²q)·∫V(r)·sin(qr)·r·dr   →   dσ/dΩ = |f(q)|²，q = 2k·sin(θ/2)
+库仑：两条管线同给 (A/4E)²·csc⁴(θ/2)   ← 著名的经典=量子巧合（本卷机器复现）
+Yukawa：f ∝ 1/(q²+m²)，m = 1/λ   ← 「距离特性」在动量空间 = 传播子质量</div>
+  <p class="note" id="methNote"></p>
+</section>
+
+<section>
+  <h2><span class="n">§2</span>散射沙盒：拖动瞄准参数 b，看同一个方程如何偏转</h2>
+  <div class="ctrl">
+    <label>b = <span id="bV">1.00</span> fm<input type="range" id="bSlider" min="-1.3" max="2.18" step="0.01" value="0"></label>
+    <span class="read" style="min-height:0;padding:4px 10px;margin:0">pp，E=5 MeV（c.m.），A = α·ħc = 1.440 MeV·fm</span>
+  </div>
+  <canvas id="cvT" width="1000" height="500"></canvas>
+  <div class="read" id="readT"></div>
+  <p class="note">蓝线 = RK4 直积分轨迹（与引擎同一组方程，浏览器实时复算）；绿点 = 解析 θ；
+     拖动 b 从 0.05 fm 到 150 fm，θ 从 141° 扫到 0.1°——力定律的距离特性写在这一条曲线上。</p>
+</section>
+
+<section>
+  <h2><span class="n">§3</span>θ(b) 与 dσ/dΩ：数值 vs 解析（引擎铸数）</h2>
+  <canvas id="cvTh" width="1000" height="460"></canvas>
+  <p class="note" id="thNote"></p>
+</section>
+
+<section>
+  <h2><span class="n">§4</span>形状因子：距离特性在动量空间的镜子（本卷核心图）</h2>
+  <div class="legend" style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;">
+    <span><span class="sw" style="display:inline-block;width:18px;height:4px;background:#e0af68;border-radius:2px;vertical-align:middle"></span>库仑 1/q²（λ→∞）</span>
+    <span><span class="sw" style="display:inline-block;width:18px;height:4px;background:#f7768e;border-radius:2px;vertical-align:middle"></span>π-Yukawa（λ_π=1.46 fm ⇒ m=0.684 fm⁻¹）</span>
+    <span><span class="sw" style="display:inline-block;width:18px;height:4px;background:#bb9af7;border-radius:2px;vertical-align:middle"></span>弱 W（λ_W=2.46e−3 fm ⇒ m=407 fm⁻¹）</span>
+  </div>
+  <canvas id="cvF" width="1000" height="520"></canvas>
+  <p class="note">三条竖线 = 各力的 1/λ（动量空间"质量"）。每个力的距离特性在 q-轴上就是
+     「平台 → 拐折 → 1/q² 下落」的拐折位置：λ 越短，拐折越靠右。弱力的拐折在 q≈407 fm⁻¹——
+     任何实验都够不着 ⇒ 弱力在一切可达 q 上表现为接触作用（各向同性），这就是 R04 的负读数。</p>
+</section>
+
+<section>
+  <h2><span class="n">§5</span>全方法总账：十一种方法对同一诉求的判决</h2>
+  <table id="invTable"></table>
+  <p class="note">十一种方法各自闭合、互不共享代码；共同判决：形式统一逐层成立（静态中心力 → 禁闭+通道门 →
+     传播色散 → 轨道进动 → 量子束缚谱 → 散射镜像），动力学统一逐层 FAIL（四个 α + λ + σ 是独立输入，供给 0）。</p>
+</section>
+
+<section>
+  <h2><span class="n">§6</span>诚实边界（不粉饰）</h2>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R227_JSON__;
+const MU = 469.136, A_EM = 1.4400, EK = 5.0;
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">全方法总账 <b>${R.readings.inventory.length}</b> 轮点名</span>`;
+  document.getElementById("methNote").textContent =
+    `η（Born 参数）= 2μAλ/(ħc)²：α=14.6 ⇒ ${R.readings.eta["146"]}（微扰失效，与 r226 谱层 g 同数字）；`+
+    `α_y=0.349 ⇒ ${R.readings.eta.fit}（近临界）；弱接触系数比（Yukawa/Fermi 口径）= ${R.readings.weak_contact.ratio}`;
+})();
+
+/* ---------- §2 散射沙盒 ---------- */
+const cvT=document.getElementById("cvT"), ctxT=cvT.getContext("2d");
+function acc(x,y){
+  const r=Math.hypot(x,y); if(r===0)return[0,0];
+  const f=A_EM/(r*r); return [f*x/r/MU,f*y/r/MU];   // pp：同号排斥；a = F/μ
+}
+function traj(b){
+  const v0=Math.sqrt(2*EK/MU), L=60*Math.max(b,10), N=6000, dt=2*L/v0/N;
+  let x=-L,y=b,vx=v0,vy=0;
+  const pts=[[x,y]];
+  for(let i=0;i<N;i++){
+    const a1=acc(x,y);
+    const x2=x+vx*dt/2,y2=y+vy*dt/2,v2x=vx+a1[0]*dt/2,v2y=vy+a1[1]*dt/2;
+    const a2=acc(x2,y2);
+    const x3=x+v2x*dt/2,y3=y+v2y*dt/2,v3x=vx+a2[0]*dt/2,v3y=vy+a2[1]*dt/2;
+    const a3=acc(x3,y3);
+    const x4=x+v3x*dt,y4=y+v3y*dt,v4x=vx+a3[0]*dt,v4y=vy+a3[1]*dt;
+    const a4=acc(x4,y4);
+    x+=dt*(vx+2*v2x+2*v3x+v4x)/6; y+=dt*(vy+2*v2y+2*v3y+v4y)/6;
+    vx+=dt*(a1[0]+2*a2[0]+2*a3[0]+a4[0])/6; vy+=dt*(a1[1]+2*a2[1]+2*a3[1]+a4[1])/6;
+    pts.push([x,y]);
+  }
+  const th=Math.abs(Math.atan2(vy,vx));
+  const tha=2*Math.atan2(A_EM,2*EK*b);
+  return {pts,th,tha};
+}
+function drawT(b){
+  const {pts,th,tha}=traj(b);
+  ctxT.clearRect(0,0,1000,500);
+  ctxT.fillStyle="#0d1730";ctxT.fillRect(0,0,1000,500);
+  let xmin=Infinity,xmax=-Infinity,ymin=Infinity,ymax=-Infinity;
+  pts.forEach(p=>{xmin=Math.min(xmin,p[0]);xmax=Math.max(xmax,p[0]);ymin=Math.min(ymin,p[1]);ymax=Math.max(ymax,p[1]);});
+  const pad=Math.max(b*0.3,5);
+  xmin-=pad;xmax+=pad;ymin-=pad;ymax+=pad;
+  const sc=Math.min(940/(xmax-xmin),440/(ymax-ymin));
+  const X=x=>30+(x-xmin)*sc, Y=y=>470-(y-ymin)*sc;
+  ctxT.strokeStyle="#1f2b3f";ctxT.font="10px Consolas";ctxT.fillStyle="#64748b";
+  for(let gx=Math.ceil(xmin/50)*50;gx<=xmax;gx+=50){ctxT.beginPath();ctxT.moveTo(X(gx),20);ctxT.lineTo(X(gx),480);ctxT.stroke();
+    if(gx!==0)ctxT.fillText(String(gx),X(gx)-6,494);}
+  ctxT.beginPath();ctxT.moveTo(X(xmin),Y(0));ctxT.lineTo(X(xmax),Y(0));ctxT.strokeStyle="#475569";ctxT.stroke();
+  ctxT.strokeStyle="#63d2ff";ctxT.lineWidth=1.6;ctxT.beginPath();
+  pts.forEach((p,i)=>{i?ctxT.lineTo(X(p[0]),Y(p[1])):ctxT.moveTo(X(p[0]),Y(p[1]));});
+  ctxT.stroke();
+  ctxT.fillStyle="#fbbf24";ctxT.beginPath();ctxT.arc(X(0),Y(0),4,0,7);ctxT.fill();
+  ctxT.fillStyle="#4ade80";ctxT.beginPath();ctxT.arc(X(pts[pts.length-1][0]),Y(pts[pts.length-1][1]),5,0,7);ctxT.fill();
+  document.getElementById("readT").textContent=
+    `b=${b.toFixed(3)} fm   θ(数值)=${(th*180/Math.PI).toFixed(4)}°   θ(卢瑟福解析)=${(tha*180/Math.PI).toFixed(4)}°   `+
+    `rel=${(Math.abs(th-tha)/tha).toExponential(2)}`;
+}
+const bSlider=document.getElementById("bSlider");
+bSlider.addEventListener("input",e=>{
+  const b=Math.pow(10,parseFloat(e.target.value));
+  document.getElementById("bV").textContent=b<1?b.toFixed(3):b.toFixed(2);
+  drawT(b);});
+document.getElementById("bV").textContent="1.00";
+drawT(1.0);
+
+/* ---------- §3 θ(b) 曲线 ---------- */
+const cvTh=document.getElementById("cvTh"), ctxTh=cvTh.getContext("2d");
+(function(){
+  const tb=R.readings.theta_b;
+  ctxTh.clearRect(0,0,1000,460);ctxTh.fillStyle="#0d1730";ctxTh.fillRect(0,0,1000,460);
+  const PL=58,PR=16,PT=14,PB=36;
+  const lx=b=>PL+(Math.log10(b)+1.3)/(2.6+1.3)*(1000-PL-PR);
+  const ly=t=>PT+(1-t/145)*(460-PT-PB);
+  ctxTh.strokeStyle="#1f2b3f";ctxTh.font="10px Consolas";ctxTh.fillStyle="#94a3b8";
+  [-1,0,1,2].forEach(v=>{const x=lx(Math.pow(10,v));ctxTh.beginPath();ctxT;ctxTh.moveTo(x,PT);ctxTh.lineTo(x,460-PB);ctxTh.stroke();
+    ctxTh.fillText("1e"+v,x-6,460-PB+13);});
+  [0,35,70,105,140].forEach(t=>{ctxTh.beginPath();ctxTh.moveTo(PL,ly(t));ctxTh.lineTo(1000-PR,ly(t));ctxTh.stroke();
+    ctxTh.fillText(t+"°",10,ly(t)+3);});
+  function curve(arr,color,dash){
+    ctxTh.strokeStyle=color;ctxTh.lineWidth=1.8;if(dash)ctxTh.setLineDash([5,4]);
+    ctxTh.beginPath();let st=false;
+    for(let i=0;i<arr.length;i++){
+      const x=lx(tb.b[i]),y=ly(arr[i]);
+      if(!st){ctxTh.moveTo(x,y);st=true;}else ctxTh.lineTo(x,y);}
+    ctxTh.stroke();ctxTh.setLineDash([]);}
+  curve(tb.ana,"#e0af68",true);
+  curve(tb.num,"#63d2ff",false);
+  const g1=R.guards.find(g=>g.id==="G1"), g3=R.guards.find(g=>g.id==="G3");
+  document.getElementById("thNote").textContent=
+    `24 个 b 跨 3.5 个量级，θ 3°–141°：max rel = ${g1.numbers.max_rel}（G1）；dσ/dΩ 数值（b/sinθ·|db/dθ|）对 csc⁴ 的 max rel = ${g3.numbers.max_rel}（G3）；`+
+    `标度律 dσ∝A²、∝1/E² 精确成立（G4）`;
+})();
+
+/* ---------- §4 形状因子 ---------- */
+const cvF=document.getElementById("cvF"), ctxF=cvF.getContext("2d");
+(function(){
+  const ff=R.readings.formfactor, lm=R.readings.lam_marks;
+  ctxF.clearRect(0,0,1000,520);ctxF.fillStyle="#0d1730";ctxF.fillRect(0,0,1000,520);
+  const L0=-2,R1=4, Y0=-6,Y1=9;
+  const PL=58,PR=16,PT=14,PB=36;
+  const X=q=>PL+(Math.log10(q)-L0)/(R1-L0)*(1000-PL-PR);
+  const Y=v=>PT+(Y1-Math.log10(Math.max(v,1e-7)))/(Y1-Y0)*(520-PT-PB);
+  ctxF.strokeStyle="#1f2b3f";ctxF.font="10px Consolas";ctxF.fillStyle="#94a3b8";
+  for(let v=L0;v<=R1;v++){ctxF.beginPath();ctxF.moveTo(X(Math.pow(10,v)),PT);ctxF.lineTo(X(Math.pow(10,v)),520-PB);ctxF.stroke();
+    ctxF.fillText("1e"+v,X(Math.pow(10,v))-8,520-PB+13);}
+  for(let y=Y0;y<=Y1;y+=3){ctxF.beginPath();ctxF.moveTo(PL,Y(Math.pow(10,y)));ctxF.lineTo(1000-PR,Y(Math.pow(10,y)));ctxF.stroke();
+    ctxF.fillText("1e"+y,8,Y(Math.pow(10,y))+3);}
+  function curve(key,color){
+    ctxF.strokeStyle=color;ctxF.lineWidth=1.8;ctxF.beginPath();let st=false;
+    for(let i=0;i<ff.q.length;i++){
+      const x=X(ff.q[i]),y=Y(ff[key][i]);
+      if(!isFinite(y)){st=false;continue;}
+      if(!st){ctxF.moveTo(x,y);st=true;}else ctxF.lineTo(x,y);}
+    ctxF.stroke();}
+  curve("coulomb","#e0af68");curve("pion","#f7768e");curve("weak","#bb9af7");
+  [[lm.pion,"#f7768e","1/λ_π"],[lm.weak,"#bb9af7","1/λ_W"]].forEach(m=>{
+    const x=X(m[0]);ctxF.strokeStyle=m[1];ctxF.setLineDash([4,4]);
+    ctxF.beginPath();ctxF.moveTo(x,PT);ctxF.lineTo(x,520-PB);ctxF.stroke();ctxF.setLineDash([]);
+    ctxF.fillStyle=m[1];ctxF.fillText(m[2],x+3,PT+10);});
+  ctxF.fillStyle="#94a3b8";ctxF.fillText("log₁₀ q [fm⁻¹]",440,520-8);
+  ctxF.save();ctxF.translate(12,270);ctxF.rotate(-Math.PI/2);ctxF.fillText("log₁₀ |f(q)| [×1e-3 fm]",-60,0);ctxF.restore();
+})();
+
+/* ---------- §5 方法总账 ---------- */
+(function(){
+  let html="<tr><th>卷</th><th>方法</th><th>对该诉求的判决</th></tr>";
+  R.readings.inventory.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;});
+  document.getElementById("invTable").innerHTML=html;
+})();
+
+/* ---------- §6 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"R05 FAIL",b:"散射层微扰对 α=14.6 失效：η=101.5≈g（r226 谱层同数字）——两种独立方法、同一个无量纲数定罪『α 是耦合常数不是势强度』。"},
+    {cls:"bnd",t:"R06 BOUNDARY",b:"色道散射不可定义：禁闭 ⇒ 孤立色荷无渐近态；QCD 散射定义于色单态道，超出单粒子中心势框架。"},
+    {cls:"bnd",t:"R07 BOUNDARY",b:"弱接触系数口径账：4πα_W ħc λ_W² 与 G_F(ħc)³/√2 比 "+R.readings.weak_contact.ratio+"——α_W=G_F m_p² 已内含 1/m_W²，两口径不可混用。"},
+    {cls:"bnd",t:"B1 库仑长程",b:"Born 积分发散需屏蔽正则化（Yukawa λ→∞ 承担）；经典 θ(b) 无此问题。"},
+    {cls:"bnd",t:"U30 继承",b:"动力学统一 FAIL 不翻案：散射层零新增第一性输入；形式统一在第四层（散射）同样成立。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r227 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

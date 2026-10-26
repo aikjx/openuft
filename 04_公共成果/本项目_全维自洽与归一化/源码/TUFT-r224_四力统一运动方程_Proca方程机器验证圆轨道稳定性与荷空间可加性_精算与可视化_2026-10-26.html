@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>TUFT-r224 · 四力统一运动方程（第二推进轮）</title>
+<style>
+body{font-family:"Microsoft YaHei",system-ui,sans-serif;margin:24px;color:#222;background:#fff;line-height:1.7}
+h1{font-size:20px;border-bottom:2px solid #c0392b;padding-bottom:8px}
+h2{font-size:16px;margin-top:26px;color:#2d6ea8}
+.chart{width:100%;max-width:640px;border:1px solid #ddd;background:#fafafa;margin:8px 0}
+.tt{font-size:12px;fill:#333}.tk{font-size:11px;fill:#444}.ax{font-size:11px;fill:#444}
+table{border-collapse:collapse;font-size:13px;margin:10px 0}
+td,th{border:1px solid #ccc;padding:5px 9px;text-align:right}th{background:#f0f0f0}
+code{background:#f4f4f4;padding:1px 4px;border-radius:3px}
+.note{background:#fff8e6;border-left:3px solid #e6a23c;padding:8px 12px;margin:10px 0;font-size:13px}
+</style></head><body>
+<h1>TUFT-r224 · 四力统一运动方程（第二推进轮）：Proca 机验 · 圆轨道稳定性 · 荷空间可加性</h1>
+<div class="note"><b>命题</b>：继续「把所有力写进一个运动方程」——本轮在 r223 之上再推进三层：
+<b>①Proca/Yukawa 场方程的机器验证</b>；<b>②圆轨道稳定性（解析判据）</b>；<b>③荷空间可加性</b>。</div>
+
+<h2>① Proca/Yukawa 场方程：机器验证 <span style="color:#2d6ea8">通过</span></h2>
+<p>自写精确微分引擎走「×r² → d/dr → ÷r²」：<code>∇²V = K e^{−r/λ}/(r λ²) = V/λ²</code>
+⇒ <code>∇²V − V/λ² = 0</code>，<b>残差机器为 0</b>。线性势复算 <code>(∇²−1/λ²)(σr) = σ(2/r − r/λ²) ≠ 0</code>
+⇒ 禁闭项确被排除（靶此处诚实）。<b>但对靶有利的两条都要配一条限制</b>：
+「齐次」只在 r&gt;0 成立，而该方程正被用于定义<b>点粒子之间的力</b>（r→0 处有 δ 源）。</p>
+
+<h2>② 圆轨道稳定性：解析判据（本卷核心）</h2>
+<p>有效势 <code>U(r) = −μ e^{−r/λ}/r + h²/(2r²)</code>；圆轨道条件 U′=0 ⇒
+<code>h² = μ e^{−x}(r²/λ + r)</code>，代回二阶导得闭式</p>
+<p><code>U″(r_c) = (μ e^{−x} / r_c³) · (−x² + x + 1)</code>　，　<code>x ≡ r_c/λ</code></p>
+<div class="note"><b>稳定 ⟺ −x² + x + 1 &gt; 0 ⟺ x &lt; φ = (1+√5)/2 = 1.6180339887（黄金比）</b>。
+数值复核：闭式与直接二阶导在 8 个点上相对差 ≤ 6.135e-12，二分变号点 1.6180339887 与 φ 相对差 5.489e-16。</div>
+<svg viewBox="0 0 620 300" class="chart"><rect x="54" y="20" width="546" height="216" fill="none" stroke="#bbb"/><polyline points="54.00,118.17 60.91,116.50 67.82,115.05 74.73,113.79 81.65,112.72 88.56,111.82 95.47,111.08 102.38,110.49 109.29,110.05 116.20,109.75 123.11,109.59 130.03,109.57 136.94,109.68 143.85,109.94 150.76,110.33 157.67,110.87 164.58,111.56 171.49,112.40 178.41,113.41 185.32,114.61 192.23,115.99 199.14,117.59 206.05,119.42 212.96,121.52 219.87,123.92 226.78,126.67 233.70,129.83 240.61,133.49 247.52,137.76 254.43,142.81 261.34,148.89 268.25,156.41 275.16,166.08 282.08,179.34 288.99,199.92 295.90,244.84 302.81,246.00 309.72,198.03 316.63,175.48 323.54,160.40 330.46,148.95 337.37,139.67 344.28,131.84 351.19,125.03 358.10,119.00 365.01,113.57 371.92,108.62 378.84,104.07 385.75,99.86 392.66,95.93 399.57,92.24 406.48,88.76 413.39,85.47 420.30,82.35 427.22,79.37 434.13,76.53 441.04,73.81 447.95,71.20 454.86,68.68 461.77,66.26 468.68,63.92 475.59,61.67 482.51,59.48 489.42,57.36 496.33,55.31 503.24,53.31 510.15,51.37 517.06,49.48 523.97,47.64 530.89,45.85 537.80,44.10 544.71,42.39 551.62,40.72 558.53,39.09 565.44,37.50 572.35,35.93 579.27,34.41 586.18,32.91 593.09,31.44 600.00,30.00" fill="none" stroke="#c0392b" stroke-width="2"/><text x="54.00" y="262" class="tk" text-anchor="middle">0.02</text><text x="190.50" y="262" class="tk" text-anchor="middle">0.909</text><text x="327.00" y="262" class="tk" text-anchor="middle">1.8</text><text x="463.50" y="262" class="tk" text-anchor="middle">2.69</text><text x="600.00" y="262" class="tk" text-anchor="middle">3.57</text><text x="48" y="250.00" class="tk" text-anchor="end">4.96e-02</text><text x="48" y="196.00" class="tk" text-anchor="end">1.78e-01</text><text x="48" y="142.00" class="tk" text-anchor="end">6.38e-01</text><text x="48" y="88.00" class="tk" text-anchor="end">2.29e+00</text><text x="48" y="34.00" class="tk" text-anchor="end">8.21e+00</text><text x="10" y="14" class="tt">图1 · 圆轨道稳定性因子 |−x²+x+1|（x=φ 处过零）</text><text x="327.0" y="292" class="ax" text-anchor="middle">x = r_c / λ</text></svg>
+<h3>太阳系硬约束：λ &gt; a/φ</h3>
+<table><tr><th>行星</th><th>a (AU)</th><th>λ 下界 (AU)</th></tr>
+<tr><td>Mercury</td><td>0.387</td><td>0.239</td></tr><tr><td>Venus</td><td>0.723</td><td>0.447</td></tr><tr><td>Earth</td><td>1.000</td><td>0.618</td></tr><tr><td>Mars</td><td>1.524</td><td>0.942</td></tr><tr><td>Jupiter</td><td>5.204</td><td>3.216</td></tr><tr><td>Saturn</td><td>9.583</td><td>5.922</td></tr><tr><td>Uranus</td><td>19.201</td><td>11.867</td></tr><tr><td>Neptune</td><td>30.104</td><td>18.605</td></tr>
+</table>
+<svg viewBox="0 0 620 300" class="chart"><rect x="54" y="20" width="546" height="216" fill="none" stroke="#bbb"/><polyline points="54.00,246.00 60.18,243.56 65.26,241.55 74.88,237.74 142.51,210.99 222.95,179.16 399.68,109.25 600.00,30.00" fill="none" stroke="#2d6ea8" stroke-width="2"/><text x="54.00" y="262" class="tk" text-anchor="middle">0.387</text><text x="190.50" y="262" class="tk" text-anchor="middle">7.82</text><text x="327.00" y="262" class="tk" text-anchor="middle">15.2</text><text x="463.50" y="262" class="tk" text-anchor="middle">22.7</text><text x="600.00" y="262" class="tk" text-anchor="middle">30.1</text><text x="48" y="250.00" class="tk" text-anchor="end">0.239</text><text x="48" y="196.00" class="tk" text-anchor="end">4.83</text><text x="48" y="142.00" class="tk" text-anchor="end">9.42</text><text x="48" y="88.00" class="tk" text-anchor="end">14</text><text x="48" y="34.00" class="tk" text-anchor="end">18.6</text><text x="10" y="14" class="tt">图2 · 各行星稳定圆轨道所要求的 λ 下界 (AU) = a/φ</text><text x="327.0" y="292" class="ax" text-anchor="middle">半长轴 a (AU)</text></svg>
+<div class="note"><b>与 r223 合起来看</b>：稳定性只排除 λ ≲ <b>18.6 AU</b>（海王星），
+而 r223 的 λ_fit ≈ <b>957.9 AU</b> 满足稳定性却与金星/地球/火星进动冲突
+<b>6.96× / 18.4× / 64.1×</b> ⇒ 两条约束把 Yukawa 引力夹成
+<b>「要么无稳定轨道，要么与多行星进动冲突」</b>，无可行区间。</div>
+
+<h2>③ 荷空间可加性：判决项</h2>
+<svg viewBox="0 0 620 260" class="chart"><rect x="20" y="40" width="26" height="26" fill="#c0392b"/><text x="56" y="58" class="tk">gravity   m/m_P          连续量（随物体变）</text><rect x="20" y="92" width="26" height="26" fill="#c0392b"/><text x="56" y="110" class="tk">em        √α·Z           离散整数×常数（随物体变）</text><rect x="20" y="144" width="26" height="26" fill="#2d6ea8"/><text x="56" y="162" class="tk">weak      g_W/√4π        普适常数（不随物体变）</text><rect x="20" y="196" width="26" height="26" fill="#2d6ea8"/><text x="56" y="214" class="tk">strong    g_π/√4π        普适常数（不随物体变）</text><text x="10" y="14" class="tt">图4 · 四个 Q 的数学对象类型：2 类随物体变（红）、2 类不随物体变（蓝）⇒ 无法合成</text></svg>
+<p>四个 Q 是<b>三种互不相容的数学对象</b>：连续量（m/m_P）、离散整数×常数（√α·Z）、
+普适耦合常数（g_W/√4π、g_π/√4π）。塞进同一个 <code>Q₁Q₂</code> 意味着弱/强通道的力
+<b>不随物体身份变化</b>——与实际弱相互作用（味/弱荷/手征）矛盾。
+靶中「统一荷/总荷/合成荷/同时作用」命中 <b>0</b> ⇒ <b>无法定义 Q_total²</b> ⇒
+「把四力写进一个方程」在<b>同一次相互作用</b>的意义上不成立。</p>
+
+<h2>④ 距离特性：逃逸速度</h2>
+<svg viewBox="0 0 620 300" class="chart"><rect x="54" y="20" width="546" height="216" fill="none" stroke="#bbb"/><polyline points="54.00,30.00 70.55,47.04 103.64,77.52 158.79,119.18 226.96,158.17 269.09,176.89 379.39,211.89 600.00,246.00" fill="none" stroke="#7a4fa3" stroke-width="2"/><text x="54.00" y="262" class="tk" text-anchor="middle">0.05</text><text x="190.50" y="262" class="tk" text-anchor="middle">1.29</text><text x="327.00" y="262" class="tk" text-anchor="middle">2.52</text><text x="463.50" y="262" class="tk" text-anchor="middle">3.76</text><text x="600.00" y="262" class="tk" text-anchor="middle">5</text><text x="48" y="250.00" class="tk" text-anchor="end">0.0821</text><text x="48" y="196.00" class="tk" text-anchor="end">0.305</text><text x="48" y="142.00" class="tk" text-anchor="end">0.529</text><text x="48" y="88.00" class="tk" text-anchor="end">0.752</text><text x="48" y="34.00" class="tk" text-anchor="end">0.975</text><text x="10" y="14" class="tt">图3 · 逃逸速度 / 牛顿值 = e^{−x/2}</text><text x="327.0" y="292" class="ax" text-anchor="middle">x = r / λ</text></svg>
+<p><code>v_esc / v_esc(牛顿) = e^{−r/(2λ)}</code>：r=λ 处降 <b>39.4%</b>，r=2λ 处降 63.2%，
+r=5λ 处降 91.8% —— 这是<b>可观测</b>的距离特性，靶未给出任何检验。
+另：V(r→0) → −∞，势阱<b>无下界</b>且无截断 ⇒ 点粒子极限未定义。</p>
+
+<div class="note"><b>红线</b>：本卷条目不可与 r142–r223 相加。数学自洽 ≠ 实验证实；
+本卷只给「可算判决」，不产生新物理。</div>
+</body></html>

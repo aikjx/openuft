@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>229 · 四力统一方程·新颖性审计轮（方程溯源与预测供给清点）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#052e16);border:1px solid #166534;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#14532d;color:#bbf7d0;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;padding:20px 24px;margin-bottom:16px;text-align:center;}
+  .verdict-box h2{font-size:26px;color:var(--gold);font-weight:900;letter-spacing:2px;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);color:#e2e8f0;}
+  h3 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12px;}
+  th,td{border:1px solid var(--line);padding:5px 7px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11px;}
+  .tb{color:var(--blue);} .tool{color:#64748b;} .rest{color:var(--orange);} .meth{color:var(--purple);} .new{color:var(--red);font-weight:800;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r229 · 对库自身的再审计 · 承 r214–r228 十三轮 · 零外部依赖</span>
+  <h1>四力统一方程·新颖性审计轮<br>「是否发现新的理论体系与方程？」——精算分析验证</h1>
+  <p>四路独立证据：①母式 vs 教科书恒等对拍；②η≡g 结构性恒等证明；③14 行方程溯源表；
+     ④预测供给程序化清点。审计设计为<b>可被推翻</b>：任一守卫发现恒等不成立或有新预测即 rc≠0。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：无新理论体系 · 无新方程</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>四路证据读数</h3>
+  <div class="cards" id="evidenceCards"></div>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>方程溯源表（14 行：本库用到的每一个方程）</h3>
+  <table id="srcTable"></table>
+  <p class="note" id="srcNote"></p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>η ≡ g：同一无量纲数的两个名字（λ 扫描恒等线）</h3>
+  <canvas id="cvE" width="1000" height="420"></canvas>
+  <p class="note" id="etaNote"></p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>预测供给仪表：13 轮条目清点（只读 json 扫描）</h3>
+  <canvas id="cvS" width="1000" height="420"></canvas>
+  <p class="note" id="supNote"></p>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>参数关系矩阵（7 参数、21 对）</h3>
+  <table id="pairTable"></table>
+  <p class="note">α_W=G_F·m_p² 与 λ_π=ħc/m_π0 是<b>定义性换算</b>（单位账，r227 G9/G6 已双路钉死）；
+     α_s*=0.311 是<b>单参数拟合</b>（r226，拟合非预言）；其余全部外部输入。
+     <b>13 轮没有从更深层推出任何一对参数的新数值关系</b>——动力学统一 FAIL（供给 0）在参数层的程序化对应。</p>
+</section>
+
+<section>
+  <h3><span class="n">§6</span>新知定位：本库产出的真实形态</h3>
+  <div class="cards" id="valueCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = {"stem": "TUFT-r229", "round": 229, "date": "2026-10-26", "method": "恒等对拍（母式 vs 教科书双写）+ 结构性恒等证明（η≡g，λ 扫描）+ 只读 json 供给清点 + 参数关系矩阵——float64，纯标准库", "novelty_verdict": "无新理论体系、无新方程：14 行溯源全部为教科书/工具/重述层/方法论读数；预测供给 0；参数新推导关系 0", "entries": [{"code": "N01", "level": "INFO", "title": "判定：无新理论体系、无新方程", "detail": "13 轮全部方程为教科书内容（Newton 1687 → Cornell 唯象 1975，年代跨度见溯源表）；本库「统一方程」（UFE-4F 母式）与教科书逐力合成逐位恒等（G1）——用户直问「是否发现新的理论体系与方程」的机器验证答案：**否**", "numbers": {}}, {"code": "N02", "level": "PASS", "title": "恒等审计：母式 ≡ 教科书", "detail": "两条独立代码路径（库内常数封装 vs 原始文献形式）10 点 rel = 1.6e−13 级——「统一方程」是标准力学合成的重述（承 r218「定义恒等式」与 r224「重述层」裁定）", "numbers": {}}, {"code": "N03", "level": "PASS", "title": "η ≡ g：结构性恒等而非新发现", "detail": "谱层临界参数（r226）与散射层微扰参数（r227）是同一无量纲数 2μAλ/(ħc)² 的两个名字（解析同式 + λ→2λ 同变 + 落盘对拍）——「同数字交叉」是方法论读数：同一个数学对象在两层各自定罪 α=14.6，交叉提升了证据强度，但不产生新物理", "numbers": {}}, {"code": "N04", "level": "PASS", "title": "预测供给 = 0（程序化清点）", "detail": "只读扫描 12 份 json：本线四轮全部 PASS 条目（≥20 条）逐一映射库外锚点（PDG/CODATA/教科书定理/定义）；全部 FAIL 对应已知局限——**无锚点支撑的新预测：0 条**。这与 U30（动力学统一 FAIL、输入 12→14 净增 0）一致", "numbers": {}}, {"code": "N05", "level": "PASS", "title": "参数关系矩阵：新推导 = 0", "detail": "7 参数 21 对关系全部为定义性换算（2）、拟合（1）或外部输入——13 轮没有从更深层推出任何一对参数的新数值关系；「形式统一」与「动力学统一」的裂缝在参数层得到程序化对应", "numbers": {}}, {"code": "N06", "level": "INFO", "title": "新知定位：本库产出的真实形态", "detail": "三层产出——①验证工程：真守卫（失败即 rc≠0）+ 控制组 + 阴性对照体系，13 轮累计自抓真错 30+ 处（本轮 C1 证明该体系对 1% 级方程差异敏感）；②方法论读数：η=g 同数字交叉（r226/r227）、维里陷阱 ⟨K⟩=⟨V⟩⇒S₀≡0（r228）、库仑长程 1/L 尾的 Richardson 外推处理（r227）；③方法地图：13 轮各自闭合、共同钉死「形式统一成立 / 动力学统一失败」的边界——全部位于**工程与方法层**，不改变物理认识", "numbers": {}}, {"code": "N07", "level": "INFO", "title": "判决：诚实结论即价值", "detail": "「是否发现新的理论体系与方程」→ 否（机器验证）；本库的价值在于把「统一到什么程度、卡在哪一层」钉死到可复算精度：形式统一四层成立（模板/谱/散射/作用量），动力学统一逐层 FAIL（供给 0）——这一负结果本身被 13 轮、60+ 守卫、10+ 控制组反复加固，且**可被推翻**（任一守卫发现恒等不成立即 rc≠0）", "numbers": {}}], "guards": [{"id": "G1", "title": "UFE-4F 母式 ≡ 教科书逐力合成（10 点逐位）", "ok": true, "detail": "两条独立代码路径（库内常数封装 vs 原始文献形式逐力写出）10 点：max rel = 0.000e+00——「统一方程」与教科书直接合成无任何新结构（逐位恒等）", "numbers": {"max_rel": "0.000e+00"}}, {"id": "G2", "title": "η ≡ g 解析恒等（结构性，非数值巧合）", "ok": true, "detail": "η = 2μAλ/(ħc)² 与谱层 g 同一表达式（rel = 0.0e+00）；λ→2λ 时两者同乘 2 恒等保持；与落盘对拍：r226 G8 = 101.49、r227 G8 = 101.49，本卷重算 = 101.49——「同数字交叉」是同一无量纲数的两个名字（谱层临界强度 = 散射层微扰参数），属方法论读数，非新物理", "numbers": {"rel": "0.0e+00", "eta": 101.49, "r226": 101.49, "r227": 101.49}}, {"id": "G3", "title": "方程溯源表完整性（14 行，每行出处+年代+新颖性分级）", "ok": true, "detail": "14 行方程溯源：教科书 10 / 工具 2 / 重述层 1 / 方法论读数 1——**零行「新方程」**；年代跨度 1687–1975，无一 2026 新方程", "numbers": {"rows": 14, "textbook": 10, "tool": 2, "restated": 1, "method_reading": 1}}, {"id": "G4", "title": "预测供给清点：全部 PASS 有库外锚点，新预测 = 0", "ok": true, "detail": "只读扫描 12 份 json（成功解析 11；并行卷结构不同者按文件在案计）：本线四轮（r221/226/227/228）PASS 条目共 23 条，锚点映射表 4/4 覆盖——每一条 PASS 都是复现库外锚点（PDG/CODATA/教科书定理/定义），每一条 FAIL 都对应已知局限（U30 动力学不统一 / α=14.6 是耦合常数 / AL 无拉格朗日量）——**无锚点支撑的新预测：0 条**（清单核对口径，如实声明非自动证明）", "numbers": {"files": 12, "parsed": 11, "pass_line": 23, "anchor_coverage": "4/4"}}, {"id": "G5", "title": "参数关系矩阵：21 对中「新推导」= 0", "ok": true, "detail": "7 参数（α_EM, α_G, α_W, α_s, λ_π, λ_W, σ）两两关系：定义性换算 2、拟合 1、外部输入 6、**新推导 0**——13 轮没有从更深层推出任何一对参数的新数值关系；动力学统一 FAIL（供给 0）在参数层得到程序化对应", "numbers": {"defined": 2, "fit": 1, "external": 6, "derived": 0}}], "controls": [{"id": "C1", "title": "判别力：1/r^1.99 假想新力律必与教科书可区分", "ok": true, "detail": "b=10 fm：θ(1/r²) = 1.6494° vs θ(1/r^1.99) = 1.6933°，差异 2.67%（≫ 守卫容差 1e−12）——若真有新方程，溯源对拍必然亮红；本库母式对拍 rel = 1.6e−13 级 ⇒ 无新方程不是容差太宽造成的", "numbers": {"discrim_pct": 2.665}}, {"id": "C2", "title": "阴性对照：撤掉任一轮锚点映射 ⇒ G4 覆盖断言必失败", "ok": true, "detail": "从锚点表删除 r227 后覆盖检查立刻失败——G4 的「4/4 覆盖」对缺锚敏感，不是恒绿灯", "numbers": {}}], "readings": {"sources": [{"eq": "牛顿第二定律 m·r̈ = ΣF", "src": "Newton", "year": 1687, "used": "r214/219/223-225/227/228", "reading": "G1 恒等 1.6e−09（r229）", "novelty": "教科书"}, {"eq": "平方反比势 1/r（库仑/引力）", "src": "Coulomb 1785 / Newton 1687", "year": 1785, "used": "r214+ 全线", "reading": "G1 梯度 1.6e−09（r227）", "novelty": "教科书"}, {"eq": "Yukawa 势 e^(−r/λ)/r", "src": "Yukawa", "year": 1935, "used": "r214/221/226/227/228", "reading": "传播子镜像 3.0e−06（r227）", "novelty": "教科书"}, {"eq": "线性禁闭势 σr（Cornell 型）", "src": "Eichten et al.（QCD 唯象）", "year": 1975, "used": "r221/226/228", "reading": "EL vs 解析 1.5e−11（r228）", "novelty": "教科书（唯象标准形）"}, {"eq": "薛定谔方程", "src": "Schrödinger", "year": 1926, "used": "r226", "reading": "E₁s=−13.605693 eV 双锚", "novelty": "教科书"}, {"eq": "Numerov 算法", "src": "Numerov", "year": 1923, "used": "r226", "reading": "氢原子四重校验", "novelty": "工具"}, {"eq": "Born 近似 f(q)=−2μ/(ħ²q)∫V sin(qr) r dr", "src": "Born", "year": 1926, "used": "r227", "reading": "传播子逐位 3.0e−06", "novelty": "教科书"}, {"eq": "卢瑟福截面 (A/4E)²csc⁴(θ/2)", "src": "Rutherford", "year": 1911, "used": "r227", "reading": "θ(b) 直积分 1.5e−05", "novelty": "教科书"}, {"eq": "欧拉-拉格朗日方程", "src": "Euler & Lagrange", "year": 1788, "used": "r228", "reading": "双积分器 8.5e−12", "novelty": "教科书"}, {"eq": "诺特定理（对称↔守恒）", "src": "Noether", "year": 1918, "used": "r228", "reading": "E/L_z 漂移 ~1e−12", "novelty": "教科书"}, {"eq": "广义势与洛伦兹力 qv×B", "src": "Lagrange 广义势 / Lorentz 1895", "year": 1895, "used": "r228", "reading": "F·v=0 精确零", "novelty": "教科书"}, {"eq": "RK4 数值积分 + Richardson 外推", "src": "Runge–Kutta 1901 / Richardson 1911", "year": 1901, "used": "r227/228", "reading": "尾标度比 2.01", "novelty": "工具"}, {"eq": "UFE-4F「母式」（四力并排模板）", "src": "本库 r214", "year": 2026, "used": "r214/221/226-228", "reading": "本卷 G1 恒等对拍", "novelty": "重述层（r218/r224 已裁定）"}, {"eq": "η=g 交叉读数 2μAλ/(ħc)²", "src": "同一无量纲数的两个名字", "year": 2026, "used": "r226/227", "reading": "本卷 G2 结构性恒等", "novelty": "方法论读数（非新物理）"}], "eta_g": {"value": 101.49, "r226": 101.49, "r227": 101.49, "lam_scan": [[0.25, 25.372458], [0.3438, 34.887129], [0.4375, 44.401801], [0.5312, 53.916472], [0.625, 63.431144], [0.7188, 72.945815], [0.8125, 82.460487], [0.9062, 91.975158], [1.0, 101.48983], [1.0938, 111.004502], [1.1875, 120.519173], [1.2812, 130.033845], [1.375, 139.548516], [1.4688, 149.063188], [1.5625, 158.577859], [1.6562, 168.092531], [1.75, 177.607203], [1.8438, 187.121874], [1.9375, 196.636546], [2.0312, 206.151217], [2.125, 215.665889], [2.2188, 225.18056], [2.3125, 234.695232], [2.4062, 244.209903], [2.5, 253.724575], [2.5938, 263.239247], [2.6875, 272.753918], [2.7813, 282.26859], [2.875, 291.783261], [2.9688, 301.297933], [3.0625, 310.812604], [3.1562, 320.327276], [3.25, 329.841948], [3.3438, 339.356619], [3.4375, 348.871291], [3.5312, 358.385962], [3.625, 367.900634], [3.7188, 377.415305], [3.8125, 386.929977], [3.9062, 396.444648], [4.0, 405.95932]]}, "supply": {"files": 12, "parsed": 11, "pass_line": 23, "new_predictions": 0}, "pairs": {"defined": 2, "fit": 1, "external": 6, "derived": 0}, "inv_counts": [{"round": "r214", "entries": 16, "PASS": 11, "FAIL": 1, "BOUNDARY": 2, "INFO": 2}, {"round": "r218", "entries": 0, "PASS": 3, "FAIL": 13, "BOUNDARY": 0, "INFO": 3}, {"round": "r219", "entries": 0, "PASS": 8, "FAIL": 0, "BOUNDARY": 4, "INFO": 2}, {"round": "r220", "entries": 0, "PASS": 9, "FAIL": 0, "BOUNDARY": 2, "INFO": 2}, {"round": "r221", "entries": 16, "PASS": 11, "FAIL": 1, "BOUNDARY": 2, "INFO": 2}, {"round": "r222", "entries": 0, "PASS": 8, "FAIL": 0, "BOUNDARY": 2, "INFO": 1}, {"round": "r223", "entries": 0, "PASS": 5, "FAIL": 9, "BOUNDARY": 0, "INFO": 6}, {"round": "r224", "entries": 0, "PASS": 3, "FAIL": 7, "BOUNDARY": 0, "INFO": 3}, {"round": "r225", "entries": 0, "PASS": 0, "FAIL": 0, "BOUNDARY": 0, "INFO": 0}, {"round": "r226", "entries": 11, "PASS": 3, "FAIL": 1, "BOUNDARY": 3, "INFO": 4}, {"round": "r227", "entries": 10, "PASS": 4, "FAIL": 1, "BOUNDARY": 2, "INFO": 3}, {"round": "r228", "entries": 9, "PASS": 5, "FAIL": 1, "BOUNDARY": 1, "INFO": 2}], "discrim_pct": 2.665}, "counts": {"entries": 7, "PASS": 4, "FAIL": 0, "BOUNDARY": 0, "INFO": 3, "guards": "5/5", "controls": "2/2"}, "verdict": "R229-NOVELTY-AUDIT-IDENTITY-TEXTBOOK-OK-ETA-EQ-G-STRUCTURAL-OK-SOURCES-14ROWS-NONEW-EQ-OK-SUPPLY-NEW-PREDICTIONS-0-OK-PAIRS-DERIVED-0-OK-NOVEL-THEORY-NONE-NEW-EQUATIONS-NONE-VALUE-VERIFICATION-ENGINEERING-AND-HONEST-NEGATIVE-VERDICT-FORM-UNIFIED-13ROUNDS-DYNAMICS-FAIL-SUPPLY-0", "judgement": "CLOSED-INCREMENT（新颖性审计：无新理论、无新方程——恒等对拍/结构性证明/供给清点/关系矩阵四路一致）；本库产出 = 验证工程 + 方法论读数 + 方法地图；动力学统一 FAIL（供给 0）不翻案", "source": {"engine": "TUFT-r229_四力统一方程_新颖性审计轮_方程溯源与预测供给清点_新理论判定_精算与交互可视化_2026-10-26.py", "inherits": ["r214–r228 全部数据 json（只读）", "r218/r224 重述层裁定", "U30 动力学不统一 FAIL 继承", "PDG/CODATA/教科书锚点"]}};
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">溯源表 <b>${R.readings.sources.length}</b> 行 · 新方程 <b>0</b></span>`;
+  document.getElementById("verdictLine").textContent =
+    "13 轮全部方程为教科书内容（Newton 1687 → Cornell 唯象 1975）；UFE-4F 母式与教科书逐力合成逐位恒等（rel 1e−13 级）；" +
+    "全部 PASS 复现库外锚点、全部 FAIL 复现已知局限；无锚点支撑的新预测 = 0；参数新推导关系 = 0。" +
+    "本库产出 = 验证工程 + 方法论读数 + 方法地图（工程与方法层，非物理新知）。";
+  const s = R.readings.supply, p = R.readings.pairs;
+  document.getElementById("evidenceCards").innerHTML = [
+    ["① 恒等对拍","UFE-4F 母式 ≡ 教科书逐力合成：10 点 max rel = 1e−13 级（G1）——「统一方程」无任何新结构"],
+    ["② η≡g 结构性","谱层 g 与散射层 η 同一表达式 2μAλ/(ħc)²：rel 0、λ→2λ 同变、落盘对拍 r226=" + R.readings.eta_g.r226 + " / r227=" + R.readings.eta_g.r227 + "（G2）"],
+    ["③ 溯源表","14 行方程：教科书 " + countNov("教科书") + " / 工具 " + countNov("工具") + " / 重述层 " + countNov("重述层") + " / 方法论读数 " + countNov("方法论") + " / 新方程 <b style='color:#f87171'>0</b>（G3）"],
+    ["④ 供给清点","只读 " + s.files + " 份 json（解析 " + s.parsed + "）：本线 PASS " + s.pass_line + " 条全部有库外锚点；新预测 = <b style='color:#f87171'>0</b>；参数新推导 = 0（G4/G5）"],
+  ].map(x=>`<div class="card"><b>${x[0]}</b><br>${x[1]}</div>`).join("");
+  function countNov(k){ return R.readings.sources.filter(x=>x.novelty.startsWith(k)).length; }
+})();
+
+/* ---------- §2 溯源表 ---------- */
+(function(){
+  let html = "<tr><th style='width:26%'>方程</th><th style='width:20%'>出处</th><th style='width:7%'>年代</th><th style='width:16%'>使用轮</th><th style='width:19%'>机器验证读数</th><th style='width:12%'>新颖性</th></tr>";
+  R.readings.sources.forEach(s=>{
+    const cls = s.novelty.startsWith("教科书")?"tb":(s.novelty==="工具"?"tool":(s.novelty.startsWith("重述层")?"rest":"meth"));
+    html+=`<tr><td class="mono">${s.eq}</td><td>${s.src}</td><td class="mono">${s.year}</td><td class="mono">${s.used}</td><td class="mono">${s.reading}</td><td class="${cls}">${s.novelty}</td></tr>`;});
+  document.getElementById("srcTable").innerHTML=html;
+  document.getElementById("srcNote").textContent =
+    "年代跨度 1687–1975：没有任何一行是 2026 年的新方程。「重述层」= 本库把教科书方程并排成模板（r218/r224 已裁定其为重述而非推导）；「方法论读数」= 同一数学对象在两层的交叉读数（§3）。";
+})();
+
+/* ---------- §3 η≡g ---------- */
+const cvE=document.getElementById("cvE"), ctxE=cvE.getContext("2d");
+(function(){
+  const scan=R.readings.eta_g.lam_scan;
+  ctxE.clearRect(0,0,1000,420);ctxE.fillStyle="#0d1730";ctxE.fillRect(0,0,1000,420);
+  const PL=64,PR=20,PT=18,PB=36;
+  const vals=scan.map(p=>p[1]);
+  const vmin=Math.min(...vals),vmax=Math.max(...vals);
+  const X=t=>PL+t/4.0*(1000-PL-PR);
+  const Y=v=>PT+(1-(v-vmin)/(vmax-vmin))*(420-PT-PB);
+  ctxE.strokeStyle="#1f2b3f";ctxE.font="10px Consolas";ctxE.fillStyle="#94a3b8";
+  [0,1,2,3,4].forEach(t=>{ctxE.beginPath();ctxE.moveTo(X(t),PT);ctxE.lineTo(X(t),420-PB);ctxE.stroke();
+    ctxE.fillText((t)+"λ",X(t)-6,420-PB+13);});
+  [vmin,vmax].forEach(v=>{ctxS2(v);});
+  function ctxS2(v){ctxE.fillText(v.toFixed(1),8,Y(v)+3);}
+  // η 线与 g 线（同一条——画两遍：实线粗 + 虚线，视觉上完全重合）
+  ctxE.strokeStyle="#63d2ff";ctxE.lineWidth=5;ctxE.beginPath();
+  scan.forEach((p,i)=>{i?ctxE.lineTo(X(p[0]),Y(p[1])):ctxE.moveTo(X(p[0]),Y(p[1]));});
+  ctxE.stroke();
+  ctxE.strokeStyle="#e0af68";ctxE.lineWidth=1.6;ctxE.setLineDash([6,5]);ctxE.beginPath();
+  scan.forEach((p,i)=>{i?ctxE.lineTo(X(p[0]),Y(p[1])):ctxE.moveTo(X(p[0]),Y(p[1]));});
+  ctxE.stroke();ctxE.setLineDash([]);
+  // 落盘对拍点（λ=1：r226/r227 的读数）
+  const one = scan.find(p=>Math.abs(p[0]-1)<0.13);
+  if(one){
+    [[R.readings.eta_g.r226,"#4ade80","r226 落盘"],[R.readings.eta_g.r227,"#f7768e","r227 落盘"]].forEach(m=>{
+      const v=parseFloat(m[0]); if(!isFinite(v))return;
+      const y=Y(Math.min(Math.max(v,vmin),vmax));
+      ctxE.fillStyle=m[1];ctxE.beginPath();ctxE.arc(X(1),y,6,0,7);ctxE.fill();
+      ctxE.fillText(m[2],X(1)+10,y+3);});
+  }
+  ctxE.fillStyle="#94a3b8";ctxE.fillText("λ（×λ_π）",470,420-6);
+  ctxE.save();ctxE.translate(14,220);ctxE.rotate(-Math.PI/2);ctxE.fillText("η 与 g [无量纲]",-52,0);ctxE.restore();
+  document.getElementById("etaNote").textContent =
+    "蓝粗线（η）与橙虚线（g）在 λ 全域完全重合——同一表达式 2μAλ/(ħc)² 的两次命名。" +
+    "r226 谱层用它定罪 α=14.6（g=101.5≫1 ⇒ 谱崩溃），r227 散射层再次定罪（η=101.5≫1 ⇒ 微扰失效）：" +
+    "交叉提升证据强度（两种独立方法、同一个数），但不产生新物理。C2 阴性对照：撤掉任一轮锚点映射，覆盖断言必失败。";
+})();
+
+/* ---------- §4 供给仪表 ---------- */
+const cvS=document.getElementById("cvS"), ctxS=cvS.getContext("2d");
+(function(){
+  const inv=R.readings.inv_counts;
+  ctxS.clearRect(0,0,1000,420);ctxS.fillStyle="#0d1730";ctxS.fillRect(0,0,1000,420);
+  const PL=56,PR=16,PT=18,PB=52;
+  const maxE=Math.max(...inv.map(x=>x.entries),1);
+  const bw=Math.min(58,(1000-PL-PR)/inv.length-8);
+  inv.forEach((x,i)=>{
+    const x0=PL+i*((1000-PL-PR)/inv.length)+6;
+    let y=420-PB;
+    const segs=[["PASS",x.PASS,"#4ade80"],["FAIL",x.FAIL,"#f87171"],["BOUNDARY",x.BOUNDARY,"#e0af68"],["INFO",x.INFO,"#7aa2f7"]];
+    segs.forEach(s=>{
+      if(!s[1])return;
+      const h=s[1]/maxE*(420-PT-PB);
+      ctxS.fillStyle=s[2];ctxS.fillRect(x0,y-h,bw,h);
+      y-=h;});
+    ctxS.fillStyle="#94a3b8";ctxS.font="10px Consolas";
+    ctxS.fillText(x.round,x0+bw/2-16,420-PB+14);
+    ctxS.fillText(String(x.entries),x0+bw/2-4,y-4);
+  });
+  const leg=[["PASS","#4ade80"],["FAIL","#f87171"],["BOUNDARY","#e0af68"],["INFO","#7aa2f7"]];
+  leg.forEach((l,i)=>{ctxS.fillStyle=l[1];ctxS.fillRect(PL+i*110,420-30,12,12);
+    ctxS.fillStyle="#94a3b8";ctxS.fillText(l[0],PL+i*110+18,420-20);});
+  document.getElementById("supNote").textContent =
+    "每根柱 = 一轮的条目等级分布（绿 PASS / 红 FAIL / 橙 BOUNDARY / 蓝 INFO；柱顶数字 = 条目数）。" +
+    "r217 无独立数据 json（整理轮，以判定册/README 记录为准）；并行卷（r218–r220、r222–r225）按文件在案计、结构可解析者已解析。" +
+    "清点结论：全部 PASS 条目逐一映射库外锚点（PDG/CODATA/教科书定理/定义），新预测 = 0——清单核对口径，如实声明非自动证明。";
+})();
+
+/* ---------- §5 关系矩阵 ---------- */
+(function(){
+  const p=R.readings.pairs;
+  const rows=[
+    ["α_W ↔ G_F·m_p²","定义","r227 G9 双路恒等式钉单位"],
+    ["λ_π ↔ ħc/m_π0","定义","r227 G6 双向逐位"],
+    ["α_s*=0.311 ↔ χc1/Υ 谱","拟合","r226 单参数（拟合非预言）"],
+    ["α_EM、α_G、α_W、α_s、λ_W、σ（其余 18 对）","外部输入","CODATA/PDG/r214 声明——无推导"],
+  ];
+  let html="<tr><th style='width:40%'>参数对</th><th style='width:14%'>关系类型</th><th>依据</th></tr>";
+  rows.forEach(r=>{
+    const cls = r[1]==="定义"?"tb":(r[1]==="拟合"?"rest":"meth");
+    html+=`<tr><td class="mono">${r[0]}</td><td class="${cls}">${r[1]}</td><td>${r[2]}</td></tr>`;});
+  html+=`<tr><td colspan="3" style="text-align:center;color:#f87171;font-weight:800">新推导关系：${p.derived}（零）</td></tr>`;
+  document.getElementById("pairTable").innerHTML=html;
+})();
+
+/* ---------- §6 价值卡 ---------- */
+(function(){
+  const cards=[
+    ["验证工程","真守卫（失败即 rc≠0）+ 控制组 + 阴性对照体系：13 轮累计自抓真错 30+ 处；本轮 C1 证明该体系对 1% 级方程差异敏感（1/r^1.99 vs 1/r² 差 " + R.readings.discrim_pct + "% 必亮红）。"],
+    ["方法论读数","η=g 同数字交叉（r226/r227）、维里陷阱 ⟨K⟩=⟨V⟩⇒S₀≡0（r228）、库仑长程 1/L 尾的 Richardson 外推处理（r227）——对做同类验证者有用，非物理新知。"],
+    ["方法地图","13 轮各自闭合：形式统一四层成立（模板/谱/散射/作用量），动力学统一逐层 FAIL（供给 0）——负结果被 60+ 守卫、10+ 控制组反复加固，且可被推翻。"],
+  ];
+  document.getElementById("valueCards").innerHTML=
+    cards.map(x=>`<div class="card"><b>${x[0]}</b><br>${x[1]}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r229 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

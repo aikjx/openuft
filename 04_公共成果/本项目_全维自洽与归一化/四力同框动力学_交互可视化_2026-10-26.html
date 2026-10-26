@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>四力同框动力学 · r219</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:#e5e7eb;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif}
+.wrap{max-width:1280px;margin:0 auto;padding:22px}
+h1{font-size:22px;margin:0 0 4px;font-weight:650}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:330px 1fr 320px;gap:16px;align-items:start}
+.card{background:#111a2e;border:1px solid #1e293b;border-radius:12px;padding:14px}
+.card h2{font-size:14px;margin:0 0 10px;color:#cbd5e1;font-weight:600;letter-spacing:.3px}
+.row{margin-bottom:12px}
+.row label{display:flex;justify-content:space-between;font-size:12.5px;color:#94a3b8;margin-bottom:4px}
+.row label b{color:#7dd3fc;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:#38bdf8;height:20px}
+canvas{display:block;width:100%;background:#070c18;border-radius:10px}
+.eq{font-family:Consolas,monospace;background:#0a1224;border:1px solid #1e293b;border-radius:8px;
+    padding:10px 12px;font-size:12px;line-height:1.85;color:#cbd5e1;overflow-x:auto;white-space:pre}
+.kv{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0;border-bottom:1px dashed #1e293b}
+.kv:last-child{border-bottom:none}
+.kv b{font-variant-numeric:tabular-nums}
+.ok{color:#4ade80}.warn{color:#fbbf24}.bad{color:#f87171}
+.note{font-size:12px;color:#94a3b8;line-height:1.7}
+.flex{display:flex;gap:8px;flex-wrap:wrap}
+button{background:#1d4ed8;border:0;color:#fff;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px}
+button.ghost{background:#1e293b;color:#cbd5e1}
+button:hover{filter:brightness(1.1)}
+@media(max-width:1080px){.grid{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<h1>四力同框动力学 · Yukawa 进动 / 多源叠加 / 相对论化</h1>
+<div class="sub">TUFT-r219 · 2026-10-26 · 拖动滑块实时重算（RK4，浏览器内）· 物理公式与 Python 引擎同源</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>参数</h2>
+    <div class="row"><label>力程 λ（r₀=1 为单位）<b id="vlam">2.00</b></label>
+      <input id="lam" type="range" min="-0.7" max="1.3" step="0.01" value="0.30"></div>
+    <div class="row"><label>强度 α<b id="valp">1.00</b></label>
+      <input id="alp" type="range" min="-0.7" max="0.7" step="0.01" value="0"></div>
+    <div class="row"><label>初速（相对圆速度）<b id="vbet">0.85</b></label>
+      <input id="bet" type="range" min="0.55" max="1.45" step="0.005" value="0.85"></div>
+    <div class="row"><label>符号 s（+1 吸引 / −1 排斥）<b id="vsgn">+1</b></label>
+      <input id="sgn" type="range" min="0" max="1" step="1" value="0"></div>
+    <div class="flex">
+      <button id="go">重新发射</button>
+      <button id="ghost" class="ghost">切库仑 λ→∞</button>
+    </div>
+    <div class="note" style="margin-top:12px">
+      蓝线 = 轨迹；红点 = 近心点（r 的局部极小）；黄圈 = 源。<br/>
+      <b>要看进动必须用椭圆轨道</b>：初速 = 圆速度（β=1）时轨迹是闭合圆、没有近心点，进动不可见；
+      把 β 调到 0.8~0.9 就能看到近心点逐圈<b>沿同一方向漂移</b>。
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>轨道（世界坐标 x,y ∈ [−3,3]）</h2>
+    <canvas id="main" width="660" height="660"></canvas>
+  </div>
+
+  <div class="card">
+    <h2>读数</h2>
+    <div class="kv"><span>x = r₀/λ</span><b id="kx">0.30</b></div>
+    <div class="kv"><span>(ω_r/ω_φ)² = 1−x²/(1+x)</span><b id="kq">0.93</b></div>
+    <div class="kv"><span>Δφ 每轨道（解析）</span><b id="kdp">0.00 rad</b></div>
+    <div class="kv"><span>Δφ（度/轨道）</span><b id="kdg">0.00°</b></div>
+    <div class="kv"><span>L_max 判据</span><b id="klm">—</b></div>
+    <div class="kv"><span>能量 E</span><b id="ke">—</b></div>
+    <div class="kv"><span>|ΔL/L| 最大</span><b id="kl">—</b></div>
+    <h2 style="margin-top:14px">进动闭式</h2>
+    <div class="eq">Δφ = 2π[ 1/√(1−x²/(1+x)) − 1 ]
+   ≈ πx²(1−x)   (x = r/λ ≪ 1)
+
+x → φ = (1+√5)/2 ⇒ 分母归零
+（径向频率为零 = 圆轨道中性稳定）</div>
+    <div class="note" style="margin-top:10px">
+      x 越接近 φ，轨道越快进动；x &gt; φ 时该半径的圆轨道<b class="bad">不稳定</b>。
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px">
+  <h2>这张图在说什么</h2>
+  <div class="note">
+    单源的 Yukawa 中心力<b>破坏开普勒闭合</b>：每绕一圈，近心点沿同一方向多转 Δφ。
+    这个角度是「力的大小 + 距离特性」在时间上的<b>积累</b>——力的瞬时方向仍是 r̂（中心力），
+    但强度随 r 衰减的<b>方式</b>（λ 有限 vs ∞）决定了轨道闭不闭合。
+    <br/><br/>
+    λ→∞ 时 Δφ→0（库仑/开普勒闭合，Bertrand 定理）；λ 越短、r/λ 越大，进动越快。
+    反过来，把观测到的进动残差当预算，就能给 (α′, λ) 划出排除带（见 Python 侧 U04）。
+  </div>
+</div>
+</div>
+
+<script>
+const cv = document.getElementById('main'), ctx = cv.getContext('2d');
+const S = {lam:2.0, alpha:1.0, beta:1.0, sgn:1, pts:[], peri:[], src:[0,0], L0:0, Ldev:0, E:0};
+const PHI = (1+Math.sqrt(5))/2, TAU = 2*Math.PI;
+
+function f(lam, r){
+  if (!isFinite(lam)) return 1/(r*r);
+  const x = r/lam;
+  if (x > 700) return 0;
+  return Math.exp(-x)*(1/(r*r) + 1/(lam*r));
+}
+function U(lam, r){
+  if (!isFinite(lam)) return -1/r;
+  const x = r/lam;
+  if (x > 700) return 0;
+  return -Math.exp(-x)/r;
+}
+function hPhi(){ return Math.pow(PHI,3)*Math.exp(-PHI); }
+
+function acc(x,y){
+  const r = Math.hypot(x,y);
+  if (r < 1e-9) return [0,0];
+  const fr = -S.sgn * S.alpha * f(S.lam, r) / r;
+  return [fr*x, fr*y];
+}
+
+function simulate(){
+  // 圆速度：alpha*f(lam,1) = vc^2 / 1
+  const vc = Math.sqrt(S.alpha * f(S.lam, 1));
+  let x=1, y=0, vx=0, vy=vc*S.beta;
+  const dt = 2e-4, steps = 260000;
+  const pts=[[x,y]], peri=[];
+  let L0 = x*vy - y*vx, Ldev=0, rmax=1;
+  let pr=null, pr2=null;
+  for (let i=0;i<steps;i++){
+    const d=(st)=>{const a=acc(st[0],st[1]); return [st[2],st[3],a[0],a[1]];};
+    const k1=d([x,y,vx,vy]);
+    const k2=d([x+dt/2*k1[0], y+dt/2*k1[1], vx+dt/2*k1[2], vy+dt/2*k1[3]]);
+    const k3=d([x+dt/2*k2[0], y+dt/2*k2[1], vx+dt/2*k2[2], vy+dt/2*k2[3]]);
+    const k4=d([x+dt*k3[0], y+dt*k3[1], vx+dt*k3[2], vy+dt*k3[3]]);
+    x += dt*(k1[0]+2*k2[0]+2*k3[0]+k4[0])/6;
+    y += dt*(k1[1]+2*k2[1]+2*k3[1]+k4[1])/6;
+    vx += dt*(k1[2]+2*k2[2]+2*k3[2]+k4[2])/6;
+    vy += dt*(k1[3]+2*k2[3]+2*k3[3]+k4[3])/6;
+    const r = Math.hypot(x,y);
+    rmax = Math.max(rmax, r);
+    const L = x*vy - y*vx;
+    if (L0!==0) Ldev = Math.max(Ldev, Math.abs(L-L0)/Math.abs(L0));
+    if (pr2!==null && pr<pr2 && pr<=r) peri.push([x,y]);
+    pr2 = pr; pr = r;
+    if (i%40===0) pts.push([x,y]);
+    if (r>12 || pts.length>4200) break;
+  }
+  S.pts=pts; S.peri=peri.slice(0,40); S.L0=L0; S.Ldev=Ldev;
+  S.E = 0.5*(vx*vx+vy*vy) + S.sgn*U(S.lam, Math.hypot(x,y));
+  S.rmax = rmax;
+  S.vc = vc;
+  return S;
+}
+
+function draw(){
+  const W=cv.width, H=cv.height, R=3.0;
+  const sx = (X)=> (X+R)/(2*R)*W, sy=(Y)=> H-(Y+R)/(2*R)*H;
+  ctx.clearRect(0,0,W,H);
+
+  // 网格
+  ctx.strokeStyle='#132033'; ctx.lineWidth=1;
+  for(let g=-3; g<=3; g++){
+    ctx.beginPath(); ctx.moveTo(sx(g),0); ctx.lineTo(sx(g),H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,sy(g)); ctx.lineTo(W,sy(g)); ctx.stroke();
+  }
+  // 源
+  ctx.strokeStyle='#fbbf24'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.arc(sx(0),sy(0),7,0,TAU); ctx.stroke();
+
+  // 轨迹
+  if (S.pts.length>1){
+    ctx.strokeStyle='#38bdf8'; ctx.lineWidth=1.6; ctx.beginPath();
+    ctx.moveTo(sx(S.pts[0][0]), sy(S.pts[0][1]));
+    for(let i=1;i<S.pts.length;i++) ctx.lineTo(sx(S.pts[i][0]), sy(S.pts[i][1]));
+    ctx.stroke();
+  }
+  // 近心点
+  ctx.fillStyle='#f87171';
+  for(const p of S.peri){
+    ctx.beginPath(); ctx.arc(sx(p[0]), sy(p[1]), 2.6, 0, TAU); ctx.fill();
+  }
+  // 起点
+  ctx.fillStyle='#4ade80';
+  ctx.beginPath(); ctx.arc(sx(1), sy(0), 4, 0, TAU); ctx.fill();
+}
+
+function readout(){
+  const x = 1/S.lam;                       // r0=1
+  const q = isFinite(S.lam) ? (1 - x*x/(1+x)) : 1;
+  const dp = q>0 ? TAU*(1/Math.sqrt(q)-1) : NaN;
+  document.getElementById('kx').textContent = isFinite(x)? x.toFixed(3) : '0.000';
+  document.getElementById('kq').textContent = q.toFixed(4);
+  document.getElementById('kdp').textContent = isFinite(dp)? dp.toFixed(4)+' rad' : '发散';
+  document.getElementById('kdg').textContent = isFinite(dp)? (dp*180/Math.PI).toFixed(2)+'°' : '—';
+  const L = 1*(S.vc*S.beta);
+  let lm;
+  if (isFinite(S.lam)){
+    const Lmax2 = S.alpha*S.lam*hPhi();
+    lm = (L*L <= Lmax2) ? '<span class="ok">束缚 (L≤L_max)</span>' : '<span class="warn">超 L_max ⇒ 逃逸</span>';
+  } else {
+    lm = (S.E<0) ? '<span class="ok">束缚 (E&lt;0)</span>' : '<span class="warn">逃逸 (E&gt;0)</span>';
+  }
+  document.getElementById('klm').innerHTML = lm;
+  document.getElementById('ke').textContent = S.E.toFixed(4);
+  document.getElementById('kl').textContent = S.Ldev.toExponential(2);
+}
+
+function refresh(){
+  simulate(); draw(); readout();
+}
+
+function bind(){
+  const lam=document.getElementById('lam'), alp=document.getElementById('alp'),
+        bet=document.getElementById('bet'), sgn=document.getElementById('sgn');
+  const upd=()=>{
+    S.lam = document.getElementById('lammode') ? Infinity : Math.pow(10, parseFloat(lam.value));
+    S.alpha = Math.pow(10, parseFloat(alp.value));
+    S.beta = parseFloat(bet.value);
+    S.sgn = parseInt(sgn.value)===0 ? 1 : -1;
+    document.getElementById('vlam').textContent = isFinite(S.lam)? S.lam.toFixed(2) : '∞';
+    document.getElementById('valp').textContent = S.alpha.toFixed(2);
+    document.getElementById('vbet').textContent = S.beta.toFixed(3);
+    document.getElementById('vsgn').textContent = (S.sgn>0?'+1':'−1');
+    refresh();
+  };
+  [lam,alp,bet,sgn].forEach(el=>el.addEventListener('input', upd));
+  document.getElementById('go').addEventListener('click', refresh);
+  document.getElementById('ghost').addEventListener('click', ()=>{
+    // λ→∞：直接置 Infinity（f()/U() 内部按 isFinite 走 1/r^2 与 -1/r 分支）
+    lam.value = 1.3;
+    S.lam = Infinity;
+    document.getElementById('vlam').textContent = '∞';
+    refresh();
+  });
+  upd();
+}
+bind();
+</script>
+</body></html>

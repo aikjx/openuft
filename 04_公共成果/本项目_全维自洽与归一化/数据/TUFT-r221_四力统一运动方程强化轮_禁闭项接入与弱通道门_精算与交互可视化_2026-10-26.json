@@ -1,0 +1,534 @@
+{
+ "stem": "TUFT-r221",
+ "round": 221,
+ "date": "2026-10-26",
+ "unified_force_equation": "UFE-4F⁺：U(r) = Σ_i [−s_i·α_i·ħc·e^{−r/λ_i}/r] + [σ·r]_色道；F(r) = −dU/dr = Σ_i [−s_i·α_i·ħc·e^{−x_i}(1/r²+1/(λ_i r))·r̂] − σ·r̂]_色道",
+ "unified_motion_equation": "m·d²r/dt² = Σ_i F_i(r)（五项：四 Yukawa 型 + 一个线性禁闭项）",
+ "potential": "U(r) = Σ_i −s_i·α_i·ħc·e^{−r/λ_i}/r + [σr]_色道，g_χ 乘于 (s·α)",
+ "params": {
+  "lambda_W_m": "2.4550179827562611e-18",
+  "lambda_pi_m": "1.4619325721160970e-15",
+  "alpha_G_pp": "5.9061494e-39",
+  "alpha_em": "0.0072973525693",
+  "alpha_W": "0.000010268268",
+  "alpha_sres": "14.6",
+  "alpha_s_2GeV": "0.30521",
+  "alpha_s_MZ": "0.1180",
+  "sigma_GeV2": "0.18",
+  "sigma_GeV_per_fm": "0.9121915292",
+  "sigma_N": "146149.1954",
+  "A_color_GeVfm": "0.08030155692",
+  "C_F": "4/3",
+  "r_star_sigma_fm": "0.2967009694",
+  "phi": "1.61803398874989",
+  "h_phi": "0.839962094657175090",
+  "x_e": "2.14619322062"
+ },
+ "entries": [
+  {
+   "code": "U01",
+   "level": "PASS",
+   "title": "σ 项量纲齐次",
+   "detail": "[σ]=MLT⁻²=力、[σr]=ML²T⁻²=能量；σ 是唯一『本身就有力的量纲』的强度参数",
+   "numbers": {
+    "sigma_dim": [
+     1,
+     0,
+     -2,
+     0
+    ]
+   }
+  },
+  {
+   "code": "U02",
+   "level": "PASS",
+   "title": "组合母式求导闭合",
+   "detail": "Yukawa+线性组合势 F=−dU/dr：解析 vs Richardson 四阶外推，6 个 r 残差 ≤1e-30 且 ≠0",
+   "numbers": {
+    "max_residual": "3.7071242e-47"
+   }
+  },
+  {
+   "code": "U03",
+   "level": "PASS",
+   "title": "F_σ 恒定（禁闭签名）",
+   "detail": "线性项对 r 的力恒为 σ（0.18 GeV² ⇒ 0.912192 GeV/fm ⇒ 146149 N），与 r⁻² 系（引力/电磁）和 e^{-r/λ} 系（弱/剩余强）形成第三类距离行为",
+   "numbers": {
+    "sigma_N": "146149.20"
+   }
+  },
+  {
+   "code": "U04",
+   "level": "PASS",
+   "title": "色道恒吸引",
+   "detail": "r∈[0.01,100] fm 4000 点 F_r<0：OGE 与 σ 两项同向，无远近反号（同 r214 G1-7 结论）",
+   "numbers": {}
+  },
+  {
+   "code": "U05",
+   "level": "PASS",
+   "title": "交叉 r*_σ = √(A/σ)",
+   "detail": "r* = 0.29670097 fm（α_s(2 GeV) 口径）：r<r* 单胶子交换占优（渐近自由区），r>r* 线性禁闭占优；与 18 卷 0.3889 fm（σr vs π-Yukawa，异道异口径）不矛盾",
+   "numbers": {
+    "r_star_fm": "0.29670097"
+   }
+  },
+  {
+   "code": "U06",
+   "level": "BOUNDARY",
+   "title": "EM↔σr 交叉为跨自由度比较",
+   "detail": "r = √(k_e e²/σ) = 0.0397313 fm，但色力作用于色荷对、电磁力作用于电荷对——不同自由度的『谁大』只作形式层读数",
+   "numbers": {
+    "r_cross_fm": "0.0397313"
+   }
+  },
+  {
+   "code": "U07",
+   "level": "PASS",
+   "title": "n_eff(线性)=1",
+   "detail": "线性项等效幂指数恒为 +1：四力距离行为三分类（−2 / 指数压制 / +1）至此齐备",
+   "numbers": {}
+  },
+  {
+   "code": "U08",
+   "level": "PASS",
+   "title": "禁闭无 L_max 上限",
+   "detail": "dL²_circ/dr = A+4σr³ > 0 严格单调 ⇒ 任何 L 都有束缚圆轨道；Yukawa 则有 L_max² = αħcλφ³e^{−φ}（r214 U22）——两种短程化的动力学后果截然不同",
+   "numbers": {}
+  },
+  {
+   "code": "U09",
+   "level": "PASS",
+   "title": "禁闭下无逃逸（轨迹证实）",
+   "detail": "禁闭势 L=0.6/3.0 均束缚（L=3 的 r_max=19.6453）；Yukawa λ=0.35 同初值逃逸（r_max=25.0002 或 40+）",
+   "numbers": {
+    "conf_L3_rmax": "19.645311"
+   }
+  },
+  {
+   "code": "U10",
+   "level": "PASS",
+   "title": "RK4 组合势轨迹质量",
+   "detail": "6 条轨迹 |ΔE/E|max=2.59716e-11；数值 r_max 与理论外根相对差 1.80318e-11；步长收敛比 16.0216（应在 4–64）",
+   "numbers": {
+    "dE_max": "2.5971584e-11",
+    "r_max_rel": "1.80318e-11"
+   }
+  },
+  {
+   "code": "U11",
+   "level": "PASS",
+   "title": "退化还原 r214",
+   "detail": "g_χ≡1、σ=0 时 24 点网格与 r214 UFE-4F 母力逐位一致（|Δ|=0）——UFE-4F⁺ 是 r214 的严格超集，不是另一条方程",
+   "numbers": {}
+  },
+  {
+   "code": "U12",
+   "level": "PASS",
+   "title": "通道门代数与宇称读数",
+   "detail": "P_L²=P_L、P_L+P_R=I、P_LP_R=0（精确分数）；CC 道 A_P=1（最大宇称破坏），样本 (g_L,g_R)=(1,0.3) A_P=91/109≈0.834862",
+   "numbers": {}
+  },
+  {
+   "code": "U13",
+   "level": "BOUNDARY",
+   "title": "弱方向通道依从（结构登记，非推导）",
+   "detail": "在门扩展下『只有电磁可变号』（r214 U18）需加限定：s 可通道依从是结构登记，弱道的完整 V−A 规范动力学（W/Z 极化、味改变）仍不在式内——U27 完整收口 OPEN",
+   "numbers": {}
+  },
+  {
+   "code": "U14",
+   "level": "INFO",
+   "title": "大小表升级（五系列）",
+   "detail": "色道 |F| 在 0.1/0.3/1 fm = 1.43272e+6 / 289102 / 159015 N（GeV/fm 口径两路一致）；1 Å 以上色道『恒力』只是形式延拓——物理上禁闭使孤立色对不存在（B3）",
+   "numbers": {
+    "sigma_N": "146149.20"
+   }
+  },
+  {
+   "code": "U15",
+   "level": "FAIL",
+   "title": "输入账：净约束增量仍为 0",
+   "detail": "UFE-4F 输入 12 个（{s,α,λ}×4）→ UFE-4F⁺ 14 个（+σ、+g_χ）；约束新增 0 个；方程更完整但统一度不升——U30『动力学不统一』FAIL 继承不翻案",
+   "numbers": {
+    "inputs_before": 12,
+    "inputs_after": 14
+   }
+  },
+  {
+   "code": "U16",
+   "level": "INFO",
+   "title": "判决",
+   "detail": "形式统一**扩展成功**：一个势函数 + 一个运动方程现在承载四 Yukawa 型力 + 线性禁闭；求导、量纲、方向、距离、轨迹全机算闭合；动力学统一仍 FAIL（继承）",
+   "numbers": {}
+  }
+ ],
+ "guards": [
+  {
+   "id": "G0-1",
+   "title": "量纲工具自检（σ 项）",
+   "ok": true,
+   "detail": "[α·ħc/r²]=[σ]=MLT⁻²=力；[σr]=ML²T⁻²=能量；错误逐分量相乘实现被抓",
+   "numbers": {
+    "sigma_dim": [
+     1,
+     1,
+     -2,
+     0
+    ],
+    "sigma_r_dim": [
+     1,
+     2,
+     -2,
+     0
+    ]
+   }
+  },
+  {
+   "id": "G1-1",
+   "title": "组合母式 F=−dU/dr 解析vs数值",
+   "ok": true,
+   "detail": "Yukawa(λ=1)+线性 σr 组合势，6 个 r 跨 3.3 个量级，Richardson 残差 max=3.70712e-47",
+   "numbers": {
+    "max_residual": "3.707124228e-47",
+    "min_residual": "2.027751373e-51"
+   }
+  },
+  {
+   "id": "G1-2",
+   "title": "残差非退化（≠0）",
+   "ok": true,
+   "detail": "残差恰为 0 意味着退化成恒等复读，必须有真实数值微分在跑",
+   "numbers": {}
+  },
+  {
+   "id": "G1-3",
+   "title": "λ→∞ 库仑极限",
+   "ok": true,
+   "detail": "λ=1e30 m 与纯 r⁻² 的最大相对差 5.00002e-55",
+   "numbers": {}
+  },
+  {
+   "id": "G2-1",
+   "title": "σ 双路换算一致（口径级）",
+   "ok": true,
+   "detail": "路径A σ·(GeV/fm→N)=146149.195379 N；路径B SI 直算=146149.195424 N；相对差 3.12190e-10（≈2e-8 量级 = ħc 两口径的 CODATA 版本差，非分歧）",
+   "numbers": {
+    "sigma_N_pathA": "146149.1954",
+    "sigma_N_pathB": "146149.1954",
+    "rel": "3.121902635e-10"
+   }
+  },
+  {
+   "id": "G2-3",
+   "title": "λ_W/λ_π 双路读数（口径级）",
+   "ok": true,
+   "detail": "λ_W：2.45501798276e-18 vs 2.45501798199e-18 m（rel 3.1219026e-10）；λ_π：1.46193257212e-15 vs 1.46193257166e-15 m（rel 3.1219026e-10）；正文统一取 ħc[MeV·fm] 路径（与 r214 逐位同源）",
+   "numbers": {
+    "rel_W": "3.121902634e-10",
+    "rel_PI": "3.121902634e-10"
+   }
+  },
+  {
+   "id": "G2-4",
+   "title": "α_W 双口径（重算 vs r214 声明）",
+   "ok": true,
+   "detail": "G_F·m_p(c²)² = 0.000010268267505693427 vs r214 声明 0.000010268268；rel = 4.81392e-8（声明值末位舍入所致，口径级一致）；退化还原守卫统一用声明口径",
+   "numbers": {
+    "rel": "4.813923569e-8"
+   }
+  },
+  {
+   "id": "G2-2",
+   "title": "交叉 r*=√(A/σ) 量纲自洽",
+   "ok": true,
+   "detail": "r*_σ = 0.29670097 fm（α_s(2 GeV)=0.30521 口径）；18 卷另一口径（σr vs π-Yukawa）给 0.3889 fm——道不同，不矛盾",
+   "numbers": {}
+  },
+  {
+   "id": "G4-1",
+   "title": "EM↔强剩余交叉复现 r214",
+   "ok": true,
+   "detail": "x=9.9990765, r_×=14.617976 fm，vs r214 读数相对差 3.12190e-10",
+   "numbers": {}
+  },
+  {
+   "id": "G4-2",
+   "title": "OGE↔σr 同道交叉",
+   "ok": true,
+   "detail": "r < r* 时单胶子交换占优（渐近自由区），r > r* 时线性禁闭占优；r* = 0.29670097 fm",
+   "numbers": {}
+  },
+  {
+   "id": "G5-1",
+   "title": "色道恒吸引（4000 点扫描）",
+   "ok": true,
+   "detail": "r∈[0.01, 100] fm 全程 F_r<0：OGE 与 σ 两项都指向配对粒子，无远近反号",
+   "numbers": {}
+  },
+  {
+   "id": "G5-2",
+   "title": "阴性对照：σ 反号必被抓",
+   "ok": true,
+   "detail": "把 σ 项写反（排斥）后，r ≳ 0.3 fm 的扫描立即出现 F_r>0 ⇒ 方向检查有判别力",
+   "numbers": {}
+  },
+  {
+   "id": "G6-1",
+   "title": "n_eff(线性)=1",
+   "ok": true,
+   "detail": "对数斜率 = 1.00000000000（精确 1：F ∝ r¹，与 r⁻² 的 −2 形成两端锚）",
+   "numbers": {}
+  },
+  {
+   "id": "G6-2",
+   "title": "e 折长度 x_e 复现",
+   "ok": true,
+   "detail": "x_e = 2.14619322062（r214 读数 2.1461932206）——力的 e 折是 2.146λ 不是 λ",
+   "numbers": {}
+  },
+  {
+   "id": "G6-3",
+   "title": "h(φ)=φ³e^{−φ} 复现",
+   "ok": true,
+   "detail": "h(φ) = 0.83996209465717508980；L_max² = α·ħc·λ·h(φ)——Yukawa 束缚角动量有上限",
+   "numbers": {}
+  },
+  {
+   "id": "G6-4",
+   "title": "禁闭无 L_max（对比 r214 U22）",
+   "ok": true,
+   "detail": "dL²/dr = A + 4σr³ > 0 全程严格单调 ⇒ 圆轨道 L² 无上界 ⇒ 禁闭势不存在『超过必逃逸』的角动量上限——与 Yukawa 的 φ-极上限形成硬对照",
+   "numbers": {}
+  },
+  {
+   "id": "G7-1",
+   "title": "RK4 能量守恒（全案例）",
+   "ok": true,
+   "detail": "6 条轨迹 |ΔE/E|max = 2.59716e-11（dt=5e-4，含近临界 λ=0.35 逃逸案例）",
+   "numbers": {
+    "dE_max": "2.5971584e-11",
+    "dL_max": "2.3681736e-13"
+   }
+  },
+  {
+   "id": "G7-2",
+   "title": "禁闭无逃逸 vs Yukawa 逃逸（判据有判别力）",
+   "ok": true,
+   "detail": "禁闭：L=0.6/3.0 都束缚（L=3 的 r_max=19.6453）；Yukawa λ=0.35：L=0.6 与 L=3（≫L_max=0.5422）都逃逸",
+   "numbers": {
+    "conf_L3_rmax": "19.645311",
+    "yuk035_L06_rmax": "25.000215"
+   }
+  },
+  {
+   "id": "G7-3",
+   "title": "数值 r_max 与理论外根对拍",
+   "ok": true,
+   "detail": "理论 r_max = 19.645311，数值 = 19.645311，相对差 1.80318e-11（RK4 步长内一致）",
+   "numbers": {}
+  },
+  {
+   "id": "G7-4",
+   "title": "步长收敛比（能量误差，非调容差蒙过）",
+   "ok": true,
+   "detail": "dt 减半后 |ΔE/E| 缩小约 16.0216 倍（RK4 应 ~16）；r_max 与理论外根相对差 1.80318e-11 已在步长内一致",
+   "numbers": {
+    "ratio": "16.021553",
+    "dE_dt": "4.2231629e-15",
+    "dE_half": "2.6359260e-16"
+   }
+  },
+  {
+   "id": "G8-1",
+   "title": "P_L²=P_L、P_L+P_R=I、P_LP_R=0",
+   "ok": true,
+   "detail": "2×2 精确分数矩阵（γ⁵=diag(1,−1) 代表）：门代数封闭，g_χ 只能取投影值",
+   "numbers": {}
+  },
+  {
+   "id": "G8-2",
+   "title": "宇称不对称读数",
+   "ok": true,
+   "detail": "CC 道（g_L=1, g_R=0）A_P=1（最大宇称破坏）；样本 (1, 0.3) A_P=91/109=0.834862",
+   "numbers": {
+    "A_P_CC": 1.0,
+    "A_P_sample": 0.8348623853211009
+   }
+  },
+  {
+   "id": "G8-3",
+   "title": "退化还原 r214（逐位）",
+   "ok": true,
+   "detail": "g_χ≡1、σ=0 时 24 点网格 |ΔF| = 0（恰为 0：同一组参数的同一函数）",
+   "numbers": {
+    "max_abs_diff": "0"
+   }
+  }
+ ],
+ "controls": [
+  {
+   "id": "C1",
+   "title": "太阳-地球引力：母式 vs 牛顿直算",
+   "ok": true,
+   "detail": "母式 F=3.541742792e+22 N，牛顿直算 F=3.541742792e+22 N，相对差 0",
+   "numbers": {
+    "F_N": "3.541742792e+22",
+    "rel": "0"
+   }
+  },
+  {
+   "id": "C2",
+   "title": "氢原子：库仑母式给 13.6057 eV",
+   "ok": true,
+   "detail": "V(a0)=27.21138625 eV，E1=−V/2=13.60569312 eV vs Rydberg 13.605693 eV，相对差 9.04209e-9",
+   "numbers": {
+    "E1_eV": "13.60569312",
+    "rel": "9.0420935e-9"
+   }
+  },
+  {
+   "id": "C3",
+   "title": "EM↔强剩余交叉 14.618 fm 复现",
+   "ok": true,
+   "detail": "r_× = 14.617976 fm vs r214 读数 14.6179756 fm",
+   "numbers": {
+    "cross_fm": "14.617976"
+   }
+  }
+ ],
+ "readings": {
+  "size_table_log10F": [
+   {
+    "r": "1 fm",
+    "G": "-33.728799",
+    "EM": "2.3630622",
+    "W": "-174.77833",
+    "Sres": "5.5935298",
+    "Scol": "5.2014379"
+   },
+   {
+    "r": "1 Å",
+    "G": "-43.728799",
+    "EM": "-7.6369378",
+    "W": "-inf(下溢=物理零)",
+    "Sres": "-29706.376",
+    "Scol": "5.1647964"
+   },
+   {
+    "r": "1 m",
+    "G": "-63.728799",
+    "EM": "-27.636938",
+    "W": "-inf(下溢=物理零)",
+    "Sres": "-inf(下溢=物理零)",
+    "Scol": "5.1647964"
+   },
+   {
+    "r": "1 R☉",
+    "G": "-81.413643",
+    "EM": "-45.321782",
+    "W": "-inf(下溢=物理零)",
+    "Sres": "-inf(下溢=物理零)",
+    "Scol": "5.1647964"
+   }
+  ],
+  "cross_em_sres_m": "1.4617975629306001e-14",
+  "cross_em_sres_fm": "14.61797563",
+  "cross_em_sigma_m": "3.973130980e-17",
+  "cross_oge_sigma_fm": "0.2967009694",
+  "trajectories": {
+   "conf_L0.6": {
+    "E0": "-0.420",
+    "L": "0.6",
+    "rmax": "1",
+    "escaped": false,
+    "dE": "4.747450291e-12",
+    "dL": "9.164265348e-14"
+   },
+   "conf_L1.0": {
+    "E0": "-0.100",
+    "L": "1.0",
+    "rmax": "1",
+    "escaped": false,
+    "dE": "1.302083362e-16",
+    "dL": "1.302083362e-17"
+   },
+   "conf_L3.0": {
+    "E0": "3.900",
+    "L": "3.0",
+    "rmax": "19.64531144",
+    "escaped": false,
+    "dE": "4.223162857e-15",
+    "dL": "2.467678415e-18"
+   },
+   "yuk035_L0.6": {
+    "E0": "0.1225673807",
+    "L": "0.6",
+    "rmax": "25.00021514",
+    "escaped": true,
+    "dE": "7.675295954e-18",
+    "dL": "9.598756526e-21"
+   },
+   "yuk035_L3.0": {
+    "E0": "4.442567381",
+    "L": "3.0",
+    "rmax": "25.00047193",
+    "escaped": true,
+    "dE": "1.888528292e-15",
+    "dL": "4.176088588e-20"
+   },
+   "yuk1_L0.6": {
+    "E0": "-0.1878794412",
+    "L": "0.6",
+    "rmax": "1",
+    "escaped": false,
+    "dE": "2.597158414e-11",
+    "dL": "2.368173599e-13"
+   }
+  },
+  "channel_gate": {
+   "CC": {
+    "g_L": 1,
+    "g_R": 0,
+    "A_P": 1.0
+   },
+   "sample_1_03": {
+    "g_L": 1,
+    "g_R": 0.3,
+    "A_P": 0.8348623853211009
+   }
+  }
+ },
+ "counts": {
+  "entries": 16,
+  "PASS": 11,
+  "FAIL": 1,
+  "BOUNDARY": 2,
+  "INFO": 2,
+  "guards": "23/23",
+  "controls": "3/3"
+ },
+ "verdict": "R221-UFE4F-PLUS-SIGMA-IN-OK-DERIV-COMB-OK-SIGMA-2PATH-OK-RSTAR-0.296701fm-EM-SRES-CROSS-REPRO-OK-COL-ATTRACT-OK-NEGSIG-CAUGHT-NEFF-LIN-1-OK-NO-LMAX-CONFINEMENT-OK-CONFINEMENT-NO-ESCAPE-OK-REDUCE-R214-BITEXACT-OK-GATE-PALG-OK-AP-CC-1-TRAJ-GAUGE-OK-FAIL-U30-INHERITED-NET-INPUTS-PLUS2-VERDICT-FORM-UNIFIED-EXTENDED-DYNAMICS-STILL-NOT",
+ "key_numbers": {
+  "lambda_W_m": "2.4550179827562611e-18",
+  "lambda_pi_m": "1.4619325721160970e-15",
+  "sigma_N": "146149.20",
+  "r_star_oge_sigma_fm": "0.29670097",
+  "cross_em_sres_fm": "14.617976",
+  "cross_em_sigma_fm": "0.0397313",
+  "x_e": "2.14619322062",
+  "h_phi": "0.839962094657175090",
+  "L_max2_natural_yukawa1": "0.8399620947",
+  "em_g_ratio": "1.23555163865e+36"
+ },
+ "judgement": "CLOSED-INCREMENT（禁闭项接入 + 通道门登记 + 交互可视化）；U26 部分收口（色道）、U27 结构登记、U30 FAIL 继承；供给仍 0",
+ "source": {
+  "engine": "TUFT-r221_四力统一运动方程强化轮_禁闭项接入与弱通道门_精算与交互可视化_2026-10-26.py",
+  "inherits": [
+   "r214（UFE-4F 母式与四力参数）",
+   "r217（独立复核与根目录整理）",
+   "70 卷（α_s 低能读数）",
+   "03_四力还原（力程/耦合基准）"
+  ]
+ }
+}

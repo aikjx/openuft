@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>221 · 四力统一运动方程·交互可视化（UFE-4F⁺：禁闭项 + 通道门）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;--gray:#7aa2f7;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#12315a);border:1px solid #1d4ed8;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#1e3a8a;color:#bfdbfe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h2{font-size:16.5px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  h3{font-size:14px;font-weight:700;color:#86efac;margin:12px 0 6px;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .eq{background:#0d1730;border:1px solid #1d4ed8;border-left:5px solid var(--green);border-radius:8px;
+      padding:12px 16px;margin:10px 0;font-family:Consolas,monospace;font-size:13.5px;color:#93c5fd;
+      overflow-x:auto;white-space:pre;}
+  .eq b{color:#fbbf24;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0;font-size:12.5px;color:#cbd5e1;}
+  .ctrl label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;user-select:none;}
+  .ctrl input[type=checkbox]{accent-color:#4ade80;}
+  .ctrl input[type=range]{width:150px;accent-color:#4ade80;}
+  .btn{background:#14532d;color:#bbf7d0;border:1px solid #166534;border-radius:8px;padding:4px 14px;font-size:12.5px;cursor:pointer;font-family:inherit;}
+  .btn:hover{background:#166534;}
+  .btn.on{background:#1d4ed8;color:#dbeafe;border-color:#1e40af;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#93c5fd;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;min-height:20px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono,th.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .card.bnd{border-color:#92400e;} .card.bnd b{color:var(--orange);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:#cbd5e1;margin:4px 0;}
+  .legend .sw{display:inline-block;width:18px;height:4px;border-radius:2px;margin-right:5px;vertical-align:middle;}
+  @media(max-width:600px){.banner h1{font-size:17px;}section{padding:14px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r221 · 承 r214（UFE-4F）+ r217（独立复核/整理）· 零外部依赖</span>
+  <h1>四力统一运动方程·交互可视化<br>UFE-4F⁺：禁闭项 σr 接入 + 弱通道门 g_χ</h1>
+  <p>同一张图上看四种力 + 色道禁闭：大小（log₁₀|F|）、方向（符号）、距离（λ / e 折 / 幂指数 / 恒力）。
+     本页全部数字由引擎 JSON 单源铸入；交互读数由浏览器实时复算同一组公式。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h2><span class="n">§1</span>承重式：UFE-4F⁺（r214 母式的严格超集）</h2>
+  <div class="eq">统一势   U(r) = Σᵢ [ −sᵢ·αᵢ·(ħc/r)·e^(−r/λᵢ) ]  +  <b>[ σ·r ]色道</b>
+统一力   F(r) = −dU/dr = Σᵢ [ −sᵢ·αᵢ·(ħc/r²)·e^(−r/λᵢ)·(1+r/λᵢ)·r̂ ]  −  <b>σ·r̂ ]色道</b>
+统一运动 m·d²r/dt² = Σᵢ Fᵢ(r)     ← 所有力写进同一个运动</div>
+  <p>退化还原守卫：<b>g_χ≡1、σ=0 时与 r214 母式逐位一致（|Δ|=0）</b>——本式不是另一条方程，是原式加一项。
+     σ = 0.18 GeV² 是唯一"本身就有力的量纲"的强度参数（<span class="mono" id="sigmaN"></span> N，恒定，与 r 无关）。</p>
+  <div class="note" id="paramsNote"></div>
+</section>
+
+<section>
+  <h2><span class="n">§2</span>力的大小 × 距离：双对数交互图（两质子基准 + q q̄ 色道）</h2>
+  <div class="legend" id="legend2"></div>
+  <canvas id="cvF" width="1000" height="560"></canvas>
+  <div class="ctrl" id="seriesToggles"></div>
+  <div class="read" id="readF">移动鼠标读取各力在对应距离的 log₁₀|F|（浏览器实时复算）</div>
+  <p class="note" id="marksNote"></p>
+</section>
+
+<section>
+  <h2><span class="n">§3</span>距离因子 g(x)、等效幂指数 n_eff(x)、束缚函数 h(x)</h2>
+  <div class="legend">
+    <span><span class="sw" style="background:#4ade80"></span>g(x)=e^(−x)(1+x)（Yukawa/库仑 比）</span>
+    <span><span class="sw" style="background:#e0af68"></span>n_eff(x)=2+x²/(1+x)（等效幂指数，右轴）</span>
+    <span><span class="sw" style="background:#bb9af7"></span>h(x)=x·e^(−x)(1+x)（∝L_max²，右轴）</span>
+  </div>
+  <canvas id="cvG" width="1000" height="440"></canvas>
+  <div class="read" id="readG">移动鼠标读取 x、g、n_eff、h（h 的极大在黄金比 φ=1.618，h(φ)=0.839962094657…）</div>
+  <p class="note">三个距离读数：力的 e 折在 x=2.146（<b>2.146λ 不是 λ</b>）；n_eff 从 2 连续走到无穷（指数压制=加速的幂律）；
+     h(x) 有极大 ⇒ <b>Yukawa 束缚角动量有上限 L_max²=αħcλ·h(φ)</b>，而禁闭势 dL²/dr=A+4σr³&gt;0 无上限——沙盒里可见差别。</p>
+</section>
+
+<section>
+  <h2><span class="n">§4</span>轨迹沙盒：一个运动方程里的束缚与逃逸（RK4 实时积分）</h2>
+  <div class="ctrl">
+    <button class="btn on" data-mode="kepler" id="m_kepler">库仑/牛顿 λ=∞</button>
+    <button class="btn" data-mode="yuk1" id="m_yuk1">Yukawa λ=1</button>
+    <button class="btn" data-mode="yuk035" id="m_yuk035">Yukawa λ=0.35</button>
+    <button class="btn" data-mode="conf" id="m_conf">禁闭 −0.8/r+0.2r</button>
+    <label>角动量 L=<span id="Lv">0.60</span><input type="range" id="Lslider" min="0.3" max="3.2" step="0.05" value="0.6"></label>
+    <button class="btn" id="playBtn">暂停</button>
+    <button class="btn" id="resetBtn">重置</button>
+  </div>
+  <canvas id="cvT" width="1000" height="560"></canvas>
+  <div class="read" id="readT"></div>
+  <p class="note">同一切初值（r₀=1，v_r=0）：Kepler 永束缚；Yukawa λ=0.35 在 L&gt;L_max=0.5422 时<b>逃逸</b>；
+     禁闭势<b>任何 L 都束缚</b>（大 L 走出一个半径有限的"禁闭花瓣"再回来）——这就是 U26 接入 σr 后的动力学后果。</p>
+</section>
+
+<section>
+  <h2><span class="n">§5</span>无量纲强度谱（跨 39 个数量级）与 σ 的特殊地位</h2>
+  <canvas id="cvA" width="1000" height="360"></canvas>
+  <p class="note">σ 不在 α 谱里——它有量纲（力的量纲）。这正是"统一方程里的第五项"与"四种 Yukawa 型力"的结构差别：
+     四力互比用 α，禁闭的强度用 σ（N）直接读。</p>
+</section>
+
+<section>
+  <h2><span class="n">§6</span>大小表（log₁₀|F|/N）——引擎铸数</h2>
+  <table id="sizeTable"></table>
+  <p class="note">"−inf(下溢=物理零)"：e^(−r/λ) 在 Decimal 60 位下已无有效位，物理上就是 0。
+     色道在 1 Å 以外的"恒力"只是形式延拓——物理上禁闭使孤立色对不存在（诚实边界 B3）。</p>
+</section>
+
+<section>
+  <h2><span class="n">§7</span>方向与通道门</h2>
+  <table>
+    <tr><th>力</th><th>方向 s</th><th>距离行为</th><th>通道门 g_χ</th><th>备注</th></tr>
+    <tr><td>引力</td><td class="mono">+1 恒吸引</td><td class="mono">r⁻²</td><td class="mono">1</td><td>α_G 依赖 m²（非普适）</td></tr>
+    <tr><td>电磁</td><td class="mono">±1 双号</td><td class="mono">r⁻²</td><td class="mono">1</td><td>唯一 s 随源变号的力</td></tr>
+    <tr><td>弱（有效）</td><td class="mono">+1（CC 道）</td><td class="mono">e^(−r/λ_W)(1+r/λ_W)</td><td class="mono" id="gateW"></td><td>V−A：g_L=1、g_R=0 ⇒ A_P=1（最大宇称破坏）</td></tr>
+    <tr><td>强（剩余核力）</td><td class="mono">+1 恒吸引</td><td class="mono">e^(−r/λ_π)(1+r/λ_π)</td><td class="mono">1</td><td>色单态强子间 π 交换</td></tr>
+    <tr><td><b>强（色道）</b></td><td class="mono">+1 恒吸引</td><td class="mono"><b>A/r² + σ（第三类）</b></td><td class="mono">1</td><td>C_F=4/3 精确分数；r*&lt;0.3 fm OGE 占优</td></tr>
+  </table>
+  <p class="note">通道门登记（U12/U13）：A_P=(g_L²−g_R²)/(g_L²+g_R²)；样本 (1, 0.3) 给 A_P=91/109≈0.834862。
+     这是<b>结构登记不是推导</b>——完整 SU(2)_L 规范动力学（W/Z 极化、味改变）仍不在式内（U27 完整收口 OPEN）。</p>
+</section>
+
+<section>
+  <h2><span class="n">§8</span>诚实边界（不粉饰）</h2>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = {"stem": "TUFT-r221", "round": 221, "date": "2026-10-26", "unified_force_equation": "UFE-4F⁺：U(r) = Σ_i [−s_i·α_i·ħc·e^{−r/λ_i}/r] + [σ·r]_色道；F(r) = −dU/dr = Σ_i [−s_i·α_i·ħc·e^{−x_i}(1/r²+1/(λ_i r))·r̂] − σ·r̂]_色道", "unified_motion_equation": "m·d²r/dt² = Σ_i F_i(r)（五项：四 Yukawa 型 + 一个线性禁闭项）", "potential": "U(r) = Σ_i −s_i·α_i·ħc·e^{−r/λ_i}/r + [σr]_色道，g_χ 乘于 (s·α)", "params": {"lambda_W_m": "2.4550179827562611e-18", "lambda_pi_m": "1.4619325721160970e-15", "alpha_G_pp": "5.9061494e-39", "alpha_em": "0.0072973525693", "alpha_W": "0.000010268268", "alpha_sres": "14.6", "alpha_s_2GeV": "0.30521", "alpha_s_MZ": "0.1180", "sigma_GeV2": "0.18", "sigma_GeV_per_fm": "0.9121915292", "sigma_N": "146149.1954", "A_color_GeVfm": "0.08030155692", "C_F": "4/3", "r_star_sigma_fm": "0.2967009694", "phi": "1.61803398874989", "h_phi": "0.839962094657175090", "x_e": "2.14619322062"}, "entries": [{"code": "U01", "level": "PASS", "title": "σ 项量纲齐次", "detail": "[σ]=MLT⁻²=力、[σr]=ML²T⁻²=能量；σ 是唯一『本身就有力的量纲』的强度参数", "numbers": {"sigma_dim": [1, 0, -2, 0]}}, {"code": "U02", "level": "PASS", "title": "组合母式求导闭合", "detail": "Yukawa+线性组合势 F=−dU/dr：解析 vs Richardson 四阶外推，6 个 r 残差 ≤1e-30 且 ≠0", "numbers": {"max_residual": "3.7071242e-47"}}, {"code": "U03", "level": "PASS", "title": "F_σ 恒定（禁闭签名）", "detail": "线性项对 r 的力恒为 σ（0.18 GeV² ⇒ 0.912192 GeV/fm ⇒ 146149 N），与 r⁻² 系（引力/电磁）和 e^{-r/λ} 系（弱/剩余强）形成第三类距离行为", "numbers": {"sigma_N": "146149.20"}}, {"code": "U04", "level": "PASS", "title": "色道恒吸引", "detail": "r∈[0.01,100] fm 4000 点 F_r<0：OGE 与 σ 两项同向，无远近反号（同 r214 G1-7 结论）", "numbers": {}}, {"code": "U05", "level": "PASS", "title": "交叉 r*_σ = √(A/σ)", "detail": "r* = 0.29670097 fm（α_s(2 GeV) 口径）：r<r* 单胶子交换占优（渐近自由区），r>r* 线性禁闭占优；与 18 卷 0.3889 fm（σr vs π-Yukawa，异道异口径）不矛盾", "numbers": {"r_star_fm": "0.29670097"}}, {"code": "U06", "level": "BOUNDARY", "title": "EM↔σr 交叉为跨自由度比较", "detail": "r = √(k_e e²/σ) = 0.0397313 fm，但色力作用于色荷对、电磁力作用于电荷对——不同自由度的『谁大』只作形式层读数", "numbers": {"r_cross_fm": "0.0397313"}}, {"code": "U07", "level": "PASS", "title": "n_eff(线性)=1", "detail": "线性项等效幂指数恒为 +1：四力距离行为三分类（−2 / 指数压制 / +1）至此齐备", "numbers": {}}, {"code": "U08", "level": "PASS", "title": "禁闭无 L_max 上限", "detail": "dL²_circ/dr = A+4σr³ > 0 严格单调 ⇒ 任何 L 都有束缚圆轨道；Yukawa 则有 L_max² = αħcλφ³e^{−φ}（r214 U22）——两种短程化的动力学后果截然不同", "numbers": {}}, {"code": "U09", "level": "PASS", "title": "禁闭下无逃逸（轨迹证实）", "detail": "禁闭势 L=0.6/3.0 均束缚（L=3 的 r_max=19.6453）；Yukawa λ=0.35 同初值逃逸（r_max=25.0002 或 40+）", "numbers": {"conf_L3_rmax": "19.645311"}}, {"code": "U10", "level": "PASS", "title": "RK4 组合势轨迹质量", "detail": "6 条轨迹 |ΔE/E|max=2.59716e-11；数值 r_max 与理论外根相对差 1.80318e-11；步长收敛比 16.0216（应在 4–64）", "numbers": {"dE_max": "2.5971584e-11", "r_max_rel": "1.80318e-11"}}, {"code": "U11", "level": "PASS", "title": "退化还原 r214", "detail": "g_χ≡1、σ=0 时 24 点网格与 r214 UFE-4F 母力逐位一致（|Δ|=0）——UFE-4F⁺ 是 r214 的严格超集，不是另一条方程", "numbers": {}}, {"code": "U12", "level": "PASS", "title": "通道门代数与宇称读数", "detail": "P_L²=P_L、P_L+P_R=I、P_LP_R=0（精确分数）；CC 道 A_P=1（最大宇称破坏），样本 (g_L,g_R)=(1,0.3) A_P=91/109≈0.834862", "numbers": {}}, {"code": "U13", "level": "BOUNDARY", "title": "弱方向通道依从（结构登记，非推导）", "detail": "在门扩展下『只有电磁可变号』（r214 U18）需加限定：s 可通道依从是结构登记，弱道的完整 V−A 规范动力学（W/Z 极化、味改变）仍不在式内——U27 完整收口 OPEN", "numbers": {}}, {"code": "U14", "level": "INFO", "title": "大小表升级（五系列）", "detail": "色道 |F| 在 0.1/0.3/1 fm = 1.43272e+6 / 289102 / 159015 N（GeV/fm 口径两路一致）；1 Å 以上色道『恒力』只是形式延拓——物理上禁闭使孤立色对不存在（B3）", "numbers": {"sigma_N": "146149.20"}}, {"code": "U15", "level": "FAIL", "title": "输入账：净约束增量仍为 0", "detail": "UFE-4F 输入 12 个（{s,α,λ}×4）→ UFE-4F⁺ 14 个（+σ、+g_χ）；约束新增 0 个；方程更完整但统一度不升——U30『动力学不统一』FAIL 继承不翻案", "numbers": {"inputs_before": 12, "inputs_after": 14}}, {"code": "U16", "level": "INFO", "title": "判决", "detail": "形式统一**扩展成功**：一个势函数 + 一个运动方程现在承载四 Yukawa 型力 + 线性禁闭；求导、量纲、方向、距离、轨迹全机算闭合；动力学统一仍 FAIL（继承）", "numbers": {}}], "guards": [{"id": "G0-1", "title": "量纲工具自检（σ 项）", "ok": true, "detail": "[α·ħc/r²]=[σ]=MLT⁻²=力；[σr]=ML²T⁻²=能量；错误逐分量相乘实现被抓", "numbers": {"sigma_dim": [1, 1, -2, 0], "sigma_r_dim": [1, 2, -2, 0]}}, {"id": "G1-1", "title": "组合母式 F=−dU/dr 解析vs数值", "ok": true, "detail": "Yukawa(λ=1)+线性 σr 组合势，6 个 r 跨 3.3 个量级，Richardson 残差 max=3.70712e-47", "numbers": {"max_residual": "3.707124228e-47", "min_residual": "2.027751373e-51"}}, {"id": "G1-2", "title": "残差非退化（≠0）", "ok": true, "detail": "残差恰为 0 意味着退化成恒等复读，必须有真实数值微分在跑", "numbers": {}}, {"id": "G1-3", "title": "λ→∞ 库仑极限", "ok": true, "detail": "λ=1e30 m 与纯 r⁻² 的最大相对差 5.00002e-55", "numbers": {}}, {"id": "G2-1", "title": "σ 双路换算一致（口径级）", "ok": true, "detail": "路径A σ·(GeV/fm→N)=146149.195379 N；路径B SI 直算=146149.195424 N；相对差 3.12190e-10（≈2e-8 量级 = ħc 两口径的 CODATA 版本差，非分歧）", "numbers": {"sigma_N_pathA": "146149.1954", "sigma_N_pathB": "146149.1954", "rel": "3.121902635e-10"}}, {"id": "G2-3", "title": "λ_W/λ_π 双路读数（口径级）", "ok": true, "detail": "λ_W：2.45501798276e-18 vs 2.45501798199e-18 m（rel 3.1219026e-10）；λ_π：1.46193257212e-15 vs 1.46193257166e-15 m（rel 3.1219026e-10）；正文统一取 ħc[MeV·fm] 路径（与 r214 逐位同源）", "numbers": {"rel_W": "3.121902634e-10", "rel_PI": "3.121902634e-10"}}, {"id": "G2-4", "title": "α_W 双口径（重算 vs r214 声明）", "ok": true, "detail": "G_F·m_p(c²)² = 0.000010268267505693427 vs r214 声明 0.000010268268；rel = 4.81392e-8（声明值末位舍入所致，口径级一致）；退化还原守卫统一用声明口径", "numbers": {"rel": "4.813923569e-8"}}, {"id": "G2-2", "title": "交叉 r*=√(A/σ) 量纲自洽", "ok": true, "detail": "r*_σ = 0.29670097 fm（α_s(2 GeV)=0.30521 口径）；18 卷另一口径（σr vs π-Yukawa）给 0.3889 fm——道不同，不矛盾", "numbers": {}}, {"id": "G4-1", "title": "EM↔强剩余交叉复现 r214", "ok": true, "detail": "x=9.9990765, r_×=14.617976 fm，vs r214 读数相对差 3.12190e-10", "numbers": {}}, {"id": "G4-2", "title": "OGE↔σr 同道交叉", "ok": true, "detail": "r < r* 时单胶子交换占优（渐近自由区），r > r* 时线性禁闭占优；r* = 0.29670097 fm", "numbers": {}}, {"id": "G5-1", "title": "色道恒吸引（4000 点扫描）", "ok": true, "detail": "r∈[0.01, 100] fm 全程 F_r<0：OGE 与 σ 两项都指向配对粒子，无远近反号", "numbers": {}}, {"id": "G5-2", "title": "阴性对照：σ 反号必被抓", "ok": true, "detail": "把 σ 项写反（排斥）后，r ≳ 0.3 fm 的扫描立即出现 F_r>0 ⇒ 方向检查有判别力", "numbers": {}}, {"id": "G6-1", "title": "n_eff(线性)=1", "ok": true, "detail": "对数斜率 = 1.00000000000（精确 1：F ∝ r¹，与 r⁻² 的 −2 形成两端锚）", "numbers": {}}, {"id": "G6-2", "title": "e 折长度 x_e 复现", "ok": true, "detail": "x_e = 2.14619322062（r214 读数 2.1461932206）——力的 e 折是 2.146λ 不是 λ", "numbers": {}}, {"id": "G6-3", "title": "h(φ)=φ³e^{−φ} 复现", "ok": true, "detail": "h(φ) = 0.83996209465717508980；L_max² = α·ħc·λ·h(φ)——Yukawa 束缚角动量有上限", "numbers": {}}, {"id": "G6-4", "title": "禁闭无 L_max（对比 r214 U22）", "ok": true, "detail": "dL²/dr = A + 4σr³ > 0 全程严格单调 ⇒ 圆轨道 L² 无上界 ⇒ 禁闭势不存在『超过必逃逸』的角动量上限——与 Yukawa 的 φ-极上限形成硬对照", "numbers": {}}, {"id": "G7-1", "title": "RK4 能量守恒（全案例）", "ok": true, "detail": "6 条轨迹 |ΔE/E|max = 2.59716e-11（dt=5e-4，含近临界 λ=0.35 逃逸案例）", "numbers": {"dE_max": "2.5971584e-11", "dL_max": "2.3681736e-13"}}, {"id": "G7-2", "title": "禁闭无逃逸 vs Yukawa 逃逸（判据有判别力）", "ok": true, "detail": "禁闭：L=0.6/3.0 都束缚（L=3 的 r_max=19.6453）；Yukawa λ=0.35：L=0.6 与 L=3（≫L_max=0.5422）都逃逸", "numbers": {"conf_L3_rmax": "19.645311", "yuk035_L06_rmax": "25.000215"}}, {"id": "G7-3", "title": "数值 r_max 与理论外根对拍", "ok": true, "detail": "理论 r_max = 19.645311，数值 = 19.645311，相对差 1.80318e-11（RK4 步长内一致）", "numbers": {}}, {"id": "G7-4", "title": "步长收敛比（能量误差，非调容差蒙过）", "ok": true, "detail": "dt 减半后 |ΔE/E| 缩小约 16.0216 倍（RK4 应 ~16）；r_max 与理论外根相对差 1.80318e-11 已在步长内一致", "numbers": {"ratio": "16.021553", "dE_dt": "4.2231629e-15", "dE_half": "2.6359260e-16"}}, {"id": "G8-1", "title": "P_L²=P_L、P_L+P_R=I、P_LP_R=0", "ok": true, "detail": "2×2 精确分数矩阵（γ⁵=diag(1,−1) 代表）：门代数封闭，g_χ 只能取投影值", "numbers": {}}, {"id": "G8-2", "title": "宇称不对称读数", "ok": true, "detail": "CC 道（g_L=1, g_R=0）A_P=1（最大宇称破坏）；样本 (1, 0.3) A_P=91/109=0.834862", "numbers": {"A_P_CC": 1.0, "A_P_sample": 0.8348623853211009}}, {"id": "G8-3", "title": "退化还原 r214（逐位）", "ok": true, "detail": "g_χ≡1、σ=0 时 24 点网格 |ΔF| = 0（恰为 0：同一组参数的同一函数）", "numbers": {"max_abs_diff": "0"}}], "controls": [{"id": "C1", "title": "太阳-地球引力：母式 vs 牛顿直算", "ok": true, "detail": "母式 F=3.541742792e+22 N，牛顿直算 F=3.541742792e+22 N，相对差 0", "numbers": {"F_N": "3.541742792e+22", "rel": "0"}}, {"id": "C2", "title": "氢原子：库仑母式给 13.6057 eV", "ok": true, "detail": "V(a0)=27.21138625 eV，E1=−V/2=13.60569312 eV vs Rydberg 13.605693 eV，相对差 9.04209e-9", "numbers": {"E1_eV": "13.60569312", "rel": "9.0420935e-9"}}, {"id": "C3", "title": "EM↔强剩余交叉 14.618 fm 复现", "ok": true, "detail": "r_× = 14.617976 fm vs r214 读数 14.6179756 fm", "numbers": {"cross_fm": "14.617976"}}], "readings": {"size_table_log10F": [{"r": "1 fm", "G": "-33.728799", "EM": "2.3630622", "W": "-174.77833", "Sres": "5.5935298", "Scol": "5.2014379"}, {"r": "1 Å", "G": "-43.728799", "EM": "-7.6369378", "W": "-inf(下溢=物理零)", "Sres": "-29706.376", "Scol": "5.1647964"}, {"r": "1 m", "G": "-63.728799", "EM": "-27.636938", "W": "-inf(下溢=物理零)", "Sres": "-inf(下溢=物理零)", "Scol": "5.1647964"}, {"r": "1 R☉", "G": "-81.413643", "EM": "-45.321782", "W": "-inf(下溢=物理零)", "Sres": "-inf(下溢=物理零)", "Scol": "5.1647964"}], "cross_em_sres_m": "1.4617975629306001e-14", "cross_em_sres_fm": "14.61797563", "cross_em_sigma_m": "3.973130980e-17", "cross_oge_sigma_fm": "0.2967009694", "trajectories": {"conf_L0.6": {"E0": "-0.420", "L": "0.6", "rmax": "1", "escaped": false, "dE": "4.747450291e-12", "dL": "9.164265348e-14"}, "conf_L1.0": {"E0": "-0.100", "L": "1.0", "rmax": "1", "escaped": false, "dE": "1.302083362e-16", "dL": "1.302083362e-17"}, "conf_L3.0": {"E0": "3.900", "L": "3.0", "rmax": "19.64531144", "escaped": false, "dE": "4.223162857e-15", "dL": "2.467678415e-18"}, "yuk035_L0.6": {"E0": "0.1225673807", "L": "0.6", "rmax": "25.00021514", "escaped": true, "dE": "7.675295954e-18", "dL": "9.598756526e-21"}, "yuk035_L3.0": {"E0": "4.442567381", "L": "3.0", "rmax": "25.00047193", "escaped": true, "dE": "1.888528292e-15", "dL": "4.176088588e-20"}, "yuk1_L0.6": {"E0": "-0.1878794412", "L": "0.6", "rmax": "1", "escaped": false, "dE": "2.597158414e-11", "dL": "2.368173599e-13"}}, "channel_gate": {"CC": {"g_L": 1, "g_R": 0, "A_P": 1.0}, "sample_1_03": {"g_L": 1, "g_R": 0.3, "A_P": 0.8348623853211009}}}, "counts": {"entries": 16, "PASS": 11, "FAIL": 1, "BOUNDARY": 2, "INFO": 2, "guards": "23/23", "controls": "3/3"}, "verdict": "R221-UFE4F-PLUS-SIGMA-IN-OK-DERIV-COMB-OK-SIGMA-2PATH-OK-RSTAR-0.296701fm-EM-SRES-CROSS-REPRO-OK-COL-ATTRACT-OK-NEGSIG-CAUGHT-NEFF-LIN-1-OK-NO-LMAX-CONFINEMENT-OK-CONFINEMENT-NO-ESCAPE-OK-REDUCE-R214-BITEXACT-OK-GATE-PALG-OK-AP-CC-1-TRAJ-GAUGE-OK-FAIL-U30-INHERITED-NET-INPUTS-PLUS2-VERDICT-FORM-UNIFIED-EXTENDED-DYNAMICS-STILL-NOT", "key_numbers": {"lambda_W_m": "2.4550179827562611e-18", "lambda_pi_m": "1.4619325721160970e-15", "sigma_N": "146149.20", "r_star_oge_sigma_fm": "0.29670097", "cross_em_sres_fm": "14.617976", "cross_em_sigma_fm": "0.0397313", "x_e": "2.14619322062", "h_phi": "0.839962094657175090", "L_max2_natural_yukawa1": "0.8399620947", "em_g_ratio": "1.23555163865e+36"}, "judgement": "CLOSED-INCREMENT（禁闭项接入 + 通道门登记 + 交互可视化）；U26 部分收口（色道）、U27 结构登记、U30 FAIL 继承；供给仍 0", "source": {"engine": "TUFT-r221_四力统一运动方程强化轮_禁闭项接入与弱通道门_精算与交互可视化_2026-10-26.py", "inherits": ["r214（UFE-4F 母式与四力参数）", "r217（独立复核与根目录整理）", "70 卷（α_s 低能读数）", "03_四力还原（力程/耦合基准）"]}};
+
+/* ---------- 顶部徽章 ---------- */
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>` +
+    `<span class="chip">守卫 <b>${c.guards}</b></span>` +
+    `<span class="chip">控制组 <b>${c.controls}</b></span>` +
+    `<span class="chip">引擎 rc=0（纯标准库 Decimal 60 位）</span>`;
+  document.getElementById("sigmaN").textContent = Number(R.params.sigma_N).toExponential(4);
+  document.getElementById("paramsNote").textContent =
+    `λ_W = ${R.params.lambda_W_m} m · λ_π = ${R.params.lambda_pi_m} m · ` +
+    `A_色 = C_F·α_s(2GeV)·ħc = ${R.params.A_color_GeVfm} GeV·fm · ` +
+    `σ = ${R.params.sigma_GeV2} GeV² = ${R.params.sigma_GeV_per_fm} GeV/fm`;
+  document.getElementById("gateW").textContent = "g_L=1, g_R=0";
+})();
+
+/* ---------- 物理函数（与引擎同一组公式，浏览器侧复算） ---------- */
+const P = R.params;
+const LAM_W = parseFloat(P.lambda_W_m), LAM_PI = parseFloat(P.lambda_pi_m);
+const A_G = parseFloat(P.alpha_G_pp), A_EM = parseFloat(P.alpha_em), A_W = parseFloat(P.alpha_W);
+const A_SRES = 14.6, HC = 3.16152677e-26;       // ħc [J·m]
+const A_COL = parseFloat(P.A_color_GeVfm);       // GeV·fm
+const SIG = parseFloat(P.sigma_GeV_per_fm);      // GeV/fm
+const GEVFM_TO_N = 1.602176634e5;
+
+function log10Yuk(alpha, lam, r){               // r, lam 同单位
+  const x = r/lam;
+  const l0 = Math.log10(alpha*HC) - 2*Math.log10(r) + Math.log10(1+Math.pow(10, Math.log10(r)-Math.log10(lam)));
+  return l0 - x/Math.LN10;                       // e^(−x) 只进指数项
+}
+function log10Color(rm){                        // rm [m] → GeV/fm → N
+  const rfm = rm*1e15;
+  return Math.log10((A_COL/(rfm*rfm) + SIG)*GEVFM_TO_N);
+}
+const SERIES = [
+  {key:"G",   name:"引力 (pp)",        color:"#7aa2f7", f:r=>Math.log10(A_G*HC)-2*Math.log10(r)},
+  {key:"EM",  name:"电磁 (pp)",        color:"#e0af68", f:r=>Math.log10(A_EM*HC)-2*Math.log10(r)},
+  {key:"W",   name:"弱·有效 (pp)",     color:"#bb9af7", f:r=>log10Yuk(A_W, LAM_W, r)},
+  {key:"Sres",name:"强·剩余核力 (pp)", color:"#9ece6a", f:r=>log10Yuk(A_SRES, LAM_PI, r)},
+  {key:"Scol",name:"强·色道 (qq̄)",    color:"#f7768e", f:r=>log10Color(r)},
+];
+const on = {G:true, EM:true, W:true, Sres:true, Scol:true};
+
+/* ---------- §2 大图 ---------- */
+const cvF = document.getElementById("cvF"), ctxF = cvF.getContext("2d");
+const X0=-18, X1=3, Y0=-45, Y1=10;
+const PADL=64, PADR=16, PADT=14, PADB=40;
+function x2px(x){return PADL+(x-X0)/(X1-X0)*(1000-PADL-PADR);}
+function y2px(y){return PADT+(Y1-y)/(Y1-Y0)*(560-PADT-PADB);}
+function px2x(px){return X0+(px-PADL)/(1000-PADL-PADR)*(X1-X0);}
+
+function drawF(hoverX){
+  ctxF.clearRect(0,0,1000,560);
+  ctxF.fillStyle="#0d1730"; ctxF.fillRect(0,0,1000,560);
+  // 网格
+  ctxF.strokeStyle="#1f2b3f"; ctxF.lineWidth=1; ctxF.font="10px Consolas"; ctxF.fillStyle="#94a3b8";
+  for(let x=Math.ceil(X0/3)*3;x<=X1;x+=3){const px=x2px(x);
+    ctxF.beginPath();ctxF.moveTo(px,PADT);ctxF.lineTo(px,560-PADB);ctxF.stroke();
+    ctxF.fillText("1e"+x,px-10,560-PADB+14);}
+  for(let y=Math.ceil(Y0/5)*5;y<=Y1;y+=5){const py=y2px(y);
+    ctxF.beginPath();ctxF.moveTo(PADL,py);ctxF.lineTo(1000-PADR,py);ctxF.stroke();
+    ctxF.fillText(String(y),8,py+3);}
+  ctxF.fillText("log₁₀(r/m)",440,560-8); 
+  ctxF.save();ctxF.translate(12,300);ctxF.rotate(-Math.PI/2);ctxF.fillText("log₁₀(|F|/N)",-40,0);ctxF.restore();
+  // 关键竖线
+  const marks=[
+    {x:Math.log10(LAM_W),           c:"#bb9af7", t:"λ_W"},
+    {x:Math.log10(LAM_PI),          c:"#9ece6a", t:"λ_π"},
+    {x:Math.log10(parseFloat(R.key_numbers.r_star_oge_sigma_fm)*1e-15), c:"#f7768e", t:"r*σ"},
+    {x:Math.log10(parseFloat(R.key_numbers.cross_em_sigma_fm)*1e-15),   c:"#e0af68", t:"EM·σ"},
+    {x:Math.log10(parseFloat(R.key_numbers.cross_em_sres_fm)*1e-15),    c:"#9ece6a", t:"EM·Sres"},
+  ];
+  marks.forEach(m=>{if(m.x<X0||m.x>X1)return;const px=x2px(m.x);
+    ctxF.strokeStyle=m.c;ctxF.setLineDash([4,4]);
+    ctxF.beginPath();ctxF.moveTo(px,PADT);ctxF.lineTo(px,560-PADB);ctxF.stroke();ctxF.setLineDash([]);
+    ctxF.fillStyle=m.c;ctxF.fillText(m.t,px+3,PADT+10);});
+  // 曲线（逐像素列采样）
+  SERIES.forEach(s=>{ if(!on[s.key])return;
+    ctxF.strokeStyle=s.color; ctxF.lineWidth=1.8; ctxF.beginPath(); let started=false;
+    for(let px=PADL;px<=1000-PADR;px+=1.5){
+      const r=Math.pow(10,px2x(px)); const y=s.f(r);
+      if(!isFinite(y)){started=false;continue;}
+      if(y<Y0-30){started=false;continue;}
+      const py=y2px(Math.max(y,Y0-1));
+      if(y<Y0){started=false;continue;}
+      if(!started){ctxF.moveTo(px,py);started=true;} else ctxF.lineTo(px,py);
+    }
+    ctxF.stroke();});
+  // hover 竖线
+  if(hoverX!=null){const px=x2px(hoverX);
+    ctxF.strokeStyle="#e2e8f0";ctxF.setLineDash([2,3]);
+    ctxF.beginPath();ctxF.moveTo(px,PADT);ctxF.lineTo(px,560-PADB);ctxF.stroke();ctxF.setLineDash([]);}
+}
+(function(){
+  const box=document.getElementById("seriesToggles");
+  SERIES.forEach(s=>{
+    const lab=document.createElement("label");
+    lab.innerHTML=`<input type="checkbox" checked> <span class="sw" style="background:${s.color}"></span>${s.name}`;
+    lab.querySelector("input").addEventListener("change",e=>{on[s.key]=e.target.checked;drawF(null);});
+    box.appendChild(lab);});
+  const lg=document.getElementById("legend2");
+  SERIES.forEach(s=>{lg.innerHTML+=`<span><span class="sw" style="background:${s.color}"></span>${s.name}</span>`;});
+  document.getElementById("marksNote").textContent =
+    `竖线：λ_W=${P.lambda_W_m} m、λ_π=${(LAM_PI*1e15).toFixed(4)} fm、r*σ(OGE↔禁闭)=${R.key_numbers.r_star_oge_sigma_fm} fm、` +
+    `EM↔σr=${R.key_numbers.cross_em_sigma_fm} fm（跨自由度）、EM↔强剩余=${R.key_numbers.cross_em_sres_fm} fm`;
+  cvF.addEventListener("mousemove",e=>{
+    const rect=cvF.getBoundingClientRect();
+    const px=(e.clientX-rect.left)*(1000/rect.width);
+    if(px<PADL||px>1000-PADR)return;
+    const x=px2x(px), r=Math.pow(10,x);
+    let s=`r = 10^${x.toFixed(2)} m`;
+    SERIES.forEach(k=>{ if(!on[k.key])return;
+      const y=k.f(r); s+=`\n${k.name.padEnd(12,"　")} log₁₀|F| = ${isFinite(y)?y.toFixed(3):"−∞"}${y<Y0?"   (图中截断)":""}`;});
+    document.getElementById("readF").textContent=s; drawF(x);});
+  cvF.addEventListener("mouseleave",()=>{document.getElementById("readF").textContent="移动鼠标读取各力在对应距离的 log₁₀|F|（浏览器实时复算）";drawF(null);});
+  drawF(null);
+})();
+
+/* ---------- §3 g / n_eff / h ---------- */
+const cvG=document.getElementById("cvG"), ctxG=cvG.getContext("2d");
+function gx(x){return Math.exp(-x)*(1+x);}
+function neff(x){return 2+x*x/(1+x);}
+function hx(x){return x*Math.exp(-x)*(1+x);}
+function drawG(hxHover){
+  ctxG.clearRect(0,0,1000,440);
+  ctxG.fillStyle="#0d1730";ctxG.fillRect(0,0,1000,440);
+  const gx0=0,gx1=10,gy0=-0.05,gy1=5.2;
+  const PL=64,PR=52,PT=14,PB=36;
+  const X=xx=>PL+(xx-gx0)/(gx1-gx0)*(1000-PL-PR);
+  const YL=yy=>PT+(gy1-yy)/(gy1-gy0)*(440-PT-PB);   // 左轴 g (0..1.05 映射压缩) — 用同一 0..5.2 轴
+  ctxG.strokeStyle="#1f2b3f";ctxG.font="10px Consolas";ctxG.fillStyle="#94a3b8";
+  for(let x=0;x<=10;x++){ctxG.beginPath();ctxG.moveTo(X(x),PT);ctxG.lineTo(X(x),440-PB);ctxG.stroke();ctxG.fillText(String(x),X(x)-2,440-PB+13);}
+  for(let y=0;y<=5;y++){ctxG.beginPath();ctxG.moveTo(PL,YL(y));ctxG.lineTo(1000-PR,YL(y));ctxG.stroke();ctxG.fillText(String(y),10,YL(y)+3);}
+  // g 曲线（左轴尺度：g∈0..1 映射到 0..1.05 段 ⇒ 乘 (1.05/5.2) 视觉压缩? 直接同轴画，g 最高 1，可读）
+  function curve(fn,color){ctxG.strokeStyle=color;ctxG.lineWidth=1.8;ctxG.beginPath();let st=false;
+    for(let i=0;i<=600;i++){const x=gx0+(gx1-gx0)*i/600;const y=fn(x);
+      if(y>5.19||y<-0.04){st=false;continue;}
+      if(!st){ctxG.moveTo(X(x),YL(y));st=true;}else ctxG.lineTo(X(x),YL(y));}
+    ctxG.stroke();}
+  curve(gx,"#4ade80");curve(neff,"#e0af68");curve(hx,"#bb9af7");
+  // 标记
+  const marks=[[1,gx(1),"g(1)=0.7358"],[1,neff(1),"n_eff(1)=2.5"],[2.1461932206,gx(2.1461932206),"e 折 x_e"],
+               [1.6180339887,hx(1.6180339887),"h(φ)=0.83996"]];
+  ctxG.font="10px Consolas";
+  marks.forEach(m=>{ctxG.fillStyle="#e2e8f0";ctxG.beginPath();ctxG.arc(X(m[0]),YL(m[1]),3,0,7);ctxG.fill();
+    ctxG.fillText(m[2],X(m[0])+4,YL(m[1])-4);});
+  if(hxHover!=null){ctxG.strokeStyle="#e2e8f0";ctxG.setLineDash([2,3]);
+    ctxG.beginPath();ctxG.moveTo(X(hxHover),PT);ctxG.lineTo(X(hxHover),440-PB);ctxG.stroke();ctxG.setLineDash([]);}
+}
+cvG.addEventListener("mousemove",e=>{
+  const rect=cvG.getBoundingClientRect();
+  const px=(e.clientX-rect.left)*(1000/rect.width);
+  const PL=64,PR=52; if(px<PL||px>1000-PR)return;
+  const x=(px-PL)/(1000-PL-PR)*10;
+  document.getElementById("readG").textContent=
+    `x = r/λ = ${x.toFixed(3)}   g = ${gx(x).toFixed(5)}   n_eff = ${neff(x).toFixed(4)}   h = ${hx(x).toFixed(5)}`;
+  drawG(x);});
+cvG.addEventListener("mouseleave",()=>{drawG(null);
+  document.getElementById("readG").textContent="移动鼠标读取 x、g、n_eff、h（h 的极大在黄金比 φ=1.618，h(φ)=0.839962094657…）";});
+drawG(null);
+
+/* ---------- §4 轨迹沙盒 ---------- */
+const cvT=document.getElementById("cvT"), ctxT=cvT.getContext("2d");
+const MODES={
+  kepler:{A:1, S:0, lam:null},
+  yuk1:{A:1, S:0, lam:1},
+  yuk035:{A:1, S:0, lam:0.35},
+  conf:{A:0.8, S:0.2, lam:null},
+};
+let mode="kepler", L0=0.6, playing=true, st=null, trail=[];
+const PHI_JS=(1+Math.sqrt(5))/2, HPHI=Math.pow(PHI_JS,3)*Math.exp(-PHI_JS);
+function Vv(md,r){const m=MODES[md];
+  let coul = m.lam? -Math.exp(-r/m.lam)/r : -m.A/r;
+  return coul + m.S*r;}
+function acc(md,x,y,vx,vy){
+  const r=Math.hypot(x,y); if(r===0)return[0,0];
+  const m=MODES[md];
+  let fr = m.lam ? Math.exp(-r/m.lam)*(m.A/(r*r)+m.A/(m.lam*r)) : m.A/(r*r);
+  fr += m.S;
+  return [-fr*x/r,-fr*y/r];
+}
+function reset(){
+  const m=MODES[mode];
+  st={x:1,y:0,vx:0,vy:L0,t:0,rmax:1};
+  st.E=0.5*(st.vx*st.vx+st.vy*st.vy)+Vv(mode,1);
+  st.L=st.x*st.vy-st.y*st.vx;
+  trail=[];
+}
+function stepRK4(dt){
+  const md=mode;
+  const [a1x,a1y]=acc(md,st.x,st.y,st.vx,st.vy);
+  const x2=st.x+st.vx*dt/2, y2=st.y+st.vy*dt/2, vx2=st.vx+a1x*dt/2, vy2=st.vy+a1y*dt/2;
+  const [a2x,a2y]=acc(md,x2,y2,vx2,vy2);
+  const x3=st.x+vx2*dt/2, y3=st.y+vy2*dt/2, vx3=st.vx+a2x*dt/2, vy3=st.vy+a2y*dt/2;
+  const [a3x,a3y]=acc(md,x3,y3,vx3,vy3);
+  const x4=st.x+vx3*dt, y4=st.y+vy3*dt, vx4=st.vx+a3x*dt, vy4=st.vy+a3y*dt;
+  const [a4x,a4y]=acc(md,x4,y4,vx4,vy4);
+  st.x+=dt*(st.vx+2*vx2+2*vx3+vx4)/6;
+  st.y+=dt*(st.vy+2*vy2+2*vy3+vy4)/6;
+  st.vx+=dt*(a1x+2*a2x+2*a3x+a4x)/6;
+  st.vy+=dt*(a1y+2*a2y+2*a3y+a4y)/6;
+  st.t+=dt;
+  const r=Math.hypot(st.x,st.y); if(r>st.rmax)st.rmax=r;
+}
+function drawT(){
+  ctxT.clearRect(0,0,1000,560);
+  ctxT.fillStyle="#0d1730";ctxT.fillRect(0,0,1000,560);
+  const viewR=Math.min(45,Math.max(2.2,st.rmax*1.12));
+  const cx=500,cy=280,scale=Math.min(440,500)/(2*viewR);
+  const X=x=>cx+x*scale, Y=y=>cy-y*scale;
+  // 网格圈
+  ctxT.strokeStyle="#1f2b3f";ctxT.font="10px Consolas";ctxT.fillStyle="#64748b";
+  for(let rr=Math.ceil(viewR/5)*5;rr>0;rr-=Math.max(1,Math.round(viewR/5))){
+    ctxT.beginPath();ctxT.arc(cx,cy,rr*scale,0,7);ctxT.stroke();
+    ctxT.fillText(String(rr),cx+rr*scale+2,cy-2);}
+  // 轨迹
+  ctxT.strokeStyle="#38bdf8";ctxT.lineWidth=1.2;ctxT.beginPath();
+  trail.forEach((p,i)=>{i?ctxT.lineTo(X(p[0]),Y(p[1])):ctxT.moveTo(X(p[0]),Y(p[1]));});
+  ctxT.stroke();
+  // 源与粒子
+  ctxT.fillStyle="#fbbf24";ctxT.beginPath();ctxT.arc(cx,cy,4,0,7);ctxT.fill();
+  ctxT.fillStyle="#4ade80";ctxT.beginPath();ctxT.arc(X(st.x),Y(st.y),5,0,7);ctxT.fill();
+  // 判定徽标
+  const m=MODES[mode];
+  const Lmax = m.lam? Math.sqrt(m.lam*HPHI) : null;
+  let verdict;
+  if(m.S>0) verdict="束缚（禁闭势无逃逸；L 无上限）";
+  else if(Lmax!==null && st.L>Lmax) verdict="无束缚轨道（L>L_max="+Lmax.toFixed(4)+"）→ 逃逸或坠落";
+  else if(st.E>=0) verdict="逃逸（E≥0）";
+  else verdict="束缚";
+  document.getElementById("readT").textContent=
+    `t=${st.t.toFixed(1)}   r=${Math.hypot(st.x,st.y).toFixed(3)}   r_max=${st.rmax.toFixed(3)}   `+
+    `E=${st.E.toFixed(4)}   L=${st.L.toFixed(3)}   ${Lmax!=null?("L_max="+Lmax.toFixed(4)):"L_max=∞（禁闭）"}\n判定：${verdict}`;
+}
+let frameN=0;
+function loop(){
+  if(playing&&st){
+    for(let i=0;i<6;i++){stepRK4(2e-3);}
+    if(frameN%2===0){trail.push([st.x,st.y]); if(trail.length>5000)trail.shift();}
+    frameN++;
+    const r=Math.hypot(st.x,st.y);
+    if(r>60||!isFinite(r)) reset();
+  }
+  if(st)drawT();
+  requestAnimationFrame(loop);
+}
+document.querySelectorAll("[data-mode]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("[data-mode]").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); mode=b.dataset.mode; reset();});});
+document.getElementById("Lslider").addEventListener("input",e=>{
+  L0=parseFloat(e.target.value);document.getElementById("Lv").textContent=L0.toFixed(2);reset();});
+document.getElementById("playBtn").addEventListener("click",e=>{
+  playing=!playing;e.target.textContent=playing?"暂停":"播放";});
+document.getElementById("resetBtn").addEventListener("click",reset);
+reset();loop();
+
+/* ---------- §5 强度谱 ---------- */
+const cvA=document.getElementById("cvA"), ctxA=cvA.getContext("2d");
+(function(){
+  ctxA.clearRect(0,0,1000,360);ctxA.fillStyle="#0d1730";ctxA.fillRect(0,0,1000,360);
+  const bars=[
+    {n:"引力 α_G(pp)", v:Math.log10(A_G), c:"#7aa2f7"},
+    {n:"弱 α_W(有效)", v:Math.log10(A_W), c:"#bb9af7"},
+    {n:"电磁 α_em",    v:Math.log10(A_EM),c:"#e0af68"},
+    {n:"α_s(M_Z)",     v:Math.log10(parseFloat(P.alpha_s_MZ)), c:"#9ece6a"},
+    {n:"α_s(2GeV)",    v:Math.log10(parseFloat(P.alpha_s_2GeV)), c:"#9ece6a"},
+    {n:"强剩余 g²/4π", v:Math.log10(14.6), c:"#f7768e"},
+  ];
+  const L0x=-40,R1x=2, PL=190,PR=80;
+  const X=v=>PL+(v-L0x)/(R1x-L0x)*(1000-PL-PR);
+  ctxA.strokeStyle="#1f2b3f";ctxA.font="10px Consolas";ctxA.fillStyle="#94a3b8";
+  for(let v=-40;v<=2;v+=6){ctxA.beginPath();ctxA.moveTo(X(v),20);ctxA.lineTo(X(v),320);ctxA.stroke();
+    ctxA.fillText("1e"+v,X(v)-12,336);}
+  bars.forEach((b,i)=>{
+    const y=34+i*46;
+    ctxA.fillStyle=b.c;ctxA.fillRect(X(L0x),y,X(b.v)-X(L0x),22);
+    ctxA.fillStyle="#cbd5e1";ctxA.font="11px Consolas";
+    ctxA.fillText(`${b.n} = 10^${b.v.toFixed(2)}`,8,y+15);});
+  ctxA.fillStyle="#fbbf24";ctxA.font="11px Consolas";
+  ctxA.fillText("σ 不入此谱：[σ]=力（"+Number(P.sigma_N).toExponential(4)+" N），量纲不同不能用 α 互比",8,330);
+})();
+
+/* ---------- §6 大小表 ---------- */
+(function(){
+  const t=document.getElementById("sizeTable");
+  const head=["r","引力","电磁","弱·有效","强·剩余","强·色道"];
+  let html="<tr>"+head.map(h=>`<th class="mono">${h}</th>`).join("")+"</tr>";
+  R.readings.size_table_log10F.forEach(row=>{
+    html+=`<tr><td class="mono">${row.r}</td><td class="mono">${row.G}</td><td class="mono">${row.EM}</td>`+
+          `<td class="mono">${row.W}</td><td class="mono">${row.Sres}</td><td class="mono">${row.Scol}</td></tr>`;});
+  t.innerHTML=html;
+})();
+
+/* ---------- §8 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"U30 FAIL（继承）",b:"动力学不统一：五个 α 是五个独立输入（+σ、+g_χ 后输入 14 个），无单一耦合在分量间转换，不能预言任何 α 的数值。净约束增量 0。"},
+    {cls:"bnd",t:"B1 σ 项只作用于色道",b:"剩余核力道（π Yukawa）不加 σ——两道并存登记。色道在 r≳1 fm 与其他力的大小比较是跨自由度的形式读数。"},
+    {cls:"bnd",t:"B2 α_s 跑动",b:"OGE 系数取 α_s(2GeV)=0.30521 为名义口径；1 fm 处微扰失效（70 卷 B1），OGE 项在 r≳0.3 fm 只作形式延拓。"},
+    {cls:"bnd",t:"B4 手征只登记到门层",b:"通道门给出 A_P 读数，但完整 SU(2)_L 规范动力学（W/Z 极化、味改变、CKM）不在式内——U27 完整收口 OPEN。"},
+    {cls:"bnd",t:"B5 引力仅牛顿极限 / 电磁仅库仑",b:"无 2PN/PPN、无引力波反作用；无 v×B、无辐射反作用（承 r214 U28/U29）。"},
+  ];
+  document.getElementById("boundCards").innerHTML =
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML =
+    `TUFT-r218 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 Decimal 60 位）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

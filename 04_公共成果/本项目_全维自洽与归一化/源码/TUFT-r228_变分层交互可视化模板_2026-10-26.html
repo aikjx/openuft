@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>228 · 四力统一方程·变分层（拉格朗日量与诺特定理：一个作用量统一四力）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #6d28d9;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#4c1d95;color:#ddd6fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h2{font-size:16.5px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h2 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .eq{background:#0d1730;border:1px solid #6d28d9;border-left:5px solid var(--green);border-radius:8px;
+      padding:12px 16px;margin:10px 0;font-family:Consolas,monospace;font-size:13.5px;color:#c4b5fd;
+      overflow-x:auto;white-space:pre;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0;font-size:12.5px;color:#cbd5e1;}
+  .ctrl input[type=range]{width:260px;accent-color:#4ade80;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c4b5fd;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;min-height:20px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;color:#cbd5e1;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;} .bnd{color:var(--orange);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .card.bnd{border-color:#92400e;} .card.bnd b{color:var(--orange);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+  @media(max-width:600px){.banner h1{font-size:17px;}section{padding:14px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r228 · 承 r214（UFE-4F）+ r221（UFE-4F⁺）+ r226/r227（量子谱/散射）· 变分层 · 零外部依赖</span>
+  <h1>四力统一方程·变分层<br>拉格朗日量与诺特定理：一个作用量统一四力</h1>
+  <p>「所有力写进一个运动上面」的最强数学形式：不是四力共用一个模板，而是
+     <b>存在一个作用量 S=∫L dt，其驻定性 δS=0 同时生成全部运动方程</b>。
+     本卷对 UFE-4F⁺ 中心力部分机器验证这一判据，并把「方向特性」升级为诺特定理。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h2><span class="n">§1</span>承重式：一个作用量，一条诺特链，一条边界</h2>
+  <div class="eq">作用量：S[r] = ∫ ( ½μv² − ΣᵢVᵢ(r) ) dt̃，  ΣVᵢ = A_EM/r − A_G/r − A_πe^(−r/λ_π)/r − A_We^(−r/λ_W)/r
+驻定：δS = 0（端点固定） ⇒ μr̈ = −∇ΣVᵢ   ← 与 r214 母式逐位同构（G1/G2 双积分器对拍）
+诺特：时间平移对称 ⇒ E 守恒；旋转对称 ⇒ L_z 守恒 ⇒ 力永远沿 r̂（方向特性定理化）
+磁扩展：L = ½mv² + qA·v ⇒ m r̈ = qv×B，F·v = 0（磁力永不做功——方向特性的极限）
+边界：Abraham–Lorentz 辐射反作用 mτ·r⃛ 无标准拉格朗日量（W05 FAIL）</div>
+  <p class="note" id="statNote"></p>
+</section>
+
+<section>
+  <h2><span class="n">§2</span>变分沙盒：拖动 ε，看作用量如何惩罚偏离真实路径</h2>
+  <div class="ctrl">
+    <label>扰动幅度 ε = <span id="epsV">0.000</span> fm<input type="range" id="epsSlider" min="-0.2" max="0.2" step="0.005" value="0"></label>
+    <span class="read" style="min-height:0;padding:4px 10px;margin:0">路径族 r₀+ε·sin²(πs)，端点固定</span>
+  </div>
+  <canvas id="cvP" width="1000" height="420"></canvas>
+  <canvas id="cvS" width="1000" height="380"></canvas>
+  <div class="read" id="readS"></div>
+  <p class="note">上：δS 段真实路径（蓝）与扰动路径（紫，放大系数 k<sub>viz</sub>=1，所见即 ε）。
+     下：S(ε)−S₀ 抛物线（引擎铸数）——谷底在 ε=0：<b>真实路径是作用量的驻定点</b>，
+     这就是「最小作用量原理」的直接数值形态（不经过运动方程）。</p>
+</section>
+
+<section>
+  <h2><span class="n">§3</span>诺特仪表：对称性 → 守恒量（沿轨道逐点审计）</h2>
+  <canvas id="cvO" width="1000" height="460"></canvas>
+  <div class="read" id="readN"></div>
+  <p class="note">b=10 fm、E=5 MeV 的 UFE-4F⁺ 轨道（16 万步 RK4，EL 数值梯度积分器）。
+     能量与角动量的漂移都在 1e−12 量级——「大小」由 E 守恒钉住、「方向」由 L_z 守恒钉住：
+     <b>中心势各向同性 ⟺ 力永远沿 r̂</b>。方向特性不再是观察，是对称性定理。</p>
+</section>
+
+<section>
+  <h2><span class="n">§4</span>磁回旋：广义势的判决 + 方向特性的极限</h2>
+  <canvas id="cvM" width="1000" height="460"></canvas>
+  <div class="read" id="readM"></div>
+  <p class="note">L = ½mv² + qA·v 的 EL 方程给出 qv×B（两套积分器末端 rel ~1e−12）。
+     磁力 <b>F·v=0 恒成立</b>：永远垂直速度、不做功、速率守恒——标量势管「大小与距离」，
+     矢量势管「方向的弯转」，合起来才是完整的电磁。辐射反作用则完全没有 L（§7）。</p>
+</section>
+
+<section>
+  <h2><span class="n">§5</span>统一判据表：每个力的「拉格朗日存在性」</h2>
+  <table id="crtTable"></table>
+  <p class="note">「一个作用量统一四力」在<b>中心力部分完整成立</b>（四势可加进同一个 L）；
+     磁力需广义势（仍是一个 L）；辐射反作用无 L（变分原理的硬边界）；
+     弱手征/色道需场论框架（超出单粒子中心势，承 r221 通道门）。</p>
+</section>
+
+<section>
+  <h2><span class="n">§6</span>全方法总账：十三轮方法对同一诉求的判决</h2>
+  <table id="invTable"></table>
+  <p class="note">十三种方法各自闭合、互不共享代码；共同判决：<b>形式统一逐层成立</b>
+     （静态中心力 → 禁闭+通道门 → 传播 → 进动 → 量子谱 → 散射镜像 → 作用量变分），
+     <b>动力学统一逐层 FAIL</b>（四个 α + λ + σ 依旧是独立输入；本卷再加一刀：
+     即使有了一个 L，ΣVᵢ 仍是四个独立势——作用量层供给 0）。</p>
+</section>
+
+<section>
+  <h2><span class="n">§7</span>诚实边界（不粉饰）</h2>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R228_JSON__;
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">全方法总账 <b>${R.readings.inventory.length}</b> 轮点名</span>`;
+  const s = R.readings.stat;
+  document.getElementById("statNote").textContent =
+    `δS 驻定读数：|dS/dε|₀/|S₀| = ${s.dS_rel}（S₀ = ${s.S0} MeV·fm）；二次型系数 k = ${s.k2} MeV·fm（>0，谷底在 0）；`+
+    `诺特漂移：E ${R.readings.noether.E} / L_z ${R.readings.noether.Lz}；磁 F·v = ${R.readings.mag.fv}（恒零）`;
+})();
+
+/* ---------- §2 变分沙盒 ---------- */
+const seg = R.readings.traj_seg, dSC = R.readings.dS_curve;
+const cvP=document.getElementById("cvP"), ctxP=cvP.getContext("2d");
+const cvS=document.getElementById("cvS"), ctxS=cvS.getContext("2d");
+function etaShape(s){ const v=Math.sin(Math.PI*s); return v*v; }
+function etaDot(s,T){ return Math.PI*Math.sin(2*Math.PI*s)/T; }
+function drawPaths(eps){
+  ctxP.clearRect(0,0,1000,420); ctxP.fillStyle="#0d1730"; ctxP.fillRect(0,0,1000,420);
+  let xmin=1e9,xmax=-1e9,ymin=1e9,ymax=-1e9;
+  seg.forEach(p=>{xmin=Math.min(xmin,p[0]);xmax=Math.max(xmax,p[0]);ymin=Math.min(ymin,p[1]);ymax=Math.max(ymax,p[1]);});
+  const pad=2.5; xmin-=pad;xmax+=pad;ymin-=pad;ymax+=pad;
+  const sc=Math.min(940/(xmax-xmin),340/(ymax-ymin));
+  const X=x=>30+(x-xmin)*sc, Y=y=>390-(y-ymin)*sc;
+  ctxP.strokeStyle="#1f2b3f";ctxP.font="10px Consolas";ctxP.fillStyle="#64748b";
+  for(let gx=Math.ceil(xmin/2)*2;gx<=xmax;gx+=2){ctxP.beginPath();ctxP.moveTo(X(gx),15);ctxP.lineTo(X(gx),405);ctxP.stroke();
+    ctxP.fillText(gx+"",X(gx)-4,418);}
+  ctxP.strokeStyle="#63d2ff";ctxP.lineWidth=1.8;ctxP.beginPath();
+  seg.forEach((p,i)=>{i?ctxP.lineTo(X(p[0]),Y(p[1])):ctxP.moveTo(X(p[0]),Y(p[1]));});
+  ctxP.stroke();
+  ctxP.strokeStyle="#bb9af7";ctxP.lineWidth=1.4;ctxP.setLineDash([4,3]);ctxP.beginPath();
+  const n=seg.length;
+  seg.forEach((p,i)=>{
+    const e=eps*etaShape(i/(n-1));
+    i?ctxP.lineTo(X(p[0]),Y(p[1]+e)):ctxP.moveTo(X(p[0]),Y(p[1]+e));});
+  ctxP.stroke();ctxP.setLineDash([]);
+  [0,n-1].forEach(i=>{ctxP.fillStyle="#fbbf24";ctxP.beginPath();
+    ctxP.arc(X(seg[i][0]),Y(seg[i][1]),4,0,7);ctxP.fill();});
+  ctxP.fillStyle="#94a3b8";
+  ctxP.fillText("蓝=真实路径 r₀（δS 段，|x|≤5.2 fm）  紫=扰动路径 r₀+ε·η（黄点=固定端点）",34,28);
+}
+function drawS(eps){
+  ctxS.clearRect(0,0,1000,380); ctxS.fillStyle="#0d1730"; ctxS.fillRect(0,0,1000,380);
+  const PL=70,PR=20,PT=20,PB=34;
+  let dmin=1e18,dmax=-1e18;
+  dSC.forEach(p=>{dmin=Math.min(dmin,p[1]);dmax=Math.max(dmax,p[1]);});
+  if(dmax-dmin<1e-15){dmax=dmin+1e-15;}
+  const X=e=>PL+(e+0.2)/0.4*(1000-PL-PR);
+  const Y=d=>PT+(1-(d-dmin)/(dmax-dmin))*(380-PT-PB);
+  ctxS.strokeStyle="#1f2b3f";ctxS.font="10px Consolas";ctxS.fillStyle="#94a3b8";
+  [-0.2,-0.1,0,0.1,0.2].forEach(e=>{ctxS.beginPath();ctxS.moveTo(X(e),PT);ctxS.lineTo(X(e),380-PB);ctxS.stroke();
+    ctxS.fillText(e.toFixed(1),X(e)-8,380-PB+13);});
+  [dmin,dmax].forEach((d,i)=>{ctxS.fillText(d.toExponential(2),6,Y(d)+3);});
+  ctxS.strokeStyle="#e0af68";ctxS.lineWidth=2;ctxS.beginPath();
+  dSC.forEach((p,i)=>{i?ctxS.lineTo(X(p[0]),Y(p[1])):ctxS.moveTo(X(p[0]),Y(p[1]));});
+  ctxS.stroke();
+  // 当前 ε 点
+  const dcur = interpS(eps)-dSC[5][1];
+  ctxS.fillStyle="#bb9af7";ctxS.beginPath();ctxS.arc(X(eps),Y(dcur+dSC[5][1]),5,0,7);ctxS.fill();
+  ctxS.fillStyle="#94a3b8";ctxS.fillText("ε",500,380-6);
+  ctxS.save();ctxS.translate(14,200);ctxS.rotate(-Math.PI/2);ctxS.fillText("S(ε)−S₀ [MeV·fm]",-50,0);ctxS.restore();
+}
+function interpS(e){
+  const a=dSC; 
+  for(let i=0;i<a.length-1;i++){
+    if(e>=a[i][0]&&e<=a[i+1][0]){
+      const t=(e-a[i][0])/(a[i+1][0]-a[i][0]); return a[i][1]+t*(a[i+1][1]-a[i][1]);}}
+  return a[a.length-1][1];
+}
+const epsSlider=document.getElementById("epsSlider");
+function updEps(){
+  const e=parseFloat(epsSlider.value);
+  document.getElementById("epsV").textContent=e.toFixed(3);
+  drawPaths(e); drawS(e);
+  document.getElementById("readS").textContent=
+    `ε=${e.toFixed(3)} fm   S(ε)−S₀=${(interpS(e)).toExponential(4)} MeV·fm   `+
+    `ΔS∝ε²（抛物线谷底在 ε=0）：偏离真实路径的代价是二阶的——驻定性的直观形态`;
+}
+epsSlider.addEventListener("input",updEps);
+updEps();
+
+/* ---------- §3 诺特仪表 ---------- */
+const cvO=document.getElementById("cvO"), ctxO=cvO.getContext("2d");
+(function(){
+  const T=R.readings.traj_main;
+  ctxO.clearRect(0,0,1000,460);ctxO.fillStyle="#0d1730";ctxO.fillRect(0,0,1000,460);
+  let xmin=1e9,xmax=-1e9,ymin=1e9,ymax=-1e9;
+  T.forEach(p=>{xmin=Math.min(xmin,p[0]);xmax=Math.max(xmax,p[0]);ymin=Math.min(ymin,p[1]);ymax=Math.max(ymax,p[1]);});
+  const pad=8;xmin-=pad;xmax+=pad;ymin-=pad;ymax+=pad;
+  const sc=Math.min(940/(xmax-xmin),400/(ymax-ymin));
+  const X=x=>30+(x-xmin)*sc, Y=y=>430-(y-ymin)*sc;
+  ctxO.strokeStyle="#1f2b3f";ctxO.font="10px Consolas";ctxO.fillStyle="#64748b";
+  for(let gx=Math.ceil(xmin/50)*50;gx<=xmax;gx+=50){ctxO.beginPath();ctxO.moveTo(X(gx),15);ctxO.lineTo(X(gx),445);ctxO.stroke();
+    ctxO.fillText(String(gx),X(gx)-6,458);}
+  ctxO.strokeStyle="#475569";ctxO.beginPath();ctxO.moveTo(X(xmin),Y(0));ctxO.lineTo(X(xmax),Y(0));ctxO.stroke();
+  // 势心
+  ctxO.fillStyle="#fbbf24";ctxO.beginPath();ctxO.arc(X(0),Y(0),4,0,7);ctxO.fill();
+  ctxO.strokeStyle="#63d2ff";ctxO.lineWidth=1.7;ctxO.beginPath();
+  T.forEach((p,i)=>{i?ctxO.lineTo(X(p[0]),Y(p[1])):ctxO.moveTo(X(p[0]),Y(p[1]));});
+  ctxO.stroke();
+  ctxO.fillStyle="#94a3b8";
+  ctxO.fillText("UFE-4F⁺ 轨道（b=10 fm，E=5 MeV）：黄点=势心；近点 |V|≈0.17 MeV ≪ E ⇒ 全程 v≈0.146c（非相对论口径自洽）",34,28);
+  document.getElementById("readN").textContent=
+    `E  漂移 max |ΔE/E₀|   = ${R.readings.noether.E}   ← 时间平移对称（诺特）\n`+
+    `L_z 漂移 max |ΔL_z/L₀| = ${R.readings.noether.Lz}   ← 旋转对称（诺特）⇒ 力永远沿 r̂（方向特性定理化）`;
+})();
+
+/* ---------- §4 磁回旋 ---------- */
+const cvM=document.getElementById("cvM"), ctxM=cvM.getContext("2d");
+(function(){
+  const T=R.readings.traj_mag;
+  ctxM.clearRect(0,0,1000,460);ctxM.fillStyle="#0d1730";ctxM.fillRect(0,0,1000,460);
+  const cx=500,cy=230,sc=Math.min(420,380)/2.3;
+  const X=x=>cx+x*sc, Y=y=>cy-y*sc;
+  ctxM.strokeStyle="#1f2b3f";ctxM.font="10px Consolas";ctxM.fillStyle="#64748b";
+  ctxM.beginPath();ctxM.moveTo(30,cy);ctxM.lineTo(970,cy);ctxM.stroke();
+  ctxM.beginPath();ctxM.moveTo(cx,15);ctxM.lineTo(cx,445);ctxM.stroke();
+  ctxM.fillStyle="#475569";ctxM.fillText("x/r_L",925,cy-6);ctxM.fillText("y/r_L",cx+6,25);
+  // 圆参考
+  ctxM.strokeStyle="#1f2b3f";ctxM.setLineDash([3,4]);ctxM.beginPath();ctxM.arc(cx,cy,sc,0,7);ctxM.stroke();ctxM.setLineDash([]);
+  ctxM.strokeStyle="#63d2ff";ctxM.lineWidth=2;ctxM.beginPath();
+  T.forEach((p,i)=>{i?ctxM.lineTo(X(p[0]),Y(p[1])):ctxM.moveTo(X(p[0]),Y(p[1]));});
+  ctxM.stroke();
+  // F⊥v 采样箭头（4 处，顺时针：v=(sinθ,−cosθ)，F=qv×B ∝ (−cosθ,−sinθ) 指向圆心）
+  for(let k=0;k<4;k++){
+    const th=Math.PI/2 - k*Math.PI/2;
+    const px=Math.cos(th), py=Math.sin(th);
+    const vx=Math.sin(th), vy=-Math.cos(th);      // 速度切向（顺时针）
+    const fx=-Math.cos(th), fy=-Math.sin(th);     // F ∝ v×B（B=+z，指向圆心）
+    arrow(X(px),Y(py),X(px)+fx*36,Y(py)-fy*36,"#f7768e");
+    arrow(X(px),Y(py),X(px)+vx*44,Y(py)-vy*44,"#4ade80");
+  }
+  ctxM.fillStyle="#f7768e";ctxM.fillText("F = qv×B（永远指向圆心）",60,432);
+  ctxM.fillStyle="#4ade80";ctxM.fillText("v（切向）",60,448);
+  ctxM.fillStyle="#94a3b8";ctxM.fillText("均匀 B（+z 出屏）：ω_c=qB/m 圆周；半径 = r_L",60,44);
+  function arrow(x1,y1,x2,y2,col){
+    ctxM.strokeStyle=col;ctxM.lineWidth=1.6;ctxM.beginPath();ctxM.moveTo(x1,y1);ctxM.lineTo(x2,y2);ctxM.stroke();
+    const a=Math.atan2(y2-y1,x2-x1);
+    ctxM.beginPath();ctxM.moveTo(x2,y2);
+    ctxM.lineTo(x2-7*Math.cos(a-0.4),y2-7*Math.sin(a-0.4));
+    ctxM.lineTo(x2-7*Math.cos(a+0.4),y2-7*Math.sin(a+0.4));
+    ctxM.closePath();ctxM.fillStyle=col;ctxM.fill();
+  }
+  document.getElementById("readM").textContent=
+    `ω_c = qB/m = ${R.readings.mag.omega} 1/t̃   r_L = v⊥/ω_c = ${R.readings.mag.rL} fm\n`+
+    `F·v = ${R.readings.mag.fv}（恒零：磁力垂直速度、不做功、速率守恒）——「方向」特性的极限表述`;
+})();
+
+/* ---------- §5 统一判据表 ---------- */
+(function(){
+  const rows=[
+    ["引力（牛顿项）","标量势 V=−A_G/r","✓ 在同一个 L 内","中心力；各向同性"],
+    ["电磁（库仑项）","标量势 V=+A_EM/r","✓ 在同一个 L 内","中心力"],
+    ["电磁（磁力）","广义势 qA·v","✓ 同一个 L 的矢量势部分","F⊥v、不做功"],
+    ["强（剩余 Yukawa）","标量势 V=−A_πe^(−r/λ)/r","✓ 在同一个 L 内","中心力；η=101.5 微扰失效（r227）"],
+    ["强（禁闭 σr）","标量势 V=σr","✓ 合格势（G8 机验）","线性势不破坏作用量结构"],
+    ["弱（Yukawa 标量近似）","标量势 V=−A_We^(−r/λ_W)/r","✓ 在同一个 L 内","接触极限（r227 R04）"],
+    ["弱（V−A 手征流）","——","BOUNDARY 需场论框架","超出单粒子中心势（r221 通道门）"],
+    ["色道（QCD）","QCD 拉格朗日量存在","BOUNDARY 非本框架","规范场论，非中心势"],
+    ["辐射反作用（AL）","——","FAIL 无标准 L","mτ·r⃛ 非保守、有跑马解（W05）"],
+  ];
+  let html="<tr><th>力</th><th>势/L 形态</th><th>「一个 L」判定</th><th>备注</th></tr>";
+  rows.forEach(r=>{
+    const cls = r[2].startsWith("✓")?"ok":(r[2].startsWith("FAIL")?"bad":"bnd");
+    html+=`<tr><td>${r[0]}</td><td class="mono">${r[1]}</td><td class="${cls}">${r[2]}</td><td>${r[3]}</td></tr>`;});
+  document.getElementById("crtTable").innerHTML=html;
+})();
+
+/* ---------- §6 方法总账 ---------- */
+(function(){
+  let html="<tr><th>卷</th><th>方法</th><th>对该诉求的判决</th></tr>";
+  R.readings.inventory.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;});
+  document.getElementById("invTable").innerHTML=html;
+})();
+
+/* ---------- §7 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"W05 FAIL",b:"辐射反作用无拉格朗日量：Abraham–Lorentz mτ·r⃛ 非保守、依赖加速度、有跑马解——「一切力从变分原理出」在点粒子框架硬失败。"},
+    {cls:"bnd",t:"W06 BOUNDARY",b:"弱手征 V−A 与 QCD 拉格朗日量存在但需场论框架；σr 禁闭项本身有合格 L（G8 机验）——超出项是「结构」而非「势」。"},
+    {cls:"bnd",t:"B1 δS 精度",b:"驻定检验的数值精度受轨道误差与积分误差双重限制（两层都量化报告：|dS/dε|₀/|S₀| 与 |c|/|S₀|）。"},
+    {cls:"bnd",t:"B2 接触极限",b:"弱 Yukawa 项在 fm 尺度 exp(−r/λ_W) 数值下溢为 0——弱力在中心势管线里天然隐形（承 r227 R04）。"},
+    {cls:"bnd",t:"U30 继承",b:"动力学统一 FAIL 不翻案：L 的存在不减少独立参数——ΣVᵢ 仍是四个独立势，作用量层供给 0。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r228 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

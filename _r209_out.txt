@@ -1,0 +1,47 @@
+[PASS] A1 | 验证报告.json 共 47 项：PASS 39 / FAIL 2 / INFO 6（与 summary 一致）
+      note: report_summary 与 results 长度互校
+[PASS] A2 | tolerance 与期望值机读：EXACT 23 / NUMERIC 19 / NONNUM 5（合计 47）
+      note: 三分账互斥且穷尽；EXACT 含 tolerance=0 的 22 项与 C1
+[PASS] A3 | NUMERIC 19 项逐项余量比 r = |c-e|/e/tol 全部重算；其中 FAIL 1 项（R1.1，r=93837.8），非 FAIL 数值项 18 项
+      note: r 与 PASS/FAIL 状态自洽：非 FAIL 项 r<1，FAIL 项 r>>1
+[PASS] A4 | 18 项非 FAIL 数值项分档：<0.1 = 12 / 0.1–0.5 = 6 / ≥0.5 = 0
+      note: ≥0.5 = 0 即「无擦边 PASS」
+[INFO] A5 | 最大余量比 0.3625（E5.2），最小 0.0000（R2.1），中位 0.0256
+      note: 最大者仍在容差内 2.8 倍余量
+[PASS] A6 | 容差减半仍通过 18/18；缩到四分之一仍通过 15/18（掉出：E5.2、E5.3、C4）
+      note: 余量口径下的稳健性，不等于物理显著性
+[FAIL] A7 | tolerance 为相对容差却与 unit 字段并列；若按绝对读法，4 项（E5.3/E5.4/R2.3/C4）会翻面成 FAIL
+      note: 同一字段两种读法给出相反判定 ⇒ 口径必须显式声明
+[FAIL] A8 | 报告 sigma 字段数 = 0；含「±」字样 4 条，其中 ± 属于被比对量可换算者 2 条（C2 0.049σ、C3 0.122σ）
+      note: 无 σ 字段 ⇒ 显著性必须外部补，报告本身不可换算
+[FAIL] A9 | 三项可比者的容差 / 实测 1σ 宽化倍数：E5.3 10.05×；C2 10.74×；C3 8.76× ⇒ 相对容差口径把「通过」放大约 10 倍
+      note: 容差是手设的宽松带，不是测量精度
+[INFO] A10 | 1σ 口径：m_W 2.692σ（对 PDG 80.377）/ 4.692σ（对 SM 完整拟合 80.353）；C2 0.049σ；C3 0.122σ ⇒ 唯一 >2σ 的项是 m_W
+      note: m_W 的 2.69σ 与 r205 的 4.69σ（对 SM 拟合）是两个口径，不可混用
+[INFO] A11 | FAIL 项余量比 93837.8（R1.1，拒绝而非擦边）；NONNUM 5 项（R1.2 / R1.3 / N1 / N2 / N3）无期望值或容差 ⇒ 不可比
+      note: 5/47 = 10.6% 的条目根本进不了余量账
+[PASS] A12 | m_W 对 SM 完整拟合 4.692σ，与 r205 判词的 4.69σ 一致
+      note: 两卷同源、同口径
+[PASS] A13 | 与 r208 JSON distances 机读对拍 7/7（AS200 / λ / 水星 / 偏折 / GW / m_W 两口径）
+      note: 数值逐位一致（相对差 ≤ 1e-12）
+[FAIL] A14 | EXACT 23 项 tolerance=0，是恒等/结构判定，**不接触自然**；NUMERIC 19 项才是与外界数值的比对
+      note: 「47 项通过」不等于 47 次对自然的检验
+[FAIL] A15 | 稳健性（18/18 无擦边）与判别力（r208：D1∧D2∧D3∧D4 = 0）是两条轴，不可互相替代
+      note: 本卷不给框架增加独有证据
+[FAIL] A16 | CLOSED-NEUTRAL：PASS 集合稳健但供给 0；余量审计只说明「与报告口径无冲突」，不说明框架正确
+      note: 这是计数，不是证明；换容差口径即换结论
+
+------------------------------------------------------------------------------
+控制组 48/48；守卫 19/19
+条目 16（FAIL 6 / INFO 3 / PASS 7）
+只读校验：机读 2/2，文档 4/4
+产物：TUFT-r209_验证余量审计_47项PASS的余量分布与容差口径三分账_精算_2026-10-26
+  json   32022 B
+  md     3564 B
+  report 4501 B
+  book   2573 B
+勘误：本次已存在（幂等）（3111 B -> 3111 B）
+判词：R209-MARGIN-AUDIT-CORPUS47-EXACT23-NUMERIC19-NONNUM5-NONFAIL-NUMERIC18-MAXR-0-3625-E5-2-MINR0-R2-1-MEDIAN-0-0256-BAND-LOW12-MID6-HIGH0-TOL-HALF18-TOL-QUARTER15-FAIL-RATIO93837-8-R1-1-RELATIVE-READ-PROOF4-HANDSET19-SIGMA-FIELD0-PM4-USABLE2-C2-0-049-C3-0-122-TOL-OVER-SIGMA-8-8-TO-10-7-MW-PDG-2-692SIGMA-MW-SMFIT-4-692SIGMA-CROSSCHECK-R205-R208-6OF6-EXACT-TOUCH-NATURE0-TWO-LAYER-ROBUST18-DISCRIMINATING0-SUPPLY0
+红线：余量审计只统计验证报告 47 项自述的 computed / expected / tolerance 三者之比；容差是报告手设的相对百分比，不是实验 1σ，本卷不重算物理显著性；4 条 ± 中只有 2 条属于被比对量，其余登记不换算；本卷条目不可与 r142–r208 相加
+
+[EXIT CODE] 0

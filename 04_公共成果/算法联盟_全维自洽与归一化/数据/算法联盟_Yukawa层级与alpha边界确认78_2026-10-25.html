@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟78期 · Yukawa层级与α边界确认</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;margin:0;padding:24px;}
+h1{font-size:23px;color:#58a6ff;border-bottom:2px solid #30363d;padding-bottom:10px;}
+.sub{color:#8b949e;font-size:13px;margin-bottom:8px;}
+.hero{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin:14px 0;}
+.hero .big{font-size:23px;color:#d29922;font-weight:700;}
+.hero .dim{color:#8b949e;font-size:13px;margin-top:6px;}
+.chartbox{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin:14px 0;}
+#c1{width:100%;height:330px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+th,td{border:1px solid #30363d;padding:6px 10px;text-align:center;}
+th{background:#21262d;color:#58a6ff;}
+td:nth-child(1){text-align:left;}
+.open{color:#d29922;font-weight:600}.ok{color:#3fb950;font-weight:600}
+.verdict{background:#1c2128;border-left:4px solid #d29922;padding:12px 16px;border-radius:6px;font-size:14px;}
+.foot{color:#8b949e;font-size:12px;margin-top:18px;border-top:1px solid #30363d;padding-top:10px;}
+</style>
+</head>
+<body>
+<h1>算法联盟 · 统一场论攻破 第78期 —— Yukawa 层级与 α 边界确认</h1>
+<div class="sub">诚实边界确认（非伪闭合）｜ 2026-10-25 ｜ mpmath dps=40 ｜ 复现五轮证伪+α C1-C5 复查+穷尽式新约束</div>
+
+<div class="hero">
+  核心结论：<span class="big">味谱与 α 绝对值仍为几何内不可封闭边界 —— 诚实保持 OPEN，不伪造闭合</span>
+  <div class="dim">自由度守恒：N 个 Yukawa 层级需 N 个区分性荷构型 ｜ α C1-C5：编码非导出 ｜ Koide Q=0.66666051（需质量输入）</div>
+</div>
+
+<div class="chartbox"><div id="c1"></div></div>
+
+<div class="hero">
+  诚实边界判定
+  <table>
+    <tr><th>项目</th><th>精算/复查结果</th><th>状态</th></tr>
+    <tr><td>3代 Yukawa 自由度</td><td>3×3复矩阵=18实，U(3)²消去16 → 3质量+1相位+4混合角</td><td class="ok">守恒论证成立</td></tr>
+    <tr><td>α 约束集 C1/C2/C5</td><td>均把 α 编码进其他量（非导出）</td><td class="open">未闭合</td></tr>
+    <tr><td>Koide 关系</td><td>Q=0.66666051（偏差6.15e-6），需质量输入</td><td class="open">数值巧合</td></tr>
+    <tr><td>味谱</td><td>五轮证伪+本卷复验</td><td class="open">OPEN（需新物理）</td></tr>
+    <tr><td>α 绝对值</td><td>C1-C5 相容但未闭合</td><td class="open">OPEN</td></tr>
+    <tr><td>全非线性GR(Ricci↔运动学)</td><td>—</td><td class="open">OPEN（主线最大剩余）</td></tr>
+  </table>
+</div>
+
+<div class="verdict">
+  <b>Yukawa 层级与 α 边界确认（诚实）：</b>① 自由度守恒量化复现——3代 Yukawa 3×3复矩阵=18 实自由度，U(3)_L×U(3)_R 消去 16 后剩 3 质量+1 相位+4 混合角，对称性可量子化但不能消去质量层级数值；
+  ② α C1-C5 复查——C1/C2/C5 均为把 α 数值编码进其他量（编码非导出），约束集相容但 α 绝对值未闭合；
+  ③ 穷尽式新约束——Koide（需质量输入，偏差6.15e-6）、应变势（只给引力结构）、α-质量耦联（无），均非从几何首原导出质量谱/α；
+  ④ <b>诚实结论：味谱=OPEN（已穷尽，需公理体系外新动力学）；α 绝对值=OPEN（约束集未闭合）；不伪造闭合。</b>
+  本源红线：UFT 2/6、L3=0、判决性实验 0。
+</div>
+
+<script>
+const c1 = echarts.init(document.getElementById('c1'));
+c1.setOption({
+  title:{text:'OpenUFT 常数本源诚实分级（78期复查）',left:'center',textStyle:{color:'#58a6ff',fontSize:14}},
+  tooltip:{},
+  xAxis:{type:'category',data:['普朗克簇','克尔熵','味谱','α 绝对值','Λ','全非线性GR'],axisLabel:{color:'#e6edf3',interval:0,fontSize:10}},
+  yAxis:{type:'value',show:false,max:1},
+  series:[{type:'bar',barWidth:46,data:[
+    {value:1,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'DERIV',color:'#e6edf3'}},
+    {value:1,itemStyle:{color:'#3fb950'},label:{show:true,position:'top',formatter:'DERIV',color:'#e6edf3'}},
+    {value:0.3,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'OPEN',color:'#e6edf3'}},
+    {value:0.3,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'OPEN',color:'#e6edf3'}},
+    {value:0.3,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'OPEN',color:'#e6edf3'}},
+    {value:0.3,itemStyle:{color:'#d29922'},label:{show:true,position:'top',formatter:'OPEN',color:'#e6edf3'}}]}]
+});
+window.addEventListener('resize',()=>{c1.resize();});
+</script>
+<div class="foot">OpenUFT 算法联盟 · 攻破统一场论 第78期 ｜ Yukawa层级与α边界确认 ｜ 诚实边界：味谱/α/Λ/全非线性GR 均OPEN ｜ 不伪造闭合</div>
+</body>
+</html>

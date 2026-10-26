@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>232 · 四力统一方程·引力波层（四极辐射、啁啾与 Hulse–Taylor 锚）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#134e4a);border:1px solid #0f766e;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#134e4a;color:#99f6e4;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:20px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#99f6e4;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r232 · 承 r230 遗留候选 · 引力波层 · 零外部依赖</span>
+  <h1>四力统一方程·引力波层<br>四极辐射、啁啾积分与 Hulse–Taylor 锚</h1>
+  <p>经典引力的最后一块拼图：几何的动力学。三条独立管线互印——
+     ①四极功率（数值三阶差分 vs Einstein 1918 解析）；②Ṗb 公式对 Hulse–Taylor 观测锚（Nobel 1993）；
+     ③啁啾 ODE 数值积分 vs 闭式（GW150914 参数，LIGO 2016 应变量级）。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：经典引力三层（牛顿 / 1PN / 四极辐射）全部机器闭合</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>啁啾：GW150914 参数的数值积分（36+29 M☉）</h3>
+  <canvas id="cvW" width="1000" height="480"></canvas>
+  <div class="read" id="readC"></div>
+  <p class="note">蓝线 = 引力波频率 f(t)（左轴）；紫线 = 应变幅 h(t)·10²¹（右轴）——升频 + 幅度增长，
+     LIGO 波形的两大标志特征（C2 阴性守卫：降频必红）。积分 2.3 万步 RK4，t_merge 与闭式 rel ~1e−8。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>四极功率：数值三阶差分 vs Einstein 1918 解析</h3>
+  <div class="read" id="readQ"></div>
+  <p class="note">圆双星约化四极矩 Q_ij(t)（相对坐标）在 8192 点网格上做中心 5 点三阶差分
+     （系数 [−½,1,0,−1,½]/h³，对 x³ 精确），⟨Q̈⃛_ij Q̈⃛_ij⟩ 时间平均 ×G/(5c⁵)
+     ——不经任何解析代入功率式，直接从微分内核得到功率。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>Hulse–Taylor 锚：引力波的首次间接验证（Nobel 1993）</h3>
+  <div class="read" id="readH"></div>
+  <p class="note">PSR B1913+16（m₁=1.4411, m₂=1.3873 M☉, P_b=27907 s, e=0.61713）：
+     Ṗb 公式（Taylor–Weisberg 口径，M_c 以 M☉ 计配套 T☉——kg 代入差 50 量级为本轮自抓教训）
+     vs 40 年射电计时观测。rel ~1% 的差额即著名银河系加速度修正（修正后 0.13%）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>引力在 14+ 轮中的读数账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R232_JSON__;
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">三管线 <b>互印</b>（四极/HT 锚/啁啾）</span>`;
+  const q = R.readings.quad, h = R.readings.ht, ch = R.readings.chirp;
+  document.getElementById("verdictLine").textContent =
+    `四极功率 rel ${q.rel}（数值微分内核独立复现 Einstein 1918）；` +
+    `Ṗb 计算 ${h.Pdot_calc} vs 观测 ${h.Pdot_obs}（rel ${h.rel_pct}%，银河加速度修正故事）；` +
+    `啁啾 t_merge rel ${ch.rel_tm}、${ch.f_start}→${ch.f_end} Hz；` +
+    `末端应变 h ≈ ${ch.h_end}（LIGO 量级）。复现层无新理论（承 r229/r230）。`;
+})();
+
+/* ---------- §1 啁啾 ---------- */
+const cvW=document.getElementById("cvW"), ctxW=cvW.getContext("2d");
+(function(){
+  const T=R.readings.wave;
+  ctxW.clearRect(0,0,1000,480);ctxW.fillStyle="#0d1730";ctxW.fillRect(0,0,1000,480);
+  const PL=60,PR=64,PT=18,PB=40;
+  const tmax=T[T.length-1][0]*1.02;
+  let fmin=1e18,fmax=-1e18,hmax=-1e18;
+  T.forEach(p=>{fmin=Math.min(fmin,p[1]);fmax=Math.max(fmax,p[1]);hmax=Math.max(hmax,p[2]);});
+  const X=t=>PL+t/tmax*(1000-PL-PR);
+  const Yf=f=>PT+(1-(f-fmin)/(fmax-fmin))*(480-PT-PB);
+  const Yh=h=>PT+(1-h/hmax)*(480-PT-PB);
+  ctxW.strokeStyle="#1f2b3f";ctxW.font="10px Consolas";ctxW.fillStyle="#94a3b8";
+  for(let i=0;i<=5;i++){const x=PL+i/5*(1000-PL-PR);ctxW.beginPath();ctxW.moveTo(x,PT);ctxW.lineTo(x,480-PB);ctxW.stroke();
+    ctxW.fillText((tmax*i/5).toFixed(2)+"s",x-12,480-PB+13);}
+  [fmin,fmax].forEach(f=>{ctxW.fillText(f.toFixed(1)+"Hz",6,Yf(f)+3);});
+  ctxW.fillText("h[1e-21]: 0→"+hmax.toFixed(2),6,PT+8);
+  // h 幅度（紫，填充感）
+  ctxW.strokeStyle="#bb9af7";ctxW.lineWidth=1.6;ctxW.beginPath();
+  T.forEach((p,i)=>{i?ctxW.lineTo(X(p[0]),Yh(p[2])):ctxW.moveTo(X(p[0]),Yh(p[2]));});
+  ctxW.stroke();
+  // f（蓝）
+  ctxW.strokeStyle="#63d2ff";ctxW.lineWidth=2;ctxW.beginPath();
+  T.forEach((p,i)=>{i?ctxW.lineTo(X(p[0]),Yf(p[1])):ctxW.moveTo(X(p[0]),Yf(p[1]));});
+  ctxW.stroke();
+  ctxW.fillStyle="#63d2ff";ctxW.fillText("f_GW(t)（升频）",PL+10,PT+12);
+  ctxW.fillStyle="#bb9af7";ctxW.fillText("h(t)·1e21（幅度增长）",PL+130,PT+12);
+  const ch=R.readings.chirp;
+  document.getElementById("readC").textContent=
+    `f: ${ch.f_start} → ${ch.f_end} Hz   t_merge(数值) = ${ch.t_num} s vs 闭式 ${ch.t_ana} s（rel ${ch.rel_tm}）\n`+
+    `末端应变 h = ${ch.h_end}（M_c=28.1 M☉, D=410 Mpc）——GW150914 峰值 ~1e−21 量级锚`;
+})();
+
+/* ---------- §2 四极 ---------- */
+(function(){
+  const q=R.readings.quad;
+  document.getElementById("readQ").textContent=
+    `P_num（数值三阶差分） = ${q.P_num} W\n`+
+    `P_ana（Einstein 1918） = ${q.P_ana} W\n`+
+    `rel = ${q.rel}   ——微分内核独立复现，非解析代入`;
+})();
+
+/* ---------- §3 HT ---------- */
+(function(){
+  const h=R.readings.ht;
+  document.getElementById("readH").textContent=
+    `PSR B1913+16: m₁=1.4411, m₂=1.3873 M☉, P_b=27907 s, e=0.6171334\n`+
+    `Ṗb 计算 = ${h.Pdot_calc} s/s（M_c = ${h.mc_msun} M☉，T☉ 口径）\n`+
+    `Ṗb 观测 = ${h.Pdot_obs} s/s   rel = ${h.rel_pct}%（银河加速度修正后 ~0.13%）\n`+
+    `Peters da/dt = ${h.adot_m_yr} m/yr（文献 3.5）——Kepler 关系互拍通过`;
+})();
+
+/* ---------- §4 ledger ---------- */
+(function(){
+  let html="<tr><th>卷</th><th>方法</th><th>引力读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;});
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §5 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"复现层",b:"四极（1916/1918）、Ṗb（Peters 1964 / Taylor–Weisberg 1982）、啁啾闭式全部为教科书内容——本卷与 r229/r230 判定一致：无新理论。"},
+    {cls:"bnd",t:"绝热口径",b:"啁啾积分用轨道平均能量损失（绝热近似）——并合前最后几圈（f≳150 Hz）需要完整数值相对论，本库框架外。"},
+    {cls:"bnd",t:"1PN 之外",b:"h(t) 用 leading-order 四极振幅；更高阶 PN 相位修正（LIGO 模板的核心）未做——后续轮次候选。"},
+    {cls:"bnd",t:"HT 差额 1%",b:"Ṗb 计算与观测差 ~1%：银河系加速度修正（Shklovskii 效应）——本库未建模，如实登记为著名故事。"},
+    {cls:"bnd",t:"M_c 单位教训",b:"Ṗb 公式 M_c 以 M☉ 计配套 T☉；kg 代入差 ~50 个量级——由 Ṗ vs Peters da/dt 的 Kepler 互拍抓出（开发期自抓）。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r232 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+{
+ "stem": "TUFT-r215_变分推导_首次整卷机核_外形式恒等式Cartan秩Higgs质量矩阵与费米表微归因审计_2026-10-26",
+ "doc": "D:\\a10\\aikjx\\code\\my_lib\\openuft\\07_统一场方程\\02_变分推导.md",
+ "doc_bytes": 14836,
+ "verdict": "R215-P1-P2-P3-FAIL-EPS-MERGE-2-4-OK-CARTAN-RANK-24-EC-COEFF-OK-YM-DELTA-F-OK-CURRENT-CONS-OK-HIGGS-EQ-OK-MASS-EIGEN-OK-E-IDENTITIES-OK-V-246-219651-LAMBDA-0-129384-OK-RHO-IDENTITY-OK-ATTRIB-WRONG-24-6X-FAIL-PROCA-PARTIAL-BOUNDARY-CONV-3-8-BOUNDARY-TAGS-OK-SEC7-REFS-OK-LINKS-OK-SUPPLY-0",
+ "entries": [
+  {
+   "code": "A01",
+   "level": "PASS",
+   "title": "引理 P1：δR = D(δω) 在 4 变量精确外形式代数上成立",
+   "detail": "so(3) 矩阵值 1-形式联络、随机多项式系数；以对偶数 ε 微分 R(ω+εδω)，取 ε 部得 δR，与 d(δω)+ω∧δω+δω∧ω 逐元素精确相等（36 个非零分量）。控制组 K01 去掉 d(δω) ⇒ 检查器可分辨。",
+   "numbers": {
+    "terms": 36,
+    "equal": true
+   }
+  },
+  {
+   "code": "A02",
+   "level": "FAIL",
+   "title": "引理 P2：协变莱布尼茨 + 分部积分符号 (−1)^p 精确成立",
+   "detail": "取 α 为 1-形式、β 为 2-形式（so(3) 矩阵值、随机多项式系数），LHS=d tr(α∧β) 为 4-形式（1 个分量），与 tr(Dα∧β)−tr(α∧Dβ) 精确相等。控制组 K02 把分级符号写成 +1 ⇒ 不相等。",
+   "numbers": {
+    "components": 1,
+    "equal": false
+   }
+  },
+  {
+   "code": "A03",
+   "level": "PASS",
+   "title": "引理 P3：挠率变分的两支（δ_ω 与 δ_e）均精确成立",
+   "detail": "T^a=de^a+ω^a_b∧e^b。固定 e 对 ω 取对偶微分 ⇒ δ_ωT^a=δω^a_b∧e^b；固定 ω 对 e 取对偶微分 ⇒ δ_eT^a=d(δe^a)+ω^a_b∧δe^b=D(δe^a)。两支逐分量精确相等。控制组 K03 取反号 ⇒ 不相等。",
+   "numbers": {
+    "dw_equal": true,
+    "de_equal": true
+   }
+  },
+  {
+   "code": "B01",
+   "level": "PASS",
+   "title": "§1 第三步：ε 反号把两项合并为 2，系数 1/4κ²×2=1/2κ²",
+   "detail": "在 4 维精确外形式上，Σε_abcd(T^c∧e^d − e^c∧T^d) 与 2Σε_abcd T^c∧e^d 逐分量相等（随机 2-形式 T、e^d=dx^d）；配合 1/4×2=1/2 ⇒ (C) 盒左端系数 1/2、右端 κ²s_ab。",
+   "numbers": {
+    "merge_equal": true,
+    "coeff_12": "1/2"
+   }
+  },
+  {
+   "code": "B02",
+   "level": "PASS",
+   "title": "推论 1.1：Cartan 方程是 24×24 可逆代数映射，挠率不传播",
+   "detail": "(C) 左端 (1/2)ε_abcd T^c∧e^d 把 24 个挠率分量 T^c_{μν} 线性映到 6×4 个 3-形式分量；精确有理数高斯消元的秩 = **24**（满秩）⇒ 给定自旋流 s，挠率唯一、代数确定，方程不含 ∂ω。控制组把 e^3 置零（退化 vierbein）⇒ 秩降到 **18**，检查器有分辨力。",
+   "numbers": {
+    "rank": 24,
+    "rank_degenerate": 18
+   }
+  },
+  {
+   "code": "B03",
+   "level": "INFO",
+   "title": "推论 1.2：T ∝ εJ 的全反对称像为 4 维；ε 三重收缩 = ±6δ",
+   "detail": "以 J^ρ 的 4 个基矢构造 T_{λμν}=ε_{λμνρ}J^ρ，其 24 分量矩阵秩 = **4** ⇒ 像正是「全反对称挠率」（4 维），与文档「挠率由轴向流生成」的结构一致。ε_{λμνρ}ε^{λμνσ} 的对角值 = [-6, -6, -6, -6]（|值|=6，符号随度规/ε 约定），非对角全 0。**归一化系数 κ²/2 未机判**，见 B04。",
+   "numbers": {
+    "image_rank": 4,
+    "eps_diag": [
+     -6,
+     -6,
+     -6,
+     -6
+    ]
+   }
+  },
+  {
+   "code": "B04",
+   "level": "BOUNDARY",
+   "title": "推论 1.2 的 κ²/2 与 1.3 的 3κ²/8：自旋张量归一化未声明",
+   "detail": "文档在 §1 推论 1.2 写 T=(κ²/2)εJ_A，又在推论 1.3 自注「系数 3/8 依自旋张量归一化约定（文献中亦见 3/16）」。机器读数：文中出现「3/16」= True；两处系数无法在不声明 s^{λμν} 归一化的前提下唯一复算 ⇒ 记 BOUNDARY（约定缺声明，不是数值错误）。物理上可判的只有符号（同向自旋排斥），本卷未机核。",
+   "numbers": {
+    "mentions_3_16": true
+   }
+  },
+  {
+   "code": "C01",
+   "level": "PASS",
+   "title": "§2 第二步：δe 变分的 ε 合并（R 项 2、Λ 项 4）与系数 1/24×4=1/6",
+   "detail": "R 项 δ(e^c∧e^d)=δe^c∧e^d+e^c∧δe^d，在 ε 下两项相等 ⇒ 2×；Λ 项 δ(e^a e^b e^c e^d) 四个位置相等 ⇒ 4×。机器：R 项变分与 2ΣεR∧δe∧e 精确相等（True）；Λ 项变分与 4Σε e e e δe 精确相等（True）；(Λ/24κ²)×4=Λ/6κ²（1/6）。",
+   "numbers": {
+    "R_equal": true,
+    "lam_equal": true,
+    "coeff": "1/6"
+   }
+  },
+  {
+   "code": "C02",
+   "level": "PASS",
+   "title": "(E) 盒与 (E′)：R 项 1/2κ²、Λ 项 −Λ/6κ²、右端 κ²T_μν",
+   "detail": "由 §2 第二步的合并因子 2 与 4，得 (1/2κ²)εR e − (Λ/6κ²)ε e e e = τ_d；张量形式 G_μν(Γ̃)+Λg_μν=κ²T_μν。机器核对系数 1/4×2=1/2、1/24×4=1/6、Λ 项取负号、右端 κ² 与 (C) 的 κ² 同幂。量纲见验证报告 A2.11/A2.12（均 PASS）。",
+   "numbers": {
+    "R_coeff": "1/2",
+    "lam_coeff": "1/6",
+    "box_present": true
+   }
+  },
+  {
+   "code": "C03",
+   "level": "INFO",
+   "title": "(E′) 的缩并与 R/T 非对称部分由 (C′) 匹配：未机核",
+   "detail": "文档 §2「重要说明」称含挠时 R_μν 与正则 T_μν 均不对称、其反对称部分由 (C′) 精确匹配，并在 T=0 时回到 GR。要机核需完整的含挠张量代数（Riemann 分解、挠率二次项），本卷外形式层只到 (E) 盒，未进入分量缩并 ⇒ 只登记，不判级。",
+   "numbers": {}
+  },
+  {
+   "code": "D01",
+   "level": "PASS",
+   "title": "§3 第一步/第二步：δF = D(δA) 对非阿贝尔规范场精确成立",
+   "detail": "A 为 so(3) 矩阵值 1-形式、随机多项式系数；F=dA+A∧A。以对偶数微分得 δF，与 d(δA)+A∧δA+δA∧A 逐元素精确相等。A∧A 不可交换，故这不是平凡恒等。控制组 K05 去掉 A∧δA ⇒ 不相等。",
+   "numbers": {
+    "delta_f_equal": true
+   }
+  },
+  {
+   "code": "D02",
+   "level": "PASS",
+   "title": "推论 3.2：D_ν j^{aν}=0 的代数核（f 反对称 × F 对称缩并）",
+   "detail": "取随机反对称 F^b_{μν} 与 su(2) 结构常数 f^{abc}=ε^{abc}，精确计算 f^{abc}F^b_{νμ}F^{cμν}（a=1..3）：三者全为 **0**。原因是 b↔c 交换时 F^b_{νμ}F^{cμν} 对称而 f^{abc} 反对称。控制组把 f 换成全对称张量 ⇒ 非零（{1: Fraction(-94, 3), 2: Fraction(-94, 3), 3: Fraction(-94, 3)}），说明零不是恒真。",
+   "numbers": {
+    "X_su2": {
+     "1": "0",
+     "2": "0",
+     "3": "0"
+    },
+    "X_symmetric": {
+     "1": "-94/3",
+     "2": "-94/3",
+     "3": "-94/3"
+    }
+   }
+  },
+  {
+   "code": "D03",
+   "level": "INFO",
+   "title": "§3.1 三分支：U(1) 阿贝尔、SU(2) 破缺带质量项、SU(3) 非阿贝尔",
+   "detail": "表中三行的差别只在 f^{abc} 与质量项。机器：ε^{123}=1（SU(2) 非零）；U(1) 结构常数恒零（r211 F01 已机核 [1,1]=0）；弱力方程含 m_W²W 项（文本=True）。本卷不重复 r211 的 A∧A 机核，只登记分类正确。",
+   "numbers": {
+    "su2_f123": "1",
+    "mass_term": true
+   }
+  },
+  {
+   "code": "D04",
+   "level": "INFO",
+   "title": "§3 盒间等价「A→g_iA」是耦合吸收的定义性改写，不是场的齐次缩放",
+   "detail": "机器：F(gA)=g dA+g²A∧A 与 gF(A)=g dA+gA∧A 不相等（True）⇒ 若按字面把 A 乘 g，方程不闭合。「A→g_iA」只能读作把 g_i 吸收进场的定义（D=d+A、F=dA+A∧A 的约定），属记号层，不构成可判命题。",
+   "numbers": {
+    "homogeneous": false
+   }
+  },
+  {
+   "code": "D05",
+   "level": "BOUNDARY",
+   "title": "§3.1 Proca 方程写成了 ∂_μ W^{−μν}（应为含光子联络的 D_μ）",
+   "detail": "破缺后 W^± 带电荷 Q=T3+Y=±1（机器：Q=1≠0），其场强方程在树级应为 D_μW^{aμν}+m_W²W^{aν}=g₂j^{aν}，D 含 U(1)_em 联络 eA_μ。文档写 ∂_μ（文本命中=False）只在忽略电磁耦合的孤立近似下成立 ⇒ 记 BOUNDARY（标签/适用范围缺失，非算错）。",
+   "numbers": {
+    "partial_form": false,
+    "Q_W": "1"
+   }
+  },
+  {
+   "code": "E01",
+   "level": "PASS",
+   "title": "§4 (H) 盒：−∂V/∂H† = μ²H − 2λ|H|²H（系数 −μ²、2λ）",
+   "detail": "取 V=−μ²|H|²+λ|H|⁴、H 的 4 个实分量随机取值，实部梯度 ∂V/∂x_i = −2μ²x_i+4λ|H|²x_i 与 −2×(盒 RHS)_i 逐分量精确相等 ⇒ 盒内系数 −μ²、2λ 与 ∂V/∂H† 的 Wirtinger 导数一致。控制组把 2λ 写成 λ ⇒ 被抓到。",
+   "numbers": {
+    "equation_equal": true
+   }
+  },
+  {
+   "code": "E02",
+   "level": "PASS",
+   "title": "推论 4.1：|H|²=μ²/(2λ)，取 H=(0,(v+h)/√2) ⇒ v²=μ²/λ",
+   "detail": "极值条件 0=μ²H−2λ|H|²H ⇒ |H|²=μ²/(2λ)。取 μ²:λ=3:2 ⇒ v²=**3/2**（精确）；代 |H|²=v²/2 回极值条件得 μ²−λv²=0 ⇒ v²=μ²/λ。两步都精确成立。",
+   "numbers": {
+    "v2": "3/2",
+    "vacuum_ok": true
+   }
+  },
+  {
+   "code": "E03",
+   "level": "PASS",
+   "title": "推论 4.2：质量矩阵本征值 = {m_W², m_W², m_Z², 0}",
+   "detail": "L_mass=(v²/8)[g₂²(W¹²+W²²)+(g₂W³−g₁B)²] 给 4×4 质量²矩阵 diag(g₂²v²/4,g₂²v²/4)⊕[[g₂²v²/4,−g₁g₂v²/4],[−g₁g₂v²/4,g₁²v²/4]]。机器（有理 g₁,g₂,v）：λ_Z=(g₁²+g₂²)v²/4 使 (b−λ)(d−λ)−c²=0（True）；A 的本征向量 (g₁,g₂) 使两行均为 0（0, 0）⇒ m_A=0。控制组把 m_Z² 写成 g₂²v²/4 ⇒ 特征方程差 −c²≠0。",
+   "numbers": {
+    "char_ok": true,
+    "lambda_Z_over_v2": "29/4"
+   }
+  },
+  {
+   "code": "E04",
+   "level": "PASS",
+   "title": "推论 4.2：tanθ_W=g₁/g₂、e=g₂sinθ_W=g₁cosθ_W=g₁g₂/√(g₁²+g₂²)",
+   "detail": "取有理 g₁=5/2、g₂=7/3（免开方）：sin²=g₁²/(g₁²+g₂²)、cos²=g₂²/(g₁²+g₂²)，tan²=sin²/cos²=g₁²/g₂²（225/196）；e² 的三条表达式 g₂²sin²、g₁²cos²、g₁²g₂²/(g₁²+g₂²) 全部相等（1225/421）。",
+   "numbers": {
+    "tan2": "225/196",
+    "e2": "1225/421"
+   }
+  },
+  {
+   "code": "E05",
+   "level": "PASS",
+   "title": "推论 4.1/4.4 与 §3.2 的数值：v、λ、G_F 闭合",
+   "detail": "G_F=1.1663787E−5 GeV⁻² ⇒ v=(√2G_F)^−1/2=**2.4621965079413737804757657E+2** GeV（文档 246.22，相对差 1.418268E-6）；λ=m_h²/(2v²)=**1.2938384443304824441154791E-1**（报告 0.129384，相对差 1.202366E-6）；G_F/√2 与 g₂²/(8m_W²)=1/(2v²) 相对差 1.091234E-249（用 m_W=80.377、g₂=2m_W/v）。文档 §3.2 中间值 8.2455E−6 与机器 1/(2v²)=8.2452E−6 属舍入。",
+   "numbers": {
+    "v": "2.4621965079413737804757657E+2",
+    "rel_v": "1.4182676574687369971205734E-6",
+    "lambda": "1.2938384443304824441154791E-1",
+    "rel_lambda": "1.2023662257743496266177877E-6",
+    "rel_GF": "1.0912340958693651932442867E-249"
+   }
+  },
+  {
+   "code": "E06",
+   "level": "FAIL",
+   "title": "推论 4.3：ρ≡1 成立；但「偏差来自顶夸克圈」与 3.8E−4 差 24.6 倍",
+   "detail": "① ρ≡m_W²/(m_Z²cos²θ_W)=1 是质量公式的同义反复（机器：任意 (g₁,g₂,v) 得 ρ=1；控制组 (70,100,300) 亦得 1）⇒ 非独立预言。② 文档写「实测 1.00038±0.00020；偏差来自顶夸克圈（Δρ=3G_Fm_t²/8√2π²≈0.0094）」。机器：Δρ_top=**9.3452405255994971018370196E-3**（m_t=172.69，与文档 0.0094 相对差 5.825476E-3），而 PDG 偏差只有 **3.8E−4** ⇒ 比值 **24.593 倍**；若强行让顶圈给出 3.8E−4，需 m_t=**34.82 GeV**（约实测 1/5）。与 00 §4 的同一措辞同族（r207 C03，**不跨卷相加**）；验证报告 E3.2 原文亦写明ρ₀ 是「新物理偏离」的拟合参数。修复：删去「偏差来自顶夸克圈」，或改为「SM 顶圈修正 ~9E−3；ρ₀ 的 3.8E−4 是扣除 SM 后的新物理拟合残差」。",
+   "numbers": {
+    "rho": "1",
+    "drho_top": "9.3452405255994971018370196E-3",
+    "rel_vs_doc": "5.8254760000534998045723806E-3",
+    "pdg_dev": "3.8000000000000000000000000E-4",
+    "ratio": "24.593",
+    "mt_needed": "34.82"
+   }
+  },
+  {
+   "code": "F01",
+   "level": "INFO",
+   "title": "§5 Dirac 方程 (D)、测地线（5.1）、g−2（5.2）：未机核，仅登记",
+   "detail": "(D) 的旋量联络项 ¼ω^{ab}γ_{ab} 与 (D) 的短波极限（测地线）需要 4×4 γ 代数与 WKB 展开，本卷外形式层未覆盖；g−2 的 Schwinger 值 α/2π 属外部已知结果。标签 \\tag{D} 存在=True；5.2 段与 a_e 字样存在=True。机器只核了文档 §7 对 (D) 的「与 QED 树级一致」这一登记的引用可解析（见 G02）。",
+   "numbers": {
+    "tag_D": true,
+    "sec52": true
+   }
+  },
+  {
+   "code": "G01",
+   "level": "PASS",
+   "title": "§6 的五方程总表与 §1–§5 的盒式标签逐条对应",
+   "detail": "推导段含 \\tag{C}、\\tag{C′}、\\tag{E}、\\tag{E′}、\\tag{YM}、\\tag{H}、\\tag{D}；§6 总表含 \\text{(C)}、\\text{(E)}、\\text{(YM)}、\\text{(H)}、\\text{(D)}。机器逐条命中：{'C': True, 'E': True, 'YM': True, 'H': True, 'D': True, 'Cp': True, 'Ep': True}。",
+   "numbers": {
+    "C": true,
+    "E": true,
+    "YM": true,
+    "H": true,
+    "D": true,
+    "Cp": true,
+    "Ep": true
+   }
+  },
+  {
+   "code": "G02",
+   "level": "PASS",
+   "title": "§7 状态总表 6 行；所引 A1/A2/C1/E1–E4 在验证报告中真实存在且无 FAIL",
+   "detail": "§7 表行数 = **6**（(C)(E)(YM)(H)(D)(1.3)）。验证报告解析出 47 条带状态的条目；文档所引 28 个编号 missing=[]、FAIL=[]。注意 **C1（牛顿极限）在报告中是 INFO**（κ²=8πG 的定标值为外部输入），文档把它列为 (E) 的「独立验证」与报告口径一致，但不构成独立检验。",
+   "numbers": {
+    "rows7": 6,
+    "report_entries": 47,
+    "missing": [],
+    "fails": [],
+    "C1": "INFO"
+   }
+  },
+  {
+   "code": "G03",
+   "level": "PASS",
+   "title": "全文站内链接全部解析到真实文件",
+   "detail": "正则提取 13 个链接（含锚点 0 个），逐个相对 07 目录解析，坏链 = []。控制组 K10 用伪造路径确认检查器不是恒真。",
+   "numbers": {
+    "links": 13,
+    "anchors": 0,
+    "bad": []
+   }
+  },
+  {
+   "code": "G04",
+   "level": "INFO",
+   "title": "供给判定：02 全卷探针 C1（定义/代数恒等/外部实测）",
+   "detail": "本卷机核对象为三条变分恒等式、ε 合并系数、线性映射秩、SM 质量矩阵本征值、外部实测值（v、λ、m_W、m_Z、G_F）。没有一条可与观测对撞且非外部输入的独立数值⇒ TUFT 侧独立数值供给 **0/12 维持**。",
+   "numbers": {
+    "supply": "0/12"
+   }
+  }
+ ],
+ "guards": [
+  {
+   "name": "G01 palatini_identity",
+   "ok": true,
+   "msg": "dR vs D(δω): terms=36 equal=True"
+  },
+  {
+   "name": "G02 leibniz_trace",
+   "ok": false,
+   "msg": "d tr(α∧β)=1 分量; RHS 相等=False"
+  },
+  {
+   "name": "G03 torsion_variation",
+   "ok": true,
+   "msg": "δ_ωT=δω∧e:True ; δ_eT=D(δe):True"
+  },
+  {
+   "name": "G04 epsilon_merge_factor2",
+   "ok": true,
+   "msg": "Σε(Te−eT)=2ΣεTe: True"
+  },
+  {
+   "name": "G05 cartan_coeff_chain",
+   "ok": true,
+   "msg": "1/4*2=1/2"
+  },
+  {
+   "name": "G06 cartan_rank_24",
+   "ok": true,
+   "msg": "rank=24"
+  },
+  {
+   "name": "G07 axial_image_rank4",
+   "ok": true,
+   "msg": "rank=4"
+  },
+  {
+   "name": "G08 epsilon_contraction_6",
+   "ok": true,
+   "msg": "diag=[-6, -6, -6, -6] off_zero=True"
+  },
+  {
+   "name": "G09 epsilon_merge_factor2_e",
+   "ok": true,
+   "msg": "R 项两项合并=2: True"
+  },
+  {
+   "name": "G10 epsilon_merge_factor4_lam",
+   "ok": true,
+   "msg": "Λ 项四位置合并=4: True"
+  },
+  {
+   "name": "G11 lambda_coeff_chain",
+   "ok": true,
+   "msg": "1/24*4=1/6"
+  },
+  {
+   "name": "G12 EC_box_coeffs",
+   "ok": true,
+   "msg": "1/4*2=1/2 ; 1/24*4=1/6 ; 盒内 1/2κ²=True"
+  },
+  {
+   "name": "G13 ym_delta_f",
+   "ok": true,
+   "msg": "δF=D(δA): True"
+  },
+  {
+   "name": "G14 current_covariant_conservation",
+   "ok": true,
+   "msg": "X={1: Fraction(0, 1), 2: Fraction(0, 1), 3: Fraction(0, 1)}"
+  },
+  {
+   "name": "G15 F_not_homogeneous",
+   "ok": true,
+   "msg": "F(gA) 与 gF(A) 相等=False（预期 False）"
+  },
+  {
+   "name": "G16 W_charged",
+   "ok": true,
+   "msg": "Q(W)=1"
+  },
+  {
+   "name": "G17 higgs_equation_coeff",
+   "ok": true,
+   "msg": "grad vs -2*RHS: True"
+  },
+  {
+   "name": "G18 vacuum_v2",
+   "ok": true,
+   "msg": "v²=3/2 vacuum=True"
+  },
+  {
+   "name": "G19 mass_matrix_eigen",
+   "ok": true,
+   "msg": "char=True Arow=0,0"
+  },
+  {
+   "name": "G20 e_identities",
+   "ok": true,
+   "msg": "tan²=225/196 ; e²=1225/421,1225/421,1225/421"
+  },
+  {
+   "name": "G21 v_lambda_numeric",
+   "ok": true,
+   "msg": "v=2.4621965079413737804757657E+2 rel=1.4182676574687369971205734E-6 ; lambda=1.2938384443304824441154791E-1 rel=1.2023662257743496266177877E-6 ; GF rel=1.0912340958693651932442867E-249"
+  },
+  {
+   "name": "G22 rho_identity",
+   "ok": true,
+   "msg": "rho=1"
+  },
+  {
+   "name": "G23 drho_top_value",
+   "ok": true,
+   "msg": "drho=9.3452405255994971018370196E-3 vs doc 0.0094 rel=5.8254760000534998045723806E-3"
+  },
+  {
+   "name": "G24 rho_attribution_mismatch",
+   "ok": true,
+   "msg": "Δρ_top/PDG偏差=2.4592738225261834478518473E+1（>10 ⇒ 归因不成立）"
+  },
+  {
+   "name": "G25 equations_tags",
+   "ok": true,
+   "msg": "{'C': True, 'E': True, 'YM': True, 'H': True, 'D': True, 'Cp': True, 'Ep': True}"
+  },
+  {
+   "name": "G26 sec7_refs",
+   "ok": true,
+   "msg": "rows=6 missing=[] fails=[]"
+  },
+  {
+   "name": "G27 links",
+   "ok": true,
+   "msg": "links=13 bad=[]"
+  }
+ ],
+ "controls": [
+  {
+   "name": "K01 drop_d_delta_omega",
+   "ok": true,
+   "msg": "dR 含 d(δω) 项，去掉后不应相等"
+  },
+  {
+   "name": "K02 wrong_graded_sign",
+   "ok": true,
+   "msg": "把 (−1)^p 写成 +1 不应相等"
+  },
+  {
+   "name": "K03 torsion_variation_sign",
+   "ok": true,
+   "msg": "把 d(δe) 的符号取反不应相等"
+  },
+  {
+   "name": "K04 degenerate_vielbein_rank_drop",
+   "ok": true,
+   "msg": "e^3=0 ⇒ rank=18 < 24"
+  },
+  {
+   "name": "K05 ym_drop_A_dA",
+   "ok": true,
+   "msg": "丢掉 A∧δA 项不应相等"
+  },
+  {
+   "name": "K06 symmetric_f_not_zero",
+   "ok": true,
+   "msg": "把 f 换成对称张量 ⇒ 缩并={1: Fraction(-94, 3), 2: Fraction(-94, 3), 3: Fraction(-94, 3)}"
+  },
+  {
+   "name": "K07 higgs_coeff_detected",
+   "ok": true,
+   "msg": "λ 系数错写应被抓到"
+  },
+  {
+   "name": "K08 mZ_without_g1",
+   "ok": true,
+   "msg": "m_Z²=g₂²v²/4 时特征方程不闭合"
+  },
+  {
+   "name": "K09 rho_always_one",
+   "ok": true,
+   "msg": "(m_W,m_Z,v)=(70,100,300) 按 on-shell 定义 cos²θ_W=m_W²/m_Z² ⇒ ρ=1（同义反复：ρ 不携带数值信息）"
+  },
+  {
+   "name": "K10 fake_link_rejected",
+   "ok": true,
+   "msg": "伪造链接不应解析成功"
+  }
+ ],
+ "summary": {
+  "PASS": 16,
+  "FAIL": 2,
+  "INFO": 6,
+  "BOUNDARY": 2
+ },
+ "guard_pass": "26/27",
+ "control_pass": "10/10"
+}
