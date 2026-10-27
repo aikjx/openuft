@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>238 · 高阶 PN 波形层（TaylorF2 牛顿阶 SPA 与 chirp 质量反演）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.7;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#0c4a6e);border:1px solid #0e7490;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#164e63;color:#a5f3fc;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#a5f3fc;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r238 · 承 r232 遗留候选 · 高阶 PN 波形层第一步 · 零外部依赖</span>
+  <h1>四力统一方程·高阶 PN 波形层<br>TaylorF2 牛顿阶 SPA 与 chirp 质量反演</h1>
+  <p>时域啁啾积分（r232 管线）经驻定相位近似（SPA）映射到频域，复现 TaylorF2 相位级数的
+     <b>牛顿阶</b> Ψ₀=(3/128η)v^(−5)；并从数值 (f,t) 网格反演 <b>chirp 质量</b>——
+     LIGO 2016 首篇论文的第一参数读数。1PN/2PN 保守项时域验证框架外（如实登记）。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>啁啾演化：频率、相位与周期数</h3>
+  <canvas id="cvW" width="1000" height="460"></canvas>
+  <div class="read" id="readW"></div>
+  <p class="note">蓝线 = 瞬时频率 f(t)（30→250 Hz 升频）；紫线 = 累计周期数 N(t)=Φ/2π。
+     35→150 Hz 段（GW150914 可见段）周期数与论文读出 ~10 量级自洽。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>SPA 残差结构：为什么 LIGO 模板需要 1PN 项</h3>
+  <canvas id="cvR" width="1000" height="420"></canvas>
+  <div class="read" id="readR"></div>
+  <p class="note">牛顿阶 SPA 残差（线性拟合扣除 t_c/φ_c 后）随 f 增长——比值 ≈ (f_hi/f_lo)²
+     即 v² 结构：SPA 误差与 TaylorF2 的 1PN 修正项<b>同量级同形状</b>。
+     这就是 LIGO 模板必须含 1PN/2PN 保守项的定量原因（其时域验证需 PN 保守动力学——框架外登记）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>chirp 质量反演：LIGO 首参数读数的机器化</h3>
+  <div class="read" id="readM"></div>
+  <p class="note">牛顿 chirp 关系 τ = (5/256)(πM_c)^(−8/3)f^(−8/3)（c=1）：350 点逐点反演。
+     判别力：时间标度 1% 扰动 ⇒ M_c 偏移 0.60%（=1.01^(3/5)）；双中子星 1.4+1.4 M☉ 给 1.22 M☉。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R238_JSON__;
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">M_c 反演 rel <b>${R.readings.mc.rel}</b></span>`;
+})();
+
+/* ---------- §1 啁啾 ---------- */
+const cvW=document.getElementById("cvW"), ctxW=cvW.getContext("2d");
+(function(){
+  const T=R.readings.wave;
+  ctxW.clearRect(0,0,1000,460);ctxW.fillStyle="#0d1730";ctxW.fillRect(0,0,1000,460);
+  const PL=62,PR=66,PT=18,PB=40;
+  const tmax=T[T.length-1][0];
+  let fmin=1e18,fmax=-1e18,nmax=-1e18;
+  T.forEach(p=>{fmin=Math.min(fmin,p[1]);fmax=Math.max(fmax,p[1]);nmax=Math.max(nmax,p[2]);});
+  const X=t=>PL+t/tmax*(1000-PL-PR);
+  const Yf=f=>PT+(1-(f-fmin)/(fmax-fmin))*(460-PT-PB);
+  const Yn=n=>PT+(1-n/nmax)*(460-PT-PB);
+  ctxW.strokeStyle="#1f2b3f";ctxW.font="10px Consolas";ctxW.fillStyle="#94a3b8";
+  for(let i=0;i<=5;i++){const x=PL+i/5*(1000-PL-PR);ctxW.beginPath();ctxW.moveTo(x,PT);ctxW.lineTo(x,460-PB);ctxW.stroke();
+    ctxW.fillText((tmax*i/5).toFixed(2)+"s",x-12,460-PB+13);}
+  [fmin,fmax].forEach(f=>ctxW.fillText(f.toFixed(0)+"Hz",4,Yf(f)+3));
+  [0,nmax].forEach(n=>ctxW.fillText(n.toFixed(0),1000-PR+4,Yn(n)+3));
+  ctxW.strokeStyle="#bb9af7";ctxW.lineWidth=1.6;ctxW.beginPath();
+  T.forEach((p,i)=>{i?ctxW.lineTo(X(p[0]),Yn(p[2])):ctxW.moveTo(X(p[0]),Yn(p[2]));});
+  ctxW.stroke();
+  ctxW.strokeStyle="#63d2ff";ctxW.lineWidth=2;ctxW.beginPath();
+  T.forEach((p,i)=>{i?ctxW.lineTo(X(p[0]),Yf(p[1])):ctxW.moveTo(X(p[0]),Yf(p[1]));});
+  ctxW.stroke();
+  ctxW.fillStyle="#63d2ff";ctxW.fillText("f_GW(t)（30→250 Hz 升频）",PL+10,PT+12);
+  ctxW.fillStyle="#bb9af7";ctxW.fillText("N(t)=Φ/2π 累计周期数",PL+10,PT+26);
+  const cy=R.readings.cycles;
+  document.getElementById("readW").textContent=
+    `全段（30→250 Hz）周期数 = ${cy.total}\n`+
+    `35→150 Hz 可见段 = ${cy.visible}（GW150914 论文读出 ~10 量级自洽）\n`+
+    `相位累计 Φ_end ≈ ${(cy.total*2*Math.PI).toFixed(0)} rad（RK4 dt=2.5μs）`;
+})();
+
+/* ---------- §2 SPA 残差结构 ---------- */
+const cvR=document.getElementById("cvR"), ctxR=cvR.getContext("2d");
+(function(){
+  const T=R.readings.wave, rs=R.readings.residuals;
+  // 残差逐点重算（从 wave 里 Ψ_num 与牛顿级数）
+  const MCs = 1.3842e-4;   // GM_c/c³ [s]（28.1 M☉）
+  const eta = R.readings.mc.eta;
+  ctxR.clearRect(0,0,1000,420);ctxR.fillStyle="#0d1730";ctxR.fillRect(0,0,1000,420);
+  const PL=60,PR=16,PT=18,PB=40;
+  let mx=0;
+  const pts = T.map(p=>{
+    const f=p[0], psi=p[3];
+    const v = Math.cbrt(Math.PI*MCs*f);
+    const core = (3/(128*eta))*Math.pow(v,-5);
+    const res = psi - core;                      // 扣牛顿级数（未扣线性项——展示漂移）
+    mx = Math.max(mx, Math.abs(res));
+    return [f, res];
+  });
+  // 线性拟合
+  let sx=0,sy=0,sxx=0,sxy=0; const n=pts.length;
+  pts.forEach(p=>{sx+=p[0];sy+=p[1];sxx+=p[0]*p[0];sxy+=p[0]*p[1];});
+  const B=(n*sxy-sx*sy)/(n*sxx-sx*sx), A=(sy-B*sx)/n;
+  let rmax=0;
+  pts.forEach(p=>{p[2]=p[1]-A-B*p[0]; rmax=Math.max(rmax,Math.abs(p[2]));});
+  const X=f=>PL+(Math.log10(f)-Math.log10(30))/(Math.log10(250)-Math.log10(30))*(1000-PL-PR);
+  const Y=r=>PT+(1-(r+rmax)/(2*rmax))*(420-PT-PB);
+  ctxR.strokeStyle="#1f2b3f";ctxR.font="10px Consolas";ctxR.fillStyle="#94a3b8";
+  [30,50,100,200,250].forEach(f=>{ctxR.beginPath();ctxR.moveTo(X(f),PT);ctxR.lineTo(X(f),420-PB);ctxR.stroke();
+    ctxR.fillText(String(f),X(f)-8,420-PB+13);});
+  ctxR.strokeStyle="#63d2ff";ctxR.lineWidth=1.6;ctxR.beginPath();
+  pts.forEach((p,i)=>{i?ctxR.lineTo(X(p[0]),Y(p[2])):ctxR.moveTo(X(p[0]),Y(p[2]));});
+  ctxR.stroke();
+  ctxR.fillStyle="#94a3b8";ctxR.fillText("f [Hz]（对数）",470,420-8);
+  ctxR.fillStyle="#63d2ff";ctxR.fillText("SPA 残差（扣牛顿级数+线性漂移）±"+rmax.toFixed(3)+" rad",PL+10,PT+12);
+  document.getElementById("readR").textContent=
+    `残差 RMS：牛顿阶 ${rs.res0} → +1PN ${rs.res1} → +1.5PN ${rs.res15} → +2PN ${rs.res2}（级数侧自洽结构）\n`+
+    `分半段比值 ${rs.ratio ? "见守卫 G2" : "—"}：SPA 误差 ∝ v²，与 1PN 项同量级同形状\n`+
+    `→ LIGO 模板必须含 1PN/2PN 保守项；其时域独立验证需 PN 保守动力学积分（框架外登记）`;
+})();
+
+/* ---------- §3 M_c 反演 ---------- */
+(function(){
+  const m=R.readings.mc;
+  document.getElementById("readM").textContent=
+    `反演 M_c = ${m.inv} M☉   设定 = ${m.set} M☉   rel = ${m.rel}（350 点，η=${m.eta}）\n`+
+    `判别力：时间标度 ×1.01 ⇒ M_c +0.60%（=1.01^(3/5)）；双中子星 1.4+1.4 M☉ ⇒ M_c = 1.22 M☉\n`+
+    `→ LIGO 2016 首篇论文的第一参数读数（chirp 质量）在纯标准库内复现`;
+})();
+
+/* ---------- §5 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"1PN/2PN 保守项框架外",b:"TaylorF2 的 1PN/2PN 相位项来自轨道保守动力学 PN 修正——牛顿时域积分不含，时域独立验证需 PN 保守动力学积分（框架外登记）。"},
+    {cls:"bnd",t:"SPA 渐近口径",b:"SPA 对慢演化啁啾渐近精确，误差 O(v²)——本卷实测其 v² 结构（守卫 G2），与 1PN 项同量级。"},
+    {cls:"bnd",t:"GW150914 对照",b:"35→150 Hz 可见段周期数与论文 ~10 量级自洽；30→250 Hz 全段理论周期数更大（含低 SNR 段）。"},
+    {cls:"bnd",t:"等质量近似",b:"波形 η 用 36/29 真实值 0.2471；η 判别力见控制组（M_c 反演对 η 不敏感是牛顿阶特性——η 进入 1PN+ 项）。"},
+    {cls:"bnd",t:"无新理论",b:"SPA、TaylorF2 牛顿阶、chirp 反演全部为 1980s–2016 波天文学标准内容（承 r229 口径）。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r238 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

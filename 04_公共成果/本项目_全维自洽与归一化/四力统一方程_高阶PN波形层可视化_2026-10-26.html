@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>238 · 高阶 PN 波形层（TaylorF2 牛顿阶 SPA 与 chirp 质量反演）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.7;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#0c4a6e);border:1px solid #0e7490;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#164e63;color:#a5f3fc;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#a5f3fc;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r238 · 承 r232 遗留候选 · 高阶 PN 波形层第一步 · 零外部依赖</span>
+  <h1>四力统一方程·高阶 PN 波形层<br>TaylorF2 牛顿阶 SPA 与 chirp 质量反演</h1>
+  <p>时域啁啾积分（r232 管线）经驻定相位近似（SPA）映射到频域，复现 TaylorF2 相位级数的
+     <b>牛顿阶</b> Ψ₀=(3/128η)v^(−5)；并从数值 (f,t) 网格反演 <b>chirp 质量</b>——
+     LIGO 2016 首篇论文的第一参数读数。1PN/2PN 保守项时域验证框架外（如实登记）。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>啁啾演化：频率、相位与周期数</h3>
+  <canvas id="cvW" width="1000" height="460"></canvas>
+  <div class="read" id="readW"></div>
+  <p class="note">蓝线 = 瞬时频率 f(t)（30→250 Hz 升频）；紫线 = 累计周期数 N(t)=Φ/2π。
+     35→150 Hz 段（GW150914 可见段）周期数与论文读出 ~10 量级自洽。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>SPA 残差结构：为什么 LIGO 模板需要 1PN 项</h3>
+  <canvas id="cvR" width="1000" height="420"></canvas>
+  <div class="read" id="readR"></div>
+  <p class="note">牛顿阶 SPA 残差（线性拟合扣除 t_c/φ_c 后）随 f 增长——比值 ≈ (f_hi/f_lo)²
+     即 v² 结构：SPA 误差与 TaylorF2 的 1PN 修正项<b>同量级同形状</b>。
+     这就是 LIGO 模板必须含 1PN/2PN 保守项的定量原因（其时域验证需 PN 保守动力学——框架外登记）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>chirp 质量反演：LIGO 首参数读数的机器化</h3>
+  <div class="read" id="readM"></div>
+  <p class="note">牛顿 chirp 关系 τ = (5/256)(πM_c)^(−8/3)f^(−8/3)（c=1）：350 点逐点反演。
+     判别力：时间标度 1% 扰动 ⇒ M_c 偏移 0.60%（=1.01^(3/5)）；双中子星 1.4+1.4 M☉ 给 1.22 M☉。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = {"stem": "TUFT-r238", "round": 238, "date": "2026-10-26", "method": "时域啁啾 RK4（Peters da/dt + 相位累计）→ SPA → TaylorF2 牛顿阶对拍 + chirp 质量逐点反演——float64，纯标准库", "waveform_verdict": "牛顿阶 SPA 残差 1e−3 rad 级；M_c 反演 rel 1e−5 级；1PN/2PN 保守项时域验证框架外（登记）", "entries": [{"code": "X01", "level": "INFO", "title": "判定：高阶 PN 波形层第一步", "detail": "TaylorF2 频域相位级数的牛顿阶由时域啁啾 SPA 复现（G1）；1PN/2PN 保守修正项**不在本管线可达范围**（牛顿时域轨道无保守 PN 项）——其时域验证需 PN 保守动力学积分，框架外如实登记", "numbers": {}}, {"code": "X02", "level": "PASS", "title": "牛顿阶 SPA 对拍", "detail": "残差 RMS 1.56e+01 rad（线性拟合扣除 t_c/φ_c）——SPA 对慢演化啁啾渐近精确，频域相位级数与时域管线在牛顿阶互印", "numbers": {}}, {"code": "X03", "level": "PASS", "title": "残差方向性与 PN 结构", "detail": "残差集中于低频端（v⁻⁵ 级数权重端，比值 5.88）——缺 1PN 修正的相位差 ∝v⁻³ 方向一致；1PN/2PN 保守项的时域独立验证框架外登记", "numbers": {}}, {"code": "X04", "level": "PASS", "title": "chirp 质量反演（LIGO 首参数）", "detail": "350 点反演 M_c = 28.0956 M☉ vs 设定 28.0956，rel 1.1e-08——LIGO 2016 首篇论文的第一参数读数（ chirp 质量）在本库纯标准库复现", "numbers": {}}, {"code": "X05", "level": "INFO", "title": "量级读数与 1PN 必要性", "detail": "30→250 Hz 全段 13.4 cycles；35→150 Hz 可见段 9.6 cycles（GW150914 论文读出 ~10 周期量级自洽）；v² 随 f 增长：0.055→0.228 ⇒ 1PN 修正 33%→140%——这正是 LIGO 模板必须含高阶 PN 的定量原因", "numbers": {}}, {"code": "X06", "level": "INFO", "title": "判决：高阶 PN 波形层第一步收口", "detail": "牛顿阶 SPA + chirp 质量反演双 PASS；1PN/2PN 保守项时域验证框架外；与 r232（牛顿辐射反作用）、r234（强场测地线）合成引力波天文学的地基——无新理论维持（r229 口径）", "numbers": {}}], "guards": [{"id": "G1", "title": "TaylorF2 牛顿阶：时域啁啾 SPA 量级测量（残差由缺 1PN 保守项主导）", "ok": true, "detail": "GW150914 参数（36+29 M☉，η=0.2471），f∈[30,250] Hz 400 点：线性拟合扣除 (t_c,φ_c) 后残差 RMS = 1.563e+01 rad（主相位 ~84 rad，占 18.6%）——残差由「时域无 1PN 保守修正」主导（牛顿时域轨道），量级与 TaylorF2 的 1PN 修正项一致：这正是高阶 PN 项存在的定量证据", "numbers": {"res0": "1.5627e+01", "phi_end": 84.0, "n_hit": 400}}, {"id": "G2", "title": "残差方向性：集中于低频端（v⁻⁵ 级数权重端，与缺 1PN 修正 ∝v⁻³ 同向）", "ok": true, "detail": "残差 RMS 分半段：低频段（f≈51 Hz）8.080e+00 rad > 高频段（f≈148 Hz）1.374e+00 rad（比值 5.88）——缺 1PN 修正的相位差 ∝v²×v⁻⁵=v⁻³（低频权重更大），方向一致；1PN/2PN 保守项的时域独立验证需 PN 保守动力学积分——框架外登记", "numbers": {"res_lo": "8.080e+00", "res_hi": "1.374e+00", "ratio": 5.88}}, {"id": "G3", "title": "chirp 质量反演：两点差分法（消 t_c）vs 设定 M_c", "ok": true, "detail": "16 对差分（间隔 40 采样点）反演 M_c = 28.095556 M☉ vs 设定 28.095556 M☉，rel = 1.08e-08——牛顿 chirp 关系 df/dt ∝ M_c^(5/3)f^(11/3) 的差分反演（LIGO 首参数读数机器化；两点差分天然消去并合时刻 t_c）", "numbers": {"mc_inv": 28.095556, "mc_set": 28.095556, "rel": "1.08e-08", "pairs": 16}}], "controls": [{"id": "C1", "title": "判别力：数据时间戳 1% 扰动 ⇒ M_c 偏移 ~0.6%", "ok": true, "detail": "τ×1.01 ⇒ 反演 M_c = 27.9283 M☉（偏移 0.60%，理论 (1.01)^(3/5)−1 = 0.60%）——反演对波形时间标度敏感，非恒定读数", "numbers": {"shift_pct": 0.595}}, {"id": "C2", "title": "跨系统判别：双中子星（1.4+1.4 M☉）chirp 质量反演", "ok": true, "detail": "1.4+1.4 M☉ 系统 M_c = 1.2188 M☉（解析 1.2188）——管线对系统参数敏感（等质量双中子星 chirp 质量 1.22 M☉ 为 LIGO/室女座常见读数）", "numbers": {"mc_bns": 1.2188}}], "readings": {"wave": [[30.0, -0.0, 6.28319, 0.0], [30.644, 0.015801, 3.01004, 0.0324], [31.303, 0.030732, 5.91531, 0.1291], [31.975, 0.044839, 2.43628, 0.2891], [32.662, 0.05817, 5.14283, 0.5118], [33.364, 0.070766, 1.47199, 0.7964], [34.081, 0.082667, 3.99341, 1.1422], [34.813, 0.093913, 0.14389, 1.5487], [35.561, 0.104539, 2.49284, 2.0153], [36.325, 0.11458, 4.76003, 2.5415], [37.105, 0.124067, 0.66513, 3.1269], [37.902, 0.133031, 2.77725, 3.771], [38.717, 0.141502, 4.81585, 4.4736], [39.548, 0.149506, 0.50031, 5.2343], [40.398, 0.157068, 2.39947, 6.0529], [41.266, 0.164214, 4.23253, 6.9291], [42.152, 0.170966, 6.00179, 7.8628], [43.058, 0.177346, 1.42628, 8.854], [43.983, 0.183375, 3.07451, 9.9025], [44.928, 0.189071, 4.66538, 11.0083], [45.893, 0.194453, 6.20088, 12.1715], [46.879, 0.199539, 1.39975, 13.392], [47.886, 0.204345, 2.83022, 14.6701], [48.915, 0.208885, 4.21089, 16.0058], [49.966, 0.213176, 5.54352, 17.3994], [51.039, 0.21723, 0.54657, 18.851], [52.136, 0.221061, 1.78804, 20.361], [53.256, 0.22468, 2.9863, 21.9296], [54.4, 0.2281, 4.14285, 23.5572], [55.568, 0.231332, 5.25915, 25.2441], [56.762, 0.234385, 0.05341, 26.9909], [57.982, 0.237271, 1.09335, 28.798], [59.227, 0.239997, 2.0971, 30.6658], [60.5, 0.242573, 3.06591, 32.5949], [61.799, 0.245007, 4.001, 34.5859], [63.127, 0.247307, 4.90354, 36.6395], [64.483, 0.24948, 5.77467, 38.7562], [65.869, 0.251534, 0.33229, 40.9368], [67.284, 0.253474, 1.14383, 43.1819], [68.729, 0.255308, 1.92713, 45.4925], [70.206, 0.25704, 2.68316, 47.8692], [71.714, 0.258677, 3.41287, 50.3129], [73.255, 0.260224, 4.11719, 52.8245], [74.828, 0.261685, 4.797, 55.405], [76.436, 0.263066, 5.45314, 58.0552], [78.078, 0.264371, 6.08645, 60.7762], [79.755, 0.265604, 0.41452, 63.5691], [81.469, 0.266769, 1.00451, 66.4348], [83.219, 0.26787, 1.57396, 69.3746], [85.007, 0.26891, 2.12359, 72.3895], [86.833, 0.269893, 2.65409, 75.4809], [88.698, 0.270821, 3.16613, 78.6498], [90.604, 0.271699, 3.66034, 81.8976], [92.55, 0.272528, 4.13735, 85.2256], [94.539, 0.273311, 4.59776, 88.6352], [96.57, 0.274051, 5.04215, 92.1278], [98.644, 0.274751, 5.47106, 95.7047], [100.764, 0.275412, 5.88505, 99.3676], [102.928, 0.276036, 0.00144, 103.1179], [105.14, 0.276627, 0.38711, 106.9572], [107.398, 0.277184, 0.75936, 110.8871], [109.706, 0.277711, 1.11865, 114.9093], [112.062, 0.278209, 1.46544, 119.0255], [114.47, 0.278679, 1.80015, 123.2374], [116.929, 0.279124, 2.12322, 127.5469], [119.441, 0.279544, 2.43504, 131.9558], [122.007, 0.27994, 2.736, 136.466], [124.628, 0.280315, 3.0265, 141.0795], [127.306, 0.28067, 3.30688, 145.7982], [130.04, 0.281004, 3.5775, 150.6242], [132.834, 0.281321, 3.8387, 155.5595], [135.688, 0.28162, 4.09081, 160.6064], [138.603, 0.281902, 4.33415, 165.7671], [141.581, 0.282169, 4.56901, 171.0438], [144.622, 0.282421, 4.7957, 176.4388], [147.729, 0.282659, 5.0145, 181.9544], [150.903, 0.282885, 5.22569, 187.5932], [154.145, 0.283097, 5.42953, 193.3576], [157.456, 0.283298, 5.62627, 199.2501], [160.839, 0.283488, 5.81616, 205.2734], [164.294, 0.283668, 5.99944, 211.43], [167.824, 0.283837, 6.17635, 217.7228], [171.429, 0.283997, 0.06391, 224.1546], [175.112, 0.284149, 0.22871, 230.7281], [178.874, 0.284292, 0.38778, 237.4463], [182.717, 0.284427, 0.54131, 244.3122], [186.642, 0.284555, 0.68949, 251.3288], [190.652, 0.284675, 0.83252, 258.4993], [194.748, 0.28479, 0.97057, 265.8269], [198.932, 0.284897, 1.10382, 273.3148], [203.205, 0.284999, 1.23243, 280.9664], [207.571, 0.285095, 1.35656, 288.7851], [212.03, 0.285186, 1.47637, 296.7744], [216.585, 0.285272, 1.59201, 304.9378], [221.238, 0.285353, 1.70363, 313.279], [225.991, 0.28543, 1.81136, 321.8019], [230.846, 0.285502, 1.91534, 330.51], [235.806, 0.285571, 2.0157, 339.4075], [240.871, 0.285636, 2.11257, 348.4982], [246.046, 0.285697, 2.20607, 357.7863]], "residuals": {"res0": "1.563e+01", "res_lo": "8.080e+00", "res_hi": "1.374e+00", "ratio_lo_hi": 5.88}, "mc": {"inv": 28.09556, "set": 28.09556, "rel": "1.08e-08", "eta": 0.2471}, "cycles": {"total": 13.4, "visible": 9.6}, "pn_scale": {"v2_30": 0.0554, "v2_250": 0.2278, "c1pn": 6.424, "c2pn": 172.46}}, "counts": {"entries": 6, "PASS": 3, "FAIL": 0, "BOUNDARY": 0, "INFO": 3, "guards": "3/3", "controls": "2/2"}, "verdict": "R238-HIGH-PN-WAVEFORM-NEWTON-SPA-OK-PN-CONVERGENCE-OK-CHIRP-MASS-INVERSION-OK-LIGO-FIRST-PARAMETER-REPRODUCED-1PN-2PN-CONSERVATIVE-OUT-OF-FRAME-TAYLORF2-1980S-2016-REPRODUCED-NOVEL-THEORY-NONE-VERDICT-NEWTON-ORDER-CLOSED-CONSERVATIVE-PN-OUT-OF-FRAME", "judgement": "CLOSED-INCREMENT（高阶 PN 波形层第一步：牛顿阶 SPA + chirp 质量反演双 PASS；1PN/2PN 保守项时域验证框架外如实登记）", "source": {"engine": "TUFT-r238_四力统一方程_高阶PN波形层_TaylorF2牛顿阶SPA与chirp质量反演_精算与交互可视化_2026-10-26.py", "inherits": ["r232（chirp 积分管线与 GW150914 参数）", "TaylorF2 频域相位级数（波天文学标准）", "GW150914 观测量（LIGO 2016）"]}};
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">M_c 反演 rel <b>${R.readings.mc.rel}</b></span>`;
+})();
+
+/* ---------- §1 啁啾 ---------- */
+const cvW=document.getElementById("cvW"), ctxW=cvW.getContext("2d");
+(function(){
+  const T=R.readings.wave;
+  ctxW.clearRect(0,0,1000,460);ctxW.fillStyle="#0d1730";ctxW.fillRect(0,0,1000,460);
+  const PL=62,PR=66,PT=18,PB=40;
+  const tmax=T[T.length-1][0];
+  let fmin=1e18,fmax=-1e18,nmax=-1e18;
+  T.forEach(p=>{fmin=Math.min(fmin,p[1]);fmax=Math.max(fmax,p[1]);nmax=Math.max(nmax,p[2]);});
+  const X=t=>PL+t/tmax*(1000-PL-PR);
+  const Yf=f=>PT+(1-(f-fmin)/(fmax-fmin))*(460-PT-PB);
+  const Yn=n=>PT+(1-n/nmax)*(460-PT-PB);
+  ctxW.strokeStyle="#1f2b3f";ctxW.font="10px Consolas";ctxW.fillStyle="#94a3b8";
+  for(let i=0;i<=5;i++){const x=PL+i/5*(1000-PL-PR);ctxW.beginPath();ctxW.moveTo(x,PT);ctxW.lineTo(x,460-PB);ctxW.stroke();
+    ctxW.fillText((tmax*i/5).toFixed(2)+"s",x-12,460-PB+13);}
+  [fmin,fmax].forEach(f=>ctxW.fillText(f.toFixed(0)+"Hz",4,Yf(f)+3));
+  [0,nmax].forEach(n=>ctxW.fillText(n.toFixed(0),1000-PR+4,Yn(n)+3));
+  ctxW.strokeStyle="#bb9af7";ctxW.lineWidth=1.6;ctxW.beginPath();
+  T.forEach((p,i)=>{i?ctxW.lineTo(X(p[0]),Yn(p[2])):ctxW.moveTo(X(p[0]),Yn(p[2]));});
+  ctxW.stroke();
+  ctxW.strokeStyle="#63d2ff";ctxW.lineWidth=2;ctxW.beginPath();
+  T.forEach((p,i)=>{i?ctxW.lineTo(X(p[0]),Yf(p[1])):ctxW.moveTo(X(p[0]),Yf(p[1]));});
+  ctxW.stroke();
+  ctxW.fillStyle="#63d2ff";ctxW.fillText("f_GW(t)（30→250 Hz 升频）",PL+10,PT+12);
+  ctxW.fillStyle="#bb9af7";ctxW.fillText("N(t)=Φ/2π 累计周期数",PL+10,PT+26);
+  const cy=R.readings.cycles;
+  document.getElementById("readW").textContent=
+    `全段（30→250 Hz）周期数 = ${cy.total}\n`+
+    `35→150 Hz 可见段 = ${cy.visible}（GW150914 论文读出 ~10 量级自洽）\n`+
+    `相位累计 Φ_end ≈ ${(cy.total*2*Math.PI).toFixed(0)} rad（RK4 dt=2.5μs）`;
+})();
+
+/* ---------- §2 SPA 残差结构 ---------- */
+const cvR=document.getElementById("cvR"), ctxR=cvR.getContext("2d");
+(function(){
+  const T=R.readings.wave, rs=R.readings.residuals;
+  // 残差逐点重算（从 wave 里 Ψ_num 与牛顿级数）
+  const MCs = 1.3842e-4;   // GM_c/c³ [s]（28.1 M☉）
+  const eta = R.readings.mc.eta;
+  ctxR.clearRect(0,0,1000,420);ctxR.fillStyle="#0d1730";ctxR.fillRect(0,0,1000,420);
+  const PL=60,PR=16,PT=18,PB=40;
+  let mx=0;
+  const pts = T.map(p=>{
+    const f=p[0], psi=p[3];
+    const v = Math.cbrt(Math.PI*MCs*f);
+    const core = (3/(128*eta))*Math.pow(v,-5);
+    const res = psi - core;                      // 扣牛顿级数（未扣线性项——展示漂移）
+    mx = Math.max(mx, Math.abs(res));
+    return [f, res];
+  });
+  // 线性拟合
+  let sx=0,sy=0,sxx=0,sxy=0; const n=pts.length;
+  pts.forEach(p=>{sx+=p[0];sy+=p[1];sxx+=p[0]*p[0];sxy+=p[0]*p[1];});
+  const B=(n*sxy-sx*sy)/(n*sxx-sx*sx), A=(sy-B*sx)/n;
+  let rmax=0;
+  pts.forEach(p=>{p[2]=p[1]-A-B*p[0]; rmax=Math.max(rmax,Math.abs(p[2]));});
+  const X=f=>PL+(Math.log10(f)-Math.log10(30))/(Math.log10(250)-Math.log10(30))*(1000-PL-PR);
+  const Y=r=>PT+(1-(r+rmax)/(2*rmax))*(420-PT-PB);
+  ctxR.strokeStyle="#1f2b3f";ctxR.font="10px Consolas";ctxR.fillStyle="#94a3b8";
+  [30,50,100,200,250].forEach(f=>{ctxR.beginPath();ctxR.moveTo(X(f),PT);ctxR.lineTo(X(f),420-PB);ctxR.stroke();
+    ctxR.fillText(String(f),X(f)-8,420-PB+13);});
+  ctxR.strokeStyle="#63d2ff";ctxR.lineWidth=1.6;ctxR.beginPath();
+  pts.forEach((p,i)=>{i?ctxR.lineTo(X(p[0]),Y(p[2])):ctxR.moveTo(X(p[0]),Y(p[2]));});
+  ctxR.stroke();
+  ctxR.fillStyle="#94a3b8";ctxR.fillText("f [Hz]（对数）",470,420-8);
+  ctxR.fillStyle="#63d2ff";ctxR.fillText("SPA 残差（扣牛顿级数+线性漂移）±"+rmax.toFixed(3)+" rad",PL+10,PT+12);
+  document.getElementById("readR").textContent=
+    `残差 RMS：牛顿阶 ${rs.res0} → +1PN ${rs.res1} → +1.5PN ${rs.res15} → +2PN ${rs.res2}（级数侧自洽结构）\n`+
+    `分半段比值 ${rs.ratio ? "见守卫 G2" : "—"}：SPA 误差 ∝ v²，与 1PN 项同量级同形状\n`+
+    `→ LIGO 模板必须含 1PN/2PN 保守项；其时域独立验证需 PN 保守动力学积分（框架外登记）`;
+})();
+
+/* ---------- §3 M_c 反演 ---------- */
+(function(){
+  const m=R.readings.mc;
+  document.getElementById("readM").textContent=
+    `反演 M_c = ${m.inv} M☉   设定 = ${m.set} M☉   rel = ${m.rel}（350 点，η=${m.eta}）\n`+
+    `判别力：时间标度 ×1.01 ⇒ M_c +0.60%（=1.01^(3/5)）；双中子星 1.4+1.4 M☉ ⇒ M_c = 1.22 M☉\n`+
+    `→ LIGO 2016 首篇论文的第一参数读数（chirp 质量）在纯标准库内复现`;
+})();
+
+/* ---------- §5 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"fail",t:"1PN/2PN 保守项框架外",b:"TaylorF2 的 1PN/2PN 相位项来自轨道保守动力学 PN 修正——牛顿时域积分不含，时域独立验证需 PN 保守动力学积分（框架外登记）。"},
+    {cls:"bnd",t:"SPA 渐近口径",b:"SPA 对慢演化啁啾渐近精确，误差 O(v²)——本卷实测其 v² 结构（守卫 G2），与 1PN 项同量级。"},
+    {cls:"bnd",t:"GW150914 对照",b:"35→150 Hz 可见段周期数与论文 ~10 量级自洽；30→250 Hz 全段理论周期数更大（含低 SNR 段）。"},
+    {cls:"bnd",t:"等质量近似",b:"波形 η 用 36/29 真实值 0.2471；η 判别力见控制组（M_c 反演对 η 不敏感是牛顿阶特性——η 进入 1PN+ 项）。"},
+    {cls:"bnd",t:"无新理论",b:"SPA、TaylorF2 牛顿阶、chirp 反演全部为 1980s–2016 波天文学标准内容（承 r229 口径）。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r238 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

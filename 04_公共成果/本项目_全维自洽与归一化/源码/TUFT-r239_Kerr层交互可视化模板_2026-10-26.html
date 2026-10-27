@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>239 · 四力统一方程·Kerr 测地线层（旋转黑洞：ISCO(a)、光子球、方向效应）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#082f49);border:1px solid #0369a1;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#0c4a6e;color:#bae6fd;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bbf7d0;}
+  .chip b{color:var(--green);}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--green);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#e9d5ff;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card.fail{border-color:#7f1d1d;} .card.fail b{color:var(--red);}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r239 · 承 r234（史瓦西强场层）遗留候选 · Kerr 测地线层 · 几何单位 GM=c=1 · 零外部依赖</span>
+  <h1>四力统一方程·Kerr 测地线层<br>旋转黑洞：ISCO(a) 曲线、光子球与顺/逆行方向效应</h1>
+  <p>Kerr 度规（1963）赤道面测地线。本卷数值探索：Bardeen–Press–Teukolsky 1972 解析 ISCO(a)
+     顺/逆两支（a=0 → 6M、a=1 → 1M）、R_eff″ 符号二分的数值交叉验证、
+     光子球求根 vs 三角式双路对拍、视界/能层结构与 a=1 极限三线重合、
+     a=0.9 顺逆行 ISCO 差的方向效应机器判别。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>ISCO(a) 顺/逆两支与结构线族（几何单位 M=1）</h3>
+  <canvas id="cvI" width="1000" height="470"></canvas>
+  <div class="read" id="readI"></div>
+  <p class="note">绿线=顺行 ISCO（与黑洞同向，旋转拖曳使稳定圆轨道深入至 1M）；橙线=逆行 ISCO（升向 9M）。
+     红线=视界 r₊=1+√(1−a²)；金线=顺行光子球；灰虚线=赤道能层 2M。
+     a=0.5 竖线处标注数值二分交叉验证点。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>方向效应与数值交叉验证读数</h3>
+  <canvas id="cvB" width="1000" height="430"></canvas>
+  <div class="read" id="readB"></div>
+  <p class="note">三个自旋档（a=0 / 0.5 / 0.9）的特征半径对比：顺/逆行 ISCO 分叉即旋转拖曳的方向效应
+     ——吸积盘不对称与逆行盘更早失稳的根源。读数卡含 R_eff″ 两面判别与二分交叉验证。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>结构半径读数表</h3>
+  <table id="structTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>引力线五层读数账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R239_JSON__;
+
+(function(){
+  const c = R.counts;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">ISCO 6M→1M（顺）· 光子球 3M→1M · 视界 2M→1M</span>`;
+})();
+
+/* ---------- §1 ISCO(a) 曲线族 ---------- */
+const cvI=document.getElementById("cvI"), ctxI=cvI.getContext("2d");
+(function(){
+  const W=1000,H=470,PL=60,PR=16,PT=18,PB=40;
+  ctxI.clearRect(0,0,W,H);ctxI.fillStyle="#0d1730";ctxI.fillRect(0,0,W,H);
+  const X=a=>PL+a*(W-PL-PR);
+  const Y=r=>PT+(7.3-r)/(7.3-0.7)*(H-PT-PB);
+  ctxI.strokeStyle="#1f2b3f";ctxI.font="10px Consolas";ctxI.fillStyle="#94a3b8";
+  [0,0.25,0.5,0.75,1].forEach(a=>{ctxI.beginPath();ctxI.moveTo(X(a),PT);ctxI.lineTo(X(a),H-PB);ctxI.stroke();
+    ctxI.fillText(a.toFixed(2),X(a)-10,H-PB+13);});
+  [1,2,3,4,5,6,7].forEach(r=>{ctxI.beginPath();ctxI.moveTo(PL,Y(r));ctxI.lineTo(W-PR,Y(r));ctxI.stroke();
+    ctxI.fillText(String(r),8,Y(r)+3);});
+  /* 能层 2M（赤道，与 a 无关） */
+  ctxI.strokeStyle="#64748b";ctxI.setLineDash([6,4]);ctxI.beginPath();
+  ctxI.moveTo(PL,Y(2));ctxI.lineTo(W-PR,Y(2));ctxI.stroke();ctxI.setLineDash([]);
+  ctxI.fillStyle="#94a3b8";ctxI.fillText("能层 2M",W-PR-64,Y(2)-5);
+  /* 视界 r+=1+sqrt(1-a^2) */
+  ctxI.strokeStyle="#f87171";ctxI.lineWidth=2;ctxI.beginPath();
+  for(let k=0;k<=200;k++){const a=k/200;const rp=1+Math.sqrt(Math.max(0,1-a*a));
+    k?ctxI.lineTo(X(a),Y(rp)):ctxI.moveTo(X(a),Y(rp));}
+  ctxI.stroke();ctxI.lineWidth=1;
+  /* 光子球（顺行）：x=2cos((1/3)acos(-a))，r=x^2 */
+  ctxI.strokeStyle="#e0af68";ctxI.lineWidth=2;ctxI.beginPath();
+  for(let k=0;k<=200;k++){const a=k/200;const x=2*Math.cos(Math.acos(-a)/3);const r=x*x;
+    k?ctxI.lineTo(X(a),Y(r)):ctxI.moveTo(X(a),Y(r));}
+  ctxI.stroke();ctxI.lineWidth=1;
+  /* ISCO 顺/逆两支（引擎单源数据） */
+  const T=R.readings.isco_curve;
+  ctxI.strokeStyle="#4ade80";ctxI.lineWidth=2.4;ctxI.beginPath();
+  T.forEach((p,i)=>{i?ctxI.lineTo(X(p[0]),Y(p[1])):ctxI.moveTo(X(p[0]),Y(p[1]));});
+  ctxI.stroke();
+  ctxI.strokeStyle="#e0af68";ctxI.lineWidth=2.4;ctxI.beginPath();
+  T.forEach((p,i)=>{i?ctxI.lineTo(X(p[0]),Y(p[2])):ctxI.moveTo(X(p[0]),Y(p[2]));});
+  ctxI.stroke();ctxI.lineWidth=1;
+  /* a=0.5 交叉验证点 */
+  const cr=R.readings.cross;
+  ctxI.strokeStyle="#bb9af7";ctxI.setLineDash([3,3]);ctxI.beginPath();
+  ctxI.moveTo(X(0.5),PT);ctxI.lineTo(X(0.5),H-PB);ctxI.stroke();ctxI.setLineDash([]);
+  ctxI.fillStyle="#bb9af7";ctxI.beginPath();ctxI.arc(X(0.5),Y(cr.b_num),4,0,7);ctxI.fill();
+  ctxI.fillText("a=0.5：数值二分 "+cr.b_num,X(0.5)+6,Y(cr.b_num)-8);
+  /* 图例 */
+  const lg=[["#4ade80","ISCO 顺行（BPT 1972）"],["#e0af68","ISCO 逆行 / 光子球(顺)"],
+            ["#f87171","视界 r₊"],["#64748b","能层 2M"]];
+  lg.forEach((l,i)=>{ctxI.fillStyle=l[0];ctxI.fillRect(PL+10,PT+6+i*16,18,3);
+    ctxI.fillText(l[1],PL+34,PT+12+i*16);});
+  ctxI.fillStyle="#94a3b8";ctxI.fillText("a = J/M²",480,H-8);
+  ctxI.save();ctxI.translate(14,250);ctxI.rotate(-Math.PI/2);
+  ctxI.fillText("r/M",30,0);ctxI.restore();
+  document.getElementById("readI").textContent =
+    `ISCO(a)：a=0 → 6M（史瓦西退化）· a=0.5 → 4.2330 · a=0.9 → 2.3209 · a=1 → 1M（极端 Kerr 极限）\n`+
+    `数值交叉：R_eff″ 符号二分（30 轮）= ${cr.b_num} vs BPT ${cr.b_ana}，rel = ${cr.rel}\n`+
+    `两面判别：×1.01 R″ = ${cr.sec_out}（>0 势极小=稳定）vs ×0.99 R″ = ${cr.sec_in}（<0 不稳定）\n`+
+    `a=1 极限三线重合：视界 ${R.readings.lim[0]} / 光子球 ${R.readings.lim[1]} / ISCO ${R.readings.lim[2]}`;
+})();
+
+/* ---------- §2 方向效应条形 ---------- */
+const cvB=document.getElementById("cvB"), ctxB=cvB.getContext("2d");
+(function(){
+  const W=1000,H=430,PL=60,PR=16,PT=30,PB=46;
+  ctxB.clearRect(0,0,W,H);ctxB.fillStyle="#0d1730";ctxB.fillRect(0,0,W,H);
+  const rows=R.readings.kappa_rows.filter(r=>r.a===0||r.a===0.5||r.a===0.9);
+  const hz={};R.readings.horizon.forEach(h=>hz[h.a]=h.r_plus);
+  const ph={};R.readings.photon.forEach(h=>ph[h.a]=h.r_nr);
+  const series=[["ISCO 顺行",r=>r.isco_pro,"#4ade80"],["ISCO 逆行",r=>r.isco_retro,"#e0af68"],
+                ["光子球(顺)",r=>ph[r.a],"#d4a94e"],["视界 r₊",r=>hz[r.a],"#f87171"]];
+  const vmax=9.2, bw=52, gw=(W-PL-PR)/3;
+  const Yv=v=>PT+(vmax-v)/vmax*(H-PT-PB);
+  ctxB.strokeStyle="#1f2b3f";ctxB.font="10px Consolas";ctxB.fillStyle="#94a3b8";
+  [2,4,6,8].forEach(v=>{ctxB.beginPath();ctxB.moveTo(PL,Yv(v));ctxB.lineTo(W-PR,Yv(v));ctxB.stroke();
+    ctxB.fillText(String(v),8,Yv(v)+3);});
+  rows.forEach((r,g)=>{
+    const x0=PL+g*gw+gw/2-(series.length*bw+(series.length-1)*10)/2;
+    series.forEach((s,i)=>{
+      const v=s[1](r);const hgt=(H-PT-PB)*v/vmax;
+      ctxB.fillStyle=s[2];ctxB.fillRect(x0+i*(bw+10),H-PB-hgt,bw,hgt);
+      ctxB.fillStyle="#e9d5ff";ctxB.font="10px Consolas";
+      ctxB.fillText(v.toFixed(3),x0+i*(bw+10)+6,H-PB-hgt-5);
+    });
+    ctxB.fillStyle="#94a3b8";ctxB.font="11px Consolas";
+    ctxB.fillText("a = "+r.a,PL+g*gw+gw/2-20,H-PB+16);
+  });
+  ctxB.strokeStyle="#475569";ctxB.beginPath();ctxB.moveTo(PL,H-PB);ctxB.lineTo(W-PR,H-PB);ctxB.stroke();
+  ctxB.fillStyle="#94a3b8";ctxB.font="10px Consolas";
+  ctxB.fillText("特征半径（M）：顺/逆行 ISCO 分叉 = 旋转拖曳的方向效应",PL+10,PT+2);
+  document.getElementById("readB").textContent =
+    rows.map(r=>`a=${r.a}: ISCO 顺 ${r.isco_pro} / 逆 ${r.isco_retro}（差 ${((r.isco_retro-r.isco_pro)/r.isco_pro*100).toFixed(0)}%）· 光子球 ${ph[r.a]} · 视界 ${hz[r.a]}`).join("\n")+
+    `\n→ a=0.9 顺行盘可稳定内旋至 2.32M，逆行盘 6.88M 才稳定——同一黑洞、只差方向`;
+})();
+
+/* ---------- §3 结构半径表 ---------- */
+(function(){
+  const hz={};R.readings.horizon.forEach(h=>hz[h.a]=h.r_plus);
+  const ph={};R.readings.photon.forEach(h=>ph[h.a]=h.r_nr);
+  let html="<tr><th>a</th><th>视界 r₊</th><th>光子球（顺）</th><th>ISCO 顺行</th><th>ISCO 逆行</th><th>能层（赤道）</th></tr>";
+  R.readings.kappa_rows.forEach(r=>{
+    const f=v=>(v===undefined)?"—":v;
+    html+=`<tr><td class="mono">${r.a}</td><td class="mono">${f(hz[r.a])}</td>`+
+          `<td class="mono">${f(ph[r.a])}</td><td class="mono">${r.isco_pro}</td>`+
+          `<td class="mono">${r.isco_retro}</td><td class="mono">2.0</td></tr>`;});
+  document.getElementById("structTable").innerHTML=html;
+})();
+
+/* ---------- §4 ledger ---------- */
+(function(){
+  let html="<tr><th>卷</th><th>方法</th><th>引力读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it[0]}</td><td>${it[1]}</td><td>${it[2]}</td></tr>`;});
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §5 边界卡 ---------- */
+(function(){
+  const cards=[
+    {cls:"bnd",t:"赤道面限定",b:"本卷是 Kerr 赤道面测地线——Carter 常数的一般三维轨道（含极轨/进动章动）在框架外，登记为后续候选。"},
+    {cls:"fail",t:"方法降级登记",b:"判别用 R_eff″ 数值差分（势方法）而非扰动轨迹积分：后者在 Kerr 跨光子球轨道的 turning 处理上精度受限（r234 手法不直接迁移，如实降级）。"},
+    {cls:"bnd",t:"符号约定注记",b:"Carter 文献常写 R=P²−Δ(...) 且 (dr/dτ)²=−R/r⁴；本库取 R_eff=−R 使 (dr/dτ)²=R_eff/r⁴≥0——数值裁判确认圆轨道邻域 R_eff″>0=稳定，与史瓦西极限一致。"},
+    {cls:"bnd",t:"test-particle 层",b:"Kerr test-particle 测地线——自引力/吸积盘流体/并合数值相对论在框架外（r232 已登记绝热口径边界）。"},
+    {cls:"bnd",t:"无新理论",b:"Kerr 1963 / Bardeen–Press–Teukolsky 1972 全部教科书；本卷复现层（承 r229 判定：NOVEL-THEORY-NONE）。"},
+  ];
+  document.getElementById("boundCards").innerHTML=
+    cards.map(c=>`<div class="card ${c.cls}"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML=
+    `TUFT-r239 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>
