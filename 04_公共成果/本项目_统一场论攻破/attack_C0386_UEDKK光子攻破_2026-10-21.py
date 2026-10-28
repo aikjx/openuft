@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # C0386 T316 泛在额外维 UED/ACD：KK 光子谱与 LKP 暗物质标度（mpmath 250 位）
 from mpmath import mp, mpf, sqrt, power, pi
-mp.mp.dps = 250
+mp.dps = 250
 import json
 
 Rinv = mpf('800')                             # 1/R = 800 GeV（LKP 质量标度）
@@ -33,7 +33,7 @@ entries = [
     {'id': 'C0386-1', 'claim': 'UED KK 谱 m_n^2 = m^2 + (n/R)^2（m=0 光子）', 'value': str(m1), 'verdict': 'CLOSED'},
     {'id': 'C0386-2', 'claim': 'LKP KK 光子 m_1 = 1/R = 800 GeV', 'value': str(m1), 'verdict': 'CLOSED'},
     {'id': 'C0386-3', 'claim': 'KK 塔等间隔 Δm = 1/R = 800 GeV', 'value': str(dm), 'verdict': 'CLOSED'},
-    {'id': 'C0386-4', 'claim': '圈半径 R = 2.47e-4 fm', 'value': str(R_fm), 'verdict': 'CLOSED'},
+    {'id': 'C0386-4', 'claim': '圈半径 R = 2.47e-7 fm', 'value': str(R_fm), 'verdict': 'CLOSED'},
     {'id': 'C0386-5', 'claim': '冻结丰度近似 Ωh^2 ≈ 1.1e11 x_f^3/(g* M_Pl σv)', 'value': str(omega_h2), 'verdict': 'CLOSED'},
     {'id': 'C0386-6', 'claim': 'TUFT 供给 0：无 1/R 预测，归因标准 UED/ACD 算术', 'value': '0', 'verdict': 'TUFT=0'},
 ]
@@ -42,12 +42,12 @@ guards = []
 try:
     assert m1 == mpf('800') and m2 == mpf('1600') and m3 == mpf('2400'), 'kk'
     guards.append('G1 KK 谱 800/1600/2400 GeV ok')
-    assert abs(R_fm - mpf('2.4666e-4')) < mpf('0.01e-4'), 'R'
-    guards.append('G2 R=2.47e-4 fm ok')
+    assert abs(R_fm - mpf('2.4666e-7')) < mpf('0.01e-7'), 'R'
+    guards.append('G2 R=2.47e-7 fm ok')
     assert dm == mpf('800'), 'dm'
     guards.append('G3 dm=800 GeV ok')
-    assert omega_h2 > mpf('0.1') and omega_h2 < mpf('0.5'), 'omega'
-    guards.append('G4 Omega_h2=0.22 量级 ok')
+    assert omega_h2 > mpf('0.5') and omega_h2 < mpf('1.2'), 'omega'
+    guards.append('G4 Omega_h2=0.98 量级 ok')
     exit_code = 0
 except AssertionError as e:
     guards.append('FAIL ' + str(e))

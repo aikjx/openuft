@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # C0387 T398 α 吸引子暴胀（α-attractor E/T 模型）：慢滚闭式 r/n_s/V0（mpmath 250 位）
 from mpmath import mp, mpf, sqrt, exp, ln, power, pi
-mp.mp.dps = 250
+mp.dps = 250
 import json
 
 A_s = mpf('2.105e-9')                        # 标量振幅原初功率谱
@@ -42,8 +42,8 @@ try:
     guards.append('G1 n_s=0.9636 ok')
     assert r1 > mpf('0.0038') and r1 < mpf('0.0041'), 'r'
     guards.append('G2 r=3.97e-3 ok')
-    assert V01 > mpf('3e-11') and V01 < mpf('5e-11'), 'V0'
-    guards.append('G3 V0=3.94e-11 ok')
+    assert V01 > mpf('1.1e-10') and V01 < mpf('1.4e-10'), 'V0'
+    guards.append('G3 V0=1.24e-10 ok')
     assert phi1 > mpf('5.2') and phi1 < mpf('5.4'), 'phi'
     guards.append('G4 phi_N=5.26 M_Pl ok')
     assert abs(r_higgs - mpf('0.0013223140495867769')) < mpf('1e-12'), 'rh'

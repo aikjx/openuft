@@ -27,7 +27,7 @@ for n in (2, 3, 4, 6):
     print('n=%d  R=%.6e GeV^-1  m1=%.6e GeV  R=%.6e m  R=%.6e mm  R=%.6e um' % (n, R, m1, Rm, Rmm, Rmu))
 
 n6 = results[3]
-R6 = n6[1]; R6um = n6[5]
+R6 = n6[1]; R6fm = n6[3] * 1e15            # R(m) -> fm
 # 牛顿势修正（ADD）：V(r) = -G m1 m2 / r * (1 + S_n e^{-r/R})，S_n=2n（n 维）
 S_n = 12
 corr_at_R = S_n * exp(-1)                        # r=R 处修正项相对幅度
@@ -35,7 +35,7 @@ print('S_n(r=R)=%.12f' % corr_at_R)
 
 entries = [
     {'id': 'C0384-1', 'claim': 'ADD 关系 M_Pl^2 = M_D^(n+2) R^n（n=6, M_D=1TeV）', 'value': str(R6), 'verdict': 'CLOSED'},
-    {'id': 'C0384-2', 'claim': 'n=6 时 R≈2.3e2 GeV^-1 ≈ 45 μm', 'value': str(R6um), 'verdict': 'CLOSED'},
+    {'id': 'C0384-2', 'claim': 'n=6 时 R≈2.30e2 GeV^-1 ≈ 45.2 fm', 'value': str(R6fm), 'verdict': 'CLOSED'},
     {'id': 'C0384-3', 'claim': 'KK 谱 m_n = n/R，第一激发 1/R', 'value': str(1 / R6), 'verdict': 'CLOSED'},
     {'id': 'C0384-4', 'claim': '势修正 (1 + S_n e^{-r/R})，r=R 处幅度', 'value': str(corr_at_R), 'verdict': 'CLOSED'},
     {'id': 'C0384-5', 'claim': 'TUFT 供给 0：无 R/M_D 预测，归因标准 ADD 算术', 'value': '0', 'verdict': 'TUFT=0'},
@@ -46,12 +46,12 @@ guards = []
 try:
     assert abs(R6 - mpf('230.6')) < mpf('2.0'), 'R6'
     guards.append('G1 R6=230.6 GeV^-1 ok')
-    assert abs(R6um - mpf('45.5')) < mpf('2.0'), 'R6um'
-    guards.append('G2 R6=45.5 um ok')
+    assert R6fm > mpf('44') and R6fm < mpf('47'), 'R6fm'
+    guards.append('G2 R6=45.2 fm ok')
     assert abs(1 / R6 - mpf('4.336e-3')) < mpf('0.1e-3'), 'm1'
     guards.append('G3 m1=4.34e-3 GeV ok')
     assert results[0][4] > mpf('1.9') and results[0][4] < mpf('3.0'), 'R2mm'
-    guards.append('G4 n=2 R=2.4 mm ok')
+    guards.append('G4 n=2 R=2.41 mm ok')
     assert corr_at_R > mpf('4.4'), 'corr'
     guards.append('G5 势修正 4.41 ok')
     exit_code = 0

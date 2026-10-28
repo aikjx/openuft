@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # C0385 T315 卷曲额外维 RS1：层级 ω=e^{kπr_c} 与 KK 引力子谱（mpmath 250 位）
 from mpmath import mp, mpf, sqrt, exp, ln, power, pi
-mp.mp.dps = 250
+mp.dps = 250
 import json
 
 M_PL = mpf('1.2209100000000000e19')          # GeV
