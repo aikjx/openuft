@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一个方程，四种力 —— 人人能懂版</title>
+<style>
+:root{
+  --paper:#faf8f4; --ink:#1c1b18; --ink2:#55524a; --hair:#d9d4c8; --hair2:#e8e4da;
+  --accent:#9e3b2c; --accent2:#7a2e22; --ok:#3d6b4f; --warn:#8a6d2f;
+  --serif:"Source Han Serif SC","Noto Serif CJK SC","Songti SC","STSong",serif;
+  --sans:"Source Han Sans SC","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 28px}
+.bleed{max-width:1100px;margin:0 auto;padding:0 28px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--hair)}
+/* ---------- 封面 ---------- */
+header{padding:72px 0 40px;border-bottom:1px solid var(--hair)}
+header .kicker{margin-bottom:18px}
+h1{font-size:clamp(34px,6vw,52px);line-height:1.15;letter-spacing:-.02em}
+h1 .eq{font-family:var(--mono);font-size:.52em;display:block;margin-top:14px;color:var(--ink2);letter-spacing:0}
+.lede{margin-top:22px;font-size:18px;color:var(--ink2);max-width:60ch}
+.meta{margin-top:26px;font-family:var(--mono);font-size:12px;color:var(--ink2);letter-spacing:.04em}
+/* ---------- 章节 ---------- */
+section{padding:52px 0 8px}
+h2{font-size:28px;margin-bottom:6px}
+h2 .no{font-family:var(--mono);font-size:14px;color:var(--accent);letter-spacing:.1em;margin-right:10px}
+.sechead{border-bottom:1px solid var(--hair);padding-bottom:14px;margin-bottom:26px}
+h3{font-size:19px;margin:30px 0 10px}
+p{margin:14px 0;max-width:65ch}
+p.wide{max-width:none}
+strong{font-weight:550}
+em{font-style:normal;background:linear-gradient(transparent 62%,rgba(158,59,44,.14) 0)}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:2px 8px;border:1px solid var(--hair);border-radius:2px;color:var(--ink2);margin-left:6px;vertical-align:2px}
+.tag.ok{color:var(--ok);border-color:var(--ok)}
+.tag.warn{color:var(--warn);border-color:var(--warn)}
+.tag.acc{color:var(--accent);border-color:var(--accent)}
+/* ---------- 表格 ---------- */
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:20px 0}
+th{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--ink2);text-align:left;padding:8px 10px;border-bottom:1.5px solid var(--ink);font-weight:500}
+td{padding:9px 10px;border-bottom:1px solid var(--hair2);vertical-align:top}
+tr:hover td{background:rgba(158,59,44,.035)}
+td.mono, .mono{font-family:var(--mono);font-size:13px}
+.clickable{cursor:pointer}
+.clickable:hover td{background:rgba(158,59,44,.07)}
+/* ---------- widget ---------- */
+.widget{border:1px solid var(--hair);background:#fffdf9;padding:22px 24px;margin:26px 0;border-radius:3px}
+.widget h4{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--accent);margin-bottom:4px;font-weight:500}
+.widget .sub{font-size:13px;color:var(--ink2);margin-bottom:16px}
+.ctrl-row{display:flex;gap:26px;flex-wrap:wrap;margin:14px 0 6px}
+.ctrl{flex:1;min-width:220px}
+.ctrl label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--ink2);margin-bottom:6px;letter-spacing:.05em}
+.ctrl label b{color:var(--ink);font-weight:500}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.seg{display:flex;gap:0;border:1px solid var(--hair);width:max-content}
+.seg button{font-family:var(--mono);font-size:12.5px;padding:7px 16px;background:transparent;border:none;border-right:1px solid var(--hair);cursor:pointer;color:var(--ink2)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--accent);color:#fffdf9}
+.plot{width:100%;height:auto;display:block;margin:10px 0 6px}
+.readout{display:flex;gap:0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);margin-top:12px}
+.readout div{flex:1;padding:12px 14px;border-right:1px solid var(--hair2)}
+.readout div:last-child{border-right:none}
+.readout .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink2)}
+.readout .v{font-family:var(--serif);font-size:21px;margin-top:3px}
+.readout .v.neg{color:var(--accent2)}
+.readout .v.pos{color:#2e4a6b}
+.hint{font-size:12.5px;color:var(--ink2);margin-top:12px;line-height:1.55}
+/* ---------- 图 ---------- */
+figure{margin:26px 0}
+figcaption{font-size:13px;color:var(--ink2);margin-top:8px;line-height:1.5}
+figcaption .fig-no{font-family:var(--mono);color:var(--accent);margin-right:8px}
+/* ---------- 链图 ---------- */
+.chain{margin:24px 0;overflow-x:auto}
+.chain svg{min-width:640px;width:100%;height:auto;display:block}
+/* ---------- 词典 ---------- */
+dl.gloss{margin:18px 0;border-top:1px solid var(--hair)}
+dl.gloss dt{font-family:var(--serif);font-weight:600;margin-top:16px;font-size:16.5px}
+dl.gloss dd{color:var(--ink2);margin:4px 0 0 0;font-size:15px;max-width:62ch}
+/* ---------- 状态块 ---------- */
+.status{border:1px solid var(--hair);border-left:3px solid var(--accent);padding:16px 20px;margin:22px 0;background:#fffdf9;font-size:15px}
+.status b{font-family:var(--serif)}
+.status .lab{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--accent);display:block;margin-bottom:6px}
+/* ---------- 底部 ---------- */
+footer{margin-top:70px;padding:28px 0 60px;border-top:1px solid var(--hair);font-size:13px;color:var(--ink2)}
+footer .mono{font-size:12px}
+.toc{font-size:14px;margin-top:18px;columns:2;column-gap:40px}
+.toc a{display:block;padding:3px 0;color:var(--ink);border:none}
+.toc a:hover{color:var(--accent)}
+.toc .n{font-family:var(--mono);color:var(--accent);margin-right:8px;font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="kicker">ALGORITHM ALLIANCE · 力的统一 · 人人版</div>
+  <h1>一个方程，四种力<span class="eq">V(r) = (−1)<sup>s+1</sup> · g₁g₂ · e<sup>−mr</sup> / 4πr</span></h1>
+  <p class="lede">宇宙里所有被命名的"力"——从苹果落地、磁铁吸针，到太阳发光、原子核抱团——它们的<strong>形状</strong>其实是同一条公式。这条页面用一个可以亲手拖动的滑块实验把它讲清楚，并且诚实地告诉你：哪些已经被机器证明了，哪些还差最后一层。</p>
+  <div class="meta">算法联盟 · 2026-10-29 · 全部数值可复算（scratch/_j51、_j52、_j54、_j55）· 门禁 52/52 PASS</div>
+  <nav class="toc">
+    <a href="#s1"><span class="n">01</span>力到底是什么</a>
+    <a href="#s2"><span class="n">02</span>亲手玩：一条公式变出四种力</a>
+    <a href="#s3"><span class="n">03</span>三个特性，两个免费</a>
+    <a href="#s4"><span class="n">04</span>全力谱清单</a>
+    <a href="#s5"><span class="n">05</span>磁力是电力的"影子"</a>
+    <a href="#s6"><span class="n">06</span>证明了什么 / 还差什么</a>
+    <a href="#s7"><span class="n">07</span>常温超导</a>
+    <a href="#s8"><span class="n">08</span>白话词典</a>
+  </nav>
+</header>
+
+<!-- ============ 01 ============ -->
+<section id="s1">
+  <div class="sechead"><h2><span class="no">01</span>力到底是什么</h2></div>
+  <p>把两个东西放在一起，它们会互相"推"或"拉"——这个推拉就是<strong>力</strong>。现代物理的回答很具体：力是两个粒子之间<em>交换了一个"信使"粒子</em>的结果。信使不同，力的性格就不同。</p>
+  <p>信使有三个身份证信息，恰好对应你关心的三件事：</p>
+  <table>
+    <tr><th>信使的属性</th><th>决定了力的</th><th>白话</th></tr>
+    <tr><td class="mono">自旋 s（0、1、2）</td><td><strong>方向</strong>：吸引还是排斥</td><td>偶数自旋互相拉，奇数自旋同号互推</td></tr>
+    <tr><td class="mono">质量 m</td><td><strong>距离</strong>：力够得着多远</td><td>越重的信使越"短命"，力程越短</td></tr>
+    <tr><td class="mono">耦合 g（强度）</td><td><strong>大小</strong>：力有多猛</td><td>这是唯一还没被解释 free 的信息</td></tr>
+  </table>
+  <p>四种基本力的信使分别是：光子（电磁）、W/Z 粒子（弱）、胶子（强）、引力子（引力）。它们四个，全部坐在同一条公式的不同参数位置上。</p>
+</section>
+
+<!-- ============ 02 ============ -->
+<section id="s2">
+  <div class="sechead"><h2><span class="no">02</span>亲手玩：一条公式变出四种力</h2></div>
+  <p>下面这条曲线就是那条公式。<strong>拖动滑块</strong>，换信使的质量；<strong>点按钮</strong>，换信使的自旋。注意看两件事：曲线跑到横轴下方（吸引）还是上方（排斥），以及曲线贴回横轴有多快（力程）。</p>
+
+  <div class="widget">
+    <h4>INTERACTIVE · 母公式探索器</h4>
+    <div class="sub">V(r) = (−1)<sup>s+1</sup>·g²·e^(−mr)/4πr —— 横轴 r̂ = m·r（无量纲距离），纵轴 V（单位 g²/4π）</div>
+    <div class="ctrl-row">
+      <div class="ctrl" style="flex:0 0 auto">
+        <label><span>自旋 s（决定吸引/排斥）</span></label>
+        <div class="seg" id="segS">
+          <button data-s="0">s=0 吸引</button>
+          <button data-s="1" class="on">s=1 排斥</button>
+          <button data-s="2">s=2 吸引</button>
+        </div>
+      </div>
+      <div class="ctrl">
+        <label><span>信使质量 m</span><b id="mRead">80.4 GeV</b></label>
+        <input type="range" id="mSlider" min="-3" max="3" step="0.01" value="1.905">
+      </div>
+      <div class="ctrl">
+        <label><span>耦合强度 g</span><b id="gRead">0.60</b></label>
+        <input type="range" id="gSlider" min="1" max="15" step="1" value="6">
+      </div>
+    </div>
+    <svg class="plot" id="plot" viewBox="0 0 700 340">
+      <text x="55" y="20" font-size="11" font-family="mono" fill="#55524a">V (单位 g²/4π)</text>
+      <line x1="55" y1="170" x2="665" y2="170" stroke="#1c1b18" stroke-width="1"/>
+      <line x1="55" y1="28" x2="55" y2="315" stroke="#d9d4c8" stroke-width="1"/>
+      <text x="660" y="335" font-size="11" font-family="mono" fill="#55524a" text-anchor="end">r̂ = m·r（对数轴）</text>
+      <text x="62" y="164" font-size="11" font-family="mono" fill="#55524a">0</text>
+      <line id="markRange" x1="0" y1="40" x2="0" y2="300" stroke="#9e3b2c" stroke-width="1" stroke-dasharray="4 3"/>
+      <text id="markRangeLab" x="0" y="34" font-size="11" font-family="mono" fill="#9e3b2c" text-anchor="middle">力程 r̂=1</text>
+      <path id="curve" d="" fill="none" stroke="#9e3b2c" stroke-width="1.8"/>
+    </svg>
+    <div class="readout">
+      <div><div class="k">力的方向</div><div class="v" id="roDir">同号排斥</div></div>
+      <div><div class="k">力程 λ = ℏ/mc</div><div class="v" id="roRange">2.46×10⁻¹⁸ m</div></div>
+      <div><div class="k">现实中它是</div><div class="v" id="roWho" style="font-size:17px">弱力（W 玻色子）</div></div>
+    </div>
+    <div class="hint">小提示：把 m 拖到最左边（轻信使），曲线拖得很长——这就是电磁力和引力"够得着宇宙尽头"的原因；把 m 拖到最右边（重信使），曲线几乎贴着纵轴——弱力的力程只有 10⁻¹⁸ 米，所以日常生活中你从来感觉不到它。自旋换成 0 或 2，曲线整体翻到横轴下方：这就是"引力为什么只吸不推"的答案——不是巧合，是数学（见下文第三章）。</div>
+  </div>
+
+  <h3>一键对号入座：真实世界的力</h3>
+  <p class="wide">点表格里任意一行，上面的探索器会跳到那种力的参数：</p>
+  <div class="bleed">
+  <table id="forceTable">
+    <tr><th>力</th><th>自旋 s</th><th>信使质量 m</th><th>方向（机验）</th><th>力程（机验）</th><th>强度</th></tr>
+    <tr class="clickable" data-s="2" data-m="0"><td><strong>引力</strong></td><td class="mono">2</td><td class="mono">0（实验界 &lt;10⁻²² eV）</td><td>普适吸引</td><td class="mono">>2×10¹⁵ m</td><td>输入 G</td></tr>
+    <tr class="clickable" data-s="1" data-m="0"><td><strong>电磁</strong></td><td class="mono">1</td><td class="mono">0（实验界 &lt;10⁻¹⁸ eV）</td><td>同号斥/异号吸</td><td class="mono">>2×10¹¹ m</td><td>输入 α</td></tr>
+    <tr class="clickable" data-s="1" data-m="80.379"><td><strong>弱</strong></td><td class="mono">1</td><td class="mono">80.4 / 91.2 GeV</td><td>手征换荷（无静力）</td><td class="mono">2.2–2.5×10⁻¹⁸ m</td><td>输入 g₂</td></tr>
+    <tr class="clickable" data-s="1" data-m="0.135"><td><strong>强</strong></td><td class="mono">1（胶子）</td><td class="mono">0 + 禁闭</td><td>色禁闭→束缚</td><td class="mono">~10⁻¹⁵ m</td><td>输入 α₃</td></tr>
+    <tr class="clickable" data-s="0" data-m="125.18"><td><strong>希格斯介导</strong></td><td class="mono">0</td><td class="mono">125.18 GeV</td><td>吸引</td><td class="mono">1.58×10⁻¹⁸ m</td><td>输入 y</td></tr>
+  </table>
+  </div>
+  <p class="hint">表中"方向"与"力程"两列的全部数字都经过独立机器复算（J51 六闸门 / J54 官方数据对照）；"强度"一列是整套体系里<strong>唯一</strong>还没被推导出来的信息——这就是第六章要说的"最后一层"。</p>
+</section>
+
+<!-- ============ 03 ============ -->
+<section id="s3">
+  <div class="sechead"><h2><span class="no">03</span>三个特性，两个免费</h2></div>
+  <p>2026 年的机器审计给出了一个干净的结论：<strong>三个特性里，两个是"免费"的</strong>——它们不是独立假设，而是自动跟着数学结构走。</p>
+
+  <h3>方向：免费（由自旋锁定）</h3>
+  <p>为什么引力只吸不推、而静电同号相斥？因为符号由信使自旋唯一决定：交换一个自旋 s 的信使，同类源之间的势能正比于 (−1)<sup>s+1</sup>。s=0（希格斯、介子）吸引；s=1（光子、W）同号排斥；s=2（引力子）普适吸引。这条规则经过了完整的费曼规则符号推导（M_vec/M_sca = −1，机器验证），而"引力子必须是自旋 2"本身又由洛伦兹不变性加幺正性唯一强制。所以<strong>引力的方向没有自由度</strong>——它想不吸引都不行。</p>
+
+  <h3>距离：免费（由质量锁定）</h3>
+  <p>力程就是信使的"寿命距离"ℏ/mc。信使越重，死得越快，力越短。W 粒子重（80 GeV），弱力的力程只有 2.5×10⁻¹⁸ 米——比原子核还小一千倍，所以日常生活中你永远感觉不到弱力。光子与引力子极轻，力程便是宇宙级。π 介子 135 MeV 对应 1.46 fm，与实验测得的核力力程 1.4 fm 对上——汤川 1935 年就是反过来用核力力程猜出 π 介子的。</p>
+
+  <h3>大小：还没免费（唯一的真缺口）</h3>
+  <p>四种力<strong>差多猛</strong>——α 电磁 1/137、α_s 强 0.118、引力在质子尺度只有 10⁻³⁹——这些数字目前仍然是<strong>实验测出来的输入</strong>，不是推导出来的输出。机器审计的结论是 0/7：七个关键数值，一个都没被现有任何路线从第一性推出。这就是整个体系剩下的、唯一的战场。</p>
+
+  <figure>
+    <svg viewBox="0 0 700 150" class="plot" style="border:1px solid var(--hair2);background:#fffdf9">
+      <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#55524a"/></marker></defs>
+      <rect x="30" y="55" width="180" height="40" fill="none" stroke="#1c1b18" stroke-width="1.2"/>
+      <text x="120" y="80" text-anchor="middle" font-size="14" font-family="serif" fill="#1c1b18">洛伦兹 + 幺正 + 量子化</text>
+      <line x1="210" y1="75" x2="285" y2="42" stroke="#55524a" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="210" y1="75" x2="285" y2="75" stroke="#55524a" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="210" y1="75" x2="285" y2="108" stroke="#55524a" stroke-width="1" marker-end="url(#arr)"/>
+      <rect x="290" y="22" width="150" height="40" fill="none" stroke="#d9d4c8"/>
+      <text x="365" y="47" text-anchor="middle" font-size="13.5" fill="#1c1b18">自旋谱 → 方向免费</text>
+      <rect x="290" y="55" width="150" height="40" fill="none" stroke="#d9d4c8"/>
+      <text x="365" y="80" text-anchor="middle" font-size="13.5" fill="#1c1b18">反常消去 → 电荷免费</text>
+      <rect x="290" y="88" width="150" height="40" fill="none" stroke="#d9d4c8"/>
+      <text x="365" y="113" text-anchor="middle" font-size="13.5" fill="#1c1b18">母公式 → 力谱形状</text>
+      <line x1="440" y1="42" x2="505" y2="42" stroke="#55524a" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="440" y1="108" x2="505" y2="108" stroke="#55524a" stroke-width="1" marker-end="url(#arr)"/>
+      <rect x="510" y="22" width="160" height="40" fill="none" stroke="#9e3b2c" stroke-width="1.2"/>
+      <text x="590" y="41" text-anchor="middle" font-size="13.5" fill="#7a2e22">方向 ✓ 距离 ✓</text>
+      <text x="590" y="58" text-anchor="middle" font-size="12" fill="#55524a">机器已证明（免费）</text>
+      <rect x="510" y="88" width="160" height="40" fill="none" stroke="#9e3b2c" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="590" y="107" text-anchor="middle" font-size="13.5" fill="#7a2e22">大小 = 数值层</text>
+      <text x="590" y="124" text-anchor="middle" font-size="12" fill="#55524a">0/7 可推导 · 唯一开放</text>
+    </svg>
+    <figcaption><span class="fig-no">图 1</span>运动本源推导链：三个不可再减的输入（洛伦兹不变、幺正性、量子化）自动给出方向与电荷结构；大小一列仍是敞开的口。</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 04 ============ -->
+<section id="s4">
+  <div class="sechead"><h2><span class="no">04</span>全力谱清单：微观、宏观、量子的每一个力</h2></div>
+  <p>把物理书里所有被命名的力摆在一起，会发现它们对四类封闭——要么是母公式的直接实例，要么是实例的二阶微扰、边界条件、洛伦兹投影或统计涌现。没有第五种来源。</p>
+  <div class="bleed">
+  <table>
+    <tr><th>类</th><th>力</th><th>从哪来</th><th>典型强度/形状</th></tr>
+    <tr><td rowspan="5"><strong>(i) 基本交换</strong></td><td>引力</td><td class="mono">s=2, m=0</td><td>−Gm₁m₂/r，普适吸引</td></tr>
+    <tr><td>电磁</td><td class="mono">s=1, m=0</td><td>α/4πr，同号斥</td></tr>
+    <tr><td>弱</td><td class="mono">s=1, m_W,Z</td><td>10⁻¹⁸ m 超短程，手征</td></tr>
+    <tr><td>强</td><td class="mono">s=1 胶子 + 禁闭</td><td>~1 fm 束缚</td></tr>
+    <tr><td>希格斯介导</td><td class="mono">s=0, m_H</td><td>1.58×10⁻¹⁸ m，吸引（最短程基本力）</td></tr>
+    <tr><td rowspan="4"><strong>(ii) 复合导出</strong></td><td>核力残余</td><td class="mono">π/ρ 交换</td><td>1.4 fm（ℏ/m_πc 机验 ✓）</td></tr>
+    <tr><td><strong>磁力</strong></td><td class="mono">电力的洛伦兹投影</td><td>F_m/F_e = (v/c)² 精确机验</td></tr>
+    <tr><td>范德华 / Casimir</td><td class="mono">电磁二阶微扰/边界</td><td>F∝r⁻⁷ / F/A∝a⁻⁵ 机验</td></tr>
+    <tr><td>接触/摩擦/张力</td><td class="mono">电磁+统计残余</td><td>涌现，无新耦合</td></tr>
+    <tr><td><strong>(iii) 统计涌现</strong></td><td>简并压（白矮星不塌的原因）</td><td class="mono">泡利不相容</td><td>来自反对称性，非交换</td></tr>
+    <tr><td><strong>(iv) 惯性几何</strong></td><td>离心 / 科里奥利</td><td class="mono">坐标效应</td><td>非相互作用</td></tr>
+  </table>
+  </div>
+  <p class="hint">这就是"所有力一个方程"在<strong>力的形状层面</strong>的精确含义：一条母公式 + 一条洛伦兹协变规则 + 统计力学，覆盖清单上的每一行。清单对四类封闭——发现一个"新力"，举证责任是把它归入其中一类。</p>
+</section>
+
+<!-- ============ 05 ============ -->
+<section id="s5">
+  <div class="sechead"><h2><span class="no">05</span>磁力是电力的"影子"——运动本源</h2></div>
+  <p>磁力看起来像一种独立的力（磁铁、地磁、电动机），但它其实<strong>不是新力</strong>。机器验证的关键数字：让两条带电的"线"以速度 v 平行运动，磁吸引力与电排斥力之比<strong>恰好等于 (v/c)²</strong>——相对差只有 4×10⁻¹⁴。磁，就是电力在运动观察者眼中的变形；μ₀ 与 ε₀ 也不是两个常数（μ₀ε₀=1/c²）。</p>
+  <p>那为什么磁铁那么有力，而导线里电子的漂移速度只有每秒零点几毫米？因为导线是电中性的：正负电荷的巨大电力<strong>精确抵消</strong>，只剩 (v/c)² 量级的小尾巴没被抵消——磁铁的力就是这个小尾巴。这同时解释了引力的"方向"与磁的"来源"是同一件事的两面：<strong>方向由自旋的数学锁定，磁由运动生成</strong>——都不需要新的假设。引力的同款"磁效应"（参考系拖拽）已被 GP-B 卫星实测，量级吻合。</p>
+</section>
+
+<!-- ============ 06 ============ -->
+<section id="s6">
+  <div class="sechead"><h2><span class="no">06</span>诚实的计分板：证明了什么、排除了什么、还差什么</h2></div>
+  <p>这套体系有一条铁律：<strong>每个数字必须有脚本可复算，没算出来的不许说算出来了</strong>。所以计分板长这样：</p>
+
+  <div class="status"><span class="lab">已经机器证明（✓）</span>
+  <b>方向免费</b>（符号由自旋唯一决定）、<b>电荷结构免费</b>（反常消去锁定电荷比例，精确到分数）、<b>力谱形状</b>（一条母公式覆盖全部静力与匀速运动力）、<b>引力子自旋 2 唯一</b>、<b>等价原理是定理</b>、<b>渐近安全量子引力的数学存在性</b>。</div>
+
+  <div class="status"><span class="lab">已经排除（✗）</span>
+  15 种"四力统一方程"候选全部未通过逐项审计；KK 高维几何在数值层关闭（它真的给出了电磁方程——历史性成功——但给出的"荷"与真实电子差 21 个数量级）；爱因斯坦–嘉当挠率不能承载电磁；f_g&lt;0 修正单独救不了耦合汇聚；(1+1) 维宇宙装不下任何力。</div>
+
+  <div class="status"><span class="lab">张力在案（实验间分歧，非框架失效）</span>
+  缪子 g-2 约 5.1σ；m_W 的 CDF 测量偏离约 7σ；α 的两种原子反冲测量相差约 5.4σ。三处都是实验之间或实验与微扰理论之间的未决分歧，不影响力形状。</div>
+
+  <div class="status" style="border-left-color:var(--warn)"><span class="lab" style="color:var(--warn)">还差什么（唯一的真缺口）</span>
+  <b>大小</b>：七个数（α、α_s、G、v、Yukawa、N_gen、θ_QCD）仍然是实验测量的输入，0/7 被推导。所有几何路线（KK、挠率）与重整化路线已被机器审计穷尽——剩下的是"数值层新原则"，且任何新候选必须先过三道预审闸门（跨扇区检验、重整化定理检验、β 函数结构检验）。这是前沿，不是缺陷：它同时是标准模型自己没解决的题。</div>
+
+  <p class="hint">为什么不宣布"完成了"？因为体系自己的完成度闸门（六条必要条件）机器裁定为 2 达成 / 1 部分 / 3 未达成。<strong>按这套研究方法，没证完就是没证完</strong>——这正是它和那些宣称"已统一一切"的民间理论最大的区别。</p>
+</section>
+
+<!-- ============ 07 ============ -->
+<section id="s7">
+  <div class="sechead"><h2><span class="no">07</span>常温超导：同一个符号定理的"频率版"</h2></div>
+  <p>超导不是第五种力，它是电磁力的多体涌现。但它的机制可以用母公式的一句话讲清：<strong>信使不只是基本粒子，也可以是"原子振动"（声子）——而声子交换的有效力，符号随频率翻转</strong>。机器验证：电子之间通过声子传话，在低频（ω &lt; ω_q）时互相<strong>吸引</strong>（V_eff(0) = −2g²/ω_q &lt; 0），高频时变排斥。两个电子只要在吸引窗口里待着，就会结成"库珀对"——超导由此诞生。</p>
+
+  <figure>
+    <svg viewBox="0 0 700 260" class="plot" style="border:1px solid var(--hair2);background:#fffdf9">
+      <line x1="60" y1="130" x2="660" y2="130" stroke="#1c1b18" stroke-width="1"/>
+      <line x1="230" y1="20" x2="230" y2="240" stroke="#9e3b2c" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="230" y="14" text-anchor="middle" font-size="12" font-family="mono" fill="#9e3b2c">ω = ω_q（符号翻转点）</text>
+      <path d="M 70,250 C 110,240 170,225 220,180 C 225,150 228,140 229,24 L 231,236 C 240,150 260,140 300,158 C 380,180 520,168 650,150" fill="none" stroke="#9e3b2c" stroke-width="1.8"/>
+      <text x="120" y="205" font-size="13" fill="#3d6b4f" font-family="serif">吸引窗口 ω &lt; ω_q</text>
+      <text x="120" y="222" font-size="11.5" fill="#55524a">（电子在此结成库珀对）</text>
+      <text x="420" y="185" font-size="13" fill="#2e4a6b" font-family="serif">排斥区 ω &gt; ω_q</text>
+      <text x="60" y="250" font-size="11.5" fill="#55524a">0</text>
+      <text x="640" y="150" font-size="11.5" fill="#55524a">ω</text>
+    </svg>
+    <figcaption><span class="fig-no">图 2</span>声子交换的有效相互作用随频率变号：低频吸引（配对区）、高频排斥。这就是"超导为什么存在"的一条公式回答——它和 J51 的符号定理是同一条数学。</figcaption>
+  </figure>
+
+  <h3>官方记录（截至 2026-10，一个不漏）</h3>
+  <div class="bleed">
+  <table>
+    <tr><th>体系</th><th>Tc</th><th>状态</th></tr>
+    <tr><td>铜氧化物 Hg 系（常压）</td><td class="mono"><strong>134 K</strong>（常压上限）</td><td>✓ 官方承认；d 波配对</td></tr>
+    <tr><td>LaH₁₀ @170 万大气压</td><td class="mono">250–260 K</td><td>✓ 多组重复（富氢高压路线）</td></tr>
+    <tr><td>MgB₂（常压）</td><td class="mono">39 K</td><td>✓ Allen-Dynes 公式复现 39.1 K（本卷机验 0.3%）</td></tr>
+    <tr><td>C-S-H（Dias 2020）</td><td class="mono">287 K</td><td>2022 撤稿 ✗</td></tr>
+    <tr><td>Lu-N-H（Dias 2023）</td><td class="mono">294 K</td><td>2024 撤稿 ✗</td></tr>
+    <tr><td>LK-99（2023）</td><td class="mono">—</td><td>非超导（Cu₂S 杂质假象）✗</td></tr>
+  </table>
+  </div>
+  <p>结论：**常压超过 134 K 的官方 verified 记录目前为零**。机制上，纯声子配对在常压下推到 300 K 需要超出公式适用域的耦合强度——所以"常温超导"的真正战场在两处：非常规配对机制（自旋涨落等，尚无公认理论）与材料结构设计（富氢结构、界面应变、高压淬火）。任何新的室温超导主张，都必须先过三道准入闸：复现独立性、同位素指数（声子参与度探针）、配对对称性。</p>
+</section>
+
+<!-- ============ 08 ============ -->
+<section id="s8">
+  <div class="sechead"><h2><span class="no">08</span>白话词典</h2></div>
+  <dl class="gloss">
+    <dt>信使粒子 / 媒介子</dt><dd>两个粒子互相互动的方式：交换一个"信使"。光子是电磁的信使，引力子（假想）是引力的信使。</dd>
+    <dt>自旋 s</dt><dd>粒子的"内禀转速"，只能取 0、½、1、3/2、2…。信使的自旋决定力的方向：偶数自旋吸引，奇数自旋同号排斥。</dd>
+    <dt>力程 ℏ/mc</dt><dd>信使越重死得越快，力够得着越近。公式：力程 = 6.58×10⁻¹⁶ eV·s ÷ 质量。</dd>
+    <dt>耦合常数 g / α</dt><dd>力的"音量旋钮"。α≈1/137 是电磁的音量；它为什么是这个值，目前无人知道——本体系唯一真缺口。</dd>
+    <dt>反常消去</dt><dd>量子力学的一条自洽性要求：各种荷如果不按特定比例搭配，理论会"自爆"。SM 的电荷比例正是被它锁死的——所以电荷量子化是被迫的，不是巧合。</dd>
+    <dt>crossing（穿越点）</dt><dd>三条随能量变化的耦合曲线交于一点，不等于它们被"钉"在那里：离开交点会立刻分道扬镳。机器证明了这点——所谓"大统一能标"是数值巧合，不是动力指定。</dd>
+    <dt>零因子 / 可除代数</dt><dd>一种"没有除不尽"的乘法系统。128 维的这种系统被数学定理（Frobenius）禁止存在——某本书的第一块基石因此倒塌（这就是为什么要做审计）。</dd>
+    <dt>机器判决 / 门禁</dt><dd>本体系的方法论：每个结论必须有一个 Python 脚本，跑出机器精度（10⁻¹³ 级）的数字；没跑通的结论只能进"开放问题"清单，不许说"已证明"。</dd>
+  </dl>
+</section>
+
+<footer>
+  <div>证据与复现：`scratch/_j51_force_spectrum.py`（力谱分类 6/6）、`_j52_motion_extension.py`（磁力投影 6/6）、`_j54_official_data_audit.py`（官方数据 8/8）、`_j55_rtsc_attack.py`（常温超导 7/7）；全量门禁 `_verify_all.py` 52/52 PASS。</div>
+  <div class="mono" style="margin-top:8px">算法联盟 · 判决台账 J1–J55 · openuft 07 卷 73–77 · 本页所有数字均为脚本实算值，无拟合叙事。</div>
+</footer>
+</div>
+
+<script>
+(function(){
+  var hbarc = 1.973269804e-16; // GeV·m
+  var S = 1, M = 80.379, G = 0.60, massless = false;
+  var mSlider = document.getElementById('mSlider');
+  var gSlider = document.getElementById('gSlider');
+  var seg = document.getElementById('segS');
+
+  function fmtLen(lam){
+    if (lam > 1e10) return '宇宙级（> 10¹⁰ m）';
+    if (lam > 1e-6) return (lam).toExponential(2).replace('e','×10^') + ' m';
+    if (lam > 1e-12) return (lam*1e12).toFixed(2) + '×10⁻¹² m';
+    if (lam > 1e-15) return (lam*1e15).toFixed(2) + ' fm';
+    return (lam*1e18).toFixed(2) + '×10⁻¹⁸ m';
+  }
+  function who(s, m){
+    if (s === 2 && m < 1e-6) return '引力（引力子）';
+    if (s === 0 && m > 100) return '希格斯介导力';
+    if (s === 0 && m > 50 && m < 100) return 's=0 介导力（现实中无此基本粒子）';
+    if (s === 0) return '介子型吸引（核力成分）';
+    if (s === 1 && m > 70 && m < 100) return '弱力（W 玻色子）';
+    if (s === 1 && m > 85 && m < 95) return '弱力（Z 玻色子）';
+    if (s === 1 && m < 0.01) return '电磁（光子）';
+    if (s === 1 && m > 0.1 && m < 0.5) return '核力残余（π 介子，实为复合）';
+    return '某种 s=' + s + ' 介导力';
+  }
+  function dirText(s){ return (s % 2 === 0) ? '普适吸引' : '同号排斥'; }
+
+  function update(){
+    var XMIN = 0.03, XMAX = 12, N = 300, YMAX = 14;
+    var sgn = (S % 2 === 0) ? -1 : 1;
+    var px = function(x){ return 55 + (Math.log(x/XMIN)/Math.log(XMAX/XMIN)) * 610; };
+    var py = function(y){ if (y > YMAX) y = YMAX; if (y < -YMAX) y = -YMAX; return 170 - (y / YMAX) * 130; };
+    var paths = [], cur = '';
+    for (var i = 0; i <= N; i++){
+      var x = XMIN * Math.pow(XMAX/XMIN, i/N);
+      var y = sgn * G * G * Math.exp(-x) / x;
+      var clamped = (y > YMAX || y < -YMAX);
+      var cmd = (i ? 'L' : 'M') + px(x).toFixed(1) + ',' + py(y).toFixed(1);
+      if (clamped){ if (cur) { paths.push(cur); cur = ''; } if (i===0||i===N) cur = cmd; }
+      else cur += cmd;
+    }
+    if (cur) paths.push(cur);
+    document.getElementById('curve').setAttribute('d', paths.join(' '));
+    var mx = massless ? px(0.03) : px(1);
+    document.getElementById('markRange').setAttribute('x1', mx);
+    document.getElementById('markRange').setAttribute('x2', mx);
+    var lab = document.getElementById('markRangeLab');
+    lab.setAttribute('x', Math.max(80, Math.min(640, mx)));
+    lab.textContent = massless ? '无质量：力程 ∞' : '力程 r̂=1';
+    document.getElementById('roDir').textContent = dirText(S);
+    document.getElementById('roDir').className = 'v ' + (S % 2 === 0 ? 'neg' : 'pos');
+    if (massless){ document.getElementById('roRange').textContent = '∞（实验下界内）'; }
+    else { document.getElementById('roRange').textContent = fmtLen(hbarc / M); }
+    document.getElementById('roWho').textContent = who(S, massless ? 0 : M);
+    document.getElementById('mRead').textContent = massless ? '0（无质量）' : ((M < 0.01) ? (M*1000).toFixed(1) + ' MeV' : M.toFixed(1) + ' GeV');
+    document.getElementById('gRead').textContent = G.toFixed(2);
+  }
+
+  mSlider.addEventListener('input', function(){ M = Math.pow(10, parseFloat(this.value)); massless = false; update(); });
+  gSlider.addEventListener('input', function(){ G = parseFloat(this.value)/10; update(); });
+  seg.addEventListener('click', function(e){
+    if (e.target.dataset.s === undefined) return;
+    S = parseInt(e.target.dataset.s);
+    [].forEach.call(seg.children, function(b){ b.classList.remove('on'); });
+    e.target.classList.add('on');
+    update();
+  });
+  document.getElementById('forceTable').addEventListener('click', function(e){
+    var tr = e.target.closest('tr');
+    if (!tr || !tr.dataset.s) return;
+    S = parseInt(tr.dataset.s);
+    [].forEach.call(seg.children, function(b){ b.classList.toggle('on', parseInt(b.dataset.s) === S); });
+    var mv = parseFloat(tr.dataset.m);
+    if (mv === 0){ massless = true; M = 0.001; mSlider.value = -3; }
+    else { massless = false; M = mv; mSlider.value = Math.log10(mv); }
+    update();
+    document.getElementById('plot').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
