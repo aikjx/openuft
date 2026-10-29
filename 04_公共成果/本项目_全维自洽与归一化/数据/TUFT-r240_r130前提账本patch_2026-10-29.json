@@ -1,0 +1,72 @@
+{
+ "volume": "r240",
+ "stamp": "2026-10-29",
+ "target": "数据/TUFT-r130_攻破推导链_正确理论体系与方程的隐藏前提审计_2026-10-20.json",
+ "applied": false,
+ "reason": "只读对接：不改并发会话产物；补丁待下一版合并",
+ "r130_summary_observed": {
+  "n_chains": 18,
+  "n_total_premises": 55,
+  "closure_all": 0.327273,
+  "verdict": "SOUND-BUT-PREMISE-OPEN"
+ },
+ "patch": [
+  {
+   "id": "SM-1b",
+   "claim": "规范群选择的**信息论位下界**：位账本 6.61 bit / 框架供给 0 bit",
+   "family": "SM",
+   "counts": {
+    "POSTED": 1,
+    "ASSUMED": 1,
+    "DERIVED": 2,
+    "OPEN": 1
+   },
+   "total": 5,
+   "closure": 0.4,
+   "flags": [
+    "domain_limited"
+   ],
+   "verdict": "PREMISE-OPEN",
+   "evidence": "r240：log2(7x7x2)=6.6147 bit；其中颜色 2.8074 + 弱 2.8074 由「表示维数=3/2」的实验输入供给，超荷残余 1 bit 不可消；TUFT 供给侧 0 bit（D03，k=2 不指定 N，缺口 log2 5=2.3219 bit）",
+   "note": "把 SM-1 的定性「不推导群选择」量化为可复算位账本；口径 II 下为 5.6147 bit（差 1 bit，B06）"
+  },
+  {
+   "id": "SM-1c",
+   "claim": "反常抵消对色数 N_c 的判别力 = 0 bit（代数恒等，非数值观察）",
+   "family": "SM",
+   "counts": {
+    "POSTED": 0,
+    "ASSUMED": 1,
+    "DERIVED": 2,
+    "OPEN": 1
+   },
+   "total": 4,
+   "closure": 0.5,
+   "flags": [
+    "domain_limited"
+   ],
+   "verdict": "PREMISE-OPEN",
+   "evidence": "r240 B01：解族 Y_Q=1, Y_L=-N_c, Y_e=-2N_c, Y_d=2-Y_u, (Y_u-1)^2=N_c^2 ⇒ N_c=2..12 每个 N_c 恰 2 个解，六类系数精确 0 ⇒ 0 bit（无界）",
+   "note": "该结论修正了「反常自由筛掉了大量不可能群」的读法（C05）：筛选力只在谱方向"
+  },
+  {
+   "id": "SM-3b",
+   "claim": "代数 N_gen 的信息论位 = 0 bit（反常线性缩放；位数完全由先验界决定）",
+   "family": "SM",
+   "counts": {
+    "POSTED": 0,
+    "ASSUMED": 1,
+    "DERIVED": 1,
+    "OPEN": 1
+   },
+   "total": 3,
+   "closure": 0.3333333333333333,
+   "flags": [
+    "domain_limited"
+   ],
+   "verdict": "PREMISE-OPEN",
+   "evidence": "r240 A03：N_gen=1..12 六类系数精确 0 且比值 == N_gen；r240 D02：R10 的「3 代 = k+1」预设 SU(2) ⇒ 对群选择 0 bit",
+   "note": "与 G7 §2.2 定性备注一致并被位量化；代数量的位来源仍为外部（无框架内上界）"
+  }
+ ]
+}
