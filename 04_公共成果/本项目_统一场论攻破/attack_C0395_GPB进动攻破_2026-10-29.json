@@ -1,0 +1,83 @@
+{
+  "id": "C0395",
+  "title": "GPB进动攻破",
+  "date": "2026-10-29",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "观测事实：GP-B 2011（Everitt et al.）陀螺仪进动测量",
+      "value": "测地 6.606±0.017 ″/yr；系拖拽 0.0392±0.0064 ″/yr（引用不复算）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "标准 GR 闭式与 250 位精算",
+      "value": "Ω_g(rad/s)=1.017181072344892e-12 → 6.621057668 ″/yr（偏差 0.227939%）；Ω_LT(rad/s)=6.290369366188593e-15 → 0.0409454122367 ″/yr（偏差 4.45258%）；r=7020100.0 m",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "解析求导验证",
+      "value": "dΩ_g/dr=−(5/2)Ω_g/r<0（-3.62238811536e-19，数值差商相对差 1.75e-10）；dΩ_g/d(GM)=(3/2)Ω_g/GM>0；dΩ_LT/dJ=Ω_LT/J>0（线性）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 供给检查",
+      "value": "0（无 GR 度规解、无地球角动量/轨道半径供给；GM、J、r 均须外部观测注入）",
+      "verdict": "structural_negative"
+    },
+    {
+      "id": "E5",
+      "claim": "裁定",
+      "value": "结构性负面闭合：测地/系拖拽为标准 GR 算术，TUFT 供给 0，不能给出带误差带的单点预言，撞 C5",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_geodetic_range",
+      "passed": true,
+      "note": "Ω_g=6.621057668 ″/yr ∈ [6.5, 6.7]"
+    },
+    {
+      "name": "G2_frame_drag_range",
+      "passed": true,
+      "note": "Ω_LT=0.0409454122367 ″/yr ∈ [0.030, 0.050]"
+    },
+    {
+      "name": "G3_geodetic_close_obs",
+      "passed": true,
+      "note": "|Ω_g−6.606|=0.0150576680031 < 0.1 ″/yr（0.227939% < 1.5%）"
+    },
+    {
+      "name": "G4_dOgdr_negative",
+      "passed": true,
+      "note": "dΩ_g/dr=−(5/2)Ω_g/r=-3.62238811536e-19 < 0；数值差商=-3.62238811472e-19 < 0；相对差=1.75e-10 < 1e-8（二阶截断 O(δ/r)）"
+    },
+    {
+      "name": "G5_dOgdGM_positive",
+      "passed": true,
+      "note": "dΩ_g/d(GM)=(3/2)Ω_g/GM=3.82782217106e-27 > 0"
+    },
+    {
+      "name": "G6_dOlt_dJ_positive",
+      "passed": true,
+      "note": "dΩ_LT/dJ=Ω_LT/J=1.07325872141e-48 > 0（线性）"
+    },
+    {
+      "name": "G7_frame_drag_in_band",
+      "passed": true,
+      "note": "|Ω_LT−0.0392|=0.00174541223674 < 0.0064 ″/yr（GP-B 1σ 带内）"
+    },
+    {
+      "name": "G8_TUFT_zero",
+      "passed": true,
+      "note": "TUFT 无度规/角动量/轨道供给 → 只给标准 GR 预言，结构性负面，撞 C5"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT 结构性负面闭合",
+  "precision": "mpmath 250 位；rad/s → ″/yr：1 rad/yr=180×3600/π=206264.8062470963 ″",
+  "claim": "T193 陀螺仪进动（测地 + 系拖拽）：Ω_g=(3/2)(GM)^{3/2}/(c²r^{5/2})、Ω_LT=GJ/(2c²r³)，GP-B 读数落观测带内；TUFT 供给 0，撞 C5"
+}

@@ -1,0 +1,83 @@
+{
+  "id": "C0392",
+  "title": "BransDickePPNγ攻破",
+  "date": "2026-10-29",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "观测事实：PPN γ 的太阳系上限",
+      "value": "γ−1=(2.1±2.3)e-5（Cassini 2003）→ ω>40000（引用不复算）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "PPN γ 闭式与收敛",
+      "value": "γ(1)=2/3、γ(2)=3/4（Fraction 精确）；γ(40000)=1−1/40002=-2.499875006249688e-5；γ(10^12)=0.999999999999→1",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "解析求导验证",
+      "value": "dγ/dω=1/(2+ω)^2>0（ω=40000 处 6.249375046871875e-10）；d²γ/dω²=−2/(2+ω)^3<0；数值差商互验差<1e-230",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 供给检查",
+      "value": "0（无 BD 标量场；γ≠1 需要标量-张量载体）",
+      "verdict": "structural_negative"
+    },
+    {
+      "id": "E5",
+      "claim": "裁定",
+      "value": "结构性负面闭合：γ(ω) 标准 PPN 算术，ω 为自由参数，TUFT 供给 0，撞 C2/C3",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_BD_omega1_gamma_2over3",
+      "passed": true,
+      "note": "γ(1)=2/3（Fraction 精确）"
+    },
+    {
+      "name": "G2_BD_omega2_gamma_3over4",
+      "passed": true,
+      "note": "γ(2)=3/4（Fraction 精确）"
+    },
+    {
+      "name": "G3_Cassini_gamma_close1",
+      "passed": true,
+      "note": "|γ(40000)−1|=2.49987500625e-5 < 2.5e-5（Cassini ω>40000）"
+    },
+    {
+      "name": "G4_deriv_positive",
+      "passed": true,
+      "note": "dγ/dω=1/(2+ω)^2=6.24937504687e-10 > 0（单调增，γ(∞)=1）"
+    },
+    {
+      "name": "G5_deriv2_negative",
+      "passed": true,
+      "note": "d²γ/dω²=−2/(2+ω)^3=-3.12453129687e-14 < 0（凹）"
+    },
+    {
+      "name": "G6_numerical_diff",
+      "passed": true,
+      "note": "数值差商(δ=1e-100)与闭式导数一致（差≈(δ/2)·γ″=1.56e-114 截断项，<1e-110）"
+    },
+    {
+      "name": "G7_limit_gamma_to1",
+      "passed": true,
+      "note": "γ(10^12)=0.999999999999 → 1（GR 极限）"
+    },
+    {
+      "name": "G8_TUFT_zero",
+      "passed": true,
+      "note": "TUFT 无 Brans-Dicke 标量场供给 → 结构性负面，撞 C2/C3"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT 结构性负面闭合",
+  "precision": "mpmath 250 位 + Fraction 精确",
+  "claim": "T167 Brans-Dicke ω_BD：γ(ω)=(1+ω)/(2+ω)，Cassini |γ−1|<2.5e-5，ω 自由参数→TUFT 供给 0，撞 C2/C3"
+}

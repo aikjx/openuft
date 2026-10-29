@@ -1,0 +1,83 @@
+{
+  "id": "C0400",
+  "title": "phantom幽灵稳定性攻破",
+  "date": "2026-10-29",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "观测事实：暗能量状态方程 w 与 phantom 假说",
+      "value": "Ia 超新星 / CMB / 大尺度结构联合约束暗能量 w≈−1（引用不复算）；w<−1 需负动能 phantom 标量场（Caldwell 2002 型 L=−½(∂φ)²−V）；w>−1 为常规（quintessence）正动能场，w=−1 为宇宙学常数",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "phantom 闭式 w(x) 与 250 位精算表",
+      "value": "ρ=V(1−x)，P=−V(1+x)，w=(x+1)/(x−1)；w(0)=−1、w(1/4)=−5/3、w(1/2)=−3、w(3/4)=−7、w(0.9)=−19、w(0.99)=−199、w(1.01)=201、w(2)=3、w(10)=11/9",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "解析求导验证（用户指定线）",
+      "value": "dw/dx=−2/(x−1)²<0（x=1/2 处 -8.0，数值中心差商互验差 1.17429e-151<1e-100；x=2 处互验差 2.93572e-152<1e-100）；dρ/dx=−V<0；x=1 奇点（ρ=0）两侧 w 发散异号：x→1⁻ w→−∞、x→1⁺ w→+∞",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 供给检查 / 幽灵不稳定性",
+      "value": "TUFT 供给=0（无 phantom/ghost 负动能标量场载体）；负动能 ⇒ H=−½φ̇²−V+… 无下界 ⇒ 真空衰变、UV 截断无法固定、粒子谱病态（幽灵）",
+      "verdict": "structural_negative"
+    },
+    {
+      "id": "E5",
+      "claim": "裁定",
+      "value": "结构性负面闭合：w(x) 为标准 phantom 标量场算术，TUFT 供给 0；w<−1 所需负动能载体不存在，幽灵哈密顿量无下界 → 撞 C7/C1",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_w_half_exact_minus3",
+      "passed": true,
+      "note": "w(0.5)=(1.5)/(−0.5)=−3（Fraction 精确）"
+    },
+    {
+      "name": "G2_w_two_exact_plus3",
+      "passed": true,
+      "note": "w(2)=3/1=3（Fraction 精确）"
+    },
+    {
+      "name": "G3_dwdx_negative_numerical",
+      "passed": true,
+      "note": "dw/dx=−2/(x−1)²<0：x=1/2 闭式 -8.0，数值差商 -8.0，互验差 1.17429e-151<1e-100；x=2 闭式 -2.0，互验差 2.93572e-152<1e-100"
+    },
+    {
+      "name": "G4_phantom_interval_w_lt_minus1",
+      "passed": true,
+      "note": "w<−1 ⟺ 0<x<1 区间断言：内部五点 w<−1；x=0 恰为 w=−1；x>1 三点 w>1（ρ<0 ghost 病态区）"
+    },
+    {
+      "name": "G5_endpoint_divergence_opposite_sign",
+      "passed": true,
+      "note": "x→1⁻：w=-2.0e+50→−∞，ρ/V=1.0e-50>0；x→1⁺：w=2.0e+50→+∞，ρ/V=-1.0e-50<0；两侧发散异号"
+    },
+    {
+      "name": "G6_TUFT_zero",
+      "passed": true,
+      "note": "TUFT 无 phantom/ghost 负动能标量场供给 → 结构性负面，撞 C7/C1"
+    },
+    {
+      "name": "G7_w_09_exact_minus19_and_w0_exact_minus1",
+      "passed": true,
+      "note": "w(0.9)=1.9/(−0.1)=−19、w(0)=−1（Fraction 精确）"
+    },
+    {
+      "name": "G8_rho_decreasing_drho_dx_neg",
+      "passed": true,
+      "note": "ρ=V(1−x)，dρ/dx=−V<0：ρ/V(1/4)=0.75 > ρ/V(1/2)=0.5 > ρ/V(3/4)=0.25，密度随动能比下降"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT/几何框架结构性负面闭合",
+  "precision": "mpmath 250 位 + Fraction 精确",
+  "claim": "T483 phantom 穿越 w=−1：w=(x+1)/(x−1)，0<x<1 时 w<−1（ρ>0），x>1 时 w>1（ρ<0 ghost 区）；dw/dx=−2/(x−1)²<0，x=1 奇点两侧发散异号；幽灵哈密顿量无下界；TUFT 供给 0，撞 C7/C1"
+}

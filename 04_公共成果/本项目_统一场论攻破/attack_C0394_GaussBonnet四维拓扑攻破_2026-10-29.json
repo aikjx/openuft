@@ -1,0 +1,78 @@
+{
+  "id": "C0394",
+  "title": "GaussBonnet四维拓扑攻破",
+  "date": "2026-10-29",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "标准事实：Chern-Gauss-Bonnet 拓扑定理",
+      "value": "4D 闭流形上 ∫ L_GB·√g d⁴x = 32π²·χ(M)；S⁴ 欧拉示性数 χ=2（引用不复算）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "S⁴ 闭式分解与 250 位精算",
+      "value": "R=12/a²、RμνRμν=36/a⁴、RμνρσRμνρσ=24/a⁴；L_GB=144/a⁴−144/a⁴+24/a⁴=24/a⁴；Vol(S⁴)=8π²a⁴/3；∫L_GB√g=64π²=631.65468166971895161（前 20 位）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "求导验证：变分恒零（用户指定线）",
+      "value": "解析：GB 密度在 4D 为 Euler 全导数，∫ 只依赖 χ，故 d/dε=0；数值扫描 ε∈[1e-20,1e-8]，max|d/dε∫L_GB|=8.938889586e-229 < 1e-100；E_μν≡0（4D GB 无动力学）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 供给检查 + Lovelock 唯一性注记",
+      "value": "0（TUFT 无高阶曲率项；4D 中二阶自洽引力唯一 = Einstein 场方程，Lovelock k=2 项运动方程恒零，无独立动力学签名）",
+      "verdict": "structural_negative"
+    },
+    {
+      "id": "E5",
+      "claim": "裁定",
+      "value": "结构性负面闭合：GB/Lovelock 高阶曲率修正在 4D 为拓扑全导数、无动力学，TUFT 供给 0，撞 C1/C5",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_GB_integral_range_64pi2",
+      "passed": true,
+      "note": "64π²=631.65468166971895161 ∈ [631.6, 631.7]（250 位）"
+    },
+    {
+      "name": "G2_chi2_32pi2_times2",
+      "passed": true,
+      "note": "64π² == 32π²×χ（χ=2）：差=0.0"
+    },
+    {
+      "name": "G3_integer_decomposition_144minus144plus24",
+      "passed": true,
+      "note": "144−144+24=24（整数精确）；R²=144/a⁴ 与 4RμνRμν=144/a⁴ 相等抵消"
+    },
+    {
+      "name": "G4_variation_derivative_zero_scan",
+      "passed": true,
+      "note": "d/dε ∫L_GB 扫描 ε∈[1e-20,1e-8]，max|q|=8.938889586e-229 < 1e-100（变分恒零）"
+    },
+    {
+      "name": "G5_volume_S4_8pi2_over3",
+      "passed": true,
+      "note": "Vol(S⁴, a=1)=8π²/3=26.318945069571622984 ∈ [26.3, 26.4]"
+    },
+    {
+      "name": "G6_integral_topology_invariant",
+      "passed": true,
+      "note": "扰动族上 ∫L_GB 恒等于 64π²：max|I(ε)−64π²|=8.938889586e-249 < 1e-200"
+    },
+    {
+      "name": "G7_TUFT_zero",
+      "passed": true,
+      "note": "TUFT 无高阶曲率/Lovelock 项供给 → 结构性负面，撞 C1/C5"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT/几何框架结构性负面闭合",
+  "precision": "mpmath 250 位 + Python int 整数精确分解",
+  "claim": "T126 Gauss-Bonnet/Lovelock：S⁴ 上 ∫L_GB√g=64π²=32π²χ（χ=2），4D 变分恒零 E_μν≡0 无动力学 → TUFT 供给 0，撞 C1/C5"
+}

@@ -1,0 +1,83 @@
+{
+  "id": "C0397",
+  "title": "freezein暗物质丰度攻破",
+  "date": "2026-10-29",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "观测事实：暗物质丰度基准",
+      "value": "Planck Ω_cdm h² = 0.120 ± 0.001（引用，不复算）；FIMP freeze-in 范式见 Hall, Jedamzik, March-Russell, West (2010)。",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "衰变 freeze-in 闭式与精算表（m₁=1 TeV，m_χ=1 GeV）",
+      "value": "Yχ = 45 g₁ y² M_Pl/(32 π⁵ g_*S m₁)；Ωχh² = mχ Yχ × 2.744e8。y=1e-12 → Y=5.25559420191848e-13, Ωh²=0.000144213504901；y=3e-12 → Y=4.73003478172663e-12, Ωh²=0.00129792154411；y=1e-11 → Y=5.25559420191848e-11, Ωh²=0.0144213504901；y=1e-10 → Y=5.25559420191848e-9, Ωh²=1.44213504901；Ωh²=0.12 反解 y*=2.88461366873638817e-11（二分/牛顿/解析三路径一致）。",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "解析求导验证（用户指定线）",
+      "value": "dΩh²/dy=2Ωh²/y（幂律 2，中心差分互验差=2.0e-205）；d lnY/d ln y=2.0（=2）；dY/dm₁=−Y/m₁（质量反比，中心差分互验差=5.26e-122）。",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 供给检查",
+      "value": "0（TUFT 几何框架内无 φ₁、χ 两个新粒子，也无 y 新耦合；产生机制须外部注入 ≥3 个新输入）",
+      "verdict": "structural_negative"
+    },
+    {
+      "id": "E5",
+      "claim": "裁定",
+      "value": "结构性负面闭合：freeze-in 为标准 FIMP 参数化算术，新粒子内容与新耦合均由外部给定，TUFT 供给 0，撞 C1/C3",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_closed_form_two_path",
+      "passed": true,
+      "note": "Y→Ω→Y' 双路径闭式一致（差=0.0 < 1e-230）；换算系数 s₀/(ρ_c/h²)=274372479.240807（相对 2.744e8 偏差 0.0001）"
+    },
+    {
+      "name": "G2_y_star_in_band",
+      "passed": true,
+      "note": "Ωh²=0.12 反解 y*=2.88461366873638817e-11 ∈ [1e-11, 5e-11]（给定 Hall 2010 型闭式下实算值；FIMP 耦合量级 10⁻¹¹～10⁻¹²，文献量级一致）"
+    },
+    {
+      "name": "G2b_root_three_path",
+      "passed": true,
+      "note": "二分/牛顿/解析 sqrt 三路径一致（二分差=5.22e-254，牛顿差=0.0 < 1e-230）"
+    },
+    {
+      "name": "G2c_root_reproduces_012",
+      "passed": true,
+      "note": "回代 Ωh²(y*)=0.12 = 0.12"
+    },
+    {
+      "name": "G3_dOmega_dy_power2",
+      "passed": true,
+      "note": "dΩh²/dy=2Ωh²/y：闭式=288427009.801286，中心差分=288427009.801286，差=2.0e-205 < 1e-100 ✓"
+    },
+    {
+      "name": "G4_log_power_index2",
+      "passed": true,
+      "note": "d lnY/d ln y=2.0（=2，Y ∝ y² 幂律），差=4.12e-214 < 1e-100 ✓"
+    },
+    {
+      "name": "G5_dY_dm1_inverse",
+      "passed": true,
+      "note": "dY/dm₁=−Y/m₁：闭式=-5.255594201918476e-16，中心差分=-5.255594201918476e-16，差=5.26e-122 < 1e-100 ✓"
+    },
+    {
+      "name": "G6_TUFT_zero",
+      "passed": true,
+      "note": "TUFT 供给=0：freeze-in 需新粒子 φ₁、新粒子 χ + 新耦合 y（≥3 个新输入），TUFT 几何框架内无对应载体 → 结构性负面，撞 C1/C3"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT/几何框架结构性负面闭合",
+  "precision": "mpmath 250 位（双 API 兼容）",
+  "claim": "T414 暗物质 freeze-in：Yχ=45 g₁ y² M_Pl/(32π⁵ g_*S m₁)，Ωχh²=mχ Yχ×2.744e8；需 φ₁、χ 新粒子 + y 新耦合，TUFT 供给 0，撞 C1/C3；标准 freeze-in FIMP 算术（Hall et al. 2010 型），参数化基准演示，未写成 TUFT 预测"
+}

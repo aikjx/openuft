@@ -1,0 +1,83 @@
+{
+  "id": "C0396",
+  "title": "自旋2四极辐射攻破",
+  "date": "2026-10-29",
+  "entries": [
+    {
+      "id": "E1",
+      "claim": "观测事实：Hulse-Taylor PSR B1913+16 周期衰减",
+      "value": "m1=1.438 M☉、m2=1.390 M☉、P_b=27906.98 s、e=0.617138；观测 Ṗ_b=-2.423e-12±1.0e-15 s/s；GR 预言 -2.4025e-12 s/s（引用不复算）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E2",
+      "claim": "标准 GR 四极闭式与 250 位精算",
+      "value": "a=1949198774.92 m；f(e)=11.857255781；M_c=1.23074571 M☉；P_quad(圆)=6.55438665395e+23 W，P_quad(偏心)=7.77170390433e+24 W；Ṗ_b=-2.40321392503535e-12 s/s（对 GR -0.0297159%，对观测 0.816594%）",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E3",
+      "claim": "解析求导验证（用户指定线）",
+      "value": "d lnP/d ln a=−5（数值差商差 1.46191e-150）；dP/da=−5P/a=-1.9935637156e+16（相对差 3.0e-100）；能量守恒 dE/dt=−P_quad，能量链 Ṗ_b 相对差 2.51076e-250",
+      "verdict": "PASS"
+    },
+    {
+      "id": "E4",
+      "claim": "TUFT 供给检查",
+      "value": "0（无标量/矢量替代辐射机制；质量、周期、偏心率、chirp 质量均须外部观测注入）",
+      "verdict": "structural_negative"
+    },
+    {
+      "id": "E5",
+      "claim": "裁定",
+      "value": "结构性负面闭合：四极辐射为标准 GR 算术，TUFT 供给 0；自旋-2 幂律 −5 与 Hulse-Taylor 观测自洽，TUFT 无对应辐射自由度，撞 C1/C5",
+      "verdict": "structural_negative"
+    }
+  ],
+  "guards": [
+    {
+      "name": "G1_quadrupole_coeff_32over5",
+      "passed": true,
+      "note": "四极系数 32/5（Fraction 精确断言）"
+    },
+    {
+      "name": "G2_Pbdot_in_band",
+      "passed": true,
+      "note": "Ṗ_b=-2.40321392503535e-12 s/s ∈ [−2.6e-12, −2.2e-12]"
+    },
+    {
+      "name": "G3_Pbdot_close_GR_and_obs",
+      "passed": true,
+      "note": "对 GR 预言偏差 -0.029715922% < 1%；对观测偏差 0.8165941% < 1%"
+    },
+    {
+      "name": "G4_powerlaw_minus5",
+      "passed": true,
+      "note": "d lnP/d ln a=−5；数值差商=-5.0，差=1.46191e-150 < 1e-100"
+    },
+    {
+      "name": "G5_dPda_minus5Povera",
+      "passed": true,
+      "note": "dP/da=−5P/a=-1.9935637156e+16；数值差商相对差=3.0e-100 < 1e-80"
+    },
+    {
+      "name": "G6_energy_conservation",
+      "passed": true,
+      "note": "dE/dt=−P_quad 互验：能量链 Ṗ_b=-2.40321392503535e-12，相对差=2.51076e-250 < 1e-200"
+    },
+    {
+      "name": "G7_no_monopole_dipole",
+      "passed": true,
+      "note": "单极（质量守恒）、偶极（质心固定）辐射禁戒；辐射仅四极起阶（自旋-2 签名）"
+    },
+    {
+      "name": "G8_TUFT_zero",
+      "passed": true,
+      "note": "TUFT 无替代辐射机制（无标量/矢量通道），仅标准 GR 四极 → 结构性负面，撞 C1/C5"
+    }
+  ],
+  "exit_code": 0,
+  "red_line": "0/22 保持；UFT-3=0 保持；不宣称实现统一场论；攻破=对 TUFT/几何框架结构性负面闭合",
+  "precision": "mpmath 250 位 + fractions.Fraction 精确系数 32/5",
+  "claim": "T208 引力子自旋-2 四极辐射：P_quad=(32/5)(G⁴/c⁵)m1²m2²M/a⁵、Ṗ_b=−(192π/5)(2π/P_b)^{5/3}(GM_c/c³)^{5/3}·f(e)，Hulse-Taylor 偏差 <1%，幂律 dlnP/dlna=−5；TUFT 供给 0，撞 C1/C5"
+}
