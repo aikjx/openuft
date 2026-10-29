@@ -1,0 +1,136 @@
+{
+  "doc": "68_螺旋曲率挠率核心方程组_定稿_2026-10-30.md",
+  "tool": "spiral_curvature_torsion_core.py",
+  "total": 18,
+  "pass": 18,
+  "fail": 0,
+  "exit_code": 0,
+  "items": [
+    {
+      "id": "G1",
+      "title": "|\\mathbf v|^2 = R^2\\omega^2+v_z^2",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G2",
+      "title": "\\kappa = R\\omega^2/c^2",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G3",
+      "title": "\\tau = v_z\\omega/c^2",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G4",
+      "title": "\\kappa^2+\\tau^2=(\\omega/c)^2",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G5",
+      "title": "a_h=\\kappa/K^2=R",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G6",
+      "title": "h=2\\pi\\tau/K^2=2\\pi v_z/\\omega",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G7",
+      "title": "\\mathbf r(s)|_{s=ct}=\\mathbf r(t)",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual vector = [R*(-cos(omega*t) + cos(c*omega*t/sqrt(R**2*omega**2 + v_z**2))), R*(-sin(omega*t) + sin(c*omega*t/sqrt(R**2*omega**2 + v_z**2))), c*t*v_z/sqrt(R**2*omega**2 + v_z**2) - t*v_z]"
+    },
+    {
+      "id": "G8",
+      "title": "|d\\mathbf T/dt|=c\\kappa",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G9",
+      "title": "d\\mathbf B/dt=-c\\tau\\mathbf N",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual vector = [0, 0, 0]"
+    },
+    {
+      "id": "G10",
+      "title": "\\kappa\\kappa'+\\tau\\tau'=\\omega\\omega'/c^2",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "由 H0 对 λ 求导，残差符号零"
+    },
+    {
+      "id": "G11",
+      "title": "(\\kappa'^2+\\tau'^2)+(\\kappa\\kappa''+\\tau\\tau'')=(\\omega'^2+\\omega\\omega'')/c^2",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "由 H1 再对 λ 求导，残差符号零"
+    },
+    {
+      "id": "G12",
+      "title": "\\eta_{\\mu\\nu}dx^\\mu dx^\\nu=-c^2+|\\mathbf v|^2=0",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G13",
+      "title": "\\tau=0\\Rightarrow\\kappa=\\omega/c",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "G14",
+      "title": "[\\kappa^2]=[(\\omega/c)^2]",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "{L^-2} vs {L^-2}"
+    },
+    {
+      "id": "G15",
+      "title": "[\\kappa]=[\\tau]=L^{-1}",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "[kappa]={L^-1}, [tau]={L^-1}"
+    },
+    {
+      "id": "G16",
+      "title": "[h]=[\\tau/\\kappa^2]=L",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "[h]={L^1}"
+    },
+    {
+      "id": "CT1",
+      "title": "控制组：κ=Rω²/c³ 必须被量纲层判非 L^-1",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "[Rω²/c³]={L^-2,T^1}"
+    },
+    {
+      "id": "CT2",
+      "title": "控制组：κ²-τ²=(ω/c)² 必须被符号层拒绝",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "residual = -2*omega**2*v_z**2/(R**4*omega**4 + 2*R**2*omega**2*v_z**2 + v_z**4)"
+    }
+  ]
+}
