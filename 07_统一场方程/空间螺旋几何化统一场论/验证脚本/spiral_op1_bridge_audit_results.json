@@ -1,0 +1,94 @@
+{
+  "doc": "69_OP1算子错配裁决_沿流导数与旋度的精确桥_2026-10-30.md",
+  "tool": "spiral_op1_bridge_audit.py",
+  "total": 12,
+  "pass": 12,
+  "fail": 0,
+  "exit_code": 0,
+  "items": [
+    {
+      "id": "S1",
+      "title": "\\nabla\\times\\mathbf T=\\tau\\mathbf T+\\kappa\\mathbf B",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "S2",
+      "title": "\\kappa^2=|(\\nabla\\times\\mathbf T)\\times\\mathbf T|^2",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "S3",
+      "title": "\\tau=\\mathbf T\\cdot(\\nabla\\times\\mathbf T)",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "S4",
+      "title": "(\\nabla\\times\\mathbf T)\\times\\mathbf T=\\kappa\\mathbf N",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "S5",
+      "title": "朴素形式 \\nabla\\times\\mathbf T=\\kappa\\mathbf N 的失配量",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "|residual|^2 = (alpha**4 + alpha**2)/C.rho**2（a∈(0,1] 恒非零）"
+    },
+    {
+      "id": "S6",
+      "title": "变螺距：curl 闭式 (0,\\,-\\beta',\\,(\\rho\\alpha)'/\\rho)",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "res = (0, 0, 0)"
+    },
+    {
+      "id": "S7",
+      "title": "变螺距残差 = -\\beta'\\hat\\varphi（等螺距才为零）",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "r_phi = -Derivative(B(C.rho), C.rho), -B' = -Derivative(B(C.rho), C.rho)"
+    },
+    {
+      "id": "N1",
+      "title": "数值 \\nabla\\times\\mathbf T=(α/ρ)\\hat z",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "max rel err = 8.492e-11"
+    },
+    {
+      "id": "N2",
+      "title": "数值 \\nabla\\times\\mathbf T=\\tau\\mathbf T+\\kappa\\mathbf B",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "max rel err = 8.492e-11"
+    },
+    {
+      "id": "N3",
+      "title": "场论 (\\nabla\\times\\mathbf T)\\times\\mathbf T = 曲线 d\\mathbf T/ds",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "max rel err = 1.858e-10"
+    },
+    {
+      "id": "CT1",
+      "title": "控制组：朴素形式 ∇×T=κN 必须被数值层判失配",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "|residual|/|κN| = 1.943651, |curl|/|κN| = 1.666667 (= 1/α)"
+    },
+    {
+      "id": "CT2",
+      "title": "控制组：变螺距时 τT+κB 必须失效（定理 2 有条件）",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "max rel gap = 3.937e-01"
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "doc": "71_电磁扇区精确解_矢势沿螺旋切矢_2026-10-30.md",
+  "tool": "em_sector_exact_solution.py",
+  "total": 18,
+  "pass": 15,
+  "fail": 3,
+  "exit_code": 1,
+  "conclusion": "结论：候选解 A = λT 被证伪（∇×(τT+κB) = (sinθ/ρ²) ê_φ ≠ 0，与 C-01 静态真空式矛盾）；轴对称无源正则解只能是均匀场 𝓑 = 2fλ ẑ，由 A = λρ ê_φ 给出。",
+  "items": [
+    {
+      "id": "G1",
+      "group": "G",
+      "title": "切矢旋度 ∇×T = (α/ρ) ẑ",
+      "tex": "\\nabla\\times\\mathbf T=(\\alpha/\\rho)\\hat z",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "∇×T = (sinθ/ρ)·ẑ"
+    },
+    {
+      "id": "G2",
+      "group": "G",
+      "title": "副法矢旋度 ∇×B = −(β/ρ) ẑ",
+      "tex": "\\nabla\\times\\mathbf B_{\\rm frame}=-(\\beta/\\rho)\\hat z",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "∇×B = (-cosθ/ρ)·ẑ"
+    },
+    {
+      "id": "G3",
+      "group": "G",
+      "title": "标架桥 ∇×T = τT + κB（69 号，兼仪器自检）",
+      "tex": "\\nabla\\times\\mathbf T=\\tau\\mathbf T+\\kappa\\mathbf B",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "τT+κB = (sinθ/ρ)·ẑ，与 ∇×T = (sinθ/ρ)·ẑ 一致"
+    },
+    {
+      "id": "E3",
+      "group": "E",
+      "title": "承重式 ∇×(τT + κB) = 0",
+      "tex": "\\nabla\\times(\\tau\\mathbf T+\\kappa\\mathbf B_{\\rm frame})=\\mathbf 0",
+      "kind": "IDN",
+      "verdict": "FAIL",
+      "detail": "∇×(τT+κB) = (sinθ/ρ²)·ê_φ ≠ 0 —— 因 τT+κB = (sinθ/ρ)ẑ，其旋度只剩 ê_φ 分量 sinθ/ρ²"
+    },
+    {
+      "id": "E4",
+      "group": "E",
+      "title": "无散 ∇·(τT + κB) = 0",
+      "tex": "\\nabla\\cdot(\\tau\\mathbf T+\\kappa\\mathbf B_{\\rm frame})=0",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "∇·(τT+κB) = 0"
+    },
+    {
+      "id": "E5",
+      "group": "E",
+      "title": "模长 |τT + κB|² = κ²+τ² = α²/ρ²",
+      "tex": "|\\tau\\mathbf T+\\kappa\\mathbf B|^2=\\kappa^2+\\tau^2=\\alpha^2/\\rho^2",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "|combo|² = sin²θ/ρ²；κ²+τ² 残差 = 0；α²/ρ² 残差 = 0"
+    },
+    {
+      "id": "E6",
+      "group": "E",
+      "title": "三本构式 + 无源麦克斯韦同时满足（A = λT）",
+      "tex": "\\text{三本构式}+\\text{无源麦克斯韦}",
+      "kind": "RES",
+      "verdict": "FAIL",
+      "detail": "𝓑 = (f·λ·sinθ/ρ)·ẑ；∇×𝓑 = (f·λ·sinθ/ρ²)·ê_φ ≠ 0；∇·𝓑 = 0。C-03 与 C-02 成立（E=0、𝓑≡f∇×A），但 C-01 静态式要求 ∇×𝓑=0 ⇒ 矛盾。若取 ∇×𝓑=μ₀J，则所需体电流 J = (f·λ·sinθ/(ρ²·μ₀))·ê_φ"
+    },
+    {
+      "id": "E7a",
+      "group": "E",
+      "title": "能流 S = E×𝓑 = 0",
+      "tex": "\\mathbf S=\\mathbf E\\times\\mathcal B=\\mathbf 0",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "E = −f∂_t(λT) = 0（静态）⇒ S ≡ 0，无条件成立"
+    },
+    {
+      "id": "E7b",
+      "group": "E",
+      "title": "能量密度 u = 𝓑²/(2μ₀) 与位置无关",
+      "tex": "u=\\mathcal B^2/(2\\mu_0)\\ \\text{与位置无关}",
+      "kind": "RES",
+      "verdict": "FAIL",
+      "detail": "u = f²·λ²·sin²θ/(2·ρ²·μ₀) ∝ 1/ρ²，随 ρ 变化 ⇒「处处相等」为假"
+    },
+    {
+      "id": "MC1",
+      "group": "MC",
+      "title": "A = λρ ê_φ ⇒ 𝓑 = 2fλ ẑ（均匀）",
+      "tex": "A=\\lambda\\rho\\hat e_\\phi\\Rightarrow\\mathcal B=2f\\lambda\\hat z",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "∇×A = 2·λ·ẑ，𝓑 = 2·f·λ·ẑ"
+    },
+    {
+      "id": "MC2",
+      "group": "MC",
+      "title": "无源：∇×𝓑 = 0 且 ∇·𝓑 = 0",
+      "tex": "\\nabla\\times\\mathcal B=\\mathbf 0,\\ \\nabla\\cdot\\mathcal B=0",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "∇×𝓑 = 0，∇·𝓑 = 0"
+    },
+    {
+      "id": "MC3",
+      "group": "MC",
+      "title": "三本构式 C-01 / C-02 / C-03 同时成立",
+      "tex": "\\text{C-01/C-02/C-03 同时成立}",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "E = −f∂_tA = 0 ⇒ C-03 恒真、∇·E = 0；C-02 由 𝓑 ≡ f∇×A 构造成立；静态 C-01：0 = (1/f)[V·0 − c²∇×𝓑] = 0，因 ∇×𝓑 = 0"
+    },
+    {
+      "id": "MC4",
+      "group": "MC",
+      "title": "u 均匀且 S = 0",
+      "tex": "u=\\mathcal B^2/(2\\mu_0)\\ \\text{均匀；}\\ \\mathbf S=\\mathbf 0",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "u = 2·f²·λ²/μ₀（与 ρ 无关）；S = E×𝓑 = 0"
+    },
+    {
+      "id": "MC5",
+      "group": "MC",
+      "title": "𝓑 = 2fλ(βT + αB) = 2fλ(ρ/α)(τT + κB)",
+      "tex": "\\mathcal B=2f\\lambda(\\beta\\mathbf T+\\alpha\\mathbf B)=2f\\lambda\\frac{\\rho}{\\alpha}(\\tau\\mathbf T+\\kappa\\mathbf B)",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "残差(βT+αB) = 0；残差((ρ/α)(τT+κB)) = 0 ⇒ 均匀场正是 τT+κB 方向，但权重 ∝ ρ（而非 λ = 常数）"
+    },
+    {
+      "id": "CT1",
+      "group": "CT",
+      "title": "控制组：去掉归一化 α²+β²=1 ⇒ 标架桥必须失效",
+      "tex": "\\text{去归一化} \\Rightarrow \\text{桥失效}",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "残差 = (alpha·(-alpha² - beta² + 1)/ρ)·ẑ ∝ 1−α²−β² ⇒ |T| = 1 是桥成立的必要条件"
+    },
+    {
+      "id": "CT2",
+      "group": "CT",
+      "title": "控制组：系数互换 κT+τB ⇒ 标架桥必须失效",
+      "tex": "\\kappa\\mathbf T+\\tau\\mathbf B \\neq \\nabla\\times\\mathbf T",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "κT+τB = (-sinθ·cos(2·θ)/ρ)·ê_φ + (2·sin²θ·cosθ/ρ)·ẑ，与 ∇×T = (sinθ/ρ)·ẑ 不等 ⇒ T、B 角色不可互换"
+    },
+    {
+      "id": "CT3",
+      "group": "CT",
+      "title": "控制组：换成 A = λB ⇒ ∇×𝓑 同样非零",
+      "tex": "A=\\lambda\\mathbf B_{\\rm frame}\\Rightarrow\\nabla\\times\\mathcal B\\neq 0",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "𝓑 = (-f·λ·cosθ/ρ)·ẑ，∇×𝓑 = (-f·λ·cosθ/ρ²)·ê_φ ⇒ A=λT 的失败不是「选了 T」的偶然"
+    },
+    {
+      "id": "CT4",
+      "group": "CT",
+      "title": "控制组：退化极限 α=0 ⇒ 𝓑 ≡ 0（只剩平凡解）",
+      "tex": "\\alpha=0\\Rightarrow\\mathcal B\\equiv\\mathbf 0",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "𝓑|_(α=0) = 0 ⇒ 螺旋度是场强的唯一来源，代价是 ∇×𝓑 ≠ 0"
+    },
+    {
+      "id": "D1",
+      "group": "D",
+      "title": "诊断：轴对称静态无源场的通解",
+      "tex": "",
+      "kind": "INFO",
+      "verdict": "INFO",
+      "detail": "∂_φ = ∂_z = 0 下 ∇·𝓑 = 0 ⇒ B_ρ = c/ρ；∇×𝓑 = 0 ⇒ B_z = 常数、B_φ = c′/ρ。轴上正则 ⇒ c = c′ = 0 ⇒ 𝓑 只能是均匀场（MC 组）。A = λT 给出 𝓑 ∝ (1/ρ)ẑ，落在「需体电流 J ∝ 1/ρ² ê_φ」的一族里，不是真空解。"
+    },
+    {
+      "id": "D2",
+      "group": "D",
+      "title": "诊断：候选解被证伪的根源",
+      "tex": "",
+      "kind": "INFO",
+      "verdict": "INFO",
+      "detail": "τT+κB = ∇×T = (sinθ/ρ)ẑ。承重式 E3 要求 ∇×∇×T = 0，但 ∇×((sinθ/ρ)ẑ) = (sinθ/ρ²)ê_φ ≠ 0。即：沿切矢的矢势必然携带 1/ρ 型轴向场，而任何 1/ρ 型轴向场的旋度都不为零 ⇒ 与 C-01 静态真空式不相容。"
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "doc": "70_力的统一_供给需求预算裁决_2026-10-30.md",
+  "tool": "force_unification_budget.py",
+  "total": 19,
+  "pass": 17,
+  "fail": 2,
+  "verdict_fail_items": [
+    "L2",
+    "L3"
+  ],
+  "exit_code": 0,
+  "items": [
+    {
+      "id": "D1",
+      "title": "dim su(3)",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "rank = 8"
+    },
+    {
+      "id": "D2",
+      "title": "dim su(2)",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "rank = 3"
+    },
+    {
+      "id": "D3",
+      "title": "需求侧：12 个规范生成元 / 12 个无质量规范玻色子",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "8+3+1 = 12"
+    },
+    {
+      "id": "D4",
+      "title": "dim so(3,1)",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "rank = 6"
+    },
+    {
+      "id": "D5",
+      "title": "dim so(3)（标架转动）",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "3"
+    },
+    {
+      "id": "U1",
+      "title": "供给侧：几何层物理标量自由度 = 3−1 = 2",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "变量 (κ,τ,ω) 3 个，约束 κ²+τ²=(ω/c)² 1 个 ⇒ 2"
+    },
+    {
+      "id": "U2",
+      "title": "供给侧：矢量槽位 = 0（κ,τ,ω 全为标量；标架对标量纯规范）",
+      "kind": "DEF",
+      "verdict": "PASS",
+      "detail": "标量场在 SO(3) 标架转动下不变 ⇒ 标架不产生矢量自由度"
+    },
+    {
+      "id": "K1",
+      "title": "|\\mathbf a|=c^2\\kappa",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "residual = 0"
+    },
+    {
+      "id": "K2",
+      "title": "\\mathbf a\\parallel\\mathbf N,\\ \\mathbf a\\cdot\\mathbf B=0",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "a·B = 0"
+    },
+    {
+      "id": "K3",
+      "title": "\\partial\\mathbf a/\\partial v_z=\\mathbf 0 \\Rightarrow \\tau 不进加速度",
+      "kind": "IDN",
+      "verdict": "PASS",
+      "detail": "∂a/∂v_z = [0, 0, 0]；而 τ = v_z\\omega/c² ∝ v_z"
+    },
+    {
+      "id": "V1",
+      "title": "V1：需求 12 > dim so(3,1)=6（表示论容量不足）",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "12 − 6 = 6"
+    },
+    {
+      "id": "V2",
+      "title": "V2：需求 12 > 供给侧物理标量 2",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "12 − 2 = 10"
+    },
+    {
+      "id": "V3",
+      "title": "V3：矢量槽位缺口 = 12 − 0 = 12",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "缺 12 个"
+    },
+    {
+      "id": "V4",
+      "title": "V4：单一 U(1)（1 个生成元）≤ 供给 2 ⇒ 电磁扇区不被计数关闭",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "1 ≤ 2 ⇒ 与 26 号『只有电磁扇区闭合』独立吻合"
+    },
+    {
+      "id": "CT1",
+      "title": "控制组：SO(3) 当内部群（3<12）必须判不足",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "supply=3, need=12 ⇒ 不足"
+    },
+    {
+      "id": "CT2",
+      "title": "控制组：虚构供给 13 ≥ 12 必须判足够（判据非恒红）",
+      "kind": "CTRL",
+      "verdict": "PASS",
+      "detail": "supply=13, need=12 ⇒ 足够"
+    },
+    {
+      "id": "L1",
+      "title": "L-A 形式层：能写出一个含四力符号的方程",
+      "kind": "RES",
+      "verdict": "PASS",
+      "detail": "任何多项式组合都能写；零信息量，不构成统一"
+    },
+    {
+      "id": "L2",
+      "title": "L-B 动力学层：该方程有作用量、有初值问题、有守恒",
+      "kind": "RES",
+      "verdict": "FAIL",
+      "detail": "几何层无矢量槽位（U2/V3）；标量对 (κ,τ) 无法生成 12 个规范场"
+    },
+    {
+      "id": "L3",
+      "title": "L-C 可观测层：给出 ≥1 个四力共有的新可观测量",
+      "kind": "RES",
+      "verdict": "FAIL",
+      "detail": "供给 2 个标量，需求 12 个生成元；参数计数 2 自由 vs 0 观测（沿用 67 号 G4 口径）"
+    }
+  ]
+}
