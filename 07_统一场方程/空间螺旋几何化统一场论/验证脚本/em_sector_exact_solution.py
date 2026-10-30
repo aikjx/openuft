@@ -430,7 +430,7 @@ lines.append(f"合计 {n_pass + n_fail} 条判定：PASS {n_pass} / FAIL {n_fail
              f" ⇒ exit {1 if n_fail else 0}")
 
 summary = {
-    "doc": "71_电磁扇区精确解_矢势沿螺旋切矢_2026-10-30.md",
+    "doc": "71_电磁扇区精确解_矢势沿螺旋切矢_攻破与修正候选_2026-10-30.md",
     "tool": os.path.basename(__file__),
     "total": n_pass + n_fail,
     "pass": n_pass,
