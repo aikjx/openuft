@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<title>r249 · 低能极限推导层</title><style>
+:root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+--line:#1f2b3f;--green:#4ade80;--red:#f87171;--amber:#fbbf24;--blue:#63d2ff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+.wrap{max-width:960px;margin:0 auto;}
+.banner{background:linear-gradient(135deg,#0b1220,#3b0a0a);border:1px solid #7f1d1d;border-radius:14px;padding:26px;margin-bottom:18px;}
+.badge{display:inline-block;background:#7f1d1d;color:#fecaca;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+.banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+.banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+.preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--red);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#fecaca;margin-bottom:20px;}
+.preview b{color:var(--red);}
+section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+h2 .n{color:var(--red);margin-right:6px;}
+p,li{font-size:13.5px;color:#cbd5e1;}
+table{border-collapse:collapse;margin:10px 0;font-size:12px;}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:#0d1730;color:#fca5a5;font-weight:700;}
+.eq{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--blue);border-radius:8px;padding:12px 16px;margin:12px 0;font-family:Consolas,monospace;font-size:12.5px;color:#dbeafe;white-space:pre-wrap;}
+.thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--green);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+.thm .lab{color:var(--green);font-weight:800;font-family:Consolas,monospace;}
+.bad{background:#1a0b0b;border:1px solid #7f1d1d;border-left:5px solid var(--red);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;color:#fecaca;}
+.warn{background:#1c1206;border:1px solid #78350f;border-left:5px solid var(--amber);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;color:#fde68a;}
+.PASS{color:#4ade80;font-weight:700;}.FAIL{color:#f87171;font-weight:700;}
+.foot{font-size:12px;color:var(--dim);text-align:center;padding:16px 0;}
+</style></head><body><div class="wrap">
+<div class="banner"><span class="badge">TUFT 审计链 · R249 · 低能极限推导层首卷</span>
+<h1>低能极限推导层：牛顿还原隐含普适质量与禁闭声称单调性反号</h1>
+<p>靶声称从单一主方程「自动推导」出牛顿引力、库仑定律、弱力短程与宇称破缺、强力禁闭与渐近自由。
+条目 26（PASS 12 / FAIL 14），守卫 5/5，退出码 0。</p></div>
+
+<div class="preview"><b>判词</b>：对靶有利 4 条照实记 PASS（泰勒展开首项正确；b=t&times;n 确为赝矢量；
+特征尺度 r_c=c/omega 的结构正确——取 omega=m_W c&sup2;/&#8463; 恰给出弱力力程 2.455e-18 m；
+靶第五步主动改用零标架）。★但「还原牛顿引力」要求 <b>m = &#8463;/(4&pi;c) = 2.7993e-44 kg 为普适常数</b>
+（对应约化康普顿波长恰为 4&pi; 米 = 12.566 m，与电子/质子差 13.5 / 16.8 个数量级）；
+否则几何量必须依赖检验物体 ⇒ <b>二难</b>。★★最锋利：靶方程 F &prop; 1/&radic;(1+x&sup2;) 对 r&gt;0
+<b>严格单调递减</b>，靶却声称强力「随距离增强」（禁闭）、「极近距离力减弱」（渐近自由）——
+<b>两条都与自己的方程反号</b>。修复定价 2&#8310;=64：SURVIVE 0 ⇒ 本线第 32 度。</div>
+
+<section><h2><span class="n">&sect;1</span>靶的五步推导（原文）</h2>
+<div class="eq">第一步  分母泰勒展开，(omega/c)r&lt;&lt;1 ⇒ F = (hbar c/4pi)(kappa n + tau b)
+第二步  引力：kappa = GM/(c^2 r^2)（靶式 61，e^{-lambda}=1），n 沿径向内 ⇒ 声称还原牛顿
+第三步  电磁：挠率与电荷几何关系，定义「几何电荷」⇒ 声称还原库仑
+第四步  高频短程 ⇒ 弱力短程 + 宇称破缺；强力禁闭 + 渐近自由
+第五步  四维协变：r → 时空间隔，标架 → 四维 Frenet「零标架」</div></section>
+
+<section><h2><span class="n">&sect;2</span>先证明对的部分（A 组）</h2>
+<div class="thm"><span class="lab">A3 · 特征尺度结构正确</span>
+<div>lambda_W = &#8463;/(m_W c) = <b>2.4554e-18 m</b>；反解 omega = c/lambda_W = 1.2209e26 rad/s；
+E = &#8463;&omega; = <b>80.377 GeV</b> = m_W（相对残差机读 &lt; 1e-3）。
+即：靶的「分母特征尺度 = c/omega」这一<b>结构</b>若配上正确赋值，确实给出正确的弱力力程。
+<span style="color:var(--amber)">但靶全篇从未给 omega 赋值（F2 判 FAIL：力程预言为空壳）。</span></div></div>
+<div class="thm"><span class="lab">A2 · 赝矢量归属正确</span>
+<div>b = t &times; n：两个极矢量的叉积确为赝矢量（轴矢量）。靶据此解释弱力宇称破缺，
+这一步的几何归属是对的——问题出在它与引力项被<b>放在同一个方程里相加</b>（见 E1）。</div></div>
+</section>
+
+<section><h2><span class="n">&sect;3</span>★ 牛顿还原：隐含的普适质量</h2>
+<div class="bad"><span class="lab">B1/B2/B3</span><div>
+F_g = (&#8463;c/4&pi;) &middot; GM/(c&sup2;r&sup2;) = &#8463;GM/(4&pi;c r&sup2;)，与牛顿 GMm/r&sup2; 逐项比对 &rArr;
+<b>m = &#8463;/(4&pi;c) = 2.7993e-44 kg，与物体无关</b>。<br>
+该质量的约化康普顿波长 &#8463;/(mc) = <b>12.566371 m = 4&pi; 米（精确）</b>。<br>
+与真实粒子：电子差 <b>13.51</b> 个数量级、质子差 <b>16.78</b> 个数量级。</div></div>
+<div class="bad"><span class="lab">B4 · 二难第二支</span><div>
+若坚持还原牛顿，则 &kappa; 必须含受力质量 m_test &rArr; <b>时空几何由「放什么检验物体」决定</b>，
+与靶「物质是几何投影」的因果方向相反。与 r243 的 &kappa; 读法二难同型，但发生在本靶的牛顿还原步骤上。</div></div>
+<div class="warn"><span class="lab">B5 · 定义恒等式刀</span>
+&rarr; &kappa;(r) = GM/(c&sup2;r&sup2;) 就是牛顿场强 g(r)/c&sup2; 的换名（r247 已判 Fraction 残差严格 0）
+&rArr; 把结论写进前提再「推导」出结论，零新增内容。</div>
+</section>
+
+<section><h2><span class="n">&sect;4</span>★★ 单调性：禁闭与渐近自由都与方程反号</h2>
+<table><thead><tr><th>x=(omega/c)r</th><th>F 形状因子</th><th>dF/dx</th><th>符号</th></tr></thead>
+<tbody><tr><td>0.0001</td><td>1.00000000</td><td>-1.000000e-04</td><td>负</td></tr><tr><td>0.01</td><td>0.99995000</td><td>-9.998500e-03</td><td>负</td></tr><tr><td>0.5</td><td>0.89442719</td><td>-3.577709e-01</td><td>负</td></tr><tr><td>1.0</td><td>0.70710678</td><td>-3.535534e-01</td><td>负</td></tr><tr><td>5.0</td><td>0.19611614</td><td>-3.771464e-02</td><td>负</td></tr><tr><td>100.0</td><td>0.00999950</td><td>-9.998500e-05</td><td>负</td></tr></tbody></table>
+<p>解析式 dF/dx = -x/(1+x&sup2;)^{3/2}，在 r &gt; 0 上<b>恒为负</b> &rArr; 力<b>永远随距离减小</b>。</p>
+<div class="bad"><span class="lab">D1 · 禁闭声称与方程冲突</span>
+<div>靶：强力「随距离增加不衰减反而增强」（禁闭）。方程：dF/dr &lt; 0 恒成立 &rArr; 不可能递增。</div></div>
+<div class="bad"><span class="lab">D2 · 渐近自由与方程反号</span>
+<div>靶：极近距离作用力减弱（渐近自由）。方程：F(0) = 1 为<b>最大值</b>，r&rarr;&infin; 才趋于 0
+&rArr; 恰好<b>反号</b>（渐近自由要求 r&rarr;0 时耦合&rarr;0）。</div></div>
+<div class="thm"><span class="lab">K1/K2/K3 · 控制组</span>
+<div>扫描器对真 Yukawa 给出 dlnF/dlnr = -3.0（递减）、对真禁闭势 +1.0（递增）&rArr; 符号相反，有分辨力；
+单圈 QCD 的 &alpha;_s(2 GeV)=0.3032 &gt; &alpha;_s(100 GeV)=0.1123 &rArr; 能识别真渐近自由；
+中心差分数值导数与解析式符号一致 &rArr; D1/D2 非恒红。</div></div>
+</section>
+
+<section><h2><span class="n">&sect;5</span>★ 宇称泄漏与参数预算</h2>
+<div class="bad"><span class="lab">E1 · 宇称破缺泄漏到引力</span>
+<div>P 变换：n &rarr; -n（极矢量），b &rarr; +b（赝矢量）&rArr; F &rarr; (&#8463;c/4&pi;)(-&kappa;n + &tau;b) &ne; &plusmn;F。
+靶声称引力来自 n（不破宇称）、弱力来自 b（破宇称），但<b>二者在同一个方程里相加</b> &rArr;
+引力分量必然继承宇称破缺，与引力不破宇称的实测冲突。</div></div>
+<div class="bad"><span class="lab">F1/F2 · 参数预算</span>
+<div>四种力程 &rArr; 四个不同的本征角频率：弱力 &omega;=1.2209e26 rad/s（80.38 GeV）、
+强力 &omega;=4.5595e23 rad/s（0.20 GeV）、引力与电磁需 &omega;&rarr;0。
+<b>至少两个有限频率必须外部输入</b>，与靶「无额外自由参数」冲突；且靶全篇<b>从未给 &omega; 赋值</b>。</div></div>
+</section>
+
+<section><h2><span class="n">&sect;6</span>条目表（分层并列，不跨层加总）</h2>
+<table><thead><tr><th>ID</th><th>层</th><th>结论</th><th>证据</th></tr></thead><tbody><tr><td>A1</td><td>对靶有利</td><td><span class='PASS'>PASS</span></td><td>x=1e-3：精确值 0.999999500000375，一阶展开 0.999999500000000，差 3.75e-13</td></tr><tr><td>A2</td><td>对靶有利</td><td><span class='PASS'>PASS</span></td><td>叉积几何：极矢量 × 极矢量 = 轴矢量（赝矢量）。t、n 均为极矢量 ⇒ b 为赝矢量。靶据此解释弱力宇称破缺，这一步的几何归属是对的</td></tr><tr><td>A3</td><td>对靶有利</td><td><span class='INFO'>INFO</span></td><td>机读：lambda_W = hbar/(m_W c) = 2.4550e-18 m；反解 omega = 1.2211e+26 rad/s；回代 E = hbar·omega = 80.377 GeV。★**残差 0 属恒等式回代**（omega 由 m_W 定义，再回代得 m_W），故记 INFO 不记 PASS：它只说明靶的「特征尺度 = c/omega」这一**结构**与 Yukawa 同构，**不构成数值预测**（靶全篇未给 omega 赋值，见 F2）</td></tr><tr><td>A4</td><td>对靶有利</td><td><span class='PASS'>PASS</span></td><td>靶原文：三维标架矢量升级为四维 Frenet 零标架。与 r248 A5 呼应 ⇒ 本卷据此把「前四步用普通 Frenet 标架」记为自认型地基问题，不作外部假定攻击</td></tr><tr><td>B1</td><td>牛顿还原层</td><td><span class='FAIL'>FAIL</span></td><td>机读：F_g = (hbar c/4pi)·GM/(c^2 r^2) = hbar·GM/(4 pi c r^2)；与牛顿 GMm/r^2 逐项比对 ⇒ m 必须恒等于 hbar/(4 pi c) = 2.7993e-44 kg，与物体无关</td></tr><tr><td>B2</td><td>牛顿还原层</td><td><span class='FAIL'>FAIL</span></td><td>hbar/(m c) = 12.566371 m = 4 pi m（精确）⇒ 「几何质量」蕴含一个 12.57 米的普适长度，无任何观测支持</td></tr><tr><td>B3</td><td>牛顿还原层</td><td><span class='FAIL'>FAIL</span></td><td>m_e/m_univ = 3.254e+13（13.51 数量级）；m_p/m_univ = 5.975e+16（16.78 数量级）</td></tr><tr><td>B4</td><td>牛顿还原层</td><td><span class='FAIL'>FAIL</span></td><td>两条路：①kappa = GM/(c^2 r^2)（靶式 61）⇒ m 普适为 2.80e-44 kg（荒谬）；②kappa ∝ m_test ⇒ 几何量依赖检验物体（因果倒置）。与 r243 的 kappa 读法二难同型，但发生在本靶的牛顿还原步骤上</td></tr><tr><td>B5</td><td>牛顿还原层</td><td><span class='FAIL'>FAIL</span></td><td>靶式(61) 的 kappa(r) 就是牛顿场强 g(r)/c^2 的换名（r247 已判 Fraction 残差严格 0）。把结论写进前提，再「推导」出结论 ⇒ 零新增内容</td></tr><tr><td>C1</td><td>库仑还原层</td><td><span class='FAIL'>FAIL</span></td><td>F_em = (hbar c/4pi)·tau·b。库仑 F = q1 q2/(4 pi eps0 r^2) 依赖**两个**电荷的乘积；靶式只有 tau 一个槽位 ⇒ 必须把 q1 q2 塞进 tau</td></tr><tr><td>C2</td><td>库仑还原层</td><td><span class='FAIL'>FAIL</span></td><td>tau 若由电荷决定，则撤去电荷即 tau=0；但靶称 tau 是时空的**本征**几何模态（不依赖物质存在）⇒ 几何本征性与电荷依赖性互斥</td></tr><tr><td>D1</td><td>单调性层</td><td><span class='FAIL'>FAIL</span></td><td>机读 dF/dx = -x/(1+x^2)^{3/2}：在 x=1e-4…1e2 全网格上符号恒为负（是）⇒ 方程给出的力**永远随距离减小**，不可能出现禁闭所需的 dF/dr > 0</td></tr><tr><td>D2</td><td>单调性层</td><td><span class='FAIL'>FAIL</span></td><td>F(0) = 1（形状因子最大值）；渐近自由要求 r→0 时耦合 → 0。靶方程给出的恰恰相反：r→0 力最大，r→∞ 力 → 0 ⇒ 与渐近自由**反号**</td></tr><tr><td>E1</td><td>宇称层</td><td><span class='FAIL'>FAIL</span></td><td>P 变换：n → -n（极矢量），b → +b（赝矢量）⇒ F → (hbar c/4pi)(-kappa n + tau b) ≠ ±F。靶声称「引力来自 n（不破宇称）、弱力来自 b（破宇称）」，但二者在**同一个方程里相加**，引力分量必然继承宇称破缺 ⇒ 与引力不破宇称的实测冲突</td></tr><tr><td>F1</td><td>参数层</td><td><span class='FAIL'>FAIL</span></td><td>实测力程：引力/电磁长程（omega→0）、弱力 2.455e-18 m（omega=1.221e+26 rad/s，对应 80.38 GeV）、强力 ~1e-15 m（omega=3.039e+23 rad/s，对应 0.20 GeV）⇒ 至少 2 个有限频率必须由外部输入</td></tr><tr><td>F2</td><td>参数层</td><td><span class='FAIL'>FAIL</span></td><td>全文中 omega 只以「低频/中频/高频」定性出现，从未赋值；⇒ 声称的「自动给出四力各自的力程」无法被复算</td></tr><tr><td>G1</td><td>标架地基层</td><td><span class='FAIL'>FAIL</span></td><td>靶自认（A4）后仍用 n、b 完成牛顿还原、库仑还原、禁闭与渐近自由的推导；若基础客体是类光曲线（靶自述），则 n、b 自始无定义 ⇒ 前四步全部结论悬空</td></tr><tr><td>K1</td><td>控制组</td><td><span class='PASS'>PASS</span></td><td>e^{-r/lam}/r^2 ⇒ -r/lam - 2 = -3.0；sigma·r ⇒ +1 ⇒ D1 非恒红</td></tr><tr><td>K2</td><td>控制组</td><td><span class='PASS'>PASS</span></td><td>单圈 QCD：Q↑ ⇒ alpha_s↓。靶方程给出 r→0（即 Q→∞）时力最大 ⇒ 与真渐近自由反号，D2 非恒红</td></tr><tr><td>K3</td><td>控制组</td><td><span class='PASS'>PASS</span></td><td>数值导数 -9.852e-02, -3.536e-01, -9.852e-03 与解析式 -x/(1+x^2)^{3/2} 符号一致 ⇒ D1 的单调性结论不是符号笔误</td></tr><tr><td>K4</td><td>控制组</td><td><span class='PASS'>PASS</span></td><td>三态互不相同 ⇒ E1 判「无确定宇称」是审计结果，不是恒红</td></tr><tr><td>H1</td><td>修复定价</td><td><span class='FAIL'>FAIL</span></td><td>修 Q1/Q2 ⇒ 新增质量或电荷因子（违反 N）；修 Q3/Q4 ⇒ 改动形状因子（违反 N）；修 Q5 ⇒ 拆分方程（违反 D）；修 Q6 ⇒ 换标架使 n、b 项崩（违反 D）</td></tr><tr><td>G-1</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>残差由 F(x) 与 1-x^2/2 相减得到 ⇒ 阈值判定来自计算</td></tr><tr><td>G-2</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>枚举 64 个 mask，逐组合判 SURVIVE/SUICIDE/EMPTY：0/63/1</td></tr><tr><td>G-3</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>E=hbar·omega=80.377 GeV vs m_W=80.377 GeV，相对残差 9.13e-10</td></tr><tr><td>G-4</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>K1/K2/K3 三条正/负对照全部由计算得出</td></tr><tr><td>G-5</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>落盘前后各 2 份靶文件逐一比对</td></tr></tbody></table>
+<h3>分层计数</h3>
+<table><thead><tr><th>层</th><th>PASS</th><th>FAIL</th><th>OPEN</th><th>INFO</th></tr></thead><tbody><tr><td>对靶有利</td><td>3</td><td>0</td><td>0</td><td>1</td></tr><tr><td>牛顿还原层</td><td>0</td><td>5</td><td>0</td><td>0</td></tr><tr><td>库仑还原层</td><td>0</td><td>2</td><td>0</td><td>0</td></tr><tr><td>单调性层</td><td>0</td><td>2</td><td>0</td><td>0</td></tr><tr><td>宇称层</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>参数层</td><td>0</td><td>2</td><td>0</td><td>0</td></tr><tr><td>标架地基层</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>控制组</td><td>4</td><td>0</td><td>0</td><td>0</td></tr><tr><td>修复定价</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>守卫</td><td>5</td><td>0</td><td>0</td><td>0</td></tr></tbody></table>
+</section>
+
+<section><h2><span class="n">&sect;7</span>修复定价与治理</h2>
+<div class="bad"><span class="lab">H1 · 2^6 = 64 组合</span>
+<div>SURVIVE <b>0</b> / SUICIDE 63 / EMPTY 1 &rArr; <b>本线第 32 度</b>。<br>
+修 Q1/Q2 &rArr; 新增质量或电荷因子（违反「无额外参数」）；修 Q3/Q4 &rArr; 改动形状因子（违反「无额外势函数」）；
+修 Q5 &rArr; 拆分方程（违反「单一方程」）；修 Q6 &rArr; 换零标架使 n、b 项崩（违反「同一方程」）。</div></div>
+<div class="warn"><b>性质界定</b>：本卷不判靶方向全错——「曲率+挠率几何化」与爱因斯坦–嘉唐引力同大类，
+A3 的结构正确说明靶抓住了一个真实关系。判的是：<b>把结论写进前提</b>（B5）、
+<b>单调性与自己的方程反号</b>（D1/D2）、<b>宇称破缺泄漏</b>（E1）、<b>参数预算不足</b>（F1/F2）。</div>
+</section>
+
+<div class="foot">TUFT-R249 · 低能极限推导层首卷 · 零虚构声明：
+所有 PASS/FAIL 由脚本机算得出，无一处写死 True。靶 2 份只读，落盘前后 sha256 一致。</div>
+</div></body></html>

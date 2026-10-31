@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<title>r248 · 单方程全域力层</title><style>
+:root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+--line:#1f2b3f;--green:#4ade80;--red:#f87171;--amber:#fbbf24;--blue:#63d2ff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.8;padding:26px 16px;}
+.wrap{max-width:960px;margin:0 auto;}
+.banner{background:linear-gradient(135deg,#0b1220,#3b0a0a);border:1px solid #7f1d1d;border-radius:14px;padding:26px;margin-bottom:18px;}
+.badge{display:inline-block;background:#7f1d1d;color:#fecaca;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:12px;font-weight:600;}
+.banner h1{font-size:22px;font-weight:900;letter-spacing:1px;}
+.banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+.preview{background:var(--panel2);border:1px solid #334155;border-left:5px solid var(--red);border-radius:10px;padding:14px 16px;font-size:13.5px;color:#fecaca;margin-bottom:20px;}
+.preview b{color:var(--red);}
+section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:18px;}
+h2{font-size:17px;font-weight:800;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+h2 .n{color:var(--red);margin-right:6px;}
+h3{font-size:14.5px;font-weight:700;color:#fca5a5;margin:14px 0 6px;}
+p,li{font-size:13.5px;color:#cbd5e1;}
+ul,ol{padding-left:22px;margin:8px 0;}li{margin:4px 0;}
+.eq{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--blue);border-radius:8px;padding:12px 16px;margin:12px 0;font-family:Consolas,"Courier New",monospace;font-size:12.5px;color:#dbeafe;white-space:pre-wrap;overflow-x:auto;}
+.thm{background:#0c1a2e;border:1px solid #1d4ed8;border-left:5px solid var(--green);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;}
+.thm .lab{color:var(--green);font-weight:800;font-family:Consolas,monospace;}
+.bad{background:#1a0b0b;border:1px solid #7f1d1d;border-left:5px solid var(--red);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;color:#fecaca;}
+.warn{background:#1c1206;border:1px solid #78350f;border-left:5px solid var(--amber);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:13.5px;color:#fde68a;}
+table{border-collapse:collapse;margin:10px 0;font-size:12px;}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:#0d1730;color:#fca5a5;font-weight:700;}
+.PASS{color:#4ade80;font-weight:700;}.FAIL{color:#f87171;font-weight:700;}
+.OPEN{color:#fbbf24;font-weight:700;}.INFO{color:#94a3b8;font-weight:700;}
+.foot{font-size:12px;color:var(--dim);text-align:center;padding:16px 0;}
+</style></head><body><div class="wrap">
+<div class="banner"><span class="badge">TUFT 审计链 · R248 · 单方程全域力层首卷</span>
+<h1>单方程全域力层：主方程量纲断裂与自旋条件虚数解</h1>
+<p>靶声称一个矢量方程统一四力并同时给出大小、距离依赖与方向。本卷先证明对的部分，再逐层精算。
+条目 30（PASS 14 / FAIL 14 / OPEN 1 / INFO 1），守卫 7/7，退出码 0。</p></div>
+
+<div class="preview"><b>判词</b>：对靶有利 5 条照实记 PASS（式(1) 对圆柱螺旋成立，数值微分对拍残差 8.322e-08；
+式(5) 量纲 [M] 正确；Frenet-Serret 书写正确；分母无量纲；靶主动自认类光标架风险）。
+★最硬的一击在自旋层：<b>实数域上 sqrt(1+x^2) &ge; 1 恒成立，故 S = hbar·sqrt(1+x^2) &ge; hbar，
+靶要的 hbar/2 被自己的公式排除</b>，(tau/kappa)^2 = -3/4 为纯虚数。
+★主方程右端量纲是能量不是力；★距离依赖两端（指数 0 与 -1）都不匹配任何一种已知力；
+★方程不含受力质量 &rArr; eta(Ti,Pt)=1.2119，超 MICROSCOPE 1.10e15 倍。
+修复定价 2^6=64：SURVIVE 0 / SUICIDE 30 / EMPTY 34 &rArr; 本线第 31 度。</div>
+
+<section><h2><span class="n">§1</span>靶的核心方程（原文，已还原）</h2>
+<div class="eq">(1)  omega^2 = c^2 (kappa^2 + tau^2)                        本源几何不变式
+(2)  nabla_t t = kappa n ; nabla_t n = -kappa t + tau b ; nabla_t b = -tau n
+(3)  F = (hbar c / 4 pi) * (kappa n + tau b) / sqrt(1 + (omega/c)^2 r^2)     全域力主方程
+(5)  m = (hbar/c) sqrt(kappa^2 + tau^2)                     质量几何式
+(12) S = hbar * sqrt(kappa^2+tau^2)/kappa ;  靶令 sqrt(kappa^2+tau^2)/kappa = 1/2
+(17) R_mn - (1/2) g_mn R + Lambda g_mn = (4 pi G m^2/(c^2 hbar)) u_m u_n
+(61) kappa(r) = (G M/(c^2 r^2)) e^{-lambda(r)} ; (62) tau(r) = (tau_0/r) e^{-lambda(r)}</div>
+<p>来料的 LaTeX 曾被批量破坏（所有 t 被替换为 \(\boldsymbol{t}\)），本卷无损还原后再审计；
+原文件只读未改。</p></section>
+
+<section><h2><span class="n">§2</span>先证明对的部分（A 组，照实记 PASS）</h2>
+<div class="thm"><span class="lab">A1 · 式(1) 对圆柱螺旋成立</span>
+<div>解析 kappa=a/(a^2+b^2)、tau=b/(a^2+b^2) 与中心差分数值微分对拍（各阶独立差分公式，步长在
+1e-1…1e-4 中按残差自适应，取 h=5e-04），<b>kappa 与 tau 的联合相对残差 8.322e-08</b>。这一条靶是对的。
+★恒等式两端残差 2.220e-16 恒为 0（c 与 kappa、tau 出自同一组 (a,b)，属恒等式回代），<b>不作 A1 依据</b>。</div></div>
+<div class="thm"><span class="lab">A2/A4 · 量纲正确的两项</span>
+<div>[hbar/c]·[L^-1] = <b>M</b>（质量），与式(5) 一致；[omega/c]·[r] 无量纲，故分母无量纲。
+<div class="warn" style="margin-top:8px"><b>但</b>：残差 0 / 量纲对属「结构自洽」，不等于实验预测。式(5) 是 E=mc^2 与 E=hbar·omega 的联立（定义恒等式），见 E3。</div></div></div>
+</section>
+
+<section><h2><span class="n">§3</span>★ 自旋层：hbar/2 被自己的公式排除</h2>
+<div class="bad"><span class="lab">D1/D2</span><div>
+靶：S = hbar·sqrt(kappa^2+tau^2)/kappa，令其 = 1/2（自旋 1/2）<br>
+&nbsp;&nbsp;&rArr; sqrt(1+(tau/kappa)^2) = 1/2 &nbsp;&rArr;&nbsp; (tau/kappa)^2 = 1/4 - 1 = <b>-3/4</b><br>
+<b>实数域无解</b>：tau/kappa 为纯虚数。更一般地，对任意实数 x，sqrt(1+x^2) &ge; 1，
+故 <b>S &ge; hbar 恒成立</b>，hbar/2 与 x 取何值无关地被排除。</div></div>
+<div class="thm"><span class="lab">D3 · 控制组（证明求解器有分辨力）</span>
+<div>同一求解器对 S=2·hbar 给出 (tau/kappa)^2 = 3 &rArr; tau/kappa = &plusmn;1.732051（<b>实数可解</b>）；
+对 S=hbar/2 给出 -3/4（无解）&rArr; D1/D2 不是恒红门禁。</div></div>
+</section>
+
+<section><h2><span class="n">§4</span>★ 量纲层与距离依赖层</h2>
+<div class="bad"><span class="lab">B1 · 主方程右端是能量，不是力</span>
+<div>[hbar·c]·[kappa] = <b>M L^2 T^-2</b>（能量 J）；力应为 <b>M L T^-2</b>（N）；<b>多一个长度 L</b>。
+负对照 B3：把 kappa 换成 kappa^2 即得 <b>M L T^-2</b> = 力 &rArr; 这是靶的真实缺陷，不是审计器恒红。</div></div>
+<div class="bad"><span class="lab">B2 · 场方程右端系数</span>
+<div>4 pi G m^2/(c^2 hbar) 量纲 = <b>L^-1 T</b>；左端 = <b>L^-2</b>。
+正对照：GR 的 (8 pi G/c^4) T_munu = <b>L^-2</b>，与左端一致。</div></div>
+<h3>距离依赖：唯一的 r 依赖来自分母</h3>
+<table><thead><tr><th>x=(omega/c)r</th><th>形状因子 1/sqrt(1+x^2)</th><th>局部指数 dlnF/dlnr</th></tr></thead>
+<tbody><tr><td>0.001</td><td>1.000000</td><td>-0.000001</td></tr><tr><td>0.01</td><td>0.999950</td><td>-0.000100</td></tr><tr><td>0.1</td><td>0.995037</td><td>-0.009901</td></tr><tr><td>1.0</td><td>0.707107</td><td>-0.500000</td></tr><tr><td>10.0</td><td>0.099504</td><td>-0.990099</td></tr><tr><td>100.0</td><td>0.010000</td><td>-0.999900</td></tr><tr><td>1000.0</td><td>0.001000</td><td>-0.999999</td></tr></tbody></table>
+<p>长程 &rarr; 指数 <b>0</b>（力趋于常数）；短程 &rarr; 指数 <b>-1</b>（F ~ 1/r）。
+四力实测：引力 -2、电磁 -2、弱力 Yukawa 指数衰减、强力禁闭 &rArr; <b>两端都不匹配任何一种已知力</b>。
+且靶自述「低频时分母近似常数 &rArr; 长程」与「引力随距离缓慢衰减」<b>直接冲突</b>（C3）。</p>
+</section>
+
+<section><h2><span class="n">§5</span>★ 主方程不含受力物体的质量</h2>
+<div class="bad"><span class="lab">E1/E2 · 弱等效原理</span>
+<div>F 只含源侧几何量（kappa, tau, omega, r），<b>无受力物体质量 m_test</b> &rArr; a = F/m 反比于受力质量。<br>
+Eötvös 参数 eta(Ti,Pt) = 2|m2-m1|/(m1+m2) = <b>1.2119</b>；MICROSCOPE 上限 &lt; 1.1e-15
+&rArr; 冲突 <b>1.10e15 倍</b>。<span style="color:var(--green)">该值与 r243 的独立实现完全一致（交叉验证通过）。</span></div></div>
+<h3>数值层：用靶自己的 kappa(r) 代入</h3>
+<table><thead><tr><th>检验质量</th><th>F_靶 / F_牛顿 = hbar/(4 pi c m)</th></tr></thead><tbody><tr><td>电子</td><td>3.0730e-14</td></tr><tr><td>质子</td><td>1.6736e-17</td></tr><tr><td>1 kg 检验质量</td><td>2.7993e-44</td></tr></tbody></table>
+<p>跨 <b>30.0 个数量级</b>，且比值随检验质量变化 &rArr; 靶方程描述的不是引力（引力应与受力质量成正比）。</p>
+</section>
+
+<section><h2><span class="n">§6</span>条目表（分层并列，不跨层加总）</h2>
+<table><thead><tr><th>ID</th><th>层</th><th>结论</th><th>证据</th></tr></thead><tbody><tr><td>A1</td><td>对靶有利</td><td><span class='PASS'>PASS</span></td><td>解析 kappa=2.044198895 / tau=1.160220994；中心差分数值微分（步长自适应，取 h=5e-04）得 kappa=2.044198980 / tau=1.160220898 ⇒ 联合相对残差 8.32e-08。★PASS 依据为**数值对拍残差**；恒等式两端残差 2.22e-16 恒为 0（c 与 kappa、tau 由同一组 (a,b) 定义，属恒等式回代），不作依据</td></tr><tr><td>A2</td><td>对靶有利</td><td><span class='PASS'>PASS</span></td><td>量纲机读：[hbar/c]·[L^-1] = M = [M]，与质量同量纲</td></tr><tr><td>A3</td><td>对靶有利</td><td><span class='PASS'>PASS</span></td><td>nabla_t t = kappa n；nabla_t n = -kappa t + tau b；nabla_t b = -tau n —— 与标准公式逐项一致</td></tr><tr><td>A4</td><td>对靶有利</td><td><span class='PASS'>PASS</span></td><td>[omega/c]=L^-1，乘 r 后无量纲，故分母无量纲 —— 这一项靶写对了</td></tr><tr><td>A5</td><td>对靶有利</td><td><span class='PASS'>PASS</span></td><td>靶原文：类光曲线（零矢量）没有标准 Frenet 正交标架，需改用零标架重构；直接套用是常见数学陷阱。本卷据此把它记为「自认型地基缺失」，不作外部假定攻击</td></tr><tr><td>B1</td><td>量纲层</td><td><span class='FAIL'>FAIL</span></td><td>机读：[hbar c]·[kappa] = M·L^2·T^-2；力应为 M·L·T^-2；差 L（多一个长度 L）</td></tr><tr><td>B2</td><td>量纲层</td><td><span class='FAIL'>FAIL</span></td><td>机读：右端系数 = L^-1·T，左端 = L^-2。正对照：GR 的 (8 pi G/c^4)T_munu = L^-2 与左端一致</td></tr><tr><td>B3</td><td>量纲层</td><td><span class='PASS'>PASS</span></td><td>修复版 (hbar c)·kappa^2 = M·L·T^-2 = 力 ⇒ B1 是靶的真实缺陷，不是审计器恒红</td></tr><tr><td>C1</td><td>距离依赖层</td><td><span class='FAIL'>FAIL</span></td><td>x=1e-3 时局部指数 -1.00e-06（≈0）；牛顿引力为 -2 ⇒ 偏差 2 个幂次</td></tr><tr><td>C2</td><td>距离依赖层</td><td><span class='FAIL'>FAIL</span></td><td>x=1e3 时局部指数 -1.0000（→-1）；靶声称压制短程力，但 1/r 既非 Yukawa 亦非禁闭</td></tr><tr><td>C3</td><td>距离依赖层</td><td><span class='FAIL'>FAIL</span></td><td>分母→常数即 F 与 r 无关（指数 0），与「随距离衰减」直接矛盾；唯一的 r 依赖只来自分母，衰减被靶自己的低频释义消掉</td></tr><tr><td>D1</td><td>自旋层</td><td><span class='FAIL'>FAIL</span></td><td>Fraction 精确推导：1+(tau/kappa)^2 = 1/4 ⇒ (tau/kappa)^2 = -3/4 < 0 ⇒ tau/kappa 为纯虚数。靶要的是自旋 1/2，得到的却是虚数挠率比</td></tr><tr><td>D2</td><td>自旋层</td><td><span class='FAIL'>FAIL</span></td><td>下界定理：实数域上 sqrt(1+x^2) 的最小值在 x=0 处为 1 ⇒ S_min = hbar。自旋 1/2（S=hbar/2）被该式本身排除，与 x 取何值无关</td></tr><tr><td>D3</td><td>自旋层</td><td><span class='PASS'>PASS</span></td><td>S=2hbar ⇒ (tau/kappa)^2=3 ⇒ ±1.732051（实数，可解）；S=hbar/2 ⇒ -3/4（无解）。⇒ 判据有分辨力，D1/D2 不是恒红</td></tr><tr><td>E1</td><td>质量/WEP 层</td><td><span class='FAIL'>FAIL</span></td><td>靶 F = (hbar c/4pi)(kappa n + tau b)/sqrt(...) 只含源侧几何量（kappa,tau,omega,r），无受力物体质量 ⇒ 同一引力场中不同物体加速度不同</td></tr><tr><td>E2</td><td>质量/WEP 层</td><td><span class='FAIL'>FAIL</span></td><td>a ∝ 1/m ⇒ eta = 2|a1-a2|/(a1+a2) = 2|m2-m1|/(m1+m2) = 1.2119，实测上限 1.1e-15 ⇒ 冲突 1.10e+15 倍</td></tr><tr><td>E3</td><td>质量/WEP 层</td><td><span class='INFO'>INFO</span></td><td>靶的推导链：mc^2 = hbar omega，再代入式(1) omega=c·sqrt(kappa^2+tau^2) ⇒ m=(hbar/c)sqrt(...)。两步都是既有恒等式的代入，残差恒 0 ⇒ 相符是规定不是推导（配正对照：见 G1）</td></tr><tr><td>F1</td><td>地基层</td><td><span class='FAIL'>FAIL</span></td><td>靶自述基础客体是类光螺旋世界线，又在风险提示中自认类光零矢量没有 Frenet 正交标架；式(3) 的 kappa·n + tau·b 中的 n、b 因此无定义 ⇒ 主方程右端整体无定义</td></tr><tr><td>F2</td><td>地基层</td><td><span class='OPEN'>OPEN</span></td><td>与 r247 D1 同型：正确判法是「修法已提出但未被行使」，靶自己写「但需重推 n…」故记 OPEN 不记 FAIL</td></tr><tr><td>G1</td><td>公设层</td><td><span class='FAIL'>FAIL</span></td><td>Lancret 定理：曲线为广义螺旋 ⟺ kappa/tau = 常数。式(1) 在圆柱螺旋下是恒等式（A1 已证），但靶把它升格为全域公理；对 kappa/tau 非常数的一般 Frenet 曲线不存在单一 omega ⇒ 特例冒充普适</td></tr><tr><td>G2</td><td>公设层</td><td><span class='FAIL'>FAIL</span></td><td>若 Lambda 由 tau_Lambda 导出，则左端 Lambda 不再是自由项；靶只写 ∝ 未给系数 ⇒ 无量纲自由参数缺失（承 r168：有量纲自由参数 = 非定律），且构成双重计数</td></tr><tr><td>H1</td><td>数值层</td><td><span class='FAIL'>FAIL</span></td><td>比值随检验质量变化 ⇒ 靶方程描述的不是引力（引力应与受力质量成正比）。这正是 E1 的数值显形：方程缺 m_test</td></tr><tr><td>I1</td><td>修复定价</td><td><span class='FAIL'>FAIL</span></td><td>修 P2/P3/P6 均违反靶的「无人工参数」宣称；修 P5 使原方程形式崩塌；P4 在实数域无解 ⇒ 无存续路径</td></tr><tr><td>G-1</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>残差 8.322e-08 = max(|kappa_数值-kappa_解析|/kappa_解析, |tau_数值-tau_解析|/|tau_解析|)，kappa/tau 由中心差分**逐阶独立**公式算出（一阶中心差 / 二阶三点 / 三阶五点），步长在 1e-1…1e-4 中自适应取最优 h=5e-04；恒等式残差 2.22e-16 不用作 A1 依据（属恒等式回代）</td></tr><tr><td>G-2</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>枚举 64 个 mask，逐组合按规则判定；SURVIVE 0 / SUICIDE 30 / EMPTY 34</td></tr><tr><td>G-3</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>sha256：基于光速螺旋流形的核心动力学方程组.md=debde8aa6a3d01e2…；修改攻破.md=e9d034e4f7294e73…</td></tr><tr><td>G-4</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>机读结果 L^-2 == L^-2 ⇒ 审计器不是恒红</td></tr><tr><td>G-5</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>S=2hbar ⇒ (tau/kappa)^2=3 ⇒ 1.732051；S=hbar/2 ⇒ -3/4 ⇒ 无解</td></tr><tr><td>G-6</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>落盘前 debde8aa6a3d, e9d034e4f729 与落盘后 debde8aa6a3d, e9d034e4f729 逐一比对 ⇒ 一致（靶未被改动）</td></tr><tr><td>G-7</td><td>守卫</td><td><span class='PASS'>PASS</span></td><td>★本卷自抓：初版用一阶差分公式去取二阶/三阶导数 ⇒ r1 与 r2 近似平行、|r1×r2|~1e-10、kappa 崩为 5e-9（残差 100%），而 verdict 却按恒等式残差判 PASS ⇒ **对靶有利方向的假 PASS**。修正为各阶独立差分公式后：kappa 残差 4.15e-08、tau 残差 8.32e-08 ⇒ 标定通过</td></tr></tbody></table>
+<h3>分层计数</h3>
+<table><thead><tr><th>层</th><th>PASS</th><th>FAIL</th><th>OPEN</th><th>INFO</th></tr></thead><tbody><tr><td>对靶有利</td><td>5</td><td>0</td><td>0</td><td>0</td></tr><tr><td>量纲层</td><td>1</td><td>2</td><td>0</td><td>0</td></tr><tr><td>距离依赖层</td><td>0</td><td>3</td><td>0</td><td>0</td></tr><tr><td>自旋层</td><td>1</td><td>2</td><td>0</td><td>0</td></tr><tr><td>质量/WEP 层</td><td>0</td><td>2</td><td>0</td><td>1</td></tr><tr><td>地基层</td><td>0</td><td>1</td><td>1</td><td>0</td></tr><tr><td>公设层</td><td>0</td><td>2</td><td>0</td><td>0</td></tr><tr><td>数值层</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>修复定价</td><td>0</td><td>1</td><td>0</td><td>0</td></tr><tr><td>守卫</td><td>7</td><td>0</td><td>0</td><td>0</td></tr></tbody></table>
+</section>
+
+<section><h2><span class="n">§7</span>修复定价与治理</h2>
+<div class="bad"><span class="lab">I1 · 2^6 = 64 组合</span>
+<div>SURVIVE <b>0</b> / SUICIDE <b>30</b> / EMPTY <b>34</b> &rArr; <b>本线第 31 度</b>。<br>
+修 P2/P3/P6 均违反靶的「无人工参数」宣称；修 P5（null frame）使原方程形式 (kappa n + tau b) 崩塌；
+P4（自旋 hbar/2）在实数域无解 &rArr; 无存续路径。</div></div>
+<div class="thm"><span class="lab">守卫 7/7 · 控制组 3 类</span>
+<div>守卫：残差阈值非写死 / 定价真枚举 / 靶只读 sha256 / GR 量纲正对照 / 求解器可解 / 末尾 hash 复验。<br>
+控制组：正对照（B2-GR、B3-kappa^2、D3-S=2hbar）、负对照（A1 解析 vs 数值）、分辨力（C1/C2 指数扫描、H1 比值随质量变）。</div></div>
+<div class="warn"><b>性质界定</b>：本卷<b>不判靶方向全错</b>——「曲率+挠率几何化」与爱因斯坦–嘉唐引力属同一大类，
+式(1)、式(5) 在其适用域内正确。判的是：特例恒等式被升格为全域公理（G1）、能量被当力写（B1）、
+结构上不可能推出 hbar/2（D1/D2）。F2（null frame 修法未行使）记 OPEN 不记 FAIL。</div>
+</section>
+
+<div class="foot">TUFT-R248 · 单方程全域力层首卷 · 零虚构声明：
+所有 PASS/FAIL 由脚本机算或量纲代数得出，无一处写死 True。靶 2 份只读，落盘前后 sha256 一致。</div>
+</div></body></html>
