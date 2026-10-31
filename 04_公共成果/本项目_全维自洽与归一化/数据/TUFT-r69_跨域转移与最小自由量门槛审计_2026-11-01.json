@@ -1,0 +1,160 @@
+{
+  "audit": "TUFT-r69",
+  "subject": "跨域转移与最小自由量门槛审计（正面回答 r68 X-R68-2）",
+  "verdict": "THRESHOLD_N_MATCHED_GE_N_FREE_PLUS_ONE_FRAMEWORK_SHORT_BY_ONE_OBSERVABLE",
+  "criteria": {
+    "transfer": "预言的量 O 不在定参集合 M 中（O ∉ M）；否则循环",
+    "over_determination": "surplus = n_matched − n_free；真预测要求 n_matched ≥ n_free + 1",
+    "note": "门槛不是自由量的绝对个数，而是数据对自由量的超定程度"
+  },
+  "relations": [
+    {
+      "关系": "α_KK = 4(ℓ_P/R)^2",
+      "层": "KK(r66)",
+      "n_free": 1,
+      "定参集合M": [
+        "α(实测)"
+      ],
+      "输出O": [
+        "α"
+      ],
+      "n_matched": 1,
+      "transfer": false,
+      "输出类型": "连续",
+      "备注": "α 用于反解 R ⇒ O ∈ M ⇒ 循环，残差再小也不算预测",
+      "surplus": 0,
+      "surplus_effective": 0,
+      "circular": true,
+      "threshold": 2,
+      "passes_threshold": false
+    },
+    {
+      "关系": "m_KK = ℏ/(Rc)",
+      "层": "KK(r66)",
+      "n_free": 1,
+      "定参集合M": [
+        "α(实测)"
+      ],
+      "输出O": [
+        "m_KK"
+      ],
+      "n_matched": 0,
+      "transfer": true,
+      "输出类型": "连续",
+      "备注": "★真跨域转移：用 α 定 R 去预言质量；但被否证 1.02e21（可证伪·加分）",
+      "surplus": -1,
+      "surplus_effective": -1,
+      "circular": false,
+      "threshold": 2,
+      "passes_threshold": false
+    },
+    {
+      "关系": "κ(m) 质量—曲率",
+      "层": "螺旋(r45)",
+      "n_free": 1,
+      "定参集合M": [
+        "κ 尺度/l0"
+      ],
+      "输出O": [
+        "m"
+      ],
+      "n_matched": 0,
+      "transfer": true,
+      "输出类型": "连续",
+      "备注": "V(κ)≡0 ⇒ 无粒子；转移尝试失败",
+      "surplus": -1,
+      "surplus_effective": -1,
+      "circular": false,
+      "threshold": 2,
+      "passes_threshold": false
+    },
+    {
+      "关系": "G = c^3/[ℏ(κ^2+τ^2)]",
+      "层": "螺旋(247/r62)",
+      "n_free": 1,
+      "定参集合M": [
+        "G(实测)"
+      ],
+      "输出O": [
+        "G"
+      ],
+      "n_matched": 1,
+      "transfer": false,
+      "输出类型": "连续",
+      "备注": "G 在输入侧 ⇒ O ∈ M ⇒ 循环",
+      "surplus": 0,
+      "surplus_effective": 0,
+      "circular": true,
+      "threshold": 2,
+      "passes_threshold": false
+    },
+    {
+      "关系": "电荷量子化 n∈ℤ",
+      "层": "KK(r66)",
+      "n_free": 0,
+      "定参集合M": [],
+      "输出O": [
+        "n∈ℤ"
+      ],
+      "n_matched": 1,
+      "transfer": true,
+      "输出类型": "离散",
+      "备注": "★★框架唯一 0 自由量真结果；但输出为离散整数，非连续常数",
+      "surplus": 1,
+      "surplus_effective": 1,
+      "circular": false,
+      "threshold": 1,
+      "passes_threshold": true
+    },
+    {
+      "关系": "★ GR 水星进动 42.98″/世纪",
+      "层": "GR(正对照)",
+      "n_free": 0,
+      "定参集合M": [
+        "G",
+        "M☉",
+        "a",
+        "e"
+      ],
+      "输出O": [
+        "42.98″"
+      ],
+      "n_matched": 1,
+      "transfer": true,
+      "输出类型": "连续",
+      "备注": "★★n_matched(1) ≥ n_free(0)+1 且 O∉M ⇒ 通过门槛，真预测",
+      "surplus": 1,
+      "surplus_effective": 1,
+      "circular": false,
+      "threshold": 1,
+      "passes_threshold": true
+    }
+  ],
+  "framework_pass_all": [
+    "电荷量子化 n∈ℤ"
+  ],
+  "framework_pass_continuous": [],
+  "framework_pass_discrete": [
+    "电荷量子化 n∈ℤ"
+  ],
+  "kk_analysis": {
+    "n_free": 1,
+    "threshold_n_free_plus_1": 2,
+    "n_matched": 1,
+    "shortfall": 1,
+    "attempted_second_observable": "m_KK（电子质量）",
+    "discrepancy": 1.0204911e+21
+  },
+  "gr_control": {
+    "passes_threshold": true,
+    "n_free": 0,
+    "n_matched": 1,
+    "surplus": 1
+  },
+  "gates": {
+    "F4": "『残差极小』被误当作『预测成立』：循环关系(O∈M)的残差恒为 0，却不含任何预测内容 ⇒ 范畴错置：拟合残差 ≠ 预测盈余 → F4 触发",
+    "E9": "跨域转移要求定参测量与预言可观测量处于不同物理域；本框架定参与预言同域(α→α、G→G) 或跨域失败(α→m 差 1.02e21) ⇒ E9 对『跨域预测』FAIL",
+    "Ω5": "门槛判据 n_matched ≥ n_free+1：本框架 n_free=1 而 n_matched=1 ⇒ 未超定；欲达标须再吻合 1 个独立可观测量，而非再增自由量 ⇒ Ω5 指向『缺口在观测，不在参数』"
+  },
+  "conclusion": "★ 门槛判据：真预测要求 **n_matched ≥ n_free + 1**（数据超定自由量），且预言量 O ∉ 定参集合 M。本框架：连续型通过门槛者 **0 项**；唯一通过门槛的是**离散**的电荷量子化(n∈ℤ，0 自由量)。KK 模型 n_free=1 ⇒ 门槛=2 个独立吻合可观测量，实得 1 个(α，且循环) ⇒ **差整整 1 个可观测量**；它唯一尝试的第二个可观测量 m_KK 与电子质量差 1.020e+21 倍（真跨域转移，故可证伪·加分，但被否证）。正对照 GR 水星进动：n_free=0、n_matched=1 ⇒ 1 ≥ 0+1 且 O∉M ⇒ **通过门槛**。⇒ 结论：缺口在**观测侧**（还差 1 个独立吻合量），而非参数侧（再加自由量只会更糟）。"
+}

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>290 · ROOT V12.0 高维几何→电磁耦合 · 第一性原理审计</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei",system-ui,sans-serif;
+       line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#0f2b33);border:1px solid #0e7490;
+          border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#0c4a6e;color:#bae6fd;font-size:11px;
+         padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);
+        background:var(--panel2);color:#bae6fd;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0a1a26;border:2px solid var(--gold);border-radius:12px;
+               padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:18px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;word-break:break-all;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;
+     border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0a1424;border:1px solid var(--line);border-radius:8px;
+         display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#bae6fd;background:#0a1424;
+        border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:8px;
+        white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;
+        word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .warn{color:var(--orange);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+  .card{background:#0a1424;border:1px solid var(--line);border-radius:8px;
+        padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card .v{font-family:Consolas,monospace;font-size:15px;color:#fff;display:block;margin-top:3px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r290 · ROOT V12.0 高维几何→电磁耦合 · 零外部依赖</span>
+  <h1>从空间几何推导电磁耦合：第一性原理审计</h1>
+  <p>ROOT V12.0 走 Kaluza–Klein 路线：高维几何 → 电磁规范场 → 电荷量子化 → 精细结构常数。
+     本卷逐条机检：① θ→θ+χ 诱导 B→B−∂χ 的三条检验；② 五维 Ricci 分解系数 −R²/4 的独立
+     5D 曲率复算（含纯规范对照）；③ α_KK=4(ℓ_P/R)² 与 R=2ℓ_P/√α 反解；
+     ④ 第一带电模态 m=ħc/R 与电子质量；⑤ 模数、幂律与势的来源；⑥ 稳定势极小；
+     ⑦ radion 一致性；⑧ 精度地板与「10000 组残差」的判别力。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判决</h2>
+  <div id="verdictText" style="font-family:Consolas,monospace;font-size:11.5px;color:#f1d18a;word-break:break-all;margin-top:8px;"></div>
+  <p id="judgement"></p>
+</div>
+
+<section>
+  <h3><span class="n">01</span>α_KK(R)=4(ℓ_P/R)²：曲线对任意 R 都给一个 α</h3>
+  <canvas id="c1" height="330"></canvas>
+  <div class="read" id="r1"></div>
+  <p class="note">实线是模型的条件性耦合公式，虚线是实测 α；交点是**用 α 反解**出来的半径
+     （23.412475 ℓ_P），不是模型自动选定的。曲线在 R∈[1,10³] 上连续覆盖 α 的 6 个量级
+     ⇒ 「结构→耦合」成立，但「结构→唯一耦合」不成立。</p>
+</section>
+
+<section>
+  <h3><span class="n">02</span>第一带电模态 m₁=ħc/R 与电子质量（log₁₀ 纵轴）</h3>
+  <canvas id="c2" height="300"></canvas>
+  <div class="read" id="r2"></div>
+  <p class="note">KK 塔的最轻带电态在 5.2×10¹⁷ GeV，电子（log₁₀=0）与它隔 21 个数量级
+     ⇒ 「第五维动量同时解释电荷与质量」被一次性否证；强制 m₁=m_e 反解 α 得 7×10⁻⁴⁵。</p>
+</section>
+
+<section>
+  <h3><span class="n">03</span>曲率分解系数 −R²/4 的独立数值验证（h→0 收敛）</h3>
+  <canvas id="c3" height="300"></canvas>
+  <div class="read" id="r3"></div>
+  <p class="note">用 5D 有限差分曲率独立计算 R₅，与 −R²/4·F² 的预测比：R=1、R=2 两档都收敛到 1
+     （误差按 h² 下降约 4 倍）。纯规范（A=Λ′(x)，F≡0）与平直圆给精确 0 —— 代码不会把坐标
+     假象当曲率。若系数是 ¾ 而非 ¼，同一读数会给出 1/3。</p>
+</section>
+
+<section>
+  <h3><span class="n">04</span>稳定势 V=Ax²+B/x²：极小点恒等于反解半径</h3>
+  <canvas id="c4" height="300"></canvas>
+  <div class="read" id="r4"></div>
+  <p class="note">x*=(B/A)¹ᐟ⁴=23.4125 与 2/√α 逐位相同（相对差机器零），A/B=α²/16
+     ⇒ 「极值选择机制」是反解半径的改名，2 系数减 1 整体标度冗余 = 1 有效比 ↔ 1 观测量 ⇒ dof=0。</p>
+</section>
+
+<section>
+  <h3><span class="n">05</span>关键读数</h3>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section>
+  <h3><span class="n">06</span>V12 八项声称对表（本卷独立复算）</h3>
+  <div id="claimTable"></div>
+  <p class="note">V1–V3 的数学确实成立（本卷给出独立机检）；V4 的 80 位残差是恒等式记账；
+     V5/V6/V8 是 V12 自己承认的失败；V7 数学成立但作为选择机制失败。</p>
+</section>
+
+<section>
+  <h3><span class="n">07</span>守卫与控制组</h3>
+  <div id="guardTable"></div>
+  <div id="ctrlTable"></div>
+</section>
+
+<section>
+  <h3><span class="n">08</span>条目</h3>
+  <div id="entryTable"></div>
+  <p class="note">本卷条目不可与 r142–r287 相加（跨卷条目不可相加，铁律）。</p>
+</section>
+
+<div class="foot">
+  TUFT-r290 · 2026-10-31 · float64 5D 有限差分曲率 + 代数量纲 · 零外部 URL · 数字由引擎 JSON 单源铸入<br>
+  审计层：模型内数学成立 ≠ 对自然界 α 的第一性原理预言；本卷不新增物理。
+</div>
+
+</div>
+<script>
+const DATA = __R290_JSON__;
+
+function fmt(x, d){ return Number(x).toFixed(d === undefined ? 3 : d); }
+function sci(x, d){ return Number(x).toExponential(d === undefined ? 2 : d); }
+
+function setupCanvas(cv, cssH){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth || 900;
+  cv.width = w * dpr; cv.height = cssH * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx:ctx, w:w, h:cssH};
+}
+
+function drawFrame(ctx, w, h, pad, o){
+  const logx = !!o.logx, logy = !!o.logy;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0a1424'; ctx.fillRect(0,0,w,h);
+  const pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
+  const xmap = x => {
+    if(logx){ return pad.l + pw*(Math.log10(x)-Math.log10(o.xmin))/(Math.log10(o.xmax)-Math.log10(o.xmin)); }
+    return pad.l + pw*(x-o.xmin)/(o.xmax-o.xmin);
+  };
+  const ymap = y => {
+    if(logy){ return pad.t + ph*(Math.log10(o.ymax)-Math.log10(y))/(Math.log10(o.ymax)-Math.log10(o.ymin)); }
+    return pad.t + ph*(o.ymax-y)/(o.ymax-o.ymin);
+  };
+  ctx.strokeStyle = '#1f2b3f'; ctx.lineWidth = 1;
+  for(let i=0;i<=5;i++){
+    const y = pad.t + ph*i/5;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+pw, y); ctx.stroke();
+    let yv;
+    if(logy){ yv = Math.pow(10, Math.log10(o.ymax)-(Math.log10(o.ymax)-Math.log10(o.ymin))*i/5); }
+    else { yv = o.ymax - (o.ymax-o.ymin)*i/5; }
+    ctx.fillStyle = '#94a3b8'; ctx.font = '11px Consolas,monospace'; ctx.textAlign = 'right';
+    ctx.fillText(showNum(yv, o), pad.l-8, y+4);
+  }
+  for(let i=0;i<=6;i++){
+    let xt;
+    if(logx){ xt = Math.pow(10, Math.log10(o.xmin)+(Math.log10(o.xmax)-Math.log10(o.xmin))*i/6); }
+    else { xt = o.xmin + (o.xmax-o.xmin)*i/6; }
+    const x = xmap(xt);
+    ctx.strokeStyle = '#1f2b3f'; ctx.beginPath();
+    ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t+ph); ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.textAlign='center';
+    ctx.fillText(showNum(xt, o), x, h-pad.b+16);
+  }
+  ctx.fillStyle = '#cbd5e1'; ctx.font = '12px "Microsoft YaHei"';
+  ctx.textAlign = 'center'; ctx.fillText(o.xlab, pad.l+pw/2, h-6);
+  ctx.save(); ctx.translate(14, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(o.ylab, 0, 0); ctx.restore();
+  return {pw:pw, ph:ph, xmap:xmap, ymap:ymap};
+}
+
+function showNum(v, o){
+  if(!isFinite(v)) return '';
+  const a = Math.abs(v);
+  if(a !== 0 && (a < 1e-3 || a >= 1e5)) return v.toExponential(1);
+  if(a >= 100) return v.toFixed(0);
+  if(a >= 1) return v.toFixed(1);
+  return v.toFixed(3);
+}
+
+function polyline(ctx, pts, m, color, width){
+  ctx.strokeStyle = color; ctx.lineWidth = width || 2.2; ctx.beginPath();
+  let first = true;
+  for(const p of pts){
+    if(!isFinite(p[1]) || p[1] <= 0) continue;
+    const x = m.xmap(p[0]), y = m.ymap(p[1]);
+    if(first){ ctx.moveTo(x,y); first=false; } else { ctx.lineTo(x,y); }
+  }
+  ctx.stroke();
+}
+
+function hline(ctx, m, y, xa, xb, color, dash){
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 1.2; ctx.setLineDash(dash || []);
+  ctx.beginPath(); ctx.moveTo(m.xmap(xa), m.ymap(y)); ctx.lineTo(m.xmap(xb), m.ymap(y));
+  ctx.stroke(); ctx.restore();
+}
+
+function vline(ctx, m, x, ya, yb, color, dash){
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 1.2; ctx.setLineDash(dash || []);
+  ctx.beginPath(); ctx.moveTo(m.xmap(x), m.ymap(ya)); ctx.lineTo(m.xmap(x), m.ymap(yb));
+  ctx.stroke(); ctx.restore();
+}
+
+function dot(ctx, m, x, y, color, r){
+  ctx.fillStyle = color; ctx.beginPath();
+  ctx.arc(m.xmap(x), m.ymap(y), r || 4.5, 0, Math.PI*2); ctx.fill();
+}
+
+function legend(ctx, pad, items){
+  let x = pad.l + 10, y = pad.t + 14;
+  ctx.font = '11.5px Consolas,monospace'; ctx.textAlign = 'left';
+  for(const it of items){
+    ctx.fillStyle = it[1]; ctx.fillRect(x, y-8, 14, 3);
+    ctx.fillStyle = '#cbd5e1'; ctx.fillText(it[0], x+20, y);
+    x += 200;
+  }
+}
+
+function plotAlpha(){
+  const cv = document.getElementById('c1');
+  const s = setupCanvas(cv, 330);
+  const pad = {l:70,r:20,t:30,b:42};
+  const rd = DATA.readings;
+  const m = drawFrame(s.ctx, s.w, s.h, pad,
+    {xmin:1, xmax:1000, ymin:1e-6, ymax:10, logx:true, logy:true,
+     xlab:'R / ℓ_P', ylab:'α_KK = 4(ℓ_P/R)²'});
+  const pts = [];
+  for(let i=0;i<=300;i++){
+    const x = Math.pow(10, 6*i/300.0);
+    pts.push([x, 4.0/(x*x)]);
+  }
+  polyline(s.ctx, pts, m, '#63d2ff', 2.4);
+  hline(s.ctx, m, DATA.readings.params.alpha, 1, 1000, '#d4a94e', [6,4]);
+  dot(s.ctx, m, rd.s3.ratio, DATA.readings.params.alpha, '#f7768e', 5);
+  legend(s.ctx, pad, [['α_KK(R) 连续族','#63d2ff'], ['实测 α','#d4a94e'], ['反解交点','#f7768e']]);
+  document.getElementById('r1').textContent =
+    'α = ' + sci(DATA.readings.params.alpha, 6) + '，反解 R = ' + rd.s3.ratio.toFixed(6) +
+    ' ℓ_P = ' + sci(rd.s3.R_m, 6) + ' m\n' +
+    '交点唯一的理由是「我们要求它命中 α」；曲线本身对 R∈[1,10³] 给出 α∈[4×10⁻⁶, 4]';
+}
+
+function plotMass(){
+  const cv = document.getElementById('c2');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:70,r:24,t:30,b:42};
+  const m = drawFrame(s.ctx, s.w, s.h, pad,
+    {xmin:0.4, xmax:4.6, ymin:1, ymax:1e23, logy:true,
+     xlab:'状态（1–3 = KK 塔；e = 电子）', ylab:'质量 / m_e（log₁₀）'});
+  const vals = [DATA.readings.s4.tower[0].m/DATA.readings.params.me_GeV,
+                DATA.readings.s4.tower[1].m/DATA.readings.params.me_GeV,
+                DATA.readings.s4.tower[2].m/DATA.readings.params.me_GeV, 1.0];
+  const cols = ['#f87171','#f87171','#f87171','#4ade80'];
+  for(let i=0;i<4;i++){
+    const x0 = m.xmap(0.72+i), x1 = m.xmap(1.28+i);
+    const y0 = m.ymap(1.0), y1 = m.ymap(vals[i]);
+    s.ctx.fillStyle = cols[i];
+    s.ctx.globalAlpha = 0.85;
+    s.ctx.fillRect(x0, Math.min(y0,y1), x1-x0, Math.abs(y0-y1));
+    s.ctx.globalAlpha = 1.0;
+    s.ctx.fillStyle = '#e2e8f0'; s.ctx.font = '11px Consolas,monospace'; s.ctx.textAlign = 'center';
+    s.ctx.fillText('10^' + Math.log10(vals[i]).toFixed(1), (x0+x1)/2, Math.min(y0,y1)-6);
+  }
+  document.getElementById('r2').textContent =
+    'm₁ = ' + sci(DATA.readings.s4.m1, 6) + ' GeV；m₁/m_e = ' + sci(DATA.readings.s4.ratio_e, 4) + '\n' +
+    '强制 m₁=m_e ⇒ α_pred = 4(m_e/m_P)² = ' + sci(DATA.readings.s4.a_pred, 4) +
+    '（真实 α 的 1/' + sci(DATA.readings.s4.a_over, 2) + '）';
+}
+
+function plotCurv(){
+  const cv = document.getElementById('c3');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:70,r:20,t:30,b:42};
+  const rd = DATA.readings.s2;
+  const m = drawFrame(s.ctx, s.w, s.h, pad,
+    {xmin:1e-3, xmax:4.5e-3, ymin:0.28, ymax:1.10, logx:true,
+     xlab:'差分步长 h（左 = 更细）', ylab:'R₅ 实测 / (−R²/4·F²) 预测'});
+  const xs = rd.hs.map(h=>h);
+  polyline(s.ctx, xs.map((h,i)=>[h, rd.rows[0].ratios[i]]), m, '#63d2ff', 2.2);
+  polyline(s.ctx, xs.map((h,i)=>[h, rd.rows[1].ratios[i]]), m, '#bb9af7', 2.2);
+  for(const h of xs){
+    dot(s.ctx, m, h, rd.rows[0].ratios[xs.indexOf(h)], '#63d2ff', 3.5);
+    dot(s.ctx, m, h, rd.rows[1].ratios[xs.indexOf(h)], '#bb9af7', 3.5);
+  }
+  hline(s.ctx, m, 1.0, 1e-3, 4.5e-3, '#4ade80', [6,4]);
+  hline(s.ctx, m, 1/3, 1e-3, 4.5e-3, '#f87171', [6,4]);
+  legend(s.ctx, pad, [['R=1','#63d2ff'], ['R=2','#bb9af7'], ['正确 ¼','#4ade80'], ['若为 ¾','#f87171']]);
+  document.getElementById('r3').textContent =
+    'R=1: ' + rd.rows[0].ratios.map(x=>x.toFixed(6)).join(' / ') + '\n' +
+    'R=2: ' + rd.rows[1].ratios.map(x=>x.toFixed(6)).join(' / ') + '\n' +
+    '纯规范 R₅=' + sci(rd.gauge, 2) + '；平直圆 R₅=' + sci(rd.flat, 2) +
+    '；错误系数对照=' + rd.alt_ratio.toFixed(4);
+}
+
+function plotPot(){
+  const cv = document.getElementById('c4');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:70,r:20,t:30,b:42};
+  const rd = DATA.readings.s6;
+  const m = drawFrame(s.ctx, s.w, s.h, pad,
+    {xmin:5, xmax:60, ymin:0, ymax:12,
+     xlab:'x = R / ℓ_P', ylab:'V(x) / V_min（归一）'});
+  polyline(s.ctx, rd.grid_x.map((x,i)=>[x, rd.v_norm[i]]), m, '#e0af68', 2.4);
+  vline(s.ctx, m, rd.xstar, 0, 12, '#f7768e', [6,4]);
+  dot(s.ctx, m, rd.xstar, 1.0, '#f7768e', 5);
+  legend(s.ctx, pad, [['V(x) 归一','#e0af68'], ['x*≡2/√α','#f7768e']]);
+  document.getElementById('r4').textContent =
+    'A/B = ' + sci(rd.a_over_b, 6) + '（= α²/16）；x* = ' + rd.xstar.toFixed(6) +
+    '；V″/A = ' + rd.vpp_over_A.toFixed(3) + '\n' +
+    'x* 与 2/√α 相对差 = ' + sci(rd.rel_ident, 2) + ' ⇒ 极小点不是被动力学选出的，是反解半径';
+}
+
+function cards(){
+  const rd = DATA.readings;
+  const items = [
+    ['反解半径 R/ℓ_P', rd.s3.ratio.toFixed(6), '#63d2ff'],
+    ['物理半径 R', sci(rd.s3.R_m, 4) + ' m', '#63d2ff'],
+    ['半径有效误差 δR', '±' + rd.s3.u_R.toFixed(4) + ' ℓ_P', '#94a3b8'],
+    ['m₁ c²', sci(rd.s4.m1, 4) + ' GeV', '#f87171'],
+    ['m₁ / m_e', sci(rd.s4.ratio_e, 3), '#f87171'],
+    ['若 m₁=m_e ⇒ α', sci(rd.s4.a_pred, 3), '#f87171'],
+    ['势极小 x*', rd.s6.xstar.toFixed(5), '#bb9af7'],
+    ['radion 反作用 δα/α', sci(rd.s7.da_over_a, 2), '#4ade80'],
+  ];
+  document.getElementById('cards').innerHTML = items.map(
+    it => '<div class="card"><b>' + it[0] + '</b><span class="v" style="color:' + it[2] +
+          '">' + it[1] + '</span></div>').join('');
+}
+
+function claimTable(){
+  const rows = DATA.claims.map(c => {
+    const col = c.verdict === 'PASS' ? 'ok' : (c.verdict === 'FAIL' ? 'bad' : 'warn');
+    return '<tr><td class="mono">' + c.id + '</td><td>' + c.claim +
+           '</td><td class="' + col + '">' + c.verdict + '</td><td class="mono">' +
+           c.num + '</td></tr>';
+  }).join('');
+  document.getElementById('claimTable').innerHTML =
+    '<table><colgroup><col style="width:8%"><col style="width:42%"><col style="width:16%"><col style="width:34%"></colgroup>' +
+    '<tr><th>项</th><th>V12 声称</th><th>本卷判定</th><th>读数</th></tr>' + rows + '</table>';
+}
+
+function guardTable(){
+  const rows = DATA.guards.map(g =>
+    '<tr><td class="mono">' + g.id + '</td><td>' + g.title +
+    '</td><td class="' + (g.ok ? 'ok' : 'bad') + '">' + (g.ok ? 'OK' : 'FAIL') +
+    '</td><td class="mono">' + g.detail + '</td></tr>').join('');
+  document.getElementById('guardTable').innerHTML =
+    '<table><colgroup><col style="width:7%"><col style="width:30%"><col style="width:8%"><col style="width:55%"></colgroup>' +
+    '<tr><th>ID</th><th>检验</th><th>态</th><th>读数</th></tr>' + rows + '</table>';
+}
+
+function ctrlTable(){
+  const rows = DATA.controls.map(c =>
+    '<tr><td class="mono">' + c.id + '</td><td>' + c.title +
+    '</td><td class="' + (c.ok ? 'ok' : 'bad') + '">' + (c.ok ? 'OK' : 'FAIL') +
+    '</td><td class="mono">' + c.detail + '</td></tr>').join('');
+  document.getElementById('ctrlTable').innerHTML =
+    '<table><colgroup><col style="width:7%"><col style="width:32%"><col style="width:8%"><col style="width:53%"></colgroup>' +
+    '<tr><th>ID</th><th>控制组</th><th>态</th><th>读数</th></tr>' + rows + '</table>';
+}
+
+function entryTable(){
+  const rows = DATA.entries.map(e => {
+    const col = e.level === 'PASS' ? 'ok' : (e.level === 'FAIL' ? 'bad' :
+                (e.level === 'BOUNDARY' ? 'warn' : ''));
+    return '<tr><td class="mono">' + e.code + '</td><td class="' + col + '">' + e.level +
+           '</td><td>' + e.title + '——' + e.detail + '</td></tr>';
+  }).join('');
+  document.getElementById('entryTable').innerHTML =
+    '<table><colgroup><col style="width:8%"><col style="width:13%"><col style="width:79%"></colgroup>' +
+    '<tr><th>码</th><th>级</th><th>内容</th></tr>' + rows + '</table>';
+}
+
+function header(){
+  const c = DATA.counts;
+  document.getElementById('chips').innerHTML =
+    '<span class="chip">条目 <b>' + c.entries + '</b></span>' +
+    '<span class="chip">PASS <b>' + c.PASS + '</b></span>' +
+    '<span class="chip">FAIL <b>' + c.FAIL + '</b></span>' +
+    '<span class="chip">BOUNDARY <b>' + c.BOUNDARY + '</b></span>' +
+    '<span class="chip">INFO <b>' + c.INFO + '</b></span>' +
+    '<span class="chip">守卫 <b>' + c.guards + '</b></span>' +
+    '<span class="chip">控制组 <b>' + c.controls + '</b></span>';
+  document.getElementById('verdictText').textContent = DATA.verdict;
+  document.getElementById('judgement').textContent = DATA.judgement;
+}
+
+header();
+plotAlpha();
+plotMass();
+plotCurv();
+plotPot();
+cards();
+claimTable();
+guardTable();
+ctrlTable();
+entryTable();
+</script>
+</body>
+</html>

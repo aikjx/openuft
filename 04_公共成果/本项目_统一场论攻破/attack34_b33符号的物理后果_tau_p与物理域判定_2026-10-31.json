@@ -1,0 +1,110 @@
+{
+ "round": "attack34",
+ "topic": "b33 符号的物理后果：M_SUSY 物理域 + tau_p 联动判定",
+ "entries": [
+  {
+   "code": "B0 PASS",
+   "verdict": "PASS",
+   "title": "tau_p 闭式自校准：复现 attack27b 的 2.7755e+34 yr（相对偏差 3.3e-07）",
+   "value": "tau_p=2.7755e+34 yr",
+   "note": "证明本册与 attack27b 用的是同一闭式，后续差异只能来自输入 (M_GUT, alpha_GUT)，不是公式分歧。闭式的绝对标度（TAU0/M_REF/AGINV_REF）属 [C] 级外部输入，见 B8"
+  },
+  {
+   "code": "B1 FAIL",
+   "verdict": "FAIL",
+   "title": "attack30 的 b33=-14 与其自称文献源「标准 MSSM」冲突：唯一解释是 +14 的符号翻转",
+   "value": "标准元素集合中 -14 的唯一匹配 = -(+14)；SM 阵最近元素 -26 不匹配",
+   "note": "文档层（注释声明标准 MSSM + 文献来源）与执行层（元素值 -14）不同源，与 attack33 A3「注释漂移」同族，但这里漂的是【数据来源声明】而非搜索域。本册不判「作者写错」：只判「该册的输出不能在其自称的文献口径下引用」"
+  },
+  {
+   "code": "B2 INFO",
+   "verdict": "INFO",
+   "title": "attack30 把 b33 符号做成 flip33 开关却以默认 False 报出，未在输出中声明",
+   "value": "报值来自 flip33=False（b33=-14）",
+   "note": "这是「未声明的默认值」型缺陷：开关存在说明作者已知该单元可疑，但输出不标注，导致 downstream（attack32 F5c）只能靠数值反推"
+  },
+  {
+   "code": "B3 FAIL",
+   "verdict": "FAIL",
+   "title": "1-loop 后向解 M_SUSY=54.38472 GeV < M_Z=91.1876 GeV，L1=-0.516836，物理域违规",
+   "value": "需 M_SUSY >= M_Z；违规分支 1 个（1-loop 后向解）",
+   "note": "L1<0 意味着「M_Z 到 M_SUSY」是向下跑 SM，与「M_Z 以上是 SM、M_SUSY 以上是 MSSM」的前提矛盾。这解释了为何该解反而给出最大的 M_GUT(2.32e16) 与最大的 tau_p：它用一段【反向的 SM 跑动】换来了统一点抬高。此前 attack28/29/30 把它当作「1-loop 自校准基准」引用，属把非物理解当基准"
+  },
+  {
+   "code": "B4 FAIL",
+   "verdict": "FAIL",
+   "title": "二选一必死：物理域内(M_SUSY>=M_Z)的 2-loop 解 tau_p 全被 Super-K 排除；唯一未被排除的 1-loop 解其 M_SUSY<M_Z 非物理",
+   "value": "2-loop b33=+14: tau_p=5.251e+33 yr（差 4.57 倍）; b33=-14: 4.226e+32 yr（差 56.79 倍）; 1-loop 54.38GeV: 8.503e+34 yr（余量 3.54 倍但 M_SUSY<M_Z）",
+   "note": "把 attack33 的「记账差异」换算成物理量后：b33 符号 + RGE 阶数 + M_SUSY 口径三者任一变化都会让 tau_p 跨越 Super-K 下限（跨度 201.2 倍）。⇒ 「MSSM 大统一与质子衰变实验相容」这一表述在本库当前输入下不成立。判定对象是【结论随未声明口径翻转】，不是 MSSM 本身"
+  },
+  {
+   "code": "B5 BOUNDARY",
+   "verdict": "BOUNDARY",
+   "title": "alpha_H 稳健性：2-loop 解需 alpha_H <= 0.007016 GeV^3（格点典型值 0.015 的 47%）才不被排除",
+   "value": "alpha_H=0.0075（典型值一半）时 tau_p=2.100e+34 yr，仍差 1.14 倍",
+   "note": "结论对 alpha_H 稳健（需压缩到典型值一半以下才翻转），但格点矩阵元的绝对范围由外部给出（[C] 级输入），本册不掌握其硬下限 => 判 BOUNDARY 不判 FAIL"
+  },
+  {
+   "code": "B6 CORRECTED",
+   "verdict": "CORRECTED",
+   "title": "attack27b 的「tau_p 与 Super-K 窗口重叠（余量 1.156 倍）」依赖 1-loop M_GUT；",
+   "value": "换成 2-loop 自洽 M_GUT 后 tau_p 由 2.776e+34 降到 5.251e+33（5.29 倍）",
+   "note": "这里不是 attack27b 算错：它明确用了 1-loop。问题是本库两册各自用不同阶数的 M_GUT，却给出方向相反的「是否与实验相容」结论，且互不标注 => 跨册口径混用。（attack27b 的自校准 M_SUSY=1 TeV 与 attack32 的 2-loop 自洽 M_SUSY=2.32 TeV 也不同源）"
+  },
+  {
+   "code": "B7 PASS",
+   "verdict": "PASS",
+   "title": "单调性判定：M_SUSY 上升 => M_GUT 下降 => tau_p 下降（两个实验约束同向收紧）",
+   "value": "M_GUT 单调下降=True ; tau_p 单调下降=True ; tau_p 跨度 10.96 倍",
+   "note": "这是本册唯一方向明确的【可检验推论】：一旦 LHC 把 M_SUSY 下限推到 10 TeV 以上，本库口径下的维度-6 tau_p 就落到 1.64e+33 yr 以下（差 Super-K 14.6 倍）。注意它依赖 B8 的三条边界，不是对 MSSM 的否证"
+  },
+  {
+   "code": "B7b FAIL",
+   "verdict": "FAIL",
+   "title": "tau_p >= Super-K 要求 M_SUSY <= 350.5 GeV（2-loop b33=+14 口径）",
+   "value": "M_SUSY=M_Z: tau_p=7.215e+34（通过）；M_SUSY=500GeV: tau_p=1.800e+34（差 1.33 倍）；临界 350.5 GeV",
+   "note": "这条把 B4 的「二选一必死」升级为可直接对照实验的门槛：任何把超伴子质量下限推到 350.5 GeV 以上的实验（LHC 对 gluino/squark 的公认下限在 TeV 量级，具体值须核对，标 [C]）都会与本库口径下的维度-6 tau_p 冲突，且由 B7 的单调性知冲突随下限上移而加剧"
+  },
+  {
+   "code": "B8 INFO",
+   "verdict": "INFO",
+   "title": "可检验性与边界五条：工程闭式 / 仅维度-6 / 单点标度 / 无阈值修正 / b33 标准值待文献核对",
+   "value": "闭式归一化点 TAU0=1e35, M_REF=2e16, AGINV_REF=35, alpha_H=0.015",
+   "note": "本册的强结论是【结论随未声明口径翻转】（可机器判定），弱结论才是【tau_p 被排除】（依赖上述外部输入）。引用时必须连同这五条"
+  }
+ ],
+ "tally": {
+  "PASS": 2,
+  "FAIL": 4,
+  "INFO": 2,
+  "BOUNDARY": 1,
+  "CORRECTED": 1
+ },
+ "total": 10,
+ "key_numbers": {
+  "tau_p_selfcal_yr": "2.7755e+34",
+  "tau_p_selfcal_rel_dev": "3.293e-07",
+  "branch_1loop_back_msusy_GeV": 54.38472,
+  "branch_1loop_back_mgut_GeV": "2.321451e+16",
+  "branch_1loop_back_taup_yr": "8.5028e+34",
+  "branch_2loop_p14_msusy_GeV": 2317.71643,
+  "branch_2loop_p14_mgut_GeV": "1.117972e+16",
+  "branch_2loop_p14_taup_yr": "5.2508e+33",
+  "branch_2loop_n14_msusy_GeV": 17918.7652,
+  "branch_2loop_n14_mgut_GeV": "5.780340e+15",
+  "branch_2loop_n14_taup_yr": "4.2258e+32",
+  "branch_27b_mgut_GeV": "1.689906e+16",
+  "branch_27b_taup_yr": "2.7755e+34",
+  "tau_p_span_mult": "201.2143",
+  "sk_limit_yr": 2.4e+34,
+  "excluded_branches_in_physical_domain": 2,
+  "alpha_H_critical_2loop_p14": "0.007016",
+  "alpha_H_typical": 0.015,
+  "mono_mgut_decreasing": true,
+  "mono_taup_decreasing": true,
+  "mono_taup_at_10TeV_yr": "1.6425e+33"
+ },
+ "verdict": "attack33 定位出的 b33 符号差异有硬物理后果：把四个分支各自的 (M_GUT, alpha_GUT) 代入 attack27b 的同一 tau_p 闭式，tau_p 跨 201.2 倍；物理域内(M_SUSY>=M_Z)的 2-loop 解 tau_p 分别为 5.251e+33 / 4.226e+32 yr，均低于 Super-K 2.4e+34（差 4.57 / 56.79 倍，且需把 alpha_H 压到典型值 47% 以下才翻转）；唯一未被排除的 1-loop 解其 M_SUSY=54.38 GeV < M_Z 属非物理",
+ "red_line": "判定对象是「结论随未声明口径翻转」，不是 MSSM 被否证；tau_p 是工程闭式且仅算维度-6、单点标度、无阈值修正，b33 标准值仍待原始文献核对",
+ "exit_code": 0
+}

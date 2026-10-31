@@ -1,0 +1,78 @@
+==============================================================================
+TUFT-r293 . 数值关系偶然性基准率_常数池穷举搜索与三个轻子夸克桥候选的零点检验
+date=2026-11-01
+==============================================================================
+
+[koide]
+  Q          = 0.666660511477385572187951542529875224265110270846199262615751
+  theta_K    = 0.22227048793198170000000000000000000000000000000000000000000 rad
+  theta_C    = 0.22622467449129455 rad
+  L3 rank    = 0 / 24288
+
+[candidates]
+  X1 theta_K = theta_C        dev = 0.0177899756108102569968208073736125361014215686803518543810044
+  X2 theta12+theta_C = 45deg  dev = 0.0304826460016007341250864257792631467808474820973817769465413
+  X3 theta13 = theta_C/sqrt2  dev = 0.0682190501495249742097869726645381541487685530159409823389988
+
+[expr pool]  L1=139 L2=3864 L3=24288 total=28291
+[hits]
+  rel_dev <= 1e-01 : 14314
+  rel_dev <= 1e-02 : 1504
+  rel_dev <= 1e-03 : 146
+  rel_dev <= 1e-04 : 27
+  rel_dev <= 1e-05 : 13
+  rel_dev <= 1e-06 : 12
+
+[items]
+  A01    PASS     exp=0.6666666666666666667 ; act=0.666660511477385572187951542529875224265110270846199262615751 ; Koide 比值 Q = sum m/(sum sqrt m)^2
+  A02    PASS     exp=0 ; act=-1E-59 ; Brannen 参数化闭合条件 sum y_i = 0
+  A03    PASS     exp=0.2225 ; act=0.22227048793198170000000000000000000000000000000000000000000 ; Brannen 相位 theta_K 反解
+  A04    PASS     exp=0.2262 ; act=0.22622467449129455 ; Cabibbo 角 theta_C = arcsin|Vus|
+  A05    FAIL     exp=0.0163 ; act=0.0177899756108102569968208073736125361014215686803518543810044 ; 候选 X1：theta_K = theta_C 的相对偏差
+  A06    FAIL     exp=0.0300 ; act=0.0304826460016007341250864257792631467808474820973817769465413 ; 候选 X2：theta12 + theta_C = 45 度 的相对偏差
+  A07    FAIL     exp=0.0640 ; act=0.0682190501495249742097869726645381541487685530159409823389988 ; 候选 X3：theta13 = theta_C/sqrt2 的相对偏差
+  A08    FAIL     exp=0.00135 ; act=0.000217195693917650000000000000000000000000000000000000000001000 ; theta_K 与 2/9 的相对偏差
+  A09    INFO     exp=23.412475 ; act=23.4124752366767064136563229898575854595747988869032361558470 ; 回归 r289：匹配 alpha 的 R/l_P
+  B01    PASS     exp=139 ; act=139 ; L1 层表达式枚举数
+  B02    PASS     exp=3864 ; act=3864 ; L2 层表达式枚举数
+  B03    PASS     exp=24288 ; act=24288 ; L3 层表达式枚举数
+  B04    FAIL     exp=12656 ; act=28291 ; 三层表达式合计
+  B05    PASS     exp=424365 ; act=424365 ; （表达式, 目标）对数合计
+  B06    FAIL     exp=2000 ; act=1504 ; 全池命中数 @ 阈值 1e-02
+  B07    FAIL     exp=200 ; act=146 ; 全池命中数 @ 阈值 1e-03
+  B08    PASS     exp=20 ; act=27 ; 全池命中数 @ 阈值 1e-04
+  B09    PASS     exp=0 ; act=13 ; 全池命中数 @ 阈值 1e-5
+  B10    PASS     exp=-1 ; act=12 ; 全池命中数 @ 阈值 1e-6
+  B11    FAIL     exp=1 ; act=0 ; Koide 偏差在 L3(目标=2/3) 中的排名
+  D01    PASS     exp=in-noise ; act=in-noise ; 三候选偏差是否高于噪声带（阈值 1e-2）
+  D02    INFO     exp=none ; act=none ; X1 的理论来源
+  D03    INFO     exp=conditional ; act=conditional ; X2 的理论来源
+  D04    INFO     exp=phenomenological ; act=phenomenological ; X3 的理论来源
+  D05    PASS     exp=100 ; act=1926.8268121287247 ; 三候选偏差 / Koide 偏差 的倍率
+  D06    INFO     exp=consistent ; act=consistent ; 与本库 J64/J65 的关系
+
+[controls]
+  CTL1   PASS exp=1 ; act=1 ; 阈值放宽命中单调不减
+  CTL2   PASS exp=1.0 ; act=1.1111111111111112 ; 负对照：常数置换后 1e-3 命中数比值（目标 2/3）
+  CTL3   PASS exp=0.11643835616438356 ; act=0.11643835616438356 ; 去掉单一目标后 1e-3 命中数下降比例
+  CTL4   PASS exp=45 ; act=45 ; 多重比较校正因子 m = 目标数 x 层数
+  CTL5   PASS exp=1 ; act=1 ; 正对照：Koide 型三元表达式在 L3 池中可检索到
+  CTL6   PASS exp=200 ; act=200 ; 负对照：随机三质量下 Q 偏离 2/3 超过 1e-4 的比例
+
+[summary] items=26 PASS=13 FAIL=8 INFO=5 BOUNDARY=0
+[pricing] 2^4=16 strict=0 loose=2
+
+[guards] 10/10
+  G01   PASS verdict 合法 ; 
+  G02   PASS 条目数与 json 一致 ; 26
+  G03   PASS 控制组全过 ; 6/6
+  G04   PASS Decimal 精度 >= 50 ; 60
+  G05   PASS 未使用 random ; ast,json,math,os,sys,decimal
+  G06   PASS report 与 json 逐条一致 ; all
+  G07   PASS verdict 由计数驱动 ; 13/8
+  G08   PASS 定价槽位覆盖最硬发现 ; B09,B11
+  G09   PASS 无写死 True 的守卫 ; none
+  G10   PASS 三层表达式数均 > 0 ; L1=139 L2=3864 L3=24288
+
+[verdict] BASELINE-ESTABLISHED__THREE-CANDIDATES-IN-NOISE
+==============================================================================

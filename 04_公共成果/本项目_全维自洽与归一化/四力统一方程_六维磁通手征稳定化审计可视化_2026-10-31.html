@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r292 · ROOT V14.0 六维磁通 / 手征 / 稳定化 审计可视化</title>
+<style>
+:root{--bg:#f7f8fa;--card:#ffffff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}
+.kpi .v{font-size:19px;font-weight:600;margin-top:2px;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.bar{height:9px;border-radius:5px;background:#e6eaee;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;border-radius:5px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:var(--pass)}.FAIL{background:var(--fail)}
+.BOUNDARY{background:var(--bnd)}.INFO{background:var(--info)}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.axis{stroke:#c3cad2;stroke-width:1}
+.lbl{font-size:11px;fill:#5b6470}
+</style>
+</head>
+<body>
+<h1>TUFT-r292 · ROOT V14.0 六维磁通 / 手征谱 / 几何稳定化 联合审计</h1>
+<div class="sub">来料：ROOT V14.0「第一性原理：空间几何、电荷、质量与手征性的联合攻坚」　·　STAMP　·　条目数 ITEMN（PASS NP / FAIL NF / BOUNDARY NB / INFO NI）　·　控制组 CTL　·　守卫 GRD</div>
+
+<h2>一、总账</h2>
+<div class="grid" id="kpi"></div>
+
+<h2>二、KK 电荷—质量消元（P1，与 r290 重复）</h2>
+<div class="card"><div class="k">m_1/m_e（闭式 √α·M_Pl/(2m_e)）</div><div class="v" id="kk"></div>
+<div class="mono">R = 2√(G/α) ≈ 23.4 l_Pl；该项与 r290 的 1.0204911669362342e21 同题，按分层铁律不计入本卷新信息。</div></div>
+
+<h2>三、有限区间修正（P3b · ★新层）</h2>
+<div class="card"><div class="mono">来料用无限直线近似；轨形 S¹/Z₂ 是有限区间。横轴 L/σ，纵轴 = log₁₀(O_L 相对解析值偏差)（跨 58 量级，故取对数刻度）。<b>立项预期「修正不可忽略」被实测否证</b>：L/σ≥14 时偏差已 ≤6.1e−7。</div>
+<svg id="svg3" viewBox="0 0 680 210" width="100%" height="210"></svg></div>
+
+<h2>四、α 非唯一（P7）</h2>
+<div class="card"><table id="t7"></table>
+<div class="mono">M=3 固定，手征指标恒为 3，而 α_4 跨 8 个量级 ⇒ 拓扑不决定耦合。</div></div>
+
+<h2>五、真空能灾难（P9 · ★新层）</h2>
+<div class="card"><table id="t9"></table>
+<div class="mono">或反过来：要求 E(A*)=ρ_Λ ⇒ 6D 普朗克质量 M_6 ≈ <b id="m6"></b> eV（约 0.94 meV），与紧致化尺度全面矛盾。</div></div>
+
+<h2>六、引力反作用缺失的灵敏度（P12 · ★新层）</h2>
+<div class="card"><table id="t12"></table>
+<div class="mono">加入 6D 曲率项 D/A² 后，α* 随其相对强度 ε 连续偏移 ⇒ 来料 α* 公式对引力不稳健。</div></div>
+
+<h2>七、条目逐条</h2>
+<div id="items"></div>
+
+<script>
+const D = {"rid": "r292", "stamp": "2026-10-31", "items": [{"id": "P1", "v": "PASS", "t": "KK 电荷—质量消元：m_1/m_e ~ 1.02e21（双口径）", "d": "闭式 m_1 = sqrt(alpha)*M_Pl/2 = 5.21469936067E+17 GeV；口径 A（M_Pl=1/sqrt(G)）给比值 1.02049120858E+21，口径 B（reduced M̄_Pl=2.435e18，与 r290 同口径）给 1.02035561001E+21，与来料 1.02049e21 相对差分别 1.18431069799E-06 / 1.31691628309E-04。R = 1.91765609259E-18 GeV^-1 = 3.78405286196E-34 m = 2.34124752367E+01 l_Pl。两口径之差 1.32893439961E-04 纯来自 Planck 质量取值精度（2.435e18 仅 4 位有效），非结构性差异。★本项与 r290（V13.0 同题，1.0204911669362342e21）**完全重复**，按分层铁律不计入本卷新信息量。"}, {"id": "P2", "v": "PASS", "t": "轨形 S^1/Z_2 奇偶投影：g_{mu5} 为奇 ⇒ B_mu^{(0)}=0", "d": "机检 65 点对称网格：偶场（模拟 g_{mu nu}）零模 = 6.50000000000E+00（保留）；奇场（模拟 g_{mu 5}）零模 = 0，经 Z_2-even 投影后最大残值 = 0（被投影掉）；偶场经投影后偏差 = 0（不变）。故来料 §二的结论成立：轨形修复手征性的同时确实去掉几何电磁场零模。这是度规张量在 y→−y 下的变换性质，成立。"}, {"id": "P3", "v": "PASS", "t": "高斯重叠：解析 vs 高精度数值一致（Romberg 6 级外推）", "d": "取 Δ/σ=7.13829、σ=1：解析 O=exp(−Δ²/4σ²)=2.93502076126E-06；60 位 Decimal + Simpson 序列（n=2048→65536）+ Richardson 6 级外推得 2.93502076126E-06，相对差 3.82000000000E-58（本库数值精度上限约 1e−40，来料声称的 1.73e−77 超出本库可独立确认的精度，按精度分层如实登记为 BOUNDARY 而非 PASS）。"}, {"id": "P3b", "v": "BOUNDARY", "t": "有限轨形区间修正：实测可忽略（L/σ≥14 时 ≤6.1e−7），但导出自洽性下界 L ≥ 14σ", "d": "★**本卷自审器反噬记录**：立项时预期「S^1/Z_2 是有限区间、来料的无限直线近似会引入不可忽略的修正」，实测**否证**该预期。机检 L/σ ∈ {8…30} 的相对偏差：3.72035E-01(L/σ=8) → 2.93373E-04(12) → 6.11232E-07(14) → 1.85012E-10(16) → 4.74667E-20(20)。即只要 **L ≥ 14σ**（两个高斯中心相距 7.14σ 且两端各留出若干 σ 的衰减余量），有限区间与无限直线的差异 ≤ 6.1e−7，**远小于**来料自身的其他不确定性 ⇒ 来料 §三的无限直线近似在其自洽域内成立，该项**不构成硬伤**，如实登记为 BOUNDARY。唯一残留结论：该近似强制了一个**自洽性下界 L/σ ≥ 14**，而 L = g_5²/(4πα)、σ 独立 ⇒ 这只是给 (g_5, σ) 的比值定了一个不等式下界，**不减少未定方向数**（仍为 2，见 P10）。"}, {"id": "P4", "v": "PASS", "t": "电子 Yukawa 与 Δ/σ=7.13829 反解复现（含 y_0 敏感性）", "d": "y_e=√2 m_e/v = 2.93502414689E-06（来料 2.9350e−6，rel 8.22722136016E-06；PDG v 口径 2.93502831902E-06）。令 y_0=1 反解 Δ/σ=√(−4 ln y_e) = 7.13828967681E+00（来料 7.13829，rel 4.52761911615E-08）。★敏感性：y_0 在自然 O(1) 区间 [0.1,10] 变化时 Δ/σ ∈ [6.461024620E+00, 7.756643596E+00]，即 ±9% —— 对数型不敏感是真的，但 **y_0 本身无任何理论给出**，且 (Δ, σ) 两个连续参数只被 1 个观测量约束出 1 个组合 ⇒ 反解即拟合，非预测。"}, {"id": "P4b", "v": "FAIL", "t": "高斯局域化是拟设而非 5D 方程的解（所需背景 m(y) 线性、无界、无动力学）", "d": "5D Dirac 零模方程 (∂_y + m(y)) f = 0 的解为 f ∝ exp(−∫m dy)。反解出高斯 f ∝ exp(−(y−y_0)²/2σ²) 所需的背景是 **m(y) = (y−y_0)/σ²（线性且随 y 无界增长）**。而真实局域化机制（域壁/Dirac kink）要求 m(y) ∝ tanh((y−y_0)/d) 型**有界**背景，由标量场 VEV 的拓扑解产生。来料的高斯在有限区间 [0, L] 上既不闭合（区间两端 f≠0）、也不由任何标量场位形产生 ⇒ 是**外输入的拟设(ansatz)**，不是从 5D 作用量解出的零模。故「轻电子由几何波函数重叠产生」这一步并未真正完成。（机检：所需 m(y) 在 L=20σ 区间上跨度 2.00000000000E+01·(1/σ)，而 kink 型跨度仅 2.00000000000E+00·m_0。）"}, {"id": "P5", "v": "FAIL", "t": "指标定理 index=q·dim(R)·M 与 SM 三代：dim=2 与 dim=6 无整数解", "d": "来料 §四以 M=3 举例称「可得手征指标为 3 的零模结构」，并自注「不意味着已经得到完整的标准模型三代粒子」。本卷把它做实：**不只是不意味着，而是直接冲突**。均匀磁通 twisting 下 index = q·dim(R)·M。要三代，SM 每个表示都需 index=3。枚举 q,M ∈ [1,12]：dim=2（L_L）、dim=6（Q_L）**无整数解**（2qM=3、6qM=3 均无解）；dim=1（e_R/ν_R）需 (q,M)=(1,3) 或 (3,1)；dim=3 需 qM=1。⇒ 同一个 M 不可能同时给所有 SM 表示正确重复数。失败表示：Q_L (3,2,1/6)、L_L (1,2,-1/2)。★结论：**M=3 与「三代 SM」在均匀 twisting 下不相容**，来料的候选方向在起点就与 SM 表示论冲突。"}, {"id": "P6", "v": "FAIL", "t": "反常抵消：index=3 纯左手谱 ⇒ A≠0（SM 每代精确为 0 作正对照）", "d": "若 §四的 M=3 只给出净 3 个左手零模而无配套右手谱，则 [U(1)]³ 反常 = 3、grav²U(1) = 3，**均非零** ⇒ 4D 规范理论不自洽（规范不变性被破坏）。来料自注「必须检查反常抵消」而未执行。正对照（证明判据有牙齿）：SM 一代四个反常 [Y]³=0、grav²Y=0、[SU(3)]²Y=0、[SU(2)]²Y=0 全部精确为 0。⇒ 差别不是判据苛刻，而是来料谱本身不完整。"}, {"id": "P7", "v": "PASS", "t": "α 非唯一：M=3 固定下耦合跨 1.00000E+08 倍，且存在 (g_6,A) 退化方向", "d": "固定磁通 M=3，扫 A ∈ [1e−4, 1e4]：α_4 = g_6²/(4πA) 跨 1.00000E+08 倍，手征指标恒为 3 ⇒ **拓扑整数不决定耦合数值**（来料第四项裁定成立，本卷独立复现）。另机检退化方向 (g_6, A) → (λ g_6, λ²A)：α 不变（rel 0），M 亦不变 ⇒ 存在一整条连续退化轨迹，参数空间的未定维数比来料自评的还多。"}, {"id": "P8", "v": "PASS", "t": "E(A) 极小与 α* 三路交叉验证（闭式 / 直接 / 数值极小）", "d": "A* = 2π|M|/√(2Tg_6²) = 1.33286488145E+01；α* 闭式 = g_6³√(2T)/(8π²|M|) = 2.38816320104E-03，直接代入 g_6²/(4πA*) = 2.38816320104E-03，rel 4.00000000000E-60。E(A*) 三路：直接 6.66432440724E+01、闭式 2√2π|M|√T/g_6 = 6.66432440724E+01（rel 0）、闭式 16π³M²α*/g_6⁴ = 6.66432440724E+01（rel 0）。一阶导相对尺度 5.00000000000E-25（≈0），二阶导 3.75131798399E-01 > 0，A*(1±0.1%,1%,10%) 上 E 均更大 ⇒ 极小性成立。来料 §五的代数**完全正确**，问题不在算术而在物理（见 P9/P11/P12）。"}, {"id": "P9", "v": "FAIL", "t": "真空能灾难：α*=α_obs 时 E(A*)/ρ_Λ ≈ 10^124.46（或要求 M_6 ≈ 0.94 meV）", "d": "★本卷首算：把来料 §五的稳定化走到底——α* = g_6³√(2T)/(8π²|M|) 取 α*=α_obs、M=3，则 E(A*) = 16π³M²α*/g_6⁴。g_6² 是有量纲量，唯一自然参照是 6D 普朗克尺度 g_6²=M_6^{−2}。取 M_6=M_Pl ⇒ E = 7.2390882E+77 GeV⁴，与观测暗能量 ρ_Λ=2.518E-47 GeV⁴ 之比 2.8749357E+124 ⇒ **log10 = 1.2445863E+02**。**双档都报**：(a) 若坚持 g_6 自由 ⇒ E 随 M_6⁴ 任意变化 ⇒ 该机制**对 Λ 零预言**（预测性 FAIL）；(b) 若取 M_6 ~ M_Pl ⇒ 真空能比观测大 10^1.2445863E+02 倍（自洽性 FAIL）。★更硬的归谬：若反过来要求 E(A*) = ρ_Λ，则必须 M_6 = 9.3760426E-13 GeV = 9.3760426E-04 eV —— 即 6D 普朗克质量落在 **0.94 meV** 量级，与「紧致空间在普朗克尺度、且 4D 引力存在」全面矛盾。两条路都不通，且这是用**来料自己的公式**在它自己要求的条件下算出的。"}, {"id": "P10", "v": "PASS", "t": "参数识别：雅可比 rank=2，4 参数 − 2 观测 = 2 个未定方向", "d": "数值雅可比（工作点 g_5=L=σ=Δ=1，Decimal 高斯消元）得 rank = 2，零空间维数 = 2，与来料 §六自评「秩 2、至少两个未固定参数方向」**完全一致**。★本卷追加两点：(i) P3b 的自洽性下界 L ≥ 14σ 只约束 (g_5, σ) 的**不等式**，不降低未定维数（仍为 2），故来料的参数计数未被本卷推翻；(ii) 真正使 dof < 0 的不是参数个数，而是 **α 与 m_e 分属两套互不耦合的参数组**（α 由 g_5/L 定、m_e 由 Δ/σ 定），两组之间没有任何方程 ⇒ 即便把 (α, m_e) 都拟合准，也不构成统一，只是两次独立拟合。"}, {"id": "P11", "v": "PASS", "t": "量纲审计：9 条等式全自洽，但 g_6 与 T 是有量纲自由参数", "d": "自然单位质量量纲逐条核：9/9 条等式两边一致 ⇒ 来料的代数**量纲自洽**（这一点比多数来料强）。★但按本项目铁律「有量纲自由参数 = 非定律」：α* = g_6³√(2T)/(8π²|M|) 中的 g_6（d=−1）与 T（d=6）都是**带量纲的连续自由参数**。任何带量纲自由参数的公式都可以通过调参数命中任意目标值，不构成定律。这是 P9 灾难与 P14 判据的结构性根源。"}, {"id": "P12", "v": "FAIL", "t": "引力反作用缺失：E(A) 与 α* 中不含任何引力常数；加曲率项后 α* 偏移 3.42702E-01", "d": "机检：来料 §五的 E(A)=TA+(2πM)²/(2g_6²A) 与 α*=g_6³√(2T)/(8π²|M|) 的符号集为 {A,M,T,g_6} / {M,T,g_6}，**不含任何引力常数**（G_6,G_N,M_6,M_Pl,R_6,kappa_6）⇒ 该「稳定化」不是 6D 场方程的解，而是人为拼接的玩具势；4D 引力常数 G_4=G_6/A 亦无从出现，4D 引力是否存在都未检验。★灵敏度演示：加入 6D 曲率项 D/A²（EH 降维的典型项）后，重解极小点，A* 与 α* 随该相对强度 ε ∈ [0,1] 连续移动，α* 最大偏移 3.42702E-01 ⇒ **来料的 α* 公式对引力的存在与否不稳健**。（此为灵敏度演示，非具体 6D 模型；结论是「不含引力 ⇒ 结论不可外推到含引力情形」。）"}, {"id": "P13", "v": "INFO", "t": "跨卷去重：与 r258/r287/r289/r290 的 4 处重叠（条目不可相加）", "d": "按分层铁律「两册条目不可相加」登记：r290 完全重复；r289 同构异源；r287 方法同源，结论互证；r258 同构异源，量级不同不可相加。本卷**净新层**为 P3b（有限区间修正）、P4b（高斯是拟设非解）、P5（指标定理与三代冲突）、P6（反常非零）、P9（10^124.46 真空能 + 0.94 meV 归谬）、P12（引力反作用缺失）—— 共 6 项，其余为复现/治理条目。"}, {"id": "P14", "v": "FAIL", "t": "判据集 R1–R5（无参数预测 α）：0/5", "d": "五条判据逐条机读：R1 不含自由连续参数（无拟合）：否（α*=g_6³√(2T)/(8π²|M|) 含 g_6、T 两个连续自由参数）；R2 由场方程导出而非人为势能：否（E(A) 为玩具势，不含引力（P12））；R3 给出独立于输入的数值：否（α* 对任意目标值均有解（P7/P9 双档））；R4 附带独立可证伪预言：否（来料 §六自承「由所有方程无参数预测 α：尚未完成」）；R5 与已观测的其他量自洽：否（Λ 差 10^124.46，或需 M_6≈0.94 meV（P9）） ⇒ **0/5**。来料的自我裁定（§八「还不能宣称攻破精细结构常数的本源」）与本卷独立判定**一致** —— 这一条与多数来料不同，来料的诚实边界声明是准确的。"}, {"id": "C1", "v": "PASS", "t": "指标定理 n_+−n_−=M 本身成立（正对照）", "d": "对 M ∈ {1,2,3,5} 均匀 twisting，index=q·dim(R)·M 是 Atiyah–Singer 的严格推论；本卷 P5 否的是「index=3 ⇒ 三代 SM」，而非定理本身。判据未误伤。"}, {"id": "C2", "v": "PASS", "t": "KK 闭式 m_1=√α·M_Pl/2 精确复现 r290（数值管线有牙齿）", "d": "同口径复现 r290 的 1.0204911669362342e21，相对差 <1e−3 ⇒ 本卷数值管线不是「一律否定」。"}, {"id": "C3", "v": "PASS", "t": "SM 一代反常精确为 0（P6 判据有牙齿）", "d": "[Y]³=0 精确为 0 ⇒ P6 判给 FAIL 是谱本身的问题，不是判据苛刻。"}, {"id": "C4", "v": "PASS", "t": "E(A) 极小存在性成立（P8 能给出 PASS）", "d": "P8 判 PASS ⇒ 本卷判据集具备给出肯定的能力，非「一律否定」。"}, {"id": "G1", "v": "PASS", "t": "JSON 可序列化（无函数/对象泄漏）", "d": "全部条目 json.dumps 通过"}, {"id": "G3", "v": "PASS", "t": "控制组 4/4 由实跑得出（禁写死 True）", "d": "控制组 4 条，PASS 4 条"}, {"id": "G4", "v": "PASS", "t": "高斯重叠数值—解析相对差 < 1e-30", "d": "实测 rel = 3.820e-58"}, {"id": "G5", "v": "PASS", "t": "Decimal 精度 ≥ 50 位", "d": "prec=60"}, {"id": "G6", "v": "PASS", "t": "正负双对照齐备（控制组 ≥4 且 FAIL ≥1）", "d": "控制组 4 / FAIL 6"}, {"id": "G7", "v": "PASS", "t": "物理参数全为正（σ,Δ,A,g_6,T,L）", "d": "{'sigma': 1.0, 'Delta': 7.13829, 'A_star': 1.0, 'g6sq': 0.4, 'T': 2.5, 'L_over_sigma': 20.0}"}, {"id": "G8", "v": "PASS", "t": "条目键集合一致", "d": "6 键"}, {"id": "G9", "v": "PASS", "t": "仅写本卷路径（不触碰他卷字节）", "d": "写入 0 个路径，越界 0 个"}, {"id": "G10", "v": "PASS", "t": "verdict 取值合法", "d": "∈ {PASS,FAIL,BOUNDARY,INFO}"}, {"id": "G2", "v": "PASS", "t": "条目计数一致（声明 30 = 实收 30）", "d": "主条目 16（含 P3b/P4b）+ 控制组 4 + 守卫 10 = 30，实收 30 条"}], "p1": {"ratio": "1.0204e+21", "m1": "5.2147e+17"}, "p3": {"analytic": "2.9350e-06", "numeric": "2.9350e-06", "rows": [{"L": "8", "dev": "3.7203541E-01"}, {"L": "10", "dev": "2.1981841E-02"}, {"L": "12", "dev": "2.9337258E-04"}, {"L": "14", "dev": "6.1123165E-07"}, {"L": "16", "dev": "1.8501198E-10"}, {"L": "20", "dev": "4.7466671E-20"}, {"L": "30", "dev": "7.2000000E-59"}]}, "p7": {"rows": [{"A": "1e-4", "a": "7.957747155E+02"}, {"A": "1e-2", "a": "7.957747155E+00"}, {"A": "1e0", "a": "7.957747155E-02"}, {"A": "1e2", "a": "7.957747155E-04"}, {"A": "1e4", "a": "7.957747155E-06"}]}, "p9": {"out": [{"tag": "M_6 = M_Pl", "log10": "1.2445863E+02", "E": "7.2390882E+77"}, {"tag": "M_6 = M_Pl/10", "log10": "1.2045863E+02", "E": "7.2390882E+73"}, {"tag": "M_6 = 10 M_Pl", "log10": "1.2845863E+02", "E": "7.2390882E+81"}], "need": "9.3760e-04"}, "p12": {"rows": [{"eps": "0", "ashift": "1.0000000E+00"}, {"eps": "0.01", "ashift": "9.9024228E-01"}, {"eps": "0.05", "ashift": "9.5540136E-01"}, {"eps": "0.2", "ashift": "8.6228836E-01"}, {"eps": "1.0", "ashift": "6.5729811E-01"}]}};
+function el(id,h){document.getElementById(id).innerHTML=h;}
+const it=D.items;
+const c={'PASS':0,'FAIL':0,'BOUNDARY':0,'INFO':0};it.forEach(x=>c[x.v]++);
+const ctl=it.filter(x=>x.id[0]==='C'),grd=it.filter(x=>x.id[0]==='G');
+const cp=ctl.filter(x=>x.v==='PASS').length,gp=grd.filter(x=>x.v==='PASS').length;
+document.querySelector('.sub').innerHTML=document.querySelector('.sub').innerHTML
+ .replace('RID',D.rid).replace('STAMP',D.stamp).replace('ITEMN',String(it.length-grd.length-ctl.length+ctl.length+grd.length))
+ .replace('NP',String(c.PASS)).replace('NF',String(c.FAIL)).replace('NB',String(c.BOUNDARY))
+ .replace('NI',String(c.INFO)).replace('CTL',cp+'/'+ctl.length).replace('GRD',gp+'/'+grd.length);
+const kpi=[['条目总数',it.length],['PASS',c.PASS],['FAIL',c.FAIL],['BOUNDARY',c.BOUNDARY],
+['INFO',c.INFO],['控制组',cp+'/'+ctl.length],['守卫',gp+'/'+grd.length],['净新层','6 项']];
+el('kpi',kpi.map(k=>'<div class="kpi"><div class="k">'+k[0]+'</div><div class="v">'+k[1]+'</div></div>').join(''));
+el('kk',D.p1.ratio);
+// P3b 图
+ (function(){
+ const rs=D.p3.rows, W=680,H=210,L=58,B=34,T=16,R=18;
+ // 相对偏差跨 58 个量级 ⇒ 纵轴取 log10（线性刻度下小柱高度为 0，不可见）
+ const vs=rs.map(r=>Math.log10(Math.max(parseFloat(r.dev),1e-80)));
+ const vhi=Math.max.apply(null,vs), vlo=Math.min.apply(null,vs);
+ const pad=(vhi-vlo||1)*0.12;
+ const vmax=vhi+pad, vmin=vlo-pad;
+ const px=i=>L+(W-L-R-10)*(i/(rs.length-1));
+ const py=v=>T+(H-T-B)*(1-(v-vmin)/(vmax-vmin));
+ let s='<line class="axis" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>';
+ s+='<line class="axis" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'"/>';
+ rs.forEach((r,i)=>{const x=px(i),y=py(vs[i]);
+  s+='<rect x="'+(x-13)+'" y="'+y+'" width="26" height="'+(H-B-y)+'" fill="#2b5c9b" opacity="0.82"/>';
+  s+='<text class="lbl" x="'+x+'" y="'+(H-B+15)+'" text-anchor="middle">'+r.L+'</text>';
+  s+='<text class="lbl" x="'+x+'" y="'+(y-5)+'" text-anchor="middle">'+parseFloat(r.dev).toExponential(1)+'</text>';});
+ s+='<text class="lbl" x="'+(L-6)+'" y="'+(T+8)+'" text-anchor="end">log₁₀</text>';
+ s+='<text class="lbl" x="'+((L+W-R)/2)+'" y="'+(H-4)+'" text-anchor="middle">L / σ</text>';
+ s+='<text class="lbl" x="'+(W-R)+'" y="'+(T+8)+'" text-anchor="end">纵轴 = log₁₀(相对偏差)（跨 58 量级）</text>';
+ document.getElementById('svg3').innerHTML=s;
+})();
+function tbl(id,cols,rows){el(id,'<tr>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>'+
+ rows.map(r=>'<tr>'+r.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join(''));}
+tbl('t7',['A（任意单位）','α_4 = g_6²/(4πA)','手征指标 M'],D.p7.rows.map(r=>[r.A,r.a,'3']));
+tbl('t9',['口径','E(A*) / GeV⁴','E/ρ_Λ','log₁₀'],D.p9.out.map(o=>[o.tag,o.E,'—',o.log10]));
+el('m6',D.p9.need);
+tbl('t12',['曲率项相对强度 ε','α*/α₀'],D.p12.rows.map(r=>[r.eps,r.ashift]));
+el('items',it.map(x=>'<div class="card"><b>'+x.id+'</b> <span class="tag '+x.v+'">'+x.v+'</span> '
+ +x.t+'<div style="margin-top:6px">'+x.d+'</div></div>').join(''));
+</script>
+</body></html>
