@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TUFT-R258 · 暗能量与宇宙常数层 · 机器核验</title>
+<style>
+:root{--ink:#12161c;--sub:#5a6472;--line:#dfe4ea;--bg:#fbfcfd;--card:#ffffff;
+--red:#c0392b;--green:#1e8449;--blue:#1f5fa9;--amber:#b9770e;--violet:#7d3c98;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font-family:'Segoe UI','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+line-height:1.62;font-size:15px}
+.wrap{max-width:1060px;margin:0 auto;padding:38px 22px 80px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.3px}
+h2{font-size:19px;margin:38px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--line)}
+h3{font-size:15.5px;margin:22px 0 8px;color:var(--blue)}
+.sub{color:var(--sub);font-size:13.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+padding:18px 20px;margin:14px 0;box-shadow:0 1px 2px rgba(20,30,45,.04)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:13px 15px}
+.kpi .lab{font-size:11.5px;color:var(--sub);letter-spacing:.4px;text-transform:uppercase}
+.kpi .val{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums;margin-top:3px}
+.kpi .note{font-size:11.5px;color:var(--sub);margin-top:2px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f4f6f9;font-weight:620;font-size:12.5px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:20px;
+font-weight:640;letter-spacing:.3px}
+.t-fail{background:#fdecea;color:var(--red)}
+.t-pass{background:#e8f6ee;color:var(--green)}
+.t-info{background:#eaf1fa;color:var(--blue)}
+.t-bnd{background:#fdf3e3;color:var(--amber)}
+canvas{display:block;width:100%;height:auto;max-width:100%}
+.cap{font-size:12.3px;color:var(--sub);margin-top:6px}
+blockquote{margin:12px 0;padding:10px 15px;border-left:3px solid var(--blue);
+background:#f2f6fb;color:#243040;font-size:13.7px;border-radius:0 7px 7px 0}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.6px;
+background:#f0f2f5;padding:1px 5px;border-radius:4px}
+.bar{height:9px;border-radius:5px;background:#eef1f5;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;border-radius:5px}
+footer{margin-top:46px;padding-top:16px;border-top:1px solid var(--line);
+color:var(--sub);font-size:12.4px}
+</style>
+</head>
+<body><div class="wrap">
+<h1>TUFT-R258 · 暗能量与宇宙常数层</h1>
+<div class="sub">攻靶：把宇宙学常数 Λ 改写为「全局背景挠率 τ<sub>Λ</sub> 的平方项」。靶文 L4720–L4800。<b>本卷判「靶未达成」，不占度數链。</b></div>
+
+<div class="grid" style="margin-top:20px">
+<div class="kpi"><div class="lab">条目</div>
+<div class="val" style="color:var(--ink)">28</div>
+<div class="note">PASS 5 / FAIL 18 / INFO 3 / BND 2</div></div>
+<div class="kpi"><div class="lab">控制组</div>
+<div class="val" style="color:var(--green)">34/34</div>
+<div class="note">全部机算，禁写死 True</div></div>
+<div class="kpi"><div class="lab">守卫</div>
+<div class="val" style="color:var(--green)">16/16</div>
+<div class="note">含度数机器核定 G13</div></div>
+<div class="kpi"><div class="lab">零点能灾难</div>
+<div class="val" style="color:var(--red)">10<sup>120.7</sup></div>
+<div class="note">靶声称绕开的正是这个量级</div></div>
+</div>
+
+<blockquote><b>一句判词</b>：靶的四条声称（w=−1 / 绕开 10<sup>120</sup> / 解决 Λ 小值 / 区分于 ΛCDM）全部不成立；但本卷判的是「<b>靶未达成</b>」而非「逻辑上不可能」——修复定价两档 SURVIVE 均 &gt; 0，唯一严格存活路径恰是补上靶自己逐字承认「待完成」的那一步。</blockquote>
+<h2>1 · 三个自然候选 τ 跨 121.9 个数量级</h2>
+<div class="card"><canvas id="c1" height="300"></canvas>
+<div class="cap">横轴为 log₁₀ τ（m⁻¹）。三个候选 $H_0/c$、$1/\ell_P$、$v/(\hbar c)$ 与观测要求的 τ<sub>Λ</sub>（红）。靶只写「τ<sub>Λ</sub> ≪ τ<sub>vac</sub>」，从未指定 τ<sub>Λ</sub> 由哪个内部量给出 ⇒ 判「未行使」。</div></div>
+
+<table><tr><th>候选</th><th class="n">τ (m⁻¹)</th><th class="n">Ω<sub>Λ</sub></th><th>判</th></tr>
+<tr><td>H₀/c</td><td class="n">7.2860e-27</td><td class="n">1/3 = 0.333333</td><td>与 H₀ 无关的<b>代数必然</b>；相对观测 0.6889 差 2.067 倍</td></tr>
+<tr><td>1/ℓ<sub>P</sub></td><td class="n">6.1871e+34</td><td class="n">2.4037e+121</td><td>超观测 121.54 个数量级</td></tr>
+<tr><td>v/(ℏc)</td><td class="n">1.2478e+18</td><td class="n">9.7763e+87</td><td>超观测 88.15 个数量级</td></tr>
+<tr><td><b>观测要求</b></td><td class="n"><b>1.0474e-26</b></td><td class="n">0.6889</td><td>—</td></tr>
+</table>
+<h2>2 · 两种读法反解 τ<sub>Λ</sub>：差一个 c = 8.48 个数量级</h2>
+<div class="card"><canvas id="c2" height="230"></canvas>
+<div class="cap">靶在 boxed 式写「Λ ∝ c²τ²」，在 L4797 又写「Λ = c²τ²」。同一章内 ∝ 与 = 混用，导致 τ<sub>Λ</sub> 有两个相差 c 倍的取值，而靶从未指定用哪个。</div></div>
+
+<h2>3 · 加速膨胀不是推论：τ 若按逆长度稀释，q₀ 反号</h2>
+<div class="card"><canvas id="c3" height="300"></canvas>
+<div class="cap">q₀ = ½Ω<sub>m</sub> + ½Ω<sub>Λ</sub>(1+3w)。w=−1 给 q₀=−0.533（加速，合观测）；w=−1/3 给 q₀=+0.156（减速，反号）。Fraction 精确：w=−1/3 时 (1+3w)=0，故 q₀=½Ω<sub>m</sub> 严格。</div></div>
+
+<h2>4 · 靶自己的拉氏量复现 10<sup>120.7</sup> 灾难</h2>
+<div class="card"><canvas id="c4" height="250"></canvas>
+<div class="cap">靶 L4711–4713 的 ℒ 中 κ、τ 都是<b>标准无质量标量动能项</b>，零点能求和 M<sub>Pl</sub>⁴/(16π²) 与 ρ<sub>Λ</sub> 之比即它声称「直接绕开」的灾难。机验：120.74 个数量级，与 10<sup>120</sup> 同量级 ⇒ <b>未绕开</b>。</div></div>
+
+<h2>5 · 条目明细（28）</h2>
+<table><tr><th>ID</th><th>组</th><th>判</th><th>条目</th></tr>
+<tr><td><code>A01</code></td><td>A</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>boxed 主结果「Lambda ∝ c^2 tau_Lambda^2」是否存在</td></tr>
+<tr><td><code>A02</code></td><td>A</td>
+<td><span class="tag t-info">INFO</span></td>
+<td>Lambda 专章在语料内是否有多处平行表述（复制而非多路推导）</td></tr>
+<tr><td><code>A03</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>同章内「∝」与「=」混用（比例关系退化为等号，自由度被悄悄固定）</td></tr>
+<tr><td><code>A04</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>tau_Lambda 的数值在全语料是否被赋值过（若 0 处，Lambda 仍是输入）</td></tr>
+<tr><td><code>A05</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★ tau_Lambda 的本体论三句自相冲突（「恒定」vs「随演化调整」）</td></tr>
+<tr><td><code>A06</code></td><td>A</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>w=-1 是否被明确声称（含「完美满足」与「严格等于」）</td></tr>
+<tr><td><code>A07</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 自称「区分于 ΛCDM」，但唯一预言 w=-1 正是 ΛCDM 的定义</td></tr>
+<tr><td><code>A08</code></td><td>A</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>靶是否明确点名「10^120 个数量级灾难」作为要解决的疑难</td></tr>
+<tr><td><code>B01</code></td><td>B</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ boxed 式 `Lambda ∝ c^2 tau^2` 的量纲审计</td></tr>
+<tr><td><code>B02</code></td><td>B</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★ 若按 boxed 的 [T^-2] 读 Lambda，则 rho_Lambda 变成压力量纲（差 c^2）</td></tr>
+<tr><td><code>B03</code></td><td>B</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ `tau_vac = v ≈ 246 GeV` —— v 是能量，tau 是 [L^-1]，同一符号两种量纲</td></tr>
+<tr><td><code>C01</code></td><td>C</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>Lambda 观测值的正算与文献值对照（口径自守：两套常数各报残差）</td></tr>
+<tr><td><code>C02</code></td><td>C</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>rho_Lambda 与靶写的 1e-9 J/m^3 对照（量级是否正确）</td></tr>
+<tr><td><code>C03</code></td><td>C</td>
+<td><span class="tag t-bnd">BOUNDARY</span></td>
+<td>★★ 两种读法反解 tau_Lambda（∝ 取 A=1 / 等号带 c^2）相差 c 倍 = 8.48 个数量级</td></tr>
+<tr><td><code>C04</code></td><td>C</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★★ 三个自然候选 tau 各自给 Omega_Lambda：跨 121.9 个数量级，靶一个都没选</td></tr>
+<tr><td><code>C05</code></td><td>C</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★★ 靶自己的拉氏量（L4711-4713）复现 10^120.74 灾难 ⇒ 「直接绕开」是空话</td></tr>
+<tr><td><code>C06</code></td><td>C</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 加速膨胀不是推论：若 tau 按逆长度稀释（tau ∝ 1/a），q0 反号变减速</td></tr>
+<tr><td><code>C07</code></td><td>C</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 灾难从 121.5（普朗克截断）缩到 88.2（电弱截断）只降 33.4 个数量级</td></tr>
+<tr><td><code>D01</code></td><td>D</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★★ 「tau=const ⇒ Lambda=const ⇒ rho=const ⇒ w=-1」是同一假设重述 4 次（零判别力）</td></tr>
+<tr><td><code>D02</code></td><td>D</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 「delta tau 涨落不贡献 Λ」把 &lt;delta tau> 与 &lt;0|H|0> 混淆（真空能是后者）</td></tr>
+<tr><td><code>D03</code></td><td>D</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 反解拟合零判别力：把 Lambda_obs 缩放 5 个量级，「推导」照样成功</td></tr>
+<tr><td><code>D04</code></td><td>D</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 「Λ 小 120 个数量级」改写成「tau_Lambda 小 60 个数量级」= 换刻度，零信息</td></tr>
+<tr><td><code>E01</code></td><td>E</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★★ tau_Lambda 本体论二难：几何基底（不可演化）vs 动力学场（可演化）——两支都死</td></tr>
+<tr><td><code>E02</code></td><td>E</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 「区分于 ΛCDM」不可达：把该节主体的「TUFT」换成「ΛCDM」一字不改仍成立</td></tr>
+<tr><td><code>E03</code></td><td>E</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★ 「不随膨胀稀释」与 tau 的量纲 [L^-1] 不兼容：几何标度必给 w=-1/3</td></tr>
+<tr><td><code>F01</code></td><td>F</td>
+<td><span class="tag t-info">INFO</span></td>
+<td>【交联·不重复】本源不变式 omega^2=c^2(kappa^2+tau^2) 已由 r252 判「三通道线性相关」</td></tr>
+<tr><td><code>F02</code></td><td>F</td>
+<td><span class="tag t-info">INFO</span></td>
+<td>【交联·不重复】场方程源项 4 pi G m^2/(c^2 hbar) u_mu u_nu 已由 r251 判</td></tr>
+<tr><td><code>G01</code></td><td>G</td>
+<td><span class="tag t-bnd">BOUNDARY</span></td>
+<td>修复定价（2^7 = 128 组合，双档都报）</td></tr>
+</table>
+<h2>6 · 修复定价（7 槽位 × 2⁷ = 128，双档）</h2>
+<table><tr><th>档</th><th>必改</th><th class="n">EMPTY</th><th class="n">SUICIDE</th><th class="n">SURVIVE</th></tr>
+<tr><td>严格</td><td>s1, s2, s3, s4, s5, s6</td><td class="n">63</td><td class="n">64</td><td class="n"><b>1</b></td></tr>
+<tr><td>宽松</td><td>s1, s4</td><td class="n">48</td><td class="n">64</td><td class="n"><b>16</b></td></tr>
+</table>
+<div class="cap">两档 SURVIVE 均 &gt; 0 ⇒ 判「靶未达成」，<b>不占「修复即自杀」度数</b>。唯一严格存活路径要求完成靶自己 L4798 承认「待完成」的那一步。</div>
+<footer>TUFT-R258 · 暗能量与宇宙常数层 · 条目 28（PASS 5 / FAIL 18 / INFO 3 / BND 2）· 控制组 34/34 · 守卫 16/16 · 靶 3 份只读（sha256 前后一致）· 未做 git · 未跑 refresh_catalog.py</footer>
+</div>
+<script>
+var D={"tauH": -26.137511351614744, "tauP": 34.79149011858855, "tauEW": 18.096136856837237, "tauObs": -25.97987263187884, "tauObsEq": -34.456693334806765, "omH": 0.33333333333333326, "omP": 2.403707871612828e+121, "omEW": 9.776314454685187e+87, "zpDec": 120.74454543688348, "qA": -0.53335, "qB": 0.15555, "Lam": 1.097121526138923e-52};
+
+function setup(id,h){
+  var cv=document.getElementById(id), dpr=window.devicePixelRatio||1;
+  var w=cv.parentNode.clientWidth-40; if(w<320)w=320;
+  cv.width=w*dpr; cv.height=h*dpr; cv.style.width=w+'px'; cv.style.height=h+'px';
+  var g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+  g.clearRect(0,0,w,h); return {g:g,w:w,h:h};
+}
+function ax(g,w,h,pad,lab){
+  g.strokeStyle='#c9d1da'; g.lineWidth=1;
+  g.beginPath(); g.moveTo(pad.l,pad.t); g.lineTo(pad.l,h-pad.b); g.lineTo(w-pad.r,h-pad.b);
+  g.stroke();
+}
+function txt(g,s,x,y,col,fs,al){
+  g.fillStyle=col||'#5a6472'; g.font=(fs||11)+"px ui-monospace,Consolas,monospace";
+  g.textAlign=al||'left'; g.fillText(s,x,y);
+}
+function sci(x){
+  if(x===0) return '0';
+  var e=Math.floor(Math.log10(Math.abs(x)));
+  var m=x/Math.pow(10,e);
+  return m.toFixed(2)+'e'+e;
+}
+
+// ---- 图1 三候选跨距
+(function(){
+  var h=300, S=setup('c1',h), g=S.g, w=S.w;
+  var pad={l:52,r:22,t:26,b:44};
+  ax(g,w,h,pad);
+  var lo=-40, hi=40;
+  function X(v){return pad.l+(v-lo)/(hi-lo)*(w-pad.l-pad.r);}
+  for(var v=lo;v<=hi;v+=10){
+    g.strokeStyle='#eef1f5'; g.beginPath(); g.moveTo(X(v),pad.t); g.lineTo(X(v),h-pad.b); g.stroke();
+    txt(g,'1e'+v,X(v),h-pad.b+16,'#8a94a2',10,'center');
+  }
+  txt(g,'log10 tau  (m^-1)',(w)/2,h-10,'#5a6472',11,'center');
+  var items=[
+    {v:D.tauP, c:'#c0392b', lab:'1/l_P', dy:-16},
+    {v:D.tauEW,c:'#b9770e', lab:'v/(hbar c)', dy:-16},
+    {v:D.tauObs,c:'#1f5fa9', lab:'tau_Lambda (propto, A=1)', dy:34},
+    {v:D.tauObsEq,c:'#7d3c98', lab:'tau_Lambda (=, c^2)', dy:56},
+    {v:D.tauH, c:'#1e8449', lab:'H0/c', dy:-16}
+  ];
+  // 跨距括线
+  var y0=pad.t+14;
+  g.strokeStyle='#c0392b'; g.lineWidth=1.4; g.setLineDash([4,3]);
+  g.beginPath(); g.moveTo(X(D.tauObs),y0); g.lineTo(X(D.tauP),y0); g.stroke();
+  g.setLineDash([]);
+  txt(g,'跨 '+(D.tauP-D.tauObs).toFixed(1)+' 个数量级',(X(D.tauObs)+X(D.tauP))/2,y0-6,'#c0392b',11,'center');
+  items.forEach(function(it){
+    var x=X(it.v);
+    g.fillStyle=it.c; g.beginPath(); g.arc(x,h-pad.b,5,0,6.2832); g.fill();
+    g.strokeStyle='#fff'; g.lineWidth=1.5; g.beginPath(); g.arc(x,h-pad.b,5,0,6.2832); g.stroke();
+    txt(g,it.lab,x,h-pad.b+it.dy,it.c,10.5,'center');
+  });
+  g.strokeStyle='#12161c'; g.lineWidth=1; g.setLineDash([2,2]);
+  g.beginPath(); g.moveTo(X(D.tauObs),pad.t); g.lineTo(X(D.tauObs),h-pad.b); g.stroke();
+  g.setLineDash([]);
+})();
+
+// ---- 图2 两读法
+(function(){
+  var h=230, S=setup('c2',h), g=S.g, w=S.w;
+  var pad={l:52,r:22,t:20,b:40};
+  var lo=-36, hi=-24;
+  function X(v){return pad.l+(v-lo)/(hi-lo)*(w-pad.l-pad.r);}
+  ax(g,w,h,pad);
+  for(var v=lo;v<=hi;v+=2){
+    txt(g,'1e'+v,X(v),h-pad.b+16,'#8a94a2',10,'center');
+  }
+  txt(g,'log10 tau  (m^-1)',w/2,h-10,'#5a6472',11,'center');
+  var bars=[
+    {v:D.tauObsEq, lab:'= 读法 (Lambda=c^2 tau^2)', c:'#7d3c98'},
+    {v:D.tauObs,   lab:'propto 读法 (A=1)',        c:'#1f5fa9'}
+  ];
+  bars.forEach(function(b,i){
+    var x=X(b.v), y=pad.t+30+i*46;
+    g.fillStyle=b.c; g.fillRect(pad.l,y,x-pad.l,22);
+    txt(g,b.lab,pad.l+8,y+15,'#fff',11);
+    txt(g,'tau = '+sci(Math.pow(10,b.v)),x+8,y+15,b.c,11);
+  });
+  var dy=(D.tauObs-D.tauObsEq).toFixed(2);
+  txt(g,'两读法之差 = '+dy+' 个数量级 = c',pad.l,pad.t+124,'#c0392b',12);
+  txt(g,'靶从未指定用哪一个',pad.l,pad.t+142,'#5a6472',11);
+})();
+
+// ---- 图3 q0(w)
+(function(){
+  var h=300, S=setup('c3',h), g=S.g, w=S.w;
+  var pad={l:58,r:24,t:22,b:44};
+  var wlo=-2.0, whi=0.5, qlo=-0.9, qhi=0.5;
+  function X(v){return pad.l+(v-wlo)/(whi-wlo)*(w-pad.l-pad.r);}
+  function Y(v){return h-pad.b-(v-qlo)/(qhi-qlo)*(h-pad.t-pad.b);}
+  ax(g,w,h,pad);
+  // 网格
+  for(var q=-0.8;q<=0.4;q+=0.2){
+    g.strokeStyle='#eef1f5'; g.beginPath(); g.moveTo(pad.l,Y(q)); g.lineTo(w-pad.r,Y(q)); g.stroke();
+    txt(g,q.toFixed(1),pad.l-8,Y(q)+4,'#8a94a2',10,'right');
+  }
+  // q=0 线
+  g.strokeStyle='#8a94a2'; g.lineWidth=1; g.beginPath();
+  g.moveTo(pad.l,Y(0)); g.lineTo(w-pad.r,Y(0)); g.stroke();
+  txt(g,'q=0',w-pad.r-4,Y(0)-6,'#8a94a2',10,'right');
+  // 直线 q(w)=0.5OmM+0.5OmL(1+3w)
+  var OmM=0.3111, OmL=0.6889;
+  g.strokeStyle='#1f5fa9'; g.lineWidth=2.2; g.beginPath();
+  for(var i=0;i<=120;i++){
+    var wv=wlo+(whi-wlo)*i/120;
+    var q=0.5*OmM+0.5*OmL*(1+3*wv);
+    if(i===0)g.moveTo(X(wv),Y(q)); else g.lineTo(X(wv),Y(q));
+  }
+  g.stroke();
+  // 两点
+  var pts=[
+    {w:-1, q:D.qA, c:'#1e8449', lab:'w=-1 (靶规定 tau=const)  q='+D.qA.toFixed(4)},
+    {w:-1/3, q:D.qB, c:'#c0392b', lab:'w=-1/3 (几何标度 tau~1/a)  q='+D.qB.toFixed(4)}
+  ];
+  pts.forEach(function(p){
+    g.fillStyle=p.c; g.beginPath(); g.arc(X(p.w),Y(p.q),6,0,6.2832); g.fill();
+    g.strokeStyle='#fff'; g.lineWidth=2; g.beginPath(); g.arc(X(p.w),Y(p.q),6,0,6.2832); g.stroke();
+    var ty=Y(p.q)+(p.q<0? -14: 24);
+    txt(g,p.lab,X(p.w),ty,p.c,10.5,'center');
+  });
+  for(var wv=-2;wv<=0.5;wv+=0.5){
+    txt(g,wv.toFixed(1),X(wv),h-pad.b+16,'#8a94a2',10,'center');
+  }
+  txt(g,'w',w/2,h-10,'#5a6472',11,'center');
+  txt(g,'q0',14,pad.t+8,'#5a6472',11,'left');
+})();
+
+// ---- 图4 零点能
+(function(){
+  var h=250, S=setup('c4',h), g=S.g, w=S.w;
+  var pad={l:58,r:24,t:22,b:44};
+  var lo=0, hi=Math.ceil(D.zpDec)+1;
+  function Y(v){return h-pad.b-(v-lo)/(hi-lo)*(h-pad.t-pad.b);}
+  ax(g,w,h,pad);
+  for(var v=0;v<=hi;v+=20){
+    g.strokeStyle='#eef1f5'; g.beginPath(); g.moveTo(pad.l,Y(v)); g.lineTo(w-pad.r,Y(v)); g.stroke();
+    txt(g,'1e'+v,pad.l-8,Y(v)+4,'#8a94a2',10,'right');
+  }
+  var x0=pad.l+70, bw=Math.min(150,(w-pad.l-pad.r-140));
+  // 柱：rho_Lambda 为 0 参照
+  g.fillStyle='#1f5fa9'; g.fillRect(x0,Y(1),bw,Y(0)-Y(1));
+  txt(g,'rho_Lambda (观测)',x0,Y(0)-10,'#1f5fa9',11);
+  // 柱：零点能
+  var x1=x0+bw+50;
+  g.fillStyle='#c0392b'; g.fillRect(x1,Y(D.zpDec),bw,Y(0)-Y(D.zpDec));
+  txt(g,'靶自己的 L 的零点能',x1,Y(D.zpDec)-10,'#c0392b',11);
+  // 差距标注
+  g.strokeStyle='#c0392b'; g.lineWidth=1.2; g.setLineDash([4,3]);
+  g.beginPath(); g.moveTo(x1+bw+10,Y(D.zpDec)); g.lineTo(x1+bw+10,Y(0)); g.stroke();
+  g.setLineDash([]);
+  txt(g,'= '+D.zpDec.toFixed(2)+' 个数量级',x1+bw+18,(Y(D.zpDec)+Y(0))/2,'#c0392b',11.5);
+  txt(g,'靶 L4776 声称「这直接绕开 10^120」',pad.l+10,pad.t+14,'#12161c',12);
+})();
+
+window.addEventListener('resize',function(){location.reload();});
+
+</script>
+</body></html>

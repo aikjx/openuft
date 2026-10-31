@@ -235,7 +235,7 @@ def main():
         a = 1.0 / (1.0 + z)
         sig[z] = SIGMA8_0 * interp(A, DD, a) / d1
     ok4 = (abs(sig[0.0] - SIGMA8_0) < 1e-12
-           and 0.60 <= sig[1.0] <= 0.68
+           and 0.46 <= sig[1.0] <= 0.54
            and all(sig[zs[i]] < sig[zs[i - 1]] for i in range(1, len(zs))))
     guard("G4", "σ8(z) 归一到输入值并单调衰减", ok4,
           f"σ8(0)={sig[0.0]:.6f}（输入 {SIGMA8_0}）；σ8(1)={sig[1.0]:.6f}；"
@@ -254,8 +254,10 @@ def main():
             {"D_example": "0.5", "f": "1"})
     ratio_f = f0 / 1.0
     ratio_d = d_rk[0.5] / 0.5
-    control("C2", "Λ 对增长的抑制：f0 与 D(0.5) 相对 EdS", 0.45 < ratio_f < 0.60,
-            f"f0(ΛCDM)/f0(EdS)={ratio_f:.6f}；D(0.5)/a={ratio_d:.6f}（<1 即抑制）",
+    control("C2", "Λ 使晚期增长受抑：f0 远低于 EdS 的 1，D(a)/a 由 1.27 降到 1", 
+            0.45 < ratio_f < 0.60 and 1.15 < ratio_d < 1.30,
+            f"f0(ΛCDM)/f0(EdS)={ratio_f:.6f}（EdS 为 1）；D(0.5)/a={ratio_d:.6f}"
+            "（今日归一，过去增长相对更快，比值随 a 单调降到 1）",
             {"f_ratio": f"{ratio_f:.6f}", "D_ratio": f"{ratio_d:.6f}"})
 
     # ---------------------------------------------------------------- S6

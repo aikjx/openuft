@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TUFT-R262 · 重子不对称层 · 机器核验</title>
+<style>
+:root{--ink:#12161c;--sub:#5a6472;--line:#dfe4ea;--bg:#fbfcfd;--card:#fff;
+--red:#c0392b;--green:#1e8449;--blue:#1f5fa9;--amber:#b9770e;--violet:#7d3c98;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font-family:'Segoe UI','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+line-height:1.62;font-size:15px}
+.wrap{max-width:1060px;margin:0 auto;padding:38px 22px 80px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.3px}
+h2{font-size:19px;margin:38px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--line)}
+h3{font-size:15.5px;margin:22px 0 8px;color:var(--blue)}
+.sub{color:var(--sub);font-size:13.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+padding:18px 20px;margin:14px 0;box-shadow:0 1px 2px rgba(20,30,45,.04)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:13px 15px}
+.kpi .lab{font-size:11.5px;color:var(--sub);letter-spacing:.4px;text-transform:uppercase}
+.kpi .val{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums;margin-top:3px}
+.kpi .note{font-size:11.5px;color:var(--sub);margin-top:2px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f4f6f9;font-weight:620;font-size:12.5px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;
+font-family:ui-monospace,Consolas,monospace}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:20px;
+font-weight:640;letter-spacing:.3px}
+.t-fail{background:#fdecea;color:var(--red)}
+.t-pass{background:#e8f6ee;color:var(--green)}
+.t-info{background:#eaf1fa;color:var(--blue)}
+.t-bnd{background:#fdf3e3;color:var(--amber)}
+canvas{display:block;width:100%;height:auto;max-width:100%}
+.cap{font-size:12.3px;color:var(--sub);margin-top:6px}
+blockquote{margin:12px 0;padding:10px 15px;border-left:3px solid var(--blue);
+background:#f2f6fb;color:#243040;font-size:13.7px;border-radius:0 7px 7px 0}
+code{font-family:ui-monospace,Consolas,monospace;font-size:12.6px;
+background:#f0f2f5;padding:1px 5px;border-radius:4px}
+footer{margin-top:46px;padding-top:16px;border-top:1px solid var(--line);
+color:var(--sub);font-size:12.4px}
+</style>
+</head>
+<body><div class="wrap">
+<h1>TUFT-R262 · 重子不对称层</h1>
+<div class="sub">攻靶：CP 破坏与宇宙重子不对称性（轻子生成）。靶文 L5369–L5500。<b>本卷判「靶未达成」，不占度数链。</b></div>
+
+<div class="grid" style="margin-top:20px">
+<div class="kpi"><div class="lab">条目</div>
+<div class="val" style="color:var(--ink)">23</div>
+<div class="note">PASS 8 / FAIL 11 / INFO 3 / BND 1</div></div>
+<div class="kpi"><div class="lab">控制组</div>
+<div class="val" style="color:var(--green)">30/30</div>
+<div class="note">全部机算，禁写死 True</div></div>
+<div class="kpi"><div class="lab">守卫</div>
+<div class="val" style="color:var(--green)">16/16</div>
+<div class="note">含度数机器核定</div></div>
+<div class="kpi"><div class="lab">链条缺口</div>
+<div class="val" style="color:var(--red)">2 / 4</div>
+<div class="note">ε→η_B 四环节缺 washout 与 g_*</div></div>
+</div>
+
+<blockquote><b>一句判词</b>：这章主体是标准 leptogenesis 教科书的<b>正确复述</b>，TUFT 的增量只有三句定性附会（零公式零数值）；而它抄标准物理时把 <b>sphaleron 选择定则抄反</b>，且该错误与它自己下一行的 B=(28/79)(B−L) <b>直接自毁</b>。</blockquote>
+<h2>1 · sphaleron 选择定则：靶写反了</h2>
+<div class="card"><canvas id="c1" height="250"></canvas>
+<div class="cap">每次跃迁在每代产生 3 个重子与 3 个轻子（B 与 L 同步变）⇒ B+L 被破坏、B−L 守恒。靶两项全反，且与它下一行的 B=(28/79)(B−L) 自毁：若 B−L 不守恒，该式右端随时间漂移，B 无稳定平衡值。</div></div>
+
+<table><tr><th>量</th><th class="n">靶的写法</th><th class="n">标准</th></tr>
+<tr><td>Δ(B+L)</td><td class="n">0</td><td class="n"><b>18 ≠ 0（破坏）</b></td></tr>
+<tr><td>Δ(B−L)</td><td class="n">≠ 0</td><td class="n"><b>0（守恒）</b></td></tr>
+</table>
+<h2>2 · ε → η_B 的链条：四环节缺两个</h2>
+<div class="card"><canvas id="c2" height="200"></canvas>
+<div class="cap">靶只写了 ①（ε 定义式）与 ④（目标值），中间的 <b>washout 因子 κ_f</b> 与 <b>有效自由度 g_*</b> <b>全语料 0 命中</b>。本卷补算：coef = 0.023374，κ_f=1 需 ε₁=2.610e-08。
+</div></div>
+
+<table><tr><th>环节</th><th>内容</th><th>靶</th></tr>
+<tr><td>①</td><td>ε<sub>i</sub> 定义式</td><td><span class="tag t-pass">有</span></td></tr>
+<tr><td>②</td><td>washout κ<sub>f</sub>（由 K=Γ/H 定）</td><td><span class="tag t-fail">0 命中</span></td></tr>
+<tr><td>③</td><td>有效自由度 g<sub>*</sub></td><td><span class="tag t-fail">0 命中</span></td></tr>
+<tr><td>④</td><td>η<sub>B</sub> = (28/79)(ε₁κ<sub>f</sub>/g<sub>*</sub>)(s/n<sub>γ</sub>)</td><td><span class="tag t-bnd">只写目标值</span></td></tr>
+</table>
+<h2>3 · M_i 反解：5 档全可行 ⇒ 零判别力</h2>
+<div class="card"><canvas id="c3" height="280"></canvas>
+<div class="cap">用 η<sub>B</sub> 反解 κ<sub>f</sub>：M₁ 从 10⁹ 跨到 10¹³（4 个量级），反解出的 κ<sub>f</sub> <b>全部落在 (0,1]</b> ⇒ 任一 M₁ 都能「解释」观测值 ⇒ 靶给的 M_i 范围没有判别力（与 r252 的「反推」同型）。</div></div>
+
+<h2>4 · 标准内容 vs TUFT 增量的行配比</h2>
+<div class="card"><canvas id="c4" height="150"></canvas>
+<div class="cap">BAU 章共 90 行：含标准物理关键词 24 行（26.7%），含 TUFT 关键词 22 行，<b>两者兼有仅 6 行（6.7%）</b> —— 兼有才是「把 TUFT 接到标准链条上」的位置 ⇒ 增量几乎为零。</div></div>
+
+<h2>5 · 条目明细（23）</h2>
+<table><tr><th>ID</th><th>组</th><th>判</th><th>条目</th></tr>
+<tr><td><code>A01</code></td><td>A</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>eta_B 的观测值是否给出（含公式定义与数值）</td></tr>
+<tr><td><code>A02</code></td><td>A</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>Sakharov 三条件是否列全</td></tr>
+<tr><td><code>A03</code></td><td>A</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>B = (28/79)(B−L) 是否给出且注明为群论结果</td></tr>
+<tr><td><code>A04</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★★ sphaleron 选择定则被写反（Δ(B+L)=0 / Δ(B−L)≠0）</td></tr>
+<tr><td><code>A05</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★★ eps_i → eta_B 的定量链是否出现（washout / efficiency / g_* / κ_f）</td></tr>
+<tr><td><code>A06</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 唯一的「TUFT 独有预言」（κ²τ² 修正 ε_i）是否有公式或数值</td></tr>
+<tr><td><code>A07</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★ 重涡旋质量 M_i 是否给出公式（还是只给范围）</td></tr>
+<tr><td><code>A08</code></td><td>A</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 「CP 相位 = κ²τ² 带来的标架复旋转」是否有方程</td></tr>
+<tr><td><code>A09</code></td><td>A</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>0νββ 是否被作为判据提出（可证伪方向）</td></tr>
+<tr><td><code>B01</code></td><td>B</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>B=(28/79)(B−L) 的群论核验（(8N_f+4N_H)/(22N_f+13N_H)）</td></tr>
+<tr><td><code>B02</code></td><td>B</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★★ sphaleron 选择定则机算：Δ(B+L)=6N_f≠0 而 Δ(B−L)=0</td></tr>
+<tr><td><code>B03</code></td><td>B</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★★ A04 的错误与靶自己的 B=(28/79)(B−L) 直接自毁</td></tr>
+<tr><td><code>B04</code></td><td>B</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>eta_B 观测值的口径核验（靶 6.1e-10 vs Planck 6.12±0.04 e-10）</td></tr>
+<tr><td><code>B05</code></td><td>B</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★ 要 η_B=6.1e-10，所需 ε₁ κ_f 的量级（靶从未做这一步）</td></tr>
+<tr><td><code>B06</code></td><td>B</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>★ Davidson–Ibarra 上界核验：M_i ~ 1e10–1e13 GeV 是否落在可行区</td></tr>
+<tr><td><code>B07</code></td><td>B</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ Frenet 标架（2 参、实）与 PMNS 矩阵（6 参、复）自由度不匹配</td></tr>
+<tr><td><code>C01</code></td><td>C</td>
+<td><span class="tag t-info">INFO</span></td>
+<td>★ BAU 章的「标准内容 / TUFT 增量」逐行配比（判断增量有多少）</td></tr>
+<tr><td><code>C02</code></td><td>C</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 「κ²τ² 修 ε_i 是独有预言」零判别力：δ 无定义 ⇒ 对任意 δ 都无观测后果</td></tr>
+<tr><td><code>C03</code></td><td>C</td>
+<td><span class="tag t-fail">FAIL</span></td>
+<td>★★ 反解拟合零判别力：M_i 从 1e9 跨到 1e13（4 个量级）全都能「解释」η_B</td></tr>
+<tr><td><code>C04</code></td><td>C</td>
+<td><span class="tag t-pass">PASS</span></td>
+<td>SM 的 CKM CP 破坏不足以为 BAU 供数（靶的定性陈述是否正确）</td></tr>
+<tr><td><code>D01</code></td><td>D</td>
+<td><span class="tag t-bnd">BOUNDARY</span></td>
+<td>修复定价（2^7 = 128 组合，双档都报）</td></tr>
+<tr><td><code>E01</code></td><td>E</td>
+<td><span class="tag t-info">INFO</span></td>
+<td>【交联·不重复】马约拉纳 CP 相位与 PMNS 的物理内含归中微子物理，本卷只审 BAU 闭合性</td></tr>
+<tr><td><code>E02</code></td><td>E</td>
+<td><span class="tag t-info">INFO</span></td>
+<td>【交联·不重复】质量谱反解与 M_i 输入同型，已在 r252 判过</td></tr>
+</table>
+<h2>6 · 修复定价（7 槽位 × 2⁷ = 128，双档）</h2>
+<table><tr><th>档</th><th>必改</th><th class="n">EMPTY</th><th class="n">SUICIDE</th><th class="n">SURVIVE</th></tr>
+<tr><td>严格</td><td>s1, s2, s4, s5</td><td class="n">60</td><td class="n">64</td><td class="n"><b>4</b></td></tr>
+<tr><td>宽松</td><td>s1, s2</td><td class="n">48</td><td class="n">64</td><td class="n"><b>16</b></td></tr>
+</table>
+<div class="cap">两档 SURVIVE 均 &gt; 0 ⇒ 判「靶未达成」，<b>不占「修复即自杀」度数</b>。严格档 4 个存活组合全部要求 s4（Frenet→PMNS 显式映射）—— 那是新推导。</div>
+<footer>TUFT-R262 · 重子不对称层 · 条目 23（PASS 8 / FAIL 11 / INFO 3 / BND 1）· 控制组 30/30 · 守卫 16/16 · 靶 3 份只读（sha256 前后一致）· 未做 git · 未跑 refresh_catalog.py</footer>
+</div>
+<script>
+var D={"dbpl": 18, "dbml": 0, "rows": [{"M": 9.0, "kf": 0.26508757611734673}, {"M": 10.0, "kf": 0.026508757611734674}, {"M": 11.0, "kf": 0.002650875761173467}, {"M": 12.0, "kf": 0.00026508757611734676}, {"M": 13.0, "kf": 2.6508757611734677e-05}], "ratio": {"std": 24, "tuft": 22, "both": 6, "n": 90}, "eps1": 2.6097212357954542e-08, "eps01": 2.609721235795454e-07, "coef": 0.023374144013280765};
+
+function setup(id,h){
+  var cv=document.getElementById(id), dpr=window.devicePixelRatio||1;
+  var w=cv.parentNode.clientWidth-40; if(w<320)w=320;
+  cv.width=w*dpr; cv.height=h*dpr; cv.style.width=w+'px'; cv.style.height=h+'px';
+  var g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+  g.clearRect(0,0,w,h); return {g:g,w:w,h:h};
+}
+function txt(g,s,x,y,col,fs,al){
+  g.fillStyle=col||'#5a6472'; g.font=(fs||11)+"px ui-monospace,Consolas,monospace";
+  g.textAlign=al||'left'; g.fillText(s,x,y);
+}
+function sci(x){
+  if(x===0) return '0';
+  var e=Math.floor(Math.log10(Math.abs(x))), m=x/Math.pow(10,e);
+  return m.toFixed(2)+'e'+e;
+}
+
+// 图1 选择定则对比
+(function(){
+  var h=250, S=setup('c1',h), g=S.g, w=S.w;
+  var pad={l:70,r:24,t:34,b:52};
+  g.strokeStyle='#c9d1da'; g.beginPath();
+  g.moveTo(pad.l,pad.t); g.lineTo(pad.l,h-pad.b); g.lineTo(w-pad.r,h-pad.b); g.stroke();
+  txt(g,'靶的写法',60,pad.t+14,'#c0392b',11,'center');
+  txt(g,'标准',60,pad.t+30,'#1e8449',11,'center');
+  var bw=(w-pad.l-pad.r)/2-30;
+  // 两组：B+L 与 B-L
+  var groups=[
+    {lab:'Delta(B+L)', tgt:0, std:D.dbpl},
+    {lab:'Delta(B-L)', tgt:1, std:0}
+  ];
+  groups.forEach(function(gr,i){
+    var x0=pad.l+20+i*((w-pad.l-pad.r)/2);
+    txt(g,gr.lab,x0+bw/2,h-pad.b+18,'#12161c',11,'center');
+    // 靶柱
+    g.fillStyle='#c0392b';
+    var ht=gr.tgt===0?8:56;
+    g.fillRect(x0, h-pad.b-ht, bw*0.42, ht);
+    txt(g, gr.tgt===0?'0':'≠0', x0+bw*0.21, h-pad.b-ht-6,'#c0392b',10,'center');
+    // 标准柱
+    g.fillStyle='#1e8449';
+    var hs=gr.std===0?8:56;
+    g.fillRect(x0+bw*0.5, h-pad.b-hs, bw*0.42, hs);
+    txt(g, gr.std===0?'0':'≠0', x0+bw*0.71, h-pad.b-hs-6,'#1e8449',10,'center');
+  });
+  txt(g,'靶：B+L=0（说守恒） 标准：B+L=18（说破坏）',pad.l+10,pad.t-6,'#5a6472',11);
+})();
+
+// 图2 链条环节
+(function(){
+  var h=200, S=setup('c2',h), g=S.g, w=S.w;
+  var labels=['epsilon 定义','washout kf','g*','eta_B'];
+  var missing=[false,true,true,false];
+  var n=4, gap=14, bw=(w-40-(n-1)*gap)/n;
+  for(var i=0;i<n;i++){
+    var x=20+i*(bw+gap), y=60;
+    g.fillStyle = missing[i] ? '#fdecea' : '#e8f6ee';
+    g.strokeStyle = missing[i] ? '#c0392b' : '#1e8449';
+    g.lineWidth=1.6;
+    g.beginPath(); g.roundRect ? g.roundRect(x,y,bw,64,8) : g.rect(x,y,bw,64); g.fill(); g.stroke();
+    txt(g, labels[i], x+bw/2, y+28, missing[i]?'#c0392b':'#1e8449', 11.5, 'center');
+    txt(g, missing[i]?'0 命中':'有', x+bw/2, y+48, missing[i]?'#c0392b':'#1e8449', 10.5, 'center');
+    if(i<n-1){
+      g.strokeStyle='#8a94a2'; g.lineWidth=1.4;
+      g.beginPath(); g.moveTo(x+bw,y+32); g.lineTo(x+bw+gap,y+32); g.stroke();
+    }
+  }
+  txt(g,'epsilon -> eta_B 的四环节：缺 washout 与 g*', 20, 34, '#12161c', 12);
+  txt(g,'coef = '+D.coef.toFixed(6)+'   kf=1 需 eps1 = '+sci(D.eps1), 20, h-16, '#5a6472', 11);
+})();
+
+// 图3 kf 反解
+(function(){
+  var h=280, S=setup('c3',h), g=S.g, w=S.w;
+  var pad={l:70,r:24,t:26,b:46};
+  g.strokeStyle='#c9d1da'; g.beginPath();
+  g.moveTo(pad.l,pad.t); g.lineTo(pad.l,h-pad.b); g.lineTo(w-pad.r,h-pad.b); g.stroke();
+  var lo=8.5, hi=13.5;
+  function X(v){return pad.l+(v-lo)/(hi-lo)*(w-pad.l-pad.r);}
+  var qlo=-5, qhi=0.5;
+  function Y(v){return h-pad.b-(v-qlo)/(qhi-qlo)*(h-pad.t-pad.b);}
+  // 可行区 (0,1] => log kf <= 0
+  g.fillStyle='rgba(30,132,73,.07)';
+  g.fillRect(pad.l, Y(0), w-pad.l-pad.r, h-pad.b-Y(0));
+  g.strokeStyle='#1e8449'; g.setLineDash([4,3]); g.beginPath();
+  g.moveTo(pad.l,Y(0)); g.lineTo(w-pad.r,Y(0)); g.stroke(); g.setLineDash([]);
+  txt(g,'kf = 1（上限）', w-pad.r-4, Y(0)-6, '#1e8449', 10, 'right');
+  for(var e=9;e<=13;e++){
+    txt(g,'1e'+e, X(e), h-pad.b+16, '#8a94a2', 10, 'center');
+  }
+  txt(g,'M1 (GeV)', w/2, h-10, '#5a6472', 11, 'center');
+  D.rows.forEach(function(r){
+    var ideal=Math.log10(r.kf);
+    g.fillStyle='#1f5fa9';
+    g.beginPath(); g.arc(X(r.M),Y(ideal),6,0,6.2832); g.fill();
+    g.strokeStyle='#fff'; g.lineWidth=2;
+    g.beginPath(); g.arc(X(r.M),Y(ideal),6,0,6.2832); g.stroke();
+    txt(g, r.kf.toExponential(2), X(r.M), Y(ideal)-12, '#1f5fa9', 9.5, 'center');
+  });
+  txt(g,'五档全部落在可行区 ⇒ 零判别力', pad.l+10, pad.t+10, '#c0392b', 11.5);
+})();
+
+// 图4 行配比
+(function(){
+  var h=150, S=setup('c4',h), g=S.g, w=S.w;
+  var pad={l:24,r:24,t:52,b:36};
+  var bw=w-pad.l-pad.r;
+  var n=D.ratio.n, std=D.ratio.std, tuft=D.ratio.tuft, both=D.ratio.both;
+  function bar(y,val,col,lab){
+    var ww=bw*val/n;
+    g.fillStyle=col; g.fillRect(pad.l,y,ww,26);
+    txt(g,lab+' '+val+' 行 ('+(100*val/n).toFixed(1)+'%)', pad.l+10, y+18, '#fff', 11);
+  }
+  bar(pad.t, std, '#1f5fa9', '含标准物理关键词');
+  bar(pad.t+40, tuft, '#b9770e', '含 TUFT 关键词');
+  bar(pad.t+80, both, '#c0392b', '两者兼有');
+  txt(g,'共 '+n+' 行', w-pad.r, pad.t-10, '#5a6472', 11, 'right');
+})();
+
+window.addEventListener('resize',function(){location.reload();});
+
+</script>
+</body></html>

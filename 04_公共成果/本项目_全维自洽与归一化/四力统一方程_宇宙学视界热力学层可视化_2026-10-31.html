@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>260 · 四力统一方程·宇宙学视界热力学层（视界温度、熵与第一/第二定律）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#3b0764);border:1px solid #7c3aed;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#4c1d95;color:#e9d5ff;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#e9d5ff;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:19px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#e9d5ff;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .metric{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:10px;}
+  .metric .t{font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px;}
+  .bar{height:14px;border-radius:4px;margin:4px 0;position:relative;background:#111c31;}
+  .bar i{display:block;height:14px;border-radius:4px;}
+  .bar span{position:absolute;right:6px;top:-2px;font-size:11px;font-family:Consolas,monospace;color:#e2e8f0;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r260 · 宇宙学视界热力学层 · S=A/4ℓ_P² / T_GH / 第一·第二定律 · 零外部依赖</span>
+  <h1>四力统一方程·宇宙学视界热力学层<br>视界温度、熵与第一/第二定律</h1>
+  <p>承 r233（黑洞热力学）与 r237（背景层）：把 Bekenstein–Hawking 面积律与 Gibbons–Hawking 温度
+     从<strong>事件视界</strong>外推到 FRW 的<strong>表观视界</strong> r_A=c/H。
+     ①S/k_B=πc⁵/(GħH²)=A/(4ℓ_P²) 双路径；②T_GH=ħH/(2πk_B) 与 T_CMB 对照；
+     ③第一定律的正确形式（T dS=2dE_MS）vs 朴素静态形式（T dS=dE+p dV）；
+     ④第二定律 dS/dt；⑤视界熵的公设身份与观测通道边界。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：视界热力学机器复现；朴素 p dV 第一定律 FAIL；熵身份是公设</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>视界半径与 Gibbons–Hawking 温度</h3>
+  <canvas id="cvT" width="1000" height="420"></canvas>
+  <div class="read" id="readT"></div>
+  <p class="note">r_A=c/H(z)（左轴，Mpc）与 T_GH=ħH/(2πk_B)（右轴，10^-30 K）。H 随 z 增大 ⇒ 视界收缩、
+     温度升高。今日 T0≈2.66×10^-30 K，比 CMB 2.7255 K 低约 30 个量级 ⇒ 无直接测温通道（条目 H07）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>面积律：S/k_B = A/(4ℓ_P²) = πc⁵/(GħH²)</h3>
+  <div id="entBars"></div>
+  <div class="read" id="readS"></div>
+  <p class="note">两条独立代码路径（πc⁵/(GħH²) 与 4πr_A²/(4ℓ_P²)）在 z∈{0,1,5} 最大相对差 1.3×10⁻16 ⇒
+     机器零。今日 S0/k_B≈2.27×10^122（log10≈122.355）——这就是常说的「宇宙熵 10^122」，
+     但它依赖「把 A/4ℓ_P² 赋给表观视界」这一公设（条目 H06）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>第一定律：什么形式真的闭合</h3>
+  <div id="flBars"></div>
+  <div class="read" id="readF"></div>
+  <p class="note">金条 = 精确形式 T dS/dz 与 2 dE_MS/dz（E=ρc²V=c⁵/(2GH)）：6 个 z 点最大相对残差约 2×10⁻16 ⇒
+     结构恒等。红条 = 朴素静态形式 T dS=dE+p dV（p 含辐射 ρ_r c²/3 与 Λ 的 −ρ_Λ c²）：
+     rhs/lhs 比值 −0.527 / 0.180 / 0.389 / 0.486 ⇒ <strong>不闭合</strong>（条目 H05 FAIL）。
+     把静态黑洞的第一定律照搬到表观视界是错的。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>第二定律与纯 de Sitter 极限</h3>
+  <canvas id="cvS" width="1000" height="400"></canvas>
+  <div class="read" id="readSec"></div>
+  <p class="note">d(S/k_B)/dt = dS/dz·(−(1+z)H) > 0 全域（视界面积随膨胀增长）；纯 de Sitter（Ωm=Ωr=0）
+     下 H 常数 ⇒ dS/dt = 0，是第二定律的零测度边界（控制组 C1）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>r214–r260 全方法总账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§6</span>条目 · 守卫 · 控制组（机器账本）</h3>
+  <table id="entryTable"></table>
+  <table id="guardTable"></table>
+  <table id="controlTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§7</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = {"stem": "TUFT-r260", "round": 260, "date": "2026-10-31", "method": "r_A=c/H(z) + S/k_B=πc⁵/(GħH²)=A/(4ℓ_P²) + T_GH=ħH/(2πk_B) + 精确第一定律 T dS=2dE_MS（Misner–Sharp）+ 第二定律 dS/dt ——float64，纯标准库，解析导数", "cosmo_verdict": "视界热力学全部机器复现（面积律双路径、温度双路径、精确第一定律机器零、第二定律全域 dS/dt>0）；朴素 p dV 形式 FAIL；视界熵公设与无观测通道为边界 ——复现层，无新理论", "entries": [{"code": "H01", "level": "INFO", "title": "判定：视界热力学 = 标准 Bekenstein–Hawking / Gibbons–Hawking 复现，不是新理论", "detail": "面积律、GH 温度、de Sitter 熵 3πc³/(GħΛ) 均为教科书结果（Bekenstein 1973 / Hawking 1975 / Gibbons–Hawking 1977 / Cai–Kim 2005）；本卷只做机器复现与形式机检", "numbers": {}}, {"code": "H02", "level": "PASS", "title": "面积律 S/k_B = A/(4ℓ_P²)", "detail": "S0/k_B=2.265441e+122（log10=122.355153，即 10^122 量级）；πc⁵/(GħH²) 与 A/(4ℓ_P²) 双路径最大相对差 1.30e-16；r_A0=c/H0=4448.0 Mpc", "numbers": {}}, {"code": "H03", "level": "PASS", "title": "Gibbons–Hawking 温度与 CMB 对照", "detail": "T0=2.655354e-30 K；ħH/2πk_B 与 ħc/(2πk_B r_A) 双路径最大相对差 1.27e-16；T_GH/T_CMB=9.7426e-31", "numbers": {}}, {"code": "H04", "level": "PASS", "title": "精确第一定律 T dS = 2 dE_MS（Misner–Sharp 形式）", "detail": "E_MS=ρc²V=c⁵/(2GH)=8.3054e+69 J；T dS/dz 与 2 dE/dz 在 z∈{0,0.3,1,2,5,10} 最大相对残差 1.95e-16；S 随 t 单调增（G4）", "numbers": {}}, {"code": "H05", "level": "FAIL", "title": "朴素静态形式 T dS = dE + p dV 不闭合", "detail": "z∈{0,1,2,5}：rhs/lhs 比值 -0.5269, 0.1802, 0.3888, 0.4860（最大偏离 |ratio−1|=1.527）；Hayward 形式 dE=T dS+w dV（w=(ρc²−p)/2）比值 -0.7634 亦不闭合 ⇒ 把静态黑洞的第一定律照搬到表观视界是错的（必须用 Misner–Sharp 形式）", "numbers": {}}, {"code": "H06", "level": "BOUNDARY", "title": "视界熵的物理身份是公设，不是定理", "detail": "GH 温度对 de Sitter 视界严格；FRW 表观视界的热力学是框架性推广（Cai–Kim / Hayward），且不同视界定义（表观/粒子/事件）给不同熵；「宇宙总熵 10^122」依赖把 A/4ℓ_P² 赋给 r_A 这一公设", "numbers": {}}, {"code": "H07", "level": "BOUNDARY", "title": "无观测通道", "detail": "T_GH/T_CMB=9.743e-31，视界温度比 CMB 低约 30 个量级，直接测温不可能；视界熵 S0/k_B ~ 10^122 不进入任何可观测量（物质熵仅为其 7.07e-35 倍）", "numbers": {}}, {"code": "H08", "level": "INFO", "title": "判决：视界热力学复现 OK，统一仍无新物理", "detail": "r233（黑洞热力学）→本卷（宇宙学视界）为同一组定律的不同视界；r230『本质三层不可达』、r229 新颖性审计口径与本线动力学统一 FAIL 不变", "numbers": {}}], "guards": [{"id": "G1", "title": "S/k_B = A/(4ℓ_P²) 双路径恒等且 log10(S0) 落 121.5–123.5", "ok": true, "detail": "z∈{0,1,5} 最大相对差 1.30e-16；S0/k_B=2.265441e+122（log10=122.355153）；r_A0=1.372497e+26 m = 4447.959 Mpc（= c/H0）", "numbers": {"S0": "2.265441e+122", "log10S0": "122.355153", "rel": "1.30e-16", "rA0_Mpc": "4447.959"}}, {"id": "G2", "title": "T_GH 双路径恒等且 T0 ∈ [2,3.5]×10^-30 K", "ok": true, "detail": "z∈{0,1,5} 最大相对差 1.27e-16；T0=2.655354e-30 K；T_GH/T_CMB=9.7426e-31（CMB 2.7255 K）", "numbers": {"T0": "2.655354e-30", "rel": "1.27e-16", "T_ratio_cmb": "9.7426e-31"}}, {"id": "G3", "title": "精确第一定律 T dS/dz = 2 dE_MS/dz（E=ρc²V=c⁵/2GH）全域机器零", "ok": true, "detail": "z∈{0,0.3,1,2,5,10} 最大相对残差 1.95e-16（解析导数对解析导数，结构恒等：S=A/4ℓ_P²、T=ħH/2π、r_A=c/H 三者联立的必然结果）", "numbers": {"max_rel": "1.95e-16"}}, {"id": "G4", "title": "第二定律 dS/dt>0 全域；纯 de Sitter 极限 dS/dt=0", "ok": true, "detail": "ΛCDM：z∈{0,1,2,5,10} dS/dt = 4.682e+104, 6.521e+104, 4.530e+104, 1.772e+104, 7.225e+103（全部 >0）；纯 dS：H/H0 偏离 0.00e+00、dS/dt=0.00e+00", "numbers": {"dSdt_z0": "4.6825e+104", "dSdt_z10": "7.2251e+103"}}, {"id": "G5", "title": "交互 HTML 生成且自含", "ok": true, "detail": "已生成 D:\\a10\\aikjx\\code\\my_lib\\openuft\\04_公共成果\\本项目_全维自洽与归一化\\四力统一方程_宇宙学视界热力学层可视化_2026-10-31.html（27585 B），零外部 URL、JSON 已铸入", "numbers": {}}], "controls": [{"id": "C1", "title": "纯 de Sitter：H 常数 ⇒ dS/dt=0，且 S/k_B=3πc³/(GħΛ) 恒等", "ok": true, "detail": "Ωm=Ωr=0：H(z)/H0−1 最大 0.00e+00；dS/dt=0.00e+00；S/k_B(3πc³/GħΛ)=2.265441e+122 vs πc⁵/(GħH0²)=2.265441e+122（rel 1.62e-16）", "numbers": {"rel_lambda": "1.62e-16"}}, {"id": "C2", "title": "标度控制：S ∝ H^-2、T ∝ H（H0×1.10）", "ok": true, "detail": "H0×1.1 ⇒ S 比值 0.826446280991735（解析 1/1.102=0.826446280991735）；T 比值 1.100000000000000（解析 1.1）；⇒ 视界熵对 H0 是强敏感（10% 的 H0 ⇒ 17.4% 的 S），与 θ_s 对 H0 严格不变（r256 C1）形成对照", "numbers": {"S_ratio": "0.826446280991735", "T_ratio": "1.100000000000000"}}], "readings": {"params": {"H0_km": 67.4, "Om": 0.3153, "Or": 9.15e-05, "OL": 0.6846085, "T_CMB": 2.7255, "lP2": 2.6122803023742777e-70}, "horizon": {"T0": 2.6553535939990477e-30, "S0": 2.2654412301710247e+122, "log10S0": 122.3551528002413, "rA0_m": 1.3724968349418282e+26, "rA0_Mpc": 4447.959317507418, "E_MS0_J": 8.30535965762462e+69, "T_ratio_cmb": 9.742629220323051e-31, "S_inf": 3.309104736752501e+122, "lam": 1.592570077135902e-52, "S_lambda": 2.2654412301710243e+122}, "first_law": {"max_rel": 1.9499682479586978e-16, "rows": [{"z": 0.0, "T_K": 2.6553535939990477e-30, "S_kB": 2.2654412301710247e+122, "tds_dz": -7.859079461781823e+69, "dedz": -3.929539730890911e+69, "rel": 1.9499682479586978e-16}, {"z": 0.3, "T_K": 3.116602362565309e-30, "S_kB": 1.6445032318218457e+122, "tds_dz": -8.21545595302687e+69, "dedz": -4.107727976513436e+69, "rel": 1.865380996049601e-16}, {"z": 1.0, "T_K": 4.756324993366948e-30, "S_kB": 7.060809248547479e+121, "tds_dz": -5.472076178522505e+69, "dedz": -2.7360380892612526e+69, "rel": 0.0}, {"z": 2.0, "T_K": 8.05632705059673e-30, "S_kB": 2.4610664827520162e+121, "tds_dz": -2.5345790078533596e+69, "dedz": -1.26728950392668e+69, "rel": 1.5115878575075697e-16}, {"z": 5.0, "T_K": 2.2042312741663002e-29, "S_kB": 3.287632026387976e+120, "tds_dz": -4.955743983718432e+68, "dedz": -2.4778719918592167e+68, "rel": 1.9327263801115672e-16}, {"z": 10.0, "T_K": 5.452783702043684e-29, "S_kB": 5.372308962261211e+119, "tds_dz": -1.1024168947371134e+68, "dedz": -5.512084473685567e+67, "rel": 0.0}]}, "naive": {"rows": [{"z": 0.0, "tds": -7.859079461781823e+69, "rhs": 4.1406896187906e+69, "ratio": -0.5268669999999995, "hw_ratio": -0.7634334999999995}, {"z": 1.0, "tds": -5.472076178522505e+69, "rhs": -9.858783989620968e+68, "ratio": 0.18016532789356932, "hw_ratio": -0.4099173360532154}, {"z": 2.0, "tds": -2.5345790078533596e+69, "rhs": -9.855551014540766e+68, "ratio": 0.3888437087186263, "hw_ratio": -0.30557814564068647}, {"z": 5.0, "tds": -4.955743983718432e+68, "rhs": -2.4082823762520922e+68, "ratio": 0.4859577863917601, "hw_ratio": -0.25702110680412005}], "worst_dev": 1.5268669999999995}, "second": {"rows": [{"z": 0.0, "dSdt": 4.6824741384326603e+104}, {"z": 1.0, "dSdt": 6.520574149699665e+104}, {"z": 2.0, "dSdt": 4.530339989741081e+104}, {"z": 5.0, "dSdt": 1.7715924481970083e+104}, {"z": 10.0, "dSdt": 7.225073225087575e+103}], "ds_const": 0.0, "ds_dsdt": 0.0}, "matter": {"s_gamma_n": 1479255284.3892138, "S_matter": 1.6020121057342316e+88, "ratio": 7.071523570767232e-35}, "scan": {"z": [0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25, 5.5, 5.75, 6.0, 6.25, 6.5, 6.75, 7.0, 7.25, 7.5, 7.75, 8.0, 8.25, 8.5, 8.75, 9.0, 9.25, 9.5, 9.75, 10.0], "T_K": [2.6553535939990477e-30, 3.028328272978749e-30, 3.511908885403837e-30, 4.092413874131827e-30, 4.756324993366948e-30, 5.4924226256820775e-30, 6.291980790986895e-30, 7.148326394227704e-30, 8.05632705059673e-30, 9.01197226112267e-30, 1.0012065822144034e-29, 1.1054008156597808e-29, 1.213564354375907e-29, 1.3255152337261122e-29, 1.441097402572123e-29, 1.5601751492001562e-29, 1.6826289978808742e-29, 1.8083526386586602e-29, 1.9372505934389154e-29, 2.0692364145614664e-29, 2.2042312741663002e-29, 2.3421628445044636e-29, 2.4829643978673563e-29, 2.626574074489999e-29, 2.772934280541566e-29, 2.921991188056107e-29, 3.073694315637968e-29, 3.227996173841897e-29, 3.384851962846175e-29, 3.5442193127972734e-29, 3.706058059275503e-29, 3.870330047900861e-29, 4.0369989632998474e-29, 4.206030178582197e-29, 4.3773906221999366e-29, 4.5510486596297584e-29, 4.72697398777014e-29, 4.905137540304255e-29, 5.085511402568839e-29, 5.268068734703242e-29, 5.452783702043684e-29], "log10S": [122.3551528002413, 122.24099161997896, 122.1123110427269, 121.97943842572218, 121.84885447896082, 121.723869627358, 121.60582274625139, 121.49498877386705, 121.39112334580453, 121.29375782982332, 121.20235013017171, 121.11635796100023, 121.03527189925573, 120.9586280757986, 120.88601085159559, 120.81705081023954, 120.75142078414378, 120.68883127401551, 120.62902591720628, 120.57177729731609, 120.51688320246525, 120.46416334810284, 120.41345653752772, 120.36461821589228, 120.31751836885732, 120.27203971864313, 120.22807617450505, 120.1855314998533, 120.14431816344458, 120.10435634688977, 120.06557308498473, 120.02790151905585, 119.99128024664437, 119.95565275349766, 119.92096691605016, 119.88717456443084, 119.85423109758113, 119.82209514335983, 119.79072825759083, 119.76009465691354, 119.73016098105303], "rA_Mpc": [4447.959317507418, 3900.1401747266113, 3363.1011353378913, 2886.048460142722, 2483.199692236352, 2150.3998444107597, 1877.1361757212767, 1652.261537643583, 1466.040875144219, 1310.5793512766015, 1179.6671106159015, 1068.4725931430853, 973.2409094842607, 891.0425515445513, 819.577131887431, 757.024284469592, 701.9316067047273, 653.1306177353536, 609.6735651911048, 570.785661637796, 535.8287443849139, 504.2734234904888, 475.6775719317353, 449.66958573206017, 425.9352571961479, 404.2074051414998, 384.2576244363269, 365.8896765558358, 348.9341598789921, 333.2441848916828, 318.69184375416364, 305.16531183459966, 292.56645510878775, 280.8088448781932, 269.8161023100353, 259.5205114916466, 249.86185221798615, 240.78641348295952, 232.24615628113318, 224.19800033930647, 216.6032141579023]}, "scaling": {"hf": 1.1, "S_ratio": 0.8264462809917353, "T_ratio": 1.1}, "ledger": [{"round": "r214", "method": "静态中心力（UFE-4F 母式）", "verdict": "形式统一 PASS；动力学 FAIL"}, {"round": "r221", "method": "禁闭 σr + 通道门（UFE-4F⁺）", "verdict": "r214 严格超集"}, {"round": "r222", "method": "传播层（色散/群速度）", "verdict": "质量-力程等价"}, {"round": "r226", "method": "量子束缚层（薛定谔谱）", "verdict": "引力『原子』无意义"}, {"round": "r227", "method": "散射层（动量空间镜像）", "verdict": "λ=∞ ⇔ 零质量载体"}, {"round": "r228", "method": "变分层（L 与诺特）", "verdict": "一个作用量生成中心力；辐射反作用无 L"}, {"round": "r229", "method": "新颖性审计", "verdict": "无新理论/无新方程"}, {"round": "r230", "method": "引力本质层", "verdict": "WEP 结构恒等 + 1PN 两件套"}, {"round": "r232", "method": "引力波层", "verdict": "四极/HT/啁啾三管线互印"}, {"round": "r233", "method": "黑洞热力学层", "verdict": "四定律+Smarr+面积定理+熵力母式（仅引力）"}, {"round": "r234（并行）", "method": "强场层（史瓦西测地线）", "verdict": "ISCO/光子球/1PN 失效曲线"}, {"round": "r237", "method": "宇宙学背景层", "verdict": "FRW 年龄/距离-红移/Λ 通道"}, {"round": "r254", "method": "宇宙学扰动层", "verdict": "线性增长+BAO 声视界+σ8 演化"}, {"round": "r256", "method": "宇宙学声学峰层", "verdict": "θ_s/l_A/z_eq + 张量边界"}, {"round": "r260", "method": "宇宙学视界热力学层（本卷）", "verdict": "面积律/温度 + 精确第一定律 + 第二定律"}]}, "counts": {"entries": 8, "PASS": 3, "FAIL": 1, "BOUNDARY": 2, "INFO": 2, "guards": "5/5", "controls": "2/2"}, "verdict": "R260-COSMO-HORIZON-THERMO-OK-S-AREA-DUAL-PATH-OK-T-GH-DUAL-PATH-OK-EXACT-FIRST-LAW-TDS-EQ-2DEMS-OK-SECOND-LAW-OK-NAIVE-PDV-FORM-FAIL-PURE-DS-CONTROL-OK-H0-SCALING-CONTROL-OK-ENTROPY-POSTULATE-BOUNDARY-NO-OBSERVABLE-BOUNDARY-VERDICT-STANDARD-HORIZON-THERMODYNAMICS-NO-NEW-THEORY", "judgement": "CLOSED-INCREMENT（宇宙学视界热力学层：面积律双路径、温度双路径、精确第一定律 T dS=2dE_MS、第二定律）；朴素 p dV 形式 FAIL；视界熵公设与无观测通道为边界；无新理论", "source": {"engine": "TUFT-r260_四力统一方程_宇宙学视界热力学层_视界温度熵与第一第二定律_精算与交互可视化_2026-10-31.py", "inherits": ["r233（黑洞热力学层）", "r237（宇宙学背景层）", "r230（本质三层不可达）", "r229（新颖性审计口径）", "Bekenstein 1973 / Hawking 1975 / Gibbons–Hawking 1977 / Cai–Kim 2005 / Hayward 1998（只读）"]}};
+
+(function(){
+  const c = R.counts, h = R.readings.horizon;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">S0/k_B <b>${h.S0.toExponential(3)}</b></span>`+
+    `<span class="chip">T0 <b>${h.T0.toExponential(3)}</b> K</span>`;
+  document.getElementById("verdictLine").textContent =
+    `S0/k_B = ${h.S0.toExponential(6)}（log10 ${h.log10S0.toFixed(3)}）；T0 = ${h.T0.toExponential(6)} K，`+
+    `T_GH/T_CMB = ${h.T_ratio_cmb.toExponential(3)}；精确第一定律 T dS=2dE_MS 全域机器零；`+
+    `朴素 p dV 形式不闭合（FAIL）；视界熵身份是公设、无观测通道——复现层，无新理论。`;
+})();
+
+/* ---------- §1 r_A 与 T_GH ---------- */
+(function(){
+  const s = R.readings.scan, h = R.readings.horizon;
+  const cv = document.getElementById("cvT"), ctx = cv.getContext("2d");
+  const W=1000, H=420, PL=78, PR=78, PT=26, PB=50;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const zmax = Math.max(...s.z), zmin = 0;
+  const yAmin = 0, yAmax = Math.max(...s.rA_Mpc)*1.05;
+  const tVals = s.T_K.map(v=>v*1e30);
+  const yTmin = Math.min(...tVals)*0.92, yTmax = Math.max(...tVals)*1.08;
+  const X = z => PL + (z-zmin)/(zmax-zmin)*(W-PL-PR);
+  const YA = v => PT + (1-v/yAmax)*(H-PT-PB);
+  const YT = v => PT + (1-(v-yTmin)/(yTmax-yTmin))*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=5;i++){
+    const z=zmin+(zmax-zmin)*i/5, x=X(z);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(z.toFixed(1),x-8,H-PB+15);
+  }
+  ctx.fillStyle="#94a3b8"; ctx.fillText("r_A [Mpc]",10,PT+12);
+  ctx.fillText("T_GH [10^-30 K]",W-PR+6,PT+12);
+  ctx.fillText("z",W-PR-6,H-PB+34);
+  // r_A
+  ctx.strokeStyle="#63d2ff"; ctx.lineWidth=2.2; ctx.beginPath();
+  s.z.forEach((z,i)=>{ const x=X(z), y=YA(s.rA_Mpc[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  // T_GH
+  ctx.strokeStyle="#f7768e"; ctx.lineWidth=2.2; ctx.beginPath();
+  s.z.forEach((z,i)=>{ const x=X(z), y=YT(tVals[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  ctx.fillStyle="#63d2ff"; ctx.fillText("r_A",X(1.0)+8,YA(s.rA_Mpc[4])+4);
+  ctx.fillStyle="#f7768e"; ctx.fillText("T_GH",X(1.0)+8,YT(tVals[4])-8);
+  document.getElementById("readT").textContent =
+    `r_A(z=0) = ${h.rA0_Mpc.toFixed(3)} Mpc（c/H0）\n`+
+    `r_A(z=10) = ${s.rA_Mpc[s.rA_Mpc.length-1].toFixed(3)} Mpc\n`+
+    `T_GH(z=0) = ${h.T0.toExponential(6)} K ；T_GH/T_CMB = ${h.T_ratio_cmb.toExponential(3)}\n`+
+    `T_GH(z=10) = ${s.T_K[s.T_K.length-1].toExponential(4)} K`;
+})();
+
+/* ---------- §2 熵 ---------- */
+(function(){
+  const h = R.readings.horizon, m = R.readings.matter;
+  const rows = [
+    {t:"S0/k_B（面积律，双路径）", a:h.S0, aL:"S0", b:h.S_lambda, bL:"3πc³/GħΛ", max:h.S0*1.1, col:"#bb9af7", col2:"#4ade80"},
+    {t:"S_∞/k_B = S0/ΩΛ（纯 dS 终值）", a:h.S_inf, aL:"S_∞", b:h.S0, bL:"S0", max:h.S_inf*1.1, col:"#e0af68", col2:"#63d2ff"},
+    {t:"物质熵 / 视界熵（今日视界内）", a:m.ratio, aL:"比值", b:0, bL:"", max:1e-33, col:"#f7768e"},
+  ];
+  document.getElementById("entBars").innerHTML = rows.map(r=>{
+    const wa = Math.min(100, Math.abs(r.a)/r.max*100);
+    const wb = r.b ? Math.min(100, Math.abs(r.b)/r.max*100) : 0;
+    const fmt = v => v >= 1e-6 ? v.toExponential(6) : v.toExponential(3);
+    return `<div class="metric"><div class="t">${r.t}</div>`+
+      `<div class="bar"><i style="width:${Math.max(wa,0.5)}%;background:${r.col}"></i><span>${r.aL} ${fmt(r.a)}</span></div>`+
+      (r.b?`<div class="bar"><i style="width:${wb}%;background:${r.col2}"></i><span>${r.bL} ${fmt(r.b)}</span></div>`:"")+
+      `</div>`;
+  }).join("");
+  document.getElementById("readS").textContent =
+    `S0/k_B = ${h.S0.toExponential(9)}  (log10 = ${h.log10S0.toFixed(6)})\n`+
+    `r_A0 = ${h.rA0_m.toExponential(6)} m = ${h.rA0_Mpc.toFixed(2)} Mpc\n`+
+    `E_MS0 = ρc²V = ${h.E_MS0_J.toExponential(5)} J\n`+
+    `S_∞/k_B = S0/ΩΛ = ${h.S_inf.toExponential(6)}（若未来纯 dS，H_∞=H0√ΩΛ）\n`+
+    `s_γ/k_B = ${m.s_gamma_n.toExponential(4)} /m³ ⇒ 视界内物质熵 ${m.S_matter.toExponential(3)} k_B\n`+
+    `物质熵/视界熵 = ${m.ratio.toExponential(3)}（视界熵压倒性主导）`;
+})();
+
+/* ---------- §3 第一定律 ---------- */
+(function(){
+  const fl = R.readings.first_law, nv = R.readings.naive;
+  const cards = [];
+  fl.rows.forEach(r=>{
+    cards.push({t:`z=${r.z} · 精确形式 T dS/dz vs 2dE/dz`, a:r.tds_dz, aL:"T dS", b:2*r.dedz, bL:"2dE_MS", max:Math.abs(r.tds_dz)*1.15});
+  });
+  nv.rows.forEach(r=>{
+    cards.push({t:`z=${r.z} · 朴素形式 T dS/dz vs dE/dz+p dV/dz（比值 ${r.ratio.toFixed(3)}）`, a:Math.abs(r.tds), aL:"|T dS|", b:Math.abs(r.rhs), bL:"|dE+p dV|", max:Math.abs(r.tds)*1.15, bad:true});
+  });
+  document.getElementById("flBars").innerHTML = cards.map(r=>{
+    const wa = Math.min(100, Math.abs(r.a)/r.max*100), wb = Math.min(100, Math.abs(r.b)/r.max*100);
+    const c1 = r.bad ? "#f7768e" : "#d4a94e", c2 = r.bad ? "#e0af68" : "#4ade80";
+    const fmt = v => Math.abs(v) >= 1e-3 ? v.toExponential(3) : v.toExponential(2);
+    return `<div class="metric"><div class="t">${r.t}</div>`+
+      `<div class="bar"><i style="width:${wa}%;background:${c1}"></i><span>${r.aL} ${fmt(r.a)}</span></div>`+
+      `<div class="bar"><i style="width:${wb}%;background:${c2}"></i><span>${r.bL} ${fmt(r.b)}</span></div>`+
+      `</div>`;
+  }).join("");
+  document.getElementById("readF").textContent =
+    `精确形式：z∈{0,0.3,1,2,5,10} 最大相对残差 ${fl.max_rel.toExponential(3)}\n`+
+    `  E_MS = ρc²V = c⁵/(2GH)，T dS = dr_A/G ⇒ T dS = 2 dE_MS（结构恒等）\n`+
+    `朴素 p dV 形式 rhs/lhs 比值：`+nv.rows.map(r=>`z=${r.z}→${r.ratio.toFixed(4)}`).join("，")+`\n`+
+    `  ⇒ 最大偏离 |ratio−1| = ${nv.worst_dev.toFixed(3)}，不闭合（条目 H05 FAIL）\n`+
+    `Hayward 形式 dE=T dS+w dV（w=(ρc²−p)/2）比值 ${nv.rows[0].hw_ratio.toFixed(4)}，亦不闭合`;
+})();
+
+/* ---------- §4 第二定律 ---------- */
+(function(){
+  const sec = R.readings.second, s = R.readings.scan;
+  const cv = document.getElementById("cvS"), ctx = cv.getContext("2d");
+  const W=1000, H=400, PL=78, PR=50, PT=26, PB=48;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const zmax = Math.max(...s.z);
+  const lo = Math.min(...s.log10S), hi = Math.max(...s.log10S);
+  const X = z => PL + z/zmax*(W-PL-PR);
+  const Y = v => PT + (1-(v-(lo-0.3))/((hi+0.3)-(lo-0.3)))*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=5;i++){
+    const z=zmax*i/5, x=X(z);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(z.toFixed(1),x-8,H-PB+15);
+  }
+  for(let i=0;i<=4;i++){
+    const v=lo-0.3+((hi+0.3)-(lo-0.3))*i/4, y=Y(v);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(v.toFixed(1),10,y+3);
+  }
+  ctx.fillStyle="#94a3b8"; ctx.fillText("log10(S/k_B)",10,PT+12);
+  ctx.fillStyle="#94a3b8"; ctx.fillText("z",W-PR-6,H-PB+34);
+  ctx.strokeStyle="#4ade80"; ctx.lineWidth=2.2; ctx.beginPath();
+  s.z.forEach((z,i)=>{ const x=X(z), y=Y(s.log10S[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  ctx.fillStyle="#4ade80"; ctx.fillText("S 随 t 单调增（z 减 ⇒ S 增）",PL+180,PT+22);
+  document.getElementById("readSec").textContent =
+    `ΛCDM：`+sec.rows.map(r=>`z=${r.z}→${r.dSdt.toExponential(3)}/s`).join("，")+`\n`+
+    `  全部 dS/dt > 0（S/k_B 每秒增量）\n`+
+    `纯 dS：H/H0−1 最大 ${sec.ds_const.toExponential(2)}；dS/dt = ${sec.ds_dsdt.toExponential(2)}（零测度边界）\n`+
+    `今日 log10(S0/k_B) = ${s.log10S[0].toFixed(6)} ⇒ 视界面积随膨胀增长`;
+})();
+
+/* ---------- §5 ledger ---------- */
+(function(){
+  let html="<tr><th style='width:96px'>卷</th><th>方法</th><th>读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;
+  });
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §6 条目/守卫/控制组 ---------- */
+(function(){
+  let e="<tr><th style='width:60px'>码</th><th style='width:86px'>级别</th><th>条目</th></tr>";
+  R.entries.forEach(it=>{
+    const cls = it.level==="PASS"?"ok":(it.level==="FAIL"?"bad":"");
+    e+=`<tr><td class="mono">${it.code}</td><td class="${cls}">${it.level}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("entryTable").innerHTML=e;
+  let g="<tr><th style='width:60px'>码</th><th style='width:70px'>状态</th><th>守卫</th></tr>";
+  R.guards.forEach(it=>{
+    g+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("guardTable").innerHTML=g;
+  let c="<tr><th style='width:60px'>码</th><th style='width:70px'>状态</th><th>控制组</th></tr>";
+  R.controls.forEach(it=>{
+    c+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("controlTable").innerHTML=c;
+})();
+
+/* ---------- §7 边界卡 ---------- */
+(function(){
+  const h = R.readings.horizon, m = R.readings.matter, sc = R.readings.scaling;
+  const cards=[
+    {t:"复现层",b:"面积律、GH 温度、de Sitter 熵 3πc³/(GħΛ) 全部是教科书结果（Bekenstein 1973 / Hawking 1975 / Gibbons–Hawking 1977 / Cai–Kim 2005 / Hayward 1998）——本卷无新物理。"},
+    {t:"第一定律必须换形式",b:"朴素静态形式 T dS=dE+p dV 在表观视界上不闭合（比值 −0.53/0.18/0.39/0.49）；能闭合的是 Misner–Sharp 形式 T dS=2dE_MS（E=ρc²V=c⁵/2GH）。这是把黑洞热力学外推到宇宙学时唯一必须改正的一条（H05 FAIL / H04 PASS）。"},
+    {t:"熵身份是公设",b:"GH 温度对 de Sitter 视界严格；FRW 表观视界热力学是框架性推广，且不同视界定义（表观/粒子/事件）给不同熵；10^122 依赖「把 A/4ℓ_P² 赋给 r_A」这一公设（H06 BOUNDARY）。"},
+    {t:"无观测通道",b:`T_GH/T_CMB = ${h.T_ratio_cmb.toExponential(2)}，视界温度比 CMB 低约 30 个量级；视界熵不进入任何可观测量；视界内物质熵仅为视界熵的 ${m.ratio.toExponential(2)} 倍（H07 BOUNDARY）。`},
+    {t:"标度与对照",b:`S ∝ H^-2、T ∝ H：H0×${sc.hf} ⇒ S 比值 ${sc.S_ratio.toFixed(6)}（解析 1/1.21）、T 比值 ${sc.T_ratio.toFixed(6)}（控制组 C2）。与 r256 C1「θ_s 对 H0 严格不变」形成对照：视界熵对 H0 强敏感。`},
+    {t:"纯 dS 极限",b:"Ωm=Ωr=0 ⇒ H 常数 ⇒ dS/dt=0（第二定律的零测度边界）；S_∞/k_B=S0/ΩΛ 给出未来终值量级（控制组 C1）。"},
+    {t:"统一仍无新物理",b:"r233（黑洞热力学）+ r237（背景）+本卷（宇宙学视界）为同一组定律的不同视界；r230『本质三层不可达』与动力学统一 FAIL 不变。"},
+  ];
+  document.getElementById("boundCards").innerHTML =
+    cards.map(c=>`<div class="card"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML =
+    `TUFT-r260 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64，解析导数）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>254 · 四力统一方程·宇宙学扰动层（线性增长、BAO 声视界与 σ8 演化）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #4338ca;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:19px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c7d2fe;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .metric{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:10px;}
+  .metric .t{font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px;}
+  .bar{height:14px;border-radius:4px;margin:4px 0;position:relative;background:#111c31;}
+  .bar i{display:block;height:14px;border-radius:4px;}
+  .bar span{position:absolute;right:6px;top:-2px;font-size:11px;font-family:Consolas,monospace;color:#e2e8f0;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r254 · 宇宙学扰动层 · 线性增长 · 零外部依赖</span>
+  <h1>四力统一方程·宇宙学扰动层<br>线性增长因子 D(a)、BAO 声视界 r_d 与 σ8(z) 演化</h1>
+  <p>承 r237（宇宙学背景层）之后的第一个增量：均匀背景之上的物质密度扰动。
+     ①增长 ODE 的 RK4 与 ΛCDM 精确积分解双路径互印；
+     ②增长率 f(a) 与增长指数 γ（Linder ≈0.55）；
+     ③重子声学振荡共动声视界 r_d 与 Planck 锚；
+     ④σ8(z)=σ8(0)·D(z)/D(0) 的演化自洽。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：ΛCDM 线性扰动骨架机器复现；σ8(0) 是观测输入；无新理论</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>线性增长因子 D(a) 与增长率 f(a)</h3>
+  <canvas id="cvG" width="1000" height="460"></canvas>
+  <div class="read" id="readG"></div>
+  <p class="note">蓝线 = D(a)（左轴，D(1)=1 归一）；紫线 = f(a)=dlnD/dlna（右轴）；金虚线 = EdS 参考 D=a。
+     两条独立路径（growth ODE 的 RK4 vs ΛCDM 积分解 D∝E∫da/(a³E³)）逐点互印，最大相对差须 &lt;1e−3（守卫 G1）。
+     Λ 使晚期增长放缓：D(a)/a 由早期 ~1.27 降到今日 1，增长率 f0 由早期 ~1 降到 0.527（控制组 C2）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>σ8(z) 演化：只给相对演化，绝对值是输入</h3>
+  <canvas id="cvS" width="1000" height="400"></canvas>
+  <div class="read" id="readS"></div>
+  <p class="note">σ8(z)=σ8(0)·D(z)/D(0)，σ8(0)=0.811 为 Planck 观测输入（本框架不能预言 A_s）。
+     蓝线 = σ8(z)，金虚线 = σ8(0)。随 z 单调下降 ⇒ 高红移处结构更"未长成"；线性理论在 z≳1 之后
+     需非线性修正，本卷不越过线性区。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>BAO 共动声视界 r_d：锚定 Planck 147.09 Mpc</h3>
+  <div id="baoBars"></div>
+  <div class="read" id="readB"></div>
+  <p class="note">r_d = ∫_{z_d}^{∞} c_s/H dz，c_s=c/√(3(1+R))，R=(3Ωb/4Ωγ)/(1+z)，Ωγ=h⁻²·2.473e−5。
+     被积函数用 x=ln(1+z) 代换（紫外端 z→10⁷ 收敛）；r_d 与 Planck 的偏差须 &lt;5%，且 n=1e5/2e5 收敛 rel &lt;1e−3（守卫 G3）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>r214–r254 全方法总账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>条目 · 守卫 · 控制组（机器账本）</h3>
+  <table id="entryTable"></table>
+  <table id="guardTable"></table>
+  <table id="controlTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§6</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = {"stem": "TUFT-r254", "round": 254, "date": "2026-10-31", "method": "增长 ODE 的 RK4 与 ΛCDM 精确积分解双路径 + 线性增长增长率 f/γ + BAO 共动声视界 x=ln(1+z) 求积 + σ8(z) 演化 ——float64，纯标准库", "cosmo_verdict": "扰动层全部机器复现（增长双路 1e−3 内、r_d 锚 5% 内、σ8 演化单调）；σ8(0) 为观测输入；CMB 峰位需 Boltzmann ——复现层，无新理论", "entries": [{"code": "H01", "level": "INFO", "title": "判定：扰动层 = ΛCDM 线性增长复现，不是新理论", "detail": "增长方程、积分解、BAO 声视界、σ8 演化均为标准宇宙学（Peebles 1980 / Eisenstein–Hu 1998 / Planck 2018）；本卷只做机器复现与互印", "numbers": {}}, {"code": "H02", "level": "PASS", "title": "线性增长 D(a) 双路径互印", "detail": "RK4 与精确积分解在 a∈{0.1,0.3,0.5,0.7,1} 最大相对差 4.13e-12；D(1)=1 归一，D(0.5)=0.606646", "numbers": {}}, {"code": "H03", "level": "PASS", "title": "增长率与增长指数", "detail": "f0=0.527413、γ0=0.554327（Linder γ≈0.55）；f(z=3)=0.981958 单调上升；Linder 近似最大相对偏差 0.50%", "numbers": {}}, {"code": "H04", "level": "PASS", "title": "BAO 声视界 r_d 锚", "detail": "r_d=147.0728 Mpc vs Planck 147.09（0.012%）；Ωb、Ωγ、z_d 与完整 E(z)（含辐射）单源设定", "numbers": {}}, {"code": "H05", "level": "PASS", "title": "σ8(z) 演化自洽", "detail": "σ8(0)=0.811、σ8(1)=0.4920、σ8(3)=0.2557；σ8(0) 为观测输入，演化由 D(z) 唯一决定", "numbers": {}}, {"code": "H06", "level": "BOUNDARY", "title": "σ8(0) 绝对值不可由本框架预言", "detail": "σ8(0)=0.811 是 Planck 观测输入；线性增长只给出相对演化，原初功率谱幅度 A_s 不在本卷框架内", "numbers": {}}, {"code": "H07", "level": "BOUNDARY", "title": "CMB 峰位/张量扰动不在本卷", "detail": "声学峰位与张量模需 Einstein–Boltzmann 求解（含重子-光子流体与自由流阻尼），纯 float64 背景+线性增长不足以覆盖", "numbers": {}}, {"code": "H08", "level": "INFO", "title": "判决：扰动层复现 OK，统一仍无新物理", "detail": "背景层（r237）与扰动层（本卷）均为 ΛCDM 复现；『本质三层不可达』（r230）与动力学统一 FAIL 不变", "numbers": {}}], "guards": [{"id": "G1", "title": "增长因子双路径互印（RK4 vs 精确积分解）", "ok": true, "detail": "a∈{0.1,0.3,0.5,0.7,1}：D(0.1)=0.126853/0.126853；D(0.3)=0.376760/0.376760；D(0.5)=0.606646/0.606646；D(0.7)=0.797445/0.797445；D(1.0)=1.000000/1.000000——max rel 4.13e-12", "numbers": {"max_rel": "4.13e-12"}}, {"id": "G2", "title": "增长率 f0/γ 与 Linder 近似、随红移单调上升", "ok": true, "detail": "f0=0.527413（锚 ~0.528）；γ0=0.554327（Linder 0.55）；f(z=3)=0.981958 > f0；γ 0.55 近似 max rel 0.0050", "numbers": {"f0": "0.527413", "gamma0": "0.554327", "f_z3": "0.981958", "linder_rel": "0.0050"}}, {"id": "G3", "title": "BAO 声视界锚与收敛", "ok": true, "detail": "r_d=147.0728 Mpc vs Planck 147.09（rel 0.012%）；n=1e5/2e5 收敛 rel 7.34e-15", "numbers": {"rd_Mpc": "147.0728", "rel": "1.17e-04", "conv": "7.34e-15"}}, {"id": "G4", "title": "σ8(z) 归一到输入值并单调衰减", "ok": true, "detail": "σ8(0)=0.811000（输入 0.811）；σ8(1)=0.491990；σ8(3)=0.255734——随 z 单调下降", "numbers": {"s8_0": "0.811000", "s8_1": "0.491990", "s8_3": "0.255734"}}, {"id": "G5", "title": "交互 HTML 生成且自含", "ok": true, "detail": "已生成 D:\\a10\\aikjx\\code\\my_lib\\openuft\\04_公共成果\\本项目_全维自洽与归一化\\四力统一方程_宇宙学扰动层可视化_2026-10-31.html（20936 B），零外部 URL、JSON 已铸入", "numbers": {}}], "controls": [{"id": "C1", "title": "EdS 极限：D∝a、f=1", "ok": true, "detail": "ΩΛ=0 时增长方程的解退化为 D=a、f=1（数值恒等，逐位）", "numbers": {"D_example": "0.5", "f": "1"}}, {"id": "C2", "title": "Λ 使晚期增长受抑：f0 远低于 EdS 的 1，D(a)/a 由 1.27 降到 1", "ok": true, "detail": "f0(ΛCDM)/f0(EdS)=0.527413（EdS 为 1）；D(0.5)/a=1.213292（今日归一，过去增长相对更快，比值随 a 单调降到 1）", "numbers": {"f_ratio": "0.527413", "D_ratio": "1.213292"}}], "readings": {"params": {"H0_km": 67.4, "Om": 0.3153, "Or": 9.15e-05, "OL": 0.6846085, "Ob": 0.0493, "Ogamma": 5.443827100705297e-05, "z_d": 1059.94, "sigma8_0": 0.811}, "growth": {"curves": [{"a": 0.1, "z": 9.0, "D": 0.12685321986076117, "f": 0.9988176078642269, "gamma": 0.5454703644354494}, {"a": 0.3, "z": 2.3333333333333335, "D": 0.37675990283951233, "f": 0.9693798703706759, "gamma": 0.5458712577117735}, {"a": 0.5, "z": 1.0, "D": 0.6066461202751718, "f": 0.8768629538660758, "gamma": 0.5472277578034265}, {"a": 0.7, "z": 0.4285714285714286, "D": 0.7974452327919621, "f": 0.7364378975509713, "gamma": 0.5496283307543306}, {"a": 1.0, "z": 0.0, "D": 0.9999999999994702, "f": 0.5274132656924193, "gamma": 0.5543272837527581}], "D_z1": 0.6066461202751718, "max_rel_two_path": 4.128156420914181e-12}, "rate": {"f0": 0.5274132656924193, "gamma0": 0.5543272837527581, "f_z3": 0.9819582578602708, "linder_rel": 0.005006780087755735}, "bao": {"rd_Mpc": 147.07283111836705, "anchor": 147.09, "rel": 0.0001167236496903592, "conv": 7.343470239490579e-15}, "sigma8": [{"z": 0.0, "sigma8": 0.8109999999995704}, {"z": 0.5, "sigma8": 0.6235220428325453}, {"z": 1.0, "sigma8": 0.49199000354316436}, {"z": 2.0, "sigma8": 0.3382267778388258}, {"z": 3.0, "sigma8": 0.2557340844415524}], "ledger": [{"round": "r214", "method": "静态中心力（UFE-4F 母式）", "verdict": "形式统一 PASS；动力学 FAIL"}, {"round": "r221", "method": "禁闭 σr + 通道门（UFE-4F⁺）", "verdict": "r214 严格超集"}, {"round": "r222", "method": "传播层（色散/群速度）", "verdict": "质量-力程等价"}, {"round": "r226", "method": "量子束缚层（薛定谔谱）", "verdict": "引力『原子』无意义"}, {"round": "r227", "method": "散射层（动量空间镜像）", "verdict": "λ=∞ ⇔ 零质量载体"}, {"round": "r228", "method": "变分层（L 与诺特）", "verdict": "一个作用量生成中心力；辐射反作用无 L"}, {"round": "r229", "method": "新颖性审计", "verdict": "无新理论/无新方程"}, {"round": "r230", "method": "引力本质层", "verdict": "WEP 结构恒等 + 1PN 两件套"}, {"round": "r231（并行）", "method": "实验约束全景", "verdict": "参数空间合并（只读引用）"}, {"round": "r232", "method": "引力波层", "verdict": "四极/HT/啁啾三管线互印"}, {"round": "r233", "method": "黑洞热力学层", "verdict": "四定律+Smarr+面积定理+熵力母式（仅引力）"}, {"round": "r234（并行）", "method": "强场层（史瓦西测地线）", "verdict": "ISCO/光子球/1PN 失效曲线"}, {"round": "r237", "method": "宇宙学背景层", "verdict": "FRW 年龄/距离-红移/Λ 通道"}, {"round": "r254", "method": "宇宙学扰动层（本卷）", "verdict": "线性增长+BAO 声视界+σ8 演化"}]}, "counts": {"entries": 8, "PASS": 4, "FAIL": 0, "BOUNDARY": 2, "INFO": 2, "guards": "5/5", "controls": "2/2"}, "verdict": "R254-COSMO-PERTURBATION-LINEAR-GROWTH-OK-BAO-SOUND-HORIZON-OK-SIGMA8-EVOLUTION-OK-EDS-CONTROL-OK-LAMBDA-SUPPRESSION-OK-SIGMA8-AMPLITUDE-INPUT-BOUNDARY-BOLTZMANN-TENSOR-BOUNDARY-VERDICT-STANDARD-GROWTH-NO-NEW-THEORY", "judgement": "CLOSED-INCREMENT（宇宙学扰动层：线性增长双路径、增长率/γ、BAO 声视界、σ8 演化）；σ8(0) 为输入、CMB 峰位在框架外；无新理论", "source": {"engine": "TUFT-r254_四力统一方程_宇宙学扰动层_线性增长因子BAO声视界与sigma8演化_精算与交互可视化_2026-10-31.py", "inherits": ["r237（宇宙学背景层）", "r233（黑洞热力学层）", "r230（本质三层不可达）", "r229（新颖性审计口径）", "Planck 2018 / Peebles 1980 / Eisenstein–Hu 1998（只读）"]}};
+
+(function(){
+  const c = R.counts, p = R.readings.params, r = R.readings.rate, b = R.readings.bao;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">f0 <b>${r.f0.toFixed(3)}</b></span>`+
+    `<span class="chip">r_d <b>${b.rd_Mpc.toFixed(2)}</b> Mpc</span>`;
+  document.getElementById("verdictLine").textContent =
+    `增长双路径 max rel = ${R.readings.growth.max_rel_two_path.toExponential(1)}；`+
+    `f0 = ${r.f0.toFixed(4)}、γ0 = ${r.gamma0.toFixed(4)}（Linder ${0.55}）；`+
+    `r_d = ${b.rd_Mpc.toFixed(3)} Mpc vs Planck ${b.anchor}（${(b.rel*100).toFixed(3)}%）；`+
+    `σ8(z=1) = ${R.readings.sigma8[2].sigma8.toFixed(4)}。`+
+    `全部为 ΛCDM 线性扰动复现——无新理论。`;
+})();
+
+/* ---------- §1 D(a) 与 f(a) ---------- */
+(function(){
+  const g = R.readings.growth, cur = g.curves;
+  const cv = document.getElementById("cvG"), ctx = cv.getContext("2d");
+  const W=1000, H=460, PL=66, PR=72, PT=24, PB=46;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const amin=0.05, amax=1.0, dmax=1.15, fmin=0.40, fmax=1.06;
+  const X = a => PL + (a-amin)/(amax-amin)*(W-PL-PR);
+  const YD = d => PT + (1-d/dmax)*(H-PT-PB);
+  const YF = f => PT + (1-(f-fmin)/(fmax-fmin))*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=10;i++){
+    const a=amin+(amax-amin)*i/10, x=X(a);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    if(i%2===0){ ctx.fillStyle="#94a3b8"; ctx.fillText(a.toFixed(1),x-8,H-PB+14); }
+  }
+  for(let i=0;i<=5;i++){
+    const d=dmax*i/5, y=YD(d);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#63d2ff"; ctx.fillText(d.toFixed(2),6,y+3);
+  }
+  ctx.fillStyle="#63d2ff"; ctx.fillText("D(a)",PL+8,PT+14);
+  ctx.fillStyle="#bb9af7"; ctx.fillText("f(a)",W-PR+4,PT+14);
+  ctx.fillStyle="#94a3b8"; ctx.fillText("a（标度因子）",W-PR-96,H-PB+30);
+  // EdS 参考 D=a
+  ctx.setLineDash([6,5]); ctx.strokeStyle="#d4a94e"; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(X(amin),YD(amin)); ctx.lineTo(X(1),YD(1)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle="#d4a94e"; ctx.fillText("EdS: D=a",X(0.72),YD(0.72)-8);
+  // D 曲线
+  ctx.strokeStyle="#63d2ff"; ctx.lineWidth=2.3; ctx.beginPath();
+  cur.forEach((r,i)=>{ const x=X(r.a), y=YD(r.D); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  cur.forEach(r=>{
+    ctx.fillStyle="#63d2ff"; ctx.beginPath(); ctx.arc(X(r.a),YD(r.D),3.6,0,Math.PI*2); ctx.fill();
+  });
+  // f 曲线
+  ctx.strokeStyle="#bb9af7"; ctx.lineWidth=2.0; ctx.beginPath();
+  cur.forEach((r,i)=>{ const x=X(r.a), y=YF(r.f); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  cur.forEach(r=>{
+    ctx.fillStyle="#bb9af7"; ctx.beginPath(); ctx.arc(X(r.a),YF(r.f),3.2,0,Math.PI*2); ctx.fill();
+  });
+  const r0 = R.readings.rate;
+  document.getElementById("readG").textContent =
+    `D(a)：` + cur.map(r=>`D(${r.a.toFixed(2)})=${r.D.toFixed(4)}`).join("  ") + `\n`+
+    `D(a=1) = 1（归一）\n`+
+    `双路径（RK4 vs 积分）max rel = ${g.max_rel_two_path.toExponential(3)}\n`+
+    `f(a)：` + cur.map(r=>`f(${r.a.toFixed(2)})=${r.f.toFixed(3)}`).join("  ") + `\n`+
+    `f0 = ${r0.f0.toFixed(6)}（锚 ~0.528）  γ0 = ${r0.gamma0.toFixed(6)}（Linder 0.55）\n`+
+    `f(z=3) = ${r0.f_z3.toFixed(6)}（> f0，高红移增长更快）  Linder 近似 max rel = ${(r0.linder_rel*100).toFixed(2)}%`;
+})();
+
+/* ---------- §2 σ8(z) ---------- */
+(function(){
+  const s = R.readings.sigma8, p = R.readings.params;
+  const cv = document.getElementById("cvS"), ctx = cv.getContext("2d");
+  const W=1000, H=400, PL=70, PR=36, PT=24, PB=46;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const zmax=3.2, ymin=0.35, ymax=0.88;
+  const X = z => PL + z/zmax*(W-PL-PR);
+  const Y = v => PT + (1-(v-ymin)/(ymax-ymin))*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=8;i++){
+    const z=zmax*i/8, x=X(z);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    if(i%2===0){ ctx.fillStyle="#94a3b8"; ctx.fillText(z.toFixed(1),x-8,H-PB+14); }
+  }
+  for(let i=0;i<=5;i++){
+    const v=ymin+(ymax-ymin)*i/5, y=Y(v);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(v.toFixed(2),6,y+3);
+  }
+  ctx.fillStyle="#94a3b8"; ctx.fillText("σ8(z)",PL+8,PT+14);
+  ctx.fillStyle="#94a3b8"; ctx.fillText("z",W-PR-8,H-PB+30);
+  ctx.setLineDash([6,5]); ctx.strokeStyle="#d4a94e"; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(PL,Y(p.sigma8_0)); ctx.lineTo(W-PR,Y(p.sigma8_0)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle="#d4a94e"; ctx.fillText("σ8(0) = "+p.sigma8_0.toFixed(3)+"（观测输入）",PL+8,Y(p.sigma8_0)-7);
+  ctx.strokeStyle="#63d2ff"; ctx.lineWidth=2.3; ctx.beginPath();
+  s.forEach((r,i)=>{ const x=X(r.z), y=Y(r.sigma8); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  s.forEach(r=>{
+    const x=X(r.z), y=Y(r.sigma8);
+    ctx.fillStyle="#63d2ff"; ctx.beginPath(); ctx.arc(x,y,3.8,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#e2e8f0"; ctx.fillText(r.sigma8.toFixed(3),x-14,y-10);
+  });
+  document.getElementById("readS").textContent =
+    s.map(r=>`σ8(z=${r.z.toFixed(1)}) = ${r.sigma8.toFixed(5)}`).join("\n") + "\n"+
+    `σ8(z) = σ8(0)·D(z)/D(0)，D 为线性增长因子；σ8(0)=${p.sigma8_0} 为 Planck 输入\n`+
+    `⇒ 线性理论给相对演化，绝对值（A_s）不在本卷框架内`;
+})();
+
+/* ---------- §3 BAO r_d ---------- */
+(function(){
+  const b = R.readings.bao;
+  const rows = [
+    {t:"r_d（本卷精算 vs Planck 锚，Mpc）", a:b.rd_Mpc, aL:"计算", b:b.anchor, bL:"Planck", max:160, col:"#63d2ff", col2:"#4ade80"},
+    {t:"相对偏差（%，越小越好；0 = 完全一致）", a:b.rel*100, aL:"偏差", b:0, bL:"理想", max:6, col:"#e0af68", col2:"#4ade80"},
+    {t:"数值收敛 |r_d(2e5)-r_d(1e5)|/r_d（×1e−3）", a:b.conv*1e3, aL:"收敛", b:1.0, bL:"阈值", max:1.2, col:"#bb9af7", col2:"#f87171"},
+  ];
+  document.getElementById("baoBars").innerHTML = rows.map(r=>{
+    const wa = Math.min(100, Math.abs(r.a)/r.max*100), wb = Math.min(100, Math.abs(r.b)/r.max*100);
+    return `<div class="metric"><div class="t">${r.t}</div>`+
+      `<div class="bar"><i style="width:${wa}%;background:${r.col}"></i><span>${r.aL} ${r.a.toPrecision(5)}</span></div>`+
+      `<div class="bar"><i style="width:${wb}%;background:${r.col2}"></i><span>${r.bL} ${r.b.toPrecision(5)}</span></div>`+
+      `</div>`;
+  }).join("");
+  document.getElementById("readB").textContent =
+    `r_d = ${b.rd_Mpc.toFixed(6)} Mpc（Planck 2018 锚 ${b.anchor}）\n`+
+    `相对偏差 = ${(b.rel*100).toFixed(4)}%（守卫阈值 5%）\n`+
+    `n=1e5 → 2e5 收敛 rel = ${b.conv.toExponential(3)}（阈值 1e−3）\n`+
+    `口径：Ωb=${R.readings.params.Ob}、Ωγ=${R.readings.params.Ogamma.toExponential(3)}、z_d=${R.readings.params.z_d}`;
+})();
+
+/* ---------- §4 ledger ---------- */
+(function(){
+  let html="<tr><th style='width:96px'>卷</th><th>方法</th><th>读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;
+  });
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §5 条目/守卫/控制组 ---------- */
+(function(){
+  let e="<tr><th style='width:60px'>码</th><th style='width:86px'>级别</th><th>条目</th></tr>";
+  R.entries.forEach(it=>{
+    const cls = it.level==="PASS"?"ok":(it.level==="FAIL"?"bad":"");
+    e+=`<tr><td class="mono">${it.code}</td><td class="${cls}">${it.level}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("entryTable").innerHTML=e;
+  let g="<tr><th style='width:60px'>码</th><th style='width:70px'>状态</th><th>守卫</th></tr>";
+  R.guards.forEach(it=>{
+    g+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("guardTable").innerHTML=g;
+  let c="<tr><th style='width:60px'>码</th><th style='width:70px'>状态</th><th>控制组</th></tr>";
+  R.controls.forEach(it=>{
+    c+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("controlTable").innerHTML=c;
+})();
+
+/* ---------- §6 边界卡 ---------- */
+(function(){
+  const cards=[
+    {t:"复现层",b:"线性增长、BAO 声视界、σ8 演化全部是教科书/文献内容（Peebles 1980、Eisenstein–Hu 1998、Planck 2018）——本卷无新物理（承 r229/r233/r234/r237）。"},
+    {t:"σ8(0) 是输入",b:`σ8(0)=${R.readings.params.sigma8_0} 取自 Planck；线性增长只给相对演化，原初功率谱幅度 A_s 不在本框架内（条目 H06 BOUNDARY）。`},
+    {t:"CMB 峰位在框架外",b:"声学峰位、张量模、自由流阻尼均需 Einstein–Boltzmann 求解，本卷 float64 背景+线性增长不覆盖（条目 H07 BOUNDARY）。"},
+    {t:"增长方程的口径",b:"增长 ODE 用 E_g=√(Ωm a⁻³+ΩΛ)，a≥1e−3 时辐射影响可忽略；积分解仅在此 E 下严格成立——混入 Ωr 会破坏双路径一致性（开发期已验证）。"},
+    {t:"线性区边界",b:"δ≲1 的线性近似；z≳1 之后需非线性修正（HaloFit 等），本卷不越过线性区。"},
+    {t:"与 r237 的分层",b:"背景层（r237）已判 S18 宇宙学证伪；扰动层 S18 无对应理论 ⇒ 不可对照。层级只做加法，条目不跨卷相加。"},
+    {t:"统一仍无新物理",b:"背景层（r237）+扰动层（本卷）均为 ΛCDM 复现；『本质三层不可达』（r230）与动力学统一 FAIL 不变。"},
+  ];
+  document.getElementById("boundCards").innerHTML =
+    cards.map(c=>`<div class="card"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML =
+    `TUFT-r254 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

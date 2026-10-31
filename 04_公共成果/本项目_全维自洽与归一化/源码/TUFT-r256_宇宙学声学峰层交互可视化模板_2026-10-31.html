@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>256 · 四力统一方程·宇宙学声学峰层（θ_s、l_A 与张量边界）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #4338ca;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:19px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c7d2fe;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .metric{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:10px;}
+  .metric .t{font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px;}
+  .bar{height:14px;border-radius:4px;margin:4px 0;position:relative;background:#111c31;}
+  .bar i{display:block;height:14px;border-radius:4px;}
+  .bar span{position:absolute;right:6px;top:-2px;font-size:11px;font-family:Consolas,monospace;color:#e2e8f0;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r256 · 宇宙学声学峰层 · θ_s / l_A / z_eq · 零外部依赖</span>
+  <h1>四力统一方程·宇宙学声学峰层<br>声视界角度 θ_s、声学多极 l_A 与张量边界</h1>
+  <p>承 r254（扰动层）把 BAO 拖曳声视界推到<strong>复合末期</strong>：
+     ①θ_s = r_s(z_*)/D_M(z_*) 与 Planck 100θ_s=1.04109 对照；
+     ②声学多极 l_A = π/θ_s；
+     ③物质-辐射等号红移 z_eq = Ωm/Ωr − 1；
+     ④r_s(z_*) 与 r_d 的层级差；⑤张量模 r=16ε 的框架边界。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：CMB 声学峰几何机器复现；完整 TT 谱与张量幅度在框架外</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>θ_s 对 Ωm 的敏感性扫描</h3>
+  <canvas id="cvScan" width="1000" height="430"></canvas>
+  <div class="read" id="readScan"></div>
+  <p class="note">蓝线 = 100θ_s(Ωm)（其余参数取 Planck，平坦 ΩΛ=1−Ωm−Ωr）；金虚线 = Planck 1.04109；
+     金竖线 = Ωm=0.3153。θ_s 随 Ωm 单调递增、0.28–0.35 跨度约 8.9%（控制组 C2）：
+     低红移段 D_M 的贡献不可忽略，声学角度对 Ωm 有真实敏感性；而 θ_s 对 H0 严格不变（C1，机器零）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>三个可算观测量：模型 vs Planck</h3>
+  <div id="metricBars"></div>
+  <div class="read" id="readM"></div>
+  <p class="note">100θ_s = 1.0379（Planck 1.04109）；l_A = π/θ_s；z_eq = Ωm/Ωr − 1。
+     三者只用到背景参数与声视界积分，不涉及 Boltzmann 求解——这是 CMB 第一峰位置可算的几何骨架。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>r_s(z_*) 与 r_d：为什么复合末期的声视界更短</h3>
+  <div id="rsBars"></div>
+  <div class="read" id="readR"></div>
+  <p class="note">z_*=1089.90 > z_d=1059.94 ⇒ 积分区间更短 ⇒ r_s(z_*) 小于拖曳声视界 r_d；
+     差值 Δr 是 1–6 Mpc 量级的几何效应，方向与量级都须正确（守卫 G4）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>r214–r256 全方法总账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>条目 · 守卫 · 控制组（机器账本）</h3>
+  <table id="entryTable"></table>
+  <table id="guardTable"></table>
+  <table id="controlTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§6</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R256_JSON__;
+
+(function(){
+  const c = R.counts, a = R.readings.acoustic;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">100θ_s <b>${a.hundred_theta.toFixed(4)}</b></span>`+
+    `<span class="chip">l_A <b>${a.lA.toFixed(2)}</b></span>`;
+  document.getElementById("verdictLine").textContent =
+    `100θ_s = ${a.hundred_theta.toFixed(6)} vs Planck ${a.anchor_100theta}（rel ${(a.rel*100).toFixed(3)}%）；`+
+    `l_A = ${a.lA.toFixed(3)} vs ${a.lA_anchor}；z_eq = ${a.z_eq.toFixed(0)}（文献 ~${a.z_eq_anchor.toFixed(0)}）；`+
+    `r_s(z_*) = ${a.rs_star_Mpc.toFixed(2)} Mpc < r_d = ${a.r_drag_Mpc.toFixed(2)} Mpc。`+
+    `完整 TT 谱需 Boltzmann、张量幅度无框架来源——复现层，无新理论。`;
+})();
+
+/* ---------- §1 Ωm 扫描 ---------- */
+(function(){
+  const s = R.readings.scan, a = R.readings.acoustic;
+  const cv = document.getElementById("cvScan"), ctx = cv.getContext("2d");
+  const W=1000, H=430, PL=72, PR=40, PT=26, PB=48;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const xmin=0.275, xmax=0.355;
+  let ymin=1e9, ymax=-1e9;
+  s.forEach(p=>{ ymin=Math.min(ymin,p.hundred_theta); ymax=Math.max(ymax,p.hundred_theta); });
+  ymin=Math.min(ymin, a.anchor_100theta); ymax=Math.max(ymax, a.anchor_100theta);
+  ymin=Math.floor((ymin-0.0010)*1000)/1000; ymax=Math.ceil((ymax+0.0010)*1000)/1000;
+  const X = om => PL + (om-xmin)/(xmax-xmin)*(W-PL-PR);
+  const Y = v => PT + (1-(v-ymin)/(ymax-ymin))*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=8;i++){
+    const om=xmin+(xmax-xmin)*i/8, x=X(om);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    if(i%2===0){ ctx.fillStyle="#94a3b8"; ctx.fillText(om.toFixed(3),x-14,H-PB+14); }
+  }
+  for(let i=0;i<=5;i++){
+    const v=ymin+(ymax-ymin)*i/5, y=Y(v);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(v.toFixed(3),8,y+3);
+  }
+  ctx.fillStyle="#94a3b8"; ctx.fillText("100θ_s",PL+8,PT+14);
+  ctx.fillStyle="#94a3b8"; ctx.fillText("Ωm",W-PR-16,H-PB+30);
+  ctx.setLineDash([6,5]); ctx.strokeStyle="#d4a94e"; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(PL,Y(a.anchor_100theta)); ctx.lineTo(W-PR,Y(a.anchor_100theta)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle="#d4a94e"; ctx.fillText("Planck 1.04109",PL+8,Y(a.anchor_100theta)-7);
+  const x0=X(0.3153);
+  ctx.strokeStyle="#d4a94e"; ctx.setLineDash([3,4]);
+  ctx.beginPath(); ctx.moveTo(x0,PT); ctx.lineTo(x0,H-PB); ctx.stroke(); ctx.setLineDash([]);
+  ctx.strokeStyle="#63d2ff"; ctx.lineWidth=2.2; ctx.beginPath();
+  s.forEach((p,i)=>{ const x=X(p.Om), y=Y(p.hundred_theta); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+  ctx.stroke();
+  s.forEach(p=>{
+    const x=X(p.Om), y=Y(p.hundred_theta);
+    ctx.fillStyle="#63d2ff"; ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#e2e8f0"; ctx.fillText(p.hundred_theta.toFixed(4),x-18,y-10);
+  });
+  const hmin=Math.min(...s.map(p=>p.hundred_theta)), hmax=Math.max(...s.map(p=>p.hundred_theta));
+  document.getElementById("readScan").textContent =
+    s.map(p=>`Ωm=${p.Om.toFixed(4)} → 100θ_s=${p.hundred_theta.toFixed(6)}`).join("\n") + "\n"+
+    `扫描跨度 ${hmin.toFixed(6)} – ${hmax.toFixed(6)}（相对 ${(100*(hmax-hmin)/hmin).toFixed(3)}%）\n`+
+    `Ωm=0.3153 处：100θ_s=${a.hundred_theta.toFixed(6)}（Planck ${a.anchor_100theta}）`;
+})();
+
+/* ---------- §2 三观测量条 ---------- */
+(function(){
+  const a = R.readings.acoustic;
+  const rows = [
+    {t:"100θ_s（模型 vs Planck）", a:a.hundred_theta, aL:"模型", b:a.anchor_100theta, bL:"Planck", max:1.08, col:"#63d2ff", col2:"#4ade80"},
+    {t:"声学多极 l_A（模型 vs Planck 反推）", a:a.lA, aL:"模型", b:a.lA_anchor, bL:"Planck", max:320, col:"#63d2ff", col2:"#4ade80"},
+    {t:"z_eq（模型 vs 文献 ~3400）", a:a.z_eq, aL:"模型", b:a.z_eq_anchor, bL:"文献", max:3700, col:"#bb9af7", col2:"#4ade80"},
+  ];
+  document.getElementById("metricBars").innerHTML = rows.map(r=>{
+    const wa = Math.min(100, Math.abs(r.a)/r.max*100), wb = Math.min(100, Math.abs(r.b)/r.max*100);
+    return `<div class="metric"><div class="t">${r.t}</div>`+
+      `<div class="bar"><i style="width:${wa}%;background:${r.col}"></i><span>${r.aL} ${r.a.toPrecision(6)}</span></div>`+
+      `<div class="bar"><i style="width:${wb}%;background:${r.col2}"></i><span>${r.bL} ${r.b.toPrecision(6)}</span></div>`+
+      `</div>`;
+  }).join("");
+  document.getElementById("readM").textContent =
+    `θ_s = r_s(z_*)/D_M(z_*) = ${a.rs_star_Mpc.toFixed(4)} / ${a.DM_star_Mpc.toFixed(2)} = ${a.theta_s.toExponential(6)} rad\n`+
+    `100θ_s = ${a.hundred_theta.toFixed(6)}（Planck ${a.anchor_100theta}，rel ${(a.rel*100).toFixed(3)}%）\n`+
+    `l_A = π/θ_s = ${a.lA.toFixed(5)}（Planck 反推 ${a.lA_anchor}，rel ${(a.lA_rel*100).toFixed(3)}%）\n`+
+    `z_eq = Ωm/Ωr − 1 = ${a.z_eq.toFixed(2)}（文献 ~${a.z_eq_anchor.toFixed(0)}）\n`+
+    `张量边界：r = 16ε ⇒ r<${a.r_bound} 给 ε<${a.eps_max.toExponential(3)}（框架无法预言 r）`;
+})();
+
+/* ---------- §3 r_s 与 r_d ---------- */
+(function(){
+  const a = R.readings.acoustic;
+  const rows = [
+    {t:"r_d（拖曳纪元 z_d=1059.94，Mpc）", a:a.r_drag_Mpc, aL:"r_d", b:0, bL:"—", max:160, col:"#e0af68"},
+    {t:"r_s(z_*)（复合末期 z_*=1089.90，Mpc）", a:a.rs_star_Mpc, aL:"r_s", b:0, bL:"—", max:160, col:"#63d2ff"},
+    {t:"差值 Δr = r_d − r_s(z_*)（Mpc，须 1–6）", a:a.delta_r_Mpc, aL:"Δr", b:3.0, bL:"典型", max:6, col:"#bb9af7", col2:"#4ade80"},
+  ];
+  document.getElementById("rsBars").innerHTML = rows.map(r=>{
+    const wa = Math.min(100, Math.abs(r.a)/r.max*100);
+    const wb = r.b ? Math.min(100, Math.abs(r.b)/r.max*100) : 0;
+    return `<div class="metric"><div class="t">${r.t}</div>`+
+      `<div class="bar"><i style="width:${wa}%;background:${r.col}"></i><span>${r.aL} ${r.a.toPrecision(6)}</span></div>`+
+      (r.b?`<div class="bar"><i style="width:${wb}%;background:${r.col2}"></i><span>${r.bL} ${r.b.toPrecision(6)}</span></div>`:"")+
+      `</div>`;
+  }).join("");
+  document.getElementById("readR").textContent =
+    `r_d(z_d) = ${a.r_drag_Mpc.toFixed(6)} Mpc（r254 锚 147.09）\n`+
+    `r_s(z_*) = ${a.rs_star_Mpc.toFixed(6)} Mpc（z_* 更高 30.0 ⇒ 区间更短）\n`+
+    `Δr = ${a.delta_r_Mpc.toFixed(6)} Mpc（方向与量级均正确）\n`+
+    `⇒ θ_s = r_s(z_*)/D_M(z_*) = ${a.theta_s.toExponential(6)}`;
+})();
+
+/* ---------- §4 ledger ---------- */
+(function(){
+  let html="<tr><th style='width:96px'>卷</th><th>方法</th><th>读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;
+  });
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §5 条目/守卫/控制组 ---------- */
+(function(){
+  let e="<tr><th style='width:60px'>码</th><th style='width:86px'>级别</th><th>条目</th></tr>";
+  R.entries.forEach(it=>{
+    const cls = it.level==="PASS"?"ok":(it.level==="FAIL"?"bad":"");
+    e+=`<tr><td class="mono">${it.code}</td><td class="${cls}">${it.level}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("entryTable").innerHTML=e;
+  let g="<tr><th style='width:60px'>码</th><th style='width:70px'>状态</th><th>守卫</th></tr>";
+  R.guards.forEach(it=>{
+    g+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("guardTable").innerHTML=g;
+  let c="<tr><th style='width:60px'>码</th><th style='width:70px'>状态</th><th>控制组</th></tr>";
+  R.controls.forEach(it=>{
+    c+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("controlTable").innerHTML=c;
+})();
+
+/* ---------- §6 边界卡 ---------- */
+(function(){
+  const a = R.readings.acoustic, p = R.readings.params;
+  const cards=[
+    {t:"复现层",b:"θ_s、l_A、z_eq、r=16ε 全部是教科书/文献内容（Planck 2018、Eisenstein–Hu 1998、KKT 1997）——本卷无新物理（承 r229/r233/r237/r254）。"},
+    {t:"完整 CMB 谱在框架外",b:"峰高、峰宽、Silk 阻尼尾、偏振与透镜势均需 Einstein–Boltzmann（含重子-光子紧耦合与自由流阻尼）；本卷只算几何骨架（条目 H06 BOUNDARY）。"},
+    {t:"张量模",b:`单场慢滚一致性 r=16ε ⇒ r<${a.r_bound} 给 ε<${a.eps_max.toExponential(2)}；但本框架无暴胀扇区，不能预言 A_s、n_s、r（条目 H07 BOUNDARY）。`},
+    {t:"θ_s 的口径",b:`z_*=${p.z_star}、z_d=${p.z_d}、Ωb=${p.Ob}、Ωγ=${p.Ogamma.toExponential(3)} 全部单源 Planck；换表值会移动 100θ_s（rel 约 0.3%）。`},
+    {t:"H0 不变性",b:"r_s 与 D_M 都 ∝1/H0，比值严格消去 ⇒ θ_s 不能用来测 H0（控制组 C1，机器零）；对 Ωm 则有真实敏感性（0.28–0.35 跨度 8.9%，C2）。"},
+    {t:"线性/几何边界",b:"θ_s 是背景几何量，不含扰动演化；声学峰振幅与相位漂移（ISW、透镜）不在本卷。"},
+    {t:"统一仍无新物理",b:"背景（r237）+扰动（r254）+声学峰（本卷）三卷均为 ΛCDM 复现；r230『本质三层不可达』与动力学统一 FAIL 不变。"},
+  ];
+  document.getElementById("boundCards").innerHTML =
+    cards.map(c=>`<div class="card"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML =
+    `TUFT-r256 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

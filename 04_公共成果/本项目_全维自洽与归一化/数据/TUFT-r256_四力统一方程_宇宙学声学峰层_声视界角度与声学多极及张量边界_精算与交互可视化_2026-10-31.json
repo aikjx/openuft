@@ -1,0 +1,283 @@
+{
+ "stem": "TUFT-r256",
+ "round": 256,
+ "date": "2026-10-31",
+ "method": "θ_s=r_s(z_*)/D_M(z_*)（x=ln(1+z) 求积 + D_M 直积）+ l_A=π/θ_s + z_eq=Ωm/Ωr−1 + r=16ε 边界 ——float64，纯标准库",
+ "cosmo_verdict": "声学峰几何全部机器复现（θ_s 1% 内、z_eq 3% 内、r_s<r_d 方向正确）；完整 TT 谱需 Boltzmann、张量幅度无框架来源 ——复现层，无新理论",
+ "entries": [
+  {
+   "code": "H01",
+   "level": "INFO",
+   "title": "判定：声学峰几何 = 标准 CMB 几何复现，不是新理论",
+   "detail": "θ_s、l_A、z_eq、r=16ε 均为文献内容（Planck 2018 / Eisenstein–Hu 1998 / Kamionkowski–Kosowsky–Turner 1997）；本卷只做机器复现与锚定",
+   "numbers": {}
+  },
+  {
+   "code": "H02",
+   "level": "PASS",
+   "title": "声视界角度 θ_s 锚",
+   "detail": "100θ_s=1.042027 vs Planck 1.04109（rel 0.090%）；r_s(z_*)=144.4189 Mpc、D_M(z_*)=13859.42 Mpc",
+   "numbers": {}
+  },
+  {
+   "code": "H03",
+   "level": "PASS",
+   "title": "声学多极 l_A=π/θ_s",
+   "detail": "l_A=301.4886 vs Planck 反推 301.77（rel 0.093%）；与 π/θ_s 逐位恒等",
+   "numbers": {}
+  },
+  {
+   "code": "H04",
+   "level": "PASS",
+   "title": "物质-辐射等号红移",
+   "detail": "z_eq=Ωm/Ωr−1=3444.90 vs 文献 ~3400（rel 1.32%）",
+   "numbers": {}
+  },
+  {
+   "code": "H05",
+   "level": "PASS",
+   "title": "r_s(z_*) 与 r_d 层级自洽",
+   "detail": "r_d=147.0728 Mpc、r_s(z_*)=144.4189 Mpc，差 Δr=2.6539 Mpc；z_*>z_d ⇒ 声视界更短，方向正确",
+   "numbers": {}
+  },
+  {
+   "code": "H06",
+   "level": "BOUNDARY",
+   "title": "完整 CMB TT 谱不在本卷",
+   "detail": "峰高、峰宽、阻尼尾（Silk）、透镜势均需 Einstein–Boltzmann（含重子-光子紧耦合、偏振与自由流阻尼）；本卷只算几何骨架（θ_s/l_A/z_eq）",
+   "numbers": {}
+  },
+  {
+   "code": "H07",
+   "level": "BOUNDARY",
+   "title": "张量模 r=16ε：框架无暴胀扇区",
+   "detail": "单场慢滚一致性 r=16ε ⇒ r<0.036 给 ε<2.25e-03；但本框架无暴胀/原初功率谱扇区，不能预言 A_s、n_s、r——只登记边界",
+   "numbers": {}
+  },
+  {
+   "code": "H08",
+   "level": "INFO",
+   "title": "判决：声学峰几何复现 OK，统一仍无新物理",
+   "detail": "背景（r237）→扰动（r254）→声学峰（本卷）三卷均为 ΛCDM 复现；r230『本质三层不可达』与动力学统一 FAIL 不变",
+   "numbers": {}
+  }
+ ],
+ "guards": [
+  {
+   "id": "G1",
+   "title": "θ_s 锚定 Planck 100θ_s 且两级收敛",
+   "ok": true,
+   "detail": "100θ_s=1.042027 vs Planck 1.04109（rel 0.090%）；r_s(z_*)=144.4189 Mpc、D_M(z_*)=13859.42 Mpc（13.8594 Gpc）；n=1e5/2e5 收敛 r_s 1.32e-14、D_M 3.53e-11",
+   "numbers": {
+    "hundred_theta": "1.042027",
+    "rel": "9.00e-04",
+    "rs_star_Mpc": "144.4189",
+    "DM_star_Mpc": "13859.42"
+   }
+  },
+  {
+   "id": "G2",
+   "title": "l_A=π/θ_s 恒等且锚定 301.77",
+   "ok": true,
+   "detail": "l_A=301.4886 vs Planck 反推 301.77（rel 0.093%）；π/θ_s 与 l_A 逐位恒等（机器零）",
+   "numbers": {
+    "lA": "301.4886",
+    "lA_rel": "9.32e-04"
+   }
+  },
+  {
+   "id": "G3",
+   "title": "物质-辐射等号红移 z_eq",
+   "ok": true,
+   "detail": "z_eq=Ωm/Ωr−1=3444.90 vs 文献 ~3400（rel 1.32%）",
+   "numbers": {
+    "z_eq": "3444.90",
+    "rel": "1.32e-02"
+   }
+  },
+  {
+   "id": "G4",
+   "title": "r_s(z_*) < r_d（z_* > z_d）且差值量级 1–6 Mpc",
+   "ok": true,
+   "detail": "r_d(z_d=1059.94)=147.0728 Mpc；r_s(z_*=1089.9)=144.4189 Mpc；差 Δr=2.6539 Mpc（z_* 更高 ⇒ 声视界更短，方向正确）",
+   "numbers": {
+    "rd_Mpc": "147.0728",
+    "rs_star_Mpc": "144.4189",
+    "delta_r_Mpc": "2.6539"
+   }
+  },
+  {
+   "id": "G5",
+   "title": "交互 HTML 生成且自含",
+   "ok": true,
+   "detail": "已生成 D:\\a10\\aikjx\\code\\my_lib\\openuft\\04_公共成果\\本项目_全维自洽与归一化\\四力统一方程_宇宙学声学峰层可视化_2026-10-31.html（20244 B），零外部 URL、JSON 已铸入",
+   "numbers": {}
+  }
+ ],
+ "controls": [
+  {
+   "id": "C1",
+   "title": "θ_s 对 H0 严格不变（r_s 与 D_M 同标 1/H0）",
+   "ok": true,
+   "detail": "H0×1.10 ⇒ θ_s 比值 1.000000000000000（1/H0 在比值中约掉，机器零）",
+   "numbers": {
+    "ratio": "1.000000000000000"
+   }
+  },
+  {
+   "id": "C2",
+   "title": "θ_s 对 Ωm 单调递增（0.28–0.35 扫描，跨度 3–15%）",
+   "ok": true,
+   "detail": "100θ_s 扫描范围 [0.994016, 1.086463]，相对跨度 8.872%；随 Ωm 单调递增 ⇒ 声学角度对 Ωm 有真实敏感性（低红移段 D_M 的贡献不可忽略），不同于对 H0 的严格不变",
+   "numbers": {
+    "spread": "8.87e-02"
+   }
+  }
+ ],
+ "readings": {
+  "params": {
+   "H0_km": 67.4,
+   "Om": 0.3153,
+   "Or": 9.15e-05,
+   "OL": 0.6846085,
+   "Ob": 0.0493,
+   "Ogamma": 5.443827100705297e-05,
+   "z_d": 1059.94,
+   "z_star": 1089.9
+  },
+  "acoustic": {
+   "z_star": 1089.9,
+   "z_drag": 1059.94,
+   "rs_star_Mpc": 144.41892398351067,
+   "r_drag_Mpc": 147.07283111836705,
+   "delta_r_Mpc": 2.6539071348563823,
+   "DM_star_Mpc": 13859.423376733299,
+   "theta_s": 0.010420269303985328,
+   "hundred_theta": 1.0420269303985328,
+   "anchor_100theta": 1.04109,
+   "rel": 0.0008999513956840516,
+   "lA": 301.4886239445138,
+   "lA_anchor": 301.77,
+   "lA_rel": 0.0009324189133651174,
+   "z_eq": 3444.9016393442625,
+   "z_eq_anchor": 3400.0,
+   "r_bound": 0.036,
+   "eps_max": 0.00225
+  },
+  "scan": [
+   {
+    "Om": 0.28,
+    "hundred_theta": 0.9940161979835124
+   },
+   {
+    "Om": 0.3,
+    "hundred_theta": 1.0215950087244314
+   },
+   {
+    "Om": 0.3153,
+    "hundred_theta": 1.0420269304917784
+   },
+   {
+    "Om": 0.33,
+    "hundred_theta": 1.0611584273977415
+   },
+   {
+    "Om": 0.35,
+    "hundred_theta": 1.086462859916638
+   }
+  ],
+  "ledger": [
+   {
+    "round": "r214",
+    "method": "静态中心力（UFE-4F 母式）",
+    "verdict": "形式统一 PASS；动力学 FAIL"
+   },
+   {
+    "round": "r221",
+    "method": "禁闭 σr + 通道门（UFE-4F⁺）",
+    "verdict": "r214 严格超集"
+   },
+   {
+    "round": "r222",
+    "method": "传播层（色散/群速度）",
+    "verdict": "质量-力程等价"
+   },
+   {
+    "round": "r226",
+    "method": "量子束缚层（薛定谔谱）",
+    "verdict": "引力『原子』无意义"
+   },
+   {
+    "round": "r227",
+    "method": "散射层（动量空间镜像）",
+    "verdict": "λ=∞ ⇔ 零质量载体"
+   },
+   {
+    "round": "r228",
+    "method": "变分层（L 与诺特）",
+    "verdict": "一个作用量生成中心力；辐射反作用无 L"
+   },
+   {
+    "round": "r229",
+    "method": "新颖性审计",
+    "verdict": "无新理论/无新方程"
+   },
+   {
+    "round": "r230",
+    "method": "引力本质层",
+    "verdict": "WEP 结构恒等 + 1PN 两件套"
+   },
+   {
+    "round": "r232",
+    "method": "引力波层",
+    "verdict": "四极/HT/啁啾三管线互印"
+   },
+   {
+    "round": "r233",
+    "method": "黑洞热力学层",
+    "verdict": "四定律+Smarr+面积定理+熵力母式（仅引力）"
+   },
+   {
+    "round": "r234（并行）",
+    "method": "强场层（史瓦西测地线）",
+    "verdict": "ISCO/光子球/1PN 失效曲线"
+   },
+   {
+    "round": "r237",
+    "method": "宇宙学背景层",
+    "verdict": "FRW 年龄/距离-红移/Λ 通道"
+   },
+   {
+    "round": "r254",
+    "method": "宇宙学扰动层",
+    "verdict": "线性增长+BAO 声视界+σ8 演化"
+   },
+   {
+    "round": "r256",
+    "method": "宇宙学声学峰层（本卷）",
+    "verdict": "θ_s/l_A/z_eq + 张量边界"
+   }
+  ]
+ },
+ "counts": {
+  "entries": 8,
+  "PASS": 4,
+  "FAIL": 0,
+  "BOUNDARY": 2,
+  "INFO": 2,
+  "guards": "5/5",
+  "controls": "2/2"
+ },
+ "verdict": "R256-CMB-ACOUSTIC-PEAK-OK-THETA-S-ANCHOR-OK-LA-OK-ZEQ-OK-RS-STAR-LT-RD-OK-H0-INVARIANCE-CONTROL-OK-OMEGA-M-SENSITIVITY-CONTROL-OK-FULL-TT-BOLTZMANN-BOUNDARY-TENSOR-R-BOUNDARY-VERDICT-STANDARD-ACOUSTIC-GEOMETRY-NO-NEW-THEORY",
+ "judgement": "CLOSED-INCREMENT（宇宙学声学峰层：θ_s、l_A、z_eq、r_s/r_d 层级）；完整 TT 谱需 Boltzmann、张量幅度无框架来源；无新理论",
+ "source": {
+  "engine": "TUFT-r256_四力统一方程_宇宙学声学峰层_声视界角度与声学多极及张量边界_精算与交互可视化_2026-10-31.py",
+  "inherits": [
+   "r237（宇宙学背景层）",
+   "r254（宇宙学扰动层）",
+   "r230（本质三层不可达）",
+   "r229（新颖性审计口径）",
+   "Planck 2018 / Eisenstein–Hu 1998 / KKT 1997（只读）"
+  ]
+ }
+}
