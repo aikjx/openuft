@@ -1,0 +1,124 @@
+{
+ "round": "attack33",
+ "topic": "2-loop M_SUSY 跨册差异的机器定位",
+ "entries": [
+  {
+   "code": "A0 CORRECTED",
+   "verdict": "CORRECTED",
+   "title": "v1 的 flow 用单一矩阵跑两段，解的不是 attack32 的方程组；修正后逐位复现 2317.71643 与 17918.76520",
+   "value": "单一矩阵: 1780.00 / 24053.22 GeV ; 分段矩阵: 2317.71643 / 17918.76520 GeV（attack32 报 2317.71643 / 17918.76520）",
+   "note": "判据：同一矩阵同一输入，两册必须给同一根。v1 得 1780.00 而 attack32 得 2317.72，两者各自 residual 都很小 => 不是收敛问题，是【方程组不同】。根因=SM 段被灌入 MSSM 2-loop 系数。本册所有读数以分段口径重算；v1 的 b33 敏感度 13.51 倍随之作废"
+  },
+  {
+   "code": "A1 INFO",
+   "verdict": "INFO",
+   "title": "两册 b_ij 只在 b33 上不同（+14 vs -14），一阶系数与 SM 段矩阵完全一致",
+   "value": "差异单元 1 个：b33 +14 vs -14",
+   "note": "F5c 用「V1 仅对角项」解释跨册差异，但 V1 是人为构造的矩阵变体；两册真实矩阵的差异只有 b33 一个符号位 => 归因必须重新做（A4/A5/A6）"
+  },
+  {
+   "code": "A2 CORRECTED",
+   "verdict": "CORRECTED",
+   "title": "attack30 的 2-loop M_SUSY=193.04415 GeV 是其搜索域上界，不是解",
+   "value": "M_Z*exp(0.75)=193.04415 GeV vs 报值 193.04415（相对偏差 3.70e-09）",
+   "note": "报值恰等于域上界 => 真解在搜索域之外，网格搜索以边界值收尾。该册未报 residual，故「边界值」与「收敛解」在册内不可区分。这是跨册差异的第一候选归因，优先级高于 b_ij 约定。该判定不依赖 A0 的分段/单矩阵口径（纯算术：M_Z*exp(0.75)）"
+  },
+  {
+   "code": "A3 FAIL",
+   "verdict": "FAIL",
+   "title": "attack30 的 L1 搜索域注释(-1.5..3)与 range(46) 实际上界(0.75)不一致",
+   "value": "实际 L1_max=0.7500；对应 M_SUSY 上限 193.04 GeV",
+   "note": "注释写 3.0、实际 0.75，差 4 倍。该不一致使「解是否被域截断」无法从注释判断，必须从 range() 反算。属「注释漂移」缺陷族：文档层与执行层未同源"
+  },
+  {
+   "code": "A5 BOUNDARY",
+   "verdict": "BOUNDARY",
+   "title": "复现了 attack30 的 193 GeV：它是域内最优点，残差 7.512e-01 未收敛",
+   "value": "L1=0.7500 L2=31.7000 M_SUSY=193.04415 GeV residual=7.512346e-01",
+   "note": "网格搜索只要残余不为零就不是解。attack30 未报 residual => 册内无法区分「边界值」与「解」；本册补齐该读数。复现本身证明两册积分器一致（差异不在算法）"
+  },
+  {
+   "code": "A6 PASS",
+   "verdict": "PASS",
+   "title": "扩展域 + 局部精修可达真解 => 原域报值是截断产物，不是解",
+   "value": "refined M_SUSY=17918.76520 GeV residual=7.461e-14（原域最优 residual=7.512e-01）",
+   "note": "阳性对照成立：同一积分器、同一分段矩阵、只扩大搜索域并补精修 => residual 从 7.512e-01 降到 7.461e-14（13.00 个数量级，其中粗扫仅贡献 1.02 个数量级，其余来自精修）。故 b_ij 非对角项不是主因，搜索域 + 未精修才是"
+  },
+  {
+   "code": "A7 BOUNDARY",
+   "verdict": "BOUNDARY",
+   "title": "仅 b33 符号位就使 2-loop M_SUSY 跨 7.73 倍（分段矩阵口径）",
+   "value": "b33=+14 -> 2317.71643 GeV ; b33=-14 -> 17918.76520 GeV",
+   "note": "两册各自的 b33 符号不同（+14 / -14），此为「约定未声明」型缺陷；本册不判哪个符号是标准（需引原始文献表逐元素核对），只登记其影响面。注：v1 曾报 13.51 倍，那是单矩阵口径的产物，已作废"
+  },
+  {
+   "code": "A9 INFO",
+   "verdict": "INFO",
+   "title": "反解在扫描范围内唯一（最大根数 1）",
+   "value": "b33=+14 根数 1 / b33=-14 根数 1",
+   "note": "88 个初值全部收敛到同一根；不做更强断言（未做全局拓扑证明）。故跨册差异不能用「不同分支」解释，只能是搜索域或方程组不同"
+  },
+  {
+   "code": "A4 CORRECTED",
+   "verdict": "CORRECTED",
+   "title": "F5c 的「非对角项」归因是数值巧合；真实归因是搜索域截断（193.04=域上界）",
+   "value": "同矩阵代入 Newton 相差 92.82 倍；域上界=M_Z*exp(0.75)=193.04415 GeV",
+   "note": "一个凑巧落在目标附近的变体（V1）被当成机制，是本库反复出现的「凡数值接近即归因」陷阱。正确做法：先做「报值是否等于某个结构常数」的恒等式核验（本册 A2），再谈物理归因"
+  },
+  {
+   "code": "A8 INFO",
+   "verdict": "INFO",
+   "title": "2-loop M_SUSY 的最小可复现字段 = 矩阵逐元素 + 分段动力学 + 求解定义 + residual + 搜索域",
+   "value": "五字段；缺任一项则跨册比较无意义",
+   "note": "本册给出三个反例：域上界被当成解（缺 residual）、凑巧接近被当成机制（缺矩阵逐元素）、单矩阵套两段（缺分段动力学）。五项齐全时，跨册 12 倍差异本可在首次对拍时定位"
+  }
+ ],
+ "tally": {
+  "CORRECTED": 3,
+  "INFO": 3,
+  "FAIL": 1,
+  "BOUNDARY": 2,
+  "PASS": 1
+ },
+ "total": 10,
+ "key_numbers": {
+  "matrix_diff_cells": 1,
+  "roots_count_b33p14": 1,
+  "roots_count_b33n14": 1,
+  "roots_msusy_b33p14": [
+   "2317.7164"
+  ],
+  "roots_msusy_b33n14": [
+   "17918.7652"
+  ],
+  "b33_attack32": 14.0,
+  "b33_attack30": -14.0,
+  "a30_L1_hi_actual": "0.750000",
+  "a30_L1_hi_claimed": 3.0,
+  "a30_msusy_at_bound_GeV": "193.044151",
+  "a30_reported_msusy_GeV": 193.04415,
+  "a30_reported_vs_bound_rel": "3.703e-09",
+  "orig_grid_msusy_GeV": "193.044151",
+  "orig_grid_residual": "7.512346e-01",
+  "newton_msusy_b33p14_GeV": "2317.71643",
+  "newton_msusy_b33n14_GeV": "17918.76520",
+  "newton_residual_b33p14": "7.105e-15",
+  "newton_residual_b33n14": "7.105e-15",
+  "a32_reported_msusy_GeV": 2317.71643,
+  "a32_reproduced_rel_dev": "1.964e-09",
+  "a32_v3_reproduced_rel_dev": "1.302e-10",
+  "v1_single_matrix_msusy_b33p14_GeV": "1779.9989",
+  "v1_single_matrix_msusy_b33n14_GeV": "24053.2157",
+  "ext_grid_msusy_GeV": "11648.3396",
+  "ext_grid_residual": "7.113e-02",
+  "refined_msusy_GeV": "17918.76520",
+  "refined_residual": "7.461e-14",
+  "b33_symbol_mult": "7.7312",
+  "grid_orders_gain": "1.02",
+  "refine_orders_gain": "13.00",
+  "crossbook_ratio_a32_over_a30": "12.0061"
+ },
+ "verdict": "attack30 的 2-loop M_SUSY=193.04415 GeV 是搜索域上界(M_Z*exp(0.75))而非解；attack32 F5c 的「非对角项」归因须更正为「搜索域截断 + residual 未报告」；v1 的 b33 敏感度 13.51 倍因 flow 单矩阵缺陷作废，分段口径为 7.73 倍",
+ "red_line": "不判 attack30 / attack32 作者算错；判定的是「报出的量是不是解」与「两个数字是否来自同一方程组」。MSSM gauge unification 的物理结论不被本册否定",
+ "exit_code": 0
+}

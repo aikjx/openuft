@@ -1,0 +1,95 @@
+{
+ "round": "attack30",
+ "topic": "函子缺口的不可行性判定与破壁最小条件",
+ "entries": [
+  {
+   "code": "E1 FAIL",
+   "verdict": "FAIL",
+   "title": "几何路径每费米子只能供给「质量」1 项，3 个离散规范标号供给 0",
+   "value": "需求 {m, SU(3), SU(2), Y} = 4；供给 {m} = 1；离散层供给 0/3",
+   "note": "这是逐项计数，不是哲学论断：TUFT 的 κ, τ 是曲线几何量，SM 的 SU(3)/SU(2)/Y 是李群表示标签，二者没有对应载体。质量虽可由 √(κ²+τ²) 表达，但那是把 m 换个写法，不预测 m 的数值"
+  },
+  {
+   "code": "E2 FAIL",
+   "verdict": "FAIL",
+   "title": "几何路径的离散信息容量不足以唯一确定 SM 场目录（缺口 1.74~3.0 bits）",
+   "value": "R14 缺口 1.73697 bits；18 场缺口 2.58496 bits；(j,color,Y) 缺口 3.0 bits",
+   "note": "三口径一致给出正缺口，且 (j,color,Y) 口径恰为 3.0 bits（=log2 8）。缺口不是「测量不够」，而是「几何路径的离散层只有 log2(3) 的容量」。与 R14 判定的「结不变量与规范量子数之间不存在自然函子」同源"
+  },
+  {
+   "code": "E3 FAIL",
+   "verdict": "FAIL",
+   "title": "连续参数不能无外部规则地产生离散规范标号（机器演示）",
+   "value": "连续 max|Δm|: 0.03128 -> 3.129e-5（细分 1000x）；离散 max|Δlabel| 恒 2.0",
+   "note": "连通集连续像连通、离散集全不连通 => 连续映射到离散标签必为常值。要产生 SU(3)/SU(2)/Y 这样的离散标签，必须另加一条「选择/量子化规则」。这条规则不在 TUFT 现有公设集内（见 E4）"
+  },
+  {
+   "code": "E4 FAIL",
+   "verdict": "FAIL",
+   "title": "破壁所需 3 项最小条件在 TUFT 公设集内 0/3 可得",
+   "value": "C1 代结选择规则 = 0；C2 场名标记函子 = 0；C3 耦合几何锁定 = 0；外部桥接模块 = 0",
+   "note": "审计 5 个引擎，import 并集仅 {io, json, mpmath, os, sys}，无本工程自有桥接模块。这三项正是本库 R14 的 O-KNOTMAP 残余 (a)+(b) 与 O-COUPLING。缺任一，几何路径就无法把自身的连续量翻译成 SM 的离散标签"
+  },
+  {
+   "code": "E5 PASS",
+   "verdict": "PASS",
+   "title": "attack28 / attack29 四项关键读数独立复现",
+   "value": "偏差 SM 5.48e-9 / MSSM 2.17e-8 / M_SUSY 3.32e-9 / M_GUT 2.03e-8",
+   "note": "本册用与 attack28/29 同源的闭式独立复算，四项读数在 1e-6 内一致。=> 前两册的数值可信；本册在此基础上做的是「容量与障碍」判定，不重判其物理"
+  },
+  {
+   "code": "E6 INFO",
+   "verdict": "INFO",
+   "title": "M1-M7 已闭合，M8 结构性未达成",
+   "value": "M1-M7 7/7；M8 0/1",
+   "note": "M8 的未达成不是遗漏，而是 E1-E4 三条下界的直接后果：容量不足 + 连续->离散障碍 + 0/3 选择规则"
+  }
+ ],
+ "tally": {
+  "FAIL": 4,
+  "PASS": 1,
+  "INFO": 1
+ },
+ "total": 6,
+ "key_numbers": {
+  "bits_supply_log2_3": "1.584962501",
+  "bits_need_r14_log2_10": "3.321928095",
+  "gap_r14_bits": "1.736965594",
+  "bits_need_18_log2_18": "4.169925001",
+  "gap_18_bits": "2.584962501",
+  "bits_need_label_24": "4.584962501",
+  "gap_label_bits": "3.0",
+  "gap_label_exact_3_residual": "0.0",
+  "continuous_max_step_N100": "0.03128232",
+  "continuous_max_step_N100000": "3.1289744e-5",
+  "discrete_max_step_N100000": "2.0",
+  "per_fermion_demand": 4,
+  "per_fermion_supply": 1,
+  "per_fermion_discrete_supply": 0,
+  "barrier_conditions_supplied": "0/3",
+  "audited_engine_count": 5,
+  "audited_import_union": [
+   "io",
+   "json",
+   "mpmath",
+   "os",
+   "sys"
+  ],
+  "external_bridge_modules": [],
+  "repro_SM_sin2thetaW": "0.2074476311",
+  "repro_MSSM_sin2thetaW": "0.228925595",
+  "repro_M_SUSY_GeV": "54.38471618",
+  "repro_M_GUT_GeV": "2.321450947e+16",
+  "repro_rel_devs": {
+   "SM": "5.485e-9",
+   "MSSM": "2.172e-8",
+   "MSUSY": "3.324e-9",
+   "MGUT": "2.03e-8"
+  },
+  "M1_M7_closed": "7/7",
+  "M8_achieved": false
+ },
+ "verdict": "M8 结构性不可达：容量下界 + 范畴障碍 + 0/3 选择规则；破壁需 >=1 条外部选择规则",
+ "red_line": "不否证 TUFT 物理；只判几何路径不能无外部选择规则地预测 SM 观测量",
+ "exit_code": 0
+}

@@ -1,0 +1,115 @@
+{
+ "round": "attack32",
+ "topic": "函子缺口的精算强化与反例排除",
+ "entries": [
+  {
+   "code": "F1 CORRECTED",
+   "verdict": "CORRECTED",
+   "title": "attack31 E2 的「缺口恰 3.0 bits」是口径构造产物，不稳健",
+   "value": "缺口区间 [0.0, 3.58496] bits；正缺口口径 5/6；精度残差 0.0",
+   "note": "整数 3.0 = log2(24/3) = log2(8) 是分子分母选择的算术后果。O6 口径下缺口归零 => 「存在缺口」依赖供给侧假设（几何层能给多少离散值）。真正不受口径影响的不是 bit 数，而是 F2 的可识别性结论"
+  },
+  {
+   "code": "F2 FAIL",
+   "verdict": "FAIL",
+   "title": "函子缺失的实质是不可识别性（nullity=18，约束数 0），而非单纯容量不足",
+   "value": "自由变量 18 / 约束 0 / 待解释 18 => nullity=18；阳性对照：约束 18 => nullity=0",
+   "note": "这是比 bit 计数更强的判据，且不受 F1 的口径选择影响：即使几何层给出 24 个离散值，只要没有方程约束它们，18 维标号空间可被任意填充 => 零预测力。attack31 的「容量下界」是弱版本，本册给出强版本（可识别性）"
+  },
+  {
+   "code": "F3 CORRECTED",
+   "verdict": "CORRECTED",
+   "title": "attack31 E3 的范畴论证被 TUFT 自身整数不变量反例否证，须重述",
+   "value": "绕数数值 1.000000000（连续->整数）；SU(3) 生成元定义命中 6/351 文件；整体量只能给常值",
+   "note": "原命题「连续参数不能产生离散量」为假：Lk/W/det 都是连续几何的整体不变量且取离散值。正确障碍 = (i) 群结构缺失 (ii) 定义域错配（曲线 vs 表示空间）(iii) 整体 vs 局部错配。结论（给不出标号）不变，理由必须更换。若沿用错判据，会被一条反例整册推翻 —— 这是必须自曝的缺口"
+  },
+  {
+   "code": "F4 FAIL",
+   "verdict": "FAIL",
+   "title": "全目录扫描：几何->规范标号的映射实现 0 个（提及充分，实现为零）",
+   "value": "扫描 351 个 .py；生成元 def 命中 2 / (3,2,Y) 返回命中 0；扫描器阳性对照通过",
+   "note": "attack31 的 E4 只扫 5 个文件且只查 import，无法排除「内联实现」；本册扩到全目录并按「可执行实现」而非「依赖引用」判据，结论不变但覆盖面补齐。同时用 import/def 计数做阳性对照，避免「扫描器坏了导致 0 命中」的假 FAIL"
+  },
+  {
+   "code": "F5 MISMATCH",
+   "verdict": "MISMATCH",
+   "title": "1-loop 自校准通过但 2-loop 未复现 attack30 读数（差异须归因）",
+   "value": "自校准偏差 3.32e-09；2-loop M_SUSY 偏差 1.10e+01 / M_GUT 偏差 4.12e-01",
+   "note": "按纪律不下「对方错」的结论：登记三条候选（解的定义 / b_ij 取值与符号 / 阈值修正）。归因见后续 F5c：b_ij「仅对角项」变体与 attack30 读数仅差约 5%，而「含非对角项」差 12 倍 => 差异集中在非对角项是否计入"
+  },
+  {
+   "code": "F5b BOUNDARY",
+   "verdict": "BOUNDARY",
+   "title": "M_SUSY 反解由截断阶数主导（42 倍），远超参数误差 0.5% 与测量误差 1.3~1.5 倍",
+   "value": "cond(J)=39.41；dL1(阶数)=+3.7523(x42.62)；dL1(beta+1%)=+0.0051(x1.0051)；输入 0.1%=>x1.3410",
+   "note": "初版把 42 倍归因为「系数误设同量级」是错的（实测系数 1% 只造成 0.5%），已自抓更正。正确归因：模型误差（截断阶数）主导，参数/测量误差均小 1~2 个量级。因此 attack29 的 54.38 GeV、attack30 的 193 GeV、本册的 2318 GeV 三者都在同一「截断敏感」问题的不同切片上，相互差异主要是阶数与矩阵约定，不是物理。可检验性含义：任何以 M_SUSY 为中间量的「预言」（含 tau_p）都必须先报截断误差带"
+  },
+  {
+   "code": "F5c BOUNDARY",
+   "verdict": "BOUNDARY",
+   "title": "2-loop 的 M_SUSY 对 b_ij 约定跨 97.6 倍；V1 仅对角与 attack30 仅差 4.89%",
+   "value": "4 变体 M_SUSY: 2317.7, 183.6, 4764.6, 17918.8 GeV（跨度 97.60 倍）",
+   "note": "V0 标准 / V1 仅对角 / V2 误用 SM / V3 b33 反号 四种约定给出的 M_SUSY 已跨越 97.6 倍。其中 V1（仅对角项）与 attack30 的 193.04 GeV 仅差 4.89%，是把 11 倍跨册差异收敛到「非对角项是否计入」这一条的具体证据。=> 「2-loop 的 M_SUSY」不是可跨实现比较的量，引用时必须同时声明 b_ij 约定与求解定义"
+  },
+  {
+   "code": "F6 INFO",
+   "verdict": "INFO",
+   "title": "破壁的代价可量化：C2 需 >=52.5 bits 查表，C1 最少需 >=24.0 bits 分组",
+   "value": "log2(18!)=52.5075；log2(18!/(6!)^3)=24.032",
+   "note": "这不是「再加一个参数」的问题：补齐函子等价于补一张 18 行的外部映射表。按本工程「零外部输入」纪律，M8 的达成必须先修改纪律本身（与 r14 的出路④同型）"
+  }
+ ],
+ "tally": {
+  "CORRECTED": 2,
+  "FAIL": 2,
+  "MISMATCH": 1,
+  "BOUNDARY": 2,
+  "INFO": 1
+ },
+ "total": 8,
+ "key_numbers": {
+  "gap_calib_min_bits": "0.0",
+  "gap_calib_max_bits": "3.5849625",
+  "gap_positive_calibers": 5,
+  "log2_8_residual_dps80": "0.0",
+  "identifiability_nullity_at_0_constraints": 18,
+  "winding_number_numeric": "1.000000000000",
+  "su3_generator_def_hits": 6,
+  "scanned_py_files": 351,
+  "scanned_py_files_full": 351,
+  "reachable_targets_demo": "3/3",
+  "bridge_impl_hit_files": 2,
+  "scanner_control_import_files": 349,
+  "scanner_control_def_files": 333,
+  "scanner_ok": true,
+  "rge_1loop_MSUSY_GeV": "54.38472",
+  "rge_1loop_MGUT_GeV": "2.321451e+16",
+  "rge_2loop_MSUSY_GeV": "2317.71643",
+  "rge_2loop_MGUT_GeV": "1.117972e+16",
+  "rge_2loop_alphaGUT_inv": "25.6672",
+  "rge_2loop_convergence_residual": "7.105e-15",
+  "rge_selfcal_dev_1loop_vs_attack29": "3.321e-09",
+  "rge_cross_dev_2loop_MSUSY": "1.1006e+01",
+  "rge_cross_dev_2loop_MGUT": "4.1216e-01",
+  "bits_full_permutation_18": "52.507528",
+  "bits_generation_grouping_only": "24.031969",
+  "f5b_cond_J": "39.41",
+  "f5b_dL1_order_1loop_to_2loop": "+3.7523",
+  "f5b_MSUSY_mult_from_order": "42.62",
+  "f5b_dL1_beta_plus1pct": "+0.0051",
+  "f5b_MSUSY_mult_beta_plus1pct": "1.0051",
+  "f5b_MSUSY_mult_sin2_plus0p1pct": "1.3410",
+  "f5b_MSUSY_mult_alphas_plus1pct": "1.4728",
+  "f5c_variant_MSUSY_GeV": [
+   "2317.7164",
+   "183.5956",
+   "4764.6056",
+   "17918.7652"
+  ],
+  "f5c_variant_span": "97.60",
+  "f5c_dev_V1_vs_attack30": "0.0489"
+ },
+ "verdict": "F2 为强判据（不可识别性 nullity=18）；F1/F3 判 attack31 两处过度陈述并更正；F4 全目录复核维持「实现零」；F5 数值独立复算（见 tally）；F6 给出破壁代价（>=24.0 bits 分组 / >=52.5 bits 查表）",
+ "red_line": "不否证 TUFT 物理；结论（几何路径给不出规范标号）不变，但判据须更换",
+ "exit_code": 0
+}

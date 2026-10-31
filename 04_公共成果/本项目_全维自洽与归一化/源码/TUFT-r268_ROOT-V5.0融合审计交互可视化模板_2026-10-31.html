@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>268 · ROOT 空间光速螺旋 V5.0 融合审计（四层映射 · 六条口径 · Z/Z' · 旧 ω 失效）</title>
+<style>
+  :root{--bg:#07131a;--panel:#0b1b23;--panel2:#0e2430;--ink:#dff3f5;--dim:#8fb0b8;
+        --line:#17333f;--gold:#d9b45a;--green:#4ade80;--red:#f87171;--blue:#5dd9ee;
+        --purple:#b39af7;--orange:#e8b06a;--rose:#f7799b;--teal:#3fd0c9;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#07131a,#123b4a 55%,#2a1a52);border:1px solid #2f6f83;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#12414a;color:#bdf3f5;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#bdf3f5;}
+  .chip b{color:var(--teal);}
+  .verdict-box{background:#0a1d22;border:2px solid var(--gold);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:19px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#c7e2e6;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#c7e2e6;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0a1d22;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#bdf3f5;background:#0a1d22;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#c7e2e6;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .fix{color:var(--blue);font-weight:700;} .info{color:var(--dim);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0a1d22;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#c7e2e6;}
+  .card b{color:var(--gold);}
+  .metric{background:#0a1d22;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:10px;}
+  .metric .t{font-size:13px;font-weight:700;color:#dff3f5;margin-bottom:6px;}
+  .bar{height:14px;border-radius:4px;margin:4px 0;position:relative;background:#0e2430;}
+  .bar i{display:block;height:14px;border-radius:4px;}
+  .bar span{position:absolute;right:6px;top:-2px;font-size:11px;font-family:Consolas,monospace;color:#dff3f5;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;}
+  .kpi{background:#0a1d22;border:1px solid var(--line);border-radius:8px;padding:10px 12px;}
+  .kpi .k{font-size:11px;color:var(--dim);font-family:Consolas,monospace;}
+  .kpi .v{font-size:15px;font-weight:800;color:var(--teal);font-family:Consolas,monospace;word-break:break-all;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r268 · ROOT V5.0 融合审计层 · 外部复核 / 口径统一 · 零外部依赖</span>
+  <h1>ROOT 空间光速螺旋统一理论 V5.0<br>四层分级映射 · 六条口径消解 · Z/Z' · 旧强场 ω 失效定理</h1>
+  <p>把用户提供的 V5.0 独立审计接入项目账本：①Z=Gc/2、Z'=c/(8πε₀) 的重参数恒等式；
+     ②Z+iZ' 的量纲不可加性；③α=1/(4π³+π²+π) 与 m_p/m_e=56π 两个伪预言定价；
+     ④螺旋双模型（轴向 u=c / 总速 v=c）的 κ、τ、H；⑤旧强场 ω_old 无弱场极限（否定性定理）；
+     ⑥Schwarzschild ISCO/光子球、ℓ_g/r_s 与四项经典检验复现。全部为已知式复现，无新物理。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：V5.0 审计本身正确，属外部复核层；A/B 保留、C 修正、D 不可判定；新增理论含量为零</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>耦合重参数：Z=Gc/2 与 Z'=c/(8πε₀)</h3>
+  <div class="kpis" id="kpis"></div>
+  <div id="coupBars"></div>
+  <div class="read" id="readCoup"></div>
+  <p class="note">左：F=2Zm₁m₂/(cr²) 与 Gm₁m₂/r² 的 12 格点差值为机器零（Z 只是 G 的重参数）。
+     右：1/(4πε₀)=2Z'/c 与 μ₀=8πZ'/c³ 双恒等残差 0；α=2e²Z'/(ħc²) 与 CODATA 2022 差约 8×10⁻¹⁰
+     （该差值来自 ε₀ 的版本舍入，不是理论误差）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>Z+iZ' 为什么不能加：量纲签名与量级</h3>
+  <table id="dimTable"></table>
+  <div class="read" id="readDim"></div>
+  <p class="note">Z 的单位是 m⁴·kg⁻¹·s⁻³（含 kg⁻¹），Z' 的单位是 kg·m⁴·C⁻²·s⁻³（含 C⁻²）。
+     两者相差 (kg/C)² 这个因子，线性叠加没有 SI 含义；|Z'/Z|≈1.35×10²⁰ ⇒ 即使强行相加，
+     实部也在 20 个量级下被淹没。该「复耦合」应从体系删除（条目 A03 FAIL）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>两个伪预言的机器定价</h3>
+  <div id="propBars"></div>
+  <div class="read" id="readProp"></div>
+  <p class="note">α 几何提案 1/(4π³+π²+π)=137.036303776 与 CODATA 137.035999177 差 +2.2228 ppm，
+     比实验相对不确定度大约 1.5×10⁴ 倍 ⇒ 只能登记为经验近似（项目预测登记 S10-P002 已标 ❌）。
+     m_p/m_e=56π≈175.929 与实测 1836.153 差 10.4 倍 ⇒ 直接排除。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>螺旋双模型：κλ 与 τλ 随 q=R/λ</h3>
+  <canvas id="cvHelix" width="1000" height="430"></canvas>
+  <div class="read" id="readHelix"></div>
+  <p class="note">固定 v_⊥=Rω=0.42c（λ=550 nm，ω=1.2c/λ）。轴向模型强行 u=c ⇒ 总速 1.0846c（超光速，
+     被相对论排除）；总速模型 u=0.9075c ⇒ 满足光样条件，但 κ≠0 意味着加速度 a=Rω²≈8.24×10²² m/s²，
+     不是测地线（条目 H02 BOUNDARY）。两模型都满足 κ²+τ²=ω²/v²，R、H 反演逐位（G6/C4）。</p>
+</div>
+
+<section>
+  <h3><span class="n">§5</span>旧强场 ω_old 的失效定理：ω_old/Ω_K=√(x³/(2(x−1)))</h3>
+  <canvas id="cvOld" width="1000" height="400"></canvas>
+  <div class="read" id="readOld"></div>
+  <p class="note">x=r/(GM/c²)。x=100（已是弱场区）时旧式仍比 Kepler 大 71.07 倍，x=1000 时大 707 倍，
+     且随 x 发散 ⇒ 弱场极限不存在。这不是精度问题，而是函数形式的错误（条目 H03 PASS，否定性定理）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§6</span>四层分级映射（A/B/C/D）</h3>
+  <table id="layerTable"></table>
+  <p class="note">V5.0 的 A/B/C/D 分级与本项目 r141/r142/r257 口径同向：A 类严格成立予以保留；
+     B 类需借用标准理论动力学；C 类五条已在 r268 修正；D 类四条无「预测值+观测值+误差条」结构，
+     不可判定，只能作为研究纲领。</p>
+</section>
+
+<section>
+  <h3><span class="n">§7</span>引力长度与经典检验复现</h3>
+  <table id="lenTable"></table>
+  <table id="testTable"></table>
+  <div class="read" id="readTest"></div>
+  <p class="note">ℓ_g=GM/c² 是由 G、M、c 定义的长度，不是对引力本源的独立解释；r_s=2ℓ_g。
+     水星/光偏折/GPS/Shapiro 全部由标准 GR 公式复算，符合只说明公式用对，不说明 ROOT 独立推出。
+     GPS 运动项本卷 −7.222 与文 −7.105 μs/d 差 0.117 μs，属轨道半径与周期口径（C5）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§8</span>条目 · 守卫 · 控制组（机器账本）</h3>
+  <table id="entryTable"></table>
+  <table id="guardTable"></table>
+  <table id="controlTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§9</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<section>
+  <h3><span class="n">§10</span>r214–r268 方法总账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R268_JSON__;
+
+(function(){
+  const c = R.counts, k = R.readings.coupling;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / CORRECTED ${c.CORRECTED} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">Z <b>${k.Z.toFixed(6)}</b></span>`+
+    `<span class="chip">α 偏差 <b>${k.rel_alpha.toExponential(2)}</b></span>`;
+  document.getElementById("verdictLine").textContent =
+    `Z'=c/(8πε₀)=${k.Zp.toExponential(6)}（Z'/Z=${k.ratio.toExponential(2)}，量纲不同不可加）；`+
+    `α=2e²Z'/(ħc²)=${k.alpha.toExponential(9)}；f=(c/2)√(4πε₀G)=${k.f.toFixed(6)} A·m/kg；`+
+    `α 几何提案偏差 ${R.readings.alpha_prop.ppm.toFixed(3)} ppm（FAIL）；56π 差 ${(R.readings.mass_ratio.rel*100).toFixed(1)}%（FAIL）；`+
+    `旧 ω_old 在 x=100 超 Kepler 71.07 倍（无弱场极限）；非零 κ 光样曲线非测地线（BOUNDARY）。`;
+})();
+
+/* ---------- §1 耦合 ---------- */
+(function(){
+  const k = R.readings.coupling, g1 = R.guards[0], g2 = R.guards[1];
+  const kpis = [
+    {k:"Z = Gc/2 [m⁴kg⁻¹s⁻³]", v:k.Z.toFixed(9)},
+    {k:"Z' = c/(8πε₀)", v:k.Zp.toExponential(6)},
+    {k:"1/(4πε₀) = 2Z'/c", v:k.inv4pe0.toExponential(9)},
+    {k:"μ₀ = 8πZ'/c³", v:k.mu0.toExponential(9)},
+    {k:"α = 2e²Z'/(ħc²)", v:k.alpha.toExponential(9)},
+    {k:"f = (c/2)√(4πε₀G) [A·m/kg]", v:k.f.toFixed(9)},
+  ];
+  document.getElementById("kpis").innerHTML = kpis.map(x=>
+    `<div class="kpi"><div class="k">${x.k}</div><div class="v">${x.v}</div></div>`).join("");
+  const rows = [
+    {t:"Z 引力等价（G1）", a:1, aL:"F_Z", b:1, bL:"F_G", max:1.2, c1:"#3fd0c9", c2:"#4ade80"},
+    {t:"1/(4πε₀) = 2Z'/c（G2，rel 0）", a:1, aL:"LHS", b:1, bL:"RHS", max:1.2, c1:"#5dd9ee", c2:"#4ade80"},
+    {t:"μ₀ = 8πZ'/c³（G2，rel 0）", a:1, aL:"LHS", b:1, bL:"RHS", max:1.2, c1:"#b39af7", c2:"#4ade80"},
+  ];
+  document.getElementById("coupBars").innerHTML = rows.map(r=>
+    `<div class="metric"><div class="t">${r.t}</div>`+
+    `<div class="bar"><i style="width:100%;background:${r.c1}"></i><span>${r.aL}</span></div>`+
+    `<div class="bar"><i style="width:100%;background:${r.c2}"></i><span>${r.bL}</span></div>`+
+    `</div>`).join("");
+  document.getElementById("readCoup").textContent =
+    `Z = ${k.Z.toFixed(15)} m⁴kg⁻¹s⁻³（对照 0.010004524012147）\n`+
+    `F=2Zm₁m₂/(cr²) 与 Gm₁m₂/r²：r∈{1,5,100} 最大相对残差 0\n`+
+    `Z' = ${k.Zp.toExponential(9)} kg·m⁴·C⁻²·s⁻³\n`+
+    `1/(4πε₀) = ${k.inv4pe0.toFixed(6)}  |  2Z'/c = ${(2*k.Zp/2.99792458e8).toFixed(6)}\n`+
+    `α = ${k.alpha.toExponential(15)}  vs CODATA ${k.alpha_codata.toExponential(15)}（rel ${k.rel_alpha.toExponential(2)}）\n`+
+    `f = ${k.f.toFixed(15)}，单位 A·m/kg（旧稿 kg/A 为量纲错误，数值不变）`;
+})();
+
+/* ---------- §2 量纲 ---------- */
+(function(){
+  const k = R.readings.coupling;
+  const rows = [
+    ["Z", k.Z.toFixed(12), k.Z_unit, "引力：kg⁻¹"],
+    ["Z'", k.Zp.toExponential(9), k.Zp_unit, "电磁：C⁻²"],
+    ["Z+iZ'", "无 SI 含义", "—", "两份量纲空间不可线性合并"],
+    ["Z'/Z", k.ratio.toExponential(6), "kg²·C⁻²（无量纲比不成立）", "量级差 20 个数量级"],
+  ];
+  let h = "<tr><th style='width:70px'>对象</th><th style='width:210px'>数值</th><th style='width:250px'>SI 单位</th><th>说明</th></tr>";
+  rows.forEach(r=>{ h += `<tr><td class="mono">${r[0]}</td><td class="mono">${r[1]}</td><td class="mono">${r[2]}</td><td>${r[3]}</td></tr>`; });
+  document.getElementById("dimTable").innerHTML = h;
+  document.getElementById("readDim").textContent =
+    `|Z+iZ'| = ${k.mag.toExponential(6)} ≈ Z'；Z 的相对贡献 ${(k.Z/k.mag).toExponential(2)}\n`+
+    `Z'/Z = ${k.ratio.toExponential(9)}\n`+
+    `结论：复耦合在 SI 中无定义，删除（A03 FAIL / B01 口径⑥）`;
+})();
+
+/* ---------- §3 伪预言 ---------- */
+(function(){
+  const ap = R.readings.alpha_prop, mr = R.readings.mass_ratio;
+  const rows = [
+    {t:`α 几何提案：α⁻¹=137.036303776 vs CODATA（偏差 ${ap.ppm.toFixed(3)} ppm）`,
+     a:Math.abs(ap.ppm), aL:"|ppm|", b:ap.unc_rel*1e6, bL:"实验不确定度 ppm",
+     max:Math.abs(ap.ppm)*1.2, c1:"#f7799b", c2:"#4ade80"},
+    {t:`m_p/m_e=56π=${mr.prop.toFixed(4)} vs ${mr.meas}（差 ${(mr.rel*100).toFixed(1)}%）`,
+     a:mr.prop, aL:"56π", b:mr.meas, bL:"实测", max:mr.meas*1.1, c1:"#f7799b", c2:"#3fd0c9"},
+  ];
+  document.getElementById("propBars").innerHTML = rows.map(r=>{
+    const wa=Math.min(100,Math.abs(r.a)/r.max*100), wb=Math.min(100,Math.abs(r.b)/r.max*100);
+    return `<div class="metric"><div class="t">${r.t}</div>`+
+      `<div class="bar"><i style="width:${Math.max(wa,0.5)}%;background:${r.c1}"></i><span>${r.aL} ${r.a.toFixed(4)}</span></div>`+
+      `<div class="bar"><i style="width:${Math.max(wb,0.5)}%;background:${r.c2}"></i><span>${r.bL} ${r.b.toFixed(4)}</span></div>`+
+      `</div>`;
+  }).join("");
+  document.getElementById("readProp").textContent =
+    `α⁻¹_geo = ${ap.inv.toFixed(12)}；CODATA = 137.035999177\n`+
+    `偏差 = ${ap.ppm.toFixed(6)} ppm；实验相对不确定度 = ${ap.unc_rel.toExponential(2)}（≈${(ap.unc_rel*1e6).toExponential(2)} ppm）\n`+
+    `超实验不确定度 ${ap.overshoot.toFixed(0)} 倍 ⇒ 不能称「零误差证明」\n`+
+    `56π = ${mr.prop.toFixed(9)}；实测 ${mr.meas}；相对差 ${(mr.rel*100).toFixed(2)}%（${(mr.meas/mr.prop).toFixed(3)} 倍）`;
+})();
+
+/* ---------- §4 螺旋 ---------- */
+(function(){
+  const h = R.readings.helix, s = R.readings.scan;
+  const cv = document.getElementById("cvHelix"), ctx = cv.getContext("2d");
+  const W=1000, H=430, PL=78, PR=110, PT=28, PB=52;
+  ctx.fillStyle="#0a1d22"; ctx.fillRect(0,0,W,H);
+  const all = s.kap_ax.concat(s.tau_ax, s.kap_lt, s.tau_lt);
+  const lo = Math.min(...all)*0.9, hi = Math.max(...all)*1.05;
+  const X = q => PL + (q-s.q[0])/(s.q[s.q.length-1]-s.q[0])*(W-PL-PR);
+  const Y = v => PT + (1-(v-lo)/(hi-lo))*(H-PT-PB);
+  ctx.strokeStyle="#17333f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=5;i++){
+    const q=s.q[0]+(s.q[s.q.length-1]-s.q[0])*i/5, x=X(q);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    ctx.fillStyle="#8fb0b8"; ctx.fillText(q.toFixed(2),x-10,H-PB+15);
+  }
+  for(let i=0;i<=4;i++){
+    const v=lo+(hi-lo)*i/4, y=Y(v);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#8fb0b8"; ctx.fillText((v).toFixed(2),10,y+3);
+  }
+  ctx.fillStyle="#8fb0b8"; ctx.fillText("κλ , τλ（无量纲）",10,PT+12);
+  ctx.fillStyle="#8fb0b8"; ctx.fillText("q = R/λ",W-PR-40,H-PB+34);
+  function plot(vals, col, w){
+    ctx.strokeStyle=col; ctx.lineWidth=w; ctx.beginPath();
+    s.q.forEach((q,i)=>{ const x=X(q), y=Y(vals[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.stroke();
+  }
+  plot(s.kap_ax,"#3fd0c9",2.2);
+  plot(s.tau_ax,"#5dd9ee",2.2);
+  plot(s.kap_lt,"#f7799b",2.0);
+  plot(s.tau_lt,"#e8b06a",2.0);
+  ctx.font="11px Consolas";
+  ctx.fillStyle="#3fd0c9"; ctx.fillText("κλ | u=c",W-PR+6,Y(s.kap_ax[20])-6);
+  ctx.fillStyle="#5dd9ee"; ctx.fillText("τλ | u=c",W-PR+6,Y(s.tau_ax[20])+8);
+  ctx.fillStyle="#f7799b"; ctx.fillText("κλ | v=c",W-PR+6,Y(s.kap_lt[20])-6);
+  ctx.fillStyle="#e8b06a"; ctx.fillText("τλ | v=c",W-PR+6,Y(s.tau_lt[20])+8);
+  document.getElementById("readHelix").textContent =
+    `λ=550 nm，R=0.35λ，ω=1.2c/λ ⇒ v_⊥/c=${h.vp_over_c.toFixed(3)}\n`+
+    `轴向 u=c：v/c=${h.ax.v_over_c.toFixed(9)}（>1 超光速）、κ=${h.ax.kappa.toFixed(3)} m⁻¹、τ=${h.ax.tau.toFixed(3)}、H=${h.ax.H_nm.toFixed(3)} nm\n`+
+    `总速 v=c：u/c=${h.lt.u_over_c.toFixed(9)}、κ=${h.lt.kappa.toFixed(3)} m⁻¹、τ=${h.lt.tau.toFixed(3)}、H=${h.lt.H_nm.toFixed(3)} nm\n`+
+    `a=Rω²=${h.ax.a.toExponential(4)} m/s²（几何加速度，非测得光子加速度）\n`+
+    `恒等式残差 ${h.identity_rel.toExponential(2)}；R 反演 ${h.R_recover_rel.toExponential(2)}；H 反演 ${h.H_recover_rel.toExponential(2)}`;
+})();
+
+/* ---------- §5 旧 ω ---------- */
+(function(){
+  const o = R.readings.old_omega, s = o.scan;
+  const cv = document.getElementById("cvOld"), ctx = cv.getContext("2d");
+  const W=1000, H=400, PL=78, PR=60, PT=28, PB=52;
+  ctx.fillStyle="#0a1d22"; ctx.fillRect(0,0,W,H);
+  const hi = Math.max(...s.ratio)*1.08;
+  const X = x => PL + Math.log10(x/2)/Math.log10(1000/2)*(W-PL-PR);
+  const Y = v => PT + (1-v/hi)*(H-PT-PB);
+  ctx.strokeStyle="#17333f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  [2,3,6,10,30,100,300,1000].forEach(x=>{
+    const px=X(x); ctx.beginPath(); ctx.moveTo(px,PT); ctx.lineTo(px,H-PB); ctx.stroke();
+    ctx.fillStyle="#8fb0b8"; ctx.fillText(String(x),px-8,H-PB+15);
+  });
+  for(let i=0;i<=4;i++){
+    const v=hi*i/4, y=Y(v);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#8fb0b8"; ctx.fillText(v.toFixed(0),44,y+3);
+  }
+  ctx.fillStyle="#8fb0b8"; ctx.fillText("ω_old / Ω_K",10,PT+12);
+  ctx.fillStyle="#8fb0b8"; ctx.fillText("x = r/(GM/c²)（对数轴）",W-PR-160,H-PB+34);
+  ctx.strokeStyle="#f7799b"; ctx.lineWidth=2.4; ctx.beginPath();
+  s.x.forEach((x,i)=>{ const px=X(x), y=Y(s.ratio[i]); i?ctx.lineTo(px,y):ctx.moveTo(px,y); });
+  ctx.stroke();
+  ctx.strokeStyle="#4ade80"; ctx.lineWidth=2.0; ctx.setLineDash([6,5]); ctx.beginPath();
+  ctx.moveTo(PL,Y(1)); ctx.lineTo(W-PR,Y(1)); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle="#4ade80"; ctx.fillText("标准 Kepler：Ω_K/Ω_K = 1",PL+150,Y(1)-8);
+  ctx.fillStyle="#f7799b"; ctx.fillText("旧式：x=100 → 71.07，x=1000 → 707.46",PL+380,Y(hi*0.55));
+  document.getElementById("readOld").textContent =
+    `ω_old/Ω_K = √(x³/(2(x−1)))；x=r/(GM/c²)\n`+
+    `x=2 → ${o.ratios["2"].toFixed(3)}；x=3 → ${o.ratios["3"].toFixed(3)}；x=6 → ${o.ratios["6"].toFixed(3)}\n`+
+    `x=10 → ${o.ratios["10"].toFixed(3)}；x=100 → ${o.ratios["100"].toFixed(3)}；x=1000 → ${o.ratios["1000"].toFixed(3)}\n`+
+    `单调递增且 x→∞ 发散 ⇒ 弱场极限不存在 ⇒ 旧 ω_old 弃用（H03 PASS，否定性定理）`;
+})();
+
+/* ---------- §6 四层 ---------- */
+(function(){
+  let h="<tr><th style='width:130px'>分级</th><th>内容</th><th style='width:70px'>条数</th><th style='width:170px'>本卷处理</th></tr>";
+  R.readings.layer.forEach(it=>{
+    h+=`<tr><td><b>${it.cls}</b></td><td>${it.items}</td><td class="mono">${it.n}</td><td>${it.verdict}</td></tr>`;
+  });
+  document.getElementById("layerTable").innerHTML=h;
+})();
+
+/* ---------- §7 长度与检验 ---------- */
+(function(){
+  const ls = R.readings.lengths, ts = R.readings.tests;
+  let h="<tr><th style='width:210px'>天体</th><th>ℓ_g=GM/c²</th><th>r_s=2ℓ_g</th><th style='width:60px'>单位</th></tr>";
+  ls.forEach(r=>{
+    h+=`<tr><td>${r.name}</td><td class="mono">${r.lg_si.toExponential(6)}</td><td class="mono">${r.rs_si.toExponential(6)}</td><td>${r.unit}</td></tr>`;
+  });
+  document.getElementById("lenTable").innerHTML=h;
+  let t="<tr><th>检验项</th><th style='width:110px'>本卷</th><th style='width:110px'>V5.0 文</th><th style='width:60px'>容差</th><th style='width:190px'>传统状态</th></tr>";
+  ts.forEach(r=>{
+    const dev=Math.abs(r.calc-r.doc);
+    const cls=dev<=r.tol?"ok":"bad";
+    t+=`<tr><td>${r.name}</td><td class="mono ${cls}">${r.calc.toFixed(6)}</td><td class="mono">${r.doc}</td><td class="mono">±${r.tol}</td><td>${r.trad}</td></tr>`;
+  });
+  document.getElementById("testTable").innerHTML=t;
+  const big=ts.find(r=>r.name.indexOf("Shapiro")>=0);
+  document.getElementById("readTest").textContent =
+    `水星 ${ts[0].calc.toFixed(5)}″/cy（文 ${ts[0].doc}）；偏折 ${ts[1].calc.toFixed(5)}″（文 ${ts[1].doc}）\n`+
+    `GPS ${ts[2].calc.toFixed(5)} / ${ts[3].calc.toFixed(5)} / ${ts[4].calc.toFixed(5)} μs/d（文 ${ts[2].doc} / ${ts[3].doc} / ${ts[4].doc}）\n`+
+    `Shapiro 单程 ${big.calc.toFixed(3)} μs（文 ${big.doc}）\n`+
+    `以上均为标准 GR 公式复算，不构成 ROOT 的独立预言`;
+})();
+
+/* ---------- §8 条目 ---------- */
+(function(){
+  let e="<tr><th style='width:56px'>码</th><th style='width:96px'>级别</th><th>条目</th></tr>";
+  R.entries.forEach(it=>{
+    const cls = it.level==="PASS"?"ok":(it.level==="FAIL"?"bad":(it.level==="CORRECTED"?"fix":"info"));
+    e+=`<tr><td class="mono">${it.code}</td><td class="${cls}">${it.level}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("entryTable").innerHTML=e;
+  let g="<tr><th style='width:56px'>码</th><th style='width:70px'>状态</th><th>守卫</th></tr>";
+  R.guards.forEach(it=>{
+    g+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("guardTable").innerHTML=g;
+  let c="<tr><th style='width:56px'>码</th><th style='width:70px'>状态</th><th>控制组</th></tr>";
+  R.controls.forEach(it=>{
+    c+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("controlTable").innerHTML=c;
+})();
+
+/* ---------- §9 边界 ---------- */
+(function(){
+  const k = R.readings.coupling, h = R.readings.helix, ap = R.readings.alpha_prop;
+  const cards = [
+    {t:"本卷是复核层，不是新理论",b:"V5.0 的 15 个关键数字在本卷独立复算全中；A/B 层保留、C 层五条已修正、D 层四条不可判定。新增方程只有一条否定性定理（旧 ω_old 无弱场极限）。"},
+    {t:"Z 与 Z' 是重参数",b:`Z=Gc/2=${k.Z.toFixed(9)} 只是 G 的改写（12 格点力恒等机器零）；Z'=c/(8πε₀)=${k.Zp.toExponential(4)} 只是 ε₀ 的改写。两者都不能称为「发现了新常数」。`},
+    {t:"复耦合必须删除",b:`Z+iZ' 的两部分量纲差 (kg/C)²，|Z'/Z|=${k.ratio.toExponential(2)} ⇒ 强行相加时实部被淹没 20 个量级。B01 口径⑥已登记。`},
+    {t:"两个伪预言",b:`α 几何提案偏差 ${ap.ppm.toFixed(3)} ppm（超实验不确定度 ${ap.overshoot.toFixed(0)} 倍）；m_p/m_e=56π 差 10.4 倍。均已在预测登记中判 ❌，不得写入已验证核心。`},
+    {t:"螺旋双模型：哪个被排除",b:`轴向 u=c 模型总速 ${h.ax.v_over_c.toFixed(4)}c（超光速）；总速 v=c 模型 u=${h.lt.u_over_c.toFixed(6)}c 满足光样条件。但两模型 κ≠0 ⇒ 有加速度 a=${h.ax.a.toExponential(3)} m/s²，非测地线；r116 上界 R≤1.13e−16 m 远小于 0.35λ。实体螺旋光子不可作为自由光子轨迹（H02 BOUNDARY）。`},
+    {t:"旧强场公式的方向性错误",b:"ω_old 在 x=100 仍超 Kepler 71 倍并随 x 发散 ⇒ 不是精度问题而是函数形式错误。标准强场应使用 Ω=√(GM/r³)、r_ph=3GM/c²、r_ISCO=6GM/c²=3r_s（r234 机检）。"},
+    {t:"经典检验的归属",b:"水星 42.98″/cy、偏折 1.751″、GPS +45.66/−7.22/+38.44 μs/d、Shapiro 123.62 μs 全部由标准 GR 复算；符合只说明用了对的公式，不是 ROOT 独立预言。"},
+    {t:"GPS 与 Shapiro 的口径",b:"GPS 运动项本卷 −7.222 vs 文 −7.105 μs/d（0.117 μs，轨道半径/周期口径）；Shapiro 本卷 123.62 μs 与文一致（b=R☉）。只报到 0.1 μs / 1% 量级，不粉饰。"},
+  ];
+  document.getElementById("boundCards").innerHTML =
+    cards.map(c=>`<div class="card"><b>${c.t}</b><br>${c.b}</div>`).join("");
+})();
+
+/* ---------- §10 ledger ---------- */
+(function(){
+  let h="<tr><th style='width:100px'>卷</th><th>方法</th><th style='width:250px'>读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    h+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;
+  });
+  document.getElementById("ledgerTable").innerHTML=h;
+  document.getElementById("foot").innerHTML =
+    `TUFT-r268 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

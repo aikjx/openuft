@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>287 · 精细结构常数 V10「下一步链条」可行性审计</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei",system-ui,sans-serif;
+       line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #4338ca;
+          border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;
+         padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);
+        background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;
+               padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:18px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;word-break:break-all;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;
+     border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;
+         display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c7d2fe;background:#0d1730;
+        border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:8px;
+        white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;
+        word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;
+        padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card .v{font-family:Consolas,monospace;font-size:15px;color:#fff;display:block;margin-top:3px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r287 · V10 下一步链条可行性审计 · 零外部依赖</span>
+  <h1>精细结构常数 V10「下一步链条」可行性审计</h1>
+  <p>r284 判六路为条件性候选后，本卷专攻其 §七 链条第 1–2 环：能否从纯几何作用量
+     选出唯一无量纲耦合。四条机检：① 形状量标度不变（无 RG）；② 两个 α 锚相隔 9.081 个
+     倒数单位，单一常数 minimax 908σ；③ 能量族 3 系数 − 2 冗余 ⇒ 1 独立参数 / 1 目标 ⇒ dof=0；
+     ④ 4D 度规有 Lovelock 刚性、规范扇区只固定形式、曲率标量无界 ⇒ 定理不可借用。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判决</h2>
+  <div id="verdictText" style="font-family:Consolas,monospace;font-size:11.5px;color:#f1d18a;word-break:break-all;margin-top:8px;"></div>
+  <p id="judgement"></p>
+</div>
+
+<section>
+  <h3><span class="n">01</span>标度不变性：形状量不动，κ 按 1/λ 变</h3>
+  <canvas id="c1" height="320"></canvas>
+  <div class="read" id="r1"></div>
+  <p class="note">双对数坐标。Q=∮κds/∮|τ|ds 在 λ=1e−3…1e6 上恒为 1（水平线），
+     κ(λ)/κ(1) 严格按 1/λ 下降（斜率 −1）⇒ 检验不是恒真。推论：任何纯形状无量纲数
+     <b>没有能标依赖</b>，即不含 RG 跑动；而 α 确有跑动。</p>
+</section>
+
+<section>
+  <h3><span class="n">02</span>两锚否证：不存在同时命中的常数</h3>
+  <canvas id="c2" height="320"></canvas>
+  <div class="read" id="r2"></div>
+  <p class="note">横轴为候选常数值 q∈[α⁻¹(M_Z), α⁻¹(0)]，纵轴 log₁₀σ。
+     两曲线分别在 q≈137.036 与 q≈127.955 处触底，<b>没有一处同时低于 1σ</b>；
+     minimax 最优 q* 仍在两端各差约 908σ。⇒「一个几何数 = α」在标度上被否证。</p>
+</section>
+
+<section>
+  <h3><span class="n">03</span>参数窗：1σ 只占 (0,2) 域的 4.5e−12</h3>
+  <canvas id="c3" height="320"></canvas>
+  <div class="read" id="r3"></div>
+  <p class="note">α⁻¹(r)=√((2−r)/r)，r=(B−A)/C。自然 O(1) 系数给出 α≈0.577（差 237 倍），
+     要命中 α 需把 r 压到 1.065e−4；1σ 参数窗 Δr/r≈4.2e−8 ⇒ 域占比 4.5e−12。
+     3 个系数去掉加常数与整体标度两条冗余后只剩 1 个独立比，目标也是 1 个数 ⇒ dof=0（拟合式）。</p>
+</section>
+
+<section>
+  <h3><span class="n">04</span>关键读数</h3>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section>
+  <h3><span class="n">05</span>刚性对照：度规 / 规范 / 曲率标量</h3>
+  <div id="rigTable"></div>
+  <p class="note">4D 二阶度规扇区只有 {1,R}（GB 为全导数）⇒ 刚性确实存在；
+     dim-4 规范算子只有 F² 与 F F̃ ⇒ 形式唯一、系数 1/(4g²) 自由；
+     曲率标量 κ,τ,κ',τ',… 计数无界 ⇒ 没有可援引的有限刚性集。</p>
+</section>
+
+<section>
+  <h3><span class="n">06</span>守卫与控制组</h3>
+  <div id="guardTable"></div>
+  <div id="ctrlTable"></div>
+</section>
+
+<section>
+  <h3><span class="n">07</span>条目</h3>
+  <div id="entryTable"></div>
+  <p class="note">本卷条目不可与 r142–r286 相加（跨卷条目不可相加，铁律）。</p>
+</section>
+
+<div class="foot">
+  TUFT-r287 · 2026-10-31 · float64 几何积分 · 零外部 URL · 数字由引擎 JSON 单源铸入<br>
+  审计层：数值复现 ≠ 物理验证；No-Go 仅在三前提下成立（纯几何 / 无 α 输入 / 无额外标度）。
+</div>
+
+</div>
+<script>
+const DATA = __R287_JSON__;
+
+function fmt(x, d){ return Number(x).toFixed(d === undefined ? 3 : d); }
+
+function setupCanvas(cv, cssH){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth || 900;
+  cv.width = w * dpr; cv.height = cssH * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx:ctx, w:w, h:cssH};
+}
+
+function drawFrame(ctx, w, h, pad, xmin, xmax, ymin, ymax, xlab, ylab){
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0d1730'; ctx.fillRect(0,0,w,h);
+  const pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
+  ctx.strokeStyle = '#1f2b3f'; ctx.lineWidth = 1;
+  for(let i=0;i<=5;i++){
+    const y = pad.t + ph*i/5;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+pw, y); ctx.stroke();
+    const yv = ymax - (ymax-ymin)*i/5;
+    ctx.fillStyle = '#94a3b8'; ctx.font = '11px Consolas,monospace'; ctx.textAlign = 'right';
+    ctx.fillText(fmt(yv, Math.abs(ymax-ymin)>20?0:2), pad.l-8, y+4);
+  }
+  const xmap = x => pad.l + pw*(x-xmin)/(xmax-xmin);
+  for(let i=0;i<=6;i++){
+    const xt = xmin + (xmax-xmin)*i/6;
+    const x = xmap(xt);
+    ctx.strokeStyle = '#1f2b3f'; ctx.beginPath();
+    ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t+ph); ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.textAlign='center';
+    ctx.fillText(fmt(xt, Math.abs(xmax-xmin)>20?0:1), x, h-pad.b+16);
+  }
+  ctx.fillStyle = '#cbd5e1'; ctx.font = '12px "Microsoft YaHei"';
+  ctx.textAlign = 'center'; ctx.fillText(xlab, pad.l+pw/2, h-6);
+  ctx.save(); ctx.translate(14, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(ylab, 0, 0); ctx.restore();
+  return {pw:pw, ph:ph, xmap:xmap, ymap:y => pad.t + ph*(ymax-y)/(ymax-ymin)};
+}
+
+function polyline(ctx, pts, m, color, width, dash){
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width || 2.2;
+  if(dash) ctx.setLineDash(dash);
+  ctx.beginPath();
+  let first = true;
+  for(const p of pts){
+    if(!isFinite(p[1])) continue;
+    const x = m.xmap(p[0]), y = m.ymap(p[1]);
+    if(first){ ctx.moveTo(x,y); first=false; } else { ctx.lineTo(x,y); }
+  }
+  ctx.stroke(); ctx.restore();
+}
+
+function legend(ctx, pad, items){
+  let x = pad.l + 10, y = pad.t + 14;
+  ctx.font = '11.5px Consolas,monospace'; ctx.textAlign = 'left';
+  for(const it of items){
+    ctx.fillStyle = it[1]; ctx.fillRect(x, y-8, 14, 3);
+    ctx.fillStyle = '#cbd5e1'; ctx.fillText(it[0], x+20, y);
+    x += 230;
+  }
+}
+
+function plotScale(){
+  const cv = document.getElementById('c1');
+  const s = setupCanvas(cv, 320);
+  const pad = {l:64,r:20,t:26,b:42};
+  const rd = DATA.readings.s1;
+  const lx = rd.lams.map(x=>Math.log10(x));
+  const qy = rd.q_rel.map(x=>Math.log10(x));
+  const ky = rd.rows.map((r,i)=>Math.log10(r.kappa / rd.rows[1].kappa));
+  const m = drawFrame(s.ctx, s.w, s.h, pad, -3, 6, -6, 3,
+                      'log₁₀ λ（整体重标度）', 'log₁₀(比值)');
+  polyline(s.ctx, lx.map((x,i)=>[x,qy[i]]), m, '#4ade80', 2.6);
+  polyline(s.ctx, lx.map((x,i)=>[x,ky[i]]), m, '#63d2ff', 2.2, [6,4]);
+  legend(s.ctx, pad, [['Q(λ)/Q(1)（恒 1）','#4ade80'], ['κ(λ)/κ(1)（∝1/λ）','#63d2ff']]);
+  document.getElementById('r1').textContent =
+    'max|Q/Q0−1|=' + fmt(rd.max_rel_Q,3) + '（8 位机器零）\n' +
+    'κ 阳性对照 max|λκ(λ)/κ(1)−1|=' + fmt(rd.max_rel_kappa,3) + '\n' +
+    '螺旋 κ/|τ| 同比缩放残差=' + fmt(rd.max_rel_helix,3) +
+    '（=1/137=' + fmt(rd.helix_ratio,6) + '）';
+}
+
+function plotAnchors(){
+  const cv = document.getElementById('c2');
+  const s = setupCanvas(cv, 320);
+  const pad = {l:64,r:20,t:26,b:42};
+  const rd = DATA.readings.s2;
+  const y0 = -2, y1 = 9;
+  const log = v => v <= 0 ? null : Math.log10(v);
+  const m = drawFrame(s.ctx, s.w, s.h, pad, rd.AZ, rd.A0, y0, y1,
+                      '候选常数 q（一个与标度无关的数）', 'log₁₀ σ');
+  polyline(s.ctx, rd.grid_q.map((q,i)=>[q, log(rd.sig_ir[i])]), m, '#f87171', 2.0);
+  polyline(s.ctx, rd.grid_q.map((q,i)=>[q, log(rd.sig_mz[i])]), m, '#63d2ff', 2.0);
+  ctxH(m, 0);
+  function ctxH(m, yy){
+    s.ctx.save(); s.ctx.strokeStyle = '#4ade80'; s.ctx.setLineDash([4,4]);
+    s.ctx.beginPath(); s.ctx.moveTo(m.xmap(rd.AZ), m.ymap(yy));
+    s.ctx.lineTo(m.xmap(rd.A0), m.ymap(yy)); s.ctx.stroke(); s.ctx.restore();
+  }
+  legend(s.ctx, pad, [['σ 相对 α⁻¹(0)','#f87171'], ['σ 相对 α⁻¹(M_Z)','#63d2ff']]);
+  document.getElementById('r2').textContent =
+    'Δ=' + fmt(rd.delta,6) + '（' + fmt(rd.rel*100,4) + '%）\n' +
+    'minimax 最优常数 q*=' + fmt(rd.q_star,4) + ' ⇒ 仍差 ' + fmt(rd.minimax,1) + 'σ\n' +
+    '两 1σ 区间间隙=' + fmt(rd.gap,4) + ' 个单位 ⇒ 无交叠';
+}
+
+function plotWindow(){
+  const cv = document.getElementById('c3');
+  const s = setupCanvas(cv, 320);
+  const pad = {l:64,r:20,t:26,b:42};
+  const rd = DATA.readings.s3;
+  const lx = rd.grid_r.map(x=>Math.log10(x));
+  const ay = rd.grid_ainv.map(x=>Math.log10(x));
+  const m = drawFrame(s.ctx, s.w, s.h, pad, -6, 0, 0, 3.4,
+                      'log₁₀ r（(B−A)/C）', 'log₁₀ α⁻¹');
+  polyline(s.ctx, lx.map((x,i)=>[x,ay[i]]), m, '#bb9af7', 2.4);
+  const xr = Math.log10(rd.rstar);
+  const yr = Math.log10(Math.sqrt((2-rd.rstar)/rd.rstar));
+  s.ctx.fillStyle = '#d4a94e'; s.ctx.beginPath();
+  s.ctx.arc(m.xmap(xr), m.ymap(yr), 5, 0, Math.PI*2); s.ctx.fill();
+  s.ctx.save(); s.ctx.strokeStyle = '#4ade80'; s.ctx.setLineDash([4,4]);
+  s.ctx.beginPath(); s.ctx.moveTo(m.xmap(xr), pad.t); s.ctx.lineTo(m.xmap(xr), s.h-pad.b);
+  s.ctx.stroke(); s.ctx.restore();
+  legend(s.ctx, pad, [['α⁻¹(r)=√((2−r)/r)','#bb9af7'], ['命中 α 的 r*','#d4a94e']]);
+  document.getElementById('r3').textContent =
+    'r*=' + rd.rstar.toExponential(4) + '、α⁻¹(r*)=' + fmt(137.036,3) + '\n' +
+    '1σ 窗 Δr/r=' + rd.win_rel.toExponential(3) +
+    '、域占比=' + rd.domain_frac.toExponential(3) + '\n' +
+    '有效参数=' + rd.n_eff + ' / 目标=' + rd.n_target + ' ⇒ dof=' + rd.dof +
+    '；自然系数细调 ' + fmt(rd.tune,0) + ' 倍';
+}
+
+function cards(){
+  const s = DATA.readings.summary;
+  const items = [
+    ['两锚缺口 Δ', fmt(s.delta,6) + ' 单位', '（' + fmt(s.rel*100,3) + '%，MS-bar vs Thomson）'],
+    ['单常数 minimax', fmt(s.minimax,1) + 'σ', '（最优 q*=' + fmt(s.q_star,3) + '）'],
+    ['参数自由度 dof', String(s.dof), '（3 系数 − 2 冗余 = 1 参数 / 1 目标）'],
+    ['1σ 参数窗 Δr/r', s.win_rel.toExponential(2), '（域占比 ' + DATA.readings.s3.domain_frac.toExponential(2) + '）'],
+    ['自然系数细调', fmt(s.tune,0) + '×', '（O(1) 系数给 α≈0.577）'],
+    ['形状量标度残差', s.max_rel_Q.toExponential(1), '（恒 1 ⇒ 零跑动）'],
+  ];
+  document.getElementById('cards').innerHTML = items.map(it =>
+    '<div class="card"><b>' + it[0] + '</b><span class="v">' + it[1] + '</span>' +
+    '<span class="note">' + it[2] + '</span></div>').join('');
+}
+
+function tables(){
+  const rd = DATA.readings.s4;
+  let h = '<table><tr><th>扇区</th><th>允许项</th><th>计数</th><th>含义</th></tr>' +
+          '<tr><td>4D 二阶度规</td><td class="mono">1, R（GB 全导数）</td><td class="mono">' +
+          rd.lov_count + '</td><td>刚性存在，但只固定 G、Λ（量纲量）</td></tr>';
+  h += '<tr><td>dim-4 规范</td><td class="mono">' +
+       rd.gauge.filter(g=>g.dim===4).map(g=>g.op).join('、') +
+       '</td><td class="mono">' + rd.dim4 + '（动力学 ' + rd.dyn + '）</td>' +
+       '<td>形式唯一、系数 1/(4g²) 自由 ⇒ 不给数值</td></tr>';
+  h += '<tr><td>曲率标量</td><td class="mono">κ, τ, κ′, τ′, …（0–5 阶）</td><td class="mono">' +
+       rd.curvature_counts.join(' → ') + '</td><td>无界 ⇒ 无可援引的有限刚性集</td></tr></table>';
+  document.getElementById('rigTable').innerHTML = h;
+
+  let g = '<table><tr><th>守卫</th><th>状态</th><th>说明</th></tr>';
+  for(const x of DATA.guards){
+    g += '<tr><td class="mono">' + x.id + ' ' + x.title + '</td>' +
+         '<td class="' + (x.ok?'ok':'bad') + '">' + (x.ok?'OK':'FAIL') + '</td>' +
+         '<td>' + x.detail + '</td></tr>';
+  }
+  document.getElementById('guardTable').innerHTML = g + '</table>';
+
+  let c = '<table><tr><th>控制组</th><th>状态</th><th>说明</th></tr>';
+  for(const x of DATA.controls){
+    c += '<tr><td class="mono">' + x.id + ' ' + x.title + '</td>' +
+         '<td class="' + (x.ok?'ok':'bad') + '">' + (x.ok?'OK':'FAIL') + '</td>' +
+         '<td>' + x.detail + '</td></tr>';
+  }
+  document.getElementById('ctrlTable').innerHTML = c + '</table>';
+
+  let e = '<table><tr><th>条目</th><th>级别</th><th>内容</th></tr>';
+  for(const x of DATA.entries){
+    e += '<tr><td class="mono">' + x.code + '</td>' +
+         '<td class="' + (x.level==='PASS'?'ok':(x.level==='FAIL'?'bad':'')) + '">' +
+         x.level + '</td><td>' + x.title + '——' + x.detail + '</td></tr>';
+  }
+  document.getElementById('entryTable').innerHTML = e + '</table>';
+}
+
+function header(){
+  const c = DATA.counts;
+  document.getElementById('chips').innerHTML =
+    '<span class="chip">条目 <b>' + c.entries + '</b></span>' +
+    '<span class="chip">PASS <b>' + c.PASS + '</b> / FAIL <b>' + c.FAIL + '</b></span>' +
+    '<span class="chip">BOUNDARY <b>' + c.BOUNDARY + '</b> / INFO <b>' + c.INFO + '</b></span>' +
+    '<span class="chip">守卫 <b>' + c.guards + '</b> · 控制组 <b>' + c.controls + '</b></span>';
+  document.getElementById('verdictText').textContent = DATA.verdict;
+  document.getElementById('judgement').textContent = DATA.judgement;
+}
+
+header(); plotScale(); plotAnchors(); plotWindow(); cards(); tables();
+window.addEventListener('resize', function(){ plotScale(); plotAnchors(); plotWindow(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>281 · 四力统一方程·红移漂移与实时宇宙学层（Sandage–Loeb 信号）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei",system-ui,sans-serif;
+       line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #4338ca;
+          border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;
+         padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);
+        background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;
+               padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:18px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;word-break:break-all;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;
+     border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;
+         display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c7d2fe;background:#0d1730;
+        border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:8px;
+        white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;
+        word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;
+        padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card .v{font-family:Consolas,monospace;font-size:15px;color:#fff;display:block;margin-top:3px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r281 · 红移漂移与实时宇宙学层 · 零外部依赖</span>
+  <h1>四力统一方程·红移漂移与实时宇宙学层</h1>
+  <p>承 r237（背景）→ r254（扰动）→ r256（声学几何）→ r260（视界热力学）→ r274（非线性）
+     → r278（距离与观测量）之后的第七级增量。把「距离」推进到「距离随观测时间的变化」：
+     ① Sandage–Loeb 漂移 dz/dt0=(1+z)H0−H(z) 双路径互印；
+     ② z=0 零点与小 z 斜率 = −q0；
+     ③ 符号翻转红移 z_cross；④ 十年漂移速度 Δv（cm/s）；
+     ⑤ 曲率控制组（Milne 精确零漂移 / EdS / de Sitter）；⑥ 与 r278 的 H(z) 互印。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判决</h2>
+  <div id="verdictText" style="font-family:Consolas,monospace;font-size:11.5px;color:#f1d18a;word-break:break-all;margin-top:8px;"></div>
+  <p id="judgement"></p>
+</div>
+
+<section>
+  <h3><span class="n">01</span>红移漂移 dz/dt0 随红移（10⁻¹² yr⁻¹）</h3>
+  <canvas id="c1" height="330"></canvas>
+  <div class="read" id="r1"></div>
+  <p class="note">横轴红移 z（线性 0–6），纵轴 dz/dt0（10⁻¹²/yr）。零线是 z=0 的平凡根；
+     非零根 z_cross 处 (1+z)=E(z)，漂移由正转负——这是 q0&lt;0（加速宇宙）的直接几何印记。
+     EdS 恒负、Milne 恒零（见控制组），故该翻转是真实判别量而非恒等式。</p>
+</section>
+
+<section>
+  <h3><span class="n">02</span>十年漂移速度 Δv=cΔz/(1+z)（cm/s）</h3>
+  <canvas id="c2" height="300"></canvas>
+  <div class="read" id="r2"></div>
+  <p class="note">Δz(Δt)=drift·Δt；Δv 是光谱速度漂移。量级 ~cm/s per decade 正是
+     Sandage–Loeb 信号的著名特征，也是 ELT/CODEX 级实测的目标量。</p>
+</section>
+
+<section>
+  <h3><span class="n">03</span>H(z)/H0 与 (1+z) 的交点</h3>
+  <canvas id="c3" height="300"></canvas>
+  <div class="read" id="r3"></div>
+  <p class="note">平坦 ΛCDM 的 E(z)=H(z)/H0。漂移为零 ⇔ (1+z)=E(z)，两线交点即 z_cross；
+     低 z 时 E&lt;1+z（漂移正）、高 z 时 E&gt;1+z（漂移负）。</p>
+</section>
+
+<section>
+  <h3><span class="n">04</span>关键读数</h3>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section>
+  <h3><span class="n">05</span>漂移表（引擎读数）</h3>
+  <p class="note">drift 单位 10⁻¹²/yr；Δz(10yr) 无量纲；Δv 单位 cm/s；H 单位 km/s/Mpc。</p>
+  <div id="driftTable"></div>
+</section>
+
+<section>
+  <h3><span class="n">06</span>守卫与控制组</h3>
+  <div id="guardTable"></div>
+  <div id="ctrlTable"></div>
+</section>
+
+<section>
+  <h3><span class="n">07</span>条目</h3>
+  <div id="entryTable"></div>
+  <p class="note">本卷条目不可与 r142–r280 相加（跨卷条目不可相加，铁律）。</p>
+</section>
+
+<div class="foot">
+  TUFT-r281 · 2026-10-31 · 纯标准库 float64 · 零外部 URL · 数字由引擎 JSON 单源铸入<br>
+  复现层：Sandage–Loeb 漂移是标准 ΛCDM 的纯几何预言；实测光谱精度与 w(z) 先验在框架外。
+</div>
+
+</div>
+<script>
+const DATA = __R281_JSON__;
+
+function fmt(x, d){ return Number(x).toFixed(d === undefined ? 3 : d); }
+
+function setupCanvas(cv, cssH){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth || 900;
+  cv.width = w * dpr; cv.height = cssH * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx:ctx, w:w, h:cssH};
+}
+
+function drawFrame(ctx, w, h, pad, xmin, xmax, ymin, ymax, xlab, ylab){
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0d1730'; ctx.fillRect(0,0,w,h);
+  const pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
+  ctx.strokeStyle = '#1f2b3f'; ctx.lineWidth = 1;
+  for(let i=0;i<=5;i++){
+    const y = pad.t + ph*i/5;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+pw, y); ctx.stroke();
+    const yv = ymax - (ymax-ymin)*i/5;
+    ctx.fillStyle = '#94a3b8'; ctx.font = '11px Consolas,monospace'; ctx.textAlign = 'right';
+    ctx.fillText(fmt(yv, Math.abs(ymax-ymin)>50?0:1), pad.l-8, y+4);
+  }
+  const xmap = x => pad.l + pw*(x-xmin)/(xmax-xmin);
+  for(let i=0;i<=6;i++){
+    const xt = xmin + (xmax-xmin)*i/6;
+    const x = xmap(xt);
+    ctx.strokeStyle = '#1f2b3f'; ctx.beginPath();
+    ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t+ph); ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.textAlign='center';
+    ctx.fillText(fmt(xt, 1), x, h-pad.b+16);
+  }
+  ctx.fillStyle = '#cbd5e1'; ctx.font = '12px "Microsoft YaHei"';
+  ctx.textAlign = 'center'; ctx.fillText(xlab, pad.l+pw/2, h-6);
+  ctx.save(); ctx.translate(14, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(ylab, 0, 0); ctx.restore();
+  return {pw:pw, ph:ph, xmap:xmap, ymap:y => pad.t + ph*(ymax-y)/(ymax-ymin)};
+}
+
+function line(ctx, pts, m, color, width){
+  ctx.strokeStyle = color; ctx.lineWidth = width || 2.2; ctx.beginPath();
+  let first = true;
+  for(const p of pts){
+    if(!isFinite(p[1])) continue;
+    const x = m.xmap(p[0]), y = m.ymap(p[1]);
+    if(first){ ctx.moveTo(x,y); first=false; } else { ctx.lineTo(x,y); }
+  }
+  ctx.stroke();
+}
+
+function hline(ctx, y, m, color, dash){
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash(dash || []);
+  ctx.beginPath(); ctx.moveTo(m.xmap(0), y); ctx.lineTo(m.xmap(6), y); ctx.stroke();
+  ctx.restore();
+}
+
+function legend(ctx, pad, items){
+  let x = pad.l + 10, y = pad.t + 14;
+  ctx.font = '11.5px Consolas,monospace'; ctx.textAlign = 'left';
+  for(const it of items){
+    ctx.fillStyle = it[1]; ctx.fillRect(x, y-8, 14, 3);
+    ctx.fillStyle = '#cbd5e1'; ctx.fillText(it[0], x+20, y);
+    x += 170;
+  }
+}
+
+function plotDrift(){
+  const cv = document.getElementById('c1');
+  const s = setupCanvas(cv, 330);
+  const pad = {l:64,r:20,t:26,b:40};
+  const c = DATA.readings.curves;
+  const m = drawFrame(s.ctx, s.w, s.h, pad, 0, 6, -250, 30,
+                      '红移 z', 'dz/dt0（10⁻¹² yr⁻¹）');
+  hline(s.ctx, m.ymap(0), m, '#475569', [4,4]);
+  const zc = DATA.readings.summary.z_cross;
+  const xzc = m.xmap(zc);
+  s.ctx.save(); s.ctx.strokeStyle = '#d4a94e'; s.ctx.lineWidth = 1.2;
+  s.ctx.setLineDash([2,4]); s.ctx.beginPath();
+  s.ctx.moveTo(xzc, pad.t); s.ctx.lineTo(xzc, pad.t + m.ph); s.ctx.stroke(); s.ctx.restore();
+  s.ctx.fillStyle = '#d4a94e'; s.ctx.font = '11px Consolas,monospace'; s.ctx.textAlign = 'left';
+  s.ctx.fillText('z_cross=' + fmt(zc,3), xzc + 5, pad.t + 14);
+  const pts = c.z.map((z,i)=>[z,c.drift[i]]);
+  line(s.ctx, pts, m, '#63d2ff', 2.4);
+  legend(s.ctx, pad, [['dz/dt0(z)','#63d2ff']]);
+  document.getElementById('r1').textContent =
+    'drift(z=1)=' + fmt(DATA.readings.drift[1].closed*1e12,3) + '×10⁻¹²/yr\n' +
+    'z_cross=' + fmt(zc,4) + '；z=2 时 drift=' +
+    fmt(DATA.readings.drift[2].closed*1e12,2) + '×10⁻¹²/yr';
+}
+
+function plotDv(){
+  const cv = document.getElementById('c2');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:64,r:20,t:26,b:40};
+  const c = DATA.readings.curves;
+  const m = drawFrame(s.ctx, s.w, s.h, pad, 0, 6, -13, 4,
+                      '红移 z', 'Δv（cm/s per decade）');
+  hline(s.ctx, m.ymap(0), m, '#475569', [4,4]);
+  line(s.ctx, c.z.map((z,i)=>[z,c.dv[i]]), m, '#f7768e', 2.4);
+  legend(s.ctx, pad, [['Δv(10yr)','#f7768e']]);
+  const d = DATA.readings.summary;
+  document.getElementById('r2').textContent =
+    'Δv(z=0.5)=' + fmt(DATA.readings.drift[0].dv10,2) + ' cm/s，Δv(z=1)=' +
+    fmt(d.dv1,2) + ' cm/s\n' +
+    'Δv(z=4)=' + fmt(d.dv4,2) + ' cm/s，Δv(z=5)=' + fmt(d.dv5,2) + ' cm/s（负=朝低 z 漂移）';
+}
+
+function plotH(){
+  const cv = document.getElementById('c3');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:64,r:20,t:26,b:40};
+  const c = DATA.readings.curves;
+  const m = drawFrame(s.ctx, s.w, s.h, pad, 0, 6, 1, 11,
+                      '红移 z', 'H(z)/H0 与 (1+z)');
+  const ser = [
+    ['E(z)=H/H0', c.z.map((z,i)=>[z,c.H[i]]), '#4ade80'],
+    ['1+z', c.z.map((z,i)=>[z,c.H0_1z[i]]), '#e0af68'],
+  ];
+  for(const [n,p,col] of ser) line(s.ctx, p, m, col, 2.4);
+  legend(s.ctx, pad, ser.map(x=>[x[0],x[2]]));
+  document.getElementById('r3').textContent =
+    '交点 z_cross=' + fmt(DATA.readings.summary.z_cross,4) +
+    '（(1+z)=E(z) ⇒ drift=0）\nz→0：H/H0→1，两线重合（drift→0）';
+}
+
+function cards(){
+  const d = DATA.readings.summary;
+  const p = DATA.readings.params;
+  const items = [
+    ['符号翻转 z_cross', fmt(d.z_cross,4), '（(1+z)=E(z)）'],
+    ['十年漂移 Δv(z=4)', fmt(d.dv4,2) + ' cm/s', '（Sandage–Loeb 量级）'],
+    ['减速参数 q0', fmt(p.Q0,4), '（<0 ⇒ 加速）'],
+    ['小 z 斜率', fmt(d.slope,4), '（= −q0）'],
+    ['双路径 max rel', fmt(d.max_rel,3), '（闭式 vs 数值）'],
+    ['与 r278 H(z) max rel', fmt(d.max_h_rel,3), '（跨卷互印）'],
+  ];
+  document.getElementById('cards').innerHTML = items.map(it =>
+    '<div class="card"><b>' + it[0] + '</b><span class="v">' + it[1] + '</span>' +
+    '<span class="note">' + it[2] + '</span></div>').join('');
+}
+
+function tables(){
+  const t = DATA.readings.table;
+  let h = '<table><tr><th>z</th><th>drift（10⁻¹²/yr）</th><th>Δz(10yr)</th>' +
+          '<th>Δv（cm/s）</th><th>H（km/s/Mpc）</th></tr>';
+  for(const r of t){
+    h += '<tr><td class="mono">' + fmt(r.z,2) + '</td>' +
+         '<td class="mono">' + fmt(r.drift*1e12,2) + '</td>' +
+         '<td class="mono">' + r.dz10.toExponential(2) + '</td>' +
+         '<td class="mono">' + fmt(r.dv,2) + '</td>' +
+         '<td class="mono">' + fmt(r.H,2) + '</td></tr>';
+  }
+  document.getElementById('driftTable').innerHTML = h + '</table>';
+
+  let g = '<table><tr><th>守卫</th><th>状态</th><th>说明</th></tr>';
+  for(const x of DATA.guards){
+    g += '<tr><td class="mono">' + x.id + ' ' + x.title + '</td>' +
+         '<td class="' + (x.ok?'ok':'bad') + '">' + (x.ok?'OK':'FAIL') + '</td>' +
+         '<td>' + x.detail + '</td></tr>';
+  }
+  document.getElementById('guardTable').innerHTML = g + '</table>';
+
+  let c = '<table><tr><th>控制组</th><th>状态</th><th>说明</th></tr>';
+  for(const x of DATA.controls){
+    c += '<tr><td class="mono">' + x.id + ' ' + x.title + '</td>' +
+         '<td class="' + (x.ok?'ok':'bad') + '">' + (x.ok?'OK':'FAIL') + '</td>' +
+         '<td>' + x.detail + '</td></tr>';
+  }
+  document.getElementById('ctrlTable').innerHTML = c + '</table>';
+
+  let e = '<table><tr><th>条目</th><th>级别</th><th>内容</th></tr>';
+  for(const x of DATA.entries){
+    e += '<tr><td class="mono">' + x.code + '</td>' +
+         '<td class="' + (x.level==='PASS'?'ok':(x.level==='FAIL'?'bad':'')) + '">' +
+         x.level + '</td><td>' + x.title + '——' + x.detail + '</td></tr>';
+  }
+  document.getElementById('entryTable').innerHTML = e + '</table>';
+}
+
+function header(){
+  const c = DATA.counts;
+  document.getElementById('chips').innerHTML =
+    '<span class="chip">条目 <b>' + c.entries + '</b></span>' +
+    '<span class="chip">PASS <b>' + c.PASS + '</b> / FAIL <b>' + c.FAIL + '</b></span>' +
+    '<span class="chip">BOUNDARY <b>' + c.BOUNDARY + '</b> / INFO <b>' + c.INFO + '</b></span>' +
+    '<span class="chip">守卫 <b>' + c.guards + '</b> · 控制组 <b>' + c.controls + '</b></span>';
+  document.getElementById('verdictText').textContent = DATA.verdict;
+  document.getElementById('judgement').textContent = DATA.judgement;
+}
+
+header(); plotDrift(); plotDv(); plotH(); cards(); tables();
+window.addEventListener('resize', function(){ plotDrift(); plotDv(); plotH(); });
+</script>
+</body>
+</html>

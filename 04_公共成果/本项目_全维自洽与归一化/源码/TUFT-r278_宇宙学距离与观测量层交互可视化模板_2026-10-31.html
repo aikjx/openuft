@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>278 · 四力统一方程·宇宙学距离与观测量层（D_C / D_A / D_L / μ / t0 / 视界 / θ_s）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei",system-ui,sans-serif;
+       line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #4338ca;
+          border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;
+         padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);
+        background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;
+               padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:18px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;word-break:break-all;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;
+     border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;
+         display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c7d2fe;background:#0d1730;
+        border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:8px;
+        white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;
+        word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;
+        padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card .v{font-family:Consolas,monospace;font-size:15px;color:#fff;display:block;margin-top:3px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r278 · 宇宙学距离与观测量层 · 零外部依赖</span>
+  <h1>四力统一方程·宇宙学距离与观测量层</h1>
+  <p>承 r237（背景）→ r254（扰动）→ r256（声学几何）→ r260（视界热力学）→ r274（非线性）
+     之后的第六级增量。把同一套 E(z) 变成可直接对照观测的距离阶梯与年龄/视界读数：
+     ① 共动距离 D_C 双路径互印；② D_A/D_L/μ 距离阶梯与对偶恒等；
+     ③ 宇宙年龄与回望时间；④ 粒子视界、D_H、D_V；
+     ⑤ r_d 与 100θ_s 跨卷互印（r254 / r256）。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判决</h2>
+  <div id="verdictText" style="font-family:Consolas,monospace;font-size:11.5px;color:#f1d18a;word-break:break-all;margin-top:8px;"></div>
+  <p id="judgement"></p>
+</div>
+
+<section>
+  <h3><span class="n">01</span>距离阶梯：D_C / D_A / D_L 随红移</h3>
+  <canvas id="c1" height="340"></canvas>
+  <div class="read" id="r1"></div>
+  <p class="note">横轴 log(1+z)，纵轴共动/角径/光度距离（Mpc）。平坦宇宙 D_M=D_C；
+     D_A=D_M/(1+z)（近处小、远处趋于饱和后回落）；D_L=(1+z)²D_A（远处陡升）。
+     三条曲线由同一 E(z) 单重积分给出，不是独立拟合。</p>
+</section>
+
+<section>
+  <h3><span class="n">02</span>距离模数 μ(z)=5log10(D_L/10pc)</h3>
+  <canvas id="c2" height="300"></canvas>
+  <div class="read" id="r2"></div>
+  <p class="note">μ(z=1)=44.16 mag 是 ΛCDM 标准值（Planck 参数、H0=67.4）。
+     本卷复现它，不预言新的暗能量演化——若 w≠−1，曲线在高 z 会移动。</p>
+</section>
+
+<section>
+  <h3><span class="n">03</span>宇宙年龄、回望时间与视界</h3>
+  <canvas id="c3" height="300"></canvas>
+  <div class="read" id="r3"></div>
+  <p class="note">t0 = ∫₀^∞ dz/[(1+z)H(z)]；回望时间 lookback(z)=t0−t(z)。
+     粒子视界是共动视界 ∫₀^∞ c dz/H(z)，与年龄同源但被 (1+z) 加权。</p>
+</section>
+
+<section>
+  <h3><span class="n">04</span>关键读数</h3>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section>
+  <h3><span class="n">05</span>距离表（引擎读数）</h3>
+  <p class="note">全部单位 Mpc（μ 除外，单位 mag）。D_V=(z D_M² D_H)^{1/3} 为体平均距离。</p>
+  <div id="distTable"></div>
+</section>
+
+<section>
+  <h3><span class="n">06</span>守卫与控制组</h3>
+  <div id="guardTable"></div>
+  <div id="ctrlTable"></div>
+</section>
+
+<section>
+  <h3><span class="n">07</span>条目</h3>
+  <div id="entryTable"></div>
+  <p class="note">本卷条目不可与 r142–r277 相加（跨卷条目不可相加，铁律）。</p>
+</section>
+
+<div class="foot">
+  TUFT-r278 · 2026-10-31 · 纯标准库 float64 · 零外部 URL · 数字由引擎 JSON 单源铸入<br>
+  复现层：平坦 ΛCDM 的距离/年龄/视界全部为已知物理；H0 绝对定标与弯曲宇宙在框架外。
+</div>
+
+</div>
+<script>
+const DATA = __R278_JSON__;
+
+function fmt(x, d){ return Number(x).toFixed(d === undefined ? 3 : d); }
+
+function setupCanvas(cv, cssH){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth || 900;
+  cv.width = w * dpr; cv.height = cssH * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx:ctx, w:w, h:cssH};
+}
+
+function drawFrame(ctx, w, h, pad, xlog, xmin, xmax, ymin, ymax, xlab, ylab){
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0d1730'; ctx.fillRect(0,0,w,h);
+  const pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
+  ctx.strokeStyle = '#1f2b3f'; ctx.lineWidth = 1;
+  for(let i=0;i<=5;i++){
+    const y = pad.t + ph*i/5;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+pw, y); ctx.stroke();
+    const yv = ymax - (ymax-ymin)*i/5;
+    ctx.fillStyle = '#94a3b8'; ctx.font = '11px Consolas,monospace'; ctx.textAlign = 'right';
+    ctx.fillText(fmt(yv, ymax-ymin>10?1:2), pad.l-8, y+4);
+  }
+  const xmap = x => xlog
+    ? pad.l + pw*(Math.log(x)-Math.log(xmin))/(Math.log(xmax)-Math.log(xmin))
+    : pad.l + pw*(x-xmin)/(xmax-xmin);
+  const xticks = xlog ? [xmin,0.03,0.1,0.3,1,3] : [xmin, (xmin+xmax)/2, xmax];
+  ctx.textAlign = 'center';
+  for(const xt of xticks){
+    if(xt<xmin||xt>xmax) continue;
+    const x = xmap(xt);
+    ctx.strokeStyle = '#1f2b3f'; ctx.beginPath();
+    ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t+ph); ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.fillText(fmt(xt, xt<0.1?3:1), x, h-pad.b+16);
+  }
+  ctx.fillStyle = '#cbd5e1'; ctx.font = '12px "Microsoft YaHei"';
+  ctx.textAlign = 'center'; ctx.fillText(xlab, pad.l+pw/2, h-6);
+  ctx.save(); ctx.translate(14, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(ylab, 0, 0); ctx.restore();
+  return {pw:pw, ph:ph, xmap:xmap,
+          ymap:y => pad.t + ph*(ymax-y)/(ymax-ymin)};
+  }
+
+function line(ctx, pts, m, color, width){
+  ctx.strokeStyle = color; ctx.lineWidth = width || 2.2; ctx.beginPath();
+  let first = true;
+  for(const p of pts){
+    if(!isFinite(p[1])) continue;
+    const x = m.xmap(p[0]), y = m.ymap(p[1]);
+    if(first){ ctx.moveTo(x,y); first=false; } else { ctx.lineTo(x,y); }
+  }
+  ctx.stroke();
+}
+
+function legend(ctx, pad, items){
+  let x = pad.l + 10, y = pad.t + 14;
+  ctx.font = '11.5px Consolas,monospace'; ctx.textAlign = 'left';
+  for(const it of items){
+    ctx.fillStyle = it[1]; ctx.fillRect(x, y-8, 14, 3);
+    ctx.fillStyle = '#cbd5e1'; ctx.fillText(it[0], x+20, y);
+    x += 120;
+  }
+}
+
+function plotDist(){
+  const cv = document.getElementById('c1');
+  const s = setupCanvas(cv, 340);
+  const pad = {l:64,r:20,t:26,b:40};
+  const c = DATA.readings.curves;
+  const ymax = 16000, ymin = 0;
+  const m = drawFrame(s.ctx, s.w, s.h, pad, true, 0.01, 3, ymin, ymax,
+                      '红移 z（对数轴）', '距离（Mpc）');
+  const ser = [
+    ['D_C = D_M', c.z.map((z,i)=>[z,c.DM[i]]), '#63d2ff'],
+    ['D_L = (1+z)D_M', c.z.map((z,i)=>[z,c.DL[i]]), '#f7768e'],
+    ['D_A = D_M/(1+z)', c.z.map((z,i)=>[z,c.DA[i]]), '#4ade80'],
+  ];
+  for(const [n,p,col] of ser) line(s.ctx, p, m, col, 2.2);
+  legend(s.ctx, pad, ser.map(x=>[x[0],x[2]]));
+  const d = DATA.readings.summary;
+  const row1 = DATA.readings.dist.filter(r => Math.abs(r.z - 1.0) < 1e-9)[0];
+  document.getElementById('r1').textContent =
+    'z=1：D_M=' + fmt(row1.DM,2) + ' Mpc，D_A=' + fmt(row1.DA,2) +
+    ' Mpc，D_L=' + fmt(row1.DL,2) + ' Mpc\n' +
+    'z_*：D_C=' + fmt(d.dc_star,3) + ' Mpc（跨卷互印 r256 的 θ_s 分母）';
+}
+
+function plotMu(){
+  const cv = document.getElementById('c2');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:64,r:20,t:26,b:40};
+  const c = DATA.readings.curves;
+  const m = drawFrame(s.ctx, s.w, s.h, pad, true, 0.01, 3, 38, 48,
+                      '红移 z（对数轴）', '距离模数 μ（mag）');
+  const pts = c.z.map((z,i)=>[z,c.mu[i]]);
+  line(s.ctx, pts, m, '#d4a94e', 2.4);
+  legend(s.ctx, pad, [['μ(z)=5log₁₀(D_L/10pc)','#d4a94e']]);
+  document.getElementById('r2').textContent =
+    'μ(z=1)=' + fmt(DATA.readings.summary.mu1,4) + ' mag（参照 44.16）';
+}
+
+function plotAge(){
+  const cv = document.getElementById('c3');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:64,r:20,t:26,b:40};
+  const c = DATA.readings.curves;
+  const m = drawFrame(s.ctx, s.w, s.h, pad, true, 0.01, 3, 0, 14.5,
+                      '红移 z（对数轴）', '时间（Gyr）');
+  const lb = c.z.map((z,i)=>[z,c.lookback[i]]);
+  const tz = c.z.map((z,i)=>[z,DATA.readings.summary.age - c.lookback[i]]);
+  line(s.ctx, lb, m, '#bb9af7', 2.2);
+  line(s.ctx, tz, m, '#4ade80', 2.2);
+  legend(s.ctx, pad, [['回望时间 lookback(z)','#bb9af7'],['宇宙时 t(z)','#4ade80']]);
+  const d = DATA.readings.summary;
+  document.getElementById('r3').textContent =
+    't0=' + fmt(d.age,5) + ' Gyr（Planck 13.797）\n' +
+    'lookback(z=1)=' + fmt(d.lookback1,5) + ' Gyr，粒子视界=' +
+    fmt(d.horizon,2) + ' Mpc = ' + fmt(d.horizon/1000,4) + ' Gpc';
+}
+
+function fillCards(){
+  const d = DATA.readings.summary;
+  const p = DATA.readings.params;
+  const items = [
+    ['宇宙年龄 t0', fmt(d.age,4) + ' Gyr'],
+    ['共动距离 z_*', fmt(d.dc_star,2) + ' Mpc'],
+    ['距离模数 μ(z=1)', fmt(d.mu1,3) + ' mag'],
+    ['粒子视界', fmt(d.horizon/1000,3) + ' Gpc'],
+    ['BAO 声视界 r_d', fmt(d.rd,2) + ' Mpc'],
+    ['100θ_s', fmt(d.theta100,5)],
+    ['c/H0', fmt(p.C_H0,2) + ' Mpc'],
+    ['哈勃时间 t_H', fmt(p.t_H_Gyr,2) + ' Gyr'],
+  ];
+  document.getElementById('cards').innerHTML = items.map(x =>
+    '<div class="card"><b>' + x[0] + '</b><span class="v">' + x[1] + '</span></div>').join('');
+  const chips = [
+    'H0 = ' + p.H0 + ' km/s/Mpc', 'Ωm = ' + p.Om, 'ΩΛ = ' + fmt(p.OL,5),
+    'Ωr = ' + p.Or, '平坦 Ωk=0', '条目不可跨卷相加'
+  ];
+  document.getElementById('chips').innerHTML = chips.map(x =>
+    '<div class="chip">' + x + '</div>').join('');
+}
+
+function fillDist(){
+  const rows = DATA.readings.dist;
+  let h = '<table><thead><tr><th>z</th><th>D_M</th><th>D_A</th><th>D_L</th>' +
+          '<th>D_H</th><th>D_V</th><th>μ (mag)</th></tr></thead><tbody>';
+  for(const r of rows){
+    h += '<tr><td class="mono">' + fmt(r.z,2) + '</td>' +
+         '<td class="mono">' + fmt(r.DM,2) + '</td>' +
+         '<td class="mono">' + fmt(r.DA,2) + '</td>' +
+         '<td class="mono">' + fmt(r.DL,2) + '</td>' +
+         '<td class="mono">' + fmt(r.DH,2) + '</td>' +
+         '<td class="mono">' + fmt(r.DV,2) + '</td>' +
+         '<td class="mono">' + fmt(r.mu,3) + '</td></tr>';
+  }
+  document.getElementById('distTable').innerHTML = h + '</tbody></table>';
+}
+
+function fillTables(){
+  let g = '<table><thead><tr><th>守卫</th><th>断言</th><th>结果</th></tr></thead><tbody>';
+  for(const x of DATA.guards){
+    g += '<tr><td class="mono">' + x.id + '</td><td>' + x.title + '</td>' +
+         '<td class="' + (x.ok?'ok':'bad') + '">' + (x.ok?'PASS':'FAIL') +
+         ' · ' + x.detail + '</td></tr>';
+  }
+  g += '</tbody></table>';
+  document.getElementById('guardTable').innerHTML = g;
+  let c = '<table><thead><tr><th>控制组</th><th>判别力验证</th><th>结果</th></tr></thead><tbody>';
+  for(const x of DATA.controls){
+    c += '<tr><td class="mono">' + x.id + '</td><td>' + x.title + '</td>' +
+         '<td class="' + (x.ok?'ok':'bad') + '">' + (x.ok?'PASS':'FAIL') +
+         ' · ' + x.detail + '</td></tr>';
+  }
+  document.getElementById('ctrlTable').innerHTML = c + '</tbody></table>';
+  let e = '<table><thead><tr><th>#</th><th>级别</th><th>条目</th><th>结论</th></tr></thead><tbody>';
+  for(const x of DATA.entries){
+    e += '<tr><td class="mono">' + x.code + '</td><td class="mono">' + x.level +
+         '</td><td>' + x.title + '</td><td>' + x.detail + '</td></tr>';
+  }
+  document.getElementById('entryTable').innerHTML = e + '</tbody></table>';
+}
+
+document.getElementById('verdictText').textContent = DATA.verdict;
+document.getElementById('judgement').textContent = DATA.judgement;
+fillCards(); fillDist(); fillTables();
+plotDist(); plotMu(); plotAge();
+window.addEventListener('resize', ()=>{ plotDist(); plotMu(); plotAge(); });
+</script>
+</body>
+</html>

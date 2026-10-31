@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>274 · 四力统一方程·宇宙学非线性结构层（EH98 功率谱、Halofit、晕质量函数、Kaiser 畸变）</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #4338ca;border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:19px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c7d2fe;background:#0d1730;border:1px solid var(--line);
+        border-radius:8px;padding:8px 12px;margin-top:8px;white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .metric{background:#0d1730;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:10px;}
+  .metric .t{font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px;}
+  .bar{height:14px;border-radius:4px;margin:4px 0;position:relative;background:#111c31;}
+  .bar i{display:block;height:14px;border-radius:4px;}
+  .bar span{position:absolute;right:6px;top:-2px;font-size:11px;font-family:Consolas,monospace;color:#e2e8f0;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r274 · 宇宙学非线性结构层 · Halofit · 零外部依赖</span>
+  <h1>四力统一方程·宇宙学非线性结构层<br>EH98 功率谱、Halofit 非线性、晕质量函数与 Kaiser 畸变</h1>
+  <p>承 r237（背景）→ r254（线性扰动）→ r256（声学几何）→ r260（视界热力学）之后的第五级增量。
+     ① 转移函数三件套互印（EH98 全版/no-wiggle vs BBKS+Sugiyama）；
+     ② 原初谱 A_s、n_s 回算 σ8 并定标；
+     ③ Halofit（Smith+03）非线性功率谱与 boost 曲线；
+     ④ Press–Schechter / Sheth–Tormen 晕质量函数；
+     ⑤ Kaiser 红移畸变双路径与 fσ8(z) 演化。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判定：ΛCDM 非线性结构骨架机器复现；拟合式残差与 bias/中微子/反馈在框架外；无新理论</h2>
+  <p id="verdictLine"></p>
+</div>
+
+<section>
+  <h3><span class="n">§1</span>线性功率谱 P(k)：EH98 对拍 BBKS（log-log）</h3>
+  <canvas id="cvP" width="1000" height="460"></canvas>
+  <div class="read" id="readP"></div>
+  <p class="note">蓝线 = EH98 含 wiggle 全版 P(k)；金虚线 = BBKS+Sugiyama。两者同为 Γ 型拟合，
+     在 k∈[0.02,0.3] h/Mpc 最大相对差须 &lt;12%（守卫 G1）；EH98 的 s 与 r254 的 r_d=147.07 Mpc 互印须 &lt;8%。
+     蓝线上的细微振荡即 BAO wiggle（幅度守卫窗口 0.5%–20%）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§2</span>Halofit 非线性功率谱 Δ²(k)：线性与非线性对照</h3>
+  <canvas id="cvN" width="1000" height="460"></canvas>
+  <div class="read" id="readN"></div>
+  <p class="note">灰线 = 线性 Δ²_L；蓝/紫线 = Halofit Δ²_NL（z=0 / z=1）。
+     守卫：k_σ∈[0.10,0.35] h/Mpc、B(0.05)∈[0.95,1.15]、B(1.0)∈[2,15]、Δ²_NL(1)∈[5,80]、
+     z=1 的 boost 低于 z=0（结构随时间更非线性 ⇒ 方向判别）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§3</span>晕质量函数 dn/dlnM：Sheth–Tormen vs Press–Schechter</h3>
+  <canvas id="cvM" width="1000" height="440"></canvas>
+  <div class="read" id="readM"></div>
+  <p class="note">蓝线 = ST(z=0)；金虚线 = PS(z=0)；紫线 = ST(z=1)。
+     判别结构（控制组 C2）：高质量端 ST&gt;PS（指数尾 q=0.707&lt;1）、低质量端 ST&lt;PS；
+     ∫f_PS dlnν=1 为机器恒等，∫f_ST dlnν≈1（A=0.3222）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§4</span>Kaiser 红移畸变与 fσ8(z)</h3>
+  <canvas id="cvK" width="1000" height="400"></canvas>
+  <div class="read" id="readK"></div>
+  <p class="note">P0/P^r=1+2β/3+β²/5 与 P2/P^r=4β/3+4β²/7：μ 积分数值路径与解析因子互印
+     max rel 须 &lt;1e−9（守卫 G5）。β=f/b，本卷 b=1 仅作示意——bias 在框架外（H08）。</p>
+</section>
+
+<section>
+  <h3><span class="n">§5</span>r214–r274 全方法总账</h3>
+  <table id="ledgerTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§6</span>条目 · 守卫 · 控制组（机器账本）</h3>
+  <table id="entryTable"></table>
+  <table id="guardTable"></table>
+  <table id="controlTable"></table>
+</section>
+
+<section>
+  <h3><span class="n">§7</span>诚实边界（不粉饰）</h3>
+  <div class="cards" id="boundCards"></div>
+</section>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script>
+const R = __R274_JSON__;
+
+(function(){
+  const c = R.counts, t = R.readings.tf, s = R.readings.s8, h = R.readings.halofit;
+  document.getElementById("chips").innerHTML =
+    `<span class="chip">条目 <b>${c.entries}</b>（PASS ${c.PASS} / FAIL ${c.FAIL} / BOUNDARY ${c.BOUNDARY} / INFO ${c.INFO}）</span>`+
+    `<span class="chip">守卫 <b>${c.guards}</b></span>`+
+    `<span class="chip">控制组 <b>${c.controls}</b></span>`+
+    `<span class="chip">k_σ <b>${h.k_sig0.toFixed(3)}</b> h/Mpc</span>`+
+    `<span class="chip">M* <b>${R.readings.mf.m_star.toExponential(2)}</b> M_sun/h</span>`;
+  document.getElementById("verdictLine").textContent =
+    `EH-nowig vs BBKS max rel = ${(t.cmp_rel*100).toFixed(2)}%；s_EH = ${t.s_EH.toFixed(2)} Mpc vs r_d 147.07（${(t.rel_s*100).toFixed(2)}%）；`+
+    `σ8_raw = ${s.raw.toFixed(4)} → 定标 ×${s.cal.toFixed(4)} = 0.811；`+
+    `Halofit B(1.0) = ${h.b10.toFixed(2)}、Δ²_NL(1) = ${h.d2nl_1.toFixed(1)}；`+
+    `n(>1e14) = ${R.readings.mf.n14_0.toExponential(2)} (Mpc/h)⁻³。全部为 ΛCDM 标准件复现——无新理论。`;
+})();
+
+/* 通用 log-log 绘图架 */
+function loglog(cvId, series, xlab, ylab, kmin, kmax, ymin, ymax){
+  const cv = document.getElementById(cvId), ctx = cv.getContext("2d");
+  const W=1000, H=cv.height, PL=70, PR=30, PT=26, PB=46;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const lx0=Math.log10(kmin), lx1=Math.log10(kmax), ly0=Math.log10(ymin), ly1=Math.log10(ymax);
+  const X = k => PL + (Math.log10(k)-lx0)/(lx1-lx0)*(W-PL-PR);
+  const Y = v => PT + (1-(Math.log10(v)-ly0)/(ly1-ly0))*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let d=Math.ceil(lx0); d<=Math.floor(lx1); d++){
+    const x=X(Math.pow(10,d));
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText("1e"+d, x-10, H-PB+14);
+  }
+  for(let d=Math.ceil(ly0); d<=Math.floor(ly1); d++){
+    const y=Y(Math.pow(10,d));
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText("1e"+d, 6, y+3);
+  }
+  ctx.fillStyle="#94a3b8"; ctx.fillText(xlab, W-PR-150, H-PB+30);
+  ctx.fillStyle="#94a3b8"; ctx.fillText(ylab, PL+6, PT+12);
+  series.forEach(sr=>{
+    ctx.setLineDash(sr.dash? [6,5] : []);
+    ctx.strokeStyle=sr.color; ctx.lineWidth=sr.width||2.0; ctx.beginPath();
+    let started=false;
+    sr.data.forEach(p=>{
+      if(p.x<kmin||p.x>kmax||p.y<ymin||p.y>ymax){started=false;return;}
+      const x=X(p.x), y=Y(p.y);
+      started? ctx.lineTo(x,y) : ctx.moveTo(x,y); started=true;
+    });
+    ctx.stroke(); ctx.setLineDash([]);
+    if(sr.label){ ctx.fillStyle=sr.color; ctx.fillText(sr.label, sr.lx? X(sr.lx):PL+20, sr.ly? Y(sr.ly):PT+30); }
+  });
+  return {X,Y};
+}
+
+/* ---------- §1 P(k) ---------- */
+(function(){
+  const t = R.readings.tf;
+  loglog("cvP", [
+    {data: t.pk.map(p=>({x:p.k, y:p.eh})), color:"#63d2ff", width:2.2, label:"EH98 全版", lx:0.02, ly:3e4},
+    {data: t.pk.map(p=>({x:p.k, y:p.bb})), color:"#d4a94e", width:1.6, dash:true, label:"BBKS+Sugiyama", lx:0.02, ly:1.6e4},
+  ], "k [h/Mpc]", "P(k) [(Mpc/h)³]", 1e-3, 30, 1, 1e5);
+  document.getElementById("readP").textContent =
+    `Γ_BBKS = ${t.gamma_bbks.toFixed(5)} h/Mpc   Γ_eff(EH98) = ${t.gamma_eff.toFixed(5)} h/Mpc\n`+
+    `s_EH = ${t.s_EH.toFixed(2)} Mpc（vs r254 机算 r_d = ${t.rd_ref} Mpc，rel ${(t.rel_s*100).toFixed(2)}%）\n`+
+    `k_silk = ${t.k_silk.toFixed(4)} h/Mpc   α_c = ${t.alpha_c.toFixed(4)}   β_c = ${t.beta_c.toFixed(4)}\n`+
+    `EH-nowig vs BBKS max rel = ${(t.cmp_rel*100).toFixed(3)}%（k∈[0.02,0.3]）   wiggle 幅度 = ${(t.wig_amp*100).toFixed(2)}%\n`+
+    `σ8_raw = ${R.readings.s8.raw.toFixed(4)}（A_s=2.1e−9 直接积分）→ 定标 CAL = ${R.readings.s8.cal.toFixed(4)} ⇒ σ8 = 0.811（逐位）`;
+})();
+
+/* ---------- §2 Halofit ---------- */
+(function(){
+  const h = R.readings.halofit;
+  loglog("cvN", [
+    {data: h.nl.map(p=>({x:p.k, y:p.lin0})), color:"#94a3b8", width:1.4, dash:true, label:"线性 z=0", lx:0.002, ly:30},
+    {data: h.nl.map(p=>({x:p.k, y:p.nl0})), color:"#63d2ff", width:2.2, label:"Halofit z=0", lx:0.002, ly:12},
+    {data: h.nl.map(p=>({x:p.k, y:p.nl1})), color:"#bb9af7", width:1.8, label:"Halofit z=1", lx:0.002, ly:5},
+  ], "k [h/Mpc]", "Δ²(k)", 1e-3, 30, 1e-3, 3e3);
+  document.getElementById("readN").textContent =
+    `k_σ(z=0) = ${h.k_sig0.toFixed(4)} h/Mpc   n_eff = ${h.n_eff0.toFixed(4)}   C = ${h.c0.toFixed(4)}\n`+
+    `k_σ(z=1) = ${h.k_sig1.toFixed(4)} h/Mpc   n_eff = ${h.n_eff1.toFixed(4)}   C = ${h.c1.toFixed(4)}\n`+
+    `boost：B(0.05) = ${h.b005.toFixed(4)}（线性区应≈1）   B(1.0) = ${h.b10.toFixed(3)}   Δ²_NL(1) = ${h.d2nl_1.toFixed(2)}\n`+
+    `B(1.0, z=1) = ${h.b10_z1.toFixed(3)} < B(1.0, z=0) = ${h.b10.toFixed(3)}（同 k 处结构随时间更非线性 ⇒ 方向正确）`;
+})();
+
+/* ---------- §3 晕质量函数 ---------- */
+(function(){
+  const m = R.readings.mf;
+  loglog("cvM", [
+    {data: m.mf.map(p=>({x:p.m, y:p.st0})), color:"#63d2ff", width:2.2, label:"ST z=0", lx:2e10, ly:1e-3},
+    {data: m.mf.map(p=>({x:p.m, y:p.ps0})), color:"#d4a94e", width:1.6, dash:true, label:"PS z=0", lx:2e10, ly:3e-4},
+    {data: m.mf.map(p=>({x:p.m, y:p.st1})), color:"#bb9af7", width:1.8, label:"ST z=1", lx:2e10, ly:1e-4},
+  ], "M [M_sun/h]", "dn/dlnM [(Mpc/h)⁻³]", 1e10, 1e16, 1e-14, 1e-1);
+  document.getElementById("readM").textContent =
+    `M*（σ=δ_c=1.686，z=0）= ${m.m_star.toExponential(4)} M_sun/h\n`+
+    `n(>1e14 M_sun/h, z=0) = ${m.n14_0.toExponential(4)} (Mpc/h)⁻³   n(>1e15)/n(>1e14) = ${(m.n15_0/m.n14_0).toExponential(2)}\n`+
+    `n(>1e14, z=1) = ${m.n14_1.toExponential(4)} < z=0 值（高红移大晕更少 ⇒ 方向正确）\n`+
+    `ST/PS：ν=1 处 ${m.st_ps_star.toFixed(4)}；1e15 处 ${m.r_hi.toFixed(3)}（>1）；1e11 处 ${m.r_lo.toFixed(3)}（<1）\n`+
+    `∫f_PS dlnν = ${m.norm_ps.toFixed(12)}（恒等 1）   ∫f_ST dlnν = ${m.norm_st.toFixed(6)}`;
+})();
+
+/* ---------- §4 Kaiser + fσ8 ---------- */
+(function(){
+  const r = R.readings.rsd;
+  const cv = document.getElementById("cvK"), ctx = cv.getContext("2d");
+  const W=1000, H=400, PL=70, PR=36, PT=26, PB=46;
+  ctx.fillStyle="#0d1730"; ctx.fillRect(0,0,W,H);
+  const X = b => PL + b/1.5*(W-PL-PR);
+  const Y = v => PT + (1-v/3.4)*(H-PT-PB);
+  ctx.strokeStyle="#1f2b3f"; ctx.lineWidth=1; ctx.font="10px Consolas";
+  for(let i=0;i<=6;i++){ const b=1.5*i/6, x=X(b);
+    ctx.beginPath(); ctx.moveTo(x,PT); ctx.lineTo(x,H-PB); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(b.toFixed(2),x-12,H-PB+14); }
+  for(let i=0;i<=4;i++){ const v=3.4*i/4, y=Y(v);
+    ctx.beginPath(); ctx.moveTo(PL,y); ctx.lineTo(W-PR,y); ctx.stroke();
+    ctx.fillStyle="#94a3b8"; ctx.fillText(v.toFixed(2),6,y+3); }
+  ctx.fillStyle="#94a3b8"; ctx.fillText("β = f/b", W-PR-60, H-PB+30);
+  const draw=(key,color,label,ly,dash)=>{
+    ctx.setLineDash(dash? [6,5]:[]); ctx.strokeStyle=color; ctx.lineWidth=2.0; ctx.beginPath();
+    r.kaiser.forEach((p,i)=>{ const x=X(p.beta), y=Y(p[key]); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=color; ctx.fillText(label, X(1.08), Y(ly));
+  };
+  draw("p0","#63d2ff","P0/P^r = 1+2β/3+β²/5",2.4,false);
+  draw("p2","#e0af68","P2/P^r = 4β/3+4β²/7",1.1,true);
+  document.getElementById("readK").textContent =
+    `μ 积分 vs 解析因子 max rel = ${r.kaiser_rel.toExponential(3)}（β∈{0.3,0.5,0.7,1.0}）\n`+
+    `fσ8(z)：` + r.fs8.map(x=>`z=${x.z} → ${x.fs8.toFixed(4)}`).join("　") + `\n`+
+    `fσ8 随 z 单调衰减；fσ8(0.5)=${r.fs8[1].fs8.toFixed(4)}（守卫窗 [0.40,0.52]，BOSS 量级锚）`;
+})();
+
+/* ---------- §5 ledger ---------- */
+(function(){
+  let html="<tr><th style='width:96px'>卷</th><th>方法</th><th>读数</th></tr>";
+  R.readings.ledger.forEach(it=>{
+    html+=`<tr><td class="mono">${it.round}</td><td>${it.method}</td><td>${it.verdict}</td></tr>`;
+  });
+  document.getElementById("ledgerTable").innerHTML=html;
+})();
+
+/* ---------- §6 条目/守卫/控制组 ---------- */
+(function(){
+  let e="<tr><th style='width:60px'>码</th><th style='width:86px'>级别</th><th>条目</th></tr>";
+  R.entries.forEach(it=>{
+    const cls = it.level==="PASS"?"ok":(it.level==="FAIL"?"bad":"");
+    e+=`<tr><td class="mono">${it.code}</td><td class="${cls}">${it.level}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("entryTable").innerHTML=e;
+  let g="<tr><th style='width:60px'>码</th><th style='width:70px'>状态</th><th>守卫</th></tr>";
+  R.guards.forEach(it=>{
+    g+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("guardTable").innerHTML=g;
+  let c="<tr><th style='width:60px'>码</th><th style='width:70px'>状态</th><th>控制组</th></tr>";
+  R.controls.forEach(it=>{
+    c+=`<tr><td class="mono">${it.id}</td><td class="${it.ok?'ok':'bad'}">${it.ok?'OK':'FAIL'}</td><td>${it.title}<br><span class="note">${it.detail}</span></td></tr>`;
+  });
+  document.getElementById("controlTable").innerHTML=c;
+})();
+
+/* ---------- §7 边界卡 ---------- */
+(function(){
+  const cards=[
+    {t:"复现层",b:"EH98 转移函数、Halofit、PS/ST、Kaiser 因子全部是文献拟合式/解析近似（1998/2003/1974/1999/1987）——本卷无新物理（承 r229/r237/r254/r256）。"},
+    {t:"拟合式残差",b:`EH98 对 CAMB/CLASS 残差 ~5–10%；σ8_raw=${R.readings.s8.raw.toFixed(4)} 与锚 0.811 的差即此系统差，定标 CAL=${R.readings.s8.cal.toFixed(4)} 吸收之。Halofit 取 Smith+03 原版，Takahashi+12 修订在 k~1 处差 ~5–10%（条目 H07）。`},
+    {t:"bias/中微子/反馈在框架外",b:"星系偏袒 b(k,z)、Σmν 的小尺度压低、AGN 反馈均未建模；Kaiser 图 b=1 仅示意（条目 H08）。"},
+    {t:"窗口不可混用",b:"σ8 用 top-hat 窗（R=8 Mpc/h）；Halofit 内部 σ²(R) 用 Gaussian 窗 e^{−(kR)²}（Smith+03 原定义）——开发期已钉死两窗分离。"},
+    {t:"n_eff 约定",b:"n_eff = −3 − dlogσ²/dlogR |_{R_σ}：幂律 P∝k^n 时必须退化 n_eff=n，此约束钉死符号；C = −d²logσ²/dlogR²。控制组 C1 的幂律恒等机检该约定。"},
+    {t:"与 r254 的分层",b:"r254 是线性扰动层（D(a)、r_d、σ8(z)）；本卷是非线性结构层（P(k)、Halofit、晕质量函数、RSD）——层级只做加法，条目不跨卷相加。"},
+    {t:"统一仍无新物理",b:"背景→线性→声学几何→视界热力学→非线性全链均为 ΛCDM 复现；『本质三层不可达』（r230）与 r267 完成度终局判决不变。"},
+  ];
+  document.getElementById("boundCards").innerHTML =
+    cards.map(c=>`<div class="card"><b>${c.t}</b><br>${c.b}</div>`).join("");
+  document.getElementById("foot").innerHTML =
+    `TUFT-r274 · ${R.stem} · ${R.judgement}<br>`+
+    `引擎：${R.source.engine}（rc=0，纯标准库 float64）· 继承：${R.source.inherits.join(" / ")}<br>`+
+    `判决串：${R.verdict}`;
+})();
+</script>
+</body>
+</html>

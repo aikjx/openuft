@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>284 · 精细结构常数 V10「选择机制」全维可攻破性审计</title>
+<style>
+  :root{--bg:#0b1220;--panel:#0f1829;--panel2:#111c31;--ink:#e2e8f0;--dim:#94a3b8;
+        --line:#1f2b3f;--gold:#d4a94e;--green:#4ade80;--red:#f87171;--blue:#63d2ff;
+        --purple:#bb9af7;--orange:#e0af68;--rose:#f7768e;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei",system-ui,sans-serif;
+       line-height:1.75;padding:24px 14px;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  .banner{background:linear-gradient(135deg,#0b1220,#1e1b4b);border:1px solid #4338ca;
+          border-radius:14px;padding:24px;margin-bottom:16px;}
+  .badge{display:inline-block;background:#312e81;color:#c7d2fe;font-size:11px;
+         padding:2px 10px;border-radius:99px;margin-bottom:10px;font-weight:600;}
+  .banner h1{font-size:21px;font-weight:900;letter-spacing:.5px;}
+  .banner p{font-size:13px;color:var(--dim);margin-top:8px;}
+  .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;padding:3px 12px;border-radius:99px;border:1px solid var(--line);
+        background:var(--panel2);color:#c7d2fe;}
+  .chip b{color:var(--purple);}
+  .verdict-box{background:#0d1730;border:2px solid var(--gold);border-radius:12px;
+               padding:18px 22px;margin-bottom:16px;}
+  .verdict-box h2{font-size:18px;color:var(--gold);font-weight:900;}
+  .verdict-box p{font-size:13px;color:#cbd5e1;margin-top:8px;word-break:break-all;}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:18px 20px;margin-bottom:16px;}
+  h3{font-size:16px;font-weight:800;margin-bottom:10px;padding-bottom:8px;
+     border-bottom:2px solid var(--line);}
+  h3 .n{color:var(--purple);margin-right:6px;font-family:Consolas,monospace;}
+  p,li{font-size:13px;color:#cbd5e1;}
+  .note{font-size:11.5px;color:var(--dim);margin-top:6px;}
+  canvas{width:100%;background:#0d1730;border:1px solid var(--line);border-radius:8px;
+         display:block;margin:10px auto;}
+  .read{font-family:Consolas,monospace;font-size:12px;color:#c7d2fe;background:#0d1730;
+        border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:8px;
+        white-space:pre-wrap;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0;font-size:12.5px;}
+  th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;color:#cbd5e1;
+        word-break:break-all;}
+  th{background:var(--panel2);color:var(--gold);font-weight:700;}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;}
+  .ok{color:var(--green);font-weight:700;} .bad{color:var(--red);font-weight:700;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+  .card{background:#0d1730;border:1px solid var(--line);border-radius:8px;
+        padding:10px 14px;font-size:12.5px;color:#cbd5e1;}
+  .card b{color:var(--gold);}
+  .card .v{font-family:Consolas,monospace;font-size:15px;color:#fff;display:block;margin-top:3px;}
+  .foot{font-size:11.5px;color:var(--dim);margin:18px 0 6px;text-align:center;line-height:1.9;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="banner">
+  <span class="badge">TUFT-r284 · V10 选择机制审计 · 零外部依赖</span>
+  <h1>精细结构常数 V10「选择机制」全维可攻破性审计</h1>
+  <p>ROOT V10.0 把问题从「找 α 的公式」改为「找唯一选择机制」。本卷逐条机器复算其声称：
+     ① 螺旋拓扑闭合 2πpb=qL 与 κ/|τ|=2πpR/(|q|L)，及 1/137 ⇒ 262.77 ppm；
+     ② 2026 Symmetry 条件级数 α⁻¹=Ω−1/(24Ω)−Σ(k+6)/(k+4)Ω<sup>−(2k+1)</sup> 的 80 位复算与三级 σ；
+     ③ 圆环面 (2,3) 结 Q=∮κds/∮|τ|ds 四组对表；④ 四次能量 E(x) 的稳定点与 (B−A)/C 反解；
+     ⑤ 磁单极 α_eα_m=n²/4；⑥ KK 维度约化 1/g4²=L/g5²。判定：五路是否为无参数独立预言。</p>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="verdict-box">
+  <h2>判决</h2>
+  <div id="verdictText" style="font-family:Consolas,monospace;font-size:11.5px;color:#f1d18a;word-break:break-all;margin-top:8px;"></div>
+  <p id="judgement"></p>
+</div>
+
+<section>
+  <h3><span class="n">01</span>同结型不同几何：Q(a)=∮κds/∮|τ|ds</h3>
+  <canvas id="c1" height="330"></canvas>
+  <div class="read" id="r1"></div>
+  <p class="note">圆环面 (2,3) 结 r(t)=((1+a cos3t)cos2t, (1+a cos3t)sin2t, a sin3t)，
+     0&lt;a&lt;1 内结型/闭合/绕数完全相同，但 Q 随 a 连续变化（跨约 20 倍）。
+     拓扑只决定「允许哪些结构」，不决定「选哪一个」——四方形标为来料表值（本卷复算命中）。</p>
+</section>
+
+<section>
+  <h3><span class="n">02</span>条件级数的三级标准化偏差（log₁₀ σ）</h3>
+  <canvas id="c2" height="300"></canvas>
+  <div class="read" id="r2"></div>
+  <p class="note">主项 Ω=4π³+π²+π 偏 2.2228 ppm（14504.7σ）；加 1/(24Ω) 后 25.87σ；
+     完整级数落到 0.0409σ。三级数值均与来料一致 ⇒ 数值复现通过；
+     但"修正总量恰等于主项残差"+"Ω 相对微调 6.3e−12 即精确命中" ⇒ 属**条件性匹配**，
+     不是无参数预言。</p>
+</section>
+
+<section>
+  <h3><span class="n">03</span>螺旋 κ/|τ| 随 R/L 连续（拓扑不选比值）</h3>
+  <canvas id="c3" height="300"></canvas>
+  <div class="read" id="r3"></div>
+  <p class="note">固定绕数 (p,q)=(1,137)，κ/|τ|=2πpR/(|q|L) ∝ R/L。
+     R/L∈[0.1,10] ⇒ 比值连续跨 100 倍，α 只是其中一点；
+     「强加 L=2πR」得到 p/|q| 离散族，但 p=1,q=137 仍是外部选择（差 262.77 ppm）。</p>
+</section>
+
+<section>
+  <h3><span class="n">04</span>关键读数</h3>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section>
+  <h3><span class="n">05</span>(2,3) 结 Q 表（引擎读数 vs 来料表值）</h3>
+  <div id="knotTable"></div>
+  <p class="note">解析导数 + Simpson 2 万点；四组 ∮κds、∮|τ|ds、Q 全部复算命中（max rel ~1e−6，来自来料表值四位小数截断）。</p>
+</section>
+
+<section>
+  <h3><span class="n">06</span>守卫与控制组</h3>
+  <div id="guardTable"></div>
+  <div id="ctrlTable"></div>
+</section>
+
+<section>
+  <h3><span class="n">07</span>条目</h3>
+  <div id="entryTable"></div>
+  <p class="note">本卷条目不可与 r142–r283 相加（跨卷条目不可相加，铁律）。</p>
+</section>
+
+<div class="foot">
+  TUFT-r284 · 2026-10-31 · float64 几何积分 + decimal(prec=100) 级数 · 零外部 URL · 数字由引擎 JSON 单源铸入<br>
+  审计层：数值复现 ≠ 物理验证；五路均为条件性候选，"结构→电磁耦合"仍有外加公设。
+</div>
+
+</div>
+<script>
+const DATA = __R284_JSON__;
+
+function fmt(x, d){ return Number(x).toFixed(d === undefined ? 3 : d); }
+
+function setupCanvas(cv, cssH){
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth || 900;
+  cv.width = w * dpr; cv.height = cssH * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx:ctx, w:w, h:cssH};
+}
+
+function drawFrame(ctx, w, h, pad, xmin, xmax, ymin, ymax, xlab, ylab, logx){
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0d1730'; ctx.fillRect(0,0,w,h);
+  const pw = w - pad.l - pad.r, ph = h - pad.t - pad.b;
+  ctx.strokeStyle = '#1f2b3f'; ctx.lineWidth = 1;
+  for(let i=0;i<=5;i++){
+    const y = pad.t + ph*i/5;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+pw, y); ctx.stroke();
+    const yv = ymax - (ymax-ymin)*i/5;
+    ctx.fillStyle = '#94a3b8'; ctx.font = '11px Consolas,monospace'; ctx.textAlign = 'right';
+    ctx.fillText(fmt(yv, Math.abs(ymax-ymin)>50?0:2), pad.l-8, y+4);
+  }
+  const xmap = x => {
+    if(logx){ return pad.l + pw*(Math.log10(x)-Math.log10(xmin))/(Math.log10(xmax)-Math.log10(xmin)); }
+    return pad.l + pw*(x-xmin)/(xmax-xmin);
+  };
+  for(let i=0;i<=6;i++){
+    const xt = logx ? Math.pow(10, Math.log10(xmin)+(Math.log10(xmax)-Math.log10(xmin))*i/6)
+                    : xmin + (xmax-xmin)*i/6;
+    const x = xmap(xt);
+    ctx.strokeStyle = '#1f2b3f'; ctx.beginPath();
+    ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t+ph); ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.textAlign='center';
+    ctx.fillText(logx ? xt.toExponential(1) : fmt(xt, 1), x, h-pad.b+16);
+  }
+  ctx.fillStyle = '#cbd5e1'; ctx.font = '12px "Microsoft YaHei"';
+  ctx.textAlign = 'center'; ctx.fillText(xlab, pad.l+pw/2, h-6);
+  ctx.save(); ctx.translate(14, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(ylab, 0, 0); ctx.restore();
+  return {pw:pw, ph:ph, xmap:xmap, ymap:y => pad.t + ph*(ymax-y)/(ymax-ymin)};
+}
+
+function line(ctx, pts, m, color, width){
+  ctx.strokeStyle = color; ctx.lineWidth = width || 2.2; ctx.beginPath();
+  let first = true;
+  for(const p of pts){
+    if(!isFinite(p[1])) continue;
+    const x = m.xmap(p[0]), y = m.ymap(p[1]);
+    if(first){ ctx.moveTo(x,y); first=false; } else { ctx.lineTo(x,y); }
+  }
+  ctx.stroke();
+}
+
+function hline(ctx, y, m, color, dash, xa, xb){
+  ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash(dash || []);
+  ctx.beginPath(); ctx.moveTo(m.xmap(xa), y); ctx.lineTo(m.xmap(xb), y); ctx.stroke();
+  ctx.restore();
+}
+
+function legend(ctx, pad, items){
+  let x = pad.l + 10, y = pad.t + 14;
+  ctx.font = '11.5px Consolas,monospace'; ctx.textAlign = 'left';
+  for(const it of items){
+    ctx.fillStyle = it[1]; ctx.fillRect(x, y-8, 14, 3);
+    ctx.fillStyle = '#cbd5e1'; ctx.fillText(it[0], x+20, y);
+    x += 210;
+  }
+}
+
+function plotKnot(){
+  const cv = document.getElementById('c1');
+  const s = setupCanvas(cv, 330);
+  const pad = {l:64,r:20,t:26,b:40};
+  const rd = DATA.readings.s3;
+  const qs = rd.grid_q.concat();
+  const ymax = Math.max.apply(null, qs) * 1.08;
+  const m = drawFrame(s.ctx, s.w, s.h, pad, rd.grid_a[0], rd.grid_a[rd.grid_a.length-1],
+                      0, ymax, '形状参数 a（(2,3) 结）', 'Q=∮κds/∮|τ|ds');
+  line(s.ctx, rd.grid_a.map((a,i)=>[a,rd.grid_q[i]]), m, '#63d2ff', 2.4);
+  for(const r of rd.rows){
+    const x = m.xmap(r.a), y = m.ymap(r.Q);
+    s.ctx.fillStyle = '#d4a94e'; s.ctx.beginPath();
+    s.ctx.arc(x, y, 4.5, 0, Math.PI*2); s.ctx.fill();
+  }
+  legend(s.ctx, pad, [['Q(a) 连续曲线','#63d2ff'], ['来料表值（复算命中）','#d4a94e']]);
+  document.getElementById('r1').textContent =
+    'Q(a=0.15)=' + fmt(rd.rows[0].Q,5) + '，Q(0.40)=' + fmt(rd.rows[2].Q,5) +
+    '，Q(0.60)=' + fmt(rd.rows[3].Q,5) + '\n' +
+    '连续扫描 100 点：min=' + fmt(Math.min.apply(null,qs),5) + '，max=' +
+    fmt(Math.max.apply(null,qs),5) + '，span=' + fmt(rd.span,2) + '×（同结型非唯一）';
+}
+
+function plotSigma(){
+  const cv = document.getElementById('c2');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:64,r:20,t:26,b:40};
+  const st = DATA.readings.s2.stages;
+  const vals = st.map(x=>Math.log10(x.sigma));
+  const m = drawFrame(s.ctx, s.w, s.h, pad, -0.5, 2.5, -2, 4.5,
+                      '阶段', 'log₁₀(σ)', false);
+  const cols = ['#f87171','#e0af68','#4ade80'];
+  for(let i=0;i<st.length;i++){
+    const x = m.xmap(i);
+    const y0 = m.ymap(-2), y1 = m.ymap(vals[i]);
+    s.ctx.fillStyle = cols[i]; s.ctx.globalAlpha = 0.85;
+    s.ctx.fillRect(x-26, Math.min(y0,y1), 52, Math.abs(y0-y1));
+    s.ctx.globalAlpha = 1;
+    s.ctx.fillStyle = '#e2e8f0'; s.ctx.font = '11px Consolas,monospace';
+    s.ctx.textAlign = 'center';
+    s.ctx.fillText(fmt(st[i].sigma,4) + 'σ', x, Math.min(y0,y1) - 6);
+    s.ctx.fillStyle = '#94a3b8'; s.ctx.font = '11px "Microsoft YaHei"';
+    s.ctx.fillText(st[i].stage, x, s.h - pad.b + 16);
+  }
+  hline(s.ctx, m.ymap(0), m, '#4ade80', [4,4], -0.5, 2.5);
+  document.getElementById('r2').textContent =
+    '主项 σ=' + fmt(st[0].sigma,1) + '；Ω−1/(24Ω) σ=' + fmt(st[1].sigma,2) +
+    '；完整级数 σ=' + fmt(st[2].sigma,4) + '\n' +
+    'α⁻¹_cand=' + DATA.readings.s2.cand_str + '（来料 137.035999176142）\n' +
+    '单参数微调 ε*=' + DATA.readings.s2.eps_star.toExponential(2) +
+    ' ⇒ 精确等于 CODATA ⇒ 条件性匹配';
+}
+
+function plotHelix(){
+  const cv = document.getElementById('c3');
+  const s = setupCanvas(cv, 300);
+  const pad = {l:64,r:20,t:26,b:40};
+  const sc = DATA.readings.s1.scan;
+  const m = drawFrame(s.ctx, s.w, s.h, pad, 0.1, 10, 0, 0.5,
+                      'R/L（对数轴）', 'κ/|τ|', true);
+  line(s.ctx, sc.map(x=>[x.RoverL, x.ratio]), m, '#bb9af7', 2.4);
+  hline(s.ctx, m.ymap(DATA.readings.params.alpha_exp), m, '#4ade80', [4,4], 0.1, 10);
+  s.ctx.fillStyle = '#4ade80'; s.ctx.font = '11px Consolas,monospace'; s.ctx.textAlign = 'left';
+  s.ctx.fillText('α=1/137.036', m.xmap(1.0) + 4, m.ymap(DATA.readings.params.alpha_exp) - 6);
+  legend(s.ctx, pad, [['κ/|τ| = 2πpR/(|q|L)','#bb9af7'], ['实验 α（其中一点）','#4ade80']]);
+  document.getElementById('r3').textContent =
+    'R/L=1（即 L=2πR）⇒ κ/|τ|=' + fmt(DATA.readings.s1.ratio_137,6) +
+    '（=1/137，偏 ' + fmt(DATA.readings.s1.ppm137,4) + ' ppm）\n' +
+    'p=1,q=137 是外部选择；R/L 连续 ⇒ 拓扑不唯一选 α';
+}
+
+function cards(){
+  const s = DATA.readings.summary;
+  const items = [
+    ['1/137 vs α（ppm）', fmt(s.ppm137,4) + ' ppm', '（拓扑强加 L=2πR）'],
+    ['候选 α⁻¹（80 位）', DATA.readings.s2.cand_str.slice(0,15), '（来料 137.035999176142）'],
+    ['完整级数偏差', fmt(s.sigma,4) + 'σ', '（u=2.1e−8）'],
+    ['单参数微调 ε*', s.eps_star.toExponential(2), '（Ω 相对改即精确命中）'],
+    ['反解系数比 (B−A)/C', s.ratio_req.toExponential(3), '（=2α²/(1+α²)，细调 ' + fmt(s.tune,0) + '×）'],
+    ['结 Q 跨度（连续）', fmt(s.knot_span,2) + '×', '（同结型非唯一）'],
+  ];
+  document.getElementById('cards').innerHTML = items.map(it =>
+    '<div class="card"><b>' + it[0] + '</b><span class="v">' + it[1] + '</span>' +
+    '<span class="note">' + it[2] + '</span></div>').join('');
+}
+
+function tables(){
+  const rd = DATA.readings.s3;
+  let h = '<table><tr><th>a</th><th>∮κds</th><th>∮|τ|ds</th><th>Q</th>' +
+          '<th>Q（来料）</th><th>max rel</th></tr>';
+  for(const r of rd.rows){
+    h += '<tr><td class="mono">' + fmt(r.a,2) + '</td>' +
+         '<td class="mono">' + fmt(r.K,5) + '</td>' +
+         '<td class="mono">' + fmt(r.T,5) + '</td>' +
+         '<td class="mono">' + fmt(r.Q,5) + '</td>' +
+         '<td class="mono">' + fmt(r.Q_ref,5) + '</td>' +
+         '<td class="mono">' + r.rel.toExponential(2) + '</td></tr>';
+  }
+  document.getElementById('knotTable').innerHTML = h + '</table>';
+
+  let g = '<table><tr><th>守卫</th><th>状态</th><th>说明</th></tr>';
+  for(const x of DATA.guards){
+    g += '<tr><td class="mono">' + x.id + ' ' + x.title + '</td>' +
+         '<td class="' + (x.ok?'ok':'bad') + '">' + (x.ok?'OK':'FAIL') + '</td>' +
+         '<td>' + x.detail + '</td></tr>';
+  }
+  document.getElementById('guardTable').innerHTML = g + '</table>';
+
+  let c = '<table><tr><th>控制组</th><th>状态</th><th>说明</th></tr>';
+  for(const x of DATA.controls){
+    c += '<tr><td class="mono">' + x.id + ' ' + x.title + '</td>' +
+         '<td class="' + (x.ok?'ok':'bad') + '">' + (x.ok?'OK':'FAIL') + '</td>' +
+         '<td>' + x.detail + '</td></tr>';
+  }
+  document.getElementById('ctrlTable').innerHTML = c + '</table>';
+
+  let e = '<table><tr><th>条目</th><th>级别</th><th>内容</th></tr>';
+  for(const x of DATA.entries){
+    e += '<tr><td class="mono">' + x.code + '</td>' +
+         '<td class="' + (x.level==='PASS'?'ok':(x.level==='FAIL'?'bad':'')) + '">' +
+         x.level + '</td><td>' + x.title + '——' + x.detail + '</td></tr>';
+  }
+  document.getElementById('entryTable').innerHTML = e + '</table>';
+}
+
+function header(){
+  const c = DATA.counts;
+  document.getElementById('chips').innerHTML =
+    '<span class="chip">条目 <b>' + c.entries + '</b></span>' +
+    '<span class="chip">PASS <b>' + c.PASS + '</b> / FAIL <b>' + c.FAIL + '</b></span>' +
+    '<span class="chip">BOUNDARY <b>' + c.BOUNDARY + '</b> / INFO <b>' + c.INFO + '</b></span>' +
+    '<span class="chip">守卫 <b>' + c.guards + '</b> · 控制组 <b>' + c.controls + '</b></span>';
+  document.getElementById('verdictText').textContent = DATA.verdict;
+  document.getElementById('judgement').textContent = DATA.judgement;
+}
+
+header(); plotKnot(); plotSigma(); plotHelix(); cards(); tables();
+window.addEventListener('resize', function(){ plotKnot(); plotSigma(); plotHelix(); });
+</script>
+</body>
+</html>
