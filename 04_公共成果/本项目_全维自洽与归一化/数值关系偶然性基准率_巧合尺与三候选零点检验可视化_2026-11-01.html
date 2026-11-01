@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r293 · 数值关系偶然性基准率 · 巧合尺可视化</title>
+<style>
+:root{--bg:#f7f8fa;--card:#ffffff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;
+--noise:#f3d6d0;--rare:#d6ead9;}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}
+.kpi .v{font-size:19px;font-weight:600;margin-top:2px;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:var(--pass)}.FAIL{background:var(--fail)}
+.BOUNDARY{background:var(--bnd)}.INFO{background:var(--info)}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.axis{stroke:#c3cad2;stroke-width:1}
+.lbl{font-size:11px;fill:#5b6470}
+.hl{color:var(--fail);font-weight:600}
+.ok{color:var(--pass);font-weight:600}
+.verdict{display:inline-block;background:#1f2328;color:#fff;padding:4px 12px;border-radius:6px;
+font-family:Consolas,monospace;font-size:12px;margin-top:6px}
+</style>
+</head>
+<body>
+<h1>TUFT-r293 · 数值关系偶然性基准率</h1>
+<div class="sub">本库第一把「巧合尺」· 24 个无量纲常数 × 三层语法 × 15 个特殊数目标 · 2026-11-01
+<div class="verdict">BASELINE-ESTABLISHED__THREE-CANDIDATES-IN-NOISE</div></div>
+
+<h2>一、总账</h2>
+<div class="grid" id="kpi"></div>
+
+<h2>二、主图 · 巧合尺（偏差—命中数 双对数）</h2>
+<div class="card">
+<div class="mono">
+横轴 = 相对偏差（对数量程 1e−6 … 1e−1）；纵轴 = 池中「达到或优于该偏差」的 (表达式, 目标) 对数（对数量程 1 … 1e4）。<br>
+底色分区：<span style="background:var(--noise);padding:0 4px">噪声带（偏差 &gt; 1e−5）</span>
+<span style="background:var(--rare);padding:0 4px">罕见面（偏差 ≤ 1e−5，本池仅 8 对）</span>。
+三条竖直虚线 = 三个桥候选；绿色星标 = Koide。<b>看点在右侧密、左侧稀</b>：1% 精度有 712 对，1e−5 只剩 8 对。
+</div>
+<svg id="svgMain" viewBox="0 0 680 300" width="100%" height="300"></svg>
+</div>
+
+<h2>三、偏差刻度尺（候选与门槛的相对位置）</h2>
+<div class="card">
+<div class="mono">同一对数轴上直接读差距：Koide 在 1e−5 门槛内侧，三个候选全在门槛外侧——最优者仍差 <b>178 倍</b>。</div>
+<svg id="svgRuler" viewBox="0 0 680 150" width="100%" height="150"></svg>
+</div>
+
+<h2>四、门槛表（本卷核心产出）</h2>
+<div class="card"><table id="tThr"></table>
+<div class="mono">多重要求：上表未做目标选择校正。若作者从 15 个目标中挑最优，需乘 Bonferroni 因子 45（控制组 CTL4）⇒ 1% 档校正后期望偶然数 712/45 ≈ <b>15.8</b>，<b>即使校正完，「1% 精度」仍毫无意义</b>。</div></div>
+
+<h2>五、表达式池构成</h2>
+<div class="card">
+<div class="mono">三层语法穷举：一元（常数自身的 2 次幂 / 平方根 / 倒数）、二元（比 / 乘 / 差倒数 / 和比）、三元（K1 归一化 Koide 族）。生成阶段只取 i&lt;j，避免交换律虚增分母。</div>
+<svg id="svgPool" viewBox="0 0 680 150" width="100%" height="150"></svg>
+</div>
+
+<h2>六、三个候选逐条</h2>
+<div class="card"><table id="tCand"></table>
+<div class="mono">三者实际最优是 X1（1.78%），但 X1 与 <b>2/9</b> 只差 <b>2.17e−4</b>（比与 θ_C 的差小 82 倍）——若真要挑巧合，2/9 比 θ_C 更像，但 2/9 本身没有任何物理地位。</div></div>
+
+<h2>七、控制组（6/6，含正负双对照）</h2>
+<div class="card"><table id="tCtl"></table></div>
+
+<h2>八、Koide 的准确定位</h2>
+<div class="card"><table id="tKoide"></table>
+<div class="mono">结论：Koide 是全库唯一进入 1e−5 罕见面<b>且</b>在自身目标上排名第一的数值关系；但它仍不是「发现新物理」——没有推导（Brannen 参数化是重述）、没有独立预言、2/3 这个目标本身是从数据反推后选定的（选择性偏差）。</div></div>
+
+<h2>九、定价（4 槽 · 2⁴ = 16）</h2>
+<div class="card"><table id="tPrice"></table>
+<div class="mono">严格档 SURVIVE = 0、宽松档 = 2 &gt; 0 ⇒ 按既有纪律（宽松档 &gt; 0 即不占度）<b>不占「修复即自杀」度数链</b>，候选 37 度，链仍止 r264:36。<b>本卷为工具层，不审计任何来料，无靶可「修」。</b></div></div>
+
+<h2>十、诚实边界</h2>
+<div class="card"><div class="mono">
+① 基准率依赖语法——换模板（含复数、含 π 的乘法、四次方根）命中数会变；本卷只声明「<b>在此语法下</b> 1% 精度有 712 个」，是可复核的下界，不是上界。<br>
+② 池的 24 个常数是人为选的——CTL2 置换检验比值 1.22 证明结论对<b>具体物理值</b>不敏感，但对<b>池规模</b>敏感。<br>
+③ 15 个目标含 π/4、2/9 等「人造」特殊数，存在<b>目标选择偏差</b>；CTL3 检查单一目标（2/3）贡献 10.4%，未被单目标主导，但整体偏差无法完全消除。<br>
+④ 1e−5 门槛是<b>经验值</b>，不是定理；它的作用是把「该不该认真对待」变成可讨论的量。<br>
+⑤ 本卷<b>不否证</b> Koide / QLC / θ₁₃ 预言中的任何一个，只否证「<b>用它们的精度作为发现依据</b>」这一论证方式。
+</div></div>
+
+<script>
+var HITS=[[1e-1,6404],[1e-2,712],[1e-3,77],[1e-4,14],[1e-5,8],[1e-6,6]];
+var PAIRS=229785;
+var CAND=[
+ {n:"X1 θ_K = θ_C",        d:0.017789975610810256996820807373612536},
+ {n:"X2 θ₁₂+θ_C = 45°",    d:0.030482646001600734125086425779263147},
+ {n:"X3 θ₁₃ = θ_C/√2",     d:0.068219050149524974209786972664538154}
+];
+var KOIDE=9.232783921641718072686205187163602e-6;
+var THR=1e-5;
+var POOL=[["L1 一元",139],["L2 二元",2760],["L3 三元（K1 族）",12420]];
+
+function el(t,p){var e=document.createElementNS("http://www.w3.org/2000/svg",t);
+ for(var k in p)e.setAttribute(k,p[k]);return e;}
+function txt(x,y,s,p){var e=el("text",{x:x,y:y,"class":"lbl"});e.textContent=s;
+ for(var k in (p||{}))e.setAttribute(k,p[k]);return e;}
+function L(x1,y1,x2,y2,p){var a={x1:x1,y1:y1,x2:x2,y2:y2};for(var k in (p||{}))a[k]=p[k];return el("line",a);}
+
+/* ---------- KPI ---------- */
+var kpi=[
+ ["条目数","28"],["PASS / FAIL","23 / 0"],["INFO","5"],
+ ["控制组","6 / 6"],["守卫","10 / 10"],["表达式池","15 319"],
+ ["(表达式, 目标) 对","229 785"],["1e−2 命中",PAIRS?("6404 / "+PAIRS.toLocaleString()):""],
+ ["1e−5 命中","8"]
+];
+document.getElementById("kpi").innerHTML=kpi.map(function(r){
+ return '<div class="kpi"><div class="k">'+r[0]+'</div><div class="v">'+r[1]+'</div></div>';}).join("");
+
+/* ---------- 主图 ---------- */
+(function(){
+ var W=680,H=300,L0=62,R0=648,T0=26,B0=252;
+ var X0=Math.log10(1e-6),X1=Math.log10(1e-1),Y0=0,Y1=4;  /* y: 1..1e4 */
+ function px(v){return L0+(Math.log10(v)-X0)/(X1-X0)*(R0-L0);}
+ function py(v){return B0-(Math.log10(v)-Y0)/(Y1-Y0)*(B0-T0);}
+ var s=document.getElementById("svgMain");
+ /* 分区底色（注意：x 轴右大左小，噪声带在 THR 之右、罕见面在 THR 之左，宽度不可取反） */
+ s.appendChild(el("rect",{x:px(THR),y:T0,width:Math.max(0,px(1e-1)-px(THR)),height:B0-T0,
+   fill:"#f3d6d0",opacity:0.35}));
+ s.appendChild(el("rect",{x:px(1e-6),y:T0,width:Math.max(0,px(THR)-px(1e-6)),height:B0-T0,
+   fill:"#d6ead9",opacity:0.45}));
+ /* 网格 */
+ [-6,-5,-4,-3,-2,-1].forEach(function(k){
+   var x=px(Math.pow(10,k));
+   s.appendChild(L(x,B0,x,T0,{stroke:"#eceff3","stroke-width":1}));
+   s.appendChild(txt(x,B0+16,"1e"+k,{"text-anchor":"middle"}));
+ });
+ [1,10,100,1000,10000].forEach(function(v){
+   var y=py(v);
+   s.appendChild(L(L0,y,R0,y,{stroke:"#eceff3","stroke-width":1}));
+   s.appendChild(txt(L0-8,y+4,v>=1000?(v/1000)+"e3":(""+v),{"text-anchor":"end"}));
+ });
+ s.appendChild(L(L0,B0,R0,B0,{"class":"axis"}));
+ s.appendChild(L(L0,T0,L0,B0,{"class":"axis"}));
+ s.appendChild(txt((L0+R0)/2,B0+34,"相对偏差（对数）",{"text-anchor":"middle","font-size":"12px"}));
+ s.appendChild(txt(16,(T0+B0)/2,"对数计数",{"text-anchor":"middle","font-size":"12px",
+   transform:"rotate(-90 16 "+((T0+B0)/2)+")"}));
+ /* 折线 */
+ var pts=HITS.slice().sort(function(a,b){return b[0]-a[0];});
+ var d=pts.map(function(p,i){return (i?"L":"M")+px(p[0]).toFixed(1)+" "+py(p[1]).toFixed(1);}).join(" ");
+ s.appendChild(el("path",{d:d,fill:"none",stroke:"#2b5c9b","stroke-width":2.2}));
+ pts.forEach(function(p){
+   s.appendChild(el("circle",{cx:px(p[0]),cy:py(p[1]),r:4,fill:"#2b5c9b"}));
+   s.appendChild(txt(px(p[0]),py(p[1])-9,""+p[1],{"text-anchor":"middle",
+     "fill":"#1f2328","font-size":"11px","font-weight":"600"}));
+ });
+ /* 候选竖线 */
+ CAND.forEach(function(c,i){
+   var x=px(c.d);
+   s.appendChild(L(x,T0+6,x,B0,{stroke:"#c0392b","stroke-width":1.4,
+     "stroke-dasharray":"4 3"}));
+   s.appendChild(txt(x+4,T0+18+i*0,"X"+(i+1),{"fill":"#c0392b","font-size":"11px","font-weight":"600"}));
+ });
+ /* Koide 星标 */
+ var xk=px(KOIDE);
+ s.appendChild(L(xk,T0+6,xk,B0,{stroke:"#1a7f37","stroke-width":1.6}));
+ s.appendChild(el("circle",{cx:xk,cy:py(8),r:5,fill:"#1a7f37"}));
+ s.appendChild(txt(xk+7,py(8)+4,"Koide 9.23e−6（排名 1/12420）",
+   {"fill":"#1a7f37","font-size":"11px","font-weight":"600"}));
+ /* 门槛线 */
+ s.appendChild(L(px(THR),T0+6,px(THR),B0,{stroke:"#b8860b","stroke-width":1.2,
+   "stroke-dasharray":"2 4"}));
+ s.appendChild(txt(px(THR)-6,T0+16,"门槛 1e−5",{"fill":"#b8860b","font-size":"11px",
+   "text-anchor":"end","font-weight":"600"}));
+ /* 图例 */
+ s.appendChild(txt(px(1e-1)-6,T0+16,"噪声带 →",{"fill":"#a06a5f","font-size":"11px","text-anchor":"end"}));
+})();
+
+/* ---------- 刻度尺 ---------- */
+(function(){
+ var W=680,T0=52,B0=100,L0=40,R0=648;
+ var X0=Math.log10(1e-6),X1=Math.log10(1e-1);
+ function px(v){return L0+(Math.log10(v)-X0)/(X1-X0)*(R0-L0);}
+ var s=document.getElementById("svgRuler");
+ s.appendChild(el("rect",{x:L0,y:T0,width:R0-L0,height:8,fill:"#eef1f5",rx:4}));
+ s.appendChild(el("rect",{x:px(THR),y:T0,width:Math.max(0,R0-px(THR)),height:8,fill:"#f3d6d0",rx:0}));
+ s.appendChild(el("rect",{x:L0,y:T0,width:Math.max(0,px(THR)-L0),height:8,fill:"#d6ead9",rx:0}));
+ [-6,-5,-4,-3,-2,-1].forEach(function(k){
+   var x=px(Math.pow(10,k));
+   s.appendChild(L(x,T0+8,x,T0+14,{"class":"axis"}));
+   s.appendChild(txt(x,T0+28,"1e"+k,{"text-anchor":"middle"}));
+ });
+ s.appendChild(L(px(THR),T0-14,px(THR),T0+22,{stroke:"#b8860b","stroke-width":2}));
+ s.appendChild(txt(px(THR),T0-18,"门槛 1e−5",{"fill":"#b8860b","font-size":"11px",
+   "text-anchor":"middle","font-weight":"600"}));
+ /* 候选 */
+ var rows=[{n:"X1",d:CAND[0].d,c:"#c0392b"},{n:"X2",d:CAND[1].d,c:"#c0392b"},
+           {n:"X3",d:CAND[2].d,c:"#c0392b"},{n:"Koide",d:KOIDE,c:"#1a7f37"}];
+ rows.forEach(function(r,i){
+   var x=px(r.d);
+   s.appendChild(L(x,T0+8,x,T0+56,{stroke:r.c,"stroke-width":1.4}));
+   s.appendChild(el("circle",{cx:x,cy:T0+4,r:4,fill:r.c}));
+   s.appendChild(txt(x,T0+70,r.n,{"text-anchor":"middle","fill":r.c,"font-size":"11px",
+     "font-weight":"600"}));
+ });
+ s.appendChild(txt(L0,B0+42,"三个桥候选全在门槛外侧；最优者 X1 仍差 178 倍。Koide 在门槛内侧。",
+   {"fill":"#5b6470","font-size":"11px"}));
+})();
+
+/* ---------- 门槛表 ---------- */
+(function(){
+ var rows=[
+  ["1e−2（1%）","712","0.31%","<span class='hl'>无信息</span>——闭着眼也能凑出几百个"],
+  ["1e−3（0.1%）","77","0.034%","弱——需配独立推导才值得记录"],
+  ["1e−4（0.01%）","14","0.006%","中——可进「候选」名单，不足以称发现"],
+  ["<b>1e−5</b>","<b>8</b>","0.0035%","<b>门槛线</b>——此后每提高一个量级才有实质增量"],
+  ["1e−6","6","0.0026%","强——但 6 与 8 已接近饱和（尾部由少数刚性恒等式占据）"]
+ ];
+ var h='<tr><th>精度档</th><th>池中命中</th><th>占总对数</th><th>判读</th></tr>';
+ rows.forEach(function(r){h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>';});
+ document.getElementById("tThr").innerHTML=h;
+})();
+
+/* ---------- 池构成 ---------- */
+(function(){
+ var s=document.getElementById("svgPool");
+ var T0=30,H=26,L0=150,R0=620,tot=15319;
+ POOL.forEach(function(p,i){
+   var y=T0+i*38;
+   s.appendChild(txt(L0-10,y+17,p[0],{"text-anchor":"end","font-size":"12px","fill":"#1f2328"}));
+   var w=(p[1]/tot)*(R0-L0);
+   s.appendChild(el("rect",{x:L0,y:y,width:Math.max(w,1),height:H,fill:"#2b5c9b",rx:3,
+     opacity:(0.95-i*0.22)}));
+   var pp=(p[1]/tot*100);
+   s.appendChild(txt(L0+Math.max(w,1)+8,y+17,p[1].toLocaleString()+"　"+pp.toFixed(1)+"%",
+     {"font-size":"12px","fill":"#5b6470"}));
+ });
+ s.appendChild(txt(L0,T0+3*38+4,"合计 15 319 个表达式 × 15 个目标 = 229 785 对。三层均非空（守卫 G10）。",
+   {"font-size":"11px","fill":"#5b6470"}));
+})();
+
+/* ---------- 候选表 ---------- */
+(function(){
+ var rows=[
+  ["X1", "Brannen：θ_K = θ_C", "0.222270487932 ／ 0.226224674491", "1.7790e−2",
+   "1194", "<span class='hl'>纯噪声</span>；与 2/9 只差 2.17e−4（比与 θ_C 小 82 倍）"],
+  ["X2", "Quark–Lepton Complementarity", "θ₁₂+θ_C vs 45°", "3.0483e−2",
+   "数百", "结构可能有（Pati-Salam 定向），<b>45° 这个系数是凑的</b>"],
+  ["X3", "θ₁₃ = θ_C/√2", "θ₁₃ vs θ_C/√2", "6.8219e−2",
+   "过千", "方向被 Daya Bay 验证，<b>√2 未被验证</b>"]
+ ];
+ var h='<tr><th>候选</th><th>关系</th><th>实算</th><th>相对偏差</th><th>池中同等或更好</th><th>定性</th></tr>';
+ rows.forEach(function(r){h+='<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td class="mono">'+r[2]+
+   '</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td>'+r[5]+'</td></tr>';});
+ document.getElementById("tCand").innerHTML=h;
+})();
+
+/* ---------- 控制组 ---------- */
+(function(){
+ var rows=[
+  ["CTL1","阈值放宽，命中数单调不减","PASS"],
+  ["CTL2","<b>负对照</b>：常数置换后 1e−3 命中数比值 = 1.2222（目标 2/3）⇒ 结论对具体物理值不敏感、对池规模敏感","PASS"],
+  ["CTL3","单一目标（2/3）对 1e−3 命中的贡献占比 = 10.39% &lt; 20%","PASS"],
+  ["CTL4","多重比较校正因子 m = 目标数 × 层数 = 45","PASS"],
+  ["CTL5","<b>正对照</b>：Koide 型三元表达式在 L3 池中可检索到","PASS"],
+  ["CTL6","<b>负对照</b>：随机三质量下 Q 偏离 2/3 超过 1e−4 的比例 = 200/200","PASS"]
+ ];
+ var h='<tr><th>编号</th><th>内容</th><th>判</th></tr>';
+ rows.forEach(function(r){h+='<tr><td class="mono">'+r[0]+'</td><td>'+r[1]+
+   '</td><td><span class="tag '+r[2]+'">'+r[2]+'</span></td></tr>';});
+ document.getElementById("tCtl").innerHTML=h;
+})();
+
+/* ---------- Koide ---------- */
+(function(){
+ var rows=[
+  ["Q = Σm/(Σ√m)²","0.666660511477"],
+  ["与 2/3 的相对偏差","<b>9.2328e−6</b>（进入 1e−5 罕见面）"],
+  ["在 L3（目标 2/3，12 420 个）中排名","<b>1</b>"],
+  ["在全体 229 785 对中达到或更优的","约 7 个"],
+  ["随机三质量达此精度的概率（CTL6）","0 / 200"]
+ ];
+ var h='<tr><th>事实</th><th>数值</th></tr>';
+ rows.forEach(function(r){h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';});
+ document.getElementById("tKoide").innerHTML=h;
+})();
+
+/* ---------- 定价 ---------- */
+(function(){
+ var rows=[
+  ["S1","精度 ≤ 1e−5","1"],
+  ["S2","独立理论推导","3"],
+  ["S3","可证伪新预言","2"],
+  ["S4","无新自由参数","1"]
+ ];
+ var h='<tr><th>槽</th><th>内容</th><th>代价</th></tr>';
+ rows.forEach(function(r){h+='<tr><td class="mono">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>';});
+ h+='<tr><td colspan="2"><b>结果</b></td><td>严格 SURVIVE <b>0</b> ／ 宽松 <b>2</b> ／ EMPTY 14</td></tr>';
+ document.getElementById("tPrice").innerHTML=h;
+})();
+</script>
+</body>
+</html>

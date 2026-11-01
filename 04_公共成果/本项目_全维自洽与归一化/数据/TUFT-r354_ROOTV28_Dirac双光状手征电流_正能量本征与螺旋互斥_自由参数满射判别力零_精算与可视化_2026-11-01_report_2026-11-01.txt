@@ -1,0 +1,276 @@
+====================================================================================================
+TUFT-r354 · ROOT V28（Dirac 双光速螺旋）来料审计 · 精算报告
+度规 (+,-,-,-)；Dirac 表象；A 层 Fraction 精确；B 层 Decimal(prec=60)
+====================================================================================================
+
+ID     KIND     NAME                                                             VERDICT   
+----------------------------------------------------------------------------------------------------
+A01    ENGINE   Clifford 关系 {gamma^mu,gamma^nu}=2 eta^{mu nu} I（16 组 × 对角）       PASS      
+A02    ENGINE   gamma^5 性质：(gamma^5)^2=1 且 {gamma^5,gamma^mu}=0                  PASS      
+A03    ENGINE   Fierz 恒等式 j·k=0 与 j^2+k^2=0（随机复旋量 2000 组，精确 Fraction）            PASS      
+A04    ENGINE   手征电流光状性 (j±k)^2=0（2000 组 × 2 支）                                  PASS      
+A05    ENGINE   流 j^mu、k^mu 的虚部恒为 0（实流检查）                                        PASS      
+A06    ENGINE   双光状结构在 5 种互不相同的旋量类型上同样成立（普遍性）                                    PASS      
+A07    ENGINE   显式解满足 i dpsi/dz = gamma^0 psi（系数级精确，8 个有理 eta 点 × 4 分量）          PASS      
+A08    ENGINE   来料电流闭式 j=(1,s2e·c2z,s2e·s2z,0)、k=(0,0,0,c2e) 对直接矩阵乘积（100 组 eta×z PASS      
+A09    ENGINE   手征流线速度模 |v_pm| = c（精确，50 条流线）                                    PASS      
+A10    ENGINE   该解上 j^2 = cos^2(2eta)、k^2 = -cos^2(2eta)                         PASS      
+A11    ENGINE   能量期望与涨落独立复算：<H> = m c^2 cos2eta、(Delta H)^2 = (m c^2)^2 sin^2 2e PASS      
+A12    ENGINE   自旋期望独立实算：<Sigma_x>=<Sigma_y>=0、<Sigma_z>=cos2eta                 PASS      
+B01    ENGINE   曲率三路径一致：Frenet / 圆柱闭式 R/(R^2+b^2) / 来料式 (omega/c)sin2eta         PASS      
+B02    ENGINE   挠率三路径一致：Frenet det/|v×a|^2 / 闭式 b/(R^2+b^2) / 来料式 (omega/c)cos2e PASS      
+B03    ENGINE   Frenet 量在 6 个相位点上与相位无关（螺旋是常曲率常挠率曲线）                              PASS      
+B04    ENGINE   恒等式 kappa^2 + tau^2 = (omega_Z/c)^2                              PASS      
+B05    ENGINE   恒等式 kappa/|tau| = tan 2eta                                       PASS      
+B06    ENGINE   流线速度分解：v_perp = c·sin2eta，v_axis = c·cos2eta，合成 |v| = c          PASS      
+B07    ENGINE   来料 70 位精算表 7 项复算（独立常数：CODATA 2022）                               PASS      
+B08    ENGINE   几何自洽：曲率半径 1/kappa 与 (R^2+b^2)/R 一致；螺距/半径比                        PASS      
+G01    GATE     满射检验：对 12 个互不相干的正目标 rho，调 eta 后 kappa/|tau| 命中率                  FAIL      
+G02    CONTROL  负对照：目标 rho<0 在 eta∈(0,pi/4) 内不可达（判据有边界，非恒绿）                      PASS      
+G03    GATE     正能量本征性（Delta H = 0）与 kappa/|tau| = alpha 是否相容                    FAIL      
+G04    ENGINE   代价曲线：目标比值 rho ⇒ 所需能量不确定度 Delta H(rho) = m c^2 · rho/sqrt(1+rho^2 PASS      
+G05    CONTROL  对照：eta=pi/8（kappa/|tau|=1）时 Delta H 必须显著异于 3.729 keV             PASS      
+G06    GATE     局域性：V28 解的电流场是否依赖空间坐标（p=0 平面波）                                   FAIL      
+G07    CONTROL  对照：人为加入空间包络后，同一检测器必须判「有梯度」                                       PASS      
+G08    ENGINE   boost 下表复算：(kappa/|tau|)' = sin2eta·sqrt(1-beta^2)/|cos2eta+beta PASS      
+G08b   CONTROL  对照：beta = -cos2eta 时分母为 0，比值发散（判据有奇点，非恒绿）                        PASS      
+G09    GATE     参数计数：自由无量纲参数个数 vs 无量纲目标个数                                        FAIL      
+G10    GATE     双光状结构是否能区分电子与其他 Dirac 粒子                                         FAIL      
+G11    GATE     「kappa/|tau| = alpha」与「Dirac 概率流速度 = alpha·c」是否独立                FAIL      
+G12    ENGINE   Omega_Z 的来源：是否等于 2 倍康普顿频率（教科书 zitterbewegung）                    PASS      
+G13    GATE     来料自陈三项未完成（流线=真实组成物 / eta 唯一 / 无电荷输入预测 alpha）能否由本构造闭合             FAIL      
+G14    ENGINE   条件数：rho=tan2eta 对 eta 的敏感度（匹配到相对 1e-9 所需 eta 精度）                 INFO      
+G15    ENGINE   磁矩交叉：该叠加态的 <Sigma_z> = cos2eta（自旋稀释 1-cos2eta）可否被磁矩实验分辨          INFO      
+G16    PRICE    定价：使「无参数预测 alpha」成立的槽位组合数（位掩码 2^5）                               INFO      
+
+[A01] Clifford 关系 {gamma^mu,gamma^nu}=2 eta^{mu nu} I（16 组 × 对角） (ENGINE)
+   期望: 违例 0 / 64
+   实测: 违例 0 / 64
+   裁定: PASS
+   注  : 度规 (+,-,-,-)，Dirac 表象
+
+[A02] gamma^5 性质：(gamma^5)^2=1 且 {gamma^5,gamma^mu}=0 (ENGINE)
+   期望: 0 违例
+   实测: 平方违例 0 / 反对易违例 0
+   裁定: PASS
+   注  : Dirac 表象 gamma^5 = blk(0,I;I,0)
+
+[A03] Fierz 恒等式 j·k=0 与 j^2+k^2=0（随机复旋量 2000 组，精确 Fraction） (ENGINE)
+   期望: 违例 0 / 4000
+   实测: j·k 违例 0 / j^2+k^2 违例 0，共 2000 组
+   裁定: PASS
+   注  : 来料第 1 条框式：数学层严格成立
+
+[A04] 手征电流光状性 (j±k)^2=0（2000 组 × 2 支） (ENGINE)
+   期望: 违例 0 / 4000
+   实测: 违例 0 / 4000
+   裁定: PASS
+   注  : ★注意：对任意 Dirac 旋量成立，非电子特有
+
+[A05] 流 j^mu、k^mu 的虚部恒为 0（实流检查） (ENGINE)
+   期望: max|Im| = 0
+   实测: max|Im| = 0
+   裁定: PASS
+   注  : 复旋量上的实性检查
+
+[A06] 双光状结构在 5 种互不相同的旋量类型上同样成立（普遍性） (ENGINE)
+   期望: 违例 0 / 10
+   实测: 违例 0 / 10
+   裁定: PASS
+   注  : ★普遍性 = 对粒子种类零判别力（含纯正频、纯负频、纯手征）
+
+[A07] 显式解满足 i dpsi/dz = gamma^0 psi（系数级精确，8 个有理 eta 点 × 4 分量） (ENGINE)
+   期望: 失配 0 / 32
+   实测: 失配 0 / 32
+   裁定: PASS
+   注  : 左端经 i·(±i) 复数乘法实算；第一分量载 e^{-iz}（正频），第四分量载 e^{+iz}（负频）⇒ 解本身即正负频叠加
+
+[A08] 来料电流闭式 j=(1,s2e·c2z,s2e·s2z,0)、k=(0,0,0,c2e) 对直接矩阵乘积（100 组 eta×z） (ENGINE)
+   期望: 失配 0 / 100
+   实测: j 失配 0，k 失配 0（共 100 分量组）
+   裁定: PASS
+   注  : 两条路径：闭式 vs psi_bar gamma^mu (gamma^5) psi，直接矩阵乘积
+
+[A09] 手征流线速度模 |v_pm| = c（精确，50 条流线） (ENGINE)
+   期望: 失配 0 / 50
+   实测: 失配 0 / 50
+   裁定: PASS
+   注  : ★这是流线参数化（dr/dt = J^i/J^0）的结果，非可观测量
+
+[A10] 该解上 j^2 = cos^2(2eta)、k^2 = -cos^2(2eta) (ENGINE)
+   期望: j^2 + k^2 = 0
+   实测: j^2 = 49/625，k^2 = -49/625，和 = 0
+   裁定: PASS
+   注  : j 类时（除非 eta=pi/4），k 类空；二者模平方互为相反数
+
+[A11] 能量期望与涨落独立复算：<H> = m c^2 cos2eta、(Delta H)^2 = (m c^2)^2 sin^2 2eta (ENGINE)
+   期望: 失配 0 / 16
+   实测: 失配 0 / 16
+   裁定: PASS
+   注  : 由 H=gamma^0 m c^2 与 H^2=(m c^2)^2 I 直接算，不引用来料的 Delta H 表达式
+
+[A12] 自旋期望独立实算：<Sigma_x>=<Sigma_y>=0、<Sigma_z>=cos2eta (ENGINE)
+   期望: 失配 0 / 24
+   实测: 失配 0 / 24
+   裁定: PASS
+   注  : ★自旋被稀释 1-cos2eta = 2.66e-5（G15 的读数来源，实算非引用）
+
+[B01] 曲率三路径一致：Frenet / 圆柱闭式 R/(R^2+b^2) / 来料式 (omega/c)sin2eta (ENGINE)
+   期望: 相对残差 <= 1e-30
+   实测: Frenet=3.77935162767E+10，闭式=3.77935162767E+10，来料式=3.77935162767E+10；|12|=2.65E-60 |13|=5.29E-60 |23|=2.65E-60
+   裁定: PASS
+   注  : 三条路径不共享中间量（Frenet 用 v,a,adot；闭式用 R,b；来料式用 omega,eta）
+
+[B02] 挠率三路径一致：Frenet det/|v×a|^2 / 闭式 b/(R^2+b^2) / 来料式 (omega/c)cos2eta (ENGINE)
+   期望: 相对残差 <= 1e-30
+   实测: Frenet=5.17907226539E+12，闭式=5.17907226539E+12，来料式=5.17907226539E+12；|12|=0 |13|=3.86E-60 |23|=3.86E-60
+   裁定: PASS
+   注  : τ 符号：J_+ 取 +，J_- 取 −
+
+[B03] Frenet 量在 6 个相位点上与相位无关（螺旋是常曲率常挠率曲线） (ENGINE)
+   期望: 相位离散度 <= 1e-40
+   实测: kappa 离散度=1.06E-59，tau 离散度=1.16E-59
+   裁定: PASS
+   注  : 相位点 omega*t ∈ {0.3,0.7,1.3,2.1,3.7,5.9}
+
+[B04] 恒等式 kappa^2 + tau^2 = (omega_Z/c)^2 (ENGINE)
+   期望: 相对残差 <= 1e-30
+   实测: 左=2.68242178800E+25，右=2.68242178800E+25，残差=0
+   裁定: PASS
+   注  : 来料第三节第 3 个框式
+
+[B05] 恒等式 kappa/|tau| = tan 2eta (ENGINE)
+   期望: 相对残差 <= 1e-30
+   实测: kappa/|tau|=7.29735256433E-3，tan2eta=7.29735256433E-3，残差=1.37E-60
+   裁定: PASS
+   注  : ★注意：此处的 alpha 是「调 eta 使其等于 alpha」的输入值，不是输出
+
+[B06] 流线速度分解：v_perp = c·sin2eta，v_axis = c·cos2eta，合成 |v| = c (ENGINE)
+   期望: |v|/c 相对残差 <= 1e-40
+   实测: v_perp=7.29715827514E-3 c，v_axis=9.99973375386E-1 c，|v|/c=1.0000000000000000000E+0
+   裁定: PASS
+   注  : ★v_perp = c·sin2eta ≈ alpha·c：见 G11 旧数新衣
+
+[B07] 来料 70 位精算表 7 项复算（独立常数：CODATA 2022） (ENGINE)
+   期望: 最坏相对残差 <= 1e-9（来料仅给 12 位有效数字）
+   实测: 最坏项=Omega_Z，残差=6.14E-10；其余见 JSON 表
+   裁定: PASS
+   注  : 各项：eta=3.64861151858E-3，sin^2(eta)=1.33123069406E-5，Omega_Z=1.55268814432E+21，R=1.40893264608E-15，螺距=1.21312281716E-12，kappa=3.77935162767E+10，|tau|=5.17907226539E+12
+
+[B08] 几何自洽：曲率半径 1/kappa 与 (R^2+b^2)/R 一致；螺距/半径比 (ENGINE)
+   期望: 相对残差 <= 1e-30
+   实测: 1/kappa=2.64595649867E-11 m，(R^2+b^2)/R=2.64595649867E-11 m，残差=3.78E-60；螺距/半径=8.61023E+2
+   裁定: PASS
+   注  : ★螺距约为半径的 861 倍：该螺旋极细长，曲率半径远大于螺旋半径
+
+[G01] 满射检验：对 12 个互不相干的正目标 rho，调 eta 后 kappa/|tau| 命中率 (GATE)
+   期望: 若命中率 < 100% 则该比值有判别力
+   实测: 命中 12 / 12，最坏相对残差 6.35E-55
+   裁定: FAIL
+   注  : ★kappa/|tau| = tan2eta 在 eta∈(0,pi/4) 上满射到 (0,+∞) ⇒ 一个自由无量纲参数拟合一个数 ⇒ 判别力 0
+
+[G02] 负对照：目标 rho<0 在 eta∈(0,pi/4) 内不可达（判据有边界，非恒绿） (CONTROL)
+   期望: 2 / 2 检出不可达
+   实测: 检出 2 / 2
+   裁定: PASS
+   注  : 若此条恒绿则 G01 的满射结论不可信；此处读出边界 ⇒ G01 有判别力
+
+[G03] 正能量本征性（Delta H = 0）与 kappa/|tau| = alpha 是否相容 (GATE)
+   期望: 相容
+   实测: Delta H = 3.7288402E+0 keV ≠ 0；而 Delta H=0 ⇒ eta∈{0,pi/2} ⇒ kappa=0、R=0（螺旋退化为直线）⇒ 比值 0/0 无定义
+   裁定: FAIL
+   注  : ★双向夹逼：要螺旋必须正负频混合；要正能量本征就没有螺旋。二者在该构造内严格互斥
+
+[G04] 代价曲线：目标比值 rho ⇒ 所需能量不确定度 Delta H(rho) = m c^2 · rho/sqrt(1+rho^2) (ENGINE)
+   期望: 单调增
+   实测: rho=alpha ⇒ 3.72884E+0 keV；rho=0.1 ⇒ 5.08463E+1 keV；rho=1 ⇒ 3.61331E+2 keV；rho=2 ⇒ 4.57051E+2 keV
+   裁定: PASS
+   注  : ★「看得见的螺旋」必须以「与静质量同量级的能量不确定度」为代价
+
+[G05] 对照：eta=pi/8（kappa/|tau|=1）时 Delta H 必须显著异于 3.729 keV (CONTROL)
+   期望: 显著异于（相对差 > 0.1）
+   实测: Delta H(pi/8) = 3.61331E+2 keV，相对差 = 9.59E+1
+   裁定: PASS
+   注  : 若恒等则说明 G03 的 Delta H 计算是常数，无判别力
+
+[G06] 局域性：V28 解的电流场是否依赖空间坐标（p=0 平面波） (GATE)
+   期望: 依赖（存在局域中心）
+   实测: 5 个互异空间点上电流读数差异 0 处 ⇒ 与 x 无关 ⇒ 平移简并
+   裁定: FAIL
+   注  : ★流线充满全空间；「螺旋半径 R」来自积分常数（初始点任选）而非解的尺度 ⇒ 「电子内部」在本构造中无指称
+
+[G07] 对照：人为加入空间包络后，同一检测器必须判「有梯度」 (CONTROL)
+   期望: 4 / 4 检出差异
+   实测: 检出 4 / 4
+   裁定: PASS
+   注  : 证明 G06 的「非局域」不是检测器恒报
+
+[G08] boost 下表复算：(kappa/|tau|)' = sin2eta·sqrt(1-beta^2)/|cos2eta+beta| (ENGINE)
+   期望: 与来料表残差 <= 1e-6
+   实测: 最坏残差 4.72E-7；0→7.2973526E-3，0.99c→5.1728876E-4（相对变化 9.29E-1）
+   裁定: PASS
+   注  : ★与 r351（ROOT V27 三维螺旋洛伦兹依赖）同源，本卷只复算不计新条目
+
+[G08b] 对照：beta = -cos2eta 时分母为 0，比值发散（判据有奇点，非恒绿） (CONTROL)
+   期望: 分母 -> 0
+   实测: beta_crit = -9.99973375386E-1，|cos2eta+beta_crit| = 0
+   裁定: PASS
+   注  : 洛伦兹标量不会发生「换参考系即发散」；此条证明该比值不是标量
+
+[G09] 参数计数：自由无量纲参数个数 vs 无量纲目标个数 (GATE)
+   期望: 自由参数数 < 目标数（才有预测）
+   实测: 自由无量纲参数 1 个（eta），目标 1 个（alpha）⇒ 自由度 0
+   裁定: FAIL
+   注  : ★自由 Dirac 方程含 (m_e,hbar,c) 不含 e；alpha = e^2/(4 pi eps0 hbar c) 中的 e 在本构造里根本不出现
+
+[G10] 双光状结构是否能区分电子与其他 Dirac 粒子 (GATE)
+   期望: 能区分
+   实测: 不能：A06 显示对纯正频/纯负频/纯手征/一般旋量 5/5 成立；A03 对 2000 组随机旋量成立
+   裁定: FAIL
+   注  : ★这是 Clifford 代数的恒等式，不是电子的性质 ⇒ 结构上不携带 alpha 的特异性
+
+[G11] 「kappa/|tau| = alpha」与「Dirac 概率流速度 = alpha·c」是否独立 (GATE)
+   期望: 独立（含新信息）
+   实测: |j|/j^0 = sin2eta = 7.29715827514E-3；与 alpha 的相对差 = 2.66E-5 = alpha^2/2 量级 ⇒ 同一条件的两种写法
+   裁定: FAIL
+   注  : ★等价于 Bohr 基态 v = alpha·c 的老结果重包装；不是新预言
+
+[G12] Omega_Z 的来源：是否等于 2 倍康普顿频率（教科书 zitterbewegung） (ENGINE)
+   期望: Omega_Z / (m c^2/hbar) = 2
+   实测: Omega_Z=1.55268814432E+21，m c^2/hbar=7.76344072162E+20，比值=2.0000000000000000000E+0
+   裁定: PASS
+   注  : ★数值由 (m_e,hbar,c) 完全内生 ⇒ 是 NUM 不是 FIT，但与 alpha 正交
+
+[G13] 来料自陈三项未完成（流线=真实组成物 / eta 唯一 / 无电荷输入预测 alpha）能否由本构造闭合 (GATE)
+   期望: 至少一项可闭合
+   实测: 0 / 3 可闭合：①流线无局域指称（G06）②eta 由 alpha 后验反解（G01）③方程不含 e（G09）
+   裁定: FAIL
+   注  : 来料第六节自陈与本节独立复算一致 ⇒ 判词与来料自陈相同，但本卷给出的是可算理由
+
+[G14] 条件数：rho=tan2eta 对 eta 的敏感度（匹配到相对 1e-9 所需 eta 精度） (ENGINE)
+   期望: drho/deta = 2(1+rho^2) = 2.00010650271E+0
+   实测: deta <= 3.64848E-12 rad；而 eta 在本构造中无任何约束 ⇒ 该精度要求可被任意满足
+   裁定: INFO
+   注  : ★「匹配」的代价为零：eta 自由，要几位有几位 ⇒ 精度本身不构成证据
+
+[G15] 磁矩交叉：该叠加态的 <Sigma_z> = cos2eta（自旋稀释 1-cos2eta）可否被磁矩实验分辨 (ENGINE)
+   期望: 稀释量与实验反常磁矩同量级或更大则可分辨
+   实测: 稀释 = 2.66246E-5；实测反常磁矩 = 1.15965218059E-3（不确定度 1.30E-13）；稀释/反常 = 2.29591E-2
+   裁定: INFO
+   注  : 稀释比 QED 反常小 44 倍 ⇒ 在自由 Dirac 层内不可分辨；既不能证实也不被排除。与 r351（ROOT V27 含 Dirac 磁矩审计）同源
+
+[G16] 定价：使「无参数预测 alpha」成立的槽位组合数（位掩码 2^5） (PRICE)
+   期望: SURVIVE > 0 则不占度；本卷满足槽位 0 / 5
+   实测: 全真组合 1 个；翻转 S4 后仍成立 2 个；本构造实际满足 0 / 5 ⇒ 不占度（候选 37，链止 r264:36）
+   裁定: INFO
+   注  : 槽位：S1 局域化(G06 FAIL) / S2 正能量本征(G03 FAIL) / S3 洛伦兹标量(G08b) / S4 eta 由动力学固定(G01 FAIL) / S5 含电荷输入(G09 FAIL)
+
+----------------------------------------------------------------------------------------------------
+统计（分层，条目不可跨层相加）：
+   CONTROL  PASS   : 4
+   ENGINE   INFO   : 2
+   ENGINE   PASS   : 23
+   GATE     FAIL   : 7
+   PRICE    INFO   : 1
+   合计条目: 37
+====================================================================================================

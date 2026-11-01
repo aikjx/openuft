@@ -1,0 +1,100 @@
+==============================================================================
+TUFT-r358 . 整性集的精确结构：陪集只需 n+1 个值判定 / 周期等于分母 lcm
+date=2026-11-01  degree=0  candidate_degree=37
+==============================================================================
+
+[convention] X_d in CP^{n+1}, dim_C = n ; chi(O_X(kH)) = d * [h^n](e^{kh} td(T_X))
+  P(k) = sum_j a_j C(k,j) ; on coset c+Z :  P(c+m) = sum_i b_i(c) C(m,i)
+  b_i(c) = sum_{j>=i} a_j C(c, j-i)   (Vandermonde)
+  beta_i = D*b_i in Z with D = lcm_i den b_i  =>  Q(m) in Z <=> sum beta_i C(m,i) = 0 (mod D)
+
+[theorem E'] c+Z subset S  <=>  P(c),...,P(c+n) in Z     (only n+1 values needed)
+[theorem G ] period N divides D*n!  (proved) ;  measured N == D (sharp)
+[theorem F ] S cap (c+Z) is a SINGLE arithmetic progression (1 solution per period)
+
+[cosets] total=396  decided=304 (FULL=70 PARTIAL=11 EMPTY=223)  UND=92
+
+[partial cosets] (n,d,M,r) -> D, solutions-per-period
+  n=3 d=2  M=2 r=1 -> D=4      sols=1
+  n=3 d=4  M=2 r=1 -> D=2      sols=1
+  n=3 d=6  M=2 r=1 -> D=4      sols=1
+  n=3 d=10 M=2 r=1 -> D=4      sols=1
+  n=3 d=12 M=2 r=1 -> D=2      sols=1
+  n=5 d=2  M=2 r=1 -> D=64     sols=1
+  n=5 d=4  M=2 r=1 -> D=32     sols=1
+  n=5 d=6  M=2 r=1 -> D=64     sols=1
+  n=5 d=8  M=2 r=1 -> D=16     sols=1
+  n=5 d=10 M=2 r=1 -> D=64     sols=1
+  n=5 d=12 M=2 r=1 -> D=32     sols=1
+
+[undecided] D > 6000 : 92 cosets, max D = 35831808
+
+[pricing] 2^6=64 feasible=24 match=1 mask=0 flip=0 pinned=[5] unpinned=[0, 1, 2, 3, 4]
+[summary] items=25 PASS=25 FAIL=0 INFO=0
+[summary] controls=13/13  guards=19/19
+
+[items]  (kind: eq=equal / gt=act>exp / info=statement only)
+  A01   PASS eq   exp=0                      act=0
+  A02   PASS eq   exp=0                      act=0
+  A03   PASS eq   exp=0                      act=0
+  A04   PASS eq   exp=0                      act=0
+  A05   PASS eq   exp=0                      act=0
+  A06   PASS gt   exp=0                      act=4
+  B01   PASS eq   exp=0                      act=0
+  B02   PASS eq   exp=11                     act=11
+  B03   PASS eq   exp=0                      act=0
+  B04   PASS gt   exp=0                      act=14117880
+  B05   PASS eq   exp=0                      act=0
+  B06   PASS gt   exp=0                      act=92
+  C01   PASS eq   exp=11                     act=11
+  C02   PASS eq   exp=2                      act=2
+  C03   PASS eq   exp=265                    act=265
+  C04   PASS eq   exp=2                      act=2
+  C05   PASS eq   exp=0                      act=0
+  C06   PASS eq   exp=1                      act=1
+  D01   PASS eq   exp=0                      act=0
+  D02   PASS eq   exp=0                      act=0
+  D03   PASS gt   exp=0                      act=6
+  D04   PASS eq   exp=0                      act=0
+  E01   PASS eq   exp=24                     act=24
+  E02   PASS eq   exp=1                      act=1
+  E03   PASS eq   exp=0                      act=0
+
+[controls]
+  CTL1   PASS  正控：Vandermonde 展开在 k^2 上逐点成立（3 个陪集 × 9 个平移） ; 全对=True
+  CTL2   PASS  负控：`b` 非全整 ⇒ 一个周期内**必须**有非整点（否则 A03/A04 恒绿） ; 命中 171/171
+  CTL3   PASS  **口径自守**：`F(2,4)` 与 `F(1,2)` 必须给出同一个陪集多项式 ⇒ `gcd(r,M)=1` 是枚举去重的**约定**，不是数学前提（若写成数学前提就会误删真陪集） ; F(1/2)==F(2/4)=True ；b 向量相同=True
+  CTL4   PASS  **方向性对照**：把平移换成 `D·n! − 1` ⇒ 一致性必须**崩掉**（否则 B01 恒绿） ; 仍一致 0/220（越少越好）
+  CTL5   PASS  分类器自检：`C(m,2) mod 2` 在 `m=0..3` 上的解必须是 `{0,1}`（两**条** AP） ; 解=[0, 1]
+  CTL6   PASS  正控：r339 的非陪集见证点 `-11/2` 必须真的在 S 内（否则 C06 结论作废） ; P(-11/2)=-21
+  CTL7   PASS  正控：r339 的见证点 `-9/2` 必须真的**不**在 S 内 ; P(-9/2)=-35/4
+  CTL8   PASS  **两条路互核**：周期取 `D` 与取 `D·n!` 的点数必须自洽（不共享中间量） ; 一致 11/11
+  CTL9   PASS  判别力非恒真：随机整值多项式上必须真的出现多剩余类 ; 多类出现 79 次
+  CTL10  PASS  **`n+1` 不可减**：`C(m,2)/2` 在 `m=0,1` 上全整而 `m=2` 非整 ; Q(0)=0 Q(1)=0 Q(2)=1/2
+  CTL11  PASS  负控：定理 C ⇒ `M ∤ d` 的陪集必无整点（否则本卷只需扫 `M | d` 的前提不成立） ; 违例 0 / 8857 个 (组,分母,平移)
+  CTL12  PASS  一致性：整段陪集的 `b` 全整 ⇒ `D = 1`（否则 lcm_den 与 isint 互相矛盾） ; 违反 0 / 70 个 FULL 陪集
+  CTL13  PASS  **非对称对照**：未钉住的位（`[0, 1, 2, 3, 4]`）必须**存在**某个可行组合使其翻转后仍在可行集内 ⇒ 证明 E02 的「钉住」不是全钉。**注**：不能写成「从基准组合翻转必安全」——位 2（S3）未钉住，但基准组合上 S2=0，单独翻 S3 会违反 `S3⇒S2`（首跑正是这样误报） ; 未钉住 5 位，可翻转 5 位
+
+[guards] 19/19
+  G01   PASS  判决类无 FAIL ; FAIL=0
+  G02   PASS  INFO 只能来自 info 类型，不得由判决类降级得到 ; info 型 0 条 / INFO 状态 0 条
+  G03   PASS  判决类条目的 note 必须写分母 ; 缺分母 0 条 []
+  G04   PASS  源码级非同源：item 的 exp 与 act 不得是同一表达式（同义反复恒 PASS 的破法） ; 调用 25 处，同源 0 处
+  G05   PASS  item 的判据实参**顶层**不得是 IfExp 或布尔常量（IfExp 盲区 + 禁写死） ; 可疑调用 0 处
+  G06   PASS  item 调用数 == 条目数（无静默丢弃、无重复登记） ; 调用 25 / 条目 25
+  G07   PASS  items tag 唯一 ; 重复 0 个
+  G08   PASS  控制组/守卫 tag 唯一 ; 重复 0 个
+  G09   PASS  如实登记：每条控制组/守卫的 detail 都带具体读数（0 条也要登记成 0） ; 无读数 detail 0 条
+  G10   PASS  FULL⇔D=1 与 PARTIAL⇒D>1 的联合一致性 ; 矛盾 0 处
+  G11   PASS  跨卷回验：r346 落盘 JSON 存在（本卷只读不写） ; 存在=True
+  G12   PASS  确定性：AST 层无伪随机模块导入（不靠字符串自命中判定） ; 导入次数 0
+  G13   PASS  精确算术：AST 层无浮点常量、无 float() 调用（判决路径全 Fraction / 整数） ; 浮点常量 0 个 / float() 0 处
+  G14   PASS  verdict 机读：全大写、下划线分段、无空格（允许连字符） ; 长度 619
+  G15   PASS  度数判据：本卷无「消除自由参数」的量化发现（宽松档 SURVIVE=0）⇒ 不占度 ; degree=0 candidate=37
+  G16   PASS  定价组恰 3 条（E01..E03） ; E 组 3 条
+  G17   PASS  证据键齐备：全量陪集 = 已判定 + UND（无静默丢弃） ; spec 396 = 304 + 92
+  G18   PASS  部分陪集非空（否则定理 F 与 B02 的读数都是空转） ; 部分陪集 11 个
+  G19   PASS  ctl/guard 的 ok 实参**顶层**不得是布尔常量（假守卫的结构性防线） ; 可疑调用 0 处
+
+[verdict] X-R339-2-AND-X-R346-2-ANSWERED__X-R346-1-TIGHTENED__A-COSET-IS-DECIDED-BY-N-PLUS-ONE-VALUES-ALONE-SO-THE-INTEGRALITY-SET-IS-EXACTLY-Z-PLUS-AT-MOST-ONE-ARITHMETIC-PROGRESSION-PER-COSET__THE-MINIMAL-PERIOD-EQUALS-THE-LCM-OF-THE-DENOMINATORS-OF-THE-COSET-NEWTON-COEFFICIENTS-WHICH-TIGHTENS-R346-S-BOUND-FROM-M-POW-N-TIMES-N-FACTORIAL-SQUARED-TO-D-TIMES-N-FACTORIAL__THE-NON-COSET-OF-R339-IS-JUST-ONE-PROGRESSION-OF-DIFFERENCE-D-UNIONED-WITH-Z__AND-THE-FIXED-WINDOW-METHOD-IS-UNRELIABLE-IN-PRINCIPLE-BECAUSE-D-REACHES-THREE-POINT-FIVE-E7__CREDIT-BELONGS-TO-ELEMENTARY-POLYNOMIAL-ARITHMETIC-NOT-GEOMETRY__STILL-NOT-PREDICTED
+==============================================================================

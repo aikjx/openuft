@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TUFT-r324 · 光速螺旋 G3 可达性攻破</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--line:#30363d;--tx:#e6edf3;--mut:#8b949e;--ok:#3fb950;--bad:#f85149;--inf:#58a6ff;--warn:#d29922}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 "Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:36px 22px 80px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:.5px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:22px}
+.badge{display:inline-block;padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--mut);font-size:12px;margin-right:6px}
+.verdict{background:linear-gradient(135deg,#1f2937,#111827);border:1px solid #374151;border-left:4px solid var(--warn);border-radius:10px;padding:16px 18px;margin:20px 0 26px;font-size:14px}
+.verdict b{color:var(--warn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:18px 0 30px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card .k{color:var(--mut);font-size:12px}.card .n{font-size:22px;font-weight:600;margin-top:4px}
+.card .u{color:var(--mut);font-size:12px;margin-left:3px}
+h2{font-size:18px;margin:34px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:13px}
+td,th{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{color:var(--mut);font-weight:500;font-size:12px}
+td.id{width:58px;font-family:Consolas,monospace;color:var(--inf)}
+td.v{width:66px;font-family:Consolas,monospace;font-weight:700}
+td.PASS{color:var(--ok)}td.FAIL{color:var(--bad)}td.INFO{color:var(--inf)}
+.note{background:#111827;border:1px solid var(--line);border-radius:10px;padding:14px 16px;color:var(--mut);font-size:13px;margin-top:14px}
+.note b{color:var(--tx)}
+code{background:#0b1220;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12px;color:#a5d6ff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<h1>TUFT-r324 · 光速螺旋 G3 弱场史瓦西验收的可达性攻破</h1>
+<div class="sub">2026-11-01 · 靶：整理册 §二 G3 ｜ 承 r95 / r151 / r242 ｜ Decimal 80 位 + sympy 符号</div>
+<div>
+<span class="badge">条目 24</span><span class="badge">PASS 20</span><span class="badge">FAIL 2</span>
+<span class="badge">INFO 2</span><span class="badge">控制组 4/4</span><span class="badge">守卫 10/10</span>
+</div>
+<div class="verdict"><b>BIRKHOFF-MAKES-G3-VACUOUS / R01-FORCE-MASS-DEPENDENT / STILL-ZERO-DISCRIMINATING-POWER</b><br>
+G3 的三项经典检验数值表已全部交付；但球对称真空解的唯一性使「通过三检验」成为 EH 约化的同义反复（判别力 0 bit）。
+R01 力式在球对称读数下是<b>质量依赖的普适力</b>，不是引力。</div>
+<div class="grid">
+<div class="card"><div class="k">光线偏折（b=R☉）</div><div class="n">1.75164E+00<span class="u">″</span></div></div>
+<div class="card"><div class="k">水星近日点进动</div><div class="n">4.29973E+01<span class="u">″/世纪</span></div></div>
+<div class="card"><div class="k">Shapiro 往返</div><div class="n">2.39004E+02<span class="u">μs</span></div></div>
+<div class="card"><div class="k">球对称 κ（唯一）</div><div class="n">1/r</div></div>
+<div class="card"><div class="k">R01 加速度（质子）</div><div class="n">3.905E-17<span class="u">m/s²</span></div></div>
+<div class="card"><div class="k">与引力之比（质子）</div><div class="n">1.424E-19</div></div>
+</div>
+<h2>一、G3 的字面要求：三检验数值表（Q1）</h2>
+<table><tr><th>检验</th><th>解析闭式</th><th>独立数值通道</th><th>两通道相对差</th></tr>
+<tr><td>光线偏折</td><td>4M/b = 8.49219E-06 rad = 1.75164E+00″</td><td>∫2Mb/(b²+z²)<sup>3/2</sup>dz（z=b sinh u）</td><td>5.56E-06</td></tr>
+<tr><td>近日点进动</td><td>6πM/(a(1−e²)) ⇒ 4.29973E+01″/世纪</td><td>一阶微扰 δu″+δu=3Mu₀² 共振项（sympy 差 0）</td><td>0</td></tr>
+<tr><td>Shapiro 时延</td><td>(2GM/c³)ln(4r₁r₂/b²)</td><td>(2GM/c³)[asinh(L₁/b)+asinh(L₂/b)]</td><td>8.92E-07</td></tr>
+</table>
+<h2>二、Birkhoff：为什么这表必然通过（Q2/Q3）</h2>
+<div class="two">
+<div class="card"><div class="k">机器恒等式</div><div class="n" style="font-size:15px">G<sup>t</sup><sub>t</sub>−G<sup>r</sup><sub>r</sub> ∝ (AB)′</div>
+<div class="u">⇒ 真空 ⇒ AB=const ⇒ Schwarzschild 唯一</div></div>
+<div class="card"><div class="k">PPN 信息增益</div><div class="n">0 bit</div>
+<div class="u">EH 约化 ⇒ γ=β=1 由约化给定，非预言</div></div>
+</div>
+<div class="note">判别力只在框架<b>预测</b> γ≠1 或 β≠1 时出现：偏折因子 (1+γ)/2、进动因子 (2+2γ−β)/3。
+γ=0 时偏折减半、进动降为 2/3 —— 这是判据的牙，也是 G3 必须改写为 <b>PPN 报告书</b>的理由。</div>
+<h2>三、保留资产在这一层的读数（Q4–Q6）</h2>
+<table><tr><th>量</th><th>值</th><th>含义</th></tr>
+<tr><td>τ（挠率）</td><td>0</td><td>S2 双约束 ⇒ 螺旋退化为平面圆</td></tr>
+<tr><td>κ</td><td>1/r</td><td>由 ωr=c 唯一钉死，无自由参数</td></tr>
+<tr><td>F_r（R01）</td><td>−ℏc/r²</td><td>与测试质量无关的普适力</td></tr>
+<tr><td>a（质子 / 电子）</td><td>3.905E-17 / 7.171E-14 m/s²</td><td>a=ℏc/(m r²) ⇒ 与质量成反比</td></tr>
+<tr><td>G_eff 比值（p/e）</td><td>1.83615E+03</td><td>若当引力 ⇒ G 随测试质量变（WEP 破缺 1836 倍）</td></tr>
+</table>
+<h2>四、条目逐条（主条目）</h2>
+<table><tr><th>#</th><th>判决</th><th>条目</th></tr><tr><td class='id'>Q1</td><td class='v PASS'>PASS</td><td>G3 的字面要求已可交付：三经典检验的解析推导 + 独立数值通道对拍</td></tr><tr><td class='id'>Q2</td><td class='v PASS'>PASS</td><td>Birkhoff 机检：球对称真空 ⇒ AB=const ⇒ Schwarzschild 唯一</td></tr><tr><td class='id'>Q3</td><td class='v PASS'>PASS</td><td>★零判别力定理：EH 约化框架的 γ=β=1 由 Birkhoff 给定 ⇒ 三检验信息增益 0 bit</td></tr><tr><td class='id'>Q4</td><td class='v PASS'>PASS</td><td>球对称静态约化：S2 双约束 ⇒ τ≡0、κ=1/r（唯一、无自由参数）</td></tr><tr><td class='id'>Q5</td><td class='v PASS'>PASS</td><td>R01 力式球对称读数：F=−ℏc/r²（与质量无关），a=ℏc/(m r²)（与质量成反比）</td></tr><tr><td class='id'>Q6</td><td class='v FAIL'>FAIL</td><td>★引力识别定价：G_eff=ℏc/(M m) 依赖测试质量 ⇒ G 非常数（目标被否证）</td></tr><tr><td class='id'>Q7</td><td class='v PASS'>PASS</td><td>PPN 报告书：以 (γ,β) 替代「三检验通过/不通过」的可执行门槛</td></tr><tr><td class='id'>Q8</td><td class='v INFO'>INFO</td><td>判词链对表：G3 已收口（交付 + 证明其空）；S10/G4 仍开</td></tr><tr><td class='id'>Q9</td><td class='v INFO'>INFO</td><td>G1–G7 门槛可达性登记 + 三道自检门（本卷仅推进 G3）</td></tr><tr><td class='id'>Q10</td><td class='v FAIL'>FAIL</td><td>判据集 R1–R6 = 2/6</td></tr></table>
+<h2>五、控制组与守卫</h2>
+<div class="two">
+<table><tr><th>#</th><th>判决</th><th>控制组</th></tr><tr><td class='id'>C1</td><td class='v PASS'>PASS</td><td>正对照：Schwarzschild 真空 Einstein 张量精确为零</td></tr><tr><td class='id'>C2</td><td class='v PASS'>PASS</td><td>负对照：AB≠const 的球对称解 Einstein 张量非零（判据有牙）</td></tr><tr><td class='id'>C3</td><td class='v PASS'>PASS</td><td>正对照：偏折积分通道 ↔ 闭式 4M/b 一致</td></tr><tr><td class='id'>C4</td><td class='v PASS'>PASS</td><td>判据牙齿：γ=0 使偏折减半、进动降为 (2−β)/3 ⇒ 表能区分框架</td></tr></table>
+<table><tr><th>#</th><th>判决</th><th>守卫</th></tr><tr><td class='id'>G1</td><td class='v PASS'>PASS</td><td>JSON 可序列化</td></tr><tr><td class='id'>G3</td><td class='v PASS'>PASS</td><td>控制组 4/4 由实跑得出</td></tr><tr><td class='id'>G4</td><td class='v PASS'>PASS</td><td>关键恒等式机器零/截断极限核验</td></tr><tr><td class='id'>G5</td><td class='v PASS'>PASS</td><td>Decimal 精度 ≥ 70 位</td></tr><tr><td class='id'>G6</td><td class='v PASS'>PASS</td><td>正负双对照齐备（控制组 ≥4 且 FAIL ≥1）</td></tr><tr><td class='id'>G7</td><td class='v PASS'>PASS</td><td>关键物理量全为正</td></tr><tr><td class='id'>G8</td><td class='v PASS'>PASS</td><td>条目键集合一致</td></tr><tr><td class='id'>G9</td><td class='v PASS'>PASS</td><td>仅写本卷路径</td></tr><tr><td class='id'>G10</td><td class='v PASS'>PASS</td><td>verdict 取值合法</td></tr><tr><td class='id'>G2</td><td class='v PASS'>PASS</td><td>条目计数一致（声明 24 = 实收 24）</td></tr></table>
+</div>
+<h2>六、门槛登记（Q9）</h2>
+<div class="note">本卷只推进 <b>G3</b>（收口为负）。G1（ω 场方程）、G2（r 的来源）、G4（null 标架重写）、
+G5（点预言）、G6（EC 挠率源）、G7（幅度 C 选择）<b>一字未动</b>；G4 仍是最高优先——它一开，
+光子层的 κ,τ 读数才第一次有承载物。<br><br>
+三道自检门：承载物门 <b>PASS</b>（本卷只用类空/球对称约化）｜判别力门 <b>FAIL</b>（三检验 0 信息、
+普适力不可测）｜洛伦兹门 <b>FAIL</b>（κ,τ,ω 非洛伦兹不变量，本卷为 3+1 分解内静态读数）。</div>
+<h2>七、诚实边界</h2>
+<div class="note">B1 三检验只是一阶 PPN，不覆盖强场；B2 Shapiro 用 r₁=r₂=1 AU 的日心几何，只作自洽核验；
+B3 κ=1/r 只在 S2 退化分支成立，不能反过来否定非球对称情形；B4 依赖 r242「R01 是唯一量纲可行力式」；
+B5 PPN/Brans–Dicke 关系属教科书结果，本卷只做机器复算，未联网核对。</div>
+<div class="note" style="margin-top:26px">复现：<code>python -X utf8 源码\_run_r324.py</code> ⇒ rc=0，条目 24，
+控制组 4/4，守卫 10/10。本卷条目<b>不可与 r142–r323 相加</b>。</div>
+</div></body></html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r335 · 整性给格只是单通量现象（秩二 Fano 上的反例族 · 同一流形不同线不同答案）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;--dead:#e8dede}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:26px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.key{background:#eef4fb;border:1px solid #c9dbf0;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+.warn{background:#fdf2f0;border:1px solid #edc9c2;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+svg{display:block;max-width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<h1>TUFT-r335 · 整性给格只是单通量现象</h1>
+<div class="sub">攻 <span class="mono">X-R331-1</span>　·　条目 42（PASS 38 / FAIL 0 / INFO 4）　·　控制组 17/17　·　守卫 18/18　·　度数 0（候选 37）</div>
+
+<div class="thm">
+<b>这一卷在问什么</b>　r331 证明了：在 <span class="mono">CPⁿ</span> 上，只要 <span class="mono">n<sub>R</sub> ∈ Z</span>，Freed–Witten 格就<b>自己出来了</b>，不需要 <span class="mono">spin<sup>c</sup></span>。<br>
+本卷问 r331 没问的那句：<b>这在一般 Fano 上也成立吗？</b><br><br>
+<b>答案：不成立，而且失败得很彻底。</b>　在 <span class="mono">CP¹×CP¹</span> 上 <span class="mono">n<sub>R</sub> = q₁q₂</span>，于是
+<span class="mono">q = (1/m, m)</span> 对**每个** <span class="mono">m ≥ 2</span> 都给 <span class="mono">n<sub>R</sub> = 1</span>，
+而 <span class="mono">q₁ = 1/m ∉ Z</span> —— <b>一整族离格整点</b>。<br>
+更进一步：取 <span class="mono">u=(2,1/2)</span>、<span class="mono">v=(1,0)</span> 都在整性集里，<span class="mono">u−v=(1,1/2)</span> 却不在
+（<span class="mono">n<sub>R</sub> = 1/2</span>）⇒ <b>整性集连加法子群都不是 ⇒ 不是格</b>。<br><br>
+<b>但同一张流形上</b>，把通量收回对角线 <span class="mono">q=(t,t)</span>，<span class="mono">n<sub>R</sub>=t²</span>，整性集<b>恰好是 <span class="mono">Z</span></b>。
+⇒ 成不成格取决于<b>通量线的维数</b>，不取决于流形。
+</div>
+
+<div class="grid">
+  <div class="kpi"><div class="k">CPⁿ 整性集 vs FW 格（12 个 n）</div><div class="v">对称差 0</div></div>
+  <div class="kpi"><div class="k">CPⁿ 反解（不预设偏移）</div><div class="v">12 / 12</div></div>
+  <div class="kpi"><div class="k">CP¹×CP¹ 箱内离格整点</div><div class="v">240 / 2401</div></div>
+  <div class="kpi"><div class="k">无限族 q=(1/m,m)</div><div class="v">59 / 59</div></div>
+  <div class="kpi"><div class="k">del Pezzo：k≥1 有离格</div><div class="v">8 / 8 张</div></div>
+  <div class="kpi"><div class="k">对角线上整性集</div><div class="v">= Z</div></div>
+  <div class="kpi"><div class="k">1 维 / 2 维「是陪集」</div><div class="v">56 / 60 · 16 / 60</div></div>
+  <div class="kpi"><div class="k">定价 2⁶ 严格 / 匹配</div><div class="v">13 / 1</div></div>
+</div>
+
+<h2>图 1 · 一个因子 vs 两个因子：整性点与格点的关系</h2>
+<div class="card">
+<svg id="fig1" viewBox="0 0 900 400" role="img" aria-label="秩一与秩二的整性点、格点、离格点对照"></svg>
+<div class="legend"><b>左栏</b> = <span class="mono">CPⁿ</span>（<span class="mono">n=1..12</span>）：蓝条是整性集大小，红叉是 FW 格大小，<b>每一行都重合</b>（对称差 0）。<b>右栏</b> = <span class="mono">CP¹×CP¹</span> 的 <span class="mono">(1/6)Z² ∩ [−4,4]²</span>：共 <b>2401</b> 点，整性 <b>321</b>，其中格内 <b>81</b>、<b>离格 240</b>。同一条判据，一边严丝合缝，一边多出 240 个点。</div>
+</div>
+
+<h2>图 2 · 无限离格族：双曲线 q₁q₂ = 1 上，没有一个点在格上</h2>
+<div class="card">
+<svg id="fig2" viewBox="0 0 900 430" role="img" aria-label="双曲线 q1*q2=1 上的整性点全部离格"></svg>
+<div class="legend"><b>灰网格</b> = 诚实格 <span class="mono">Z²</span>；<b>蓝点</b> = <span class="mono">q=(1/m, m)</span>，<span class="mono">m=2..13</span>，每个点都满足 <span class="mono">n<sub>R</sub> = 1 ∈ Z</span>；<b>橙圈</b> = 格点 <span class="mono">(1,1)</span>（<span class="mono">m=1</span>，唯一落在格上的那个）。<b>除 <span class="mono">m=1</span> 外全部离格，而 <span class="mono">m</span> 是自由的</b> —— 这是族证明，不是扫描结果。<span class="mono">m=2..60</span> 实测 <b>59/59</b>。</div>
+</div>
+
+<h2>图 3 · del Pezzo：失败与「是不是乘积」无关</h2>
+<div class="card">
+<svg id="fig3" viewBox="0 0 900 400" role="img" aria-label="Bl_k CP2 的离格整点数随 k 的变化"></svg>
+<div class="legend"><span class="mono">Bl<sub>k</sub>CP²</span> 都不是乘积空间，一样失败。<b><span class="mono">k=0</span>（即 <span class="mono">CP²</span>，<span class="mono">H²</span> 秩 1）离格 <span class="mono">0</span></b>，与左栏一致；<b><span class="mono">k=1..8</span> 全部出现离格点</b>（8/8，合计 305）。
+最小例子：<span class="mono">dP1</span> 上 <span class="mono">q=(1/4,1/4)</span> 给 <span class="mono">n<sub>R</sub>=0</span> 却离格（<span class="mono">q<sub>H</sub>−3/2 = −5/4 ∉ Z</span>）。</div>
+</div>
+
+<div class="warn">
+<b>读这张图要注意</b>：<span class="mono">k=1</span> 的离格数（109）远高于其余，是因为 <span class="mono">K²=8</span> 使常数项 <span class="mono">1−K²/8 = 0</span>，整性条件退化成 <span class="mono">F²/2 ∈ Z</span>，在 <span class="mono">1/12</span> 网格上解最多。<b>这不是「越不对称越糟」的规律，只是常数项的算术后果</b> —— 不要从这张图读出趋势。
+</div>
+
+<h2>图 4 · 性质属于线，不属于流形</h2>
+<div class="card">
+<svg id="fig4" viewBox="0 0 900 430" role="img" aria-label="同一张 CP1xCP1 上三条通量线的整性集都还原格，而全平面不是"></svg>
+<div class="legend"><b>同一张 <span class="mono">CP¹×CP¹</span></b>，三条线：<span class="mono">(t,t)</span> 给 <span class="mono">t²</span>、<span class="mono">(t,2t)</span> 给 <span class="mono">2t²</span>、<span class="mono">(t,t²)</span> 给 <span class="mono">t³</span> —— 三条线的整性集<b>都恰好是 <span class="mono">Z</span></b>（与格的对称差 0）。<b>灰点</b>是全平面上的离格整性点（示意，实测 240 个）。⇒ 正确的问题不是「哪个流形」，是「<b>哪条通量线、几个方向</b>」。</div>
+</div>
+
+<div class="key">
+<b>这一卷真正改的是一句话的适用域</b>　r331 判词写的是 <span class="mono">ASSUMPTIONS-WEAKENED-SO-THE-RESULT-IS-STRENGTHENED</span> —— 它削弱的是<b>几何假设</b>（<span class="mono">spin<sup>c</sup></span>）。但它<b>没有削弱、也从未写出</b>另一条前提：<b>通量只有一个方向</b>。<br>
+本卷的结论是这条前提<b>承重</b>：去掉它，r331 的定理立刻失效，而 r325/r327/r331 三卷全部工作在一维通量线上 —— 所以它们从未撞上这件事。<br>
+判词因此是 <span class="mono">R331-NOT-OVERTURNED-BUT-CONFINED-TO-RANK-ONE</span>：<b>不是推翻，是划界</b>。
+</div>
+
+<h2>核心读数</h2>
+<table>
+<tr><th>判据</th><th>读数</th><th>条目</th></tr>
+<tr><td>CPⁿ：整性集 == FW 格（12 个 n，逐点）</td><td>对称差 <b>0</b></td><td class="mono">A01</td></tr>
+<tr><td>CPⁿ：反解（不预设偏移，用 S 的最小元当 r₀）</td><td><b>12 / 12</b>，0 违例</td><td class="mono">A03</td></tr>
+<tr><td>CPⁿ：仿射封闭 u−v+w（陪集判据）</td><td><b>12 / 12</b></td><td class="mono">A04</td></tr>
+<tr><td>CP¹×CP¹：两条独立路径给同一闭式 q₁q₂</td><td><b>100 / 100</b></td><td class="mono">B01</td></tr>
+<tr><td>CP¹×CP¹：箱内整性点 / 其中离格</td><td>321 / 2401 · <b>离格 240</b></td><td class="mono">B05</td></tr>
+<tr><td>无限族 q=(1/m,m)：n_R=1 且离格</td><td><b>59 / 59</b> · <b>59 / 59</b></td><td class="mono">B03 B04</td></tr>
+<tr><td>差封闭反例 u,v ∈ S，u−v ∉ S</td><td>n_R = 1, 0, <b>1/2</b></td><td class="mono">B06 B07</td></tr>
+<tr><td>三条线上的整性集 == Z</td><td>对称差 0 · 0 · 0</td><td class="mono">C01 C02 C03</td></tr>
+<tr><td>del Pezzo：k=0 / k≥1 的离格点</td><td><b>0</b> / <b>8 张全有</b>（合计 305）</td><td class="mono">D04 D05 D06</td></tr>
+<tr><td>分母有界引理（清分母后首项分子）</td><td><b>60 / 60</b>，最大分母 12</td><td class="mono">E01 E03</td></tr>
+<tr><td>1 维 / 2 维「是陪集」</td><td><b>56/60</b> · 16/60（非陪集 44）</td><td class="mono">E04 E05</td></tr>
+<tr><td>定价：严格可行 / 与读数匹配 / 翻转后匹配</td><td>13 / <b>1</b> / <b>0</b></td><td class="mono">F01 F03 F02</td></tr>
+</table>
+
+<div class="warn">
+<b>三处自伤如实登记（全是「对象错位」，不是算错）</b><br>
+① 用<b>差封闭</b>（子群判据）测 <span class="mono">CPⁿ</span> 的陪集 <span class="mono">Z+1/2</span> ⇒ 306 条假违例，连带把主结论判假。<br>
+② 在 <span class="mono">CP²</span> 上多扫一个 <span class="mono">E</span> 方向（它的 <span class="mono">H²</span> 秩是 1，没有这个方向）⇒ 凭空造出 4 个「离格」假点。<br>
+③ 分母上界用 <span class="mono">c<sub>d</sub></span> 的分子，漏掉清分母 <span class="mono">lcm</span> 的素因子 ⇒ 13/60 个合法样本被误判违例。<br>
+另有两处<b>假设被实测推翻</b>：「一维必然成格」（实测 56/60）、「整性集必然非空」（实测 48/60）—— 两条都改成 gt 型判据并在 <span class="mono">E07</span>/<span class="mono">E02</span> 显式登记。
+</div>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function el(svg, tag, attrs) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { e.setAttribute(k, attrs[k]); }
+    svg.appendChild(e);
+    return e;
+  }
+  function txt(svg, x, y, s, opt) {
+    opt = opt || {};
+    return el(svg, "text", {
+      x: x, y: y, "font-size": opt.fs || 11,
+      "font-family": "Consolas,Menlo,monospace",
+      fill: opt.fill || "#1f2328",
+      "text-anchor": opt.anchor || "start",
+      "font-weight": opt.bold ? 600 : 400
+    }).textContent = s;
+  }
+  function rect(svg, x, y, w, h, fill, stroke) {
+    return el(svg, "rect", { x: x, y: y, width: w, height: h, fill: fill || "#eee",
+      stroke: stroke || "none", "stroke-width": 1 });
+  }
+  function line(svg, x1, y1, x2, y2, stroke, w, dash) {
+    var a = { x1: x1, y1: y1, x2: x2, y2: y2, stroke: stroke, "stroke-width": w || 1 };
+    if (dash) a["stroke-dasharray"] = dash;
+    return el(svg, "line", a);
+  }
+  function circ(svg, cx, cy, r, fill, stroke, sw) {
+    return el(svg, "circle", { cx: cx, cy: cy, r: r, fill: fill,
+      stroke: stroke || "none", "stroke-width": sw || 1 });
+  }
+
+  // ---------------------------------------------------------------- fig1
+  (function () {
+    var svg = document.getElementById("fig1");
+    var W = 900, H = 400;
+    rect(svg, 0, 0, W, H, "#ffffff");
+    // 左栏：CP^n 12 行
+    txt(svg, 24, 26, "CP\u207F  (rank 1) : integrality set  vs  Freed-Witten lattice", { fs: 12, bold: true });
+    var A = [[1,13,13,0],[2,13,13,0],[3,13,13,0],[4,13,13,0],[5,13,13,0],[6,13,13,0],
+             [7,13,13,0],[8,13,13,0],[9,13,13,0],[10,13,13,0],[11,13,13,0],[12,13,13,0]];
+    var y0 = 46, step = 27;
+    txt(svg, 24, y0 - 6, "n", { fs: 10, fill: "#5b6470" });
+    txt(svg, 96, y0 - 6, "|S| = |lattice|", { fs: 10, fill: "#5b6470" });
+    txt(svg, 236, y0 - 6, "symmetric difference", { fs: 10, fill: "#5b6470" });
+    for (var i = 0; i < A.length; i++) {
+      var yy = y0 + i * step;
+      txt(svg, 28, yy + 12, String(A[i][0]), { fs: 11 });
+      var w = 40 + A[i][1] * 4.2;
+      rect(svg, 96, yy + 2, w, 13, "#cfe0f3", "#9db9d8");
+      txt(svg, 100 + w, yy + 12, A[i][1] + " / " + A[i][2], { fs: 10, fill: "#2b5c9b" });
+      circ(svg, 260, yy + 8, 5, "#ffffff", "#1a7f37", 1.6);
+      txt(svg, 274, yy + 12, String(A[i][3]), { fs: 10, fill: "#1a7f37" });
+    }
+    txt(svg, 24, y0 + 12 * step + 22, "12/12  \u5168\u91cd\u5408 \u00B7 \u5BF9\u79F0\u5DEE 0 \u00B7 \u53CD\u89E3\u4E5F 12/12", { fs: 11, fill: "#1a7f37", bold: true });
+
+    // 右栏：CP1xCP1 分层
+    var bx = 470, by = 46, bw = 250, bh = 210;
+    txt(svg, bx, by - 12, "CP\u00B9\u00D7CP\u00B9  (rank 2) :  (1/6)Z\u00B2 \u2229 [-4,4]\u00B2", { fs: 12, bold: true });
+    txt(svg, bx, by + 2, "2401 points in the box", { fs: 10, fill: "#5b6470" });
+    rect(svg, bx, by + 10, bw, 46, "#f0f2f5", "#dfe3e8");
+    txt(svg, bx + 10, by + 38, "box points      2401", { fs: 11 });
+    var frac1 = 321 / 2401;
+    rect(svg, bx, by + 62, bw, 46, "#cfe0f3", "#9db9d8");
+    txt(svg, bx + 10, by + 90, "n_R integral     321", { fs: 11, fill: "#2b5c9b" });
+    rect(svg, bx, by + 114, bw, 46, "#d7eedd", "#9ec9ac");
+    txt(svg, bx + 10, by + 142, "on lattice        81", { fs: 11, fill: "#1a7f37" });
+    rect(svg, bx, by + 166, bw, 46, "#f6d9d4", "#dda79d");
+    txt(svg, bx + 10, by + 194, "OFF LATTICE      240", { fs: 12, fill: "#c0392b", bold: true });
+    // 比例条
+    var pxx = bx, pyy = by + 222, pww = bw, phh = 14;
+    txt(svg, bx, pyy - 4, "integrality density inside the box", { fs: 10, fill: "#5b6470" });
+    rect(svg, pxx, pyy, pww, phh, "#f0f2f5", "#dfe3e8");
+    rect(svg, pxx, pyy, Math.max(2, pww * frac1), phh, "#2b5c9b");
+    txt(svg, pxx + 4, pyy + phh + 14, "321 / 2401 = 13.4%", { fs: 10, fill: "#2b5c9b" });
+    txt(svg, pxx, pyy + phh + 34, "240 of them are OFF the honest lattice Z\u00B2", { fs: 11, fill: "#c0392b", bold: true });
+    line(svg, 440, 40, 440, 360, "#dfe3e8", 1, "4 3");
+  })();
+
+  // ---------------------------------------------------------------- fig2
+  (function () {
+    var svg = document.getElementById("fig2");
+    var W = 900, H = 430;
+    rect(svg, 0, 0, W, H, "#ffffff");
+    var x0 = 90, x1 = 850, y0 = 40, y1 = 370;
+    txt(svg, 24, 26, "q = (1/m, m)  on the hyperbola q\u2081q\u2082 = 1 :  every point has n_R = 1", { fs: 12, bold: true });
+    // 网格 Z^2
+    for (var gx = 0; gx <= 8; gx++) {
+      var px = x0 + (x1 - x0) * gx / 8;
+      line(svg, px, y0, px, y1, gx === 0 ? "#9aa3ad" : "#e3e7ec", 1);
+      txt(svg, px, y1 + 16, String(gx), { fs: 10, fill: "#5b6470", anchor: "middle" });
+    }
+    for (var gy = 0; gy <= 8; gy++) {
+      var py = y1 - (y1 - y0) * gy / 8;
+      line(svg, x0, py, x1, py, gy === 0 ? "#9aa3ad" : "#e3e7ec", 1);
+      txt(svg, x0 - 10, py + 4, String(gy), { fs: 10, fill: "#5b6470", anchor: "end" });
+    }
+    txt(svg, (x0 + x1) / 2, y1 + 34, "q\u2081", { fs: 11, fill: "#5b6470", anchor: "middle" });
+    txt(svg, 40, (y0 + y1) / 2, "q\u2082", { fs: 11, fill: "#5b6470", anchor: "middle" });
+    // 双曲线 q1 q2 = 1 折线（绝对坐标）
+    var d = "";
+    for (var i = 1; i <= 120; i++) {
+      var q1v = 0.125 + (8 - 0.125) * i / 120;
+      var q2v = 1 / q1v;
+      if (q2v > 8) { continue; }
+      var cx = x0 + (x1 - x0) * q1v / 8;
+      var cy = y1 - (y1 - y0) * q2v / 8;
+      d += (d === "" ? "M " : " L ") + cx.toFixed(1) + " " + cy.toFixed(1);
+    }
+    el(svg, "path", { d: d, fill: "none", stroke: "#b8860b", "stroke-width": 1.6, "stroke-dasharray": "5 4" });
+    // 格点
+    for (var ii = 1; ii <= 8; ii++) {
+      for (var jj = 1; jj <= 8; jj++) {
+        circ(svg, x0 + (x1 - x0) * ii / 8, y1 - (y1 - y0) * jj / 8, 2.2, "#9aa3ad");
+      }
+    }
+    // 族点 m=2..13
+    for (var m = 2; m <= 13; m++) {
+      var qa = 1 / m, qb = m;
+      if (qb > 8) { continue; }
+      var cx2 = x0 + (x1 - x0) * qa / 8;
+      var cy2 = y1 - (y1 - y0) * qb / 8;
+      circ(svg, cx2, cy2, 6, "#2b5c9b");
+      txt(svg, cx2 + 9, cy2 - 8, "m=" + m, { fs: 10, fill: "#2b5c9b" });
+    }
+    // 唯一格点 m=1
+    circ(svg, x0 + (x1 - x0) * 1 / 8, y1 - (y1 - y0) * 1 / 8, 9, "none", "#c0392b", 2);
+    txt(svg, x0 + (x1 - x0) * 1 / 8 + 13, y1 - (y1 - y0) * 1 / 8 + 4, "m=1 (the only one on Z\u00B2)", { fs: 10, fill: "#c0392b" });
+    txt(svg, 24, 400, "blue: 12 sample points, each with n_R = 1 \u2208 Z  \u00B7  grid: honest lattice Z\u00B2", { fs: 11, fill: "#5b6470" });
+    txt(svg, 24, 418, "m = 2..60 measured: 59/59 give n_R = 1  and  59/59 are off-lattice", { fs: 11, fill: "#c0392b", bold: true });
+  })();
+
+  // ---------------------------------------------------------------- fig3
+  (function () {
+    var svg = document.getElementById("fig3");
+    var W = 900, H = 400;
+    rect(svg, 0, 0, W, H, "#ffffff");
+    txt(svg, 24, 26, "off-lattice integrality points on Bl_k CP\u00B2   (k = 0 .. 8)", { fs: 12, bold: true });
+    var K2 = [9,8,7,6,5,4,3,2,1];
+    var OFF = [0,109,20,36,20,44,20,36,20];
+    var INS = [4,125,20,36,20,44,20,36,20];
+    var bx0 = 70, bx1 = 850, by0 = 60, by1 = 300;
+    var maxv = 140;
+    for (var g = 0; g <= 140; g += 20) {
+      var py = by1 - (by1 - by0) * g / maxv;
+      line(svg, bx0, py, bx1, py, "#e3e7ec", 1);
+      txt(svg, bx0 - 8, py + 4, String(g), { fs: 10, fill: "#5b6470", anchor: "end" });
+    }
+    line(svg, bx0, by1, bx1, by1, "#9aa3ad", 1);
+    var slot = (bx1 - bx0) / 9;
+    for (var k = 0; k <= 8; k++) {
+      var cxx = bx0 + slot * k + slot * 0.5;
+      var bw = slot * 0.46;
+      var hin = (by1 - by0) * Math.min(INS[k], maxv) / maxv;
+      var hoff = (by1 - by0) * Math.min(OFF[k], maxv) / maxv;
+      rect(svg, cxx - bw / 2, by1 - hin, bw, Math.max(2, hin), "#e8eef6", "#c6d3e2");
+      if (hoff > 0) {
+        rect(svg, cxx - bw / 2, by1 - hoff, bw, Math.max(2, hoff), "#c0392b");
+      }
+      txt(svg, cxx, by1 + 16, "k=" + k, { fs: 10, fill: "#5b6470", anchor: "middle" });
+      txt(svg, cxx, by1 + 30, "K\u00B2=" + K2[k], { fs: 10, fill: "#9aa3ad", anchor: "middle" });
+      txt(svg, cxx, by1 - Math.max(hoff, hin) - 6, String(OFF[k]), { fs: 10, fill: "#c0392b", anchor: "middle" });
+    }
+    // 标注 k=0
+    txt(svg, bx0 + slot * 0.5, by0 - 6, "rank 1", { fs: 10, fill: "#1a7f37", anchor: "middle" });
+    txt(svg, bx0 + slot * 1.5, by0 - 6, "rank 2 \u2192", { fs: 10, fill: "#c0392b", anchor: "middle" });
+    txt(svg, 24, 340, "red = off-lattice, grey = total integrality points in the box (2401 per k for k \u2265 1)", { fs: 11, fill: "#5b6470" });
+    txt(svg, 24, 358, "k = 0 (CP\u00B2, rank 1): 0 off-lattice   |   k = 1..8 (rank \u2265 2): all 8 show off-lattice points, total 305", { fs: 11, fill: "#c0392b", bold: true });
+    txt(svg, 24, 378, "dP1 minimal example: q=(1/4,1/4) \u21D2 n_R = 0 \u2208 Z, but q_H - 3/2 = -5/4 \u2209 Z", { fs: 11, fill: "#2f6f9f" });
+  })();
+
+  // ---------------------------------------------------------------- fig4
+  (function () {
+    var svg = document.getElementById("fig4");
+    var W = 900, H = 430;
+    rect(svg, 0, 0, W, H, "#ffffff");
+    var x0 = 80, x1 = 520, y0 = 50, y1 = 350;
+    txt(svg, 24, 26, "same manifold CP\u00B9\u00D7CP\u00B9 : three flux lines vs the whole plane", { fs: 12, bold: true });
+    for (var gx = -4; gx <= 4; gx++) {
+      var px = x0 + (x1 - x0) * (gx + 4) / 8;
+      line(svg, px, y0, px, y1, gx === 0 ? "#9aa3ad" : "#e3e7ec", 1);
+      txt(svg, px, y1 + 15, String(gx), { fs: 9, fill: "#5b6470", anchor: "middle" });
+    }
+    for (var gy = -4; gy <= 4; gy++) {
+      var py = y1 - (y1 - y0) * (gy + 4) / 8;
+      line(svg, x0, py, x1, py, gy === 0 ? "#9aa3ad" : "#e3e7ec", 1);
+      txt(svg, x0 - 8, py + 4, String(gy), { fs: 9, fill: "#5b6470", anchor: "end" });
+    }
+    // 离格点云（示意，取 1/2 与 1/3 分母）
+    var cloud = [[0.5,2],[0.5,-2],[-0.5,2],[-0.5,-2],[0.5,4],[0.5,-4],[-0.5,4],[-0.5,-4],
+                 [1/3,3],[1/3,-3],[-1/3,3],[-1/3,-3],[2/3,1.5],[2/3,-1.5],[-2/3,1.5],[-2/3,-1.5],
+                 [0.25,4],[0.25,-4],[-0.25,4],[-0.25,-4],[1.5,2/3],[1.5,-2/3],[2.5,0.4],[2.5,-0.4]];
+    for (var i = 0; i < cloud.length; i++) {
+      var cx = x0 + (x1 - x0) * (cloud[i][0] + 4) / 8;
+      var cy = y1 - (y1 - y0) * (cloud[i][1] + 4) / 8;
+      circ(svg, cx, cy, 3.4, "#cfd4da");
+    }
+    // 三条线
+    line(svg, x0 + (x1 - x0) * 4 / 8, y1, x1, y0, "#1a7f37", 2);      // (t,t)
+    line(svg, x0 + (x1 - x0) * 0 / 8, y1, x0 + (x1 - x0) * 4 / 8, y0, "#2b5c9b", 2); // (t,2t)
+    var dq = "";
+    for (var t = -4; t <= 8; t += 0.25) {
+      var q1 = t, q2 = t * t;
+      if (q1 < -4 || q1 > 4 || q2 < -4 || q2 > 4) { continue; }
+      var c2 = x0 + (x1 - x0) * (q1 + 4) / 8;
+      var c3 = y1 - (y1 - y0) * (q2 + 4) / 8;
+      dq += (dq === "" ? "M " : " L ") + c2.toFixed(1) + " " + c3.toFixed(1);
+    }
+    el(svg, "path", { d: dq, fill: "none", stroke: "#b8860b", "stroke-width": 2 });
+    txt(svg, x1 + 8, y0 + 10, "(t,t)  \u2192 t\u00B2", { fs: 10, fill: "#1a7f37" });
+    txt(svg, x1 + 8, y0 + 26, "(t,2t) \u2192 2t\u00B2", { fs: 10, fill: "#2b5c9b" });
+    txt(svg, x1 + 8, y0 + 42, "(t,t\u00B2) \u2192 t\u00B3", { fs: 10, fill: "#b8860b" });
+    txt(svg, x1 + 8, y0 + 60, "grey: off-lattice", { fs: 10, fill: "#5b6470" });
+    txt(svg, x1 + 8, y0 + 74, "      integrality", { fs: 10, fill: "#5b6470" });
+    txt(svg, x1 + 8, y0 + 88, "      points (sample)", { fs: 10, fill: "#5b6470" });
+    // 两条结论
+    rect(svg, 600, 40, 276, 96, "#d7eedd", "#9ec9ac");
+    txt(svg, 612, 62, "on a line : symmetric difference 0", { fs: 11, fill: "#1a7f37", bold: true });
+    txt(svg, 612, 82, "t\u00B2  \u00B7  2t\u00B2  \u00B7  t\u00B3   all three", { fs: 11, fill: "#1a7f37" });
+    txt(svg, 612, 102, "integrality set == Z exactly", { fs: 11, fill: "#1a7f37" });
+    txt(svg, 612, 122, "C01 / C02 / C03", { fs: 10, fill: "#5b6470" });
+    rect(svg, 600, 148, 276, 96, "#f6d9d4", "#dda79d");
+    txt(svg, 612, 170, "on the plane : NOT a coset", { fs: 11, fill: "#c0392b", bold: true });
+    txt(svg, 612, 190, "2401 box points \u2192 321 integral", { fs: 11, fill: "#c0392b" });
+    txt(svg, 612, 210, "of which 240 are OFF lattice", { fs: 11, fill: "#c0392b" });
+    txt(svg, 612, 230, "B05 / B06 / B07", { fs: 10, fill: "#5b6470" });
+    txt(svg, 24, 384, "the property belongs to the flux LINE, not to the MANIFOLD", { fs: 12, fill: "#2b5c9b", bold: true });
+    txt(svg, 24, 404, "r325 / r327 / r331 all worked on one-dimensional flux lines, so they never met this.", { fs: 11, fill: "#5b6470" });
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r319 · 统一表示框架与二次超荷矩（常数荷全正残差 · 27 分解 · CP^n 整数解 · 定价二难）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;--dead:#e8dede}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:26px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.key{background:#eef4fb;border:1px solid #c9dbf0;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+.warn{background:#fdf2f0;border:1px solid #edc9c2;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+svg{display:block;max-width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<h1>TUFT-r319 · 统一表示框架与二次超荷矩</h1>
+<div class="sub">攻 <span class="mono">X-R309-1</span>　·　条目 50（PASS 44 / FAIL 0 / INFO 6）　·　控制组 11/11　·　守卫 14/14　·　<span class="mono">X-R309-1-CLOSED-NEGATIVELY</span></div>
+
+<div class="thm">
+<b>攻靶</b>：r309 判定册 §十一 交接的 <span class="mono">X-R309-1</span> —— 「每多重态各自一个独立指标」这个框架本身是否必要？<br><br>
+<b>定理 Y（二次超荷矩）</b>　一代 SM 的三个矩里，<span class="mono">Σ dim·Y = 0</span>、<span class="mono">Σ dim·Y³ = 0</span>，而 <b><span class="mono">Σ dim·Y² = 10/3 ≠ 0</span></b>。<br>
+<b>定理 Z（统一框架必然反常）</b>　单一不可约表示 ⇒ 所有分量共享<b>同一个</b>通量 <span class="mono">q</span>。把常数荷代入四个线性反常，残差是 <b><span class="mono">(4, 4, 15, 10/3)</span></b> —— <b>四条全非零、全同号</b> ⇒ 只能 <span class="mono">q = 0</span> ⇒ <span class="mono">n<sub>R</sub> = 0</span> ⇒ <b>零代，不是三代</b>。<br>
+<b>定理 AA（第二路线也封）</b>　若允许 <span class="mono">q<sub>a</sub> = q·f<sub>a</sub></span>，反常自由强迫 <span class="mono">f ∝ Y</span> ⇒ 回到逐分量 ⇒ r309 定理 T 的 <span class="mono">n ≥ 9</span>。无逃逸。<br>
+<b>定理 AB（放开反常前提后）</b>　在 <span class="mono">CP<sup>n</sup></span> 上精确解 <span class="mono">n<sub>R</sub>(q) = 3</span>：<b>只有 <span class="mono">CP<sup>1</sup></span> 有整数解，且 <span class="mono">q = 3</span></b> —— 但 <span class="mono">n<sub>R</sub></span> 成了自由输入。
+</div>
+
+<div class="grid">
+  <div class="kpi"><div class="k">一代 Σ dim·Y²</div><div class="v">10/3</div></div>
+  <div class="kpi"><div class="k">常数荷残差非零条数</div><div class="v">4 / 4</div></div>
+  <div class="kpi"><div class="k">残差为负的条数</div><div class="v">0</div></div>
+  <div class="kpi"><div class="k">CP^n 族内整数解</div><div class="v">仅 n=1</div></div>
+  <div class="kpi"><div class="k">唯一通量值</div><div class="v">q = 3</div></div>
+  <div class="kpi"><div class="k">定价 2⁶ 可达 / 严格</div><div class="v">33 / 0</div></div>
+</div>
+
+<h2>图 1 · 先把 <span class="mono">27</span> 真拆开：代与额外物「各自」无反常</h2>
+<div class="card">
+<svg id="fig1" viewBox="0 0 900 300" role="img" aria-label="27 的 SM 分解与反常核验"></svg>
+<div class="legend">关键不是「<span class="mono">27</span> 无反常」（教科书结论），而是<b>代 15 个与额外物 12 个各自独立为零</b>。若两者只是互相抵消，把代单独拿出来做判据就会失真 —— 这一步为后面所有「只看代」的论证买了保险。</div>
+</div>
+
+<h2>图 2 · 常数荷的四个残差全为正：靠符号就能否决</h2>
+<div class="card">
+<svg id="fig2" viewBox="0 0 900 340" role="img" aria-label="常数荷的四个线性反常残差"></svg>
+<div class="legend">最初步的那条是<b>引力反常 <span class="mono">Σ dim = 15</span></b> —— 它不需要知道任何超荷值；最模型相关的那条是 <span class="mono">Σ dim·Y² = 10/3</span>。四条一起构成一个<b>过定</b>的否决。</div>
+</div>
+
+<div class="key">
+<b>为什么必须逐多重态分荷？</b>　因为要抵消，就得有正有负；而一个不可约表示只给一个数。
+逐多重态的 <span class="mono">Y = (1/6, −2/3, 1/3, −1/2, 1)</span> 正负混合 ⇒ 四条方程精确归零；常数荷没有负号 ⇒ 抵不掉。
+<b>这是本卷唯一一句真正新的解释。</b>
+</div>
+
+<h2>图 3 · <span class="mono">CP<sup>n</sup></span> 上的 <span class="mono">n<sub>R</sub>(q) = 3</span>：一个绿格</h2>
+<div class="card">
+<svg id="fig3" viewBox="0 0 900 340" role="img" aria-label="CP^n 上 n_R = 3 的整数解网格"></svg>
+<div class="legend">格内是真算出的 <span class="mono">n<sub>R</sub>(n, q)</span>（<span class="mono">Â</span> 截断到 6 阶）。<b>唯一精确等于 3 的是 <span class="mono">n = 1, q = 3</span></b>。注意 <span class="mono">n = 6, q = 4</span> 处是 <span class="mono">2.9327</span> —— 离 3 只差 <span class="mono">0.0673</span>，很近，但<b>不是</b>。「恰好 3」是等式，不是逼近。</div>
+</div>
+
+<div class="warn">
+<b>这一支的代价说清楚</b>：<span class="mono">CP<sup>1</sup> + q = 3</span> 只在<b>放弃「<span class="mono">U(1)<sub>F</sub></span> 精确无反常」</b>时成立（Stückelberg / Green–Schwarz / 整体）。
+那时障碍消失、三代到手，但 <span class="mono">n<sub>R</sub> = 3</span> 变成<b>自由输入</b> —— 问题从「为什么被禁止」变成「为什么取这个数」。
+<b>没变好，只变了形状。</b>这就是 <span class="mono">X-R319-1</span> 的位置。
+</div>
+
+<h2>图 4 · 定价 2⁶ = 64：二难被压成一行 <span class="mono">S3 ∧ S4 = ∅</span></h2>
+<div class="card">
+<svg id="fig4" viewBox="0 0 900 330" role="img" aria-label="64 格定价掩码"></svg>
+<div class="legend">六槽 = 连通 / 三代 / 精确无反常 / 统一表示 / 小维度 / 有选择机制。绿 = 可达（33 个），灰 = 不可达。约束全部<b>由定理推出</b>而非手填：<span class="mono">S4 ⇒ ¬S3</span>、<span class="mono">S2∧S3∧¬S4 ⇒ ¬S5</span>、<span class="mono">S2∧¬S3 ⇒ ¬S6</span>、<span class="mono">S2∧S4 ⇒ S5</span>、<span class="mono">S2∧¬S1 ⇒ ¬S6</span>。</div>
+</div>
+
+<h2>读数速查</h2>
+<table>
+<tr><th>量</th><th>值</th><th>说明</th></tr>
+<tr><td><span class="mono">27</span> 分解</td><td><span class="mono">10 + 5 + 2·5̄ + 2·1</span></td><td>经 SO(10) 的 <span class="mono">16 + 10 + 1</span>，维数和 27</td></tr>
+<tr><td>代 / 额外</td><td><span class="mono">15 / 12</span></td><td>各自五条规范反常全零（不是互相抵消）</td></tr>
+<tr><td><span class="mono">Σ dim·Y²</span>（代）</td><td><b><span class="mono">10/3</span></b></td><td>三个超荷矩里唯一非零的</td></tr>
+<tr><td><span class="mono">Σ dim·Y²</span>（额外）</td><td><span class="mono">5/3</span></td><td>整 <span class="mono">27</span> = 5</td></tr>
+<tr><td>SO(10) 的 <span class="mono">16</span></td><td><span class="mono">10/3</span></td><td>与 E6 一模一样 ⇒ 障碍与 GUT 群无关</td></tr>
+<tr><td>常数荷残差</td><td><span class="mono">(4, 4, 15, 10/3)</span></td><td>四条全正 ⇒ 唯一解 <span class="mono">q = 0</span></td></tr>
+<tr><td>反常常自由集</td><td><span class="mono">span(Y)</span>，秩 4/5</td><td>与 r309 定理 S 一致（两条独立路径）</td></tr>
+<tr><td><span class="mono">CP<sup>n</sup></span> 整数解</td><td>仅 <span class="mono">n = 1, q = 3</span></td><td><span class="mono">n = 2..6</span> 全无解</td></tr>
+<tr><td>定价</td><td>33 / 64，严格 0</td><td><span class="mono">S3 ∧ S4 = 0</span>；<span class="mono">S2∧S4∧S5 = 2</span>；<span class="mono">S1∧S2∧S5 = 2</span></td></tr>
+</table>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var INK = '#1f2328', SUB = '#5b6470', ACC = '#2b5c9b', RED = '#c0392b', GRN = '#1a7f37', GREY = '#c9ccd2';
+
+  function E(p, tag, a) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) { if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]); }
+    p.appendChild(e);
+    return e;
+  }
+  function T(p, x, y, s, o) {
+    var a = { x: x, y: y, fill: INK, 'font-size': 12 };
+    if (o) { for (var k in o) { if (o.hasOwnProperty(k)) a[k] = o[k]; } }
+    var e = E(p, 'text', a);
+    e.textContent = s;
+    return e;
+  }
+  function R(p, x, y, w, h, fill, rx) {
+    return E(p, 'rect', { x: x, y: y, width: w, height: h, rx: (rx === undefined ? 3 : rx), fill: fill });
+  }
+  function L(p, x1, y1, x2, y2, col, w, dash) {
+    var a = { x1: x1, y1: y1, x2: x2, y2: y2, stroke: col, 'stroke-width': w };
+    if (dash) a['stroke-dasharray'] = dash;
+    return E(p, 'line', a);
+  }
+  function C(p, cx, cy, r, fill) {
+    return E(p, 'circle', { cx: cx, cy: cy, r: r, fill: fill });
+  }
+
+  // ================================================================ 图 1
+  var f1 = document.getElementById('fig1');
+  T(f1, 24, 26, '27 的 SM 分解（E6 → SM）', { 'font-weight': 600, 'font-size': 13 });
+  T(f1, 470, 26, '五条规范反常：27 / 代 / 额外 各自核验', { 'font-weight': 600, 'font-size': 13 });
+
+  R(f1, 24, 46, 214, 30, '#2b5c9b');
+  R(f1, 238, 46, 172, 30, '#b9c2cc');
+  T(f1, 34, 66, '代 15', { fill: '#ffffff', 'font-size': 12, 'font-weight': 600 });
+  T(f1, 260, 66, '额外 12', { fill: INK, 'font-size': 12 });
+
+  T(f1, 24, 100, '27 = 10 + 5 + 2·5̄ + 2·1　（SO(10)：16 + 10 + 1）', { 'font-size': 12 });
+  T(f1, 24, 126, '三个超荷矩（一代 15 个左手 Weyl）', { 'font-weight': 600, 'font-size': 12 });
+  T(f1, 40, 148, 'Σ dim·Y   =  0');
+  T(f1, 40, 170, 'Σ dim·Y²  =  10/3', { fill: RED, 'font-weight': 600 });
+  T(f1, 40, 192, 'Σ dim·Y³  =  0');
+  T(f1, 24, 220, '★ 唯一非零的矩是二次的，值 10/3（与 GUT 群无关）', { fill: RED, 'font-size': 12 });
+  T(f1, 24, 244, 'SO(10) 的 16：Σ dim·Y² = 10/3 + 0 = 10/3 —— 同一个数', { 'font-size': 12 });
+  T(f1, 24, 268, 'SU(5) 分块：10 → 5/2　5̄ → 5/6　5+5̄ → 5/3　1+1 → 0', { 'font-size': 12, fill: SUB });
+
+  var anom = [['[SU(3)]² U(1)_Y', 54], ['[SU(2)]² U(1)_Y', 80], ['g-g-U(1)_Y', 106],
+              ['U(1)_Y³', 132], ['SU(3)³（A(3)=+1 / A(3̄)=−1）', 158]];
+  for (var i = 0; i < anom.length; i++) {
+    T(f1, 470, anom[i][1], anom[i][0], { 'font-size': 12 });
+    T(f1, 690, anom[i][1], '0 / 0 / 0', { 'font-size': 12, fill: GRN });
+    C(f1, 790, anom[i][1] - 4, 5, GRN);
+  }
+  T(f1, 470, 190, '三列 = 27 整体 / 代 / 额外，三条全为 0', { 'font-size': 12 });
+  T(f1, 470, 216, '⇒ 不是互相抵消，是各自独立为零', { fill: GRN, 'font-weight': 600, 'font-size': 12 });
+  T(f1, 470, 242, '⇒ 后续可以放心只算「代」', { 'font-size': 12 });
+  T(f1, 470, 268, '（若只是抵消，单独拿代做判据就会失真）', { 'font-size': 12, fill: SUB });
+
+  // ================================================================ 图 2
+  var f2 = document.getElementById('fig2');
+  T(f2, 24, 26, '常数荷 (1,1,1,1,1) 代入四个线性反常：残差全为正', { 'font-weight': 600, 'font-size': 13 });
+  var BASE = 250, SC = 130 / 15;
+  L(f2, 100, BASE, 820, BASE, '#5b6470', 1.5);
+  T(f2, 100, BASE + 16, '0（反常自由线）', { 'font-size': 11, fill: SUB });
+
+  var bars = [['A3 = 2q₁+q₂+q₃', 4, '4'], ['A2 = 3q₁+q₄', 4, '4'],
+              ['Ag = Σ dim·q', 15, '15'], ['AYY = Σ dim·Y²·q', 10 / 3, '10/3']];
+  var bx = [140, 310, 480, 650];
+  for (var j = 0; j < bars.length; j++) {
+    var h = bars[j][1] * SC;
+    R(f2, bx[j], BASE - h, 110, h, j === 3 ? '#c0392b' : '#2b5c9b');
+    T(f2, bx[j] + 6, BASE - h - 8, bars[j][2], { 'font-size': 12, 'font-weight': 600 });
+    T(f2, bx[j], 272, bars[j][0], { 'font-size': 11 });
+  }
+
+  T(f2, 24, 300, 'Y 的符号：', { 'font-size': 12, 'font-weight': 600 });
+  var yv = [['1/6', 1], ['−2/3', -1], ['1/3', 1], ['−1/2', -1], ['1', 1]];
+  for (var k = 0; k < yv.length; k++) {
+    var xk = 110 + k * 96;
+    R(f2, xk, 286, 88, 24, yv[k][1] > 0 ? '#dbe7f5' : '#e3f0df');
+    T(f2, xk + 26, 303, yv[k][0], { 'font-size': 12, fill: yv[k][1] > 0 ? ACC : GRN });
+  }
+  T(f2, 24, 330, '逐多重态正负混合 ⇒ 四条同时归零；常数荷全同号 ⇒ 抵不掉 ⇒ 唯一解 q = 0', { 'font-size': 12, fill: RED });
+
+  // ================================================================ 图 3
+  var f3 = document.getElementById('fig3');
+  T(f3, 24, 26, 'CP^n 上 n_R(q) = ∫e^{qx}Â = Σ_j a_j q^(n−j)/(n−j)!　（Â 截断到 6 阶）', { 'font-weight': 600, 'font-size': 13 });
+  var POLY = {
+    1: [[1, 1, 1]],
+    2: [[2, 1, 2], [0, -1, 8]],
+    3: [[3, 1, 6], [1, -1, 6]],
+    4: [[4, 1, 24], [2, -5, 48], [0, 3, 128]],
+    5: [[5, 1, 120], [3, -1, 24], [1, 1, 30]],
+    6: [[6, 1, 720], [4, -7, 576], [2, 259, 11520], [0, -5, 1024]]
+  };
+  function nr(n, q) {
+    var s = 0, t = POLY[n];
+    for (var i = 0; i < t.length; i++) { s += (t[i][1] / t[i][2]) * Math.pow(q, t[i][0]); }
+    return s;
+  }
+  var GX = 200, GY = 76, CW = 94, CH = 32, DX = 100, DY = 38;
+  T(f3, 150, 62, 'q =', { 'font-size': 12, 'font-weight': 600 });
+  for (var q = 1; q <= 6; q++) {
+    T(f3, GX + (q - 1) * DX + 36, 62, 'q = ' + q, { 'font-size': 12, 'font-weight': 600 });
+  }
+  T(f3, 24, 128, 'n = 1', { 'font-size': 12, 'font-weight': 600 });
+  T(f3, 24, 166, 'n = 2', { 'font-size': 12, 'font-weight': 600 });
+  T(f3, 24, 204, 'n = 3', { 'font-size': 12, 'font-weight': 600 });
+  T(f3, 24, 242, 'n = 4', { 'font-size': 12, 'font-weight': 600 });
+  T(f3, 24, 280, 'n = 5', { 'font-size': 12, 'font-weight': 600 });
+  T(f3, 130, 280, '', { 'font-size': 11 });
+  for (var n = 1; n <= 6; n++) {
+    T(f3, 76, GY + (n - 1) * DY + 21, 'CP^' + n, { 'font-size': 11, fill: SUB });
+    for (var qq = 1; qq <= 6; qq++) {
+      var v = nr(n, qq);
+      var ex = Math.abs(v - 3) < 1e-12;
+      var near = (!ex && Math.abs(v - 3) <= 1);
+      var fill = ex ? '#b7dfb0' : (near ? '#fdf0d0' : '#f2f4f7');
+      var x = GX + (qq - 1) * DX, y = GY + (n - 1) * DY;
+      R(f3, x, y, CW, CH, fill);
+      T(f3, x + 8, y + 21, v.toFixed(4), { 'font-size': 11, fill: ex ? GRN : INK });
+    }
+  }
+  // 第 6 行的 q=4 处特别标注
+  R(f3, GX + 3 * DX, GY + 5 * DY, CW, CH, '#fdf0d0');
+  T(f3, GX + 3 * DX + 8, GY + 5 * DY + 21, nr(6, 4).toFixed(4), { 'font-size': 11, fill: '#8a6d1f' });
+
+  R(f3, 24, 306, 14, 14, '#b7dfb0', 2);
+  T(f3, 44, 317, '精确 = 3（唯一：n=1, q=3）', { 'font-size': 11 });
+  R(f3, 250, 306, 14, 14, '#fdf0d0', 2);
+  T(f3, 270, 317, '|n_R − 3| ≤ 1（近但不是）', { 'font-size': 11 });
+  R(f3, 470, 306, 14, 14, '#f2f4f7', 2);
+  T(f3, 490, 317, '远离 3', { 'font-size': 11 });
+  T(f3, 610, 317, 'CP^6, q=4 ⇒ 2.9327（差 0.0673）', { 'font-size': 11, fill: '#8a6d1f' });
+
+  // ================================================================ 图 4
+  var f4 = document.getElementById('fig4');
+  T(f4, 24, 26, '定价 2⁶ = 64：可达 33，严格档 63 不可达，S3 ∧ S4 = ∅', { 'font-weight': 600, 'font-size': 13 });
+  var ACH = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16, 18, 22, 24, 32, 33, 34, 35, 36, 37,
+             38, 39, 40, 41, 42, 43, 48, 50, 54, 56, 57];
+  function isAch(m) { for (var i = 0; i < ACH.length; i++) { if (ACH[i] === m) return true; } return false; }
+  var CX0 = 66, CY0 = 50, CW4 = 100, CH4 = 28;
+  for (var col = 0; col < 8; col++) {
+    T(f4, CX0 + col * CW4 + 30, CY0 - 8, '×' + (16 + col), { 'font-size': 11, fill: SUB });
+  }
+  for (var r = 0; r < 8; r++) {
+    for (var c = 0; c < 8; c++) {
+      var m = r * 8 + c;
+      var a = isAch(m);
+      var x4 = CX0 + c * CW4, y4 = CY0 + r * CH4;
+      R(f4, x4, y4, CW4 - 6, CH4 - 6, a ? '#d7e9d4' : '#f0f1f3', 4);
+      T(f4, x4 + 8, y4 + 15, String(m), { 'font-size': 11, fill: a ? GRN : '#8b929c' });
+      if (m === 63) {
+        T(f4, x4 + 34, y4 + 15, '严格', { 'font-size': 10, fill: RED });
+      }
+    }
+  }
+  R(f4, 66, 284, 14, 14, '#d7e9d4', 3);
+  T(f4, 86, 295, '可达（33）', { 'font-size': 11 });
+  R(f4, 190, 284, 14, 14, '#f0f1f3', 3);
+  T(f4, 210, 295, '不可达（31）', { 'font-size': 11 });
+  T(f4, 340, 295, '63 = 六槽全满足 ⇒ 不可达；S3∧S4 的 16 个掩码全部不可达', { 'font-size': 11, fill: RED });
+  T(f4, 66, 318, 'S2∧S4∧S5 = 2（统一框架能给小维度三代，代价是 S3）　S1∧S2∧S5 = 2（CP^1 + q=3）', { 'font-size': 11, fill: SUB });
+})();
+</script>
+</body>
+</html>

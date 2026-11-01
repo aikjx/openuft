@@ -1,0 +1,135 @@
+==============================================================================
+TUFT-r307 . 常数截面计数的第一原理审计
+date=2026-11-01  degree=0
+==============================================================================
+
+[convention] 左手口径，Q = T3 + Y；口径 (i) 常数轮廓数（承 r302/r305）
+  Q_L  (3,2)_{1/6}         dim=6  Y=1/6   tr=1    (Z3,Z2)=(1,1)
+  u_R^c (3bar,1)_{-2/3}    dim=3  Y=-2/3  tr=-2   (Z3,Z2)=(2,0)
+  d_R^c (3bar,1)_{1/3}     dim=3  Y=1/3   tr=1    (Z3,Z2)=(2,0)
+  L_L  (1,2)_{-1/2}        dim=2  Y=-1/2  tr=-1   (Z3,Z2)=(0,1)
+  e_R^c (1,1)_{1}          dim=1  Y=1     tr=1    (Z3,Z2)=(0,0)
+  SM 六条反常: {'A3': '0', 'A2': '0', 'Ag': '0', 'AYY': '0', 'AYF': '0', 'AFF': '0'}
+
+[theorem-N] 6 个扭转元 -> k 向量（Schur 标量性）
+  g=(a=0,b=0)  phase_exp=[0, 0, 0, 0, 0]  k=(1,1,1,1,1)  T0
+  g=(a=0,b=1)  phase_exp=[3, 0, 0, 3, 0]  k=(0,1,1,0,1)  T2
+  g=(a=1,b=0)  phase_exp=[2, 4, 4, 0, 0]  k=(0,0,0,1,1)  T3
+  g=(a=1,b=1)  phase_exp=[5, 4, 4, 3, 0]  k=(0,0,0,0,1)  T32
+  g=(a=2,b=0)  phase_exp=[4, 2, 2, 0, 0]  k=(0,0,0,1,1)  T3
+  g=(a=2,b=1)  phase_exp=[1, 2, 2, 3, 0]  k=(0,0,0,0,1)  T32
+  distinct k: ['(0,0,0,0,1)', '(0,0,0,1,1)', '(0,1,1,0,1)', '(1,1,1,1,1)']
+
+[theorem-O] 放宽到有符号 k in {-1,0,1}: [(0, '(0,0,0,0,0)'), (1, '(1,1,1,1,1)')]
+[theorem-P] r305 minK = [0, 3, 6, 9, 12, 15, 18]  (其 N = [0, 1, 2, 3, 4, 5, 6])
+            correct K_min(N) = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+            N <= K check: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[theorem-Q] noncentral fixed-dims = [1, 2, 3, 4, 6] ; A4 3-dim trivial mult = 0
+            replication (c components, independent twists): K = c => N <= c
+            special case (identical twists): N in {0, c}
+
+[items]  (kind: eq=相等 / gt=act>exp / info=纯陈述不判决)
+  A01   PASS eq   exp=(1/6,-2/3,1/3,-1/2,1)  act=(1/6,-2/3,1/3,-1/2,1) 
+  A02   PASS eq   exp=(1,-2,1,-1,1)          act=(1,-2,1,-1,1)         
+  A03   PASS eq   exp=0                      act=0                     
+  A04   PASS eq   exp=0                      act=0                     
+  A05   PASS eq   exp=0                      act=0                     
+  A06   PASS eq   exp=0                      act=0                     
+  A07   PASS eq   exp=11/6                   act=11/6                  
+  B01   PASS eq   exp=(1,2,2,0,0)            act=(1,2,2,0,0)           
+  B02   PASS eq   exp=(1,0,0,1,0)            act=(1,0,0,1,0)           
+  B03   PASS eq   exp=4                      act=4                     
+  B04   PASS eq   exp=[(0,0,0,0,1),(0,0,0,1, act=[(0,0,0,0,1),(0,0,0,1,
+  B05   PASS eq   exp=4                      act=4                     
+  B06   PASS eq   exp=30                     act=30                    
+  B07   PASS eq   exp=1                      act=1                     
+  B08   PASS eq   exp=3                      act=3                     
+  B09   PASS eq   exp=30                     act=30                    
+  B10   PASS eq   exp=30                     act=30                    
+  B11   PASS eq   exp=1                      act=1                     
+  B12   INFO info exp=k<=1 derived under H1^ act=k<=1 derived under H1^
+  C01   PASS eq   exp=2                      act=2                     
+  C02   PASS eq   exp=0                      act=0                     
+  C03   PASS eq   exp=0                      act=0                     
+  C04   PASS eq   exp=[(0,0,0,0,0),(1,1,1,1, act=[(0,0,0,0,0),(1,1,1,1,
+  C05   PASS eq   exp=[0, 1, 2, 3, 4, 5, 6,  act=[0, 1, 2, 3, 4, 5, 6, 
+  C06   PASS eq   exp=0                      act=0                     
+  C07   INFO info exp=relaxation does not he act=relaxation does not he
+  C08   PASS eq   exp=4                      act=4                     
+  D01   PASS eq   exp=[0, 3, 6, 9, 12, 15, 1 act=[0, 3, 6, 9, 12, 15, 1
+  D02   PASS eq   exp=[0, 0, 0, 0, 0, 0, 0]  act=[0, 0, 0, 0, 0, 0, 0] 
+  D03   PASS eq   exp=[0, 1, 2, 3, 4, 5, 6]  act=[0, 1, 2, 3, 4, 5, 6] 
+  D04   PASS eq   exp=[0, 1, 2, 3, 4, 5, 6,  act=[0, 1, 2, 3, 4, 5, 6, 
+  D05   PASS eq   exp=[0, 0, 0, 0, 0, 0, 0,  act=[0, 0, 0, 0, 0, 0, 0, 
+  D06   PASS eq   exp=(3,3,3,3,3)            act=(3,3,3,3,3)           
+  D07   PASS eq   exp=(3,3,3,3,3)            act=(3,3,3,3,3)           
+  D08   PASS eq   exp=0                      act=0                     
+  D09   PASS eq   exp=(0,9,0,6,0)            act=(0,9,0,6,0)           
+  D10   PASS eq   exp=(3,3,3,3,3)            act=(3,3,3,3,3)           
+  D11   PASS eq   exp=[0, 1, 2, 3, 4, 5, 6,  act=[0, 1, 2, 3, 4, 5, 6, 
+  D12   PASS eq   exp=0                      act=0                     
+  D13   PASS eq   exp=0                      act=0                     
+  D14   PASS eq   exp=3                      act=3                     
+  E01   PASS gt   exp=1                      act=5                     
+  E02   PASS eq   exp=2                      act=2                     
+  E03   PASS eq   exp=6                      act=6                     
+  E04   PASS eq   exp=12                     act=12                    
+  E05   PASS eq   exp=0                      act=0                     
+  E05b  PASS eq   exp=3                      act=3                     
+  E03b  PASS eq   exp=1                      act=1                     
+  E06   PASS eq   exp=1299                   act=1299                  
+  E07   PASS eq   exp=[1, 2, 3, 4, 5, 6]     act=[1, 2, 3, 4, 5, 6]    
+  E08   PASS eq   exp=[3, 4, 5, 6]           act=[3, 4, 5, 6]          
+  E09   PASS eq   exp=(3,3,3,3,3)            act=(3,3,3,3,3)           
+  E10   PASS eq   exp=0                      act=0                     
+  E11   PASS eq   exp=6                      act=6                     
+  E11b  PASS eq   exp=[0, 1, 2, 3, 4, 5, 6]  act=[0, 1, 2, 3, 4, 5, 6] 
+  E12   INFO info exp=X-R305-1 closed negati act=X-R305-1 closed negati
+  F01   INFO info exp=convention (i) profile act=convention (i) profile
+  F02   INFO info exp=convention (ii) fixed- act=convention (ii) fixed-
+  F03   PASS eq   exp=0                      act=0                     
+  F04   PASS eq   exp=0                      act=0                     
+  F05   PASS eq   exp=0                      act=0                     
+  F06   INFO info exp=true index form left O act=true index form left O
+  H01   PASS eq   exp=64                     act=64                    
+  H02   PASS eq   exp=0                      act=0                     
+  H03   PASS eq   exp=4                      act=4                     
+  H04   PASS eq   exp=0                      act=0                     
+  H04b  PASS eq   exp=8                      act=8                     
+  H05   PASS gt   exp=0                      act=56                    
+  H06   PASS eq   exp=0                      act=0                     
+
+[controls]
+  CTL1   PASS  负对照（关键）：**完全去掉 k 的上界 K**、只留「k 为非负整数」⇒ 三代解立刻成片出现 ⇒ 证明上界 K 是**真约束**、不是装饰
+  CTL2   PASS  负对照：把相位公式写成 `3a·n3 + 2b·n2`（Z_3 与 Z_2 权重互换）⇒ k 向量集合必须崩掉，证明「中心荷 ⇒ 相位」这条
+  CTL3   PASS  正对照：把 e_R^c 的中心荷人为改成 (1,1) ⇒ 4 个 k 向量全部改变 ⇒ 表对每个表示的荷**敏感**
+  CTL4   PASS  **关键负对照**：同一个 A_4，取 ρ = 1⊕1⊕1（3 份平凡表示）⇒ 重数 = 3 ⇒ **只有「复制」才给 k=3，不可约表示给
+  CTL5   PASS  正对照：c=2 与 c=3 都自洽（n≡2 与 n≡3），且六条反常都为零 ⇒ 「无选择性」是**机制本身的性质**，不是我们只试了 3
+  CTL6   PASS  正对照：定理 N 的链「Dynkin ⇒ 中心荷 ⇒ 相位 ⇒ k」给出 4 个 k 向量，与 r302 手写 `k_of()` 完全一致 
+  CTL7   PASS  负对照：把 k 的上界从 1 跳到 3 ⇒ 三代立刻出现（k=(3,3,3,3,3)）⇒ K 是**唯一承重点**，定理 P 的 N ≤ K
+  CTL8   PASS  正对照：r305 的 t=3 构造 (0,9,0,6,0) 确给 N=3 ⇒ **r305 的算术没错**，错的是把 t 标成代数
+  CTL9   PASS  负对照：直径（φ=0）时 Q_L 的六权**全同相位** ⇒ 口径 (ii) 给 6 而非 1 ⇒ 证明 (i)(ii) 确是两种不同读法，
+  CTL10  PASS  正对照：定理 P 的闭式 max k = N+2t 与穷举结果在 K=0..9、N=0..39 上逐点一致
+  CTL11  PASS  负对照：把 k_2 的系数由 2t 误写成 t ⇒ r305 那条 λ=0 切片给出的最小 K 变成 2t 而不是 3t，与 r305 的独
+
+[summary] items=69 PASS=63 FAIL=0 INFO=6
+[pricing] 2^6=64 strict=0 loose5=4 achievable=56 S2^S6=8
+
+[guards] 14/14
+  G01  PASS  verdict 合法（大写、含判词主体、长度 ≥ 40） ; X-R305-1-CLOSED-NEGATIVELY__K-LE-1-IS-TH
+  G02  PASS  items 数与 json 一致（写盘后回读） ; json=69 mem=69
+  G03  PASS  控制组全过 ; 11/11
+  G04  PASS  Decimal 精度 ≥ 50 ; prec=60
+  G05  PASS  源码无 random 导入（确定性） ; 行首 import/from random 命中 0（用行首正则避免守卫自身源码
+  G06  PASS  report/json 逐条一致（写盘后回读） ; 逐条一致 + report 已落盘
+  G07  PASS  verdict 由计数驱动（strict==0 与 KminN(3)==3 都进入判词构造） ; strict=0 KminN(3)=3
+  G08  PASS  定价覆盖本卷最硬发现（S6 = 连通性 = k_R≤1 的来源） ; S2∧S3∧S6 可达 = 0
+  G09  PASS  **无同义反复（源码级）**：exp 与 act 不得是同一个带引号字面量 ; 命中 0 条：[]
+  G10  PASS  字面 True 的 control/guard 计数如实登记 ; 字面 True 出现 3 处（均为「待回读」占位，写盘后实测）
+  G11  PASS  Schur 表由中心荷机械生成（非手写 k 向量） ; 6 个扭转元的 k 全部由 phase_exp 生成
+  G12  PASS  与 r302 k 表逐项一致 ; 4/4
+  G13  PASS  定理 P（N ≤ K）在 K=0..9 上全局验证、反例 0 ; N_max=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  G14  PASS  自审修正已登记（r305 的 3t 与修正后的 N 同时出现） ; r305=[0, 3, 6, 9, 12, 15, 18] 修正=[0, 1, 
+
+[verdict] X-R305-1-CLOSED-NEGATIVELY__K-LE-1-IS-THEOREM-ONLY-UNDER-CENTRAL-CONNECTED__AND-R305-KMIN-CORRECTED-FROM-3T-TO-N
+==============================================================================

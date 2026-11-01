@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>TUFT-r332 · G4 null Frenet 标架重写</title>
+<style>
+body{margin:0;padding:24px;background:#f7f8fa;color:#1f2328;font-family:"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid #2b5c9b}
+.sub{color:#5b6470;font-size:13px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #dfe3e8;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.mono{font-family:Consolas,monospace;font-size:12px;color:#5b6470}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:#1a7f37}.FAIL{background:#c0392b}.BOUNDARY{background:#b8860b}.INFO{background:#2f6f9f}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.kpi{background:#fff;border:1px solid #dfe3e8;border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:#5b6470}.kpi .v{font-size:19px;font-weight:600;margin-top:2px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;background:#fff}
+th,td{border:1px solid #dfe3e8;padding:5px 9px;text-align:right}
+th{background:#eef1f5;text-align:center}td.c{text-align:center}
+.multi{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.multi{grid-template-columns:1fr}}
+.fig{background:#fff;border:1px solid #dfe3e8;border-radius:8px;padding:10px}
+</style></head><body>
+<h1>TUFT-r332 · G4 null Frenet 标架重写（光速螺旋缺口 G4 / 封死点 S10）</h1>
+<div class="sub">2026-11-01 · 判词：<b>NULL-FRENET-DEGENERACY-DIAGNOSED-BY-NULL-NORMAL-SPACE / PSEUDO-ARCLENGTH-REBUILD-VERIFIED / LORENTZ-SCOPE-LIMITED-REFERENCE-FRAME-ONLY / S10-PARTIALLY-UNLOCKED-3D-PROJECTION-ONLY / STILL-KINEMATIC-NO-FIELD-EQUATION-ALPHA-STILL-INPUT</b></div>
+<h2>一、总账</h2><div class="grid" id="kpi"></div>
+<h2>二、螺旋的 3D 投影与 Frenet 标架（伪参量化 σ）</h2>
+<div class="multi">
+<div class="fig"><svg viewBox="0 0 520 260" width="100%" height="auto" id="helix"></svg></div>
+<div class="card" id="rebuild"></div>
+</div>
+<h2>三、Frenet–Serret 三式数值残差（r=p=28 m，h=1e-6）</h2><div id="fs"></div>
+<h2>四、洛伦兹助推：非不变性的精确读数</h2><div class="card" id="boost"></div>
+<h2>五、两锚同源反解</h2><div class="card" id="anchor"></div>
+<h2>六、条目逐条</h2><div id="items"></div>
+<script>
+const D={
+"kpis":[["条目总数",22],["PASS",20],["BOUNDARY",1],["FAIL",0],["控制组","4/4"],["守卫","10/10"],["rc",0],["运行","1.5 s"]],
+"rebuild":[["σ(φ)","√(r²+p²)·φ（严格正 ⇒ 单调可逆）"],["κ_sp","r/(r²+p²)　[L⁻¹]"],["|τ_sp|","p/(r²+p²)　[L⁻¹]"],["κ²+τ²","1/(r²+p²)"],["恒等式","ω² = c²(κ²+τ²)（残差 0，λ=t、ṫ=1）"],["τ 对拍","ωv_z/c² = p/(r²+p²)（与 |τ_sp| 差 0）"]],
+"fs":[[0.1,6.56e-13,7.63e-14,6.56e-13],[0.5,4.56e-13,1.97e-13,4.56e-13],[1.0,6.25e-13,9.86e-13,6.25e-13],[2.0,5.64e-13,7.23e-13,5.64e-13],[3.0,2.28e-12,3.29e-12,2.28e-12]],
+"items":[{"id":"Q1","v":"PASS","t":"null 曲线 Frenet 退化诊断（ds²=0 + 法空间退化，双证）","d":"null 残差 0；法空间含 k 自身（g(k,k)=0），1/k² 数值 ε=1e-16 → 1e16 ⇒ 法向不唯一。S10 成立且比「ds=0」更深。"},{"id":"Q2","v":"PASS","t":"伪参量化重建：σ 严格正，κ_sp、|τ_sp| 为 L⁻¹","d":"以 3D 欧氏范数 √(r²+p²) 定义 σ；κ_sp=r/(r²+p²)、|τ_sp|=p/(r²+p²)。"},{"id":"Q3","v":"PASS","t":"Frenet–Serret 三式在 σ 下重推","d":"解析残差恒等为零；数值最大残差 3.29e-12（5 点×3 式）。"},{"id":"Q4","v":"PASS","t":"保留资产 1 与 r95 τ 公式对拍","d":"ω²=c²(κ²+τ²) 与 τ=ωv_z/c² 均为重建推论（残差 0），非独立假设。"},{"id":"Q5","v":"PASS","t":"极限与连续性","d":"p→0：κ→1/r、τ→0；r→0：κ→0、τ→1/p ⇒ 连续退回经典/退化值。"},{"id":"Q6","v":"BOUNDARY","t":"洛伦兹非不变（不变量门未过）","d":"β=1/2：κ'/κ=8/7（精确）、τ'/τ=4√3/7≈0.989743 ⇒ 仅参考系内有效。"},{"id":"Q7","v":"PASS","t":"S10 状态更新","d":"时空内积层 INVALID / 3D 投影层 VALID / 协变层 INVALID ⇒ S10 收窄为「仅 3D 投影层有效」。"},{"id":"Q8","v":"PASS","t":"两锚同源反解","d":"D=5.2586e-17、r=9.3904e-19 m、p=7.2516e-9 m、v_z/c=1.0 ⇒ 两锚自洽、非公式冲突。"},{"id":"C1","v":"PASS","t":"mpmath 50 位复核","d":"r=p=28 m ⇒ κ=1/56，与 Fraction(1,56) 差 <1e-40。"},{"id":"C2","v":"PASS","t":"经典极限对照","d":"p=0 纯空间圆 ⇒ κ=1/r、τ=0。"},{"id":"C3","v":"PASS","t":"负对照（工具有牙）","d":"轴向直线 κ=0 精确，不伪造曲率。"},{"id":"C4","v":"PASS","t":"量纲四元组 (M,L,T,Q)","d":"κ、τ 均为 L⁻¹，与 r241 口径一致。"},{"id":"G1–G10","v":"PASS","t":"守卫 10/10","d":"dps=50；计数 22；仅写本卷；verdict 合法；控制组 4/4；取号 r332 四处无命中；FS 残差零；对拍零；1.5 s；不跑 refresh_catalog.py / 不 git / 不触碰 r95,r151,r241,r242。"}]
+};
+document.getElementById('kpi').innerHTML=D.kpis.map(e=>'<div class="kpi"><div class="k">'+e[0]+'</div><div class="v">'+e[1]+'</div></div>').join('');
+document.getElementById('rebuild').innerHTML=D.rebuild.map(e=>'<div class="mono" style="margin:3px 0"><b>'+e[0]+'</b> = '+e[1]+'</div>').join('');
+document.getElementById('fs').innerHTML='<table><tr><th>φ</th><th>‖dT/dσ−κN‖</th><th>‖dN/dσ+κT−τB‖</th><th>‖dB/dσ+τN‖</th></tr>'+D.fs.map(e=>'<tr><td class="c">'+e[0].toFixed(1)+'</td><td>'+e[1].toExponential(2)+'</td><td>'+e[2].toExponential(2)+'</td><td>'+e[3].toExponential(2)+'</td></tr>').join('')+'</table>';
+document.getElementById('boost').innerHTML='<div class="mono">沿 z 助推 β=1/2 ⇒ γ²=4/3、p′²=(1−β²)p²=3p²/4、r′=r。取 r=p：</div><div class="mono" style="margin-top:6px">κ = 1/(2r) → κ′ = r/(r²+3p²/4) = 4/(7r)　⇒　κ′/κ = <b>8/7 ≈ 1.142857</b></div><div class="mono">τ = 1/(2p) → τ′ = 4√3/(7p)　⇒　τ′/τ = <b>4√3/7 ≈ 0.989743</b></div><div class="mono" style="margin-top:6px;color:#b8860b">⇒ 两个读数都随参考系改变：非洛伦兹不变量（承 r54 N14），下游承重必须声明参考系。</div>';
+document.getElementById('anchor').innerHTML='<div class="mono">设 κ=1/56 m⁻¹（曲率半径 56 m）与 τ=1.379×10⁸ m⁻¹（r95 玻尔锚）取自同一螺旋：</div><div class="mono" style="margin-top:6px">D = 1/(κ²+τ²) = 5.2586×10⁻¹⁷　·　r = κD = 9.3904×10⁻¹⁹ m　·　p = τD = 7.2516×10⁻⁹ m</div><div class="mono">v_z/c = p/√D = 1.0　·　r/p = 1.295×10⁻¹⁰</div><div class="mono" style="margin-top:6px">⇒ 两锚在同源假设下自洽（此前看似相差 7.7×10⁹ 倍，实为同一曲线的不同参量分支）。</div>';
+document.getElementById('items').innerHTML=D.items.map(x=>'<div class="card"><span class="tag '+x.v+'">'+x.v+'</span> <b>'+x.id+'</b> · '+x.t+'<div class="mono" style="margin-top:6px">'+x.d+'</div></div>').join('');
+
+// 螺旋投影图：轴 + 螺旋曲线（φ∈[0,4π]）
+(function(){
+ var svg=document.getElementById('helix'), W=520,H=260,cx=260,cy=130,R=56,p=56;
+ var NS='http://www.w3.org/2000/svg';
+ function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+ var g=el('g',{});
+ g.appendChild(el('line',{x1:cx,y1:16,x2:cx,y2:H-16,stroke:'#c9d1da','stroke-width':1,'stroke-dasharray':'4 4'}));
+ var pts=[];
+ for(var i=0;i<=120;i++){
+   var ph=i/120*4*Math.PI;
+   pts.push((cx+R*Math.cos(ph)).toFixed(2)+','+(cy+20*Math.sin(ph)-p*0.30*ph/2).toFixed(2));
+ }
+ g.appendChild(el('polyline',{points:pts.join(' '),fill:'none',stroke:'#2b5c9b','stroke-width':2}));
+ var t=el('text',{x:10,y:22,fill:'#5b6470','font-size':12});
+ t.textContent='3D 欧氏投影：R(φ)=(r cosφ, r sinφ, pφ)';g.appendChild(t);
+ var t2=el('text',{x:10,y:H-10,fill:'#5b6470','font-size':12});
+ t2.textContent='σ = √(r²+p²)·φ（严格正 ⇒ 可替代 ds=0 的弧长）';g.appendChild(t2);
+ svg.appendChild(g);
+})();
+</script></body></html>

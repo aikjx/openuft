@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r346 · 整数 Newton 系数是三行初等事实而非几何定理</title>
+<style>
+  :root { --bg:#f7f8fa; --card:#ffffff; --ink:#1f2328; --sub:#5b6570;
+          --line:#d8dee6; --true:#2f7d4f; --false:#b23a3a; --accent:#2f5fb3; --warn:#9a6b00; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:var(--bg); color:var(--ink);
+         font-family:"Segoe UI","Microsoft YaHei",sans-serif; line-height:1.65; }
+  .wrap { max-width:1000px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 6px; }
+  h2 { font-size:16px; margin:26px 0 8px; padding-left:9px; border-left:4px solid var(--accent); }
+  .sub { color:var(--sub); font-size:13px; margin-bottom:14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px;
+          padding:14px 16px; margin:12px 0; }
+  .verdict { font-family:Consolas,monospace; font-size:11.5px; word-break:break-all;
+             background:#eef2f8; border:1px solid var(--line); border-radius:6px; padding:10px; }
+  table { border-collapse:collapse; width:100%; font-size:12.5px; margin-top:8px; }
+  th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; }
+  th { background:#eef2f8; }
+  .t { color:var(--true); font-weight:600; }
+  .f { color:var(--false); font-weight:600; }
+  .w { color:var(--warn); font-weight:600; }
+  .fig { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px; }
+  .cap { font-size:12px; color:var(--sub); margin:6px 2px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT-r346 · 整数 Newton 系数是三行初等事实而非几何定理</h1>
+  <div class="sub">攻 <code>X-R339-1</code> · 2026-11-01 · items 25（PASS 25 / FAIL 0 / INFO 0）· 控制组 13/13 · 守卫 19/19 · rc=0 · 不占度（候选 37）</div>
+
+  <div class="card">
+    <b>一句话</b>：<code>a_j ∈ Z</code> 与 <code>Z ⊆ S</code> 都是关于<b>多项式</b>的平凡事实（前者是有限差分的整数组合，后者是 <code>S</code> 的定义），
+    对任意射影簇成立、判别力为 0 —— r339 拿它们当几何定理是<b>读高了</b>。
+    真有内容的只有两条初等定理：<b>分母整除首项 Newton 系数</b>（<code>k=r/M ∈ S ⇒ M | a_n</code>，无假设）与<b>陪集内积分性周期</b>（⇒ <code>S</code> 是有限个等差级数之并）。
+  </div>
+
+  <h2>图 1 · 引理 L：两条路径给出同一批 Newton 系数（130 项，失配 0）</h2>
+  <div class="fig"><svg id="fig1" viewBox="0 0 680 300"></svg></div>
+  <div class="cap">左：递推差分 <code>Δ^j P(0)</code>；右：闭式整数组合 <code>Σ_i (−1)^(j−i) C(j,i) P(i)</code>。两条路径在 130 项上完全一致 ⇒ 恒等式成立，且证明只用到「整数组合仍是整数」。</div>
+  <div class="card"><div id="tbl1"></div></div>
+
+  <h2>图 2 · 降级：它既不是几何定理，也不是完整校验器</h2>
+  <div class="fig"><svg id="fig2" viewBox="0 0 680 350"></svg></div>
+  <div class="cap">左：72 组全部通过 ⇒ 判别力 0。中：但算错 td 立刻非整 27/30 与 29/30 ⇒ 是 bug 探测器。右：仍有 3 组与 1 组「算错却仍全整」（如 <code>(1,2)</code> 错给 <code>(0,2)</code> vs 正确 <code>(1,2)</code>）⇒ 必要非充分。</div>
+  <div class="card"><div id="tbl2"></div></div>
+
+  <h2>图 3 · 定理 C：出现的分母全部整除次数 d</h2>
+  <div class="fig"><svg id="fig3" viewBox="0 0 680 430"></svg></div>
+  <div class="cap">横轴 <code>d</code>（次数），纵轴出现的分母 <code>M</code>。所有点都落在「<code>M | d</code>」上（对角带内）：<code>d=12</code> 一行给出 2、3、4、6、12；<code>d=7</code> 只给 7；<code>d=11</code> 只给 11。⇒ <code>S ⊆ (1/d)Z</code>，且 <code>n=1</code> 时等号成立（d=1..24 全中）。</div>
+  <div class="card"><div id="tbl3"></div></div>
+
+  <h2>图 4 · 定理 D：S 是有限个等差级数之并（r339 的「非陪集」由此解释）</h2>
+  <div class="fig"><svg id="fig4" viewBox="0 0 680 330"></svg></div>
+  <div class="cap">上：数轴示意 <code>Z</code>（黑）与 <code>c=1/2</code> 上周期 4 的级数（红）—— 两个不同模数拼在一起，仿射封闭 <code>u−v+w</code> 必然失败，所以「非陪集」是结构性必然而非混沌。下：81 个陪集的实测最小周期分布，最大 64（<code>N | M^n</code> 已被 <code>(5,2)</code> 否证）。</div>
+  <div class="card"><div id="tbl4"></div></div>
+
+  <h2>判定（机读）</h2>
+  <div class="verdict">X-R339-1-ANSWERED__THE-GENERAL-PROOF-IS-A-THREE-LINE-FINITE-DIFFERENCE-IDENTITY-AND-NEEDS-NO-GEOMETRY__SO-R339-THEOREM-B-IS-DEMOTED-FROM-A-THEOREM-TO-A-DEFINITION-TAUTOLOGY__ITS-30-OF-30-CHECK-IS-A-BUG-DETECTOR-WHICH-IS-NECESSARY-BUT-NOT-SUFFICIENT__Z-SUBSET-S-HOLDS-ON-EVERY-POLARIZED-VARIETY-SO-THE-PREDICATE-HAS-ZERO-DISCRIMINATING-POWER__THE-REAL-THEOREM-IS-ASSUMPTION-FREE-M-DIVIDES-THE-LEADING-NEWTON-COEFFICIENT__HENCE-S-IS-CONTAINED-IN-ONE-OVER-DEG-Z-WHICH-IS-SHARP-ONLY-FOR-N-EQUALS-ONE__AND-INTEGRALITY-IS-PERIODIC-ON-EACH-COSET-SO-S-IS-A-FINITE-UNION-OF-ARITHMETIC-PROGRESSIONS__R339-NOT-OVERTURNED-BUT-RECERTIFIED-AND-THE-CREDIT-REDISTRIBUTED__STILL-NOT-PREDICTED</div>
+
+  <h2>最终一句</h2>
+  <div class="card">「整性约束了通量」是一句关于多项式的话，不是关于流形的话：<code>a_j ∈ Z</code> 是整数组合仍是整数，<code>Z ⊆ S</code> 是 <code>S</code> 的定义 —— 两条都不承重。真正有内容的东西是初等的：分母整除首项 Newton 系数，于是 <code>S</code> 被压进 <code>(1/d)Z</code>；每个陪集内积分性周期，于是 <code>S</code> 是有限个等差级数之并 —— 后者顺手把 r339 的「非陪集」从「混沌」改写成了「并集」。</div>
+</div>
+
+<script>
+function mk(svg, tag, a) {
+  var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in a) { e.setAttribute(k, a[k]); }
+  svg.appendChild(e);
+  return e;
+}
+function tx(svg, x, y, s, fs, fill, anchor) {
+  var t = mk(svg, 'text', { x: x, y: y, 'font-size': fs || 12,
+                            fill: fill || '#333', 'text-anchor': anchor || 'start' });
+  t.textContent = s;
+  return t;
+}
+function rbox(svg, x, y, w, h, fill, stroke, rx) {
+  // 不做钳位：钳位会把「零宽/负宽」这类 bug 藏起来（几何体检器专门查这个）
+  return mk(svg, 'rect', { x: x, y: y, width: w, height: h, fill: fill,
+                           stroke: stroke || '#c9d1db', rx: rx || 4 });
+}
+function bar(svg, x, y, w, h, fill) {
+  if (w <= 0) { w = 1; }
+  if (h <= 0) { h = 1; }
+  return mk(svg, 'rect', { x: x, y: y, width: w, height: h, fill: fill, stroke: '#ffffff' });
+}
+
+// ---------------------------------------------------------------- 图 1
+(function () {
+  var s = document.getElementById('fig1');
+  var H = 300;
+  mk(s, 'rect', { x: 0, y: 0, width: 680, height: H, fill: '#ffffff' });
+  tx(s, 14, 22, '路径 A：递推差分', 13, '#1f2328');
+  tx(s, 366, 22, '路径 B：闭式整数组合', 13, '#1f2328');
+
+  // 差分三角（P(0)..P(4) 逐级相减）
+  var rows = [4, 3, 2, 1, 0];
+  var baseY = 60, dy = 34;
+  for (var r = 0; r < 5; r++) {
+    var cnt = 5 - r, y = baseY + r * dy;
+    for (var i = 0; i < cnt; i++) {
+      var x = 24 + i * 62 + r * 31;
+      mk(s, 'circle', { cx: x, cy: y, r: 13, fill: '#dbe6f7', stroke: '#2f5fb3' });
+      tx(s, x, y + 4, 'P' + i, 10, '#2f5fb3', 'middle');
+      if (r > 0) {
+        mk(s, 'line', { x1: x - 31 + 12, y1: y - dy + 4, x2: x - 12, y2: y - 12,
+                        stroke: '#8fa3c4', 'stroke-width': 1 });
+        mk(s, 'line', { x1: x + 31 - 12, y1: y - dy + 4, x2: x + 12, y2: y - 12,
+                        stroke: '#8fa3c4', 'stroke-width': 1 });
+      }
+    }
+  }
+  tx(s, 24, 250, 'a_j = Δ^j P(0)（逐级相减）', 11.5, '#5b6570');
+
+  // 右侧：闭式组合
+  var bxx = 356, byy = 56;
+  rbox(s, bxx, byy, 300, 44, '#eef2f8', '#2f5fb3', 6);
+  tx(s, bxx + 150, byy + 27, 'Σ_i (−1)^(j−i) · C(j,i) · P(i)', 12.5, '#1f2328', 'middle');
+  for (var t = 0; t < 3; t++) {
+    rbox(s, bxx + 10 + t * 96, byy + 60, 84, 30, '#f6f8fb', '#c9d1db', 4);
+    tx(s, bxx + 52 + t * 96, byy + 80, ['C(j,i) ∈ Z', 'P(i) ∈ Z', '⇒ a_j ∈ Z'][t], 10.5, '#5b6570', 'middle');
+  }
+  mk(s, 'line', { x1: bxx + 150, y1: byy + 96, x2: bxx + 150, y2: byy + 128, stroke: '#8fa3c4' });
+  rbox(s, bxx + 40, byy + 130, 220, 40, '#e6f2ea', '#2f7d4f', 6);
+  tx(s, bxx + 150, byy + 155, '整数组合 ⇒ 整数（零几何输入）', 12, '#2f7d4f', 'middle');
+
+  // 箭头 A→B
+  mk(s, 'line', { x1: 300, y1: 150, x2: 348, y2: 150, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 348 150 L 338 144 L 338 156 Z', fill: '#8fa3c4' });
+  tx(s, 304, 142, '130 项', 11, '#5b6570');
+  tx(s, 304, 168, '失配 0', 11, '#2f7d4f');
+
+  tx(s, 14, 280, 'A01：30 组 × (n+1) = 130 项逐项一致，失配 0 ｜ A02：去掉前提的 3 族全非整 ｜ A03：纯组合多项式同样成立', 11.5, '#5b6570');
+})();
+
+// ---------------------------------------------------------------- 图 2
+(function () {
+  var s = document.getElementById('fig2');
+  mk(s, 'rect', { x: 0, y: 0, width: 680, height: 350, fill: '#ffffff' });
+  var titles = ['（左）72 组全部通过', '（中）算错立刻被抓', '（右）但会漏检'];
+  var colors = ['#2f5fb3', '#b23a3a', '#9a6b00'];
+  var rows = [
+    ['非整组数', '0 / 72', '27/30 · 29/30', '漏 3 组 · 1 组'],
+    ['含义', '判别力 0', '是 bug 探测器', '必要非充分'],
+    ['结论', '不是判据', '可当筛子', '通过 ≠ 算对']
+  ];
+  var W = 200, x0 = 20, gap = 20;
+  for (var c = 0; c < 3; c++) {
+    var x = x0 + c * (W + gap);
+    rbox(s, x, 20, W, 120, '#f6f8fb', colors[c], 8);
+    tx(s, x + W / 2, 44, titles[c], 12, colors[c], 'middle');
+    for (var r = 0; r < 3; r++) {
+      tx(s, x + 12, 70 + r * 22, rows[r][0], 11, '#5b6570');
+      tx(s, x + W - 12, 70 + r * 22, rows[r][c + 1], 11, colors[c], 'end');
+    }
+  }
+
+  // 条形：非整组数对比
+  tx(s, 20, 176, '非整组数对比（0 / 27 / 29 / 漏检 3 / 漏检 1）', 12, '#1f2328');
+  var bars = [['正确 td', 0, '#2f7d4f'], ['错：少一个 T', 27, '#b23a3a'],
+              ['错：逐元素幂', 29, '#b23a3a'], ['漏检（少 T）', 3, '#9a6b00'],
+              ['漏检（幂）', 1, '#9a6b00']];
+  var bx = 20, by = 190, bw = 128, bh = 22, sc = 3.2;
+  for (var i = 0; i < bars.length; i++) {
+    var w = Math.max(2, bars[i][1] * sc);
+    bar(s, bx, by + i * (bh + 8), w, bh, bars[i][2]);
+    tx(s, bx + w + 8, by + i * (bh + 8) + 16, bars[i][0] + ' · ' + bars[i][1], 11, '#5b6570');
+  }
+  // 反例框
+  rbox(s, 340, 190, 320, 110, '#fdf6e6', '#9a6b00', 8);
+  tx(s, 356, 212, '最刺眼的漏检（A06）', 12, '#9a6b00');
+  tx(s, 356, 236, '(1,2)：错算 a = (0, 2)', 11.5, '#5b6570');
+  tx(s, 356, 256, '(1,2)：正确 a = (1, 2)', 11.5, '#5b6570');
+  tx(s, 356, 282, 'χ 差了 1，Newton 系数仍全整 ⇒「整数守恒的错」整块穿过筛子', 11, '#9a6b00');
+  tx(s, 20, 312, 'A05：27/30 与 29/30 ｜ A06：3 组与 1 组 ｜ 未响应组 (1,2) (1,4) (3,6)；(1,4)', 11.5, '#5b6570');
+})();
+
+// ---------------------------------------------------------------- 图 3
+(function () {
+  var s = document.getElementById('fig3');
+  mk(s, 'rect', { x: 0, y: 0, width: 680, height: 430, fill: '#ffffff' });
+  tx(s, 14, 20, '分母谱：(d, M) 出现的配对全部满足 M | d', 12.5, '#1f2328');
+
+  var pairs = { 2: [2], 3: [3], 4: [2, 4], 5: [5], 6: [2, 3, 6], 7: [7],
+                8: [2, 4, 8], 9: [3, 9], 10: [2, 5, 10], 11: [11], 12: [2, 3, 4, 6, 12] };
+  var x0 = 74, y0 = 44, cw = 48, ch = 22, Mmax = 12;
+  // 表头：d
+  for (var d = 1; d <= 12; d++) {
+    tx(s, x0 + (d - 1) * cw + cw / 2, y0 - 6, 'd=' + d, 10.5, '#5b6570', 'middle');
+  }
+  // 网格
+  for (var M = 1; M <= Mmax; M++) {
+    tx(s, x0 - 8, y0 + (M - 1) * ch + 15, 'M=' + M, 10.5, '#5b6570', 'end');
+    for (var dd = 1; dd <= 12; dd++) {
+      rbox(s, x0 + (dd - 1) * cw, y0 + (M - 1) * ch, cw - 2, ch - 2,
+          (dd % M === 0) ? '#eef2f8' : '#ffffff', '#dde3ea', 2);
+    }
+  }
+  // 打点
+  for (var kd in pairs) {
+    var dv = parseInt(kd, 10);
+    for (var q = 0; q < pairs[kd].length; q++) {
+      var mm = pairs[kd][q];
+      mk(s, 'circle', { cx: x0 + (dv - 1) * cw + (cw - 2) / 2,
+                        cy: y0 + (mm - 1) * ch + (ch - 2) / 2,
+                        r: 6, fill: '#2f5fb3', stroke: '#ffffff' });
+    }
+  }
+  tx(s, x0, y0 + Mmax * ch + 24, '灰底格 = M | d（合法区）；蓝点 = 实测出现的分母。所有点都在合法区内。', 11.5, '#5b6570');
+  tx(s, x0, y0 + Mmax * ch + 44, 'B01 违例 0（72 组 × M ≤ 24） ｜ B03 扫到 6d 命中 0 ｜ B06 越界 0 ｜ CTL11：a_n = d，72 组违例 0', 11.5, '#5b6570');
+  rbox(s, x0, y0 + Mmax * ch + 58, 560, 46, '#e6f2ea', '#2f7d4f', 6);
+  tx(s, x0 + 280, y0 + Mmax * ch + 86, '推论：S ⊆ (1/d)Z；n = 1 时等号成立（d = 1..24，24/24 全中）', 12, '#2f7d4f', 'middle');
+})();
+
+// ---------------------------------------------------------------- 图 4
+(function () {
+  var s = document.getElementById('fig4');
+  mk(s, 'rect', { x: 0, y: 0, width: 680, height: 330, fill: '#ffffff' });
+  tx(s, 14, 20, '上：Z 与 (c=1/2, 周期 4) 两个级数之并 —— 仿射封闭必然失败', 12.5, '#1f2328');
+
+  var ax = 30, ay = 120;
+  mk(s, 'line', { x1: ax, y1: ay, x2: 650, y2: ay, stroke: '#5b6570', 'stroke-width': 1 });
+  var step = 26;
+  for (var i = 0; i <= 23; i++) {
+    var x = ax + i * step;
+    mk(s, 'line', { x1: x, y1: ay - 5, x2: x, y2: ay + 5, stroke: '#5b6570' });
+    mk(s, 'circle', { cx: x, cy: ay - 26, r: 5, fill: '#1f2328' });
+    tx(s, x, ay + 20, String(i - 11), 9.5, '#5b6570', 'middle');
+  }
+  // 红点：c=1/2 上周期 4（m ≡ 5/2 mod 4 之类；这里按 (3,2) 实测相位画）
+  var half = [-11 / 2, -3 / 2, 5 / 2, 13 / 2, 21 / 2];
+  for (var j = 0; j < half.length; j++) {
+    var hx = ax + (half[j] + 11) * step;
+    mk(s, 'circle', { cx: hx, cy: ay - 26, r: 5.5, fill: '#b23a3a', stroke: '#ffffff' });
+    tx(s, hx, ay - 38, String(half[j]), 9.5, '#b23a3a', 'middle');
+  }
+  tx(s, ax, ay - 56, '黑 = Z（全部整数） ｜ 红 = c=1/2 上周期 4 的子级数（(3,2) 实测）', 11, '#5b6570');
+  tx(s, ax, ay + 44, 'u=−6, v=−11/2, w=−4 都在 S 内，而 u−v+w = −9/2 ∉ S ⇒ 非陪集是「不同模数拼一起」的必然结果', 11, '#b23a3a');
+
+  tx(s, 14, 208, '下：81 个陪集的实测最小周期分布', 12.5, '#1f2328');
+  var dist = [[1, 70], [2, 2], [4, 3], [16, 1], [32, 2], [64, 3]];
+  var bx = 40, by = 220, bw = 40, gap = 16, sc = 1.4;
+  for (var t = 0; t < dist.length; t++) {
+    var hh = Math.max(2, dist[t][1] * sc);
+    bar(s, bx + t * (bw + gap), by + (90 - hh), bw, hh, '#2f5fb3');
+    tx(s, bx + t * (bw + gap) + bw / 2, by + 90 - hh - 6, String(dist[t][1]), 10.5, '#5b6570', 'middle');
+    tx(s, bx + t * (bw + gap) + bw / 2, by + 106, 'N=' + dist[t][0], 10.5, '#5b6570', 'middle');
+  }
+  tx(s, bx + 6 * (bw + gap), by + 70, '最大周期 64；(5,2) 的 N=64 > M^n=32 ⇒「N | M^n」已被否证（X-R346-1）', 11, '#9a6b00');
+})();
+
+// ---------------------------------------------------------------- 表格
+document.getElementById('tbl1').innerHTML =
+  '<table><tr><th>条目</th><th>分母</th><th>act</th><th>读数含义</th></tr>' +
+  '<tr><td>A01</td><td>130 项</td><td class="t">失配 0</td><td>两条路径给出同一批 Newton 系数</td></tr>' +
+  '<tr><td>A02</td><td>3 族</td><td class="t">3</td><td>前提 P(Z)⊆Z 不可去（去掉则非整）</td></tr>' +
+  '<tr><td>A03</td><td>17 点</td><td class="t">17</td><td>纯组合多项式：零几何输入也成立</td></tr></table>';
+
+document.getElementById('tbl2').innerHTML =
+  '<table><tr><th>条目</th><th>分母</th><th>act</th><th>读数含义</th></tr>' +
+  '<tr><td>A04</td><td>72 组</td><td class="f">非整 0</td><td>100% 通过 ⇒ 判别力 0 ⇒ 不得当判据</td></tr>' +
+  '<tr><td>A05</td><td>30 组</td><td class="t">27,29</td><td>算错 td 立刻非整 ⇒ 是 bug 探测器</td></tr>' +
+  '<tr><td>A06</td><td>30 组</td><td class="w">3,1</td><td>算错仍全整 ⇒ 必要非充分</td></tr>' +
+  '<tr><td>D01/G11</td><td>30 组</td><td class="t">差异 0</td><td>r339 读数逐项复现（跨卷 JSON 比对）</td></tr></table>';
+
+document.getElementById('tbl3').innerHTML =
+  '<table><tr><th>条目</th><th>分母</th><th>act</th><th>读数含义</th></tr>' +
+  '<tr><td>B01</td><td>72 组</td><td class="t">违例 0</td><td>出现的 M 全整除 a_n</td></tr>' +
+  '<tr><td>B02</td><td>900 三元组</td><td class="t">失配 0</td><td>N_j(r) ≡ r^j (mod M)</td></tr>' +
+  '<tr><td>B03</td><td>292446 组合</td><td class="t">命中 0</td><td>M &gt; d 上无整点 ⇒ S ⊆ (1/d)Z</td></tr>' +
+  '<tr><td>B04</td><td>24 个 d</td><td class="t">24</td><td>n=1 时 S=(1/d)Z 精确（界尖锐）</td></tr>' +
+  '<tr><td>B05</td><td>72 组</td><td class="w">13</td><td>M=d 仅 13 组可达 ⇒ n≥2 时只是上界</td></tr></table>';
+
+document.getElementById('tbl4').innerHTML =
+  '<table><tr><th>条目</th><th>分母</th><th>act</th><th>读数含义</th></tr>' +
+  '<tr><td>C01</td><td>396 陪集</td><td class="t">失配 0</td><td>b_i = Σ_{j≥i} a_j C(c, j−i)</td></tr>' +
+  '<tr><td>C02</td><td>1782 项</td><td class="t">非整 0</td><td>M^n n! b_i ∈ Z（周期界的键一步）</td></tr>' +
+  '<tr><td>C03</td><td>81 陪集</td><td class="t">81</td><td>周期 ∈ {1,2,4,16,32,64}，最大 64</td></tr>' +
+  '<tr><td>C05</td><td>30 组</td><td class="t">失配 0</td><td>按陪集重构 == 直接穷举 ⇒ 有限并</td></tr>' +
+  '<tr><td>C06</td><td>3 组</td><td class="w">7,0,1</td><td>n 增大时额外点趋于消失</td></tr></table>';
+</script>
+</body>
+</html>

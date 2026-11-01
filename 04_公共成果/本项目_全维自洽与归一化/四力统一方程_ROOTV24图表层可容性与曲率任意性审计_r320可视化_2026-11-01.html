@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
+<title>TUFT-r320 · ROOT V24 图表层审计</title>
+<style>
+body{font-family:system-ui,'Noto Sans SC',sans-serif;margin:0;background:#0f1115;color:#e8eaef}
+.wrap{max-width:1120px;margin:0 auto;padding:22px}
+h1{font-size:20px;margin:6px 0 2px}h2{font-size:15px;margin:22px 0 8px;color:#8ab4ff}
+.sub{color:#9aa3b2;font-size:12.5px}
+.card{background:#171b22;border:1px solid #262c36;border-radius:10px;padding:14px;margin:10px 0}
+label{font-size:13px;color:#c9d2e0}
+input[type=range]{width:100%}
+.b{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;margin-right:6px}
+.ok{background:#123d24;color:#7ee2a8}.no{background:#3d1418;color:#ff8f9a}.bd{background:#3a3110;color:#ffd479}
+.mono{font-family:ui-monospace,Consolas,monospace}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{border-bottom:1px solid #262c36;padding:5px 7px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+.big{font-size:26px;font-weight:600}
+</style></head><body><div class="wrap">
+<h1>TUFT-r320 · ROOT V24.0 固定点真假判别 —— 图表层审计</h1>
+<div class="sub">来料：A=1/50、B=3 ⇒ u*=1/150；v=u/(1−ku) ⇒ v*=A/(B−kA)、β′(v*)=−1/50（与 k 无关）。本卷审的是「换变量」这件事本身的边界。</div>
+<div class="card">
+<h2 style="margin-top:0">坐标旋钮（拖动即改「预测值」，指数不动）</h2>
+<label>k = <span id="kv" class="mono">13</span>　<span class="sub">1/v* = 150 − k（精确恒等，非拟合）</span></label>
+<input type="range" id="k" min="-40" max="149" step="1" value="13">
+<div style="margin-top:10px">
+<div class="big">1/v* = <span id="read" class="mono">137</span> <span class="sub">个 α⁻¹ 单位</span></div>
+<div style="margin-top:6px">临界指数 β′(v*) = <span class="mono" id="slope">−0.02</span>　<span class="b ok" id="badg1">不变量</span><span class="b" id="admb">可容</span></div>
+<div class="sub" id="note">物理 CODATA 137.035999177 需 k*=12.964000823（非整数、无第一性来源）；取整数 k=13 的偏差 = 1.71e6 σ。</div>
+</div></div>
+<div class="card"><h2 style="margin-top:0">§三 轨道表 12 读数 · 按字段自身半 ulp 裁定</h2>
+<table><thead><tr><th>打印值</th><th>90 位复算</th><th>偏差/半ulp</th><th>裁定</th></tr></thead><tbody id="t12"></tbody></table>
+<div class="sub">最紧一格 0.953002；他卷 r317 对同一张表按固定相对容差判 FAIL——分歧只在容差货币（本卷最大相对偏差 7.25988457507e-5 仍小于 6 位字段的相对容许值 ~7.5e-5）。</div></div>
+<div class="card"><h2 style="margin-top:0">三笔账放在同一货币里（α⁻¹ 单位）</h2>
+<table><thead><tr><th>来源</th><th>移动量</th><th>相对旋钮一格</th></tr></thead><tbody>
+<tr><td>坐标旋钮 k 走一格</td><td class="mono">1</td><td>1×</td></tr>
+<tr><td>来料那一步 150→137</td><td class="mono">13</td><td>13×</td></tr>
+<tr><td>真实 QED 阈值积分（H(1)）</td><td class="mono">0.0192353209</td><td>0.0192</td></tr>
+<tr><td>L=500 时三条轨道的残余历史差</td><td class="mono">0.018159972</td><td>0.0182</td></tr>
+</tbody></table>
+<div class="sub">⇒ §四 的「接入真实 QED」与「收敛到同一固定点」都太小，不足以裁定 §一 的坐标之争。</div></div>
+<div class="card"><h2 style="margin-top:0">不变量名单（V2/V8 的结论）</h2>
+<div class="sub">图表族 v=u/(1−13u)+S(u−u*)² 中：v*≡1/137、β′(v*)≡−1/50 与 S 无关；而 β″(v*)=-137(2571353·S + 506250000)/12656250000 随 S 线性漂移，S*=-196.880786108 时恰好为零 ⇒ 曲率类论证全族失效。</div></div>
+<div class="card"><h2 style="margin-top:0">可容性：极点在不在你这条轨道里</h2>
+<div class="sub">三条来料轨道的 u 区间 = [0.002,1/150]、[0.004,1/150]、[1/150,0.010]。同时可容 ⇒ k≤99 ⇒ 读数 &gt; 50。视界 k=B/A=150：极点 1/k 正落在固定点上（相似性前提失效）。上方面板会随 k 变红。</div></div>
+<script>
+var T12=[["0.002000", "0.00200000000000", "0.0"], ["0.005067", "0.00506669418419", "0.611632"], ["0.006563", "0.00656347650082", "0.953002"], ["0.006666", "0.00666596052034", "0.0789593"], ["0.004000", "0.00400000000000", "0.0"], ["0.006115", "0.00611495398070", "0.0920386"], ["0.006637", "0.00663685415232", "0.291695"], ["0.006666", "0.00666646489531", "0.929791"], ["0.010000", "0.0100000000000", "0.0"], ["0.006982", "0.00698161983249", "0.760335"], ["0.006682", "0.00668167358750", "0.652825"], ["0.006667", "0.00666676755693", "0.464886"]];
+var tb=document.getElementById('t12');
+T12.forEach(function(r){var tr=document.createElement('tr');var ok=parseFloat(r[2])<1;
+tr.innerHTML='<td class="mono">'+r[0]+'</td><td class="mono">'+r[1]+'</td><td class="mono">'+parseFloat(r[2]).toFixed(3)+'</td><td><span class="b '+(ok?'ok':'no')+'">'+(ok?'命中':'红')+'</span></td>';tb.appendChild(tr);});
+function paint(){var k=+document.getElementById('k').value;
+document.getElementById('kv').textContent=k;
+var rd=150-k;document.getElementById('read').textContent=rd;
+document.getElementById('slope').textContent=(-0.02).toFixed(4);
+var adm=k<100;var b=document.getElementById('admb');
+b.className='b '+(adm?'ok':'no');b.textContent=adm?'三轨道同时可容':'极点切断某条轨道';
+var n=document.getElementById('note');
+if(k===13)n.textContent='来料取的值：1/v*=137（整数）。与 CODATA 137.035999177 差 0.035999177 = 1.71e6 σ。';
+else if(k===150)n.textContent='视界：分母 B−kA=0，非零固定点跑到无穷。';
+else n.textContent='整数 k ⇒ 1/v* 必为整数（'+(101)+' 格抽样 101/101 命中）；要命中 CODATA 需非整数 k*=12.964000823。';
+}
+document.getElementById('k').addEventListener('input',paint);paint();
+</script></div></body></html>

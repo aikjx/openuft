@@ -1,0 +1,163 @@
+==============================================================================
+TUFT-r309 . 指标形式定理与内部维度禁区
+date=2026-11-01  degree=0
+==============================================================================
+
+[convention] 左手口径 Q = T3 + Y；family 口径（dim R 已剥离，见定理 W）
+  Q_L  (3,2)_{1/6}         dim=6  Y=1/6   Y^2=1/36   6Y=1  
+  u_R^c (3bar,1)_{-2/3}    dim=3  Y=-2/3  Y^2=4/9    6Y=-4 
+  d_R^c (3bar,1)_{1/3}     dim=3  Y=1/3   Y^2=1/9    6Y=2  
+  L_L  (1,2)_{-1/2}        dim=2  Y=-1/2  Y^2=1/4    6Y=-3 
+  e_R^c (1,1)_{1}          dim=1  Y=1     Y^2=1      6Y=6  
+  SM 六条反常: {'A3': '0', 'A2': '0', 'Ag': '0', 'AYY': '0', 'AYF': '0', 'AFF': '0'}
+
+[theorem-R] index = sum_k A_k q^(n-2k) ; n = dim(M_int)/2
+  n=1  dim_int=2   powers=[1]              charge-dep coef = 1
+  n=2  dim_int=4   powers=[2, 0]           charge-dep coef = 1
+  n=3  dim_int=6   powers=[3, 1]           charge-dep coef = 2
+  n=4  dim_int=8   powers=[4, 2, 0]        charge-dep coef = 2
+  n=5  dim_int=10  powers=[5, 3, 1]        charge-dep coef = 3
+  n=6  dim_int=12  powers=[6, 4, 2, 0]     charge-dep coef = 3
+  n=7  dim_int=14  powers=[7, 5, 3, 1]     charge-dep coef = 4
+  n=8  dim_int=16  powers=[8, 6, 4, 2, 0]  charge-dep coef = 4
+
+[theorem-S] rank=4/5  dim=1  basis=(1/6,-2/3,1/3,-1/2,1)
+            AFF=0  AYF=0 on the line  =>  anomaly-free set = span(Y)
+            distinct Y = 5 , distinct Y^2 = 5
+
+[theorem-T] no torsion: nullity by n = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3]
+            parity threshold n = 9 (dim_int >= 18) ; non-parity n = 5 (dim_int >= 10)
+
+[theorem-U] torsion cone: k = (a, a+c, a+c, a+b, C), C = a+b+c+d
+  n=1  dim=2  cd_powers=[1]                eqnull=0  cone={0}? True
+  n=2  dim=4  cd_powers=[2]                eqnull=0  cone={0}? True
+  n=3  dim=6  cd_powers=[3, 1]             eqnull=1  cone={0}? True
+  n=4  dim=8  cd_powers=[4, 2]             eqnull=1  cone={0}? True
+  n=5  dim=10 cd_powers=[5, 3, 1]          eqnull=2  cone={0}? True
+  n=6  dim=12 cd_powers=[6, 4, 2]          eqnull=2  cone={0}? False
+  n=7  dim=14 cd_powers=[7, 5, 3, 1]       eqnull=3  cone={0}? False
+  n=8  dim=16 cd_powers=[8, 6, 4, 2]       eqnull=3  cone={0}? False
+  n=9  dim=18 cd_powers=[9, 7, 5, 3, 1]    eqnull=4  cone={0}? False
+  n=10 dim=20 cd_powers=[10, 8, 6, 4, 2]   eqnull=4  cone={0}? False
+  n=11 dim=22 cd_powers=[11, 9, 7, 5, 3, 1] eqnull=5  cone={0}? False
+  n=12 dim=24 cd_powers=[12, 10, 8, 6, 4, 2] eqnull=5  cone={0}? False
+  dead zone: n <= 5  (dim_int <= 10)
+
+[theorem-V] minimal copy number c for N=3
+  n=1  dim=2   c_min=none
+  n=2  dim=4   c_min=none
+  n=3  dim=6   c_min=none
+  n=4  dim=8   c_min=none
+  n=5  dim=10  c_min=none
+  n=6  dim=12  c_min=187   k=(26,75,75,103,187)  (a,b,c2,d)=(26,77,49,35)
+  n=7  dim=14  c_min=12    k=(2,2,2,3,12)  (a,b,c2,d)=(2,1,0,9)
+  n=8  dim=16  c_min=20    k=(5,10,10,14,20)  (a,b,c2,d)=(5,9,5,1)
+  n=9  dim=18  c_min=1     k=(0,0,0,0,1)  (a,b,c2,d)=(0,0,0,1)
+  n=10 dim=20  c_min=1     k=(0,0,0,0,1)  (a,b,c2,d)=(0,0,0,1)
+  n=11 dim=22  c_min=1     k=(0,0,0,0,1)  (a,b,c2,d)=(0,0,0,1)
+  n=12 dim=24  c_min=1     k=(0,0,0,0,1)  (a,b,c2,d)=(0,0,0,1)
+  pure replication: c=3, k=(3,3,3,3,3), q=0, anomalies 0, N=3
+
+[items]  (kind: eq=相等 / gt=act>exp / info=纯陈述不判决)
+  A01   PASS eq   exp=(1/6,-2/3,1/3,-1/2,1)      act=(1/6,-2/3,1/3,-1/2,1)     
+  A02   PASS eq   exp=(1,-2,1,-1,1)              act=(1,-2,1,-1,1)             
+  A03   PASS eq   exp=0                          act=0                         
+  A04   PASS eq   exp=0                          act=0                         
+  A05   PASS eq   exp=0                          act=0                         
+  A06   PASS eq   exp=0                          act=0                         
+  A07   PASS eq   exp=(1,-4,2,-3,6)              act=(1,-4,2,-3,6)             
+  B01   PASS eq   exp=[1]                        act=[1]                       
+  B02   PASS eq   exp=[2, 0]                     act=[2, 0]                    
+  B03   PASS eq   exp=[3, 1]                     act=[3, 1]                    
+  B04   PASS eq   exp=[4, 2, 0]                  act=[4, 2, 0]                 
+  B05   PASS eq   exp=[1, 1, 2, 2, 3, 3, 4, 4]   act=[1, 1, 2, 2, 3, 3, 4, 4]  
+  B06   PASS eq   exp=[5, 5, 6, 6, 7, 7]         act=[5, 5, 6, 6, 7, 7]        
+  B07   PASS eq   exp=2                          act=2                         
+  B08   PASS eq   exp=0                          act=0                         
+  C01   PASS eq   exp=4                          act=4                         
+  C02   PASS eq   exp=1                          act=1                         
+  C03   PASS eq   exp=(1/6,-2/3,1/3,-1/2,1)      act=(1/6,-2/3,1/3,-1/2,1)     
+  C04   PASS eq   exp=0                          act=0                         
+  C05   PASS eq   exp=0                          act=0                         
+  C06   PASS eq   exp=2                          act=2                         
+  C07   PASS eq   exp=5                          act=5                         
+  C08   PASS eq   exp=5                          act=5                         
+  D01   PASS eq   exp=9                          act=9                         
+  D02   PASS eq   exp=[0, 0, 0, 0, 0, 0, 0, 0, 1 act=[0, 0, 0, 0, 0, 0, 0, 0, 1
+  D03   PASS eq   exp=4                          act=4                         
+  D04   PASS eq   exp=5                          act=5                         
+  D05   PASS eq   exp=[0, 0, 0, 0, 1, 2, 3, 4, 5 act=[0, 0, 0, 0, 1, 2, 3, 4, 5
+  D06   PASS eq   exp=18                         act=18                        
+  D07   PASS eq   exp=10                         act=10                        
+  D08   PASS gt   exp=0                          act=8                         
+  E01   PASS eq   exp=4                          act=4                         
+  E02   PASS eq   exp=[0, 0, 0, 0, 1]            act=[0, 0, 0, 0, 1]           
+  E03   PASS eq   exp=True                       act=True                      
+  E04   PASS eq   exp=True                       act=True                      
+  E05   PASS eq   exp=True                       act=True                      
+  E06   PASS eq   exp=True                       act=True                      
+  E07   PASS eq   exp=(0,3,2,13)                 act=(0,3,2,13)                
+  E08   PASS eq   exp=(2,1,0,9)                  act=(2,1,0,9)                 
+  E09   PASS eq   exp=[1, 1, 1, 1, 1, 0, 0, 0, 0 act=[1, 1, 1, 1, 1, 0, 0, 0, 0
+  E10   PASS eq   exp=10                         act=10                        
+  E11   PASS eq   exp=5                          act=5                         
+  F01   PASS eq   exp=187                        act=187                       
+  F02   PASS eq   exp=12                         act=12                        
+  F03   PASS eq   exp=20                         act=20                        
+  F03b  PASS eq   exp=1                          act=1                         
+  F04   PASS eq   exp=0                          act=0                         
+  F05   PASS eq   exp=True                       act=True                      
+  F06   PASS eq   exp=3                          act=3                         
+  F07   PASS eq   exp=1                          act=1                         
+  F08   PASS eq   exp=4                          act=4                         
+  F09   PASS eq   exp=[187, 12, 20, 1, 1, 1, 1]  act=[187, 12, 20, 1, 1, 1, 1] 
+  G01   PASS eq   exp=6                          act=6                         
+  G02   PASS eq   exp=3                          act=3                         
+  G03   PASS eq   exp=3                          act=3                         
+  G04   PASS eq   exp=True                       act=True                      
+  G05   INFO info exp=-                          act=-                         
+  G06   INFO info exp=-                          act=-                         
+  G07   INFO info exp=-                          act=-                         
+  G08   PASS eq   exp=0                          act=0                         
+  H01   PASS eq   exp=0                          act=0                         
+  H02   PASS eq   exp=4                          act=4                         
+  H03   INFO info exp=-                          act=-                         
+  H04   PASS eq   exp=1                          act=1                         
+  H05   PASS eq   exp=0                          act=0                         
+  H06   PASS eq   exp=0                          act=0                         
+  H07   INFO info exp=-                          act=-                         
+
+[controls]
+  CTL1   PASS  正对照：SM 基线的六条反常全零（否则后面所有零都没有意义）
+  CTL2   PASS  正对照：Y 手工代入四个线性方程全满足
+  CTL3   PASS  负对照：删去 AYY 那一行 ⇒ 零空间由 1 维涨到 2 维 ⇒ Y² 权那一条是承重的
+  CTL4   PASS  正对照：powers(n) 长度 = ⌊n/2⌋+1 在 n=1..14 上逐点成立
+  CTL5   PASS  负对照：若丢掉 parity（把 ⌈n/2⌉ 当 n），阈值从 9 掉到 5 ⇒ 两口径必须都报
+  CTL6   PASS  正对照：AFF 与 AYF 在 Y 处同时为零（双重复核，防止只查一个）
+  CTL7   PASS  正对照：k 向量表与 r302/r307 的 4 个生成元逐项一致
+  CTL8   PASS  负对照：**首版漏了 k₁ ≤ k₄** ⇒ n=5 曾出现 c=59 的假解 k=(10,11,11,2,59)；补上该约束后回构失败（b
+  CTL9   PASS  正对照：n=6/n=7 的真解可回构，且四元组之和等于 c
+  CTL10  PASS  负对照：锥判定不依赖 Y 的具体数值个数是否恰好为 5（去掉 e^c 后前四值仍互异）
+  CTL11  PASS  正对照：锥判定与整数搜索两条独立路径在 n=1..5 上结论一致（都无解）
+
+[summary] items=67 PASS=62 FAIL=0 INFO=5
+[pricing] 2^6=64 achievable=4 strict=0 S1^S2^S3^S4=1 S3^S4^S6=0
+
+[guards] 14/14
+  G01  PASS  verdict 合法（大写、含判词主体、长度 ≥ 40） ; X-R307-1-PARTIALLY-CLOSED__INDEX-FORM-IS
+  G02  PASS  items 数与 json 一致（写盘后回读） ; json=67 mem=67
+  G03  PASS  控制组全过 ; 11/11
+  G04  PASS  Decimal 精度 ≥ 50 ; prec=60
+  G05  PASS  源码无 random 导入（确定性） ; 行首 import/from random 命中 0
+  G06  PASS  report/json 逐条一致（写盘后回读） ; 逐条一致 + report 已落盘
+  G07  PASS  verdict 由计数驱动（一维荷空间、死区上界、c=1 活口都进判词） ; dead=5 ns=1 cmin9=1
+  G08  PASS  定价覆盖本卷最硬发现（S3 体场一致性与 S4 单一连通） ; S3∧S4∧S6 可达 = 0
+  G09  PASS  **无同义反复（源码级）**：exp 与 act 不得是同一个带引号字面量 ; 命中 0 条：[]
+  G10  PASS  字面 True 的 control/guard 计数如实登记 ; 字面 True 出现 3 处（均为「待回读」占位）
+  G11  PASS  锥判定不依赖有界搜索（两条独立判据都跑过，n=1..5 一致） ; cone-dead n=1..5 = [1, 2, 3, 4, 5]
+  G12  PASS  重建函数对所有已登记解都成功（否则登记的是不可实现的 k） ; 已登记解全部可回构
+  G13  PASS  与 r302/r307 的 k 表逐项一致（不是本卷重推的另一张表） ; 4/4
+  G14  PASS  自审事件已字面登记（首版漏 k₁≤k₄ 的假解在本文内可见且被否决） ; 假解 k=(10,11,11,2,59) 已被回构否决
+
+[verdict] X-R307-1-PARTIALLY-CLOSED__INDEX-FORM-IS-A-PARITY-POLYNOMIAL__CHARGE-SPACE-IS-ONE-DIMENSIONAL__INTERNAL-DIM-LE-10-GIVES-WEIGHTED-REPLICATION-ONLY__NO-REPLICATION-ESCAPE-ONLY-AT-INTERNAL-DIM-GE-18
+==============================================================================

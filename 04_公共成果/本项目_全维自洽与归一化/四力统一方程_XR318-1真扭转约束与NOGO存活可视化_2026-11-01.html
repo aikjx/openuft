@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>X-R318-1 审计 · 真几何扭转的模式约束与 r318 反例的存活检验（NO-GO 未被约束复活） · X-R318-1 可视化</title>
+<style>
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;margin:0;background:#f5f7fa;color:#1f2d3d}
+.wrap{max-width:980px;margin:0 auto;padding:28px}
+h1{font-size:23px;margin:0 0 4px}
+.sub{color:#5a6b7b;font-size:13px;margin-bottom:18px}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+.kpi{background:#fff;border:1px solid #dfe6ee;border-radius:10px;padding:12px 16px;min-width:120px}
+.kpi .k{font-size:12px;color:#7a8a99}
+.kpi .v{font-size:15px;font-weight:700;margin-top:4px}
+table{width:100%;border-collapse:collapse;background:#fff;margin-bottom:18px;border:1px solid #dfe6ee;border-radius:8px;overflow:hidden}
+th,td{border-bottom:1px solid #eef2f6;padding:8px 10px;font-size:13px;text-align:left}
+th{background:#eef3f8;color:#445}
+.pass{color:#1a9d54;font-weight:700}.fail{color:#d63a3a;font-weight:700}.info{color:#b8860b;font-weight:700}
+.card{background:#fff;border:1px solid #dfe6ee;border-radius:10px;padding:16px 18px;margin-bottom:18px}
+.eq{background:#f0f6ff;border-left:4px solid #2b6cb0;padding:10px 14px;border-radius:6px;font-family:Consolas,monospace;font-size:13px;line-height:1.7}
+.note{font-size:12px;color:#7a8a99;margin-top:8px}
+svg{width:100%;height:auto;background:#fff;border:1px solid #dfe6ee;border-radius:8px}
+</style></head><body><div class="wrap">
+<h1>X-R318-1 审计 · 真几何扭转的模式约束与 r318 反例的存活检验（NO-GO 未被约束复活）</h1><div class="sub">TUFT-r322 · 攻 X-R318-1 · 真几何扭转结构约束（k_{u^c}=k_{d^c}, k_{e^c}=k_{ν^c}）· 2026-11-01</div>
+<div class="kpis"><div class='kpi'><div class='k'>主条目</div><div class='v'>8</div></div><div class='kpi'><div class='k'>PASS/FAIL/INFO</div><div class='v'>6 / 0 / 2</div></div><div class='kpi'><div class='k'>控制组</div><div class='v'>4/4</div></div><div class='kpi'><div class='k'>守卫</div><div class='v'>10/10</div></div><div class='kpi'><div class='k'>判词</div><div class='v'>NO-GO-NOT-RESURRECTED</div></div></div>
+<div class="card"><h3>§1 · 从「任意 0/1」到「真扭转模式」</h3>
+<div class="eq">r318 假设：任意 g∈{0,1}^6 都是合法扭转（薄弱点）
+结构约束（中心扭转，可证）： u^c,d^c 同为 3bar ⇒ k_{u^c}=k_{d^c} ;  e^c,ν^c 同为单态 ⇒ k_{e^c}=k_{ν^c}
+⇒ 约束集 = {g: g1=g2 且 g4=g5} = 2^4 = 16 个（全 64 中的）</div>
+<div class="note">来源：r307 Thm N（Schur, k_R∈{0,1}）+ r309 Thm U（k₂≡k₃ 结构性）。</div></div>
+<div class="card"><h3>§2 · 判决关键数字</h3>
+<div class="eq">全 64 个中 N=3 可解 = 16 个（g0=g3=1）
+约束集 16 个中 N=3 可解 = 4 个（即 {g0=1,g3=1,g1=g2,g4=g5}）
+r318 显式构造 g=(1,0,0,1,0,0) 满足约束、A·t=3·𝟙 ⇒ 存活</div>
+<div class="note">⇒ 结构约束把可解面 16→4，但不为零 ⇒ r318 反例存活，NO-GO 未被复活。</div></div>
+<div class="card"><h3>§3 · 约束集内 {g0=1,g3=1} 的 4 个模式</h3>
+<table><tr><th>满足约束</th><th>N=3 时 index</th><th>可解</th></tr>
+<tr><td>是</td><td>3</td><td>是</td></tr><tr><td>是</td><td>3</td><td>是</td></tr><tr><td>是</td><td>3</td><td>是</td></tr><tr><td>是</td><td>3</td><td>是</td></tr></table>
+<div class="note">r318 的 g=(1,0,0,1,0,0) 是其中之一。</div></div>
+<div class="card"><h3>§4 · 主条目</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>P1</td><td class='info'>INFO</td><td>X-R318-1 重述与 r318 的薄弱点</td></tr><tr><td>P2</td><td class='pass'>PASS</td><td>结构约束定理：真扭转的 k 模式受限（约束集 = 16 个）</td></tr><tr><td>P3</td><td class='pass'>PASS</td><td>约束集内 N=3 可解面 = 4 个（g0=g3=1 且满足结构约束）</td></tr><tr><td>P4</td><td class='pass'>PASS</td><td>★r318 的显式构造 g=(1,0,0,1,0,0) 在约束下存活</td></tr><tr><td>P5</td><td class='pass'>PASS</td><td>N 自由在约束下仍成立（N=1..12，且 g_for_N 自动满足约束）</td></tr><tr><td>P6</td><td class='pass'>PASS</td><td>结论：结构约束不复活 NO-GO（X-R318-1 部分闭合）</td></tr><tr><td>P7</td><td class='pass'>PASS</td><td>判据集 R1–R10（R10 = 真扭转约束能否复活 NO-GO）</td></tr><tr><td>P8</td><td class='info'>INFO</td><td>诚实边界：只做了可证的中心扭转结构约束</td></tr></table></div>
+<div class="card"><h3>§5 · 控制组</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>C1</td><td class='pass'>PASS</td><td>引擎自洽（判定与特解 mutually consistent）</td></tr><tr><td>C2</td><td class='pass'>PASS</td><td>纯通量 N=6 可解（FCSRE 正例）</td></tr><tr><td>C3</td><td class='pass'>PASS</td><td>纯通量 N=3 不可解（FCSRE 负例）</td></tr><tr><td>C4</td><td class='pass'>PASS</td><td>★反证控制：约束集内每个可解 g 均给出 index=3，且 g0 存活</td></tr></table></div>
+<div class="card"><h3>§6 · 判词</h3>
+<div class="eq">NO-GO-NOT-RESURRECTED-BY-CONSTRAINT：可证结构约束把 N=3 可解面 16→4（非零），
+r318 显式解存活，N=1..12 仍全可及 ⇒ 约束不足以复活 NO-GO。框架仍不预言 3。</div>
+<svg id="geom" viewBox="0 0 680 280" width="100%" height="280"></svg>
+<script>
+var svg=document.getElementById('geom');
+function add(tag,attrs,txt){var e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e;}
+add('rect',{x:20,y:18,width:190,height:64,rx:8,fill:'#eef3f8',stroke:'#2b6cb0'});
+add('text',{x:115,y:44,'text-anchor':'middle','font-size':13,fill:'#1f2d3d'},'r318 全模式');
+add('text',{x:115,y:64,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'64 个 0/1，16 可解');
+add('rect',{x:250,y:18,width:190,height:64,rx:8,fill:'#fff',stroke:'#b8860b'});
+add('text',{x:345,y:44,'text-anchor':'middle','font-size':13,fill:'#1f2d3d'},'结构约束');
+add('text',{x:345,y:64,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'g1=g2, g4=g5');
+add('rect',{x:480,y:18,width:180,height:64,rx:8,fill:'#f0f6ff',stroke:'#2b6cb0'});
+add('text',{x:570,y:44,'text-anchor':'middle','font-size':13,fill:'#1f2d3d'},'约束集');
+add('text',{x:570,y:64,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'16 个');
+add('line',{x1:210,y1:50,x2:250,y2:50,stroke:'#2b6cb0','stroke-width':2});
+add('line',{x1:440,y1:50,x2:480,y2:50,stroke:'#2b6cb0','stroke-width':2});
+add('rect',{x:250,y:118,width:190,height:70,rx:8,fill:'#fff',stroke:'#1a9d54'});
+add('text',{x:345,y:144,'text-anchor':'middle','font-size':12,fill:'#1a9d54'},'其中可解 = 4');
+add('text',{x:345,y:164,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'g0=1,g3=1,g1=g2,g4=g5');
+add('text',{x:345,y:180,'text-anchor':'middle','font-size':11,fill:'#1a9d54'},'非零 ✓');
+add('rect',{x:480,y:118,width:180,height:70,rx:8,fill:'#fff',stroke:'#1a9d54'});
+add('text',{x:570,y:144,'text-anchor':'middle','font-size':12,fill:'#1a9d54'},'g0=(1,0,0,1,0,0)');
+add('text',{x:570,y:164,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'满足约束');
+add('text',{x:570,y:180,'text-anchor':'middle','font-size':11,fill:'#1a9d54'},'存活 ✓');
+add('line',{x1:345,y1:82,x2:345,y2:118,stroke:'#2b6cb0','stroke-width':2});
+add('line',{x1:440,y1:153,x2:480,y2:153,stroke:'#2b6cb0','stroke-width':2});
+add('rect',{x:110,y:222,width:460,height:44,rx:8,fill:'#fdf3f3',stroke:'#d63a3a'});
+add('text',{x:340,y:249,'text-anchor':'middle','font-size':12,fill:'#d63a3a'},'NO-GO 未被约束复活；框架仍不预言 3（Y 拨入）');
+add('line',{x1:345,y1:188,x2:340,y2:222,stroke:'#d63a3a','stroke-width':1.5});
+</script>
+</div></div></body></html>

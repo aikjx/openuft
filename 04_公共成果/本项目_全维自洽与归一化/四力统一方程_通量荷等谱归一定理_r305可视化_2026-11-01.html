@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r305 · 通量荷的等谱归一定理（M 消去 · q ∝ Y · 最小 K = 3t）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:var(--pass)}.FAIL{background:var(--fail)}
+.BOUNDARY{background:var(--bnd)}.INFO{background:var(--info)}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.lbl{font-size:11px;fill:#5b6470}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.note{font-size:12px;color:var(--sub);margin-top:8px}
+.key{background:#eef4fb;border:1px solid #c9dbf0;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+</style>
+</head>
+<body>
+<h1>TUFT-r305 · 通量荷的等谱归一定理</h1>
+<div class="sub">M 消去 · <span class="mono">q ∝ Y</span> · 扭转计数的完整分类 · 最小 <span class="mono">K = 3t</span>　·　条目 46（PASS 39 / FAIL 0 / INFO 7）　·　控制组 11/11　·　守卫 13/13　·　verdict <span class="mono">NO-GO-UPGRADED</span></div>
+
+<div class="thm">
+<b>承 r302 的诚实边界</b>：「M 的穷举是 ±1…±12，不是全部整数；判决应来自闭式。」本卷把那句话落实成四个定理，并把整个 no-go 压缩到一个单点上。<br><br>
+<b>定理 I（M 消去）</b>　<span class="mono">q<sub>i</sub> = (N−k<sub>i</sub>)/(M·d<sub>i</sub>)</span>；四条线性反常 ∝ 1/M、<span class="mono">A<sub>YF</sub> ∝ 1/M²</span>、<span class="mono">A<sub>FF</sub> ∝ 1/M³</span> ⇒ 乘掉后约束<b>与 M 完全无关</b>。<br>
+<b>定理 J（等谱归一）</b>　四条线性反常的精确 RREF <b>秩 4 / 维数 2</b> ⇒ 解集是
+<span class="mono">k = (λ, 3N−2λ, λ, 2N−λ, λ)</span>，且<b>荷型唯一</b> <span class="mono">q = (t/M)·Y</span>（<span class="mono">t = N−λ</span>）。<br>
+<b>定理 K（自动性）</b>　<span class="mono">N−k = t·tr<sub>R</sub>(Y)</span> ⇒ <span class="mono">A<sub>YF</sub>·M² = t²·Σd<sub>i</sub>Y<sub>i</sub>³</span>、<span class="mono">A<sub>FF</sub>·M³ = t³·Σd<sub>i</sub>Y<sub>i</sub>³</span>；而 <span class="mono">Σd<sub>i</sub>Y<sub>i</sub>³ = 0</span> ⇒ 两条非线性恒零。<br>
+<b>定理 L（锁定）</b>　<span class="mono">k<sub>R</sub> ≤ 1</span> ⇒ 唯一等谱解 <span class="mono">n<sub>R</sub> ≡ 1</span>。<br>
+<b>定理 M（边界）</b>　<span class="mono">K<sub>min</sub>(t) = 3t</span> —— <b>三代需 K ≥ 9</b>。
+</div>
+
+<h2>一、总账</h2><div class="grid" id="kpi"></div>
+
+<h2>二、定理 I · 通量量子 M 被完全消去</h2>
+<div class="card">
+<svg id="svgA" viewBox="0 0 760 320" width="100%" height="320"></svg>
+<div class="legend">以 T3 扭转、N=1 为例：六条反常各乘 <span class="mono">M<sup>p</sup></span> 后的「约化残差」。<b>六条全部是水平线</b> ⇒ 障碍与 M 无关，且六条均非零 ⇒ 任何 M 都不行。</div>
+<div class="key">24 组 (k, N) × <b>12 个有理 M</b>（1, 2, 3, 5, −1, −5, 7, <b>1/2, 1/3, 2/3, −1/7, 5/3</b>）⇒ <b>24/24 与 M 无关，反例 0</b>。r302 的 96 组穷举本质上是在验证一个与 M 无关的命题。</div>
+<table id="t1" style="margin-top:10px"></table>
+</div>
+
+<h2>三、定理 J · 完整分类与 <span class="mono">q ∝ Y</span></h2>
+<div class="card">
+<table id="t2"></table>
+<div class="key">秩 = 4 这一个数字，就是「完整」二字的凭据：未知量 6、秩 4 ⇒ 解空间维数<b>必然</b>是 2；而找到的族正好 2 维 ⇒ 它就是<b>整个</b>线性解集。</div>
+<svg id="svgB" viewBox="0 0 760 320" width="100%" height="320" style="margin-top:12px"></svg>
+<div class="legend">族在 <span class="mono">N = λ + t</span> 下的形状：<span class="mono">k = (λ, λ+3t, λ, λ+2t, λ)</span>。三组分别 t=0（一代）、t=1、t=3（三代）。</div>
+</div>
+
+<h2>四、定理 M · <span class="mono">K<sub>min</sub> = 3t</span>：三代需要多少常数截面</h2>
+<div class="card">
+<svg id="svgC" viewBox="0 0 760 300" width="100%" height="300"></svg>
+<div class="legend">放宽 <span class="mono">k<sub>R</sub> ≤ K</span> 后，要 t 代所需的最小 K。逐点等于 <b>3t</b>。</div>
+<div class="key"><b>三代的具体代价</b>：<span class="mono">k = (0,9,0,6,0)</span>，即 u<sub>R</sub><sup>c</sup> 有 <b>9 份</b>、d<sub>R</sub><sup>c</sup> 有 <b>6 份</b>常数截面；配 <span class="mono">q = 3Y</span> 得 <span class="mono">n = (3,3,3,3,3)</span>，<b>且六条反常全零</b>（CTL6）。⇒ 三代不是被算术或反常挡住的，是<b>被 <span class="mono">k<sub>R</sub> ≤ 1</span> 挡住的</b>。</div>
+<table id="t3" style="margin-top:10px"></table>
+</div>
+
+<h2>五、逃逸定价（5 槽 · 2⁵ = 32）</h2>
+<div class="card">
+<svg id="svgD" viewBox="0 0 760 340" width="100%" height="340"></svg>
+<div class="legend"><span style="color:#1a7f37">■</span> 满足　<span style="color:#c0392b">■</span> 不满足（即该路线的缺口）</div>
+<div class="note">严格档（五槽全要）SURVIVE = <b>0</b>；宽松档（任取四槽）SURVIVE = <b>5</b> —— 每条路线<b>恰好缺一槽</b>且互不重合，因此不能靠「两害相权」合并出解。宽松 &gt; 0 ⇒ 不占度数链（候选 37，链仍止 r264:36）。</div>
+</div>
+
+<h2>六、判定纪律：首跑 4 条 FAIL 是健康信号</h2>
+<div class="card"><table id="t4"></table>
+<div class="note">四处失败<b>全部是作者自己的编码错</b>，没有一处是「判据太严」。尤其 F01 那个「K<sub>min</sub> = 0,1,2,3,4,5,6」的整齐序列 —— <b>太整齐反而暴露了下标错</b>：数学上 K<sub>min</sub> 不可能恰好等于 t。</div>
+</div>
+
+<script>
+/* ---------------- 数据（与引擎输出逐字一致） ---------------- */
+var REP   = ['Q_L','u_R^c','d_R^c','L_L','e_R^c'];
+var MS    = ['1','2','3','5','−1','−5','7','1/2','1/3','2/3','−1/7','5/3'];
+var T3RES = [1, 1/2, 3, 7/12, -1/12, 1/4];
+var T3NAM = ['A₃','A₂','A_g','A_YY','A_YF','A_FF'];
+var T3COL = ['#2b5c9b','#1a7f37','#b8860b','#2f6f9f','#c0392b','#7a4fa3'];
+var FAM   = [{t:0,k:[1,1,1,1,1],lab:'t = 0（一代）'},
+             {t:1,k:[0,3,0,2,0],lab:'t = 1'},
+             {t:3,k:[0,9,0,6,0],lab:'t = 3（三代）'}];
+var KMIN  = [0,3,6,9,12,15,18];
+var ROUTES= [['标准 \'t Hooft 扭转（k_R ≤ 1）',[1,0,1,1,1]],
+             ['放开 k_R（多重常数截面）',[1,1,0,1,1]],
+             ['放弃反常自由（q 不沿 Y）',[1,1,1,1,0]],
+             ['非阿贝尔通量（破缺 SM）',[0,1,1,1,1]],
+             ['CY3 / T⁶ 高维',[1,1,0,0,1]]];
+
+function el(svg, tag, a, txt){
+  var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in a) e.setAttribute(k, a[k]);
+  if (txt !== undefined && txt !== null) e.textContent = String(txt);
+  svg.appendChild(e);
+  return e;
+}
+function tx(svg, x, y, s, anchor, size, fill){
+  var a = {x:x, y:y, 'font-size': (size||11), fill: (fill||'#5b6470')};
+  if (anchor) a['text-anchor'] = anchor;
+  return el(svg, 'text', a, s);
+}
+function hline(svg, x1, y, x2, col, w, dash){
+  var a = {x1:x1, y1:y, x2:x2, y2:y, stroke:col, 'stroke-width':(w||1)};
+  if (dash) a['stroke-dasharray'] = dash;
+  return el(svg, 'line', a);
+}
+
+/* ---------------- 一、KPI ---------------- */
+(function(){
+  var rows = [
+    ['条目 / 判定', '46 条 · PASS 39 · FAIL 0 · INFO 7'],
+    ['控制组', '11 / 11 全过'],
+    ['守卫', '13 / 13 全过'],
+    ['线性系统', '秩 4 · 解空间维数 2'],
+    ['M 消去', '24 / 24 与 M 无关'],
+    ['q 的方向', 'q = (t/M)·Y（被逼出来）'],
+    ['k∈{0,1}⁵ 解数', '2（N=0 与 N=1）'],
+    ['三代可达', '0（k≤1 下）'],
+    ['K_min(t)', '3t ⇒ 三代需 K ≥ 9'],
+    ['定价严格 / 宽松', '0 / 5']
+  ];
+  var h = '';
+  for (var i=0;i<rows.length;i++){
+    h += '<div class="kpi"><div class="k">'+rows[i][0]+'</div><div class="v">'+rows[i][1]+'</div></div>';
+  }
+  document.getElementById('kpi').innerHTML = h;
+})();
+
+/* ---------------- 二、M 消去：六条水平线 ---------------- */
+(function(){
+  var svg = document.getElementById('svgA');
+  var W=760, H=320, L=72, R=44, T=48, B=64;
+  var base = T + (H-T-B);      /* 48 + 208 = 256 */
+  var plotH = H-T-B;           /* 208 */
+  var lo = -1, hi = 4;
+  function py(v){ return base - (v-lo)/(hi-lo)*plotH; }
+
+  /* 网格 */
+  for (var g=0; g<=5; g++){
+    var gv = lo + (hi-lo)*g/5, gy = py(gv);
+    hline(svg, L, gy.toFixed(2), W-R, '#e8ecf1', 1);
+    tx(svg, L-8, (gy+4).toFixed(2), String(gv), 'end', 11, '#5b6470');
+  }
+  hline(svg, L, py(0).toFixed(2), W-R, '#c3cad2', 2);
+
+  var slot = (W-L-R)/MS.length;    /* 644/12 = 53.67 */
+  /* x 轴刻度 */
+  for (var i=0;i<MS.length;i++){
+    var cx = L + slot*i + slot/2;
+    tx(svg, cx, base+18, MS[i], 'middle', 11, '#1f2328');
+  }
+  tx(svg, W-R, base+38, 'M 的取值（含 1/2、1/3、2/3、−1/7、5/3 等分数）', 'end', 11, '#5b6470');
+
+  /* 六条水平线 + 数据点 */
+  for (var j=0;j<T3RES.length;j++){
+    var y = py(T3RES[j]);
+    hline(svg, L, y.toFixed(2), W-R, T3COL[j], 1.6, null);
+    for (var i2=0;i2<MS.length;i2++){
+      var cx2 = L + slot*i2 + slot/2;
+      el(svg, 'circle', {cx: cx2.toFixed(2), cy: y.toFixed(2), r: 2.6,
+                         fill: T3COL[j]});
+    }
+    tx(svg, W-R+6, (y+4).toFixed(2), T3NAM[j], 'start', 11, T3COL[j]);
+  }
+  tx(svg, 10, 22, '约化残差（= 反常 × Mᵖ）', 'start', 12, '#1f2328');
+  tx(svg, 10, 38, '六条全部水平且非零 ⇒ 与 M 无关', 'start', 11, '#c0392b');
+})();
+
+/* ---------------- 三、族形状：k 向量分组柱 ---------------- */
+(function(){
+  var svg = document.getElementById('svgB');
+  var W=760, H=320, L=58, R=40, T=52, B=76;
+  var base = T + (H-T-B);      /* 52 + 192 = 244 */
+  var plotH = H-T-B;           /* 192 */
+  var maxV = 10;
+  for (var g=0; g<=5; g++){
+    var gv = maxV*g/5, gy = base - plotH*g/5;
+    hline(svg, L, gy.toFixed(2), W-R, '#e8ecf1', 1);
+    tx(svg, L-8, (gy+4).toFixed(2), String(gv), 'end', 11, '#5b6470');
+  }
+  hline(svg, L, base, W-R, '#c3cad2', 2);
+
+  var grpW = (W-L-R)/FAM.length;   /* 662/3 = 220.67 */
+  var bw = 26, gap = 6;
+  var totW = 5*bw + 4*gap;         /* 130+24 = 154 */
+  for (var f=0; f<FAM.length; f++){
+    var x0 = L + grpW*f + (grpW - totW)/2;
+    for (var i=0;i<5;i++){
+      var v = FAM[f].k[i];
+      var x = x0 + i*(bw+gap);
+      var hh = v/maxV*plotH;
+      if (v === 0){
+        el(svg, 'rect', {x:x.toFixed(2), y:(base-2).toFixed(2), width:bw, height:2,
+                         fill:'#c3cad2'});
+        tx(svg, x+bw/2, base-8, '0', 'middle', 11, '#8b939c');
+      } else {
+        el(svg, 'rect', {x:x.toFixed(2), y:(base-hh).toFixed(2), width:bw,
+                         height:hh.toFixed(2), fill:'#2b5c9b', rx:2});
+        tx(svg, x+bw/2, base-hh-6, String(v), 'middle', 11, '#1f2328');
+      }
+      tx(svg, x+bw/2, base+18, REP[i], 'middle', 10, '#5b6470');
+    }
+    tx(svg, L+grpW*f+grpW/2, base+40, FAM[f].lab, 'middle', 12, '#1f2328');
+  }
+  tx(svg, 10, 22, 'k 向量（常数截面数）', 'start', 12, '#1f2328');
+  tx(svg, 10, 38, '形状恒为 (λ, λ+3t, λ, λ+2t, λ)：u_R^c 高 3t、d_R^c 高 2t', 'start', 11, '#5b6470');
+})();
+
+/* ---------------- 四、K_min = 3t ---------------- */
+(function(){
+  var svg = document.getElementById('svgC');
+  var W=760, H=300, L=62, R=44, T=50, B=64;
+  var base = T + (H-T-B);      /* 50 + 186 = 236 */
+  var plotH = H-T-B;           /* 186 */
+  var maxV = 18;
+  for (var g=0; g<=6; g++){
+    var gv = maxV*g/6, gy = base - plotH*g/6;
+    hline(svg, L, gy.toFixed(2), W-R, '#e8ecf1', 1);
+    tx(svg, L-8, (gy+4).toFixed(2), String(gv), 'end', 11, '#5b6470');
+  }
+  hline(svg, L, base, W-R, '#c3cad2', 2);
+
+  var slot = (W-L-R)/KMIN.length;   /* 654/7 = 93.4 */
+  var bw = 44;
+  for (var i=0;i<KMIN.length;i++){
+    var cx = L + slot*i + slot/2;
+    var v = KMIN[i];
+    var hh = v/maxV*plotH;
+    if (v === 0){
+      el(svg, 'rect', {x:(cx-bw/2).toFixed(2), y:(base-2).toFixed(2), width:bw, height:2,
+                       fill:'#c3cad2'});
+      tx(svg, cx, base-8, '0', 'middle', 11, '#8b939c');
+    } else {
+      var col = (i===3) ? '#c0392b' : '#2b5c9b';
+      el(svg, 'rect', {x:(cx-bw/2).toFixed(2), y:(base-hh).toFixed(2), width:bw,
+                       height:hh.toFixed(2), fill:col, rx:2});
+      tx(svg, cx, base-hh-7, String(v), 'middle', 12, '#1f2328');
+    }
+    tx(svg, cx, base+20, 't = '+i, 'middle', 12, '#1f2328');
+  }
+  /* 三代标记 */
+  tx(svg, L + slot*3 + slot/2, base-186-6, '三代：K ≥ 9', 'middle', 11, '#c0392b');
+  tx(svg, 10, 22, 'K_min（所需常数截面上限）', 'start', 12, '#1f2328');
+  tx(svg, 10, 38, 'K_min(t) = 3t，逐点成立、严格递增', 'start', 11, '#5b6470');
+})();
+
+/* ---------------- 五、定价矩阵 ---------------- */
+(function(){
+  var svg = document.getElementById('svgD');
+  var W=760, H=340, x0=250, y0=72, cw=86, ch=42;
+  var SL = ['S1','S2','S3','S4','S5'];
+  for (var j=0;j<SL.length;j++){
+    tx(svg, x0+cw*j+cw/2, y0-12, SL[j], 'middle', 12, '#1f2328');
+  }
+  for (var i=0;i<ROUTES.length;i++){
+    var y = y0 + ch*i;
+    tx(svg, 12, y+ch/2+4, ROUTES[i][0], 'start', 11, '#1f2328');
+    for (var j2=0;j2<5;j2++){
+      var ok = ROUTES[i][1][j2] === 1;
+      el(svg, 'rect', {x:x0+cw*j2, y:y, width:cw, height:ch,
+                       fill: ok ? '#d7ecd9' : '#f7d6d0',
+                       stroke: ok ? '#1a7f37' : '#c0392b', 'stroke-width':1});
+      tx(svg, x0+cw*j2+cw/2, y+ch/2+5, ok ? '✓' : '✗', 'middle', 13,
+         ok ? '#1a7f37' : '#c0392b');
+    }
+  }
+  tx(svg, 12, y0+ch*ROUTES.length+28,
+     'S1 保 SM · S2 等三代 · S3 k_R ≤ 1 · S4 额外维 ≤ 2 · S5 反常自由', 'start', 11, '#5b6470');
+  tx(svg, 12, y0+ch*ROUTES.length+46,
+     '每条路线恰好缺一槽且互不重合 ⇒ 无法靠「两害相权」合并出解', 'start', 11, '#c0392b');
+  tx(svg, 12, 24, '5 槽 × 5 路线：无一全满足', 'start', 12, '#1f2328');
+})();
+
+/* ---------------- 表格 ---------------- */
+(function(){
+  var h = '<tr><th>反常</th><th>T3, N=1 的约化残差</th><th>M 依赖</th><th>12 个 M 上是否恒定</th></tr>';
+  var dep = ['∝ 1/M','∝ 1/M','∝ 1/M','∝ 1/M','∝ 1/M²','∝ 1/M³'];
+  for (var i=0;i<6;i++){
+    var v = T3RES[i];
+    var s = (v === Math.round(v)) ? String(v) : (v > 0 ? v.toFixed(4) : v.toFixed(4));
+    h += '<tr><td>'+T3NAM[i]+'</td><td class="mono">'+s+'</td><td class="mono">'+dep[i]
+       + '</td><td><span class="tag PASS">是</span></td></tr>';
+  }
+  h += '<tr><th colspan="4">六条全部非零且全部恒定 ⇒ <b>任何有理 M 都不行</b>（含 Z_N 分数通量）</th></tr>';
+  document.getElementById('t1').innerHTML = h;
+})();
+(function(){
+  var h = '<tr><th>RREF 行</th><th>系数（未知量 N, k₁…k₅）</th><th>解出</th></tr>'
+    + '<tr><td>R1</td><td class="mono">[1, 0, 0, 0, −1/2, −1/2]</td><td class="mono">N = (k₄+k₅)/2</td></tr>'
+    + '<tr><td>R2</td><td class="mono">[0, 1, 0, 0, 0, −1]</td><td class="mono"><b>k₁ = k₅</b></td></tr>'
+    + '<tr><td>R3</td><td class="mono">[0, 0, 1, 0, −3/2, 1/2]</td><td class="mono">k₂ = (3k₄−k₅)/2</td></tr>'
+    + '<tr><td>R4</td><td class="mono">[0, 0, 0, 1, 0, −1]</td><td class="mono"><b>k₃ = k₅</b></td></tr>'
+    + '<tr><th colspan="3">秩 = 4、未知量 6 ⇒ 解空间维数 2 ⇒ 以 λ = k₅ 重参数化：'
+    + '<span class="mono">k = (λ, 3N−2λ, λ, 2N−λ, λ)</span>，且 <span class="mono">q = (t/M)·Y</span></th></tr>';
+  document.getElementById('t2').innerHTML = h;
+})();
+(function(){
+  var h = '<tr><th>t</th><th>K_min</th><th>构造的 k</th><th>n</th></tr>';
+  var KK = ['(0,0,0,0,0)','(0,3,0,2,0)','(0,6,0,4,0)','(0,9,0,6,0)','(0,12,0,8,0)','(0,15,0,10,0)','(0,18,0,12,0)'];
+  for (var i=0;i<KMIN.length;i++){
+    var nn = '';
+    for (var j=0;j<5;j++) nn += (i===0 ? '1' : String(i));
+    var ns = '';
+    for (var j2=0;j2<5;j2++) ns += (i===0 ? '1' : String(i)) + (j2<4 ? ',' : '');
+    h += '<tr><td>'+i+'</td><td><b>'+KMIN[i]+'</b></td><td class="mono">'+KK[i]
+       + '</td><td class="mono">('+ns+')</td></tr>';
+  }
+  h += '<tr><th colspan="4">K_min = 3t ⇒ <b>三代需 K ≥ 9</b>：u_R^c 要有 9 份、d_R^c 要有 6 份常数截面</th></tr>';
+  document.getElementById('t3').innerHTML = h;
+})();
+(function(){
+  var rows = [
+    ['C04','RREF 行系数被直接当解，忘了取负号','加 solve_row() 显式取负','4 行中 3 行符号反'],
+    ['D04','扰动 Y 后仍用 SM 的 anomal()（权重固定 YS）','抽出 anomal_w(q, Yv)','恒等式两边不相等'],
+    ['F01 / F02','元组下标错：minK 元素是 (t, K, k)，把 m[0](=t) 当 K','全部改为 m[1]','K_min = 0..6 的假序列'],
+    ['CTL10 / G13','同上，随 F01 一起错','随 F01 修正','控制组与守卫连坐']
+  ];
+  var h = '<tr><th>失败项</th><th>根因</th><th>修法</th><th>首跑表现</th></tr>';
+  for (var i=0;i<rows.length;i++){
+    h += '<tr><td>'+rows[i][0]+'</td><td>'+rows[i][1]+'</td><td class="mono">'+rows[i][2]
+       + '</td><td>'+rows[i][3]+'</td></tr>';
+  }
+  h += '<tr><th colspan="4">首跑：items=46 PASS=35 FAIL=4 / controls=9/11 / guards=10/13 / <b>rc=2</b>　⇒　修后：PASS=39 FAIL=0 / 11/11 / 13/13 / <b>rc=0</b></th></tr>';
+  document.getElementById('t4').innerHTML = h;
+})();
+</script>
+</body>
+</html>

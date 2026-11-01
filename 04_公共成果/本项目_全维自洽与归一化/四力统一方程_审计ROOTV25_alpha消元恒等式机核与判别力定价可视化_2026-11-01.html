@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>审计 ROOT V25 来料：α 消元恒等式（V25-1）的机核、判别力定价与诚实边界</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2d3d;--mut:#5a6b7b;--line:#e3e8ef;
+--pass:#1a9d54;--fail:#d63a3a;--info:#2b6cb0;--acc:#b8860b;}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);
+font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+.wrap{max-width:960px;margin:0 auto;padding:24px}
+h1{font-size:21px;margin:0 0 4px} .sub{color:var(--mut);font-size:13px;margin-bottom:18px}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
+.kpi{flex:1 1 140px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.kpi .k{font-size:12px;color:var(--mut)} .kpi .v{font-size:18px;font-weight:700;color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.card h3{margin:0 0 8px;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-weight:600}
+.pass{color:var(--pass);font-weight:700} .fail{color:var(--fail);font-weight:700}
+.info{color:var(--info);font-weight:700}
+.note{font-size:12px;color:var(--mut);margin-top:8px}
+.eq{background:#f0f6ff;border:1px solid #cfe0ff;border-radius:8px;padding:8px 10px;font-size:13px}
+.warn{background:#fdf3f4;border:1px solid #f0c0c4;border-radius:8px;padding:8px 10px;font-size:13px;color:#8a2a2a}
+</style></head><body><div class="wrap">
+<h1>审计 ROOT V25 来料：α 消元恒等式（V25-1）的机核、判别力定价与诚实边界</h1><div class="sub">TUFT-368 · 审计 ROOT V25 来料 · 2026-11-01</div>
+<div class="kpis"><div class='kpi'><div class='k'>来料数值偏差</div><div class='v'>7.9e-13</div></div><div class='kpi'><div class='k'>闭式复算差</div><div class='v'>2.3e-31</div></div><div class='kpi'><div class='k'>V25-1 恒等差</div><div class='v'>2.6e-58</div></div><div class='kpi'><div class='k'>α(0) 判别力</div><div class='v'>0</div></div><div class='kpi'><div class='k'>跑动形状判别力</div><div class='v'>≠0</div></div></div>
+<div class="card"><h3>§1 · 判词</h3><div class="eq">V25-MATH-VERIFIED-BUT-ANCHOR-BLIND</div>
+<div class="note">来料 ROOT V25 的**数学复核通过**：六个尺度 H(t) 数值、级数通项与收敛域、t=1 闭式、上下界与单调凹凸、V25-1 的双路径恒等，全部逐条对拍一致（最大相对偏差 7.888e-13）。但**判别力定价给出否定结论**：α(0) 在 V25-1 中**精确相消**，α⁻¹(0) 取 50/100/137/200/500 五档时左端逐位不变 ⇒ 该检验对「1/137 的几何本源」**判别力为零**；它真正有判别力的是**跑动形状**（系数加倍即改变），而一圈跑动形状只由粒子内容决定、不含几何信息。⇒ V25 把问题从「α(0) 是多少」平移为「跑动长得像不像 QED」，**未推进 α 的几何本源这一问**。另钉死两条适用边界：m_e 仍是必需实测输入（「无实验输入」应读作「无 α 输入」）；恒等式仅在一圈链内精确（高阶修正 ~α/π ≈ 2.323e-03）。</div></div>
+<div class="card"><h3>§2 · 来料 H(t) 六尺度重算对拍（60 位 Decimal · Simpson 自适应）</h3>
+<table><tr><th>Q/m_e</th><th>t</th><th>本卷 H(t)</th><th>来料 H(t)</th><th>相对偏差</th></tr><tr><td>0.01</td><td>0.0001</td><td>0.0000021220431718083262</td><td>0.00000212204317181</td><td>7.888e-13</td></tr><tr><td>0.1</td><td>0.01</td><td>0.0002119795628475410679</td><td>0.000211979562847541</td><td>3.205e-16</td></tr><tr><td>1</td><td>1</td><td>0.0192353209028294044992</td><td>0.0192353209028294045</td><td>3.846e-20</td></tr><tr><td>2</td><td>4</td><td>0.0615169732408703290828</td><td>0.0615169732408703</td><td>4.728e-16</td></tr><tr><td>10</td><td>100</td><td>0.3178293738531450322090</td><td>0.317829373853145032</td><td>6.577e-19</td></tr><tr><td>100</td><td>10000</td><td>0.8004722396814495041815</td><td>0.800472239681449335</td><td>2.114e-16</td></tr></table>
+<div class="note">最大相对偏差 7.888e-13（容差 1e-12）⇒ 来料数值表复核通过。</div></div>
+<div class="card"><h3>§3 · ★判别力定价：α⁻¹(0) 五档下 V25-1 左端</h3>
+<table><tr><th>α⁻¹(0)</th><th>V25-1 左端</th></tr><tr><td>50</td><td>0.31761739429029749114</td></tr><tr><td>100</td><td>0.31761739429029749114</td></tr><tr><td>137.035999177</td><td>0.31761739429029749114</td></tr><tr><td>200</td><td>0.31761739429029749114</td></tr><tr><td>500</td><td>0.31761739429029749114</td></tr></table>
+<div class="warn">五档逐位相同 ⇒ α(0) 精确相消 ⇒ <b>对「1/137 的几何本源」判别力 = 0</b>。
+跑动系数加倍后左端由 0.317617394290297491 变为 0.635234788580594982 ⇒ 该检验真正有判别力的是<b>跑动形状</b>，而一圈跑动只由粒子内容定、不含几何信息。</div></div>
+<div class="card"><h3>§4 · 主条目</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>P1</td><td class='info'>INFO</td><td>来料五命题清点：哪些可机核、哪些属解析/标准结论（先分清再判）</td></tr><tr><td>P2</td><td class='pass'>PASS</td><td>α = g²/4π 的非唯一性机核：g 连续 ⇒ α 连续，拓扑不选 α</td></tr><tr><td>P3</td><td class='pass'>PASS</td><td>六个动量尺度 H(t) 的 60 位独立重算 vs 来料表（最大相对偏差 7.888e-13）</td></tr><tr><td>P4</td><td class='pass'>PASS</td><td>级数通项为精确有理数 + 收敛域 |t|<4（并报「范围外第一条就错」）</td></tr><tr><td>P5</td><td class='pass'>PASS</td><td>t=1 闭式 (7+√5·ln(9−4√5))/(9π) 的独立复算（与 60 位积分差 2.267e-31）</td></tr><tr><td>P6</td><td class='pass'>PASS</td><td>上下界与单调/凹凸全域机检（H 严格递增且严格凹）</td></tr><tr><td>P7</td><td class='pass'>PASS</td><td>V25-1 的数值恒等：两条路径逐位一致（差 2.560e-58）</td></tr><tr><td>P8</td><td class='pass'>PASS</td><td>★判别力定价（本卷核心）：V25-1 对锚值 α(0) 判别力 = 0，对跑动形状判别力 ≠ 0</td></tr><tr><td>P9</td><td class='info'>INFO</td><td>诚实边界：来料「无需实验输入」只成立于「无需 α」，m_e 仍是必需输入；且恒等式仅在一圈链内精确</td></tr></table></div>
+<div class="card"><h3>§5 · 控制组</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>C1</td><td class='pass'>PASS</td><td>控制组（正对照）：六尺度保守误差界 est_err=δ/15 均 < 1e-12（支撑 P3 的 1e-12 判据）</td></tr><tr><td>C2</td><td class='pass'>PASS</td><td>控制组（负对照）：把前置因子 2/π 改成 1/π ⇒ H(1) 偏离来料表 100%</td></tr><tr><td>C3</td><td class='pass'>PASS</td><td>控制组（级数有效域正负对照）：t=2 域内可用，t=100 域外失效</td></tr><tr><td>C4</td><td class='pass'>PASS</td><td>控制组（判别力负对照）：α⁻¹(0) 取五档，V25-1 左端偏离 < 1e-40（证实对锚值零判别力）</td></tr><tr><td>C5</td><td class='pass'>PASS</td><td>控制组（判别力正对照）：跑动系数加倍 ⇒ V25-1 左端改变（证实对形状有判别力）</td></tr></table></div>
+<div class="card"><h3>§6 · 守卫</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>G1</td><td class='pass'>PASS</td><td>守卫：JSON 可序列化（结论可机读）</td></tr><tr><td>G2</td><td class='pass'>PASS</td><td>守卫：条目计数一致（主/控制）</td></tr><tr><td>G3</td><td class='pass'>PASS</td><td>守卫：五条控制组的判据均为运行时算出的布尔量（禁写死）</td></tr><tr><td>G4</td><td class='pass'>PASS</td><td>守卫：verdict 取值合法</td></tr><tr><td>G5</td><td class='pass'>PASS</td><td>守卫：π 与 H 值有限且量级正确</td></tr><tr><td>G6</td><td class='pass'>PASS</td><td>守卫：正负双对照齐备且均通过</td></tr><tr><td>G7</td><td class='pass'>PASS</td><td>守卫：t 无量纲且 t_a < t_b（口径自守：t = Q²/m_e²）</td></tr><tr><td>G8</td><td class='pass'>PASS</td><td>守卫：恒等式残差为机器零级（非口径巧合）</td></tr><tr><td>G9</td><td class='pass'>PASS</td><td>守卫：仅写本卷路径（不触碰他卷字节）</td></tr><tr><td>G10</td><td class='pass'>PASS</td><td>守卫：守卫总数 10（9 已登记 + 本条）</td></tr></table></div>
+<div class="card"><h3>§7 · 示意：α(0) 如何在相减中消失 + H(t) 实算曲线</h3>
+<svg id="geom" viewBox="0 0 680 300" width="100%" height="300"></svg>
+<script>
+var svg=document.getElementById('geom');
+function add(tag,attrs,txt){var e=document.createElementNS('http://www.w3.org/2000/svg',tag);
+for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e;}
+add('rect',{x:20,y:20,width:180,height:64,rx:8,fill:'#fff',stroke:'#b8860b'});
+add('text',{x:110,y:44,'text-anchor':'middle','font-size':12,fill:'#1f2d3d'},'输入 α(0)');
+add('text',{x:110,y:62,'text-anchor':'middle','font-size':10,fill:'#5a6b7b'},'1/α_eff = 1/α(0) − H(t)');
+add('rect',{x:250,y:20,width:180,height:64,rx:8,fill:'#fff',stroke:'#2b6cb0'});
+add('text',{x:340,y:44,'text-anchor':'middle','font-size':12,fill:'#1f2d3d'},'两尺度相减');
+add('text',{x:340,y:62,'text-anchor':'middle','font-size':10,fill:'#5a6b7b'},'t_a 与 t_b');
+add('rect',{x:480,y:20,width:180,height:64,rx:8,fill:'#fdf3f4',stroke:'#d63a3a'});
+add('text',{x:570,y:44,'text-anchor':'middle','font-size':12,fill:'#d63a3a'},'α(0) 相消');
+add('text',{x:570,y:62,'text-anchor':'middle','font-size':10,fill:'#8a2a2a'},'⇒ 对锚值零判别力');
+add('line',{x1:200,y1:52,x2:250,y2:52,stroke:'#2b6cb0','stroke-width':2});
+add('line',{x1:430,y1:52,x2:480,y2:52,stroke:'#d63a3a','stroke-width':2});
+add('line',{x1:60,y1:260,x2:620,y2:260,stroke:'#5a6b7b','stroke-width':1});
+add('line',{x1:60,y1:260,x2:60,y2:70,stroke:'#5a6b7b','stroke-width':1});
+add('path',{d:'M 60 260 L 172 260 L 284 256 L 396 245 L 508 181 L 620 60',fill:'none',stroke:'#1a9d54','stroke-width':2.5});
+add('text',{x:60,y:278,'font-size':10,fill:'#5a6b7b'},'log₁₀(t)：1e−4 → 1e4（六个实算点）');
+add('text',{x:8,y:70,'font-size':10,fill:'#5a6b7b'},'H');
+add('text',{x:340,y:112,'text-anchor':'middle','font-size':11,fill:'#1a9d54'},'H(t) 实算曲线（严格递增 · 严格凹，已机检）');
+</script></div>
+<div class="card"><h3>§8 · 结论</h3>
+<div class="eq">数学复核通过，但判别力定价为负：V25-1 对锚值 α(0) 判别力 = 0，只检验跑动形状。
+⇒ ROOT V25 未推进「α 的几何本源」这一问；它把问题平移成了「跑动像不像 QED」。
+适用边界：m_e 仍是必需实测输入；恒等式仅在一圈链内精确（高阶 ~α/π ≈ 2.32e-03）。</div></div>
+</div></body></html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r354 · ROOT V28 Dirac 双光状手征电流 · 可视化</title>
+<style>
+  :root { --bg:#f7f8fa; --ink:#1f2328; --sub:#5b6470; --line:#d5dae1; --acc:#2f6fb5; --warn:#c2432f; }
+  body { background:var(--bg); color:var(--ink); font-family:"Segoe UI","Microsoft YaHei",sans-serif; margin:0; padding:24px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  h2 { font-size:15px; margin:22px 0 8px; color:var(--sub); font-weight:600; }
+  .sub { color:var(--sub); font-size:13px; margin-bottom:18px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  table { border-collapse:collapse; font-size:13px; }
+  th, td { border:1px solid var(--line); padding:5px 10px; text-align:left; }
+  th { background:#eef1f5; }
+</style>
+</head>
+<body>
+<h1>TUFT-r354 · ROOT V28（Dirac 双光状手征电流）审计可视化</h1>
+<div class="sub">数据驱动：全部曲线由内联脚本按本卷引擎读数计算；螺旋面板为等距投影示意（真实螺距/半径 = 861，横向已放大以便观察）。</div>
+
+<h2>一、双光状手征电流的螺旋流线（示意，横向已放大）</h2>
+<div class="card"><svg id="spiral" viewBox="0 0 680 300" width="680" height="300"></svg></div>
+
+<h2>二、κ/|τ| = tan(2η) 在 η∈(0,π/4) 上满射到 (0,+∞)</h2>
+<div class="card"><svg id="surj" viewBox="0 0 680 260" width="680" height="260"></svg></div>
+
+<h2>三、代价曲线 ΔH(ρ) = m·c² · ρ/√(1+ρ²)：看得见的螺旋要付多少能量不确定度</h2>
+<div class="card"><svg id="cost" viewBox="0 0 680 260" width="680" height="260"></svg></div>
+
+<h2>四、读数表</h2>
+<div class="card"><table id="tbl"></table></div>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function el(id, tag) { return function () { return document.getElementById(id).appendChild(document.createElementNS(NS, tag)); }; }
+
+  function mk(svgId, tag, attrs, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { e.setAttribute(k, attrs[k]); }
+    if (text !== undefined) { e.textContent = text; }
+    document.getElementById(svgId).appendChild(e);
+    return e;
+  }
+
+  var ALPHA = 0.0072973525643;
+  var ETA_A = 0.0036486115186;
+  var MC2_KEV = 510.9989506918;
+  var DH_ALPHA = 3.7288402;
+  var R_M = 1.408932646e-15;
+  var PITCH_M = 1.2131228172e-12;
+  var KAPPA = 3.7793516277e10;
+  var TAU = 5.1790722654e12;
+
+  // ---------- 面板一：双螺旋流线 ----------
+  (function () {
+    var W = 680, H = 300, cx = 250, cy = 150, A = 40, L = 90, T = 4 * Math.PI;
+    mk("spiral", "rect", { x: 0, y: 0, width: W, height: H, fill: "#ffffff", stroke: "#e6e9ee" });
+    // 中轴
+    mk("spiral", "line", { x1: cx, y1: 26, x2: cx, y2: 274, stroke: "#c9cfd8", "stroke-dasharray": "4 4" });
+    // 两条流线（等距投影）
+    var s, t, x, y, d1 = "", d2 = "", N = 240;
+    for (s = 0; s <= N; s++) {
+      t = T * s / N;
+      x = cx + A * Math.cos(t);
+      y = cy - (t / T) * L - A * 0.35 * Math.sin(t);
+      d1 += (s === 0 ? "M " : "L ") + x.toFixed(2) + " " + y.toFixed(2) + " ";
+      y = cy + (t / T) * L + A * 0.35 * Math.sin(t);
+      d2 += (s === 0 ? "M " : "L ") + x.toFixed(2) + " " + y.toFixed(2) + " ";
+    }
+    mk("spiral", "path", { d: d1, fill: "none", stroke: "#2f6fb5", "stroke-width": 2 });
+    mk("spiral", "path", { d: d2, fill: "none", stroke: "#c2432f", "stroke-width": 2 });
+    // 起点标记
+    mk("spiral", "circle", { cx: cx + A, cy: cy, r: 4, fill: "#2f6fb5" });
+    mk("spiral", "circle", { cx: cx + A, cy: cy, r: 4, fill: "#c2432f", opacity: "0.55" });
+    // 说明文字
+    var ty = [56, 80, 104, 128, 152, 176, 200, 224];
+    var tx = [
+      "J_+ 沿 +z 轴向延伸（蓝）",
+      "J_- 沿 -z 轴向延伸（红）",
+      "横向旋转方向相同",
+      "两条流线速度模恒为 c",
+      "横向速度 = c·sin2η ≈ α·c",
+      "轴向速度 = c·cos2η ≈ 0.99997c",
+      "半径 R = 1.4089e-15 m",
+      "螺距 = 1.2131e-12 m（螺距/半径 = 861）"
+    ];
+    for (var i = 0; i < tx.length; i++) {
+      mk("spiral", "text", { x: 330, y: ty[i], "font-size": 13, fill: "#1f2328" }, tx[i]);
+    }
+    mk("spiral", "text", { x: 330, y: 252, "font-size": 12, fill: "#c2432f" },
+      "真实比例 861:1 下该螺旋几乎退化为直线；此处横向已放大");
+    mk("spiral", "text", { x: 60, y: 22, "font-size": 13, fill: "#5b6470" }, "轴向 z");
+  })();
+
+  // ---------- 面板二：满射 ----------
+  (function () {
+    var W = 680, H = 260, x0 = 60, x1 = 640, y0 = 220, y1 = 40;
+    var ETA_MAX = Math.PI / 4, RHO_MAX = 6;
+    mk("surj", "rect", { x: 0, y: 0, width: W, height: H, fill: "#ffffff", stroke: "#e6e9ee" });
+    // 轴
+    mk("surj", "line", { x1: x0, y1: y0, x2: x1, y2: y0, stroke: "#8b949e" });
+    mk("surj", "line", { x1: x0, y1: y0, x2: x0, y2: y1, stroke: "#8b949e" });
+    var e, r, xx, yy, d = "", N = 220;
+    for (var s = 0; s <= N; s++) {
+      e = ETA_MAX * 0.98 * s / N;
+      r = Math.tan(2 * e);
+      if (r > RHO_MAX) { r = RHO_MAX; }
+      xx = x0 + (e / ETA_MAX) * (x1 - x0);
+      yy = y0 - (r / RHO_MAX) * (y0 - y1);
+      d += (s === 0 ? "M " : "L ") + xx.toFixed(2) + " " + yy.toFixed(2) + " ";
+    }
+    mk("surj", "path", { d: d, fill: "none", stroke: "#2f6fb5", "stroke-width": 2 });
+    // α 点
+    var xa = x0 + (ETA_A / ETA_MAX) * (x1 - x0);
+    var ya = y0 - (ALPHA / RHO_MAX) * (y0 - y1);
+    mk("surj", "circle", { cx: xa.toFixed(2), cy: ya.toFixed(2), r: 4, fill: "#c2432f" });
+    mk("surj", "text", { x: 150, y: 100, "font-size": 13, fill: "#c2432f" },
+      "η = ½arctan α = 0.0036486 ⇒ ρ = α（贴原点，红点）");
+    mk("surj", "text", { x: 150, y: 124, "font-size": 13, fill: "#1f2328" },
+      "η 在 (0, π/4) 内连续变化，ρ 跑遍 (0, +∞) ⇒ 任意正数都能被「命中」");
+    mk("surj", "text", { x: 150, y: 148, "font-size": 13, fill: "#c2432f" },
+      "本卷实测：12 个互不相干正目标命中 12/12 ⇒ 判别力 0");
+    mk("surj", "text", { x: 150, y: 172, "font-size": 12, fill: "#5b6470" },
+      "对照：ρ < 0 在 η∈(0,π/4) 内不可达（检出 2/2）⇒ 判据有边界");
+    mk("surj", "text", { x: x1 - 60, y: y0 + 22, "font-size": 12, fill: "#5b6470" }, "η");
+    mk("surj", "text", { x: 12, y: y1 + 10, "font-size": 12, fill: "#5b6470" }, "ρ");
+    mk("surj", "text", { x: x0, y: 26, "font-size": 12, fill: "#5b6470" }, "ρ = 6（截断）");
+  })();
+
+  // ---------- 面板三：代价曲线 ----------
+  (function () {
+    var W = 680, H = 260, x0 = 60, x1 = 640, y0 = 220, y1 = 40;
+    var RHO_MAX = 2, DH_MAX = 470;
+    mk("cost", "rect", { x: 0, y: 0, width: W, height: H, fill: "#ffffff", stroke: "#e6e9ee" });
+    mk("cost", "line", { x1: x0, y1: y0, x2: x1, y2: y0, stroke: "#8b949e" });
+    mk("cost", "line", { x1: x0, y1: y0, x2: x0, y2: y1, stroke: "#8b949e" });
+    var s, r, dh, xx, yy, d = "", N = 200;
+    for (s = 0; s <= N; s++) {
+      r = RHO_MAX * s / N;
+      dh = MC2_KEV * r / Math.sqrt(1 + r * r);
+      xx = x0 + (r / RHO_MAX) * (x1 - x0);
+      yy = y0 - (dh / DH_MAX) * (y0 - y1);
+      d += (s === 0 ? "M " : "L ") + xx.toFixed(2) + " " + yy.toFixed(2) + " ";
+    }
+    mk("cost", "path", { d: d, fill: "none", stroke: "#2f6fb5", "stroke-width": 2 });
+    // 标记点
+    var marks = [[ALPHA, DH_ALPHA, "α"], [0.1, 50.8463, "0.1"], [1, 361.3308, "1"], [2, 457.0514, "2"]];
+    for (var i = 0; i < marks.length; i++) {
+      var mr = marks[i][0], md = marks[i][1];
+      var mx = x0 + (mr / RHO_MAX) * (x1 - x0);
+      var my = y0 - (md / DH_MAX) * (y0 - y1);
+      mk("cost", "circle", { cx: mx.toFixed(2), cy: my.toFixed(2), r: i === 0 ? 5 : 4, fill: i === 0 ? "#c2432f" : "#2f6fb5" });
+      mk("cost", "text", { x: (mx + 8).toFixed(2), y: (my - 6).toFixed(2), "font-size": 12, fill: "#1f2328" },
+        "ρ=" + marks[i][2] + " ⇒ " + md.toFixed(2) + " keV");
+    }
+    mk("cost", "text", { x: 300, y: 90, "font-size": 13, fill: "#c2432f" },
+      "正能量本征要求 ΔH = 0 ⇒ ρ = 0 ⇒ κ = 0 ⇒ 螺旋退化为直线");
+    mk("cost", "text", { x: 300, y: 114, "font-size": 13, fill: "#1f2328" },
+      "ΔH(ρ) 单调 ⇒ 想让螺旋「看得见」就得付与静质量同量级的能量不确定度");
+    mk("cost", "text", { x: x1 - 50, y: y0 + 22, "font-size": 12, fill: "#5b6470" }, "ρ");
+    mk("cost", "text", { x: 12, y: y1 + 10, "font-size": 12, fill: "#5b6470" }, "keV");
+  })();
+
+  // ---------- 表格 ----------
+  var rows = [
+    ["量", "值"],
+    ["α（CODATA 2022 倒数 137.035999177）", ALPHA.toFixed(12)],
+    ["η = ½arctan α", ETA_A.toFixed(12) + " rad"],
+    ["螺旋半径 R", R_M.toExponential(10) + " m"],
+    ["螺距", PITCH_M.toExponential(10) + " m"],
+    ["螺距 / 半径", "861.022577"],
+    ["曲率 κ", KAPPA.toExponential(10) + " m^-1"],
+    ["挠率 |τ|", TAU.toExponential(10) + " m^-1"],
+    ["能量不确定度 ΔH", DH_ALPHA.toFixed(6) + " keV"],
+    ["负频权重 sin²η", "1.331230694e-5"],
+    ["满射命中率", "12 / 12（判别力 0）"],
+    ["boost 0 → 0.99c 的 κ/|τ|", "0.007297353 → 0.000517289"],
+    ["定价槽位满足数", "0 / 5（不占度，候选 37，链止 r264:36）"]
+  ];
+  var html = "";
+  for (var i = 0; i < rows.length; i++) {
+    html += "<tr><th>" + rows[i][0] + "</th><td>" + rows[i][1] + "</td></tr>";
+  }
+  document.getElementById("tbl").innerHTML = html;
+})();
+</script>
+</body>
+</html>

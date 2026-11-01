@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TUFT-r329 · null 标架伪弧长重写（G4）</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--line:#30363d;--tx:#e6edf3;--mut:#8b949e;--ok:#3fb950;--bad:#f85149;--inf:#58a6ff;--warn:#d29922}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 "Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:36px 22px 80px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:.5px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:22px}
+.badge{display:inline-block;padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--mut);font-size:12px;margin-right:6px}
+.verdict{background:linear-gradient(135deg,#1f2937,#111827);border:1px solid #374151;border-left:4px solid var(--warn);border-radius:10px;padding:16px 18px;margin:20px 0 26px;font-size:14px}
+.verdict b{color:var(--warn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;margin:18px 0 30px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card .k{color:var(--mut);font-size:12px}.card .n{font-size:21px;font-weight:600;margin-top:4px}
+.card .u{color:var(--mut);font-size:12px;margin-left:3px}
+h2{font-size:18px;margin:34px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:13px}
+td,th{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{color:var(--mut);font-weight:500;font-size:12px}
+td.id{width:52px;font-family:Consolas,monospace;color:var(--inf)}
+td.v{width:60px;font-family:Consolas,monospace;font-weight:700}
+td.PASS{color:var(--ok)}td.FAIL{color:var(--bad)}td.INFO{color:var(--inf)}
+.mono{font-family:Consolas,monospace}
+.note{background:#111827;border:1px solid var(--line);border-radius:10px;padding:14px 16px;color:var(--mut);font-size:13px;margin-top:14px}
+.note b{color:var(--tx)}
+code{background:#0b1220;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12px;color:#a5d6ff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<h1>TUFT-r329 · 光速螺旋 G4：null 标架的伪弧长重写</h1>
+<div class="sub">2026-11-01 · 靶：整理册 §二 G4 ｜ 承 S10 / S2 / S11 / r95 ｜ sympy 符号 + Decimal 80 位</div>
+<div>
+<span class="badge">条目 24</span><span class="badge">PASS 20</span><span class="badge">FAIL 2</span>
+<span class="badge">INFO 2</span><span class="badge">控制组 4/4</span><span class="badge">守卫 10/10</span>
+</div>
+<div class="verdict"><b>NULL-FRENET-IS-FRAME-LOCAL / TAU-ZERO-IS-FRAME-ARTIFACT /
+NO-LORENTZ-INVARIANT-KAPPA-TAU / G4-CLOSED-CONDITIONAL</b><br>
+伪弧长重建与 Frenet–Serret 重推已全部交付（κ=aω²、τ=ωv_z，三式与 Darboux 全机器零）；
+但 κ'=κ/D² ⇒ <b>这些量只能在被指名的观察者帧里解释</b>，τ≡0 只是 v_z=0 帧的读数。</div>
+<div class="grid">
+<div class="card"><div class="k">伪弧长 σ</div><div class="n mono" style="font-size:16px">σ = −u·x = t</div><div class="u">u=(1,0,0,0)</div></div>
+<div class="card"><div class="k">帧内 κ</div><div class="n mono" style="font-size:18px">aω²</div><div class="u">单位速下精确</div></div>
+<div class="card"><div class="k">帧内 τ</div><div class="n mono" style="font-size:18px">ωv_z</div><div class="u">v_z=0 ⇒ τ=0</div></div>
+<div class="card"><div class="k">β=0.5 的 κ'</div><div class="n">7.500000000E-01</div><div class="u">κ 缩到 3/4</div></div>
+<div class="card"><div class="k">β=0.5 的 τ'</div><div class="n">-4.330127019E-01<span class="u">m⁻¹</span></div></div>
+<div class="card"><div class="k">κ(β=−0.9)/κ(β=+0.9)</div><div class="n">1.121E+01</div><div class="u">同曲线差一个量级</div></div>
+</div>
+<h2>一、旧 Frenet 失效 ↔ 伪弧长重建（Q1 / Q2）</h2>
+<div class="two">
+<div class="card"><div class="k">旧标架</div><div class="n mono" style="font-size:16px">ℓ·ℓ = 0 ⇒ ds = 0</div>
+<div class="u">T = dx/ds 不可定义；λ 读数 ∝ 1/k²（非几何）</div></div>
+<div class="card"><div class="k">重写后</div><div class="n mono" style="font-size:16px">|dr/dσ| ≡ 1</div>
+<div class="u">null ⇒ 空间投影恒单位速（boost 后仍 1）⇒ 标准 FS 可用</div></div>
+</div>
+<div class="note">代价：<b>σ=−u·x 依赖观察者 u</b>。它给的是「这个帧里的时间切片」，不是曲线自身的弧长——
+类光曲线的洛伦兹长度恒为 0，所以<b>不存在</b>与 u 无关的归一化。</div>
+<h2>二、boost 网格：κ、τ 随帧变形（Q3，a=ω=1, v_z=0, c=1）</h2>
+<table><tr><th>β</th><th>γ</th><th>ω'</th><th>v_z'</th><th>κ'</th><th>τ'</th><th>κ'²+τ'²−ω'²</th></tr><tr><td>β=0</td><td>1.000000000E+00</td><td>1.000000000E+00</td><td>0</td><td>1.000000000E+00</td><td>0</td><td>0</td></tr><tr><td>β=0.1</td><td>1.005037815E+00</td><td>9.949874371E-01</td><td>-1.000000000E-01</td><td>9.900000000E-01</td><td>-9.949874371E-02</td><td>1.300000000E-79</td></tr><tr><td>β=0.3</td><td>1.048284837E+00</td><td>9.539392014E-01</td><td>-3.000000000E-01</td><td>9.100000000E-01</td><td>-2.861817604E-01</td><td>0</td></tr><tr><td>β=0.5</td><td>1.154700538E+00</td><td>8.660254038E-01</td><td>-5.000000000E-01</td><td>7.500000000E-01</td><td>-4.330127019E-01</td><td>-6.000000000E-80</td></tr><tr><td>β=0.7</td><td>1.400280084E+00</td><td>7.141428429E-01</td><td>-7.000000000E-01</td><td>5.100000000E-01</td><td>-4.998999900E-01</td><td>1.000000000E-80</td></tr><tr><td>β=0.9</td><td>2.294157339E+00</td><td>4.358898944E-01</td><td>-9.000000000E-01</td><td>1.900000000E-01</td><td>-3.923009049E-01</td><td>0</td></tr></table>
+<h2>三、τ≡0 是帧伪影（Q4）</h2>
+<div class="note">v_z=0 帧 τ=0（S2 的「螺旋退化为平面圆」）。但 boost 给 v_z'=−β、ω'=ω/γ ⇒
+<b>τ'=−βω'</b>：β=0.5 时 τ' = -4.33013E-01 m⁻¹（|τ'|/ω'=0.5）。
+⇒ 同一 null 世界线，不同惯性帧「有的挠率不为零」⇒ <b>该判词必须写成「在哪个 u 的帧」</b>。</div>
+<h2>四、r95 玻尔锚的帧定价（Q6）</h2>
+<table><tr><th>β</th><th>D</th><th>ω'</th><th>κ'</th><th>τ'</th></tr><tr><td>β=0</td><td>1.000000000E+00</td><td>4.134137334E+16</td><td>1.006304758E+06</td><td>1.378963062E+08</td></tr><tr><td>β=0.3</td><td>7.338077592E-01</td><td>5.633815235E+16</td><td>1.868809043E+06</td><td>1.879145557E+08</td></tr><tr><td>β=0.5</td><td>5.773656417E-01</td><td>7.160345256E+16</td><td>3.018753517E+06</td><td>2.388243308E+08</td></tr><tr><td>β=0.7</td><td>4.201101239E-01</td><td>9.840603922E+16</td><td>5.701685145E+06</td><td>3.281976912E+08</td></tr><tr><td>β=0.9</td><td>2.294707097E-01</td><td>1.801596961E+17</td><td>1.911063018E+07</td><td>6.006441167E+08</td></tr></table>
+<div class="note">严格 null：τ_B = 1.37896E+08 m⁻¹；r95 登记的 <span class="mono">1.3789630609e8</span> 是
+v_z→c 极限（与严格分支差 2.66e−5）。β 从 0.3 到 0.9，τ 由 1.87915E+08 移到 6.00644E+08 m⁻¹（4.4 倍）
+⇒ <b>τ 是频率型帧量（Doppler 可标度），不是不变量</b>。</div>
+<h2>五、Fs 重推（Q7）</h2>
+<div class="note mono" style="font-size:13px">dT/dσ = κN　　dN/dσ = −κT + τB　　dB/dσ = −τN　　
+Ω_D = κB + τT（dT/dσ = Ω×T ...）</div>
+<div class="note">三式与 Darboux 关系在 sympy 下逐式<b>零向量</b>；独立数值通道（中心差分）给
+|dr/dσ|=1.000E+00、κ=8.000E-01、τ=6.000E-01。⇒ <b>G4 的「重推微分方程」字面完成</b>——完成的是帧内方程。</div>
+<h2>六、条目逐条（主条目）</h2>
+<table><tr><th>#</th><th>判决</th><th>条目</th></tr><tr><td class='id'>Q1</td><td class='v PASS'>PASS</td><td>旧 Frenet 在 null 上失效已机器证明：ds²≡0 ⇒ s 不存在；λ-读数 ∝1/k² 非几何</td></tr><tr><td class='id'>Q2</td><td class='v PASS'>PASS</td><td>伪弧长重写 σ=−u·x 交付：null ⇒ 空间投影恒单位速；κ=aω²、τ=ωv_z（帧局部）</td></tr><tr><td class='id'>Q3</td><td class='v PASS'>PASS</td><td>协变恒等式 ω²=c²(κ²+τ²) 在 null 螺旋分支恒成立 + boost 网格逐行机器零</td></tr><tr><td class='id'>Q4</td><td class='v PASS'>PASS</td><td>★τ≡0 是帧伪影：v_z=0 帧 τ=0，boost 后 τ'=−βω'≠0（螺旋退化为圆只在特定帧成立）</td></tr><tr><td class='id'>Q5</td><td class='v FAIL'>FAIL</td><td>★无洛伦兹不变 κ,τ：κ'=κ/D²、D=γ(1−βv_z) 随帧可变 ⇒ 标量假设只对直线成立</td></tr><tr><td class='id'>Q6</td><td class='v PASS'>PASS</td><td>r95 玻尔锚 τ=1.379e8 m⁻¹ 的帧定价：boost 下 τ 在 1.38e8→6.01e8 间移动（非不变量）</td></tr><tr><td class='id'>Q7</td><td class='v PASS'>PASS</td><td>伪弧长 Frenet–Serret 重推交付：三式 + Darboux Ω=κB+τT 全机器零，数值通道对拍</td></tr><tr><td class='id'>Q8</td><td class='v INFO'>INFO</td><td>判词链对表：S10 从「无定义」升级为「帧局部有定义但非不变」；S2 改写为帧陈述</td></tr><tr><td class='id'>Q9</td><td class='v INFO'>INFO</td><td>G1–G7 门槛可达性登记 + 三道自检门（本卷推进 G4：条件收口）</td></tr><tr><td class='id'>Q10</td><td class='v FAIL'>FAIL</td><td>判据集 R1–R6 = 2/6</td></tr></table>
+<h2>七、控制组与守卫</h2>
+<div class="two">
+<table><tr><th>#</th><th>判决</th><th>控制组</th></tr><tr><td class='id'>C1</td><td class='v PASS'>PASS</td><td>正对照：null 判定两通道一致（ℓ·ℓ=0 ↔ 空间投影速=1）</td></tr><tr><td class='id'>C2</td><td class='v PASS'>PASS</td><td>判据有牙：直线 null κ=0 ↔ 平面圆 κ=1（dimensionless c=1）</td></tr><tr><td class='id'>C3</td><td class='v PASS'>PASS</td><td>正对照：boost 后 null 条件仍成立（|v'|²=1，机器零）</td></tr><tr><td class='id'>C4</td><td class='v PASS'>PASS</td><td>负对照：类时曲线（|v|=0.5）⇒ 空间投影非单位速、恒等式不成立（牙）</td></tr></table>
+<table><tr><th>#</th><th>判决</th><th>守卫</th></tr><tr><td class='id'>G1</td><td class='v PASS'>PASS</td><td>JSON 可序列化</td></tr><tr><td class='id'>G3</td><td class='v PASS'>PASS</td><td>控制组 4/4 由实跑得出</td></tr><tr><td class='id'>G4</td><td class='v PASS'>PASS</td><td>boost 网格残差逐行机器零</td></tr><tr><td class='id'>G5</td><td class='v PASS'>PASS</td><td>Decimal 精度 ≥ 70 位</td></tr><tr><td class='id'>G6</td><td class='v PASS'>PASS</td><td>正负双对照齐备（控制组 ≥4 且 FAIL ≥1）</td></tr><tr><td class='id'>G7</td><td class='v PASS'>PASS</td><td>关键物理量全为正</td></tr><tr><td class='id'>G8</td><td class='v PASS'>PASS</td><td>条目键集合一致</td></tr><tr><td class='id'>G9</td><td class='v PASS'>PASS</td><td>仅写本卷路径</td></tr><tr><td class='id'>G10</td><td class='v PASS'>PASS</td><td>verdict 取值合法</td></tr><tr><td class='id'>G2</td><td class='v PASS'>PASS</td><td>条目计数一致（声明 24 = 实收 24）</td></tr></table>
+</div>
+<h2>八、门槛登记（Q9）</h2>
+<div class="note">本卷推进 <b>G4：收口（条件/负）</b>。G3 由 r324 收口（负）；G1（ω 场方程）、G2（r 来源）、
+G5（点预言）、G6（EC 挠率源）、G7（幅度 C）<b>一字未动</b>。<br><br>
+三道自检门：承载物门 <b>条件 PASS</b>（帧局部承载物已建；跨帧无）｜判别力门 <b>FAIL</b>（帧局部量无点预言）｜
+洛伦兹门 <b>FAIL</b>（κ'=κ/D²，不存在不变 null 弧长）。</div>
+<h2>九、诚实边界</h2>
+<div class="note">B1 全部在平直闵可夫斯基背景，弯曲时空 NP 标架未做；B2 伪弧长只对惯性观察者定义；
+B3 处理单条 null 世界线而非 null 汇，光学标量不适用；B4「无不变 κ,τ」只针对 Frenet 型外蕴量；
+B5 r95 的 τ_B 用 v_z→c 极限（差 2.66e−5），不修改其登记值；B6 不主张光子层因此有物理。</div>
+<div class="note" style="margin-top:26px">复现：<code>python -X utf8 源码\_run_r329.py</code> ⇒ rc=0，条目 24，
+控制组 4/4，守卫 10/10。本卷条目<b>不可与 r142–r325 相加</b>。</div>
+</div></body></html>

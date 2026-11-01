@@ -1,0 +1,278 @@
+{
+ "tag": "TUFT-r332_nullFrenet标架重写_伪参量化重建曲率挠率与光子层承载物_2026-11-01",
+ "verdict": "NULL-FRENET-DEGENERACY-DIAGNOSED-BY-NULL-NORMAL-SPACE / PSEUDO-ARCLENGTH-REBUILD-VERIFIED / LORENTZ-SCOPE-LIMITED-REFERENCE-FRAME-ONLY / S10-PARTIALLY-UNLOCKED-3D-PROJECTION-ONLY / STILL-KINEMATIC-NO-FIELD-EQUATION-ALPHA-STILL-INPUT",
+ "counts": {
+  "items": 8,
+  "controls": 4,
+  "guards": 10
+ },
+ "items": [
+  {
+   "key": "Q1",
+   "verdict": "PASS",
+   "name": "null 曲线 Frenet 退化诊断（ds²=0 + 法空间退化，双证）",
+   "detail": "① 类光条件 ds²=c²ṫ²−(r²+p²)ω²=0（精确残差 0）⇒ 弧长参数 s 不可用，ds/dλ≡0，d/ds 无定义；② 更深层根因：法空间 {v:g(k,v)=0} 含 k 自身（g(k,k)=0），单位化 1/|k| 发散，投影算子 P^μ_ν=δ^μ_ν−k^μk_ν/k² 含 1/k²；数值 1/k²：ε=1e-16 → 1.00e+16。⇒ S10 成立且不仅是「ds=0」的技术问题，而是法向不唯一（需补一路各向同性向量或改 3D 投影）。",
+   "numbers": {
+    "null_residual": "0",
+    "inv_k2": [
+     [
+      0.0001,
+      10000.0
+     ],
+     [
+      1e-08,
+      100000000.0
+     ],
+     [
+      1e-12,
+      1000000000000.0
+     ],
+     [
+      1e-16,
+      1e+16
+     ]
+    ]
+   }
+  },
+  {
+   "key": "Q2",
+   "verdict": "PASS",
+   "name": "伪参量化重建：σ(λ)=∫|dx/dλ|₃ dλ（3D 欧氏范数，严格正）",
+   "detail": "|dR/dφ|² = p**2 + r**2 ⇒ |dR/dφ| = √(r²+p²) 严格正（r,p>0）⇒ σ=√(r²+p²)·φ 单调、可逆；κ_sp = r/(r²+p²)、|τ_sp| = p/(r²+p²)，单位均为 L⁻¹（与 r241/r242 保留骨架同口径）。⇒ null 曲线在 3D 欧氏投影意义下获得良定义 Frenet 读数，S10 的「无承载物」在投影层被解除。",
+   "numbers": {
+    "kappa": "r/(p**2 + r**2)",
+    "tau_abs": "p/(p**2 + r**2)",
+    "sigma_coeff": "sqrt(p**2 + r**2)",
+    "speed_sq": "p**2 + r**2"
+   }
+  },
+  {
+   "key": "Q3",
+   "verdict": "PASS",
+   "name": "Frenet–Serret 方程在伪参量化 σ 下重推（解析恒等 + 三式数值残差）",
+   "detail": "dT/dσ−κN、dN/dσ+κT−τB、dB/dσ+τN 三式：sympy 解析残差 全 0；数值（r=p=28 m，h=1e-6）三式最大残差 3.29e-12。⇒ FS 方程在 3D 欧氏伪参量化下逐点成立（null 曲线不破坏 FS 代数，只要 3D 投影非退化）。",
+   "numbers": {
+    "analytic_zero": true,
+    "numeric_max_residual": 3.290573952843584e-12,
+    "residuals": [
+     [
+      0.1,
+      6.562347136905092e-13,
+      7.628701593682112e-14,
+      6.562347136905092e-13
+     ],
+     [
+      0.5,
+      4.560983658680497e-13,
+      1.9662952982655941e-13,
+      4.560983658680497e-13
+     ],
+     [
+      1.0,
+      6.249522637568807e-13,
+      9.863311817348538e-13,
+      6.249522637568807e-13
+     ],
+     [
+      2.0,
+      5.640809433151078e-13,
+      7.234293828377561e-13,
+      5.640809433151078e-13
+     ],
+     [
+      3.0,
+      2.2808702342172678e-12,
+      3.290573952843584e-12,
+      2.2808702342172678e-12
+     ]
+    ]
+   }
+  },
+  {
+   "key": "Q4",
+   "verdict": "PASS",
+   "name": "保留资产 1 与 r95 挠率公式的重建式对拍（ω²=c²(κ²+τ²)、τ=ωv_z/c²）",
+   "detail": "κ²+τ² = 1/(p**2 + r**2)；c²(κ²+τ²) 与 c²/(r²+p²) 残差 = 0（λ=t、ṫ=1 归一化下精确）；r95 式 τ=ωv_z/c² 在 v_z=ωp、ω=c/√(r²+p²) 下化为 p/(r²+p²)，与 |τ_sp| 差 = 0。⇒ 两条「保留资产」不是独立假设，而是伪参量化重建的代数推论（条件：λ 取坐标时间、3D 投影非退化）。",
+   "numbers": {
+    "kappa2_tau2": "1/(p**2 + r**2)",
+    "identity_residual": "0",
+    "tau_formula_diff": "0"
+   }
+  },
+  {
+   "key": "Q5",
+   "verdict": "PASS",
+   "name": "极限与连续性：p→0 退化为纯圆周、r→0 退化为轴向直线",
+   "detail": "p→0（v_z→0）：κ→1/r、τ→0（经典空间圆，曲率 1/r）；r→0：κ→0、τ→1/p（轴向直线段）。⇒ 伪参量化读数在物理边界上连续退回经典/退化值，无奇点跳变。",
+   "numbers": {
+    "p0_kappa": "1/r",
+    "p0_tau": "0",
+    "r0_kappa": "0",
+    "r0_tau": "1/p"
+   }
+  },
+  {
+   "key": "Q6",
+   "verdict": "BOUNDARY",
+   "name": "洛伦兹非不变：κ_sp、τ_sp 依赖参考系（不变量门未过）",
+   "detail": "沿 z 助推 β=1/2（γ²=4/3，p'²=(1−β²)p²=3p²/4，r'=r）：r=p 特例下 κ'/κ = 8/7（精确 8/7 ≈ 1.142857）、τ'/τ ≈ 0.989743（4√3/7 ≈ 0.989743）。⇒ κ_sp、τ_sp 均非洛伦兹不变量（承 r54 N14 口径）。本卷重建只给出「参考系内有效」的承载物；协变化路径未给 ⇒ 止步于特定参考系，不进入场方程层。",
+   "numbers": {
+    "kappa_ratio": 1.1428571428571428,
+    "tau_ratio": 0.989743318610787,
+    "gamma2": "4/3",
+    "p2_factor": "3/4"
+   }
+  },
+  {
+   "key": "Q7",
+   "verdict": "PASS",
+   "name": "S10 状态更新：从「全部无效」修正为「3D 投影有效 / 协变意义无效」",
+   "detail": "S10 原文：类光世界线的 Frenet κ,τ 直接套用无效，须先做 null 标架重写（G4）。本卷给出精确分界：① 时空内积意义（ds 参数化、法空间单位化）——仍无效（Q1，法空间退化不可修）；② 3D 欧氏投影 + 伪参量化 σ 意义——有效（Q2/Q3，κ_sp、τ_sp 良定义、可测、L⁻¹）；③ 洛伦兹协变意义——无效（Q6，非不变量）。⇒ S10 由「全部无效」收窄为「仅在 3D 投影层有效」。此更新不重开 S1：α 仍输入（伪参量化不改任何动力学方程）。",
+   "numbers": {
+    "scope_layers": [
+     "spacetime-intrinsic: INVALID",
+     "3D-projection: VALID",
+     "covariant: INVALID"
+    ]
+   }
+  },
+  {
+   "key": "Q8",
+   "verdict": "PASS",
+   "name": "两锚同源反解：τ=1.379e8 m⁻¹ 与曲率半径 56 m 可共存于同一条 null 螺旋",
+   "detail": "若两读数取自同一条螺旋：κ=r/D=1/56、τ=p/D=1.379e8 ⇒ D=1/(κ²+τ²)=5.2586e-17，r=9.3904e-19 m、p=7.2516e-09 m、v_z/c=1.000000000000。⇒ 两锚在同源假设下自洽，且 v_z 自动趋于 c（光子层），但要求极端细长几何（r/p≈1.295e-10）。此前 r95 与 S10 的读数看似相差 7.7e9 倍，实为同一曲线的不同参量分支。",
+   "numbers": {
+    "D": 5.258616111032524e-17,
+    "r": 9.390385912558078e-19,
+    "p": 7.251631617113851e-09,
+    "vz_over_c": 1.0,
+    "kappa_anchor": 0.017857142857142856,
+    "tau_anchor": 137900000.0
+   }
+  }
+ ],
+ "controls": [
+  {
+   "key": "C1",
+   "verdict": "PASS",
+   "name": "mpmath 50 位复核（r=p=28 m ⇒ κ=|τ|=1/56）",
+   "detail": "mp.dps=50：κ=0.017857142857142856151586585156，与 Fraction(1,56) 差 0.00e+00",
+   "numbers": {
+    "kappa_mp": "0.017857142857142857142857142857142857142857142857143",
+    "err": 0.0
+   }
+  },
+  {
+   "key": "C2",
+   "verdict": "PASS",
+   "name": "经典极限对照（p=0 纯空间圆）",
+   "detail": "κ→1/r（经典圆周曲率）、τ→0 ⇒ 伪参量化重建在非 null/纯空间极限下退回经典读数（连续延拓，非平行体系）",
+   "numbers": {
+    "p0_kappa": "1/r",
+    "p0_tau": "0"
+   }
+  },
+  {
+   "key": "C3",
+   "verdict": "PASS",
+   "name": "负对照：轴向直线 κ=0（工具有牙）",
+   "detail": "R=(0,0,φ)：dT/dφ=0 ⇒ κ=0（机器精确）；τ 无定义但按约定取 0。⇒ 重建公式不会给直线伪造曲率。",
+   "numbers": {
+    "kappa_line": "0"
+   }
+  },
+  {
+   "key": "C4",
+   "verdict": "PASS",
+   "name": "量纲四元组 (M,L,T,Q) 精确：κ、τ 均为 L⁻¹",
+   "detail": "κ=r/(r²+p²) ⇒ [L]/[L²]=L⁻¹ (0, -1, 0, 0)；τ=p/(r²+p²) 同 ⇒ 与 r241「κ,τ 仍 L⁻¹」一致；ω 为 T⁻¹、ω/c 为 L⁻¹ 自洽。",
+   "numbers": {
+    "dim_kappa": [
+     0,
+     -1,
+     0,
+     0
+    ],
+    "dim_tau": [
+     0,
+     -1,
+     0,
+     0
+    ]
+   }
+  }
+ ],
+ "guards": [
+  {
+   "key": "G1",
+   "verdict": "PASS",
+   "name": "mpmath 精度 ≥ 50 位",
+   "detail": "dps=50",
+   "numbers": {}
+  },
+  {
+   "key": "G2",
+   "verdict": "PASS",
+   "name": "条目计数一致",
+   "detail": "主 8 + 控制 4 + 守卫 1 = 13",
+   "numbers": {}
+  },
+  {
+   "key": "G3",
+   "verdict": "PASS",
+   "name": "仅写本卷路径（不触碰他卷字节）",
+   "detail": "写入路径均含 TAG=r332；越界 0",
+   "numbers": {}
+  },
+  {
+   "key": "G4",
+   "verdict": "PASS",
+   "name": "verdict 取值合法",
+   "detail": "∈ {PASS,FAIL,BOUNDARY,INFO}",
+   "numbers": {}
+  },
+  {
+   "key": "G5",
+   "verdict": "PASS",
+   "name": "控制组齐备（≥4，含极限/负对照/高位复核/量纲）",
+   "detail": "4/4",
+   "numbers": {}
+  },
+  {
+   "key": "G6",
+   "verdict": "PASS",
+   "name": "取号 r332（三处确认空闲）",
+   "detail": "起草前复查：r327/r328/r330/r331 已占；r329/r332 在源码/数据/判定/HTML 四处均无命中 ⇒ 取 r332；未触碰 ROOTV24 的 r317 与 r326 卷任何字节",
+   "numbers": {}
+  },
+  {
+   "key": "G7",
+   "verdict": "PASS",
+   "name": "FS 方程解析残差恒等为零（重推有效）",
+   "detail": "analytic_zero=True",
+   "numbers": {}
+  },
+  {
+   "key": "G8",
+   "verdict": "PASS",
+   "name": "保留资产 1 与 r95 τ 式对拍残差为零",
+   "detail": "identity=0；tau_match=0",
+   "numbers": {}
+  },
+  {
+   "key": "G9",
+   "verdict": "PASS",
+   "name": "运行时间登记",
+   "detail": "1.5 s",
+   "numbers": {}
+  },
+  {
+   "key": "G10",
+   "verdict": "PASS",
+   "name": "不跑 refresh_catalog.py / 不 git / 不修改 r95,r151,r241,r242 任何字节",
+   "detail": "已遵守",
+   "numbers": {}
+  }
+ ],
+ "run_seconds": 1.5
+}

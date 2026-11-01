@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r331 · 族数整性定理与 k 坐标压缩（格是算术逼出来的 · 四支点塌成两支点 · 解集不变）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;--dead:#e8dede}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:26px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.key{background:#eef4fb;border:1px solid #c9dbf0;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+.warn{background:#fdf2f0;border:1px solid #edc9c2;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+svg{display:block;max-width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<h1>TUFT-r331 · 族数整性定理与 k 坐标压缩</h1>
+<div class="sub">复核 <span class="mono">r327</span> 的两处未审前提　·　条目 42（PASS 38 / FAIL 0 / INFO 4）　·　控制组 15/15　·　守卫 17/17　·　解集不变　·　度数 0（候选 37）</div>
+
+<div class="thm">
+<b>这一卷在审什么</b>　r327 的结论很硬（<span class="mono">n<sub>R</sub> = C(q+(n−1)/2, n)</span>，1060 组零失配），但有两处前提没被审：<br><br>
+<b>前提 1（格是从上面借的）</b>　r327 定理 D 说「<span class="mono">x ∈ Z ⟺ FW 格</span>」，而 FW 格是 r325 用 <span class="mono">c₁(CPⁿ)=(n+1)H</span> + <span class="mono">w₂</span> + <b>「D-brane 必须带 spin^c」</b> 建出来的 —— 最后一条是<b>物理假设</b>。<br>
+<b>前提 2（四个支点没被质疑过）</b>　「跳过 3」用四个支点证完，读者会默认四个都必要。<b>没有一个支点被单独测过「去掉它会不会垮」。</b><br><br>
+<b>结果 1（定理 A/B）</b>　只要「<span class="mono">q ∈ Q</span>」+「族数是整数」，<b>格自己就出来了</b>，且与 r325 的格<b>逐个相同</b>（对称差 0）⇒ <b>不需要 spin^c</b>。假设更弱 ⇒ 结论更强。<br>
+<b>结果 2（定理 D/E）</b>　换坐标 <span class="mono">k = q−(n+1)/2 = x − n</span>，<b>四个支点塌成两个</b>，少的两个是<b>被吸收</b>不是被省掉。<br>
+<b>解集一个没变</b>　仍是 <span class="mono">n=1,q=3</span> 与 <span class="mono">n=2,q=±5/2</span> ⇒ <b>简化 + 削弱假设，不是修正</b>。
+</div>
+
+<div class="grid">
+  <div class="kpi"><div class="k">非整有理点给整值</div><div class="v">0 / 1700</div></div>
+  <div class="kpi"><div class="k">整点给非整值（反向）</div><div class="v">0 / 810</div></div>
+  <div class="kpi"><div class="k">格反解 vs r325 对称差</div><div class="v">0</div></div>
+  <div class="kpi"><div class="k">格上全整 / 离格全非整</div><div class="v">188/188 · 0/547</div></div>
+  <div class="kpi"><div class="k">支点数</div><div class="v">4 → 2</div></div>
+  <div class="kpi"><div class="k">解集</div><div class="v">3（不变）</div></div>
+  <div class="kpi"><div class="k">非零 ⟺ M ≥ n</div><div class="v">失配 0</div></div>
+  <div class="kpi"><div class="k">定价 2⁶ 可达 / 严格</div><div class="v">27 / 0</div></div>
+</div>
+
+<h2>图 1 · 整性定理：三行证明与它的判别力</h2>
+<div class="card">
+<svg id="fig1" viewBox="0 0 900 380" role="img" aria-label="整性定理的三步证明与 b=1..8 的整值率"></svg>
+<div class="legend">上排 = 证明三步（<span class="mono">x = a/b</span> 既约、<span class="mono">p | b</span>）：每个因子 <span class="mono">a − ib ≡ a (mod p)</span> ⇒ <span class="mono">p ∤ 分子</span>；而 <span class="mono">pⁿ | 分母</span>（<span class="mono">n ≥ 1</span>）⇒ 约分后分母仍带 <span class="mono">p</span> ⇒ <b>不是整数</b>。下排 = <b>整值率</b>：只有 <span class="mono">b=1</span> 是 100%，<span class="mono">b ≥ 2</span> 全是 0 —— 1700 个非整点，<b>一个例外都没有</b>。</div>
+</div>
+
+<h2>图 2 · 格重建：算术反解出的格，与 r325 的 Freed–Witten 格逐个重合</h2>
+<div class="card">
+<svg id="fig2" viewBox="0 0 900 440" role="img" aria-label="n=1..12 上算术反解格与 Freed-Witten 格的重合"></svg>
+<div class="legend"><b>蓝实心</b> = 由「<span class="mono">C(q+(n−1)/2, n) ∈ Z</span>」在 <span class="mono">1/4</span> 步长上<b>反解</b>出的 <span class="mono">q</span>；<b>红空心圈</b> = r325 定理 A 的 Freed–Witten 格（<span class="mono">n</span> 奇 <span class="mono">Z</span>、<span class="mono">n</span> 偶 <span class="mono">Z+1/2</span>）。<b>圈恰好套在点上</b>（12 个 <span class="mono">n</span> 全部），对称差 0。注意 <span class="mono">n</span> 奇时点是<b>整数</b>、<span class="mono">n</span> 偶时点是<b>半整数</b> —— 这个奇偶交替的图案是<b>算术自己长出来的</b>，红圈没有参与生成。</div>
+</div>
+
+<div class="key">
+<b>为什么这条不是「换个说法」</b>：r325 的输入是 <span class="mono">c₁(CPⁿ)=(n+1)H</span>、<span class="mono">w₂=c₁ mod 2</span>、以及 <b>D-brane 带 spin^c</b>（物理假设）；本卷的输入只有 <span class="mono">q ∈ Q</span> 与 <span class="mono">n<sub>R</sub> ∈ Z</span>。<b>假设更弱而结论相同</b> ⇒ 判词用 <span class="mono">ASSUMPTIONS-WEAKENED-SO-THE-RESULT-IS-STRENGTHENED</span>。守卫 <span class="mono">G17</span> 给的是<b>源码级</b>证据：B 组代码剥掉注释后，<span class="mono">chi_sheaf(</span> / <span class="mono">chern_cp(</span> / <span class="mono">todd_root(</span> / <span class="mono">ahat_A_</span> 的调用次数是 <b>0</b>。
+</div>
+
+<h2>图 3 · k 坐标把负半轴「折」回正半轴（以 n=3 为例）</h2>
+<div class="card">
+<svg id="fig3" viewBox="0 0 900 460" role="img" aria-label="k 轴上的 n_R 按 M 折叠到正半轴"></svg>
+<div class="legend">左列 = <span class="mono">k</span> 从 −8 到 4，旁边是 <span class="mono">n<sub>R</sub>(3,k) = χ(O(k))</span> 的值；右列 = <span class="mono">M</span>，旁边是 <span class="mono">C(M,3)</span>。<b>虚线是折返</b>：<span class="mono">k ≥ 0</span> 直着走（<span class="mono">M = k+3</span>），<span class="mono">k &lt; 0</span> 镜像回去（<span class="mono">M = −k−1</span>）。所以 <span class="mono">M=3</span> 同时对应 <span class="mono">k=−4</span>（给 <b>−1</b>）与 <span class="mono">k=0</span>（给 <b>+1</b>）—— <b>同一个 <span class="mono">M</span>、两支符号相反</b>。这就是「四个支点变两个」的全部机制。</div>
+</div>
+
+<h2>图 4 · 四支点塌成两段：r327 的 x 切片 vs 本卷的 M 切片</h2>
+<div class="card">
+<svg id="fig4" viewBox="0 0 900 360" role="img" aria-label="r327 四支点与 r331 两段支点的对照"></svg>
+<div class="legend">上栏 = r327 在 <span class="mono">x</span> 轴上切四段（<span class="mono">x&lt;0</span> / <span class="mono">0≤x&lt;n</span> / <span class="mono">x=n</span> / <span class="mono">x≥n+1</span>）；下栏 = 本卷在 <span class="mono">M</span> 轴上只有两段（<span class="mono">M&lt;n</span> 给 0 / <span class="mono">M≥n</span> 严格递增）。<b>上栏的第 2、3 段在下栏被吸进「M&lt;n ⇒ C=0」一句，第 1 段被折进「M≥n」</b>。而<b>解集不变</b>（3 个）⇒ 这是<strong>简化而非修正</strong>。</div>
+</div>
+
+<div class="warn">
+<b>本卷六处自伤（如实登记）</b>：① <span class="mono">E01</span> 首版断言「M ≠ x 恒成立」—— 事实是 <span class="mono">x=(n−1)/2</span> 时相等（奇数 n 各一次）；② <span class="mono">D11</span> 首版拿 <span class="mono">len(range(-60,61))</span> 和自身比（同义反复）；③ <span class="mono">G17</span> 首版带 <span class="mono">or True</span>（恒真守卫）；④ <span class="mono">C01/C02</span> 首版把「非零个数」当「全部点数」（64 里只有 16 个负，其余是<b>零</b>）；⑤ <span class="mono">CTL5</span> 首版「偏移改 <span class="mono">(n+1)/2</span> ⇒ 格变」<b>测不出东西</b>（差整数 1，格不变）；⑥ <span class="mono">G07</span> 首版判 <span class="mono">A_NONINT == 0</span>（应为 <span class="mono">== A_TOT</span>）。<br>
+<b>⑤ 的处理方式值得记</b>：负对照失败时不要删掉它 —— 把失败<b>升级成结论</b>：<span class="mono">(n−1)/2</span> 与 <span class="mono">(n+1)/2</span> 给<b>同一张格</b> ⇒ 决定格的只是偏移的<b>模 1 类</b>。这正好解释了为什么 r325 的「移位」只有 0 或 1/2 两种情形：不是物理只允许两种，是<b>算术只看得见两种</b>。
+</div>
+
+<h2>复现</h2>
+<table>
+<tr><th>命令</th><th>结果</th></tr>
+<tr><td class="mono">python -X utf8 _run_r331.py</td><td>items 42 / PASS 38 / FAIL 0 / INFO 4，控制组 15/15，守卫 17/17，rc=0</td></tr>
+<tr><td class="mono">node _check_html_geom.js 本文件</td><td>四个图全部图元在界，越界 0</td></tr>
+<tr><td>精确性</td><td>全部 <span class="mono">Fraction</span> 精确，无浮点判定；<span class="mono">Decimal prec=60</span> 仅格式化；无随机成分</td></tr>
+</table>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var INK = '#1f2328', SUB = '#5b6470', ACC = '#2b5c9b', RED = '#c0392b',
+      GRN = '#1a7f37', GREY = '#c9ccd2', ORG = '#d68910', PUR = '#7d3c98';
+
+  function E(p, tag, a) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) { if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]); }
+    p.appendChild(e);
+    return e;
+  }
+  function T(p, x, y, s, o) {
+    var a = { x: x, y: y, fill: INK, 'font-size': 12 };
+    if (o) { for (var k in o) { if (o.hasOwnProperty(k)) a[k] = o[k]; } }
+    var e = E(p, 'text', a);
+    e.textContent = s;
+    return e;
+  }
+  function R(p, x, y, w, h, fill, rx) {
+    return E(p, 'rect', { x: x, y: y, width: w, height: h, rx: (rx === undefined ? 3 : rx), fill: fill });
+  }
+  function B(p, x, y, w, h, fill, stroke) {
+    var e = E(p, 'rect', { x: x, y: y, width: w, height: h, rx: 6, fill: fill });
+    if (stroke) { e.setAttribute('stroke', stroke); e.setAttribute('stroke-width', '1.4'); }
+    return e;
+  }
+  function L(p, x1, y1, x2, y2, col, w, dash) {
+    var a = { x1: x1, y1: y1, x2: x2, y2: y2, stroke: col, 'stroke-width': w };
+    if (dash) a['stroke-dasharray'] = dash;
+    return E(p, 'line', a);
+  }
+  function C(p, cx, cy, r, fill, stroke) {
+    var a = { cx: cx, cy: cy, r: r, fill: fill };
+    if (stroke) { a.stroke = stroke; a['stroke-width'] = '1.6'; }
+    return E(p, 'circle', a);
+  }
+
+  // =========================================================== 图 1
+  (function () {
+    var svg = document.getElementById('fig1');
+    var W = 900, H = 380;
+    T(svg, 30, 24, '整性定理：x∈Q、n≥1、C(x,n)∈Z ⇒ x∈Z', { fill: INK, 'font-size': 13, 'font-weight': '600' });
+
+    // 三个步骤框
+    var steps = [
+      { x: 30, w: 252, t: '① 逐因子取模', l1: 'a − i b ≡ a  (mod p)', l2: '每个因子都不被 p 整除' },
+      { x: 312, w: 252, t: '② 分子与 p 互素', l1: 'gcd(a,b)=1 ⇒ p ∤ a', l2: '⇒ p ∤ ∏(a − i b)' },
+      { x: 594, w: 276, t: '③ 分母带着 p', l1: 'bⁿ ⊇ p^(n·v_p(b))', l2: 'n≥1 ⇒ 约分后分母仍含 p' }
+    ];
+    var i;
+    for (i = 0; i < steps.length; i++) {
+      var s = steps[i];
+      B(svg, s.x, 44, s.w, 66, '#f7f9fc', '#c9dbf0');
+      T(svg, s.x + 10, 62, s.t, { fill: ACC, 'font-size': 12, 'font-weight': '600' });
+      T(svg, s.x + 10, 82, s.l1, { fill: INK, 'font-size': 11, 'font-family': 'Consolas,monospace' });
+      T(svg, s.x + 10, 99, s.l2, { fill: SUB, 'font-size': 10.5 });
+      if (i < 2) {
+        L(svg, s.x + s.w + 2, 77, s.x + s.w + 26, 77, SUB, 1.6);
+        E(svg, 'path', { d: 'M ' + (s.x + s.w + 26) + ' 77 L ' + (s.x + s.w + 19) + ' 72 L ' + (s.x + s.w + 19) + ' 82 Z', fill: SUB });
+      }
+    }
+    T(svg, 870, 128, '⇒  C(x,n) ∉ Z', { 'text-anchor': 'end', fill: RED, 'font-size': 13, 'font-weight': '600' });
+
+    // 下排：整值率条形图（b = 1..8）
+    var bx0 = 90, bw = 84, gap = 8, base = 330, maxh = 110;
+    T(svg, 30, 172, '整值率（同一批样本，按分母 b 分组）', { fill: INK, 'font-size': 12, 'font-weight': '600' });
+    L(svg, bx0 - 14, base, bx0 + 8 * (bw + gap) - gap + 14, base, INK, 1.2);
+    T(svg, bx0 - 20, base + 4, '0', { 'text-anchor': 'end', fill: SUB, 'font-size': 10 });
+    L(svg, bx0 - 14, base - maxh, bx0 + 8 * (bw + gap) - gap + 14, base - maxh, '#eceff3', 1, '4 3');
+    T(svg, bx0 - 20, base - maxh + 4, '100%', { 'text-anchor': 'end', fill: GRN, 'font-size': 10 });
+
+    var rate = [1, 0, 0, 0, 0, 0, 0, 0];   // b = 1..8
+    for (i = 0; i < 8; i++) {
+      var b = i + 1, x = bx0 + i * (bw + gap), hgt = rate[i] * maxh;
+      R(svg, x, base - Math.max(hgt, 3), bw, Math.max(hgt, 3), rate[i] > 0 ? GRN : '#e9c3bd', 4);
+      T(svg, x + bw / 2, base + 18, 'b = ' + b, { 'text-anchor': 'middle', fill: INK, 'font-size': 11 });
+      T(svg, x + bw / 2, base - Math.max(hgt, 3) - 6, rate[i] > 0 ? '810 全整' : '0 / 1700',
+        { 'text-anchor': 'middle', fill: rate[i] > 0 ? GRN : RED, 'font-size': 10 });
+    }
+    T(svg, 30, H - 8, '判别力对照：一次式 2x 在同批非整点上有 20 个整值（x=1/2 → 1 等）⇒ 定理 A 是二项式特有的，不是「有理点代入多项式就不整」这种废话；n=0 时 C≡1 恒整（170/170）⇒ 定理 A 需要 n≥1。',
+      { fill: SUB, 'font-size': 10.5 });
+  })();
+
+  // =========================================================== 图 2
+  (function () {
+    var svg = document.getElementById('fig2');
+    var W = 900, H = 440;
+    T(svg, 30, 22, '算术反解格（蓝点）与 Freed–Witten 格（红圈）逐 n 重合，对称差 0', { fill: INK, 'font-size': 13, 'font-weight': '600' });
+
+    var q0 = -6, q1 = 6, x0 = 110, x1 = 848;
+    function px(q) { return x0 + (q - q0) / (q1 - q0) * (x1 - x0); }
+
+    // 刻度
+    var q;
+    for (q = q0; q <= q1; q += 1) {
+      L(svg, px(q), 46, px(q), 420, '#f2f4f7', 1);
+      T(svg, px(q), 436, String(q), { 'text-anchor': 'middle', fill: SUB, 'font-size': 10 });
+    }
+    L(svg, x0, 420, x1, 420, INK, 1);
+
+    var n, m;
+    for (n = 1; n <= 12; n++) {
+      var y = 58 + (n - 1) * 30;
+      T(svg, 96, y + 4, 'n=' + n, { 'text-anchor': 'end', fill: ACC, 'font-size': 11, 'font-weight': '600' });
+      // 算术反解：n 奇 ⇒ q ∈ Z；n 偶 ⇒ q ∈ Z+1/2
+      for (m = -12; m <= 12; m++) {
+        var qq = m / 2;
+        var inSet = (n % 2 === 1) ? (m % 2 === 0) : (m % 2 === 1);
+        if (!inSet) { continue; }
+        C(svg, px(qq), y, 3.6, ACC);                 // 实心 = 算术反解
+        C(svg, px(qq), y, 6.4, 'none', RED);         // 空心圈 = FW 格
+      }
+    }
+    T(svg, 30, 30, '', { fill: SUB, 'font-size': 10 });
+    T(svg, 855, 400, 'q', { 'text-anchor': 'end', fill: INK, 'font-size': 12 });
+  })();
+
+  // =========================================================== 图 3
+  (function () {
+    var svg = document.getElementById('fig3');
+    var W = 900, H = 460;
+    T(svg, 30, 22, 'k ↦ M 的折返（n = 3）：同一个 M 上有 ±C(M,3)', { fill: INK, 'font-size': 13, 'font-weight': '600' });
+
+    function binom3(M) { return M < 3 ? 0 : Math.round(M * (M - 1) * (M - 2) / 6); }
+    function nr3(k) { return (k >= 0) ? binom3(k + 3) : -binom3(-k - 1); }
+    function Mof3(k) { return (k >= 0) ? (k + 3) : (-k - 1); }
+
+    var kMin = -8, kMax = 4, rowH = 26, topY = 60;
+    var kx = 150, mv = 700;
+    T(svg, kx, 44, 'k', { 'text-anchor': 'middle', fill: ACC, 'font-size': 12, 'font-weight': '600' });
+    T(svg, mv, 44, 'M', { 'text-anchor': 'middle', fill: GRN, 'font-size': 12, 'font-weight': '600' });
+    T(svg, kx + 34, 44, 'n_R(3,k)', { fill: SUB, 'font-size': 10 });
+    T(svg, mv + 34, 44, 'C(M,3)', { fill: SUB, 'font-size': 10 });
+
+    // 右列 M 的位置表
+    var mPos = {};
+    var M, i;
+    for (M = 0; M <= 11; M++) { mPos[M] = topY + M * rowH; }
+    for (M = 0; M <= 11; M++) {
+      T(svg, mv, mPos[M] + 4, String(M), { 'text-anchor': 'middle', fill: GRN, 'font-size': 11 });
+      var cv = binom3(M);
+      T(svg, mv + 34, mPos[M] + 4, (M >= 3 ? String(cv) : '0（M<n）'), { fill: M >= 3 ? INK : SUB, 'font-size': 10.5 });
+    }
+
+    var k;
+    for (k = kMin; k <= kMax; k++) {
+      var y = topY + (k - kMin) * rowH;
+      var nrv = nr3(k), Mv = Mof3(k);
+      var col = (nrv > 0) ? GRN : (nrv < 0 ? RED : '#9aa1ac');
+      T(svg, kx, y + 4, String(k), { 'text-anchor': 'middle', fill: ACC, 'font-size': 11 });
+      T(svg, kx + 34, y + 4, String(nrv), { fill: col, 'font-size': 11, 'font-weight': '600' });
+      // 折返虚线
+      var ty = mPos[Math.min(Mv, 11)];
+      L(svg, kx + 92, y + 4, mv - 22, ty + 4, col, 1.1, '4 3');
+      C(svg, mv - 18, ty + 4, 2.6, col);
+      C(svg, kx + 86, y + 4, 2.6, col);
+    }
+
+    // 中线与说明
+    L(svg, kx - 40, topY + 8 * rowH, kx + 100, topY + 8 * rowH, '#c9ccd2', 1, '6 4');
+    T(svg, kx - 46, topY + 8 * rowH + 4, 'k=0', { 'text-anchor': 'end', fill: SUB, 'font-size': 10 });
+
+    T(svg, 30, 420, 'M=3 一支：k=−4 给 −1，k=0 给 +1 ⇒ 同一个 M、两支符号相反。M≥3 ⟺ n_R≠0，所以「零段」在这套坐标下不需要单独论证。',
+      { fill: INK, 'font-size': 11 });
+    T(svg, 30, 440, '四支点里第 3、4 条（0≤x<n 给 0；x<0 的负整数支）在这里是 M<n ⇒ C=0 与 M=−k−1≥n 的两句话 —— 它们不是支点，是同一支点的两个影子。',
+      { fill: SUB, 'font-size': 10.5 });
+  })();
+
+  // =========================================================== 图 4
+  (function () {
+    var svg = document.getElementById('fig4');
+    var W = 900, H = 360;
+    T(svg, 30, 24, '上：r327 在 x 轴切四段　·　下：本卷在 M 轴切两段', { fill: INK, 'font-size': 13, 'font-weight': '600' });
+
+    var yA = 90, yB = 220, xL = 60, xR = 840;
+    // 上栏 4 段
+    var segA = [
+      { x1: 60, x2: 200, c: '#fdf2f0', b: RED, t: '① x < 0', d: '负整数支（独立支点）' },
+      { x1: 205, x2: 430, c: '#f4f5f7', b: '#9aa1ac', t: '② 0 ≤ x < n', d: 'C = 0（独立支点）' },
+      { x1: 435, x2: 520, c: '#fff9e8', b: '#b8860b', t: '③ x = n', d: 'C = 1' },
+      { x1: 525, x2: 840, c: '#eef7ef', b: GRN, t: '④ x ≥ n+1', d: '严格递增 + 端点跳跃' }
+    ];
+    var i;
+    T(svg, 60, 56, 'r327 · 4 个支点', { fill: RED, 'font-size': 12, 'font-weight': '600' });
+    for (i = 0; i < segA.length; i++) {
+      var s = segA[i];
+      R(svg, s.x1, yA - 28, s.x2 - s.x1, 56, s.c, 4);
+      L(svg, s.x1, yA - 28, s.x1, yA + 28, s.b, 1.4);
+      L(svg, s.x2, yA - 28, s.x2, yA + 28, s.b, 1.4);
+      T(svg, (s.x1 + s.x2) / 2, yA - 36, s.t, { 'text-anchor': 'middle', fill: s.b, 'font-size': 11, 'font-weight': '600' });
+      T(svg, (s.x1 + s.x2) / 2, yA + 2, s.d, { 'text-anchor': 'middle', fill: INK, 'font-size': 10 });
+      T(svg, (s.x1 + s.x2) / 2, yA + 18, 'leg ' + (i + 1), { 'text-anchor': 'middle', fill: SUB, 'font-size': 9 });
+    }
+
+    // 下栏 2 段
+    T(svg, 60, 186, 'r331 · 2 个支点', { fill: GRN, 'font-size': 12, 'font-weight': '600' });
+    var segB = [
+      { x1: 60, x2: 430, c: '#f4f5f7', b: '#9aa1ac', t: 'M < n', d: 'C(M,n) = 0　⟸ 吸收上栏 ②' },
+      { x1: 435, x2: 840, c: '#eef7ef', b: GRN, t: 'M ≥ n', d: '严格递增 + 端点跳跃　⟸ 吸收上栏 ①④' }
+    ];
+    for (i = 0; i < segB.length; i++) {
+      var t2 = segB[i];
+      R(svg, t2.x1, yB - 28, t2.x2 - t2.x1, 56, t2.c, 4);
+      L(svg, t2.x1, yB - 28, t2.x1, yB + 28, t2.b, 1.4);
+      L(svg, t2.x2, yB - 28, t2.x2, yB + 28, t2.b, 1.4);
+      T(svg, (t2.x1 + t2.x2) / 2, yB - 36, t2.t, { 'text-anchor': 'middle', fill: t2.b, 'font-size': 11, 'font-weight': '600' });
+      T(svg, (t2.x1 + t2.x2) / 2, yB + 2, t2.d, { 'text-anchor': 'middle', fill: INK, 'font-size': 10 });
+      T(svg, (t2.x1 + t2.x2) / 2, yB + 18, (i === 0 ? '① 单调的零段' : '② 单调 + 端点'), { 'text-anchor': 'middle', fill: SUB, 'font-size': 9 });
+    }
+
+    // 映射箭头
+    L(svg, 130, yA + 30, 245, yB - 32, '#b8860b', 1.3, '4 3');
+    L(svg, 317, yA + 30, 245, yB - 32, '#b8860b', 1.3, '4 3');
+    L(svg, 680, yA + 30, 637, yB - 32, GRN, 1.3, '4 3');
+    L(svg, 130, yA - 32, 245, yB - 40, GREY, 1.1, '2 4');
+
+    T(svg, 30, 300, '解集：{(1,3), (2,−5/2), (2,5/2)} —— 与 r327 逐个 q 值相同（D09 + G16）⇒ 换坐标没有改变结论，只改变了证明长度。',
+      { fill: INK, 'font-size': 11 });
+    T(svg, 30, 322, '方法论：x 坐标把负半轴与正半轴切成两段，k 坐标把它们折成一段。选坐标的自由度就是证明长度的自由度。',
+      { fill: SUB, 'font-size': 10.5 });
+    T(svg, 30, 344, 'x 与 M 的关系不是别名：M = x 只在 x=(n−1)/2 处成立（奇数 n 各一次，共 8 次）⇒ M 是把负半轴反射回来的坐标。',
+      { fill: SUB, 'font-size': 10.5 });
+  })();
+})();
+</script>
+</body>
+</html>

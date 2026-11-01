@@ -1,0 +1,147 @@
+==============================================================================
+TUFT-r335 . 整性给格只是单通量现象
+date=2026-11-01  degree=0  candidate_degree=37
+==============================================================================
+
+[convention] Q_L (3,2)_{1/6} dim=6 Y=1/6 ; u^c (3bar,1)_{-2/3} dim=3 ; d^c (3bar,1)_{1/3} dim=3 ; L_L (1,2)_{-1/2} dim=2 ; e^c (1,1)_{1} dim=1
+  CP^n      : n_R = C(q-(n+1)/2+n, n) = chi(O(k)),  k = q-(n+1)/2
+  CP^1xCP^1 : n_R = q1*q2  (td series + closed form, two paths) ; honest lattice Z^2
+  del Pezzo : n_R = F^2/2 + 1 - K^2/8 , K^2 = 9-k , honest lattice c1(D)=F+K/2 integral
+
+[A] RANK ONE BASELINE (CP^n, r331 reproduced)
+  n | integrality set | lattice | symmetric difference
+   1 |              13 |      13 | 0
+   2 |              12 |      12 | 0
+   3 |              13 |      13 | 0
+   4 |              12 |      12 | 0
+   5 |              13 |      13 | 0
+   6 |              12 |      12 | 0
+   7 |              13 |      13 | 0
+   8 |              12 |      12 | 0
+   9 |              13 |      13 | 0
+  10 |              12 |      12 | 0
+  11 |              13 |      13 | 0
+  12 |              12 |      12 | 0
+  on-lattice points 150, violations 0 ; off-lattice points 0
+  resolve (no preset shift): tried 12, bad 0
+  affine closure u-v+w : 12/12
+
+[B] RANK TWO : CP^1 x CP^1 , n_R = q1*q2
+  two-path agreement 100/100
+  honest lattice Z^2 on integers: violations 0 / 169
+  infinite family q=(1/m,m): n_R=1 59/59 ; off-lattice 59/59
+  box (1/6)Z^2 in [-4,4]^2 : points 2401 , integrality 321 , OFF-LATTICE 240
+  off-lattice examples : -4,-7/2 ; -4,-5/2 ; -4,-3/2 ; -4,-1/2 ; -4,1/2 ; -4,3/2 ; -4,5/2 ; -4,7/2
+  difference closure : u=(2,1/2) v=(1,0) u-v=(1,1/2)
+    n_R(u)=1  n_R(v)=0  n_R(u-v)=1/2
+
+[C] SAME MANIFOLD, DIFFERENT LINE
+  diag q=(t,t)   integrality   13 , lattice   13 , symmetric difference 0
+  q=(t,2t)       integrality   13 , lattice   13 , symmetric difference 0
+  q=(t,t^2)      integrality   13 , lattice   13 , symmetric difference 0
+
+[D] DEL PEZZO SURFACES (not products)
+  k | K^2 | box points | integrality | OFF-LATTICE
+  0 |   9 |          49 |           4 | 0
+  1 |   8 |        2401 |         125 | 109
+  2 |   7 |        2401 |          20 | 20
+  3 |   6 |        2401 |          36 | 36
+  4 |   5 |        2401 |          20 | 20
+  5 |   4 |        2401 |          44 | 44
+  6 |   3 |        2401 |          20 | 20
+  7 |   2 |        2401 |          36 | 36
+  8 |   1 |        2401 |          20 | 20
+  dP1 q=(1/4,1/4) : n_R=0 , off-lattice=True
+
+[E] ONE VERSUS TWO VARIABLES (coset test + denominator bound)
+  polynomials 60 ; bound holds 60 ; nonempty sets 48 ; max denominator 6
+  1-var coset 56/60 ; 2-var NOT coset 44/60
+
+[pricing] 2^6=64 strict=13 matching=1 predicting=32 S1^S2=0 S3^S4=0
+[summary] items=42 PASS=38 FAIL=0 INFO=4
+
+[items]  (kind: eq=equal / gt=act>exp / info=statement only)
+  A01   PASS eq   exp=0                                      act=0
+  A02   PASS eq   exp=0                                      act=0
+  A03   PASS eq   exp=0                                      act=0
+  A04   PASS eq   exp=12                                     act=12
+  A05   PASS eq   exp=12                                     act=12
+  A06   PASS eq   exp=12                                     act=12
+  A07   PASS eq   exp=1                                      act=1
+  A08   INFO info exp=-                                      act=-
+  B01   PASS eq   exp=100                                    act=100
+  B02   PASS eq   exp=0                                      act=0
+  B03   PASS eq   exp=59                                     act=59
+  B04   PASS eq   exp=59                                     act=59
+  B05   PASS gt   exp=0                                      act=240
+  B06   PASS eq   exp=2                                      act=2
+  B07   PASS eq   exp=1                                      act=1
+  B08   INFO info exp=-                                      act=-
+  C01   PASS eq   exp=0                                      act=0
+  C02   PASS eq   exp=0                                      act=0
+  C03   PASS eq   exp=0                                      act=0
+  C04   PASS gt   exp=0                                      act=13
+  C05   INFO info exp=-                                      act=-
+  D01   PASS eq   exp=49                                     act=49
+  D02   PASS eq   exp=0                                      act=0
+  D03   PASS eq   exp=1                                      act=1
+  D04   PASS eq   exp=0                                      act=0
+  D05   PASS eq   exp=8                                      act=8
+  D06   PASS gt   exp=0                                      act=305
+  D07   PASS eq   exp=8                                      act=8
+  D08   PASS eq   exp=1                                      act=1
+  D09   INFO info exp=-                                      act=-
+  E01   PASS eq   exp=60                                     act=60
+  E02   PASS gt   exp=0                                      act=48
+  E03   PASS gt   exp=0                                      act=6
+  E04   PASS gt   exp=0                                      act=56
+  E05   PASS gt   exp=0                                      act=44
+  E06   PASS gt   exp=0                                      act=2400
+  E07   PASS gt   exp=0                                      act=4
+  F01   PASS gt   exp=0                                      act=51
+  F02   PASS eq   exp=0                                      act=0
+  F03   PASS eq   exp=1                                      act=1
+  F04   PASS eq   exp=0                                      act=0
+  F05   PASS eq   exp=0                                      act=0
+
+[controls]
+  CTL1  PASS 正对照：CP^n 上整性集 == FW 格（判据没坏） ; symdiff=0
+  CTL2  PASS 正对照：A02 的分母非零 ; 格上点 150
+  CTL3  PASS 正对照：B05 的分子非空（箱内确有整性点） ; in=321
+  CTL4  PASS 负对照：离格数 ≠ 整性点数（否则判据无区分） ; off=240 in=321
+  CTL5  PASS 正对照：族上 n_R 恒为同值（不是噪声） ; 取值集合=['1']
+  CTL6  PASS 负对照：若族上有一点在格上，B03/B04 就失效 ; off=59/59
+  CTL7  PASS 负对照：差封闭反例三点必须两真一假 ; u,v∈S=2 ; u−v∈S=False
+  CTL8  PASS 正对照：两条线上的整性集确实还原格 ; diag=0 two=0
+  CTL9  PASS 正对照：C 组分母非零 ; diag S 大小=13
+  CTL10 PASS 正对照：表面闭式与 td 级数一致（两条路都对） ; 49/49
+  CTL11 PASS 负对照：CP²（rank 1）必须 0 离格，否则 A/D 两组打架 ; k=0 off=0 / 49 点
+  CTL12 PASS 正对照：分母有界引理在 60 个多项式上全成立 ; 60/60
+  CTL13 PASS 负对照：两侧比例不能都满或都空（否则对比无意义） ; 1D 陪集 56/60 ; 2D 陪集 16/60
+  CTL14 PASS 正对照：三个定价槽取值与各组读数一致 ; S1=True S2=False S3=True
+  CTL15 PASS 正对照：B01 两条路径全中（n_R=q1q2 这个前提可靠） ; 100/100
+  CTL16 PASS 负对照：把「离格」判据换成恒假 ⇒ 离格数必须塌成 0（证明 B05 的数不是判据自带的） ; broken=0（真判据 240）
+  CTL17 PASS 正对照：陪集判据（仿射封闭 + 反解）在 CP^n 上 12/12 ; 12/12 resolve_bad=0
+
+[guards] 18/18
+  G01   PASS verdict 合法（大写、含判词主体、长度 >= 40） ; X-R331-1-ANSWERED__INTEGRALITY-ALONE-FORCES-THE-LATTICE-ONLY
+  G02   PASS 条目编号唯一（重复 tag 会让 report 与 json 对不上） ; items=42 unique=42
+  G03   PASS 控制组全过 ; 17/17
+  G04   PASS Decimal 精度 >= 50 ; prec=60
+  G05   PASS 源码无 random 导入（确定性） ; 行首 import/from random 命中 0
+  G06   PASS INFO 条目只来自 info 类（判决类不得被降级成 INFO） ; info 类 4 条
+  G07   PASS verdict 由计数驱动（基线 / 反例 / 族三件事都进判词） ; symdiff=0 offbox=240 fam=59
+  G08   PASS 定价覆盖本卷核心（S1∧S2=0 且 S3∧S4=0） ; S1^S2=0 S3^S4=0
+  G09   PASS 无同义反复（源码级）：exp 与 act 不得是同一个整数字面量 ; 命中 0 条
+  G10   PASS 字面 True 的守卫计数如实登记 ; 字面 True 出现 1 处
+  G11   PASS 所有判决类条目无 FAIL ; fail=0
+  G12   PASS **分母非空**（防「0 条即通过」） ; A=150 B=2401 fam=59 E=60
+  G13   PASS 无限族真被机检（不是口头断言） ; n_R=1 的 59/59，离格 59/59
+  G14   PASS 自审：六个关键负对照都真改变了输出 ; 6/6
+  G15   PASS 不宣称预言三代 ; 含 NOT-PREDICTED
+  G16   PASS 与 r331 的等价性（CP^n 上整性⟹格 12/12 复现，且反解不需要预设 shift） ; symdiff=0 bad=0 resolve_bad=0
+  G17   PASS 三条独立实现都在（乘积 td 级数 / 表面闭式 / 广义二项式） ; chi_prod=True dp_nr=True binom_g=True
+  G18   PASS 所有判决类条目的 note 里都写了分母（info 条已排除） ; 判决类 38 条
+
+[verdict] X-R331-1-ANSWERED__INTEGRALITY-ALONE-FORCES-THE-LATTICE-ONLY-FOR-RANK-ONE-FLUX__ON-RANK-TWO-FANOS-THE-INTEGRALITY-SET-IS-NOT-A-COSET-AT-ALL__EXPLICIT-INFINITE-OFF-LATTICE-FAMILY-Q-EQUALS-ONE-OVER-M-COMMA-M__DIFFERENCE-CLOSURE-AND-AFFINE-CLOSURE-BOTH-FAIL-THERE__THE-PROPERTY-BELONGS-TO-THE-FLUX-LINE-NOT-TO-THE-MANIFOLD__R331-NOT-OVERTURNED-BUT-CONFINED-TO-RANK-ONE__STILL-NOT-PREDICTED
+==============================================================================

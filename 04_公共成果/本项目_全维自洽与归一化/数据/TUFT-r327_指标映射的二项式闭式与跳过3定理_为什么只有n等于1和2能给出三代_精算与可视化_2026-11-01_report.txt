@@ -1,0 +1,143 @@
+==============================================================================
+TUFT-r327 . 指标映射的二项式闭式与「跳过 3」定理
+date=2026-11-01  degree=0
+==============================================================================
+
+[convention] n_R = int_{CP^n} e^{qH} A-hat(CP^n);  path C = Chern roots + Todd sequence
+  Q_L (3,2)_{1/6}        dim=6  Y=1/6  
+  u^c (3bar,1)_{-2/3}    dim=3  Y=-2/3 
+  d^c (3bar,1)_{1/3}     dim=3  Y=1/3  
+  L_L (1,2)_{-1/2}       dim=2  Y=-1/2 
+  e^c (1,1)_{1}          dim=1  Y=1    
+  SM six anomalies: {'A3': '0', 'A2': '0', 'Ag': '0', 'AYY': '0', 'AYF': '0', 'AFF': '0'}
+
+[theorem-A] power sums of Chern roots : P_m = (n+1)H^m for m <= n
+  checked n=1..12 : ok=78  mismatch=0
+  fails for m > n : CP^2 P_3 = 0  (vs 4H^3)
+
+[theorem-B] Todd-Hirzebruch : [H^n] e^(lam H) T(H)^(n+1) = C(lam+n, n)
+  n=1..8 x lam grid : mismatch=0
+
+[theorem-C] THE BINOMIAL CLOSED FORM
+  n_R(q) = C(q + (n-1)/2, n)          <=== exact identity
+  proof: A-hat = td * e^(-c1/2); log td = sum_m (logT)_m P_m;
+         by Thm A, td = T(H)^(n+1) mod H^(n+1) => n_R = [H^n] e^((q-(n+1)/2)H) T^(n+1) = C(q+(n-1)/2,n)
+  checked n=1..12 x 61 q : mismatch=0 ; off-lattice (den 3) : mismatch=0
+    n=1  n_R = C(q + 0, 1)
+    n=2  n_R = C(q + 1/2, 2)
+    n=3  n_R = C(q + 1, 3)
+    n=4  n_R = C(q + 3/2, 4)
+    n=5  n_R = C(q + 2, 5)
+    n=6  n_R = C(q + 5/2, 6)
+
+[theorem-D] Freed-Witten shift IS the integrality of the binomial top
+  x = q + (n-1)/2 in Z  <=>  q on the FW lattice (Z for n odd, Z+1/2 for n even)
+  contingency over 300 (n,q) pairs : lattice 150 -> non-integer x 0 ; off-lattice 150 -> integer x 0
+  per-n lattice counts : [13, 12, 13, 12, 13, 12, 13, 12, 13, 12, 13, 12]
+
+[theorem-E] THREE IS SKIPPED FOR n >= 3  (a proof, not a scan)
+  n=1 : C(x,1)=3 => x=3
+  n=2 : C(x,2)=3 => x=3 or -2  (T_2 = 3)
+  n>=3: monotone on x>=n with C(n,n)=1 < 3 < n+1=C(n+1,n);
+        x<n gives 0; x<0 gives |C|>=n+1>=4 or sign (-1)^n
+  => solution set = { n=1: x=3 ; n=2: x=-2,3 }
+
+[theorem-F] achievable generation number on CP^n = C(m,n)
+  n=1 : [1, 2, 3, 4, 5]
+  n=2 : [1, 3, 6, 10, 15]
+  n=3 : [1, 4, 10, 20, 35]
+  n=4 : [1, 5, 15, 35, 70]
+  n=5 : [1, 6, 21, 56, 126]
+  n=6 : [1, 7, 28, 84, 210]
+  ==> n=2 gives EXACTLY the triangular numbers ; 3 = T_2
+
+[theorem-G] 3 vs 4 : min nontrivial internal complex dim
+  N=3 needs n>=2 (CP^2) ; N=4 needs n>=3 (CP^3)
+
+[items]  (kind: eq=equal / gt=act>exp / info=statement only)
+  A01   PASS eq   exp=[2, 3, 3, 4, 6, 4]             act=[2, 3, 3, 4, 6, 4]            
+  A02   PASS eq   exp=78                             act=78                            
+  A03   PASS eq   exp=0                              act=0                             
+  A04   PASS eq   exp=[3, 3, 0]                      act=[3, 3, 0]                     
+  A05   PASS gt   exp=0                              act=9                             
+  A06   PASS eq   exp=0                              act=0                             
+  A07   PASS eq   exp=0                              act=0                             
+  A08   PASS eq   exp=-1/6                           act=-1/6                          
+  B01   PASS eq   exp=0                              act=0                             
+  B02   PASS eq   exp=0                              act=0                             
+  B03   PASS eq   exp=0                              act=0                             
+  B04   PASS eq   exp=0                              act=0                             
+  B05   PASS eq   exp=[-1/8, 0, 1/2]                 act=[-1/8, 0, 1/2]                
+  B06   PASS eq   exp=0                              act=0                             
+  B07   PASS eq   exp=0                              act=0                             
+  C01   PASS eq   exp=0                              act=0                             
+  C02   PASS eq   exp=[13, 12, 13, 12, 13, 12, 13, 1 act=[13, 12, 13, 12, 13, 12, 13, 1
+  C03   PASS eq   exp=[2, 4, 6, 8, 10, 12]           act=[2, 4, 6, 8, 10, 12]          
+  D01   PASS eq   exp=[3]                            act=[3]                           
+  D02   PASS eq   exp=[-2, 3]                        act=[-2, 3]                       
+  D03   PASS eq   exp=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0] act=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  D04   PASS eq   exp=12                             act=12                            
+  D05   PASS eq   exp=0                              act=0                             
+  D06   PASS eq   exp=0                              act=0                             
+  D07   PASS eq   exp=0                              act=0                             
+  D08   PASS eq   exp=0                              act=0                             
+  D09   INFO info exp=-                              act=-                             
+  E01   PASS eq   exp=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10 act=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  E02   PASS eq   exp=[1, 2]                         act=[1, 2]                        
+  E03   PASS eq   exp=[1, 3]                         act=[1, 3]                        
+  E04   PASS eq   exp=12                             act=12                            
+  E05   PASS eq   exp=3                              act=3                             
+  E06   PASS eq   exp=0                              act=0                             
+  E07   PASS eq   exp=2                              act=2                             
+  E08   PASS eq   exp=3                              act=3                             
+  E09   PASS eq   exp=[[1, 3, 6, 10, 15], [1, 4, 10, act=[[1, 3, 6, 10, 15], [1, 4, 10,
+  E10   PASS eq   exp=2                              act=2                             
+  F01   PASS eq   exp=0                              act=0                             
+  F02   PASS eq   exp=0                              act=0                             
+  F03   PASS gt   exp=0                              act=3                             
+  F04   PASS eq   exp=0                              act=0                             
+  F05   INFO info exp=-                              act=-                             
+  F06   PASS eq   exp=[0, 0, 0, 0, 0, 0]             act=[0, 0, 0, 0, 0, 0]            
+  F07   INFO info exp=-                              act=-                             
+
+[controls]
+  CTL1   PASS  正对照：Pascal 行 c_k(CP^n)=C(n+1,k) 在 n=1..12 上正确
+  CTL2   PASS  正对照：路径 C 在 n=1 给 a_2 = -1/6（与手算 H/sinh H 一致）
+  CTL3   PASS  负对照：把二项式的偏移从 (n-1)/2 改成 (n+1)/2 ⇒ 恒等式失败（偏移承重）
+  CTL4   PASS  负对照：把 binom 的 n 改成 n-1 ⇒ 恒等式失败（阶数承重）
+  CTL5   PASS  负对照：把 Â 截断到 H^2（丢掉 a4、a6）⇒ n>=6 时二项式恒等式失败
+  CTL6   PASS  正对照：三角形数判据与 C(x,2) 判据在 N=1..40 上一致
+  CTL7   PASS  负对照：把判据换成「平方数」⇒ 3 会被误判为不可达（判别力）
+  CTL8   PASS  正对照：解集计数自洽（1 + 2 = 3）
+  CTL9   PASS  正对照：定价函数在空约束下是 64
+  CTL10  PASS  负对照：去掉约束 (iv) S5=>¬S6 ⇒ S5∧S6 变可达 ⇒ 该约束承重
+  CTL11  PASS  正对照：L1 在 m<=n 全对且在 m=n+1 至少对 n=2 失效（不是恒真）
+  CTL12  PASS  负对照：把 L2 的指数从 n+1 改成 n ⇒ 二项式恒等式失败（Todd 幂次承重）
+  CTL13  PASS  正对照：ahat_A_fixed 与 ahat_C 在 n=1..12 的 H^2..H^6 上全一致
+  CTL14  PASS  负对照：ahat_A_buggy 确实与 ahat_C 不符（否则 A05 是恒绿）
+  CTL15  PASS  负对照：把 chi 的 k<0 支判成 0（即漏掉 Serre 对偶）⇒ B06 立刻被打红
+
+[pricing] 2^6=64 achievable=23 strict=0 S5^S6=0 S2^S4=3
+[summary] items=44 PASS=41 FAIL=0 INFO=3
+
+[guards] 17/17
+  G01  PASS  verdict 合法（大写、含判词主体、长度 >= 40） ; X-R325-1-CLOSED__INDEX-MAP-IS-EXACTLY-TH
+  G02  PASS  items 数与 json 一致（写盘后回读） ; json=44 mem=44
+  G03  PASS  控制组全过 ; 15/15
+  G04  PASS  Decimal 精度 >= 50 ; prec=60
+  G05  PASS  源码无 random 导入（确定性） ; 行首 import/from random 命中 0
+  G06  PASS  report/json 逐条一致（写盘后回读） ; 逐条一致 + report 已落盘
+  G07  PASS  verdict 由计数驱动（二项式、FW 整数化、跳过 3、三角形数、不预言五件事都进判词） ; L1=78 ID_BAD=0 sol1=1 sol2=2
+  G08  PASS  定价覆盖本卷最硬发现（S5∧S6 = 0：三角形数解释不了「为什么是 3」） ; S5^S6=0 S2^S4=3
+  G09  PASS  **无同义反复（源码级）**：exp 与 act 不得是同一个带引号字面量 ; 命中 0 条：[]
+  G10  PASS  字面 True 的守卫计数如实登记 ; 字面 True 出现 3 处
+  G11  PASS  所有判决类条目无 FAIL ; fail=0
+  G12  PASS  n_R 作为 q 的多项式，次数恰为 n 且首项系数 = 1/n!（n=1..12 全查） ; 12 条；首项 1/1/2/1/6
+  G13  PASS  证明的四个支点都真被机检（D04..D08 全 PASS；支点 1 拆成单调性 + Pascal 差分两条） ; 5/5
+  G14  PASS  自审：CTL3/CTL4/CTL5/CTL7/CTL10/CTL12/CTL14/CTL15 八个负对照都真改变 ; 8/8
+  G15  PASS  不宣称预言了三代（判词含 NOT-PREDICTED 且不含 PREDICTED-THREE 之类断言） ; 含 NOT-PREDICTED
+  G16  PASS  bug 无害性有独立证据（A06 修正后零失配 且 A07 危害数 = 0） ; fixed_mismatch=0 harmful=0
+  G17  PASS  C01 不是恒绿：格点集非空、两个奇偶类都被覆盖、且离格点全部给非整数 x ; lattice=150/300 off=150 off_giving_int_x
+
+[verdict] X-R325-1-CLOSED__INDEX-MAP-IS-EXACTLY-THE-BINOMIAL-C-Q-PLUS-HALF-N__AND-THE-BINOMIAL-IS-JUST-RIEMANN-ROCH-FOR-O-K-ON-CPN__FREED-WITTEN-SHIFT-IS-WHAT-MAKES-THE-BINOMIAL-TOP-INTEGER__THREE-IS-SKIPPED-FOR-N-GE-3-SINCE-C-N-N-1-AND-C-N1-N-N1__THREE-GENERATIONS-EQUIVALENT-TO-THREE-BEING-TRIANGULAR-AND-CP2__STILL-NOT-PREDICTED-BECAUSE-TRIANGULAR-NUMBERS-ARE-INFINITE
+==============================================================================

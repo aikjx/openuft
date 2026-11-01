@@ -1,0 +1,70 @@
+==============================================================================
+TUFT-r366 · 整值多项式通有性审计
+==============================================================================
+[items] 25 条  PASS=25  FAIL=0
+  A01   PASS/FAIL PASS  exp=0 act=0  组 51 组（Fano 27 / CY 6 / 一般型 18）；失配 A-C=0 A-H=0 C-H=0
+  A02   PASS/FAIL PASS  exp=0 act=0  组 51 组，违例 0；exp 走闭式子式、act 走 td 级数，两条不共享中间量
+  A03   PASS/FAIL PASS  exp=0 act=0  组 51 组，违例 0；恒整性（d(2n+1−d) 必偶）已在 Fraction 层验过
+  A04   PASS/FAIL PASS  exp={1: 0, 2: 2, 3: 0, 4: 2, 5: 0} act={1: 0, 2: 2, 3: 0, 4: 2, 5: 0}  n=1..5；K3(n=2,d=4)=2、五次三维 CY(n=3,d=5)=0、四次曲线一般型(n=1,d=4)=-2
+  A05   PASS/FAIL PASS  exp=0 act=0  非 Fano 组 24 组（占 51 组的 47.1%），失配 0
+  A06   PASS/FAIL PASS  exp=0 act=0  校验 42 项（分母 42 项：p=1..6 × r=0..6），违例 0；这是 d>n+1 时闭式仍成立的承重件
+  B01   PASS/FAIL PASS  exp=0 act=0  样本 16000 个（n=3,4,5,6 各 4000 个，a_m∈[−40,40]）；命中 0，分母 16000
+  B02   PASS/FAIL PASS  exp=16000 act=16000  样本 16000 个，通过 16000；整值多项式的定义即 a_m∈Z，故恒 100%、判别力 0
+  B03   PASS/FAIL PASS  exp=16000 act=16000  样本 16000 个，通过 16000；c=0 时 b_i=a_i 全整，故恒 100%、判别力 0
+  B04   PASS/FAIL PASS  exp=0_0_1 act=0_0_1  几何类通过率 引理L=100% / 定理E=100% / 定理H=51/51；Int(Z) 通过率 100% / 100% / 0/16000
+  B05   PASS/FAIL PASS  exp=4 act=4  扰动 126 次，存活 4（存活率 0.031746）；期望走解析路径 closedH(n,d+1)−closedH(n,d)=C(n−d,n−m)
+  B06   PASS/FAIL PASS  exp=0 act=0  存活 4 次中族外漏网 0（分母 4 次）；(n,d=n) 与 (n,d=n+1) 的向量只差末位 ⇒ 恰 1 次族内移动
+  C01   PASS/FAIL PASS  exp=4 act=4  部分陪集 4 组，N=D 的 4 组；分流 EMPTY=78 FULL=58 PARTIAL=4（分母 140）
+  C02   PASS/FAIL PASS  exp=0 act=0  部分陪集 4 组，违反 |S|=n! 的 0 组；与 r358 定理 F 一致
+  C03   PASS/FAIL PASS  exp=0 act=0  组 140 组，违例 0；⇒ D 的爆炸来自 c 的算术，与几何 (n,d) 无关
+  C04   PASS/FAIL PASS  exp=>12 act=2048  空陪集 78 组，其中 D>12 的 56 组，最大 D=2048 ⇒ 固定窗口法在原理上不可靠
+  C05   PASS/FAIL PASS  exp=0 act=0  部分陪集 4 组，违反 0 组；H=D·n!、|S|=n! ⇒ N=H/|S|=D；轨道性本身未独立证明
+  C06   PASS/FAIL PASS  exp=differ act=ring=4 flat=None  环形 N=4、非环形 N=None；两者不同才说明该对照有判别力
+  D01   PASS/FAIL PASS  exp=0 act=0  点 170 个（分母 170 个点：n=1..5, d=1..n+1, k=0..n+4），失配 0
+  D02   PASS/FAIL PASS  exp=0 act=0  组 51 组，违例 0；定理 H 给出 a_n=d 的闭式，与 r346 同读数
+  D03   PASS/FAIL PASS  exp=0 act=0  陪集 70 个（分母 70 个），判定分歧 0；本卷用闭式 a 重算，与 r358 同读数
+  D04   PASS/FAIL PASS  exp=found act={'n': 3, 'd': 2, 'p': 1, 'q': 2, 'D': 4,  样例 n=3 d=2 c=1/2：D=4 N=4 |S|=6；两模数不同 ⇒ u−v+w 必然失败
+  E01   PASS/FAIL PASS  exp=True act=True  基准 [1, 1, 1, 1, 1]；可行集 12 个（共 32 个组合）
+  E02   PASS/FAIL PASS  exp=>=1 act=1  被钉住位 [0]；自由位 [1, 2, 3, 4]；可行 12 个；钉住 S0 的是 K7（本卷至少产出一个结论）
+  E03   PASS/FAIL PASS  exp=0 act=0  自由位 4 个 [1, 2, 3, 4]，找不到翻转可行组合的 0 个
+------------------------------------------------------------------------------
+[controls] 15/15
+  CTL14  PASS  exp=>0 act=48  正确算法失配 0 组 / 错误算法失配 48 组（分母 51 组）；漏网 3 组
+  CTL15  PASS  exp=>0 act=44  错误 td 与 Koszul 失配 44 组（分母 51 组）；漏网 7 组 ⇒ 主校验是必要非充分的 bug 探测器
+  CTL1   PASS  exp=0 act=[0, 0, 0, 0]  n=3,d=0
+  CTL2   PASS  exp=0 act=0  点 30 个
+  CTL3   PASS  exp=False act=False  扰动 a_1：[Fraction(1, 1), Fraction(4, 1), Fraction(5, 1), Fraction(2, 1)
+  CTL4   PASS  exp=True act=True  引理 L 对扰动不敏感 ⇒ 判别力 0（本卷第三次确认）；注意须用分母判定，isinstance(int) 对 Fraction 恒假
+  CTL5   PASS  exp=0 act=0  c∈Z 的组 14 个
+  CTL6   PASS  exp=prod>=lcm act=1>=1  积=1 lcm=1（相等 True）
+  CTL7   PASS  exp=0 act=0  校验 78 项
+  CTL8   PASS  exp=0 act=0  一般型 18 组
+  CTL9   PASS  exp=0 act=0  点 260 个（含负 k，广义二项式须正确）
+  CTL10  PASS  exp=0 act=0  样本 300 个 × k=−4..4
+  CTL11  PASS  exp=0 act=0  FULL 组 58 个
+  CTL12  PASS  exp=140 act=140  计入 140 + 跳过 0 = 140；枚举 140 个（n=1..4, d=1..n+1, q=1..4）
+  CTL13  PASS  exp=True act=True  空陪集 78 个，N 全为 1：True
+------------------------------------------------------------------------------
+[guards] 19/19
+  G01   PASS  exp=>0 act=36011  
+  G02   PASS  exp=0 act=0  AST 命中 0 处；字符串法会误报 8 处
+  G03   PASS  exp=0 act=0  act=0 的条目 14 条，缺分母登记 0 条 []
+  G04   PASS  exp=0 act=0  可疑 0 条 []；A/B 组的 exp=0 act=0 是「违例数为 0」的合法读数，非同义反复
+  G05   PASS  exp=>=2且全>0 act=2条 弱=0  扰动对照 2 条 ['CTL14', 'CTL15']；弱（pert<=0）0 条 []
+  G06   PASS  exp=0 act=0  
+  G07   PASS  exp=True act=True  
+  G08   PASS  exp=0 act=0  候选度 37（链最大度 36 止于 r264）
+  G09   PASS  exp=>=51 act=51  
+  G10   PASS  exp=3 act=3  {'Fano(d<=n+1)': 27, 'CY(d=n+2)': 6, '一般型(d>n+2)': 18}
+  G11   PASS  exp=both act=both  B04 的 note 含两侧
+  G12   PASS  exp=0 act=0  []
+  G13   PASS  exp=3 act=3  {'FULL': 58, 'EMPTY': 78, 'PARTIAL': 4}
+  G14   PASS  exp=>0 act=12  
+  G15   PASS  exp=0 act=0  
+  G16   PASS  exp=0 act=0  AST 层 float 调用 0 处；字符串计数会误报 4 处（差 4，正是守卫描述文字）
+  G18   PASS  exp=AST act=AST  字符串命中 8 处、AST 命中 0 处；差 8 ⇒ 字符串法会误报，故本卷对 random 与 float 均用 AS
+  G17   PASS  exp=all act=25  
+  G19   PASS  exp=0 act=0  可疑调用 0 处 []
+==============================================================================
+[verdict] X-R358-1-REDUCED-TO-SINGLE-ORBIT__X-R358-2-ANSWERED-PRIME-FACTORS-OF-D-COME-FROM-DENOMINATOR-OF-C__THEOREM-H-NEWTON-COEFFICIENTS-ARE-CLOSED-FORM-C-nplus1-choose-m-MINUS-C-nplus1-minus-d-choose-nplus1-minus-m__HOLDS-FOR-ALL-d-INCLUDING-CY-AND-GENERAL-TYPE-SO-THE-TD-ROUTE-OF-r339-r346-r358-IS-SUFFICIENT-BUT-UNNECESSARY__INTEGRALITY-CRITERIA-HAVE-ZERO-DISCRIMINATING-POWER-BUT-COEFFICIENT-VALUES-HAVE-FULL-POWER-ZERO-OUT-OF-4000__STILL-NOT-PREDICTED
+==============================================================================

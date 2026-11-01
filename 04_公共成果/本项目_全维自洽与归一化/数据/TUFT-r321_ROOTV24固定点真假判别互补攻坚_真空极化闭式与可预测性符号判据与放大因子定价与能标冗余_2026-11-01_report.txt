@@ -1,0 +1,71 @@
+r321 · ROOT V24.0 固定点真假判别 互补攻坚卷
+date=2026-11-01
+PASS = 29
+FAIL = 0
+BOUNDARY = 0
+INFO = 1
+GUARD = 32/32
+
+[PASS] A01 · 原坐标固定点 u* = A/B = 1/150（精确有理）
+[PASS] A02 · β_v = (dv/du)β_u = (1/50)v − (137/50)v²（链式法则 5 点机器校核）
+[PASS] A03 · 新坐标固定点 v* = A/(B−13A) = 1/137（精确有理）
+[PASS] A04 · 稳定性指数 β_u'(u*) = β_v'(v*) = −A = −1/50（变换前后逐位相同）
+[PASS] A05 · 示范可观测 O = u² = v²/(1+13v)² 在固定点同值 1/22500
+[PASS] A06 · 轨道闭式 u(t)=u*/[1+(u*/u0−1)e^{−At}] 与 RK4 独立积分一致
+[PASS] A07 · 来料 RG 轨道表 12 格逐格复现（最大绝对差 4.76500818071417851103473E-7）
+[PASS] A08 · 多耦合：B'* = J B* J⁻¹（线性 J=[[2,1],[1,1]]）⇒ tr/det/特征值/符号谱全不变
+[PASS] A08b · 非线性重参数化（Möbius 型 h1=g1/(1+g2)）在固定点同样给相似变换
+[PASS] B01 · H(1) 三路对拍：闭式 / 级数 / mpmath 90 位求积
+[PASS] B02 · 五组动量的 H(q)（闭式）与大 q 渐近对照
+[PASS] B03 · 来料 α_eff(m_e) 两输入逐位复现（闭合式 α_eff⁻¹ = α⁻¹(0) − H）
+[PASS] B04 · 反演 α(0) = α_eff/(1+α_eff H) 回程一致（残差 5.48000000000000000000000E-60）
+[PASS] C01 · ★真空极化闭式（本册新增，来料与并行卷 r317 均未给）
+[PASS] C01b · ★一般闭式的 q=1 特例与并行卷 r320-V13 的黄金比闭式逐位一致（相对差 1.03975390382273870078250E-59）
+[PASS] C02 · 小 q 级数与大 q 渐近：两条独立解析路径锁死闭式（★β 系数由机器定，不靠记忆）
+[PASS] C03 · ★可预测性符号判据：α 被 UV 固定点预测 ⟺ α 方向的 λ > 0（IR 吸引）
+[PASS] C04 · ★放大因子定价：从 UV 往 IR 走，偏差放大 e^{θΔ}
+[PASS] C05 · ★能标冗余：同一个数 1/137 挂在不同能标 ⇒ α(0) 相差 1.22043442850767065954060E+1
+[PASS] C06 · ★1/137 与 α⁻¹(0)=137.035999084 相距 2.62767036496350364963504E-4（≈1.71469254155329824678485E+6 σ）
+[PASS] C07 · ★二次截断内的规范等价：Möbius 重参数化 ≡ B → B − cA
+[PASS] C08 · ★信息量记账：两重冗余共 6.18482124318906121750137E+1 bit ≫ 声明 α 所需的 3.26034465570706804935941E+1 bit
+[PASS] C09 · 二次族定理：β=Au−Bu² (A,B>0) 的非零固定点恒有 λ=−A<0
+[INFO] C10 · 外部文献登记（★外部事实·待核，不得当作已确立证据）
+[PASS] CTL1 · 正对照：把二次项符号反过来（β=−Au+Bu²）⇒ λ=+A>0 ⇒ IR 值被吸引
+[PASS] CTL2 · 负对照：可观测不做相应变换（取 O=v²）⇒ 结果偏离 1.98785230965954499440567E-1
+[PASS] CTL3 · 闭式扰动 0.1% ⇒ 与独立求积偏离 1.18708201527487550994458E-2（判据能锁死闭式）
+[PASS] CTL4 · 目标换成实测 α⁻¹=137.035999084 ⇒ 所需 c=1.29640009160000000000000E+1（非整数）
+[PASS] CTL5 · 奇异（不可逆）J ⇒ J B J⁻¹ 不存在 ⇒ 相似性的可逆前提被显式检验
+[PASS] CTL6 · 小 q 端点正对照：H(q) → (2/π)q²/30，且相对差逐位等于下一阶 3q²/28（偏离 1.48145622942242035760318E-5）
+
+guard G1_u_star_is_1_over_150 => PASS
+guard G2_beta_v_coeff_137_over_50 => PASS
+guard G2b_chain_rule_identity => PASS
+guard G1b_v_star_is_1_over_137 => PASS
+guard G4_lambda_invariant => PASS
+guard G5_observable_invariant => PASS
+guard G6_trajectory_table_reproduced => PASS
+guard G6b_rk4_agrees_with_closed => PASS
+guard G7_similarity_eigenvalues_invariant => PASS
+guard G8_sign_spectrum_invariant => PASS
+guard G8b_nonlinear_similarity => PASS
+guard G3_three_paths_agree => PASS
+guard G5b_alpha_eff_reproduced => PASS
+guard G5c_inversion_roundtrip => PASS
+guard G3b_closed_form_vs_quad => PASS
+guard G3c_closed_form_vs_series => PASS
+guard G3d_cross_check_r320_golden => PASS
+guard G3e_asymptotic_matches => PASS
+guard G3g_beta_coefficient_is_two_over_3pi => PASS
+guard G9_lambda_sign_negative => PASS
+guard G9b_amplification_scales => PASS
+guard G10_scale_redundancy_large => PASS
+guard G11_137_is_excluded => PASS
+guard G7b_B_is_gauge => PASS
+guard G10b_redundancy_exceeds_content => PASS
+guard G9c_family_theorem => PASS
+guard G0_positive_control_predicts => PASS
+guard G0b_negative_control_observable => PASS
+guard G0c_perturbation_detected => PASS
+guard G0d_integer_is_coincidence => PASS
+guard G0e_singular_J_rejected => PASS
+guard G0f_small_q_endpoint => PASS

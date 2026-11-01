@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r339 · 秩一超曲面上整性从不排除整数通量</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#ffffff; --ink:#1f2430; --muted:#5c6675;
+    --line:#d8dde6; --blue:#2f6fb5; --red:#c0392b; --green:#2d8659;
+    --amber:#b8860b; --violet:#6b4fa0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:28px 20px 48px;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       line-height:1.65}
+  .wrap{max-width:960px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 6px;letter-spacing:.2px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:6px}
+  .verdict{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--red);
+           padding:10px 14px;border-radius:6px;font-size:12.5px;color:var(--muted);
+           word-break:break-all;margin:12px 0 22px;font-family:ui-monospace,Consolas,monospace}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+        padding:14px 16px 8px;margin-bottom:22px;box-shadow:0 1px 2px rgba(20,30,50,.04)}
+  .cap{font-size:13.5px;font-weight:600;margin:2px 0 2px}
+  .note{font-size:12px;color:var(--muted);margin:0 0 8px}
+  svg{display:block;width:100%;height:auto}
+  .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;
+       border:1px solid var(--line);color:var(--muted);margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>秩一超曲面上，整性从不排除整数通量</h1>
+  <div class="sub">TUFT-r339 · 2026-11-01 · 攻 <code>X-R335-2</code> · 条目 23（PASS 22 / FAIL 0 / INFO 1）· 控制组 15/15 · 守卫 18/18</div>
+  <div class="verdict">X-R335-2-ANSWERED__SINGLE-FACTOR-STRUCTURE-DOES-RECUR-ON-RANK-ONE-HYPERSURFACES__BUT-IT-YIELDS-SOMETHING-WEAKER-THAN-THE-GEOMETRIC-LATTICE__NEWTON-COEFFICIENTS-ARE-INTEGERS-SO-Z-IS-ALWAYS-CONTAINED__INTEGRALITY-NEVER-EXCLUDES-AN-INTEGER-FLUX__THE-Z-PLUS-HALF-OF-R325-IS-A-COORDINATE-SHIFT-NOT-GEOMETRY__R331-NOT-OVERTURNED-BUT-THE-LATTICE-IT-FOUND-IS-THE-TOPOLOGICAL-ONE__STILL-NOT-PREDICTED</div>
+
+  <div class="card">
+    <div class="cap">图 1 · 整性集的四类结构：没有一类比 <code>Z</code> 更紧</div>
+    <div class="note">30 组 = 超曲面 <code>X_d ⊂ CP^(n+1)</code>，<code>n = 1..5</code>，<code>d = 1..n+3</code>。红色两类是「整性比几何格更宽」，蓝绿两类是「整性零增量」。</div>
+    <svg id="fig1" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="card">
+    <div class="cap">图 2 · 非陪集见证：<code>n=3, d=2</code> 的整性集</div>
+    <div class="note">整性集含全部整数，也含 <code>−11/2, −3/2, 5/2</code>，却<b>不含</b> <code>−9/2 = (−6) − (−11/2) + (−4)</code> ⇒ 不是陪集。</div>
+    <svg id="fig2" viewBox="0 0 900 430" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="card">
+    <div class="cap">图 3 · <code>Z+1/2</code> 是坐标假象：<code>k = q − (n+1)/2</code></div>
+    <div class="note"><code>n</code> 偶时偏移半整数，r325 的 <code>Z+1/2</code> 在 <code>k</code> 坐标下就是 <code>Z</code>。同一张格，两个名字。</div>
+    <svg id="fig3" viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div class="card">
+    <div class="cap">图 4 · 副产品：<code>χ(O_X)</code> 是 Fano 判别器</div>
+    <div class="note">绿 = 1（Fano，<code>d ≤ n+1</code>）；黄 = <code>1+(−1)^n</code>（CY，<code>d = n+2</code>）；红 = 其余（一般型）。</div>
+    <svg id="fig4" viewBox="0 0 900 430" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+
+  function E(tag, attrs, parent){
+    var n = document.createElementNS(NS, tag);
+    if (attrs){ for (var k in attrs){ if (Object.prototype.hasOwnProperty.call(attrs,k)) n.setAttribute(k, attrs[k]); } }
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function T(parent, x, y, txt, size, fill, anchor, weight){
+    var t = E("text", {x:x, y:y, "font-size":(size||12), fill:(fill||"#1f2430"),
+                       "text-anchor":(anchor||"start"),
+                       "font-family":"ui-monospace,Consolas,monospace"}, parent);
+    if (weight) t.setAttribute("font-weight", weight);
+    t.textContent = txt;
+    return t;
+  }
+  function R(parent, x, y, w, h, fill, stroke, rx){
+    return E("rect", {x:x, y:y, width:Math.max(0,w), height:Math.max(0,h),
+                      fill:fill, stroke:(stroke||"none"), "stroke-width":1, rx:(rx||0)}, parent);
+  }
+  function L(parent, x1, y1, x2, y2, stroke, w, dash){
+    var a = {x1:x1, y1:y1, x2:x2, y2:y2, stroke:stroke, "stroke-width":(w||1)};
+    if (dash) a["stroke-dasharray"] = dash;
+    return E("line", a, parent);
+  }
+
+  // ================================================== 图 1
+  (function(){
+    var svg = document.getElementById("fig1");
+    var W = 900, H = 400;
+    var M = {l:78, r:36, t:56, b:78};
+    var pw = W - M.l - M.r, ph = H - M.t - M.b;
+
+    var data = [
+      {label:"S = Z",             v:19, color:"#2d8659", note:"n≥2，零增量"},
+      {label:"非陪集",            v:7,  color:"#c0392b", note:"n 奇 d 偶"},
+      {label:"S = (1/d)Z",        v:3,  color:"#c0392b", note:"n=1，放大 d 倍"},
+      {label:"S = Z（CP¹）",      v:1,  color:"#2d8659", note:"n=1,d=1"}
+    ];
+    var maxv = 20;
+    var bw = pw / data.length * 0.52;
+
+    // y axis
+    L(svg, M.l, M.t, M.l, M.t + ph, "#d8dde6", 1);
+    L(svg, M.l, M.t + ph, M.l + pw, M.t + ph, "#d8dde6", 1);
+    for (var g = 0; g <= maxv; g += 5){
+      var y = M.t + ph - (g / maxv) * ph;
+      L(svg, M.l, y, M.l + pw, y, "#eef1f5", 1);
+      T(svg, M.l - 10, y + 4, String(g), 11, "#5c6675", "end");
+    }
+    T(svg, 24, M.t + ph / 2, "组数", 12, "#5c6675", "middle");
+
+    T(svg, M.l, M.t - 26, "整性集 S 的四类形态（互斥分解，合计 30 组）", 13, "#1f2430", "start", "600");
+
+    for (var i = 0; i < data.length; i++){
+      var d = data[i];
+      var cx = M.l + pw / data.length * (i + 0.5);
+      var h = (d.v / maxv) * ph;
+      var y = M.t + ph - h;
+      R(svg, cx - bw / 2, y, bw, h, d.color, "none", 4);
+      T(svg, cx, y - 10, String(d.v), 15, d.color, "middle", "700");
+      T(svg, cx, M.t + ph + 22, d.label, 12.5, "#1f2430", "middle", "600");
+      T(svg, cx, M.t + ph + 40, d.note, 11, "#5c6675", "middle");
+    }
+
+    // callout
+    R(svg, M.l + 8, M.t + 8, 372, 46, "#fdf3f2", "#c0392b", 6);
+    T(svg, M.l + 20, M.t + 27, "红色 = 整性给的是 Z 的超集（更宽）", 12, "#c0392b", "start", "600");
+    T(svg, M.l + 20, M.t + 45, "绿色 = 整性给的就是 Z（零增量）—— 没有一类更紧", 12, "#2d8659", "start");
+
+    T(svg, M.l, H - 22, "读数：B02/D01「Z ⊆ S」510 点 0 违例 · C01「S=Z」20 组 · C04「非陪集」7 组", 11, "#5c6675", "start");
+  })();
+
+  // ================================================== 图 2
+  (function(){
+    var svg = document.getElementById("fig2");
+    var W = 900, H = 430;
+    var M = {l:70, r:40, t:64, b:70};
+    var pw = W - M.l - M.r;
+
+    var lo = -6.6, hi = 3.2;
+    function X(v){ return M.l + ((v - lo) / (hi - lo)) * pw; }
+
+    T(svg, M.l, M.t - 34, "n=3, d=2 的整性集：Z ∪ {…, −11/2, −3/2, 5/2, …}", 13, "#1f2430", "start", "600");
+    T(svg, M.l, M.t - 14, "含 −11/2 也含全部整数，却不含 −9/2 ⇒ 仿射封闭失败 ⇒ 不是陪集", 12, "#5c6675", "start");
+
+    var yA = M.t + 74, yB = M.t + 194, yC = M.t + 300;
+
+    // --- 轴 A: Z
+    L(svg, M.l, yA, M.l + pw, yA, "#9aa5b5", 1.5);
+    T(svg, M.l - 14, yA + 4, "Z", 13, "#2f6fb5", "end", "700");
+    T(svg, M.l - 14, yA + 22, "", 10, "#5c6675", "end");
+    for (var k = -6; k <= 3; k++){
+      var x = X(k);
+      E("circle", {cx:x, cy:yA, r:5, fill:"#2f6fb5"}, svg);
+      T(svg, x, yA - 14, String(k), 11, "#2f6fb5", "middle");
+    }
+    T(svg, M.l + pw, yA - 16, "20 组里 19 组 S 恰好 = 它", 11, "#2f6fb5", "end");
+
+    // --- 轴 B: S
+    L(svg, M.l, yB, M.l + pw, yB, "#9aa5b5", 1.5);
+    T(svg, M.l - 14, yB + 4, "S", 13, "#c0392b", "end", "700");
+    var Sset = [];
+    for (var k2 = -6; k2 <= 3; k2++) Sset.push(k2);
+    Sset.push(-5.5); Sset.push(-1.5); Sset.push(2.5);
+    for (var j = 0; j < Sset.length; j++){
+      var v = Sset[j];
+      var isInt = (Math.abs(v - Math.round(v)) < 1e-9);
+      E("circle", {cx:X(v), cy:yB, r:(isInt ? 5 : 7),
+                   fill:(isInt ? "#2f6fb5" : "#c0392b")}, svg);
+      if (!isInt){
+        T(svg, X(v), yB - 16, (v < 0 ? "−" : "") + Math.abs(v * 2) + "/2", 11, "#c0392b", "middle", "700");
+      }
+    }
+    T(svg, M.l + pw, yB + 26, "红点 = 额外整性点（间距 4）", 11, "#c0392b", "end");
+
+    // --- 轴 C: 见证
+    L(svg, M.l, yC, M.l + pw, yC, "#eef1f5", 1);
+    var u = -6, v2 = -5.5, w = -4;
+    var zres = -4.5;
+    T(svg, M.l, yC - 30, "见证：u − v + w = −9/2", 12, "#1f2430", "start", "600");
+    E("circle", {cx:X(u), cy:yC, r:6, fill:"#6b4fa0"}, svg);
+    T(svg, X(u), yC + 20, "u=−6", 11, "#6b4fa0", "middle");
+    E("circle", {cx:X(v2), cy:yC, r:6, fill:"#6b4fa0"}, svg);
+    T(svg, X(v2), yC + 20, "v=−11/2", 11, "#6b4fa0", "middle");
+    E("circle", {cx:X(w), cy:yC, r:6, fill:"#6b4fa0"}, svg);
+    T(svg, X(w), yC + 20, "w=−4", 11, "#6b4fa0", "middle");
+    // 结果点不在 S
+    E("circle", {cx:X(zres), cy:yC, r:7, fill:"none", stroke:"#c0392b", "stroke-width":2, "stroke-dasharray":"3 3"}, svg);
+    T(svg, X(zres), yC - 12, "−9/2 ∉ S", 11, "#c0392b", "middle", "700");
+    L(svg, X(v2), yB + 26, X(v2), yC - 10, "#e2c7c2", 1, "4 4");
+    L(svg, X(u), yA + 12, X(u), yC - 10, "#e2c7c2", 1, "4 4");
+    L(svg, X(w), yA + 12, X(w), yC - 10, "#e2c7c2", 1, "4 4");
+
+    T(svg, M.l, H - 20, "读数：C04 给出 7 组非陪集，全部属「n≥3 且 n 奇 且 d 偶」（C05 预测 7 / 实测 7）", 11, "#5c6675", "start");
+  })();
+
+  // ================================================== 图 3
+  (function(){
+    var svg = document.getElementById("fig3");
+    var W = 900, H = 400;
+    var M = {l:96, r:44, t:76, b:74};
+    var pw = W - M.l - M.r;
+
+    var lo = -3.2, hi = 3.2;
+    function X(v){ return M.l + ((v - lo) / (hi - lo)) * pw; }
+
+    T(svg, M.l, M.t - 38, "同一张格的两个名字（n = 2：CP²）", 13, "#1f2430", "start", "600");
+    T(svg, M.l, M.t - 18, "r325 在 q 坐标说「格是 Z+1/2」；换到 k = q − 3/2，它就是 Z", 12, "#5c6675", "start");
+
+    var yQ = M.t + 86, yK = M.t + 208;
+
+    // q 轴
+    L(svg, M.l, yQ, M.l + pw, yQ, "#9aa5b5", 1.5);
+    T(svg, M.l - 16, yQ - 4, "q 坐标", 12.5, "#6b4fa0", "end", "700");
+    T(svg, M.l - 16, yQ + 14, "(r325)", 10.5, "#5c6675", "end");
+    for (var m = -6; m <= 6; m++){
+      var q = m + 0.5;
+      if (q < lo + 0.1 || q > hi - 0.1) continue;
+      E("circle", {cx:X(q), cy:yQ, r:5.5, fill:"#6b4fa0"}, svg);
+      T(svg, X(q), yQ - 14, (q < 0 ? "−" : "") + (Math.abs(m * 2 + 1)) + "/2", 10.5, "#6b4fa0", "middle");
+    }
+    T(svg, M.l + pw, yQ - 16, "Z + 1/2", 12, "#6b4fa0", "end", "600");
+
+    // k 轴
+    L(svg, M.l, yK, M.l + pw, yK, "#9aa5b5", 1.5);
+    T(svg, M.l - 16, yK - 4, "k 坐标", 12.5, "#2f6fb5", "end", "700");
+    T(svg, M.l - 16, yK + 14, "(本卷)", 10.5, "#5c6675", "end");
+    for (var k = -3; k <= 3; k++){
+      E("circle", {cx:X(k), cy:yK, r:5.5, fill:"#2f6fb5"}, svg);
+      T(svg, X(k), yK - 14, String(k), 11, "#2f6fb5", "middle");
+    }
+    T(svg, M.l + pw, yK - 16, "Z", 12, "#2f6fb5", "end", "600");
+
+    // 平移箭头
+    for (var m2 = -5; m2 <= 5; m2++){
+      var q2 = m2 + 0.5;
+      var k2 = q2 - 1.5;
+      if (q2 < lo + 0.1 || q2 > hi - 0.1) continue;
+      if (k2 < lo + 0.1 || k2 > hi - 0.1) continue;
+      E("path", {d:"M " + X(q2) + " " + (yQ + 12) + " L " + X(k2) + " " + (yK - 18),
+                 stroke:"#cfd6e0", "stroke-width":1, fill:"none"}, svg);
+    }
+
+    // 标注
+    R(svg, M.l + pw - 300, M.t + 258, 300, 52, "#eef4fb", "#2f6fb5", 6);
+    T(svg, M.l + pw - 288, M.t + 278, "q = 5/2  ⟶  k = 1", 12.5, "#2f6fb5", "start", "600");
+    T(svg, M.l + pw - 288, M.t + 298, "r325 的「q=±5/2 给三代」＝「k=±1 给三代」", 11, "#5c6675", "start");
+
+    T(svg, M.l, H - 20, "读数：E01 对 n=1,2,3,4 全部 4/4 —— 平移后恰好是连续整数（间隔 1、无缺口）", 11, "#5c6675", "start");
+  })();
+
+  // ================================================== 图 4
+  (function(){
+    var svg = document.getElementById("fig4");
+    var W = 900, H = 430;
+    var M = {l:88, r:44, t:70, b:78};
+
+    var rows = [
+      {n:1, vals:[1,1,0,-2]},
+      {n:2, vals:[1,1,1,2,5]},
+      {n:3, vals:[1,1,1,1,0,-4]},
+      {n:4, vals:[1,1,1,1,1,2,7]},
+      {n:5, vals:[1,1,1,1,1,1,0,-6]},
+      {n:6, vals:[1,1,1,1,1,1,1,2,9]}
+    ];
+    var ncol = 9;
+    var cw = (W - M.l - M.r) / ncol;
+    var ch = 46;
+
+    T(svg, M.l, M.t - 40, "χ(O_X) 的值：一个顺手的 Fano 判别器", 13, "#1f2430", "start", "600");
+    T(svg, M.l, M.t - 20, "Fano ⟺ χ = 1（绿）；CY ⟺ χ = 1+(−1)^n（黄）；d > n+2 落进一般型（红）", 12, "#5c6675", "start");
+
+    // 表头
+    for (var c = 0; c < ncol; c++){
+      T(svg, M.l + cw * (c + 0.5), M.t - 2, "d=" + (c + 1), 11, "#5c6675", "middle");
+    }
+    T(svg, M.t + 0, M.t - 2, "", 10, "#5c6675", "middle");
+
+    for (var r = 0; r < rows.length; r++){
+      var row = rows[r];
+      var y = M.t + 12 + r * ch;
+      T(svg, M.l - 14, y + ch / 2 + 4, "n=" + row.n, 12, "#1f2430", "end", "600");
+      for (var c2 = 0; c2 < ncol; c2++){
+        var d = c2 + 1;
+        var x = M.l + cw * c2;
+        var has = (d - 1) < row.vals.length;
+        var v = has ? row.vals[d - 1] : null;
+        var fill = "#f2f4f7";
+        if (v !== null){
+          if (d <= row.n + 1) fill = "#d7eedd";
+          else if (d === row.n + 2) fill = "#fbeecb";
+          else fill = "#f6d9d4";
+        }
+        R(svg, x + 2, y, cw - 4, ch - 4, fill, "#e3e7ee", 4);
+        if (v !== null){
+          T(svg, x + cw / 2, y + ch / 2 + 4, String(v), 12,
+            (d <= row.n + 1 ? "#2d8659" : (d === row.n + 2 ? "#8a6508" : "#c0392b")), "middle", "600");
+        }
+      }
+    }
+
+    var yb = M.t + 12 + rows.length * ch + 18;
+    // legend
+    var lx = M.l;
+    var items = [["#d7eedd", "Fano：d ≤ n+1，χ = 1"], ["#fbeecb", "CY：d = n+2，χ = 1+(−1)^n"], ["#f6d9d4", "一般型"], ["#f2f4f7", "未计算/不存在"]];
+    for (var i = 0; i < items.length; i++){
+      R(svg, lx, yb - 11, 16, 12, items[i][0], "#e3e7ee", 3);
+      T(svg, lx + 22, yb - 1, items[i][1], 11, "#5c6675", "start");
+      lx += 22 + items[i][1].length * 6.6 + 22;
+    }
+
+    T(svg, M.l, H - 22, "机检 A06：6 行 × 各行 d=1..n+3 全部符合分类律（6/6）；A05 主校验另在 448 组上核过 χ == h⁰", 11, "#5c6675", "start");
+  })();
+
+})();
+</script>
+</body>
+</html>

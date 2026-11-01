@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r360 · ROOT V29 Dirac–Maxwell 自洽性 · 可视化</title>
+<style>
+  :root { --bg:#f7f8fa; --ink:#1f2328; --sub:#5b6470; --line:#d5dae1; --acc:#2f6fb5; --warn:#c2432f; --ok:#2b7a4b; }
+  body { background:var(--bg); color:var(--ink); font-family:"Segoe UI","Microsoft YaHei",sans-serif; margin:0; padding:24px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  h2 { font-size:15px; margin:22px 0 8px; color:var(--sub); font-weight:600; }
+  .sub { color:var(--sub); font-size:13px; margin-bottom:18px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  table { border-collapse:collapse; font-size:13px; }
+  th, td { border:1px solid var(--line); padding:5px 10px; text-align:left; }
+  th { background:#eef1f5; }
+</style>
+</head>
+<body>
+<h1>TUFT-r360 · ROOT V29（Dirac–Maxwell 自洽性）审计可视化</h1>
+<div class="sub">数据驱动：全部曲线由内联脚本按本卷引擎读数计算（Decimal 60 位结论 + JS 独立数值积分复核）；纵轴为对数刻度。</div>
+
+<h2>一、均匀带电球的场能：两种口径给出相反趋势</h2>
+<div class="card"><svg id="panel1" viewBox="0 0 680 300" width="680" height="300"></svg></div>
+
+<h2>二、试探能量 E(x)：受限模型内单调下降；加入束缚项后出现极小（对照）</h2>
+<div class="card"><svg id="panel2" viewBox="0 0 680 300" width="680" height="300"></svg></div>
+
+<h2>三、电磁强度 α 与引力耦合 α_G 的对比（对数条）</h2>
+<div class="card"><svg id="panel3" viewBox="0 0 680 220" width="680" height="220"></svg></div>
+
+<h2>四、读数表</h2>
+<div class="card"><table id="tbl"></table></div>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  function mk(id, tag, attrs, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) { e.setAttribute(k, attrs[k]); }
+    if (text !== undefined) { e.textContent = text; }
+    document.getElementById(id).appendChild(e);
+    return e;
+  }
+
+  var ALPHA = 0.0072973525643;
+  var U0 = ALPHA / 10;                 // x=1 处两口径共同的 U/(m c^2)
+  var SQ2PI = Math.sqrt(2 * Math.PI);
+
+  function Fkin(x) {
+    var n = 400, a = 0, b = 15, h = (b - a) / n, s = 0, i, y, f;
+    for (i = 0; i <= n; i++) {
+      y = a + h * i;
+      f = y * y * Math.exp(-y * y) * Math.sqrt(1 + y * y / (x * x));
+      s += f * ((i === 0 || i === n) ? 1 : ((i % 2 === 1) ? 4 : 2));
+    }
+    return s * h / 3 * 4 / Math.sqrt(Math.PI);
+  }
+
+  // ---------- 面板一：场能两口径 ----------
+  (function () {
+    var W = 680, H = 300, x0 = 70, x1 = 640, y0 = 250, y1 = 45;
+    var XMIN = 0, XMAX = 1;                    // log10(x): x in [1,10]
+    var YMIN = -4.3, YMAX = 2.1;               // log10(U/(mc^2))
+    function px(x) { return x0 + (Math.log(x) / Math.LN10 - XMIN) / (XMAX - XMIN) * (x1 - x0); }
+    function py(v) {
+      var l = Math.log(v) / Math.LN10;
+      if (l < YMIN) { l = YMIN; }
+      if (l > YMAX) { l = YMAX; }
+      return y0 - (l - YMIN) / (YMAX - YMIN) * (y0 - y1);
+    }
+    mk("panel1", "rect", { x: 0, y: 0, width: W, height: H, fill: "#ffffff", stroke: "#e6e9ee" });
+    mk("panel1", "line", { x1: x0, y1: y0, x2: x1, y2: y0, stroke: "#8b949e" });
+    mk("panel1", "line", { x1: x0, y1: y0, x2: x0, y2: y1, stroke: "#8b949e" });
+    // 网格刻度（1,2,5,10）
+    [1, 2, 5, 10].forEach(function (x) {
+      mk("panel1", "line", { x1: px(x).toFixed(2), y1: y0, x2: px(x).toFixed(2), y2: y0 + 5, stroke: "#c9cfd8" });
+      mk("panel1", "text", { x: (px(x) - 6).toFixed(2), y: y0 + 20, "font-size": 12, fill: "#5b6470" }, String(x));
+    });
+    [-4, -2, 0, 2].forEach(function (e) {
+      var v = Math.pow(10, e);
+      mk("panel1", "line", { x1: x0 - 5, y1: py(v).toFixed(2), x2: x0, y2: py(v).toFixed(2), stroke: "#c9cfd8" });
+      mk("panel1", "text", { x: 16, y: (py(v) + 4).toFixed(2), "font-size": 12, fill: "#5b6470" }, "1e" + e);
+    });
+    var s, x, d1 = "", d2 = "", N = 120;
+    for (s = 0; s <= N; s++) {
+      x = 1 + 9 * s / N;
+      d1 += (s === 0 ? "M " : "L ") + px(x).toFixed(2) + " " + py(U0 * Math.pow(x, 5)).toFixed(2) + " ";
+      d2 += (s === 0 ? "M " : "L ") + px(x).toFixed(2) + " " + py(U0 / x).toFixed(2) + " ";
+    }
+    mk("panel1", "path", { d: d1, fill: "none", stroke: "#c2432f", "stroke-width": 2 });
+    mk("panel1", "path", { d: d2, fill: "none", stroke: "#2f6fb5", "stroke-width": 2 });
+    mk("panel1", "circle", { cx: px(1).toFixed(2), cy: py(U0).toFixed(2), r: 4, fill: "#2b7a4b" });
+    mk("panel1", "text", { x: 300, y: 70, "font-size": 13, fill: "#c2432f" },
+      "固定 rho（来料口径）：U ∝ L^5，发散");
+    mk("panel1", "text", { x: 300, y: 94, "font-size": 13, fill: "#2f6fb5" },
+      "固定总电荷 Q=e（孤立电子口径）：U = alpha·hbar·c/(10L)，趋于 0");
+    mk("panel1", "text", { x: 300, y: 122, "font-size": 12, fill: "#c2432f" },
+      "★两口径在 L→∞ 上给出相反趋势 ⇒ 发散结论依赖「rho 与 L 独立」这一隐含假设");
+    mk("panel1", "text", { x: 300, y: 146, "font-size": 12, fill: "#1f2328" },
+      "真正的问题是均匀解没有局域支撑（与 r354 G06 的平移简并跨卷印证）");
+    mk("panel1", "text", { x: x1 - 60, y: y0 + 38, "font-size": 12, fill: "#5b6470" }, "L / 约化康普顿波长");
+    mk("panel1", "text", { x: 12, y: y1 - 12, "font-size": 12, fill: "#5b6470" }, "U/(m_e c^2)");
+  })();
+
+  // ---------- 面板二：试探能量与束缚项对照 ----------
+  (function () {
+    var W = 680, H = 300, x0 = 70, x1 = 640, y0 = 255, y1 = 45;
+    var LX0 = -3, LX1 = 3;                     // log10(x): x in [1e-3, 1e3]
+    var LY0 = -0.05, LY1 = 3.2;                // log10(E/(mc^2))
+    function px(x) {
+      var l = Math.log(x) / Math.LN10;
+      return x0 + (l - LX0) / (LX1 - LX0) * (x1 - x0);
+    }
+    function py(v) {
+      var l = Math.log(v) / Math.LN10;
+      if (l < LY0) { l = LY0; }
+      if (l > LY1) { l = LY1; }
+      return y0 - (l - LY0) / (LY1 - LY0) * (y0 - y1);
+    }
+    mk("panel2", "rect", { x: 0, y: 0, width: W, height: H, fill: "#ffffff", stroke: "#e6e9ee" });
+    mk("panel2", "line", { x1: x0, y1: y0, x2: x1, y2: y0, stroke: "#8b949e" });
+    mk("panel2", "line", { x1: x0, y1: y0, x2: x0, y2: y1, stroke: "#8b949e" });
+    [-3, -2, -1, 0, 1, 2, 3].forEach(function (e) {
+      mk("panel2", "line", { x1: px(Math.pow(10, e)).toFixed(2), y1: y0, x2: px(Math.pow(10, e)).toFixed(2), y2: y0 + 5, stroke: "#c9cfd8" });
+      mk("panel2", "text", { x: (px(Math.pow(10, e)) - 8).toFixed(2), y: y0 + 20, "font-size": 11, fill: "#5b6470" }, "1e" + e);
+    });
+    [0, 1, 2, 3].forEach(function (e) {
+      mk("panel2", "line", { x1: x0 - 5, y1: py(Math.pow(10, e)).toFixed(2), x2: x0, y2: py(Math.pow(10, e)).toFixed(2), stroke: "#c9cfd8" });
+      mk("panel2", "text", { x: 16, y: (py(Math.pow(10, e)) + 4).toFixed(2), "font-size": 11, fill: "#5b6470" }, "1e" + e);
+    });
+    var s, x, d1 = "", d2 = "", N = 150;
+    var bestX = 0, bestE = 1e9, prev = null, mins = [];
+    for (s = 0; s <= N; s++) {
+      x = Math.pow(10, LX0 + (LX1 - LX0) * s / N);
+      var e1 = Fkin(x) + ALPHA / (SQ2PI * x);
+      var e2 = e1 + 0.01 * x * x;
+      d1 += (s === 0 ? "M " : "L ") + px(x).toFixed(2) + " " + py(e1).toFixed(2) + " ";
+      d2 += (s === 0 ? "M " : "L ") + px(x).toFixed(2) + " " + py(e2).toFixed(2) + " ";
+      if (prev !== null && e2 < prev && e2 < bestE) { bestE = e2; bestX = x; }
+      prev = e2;
+    }
+    mk("panel2", "path", { d: d2, fill: "none", stroke: "#c2432f", "stroke-width": 2, "stroke-dasharray": "5 3" });
+    mk("panel2", "path", { d: d1, fill: "none", stroke: "#2f6fb5", "stroke-width": 2 });
+    if (bestX > 0) {
+      mk("panel2", "circle", { cx: px(bestX).toFixed(2), cy: py(bestE).toFixed(2), r: 5, fill: "#2b7a4b" });
+      mk("panel2", "text", { x: (px(bestX) + 10).toFixed(2), y: (py(bestE) - 8).toFixed(2), "font-size": 12, fill: "#2b7a4b" },
+        "极小 x≈" + bestX.toFixed(2));
+    }
+    mk("panel2", "text", { x: 300, y: 70, "font-size": 13, fill: "#2f6fb5" },
+      "受限模型 E(x) = 正能色散 + alpha/(sqrt(2pi)·x)：严格递减，无有限极小");
+    mk("panel2", "text", { x: 300, y: 94, "font-size": 13, fill: "#c2432f" },
+      "对照：加入束缚项 0.01·x^2 后立刻出现极小 ⇒ 检测器有双向判别力");
+    mk("panel2", "text", { x: 300, y: 122, "font-size": 12, fill: "#1f2328" },
+      "换族检验：指数分布族自能系数 5/32，仍 ∝ 1/a ⇒ 单调性对试探族稳健");
+    mk("panel2", "text", { x: 300, y: 146, "font-size": 12, fill: "#c2432f" },
+      "★适用域 = 「正动能 + 正 1/a 自排斥」；完整 Maxwell–Dirac 已有局域驻定解存在定理");
+    mk("panel2", "text", { x: x1 - 60, y: y0 + 38, "font-size": 12, fill: "#5b6470" }, "a / 约化康普顿波长");
+    mk("panel2", "text", { x: 12, y: y1 - 12, "font-size": 12, fill: "#5b6470" }, "E/(m_e c^2)");
+  })();
+
+  // ---------- 面板三：强度对比 ----------
+  (function () {
+    var W = 680, H = 220, bx = 90, bw_max = 520;
+    var aG = 1.7518094e-45;
+    var ratio = aG / ALPHA;
+    // 对数条：log10 从 -50 到 0 映射到 0..bw_max
+    function bw(v) {
+      var l = Math.log(v) / Math.LN10;
+      if (l < -50) { l = -50; }
+      var w = (l + 50) / 50 * bw_max;
+      return Math.max(w, 2);
+    }
+    mk("panel3", "rect", { x: 0, y: 0, width: W, height: H, fill: "#ffffff", stroke: "#e6e9ee" });
+    mk("panel3", "rect", { x: bx, y: 50, width: bw(ALPHA).toFixed(2), height: 30, fill: "#2f6fb5" });
+    mk("panel3", "text", { x: 12, y: 70, "font-size": 13, fill: "#1f2328" }, "电磁 α");
+    mk("panel3", "text", { x: (bx + bw(ALPHA) + 10).toFixed(2), y: 70, "font-size": 12, fill: "#2f6fb5" }, "7.297e-3");
+    mk("panel3", "rect", { x: bx, y: 110, width: bw(aG).toFixed(2), height: 30, fill: "#c2432f" });
+    mk("panel3", "text", { x: 12, y: 130, "font-size": 13, fill: "#1f2328" }, "引力 α_G");
+    mk("panel3", "text", { x: (bx + bw(aG) + 10).toFixed(2), y: 130, "font-size": 12, fill: "#c2432f" }, "1.7518e-45");
+    mk("panel3", "text", { x: bx, y: 30, "font-size": 12, fill: "#5b6470" }, "对数刻度（1e-50 → 1）");
+    mk("panel3", "text", { x: bx, y: 170, "font-size": 13, fill: "#1f2328" },
+      "α_G/α = 2.4006e-43 ⇒ 用引力平衡电磁自排斥需放大约 4.17e42 倍");
+    mk("panel3", "text", { x: bx, y: 194, "font-size": 12, fill: "#c2432f" },
+      "★引力与电磁等强的质量尺度 m* = sqrt(α·ħc/G) = 1.859e-9 kg = 2.04e21 m_e");
+  })();
+
+  // ---------- 表格 ----------
+  var rows = [
+    ["量", "值"],
+    ["α（CODATA 2022）", ALPHA.toFixed(12)],
+    ["场能（固定 Q=e，x=1）U/(m_ec²) = α/10", (ALPHA / 10).toExponential(10)],
+    ["场能（固定 ρ，x=10）", "72.9735257"],
+    ["静电自能系数 1/√(2π)（三路径）", "0.398942280401（差 8.2e-17 / 5e-59）"],
+    ["换族：指数分布系数 5/32", "0.15625（数值差 5.9e-14）"],
+    ["局域化残差（能量口径，a=r_e）", "85.763 MeV"],
+    ["经典电子半径 r_e = α·λ̄_C", "2.817940319e-15 m"],
+    ["试探能量 E(0.001) → E(1000)", "1131.29 → 1.0000037（严格递减）"],
+    ["加束缚项 λx² 后的极小", "x ≈ 2.8（对照）"],
+    ["α_G = G m_e²/(ħc)", "1.7518094e-45"],
+    ["α_G / α", "2.4006095e-43"],
+    ["Fierz 5000 组（精确 Fraction）", "违例 0"],
+    ["定价槽位满足数", "0 / 5（不占度，候选 37，链止 r264:36）"]
+  ];
+  var html = "";
+  for (var i = 0; i < rows.length; i++) {
+    html += "<tr><th>" + rows[i][0] + "</th><td>" + rows[i][1] + "</td></tr>";
+  }
+  document.getElementById("tbl").innerHTML = html;
+})();
+</script>
+</body>
+</html>

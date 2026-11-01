@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r302 · 三代多重度的反常锁定定理（等谱即一代）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:var(--pass)}.FAIL{background:var(--fail)}
+.BOUNDARY{background:var(--bnd)}.INFO{background:var(--info)}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.axis{stroke:#c3cad2;stroke-width:1}.lbl{font-size:11px;fill:#5b6470}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.note{font-size:12px;color:var(--sub);margin-top:8px}
+</style>
+</head>
+<body>
+<h1>TUFT-r302 · 三代多重度的反常锁定定理（等谱即一代）</h1>
+<div class="sub">攻靶：r295 自留 OPEN <b>X-R295-1</b>（'t Hooft 分数通量能否给出 1:1:1:1:1 谱型）　·　条目 41（PASS 35 / FAIL 0 / INFO 6）　·　控制组 9/9　·　守卫 12/12　·　verdict <span class="mono">NO-GO-CLOSED</span></div>
+
+<div class="thm">
+<b>定理 G（等谱锁）</b>　要求五表示多重度全等 <span class="mono">n<sub>R</sub> ≡ N</span> ⇒ 荷必须满足
+<span class="mono">q<sub>R</sub>·dim<sub>R</sub> = c</span> ⇒ 唯一允许的荷型 <span class="mono">q = c·(1/6, 1/3, 1/3, 1/2, 1)</span>。
+把该荷型代入六条规范反常，得
+<span class="mono">(A₃, A₂, A<sub>g</sub>, A<sub>YY</sub>, A<sub>YF</sub>, A<sub>FF</sub>) = c·(1, 1, 5, 11/6, (2/3)c, (3/2)c²)</span> —— <b>六条系数全部非零 ⇒ 反常自由强制 c = 0 ⇒ q ≡ 0</b>。<br>
+<b>定理 H（扭转表）</b>　q ≡ 0 后只剩扭转计数 <span class="mono">n<sub>R</sub> = k<sub>R</sub></span>；三种非平凡扭转的 k 向量各取两个不同值 ⇒ 只有平凡扭转可等谱 ⇒
+<b>唯一等谱解是 n ≡ 1，即恰好一代</b>。
+</div>
+
+<h2>一、总账</h2><div class="grid" id="kpi"></div>
+
+<h2>二、定理 G · 六条反常系数（c = 1 时）</h2>
+<div class="card">
+<svg id="svgA" viewBox="0 0 760 300" width="100%" height="300"></svg>
+<div class="legend">每根柱 = 该条反常对 <span class="mono">c</span> 的系数。<b>全部非零</b> ⇒ 反常自由要求 <span class="mono">c = 0</span>；单靠任一条即可否决，六条互不依赖。</div>
+<table id="t1" style="margin-top:10px"></table>
+</div>
+
+<h2>三、定理 H · 扭转 k 向量矩阵</h2>
+<div class="card">
+<svg id="svgB" viewBox="0 0 760 280" width="100%" height="280"></svg>
+<div class="legend"><span style="color:#1a7f37">■</span> k=1 保留常数截面　<span style="color:#c0392b">■</span> k=0 失去常数截面（该表示被扭转"掐掉"）</div>
+<table id="t2" style="margin-top:10px"></table>
+</div>
+
+<h2>四、穷举 96 组：24 个组合，1 种谱型</h2>
+<div class="card">
+<svg id="svgC" viewBox="0 0 760 214" width="100%" height="214"></svg>
+<div class="legend">4 种扭转 × M ∈ ±1…±12 = 96 组，每组解 9×6 精确线性系统（Fraction）。<b>72 组不相容，24 组等谱，0 组被整数性否决。</b></div>
+<div class="note"><b>关键读数不是 24，是 1</b>：24 个组合全部是「平凡扭转 + q ≡ 0」。<span class="mono">q = 0</span> 时 <span class="mono">M</span> 不进入任何物理量 ⇒ 这 24 个是<b>同一个物理的 24 种写法</b>，不是 24 个解。非平凡扭转给出等谱的组数 = <b>0</b>。</div>
+<table id="t3" style="margin-top:10px"></table>
+</div>
+
+<h2>五、谱型对照：目标三代 vs 机制给出的唯一等谱</h2>
+<div class="card">
+<svg id="svgD" viewBox="0 0 760 300" width="100%" height="300"></svg>
+<div class="legend"><span style="color:#c0392b">■</span> 目标 (3,3,3,3,3) —— 穷举中<b>不可达</b>（D06 = 0）　<span style="color:#1a7f37">■</span> 机制给出的唯一等谱 (1,1,1,1,1)</div>
+<div class="note"><b>CTL9 负对照</b>：把 n ≡ 3 直接凑出来（M=3、均匀 k=1、q = 2/(3·dim)）确实得到 (3,3,3,3,3)，但 A₃ = 2/3 ≠ 0、A₂ = 2/3 ≠ 0 —— <b>三代离得只有一步，挡住它的是反常自由，不是算术</b>。</div>
+</div>
+
+<h2>六、逃逸定价（5 槽 · 2⁵ = 32）</h2>
+<div class="card"><table id="t4"></table>
+<div class="note">严格档（五槽全要）SURVIVE = <b>0</b>；宽松档（任取四槽）SURVIVE = <b>2</b>，但两条分别是「不给三代」与「不自洽」。<b>两档都找不出三代。</b>宽松档 &gt; 0 ⇒ 不占「修复即自杀」度数链（候选 37 度，链仍止 r264:36）。</div>
+</div>
+
+<h2>七、控制组与守卫</h2>
+<div class="card"><table id="t5"></table></div>
+
+<script>
+/* ---------------- 数据（与引擎输出逐字一致） ---------------- */
+var COEF = [
+  {k:'A₃ = [SU(3)]²U(1)_F', v:1,    s:'1'},
+  {k:'A₂ = [SU(2)]²U(1)_F', v:1,    s:'1'},
+  {k:'A_g = grav-U(1)_F',   v:5,    s:'5'},
+  {k:'A_YY = U(1)_Y²U(1)_F',v:11/6, s:'11/6'},
+  {k:'A_YF = U(1)_Y U(1)_F²',v:2/3, s:'2/3'},
+  {k:'A_FF = U(1)_F³',      v:3/2,  s:'3/2'}
+];
+var REP = ['Q_L','u_R^c','d_R^c','L_L','e_R^c'];
+var TW = [
+  {n:'T0 平凡',  k:[1,1,1,1,1], d:1},
+  {n:'T3 仅Z₃',  k:[0,0,0,1,1], d:2},
+  {n:'T2 仅Z₂',  k:[0,1,1,0,1], d:2},
+  {n:'T32 双因子',k:[0,0,0,0,1], d:2}
+];
+var EXH = [{n:'不相容 / 非线性反常≠0', c:72, col:'#c0392b'},
+           {n:'等谱（全部 T0 + q≡0）', c:24, col:'#1a7f37'},
+           {n:'被整数性/非负性否决',    c:0,  col:'#b8860b'}];
+
+/* ---------------- 工具 ---------------- */
+function el(svg, tag, a, txt){
+  var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in a) e.setAttribute(k, a[k]);
+  if (txt !== undefined && txt !== null) e.textContent = String(txt);
+  svg.appendChild(e);
+  return e;
+}
+function txt(svg, x, y, s, cls, anchor, size, fill){
+  var a = {x:x, y:y, 'font-size': (size||11), fill: (fill||'#5b6470')};
+  if (anchor) a['text-anchor'] = anchor;
+  return el(svg, 'text', a, s);
+}
+
+/* ---------------- 一、KPI ---------------- */
+(function(){
+  var box = document.getElementById('kpi');
+  var rows = [
+    ['条目 / 判定', '41 条 · PASS 35 · FAIL 0 · INFO 6'],
+    ['控制组', '9 / 9 全过'],
+    ['守卫', '12 / 12 全过'],
+    ['穷举规模', '4 扭转 × 24 个 M = 96 组'],
+    ['等谱解', '24 组 → 1 种谱型'],
+    ['非平凡扭转等谱', '0 组'],
+    ['三代可达', '0 组（D06）'],
+    ['定价严格 / 宽松', '0 / 2（SURVIVE）'],
+    ['度数链', '不占度（宽松档 > 0）']
+  ];
+  var h = '';
+  for (var i=0;i<rows.length;i++){
+    h += '<div class="kpi"><div class="k">'+rows[i][0]+'</div><div class="v">'+rows[i][1]+'</div></div>';
+  }
+  box.innerHTML = h;
+})();
+
+/* ---------------- 二、六条反常系数柱状图 ---------------- */
+(function(){
+  var svg = document.getElementById('svgA');
+  var W=760, H=300, L=64, R=44, T=44, B=52;
+  var base = T + (H-T-B);      /* = 44 + 204 = 248 */
+  var plotH = H-T-B;           /* 204 */
+  var maxV = 6;
+  /* 网格 */
+  for (var g=0; g<=3; g++){
+    var gv = maxV*g/3, gy = base - plotH*g/3;
+    el(svg,'line',{x1:L, y1:gy.toFixed(2), x2:W-R, y2:gy.toFixed(2),
+                   stroke:'#e8ecf1','stroke-width':1});
+    txt(svg, L-8, (gy+4).toFixed(2), gv.toFixed(0), 'lbl', 'end');
+  }
+  /* 零线（必须为 0 的位置） */
+  el(svg,'line',{x1:L, y1:base, x2:W-R, y2:base, 'stroke-width':2, stroke:'#c0392b'});
+  txt(svg, W-R, base+16, '反常自由要求 = 0', 'lbl', 'end', 11, '#c0392b');
+
+  var slot = (W-L-R)/COEF.length;   /* 652/6 = 108.67 */
+  var bw = slot*0.56;
+  for (var i=0;i<COEF.length;i++){
+    var cx = L + slot*i + slot/2;
+    var x = cx - bw/2;
+    var hh = COEF[i].v/maxV*plotH;
+    if (hh < 1.5) hh = 1.5;
+    var y = base - hh;
+    el(svg,'rect',{x:x.toFixed(2), y:y.toFixed(2), width:bw.toFixed(2), height:hh.toFixed(2),
+                   fill:'#2b5c9b', rx:3});
+    txt(svg, cx, y-7, COEF[i].s, 'lbl', 'middle', 12, '#1f2328');
+    txt(svg, cx, base+18, '#'+(i+1), 'lbl', 'middle', 11, '#5b6470');
+    var short = COEF[i].k.split(' = ')[0];
+    txt(svg, cx, base+34, short, 'lbl', 'middle', 11, '#1f2328');
+  }
+  txt(svg, 12, 22, '系数（c = 1）', 'lbl', 'start', 12, '#1f2328');
+})();
+
+/* ---------------- 三、扭转矩阵 ---------------- */
+(function(){
+  var svg = document.getElementById('svgB');
+  var x0=150, y0=70, cw=92, ch=40;
+  /* 列头 */
+  for (var j=0;j<REP.length;j++){
+    txt(svg, x0+cw*j+cw/2, y0-10, REP[j], 'lbl', 'middle', 12, '#1f2328');
+  }
+  txt(svg, x0+cw*5+cw/2, y0-10, '不同值', 'lbl', 'middle', 11, '#5b6470');
+  for (var i=0;i<TW.length;i++){
+    var y = y0 + ch*i;
+    txt(svg, 16, y+ch/2+4, TW[i].n, 'lbl', 'start', 12, '#1f2328');
+    for (var j2=0;j2<REP.length;j2++){
+      var v = TW[i].k[j2];
+      var fill = v===1 ? '#d7ecd9' : '#f7d6d0';
+      var stroke = v===1 ? '#1a7f37' : '#c0392b';
+      el(svg,'rect',{x:x0+cw*j2, y:y, width:cw, height:ch, fill:fill,
+                     stroke:stroke, 'stroke-width':1});
+      txt(svg, x0+cw*j2+cw/2, y+ch/2+5, String(v), 'lbl', 'middle', 13,
+          v===1 ? '#1a7f37' : '#c0392b');
+    }
+    var dup = TW[i].d;
+    txt(svg, x0+cw*5+cw/2, y+ch/2+5, String(dup), 'lbl', 'middle', 13,
+        dup===1 ? '#1a7f37' : '#c0392b');
+    el(svg,'rect',{x:x0+cw*5, y:y, width:cw, height:ch, fill:'none',
+                   stroke:'#c3cad2','stroke-width':1});
+  }
+  txt(svg, 16, y0+ch*TW.length+26, '↑ 「不同值」= 1 才可能等谱；三种非平凡扭转全部 = 2 ⇒ 纯扭转已给不出等谱',
+      'lbl', 'start', 11, '#5b6470');
+})();
+
+/* ---------------- 四、穷举堆叠条 ---------------- */
+(function(){
+  var svg = document.getElementById('svgC');
+  var W=760, x0=40, y=64, barH=48, total=96;
+  var usable = W - x0 - 40;          /* 680 */
+  var unit = usable/total;
+  var acc = x0;
+  for (var i=0;i<EXH.length;i++){
+    var w = unit*EXH[i].c;
+    if (EXH[i].c > 0 && w < 2){ w = 2; }
+    if (EXH[i].c > 0){
+      el(svg,'rect',{x:acc.toFixed(2), y:y, width:w.toFixed(2), height:barH,
+                     fill:EXH[i].col, rx:2});
+      txt(svg, acc+w/2, y+barH/2+5, String(EXH[i].c), 'lbl', 'middle', 14, '#ffffff');
+      txt(svg, acc+w/2, y+barH+18, EXH[i].n, 'lbl', 'middle', 11, '#1f2328');
+    }
+    acc += w;
+  }
+  /* 后两段跨度太小，改为独立注释，避免互相压字 */
+  txt(svg, x0, y-16, '96 组穷举的归属', 'lbl', 'start', 12, '#1f2328');
+  el(svg,'line',{x1:x0, y1:y+barH+26, x2:W-40, y2:y+barH+26, stroke:'#e8ecf1','stroke-width':1});
+  txt(svg, x0, y+barH+46,
+      '被整数性/非负性否决 = 0 组（全部在反常层已出局；过滤器有效性见 CTL8）',
+      'lbl', 'start', 11, '#5b6470');
+  txt(svg, x0, y+barH+64,
+      '等谱 24 组 → 不同谱型 1 种（全部 T0 + q≡0，M 退化为不可观测参数）',
+      'lbl', 'start', 11, '#1a7f37');
+  txt(svg, x0, y+barH+82,
+      '目标 (3,3,3,3,3) 可达组数 = 0',
+      'lbl', 'start', 11, '#c0392b');
+})();
+
+/* ---------------- 五、谱型对照 ---------------- */
+(function(){
+  var svg = document.getElementById('svgD');
+  var W=760, H=300, L=64, R=44, T=48, B=56;
+  var base = T + (H-T-B);      /* 48 + 196 = 244 */
+  var plotH = H-T-B;           /* 196 */
+  var maxV = 3.5;
+  for (var g=0; g<=3; g++){
+    var gv = maxV*g/3, gy = base - plotH*g/3;
+    el(svg,'line',{x1:L, y1:gy.toFixed(2), x2:W-R, y2:gy.toFixed(2),
+                   stroke:'#e8ecf1','stroke-width':1});
+    txt(svg, L-8, (gy+4).toFixed(2), gv.toFixed(1), 'lbl', 'end');
+  }
+  el(svg,'line',{x1:L, y1:base, x2:W-R, y2:base, 'stroke-width':2, stroke:'#c3cad2'});
+  var slot = (W-L-R)/REP.length;
+  var bw = 38;
+  for (var i=0;i<REP.length;i++){
+    var cx = L + slot*i + slot/2;
+    var hT = 3/maxV*plotH;      /* 168 */
+    var hA = 1/maxV*plotH;      /* 56 */
+    el(svg,'rect',{x:(cx-bw-3).toFixed(2), y:(base-hT).toFixed(2), width:bw,
+                   height:hT.toFixed(2), fill:'#f7d6d0', stroke:'#c0392b',
+                   'stroke-width':1.5, 'stroke-dasharray':'4 3'});
+    txt(svg, cx-bw/2-3, base-hT-7, '3', 'lbl', 'middle', 12, '#c0392b');
+    el(svg,'rect',{x:(cx+3).toFixed(2), y:(base-hA).toFixed(2), width:bw,
+                   height:hA.toFixed(2), fill:'#1a7f37'});
+    txt(svg, cx+bw/2+3, base-hA-7, '1', 'lbl', 'middle', 12, '#1a7f37');
+    txt(svg, cx, base+20, REP[i], 'lbl', 'middle', 12, '#1f2328');
+  }
+  txt(svg, 12, 24, '多重度 n_R', 'lbl', 'start', 12, '#1f2328');
+  txt(svg, W-R, base+40, '目标三代不可达 · 唯一等谱是一代', 'lbl', 'end', 11, '#5b6470');
+})();
+
+/* ---------------- 表格 ---------------- */
+(function(){
+  var h = '<tr><th>反常</th><th>表达式</th><th>c = 1 时的系数</th><th>单独能否钉死 c=0</th></tr>';
+  var expr = ['2q₁+q₂+q₃','3q₁+q₄','Σ dimᵢqᵢ','Σ dimᵢYᵢ²qᵢ','Σ dimᵢYᵢqᵢ²','Σ dimᵢqᵢ³'];
+  for (var i=0;i<COEF.length;i++){
+    h += '<tr><td>'+COEF[i].k+'</td><td class="mono">'+expr[i]+'</td><td><b>'+COEF[i].s+'</b></td><td><span class="tag PASS">能</span></td></tr>';
+  }
+  h += '<tr><th colspan="4">六条系数全部非零（B09 = 6/6）⇒ 反常自由 ⇒ c = 0 ⇒ q ≡ 0 ⇒ n<sub>R</sub> = k<sub>R</sub></th></tr>';
+  document.getElementById('t1').innerHTML = h;
+})();
+(function(){
+  var h = '<tr><th>扭转</th>';
+  for (var j=0;j<REP.length;j++) h += '<th>'+REP[j]+'</th>';
+  h += '<th>不同值</th><th>能否等谱</th></tr>';
+  for (var i=0;i<TW.length;i++){
+    h += '<tr><td>'+TW[i].n+'</td>';
+    for (var j2=0;j2<TW[i].k.length;j2++) h += '<td class="mono">'+TW[i].k[j2]+'</td>';
+    h += '<td>'+TW[i].d+'</td><td>'+(TW[i].d===1
+        ? '<span class="tag PASS">是（唯一）</span>'
+        : '<span class="tag FAIL">否</span>')+'</td></tr>';
+  }
+  document.getElementById('t2').innerHTML = h;
+})();
+(function(){
+  var h = '<tr><th>归属</th><th>组数</th><th>说明</th></tr>'
+    + '<tr><td>线性系统不相容 / 非线性反常≠0</td><td><b>72</b></td><td>= 3 种非平凡扭转 × 24 个 M，<b>无一例外</b></td></tr>'
+    + '<tr><td>线性解存在且六条反常全零</td><td>24</td><td>全部是 T0 平凡扭转</td></tr>'
+    + '<tr><td>被整数性 / 非负性否决</td><td><b>0</b></td><td>全部在反常层已出局（CTL8 证明过滤器有牙齿）</td></tr>'
+    + '<tr><td><b>给出等谱</b></td><td><b>24</b></td><td>但<b>不同谱型只有 1 种</b>： (1,1,1,1,1)</td></tr>'
+    + '<tr><td><b>非平凡扭转给出等谱</b></td><td><b>0</b></td><td>定理 H 的机检形式（D05c）</td></tr>'
+    + '<tr><td><b>目标 (3,3,3,3,3) 可达</b></td><td><b>0</b></td><td>D06</td></tr>';
+  document.getElementById('t3').innerHTML = h;
+})();
+(function(){
+  var slot = [['S1','保持 G_SM 不破缺'],['S2','等代数三代（完整谱）'],
+              ['S3','不引入景观挑选'],['S4','额外维数 ≤ 2'],['S5','反常自由']];
+  var routes = [
+    ['T² 通量 + 平凡扭转（r294/r295 靶）',[1,0,1,1,1]],
+    ['T² 通量 + 非平凡扭转（本卷新增）',[1,0,1,1,1]],
+    ['放弃反常自由（q=(1/3,2/3,2/3,1,2)）',[1,1,1,1,0]],
+    ['引入旁观费米子补反常',[1,1,0,0,1]],
+    ['CY3 / T⁶ 高维',[1,1,0,0,1]]
+  ];
+  var h = '<tr><th>路线</th>';
+  for (var i=0;i<slot.length;i++) h += '<th title="'+slot[i][1]+'">'+slot[i][0]+'</th>';
+  h += '<th>缺口</th></tr>';
+  for (var r=0;r<routes.length;r++){
+    var miss = [];
+    h += '<tr><td>'+routes[r][0]+'</td>';
+    for (var j=0;j<routes[r][1].length;j++){
+      var ok = routes[r][1][j] === 1;
+      h += '<td style="text-align:center;color:'+(ok?'#1a7f37':'#c0392b')+'">'+(ok?'✓':'✗')+'</td>';
+      if (!ok) miss.push(slot[j][0]);
+    }
+    h += '<td class="mono">'+miss.join(', ')+'</td></tr>';
+  }
+  h += '<tr><th colspan="7">严格档（五槽全要）SURVIVE = 0　|　宽松档（任取四槽）SURVIVE = 2</th></tr>';
+  document.getElementById('t4').innerHTML = h;
+})();
+(function(){
+  var ctl = [
+    ['CTL1','正','SM 自身六条反常全为零（机器算得出零）'],
+    ['CTL2','负','u_R^c 的 Y 写成 +2/3 ⇒ A₃ 立刻非零'],
+    ['CTL3','正','c=1 时 A₃ 算出 1（判据非恒零）'],
+    ['CTL4','负','q=(1/3,2/3,2/3,1,2) 被 A₃ = 2 抓出'],
+    ['CTL5','跨卷','|tr_R Y| = (1,2,1,1,1) 与 r295 一致'],
+    ['CTL6','负','三种非平凡扭转 k 均取两个值'],
+    ['CTL7','正','k 参数化 1/2/3 ⇒ 解出 N 随之走（k 真进方程）'],
+    ['CTL8','正','整数性过滤器对分数/负判否、对 3/1 判是'],
+    ['CTL9','负（关键）','n≡3 能凑出来（M=3、q=2/(3·dim)）但被 A₃=2/3 否决']
+  ];
+  var h = '<tr><th>编号</th><th>类型</th><th>内容</th><th>状态</th></tr>';
+  for (var i=0;i<ctl.length;i++){
+    h += '<tr><td>'+ctl[i][0]+'</td><td>'+ctl[i][1]+'</td><td>'+ctl[i][2]
+       + '</td><td><span class="tag PASS">PASS</span></td></tr>';
+  }
+  h += '<tr><th colspan="4">守卫 12/12：G01 verdict 合法 · G02 条目数与 json 一致 · G03 控制组全过 · G04 prec≥50 · G05 无 random · G06 report/json 逐条一致 · G07 verdict 由计数驱动 · G08 定价覆盖最硬发现 · G09 无写死 True · G10 PASS 均出自算术/枚举 · G11 穷举非空且扭转表机械生成 · G12 k 向量 assert 校验</th></tr>';
+  document.getElementById('t5').innerHTML = h;
+})();
+</script>
+</body>
+</html>

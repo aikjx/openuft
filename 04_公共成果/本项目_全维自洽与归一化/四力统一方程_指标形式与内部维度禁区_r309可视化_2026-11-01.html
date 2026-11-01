@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r309 · 指标形式定理与内部维度禁区（parity 幂次 · 荷空间一维 · 扭转锥 · c_min 谱）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;--dead:#e8dede}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:26px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:var(--pass)}.FAIL{background:var(--fail)}
+.BOUNDARY{background:var(--bnd)}.INFO{background:var(--info)}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.key{background:#eef4fb;border:1px solid #c9dbf0;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+.warn{background:#fdf2f0;border:1px solid #edc9c2;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+svg{display:block;max-width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<h1>TUFT-r309 · 指标形式定理与内部维度禁区</h1>
+<div class="sub">parity 幂次 <span class="mono">⌈n/2⌉</span>　·　反常荷空间<b>严格一维</b>　·　扭转锥死区 <span class="mono">dim ≤ 10</span>　·　<span class="mono">c<sub>min</sub></span> 谱　·　条目 67（PASS 62 / FAIL 0 / INFO 5）　·　控制组 11/11　·　守卫 14/14　·　verdict <span class="mono">X-R307-1-PARTIALLY-CLOSED</span></div>
+
+<div class="thm">
+<b>攻靶</b>：r307 判定册 §十 登记为「本卷最硬的未决」的 <span class="mono">X-R307-1</span> —— 「<span class="mono">n<sub>R</sub></span> 的真实指标定理形式是什么？」<br><br>
+<b>定理 R（指标形式）</b>　<span class="mono">n<sub>R</sub> = Σ<sub>k</sub> A<sub>k</sub> q<sub>R</sub><sup>n−2k</sup></span>，幂次降到 0 或 1 为止 ⇒ <b>电荷系数只有 ⌈n/2⌉ 个</b>（不是 n+1）。<br>
+<b>定理 S（荷空间一维）</b>　四个线性反常秩 4/5 ⇒ 解空间 <b>1 维且就是 <span class="mono">span(Y)</span></b>；<span class="mono">AFF</span>、<span class="mono">AYF</span> 在该线上恒零 ⇒ <b>m 个 U(1) 全部共线，加 U(1) 零收益</b>。<br>
+<b>定理 U（扭转锥）</b>　中心扭转给 <span class="mono">k = (a, a+c₂, a+c₂, a+b, C)</span>，其中 <b><span class="mono">k₂ ≡ k₃</span></b>（<span class="mono">u<sup>c</sup></span> 与 <span class="mono">d<sup>c</sup></span> 同为 <span class="mono">3̄</span>）。与 parity 幂次联立 ⇒ <b><span class="mono">n ≤ 5</span> 的齐次锥精确塌成 {0}</b> ⇒ 内部维度 ≤ 10 只有<b>零通量 + 3 份无扭转复制</b>。<br>
+<b>定理 V（复制数谱）</b>　<span class="mono">n=6 → 187</span>、<span class="mono">n=7 → 12</span>、<span class="mono">n=8 → 20</span>、<span class="mono">n ≥ 9 → 1</span>；纯复制恒为 <span class="mono">c = 3</span>。
+</div>
+
+<div class="grid">
+  <div class="kpi"><div class="k">电荷空间维数</div><div class="v">1 / 5</div></div>
+  <div class="kpi"><div class="k">电荷系数 ⌈n/2⌉（n=9）</div><div class="v">5</div></div>
+  <div class="kpi"><div class="k">等重条件数</div><div class="v">4</div></div>
+  <div class="kpi"><div class="k">死区（内部维度）</div><div class="v">≤ 10</div></div>
+  <div class="kpi"><div class="k">不靠复制的活口</div><div class="v">≥ 18</div></div>
+  <div class="kpi"><div class="k">定价 2⁶ 可达</div><div class="v">4 / 64</div></div>
+</div>
+
+<h2>图 1 · 指标形式是 parity 多项式：自由度只有 ⌈n/2⌉</h2>
+<div class="card">
+<svg id="fig1" viewBox="0 0 900 320" role="img" aria-label="parity 幂次表"></svg>
+<div class="legend">同一张表读两遍：左边看「幂次被 Â 的偶阶性砍掉一半」，右边看「4 个等重条件什么时候终于打不过自由系数」。ROOT 的内部空间是 2 维（n=1），在最上面一行，离阈值差 8 个 2 维因子。</div>
+</div>
+
+<h2>图 2 · 反常自由荷空间：严格一维，就是 Y 本身</h2>
+<div class="card">
+<svg id="fig2" viewBox="0 0 900 280" role="img" aria-label="荷空间一维"></svg>
+<div class="legend">红色两处是同一条线上的两个点：超荷不同（−2/3 vs 1/3），扭转制度相同（k₂ ≡ k₃）。这一处不对称是图 3 死区的全部来源。</div>
+</div>
+
+<h2>图 3 · 复制数谱：死区、纯复制基准线、唯一的不靠复制活口</h2>
+<div class="card">
+<svg id="fig3" viewBox="0 0 900 310" role="img" aria-label="c_min 谱"></svg>
+<div class="legend">唯一「不靠复制」的活口在内部维度 18（n=9）：单一连通内部空间 + 一个非平凡扭转 T32。纯复制 c=3 在任何内部维度都成立 —— 这是它唯一的好处，也是它唯一的坏处。</div>
+</div>
+
+<h2>图 4 · 定价 2⁶ = 64：可达只有 4 个掩码，严格档为 0</h2>
+<div class="card">
+<svg id="fig4" viewBox="0 0 900 340" role="img" aria-label="定价 64 格"></svg>
+<div class="legend">严格档 0、宽松档 4 ⇒ 按纪律不占度数链：候选 37 度，链仍止 r264:36。</div>
+</div>
+
+<h2>自审登记：三轮伪值，全部自己抓掉</h2>
+<div class="warn">
+<b>① <span class="mono">n=5</span> 的 <span class="mono">c=59</span>、<span class="mono">k=(10,11,11,2,59)</span></b>　根因：可实现性锥漏了 <span class="mono">k₁ ≤ k₄</span>。回构 <span class="mono">b = 2 − 10 = −8 &lt; 0</span> ⇒ 这个 k 不是任何扭转组合的和。抓法：<span class="mono">reconstruction()</span> 反解回验（CTL8 / G14），且该假解<b>字面保留</b>在守卫里。<br>
+<b>② <span class="mono">c<sub>min</sub></span> 表整体错位（n=6 → 18、n=8 → 1）</b>　根因：线性系统右端符号写反（<span class="mono">λ·(3−k)=0</span> 展开应为 <span class="mono">A x = −3Σλ + λ₄c</span>）。探针带着同源错误还能「通过」。抓法：另写<b>无技巧暴力枚举</b>作第三方基准，一次对出真值。<br>
+<b>③ <span class="mono">n=6</span> 的 <span class="mono">c=235</span></b>　根因：解析搜索里 <span class="mono">for k₂</span> 内的 <span class="mono">break</span> 砍掉了更优解（<span class="mono">c</span> 随 <span class="mono">k₂</span> 递减）。抓法：去掉 <span class="mono">break</span> 重算得 187，与引擎一致。
+</div>
+
+<h2>诚实边界</h2>
+<div class="key">
+<b>最重要的边界</b>：本卷全部结论都建立在「<b>五个 SM 多重态各自独立由扭折 Dirac 指标给出重数</b>」这个框架上。真实异弦模型构建的做法正相反 —— 一整个 <span class="mono">27</span> of E6 内含整代，<b>一个指标给全部</b>。在那个框架里，定理 T/U <b>完全不适用</b>。这是 <span class="mono">X-R309-1</span>。<br>
+其余：本卷<b>没有</b>证明三代不可能（三代仍存在，只是没被解释）；<span class="mono">c<sub>min</sub></span> 只是存在性下界（未问几何实现）；<span class="mono">n ≥ 9</span> 的 <span class="mono">c=1</span> 要求 5 个几何矩精确满足一条约束，在「典型」意义下概率为零；<span class="mono">m</span> 的无关性依赖 SM 五重态内容（加 ν<sup>c</sup> 后荷空间变 2 维，本卷未做）；锥判定只覆盖 <span class="mono">n ≤ 5</span> 的无解性。
+</div>
+
+<h2>机检读数</h2>
+<div class="card">
+<table>
+<tr><th>项</th><th>读数</th><th>说明</th></tr>
+<tr><td>条目</td><td><span class="tag PASS">PASS</span> 62 &nbsp; <span class="tag FAIL">FAIL</span> 0 &nbsp; <span class="tag INFO">INFO</span> 5</td><td>共 67 条；纯陈述不判决</td></tr>
+<tr><td>控制组</td><td>11 / 11</td><td>正负对照；含 CTL8 假解回构否决</td></tr>
+<tr><td>守卫</td><td>14 / 14</td><td>G09 源码级同义反复检测命中 0 条</td></tr>
+<tr><td>荷空间</td><td>rank 4 / dim 1</td><td>基向量 = Y 本身</td></tr>
+<tr><td>无扭转阈值</td><td>n = 9（18 维）/ n = 5（10 维）</td><td>严格档 / 宽松档双报</td></tr>
+<tr><td>死区</td><td>n ≤ 5（内部维度 ≤ 10）</td><td>齐次锥精确塌成 {0}</td></tr>
+<tr><td>c<sub>min</sub></td><td>187 / 12 / 20 / 1 / 1 / 1 / 1</td><td>n = 6…12；纯复制恒为 3</td></tr>
+<tr><td>定价</td><td>可达 4 / 64；严格 0</td><td>掩码 50 / 51 / 56 / 60</td></tr>
+<tr><td>退出码</td><td>0</td><td><span class="mono">python -X utf8 源码\_run_r309.py</span></td></tr>
+</table>
+</div>
+
+<div class="sub" style="margin-top:22px">
+TUFT-r309 · 2026-11-01 · 判词 <span class="mono">X-R307-1-PARTIALLY-CLOSED</span> —— 形式已定，栅栏在幂次上，剩下的空子只剩框架本身。
+</div>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var INK = '#1f2328', SUB = '#5b6470', ACC = '#2b5c9b', RED = '#c0392b', GRN = '#1a7f37', GREY = '#c9ccd2';
+
+  function E(p, tag, a) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) { if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]); }
+    p.appendChild(e);
+    return e;
+  }
+  function T(p, x, y, s, o) {
+    var a = { x: x, y: y, fill: INK, 'font-size': 12 };
+    if (o) { for (var k in o) { if (o.hasOwnProperty(k)) a[k] = o[k]; } }
+    var e = E(p, 'text', a);
+    e.textContent = s;
+    return e;
+  }
+  function R(p, x, y, w, h, fill, rx) {
+    return E(p, 'rect', { x: x, y: y, width: w, height: h, rx: (rx === undefined ? 3 : rx), fill: fill });
+  }
+  function L(p, x1, y1, x2, y2, col, w, dash) {
+    var a = { x1: x1, y1: y1, x2: x2, y2: y2, stroke: col, 'stroke-width': w };
+    if (dash) a['stroke-dasharray'] = dash;
+    return E(p, 'line', a);
+  }
+
+  // ---------------- 图 1
+  var f1 = document.getElementById('fig1');
+  T(f1, 24, 26, 'n（内部维度 2n）', { 'font-weight': 600, 'font-size': 13 });
+  T(f1, 150, 26, 'ch(L)·Â 的幂次（蓝 = 电荷依赖，灰 = q-无关项）', { 'font-weight': 600, 'font-size': 13 });
+  T(f1, 530, 26, '电荷系数 ⌈n/2⌉', { 'font-weight': 600, 'font-size': 13 });
+  T(f1, 690, 26, '4 个等重条件是否可解', { 'font-weight': 600, 'font-size': 13 });
+  L(f1, 150, 36, 360, 36, '#dfe3e8', 1.5);
+  L(f1, 530, 36, 600, 36, '#dfe3e8', 1.5);
+  L(f1, 690, 36, 880, 36, '#dfe3e8', 1.5);
+
+  var rows = [
+    [1, [1], '0 维 ⇒ 无解', RED],
+    [2, [2, 0], '0 维 ⇒ 无解', RED],
+    [3, [3, 1], '秩 2 ⇒ 无解', RED],
+    [4, [4, 2, 0], '秩 2 ⇒ 无解', RED],
+    [5, [5, 3, 1], '秩 3 ⇒ 无解', RED],
+    [6, [6, 4, 2, 0], '秩 3 ⇒ 无解', RED],
+    [7, [7, 5, 3, 1], '秩 4 ⇒ 无解', RED],
+    [8, [8, 6, 4, 2, 0], '秩 4 ⇒ 无解', RED],
+    [9, [9, 7, 5, 3, 1], '秩 4 < 5 ⇒ 可解', GRN]
+  ];
+  for (var i = 0; i < rows.length; i++) {
+    var n = rows[i][0], ps = rows[i][1], verdict = rows[i][2], vc = rows[i][3];
+    var y = 58 + i * 28;
+    T(f1, 60, y, 'n = ' + n, { 'font-size': 12, 'font-weight': (n === 9 ? 600 : 400), fill: (n === 9 ? GRN : INK) });
+    var cd = 0;
+    for (var j = 0; j < ps.length; j++) {
+      var px = 150 + j * 46;
+      var isQ = (ps[j] >= 1);
+      R(f1, px, y - 12, 38, 17, isQ ? ACC : GREY);
+      T(f1, px + 10, y, String(ps[j]), { 'font-size': 11, fill: isQ ? '#ffffff' : INK });
+      if (isQ) cd++;
+    }
+    T(f1, 532, y, String(cd), { 'font-size': 12, fill: SUB });
+    T(f1, 700, y, verdict, { 'font-size': 12, fill: vc, 'font-weight': (n === 9 ? 600 : 400) });
+  }
+  L(f1, 140, 296, 880, 296, GRN, 1.5);
+  T(f1, 150, 312, '阈值：内部维度 ≥ 18（严格档）；若放弃 parity 结构则为 n ≥ 5 / 内部维度 ≥ 10（宽松档，两档都报）', { 'font-size': 11, fill: GRN });
+
+  // ---------------- 图 2
+  var f2 = document.getElementById('fig2');
+  T(f2, 24, 26, '四个线性反常的系数矩阵：秩 4 / 5 未知数 ⇒ 解空间 1 维', { 'font-weight': 600, 'font-size': 13 });
+  R(f2, 24, 40, 300, 90, '#eef4fb', 6);
+  T(f2, 38, 60, '[SU(3)]² U(1)', { 'font-size': 12 });
+  T(f2, 38, 78, '[SU(2)]² U(1)', { 'font-size': 12 });
+  T(f2, 38, 96, 'g–g–U(1)', { 'font-size': 12 });
+  T(f2, 38, 114, 'U(1)–U(1)_Y²', { 'font-size': 12 });
+  R(f2, 210, 52, 96, 66, '#ffffff', 4);
+  T(f2, 258, 90, 'rank 4', { 'font-size': 15, 'font-weight': 700, fill: ACC, 'text-anchor': 'middle' });
+  E(f2, 'path', { d: 'M332 85 L368 85', stroke: ACC, 'stroke-width': 2, fill: 'none' });
+  E(f2, 'path', { d: 'M362 79 L370 85 L362 91', stroke: ACC, 'stroke-width': 2, fill: 'none' });
+  R(f2, 378, 52, 158, 66, '#fbf7ec', 6);
+  T(f2, 457, 78, '解空间维数 = 1', { 'font-size': 13, 'font-weight': 700, fill: '#b8860b', 'text-anchor': 'middle' });
+  T(f2, 457, 100, '基 = (1/6,−2/3,1/3,−1/2,1)', { 'font-size': 11, 'text-anchor': 'middle' });
+  E(f2, 'path', { d: 'M544 85 L580 85', stroke: ACC, 'stroke-width': 2, fill: 'none' });
+  E(f2, 'path', { d: 'M574 79 L582 85 L574 91', stroke: ACC, 'stroke-width': 2, fill: 'none' });
+  T(f2, 592, 70, 'AFF = Σ dim·q³ = 0', { 'font-size': 12 });
+  T(f2, 592, 90, 'AYF = Σ dim·Y·q² = 0', { 'font-size': 12 });
+  T(f2, 592, 112, '⇒ 反常自由集 = span(Y)', { 'font-size': 12, 'font-weight': 600, fill: GRN });
+  T(f2, 24, 160, '这条线上只有 5 个可能的荷值（Y 五值互异）；任何新增 U(1) 的荷向量都必须落在同一条线上 ⇒ m 不出现', { 'font-size': 12, 'font-weight': 600 });
+
+  L(f2, 80, 205, 860, 205, ACC, 2.5);
+  var dots = [
+    [140, 'Y=−2/3', 228, RED],
+    [204, '−1/2', 190, ACC],
+    [460, '1/6', 228, ACC],
+    [524, '1/3', 190, RED],
+    [780, 'Y=1', 228, ACC]
+  ];
+  for (var d = 0; d < dots.length; d++) {
+    E(f2, 'circle', { cx: dots[d][0], cy: 205, r: 6, fill: dots[d][3] });
+    T(f2, dots[d][0], dots[d][2], dots[d][1], { 'font-size': 11, 'text-anchor': 'middle' });
+  }
+  L(f2, 140, 238, 524, 238, RED, 1.5, '4 3');
+  T(f2, 332, 256, 'u^c 与 d^c：Y 不同（−2/3 vs 1/3），但扭转 k₂ ≡ k₃', { 'font-size': 11, fill: RED, 'text-anchor': 'middle' });
+  T(f2, 24, 274, '注：横轴为 Y 轴（示意），刻度位置按 Y 值线性放置', { 'font-size': 11, fill: SUB });
+
+  // ---------------- 图 3
+  var f3 = document.getElementById('fig3');
+  T(f3, 24, 24, 'N = 3 所需的最小复制数 c（纵轴取 log₁₀(1+c) 以便同屏）', { 'font-weight': 600, 'font-size': 13 });
+  R(f3, 70, 40, 330, 196, '#e8dede', 0);
+  T(f3, 235, 64, '死区：n ≤ 5（内部维度 ≤ 10）', { 'font-size': 12, 'font-weight': 700, fill: '#8a6d3b', 'text-anchor': 'middle' });
+  T(f3, 235, 84, '齐次锥精确塌成 {0} ⇒ 只有纯复制', { 'font-size': 11, fill: '#8a6d3b', 'text-anchor': 'middle' });
+  L(f3, 70, 236, 870, 236, '#dfe3e8', 1.5);
+  L(f3, 70, 40, 70, 236, '#dfe3e8', 1.5);
+  var base = 236, top = 40, span = base - top - 26;
+  function hh(c) { if (c === 0) { return 2; } return Math.max(3, Math.round(Math.log(1 + c) / Math.log(188) * span)); }
+  var cm = [0, 0, 0, 0, 0, 187, 12, 20, 1, 1, 1, 1];
+  for (var b = 0; b < 12; b++) {
+    var bx = 94 + b * 66;
+    var bh = hh(cm[b]);
+    if (cm[b] === 0) {
+      R(f3, bx, base - 2, 34, 2, '#b0b6be', 0);
+    } else {
+      var col = (cm[b] >= 100) ? RED : (cm[b] >= 3 ? ACC : GRN);
+      R(f3, bx, base - bh, 34, bh, col, 0);
+      T(f3, bx + 17, base - bh - 6, String(cm[b]), { 'font-size': 12, 'font-weight': 700, fill: col, 'text-anchor': 'middle' });
+    }
+    T(f3, bx + 17, 256, String(2 * (b + 1)), { 'font-size': 11, fill: (cm[b] === 0 ? SUB : INK), 'text-anchor': 'middle' });
+  }
+  L(f3, 70, 191, 870, 191, GRN, 1.5, '5 4');
+  T(f3, 800, 186, '纯复制 c = 3', { 'font-size': 11, fill: GRN, 'text-anchor': 'middle' });
+  T(f3, 470, 276, '内部维度 2n', { 'font-size': 11, fill: SUB, 'text-anchor': 'middle' });
+  T(f3, 24, 298, '非单调（187 → 12 → 20 → 1）由左零条件数 2 → 1 → 1 → 0 决定，不是笔误；n ≥ 9 的 c=1 要求 5 个几何矩精确满足一条线性约束。', { 'font-size': 11, fill: SUB });
+
+  // ---------------- 图 4
+  var f4 = document.getElementById('fig4');
+  T(f4, 24, 24, '每个格子是一个 6 位掩码（S1…S6）；深蓝 = 可达（50 / 51 / 56 / 60）', { 'font-weight': 600, 'font-size': 13 });
+  var slots = ['S1 保 SM', 'S2 三代', 'S3 电荷依赖', 'S4 单一连通', 'S5 无扭转', 'S6 内部≤8维'];
+  for (var s = 0; s < 6; s++) {
+    T(f4, 24, 62 + s * 20, slots[s], { 'font-size': 11, fill: SUB });
+  }
+  var ach = { 50: 1, 51: 1, 56: 1, 60: 1 };
+  for (var mask = 0; mask < 64; mask++) {
+    var col2 = mask % 8, row2 = Math.floor(mask / 8);
+    var gx = 140 + col2 * 34, gy = 56 + row2 * 34;
+    var on = ach[mask] === 1;
+    R(f4, gx, gy, 30, 30, on ? ACC : '#eef1f5', 4);
+    if (on) {
+      T(f4, gx + 15, gy + 20, String(mask), { 'font-size': 11, fill: '#ffffff', 'text-anchor': 'middle' });
+    }
+  }
+  T(f4, 432, 78, '50 / 51 = 110010 / 110011', { 'font-size': 12, 'font-weight': 600, fill: ACC });
+  T(f4, 432, 98, '纯复制：c=3，零通量，无扭转，k≡3', { 'font-size': 12 });
+  T(f4, 432, 116, '51 是 n≤4 那一支（S6 也满足），50 是 n≥5 的同构型', { 'font-size': 11, fill: SUB });
+  T(f4, 432, 148, '56 = 111000', { 'font-size': 12, 'font-weight': 600, fill: ACC });
+  T(f4, 432, 168, '电荷依赖成立，但仍需复制：n=7 (c=12) / n=8 (c=20)', { 'font-size': 12 });
+  T(f4, 432, 200, '60 = 111100', { 'font-size': 12, 'font-weight': 600, fill: ACC });
+  T(f4, 432, 220, '三代 + 电荷依赖 + 单一连通：n≥9，内部维度 ≥ 18', { 'font-size': 12 });
+  T(f4, 432, 254, '63 = 111111（严格六槽）：不可达', { 'font-size': 12, 'font-weight': 700, fill: RED });
+  T(f4, 432, 274, 'S3 ∧ S4 ∧ S6 = ∅ 且 S3 ∧ S4 ∧ S5 = ∅', { 'font-size': 11, fill: '#8a6d3b' });
+  T(f4, 24, 322, '掩码位序：S1 为最高位（32）… S6 为最低位（1）；共 2⁶ = 64 个', { 'font-size': 11, fill: SUB });
+})();
+</script>
+</body>
+</html>

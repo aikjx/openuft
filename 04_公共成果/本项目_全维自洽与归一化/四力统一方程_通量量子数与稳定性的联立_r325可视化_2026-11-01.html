@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r325 · 通量量子数与稳定性的联立（Freed–Witten 格 · CP² 的 5/2 · 稳定性零约束 · 只有 n=1,2 有解）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;--dead:#e8dede}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:26px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.key{background:#eef4fb;border:1px solid #c9dbf0;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+.warn{background:#fdf2f0;border:1px solid #edc9c2;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+svg{display:block;max-width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<h1>TUFT-r325 · 通量量子数与稳定性的联立</h1>
+<div class="sub">攻 <span class="mono">X-R319-1</span>　·　条目 49（PASS 41 / FAIL 0 / INFO 8）　·　控制组 15/15　·　守卫 16/16　·　<span class="mono">X-R319-1-CLOSED-NEGATIVELY</span>　·　度数 0（候选 37）</div>
+
+<div class="thm">
+<b>攻靶</b>：r319 判定册 §十二 交接的 <span class="mono">X-R319-1</span> —— <span class="mono">q = 3</span> 由什么选定？<br><br>
+<b>定理 A（量子化格不是 Z）</b>　<span class="mono">CP<sup>n</sup></span> 是 spin <b>当且仅当 n 奇</b>；非自旋圈上 <span class="mono">[F] ∈ H²(Z) + c₁/2</span>，故 <span class="mono">CP²</span> 的通量格是 <b><span class="mono">Z + 1/2</span></b> —— <b>整数在那里根本不是合法通量</b>。<br>
+<b>定理 B（唯一性撤回）</b>　在正确格上 <span class="mono">n<sub>R</sub> = 3</span> 的解<b>不止一个</b>：<span class="mono">CP¹ + q=3</span> 与 <b><span class="mono">CP² + q=±5/2</span></b>（<span class="mono">25/8 − 1/8 = 3</span>，Fraction 精确）⇒ r319 的「<span class="mono">CP¹</span> 是唯一真空」<b>判负撤回</b>。<br>
+<b>定理 C（稳定性零约束）</b>　slope / DUY / HYM / D 项 / tadpole / 模稳定化，对 rank-1 线丛的 <span class="mono">q</span> 给出的独立约束数 <b>= 0</b>。最狠的一条：<span class="mono">CP¹</span> 实维 2，<span class="mono">F∧F ≡ 0</span> ⇒ <b>tadpole 在给出三代的几何上信息量恰好为零</b>。<br>
+<b>定理 D（恒等映射）</b>　<span class="mono">CP¹</span> 上 <span class="mono">n<sub>R</sub>(q) = q</span> 是<b>恒等式</b> ⇒ 「<span class="mono">q=3</span>」与「三代」是同一句话的两种写法 ⇒ 该路线<b>结构性无法回答</b>。<br>
+<b>定理 E（问题倒置）</b>　真问题不是「什么选 <span class="mono">q</span>」，而是「<span class="mono">n<sub>R</sub>=3</span> 的解集有多大、按什么排序」。
+</div>
+
+<div class="grid">
+  <div class="kpi"><div class="k">CP² 的通量格</div><div class="v">Z + 1/2</div></div>
+  <div class="kpi"><div class="k">n_R(CP², ±5/2)</div><div class="v">3（精确）</div></div>
+  <div class="kpi"><div class="k">解数（计符号）</div><div class="v">3</div></div>
+  <div class="kpi"><div class="k">不同 |q| / 几何</div><div class="v">2 / 2</div></div>
+  <div class="kpi"><div class="k">稳定性对 q 的约束</div><div class="v">0</div></div>
+  <div class="kpi"><div class="k">定价 2⁶ 可达 / 严格</div><div class="v">18 / 0</div></div>
+</div>
+
+<h2>图 1 · 格不是 <span class="mono">Z</span>：spin 性决定移位</h2>
+<div class="card">
+<svg id="fig1" viewBox="0 0 900 300" role="img" aria-label="CP^n 的 spin 性与 Freed-Witten 移位格"></svg>
+<div class="legend"><span class="mono">c₁(CP<sup>n</sup>) = (n+1)H</span>，<span class="mono">w₂ = c₁ mod 2</span> ⇒ <span class="mono">CP<sup>n</sup></span> 是 spin <b>当且仅当 n 奇</b>。蓝 = 整数格 <span class="mono">Z</span>；红 = 半整数格 <span class="mono">Z + 1/2</span>。<b>r319 只看了 <span class="mono">n=1</span> 这一行（两张格在这里重合），于是看不出格的差别。</b></div>
+</div>
+
+<h2>图 2 · 为什么 <span class="mono">CP²</span> 的整数点上找不到 3，而半整数点上有</h2>
+<div class="card">
+<svg id="fig2" viewBox="0 0 900 360" role="img" aria-label="CP^1 与 CP^2 的 n_R(q) 曲线与 n_R=3 的交点"></svg>
+<div class="legend">绿线 = <span class="mono">CP¹</span> 的 <span class="mono">n<sub>R</sub> = q</span>（恒等映射，<b>任何</b> N 都能取到 ⇒ 判别力为 0）。蓝线 = <span class="mono">CP²</span> 的 <span class="mono">n<sub>R</sub> = q²/2 − 1/8</span>。红虚线 = <span class="mono">n<sub>R</sub> = 3</span>。整数竖线（灰）与蓝线的交点<b>没有一个是 3</b>；半整数竖线 <span class="mono">q = ±5/2</span>（橙）与蓝线交于 <b>恰好的 3</b>。</div>
+</div>
+
+<div class="key">
+<b>这一步不是「发现新解」，而是「发现上一卷的格选窄了」。</b>
+<span class="mono">CP²</span> 不是 spin（<span class="mono">c₁ = 3H</span> 为奇），其 D-brane 必须带 spin<sup>c</sup> 结构，
+规范通量满足 <span class="mono">[F] ∈ H²(Z) + c₁/2</span> —— 于是 <span class="mono">q</span> 只能是半整数。
+在 <span class="mono">q ∈ Z</span> 上扫，当然扫不到 <span class="mono">5/2</span>。
+</div>
+
+<h2>图 3 · 解集的两张格对照：左 = r319 用的格，右 = 物理上正确的格</h2>
+<div class="card">
+<svg id="fig3" viewBox="0 0 900 340" role="img" aria-label="n=1..7 与 q=-6..6 的解集网格，两种格对照"></svg>
+<div class="legend">每格是真算出的 <span class="mono">n<sub>R</sub>(n, q)</span>（<span class="mono">Â</span> 的 <span class="mono">H</span> 幂次恒偶 ⇒ 6 阶截断对 <span class="mono">n ≤ 7</span> <b>精确</b>）。<b>绿 = 恰好等于 3</b>；灰 = 该 <span class="mono">q</span> 不在这张格上（右图专有）；白 = 算了但不是 3。左图只有 1 个绿格；右图有 3 个。<span class="mono">n ≥ 3</span> 两张图都全白 —— <b>只有 <span class="mono">n = 1, 2</span> 有解</b>，这一条本卷只报不解释（<span class="mono">X-R325-1</span>）。</div>
+</div>
+
+<div class="warn">
+<b>撤回的精确范围</b>：r319 定理 AB 里「<span class="mono">CP²</span> 上整数 q 无解」<b>仍然成立</b>（本卷 <span class="mono">A08</span> 复现）；
+「<b>只有</b> <span class="mono">CP¹</span> 有整数解」在 <span class="mono">q ∈ Z</span> 前提下<b>仍然成立</b>；
+被撤回的只是最后那一句「<b><span class="mono">CP¹</span> 是唯一真空</b>」。
+<b>理由不是算错，是格选窄了。</b>凡报「唯一性」，必须报它是在哪张格上唯一。
+</div>
+
+<h2>图 4 · 定价 <span class="mono">2⁶ = 64</span>：二难被压成两行</h2>
+<div class="card">
+<svg id="fig4" viewBox="0 0 900 330" role="img" aria-label="64 格定价掩码，可达 18"></svg>
+<div class="legend">六槽 = 有机制 / 三代 / 正确量子化 / 稳定性有约束 / 解集唯一 / |q| 极小化。绿 = 可达（18 个），灰 = 不可达。
+关键两行：<b><span class="mono">S1 ∧ S2 = 0</span></b>（「解释了三代」与「三代成立」互斥）、<b><span class="mono">S3 ∧ S5 = 0</span></b>（用对量子化就失去唯一性）。
+约束全部<b>由定理推出</b>而非手填：<span class="mono">S2⇒¬S1</span>、<span class="mono">S3⇒¬S5</span>、<span class="mono">S2∧¬S3⇒S5</span>、<span class="mono">S6⇒¬S5</span>、<span class="mono">S1⇒S4</span>、<span class="mono">S4⇒¬S5</span>。</div>
+</div>
+
+<h2>读数速查</h2>
+<table>
+<tr><th>量</th><th>值</th><th>说明</th></tr>
+<tr><td><span class="mono">CP<sup>n</sup></span> 的 spin 性</td><td>n 奇 = spin</td><td><span class="mono">c₁ = (n+1)H</span>，<span class="mono">w₂ = c₁ mod 2</span></td></tr>
+<tr><td>移位格</td><td><span class="mono">Z</span> / <span class="mono">Z+1/2</span></td><td>n 奇 / n 偶（含 n=2,4,6）</td></tr>
+<tr><td><span class="mono">n<sub>R</sub>(CP², ±5/2)</span></td><td><b>3（精确）</b></td><td><span class="mono">25/8 − 1/8 = 24/8</span></td></tr>
+<tr><td>解数（计符号）</td><td><b>3</b></td><td><span class="mono">CP¹:{3}</span>，<span class="mono">CP²:{−5/2,+5/2}</span></td></tr>
+<tr><td>不同 <span class="mono">|q|</span> / 几何</td><td>2 / 2</td><td>按「退化重复 ≠ 多解」分列</td></tr>
+<tr><td>最小 <span class="mono">|q|</span></td><td><span class="mono">5/2</span>（在 CP²）</td><td>不是 r319 报的 <span class="mono">CP¹</span> 的 3</td></tr>
+<tr><td>稳定性对 q 的约束</td><td><b>0</b></td><td>slope / DUY / HYM / D 项 / tadpole / 模稳定化</td></tr>
+<tr><td><span class="mono">CP¹</span> 上 <span class="mono">∫F∧F</span></td><td><b>0</b></td><td>4-形式在 2 维流形上恒为零 ⇒ tadpole 零信息</td></tr>
+<tr><td>反向可及性（<span class="mono">CP¹</span>，N=1..12）</td><td><b>12/12</b></td><td>没有 N 被排除 ⇒ 判别力 0</td></tr>
+<tr><td>定价</td><td>18 / 64，严格 0</td><td><span class="mono">S1∧S2 = 0</span>；<span class="mono">S3∧S5 = 0</span>；<span class="mono">S2∧S3∧S6 = 2</span></td></tr>
+</table>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var INK = '#1f2328', SUB = '#5b6470', ACC = '#2b5c9b', RED = '#c0392b',
+      GRN = '#1a7f37', GREY = '#c9ccd2', ORG = '#d68910';
+
+  function E(p, tag, a) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) { if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]); }
+    p.appendChild(e);
+    return e;
+  }
+  function T(p, x, y, s, o) {
+    var a = { x: x, y: y, fill: INK, 'font-size': 12 };
+    if (o) { for (var k in o) { if (o.hasOwnProperty(k)) a[k] = o[k]; } }
+    var e = E(p, 'text', a);
+    e.textContent = s;
+    return e;
+  }
+  function R(p, x, y, w, h, fill, rx) {
+    return E(p, 'rect', { x: x, y: y, width: w, height: h, rx: (rx === undefined ? 3 : rx), fill: fill });
+  }
+  function L(p, x1, y1, x2, y2, col, w, dash) {
+    var a = { x1: x1, y1: y1, x2: x2, y2: y2, stroke: col, 'stroke-width': w };
+    if (dash) a['stroke-dasharray'] = dash;
+    return E(p, 'line', a);
+  }
+  function C(p, cx, cy, r, fill) {
+    return E(p, 'circle', { cx: cx, cy: cy, r: r, fill: fill });
+  }
+
+  // ---------- 精确有理数（避免浮点误判「是否恰为 3」）
+  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = a % b; a = b; b = t; } return a || 1; }
+  function fr(n, d) { if (d < 0) { n = -n; d = -d; } var g = gcd(n, d); return [n / g, d / g]; }
+  function fadd(x, y) { return fr(x[0] * y[1] + y[0] * x[1], x[1] * y[1]); }
+  function fmul(x, y) { return fr(x[0] * y[0], x[1] * y[1]); }
+  function fpow(x, e) { var r = [1, 1]; for (var i = 0; i < e; i++) { r = fmul(r, x); } return r; }
+
+  // n_R 多项式：[q 的幂, 分子, 分母]（分母已含阶乘）
+  var P = {
+    1: [[1, 1, 1]],
+    2: [[2, 1, 2], [0, -1, 8]],
+    3: [[3, 1, 6], [1, -1, 6]],
+    4: [[4, 1, 24], [2, -5, 48], [0, 3, 128]],
+    5: [[5, 1, 120], [3, -1, 24], [1, 1, 30]],
+    6: [[6, 1, 720], [4, -7, 576], [2, 259, 11520], [0, -5, 1024]],
+    7: [[7, 1, 5040], [5, -1, 360], [3, 7, 720], [1, -1, 140]]
+  };
+  function nr(n, qn, qd) {
+    var q = fr(qn, qd), s = [0, 1], t = P[n];
+    for (var i = 0; i < t.length; i++) {
+      s = fadd(s, fmul(fr(t[i][1], t[i][2]), fpow(q, t[i][0])));
+    }
+    return s;
+  }
+  function isThree(n, qn, qd) { var v = nr(n, qn, qd); return v[0] === 3 * v[1]; }
+  function vshow(n, qn, qd) {
+    var v = nr(n, qn, qd);
+    if (v[1] === 1) { return String(v[0]); }
+    return (v[0] / v[1]).toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+  }
+
+  // 通量格：CP^n 是 spin <=> n 奇；非 spin 时格 = Z + 1/2
+  function shiftOf(n) { return (n % 2 === 1) ? 0 : 0.5; }
+  function onLattice(n, qn, qd) {
+    var q = fr(qn, qd), s = (n % 2 === 1) ? fr(0, 1) : fr(1, 2);
+    var d = [q[0] * s[1] - s[0] * q[1], q[1] * s[1]];
+    return fr(d[0], d[1])[1] === 1;
+  }
+
+  // ================================================================ 图 1
+  var f1 = document.getElementById('fig1');
+  T(f1, 24, 26, 'CP^n 的 spin 性与通量格', { 'font-weight': 600, 'font-size': 13 });
+  T(f1, 470, 26, 'c1 = (n+1)H  →  w2 = c1 mod 2  →  格', { 'font-weight': 600, 'font-size': 13 });
+
+  var hdr = ['n', 'c1', 'spin?', '移位', '允许的 q'];
+  var cx = [40, 105, 190, 285, 380];
+  for (var h = 0; h < hdr.length; h++) {
+    T(f1, cx[h], 52, hdr[h], { 'font-size': 11, fill: SUB, 'font-weight': 600 });
+  }
+  L(f1, 30, 58, 440, 58, '#dfe3e8', 1);
+
+  for (var n = 1; n <= 7; n++) {
+    var y = 82 + (n - 1) * 26;
+    var spin = (n % 2 === 1);
+    T(f1, cx[0], y, 'CP^' + n, { 'font-size': 12, 'font-weight': 600 });
+    T(f1, cx[1], y, (n + 1) + 'H', { 'font-size': 12 });
+    T(f1, cx[2], y, spin ? 'spin' : 'NON-spin', { 'font-size': 12, fill: spin ? SUB : RED, 'font-weight': spin ? 400 : 600 });
+    T(f1, cx[3], y, spin ? '0' : '1/2', { 'font-size': 12, fill: spin ? ACC : RED, 'font-weight': 600 });
+    T(f1, cx[4], y, spin ? 'Z' : 'Z + 1/2', { 'font-size': 12, fill: spin ? ACC : RED, 'font-weight': 600 });
+    R(f1, 30, y - 13, 410, 18, spin ? 'rgba(43,92,155,0.06)' : 'rgba(192,57,43,0.08)', 2);
+  }
+
+  T(f1, 470, 62, '偶数 n（2, 4, 6）的格 = 半整数', { 'font-size': 12, fill: RED, 'font-weight': 600 });
+  T(f1, 470, 86, 'CP^2 上 |q| ≤ 4 的全部允许值：', { 'font-size': 12 });
+  var lat2 = ['-7/2', '-5/2', '-3/2', '-1/2', '1/2', '3/2', '5/2', '7/2'];
+  for (var i2 = 0; i2 < lat2.length; i2++) {
+    var x2 = 470 + i2 * 48;
+    R(f1, x2, 96, 42, 24, '#f3e2e0', 3);
+    T(f1, x2 + 8, 113, lat2[i2], { 'font-size': 11, fill: RED });
+  }
+  T(f1, 470, 146, '⇒ 整数 q 在 CP^2 上根本不是合法通量', { 'font-size': 12, fill: RED, 'font-weight': 600 });
+  T(f1, 470, 172, 'r319 只看了 n=1 这一行 ——', { 'font-size': 12 });
+  T(f1, 470, 194, '两张格在 n=1 上重合（移位都是 0），', { 'font-size': 12 });
+  T(f1, 470, 216, '所以从 CP^1 这一个个例看不出格的差别。', { 'font-size': 12 });
+  T(f1, 470, 244, '格 = 由几何（spin 性）决定，不是约定。', { 'font-size': 12, fill: ACC, 'font-weight': 600 });
+  T(f1, 24, 278, 'A01–A05 逐条机检；p1 用两条独立表达式互核（CTL7）', { 'font-size': 11, fill: SUB });
+
+  // ================================================================ 图 2
+  var f2 = document.getElementById('fig2');
+  T(f2, 24, 26, 'n_R(q) 的两条曲线与 n_R = 3 的交点', { 'font-weight': 600, 'font-size': 13 });
+  var X0 = 90, X1 = 850, Y0 = 300, Y1 = 60;
+  function px(q) { return X0 + (q + 4) / 8 * (X1 - X0); }
+  function py(v) { return Y0 - (v + 7) / 16 * (Y0 - Y1); }
+
+  // 网格与轴
+  L(f2, X0, py(0), X1, py(0), '#8a929c', 1.4);
+  L(f2, px(0), Y1, px(0), Y0, '#dfe3e8', 1);
+  for (var qq = -4; qq <= 4; qq++) { L(f2, px(qq), Y1, px(qq), Y0, '#f0f2f5', 1); }
+  for (var vv = -6; vv <= 8; vv += 2) {
+    L(f2, X0, py(vv), X1, py(vv), '#f0f2f5', 1);
+    T(f2, X0 - 26, py(vv) + 4, String(vv), { 'font-size': 11, fill: SUB });
+  }
+  for (var qq2 = -4; qq2 <= 4; qq2++) {
+    T(f2, px(qq2) - 8, Y0 + 16, String(qq2), { 'font-size': 11, fill: SUB });
+  }
+  T(f2, X1 - 40, Y0 + 32, 'q', { 'font-size': 12, fill: SUB, 'font-style': 'italic' });
+
+  // n_R = 3 目标线
+  L(f2, X0, py(3), X1, py(3), RED, 1.6, '6,4');
+  T(f2, X0 + 6, py(3) - 8, 'n_R = 3', { 'font-size': 12, fill: RED, 'font-weight': 600 });
+
+  // CP^1：n_R = q（绿）
+  var seg = [];
+  for (var s1 = -4; s1 <= 4; s1 += 0.1) { seg.push([px(s1), py(s1)]); }
+  for (var i3 = 1; i3 < seg.length; i3++) {
+    L(f2, seg[i3 - 1][0], seg[i3 - 1][1], seg[i3][0], seg[i3][1], GRN, 2.2);
+  }
+
+  // CP^2：n_R = q^2/2 - 1/8（蓝）
+  var prev = null;
+  for (var s2 = -4; s2 <= 4.001; s2 += 0.05) {
+    var val = s2 * s2 / 2 - 0.125;
+    if (val > 9 || val < -7) { prev = null; continue; }
+    var pt = [px(s2), py(val)];
+    if (prev) { L(f2, prev[0], prev[1], pt[0], pt[1], ACC, 2.2); }
+    prev = pt;
+  }
+
+  // q=±5/2 的交点（橙）
+  var hi = [[5, 2], [-5, 2]];
+  for (var i4 = 0; i4 < hi.length; i4++) {
+    var qv = hi[i4][0] / hi[i4][1];
+    C(f2, px(qv), py(3), 6, ORG);
+    T(f2, px(qv) - 30, py(3) - 14, 'q=' + (qv > 0 ? '5/2' : '−5/2'), { 'font-size': 12, fill: ORG, 'font-weight': 600 });
+    T(f2, px(qv) - 24, py(3) + 22, 'n_R=3 精确', { 'font-size': 11, fill: ORG });
+  }
+
+  // 整数点（灰）—— 都不是 3
+  for (var qi = -4; qi <= 4; qi++) {
+    var vv2 = qi * qi / 2 - 0.125;
+    if (vv2 < -7 || vv2 > 9) { continue; }
+    C(f2, px(qi), py(vv2), 4, '#8a929c');
+    if (qi === 2 || qi === 3) {
+      T(f2, px(qi) - 16, py(vv2) + 20, (qi === 2 ? '15/8' : '35/8'), { 'font-size': 11, fill: SUB });
+    }
+  }
+  T(f2, 24, 340, '灰点 = CP² 在整数 q 上的取值：q=2 给 15/8，q=3 给 35/8 —— 跨过 3，但不等于 3。',
+    { 'font-size': 12, fill: SUB });
+  T(f2, 640, 62, '绿 = CP¹（n_R = q）', { 'font-size': 12, fill: GRN, 'font-weight': 600 });
+  T(f2, 640, 80, '蓝 = CP²（q²/2 − 1/8）', { 'font-size': 12, fill: ACC, 'font-weight': 600 });
+
+  // ================================================================ 图 3
+  var f3 = document.getElementById('fig3');
+  T(f3, 24, 24, '左：q ∈ Z（r319 用的格）', { 'font-weight': 600, 'font-size': 13 });
+  T(f3, 480, 24, '右：Freed–Witten 格（物理上正确的格）', { 'font-weight': 600, 'font-size': 13 });
+  var QS = [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6];
+  var CW = 26, CH = 28;
+  var panels = [[60, true], [480, false]];
+  var litCount = [0, 0];
+  for (var pp = 0; pp < 2; pp++) {
+    var ox = panels[pp][0], useNaive = panels[pp][1];
+    for (var ci = 0; ci < QS.length; ci++) {
+      T(f3, ox + ci * CW + 5, 48, String(QS[ci]), { 'font-size': 10, fill: SUB });
+    }
+    for (var ni = 0; ni < 7; ni++) {
+      var nn = ni + 1, oy = 58 + ni * CH;
+      T(f3, ox - 44, oy + 18, 'CP^' + nn, { 'font-size': 11, fill: SUB });
+      for (var cj = 0; cj < QS.length; cj++) {
+        var qq3 = QS[cj], x3 = ox + cj * CW, y3 = oy;
+        var ok = onLattice(nn, qq3, 1);
+        var hit = isThree(nn, qq3, 1);
+        var fillc;
+        if (useNaive) {
+          fillc = (qq3 % 1 !== 0) ? '#f4f5f7' : (hit ? '#1a7f37' : '#ffffff');
+          if (qq3 % 1 !== 0) { continue; }
+        } else {
+          if (!ok) { fillc = '#eceef1'; }
+          else { fillc = hit ? '#1a7f37' : '#ffffff'; }
+        }
+        R(f3, x3, y3, CW - 2, CH - 2, fillc, 2);
+        E(f3, 'rect', { x: x3, y: y3, width: CW - 2, height: CH - 2, rx: 2, fill: 'none', stroke: '#dfe3e8' });
+        if (hit) { litCount[pp]++; T(f3, x3 + 6, y3 + 18, '3', { 'font-size': 11, fill: '#ffffff', 'font-weight': 600 }); }
+      }
+    }
+  }
+  T(f3, 60, 272, '绿格数 = ' + litCount[0] + '（仅 CP^1, q=3）', { 'font-size': 12, fill: RED, 'font-weight': 600 });
+  T(f3, 480, 272, '绿格数 = ' + litCount[1] + '（CP^1:q=3；CP^2:q=±5/2）', { 'font-size': 12, fill: RED, 'font-weight': 600 });
+  T(f3, 60, 296, 'n ≥ 3 全白：本卷只报不解释（X-R325-1）', { 'font-size': 11, fill: SUB });
+  T(f3, 480, 296, '灰格 = 该 q 不在这张格上，根本不允许', { 'font-size': 11, fill: SUB });
+
+  // ================================================================ 图 4
+  var f4 = document.getElementById('fig4');
+  T(f4, 24, 26, '64 个定价掩码：绿 = 可达（18）', { 'font-weight': 600, 'font-size': 13 });
+  var BIT = { S1: 32, S2: 16, S3: 8, S4: 4, S5: 2, S6: 1 };
+  function feasible(m) {
+    var S1 = (m & BIT.S1) ? 1 : 0, S2 = (m & BIT.S2) ? 1 : 0, S3 = (m & BIT.S3) ? 1 : 0;
+    var S4 = (m & BIT.S4) ? 1 : 0, S5 = (m & BIT.S5) ? 1 : 0, S6 = (m & BIT.S6) ? 1 : 0;
+    if (S2 && S1) { return false; }
+    if (S3 && S5) { return false; }
+    if (S2 && !S3 && !S5) { return false; }
+    if (S6 && S5) { return false; }
+    if (S1 && !S4) { return false; }
+    if (S4 && S5) { return false; }
+    return true;
+  }
+  var ach = 0;
+  for (var m = 0; m < 64; m++) {
+    var col = m % 8, row = Math.floor(m / 8);
+    var x4 = 90 + col * 60, y4 = 60 + row * 30;
+    var ok4 = feasible(m);
+    if (ok4) { ach++; }
+    R(f4, x4, y4, 56, 26, ok4 ? '#d8ecd9' : '#eceef1', 3);
+    E(f4, 'rect', { x: x4, y: y4, width: 56, height: 26, rx: 3, fill: 'none', stroke: ok4 ? '#9dc99f' : '#dfe3e8' });
+    var lbl = '';
+    for (var bi = 0; bi < 6; bi++) { lbl += ((m >> (5 - bi)) & 1) ? '1' : '0'; }
+    T(f4, x4 + 6, y4 + 17, lbl, { 'font-size': 10, fill: ok4 ? '#1a7f37' : '#aab0b8' });
+  }
+  T(f4, 90, 312, '可达 = ' + ach + ' / 64　·　严格全六槽 = 0', { 'font-size': 12, fill: RED, 'font-weight': 600 });
+  T(f4, 400, 312, 'S1∧S2 = 0　S3∧S5 = 0　S2∧S3∧S6 = 2', { 'font-size': 12, fill: ACC, 'font-weight': 600 });
+  T(f4, 24, 292, '位序（左→右）：S1 有机制 / S2 三代 / S3 正确格 / S4 稳定性有约束 / S5 解集唯一 / S6 |q| 极小化',
+    { 'font-size': 11, fill: SUB });
+})();
+</script>
+</body>
+</html>

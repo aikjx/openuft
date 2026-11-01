@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r307 · 常数截面计数的第一原理审计（Schur 标量性 · N ≤ K · 复制不可约化）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:var(--pass)}.FAIL{background:var(--fail)}
+.BOUNDARY{background:var(--bnd)}.INFO{background:var(--info)}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.lbl{font-size:11px;fill:#5b6470}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.key{background:#eef4fb;border:1px solid #c9dbf0;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+.warn{background:#fdf2f0;border:1px solid #edc9c2;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+</style>
+</head>
+<body>
+<h1>TUFT-r307 · 常数截面计数的第一原理审计</h1>
+<div class="sub">Schur 标量性 ⇒ <span class="mono">k<sub>R</sub> ∈ {0,1}</span>　·　<span class="mono">N ≤ K</span>（修正 r305 的 3t）　·　复制不可约化　·　条目 69（PASS 63 / FAIL 0 / INFO 6）　·　控制组 11/11　·　守卫 14/14　·　verdict <span class="mono">X-R305-1-CLOSED-NEGATIVELY</span></div>
+
+<div class="thm">
+<b>攻靶</b>：r305 判定册 §十 唯一的否证入口 —— 「<span class="mono">k<sub>R</sub> ≤ 1</span> 能否由第一原理推出？」<br><br>
+<b>定理 N（Schur）</b>　中心扭转 <span class="mono">g ∈ Z(G)</span> 在不可约 R 上作用为<b>标量</b> <span class="mono">ω<sub>R</sub>(g)</span>；常数截面要求 <span class="mono">ω<sub>R</sub> = 1</span> ⇒ <span class="mono">k<sub>R</sub> = [ω<sub>R</sub>=1] ∈ {0,1}</span>。链条「表示 → Dynkin → 中心荷 → 相位 → k」<b>全程机械</b>，给出 r302 手写表的推导。<br>
+<b>定理 P（修正）</b>　<span class="mono">k = (N−t, N+2t, N−t, N+t, N−t)</span> ⇒ <span class="mono">max k = N+2t</span> ⇒ <b><span class="mono">N ≤ K</span></b>。r305 的 <span class="mono">K<sub>min</sub>=3t</span> 是 λ=0（<span class="mono">N=t</span>）切片 ⇒ <b>三代需 K ≥ 3，不是 9</b>。<br>
+<b>定理 Q（复制）</b>　非中心扭转拿不到 <span class="mono">k&gt;1</span> 且破 SM；非阿贝尔 irrep 给 <span class="mono">k=0</span>（不是 d）；唯一来源是<b>复制</b> ⇒ <span class="mono">K = c</span> ⇒ <b><span class="mono">N<sub>gen</sub> ≤ π<sub>0</sub>(M<sub>int</sub>)</span></b>。
+</div>
+
+<h2>一、总账</h2><div class="grid" id="kpi"></div>
+
+<h2>二、定理 N · Schur 标量性：相位指数与 k 向量</h2>
+<div class="card">
+<svg id="svgA" viewBox="0 0 760 340" width="100%" height="340"></svg>
+<div class="legend">格中数字 = 相位指数 <span class="mono">m = (2a·n<sub>3</sub> + 3b·n<sub>2</sub>) mod 6</span>（单位 2π/6）。<b style="color:#1a7f37">绿色</b> = <span class="mono">m=0</span> ⇒ <span class="mono">ω=1</span> ⇒ <span class="mono">k<sub>R</sub>=1</span>；灰色 = 相位非平凡 ⇒ <span class="mono">k<sub>R</sub>=0</span>。整张图<b>没有一个格出现“半份”</b> —— 这就是 <span class="mono">k<sub>R</sub> ≤ 1</span> 的全部内容。</div>
+<div class="key">6 个扭转元给出 <b>4 个不同 k 向量</b>，与 r302 手工编码的 <span class="mono">k_of()</span> <b>逐项一致（4/4）</b>。r302 的表因此从“输入”变成“推论”。</div>
+<table id="t1" style="margin-top:10px"></table>
+</div>
+
+<h2>三、定理 P · 自我纠正：<span class="mono">3t</span> 与 <span class="mono">N</span> 不是同一个量</h2>
+<div class="card">
+<svg id="svgB" viewBox="0 0 760 330" width="100%" height="330"></svg>
+<div class="legend">同一组 t 上并列两个量：<b style="color:#b8860b">r305 的最小 K = 3t</b>（λ=0 切片）与 <b style="color:#2b5c9b">该解实际的代数 N = λ + t = t</b>。两者在对角线上恰好相等 ⇒ 数字一个不差，<b>标签却错了</b>。</div>
+<div class="warn"><b>这是削弱，不是加强，必须明写。</b>修正后的门槛是 <span class="mono">K ≥ 3</span>（<span class="mono">k=(3,3,3,3,3)</span>、<span class="mono">t=0</span>、<span class="mono">q=0</span>、六条反常全零），
+而 r305 说的是 <span class="mono">K ≥ 9</span>。<b>no-go 比 r305 自述的脆弱 3 倍。</b></div>
+<table id="t2" style="margin-top:10px"></table>
+</div>
+
+<h2>四、定理 Q · 复制不可约化：<span class="mono">N ≤ c</span></h2>
+<div class="card">
+<svg id="svgC" viewBox="0 0 760 300" width="100%" height="300"></svg>
+<div class="legend">内部空间有 <span class="mono">c</span> 个连通分量、各带独立扭转 ⇒ 可达 <span class="mono">[0,c]⁵</span> ⇒ <span class="mono">K = c</span> ⇒ 由定理 P，<span class="mono">N<sub>gen</sub> ≤ c</span>。<b>三代 ⟺ c ≥ 3</b>（柱高即该 c 下的最大代数）。</div>
+<div class="key"><b>杀掉的那条逃逸</b>：A_4 的三维不可约表示<b>不给</b> <span class="mono">k=3</span>，而给 <b>0</b> —— 因为三个阶 2 元是<b>双对换</b>（<span class="mono">Fix=0</span>），全体共同固定的维数为 0。只有 <span class="mono">ρ = 1⊕1⊕1</span> 才给 3，而那已经是复制。</div>
+<table id="t3" style="margin-top:10px"></table>
+</div>
+
+<h2>五、定价：6 槽 · 2⁶ = 64</h2>
+<div class="card">
+<svg id="svgD" viewBox="0 0 760 340" width="100%" height="340"></svg>
+<div class="legend">六条路线 × 六个槽。<span style="color:#1a7f37">✓</span> 表示满足、<span style="color:#c0392b">✗</span> 表示出局。<b>严格档（全 ✓）0 条</b>；每条路线都恰好缺一槽。</div>
+<div class="key"><b>首跑意外发现</b>：<span class="mono">S2 ∧ S6</span>（要三代 + 要连通，但<b>放弃等谱</b>）可达 <b>8</b> 个掩码；
+而 <span class="mono">S2 ∧ S3 ∧ S6</span> 可达 <b>0</b> 个。⇒ <b>「等谱」是第三根独立的柱</b>，不是技术性简化。<b>判据把我的结论改对了，而不是我把判据放松了。</b></div>
+<table id="t4" style="margin-top:10px"></table>
+</div>
+
+<script>
+function el(t, a, kids){
+  var n = document.createElementNS('http://www.w3.org/2000/svg', t);
+  for (var k in a) n.setAttribute(k, a[k]);
+  var s = document.getElementById(a.__host || ''); 
+  return n;
+}
+function txt(svg, x, y, s, cls, anchor, size, fill, weight){
+  var t = document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x', x); t.setAttribute('y', y);
+  t.setAttribute('class', cls || 'lbl');
+  if (anchor) t.setAttribute('text-anchor', anchor);
+  if (size) t.setAttribute('font-size', size);
+  if (fill) t.setAttribute('fill', fill);
+  if (weight) t.setAttribute('font-weight', weight);
+  t.textContent = s;
+  svg.appendChild(t);
+  return t;
+}
+function rect(svg, x, y, w, h, fill, rx){
+  var r = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  r.setAttribute('x', x); r.setAttribute('y', y);
+  r.setAttribute('width', w); r.setAttribute('height', h);
+  r.setAttribute('fill', fill);
+  if (rx) r.setAttribute('rx', rx);
+  svg.appendChild(r);
+  return r;
+}
+function line(svg, x1, y1, x2, y2, stroke, w){
+  var l = document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+  l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+  l.setAttribute('stroke', stroke); l.setAttribute('stroke-width', w || 1);
+  svg.appendChild(l);
+  return l;
+}
+
+/* ---------------- 数据 ---------------- */
+var REPS = ['Q_L (3,2)', 'u_R^c (3\u03051)', 'd_R^c (3\u03051)', 'L_L (1,2)', 'e_R^c (1,1)'];
+var ZC3 = [1,2,2,0,0], ZC2 = [1,0,0,1,0];
+var TW = [[0,0],[0,1],[1,0],[1,1],[2,0],[2,1]];
+var TWNAME = ['T0','T2','T3','T32','T3','T32'];
+
+function pexp(i,a,b){ return (2*a*ZC3[i] + 3*b*ZC2[i]) % 6; }
+
+/* ---------------- svgA 热力图 ---------------- */
+(function(){
+  var svg = document.getElementById('svgA');
+  var x0 = 176, cw = 88, gap = 6, y0 = 74, ch = 34, vgap = 8;
+  txt(svg, 8, 30, '相位指数 m 与 k_R（5 表示 × 6 扭转元）', 'lbl', null, 12, '#1f2328', '600');
+  // 表头
+  for (var j=0;j<6;j++){
+    var cx = x0 + j*(cw+gap);
+    txt(svg, cx + cw/2, y0 - 12, TWNAME[j] + ' (' + TW[j][0] + ',' + TW[j][1] + ')', 'lbl', 'middle', 10, '#5b6470');
+  }
+  for (var i=0;i<5;i++){
+    var ry = y0 + i*(ch+vgap);
+    txt(svg, 168, ry + ch/2 + 4, REPS[i], 'lbl', 'end', 11, '#1f2328');
+    for (var j=0;j<6;j++){
+      var cx = x0 + j*(cw+gap);
+      var m = pexp(i, TW[j][0], TW[j][1]);
+      var on = (m === 0);
+      rect(svg, cx, ry, cw, ch, on ? '#1a7f37' : '#dfe3e8', 4);
+      txt(svg, cx + cw/2, ry + ch/2 + 5, 'm=' + m + (on ? '  k=1' : '  k=0'),
+          'lbl', 'middle', 11, on ? '#ffffff' : '#5b6470', on ? '600' : '400');
+    }
+  }
+  var by = y0 + 5*(ch+vgap) + 6;
+  txt(svg, 8, by + 14, '4 个不同 k 向量：T0=(1,1,1,1,1) · T3=(0,0,0,1,1) · T2=(0,1,1,0,1) · T32=(0,0,0,0,1)　（Z₃ 的两个非平凡元给出同一个 k）',
+      'lbl', null, 11, '#5b6470');
+  txt(svg, 8, by + 32, '与 r302 手写 k_of() 表逐项一致 4/4 —— 该表由此从“输入”变成“推论”', 'lbl', null, 11, '#1a7f37', '600');
+})();
+
+/* ---------------- svgB 3t vs N ---------------- */
+(function(){
+  var svg = document.getElementById('svgB');
+  var base = 268, scale = 10, gx = 122, gw = 104, bw = 30, bgap = 10;
+  txt(svg, 8, 26, 'r305 的「最小 K = 3t」 vs 该解实际的代数 N = t', 'lbl', null, 12, '#1f2328', '600');
+  // 轴
+  line(svg, 96, base, 736, base, '#9aa3ad', 1.2);
+  for (var g=0; g<9; g++){
+    var yv = base - g*20;
+    if (g>0) line(svg, 96, yv, 736, yv, '#eef1f5', 1);
+    txt(svg, 90, yv + 4, String(g*2), 'lbl', 'end', 10, '#8a939d');
+  }
+  for (var i=0;i<6;i++){
+    var t = i+1;
+    var gx0 = gx + i*gw;
+    var h1 = t*3*scale;      // 3t
+    var h2 = t*scale;        // t
+    rect(svg, gx0, base - h1, bw, h1, '#b8860b', 3);
+    rect(svg, gx0 + bw + bgap, base - h2, bw, h2, '#2b5c9b', 3);
+    txt(svg, gx0 + bw + bgap/2, base + 16, 't=' + t, 'lbl', 'middle', 11, '#5b6470');
+    txt(svg, gx0 + bw/2, base - h1 - 6, String(3*t), 'lbl', 'middle', 10, '#b8860b', '600');
+    txt(svg, gx0 + bw + bgap + bw/2, base - h2 - 6, String(t), 'lbl', 'middle', 10, '#2b5c9b', '600');
+  }
+  txt(svg, 122, 300, '■ 3t：r305 在 λ=0 切片上的最小 K', 'lbl', null, 11, '#b8860b', '600');
+  txt(svg, 380, 300, '■ t：同一行的 N（= N_opt = λ + t，λ 恒为 0）', 'lbl', null, 11, '#2b5c9b', '600');
+  txt(svg, 122, 318, '修正后：N 代所需 K = N（t=0 取到）⇒ 三代只需 K ≥ 3，不是 K ≥ 9', 'lbl', null, 11, '#c0392b', '600');
+})();
+
+/* ---------------- svgC 复制 N ≤ c ---------------- */
+(function(){
+  var svg = document.getElementById('svgC');
+  var base = 232, scale = 26, x0 = 150, pw = 74, pgap = 22;
+  txt(svg, 8, 26, 'c 个连通分量 ⇒ 常数截面上限 K = c ⇒ N_gen ≤ c', 'lbl', null, 12, '#1f2328', '600');
+  line(svg, 120, base, 730, base, '#9aa3ad', 1.2);
+  for (var c=1;c<=6;c++){
+    var h = c*scale;
+    var x = x0 + (c-1)*(pw+pgap);
+    rect(svg, x, base - h, pw, h, c===3 ? '#1a7f37' : '#b9c6d6', 4);
+    txt(svg, x + pw/2, base - h - 7, 'N ≤ ' + c, 'lbl', 'middle', 11, c===3 ? '#1a7f37' : '#5b6470', '600');
+    txt(svg, x + pw/2, base + 16, 'c = ' + c, 'lbl', 'middle', 11, '#5b6470');
+  }
+  var ax = x0 + 2*(pw+pgap) + pw + pgap/2;
+  line(svg, ax, 60, ax, base, '#c0392b', 1.4);
+  txt(svg, ax + 8, 72, '三代起点：c = 3', 'lbl', null, 11, '#c0392b', '600');
+  txt(svg, 122, 268, 'c = 1 就是 r302/r305 的连通情形（至多一代）；c ≥ 3 才可能有三代', 'lbl', null, 11, '#5b6470');
+  txt(svg, 122, 286, '但 c = 1..6 每一个都自洽（零反常）⇒ 方程对 c 无选择性 ⇒ 3 是拓扑输入，不是预言', 'lbl', null, 11, '#c0392b', '600');
+})();
+
+/* ---------------- svgD 定价矩阵 ---------------- */
+(function(){
+  var svg = document.getElementById('svgD');
+  var SL = ['S1 保SM','S2 三代','S3 等谱','S4 反常','S5 维≤2','S6 连通'];
+  var RT = ['连通 t Hooft','c=3 复制','非中心扭转','非阿贝尔 irrep','放弃等谱','CY3 / T6'];
+  var MX = [
+    [1,0,1,1,1,1],
+    [1,1,1,1,1,0],
+    [0,0,0,1,1,1],
+    [1,0,1,1,1,1],
+    [1,1,0,1,1,1],
+    [1,1,0,1,0,1]
+  ];
+  txt(svg, 8, 26, '六条路线 × 六个槽（2^6 = 64 掩码全查）', 'lbl', null, 12, '#1f2328', '600');
+  var x0 = 268, cs = 34, y0 = 62, rs = 36, cell = 26;
+  for (var j=0;j<6;j++){
+    txt(svg, x0 + j*cs + cell/2, y0 - 10, SL[j], 'lbl', 'middle', 10, '#5b6470');
+  }
+  for (var i=0;i<6;i++){
+    var ry = y0 + i*rs;
+    txt(svg, 258, ry + cell/2 + 4, RT[i], 'lbl', 'end', 11, '#1f2328');
+    for (var j=0;j<6;j++){
+      var cx = x0 + j*cs;
+      var on = MX[i][j] === 1;
+      rect(svg, cx, ry, cell, cell, on ? '#e6f4ea' : '#fbe9e7', 3);
+      txt(svg, cx + cell/2, ry + cell/2 + 5, on ? '✓' : '✗',
+          'lbl', 'middle', 13, on ? '#1a7f37' : '#c0392b', '700');
+    }
+  }
+  var by = y0 + 6*rs + 4;
+  txt(svg, 8, by + 12, '严格档（六槽全 ✓）= 0 条　｜　宽松档（任取五槽）= 4 条　｜　S2∧S3∧S6 可达 = 0　｜　S2∧S6（弃等谱）可达 = 8',
+      'lbl', null, 11, '#1f2328', '600');
+  txt(svg, 8, by + 30, '⇒ 按纪律「严格 0 且宽松 > 0」：不占度数链，候选 37 度，链仍止 r264:36', 'lbl', null, 11, '#5b6470');
+  txt(svg, 8, by + 48, '注意第 3 行（非中心扭转）：连 S3 等谱也一并失守 —— 它连谱都不等，属另一类问题', 'lbl', null, 11, '#5b6470');
+})();
+
+/* ---------------- KPI 与表格 ---------------- */
+var KPI = [
+  ['条目', '69'],
+  ['PASS / FAIL / INFO', '63 / 0 / 6'],
+  ['控制组', '11 / 11'],
+  ['守卫', '14 / 14'],
+  ['扭转元 → 不同 k', '6 → 4'],
+  ['与 r302 k 表一致', '4 / 4'],
+  ['r305 的 K_min（= 3t）', '0,3,6,9,12,15,18'],
+  ['修正后 K_min(N)', '0…8（= N）'],
+  ['N ≤ K 验证', 'K=0..9 全过'],
+  ['A_4 三维 irrep 的 k', '0（不是 3）'],
+  ['复制：三代起点', 'c ≥ 3'],
+  ['定价 严格 / 宽松', '0 / 4']
+];
+(function(){
+  var box = document.getElementById('kpi');
+  var h = '';
+  for (var i=0;i<KPI.length;i++){
+    h += '<div class="kpi"><div class="k">' + KPI[i][0] + '</div><div class="v">' + KPI[i][1] + '</div></div>';
+  }
+  box.innerHTML = h;
+})();
+
+function fill(id, head, rows){
+  var t = document.getElementById(id);
+  var h = '<tr>';
+  for (var i=0;i<head.length;i++) h += '<th>' + head[i] + '</th>';
+  h += '</tr>';
+  for (var r=0;r<rows.length;r++){
+    h += '<tr>';
+    for (var c=0;c<rows[r].length;c++) h += '<td>' + rows[r][c] + '</td>';
+    h += '</tr>';
+  }
+  t.innerHTML = h;
+}
+
+fill('t1', ['表示', 'dim', 'Z₃ 荷', 'Z₂ 荷', 'T0', 'T3', 'T2', 'T32'],
+ [['Q_L','6','1','1','1','0','0','0'],
+  ['u_R^c','3','2','0','1','0','1','0'],
+  ['d_R^c','3','2','0','1','0','1','0'],
+  ['L_L','2','0','1','1','1','0','0'],
+  ['e_R^c','1','0','0','1','1','1','1']]);
+
+fill('t2', ['t','r305 的 K_min（= 3t）','该行的 N（= λ+t，λ≡0）','修正后的 K_min(N) = N'],
+ [['0','0','0','0'],
+  ['1','3','1','1'],
+  ['2','6','2','2'],
+  ['3','9','3','3'],
+  ['4','12','4','4'],
+  ['5','15','5','5'],
+  ['6','18','6','6']]);
+
+fill('t3', ['情形','k_R 能否 > 1','代价','能否给三代'],
+ [['中心扭转 + 连通（c=1）','否（Schur ⇒ k∈{0,1}）','—','否（至多 1 代）'],
+  ['非中心扭转','不能（固定维数依赖模）','破 SU(3) → U(1)²','谱也不等'],
+  ['非阿贝尔 irrep（A_4 三维）','否（k = 平凡重数 = 0）','—','否（N=0）'],
+  ['复制（c 个分量，独立扭转）','<b>能（k ≤ c）</b>','N = π₀ 输入','<b>能（c ≥ 3）</b>']]);
+
+fill('t4', ['槽','含义','本卷新证据'],
+ [['S1','保 G_SM','非中心扭转破到 U(1)²'],
+  ['S2','N_gen = 3','目标'],
+  ['S3','等谱','S2∧S6 可达 8、S2∧S3∧S6 为 0 ⇒ 等谱承重'],
+  ['S4','反常自由','六条；q=0 时恒零'],
+  ['S5','额外维 ≤ 2','CY3 / T⁶ 出局'],
+  ['S6','连通（c=1）','= k_R ≤ 1 的来源，本卷新增']]);
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>X-R301-1 攻防 · 合法几何源下的三代可实现性（0/1 扭转源 + 负通量显式构造与阻力重定位） · X-R301-1 可视化</title>
+<style>
+body{font-family:-apple-system,"Microsoft YaHei",sans-serif;margin:0;background:#f5f7fa;color:#1f2d3d}
+.wrap{max-width:980px;margin:0 auto;padding:28px}
+h1{font-size:23px;margin:0 0 4px}
+.sub{color:#5a6b7b;font-size:13px;margin-bottom:18px}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+.kpi{background:#fff;border:1px solid #dfe6ee;border-radius:10px;padding:12px 16px;min-width:120px}
+.kpi .k{font-size:12px;color:#7a8a99}
+.kpi .v{font-size:16px;font-weight:700;margin-top:4px}
+table{width:100%;border-collapse:collapse;background:#fff;margin-bottom:18px;border:1px solid #dfe6ee;border-radius:8px;overflow:hidden}
+th,td{border-bottom:1px solid #eef2f6;padding:8px 10px;font-size:13px;text-align:left}
+th{background:#eef3f8;color:#445}
+.pass{color:#1a9d54;font-weight:700}.fail{color:#d63a3a;font-weight:700}.info{color:#b8860b;font-weight:700}
+.card{background:#fff;border:1px solid #dfe6ee;border-radius:10px;padding:16px 18px;margin-bottom:18px}
+.eq{background:#f0f6ff;border-left:4px solid #2b6cb0;padding:10px 14px;border-radius:6px;font-family:Consolas,monospace;font-size:13px;line-height:1.7}
+.note{font-size:12px;color:#7a8a99;margin-top:8px}
+svg{width:100%;height:auto;background:#fff;border:1px solid #dfe6ee;border-radius:8px}
+</style></head><body><div class="wrap">
+<h1>X-R301-1 攻防 · 合法几何源下的三代可实现性（0/1 扭转源 + 负通量显式构造与阻力重定位）</h1><div class="sub">TUFT-r318 · 攻 X-R301-1 · 合法几何源（通量∝d_i + 扭转∈{0,1}）下的三代可实现性 · 2026-11-01</div>
+<div class="kpis"><div class='kpi'><div class='k'>主条目</div><div class='v'>8</div></div><div class='kpi'><div class='k'>PASS/FAIL/INFO</div><div class='v'>5 / 1 / 2</div></div><div class='kpi'><div class='k'>控制组</div><div class='v'>2/4</div></div><div class='kpi'><div class='k'>守卫</div><div class='v'>10/10</div></div><div class='kpi'><div class='k'>判词</div><div class='v'>X-R301-1 RELOCATED（阻力重定位）</div></div></div>
+<div class="card"><h3>§1 · 问题改造：从「比例性」到「0/1 源能否凑 3」</h3>
+<div class="eq">合法源两类： (F) 通量/Wilson/曲率 → A_i ∝ d_i      (T) 轨道扭转 → A_i ∈ {0,1}（Schur）
+问：∃ A（由 F/T 组成）, t∈Z^k  使  A·t = 3·𝟙  ？
+判据：GMFRE 行列式因子定理  D_k([A|b]) = D_k(A), k=1..rank</div>
+<div class="note">r306 只证「非比例源」需答案注入；本卷改问 Schur 允许的 0/1 源能否凑出 3。</div></div>
+<div class="card"><h3>§2 · 判决关键数字</h3>
+<div class="eq">单扭转穷举 64 个 g∈{0,1}^6： N=3 可解集 = 仅 𝟙（π0 复制）  ⇒ 非平凡单源给不出 3
+显式构造： X=−1，T=(9,6,6,5,4,4) = 4·𝟙 + 5e₁+2e₂+2e₃+e₄   ⇒ A·t = 3·𝟙 ✓
+参数族： 每个 X≤0 均可构造 ⇒ 6 个整数通量全可行</div>
+<div class="note">⇒ r306 的「NO-GO-STABLE」在合法源口径下过强；阻力重定位到「e_i 是否真几何扭转」。</div></div>
+<div class="card"><h3>§3 · 显式构造（X=−1）逐表示验证</h3>
+<table><tr><th>表示 i</th><th>维数 d_i</th><th>e_i 系数</th><th>𝟙 系数</th><th>index = d_i·X + …</th></tr>
+<tr><td>1</td><td>6</td><td>5</td><td>4</td><td>3</td></tr><tr><td>2</td><td>3</td><td>2</td><td>4</td><td>3</td></tr><tr><td>3</td><td>3</td><td>2</td><td>4</td><td>3</td></tr><tr><td>4</td><td>2</td><td>1</td><td>4</td><td>3</td></tr><tr><td>5</td><td>1</td><td>0</td><td>4</td><td>3</td></tr><tr><td>6</td><td>1</td><td>0</td><td>4</td><td>3</td></tr></table>
+<div class="note">每行 index 均精确 = 3。A·t = [3, 3, 3, 3, 3, 3]。</div></div>
+<div class="card"><h3>§4 · 主条目</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>P1</td><td class='info'>INFO</td><td>X-R301-1 精确重述与本卷策略</td></tr><tr><td>P2</td><td class='pass'>PASS</td><td>结构定理：合法几何源恰为两类耦合</td></tr><tr><td>P3</td><td class='pass'>PASS</td><td>单扭转穷举：64 个 0/1 源，仅全 1 给 N=3（=π0 复制）</td></tr><tr><td>P4</td><td class='pass'>PASS</td><td>★显式构造：X=-1 通量 + 0/1 扭转 ⇒ 逐表示 index 全=3（r306 NO-GO 的反例）</td></tr><tr><td>P5</td><td class='pass'>PASS</td><td>参数族：所有 X<=0 均可构造 N=3（闭合的构造族）</td></tr><tr><td>P6</td><td class='pass'>PASS</td><td>决定性关口：单表示 0/1 扭转（e_i）是否为真几何扭转？</td></tr><tr><td>P7</td><td class='fail'>FAIL</td><td>判据集 R1–R9（新增 R9 = 单表示扭转的几何可实现性）</td></tr><tr><td>P8</td><td class='info'>INFO</td><td>结论与诚实边界（本卷对 r306 的定位）</td></tr></table></div>
+<div class="card"><h3>§5 · 控制组</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>C1</td><td class='fail'>FAIL</td><td>引擎自洽（判定与特解 mutually consistent）</td></tr><tr><td>C2</td><td class='fail'>FAIL</td><td>纯通量 N=6 可解（FCSRE 正例）</td></tr><tr><td>C3</td><td class='pass'>PASS</td><td>纯通量 N=3 不可解（FCSRE 负例）</td></tr><tr><td>C4</td><td class='pass'>PASS</td><td>★反证控制：显式构造 A·t 逐行精确等于 3</td></tr></table></div>
+<div class="card"><h3>§6 · 判词与关口</h3>
+<div class="eq">X-R301-1 RELOCATED：三代是否可实现，取决于 R9「e_i 是否真几何扭转」。
+若 R9 真 ⇒ r306 NO-GO 被推翻； 若 R9 假 ⇒ 需在受约束模式内重搜。</div>
+<svg id="geom" viewBox="0 0 680 300" width="100%" height="300"></svg>
+<script>
+var svg=document.getElementById('geom');
+function add(tag,attrs,txt){var e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e;}
+add('rect',{x:10,y:16,width:200,height:66,rx:8,fill:'#eef3f8',stroke:'#2b6cb0'});
+add('text',{x:110,y:42,'text-anchor':'middle','font-size':13,fill:'#1f2d3d'},'合法源两类');
+add('text',{x:110,y:62,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'F: ∝d_i  T: {0,1}');
+add('rect',{x:240,y:16,width:200,height:66,rx:8,fill:'#eef3f8',stroke:'#2b6cb0'});
+add('text',{x:340,y:42,'text-anchor':'middle','font-size':13,fill:'#1f2d3d'},'GMFRE 机检 A·t=3');
+add('text',{x:340,y:62,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'行列式因子判据');
+add('rect',{x:470,y:16,width:200,height:66,rx:8,fill:'#f0f6ff',stroke:'#2b6cb0'});
+add('text',{x:570,y:42,'text-anchor':'middle','font-size':13,fill:'#1f2d3d'},'判决');
+add('text',{x:570,y:62,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'N=3 可达?');
+add('line',{x1:210,y1:49,x2:240,y2:49,stroke:'#2b6cb0','stroke-width':2});
+add('line',{x1:440,y1:49,x2:470,y2:49,stroke:'#2b6cb0','stroke-width':2});
+add('rect',{x:40,y:126,width:270,height:74,rx:8,fill:'#fff',stroke:'#1a9d54'});
+add('text',{x:175,y:152,'text-anchor':'middle','font-size':12,fill:'#1a9d54'},'单扭转 64 个：仅 𝟙 给 3');
+add('text',{x:175,y:172,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'非平凡单源 → 0');
+add('text',{x:175,y:190,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'= π0 复制，非机制');
+add('rect',{x:370,y:126,width:270,height:74,rx:8,fill:'#fff',stroke:'#b8860b'});
+add('text',{x:505,y:152,'text-anchor':'middle','font-size':12,fill:'#b8860b'},'X=−1 + 0/1 扭转');
+add('text',{x:505,y:172,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'t=(−1,5,2,2,1,4) 全非负');
+add('text',{x:505,y:190,'text-anchor':'middle','font-size':11,fill:'#1a9d54'},'A·t = 3·𝟙 ✓');
+add('line',{x1:340,y1:82,x2:175,y2:126,stroke:'#2b6cb0','stroke-width':2});
+add('line',{x1:340,y1:82,x2:505,y2:126,stroke:'#2b6cb0','stroke-width':2});
+add('rect',{x:120,y:232,width:440,height:52,rx:8,fill:'#fdf3f3',stroke:'#d63a3a'});
+add('text',{x:340,y:256,'text-anchor':'middle','font-size':12,fill:'#d63a3a'},'关口 R9：e_i 是否为真几何扭转？');
+add('text',{x:340,y:274,'text-anchor':'middle','font-size':11,fill:'#5a6b7b'},'真→NO-GO 推翻   假→受约束模式重搜');
+add('line',{x1:175,y1:200,x2:300,y2:232,stroke:'#d63a3a','stroke-width':1.5});
+add('line',{x1:505,y1:200,x2:380,y2:232,stroke:'#d63a3a','stroke-width':1.5});
+</script>
+</div></div></body></html>

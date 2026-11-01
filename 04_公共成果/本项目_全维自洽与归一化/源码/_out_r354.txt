@@ -1,0 +1,52 @@
+====================================================================================================
+TUFT-r354 · ROOT V28（Dirac 双光速螺旋）来料审计 · 精算报告
+度规 (+,-,-,-)；Dirac 表象；A 层 Fraction 精确；B 层 Decimal(prec=60)
+====================================================================================================
+
+ID     KIND     NAME                                                             VERDICT   
+----------------------------------------------------------------------------------------------------
+A01    ENGINE   Clifford 关系 {gamma^mu,gamma^nu}=2 eta^{mu nu} I（16 组 × 对角）       PASS      
+A02    ENGINE   gamma^5 性质：(gamma^5)^2=1 且 {gamma^5,gamma^mu}=0                  PASS      
+A03    ENGINE   Fierz 恒等式 j·k=0 与 j^2+k^2=0（随机复旋量 2000 组，精确 Fraction）            PASS      
+A04    ENGINE   手征电流光状性 (j±k)^2=0（2000 组 × 2 支）                                  PASS      
+A05    ENGINE   流 j^mu、k^mu 的虚部恒为 0（实流检查）                                        PASS      
+A06    ENGINE   双光状结构在 5 种互不相同的旋量类型上同样成立（普遍性）                                    PASS      
+A07    ENGINE   显式解满足 i dpsi/dz = gamma^0 psi（系数级精确，8 个有理 eta 点 × 4 分量）          PASS      
+A08    ENGINE   来料电流闭式 j=(1,s2e·c2z,s2e·s2z,0)、k=(0,0,0,c2e) 对直接矩阵乘积（100 组 eta×z PASS      
+A09    ENGINE   手征流线速度模 |v_pm| = c（精确，50 条流线）                                    PASS      
+A10    ENGINE   该解上 j^2 = cos^2(2eta)、k^2 = -cos^2(2eta)                         PASS      
+A11    ENGINE   能量期望与涨落独立复算：<H> = m c^2 cos2eta、(Delta H)^2 = (m c^2)^2 sin^2 2e PASS      
+A12    ENGINE   自旋期望独立实算：<Sigma_x>=<Sigma_y>=0、<Sigma_z>=cos2eta                 PASS      
+B01    ENGINE   曲率三路径一致：Frenet / 圆柱闭式 R/(R^2+b^2) / 来料式 (omega/c)sin2eta         PASS      
+B02    ENGINE   挠率三路径一致：Frenet det/|v×a|^2 / 闭式 b/(R^2+b^2) / 来料式 (omega/c)cos2e PASS      
+B03    ENGINE   Frenet 量在 6 个相位点上与相位无关（螺旋是常曲率常挠率曲线）                              PASS      
+B04    ENGINE   恒等式 kappa^2 + tau^2 = (omega_Z/c)^2                              PASS      
+B05    ENGINE   恒等式 kappa/|tau| = tan 2eta                                       PASS      
+B06    ENGINE   流线速度分解：v_perp = c·sin2eta，v_axis = c·cos2eta，合成 |v| = c          PASS      
+B07    ENGINE   来料 70 位精算表 7 项复算（独立常数：CODATA 2022）                               PASS      
+B08    ENGINE   几何自洽：曲率半径 1/kappa 与 (R^2+b^2)/R 一致；螺距/半径比                        PASS      
+G01    GATE     满射检验：对 12 个互不相干的正目标 rho，调 eta 后 kappa/|tau| 命中率                  FAIL      
+G02    CONTROL  负对照：目标 rho<0 在 eta∈(0,pi/4) 内不可达（判据有边界，非恒绿）                      PASS      
+G03    GATE     正能量本征性（Delta H = 0）与 kappa/|tau| = alpha 是否相容                    FAIL      
+G04    ENGINE   代价曲线：目标比值 rho ⇒ 所需能量不确定度 Delta H(rho) = m c^2 · rho/sqrt(1+rho^2 PASS      
+G05    CONTROL  对照：eta=pi/8（kappa/|tau|=1）时 Delta H 必须显著异于 3.729 keV             PASS      
+G06    GATE     局域性：V28 解的电流场是否依赖空间坐标（p=0 平面波）                                   FAIL      
+G07    CONTROL  对照：人为加入空间包络后，同一检测器必须判「有梯度」                                       PASS      
+G08    ENGINE   boost 下表复算：(kappa/|tau|)' = sin2eta·sqrt(1-beta^2)/|cos2eta+beta PASS      
+G08b   CONTROL  对照：beta = -cos2eta 时分母为 0，比值发散（判据有奇点，非恒绿）                        PASS      
+G09    GATE     参数计数：自由无量纲参数个数 vs 无量纲目标个数                                        FAIL      
+G10    GATE     双光状结构是否能区分电子与其他 Dirac 粒子                                         FAIL      
+G11    GATE     「kappa/|tau| = alpha」与「Dirac 概率流速度 = alpha·c」是否独立                FAIL      
+G12    ENGINE   Omega_Z 的来源：是否等于 2 倍康普顿频率（教科书 zitterbewegung）                    PASS      
+G13    GATE     来料自陈三项未完成（流线=真实组成物 / eta 唯一 / 无电荷输入预测 alpha）能否由本构造闭合             FAIL      
+G14    ENGINE   条件数：rho=tan2eta 对 eta 的敏感度（匹配到相对 1e-9 所需 eta 精度）                 INFO      
+G15    ENGINE   磁矩交叉：该叠加态的 <Sigma_z> = cos2eta（自旋稀释 1-cos2eta）可否被磁矩实验分辨          INFO      
+G16    PRICE    定价：使「无参数预测 alpha」成立的槽位组合数（位掩码 2^5）                               INFO      
+
+[A01] Clifford 关系 {gamma^mu,gamma^nu}=2 eta^{mu nu} I（16 组 × 对角） (ENGINE)
+   期望: 违例 0 / 64
+   实
+...
+WROTE: D:\a10\aikjx\code\my_lib\openuft\04_公共成果\本项目_全维自洽与归一化\数据\TUFT-r354_ROOTV28_Dirac双光状手征电流_正能量本征与螺旋互斥_自由参数满射判别力零_精算与可视化_2026-11-01_report_2026-11-01.txt
+WROTE: D:\a10\aikjx\code\my_lib\openuft\04_公共成果\本项目_全维自洽与归一化\数据\TUFT-r354_ROOTV28_Dirac双光状手征电流_正能量本征与螺旋互斥_自由参数满射判别力零_精算与可视化_2026-11-01_2026-11-01.json
+WROTE: D:\a10\aikjx\code\my_lib\openuft\04_公共成果\本项目_全维自洽与归一化\数据\TUFT-r354_ROOTV28_Dirac双光状手征电流_正能量本征与螺旋互斥_自由参数满射判别力零_精算与可视化_2026-11-01_2026-11-01.md

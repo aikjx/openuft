@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r295 · 三代多重度的通量指标定理 · 可视化</title>
+<style>
+:root{--bg:#f7f8fa;--card:#ffffff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}
+.kpi .v{font-size:19px;font-weight:600;margin-top:2px;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:var(--pass)}.FAIL{background:var(--fail)}.INFO{background:var(--info)}
+.yes{color:var(--pass);font-weight:700}.no{color:var(--fail);font-weight:700}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.verdict{display:inline-block;background:#1f2328;color:#fff;padding:4px 12px;border-radius:6px;
+font-family:Consolas,monospace;font-size:12px;margin-top:6px}
+.hl{color:var(--fail);font-weight:700}
+.lbl{font-size:11px;fill:#5b6470}
+.axis{stroke:#c3cad2;stroke-width:1}
+</style>
+</head>
+<body>
+<h1>TUFT-r295 · 三代多重度的通量指标定理</h1>
+<div class="sub">自审层 · 攻 r294 自留的 OPEN X-R294-1 · 2026-11-01
+<div class="verdict">NO-GO-STRENGTHENED__U1-RATIO-OBSTRUCTION</div></div>
+
+<h2>一、总账</h2>
+<div class="grid" id="kpi"></div>
+
+<h2>二、主图 · 通量给出的谱型（不是「三代」，是「三代 + 多余」）</h2>
+<div class="card">
+<div class="mono">
+纵轴 = 该表示的多重度 |n<sub>R</sub>|；横轴 = 一代 SM 的五个不可约表示。虚线 = 「三代」目标值 3。<br>
+<b>看 u<sub>R</sub> 那一列</b>：M=1 时它拿 2 份（别人 1 份），M=3 时它拿 <b>6</b> 份（别人 3 份）。
+<b>无论通量取多少，u<sub>R</sub> 永远是别人的两倍</b> ⇒ 谱型从根上就不是「若干份完整代」。
+</div>
+<svg id="svgSpec" viewBox="0 0 680 270" width="100%" height="270"></svg>
+</div>
+
+<h2>三、定理 C · 换 U(1) 之后「消掉 d<sub>R</sub> 的代价」</h2>
+<div class="card">
+<div class="mono">
+在 <code>q = a·Y + b·(B−L)</code> 里令 <code>n<sub>Q</sub> = n<sub>u</sub></code> 可解出 <code>b = a</code>；此时五条线随 a 线性发散，
+只有 <b>d<sub>R</sub> 恒为 0</b>。要让 d<sub>R</sub> 也等于别人，必须 a = 0 —— 而 a = 0 就是零通量、没有紧致化效应。
+<b>消掉 d<sub>R</sub> 的代价，正是失去 d<sub>R</sub>。</b>
+</div>
+<svg id="svgC" viewBox="0 0 680 240" width="100%" height="240"></svg>
+</div>
+
+<h2>四、定理 A · 半单 Cartan 零迹（11 个表示 + 反证本检测不是空转）</h2>
+<div class="card"><table id="tA"></table>
+<div class="mono">
+结构性理由：不可约表示的权集在 Weyl 群下不变，Weyl 反射把 w 送到 −w，每条轨道成对抵消 ⇒ Σ<sub>w</sub> w = 0。<br>
+<b>CTL7 负对照</b>：从 SU(5) 基本表示删去 1 个权，权重和立刻非零 —— <b>零是真算出来的，不是构造上写死的</b>。
+</div></div>
+
+<h2>五、四条逃逸路线 × 四个槽</h2>
+<div class="card"><table id="tEsc"></table>
+<div class="mono">严格档（四槽全要）<b>SURVIVE = 0</b>；宽松档（任取三槽）<b>SURVIVE = 2</b> ⇒ 按纪律不占度数链（候选 37，链仍止 r264:36）。</div></div>
+
+<h2>六、与 r294 的定位</h2>
+<div class="card"><table id="tR294"></table></div>
+
+<h2>七、定价 · 2⁴ = 16</h2>
+<div class="card"><table id="tPrice"></table></div>
+
+<h2>八、诚实边界</h2>
+<div class="card"><div class="mono">
+① <b>本卷不否证 r294</b>：其 NO-GO 成立，本卷只补前提、把结论改写成比值形式；两卷是同一命题的两轮攻防，<b>不可相加</b>。<br>
+② <b>不关闭 CY3 / 轨形逃逸</b>，只给代价：换理论、加 4 维、放弃预言力。<br>
+③ <b>E2（'t Hooft 分数通量）不判决</b> —— 本卷唯一实质缺口，记 OPEN X-R295-1。<br>
+④ 定理 A 机检覆盖 11 个表示，一般性由 Weyl 不变性论证给出。<br>
+⑤ 结论限定在「单一通量、单一 U(1) 方向」；多 U(1) 各自独立通量属新物理假设。<br>
+⑥ <b>本卷没有给出任何新预言</b>，也没有提出新的统一方案 —— 它是一次减法。
+</div></div>
+
+<script>
+var Y_SCALE = 6;   /* 谱型图纵轴上限 */
+var SPEC = [
+  {name:"Q_L",  d:"(3,2)",   m1:1, m3:3},
+  {name:"u_R",  d:"(3̄,1)",   m1:2, m3:6},
+  {name:"d_R",  d:"(3̄,1)",   m1:1, m3:3},
+  {name:"L_L",  d:"(1,2)",   m1:1, m3:3},
+  {name:"e_R",  d:"(1,1)",   m1:1, m3:3}
+];
+
+document.getElementById("kpi").innerHTML = [
+  ["条目数","43"],["PASS / FAIL","30 / 0"],["INFO","13"],
+  ["控制组","7 / 7"],["守卫","11 / 11"],
+  ["tr_R(Y)","(1, 2, −1, −1, −1)"],
+  ["多重度比","1 : 2 : 1 : 1 : 1"],
+  ["CY3 |Δ|=3 配对数","35"],
+  ["定价 严格 / 宽松","0 / 2"]
+].map(function(r){return '<div class="kpi"><div class="k">'+r[0]+'</div><div class="v">'+r[1]+'</div></div>';}).join("");
+
+/* ---------- 谱型图 ---------- */
+(function(){
+  var s = document.getElementById("svgSpec");
+  var L0=64,R0=648,T0=36,B0=210;
+  function px(i,off){ return L0 + (i+0.5)*(R0-L0)/SPEC.length + off; }
+  function py(v){ return B0 - v/Y_SCALE*(B0-T0); }
+
+  /* 网格与刻度 */
+  for (var v=0; v<=6; v+=1){
+    s.appendChild(mk("line",{x1:L0,y1:py(v),x2:R0,y2:py(v),stroke:"#eceff3","stroke-width":1}));
+    s.appendChild(txt(L0-8, py(v)+4, ""+v, {"text-anchor":"end"}));
+  }
+  s.appendChild(mk("line",{x1:L0,y1:B0,x2:R0,y2:B0,"class":"axis"}));
+  s.appendChild(mk("line",{x1:L0,y1:T0,x2:L0,y2:B0,"class":"axis"}));
+
+  /* 「三代」目标线 */
+  s.appendChild(mk("line",{x1:L0,y1:py(3),x2:R0,y2:py(3),
+    stroke:"#b8860b","stroke-width":1.4,"stroke-dasharray":"5 4"}));
+  s.appendChild(txt(R0-4, py(3)-7, "三代目标 = 3", {"text-anchor":"end","fill":"#b8860b","font-weight":"600"}));
+
+  /* 柱子 */
+  SPEC.forEach(function(it,i){
+    var bw=24, gap=6;
+    var x1=px(i, -(bw+gap/2)), x2=px(i, gap/2);
+    [[it.m1,"#2b5c9b",x1],[it.m3,"#b8860b",x2]].forEach(function(t){
+      var v=t[0], col=t[1], x=t[2];
+      s.appendChild(mk("rect",{x:x, y:py(v), width:bw, height:Math.max(B0-py(v),1),
+        fill:col, rx:2, opacity:0.92}));
+      s.appendChild(txt(x+bw/2, py(v)-6, ""+v,
+        {"text-anchor":"middle","fill":col,"font-size":"11px","font-weight":"600"}));
+    });
+    s.appendChild(txt(px(i,0), B0+18, it.name, {"text-anchor":"middle","fill":"#1f2328","font-size":"12px"}));
+    s.appendChild(txt(px(i,0), B0+32, it.d, {"text-anchor":"middle","font-size":"10px"}));
+    if (it.m3 !== 3){
+      s.appendChild(txt(px(i,0), B0+46, "×2", {"text-anchor":"middle","fill":"#c0392b",
+        "font-size":"11px","font-weight":"700"}));
+    }
+  });
+
+  /* 图例 */
+  s.appendChild(mk("rect",{x:L0,y:T0-24,width:10,height:10,fill:"#2b5c9b",rx:2}));
+  s.appendChild(txt(L0+16, T0-15, "M = 1"));
+  s.appendChild(mk("rect",{x:L0+76,y:T0-24,width:10,height:10,fill:"#b8860b",rx:2}));
+  s.appendChild(txt(L0+92, T0-15, "M = 3"));
+
+  s.appendChild(txt(L0, 250, "纵轴 = 多重度 |n_R|", {"font-size":"11px"}));
+})();
+
+/* ---------- 定理 C 发散图 ---------- */
+(function(){
+  var s = document.getElementById("svgC");
+  var L0=70,R0=620,T0=26,B0=186, AMAX=1, YMAX=3;
+  function pxv(a){ return L0 + (a+AMAX)/(2*AMAX)*(R0-L0); }
+  function pyv(v){ return B0 - (v+YMAX)/(2*YMAX)*(B0-T0); }
+
+  [-3,-2,-1,0,1,2,3].forEach(function(v){
+    s.appendChild(mk("line",{x1:L0,y1:pyv(v),x2:R0,y2:pyv(v),stroke:"#eceff3","stroke-width":1}));
+    s.appendChild(txt(L0-8, pyv(v)+4, ""+v, {"text-anchor":"end"}));
+  });
+  s.appendChild(mk("line",{x1:L0,y1:B0,x2:R0,y2:B0,"class":"axis"}));
+  s.appendChild(mk("line",{x1:L0,y1:T0,x2:L0,y2:B0,"class":"axis"}));
+  s.appendChild(mk("line",{x1:L0,y1:pyv(0),x2:R0,y2:pyv(0),stroke:"#c3cad2","stroke-width":1.2}));
+
+  var LINES=[
+    {n:"Q_L", k:3,  c:"#2b5c9b", w:2.0},
+    {n:"u_R", k:3,  c:"#2b5c9b", w:2.0, dash:"4 3"},
+    {n:"d_R", k:0,  c:"#c0392b", w:3.0},
+    {n:"L_L", k:-3, c:"#1a7f37", w:2.0},
+    {n:"e_R", k:-2, c:"#b8860b", w:2.0}
+  ];
+  LINES.forEach(function(L,idx){
+    var a1=-AMAX, a2=AMAX;
+    var v1=Math.max(-YMAX, Math.min(YMAX, L.k*a1));
+    var v2=Math.max(-YMAX, Math.min(YMAX, L.k*a2));
+    var attr={x1:pxv(a1),y1:pyv(v1),x2:pxv(a2),y2:pyv(v2),
+      stroke:L.c,"stroke-width":L.w};
+    if (L.dash) attr["stroke-dasharray"]=L.dash;
+    s.appendChild(mk("line",attr));
+    var vy = Math.max(-YMAX, Math.min(YMAX, L.k*AMAX));
+    s.appendChild(txt(pxv(AMAX)+6, pyv(vy)+4, L.n,
+      {"fill":L.c,"font-size":"11px","font-weight":"600"}));
+  });
+
+  /* a = 0 竖线 */
+  s.appendChild(mk("line",{x1:pxv(0),y1:T0,x2:pxv(0),y2:B0,
+    stroke:"#1f2328","stroke-width":1.2,"stroke-dasharray":"3 3"}));
+  s.appendChild(txt(pxv(0), B0+18, "a = 0（零通量）", {"text-anchor":"middle","font-size":"11px"}));
+  s.appendChild(txt(pxv(-1)+2, B0+18, "a = −1", {"font-size":"11px"}));
+  s.appendChild(txt(pxv(1)-24, B0+18, "a = +1", {"font-size":"11px"}));
+  s.appendChild(txt(L0, T0-8, "n_R 随 a 的取值（已代 b = a）", {"font-size":"11px"}));
+  s.appendChild(txt(L0, 214, "五条线只在 a = 0 处同时可取同一值 ⇒ 等代数三代只有零通量解",
+    {"font-size":"11px","fill":"#c0392b"}));
+})();
+
+/* ---------- 工具 ---------- */
+function mk(t,p){ var e=document.createElementNS("http://www.w3.org/2000/svg",t);
+  for(var k in p){ e.setAttribute(k,p[k]); } return e; }
+function txt(x,y,s,p){ var e=mk("text",{x:x,y:y,"class":"lbl"});
+  e.textContent=s; for(var k in (p||{})){ e.setAttribute(k,p[k]); } return e; }
+
+/* ---------- 表 ---------- */
+document.getElementById("tA").innerHTML = (function(){
+  var rows=[
+    ["A01","SU(2) 基本 dim=2","2","(0, 0)",""],
+    ["A02","SU(2) 伴随 dim=3","3","(0, 0)",""],
+    ["A03","SU(2) dim=4","4","(0, 0)",""],
+    ["A04","SU(3) 基本 3","3","(0, 0, 0)",""],
+    ["A05","SU(3) 反基本 3̄","3","(0, 0, 0)",""],
+    ["A06","SU(3) 伴随 8","8","(0, 0, 0)",""],
+    ["A07","SU(5) 基本 5","5","(0, 0, 0, 0, 0)",""],
+    ["A08","SU(5) 反基本 5̄","5","(0, 0, 0, 0, 0)",""],
+    ["A09","SU(5) 二阶反对称 10","10","(0, 0, 0, 0, 0)",""],
+    ["A10","SU(5) 伴随 24","24","(0, 0, 0, 0, 0)",""],
+    ["A11","SU(4) 基本 4（Pati–Salam）","4","(0, 0, 0, 0)",""],
+    ["<b>CTL7</b>","<b>负对照：SU(5) 基本删去 1 个权</b>","4","<span class='hl'>≠ 0</span>","<span class='no'>必须报非零</span>"]
+  ];
+  var h='<tr><th>#</th><th>表示</th><th>权数</th><th>权重和</th><th>判</th></tr>';
+  rows.forEach(function(r){
+    var judge = r[4] ? r[4] : '<span class="yes">零</span>';
+    h+='<tr><td class="mono">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td class="mono">'+r[3]+'</td><td>'+judge+'</td></tr>';
+  });
+  return h;
+})();
+
+document.getElementById("tEsc").innerHTML = (function(){
+  var rows=[
+    ["T² 阿贝尔通量（r294 靶）", true,  false, true,  true ],
+    ["E1 非交换通量",           false, true,  true,  true ],
+    ["E2 平坦 / 't Hooft（OPEN）", true, null, null,  true ],
+    ["E3 CY3",                  true,  true,  false, false],
+    ["E4 T⁶/Z₃ 轨形",           true,  true,  false, false]
+  ];
+  function cell(v){
+    if (v === null) return '<td class="mono">?</td>';
+    return v ? '<td class="yes">✓</td>' : '<td class="no">✗</td>';
+  }
+  var h='<tr><th>路线</th><th>S1 保 SM</th><th>S2 等三代</th><th>S3 无景观</th><th>S4 只加 2 维</th></tr>';
+  rows.forEach(function(r){
+    h+='<tr><td>'+r[0]+'</td>'+cell(r[1])+cell(r[2])+cell(r[3])+cell(r[4])+'</tr>';
+  });
+  return h;
+})();
+
+document.getElementById("tR294").innerHTML = (function(){
+  var rows=[
+    ["r294 结论形式","dim(R) | N_gen（整数整除）","可被非整数电荷 / 分数通量绕过"],
+    ["本卷结论形式","多重度比 = 1:2:1:1:1（比值）","<b>不依赖量子化，绕不过去</b>"],
+    ["r294 隐含前提","Q 在每个不可约表示上 ∝ 单位阵","本卷证明该前提<b>不必要</b>（半单部分自动归零）"],
+    ["关系","<b>本卷不否证 r294</b>","其 NO-GO 成立且被加强；两卷不可相加"]
+  ];
+  var h='<tr><th>项</th><th>内容</th><th>说明</th></tr>';
+  rows.forEach(function(r){ h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'; });
+  return h;
+})();
+
+document.getElementById("tPrice").innerHTML = (function(){
+  var rows=[
+    ["S1","保持 G_SM 不破缺","1"],
+    ["S2","等代数三代（完整谱）","3"],
+    ["S3","不引入景观挑选","2"],
+    ["S4","额外维数 ≤ 2（与 ROOT 的 6D 设定一致）","1"]
+  ];
+  var h='<tr><th>槽</th><th>要求</th><th>代价</th></tr>';
+  rows.forEach(function(r){ h+='<tr><td class="mono">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'; });
+  h+='<tr><td colspan="2"><b>结果</b></td><td>严格 SURVIVE <b>0</b> ／ 宽松 <b>2</b> ／ EMPTY 14</td></tr>';
+  return h;
+})();
+</script>
+</body>
+</html>

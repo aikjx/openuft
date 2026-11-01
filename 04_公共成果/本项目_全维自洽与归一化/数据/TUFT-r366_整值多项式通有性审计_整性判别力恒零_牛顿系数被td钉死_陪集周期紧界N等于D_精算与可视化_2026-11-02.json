@@ -1,0 +1,588 @@
+{
+ "rid": "r366",
+ "date": "2026-11-02",
+ "stem": "TUFT-r366_整值多项式通有性审计_整性判别力恒零_牛顿系数被td钉死_陪集周期紧界N等于D_精算与可视化_2026-11-02",
+ "degree": 0,
+ "cand_degree": 37,
+ "verdict": "X-R358-1-REDUCED-TO-SINGLE-ORBIT__X-R358-2-ANSWERED-PRIME-FACTORS-OF-D-COME-FROM-DENOMINATOR-OF-C__THEOREM-H-NEWTON-COEFFICIENTS-ARE-CLOSED-FORM-C-nplus1-choose-m-MINUS-C-nplus1-minus-d-choose-nplus1-minus-m__HOLDS-FOR-ALL-d-INCLUDING-CY-AND-GENERAL-TYPE-SO-THE-TD-ROUTE-OF-r339-r346-r358-IS-SUFFICIENT-BUT-UNNECESSARY__INTEGRALITY-CRITERIA-HAVE-ZERO-DISCRIMINATING-POWER-BUT-COEFFICIENT-VALUES-HAVE-FULL-POWER-ZERO-OUT-OF-4000__STILL-NOT-PREDICTED",
+ "summary": {
+  "items": 25,
+  "npass": 25,
+  "nfail": 0,
+  "controls": "15/15",
+  "guards": "19/19"
+ },
+ "grid": {
+  "pathA_groups": 51,
+  "kinds": {
+   "Fano(d<=n+1)": 27,
+   "CY(d=n+2)": 6,
+   "一般型(d>n+2)": 18
+  },
+  "coset_groups": 140,
+  "coset_kinds": {
+   "FULL": 58,
+   "EMPTY": 78,
+   "PARTIAL": 4
+  },
+  "skip": 0
+ },
+ "theorem_h": {
+  "formula": "a_m = C(n+1,m) − C(n+1−d, n+1−m)",
+  "holds_for": "all d>=1 (Fano / CY / general type)",
+  "paths": {
+   "td_vs_koszul_mismatch": 0,
+   "td_vs_closed_mismatch": 0,
+   "koszul_vs_closed_mismatch": 0
+  }
+ },
+ "discriminating": {
+  "lemma_L_intZ": "16000/16000",
+  "theorem_E_intZ": "16000/16000",
+  "theorem_H_intZ": "0/16000",
+  "theorem_H_geom": "51/51"
+ },
+ "cosets": {
+  "partial": 4,
+  "N_eq_D": 4,
+  "D_primes_subseteq_q_primes_violations": 0,
+  "empty_max_D": 2048
+ },
+ "pricing": {
+  "feasible": 12,
+  "pinned": [
+   0
+  ],
+  "free": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "base": [
+   1,
+   1,
+   1,
+   1,
+   1
+  ]
+ },
+ "items": [
+  {
+   "id": "A01",
+   "kind": "PASS/FAIL",
+   "desc": "三路径一致：td 级数 vs Koszul 计数 vs 闭式，两两失配 0",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "组 51 组（Fano 27 / CY 6 / 一般型 18）；失配 A-C=0 A-H=0 C-H=0"
+  },
+  {
+   "id": "A02",
+   "kind": "PASS/FAIL",
+   "desc": "a_n = d：闭式子式 C(n+1,n)−C(n+1−d,1) 与 td 路径一致且等于 d",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "组 51 组，违例 0；exp 走闭式子式、act 走 td 级数，两条不共享中间量"
+  },
+  {
+   "id": "A03",
+   "kind": "PASS/FAIL",
+   "desc": "a_{n−1} = d(2n+1−d)/2：闭式子式与 td 路径一致",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "组 51 组，违例 0；恒整性（d(2n+1−d) 必偶）已在 Fraction 层验过"
+  },
+  {
+   "id": "A04",
+   "kind": "PASS/FAIL",
+   "desc": "CY 自检：d=n+2 时 a_0=χ(O_X)=1+(−1)^n（n 奇则 0、n 偶则 2）",
+   "exp": "{1: 0, 2: 2, 3: 0, 4: 2, 5: 0}",
+   "act": "{1: 0, 2: 2, 3: 0, 4: 2, 5: 0}",
+   "ok": true,
+   "note": "n=1..5；K3(n=2,d=4)=2、五次三维 CY(n=3,d=5)=0、四次曲线一般型(n=1,d=4)=-2"
+  },
+  {
+   "id": "A05",
+   "kind": "PASS/FAIL",
+   "desc": "定理 H 跨出 Fano：d>n+1（CY 与一般型）时三路径仍一致",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "非 Fano 组 24 组（占 51 组的 47.1%），失配 0"
+  },
+  {
+   "id": "A06",
+   "kind": "PASS/FAIL",
+   "desc": "广义二项式负上标自检 C(−p,r)=(−1)^r C(p+r−1,r)",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "校验 42 项（分母 42 项：p=1..6 × r=0..6），违例 0；这是 d>n+1 时闭式仍成立的承重件"
+  },
+  {
+   "id": "B01",
+   "kind": "PASS/FAIL",
+   "desc": "定理 H 在随机整值多项式上的命中数为 0（判别力非零）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "样本 16000 个（n=3,4,5,6 各 4000 个，a_m∈[−40,40]）；命中 0，分母 16000"
+  },
+  {
+   "id": "B02",
+   "kind": "PASS/FAIL",
+   "desc": "对照：r346 引理 L（牛顿系数全整）在同批样本上 100% 通过 ⇒ 判别力 0",
+   "exp": "16000",
+   "act": "16000",
+   "ok": true,
+   "note": "样本 16000 个，通过 16000；整值多项式的定义即 a_m∈Z，故恒 100%、判别力 0"
+  },
+  {
+   "id": "B03",
+   "kind": "PASS/FAIL",
+   "desc": "对照：r358 定理 E（整数陪集整段属于 S）在同批样本上 100% 通过 ⇒ 判别力 0",
+   "exp": "16000",
+   "act": "16000",
+   "ok": true,
+   "note": "样本 16000 个，通过 16000；c=0 时 b_i=a_i 全整，故恒 100%、判别力 0"
+  },
+  {
+   "id": "B04",
+   "kind": "PASS/FAIL",
+   "desc": "判别力并列：引理 L / 定理 E 判别力 0，定理 H 判别力 > 0",
+   "exp": "0_0_1",
+   "act": "0_0_1",
+   "ok": true,
+   "note": "几何类通过率 引理L=100% / 定理E=100% / 定理H=51/51；Int(Z) 通过率 100% / 100% / 0/16000"
+  },
+  {
+   "id": "B05",
+   "kind": "PASS/FAIL",
+   "desc": "敏感性：扰动后仍通过定理 H 的次数 = 解析预测的族内移动数（无族外漏网）",
+   "exp": "4",
+   "act": "4",
+   "ok": true,
+   "note": "扰动 126 次，存活 4（存活率 0.031746）；期望走解析路径 closedH(n,d+1)−closedH(n,d)=C(n−d,n−m)"
+  },
+  {
+   "id": "B06",
+   "kind": "PASS/FAIL",
+   "desc": "存活扰动全部是族内移动（仍是某 (n,d) 的几何 χ），无族外漏网",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "存活 4 次中族外漏网 0（分母 4 次）；(n,d=n) 与 (n,d=n+1) 的向量只差末位 ⇒ 恰 1 次族内移动"
+  },
+  {
+   "id": "C01",
+   "kind": "PASS/FAIL",
+   "desc": "X-R358-1：部分陪集（0<|S|<H）上解集周期 N 等于 D",
+   "exp": "4",
+   "act": "4",
+   "ok": true,
+   "note": "部分陪集 4 组，N=D 的 4 组；分流 EMPTY=78 FULL=58 PARTIAL=4（分母 140）"
+  },
+  {
+   "id": "C02",
+   "kind": "PASS/FAIL",
+   "desc": "部分陪集的解密度：|S| = H/D = n!（一周期内恰一个整点）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "部分陪集 4 组，违反 |S|=n! 的 0 组；与 r358 定理 F 一致"
+  },
+  {
+   "id": "C03",
+   "kind": "PASS/FAIL",
+   "desc": "X-R358-2：D(c) 的素因子集合 ⊆ c 的分母 q 的素因子集合",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "组 140 组，违例 0；⇒ D 的爆炸来自 c 的算术，与几何 (n,d) 无关"
+  },
+  {
+   "id": "C04",
+   "kind": "PASS/FAIL",
+   "desc": "凡报「陪集为空」必报 D：空陪集的最大 D 远大于任何固定窗口",
+   "exp": ">12",
+   "act": "2048",
+   "ok": true,
+   "note": "空陪集 78 组，其中 D>12 的 56 组，最大 D=2048 ⇒ 固定窗口法在原理上不可靠"
+  },
+  {
+   "id": "C05",
+   "kind": "PASS/FAIL",
+   "desc": "N = H/|S|（⇒ N=D 归约到「解集在 Z/H 上是单条轨道」）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "部分陪集 4 组，违反 0 组；H=D·n!、|S|=n! ⇒ N=H/|S|=D；轨道性本身未独立证明"
+  },
+  {
+   "id": "C06",
+   "kind": "PASS/FAIL",
+   "desc": "负对照：平移不变性不做环形回绕会给出错误的周期（本卷探查 3 踩的坑）",
+   "exp": "differ",
+   "act": "ring=4 flat=None",
+   "ok": true,
+   "note": "环形 N=4、非环形 N=None；两者不同才说明该对照有判别力"
+  },
+  {
+   "id": "D01",
+   "kind": "PASS/FAIL",
+   "desc": "口径自守：χ(k) 逐点对拍（牛顿重建 vs Koszul 计数），不推翻 r339 读数",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "点 170 个（分母 170 个点：n=1..5, d=1..n+1, k=0..n+4），失配 0"
+  },
+  {
+   "id": "D02",
+   "kind": "PASS/FAIL",
+   "desc": "不推翻 r346 定理 C：a_n=d ⇒ 整性集落在 (1/d)Z 内",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "组 51 组，违例 0；定理 H 给出 a_n=d 的闭式，与 r346 同读数"
+  },
+  {
+   "id": "D03",
+   "kind": "PASS/FAIL",
+   "desc": "不推翻 r358 定理 E′：陪集整段 ⟺ P(c)..P(c+n) 全整（只需 n+1 个值）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "陪集 70 个（分母 70 个），判定分歧 0；本卷用闭式 a 重算，与 r358 同读数"
+  },
+  {
+   "id": "D04",
+   "kind": "PASS/FAIL",
+   "desc": "r358「非陪集」机制在本口径下重述：Z 与一条公差 D 的等差级数之并",
+   "exp": "found",
+   "act": "{'n': 3, 'd': 2, 'p': 1, 'q': 2, 'D': 4, 'N': 4, 'ns': 6, 'H': 24, 'kind': 'PARTIAL'}",
+   "ok": true,
+   "note": "样例 n=3 d=2 c=1/2：D=4 N=4 |S|=6；两模数不同 ⇒ u−v+w 必然失败"
+  },
+  {
+   "id": "E01",
+   "kind": "PASS/FAIL",
+   "desc": "定价基准组合本身可行（先判条件齐备再判自杀）",
+   "exp": "True",
+   "act": "True",
+   "ok": true,
+   "note": "基准 [1, 1, 1, 1, 1]；可行集 12 个（共 32 个组合）"
+  },
+  {
+   "id": "E02",
+   "kind": "PASS/FAIL",
+   "desc": "约束集足以钉住至少一位（约束过弱则整组空转）",
+   "exp": ">=1",
+   "act": "1",
+   "ok": true,
+   "note": "被钉住位 [0]；自由位 [1, 2, 3, 4]；可行 12 个；钉住 S0 的是 K7（本卷至少产出一个结论）"
+  },
+  {
+   "id": "E03",
+   "kind": "PASS/FAIL",
+   "desc": "每个自由位都存在可行组合使其翻转后仍可行（未钉住 ≠ 必安全）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "自由位 4 个 [1, 2, 3, 4]，找不到翻转可行组合的 0 个"
+  }
+ ],
+ "controls": [
+  {
+   "id": "CTL14",
+   "desc": "扰动对照：闭式第二项上标写成 m（下标错位）必须被三路径对拍抓住",
+   "exp": ">0",
+   "act": "48",
+   "ok": true,
+   "note": "正确算法失配 0 组 / 错误算法失配 48 组（分母 51 组）；漏网 3 组",
+   "pert": 48
+  },
+  {
+   "id": "CTL15",
+   "desc": "扰动对照：td 的 T(h) 二次项 1/12 改成 1/6（错算 td）必须被 Koszul 对拍抓住",
+   "exp": ">0",
+   "act": "44",
+   "ok": true,
+   "note": "错误 td 与 Koszul 失配 44 组（分母 51 组）；漏网 7 组 ⇒ 主校验是必要非充分的 bug 探测器",
+   "pert": 44
+  },
+  {
+   "id": "CTL1",
+   "desc": "d=0 退化：闭式应给全零向量（χ(O_X(k))≡0）",
+   "exp": "0",
+   "act": "[0, 0, 0, 0]",
+   "ok": true,
+   "note": "n=3,d=0",
+   "pert": null
+  },
+  {
+   "id": "CTL2",
+   "desc": "d=1 退化：X_1=CP^n，χ(k)=C(n+k,n)",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "点 30 个",
+   "pert": null
+  },
+  {
+   "id": "CTL3",
+   "desc": "正控：几何 a 扰动一位后定理 H 必须判否（判据不是全放行）",
+   "exp": "False",
+   "act": "False",
+   "ok": true,
+   "note": "扰动 a_1：[Fraction(1, 1), Fraction(4, 1), Fraction(5, 1), Fraction(2, 1)] → [Fraction(1, 1), Fraction(5, 1), Fraction(5, 1), Fraction(2, 1)]",
+   "pert": null
+  },
+  {
+   "id": "CTL4",
+   "desc": "负控：同一扰动在「a 全整」判据下必须判是（⇒ 该判据判别力 0）",
+   "exp": "True",
+   "act": "True",
+   "ok": true,
+   "note": "引理 L 对扰动不敏感 ⇒ 判别力 0（本卷第三次确认）；注意须用分母判定，isinstance(int) 对 Fraction 恒假",
+   "pert": null
+  },
+  {
+   "id": "CTL5",
+   "desc": "c 为整数时 D=1（该陪集整段属于 S）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "c∈Z 的组 14 个",
+   "pert": null
+  },
+  {
+   "id": "CTL6",
+   "desc": "负控：D 若取分母之积（而非 lcm）会放大，且不再是最小周期",
+   "exp": "prod>=lcm",
+   "act": "1>=1",
+   "ok": true,
+   "note": "积=1 lcm=1（相等 True）",
+   "pert": null
+  },
+  {
+   "id": "CTL7",
+   "desc": "Cgen 在非负范围与 math.comb 一致",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "校验 78 项",
+   "pert": null
+  },
+  {
+   "id": "CTL8",
+   "desc": "一般型（消灭定理不适用）上 Koszul 仍与 td 一致 ⇒ χ 加性才是承重件",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "一般型 18 组",
+   "pert": null
+  },
+  {
+   "id": "CTL9",
+   "desc": "整值性自检：定理 H 的 a 使 P(k) 在 k=−6..6 上全取整值",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "点 260 个（含负 k，广义二项式须正确）",
+   "pert": null
+  },
+  {
+   "id": "CTL10",
+   "desc": "负控：随机整值多项式的 P(k) 也全整 ⇒ 整值性对几何判别力 0",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "样本 300 个 × k=−4..4",
+   "pert": null
+  },
+  {
+   "id": "CTL11",
+   "desc": "整段陪集（FULL）的 D 必须全为 1",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "FULL 组 58 个",
+   "pert": null
+  },
+  {
+   "id": "CTL12",
+   "desc": "SKIP 组如实登记：计入组数 + 跳过组数 = 枚举陪集总数（不得静默丢弃）",
+   "exp": "140",
+   "act": "140",
+   "ok": true,
+   "note": "计入 140 + 跳过 0 = 140；枚举 140 个（n=1..4, d=1..n+1, q=1..4）",
+   "pert": null
+  },
+  {
+   "id": "CTL13",
+   "desc": "空解集周期退化为 1，必须与部分陪集分开统计",
+   "exp": "True",
+   "act": "True",
+   "ok": true,
+   "note": "空陪集 78 个，N 全为 1：True",
+   "pert": null
+  }
+ ],
+ "guards": [
+  {
+   "id": "G01",
+   "desc": "源码可用（守卫需读自身源码时必须有内容）",
+   "exp": ">0",
+   "act": "36011",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "id": "G02",
+   "desc": "AST 层：未 import random（确定性要求；字符串法会自命中描述文字）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "AST 命中 0 处；字符串法会误报 8 处"
+  },
+  {
+   "id": "G03",
+   "desc": "act=0 的条目必须写明分母／样本数",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "act=0 的条目 14 条，缺分母登记 0 条 []"
+  },
+  {
+   "id": "G04",
+   "desc": "源码级：item 的 exp 与 act 不得是同一个字面量（值相等不算同义反复）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "可疑 0 条 []；A/B 组的 exp=0 act=0 是「违例数为 0」的合法读数，非同义反复"
+  },
+  {
+   "id": "G05",
+   "desc": "控制组须含 ≥2 条扰动对照且其扰动读数全 > 0（判别力非零，不得恒绿）",
+   "exp": ">=2且全>0",
+   "act": "2条 弱=0",
+   "ok": true,
+   "note": "扰动对照 2 条 ['CTL14', 'CTL15']；弱（pert<=0）0 条 []"
+  },
+  {
+   "id": "G06",
+   "desc": "每条控制组都必须有 exp 与 act",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "id": "G07",
+   "desc": "verdict 机读（仅大写字母/数字/下划线/连字符）",
+   "exp": "True",
+   "act": "True",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "id": "G08",
+   "desc": "本卷不占度数（宽松档 SURVIVE>0 ⇒ 不占度）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "候选度 37（链最大度 36 止于 r264）"
+  },
+  {
+   "id": "G09",
+   "desc": "定理 H 的验证覆盖 n=1..6 与 d=1..n+5",
+   "exp": ">=51",
+   "act": "51",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "id": "G10",
+   "desc": "覆盖 Fano、CY、一般型三类",
+   "exp": "3",
+   "act": "3",
+   "ok": true,
+   "note": "{'Fano(d<=n+1)': 27, 'CY(d=n+2)': 6, '一般型(d>n+2)': 18}"
+  },
+  {
+   "id": "G11",
+   "desc": "判别力结论必须同时报几何侧与 Int(Z) 侧",
+   "exp": "both",
+   "act": "both",
+   "ok": true,
+   "note": "B04 的 note 含两侧"
+  },
+  {
+   "id": "G12",
+   "desc": "所有 item 的 act 非空且非 None",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "[]"
+  },
+  {
+   "id": "G13",
+   "desc": "陪集必须分流 EMPTY / FULL / PARTIAL 三类",
+   "exp": "3",
+   "act": "3",
+   "ok": true,
+   "note": "{'FULL': 58, 'EMPTY': 78, 'PARTIAL': 4}"
+  },
+  {
+   "id": "G14",
+   "desc": "定价可行集非空",
+   "exp": ">0",
+   "act": "12",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "id": "G15",
+   "desc": "源码不含中文绝对路径字面量",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "id": "G16",
+   "desc": "AST 层：主计算不得出现 float( 调用（字符串法会自命中描述文字）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "AST 层 float 调用 0 处；字符串计数会误报 4 处（差 4，正是守卫描述文字）"
+  },
+  {
+   "id": "G18",
+   "desc": "源码级禁 random 的判据走 AST 层（字符串法会自命中描述文字）",
+   "exp": "AST",
+   "act": "AST",
+   "ok": true,
+   "note": "字符串命中 8 处、AST 命中 0 处；差 8 ⇒ 字符串法会误报，故本卷对 random 与 float 均用 AST"
+  },
+  {
+   "id": "G17",
+   "desc": "每条 item 都有 kind 列",
+   "exp": "all",
+   "act": "25",
+   "ok": true,
+   "note": ""
+  },
+  {
+   "id": "G19",
+   "desc": "AST 层：ctl/guard 的 ok 实参顶层不得是布尔常量（假守卫的结构性防线）",
+   "exp": "0",
+   "act": "0",
+   "ok": true,
+   "note": "可疑调用 0 处 []"
+  }
+ ]
+}

@@ -1,0 +1,155 @@
+==============================================================================
+TUFT-r305 . 通量荷的等谱归一定理
+date=2026-11-01  degree=0
+==============================================================================
+
+[convention] 左手口径，Q = T3 + Y
+  Q_L  (3,2)_{1/6}         dim=6  Y=1/6   tr=1    Y^2=1/36
+  u_R^c (3bar,1)_{-2/3}    dim=3  Y=-2/3  tr=-2   Y^2=4/9
+  d_R^c (3bar,1)_{1/3}     dim=3  Y=1/3   tr=1    Y^2=1/9
+  L_L  (1,2)_{-1/2}        dim=2  Y=-1/2  tr=-1   Y^2=1/4
+  e_R^c (1,1)_{1}          dim=1  Y=1     tr=1    Y^2=1
+  SM 六条反常: {'A3': '0', 'A2': '0', 'Ag': '0', 'AYY': '0', 'AYF': '0', 'AFF': '0'}
+
+[theorem-I] M 消去：约化残差 = 反常 x M^p，应与 M 无关
+  M 取值: ['1', '2', '3', '5', '-1', '-5', '7', '1/2', '1/3', '2/3', '-1/7', '5/3']
+  检验组数 24，M-无关 24
+  T3, N=1 约化残差 = ['1', '1/2', '3', '7/12', '-1/12', '1/4']
+
+[theorem-J] 四条线性反常 RREF（未知量 N,k1..k5），秩=4，维数=2
+  R1  ['1', '0', '0', '0', '-1/2', '-1/2']
+  R2  ['0', '1', '0', '0', '0', '-1']
+  R3  ['0', '0', '1', '0', '-3/2', '1/2']
+  R4  ['0', '0', '0', '1', '0', '-1']
+  => 以 lam=k5 重参数化: k = (lam, 3N-2lam, lam, 2N-lam, lam)
+  => 且 q = (t/M)*Y,  t = N - lam
+
+[theorem-K] 偏差向量 N-k = t*tr_R(Y) => AYF*M^2 = t^2*Sum(dY^3), AFF*M^3 = t^3*Sum(dY^3)
+  Sum d_i Y_i^3 = 0（SM 反常自由）=> 两条非线性恒零
+  扰动 Y5 +1/10 => Sum dY^3 = 331/1000 != 0 => 恒等式仍成立且两边非零（身份为真）
+
+[theorem-L] k in {0,1}^5 的解
+  0,0,(0,0,0,0,0)
+  1,1,(1,1,1,1,1)
+
+[theorem-M] 最小 K = 3t
+  t=0  K_min= 0  k=(0,0,0,0,0)
+  t=1  K_min= 3  k=(0,3,0,2,0)
+  t=2  K_min= 6  k=(0,6,0,4,0)
+  t=3  K_min= 9  k=(0,9,0,6,0)
+  t=4  K_min=12  k=(0,12,0,8,0)
+  t=5  K_min=15  k=(0,15,0,10,0)
+  t=6  K_min=18  k=(0,18,0,12,0)
+  三代: t=3 => k=(0,9,0,6,0), n=(3,3,3,3,3)
+
+[items]  (kind: eq=相等 / gt=act>exp 阈值 / info=纯陈述不判决)
+  A01   PASS eq   exp=(1/6,-2/3,1/3,-1/2,1)    act=(1/6,-2/3,1/3,-1/2,1)   
+  A02   PASS eq   exp=(1,-2,1,-1,1)            act=(1,-2,1,-1,1)           
+  A03   PASS eq   exp=0                        act=0                       
+  A04   PASS eq   exp=0                        act=0                       
+  A05   PASS eq   exp=0                        act=0                       
+  A06   PASS eq   exp=0                        act=0                       
+  A07   PASS eq   exp=11/6                     act=11/6                    
+  B01   PASS eq   exp=24                       act=24                      
+  B02   PASS eq   exp=0                        act=0                       
+  B03   PASS eq   exp=1                        act=1                       
+  B04   PASS eq   exp=1                        act=1                       
+  B05   PASS eq   exp=1/2                      act=1/2                     
+  B06   PASS eq   exp=3                        act=3                       
+  B07   PASS eq   exp=6                        act=6                       
+  B08   INFO info exp=M cancels identically    act=M cancels identically   
+  C01   PASS eq   exp=4                        act=4                       
+  C02   PASS eq   exp=2                        act=2                       
+  C03   INFO info exp=RREF                     act=RREF                    
+  C04   PASS eq   exp=140                      act=140                     
+  C05   PASS eq   exp=30                       act=30                      
+  C06   PASS eq   exp=96                       act=96                      
+  C07   PASS eq   exp=60                       act=60                      
+  C08   INFO info exp=4 effective constraints  act=4 effective constraints 
+  D01   PASS eq   exp=12                       act=12                      
+  D02   PASS eq   exp=12                       act=12                      
+  D03   PASS eq   exp=12                       act=12                      
+  D04   PASS eq   exp=9                        act=9                       
+  D05   PASS eq   exp=9                        act=9                       
+  D06   INFO info exp=6 -> 4 effective         act=6 -> 4 effective        
+  D07   INFO info exp=why q ∝ Y is free        act=why q ∝ Y is free       
+  E01   PASS eq   exp=15                       act=15                      
+  E02   PASS eq   exp=2                        act=2                       
+  E03   PASS eq   exp=['0,0,(0,0,0,0,0)', '1,1 act=['0,0,(0,0,0,0,0)', '1,1
+  E04   PASS eq   exp=0                        act=0                       
+  E05   PASS eq   exp=0                        act=0                       
+  E06   INFO info exp=k_R <= 1 is the load-bea act=k_R <= 1 is the load-bea
+  F01   PASS eq   exp=[0, 3, 6, 9, 12, 15, 18] act=[0, 3, 6, 9, 12, 15, 18]
+  F02   PASS eq   exp=True                     act=True                    
+  F03   PASS eq   exp=(0,9,0,6,0)              act=(0,9,0,6,0)             
+  F04   PASS eq   exp=(3,3,3,3,3)              act=(3,3,3,3,3)             
+  F05   PASS eq   exp=0                        act=0                       
+  F06   PASS eq   exp=6                        act=6                       
+  F07   INFO info exp=falsifiable in one shot  act=falsifiable in one shot 
+  H01   PASS eq   exp=32                       act=32                      
+  H02   PASS eq   exp=0                        act=0                       
+  H03   PASS gt   exp=0                        act=4                       
+
+[controls]
+  CTL1   PASS  正对照：SM 自身六条反常全零（机器算得出零）
+  CTL2   PASS  负对照：u_R^c/d_R^c 写成未共轭的右手口径 ⇒ [SU(3)]² 立刻非零
+  CTL3   PASS  ★正对照：同一 k（T3）在 12 个有理 M 上约化残差取同一非零值 ⇒ 阻碍与 M 无关
+  CTL4   PASS  正对照：家族 (N,λ)=(1,1) ⇒ q=0、六条反常全零、n≡1
+  CTL5   PASS  负对照：把「3N−2λ」误写成「3N−λ」⇒ 六条反常立刻非零（条目有判别力）
+  CTL6   PASS  ★正对照（关键）：t=3 构造 k=(0,9,0,6,0) ⇒ 六条反常全零 + n≡3 ⇒ 三代只差 k_R 这一条
+  CTL7   PASS  负对照：k ∈ {0,1}⁵ 的穷举只有 2 解（与代数情形分析一致，非过滤器失灵）
+  CTL8   PASS  正对照：RREF 满秩 4 ⇒ 解空间维数 2 ⇒ 定理 J 是完整分类而非充分条件
+  CTL9   PASS  负对照：q 取非 Y 方向 (1/3,2/3,2/3,1,2) ⇒ 反常非零 ⇒ 「q∝Y 是唯一免费方向」有内容
+  CTL10  PASS  正对照：K_min(t) 严格递增且等于 3t（不是常数、不是 0）
+  CTL11  PASS  正对照：Y 扰动后 ΣdY³ ≠ 0 且 AYF·M² 恒等式两边均非零（身份非 0=0）
+
+[summary] items=46 PASS=39 FAIL=0 INFO=7
+[pricing] 2^5=32 strict=0 loose4=4
+  mask= 0 00000 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放开 k_R（多重常数截面）, 放弃反常自由（q 不沿 Y）, 非阿贝尔通量（破缺 SM）, CY3 / T⁶ 高维
+  mask= 1 00001 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放开 k_R（多重常数截面）, 放弃反常自由（q 不沿 Y）, CY3 / T⁶ 高维
+  mask= 2 00010 -> 放开 k_R（多重常数截面）, 放弃反常自由（q 不沿 Y）, 非阿贝尔通量（破缺 SM）, CY3 / T⁶ 高维
+  mask= 3 00011 -> 放开 k_R（多重常数截面）, 放弃反常自由（q 不沿 Y）, CY3 / T⁶ 高维
+  mask= 4 00100 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放弃反常自由（q 不沿 Y）, 非阿贝尔通量（破缺 SM）
+  mask= 5 00101 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放弃反常自由（q 不沿 Y）
+  mask= 6 00110 -> 放弃反常自由（q 不沿 Y）, 非阿贝尔通量（破缺 SM）
+  mask= 7 00111 -> 放弃反常自由（q 不沿 Y）
+  mask= 8 01000 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放开 k_R（多重常数截面）, 放弃反常自由（q 不沿 Y）, 非阿贝尔通量（破缺 SM）
+  mask= 9 01001 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放开 k_R（多重常数截面）, 放弃反常自由（q 不沿 Y）
+  mask=10 01010 -> 放开 k_R（多重常数截面）, 放弃反常自由（q 不沿 Y）, 非阿贝尔通量（破缺 SM）
+  mask=11 01011 -> 放开 k_R（多重常数截面）, 放弃反常自由（q 不沿 Y）
+  mask=12 01100 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放弃反常自由（q 不沿 Y）, 非阿贝尔通量（破缺 SM）
+  mask=13 01101 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放弃反常自由（q 不沿 Y）
+  mask=14 01110 -> 放弃反常自由（q 不沿 Y）, 非阿贝尔通量（破缺 SM）
+  mask=15 01111 -> 放弃反常自由（q 不沿 Y）
+  mask=16 10000 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放开 k_R（多重常数截面）, 非阿贝尔通量（破缺 SM）, CY3 / T⁶ 高维
+  mask=17 10001 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放开 k_R（多重常数截面）, CY3 / T⁶ 高维
+  mask=18 10010 -> 放开 k_R（多重常数截面）, 非阿贝尔通量（破缺 SM）, CY3 / T⁶ 高维
+  mask=19 10011 -> 放开 k_R（多重常数截面）, CY3 / T⁶ 高维
+  mask=20 10100 -> 标准 't Hooft 扭转（k_R ≤ 1）, 非阿贝尔通量（破缺 SM）
+  mask=21 10101 -> 标准 't Hooft 扭转（k_R ≤ 1）
+  mask=22 10110 -> 非阿贝尔通量（破缺 SM）
+  mask=24 11000 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放开 k_R（多重常数截面）, 非阿贝尔通量（破缺 SM）
+  mask=25 11001 -> 标准 't Hooft 扭转（k_R ≤ 1）, 放开 k_R（多重常数截面）
+  mask=26 11010 -> 放开 k_R（多重常数截面）, 非阿贝尔通量（破缺 SM）
+  mask=27 11011 -> 放开 k_R（多重常数截面）
+  mask=28 11100 -> 标准 't Hooft 扭转（k_R ≤ 1）, 非阿贝尔通量（破缺 SM）
+  mask=29 11101 -> 标准 't Hooft 扭转（k_R ≤ 1）
+  mask=30 11110 -> 非阿贝尔通量（破缺 SM）
+
+[guards] 13/13
+  G01  PASS  verdict 合法 ; NO-GO-UPGRADED__M-CANCELLED-AND-K-LE-1-L
+  G02  PASS  条目数与 json 一致 ; 写盘后校验
+  G03  PASS  控制组全过 ; 11/11
+  G04  PASS  Decimal 精度 >= 50 ; 60
+  G05  PASS  未使用 random ; io,json,os,sys,decimal,fractions
+  G06  PASS  report 与 json 逐条一致 ; 写盘后校验
+  G07  PASS  verdict 由计数驱动 ; 39 PASS / 0 FAIL
+  G08  PASS  定价覆盖最硬发现 ; S3 ← E02/E05/F03（k_R≤1 是承重点）；S5 ← D02/D0
+  G09  PASS  无写死 True 的守卫 ; G02/G06 在写盘后实测
+  G10  PASS  PASS 条目均出自算术/枚举（纯陈述一律 INFO） ; 7 条 INFO
+  G11  PASS  M 消去非空转 + 家族全零 + 分类满秩 ; M-indep 24/24, fam 96/96, rank 4
+  G12  PASS  k∈{0,1}⁵ 穷举与代数情形分析一致（2 解） ; ['0,0,(0,0,0,0,0)', '1,1,(1,1,1,1,1)']
+  G13  PASS  K_min 序列由构造性搜索给出（非公式回填） ; t=0..6 全部 3t
+
+[verdict] NO-GO-UPGRADED__M-CANCELLED-AND-K-LE-1-LOCKS-ONE-GENERATION
+==============================================================================

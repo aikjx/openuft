@@ -1,0 +1,118 @@
+{
+  "round": "r361",
+  "title": "TUFT-r361_临界面维数与阈值计数_攻A1_全系统固定点自由度下界_2026-11-02",
+  "date": "2026-11-02",
+  "verdict": "A1_BOUNDED_BELOW__CRITICAL_SURFACE_DIM_GE_1",
+  "exit_code": 0,
+  "entries": [
+    {
+      "id": "B1",
+      "layer": "临界维数",
+      "verdict": "INFO",
+      "detail": "SM 规范扇区高斯固定点：J=0、三个 λ=0 ⇒ #(λ≤0)=3 ⇒ |P_cont|≥3（三个 Λ 等价幅度）",
+      "kv": {
+        "neg": 0,
+        "zero": 3,
+        "pos": 0
+      }
+    },
+    {
+      "id": "C1",
+      "layer": "阈值计数",
+      "verdict": "FAIL",
+      "detail": "Δα⁻¹(0)=−0.4886（1→10 TeV），= 2.33e+07 σ；每个阈值贡献 +1 到 |P_cont|",
+      "kv": {
+        "dalpha_inv": -0.48862373258628516,
+        "n_sigma": 23267796.789823104
+      }
+    },
+    {
+      "id": "A1",
+      "layer": "维数总账",
+      "verdict": "FAIL",
+      "detail": "SM 规范扇区 #(λ≤0)=3，加阈值 ⇒ |P_cont|≥4；全系统 dim=0 需非平凡 UV 固定点且全 λ>0（未立）",
+      "kv": {
+        "dim_strict": 0,
+        "free_marginal": 3
+      }
+    }
+  ],
+  "guards": [
+    {
+      "id": "UV_SURFACE_DIM_EQ_NEG_EIG",
+      "pass": true,
+      "detail": "严格流形 = span{v_neg}，dim=1=#{λ<0}；混合方向发散（判据非恒真）"
+    },
+    {
+      "id": "MARGINAL_IS_FREE_NOT_DECAY",
+      "pass": true,
+      "detail": "λ=0 时 |δ(t=40)|=1.000000000000000（不衰减 ⇒ 边缘幅度是自由输入，不进严格流形）"
+    },
+    {
+      "id": "GAUSSIAN_JACOBIAN_ZERO_EXACT",
+      "pass": true,
+      "detail": "符号：J(0)=0 矩阵，精确"
+    },
+    {
+      "id": "SM_GAUGE_FP_UNIQUE_ZERO",
+      "pass": true,
+      "detail": "SM 规范扇区只有高斯固定点（此即渐近自由的另一端）"
+    },
+    {
+      "id": "MARGINAL_COUNT_3",
+      "pass": true,
+      "detail": "三个耦合各带 1 个边缘方向 ⇒ #(λ≤0)=3"
+    },
+    {
+      "id": "SCALE_TRANSLATION_INVARIANCE",
+      "pass": true,
+      "detail": "二次 β 的解对 t 平移严格不变 ⇒ 只有 1 个自由幅度（=Λ），无形状自由度"
+    },
+    {
+      "id": "THRESHOLD_SHIFT_MATCH_FORMULA",
+      "pass": true,
+      "detail": "分段积分与闭式 Δα⁻¹=−(Δb/2π)ln(M2/M1) 逐位一致"
+    },
+    {
+      "id": "THRESHOLD_SHIFT_SUPER_SIGMA",
+      "pass": true,
+      "detail": "1 个阈值的连续移动即超 2.3e+07 σ ⇒ 阈值必须是输入"
+    },
+    {
+      "id": "DIM0_MODEL_GIVES_PREDICTION",
+      "pass": true,
+      "detail": "λ>0（IR 吸引）⇒ 低能值被钉在 a* ⇒ dim=0 的预言确实可能（判据有牙）"
+    },
+    {
+      "id": "GATE_A1_RELATION_OR_FIT",
+      "pass": true,
+      "detail": "n_free=3 ⇒ surplus=-2.0<1"
+    },
+    {
+      "id": "GATE_POSCTRL_DISCOVERY",
+      "pass": true,
+      "detail": "正对照 GR ⇒ GENUINE_PREDICTION（门禁非恒否）"
+    },
+    {
+      "id": "RESERVE_R361_FREE",
+      "pass": true,
+      "detail": "落盘前 r361 空闲"
+    }
+  ],
+  "guard_pass": 12,
+  "guard_total": 12,
+  "constants": {
+    "b_sm": [
+      4.1,
+      -3.1666666666666665,
+      -7.0
+    ],
+    "b_hi_plus_gen": 5.433333333333334,
+    "sigma_alpha_inv": 2.1e-08
+  },
+  "relations": {
+    "dim_strict": "#{lambda<0}",
+    "free_floor": "#{lambda<=0} + |P_uv_other|",
+    "threshold_shift": "(db/2pi) ln(M2/M1)"
+  }
+}

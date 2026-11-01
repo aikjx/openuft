@@ -1,0 +1,129 @@
+==============================================================================
+TUFT-r331 . 族数整性定理与 k 坐标压缩
+date=2026-11-01  degree=0  candidate_degree=37
+==============================================================================
+
+[convention] n_R = [H^n] e^{kH} td(CP^n) = chi(O(k)),  k = q - (n+1)/2 = x - n,  x = q + (n-1)/2
+  Q_L (3,2)_{1/6}        dim=6  Y=1/6  
+  u^c (3bar,1)_{-2/3}    dim=3  Y=-2/3 
+  d^c (3bar,1)_{1/3}     dim=3  Y=1/3  
+  L_L (1,2)_{-1/2}       dim=2  Y=-1/2 
+  e^c (1,1)_{1}          dim=1  Y=1    
+  SM six anomalies: {'A3': '0', 'A2': '0', 'Ag': '0', 'AYY': '0', 'AYF': '0', 'AFF': '0'}
+
+[theorem-A] INTEGRALITY :  x in Q, n>=1, C(x,n) in Z  ==>  x in Z
+  proof: x=a/b reduced, b>1, p|b.  every factor (a-i b) = a (mod p), p does not divide a
+         => p does not divide the numerator; but b^n contains p^n, n>=1
+         => the reduced denominator still carries p  => not an integer.
+  machine check : 1700 non-integer rational points, 1700 of them give an integer  (must be 0)
+  converse      : 810 integer points, 0 non-integer values  (must be 0)
+
+[theorem-B] THE LATTICE IS REBUILT FROM INTEGRALITY ALONE (no spin^c)
+  candidates q on a 1/4 grid in [-6,6]; keep those with C(q+(n-1)/2,n) in Z
+  result == r325 Freed-Witten lattice (n odd: Z ; n even: Z+1/2)   symmetric difference = 0
+  lattice points 188 (all integral) ; off-lattice points 547 (none integral)
+  INPUTS USED: q in Q, n_R in Z.   NOT USED: spin, spin^c, w2, D-brane.
+
+[theorem-C] NON-NEGATIVITY : n_R >= 0 kills half the q's for odd n only
+  odd n, k<0 : n_R = -C(-k-1,n) < 0   -> 16/64 unphysical
+  even n,k<0 : n_R = +C(-k-1,n) > 0   -> 12/56 physical
+  it does NOT remove any solution (all three have n_R = +3)
+
+[theorem-D] THE k COORDINATE : n_R = sigma * C(M,n),  M >= n  <=>  n_R != 0
+  k>=0 : M = k+n      ; k<0 : M = -k-1
+  sigma = +1 unless (k<0 and n odd)
+  legs needed : 2 (monotone + endpoint jump)   [r327 used 4]
+    monotone : C(M+1,n)-C(M,n) = C(M,n-1) > 0 for M>=n>=1
+    endpoint : C(n,n)=1 < 3 < n+1 = C(n+1,n) for n>=3
+  solutions: [(1,3), (2,-5/2), (2,5/2)]
+
+[theorem-E] r327 LEGS 3 AND 4 ARE SHADOWS OF LEG 1 IN THE x COORDINATE
+  0 <= x < n  =>  M = n-x-1 < n  =>  C(M,n) = 0      (leg 3 absorbed)
+  x < 0       =>  M = n-x-1 >= n                    (leg 4 merges into leg 1)
+  solution set unchanged => simplification, not correction
+
+[items]  (kind: eq=equal / gt=act>exp / info=statement only)
+  A01   PASS eq   exp=1700                               act=1700
+  A02   PASS eq   exp=0                                  act=0
+  A03   PASS eq   exp=0                                  act=0
+  A04   PASS eq   exp=[-1/8, 1/16, 3/8]                  act=[-1/8, 1/16, 3/8]
+  A05   PASS eq   exp=1700                               act=1700
+  A06   PASS gt   exp=0                                  act=20
+  A07   PASS gt   exp=0                                  act=170
+  A08   PASS eq   exp=0                                  act=0
+  B01   PASS eq   exp=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 act=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+  B02   PASS eq   exp=0                                  act=0
+  B03   PASS eq   exp=188                                act=188
+  B04   PASS eq   exp=0                                  act=0
+  B05   INFO info exp=-                                  act=-
+  B06   PASS eq   exp=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 act=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+  C01   PASS eq   exp=16                                 act=16
+  C02   PASS eq   exp=12                                 act=12
+  C03   PASS eq   exp=[21, 0]                            act=[21, 0]
+  C04   PASS eq   exp=0                                  act=0
+  C05   PASS eq   exp=3                                  act=3
+  D01   PASS eq   exp=0                                  act=0
+  D02   PASS eq   exp=0                                  act=0
+  D03   PASS eq   exp=0                                  act=0
+  D04   PASS eq   exp=0                                  act=0
+  D05   PASS eq   exp=0                                  act=0
+  D06   PASS eq   exp=0                                  act=0
+  D07   PASS eq   exp=0                                  act=0
+  D08   PASS eq   exp=0                                  act=0
+  D09   PASS eq   exp=[(1,3), (2,-5/2), (2,5/2)]         act=[(1,3), (2,-5/2), (2,5/2)]
+  D10   INFO info exp=-                                  act=-
+  D11   PASS eq   exp=0                                  act=0
+  E01   PASS eq   exp=8                                  act=8
+  E02   PASS eq   exp=0                                  act=0
+  E03   PASS eq   exp=0                                  act=0
+  E04   PASS eq   exp=3                                  act=3
+  E05   INFO info exp=-                                  act=-
+  F01   PASS eq   exp=0                                  act=0
+  F02   PASS eq   exp=0                                  act=0
+  F03   PASS eq   exp=0                                  act=0
+  F04   PASS eq   exp=0                                  act=0
+  F05   PASS gt   exp=0                                  act=3
+  F06   PASS eq   exp=[0, 0, 0, 0, 0, 0]                 act=[0, 0, 0, 0, 0, 0]
+  F07   INFO info exp=-                                  act=-
+
+[controls]
+  CTL1   PASS 正对照：SM 基线反常全零（判据没坏）
+  CTL2   PASS 正对照：`C(x,n)` 在整数点上全为整数（A02 的分母非空）
+  CTL3   PASS 负对照：`2x` 在同批非整点上有整值 ⇒ A01 不是「有理点代入就不整」这种废话
+  CTL4   PASS 负对照：把 b 的上界从 2..8 缩到 2..3 ⇒ 样本变小但非整点依然全非整（不是靠大分母撑出来的）
+  CTL5   PASS 负对照：把偏移从 `(n−1)/2` 改成 `n/2`（差 **1/2**，不是 1）⇒ 奇偶翻转 ⇒ 格必须变
+  CTL6   PASS 正对照：`B03` 与 `B04` 的分母都非零（否则「双向」是空转）
+  CTL7   PASS 正对照：非负性筛的分母非零（C01/C02 都有样本）
+  CTL8   PASS 负对照：把非负性当成「砍掉一半解」⇒ 立即不自洽（解全是 +3）
+  CTL9   PASS 正对照：`chi_sheaf` 与 `nr_binom` 在格上一致（两条独立实现）
+  CTL10  PASS 负对照：把 `chi_sheaf` 的 `k<0` 支判成 0 ⇒ 立刻失配（Serre 对偶承重，r327 CTL15 同型）
+  CTL11  PASS 负对照：把 `M_of` 的 `k≥0` 支写成 `k+n+1` ⇒ D04 崩（M 的偏移承重）
+  CTL12  PASS 正对照：`C(M,n)` 在 `M ≥ n` 上严格递增（D07 的前提真的成立）
+  CTL13  PASS 负对照：把判据换成「平方数」⇒ 3 会被误判不可达（判别力）
+  CTL14  PASS 正对照：解集计数 1 + 2 = 3，与 r327 一致
+  CTL15  PASS 负对照：r327 的四支点在 M 坐标下必须退化成两条 ⇒ 若 E02/E03 任一不成立则本卷的核心主张垮
+
+[pricing] 2^6=64 achievable=27 strict=0 S1^S2=0 S3^S4=0 S2^S4=3 S5^S6=0
+[summary] items=42 PASS=38 FAIL=0 INFO=4
+
+[guards] 17/17
+  G01   PASS verdict 合法（大写、含判词主体、长度 >= 40） ; X-R327-COORDINATE-REVIEWED__N_R-IS-PLUS-
+  G02   PASS items 数与 json 一致（写盘后回读） ; json=42 mem=42
+  G03   PASS 控制组全过 ; 15/15
+  G04   PASS Decimal 精度 >= 50 ; prec=60
+  G05   PASS 源码无 random 导入（确定性） ; 行首 import/from random 命中 0
+  G06   PASS report/json 逐条一致（写盘后回读） ; 逐条一致 + report 已落盘
+  G07   PASS verdict 由计数驱动（整性/格/坐标/压缩/等价/不预言六件事都进判词） ; nonint=1700/1700 sym=0 sols=3
+  G08   PASS 定价覆盖本卷核心（S1∧S2=0 且 S3∧S4=0） ; S1^S2=0 S3^S4=0 S2^S4=3
+  G09   PASS **无同义反复（源码级）**：exp 与 act 不得是同一个带引号字面量 ; 命中 0 条
+  G10   PASS 字面 True 的守卫计数如实登记 ; 字面 True 出现 4 处
+  G11   PASS 所有判决类条目无 FAIL ; fail=0
+  G12   PASS **分母非空**（防「0 条即通过」）：A01/B03/B04/C01/C02/D06/D07 的分母都 > 0 ; A=1700 B=188/547 C=64/56 D=915/615
+  G13   PASS 两支点证明的四条都真被机检（D05/D06/D07/D08 全 PASS） ; 4/4
+  G14   PASS 自审：CTL3/CTL4/CTL5/CTL8/CTL10/CTL11/CTL13/CTL15 八个负对照都真改变了输出 ; 8/8
+  G15   PASS 不宣称预言了三代（判词含 NOT-PREDICTED，且不含 WE-PREDICT） ; 含 NOT-PREDICTED
+  G16   PASS 与 r327 的等价性（解集完全相同，3 个，逐个 q 值一致） ; [(1,3), (2,-5/2), (2,5/2)]
+  G17   PASS 「假设更弱」有源码级证据：B 组（格重建）里不出现 chi_sheaf / spin / chern / todd 任何几何调用 ; B 组源码 2286 字符；几何函数调用命中 0 次
+
+[verdict] X-R327-COORDINATE-REVIEWED__N_R-IS-PLUS-OR-MINUS-C-M-N-WITH-M-AT-LEAST-N__THE-X-COORDINATE-WAS-THE-WRONG-ONE-K-ABSORBS-LEGS-THREE-AND-FOUR__INTEGRALITY-OF-N_R-ALONE-FORCES-THE-FREED-WITTEN-LATTICE-WITHOUT-SPINC__FOUR-LEGS-COMPRESS-TO-TWO__SOLUTION-SET-UNCHANGED__ASSUMPTIONS-WEAKENED-SO-THE-RESULT-IS-STRENGTHENED__STILL-NOT-PREDICTED
+==============================================================================

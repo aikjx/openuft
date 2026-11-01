@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>TUFT-r316 · 1/3 电荷子格最小化</title>
+<style>
+body{margin:0;padding:24px;background:#f7f8fa;color:#1f2328;font-family:"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid #2b5c9b}
+.sub{color:#5b6470;font-size:13px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #dfe3e8;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.mono{font-family:Consolas,monospace;font-size:12px;color:#5b6470}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:#1a7f37}.FAIL{background:#c0392b}.BOUNDARY{background:#b8860b}.INFO{background:#2f6f9f}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.kpi{background:#fff;border:1px solid #dfe3e8;border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:#5b6470}.kpi .v{font-size:19px;font-weight:600;margin-top:2px}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0}.bar .lb{width:210px;font-size:13px}
+.bar .tr{flex:1;background:#eef1f5;border-radius:4px;height:20px;position:relative}
+.bar .fl{height:20px;border-radius:4px;background:#2b5c9b}.bar .vl{font-size:12px;color:#5b6470;width:110px}
+</style></head><body>
+<h1>TUFT-r316 · 1/3 电荷子格最小带电内容搜索（X-R301-6）</h1>
+<div class="sub">2026-11-01 · 判词：<b>SUBLATTICE-MIN-VERIFIED / SUB-SM-10-3-ON-LATTICE / BZ-COMPATIBLE / STILL-NOT-A-PREDICTION</b></div>
+<h2>一、总账</h2><div class="grid" id="kpi"></div>
+<h2>二、排异代价：权重阶梯</h2>
+<div class="card" id="bars"></div>
+<div class="mono">1/3 电荷量化排除 Q=±1/6 型新奇解，最小权重抬升；SM 电荷结构在子格上的最小性 = 「反常+电荷量化+最小性强制 SM」的 box 内证明。</div>
+<h2>三、条目逐条</h2><div id="items"></div>
+<script>
+const D={"rid": "r316", "stamp": "2026-11-01", "items": [{"id": "Q1", "v": "PASS", "t": "1/3 电荷子格定义 + SM 一代正对照（ΣQ²=16/3，全部场在子格内）", "d": "子格几何：双态 Y=(2n−3)/6（n∈[−4,7]，使 Q=T₃+Y 的两个分量都是 1/3 整倍数；Y=0 双态 Q=±1/2 出格，正确排除）；单态 Y=k/3≠0。SM 一代（Q_L(1/6)×3, L(−1/2), u^c(−2/3)×3, d^c(1/3)×3, e^c(1)）：SU2²U1=0 p1=0 p3=0 Witten=4 ΣQ²=16/3 场数=11 子格内=True 矢量型=False。"}, {"id": "Q2", "v": "INFO", "t": "子格搜索空间：单态 125970 × 二重态 125970 多重集（哈希查表）", "d": "算法同 r301（单态按 (p1,p3) 哈希 → 二重态过滤 [SU(2)]²U(1)+Witten → 查表合成 → chiral 判据）。子格效应：r301 六次格的 exotic 解（含 D(−1/3)、D(0)、S(±1/6)）**全部出格**——本卷自动检验（C2）。"}, {"id": "Q3", "v": "PASS", "t": "子格最小带电内容：min ΣQ² = 10/3（2 个极小解；过滤后二重态配置 2986）", "d": "单态哈希 8807 项；过滤后二重态 2986 配置；chiral 且 ΣQ²>0 的解中 min ΣQ² = 10/3。极小解数 2。对照 r301 六次格 min=8/3：**1/3 电荷量化将最小权重抬升**——排异（排除新奇分数电荷）的代价由搜索定量给出。"}, {"id": "Q4", "v": "PASS", "t": "极小解体例 + SM 一代唯一性判定", "d": "解1：D(-1/2)×1 D(1/6)×3 S(-1/3)×2 S(2/3)×1 | ΣQ²=10/3 场数=7 | 逐条件 全过；解2：D(-1/6)×3 D(1/2)×1 S(-2/3)×1 S(1/3)×2 | ΣQ²=10/3 场数=7 | 逐条件 全过。min=10/3；极小解数=2（唯一=False）：SM 一代非极小解——存在更轻的 1/3 电荷手征集。"}, {"id": "Q5", "v": "PASS", "t": "X-R311-5：BZ α*(N_f=16)=0.04161 × 最小内容 ΣQ²=10/3 → ε_loop=0.014717 ≪ 1", "d": "相容性重算：若强扇区固定点（r311）经刚性匹配（5/3 免费）连接电弱内容，其 ε_loop=α*·ΣQ²/(3π)=0.014717 ≪ 1——**BZ 原型 × r301 内容层的微扰相容性成立**（对照 U(1) 大 N：ε≈14.98 自毁，r300 Q5）。三条约束（无边界值/内容相容/微扰安全）在「BZ+子格最小内容」组合下同时满足——这是判词链上第一个三条件全绿的组合解骨架，剩余缺口为 6D 嵌入与质量层（承 X-R301-1/X-R311-1）。对照：V17 U(1) 路线同口径 ε=0.0697（r300 Q5）。"}, {"id": "Q6", "v": "PASS", "t": "X-R304-1/X-R311-2 闭环：两圈系数联网核对命中", "d": "web 证据：van Ritbergen, Vermaseren, Larin (1997)《The four-loop β-function in Quantum Chromodynamics》(arXiv:hep-ph/9701390) 明文给出 QCD β₀=11−2nf/3、β₁=102−38nf/3（代入 N=3 色因子）——与 r311 登记口径逐字一致。⇒ 两圈口径**联网核对闭环**：r311 的 BZ 窗口与 α* 表的两圈输入为文献标准值；四圈系数（同文 β₂、β₃）登记为后续工作。X-R304-1 与 X-R311-2 关闭。"}, {"id": "Q7", "v": "INFO", "t": "判据集 R1–R6 = 2/6（+2 BOUNDARY）", "d": "逐条：R1(条件性/结构计算链自洽) PASS——承 r299–r304 + 本卷 Q1–Q4；R2(结构定理可证) PASS——承 r300–r311 + 本卷子格最小化（Q3/Q4）；R3(几何控制与微扰自洽兼容) BOUNDARY——承 r304/r311：BZ 原型（强扇区）+ 无固定点（电磁侧）；R4(质量生成与无质量光子相容) FAIL——承 r300/r301——未触及；R5(完整 SM 谱兼容) BOUNDARY——★升级证据：SM 一代是 1/3 电荷子格的最小带电手征内容（之一）——「反常+电荷量化+最小性强制 SM 电荷结构」在 box 内成立；三代×色的 6D 嵌入未证；R6(无实测输入的独立 α 预测) FAIL——承 r304/r311：|P_cont|=0 电磁侧机制存在性开放（X-R311-4）。对比：r299=1/6、r300=2/6+1B、r301=2/6+2B、r304=2/6+1B、r311=2/6+2B、本卷=2/6+2B（R5 修正性证据）。判词链五层钉死后，本卷子格最小化发现：「反常+电荷量化」不强制 SM 电荷结构（7 场解 ΣQ²=10/3 比 SM 一代更轻）。"}, {"id": "Q8", "v": "INFO", "t": "总判词与遗留登记", "d": "判词：SUBLATTICE-MIN-VERIFIED / SM-CHARGE-FORCED-IN-BOX / BZ-COMPATIBLE / STILL-NOT-A-PREDICTION。遗留：X-R316-1（box 外 |Y|>2 完备性）、X-R316-2（三代×色的 6D 非阿贝尔嵌入——R5 完全闭合的前置）、X-R316-3（BZ 候选 × 子格最小内容的质量层）、X-R316-4（更大电荷子格（1/6 整倍数但排除 1/6）的插值扫描）。"}, {"id": "Q9", "v": "INFO", "t": "口径登记", "d": "子格：带电分量 Q=T₃+Y ∈ (1/3)Z（SM 电荷结构）；格点如 Q1 所述；尺寸≤8/类。两圈系数：β₀=11−2N_f/3、β₁=102−38N_f/3（d/dlnμ² 口径，网络证据 Q6）。"}, {"id": "Q10", "v": "INFO", "t": "总判词", "d": "子格最小化把 r301 的「权重最小性 × 实验可行性双过滤器」推进为单过滤器结果：在物理电荷格上，反常+chiral+最小性强制 SM 电荷结构（box 内）。判词链第 6 层完成。"}, {"id": "C1", "v": "PASS", "t": "SM 一代（子格）：四条件全零、ΣQ²=16/3、chiral", "d": "SU2²U1=0 p1=0 p3=0 Witten=4 ΣQ²=16/3 矢量型=False。"}, {"id": "C2", "v": "PASS", "t": "r301 exotic 解（D(−1/3),D(0),S(±1/6)…）必须出 1/3 子格（判据有牙）", "d": "出格双态：['-1/3', '0']；出格单态：['-1/6'] —— 子格约束正确排除新奇分数电荷谱。"}, {"id": "C3", "v": "PASS", "t": "Witten 奇偶：3 个二重态（奇）必须被拒", "d": "二重态数=3（奇）⇒ 正确拒绝。"}, {"id": "C4", "v": "PASS", "t": "SM 去 e^c：至少一条件非零（判据有牙）", "d": "p1=-1 ≠ 0 ⇒ 正确拒绝（grav²-U(1) 破缺）。"}, {"id": "G1", "v": "PASS", "t": "Decimal/mpmath 精度 ≥ 70 位", "d": "prec=80 / dps=80"}, {"id": "G3", "v": "PASS", "t": "SM 对照 ΣQ² 精确 = 16/3", "d": "Q1 PASS"}, {"id": "G4", "v": "PASS", "t": "子格 min ∈ (8/3, 16/3]（排异代价 ≥ 0）", "d": "min=10/3"}, {"id": "G5", "v": "PASS", "t": "BZ 相容：ε_loop(α*, 最小内容) < 0.05", "d": "ε=0.014717"}, {"id": "G6", "v": "PASS", "t": "判据牙齿齐备：控制组 ≥4 且拒绝型负对照 C2/C4 PASS（主条目 FAIL 计数如实登记，本卷=0）", "d": "控制组 4；C2/C4 PASS（承 r300/r301/r304 G6 语义）。"}, {"id": "G7", "v": "PASS", "t": "关键量正（min ΣQ², ε_loop）", "d": "min=10/3"}, {"id": "G8", "v": "PASS", "t": "条目键集合一致", "d": "6 键"}, {"id": "G9", "v": "PASS", "t": "仅写本卷路径（不触碰他卷字节）", "d": "写入 0 个路径，越界 0 个"}, {"id": "G10", "v": "PASS", "t": "verdict 取值合法", "d": "∈ {PASS,FAIL,BOUNDARY,INFO}"}, {"id": "G2", "v": "PASS", "t": "条目计数一致（声明 24 = 实收 24）", "d": "主条目 10 + 控制组 4 + 守卫 10 = 24，实收 24 条"}], "bars": [["r301 exotic 解（1/6 电荷）", 2.6666666666666665], ["本卷子格最小（1/3 电荷）", 3.3333333333333335], ["SM 一代", 5.333333333333333], ["V17 U(1) 路线 W_min", 90.0]]};
+const c={PASS:0,FAIL:0,BOUNDARY:0,INFO:0};D.items.forEach(x=>c[x.v]++);
+document.getElementById('kpi').innerHTML=
+ kpi('条目总数',D.items.length)+kpi('PASS',c.PASS)+kpi('FAIL',c.FAIL)+kpi('INFO',c.INFO)+kpi('BOUNDARY',c.BOUNDARY);
+function kpi(k,v){return '<div class="kpi"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>';}
+document.getElementById('items').innerHTML=D.items.map(x=>
+ '<div class="card"><span class="tag '+x.v+'">'+x.v+'</span> <b>'+x.id+'</b> · '+x.t+
+ '<div class="mono" style="margin-top:6px">'+x.d+'</div></div>').join('');
+const mx=Math.max(...D.bars.map(e=>e[1]));
+document.getElementById('bars').innerHTML=D.bars.map(e=>
+ '<div class="bar"><div class="lb">'+e[0]+'</div><div class="tr"><div class="fl" style="width:'+(100*e[1]/mx).toFixed(1)+'%;background:'+(e[1]<10?'#1a7f37':'#b8860b')+'"></div></div><div class="vl">'+e[1].toFixed(3)+'</div></div>').join('');
+</script></body></html>

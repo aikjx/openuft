@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r358 · 整性集的精确结构：陪集只需 n+1 个值判定</title>
+<style>
+  :root { --bg:#f7f8fa; --card:#ffffff; --ink:#1f2328; --sub:#5b6570;
+          --line:#d8dee6; --true:#2f7d4f; --false:#b23a3a; --accent:#2f5fb3; --warn:#9a6b00; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:var(--bg); color:var(--ink);
+         font-family:"Segoe UI","Microsoft YaHei",sans-serif; line-height:1.65; }
+  .wrap { max-width:1000px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 6px; }
+  h2 { font-size:16px; margin:26px 0 8px; padding-left:9px; border-left:4px solid var(--accent); }
+  .sub { color:var(--sub); font-size:13px; margin-bottom:14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px;
+          padding:14px 16px; margin:12px 0; }
+  .verdict { font-family:Consolas,monospace; font-size:11.5px; word-break:break-all;
+             background:#eef2f8; border:1px solid var(--line); border-radius:6px; padding:10px; }
+  table { border-collapse:collapse; width:100%; font-size:12.5px; margin-top:8px; }
+  th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; }
+  th { background:#eef2f8; }
+  .t { color:var(--true); font-weight:600; }
+  .f { color:var(--false); font-weight:600; }
+  .w { color:var(--warn); font-weight:600; }
+  .fig { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px; }
+  .cap { font-size:12px; color:var(--sub); margin:6px 2px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT-r358 · 整性集的精确结构：陪集只需 n+1 个值判定</h1>
+  <div class="sub">攻 <code>X-R339-2</code> + <code>X-R346-2</code>，压 <code>X-R346-1</code> · 2026-11-01 ·
+    items 25（PASS 25 / FAIL 0 / INFO 0）· 控制组 13/13 · 守卫 19/19 · rc=0 · 不占度（候选 37）</div>
+
+  <div class="card">
+    <b>一句话</b>：整性集被完全刻画 —— <code>S = Z ∪（每个陪集至多一条、公差 = D(c) 的等差级数）</code>。
+    判定一个陪集是「整段 / 部分 / 空」<b>只需要 <code>n+1</code> 个值</b>（定理 E′）；
+    部分陪集的最小周期<b>实测恰等于</b> <code>D(c) = lcm_i den b_i(c)</code>（定理 G），
+    一个周期内<b>恰 1 个整点</b>（定理 F）。r339 的「非陪集」由此有了机制：
+    它只是「<code>Z</code> 与一条公差 4 的等差级数之并」。
+  </div>
+
+  <h2>图 1 · 方法：Vandermonde 把陪集上的多项式整个算出来</h2>
+  <div class="fig"><svg id="fig1" viewBox="0 0 680 300"></svg></div>
+  <div class="cap">左：<code>P(k) = Σ_j a_j C(k,j)</code> 只用 Newton 系数；中：<code>C(c+m,j) = Σ_i C(c,j−i) C(m,i)</code>（Vandermonde）；
+    右：<code>P(c+m) = Σ_i b_i(c) C(m,i)</code>。拿到 <code>b</code> 之后，陪集的三种命运都变成 <code>b</code> 的算术性质，
+    <b>与取样窗口无关</b>。底部：整数化 <code>β_i = D·b_i ∈ Z</code> ⇒ <code>Q_c(m) ∈ Z ⟺ f(m) ≡ 0 (mod D)</code>，纯整数运算。</div>
+  <div class="card"><div id="tbl1"></div></div>
+
+  <h2>图 2 · 396 个陪集的三种命运（+ 92 个未判定）</h2>
+  <div class="fig"><svg id="fig2" viewBox="0 0 680 360"></svg></div>
+  <div class="cap">判定树：<code>b</code> 全整 ⇒ 整段（70）；否则看 <code>f(m) ≡ 0 (mod D)</code> 有无解 ——
+    有解 ⇒ 部分（11，一条公差 <code>D</code> 的 AP），无解 ⇒ 空（223）；<code>D &gt; 6000</code> 者如实记为 UND（92，最大 <code>D = 35 831 808</code>）。
+    <b>关键</b>：「空」是<b>可判定</b>的（同余方程无解），不是「窗口里没看见」。</div>
+  <div class="card"><div id="tbl2"></div></div>
+
+  <h2>图 3 · 定理 E′：只需 n+1 个值，且 n+1 不可减</h2>
+  <div class="fig"><svg id="fig3" viewBox="0 0 680 330"></svg></div>
+  <div class="cap">上：<code>b_i = Δ^i Q(0) = Σ_t (−1)^(i−t) C(i,t) Q(t)</code> 只用到 <code>Q(0..i) ⊆ Q(0..n)</code>
+    ⇒ <code>n+1</code> 个值足够（304 个已判定陪集一致率 100%）。
+    下：反例 <code>Q(m) = C(m,n)/2</code> 在 <code>m = 0…n−1</code> 上全整而 <code>m = n</code> 上等于 <code>1/2</code>
+    ⇒ 少看一个值就会把「部分」误判成「整段」（4/4 命中）。</div>
+  <div class="card"><div id="tbl3"></div></div>
+
+  <h2>图 4 · 定理 G / F：周期 = D，且只有一条等差级数</h2>
+  <div class="fig"><svg id="fig4" viewBox="0 0 680 430"></svg></div>
+  <div class="cap">左上：11 个部分陪集的 <code>(D, N)</code> 全部落在对角线 <code>N = D</code> 上（2/4/16/32/64）。
+    右上：界由 r346 的 <code>(M^n n!)²</code> 压到 <code>D·n!</code>，实测最大压缩 <b>14 117 880 倍</b>；
+    <code>N = D</code> 是实测（未证），已证的是 <code>N | D·n!</code>。
+    下：数轴示意 <code>(3,2)</code> —— <code>Z</code>（黑）与 <code>1/2 + (2 + 4t)</code>（红，即 r339 的 <code>−11/2, −3/2, 5/2</code>）。
+    两个不同模数拼在一起，仿射封闭 <code>u−v+w</code> 必然失败 ⇒ 「非陪集」是结构性必然而非混沌。</div>
+  <div class="card"><div id="tbl4"></div></div>
+
+  <h2>判定（机读）</h2>
+  <div class="verdict">X-R339-2-AND-X-R346-2-ANSWERED__X-R346-1-TIGHTENED__A-COSET-IS-DECIDED-BY-N-PLUS-ONE-VALUES-ALONE-SO-THE-INTEGRALITY-SET-IS-EXACTLY-Z-PLUS-AT-MOST-ONE-ARITHMETIC-PROGRESSION-PER-COSET__THE-MINIMAL-PERIOD-EQUALS-THE-LCM-OF-THE-DENOMINATORS-OF-THE-COSET-NEWTON-COEFFICIENTS-WHICH-TIGHTENS-R346-S-BOUND-FROM-M-POW-N-TIMES-N-FACTORIAL-SQUARED-TO-D-TIMES-N-FACTORIAL__THE-NON-COSET-OF-R339-IS-JUST-ONE-PROGRESSION-OF-DIFFERENCE-D-UNIONED-WITH-Z__AND-THE-FIXED-WINDOW-METHOD-IS-UNRELIABLE-IN-PRINCIPLE-BECAUSE-D-REACHES-THREE-POINT-FIVE-E7__CREDIT-BELONGS-TO-ELEMENTARY-POLYNOMIAL-ARITHMETIC-NOT-GEOMETRY__STILL-NOT-PREDICTED</div>
+
+  <h2>最终一句</h2>
+  <div class="card">整性集不再是「网格上数出来的点集」，而是 <code>Z</code> 加上「每个陪集至多一条、公差等于 <code>D(c)</code>」的等差级数；
+    判定它只需要 <code>n+1</code> 个值。r339 的「非陪集」因此有了机制 —— 它就是 <code>Z</code> 与一条公差 4 的级数之并。
+    但这三条定理（E、F、以及周期的可证部分）都是关于多项式的初等事实，对任意整值多项式都成立：
+    <b>答得越干净，功劳越不在几何那边</b>。框架依然不预言 3。</div>
+</div>
+
+<script>
+function mk(svg, tag, a) {
+  var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in a) { e.setAttribute(k, a[k]); }
+  svg.appendChild(e);
+  return e;
+}
+function tx(svg, x, y, s, fs, fill, anchor) {
+  var t = mk(svg, 'text', { x: x, y: y, 'font-size': fs || 12,
+                            fill: fill || '#333', 'text-anchor': anchor || 'start' });
+  t.textContent = s;
+  return t;
+}
+function rbox(svg, x, y, w, h, fill, stroke, rx) {
+  // 不做钳位：钳位会把「零宽/负宽」这类 bug 藏起来（几何体检器专门查这个）
+  return mk(svg, 'rect', { x: x, y: y, width: w, height: h, fill: fill,
+                           stroke: stroke || '#c9d1db', rx: rx || 4 });
+}
+function bar(svg, x, y, w, h, fill) {
+  if (w <= 0) { w = 1; }
+  if (h <= 0) { h = 1; }
+  return mk(svg, 'rect', { x: x, y: y, width: w, height: h, fill: fill, stroke: '#ffffff' });
+}
+
+// ---------------------------------------------------------------- 图 1
+(function () {
+  var s = document.getElementById('fig1');
+  var H = 300;
+  mk(s, 'rect', { x: 0, y: 0, width: 680, height: H, fill: '#ffffff' });
+  tx(s, 14, 22, '① Newton 基', 13, '#1f2328');
+  tx(s, 250, 22, '② Vandermonde', 13, '#1f2328');
+  tx(s, 486, 22, '③ 陪集多项式', 13, '#1f2328');
+
+  rbox(s, 14, 34, 216, 56, '#eef2f8', '#2f5fb3', 6);
+  tx(s, 122, 58, 'P(k) = Σ_j a_j C(k,j)', 12.5, '#1f2328', 'middle');
+  tx(s, 122, 78, 'a_j = Δ^j P(0)  （30 组）', 11, '#5b6570', 'middle');
+
+  rbox(s, 250, 34, 216, 56, '#f6f8fb', '#c9d1db', 6);
+  tx(s, 358, 58, 'C(c+m, j) =', 12.5, '#1f2328', 'middle');
+  tx(s, 358, 78, 'Σ_i C(c, j−i) · C(m, i)', 12, '#2f5fb3', 'middle');
+
+  rbox(s, 486, 34, 180, 56, '#e6f2ea', '#2f7d4f', 6);
+  tx(s, 576, 58, 'P(c+m) = Σ_i b_i(c) C(m,i)', 12, '#1f2328', 'middle');
+  tx(s, 576, 78, 'b_i = Σ_{j≥i} a_j C(c, j−i)', 11, '#2f7d4f', 'middle');
+
+  mk(s, 'line', { x1: 232, y1: 62, x2: 246, y2: 62, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 246 62 L 238 57 L 238 67 Z', fill: '#8fa3c4' });
+  mk(s, 'line', { x1: 468, y1: 62, x2: 482, y2: 62, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 482 62 L 474 57 L 474 67 Z', fill: '#8fa3c4' });
+
+  // 中间：一个具体例子 (3,2), c=1/2
+  tx(s, 14, 116, '例：(n,d) = (3,2)，c = 1/2', 12.5, '#1f2328');
+  var av = ['a0=1', 'a1=4', 'a2=5', 'a3=2'];
+  var bv = ['b0=5/2', 'b1=25/4', 'b2=6', 'b3=2'];
+  for (var i = 0; i < 4; i++) {
+    rbox(s, 14 + i * 76, 126, 68, 30, '#dbe6f7', '#2f5fb3', 4);
+    tx(s, 48 + i * 76, 146, av[i], 11.5, '#2f5fb3', 'middle');
+    rbox(s, 14 + i * 76, 166, 68, 30, '#fdeaea', '#b23a3a', 4);
+    tx(s, 48 + i * 76, 186, bv[i], 11.5, '#b23a3a', 'middle');
+  }
+  tx(s, 330, 146, 'b 全整？', 12, '#5b6570');
+  tx(s, 330, 186, '否 ⇒ D = lcm(2,4) = 4', 12, '#b23a3a');
+  mk(s, 'line', { x1: 322, y1: 156, x2: 322, y2: 176, stroke: '#c9d1db' });
+
+  // 底部：整数化
+  rbox(s, 14, 214, 652, 62, '#eef2f8', '#2f5fb3', 6);
+  tx(s, 340, 238, '整数化：β_i = D·b_i ∈ Z    ⇒    Q_c(m) ∈ Z  ⟺  f(m) = Σ_i β_i C(m,i) ≡ 0 (mod D)',
+     12.5, '#1f2328', 'middle');
+  tx(s, 340, 262, '⇒ 「整段 / 部分 / 空」全部化为纯整数同余问题（比 Fraction 快一个量级，且可判定）',
+     11.5, '#5b6570', 'middle');
+
+  tx(s, 14, 292, 'A01：Vandermonde 主校验 395 个 (组,陪集,平移) 组合，td 级数 vs Σ b_i C(m,i)，失配 0', 11.5, '#5b6570');
+})();
+
+// ---------------------------------------------------------------- 图 2
+(function () {
+  var s = document.getElementById('fig2');
+  var H = 360;
+  mk(s, 'rect', { x: 0, y: 0, width: 680, height: H, fill: '#ffffff' });
+  tx(s, 14, 22, '396 个陪集（n=1..6, d=1..12, M | d, gcd(r,M)=1）的判定树', 13, '#1f2328');
+
+  rbox(s, 250, 34, 180, 40, '#eef2f8', '#2f5fb3', 6);
+  tx(s, 340, 59, '计算 b_i(c) 与 D = lcm den b_i', 11.5, '#1f2328', 'middle');
+
+  // 左：b 全整
+  mk(s, 'line', { x1: 340, y1: 76, x2: 130, y2: 108, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 130 108 L 136 100 L 124 102 Z', fill: '#8fa3c4' });
+  // 右：b 非全整
+  mk(s, 'line', { x1: 340, y1: 76, x2: 550, y2: 108, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 550 108 L 544 100 L 556 102 Z', fill: '#8fa3c4' });
+
+  rbox(s, 40, 110, 180, 36, '#e6f2ea', '#2f7d4f', 6);
+  tx(s, 130, 133, 'b 全整 ⇒ 整段（D = 1）', 11.5, '#2f7d4f', 'middle');
+  rbox(s, 460, 110, 180, 36, '#f6f8fb', '#c9d1db', 6);
+  tx(s, 550, 133, 'b 非全整 ⇒ 需判同余方程', 11.5, '#5b6570', 'middle');
+
+  mk(s, 'line', { x1: 550, y1: 148, x2: 470, y2: 178, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 470 178 L 476 170 L 464 172 Z', fill: '#8fa3c4' });
+  mk(s, 'line', { x1: 550, y1: 148, x2: 630, y2: 178, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 630 178 L 624 170 L 636 172 Z', fill: '#8fa3c4' });
+
+  rbox(s, 360, 180, 220, 36, '#fdeaea', '#b23a3a', 6);
+  tx(s, 470, 203, 'f(m) ≡ 0 (mod D) 有解', 11.5, '#b23a3a', 'middle');
+  rbox(s, 540, 180, 128, 36, '#eef2f8', '#2f5fb3', 6);
+  tx(s, 604, 203, '无解 ⇒ 空', 11.5, '#2f5fb3', 'middle');
+
+  mk(s, 'line', { x1: 470, y1: 218, x2: 470, y2: 246, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 470 246 L 466 238 L 474 238 Z', fill: '#8fa3c4' });
+  mk(s, 'line', { x1: 604, y1: 218, x2: 604, y2: 246, stroke: '#8fa3c4', 'stroke-width': 2 });
+  mk(s, 'path', { d: 'M 604 246 L 600 238 L 608 238 Z', fill: '#8fa3c4' });
+
+  rbox(s, 356, 248, 228, 40, '#fdeaea', '#b23a3a', 6);
+  tx(s, 470, 273, '部分：一条公差 D 的 AP', 11.5, '#b23a3a', 'middle');
+  rbox(s, 536, 248, 132, 40, '#eef2f8', '#2f5fb3', 6);
+  tx(s, 602, 273, '空（可判定）', 11.5, '#2f5fb3', 'middle');
+
+  // 计数条
+  var data = [['整段 FULL', 70, '#2f7d4f'], ['部分 PARTIAL', 11, '#b23a3a'],
+              ['空 EMPTY', 223, '#2f5fb3'], ['未判定 UND', 92, '#9a6b00']];
+  var bx = 24, by = 306, bw = 632, tot = 396;
+  var cx = bx;
+  for (var i = 0; i < 4; i++) {
+    var w = bw * data[i][1] / tot;
+    bar(s, cx, by, w, 26, data[i][2]);
+    if (w > 62) { tx(s, cx + w / 2, by + 18, data[i][0] + ' ' + data[i][1], 11, '#ffffff', 'middle'); }
+    cx += w;
+  }
+  tx(s, 24, by + 44, '合计 396 = 70 + 11 + 223 + 92（UND 的 D > 6000，最大 D = 35 831 808，如实记为未判定，不当作空）',
+     11.5, '#5b6570');
+})();
+
+// ---------------------------------------------------------------- 图 3
+(function () {
+  var s = document.getElementById('fig3');
+  var H = 330;
+  mk(s, 'rect', { x: 0, y: 0, width: 680, height: H, fill: '#ffffff' });
+  tx(s, 14, 22, '定理 E′：c+Z ⊆ S  ⟺  P(c), …, P(c+n) ∈ Z   （只需 n+1 个值）', 13, '#1f2328');
+
+  rbox(s, 14, 34, 652, 50, '#eef2f8', '#2f5fb3', 6);
+  tx(s, 340, 56, 'b_i = Δ^i Q(0) = Σ_t (−1)^(i−t) C(i,t) Q(t)   只用到 Q(0), …, Q(i) ⊆ Q(0), …, Q(n)',
+     12.5, '#1f2328', 'middle');
+  tx(s, 340, 76, '⇒ n+1 个值全整 ⇒ b 全整 ⇒ C(m,i) ∈ Z ⇒ 整段', 11.5, '#2f5fb3', 'middle');
+
+  // 值序列示意
+  tx(s, 14, 112, 'Q(0) … Q(n)：只需这 n+1 个', 12, '#1f2328');
+  for (var i = 0; i < 5; i++) {
+    rbox(s, 14 + i * 74, 122, 64, 34, '#e6f2ea', '#2f7d4f', 4);
+    tx(s, 46 + i * 74, 144, 'Q(' + i + ') ∈ Z', 11, '#2f7d4f', 'middle');
+  }
+  tx(s, 400, 144, '⇒ 整个陪集 c+Z ⊆ S', 12, '#2f7d4f');
+
+  // 反例
+  tx(s, 14, 186, 'n+1 不可减（A06 / CTL10）：Q(m) = C(m,n)/2', 12.5, '#b23a3a');
+  for (var i = 0; i < 4; i++) {
+    var lbl = 'Q(' + i + ')=0';
+    rbox(s, 14 + i * 74, 198, 64, 32, '#e6f2ea', '#2f7d4f', 4);
+    tx(s, 46 + i * 74, 219, lbl, 11, '#2f7d4f', 'middle');
+  }
+  rbox(s, 14 + 4 * 74, 198, 74, 32, '#fdeaea', '#b23a3a', 4);
+  tx(s, 51 + 4 * 74, 219, 'Q(n)=1/2', 11, '#b23a3a', 'middle');
+  tx(s, 400, 219, '只看 m = 0…n−1 会误判成「整段」（4/4 命中）', 12, '#b23a3a');
+
+  rbox(s, 14, 250, 652, 44, '#f6f8fb', '#c9d1db', 6);
+  tx(s, 340, 270, 'A02：该判据 vs 「b 全整」在 304 个已判定陪集上一致率 100%', 11.5, '#1f2328', 'middle');
+  tx(s, 340, 288, 'A05：同一判据在 299 个随机整值多项式上也 100% 成立 ⇒ 功劳在多项式，不在几何', 11.5, '#9a6b00', 'middle');
+})();
+
+// ---------------------------------------------------------------- 图 4
+(function () {
+  var s = document.getElementById('fig4');
+  var H = 430;
+  mk(s, 'rect', { x: 0, y: 0, width: 680, height: H, fill: '#ffffff' });
+  tx(s, 14, 22, '定理 G：实测最小周期 N 恰等于 D = lcm den b_i(c)', 13, '#1f2328');
+
+  // 散点：D vs N 的对角线
+  var gx = 40, gy = 40, gw = 240, gh = 150;
+  rbox(s, gx, gy, gw, gh, '#fbfcfd', '#c9d1db', 4);
+  mk(s, 'line', { x1: gx, y1: gy + gh, x2: gx + gw, y2: gy, stroke: '#2f7d4f', 'stroke-width': 1.5 });
+  tx(s, gx + gw / 2, gy + gh + 16, 'D（lcm den b_i）', 11.5, '#5b6570', 'middle');
+  tx(s, gx - 26, gy + gh / 2, 'N', 11.5, '#5b6570', 'middle');
+  tx(s, gx + gw - 52, gy + 30, 'N = D', 11.5, '#2f7d4f');
+
+  var pts = [[2, 2, 2], [4, 4, 4], [16, 16, 1], [32, 32, 2], [64, 64, 2]];
+  var mx = 64;
+  for (var i = 0; i < pts.length; i++) {
+    var px = gx + gw * pts[i][0] / (mx * 1.15);
+    var py = gy + gh - gh * pts[i][1] / (mx * 1.15);
+    mk(s, 'circle', { cx: px, cy: py, r: 4 + pts[i][2], fill: '#b23a3a', stroke: '#ffffff' });
+    tx(s, px + 9, py + 4, 'D=N=' + pts[i][0] + (pts[i][2] > 1 ? ' ×' + pts[i][2] : ''), 10, '#5b6570');
+  }
+  tx(s, gx, gy + gh + 34, '11/11 个可精确测定的部分陪集全部落在对角线上', 11.5, '#2f7d4f');
+
+  // 界压缩对比
+  var bx2 = 320, by2 = 40;
+  tx(s, bx2, 34, 'X-R346-1：界的压缩', 12.5, '#1f2328');
+  rbox(s, bx2, by2 + 6, 330, 30, '#fdeaea', '#b23a3a', 4);
+  tx(s, bx2 + 165, by2 + 26, 'r346：(M^n n!)²  （粗界）', 11.5, '#b23a3a', 'middle');
+  rbox(s, bx2, by2 + 44, 330, 30, '#e6f2ea', '#2f7d4f', 4);
+  tx(s, bx2 + 165, by2 + 64, '本卷（已证）：N | D·n! ≤ M^n (n!)²', 11.5, '#2f7d4f', 'middle');
+  rbox(s, bx2, by2 + 82, 330, 30, '#eef2f8', '#2f5fb3', 4);
+  tx(s, bx2 + 165, by2 + 102, '本卷（实测）：N = D（未证，X-R358-1）', 11.5, '#2f5fb3', 'middle');
+  tx(s, bx2, by2 + 132, '实测最大压缩倍数：14 117 880 倍（304 个陪集上的 old/new 最大值）', 11.5, '#5b6570');
+  tx(s, bx2, by2 + 152, '注：N | M^n 早已被 (5,2) 的 N=64 > M^n=32 否证', 11.5, '#9a6b00');
+
+  // 数轴：Z 与 AP
+  tx(s, 14, 250, '定理 F / 与 r339 对表：(n,d) = (3,2)，c = 1/2，D = 4，解 m ≡ 2 (mod 4)', 13, '#1f2328');
+  var ax = 40, ay = 300, aw = 600;
+  mk(s, 'line', { x1: ax, y1: ay, x2: ax + aw, y2: ay, stroke: '#8fa3c4', 'stroke-width': 1.5 });
+  // Z：每 20px 一个整数
+  for (var i = 0; i <= 10; i++) {
+    var x = ax + i * 60;
+    mk(s, 'circle', { cx: x, cy: ay - 14, r: 5, fill: '#1f2328' });
+    tx(s, x, ay + 18, String(i - 2), 10, '#5b6570', 'middle');
+    mk(s, 'line', { x1: x, y1: ay - 4, x2: x, y2: ay + 4, stroke: '#8fa3c4' });
+  }
+  tx(s, ax + aw + 6, ay - 10, 'Z', 11.5, '#1f2328');
+  // AP：1/2 + (2 + 4t)  ⇒ k = 2.5, 6.5, ... 与 -1.5, -5.5
+  var aps = [-5.5, -1.5, 2.5, 6.5];
+  for (var i = 0; i < aps.length; i++) {
+    var x = ax + (aps[i] + 2) * 60;
+    if (x < ax || x > ax + aw) { continue; }
+    mk(s, 'circle', { cx: x, cy: ay + 40, r: 6, fill: '#b23a3a' });
+    tx(s, x, ay + 60, String(aps[i]), 10, '#b23a3a', 'middle');
+    if (i > 0) {
+      var xp = ax + (aps[i - 1] + 2) * 60;
+      if (xp >= ax) {
+        mk(s, 'line', { x1: xp, y1: ay + 40, x2: x, y2: ay + 40, stroke: '#b23a3a', 'stroke-width': 1 });
+      }
+    }
+  }
+  tx(s, 14, ay + 40, '1/2+Z 上的 AP', 11.5, '#b23a3a');
+  tx(s, 14, ay + 88, 'r339 的见证点 −11/2, −3/2, 5/2 全在 S 内（差值 4 = D），−9/2 不在',
+     11.5, '#5b6570');
+  tx(s, 14, ay + 108, '⇒ 「非陪集」= 「Z 与一条公差 4 的 AP 之并」：两个不同模数拼在一起，u−v+w 必然失败',
+     11.5, '#5b6570');
+  tx(s, 14, ay + 128, 'C06 逐点核对通过 ｜ 分类器自检：C(m,2)/2 必须报 2 类（它报 2，故 C01 的 11/11 有意义）',
+     11.5, '#2f7d4f');
+})();
+
+// ---------------------------------------------------------------- 表格
+function tbl(el, head, rows) {
+  var h = '<table><tr>';
+  for (var i = 0; i < head.length; i++) { h += '<th>' + head[i] + '</th>'; }
+  h += '</tr>';
+  for (var r = 0; r < rows.length; r++) {
+    h += '<tr>';
+    for (var c = 0; c < rows[r].length; c++) { h += '<td>' + rows[r][c] + '</td>'; }
+    h += '</tr>';
+  }
+  h += '</table>';
+  document.getElementById(el).innerHTML = h;
+}
+
+tbl('tbl1', ['条目', '内容', '分母', '读数'], [
+  ['A01', 'Vandermonde 主校验（td 级数 vs Σ b_i C(m,i)）', '395', '<span class="t">失配 0</span>'],
+  ['A03', '前向：整段 ⇒ b 全整（引理 L）', '304', '<span class="t">违反 0</span>'],
+  ['A04', '后向：b 全整 ⇒ 整段（C(m,i) ∈ Z）', '304', '<span class="t">违反 0</span>'],
+  ['A05', '功劳归属：随机整值多项式上同样成立', '299', '<span class="t">违反 0</span> ⇒ 非几何']
+]);
+
+tbl('tbl2', ['类型', '个数', '判据', '备注'], [
+  ['FULL（整段）', '70', 'b 全整 ⇒ D = 1', '含 n=1 的全部 M | d'],
+  ['PARTIAL（部分）', '11', 'f(m) ≡ 0 (mod D) 有解', '一条公差 D 的 AP，一周期 1 点'],
+  ['EMPTY（空）', '223', '同余方程无解', '<b>可判定</b>，非「窗口里没看见」'],
+  ['UND（未判定）', '92', 'D &gt; 6000', '最大 D = 35 831 808']
+]);
+
+tbl('tbl3', ['条目', '内容', '分母', '读数'], [
+  ['A02', '定理 E′：n+1 个值判定整段', '304', '<span class="t">一致 304/304</span>'],
+  ['A06', 'n+1 不可减（C(m,n)/2 反例）', '4', '<span class="t">命中 4/4</span>'],
+  ['CTL10', '同一反例的具体数值 Q(2) = 1/2', '1', '<span class="t">通过</span>'],
+  ['CTL2', '负控：b 非全整 ⇒ 周期内必有非整点', '171', '<span class="t">171/171</span>']
+]);
+
+tbl('tbl4', ['条目', '内容', '分母', '读数'], [
+  ['B01', '定理 G：f(m + D·n!) ≡ f(m) (mod D)', '7474', '<span class="t">失配 0</span>'],
+  ['B02', '实测最小周期 N == D', '11', '<span class="t">11/11</span>'],
+  ['B04', '界由 (M^n n!)² 压到 D·n!', '304', '<span class="t">最大 14 117 880 倍</span>'],
+  ['C01', '定理 F：一周期恰 1 个整点', '11', '<span class="t">11/11</span>'],
+  ['C02', '分类器自检：C(m,2)/2 报 2 类', '1', '<span class="t">报 2</span>'],
+  ['C03', '判别力：随机整值多项式上单剩余类', '265', '<span class="w">265/265 ⇒ 判别力 0</span>'],
+  ['D03', '否证窗口法（D &gt; 12 的部分陪集）', '11', '<span class="f">6 个</span>']
+]);
+</script>
+</body>
+</html>

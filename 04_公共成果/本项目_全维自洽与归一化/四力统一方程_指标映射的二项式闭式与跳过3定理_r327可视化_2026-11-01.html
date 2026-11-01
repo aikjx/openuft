@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r327 · 指标映射的二项式闭式与「跳过 3」定理（n_R = C(q+(n-1)/2, n) · 就是 Riemann–Roch · n≥3 无解已证）</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b;--dead:#e8dede}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:26px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:19px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.thm{background:#fbf7ec;border:1px solid #e3d3a8;border-radius:8px;padding:14px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.legend{font-size:12px;color:var(--sub);margin:6px 0 0}
+.key{background:#eef4fb;border:1px solid #c9dbf0;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+.warn{background:#fdf2f0;border:1px solid #edc9c2;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px}
+svg{display:block;max-width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<h1>TUFT-r327 · 指标映射的二项式闭式与「跳过 3」定理</h1>
+<div class="sub">攻 <span class="mono">X-R325-1</span>　·　条目 44（PASS 41 / FAIL 0 / INFO 3）　·　控制组 15/15　·　守卫 17/17　·　<span class="mono">X-R325-1-CLOSED</span>　·　度数 0（候选 37）</div>
+
+<div class="thm">
+<b>攻靶</b>：r325 判定册 §十二 交接的 <span class="mono">X-R325-1</span> —— 「为什么只有 <span class="mono">n = 1, 2</span> 有解？这是 <span class="mono">Â</span> 多项式的一个纯数论性质，还是一个几何选择效应？」<br><br>
+<b>定理 C（二项式闭式 · 核心）</b>　<span class="mono">n<sub>R</sub>(q) = C(q + (n−1)/2, n)</span>，<b>精确恒等</b>。证明：<span class="mono">Â = td·e<sup>−c₁/2</sup></span>，<span class="mono">log td = Σ<sub>m</sub> (log T)<sub>m</sub>P<sub>m</sub></span>，由幂和引理 <span class="mono">P<sub>m</sub> = (n+1)H<sup>m</sup></span> 得 <span class="mono">td ≡ T(H)<sup>n+1</sup></span>，再由 Todd–Hirzebruch 得二项式。<br>
+<b>定理 C′（它就是 Riemann–Roch）</b>　<span class="mono">n<sub>R</sub>(q) = χ(O(q − (n+1)/2))</span>，用<b>完全不碰示性类</b>的层上同调维数公式核过 150 组，失配 0 ⇒ 二项式不是巧合，是 RR 在 <span class="mono">CP<sup>n</sup></span> 上的显式形式。<br>
+<b>定理 D（FW 移位 = 上指标整数化）</b>　<span class="mono">x = q + (n−1)/2 ∈ Z ⟺ q 在 Freed–Witten 格上</span>（n 奇：<span class="mono">Z</span>；n 偶：<span class="mono">Z+1/2</span>）—— r325 的「格」与本卷的「二项式」是同一结构的两个面。<br>
+<b>定理 E（跳过 3）</b>　<span class="mono">n<sub>R</sub> = 3</span> 有格点解 <b>⟺ n ∈ {1, 2}</b>；四个支点覆盖<b>全部</b>整数 <span class="mono">x</span>，<b>无扫描上界</b> ⇒ 这是定理，不是「扫到 60 没找到」。<br>
+<b>定理 F/G（3 vs 4）</b>　<span class="mono">n = 2</span> 可实现 <span class="mono">N</span> <b>⟺ N 是三角形数</b>；<span class="mono">3 = T₂</span> ⇒ <span class="mono">CP²</span> 给得出三代，<b>4 不是</b> ⇒ 四代需 <span class="mono">CP³</span>。
+</div>
+
+<div class="grid">
+  <div class="kpi"><div class="k">n<sub>R</sub>(q) 的闭式</div><div class="v">C(q+(n−1)/2, n)</div></div>
+  <div class="kpi"><div class="k">等价写法</div><div class="v">χ(O(q−(n+1)/2))</div></div>
+  <div class="kpi"><div class="k">n<sub>R</sub>=3 的解</div><div class="v">3 个（n=1:1, n=2:2）</div></div>
+  <div class="kpi"><div class="k">n ≥ 3 的解数</div><div class="v">0（已证）</div></div>
+  <div class="kpi"><div class="k">三代最小非平凡 n</div><div class="v">2（CP²）</div></div>
+  <div class="kpi"><div class="k">四代最小非平凡 n</div><div class="v">3（CP³）</div></div>
+  <div class="kpi"><div class="k">恒等式核验组数</div><div class="v">1060（失配 0）</div></div>
+  <div class="kpi"><div class="k">定价 2⁶ 可达 / 严格</div><div class="v">23 / 0</div></div>
+</div>
+
+<h2>图 1 · 闭式：<span class="mono">n<sub>R</sub>(q) = C(q+(n−1)/2, n)</span>，只有 n=1,2 碰到 3</h2>
+<div class="card">
+<svg id="fig1" viewBox="0 0 900 380" role="img" aria-label="n_R(q) 在 n=1..5 上的曲线与 n_R=3 的交点"></svg>
+<div class="legend">横轴 <span class="mono">q</span>，纵轴 <span class="mono">n<sub>R</sub></span>。虚线 = <span class="mono">n<sub>R</sub> = 3</span>。<b>蓝</b> <span class="mono">n=1</span>（<span class="mono">n<sub>R</sub>=q</span>，恒等映射，零信息）在 <span class="mono">q=3</span> 处命中；<b>绿</b> <span class="mono">n=2</span>（三角形数）在 <span class="mono">q=±5/2</span> 处命中两次；<b>橙/红/紫</b> <span class="mono">n=3,4,5</span> <b>整条曲线都不碰虚线</b> —— 因为它们的取值只有 <span class="mono">0</span> 或 <span class="mono">≥ n+1 ≥ 4</span>。</div>
+</div>
+
+<h2>图 2 · 定理 D 的 2×2 列联表：格与 <span class="mono">x</span> 整数性是<b>同一件事</b></h2>
+<div class="card">
+<svg id="fig2" viewBox="0 0 900 360" role="img" aria-label="300 个 (n,q) 对，按是否在 Freed-Witten 格与 x 是否整数分四组"></svg>
+<div class="legend">每个点 = 一个 <span class="mono">(n, q)</span> 对（<span class="mono">n=1..12</span>，每 n 取 25 个 <span class="mono">q</span>，共 300 对）。<b>左块 150 个</b>全在 FW 格上 ⇒ <b>全部</b>给整数 <span class="mono">x</span>；<b>右块 150 个</b>离格 ⇒ <b>全部</b>给非整数 <span class="mono">x</span>。<b>零例外</b>，两个方向都查了。</div>
+</div>
+
+<div class="warn">
+<b>这张表背后是一次真实的失败。</b>初版的格判据写成「<span class="mono">q ∈ Z</span> 且 <span class="mono">q ∈ Z+shift</span>」，对<b>偶数 n 恒假</b> ⇒ 实际只数到 78 对，却仍然「通过」了一条写死 <span class="mono">exp = 300</span> 的条目。<b>表没做，洞就在。</b>改成 2×2 之后，两个方向（格太宽 / 格太窄）都被覆盖。
+</div>
+
+<h2>图 3 · 定理 E 的证明结构：四个支点覆盖全部整数 <span class="mono">x</span></h2>
+<div class="card">
+<svg id="fig3" viewBox="0 0 900 330" role="img" aria-label="四个支点在整数轴上覆盖 x&lt;0、0..n-1、x=n、x&gt;=n+1 四段"></svg>
+<div class="legend">以 <span class="mono">n = 4</span> 为例（其余 <span class="mono">n ≥ 3</span> 同构）。<b>①</b> <span class="mono">x ≥ n+1</span>：<span class="mono">C ≥ n+1 ≥ 4</span>（严格递增 + 端点跳跃）；<b>②</b> <span class="mono">x = n</span>：<span class="mono">C = 1</span>；<b>③</b> <span class="mono">0 ≤ x ≤ n−1</span>：<span class="mono">C = 0</span>；<b>④</b> <span class="mono">x &lt; 0</span>：<span class="mono">|C| = C(n−x−1, n)</span>，<span class="mono">x=−1</span> 给 1、<span class="mono">x ≤ −2</span> 给 <span class="mono">≥ n+1 ≥ 4</span>，符号 <span class="mono">(−1)<sup>n</sup></span>。<b>四段并起来就是整条整数轴</b> ⇒ 不需要任何扫描上界。</div>
+</div>
+
+<h2>图 4 · 可实现的族数 = 二项式系数，3 是三角形数、4 不是</h2>
+<div class="card">
+<svg id="fig4" viewBox="0 0 900 400" role="img" aria-label="n=1..5 各自前 6 个可实现族数，3 与 4 高亮"></svg>
+<div class="legend">每一行是一个 <span class="mono">CP<sup>n</sup></span> 能实现的前 6 个族数。<b>绿</b> = 3（三代），<b>红</b> = 4（四代）。<b>n=1 行全绿</b> —— 因为 <span class="mono">C(x,1)=x</span>，任何数都能「实现」，这是<b>恒等映射、零信息</b>，必须显式标出。<b>n=2 行</b>恰是三角形数，3 在里面、4 不在；<b>n=3 行</b>才有 4。这就是「三代比四代便宜一维」的全部内容。</div>
+</div>
+
+<div class="key">
+<b>读者最容易误读的一点</b>：本卷证明了「<span class="mono">n ≥ 3</span> 给不出 3」，<b>没有</b>证明「所以必须给 3」。中间差一步（<span class="mono">S5</span>：一条不引用 <span class="mono">N</span> 的选 3 机制），而这一步仍然空着。定价里最硬的一条正是 <span class="mono">S5 ∧ S6 = 0</span> —— 「真能选出 3」与「用三角形数解释」<b>互斥</b>，因为三角形数表 <span class="mono">1, 3, 6, 10, …</span> 里 3 与 6 并列，它解释不了凭什么单单是 3。
+</div>
+
+<h2>复现</h2>
+<table>
+<tr><th>命令</th><th>结果</th></tr>
+<tr><td class="mono">python -X utf8 _run_r327.py</td><td>items 44 / PASS 41 / FAIL 0 / INFO 3，控制组 15/15，守卫 17/17，rc=0</td></tr>
+<tr><td class="mono">node _check_html_geom.js 本文件</td><td>四个图全部图元在界，越界 0</td></tr>
+<tr><td>精确性</td><td>全部 <span class="mono">Fraction</span> 精确，无浮点判定；<span class="mono">Decimal</span> <span class="mono">prec=60</span> 仅格式化；无随机成分</td></tr>
+</table>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var INK = '#1f2328', SUB = '#5b6470', ACC = '#2b5c9b', RED = '#c0392b',
+      GRN = '#1a7f37', GREY = '#c9ccd2', ORG = '#d68910', PUR = '#7d3c98';
+
+  function E(p, tag, a) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in a) { if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]); }
+    p.appendChild(e);
+    return e;
+  }
+  function T(p, x, y, s, o) {
+    var a = { x: x, y: y, fill: INK, 'font-size': 12 };
+    if (o) { for (var k in o) { if (o.hasOwnProperty(k)) a[k] = o[k]; } }
+    var e = E(p, 'text', a);
+    e.textContent = s;
+    return e;
+  }
+  function R(p, x, y, w, h, fill, rx) {
+    return E(p, 'rect', { x: x, y: y, width: w, height: h, rx: (rx === undefined ? 3 : rx), fill: fill });
+  }
+  function L(p, x1, y1, x2, y2, col, w, dash) {
+    var a = { x1: x1, y1: y1, x2: x2, y2: y2, stroke: col, 'stroke-width': w };
+    if (dash) a['stroke-dasharray'] = dash;
+    return E(p, 'line', a);
+  }
+  function C(p, cx, cy, r, fill) {
+    return E(p, 'circle', { cx: cx, cy: cy, r: r, fill: fill });
+  }
+  function P(p, d, col, w) {
+    return E(p, 'path', { d: d, fill: 'none', stroke: col, 'stroke-width': w });
+  }
+
+  // ---------- 精确有理数（避免浮点误判「是否恰为 3」）
+  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = a % b; a = b; b = t; } return a || 1; }
+  function fr(n, d) { if (d < 0) { n = -n; d = -d; } var g = gcd(n, d); return [n / g, d / g]; }
+  function fadd(x, y) { return fr(x[0] * y[1] + y[0] * x[1], x[1] * y[1]); }
+  function fmul(x, y) { return fr(x[0] * y[0], x[1] * y[1]); }
+  function fval(x) { return x[0] / x[1]; }
+
+  // n_R 作为 q 的多项式：[[幂, 分子, 分母], ...]（由 C(q+(n-1)/2, n) 的下降阶乘展开）
+  var POLY = {
+    1: [[1, 1, 1]],
+    2: [[0, -1, 8], [2, 1, 2]],
+    3: [[1, -1, 6], [3, 1, 6]],
+    4: [[0, 3, 128], [2, -5, 48], [4, 1, 24]],
+    5: [[1, 1, 30], [3, -1, 24], [5, 1, 120]]
+  };
+  var COL = { 1: ACC, 2: GRN, 3: ORG, 4: RED, 5: PUR };
+
+  function nR(n, qf) {                    // qf = [num, den]，返回 [num, den]
+    var s = [0, 1], terms = POLY[n];
+    for (var i = 0; i < terms.length; i++) {
+      var k = terms[i][0], c = [terms[i][1], terms[i][2]], pw = [1, 1];
+      for (var j = 0; j < k; j++) { pw = fmul(pw, qf); }
+      s = fadd(s, fmul(c, pw));
+    }
+    return s;
+  }
+
+  // =========================================================== 图 1
+  (function () {
+    var svg = document.getElementById('fig1');
+    var W = 900, H = 380, ml = 60, mr = 24, mt = 22, mb = 48;
+    var PW = W - ml - mr, PH = H - mt - mb;
+    var q0 = -5, q1 = 7, v0 = 0, v1 = 22;
+    function px(q) { return ml + (q - q0) / (q1 - q0) * PW; }
+    function py(v) { return mt + PH - (v - v0) / (v1 - v0) * PH; }
+
+    R(svg, ml, mt, PW, PH, '#fcfcfd', 0);
+    var v;
+    for (v = 0; v <= 20; v += 5) {
+      L(svg, ml, py(v), ml + PW, py(v), '#eceff3', 1);
+      T(svg, ml - 10, py(v) + 4, String(v), { 'text-anchor': 'end', fill: SUB, 'font-size': 11 });
+    }
+    var qq;
+    for (qq = q0; qq <= q1; qq += 1) {
+      L(svg, px(qq), mt + PH, px(qq), mt + PH + 4, '#c9ccd2', 1);
+      T(svg, px(qq), mt + PH + 18, String(qq), { 'text-anchor': 'middle', fill: SUB, 'font-size': 11 });
+    }
+    L(svg, ml, mt + PH, ml + PW, mt + PH, INK, 1.2);
+    L(svg, ml, mt, ml, mt + PH, INK, 1.2);
+    T(svg, ml + PW, mt + PH + 34, 'q', { 'text-anchor': 'end', fill: INK, 'font-size': 12 });
+    T(svg, ml - 46, mt - 8, 'n_R', { fill: INK, 'font-size': 12 });
+
+    // n_R = 3 水平线
+    L(svg, ml, py(3), ml + PW, py(3), '#b8860b', 1.6, '6 4');
+    T(svg, ml + PW - 4, py(3) - 7, 'n_R = 3', { 'text-anchor': 'end', fill: '#b8860b', 'font-size': 11 });
+
+    // 曲线
+    var n, i, q, pts, d, prev = null, prevIn = false;
+    for (n = 1; n <= 5; n++) {
+      pts = [];
+      d = '';
+      prevIn = false;
+      for (i = 0; i <= 480; i++) {
+        q = q0 + (q1 - q0) * i / 480;
+        var val = fval(nR(n, fr(Math.round(q * 1000), 1000)));
+        var inR = (val >= v0 && val <= v1);
+        var X = px(q), Y = py(Math.max(v0, Math.min(v1, val)));
+        if (inR) {
+          if (prevIn) { d += ' L ' + X.toFixed(2) + ' ' + Y.toFixed(2); }
+          else { d += ' M ' + X.toFixed(2) + ' ' + Y.toFixed(2); }
+        }
+        prevIn = inR;
+      }
+      if (d) { P(svg, d.trim(), COL[n], n === 1 ? 2.4 : 2.0); }
+    }
+
+    // 精确交点（q = 3 与 q = ±5/2）
+    var hits = [[1, [3, 1], 'q=3'], [2, [5, 2], 'q=5/2'], [2, [-5, 2], 'q=-5/2']];
+    for (i = 0; i < hits.length; i++) {
+      var hn = hits[i][0], hq = hits[i][1];
+      var X2 = px(fval(hq)), Y2 = py(3);
+      C(svg, X2, Y2, 5, '#ffffff');
+      C(svg, X2, Y2, 3.4, COL[hn]);
+      T(svg, X2, Y2 - 12, hits[i][2], { 'text-anchor': 'middle', fill: COL[hn], 'font-size': 11, 'font-weight': '600' });
+    }
+
+    // 图例
+    var lx = ml + 14, ly = mt + 14;
+    for (n = 1; n <= 5; n++) {
+      L(svg, lx, ly + n * 18, lx + 22, ly + n * 18, COL[n], 2.6);
+      T(svg, lx + 28, ly + n * 18 + 4, 'n = ' + n + (n === 1 ? '（恒等，零信息）' : (n === 2 ? '（三角形数）' : '')), { fill: SUB, 'font-size': 11 });
+    }
+    T(svg, px(6.6), py(12), 'n ≥ 3 的曲线全在 0 与 ≥4 之间跳 —— 结构上碰不到 3', { 'text-anchor': 'end', fill: RED, 'font-size': 11 });
+  })();
+
+  // =========================================================== 图 2
+  (function () {
+    var svg = document.getElementById('fig2');
+    var W = 900, H = 360, mt = 40;
+    T(svg, 30, 22, '300 个 (n, q) 对的归宿：格与「x 是整数」完全重合', { fill: INK, 'font-size': 13, 'font-weight': '600' });
+
+    // 左块：在 FW 格上（150 对），15 x 10
+    var cell = 15, cols = 15, rows = 10;
+    var bx1 = 40, by1 = mt + 34;
+    R(svg, bx1 - 12, by1 - 30, cols * cell + 24, rows * cell + 62, '#eef4fb', 8);
+    T(svg, bx1, by1 - 12, '在 FW 格上：150 对', { fill: ACC, 'font-size': 12, 'font-weight': '600' });
+    var r, c;
+    for (r = 0; r < rows; r++) {
+      for (c = 0; c < cols; c++) {
+        C(svg, bx1 + c * cell + 6, by1 + r * cell + 6, 4.4, ACC);
+      }
+    }
+    T(svg, bx1, by1 + rows * cell + 22, 'x 为整数：150 / 150　·　例外 0', { fill: GRN, 'font-size': 12, 'font-weight': '600' });
+
+    // 右块：离格（150 对）
+    var bx2 = 520;
+    R(svg, bx2 - 12, by1 - 30, cols * cell + 24, rows * cell + 62, '#f4f5f7', 8);
+    T(svg, bx2, by1 - 12, '离格：150 对', { fill: SUB, 'font-size': 12, 'font-weight': '600' });
+    for (r = 0; r < rows; r++) {
+      for (c = 0; c < cols; c++) {
+        C(svg, bx2 + c * cell + 6, by1 + r * cell + 6, 4.4, '#9aa1ac');
+      }
+    }
+    T(svg, bx2, by1 + rows * cell + 22, 'x 为整数：0 / 150　·　零例外', { fill: GRN, 'font-size': 12, 'font-weight': '600' });
+
+    // 中间箭头
+    L(svg, 320, by1 + 70, 470, by1 + 70, '#c9ccd2', 2);
+    T(svg, 395, by1 + 60, '等价', { 'text-anchor': 'middle', fill: INK, 'font-size': 13, 'font-weight': '600' });
+    T(svg, 395, by1 + 88, 'x = q + (n−1)/2 ∈ Z', { 'text-anchor': 'middle', fill: SUB, 'font-size': 11 });
+
+    T(svg, 40, H - 16, '奇数 n：格 = Z（每 n 取 13 个 q）　·　偶数 n：格 = Z+1/2（每 n 取 12 个 q）　⇒ 两类都被覆盖，格既不空也不恒真', { fill: SUB, 'font-size': 11 });
+  })();
+
+  // =========================================================== 图 3
+  (function () {
+    var svg = document.getElementById('fig3');
+    var W = 900, H = 330;
+    var y0 = 150, xl = 60, xr = 840;
+    T(svg, 30, 26, '四个支点覆盖整条整数轴（以 n = 4 为例）', { fill: INK, 'font-size': 13, 'font-weight': '600' });
+
+    // 轴
+    L(svg, xl, y0, xr, y0, INK, 1.6);
+    E(svg, 'path', { d: 'M ' + xl + ' ' + y0 + ' L ' + (xl + 10) + ' ' + (y0 - 5) + ' L ' + (xl + 10) + ' ' + (y0 + 5) + ' Z', fill: INK });
+    E(svg, 'path', { d: 'M ' + xr + ' ' + y0 + ' L ' + (xr - 10) + ' ' + (y0 - 5) + ' L ' + (xr - 10) + ' ' + (y0 + 5) + ' Z', fill: INK });
+
+    // 分段：x<0  /  0..n-1  /  x=n  /  x>=n+1
+    var segs = [
+      { x1: 80, x2: 190, col: '#fdf2f0', bd: RED, t1: '④  x < 0', t2: '|C| = C(n−x−1,n)', t3: 'x=−1 → 1 ;  x≤−2 → ≥5', t4: '符号 (−1)^n ⇒ 取不到 +3' },
+      { x1: 195, x2: 400, col: '#f4f5f7', bd: '#9aa1ac', t1: '③  0 ≤ x ≤ n−1', t2: 'C = 0', t3: '（下降阶乘含零因子）', t4: '' },
+      { x1: 405, x2: 470, col: '#fff9e8', bd: '#b8860b', t1: '②  x = n', t2: 'C = 1', t3: '', t4: '' },
+      { x1: 475, x2: 820, col: '#eef7ef', bd: GRN, t1: '①  x ≥ n+1', t2: 'C ≥ n+1 ≥ 4', t3: 'Pascal 差分 C(m,n−1) > 0 严格递增', t4: '端点跳跃 1 → n+1 把 3 夹掉' }
+    ];
+    var i, s;
+    for (i = 0; i < segs.length; i++) {
+      s = segs[i];
+      R(svg, s.x1, y0 - 26, s.x2 - s.x1, 52, s.col, 4);
+      L(svg, s.x1, y0 - 26, s.x1, y0 + 26, s.bd, 1.4);
+      L(svg, s.x2, y0 - 26, s.x2, y0 + 26, s.bd, 1.4);
+      T(svg, (s.x1 + s.x2) / 2, y0 - 34, s.t1, { 'text-anchor': 'middle', fill: s.bd, 'font-size': 12, 'font-weight': '600' });
+      T(svg, (s.x1 + s.x2) / 2, y0 + 4, s.t2, { 'text-anchor': 'middle', fill: INK, 'font-size': 12 });
+      T(svg, (s.x1 + s.x2) / 2, y0 + 20, s.t3, { 'text-anchor': 'middle', fill: SUB, 'font-size': 10 });
+      if (s.t4) { T(svg, (s.x1 + s.x2) / 2, y0 + 44, s.t4, { 'text-anchor': 'middle', fill: SUB, 'font-size': 10 }); }
+    }
+
+    // 刻度
+    var ticks = [[190, '0'], [400, 'n−1'], [405, 'n'], [470, 'n+1']];
+    for (i = 0; i < ticks.length; i++) {
+      L(svg, ticks[i][0], y0 + 26, ticks[i][0], y0 + 32, INK, 1);
+      T(svg, ticks[i][0], y0 + 46, ticks[i][1], { 'text-anchor': 'middle', fill: INK, 'font-size': 11 });
+    }
+    T(svg, xr - 6, y0 + 46, 'x', { 'text-anchor': 'end', fill: INK, 'font-size': 12 });
+    T(svg, xl - 6, y0 - 32, 'x', { 'text-anchor': 'end', fill: INK, 'font-size': 12 });
+
+    T(svg, 30, H - 30, '机检：①D04/D05（492 组 Pascal 恒等式，失配 0）　②D06（反例 0）　③D08（失配 0）　④D07（480 组命中 0）',
+      { fill: SUB, 'font-size': 11 });
+    T(svg, 30, H - 12, '四段并集 = Z ⇒ 「n ≥ 3 无解」是定理，不是扫描结果（D09 为机读登记）', { fill: RED, 'font-size': 11 });
+  })();
+
+  // =========================================================== 图 4
+  (function () {
+    var svg = document.getElementById('fig4');
+    var W = 900, H = 400;
+    T(svg, 30, 26, 'CP^n 可实现的前 6 个族数（= C(x, n)）', { fill: INK, 'font-size': 13, 'font-weight': '600' });
+
+    // 二项式系数 C(m, n)，m 从 n 起
+    function binom(m, n) {
+      if (n < 0 || m < 0) { return 0; }
+      if (n === 0) { return 1; }
+      var r = 1, i;
+      for (i = 0; i < n; i++) { r = r * (m - i) / (i + 1); }
+      return Math.round(r);
+    }
+
+    var y = 58, rowH = 62, i, j;
+    for (i = 1; i <= 5; i++) {
+      var yy = y + (i - 1) * rowH;
+      T(svg, 30, yy + 22, 'n = ' + i, { fill: COL[i], 'font-size': 13, 'font-weight': '600' });
+      T(svg, 30, yy + 38, i === 1 ? '恒等映射 · 零信息' : (i === 2 ? '三角形数' : (i === 3 ? '四面体数' : (i === 4 ? '五胞体数' : '单纯形数'))),
+        { fill: SUB, 'font-size': 10 });
+      for (j = 0; j < 6; j++) {
+        var m = i + j, val = binom(m, i);
+        var bx = 140 + j * 120, bw = 96, bh = 40;
+        var is3 = (val === 3), is4 = (val === 4);
+        var fillc = is3 ? '#d6f0dd' : (is4 ? '#fbe0dc' : '#f4f5f7');
+        var bdc = is3 ? GRN : (is4 ? RED : '#d7dbe0');
+        R(svg, bx, yy, bw, bh, fillc, 6);
+        L(svg, bx, yy, bx, yy + bh, bdc, 1.2);
+        L(svg, bx + bw, yy, bx + bw, yy + bh, bdc, 1.2);
+        L(svg, bx, yy, bx + bw, yy, bdc, 1.2);
+        L(svg, bx, yy + bh, bx + bw, yy + bh, bdc, 1.2);
+        T(svg, bx + bw / 2, yy + 26, String(val), { 'text-anchor': 'middle', fill: is3 ? GRN : (is4 ? RED : INK), 'font-size': 15, 'font-weight': '600' });
+        T(svg, bx + bw / 2, yy + 50, 'C(' + m + ',' + i + ')', { 'text-anchor': 'middle', fill: SUB, 'font-size': 9 });
+      }
+      if (i === 1) {
+        T(svg, 860, yy + 26, '3 ✓', { 'text-anchor': 'end', fill: GRN, 'font-size': 12, 'font-weight': '600' });
+      } else if (i === 2) {
+        T(svg, 860, yy + 26, '3 ✓ / 4 ✗', { 'text-anchor': 'end', fill: SUB, 'font-size': 11 });
+      } else if (i === 3) {
+        T(svg, 860, yy + 26, '4 ✓（需 CP³）', { 'text-anchor': 'end', fill: RED, 'font-size': 11 });
+      }
+    }
+
+    T(svg, 30, H - 34, '关键读数：3 = T₂ 是三角形数 ⇒ CP² 够用；4 不是 ⇒ 四代必须升到 CP³（多要一维）。',
+      { fill: INK, 'font-size': 12 });
+    T(svg, 30, H - 14, '而 6 = T₃ 也在 CP² 上 ⇒ 六代与三代「同样便宜」：「三角形数」解释不了为什么偏偏选 3（定价里 S5 ∧ S6 = 0 就是这个意思）。',
+      { fill: RED, 'font-size': 12 });
+  })();
+})();
+</script>
+</body>
+</html>

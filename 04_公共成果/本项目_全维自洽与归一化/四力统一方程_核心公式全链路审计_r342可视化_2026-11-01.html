@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TUFT-r342 · 核心公式全链路六环审计</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--line:#30363d;--tx:#e6edf3;--mut:#8b949e;--ok:#3fb950;--bad:#f85149;--inf:#58a6ff;--warn:#d29922}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 "Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:36px 22px 80px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:.5px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:22px}
+.badge{display:inline-block;padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--mut);font-size:12px;margin-right:6px}
+.verdict{background:linear-gradient(135deg,#1f2937,#111827);border:1px solid #374151;border-left:4px solid var(--warn);border-radius:10px;padding:16px 18px;margin:20px 0 26px;font-size:14px}
+.verdict b{color:var(--warn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;margin:18px 0 30px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card .k{color:var(--mut);font-size:12px}.card .n{font-size:21px;font-weight:600;margin-top:4px}
+.card .u{color:var(--mut);font-size:12px;margin-left:3px}
+h2{font-size:18px;margin:34px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:13px}
+td,th{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{color:var(--mut);font-weight:500;font-size:12px}
+td.id{width:52px;font-family:Consolas,monospace;color:var(--inf)}
+td.v{width:60px;font-family:Consolas,monospace;font-weight:700}
+td.PASS{color:var(--ok)}td.FAIL{color:var(--bad)}td.INFO{color:var(--inf)}
+.mono{font-family:Consolas,monospace}
+.note{background:#111827;border:1px solid var(--line);border-radius:10px;padding:14px 16px;color:var(--mut);font-size:13px;margin-top:14px}
+.note b{color:var(--tx)}
+code{background:#0b1220;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12px;color:#a5d6ff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<h1>TUFT-r342 · 核心公式体系：全链路六环正确性审计</h1>
+<div class="sub">2026-11-01 · 靶：整理册 §三 保留资产 1–5 + S5/S7/S8/S12 + G2 ｜ sympy 量纲代数 + Decimal 80 位</div>
+<div>
+<span class="badge">条目 25</span><span class="badge">PASS 19</span><span class="badge">FAIL 4</span>
+<span class="badge">INFO 2</span><span class="badge">控制组 4/4</span><span class="badge">守卫 10/10</span>
+</div>
+<div class="verdict"><b>CORE-CHAIN-SIX-RING-AUDIT / DIMENSION-PASS-CARRIER-FAIL /
+LAGRANGIAN-MISMATCH-UNFIXABLE-BY-NUMBER / PHYSICAL-USE-OF-CORE-FORMULAS-ZERO</b><br>
+六环账本：<b>数学/量纲 3/6</b>，<b>物理可用 0/6</b>；第一断点 = 环3 承载物（横向 ∇κ 无定义）；
+质量锚在玻尔口径上差 <b>1.878e4 倍</b>；拉氏失配 <b>[0,−1,−1]</b> 非纯数可修。</div>
+<div class="grid">
+<div class="card"><div class="k">数学/量纲通过</div><div class="n">3<span class="u">/ 6</span></div><div class="u">L1 / L2 / L3</div></div>
+<div class="card"><div class="k">物理可用</div><div class="n">0<span class="u">/ 6</span></div><div class="u">锚 / 承载 / 量纲 / 渠道</div></div>
+<div class="card"><div class="k">m(玻尔锚)</div><div class="n">4.85087E-35<span class="u">kg</span></div><div class="u">= 5.325E-05 m_e</div></div>
+<div class="card"><div class="k">拉氏失配</div><div class="n mono" style="font-size:16px">[0, -1, -1]</div><div class="u">≠ k·c，纯数不可修</div></div>
+<div class="card"><div class="k">均匀螺旋 F</div><div class="n">0</div><div class="u">dκ/dσ=0 ⇒ ∇κ=0</div></div>
+<div class="card"><div class="k">判据集</div><div class="n">2<span class="u">/ 6</span></div><div class="u">R1/R2 过；R3–R6 不过</div></div>
+</div>
+<h2>一、六环账本（Q1–Q8）</h2>
+<table><tr><th>环</th><th>公式</th><th>审的层</th><th>判决</th><th>关键读数</th></tr><tr><td class='id'>L1</td><td class='mono'>ω²=c²(κ²+τ²)</td><td>数学</td><td>通（机器零）</td><td>只锁幅度、无演化（r338 Q4）</td></tr><tr><td class='id'>L2</td><td class='mono'>m=(ℏ/c)√(κ²+τ²)</td><td>量纲 + 锚</td><td>量纲通 / 锚断</td><td>玻尔锚差 1.878e4 倍（Q3）</td></tr><tr><td class='id'>L3</td><td class='mono'>F=ℏc∇κ</td><td>量纲 + 承载</td><td>量纲通 / 承载断</td><td>均匀螺旋 F=0；横向 ∇κ 无定义（Q4）</td></tr><tr><td class='id'>L4</td><td class='mono'>c⁴/(16πG)R ↔ (ℏ/c)√(κ²+τ²)ω</td><td>量纲</td><td>断（失配 [0,−1,−1]）</td><td>不可由纯数或 c 幂修复（Q5）</td></tr><tr><td class='id'>L5</td><td class='mono'>∇×G≡0（静态耦合）</td><td>判别力</td><td>通（恒等式）/ 渠道空</td><td>0=0，零判别力（Q6）</td></tr><tr><td class='id'>L6</td><td class='mono'>v_θ=ωr≤c（定义域）</td><td>定义域</td><td>通（必要条件）/ 越域 137 倍</td><td>a₀ 锚越 v≤c（Q7）</td></tr></table>
+<div class="note">三处断点：<b>锚</b>（L2：λ̄_C 上给 m_e，玻尔锚差 1.878e4 倍）｜<b>承载物</b>（L3：均匀螺旋 F=0、横向 ∇κ 无定义）｜
+<b>量纲配对</b>（L4：EH 项 [ML⁻¹T⁻²] vs 源项 [MT⁻¹]）。另两处（L5 静态 0=0、L6 越域 137 倍）是<b>渠道空</b>。</div>
+<h2>二、量纲账（Q2 / Q5）</h2>
+<div class="two">
+<div class="card"><div class="k">质量式（通过）</div><div class="n mono" style="font-size:15px">ℏ−c+κ = [1,0,0]</div>
+<div class="u">m=(ℏ/c)√(κ²+τ²) ⇒ [M] ✓；漏 c ⇒ [1,1,−1] ✗</div></div>
+<div class="card"><div class="k">拉氏配对（断）</div><div class="n mono" style="font-size:15px">[0, -1, -1]</div>
+<div class="u">EH [1,−1,−2] vs 源项 [1,0,−1]；k·c 命中集为空</div></div>
+</div>
+<div class="note">量纲门<b>有牙</b>：C1 放行正确式、C2 抓住「漏一次 c」、C3 抓住「非 null 曲线」、C4 抓住「非梯度场」。
+⇒ 「3/6 通过」不是放水，是<b>只有这三环真的齐次</b>。</div>
+<h2>三、质量锚与定义域（Q3 / Q7）</h2>
+<table>
+<tr><th>锚 r</th><th>√(κ²+τ²) [m⁻¹]</th><th>m=(ℏ/c)√ [kg]</th><th>对 m_e</th><th>v_θ/c</th></tr>
+<tr><td>λ̄_C = 3.86159E-13 m</td><td>2.58961E+12</td><td>9.109e-31</td><td>1（精确）</td><td>1（null）</td></tr>
+<tr><td>a₀ = 5.29177E-11 m</td><td>1.37900E+08</td><td>4.85087E-35</td><td>5.325E-05</td><td>137.036（越域）</td></tr>
+</table>
+<div class="note">同一把尺子量不了两个尺度：电子自锚（r=λ̄_C）闭合到机器零；玻尔锚（r=a₀）给 <b>5.3e-5 m_e</b>，
+要回到 m_e 需 √(κ²+τ²) 是实际值的 <b>1.878E+04 倍</b>。要保 v=c 则 ω 必须降到 <b>5.66526E+18 s⁻¹</b>（ω_C 的 1/137）。
+⇒ <b>「质量锚」与「越域」是同一缺口（G2）的两面</b>。</div>
+<h2>四、力式与静态通道（Q4 / Q6）</h2>
+<div class="note">F=ℏc∇κ 的量纲 <b>[MLT⁻²] 是全库唯一过量纲门的力式</b>；但均匀螺旋 dκ/dσ=0 ⇒ F=0、直线 κ=0 ⇒ F=0、
+横向 ∇κ 需要 null 汇 ⇒ <b>环3 断在承载物</b>。静态通道 ∇×G≡0 ⇒ 耦合方程退化为 <b>0=0</b>（机器恒零，
+非梯度反例 (y,0,0) 给 (0,0,−1) 证明判据有牙）⇒ <b>渠道恒空</b>。</div>
+<h2>五、条目逐条（主条目）</h2>
+<table><tr><th>#</th><th>判决</th><th>条目</th></tr><tr><td class='id'>Q1</td><td class='v PASS'>PASS</td><td>环1 恒等式闭合：4D null ⟺ 3D 单位速 ⟺ ω²=c²(κ²+τ²)，机器零（数值判例残差 0）</td></tr><tr><td class='id'>Q2</td><td class='v PASS'>PASS</td><td>环2 质量式量纲：m=(ℏ/c)√(κ²+τ²) 精确 [M]；缺 c 的错式 [MLT⁻¹] 不过关 ⇒ 量纲门有牙</td></tr><tr><td class='id'>Q3</td><td class='v FAIL'>FAIL</td><td>环2' 质量锚：λ̄_C 自锚精确给 m_e；玻尔锚只给 4.85e-35 kg（5.3e-5 m_e）⇒ 差 1.878e4 倍</td></tr><tr><td class='id'>Q4</td><td class='v FAIL'>FAIL</td><td>环3 力式：量纲 [MLT⁻²] 通过，但均匀螺旋与直线都给 F=0，横向 ∇κ 在单曲线上无定义 ⇒ 承载物断</td></tr><tr><td class='id'>Q5</td><td class='v FAIL'>FAIL</td><td>环4 拉氏：EH 项 [ML⁻¹T⁻²] vs 源项 [MT⁻¹] ⇒ 失配 [0,−1,−1]，非纯数亦非 c 整数幂可修</td></tr><tr><td class='id'>Q6</td><td class='v PASS'>PASS</td><td>环5 静态耦合：∇×G≡0 ⇒ 耦合方程退化为 0=0（机器恒零 + 非梯度反例给 (0,0,−1)）⇒ 零判别力</td></tr><tr><td class='id'>Q7</td><td class='v PASS'>PASS</td><td>环6 定义域：ω 固定 ⇒ r≤λ̄_C；a₀ 锚越 v≤c 137.036 倍；保 v=c 则 ω 必须随 r 反比降 ⇒ 内禀与尺度不可兼得</td></tr><tr><td class='id'>Q8</td><td class='v PASS'>PASS</td><td>六环总账：数学/量纲 3/6（L1/L2/L3），物理可用 0/6；第一断点 = 环3 承载物</td></tr><tr><td class='id'>Q9</td><td class='v INFO'>INFO</td><td>对表：S5/S12 复证；S7/G2 加强；r242 R09 前提修正；r124 T05 复证；r338 承</td></tr><tr><td class='id'>Q10</td><td class='v INFO'>INFO</td><td>G1–G7 门槛登记 + 三道自检门（本卷无新收口；G2 两处账合并）</td></tr><tr><td class='id'>Q11</td><td class='v FAIL'>FAIL</td><td>判据集 R1–R6 = 2/6</td></tr></table>
+<h2>六、控制组与守卫</h2>
+<div class="two">
+<table><tr><th>#</th><th>判决</th><th>控制组</th></tr><tr><td class='id'>C1</td><td class='v PASS'>PASS</td><td>正对照：m=(ℏ/c)√(κ²+τ²) 量纲 = [M]（量纲门对正确式放行）</td></tr><tr><td class='id'>C2</td><td class='v PASS'>PASS</td><td>负对照：m=ℏ√(κ²+τ²)（漏 c）量纲 [MLT⁻¹] 被拒（量纲门有牙）</td></tr><tr><td class='id'>C3</td><td class='v PASS'>PASS</td><td>负对照：非 null 曲线（0.64+0.25=0.89≠1）⇒ 恒等式失配（判据有牙）</td></tr><tr><td class='id'>C4</td><td class='v PASS'>PASS</td><td>负对照：非梯度场 (y,0,0) 旋度 (0,0,−1)≠0 ⇒ 静态判据非恒绿</td></tr></table>
+<table><tr><th>#</th><th>判决</th><th>守卫</th></tr><tr><td class='id'>G1</td><td class='v PASS'>PASS</td><td>JSON 可序列化</td></tr><tr><td class='id'>G3</td><td class='v PASS'>PASS</td><td>控制组 4/4 由实跑得出</td></tr><tr><td class='id'>G4</td><td class='v PASS'>PASS</td><td>恒等式与静态旋度机器零</td></tr><tr><td class='id'>G5</td><td class='v PASS'>PASS</td><td>Decimal 精度 ≥ 70 位</td></tr><tr><td class='id'>G6</td><td class='v PASS'>PASS</td><td>正负双对照齐备（控制组 ≥4 且 FAIL ≥1）</td></tr><tr><td class='id'>G7</td><td class='v PASS'>PASS</td><td>关键物理量全为正</td></tr><tr><td class='id'>G8</td><td class='v PASS'>PASS</td><td>条目键集合一致</td></tr><tr><td class='id'>G9</td><td class='v PASS'>PASS</td><td>仅写本卷路径</td></tr><tr><td class='id'>G10</td><td class='v PASS'>PASS</td><td>verdict 取值合法</td></tr><tr><td class='id'>G2</td><td class='v PASS'>PASS</td><td>条目计数一致（声明 25 = 实收 25）</td></tr></table>
+</div>
+<h2>七、门槛登记（Q10）</h2>
+<table><tr><th>项</th><th>缺口</th><th>状态</th><th>判决</th></tr><tr><td>G1</td><td>ω(r,t) 的场方程</td><td>r338 收口（负）：候选 0/4、净余 1 函数</td><td>收口（负）</td></tr><tr><td>G2</td><td>螺旋半径 r 的来源</td><td>本卷 Q3+Q7：质量锚与越域是同一缺口 ⇒ 越域 137 倍已机器复证</td><td>开（账已合并）</td></tr><tr><td>G3</td><td>弱场史瓦西退化数值验收</td><td>r324 收口（Birkhoff ⇒ 零判别力）</td><td>收口（负）</td></tr><tr><td>G4</td><td>null Frenet 标架重写</td><td>r329 收口（帧局部 κ,τ）</td><td>收口（条件/负）</td></tr><tr><td>G5</td><td>首条可证伪点预言</td><td>本卷 Q8：物理可用 0/6 ⇒ 无点预言可报</td><td>开（前置被否）</td></tr><tr><td>G6</td><td>EC 独立挠率源方程</td><td>本卷不涉（另有并行卷在审）</td><td>开</td></tr><tr><td>G7</td><td>固定点幅度 C 的第一性选择</td><td>本卷不涉（r325 已证 q 为自由拓扑输入）</td><td>开</td></tr></table>
+<div class="note">本卷<b>不新增收口</b>：G1 由 r338 收口（负）、G3/G4 由 r324/r329 收口；本卷的贡献是把 G2 的
+「质量锚」与「越域」合并成同一个账，并把「哪些核心公式算得对 / 用得上」做成逐环可复算的账本。</div>
+<h2>八、诚实边界</h2>
+<div class="note">B1 恒定零只在 null 分支 + 伪弧长帧；B2 量纲只在 (M,L,T) 三基；B3 L3 是定义域命题而非「力式必错」；
+B4 失配向量与 S5「缺 c⁴」是不同记账口径的同一事实；B5 不修改 r95 登记值；B6 不主张纲领死亡。</div>
+<div class="note" style="margin-top:26px">复现：<code>python -X utf8 源码\_run_r342.py</code> ⇒ rc=0，条目 25，
+控制组 4/4，守卫 10/10。本卷条目<b>不可与 r324/r329/r338 等相加</b>。</div>
+</div></body></html>

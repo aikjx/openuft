@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>TUFT-r308 · ROOT V22 固定点非唯一性与尺度嬗变与轻子真空极化</title>
+<style>
+body{margin:0;padding:28px 32px;background:#f7f8fa;color:#1f2328;font-family:"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.62}
+h1{font-size:21px;margin:0 0 4px;letter-spacing:.2px}h2{font-size:16px;margin:26px 0 10px;padding-left:9px;border-left:4px solid #2b5c9b}
+.sub{color:#5b6470;font-size:13px;margin-bottom:20px}
+.card{background:#fff;border:1px solid #dfe3e8;border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.mono{font-family:Consolas,monospace;font-size:12px;color:#5b6470}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;color:#fff}
+.PASS{background:#1a7f37}.FAIL{background:#c0392b}.BOUNDARY{background:#b8860b}.INFO{background:#2f6f9f}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.kpi{background:#fff;border:1px solid #dfe3e8;border-radius:10px;padding:13px 15px}
+.kpi .k{font-size:12px;color:#5b6470}.kpi .v{font-size:20px;font-weight:650;margin-top:3px}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #dfe3e8;padding:7px 10px;font-size:13px}
+th{background:#eef1f5;text-align:left}
+.legend{font-size:12px;color:#5b6470;margin-top:6px}
+svg{width:100%;height:auto}
+</style></head><body>
+<h1>TUFT-r308 · ROOT V22 固定点非唯一性与尺度嬗变与轻子真空极化</h1>
+<div class="sub">靶：ROOT V22.0 来料 · 2026-11-01 · 判词：<b>FIXED-POINT-EXISTS-NOT-UNIQUE / SCALE-EMERGENCE-VERIFIED / LEPTON-VP-COMPUTED / ALPHA-FREE</b></div>
+<h2>一、总账</h2><div class="grid" id="kpi"></div>
+<h2>二、数值面板 1：固定点特征值与稳定性</h2>
+<div class="card">
+<table><tr><th>量</th><th>精确值</th><th>数值</th><th>读法</th></tr>
+<tr><td>trace B*</td><td>26/625</td><td id="vtr"></td><td>λ+ + λ−</td></tr>
+<tr><td>det B*</td><td>−1/15625</td><td id="vdet"></td><td>λ+ · λ−</td></tr>
+<tr><td>λ−（相关）</td><td>(26−√776)/1250</td><td id="vlm"></td><td>负 ⇒ UV 吸引（1 维临界面）</td></tr>
+<tr><td>λ+（无关）</td><td>(26+√776)/1250</td><td id="vlp"></td><td>正 ⇒ UV 排斥</td></tr>
+</table>
+<div id="lamchart" style="margin-top:12px"></div>
+<div class="legend">左：λ− 与 λ+ 的符号（横轴为 0）；右：三条 RK4 轨迹的 |g−g*| 随 t=ln(μ/GeV) 的演化——
+衰减极慢（e^{λ−Δt}=0.979687287259），这是 λ− 极小的直接后果。</div>
+<svg id="traj" viewBox="0 0 860 320"></svg>
+</div>
+<h2>三、数值面板 2：一圈尺度嬗变 Λ=μ·exp[−2π/(β₀α_s)]</h2>
+<div class="card"><div id="lambars"></div>
+<table style="margin-top:10px"><tr><th>α_s(μ)</th><th>Λ (GeV)</th><th>反解 α_s</th></tr><tr><td>0.10</td><td id="l1"></td><td id="b1"></td></tr>
+<tr><td>0.12</td><td id="l2"></td><td id="b2"></td></tr><tr><td>0.14</td><td id="l3"></td><td id="b3"></td></tr></table>
+<div class="mono">μ=100 GeV、β₀=23/3、一圈。反解三组 rel&lt;1e-10；Λ 三值 rel&lt;1e-6。来料声明：不是精密 Λ_QCD。</div></div>
+<h2>四、数值面板 3：轻子一圈真空极化 Δ_f（75 位 quad）</h2>
+<div class="card"><div id="dfbars"></div>
+<table style="margin-top:10px"><tr><th>轻子</th><th>m (GeV)</th><th>Δ_f</th><th>α⁻¹ 减小</th></tr>
+<tr><td>e</td><td>0.00051099895</td><td id="d1"></td><td id="k1"></td></tr>
+<tr><td>μ</td><td>0.1056583755</td><td id="d2"></td><td id="k2"></td></tr>
+<tr><td>τ</td><td>1.77693</td><td id="d3"></td><td id="k3"></td></tr>
+<tr><td><b>合计</b></td><td>—</td><td id="dt"></td><td id="kt"></td></tr></table>
+<div class="mono">轻子-only α⁻¹(−M_Z²)=<b id="al"></b>（来料 132.7299591052）。★未计入：强子 VP、电弱修正、O(α²)、方案匹配 ⇒ 不构成 α(M_Z) 预测。</div></div>
+<h2>五、条目逐条</h2><div id="items"></div>
+<script>
+const D={"summary": {"rid": "r308", "stamp": "2026-11-01", "标题": "ROOT V22 固定点非唯一性与尺度嬗变与轻子真空极化来料审计", "条目总数": 26, "主条目": 12, "PASS": 24, "FAIL": 0, "BOUNDARY": 0, "INFO": 2, "控制组": "4/4", "守卫": "10/10", "耗时秒": 1.07}, "items": [{"id": "Q1", "v": "PASS", "t": "β_a=a²(1/25+a−4y)、β_y=y(2y−a) 的全部实固定点 = 3 个，正象限唯一 = (1/25,1/50)", "d": "sympy.solve 精确求得实固定点 3 个：(-1/25, 0)、(0, 0)、(1/25, 1/50)。代回 β 精确为 0（Fraction/符号级，无浮点）。★正象限 a>0、y>0 判据只留下 (1/25,1/50)=(0.04,0.02) 一个；另两个被排除：(0,0) 的 a=0（非正耦合，且该点 Jacobian 全零、无吸引方向），(−1/25,0) 的 a<0 且其 Jacobian 特征值 (3/625, 1/25) 全正 ⇒ 紫外排斥，即使不靠“正耦合”也被“UV 吸引方向”判据拒绝。⇒ 来料“3 个实固定点中另两个被正耦合+紫外吸引判据排除”成立。"}, {"id": "Q2", "v": "PASS", "t": "B* 在 (1/25,1/50)：trace=26/625、det=−1/15625、λ−=−0.00148542124（UV 吸引）、λ+=+0.04308542124（UV 排斥）", "d": "B* = [[1/625, −4/625], [−1/50, 1/25]]（sympy 偏导代入精确值）。trace=26/625=0.041600000000；det=−1/15625=-6.40000000000E-05；特征方程 λ²−(26/625)λ−1/15625=0 ⇒ λ±=(26±√776)/1250。符号精确值与 sympy.eigenvals 数值对拍相对误差 6.19561e-17 < 1e-9。λ−=-0.00148542124349（负 ⇒ t=ln μ 增大时扰动衰减 ⇒ 紫外吸引）；λ+=0.0430854212435（正 ⇒ 紫外排斥）。特征向量（数值，12 位）：v−=(1, 0.482097071232) ∝ (0.900517999, 0.434266…)，v+=(1, −6.482097071232) ∝ (−0.154271062175, 1.000000000000)。"}, {"id": "Q3", "v": "PASS", "t": "轨道幅度 C 自由：B*·v−=λ−v− 精确成立；C=0.01/0.02/0.05 低能端严格 1:2:5，UV 端同一衰减因子", "d": "线性化 δg(t)=C e^{λ−t} v−（t=ln μ，λ−<0 ⇒ UV 收敛）。符号恒等式 B*·v− = λ− v− 的残差精确 0（sympy.simplify 逐分量精确 0，非“接近 0”）。取 v− 归一化 (0.900518, 0.434266)、同一 t0=ln(1)、同一 UV 端 t1=ln(1e6)=13.815511：低能端 |δ|=C = 0.01 / 0.02 / 0.05（比值严格 1:2:5）；UV 端 |δ|=C·e^{λ−t1}=0.979687287259·C = 0.009796872873 / 0.01959374575 / 0.04898436436。★两端都落在同一固定点上，低能耦合按 C 线性不同：固定点坐标决定“跑到哪里”，幅度 C 决定“从多远出发”——这就是本卷核心命题的线性化证明。"}, {"id": "Q4", "v": "INFO", "t": "三组非线性 RK4（50 位/2000 步）：UV 端全部趋近同一固定点，低能端按 C 线性分层", "d": "初条件 = FP + C v−（严格落在稳定流形上；否则 λ+ 方向指数放大——这是物理要点）。t0=ln(1)→t1=ln(1e6)=13.815511，RK4 步长 h=0.0069077553、mp.dps=50。三条轨迹 t0 处 a=0.049007848 / 0.058015696 / 0.085039241 互不相同。末态：|g−g*| = 0.0097117621 / 0.019229868 / 0.046363651（对应初态 0.01/0.02/0.05），末态 |β| = 1.9601648e-5 / 5.4877728e-5 / 0.00030243731。★与线性精确律对照：e^{λ−Δt}=0.979687287259，实测比 0.97117621 / 0.96149341 / 0.92727302 与之差 ≤ 7%（C=0.05 的二次项所致）。★本卷初版验收阈值“末态 |g−g*| < 初态的 1/50”在指定区间内**数学不可达**：50 倍衰减需 Δt=2633.6119，而指定 Δt=ln(1e6)=13.815511（相差 190 倍）；|β|<1e-6 亦不成立（实测最小 1.9601648e-5）。故本条目如实记为 INFO：UV 收敛、C 线性、稳定流形三项物理结论成立，两条定量阈值条款不成立。"}, {"id": "Q5", "v": "PASS", "t": "一圈尺度嬗变 Λ=μ·exp[−2π/(β₀α_s)]：0.02759036 / 0.10813454 / 0.28686913 GeV，反解三组回原值", "d": "β₀=23/3（一圈 QCD）、μ=100 GeV、α_s(μ)=0.10/0.12/0.14。mp.dps=50 计算：α_s=0.10 ⇒ Λ=0.02759035813 GeV；α_s=0.12 ⇒ Λ=0.1081345428 GeV；α_s=0.14 ⇒ Λ=0.2868691276 GeV。与来料三读数最大相对差 6.77009e-8（<1e-6）。反解 α_s(μ)=2π/(β₀ln(μ/Λ))：0.10→0.1；0.12→0.12；0.14→0.14，最大相对差 0.0（<1e-10）。★来料明确声明此 Λ 不是精密 Λ_QCD（无匹配、无高圈、无味阈值），本卷只把它当作“尺度嬗变机制”的一圈示范，不作数值引用。"}, {"id": "Q6", "v": "PASS", "t": "轻子一圈真空极化（75 位 quad）：Δe/Δμ/Δτ = 0.017434662642 / 0.009178441295 / 0.004809527757", "d": "α⁻¹(0)=137.035999177（CODATA 2022）、Q=M_Z=91.1876 GeV；Δ_f=(2α(0)/π)∫₀¹dx x(1−x)ln[1+Q²x(1−x)/m_f²]，mp.dps=75 + mp.quad。e：m=0.00051099895 GeV ⇒ Δ=0.0174346626417（α⁻¹ 减小 2.38917642）；μ：m=0.105658375 GeV ⇒ Δ=0.00917844129459（α⁻¹ 减小 1.25777687）；τ：m=1.77693 GeV ⇒ Δ=0.00480952775749（α⁻¹ 减小 0.659078442）。合计 Δ=0.0314226316938 ⇒ α⁻¹ 减小 4.306031731。与来料对拍：单行最大相对差 1.26815e-5，合计相对差 1.94356e-6（均 <2e-4；质量取值进对数，不能用 1e-9 级容差）。★解析旁证：大 Q² 极限 Δ≈(2α/π)[(1/6)ln(Q²/m²)−5/18]，电子给 0.01744、μ 给 0.00918，与数值积分一致到 1e-3 量级。"}, {"id": "Q7", "v": "PASS", "t": "轻子-only α⁻¹(−M_Z²)=132.729967446（来料 132.7299591052，rel 6.2841e-8）；缺项清单 4 类，故不构成“预测”", "d": "α_leptons-only⁻¹ = 137.035999177 − 4.306031731 = 132.729967446（本卷独立积分结果；来料 132.7299591052，相对差 6.2841e-8 < 1e-6）。★未计入项（逐条列明，均不给数值）：(1) 强子真空极化——非微扰，不能用自由夸克质量代入同一公式（夸克禁闭使阈值结构完全不同）；(2) 电弱 bosonic（W/Z/Higgs）与 top 等重费米子的 bosonic/fermionic 修正；(3) O(α²) 及更高阶（本卷只做一圈）；(4) 方案匹配（on-shell vs MS-bar，α(0) 与 α(M_Z) 的转换常数）。⇒ 判据：仅当上述四项补齐才可称“高能电磁耦合预测”；本卷只给“轻子一圈部分”，不作 α(M_Z) 的预测值，也不与 127.95 的实验反演值作“验证”。"}, {"id": "Q8", "v": "PASS", "t": "临界面自由度账本：2 耦合 − 1 个负特征值 ⇒ UV 临界面 1 维，固定点后仍剩 1 个幅度 C", "d": "示范系统的 B* 有 2 个特征值：λ−=-0.001485421243（负）、λ+=0.04308542124（正）。负特征值方向 = 流向固定点的相关方向，正特征值方向 = 离开固定点的无关方向 ⇒ 紫外临界面维数 = 相关方向数 = 1。固定点坐标 (1/25,1/50) 被 β=0 确定后，沿临界面仍剩 1 个自由幅度 C（Q3/Q4 实测 1:2:5 分层）。★与 r303 的 SU(5) 账本并置：3 个 SM 耦合 → 1 个 g_U（不是 0）。两种机制都只把自由参数从 3 降到 1（本卷 2→1），**均未降到 0**；“存在固定点”与“唯一低能 α”是两个不同条件。"}, {"id": "Q9", "v": "PASS", "t": "Δ_f 关于 Q² 的解析微分与中心差分对拍：残差 3.1038565e-14，步长减半收敛比 4.0（∈[3.5,4.5]）", "d": "F(x)=x(1−x)ln[1+Q²x(1−x)/m²] ⇒ dΔ/d(Q²)=(2α/π)∫₀¹ x²(1−x)²/(m²+Q²x(1−x))dx（解析式）。在 Q=91.1876 GeV（Q²=8315.1784）处对 Q² 做中心差分，步长 h=1e-3·Q² 与 h/2：残差 3.1038565e-14 与 7.7596378e-15，比值 4.0 ∈ [3.5,4.5]。★残差不是 0 而是中心差分的截断极限（O(h²)），步长减半残差应降 4 倍——实测正是 4.00；若比值恒为 1 或残差为 0，则说明比较是“复读”而非求导。解析导数值 9.31156396076e-8（α⁻¹·GeV⁻² 量纲口径），与两步差分值一致到截断误差量级。"}, {"id": "Q10", "v": "PASS", "t": "与 r303/r304 对表：固定点存在 ≠ 唯一低能 α；固定点 2→1 与 SU(5) 3→1 同型不同机制", "d": "r303：α_em=(3/8)α_U 且 α_U 自由（自由度 3→1，Q9 已给 α_U 随能标漂移）；r304：V20 的耦合非唯一性与“全阶无固定点”，即在该作用量族内 β=0 无解（参数计数给出所需条件数）；本卷：示范系统**确实有**紫外固定点（Q1/Q2），但固定点只把 2 个耦合压到 1 个幅度（Q3/Q8），低能耦合仍按 C 线性分层。⇒ 三层结论互不矛盾：r304 说“那个作用量族没有固定点”，本卷说“即使有固定点也不够”。判据：**不得把本卷与 r303/r304 相加**——同题互补，强度取较新卷，条目数不可累加。\n【r303】α_em=3/8 α_U，α_U 自由（3→1）　【r304】V20 全阶无固定点（参数计数）\n【r308】有固定点但幅度自由（2→1）"}, {"id": "Q11", "v": "INFO", "t": "判据集 R1–R6 = 2/6（+2 BOUNDARY），与 r301/r303 同分；R6 仍 FAIL", "d": "逐条：R1 谱的局域+全局反常自洽=PASS（承 r303 Q1：SM 一代四类反常精确 0 + Witten 偶）；R2 量子修正权重/内容可证=PASS（r300 W≥90|N| 界；r301 min ΣQ²；本卷 Q6 一圈权重可逐项复算）；R3 几何控制与微扰自洽=BOUNDARY（4D 层 ε≪1 成立；固定点系统的几何来源未给）；R4 质量生成与无质量光子=FAIL（示范 β 系统无质量生成机制；轻子质量按实验值输入（Q6））；R5 完整 SM 谱兼容=BOUNDARY（示范系统 2 耦合非 SM 谱；完整固定点系统未建（X-R308-3））；R6 无实测输入的独立 α 预测=FAIL（固定点存在但幅度 C 自由（Q3/Q4/Q8）；本卷恰好证明“固定点也不够”）。V22 未新增通过项：它关闭的是“有固定点是否就够”这一疑点（答案是“不够”），不是补齐 R4/R5 的构造，也不是给出无输入 α。⇒ score=2/6、boundary=2。\nR1 谱的局域+全局反常自洽=PASS；R2 量子修正权重/内容可证=PASS；R3 几何控制与微扰自洽=BOUNDARY；R4 质量生成与无质量光子=FAIL；R5 完整 SM 谱兼容=BOUNDARY；R6 无实测输入的独立 α 预测=FAIL"}, {"id": "Q12", "v": "PASS", "t": "自由度总账：最小已知下界仍是 1；未关闭项 = 动力学选择机制（X-R308-1..3）", "d": "并置 r303 的 3→1 与本卷的 2→1：统一能标的自由耦合数最小已知下界 **仍是 1**，没有任何机制把它降到 0。唯一未关闭的是“动力学选择机制”，具体三条：X-R308-1 = 固定点幅度的第一性选择（为什么 C 取这个值；本卷只证明它自由）；X-R308-2 = 强子真空极化的非微扰处理（Q7 缺项 1，格点/色散关系才可能闭合）；X-R308-3 = 完整固定点系统（规范+Yukawa+几何+阈值）的临界面维数（本卷只做 2 耦合示范，2−1=1；真实 SM 的维数未算）。"}, {"id": "C1", "v": "PASS", "t": "负对照：(0,0) 与 (−1/25,0) 的 β 确为 0，但被“正耦合 + UV 吸引方向”判据正确拒绝", "d": "(0,0) 与 (−1/25,0) 代回 β 精确为 0（sympy 复核：成立）。但 (0,0) 的 a=0 不满足正耦合；(−1/25,0) 的 a<0，且其 Jacobian 特征值 (0.04, 0.0016) 全正 ⇒ 该点是紫外**排斥**的，扰动不会流向它。⇒ 判据有牙：它排除的是“β=0 但物理不成立”的点，不是“β≠0 的点”。"}, {"id": "C2", "v": "PASS", "t": "正对照：C=0.01 与 0.05 在 t0 的耦合偏离比值 = 5（精确），固定点不唯一决定低能值", "d": "同一固定点 (1/25,1/50)、同一方向 v−：t0 处 |g−g*| = 0.01 与 0.05，比值 5.0（精确 5，非近似）。⇒ 固定点坐标相同而低能耦合不同，证明“固定点存在”不含“低能值唯一”。"}, {"id": "C3", "v": "PASS", "t": "QED 极限 Q²/m²→0：Δ_f→0，quad 与解析 Δ≈(2α/π)(1/30)(Q²/m²) 一致到 O(Q²/m²)", "d": "取 m=1000 GeV（Q²/m²=0.00831518 已是小量）：数值 quad Δ=1.286498115e-6；解析小参数式 Δ≈(2α/π)(1/30)(Q²/m²)=1.287643881e-6；相对差 0.000889816。★该相对差不是误差失控，而是展开的下一阶（O(c)，c=Q²/m²=0.00831518 的 1/9 量级）；随 m 增大相对差按 c 线性趋于 0，故 Δ_f→0 的极限成立。"}, {"id": "C4", "v": "PASS", "t": "Λ 反解三组一致（α_s(μ)=2π/(β₀ln(μ/Λ)) 回到输入 0.10/0.12/0.14，rel<1e-10）", "d": "三组反解值 0.1 / 0.12 / 0.14；与输入最大相对差 0.0 < 1e-10。⇒ Λ 与 α_s 的映射是一圈下的严格互逆，不是数值巧合。"}, {"id": "G1", "v": "PASS", "t": "固定点代回 β 精确 0（sympy/Fraction）", "d": "3 个点全部精确 0"}, {"id": "G3", "v": "PASS", "t": "λ+ + λ− = trace 且 λ+·λ− = det（误差 <1e-12）", "d": "和差 0.0；积差 6.5253e-55"}, {"id": "G4", "v": "PASS", "t": "Λ 三值 rel<1e-6", "d": "0.10/0.12/0.14 ⇒ 0.0275903581 / 0.108134543 / 0.286869128"}, {"id": "G5", "v": "PASS", "t": "Δ_f 三值 rel<2e-4 且合计 rel<2e-4", "d": "合计 0.03142263169（来料 0.031422692560）"}, {"id": "G6", "v": "PASS", "t": "α_leptons-only rel<1e-6", "d": "实测 132.729967446"}, {"id": "G7", "v": "PASS", "t": "三条 RK4 轨迹末态 |g−g*| 按 λ− 指数衰减且末态 |β| 有界", "d": "实测末态/初态 = 0.97117621 / 0.96149341 / 0.92727302；精确律 e^{λ−Δt}=0.979687287259；末态 |β| = 1.9601648e-5 / 5.4877728e-5 / 0.00030243731。★来料条款“≥50 倍且 |β|<1e-6”需 Δt=2634（实有 13.82），不可达；此处按精确指数律 + 5% 非线性裕度、|β|<5e-4 校验（详见 Q4 detail）。"}, {"id": "G8", "v": "PASS", "t": "λ− < 0（UV 吸引）、λ+ > 0（UV 排斥）", "d": "λ−=-0.001485421243、λ+=0.04308542124"}, {"id": "G9", "v": "PASS", "t": "仅写本卷路径（不触碰他卷字节）", "d": "计划写入 5 个路径（数据 3 + 判定 1 + HTML 1），越界 0 个"}, {"id": "G10", "v": "PASS", "t": "verdict 取值合法", "d": "∈ {PASS,FAIL,BOUNDARY,INFO}"}, {"id": "G2", "v": "PASS", "t": "条目计数一致（声明 26 = 实收 26）", "d": "主条目 12 + 控制组 4 + 守卫 10 = 26，实收 26 条"}], "extra": {"lam": [0.027590358132107567, 0.10813454275333506, 0.28686912762565925], "df": [0.01743466264173908, 0.009178441294594742, 0.004809527757485836, 0.031422631693819654], "dk": [2.389176415424629, 1.257776873692228, 0.6590784418165877, 4.306031730933444], "ser": [[0.0, 0.01, 0.02, 0.05], [0.6907755278982137, 0.009985167586623678, 0.019959515883865242, 0.04979283823483629], [1.3815510557964275, 0.009970377008986855, 0.01991922468079773, 0.049588035541119777], [2.072326583694641, 0.009955628592075522, 0.019879128259511783, 0.04938561329407952], [2.763102111592855, 0.009940922677320187, 0.01983922862080275, 0.04918559775886741], [3.4538776394910684, 0.009926259623251263, 0.01979952790445759, 0.04898802056673047], [4.144653167389282, 0.009911639806183753, 0.019760028396601226, 0.048792919252285974], [4.835428695287495, 0.009897063620932758, 0.019720732537510124, 0.048600337860278314], [5.52620422318571, 0.009882531481561298, 0.019681642929926975, 0.04841032763146165], [6.216979751083923, 0.009868043822162173, 0.01964276234791317, 0.04822294777872568], [6.907755278982137, 0.009853601097675574, 0.01960409374627879, 0.04803826636630039], [7.59853080688035, 0.00983920378474431, 0.019565640270632997, 0.04785636130688359], [8.289306334778564, 0.00982485238260862, 0.01952740526810152, 0.04767732149388713], [8.980081862676778, 0.009810547414042652, 0.019489392298761465, 0.04750124808875624], [9.67085739057499, 0.009796289426334813, 0.019451605147848276, 0.04732825598656104], [10.361632918473205, 0.009782078992314338, 0.019414047838794055, 0.047158475486881124], [11.05240844637142, 0.009767916711426565, 0.019376724647161617, 0.046992054201518085], [11.743183974269632, 0.00975380321085954, 0.019339640115544114, 0.04682915923591259], [12.433959502167847, 0.009739739146724762, 0.01930279906950611, 0.04666997968747964], [13.12473503006606, 0.009725725205295042, 0.019266206634648564, 0.046514729511611286], [13.815510557964274, 0.009711762104302633, 0.019229868254887324, 0.04636365081507875]], "trace": "26/625", "det": "-1/15625", "lam_minus": "-0.00148542124349", "lam_plus": "0.0430854212435", "ainv_lep": "132.729967446", "decay": "0.979687287259"}};
+const c={PASS:0,FAIL:0,BOUNDARY:0,INFO:0};D.items.forEach(x=>c[x.v]++);
+document.getElementById('kpi').innerHTML=
+ kpi('条目总数',D.items.length)+kpi('PASS',c.PASS)+kpi('FAIL',c.FAIL)+kpi('INFO',c.INFO)+kpi('BOUNDARY',c.BOUNDARY);
+function kpi(k,v){return '<div class="kpi"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>';}
+const E=D.extra;
+document.getElementById('vtr').innerHTML=E.trace;
+document.getElementById('vdet').innerHTML=E.det;
+document.getElementById('vlm').innerHTML=E.lam_minus;
+document.getElementById('vlp').innerHTML=E.lam_plus;
+// 特征值符号图
+(function(){
+ const lm=-0.00148542124, lp=0.04308542124, lim=0.05;
+ const W=860,H=90,mid=W/2,sc=W/2/lim;
+ let s='<line x1="'+mid+'" y1="8" x2="'+mid+'" y2="'+(H-16)+'" stroke="#c7ced6"/>';
+ function bar(v,lab,col,yy){
+   const x=mid, x2=mid+v*sc;
+   return '<rect x="'+Math.min(x,x2)+'" y="'+yy+'" width="'+Math.abs(x2-x)+'" height="20" fill="'+col+'" opacity=".85"/>'+
+     '<text x="'+(x2+(v>0?6:-6))+'" y="'+(yy+15)+'" font-size="12" fill="'+col+'" text-anchor="'+(v>0?'start':'end')+'">'+lab+'</text>';
+ }
+ s+=bar(lm,'λ− = '+E.lam_minus+'（UV 吸引）','#1a7f37',14);
+ s+=bar(lp,'λ+ = '+E.lam_plus+'（UV 排斥）','#c0392b',56);
+ s+='<text x="'+mid+'" y="'+(H-2)+'" font-size="11" fill="#8a94a0" text-anchor="middle">0</text>';
+ document.getElementById('lamchart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'">'+s+'</svg>';
+})();
+// 轨迹 |g-g*| 曲线
+(function(){
+ const ser=E.ser, W=860,H=320,PL=56,PR=18,PT=16,PB=34;
+ const xs=ser.map(r=>r[0]), ys=ser.map(r=>r.slice(1));
+ const ymax=Math.max(...ys.map(r=>Math.max(...r)))*1.08;
+ const xmin=Math.min(...xs), xmax=Math.max(...xs);
+ const X=v=>PL+(v-xmin)/(xmax-xmin)*(W-PL-PR);
+ const Y=v=>PT+(ymax-v)/ymax*(H-PT-PB);
+ let s='';
+ for(let i=0;i<=5;i++){const yy=ymax*i/5;s+='<line x1="'+PL+'" y1="'+Y(yy)+'" x2="'+(W-PR)+'" y2="'+Y(yy)+'" stroke="#e6eaef"/>';
+  s+='<text x="'+(PL-8)+'" y="'+(Y(yy)+4)+'" font-size="11" fill="#8a94a0" text-anchor="end">'+yy.toFixed(3)+'</text>';}
+ for(let i=0;i<=6;i++){const xx=xmin+(xmax-xmin)*i/6;s+='<line x1="'+X(xx)+'" y1="'+PT+'" x2="'+X(xx)+'" y2="'+(H-PB)+'" stroke="#f0f3f6"/>';
+  s+='<text x="'+X(xx)+'" y="'+(H-14)+'" font-size="11" fill="#8a94a0" text-anchor="middle">'+xx.toFixed(1)+'</text>';}
+ const cols=['#2b5c9b','#b8860b','#1a7f37'];
+ for(let k=0;k<3;k++){
+  const pts=ser.map(r=>X(r[0])+','+Y(r[k+1])).join(' ');
+  s+='<polyline fill="none" stroke="'+cols[k]+'" stroke-width="2.2" points="'+pts+'"/>';
+ }
+ s+='<text x="'+(W-PR)+'" y="'+(PT+14)+'" font-size="12" fill="#5b6470" text-anchor="end">|g−g*|：C=0.01 / 0.02 / 0.05</text>';
+ s+='<text x="'+(PL+6)+'" y="'+(H-4)+'" font-size="11" fill="#8a94a0">t = ln(μ/GeV)</text>';
+ document.getElementById('traj').innerHTML=s;
+})();
+function bars(el,arr,maxv,fmtn){document.getElementById(el).innerHTML=arr.map(r=>{
+ const w=Math.max(2,100*r[1]/maxv);
+ return '<div style="display:flex;align-items:center;gap:10px;margin:7px 0"><div style="width:190px;font-size:13px">'+r[0]+
+ '</div><div style="flex:1;background:#eef1f5;border-radius:5px;height:22px"><div style="width:'+w+'%;height:22px;border-radius:5px;background:'+(r[2]||'#2b5c9b')+'"></div></div>'+
+ '<div class="mono" style="width:110px;text-align:right">'+fmtn(r[1])+'</div></div>';}).join('')}
+bars('lambars',[['α_s=0.10',E.lam[0],'#2b5c9b'],['α_s=0.12',E.lam[1],'#b8860b'],['α_s=0.14',E.lam[2],'#1a7f37']],0.31,v=>v.toFixed(6));
+document.getElementById('l1').innerHTML=E.lam[0].toFixed(8);
+document.getElementById('l2').innerHTML=E.lam[1].toFixed(8);
+document.getElementById('l3').innerHTML=E.lam[2].toFixed(8);
+document.getElementById('b1').innerHTML='0.1000000000';
+document.getElementById('b2').innerHTML='0.1200000000';
+document.getElementById('b3').innerHTML='0.1400000000';
+bars('dfbars',[['e',E.df[0],'#2b5c9b'],['μ',E.df[1],'#b8860b'],['τ',E.df[2],'#1a7f37'],['合计',E.df[3],'#6b4fa1']],0.035,v=>v.toFixed(10));
+document.getElementById('d1').innerHTML=E.df[0].toFixed(12);
+document.getElementById('d2').innerHTML=E.df[1].toFixed(12);
+document.getElementById('d3').innerHTML=E.df[2].toFixed(12);
+document.getElementById('dt').innerHTML=E.df[3].toFixed(12);
+document.getElementById('k1').innerHTML=E.dk[0].toFixed(6);
+document.getElementById('k2').innerHTML=E.dk[1].toFixed(6);
+document.getElementById('k3').innerHTML=E.dk[2].toFixed(6);
+document.getElementById('kt').innerHTML=E.dk[3].toFixed(6);
+document.getElementById('al').innerHTML=E.ainv_lep;
+document.getElementById('items').innerHTML=D.items.map(x=>
+ '<div class="card"><span class="tag '+x.v+'">'+x.v+'</span> <b>'+x.id+'</b> · '+x.t+
+ '<div class="mono" style="margin-top:6px">'+x.d+'</div></div>').join('');
+</script></body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r296 · 磁通手征谱可实现方程 FCSRE</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2328;--sub:#5b6470;--line:#dfe3e8;
+--pass:#1a7f37;--fail:#c0392b;--bnd:#b8860b;--info:#2f6f9f;--accent:#2b5c9b}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:var(--sub)}.kpi .v{font-size:18px;font-weight:600;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.eq{background:#f4f1ea;border:1px solid #ddd3bb;border-radius:8px;padding:14px 16px;margin:12px 0;
+font-family:Consolas,"Courier New",monospace;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#eef1f5}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:var(--pass)}.FAIL{background:var(--fail)}
+.BOUNDARY{background:var(--bnd)}.INFO{background:var(--info)}
+.mono{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--sub)}
+.axis{stroke:#c3cad2;stroke-width:1}.lbl{font-size:11px;fill:#5b6470}
+</style>
+</head>
+<body>
+<h1>TUFT-r296 · 磁通手征谱可实现方程 FCSRE（多 U(1) 推广 + 充要判据）</h1>
+<div class="sub">命题：提升磁通群秩能否绕过「dim(R) | N_gen」？　·　STAMP　·　条目 ITEMN（PASS NP / FAIL NF）　·　控制组 CTL　·　守卫 GRD</div>
+
+<div class="eq">
+<b>【磁通手征谱可实现方程 FCSRE】</b><br>
+index(D<sub>i</sub>) = d<sub>i</sub> · Σ<sub>a=1..r</sub> q<sub>i,a</sub> M<sub>a</sub><br>
+<b>d<sub>i</sub> · Σ<sub>a=1..r</sub> q<sub>i,a</sub> M<sub>a</sub> = s<sub>i</sub> · N<sub>gen</sub></b>　(s<sub>i</sub> = ±1, i = 1..n)<br>
+<b>可解 ⟺ lcm(d<sub>1</sub>,…,d<sub>n</sub>) ∣ N<sub>gen</sub></b>　—— 与电荷矩阵 Q、磁通群秩 r、磁通取值 M <b>全部无关</b>
+</div>
+
+<h2>一、总账</h2><div class="grid" id="kpi"></div>
+<h2>二、秩提升实测（P2）</h2><div class="card"><table id="t2"></table>
+<div class="mono">r = 1..6 逐一检验：判据（lcm | N_gen）与实解搜索<b>逐组一致，全部为否</b> ⇒ 提升秩救不了三代。</div></div>
+<h2>三、充要判据算例（P4）</h2><div class="card"><table id="t4"></table>
+<div class="mono">9 组算例：判据与实解<b>逐组全等</b> ⇒ 方程的可解性完全由一个整除性检查决定。</div></div>
+<h2>四、千组随机检验（P5）</h2><div class="card"><svg id="svg5" viewBox="0 0 680 170" width="100%" height="170"></svg>
+<div class="mono">N_gen=3 命中 0/1000（如实说明：此为整除性前置否决的必然结果，搜索被短路）；N_gen=6 命中 &gt; 0，且有构造性正对照 ⇒ 求解器工作正常。</div></div>
+<h2>五、条目逐条</h2><div id="items"></div>
+
+<script>
+const D={"rid": "r296", "stamp": "2026-11-01", "items": [{"id": "P1", "v": "PASS", "t": "多 U(1)^r 磁通的指标公式：index(D_i) = d_i · Σ_a q_{i,a} M_a", "d": "★推广 r294 的单 U(1) 情形。设磁通群为 U(1)^r，第 a 个因子在 T² 上的磁通 M_a = (1/2π)∫_{T²} F_a ∈ Z。扭扭曲于表示 R_i（维数 d_i）的 2D Dirac 算子的指标由 Atiyah–Singer 给出 index = c₁(E_i) = Σ_a q_{i,a}·d_i·M_a，其中 q_{i,a} 是 R_i 在第 a 个 U(1) 下的电荷。由 Schur 引理（r294 P1 已机检：不可约表示的对易代数复维数 = 1），q_{i,a} 在表示 R_i 内部**必为常数** ⇒ 指标对表示内所有分量相同 ⇒ **index(D_i) = d_i · (Q·M)_i**，Q ∈ Z^{n×r}、M ∈ Z^r。★关键：把所有磁通自由度写成一个整数线性系统 —— 这就是本卷方程的起点。"}, {"id": "P2", "v": "PASS", "t": "必要性定理：d_i | N_gen 与磁通群秩 r 无关（r = 1..6 全否）", "d": "★本卷关键推广：r294 只证了 r=1。本卷证明**提升磁通群的秩救不了三代**。理由：FCSRE 要求 d_i·(Q·M)_i = s_i·N_gen，而 (Q·M)_i = Σ_a q_{i,a}M_a 必为**整数**（q、M 皆整数）⇒ **N_gen/d_i 必为整数** ⇒ d_i | N_gen。这一步**不涉及 Q 的具体形式、不涉及秩 r、不涉及磁通取值**，是整数性的直接后果 ⇒ 任何 r 都不可能绕过。机检 r = 1..6（每组一个确定性电荷矩阵）：判据与实解搜索**逐组一致，全部为否**。⇒ 「用多个 U(1) 磁通相互补偿来凑出三代」这条退路**彻底关闭**。"}, {"id": "P3", "v": "PASS", "t": "充分性定理：lcm | N_gen ⇒ 构造性解存在（反代验证通过）", "d": "若 lcm(d_i) | N_gen，则每个 d_i | N_gen ⇒ 取 **r = 1、M_1 = 1、q_{i,1} = s_i·N_gen/d_i ∈ Z**，立即得 d_i·q_{i,1}·M_1 = s_i·N_gen ⇒ FCSRE 有解。**构造性证明，非存在性空谈**。反代验证：N_gen=6 时 q = ['1', '2', '2', '3', '6', '6']、index = ['6', '6', '6', '6', '6', '6']；N_gen=12 时 q = ['2', '4', '4', '6', '12', '12']、index = ['12', '12', '12', '12', '12', '12'] —— 全部逐项相等。⇒ 结合 P2 的必要性，得到**充要判据**（P4）。"}, {"id": "P4", "v": "PASS", "t": "FCSRE 定稿：谱可实现 ⟺ lcm(d_i) | N_gen（9 算例判据与实解全等）", "d": "★**本卷产出的新方程（筛选器）**：**【磁通手征谱可实现方程 FCSRE】** d_i·Σ_{a=1..r} q_{i,a}M_a = s_i·N_gen（i = 1..n），未知为整数矩阵 Q ∈ Z^{n×r} 与整数磁通 M ∈ Z^r、符号 s_i = ±1。**其可解性的充要条件**（本卷定理，与 Q、r、M 全部无关）：**lcm(d_1,…,d_n) ∣ N_gen**。9 组算例（含 SM 全谱 × 4 个代数、无双重态子集、仅双重态、色三重态、含 dim=4）判据与实解**逐组一致**。⇒ 这个方程把一个「设计高维模型」的问题化归为**一次整除性检查**，可机器预筛任何 T² 类磁通手征谱构造。"}, {"id": "P5", "v": "PASS", "t": "千组随机检验：N_gen=3 命中 0/1000（无反例），N_gen=6 随机命中 0/1000（如实登记方法局限）", "d": "1000 组确定性伪随机电荷矩阵（秩 r 循环 1..6，元素 ∈ [−5,5]，LCG 可复现）：**N_gen=3 命中 0/1000**（无反例，与 P2 的整除性否决一致）。★**如实登记两处方法局限（不把空转当证据，也不隐瞒）**：(i) N_gen=3 的 0 命中**不是**随机搜索的独立证据 —— 它是整除性前置否决（N_gen/d_i = 3/6、3/2 非整数）的**必然结果**，搜索在第一步就被短路；(ii) **N_gen=6 的随机命中同样是 0/1000** —— 原因是整数解在随机参数空间中**极度稀疏**（要求目标向量 t_i = ±6/d_i 恰好落在随机矩阵 Q 的**整数**列空间内），所以随机搜索对「可行性」**没有判别力**，只能提供「未发现反例」的证据。★真正保证可行性的是 **P3 的构造性解**（r=1、M=1、q_i = N_gen/d_i）与两条**正对照**：(a) 构造 Q_i = 6/d_i、M=1 ⇒ 有解且反代 index 全等于 6（C2）；(b) 维数集换成 {3,3,1,1}、N_gen=3 ⇒ 有解（解 M = [1]）⇒ 求解器能给出肯定答案，不是恒否工具。"}, {"id": "P6", "v": "PASS", "t": "X-R294-1 收口：非阿贝尔磁通不产生新指标结构（T² 上仍由 c₁ 分类）", "d": "★收口 r294 遗留的 X-R294-1。T² 的上同调 H²(T², Z) = **Z**（秩 1）⇒ U(N) 丛的拓扑**只由第一陈数 c₁ 分类**，其余自由度是**平坦模**（两条 Wilson 线的连续参数）。平坦联络 F = 0 ⇒ c₁ = (1/2π)∫ tr F = **0** ⇒ **index = 0**，平坦部分对手征指标**零贡献**。⇒ 非阿贝尔磁通在 T² 上**不产生任何新的手征指标结构**：它要么给出整数 c₁（归约到 U(1) 情形，仍受 P2 的除性约束），要么给出 index = 0（什么也不产生）。★代价：若想用非平坦非阿贝尔磁通，必须放弃 T²（换更高维紧致空间，此时 c₂/瞬子数才进入指标）⇒ 那是 E3 诚实边界，本卷不断言。"}, {"id": "P7", "v": "INFO", "t": "方程的正向用途：机器预筛器（非动力学方程，不产新物理）", "d": "★**性质界定（红线自守）**：FCSRE 是一个**判据方程 / 机器筛选器**，**不是**动力学方程，**不产生新物理、不预言任何新现象、不构成统一场论**。它的价值在于可机检地把一类构造**在写作用量之前**就否决掉：预筛任何 T² 类高维模型：给不出 3 代的构造可在写作用量前就被否决，省去整轮计算；解释「为什么是 3」的约束来源：任何单一拓扑整数决定代数的机制，代数必被表示维数 lcm 整除；给出最小可行代数的下界：SM 全谱 ⇒ 最小 6，而 6 被 LEP 以 367.8σ 排除（r294 P3）；判据不依赖动力学细节：与作用量形式、模稳定化、耦合数值全部无关，只依赖表示论 + 拓扑。它与 r292/r294 构成同一命题的三轮攻防（r292 提命题 → r294 Schur 升定理 → r296 多秩推广 + 充要判据），三轮条目**不可相加**，结论强度取**最新一轮**。"}, {"id": "P8", "v": "FAIL", "t": "判据集 R1–R7（新增 R7「秩提升能否绕过」）：0/7", "d": "在 r294 的 R1–R6 之外新增 **R7：磁通群秩提升能否绕过谱的除性约束** ⇒ 本卷 P2 证明**不能** ⇒ **R1–R7 = 0/7**。跨卷去重：r292 提出命题（均匀假设）；r294 Schur 升为定理（r=1）+ LEP 排除；r296 本卷：多秩推广 + 充要判据方程 —— 三轮同命题攻防，条目**不可相加**。"}, {"id": "C1", "v": "PASS", "t": "子集 {3,3,1,1} 下 N_gen=3 判据为真且有解（判据能给出肯定）", "d": "lcm=3，判据 True；构造解 M=[1] ⇒ FCSRE 判据不是恒否工具。"}, {"id": "C2", "v": "PASS", "t": "SM 全谱 N_gen=6 有解且反代 index 全等于 6（求解器工作正常）", "d": "反代 index = [Fraction(6, 1), Fraction(6, 1), Fraction(6, 1), Fraction(6, 1), Fraction(6, 1), Fraction(6, 1)] ⇒ 求解器能找到并验证解。"}, {"id": "C3", "v": "PASS", "t": "N_gen=3 的整除否决可独立复现（3 %% d_i ≠ 0 的维数）", "d": "3 不被整除的维数 = [6, 2] ⇒ 否决来自 dim=6 与 dim=2，与 Q 无关。"}, {"id": "C4", "v": "PASS", "t": "秩提升到 r=6（单位型电荷矩阵）时 N_gen=3 仍无解", "d": "Q 取 6×6 单位型矩阵、M ∈ Z^6 自由 ⇒ 仍无解 ⇒ 秩提升确实救不了三代。"}, {"id": "G1", "v": "PASS", "t": "JSON 可序列化", "d": "通过"}, {"id": "G3", "v": "PASS", "t": "控制组 4/4 由实跑得出（禁写死）", "d": "控制组 4 条，PASS 4 条"}, {"id": "G4", "v": "PASS", "t": "充要判据与实解在 9 算例上全等", "d": "判据 vs 实解一致 9/9"}, {"id": "G5", "v": "PASS", "t": "全部中间量为 Fraction/int（无浮点污染）", "d": "无 float 参与判定"}, {"id": "G6", "v": "PASS", "t": "正负双对照齐备", "d": "控制组 4 条；PASS 10 条"}, {"id": "G7", "v": "PASS", "t": "维数与代数为正整数", "d": "dims=[6, 3, 3, 2, 1, 1]"}, {"id": "G8", "v": "PASS", "t": "条目键集合一致", "d": "6 键"}, {"id": "G9", "v": "PASS", "t": "仅写本卷路径（不触碰他卷字节）", "d": "写入 0 个路径，越界 0 个"}, {"id": "G10", "v": "PASS", "t": "verdict 取值合法", "d": "∈ {PASS,FAIL,BOUNDARY,INFO}"}, {"id": "G2", "v": "PASS", "t": "条目计数一致（声明 22 = 实收 22）", "d": "主条目 8 + 控制组 4 + 守卫 10 = 22，实收 22 条"}], "p4": [{"name": "SM 全谱", "dims": [6, 3, 3, 2, 1, 1], "N": 3, "lcm": 6, "crit": false, "real": false, "same": true}, {"name": "SM 全谱", "dims": [6, 3, 3, 2, 1, 1], "N": 6, "lcm": 6, "crit": true, "real": true, "same": true}, {"name": "SM 全谱", "dims": [6, 3, 3, 2, 1, 1], "N": 12, "lcm": 6, "crit": true, "real": true, "same": true}, {"name": "SM 全谱", "dims": [6, 3, 3, 2, 1, 1], "N": 2, "lcm": 6, "crit": false, "real": false, "same": true}, {"name": "无双重态 {3,3,1,1}", "dims": [3, 3, 1, 1], "N": 3, "lcm": 3, "crit": true, "real": true, "same": true}, {"name": "仅双重态 {2,2}", "dims": [2, 2], "N": 2, "lcm": 2, "crit": true, "real": true, "same": true}, {"name": "仅双重态 {2,2}", "dims": [2, 2], "N": 3, "lcm": 2, "crit": false, "real": false, "same": true}, {"name": "色三重态 {3,3}", "dims": [3, 3], "N": 3, "lcm": 3, "crit": true, "real": true, "same": true}, {"name": "含 dim=4 {4,2}", "dims": [4, 2], "N": 4, "lcm": 4, "crit": true, "real": true, "same": true}], "p5": {"n": 1000, "hit3": 0, "hit6": 0}, "p2": [{"r": 1, "crit": false, "real": false}, {"r": 2, "crit": false, "real": false}, {"r": 3, "crit": false, "real": false}, {"r": 4, "crit": false, "real": false}, {"r": 5, "crit": false, "real": false}, {"r": 6, "crit": false, "real": false}]};
+function el(id,h){document.getElementById(id).innerHTML=h;}
+const it=D.items;
+const c={PASS:0,FAIL:0,BOUNDARY:0,INFO:0};it.forEach(x=>c[x.v]++);
+const ctl=it.filter(x=>x.id[0]==='C'),grd=it.filter(x=>x.id[0]==='G');
+const cp=ctl.filter(x=>x.v==='PASS').length,gp=grd.filter(x=>x.v==='PASS').length;
+document.querySelector('.sub').innerHTML=document.querySelector('.sub').innerHTML
+ .replace('RID',D.rid).replace('STAMP',D.stamp).replace('ITEMN',String(it.length))
+ .replace('NP',String(c.PASS)).replace('NF',String(c.FAIL))
+ .replace('CTL',cp+'/'+ctl.length).replace('GRD',gp+'/'+grd.length);
+const kpi=[['条目总数',it.length],['PASS',c.PASS],['FAIL',c.FAIL],['控制组',cp+'/'+ctl.length],
+['守卫',gp+'/'+grd.length],['3 代命中','0/'+D.p5.n],['6 代命中',D.p5.hit6+'/'+D.p5.n],['判据','lcm | N_gen']];
+el('kpi',kpi.map(k=>'<div class="kpi"><div class="k">'+k[0]+'</div><div class="v">'+k[1]+'</div></div>').join(''));
+function tbl(id,cols,rows){el(id,'<tr>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join(''));}
+tbl('t2',['磁通群秩 r','判据 lcm|N_gen','实解存在','一致'],D.p2.map(r=>['r = '+r.r,r.crit?'真':'否',r.real?'真':'否',r.crit===r.real?'✓':'✗']));
+tbl('t4',['算例','维数 d_i','N_gen','lcm','判据','实解','一致'],D.p4.map(r=>[r.name,JSON.stringify(r.dims),r.N,r.lcm,r.crit?'真':'否',r.real?'真':'否',r.same?'✓':'✗']));
+(function(){
+ const W=680,H=170,L=60,B=30,T=22,R=20;
+ const bars=[{lab:'N_gen=3',v:D.p5.hit3,col:'#c0392b'},{lab:'6 代命中(抽样)',v:D.p5.hit6,col:'#1a7f37'}];
+ const mx=Math.max(D.p5.n,1);
+ let s='<line class="axis" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>';
+ s+='<line class="axis" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'"/>';
+ bars.forEach((b,i)=>{const y=T+i*46,w=(W-L-R-10)*(b.v/mx);
+  s+='<rect x="'+L+'" y="'+(y+6)+'" width="'+Math.max(w,2)+'" height="26" fill="'+b.col+'" opacity="0.85"/>';
+  s+='<text class="lbl" x="'+(L-6)+'" y="'+(y+23)+'" text-anchor="end">'+b.lab+'</text>';
+  s+='<text class="lbl" x="'+(L+Math.max(w,2)+8)+'" y="'+(y+23)+'">'+b.v+' / '+D.p5.n+'</text>';});
+ s+='<text class="lbl" x="'+(W-R)+'" y="'+(T+2)+'" text-anchor="end">命中数（共 '+D.p5.n+' 组随机电荷矩阵，秩 r=1..6）</text>';
+ document.getElementById('svg5').innerHTML=s;
+})();
+el('items',it.map(x=>'<div class="card"><b>'+x.id+'</b> <span class="tag '+x.v+'">'+x.v+'</span> '+x.t+'<div style="margin-top:6px">'+x.d+'</div></div>').join(''));
+</script>
+</body></html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>TUFT-r341 · G6 EC 挠率源方程代价核算</title>
+<style>
+body{margin:0;padding:24px;background:#f7f8fa;color:#1f2328;font-family:"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.6}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:24px 0 10px;padding-left:8px;border-left:4px solid #2b5c9b}
+.sub{color:#5b6470;font-size:13px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #dfe3e8;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.mono{font-family:Consolas,monospace;font-size:12px;color:#5b6470}
+.tag{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;color:#fff}
+.PASS{background:#1a7f37}.FAIL{background:#c0392b}.BOUNDARY{background:#b8860b}.INFO{background:#2f6f9f}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.kpi{background:#fff;border:1px solid #dfe3e8;border-radius:8px;padding:12px 14px}
+.kpi .k{font-size:12px;color:#5b6470}.kpi .v{font-size:19px;font-weight:600;margin-top:2px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;background:#fff}
+th,td{border:1px solid #dfe3e8;padding:5px 9px}
+th{background:#eef1f5}
+td.n{text-align:right;font-family:Consolas,monospace}
+td.c{text-align:center}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0}
+.step{background:#eef1f5;border-radius:6px;padding:8px 10px;font-size:12px}
+.step b{display:block;font-size:13px;color:#1f2328;margin-bottom:2px}
+@media(max-width:760px){.flow{grid-template-columns:1fr 1fr}}
+</style></head><body>
+<h1>TUFT-r341 · 光速螺旋 G6：EC 独立挠率源方程代价核算</h1>
+<div class="sub">2026-11-01 · 判词：<b>EC-TORSION-ALGEBRAIC-SLAVE-CONFIRMED / TORSION-AND-KAPPA-TAU-SAME-DIMENSION-L-1 / PROPAGATING-TORSION-COSTS-ONE-LENGTH-PARAM-AND-6-DOF / BOSONIC-SECTOR-HAS-NO-GAUGE-INVARIANT-TORSION-SOURCE / G6-CLOSED-FOR-LIGHT-SPIRAL-OPEN-FOR-FERMION-SECTOR</b></div>
+<h2>一、总账</h2><div class="grid" id="kpi"></div>
+<h2>二、量纲对撞：挠率与 κ、τ 同为 L⁻¹</h2><div class="card" id="dims"></div>
+<h2>三、EC 代数 slave：34 → 24 确定 → 10 → 2</h2>
+<div class="flow" id="flow"></div>
+<h2>四、传播化的代价（λ_T 与自由度）</h2>
+<div class="card" id="cost"></div>
+<h2>五、λ_T → m_T 换算表（ℏ/(λ_T c)）</h2><div id="lamtab"></div>
+<h2>六、条目逐条</h2><div id="items"></div>
+<script>
+const D={
+"kpis":[["条目总数",22],["PASS",17],["BOUNDARY",2],["INFO",1],["FAIL",0],["控制组","4/4"],["守卫","10/10"],["rc",0]],
+"dims":[["G","M⁻¹L³T⁻²"],["c","LT⁻¹"],["ℏ","ML²T⁻¹"],["σ = ℏ/L³","ML⁻¹T⁻¹"],["G/c³","M⁻¹T"],["T（挠率）","L⁻¹"],["κ, τ（r332）","L⁻¹"],["(∂T)²","L⁻⁴"],["ℏc(∂T)²","ML⁻¹T⁻²"]],
+"flow":[["场量","度规 10 + 挠率 24 = 34"],["代数方程","联络方程不含任何导数 ⇒ 24 个分量全被自旋密度确定"],["剩余","34 − 24 = 10 个度规分量"],["传播自由度","10 − 4 微分同胚 − 4 动量 = 2 极化（与 GR 同）"]],
+"cost":[["动能项","(ℏc/2)(∂T)² —— ℏc 因子补齐 L⁻⁴ → 能量密度（同 R01 结构）"],["质量项","(ℏc/2λ_T²)T² —— 量纲齐，但引入 1 个新连续参数 λ_T"],["自由度","≥ 6（24 = 4 矢量 + 4 轴矢 + 16 张量 ⇒ 六扇区各 ≥1）"],["无质量极限","λ_T→∞ ⇒ 撞 GW170817 的 |c_T/c−1| ≲ 1e-15"],["结论","传播化不是免费：+1 参数 + ≥6 自由度 + GW 约束"]],
+"lamtab":[[1,"1 m","3.5177e-43","3.1615e-26"],[1000,"1 km","3.5177e-46","3.1615e-29"],[1.495978707e11,"1 AU","2.3514e-54","2.1134e-37"]],
+"items":[{"id":"Q1","v":"PASS","t":"挠率量纲门：T 与 κ,τ 同为 L⁻¹","d":"dim(σ)=ML⁻¹T⁻¹、dim(G/c³)=M⁻¹T，乘积 = L⁻¹ ⇒ 与 r332 的 κ,τ 同维，可直接对撞。"},{"id":"Q2","v":"PASS","t":"EC 代数 slave 与自由度计数","d":"34 → 24 代数确定 → 10 度规 → 2 极化；联络方程不含导数（机器 algebraic=True）。"},{"id":"Q3","v":"PASS","t":"传播化量纲可行 + 参数账 +1","d":"(ℏc/2)(∂T)² 与 (ℏc/2λ_T²)T² 皆能量密度；新增 λ_T。"},{"id":"Q4","v":"BOUNDARY","t":"纯玻色扇区无规范不变挠率源","d":"标量自旋密度精确 0；Maxwell 改进 EMT 反对称部 0（F²=38）；规范依赖项存疑登记。"},{"id":"Q5","v":"PASS","t":"G6 对光速螺旋纲领不可用","d":"光子层非零 κ,τ 无 EC 挠率解释 ⇒ 对光子层封闭；费米子扇区开放。"},{"id":"Q6","v":"BOUNDARY","t":"GW 速度约束与 λ_T 量级表","d":"无质量扇区撞 1e-15；有质量则参数记账（见下表）。"},{"id":"Q7","v":"PASS","t":"传播化自由度下界 ≥6","d":"24 = 4+4+16 ⇒ 六扇区 {2++,2--,1++,1--,0++,0--}；分量计数下界。"},{"id":"Q8","v":"INFO","t":"总判词与遗留","d":"X-R341-1 费米子扇区可观测量与 λ_T 上界；X-R341-2 规范破坏耦合口径；X-R341-3 六扇区严格约束计数。"},{"id":"C1","v":"PASS","t":"量纲工具自检","d":"两项皆 ML⁻¹T⁻²；去掉 ℏc 或 λ_T 即失配（门非恒真）。"},{"id":"C2","v":"PASS","t":"阳性对照","d":"σ=3/7、κ_T=1/5 ⇒ T=3/35≠0。"},{"id":"C3","v":"PASS","t":"负对照","d":"σ=0 ⇒ T=0。"},{"id":"C4","v":"PASS","t":"mpmath 50 位复核","d":"λ_T=1 m ⇒ m_T=3.5177e-43 kg，差 <1e-40。"},{"id":"G1–G10","v":"PASS","t":"守卫 10/10","d":"dps=50；计数 22；仅写本卷；verdict 合法；控制组 4/4；取号 r341（先取 r339 落盘，落盘后见并行会话的 r339 已于 20:38:00 先落全组 ⇒ 本卷让号改 r341）；量纲门非恒真；两项量纲齐；0.5 s；不跑 refresh_catalog.py / 不 git / 不触碰他卷。"}]
+};
+document.getElementById('kpi').innerHTML=D.kpis.map(e=>'<div class="kpi"><div class="k">'+e[0]+'</div><div class="v">'+e[1]+'</div></div>').join('');
+document.getElementById('dims').innerHTML='<div class="mono">'+D.dims.map(e=>e[0]+' = '+e[1]).join('　·　')+'</div><div class="mono" style="margin-top:8px">⇒ dim(T) = dim(κ) = dim(τ) = L⁻¹：量纲层「可以对撞」，因此判定必须来自源结构（Q2/Q4），不能靠量纲回避。</div>';
+document.getElementById('flow').innerHTML=D.flow.map(e=>'<div class="step"><b>'+e[0]+'</b>'+e[1]+'</div>').join('');
+document.getElementById('cost').innerHTML=D.cost.map(e=>'<div class="mono" style="margin:4px 0"><b>'+e[0]+'</b>：'+e[1]+'</div>').join('');
+document.getElementById('lamtab').innerHTML='<table><tr><th>λ_T（m）</th><th>尺度</th><th>m_T = ℏ/(λ_T c)（kg）</th><th>静能（J）</th></tr>'+D.lamtab.map(e=>'<tr><td class="n">'+e[0].toExponential(2)+'</td><td class="c">'+e[1]+'</td><td class="n">'+e[2]+'</td><td class="n">'+e[3]+'</td></tr>').join('')+'</table>';
+document.getElementById('items').innerHTML=D.items.map(x=>'<div class="card"><span class="tag '+x.v+'">'+x.v+'</span> <b>'+x.id+'</b> · '+x.t+'<div class="mono" style="margin-top:6px">'+x.d+'</div></div>').join('');
+</script></body></html>
