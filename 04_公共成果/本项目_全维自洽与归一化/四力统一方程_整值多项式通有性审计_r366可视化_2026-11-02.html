@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r366 · 整值多项式通有性审计：整性判别力恒零，系数值判别力满格</title>
+<style>
+  :root { --bg:#f7f8fa; --card:#ffffff; --ink:#1f2328; --sub:#5b6570;
+          --line:#d8dee6; --true:#2f7d4f; --false:#b23a3a; --accent:#2f5fb3; --warn:#9a6b00; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:var(--bg); color:var(--ink);
+         font-family:"Segoe UI","Microsoft YaHei",sans-serif; line-height:1.65; }
+  .wrap { max-width:1000px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 6px; }
+  h2 { font-size:16px; margin:26px 0 8px; padding-left:9px; border-left:4px solid var(--accent); }
+  .sub { color:var(--sub); font-size:13px; margin-bottom:14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px;
+          padding:14px 16px; margin:12px 0; }
+  .verdict { font-family:Consolas,monospace; font-size:11.5px; word-break:break-all;
+             background:#eef2f8; border:1px solid var(--line); border-radius:6px; padding:10px; }
+  table { border-collapse:collapse; width:100%; font-size:12.5px; margin-top:8px; }
+  th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; }
+  th { background:#eef2f8; }
+  .t { color:var(--true); font-weight:600; }
+  .f { color:var(--false); font-weight:600; }
+  .w { color:var(--warn); font-weight:600; }
+  .fig { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px; }
+  .cap { font-size:12px; color:var(--sub); margin:6px 2px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT-r366 · 整值多项式通有性审计：整性判别力恒零，系数值判别力满格</h1>
+  <div class="sub">攻 <code>X-R358-1</code> + <code>X-R358-2</code> · 2026-11-02 ·
+    items 25（PASS 25 / FAIL 0 / INFO 0）· 控制组 15/15 · 守卫 19/19 · rc=0 · 不占度（候选 37）</div>
+
+  <div class="card">
+    <b>一句话</b>：<b>整性判不出几何，系数值判得出。</b>
+    牛顿系数有完全闭式 <code>a_m = C(n+1,m) − C(n+1−d, n+1−m)</code>（定理 H），
+    由 <code>(n,d)</code> 两个参数<b>完全钉死</b>，零自由度 —— 而一般整值多项式有 <code>n+1</code> 个自由参数。
+    于是：r346 引理 L 与 r358 定理 E 在随机整值多项式上 <b>100% 通过（判别力 0）</b>，
+    定理 H 却 <b>0/16000 通过（判别力 ≈1）</b>。
+    更顺带的一点：定理 H 的证明只要 <b>Koszul 短正合列 + χ 加性</b>三行，<b>不需要 Todd 类</b>。
+  </div>
+
+  <div class="card">
+    <b>判决主文</b>
+    <div class="verdict">X-R358-1-REDUCED-TO-SINGLE-ORBIT__X-R358-2-ANSWERED-PRIME-FACTORS-OF-D-COME-FROM-DENOMINATOR-OF-C__THEOREM-H-NEWTON-COEFFICIENTS-ARE-CLOSED-FORM-C-nplus1-choose-m-MINUS-C-nplus1-minus-d-choose-nplus1-minus-m__HOLDS-FOR-ALL-d-INCLUDING-CY-AND-GENERAL-TYPE-SO-THE-TD-ROUTE-OF-r339-r346-r358-IS-SUFFICIENT-BUT-UNNECESSARY__INTEGRALITY-CRITERIA-HAVE-ZERO-DISCRIMINATING-POWER-BUT-COEFFICIENT-VALUES-HAVE-FULL-POWER-ZERO-OUT-OF-4000__STILL-NOT-PREDICTED</div>
+  </div>
+
+  <h2>图 1 · 定理 H：牛顿系数被 (n,d) 完全钉死，零自由度</h2>
+  <div class="fig"><svg id="fig1" viewBox="0 0 680 340" width="680" height="340"></svg></div>
+  <div class="cap">每个 <code>(n,d)</code> 给出唯一一条系数向量 <code>a</code>（图中每行一条，颜色深浅表示数值）。
+    几何类因此只有 <b>2 个参数</b>；对照地，一般整值多项式 <code>P(k)=Σ a_m C(k,m)</code> 的 <code>a</code> 可任取
+    <b>n+1 个整数</b>。左侧标出两条退化：<code>d=1</code> 退化为 <code>CP^n</code>（<code>a_m = C(n,m)</code>）、
+    <code>d=n+1</code> 时 <code>a_m = C(n+1,m)</code>。</div>
+  <div class="card"><div id="tbl1"></div></div>
+
+  <h2>图 2 · 判别力翻转：三个判据在两侧对照类上的通过率</h2>
+  <div class="fig"><svg id="fig2" viewBox="0 0 680 330" width="680" height="330"></svg></div>
+  <div class="cap">同一批 16000 个随机整值多项式上：r346 引理 L 与 r358 定理 E <b>100% 通过</b>（它们是
+    <code>Int(Z)</code> 的定义性性质，恒绿 ⇒ 判别力 0）；定理 H <b>0/16000</b>。
+    <b>判别力 = 1 − Int(Z) 通过率</b>，故三个判据分别是 0、0、≈1。
+    右下的敏感性条显示：几何 <code>a</code> 扰动一位后存活 <b>4/126</b>，且 4 次全部是
+    <b>族内移动</b>（<code>(n,d=n)</code> 与 <code>(n,d=n+1)</code> 只差末位），族外漏网 <b>0</b>。</div>
+  <div class="card"><div id="tbl2"></div></div>
+
+  <h2>图 3 · 三条独立路径两两对拍 51 组 × 3 对，失配 0（含 CY 与一般型）</h2>
+  <div class="fig"><svg id="fig3" viewBox="0 0 680 320" width="680" height="320"></svg></div>
+  <div class="cap">路径 A（td 级数：Bernoulli → <code>T(h)^{n+2}/T(dh)</code> → Stirling）、
+    路径 C（Koszul 计数：<code>C(n+1+k,n+1) − C(n+1+k−d,n+1)</code>）、路径 H（闭式）两两对拍。
+    关键是 <b>C 不需要消灭定理</b> ⇒ 定理 H 跨过 CY 与一般型仍成立（非 Fano 24 组，失配 0）。
+    自检：<code>d=n+2</code> 时 <code>χ(O_X)=1+(−1)^n</code> ⇒ 椭圆曲线 0、K3 2、五次三维 CY 0、四次曲线 −2，全中。</div>
+  <div class="card"><div id="tbl3"></div></div>
+
+  <h2>图 4 · 陪集：三类分流、D(c) 的素因子来源、以及 N=D 的归约</h2>
+  <div class="fig"><svg id="fig4" viewBox="0 0 680 350" width="680" height="350"></svg></div>
+  <div class="cap">140 个陪集分流：<b>EMPTY 78 / FULL 58 / PARTIAL 4</b>（部分只占 2.9%，与 r358 的 11/396≈2.8% 一致）。
+    <code>D(c)</code> 的素因子集合 <b>⊆ c 的分母 q 的素因子集合</b>（140 组 0 违例）
+    ⇒ <code>D</code> 爆到 <code>3.6e7</code> 是 <b>c 的算术</b>，不是几何的复杂性。
+    部分陪集上 <code>N = D</code> 4/4，且恒等式 <code>N = H/|S|</code>、<code>|S| = H/D = n!</code>
+    ⇒ <code>N=D</code> <b>等价于</b>「解集在 <code>Z/H</code> 上是一条轨道」——后者未独立证明，
+    故本卷只说<b>归约</b>，不说证明。</div>
+  <div class="card"><div id="tbl4"></div></div>
+
+  <h2>自审：本卷踩出的六处</h2>
+  <div class="card">
+    <table>
+      <tr><th>#</th><th>坑</th><th>修法</th></tr>
+      <tr><td>1</td><td>CTL12 的 <code>ok</code> 写死 <code>True</code>（明知故犯，本库第三卷同族）</td><td>G19（AST 层）抓出；改真判据「计入 + 跳过 = 枚举总数」</td></tr>
+      <tr><td>2</td><td>B05 期望值靠猜（猜 ≤1 而真值 4）</td><td>改由解析路径 <code>closedH(n,d+1)−closedH(n,d)=C(n−d,n−m)</code> 独立算出</td></tr>
+      <tr><td>3</td><td>定价约束太弱 ⇒ 0 位被钉住（与 r358 同族）</td><td>补 K7「本卷至少产出一个结论」⇒ 钉住 S1</td></tr>
+      <tr><td>4</td><td>CTL4 用 <code>isinstance(x,int)</code> 判 Fraction ⇒ 恒假</td><td>改 <code>F(x).denominator == 1</code></td></tr>
+      <tr><td>5</td><td>CTL15 扰动改错地方：<code>BERN[2]=1/6</code> 经 <code>/2!</code> 后仍是 <code>1/12</code></td><td>负对照恒绿（漏网 51/51）⇒ 改 <code>1/3</code> 后失配 44/51</td></tr>
+      <tr><td>6</td><td>解集周期未做环形回绕（探查 3 的 bug，<code>N=None</code>）</td><td>加 C06 成对对照：环形 4 vs 非环形 None</td></tr>
+    </table>
+    <div style="margin-top:8px">家族自伤第七卷 <code>r327→r331→r335→r339→r346→r358→r366</code>，落点仍在「<b>守错门</b>」。</div>
+  </div>
+
+  <h2>诚实边界</h2>
+  <div class="card">
+    定理 H 证的是「<b>给不出别的</b>牛顿系数」，没证「<b>所以必须给这个</b>」——与 r327 同型。
+    判别力 ≈1 只在「随机整值多项式」这一个对照类上测过，换对照类可能下降。
+    <code>X-R358-1</code> 只是<b>归约</b>不是证明。框架<b>依然不预言 3</b>。
+  </div>
+</div>
+
+<script>
+function mk(svg, tag, a) {
+  var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in a) { e.setAttribute(k, a[k]); }
+  svg.appendChild(e);
+  return e;
+}
+function tx(svg, x, y, s, fs, fill, anchor) {
+  var t = mk(svg, 'text', { x: x, y: y, 'font-size': fs || 12,
+                            fill: fill || '#333', 'text-anchor': anchor || 'start' });
+  t.textContent = s;
+  return t;
+}
+function rbox(svg, x, y, w, h, fill, stroke, rx) {
+  return mk(svg, 'rect', { x: x, y: y, width: w, height: h, fill: fill,
+                           stroke: stroke || '#c8d0da', rx: rx || 4 });
+}
+function line(svg, x1, y1, x2, y2, stroke, w, dash) {
+  var a = { x1: x1, y1: y1, x2: x2, y2: y2, stroke: stroke || '#9aa5b1' };
+  a['stroke-width'] = w || 1;
+  if (dash) { a['stroke-dasharray'] = dash; }
+  return mk(svg, 'line', a);
+}
+function arrow(svg, x1, y1, x2, y2, stroke) {
+  mk(svg, 'path', { d: 'M ' + x1 + ' ' + y1 + ' L ' + x2 + ' ' + y2 + ' Z',
+                    stroke: stroke || '#5b6570', 'stroke-width': 1.4, fill: 'none' });
+  var dx = x2 - x1, dy = y2 - y1, L = Math.sqrt(dx * dx + dy * dy);
+  if (L > 0) {
+    var ux = dx / L, uy = dy / L, s = 6;
+    mk(svg, 'path', { d: 'M ' + x2 + ' ' + y2 +
+      ' L ' + (x2 - s * ux + 3 * uy) + ' ' + (y2 - s * uy - 3 * ux) +
+      ' L ' + (x2 - s * ux - 3 * uy) + ' ' + (y2 - s * uy + 3 * ux) + ' Z',
+      fill: stroke || '#5b6570', stroke: 'none' });
+  }
+}
+
+var ACC = '#2f5fb3', TRUE = '#2f7d4f', FALSE = '#b23a3a', WARN = '#9a6b00';
+var INK = '#1f2328', SUB = '#5b6570';
+
+/* ---------- 图 1：系数被 (n,d) 钉死 ---------- */
+(function () {
+  var s = document.getElementById('fig1');
+  var W = 680, H = 340;
+
+  // 左：公式块
+  rbox(s, 14, 16, 300, 78, '#eef2f8', '#c8d0da');
+  tx(s, 26, 38, 'a_m = C(n+1, m) − C(n+1−d, n+1−m)', 13, ACC);
+  tx(s, 26, 58, '广义二项式 C(x,r)=x(x−1)…(x−r+1)/r!', 11, SUB);
+  tx(s, 26, 76, 'd > n+1 时上标为负：C(−p,r)=(−1)^r C(p+r−1,r)', 11, SUB);
+
+  // 右：自由度对比
+  rbox(s, 336, 16, 330, 78, '#f2f7f2', '#c8d0da');
+  tx(s, 348, 38, '几何类自由度：2 个参数 (n,d)', 12, TRUE);
+  tx(s, 348, 58, 'Int(Z) 自由度：n+1 个自由整数', 12, FALSE);
+  tx(s, 348, 76, '⇒ n ≥ 3 时几何类是零测真子集', 11, SUB);
+
+  // 系数矩阵：行 = (n,d)，列 = a_0..a_6
+  var rows = [[1,1,'1,1'],[2,3,'1,3,3'],[3,4,'1,4,6,4'],[4,5,'1,5,10,10,5'],
+              [5,6,'1,6,15,20,15,6'],[6,7,'1,7,21,35,35,21,7'],
+              [4,4,'1,5,10,10,4'],[3,3,'1,4,6,3'],[2,2,'1,3,2']];
+  var x0 = 120, y0 = 112, cw = 58, ch = 22;
+  tx(s, 14, y0 + 14, '(n,d)', 11, SUB);
+  for (var m = 0; m < 7; m++) {
+    tx(s, x0 + m * cw + 22, y0 + 4, 'a' + m, 11, SUB, 'middle');
+  }
+  for (var i = 0; i < rows.length; i++) {
+    var y = y0 + 12 + i * ch;
+    tx(s, 16, y + 14, '(' + rows[i][0] + ',' + rows[i][1] + ')', 11, INK);
+    var vals = rows[i][2].split(',');
+    for (var m = 0; m < 7; m++) {
+      var v = (m < vals.length) ? vals[m] : null;
+      var fill = '#ffffff', stroke = '#e2e7ee';
+      if (v !== null) {
+        var numv = parseInt(v, 10);
+        var t = Math.min(1, numv / 35);
+        var g = Math.round(238 - 60 * t);
+        fill = 'rgb(' + g + ',' + Math.round(g + 6) + ',' + Math.round(g + 14) + ')';
+        stroke = '#c8d0da';
+      }
+      rbox(s, x0 + m * cw, y, cw - 4, ch - 3, fill, stroke, 3);
+      if (v !== null) { tx(s, x0 + m * cw + 22, y + 14, v, 11, INK, 'middle'); }
+    }
+  }
+  tx(s, 14, H - 12, '每个 (n,d) 只给一条向量 ⇒ 参数 2 个；Int(Z) 每格可任取 ⇒ 参数 n+1 个', 11, SUB);
+})();
+
+/* ---------- 图 2：判别力翻转 ---------- */
+(function () {
+  var s = document.getElementById('fig2');
+  var W = 680, H = 330;
+
+  var names = ['r346 引理 L\n(系数全整)', 'r358 定理 E\n(整数陪集整段)', 'r366 定理 H\n(系数值)'];
+  var geo = [1.0, 1.0, 1.0];
+  var intz = [1.0, 1.0, 0.0];
+  var ax = 210, aw = 380, y0 = 40, bh = 30;
+
+  tx(s, 14, 26, '判据', 12, SUB);
+  tx(s, ax, 26, '通过率（几何侧 ■ / Int(Z) 侧 □，16000 样本）', 12, SUB);
+
+  for (var i = 0; i < 3; i++) {
+    var y = y0 + i * 62;
+    var parts = names[i].split('\n');
+    tx(s, 14, y + 16, parts[0], 12, INK);
+    tx(s, 14, y + 32, parts[1], 11, SUB);
+
+    // 几何侧
+    rbox(s, ax, y + 2, aw, bh / 2 - 2, ACC, ACC, 2);
+    tx(s, ax + aw + 8, y + 14, '几何 ' + (geo[i] * 100).toFixed(0) + '%', 11, ACC);
+
+    // Int(Z) 侧
+    var w2 = Math.max(2, Math.round(aw * intz[i]));
+    rbox(s, ax, y + bh / 2 + 2, w2, bh / 2 - 2, '#ffffff', FALSE, 2);
+    if (intz[i] === 0) {
+      tx(s, ax + 6, y + bh - 4, '0 / 16000', 11, FALSE);
+    } else {
+      tx(s, ax + w2 + 8, y + bh - 2, '16000 / 16000', 11, FALSE);
+    }
+    // 判别力
+    var pw = i === 2 ? TRUE : SUB;
+    tx(s, ax, y + bh + 18, '判别力 = ' + (i === 2 ? '≈1' : '0'), 12, pw);
+  }
+
+  // 敏感性
+  var sy = y0 + 3 * 62 + 6;
+  line(s, 14, sy, 666, sy, '#d8dee6', 1);
+  tx(s, 14, sy + 20, '敏感性：几何 a 扰动一位（+1）后的存活情况', 12, INK);
+  rbox(s, 210, sy + 6, 380, 18, '#ffffff', '#c8d0da', 2);
+  var sw = Math.round(380 * 4 / 126);
+  rbox(s, 210, sy + 6, sw, 18, TRUE, TRUE, 2);
+  tx(s, 210 + 380 + 8, sy + 20, '4 / 126', 11, TRUE);
+  tx(s, 14, sy + 42, '存活的 4 次全部是族内移动：(n,d=n) 与 (n,d=n+1) 的向量只差末位 ⇒ 族外漏网 0', 11, SUB);
+})();
+
+/* ---------- 图 3：三路径对拍 ---------- */
+(function () {
+  var s = document.getElementById('fig3');
+  var W = 680, H = 320;
+
+  var nodes = [
+    { x: 30,  y: 40,  w: 180, h: 62, t: '路径 A：td 级数', c: '#eef2f8',
+      l: ['Bernoulli 展开 T(h)', 'T(h)^{n+2}/T(dh)', 'Stirling → 牛顿基'] },
+    { x: 250, y: 40,  w: 180, h: 62, t: '路径 C：Koszul 计数', c: '#f2f7f2',
+      l: ['C(n+1+k,n+1)', '− C(n+1+k−d,n+1)', '（χ 加性，不需消灭）'] },
+    { x: 470, y: 40,  w: 180, h: 62, t: '路径 H：闭式', c: '#f7f4ee',
+      l: ['a_m = C(n+1,m)', '− C(n+1−d,n+1−m)', '（广义二项式）'] }
+  ];
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
+    rbox(s, n.x, n.y, n.w, n.h, n.c, '#c8d0da', 5);
+    tx(s, n.x + 10, n.y + 18, n.t, 12, INK);
+    for (var j = 0; j < n.l.length; j++) {
+      tx(s, n.x + 10, n.y + 34 + j * 13, n.l[j], 10.5, SUB);
+    }
+  }
+  arrow(s, 210, 71, 248, 71, ACC);
+  arrow(s, 430, 71, 468, 71, ACC);
+  arrow(s, 340, 102, 340, 132, ACC);
+  arrow(s, 340, 132, 120, 132, ACC);
+  tx(s, 250, 128, '两两对拍', 11, ACC);
+  tx(s, 130, 148, '失配 0', 11, TRUE);
+
+  // 结果条
+  var kinds = [['Fano  d ≤ n+1', 27, '#dfe8f5'], ['CY  d = n+2', 6, '#e6f2e6'],
+               ['一般型  d > n+2', 18, '#f7efe2']];
+  var bx = 30, by = 170, bw = 620, tot = 51, acc = 0;
+  tx(s, 30, 162, '51 组的类型分布（三类全部失配 0）', 12, INK);
+  for (var k = 0; k < kinds.length; k++) {
+    var w = Math.round(bw * kinds[k][1] / tot);
+    rbox(s, bx + acc, by, w, 34, kinds[k][2], '#c8d0da', 3);
+    tx(s, bx + acc + 8, by + 21, kinds[k][0] + '  ' + kinds[k][1] + ' 组', 11, INK);
+    acc += w;
+  }
+  tx(s, 30, by + 56, '非 Fano 共 24 组（占 47.1%），失配 0 ⇒ 定理 H 不需要消灭定理', 11, SUB);
+
+  // CY 自检
+  var cy = [['椭圆曲线 n=1,d=3', '0'], ['K3 n=2,d=4', '2'], ['五次三维 CY n=3,d=5', '0'],
+            ['六次四维 CY n=4,d=6', '2'], ['四次曲线 n=1,d=4', '−2']];
+  tx(s, 30, by + 84, '自检 a_0 = χ(O_X) = 1+(−1)^n（CY）与 1−g（曲线）：', 11.5, INK);
+  for (var c = 0; c < cy.length; c++) {
+    var cx = 30 + (c % 3) * 210, cyy = by + 104 + Math.floor(c / 3) * 20;
+    tx(s, cx, cyy, cy[c][0] + ' → ' + cy[c][1], 11, TRUE);
+  }
+})();
+
+/* ---------- 图 4：陪集分流与 D(c) ---------- */
+(function () {
+  var s = document.getElementById('fig4');
+  var W = 680, H = 350;
+
+  // 分流条
+  var parts = [['EMPTY', 78, '#f5e6e6'], ['FULL', 58, '#e6f2e6'], ['PARTIAL', 4, '#e6eef7']];
+  var bx = 30, by = 46, bw = 620, tot = 140, acc = 0;
+  tx(s, 30, 32, '140 个陪集的三类分流（部分只占 2.9%）', 12, INK);
+  for (var i = 0; i < parts.length; i++) {
+    var w = Math.round(bw * parts[i][1] / tot);
+    rbox(s, bx + acc, by, w, 32, parts[i][2], '#c8d0da', 3);
+    tx(s, bx + acc + 8, by + 20, parts[i][0] + ' ' + parts[i][1], 11, INK);
+    acc += w;
+  }
+  tx(s, 30, by + 50, '空陪集 78 个中 D>12 的有 56 个，最大 D = 2048 ⇒ 固定窗口法在原理上不可靠', 11, SUB);
+
+  // D 的素因子归属
+  rbox(s, 30, by + 66, 620, 62, '#eef2f8', '#c8d0da', 5);
+  tx(s, 42, by + 86, 'X-R358-2：D(c) 的素因子集合 ⊆ c 的分母 q 的素因子集合', 12, ACC);
+  tx(s, 42, by + 104, '140 组违例 0 ⇒ D 爆到 3.6e7 是「c 的算术」，不是「几何的复杂性」', 11, SUB);
+  tx(s, 42, by + 120, '（精确幂次未给：q=3 时 D=3^5、q=4 时 D=2^11，转入 X-R366-4）', 11, SUB);
+
+  // N=D 归约链
+  var y = by + 150;
+  tx(s, 30, y, 'X-R358-1 的归约链：', 12, INK);
+  var steps = ['|S| = H/D = n!', 'N = H / |S|', 'H = D·n!', '⇒ N = D ⟺ 解集单轨道'];
+  for (var k = 0; k < steps.length; k++) {
+    var sx = 30 + k * 160;
+    rbox(s, sx, y + 12, 148, 34, '#ffffff', k === 3 ? WARN : '#c8d0da', 4);
+    tx(s, sx + 8, y + 33, steps[k], 11.5, k === 3 ? WARN : INK);
+    if (k < 3) { arrow(s, sx + 148, y + 29, sx + 158, y + 29, '#5b6570'); }
+  }
+  tx(s, 30, y + 66, '部分陪集上 N = D：本卷 4/4（r358 另有 11/11，合计 15/15）；', 11, SUB);
+  tx(s, 30, y + 82, '但「解集在 Z/H 上是一条轨道」未独立证明 ⇒ 本卷只说归约，不说证明。', 11, WARN);
+})();
+
+/* ---------- 表格 ---------- */
+function tbl(id, head, rows) {
+  var h = '<table><tr>';
+  for (var i = 0; i < head.length; i++) { h += '<th>' + head[i] + '</th>'; }
+  h += '</tr>';
+  for (var r = 0; r < rows.length; r++) {
+    h += '<tr>';
+    for (var c = 0; c < rows[r].length; c++) { h += '<td>' + rows[r][c] + '</td>'; }
+    h += '</tr>';
+  }
+  document.getElementById(id).innerHTML = h + '</table>';
+}
+tbl('tbl1', ['(n,d)', 'a 向量', '说明'],
+  [['(1,1)', '1, 1', 'd=1 ⇒ CP^1，a_m = C(1,m)'],
+   ['(2,3)', '1, 3, 3', 'CP² 中三次曲线（Fano 边界）'],
+   ['(3,4)', '1, 4, 6, 4', 'a_m = C(4,m)'],
+   ['(6,7)', '1, 7, 21, 35, 35, 21, 7', 'a_m = C(7,m)'],
+   ['(1,3)', '0, 3', '椭圆曲线：a_0 = χ(O) = 0'],
+   ['(2,4)', '2, 2, 4', 'K3：a_0 = 2'],
+   ['(3,5)', '0, 5, 5, 5', '五次三维 CY：a_0 = 0'],
+   ['(1,4)', '−2, 4', '四次曲线 g=3：a_0 = 1−g = −2']]);
+
+tbl('tbl2', ['判据', '几何类通过率', 'Int(Z) 通过率', '判别力', '备注'],
+  [['r346 引理 L', '100%', '16000/16000', '<span class="f">0</span>', '整值多项式的定义性性质'],
+   ['r358 定理 E', '100%', '16000/16000', '<span class="f">0</span>', 'c=0 时 b_i = a_i 全整'],
+   ['r366 定理 H', '51/51', '<span class="t">0/16000</span>', '<span class="t">≈1</span>', '系数值的具体约束'],
+   ['敏感性（B05）', '存活 4/126', '—', '—', '4 次全为族内移动，族外漏网 0']]);
+
+tbl('tbl3', ['路径', '中间量', '是否需要消灭定理', '51 组失配'],
+  [['A（td 级数）', 'c_j、Stirling 数', '需要（否则 χ ≠ h⁰）', '0'],
+   ['C（Koszul 计数）', '广义二项式', '<span class="t">不需要</span>', '0'],
+   ['H（闭式）', '广义二项式', '<span class="t">不需要</span>', '0'],
+   ['CTL14（上标错位）', 'C(n+1−d, m)', '—', '<span class="w">48/51 失配，漏网 3</span>'],
+   ['CTL15（错算 td）', 'T_2: 1/12→1/6', '—', '<span class="w">44/51 失配，漏网 7</span>']]);
+
+tbl('tbl4', ['陪集类', '数量', 'D 的取值', '周期结论'],
+  [['EMPTY（无整点）', '78', '2 … 2048（56 个 &gt;12）', '周期退化为 1（空集）'],
+   ['FULL（整段）', '58', '全部 D = 1', 'N = 1 = D'],
+   ['PARTIAL（部分）', '4', '2, 4', 'N = D（4/4）'],
+   ['合计', '140', '素因子 ⊆ q 的素因子（违例 0）', 'N=D 归约为单轨道']]);
+</script>
+</body>
+</html>

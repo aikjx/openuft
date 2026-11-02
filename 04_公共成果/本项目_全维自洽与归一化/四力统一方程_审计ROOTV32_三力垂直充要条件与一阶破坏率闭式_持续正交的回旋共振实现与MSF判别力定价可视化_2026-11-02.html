@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>审计 ROOT V32 三力垂直原理：充要条件机核、一阶破坏率闭式、持续正交的回旋共振实现</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2d3d;--mut:#5a6b7b;--line:#e3e8ef;
+--pass:#1a9d54;--fail:#d63a3a;--info:#2b6cb0;--acc:#b8860b;}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);
+font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+.wrap{max-width:980px;margin:0 auto;padding:24px}
+h1{font-size:21px;margin:0 0 4px} .sub{color:var(--mut);font-size:13px;margin-bottom:18px}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
+.kpi{flex:1 1 140px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.kpi .k{font-size:12px;color:var(--mut)} .kpi .v{font-size:18px;font-weight:700;color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.card h3{margin:0 0 8px;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-weight:600}
+.pass{color:var(--pass);font-weight:700} .fail{color:var(--fail);font-weight:700}
+.info{color:var(--info);font-weight:700}
+.note{font-size:12px;color:var(--mut);margin-top:8px}
+.eq{background:#f0f6ff;border:1px solid #cfe0ff;border-radius:8px;padding:8px 10px;font-size:13px}
+.warn{background:#fdf3f4;border:1px solid #f0c0c4;border-radius:8px;padding:8px 10px;font-size:13px;color:#8a2a2a}
+.ok{background:#f1faf4;border:1px solid #bfe6ce;border-radius:8px;padding:8px 10px;font-size:13px;color:#15663a}
+</style></head><body><div class="wrap">
+<h1>审计 ROOT V32 三力垂直原理：充要条件机核、一阶破坏率闭式、持续正交的回旋共振实现</h1><div class="sub">TUFT-370 · 审计 ROOT V32 来料 · 2026-11-02</div>
+<div class="kpis"><div class='kpi'><div class='k'>V32-1 充要条件</div><div class='v'>真</div></div><div class='kpi'><div class='k'>一阶破坏率</div><div class='v'>有闭式</div></div><div class='kpi'><div class='k'>偏离表最大差</div><div class='v'>26.78°</div></div><div class='kpi'><div class='k'>交叉项（本卷）</div><div class='v'>-24.5%</div></div><div class='kpi'><div class='k'>|ṅ|min/(κ0v0)</div><div class='v'>1.000000</div></div><div class='kpi'><div class='k'>持续正交机制</div><div class='v'>回旋共振</div></div></div>
+<div class="card"><h3>§1 · 判词</h3><div class="eq">ORTHOGONALITY-CONDITIONS-TRUE__BREAKING-FIRST-ORDER__SUSTAINED-ORTHOGONALITY-BY-CHIRPED-CYCLOTRON-RESONANCE__M-S-F-ZERO-DISCRIMINATION</div><div class="note">ROOT V32 的核心几何是**对的**，但它把三条「新突破」当成了三条相互印证的独立闭合，机核结果是**一条恒等式 + 一次重复记账 + 一个被饱和的下界**。①**V32-1 成立**（充分性 3000 组精确零、必要性在 v×B≠0 分支零反例），且确有内容——它正确排除了来料 §六 的漂移反例；但「v×B≠0」是承重条款：退化分支上该充要条件立即失效（54/54 组出现一真一假）。②**V32-2 成立且可大幅加强**：本卷给出定理 V32-2'——正交性必以**一阶**速率脱离，一阶破坏率有闭式 ρ=(q/m)|v×B||g×E|max(|B·g|/|g|²,|B·E|/|E|²)>0，4000 组精确有理核验零失手，不存在「高阶才破」的配置。来料原证只对单一构型做了一阶论证，一般情形需两条判据同时求导，本卷补齐。③**数值层两处不可复现**：偏离直角表 5 行最大偏差 **26.7827°**（t=20 ps），10 ps 交叉项精确 **-24.48%**（带号）而来料报 +36.69%；本卷误差界约 1e-50，远小于所报偏差，属模型级不符而非噪声。且来料表在 20 ps 停在 62.77°，与其自述闭式解（v_y 在 20.11 ps 过零、角度必须穿到 90°）直接冲突。④**ROOT-V32-M 推导正确但是约束恒等式**：γ̇ 项确实被 n·v=0 精确消去（来料这一步无误），但方程两边是同一个数的两种写法，任何满足前件的构型自动满足，**判别力 = 0**。⑤**V32-S 的下界被饱和且等于回旋频率**：|ṅ|min=Ω/γ，与同文 T_c=71.448 ps 是同一个 Ω；**且 |ṅ|min=κ0·v0（比值 1.000000000000）** ⇒ §四 与 §五 是**同一个数换了单位**，不是两条独立闭合。⑥**V32-F 是定义恒等式**：前置 F=mγ³v̇T+mγv²κN 正确，但平方和式在任意（非正交）力场里按定义恒成立（200 组残差 8.3e-60），其全部内容就是「正交」这一前提。⑦**本卷增量（推进来料 §七 的「有可能」一格）**：让三力**始终**垂直确实可实现 —— 本卷给出显式实现：**E 与粒子横向速度共转（回旋共振）**，E(t)=E(cosΩt,-sinΩt,0) 时三力点积对一切 t 精确为零，且 |ṅ|=Ω 恰好取到下界。**该机制是否唯一本卷未证（OPEN）**。代价是 |v_⊥|=v0+at 线性无界增长，16.99 ns 即触 c，相对论下转速须按 Ω/γ chirp，且 E 的旋转使 Maxwell 自洽在 2.2e-06 量级上破缺。⇒ **可实现 ≠ 可稳定**。⑧来料 §十 的「尚待攻破」段（三力是否同源于光速螺旋）本卷不触碰，仍为 OPEN：它需要的不是几何而是耦合谱。</div></div>
+<div class="card"><h3>§2 · 偏离直角表：来料 5 行 vs 本卷精确复算</h3>
+<table><tr><th>t (ps)</th><th>本卷</th><th>来料</th><th>Δ</th></tr><tr><td>0.2</td><td>1.0060</td><td>1.0095</td><td>-0.0035</td></tr><tr><td>1</td><td>4.9951</td><td>5.0837</td><td>-0.0886</td></tr><tr><td>5</td><td>24.1888</td><td>26.3845</td><td>-2.1957</td></tr><tr><td>10</td><td>46.7929</td><td>55.2836</td><td>-8.4907</td></tr><tr><td>20</td><td>89.5511</td><td>62.7684</td><td>+26.7827</td></tr></table>
+<div class="warn">最大偏差 <b>26.7827°</b>；本卷误差界约 1e-50。角度定义被来料自己的 F_e·F_b=q²EBv_z 唯一钉死：
+偏离 = arcsin(|v_z|/|v_⊥|)，没有第二种读法。</div></div>
+<div class="card"><h3>§3 · 三条「新突破」的判别力定价</h3>
+<div class="warn"><b>V32-M</b>：约束恒等式（推导正确，任何满足前件者自动成立）⇒ 判别力 0。<br>
+<b>V32-S</b>：|ṅ|min = Ω/γ，与同文 T_c=71.448 ps 同一个 Ω；且 |ṅ|min = κ0·v0（比值 1.000000000000）⇒ §四 §五 是同一个数。<br>
+<b>V32-F</b>：条件式在任意力场里恒成立（残差 8.3e-60）⇒ 判别力 0；其内容全在「正交」这一前提。</div></div>
+<div class="card"><h3>§4 · 本卷增量：持续正交的一个显式实现 = 回旋共振</h3>
+<div class="ok">取 g=gẑ、B=Bẑ、<b>E(t)=E(cosΩt, −sinΩt, 0)</b>，则 v_⊥=(v0+at)(cosΩt, −sinΩt, 0) 满足运动方程，
+且 F_g∥ẑ、F_e∥v_⊥、F_b⟂v_⊥ ⇒ <b>三力对一切 t 精确两两正交</b>（40 阶 Taylor 残差 0 条，2000 时刻 |cos∠| ≤ 5.31e-60）。
+此时 |ṅ|=Ω 恰好取到 V32-S 的下界（饱和）。该机制是否唯一尚未证（OPEN）。代价：|v_⊥| 线性无界增长，16.99 ns 即触 c；相对论下须按 Ω/γ chirp；
+E 的旋转使 Maxwell 自洽在 2.2e-06 量级破缺。⇒ 可实现，但不可稳定。</div></div>
+<div class="card"><h3>§5 · 三力几何（示意）</h3>
+<svg id="geo" viewBox="0 0 680 300" width="100%" height="300"></svg>
+<div class="note">左：瞬时正交配置（V32-1，精确零）。右：共振实现里 F_e 始终平行于 v_⊥、F_b 始终垂直于 v_⊥ ⇒ 正交成为运动学恒等式。</div></div>
+<div class="card"><h3>§6 · 主条目</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>P1</td><td class='info'>INFO</td><td>来料十一条命题清点：哪些可机核、哪些是解析结论、哪些是文字陈述（先分清再判）</td></tr><tr><td>P2</td><td class='pass'>PASS</td><td>V32-1 充分性：满足三条件 ⇒ 三力两两正交（精确有理零，2978 组无失手）</td></tr><tr><td>P3</td><td class='pass'>PASS</td><td>V32-1 必要性：v×B≠0 分支零反例，v×B=0 分支必有反例 ⇒ 「v×B≠0」条款是承重的</td></tr><tr><td>P4</td><td class='pass'>PASS</td><td>V32-1 的负向判别力：剔除平凡违例（固定 g·E=0）后仍有 2988/2988 被抓（判据有牙）</td></tr><tr><td>P5</td><td class='pass'>PASS</td><td>★V32-2 的定量加强（本卷定理 V32-2'）：破坏必为一阶，且一阶破坏率有闭式</td></tr><tr><td>P6</td><td class='pass'>PASS</td><td>来料三个初始力读数复核（最大相对偏差 1.10e-04，容差 1e-3 由三位有效数字定）</td></tr><tr><td>P7</td><td class='pass'>PASS</td><td>闭式解精确回代：40 阶 Taylor 残差全为零（Fraction 精确，替代 SymPy）</td></tr><tr><td>P8</td><td class='pass'>PASS</td><td>独立数值积分 vs 闭式解：最大相对速度差 1.790e-24（来料报 1.19e-13）</td></tr><tr><td>P9</td><td class='info'>INFO</td><td>相对论 vs 非相对论：干净窗口角度差 ≤ 0.000292°；20 ps 处的 0.898° 是病态读数（过零点邻域）</td></tr><tr><td>P10</td><td class='fail'>FAIL</td><td>★来料偏离直角表 5 行不可复现：最大偏差 26.7827°（本卷误差界 1e-50）</td></tr><tr><td>P11</td><td class='fail'>FAIL</td><td>★10 ps 交叉项占比不可复现：精确 -24.48%（带号），来料 36.69%</td></tr><tr><td>P12</td><td class='pass'>PASS</td><td>ROOT-V32-M 推导正确（含相对论 γ̇ 项正确消去），但它是**约束的恒等式改写**</td></tr><tr><td>P13</td><td class='pass'>PASS</td><td>ROOT-V32-S 的读数复现，但 |ṅ|min 恒等于 Ω/γ —— 它把回旋频率重算了一遍</td></tr><tr><td>P14</td><td class='pass'>PASS</td><td>ROOT-V32-F：前置分解正确，但条件式是**定义恒等式**（判别力 0）</td></tr><tr><td>P15</td><td class='pass'>PASS</td><td>★§四 与 §五 是同一个数：|ṅ|min = κ0·v0（比值 1.000000000000）</td></tr><tr><td>P16</td><td class='pass'>PASS</td><td>漂移反例 f_b=-f_e 精确成立（200/200），且被 V32-1 正确排除（200/200）</td></tr><tr><td>P17</td><td class='pass'>PASS</td><td>★本卷增量：让三力「始终垂直」确实可实现——本卷给出一个显式实现：回旋共振（E 与横向速度共转）</td></tr><tr><td>P18</td><td class='pass'>PASS</td><td>★但共振代价使它不可稳定：横向速度线性无界增长，16.99 ns 后触 c；相对论下须 chirp；Maxwell 自洽破缺 2.2e-6</td></tr><tr><td>P19</td><td class='info'>INFO</td><td>来料⑩「5,000 组随机正交测试全部通过」：单向 100% ⇒ 判别力 0（只能当 bug 探测器）</td></tr></table></div>
+<div class="card"><h3>§7 · 控制组</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>C1</td><td class='pass'>PASS</td><td>负对照（正交判据的牙）：把 g·E 从 0 改成 1e-6 ⇒ F_g·F_e 由精确零变为非零</td></tr><tr><td>C2</td><td class='pass'>PASS</td><td>负对照（条款承重）：去掉「v×B≠0」后，充要条件在 54/54 组退化配置上失效</td></tr><tr><td>C3</td><td class='pass'>PASS</td><td>负对照（读数有牙）：|F_b| 取 2 倍 / 0.5 倍 ⇒ |ṅ|min 报 2 倍 / 0.5 倍（不是「差一格不变」）</td></tr><tr><td>C4</td><td class='pass'>PASS</td><td>正对照（构造不是空的）：E 转速偏 Ω 1e-6 ⇒ 正交残差由机器零升到 1e-6 量级</td></tr><tr><td>C5</td><td class='pass'>PASS</td><td>负对照（V32-F 的唯一内容）：去掉正交前提，平方和式在 191/191 组上失效（交叉项非零者全灭）</td></tr></table></div>
+<div class="card"><h3>§8 · 守卫</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>G1</td><td class='pass'>PASS</td><td>守卫：JSON 可序列化且可回读（结论可机读）</td></tr><tr><td>G2</td><td class='pass'>PASS</td><td>守卫：条目计数一致（主 19 / 控制 5）</td></tr><tr><td>G3</td><td class='pass'>PASS</td><td>守卫：五条控制组判据均为运行时算出的布尔量（禁写死）</td></tr><tr><td>G4</td><td class='pass'>PASS</td><td>守卫：verdict 取值合法</td></tr><tr><td>G5</td><td class='pass'>PASS</td><td>守卫：π 量级正确（Machin 公式）</td></tr><tr><td>G6</td><td class='pass'>PASS</td><td>守卫：正负双对照齐备且均通过</td></tr><tr><td>G7</td><td class='pass'>PASS</td><td>守卫：「精确零」全部是 Fraction 精确零，不是 Decimal 近似（含如实登记 0 条反证）</td></tr><tr><td>G8</td><td class='pass'>PASS</td><td>守卫：V32-M 传导链三步残差均为机器零级（非口径巧合）</td></tr><tr><td>G9</td><td class='pass'>PASS</td><td>守卫：仅写本卷路径（不触碰他卷字节）</td></tr><tr><td>G10</td><td class='pass'>PASS</td><td>守卫：守卫总数 20（第 10 条登记时前 9 条已在册，本条起计数）</td></tr><tr><td>G11</td><td class='pass'>PASS</td><td>守卫：本卷源码名在本目录内唯一（锚点命中数 == 1）</td></tr><tr><td>G12</td><td class='pass'>PASS</td><td>守卫：数值指控自守 —— 本卷误差界必须远小于所报偏差</td></tr><tr><td>G13</td><td class='pass'>PASS</td><td>守卫：两处 Taylor 回代（静态场闭式解、共振闭式解）残差全零</td></tr><tr><td>G14</td><td class='pass'>PASS</td><td>守卫：每条 FAIL 都给出了「不成立处的具体读数」（禁空判）</td></tr><tr><td>G15</td><td class='pass'>PASS</td><td>守卫：量纲/坐标口径自守（全 SI；m=1/q=1 仅用于纯几何枚举，物理读数一律代 CODATA）</td></tr><tr><td>G16</td><td class='pass'>PASS</td><td>守卫：V32-2' 的反证条数如实登记（ρ=0 的配置数必须为 0 才支持「必为一阶」）</td></tr><tr><td>G17</td><td class='pass'>PASS</td><td>守卫：范围外第一条即失败（V32-1 在 g·E≠0 时立刻失效）</td></tr><tr><td>G18</td><td class='pass'>PASS</td><td>守卫：统计符号必须同时报「零的个数」与「非零的个数」</td></tr><tr><td>G19</td><td class='pass'>PASS</td><td>守卫：AST 层查 PASS/FAIL 不得为字面量（必须依赖运行时量），只有 INFO 允许字面量</td></tr></table></div>
+</div>
+<script>
+var svg=document.getElementById('geo');
+function add(tag,attrs,txt){var e=document.createElementNS('http://www.w3.org/2000/svg',tag);
+for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e;}
+add('rect',{x:10,y:10,width:320,height:270,rx:10,fill:'#ffffff',stroke:'#e3e8ef'});
+add('text',{x:170,y:32,'text-anchor':'middle','font-size':13,fill:'#1f2d3d'},'V32-1 瞬时正交配置');
+add('line',{x1:60,y1:230,x2:280,y2:230,stroke:'#5a6b7b','stroke-width':1.5});
+add('line',{x1:60,y1:230,x2:60,y2:70,stroke:'#5a6b7b','stroke-width':1.5});
+add('text',{x:284,y:234,'font-size':10,fill:'#5a6b7b'},'E');
+add('text',{x:44,y:66,'font-size':10,fill:'#5a6b7b'},'g');
+add('line',{x1:60,y1:230,x2:200,y2:230,stroke:'#b8860b','stroke-width':2.5});
+add('text',{x:150,y:222,'font-size':10,fill:'#b8860b'},'F_e');
+add('line',{x1:60,y1:230,x2:60,y2:110,stroke:'#2b6cb0','stroke-width':2.5});
+add('text',{x:66,y:120,'font-size':10,fill:'#2b6cb0'},'F_g');
+add('line',{x1:60,y1:230,x2:130,y2:170,stroke:'#1a9d54','stroke-width':2.5});
+add('text',{x:132,y:168,'font-size':10,fill:'#1a9d54'},'F_b（=q v×B，沿 n）');
+add('text',{x:170,y:262,'text-anchor':'middle','font-size':10,fill:'#5a6b7b'},'三个点积精确为零；v×B≠0 为承重条款');
+add('rect',{x:350,y:10,width:320,height:270,rx:10,fill:'#ffffff',stroke:'#e3e8ef'});
+add('text',{x:510,y:32,'text-anchor':'middle','font-size':13,fill:'#1f2d3d'},'持续正交：回旋共振实现');
+add('line',{x1:400,y1:230,x2:640,y2:230,stroke:'#5a6b7b','stroke-width':1.5});
+add('line',{x1:400,y1:230,x2:400,y2:70,stroke:'#5a6b7b','stroke-width':1.5});
+add('text',{x:644,y:234,'font-size':10,fill:'#5a6b7b'},'x');
+add('text',{x:384,y:66,'font-size':10,fill:'#5a6b7b'},'z');
+add('circle',{cx:510,cy:180,r:48,fill:'none',stroke:'#cfe0ff','stroke-width':2});
+add('line',{x1:510,y1:180,x2:558,y2:180,stroke:'#b8860b','stroke-width':2.5});
+add('text',{x:540,y:172,'font-size':10,fill:'#b8860b'},'v_perp');
+add('line',{x1:510,y1:180,x2:510,y2:132,stroke:'#1a9d54','stroke-width':2.5});
+add('text',{x:514,y:128,'font-size':10,fill:'#1a9d54'},'F_b');
+add('line',{x1:510,y1:180,x2:558,y2:180,stroke:'#d63a3a','stroke-width':1});
+add('text',{x:510,y:252,'text-anchor':'middle','font-size':10,fill:'#5a6b7b'},'E 与 v_perp 共转 ⇒ F_e∥v_perp 恒成立');
+add('text',{x:510,y:268,'text-anchor':'middle','font-size':10,fill:'#8a2a2a'},'代价：|v_perp| 线性增长，约 17 ns 触 c');
+</script>
+</body></html>

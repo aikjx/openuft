@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>审计 ROOT V30 + V31：Dirac 概率流、V30-2 重言性定价、四力运动学与 Raychaudhuri 双实例实算</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ink:#1f2d3d;--mut:#5a6b7b;--line:#e3e8ef;
+--pass:#1a9d54;--fail:#d63a3a;--info:#2b6cb0;--acc:#b8860b;}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);
+font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+.wrap{max-width:980px;margin:0 auto;padding:24px}
+h1{font-size:21px;margin:0 0 4px} .sub{color:var(--mut);font-size:13px;margin-bottom:18px}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
+.kpi{flex:1 1 150px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.kpi .k{font-size:12px;color:var(--mut)} .kpi .v{font-size:17px;font-weight:700;color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.card h3{margin:0 0 8px;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-weight:600}
+.pass{color:var(--pass);font-weight:700} .fail{color:var(--fail);font-weight:700}
+.info{color:var(--info);font-weight:700}
+.note{font-size:12px;color:var(--mut);margin-top:8px}
+.eq{background:#f0f6ff;border:1px solid #cfe0ff;border-radius:8px;padding:8px 10px;font-size:13px}
+.warn{background:#fdf3f4;border:1px solid #f0c0c4;border-radius:8px;padding:8px 10px;font-size:13px;color:#8a2a2a}
+.ok{background:#f0faf3;border:1px solid #c6ecd4;border-radius:8px;padding:8px 10px;font-size:13px;color:#14663a}
+</style></head><body><div class="wrap">
+<h1>审计 ROOT V30 + V31：Dirac 概率流、V30-2 重言性定价、四力运动学与 Raychaudhuri 双实例实算</h1>
+<div class="sub">TUFT-r374 · 审计 ROOT V30 / V31 来料 · 2026-11-02</div>
+<div class="kpis"><div class='kpi'><div class='k'>V30-1 电流偏差</div><div class='v'>8.300439E-60</div></div><div class='kpi'><div class='k'>V30-2 六档残差</div><div class='v'>5.000000E-60</div></div><div class='kpi'><div class='k'>Schrödinger 判别力</div><div class='v'>7.08926688E-10</div></div><div class='kpi'><div class='k'>Cornell 口径差</div><div class='v'>2.015740E-02</div></div><div class='kpi'><div class='k'>Raychaudhuri 残差</div><div class='v'>1.328125E-17</div></div><div class='kpi'><div class='k'>来料数值最大偏差</div><div class='v'>2.653675E-06</div></div></div>
+<div class="card"><h3>§1 · 判词</h3><div class="eq">V30-1-VERIFIED--V30-2-TAUTOLOGICAL-ZERO-DISCRIMINATION--V31-MATH-VERIFIED-ONE-UNDECLARED-CONVENTION</div>
+<div class="note">来料两份的<b>技术内容全部复核通过</b>：V30-1 的 Dirac 概率电流在 30 个网格点上与闭式逐点相符，并经本卷独立积分出的束缚态 g 因子交叉验证；
+V31 的散度/旋度/物质导数、Cornell 与 Yukawa 求导、1 fm 四力数值、λ_W、κ/|τ| 全部复算一致。
+但<b>V30-2 的「几何—能量闭合式」是重言式</b>：两项分别是 Zα 与 √(1−(Zα)²)，单位圆关系在定义层面恒成立，对 Zα 判别力 = 0，
+对能量公式的判别力仅 (Zα)⁴/4 ≈ 7.1e-10，对流速公式的灵敏度还被 (Zα)² 再压一道。
+⇒ V30 未推进「α / 电子内部运动」的几何本源这一问，只是把 Dirac 1s 能量公式换了个写法。
+V31 的贡献是<b>否证了「所有力 = 速度场的散度」</b>，本卷进一步给出：否证的是「用错场」—— 加速度场本身仍是梯度场（∇·a = −2Ω²、∇×a = 0）。
+唯一实质缺陷是 Cornell 数值依赖一个未声明的 4/3 色因子口径。</div></div>
+<div class="card"><h3>§2 · V30-1：Dirac–Coulomb 概率电流的机核与独立交叉验证</h3>
+<div class="ok">V30-1 <b>复核通过</b>：4×4 Dirac α 矩阵在 30 个 (θ,φ) 网格点上的直算与闭式 j = ρcZα sinθ φ̂ 的最大相对偏差 <b>8.300439E-60</b>；
+径向方程组在 5 个 r 点上残差 <b>3.896000E-59</b>；承重消去 2q/(1+q²)=Zα 的相对偏差 <b>0</b>。<br>
+独立交叉验证：把该电流积分成磁矩，得 <b>g = 2(1+2γ)/3 = 1.999964498624373199220372E+00</b>（闭式 1.999964498624404507509666E+00），氢 1s 的 g−2 = <b>-3.550137559551E-05</b> ≈ −(2/3)α²。
+<div class="note">两条独立路径：数值 Simpson+Richardson 求积分比 1.499973373968279899415279E+00，与 Γ 函数整数移位闭式 1.499973373968303436143401E+00 相对偏差 1.567394E-14。这条链是本卷自己算的，不是引用教科书。</div></div></div>
+<div class="card"><h3>§3 · ★V30-2：六个 Zα 全部落在同一个单位圆上 —— 对 Zα 判别力 = 0</h3>
+<svg id="geom" viewBox="0 0 680 320" width="100%" height="320"></svg>
+<div class="warn">Zα 取 1e-8 / α / 0.1 / 0.5 / 0.9 / 0.99 六档，(v_max/c)²+(E/m_ec²)²−1 的残差最大值 <b>5.000000E-60</b>。
+两项分别是 Zα 与 √(1−(Zα)²)，单位圆关系是<b>定义级恒等式</b>。它真正检验的是「能量公式与流速公式是否共用同一个 Zα」：
+换 Schrödinger 能量才有残差 <b>7.08926688E-10</b>（=(Zα)⁴/4）；v_max 扰动 1e-3 只产生 <b>1.06555960E-07</b>（灵敏度被 (Zα)² = 5.32513544E-05 压制）。</div>
+<div class="note">巧合尺：Bohr 轨道速度、Schrödinger 1s 的 ⟨v²⟩^½、Dirac 概率流最大速率，三者 /c 全部精确等于 Zα = 7.29735256429999996214E-03；
+由 (α, c, m_e, ħ) 且 a₀=ħ/(m_ecα) 只能造出唯一的一阶速度 αc ⇒ 用「v_max 与轨道速度相符」论证几何闭合，判别力为 0。</div></div>
+<div class="card"><h3>§4 · V31：螺旋场的散度/旋度对偶（本卷新产出）</h3>
+<svg id="dual" viewBox="0 0 680 300" width="100%" height="300"></svg>
+<div class="ok">实算：|∇·v| ≤ 0、|∇×v − 2Ω| ≤ 0、|a − (−Ω²x,−Ω²y,0)| ≤ 0 —— V31 这三式全对。<br>
+本卷补充：<b>a 场有散无旋</b> —— ∇·a = <b>-5.7800000000000002E+00</b>（闭式 -5.7800000000000002E+00，误差 ≤ 0）、|∇×a| ≤ 0，且 a = −∇(Ω²R²/2)。
+⇒ V31 否证的是「用<b>速度场</b>的散度当力」；<b>加速度场</b>是梯度场、其散度非零。正确的修正不是放弃散度，而是把散度作用在正确的场上。</div></div>
+<div class="card"><h3>§5 · 四力数值对拍（1 fm，CODATA 2022 / PDG）</h3>
+<table><tr><th>体系</th><th>本卷复算 (N)</th><th>来料 (N)</th><th>相对偏差</th></tr><tr><td>质子—质子牛顿引力</td><td>1.867244955048E-34</td><td>1.867240000000E-34</td><td>2.653675E-06</td></tr><tr><td>质子—质子库仑斥力</td><td>2.307077552352E+02</td><td>2.307080000000E+02</td><td>1.060929E-06</td></tr><tr><td>剩余核力 Yukawa 示范</td><td>6.742373768338E+03</td><td>6.742370000000E+03</td><td>5.589041E-07</td></tr><tr><td>重夸克 Cornell 示范</td><td>1.568420041502E+05</td><td>1.568420000000E+05</td><td>2.646094E-08</td></tr></table>
+<div class="warn">★唯一实质缺陷：Cornell 的 <b>1.56842e5 N</b> 只能在未声明的口径 <b>k=(4/3)α_sħc = 7.89307921600000E+01 MeV·fm</b> 下复现；
+来料只声明 α_s=0.30 与 σ=900 MeV/fm。改用 k=α_sħc=5.91980941200000E+01 MeV·fm，同一公式给 <b>1.536804773776E+05 N</b>，相差 <b>2.015740E-02</b>（约 2%）。
+⇒ 这个数字不是公式的唯一后果，含一个未声明的色因子。</div></div>
+<div class="card"><h3>§6 · 统一螺旋：κ/|τ| = v_⊥/|u|（独立定义重算 + 满射定价）</h3>
+<table><tr><th>量</th><th>本卷实算</th><th>来料 / 闭式</th><th>相对偏差</th></tr><tr><td>回旋角频率 ω_c (rad/s)</td><td>8.73896407490241E+10</td><td>8.73896e10</td><td>4.662915E-07</td></tr><tr><td>螺旋半径 R (mm)</td><td>3.430526266391E-01</td><td>0.343053</td><td>1.088348E-06</td></tr><tr><td>单圈螺距 (mm)</td><td>1.077731611644E+00</td><td>1.077732</td><td>3.603455E-07</td></tr><tr><td>κ（独立定义 vs 闭式）</td><td>2.3320037156911826E+03</td><td>2.3320037156911826E+03</td><td>8.576316E-60</td></tr><tr><td>|τ|（独立定义 vs 闭式）</td><td>1.1660018578455913E+03</td><td>1.1660018578455913E+03</td><td>0</td></tr><tr><td>κ/|τ| vs v_⊥/|u|</td><td>2.0000000000000000E+00</td><td>2.0000000000000000E+00</td><td>5.000000E-60</td></tr></table>
+<div class="note">参数曲线的独立定义 κ=|r′×r″|/|r′|³、τ=det(r′,r″,r‴)/|r′×r″|² 给出 κ=2.3320037156911826E+03、|τ|=1.1660018578455913E+03、比值 2.0000000000000000E+00，
+与来料闭式相对偏差 5.000000E-60 ⇒ 闭合式正确。但 v_⊥/|u| 可随实验条件取任意正实数 ⇒ <b>不锁定任何常数（含 α），判别力 0</b>。</div></div>
+<div class="card"><h3>§7 · ★Raychaudhuri：两个实例各自实算（不引用教科书）</h3>
+<svg id="ray" viewBox="0 0 680 320" width="100%" height="320"></svg>
+<div class="ok"><b>实例一（V31 自己的螺旋场，相对论化到 4-速度场）</b>：Θ ≡ 0（流线邻域 |Θ| ≤ 2.820842E-27 ⇒ dΘ/dτ = 0），
+实算 σ²、ω²、∇_μa^μ，右端 −Θ²/3−σ²+ω²+∇_μa^μ 的最大绝对值 <b>1.875720E-24</b>。
+并得出新闭式 <b>σ²−ω² = −2Ω²Γ² − 2Ω⁴Γ⁴R²</b>（4 点相对偏差 7.247272E-23）：非相对论极限退化为 −2Ω²，
+R>0 项 −2Ω⁴Γ⁴R² 是相对论新增的<b>剪切</b> —— 刚性旋转一旦带上 Γ(R) 就不再刚性。<br>
+<b>实例二（FLRW 共动观测者）</b>：自写数值 Ricci 先在 Minkowski 笛卡尔（0）与 <b>Minkowski 球坐标</b>（2.520479E-17，曲率全零但联络非零）
+以及 Schwarzschild r=4M（8.040365E-18，真空）自检，再算 p=2/3、t=2 的 R_tt=1.6666666666666669E-01（闭式 1.6666666666666666E-01，相对偏差 7.037037E-17）、Θ=1.0000000000000000E+00（闭式 1.0000000000000000E+00）、
+dΘ/dτ=-5.0000000000000000E-01（闭式 -5.0000000000000000E-01），方程残差 <b>1.328125E-17</b>。</div></div>
+<div class="card"><h3>§8 · 主册条目</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>P01</td><td><span class='pass'>PASS</span></td><td>V30 旋量形式正确：q=Zα/(1+γ)、λ=m_ecZα/ħ 代入 Dirac 径向方程组残差为机器零</td></tr><tr><td>P02</td><td><span class='pass'>PASS</span></td><td>V30-1 电流闭式 j = ρ c Zα sinθ φ̂：4×4 Dirac α 矩阵直算 vs 闭式</td></tr><tr><td>P03</td><td><span class='pass'>PASS</span></td><td>V30-1 的承重消去 2q/(1+q²) = Zα（需要 γ²+(Zα)²=1）</td></tr><tr><td>P04</td><td><span class='pass'>PASS</span></td><td>V30-1 的独立交叉验证：把该电流积分成磁矩，得到 g = 2(1+2γ)/3</td></tr><tr><td>P05</td><td><span class='info'>INFO</span></td><td>★V30-2 恒等性机核：(v_max/c)²+(E/m_ec²)²−1 在 Zα 六档上全为 0</td></tr><tr><td>P06</td><td><span class='pass'>PASS</span></td><td>★V30-2 判别力定价（一）：同一残差流水线，把能量换成 Schrödinger 后读数由 0 变为 (Zα)⁴/4</td></tr><tr><td>P07</td><td><span class='pass'>PASS</span></td><td>★V30-2 判别力定价（二）：把 v_max/c 扰动 1e-3，读数由 0 变为 1.07e-7</td></tr><tr><td>P08</td><td><span class='pass'>PASS</span></td><td>★巧合尺（量纲论证）：由 (c, α, ħ, m_e) 造出的一阶速度只有一个，就是 αc</td></tr><tr><td>P09</td><td><span class='pass'>PASS</span></td><td>来料数值核对：v_max/c = 0.00729735256433 与 CODATA 2022 α 一致</td></tr><tr><td>P10</td><td><span class='pass'>PASS</span></td><td>V31 螺旋速度场：∇·v=0、∇×v=(0,0,2Ω)、a=(−Ω²x,−Ω²y,0) 的 FD 实算</td></tr><tr><td>P11</td><td><span class='pass'>PASS</span></td><td>★本卷新产出 1：v 场有旋无散，而 a 场有散无旋（∇·a=−2Ω²、∇×a=0）</td></tr><tr><td>P12</td><td><span class='pass'>PASS</span></td><td>V31「磁场力可维持螺旋」：叉积实算的洛伦兹力与所需向心力逐分量相等</td></tr><tr><td>P13</td><td><span class='pass'>PASS</span></td><td>V31 势能求导：Cornell F=−(k/r²+σ)r̂、Yukawa F=−Ae^{−r/λ}(1/r²+1/(λr))r̂ 的 FD 核对</td></tr><tr><td>P14</td><td><span class='pass'>PASS</span></td><td>V31 四力数值表（1 fm）复算：引力/库仑/Yukawa 与来料相符</td></tr><tr><td>P15</td><td><span class='pass'>PASS</span></td><td>★本卷发现：Cornell 数值依赖一个来料未声明的口径 k=(4/3)α_sħc</td></tr><tr><td>P16</td><td><span class='pass'>PASS</span></td><td>λ_W 复算：ħc/(M_Wc²) = 2.4554×10⁻¹⁸ m（来料 2.4555×10⁻¹⁸）</td></tr><tr><td>P17</td><td><span class='pass'>PASS</span></td><td>回旋 κ/\|τ\| = v_⊥/\|u\|：用参数曲线的独立定义 κ=\|r′×r″\|/\|r′\|³、τ=det/\|r′×r″\|² 重算</td></tr><tr><td>P18</td><td><span class='pass'>PASS</span></td><td>V31 数值例子复算：ω_c、R、螺距、κ/\|τ\|</td></tr><tr><td>P19</td><td><span class='info'>INFO</span></td><td>★κ/\|τ\| = v_⊥/\|u\| 是满射：把 v_⊥/u 从 2 换成 1000，比值跟着变成 1000</td></tr><tr><td>P20</td><td><span class='pass'>PASS</span></td><td>★Raychaudhuri 实例一：在 V31 自己的螺旋场上实算（平坦时空，相对论化到 4-速度场）</td></tr><tr><td>P21</td><td><span class='pass'>PASS</span></td><td>★本卷新闭式：平坦时空相对论螺旋的 σ²−ω² = −2Ω²Γ² − 2Ω⁴Γ⁴R²</td></tr><tr><td>P22</td><td><span class='pass'>PASS</span></td><td>★Raychaudhuri 实例二：FLRW 共动观测者（自写数值 Ricci，先在 Minkowski 球坐标/Schwarzschild 自检）</td></tr><tr><td>P23</td><td><span class='info'>INFO</span></td><td>V31「三力正交性」的口径：点积为 0 是构型选择的结果，不是推导</td></tr></table></div>
+<div class="card"><h3>§9 · 控制组</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>C1</td><td><span class='pass'>PASS</span></td><td>控制组（负对照）：q 缩放 1.001 ⇒ 径向方程残差由机器零变为 1e-3 量级（P01 非恒绿）</td></tr><tr><td>C2</td><td><span class='pass'>PASS</span></td><td>控制组（负对照）：γ 换成 √(1−(Zα)²·0.9) ⇒ 2q/(1+q²)=Zα 失效（P03 非恒绿）</td></tr><tr><td>C3</td><td><span class='pass'>PASS</span></td><td>控制组（负对照）：Ω 翻倍 ⇒ σ²−ω² 变化（Raychaudhuri 判据非恒绿）</td></tr><tr><td>C4</td><td><span class='pass'>PASS</span></td><td>控制组（判别力正对照）：数值 Ricci 在 Minkowski/Schwarzschild 给 0，在 FLRW 给非零</td></tr><tr><td>C5</td><td><span class='pass'>PASS</span></td><td>控制组（数值路径正对照）：r 从 1 fm 改到 2 fm ⇒ 引力按 1/r² 缩放 4 倍</td></tr><tr><td>C6</td><td><span class='pass'>PASS</span></td><td>控制组（负对照）：u=0 ⇒ \|τ\|=0 而 κ 仍有限（P17/P18/P19 的比值判据非恒绿）</td></tr></table></div>
+<div class="card"><h3>§10 · 守卫</h3><table><tr><th>键</th><th>判定</th><th>标题</th></tr><tr><td>G01</td><td><span class='pass'>PASS</span></td><td>守卫：AST 层查 add(...) 的 ok 实参顶层不是布尔常量（含 IfExp 两分支）</td></tr><tr><td>G02</td><td><span class='pass'>PASS</span></td><td>守卫：AST 层查 dict(ok=True/False) 写死</td></tr><tr><td>G03</td><td><span class='pass'>PASS</span></td><td>守卫：控制组全部有判别力（任一读数 == 基线即 FAIL）</td></tr><tr><td>G04</td><td><span class='pass'>PASS</span></td><td>守卫：判「相等」一律用偏离+容差；rel() 在分母 0 时不抛异常</td></tr><tr><td>G05</td><td><span class='pass'>PASS</span></td><td>守卫：π 的 60 位自算与已知常数一致（数值底座 sanity）</td></tr><tr><td>G06</td><td><span class='pass'>PASS</span></td><td>守卫：主册/控制组条目计数一致且正负双对照齐备</td></tr><tr><td>G07</td><td><span class='pass'>PASS</span></td><td>守卫：来料数值偏差的分母全部非零（分母 0 判 FAIL）</td></tr><tr><td>G08</td><td><span class='pass'>PASS</span></td><td>守卫：凡判「恒等」的条目必须注明它检验的是哪个量（P05/P20/P21）</td></tr><tr><td>G09</td><td><span class='pass'>PASS</span></td><td>守卫：落盘路径全部含本卷 RID（不触碰他卷字节）</td></tr><tr><td>G10</td><td><span class='pass'>PASS</span></td><td>守卫：守卫总数 ≥ 10（本条为第 10 条，计数运行时实算）</td></tr></table></div>
+<script>
+var SVGS={};var NS='http://www.w3.org/2000/svg';
+function mk(id){SVGS[id]=document.getElementById(id);}
+function add(id,tag,attrs,txt){var e=document.createElementNS(NS,tag);
+for(var k in attrs){e.setAttribute(k,attrs[k]);}if(txt!=null){e.textContent=txt;}SVGS[id].appendChild(e);return e;}
+
+mk('geom');mk('dual');mk('ray');
+/* ---- 图 1：V30-2 单位圆 + 判别力条 ---- */
+add('geom','rect',{x:0,y:0,width:680,height:320,fill:'#ffffff',stroke:'#e3e8ef'});
+var cx=180,cy=180,RR=120;
+add('geom','path',{d:'M '+(cx-RR)+' '+cy+' A '+RR+' '+RR+' 0 0 1 '+(cx+RR)+' '+cy,fill:'none',stroke:'#b8860b','stroke-width':2.5});
+add('geom','line',{x1:cx-140,y1:cy,x2:cx+150,y2:cy,stroke:'#5a6b7b','stroke-width':1});
+add('geom','line',{x1:cx,y1:cy+16,x2:cx,y2:cy-RR-16,stroke:'#5a6b7b','stroke-width':1});
+add('geom','text',{x:cx+14,y:cy+16,'font-size':10,fill:'#5a6b7b'},'v_max / c = Zα');
+add('geom','text',{x:cx-6,y:cy-RR-22,'font-size':10,fill:'#5a6b7b'},'E / m_e c²');
+add('geom','text',{x:24,y:34,'font-size':11,fill:'#1f2d3d'},'单位圆弧：六个 Zα 落在同一条弧上');
+var PTS=[["1e-8", 1e-08, 1.0], ["\u03b1", 0.0072973525643, 0.9999733739683033], ["0.1", 0.1, 0.99498743710662], ["0.5", 0.5, 0.8660254037844386], ["0.9", 0.9, 0.43588989435406733], ["0.99", 0.99, 0.14106735979665885]];
+for(var i=0;i<PTS.length;i++){
+  var px=cx+RR*PTS[i][1], py=cy-RR*PTS[i][2];
+  add('geom','circle',{cx:px,cy:py,r:4,fill:'#d63a3a',stroke:'#ffffff','stroke-width':1});
+  add('geom','text',{x:px+7,y:py-5,'font-size':9,fill:'#8a2a2a'},'Zα='+PTS[i][0]);
+}
+add('geom','text',{x:24,y:cy+40,'font-size':10,fill:'#8a2a2a'},'六档残差上界 5.000000E-60');
+add('geom','text',{x:24,y:cy+58,'font-size':10,fill:'#8a2a2a'},'⇒ 对 Zα 判别力 0');
+var bx=372,by=78;
+add('geom','text',{x:bx,y:by-20,'font-size':11,fill:'#1f2d3d'},'V30-2 的判别力定价（残差绝对值）');
+var BS=[["Z\u03b1 \u516d\u6863\uff08\u6052\u7b49\uff09", 5e-60], ["\u80fd\u91cf\u6362 Schr\u00f6dinger", 7.08926688e-10], ["\u80fd\u91cf\u52a0 (Z\u03b1)\u2074 \u9879", 1.88757788e-14], ["v_max \u6270\u52a8 1e-3", 1.0655596e-07]];
+for(var i=0;i<BS.length;i++){
+  var yy=by+i*46;
+  add('geom','text',{x:bx,y:yy+11,'font-size':10,fill:'#5a6b7b'},BS[i][0]);
+  var w=Math.max(3,Math.min(236,236*Math.pow(BS[i][1],0.085)));
+  add('geom','rect',{x:bx+4,y:yy+18,width:w,height:16,fill:'#2b6cb0',stroke:'none'});
+  add('geom','text',{x:bx+10+w,y:yy+30,'font-size':9,fill:'#5a6b7b'},BS[i][1].toExponential(2));
+}
+add('geom','text',{x:bx,y:by+4*46+26,'font-size':10,fill:'#8a2a2a'},'灵敏度被 (Zα)² = 5.32513544E-05 压制 ⇒ 「闭合」无价格');
+
+/* ---- 图 2：v 场 vs a 场 ---- */
+add('dual','rect',{x:0,y:0,width:680,height:300,fill:'#ffffff',stroke:'#e3e8ef'});
+add('dual','rect',{x:22,y:22,width:306,height:250,rx:8,fill:'#f0f6ff',stroke:'#2b6cb0'});
+add('dual','text',{x:175,y:46,'text-anchor':'middle','font-size':12,fill:'#1f2d3d'},'速度场 v = (−Ωy, Ωx, u)');
+add('dual','text',{x:175,y:66,'text-anchor':'middle','font-size':11,fill:'#14663a'},'∇·v = 0（无体积膨胀）');
+add('dual','text',{x:175,y:86,'text-anchor':'middle','font-size':11,fill:'#2b6cb0'},'∇×v = 2Ω ≠ 0（有旋转）');
+for(var i=0;i<12;i++){
+  var a=i*Math.PI/6;
+  var x0=175+52*Math.cos(a), y0=180+52*Math.sin(a);
+  var x1=175+82*Math.cos(a+0.45), y1=180+82*Math.sin(a+0.45);
+  add('dual','path',{d:'M '+x0.toFixed(2)+' '+y0.toFixed(2)+' L '+x1.toFixed(2)+' '+y1.toFixed(2),fill:'none',stroke:'#2b6cb0','stroke-width':1.6});
+  var ax=x1-5*Math.cos(a-0.5), ay=y1-5*Math.sin(a-0.5);
+  var bx2=x1-5*Math.cos(a+1.0), by2=y1-5*Math.sin(a+1.0);
+  add('dual','path',{d:'M '+x1.toFixed(2)+' '+y1.toFixed(2)+' L '+ax.toFixed(2)+' '+ay.toFixed(2)+' L '+bx2.toFixed(2)+' '+by2.toFixed(2)+' Z',fill:'#2b6cb0',stroke:'none'});
+}
+add('dual','rect',{x:352,y:22,width:306,height:250,rx:8,fill:'#fdf3f4',stroke:'#d63a3a'});
+add('dual','text',{x:505,y:46,'text-anchor':'middle','font-size':12,fill:'#1f2d3d'},'加速度场 a = −Ω²(x, y, 0)');
+add('dual','text',{x:505,y:66,'text-anchor':'middle','font-size':11,fill:'#d63a3a'},'∇·a = −2Ω² ≠ 0（本卷实算）');
+add('dual','text',{x:505,y:86,'text-anchor':'middle','font-size':11,fill:'#14663a'},'∇×a = 0（a = −∇(Ω²R²/2)）');
+for(var j=0;j<10;j++){
+  var b=j*Math.PI/5;
+  var ux=505+82*Math.cos(b), uy=180+82*Math.sin(b);
+  var vx=505+50*Math.cos(b), vy=180+50*Math.sin(b);
+  add('dual','path',{d:'M '+ux.toFixed(2)+' '+uy.toFixed(2)+' L '+vx.toFixed(2)+' '+vy.toFixed(2),fill:'none',stroke:'#d63a3a','stroke-width':1.6});
+  var hx=vx+5*Math.cos(b), hy=vy+5*Math.sin(b);
+  var ix=vx+5*Math.cos(b-1.2), iy=vy+5*Math.sin(b-1.2);
+  var jx=vx+5*Math.cos(b+1.2), jy=vy+5*Math.sin(b+1.2);
+  add('dual','path',{d:'M '+hx.toFixed(2)+' '+hy.toFixed(2)+' L '+ix.toFixed(2)+' '+iy.toFixed(2)+' L '+jx.toFixed(2)+' '+jy.toFixed(2)+' Z',fill:'#d63a3a',stroke:'none'});
+}
+add('dual','text',{x:22,y:292,'font-size':10,fill:'#5a6b7b'},'v 场：有旋无散　→　a 场：有散无旋 ⇒ 否证的是「用速度场的散度当力」，不是散度本身');
+
+/* ---- 图 3：Raychaudhuri 收支 ---- */
+add('ray','rect',{x:0,y:0,width:680,height:320,fill:'#ffffff',stroke:'#e3e8ef'});
+add('ray','text',{x:22,y:34,'font-size':12,fill:'#1f2d3d'},'实例一：平坦时空螺旋联络的 Raychaudhuri 收支（实算）');
+var ry=[['Θ²/3（Θ≡0）','-1.5425800113E-28','#5a6b7b'],['σ²','8.6418041017E-51','#2b6cb0'],['ω²','1.4123486725E+00','#1a9d54'],['∇_μ a^μ','-1.4123486725E+00','#d63a3a']];
+for(var mi=0;mi<ry.length;mi++){
+  var sy=56+mi*34;
+  add('ray','text',{x:26,y:sy+14,'font-size':11,fill:'#1f2d3d'},ry[mi][0]);
+  add('ray','rect',{x:150,y:sy,width:150,height:18,fill:ry[mi][2],stroke:'none'});
+  add('ray','text',{x:308,y:sy+14,'font-size':10,fill:'#5a6b7b'},ry[mi][1]);
+}
+add('ray','text',{x:26,y:56+4*34+20,'font-size':11,fill:'#14663a'},'σ² − ω² = −2Ω²Γ² − 2Ω⁴Γ⁴R²（新闭式，4 点相对偏差 7.247272E-23）');
+add('ray','line',{x1:22,y1:238,x2:658,y2:238,stroke:'#e3e8ef','stroke-width':1});
+add('ray','text',{x:22,y:262,'font-size':12,fill:'#1f2d3d'},'实例二：FLRW 共动观测者（p=2/3，t=2）—— 真正用到 −Θ²/3 与 −R_{μν}u^μu^ν');
+add('ray','text',{x:26,y:286,'font-size':11,fill:'#5a6b7b'},'dΘ/dτ = -5.0000000000000000E-01　　−Θ²/3 = -3.3333333333E-01　　−R_{μν}u^μu^ν = -1.6666666667E-01');
+add('ray','text',{x:26,y:306,'font-size':11,fill:'#14663a'},'左端 = 右端，残差 1.328125E-17（Ricci 计算器已在 Minkowski 球坐标 / Schwarzschild 上自检为 0）');
+</script></div></body></html>

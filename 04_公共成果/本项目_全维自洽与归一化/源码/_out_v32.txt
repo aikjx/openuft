@@ -1,0 +1,49 @@
+== A. 常量与闭式 ==
+Fg=8.936305e-30 N  Fe=1.602177e-14 N  Fb=8.010883e-14 N
+Omega=8.79410005e+10 s^-1  T=71.4477 ps  gamma0=1.0000055633
+kappa0=8.79405113e+04 m^-1  |ndot|min=8.79405113e+10 s^-1
+[PASS] Fg                                     claim 8.936e-30
+[PASS] Fe                                     claim 1.602e-14
+[PASS] Fb                                     claim 8.011e-14
+[PASS] T_cyclotron                            claim 71.448 ps
+[PASS] gamma0                                 claim 1.0000055633
+[PASS] kappa0                                 claim 8.7940511e4
+[PASS] ndot_min                               claim 8.79405e10
+
+== B. 运动解与「偏离直角」表 ==
+ t(ps) | 精确几何角 | arcsin(|vz|/v0) | 来料
+     0 |    0.0000 |        0.0000 |       0
+   0.2 |    1.0060 |        1.0095 |  1.0095
+     1 |    4.9951 |        5.0831 |  5.0837
+     5 |   24.1888 |       26.4040 | 26.3845
+    10 |   46.7929 |       57.4414 | 55.2836
+    20 |   89.5511 |       90.0000 | 62.7684
+[PASS] table_first4_vs_arcsin                 前4行与 arcsin(|vz|/v0) 一致（<0.05deg）
+[PASS] table_last2_inconsistent               10/20ps 与两种归一化均不符（精确 46.79/89.55，弧弦 57.44/90.00）
+
+== C. 交叉项占比（10 ps）==
+2|cross|/SumF2=24.4810%  2|cross|/|Ftot|2=32.4170%  来料 36.69%
+[PASS] cross_ratio                            两种口径均无 36.69%（差 12.21 / 4.27 个百分点）
+
+== D. SymPy 严格回代 ==
+res_y=0  res_z=0  res_x=0
+[PASS] sympy_backsub                          三式符号精确为零
+
+== E. 相对论动量方程 vs 非相对论轨道 ==
+max |angle_rel - angle_nonrel| = 0.000736 deg ；来料 0.00328 deg
+[PASS] rel_vs_nonrel_order                    同量级（差 4.5 倍）
+
+== F. V32-1 充分性：5000 组随机配置 ==
+违例 = 0 / 5000
+[PASS] random_orth_5000                       V32-1 充分性无违例
+
+== G. 漂移反例 v_d x B = -E ==
+v_d x B = [mpf('0.0'), mpf('-1.0'), mpf('0.0')] ; -E = [mpf('0.0'), mpf('-1.0'), mpf('0.0')]
+[PASS] drift_identity                         恒等成立
+
+== H. V32-M：静态 g,E 时 n 被钉死 ==
+n = g x E / |g x E| = [0, 0, 1] （不显含 t）
+=> n_dot = 0 ；而 F_b·n = qB|v_yz| ≠ 0 => V32-M 在静态场实例中无解
+[PASS] V32M_static_vacuous                    ṅ≡0 与 F_b·n≠0 互斥
+
+SUMMARY guard_pass=15 guard_fail=0
