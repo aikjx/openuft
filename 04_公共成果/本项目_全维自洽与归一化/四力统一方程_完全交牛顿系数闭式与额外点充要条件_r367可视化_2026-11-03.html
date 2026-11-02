@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r367 · 完全交的牛顿系数闭式 · 额外点的充要条件 · 陪集周期的反例搜索</title>
+<style>
+  :root { --bg:#f7f8fa; --card:#ffffff; --ink:#1f2328; --sub:#5b6570;
+          --line:#d8dee6; --true:#2f7d4f; --false:#b23a3a; --accent:#2f5fb3; --warn:#9a6b00; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:var(--bg); color:var(--ink);
+         font-family:"Segoe UI","Microsoft YaHei",sans-serif; line-height:1.65; }
+  .wrap { max-width:1000px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 6px; }
+  h2 { font-size:16px; margin:26px 0 8px; padding-left:9px; border-left:4px solid var(--accent); }
+  .sub { color:var(--sub); font-size:13px; margin-bottom:14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px;
+          padding:14px 16px; margin:12px 0; }
+  .verdict { font-family:Consolas,monospace; font-size:11.5px; word-break:break-all;
+             background:#eef2f8; border:1px solid var(--line); border-radius:6px; padding:10px; }
+  table { border-collapse:collapse; width:100%; font-size:12.5px; margin-top:8px; }
+  th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; }
+  th { background:#eef2f8; }
+  .t { color:var(--true); font-weight:600; }
+  .f { color:var(--false); font-weight:600; }
+  .w { color:var(--warn); font-weight:600; }
+  .fig { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px; }
+  .cap { font-size:12px; color:var(--sub); margin:6px 2px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TUFT-r367 · 完全交的牛顿系数闭式 · 额外点的充要条件 · 陪集周期的反例搜索</h1>
+  <div class="sub">攻 <code>X-R366-1</code> + <code>X-R358-2</code> + <code>X-R366-2</code> · 2026-11-03 ·
+    items 24（PASS 24 / FAIL 0 / INFO 0）· 控制组 11/11 · 守卫 20/20 · rc=0 · 不占度（候选 37）</div>
+
+  <div class="card">
+    <b>一句话</b>：<b>闭式推广成功，充要条件钉死，反例一个没找到 —— 但「没找到」不是「不存在」。</b>
+    完全交 <code>X_{d_1..d_r} ⊂ CP^N</code>（<code>n = N − r</code>）的牛顿系数有闭式
+    <code>a_m = Σ_{S⊆[r]} (−1)^{|S|} C(N − d_S, N − m)</code>（定理 K），<code>r=1</code> 退化回 r366 定理 H，
+    <b>仍然不需要 Todd 类</b>。额外点（<code>S ⊋ Z</code>）出现的<b>充要条件</b>：
+    <code>n</code> 奇且 <code>≥3</code>、<code>d</code> 偶、<code>c</code> 为半整数（1088 陪集零违例）。
+    <code>N = D</code> 的反例搜索在 30 个 PARTIAL 陪集上<b>零反例</b>（类数恒 1）——
+    这是证据，<b>不是证明</b>。
+  </div>
+
+  <div class="card">
+    <b>判决主文</b>
+    <div class="verdict">X-R366-1-ANSWERED-NEWTON-COEFFICIENTS-OF-COMPLETE-INTERSECTIONS-ARE-CLOSED-FORM__EXTRA-POINTS-EXIST-IFF-n-IS-ODD-AT-LEAST-3-AND-d-IS-EVEN-AND-THE-COSET-IS-HALF-INTEGER__NO-COUNTEREXAMPLE-TO-N-EQUALS-D-IN-1440-COSets-ALL-SINGLE-ORBIT__THE-TD-ROUTE-IS-AGAIN-SUFFICIENT-BUT-UNNECESSARY-KOSZUL-SUFFICES__STILL-NOT-PREDICTED</div>
+  </div>
+
+  <h2>图 1 · 定理 K：完全交的牛顿系数闭式（三行证明，不需 Todd 类）</h2>
+  <div class="fig"><svg id="fig1" viewBox="0 0 680 372" width="680" height="372"></svg></div>
+  <div class="cap">上：Koszul 复形给出 <code>χ(O_X(k)) = Σ_S (−1)^{|S|} C(N+k−d_S, N)</code>，
+    再对 <code>k</code> 取 <code>m</code> 阶前向差分即闭式。中：两条独立路径（td 级数 / Koszul 闭式）
+    在 <b>239 组</b>上失配 <b>0</b>。下右：最高系数 <code>a_n = Π d_i</code> 的机理是
+    <b>混合差分</b>——<code>C(x,r)</code> 首项系数 <code>1/r!</code> 经 <code>r</code> 阶混合差分
+    变成 <code>r!·(1/r!)·Πd_i</code>，更高阶项全被消掉。</div>
+  <div class="card"><div id="tbl1"></div></div>
+
+  <h2>图 2 · 定理 P：额外点的充要条件（n 奇且 ≥3 · d 偶 · c 半整数）</h2>
+  <div class="fig"><svg id="fig2" viewBox="0 0 680 396" width="680" height="396"></svg></div>
+  <div class="cap">网格为 <code>(n, d)</code>：<span class="t">绿色</span> = 满足三条件（<b>PARTIAL 30/30 全中</b>），
+    灰色 = 不满足（<b>PARTIAL 0/1058</b>）。<code>n = 1</code> 一行由 r346 定理 C
+    （<code>S = (1/d)Z</code> ⇒ 陪集上要么全要么空）解释；<code>n</code> 偶与 <code>d</code> 奇分别由
+    <code>CTL7</code>（460 组 0）与 <code>CTL6</code>（84 组 0）单独否证 ⇒ <b>三条缺一不可</b>。
+    r339 的三个孤证 <code>−11/2, −3/2, 5/2</code> 正落在 <code>(n,d) = (3,2)</code> 这一格。</div>
+  <div class="card"><div id="tbl2"></div></div>
+
+  <h2>图 3 · 反例搜索：30 个 PARTIAL 陪集类数恒 1，零反例</h2>
+  <div class="fig"><svg id="fig3" viewBox="0 0 680 342" width="680" height="342"></svg></div>
+  <div class="cap">左：类数（= 轨道数）分布 <code>[(1, 30)]</code> —— 多类 <b>0</b>，周期恒为 <code>D</code>，
+    由 <code>H = D·n!</code>、<code>|S| = n!</code> 得 <code>N = H/|S| = D</code>。
+    右：对照构造 <code>Q(m) = C(m,2)/2</code>（<code>β = [0,0,1]</code>、<code>D = 2</code>）
+    解集 <code>{0,1,4,5}</code> 在 mod 4 下占 <b>两个剩余类</b>、周期 <b>4 ≠ D = 2</b>
+    ⇒ 证明「类数恒 1」<b>不是通有性质</b>，<code>C01</code> 因此有判别力。
+    <span class="w">但零反例 ≠ 证明</span>：<code>CAP_D = 6000</code> 之外的 FULL/EMPTY 侧未搜。</div>
+  <div class="card"><div id="tbl3"></div></div>
+
+  <h2>图 4 · 方法换挡：整数化 + 有限差分递推（顺序写反的代价）</h2>
+  <div class="fig"><svg id="fig4" viewBox="0 0 680 344" width="680" height="344"></svg></div>
+  <div class="cap">递推 <code>g_j(m+1) = g_j(m) + g_{j+1}(m)</code>（<code>g_{n+1} ≡ 0</code>，全程 <code>mod D</code>）
+    要求右端取<b>旧值</b> ⇒ 循环必须 <b>j 递增</b>。写成 j 递减会用到<b>已更新</b>的 <code>g[j+1]</code>，
+    算出另一个多项式。<span class="f">阴险之处</span>：在几何类上这个错法<b>巧合地不出错</b>
+    （4232 个点失配 0），只有换到 <code>C(m,2)/2</code> 这种非几何构造才暴露
+    （正确 <code>{0,1,4,5}</code> vs 错误 <code>{0,3,4,7}</code>）。
+    沉淀：<b>对照类必须换一个，同族对照抓不到同族的错。</b></div>
+  <div class="card"><div id="tbl4"></div></div>
+
+  <h2>自审三处（本卷踩出）</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:32%">自伤</th><th>经过与修法</th></tr>
+      <tr><td><b>① <code>GRID_A</code> 的 <code>r ≠ len(ds)</code></b><br><span class="f">家族自伤第八卷</span></td>
+        <td>网格生成时 <code>r ≥ 4</code> 的分支沿用了三元组 ⇒ 网格记的 <code>r</code> 与 <code>len(ds)</code> 不等，
+            <code>pathK(...)[n]</code> 取错下标。诊断价值最高的一点：<b><code>A01</code> 两路径对拍在这批数据上是 0 失配</b> ——
+            对拍抓不到它（两条路径内部都错在同一方向）；暴露它的是 <code>A05</code>（68 违例）与 <code>A06</code>（13 违例），
+            这两条的期望值来自<b>第三条独立路径</b>。修：<code>product(range(1,3), repeat=r)</code>（256 → 239 组）+ 新增 <code>G20</code> 常驻。</td></tr>
+      <tr><td><b>② 递推更新顺序</b></td>
+        <td>j 递减用新值。几何类上巧合不出错（4232 点 0 失配），靠 <code>C(m,2)/2</code> 才暴露。三处已改为 j 递增。</td></tr>
+      <tr><td><b>③ 探查 4 的 9 条假违例</b></td>
+        <td>判「<code>c</code> 为半整数」时用了循环变量 <code>q</code> 而非既约分母（<code>F(0,2)</code> 的既约分母是 <b>1</b>）
+            ⇒ 把整数陪集误判成半整数。改用 <code>F(p,q).denominator</code> 后 1430 组 <b>0 违例</b>。</td></tr>
+    </table>
+  </div>
+
+  <h2>诚实边界与遗留 OPEN</h2>
+  <div class="card">
+    <p><b>边界</b>：定理 K 是<b>解析证明</b>（三行）；定理 P 是<b>枚举证据</b>（1088 陪集零违例 + 无盲区）不是证明；
+      <code>N = D</code> 只到<b>零反例</b>，未证；本卷<b>不产任何新物理</b>，框架对三代多重度的供给仍为 <b>0</b>。</p>
+    <table>
+      <tr><th style="width:16%">ID</th><th>内容</th></tr>
+      <tr><td><code>X-R367-1</code></td><td>定理 P 的解析证明</td></tr>
+      <tr><td><code>X-R367-2</code></td><td><code>D(c)</code> 的精确幂次（<code>B05</code> 只给「是 2 的幂」，取值 <code>2,4,32,64</code> 的规律未定）</td></tr>
+      <tr><td><code>X-R367-3</code></td><td>加权超曲面 / 加权完全交的闭式（本卷只做直积型完全交）</td></tr>
+      <tr><td><code>X-R367-4</code></td><td><code>CAP_D</code> 之外 FULL / EMPTY 侧的 <code>N = D</code> 反例搜索</td></tr>
+      <tr><td><code>X-R366-2</code></td><td>单轨道性的独立证明（<b>未动</b>）</td></tr>
+      <tr><td><code>X-R366-3</code></td><td>用定理 H / 定理 K 反审框架（<b>未动</b>）</td></tr>
+    </table>
+  </div>
+
+  <h2>最终一句</h2>
+  <div class="card">
+    <b>r366 说「整性判不出几何，系数值判得出」；r367 补上下半句 ——
+    「系数值」对完全交同样成立（定理 K），而「整性」那一侧的额外点规律（定理 P）现在有了名字。
+    可惜这两条加在一起，仍然回答不了「为什么是三代」。</b>
+  </div>
+
+  <div class="sub" style="margin-top:18px">TUFT-r367 · 2026-11-03 · 主条目 24 / 控制组 11 / 守卫 20 · 不占度 ·
+    源码 <code>源码/TUFT-r367_完全交与加权超曲面的牛顿系数闭式_陪集周期N等于D的反例搜索与轨道数定理_精算与可视化_2026-11-03.py</code></div>
+</div>
+
+<script>
+function mk(svg, tag, a) {
+  var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in a) { e.setAttribute(k, a[k]); }
+  svg.appendChild(e);
+  return e;
+}
+function tx(svg, x, y, s, fs, fill, anchor) {
+  var t = mk(svg, 'text', { x: x, y: y, 'font-size': fs || 12,
+                            fill: fill || '#333', 'text-anchor': anchor || 'start' });
+  t.textContent = s;
+  return t;
+}
+function rbox(svg, x, y, w, h, fill, stroke, rx) {
+  return mk(svg, 'rect', { x: x, y: y, width: w, height: h, fill: fill,
+                           stroke: stroke || '#c8d0da', rx: rx || 4 });
+}
+function line(svg, x1, y1, x2, y2, stroke, w, dash) {
+  var a = { x1: x1, y1: y1, x2: x2, y2: y2, stroke: stroke || '#9aa5b1' };
+  a['stroke-width'] = w || 1;
+  if (dash) { a['stroke-dasharray'] = dash; }
+  return mk(svg, 'line', a);
+}
+function arrow(svg, x1, y1, x2, y2, stroke) {
+  mk(svg, 'path', { d: 'M ' + x1 + ' ' + y1 + ' L ' + x2 + ' ' + y2 + ' Z',
+                    stroke: stroke || '#5b6570', 'stroke-width': 1.4, fill: 'none' });
+  var dx = x2 - x1, dy = y2 - y1, L = Math.sqrt(dx * dx + dy * dy);
+  if (L > 0) {
+    var ux = dx / L, uy = dy / L, s = 6;
+    mk(svg, 'path', { d: 'M ' + x2 + ' ' + y2 +
+      ' L ' + (x2 - s * ux + 3 * uy) + ' ' + (y2 - s * uy - 3 * ux) +
+      ' L ' + (x2 - s * ux - 3 * uy) + ' ' + (y2 - s * uy + 3 * ux) + ' Z',
+      fill: stroke || '#5b6570', stroke: 'none' });
+  }
+}
+function tblhtml(rows, head) {
+  var h = '<table><tr>';
+  for (var i = 0; i < head.length; i++) { h += '<th>' + head[i] + '</th>'; }
+  h += '</tr>';
+  for (var j = 0; j < rows.length; j++) {
+    h += '<tr>';
+    for (var k2 = 0; k2 < rows[j].length; k2++) { h += '<td>' + rows[j][k2] + '</td>'; }
+    h += '</tr>';
+  }
+  return h + '</table>';
+}
+
+var ACC = '#2f5fb3', TRUE = '#2f7d4f', FALSE = '#b23a3a', WARN = '#9a6b00';
+var INK = '#1f2328', SUB = '#5b6570';
+
+/* ---------------- 图 1：定理 K ---------------- */
+(function () {
+  var s = document.getElementById('fig1');
+  var W = 680, H = 372;
+
+  rbox(s, 14, 14, 652, 62, '#eef2f8', '#c8d0da');
+  tx(s, 28, 38, 'a_m = Σ_{S⊆[r]} (−1)^{|S|} C(N − d_S, N − m)', 14, ACC);
+  tx(s, 28, 58, 'd_S = Σ_{i∈S} d_i   ·   n = N − r   ·   C(x,r) = x(x−1)…(x−r+1)/r!   ·   r < 0 时 C = 0', 11, SUB);
+  tx(s, 640, 38, 'r = 1 退化为 r366 定理 H', 11, TRUE, 'end');
+  tx(s, 640, 58, 'a_m = C(n+1,m) − C(n+1−d, n+1−m)', 11, SUB, 'end');
+
+  // Koszul 链
+  tx(s, 28, 100, '① Koszul 复形（不需消灭定理 ⇒ CY / 一般型同样成立）', 12, INK);
+  var chain = ['O(k−Σd)', '…', '⊕_{|S|=j} O(k−d_S)', '…', 'O(k)', 'O_X(k)'];
+  var cx = 28, cw = [96, 26, 122, 26, 52, 66];
+  for (var i = 0; i < chain.length; i++) {
+    rbox(s, cx, 110, cw[i], 30, '#ffffff', '#c8d0da', 3);
+    tx(s, cx + cw[i] / 2, 129, chain[i], 11, i === chain.length - 1 ? TRUE : INK, 'middle');
+    if (i < chain.length - 1) { arrow(s, cx + cw[i] + 3, 125, cx + cw[i] + 13, 125, '#5b6570'); }
+    cx += cw[i] + 16;
+  }
+  tx(s, 28, 160, '② χ 加性 ⇒ χ(O_X(k)) = Σ_S (−1)^{|S|} C(N+k−d_S, N)      ③ Δ^m C(x+k,N)|_{k=0} = C(x, N−m)', 11, SUB);
+
+  // 两路径对拍
+  rbox(s, 14, 176, 322, 88, '#f2f7f2', '#c8d0da');
+  tx(s, 28, 198, '两条独立路径（互不共享中间量）', 12, INK);
+  tx(s, 28, 218, '路径 T：td 级数 T(h)^{N+1} / Π T(d_i h)，Bernoulli 展开', 11, SUB);
+  tx(s, 28, 236, '路径 K：Koszul 闭式，2^r 项广义二项式求和', 11, SUB);
+  tx(s, 28, 254, '⇒ 对拍 239 组（N=2..6, r=1..N−1）', 12, TRUE);
+  rbox(s, 336, 176, 330, 88, '#eef2f8', '#c8d0da');
+  tx(s, 350, 198, '自检三条（期望值来自第三条路径）', 12, INK);
+  tx(s, 350, 218, 'A05  a_n = Π d_i（混合差分恒等式）  239 组违例 0', 11, SUB);
+  tx(s, 350, 236, 'A06  CY: a_0 = 1+(−1)^n            55 组违例 0', 11, SUB);
+  tx(s, 350, 254, 'A03  K3 两嵌入 a_0 同为 2，a_1 为 2 vs 3', 11, WARN);
+
+  // 混合差分机理
+  rbox(s, 14, 274, 652, 84, '#fdfaf2', '#c8d0da');
+  tx(s, 28, 296, '为什么 a_n = Π d_i（机理，不是巧合）', 12, INK);
+  tx(s, 28, 316, 'm = n ⇒ a_n = Σ_S (−1)^{|S|} C(N−d_S, r) = Δ_{d_1}…Δ_{d_r} C(x, r) |_{x = N − Σd}', 11, ACC);
+  tx(s, 28, 336, 'C(x,r) 首项系数 1/r! ⇒ r 阶混合差分 = r!·(1/r!)·Π d_i = Π d_i，更高阶项全被差分消掉', 11, SUB);
+  tx(s, 28, 352, '（这一条 A05 是首跑唯一抓出「r ≠ len(ds)」的条目：对拍 A01 在错数据上仍然全绿）', 10, FALSE);
+})();
+
+/* ---------------- 图 2：定理 P ---------------- */
+(function () {
+  var s = document.getElementById('fig2');
+  var W = 680, H = 396;
+
+  rbox(s, 14, 14, 652, 52, '#eef2f8', '#c8d0da');
+  tx(s, 28, 38, 'PARTIAL（S ⊋ Z 的非平凡中间态）⟺ ( n 为奇数且 n ≥ 3 ) ∧ ( d 为偶数 ) ∧ ( c 为半整数 )', 13, ACC);
+  tx(s, 28, 58, '充分性 B02：30/30 全中   ·   必要性 B03：0/1058   ·   无盲区 B06：跳过 112 组中满足三条件的 0 组', 11, SUB);
+
+  // 网格：行 n = 1..6，列 d = 1..6
+  var gx = 60, gy = 96, cw = 62, ch = 34;
+  tx(s, 28, gy + 22, 'n ＼ d', 11, SUB, 'middle');
+  for (var d = 1; d <= 6; d++) {
+    tx(s, gx + (d - 1) * cw + cw / 2, gy + 16, String(d), 11, SUB, 'middle');
+  }
+  var rowsN = [1, 2, 3, 4, 5, 6];
+  for (var ri = 0; ri < rowsN.length; ri++) {
+    var nn = rowsN[ri];
+    var yy = gy + 24 + ri * ch;
+    tx(s, 44, yy + 22, String(nn), 11, SUB, 'middle');
+    for (var d2 = 1; d2 <= 6; d2++) {
+      var xx = gx + (d2 - 1) * cw;
+      var hit = (nn >= 3) && (nn % 2 === 1) && (d2 % 2 === 0);
+      var fillc = hit ? '#dff0e3' : '#f2f4f7';
+      var strok = hit ? TRUE : '#cfd6de';
+      rbox(s, xx, yy, cw - 4, ch - 4, fillc, strok, 3);
+      tx(s, xx + (cw - 4) / 2, yy + 21, hit ? 'PARTIAL' : '—', 10, hit ? TRUE : '#9aa5b1', 'middle');
+    }
+  }
+  var gy2 = gy + 24 + 6 * ch + 8;
+  tx(s, 60, gy2 + 12, 'n = 1 一行：r346 定理 C ⇒ S = (1/d)Z，陪集上要么全要么空 ⇒ 无 PARTIAL（D03：144 组 0 个）', 11, SUB);
+  tx(s, 60, gy2 + 30, 'n 偶：CTL7（460 组 PARTIAL 0）   ·   d 奇：CTL6（84 组 PARTIAL 0）   ⇒ 三条缺一不可', 11, SUB);
+  tx(s, 60, gy2 + 48, 'r339 的三个孤证 −11/2, −3/2, 5/2 正落在 (n,d) = (3,2) 这一格（D04 三点逐一求值，3/3）', 11, TRUE);
+
+  // 右侧三态分流条
+  var bx = 480, by = 96;
+  rbox(s, bx, by, 186, 130, '#ffffff', '#c8d0da');
+  tx(s, bx + 12, by + 20, '三态分流（1088 陪集）', 12, INK);
+  var tot = 1088, parts = [['FULL', 464, TRUE], ['EMPTY', 594, '#7a8794'], ['PARTIAL', 30, WARN]];
+  var cur = by + 32;
+  for (var pi = 0; pi < parts.length; pi++) {
+    var nm = parts[pi][0], v = parts[pi][1], co = parts[pi][2];
+    var bw = Math.round(160 * v / tot);
+    if (bw < 3) { bw = 3; }
+    rbox(s, bx + 12, cur, bw, 18, co, co, 2);
+    tx(s, bx + 12 + bw + 6, cur + 14, nm + ' ' + v, 10, INK);
+    cur += 26;
+  }
+  tx(s, bx + 12, cur + 12, 'PARTIAL 占 2.76%', 10, SUB);
+  tx(s, bx + 12, cur + 28, 'r358: 2.8% · r366: 2.9%', 10, SUB);
+  tx(s, bx + 12, cur + 44, '三个量级下同一比例', 10, SUB);
+})();
+
+/* ---------------- 图 3：反例搜索 ---------------- */
+(function () {
+  var s = document.getElementById('fig3');
+  var W = 680, H = 342;
+
+  // 左：类数柱状
+  rbox(s, 14, 14, 320, 150, '#f2f7f2', '#c8d0da');
+  tx(s, 28, 36, 'PARTIAL 陪集的类数（轨道数）分布', 12, INK);
+  line(s, 40, 148, 300, 148, '#9aa5b1', 1);
+  tx(s, 40, 162, '类数 1', 11, TRUE, 'middle');
+  tx(s, 150, 162, '类数 2', 11, '#9aa5b1', 'middle');
+  tx(s, 262, 162, '类数 ≥3', 11, '#9aa5b1', 'middle');
+  var vals = [30, 0, 0], xs = [40, 150, 262];
+  for (var i = 0; i < vals.length; i++) {
+    var bh = Math.round(88 * vals[i] / 30);
+    if (bh < 2) { bh = 2; }
+    rbox(s, xs[i] - 22, 148 - bh, 44, bh, vals[i] > 0 ? TRUE : '#dfe3e8', vals[i] > 0 ? TRUE : '#c8d0da', 3);
+    tx(s, xs[i], 148 - bh - 6, String(vals[i]), 11, vals[i] > 0 ? TRUE : '#9aa5b1', 'middle');
+  }
+  tx(s, 28, 76, '[(1, 30)]：30 个全为 1', 11, TRUE);
+  tx(s, 28, 94, '多类 0 ⇒ N = H/|S| = D', 11, SUB);
+  tx(s, 28, 112, '（H = D·n!，|S| = n!）', 10, SUB);
+
+  // 右上：几何类独有性质
+  rbox(s, 344, 14, 322, 150, '#eef2f8', '#c8d0da');
+  tx(s, 358, 36, '几何类独有：β_n = D·a_n = D·d ≡ 0 (mod D)', 11, ACC);
+  tx(s, 358, 56, '⇒ 整数化后 f 模 D 的最高次项恒消失', 11, SUB);
+  tx(s, 358, 74, 'C01  类数 >1 的 0 组（30 个 PARTIAL）', 11, TRUE);
+  tx(s, 358, 92, 'C02  非周期的 0 组（三窗平移一致）', 11, TRUE);
+  tx(s, 358, 110, 'C03  β_n ≡ 0 (mod D) 违例 0', 11, TRUE);
+  tx(s, 358, 128, 'C05  N = D 归约链闭合；单轨道性未独立证明', 11, WARN);
+  tx(s, 358, 148, '零反例 ≠ 证明；CAP_D = 6000 之外 FULL/EMPTY 侧未搜', 10, FALSE);
+
+  // 下：对照构造
+  rbox(s, 14, 178, 652, 150, '#fdfaf2', '#c8d0da');
+  tx(s, 28, 200, '对照构造：Q(m) = C(m,2)/2 = m(m−1)/4     b = [0, 0, 1/2]     D = 2     β = [0, 0, 1]', 12, INK);
+  // 数轴 0..7
+  var ax = 40, ay = 250;
+  line(s, ax, ay, ax + 560, ay, '#9aa5b1', 1);
+  for (var t = 0; t <= 7; t++) {
+    var px = ax + t * 76;
+    var inS = (t === 0 || t === 1 || t === 4 || t === 5);
+    mk(s, 'circle', { cx: px, cy: ay, r: inS ? 8 : 5, fill: inS ? TRUE : '#ffffff',
+                      stroke: inS ? TRUE : '#9aa5b1' });
+    tx(s, px, ay + 26, String(t), 11, inS ? TRUE : SUB, 'middle');
+    tx(s, px, ay - 14, inS ? '●' : '○', 11, inS ? TRUE : '#9aa5b1', 'middle');
+  }
+  tx(s, 28, 300, '解集 {0, 1, 4, 5} ⇒ mod 4 占两个剩余类 {0, 1}，周期 4 ≠ D = 2', 12, INK);
+  tx(s, 28, 318, '⇒ 类数可以是 2、周期可以不等于 D ⇒ C01 的「几何类恒为 1」有判别力（不是空话）', 11, TRUE);
+})();
+
+/* ---------------- 图 4：方法换挡 ---------------- */
+(function () {
+  var s = document.getElementById('fig4');
+  var W = 680, H = 344;
+
+  rbox(s, 14, 14, 652, 58, '#eef2f8', '#c8d0da');
+  tx(s, 28, 38, '整数化：β_i = D·b_i ∈ Z   ·   递推：g_j(m+1) = g_j(m) + g_{j+1}(m)，g_{n+1} ≡ 0，全程 mod D', 12, ACC);
+  tx(s, 28, 58, '判「Q(m) ∈ Z」⇒ 判 Σ_i β_i C(m,i) ≡ 0 (mod D)   ·   代价 O(D·n!) → O(D)   ·   CTL3：224 点不一致 0', 11, SUB);
+
+  // 左：j 递增（正确）
+  rbox(s, 14, 82, 320, 150, '#f2f7f2', '#c8d0da');
+  tx(s, 28, 104, '正确：j 递增（g[j+1] 取旧值）', 12, TRUE);
+  for (var i = 0; i < 3; i++) {
+    var yy = 122 + i * 30;
+    rbox(s, 36, yy, 60, 24, '#ffffff', '#c8d0da', 3);
+    tx(s, 66, yy + 17, 'g' + i, 11, INK, 'middle');
+    tx(s, 108, yy + 17, '+', 12, SUB);
+    rbox(s, 124, yy, 60, 24, '#ffffff', '#c8d0da', 3);
+    tx(s, 154, yy + 17, 'g' + (i + 1) + '(旧)', 11, ACC, 'middle');
+    tx(s, 196, yy + 17, '→', 12, SUB);
+    rbox(s, 216, yy, 60, 24, '#e4f0e8', TRUE, 3);
+    tx(s, 246, yy + 17, 'g' + i + '(新)', 11, TRUE, 'middle');
+  }
+  tx(s, 36, 220, 'C(m,2)/2 上：解集 {0, 1, 4, 5}  ✓ 与直算一致', 11, TRUE);
+
+  // 右：j 递减（错误）
+  rbox(s, 344, 82, 322, 150, '#fdf2f2', '#e0b8b8');
+  tx(s, 358, 104, '错误：j 递减（g[j+1] 已是新值）', 12, FALSE);
+  for (var j2 = 0; j2 < 3; j2++) {
+    var y2 = 122 + j2 * 30;
+    rbox(s, 366, y2, 60, 24, '#ffffff', '#c8d0da', 3);
+    tx(s, 396, y2 + 17, 'g' + (2 - j2), 11, INK, 'middle');
+    tx(s, 438, y2 + 17, '+', 12, SUB);
+    rbox(s, 454, y2, 74, 24, '#ffe9e9', FALSE, 3);
+    tx(s, 491, y2 + 17, 'g' + (3 - j2) + '(新!)', 11, FALSE, 'middle');
+    tx(s, 540, y2 + 17, '✗', 12, FALSE);
+  }
+  tx(s, 374, 220, 'C(m,2)/2 上：解集 {0, 3, 4, 7}  ✗ 真为 {0, 1, 4, 5}', 11, FALSE);
+
+  // 下：为什么难抓
+  rbox(s, 14, 242, 652, 88, '#fdfaf2', '#c8d0da');
+  tx(s, 28, 264, '为什么这个 bug 阴险', 12, INK);
+  tx(s, 28, 284, '在几何类上：4232 个点，j 递增与 j 递减的失配都是 0 ⇒ 错法巧合地不出错', 11, SUB);
+  tx(s, 28, 302, '只有在 C(m,2)/2 这种非几何构造上才暴露（{0,1,4,5} vs {0,3,4,7}）', 11, FALSE);
+  tx(s, 28, 320, '沉淀：对照类必须换一个 —— 同族对照抓不到同族的错（与 r374 投影算符上下标同型）', 11, TRUE);
+})();
+
+document.getElementById('tbl1').innerHTML = tblhtml([
+  ['A01', 'td 路径 vs Koszul 闭式', '0', '239 组', '<span class="t">PASS</span>'],
+  ['A02', 'r=1 退化回 r366 定理 H', '0', '30 组', '<span class="t">PASS</span>'],
+  ['A04', 'Koszul 项数 = 2^r', '0', '239 组', '<span class="t">PASS</span>'],
+  ['A05', 'a_n = Π d_i（混合差分）', '0', '239 组', '<span class="t">PASS</span>'],
+  ['A06', 'CY 自检 a_0 = 1+(−1)^n', '0', '55 组', '<span class="t">PASS</span>'],
+  ['A03', 'K3 两嵌入 a_0 同为 2', '2_2', '2_2', '<span class="t">PASS</span>'],
+  ['CTL8', '正控：两嵌入 a_1 必不同', 'differ', '2 vs 3', '<span class="t">PASS</span>'],
+  ['CTL1', '扰动：上标错位必被抓', '&gt;0', '237/239（漏网 2）', '<span class="t">PASS</span>'],
+  ['CTL2', '扰动：td 二次项改错必被抓', '&gt;0', '132/239（漏网 107）', '<span class="t">PASS</span>']
+], ['ID', '判据', '期望', '实测', '结论']);
+
+document.getElementById('tbl2').innerHTML = tblhtml([
+  ['B01', '三态分流上无违例', '0', '1088 组（跳 112）', '<span class="t">PASS</span>'],
+  ['B02', '充分性：满足三条件 ⇒ PARTIAL', '30', '30 / 30', '<span class="t">PASS</span>'],
+  ['B03', '必要性：不满足 ⇒ 非 PARTIAL', '0', '0 / 1058', '<span class="t">PASS</span>'],
+  ['B06', '无盲区：跳过组中满足三条件的', '0', '0 / 112', '<span class="t">PASS</span>'],
+  ['B04', '所有 PARTIAL 的 c 既约分母', '[2]', '[2]（全半整数）', '<span class="t">PASS</span>'],
+  ['B05', '所有 PARTIAL 的 D 为 2 的幂', '0', '取值 2,4,32,64', '<span class="t">PASS</span>'],
+  ['CTL6', '负控：半整数但 d 奇', '0', '0 / 84', '<span class="t">PASS</span>'],
+  ['CTL7', '负控：n 偶', '0', '0 / 460', '<span class="t">PASS</span>'],
+  ['CTL5', '正控：PARTIAL 上真有整点', 'found', '(3,2,−1/2,3)', '<span class="t">PASS</span>'],
+  ['D03', 'n=1 无 PARTIAL（r346 定理 C）', '0', '0 / 144', '<span class="t">PASS</span>'],
+  ['D04', 'r339 孤证 −11/2, −3/2, 5/2', '3', '3', '<span class="t">PASS</span>']
+], ['ID', '判据', '期望', '实测', '结论']);
+
+document.getElementById('tbl3').innerHTML = tblhtml([
+  ['C01', 'PARTIAL 类数分布', '0（多类）', '[(1, 30)]', '<span class="t">PASS</span>'],
+  ['C02', '解集以 D 为周期', '0', '非周期 0 组', '<span class="t">PASS</span>'],
+  ['C03', 'β_n ≡ 0 (mod D)', '0', '违例 0（30 组）', '<span class="t">PASS</span>'],
+  ['C05', 'H = D·n!、|S| = n! ⇒ N = D', '0', '30 组闭合', '<span class="t">PASS</span>'],
+  ['C04', '对照：C(m,2)/2 类数为 2', '2', '2（周期 4 ≠ D）', '<span class="t">PASS</span>'],
+  ['CTL9', 'C(m,2)/2 在 mod 4 下为 {0,1}', '{0, 1}', '[0, 1]', '<span class="t">PASS</span>'],
+  ['CTL10', '记账：可算 + 跳过 = 枚举', '1200', '1088 + 112', '<span class="t">PASS</span>'],
+  ['CTL11', 'r366 C03：D 素因子 ⊆ q 素因子', '0', '1088 组违例 0', '<span class="t">PASS</span>']
+], ['ID', '判据', '期望', '实测', '结论']);
+
+document.getElementById('tbl4').innerHTML = tblhtml([
+  ['CTL3', '快递推 vs Fraction 直算', '0', '224 点不一致 0', '<span class="t">PASS</span>'],
+  ['D01', 'r366 定理 H 在 r=1 上一致', '0', '48 组失配 0', '<span class="t">PASS</span>'],
+  ['D02', 'r358 定理 E′ 陪集判定', '0', '70 陪集分歧 0', '<span class="t">PASS</span>'],
+  ['CTL4', 'c 整数 ⇒ D=1 且陪集整段', '0', '464 个违例 0', '<span class="t">PASS</span>'],
+  ['G20', '对象错位：len(ds) == r', '0', '违例 0（239 组）', '<span class="t">PASS</span>'],
+  ['G09', '完全交网格覆盖', '≥200', '239', '<span class="t">PASS</span>'],
+  ['G10', '陪集网格覆盖', '≥1000', '1200', '<span class="t">PASS</span>'],
+  ['G13', '三态分流', '3', 'FULL 464 / EMPTY 594 / PARTIAL 30', '<span class="t">PASS</span>'],
+  ['E02', '定价：至少钉住一位', '≥1', '钉住 S0（K6）', '<span class="t">PASS</span>']
+], ['ID', '判据', '期望', '实测', '结论']);
+</script>
+</body>
+</html>

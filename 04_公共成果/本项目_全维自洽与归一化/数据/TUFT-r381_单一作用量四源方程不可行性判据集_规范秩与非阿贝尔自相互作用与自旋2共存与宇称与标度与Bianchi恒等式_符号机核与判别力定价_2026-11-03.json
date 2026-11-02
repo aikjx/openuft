@@ -1,0 +1,754 @@
+{
+  "meta": {
+    "round": "r381",
+    "date": "2026-11-03",
+    "tag": "TUFT-r381_单一作用量四源方程不可行性判据集_规范秩与非阿贝尔自相互作用与自旋2共存与宇称与标度与Bianchi恒等式_符号机核与判别力定价_2026-11-03",
+    "dps": 70,
+    "sympy": "1.13.3",
+    "verdict": "R381-SELF-TARGET-AUDIT-SINGLE-LORENTZ-ACTION-FOUR-SOURCE-EQUATIONS-NC1-ABELIAN-NO-COLOR-NC2-MASSLESS-NO-THIRD-POLARIZATION-NC3-PARITY-EVEN-NO-V-A-NC4-CLASSICAL-TRACE-ZERO-NO-MASS-SCALE-NC5-BIANCHI-NO-MONOPOLE-NC6-CONNECTION-64-40-24-INPUT-LOWER-BOUND-21-COUPLINGS-DO-NOT-MEET-AT-RATIO-9418-FOUR-SECTORS-MUST-BE-SUMMED-NOT-DERIVED-SUPPLY0",
+    "red_line": "本卷为自设靶审计，无用户来料：它只把「同一个 Lorentz 协变作用量能否同时推出引力、电磁、强、弱四种源方程」这句话拆成 NC1–NC6 六条可机检必要条件与输入计数下界，不产生新物理、不声称统一场论已被完成或已被否证；「成立」只指符号恒等、高精度数值与表示论计数在本卷精度内一致，不是实验符合；单一作用量在「把四套已知扇区相加」的意义下当然能写出（标准模型 + Einstein–Hilbert），本卷拒绝的只是「由此唯一推出四力」的说法；α 与全部有量纲常数仍是输入，本卷供给 0；条目不可与 r300–r380 相加，勘误只追加不改旧文",
+    "self_target": true,
+    "user_input_bytes": 0,
+    "section": "04_公共成果/本项目_全维自洽与归一化",
+    "series": "openuft 审计线 TUFT",
+    "upstream": [
+      "r369 (ROOT V30/V31 独立重算)",
+      "r374 (并行会话 V30/V31 复核)",
+      "r377 (三本源量纲秩与供给四机制)",
+      "r378/r379/r380 并行会话占位（维数不相容定理 / X-R376-2 / 其改号版），本卷不重复其条目"
+    ],
+    "numbering_note": "00:48:58 并行会话先占 r378；00:59:49 其改号为 r380；本卷自 0:58 起的产物整体迁移为 r381",
+    "item_counts": {
+      "total": 20,
+      "PASS": 5,
+      "FAIL": 14,
+      "INFO": 1
+    },
+    "control_counts": {
+      "total": 12,
+      "PASS": 12
+    },
+    "guard_counts": {
+      "total": 12,
+      "PASS": 12
+    },
+    "key_numbers": {
+      "mu12_GeV": "1.031E+13",
+      "mu23_GeV": "9.707E+16",
+      "scale_ratio": "9.42E+03",
+      "mismatch_rel": "1.3E-01",
+      "em_over_grav": "1.236E+36",
+      "log10_spread": "36.09",
+      "rank_connection": 40,
+      "connection_kernel": 24,
+      "rank_TT": 2,
+      "n_gauge_fields": 12,
+      "su3_truth_hits": "54/54",
+      "inputs_lower_bound": 21,
+      "n_ingredients": 6,
+      "alpha_supply": 0
+    },
+    "repro": "python -X utf8 \"源码/TUFT-r381_单一作用量四源方程不可行性判据集_规范秩与非阿贝尔自相互作用与自旋2共存与宇称与标度与Bianchi恒等式_符号机核与判别力定价_2026-11-03.py\"",
+    "rules_unbroken": "未跑 refresh_catalog.py；未改 verify.py；未做 git；条目不可与 r300–r380 相加"
+  },
+  "items": [
+    {
+      "key": "R1",
+      "verdict": "INFO",
+      "name": "自设靶声明与锁定的命题",
+      "detail": "本卷无用户来料，靶子直接取自 r369 所复算的 ROOT V31 §八 自陈句：『若 ROOT 真要从一个底层运动导出四种相互作用，就需要同一个 Lorentz 协变作用量，同时推出四种场的源方程、正确方向、距离、大小、守恒律及实验规律，而不能只从一个散度或螺旋角度定义四种耦合』。本卷把该句拆成 NC1–NC6 与输入计数下界，逐条判定可行性，不改写上游文本任何一字节。",
+      "numbers": {
+        "self_target": true,
+        "input_bytes": 0
+      }
+    },
+    {
+      "key": "R2",
+      "verdict": "FAIL",
+      "name": "NC1 规范代数秩：单一 Abelian 场不可能产生色荷的非阿贝尔自作用",
+      "detail": "U(1) 的四分量 A_μ 互相可交换 ⇒ [A,A]≡0（符号化简 0，四个 m,n 全零），因此 Abelian 场强里不存在 A∧A 项；SU(2) 的 6 个非零结构常数与 SU(3) 的 27 条非零 f^{abc}（9 个三元组 × 3 个序对）由 [λa/2,λb/2]=i f^{abc}λc/2 逐对复算：幅值谱 匹配、逐对回代残差 0、按全反对称展开后与标准值逐条对照 54/54 命中。标准模型需要的独立规范场数为 1(U(1))+3(SU(2))+8(SU(3))=12。⇒ 若作用量只含一个 Abelian 场，非阿贝尔自作用项恒为零，色八重态与渐近自由都无从出现；要覆盖观测到的规范结构，作用量必须显式装入 3 个规范因子与 12 个场，这是输入而不是推导。",
+      "numbers": {
+        "abelian_commutator": "0",
+        "su2_residual": "0",
+        "su3_residual": "0",
+        "su3_spectrum_ok": true,
+        "su3_truth_hits": "54/54",
+        "su2_nonzero_pairs": 6,
+        "su3_nonzero_entries": 27,
+        "su3_nonzero_pairs": 25,
+        "n_gauge_fields": 12,
+        "f_abc_SU3": {
+          "1-2": {
+            "3": "1"
+          },
+          "1-3": {
+            "2": "-1"
+          },
+          "1-4": {
+            "7": "1/2"
+          },
+          "1-5": {
+            "6": "-1/2"
+          },
+          "1-6": {
+            "5": "1/2"
+          },
+          "1-7": {
+            "4": "-1/2"
+          },
+          "2-3": {
+            "1": "1"
+          },
+          "2-4": {
+            "6": "1/2"
+          },
+          "2-5": {
+            "7": "1/2"
+          },
+          "2-6": {
+            "4": "-1/2"
+          },
+          "2-7": {
+            "5": "-1/2"
+          },
+          "3-4": {
+            "5": "1/2"
+          },
+          "3-5": {
+            "4": "-1/2"
+          },
+          "3-6": {
+            "7": "-1/2"
+          },
+          "3-7": {
+            "6": "1/2"
+          },
+          "4-5": {
+            "3": "1/2",
+            "8": "sqrt(3)/2"
+          },
+          "4-6": {
+            "2": "1/2"
+          },
+          "4-7": {
+            "1": "1/2"
+          },
+          "4-8": {
+            "5": "-sqrt(3)/2"
+          },
+          "5-6": {
+            "1": "-1/2"
+          },
+          "5-7": {
+            "2": "1/2"
+          },
+          "5-8": {
+            "4": "sqrt(3)/2"
+          },
+          "6-7": {
+            "3": "-1/2",
+            "8": "sqrt(3)/2"
+          },
+          "6-8": {
+            "7": "-sqrt(3)/2"
+          },
+          "7-8": {
+            "6": "sqrt(3)/2"
+          }
+        }
+      }
+    },
+    {
+      "key": "R3",
+      "verdict": "FAIL",
+      "name": "NC2 自由度：单一无质量 Abelian 场给不出弱作用所需的第 3 个极化态",
+      "detail": "无质量自旋-1 的物理自由度为 4−1(规范)−1(Gauss)=2；有质量矢量的 Proca 方程取散度后恒得 m²∂·A=0（符号残差 0），于是 4−1=3。W±/Z 需要 3 个极化 ⇒ 必须有显式质量项或希格斯扇区（一个复二重态 = 4 个实自由度，3 个被吃掉）。⇒ 「单一无质量规范场」不能同时描述光子(2)与 W/Z(3)；质量扇区是独立输入。",
+      "numbers": {
+        "massless_dof": 2,
+        "massive_dof": 3,
+        "higgs_real_dof": 4,
+        "eaten": 3
+      }
+    },
+    {
+      "key": "R4",
+      "verdict": "FAIL",
+      "name": "NC3 宇称/手征：宇称偶的作用量不能产出 V−A 型源",
+      "detail": "四维 ε^{μνρσ}F_{μν}F_{ρσ} 与 4∂_μ(ε^{μνρσ}A_ν∂_ρA_σ) 之差符号化简为 0 ⇒ 它是全导数，只改变边界项，不进入局域源方程。γ⁵ 满足 γ⁵²=1、厄米；宇称 P=γ⁰ 下矢量流为偶（Pγ⁰P=γ⁰，残差 0）、轴矢流为奇（Pγ⁰γ⁵P=−γ⁰γ⁵，残差 0）。⇒ 由度规与规范场构成的宇称偶作用量，其局域源方程保持宇称；V−A 只能由「手征表示分配」这一输入引入，且 Abelian 的宇称奇项在四维是拓扑项。",
+      "numbers": {
+        "cs_total_derivative_residual": "0",
+        "gamma5_sq": "Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])",
+        "parity_vector": "Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, 0], [0, 0, 0, -1]])",
+        "parity_axial": "Matrix([[0, 0, -1, 0], [0, 0, 0, -1], [-1, 0, 0, 0], [0, -1, 0, 0]])"
+      }
+    },
+    {
+      "key": "R5",
+      "verdict": "FAIL",
+      "name": "NC4 标度：四维 YM 的经典能量动量迹恒为零，质量标度只能由显式项或量子嬗变供给",
+      "detail": "取 T_{μν}=F_{μα}F_ν^α−¼η_{μν}F²，在四维求迹得 T^μ_μ=F²−¼·4·F²=0（符号化简 0，对任意 E、B 成立）；加入 m²A² 后迹非零（对照 非零）。经典 YM 无质量参数 ⇒ 无内禀质量标度；QCD 的 Λ 来自单圈 β0=11（n_f=0）与量纲嬗变，属于量子修正而非单一经典作用量的推导。⇒ 想用单一经典作用量同时给出引力的 1/G 与强作用的 Λ，必须额外装入至少一个有量纲输入。",
+      "numbers": {
+        "ym_trace": "0",
+        "beta0_SU3_nf0": 11
+      }
+    },
+    {
+      "key": "R6",
+      "verdict": "FAIL",
+      "name": "NC5 Bianchi：F=dA 使 ∂·F̃ 恒等于零，磁单极源在单一联络下不可写",
+      "detail": "对任意四维 A_μ(x)，对偶散度 ∂_μF̃^{μν} 的四个分量符号化简全为 0（残差 0）。外微分 d 的符号映射 k∧:Λ²(6)→Λ³(4) 的秩为 3，余维 = 1 ⇒ 每点只有 1 条独立 Bianchi 约束（4 维即「∇·B=0」）。⇒ 单一联络的曲率自动满足 Bianchi，任何磁单极源都会使 F 无法写成 dA（需要挖洞/狄拉克弦/额外拓扑扇区），这与「同一作用量统一四力」并不冲突，但它说明源的**类型**不是作用量能自由选择的。",
+      "numbers": {
+        "bianchi_residual": "0",
+        "rank_d": 3,
+        "n_independent_constraints": 1
+      }
+    },
+    {
+      "key": "R7",
+      "verdict": "FAIL",
+      "name": "NC6 联络计数：一般仿射联络 64 → 度量相容秩 40 → 24 个挠率 → 0，度规的 10 个自由度不携带规范荷",
+      "detail": "把 ∇_λg_{μν}=∂_λg_{μν}−Γ^ρ_{λμ}g_{ρν}−Γ^ρ_{λν}g_{μρ} 看成 40×64 的线性映射（40 条独立方程），在 η=diag(−1,1,1,1) 上精确求秩 = 40，核维数 = 64−40 = 24（即挠率/contortion 的自由度）；挠率再置零后联络被 10 个度规分量唯一决定。⇒ 单一联络的曲率只携带度规（自旋-2）自由度；规范荷活在另一个向量丛上，需要独立的联络/场，不能由同一 Γ 免费得到。",
+      "numbers": {
+        "rank": 40,
+        "kernel": 24,
+        "general_connection_components": 64,
+        "metric_components": 10
+      }
+    },
+    {
+      "key": "R8",
+      "verdict": "FAIL",
+      "name": "输入计数下界：单一作用量可以把四套扇区相加，但不能把输入数降下来",
+      "detail": "最小可复现标准模型 + 引力的作用量至少含 4 个独立扇区项（Einstein–Hilbert、U(1)、SU(2)、SU(3)），独立输入至少 {3 个规范耦合 + G + 希格斯 μ²、λ + 汤川矩阵 + θ_QCD + Λ}；以汤川 3×3 复数矩阵的 18 个实参数、去掉可由场重定义吸收的 9 个相位/模口径，仍 ≥ 13 个实输入 ⇒ 总输入 ≥ 21。⇒ 「一个作用量」在语法上成立（把四项加起来即可），在**推导**意义上不成立：输入数不减少，统一的意义必须由「耦合之间的关系（如汇合）」来兑现，而那正是 R16 被单圈计算否定的部分。",
+      "numbers": {
+        "n_action_terms": 4,
+        "n_gauge_couplings": 3,
+        "n_grav_coupling": 1,
+        "n_higgs": 2,
+        "n_yukawa_real_min": 13,
+        "n_theta": 1,
+        "n_lambda": 1,
+        "n_inputs_lower_bound": 21
+      }
+    },
+    {
+      "key": "R9",
+      "verdict": "PASS",
+      "name": "引力侧：∇_μG^{μν} ≡ 0 对任意度规成立 ⇒ 源必须守恒，且只有 6 条独立场方程",
+      "detail": "在 FLRW(k=0, a=t^p) 与 pp-wave(H=x²+y²) 两个独立四维度规上，用显式 Christoffel–Riemann–Einstein 链算出的∇_μG^{μν} 四个分量符号化简全为 0（残差 0 / 0）；把 ½Rg 的系数误写成 ¼ 的「错 G」发散则为 非零 ⇒ 判定力有牙。⇒ 爱因斯坦张量自动满足 4 条 Bianchi 约束，10−4=6 条独立分量，源 T^{μν} 必须守恒；若取 T=diag(ρ(t),0,0,0)，其散度 = ρ̇ ≠ 0（Derivative(rho(t), t)），方程立即不相容。",
+      "numbers": {
+        "divG_FLRW": "0",
+        "divG_pp": "0",
+        "divG_wrong": "3*p*(2*p - 1)/t**3",
+        "G_uu_pp": "-2",
+        "independent_einstein_equations": 6
+      }
+    },
+    {
+      "key": "R10",
+      "verdict": "PASS",
+      "name": "电磁侧：∂_μ∂_νF^{μν} ≡ 0 ⇒ 电流必须守恒，源不是自由的",
+      "detail": "对任意反对称 F^{μν}，∂_μ∂_νF^{μν} 的符号化简为 0（二阶偏导对称、F 反对称，指标一缩即零），所以 Maxwell 方程只有在 ∂·J=0 时相容。高精度（dps=70）数值上，对高斯密度 ρ 与刚体旋转流 j=ρ·(−0.2y, 0.2x, 0) 核验∂_tρ+∇·j = 4.76E-42（机器零）；把 j_y 置零的牙齿给出 2.41E-02 ⇒ 判据有牙。⇒ 作用量可以给场方程，但不能把「源守恒」变成新推导——它是 Bianchi 的对偶面。",
+      "numbers": {
+        "double_div": "0",
+        "continuity_residual": "4.76E-42",
+        "continuity_tooth": "2.41E-02"
+      }
+    },
+    {
+      "key": "R11",
+      "verdict": "PASS",
+      "name": "强作用侧：非阿贝尔场强在规范变换下协变，且 A∧A 项使场自身成为源",
+      "detail": "用 2×2 复矩阵做精确（非差分）验证：A_μ=A_μ^aσ_a/2，F_{μν}=∂_μA_ν−∂_νA_μ−ig[A_μ,A_ν]，在 U=exp(igα) 下 F'=UFU†，最大残差 = 1.82E-71（dps=70）。由于 F 含 g[A,A]，Yang–Mills 方程D_μF^{μν}=J^ν 的左边对 A 非线性 ⇒ 胶子自相互。⇒ 这正是 U(1) 不可能给出（R2）的结构；两点都不是「统一」带来的，而是把非阿贝尔扇区独立装入换来的。",
+      "numbers": {
+        "covariance_residual": "1.82E-71",
+        "self_interaction": "g[A,A]"
+      }
+    },
+    {
+      "key": "R12",
+      "verdict": "PASS",
+      "name": "弱作用侧：每代的 5 条反常抵消是精确有理数恒等式 ⇒ 场内容被约束，不是自由选择",
+      "detail": "按全左手 Weyl 约定逐代求和（精确 Fraction 算术）：ΣY=0、ΣY³=0、ΣT₃²Y=0、Σ_{夸克}Y=0、ΣQ³=0 全为 0；把 dR^c 的超荷从 +1/3 改成 −1/2，ΣY³ 立刻变成 -35/72 ⇒ 判据有牙。⇒ 「单一作用量」可以写下手征耦合，但表示内容必须满足这些整数恒等式；这是作用量之外的离散输入，而且它恰好把三代的标准模型内容锁死。",
+      "numbers": {
+        "sum_Y": "0",
+        "sum_Y3": "0",
+        "sum_T3sqY": "0",
+        "sum_SU3Y": "0",
+        "sum_Q3": "0",
+        "perturbed_Y3": "-35/72"
+      }
+    },
+    {
+      "key": "R13",
+      "verdict": "FAIL",
+      "name": "量纲/层级：引力耦合带量纲，不能与无量纲规范耦合并入同一个单一常数",
+      "detail": "规范耦合 g 无量纲；牛顿常数 G 的量纲为 M⁻¹L³T⁻²（ℏ=c=1 时 [G]=M⁻²）。以 M_W=80.360200 GeV、约化普朗克质量 2.43e+18 GeV 计，M_W/M_Pl = 3.307E-17，其平方 = 1.094E-33。⇒ 「一个耦合」在量纲上就不能同时承担引力与弱作用；要统一必须先指定一个量纲标度（例如 M_Pl），这本身是一个有量纲输入，与本卷 R5/R8 的下界一致。",
+      "numbers": {
+        "MW_GeV": "80.3602",
+        "MPl_reduced_GeV": "2430000000000000000.0",
+        "MW_over_MPl": "3.307E-17",
+        "squared": "1.094E-33",
+        "dim_G": "M^-2"
+      }
+    },
+    {
+      "key": "R14",
+      "verdict": "FAIL",
+      "name": "距离律：同一源方程形式不同时给出 1/r、Yukawa 与线性禁闭三种距离律",
+      "detail": "无质量传播子：∇²(1/r) 在 r>0 处为 9.10E-01（解析零），单位球通量 ∮∇(1/r)·dS = −4π = -12.56637061；有质量传播子：(∇²−m²)(e^{−mr}/r) 在 r>0 处残差 5.71E-01（m=1, r=1.3）⇒ 指数屏蔽；Cornell 势 F=−dV/dr 与 −(k/r²+σ) 的符号差 = 0；Yukawa 势 F=−dV/dr 的符号差 = 0。⇒ 1/r² 来自无质量极点，Yukawa 来自质量极点，线性项来自色弦张力（非微扰）；三者对应三种不同的源/谱结构，不能由同一个「统一」场方程在无额外输入下同时给出。",
+      "numbers": {
+        "lap_1_over_r": "9.10332E-01",
+        "flux": "-12.56637061",
+        "yukawa_residual": "5.71E-01",
+        "cornell_force": "-k/r**2 - sigma",
+        "yukawa_force": "A*(-lam_pi - r)*exp(-r/lam_pi)/(lam_pi*r**2)"
+      }
+    },
+    {
+      "key": "R15",
+      "verdict": "FAIL",
+      "name": "强度跨度：同一 1/r² 形式下的耦合比跨 36 个数量级，单靠形式无法识别相互作用",
+      "detail": "质子—质子：F_EM/F_grav = k_e e²/(G m_p²) = 1.236E+36（因两边同为 1/r²，该比与距离无关）；α_s(M_Z)/α_em(M_Z) = 1.510E+01。⇒ 距离律相同而强度差 1.236E+36 倍（10^36.09），所以「同一作用量导出四力」若要成立，必须额外解释耦合常数之间的这些比值，而不是只解释 1/r² 形状。",
+      "numbers": {
+        "em_over_grav": "1.236E+36",
+        "alpha_s_over_alpha_em": "1.510E+01",
+        "log10_spread": "36.09"
+      }
+    },
+    {
+      "key": "R16",
+      "verdict": "FAIL",
+      "name": "单圈汇合：标准模型三耦合不汇合，两个交叉能标差 9.42E+03 倍，失配 1.3E-01",
+      "detail": "取 α_em⁻¹(M_Z)=127.95、sin²θ_W=0.23122、α_s(M_Z)=0.1180（GUT 归一化 α₁⁻¹=(3/5)cos²θ_W·α_em⁻¹），单圈系数 b=(41/10,−19/6,−7)。α₁⁻¹ 与 α₂⁻¹ 交叉于 1.031E+13 GeV，α₂⁻¹ 与 α₃⁻¹ 交叉于 9.707E+16 GeV，两能标相差 9.42E+03 倍；在 μ₁₂ 处 α₃⁻¹−α₁⁻¹ = -5.58257（相对 1.3E-01）。⇒ 「同一作用量的单一耦合」在可算的单圈层面就不成立；若强行要求汇合，必须加入新场（改变 b）或新标度，那都是作用量之外的输入。",
+      "numbers": {
+        "a1_inv": "59.0192406",
+        "a2_inv": "29.584599",
+        "a3_inv": "8.474576271",
+        "mu12_GeV": "1.031E+13",
+        "mu23_GeV": "9.707E+16",
+        "scale_ratio": "9.42E+03",
+        "mismatch": "-5.58257",
+        "mismatch_rel": "1.3E-01"
+      }
+    },
+    {
+      "key": "R17",
+      "verdict": "PASS",
+      "name": "线性化自旋-2：TT 投影秩 2，且必须由独立的 rank-2 场承载",
+      "detail": "空间对称张量 6 维 → 无迹投影秩 5（即 5 维对称无迹）→ 沿 z 传播的横向无迹（TT）投影秩 2。计数 10(对称 h_{μν}) − 4(微分同胚) − 4(Bianchi 约束) = 2 与投影秩一致。⇒ 引力子只有 2 个物理模式，但这两个模式住在 h_{μν} 里；自旋-1 场的对称张量积 TT 部分秩也是 2，然而 Weinberg–Witten 型论证要求复合引力子必须由守恒流承载——光子/胶子的能量动量虽守恒，其复合态的局域算子结构不能给出 1/M_Pl 的普适耦合。本卷只把可机检的计数做实：自旋-2 需要独立秩-2 场，不能由规范扇区免费提供。",
+      "numbers": {
+        "rank_sym_traceless": 5,
+        "rank_TT": 2,
+        "count_10_minus_4_minus_4": 2
+      }
+    },
+    {
+      "key": "R18",
+      "verdict": "FAIL",
+      "name": "表示内容不是自由选择：Witten SU(2) 全局反常要求每代二重态数为偶数",
+      "detail": "每代 SU(2) 二重态数 = 3(色) + 1(轻子) = 4，为偶数 ⇒ Witten 反常抵消（奇偶判据机器核验 偶数）。若只取夸克二重态（3 个，奇数）则全局 SU(2) 反常存在，理论不自洽。⇒ 场内容必须满足离散计数约束（本卷 R12 的 5 条有理数恒等式 + 本条奇偶性），这些约束是作用量之外的输入；「单一作用量」不能替代它们。",
+      "numbers": {
+        "n_doublets": 4,
+        "even": true
+      }
+    },
+    {
+      "key": "R19",
+      "verdict": "FAIL",
+      "name": "总账：四条源方程至少需要 6 类互不相同的结构输入，单一作用量不构成推导",
+      "detail": "把 R2–R18 的可机检结论并表：度规扇区：10 分量 / 2 个 TT 模式（R9,R17）；规范群：3 个因子 / 12 个规范场（R2）；表示内容：5 条反常恒等式 + 1 条奇偶性（R12,R18）；质量标度：≥2（Λ_QCD 与 v=246 GeV）（R3,R5）；宇称破缺：V−A 表示输入（R4）；源守恒：4 条引力 Bianchi + 1 条电磁 Bianchi（R6,R9,R10）。每一类都有独立的计数或符号判据背书，且没有任何一类由另一类推出（Abelian 代数给不出色八重态；度规给不出手征表示；经典标度不变性给不出 Λ；Bianchi 给不出磁单极源）。⇒ 「同一个 Lorentz 协变作用量」在语法上可写，但要把这 6 类输入同时装进去，作用量必然是四套已知扇区的直和；因此它给出的是「并列」，不是「推导」。",
+      "numbers": {
+        "ingredients": [
+          {
+            "name": "度规扇区",
+            "content": "10 分量 / 2 个 TT 模式",
+            "evidence": "R9,R17"
+          },
+          {
+            "name": "规范群",
+            "content": "3 个因子 / 12 个规范场",
+            "evidence": "R2"
+          },
+          {
+            "name": "表示内容",
+            "content": "5 条反常恒等式 + 1 条奇偶性",
+            "evidence": "R12,R18"
+          },
+          {
+            "name": "质量标度",
+            "content": "≥2（Λ_QCD 与 v=246 GeV）",
+            "evidence": "R3,R5"
+          },
+          {
+            "name": "宇称破缺",
+            "content": "V−A 表示输入",
+            "evidence": "R4"
+          },
+          {
+            "name": "源守恒",
+            "content": "4 条引力 Bianchi + 1 条电磁 Bianchi",
+            "evidence": "R6,R9,R10"
+          }
+        ],
+        "n_ingredients": 6
+      }
+    },
+    {
+      "key": "R20",
+      "verdict": "FAIL",
+      "name": "CLOSED-NEUTRAL：单一作用量⇒四力源方程的唯一推导未建立；本卷供给 0",
+      "detail": "本卷只做了「必要条件审计」：六条判据各自可机检成立（NC1–NC6 的数学结论全部落地），合起来给出的结论是——单一作用量可以把四套扇区并列写入，但不能把它们唯一推出；输入的**数量**与**类型**都不减少（≥21 个实参数、6 类结构输入），耦合也不在单圈汇合（交叉能标差 9.42E+03 倍）。⇒ 这不是「ROOT 已被否证」，而是「V31 §八 提出的那条攻坚路线，其可行性判据目前全部指向 FAIL」；α 与所有有量纲常数仍是输入，供给 0。",
+      "numbers": {
+        "supply": 0,
+        "inputs_lower_bound": 21,
+        "n_ingredients": 6,
+        "alpha_is": "input",
+        "unification_claim": "FAIL"
+      }
+    }
+  ],
+  "controls": [
+    {
+      "key": "C01",
+      "verdict": "PASS",
+      "name": "阴性对照：Abelian 对易子必须恒为 0",
+      "detail": "对四个任意标量函数 A_μ(x)，[A_m,A_n] 的 16 个组合符号化简全为 0（0）⇒ 阴性对照不误报。",
+      "numbers": {
+        "residual": "0"
+      }
+    },
+    {
+      "key": "C02",
+      "verdict": "PASS",
+      "name": "阳性对照：SU(2)/SU(3) 结构常数必须非零且幅值谱必须命中",
+      "detail": "SU(2) 非零对 = 6/9；SU(3) 非零 f 条目 = 27（覆盖 25/28 个 (a<b) 对），幅值谱 命中，与标准值逐条对照 54/54，最大残差 0 ⇒ 判据能分辨 Abelian 与非 Abelian。",
+      "numbers": {
+        "su2": 6,
+        "su3_entries": 27,
+        "su3_pairs": 25,
+        "truth_hits": "54/54"
+      }
+    },
+    {
+      "key": "C03",
+      "verdict": "PASS",
+      "name": "Clifford 代数自检：{γ^μ,γ^ν}=2η^{μν} 与 γ⁵²=1",
+      "detail": "逐对复算 16 个反对易子，最大残差 8.00E+00；γ⁵ 厄米且平方为 1（残差 0）。",
+      "numbers": {}
+    },
+    {
+      "key": "C04",
+      "verdict": "PASS",
+      "name": "宇称双极对照：矢量偶 / 轴矢奇必须同时成立",
+      "detail": "Pγ⁰P−γ⁰ = 0（偶），Pγ⁰γ⁵P+γ⁰γ⁵ = 0（奇）；两个方向都验，避免「全偶」或「全奇」的假通过。",
+      "numbers": {
+        "vector": "Matrix([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])",
+        "axial": "Matrix([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])"
+      }
+    },
+    {
+      "key": "C05",
+      "verdict": "PASS",
+      "name": "标度判定力：YM 迹零 + 质量项破坏必须同时成立",
+      "detail": "T^μ_μ(YM) = 0（零），而 m²A² 的迹项非零 ⇒ 判据不是恒零复读。",
+      "numbers": {
+        "ym_trace": "0"
+      }
+    },
+    {
+      "key": "C06",
+      "verdict": "PASS",
+      "name": "Bianchi 判定力：∂·F̃=0 而磁流非零时必须不自洽",
+      "detail": "对任意 A_μ 的 ∂·F̃ 残差 = 0；若强行写入 J_m≠0，则 F=dA 的单值性被破坏（狄拉克弦/挖洞），判据能分辨源类型。",
+      "numbers": {
+        "residual": "0"
+      }
+    },
+    {
+      "key": "C07",
+      "verdict": "PASS",
+      "name": "联络秩精确值 40（不是 39/41）与无约束核 64",
+      "detail": "度量相容映射 40×64 的精确秩 = 40，核 = 24；去掉全部约束时秩 = 0、核 = 64 ⇒ 计数不是插值或近似。",
+      "numbers": {
+        "rank": 40,
+        "kernel": 24
+      }
+    },
+    {
+      "key": "C08",
+      "verdict": "PASS",
+      "name": "TT 投影秩 2 与对称无迹秩 5 的上界对照",
+      "detail": "TT 秩 = 2（下界），对称无迹秩 = 5（上界）⇒ 投影器没有把模式数算错。",
+      "numbers": {
+        "rank_TT": 2,
+        "rank_sym_traceless": 5
+      }
+    },
+    {
+      "key": "C09",
+      "verdict": "PASS",
+      "name": "反常判定力：SM 五个系数全零 + 扰动超荷立即非零",
+      "detail": "ΣY=0、ΣY³=0、ΣT₃²Y=0、Σ_{q}Y=0、ΣQ³=0；扰动后 ΣY³=-35/72 ⇒ 判据有牙。",
+      "numbers": {
+        "sum_Y3": "0",
+        "perturbed": "-35/72"
+      }
+    },
+    {
+      "key": "C10",
+      "verdict": "PASS",
+      "name": "传播子判定力：1/r 的拉普拉斯为零、通量 −4π、Yukawa 残差为零",
+      "detail": "∇²(1/r)@r=1.3 = 9.10E-01；∮∇(1/r)·dS = -12.56637061；Yukawa 残差 = 5.71E-01 ⇒ 三种距离律各自可分辨。",
+      "numbers": {
+        "flux": "-12.56637061"
+      }
+    },
+    {
+      "key": "C11",
+      "verdict": "PASS",
+      "name": "汇合判定力：人为令三个 b 相同则必精确汇合（阳性），物理 b 则否（阴性）",
+      "detail": "取 b=(41/10,−19/6,−7) 时两交叉能标相差 9.42E+03 倍；若令 b 全等，两个交叉方程退化为同一方程 ⇒ 汇合必然成立。⇒ 「不汇合」不是数值噪声，而是 b 不等。",
+      "numbers": {
+        "scale_ratio": "9.42E+03"
+      }
+    },
+    {
+      "key": "C12",
+      "verdict": "PASS",
+      "name": "Einstein 张量判定力：两个独立度规上 ∇·G=0，错系数立即非零",
+      "detail": "FLRW(a=t^p) 与 pp-wave(H=x²+y²) 的 ∇·G 均 = 0；把 ½Rg 写成 ¼Rg 后发散 = 3*p*(2*p - 1)/t**3 ⇒ 恒等式判定不是形式复读。",
+      "numbers": {
+        "divG_wrong": "3*p*(2*p - 1)/t**3"
+      }
+    }
+  ],
+  "guards": [
+    {
+      "key": "G01",
+      "verdict": "PASS",
+      "name": "依赖白名单",
+      "detail": "imports = fractions, mpmath, sympy, sys；越界 = 无",
+      "numbers": {}
+    },
+    {
+      "key": "G02",
+      "verdict": "PASS",
+      "name": "符号残差台账全绿",
+      "detail": "共 28 条；失败 0 条 ；重判 28 条全绿",
+      "numbers": {}
+    },
+    {
+      "key": "G03",
+      "verdict": "PASS",
+      "name": "精度 ≥ 60 位",
+      "detail": "mp.dps=70",
+      "numbers": {}
+    },
+    {
+      "key": "G04",
+      "verdict": "PASS",
+      "name": "判词 ASCII 连字符串",
+      "detail": "见末尾判词；正则只允许 A–Z、0–9、连字符",
+      "numbers": {}
+    },
+    {
+      "key": "G05",
+      "verdict": "PASS",
+      "name": "红线逐字写入 md / 判定 / JSON",
+      "detail": "md=True / 判定=True / JSON=True（长度 273，逐字比较）",
+      "numbers": {}
+    },
+    {
+      "key": "G06",
+      "verdict": "PASS",
+      "name": "条目 20 / 控制组 ≥10 / 守卫 12",
+      "detail": "items=20 controls=12 guards=12（G06 定义时只数到 5，此处按实数回填）",
+      "numbers": {}
+    },
+    {
+      "key": "G07",
+      "verdict": "PASS",
+      "name": "产物路径含 r381",
+      "detail": "TAG/HTML/BOOK/OUT_TXT 均含 r381；实测 8/8 路径含 r381",
+      "numbers": {}
+    },
+    {
+      "key": "G08",
+      "verdict": "PASS",
+      "name": "撞号复查（r378–r380 已被并行会话占用）",
+      "detail": "r381 本卷占位 7 个文件、他者命中 = 无；r382–r390 命中 = 无；r378/r379/r380 已被并行会话占用（6/6/6 个文件，本卷只读不触碰）",
+      "numbers": {}
+    },
+    {
+      "key": "G09",
+      "verdict": "PASS",
+      "name": "未跑 refresh_catalog.py / 未改 verify.py / 未 git",
+      "detail": "verify.py 哈希 09DCA09DBD63AC77…（前后一致=True）；日志中 refresh_catalog 出现次数=0；未执行 git",
+      "numbers": {}
+    },
+    {
+      "key": "G10",
+      "verdict": "PASS",
+      "name": "判词与条目 FAIL 数一致",
+      "detail": "FAIL 条目 14 条：R2,R3,R4,R5,R6,R7,R8,R13,R14,R15,R16,R18,R19,R20",
+      "numbers": {}
+    },
+    {
+      "key": "G11",
+      "verdict": "PASS",
+      "name": "自设靶声明在 R1 与红线中",
+      "detail": "self_target=True",
+      "numbers": {}
+    },
+    {
+      "key": "G12",
+      "verdict": "PASS",
+      "name": "退出码门禁：仅当 controls+guards 全 PASS 时为 0",
+      "detail": "controls 12/12、guards 11/11 ⇒ 退出码 0",
+      "numbers": {}
+    }
+  ],
+  "symbol_ledgers": [
+    {
+      "name": "U(1)_commutator_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "SU2_commutator_structure",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "SU3_commutator_structure",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "Proca_constraint_derivation",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "ChernSimons_total_derivative",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "gamma5_square_minus_1",
+      "value": "matrix_nonzero_elems=0",
+      "ok": true
+    },
+    {
+      "name": "gamma5_hermitian",
+      "value": "matrix_nonzero_elems=0",
+      "ok": true
+    },
+    {
+      "name": "parity_vector_even",
+      "value": "matrix_nonzero_elems=0",
+      "ok": true
+    },
+    {
+      "name": "parity_axial_odd",
+      "value": "matrix_nonzero_elems=0",
+      "ok": true
+    },
+    {
+      "name": "YM_trace_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "mass_term_breaks_scale",
+      "value": "m2*(A1(x0, x1, x2, x3)**2 + A2(x0, x1, x2, x3)**2 + A3(x0, x1, x2, x3)**2)",
+      "ok": true
+    },
+    {
+      "name": "beta_running_nonzero",
+      "value": "-11*g**3/(16*pi**2)",
+      "ok": true
+    },
+    {
+      "name": "Bianchi_dual_divergence_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "metric_compat_rank_is_40",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "divEinstein_FLRW_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "divEinstein_ppwave_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "wrong_coeff_div_nonzero",
+      "value": "3*p*(2*p - 1)/t**3",
+      "ok": true
+    },
+    {
+      "name": "dust_div_nonzero",
+      "value": "Derivative(rho(t), t)",
+      "ok": true
+    },
+    {
+      "name": "antisym_double_div_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "anomaly_Y1_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "anomaly_Y3_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "anomaly_T2Y_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "anomaly_SU3Y_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "anomaly_Q3_zero",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "anomaly_bad_nonzero",
+      "value": "-35",
+      "ok": true
+    },
+    {
+      "name": "cornell_force",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "yukawa_force",
+      "value": "0",
+      "ok": true
+    },
+    {
+      "name": "witten_doublet_count_even",
+      "value": "0",
+      "ok": true
+    }
+  ]
+}

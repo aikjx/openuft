@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang='zh-CN'><head><meta charset='utf-8'>
+<title>TUFT-r379 · X-R376-2 反解与形状族普查</title>
+<style>body{font-family:Segoe UI,Microsoft YaHei,sans-serif;margin:24px;color:#222;background:#fbfbfb}
+h1{font-size:18px;margin:0 0 6px}h2{font-size:14px;margin:24px 0 6px;border-left:4px solid #4a6fa5;padding-left:8px}
+table{border-collapse:collapse;margin:8px 0}th,td{border:1px solid #d8d8d8;padding:4px 10px;font-size:13px}
+th{background:#eef2f7;text-align:left}.track{background:#ececec;width:360px}
+.bar{height:13px;background:#4a6fa5}.bar2{height:13px;background:#c0504d}
+.mono{font-family:Consolas,monospace}.warn{color:#b03a2e;font-weight:600}.ok{color:#1e7145;font-weight:600}
+.box{border:1px solid #e0e0e0;background:#fff;padding:10px 14px;margin:8px 0;border-radius:4px}
+</style></head><body>
+<h1>TUFT-r379 · 攻 X-R376-2「x 三代值可反演性」</h1>
+<div class='box'>verdict <b class='warn'>BOUNDARY</b> ｜ 条目 35（PASS 30 / BOUNDARY 1 / INFO 4 / FAIL 0） ｜ 控制组 8 条 ｜ 守卫 12/12</div>
+<div class='box'>映射 <span class='mono'>m_i = C · x_i / sinh(x_i)</span>，C = <span class='mono'>174103.583896 MeV</span>（由 m_e 锚定，1 个自由常数）　｜　形状族近简并：<span class='mono'>x*e^-x</span> 与 <span class='mono'>x/sinh(x)</span> 差 <b>1.3%</b>　｜　位数账：x_tau 报 9 位 vs PDG 支撑 <b class='warn'>4.97 位</b></div>
+<h2>一、22 族形状普查（max rel，越低越好）</h2>
+<table><tr><th>名次</th><th>族</th><th>max rel</th><th>相对第一名</th></tr>
+<tr><td>1</td><td class='mono'>x*e^-x  (p_mid 的指数极限)</td><td class='mono'>3.88997234026e-5</td><td><div class='track'><div class='bar' style='width:100.0%'></div></div></td></tr>
+<tr><td>2</td><td class='mono'>x/sinh(x)</td><td class='mono'>3.93937704515e-5</td><td><div class='track'><div class='bar' style='width:100.0%'></div></div></td></tr>
+<tr><td>3</td><td class='mono'>（第三名起）</td><td class='mono'>0.552312868581</td><td><div class='track'><div class='bar2' style='width:100.0%'></div></div></td></tr>
+</table>
+<div class='box'>判定纪律：头名与次名差 <b>1.01270052858 倍</b>（best/second），第三名起差 <b>0.552312868581 倍</b> ⇒ 正确表述是「命中 <span class='mono'>x*e^-x</span> 族」，不能声称唯一解是 <span class='mono'>x/sinh(x)</span>。</div>
+<h2>二、反解偏差与灵敏度（1 参数 vs 2 个独立比值约束）</h2>
+<table><tr><th>点</th><th>偏差（相对）</th><th>σ</th><th>PDG 支撑位数</th></tr>
+<tr><td>e</td><td class='mono'>0（锚定）</td><td>0</td><td class='ok'>13.71</td></tr>
+<tr><td>mu</td><td class='mono'>5.20374045297e-9</td><td class='mono'>2.39051635993</td><td class='ok'>9.64</td></tr>
+<tr><td>tau</td><td class='mono'>3.93937704515e-5</td><td class='mono'>0.583310124704</td><td class='warn'>4.97</td></tr>
+</table>
+<div class='box'>统计账：chi2(2 dof) = <span class='mono'>6.05481916869</span>，p = <span class='mono'>0.0484409579566</span>（5% 边缘线附近）　｜　C 三点散布 = <span class='mono'>3.9398974397e-5</span>（0.004%）　｜　隐含 m_tau 与 PDG 差 <span class='mono'>0.0699972149644 MeV</span>（0.58σ）</div>
+<h2>三、精度账（唯一的 BOUNDARY）</h2>
+<table><tr><th>量</th><th>值</th></tr>
+<tr><td>来料报的 x_tau 位数</td><td class='mono'>9.0</td></tr>
+<tr><td>PDG 支撑的位数</td><td class='mono warn'>4.96707019069</td></tr>
+<tr><td>缺口（位）</td><td class='mono warn'>4.03292980931</td></tr>
+<tr><td>要 9 位所需 m_tau 精度（MeV）</td><td class='mono'>1.1123755557e-5</td></tr>
+<tr><td>实际差（倍）</td><td class='mono warn'>10787.7235692</td></tr>
+</table>
+<div class='box'>结论：<b>结构闭合 + 精度待源</b>。映射本身可逆（x(m) 回到同一组数），但 x_tau 的末 4.0 位不可能来自 PDG 的 m_tau。</div>
+<h2>四、关键读数（RES 全量 <span class='mono'>51</span> 键，此处摘 12）</h2>
+<table><tr><th>key</th><th>value</th></tr>
+<tr><td class='mono'>ident_mid_at_half_max_rel</td><td class='mono'>1.25174166379e-61</td></tr>
+<tr><td class='mono'>x_back_dev_mu</td><td class='mono'>5.50857368732e-10</td></tr>
+<tr><td class='mono'>x_back_dev_tau</td><td class='mono'>6.29246127723e-6</td></tr>
+<tr><td class='mono'>q_tau</td><td class='mono'>4.94027595491e-7</td></tr>
+<tr><td class='mono'>q_tau_vs_r376_dev_rel</td><td class='mono'>5.5861318674e-5</td></tr>
+<tr><td class='mono'>zstar_best</td><td class='mono'>0.499999</td></tr>
+<tr><td class='mono'>zstar_penalty_1e-3</td><td class='mono'>455.787930962</td></tr>
+<tr><td class='mono'>parseval_dev_at_N400</td><td class='mono'>7.74302929542e-6</td></tr>
+<tr><td class='mono'>tail_ratio_max</td><td class='mono'>-0.991993341321</td></tr>
+<tr><td class='mono'>c3_fake_best_rel</td><td class='mono'>1.79308347952e-61</td></tr>
+<tr><td class='mono'>indist_shape_diff_max</td><td class='mono'>4.94027839555e-7</td></tr>
+<tr><td class='mono'>implied_m_tau_MeV</td><td class='mono'>1776.92999721</td></tr>
+</table>
+<p class='mono' style='font-size:12px;color:#888'>生成：TUFT-r379 · 2026-11-03 · 只读 RES，不产生新判定</p>
+</body></html>

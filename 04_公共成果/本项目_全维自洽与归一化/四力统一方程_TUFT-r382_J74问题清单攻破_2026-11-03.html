@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>TUFT-r382 · J74（V48/V49）问题清单攻破</title>
+<style>
+:root{--bg:#f7f8fa;--card:#ffffff;--ink:#20242e;--sub:#5a6272;--line:#dfe3ea;}
+*{box-sizing:border-box}
+body{margin:0;padding:22px 18px 40px;background:var(--bg);color:var(--ink);
+     font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.62}
+.wrap{max-width:780px;margin:0 auto}
+h1{font-size:19px;margin:0 0 4px}
+.meta{font-size:12.5px;color:var(--sub);margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:16px;
+      box-shadow:0 1px 2px rgba(20,26,40,.04)}
+.cap{font-size:12px;color:var(--sub);margin-top:8px}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;font-weight:600;margin-right:6px}
+.ok{background:#e2f4ec;color:#12805c}
+.info{background:#e6eefb;color:#1f5aa6}
+h2{font-size:14.5px;margin:0 0 8px;color:#2b3446}
+svg{display:block;margin:0 auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TUFT-r382 · J74（ROOT V48/V49）问题清单与 V50 路线：可机核部分的攻破</h1>
+<div class="meta">
+<span class="pill ok">ALL-GATES-PASS</span>
+<span class="pill info">主册 20（PASS 13 / INFO 7 / FAIL 0）</span>
+<span class="pill info">控制组 8/8 · 守卫 12/12</span>
+</div>
+
+<div class="card">
+<svg id="fig1" viewBox="0 0 680 312" width="100%"></svg>
+<div class="cap">磁通能闭式与球面 Simpson（Richardson 外推）的相对偏差 3.18e-20；但换到 ∫F=4πN 口径系数整个 ×4。</div>
+</div>
+
+<div class="card">
+<svg id="fig2" viewBox="0 0 680 352" width="100%"></svg>
+<div class="cap">b/a 落在 (−(2k+1), −(2k−1)) 内部时 argmin=k，窗口宽度恒为 2 ⇒ 任何 N 都选得出。</div>
+</div>
+
+<div class="card">
+<svg id="fig3" viewBox="0 0 680 344" width="100%"></svg>
+<div class="cap">S(r)=Σ(r²+L²|n|²)^{−3/2}+尾项，力=−dS/dr。短距端 6D⇒4、5D⇒3；长距端两者都⇒2。</div>
+</div>
+
+<div class="card">
+<h2>主册 20 条一览</h2>
+<div id="tab-summ"></div>
+</div>
+
+<div class="card" style="font-size:12.5px;color:#5a6272">
+供给 0 · 独有预言 0 · 不占度（0/5）· 度数链维持 36（r264 止）。
+来料引用标号被递归展开吞掉（273 个标记、最深嵌套 10 层、28 处标号只剩 1 个唯一字符串），
+本卷能复算皆靠散文描述重建。
+</div>
+</div>
+
+<script>
+var zSvg1 = document.getElementById("fig1");
+function mkzSvg1(tagX, atX) {
+  var elX = document.createElementNS("http://www.w3.org/2000/svg", tagX);
+  for (var pX in atX) { elX.setAttribute(pX, atX[pX]); }
+  zSvg1.appendChild(elX);
+  return elX;
+}
+mkzSvg1("rect", {"x":0, "y":0, "width":680, "height":312, "fill":"#ffffff"});
+mkzSvg1("line", {"x1":92, "y1":250.000000, "x2":618, "y2":250.000000, "stroke":"#e6e8ee", "stroke-width":"1"});
+var tX = mkzSvg1("text", {"x":84, "y":254.000000, "font-size":"11", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "0";
+mkzSvg1("line", {"x1":92, "y1":200.000000, "x2":618, "y2":200.000000, "stroke":"#e6e8ee", "stroke-width":"1"});
+var tX = mkzSvg1("text", {"x":84, "y":204.000000, "font-size":"11", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "6";
+mkzSvg1("line", {"x1":92, "y1":150.000000, "x2":618, "y2":150.000000, "stroke":"#e6e8ee", "stroke-width":"1"});
+var tX = mkzSvg1("text", {"x":84, "y":154.000000, "font-size":"11", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "12";
+mkzSvg1("line", {"x1":92, "y1":100.000000, "x2":618, "y2":100.000000, "stroke":"#e6e8ee", "stroke-width":"1"});
+var tX = mkzSvg1("text", {"x":84, "y":104.000000, "font-size":"11", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "18";
+mkzSvg1("line", {"x1":92, "y1":50.000000, "x2":618, "y2":50.000000, "stroke":"#e6e8ee", "stroke-width":"1"});
+var tX = mkzSvg1("text", {"x":84, "y":54.000000, "font-size":"11", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "24";
+mkzSvg1("line", {"x1":92, "y1":250, "x2":618, "y2":250, "stroke":"#9aa3b2", "stroke-width":"1.4"});
+mkzSvg1("line", {"x1":92, "y1":250, "x2":92, "y2":50, "stroke":"#9aa3b2", "stroke-width":"1.4"});
+var tX = mkzSvg1("text", {"x":92.000000, "y":268, "font-size":"11", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "1";
+var tX = mkzSvg1("text", {"x":167.140000, "y":268, "font-size":"11", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "2";
+var tX = mkzSvg1("text", {"x":242.290000, "y":268, "font-size":"11", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "3";
+var tX = mkzSvg1("text", {"x":317.430000, "y":268, "font-size":"11", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "4";
+var tX = mkzSvg1("text", {"x":392.570000, "y":268, "font-size":"11", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "5";
+var tX = mkzSvg1("text", {"x":467.710000, "y":268, "font-size":"11", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "6";
+var tX = mkzSvg1("text", {"x":542.860000, "y":268, "font-size":"11", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "7";
+var tX = mkzSvg1("text", {"x":618.000000, "y":268, "font-size":"11", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "8";
+mkzSvg1("polyline", {"points":"92.00,249.28 167.14,247.10 242.29,243.48 317.43,238.40 392.57,231.88 467.71,223.91 542.86,214.49 618.00,203.62", "fill":"none", "stroke":"#1f5aa6", "stroke-width":"2.4"});
+mkzSvg1("polyline", {"points":"92.00,247.10 167.14,238.40 242.29,223.91 317.43,203.62 392.57,177.53 467.71,145.64 542.86,107.96 618.00,64.48", "fill":"none", "stroke":"#c0392b", "stroke-width":"2.4"});
+mkzSvg1("circle", {"cx":92.000000, "cy":247.100000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg1("circle", {"cx":167.140000, "cy":238.400000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg1("circle", {"cx":242.290000, "cy":223.910000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg1("circle", {"cx":317.430000, "cy":203.620000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg1("circle", {"cx":392.570000, "cy":177.530000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg1("circle", {"cx":467.710000, "cy":145.640000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg1("circle", {"cx":542.860000, "cy":107.960000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg1("circle", {"cx":618.000000, "cy":64.480000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg1("circle", {"cx":92.000000, "cy":249.280000, "r":"3.2", "fill":"#1f5aa6"});
+mkzSvg1("circle", {"cx":167.140000, "cy":247.100000, "r":"3.2", "fill":"#1f5aa6"});
+mkzSvg1("circle", {"cx":242.290000, "cy":243.480000, "r":"3.2", "fill":"#1f5aa6"});
+mkzSvg1("circle", {"cx":317.430000, "cy":238.400000, "r":"3.2", "fill":"#1f5aa6"});
+mkzSvg1("circle", {"cx":392.570000, "cy":231.880000, "r":"3.2", "fill":"#1f5aa6"});
+mkzSvg1("circle", {"cx":467.710000, "cy":223.910000, "r":"3.2", "fill":"#1f5aa6"});
+mkzSvg1("circle", {"cx":542.860000, "cy":214.490000, "r":"3.2", "fill":"#1f5aa6"});
+mkzSvg1("circle", {"cx":618.000000, "cy":203.620000, "r":"3.2", "fill":"#1f5aa6"});
+var tX = mkzSvg1("text", {"x":92, "y":30, "font-size":"14", "font-weight":"600", "fill":"#20242e"}); tX.textContent = "图1 磁通能的两种口径：结构相同、系数×4";
+var tX = mkzSvg1("text", {"x":382.570000, "y":165.530000, "font-size":"12", "fill":"#c0392b"}); tX.textContent = "口径B  E=2πN²/(g₆²R²)";
+var tX = mkzSvg1("text", {"x":382.570000, "y":251.880000, "font-size":"12", "fill":"#1f5aa6"}); tX.textContent = "口径A  E=πN²/(2g₆²R²)";
+var tX = mkzSvg1("text", {"x":92, "y":288, "font-size":"11.5", "fill":"#5a6272"}); tX.textContent = "N=3: A=0.782681、B=3.130722（比值 4.000000）";
+var tX = mkzSvg1("text", {"x":92, "y":304, "font-size":"11", "fill":"#8a92a3"}); tX.textContent = "口径无关的只有结构 N²/(g₆²R²)；系数 π/2 vs 2π 是选择，不是推导。";
+</script>
+<script>
+var zSvg2 = document.getElementById("fig2");
+function mkzSvg2(tagX, atX) {
+  var elX = document.createElementNS("http://www.w3.org/2000/svg", tagX);
+  for (var pX in atX) { elX.setAttribute(pX, atX[pX]); }
+  zSvg2.appendChild(elX);
+  return elX;
+}
+mkzSvg2("rect", {"x":0, "y":0, "width":680, "height":352, "fill":"#ffffff"});
+var tX = mkzSvg2("text", {"x":100, "y":26, "font-size":"14", "font-weight":"600", "fill":"#20242e"}); tX.textContent = "图2 argmin=k 的 b/a 窗口：宽度恒为 2，相邻窗口首尾相接 ⇒ 满射";
+mkzSvg2("line", {"x1":100, "y1":62, "x2":618, "y2":62, "stroke":"#9aa3b2", "stroke-width":"1.2"});
+mkzSvg2("line", {"x1":100.000000, "y1":59, "x2":100.000000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":100.000000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-18";
+mkzSvg2("line", {"x1":151.800000, "y1":59, "x2":151.800000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":151.800000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-16";
+mkzSvg2("line", {"x1":203.600000, "y1":59, "x2":203.600000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":203.600000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-14";
+mkzSvg2("line", {"x1":255.400000, "y1":59, "x2":255.400000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":255.400000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-12";
+mkzSvg2("line", {"x1":307.200000, "y1":59, "x2":307.200000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":307.200000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-10";
+mkzSvg2("line", {"x1":359.000000, "y1":59, "x2":359.000000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":359.000000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-8";
+mkzSvg2("line", {"x1":410.800000, "y1":59, "x2":410.800000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":410.800000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-6";
+mkzSvg2("line", {"x1":462.600000, "y1":59, "x2":462.600000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":462.600000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-4";
+mkzSvg2("line", {"x1":514.400000, "y1":59, "x2":514.400000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":514.400000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "-2";
+mkzSvg2("line", {"x1":566.200000, "y1":59, "x2":566.200000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":566.200000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "0";
+mkzSvg2("line", {"x1":618.000000, "y1":59, "x2":618.000000, "y2":65, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg2("text", {"x":618.000000, "y":54, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "2";
+var tX = mkzSvg2("text", {"x":626, "y":54, "font-size":"10.5", "fill":"#7a8193"}); tX.textContent = "b/a";
+mkzSvg2("rect", {"x":540.300000, "y":78, "width":51.800000, "height":15, "fill":"#e8eef9", "stroke":"#1f5aa6", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":566.200000, "y":89, "font-size":"10.5", "fill":"#1f5aa6", "text-anchor":"middle"}); tX.textContent = "N=0";
+var tX = mkzSvg2("text", {"x":90, "y":89, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-1, 1)";
+mkzSvg2("rect", {"x":488.500000, "y":100, "width":51.800000, "height":15, "fill":"#e8eef9", "stroke":"#1f5aa6", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":514.400000, "y":111, "font-size":"10.5", "fill":"#1f5aa6", "text-anchor":"middle"}); tX.textContent = "N=1";
+var tX = mkzSvg2("text", {"x":90, "y":111, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-3, -1)";
+mkzSvg2("rect", {"x":436.700000, "y":122, "width":51.800000, "height":15, "fill":"#e8eef9", "stroke":"#1f5aa6", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":462.600000, "y":133, "font-size":"10.5", "fill":"#1f5aa6", "text-anchor":"middle"}); tX.textContent = "N=2";
+var tX = mkzSvg2("text", {"x":90, "y":133, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-5, -3)";
+mkzSvg2("rect", {"x":384.900000, "y":144, "width":51.800000, "height":15, "fill":"#fde8e4", "stroke":"#c0392b", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":410.800000, "y":155, "font-size":"10.5", "fill":"#c0392b", "text-anchor":"middle"}); tX.textContent = "N=3";
+var tX = mkzSvg2("text", {"x":90, "y":155, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-7, -5)";
+mkzSvg2("rect", {"x":333.100000, "y":166, "width":51.800000, "height":15, "fill":"#e8eef9", "stroke":"#1f5aa6", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":359.000000, "y":177, "font-size":"10.5", "fill":"#1f5aa6", "text-anchor":"middle"}); tX.textContent = "N=4";
+var tX = mkzSvg2("text", {"x":90, "y":177, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-9, -7)";
+mkzSvg2("rect", {"x":281.300000, "y":188, "width":51.800000, "height":15, "fill":"#e8eef9", "stroke":"#1f5aa6", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":307.200000, "y":199, "font-size":"10.5", "fill":"#1f5aa6", "text-anchor":"middle"}); tX.textContent = "N=5";
+var tX = mkzSvg2("text", {"x":90, "y":199, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-11, -9)";
+mkzSvg2("rect", {"x":229.500000, "y":210, "width":51.800000, "height":15, "fill":"#e8eef9", "stroke":"#1f5aa6", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":255.400000, "y":221, "font-size":"10.5", "fill":"#1f5aa6", "text-anchor":"middle"}); tX.textContent = "N=6";
+var tX = mkzSvg2("text", {"x":90, "y":221, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-13, -11)";
+mkzSvg2("rect", {"x":177.700000, "y":232, "width":51.800000, "height":15, "fill":"#e8eef9", "stroke":"#1f5aa6", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":203.600000, "y":243, "font-size":"10.5", "fill":"#1f5aa6", "text-anchor":"middle"}); tX.textContent = "N=7";
+var tX = mkzSvg2("text", {"x":90, "y":243, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-15, -13)";
+mkzSvg2("rect", {"x":125.900000, "y":254, "width":51.800000, "height":15, "fill":"#e8eef9", "stroke":"#1f5aa6", "stroke-width":"1.2", "rx":"3"});
+var tX = mkzSvg2("text", {"x":151.800000, "y":265, "font-size":"10.5", "fill":"#1f5aa6", "text-anchor":"middle"}); tX.textContent = "N=8";
+var tX = mkzSvg2("text", {"x":90, "y":265, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"end"}); tX.textContent = "(-17, -15)";
+var tX = mkzSvg2("text", {"x":96, "y":302, "font-size":"11.5", "fill":"#5a6272"}); tX.textContent = "开区间 (−(2k+1), −(2k−1)) 内部互不相交、端点首尾接上 ⇒ 并集 = (−17, 1)。";
+var tX = mkzSvg2("text", {"x":96, "y":320, "font-size":"11.5", "fill":"#5b6272"}); tX.textContent = "对任意想要的 N 都能找到一个 b/a（即一个 θ）⇒「选 N=3」不是预言。";
+var tX = mkzSvg2("text", {"x":96, "y":340, "font-size":"11", "fill":"#c0392b"}); tX.textContent = "本卷 P06 只用 k=1/3/6 验边界：3/3 通过；窗口宽度定理与数值一致。";
+</script>
+<script>
+var zSvg3 = document.getElementById("fig3");
+function mkzSvg3(tagX, atX) {
+  var elX = document.createElementNS("http://www.w3.org/2000/svg", tagX);
+  for (var pX in atX) { elX.setAttribute(pX, atX[pX]); }
+  zSvg3.appendChild(elX);
+  return elX;
+}
+mkzSvg3("rect", {"x":0, "y":0, "width":680, "height":344, "fill":"#ffffff"});
+var tX = mkzSvg3("text", {"x":100, "y":28, "font-size":"14", "font-weight":"600", "fill":"#20242e"}); tX.textContent = "图3 KK 求和的力律斜率：6D⇒4/2，5D⇒3/2";
+mkzSvg3("line", {"x1":100, "y1":83.760000, "x2":618, "y2":83.760000, "stroke":"#dfe3ea", "stroke-width":"1", "stroke-dasharray":"4 3"});
+var tX = mkzSvg3("text", {"x":94, "y":79.760000, "font-size":"10.5", "fill":"#8a92a3", "text-anchor":"end"}); tX.textContent = "4  (D=6 短距)";
+mkzSvg3("line", {"x1":100, "y1":143.180000, "x2":618, "y2":143.180000, "stroke":"#dfe3ea", "stroke-width":"1", "stroke-dasharray":"4 3"});
+var tX = mkzSvg3("text", {"x":94, "y":139.180000, "font-size":"10.5", "fill":"#8a92a3", "text-anchor":"end"}); tX.textContent = "3  (D=5 短距)";
+mkzSvg3("line", {"x1":100, "y1":202.590000, "x2":618, "y2":202.590000, "stroke":"#dfe3ea", "stroke-width":"1", "stroke-dasharray":"4 3"});
+var tX = mkzSvg3("text", {"x":94, "y":198.590000, "font-size":"10.5", "fill":"#8a92a3", "text-anchor":"end"}); tX.textContent = "2  (D=4 与两者的长距)";
+mkzSvg3("line", {"x1":100, "y1":262, "x2":618, "y2":262, "stroke":"#9aa3b2", "stroke-width":"1.4"});
+mkzSvg3("line", {"x1":100, "y1":262, "x2":100, "y2":60, "stroke":"#9aa3b2", "stroke-width":"1.4"});
+mkzSvg3("line", {"x1":100.000000, "y1":262, "x2":100.000000, "y2":267, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg3("text", {"x":100.000000, "y":281, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "0.01";
+mkzSvg3("line", {"x1":256.920000, "y1":262, "x2":256.920000, "y2":267, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg3("text", {"x":256.920000, "y":281, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "0.1";
+mkzSvg3("line", {"x1":413.840000, "y1":262, "x2":413.840000, "y2":267, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg3("text", {"x":413.840000, "y":281, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "1";
+mkzSvg3("line", {"x1":570.760000, "y1":262, "x2":570.760000, "y2":267, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg3("text", {"x":570.760000, "y":281, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "10";
+mkzSvg3("line", {"x1":618.000000, "y1":262, "x2":618.000000, "y2":267, "stroke":"#9aa3b2", "stroke-width":"1"});
+var tX = mkzSvg3("text", {"x":618.000000, "y":281, "font-size":"10.5", "fill":"#7a8193", "text-anchor":"middle"}); tX.textContent = "20";
+mkzSvg3("line", {"x1":413.840000, "y1":60, "x2":413.840000, "y2":262, "stroke":"#c9a227", "stroke-width":"1.4", "stroke-dasharray":"6 4"});
+var tX = mkzSvg3("text", {"x":413.840000, "y":52, "font-size":"10.5", "fill":"#a3831f", "text-anchor":"middle"}); tX.textContent = "r≈L";
+mkzSvg3("polyline", {"points":"100.00,83.76 209.68,83.77 256.92,83.78 319.37,84.99 366.60,105.97 413.84,183.42 461.08,202.46 523.52,202.64 618.00,204.52", "fill":"none", "stroke":"#c0392b", "stroke-width":"2.6"});
+mkzSvg3("polyline", {"points":"100.00,143.18 209.68,143.18 256.92,143.23 319.37,144.86 366.60,159.07 413.84,194.00 461.08,202.52 523.52,202.59 618.00,202.59", "fill":"none", "stroke":"#1f5aa6", "stroke-width":"2.6"});
+mkzSvg3("circle", {"cx":100.000000, "cy":83.760000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("circle", {"cx":209.680000, "cy":83.770000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("circle", {"cx":256.920000, "cy":83.780000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("circle", {"cx":319.370000, "cy":84.990000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("circle", {"cx":366.600000, "cy":105.970000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("circle", {"cx":413.840000, "cy":183.420000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("circle", {"cx":461.080000, "cy":202.460000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("circle", {"cx":523.520000, "cy":202.640000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("circle", {"cx":618.000000, "cy":204.520000, "r":"3.2", "fill":"#c0392b"});
+mkzSvg3("rect", {"x":97.300000, "y":140.480000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+mkzSvg3("rect", {"x":206.980000, "y":140.480000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+mkzSvg3("rect", {"x":254.220000, "y":140.530000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+mkzSvg3("rect", {"x":316.670000, "y":142.160000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+mkzSvg3("rect", {"x":363.900000, "y":156.370000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+mkzSvg3("rect", {"x":411.140000, "y":191.300000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+mkzSvg3("rect", {"x":458.380000, "y":199.820000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+mkzSvg3("rect", {"x":520.820000, "y":199.890000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+mkzSvg3("rect", {"x":615.300000, "y":199.890000, "width":5.400000, "height":5.400000, "fill":"#1f5aa6"});
+var tX = mkzSvg3("text", {"x":120.430000, "y":101.590000, "font-size":"12", "fill":"#c0392b"}); tX.textContent = "6D（两额外维）";
+var tX = mkzSvg3("text", {"x":120.430000, "y":232.290000, "font-size":"12", "fill":"#1f5aa6"}); tX.textContent = "5D（一额外维）";
+var tX = mkzSvg3("text", {"x":100, "y":318, "font-size":"11.5", "fill":"#5a6272"}); tX.textContent = "r/L=0.01：6D=4.000000、5D=3.000000；r/L=20：6D=1.967418、5D=2.000000";
+var tX = mkzSvg3("text", {"x":100, "y":335, "font-size":"11", "fill":"#8a92a3"}); tX.textContent = "斜率 = dln(−dS/dr)/dln r。S 本身是 r⁻³/r⁻¹，导数才是力（对象错位就会差 1）。";
+</script>
+<script>
+(function () {
+  var zTab = document.getElementById("tab-summ");
+  zTab.innerHTML = "<table style=\"border-collapse:collapse;width:100%;font-size:12.5px\"><thead><tr style=\"background:#eef1f7\"><th style=\"text-align:left;padding:6px 8px;border-bottom:2px solid #c9d1de\">id</th><th style=\"text-align:left;padding:6px 8px;border-bottom:2px solid #c9d1de\">kind</th><th style=\"text-align:left;padding:6px 8px;border-bottom:2px solid #c9d1de\">判据</th><th style=\"text-align:left;padding:6px 8px;border-bottom:2px solid #c9d1de\">读数</th></tr></thead><tbody><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P01</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">磁通能闭式与球面 Simpson 对拍</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">rel 3.18e-20</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P02</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#1f5aa6;font-weight:600\">INFO</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">换口径 ∫F=4πN ⇒ 系数 ×4</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">4.000000</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P03</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">F∧F∧F 对通量 N 线性（内部恰 2 维）</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">2.0000000000</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P04</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">内部 4 维 ⇒ 出现二次项</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">4.0 ≠ 2</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P05</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">六维 CS 项维数不存在</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">deg 5</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P06</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">N=3 窗口 b/a∈(−7,−5)，宽恒 2</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">3/3</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P07</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#1f5aa6;font-weight:600\">INFO</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">任意 N 都选得出 ⇒ 满射、零预言力</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">8/8</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P08</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">N=3 ⇒ 3 个零模：三条独立路径</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">失配 0</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P09</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">错用 j=N/2 ⇒ N+1，全错</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">8/8</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P10</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">V48 禁区单点 Higgs ⇒ rank M ≤ 1</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">9 子式全 0</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P11</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">三点 Higgs ⇒ 秩满</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">1.004957</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P12</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">(49-9) 被 PDG 判死（两种次序）</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">21.1 倍</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P13</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">m_e+m_τ=2m_μ 被判死</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">8.41 倍</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P14</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">短距力律 r⁻⁴</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">3.9999999975</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P15</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#12805c;font-weight:600\">PASS</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">长距力律 r⁻²</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">1.967418</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P16</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#1f5aa6;font-weight:600\">INFO</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">三条成果全普适 ⇒ 独有预言 0</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">0</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P17</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#1f5aa6;font-weight:600\">INFO</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">验收判据 6 条：2 判负 + 4 未开工</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">6=2+4</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P18</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#1f5aa6;font-weight:600\">INFO</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">来料自评诚实：5 模块全未解</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">5/5</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P19</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#1f5aa6;font-weight:600\">INFO</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">来料污染：28 处标号只剩 1 个唯一字符串</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">1/28</td></tr><tr><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">P20</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;color:#1f5aa6;font-weight:600\">INFO</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4\">供给 0、不占度；度数链 36</td><td style=\"padding:5px 8px;border-bottom:1px solid #eceff4;font-family:monospace;color:#3b4252\">0/5</td></tr></tbody></table>";
+})();
+</script>
+</body>
+</html>

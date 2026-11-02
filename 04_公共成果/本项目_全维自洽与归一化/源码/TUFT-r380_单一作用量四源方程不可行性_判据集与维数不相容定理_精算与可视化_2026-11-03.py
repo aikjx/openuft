@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# TUFT-r378 · 单一 Lorentz 协变作用量「四源方程」不可行性判据集 · 维数不相容定理
+# TUFT-r380 · 单一 Lorentz 协变作用量「四源方程」不可行性判据集 · 维数不相容定理
 #
 # 用户论题：继续（承接 r377 收口「下轮从 r378 起」，与 _probe_r378.py 的占位同题）。
 #
@@ -48,7 +48,7 @@ except Exception:
 
 mp.mp.dps = 50
 
-RID = "r378"
+RID = "r380"
 TITLE = "单一作用量四源方程不可行性_判据集与维数不相容定理"
 STAMP = "2026-11-03"
 
@@ -57,15 +57,15 @@ ROOT = os.path.dirname(HERE)
 DATA_DIR = os.path.join(ROOT, "数据")
 JUD_DIR = os.path.join(ROOT, "判定")
 
-BASE = "TUFT-r378_单一作用量四源方程不可行性_判据集与维数不相容定理_精算与可视化_2026-11-03"
+BASE = "TUFT-r380_单一作用量四源方程不可行性_判据集与维数不相容定理_精算与可视化_2026-11-03"
 P_JSON = os.path.join(DATA_DIR, BASE + ".json")
 P_MD = os.path.join(DATA_DIR, BASE + ".md")
 P_REP = os.path.join(DATA_DIR, BASE + "_report.txt")
-P_JUD = os.path.join(JUD_DIR, "判定_TUFT-r378-单一作用量四源方程不可行性_判据集与维数不相容定理_2026-11-03.md")
-P_HTML = os.path.join(DATA_DIR, "单一作用量四源方程_判据矩阵与维数不相容_可视化_r378.html")
+P_JUD = os.path.join(JUD_DIR, "判定_TUFT-r380-单一作用量四源方程不可行性_判据集与维数不相容定理_2026-11-03.md")
+P_HTML = os.path.join(DATA_DIR, "单一作用量四源方程_判据矩阵与维数不相容_可视化_r380.html")
 
 ITEMS = []
-GB = GuardBook("r378")
+GB = GuardBook("r380")
 CTRLS = []
 
 
@@ -564,13 +564,18 @@ say("WROTE %s %d" % (os.path.basename(P_REP), os.path.getsize(P_REP)))
 # §10 · 判定册
 # ============================================================================
 jud = []
-jud.append("# 判定_TUFT-r378 · 单一 Lorentz 协变作用量「四源方程」不可行性 —— 判据集 NC1–NC6")
+jud.append("# 判定_TUFT-r380 · 单一 Lorentz 协变作用量「四源方程」不可行性 —— 判据集 NC1–NC6")
 jud.append("")
 jud.append("- 日期：2026-11-03")
 jud.append("- 条目 26（PASS 11 / FAIL 9 / BOUNDARY 5 / INFO 1）；守卫 26/26；控制组 5/5；退出码 0")
 jud.append("- 口径：FAIL = **该断言不成立/被排除**（不是本册执行失败）；BOUNDARY = 只在声明的作用域内成立")
 jud.append("")
 jud.append("> 承接：r377 判定册末行「**下轮从 r378 起**」；与本目录 `源码/_probe_r378.py` 的占位同题（NC1–NC6）。")
+
+jud.append("> **取号更正（治理项）**：初稿取 r378；落盘后发现并行会话同日 00:58 曾用**同一编号**发布**同题更全**卷")
+jud.append("> （`..._符号机核与判别力定价_2026-11-03`，条目 20 / 守卫 12 / 控制组 12）。按「后到者改号」本应由后落盘者让号，")
+jud.append("> 但他册不在本会话可动范围，故本册**主动让号 r380**；他册其后亦自行让号至 **r381**（r378 号现已空置）。")
+jud.append("> 两册互不覆盖：他册=符号机核 + 判别力定价，本册=整数配平 + 维数不相容 + 三态判别力矩阵，构成**独立第二实现**。")
 jud.append("")
 jud.append("## 〇、一句话结论")
 jud.append("")
@@ -702,6 +707,9 @@ jud.append("4. **T22 只判「度规扇区」**：它不排除独立规范场（
 jud.append("5. **本册不否证「四力同源」的任何具体模型**，只否证「单一 Lorentz 协变作用量**直接**产出四源方程」")
 jud.append("   这一**形式**；逃逸路径（D-brane / 磁通紧化 / 非几何机制）明确存在，但都已不属于「单一几何作用量」。")
 jud.append("")
+jud.append("6. **同号并存（治理项，非学术结论）**：同目录并行卷 `..._符号机核与判别力定价_2026-11-03`（落盘 00:58 时占 r378，其后自行让号 **r381**；条目 20 / 守卫 12 / 控制组 12，NC1–NC6 映射为「规范秩 / 极化 / 宇称 / 标度 / Bianchi / 联络计数」）与本册同题不同法：他册=符号机核 + 判别力定价，本册=整数配平 + 维数不相容 + 三态判别力矩阵 + D=5 正对照。")
+jud.append("   本册让号 r380，他册现为 r381，r378 已空置。**两册互为独立第二实现**（交叉印证），任一册的读数不得单独当「已证」使用。")
+jud.append("")
 jud.append("## 十一、自伤登记（本册自己抓到的错，就地更正）")
 jud.append("")
 jud.append("1. **把矢量分量数当矢量个数**：首版 `decomp_4d` 返回 `4*n`（分量数），T23 用 `v == 1` 判 ⇒ 正对照被判 FAIL。")
@@ -714,15 +722,15 @@ jud.append("   **教训：把「某个族的公式」升级为「上界定理」
 jud.append("")
 jud.append("## 十二、产物真链接")
 jud.append("")
-jud.append("- 引擎：`../源码/TUFT-r378_单一作用量四源方程不可行性_判据集与维数不相容定理_精算与可视化_2026-11-03.py`")
-jud.append("- 数据：`../数据/TUFT-r378_单一作用量四源方程不可行性_判据集与维数不相容定理_精算与可视化_2026-11-03.json`"
+jud.append("- 引擎：`../源码/TUFT-r380_单一作用量四源方程不可行性_判据集与维数不相容定理_精算与可视化_2026-11-03.py`")
+jud.append("- 数据：`../数据/TUFT-r380_单一作用量四源方程不可行性_判据集与维数不相容定理_精算与可视化_2026-11-03.json`"
            " / `.md` / `_report.txt`")
-jud.append("- 可视化：`../数据/单一作用量四源方程_判据矩阵与维数不相容_可视化_r378.html`")
+jud.append("- 可视化：`../数据/单一作用量四源方程_判据矩阵与维数不相容_可视化_r380.html`")
 jud.append("- 共享内核：`../源码/_criteria_kernel.py`（GuardBook / write_triplet，本册复用不重写）")
 jud.append("- 上游：`判定_TUFT-r377-本源层总账_三本源量纲秩定理与供给四机制_全物理最底层攻破_2026-11-03.md`、")
 jud.append("  `判定_TUFT-r67-力统一场论本源性审计_内生外输普查与GR正对照_2026-10-31.md`")
 jud.append("")
-jud.append("**下轮从 r379 起。**")
+jud.append("**下轮从 r382 起**（r379 = 三代值可反演性卷、r381 = 他册符号机核卷，均已占）。")
 jud.append("")
 
 with io.open(P_JUD, "w", encoding="utf-8") as f:
@@ -741,7 +749,7 @@ FAIL_HTML = "".join("<li>%s：<b>%d</b> FAIL</li>" % (COLS[j], n_fail[j]) for j 
 
 HTML = """<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
-<title>r378 · 单一作用量四源方程不可行性</title>
+<title>r380 · 单一作用量四源方程不可行性</title>
 <style>
 body{font-family:"Microsoft YaHei",sans-serif;margin:0;background:#f7f8fa;color:#222}
 .wrap{max-width:980px;margin:0 auto;padding:24px}
@@ -763,7 +771,7 @@ td.czero{color:#8a6d3b;background:#fff8e6}
 ul{font-size:13px;line-height:1.8}
 .foot{font-size:12px;color:#777;margin-top:14px}
 </style></head><body><div class="wrap">
-<h1>r378 · 单一 Lorentz 协变作用量「四源方程」不可行性</h1>
+<h1>r380 · 单一 Lorentz 协变作用量「四源方程」不可行性</h1>
 <div class="sub">判据集 NC1–NC6 · 判别力定价 · 26 条目 / 守卫 26 / 控制组 5 · 2026-11-03</div>
 
 <div class="card"><h2>一句话结论</h2>

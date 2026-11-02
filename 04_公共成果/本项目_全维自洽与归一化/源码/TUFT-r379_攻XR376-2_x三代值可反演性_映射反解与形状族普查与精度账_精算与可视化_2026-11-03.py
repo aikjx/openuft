@@ -763,5 +763,99 @@ print("")
 print("[written] %s" % JSON_PATH)
 print("[written] %s" % MD_PATH)
 print("[written] %s" % REP_PATH)
+
+
+# ------------------------------------------------------------------ HTML 可视化
+# 只读 RES / 条目账渲染，不产生任何新判定；缺失键降级为 n/a。
+def _w(v, ref):
+    try:
+        return max(0.0, min(100.0, 100.0 * float(v) / float(ref)))
+    except Exception:
+        return 0.0
+
+
+def _bar(v, ref, cls):
+    return ("<div class='track'><div class='%s' style='width:%.1f%%'></div></div>"
+            % (cls, _w(v, ref)))
+
+
+def _g(k, d="n/a"):
+    v = RES.get(k)
+    return d if v is None else fmt(v, 12)
+
+
+_HT = []
+_a = _HT.append
+_a("<!DOCTYPE html><html lang='zh-CN'><head><meta charset='utf-8'>")
+_a("<title>TUFT-%s · X-R376-2 反解与形状族普查</title>" % RID)
+_a("<style>body{font-family:Segoe UI,Microsoft YaHei,sans-serif;margin:24px;color:#222;background:#fbfbfb}")
+_a("h1{font-size:18px;margin:0 0 6px}h2{font-size:14px;margin:24px 0 6px;border-left:4px solid #4a6fa5;padding-left:8px}")
+_a("table{border-collapse:collapse;margin:8px 0}th,td{border:1px solid #d8d8d8;padding:4px 10px;font-size:13px}")
+_a("th{background:#eef2f7;text-align:left}.track{background:#ececec;width:360px}")
+_a(".bar{height:13px;background:#4a6fa5}.bar2{height:13px;background:#c0504d}")
+_a(".mono{font-family:Consolas,monospace}.warn{color:#b03a2e;font-weight:600}.ok{color:#1e7145;font-weight:600}")
+_a(".box{border:1px solid #e0e0e0;background:#fff;padding:10px 14px;margin:8px 0;border-radius:4px}")
+_a("</style></head><body>")
+_a("<h1>TUFT-%s · 攻 X-R376-2「x 三代值可反演性」</h1>" % RID)
+_a("<div class='box'>verdict <b class='warn'>%s</b> ｜ 条目 %d（PASS %d / BOUNDARY %d / INFO %d / FAIL %d）"
+   " ｜ 控制组 %d 条 ｜ 守卫 %d/%d</div>"
+   % (VERDICT, len(ALL), CNT.get("PASS", 0), CNT.get("BOUNDARY", 0), CNT.get("INFO", 0),
+      CNT.get("FAIL", 0), len(CTL), GUARD_PASS, len(GRD)))
+_a("<div class='box'>映射 <span class='mono'>m_i = C · x_i / sinh(x_i)</span>，"
+   "C = <span class='mono'>%s MeV</span>（由 m_e 锚定，1 个自由常数）"
+   "　｜　形状族近简并：<span class='mono'>x*e^-x</span> 与 <span class='mono'>x/sinh(x)</span> 差 <b>1.3%%</b>"
+   "　｜　位数账：x_tau 报 9 位 vs PDG 支撑 <b class='warn'>4.97 位</b></div>" % _g("C_from_e_MeV"))
+_a("<h2>一、22 族形状普查（max rel，越低越好）</h2>")
+_a("<table><tr><th>名次</th><th>族</th><th>max rel</th><th>相对第一名</th></tr>")
+_a("<tr><td>1</td><td class='mono'>%s</td><td class='mono'>%s</td><td>%s</td></tr>"
+   % (_g("census_best_shape"), _g("census_best_max_rel"),
+      _bar(1.0, 1.0, "bar")))
+_a("<tr><td>2</td><td class='mono'>x/sinh(x)</td><td class='mono'>%s</td><td>%s</td></tr>"
+   % (_g("census_second_max_rel"), _bar(RES.get("census_second_max_rel", 0), RES.get("census_best_max_rel", 1), "bar")))
+_a("<tr><td>3</td><td class='mono'>（第三名起）</td><td class='mono'>%s</td><td>%s</td></tr>"
+   % (_g("census_third_max_rel"), _bar(RES.get("census_third_max_rel", 0), RES.get("census_third_max_rel", 1), "bar2")))
+_a("</table>")
+_a("<div class='box'>判定纪律：头名与次名差 <b>%s 倍</b>（best/second），"
+   "第三名起差 <b>%s 倍</b> ⇒ 正确表述是「命中 <span class='mono'>x*e^-x</span> 族」，"
+   "不能声称唯一解是 <span class='mono'>x/sinh(x)</span>。</div>"
+   % (_g("census_best_vs_second"), _g("census_third_max_rel")))
+_a("<h2>二、反解偏差与灵敏度（1 参数 vs 2 个独立比值约束）</h2>")
+_a("<table><tr><th>点</th><th>偏差（相对）</th><th>σ</th><th>PDG 支撑位数</th></tr>")
+_a("<tr><td>e</td><td class='mono'>0（锚定）</td><td>0</td><td class='ok'>13.71</td></tr>")
+_a("<tr><td>mu</td><td class='mono'>%s</td><td class='mono'>%s</td><td class='ok'>9.64</td></tr>"
+   % (_g("model_dev_mu"), _g("model_sigma_mu")))
+_a("<tr><td>tau</td><td class='mono'>%s</td><td class='mono'>%s</td><td class='warn'>4.97</td></tr>"
+   % (_g("model_dev_tau"), _g("model_sigma_tau")))
+_a("</table>")
+_a("<div class='box'>统计账：chi2(2 dof) = <span class='mono'>%s</span>，p = <span class='mono'>%s</span>（5%% 边缘线附近）"
+   "　｜　C 三点散布 = <span class='mono'>%s</span>（0.004%%）"
+   "　｜　隐含 m_tau 与 PDG 差 <span class='mono'>%s MeV</span>（0.58σ）</div>"
+   % (_g("model_chi2_2dof"), _g("model_pvalue_2dof"), _g("C_spread_rel"), _g("m_tau_implied_vs_pdg_MeV")))
+_a("<h2>三、精度账（唯一的 BOUNDARY）</h2>")
+_a("<table><tr><th>量</th><th>值</th></tr>")
+_a("<tr><td>来料报的 x_tau 位数</td><td class='mono'>%s</td></tr>" % _g("digits_x_tau_incoming"))
+_a("<tr><td>PDG 支撑的位数</td><td class='mono warn'>%s</td></tr>" % _g("digits_x_tau_trust_from_pdg"))
+_a("<tr><td>缺口（位）</td><td class='mono warn'>%s</td></tr>" % _g("digits_excess_tau"))
+_a("<tr><td>要 9 位所需 m_tau 精度（MeV）</td><td class='mono'>%s</td></tr>" % _g("m_tau_abs_needed_for_9digit_x_MeV"))
+_a("<tr><td>实际差（倍）</td><td class='mono warn'>%s</td></tr>" % _g("m_tau_precision_shortfall"))
+_a("</table>")
+_a("<div class='box'>结论：<b>结构闭合 + 精度待源</b>。映射本身可逆（x(m) 回到同一组数），"
+   "但 x_tau 的末 4.0 位不可能来自 PDG 的 m_tau。</div>")
+_a("<h2>四、关键读数（RES 全量 <span class='mono'>51</span> 键，此处摘 12）</h2>")
+_a("<table><tr><th>key</th><th>value</th></tr>")
+for _k in ("ident_mid_at_half_max_rel", "x_back_dev_mu", "x_back_dev_tau", "q_tau",
+           "q_tau_vs_r376_dev_rel", "zstar_best", "zstar_penalty_1e-3",
+           "parseval_dev_at_N400", "tail_ratio_max", "c3_fake_best_rel",
+           "indist_shape_diff_max", "implied_m_tau_MeV"):
+    _a("<tr><td class='mono'>%s</td><td class='mono'>%s</td></tr>" % (_k, _g(_k)))
+_a("</table>")
+_a("<p class='mono' style='font-size:12px;color:#888'>生成：TUFT-%s · %s · 只读 RES，不产生新判定</p>" % (RID, STAMP))
+_a("</body></html>")
+
+HTML_PATH = os.path.join(DATA_DIR, "X-R376-2_反解与形状族普查_可视化_" + RID + ".html")
+with io.open(HTML_PATH, "w", encoding="utf-8") as f:
+    f.write("\n".join(_HT) + "\n")
+print("[written] %s" % HTML_PATH)
+
 sys.exit(1 if CNT.get("FAIL", 0) else 0)
 
