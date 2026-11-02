@@ -13,10 +13,15 @@ let m;
 while ((m = reSvg.exec(html)) !== null) VB[m[1]] = [parseFloat(m[2]), parseFloat(m[3])];
 if (!Object.keys(VB).length) { console.log('FAIL 未解析到任何 <svg id=... viewBox="0 0 W H">'); process.exit(2); }
 
-// 2) 抽出内联脚本
-const sm = html.match(/<script>([\s\S]*?)<\/script>/);
-if (!sm) { console.log('FAIL 未找到内联 script'); process.exit(2); }
-const code = sm[1];
+// 2) 抽出内联脚本（★必须全部抽出：只跑第一个会让图 2..n 完全不被校验 ⇒ 假绿）
+const scripts = [];
+{
+  const reScr = /<script>([\s\S]*?)<\/script>/g;
+  let s1;
+  while ((s1 = reScr.exec(html)) !== null) scripts.push(s1[1]);
+}
+if (!scripts.length) { console.log('FAIL 未找到内联 script'); process.exit(2); }
+console.log(`内联 script 块 ${scripts.length} 个（全部执行）`);
 
 // 3) DOM 桩
 const rec = {};          // id -> 记录到的图元
@@ -68,11 +73,13 @@ global.document.createElementNS = function (ns, tag) {
 };
 
 let err = 0;
-try {
-  eval(code);
-} catch (e) {
-  console.log('FAIL 脚本抛异常:', e.message);
-  process.exit(2);
+for (let si = 0; si < scripts.length; si++) {
+  try {
+    eval(scripts[si]);
+  } catch (e) {
+    console.log(`FAIL 第 ${si + 1} 个 script 抛异常: ${e.message}`);
+    process.exit(2);
+  }
 }
 
 // 5) 逐 svg 校验
