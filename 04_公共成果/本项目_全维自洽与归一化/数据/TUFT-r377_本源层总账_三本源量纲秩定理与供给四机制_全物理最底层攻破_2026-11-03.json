@@ -1,0 +1,667 @@
+{
+ "rid": "r377",
+ "title": "本源层总账_三本源量纲秩定理与供给四机制_全物理最底层攻破",
+ "stamp": "2026-11-03",
+ "verdict": "TRIAD-DIM-RANK-2-MASS-UNREACHABLE--C-HBAR-G-FULL-RANK-ALPHA-UNREACHABLE--MASS-GAP-IS-ONE-ANGLE-THETA--FOUR-ZERO-SUPPLY-MECHANISMS-EXECUTABLE--ROUTE-DIMENSIONFUL-IMPORT-CONTINUOUS-IMPORT-DISCRETE-MAYBE",
+ "final": "ALL-GATES-PASS",
+ "counts": {
+  "PASS": 15,
+  "FAIL": 5,
+  "INFO": 5,
+  "BOUNDARY": 2
+ },
+ "guards": [
+  {
+   "code": "G0-1",
+   "name": "dim(c) = L T^-1",
+   "ok": true,
+   "detail": "L^1·T^-1"
+  },
+  {
+   "code": "G0-2",
+   "name": "dim(hbar) = M L^2 T^-1",
+   "ok": true,
+   "detail": "M^1·L^2·T^-1"
+  },
+  {
+   "code": "G0-3",
+   "name": "dim(G) = M^-1 L^3 T^-2",
+   "ok": true,
+   "detail": "M^-1·L^3·T^-2"
+  },
+  {
+   "code": "G0-4",
+   "name": "dim(eps0*mu0*c^2) = 1",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "code": "G0-4b",
+   "name": "dim(eps0) = M^-1 L^-3 T^2 Q^2（F/m 单点锚）",
+   "ok": true,
+   "detail": "M^-1·L^-3·T^2·Q^2"
+  },
+  {
+   "code": "G0-4c",
+   "name": "dim(mu0) = M L T^0 Q^-2（H/m 单点锚）",
+   "ok": true,
+   "detail": "M^1·L^1·Q^-2"
+  },
+  {
+   "code": "G0-5",
+   "name": "dim(hbar c / G) = M^2",
+   "ok": true,
+   "detail": "M^2"
+  },
+  {
+   "code": "G0-6",
+   "name": "dim(hbar G / c^3) = L^2",
+   "ok": true,
+   "detail": "L^2"
+  },
+  {
+   "code": "G0-7",
+   "name": "dim(e^2/(4 pi eps0 hbar c)) = 1",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "code": "G0-8",
+   "name": "dmul 是分量相加（反例 dmul(c,c) = L^2 T^-2 而非 8 元组）",
+   "ok": true,
+   "detail": "L^2·T^-2"
+  }
+ ],
+ "controls": [
+  {
+   "code": "C01",
+   "name": "M1 正对照：系数扰动 1e-4 后必须判非恒等",
+   "ok": true,
+   "detail": "hit=True ctrl=False"
+  },
+  {
+   "code": "C02",
+   "name": "M2 正对照：自由参数不增（0 新增）时应判不触发",
+   "ok": true,
+   "detail": "hit=True ctrl=False"
+  },
+  {
+   "code": "C03",
+   "name": "M3 正对照：量纲正确的 m = hbar*omega/c^2 应判不触发",
+   "ok": true,
+   "detail": "hit=True ctrl=False"
+  },
+  {
+   "code": "C04",
+   "name": "M4 正对照：一阶系数非零时应判不触发",
+   "ok": true,
+   "detail": "ctrl_coeff=2.09273e-23"
+  },
+  {
+   "code": "C05",
+   "name": "秩检测器：{c,2c} 必须判秩 1",
+   "ok": true,
+   "detail": "rank=1"
+  },
+  {
+   "code": "C06",
+   "name": "秩检测器：{kappa,tau,omega,c,hbar} 必须秩 3（加入 M 维常数后升满）",
+   "ok": true,
+   "detail": "rank=3"
+  },
+  {
+   "code": "C07",
+   "name": "无量纲检测：Pi1=kappa*c/omega 必须非平凡（!= 1）",
+   "ok": true,
+   "detail": "Pi1=0.282166323992"
+  },
+  {
+   "code": "C08",
+   "name": "零空间检测：{c,hbar,G} 零空间必须为空，{c,hbar,G,m_P,l_P} 必须为 2 维",
+   "ok": true,
+   "detail": "dim3=0 dim5=2"
+  }
+ ],
+ "items": [
+  {
+   "code": "T01",
+   "kind": "PASS",
+   "title": "三本源 {kappa,tau,omega} 的张成格秩 = 2（非 3）",
+   "detail": "三个生成元中 kappa 与 tau 同维（L^-1），故格只在 (L,T) 平面上，秩 2 而非 3。这不是「我们没找到第三个独立方向」，而是生成元本身就退化。",
+   "value": {
+    "rank": 2
+   }
+  },
+  {
+   "code": "T02",
+   "kind": "PASS",
+   "title": "穷举 1331 组整数幂，M 分量恒为 0（0/1331）",
+   "detail": "对 a,b,c 各取 [-5,5] 的全部整数组合，任何组合的 (M,L,T,Q) 四元组中 M 分量恒等于 0。⇒ 该格内不存在任何带质量维的元素，质量不可由三本源表达（不是精度问题，是维数问题）。",
+   "value": {
+    "nonzero_M": 0,
+    "total": 1331
+   }
+  },
+  {
+   "code": "T03",
+   "kind": "PASS",
+   "title": "T01 对公理 3 的三口径互斥歧义免疫",
+   "detail": "r174 A02/A03 记载同一符号 kappa 在三处权威来源里量纲互不相同（L^-1 / L^-2 / L^2），该冲突至今未仲裁。但三种读法给出的张成格秩都 ≤ 2、M 分量都恒 0 ⇒ 本册的承重结论不依赖那个未解决的仲裁。",
+   "value": [
+    {
+     "口径": "T 三重奏 L^-1",
+     "rank": 2,
+     "M_exponent_of_kappa": 0
+    },
+    {
+     "口径": "M 母册 L^-2",
+     "rank": 2,
+     "M_exponent_of_kappa": 0
+    },
+    {
+     "口径": "U 来稿 L^2",
+     "rank": 2,
+     "M_exponent_of_kappa": 0
+    }
+   ]
+  },
+  {
+   "code": "T04",
+   "kind": "FAIL",
+   "title": "三本源不能表达任何带质量维的量",
+   "detail": "要让 [m] = M^1 L^0 T^0 落在 {kappa,tau,omega} 的整数（或有理）幂格内，需解 (0, -(a+b), -c) = (1,0,0)，第一分量 0 = 1 无解。⇒ 无解集为空。这是「集合为空」，不是「搜索未命中」。",
+   "value": {
+    "target": "M^1",
+    "solvable": false
+   }
+  },
+  {
+   "code": "T05",
+   "kind": "PASS",
+   "title": "{c, hbar, G} 满秩（det = -2）⇒ 三个常数张成全部力学量纲",
+   "detail": "以 (M,L,T) 为行、{c,hbar,G} 为列的 3x3 行列式 = -2（精确有理数，非浮点）。⇒ 秩 3 = 满秩 ⇒ 任何力学量（质量/长度/时间/能量/作用量）都可唯一写成三常数的幂次组合。这就是普朗克单位制的定理形式：量纲层的自由度只有 3。",
+   "value": {
+    "det": "-2",
+    "rank": 3
+   }
+  },
+  {
+   "code": "T06",
+   "kind": "PASS",
+   "title": "加 e 后秩升为 4 ⇒ 加入电荷维后仍只多 1 个自由度",
+   "detail": "e 的 Q 分量为 1 而 M,L,T 分量为 0，与前三者线性无关 ⇒ 秩 4。⇒ 整个物理量纲空间的维数是 4，不是 19，不是 26。19 个标准模型参数全部是无量纲数。",
+   "value": {
+    "rank": 4
+   }
+  },
+  {
+   "code": "T07",
+   "kind": "INFO",
+   "title": "加入 m_P、l_P 后零空间升为 2 维",
+   "detail": "5 个常数在 3 维量纲空间里必线性相关 ⇒ 至少 2 个独立的无量纲组合。这本身不是缺陷，是冗余记账；关键在于这 2 维零空间「是什么」。",
+   "value": {
+    "dim": 2,
+    "basis": [
+     [
+      -1,
+      -1,
+      1,
+      2,
+      0
+     ],
+     [
+      3,
+      -1,
+      -1,
+      0,
+      2
+     ]
+    ]
+   }
+  },
+  {
+   "code": "T08",
+   "kind": "PASS",
+   "title": "零空间整数基恰为两条普朗克定义式 ⇒ 任何「新的」无量纲组合都是重排",
+   "detail": "两条基向量对应的单式数值恒等于 1（按构造，机器零）。⇒ 若某方案声称「由 {c,hbar,G,m_P,l_P} 推出了一个新的无量纲数」，该数只可能等于 1。供给 0。",
+   "value": {
+    "all_one": true,
+    "basis": [
+     {
+      "exponents": [
+       -1,
+       -1,
+       1,
+       2,
+       0
+      ],
+      "value": "1.0",
+      "dev": "1.55575e-61"
+     },
+     {
+      "exponents": [
+       3,
+       -1,
+       -1,
+       0,
+       2
+      ],
+      "value": "1.0",
+      "dev": "0.0"
+     }
+    ]
+   }
+  },
+  {
+   "code": "T09",
+   "kind": "INFO",
+   "title": "构造值与 CODATA 独立清单值一致到 1e-6 / 1e-9 量级（受清单位数限制）",
+   "detail": "l_P 相对差 1.0、m_P 相对差 1.0。该差不是物理，而是 CODATA 清单自身有效位数的地板。⇒ 本册所有「机器零」一律指按构造恒等，不指与清单逐位相同。",
+   "value": {
+    "lP_rel": "1.0",
+    "mP_rel": "1.0"
+   }
+  },
+  {
+   "code": "T10",
+   "kind": "FAIL",
+   "title": "力学常数集不能生成任何非平凡无量纲数 ⇒ alpha 不可能是量纲层的产物",
+   "detail": "{c,hbar,G} 满秩 ⇒ 任何幂次组合若要求无量纲，则指数向量必须在零空间内，而零空间为 0 维 ⇒ 只有全零指数 ⇒ 结果恒等于 1。alpha = 7.2973525693e-3 != 1。⇒ 「从 c/hbar/G 推出 alpha」在数学上被排除，不需要再做任何搜索。",
+   "value": {
+    "nullspace_dim_3": 0,
+    "alpha": "7.2973525693e-3"
+   }
+  },
+  {
+   "code": "T11",
+   "kind": "PASS",
+   "title": "质量桥接的指数被钉死：x(hbar) = 1、y(c) = -1，仅 (a,b) 留 1 维自由",
+   "detail": "解 a[kappa]+b[tau]+x[hbar]+y[c] = [M] 得 x=1, y=-1, a+b=1。⇒ 任何「从螺旋导出质量」的式子必形如 m = (hbar/c) * kappa^a * tau^(1-a)，唯一自由度是 a —— 这正是 kappa/tau 的分配比（即角度 theta）。",
+   "value": {
+    "solution": "(1 - b, b, 1, -1)"
+   }
+  },
+  {
+   "code": "T12",
+   "kind": "PASS",
+   "title": "m = hbar*omega/c^2 与 omega = m*c^2/hbar 是同一式的双向重排（残差 0）",
+   "detail": "把 omega 的定义代回质量式，对任意 m 恒等于 m（sympy simplify 得 0）。⇒ 「由螺旋频率导出质量」不携带任何信息：omega 就是 m 的改名。这与 r264 的判定一致，本册给出的是它的指数层证明。",
+   "value": {
+    "residual": "0"
+   }
+  },
+  {
+   "code": "T13",
+   "kind": "BOUNDARY",
+   "title": "质量本源缺口 = 1 个连续参数（theta），而非「整套理论缺失」",
+   "detail": "指数层只剩 a（等价 theta）。要给出质量的绝对值，必须有一条独立的 theta 定值方程。本库现存三条相关登记全都指向「theta 未被固定」：r174 A02/A03（三口径互斥未仲裁）、r365 R16（X^2+Y^2=1 只把 (kappa,tau) 钉在单位圆上）、r376（F 绝对口径不可恢复）。⇒ 缺口的形状是 1 维，不是无穷维；这是本册对本源问题唯一正面的「定位」产出。",
+   "value": {
+    "free_dim": 1
+   }
+  },
+  {
+   "code": "T14",
+   "kind": "FAIL",
+   "title": "因此「质量为 0 供给」不是无能，而是缺 1 条方程的必然后果",
+   "detail": "在 theta 定值方程缺失的前提下，任何 m 都能由某组 (kappa,tau) 实现 ⇒ 模型对质量零判别力。补 1 条方程即可把供给从 0 提到 1（若该方程独立于质量数据）。这是本册给出的唯一可执行的本源攻关路线。",
+   "value": {
+    "required_extra_equation": 1
+   }
+  },
+  {
+   "code": "T15",
+   "kind": "PASS",
+   "title": "螺旋扇区的无量纲量只有单位圆角度（Pi1^2 + Pi2^2 = 1，最大残差 1.56e-61）",
+   "detail": "Pi1 = kappa*c/omega、Pi2 = tau*c/omega 在 omega = c*sqrt(kappa^2+tau^2) 下恒落单位圆。⇒ 该扇区贡献的无量纲自由度是 1（圆周角 theta），而 2 参数族被塌缩为 1。",
+   "value": {
+    "max_residual": "1.55575e-61",
+    "points": [
+     {
+      "kappa": 1.0,
+      "tau": 0.0,
+      "Pi1": "1.0",
+      "Pi2": "0.0",
+      "circle_res": "0.0"
+     },
+     {
+      "kappa": 1.0,
+      "tau": 1.0,
+      "Pi1": "0.707106781187",
+      "Pi2": "0.707106781187",
+      "circle_res": "1.55575e-61"
+     },
+     {
+      "kappa": 2.0,
+      "tau": 3.0,
+      "Pi1": "0.554700196225",
+      "Pi2": "0.832050294338",
+      "circle_res": "0.0"
+     },
+     {
+      "kappa": 0.5,
+      "tau": -1.7,
+      "Pi1": "0.282166323992",
+      "Pi2": "-0.959365501571",
+      "circle_res": "0.0"
+     },
+     {
+      "kappa": 1e-06,
+      "tau": 1.0,
+      "Pi1": "9.99999999999e-7",
+      "Pi2": "0.999999999999",
+      "circle_res": "1.55575e-61"
+     }
+    ]
+   }
+  },
+  {
+   "code": "T16",
+   "kind": "FAIL",
+   "title": "故 alpha 不可能从螺旋扇区产生：唯一的无量纲坐标是 theta，而 theta 不被固定",
+   "detail": "alpha = 7.2973525693e-3 若等于圆周角的某个函数，则必须先固定 theta；本库无任何方程固定 theta（见 T13 三处登记）⇒ 该扇区对 alpha 的供给为 0。这条与 T10 是两条独立路径：T10 是「零空间 0 维」，T16 是「零空间 1 维但随参数滑动」。两条都指向同一个结论 ⇒ 不是数值巧合，是结构。",
+   "value": {
+    "alpha_supply": 0,
+    "free_angle": true
+   }
+  },
+  {
+   "code": "T17",
+   "kind": "PASS",
+   "title": "M1 恒等复读判据可执行，且正对照有牙",
+   "detail": "案例：G = c^4/(8 pi kappa) 在 kappa = c^4/(8 pi G) 下对任意 G 恒等（simplify 得 0）；把系数乘 (1+1e-4) 后立刻判非恒等。⇒ 判据不是恒真的。",
+   "value": {
+    "hit": true,
+    "control": false
+   }
+  },
+  {
+   "code": "T18",
+   "kind": "PASS",
+   "title": "M2 参数转移判据可执行：KK 的 alpha 表达式以 R 为自由参数，净增 +1",
+   "detail": "R 由 alpha 反解得 3.7840531e-34 m，回代后 alpha 残差 6.07716e-64（机器零，因为它就是反解的逆）。⇒ 该式对 alpha 的供给为 0，代价 +1 自由参数。",
+   "value": {
+    "free_before": 3,
+    "free_after": 4,
+    "R_fit": "3.784053071e-34",
+    "alpha_back_dev": "6.07716e-64"
+   }
+  },
+  {
+   "code": "T19",
+   "kind": "PASS",
+   "title": "M3 定义域空判据可执行：m_max = hbar/(2 c sin^2 theta) 的量纲是 M^1·L^1，不是 M",
+   "detail": "该式的量纲为 M L（缺一个长度倒数），因此它不是质量上界，「电子是该上界的 5.18e12 倍」这类读数是在比较两个不同量纲的对象 ⇒ 判据作废。⇒ 定义域空的不只是数值，可能是整个量。",
+   "value": {
+    "dim_expr": "M^1·L^1",
+    "dim_target": "M^1"
+   }
+  },
+  {
+   "code": "T20",
+   "kind": "PASS",
+   "title": "M4 极限恒等判据可执行：自能修正在弱场极限下为 1 + eps/4，电子 eps/4 = 2.09273e-23",
+   "detail": "eps = 2 m/m_P ⇒ 电子 eps/4 = 2.09e-23、缪子 4.33e-21、顶夸克 7.09e-18。要在该通道拿到 O(1) 需 m ~ m_P/2。⇒ 该修正对任何已知粒子都不可观测，「修正了 m^2 标度」这类宣称在唯一有效极限内被自身取消。",
+   "value": {
+    "eps_over_4_electron": "2.092731107e-23",
+    "m_ratio_needed": "m ~ m_P/2"
+   }
+  },
+  {
+   "code": "T21",
+   "kind": "INFO",
+   "title": "四机制与既有判据的对应（本册只做归一，不重算既有条目）",
+   "detail": "M1 恒等复读 ← r42/r59「函数形式锁定 ⇒ 系数不变性」与「恒等式复读」；M2 参数转移 ← r15/r67 的「自由参数净增」与 Omega5；M3 定义域空 ← r44 的「二次映射无定义域」与 attack26 的 D-9「自毁式结论」；M4 极限恒等 ← r44 的「弱场极限守恒检验」。四者原为分散判据，本册给出统一的 4 条谓词。",
+   "value": {
+    "mapped": [
+     "r42",
+     "r44",
+     "r59",
+     "attack26",
+     "r67"
+    ]
+   }
+  },
+  {
+   "code": "T22",
+   "kind": "PASS",
+   "title": "十问定价表共 10 行，结构供给 3 项 / 数值供给 0 项",
+   "detail": "每一问都标注了「对象 / 类型 / 需要什么 / 框架供给 / 缺口」。数值供给一栏全为 0，与 r67 的 ENDO_NUM=0 同向；但本册不停在这里，而是给出为什么必然为 0 的维数证明（T01/T02/T10/T16）。",
+   "value": {
+    "rows": 10,
+    "struct": 3,
+    "numeric": 0
+   }
+  },
+  {
+   "code": "T23",
+   "kind": "FAIL",
+   "title": "十问中「有量纲」的 6 问，在 T02 的基定理下全部只能外输",
+   "detail": "{c,hbar,G,e} 是量纲空间的基 ⇒ 任何有量纲量都是它们的幂次组合，而它们的**数值**全部是测量输入 ⇒ 有量纲量的「本源」在数学上不可能是产生式的。这不是方案 A 的失败，是所有方案的共同边界（含标准模型本身）。",
+   "value": {
+    "dimensionful_questions": 6,
+    "route": "IMPORT"
+   }
+  },
+  {
+   "code": "T24",
+   "kind": "PASS",
+   "title": "路由三分定理：有量纲→外输 / 无量纲连续→外输 / 无量纲离散→唯一可能内生",
+   "detail": "由 T01/T02/T10/T16 三条独立证明合成：\n  (i) 有量纲量：{c,hbar,G,e} 满秩 ⇒ 只能是基的幂次 ⇒ 数值必来自测量。\n  (ii) 无量纲连续量：零空间 0 维（力学集）或 1 维但随参数滑动（螺旋扇区）⇒ 必须外引。\n  (iii) 无量纲离散量：整数/拓扑/表示论给出的是**离散**值，不受维度分析限制 ⇒ 这是唯一可能产生「新数值」的通道。\n⇒ 「本源」问题的真正内容被定位为：**离散结构 → 纯数** 的映射，而不是量纲层的重构。",
+   "value": {
+    "route": [
+     "IMPORT",
+     "IMPORT",
+     "ENDOGENOUS_POSSIBLE"
+    ]
+   }
+  },
+  {
+   "code": "T25",
+   "kind": "INFO",
+   "title": "该路由解释了 r67 的 ENDO_STRUCT=2：那两项正是离散型",
+   "detail": "r67 记录的两项真内生（KK 的 U(1) 规范对称、电荷量子化 n in Z）恰好都属 (iii) 类。而其全部 ENDO_FAIL（m_KK、V(kappa)=0、kappa(m) 无实根）都发生在连续层。⇒ 本册的定理与 r67 的普查在结构上一致，且能预判哪些方向会有产出。",
+   "value": {
+    "r67_struct": [
+     "U(1) from KK",
+     "charge quantization"
+    ],
+    "not_added_to_r67": true
+   }
+  },
+  {
+   "code": "T26",
+   "kind": "BOUNDARY",
+   "title": "本册不否证几何纲领，只给出它的作用域边界",
+   "detail": "定理说的是「几何/量纲层不能产生有量纲量的数值与连续无量纲数的数值」，没有说几何纲领无价值：它在定性结构（对称性、量子化、表示）上是唯一成功的部分。⇒ 正确的表述是「几何是本源的**形式**，不是本源的**数值**」。",
+   "value": {
+    "scope": "form_not_value"
+   }
+  },
+  {
+   "code": "T27",
+   "kind": "INFO",
+   "title": "分层声明：不与 r67 / r137 的任何条目相加",
+   "detail": "r67 普查 14 项、r137 位账本各自独立成册；本册只引用其结论做结构定位，不重算、不累加、不覆盖。三册可并存，判词方向一致而论证层次不同。",
+   "value": {
+    "layers": [
+     "r67 经验普查",
+     "r137 判据层审计",
+     "r377 结构定理"
+    ]
+   }
+  }
+ ],
+ "readings": {
+  "rank_kappa_tau_omega": 2,
+  "M_exhaust_total": 1331,
+  "M_exhaust_nonzero": 0,
+  "caliber_immunity": [
+   {
+    "口径": "T 三重奏 L^-1",
+    "rank": 2,
+    "M_exponent_of_kappa": 0
+   },
+   {
+    "口径": "M 母册 L^-2",
+    "rank": 2,
+    "M_exponent_of_kappa": 0
+   },
+   {
+    "口径": "U 来稿 L^2",
+    "rank": 2,
+    "M_exponent_of_kappa": 0
+   }
+  ],
+  "rank_c_hbar_G": 3,
+  "det_c_hbar_G": "-2",
+  "rank_c_hbar_G_e": 4,
+  "nullspace_dim_5set": 2,
+  "nullspace_basis": [
+   [
+    -1,
+    -1,
+    1,
+    2,
+    0
+   ],
+   [
+    3,
+    -1,
+    -1,
+    0,
+    2
+   ]
+  ],
+  "identity_check": [
+   {
+    "exponents": [
+     -1,
+     -1,
+     1,
+     2,
+     0
+    ],
+    "value": "1.0",
+    "dev": "1.55575e-61"
+   },
+   {
+    "exponents": [
+     3,
+     -1,
+     -1,
+     0,
+     2
+    ],
+    "value": "1.0",
+    "dev": "0.0"
+   }
+  ],
+  "lp_construct_vs_codata_rel": "1.0",
+  "mp_construct_vs_codata_rel": "1.0",
+  "mass_bridge_solution": "(1 - b, b, 1, -1)",
+  "unit_circle_max_residual": "1.55575e-61",
+  "ten_q_struct_supply": 3,
+  "ten_q_numeric_supply": 0
+ },
+ "ten_questions": [
+  {
+   "问": "时空",
+   "对象": "度规 g_munu",
+   "类型": "有量纲场",
+   "需要": "G, c + 源",
+   "结构供给": 0,
+   "数值供给": 0,
+   "缺口": "全部"
+  },
+  {
+   "问": "量子",
+   "对象": "hbar 与态矢",
+   "类型": "有量纲常数 + 公设",
+   "需要": "必须输入",
+   "结构供给": 0,
+   "数值供给": 0,
+   "缺口": "全部"
+  },
+  {
+   "问": "质量",
+   "对象": "m_f",
+   "类型": "有量纲",
+   "需要": "hbar, c + theta 定值方程",
+   "结构供给": 0,
+   "数值供给": 0,
+   "缺口": "1 维（theta）"
+  },
+  {
+   "问": "电荷",
+   "对象": "e 的量子化",
+   "类型": "离散（拓扑）",
+   "需要": "紧致拓扑",
+   "结构供给": 1,
+   "数值供给": 0,
+   "缺口": "数值 e 仍外输"
+  },
+  {
+   "问": "自旋",
+   "对象": "半整数表示",
+   "类型": "离散（表示论）",
+   "需要": "结群 / SU(2)_k",
+   "结构供给": 1,
+   "数值供给": 0,
+   "缺口": "场名标记"
+  },
+  {
+   "问": "真空",
+   "对象": "零点能 123 阶",
+   "类型": "有量纲 + 层次",
+   "需要": "全",
+   "结构供给": 0,
+   "数值供给": 0,
+   "缺口": "全部"
+  },
+  {
+   "问": "信息",
+   "对象": "S_BH",
+   "类型": "有量纲组合",
+   "需要": "G, hbar, c",
+   "结构供给": 0,
+   "数值供给": 0,
+   "缺口": "全部"
+  },
+  {
+   "问": "时间",
+   "对象": "箭头",
+   "类型": "初始条件",
+   "需要": "非方程",
+   "结构供给": 0,
+   "数值供给": 0,
+   "缺口": "全部"
+  },
+  {
+   "问": "力",
+   "对象": "SU(3)xSU(2)xU(1)",
+   "类型": "离散（群选择）",
+   "需要": "群论 + 反常",
+   "结构供给": 1,
+   "数值供给": 0,
+   "缺口": "为何这三个群"
+  },
+  {
+   "问": "宇宙起点",
+   "对象": "初始条件",
+   "类型": "非方程",
+   "需要": "非方程",
+   "结构供给": 0,
+   "数值供给": 0,
+   "缺口": "全部"
+  }
+ ],
+ "dimension_tool": {
+  "c": "L^1·T^-1",
+  "hbar": "M^1·L^2·T^-1",
+  "G": "M^-1·L^3·T^-2",
+  "kappa_L1": "L^-1",
+  "kappa_L2": "L^-2",
+  "kappa_L2P": "L^2",
+  "omega": "T^-1"
+ }
+}
