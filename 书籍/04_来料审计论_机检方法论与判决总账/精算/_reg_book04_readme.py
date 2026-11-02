@@ -390,19 +390,32 @@ def doc_cells(book_readme=BOOK_README):
     return cells
 
 
-def check_book_doc(d, here=HERE):
-    """把「抄进文档的读数」逐条打回普查面重建值 ⇒ 文档不是第二权威源，红了就是债。"""
-    cs = doc_cells()
+def check_book_doc(d, here=HERE, book_readme=BOOK_README):
+    """把「抄进文档的读数」逐条打回其载体面（普查面＋登记器自检面）⇒ 文档不是第二权威源，红了就是债。"""
+    cs = doc_cells(book_readme)
     size = os.path.getsize(os.path.join(here, CENSUS_FACE))
     with open(os.path.join(here, CENSUS_FACE), "rb") as f:
         face_md5 = md5s(f.read())
-    want = (("判定面分母／可解析／未提取", "%d／%d／%d" % (d["den"], d["got"], d["miss"])),
+    st_face = os.path.join(here, "_selftest_reg_book04.txt")
+    if os.path.exists(st_face):
+        with open(st_face, "rb") as f:
+            m = RE_CTRL.search(f.read().decode("utf-8", "replace"))
+        s_ok, s_all = (int(m.group(1)), int(m.group(2))) if m else (None, None)
+    else:
+        s_ok = s_all = None
+    want = [("判定面分母／可解析／未提取", "%d／%d／%d" % (d["den"], d["got"], d["miss"])),
             ("条目 Σ／PASS／FAIL／BOUNDARY／INFO",
              "%d／%d／%d／%d／%d" % (d["items"], d["p"], d["f"], d["b"], d["i"])),
             ("头条闭合破坏面", "%d 份" % d["ndef"]),
             ("普查对照", "%d/%d 绿" % (d["ctrl_ok"], d["ctrl_all"])),
             ("普查对照", "%s B" % format(size, ",").replace(",", " ")),
-            ("普查对照", "`%s`" % face_md5))
+            ("普查对照", "`%s`" % face_md5)]
+    if s_ok is None:
+        want = want + [("登记器变异体", "自检面缺失或没印「对照 n/n 绿」⇒ 无载体，不许引用文档值")]
+    else:
+        want = want + [("登记器变异体", "%d/%d 绿" % (s_ok, s_all))]
+    want = want + [("登记表那一行的件数（论文版／书稿／精算／stdout 凭据／诚实边界）",
+                    "%d／%d／%d／%d／%d" % (d["n_paper"], d["n_chap"], d["n_num"], d["n_cred"], d["n_honest"]))]
     out = []
     for label, needle in want:
         cell = cs.get(label)
@@ -411,6 +424,20 @@ def check_book_doc(d, here=HERE):
         else:
             out.append((label, needle, cell if needle in cell else cell[:56], needle in cell))
     return out, face_md5, size
+
+
+def cut_block(lines, row=None, blk=None):
+    """剪掉本书登记块 ⇒ 与 HEAD 状态无关的「其余面」。
+
+    优先按结构定位（find_landed）：块里的文本被本轮改写过也剪得掉；结构不符才退回按值删。
+    """
+    ri, span, err = find_landed(lines)
+    if err is None:
+        return cut(lines, ri, span), "结构（行 %d＋块 %d~%d）" % (ri, span[0], span[1])
+    if row is None:
+        return None, err
+    back, removed, want = strip_inserted(lines, row, blk or [])
+    return back, "按值（删 %d/%d）" % (removed, want)
 
 
 def cmd_check():
@@ -428,18 +455,22 @@ def cmd_check():
     anchor_tree = len(line_hits(lines, ANCHOR_TREE))
     in_tree = sum(1 for L in lines if L in set(blk))
     back, removed, want = strip_inserted(lines, row, blk)
+    rem_wt, how_wt = cut_block(lines, row, blk)
     okh, blob = git("show", "HEAD:书籍/README.md")
-    wt = "\n".join(back).encode("utf-8")
-    eq_exact = okh == 0 and wt == blob
-    eq_norm = okh == 0 and wt.replace(b"\r\n", b"\n") == blob.replace(b"\r\n", b"\n")
+    head_lines = blob.decode("utf-8", "replace").replace("\r\n", "\n").split("\n") if okh == 0 else None
+    rem_head, how_head = (cut_block(head_lines, row, blk) if head_lines is not None else (None, "HEAD 不可用"))
+    eq_norm = rem_head is not None and rem_wt == rem_head
+    eq_exact = okh == 0 and "\n".join(back).encode("utf-8") == blob
     print("CHECK · 只读复核（期望取自盘上图像 + 盘上件数现扫）")
     print("  C1 登记表那行在盘恰 1（按前缀）｜逐字等于现析重建的那一行 :: 前缀 %d｜逐字 %d" % (len(hits_row), exact))
     print("  C2 目录树那块在盘恰 1（按结构）｜树锚仍恰 1（未被挤掉）｜重建块逐字命中 :: %s｜%d｜%d/%d"
           % ("是" if terr is None else "否", anchor_tree, in_tree, len(blk)))
     print("  C3 本轮 %d 行整块删回 :: 实删 %d 行" % (want, removed))
-    print("  C4 删回登记块后的整面 vs git HEAD 那份 :: 归一到 LF 后等像=%s（工作树原字节 CRLF=%d↔blob CRLF=%d：autocrlf=true ⇒ 含行尾的直接等像本就不可比，只印作口径证据=%s｜HEAD md5 %s 只作当下观察）"
-          % (eq_norm, raw.count(b"\r\n"), blob.count(b"\r\n") if okh == 0 else -1,
-             eq_exact, md5s(blob) if okh == 0 else "不可用"))
+    print("  C4 各自剪掉本书登记块后的「其余面」等像（工作树↔HEAD，与 HEAD 是否已含本书登记无关）:: %s（工作树 %d 行·口径 %s｜HEAD %s 行·口径 %s）｜含行尾的直接等像只作口径证据=%s（工作树 CRLF=%d↔blob CRLF=%d，autocrlf=true ⇒ 归一口径才是唯一可比；HEAD md5 %s）"
+          % (eq_norm, len(rem_wt or []), how_wt,
+             len(rem_head) if rem_head is not None else "不可用", how_head,
+             eq_exact, raw.count(b"\r\n"), blob.count(b"\r\n") if okh == 0 else -1,
+             md5s(blob) if okh == 0 else "不可用"))
     oks, oidx = git("show", ":书籍/README.md")
     head_has = okh == 0 and "《来料审计论：机检方法论与判决总账》" in blob.decode("utf-8", "replace")
     idx_has = oks == 0 and "《来料审计论：机检方法论与判决总账》" in oidx.decode("utf-8", "replace")
@@ -452,7 +483,7 @@ def cmd_check():
         for label, needle, cell, good in rows:
             if not good:
                 red.append((label, needle, cell))
-        print("  C6 本书 README §三 抄录的读数逐条打回普查面重建值（%d 针）:: %s（面 %d B｜md5 %s）"
+        print("  C6 本书 README §三 抄录的读数逐条打回其载体面（普查面＋登记器自检面，%d 针）:: %s（面 %d B｜md5 %s）"
               % (len(rows), "全绿" if not red else "红 %d 条" % len(red), face_size, face_md5))
         for label, needle, cell in red:
             print("      [红] %s :: 面上重建=%s｜文档=%s" % (label, needle, cell))
@@ -557,8 +588,48 @@ def cmd_selftest():
         am3, i3, e13 = amend_lines(stray, row, blk)
         res.append(("N12 正对照·登记行被补字 ⇒ 更正是把该行换回重建像（块外行等像见证仍须成立，故可写）",
                     am3 is not None and i3 is not None and e13 is None and am3.count(row) == 1))
+    # —— HEAD 口径针：见证必须与「HEAD 里那一版登记块」无关（并发提交会把旧像带进 HEAD）——
+    head_stale = list(new or [])
+    if head_stale:
+        hri, hspan, h_err = find_landed(head_stale)
+        head_stale[hri] = row.replace("精算 %d 件" % d["n_num"], "精算 5 件")
+        head_stale[hspan[1] - 1] = "│   └── 精算/                # 旧措辞：+ 本登记器 + 其 stdout"
+        rem_h, how_h = cut_block(head_stale, row, blk)
+        rem_n, how_n = cut_block(new, row, blk)
+        res.append(("L4 正对照·HEAD 里是本书登记的旧像 ⇒ 按结构剪块后与本轮面等像（据此判「别的行没人动」，与 HEAD 版本无关）",
+                    h_err is None and how_h.startswith("结构") and rem_h == rem_n and head_stale != new))
+        rem_v, how_v = cut_block(stale, row, blk)
+        by_value = strip_inserted(stale, row, blk)[0]
+        res.append(("N15 负对照·同一陈旧面按值删剪不掉旧措辞 ⇒ 会谎报「登记行被人改了」：按值口径留旧行、结构口径不留",
+                    "精算 5 件" in "\n".join(by_value) and "精算 5 件" not in "\n".join(rem_v)
+                    and how_v.startswith("结构")))
     tmp = tempfile.mkdtemp(prefix="reg04_fixture_")
     try:
+        with open(BOOK_README, "rb") as f:
+            doc0 = f.read()
+        doc_dir = os.path.join(tmp, "doc")  # 放子目录：scan_num 只数 tmp 根下的文件，夹具不许互相污染（两针混因）
+        os.makedirs(doc_dir)
+        good_doc = os.path.join(doc_dir, "README_clean.md")
+        bad_doc = os.path.join(doc_dir, "README_mutant.md")
+        with open(good_doc, "wb") as f:
+            f.write(doc0)
+        mut_from = ("%d／%d／%d" % (d["den"], d["got"], d["miss"])).encode("utf-8")
+        mut_to = ("%d／%d／%d" % (d["den"] - 1, d["got"], d["miss"])).encode("utf-8")
+        with open(bad_doc, "wb") as f:
+            f.write(doc0.replace(mut_from, mut_to))
+        r_clean_all, _, _ = check_book_doc(d, book_readme=good_doc)
+        r_bad_all, _, _ = check_book_doc(d, book_readme=bad_doc)
+        # 「登记器变异体」那针读的是本脚本自己的 stdout —— --selftest 期间该面正被 shell 重定向截断
+        # ⇒ 仪器看不见自己：那针只能由 --check 定价，这里剔除并注明，不许让「读不到」冒充「不绿=文档有债」
+        excl = [x for x in r_clean_all if x[0] == "登记器变异体"]
+        r_clean = [x for x in r_clean_all if x[0] != "登记器变异体"]
+        r_bad = [x for x in r_bad_all if x[0] != "登记器变异体"]
+        bad_labels = [x[0] for x in r_bad if not x[3]]
+        res.append(("L6 正对照·C6 抄录账针在干净文档上全绿（%d 针，逐针取自载体面；恰 1 针因读自身 stdout 除名）" % len(r_clean),
+                    all(x[3] for x in r_clean) and len(r_clean) >= 6 and len(excl) == 1
+                    and len(r_clean_all) == len(r_clean) + 1))
+        res.append(("N16 负对照·把文档里判定面分母改小 1 ⇒ C6 必须只点名那一针（不是恒绿，也不是全盘红）",
+                    bad_labels == ["判定面分母／可解析／未提取"]))
         os.makedirs(os.path.join(tmp, "书稿"))
         for n in (CENSUS, CENSUS_FACE, CENSUS_JSON, "_reg_book04_readme.py", "_land_x.txt", "_check_x.txt"):
             open(os.path.join(tmp, n), "wb").write(b"x")

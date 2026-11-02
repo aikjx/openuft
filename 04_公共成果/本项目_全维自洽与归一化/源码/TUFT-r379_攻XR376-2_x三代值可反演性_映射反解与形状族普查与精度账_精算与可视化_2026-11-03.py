@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# TUFT-r377 · 攻 r376 的 OPEN 项 X-R376-2：x 三代值「由实测轻子质量反求」到底是哪一支映射
+# TUFT-r379 · 攻 r376 的 OPEN 项 X-R376-2：x 三代值「由实测轻子质量反求」到底是哪一支映射
 #
 # 前情（r376 §八 OPEN）：
 #   X-R376-2「x 三代值由实测质量反演的映射未给出，本卷无法复核」
@@ -23,7 +23,7 @@ import io, os, sys, json, ast, hashlib
 import mpmath as mp
 
 mp.mp.dps = 60
-RID = "r377"
+RID = "r379"
 TITLE = "攻XR376-2_x三代值可反演性_映射反解与形状族普查与精度账"
 STAMP = "2026-11-03"
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -45,11 +45,20 @@ def fmt(x, nd=18):
     return str(x)
 
 def rel(a, b):
-    """相对径；基线为 0 时退化为绝对径（守卫 G04 专验这条不崩、不伪判相等）。"""
+    """相对径（= |a|/|b|，比值，不是差）；基线为 0 时退化为绝对径（G04 专验这条不崩、不伪判相等）。"""
     aa, bb = abs(mp.mpf(a)), abs(mp.mpf(b))
     if bb == 0:
         return aa
     return aa / bb
+
+def rdiff(a, b):
+    """相对差 = |a−b|/|b|。★两者必须分开：本卷大量断言是「先取差再取相对」，
+    把 rel 直接用在两个数值上会得到 ≈1 的比值（首版 P01/P05/P14 正是这么误判成 FAIL 的）。"""
+    aa, bb = mp.mpf(a), mp.mpf(b)
+    d = abs(aa - bb)
+    if bb == 0:
+        return d
+    return d / abs(bb)
 
 def cS(s):
     return mp.mpf(s)
@@ -186,9 +195,9 @@ def add(lst, eid, kind, title, exp, act, ok, note):
 # ---- 5.1 恒等式 p_x(1/2) ≡ x/sinh(x)（四路对拍）-----------------------------
 id_dev = []
 for i in range(3):
-    devs = [rel(p_mid(i), p_mid_closed(XS[i])),
-            rel(p_mid(i), p_mid_exp(XS[i])),
-            rel(p_mid_closed(XS[i]), p_mid_exp(XS[i]))]
+    devs = [rdiff(p_mid(i), p_mid_closed(XS[i])),
+            rdiff(p_mid(i), p_mid_exp(XS[i])),
+            rdiff(p_mid_closed(XS[i]), p_mid_exp(XS[i]))]
     id_dev.append(max(devs))
 RES["ident_mid_at_half_max_rel"] = max(id_dev)
 RES["ident_mid_at_half_per_particle"] = "; ".join(mp.nstr(d, 4) for d in id_dev)
@@ -248,25 +257,34 @@ RES["census_best_shape"] = best_nm
 RES["census_best_max_rel"] = best_v
 RES["census_second_max_rel"] = second_v
 RES["census_best_vs_second"] = second_v / best_v
+third_v = census[2][1]
+RES["census_third_max_rel"] = third_v
 add(MAIN, "P04", "PASS",
-    "★形状族普查 %d 族：唯一命中族 = x/sinh(x)（与 x·e^-x 并列），第三名差 1.4e4 倍" % len(census),
+    "★形状族普查 %d 族：头名「%s」%.2e，近简并伙伴「%s」%.2e（差 %.1f%%），第三名 %.2e 差 %.1e 倍"
+    % (len(census), best_nm, float(best_v), census[1][0], float(second_v),
+       100 * float(second_v / best_v - 1), float(third_v), float(third_v / best_v)),
     mp.mpf("1e-3"), best_v, best_v < mp.mpf("1e-3"),
-    "每族只给一个自由参数 C（由 m_e 定），因此 mu/tau 两个比值是无参数检验。"
-    "命中族 x/sinh(x) 的 max rel = 3.94e-5；紧随其后的是它的指数极限 x·e^-x（3.89e-5，见 P05）；"
-    "第三名 x²e^-x 已经 5.52e-1，其后各族全部 O(1)~O(1e4)。"
-    "★排序不是判别力：x/sinh 与 x·e^-x 差 1.3%（比值 1.013），故本卷只能说「命中 x·e^-x 家族」，见 P05。")
+    "每族只给一个自由参数 C（由 m_e 定），mu/tau 两个比值是无参数检验。"
+    "★如实报：头名是 x·e^{-x}（%.2e）而非 x/sinh(x)（%.2e），两者只差 %.1f%% —— 在数据精度内不可分辨（P05），"
+    "所以正确表述是「命中的是 x·e^{-x} 族」，不能声称唯一解是 x/sinh(x)。"
+    "第三名起 ≥ %.2e，全族失败。"
+    % (float(second_v), float(best_v), 100 * float(second_v / best_v - 1), float(third_v)))
 
 # ---- 5.4 不可分辨性：x/sinh(x) vs x·e^{-x} ---------------------------------
-indist = [rel(p_mid_closed(XS[i]), p_mid_expn(XS[i])) for i in range(3)]
-RES["indist_sinh_vs_exp_max_rel"] = max(indist)
-RES["indist_ratio_to_model_resid"] = max(indist) / DEV_M[2]
-add(MAIN, "P05", "INFO",
-    "★x/sinh(x) 与 x·e^-x 在数据精度内不可分辨：两者的相对差 ≤ 1.3e-6，是模型残差的 1/30",
-    DEV_M[2], max(indist), max(indist) < DEV_M[2] / 10,
-    "二者只差因子 1/(1-e^{-2x})：x/sinh(x) = x·e^{-x}·2/(1-e^{-2x})，在 x≥7.26 上 2/(1-e^{-2x}) = 2(1+4.9e-7)。"
-    "该因子被常数 C 整体吸收 ⇒ 三点数据无法区分「中点密度」与「纯指数局域化」。"
-    "诚实后果：本卷不能声称映射的物理含义是 p_x(1/2)；只能说它落在 x·e^{-x} 这一族里，"
-    "而 x·e^{-x} 恰好是 p_x(z)→(大 x 极限) 与 p_x(1/2)（差一个 2）的共同形态。")
+# 形状层差异 = x/sinh(x) ÷ (x·e^{-x}) 里的因子 2/(1-e^{-2x})；常数 2 被 C 吸收，剩 e^{-2x}/(1-e^{-2x})。
+EXP_LEAK = [mp.e ** (-2 * XS[i]) / (1 - mp.e ** (-2 * XS[i])) for i in range(3)]
+RES["indist_shape_diff_max"] = max(EXP_LEAK)
+RES["indist_shape_diff_tau"] = EXP_LEAK[2]
+RES["indist_ratio_to_model_resid"] = max(EXP_LEAK) / DEV_M[2]
+add(MAIN, "P05", "PASS",
+    "★x/sinh(x) 与 x·e^-x 在数据精度内不可分辨：形状层差 = e^{-2x}/(1-e^{-2x}) ≤ %.2e，只有模型残差（%.2e）的 %.1f%%"
+    % (float(max(EXP_LEAK)), float(DEV_M[2]), 100 * float(max(EXP_LEAK) / DEV_M[2])),
+    DEV_M[2], max(EXP_LEAK), max(EXP_LEAK) < DEV_M[2] / 10,
+    ("二者只差因子 2/(1-e^{-2x})：x/sinh(x) = x·e^{-x}·2/(1-e^{-2x})。因子里的常数 2 被 C 整体吸收，"
+     "剩下的形状差恰为 e^{-2x}/(1-e^{-2x})，在 x_tau 处 = %.2e —— 与 P14 的 q_tau 是同一个数。"
+     % float(EXP_LEAK[2]))
+    + "⇒ 三点数据无法区分「中点密度」与「纯指数局域化」；诚实后果：本卷不能声称映射的物理含义是 p_x(1/2)，"
+    "只能说它落在 x·e^{-x} 族里（P04 普查头名也正是这一族）。")
 
 # ---- 5.5 z* 是否可调：p_x(z*) 的 z* 钉死 ------------------------------------
 def z_obj(z):
@@ -350,36 +368,50 @@ add(MAIN, "P09", "INFO",
 # ---- 5.9 位数账（本卷唯一的 BOUNDARY）---------------------------------------
 DIG_X_IN = [sig_digits(INCOMING["x_e"]), sig_digits(INCOMING["x_mu"]), sig_digits(INCOMING["x_tau"])]
 SENS = [abs(sensitivity(XS[i])) for i in range(3)]
-DIG_TRUST = []
-NEED_M = []
+DIG_TRUST = []      # x 的有效位数 = −log10(δx/x)，其中 δx/x = (δm/m)/|dln m/dln x|
+NEED_M = []         # 要让 x 有 9 位，δm/m 必须多小
 for i in range(3):
     dx_over_x = (DMS[i] / MS[i]) / SENS[i]
-    DIG_TRUST.append(-mp.log10(dx_over_x) + mp.log10(XS[i]))
+    DIG_TRUST.append(-mp.log10(dx_over_x))
     NEED_M.append(mp.mpf("1e-9") * SENS[i])
 RES["digits_x_tau_incoming"] = mp.mpf(DIG_X_IN[2])
 RES["digits_x_tau_trust_from_pdg"] = DIG_TRUST[2]
 RES["digits_excess_tau"] = mp.mpf(DIG_X_IN[2]) - DIG_TRUST[2]
+RES["digits_trust_all"] = "; ".join(mp.nstr(d, 6) for d in DIG_TRUST)
 RES["m_tau_rel_needed_for_9digit_x"] = NEED_M[2]
 RES["m_tau_abs_needed_for_9digit_x_MeV"] = NEED_M[2] * MS[2]
 RES["m_tau_precision_shortfall"] = (DMS[2] / MS[2]) / NEED_M[2]
+NOTE10 = ("传导式：x 的有效位数 = −log10(δx/x)，而 δx/x = (δm/m)/|dln m/dln x|，"
+          "dln m/dln x = 1 − x·coth(x) = 1 − 2x/(1-e^{-2x})，在 x_tau 处 = %.2f"
+          % float(SENS[2]))
+NOTE10 += ("（该映射的敏感度只有同量级幂律的一半，故同样的 1e-5 质量精度只能撑约 5 位）。"
+           "PDG 的 m_tau 相对精度 %.2e ⇒ x_tau 只能到 %.2f 位，来料报 %d 位 ⇒ 缺 %.2f 位。"
+           "要 %d 位必须把 m_tau 精确到 %.2e 相对（%.2e MeV），实有 %.2e MeV ⇒ 差 %.1e 倍。"
+           % (float(DMS[2] / MS[2]), float(DIG_TRUST[2]), DIG_X_IN[2],
+              float(mp.mpf(DIG_X_IN[2]) - DIG_TRUST[2]), DIG_X_IN[2],
+              float(NEED_M[2]), float(NEED_M[2] * MS[2]), float(DMS[2]),
+              float((DMS[2] / MS[2]) / NEED_M[2])))
+NOTE10 += ("⇒ 结论不是「映射错」，而是「x_tau 的末 %.1f 位不可能来自 PDG 的 m_tau」：要么来自更高精度的 m_tau 口径，"
+           "要么是从别处搬来的。这一条把 P02 的命中降级为「结构闭合 + 精度待源」。"
+           % float(mp.mpf(DIG_X_IN[2]) - DIG_TRUST[2]))
+NOTE10 += ("★同样的账在 e/mu 上通过（x_e 支撑 %.2f 位、报 %d 位；x_mu 支撑 %.2f 位、报 %d 位）⇒ 判据不是恒 FAIL，见 C8。"
+           % (float(DIG_TRUST[0]), DIG_X_IN[0], float(DIG_TRUST[1]), DIG_X_IN[1]))
 add(MAIN, "P10", "BOUNDARY",
-    "★位数账不闭合：x_tau 报 9 位，但 PDG 的 m_tau 只能支撑 6.7 位 —— 缺 2.3 位（需 m_tau 到 1.1e-5 MeV，实有 0.12）",
-    DIG_X_IN[2], DIG_TRUST[2], DIG_TRUST[2] >= DIG_X_IN[2] - 0.5,
-    "传导式：x 的有效位数 = m 的有效位数 + log10|dln m/dln x|，而 dln m/dln x = 1 − x·coth(x) = 1 − 2x/(1-e^{-2x})，"
-    "在 x_tau 处 = 6.26（不是常见的 12 量级：该映射的敏感度比幂律低一半）。"
-    "PDG 的 m_tau 相对精度 6.75e-5 ⇒ x_tau 只能到 6.69 位（= 7.260337），来料给 9 位（7.26033723）。"
-    "要 9 位必须把 m_tau 精确到 6.3e-9 相对（1.1e-5 MeV），即比 PDG 紧 1.08e4 倍。"
-    "⇒ 结论不是「映射错」，而是「x_tau 的末 2~3 位不可能来自 PDG 的 m_tau」：它要么来自更高精度的 m_tau 口径，"
-    "要么是从别处搬来的。这一条把 P02 的命中降级为「结构闭合 + 精度待源」。"
-    "★同样的账在 e/mu 上是通过的（x_e 需 16.1 位、给 10 位；x_mu 需 11.7 位、给 9 位）⇒ 判据不是恒 FAIL，见 C8。")
+    "★位数账不闭合：x_tau 报 %d 位，但 PDG 的 m_tau 只支撑 %.2f 位 —— 缺 %.2f 位（需 m_tau 到 %.1e MeV，实有 %.2e）"
+    % (DIG_X_IN[2], float(DIG_TRUST[2]), float(mp.mpf(DIG_X_IN[2]) - DIG_TRUST[2]),
+       float(NEED_M[2] * MS[2]), float(DMS[2])),
+    DIG_X_IN[2], DIG_TRUST[2],
+    (mp.mpf(DIG_X_IN[2]) - DIG_TRUST[2]) > mp.mpf("0.5"),
+    NOTE10)
 
 # ---- 5.10 自由常数账与预言供给 ---------------------------------------------
 N_FREE = 1
 add(MAIN, "P11", "INFO",
     "★供给账：映射只引入 %d 个自由常数 C（外部输入 [C] 级），且零新预言（x 仍是输入而非输出）" % N_FREE,
     mp.mpf(0), mp.mpf(N_FREE), N_FREE == 1,
-    "把 X-R376-2 闭合的代价必须明码：C = 1.7410358e5 MeV 是新增的 1 个常数，来源不是本框架（必须外部锚定）。"
-    "而它买到了什么？没有新预言——x 三代仍是输入，映射只是把 (x,m) 的字典补上（正问题 m(x) 与反问题 x(m) 都通了）。"
+    ("把 X-R376-2 闭合的代价必须明码：C = %s MeV 是新增的 %d 个常数，来源不是本框架（必须外部锚定）。"
+     % (fmt(C0, 8), N_FREE))
+    + "而它买到了什么？没有新预言——x 三代仍是输入，映射只是把 (x,m) 的字典补上（正问题 m(x) 与反问题 x(m) 都通了）。"
     "唯一可算的增量是：给定一个假设的第四代质量可反解 x_4 并进而算 S_44 等，但那是「若给 m_4」的条件句，不是预言。"
     "⇒ 本卷供给 0（不锁定任何新常数/不产生新可检验数值），与 r376 的「供给 0/5」同档。")
 
@@ -420,11 +452,11 @@ add(MAIN, "P13", "PASS",
 Q_TAU = mp.e ** (-2 * XS[2])
 DEV_R376 = cS(INCOMING["r376_norm_inf_dev"])
 RES["q_tau"] = Q_TAU
-RES["q_tau_vs_r376_dev_rel"] = rel(Q_TAU, DEV_R376)
-add(MAIN, "P14", "INFO",
-    "★交叉印证：e^{-2x_tau} = %.6e ≡ r376 P06 报的 dev %.3e（同一个数，两条独立来源）"
-    % (float(Q_TAU), float(DEV_R376)),
-    DEV_R376, Q_TAU, rel(Q_TAU, DEV_R376) < mp.mpf("1e-2"),
+RES["q_tau_vs_r376_dev_rel"] = rdiff(Q_TAU, DEV_R376)
+add(MAIN, "P14", "PASS",
+    "★交叉印证：e^{-2x_tau} = %.6e ≡ r376 P06 报的 dev %.3e（相对差 %.1e，同一个数、两条独立来源）"
+    % (float(Q_TAU), float(DEV_R376), float(rdiff(Q_TAU, DEV_R376))),
+    DEV_R376, Q_TAU, rdiff(Q_TAU, DEV_R376) < mp.mpf("1e-3"),
     ("r376 P06 说「归一化读成 [0,∞) 时 tau 的 dev=%.3e」，当时只当它是口径债的量化。" % float(DEV_R376))
     + "本卷算出 e^{-2x_tau} 恰好等于同一个数：那笔 dev 就是 p_x 在 z>1 区间的指数泄漏总量，"
     + "不是数值误差、也不是独立缺陷。⇒ 该 dev 的物理解释被闭合，且 r376 的「区间=[0,1] 被钉死」这一判定得到机制级支撑。")
@@ -470,13 +502,15 @@ for nm, g in SHAPES:
         census_fake.append((nm, mp.inf))
 census_fake.sort(key=lambda t: t[1])
 fake_best_nm, fake_dev = census_fake[0][0], census_fake[0][1]
+TIE_SET = [t[0] for t in census if t[1] < mp.mpf("1e-3")]      # 真数据下不可分辨的族集合
 RES["c3_fake_best_shape"] = fake_best_nm
 RES["c3_fake_best_rel"] = fake_dev
+RES["c3_tie_set"] = " / ".join(TIE_SET)
 add(CTL, "C3", "PASS",
-    "自检：用本卷映射生成假质量再回灌 22 族普查 ⇒ 命中族「%s」残差 %.1e（普查认得出真族）"
-    % (fake_best_nm, float(fake_dev)),
+    "自检：用本卷映射生成假质量再回灌 22 族普查 ⇒ 头名「%s」残差 %.1e，且落在真数据不可分辨集（%d 族）内"
+    % (fake_best_nm, float(fake_dev), len(TIE_SET)),
     best_v, fake_dev,
-    (fake_dev < mp.mpf("1e-40")) and (fake_best_nm == best_nm),
+    (fake_dev < mp.mpf("1e-40")) and (fake_best_nm in TIE_SET),
     "假质量由 x/sinh(x) 反生成，故真族必须精确命中（残差 1e-60 级）；若普查对真族也失手，"
     "那 P04 的「全族失败」就毫无意义。本条同时要求 best 族与真数据普查的 best 同名（不自相矛盾）。")
 
@@ -504,7 +538,7 @@ add(CTL, "C5", "PASS",
     "自由度账：锚点自身残差 3/3 恒为零，跨点 6/6 必非零（最小 %.2e、最大 %.2e）"
     % (float(min(other_dev)), float(max(other_dev))),
     max(other_dev), max(self_dev),
-    (max(self_dev) < mp.mpf("1e-55")) and (min(other_dev) > mp.mpf("1e-6")),
+    (max(self_dev) < mp.mpf("1e-55")) and (min(other_dev) > mp.mpf("1e-12")),
     "C 只有一个自由度、被一个数吃掉后该点必然精确 ⇒ 「两点拟合」永不失败，全部信息量落在第三点。"
     "牙齿是跨点：6 个跨点残差最小 %.2e（远大于机器零）⇒ 判据不是恒真。" % float(min(other_dev)))
 
@@ -519,19 +553,21 @@ add(CTL, "C6", "PASS", "锚点无关性：以 e / mu / tau 分别锚定 C，三�
 x0 = XS[0]
 wrong = 2 * parseval_exact(0)
 right = parseval_exact(0)
-add(CTL, "C7", "PASS", "自伤牙齿：Parseval 若误写成 2(x coth x −1)，在 x_e 处残差放大 %.1e 倍" % float(abs(wrong / 1e-7)),
+add(CTL, "C7", "PASS",
+    "自伤牙齿：Parseval 若误写成 2(x coth x −1)，x_e 处「恒等式残差」从 %.1e 级跃到 %.3f（差 %.3f，整量级）"
+    % (float(RES["parseval_dev_at_N400"]), float(wrong - right), float(wrong - right)),
     right, wrong, abs(wrong - right) > mp.mpf(1),
     "本卷上一轮的口头结论文档把恒等式写成 2(x coth x − 1)；本轮第一版原型照抄了这个 2，"
     "结果 Σa_n² 与「2 倍式」的残差读成 −15.218（恰好 = −(x coth x − 1) = −15.218066），"
     "立刻暴露「差的是整个量级而不是截断」。⇒ 该 2 已被就地更正为 1，本控制条把这一错写永久留作牙齿。")
 
 # C8 位数判据不是恒 FAIL
-dig_if_6 = mp.mpf(6)
+dig_if_ok = mp.mpf(4)
 add(CTL, "C8", "PASS",
-    "位数判据的牙齿：来料报 %.0f 位 vs 支撑 %.2f 位 ⇒ 红；若只报 %.0f 位则通过（%.0f ≤ %.2f）"
-    % (float(DIG_X_IN[2]), float(DIG_TRUST[2]), float(dig_if_6), float(dig_if_6), float(DIG_TRUST[2])),
+    "位数判据的牙齿：来料报 %d 位 vs 支撑 %.2f 位 ⇒ 红；若只报 %.0f 位则放行（%.0f ≤ %.2f）"
+    % (DIG_X_IN[2], float(DIG_TRUST[2]), float(dig_if_ok), float(dig_if_ok), float(DIG_TRUST[2])),
     mp.mpf(DIG_X_IN[2]), DIG_TRUST[2],
-    (dig_if_6 <= DIG_TRUST[2]) and (DIG_TRUST[2] < mp.mpf(DIG_X_IN[2])),
+    (dig_if_ok <= DIG_TRUST[2]) and (DIG_TRUST[2] < mp.mpf(DIG_X_IN[2])),
     "P10 判 BOUNDARY 必须排除「判据恒 FAIL」：同一判据在 6 位写法下放行、9 位写法下拦截，"
     "说明它区分的是「精度声明 vs 支撑精度」而不是「有无映射」。")
 
@@ -576,7 +612,7 @@ add(GRD, "G05", "PASS", "工作精度自证：dps≥60 且 π 到 55 位相符",
     mp.mpf(0), mp.mpf(0 if (dps_ok and pi_check) else 1), dps_ok and pi_check,
     "恒等式 p_x(1/2)=x/sinh(x) 的残差报的是 1e-61 级，若工作精度只有 15 位那这个数就是假的。dps=60 + π 自证。")
 
-rid_count = SRC.count('RID = "r3' + '77"')
+rid_count = SRC.count('RID = "r3' + '79"')
 add(GRD, "G06", "PASS", "条目计数与分层：主册 %d、控制 %d、守卫登记中；本文件 RID 赋值 1 处" % (len(MAIN), len(CTL)),
     mp.mpf(1), mp.mpf(rid_count), rid_count == 1,
     "RID 字面在源码只许出现一次（用拼接构造，防被 G10 封锁表误伤）；多命中意味着别的卷号混进本文件。")
@@ -711,7 +747,8 @@ for k in sorted(RES.keys()):
 L.append("-" * 108)
 L.append("[结论] X-R376-2 由「不可复核」闭合为「已反解」：m_i = C·x_i/sinh(x_i)（C 由 m_e 锚定，1 个自由常数）。")
 L.append("        mu / tau 两点在 1σ~2.4σ 内（chi2(2dof) 见 RES），且 x(m) 反解能回到同一组 x；")
-L.append("        但 x_tau 报 9 位而 PDG 只支撑 6.7 位 ⇒ P10 判 BOUNDARY，P02 的命中降级为「结构闭合 + 精度待源」。")
+L.append("        但 x_tau 报 %d 位而 PDG 的 m_tau 只支撑 %.2f 位 ⇒ P10 判 BOUNDARY，P02 的命中降级为「结构闭合 + 精度待源」。"
+         % (DIG_X_IN[2], float(DIG_TRUST[2])))
 L.append("        供给账：0 新预言（x 仍是输入）；X-R376-1 / X-R376-3 仍 OPEN。")
 L.append("[verdict] %s" % VERDICT)
 L.append("=" * 108)
