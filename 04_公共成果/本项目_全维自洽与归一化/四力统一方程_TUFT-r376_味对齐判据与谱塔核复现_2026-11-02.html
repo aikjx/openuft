@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8"><title>TUFT-r376 ROOT V44 味对齐审计</title>
+<style>body{font-family:sans-serif;background:#f7f8fa;margin:16px}h1{font-size:18px}h2{font-size:15px}
+svg{background:#fff;border:1px solid #ccc;display:block;margin:10px 0}table{border-collapse:collapse;font-size:12px}
+td,th{border:1px solid #999;padding:3px 7px}</style></head><body>
+<h1>TUFT-r376 · ROOT V44 味对齐审计 · 2026-11-02</h1>
+<div>判词 <b>V44-ALIGNMENT-CRITERION-VERIFIED--KERNEL-S-SIX-DIGITS-ALL-REPRODUCED--CKM-DEMO-UNIQUE-READOUT--F-ABSOLUTE-NOT-RECOVERABLE--DOMAIN-UNDECLARED-BUT-FORCED</b>；终态 <b>ALL-GATES-PASS</b></div>
+<h2>图 1 · S 核展示位残差（×1e-7）</h2>
+<svg id="g1" viewBox="0 0 680 280"></svg>
+<h2>图 2 · 谱塔截断收敛（S₁₁，log10 相对差）</h2>
+<svg id="g2" viewBox="0 0 680 260"></svg>
+<h2>图 3 · CKM 破缺线性 |V12| vs ε（log10）</h2>
+<svg id="g3" viewBox="0 0 680 260"></svg>
+<h2>表 · S 对拍</h2>
+<div id="t1"></div>
+<h2>表 · 关键读数</h2>
+<div id="t2"></div>
+<script>
+var SB=[["S00",-3.1859797869070654],["S01",4.177432636231602],["S02",0.8961888523628495],["S11",-1.2509683429285865],["S12",0.8917043480596243],["S22",4.398032127787399]];
+var g1=document.getElementById('g1');
+var ax=document.createElementNS('http://www.w3.org/2000/svg','line');
+ax.setAttribute('x1',30);ax.setAttribute('y1',140);ax.setAttribute('x2',650);ax.setAttribute('y2',140);
+ax.setAttribute('stroke','#666');g1.appendChild(ax);
+for(var i=0;i<SB.length;i++){
+  var v=SB[i][1];var x=40+i*100;
+  var h=Math.abs(v)>100?110:Math.abs(v)*1.1;
+  var r=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  r.setAttribute('x',x);r.setAttribute('width',60);
+  if(v>=0){r.setAttribute('y',140-h);r.setAttribute('height',Math.max(h,1));r.setAttribute('fill','#2b7');
+  }else{r.setAttribute('y',140);r.setAttribute('height',Math.max(h,1));r.setAttribute('fill','#c255');
+  }
+  g1.appendChild(r);
+  var t=document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x',x+10);t.setAttribute('y',240);t.textContent=SB[i][0];g1.appendChild(t);
+}
+</script>
+<script>
+var g2=document.getElementById('g2');
+var p2=document.createElementNS('http://www.w3.org/2000/svg','path');
+p2.setAttribute('d','M 60.00 137.85 L 140.00 159.01 L 220.00 177.86 L 300.00 197.53 L 380.00 220.00 L 460.00 220.00 L 540.00 220.00 L 620.00 220.00');p2.setAttribute('stroke','#1a5ea8');p2.setAttribute('fill','none');
+g2.appendChild(p2);
+var CL=[["10","4.6e-03"],["25","1.2e-04"],["50","4.6e-06"],["100","1.5e-07"],["250","1.6e-09"],["500","5.1e-11"],["1000","1.6e-12"],["2500","1.6e-14"]];
+for(var i=0;i<CL.length;i++){
+  var t=document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x',40+i*72);t.setAttribute('y',250);t.textContent=CL[i][0]+':'+CL[i][1];
+  g2.appendChild(t);
+}
+</script>
+<script>
+var g3=document.getElementById('g3');
+var p3=document.createElementNS('http://www.w3.org/2000/svg','path');
+p3.setAttribute('d','M 60.00 82.13 L 172.00 126.58 L 284.00 171.02 L 396.00 215.46 L 508.00 220.00 L 620.00 220.00');p3.setAttribute('stroke','#8a2b6b');p3.setAttribute('fill','none');
+g3.appendChild(p3);
+var lab=document.createElementNS('http://www.w3.org/2000/svg','text');
+lab.setAttribute('x',60);lab.setAttribute('y',245);lab.textContent='斜率≈1（一阶微扰）';g3.appendChild(lab);
+</script>
+<script>
+var SR=[["00","2.852213","2.852213","HIT"],["01","2.730266","2.730266","HIT"],["02","2.572273","2.572273","HIT"],["11","2.626513","2.626513","HIT"],["12","2.485905","2.485905","HIT"],["22","2.363949","2.363949","HIT"]];var s='<table><tr><th>位</th><th>来料</th><th>本卷round6</th><th>判定</th></tr>';
+for(var i=0;i<SR.length;i++){s+='<tr><td>'+SR[i][0]+'</td><td>'+SR[i][1]+'</td><td>'+SR[i][2]+'</td><td>'+SR[i][3]+'</td></tr>';}
+s+='</table>';document.getElementById('t1').innerHTML=s;
+var rows=[['|F_full|/|F_1|','4.80053'],['反解塔权指数 p*','2.1845'],['最近 F 读法相对差','0.09493'],
+ ['|(A1u)12| 本卷','0.003327170546'],['M1(展示Br直算)','9.5500298'],['S11 闭式','2.852212681402']];
+var s2='<table><tr><th>读数</th><th>值</th></tr>';
+for(var k=0;k<rows.length;k++){s2+='<tr><td>'+rows[k][0]+'</td><td>'+rows[k][1]+'</td></tr>';}
+s2+='</table>';document.getElementById('t2').innerHTML=s2;
+</script>
+</body></html>

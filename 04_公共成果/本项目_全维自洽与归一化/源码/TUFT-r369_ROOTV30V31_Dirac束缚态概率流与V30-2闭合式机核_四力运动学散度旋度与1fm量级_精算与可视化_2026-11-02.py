@@ -73,7 +73,7 @@ def sci(x, nd=6):
     e = int(mp.floor(mp.log10(abs(x)))
             ) if abs(x) > 0 else 0
     m = x / mp.mpf(10) ** e
-    return ("%" + str(nd) + ".4fE%+03d") % (float(m), e)
+    return ("%." + str(max(1, int(nd) - 1)) + "fE%+03d") % (float(m), e)
 
 
 def rel(a, b):
@@ -333,7 +333,7 @@ vx_s, vy_s, vz_s, Bx_s, By_s, Bz_s = sp.symbols("vx vy vz Bx By Bz", real=True)
 Fb = sp.Matrix([vy_s * Bz_s - vz_s * By_s, vz_s * Bx_s - vx_s * Bz_s, vx_s * By_s - vy_s * Bx_s])
 dotFv = sp.simplify(Fb.dot(sp.Matrix([vx_s, vy_s, vz_s])))
 divB = sp.simplify(sp.diff(Bx_s, xs) + sp.diff(By_s, ys) + sp.diff(Bz_s, zs))
-log("  [V31] F_B·v = %s ；∇·B（作为场）= %s（本地 ∝ 0，无磁单极源）" % (dotFv, divB))
+log("  [V31] F_B·v = %s ；∇·B 的符号求导 = %s（无磁单极前提，非本卷代数可推出的恒等式）" % (dotFv, divB))
 
 # ============================ 5. V31 · 数值层 ============================
 rfm = mp.mpf("1e-15")
@@ -472,8 +472,8 @@ add(items, "R3", "PASS", "ψ†αψ 代数 ⇒ j = ρ c(Zα)sinθ φ̂（V30-1�
      "identity_2q_residual": str(id_2q), "numeric_j_over_rho_diff": sci(jrel, 3)})
 
 add(items, "R4", "PASS", "v_flow,max = Zα c = 0.00729735256433c ≈ 2.188×10^6 m/s（V30 §一末）",
-    "v_flow = c Zα sinθ φ̂ 的最大值在赤道 sinθ=1 处取得：Z=1 ⇒ v_max/c = α = %s = 0.00729735256433，"
-    "即 %s m/s。与来料逐位一致（相对差 %s）。⇒ 这是一个由 Dirac–Coulomb 严格给出的局域概率流速度上界，"
+    "v_flow = c Zα sinθ φ̂ 的最大值在赤道 sinθ=1 处取得：Z=1 ⇒ v_max/c = α = %s，"
+    "即 %s m/s。与来料 0.00729735256433 逐位一致（相对差 %s）。⇒ 这是一个由 Dirac–Coulomb 严格给出的局域概率流速度上界，"
     "不是被指定的螺旋角速度。"
     % (mp.nstr(ALPHA0, 12), sci(vflow_max), sci(rel(ALPHA0, mp.mpf("0.00729735256433")), 3)),
     {"vmax_over_c": mp.nstr(ALPHA0, 16), "vmax_m_s": sci(vflow_max),
@@ -553,8 +553,8 @@ add(items, "R14", "PASS", "磁场：F_B=qv×B、F_B·v=0、∇·B=0（V31 §三.
 add(items, "R15", "PASS", "Cornell 与 Yukawa 势逐阶求导（V31 §三.4）",
     "V=−k/r+σr ⇒ F=−(k/r²+σ)r̂（机器 = %s）；V=−A e^{−r/λ}/r ⇒ F=−A e^{−r/λ}(1/r²+1/(λr))r̂（机器 = %s）。"
     "两式与来料逐字一致；且 σ→0 与 λ→∞ 各自退回纯 1/r²（见 C08）。"
-    % (F_cor, F_yuk),
-    {"F_cornell_symbolic": str(F_cor), "F_yukawa_symbolic": str(F_yuk)})
+    % (F_cor_sym, F_yuk_sym),
+    {"F_cornell_symbolic": str(F_cor_sym), "F_yukawa_symbolic": str(F_yuk_sym)})
 
 add(items, "R16", "PASS", "1 fm 五条曲线数值表（CODATA 2022 + 明标的示范输入）",
     "r=1 fm：牛顿引力 %s N、库仑 %s N、剩余核力 Yukawa 示范 %s N、静态重夸克 Cornell 示范 %s N。"
@@ -570,7 +570,7 @@ add(items, "R16", "PASS", "1 fm 五条曲线数值表（CODATA 2022 + 明标的�
      "k_cornell_MeVfm": mp.nstr(k_C, 10)})
 
 add(items, "R17", "PASS", "W 玻色子约化康普顿长度 λ_W = 2.4555×10^-18 m（V31 §四末）",
-    "λ_W = ħ/(m_W c) = ħc/(m_W c²) = %s fm / %s MeV = %s fm = %s m。"
+    "λ_W = ħ/(m_W c) = ħc/(m_W c²) = %s MeV·fm / %s MeV = %s fm = %s m。"
     "与来料 2.4555×10^-18 m 一致。仅表示有质量传播子的静态屏蔽尺度；弱作用的手征与粒子转换不能用单条经典中心力曲线描述（来料自陈同一限制）。"
     % (mp.nstr(HBC, 10), mp.nstr(MW0, 8), mp.nstr(lamW, 10), sci(lamW_m)),
     {"lambda_W_m": sci(lamW_m), "lambda_W_fm": mp.nstr(lamW, 10)})
@@ -657,7 +657,7 @@ ctl("C10", "PASS", "Raychaudhuri 退化：Ω→0 时 ω²→2Ω²、∇·a→−
        ray_rows[-1]["balance_rel"]),
     {"omega2": sci(v_om_s), "two_Om2": sci(two_om2), "diva": sci(v_di_s)})
 
-ctl("C11", "PASS", "1 fm 处的量级跨度：引力与库仑同形但差 34 个数量级",
+ctl("C11", "PASS", "1 fm 处的量级跨度：引力与库仑同形但差 36 个数量级",
     "F_C/F_g = %s（=库仑/牛顿引力）；F_Yuk/F_C = %s；F_Cornell/F_C = %s "
     "⇒ 同一条 1/r² 形式在不同耦合强度下跨越数十个数量级，单凭形式不能识别相互作用。"
     % (sci(F_coul / F_grav, 4), sci(F_yuk / F_coul, 3), sci(F_cor / F_coul, 3)),
