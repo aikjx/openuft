@@ -306,7 +306,8 @@ wlock = D(0)
 for (mm, TT) in [(DME, T_e), (DMP, T_p), (DMPL, T_P)]:
     wlock = max(wlock, rel(TT / mm, TM))
 add("B05", "B", "温度—质量锁三族（电子/质子/Planck）实测 T/m 对比 c^2/kB", sci(TM, 12),
-    "max rel = %s" % sci(wlock, 4), wlock < D("1e-30"), "残差只来自常数末位")
+    "max rel = %s" % sci(wlock, 4), None,
+    "三族一致是定义使然（T:=m c^2/kB），本项只作仪器一致性检查，不构成独立验证")
 
 print("\n[B] 密度对自由参数 theta（w 固定=omega_C）")
 rho_tab = []
@@ -376,8 +377,10 @@ add("C02", "C", "正对照 w 两独立路径（m 反算 / sqrt(k^2+t^2)）", sci
 
 a_bad = R_e * omega_C
 r_bad = DH * a_bad / (D(2) * DPI * DK * c) / T_e
-add("C03", "C", "负对照 a=R*w（少一个 w）：比值必须崩", "偏离 >> 1e10",
-    sci(r_bad / (sin_t / (D(2) * DPI)), 6), rel(r_bad, sin_t / (D(2) * DPI)) > D("1e10"))
+tgt = sin_t / (D(2) * DPI)
+add("C03", "C", "负对照 a=R*w（少一个 w）：比值必须偏离目标 sin/(2pi)", "目标/坏值 ≈ w_C",
+    sci(tgt / r_bad, 6), (tgt / r_bad) > D("1e15"),
+    "坏值 = R/(2pi c)=sin/(2pi*w_C) => 目标/坏值恰为 w_C")
 
 rho_cube = m_e / R_e ** 3
 add("C04", "C", "口径对照 V=R^3 与 V=(4pi/3)R^3 的密度比", "4.18879", sci(rho_cube / rho_e, 10),
@@ -385,14 +388,28 @@ add("C04", "C", "口径对照 V=R^3 与 V=(4pi/3)R^3 的密度比", "4.18879", s
 
 add("C05", "C", "量纲负对照：硬度当能量时差 L^3", "%s" % (d_E,), "%s" % (d_H,), d_H != d_E)
 
-ms_bad = [x * x for x in om]
-rg = [ms_bad[i + 1] / ms_bad[i] for i in range(6)]
-add("C06", "C", "双射负对照改 m~w^2：相邻比必须随 w 变", "首末比不等",
-    "%s .. %s" % (sci(rg[0], 6), sci(rg[-1], 6)), abs(rg[0] - rg[-1]) > D("1e-3"))
 
-rg2 = [ms[i + 1] / ms[i] for i in range(6)]
-add("C07", "C", "正对照 m~w：相邻比恒定（线性换算指纹）", "首末比相等",
-    "%s .. %s" % (sci(rg2[0], 8), sci(rg2[-1], 8)), rel(rg2[0], rg2[-1]) < D("1e-20"))
+def logslope(ws, ys):
+    return (ys[-1] / ys[0]).ln() / (ws[-1] / ws[0]).ln()
+
+
+ms_bad = [x * x for x in om]
+s_bad = logslope(om, ms_bad)
+s_lin = logslope(om, ms)
+add("C06", "C", "双射负对照改 m~w^2：log-log 斜率必须 = 2（不是 1）", "2", sci(s_bad, 10),
+    abs(s_bad - D(2)) < D("1e-30"))
+add("C07", "C", "正对照 m~w：log-log 斜率必须 = 1（线性换算指纹）", "1", sci(s_lin, 10),
+    abs(s_lin - D(1)) < D("1e-30"),
+    "注意：等比网格上「相邻比恒定」对任意幂律都成立，不能当判据；必须用 log-log 斜率")
+
+# ================================================================ E 仪器自捕
+print("\n[E] 仪器自捕（判据被我自己的错弄红，已修复）")
+add("E01", "E", "C03 首版把方向写反：坏值比目标小 1/w_C 量级，用 rel(坏值,目标)>1e10 恒假",
+    "判据方向须与「坏值偏大还是偏小」一致", "改为 目标/坏值 = w_C > 1e15", None,
+    "教训：构造负对照前先估坏值在目标的哪一侧")
+add("E02", "E", "C06 首版在等比网格上用「相邻比恒定」判幂律 —— 任意幂律恒绿（退化点）",
+    "判据必须对 m~w^2 与 m~w 给出不同读数", "改为 log-log 斜率：1 vs 2", None,
+    "教训：等比网格上的比值不携带幂次信息，必须用斜率")
 
 # ================================================================ P 定价
 print("\n[P] 定价")
@@ -496,3 +513,79 @@ with io.open(rp, "w", encoding="utf-8", newline="\r\n") as f:
     f.write("\n".join(L) + "\n")
 
 print("\nwritten:\n  %s\n  %s" % (os.path.basename(jp), os.path.basename(rp)))
+
+
+def esc(s):
+    return str(s).replace("|", "\\|")
+
+
+M = []
+M.append("# %s · 数据侧裁定表（%s）" % (RID, DATE))
+M.append("")
+M.append("> 判词：`%s`" % VERD)
+M.append("")
+M.append("> 条目 **%d**（%s）；守卫 **%d/%d**。分层 A 精确代数 / B 高精度数值 / G 判决 / C 对照 / E 仪器自捕 / P 定价。**条目不可跨层相加。**"
+         % (len(ROWS), " / ".join("%s %d" % (k, cnt[k]) for k in sorted(cnt)), gok, len(GUARDS)))
+M.append("")
+M.append("## 一、全维求导残差（精确有理，%d 例）" % n_case)
+M.append("")
+M.append("| 量 | 判据 | 残差 |")
+M.append("|---|---|---|")
+M.append("| 速度模方 | `\\|v\\|^2=R^2w^2+u^2` 对 `c^2` | %s |" % esc(wV))
+M.append("| 加速度 | `a=-w^2*(x,y,0)` | %s |" % esc(wA))
+M.append("| 曲率 | 叉积 `\\|vxa\\|^2/\\|v\\|^6` 对 `(Rw^2/c^2)^2` | %s |" % esc(wK))
+M.append("| 挠率 | `(vxa).da/\\|vxa\\|^2` 对 `u*w/c^2` | %s |" % esc(wT))
+M.append("| 三重奏 | `k^2+t^2` 对 `(w/c)^2` | %s |" % esc(wX))
+M.append("")
+M.append("## 二、四量闭式")
+M.append("")
+M.append("| 量 | 闭式 | 自变量 |")
+M.append("|---|---|---|")
+M.append("| 质量 | `m=(hbar/c^2)*w` | w |")
+M.append("| 温度 | `T=(hbar/kB)*w` | w |")
+M.append("| 密度 | `rho=(3*hbar/(4*pi*c^5))*w^4/sin^3(theta)` | w, theta |")
+M.append("| 硬度 | `Hv=(hbar/c^3)*w^4/sin^3(theta)` | w, theta |")
+M.append("")
+M.append("## 三、电子族读数（theta=arctan(alpha)，w=omega_C）")
+M.append("")
+M.append("| 量 | 值 | 单位 |")
+M.append("|---|---|---|")
+for (k, u) in [("omega_C", "rad/s"), ("R", "m"), ("kappa", "m^-1"), ("tau", "m^-1"),
+               ("m", "kg"), ("T", "K"), ("rho", "kg/m^3"), ("Hv", "Pa"),
+               ("a", "m/s^2"), ("T_U", "K"), ("T/m", "K/kg")]:
+    v = {"omega_C": sci(omega_C, 12), "R": sci(R_e, 10), "kappa": sci(kappa_e, 10),
+         "tau": sci(tau_e, 10), "m": sci(m_e, 10), "T": sci(T_e, 10),
+         "rho": sci(rho_e, 8), "Hv": sci(Hv_e, 8), "a": sci(a_e, 8),
+         "T_U": sci(TU_e, 8), "T/m": sci(TM, 12)}[k]
+    M.append("| `%s` | %s | %s |" % (k, v, u))
+M.append("| `T_U/T_C` | %s | 无量纲 |" % sci(ratio_e, 10))
+M.append("| `sin(theta)/(2*pi)` | %s | 无量纲 |" % sci(sin_t / (D(2) * DPI), 10))
+M.append("")
+M.append("## 四、密度对自由参数 theta（w 固定）")
+M.append("")
+M.append("| theta (deg) | rho (kg/m^3) |")
+M.append("|---|---|")
+for (thd, rr) in rho_tab:
+    M.append("| %s | %s |" % (thd, sci(rr, 8)))
+M.append("")
+M.append("## 五、条目明细")
+M.append("")
+M.append("| ID | 层 | 裁定 | 条目 | exp | act |")
+M.append("|---|---|---|---|---|---|")
+for r in ROWS:
+    M.append("| %s | %s | **%s** | %s | %s | %s |"
+             % (r["id"], r["layer"], r["kind"], esc(r["name"]), esc(r["exp"]), esc(r["act"])))
+M.append("")
+M.append("## 六、守卫")
+M.append("")
+M.append("| 守卫 | 结果 | 读数 |")
+M.append("|---|---|---|")
+for g in GUARDS:
+    M.append("| %s | %s | %s |" % (g["name"], "ok" if g["ok"] else "BAD", esc(g["detail"])))
+M.append("")
+M.append("[返回目录 README](../README.md) · [判定册](../判定/%s.md)" % TITLE)
+
+mp = os.path.join(DATA, "%s_%s.md" % (TITLE, DATE))
+with io.open(mp, "w", encoding="utf-8", newline="\r\n") as f:
+    f.write("\n".join(M) + "\n")
+print("  %s" % os.path.basename(mp))

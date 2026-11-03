@@ -1,0 +1,419 @@
+{
+ "rid": "TUFT-r385",
+ "date": "2026-11-03",
+ "title": "TUFT-r385_最本源方程求导证明_零模约束唯一性与theta零模定理_内点解需两个耦合的判别力定价_精算_2026-11-03",
+ "verdict": "R385-SOURCE-EQUATION-UNIQUE-NULL-CONSTRAINT-OK-MOTHER-IDENTITY-BIJECTION-OK-THETA-ZERO-MODE-OK-INTERIOR-NEEDS-TWO-COUPLINGS-OK-ALPHA-NOT-INTERNAL-FAIL-SINGLE-SCALE-ONLY-OK-UNIQUE-PREDICTION-0",
+ "counts": {
+  "PASS": 28,
+  "INFO": 7,
+  "FAIL": 5
+ },
+ "n_rows": 40,
+ "guards": {
+  "n_ok": 6,
+  "n_total": 6,
+  "rows": [
+   {
+    "name": "FRAC-EXACT",
+    "ok": true,
+    "detail": "1/3+1/6-1/2 = 0"
+   },
+   {
+    "name": "DEC-PREC",
+    "ok": true,
+    "detail": "1/3*3-1 = -1E-50"
+   },
+   {
+    "name": "DSIN",
+    "ok": true,
+    "detail": "sin0=0 sin(pi/2)-1=1.00E-049"
+   },
+   {
+    "name": "DCOS",
+    "ok": true,
+    "detail": "cos0-1=1.00E-049"
+   },
+   {
+    "name": "DATAN",
+    "ok": true,
+    "detail": "sin(atan(a)) vs a/sqrt(1+a^2) 相对差 = 4.11E-050"
+   },
+   {
+    "name": "SCI-SIGN",
+    "ok": true,
+    "detail": "sci(-1500)=-1.50E+003  sci(4.2e-7)=4.20E-007"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "id": "A01",
+   "layer": "A",
+   "name": "零模条件 eta(xdot,xdot)=0 <=> |v|^2=c^2 <=> (Rw)^2+u^2=c^2（24 例）",
+   "exp": "残差 0",
+   "act": "0",
+   "kind": "PASS",
+   "note": ""
+  },
+  {
+   "id": "A02",
+   "layer": "A",
+   "name": "零模 + Frenet => 母式 kappa^2+tau^2=(w/c)^2（24 例）",
+   "exp": "残差 0",
+   "act": "0",
+   "kind": "PASS",
+   "note": ""
+  },
+  {
+   "id": "A03",
+   "layer": "A",
+   "name": "逆命题：R=kappa/(kappa^2+tau^2)、u=c^2*tau/w 精确回代（24 例）",
+   "exp": "残差 0",
+   "act": "0",
+   "kind": "PASS",
+   "note": "(kappa,tau)<->(R,u) 一一对应 => 母式是重参数化"
+  },
+  {
+   "id": "A04",
+   "layer": "A",
+   "name": "映射 (kappa,tau)->(omega=c|K|, theta=atan(kappa/tau)) 的雅可比行列式 = -c^2/omega != 0",
+   "exp": "非零（闭式 -c^2/omega = -500/9）",
+   "act": "-500/9",
+   "kind": "PASS",
+   "note": "2->2 维双射：母式不减少自由度数，故它是重参数化不是约束"
+  },
+  {
+   "id": "A05",
+   "layer": "A",
+   "name": "一般系数下 N'(theta) = cos(theta)*[2(a2-a1)sin(theta) + g]，6 相位精确非零",
+   "exp": "全非零",
+   "act": "2840/841",
+   "kind": "PASS",
+   "note": "取 a1=1, a2=3, g=2"
+  },
+  {
+   "id": "A06",
+   "layer": "A",
+   "name": "a1=a2 且 g=0 => N'(theta) 恒等于 0（theta 是零模/平坦方向）",
+   "exp": "6 相位全 0",
+   "act": "0",
+   "kind": "PASS",
+   "note": ""
+  },
+  {
+   "id": "A07",
+   "layer": "A",
+   "name": "a1!=a2 且 g=0 => 内点(0<theta<pi/2)上 N'(theta) != 0（极值只在边界）",
+   "exp": "内点无一为 0",
+   "act": "zeros at interior = 0/6",
+   "kind": "PASS",
+   "note": "零点只有 sin*cos=0 => theta=0（直线）或 theta=pi/2（圆）"
+  },
+  {
+   "id": "A08",
+   "layer": "A",
+   "name": "内点驻点充要：g* = 2(a1-a2)sin(theta*)；反解后代回 N'(theta*) 残差",
+   "exp": "残差 0",
+   "act": "0",
+   "kind": "PASS",
+   "note": "g* = -48/13（取 theta*=arctan(12/5)）"
+  },
+  {
+   "id": "A09",
+   "layer": "A",
+   "name": "四格分类：a1=a2,g=0 全平 | a1=a2,g!=0 只在 theta=±pi/2（圆）| a1!=a2,g=0 只在 0 或 ±pi/2 | 双非零才有内点驻点",
+   "exp": "唯一出内点的一格需两个耦合同时非零",
+   "act": "见 A05-A08",
+   "kind": "INFO",
+   "note": "纯陈述（分类表），数值验证见 A05-A08"
+  },
+  {
+   "id": "A10",
+   "layer": "A",
+   "name": "零模约束下 (kappa,tau) 有 6 个互不相同的解而 kappa^2+tau^2 恒等 => 解集 >= 1 维",
+   "exp": "展布 0",
+   "act": "0",
+   "kind": "PASS",
+   "note": "未知 2、独立方程 1 => dim = 1；theta 就是这 1 维"
+  },
+  {
+   "id": "A11",
+   "layer": "A",
+   "name": "加耦合后：12 组 (尺度, A1:A2 比例) 各自反解 g* 均命中 N'(theta*)=0 => 解不唯一",
+   "exp": "12/12 命中且互不相同",
+   "act": "12/12 distinct",
+   "kind": "PASS",
+   "note": "补一条方程却引入 3 个参数 => 解族维数由 1 升到 3，唯一性变差不是变好"
+  },
+  {
+   "id": "B01",
+   "layer": "B",
+   "name": "a1=a2 时 N(theta) 五档相对展布（应 0）",
+   "exp": "0",
+   "act": "1.290E-048",
+   "kind": "PASS",
+   "note": "平坦方向的直接读数"
+  },
+  {
+   "id": "B02",
+   "layer": "B",
+   "name": "a1!=a2, g=0 时 theta*=arctan(alpha) 处 |N'|/N",
+   "exp": ">> 0",
+   "act": "2.9184748E-002",
+   "kind": "PASS",
+   "note": "内点不是极值"
+  },
+  {
+   "id": "B03",
+   "layer": "B",
+   "name": "反解 g* 后 N'(theta*) 残差（相对 N）",
+   "exp": "0",
+   "act": "0",
+   "kind": "PASS",
+   "note": ""
+  },
+  {
+   "id": "B04",
+   "layer": "B",
+   "name": "负对照：g 扰动 +0.1% 后 N' 必须响应",
+   "exp": "非零",
+   "act": "2.91847E-005",
+   "kind": "PASS",
+   "note": "证明 B03 的零不是检测器恒零"
+  },
+  {
+   "id": "B05",
+   "layer": "B",
+   "name": "g* 与闭式 2(a1-a2)sin(theta*) 对拍（a1:a2=1:3 => -4 sin）",
+   "exp": "-2.91886331204E-002",
+   "act": "-2.91886331204E-002",
+   "kind": "PASS",
+   "note": "无量纲比只由目标 theta 定 => 一参数一目标"
+  },
+  {
+   "id": "B06",
+   "layer": "B",
+   "name": "雅可比 det 数值（中心差 + Richardson）vs 闭式 -c^2/omega",
+   "exp": "-2.09384135110E+010",
+   "act": "-2.09384135110E+010",
+   "kind": "PASS",
+   "note": "未外推读数 4.490E-010：一次 Richardson 把相对偏差再压低 9 个量级"
+  },
+  {
+   "id": "B07",
+   "layer": "B",
+   "name": "能量归一 E=hbar*w 定出的唯一内禀长度 L=c/omega",
+   "exp": "3.86159267724E-013",
+   "act": "= lambda_bar_C",
+   "kind": "INFO",
+   "note": "唯一内禀尺度；无法再生第二个"
+  },
+  {
+   "id": "B08",
+   "layer": "B",
+   "name": "独立路径：二分求 N'(theta)=0 的根后取 sin，与闭式 g*/(2(a1-a2)) 对拍",
+   "exp": "7.29715828011E-003",
+   "act": "7.29715828011E-003",
+   "kind": "PASS",
+   "note": "两路径互不依赖（数值求根 vs 闭式反解）"
+  },
+  {
+   "id": "B09",
+   "layer": "B",
+   "name": "5 个目标 theta 各自反解 g* 后二分回收（最大偏差），g* 严格单调",
+   "exp": "偏差 <= 1e-30 且单调",
+   "act": "6.00000E-049 / mono=True",
+   "kind": "PASS",
+   "note": "theta<->g* 一一对应 => 任何目标 theta 都凑得出 => 对 theta 判别力 0"
+  },
+  {
+   "id": "B10",
+   "layer": "B",
+   "name": "范围判据 |g*| <= 2|a1-a2| 等价于 |sin(theta*)| <= 1，实测占比",
+   "exp": "<= 1",
+   "act": "7.297158280E-003",
+   "kind": "PASS",
+   "note": "以 a1:a2=1:3 计上限 g=4，物理点只用 0.0292 => 上界从不构成限制"
+  },
+  {
+   "id": "G01",
+   "layer": "G",
+   "name": "本源方程唯一 = 零模条件（一条、无自由参数）",
+   "exp": "一条",
+   "act": "A01 残差 0；V26-1、母式、四量闭式全部由它代数推出",
+   "kind": "PASS",
+   "note": "这是本卷唯一的正面结论：唯一性成立"
+  },
+  {
+   "id": "G02",
+   "layer": "G",
+   "name": "母式是动力学方程",
+   "exp": "应能定出唯一的曲线",
+   "act": "母式是 (kappa,tau)<->(omega,theta) 的双射，不含时间导数、无初值问题",
+   "kind": "FAIL",
+   "note": "约束 vs 动力学：约束只缩小解集，不产生演化"
+  },
+  {
+   "id": "G03",
+   "layer": "G",
+   "name": "母式减少自由度（把 2 个自由常数压到 0）",
+   "exp": "2 -> 0",
+   "act": "2 -> 2：一般 null 曲线 2 个自由函数；限定常 kappa,tau 后仍 2 个自由常数",
+   "kind": "FAIL",
+   "note": "A04 雅可比非零 = 双射；A03 逆命题精确闭合"
+  },
+  {
+   "id": "G04",
+   "layer": "G",
+   "name": "alpha 可由本源方程内生",
+   "exp": "应选出唯一 theta",
+   "act": "A1=A2 时 theta 是平坦方向（A06 恒 0）；A1!=A2 时极值只在边界（A07）",
+   "kind": "FAIL",
+   "note": ""
+  },
+  {
+   "id": "G05",
+   "layer": "G",
+   "name": "加手性项 g*tau 后可选出内点 theta 且构成预言",
+   "exp": "应给出不依赖拟合的 theta",
+   "act": "可选出（A08/B09），但 g*=2(a1-a2)sin(theta*) 由目标 theta 反解 => 一参数一目标",
+   "kind": "FAIL",
+   "note": "判别力 0；但本项定位了「缺什么结构」——需同时有各向异性项与手性项"
+  },
+  {
+   "id": "G06",
+   "layer": "G",
+   "name": "本卷给出可证伪的独有预言",
+   "exp": ">=1",
+   "act": "0 条",
+   "kind": "FAIL",
+   "note": ""
+  },
+  {
+   "id": "G07",
+   "layer": "G",
+   "name": "缺口是同一个：框架只有一内禀尺度 L=c/omega",
+   "exp": "四量的密度、alpha 的选择、G1 的定值同缺一个尺度",
+   "act": "B07：唯一内禀长度 = c/omega；无第二个",
+   "kind": "PASS",
+   "note": "结构性结论，与 r383 G03/G04 同源"
+  },
+  {
+   "id": "C01",
+   "layer": "C",
+   "name": "负对照：a1!=a2 时平坦判据必须非零",
+   "exp": "非零",
+   "act": "240/169",
+   "kind": "PASS",
+   "note": ""
+  },
+  {
+   "id": "C02",
+   "layer": "C",
+   "name": "正对照：a1=a2 时同一把尺恰为 0",
+   "exp": "0",
+   "act": "0",
+   "kind": "PASS",
+   "note": ""
+  },
+  {
+   "id": "C03",
+   "layer": "C",
+   "name": "边界对照：a1!=a2、g=0 时 N'(0)=0（极值落到 theta=0 这条边界上）",
+   "exp": "0",
+   "act": "0",
+   "kind": "PASS",
+   "note": "内点无零点，但边界一定有 —— 否则 A07 的「只在边界」无从谈起"
+  },
+  {
+   "id": "C04",
+   "layer": "C",
+   "name": "口径对照：int(.)ds 与 int(.)c dt 同值（c 为常数因子）",
+   "exp": "9/100",
+   "act": "9/100",
+   "kind": "PASS",
+   "note": ""
+  },
+  {
+   "id": "C05",
+   "layer": "C",
+   "name": "量纲：G1 带能量量纲时 G1*tau = 能量/长度（与 A1*k^2 同）",
+   "exp": "(1,1,-2,0,0)",
+   "act": "(1, 1, -2, 0, 0)",
+   "kind": "PASS",
+   "note": ""
+  },
+  {
+   "id": "C06",
+   "layer": "C",
+   "name": "双射负对照：R 写成 k/(k^2+t^2)^2 后回代不闭合",
+   "exp": "!= 1",
+   "act": "200/9",
+   "kind": "PASS",
+   "note": "误写后 R 从 2 变成 200/9"
+  },
+  {
+   "id": "E01",
+   "layer": "E",
+   "name": "首稿把耦合写成 alpha/beta，与精细结构常数 alpha 同名（对象错位）",
+   "exp": "变量名必须写「属于哪个对象」",
+   "act": "改 a1/a2/g",
+   "kind": "INFO",
+   "note": "本库最高频自伤是对象错位；同名不同物在长推导里必翻车"
+  },
+  {
+   "id": "E02",
+   "layer": "E",
+   "name": "首稿把 d(tau)/d(theta) 写成 (w/c)sin(theta)（应为 (w/c)cos(theta)）",
+   "exp": "内点条件应是 sin(theta*) 不是 cos(theta*)",
+   "act": "已改：g*=2(a1-a2)sin(theta*)",
+   "kind": "INFO",
+   "note": "求导对象错位；症状是极值条件差 1/sin 量级（旧读数 -4cos 而非 -4sin，差 137 倍）"
+  },
+  {
+   "id": "E03",
+   "layer": "E",
+   "name": "首稿 B05 的 exp 写成闭式、act 写成同一闭式（同义反复）",
+   "exp": "exp 与 act 必须来自两条独立路径",
+   "act": "已改：act 取二分求根，exp 取闭式反解",
+   "kind": "INFO",
+   "note": "同源回验抓不到同源错误；B08 就是这么补的"
+  },
+  {
+   "id": "E04",
+   "layer": "E",
+   "name": "sci() 首版用 abs(x) 归一后只格式化 ax => 负号被吞（detJ 与 g* 的符号全丢）",
+   "exp": "格式化函数必须保留符号位",
+   "act": "已改：前置 sgn 串",
+   "kind": "INFO",
+   "note": "这类 bug 只在「读数应为负」时暴露；本卷 detJ=-c^2/w、g*=-4sin 都是负量才被抓到"
+  },
+  {
+   "id": "P01",
+   "layer": "P",
+   "name": "五槽满足数（0 => 不占度）",
+   "exp": "0",
+   "act": "0/5",
+   "kind": "PASS",
+   "note": "SURVIVE=0"
+  },
+  {
+   "id": "P02",
+   "layer": "P",
+   "name": "可入池的第一性输出条数",
+   "exp": "0",
+   "act": "0",
+   "kind": "INFO",
+   "note": "产出类型全为结构性否证/定位"
+  }
+ ],
+ "key_numbers": {
+  "omega_C_rad_s": "7.76344071105E+020",
+  "theta_star_rad": "7.29722304214E-003",
+  "g_star_over_hbarw": "-2.91886331204E-002",
+  "dNdtheta_rel": "0",
+  "pert_0p1pct_rel": "2.91847E-005",
+  "jacobian_rel": "5.829E-019",
+  "L_natural_m": "3.86159267724E-013"
+ }
+}

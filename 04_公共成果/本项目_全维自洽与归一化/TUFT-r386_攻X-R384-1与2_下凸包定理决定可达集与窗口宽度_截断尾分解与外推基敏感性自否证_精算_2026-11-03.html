@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r386_攻X-R384-1与2_下凸包定理决定可达集与窗口宽度_截断尾分解与外推基敏感性自否证_精算_2026-11-03</title>
+<style>
+  body{background:#f7f8fa;color:#2b3446;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;margin:0;padding:28px 20px 60px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{font-size:20px;line-height:1.5;margin:0 0 6px;font-weight:700;}
+  .sub{font-size:13px;color:#6b7688;line-height:1.7;margin:0 0 18px;}
+  .kpis{display:flex;gap:10px;margin:0 0 22px;}
+  .kpi{flex:1;background:#ffffff;border:1px solid #e2e8f2;border-radius:10px;padding:10px 12px;}
+  .kpi b{display:block;font-size:19px;font-weight:700;}
+  .kpi span{font-size:12px;color:#7a8598;}
+  .card{background:#ffffff;border:1px solid #e2e8f2;border-radius:12px;padding:14px 14px 10px;margin:0 0 18px;}
+  .card h3{font-size:14px;margin:0 0 8px;font-weight:700;color:#243043;}
+  svg{display:block;width:100%;height:auto;}
+  .cap{font-size:12px;color:#6b7688;line-height:1.7;margin:8px 2px 2px;}
+  .verdict{background:#ffffff;border:1px solid #e2e8f2;border-left:4px solid #d94a4a;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.8;}
+  code{background:#eef2f8;padding:1px 5px;border-radius:4px;font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TUFT-r386_攻X-R384-1与2_下凸包定理决定可达集与窗口宽度_截断尾分解与外推基敏感性自否证_精算_2026-11-03</h1>
+<p class="sub">承接 <code>TUFT-r384</code> 判定册 §十四 的两条 OPEN。本卷给出 <b>X-R384-1</b> 的正解（下凸包定理），
+对 <b>X-R384-2</b> 给出分解与一条<b>自否证的负面结论</b>。图 1–2 讲「哪些 N 真的能被选到」，图 3–4 讲「长距残余到底收敛不收敛」。</p>
+
+<div class="kpis">
+  <div class="kpi"><b>21</b><span>PASS</span></div>
+  <div class="kpi"><b>4</b><span>INFO（含定义级重言式）</span></div>
+  <div class="kpi"><b>1</b><span>FAIL（已登记的真判负）</span></div>
+  <div class="kpi"><b>通过（含 1 条负）</b><span>总判</span></div>
+</div>
+
+<div class="card"><h3>图 1　下凸包决定「哪些 n 能被选到」</h3>
+<svg id="fig1" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">蓝折线 = (n, E₀(n)) 的<b>下凸包</b>，其顶点恰是能被某个 b 选中的 n。橙虚线是 4→9 的弦：
+在这条弦上的点（5,6,7,8）虽然 E₀ 更低，但被弦「压住」⇒ 无论 b 取什么值都选不到。
+这就是 r384 的 <code>Δ²E(k)</code> 判据看不见的那一层。</p></div>
+
+<div class="card"><h3>图 2　真窗口宽度 vs 二阶差分通式</h3>
+<svg id="fig2" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">蓝柱是按凸包算出的真宽度 <code>W(k)</code>；橙虚线是 r384 的 <code>2a+Δ²φ(k)</code>。
+两者只在「k±1 都是顶点」时相等（k=2,3,22）。k=4 处通式给 0.801 而真宽 0.212（高估 3.8 倍）；
+k=8,11,14,17 处通式给<b>正数</b>而窗口<b>为空</b>——这就是「<code>Δ²>0</code> 只是必要条件」的四个反例。</p></div>
+
+<div class="card"><h3>图 3　残余分解：几何尾吃掉 99.84%</h3>
+<svg id="fig3" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">把 <code>S(M)·r − 2π</code> 拆成「连续积分的几何尾」与「格点离散项」。蓝线与橙线几乎重合 ⇒
+残余几乎全部来自「方形截断 vs 圆盘尾」的几何差异；剩下的绿线按 <code>1/M²</code> 衰减
+（比值 2.170→3.250→3.774→3.939→4）。<b>注意</b>：这条分解式本身是定义级恒等式，零信息，故记 INFO 不记 PASS。</p></div>
+
+<div class="card"><h3>图 4　三种幂次基给出三个不同的「极限」</h3>
+<svg id="fig4" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">同一组 R_M 数据，换三种外推基 ⇒ c0 相差 3.5e-01，比数据本身还大。
+这正是本卷<b>自否证</b>的那一条：原以为「尾只含奇次幂 ⇒ r384 的变号是模型错」，实测二次项
+<code>|c2|/|c1| = 3.79</code> 并不小 ⇒ 本组 M 定不出 M→∞ 的残余，<b>r384 的降级不能撤回</b>。</p></div>
+
+<div class="verdict"><b>判词</b>　<code>X384-1-HULL-THEOREM--X384-2-EXTRAP-NOT-CONVERGED--R384-DEMOTION-STANDS--TAIL-EXPLAINS-99.8PCT--NEAREST-NEIGHBOUR-INSUFFICIENT--SUPPLY-ZERO</code><br>
+<b>一句话</b>　X-R384-1 已闭合（可达集 = 下凸包顶点集，窗口宽度 = 相邻支撑斜率差）；
+X-R384-2 维持 <code>TRUNCATION-DOMINANT</code>，并新增一条负面信息「高阶项在现有 M 上定不出」。
+本卷不产生新物理：供给 0、不占度、独有预言 0，条目不可与任何其他卷相加。</div>
+</div>
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var fig=document.getElementById("fig1");
+  function el(tag,at){var e=document.createElementNS(NS,tag);for(var q in at){e.setAttribute(q,at[q]);}fig.appendChild(e);return e;}
+  function tx(x,y,s,at){var A=at||{};A.x=x;A.y=y;var t=el("text",A);t.textContent=s;return t;}
+  var X0=74,X1=642,Y0=52,Y1=300,NMIN=1,NMAX=16,YMIN=-2,YMAX=26;
+  function px(n){return X0+(n-NMIN)/(NMAX-NMIN)*(X1-X0);}
+  function py(v){return Y1-(v-YMIN)/(YMAX-YMIN)*(Y1-Y0);}
+  el("rect",{x:0,y:0,width:680,height:360,fill:"#f7f8fa"});
+  el("rect",{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:"#ffffff",stroke:"#dde3ec"});
+  for(var g=0;g<=4;g++){
+    var gv=YMIN+(YMAX-YMIN)*g/4, gy=py(gv);
+    el("line",{x1:X0,y1:gy,x2:X1,y2:gy,stroke:"#eef1f6"});
+    tx(X0-10,gy+4,String(Math.round(gv)),{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+  }
+  tx(X0-46,Y0-22,"E₀(n) = 0.1n² + cos n",{"font-size":"12","fill":"#4a5468","text-anchor":"start"});
+  var HV=[2, 3, 4, 9, 10, 15, 16, 21, 22, 23], UN=[5, 6, 7, 8, 11, 12, 13, 14, 17, 18, 19, 20, 24];
+  var i,j;
+  // 非顶点：空心方块（够不着）
+  for(i=0;i<UN.length;i++){ if(UN[i]>NMAX) continue;
+    el("rect",{x:px(UN[i])-4,y:py(E0P(UN[i]))-4,width:8,height:8,fill:"none",stroke:"#d94a4a","stroke-width":"1.4"});
+  }
+  function E0P(n){return {1:0.640302,2:-0.016147,3:-0.089992,4:0.946356,5:2.783662,6:4.560170,7:5.653902,8:6.254500,9:7.188870,10:9.160928,11:12.104426,12:15.243854,13:17.807447,14:19.736737,15:21.740312,16:24.642341,17:28.624837,18:33.060317,19:37.088705,20:40.408082,21:43.552271,22:47.400039,23:52.367167,24:58.024179,25:63.491203,26:68.246919,27:72.607861,28:77.437394,29:83.351942,30:90.154251,31:97.014742,32:103.234223,33:108.886723,34:114.751430,35:121.596308,36:129.472036,37:137.665414,38:145.355074,39:152.366643,40:159.333062}[n];}
+  // 全部点
+  for(i=NMIN;i<=NMAX;i++){
+    el("circle",{cx:px(i),cy:py(E0P(i)),r:2.6,fill:"#95a0b4"});
+    tx(px(i),Y1+16,String(i),{"font-size":"10","fill":"#8a93a3","text-anchor":"middle"});
+  }
+  // 下凸包折线
+  var d="";
+  for(j=0;j<HV.length;j++){
+    if(HV[j]>NMAX) continue;
+    d+=(d===""?"M":"L")+px(HV[j]).toFixed(2)+" "+py(E0P(HV[j])).toFixed(2)+" ";
+  }
+  el("path",{d:d,fill:"none",stroke:"#2f6fd0","stroke-width":"2.2"});
+  for(j=0;j<HV.length;j++){
+    if(HV[j]>NMAX) continue;
+    el("circle",{cx:px(HV[j]),cy:py(E0P(HV[j])),r:4.4,fill:"#2f6fd0"});
+  }
+  // 4→9 的弦（5,6,7,8 全在弦上方 ⇒ 不是顶点）
+  el("line",{x1:px(4),y1:py(E0P(4)),x2:px(9),y2:py(E0P(9)),
+             "stroke-width":"1.5",stroke:"#e08a2c","stroke-dasharray":"5 4"});
+  tx(X1-6,py(13.4),"弦 4→9：5,6,7,8 全在弦上方 ⇒ 非顶点",
+     {"font-size":"11","fill":"#c07a20","text-anchor":"end"});
+  tx(X1,Y1+34,"n（凸包顶点 10 个：2,3,4,9,10,15,16,21,22,23；红框 = 非顶点）",
+     {"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+})();
+</script>
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var fig=document.getElementById("fig2");
+  function el(tag,at){var e=document.createElementNS(NS,tag);for(var q in at){e.setAttribute(q,at[q]);}fig.appendChild(e);return e;}
+  function tx(x,y,s,at){var A=at||{};A.x=x;A.y=y;var t=el("text",A);t.textContent=s;return t;}
+  var X0=74,X1=650,Y0=54,Y1=286,YMAX=1.45;
+  var KS=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], WID=[0.5826034823619791, 1.1101945357901364, 0.21215379605895351, null, null, null, null, 0.7235560610124375, 0.5438179904353018, null, null, null, null, 0.38615170929191045, 0.8799576114843866, null, null, null, null, 0.065782389809808, 1.1193593722316084, 0.04691762474272658, null], LAP=[0.582603, 1.110195, 0.800957, -0.060798, -0.682776, -0.493134, 0.333772, 1.037689, 0.971438, 0.195931, -0.575835, -0.634302, 0.074284, 0.898454, 1.080468, 0.452984, -0.407092, -0.70901, -0.175189, 0.70358, 1.119359, 0.689884, -0.189988];
+  var n=KS.length;
+  function px(i){return X0+(i+0.5)/n*(X1-X0);}
+  function py(v){return Y1-(v/YMAX)*(Y1-Y0);}
+  el("rect",{x:0,y:0,width:680,height:360,fill:"#f7f8fa"});
+  el("rect",{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:"#ffffff",stroke:"#dde3ec"});
+  for(var g=0;g<=4;g++){
+    var gv=YMAX*g/4, gy=py(gv);
+    el("line",{x1:X0,y1:gy,x2:X1,y2:gy,stroke:"#eef1f6"});
+    tx(X0-10,gy+4,gv.toFixed(2),{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+  }
+  el("line",{x1:X0,y1:py(0),x2:X1,y2:py(0),stroke:"#b9c2d2","stroke-width":"1.2"});
+  var i,w,top;
+  for(i=0;i<n;i++){
+    w=WID[i];
+    if(w!==null && w>0){
+      top=py(w);
+      el("rect",{x:px(i)-7,y:top,width:14,height:py(0)-top,fill:"#2f6fd0",opacity:"0.82"});
+    } else {
+      el("line",{x1:px(i)-6,y1:py(0)-7,x2:px(i)+6,y2:py(0)+7,stroke:"#d94a4a","stroke-width":"2"});
+      el("line",{x1:px(i)+6,y1:py(0)-7,x2:px(i)-6,y2:py(0)+7,stroke:"#d94a4a","stroke-width":"2"});
+    }
+    tx(px(i),Y1+16,String(KS[i]),{"font-size":"10","fill":"#8a93a3","text-anchor":"middle"});
+  }
+  var d="";
+  for(i=0;i<n;i++){
+    d+=(i===0?"M":"L")+px(i).toFixed(2)+" "+py(Math.max(LAP[i],0)).toFixed(2)+" ";
+  }
+  el("path",{d:d,fill:"none",stroke:"#e08a2c","stroke-width":"2","stroke-dasharray":"6 4"});
+  var MIS=[8, 11, 14, 17];
+  for(i=0;i<MIS.length;i++){
+    var kk=MIS[i], ii=KS.indexOf(kk);
+    el("circle",{cx:px(ii),cy:py(Math.max(LAP[ii],0)),r:5.2,fill:"none",stroke:"#d94a4a","stroke-width":"2.2"});
+    tx(px(ii),py(Math.max(LAP[ii],0))-12,"Δ²>0",{"font-size":"10","fill":"#d94a4a","text-anchor":"middle"});
+  }
+  tx(X0,Y0-24,"蓝柱 = 真窗口宽度 W(k)　橙虚线 = 2a+Δ²φ(k)　红叉 = 窗口为空（不可达）",
+     {"font-size":"12","fill":"#4a5468"});
+  tx(X1,Y1+34,"k（a=0.1，φ=cos n；23 个 k 里只有 10 个可达）",
+     {"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+})();
+</script>
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var fig=document.getElementById("fig3");
+  function el(tag,at){var e=document.createElementNS(NS,tag);for(var q in at){e.setAttribute(q,at[q]);}fig.appendChild(e);return e;}
+  function tx(x,y,s,at){var A=at||{};A.x=x;A.y=y;var t=el("text",A);t.textContent=s;return t;}
+  var X0=78,X1=640,Y0=56,Y1=288;
+  var MS=[20, 40, 80, 160, 320], RR=[-4.1312235052, -2.5474733441, -1.37064012, -0.7003856911, -0.3524301487], TL=[-4.1887902048, -2.5740044352, -1.3788047192, -0.7025490903, -0.3529793913], RS=[0.05757, 0.02653, 0.008165, 0.002163, 0.0005492];
+  var n=MS.length;
+  function px(i){return X0+i/(n-1)*(X1-X0);}
+  function py(v){  // |v| 的 log10 映射：1e-4 .. 1e1
+    var L=Math.log(Math.abs(v))/Math.LN10;
+    return Y1-(L+4)/5*(Y1-Y0);
+  }
+  el("rect",{x:0,y:0,width:680,height:360,fill:"#f7f8fa"});
+  el("rect",{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:"#ffffff",stroke:"#dde3ec"});
+  for(var g=0;g<=5;g++){
+    var e10=-4+g, gy=py(Math.pow(10,e10));
+    el("line",{x1:X0,y1:gy,x2:X1,y2:gy,stroke:"#eef1f6"});
+    tx(X0-10,gy+4,"1e"+e10,{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+  }
+  var i,dd;
+  function pl(dt,color,dash){
+    var s="";
+    for(var q=0;q<n;q++){ s+=(q===0?"M":"L")+px(q).toFixed(2)+" "+py(dt[q]).toFixed(2)+" "; }
+    el("path",{d:s,fill:"none",stroke:color,"stroke-width":"2.2","stroke-dasharray":dash});
+  }
+  pl(RR,"#2f6fd0","none");
+  pl(TL,"#e08a2c","6 4");
+  pl(RS,"#2f9e5e","none");
+  for(i=0;i<n;i++){
+    el("circle",{cx:px(i),cy:py(RR[i]),r:3.6,fill:"#2f6fd0"});
+    el("circle",{cx:px(i),cy:py(RS[i]),r:3.6,fill:"#2f9e5e"});
+    tx(px(i),Y1+16,String(MS[i]),{"font-size":"11","fill":"#8a93a3","text-anchor":"middle"});
+  }
+  tx(X0,Y0-26,"|R_M| 与 |−r·Tail_box| 几乎重合（99.84% 被尾解释）⇒ 残差 |r·D_M| 低两个量级",
+     {"font-size":"12","fill":"#4a5468"});
+  // 图例放底部空白带（y≈280），避开左侧数据点
+  el("rect",{x:X0+20,y:276,width:14,height:3,fill:"#2f6fd0"});
+  tx(X0+40,280,"R_M（2D 求和实测）",{"font-size":"11","fill":"#4a5468"});
+  el("rect",{x:X0+190,y:276,width:14,height:3,fill:"#e08a2c"});
+  tx(X0+210,280,"−r·Tail_box（1D 解析尾）",{"font-size":"11","fill":"#4a5468"});
+  el("rect",{x:X0+390,y:276,width:14,height:3,fill:"#2f9e5e"});
+  tx(X0+410,280,"r·D_M（按 1/M² 衰减）",{"font-size":"11","fill":"#4a5468"});
+  tx(X1,Y1+34,"M（纵轴为对数）",{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+})();
+</script>
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var fig=document.getElementById("fig4");
+  function el(tag,at){var e=document.createElementNS(NS,tag);for(var q in at){e.setAttribute(q,at[q]);}fig.appendChild(e);return e;}
+  function tx(x,y,s,at){var A=at||{};A.x=x;A.y=y;var t=el("text",A);t.textContent=s;return t;}
+  var X0=150,X1=628,Y0=70,Y1=250;
+  var C0=[-0.35243015, -0.00447461, -0.30272221], TAG=["\u4ec5 1/M", "1/M + 1/M\u00b2", "1/M + 1/M\u00b3"], SPREAD=0.34795554;
+  function px(v){return X0+(v+0.45)/0.52*(X1-X0);}
+  function py(i){return Y0+26+i*44;}
+  el("rect",{x:0,y:0,width:680,height:360,fill:"#f7f8fa"});
+  el("rect",{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:"#ffffff",stroke:"#dde3ec"});
+  el("line",{x1:px(0),y1:Y0,x2:px(0),y2:Y1,stroke:"#c9d2e0","stroke-width":"1.6","stroke-dasharray":"5 4"});
+  tx(px(0),Y0-8,"c0 = 0",{"font-size":"11","fill":"#8a93a3","text-anchor":"middle"});
+  var i;
+  for(i=0;i<C0.length;i++){
+    var y=py(i);
+    el("line",{x1:X0,y1:y,x2:X1,y2:y,stroke:"#eef1f6"});
+    el("circle",{cx:px(C0[i]),cy:y,r:6,fill: i===1 ? "#d94a4a" : "#2f6fd0"});
+    tx(X0-12,y+4,TAG[i],{"font-size":"12","fill":"#4a5468","text-anchor":"end"});
+    tx(px(C0[i])+(C0[i]<0?8:-8),y-11,C0[i].toExponential(3),
+       {"font-size":"11","fill":"#4a5468","text-anchor":C0[i]<0?"start":"end"});
+  }
+  var lo=Math.min.apply(null,C0), hi=Math.max.apply(null,C0);
+  el("rect",{x:px(lo),y:Y0+4,width:Math.max(px(hi)-px(lo),1),height:Y1-Y0-8,
+             fill:"#d94a4a",opacity:"0.07"});
+  tx((px(lo)+px(hi))/2,Y1+30,"三者散布 "+SPREAD.toExponential(2)+"（判据 1e-3）⇒ 外推未收敛",
+     {"font-size":"12","fill":"#d94a4a","text-anchor":"middle"});
+  tx(X0,Y0-26,"同一组 R_M 数据、三种幂次基 ⇒ 三个互不相同的极限",
+     {"font-size":"12","fill":"#4a5468"});
+})();
+</script>
+</body>
+</html>

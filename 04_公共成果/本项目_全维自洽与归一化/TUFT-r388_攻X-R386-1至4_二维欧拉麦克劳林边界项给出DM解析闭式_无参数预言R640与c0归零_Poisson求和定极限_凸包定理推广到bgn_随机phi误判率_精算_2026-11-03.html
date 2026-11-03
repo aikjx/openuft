@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r388_攻X-R386-1至4_二维欧拉麦克劳林边界项给出DM解析闭式_无参数预言R640与c0归零_Poisson求和定极限_凸包定理推广到bgn_随机phi误判率_精算_2026-11-03</title>
+<style>
+  body{background:#f7f8fa;color:#2b3446;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;margin:0;padding:28px 20px 60px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{font-size:19px;line-height:1.5;margin:0 0 6px;font-weight:700;}
+  .sub{font-size:13px;color:#6b7688;line-height:1.75;margin:0 0 18px;}
+  .kpis{display:flex;gap:10px;margin:0 0 22px;}
+  .kpi{flex:1;background:#ffffff;border:1px solid #e2e8f2;border-radius:10px;padding:10px 12px;}
+  .kpi b{display:block;font-size:19px;font-weight:700;}
+  .kpi span{font-size:12px;color:#7a8598;}
+  .card{background:#ffffff;border:1px solid #e2e8f2;border-radius:12px;padding:14px 14px 10px;margin:0 0 18px;}
+  .card h3{font-size:14px;margin:0 0 8px;font-weight:700;color:#243043;}
+  svg{display:block;width:100%;height:auto;}
+  .cap{font-size:12px;color:#6b7688;line-height:1.75;margin:8px 2px 2px;}
+  .verdict{background:#ffffff;border:1px solid #e2e8f2;border-left:4px solid #2f9d5e;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.85;}
+  code{background:#eef2f8;padding:1px 5px;border-radius:4px;font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TUFT-r388_攻X-R386-1至4_二维欧拉麦克劳林边界项给出DM解析闭式_无参数预言R640与c0归零_Poisson求和定极限_凸包定理推广到bgn_随机phi误判率_精算_2026-11-03</h1>
+<p class="sub">承接 <code>TUFT-r386</code> 判定册 §七 的四条 OPEN。本卷把「数值上定不出」的两件事（<code>D_M</code> 的系数、
+外推极限 <code>c0</code>）**改成解析可算**，并把凸包定理推广到一般 <code>b·g(n)</code>、把判别力从 3 个配置扩到 5520 组。</p>
+
+<div class="kpis">
+  <div class="kpi"><b>28</b><span>PASS</span></div>
+  <div class="kpi"><b>3</b><span>INFO</span></div>
+  <div class="kpi"><b>0</b><span>FAIL</span></div>
+  <div class="kpi"><b>全绿</b><span>总判</span></div>
+</div>
+
+<div class="card"><h3>图 1　D_M 的三项分解：橙与绿相互抵消</h3>
+<svg id="fig1" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">二维 Euler–Maclaurin 给 <code>D_M = 2Σ' + 3f(角) + (1/12)∮∂_n f + O(M⁻⁵)</code>。
+三项都画出来了：主项 <code>2Σ'</code> 是灰虚线，角项（橙）与 <code>∂_n</code> 项（绿）**大小相近、符号相反**。
+后果是反直觉的——<b>只补一项比一项都不补更差</b>（M=320：仅主项 1.2e-04，半套 1.2e-03，全套 3.2e-09）。</p></div>
+
+<div class="card"><h3>图 2　无参数预言：红圈压在蓝线上</h3>
+<svg id="fig2" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">用闭式<strong>直接算</strong> <code>R_M</code>，不给任何拟合自由度。M=640 处绝对差 <code>5.5e-14</code>，
+而且这个差**恰好等于**截断项 <code>|D_M − D_M^EM|</code> 乘 <code>8r</code> 给出的上界 ⇒ 误差不是巧合，是可预报的。
+作为对照，r386 的三点回归 hold-out 相对误差是 <code>2.55e-02</code>。</p></div>
+
+<div class="card"><h3>图 3　凸包定理推广：换 g 就换可达集</h3>
+<svg id="fig3" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">同一条 <code>E(n)=0.1n²+cos n</code>，把 <code>b·n</code> 换成 <code>b·g(n)</code>：可达集从 10 个
+（<code>g=n</code>）掉到 3 个（<code>g=n²</code>）。定理只需一行证明——<code>min_n[E₀+ b·g(n)]</code> 是把点
+<code>(g(n), E₀(n))</code> 与方向 <code>(b,1)</code> 作内积取最小 ⇒ 必在下凸包顶点上。
+<b>灰叉 = 不可达</b>。<code>g</code> 非单增时定理失效（本卷用 <code>n+2sin n</code> 做了负对照）。</p></div>
+
+<div class="card"><h3>图 4　判别力：Δ² 判据的误判率随幅度上升</h3>
+<svg id="fig4" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">5520 组随机 <code>φ</code> 上统计「<code>Δ²>0</code> 却窗口为空」的比例：幅度 0.04–0.10 时 <b>0%</b>，
+0.55–0.85 时 <b>14.1%</b>。方向是单一的——漏判 <b>0</b> 次，只会「以为能选到」。
+同一批族上凸包判据误判 <b>0</b> 次。</p></div>
+
+<div class="verdict"><b>判词</b>　<code>X386-1-EM-CLOSED-FORM--X386-2-C0-EXACTLY-ZERO--X386-3-HULL-GENERALIZED--X386-4-FP-RATE-0.05--PREDICT-640-ABS-6e-14--THREE-TERMS-NECESSARY--ONE-SIDED-CONSERVATIVE--SUPPLY-ZERO</code><br>
+<b>一句话</b>　四条 OPEN 全闭：<code>D_M</code> 有闭式（M=320 准到 3.2e-09）；<code>c0</code> 不是「定不出」而是
+<b>精确为 0</b>（Poisson 求和非零模 ~1e-54）；凸包定理推广到单增 <code>g</code>；Δ² 判据的误判率被量化成一条随幅度上升的曲线。
+本卷不产生新物理：供给 0、不占度、独有预言 0。</div>
+</div>
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var fig=document.getElementById("fig1");
+  function el(tag,at){var e=document.createElementNS(NS,tag);for(var q in at){e.setAttribute(q,at[q]);}fig.appendChild(e);return e;}
+  function tx(x,y,s,at){var A=at||{};A.x=x;A.y=y;var t=el("text",A);t.textContent=s;return t;}
+  var X0=92,X1=616,Y0=58,Y1=272;
+  var DM=[0.002878334980128, 0.001326554555552, 0.000408229959171, 0.0001081699565361, 2.746212910787e-05], SP=[0.002838237867, 0.001324022634, 0.000408271718, 0.000108192294, 2.746552e-05], CO=[7.2168784e-05, 1.3888889e-05, 1.978155e-06, 2.55945e-07, 3.2274e-08], DN=[-3.2075015e-05, -1.1358025e-05, -2.019985e-06, -2.78285e-07, -3.5665e-08], MS=[20, 40, 80, 160, 320];
+  var n=MS.length;
+  function px(i){return X0+i/(n-1)*(X1-X0);}
+  function py(v){  // log10 纵轴：1e-6 .. 1e-2
+    var L=Math.log(Math.abs(v))/Math.LN10;
+    return Y1-(L+6)/4*(Y1-Y0);
+  }
+  el("rect",{x:0,y:0,width:680,height:360,fill:"#f7f8fa"});
+  el("rect",{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:"#ffffff",stroke:"#dde3ec"});
+  var g,e10,gy;
+  for(g=0;g<=4;g++){
+    e10=-6+g; gy=py(Math.pow(10,e10));
+    el("line",{x1:X0,y1:gy,x2:X1,y2:gy,stroke:"#eef1f6"});
+    tx(X0-10,gy+4,"1e"+e10,{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+  }
+  var i;
+  function line(dt,color,dash){
+    var s="";
+    for(var q=0;q<n;q++){ s+=(q===0?"M":"L")+px(q).toFixed(2)+" "+py(dt[q]).toFixed(2)+" "; }
+    el("path",{d:s,fill:"none",stroke:color,"stroke-width":"2.2","stroke-dasharray":dash});
+  }
+  line(DM,"#2f6fd0","none");       // 实测
+  line(SP,"#8a93a3","5 4");        // 仅主项
+  line(CO,"#e08a2c","5 4");        // 角项（正）
+  var DS=[]; for(i=0;i<n;i++){ DS.push(Math.abs(DN[i])); }
+  line(DS,"#2f9e5e","5 4");        // |∂_n 项|（负）
+  for(i=0;i<n;i++){
+    el("circle",{cx:px(i),cy:py(DM[i]),r:4,fill:"#2f6fd0"});
+    tx(px(i),Y1+16,String(MS[i]),{"font-size":"11","fill":"#8a93a3","text-anchor":"middle"});
+  }
+  tx(X0,Y0-26,"实测 D_M 与三项分解（纵轴 log）；橙与绿大小相近、符号相反 ⇒ 半套公式更差",
+     {"font-size":"12","fill":"#4a5468"});
+  el("rect",{x:X0+16,y:276,width:14,height:3,fill:"#2f6fd0"});
+  tx(X0+36,280,"D_M 实测",{"font-size":"11","fill":"#4a5468"});
+  el("rect",{x:X0+140,y:276,width:14,height:3,fill:"#8a93a3"});
+  tx(X0+160,280,"2Σ'（主项）",{"font-size":"11","fill":"#4a5468"});
+  el("rect",{x:X0+290,y:276,width:14,height:3,fill:"#e08a2c"});
+  tx(X0+310,280,"角项 3f(M,M)",{"font-size":"11","fill":"#4a5468"});
+  el("rect",{x:X0+450,y:276,width:14,height:3,fill:"#2f9e5e"});
+  tx(X0+470,280,"|∂_n 项|",{"font-size":"11","fill":"#4a5468"});
+  tx(X1,Y1+34,"M（对数刻度）",{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+})();
+</script>
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var fig=document.getElementById("fig2");
+  function el(tag,at){var e=document.createElementNS(NS,tag);for(var q in at){e.setAttribute(q,at[q]);}fig.appendChild(e);return e;}
+  function tx(x,y,s,at){var A=at||{};A.x=x;A.y=y;var t=el("text",A);t.textContent=s;return t;}
+  var X0=96,X1=636,Y0=64,Y1=262;
+  var MS=[20, 40, 80, 160, 320], RR=[-4.1312235052, -2.5474733441, -1.37064012, -0.7003856911, -0.3524301487], PR=[-4.1312235052, -2.5474733441, -1.37064012, -0.7003856911, -0.3524301487];
+  var n=MS.length;
+  function px(i){return X0+i/(n-1)*(X1-X0);}
+  function py(v){  // |R_M| 的 log10：1e-3 .. 1e1（预言与实测几乎重合）
+    var L=Math.log(Math.abs(v))/Math.LN10;
+    return Y1-(L+3)/4*(Y1-Y0);
+  }
+  el("rect",{x:0,y:0,width:680,height:360,fill:"#f7f8fa"});
+  el("rect",{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:"#ffffff",stroke:"#dde3ec"});
+  var g,e10,gy;
+  for(g=0;g<=4;g++){
+    e10=-3+g; gy=py(Math.pow(10,e10));
+    el("line",{x1:X0,y1:gy,x2:X1,y2:gy,stroke:"#eef1f6"});
+    tx(X0-10,gy+4,"1e"+e10,{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+  }
+  var i,s;
+  s=""; for(i=0;i<n;i++){ s+=(i===0?"M":"L")+px(i).toFixed(2)+" "+py(RR[i]).toFixed(2)+" "; }
+  el("path",{d:s,fill:"none",stroke:"#2f6fd0","stroke-width":"3.2"});
+  for(i=0;i<n;i++){
+    el("circle",{cx:px(i),cy:py(RR[i]),r:5.4,fill:"none",stroke:"#d94a4a","stroke-width":"1.8"});
+    tx(px(i),Y1+16,String(MS[i]),{"font-size":"11","fill":"#8a93a3","text-anchor":"middle"});
+  }
+  tx(X0,Y0-28,"蓝线 = R_M 实测；红圈 = **无参数**闭式预言（不给任何拟合自由度）",
+     {"font-size":"12","fill":"#4a5468"});
+  tx(X0+8,Y0+22,"两者在图上完全重合：M=640 处绝对差 5.5e-14",
+     {"font-size":"11","fill":"#2f9d5e"});
+  tx(X0+8,Y0+40,"对照：r386 的三点回归 hold-out 相对误差 2.55e-02",
+     {"font-size":"11","fill":"#d94a4a"});
+  tx(X1,Y1+34,"M（对数刻度）",{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+})();
+</script>
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var fig=document.getElementById("fig3");
+  function el(tag,at){var e=document.createElementNS(NS,tag);for(var q in at){e.setAttribute(q,at[q]);}fig.appendChild(e);return e;}
+  function tx(x,y,s,at){var A=at||{};A.x=x;A.y=y;var t=el("text",A);t.textContent=s;return t;}
+  var X0=110,X1=650,Y0=70,Y1=250;
+  var HS=[[2, 3, 4, 9, 10, 15, 16, 21, 22, 23], [2, 3, 22], [2, 3, 4, 9, 10, 15, 16, 17, 21, 22, 23], [2, 3, 4, 9, 10, 15, 16, 17, 21, 22, 23]], TAG=["g(n) = n", "g(n) = n\u00b2", "g(n) = \u221an", "g(n) = ln(n+1)"];
+  var NMAX=24, NMIN=2;
+  function px(n){return X0+(n-NMIN)/(NMAX-NMIN)*(X1-X0);}
+  function py(i){return Y0+22+i*38;}
+  el("rect",{x:0,y:0,width:680,height:360,fill:"#f7f8fa"});
+  el("rect",{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:"#ffffff",stroke:"#dde3ec"});
+  var i,k,y;
+  for(k=NMIN;k<=NMAX;k++){
+    el("line",{x1:px(k),y1:Y0,x2:px(k),y2:Y1,stroke:"#f2f5fa"});
+    if(k%2===0){ tx(px(k),Y1+14,String(k),{"font-size":"10","fill":"#a3abb9","text-anchor":"middle"}); }
+  }
+  for(i=0;i<HS.length;i++){
+    y=py(i);
+    el("line",{x1:X0,y1:y,x2:X1,y2:y,stroke:"#eef1f6"});
+    tx(X0-10,y+4,TAG[i],{"font-size":"12","fill":"#4a5468","text-anchor":"end"});
+    var setv={};
+    for(k=0;k<HS[i].length;k++){ setv[HS[i][k]]=1; }
+    var cnt=0;
+    for(k=NMIN;k<=NMAX;k++){
+      if(setv[k]){ el("circle",{cx:px(k),cy:y,r:5,fill:"#2f6fd0"}); cnt++; }
+      else { el("line",{x1:px(k)-3,y1:y-3,x2:px(k)+3,y2:y+3,stroke:"#dfe4ee","stroke-width":"1.2"});
+             el("line",{x1:px(k)+3,y1:y-3,x2:px(k)-3,y2:y+3,stroke:"#dfe4ee","stroke-width":"1.2"}); }
+    }
+    tx(X1-4,y-9,"可达 "+cnt+" 个",{"font-size":"11","fill":"#2f6fd0","text-anchor":"end"});
+  }
+  tx(X0,Y0-24,"同一条 E(n)=0.1n²+cos n，换 b·g(n) 里的 g 就换一套可达集（蓝点 = 可达）",
+     {"font-size":"12","fill":"#4a5468"});
+  tx(X1,Y1+30,"n（2 … 24）",{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+})();
+</script>
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var fig=document.getElementById("fig4");
+  function el(tag,at){var e=document.createElementNS(NS,tag);for(var q in at){e.setAttribute(q,at[q]);}fig.appendChild(e);return e;}
+  function tx(x,y,s,at){var A=at||{};A.x=x;A.y=y;var t=el("text",A);t.textContent=s;return t;}
+  var X0=92,X1=620,Y0=62,Y1=268;
+  var RT=[0.0, 0.0181, 0.0522, 0.1228, 0.1406], LB=["0.04-0.10", "0.10-0.20", "0.20-0.35", "0.35-0.55", "0.55-0.85"];
+  var n=RT.length;
+  function px(i){return X0+(i+0.5)/n*(X1-X0);}
+  function py(v){return Y1-(v/0.20)*(Y1-Y0); }
+  var BW=(X1-X0)/n*0.56;
+  el("rect",{x:0,y:0,width:680,height:360,fill:"#f7f8fa"});
+  el("rect",{x:X0,y:Y0,width:X1-X0,height:Y1-Y0,fill:"#ffffff",stroke:"#dde3ec"});
+  var g,gy,gv;
+  for(g=0;g<=4;g++){
+    gv=0.20*g/4; gy=py(gv);
+    el("line",{x1:X0,y1:gy,x2:X1,y2:gy,stroke:"#eef1f6"});
+    tx(X0-10,gy+4,gv.toFixed(2),{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+  }
+  el("line",{x1:X0,y1:py(0),x2:X1,y2:py(0),stroke:"#b9c2d2","stroke-width":"1.2"});
+  var i,top;
+  for(i=0;i<n;i++){
+    top=py(RT[i]);
+    if(RT[i]>0){
+      el("rect",{x:px(i)-BW/2,y:top,width:BW,height:py(0)-top,fill:"#d94a4a",opacity:"0.78"});
+      tx(px(i),top-8,(RT[i]*100).toFixed(1)+"%",{"font-size":"11","fill":"#b03a3a","text-anchor":"middle"});
+    } else {
+      // ★0% 不能画 rect：高度为 0 会被体检器判「不可见」（首版正是这样被抓住的）
+      el("line",{x1:px(i)-BW/2,y1:py(0)-1,x2:px(i)+BW/2,y2:py(0)-1,stroke:"#d94a4a","stroke-width":"2.4"});
+      tx(px(i),py(0)-10,"0%",{"font-size":"11","fill":"#b03a3a","text-anchor":"middle"});
+    }
+    tx(px(i),Y1+16,LB[i],{"font-size":"10","fill":"#8a93a3","text-anchor":"middle"});
+  }
+  tx(X0,Y0-26,"「Δ²>0 但窗口为空」的误判率：随 φ 幅度单调上升（5520 组）",
+     {"font-size":"12","fill":"#4a5468"});
+  tx(X0+8,Y1-6,"灰叉 = 凸包判据在同一批族上误判 0 次（判别力对照）",
+     {"font-size":"11","fill":"#6b7688"});
+  tx(X1,Y1+34,"φ 的幅度区间",{"font-size":"11","fill":"#8a93a3","text-anchor":"end"});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r390 攻 ROOT V56：GS 平方不可分解定理与三代为输入</title>
+<style>
+  body{background:#f7f8fa;color:#2b3446;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;margin:0;padding:28px 20px 60px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{font-size:19px;line-height:1.55;margin:0 0 6px;font-weight:700;}
+  .sub{font-size:13px;color:#6b7688;line-height:1.8;margin:0 0 18px;}
+  .kpis{display:flex;gap:10px;margin:0 0 22px;flex-wrap:wrap;}
+  .kpi{flex:1;min-width:110px;background:#ffffff;border:1px solid #e2e8f2;border-radius:10px;padding:10px 12px;}
+  .kpi b{display:block;font-size:19px;font-weight:700;}
+  .kpi span{font-size:12px;color:#7a8598;}
+  .card{background:#ffffff;border:1px solid #e2e8f2;border-radius:12px;padding:14px 14px 10px;margin:0 0 18px;}
+  .card h3{font-size:14px;margin:0 0 8px;font-weight:700;color:#243043;line-height:1.6;}
+  svg{display:block;width:100%;height:auto;}
+  .cap{font-size:12px;color:#6b7688;line-height:1.8;margin:8px 2px 2px;}
+  .verdict{background:#ffffff;border:1px solid #e2e8f2;border-left:4px solid #d94a4a;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.9;}
+  code{background:#eef2f8;padding:1px 5px;border-radius:4px;font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TUFT-r390　攻 ROOT V56：六维 SO(10) 反常与三代零模</h1>
+<p class="sub">对来料 8 个公式块（来料自报「16/16 通过」）做独立重算。结论：<strong>迹恒等式是权重恒等式（判别力 0）</strong>；
+<code>I₈^net</code> 是<strong>乘积而不是平方</strong>，故 6D Green–Schwarz 抵消无解（本卷主定理）；三代数<strong>恒等于</strong>手选磁通 <code>N</code>；
+等差质量结构要求 <code>m_e &lt; 0</code>。全卷 37 条读数，13 个守卫全绿，3 条判负显式登记。</p>
+
+<div class="kpis">
+  <div class="kpi"><b>8</b><span>PASS</span></div>
+  <div class="kpi"><b>5</b><span>INFO</span></div>
+  <div class="kpi"><b>5</b><span>IDENTITY</span></div>
+  <div class="kpi"><b>3</b><span>FAIL（已登记）</span></div>
+  <div class="kpi"><b>13/13</b><span>守卫</span></div>
+</div>
+
+<div class="card"><h3>图 1　主定理：平方要求「纯项为零」，而混合项非零 —— 两处独立矛盾</h3>
+<svg id="fig1" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">若 <code>I₈ = ½·X₄∧X₄</code> 且 <code>X₄ = αx² + β·trF² + γ·p₁</code>，则每个单项式的系数被锁死。
+表格把「平方给出的系数」与「实际算出的系数」并排放：<strong>红行是矛盾</strong>。
+T 块（第 4 行）与 p₁ 块（第 5 行）各自独立地要求同一个参数既为零又非零 —— 两者都不通过也能推出结论，
+所以「T 的归一化可疑」这条反驳绕不过去。</p></div>
+
+<div class="card"><h3>图 2　三代数恒等于磁通 N：把「解释」还原成「输入」</h3>
+<svg id="fig2" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap"><code>ind(Ď) = q_F·N</code> 在 <code>q_F = 1</code> 的规范化下给出族数<strong>恰好等于 N</strong>，对任何 N 都成立。
+所以「磁通解释了三代」等价于「把 3 写进磁通」；来料把 N=3 当结果，实际它是输入。
+这与库内 r350（框架不预言 3）、r389（整数比搬家）同型。</p></div>
+
+<div class="card"><h3>图 3　等差质量：最佳拟合把 m_e 推到负值</h3>
+<svg id="fig3" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">用两参数等差 <code>(a−d, a, a+d)</code> 最小二乘拟合带电轻子：<code>a = 627.68</code>、<code>d = 888.18</code>，
+于是 <code>m_e</code> 的预言是 <strong>−260.50 MeV</strong>。相对偏差在对数轴上：电子 5.1e2、μ 子 4.9、τ 0.15。
+问题不是「拟合不好」，而是等差结构<strong>不允许</strong>真实的量级跨度。</p></div>
+
+<div class="card"><h3>图 4　无量纲等差比：不需要拟合的第二条独立判据</h3>
+<svg id="fig4" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">对<strong>任意</strong>等差三元组，<code>r ≡ (m₂−m₁)/(m₃−m₁) = d/(2d) = 1/2</code> —— 与 <code>a</code>、<code>d</code>、单位、归一化全无关。
+实测 <code>r = 0.059193</code>，差 8.45 倍。这条判据绕开了「你拟合得不好」的反驳，是 D3 之外的独立路径（两条路径同一结论，不可相加）。</p></div>
+
+<div class="card"><h3>图 5　假绿陷阱：只看两个质量，「等差」检验分不开两种剖面</h3>
+<svg id="fig5" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">把两套谱都按 <code>m=+1</code> 对齐（朴素拟合正是对齐最重态）：<code>cosθ</code> 剖面给 <code>(1−δ, 1, 1+δ)</code>，
+<code>cos²θ</code> 剖面给 <code>(1+δ, 1, 1+δ)</code>。两者在 <code>m=0</code> 与 <code>m=+1</code> <strong>读数完全相同</strong>，
+只有 <code>m=−1</code> 分开。任何「查前两个质量」的检验都会把非等差的谱判成等差。</p></div>
+
+<div class="card"><h3>图 6　「16/16 通过」的判别力分解</h3>
+<svg id="fig6" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">来料自报 16 条全过。可对应到 8 个公式块的条目分类如下：<strong>恒等式 2</strong>（tr 二次/四次迹，任何 SO(10) 都成立）、
+<strong>结构性自明 3</strong>（指标、Schur、作用量 —— 输入的直接后果）、<strong>算术 1</strong>（48 = 3×16×1）、
+<strong>真判据 2</strong> —— 而这两条恰好是<strong>不通过</strong>与<strong>负判</strong>。故 16/16 不含任何支撑模型的真判据。</p></div>
+
+<div class="verdict">
+<strong>总判</strong>　<code>GATES-PASS-WITH-3-NEGATIVE</code>　·
+<code>V561-IDENTITY</code>　<code>GS-SQUARE-IMPOSSIBLE</code>　<code>THREE-IS-INPUT</code>　<code>AP-MASS-REFUTED</code>　<code>U1F-ANOMALY-48</code>　<code>SUPPLY-ZERO</code><br>
+<strong>诚实边界</strong>　① 六维反常只用代数展开（形式次数），不涉及流形拓扑与边界；
+② 「无解」限定在 <code>X₄ ∈ span{x², trF², p₁}</code>（已枚举完备），若引入第二族 2 形式或边界反流则结论不适用；
+③ 若要判负不成立，必须<strong>改变理论结构</strong>，那不是重写而是新建。供给 0、不占度、度数链维持 36。
+</div>
+</div>
+
+<script>
+(function(){
+  var NS = "http://www.w3.org/2000/svg";
+  var INK = "#2b3446", MUT = "#6b7688", GRID = "#eef1f6", EDGE = "#dde3ec";
+  var BLUE = "#2f6fd0", RED = "#d94a4a", GREEN = "#2f9e5e", ORANGE = "#e08a2c", TEAL = "#2a9d8f";
+
+  function make(fid){
+    var fig = document.getElementById(fid);
+    function el(tag, at){
+      var e = document.createElementNS(NS, tag);
+      for (var q in at){ if (Object.prototype.hasOwnProperty.call(at, q)) e.setAttribute(q, at[q]); }
+      fig.appendChild(e);
+      return e;
+    }
+    function tx(x, y, s, at){
+      var A = at || {}; A.x = x; A.y = y;
+      var t = el("text", A); t.textContent = s; return t;
+    }
+    el("rect", {x:0, y:0, width:680, height:360, fill:"#f7f8fa"});
+    return {el:el, tx:tx};
+  }
+
+  /* ---------------- 图 1：主定理系数表 ---------------- */
+  (function(){
+    var g = make("fig1"), el = g.el, tx = g.tx;
+    tx(24, 26, "I₈^net 与 ½X₄∧X₄ 的逐单项式比对（红 = 矛盾）",
+       {"font-size":"12.5", "fill":INK, "font-weight":"700"});
+    el("rect", {x:24, y:40, width:632, height:30, fill:"#eef2f8", stroke:EDGE});
+    tx(34, 60, "单项式", {"font-size":"11.5", "fill":MUT});
+    tx(184, 60, "½X₄∧X₄ 的系数", {"font-size":"11.5", "fill":MUT});
+    tx(384, 60, "I₈^net 实测", {"font-size":"11.5", "fill":MUT, "text-anchor":"middle"});
+    tx(454, 60, "后果", {"font-size":"11.5", "fill":MUT});
+
+    var rows = [
+      ["x⁴",      "α²/2",  "2/3",  "α² = 4/3 ⇒ 可解",            false],
+      ["x²·trF²", "αβ",    "1/2",  "需 αβ = 1/2（非零）",        false],
+      ["x²·p₁",   "αγ",    "−1/3", "需 αγ = −1/3（非零）",       false],
+      ["(trF²)²", "β²/2",  "0",    "⇒ β = 0，与上一行冲突",      true ],
+      ["p₁²",     "γ²/2",  "0",    "⇒ γ = 0，与 x²p₁ 冲突",      true ],
+      ["trF⁴, p₂","—",     "0",    "平方里根本产生不出这一项",    false]
+    ];
+    var i, y;
+    for (i = 0; i < rows.length; i++){
+      y = 70 + i * 44;
+      el("rect", {x:24, y:y, width:632, height:40,
+                  fill: rows[i][4] ? "#fdecec" : "#ffffff",
+                  stroke: rows[i][4] ? "#f0b9b9" : EDGE});
+      tx(34, y + 25, rows[i][0], {"font-size":"12", "fill":INK});
+      tx(184, y + 25, rows[i][1], {"font-size":"12", "fill":MUT});
+      tx(384, y + 25, rows[i][2],
+         {"font-size":"12.5", "fill": rows[i][4] ? RED : INK,
+          "font-weight":"700", "text-anchor":"middle"});
+      tx(454, y + 25, rows[i][3],
+         {"font-size":"11.5", "fill": rows[i][4] ? "#a83232" : MUT});
+    }
+    var xs = [174, 324, 444], k;
+    for (k = 0; k < xs.length; k++){
+      el("line", {x1:xs[k], y1:40, x2:xs[k], y2:334, stroke:EDGE});
+    }
+    tx(24, 352, "两处矛盾互不依赖：T 块的归一化有约定成分，p₁ 块的归一化由 Â 固定 ⇒ 第二条腿更硬",
+       {"font-size":"11", "fill":MUT});
+  })();
+
+  /* ---------------- 图 2：族数 = N ---------------- */
+  (function(){
+    var g = make("fig2"), el = g.el, tx = g.tx;
+    var X0 = 90, X1 = 620, Y0 = 84, Y1 = 282;
+    var V = [1, 2, 3, 4, 5, 6], LB = ["N=1","N=2","N=3","N=4","N=5","N=6"];
+    var i, h, cx, top, lvl, gy;
+    tx(24, 26, "外部 U(1)_F 的族数 vs 磁通 N（q_F = 1）",
+       {"font-size":"12.5", "fill":INK, "font-weight":"700"});
+    el("rect", {x:X0, y:Y0, width:X1 - X0, height:Y1 - Y0, fill:"#ffffff", stroke:EDGE});
+    for (lvl = 0; lvl <= 6; lvl++){
+      gy = Y1 - lvl / 6 * (Y1 - Y0);
+      el("line", {x1:X0, y1:gy, x2:X1, y2:gy, stroke:GRID});
+      tx(X0 - 10, gy + 4, String(lvl),
+         {"font-size":"11", "fill":"#8a93a3", "text-anchor":"end"});
+    }
+    for (i = 0; i < V.length; i++){
+      cx = X0 + (i + 0.5) * (X1 - X0) / V.length;
+      h = V[i] / 6 * (Y1 - Y0);
+      top = Y1 - h;
+      el("rect", {x:cx - 28, y:top, width:56, height:h,
+                  fill: (i === 2) ? ORANGE : "#b9c8e2", opacity:"0.9"});
+      tx(cx, top - 8, String(V[i]),
+         {"font-size":"12", "fill": (i === 2) ? "#b06a12" : MUT,
+          "font-weight":"700", "text-anchor":"middle"});
+      tx(cx, Y1 + 18, LB[i], {"font-size":"11", "fill":"#8a93a3", "text-anchor":"middle"});
+    }
+    el("line", {x1:X0, y1:Y1, x2:X1, y2:Y1, stroke:"#b9c2d2", "stroke-width":"1.2"});
+    tx(X0, Y0 - 10, "族数（恰等于 N，无一处偏离）",
+       {"font-size":"11", "fill":MUT});
+    tx(24, 320, "橙色柱（N=3）就是来料所称的「恰好三代」：它的高度由横轴标签决定，不是算出来的",
+       {"font-size":"11", "fill":MUT});
+    tx(24, 340, "判别力 0 —— 该式对任意 N 都成立，因此不构成对「为什么是 3」的回答",
+       {"font-size":"11", "fill":MUT});
+  })();
+
+  /* ---------------- 图 3：等差拟合的相对偏差 ---------------- */
+  (function(){
+    var g = make("fig3"), el = g.el, tx = g.tx;
+    var X0 = 110, X1 = 600, Y0 = 84, Y1 = 280;
+    var V = [510.78, 4.94, 0.15], LB = ["m_e", "m_μ", "m_τ"];
+    function py(v){
+      var L = Math.log(v) / Math.LN10;
+      return Y1 - (L + 2) / 5 * (Y1 - Y0);
+    }
+    var i, cx, top, e, gy, gv;
+    tx(24, 26, "等差最佳拟合的相对偏差（对数纵轴，1e−2 … 1e+3）",
+       {"font-size":"12.5", "fill":INK, "font-weight":"700"});
+    el("rect", {x:X0, y:Y0, width:X1 - X0, height:Y1 - Y0, fill:"#ffffff", stroke:EDGE});
+    for (e = -2; e <= 3; e++){
+      gy = py(Math.pow(10, e));
+      el("line", {x1:X0, y1:gy, x2:X1, y2:gy, stroke:GRID});
+      tx(X0 - 10, gy + 4, "1e" + e,
+         {"font-size":"11", "fill":"#8a93a3", "text-anchor":"end"});
+    }
+    for (i = 0; i < V.length; i++){
+      cx = X0 + (i + 0.5) * (X1 - X0) / V.length;
+      top = py(V[i]);
+      el("rect", {x:cx - 34, y:top, width:68, height:Y1 - top,
+                  fill: (i === 0) ? RED : (i === 1 ? ORANGE : TEAL), opacity:"0.85"});
+      tx(cx, top - 9, V[i].toFixed(2),
+         {"font-size":"12", "fill":INK, "font-weight":"700", "text-anchor":"middle"});
+      tx(cx, Y1 + 18, LB[i], {"font-size":"11.5", "fill":"#8a93a3", "text-anchor":"middle"});
+    }
+    gy = py(0.15);
+    el("line", {x1:X0, y1:gy, x2:X1, y2:gy, stroke:MUT, "stroke-width":"1.4",
+                "stroke-dasharray":"6 5"});
+    tx(X1 - 4, gy - 8, "门限 0.15", {"font-size":"11", "fill":MUT, "text-anchor":"end"});
+    tx(24, 316, "拟合值 a = 627.68 MeV、d = 888.18 MeV ⇒ m_e 预言 = −260.50 MeV（负质量）",
+       {"font-size":"11", "fill":MUT});
+    tx(24, 336, "负值不能画在对数轴上 —— 这本身就是「结构不允许」的最直白表现",
+       {"font-size":"11", "fill":MUT});
+  })();
+
+  /* ---------------- 图 4：无量纲等差比 ---------------- */
+  (function(){
+    var g = make("fig4"), el = g.el, tx = g.tx;
+    var X0 = 140, X1 = 570, Y0 = 90, Y1 = 282;
+    var V = [0.5, 0.059193], LB = ["等差结构预言", "带电轻子实测"];
+    function py(v){ return Y1 - v / 0.55 * (Y1 - Y0); }
+    var i, cx, top, lv, gy;
+    tx(24, 26, "r = (m₂−m₁)/(m₃−m₁)：理论恒为 1/2，实测差 8.45 倍",
+       {"font-size":"12.5", "fill":INK, "font-weight":"700"});
+    el("rect", {x:X0, y:Y0, width:X1 - X0, height:Y1 - Y0, fill:"#ffffff", stroke:EDGE});
+    for (lv = 0; lv <= 5; lv++){
+      gy = py(lv * 0.11);
+      el("line", {x1:X0, y1:gy, x2:X1, y2:gy, stroke:GRID});
+      tx(X0 - 10, gy + 4, (lv * 0.11).toFixed(2),
+         {"font-size":"11", "fill":"#8a93a3", "text-anchor":"end"});
+    }
+    for (i = 0; i < V.length; i++){
+      cx = X0 + (i + 0.5) * (X1 - X0) / V.length;
+      top = py(V[i]);
+      el("rect", {x:cx - 42, y:top, width:84, height:Y1 - top,
+                  fill: (i === 0) ? BLUE : RED, opacity:"0.85"});
+      tx(cx, top - 9, V[i].toFixed(6),
+         {"font-size":"12", "fill":INK, "font-weight":"700", "text-anchor":"middle"});
+      tx(cx, Y1 + 18, LB[i], {"font-size":"11.5", "fill":"#8a93a3", "text-anchor":"middle"});
+    }
+    el("line", {x1:X0, y1:Y1, x2:X1, y2:Y1, stroke:"#b9c2d2", "stroke-width":"1.2"});
+    tx(24, 316, "该判据不依赖拟合、不依赖单位、不含自由参数 ⇒ 没有可调节的余地",
+       {"font-size":"11", "fill":MUT});
+    tx(24, 336, "与图 3 是同一结论的两条独立路径（D3 / D5），按纪律不可相加计为两条发现",
+       {"font-size":"11", "fill":MUT});
+  })();
+
+  /* ---------------- 图 5：假绿陷阱 ---------------- */
+  (function(){
+    var g = make("fig5"), el = g.el, tx = g.tx;
+    var X0 = 110, X1 = 600, Y0 = 84, Y1 = 268;
+    var XS = [X0, (X0 + X1) / 2, X1];
+    var LIN = [0.5, 1.0, 1.5], QUD = [1.5, 1.0, 1.5];
+    function py(v){ return Y1 - (v - 0.4) / 1.2 * (Y1 - Y0); }
+    var i, lv, gy, s;
+    tx(24, 26, "两个剖面在 m=0 与 m=+1 处读数完全相同，只有 m=−1 分开",
+       {"font-size":"12.5", "fill":INK, "font-weight":"700"});
+    el("rect", {x:X0, y:Y0, width:X1 - X0, height:Y1 - Y0, fill:"#ffffff", stroke:EDGE});
+    for (lv = 0; lv <= 4; lv++){
+      gy = py(0.4 + lv * 0.3);
+      el("line", {x1:X0, y1:gy, x2:X1, y2:gy, stroke:GRID});
+      tx(X0 - 10, gy + 4, (0.4 + lv * 0.3).toFixed(1),
+         {"font-size":"11", "fill":"#8a93a3", "text-anchor":"end"});
+    }
+    function poly(V, color, dash){
+      s = "";
+      for (i = 0; i < 3; i++){
+        s += (i === 0 ? "M" : "L") + XS[i].toFixed(1) + " " + py(V[i]).toFixed(1) + " ";
+      }
+      el("path", {d:s, fill:"none", stroke:color, "stroke-width":"2.4",
+                  "stroke-dasharray":dash});
+      for (i = 0; i < 3; i++){
+        el("circle", {cx:XS[i], cy:py(V[i]), r:5, fill:color});
+      }
+    }
+    poly(LIN, BLUE, "none");
+    poly(QUD, ORANGE, "7 5");
+    el("line", {x1:XS[2], y1:py(1.5) - 18, x2:XS[2], y2:py(1.5) + 18, stroke:GREEN,
+                "stroke-width":"1.4", "stroke-dasharray":"3 3"});
+    tx(XS[1] + 12, py(1.0) + 26, "m=0：两条线重合", {"font-size":"11", "fill":GREEN});
+    tx(XS[2] - 8, py(1.5) - 24, "m=+1：仍重合",
+       {"font-size":"11", "fill":GREEN, "text-anchor":"end"});
+    tx(XS[0] + 12, py(0.5) - 10, "m=−1：1/2 vs 3/2", {"font-size":"11", "fill":RED});
+    el("rect", {x:X0 + 14, y:276, width:14, height:3, fill:BLUE});
+    tx(X0 + 34, 280, "cosθ 剖面（等差）", {"font-size":"11", "fill":MUT});
+    el("rect", {x:X0 + 170, y:276, width:14, height:3, fill:ORANGE});
+    tx(X0 + 190, 280, "cos²θ 剖面（非等差）", {"font-size":"11", "fill":MUT});
+    tx(XS[0], Y1 + 18, "m=−1", {"font-size":"11", "fill":"#8a93a3", "text-anchor":"middle"});
+    tx(XS[1], Y1 + 18, "m=0", {"font-size":"11", "fill":"#8a93a3", "text-anchor":"middle"});
+    tx(XS[2], Y1 + 18, "m=+1", {"font-size":"11", "fill":"#8a93a3", "text-anchor":"middle"});
+    tx(24, 330, "两谱均按 m=+1 对齐（把最重态拉到同一刻度）—— 这正是朴素拟合会做的事",
+       {"font-size":"11", "fill":MUT});
+    tx(24, 348, "结论：等差判据必须查到第三个质量；只查两个分量时判别力为 0（K3 已把该失败模式固化为读数）",
+       {"font-size":"11", "fill":MUT});
+  })();
+
+  /* ---------------- 图 6：判别力分解 ---------------- */
+  (function(){
+    var g = make("fig6"), el = g.el, tx = g.tx;
+    var X0 = 80, W = 520, Y = 130, H = 56;
+    var SEG = [
+      [2, BLUE,   "恒等式 2"],
+      [3, "#b9c8e2", "结构自明 3"],
+      [1, TEAL,   "算术 1"],
+      [2, RED,    "真判据 2"]
+    ];
+    var i, x = X0, w, unit = W / 8;
+    tx(24, 26, "来料 16 条「通过」的可重算部分：8 个公式块按判别力分类",
+       {"font-size":"12.5", "fill":INK, "font-weight":"700"});
+    tx(24, 48, "16 是来料自报的条目数；此处统计的是其中能对应到公式块的 8 组",
+       {"font-size":"11", "fill":MUT});
+    for (i = 0; i < SEG.length; i++){
+      w = SEG[i][0] * unit;
+      el("rect", {x:x, y:Y, width:w, height:H, fill:SEG[i][1], opacity:"0.88"});
+      tx(x + w / 2, Y + 34, String(SEG[i][0]),
+         {"font-size":"13", "fill":"#ffffff", "font-weight":"700", "text-anchor":"middle"});
+      x = x + w;
+    }
+    el("rect", {x:X0, y:Y, width:W, height:H, fill:"none", stroke:"#c7d0de"});
+    for (i = 0; i < SEG.length; i++){
+      tx(X0 + i * unit * 2 + 6, Y + H + 22, SEG[i][2],
+         {"font-size":"11", "fill":MUT});
+    }
+    tx(24, 240, "真判据只有 2 条，且都指向反面：", {"font-size":"12", "fill":INK, "font-weight":"700"});
+    el("rect", {x:24, y:252, width:632, height:34, fill:"#fdecec", stroke:"#f0b9b9"});
+    tx(34, 274, "① I₈ 是否可平方 ⇒ 不可（B3）　　② 质量层级是否等差 ⇒ 要求 m_e < 0（D3/D5）",
+       {"font-size":"11.5", "fill":"#a83232"});
+    tx(24, 312, "即：模型唯一能被检验的两处，检验结果都是否定的。",
+       {"font-size":"11.5", "fill":MUT});
+    tx(24, 334, "剩余 6 条无论算多少次都不会改变结论 —— 它们不含模型内容。",
+       {"font-size":"11.5", "fill":MUT});
+  })();
+})();
+</script>
+</body>
+</html>

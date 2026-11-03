@@ -1,0 +1,201 @@
+==============================================================================
+TUFT-r389  精算报告  2026-11-03
+==============================================================================
+判词：R389-CHIRAL-QUANTIZATION-CANNOT-FIX-THETA-OK-DENSE-SET-CANNOT-PIN-OK-LARGE-N-THRESHOLD-OK-INTEGER-RATIO-RELOCATES-ALPHA-OK-TARGET-CENTER-NOT-MONOTONE-OK-EXACT-MATCH-IMPOSSIBLE-OK-N-NOT-INTERNAL-FAIL-UNIQUE-PREDICTION-0
+
+[1] 问题：g := G1/(hbar*w) 若来自挠率拓扑荷，则量子化；它能否定出 theta_A？
+    约定 A（与 r387 一致）：tan(theta_A)=kappa/tau，内点驻点 g* = N cos(theta_A)，N:=2(a1-a2)
+
+[2] 两种自然的量子化
+    (i)  E0=hbar*w    => g=n      => n = N cos(theta_A)   => cos(theta_A) = n/N
+    (ii) E0=hbar*c/R  => g=n/cos  => n = N cos^2(theta_A) => cos^2(theta_A) = n/N
+    两式都归一到 tan^2(theta_A) ∈ Q（A04，4 组相位精确 0）
+
+[3] 关键分岔
+    N 自由 => 谱 = {arctan(sqrt(q)) : q∈Q} 在 [0,pi/2) 稠密 => 判别力 0（B08，偏差 ~ 1/(4*alpha*N)）
+    N 固定 => 只剩 N+1 个值 => 真钉住（A05），但分辨率 ~ 1/sqrt(N)（B10）
+    而 N 无内生来源（r385/r387 已证）=> 缺口只是从 theta 挪到 N（整数比搬家）
+
+[4] 数值
+    theta_A             = 7.29722304214E-003 rad
+    cos^2(theta_A)      = 9.99946751481E-001
+    sin^2(theta_A)      = 5.32485189649E-005   (alpha^2 = 5.32513545207E-005)
+    1/alpha^2           = 1.87788650449E+004
+    靶心 N* = 1/a^2 + 1 = 1.87798650449E+004  => 最近整数 18780
+    对应 theta          = 7.29719682230E-003 rad
+    |dtheta|            = 2.62198E-008   (相对 3.59312E-006)
+    解析界 1/(4*N^{3/2}) = 9.71397E-008  => 实测在界内
+
+    V 形：|dtheta| 在 N* 取唯一极小，两侧都变大（B05）—— 不是「N 越大越准」
+    阈值：小 theta（<= theta_A）要求 N >= 1/alpha^2，且谱在 (0,theta_A) 内为空（A07/B07）
+    小 N（1..10）的最小非零 theta 至少比 theta_A 大 44.1 倍（B06）
+    精确匹配需 n 是 10^26 的倍数（A08，CODATA 定点口径）
+
+[5] 条目明细
+    A01   PASS g 的量纲 = 能量；两种候选 E0 = hbar*w 与 hbar*c/R 也都是能量 ⇒ g=n*E0 合法
+           exp = E0 两者都 = (1, 2, -2, 0, 0)
+           act = hbar*w = (1, 2, -2, 0, 0) ; hbar*c/R = (1, 2, -2, 0, 0) ; g = (1, 2, -2, 0, 0)
+           note= 量纲只筛掉非法组合，不区分两种选法（见 C03 负对照）
+    A02   PASS 两种自然能量单位：(i) E0=hbar*w ⇒ g=n；(ii) E0=hbar*c/R（唯一内禀长度）⇒ g=n*c/(R*w)=n/cos(theta_A)
+           exp = g_ii/g_i = 1
+           act = 1/cos(theta_A) = 1.00002662532E+000 ⇒ 偏离 1 达2.66E-005
+           note= (ii) 用到 R*w = c*cos(theta_A)（零模 + 约定 A）；两选法只在 theta→0 时合并
+    A03   PASS 情形(i)：n = N cos(theta_A) ⇒ cos(theta_A)=n/N；情形(ii)：n/cos = N cos ⇒ cos^2(theta_A)=n/N
+           exp = (i) 残差 0 ; (ii) 残差 0
+           act = (i) 0 ; (ii) 0
+           note= 两式的解都是 cos 的有理（或有理平方根）表达，3 组相位精确回代
+    A04   PASS 两种量子化都归一到同一集合：tan^2(theta_A) ∈ Q（4 组相位，两式各自回代）
+           exp = tan^2 精确等于 (S/C)^2
+           act = max|res| = 0
+           note= 所以 S = {arctan(sqrt(q)) : q ∈ Q, q>=0} 就是量子化允许的全部 theta
+    A05   PASS N 固定为整数时 cos(theta_A)=n/N 只给 N+1 个值（N=10 枚举）
+           exp = 11 个值
+           act = 11 个值
+           note= 有限谱 = 真钉住；但前提是 N 被独立固定
+    A06   PASS 空隙反解：k = 2N sin^2(theta/2) 反解出最小非零谱角 theta_min(N)=2*asin(1/sqrt(2N))，回代 k=1
+           exp = 回代 k = 1
+           act = max|2N sin^2(theta_min/2) - 1| = 1.300E-049（N=3/7/100/18780）
+           note= 注意：恒等式本身是半角恒等式（定义级、零信息）；有内容的是 k 只能取整数 ⇒ theta 谱离散
+    A07   PASS 空隙判据：N*alpha^2 < 1 ⇔ theta_min(N) > theta_A ⇔ 谱在 (0,theta_A) 内无点（N=1/10/100/1000/18778）
+           exp = 5/5 谱在 (0,theta_A) 内为空
+           act = 5/5 ; theta_min/theta_A = N=1:215.26 N=10:61.81 N=100:19.40 N=1000:6.13 N=18778:1.41
+           note= alpha 落在第一个空隙里 —— 这就是「小 theta 需要万级 N」的几何含义
+    A08   PASS 精确匹配 cos^2(theta_A)=1/(1+alpha^2) 需 N=n(1+alpha^2) 为整数 ⇔ (q/gcd) | n
+           exp = n 必须是 10^26 的倍数
+           act = alpha 定点值的平方：分母 = 10^26、gcd = 1 ⇒ 需 n 是 10^26 的倍数 ; n=1..10 全非整数 (10/10)
+           note= 口径自守：alpha 是实测定点值（十进制表示是约定）⇒ 本条的「不可能」只在用给定有效位数的 alpha 时成立
+    A09   PASS 手性由 sign(N) 决定：g* = N cos(theta_A) 与 N 同号 ⇒ 拓扑荷不提供手性信息
+           exp = 8/8 同号
+           act = 8/8 同号
+           note= 量子化只给「荷有多大」，不给「往哪边」—— 手性仍是 sign(N) 的输入
+    A10   INFO 推论：量子化把「连续自由参数 theta」换成「整数比 n/N」，判别力取决于 N 是否被独立钉住
+           exp = 条件性
+           act = 见 A05 与 B 层
+           note= 纯陈述：这是本卷全部结论的骨架
+    B01   PASS 物理点（theta_A = atan(alpha)）：cos^2 与 sin^2 的读数
+           exp = cos^2 = 1/(1+a^2)
+           act = cos^2=9.999467515E-001  sin^2=5.324851896E-005
+           note= sin^2 与 a^2 的相对差 = 5.325E-005
+    B02   INFO 精确匹配所需的连续 N（情形 ii：cos^2=n/N，取 n=1）
+           exp = 1/(1+a^2)
+           act = 9.99946751481E-001
+           note= 这个数略小于 1，离整数 1 差 a^2 = 5.32514E-005；所以 n=1 时 N 必须略大于 1（非整数）
+    B03   PASS 空隙 k=N-n=1 的靶心：N* = 1/alpha^2+1（由 1-1/N = 1/(1+alpha^2) 反解），扫描 N*-1,N*,N*+1
+           exp = 解析靶心最近整数 = 18780
+           act = N* = 1.87798650449E+004 ⇒ 最近整数 18780 ; 扫描最优 N=18780  |dtheta|=2.62198E-008
+           note= N* 是 alpha 的函数、不是理论产出 —— 「整数比搬家」的直接证据
+    B04   PASS 靶心整数点的偏差与解析界：dtheta/dN = -1/(2N^{3/2}) 且 |dN|<=1/2 ⇒ |dtheta| <= 1/(4N^{3/2})
+           exp = 9.71397E-008
+           act = 2.62198E-008
+           note= 相对偏差 |dtheta|/theta_A = 3.593E-006 ⇒ 单靠「取最近整数」只到 1e-6 相对精度
+    B05   PASS |dtheta| 对 N 是 V 形（唯一极小在靶心 N*）：左侧严格递减、右侧严格递增、极小在 18780
+           exp = V 形（左 3/3 递减、右 4/4 递增、极小在 18780）
+           act = N=1000:2.43E-002 N=10000:2.70E-003 N=18779:1.68E-007 N=18780:2.62E-008 N=100000:4.13E-003 N=1000000:6.30E-003 N=10000000:6.98E-003
+           note= 首版断言「N 越大越准」是错的：N 超过靶心后偏差回升 ⇒ 不是「随便放大 N」
+    B06   PASS 小整数 N=1,2,3,5,10 时最小非零 theta = asin(1/sqrt(N))，与 theta_A 的倍数
+           exp = 全部 >> 1
+           act = N=1:215.259倍 ; N=2:107.630倍 ; N=3:84.344倍 ; N=5:63.538倍 ; N=10:44.092倍
+           note= 小 N 的谱点比 alpha 大一到两个量级，根本不在同一区域
+    B07   PASS 阈值：asin(1/sqrt(N)) <= theta_A 当且仅当 N >= 1/alpha^2
+           exp = N >= 1/alpha^2
+           act = 1/alpha^2 = 1.87788650449E+004
+           note= 所以「量子化能给出物理量级的小 theta」本身要求 N 是万级整数
+    B08   PASS N 自由时取 sin^2(theta_A) 的最佳有理逼近 k/N（连分数）：偏差远小于四舍五入界 1/(4*alpha*N) ⇒ 稠密、判别力 0
+           exp = 3/3 远低于解析界且严格下降
+           act = k=5/N=93899:d=1.26E-008 (界 3.65E-004) k=452/N=8488499:d=1.20E-013 (界 4.04E-006) k=39339/N=738781111:d=5.03E-017 (界 4.64E-008)
+           note= 任一精度都可达、N 只要百万级 ⇒ 同 r387「构造性满射」。靶必须是 sin^2(theta_A)：误用 alpha^2 会引入 arcsin(alpha)-arctan(alpha)=1.943E-007 的假偏差（α 三口径刀第 4 次命中）
+    B09   PASS 与 r387 对拍：N=-4（a1:a2=1:3）时 g* = N cos(theta_A*)
+           exp = -3.9998935015443（r387 读数）
+           act = -3.99989350154E+000
+           note= 跨卷独立性：本卷用约定 A 直接算，与 r387 两套约定的结果三者一致
+    B10   PASS 有限谱分辨率：零点附近最小谱间距 gap(N)=2[asin(1/sqrt N)-asin(1/sqrt 2N)] ∝ N^{-1/2}
+           exp = N 涨 100 倍 ⇒ 比值 = 0.1（两档）
+           act = N=1E+004:gap=5.85808E-003 ratio=— N=1E+006:gap=5.85787E-004 ratio=9.99964E-002 N=1E+008:gap=5.85786E-005 ratio=10.00000E-002
+           note= 定到 1e-9 需 N ~ 3e17 ⇒ 有限谱虽「真钉住」，代价天文数字（用比值判幂次，不用等差）
+    G01   FAIL 手性耦合量子化能定出唯一 theta
+           exp = 1 个点
+           act = 只给 tan^2(theta) ∈ Q（A04）；N 自由时偏差随 N 十年一档降一个量级（B08）
+           note= 可数稠密集，不是单点：离散 ≠ 有限
+    G02   PASS 判别力取决于 N = 2(a1-a2) 是否被独立钉住
+           exp = 是
+           act = N 固定 ⇒ 11 个分立值（A05，N=10）; N 自由 ⇒ 稠密（B08）
+           note= 同一条量子化，两种命运 —— 分岔点不在物理，在「分母有没有被钉住」
+    G03   FAIL N 能被框架内生
+           exp = 应内生
+           act = r385/r387 已证 a1,a2 无内生来源 ⇒ N 无来源
+           note= 本卷只是把缺口从 theta 挪到 N，没有补上
+    G04   FAIL 小整数 N 能给出 theta ~ alpha
+           exp = 应能给
+           act = 最小非零 theta 仍比 theta_A 大 44.1 倍（B06，N=10）
+           note= 小 N 谱完全不在物理量级上
+    G05   FAIL 量子化谱中存在精确等于 arctan(alpha) 的点
+           exp = 应存在
+           act = 需 n 是 10^26 的倍数（A08，CODATA 定点口径）
+           note= 用给定有效位数的 alpha 时精确解不存在；但 alpha 是实测量 ⇒ 本条只在定点口径下成立
+    G06   PASS 量子化把 alpha 搬到 N 上（整数比搬家）
+           exp = 是
+           act = 靶心 N* = 1/alpha^2+1 = 1.877986504E+004 ⇒ 最近整数 18780（B03）
+           note= 输入总数不减少：theta 的自由度换成了 N 的自由度，而 N 由 alpha 反解
+    G07   FAIL 本卷给出可证伪的独有预言
+           exp = >=1
+           act = 0 条
+           note= 唯一的「预言」是 N* 的数值，而 N* 是 alpha 的算式 ⇒ 定义恒等式刀
+    G08   PASS X-R387-2 可关闭：量子化路线判负（条件性）
+           exp = 关闭
+           act = 关闭，条件 =「N 无内生来源」这一条保持
+           note= 若将来 N 被独立钉住（例如 a1,a2 由拓扑整数给出），本卷结论自动失效并需重开
+    C01   PASS 正对照：两种量子化在同一相位给同一 tan^2（不是巧合，都是 (S/C)^2）
+           exp = 144/25
+           act = i:144/25  ii:144/25
+           note= 两式形式不同、集合相同 ⇒ 归约成立
+    C02   PASS 负对照：若 n 允许非整数（去掉量子化），N=10 的有限谱立刻失效 —— 有限性完全来自 n∈Z
+           exp = 3/3 落在谱外
+           act = 3/3 ; n=5/2⇒cos=1/4 n=13/3⇒cos=13/30 n=37/10⇒cos=37/100
+           note= 所以 A05 的「N+1 个值」不是形式的产物，是「n 与 N 都是整数」这条的产物
+    C03   PASS 量纲负对照：E0 取 hbar/R（漏掉 c）给 (1, 1, -1, 0, 0)，不是能量 ⇒ 该选法被量纲排除
+           exp = 不是能量 (1, 2, -2, 0, 0)
+           act = hbar/R = (1, 1, -1, 0, 0)
+           note= 量纲只能筛非法项；hbar*w 与 hbar*c/R 都合法（A01）⇒ 判据在数值后果，不在量纲
+    C04   PASS 退化点：k=N-n=0 给 theta=0，是**所有** N 共享的唯一谱点
+           exp = 4/4 个 N 含 theta=0
+           act = 4/4 个 N 含 theta=0
+           note= 量子化能无歧义定出的只有 theta=0（纯圆）；物理点不是它 ⇒ 判别力 0
+    C05   PASS 口径对照：约定 B（theta_B=pi/2-theta_A, g*=N sin theta_B）重算 g*，与约定 A 同值
+           exp = -3.9998935015443
+           act = -3.99989350154E+000
+           note= r387 A02 的对拍在本卷复现：两套约定内部自洽，交叉处必须给同一读数
+    C06   PASS 负对照：错版「k = N sin^2(theta)」不成立（本卷首版就是这么写的）
+           exp = 残差应 > 0
+           act = max|k - N sin^2| = 6/5
+           note= 证明 A06 的正版检验有判别力；同时记录本卷第一处自伤
+    E01   INFO 首版把「量子化 ⇒ 离散 ⇒ 能定值」当作链条，漏了「分母是否固定」这一步
+           exp = 离散 ≠ 有限
+           act = 已改：A05（N 固定）与 B08（N 自由）分开判
+           note= 离散但无限 = 可数稠密 = 判别力 0；这是「退化点恒绿」的近亲
+    E02   INFO 首版断言「N 越大越准」，被 B05 的 V 形否掉：N 超过靶心后偏差回升
+           exp = 单调下降
+           act = 已改：B05 拆成左侧递减/右侧递增/极小在靶心三条
+           note= 凡「越大越准」的直觉，先问目标函数在哪个方向取极小
+    E03   INFO 首版把靶心整数写成 18779：两处错 ——(a) 漏了 arcsin 的立方项；(b) 把 sin^2(theta_A) 当成 alpha^2
+           exp = N* = 1/alpha^2（错）
+           act = 已改：N* = 1/alpha^2+1 = 1.877986504E+004 ⇒ 最近整数 18780
+           note= sin^2(theta_A) = alpha^2/(1+alpha^2)，与 alpha^2 差 alpha^2/2 相对 —— α 三口径刀第三次命中
+    P01   PASS 五槽满足数（0 => 不占度）
+           exp = 0
+           act = 0/5
+           note= SURVIVE=0
+    P02   INFO 可入池的第一性输出条数
+           exp = 0
+           act = 0
+           note= 产出类型：1 条判负（量子化路线）+ 1 条阈值定量 + 1 条「离散≠有限」方法论
+
+[6] 守卫 7/7
+    FRAC-EXACT   ok | 1/3+1/6-1/2 = 0
+    DEC-PREC     ok | 1/3*3-1 = -1.00E-050
+    DSIN         ok | sin0=0 sin(pi/2)-1=1.00E-049
+    DATAN        ok | sin(atan(a)) vs a/sqrt(1+a^2) 相对差 = 4.11E-050
+    DATAN2       ok | atan2(0.6)+atan2(1/0.6)-pi/2 = -1.00E-049 ; atan2(1)-pi/4 = 1.20E-049
+    DASIN        ok | cos(asin 0.3) vs sqrt(1-0.09) 相对差 = 1.05E-050
+    SCI-SIGN     ok | sci(-1500)=-1.50E+003  sci(4.2e-7)=4.20E-007
+
+条目 39：{'PASS': 28, 'INFO': 6, 'FAIL': 5}

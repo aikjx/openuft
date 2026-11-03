@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r391 攻 ROOT V58：偶数族模二定理与修复入口定位</title>
+<style>
+  body{background:#f7f8fa;color:#2b3446;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;margin:0;padding:28px 20px 60px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{font-size:19px;line-height:1.55;margin:0 0 6px;font-weight:700;}
+  .sub{font-size:13px;color:#6b7688;line-height:1.8;margin:0 0 18px;}
+  .kpis{display:flex;gap:10px;margin:0 0 22px;flex-wrap:wrap;}
+  .kpi{flex:1;min-width:104px;background:#ffffff;border:1px solid #e2e8f2;border-radius:10px;padding:10px 12px;}
+  .kpi b{display:block;font-size:19px;font-weight:700;}
+  .kpi span{font-size:12px;color:#7a8598;}
+  .card{background:#ffffff;border:1px solid #e2e8f2;border-radius:12px;padding:14px 14px 10px;margin:0 0 18px;}
+  .card h3{font-size:14px;margin:0 0 8px;font-weight:700;color:#243043;line-height:1.6;}
+  svg{display:block;width:100%;height:auto;}
+  .cap{font-size:12px;color:#6b7688;line-height:1.8;margin:8px 2px 2px;}
+  .verdict{background:#ffffff;border:1px solid #e2e8f2;border-left:4px solid #d94a4a;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.9;}
+  code{background:#eef2f8;padding:1px 5px;border-radius:4px;font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TUFT-r391　攻 ROOT V58：偶数族模二定理 · 角动量禁戒的精确间距 · 修复入口修错对象</h1>
+<p class="sub">来料主张「找到三代质量生成的关键障碍与修复入口」，并给出 <code>j_S=1</code> 的修复方案。
+本卷独立重算后给出三条更强也更不利的结论：<strong>族数恒为偶数且最小为 2</strong>（对<strong>任意族数</strong>成立，加多少 16 都改不了）；
+角动量禁戒的间距<strong>恒等于 1</strong>（比来料的不等式更紧）；所谓修复入口修的是<strong>不存在的对象</strong>——
+该机制的质量矩阵最小是 2×2，3×3 根本不存在。全卷 34 条读数，14 个守卫全绿，2 条判负显式登记。</p>
+
+<div class="kpis">
+  <div class="kpi"><b>10</b><span>PASS</span></div>
+  <div class="kpi"><b>5</b><span>INFO</span></div>
+  <div class="kpi"><b>2</b><span>FAIL（已登记）</span></div>
+  <div class="kpi"><b>3</b><span>控制组</span></div>
+  <div class="kpi"><b>14/14</b><span>守卫</span></div>
+</div>
+
+<div class="card"><h3>图 1　主定理：奇偶性由模 2 锁死，与族数无关</h3>
+<svg id="fig1" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">三行证明：前提 <code>Σ sᵢqᵢ² = 0</code> 乘上 <code>N²</code> 得 <code>Σ sᵢQᵢ² = 0</code>；对整数恒有 <code>Q² ≡ Q (mod 2)</code>；
+两式相接即 <code>n = Σ sᵢQᵢ ≡ Σ sᵢQᵢ² ≡ 0</code>。<strong>关键在 <code>sᵢ = ±1</code> 在模 2 下等于 1</strong>——
+所以结论对任意族数、任意符号分配、任意电荷都成立。右侧两列是两条<strong>不同代码路径</strong>的实测：
+107 组构造族（<code>q</code> 的多重集配对）与 6336 组（直接遍历 <code>Q</code> 与符号）都全偶。</p></div>
+
+<div class="card"><h3>图 2　族数可行性：k=1、3 是代数上无解，不是整数性产物</h3>
+<svg id="fig2" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">纵轴为 <code>log₁₀(1+解数)</code>（否则 2044 会把其余压成一条线），柱上是真实解数。
+<strong>k=1 与 k=3 的解数精确为 0</strong>，理由不是「q 不够大」而是 <code>Σu = u₀ ∧ Σu² = u₀² ⇒ 2e₂ = 0</code>：
+一侧单项、另一侧多项时，至多一个 <code>u</code> 非零 ⇒ 退化解。K3 用四元组另测过一遍，同样全不相等。
+零值用<strong>基线短横</strong>表示（高度为 0 的柱子看不见，会被几何体检判红）。</p></div>
+
+<div class="card"><h3>图 3　角动量禁戒：间距恒为 1，对任意零模数 Q</h3>
+<svg id="fig3" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">把两个角动量都写成零模数 <code>Q = q_f·N</code> 的函数：<code>j_f = (Q−1)/2</code>、<code>j_H,min = |q_H|N/2 = Q</code>
+（因 <code>q_H = −2q_f</code>）。于是 <code>j_H,min − 2j_f = Q − (Q−1) = 1</code>，<strong>恒等于 1</strong>，
+与 Q、<code>q_f</code>、N 全部无关。来料只写了不等式 <code>N &gt; N−1</code>，本卷把它收紧为等式。
+B2 又用 <code>(N,k)</code> 参数化独立扫了 35 组，全为 1（G13 记两条路径独立）。</p></div>
+
+<div class="card"><h3>图 4　修复入口修错对象：3×3 质量矩阵在这个机制里不存在</h3>
+<svg id="fig4" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">来料第七节把「<code>j_S=1</code> 背景场 ⇒ 三代质量矩阵」定为下一轮主攻方向。
+但本卷主定理说族数<strong>恒为偶数</strong>，最小非零是 <code>n = 2q₊N = 2</code>。偶数族的 Yukawa 矩阵是
+<strong>2×2</strong>；要 3×3 就得先有 3 族，而 3 永远不可能出现。所以角动量禁戒解除与否
+<strong>救不了三代</strong> —— 修的是一个不存在的对象（B4，已登记判负）。</p></div>
+
+<div class="card"><h3>图 5　来料列的两条出路在本机制内都关闭</h3>
+<svg id="fig5" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">来料据此声称「这不是不可能性证明」。本卷逐条测过：<strong>额外场</strong>被模二定理关掉（图 1：
+加多少 16 都不改奇偶）；<strong>Green–Schwarz</strong> 被 A3 关掉 —— GS 可分解性<strong>等价于</strong> <code>I₈ = 0</code>
+（5 组实测 5 组吻合），因为净 8 形式里 <code>T²</code>、<code>p₁²</code> 系数恒为 0 ⇒ 平方要求 <code>β=γ=0</code>，
+而 <code>x²T</code>、<code>x²p₁</code> 又非零 ⇒ 只能回到原矛盾。两条出路都不是独立出路（E1，已登记判负）。</p></div>
+
+<div class="card"><h3>图 6　CG 系数 <code>1/√(2Q+1)</code>：来料只报了最有利的那一点</h3>
+<svg id="fig6" viewBox="0 0 680 360" width="680" height="360"></svg>
+<p class="cap">来料给出 <code>1/√7 ≈ 0.378</code>（Q=3）。本卷把它推广成闭式：单因子
+<code>⟨j,−j;1,1|j−1,−(j−1)⟩² = (2j−1)/(2j+1)</code>，全链条（两费米子 → H⊗S → 总角动量 0）
+<code>= 1/(2Q+1)</code> ⇒ 系数 <code>1/√(2Q+1)</code> 随 Q <strong>单调衰减</strong>。
+Q=3 恰好是曲线上较高的点；Q 越大越救不回三代（这与「Q 越大越像三代」的直觉相反）。</p></div>
+
+<div class="verdict">
+<strong>一句话：</strong>ROOT V58 的「关键障碍」诊断对了（角动量禁戒确实存在，本卷还把它从不等式收紧成等式），
+但「修复入口」修错了对象 —— 该机制的族数谱是偶数集 <code>{2,4,6,…}</code>，三代 <code>n=3</code> 不在谱内，
+3×3 质量矩阵无从谈起；两条备用出路（额外场、Green–Schwarz）也分别被模二定理与 <code>I₈=0</code> 等价性关闭。
+供给 0，不占度，度数链维持 <strong>36</strong>。
+</div>
+</div>
+
+<script>
+function tx(p, x, y, s, o) {
+  o = o || {};
+  var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  t.setAttribute("x", x); t.setAttribute("y", y);
+  t.setAttribute("font-size", o.fs || 12);
+  t.setAttribute("fill", o.fill || "#2b3446");
+  t.setAttribute("text-anchor", o.anchor || "start");
+  if (o.weight) t.setAttribute("font-weight", o.weight);
+  t.textContent = s;
+  p.appendChild(t);
+  return t;
+}
+function rc(p, x, y, w, h, o) {
+  o = o || {};
+  var r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+  r.setAttribute("x", x); r.setAttribute("y", y);
+  r.setAttribute("width", w); r.setAttribute("height", h);
+  r.setAttribute("rx", o.rx === undefined ? 8 : o.rx);
+  r.setAttribute("fill", o.fill || "#ffffff");
+  r.setAttribute("stroke", o.stroke || "#dfe6f1");
+  r.setAttribute("stroke-width", o.sw || 1);
+  p.appendChild(r);
+  return r;
+}
+function ln(p, x1, y1, x2, y2, o) {
+  o = o || {};
+  var l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  l.setAttribute("x1", x1); l.setAttribute("y1", y1);
+  l.setAttribute("x2", x2); l.setAttribute("y2", y2);
+  l.setAttribute("stroke", o.stroke || "#c3cddd");
+  l.setAttribute("stroke-width", o.sw || 1.5);
+  if (o.dash) l.setAttribute("stroke-dasharray", o.dash);
+  p.appendChild(l);
+  return l;
+}
+function dot(p, cx, cy, r, o) {
+  o = o || {};
+  var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  c.setAttribute("cx", cx); c.setAttribute("cy", cy); c.setAttribute("r", r);
+  c.setAttribute("fill", o.fill || "#3d6fb4");
+  p.appendChild(c);
+  return c;
+}
+function arw(p, x1, y1, x2, y2, o) {
+  o = o || {};
+  ln(p, x1, y1, x2, y2, { stroke: o.stroke || "#8fa2bd", sw: 1.6 });
+  var hw = 5, d = (y2 >= y1) ? 1 : -1;
+  var a = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  a.setAttribute("d", "M " + x2 + " " + y2 + " L " + (x2 - hw) + " " + (y2 - d * 9) +
+                      " L " + (x2 + hw) + " " + (y2 - d * 9) + " Z");
+  a.setAttribute("fill", o.stroke || "#8fa2bd");
+  p.appendChild(a);
+  return a;
+}
+</script>
+
+<script>
+(function () {
+  var p = document.getElementById("fig1");
+  var f1X0 = 24, f1Y1 = 30, f1STEP = 92, f1W = 306, f1H = 62;
+  var steps = [
+    ["① 前提搬上 N", "Σ sᵢqᵢ² = 0   ⇒   Σ sᵢQᵢ² = N²·0 = 0"],
+    ["② 模 2 的整数事实", "Q² ≡ Q (mod 2)   对每个整数 Q"],
+    ["③ 两式相接", "n = Σ sᵢQᵢ ≡ Σ sᵢQᵢ² ≡ 0 (mod 2)   ∎"]
+  ];
+  var i, y;
+  for (i = 0; i < 3; i++) {
+    y = f1Y1 + i * f1STEP;
+    rc(p, f1X0, y, f1W, f1H, { fill: i === 2 ? "#eef6ef" : "#ffffff",
+                               stroke: i === 2 ? "#bcdcc0" : "#dfe6f1" });
+    tx(p, f1X0 + 12, y + 24, steps[i][0], { fs: 12, weight: "700", fill: "#243043" });
+    tx(p, f1X0 + 12, y + 45, steps[i][1], { fs: 11, fill: "#4d5a70" });
+    if (i < 2) arw(p, f1X0 + f1W / 2, y + f1H + 2, f1X0 + f1W / 2, y + f1STEP - 4);
+  }
+  /* 右侧两条独立路径的实测 */
+  var rx = 356, rw = 300;
+  rc(p, rx, 30, rw, 198, { fill: "#fbfcfe", stroke: "#e4eaf4" });
+  tx(p, rx + 14, 52, "两条代码路径的实测（互不复用）", { fs: 12, weight: "700", fill: "#243043" });
+  tx(p, rx + 14, 78, "路径 A：q 的多重集配对 + 逐项翻号", { fs: 11, fill: "#4d5a70" });
+  tx(p, rx + 14, 97, "  107 组构型（2 族 / 勾股 3 族 / 4 族）", { fs: 11, fill: "#4d5a70" });
+  tx(p, rx + 14, 116, "  n≠0 的 92 组，n 全偶 = True，min|n|≠0 = 2", { fs: 11, fill: "#2f7a3d" });
+  tx(p, rx + 14, 142, "路径 B：直接遍历 (Qᵢ, sᵢ) ∈ [−6,6]⁴", { fs: 11, fill: "#4d5a70" });
+  tx(p, rx + 14, 161, "  k=1..4 解数 0 / 48 / 0 / 6336", { fs: 11, fill: "#4d5a70" });
+  tx(p, rx + 14, 180, "  n 全偶 = True，min|n|≠0 = 2", { fs: 11, fill: "#2f7a3d" });
+  tx(p, rx + 14, 210, "反面对照：违反前提（a≠c）的 30 组里 60 个 n 为奇", { fs: 11, fill: "#b4453f" });
+  tx(p, rx + 14, 250, "★ sᵢ = ±1 在模 2 下都等于 +1", { fs: 11, fill: "#243043" });
+  tx(p, rx + 14, 269, "⇒ 族数、符号分配、电荷大小都不影响奇偶", { fs: 11, fill: "#243043" });
+  tx(p, rx + 14, 296, "★ 这把来料的「两族 ⇒ 偶」升级为「任意谱 ⇒ 偶」", { fs: 11, fill: "#243043" });
+  tx(p, rx + 14, 315, "  加 1 个、2 个、100 个额外 16 —— 仍然是偶数", { fs: 11, fill: "#243043" });
+  tx(p, f1X0 + 4, 320, "结论：n 恒偶 ⇒ 三代 n = 3 不在可达集内", { fs: 12, weight: "700", fill: "#b4453f" });
+  tx(p, f1X0 + 4, 340, "（与 Q 是否整数、q 是否整数、N 取何值全部无关）", { fs: 11, fill: "#6b7688" });
+})();
+</script>
+
+<script>
+(function () {
+  var p = document.getElementById("fig2");
+  var f2X0 = 70, f2Y0 = 288, f2BW = 62, f2GAP = 22;
+  var cnt = [0, 22, 0, 253, 8, 2044];
+  var lab = ["k=1", "k=2", "k=3", "k=4", "k=5", "k=6"];
+  var i, x, h, v, top;
+  ln(p, f2X0 - 14, f2Y0, 640, f2Y0, { stroke: "#c3cddd", sw: 1.5 });
+  tx(p, f2X0 - 62, 44, "log₁₀(1+解数)", { fs: 10, fill: "#7a8598", anchor: "start" });
+  for (i = 0; i < 6; i++) {
+    x = f2X0 + i * (f2BW + f2GAP);
+    v = cnt[i];
+    h = 190 * Math.log(1 + v) / Math.log(1 + 2044);
+    top = f2Y0 - h;
+    if (v === 0) {
+      /* 零值不画零高度矩形（体检会判不可见）—— 改为基线短横 */
+      ln(p, x + 6, f2Y0 - 2, x + f2BW - 6, f2Y0 - 2, { stroke: "#b4453f", sw: 3 });
+      tx(p, x + f2BW / 2, f2Y0 - 12, "0", { fs: 11, anchor: "middle", weight: "700", fill: "#b4453f" });
+    } else {
+      rc(p, x, top, f2BW, h, { rx: 4, fill: i % 2 ? "#7fa6d6" : "#5a8ac6", stroke: "#4e7cb8" });
+      tx(p, x + f2BW / 2, top - 6, String(v), { fs: 11, anchor: "middle", weight: "700", fill: "#2b3446" });
+    }
+    tx(p, x + f2BW / 2, f2Y0 + 18, lab[i], { fs: 11, anchor: "middle", fill: "#4d5a70" });
+  }
+  tx(p, f2X0 - 14, f2Y0 + 42, "k=1 与 k=3 精确为 0：一侧单项、另一侧多项时 Σu = u₀ ∧ Σu² = u₀² ⇒ 2e₂ = 0 ⇒ 退化",
+     { fs: 11, fill: "#b4453f" });
+  tx(p, f2X0 - 14, f2Y0 + 63, "这是代数结论（实数域上同样成立），换分数电荷也救不了 —— K3 用四元组另测一遍确认",
+     { fs: 11, fill: "#4d5a70" });
+  tx(p, f2X0 - 14, 60, "每一族数下同时满足 Σ s q² = 0 与 Σ s q⁴ = 0 的整数解组数（q ≤ 22 穷举）",
+     { fs: 11, fill: "#6b7688" });
+  dot(p, 520, 116, 5, { fill: "#2f7a3d" });
+  tx(p, 532, 120, "min|n|≠0 = 2（k ≥ 2 全部）", { fs: 11, fill: "#2f7a3d" });
+  tx(p, 520, 146, "⇒ 谱是 {2,4,6,…}，没有 3", { fs: 11, fill: "#b4453f" });
+})();
+</script>
+
+<script>
+(function () {
+  var p = document.getElementById("fig3");
+  var f3X0 = 62, f3DW = 47, f3Y0 = 300, f3S = 8.2;
+  var Q, x, i;
+  var jh = [], jf2 = [];
+  for (Q = 1; Q <= 12; Q++) {
+    jh.push(Q);
+    jf2.push(Q - 1);
+  }
+  ln(p, f3X0 - 16, f3Y0, 600, f3Y0, { stroke: "#c3cddd", sw: 1.5 });
+  ln(p, f3X0 - 16, 60, f3X0 - 16, f3Y0, { stroke: "#c3cddd", sw: 1.5 });
+  tx(p, f3X0 - 24, 76, "j", { fs: 11, fill: "#7a8598", anchor: "end" });
+  /* 两条折线 */
+  var d1 = "", d2 = "";
+  for (i = 0; i < 12; i++) {
+    x = f3X0 + i * f3DW;
+    d1 += (i === 0 ? "M " : " L ") + x + " " + (f3Y0 - jh[i] * f3S);
+    d2 += (i === 0 ? "M " : " L ") + x + " " + (f3Y0 - jf2[i] * f3S);
+  }
+  var pa = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  pa.setAttribute("d", d1); pa.setAttribute("fill", "none");
+  pa.setAttribute("stroke", "#4e7cb8"); pa.setAttribute("stroke-width", 2);
+  p.appendChild(pa);
+  var pb = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  pb.setAttribute("d", d2); pb.setAttribute("fill", "none");
+  pb.setAttribute("stroke", "#c98a3c"); pb.setAttribute("stroke-width", 2);
+  p.appendChild(pb);
+  for (i = 0; i < 12; i++) {
+    x = f3X0 + i * f3DW;
+    dot(p, x, f3Y0 - jh[i] * f3S, 3.6, { fill: "#4e7cb8" });
+    dot(p, x, f3Y0 - jf2[i] * f3S, 3.6, { fill: "#c98a3c" });
+    tx(p, x, f3Y0 + 17, String(i + 1), { fs: 10, anchor: "middle", fill: "#7a8598" });
+  }
+  /* 间距 1 的放大标注（Q=9） */
+  var xq = f3X0 + 8 * f3DW;
+  ln(p, xq, f3Y0 - jh[8] * f3S, xq, f3Y0 - jf2[8] * f3S, { stroke: "#b4453f", sw: 2 });
+  tx(p, xq + 8, f3Y0 - jh[8] * f3S + 4, "间距 = 1", { fs: 11, weight: "700", fill: "#b4453f" });
+  tx(p, 404, 82, "j_H,min = Q = |q_H|N/2", { fs: 11, fill: "#4e7cb8" });
+  tx(p, 404, 102, "2j_f = Q − 1", { fs: 11, fill: "#c98a3c" });
+  tx(p, 62, 328, "横轴：零模数 Q = q_f·N（Q = 1..12）；纵轴：角动量", { fs: 11, fill: "#6b7688" });
+  tx(p, 62, 348, "对任意 Q：j_H,min − 2j_f = Q − (Q−1) = 1 ⇒ 禁戒恒成立，且间距不随 Q 变",
+     { fs: 11, weight: "700", fill: "#b4453f" });
+})();
+</script>
+
+<script>
+(function () {
+  var p = document.getElementById("fig4");
+  var f4X0 = 62, f4Y1 = 96, f4C = 46;
+  /* 左：2×2 —— 真实存在的对象 */
+  tx(p, f4X0, 62, "该机制能给出的最小非零谱：n = 2", { fs: 12, weight: "700", fill: "#243043" });
+  var r, c, cx, cy;
+  for (r = 0; r < 2; r++) {
+    for (c = 0; c < 2; c++) {
+      cx = f4X0 + c * (f4C + 6);
+      cy = f4Y1 + r * (f4C + 6);
+      rc(p, cx, cy, f4C, f4C, { rx: 6, fill: "#eef6ef", stroke: "#bcdcc0" });
+      tx(p, cx + f4C / 2, cy + f4C / 2 + 5, "y" + (r + 1) + (c + 1),
+         { fs: 12, anchor: "middle", fill: "#2f7a3d" });
+    }
+  }
+  tx(p, f4X0, f4Y1 + 2 * (f4C + 6) + 22, "2×2：Yukawa 矩阵存在，可以算质量", { fs: 11, fill: "#2f7a3d" });
+  tx(p, f4X0, f4Y1 + 2 * (f4C + 6) + 42, "但只有两代 —— 与实验的 3 代矛盾", { fs: 11, fill: "#b4453f" });
+  /* 右：3×3 —— 不存在的对象 */
+  tx(p, 372, 62, "来料要的对象：3×3 三代质量矩阵", { fs: 12, weight: "700", fill: "#243043" });
+  for (r = 0; r < 3; r++) {
+    for (c = 0; c < 3; c++) {
+      cx = 372 + c * (f4C + 6);
+      cy = f4Y1 + r * (f4C + 6);
+      rc(p, cx, cy, f4C, f4C, { rx: 6, fill: "#fdf1f0", stroke: "#eec9c6" });
+      tx(p, cx + f4C / 2, cy + f4C / 2 + 5, "—",
+         { fs: 12, anchor: "middle", fill: "#d9a7a3" });
+    }
+  }
+  var xa = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  xa.setAttribute("d", "M 376 " + (f4Y1 + 6) + " L " + (372 + 3 * (f4C + 6) - 12) + " " +
+                        (f4Y1 + 3 * (f4C + 6) - 12) + " Z");
+  xa.setAttribute("stroke", "#b4453f"); xa.setAttribute("stroke-width", 3);
+  xa.setAttribute("fill", "none");
+  p.appendChild(xa);
+  tx(p, 372, f4Y1 + 3 * (f4C + 6) + 22, "族数恒偶 ⇒ 3×3 的对象根本不存在", { fs: 11, fill: "#b4453f" });
+  tx(p, 372, f4Y1 + 3 * (f4C + 6) + 42, "所以「解除角动量禁戒」救不了三代", { fs: 11, fill: "#b4453f" });
+  tx(p, 62, f4Y1 + 3 * (f4C + 6) + 74,
+     "n = 2q₊N，取 q₊N = 1 ⇒ n = 2；要 n = 3 需要 q₊N = 3/2 ∉ ℤ，与零模数整数性冲突",
+     { fs: 11, fill: "#4d5a70" });
+  tx(p, 62, f4Y1 + 3 * (f4C + 6) + 94,
+     "这与 r350「框架不预言 3」、r389「整数比搬家」同型：3 始终是输入，不是产物",
+     { fs: 11, weight: "700", fill: "#243043" });
+})();
+</script>
+
+<script>
+(function () {
+  var p = document.getElementById("fig5");
+  var f5Y1 = 40;
+  rc(p, 180, f5Y1, 320, 48, { fill: "#fbfcfe", stroke: "#dfe6f1" });
+  tx(p, 340, f5Y1 + 22, "来料：这不是不可能性证明", { fs: 12, anchor: "middle", weight: "700", fill: "#243043" });
+  tx(p, 340, f5Y1 + 40, "因为还有两条出路", { fs: 11, anchor: "middle", fill: "#4d5a70" });
+  /* 分叉 */
+  arw(p, 300, f5Y1 + 50, 200, f5Y1 + 100);
+  arw(p, 380, f5Y1 + 50, 480, f5Y1 + 100);
+  /* 左支 */
+  rc(p, 62, f5Y1 + 104, 276, 52, { fill: "#ffffff", stroke: "#dfe6f1" });
+  tx(p, 200, f5Y1 + 126, "出路 ①：额外场（再加 16）", { fs: 12, anchor: "middle", weight: "700", fill: "#243043" });
+  tx(p, 200, f5Y1 + 145, "靠加族数把 n 从 2 抬到 3", { fs: 11, anchor: "middle", fill: "#4d5a70" });
+  arw(p, 200, f5Y1 + 158, 200, f5Y1 + 196, { stroke: "#b4453f" });
+  rc(p, 62, f5Y1 + 200, 276, 66, { fill: "#fdf1f0", stroke: "#eec9c6" });
+  tx(p, 200, f5Y1 + 222, "关闭（A4 + G14）", { fs: 12, anchor: "middle", weight: "700", fill: "#b4453f" });
+  tx(p, 200, f5Y1 + 241, "每加一个 16 只加一个偶数", { fs: 11, anchor: "middle", fill: "#4d5a70" });
+  tx(p, 200, f5Y1 + 258, "n 仍是偶数，3 永远不在谱内", { fs: 11, anchor: "middle", fill: "#4d5a70" });
+  /* 右支 */
+  rc(p, 342, f5Y1 + 104, 276, 52, { fill: "#ffffff", stroke: "#dfe6f1" });
+  tx(p, 480, f5Y1 + 126, "出路 ②：Green–Schwarz", { fs: 12, anchor: "middle", weight: "700", fill: "#243043" });
+  tx(p, 480, f5Y1 + 145, "靠边界反流项消掉异常", { fs: 11, anchor: "middle", fill: "#4d5a70" });
+  arw(p, 480, f5Y1 + 158, 480, f5Y1 + 196, { stroke: "#b4453f" });
+  rc(p, 342, f5Y1 + 200, 276, 66, { fill: "#fdf1f0", stroke: "#eec9c6" });
+  tx(p, 480, f5Y1 + 222, "关闭（A3）", { fs: 12, anchor: "middle", weight: "700", fill: "#b4453f" });
+  tx(p, 480, f5Y1 + 241, "GS 可分解 ⟺ I₈ = 0（5 组实测 5 组吻合）", { fs: 11, anchor: "middle", fill: "#4d5a70" });
+  tx(p, 480, f5Y1 + 258, "⇒ 又回到「两个 16 必须同反常」这条", { fs: 11, anchor: "middle", fill: "#4d5a70" });
+  tx(p, 340, f5Y1 + 294, "两条出路都不是独立出路：一条被奇偶性堵死，一条与前提同义",
+     { fs: 12, anchor: "middle", weight: "700", fill: "#b4453f" });
+  tx(p, 340, f5Y1 + 314, "（E1，已按纪律登记为判负）", { fs: 11, anchor: "middle", fill: "#6b7688" });
+})();
+</script>
+
+<script>
+(function () {
+  var p = document.getElementById("fig6");
+  var f6X0 = 90, f6Y0 = 300, f6S = 380, f6DW = 96;
+  var Qs = [1, 3, 5, 7, 9, 11];
+  var i, x, v, y;
+  ln(p, f6X0 - 20, f6Y0, 620, f6Y0, { stroke: "#c3cddd", sw: 1.5 });
+  ln(p, f6X0 - 20, 58, f6X0 - 20, f6Y0, { stroke: "#c3cddd", sw: 1.5 });
+  tx(p, f6X0 - 28, 74, "系数", { fs: 11, fill: "#7a8598", anchor: "end" });
+  var d = "";
+  for (i = 0; i < Qs.length; i++) {
+    x = f6X0 + i * f6DW;
+    v = 1 / Math.sqrt(2 * Qs[i] + 1);
+    y = f6Y0 - v * f6S;
+    d += (i === 0 ? "M " : " L ") + x + " " + y;
+  }
+  var pa = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  pa.setAttribute("d", d); pa.setAttribute("fill", "none");
+  pa.setAttribute("stroke", "#4e7cb8"); pa.setAttribute("stroke-width", 2);
+  p.appendChild(pa);
+  for (i = 0; i < Qs.length; i++) {
+    x = f6X0 + i * f6DW;
+    v = 1 / Math.sqrt(2 * Qs[i] + 1);
+    y = f6Y0 - v * f6S;
+    if (Qs[i] === 3) {
+      dot(p, x, y, 8, { fill: "#b4453f" });
+      tx(p, x + 14, y - 4, "1/√7 = 0.378（来料只报这一点）", { fs: 11, weight: "700", fill: "#b4453f" });
+    } else {
+      dot(p, x, y, 5, { fill: "#4e7cb8" });
+      tx(p, x + 10, y + 4, v.toFixed(3), { fs: 10, fill: "#4d5a70" });
+    }
+    tx(p, x, f6Y0 + 17, "Q=" + Qs[i], { fs: 10, anchor: "middle", fill: "#7a8598" });
+  }
+  tx(p, 62, 328, "闭式：单因子 ⟨j,−j;1,1|j−1,−(j−1)⟩² = (2j−1)/(2j+1)；全链条 = 1/(2Q+1) ⇒ 系数 1/√(2Q+1)",
+     { fs: 11, fill: "#4d5a70" });
+  tx(p, 62, 348, "Q 越大系数越小 ⇒ 提高 Q 反而更难把三代拉回来（与直觉相反）",
+     { fs: 11, weight: "700", fill: "#243043" });
+})();
+</script>
+</body>
+</html>

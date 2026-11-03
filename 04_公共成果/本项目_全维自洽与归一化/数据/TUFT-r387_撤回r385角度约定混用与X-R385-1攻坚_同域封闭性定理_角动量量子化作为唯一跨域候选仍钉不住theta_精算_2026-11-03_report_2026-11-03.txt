@@ -1,0 +1,239 @@
+==============================================================================
+TUFT-r387  精算报告  2026-11-03
+==============================================================================
+判词：R387-RETRACT-R385-E02-ANGLE-CONVENTION-MIXUP-OK-GSTAR-OF-ONE-NEARLY-SATURATED-OK-SAME-DOMAIN-SECOND-EQUATION-IMPOSSIBLE-OK-ANGULAR-MOMENTUM-ONLY-CROSS-DOMAIN-CANDIDATE-OK-THETA-STILL-FREE-FAIL-ALPHA-NOT-DERIVED-FAIL-UNIQUE-PREDICTION-0
+
+[1] 撤回：r385 的 E02 修正方向反了
+    约定A  theta_A = atan(kappa/tau)  kappa=(w/c)sin  tau=(w/c)cos  N_A=a1 s^2+a2 c^2+g c
+            N_A' = sin*[2(a1-a2)cos - g]   =>  g* = 2(a1-a2)cos(theta_A*)
+    约定B  theta_B = atan(tau/kappa) = pi/2 - theta_A       N_B=a1 c^2+a2 s^2+g s
+            N_B' = cos*[2(a2-a1)sin + g]   =>  g* = 2(a1-a2)sin(theta_B*)
+    两套同值： sin(theta_B*)=cos(theta_A*)  =>  g* = 2(a1-a2)cos(theta_A*)
+
+    正确 g*          = -3.9998935015443E+000
+    r385 实报        = -2.9188633120421E-002   <= 混用读数
+    比值 cot(theta_A) = 1.370359991E+002   （1/alpha = 1.370359991E+002，恒等）
+    饱和度 |g*|/gmax  = 9.99973375386E-001   （gmax = 2|a1-a2| = 4）
+    => 撤回 r385 的「O(alpha)」「上界从不 binding」两条；并指出「137 倍=1/alpha」
+       是 cot(arctan a)=1/a 的定义恒等，不携带结构信息
+
+[2] 定理 A（同域封闭性）
+    f = kappa^2 + tau^2 - K 在 Q[kappa,tau] 不可约  =>  (f) 是素理想
+    G 在 V(f) 上恒零  <=>  G 属于 (f)  <=>  除法归约余式为空
+    归约族 f + lam*(kappa*tau - m)：15 组中只有 lam=0 的 3 组余式为空
+    => 同域第二方程不存在（不是没找到）
+
+[3] 跨域候选：角动量量子化 m R^2 w = n hbar
+    omega 自由：3 未知 2 方程 => 1 维，tan(theta)=x/sqrt(c^2-x^2) 满射
+    omega = w_C 给定：n=1 => u=0（纯圆），n>=2 无实解
+    theta_A=atan(alpha) 的解：w=4.1339172E+016  R=5.2919130E-011  u=2.9978448E+008
+    R 与 a0 相对差 2.663E-005 —— 定义恒等，判别力 0
+
+[4] 条目明细
+    A01   PASS 两套约定的角度互余：tan(theta_A)*tan(theta_B) = 1（6 相位）
+           exp = 0
+           act = 0
+    A02   PASS 同一物理点：g*(约定A) = 2(a1-a2)cos(theta_A) 与 g*(约定B) = 2(a1-a2)sin(theta_B) 恒等
+           exp = 0（两套同值）
+           act = 0
+           note= sin(theta_B)=cos(theta_A) 是互余的直接后果
+    A03   PASS 两套约定各自自洽：反解 g* 后 N_A' 与 N_B' 残差同时为 0（6 相位）
+           exp = 两套都 0
+           act = A:0 B:0
+           note= 所以 r385 的错不在任一套约定，而在把 A 约定的角度代进 B 约定的公式
+    A04   PASS 混用读数 = 2(a1-a2)sin(theta_A)，与正确值之比恰为 cot(theta_A)（6 相位）
+           exp = 比值 = C/S
+           act = 6/6 精确
+           note= theta_A=atan(alpha) 时比值 = 1/tan(alpha) ≈ 137，所以「差 137 倍」是真的，但错的是小数那个
+    A05   PASS 内点驻点的耦合饱和度 |g*|/(2|a1-a2|) 恒等于 cos(theta_A)
+           exp = 0
+           act = 0
+           note= theta_A 越小饱和度越高；atan(alpha) 时饱和度 = 0.9999734
+    A06   PASS f = kappa^2+tau^2-K 在 Q[kappa,tau] 中不可约（ad=be=1 与 ae+bd=0 逼出 e^2=-d^2）
+           exp = 无有理解（k^2+t^2 差一平方不可分解）
+           act = Q 上 d,e != 0 无解
+           note= 不可约 => (f) 是素理想 => Nullstellensatz：在 V(f) 上恒零 <=> 属于 (f)
+    A07   PASS 族 G = f + lam*(kappa*tau - m) 的归约余式：仅 lam=0 时为空（15 组）
+           exp = 只有 lam=0 属于 (f)
+           act = empty = 3/15
+           note= lam!=0 时余式 = lam*(kappa*tau - m)，含 kappa 一次项 => 在 V(f) 上不恒零
+    A08   PASS 双分支：余式含 kappa 一次项时，V(f) 上 (kappa,tau) 与 (-kappa,tau) 使其反号
+           exp = v1 = -v2 != 0
+           act = v1=60 v2=-60
+           note= 所以余式非空 <=> G 在 V(f) 上不恒零；判据双向都成立
+    A09   PASS 选 theta 的约束 |kappa/tau - tan(theta*)|=0 在 6 个零模点上只命中 1 个
+           exp = 命中 1 个
+           act = hits=1  max|val|=92/45
+           note= 不恒零 => 必须跨域（携带目标 theta* 作输入）=> 一参数一目标
+    A10   INFO 推论：只由 (kappa,tau) 代数构造、且在零模曲面上恒成立的第二方程不存在
+           exp = 0 条
+           act = 0 条（A06 素理想 + A07 归约 + A08 双分支 + A09 选区约束）
+           note= 纯陈述：这是定理 A 的直译；它不是「没找到」，是「不可能」
+    A11   PASS 角动量量子化 m R^2 w = n hbar 不含新自由参数（hbar 常数、n 整数）
+           exp = 0 个新参数
+           act = 0 个（相对零模）
+           note= 这是唯一通过「无新参数」筛子的跨域候选；但它是跨域的：它对一般螺旋不成立
+    A12   INFO 维数账：omega 自由时 3 未知 2 方程 => 1 维；omega 由 E=hbar*w 给定则 2 未知 2 方程 => 0 维
+           exp = 1 维 / 0 维
+           act = 3-2=1；2-2=0
+           note= 纯陈述；数值见 B 层。判别力完全取决于 omega 是否算输入
+    A13   PASS 手性量子化只钉 tau 的符号（±1），不钉 |tau| => 不钉 theta 的模
+           exp = 符号自由、模不变
+           act = True
+           note= 解释了为什么库内比值一律用 kappa/|tau|
+    A14   INFO 闭合性只给 tan(theta) 为有理数：Fibonacci 比 13/8 与目标 2 之差
+           exp = 13/8 = 1.625
+           act = 偏差 = -3/8
+           note= 纯陈述：有理数在实数中稠密 => 拓扑量子化给可数稠密集，不是唯一值
+    B01   PASS g* := G1*/(hbar w) 的正确读数 = 2(a1-a2)cos(theta_A*)（a1:a2=1:3 => -4cos）
+           exp = -3.9998935015443E+000
+           act = -3.9998935015443E+000
+           note= theta_A* = atan(alpha) = 7.29722304214E-003 rad
+    B02   PASS 饱和度 |g*|/gmax = cos(theta_A*)（gmax = 2|a1-a2| = 4）
+           exp = 9.9997337538608E-001
+           act = 9.9997337538608E-001
+           note= 物理点用掉上限的 99.9973%，是「几乎饱和」
+    B03   PASS r385 实报读数与正确读数之比 = cot(theta_A*) = cot(arctan(alpha))
+           exp = 1.37035999084E+002
+           act = 1.37035999084E+002
+           note= 比值 = 1/alpha 是精确恒等（cot(arctan a) = 1/a），不是巧合；见 E05
+    B04   PASS omega 自由：任意目标 tan(theta)=T 反解 x=T/sqrt(1+T^2) 后回代（6 档 1e-6..1e6）
+           exp = 回代相对偏差 0
+           act = 0
+           note= 构造性满射：x 从 0 到 c 覆盖 tan 从 0 到 inf => theta 全覆盖 => 判别力 0（无门限判据）
+    B05   PASS omega = w_C 给定时：n=1 => u=0（纯圆）；n>=2 => u^2<0 无实解
+           exp = n=1 唯一可容许
+           act = n=1:u^2/c^2=0 / n=2:u^2/c^2=-1.000E+000 / n=3:u^2/c^2=-2.000E+000 / n=4:u^2/c^2=-3.000E+000
+           note= 所以「E=hbar*w 给定 + L_z=n*hbar」把 theta 钉到 0，且只留 n=1
+    B06   PASS omega 自由、theta_A=atan(alpha)：零模残差与角动量残差（两式各自闭合）
+           exp = 两残差 0
+           act = null:7.789E-050  angmom:0
+           note= w=4.133917199E+016 rad/s  R=5.291913001E-011 m  u=2.997844761E+008 m/s
+    B07   PASS R 与 a0 = hbar/(m c alpha) 的相对差落在 [a^2/2 - a^4/4, a^2/2]（二阶级数交错）
+           exp = a^2/2 = 2.66257E-005
+           act = 实测 2.66253E-005
+           note= R = (hbar/(m alpha c))*sqrt(1+alpha^2)，sqrt 展开即 a^2/2 - a^4/8；与「alpha 三口径互差 a^2/2」同源
+    B08   PASS 负对照：把角动量误写成 m R w = n hbar（量纲是动量）后 Rw 被钉死、theta 被钉死
+           exp = theta 被钉死（判别力 1）
+           act = u^2 = 8.98755E+016
+           note= 「能钉住 theta」是量纲错误的副产品：mRw 的量纲是动量不是角动量
+    B09   PASS 闭合性只给 tan(theta) 有理：5 个目标 theta 用分母 1e6 的有理 tan 值逼近
+           exp = <= 1/(2q') = 5.000E-007
+           act = 3.52551E-007
+           note= q' 可任意大 => 任意 theta 都能被逼近 => 可数稠密 => 连续意义下判别力 0
+    B10   PASS r385 的四条结构性结论仍成立：判别力 0 / 不占度 / theta 零模 / 唯一尺度
+           exp = 4/4 成立
+           act = 4/4
+           note= 撤回只动 g* 的量值与饱和叙述，不动这四条
+    G01   PASS 撤回 r385 的 E02：其「修正」把约定 A 的角度代进了约定 B 的公式
+           exp = 应撤回
+           act = 首稿 -4cos 正确，r385 改成 -4sin 反而错
+           note= 两套约定各自的正确读数都是 g* = 2(a1-a2)cos(theta_A*)
+    G02   FAIL r385 报出的 g* = -2.91886331204E-02 是正确读数
+           exp = 应等于 -3.9998935
+           act = -2.91886331204E-002
+           note= 比值 cot(theta_A*) ≈ 137 说明它正是混用读数
+    G03   FAIL r385 的「内点耦合上界从不 binding」成立
+           exp = 应饱和
+           act = 饱和度 = 9.999733754E-001
+           note= 实际用掉上限的 99.997%，是「几乎饱和」不是「从不 binding」
+    G04   FAIL r385 的「所需手性耦合是 O(alpha) 量级」成立
+           exp = 应 O(1)
+           act = -2.9188633E-002
+           note= 正确量级是 |g*| = 3.9999 = O(1)
+    G05   FAIL 同域（只由 kappa,tau 构造）存在第二条独立方程
+           exp = 0 条
+           act = 0 条（定理 A）
+           note= 不是没找到，是素理想 + 归约 + 双分支给出的不可能
+    G06   PASS 角动量量子化是唯一通过「无新参数」筛子的跨域候选
+           exp = 1 条
+           act = 1 条
+           note= hbar 常数、n 整数；其余候选（闭合性给可数、手性给符号、变分给新参数）全部落选
+    G07   FAIL 角动量量子化把 theta 钉死
+           exp = 应钉死
+           act = omega 自由时仍满射（B04）
+           note= 只有把 omega 也当输出来源（E=hbar*w）才降到 0 维，而那是输入不是方程
+    G08   PASS omega 由 E=hbar*w 给定时，n=1 强制 theta=0 且 n>=2 无实解
+           exp = n=1 唯一
+           act = n=1 唯一（B05）
+           note= 这是本卷唯一的正面闭合：给定频率 + 角动量量子化 => 纯圆世界线
+    G09   FAIL 该正面闭合可与 alpha 锚定（theta=atan(alpha)）相容
+           exp = 差 0
+           act = 差 7.29722E-003 rad
+           note= 严格解给 theta=0，alpha 锚定给 theta=alpha，两者恒差 alpha —— 不能用它反推 alpha
+    G10   FAIL 闭合性（拓扑量子化）给出唯一 theta
+           exp = 应唯一
+           act = 可数稠密（B09）
+    G11   FAIL 本卷给出可证伪的独有预言
+           exp = >=1
+           act = 0 条
+    G12   PASS 本卷的缺口仍是同一个：只有一内禀尺度 L=c/omega
+           exp = 同一个缺口
+           act = R 与 a0 差 alpha^2/2 = 2.663E-005（口径差，不是新尺度）
+           note= 与 r383 G03/G04、r385 G07、整理册「alpha 三口径」同源
+    G13   FAIL r385 的「两读数差 137 倍 ≈ 1/alpha」可当作结构证据
+           exp = 恒等，零信息
+           act = cot(arctan a) = 1/a 精确（B03/E05）
+           note= 这是定义恒等式刀在本卷的第 5 次命中，也是 r385 那段叙述最实质的缺陷
+    C01   PASS 正对照：G = (kappa^2+tau^2)^2 - K^2 = f*(kappa^2+tau^2+K)，归约余式应为空
+           exp = 空
+           act = 0 项
+    C02   PASS 负对照：常数改 +1 后归约余式必须非空（同一把尺）
+           exp = 非空
+           act = 1 项，余式 {(0, 0): Fraction(1, 1)}
+    C03   PASS 对照：两套残差表达式之差恒为 0（同一物理零点的两种写法）
+           exp = 0
+           act = 0
+           note= 差 0 说明它们描述同一零点，不是两个不同的方程
+    C04   PASS 量纲对照：m R^2 w = 角动量 (1,2,-1)，m R w = 动量 (1,1,-1)
+           exp = (1, 2, -1, 0, 0)
+           act = (1, 1, -1, 0, 0)
+           note= 差一个长度幂次 => B08 的「能钉住」来自量纲错误
+    C05   PASS 口径对照：int(.)ds 与 int(.)c dt 同值（c 为常数因子）
+           exp = 9/100
+           act = 9/100
+    C06   PASS 退化点：theta_A=0（纯圆）时 N_A' 与 N_B' 同时为 0 —— 极值落在边界，不是内点
+           exp = 两者都 0
+           act = A:0 B:0
+           note= 所以 B05 的 n=1 解恰好是退化点，不能当内点驻点用
+    E01   INFO r385 的 E02「修正」本身是错的：换公式的同时没换角度定义
+           exp = 换公式必须同时换角度
+           act = 已撤回（本卷 G01-G04）
+           note= 这是比「求导对象错位」更难抓的一类：两套约定各自自洽，只在交叉处出错
+    E02   INFO 混用后两个读数差约 137 倍，落进 1/alpha 附近，极易被误读成「发现了 alpha」
+           exp = 比值应为 cot(arctan a) = 1/a
+           act = cot = 1.370359991E+002
+           note= 把「输入 alpha 的初等函数」当成独立出现的常数，就会编出一个不存在的结构
+    E05   INFO 「差 137 倍 = 1/alpha」本身是定义恒等式：cot(arctan a) = 1/a 精确成立
+           exp = 恒等 => 零信息
+           act = 1/alpha = 1.37035999084E+002，cot(theta_A) = 1.37035999084E+002
+           note= 定义恒等式刀第 5 次命中：凡「算出一个已知常数」先问它的定义式是否已含该常数
+    E03   INFO 「同域第二方程不存在」若只靠搜索就说，等于没证
+           exp = 必须给代数判据
+           act = 已给：素理想 + 除法归约 + 双分支（A06-A09）
+           note= 搜索 15 组样本只是抽样，A06 的不可约性才是全部
+    E04   INFO R = a0 这个巧合必须按定义恒等式处理
+           exp = 定义恒等 => 判别力 0
+           act = R=An/x=(hbar/m)/(alpha c)，a0 同式
+           note= 凡「算出一个著名常数」先查它是不是该常数的定义式
+    P01   PASS 五槽满足数（0 => 不占度）
+           exp = 0
+           act = 0/5
+           note= SURVIVE=0
+    P02   INFO 可入池的第一性输出条数
+           exp = 0
+           act = 0
+           note= 产出类型：1 条撤回 + 1 条不可能性定理 + 1 条唯一候选的近满耦合定位
+
+[5] 守卫 9/9
+    FRAC-EXACT   ok | 1/3+1/6-1/2 = 0
+    DEC-PREC     ok | 1/3*3-1 = -1.00E-050
+    DSIN         ok | sin0=0 sin(pi/2)-1=1.00E-049
+    DCOS         ok | cos0-1=1.00E-049
+    DATAN        ok | sin(atan(a)) vs a/sqrt(1+a^2) 相对差 = 4.11E-050
+    DATAN2       ok | atan2(1) vs pi/4 相对差 = 1.53E-049；atan2(-3.7) vs -atan2(3.7) 差 = 0
+    SCI-SIGN     ok | sci(-1500)=-1.50E+003  sci(4.2e-7)=4.20E-007
+    RED-ENGINE   ok | f*H 归约余式项数=0；f 自身归约余式项数=0
+    RED-NEGCTL   ok | f-25 归约余式 = {(0, 0): Fraction(-25, 1)}
+
+条目 50：{'PASS': 32, 'INFO': 9, 'FAIL': 9}
