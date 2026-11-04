@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r397 可视化 · 16 旋量表示的零空间（手征投影 / 单态计数 / J-K 四格）</title>
+<style>
+  :root{--bg:#f7f8fa;--ink:#1a202c;--sub:#4a5568;--line:#cbd5e0;--acc:#2b6cb0;--ok:#2f855a;--warn:#c53030;--grey:#a0aec0;--amber:#b7791f;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);}
+  body{font-family:"Segoe UI","Microsoft YaHei",sans-serif;}
+  .wrap{max-width:780px;margin:0 auto;padding:26px 18px 56px;}
+  h1{font-size:19px;line-height:1.55;margin:0 0 6px;}
+  .sub{color:var(--sub);font-size:13px;margin:0 0 20px;line-height:1.7;}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 12px 10px;margin-bottom:18px;}
+  .cap{font-size:12.5px;color:var(--sub);margin:8px 2px 0;line-height:1.7;}
+  .cap b{color:var(--ink);}
+  svg{display:block;width:100%;height:auto;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TUFT-r397 · 攻 X-GSM-2：`16` 旋量表示的零空间</h1>
+<div class="sub">先建 <code>Cl(10,0)</code> 的 32 维 Dirac，再用手征算子切出 <code>16</code> 与 <code>16bar</code>；45 个生成元实化、12 个 SM 生成元解零空间 · 纯 <code>Fraction</code>（判据区零浮点）<br>
+读数来源：<code>数据/TUFT-r397_…_精算_2026-11-04.json</code>（27 条：主册 9 全 PASS，控制组 4，守卫 14）· <code>GATES-PASS-ALL-POSITIVE</code></div>
+
+<div class="card"><svg id="fig1" viewBox="0 0 680 240"></svg>
+<div class="cap"><b>图 1｜`16` 不是长出来的，是**投影**出来的</b>：<code>Cl(10,0)</code> 的最小表示是 <b>32</b> 维（10 个 Hermitian <code>Γ</code>，55 对 Clifford 关系，违例 <b>0</b>）。手征算子 <code>CHIR = −i·Γ₁⋯Γ₁₀</code> 把 32 切成 <b>16</b> + <b>16</b>。★ 且它<b>在本基下对角</b>（非对角和 0）⇒ 可以用「取子矩阵」代替「求本征矢量」，省掉的正是「归一化带根号」这个精确算术的破口。</div></div>
+
+<div class="card"><svg id="fig2" viewBox="0 0 680 252"></svg>
+<div class="cap"><b>图 2｜`16` 的 `Y` 谱多重集，与幂和 `p₁..p₅` 逐项对上</b>：16 个态的 <code>y</code> 是 6×<code>1/6</code> + 3×<code>−2/3</code> + 1×<code>1</code> + 3×<code>1/3</code> + 2×<code>−1/2</code> + 1×<code>0</code>，维数和 <b>16</b>。左边 <code>p_k</code> 来自<b>矩阵幂的迹</b>，右边来自<b>多重集求和</b> —— 两条路不同源。★ 唯一那个 <code>y = 0</code> 就是右手中微子 <code>ν^c</code>，它是图 3 的钥匙。</div></div>
+
+<div class="card"><svg id="fig3" viewBox="0 0 680 286"></svg>
+<div class="cap"><b>图 3｜本卷核心：`16` <b>能</b>分辨自对偶 `J` 与反自对偶 `K`</b>：四格读数 <b>{+J: 2, +K: 0, -J: 2, -K: 0}</b>。同一手征块内 J 给 <b>2</b> 个实方向（= 1 个复单态，<code>ν^c</code>）、K 给 <b>0</b> 个。★★ 关键在<b>手征块不动数</b>：J 在两块都得 2、K 在两块都得 0 ⇒ 唯一的变量是 J/K 本身。★ 而 r396 的 <code>10/45/54</code> 把 J 换成 K 读数一律不变 —— 这就是 r396 §九 那条「边界」的解除。</div></div>
+
+<div class="card"><svg id="fig4" viewBox="0 0 680 224"></svg>
+<div class="cap"><b>图 4｜它是「SM 单态」，但**不是** `so(10)` 单态</b>：45 维生成元里，熄灭它的子空间（核）= 45 − 轨道秩 <b>21</b> = <b>24</b> 维。核<b>不等于</b> 45（否则是平凡单态、整卷空转），也<b>不等于</b> 12（<code>16</code> 里不存在 <code>so(10)</code> 纯单态）。★★ 最反直觉的一条：45 个 <code>Σ_ab</code> <b>基元素</b>里逐个熄灭它的有 **0** 个 —— 可它明明被 12 个 SM 生成元熄灭，因为那 12 个是<b>线性组合</b>。</div></div>
+
+<div class="card"><svg id="fig5" viewBox="0 0 680 262"></svg>
+<div class="cap"><b>图 5｜两步阶梯：`13 → 12` 的机制是**秩 +1**</b>：只用 45 行的约束，秩 <b>32</b> ⇒ 稳定子 <b>13</b> 维；再加上 <code>X v = 0</code> 的 32 行，秩只到 <b>33</b> ⇒ 复合稳定子 <b>12</b> 维。★★ r396 §八 说的「差 1 个 <code>u(1)_{B−L}</code>」，在本卷机核里的精确形态就是这一个 <b>+1</b>：不是算出来的减法，是秩的增量。</div></div>
+
+<div class="card"><svg id="fig6" viewBox="0 0 680 336"></svg>
+<div class="cap"><b>图 6｜分辨力的来源：不是 `su(2)`，是 `su(2)+Y`</b>：9 个子代数在 <code>16</code> 上的单态维数（<code>16bar</code> 逐格相同，<b>0</b> 格不同）。单用 <code>su(2)_J</code> 与 <code>su(2)_K</code> 都给 16 ⇒ 分不开；一旦加上 <code>Y</code>，<code>su(2)_J+Y</code> 给 <b>2</b>、<code>su(2)_K+Y</code> 给 <b>0</b> ⇒ 分开。★ 这也说明 <code>p_k</code> 四格全同的原因：谱不变，变的是「哪些态被熄灭」。</div></div>
+
+<script>
+function mk397(id, tag, at) {
+  var s = document.getElementById(id);
+  var e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (var k in at) { e.setAttribute(k, at[k]); }
+  s.appendChild(e);
+  return e;
+}
+function tx397(id, x, y, str, size, fill, anchor, weight) {
+  var e = mk397(id, "text", { x: x, y: y, fill: fill || "#1a202c",
+    "font-size": size || 12, "text-anchor": anchor || "start",
+    "font-weight": weight || "400",
+    "font-family": "Segoe UI, Microsoft YaHei, sans-serif" });
+  e.textContent = str;
+  return e;
+}
+function ln397(id, x1, y1, x2, y2, stroke, w, dash) {
+  var at = { x1: x1, y1: y1, x2: x2, y2: y2,
+    stroke: stroke || "#cbd5e0", "stroke-width": w || 1 };
+  if (dash) { at["stroke-dasharray"] = dash; }
+  return mk397(id, "line", at);
+}
+function rc397(id, x, y, w, h, fill, stroke, sw, r) {
+  return mk397(id, "rect", { x: x, y: y, width: w, height: h,
+    fill: fill, stroke: stroke || "none", "stroke-width": sw || 0, rx: r || 4 });
+}
+var CACC = "#2b6cb0", COK = "#2f855a", CWARN = "#c53030", CGREY = "#a0aec0",
+    CLINE = "#cbd5e0", CAMB = "#b7791f", CINK = "#1a202c", CSOFT = "#edf2f7";
+
+/* ---------------- 每图独立几何行：负对照只改这一行，即可精确打中指定图 ---------------- */
+var f1Y1 = 214, f1X0 = 40;
+var f2Y1 = 230, f2X0 = 40;
+var f3Y1 = 268, f3X0 = 40;
+var f4Y1 = 200, f4X0 = 60;
+var f5Y1 = 246, f5X0 = 50;
+var f6Y1 = 318, f6X0 = 200;
+
+/* ============================================================ 图 1：32 格手征切分 */
+(function () {
+  var CW = 34, CH = 26, GX = 4, GY = 10, x0 = f1X0;
+  tx397("fig1", x0, 28, "CHIR = -i G1...G10 把 32 维 Dirac 切成两块", 13, CINK, "start", "600");
+  var rows = [16, 16];
+  var cols = [["#bee3f8", CACC, "+1"], ["#c6f6d5", COK, "-1"]];
+  var acc = 0;
+  for (var r = 0; r < 2; r++) {
+    var y = 44 + r * (CH + GY);
+    tx397("fig1", x0 - 6, y + 18, cols[r][2], 12, cols[r][1], "end", "700");
+    for (var q = 0; q < rows[r]; q++) {
+      rc397("fig1", x0 + q * (CW + GX), y, CW, CH, cols[r][0], cols[r][1], 1.1, 3);
+      acc++;
+    }
+    tx397("fig1", x0 + rows[r] * (CW + GX) + 8, y + 18,
+      rows[r] + " 维", 11.5, cols[r][1], "start", "600");
+  }
+  tx397("fig1", x0, 132, "共 " + acc + " 维；非对角和 0（本基下对角）", 11.5, "#4a5568");
+  tx397("fig1", x0, 154, "10 个 Gamma 全 Hermitian；55 对 Clifford 关系违例 0", 11.5, "#4a5568");
+  tx397("fig1", x0, f1Y1, "★ 16 不是 Clifford 模，只是 so(10) 的模 —— 必须先建 32 维再投影", 11.5, CACC);
+})();
+
+/* ============================================================ 图 2：Y 谱多重集 */
+(function () {
+  var CW = 32, CH = 32, GX = 6, x0 = f2X0, y0 = 52, i = 0, g, k;
+  tx397("fig2", x0, 28, "16 个态的 Y 谱多重集（维数和 16）", 13, CINK, "start", "600");
+  var labels = [];
+  for (g = 0; g < 6; g++) {
+    var nm = ["1/6", "-2/3", "1", "1/3", "-1/2", "0"][g];
+    var cnt = [6, 3, 1, 3, 2, 1][g];
+    var fil = ["#bee3f8", "#c6f6d5", "#fefcbf", "#b2f5ea", "#e9d8fd", "#fed7d7"][g];
+    var stk = [CACC, COK, CAMB, "#2c7a7b", "#6b46c1", CWARN][g];
+    var c0 = i;
+    for (k = 0; k < cnt; k++) {
+      rc397("fig2", x0 + i * (CW + GX), y0, CW, CH, fil, stk, 1.2, 3);
+      i++;
+    }
+    labels.push([x0 + (c0 + cnt / 2) * (CW + GX) - GX / 2, nm + " x" + cnt, stk]);
+  }
+  for (g = 0; g < labels.length; g++) {
+    tx397("fig2", labels[g][0], y0 + CH + 18, "y=" + labels[g][1], 10.5, labels[g][2], "middle", "600");
+  }
+  tx397("fig2", x0, 142, "p1..p5（矩阵幂的迹）= " + 10/3, 95/54, 2525/1944, 78755/69984, 2655545/2519424, 11.5, CINK, "start", "600");
+  tx397("fig2", x0, 162, "p1..p5（多重集求和）= " + 10/3, 95/54, 2525/1944, 78755/69984, 2655545/2519424, 11.5, "#4a5568");
+  tx397("fig2", x0, 184, "两路逐项一致 ⇒ 16 的 SM 分解多重集被独立确认", 11.5, COK);
+  tx397("fig2", x0, f2Y1, "★ 只定 |y| 不定符号；p_k 对 J/K 两档逐项相同（下一图）", 11.5, CWARN);
+})();
+
+/* ============================================================ 图 3：J / K 四格 */
+(function () {
+  var W = 288, H = 76, GX = 24, GY = 14, x0 = f3X0, y0 = 54;
+  tx397("fig3", x0, 30, "{16, 16bar} x {J, K} 四格单态数", 13, CINK, "start", "600");
+  var cells = [["16  *  su(2)_J", 2, COK], ["16  *  su(2)_K", 0, CWARN],
+               ["16bar  *  su(2)_J", 2, COK], ["16bar  *  su(2)_K", 0, CWARN]];
+  for (var i = 0; i < 4; i++) {
+    var x = x0 + (i % 2) * (W + GX), y = y0 + Math.floor(i / 2) * (H + GY);
+    var v = cells[i][1];
+    rc397("fig3", x, y, W, H, v === 0 ? "#fff5f5" : "#f0fff4", cells[i][2], 1.5, 7);
+    tx397("fig3", x + 14, y + 25, cells[i][0], 12, CINK, "start", "600");
+    tx397("fig3", x + 14, y + 58, v === 0 ? "0 个单态" : ("实 " + v + " 维 = 复 " + (v / 2)), 13, cells[i][2], "start", "700");
+    tx397("fig3", x + W - 16, y + 58, String(v), 26, cells[i][2], "end", "700");
+  }
+  tx397("fig3", x0, 246, "J 跨两块都得 2、K 跨两块都得 0 ⇒ 手征块不动数，唯一变量是 J/K", 11.5, "#4a5568");
+  tx397("fig3", x0, f3Y1, "★ 分辨力来自「Y 与哪一个 su(2) 占同一条不变量空间」，不是 su(2) 本身", 11.5, CACC);
+})();
+
+/* ============================================================ 图 4：轨道与核 */
+(function () {
+  var x0 = f4X0, W45 = 560, U = W45 / 45, y0 = 70, H = 44;
+  tx397("fig4", x0, 34, "45 个 Sigma 里，熄灭单态 v 的子空间有多大", 13, CINK, "start", "600");
+  rc397("fig4", x0, y0, 21 * U, H, "#fefcbf", CAMB, 1.4, 4);
+  rc397("fig4", x0 + 21 * U, y0, 24 * U, H, "#bee3f8", CACC, 1.4, 4);
+  tx397("fig4", x0 + 21 * U / 2, y0 + 27, "轨道 " + 21, 13, CAMB, "middle", "700");
+  tx397("fig4", x0 + 21 * U + 24 * U / 2, y0 + 27, "核 " + 24, 13, CACC, "middle", "700");
+  /* 核里的 12 维 SM */
+  rc397("fig4", x0 + 21 * U + 4, y0 + H + 8, 12 * U, 22, "#c6f6d5", COK, 1.2, 4);
+  tx397("fig4", x0 + 21 * U + 8, y0 + H + 24, "其中 " + 12 + " 维 = SM（12/12 全部熄灭）", 10.5, COK, "start", "600");
+  tx397("fig4", x0, 168, "轨道秩 " + 21 + " = 45 个 (Sigma_ab v) 张成的维数；核 = 45 - " + 21 + " = " + 24, 11.5, "#4a5568");
+  tx397("fig4", x0, f4Y1, "★★ 45 个 Sigma 基元素里逐个熄灭它的：0 个（那 12 个是线性组合）", 11.5, CWARN);
+})();
+
+/* ============================================================ 图 5：两步阶梯 */
+(function () {
+  var x0 = f5X0, y0 = 56, BW = 112, BH = 36, GX = 74;
+  tx397("fig5", x0, 32, "Stab(v45)  交  Stab(v16)  按秩算，不按减法算", 13, CINK, "start", "600");
+  var xs = [x0, x0 + BW + GX, x0 + 2 * (BW + GX)];
+  rc397("fig5", xs[0], y0, BW, BH, "#bee3f8", CACC, 1.4, 5);
+  tx397("fig5", xs[0] + BW / 2, y0 + 23, "so(10) = 45", 12.5, CINK, "middle", "700");
+  rc397("fig5", xs[1], y0, BW, BH, "#c6f6d5", COK, 1.4, 5);
+  tx397("fig5", xs[1] + BW / 2, y0 + 23, "Stab(v45) = 13", 12.5, COK, "middle", "700");
+  rc397("fig5", xs[2], y0, BW, BH, "#fff5f5", CWARN, 1.6, 5);
+  tx397("fig5", xs[2] + BW / 2, y0 + 23, "交 = 12 = G_SM", 12, CWARN, "middle", "700");
+  ln397("fig5", xs[0] + BW, y0 + BH / 2, xs[1], y0 + BH / 2, CACC, 1.6);
+  ln397("fig5", xs[1] + BW, y0 + BH / 2, xs[2], y0 + BH / 2, COK, 1.6);
+  tx397("fig5", xs[0] + BW + 6, y0 - 6, "45 行", 10.5, CACC);
+  tx397("fig5", xs[1] + BW + 4, y0 - 6, "加 32 行（秩 +1）", 10.5, COK);
+  tx397("fig5", xs[0], 124, "只用约束 1：秩 32 ⇒ 45 - 32 = 13 维", 11.5, CINK, "start", "600");
+  tx397("fig5", xs[0], 148, "加 X v = 0 的 32 行：秩 33 ⇒ 45 - 33 = 12 维", 11.5, CINK, "start", "600");
+  tx397("fig5", xs[0], 176, "13 - 12 = 1：那 1 个就是 u(1)_{B-L}", 11.5, CAMB, "start", "600");
+  tx397("fig5", xs[0], 200, "★ 增量若变 0（SM 已是稳定子）或 > 1 ⇒ v 或 M45 写错", 11.5, "#4a5568");
+  tx397("fig5", xs[0], f5Y1, "★★ r396 的 TWO-STEP-NEEDED 在本卷成为已算事实：交 = 12", 11.5, CWARN);
+})();
+
+/* ============================================================ 图 6：9 x 2 子代数表 */
+(function () {
+  var x0 = f6X0, U = 18.75, top = 56, step = 27, BH = 18;
+  tx397("fig6", 40, 28, "9 个子代数在 16 上的单态维数（16bar 逐格相同）", 13, CINK, "start", "600");
+  var nm = ["su(3)_C","su(2)_J","su(2)_K","u(1)_Y","su(3)+Y","su(2)_J+Y","su(2)_K+Y","su(3)+su(2)_J","su(3)+su(2)_K"];
+  var val = [8,16,16,2,2,2,0,4,4];
+  for (var i = 0; i < nm.length; i++) {
+    var y = top + i * step, v = val[i], w = v * U;
+    var col = CACC;
+    if (i === 5) { col = COK; }
+    if (i === 6) { col = CWARN; }
+    tx397("fig6", x0 - 10, y + 13, nm[i], 11, "#4a5568", "end");
+    if (v === 0) {
+      ln397("fig6", x0, y + 9, x0 + 40, y + 9, col, 3);          /* 0 值画短横，不画零宽柱 */
+      tx397("fig6", x0 + 48, y + 13, "0（短横）", 11, col, "start", "700");
+    } else {
+      rc397("fig6", x0, y, w, BH, i === 5 ? "#c6f6d5" : (i === 6 ? "#fed7d7" : "#bee3f8"), col, 1.1, 3);
+      tx397("fig6", x0 + w + 8, y + 13, String(v), 11.5, col, "start", "700");
+    }
+  }
+  tx397("fig6", 40, f6Y1 - 18, "★ 单用 su(2) 两档都是 16 ⇒ 分不开；加上 Y 才 2 vs 0", 11.5, "#4a5568");
+  tx397("fig6", 40, f6Y1, "★ su(3)_C 给 8、su(2) 给 16、u(1)_Y 给 2 ⇒ 三档互不相同，这不是空表", 11.5, COK);
+})();
+</script>
+</div>
+</body>
+</html>
