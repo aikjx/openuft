@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r396 可视化 · G_SM 能否作 SO(10) 的稳定子</title>
+<style>
+  :root{--bg:#f7f8fa;--ink:#1a202c;--sub:#4a5568;--line:#cbd5e0;--acc:#2b6cb0;--ok:#2f855a;--warn:#c53030;--grey:#a0aec0;--amber:#b7791f;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);}
+  body{font-family:"Segoe UI","Microsoft YaHei",sans-serif;}
+  .wrap{max-width:780px;margin:0 auto;padding:26px 18px 56px;}
+  h1{font-size:19px;line-height:1.55;margin:0 0 6px;}
+  .sub{color:var(--sub);font-size:13px;margin:0 0 20px;line-height:1.7;}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 12px 10px;margin-bottom:18px;}
+  .cap{font-size:12.5px;color:var(--sub);margin:8px 2px 0;line-height:1.7;}
+  .cap b{color:var(--ink);}
+  svg{display:block;width:100%;height:auto;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TUFT-r396 · 攻 X-GSM-1：`G_SM` 能否作为 `SO(10)` 的稳定子</h1>
+<div class="sub">不引分解表：把 12 个 SM 生成元显式写成 10×10 整系数反对称矩阵，解 <code>[X,M]=0</code> 的零空间 · 纯 <code>Fraction</code>（判据区零浮点）<br>
+读数来源：<code>数据/TUFT-r396_…_精算_2026-11-04.json</code>（27 条：主册 9 全 PASS，控制组 4，守卫 14）· <code>GATES-PASS-ALL-POSITIVE</code></div>
+
+<div class="card"><svg id="fig1" viewBox="0 0 680 262"></svg>
+<div class="cap"><b>图 1｜45 个 <code>so(10)</code> 基里，SM 占 12 个</b>：色 8 + 弱 3 + 超荷 1。这 12 个不是「数出来的」，是把 100 维列矢量堆起来求秩得到 <b>12</b>。★ 若把 <code>i·λ_a</code> 写成 <code>λ_a</code>，12 个矩阵会变实对称、连 <code>so(10)</code> 都进不去（控制组 K4 实测：反对称 0/8）。</div></div>
+
+<div class="card"><svg id="fig2" viewBox="0 0 680 250"></svg>
+<div class="cap"><b>图 2｜三个表示的单态子空间维数：0 / 2 / 1</b>：<code>10</code> 一个都没有 ⇒ 任何非零 VEV 都被某个 SM 生成元推动 ⇒ <code>10</code> 不能承担「保持 SM」的任何一步。★ 这个 0 有两条独立路径：本卷解 120×10 的零空间，r394 数分解表。（0 值按基线短横画，不画零高柱。）</div></div>
+
+<div class="card"><svg id="fig3" viewBox="0 0 680 292"></svg>
+<div class="cap"><b>图 3｜单态 VEV 的稳定子五档 + 一个对照</b>：<b>25 / 13 / 15 / 19 / 21</b>，对照（单个 <code>so(2)</code> 平面，非单态）29。虚线是 <code>G_SM</code> 的 12 维。<b>没有一档等于 12</b> —— 最接近的是倾斜 <code>45</code> 给的 13，差的就是一个 <code>u(1)_{B−L}</code>。</div></div>
+
+<div class="card"><svg id="fig4" viewBox="0 0 680 300"></svg>
+<div class="cap"><b>图 4｜本卷最反直觉的读数：等比例反而更「对称」</b>：<code>α u_a + β u_k</code> 的特征值是 <code>(α,α,α,β,β)</code>。左：<code>α=β</code> ⇒ 五个特征值全等 ⇒ <code>M ∝ 复结构</code> ⇒ 中心化子 <code>u(5)</code>，<b>25 维</b>（<code>SU(5)</code> 老路）；右：<code>α≠β</code> ⇒ 谱分两组 ⇒ 只剩 <code>u(3)+u(2)</code>，<b>13 维</b>。★ 「在两个极端之间插值」是<b>错</b>的：稳定子在单态空间上不是线性的。</div></div>
+
+<div class="card"><svg id="fig5" viewBox="0 0 680 300"></svg>
+<div class="cap"><b>图 5｜破缺阶梯：一步到不了 12</b>：<code>45</code> 倾斜 → 13（差 <b>1</b>，那 1 个就是 <code>B−L</code>）；<code>45</code> 等比例 → 25（<code>SU(5)</code> 路径）；<code>54</code> → 21（差 9，更近 Pati-Salam）；<code>10</code> 不可用。★ 判词里的 <code>TWO-STEP-NEEDED</code> 是<b>读数名</b>，不是「已证两步够」—— 第二步要 <code>16/16bar</code>，本卷未算。</div></div>
+
+<div class="card"><svg id="fig6" viewBox="0 0 680 286"></svg>
+<div class="cap"><b>图 6｜三个候选方向在不在零空间里</b>：<code>u_a</code>、<code>u_k</code> 在（绿），<code>u_b</code> <b>不在</b>（红）。<code>u_b</code> 是 <code>su(2)_L</code> 的 Cartan <code>J₃</code>，与自己的代数不交换 ⇒ 当然不在。★ 这条「不在」是全卷信息量最大的读数：零空间不是「4 块相位随便哪个都行」，而是精确挑出<b>反自对偶</b>那一个。</div></div>
+
+<script>
+function mk396(id, tag, at) {
+  var s = document.getElementById(id);
+  var e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (var k in at) { e.setAttribute(k, at[k]); }
+  s.appendChild(e);
+  return e;
+}
+function tx396(id, x, y, str, size, fill, anchor, weight) {
+  var e = mk396(id, "text", { x: x, y: y, fill: fill || "#1a202c",
+    "font-size": size || 12, "text-anchor": anchor || "start",
+    "font-weight": weight || "400",
+    "font-family": "Segoe UI, Microsoft YaHei, sans-serif" });
+  e.textContent = str;
+  return e;
+}
+function ln396(id, x1, y1, x2, y2, stroke, w, dash) {
+  var at = { x1: x1, y1: y1, x2: x2, y2: y2,
+    stroke: stroke || "#cbd5e0", "stroke-width": w || 1 };
+  if (dash) { at["stroke-dasharray"] = dash; }
+  return mk396(id, "line", at);
+}
+function rc396(id, x, y, w, h, fill, stroke, sw, r) {
+  return mk396(id, "rect", { x: x, y: y, width: w, height: h,
+    fill: fill, stroke: stroke || "none", "stroke-width": sw || 0, rx: r || 4 });
+}
+function pt396(id, d, stroke, w, fill) {
+  return mk396(id, "path", { d: d, fill: fill || "none", stroke: stroke || "#1a202c",
+    "stroke-width": w || 1.6, "stroke-linejoin": "round", "stroke-linecap": "round" });
+}
+function ci396(id, cx, cy, r, fill, stroke) {
+  return mk396(id, "circle", { cx: cx, cy: cy, r: r, fill: fill,
+    stroke: stroke || "none", "stroke-width": 1.4 });
+}
+var CACC = "#2b6cb0", COK = "#2f855a", CWARN = "#c53030", CGREY = "#a0aec0",
+    CLINE = "#cbd5e0", CAMB = "#b7791f", CINK = "#1a202c", CSOFT = "#edf2f7";
+
+/* ---------------- 每图独立几何行：负对照只改这一行，即可精确打中指定图 ---------------- */
+var f1Y1 = 236, f1X0 = 118;
+var f2Y1 = 226, f2X0 = 196;
+var f3Y1 = 268, f3X0 = 168;
+var f4Y1 = 276, f4X0 = 56;
+var f5Y1 = 274, f5X0 = 40;
+var f6Y1 = 260, f6X0 = 60;
+
+/* ============================================================ 图 1：45 格网格 */
+(function () {
+  var N = 45, COLS = 9, CW = 44, CH = 26, GX = 6, GY = 6;
+  var x0 = f1X0, y0 = 44;
+  for (var i = 0; i < N; i++) {
+    var r = Math.floor(i / COLS), q = i % COLS;
+    var col = CSOFT, stk = CLINE;
+    if (i < 8) { col = "#bee3f8"; stk = CACC; }
+    else if (i < 11) { col = "#c6f6d5"; stk = COK; }
+    else if (i === 11) { col = "#fefcbf"; stk = CAMB; }
+    rc396("fig1", x0 + q * (CW + GX), y0 + r * (CH + GY), CW, CH, col, stk, 1.2, 3);
+    if (i < 12) {
+      tx396("fig1", x0 + q * (CW + GX) + CW / 2, y0 + r * (CH + GY) + 17, String(i + 1), 11, CINK, "middle", "600");
+    }
+  }
+  tx396("fig1", 40, 40, "so(10) 的 45 个基（含 SM 的 12 个）", 13, CINK, "start", "600");
+  rc396("fig1", 40, f1Y1 - 12, 12, 12, "#bee3f8", CACC, 1.2, 2);
+  tx396("fig1", 58, f1Y1 - 2, "su(3)_C = 8", 12, "#4a5568");
+  rc396("fig1", 158, f1Y1 - 12, 12, 12, "#c6f6d5", COK, 1.2, 2);
+  tx396("fig1", 176, f1Y1 - 2, "su(2)_L = 3", 12, "#4a5568");
+  rc396("fig1", 272, f1Y1 - 12, 12, 12, "#fefcbf", CAMB, 1.2, 2);
+  tx396("fig1", 290, f1Y1 - 2, "u(1)_Y = 1", 12, "#4a5568");
+  tx396("fig1", 386, f1Y1 - 2, "⇒ 展开秩 = " + 12 + "（不是抄 8+3+1）", 12, CACC, "start", "600");
+})();
+
+/* ============================================================ 图 2：零空间维数 0/2/1 */
+(function () {
+  var rows = [
+    ["10", 0, "单态 0 维 ⇒ 任何非零 VEV 都破 SM", CWARN],
+    ["45", 2, "单态 2 维 = span{u_a, u_k}", COK],
+    ["54", 1, "单态 1 维 = diag(2×6, -3×4)", CACC]
+  ];
+  var U = 56, x0 = f2X0, top = 56;
+  tx396("fig2", 40, 40, "单态子空间维数（解 [X, M] = 0）", 13, CINK, "start", "600");
+  for (var i = 0; i < rows.length; i++) {
+    var y = top + i * 58, d = rows[i][1], w = d * U;
+    tx396("fig2", x0 - 12, y + 17, rows[i][0], 13, CINK, "end", "600");
+    ln396("fig2", x0, y, x0, y + 24, CLINE, 1);
+    if (d === 0) {
+      ln396("fig2", x0, y + 12, x0 + 34, y + 12, rows[i][3], 3);   /* ★ 0 值画基线短横 */
+      tx396("fig2", x0 + 42, y + 17, "0（短横）", 12, rows[i][3], "start", "600");
+    } else {
+      rc396("fig2", x0, y, w, 24, rows[i][3], "none", 0, 3);
+      tx396("fig2", x0 + w + 10, y + 17, String(d), 13, rows[i][3], "start", "700");
+    }
+    tx396("fig2", x0, y + 42, rows[i][2], 11.5, "#4a5568");
+  }
+  tx396("fig2", 40, f2Y1, "★ 10 的 0 有两条独立源：本卷 120×10 零空间 / r394 分解表（守卫 G12 对拍）", 11.5, "#4a5568");
+})();
+
+/* ============================================================ 图 3：稳定子五档 + 对照 */
+(function () {
+  var rows = [
+    ["45 等比例（= u(1)_X）", 25, "su(5)+u(1)"],
+    ["45 倾斜（α≠β）", 13, "u(3)+u(2)"],
+    ["45 只用 u_a", 15, "u(3)+so(4)"],
+    ["45 只用 u_k", 19, "so(6)+u(2)"],
+    ["54 唯一位", 21, "so(6)+so(4)"],
+    ["对照：单个 so(2) 平面", 29, "非单态，仅作标尺"]
+  ];
+  var U = 14.4, x0 = f3X0, top = 52;
+  tx396("fig3", 40, 38, "单态 VEV 的稳定子维数（45 − rank ad_M）", 13, CINK, "start", "600");
+  ln396("fig3", x0 + 12 * U, 44, x0 + 12 * U, f3Y1, CWARN, 1.4, "5 4");
+  tx396("fig3", x0 + 12 * U, 42, "G_SM = 12", 11, CWARN, "middle", "600");
+  for (var i = 0; i < rows.length; i++) {
+    var y = top + i * 34, d = rows[i][1], w = d * U;
+    var col = (i === 5) ? CGREY : (i === 1 ? COK : CACC);
+    tx396("fig3", x0 - 10, y + 15, rows[i][0], 10.5, "#4a5568", "end");
+    rc396("fig3", x0, y, w, 22, col, "none", 0, 3);
+    tx396("fig3", x0 + w + 8, y + 16, String(d), 12.5, col, "start", "700");
+    tx396("fig3", x0 + w + 34, y + 16, rows[i][2], 10.5, "#4a5568");
+  }
+  tx396("fig3", 40, f3Y1 - 4, "★ 五档互不相同 ⇒ 稳定子计算有判别力；没有一档 = 12", 11.5, "#4a5568");
+})();
+
+/* ============================================================ 图 4：特征值谱两档 */
+(function () {
+  var x0 = f4X0;
+  tx396("fig4", 40, 34, "α·u_a + β·u_k 的特征值谱（5 个）", 13, CINK, "start", "600");
+  /* 左：α=β=1 ⇒ (1,1,1,1,1) */
+  var yA = 118, yB = 232, base = 60, U = 34;
+  tx396("fig4", x0, 56, "α = β：谱全等 (1,1,1,1,1)", 12, CINK, "start", "600");
+  for (var i = 0; i < 5; i++) {
+    ci396("fig4", x0 + 34 + i * 46, yA - base, 8, CACC, "#fff");
+    tx396("fig4", x0 + 34 + i * 46, yA - base + 24, "1", 11, CACC, "middle", "600");
+  }
+  ln396("fig4", x0 + 10, yA - base, x0 + 270, yA - base, CLINE, 1.2, "4 4");
+  tx396("fig4", x0 + 296, yA - base + 4, "⇒ M ∝ 复结构", 11.5, "#4a5568");
+  tx396("fig4", x0 + 296, yA - base + 22, "中心化子 = u(5) → " + 25 + " 维", 12, CACC, "start", "700");
+  /* 右：α=2, β=1 ⇒ (2,2,2,1,1) */
+  tx396("fig4", x0, 172, "α = 2, β = 1：谱分两组 (2,2,2,1,1)", 12, CINK, "start", "600");
+  for (var j = 0; j < 5; j++) {
+    var h = (j < 3) ? 2 * U : U;
+    ci396("fig4", x0 + 34 + j * 46, yB - 6 - h, 8, COK, "#fff");
+    tx396("fig4", x0 + 34 + j * 46, yB - 6 - h + 24, (j < 3 ? "2" : "1"), 11, COK, "middle", "600");
+  }
+  ln396("fig4", x0 + 10, yB - 6 - 2 * U, x0 + 270, yB - 6 - 2 * U, CLINE, 1.2, "4 4");
+  ln396("fig4", x0 + 10, yB - 6 - U, x0 + 270, yB - 6 - U, CLINE, 1.2, "4 4");
+  tx396("fig4", x0 + 296, yB - 6 - 2 * U + 4, "⇒ 只剩 u(3)+u(2)", 11.5, "#4a5568");
+  tx396("fig4", x0 + 296, yB - 6 - 2 * U + 22, "稳定子 " + 13 + " 维", 12, COK, "start", "700");
+  tx396("fig4", 40, f4Y1, "★ 等比例那一档反而留下更大的稳定子 —— 「插值」在这里不成立", 11.5, "#4a5568");
+})();
+
+/* ============================================================ 图 5：破缺阶梯 */
+(function () {
+  var x0 = f5X0, yTop = 60;
+  rc396("fig5", x0, yTop, 150, 34, "#bee3f8", CACC, 1.2, 5);
+  tx396("fig5", x0 + 75, yTop + 22, "so(10) = 45", 13, CINK, "middle", "700");
+  var outs = [
+    ["45 倾斜", 13, "-" + 1 + " → 12（B−L）", COK],
+    ["45 等比例", 25, "-" + 13 + "（走 su(5)）", CACC],
+    ["54", 21, "-" + 9 + "（近 PS）", CAMB]
+  ];
+  for (var i = 0; i < outs.length; i++) {
+    var y = 116 + i * 52;
+    ln396("fig5", x0 + 150, yTop + 17, x0 + 196, y + 15, CLINE, 1.6);
+    rc396("fig5", x0 + 196, y, 108, 30, CSOFT, outs[i][3], 1.2, 5);
+    tx396("fig5", x0 + 250, y + 20, String(outs[i][1]), 13, outs[i][3], "middle", "700");
+    tx396("fig5", x0 + 316, y + 20, outs[i][0] + " → " + outs[i][1] + " 维", 11.5, CINK);
+    tx396("fig5", x0 + 316, y + 36, outs[i][2], 11, "#4a5568");
+  }
+  /* 13 → 12 那一步：虚线 + 17 号表示 */
+  var yg = 116 + 15;
+  ln396("fig5", x0 + 470, yg, x0 + 560, yg, CWARN, 1.6, "6 4");
+  rc396("fig5", x0 + 564, yg - 15, 66, 30, "#fed7d7", CWARN, 1.2, 5);
+  tx396("fig5", x0 + 597, yg + 5, "12", 13, CWARN, "middle", "700");
+  tx396("fig5", x0 + 470, yg - 22, "需 16/16bar（本卷未算）", 10.5, CWARN);
+  tx396("fig5", x0, f5Y1 - 6, "★ 一步到不了 12；「差 1」是硬读数，「两步够」是未证的推论", 11.5, "#4a5568");
+  tx396("fig5", x0, f5Y1 + 14, "★ 10 不可用：它连一个 SM 单态都没有", 11.5, "#4a5568");
+})();
+
+/* ============================================================ 图 6：u_a / u_b / u_k */
+(function () {
+  var x0 = f6X0, y0 = 58, W = 170, H = 74, GAP = 15;
+  tx396("fig6", 40, 34, "45 的两个单态方向与那个「不在」的第三个", 13, CINK, "start", "600");
+  var it = [
+    ["u_a = Σ12+Σ34+Σ56", "3 块统一相位", "在零空间", COK, "#c6f6d5"],
+    ["u_k = Σ78-Σ9,10", "4 块反自对偶", "在零空间", COK, "#c6f6d5"],
+    ["u_b = Σ78+Σ9,10", "4 块同号（= J₃）", "不在零空间", CWARN, "#fed7d7"]
+  ];
+  for (var i = 0; i < it.length; i++) {
+    var x = x0 + i * (W + GAP);
+    rc396("fig6", x, y0, W, H, it[i][4], it[i][3], 1.4, 6);
+    tx396("fig6", x + W / 2, y0 + 24, it[i][0], 11.5, CINK, "middle", "700");
+    tx396("fig6", x + W / 2, y0 + 44, it[i][1], 11, "#4a5568", "middle");
+    tx396("fig6", x + W / 2, y0 + 64, it[i][2], 12, it[i][3], "middle", "700");
+  }
+  /* 零空间方框 */
+  var by = y0 + H + 26;
+  rc396("fig6", x0, by, W * 2 + GAP, 40, "#f0fff4", COK, 1.4, 6);
+  tx396("fig6", x0 + (W * 2 + GAP) / 2, by + 25, "零空间 = span{u_a, u_k}（2 维）", 12.5, COK, "middle", "700");
+  ln396("fig6", x0 + W / 2, y0 + H, x0 + W / 2, by, COK, 1.4);
+  ln396("fig6", x0 + W + GAP + W / 2, y0 + H, x0 + W + GAP + W / 2, by, COK, 1.4);
+  tx396("fig6", x0 + 2 * (W + GAP) + W / 2, by + 25, "被 su(2)_L 推动", 11, CWARN, "middle", "600");
+  tx396("fig6", x0, f6Y1, "★ 2 维 = u_a ⊕ u_k，不是 u_a ⊕ u_b —— 这一句必须由计算拼出，不能凭记忆写", 11.5, "#4a5568");
+})();
+</script>
+</div>
+</body>
+</html>

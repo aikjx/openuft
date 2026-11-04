@@ -1,0 +1,312 @@
+{
+ "title": "ROOT V61 独立复算",
+ "date": "2026-11-04",
+ "verdict": "V61_66_DECOMP_45_1_10_10_OK__CENTRALIZER_46_AND_RESIDUAL_34_OK__STABILIZER_36_28_OK__SO10_COMMUTANT_IS_1_SO_MH_EQ_MT_IS_THEOREM__SU5_COMMUTANT_IS_1_SM_COMMUTANT_IS_2_SO_DELTA_PRICE_IS_ONE_ORDER_PARAMETER__SIX_FAMILY_SPECTRUM_HAS_ZERO_ANOMALIES_SO_288_12_144_BELONGS_TO_ANOTHER_SPECTRUM__DIMENSION_COMPARISON_HAS_ZERO_DISCRIMINATING_POWER__DELTA_LOCKED_TO_ZERO_ABOVE_SM__M6_CLOSED_FORM_OK_RATIO_1P4349E4_TRUE_BUT_REAL_STATEMENT_IS_KK_SCALE_MUST_MOVE_2P06E8_FOLD__NO_NEW_PROCESSING_LOGIC__UNIQUE_PREDICTION_0",
+ "counts": {
+  "PASS": 17,
+  "FAIL": 3,
+  "INFO": 4
+ },
+ "n_rows": 24,
+ "guards": {
+  "n_ok": 6,
+  "n_total": 6,
+  "rows": [
+   {
+    "name": "G01-ACT",
+    "ok": true,
+    "detail": "24 条全部有 act 读数"
+   },
+   {
+    "name": "G02-TWOPATH",
+    "ok": true,
+    "detail": "so(10) 交换子维数两条路径同读数 1 / 1"
+   },
+   {
+    "name": "G03-SLOPE",
+    "ok": true,
+    "detail": "3 个斜率全 = 0.5"
+   },
+   {
+    "name": "G04-IDENT",
+    "ok": true,
+    "detail": "恒等式相对偏差 4.86E-050"
+   },
+   {
+    "name": "G05-CLOSURE",
+    "ok": true,
+    "detail": "反例子代数 12 维、封闭 = True"
+   },
+   {
+    "name": "G06-NOHARDOK",
+    "ok": true,
+    "detail": "add() 的 ok 为布尔字面量的调用数 = 0"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "id": "A01",
+   "layer": "A",
+   "name": "so(12) 的 66 个生成元按 U(1)_F 荷分块",
+   "exp": "66 = 45 + 1 + 10 + 10，荷 0 / 0 / +2 / -2",
+   "act": "荷 0 块 46（so(10) 45 + u(1)_F 1）、荷 +2 块 10、荷 -2 块 10，合计 66",
+   "kind": "PASS",
+   "note": "分块只由荷向量 Q12 决定，未引用来料"
+  },
+  {
+   "id": "A02",
+   "layer": "A",
+   "name": "U(1)_F 磁通保留的规范代数维数 = Cent(T_F)",
+   "exp": "46",
+   "act": "46（= so(10) 的 45 + u(1)_F 的 1）",
+   "kind": "PASS",
+   "note": "残余 46 - 12 = 34 = 33（so(10) 内未破缺）+ 1（u(1)_F）；12 = 8+3+1"
+  },
+  {
+   "id": "A02b",
+   "layer": "A",
+   "name": "负对照：把 T_F 换成一般 Cartan 元（六个平面权重 1,2,3,5,7,11）",
+   "exp": "必须 != 46（单平面旋转与一般 Cartan 元不是同一类）",
+   "act": "6",
+   "kind": "PASS",
+   "note": "同一台仪器在两个不同 T 上给两个不同读数；若相等则判据恒绿"
+  },
+  {
+   "id": "A03",
+   "layer": "A",
+   "name": "单个实十维矢量的稳定子 / 两个独立实矢量的稳定子",
+   "exp": "36（so(9)）/ 28（so(8)）",
+   "act": "36 / 28",
+   "kind": "PASS",
+   "note": "45 - 9 = 36；45 - 17 = 28（两条轨道并：9 + 8 = 17）"
+  },
+  {
+   "id": "A04",
+   "layer": "A",
+   "name": "与 so(10) 对易的对称 10x10 算子维数（两条路径）",
+   "exp": "1（路径一：全 45 生成元）/ 1（路径二：9 个相邻生成元）",
+   "act": "1 / 1",
+   "kind": "PASS",
+   "note": "维数 1 ⇒ 任一 so(10) 不变的二次涨落算符 ∝ 单位 ⇒ m_H^2 = m_T^2 是定理；承接 r394 A6，同读数"
+  },
+  {
+   "id": "A04b",
+   "layer": "A",
+   "name": "控制组：so(8) 在 R^10 = 8+1+1 上的交换子维数",
+   "exp": "4（不是 1）",
+   "act": "4",
+   "kind": "PASS",
+   "note": "同一台仪器、不同不变群给不同读数 ⇒ 维数不是恒等于 1 的装饰"
+  },
+  {
+   "id": "A05",
+   "layer": "A",
+   "name": "交换子维数阶梯：su(5) 与 SM",
+   "exp": "su(5) 给 1（Delta 仍锁死）；SM 给 2（恰 1 个自由参数）",
+   "act": "su(5): 1（24 个生成元）/ SM: 2（12 个生成元）",
+   "kind": "PASS",
+   "note": "R^10 在 SM 下分成 V6（含 3 与 3bar）与 V4（含双重态），两块各自一个标量 ⇒ m_H^2 与 m_T^2 可独立；su(5) 下 10 = 5+5bar 不可分 ⇒ 仍锁死"
+  },
+  {
+   "id": "A06",
+   "layer": "A",
+   "name": "N=3 磁通下的 16 等价家族数与净手征",
+   "exp": "6 套 / 净手征 6（来料口径：右手共轭后都算左手 16）",
+   "act": "16 个数 6、荷和 0",
+   "kind": "PASS",
+   "note": "与 r394 A7 同读数；净手征按来料口径取绝对值 6"
+  },
+  {
+   "id": "A07",
+   "layer": "A",
+   "name": "该六套谱的三项反常（U(1)^3 / Spin(10)^2U(1) / grav^2U(1)）",
+   "exp": "若谱真是 3 个 16_{+1} + 3 个 16bar_{-1}，三项必须全为 0",
+   "act": "0 / 0 / 0",
+   "kind": "PASS",
+   "note": "矢量型谱 ⇒ 三项精确为 0，与来料自报的 288 / 12 / 144 不相容：那组数不属于这个六套谱（承接 r393 A10 的 96 + 192 分解）"
+  },
+  {
+   "id": "A07b",
+   "layer": "A",
+   "name": "反推：单靠 16_{+1} 要给 U(1)^3 = 288 需要几个",
+   "exp": "18（不是 3，也不是 6）",
+   "act": "18 个",
+   "kind": "PASS",
+   "note": "16 q^3 = 16 q；六套谱给 0 ⇒ 288 只能由额外单态份额补足"
+  },
+  {
+   "id": "A07c",
+   "layer": "A",
+   "name": "来料 §四 自报的 288 / 12 / 144 能否由它自述的六套谱给出",
+   "exp": "288 / 12 / 144（来料读数反抄）",
+   "act": "0 / 0 / 0（同一谱用指标口径重算）",
+   "kind": "FAIL",
+   "note": "矢量型谱三项精确为 0 ⇒ 这组数必属另一个（手征）谱；V61 §四 在同一节里写了两个不相容的谱（承接 r393 A10，同结论）"
+  },
+  {
+   "id": "B01",
+   "layer": "B",
+   "name": "M_6 的闭式 M_Pl^{1/2} m_KK^{1/2}/(8 pi)^{1/4} 与逐式换算",
+   "exp": "两条路径相对偏差 < 1e-40",
+   "act": "6.9693058E+010 vs 6.9693058E+010，相对偏差 2.87E-050",
+   "kind": "PASS",
+   "note": "来料只给 6.9693e10（5 位）；闭式给到 10 位"
+  },
+  {
+   "id": "B02",
+   "layer": "B",
+   "name": "与来料 6.9693e10 GeV 的比对",
+   "exp": "相对偏差 < 1e-5（来料 5 位有效数字）",
+   "act": "8.25E-007",
+   "kind": "PASS",
+   "note": "M_Pl 取 2.435e18 时复现；来料未报 M_Pl 取值，此为口径反推"
+  },
+  {
+   "id": "B03",
+   "layer": "B",
+   "name": "M_X / M_6",
+   "exp": "1.4349e4（来料）",
+   "act": "1.4349E+004",
+   "kind": "PASS",
+   "note": "比值本身为真；它是不是正确的度量见 B06/C03"
+  },
+  {
+   "id": "B04",
+   "layer": "B",
+   "name": "使 M_X <= M_6 所需的最小 KK 标度（闭式反解）",
+   "exp": "sqrt(8 pi) M_X^2 / M_Pl（与 B03 读数无关的独立表达）",
+   "act": "2.0588323E+012 GeV = 2.05883E+009 TeV",
+   "kind": "INFO",
+   "note": "闭式由 B01 的 M_6(m_KK) 令 M_6 = M_X 反解；此处只报读数"
+  },
+  {
+   "id": "B05",
+   "layer": "B",
+   "name": "恒等式 m_KK,min / m_KK,demo = (M_X/M_6)^2",
+   "exp": "相对偏差 < 1e-30（左：反解闭式；右：来料比值的平方）",
+   "act": "2.0588323E+008 vs 2.0588323E+008，相对偏差 4.86E-050",
+   "kind": "PASS",
+   "note": "把来料的 1.4349e4 读成「KK 标度必须搬多少倍」：2.05883E+008 倍"
+  },
+  {
+   "id": "B06",
+   "layer": "B",
+   "name": "M_6 对 m_KK 的幂次（4 点 log-log 斜率，不是两点）",
+   "exp": "全部 = 0.5，偏差 < 1e-40",
+   "act": "0.5, 0.5, 0.5",
+   "kind": "PASS",
+   "note": "等比网格上必须用 log-log 斜率；两点相除在指数 1/2 时也可能凑出像样的数，故取 4 点"
+  },
+  {
+   "id": "B06b",
+   "layer": "B",
+   "name": "控制组：若指数为 1，M_6(1e6) 的预测",
+   "exp": "与实测差 sqrt(1000) = 31.6228 倍（不是 1 倍，也不是 1000 倍）",
+   "act": "预测 2.20389E+013 vs 实测 6.96931E+011，差 3.16228E+001 倍",
+   "kind": "PASS",
+   "note": "两个读数不同 ⇒ 幂次判据有判别力，不是恒绿；线性假设一次就错 31.6 倍"
+  },
+  {
+   "id": "B07",
+   "layer": "B",
+   "name": "六维塔的最大级数 N_max = M_6 R 与 4D 质量 M_X 对应的级数 R M_X",
+   "exp": "N_max = sqrt2 M_6/m_KK、n_req = sqrt2 M_X/m_KK，比值 = M_X/M_6",
+   "act": "N_max = 9.85609E+006，n_req = 1.41421E+011，比值 = 1.4349E+004",
+   "kind": "PASS",
+   "note": "比值与 B03 同一读数 ⇒ 此条核对的是恒等式，不能当第二条独立证据"
+  },
+  {
+   "id": "B08",
+   "layer": "B",
+   "name": "质子衰变量级：M_X = 1e15、alpha = 1/40 时的寿命",
+   "exp": "只报量级（alpha 是自由口径，不是理论输出）",
+   "act": "tau ~ 4.589E+031 年（SK 限 2.4e34 年）；反解得 M_X >= 4.782E+015 GeV",
+   "kind": "INFO",
+   "note": "有量纲口径 alpha 使这条只作一致性旁证，不作判据；tau ∝ M_X^4，单调"
+  },
+  {
+   "id": "C01",
+   "layer": "C",
+   "name": "来料 §二：「Spin(8) 的 28 > 12 ⇒ 单个复 10 不能破缺到 SM」",
+   "exp": "维数比较要成为子群判据，必须排除 12 维反例；反例存在 ⇒ 该推理零判别力",
+   "act": "so(4)+so(4) 是 12 维、对易子封闭（是）的子代数；其中心维数 0，而 SM 的为 1",
+   "kind": "FAIL",
+   "note": "「28 > 12」对「SM < 稳定子」零判别力：12 维反例存在且不是 SM（中心维数不同）；正确判据是单态计数（10 = 5+5bar 单态数 0）；承接 r394 A3，同读数"
+  },
+  {
+   "id": "C02",
+   "layer": "C",
+   "name": "来料 §五：Delta = m_T^2 - m_H^2 被当作「待从作用量算出」的开放量",
+   "exp": "若不变群 >= su(5)，Delta 恒为 0（不是待算，是已定）",
+   "act": "so(10) 交换子维数 1、su(5) 维数 1 ⇒ 涨落算符 ∝ 单位 ⇒ Delta ≡ 0；只有降到 SM（维数 2）才允许 Delta != 0，代价恰 1 个序参量",
+   "kind": "FAIL",
+   "note": "§三（m_H,0 = m_T,0）与 §五（Delta 待算）合起来自证 Delta = 0：§五 表里「Delta > 0」与「Delta >= mu^2」两行在 V60/V61 的谱内是空集"
+  },
+  {
+   "id": "C03",
+   "layer": "C",
+   "name": "来料 §四：24 个额外带电单态零模",
+   "exp": "需要荷分配才能核（本册只能核计数层面 24 = 2 x 12）",
+   "act": "来料未给 24 个单态各自的 U(1)_F 荷 ⇒ 其反常贡献无法独立复算",
+   "kind": "INFO",
+   "note": "24 = 2 x 12 与试验谱系数 2 x 12_+ 一致，但这只是维数相加，不是反常核验"
+  },
+  {
+   "id": "C04",
+   "layer": "C",
+   "name": "来料 §八：26 / 26 通过",
+   "exp": "计数不等于证据：需按可判性分类",
+   "act": "8 行里可判 4 / 半可判 1 / 不可判或未证明 3（承接 r394 A13，同读数）",
+   "kind": "INFO",
+   "note": "「四力共同微观本源 尚未证明」一行本身不是断言，不能计入通过数"
+  }
+ ],
+ "key_numbers": {
+  "decomp_66": [
+   45,
+   1,
+   10,
+   10
+  ],
+  "centralizer": 46,
+  "centralizer_other_cartan": 6,
+  "residual": 34,
+  "stabilizer_1vec_2vec": [
+   36,
+   28
+  ],
+  "commutant_so10": [
+   1,
+   1
+  ],
+  "commutant_su5": 1,
+  "commutant_sm": 2,
+  "commutant_so8": 4,
+  "example_subalgebra": [
+   12,
+   true,
+   0,
+   1
+  ],
+  "anom_six_family": [
+   0,
+   0,
+   0
+  ],
+  "M6": "6.969305750E+010",
+  "M6_closed": "6.969305750E+010",
+  "ratio_MX_M6": "1.4348631E+004",
+  "mkk_min_GeV": "2.0588323E+012",
+  "mkk_min_over_demo": "2.0588323E+008",
+  "slopes": [
+   "0.5",
+   "0.5",
+   "0.5"
+  ],
+  "N_max": "9.85609E+006",
+  "n_req": "1.41421E+011",
+  "tau_yr": "4.589E+031",
+  "MX_req_GeV": "4.782E+015"
+ }
+}

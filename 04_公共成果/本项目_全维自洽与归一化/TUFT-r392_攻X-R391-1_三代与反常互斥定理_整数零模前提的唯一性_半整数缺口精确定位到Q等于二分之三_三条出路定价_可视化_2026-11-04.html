@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>TUFT-r392 可视化 · 三代与反常互斥定理</title>
+<style>
+  :root{--bg:#f7f8fa;--ink:#1a202c;--sub:#4a5568;--line:#cbd5e0;--acc:#2b6cb0;--ok:#2f855a;--warn:#c53030;--grey:#a0aec0;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);}
+  body{font-family:"Segoe UI","Microsoft YaHei",sans-serif;}
+  .wrap{max-width:780px;margin:0 auto;padding:26px 18px 56px;}
+  h1{font-size:19px;line-height:1.55;margin:0 0 6px;}
+  .sub{color:var(--sub);font-size:13px;margin:0 0 20px;line-height:1.7;}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 12px 10px;margin-bottom:18px;}
+  .cap{font-size:12.5px;color:var(--sub);margin:8px 2px 0;line-height:1.7;}
+  .cap b{color:var(--ink);}
+  svg{display:block;width:100%;height:auto;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TUFT-r392 · 攻 X-R391-1：三代—反常互斥定理</h1>
+<div class="sub">六维手征 16 的 8 形式反常 · <b>整数零模前提的唯一性</b> · 半整数缺口精确落在 Q = 3/2 · 三条出路定价<br>
+读数来源：<code>数据/TUFT-r392_…_精算_2026-11-04.json</code>（28 条，MAIN 10 PASS / 2 INFO / 0 FAIL，守卫 13/13）</div>
+
+<div class="card"><svg id="fig1" viewBox="0 0 680 250"></svg>
+<div class="cap"><b>图 1｜两条腿</b>：GS 可解性被两个独立的块掐住 —— 腿 A 管「纯规范块」（<code>trF⁴</code>、<code>p₂</code>），腿 B 管 <code>T²</code> 块。两条都不依赖谱的对称性。</div></div>
+
+<div class="card"><svg id="fig2" viewBox="0 0 680 260"></svg>
+<div class="cap"><b>图 2｜纯规范块 = n ×（单个 16）</b>：三条线都过原点且严格线性，<code>T²</code> 恒零（所以没画就说明它是 0，不是漏画）。这条把「纯规范部分」从 r390 的抵消技巧升级成公式。</div></div>
+
+<div class="card"><svg id="fig3" viewBox="0 0 680 240"></svg>
+<div class="cap"><b>图 3｜整数侧：GS 可解构型的 n 分布</b>：<code>q₊ = 1..8</code>、<code>q₋ = −8..8</code> 共 16 组可解，其中 8 组 <code>n = 0</code>、8 组 <code>n = 2,4,…,16</code>。<b>一个奇数都没有</b>，3 不在其中。</div></div>
+
+<div class="card"><svg id="fig4" viewBox="0 0 680 240"></svg>
+<div class="cap"><b>图 4｜唯一缺口</b>：同一个机制、同一对电荷，<code>q₊ = 3/2</code> 给 n = 3，<code>q₊ = 3</code> 给 n = 6。差别只在分母，不在物理。</div></div>
+
+<div class="card"><svg id="fig5" viewBox="0 0 680 250"></svg>
+<div class="cap"><b>图 5｜分母判据</b>：n = 3 可达 ⟺ 分母 M 为偶数（12 档里 6 命中 / 6 未命中）；对照 n = 2 在 12 档全部命中，证明枚举器不是空转。</div></div>
+
+<div class="card"><svg id="fig6" viewBox="0 0 680 260"></svg>
+<div class="cap"><b>图 6｜三条出路定价</b>：只有 E1 改的是「前提」而不是「结论」。E2/E3 都撞在已经算出来的块上，不是想象出来的困难。</div></div>
+
+<script>
+function mk392(id, tag, at) {
+  var s = document.getElementById(id);
+  var e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (var k in at) { e.setAttribute(k, at[k]); }
+  s.appendChild(e);
+  return e;
+}
+function tx392(id, x, y, str, size, fill, anchor, weight) {
+  var e = mk392(id, "text", { x: x, y: y, fill: fill || "#1a202c",
+    "font-size": size || 12, "text-anchor": anchor || "start",
+    "font-weight": weight || "400",
+    "font-family": "Segoe UI, Microsoft YaHei, sans-serif" });
+  e.textContent = str;
+  return e;
+}
+function ln392(id, x1, y1, x2, y2, stroke, w) {
+  return mk392(id, "line", { x1: x1, y1: y1, x2: x2, y2: y2,
+    stroke: stroke || "#cbd5e0", "stroke-width": w || 1 });
+}
+function rc392(id, x, y, w, h, fill, stroke, sw, r) {
+  return mk392(id, "rect", { x: x, y: y, width: w, height: h,
+    fill: fill, stroke: stroke || "none", "stroke-width": sw || 0, rx: r || 4 });
+}
+function ci392(id, cx, cy, r, fill, stroke) {
+  return mk392(id, "circle", { cx: cx, cy: cy, r: r, fill: fill,
+    stroke: stroke || "none", "stroke-width": stroke ? 1.4 : 0 });
+}
+function pt392(id, d, stroke, w, fill) {
+  return mk392(id, "path", { d: d, fill: fill || "none", stroke: stroke,
+    "stroke-width": w || 1.6, "stroke-linejoin": "round", "stroke-linecap": "round" });
+}
+var CACC = "#2b6cb0", COK = "#2f855a", CWARN = "#c53030", CGREY = "#a0aec0", CLINE = "#cbd5e0";
+
+/* ---------------- 每图独立几何行：负对照只改这一行即可精确打中指定图 ---------------- */
+var f1Y1 = 242;
+var f2Y1 = 252;
+var f3Y1 = 232;
+var f4Y1 = 190;
+var f5Y1 = 210;
+var f6Y1 = 256;
+
+/* ================================ 图 1：两条腿 ================================ */
+(function () {
+  var id = "fig1";
+  tx392(id, 24, 26, "I₈ = Σ sᵢ·I8(qᵢ) → ½X₄∧X₄ 的可解性被两个独立块掐住", 13, "#1a202c", "start", "600");
+  rc392(id, 24, 54, 142, 58, "#ebf4ff", CACC, 1.2);
+  tx392(id, 34, 78, "I₈ 谱", 12.5, CACC, "start", "600");
+  tx392(id, 34, 98, "16 / 反 16 求和", 11, "#4a5568");
+  pt392(id, "M 166 83 L 202 83", CACC, 1.6);
+  pt392(id, "M 196 78 L 204 83 L 196 88", CACC, 1.6);
+  rc392(id, 204, 54, 178, 58, "#fff5f5", CWARN, 1.2);
+  tx392(id, 214, 78, "腿 A：纯规范块", 12.5, CWARN, "start", "600");
+  tx392(id, 214, 98, "trF⁴ 与 p₂ 必须 = 0", 11, "#4a5568");
+  pt392(id, "M 382 83 L 418 83", CACC, 1.6);
+  pt392(id, "M 412 78 L 420 83 L 412 88", CACC, 1.6);
+  rc392(id, 420, 54, 236, 58, "#f0fff4", COK, 1.2);
+  tx392(id, 430, 78, "腿 B：T² 块", 12.5, COK, "start", "600");
+  tx392(id, 430, 98, "T²=0 ⇒ β=0 ⇒ x²T=0", 11, "#4a5568");
+  tx392(id, 214, 130, "½X₄∧X₄ 产生不出 ⇒ n ≠ 0 一律死（A3）", 11, CWARN);
+  tx392(id, 430, 130, "单个 16 无 T² 成分 ⇒ 逼 Σ s q² = 0（A4）", 11, COK);
+  pt392(id, "M 538 134 L 538 152", CLINE, 1.4);
+  rc392(id, 134, 158, 412, 52, "#f7fafc", "#a0aec0", 1.2);
+  tx392(id, 340, 180, "GS 可解  ⟺  Σ s q² = 0  且  Σ s q⁴ = 0", 14, "#1a202c", "middle", "600");
+  tx392(id, 340, 200, "（且 Σ s = 0，即 16 与反 16 等数）", 11, "#4a5568", "middle");
+  tx392(id, 24, f1Y1 - 8, "两腿皆过才可解；任一条不过即判死，且两条互不依赖", 11, CGREY);
+})();
+
+/* ================================ 图 2：纯规范块 ∝ n ================================ */
+(function () {
+  var id = "fig2";
+  var X0 = 72, DX = 92, Y0 = 150, K = 360;
+  tx392(id, 24, 26, "纯规范块严格正比于净手征数 n：三条线都过原点，T² 恒为 0", 13, "#1a202c", "start", "600");
+  ln392(id, 56, Y0, 656, Y0, "#718096", 1.4);
+  ln392(id, 56, 30, 56, 210, "#718096", 1.4);
+  tx392(id, 40, 34, "系数", 11, "#4a5568", "end");
+  tx392(id, 40, Y0 + 4, "0", 11, "#4a5568", "end");
+  for (var n = 0; n <= 6; n++) {
+    tx392(id, X0 + n * DX, 172, "n=" + n, 11, "#4a5568", "middle");
+    ci392(id, X0 + n * DX, Y0 - K * (n / 24), 3.6, CACC);
+    ci392(id, X0 + n * DX, Y0 - K * (-n / 90), 3.6, CWARN);
+    ci392(id, X0 + n * DX, Y0 - K * (-n / 24), 3.6, COK);
+  }
+  pt392(id, "M 72 150 L 164 135 L 256 120 L 348 105 L 440 90 L 532 75 L 624 60", CACC, 1.8);
+  pt392(id, "M 72 150 L 164 154 L 256 158 L 348 162 L 440 166 L 532 170 L 624 174", CWARN, 1.8);
+  pt392(id, "M 72 150 L 164 165 L 256 180 L 348 195 L 440 210 L 532 225 L 624 240", COK, 1.8);
+  tx392(id, 476, 40, "trF⁴ = n/24", 11.5, CACC, "start", "600");
+  tx392(id, 476, 192, "p₂ = −n/90", 11.5, CWARN, "start", "600");
+  tx392(id, 150, 208, "T·p₁ = −n/24", 11.5, COK, "start", "600");
+  tx392(id, 150, 226, "（与 trF⁴ 互为镜像，两线斜率大小相等符号相反）", 10.5, "#718096");
+  tx392(id, 386, 130, "T² 线缺席 = 值恒 0", 11, CWARN, "start", "600");
+  tx392(id, 24, f2Y1 - 8, "横轴 n = Σ sᵢ（净手征数）；纵轴为 I₈ 的对应单项式系数（单个 16 的 T² 系数精确为零，A1）", 10.5, CGREY);
+})();
+
+/* ================================ 图 3：整数侧 n 分布 ================================ */
+(function () {
+  var id = "fig3";
+  var vals = [0, 2, 4, 6, 8, 10, 12, 14, 16];
+  var cnts = [8, 1, 1, 1, 1, 1, 1, 1, 1];
+  var base = 190, X0 = 74, DX = 62, BW = 40, K = 17;
+  tx392(id, 24, 26, "整数侧：16 组 GS 可解构型里 n 全偶，n = 3 一次都没出现", 13, "#1a202c", "start", "600");
+  ln392(id, 56, base, 656, base, "#718096", 1.4);
+  for (var i = 0; i < vals.length; i++) {
+    var h = cnts[i] * K;
+    rc392(id, X0 + i * DX, base - h, BW, h, i === 0 ? CGREY : CACC, "none", 0, 3);
+    tx392(id, X0 + i * DX + BW / 2, base - h - 6, "" + cnts[i], 11, "#1a202c", "middle", "600");
+    tx392(id, X0 + i * DX + BW / 2, base + 18, "n=" + vals[i], 11, "#4a5568", "middle");
+  }
+  rc392(id, X0 + 1 * DX + BW / 2 - 2, base - 22, 4, 20, CWARN, "none", 0, 1);
+  tx392(id, X0 + 1 * DX + BW / 2 + 12, base - 24, "n=2 起非平凡", 10.5, CWARN);
+  tx392(id, 300, 62, "n 只能取偶数值：0（8 组平凡解）与 2,4,…,16（8 组非平凡解）", 11.5, "#4a5568");
+  tx392(id, 300, 82, "n = 3 落在两条柱之间 —— 这是整数前提的直接后果，不是数值巧合", 11.5, CWARN);
+  tx392(id, 24, f3Y1 - 8, "纵轴为构型数；灰色柱 = n=0 的平凡支（q₋ = +q₊）", 10.5, CGREY);
+})();
+
+/* ================================ 图 4：唯一缺口 ================================ */
+(function () {
+  var id = "fig4";
+  var xs = [130, 340, 550], ns = [2, 3, 6], lab = ["q₊ = 1", "q₊ = 3/2", "q₊ = 3"];
+  var tag = ["整数 · n 偶", "半整数 · 命中", "整数 · n 偶"];
+  var col = [CACC, COK, CACC];
+  var K = 21, BW = 96;
+  tx392(id, 24, 26, "同一个机制的两侧：q₊ = 3/2 给 n = 3，q₊ = 3 给 n = 6", 13, "#1a202c", "start", "600");
+  ln392(id, 56, f4Y1, 656, f4Y1, "#718096", 1.4);
+  for (var i = 0; i < 3; i++) {
+    var h = ns[i] * K;
+    rc392(id, xs[i] - BW / 2, f4Y1 - h, BW, h, col[i], "none", 0, 4);
+    tx392(id, xs[i], f4Y1 - h - 8, "n = " + ns[i], 13, "#1a202c", "middle", "600");
+    tx392(id, xs[i], f4Y1 + 18, lab[i], 12, "#1a202c", "middle");
+    tx392(id, xs[i], f4Y1 + 36, tag[i], 10.5, col[i], "middle");
+    tx392(id, xs[i], f4Y1 - h + 18, "I₈ = ∅", 11, "#ffffff", "middle", "600");
+  }
+  tx392(id, 130, 62, "Σ s q² = Σ s q⁴ = 0", 10.5, "#4a5568", "middle");
+  tx392(id, 340, 62, "Σ s q² = Σ s q⁴ = 0", 10.5, "#4a5568", "middle");
+  tx392(id, 550, 62, "Σ s q² = Σ s q⁴ = 0", 10.5, "#4a5568", "middle");
+  tx392(id, 24, f4Y1 + 46, "★ 4/2 与 6/4 两种写法给同一读数（守卫 G12）⇒ 结果不依赖约分方式；三条的反常都精确抵消", 10.5, CGREY);
+})();
+
+/* ================================ 图 5：分母判据 ================================ */
+(function () {
+  var id = "fig5";
+  var X0 = 78, DX = 47, BW = 28, R1 = 96, R2 = 156;
+  var hit3 = [false, true, false, true, false, true, false, true, false, true, false, true];
+  tx392(id, 24, 26, "n = 3 可达 ⟺ 分母 M 为偶数：12 档枚举，6 命中 / 6 未命中", 13, "#1a202c", "start", "600");
+  tx392(id, 24, R1 + 14, "n = 3", 12, "#1a202c", "start", "600");
+  tx392(id, 24, R2 + 14, "n = 2 对照", 11, "#4a5568");
+  ln392(id, 66, 200, 656, 200, CLINE, 1.2);
+  for (var i = 0; i < 12; i++) {
+    var x = X0 + i * DX;
+    if (hit3[i]) { rc392(id, x, R1, BW, 22, COK, "none", 0, 3); }
+    else { rc392(id, x, R1, BW, 22, "#ffffff", CGREY, 1.4, 3); }
+    rc392(id, x, R2, BW, 22, CACC, "none", 0, 3);
+    tx392(id, x + BW / 2, f5Y1, "M=" + (i + 1), 10.5, "#4a5568", "middle");
+  }
+  tx392(id, 78, 186, "实心 = 命中（I₈ = ∅ 且 n 达标）；空心 = 未命中；对照行 12 档全实心 ⇒ 枚举器不空转", 11, "#4a5568");
+  tx392(id, 78, 226, "命中档的 k 依次为 3,6,9,12,15,18 ⇒ k = 3M/2，与整除判据两条路径同判（A9）", 11, COK);
+  tx392(id, 78, f5Y1 + 22, "★「半整数」不是重标：条件与 M 无关，但 n = Σ s k / M 随 M 变", 10.5, CWARN);
+})();
+
+/* ================================ 图 6：三条出路定价 ================================ */
+(function () {
+  var id = "fig6";
+  var rows = [
+    ["E1", "半整数零模  Q = k/M（M 偶）", "可行：n = 3 精确命中且 I₈ 全消（A7 / A9）", COK],
+    ["E2", "扩 ansatz，让 X₄ 含 trF⁴", "不可行：T² 块仍逼 β = 0，x²T ≠ 0 即死（A4）", CWARN],
+    ["E3", "放弃反常抵消", "不可行：6D 理论不自洽，且 GS 已被 A3 / A4 堵死", CWARN]
+  ];
+  tx392(id, 24, 26, "三条出路的价格：只有 E1 改的是「前提」，另两条撞在已算出的块上", 13, "#1a202c", "start", "600");
+  for (var i = 0; i < 3; i++) {
+    var y = 48 + i * 54;
+    rc392(id, 24, y, 50, 40, rows[i][3], "none", 0, 6);
+    tx392(id, 49, y + 26, rows[i][0], 13, "#ffffff", "middle", "700");
+    rc392(id, 82, y, 570, 40, "#ffffff", rows[i][3], 1.3, 6);
+    tx392(id, 94, y + 17, rows[i][1], 12, "#1a202c", "start", "600");
+    tx392(id, 94, y + 33, rows[i][2], 11, rows[i][3]);
+  }
+  rc392(id, 24, 214, 628, 30, "#f7fafc", "#a0aec0", 1.2, 6);
+  tx392(id, 338, 234, "判决：障碍是量子化条件（Q ∈ ℤ），不是族数", 13, "#1a202c", "middle", "700");
+  tx392(id, 24, f6Y1 - 4, "FINAL = GATES-PASS-ALL-POSITIVE（主册 10 PASS / 2 INFO / 0 FAIL，守卫 13/13）", 10.5, CGREY);
+})();
+</script>
+</div>
+</body>
+</html>
