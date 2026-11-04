@@ -15,8 +15,23 @@ import os
 import io
 import ast
 import json
+import sys
 from fractions import Fraction as F
 from decimal import Decimal as D, getcontext
+
+getcontext().prec = 50
+
+
+def _p(s):
+    """GBK 控制台守卫：C 段条目名含 U+21D2（⇒），无此守卫会在 C01 抛 UnicodeEncodeError，
+    C 段与守卫段整段不执行。只做字面降级，不重设 stdout 编码（重设会让捕获器误解码）。"""
+    s = s.replace(u"\u21d2", u"=>").replace(u"\u2192", u"->")
+    try:
+        print(s)
+    except UnicodeEncodeError:
+        enc = getattr(sys.stdout, "encoding", None) or "ascii"
+        print(s.encode(enc, "replace").decode(enc, "replace"))
+
 
 getcontext().prec = 50
 
@@ -34,13 +49,13 @@ def add(rid, layer, name, exp, act, ok, note=""):
     kind = "INFO" if ok is None else ("PASS" if ok else "FAIL")
     ROWS.append({"id": rid, "layer": layer, "name": name, "exp": str(exp),
                  "act": str(act), "kind": kind, "note": note})
-    print("  [%-4s] %-4s %s" % (kind, rid, name))
+    _p("  [%-4s] %-4s %s" % (kind, rid, name))
     return ok
 
 
 def guard(name, ok, detail):
     GUARDS.append({"name": name, "ok": bool(ok), "detail": str(detail)})
-    print("  [GUARD %-3s] %-14s | %s" % ("ok" if ok else "BAD", name, detail))
+    _p("  [GUARD %-3s] %-14s | %s" % ("ok" if ok else "BAD", name, detail))
     return ok
 
 
