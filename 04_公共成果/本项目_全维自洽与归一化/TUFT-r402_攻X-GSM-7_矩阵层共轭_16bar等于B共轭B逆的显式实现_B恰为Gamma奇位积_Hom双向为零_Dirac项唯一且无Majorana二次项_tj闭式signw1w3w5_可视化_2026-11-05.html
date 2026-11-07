@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>TUFT-r402 四图（矩阵层共轭）</title>
+<style>
+body{margin:0;background:#f7f8fa;color:#1b1b1b;font-family:"Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 40px}
+h1{font-size:18px;margin:0 0 6px}
+.sub{font-size:12px;color:#5a5a5a;margin:0 0 18px}
+.card{background:#fff;border:1px solid #e3e6eb;border-radius:10px;padding:10px;margin:0 0 16px;
+box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.cap{font-size:11.5px;color:#5a5a5a;padding:6px 4px 2px}
+svg{display:block;width:100%;height:auto}
+</style></head><body><div class="wrap">
+<h1>TUFT-r402 · 攻 X-GSM-7 · 矩阵层共轭</h1>
+<p class="sub">16bar == B·conj(16)·B^(-1) 的显式实现 · B 恰为 Gamma 奇位积（mask 341）· Hom 双向为零 · Dirac 项唯一且无 Majorana 二次项 · 2026-11-05</p>
+<div class="card"><svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Microsoft YaHei, sans-serif">
+<rect x="0" y="0" width="680" height="330" fill="#ffffff"/>
+<text x="24" y="30" font-size="14" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">图 1  矩阵层不等价的三重判定（与权层判据独立的三个读数）</text>
+<text x="24" y="50" font-size="11" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">同权位配不上对（宇称账）⇒ Hom 双向 0；交换子平凡 ⇒ 16 不可约；Dirac 系统复维 1</text>
+<rect x="30" y="76" width="300" height="72" rx="6" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="44" y="100" font-size="12" fill="#2f6fed" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">判据一  Hom(16,16bar)</text>
+<text x="44" y="126" font-size="12" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">Cartan 支撑 = 0</text>
+<rect x="360" y="76" width="300" height="72" rx="6" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="374" y="100" font-size="12" fill="#2f6fed" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">判据一'  Hom(16bar,16)</text>
+<text x="374" y="126" font-size="12" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">Cartan 支撑 = 0</text>
+<rect x="30" y="164" width="300" height="72" rx="6" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="44" y="188" font-size="12" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">判据二  Hom(16,16)</text>
+<text x="44" y="214" font-size="12" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">nullspace 实维 2 = 复维 1（分量 1）</text>
+<rect x="360" y="164" width="300" height="72" rx="6" fill="#fdf0f0" stroke="none" stroke-width="1"/>
+<text x="374" y="188" font-size="12" fill="#c77700" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">判据三  Dirac 系统</text>
+<text x="374" y="214" font-size="12" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">1280 行，实维 2 = 复维 1（T0 全 ±1 = True）</text>
+<text x="30" y="278" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">污染对照 K1：换错表示 ⇒ 解坍缩为 0 维（A4 同式系统为 2 维）—— 「复维 1」读的是 16 对 16bar</text>
+<text x="30" y="300" font-size="10" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">读数来源：A2 / A3 / A4 / K1（本卷 JSON readings）</text>
+</svg><div class="cap">图 1 读数来源：A2 / A3 / A4 / K1（三重判定 + 污染对照）</div></div>
+<div class="card"><svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Microsoft YaHei, sans-serif">
+<rect x="0" y="0" width="680" height="360" fill="#ffffff"/>
+<text x="24" y="30" font-size="14" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">图 2  B 的支撑：列 j 恰在行 match[j] 非零，值 = t_j（全 ±1）</text>
+<text x="24" y="50" font-size="11" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">B 把 w-权向量送到 t_j·(−w)-权向量；B·B^T == I（正交，B^(-1) = B^T）⇒ 可逆</text>
+<rect x="150" y="311" width="13" height="13" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<rect x="165" y="296" width="13" height="13" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<rect x="180" y="281" width="13" height="13" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<rect x="195" y="266" width="13" height="13" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<rect x="210" y="251" width="13" height="13" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<rect x="225" y="236" width="13" height="13" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<rect x="240" y="221" width="13" height="13" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<rect x="255" y="206" width="13" height="13" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<rect x="270" y="191" width="13" height="13" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<rect x="285" y="176" width="13" height="13" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<rect x="300" y="161" width="13" height="13" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<rect x="315" y="146" width="13" height="13" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<rect x="330" y="131" width="13" height="13" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<rect x="345" y="116" width="13" height="13" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<rect x="360" y="101" width="13" height="13" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<rect x="375" y="86" width="13" height="13" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<text x="155" y="78" font-size="9" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">j=0</text>
+<text x="138" y="97" font-size="9" fill="#5a5a5a" text-anchor="end" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">m=0</text>
+<text x="230" y="78" font-size="9" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">j=5</text>
+<text x="138" y="172" font-size="9" fill="#5a5a5a" text-anchor="end" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">m=5</text>
+<text x="305" y="78" font-size="9" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">j=10</text>
+<text x="138" y="247" font-size="9" fill="#5a5a5a" text-anchor="end" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">m=10</text>
+<text x="380" y="78" font-size="9" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">j=15</text>
+<text x="138" y="322" font-size="9" fill="#5a5a5a" text-anchor="end" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">m=15</text>
+<text x="270" y="350" font-size="11" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">列 j（PLUS 权 w_j）→ 行 match[j]（MINUS 权 −w_j）</text>
+<rect x="430" y="100" width="10" height="10" rx="2" fill="#2f6fed" stroke="none" stroke-width="1"/>
+<text x="446" y="109" font-size="11" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">t_j = +1（8 个）</text>
+<rect x="430" y="122" width="10" height="10" rx="2" fill="#d93f3f" stroke="none" stroke-width="1"/>
+<text x="446" y="131" font-size="11" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">t_j = −1（8 个）</text>
+<text x="430" y="160" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">rhoM·B == B·conj(rhoP) 违例 0/45</text>
+<text x="430" y="180" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">B·B^T == I = True（正交）</text>
+<text x="430" y="200" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">实化秩 32（16 复 = 32 实满秩）</text>
+<text x="430" y="220" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">t_j == sign(w1·w3·w5) 匹配 True</text>
+<text x="430" y="240" font-size="11" fill="#d93f3f" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">去 conj 负控（K2）：违例 25/45 非零</text>
+<text x="24" y="348" font-size="10" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">读数来源：A6 / A7 / K2（t_j、match 从 readings 取，颜色由 t_j 符号驱动）</text>
+</svg><div class="cap">图 2 读数来源：A6 / A7 / K2（B 的支撑、t_j 着色、正交性、去 conj 负控）</div></div>
+<div class="card"><svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Microsoft YaHei, sans-serif">
+<rect x="0" y="0" width="680" height="360" fill="#ffffff"/>
+<text x="24" y="30" font-size="14" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">图 3  Gamma 权作用表：每个 Gamma 翻恰一个权位；B = 奇位积的换块作用（mask 341）</text>
+<text x="24" y="50" font-size="11" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">Gamma_a 与 Gamma_{a+1} 成对翻同一位（合成第 a/2 个 Cartan）；★ = mask 341 的五个因子</text>
+<text x="60" y="84" font-size="11" fill="#2f6fed" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">★Gamma_0</text>
+<rect x="190" y="71" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="212" y="84" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1 翻</text>
+<rect x="246" y="71" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="268" y="84" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2</text>
+<rect x="302" y="71" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="324" y="84" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3</text>
+<rect x="358" y="71" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="380" y="84" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4</text>
+<rect x="414" y="71" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="436" y="84" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5</text>
+<text x="60" y="108" font-size="11" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif"> Gamma_1</text>
+<rect x="190" y="95" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="212" y="108" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1 翻</text>
+<rect x="246" y="95" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="268" y="108" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2</text>
+<rect x="302" y="95" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="324" y="108" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3</text>
+<rect x="358" y="95" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="380" y="108" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4</text>
+<rect x="414" y="95" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="436" y="108" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5</text>
+<text x="60" y="132" font-size="11" fill="#2f6fed" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">★Gamma_2</text>
+<rect x="190" y="119" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="212" y="132" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1</text>
+<rect x="246" y="119" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="268" y="132" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2 翻</text>
+<rect x="302" y="119" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="324" y="132" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3</text>
+<rect x="358" y="119" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="380" y="132" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4</text>
+<rect x="414" y="119" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="436" y="132" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5</text>
+<text x="60" y="156" font-size="11" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif"> Gamma_3</text>
+<rect x="190" y="143" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="212" y="156" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1</text>
+<rect x="246" y="143" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="268" y="156" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2 翻</text>
+<rect x="302" y="143" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="324" y="156" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3</text>
+<rect x="358" y="143" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="380" y="156" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4</text>
+<rect x="414" y="143" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="436" y="156" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5</text>
+<text x="60" y="180" font-size="11" fill="#2f6fed" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">★Gamma_4</text>
+<rect x="190" y="167" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="212" y="180" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1</text>
+<rect x="246" y="167" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="268" y="180" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2</text>
+<rect x="302" y="167" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="324" y="180" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3 翻</text>
+<rect x="358" y="167" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="380" y="180" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4</text>
+<rect x="414" y="167" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="436" y="180" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5</text>
+<text x="60" y="204" font-size="11" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif"> Gamma_5</text>
+<rect x="190" y="191" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="212" y="204" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1</text>
+<rect x="246" y="191" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="268" y="204" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2</text>
+<rect x="302" y="191" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="324" y="204" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3 翻</text>
+<rect x="358" y="191" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="380" y="204" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4</text>
+<rect x="414" y="191" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="436" y="204" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5</text>
+<text x="60" y="228" font-size="11" fill="#2f6fed" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">★Gamma_6</text>
+<rect x="190" y="215" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="212" y="228" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1</text>
+<rect x="246" y="215" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="268" y="228" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2</text>
+<rect x="302" y="215" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="324" y="228" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3</text>
+<rect x="358" y="215" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="380" y="228" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4 翻</text>
+<rect x="414" y="215" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="436" y="228" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5</text>
+<text x="60" y="252" font-size="11" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif"> Gamma_7</text>
+<rect x="190" y="239" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="212" y="252" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1</text>
+<rect x="246" y="239" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="268" y="252" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2</text>
+<rect x="302" y="239" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="324" y="252" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3</text>
+<rect x="358" y="239" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="380" y="252" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4 翻</text>
+<rect x="414" y="239" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="436" y="252" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5</text>
+<text x="60" y="276" font-size="11" fill="#2f6fed" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">★Gamma_8</text>
+<rect x="190" y="263" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="212" y="276" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1</text>
+<rect x="246" y="263" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="268" y="276" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2</text>
+<rect x="302" y="263" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="324" y="276" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3</text>
+<rect x="358" y="263" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="380" y="276" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4</text>
+<rect x="414" y="263" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="436" y="276" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5 翻</text>
+<text x="60" y="300" font-size="11" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif"> Gamma_9</text>
+<rect x="190" y="287" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="212" y="300" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w1</text>
+<rect x="246" y="287" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="268" y="300" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w2</text>
+<rect x="302" y="287" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="324" y="300" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w3</text>
+<rect x="358" y="287" width="44" height="18" rx="3" fill="#f4f7fd" stroke="none" stroke-width="1"/>
+<text x="380" y="300" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">w4</text>
+<rect x="414" y="287" width="44" height="18" rx="3" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="436" y="300" font-size="10" fill="#2f6fed" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">w5 翻</text>
+<text x="490" y="100" font-size="12" fill="#2f6fed" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">mask 341 = Gamma_0·2·4·6·8</text>
+<text x="490" y="120" font-size="10" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">（奇位积，翻全部 5 位）</text>
+<text x="490" y="146" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">P* == mask 341 逐元相等</text>
+<text x="490" y="164" font-size="10" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">（1024 全扫唯一，lam = 1）</text>
+<text x="490" y="190" font-size="11" fill="#c77700" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">mask 682 = Gamma_1·3·5·7·9</text>
+<text x="490" y="208" font-size="10" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">块标量 (-1*i, 1*i) 独立</text>
+<text x="490" y="234" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">P*·sig + sig^T·P* 违例 0/45</text>
+<text x="490" y="252" font-size="11" fill="#d93f3f" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">+号对照 45/45 非零</text>
+<text x="490" y="278" font-size="10" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">换块命中 [341, 682] / +号 []</text>
+<text x="24" y="348" font-size="10" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">读数来源：A8 / G05 / G06（每个 Gamma 16 非零元、权差 = ±e_{a//2}）</text>
+</svg><div class="cap">图 3 读数来源：A8 / G05 / G06（Gamma 权作用表、奇位积、682 块标量）</div></div>
+<div class="card"><svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Microsoft YaHei, sans-serif">
+<rect x="0" y="0" width="680" height="330" fill="#ffffff"/>
+<text x="24" y="30" font-size="14" fill="#1b1b1b" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">图 4  二次不变量账：单个 16 无 Majorana 二次项，Dirac 项唯一</text>
+<text x="24" y="50" font-size="11" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">Cartan 支撑 = 零权和权对；同类（偶/奇）内部配不出零和 ⇒ 两个 0；异类恰 16 对</text>
+<rect x="30" y="80" width="195" height="110" rx="6" fill="#fdf0f0" stroke="none" stroke-width="1"/>
+<text x="127" y="104" font-size="13" fill="#d93f3f" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">16 x 16</text>
+<text x="127" y="132" font-size="15" fill="#1b1b1b" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">Cartan 支撑 = 0</text>
+<text x="127" y="156" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">复维 —（无解）</text>
+<text x="127" y="178" font-size="9" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">无不变双线性 ⇒ 无 Majorana 二次</text>
+<rect x="245" y="80" width="195" height="110" rx="6" fill="#fdf0f0" stroke="none" stroke-width="1"/>
+<text x="342" y="104" font-size="13" fill="#d93f3f" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">16bar x 16bar</text>
+<text x="342" y="132" font-size="15" fill="#1b1b1b" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">Cartan 支撑 = 0</text>
+<text x="342" y="156" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">复维 —（无解）</text>
+<text x="342" y="178" font-size="9" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">同上（共轭侧同样为零）</text>
+<rect x="460" y="80" width="195" height="110" rx="6" fill="#eef2fb" stroke="none" stroke-width="1"/>
+<text x="557" y="104" font-size="13" fill="#1f9d55" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">16 x 16bar</text>
+<text x="557" y="132" font-size="15" fill="#1b1b1b" text-anchor="middle" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">Cartan 支撑 = 16</text>
+<text x="557" y="156" font-size="10" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">复维 1（= A4 同一系统）</text>
+<text x="557" y="178" font-size="9" fill="#5a5a5a" text-anchor="middle" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">支撑 16 = match 对；解空间复维 </text>
+<text x="30" y="226" font-size="11" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">同源账：16x16bar 的复维 1 与 A4 的 Dirac 系统是**同一个线性系统**（不另计为独立确认）</text>
+<text x="30" y="252" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">K1 污染对照：换错表示 ⇒ 解坍缩 0 维；K2 去 conj：违例 25/45（conj 不可去）</text>
+<text x="30" y="282" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="600" font-family="Segoe UI, Microsoft YaHei, sans-serif">块保持同号 0/511（Hom(16,16bar)=0 的有限候选版）；逐对换号 511/511（单项式结构的空转读数）</text>
+<text x="30" y="308" font-size="10" fill="#5a5a5a" text-anchor="start" font-weight="400" font-family="Segoe UI, Microsoft YaHei, sans-serif">读数来源：A9 / K1 / K2 / K3（本卷 JSON readings）</text>
+</svg><div class="cap">图 4 读数来源：A9 / K1 / K2 / K3（二次账、同源标注、两个负控）</div></div>
+</div></body></html>

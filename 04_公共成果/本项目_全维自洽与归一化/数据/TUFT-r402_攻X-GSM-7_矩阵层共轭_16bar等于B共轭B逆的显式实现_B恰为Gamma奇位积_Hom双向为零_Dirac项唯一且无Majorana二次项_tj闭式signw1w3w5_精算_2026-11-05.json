@@ -1,0 +1,629 @@
+{
+ "rid": "r402",
+ "date": "2026-11-05",
+ "title": "TUFT-r402_攻X-GSM-7_矩阵层共轭_16bar等于B共轭B逆的显式实现_B恰为Gamma奇位积_Hom双向为零_Dirac项唯一且无Majorana二次项_tj闭式signw1w3w5_精算_2026-11-05",
+ "final": "GATES-PASS-ALL-POSITIVE",
+ "verdict": "HOM-BOTH-DIRECTIONS-ZERO--COMMUTANT-SCALAR-IRREDUCIBLE--DIRAC-INVARIANT-COMPLEX-DIM-1--ANTIHERMITIAN-BRIDGE-90-OF-90--B-CONJUGATION-EXACT-45-OF-45--TJ-CLOSED-FORM-SIGN-W1W3W5--B-IS-GAMMA-ODD-PRODUCT-MASK341--NO-MAJORANA-QUADRATIC-DIRAC-UNIQUE",
+ "counts": {
+  "main": 9,
+  "pass_": 9,
+  "info": 0,
+  "identity": 0,
+  "fail": 0,
+  "ctl": 4,
+  "grd": 14,
+  "total": 27
+ },
+ "rows": [
+  {
+   "id": "A1",
+   "name": "前提复核：两类权不相交、奇类 == −偶类、match 双射",
+   "exp": "相交 0；集合取反相等 True；match 双射 True（r401 A1 读数反抄：偶 {0,2,4} / 奇 {1,3,5} 不相交且互为取反）",
+   "act": "相交 0；奇类==−偶类 True；match 双射 True",
+   "kind": "PASS",
+   "note": "★ r401 的宇称类结论在本卷的矩阵底座上重立：WM 从 MINUS 块 Sigma 的虚部对角读（与 WP 同口径），match[j] = 唯一使 WM[k] == −WP[j] 的 k —— B 的列支撑将由它决定（A7）。",
+   "computed": true
+  },
+  {
+   "id": "A2",
+   "name": "Hom 双向为零：Hom(16,16bar) 与 Hom(16bar,16) 的 Cartan 支撑都是 0",
+   "exp": "双向支撑 0/0 —— 宇称账：偶类 #(−1/2) 重数 {0:1，2:10，4:5}、奇类 {1:5，3:10，5:1}（= C(5,k)），同权须同宇称 ⇒ 双向都配不上对",
+   "act": "Hom(16,16bar) 支撑 0；Hom(16bar,16) 支撑 0；宇称账 偶 {0:1，2:10，4:5} / 奇 {1:5，3:10，5:1}",
+   "kind": "PASS",
+   "note": "★★ 矩阵层不等价的第一判据：交缠算子 C 须与 5 个 Cartan 同时对易 ⇒ 支撑只能在同权位；两条独立的计算路（逐对枚举 vs 宇称重数账）都给 0。r401 权层「两类不等价」的矩阵层机制。",
+   "computed": true
+  },
+  {
+   "id": "A3",
+   "name": "Hom(16,16) = 标量：交换子两步直解（16 不可约的计算判据）",
+   "exp": "支撑 = 对角 16 位；非对角方程 nullspace 实维 2（= 复 1）—— 由 r397 的 55 对全量枚举已证 Cl(10,0) 手征块不可约 ⇒ Schur ⇒ 交换子 = 标量；恒等给出下界 1",
+   "act": "Cartan 消元后支撑 16 位（== 对角 True）；nullspace 实维 2；连通分量 1",
+   "kind": "PASS",
+   "note": "★ 两步直解：一步用 [X,H_m]=0 + 权互异把支撑削到对角（同权位枚举）；二步用 45 个 Sigma 的非对角非零元给 x_i==x_j 方程再解。★ 连通分量 1 是同一边界数据的图路读数 —— 「矩阵看着对」不等于「不可约」，交换子平凡才是计算判据（r397 老刀的复层版）。",
+   "computed": true
+  },
+  {
+   "id": "A4",
+   "name": "Dirac 系统：16 x 16bar 不变量空间复维 1，T0 全 ±1 且直接验证 0/45",
+   "exp": "行 1280；nullspace 实维 2（= 复 1）—— conj(rhoM) 的权 == −(MINUS 权) == PLUS 权（矩阵对角共轭直读）⇒ Dirac 方程即 Hom(16,16) 的方程 ⇒ A3 的标量；T0 实支直接验证违例 0/45",
+   "act": "行 1280；nullspace 实维 2；T0 全 ±1 = True；rhoP·T + T·(rhoM)^T 违例 0/45；conj(rhoM) 权 == PLUS 权 = True",
+   "kind": "PASS",
+   "note": "★★ 全复数系统：未知 t_l = a_l + i·b_l（32 实未知量），每复方程拆实虚两行。★ r402 设计期的自伤记录：第一版只建了矩阵实部（虚部 Cartan 对角被丢），维数侥幸 —— 本卷以全复数版为准。★ T0 = [1,-1,1,-1,-1,1,-1,1,1,-1,1,-1,-1,1,-1,1]；与 nullspace 另一支（纯虚支）张成解空间。",
+   "computed": true
+  },
+  {
+   "id": "A5",
+   "name": "反 Hermitian 桥：rho^T == −conj(rho)，两块各 45/45（epsilon 账独立路）",
+   "exp": "epsilon 表全 +1（10 个 Gamma 逐个验证 G^T == conj(G)）⇒ eps_a·eps_b == +1 恰 45/45⇒ sigma_ab^T == −eps_a·eps_b·conj(sigma_ab) == −conj(sigma_ab)（结构预期 45+45）",
+   "act": "epsilon 表 [1,1,1,1,1,1,1,1,1,1]；eps_a*eps_b==+1 对 45/45；PLUS 反 Hermitian 45/45；MINUS 45/45",
+   "kind": "PASS",
+   "note": "★ 独立路从 Gamma 层组合：sigma = [Ga,Gb]/4 的转置由 Ga^T = eps_a·conj(Ga) 逐对拼出，不逐个复述 Sigma 的对称性。这条桥把 A4 的 Dirac 条件转置成 A6 的 B 共轭关系。",
+   "computed": true
+  },
+  {
+   "id": "A6",
+   "name": "B = T0^T 主判定：rhoM·B == B·conj(rhoP) 违例 0/45；B 正交；实化秩 32",
+   "exp": "0/45 —— A4 的 0/45 取转置（T^T·rhoP^T + rhoM·T^T = 0）再用 A5 的 rhoP^T == −conj(rhoP)；B·B^T == I 与秩 32（16 复 = 32 实满秩）",
+   "act": "rhoM·B == B·conj(rhoP) 违例 0/45；B·B^T == I = True；实化秩 32",
+   "kind": "PASS",
+   "note": "★★★ 这就是 16bar == B·conj(16)·B^{-1} 的显式矩阵实现（B 可逆由正交性给出，B^{-1} = B^T = T0 矩阵）。r401 边界第 2 条（不构造矩阵层共轭算子）在本卷闭合。",
+   "computed": true
+  },
+  {
+   "id": "A7",
+   "name": "B 的权层结构与 t_j 闭式：列 j 支撑恰在 match[j]、值 = t_j；t_j == sign(w1·w3·w5)",
+   "exp": "支撑/取值/权配对全闭合；闭式 sign(w1·w3·w5)（来自权）== T0（来自 nullspace）—— 两路独立",
+   "act": "列支撑 == match True；值 == t_j True；WM[match[j]] == −WP[j] 16/16；闭式匹配 = True（t_j = [1,-1,1,-1,-1,1,-1,1,1,-1,1,-1,-1,1,-1,1]）",
+   "kind": "PASS",
+   "note": "★ B 把 w-权向量送到 t_j·(−w)-权向量 —— 矩阵层的共轭在权层就是 r401 的「共轭互换宇称类」。★ 闭式只含 w1·w3·w5（不含 w2·w4）：为何 Gamma_2、Gamma_6 的符号贡献与权无关，本卷未单独推导（诚实边界第 3 条）。",
+   "computed": true
+  },
+  {
+   "id": "A8",
+   "name": "B 恰为 Gamma 奇位积：P* == Gamma_0·Gamma_2·Gamma_4·Gamma_6·Gamma_8（mask 341）逐元相等",
+   "exp": "P*·sig + sig^T·P* 违例 0/45（32 维 Dirac 表示自共轭的显式实现）；换块 Gamma 乘积 512 个中恰 2 个满足该方程（341 与 682，块标量独立）；+号对照 45/45 非零 —— 由 Gamma 权作用表（每个 Gamma 翻恰一个权位）奇位积翻全部 5 位 ⇒ 支撑 == match（权路），矩阵路为 45 对直验",
+   "act": "P*·sig + sig^T·P* 违例 0/45；+号对照 45/45；P* == Gamma 乘积的 mask = [341]（1024 全扫）；换块方程命中 = [341, 682]；+号命中 = []；682 块标量 (lam1,lam2) = (-1*i, 1*i)",
+   "kind": "PASS",
+   "note": "★★★ 本卷主结果：共轭算子不是「必须按权配对另行构造」的外来对象 —— 它就是 Clifford 代数里奇位 Gamma 积的换块作用（P* 与 mask 341 逐元相等，lam = 1）。682 = 偶位积 Gamma_1·3·5·7·9，块标量 (−i, +i) 独立 —— 解空间两个复方向的显式代表。★ 设计期自伤记录：第一版搜索方程把右端的 P 丢了（P·sig == sig^T），0 命中被误读为负结果 —— 方程写错时「没找到」不是「不存在」。",
+   "computed": true
+  },
+  {
+   "id": "A9",
+   "name": "二次不变量账：16 x 16 与 16bar x 16bar 支撑均 0；16 x 16bar 支撑 = 16 = match 对",
+   "exp": "0/0 与 16 —— 宇称账：−(偶) = 奇 ∉ 偶、−(奇) = 偶 ∉ 奇 ⇒ 同类张量积无零权和；异类的零权和恰由 match 双射给出（A1）",
+   "act": "16x16 支撑 0；16barx16bar 支撑 0；16x16bar 支撑 16（== match 对 True）；其解空间复维 = 1（A4 同一对象，同源不另计）",
+   "kind": "PASS",
+   "note": "★ 物理读法：V 上无非退化不变双线性（Hom(16,16bar) = 0 的张量读法）⇒ 单个 16 无 Majorana 二次项（nu^c·nu^c 型需 126bar 三线性）；16 x 16bar 的不变量复维 1 = Dirac 质量项唯一。★ 与 A4 是同一个线性系统的两种读法 —— 已在 act 中显式标注同源，不得当作两次独立确认。",
+   "computed": true
+  },
+  {
+   "id": "K1",
+   "name": "控制组（污染表示）：同式 Dirac 系统但两块都用 rhoP",
+   "exp": "解空间实维 0 —— 换错表示 ⇒ 解坍缩（若仍 2 则 A4 的维数是系统形状的产物而非表示的产物）；行数是污染支撑稀疏性的副产品，如实报、不作预期",
+   "act": "(行 1312, 解空间实维 0)（对照 A4 的 (1280, 2)）",
+   "kind": "PASS",
+   "note": "★ A4 的判别力对照：系统逐字符同形，只把第二个表示换掉，解从 2 维坍到 0 维 —— 「复维 1」读的是表示（16 对 16bar），不是方程的形状。污染版行数 1312 与 A4 的 1280 不同，本身即支撑错位的读数。",
+   "computed": true
+  },
+  {
+   "id": "K2",
+   "name": "控制组（去共轭）：rhoM·B == B·rhoP（无 conj）",
+   "exp": "非零（conj 不可去）；带 conj 侧 0（A6 反抄）—— 两侧读数必须不同",
+   "act": "去 conj 违例 25/45；带 conj 违例 0/45",
+   "kind": "PASS",
+   "note": "★ 有趣的中间读数：45 对中恰 20 对在去掉 conj 后仍成立（偶然同解），但只要有一对不成立，conj 就是必要的 —— 负控报「非零」不报「全非零」。",
+   "computed": true
+  },
+  {
+   "id": "K3",
+   "name": "控制组（块保持同号）：C = P|_PLUS 满足 C·rhoP == ±(rhoP)^T·C（全 45 对同一符号）",
+   "exp": "(0, 511) —— 同号 0（由 Hom(16,16bar)=0：C·rhoP == conj(rhoP)·C 型方程无非零可逆解）；逐对各自换号 511（Gamma 乘积在权基下是单项式矩阵，逐对符号总可配）",
+   "act": "45 对同号命中 0/511；逐对换号通过 511/511",
+   "kind": "PASS",
+   "note": "★★ 本卷设计期的实感刀：第一版对照允许逐对各自换号，511/511 全过 —— 空转。「同号」才是缠绕条件；「逐对可配」是单项式结构的平凡副产品。两个读数都要报，否则会以为对照做过了。",
+   "computed": true
+  },
+  {
+   "id": "K4",
+   "name": "控制组（闭式负候选）：t_j 的四个错闭式",
+   "exp": "真闭式 sign(w1*w3*w5) True；四个负候选全 False —— 判别力两侧都有",
+   "act": "真闭式匹配 = True；负候选匹配 = {'(-1)^{#minus前3}': False, '(-1)^{#minus全部}': False, 'sign(w4*w5)': False, 'sign(w1*w2*w3)': False}",
+   "kind": "PASS",
+   "note": "★ 若任何负候选也匹配，A7 的闭式就没有判别力（一个 100% 通过的谓词判别力为 0）。",
+   "computed": true
+  },
+  {
+   "id": "G01",
+   "name": "判据不得写死（AST 层：任何 *_ok 变量不得直接赋 True）",
+   "exp": "0 处",
+   "act": "写死 True 的 *_ok 赋值 0 处",
+   "kind": "PASS",
+   "note": "★★★ r394 的老刀：守卫不得读自己的源码字面量，走 AST 只看赋值右端是否常量 True。",
+   "computed": true
+  },
+  {
+   "id": "G02",
+   "name": "exp 与 act 不得是同一表达式",
+   "exp": "0 条",
+   "act": "exp == act 的条目 0 条",
+   "kind": "PASS",
+   "note": "★「值相等」不算问题，「字面相同」说明 act 没有真的算过。",
+   "computed": true
+  },
+  {
+   "id": "G03",
+   "name": "四个控制组必须两两给出不同读数",
+   "exp": "4 个不同读数",
+   "act": "K1 (1312, 0)；K2 (25, 0)；K3 (0, 511)；K4 (真闭式 1, 负候选命中 0)（4 个不同）",
+   "kind": "PASS",
+   "note": "★ K1/K3 都是「坍缩型」负控，靠第二个分量分开；K2/K4 靠结构分开。",
+   "computed": true
+  },
+  {
+   "id": "G04",
+   "name": "每条都有非空 note 且 computed",
+   "exp": "0 违规",
+   "act": "0 违规（覆盖 16 条）",
+   "kind": "PASS",
+   "note": "★ 收尾整表重扫。",
+   "computed": true
+  },
+  {
+   "id": "G05",
+   "name": "维数账：45 个 Sigma、5+5 Cartan、两类各 16 权全 ±1/2、match 双射、Gamma 乘积表 DP 抽查",
+   "exp": "45 / 5+5 / 16+16 / 双射 / DP 抽查 4 个全对",
+   "act": "Sigma 45；Cartan 5+5；权 16+16 全 ±1/2 = True；match 双射 True；DP 抽查 {341: True, 682: True, 7: True, 0: True}",
+   "kind": "PASS",
+   "note": "★ DP 抽查：mask 341 / 682 / 7 / 0 与直接升序乘积逐元相等 —— 乘积表不是凭记忆拼的。",
+   "computed": true
+  },
+  {
+   "id": "G06",
+   "name": "分类账：1024 个 mask = 换块 512 + 块保持 511 + 空 1；每个 Gamma 权差恰 ±e_{a//2} 且 16 非零元",
+   "exp": "512 + 511 + 1 = 1024；权差表全对",
+   "act": "换块 512；块保持 511；空 1；和 = 1024；权差表全对 = True",
+   "kind": "PASS",
+   "note": "★ 少一个 mask 就说明 DP 表有洞；权差表错一位，A8 的 Gamma 奇位积解释就失去地基。",
+   "computed": true
+  },
+  {
+   "id": "G07",
+   "name": "权读法守卫：两块 Cartan 实部对角全 0、虚部对角 == 权（r399 老守卫，两块各跑）",
+   "exp": "两块全闭合",
+   "act": "MINUS 实部全零 = True；虚部 == 权 = True（PLUS 同口径由 setup 断言 + 本卷复验）",
+   "kind": "PASS",
+   "note": "★ 「权」这个读法本身要守卫：对角元若混入实部，后续所有支撑账都会静默错位。",
+   "computed": true
+  },
+  {
+   "id": "G08",
+   "name": "判词与判定表必须同一读数（两路径拼接）",
+   "exp": "两路一致",
+   "act": "由变量拼：HOM-BOTH-DIRECTIONS-ZERO--COMMUTANT-SCALAR-IRREDUCIBLE--DIRAC-INVARIANT-COMPLEX-DIM-1--ANTIHERMITIAN-BRIDGE-90-OF-90--B-CONJUGATION-EXACT-45-OF-45--TJ-CLOSED-FORM-SIGN-W1W3W5--B-IS-GAMMA-ODD-PRODUCT-MASK341--NO-MAJORANA-QUADRATIC-DIRAC-UNIQUE",
+   "kind": "PASS",
+   "note": "★ 判词每一段由一个布尔量决定，不写字面量。",
+   "computed": true
+  },
+  {
+   "id": "G09",
+   "name": "落盘后回读 JSON：条目数 == 内存条目数",
+   "exp": "回读条目数 == 内存条目数（27）",
+   "act": "内存 27 → 回读 27（一致）",
+   "kind": "PASS",
+   "note": "★ 先占位再回填（r396 E06：报告必须在回填之后才拼）",
+   "computed": true
+  },
+  {
+   "id": "G10",
+   "name": "真判负必须逐条登记",
+   "exp": "登记集 == 实际 FAIL 集",
+   "act": "[] vs []",
+   "kind": "PASS",
+   "note": "★ 本卷若无判负，登记集为空。",
+   "computed": true
+  },
+  {
+   "id": "G11",
+   "name": "主关系机核：Hom 双向 0 + 交换子标量 + Dirac 复维 1 + B 共轭 0/45 + B == Gamma 奇位积 + 二次账",
+   "exp": "全部主读数同真",
+   "act": "B 关系 0；正交 True；秩 32；ns_d 2；sup 0/0；ns_c 2；comps 1；二次 0/0/16；mask [341]；命中 [341, 682]/[]；P* 0/45",
+   "kind": "PASS",
+   "note": "★★★ 本卷总纲机核：把九条主判据的核心读数拼成一个布尔 —— 任何一条塌了总门就红。",
+   "computed": true
+  },
+  {
+   "id": "G13",
+   "name": "总门必须对「守卫失败」敏感（含已登记判负不挡门）",
+   "exp": "注入守卫 FAIL 必须翻转；已登记判负不挡门",
+   "act": "(0,0)=GATES-PASS-ALL-POSITIVE；(0,1)=GATES-FAIL-MAIN-0-GUARD-1；(1,0)=GATES-FAIL-MAIN-1-GUARD-0；(已登记 1 条)=GATES-PASS-WITH-1-NEGATIVE",
+   "kind": "PASS",
+   "note": "★ 沿用 r392 起口径。",
+   "computed": true
+  },
+  {
+   "id": "G12",
+   "name": "两路拼关键量：match 两向 / T0 两路（nullspace vs 闭式代入）/维数两路（nullspace vs 秩+零化度）/ B 关系与 Gamma 实现全量重算",
+   "exp": "两路全一致",
+   "act": "match 反建 True；T0 闭式代入违例 0（维 2 vs 2）；B 0/0；正交 True/True；秩 32/32；交换子 2/2（全 1 代入 0）；支撑 0/0/0/0/16；命中 [341, 682]/[]；P* 0/45；相等 [341]",
+   "kind": "PASS",
+   "note": "★★ 右路的三个真不同路：match 从 MINUS 侧反建；T0 不解方程、拿闭式当 ansatz 代入全部 1280 行；维数用秩+零化度而不是 nullspace 基。左路任何一处缓存污染都会在这里现形。",
+   "computed": true
+  },
+  {
+   "id": "G14",
+   "name": "关键表每一句都必须由变量拼出，且两条独立路径（缓存变量 / 现场重算）字面相等",
+   "exp": "两路字面相等",
+   "act": "左路：三重判定：Hom 支撑 0+0；交换子实维 2；Dirac 行 1280 / 实维 2 || B：违例 0/45；B·B^T == I = True；秩 32；t_j 闭式匹配 True || Gamma 实现：P* 违例 0/45；+号 45/45；相等 mask [341]；换块命中 [341, 682]；682 标量 (-1*i, 1*i) || 二次账：16x16 0；16barx16bar 0；16x16bar 16（复维 1） || 右路：三重判定：Hom 支撑 0+0；交换子实维 2；Dirac 行 1280 / 实维 2 || B：违例 0/45；B·B^T == I = True；秩 32；t_j 闭式匹配 True || Gamma 实现：P* 违例 0/45；+号 45/45；相等 mask [341]；换块命中 [341, 682]；682 标量 (-1*i, 1*i) || 二次账：16x16 0；16barx16bar 0；16x16bar 16（复维 1） || 相等 = True",
+   "kind": "PASS",
+   "note": "★★ r396 E02 / r397 E09 / r398 E06 / r399 E07 / r401 G14 的第七次继承：关键表每一句由变量拼。★ 右路 T0 来自闭式 ansatz、维数来自秩 —— 与左路在算法上真不同。",
+   "computed": true
+  }
+ ],
+ "declared_neg": [],
+ "key_tables": [
+  "三重判定：Hom 支撑 0+0；交换子实维 2；Dirac 行 1280 / 实维 2",
+  "B：违例 0/45；B·B^T == I = True；秩 32；t_j 闭式匹配 True",
+  "Gamma 实现：P* 违例 0/45；+号 45/45；相等 mask [341]；换块命中 [341, 682]；682 标量 (-1*i, 1*i)",
+  "二次账：16x16 0；16barx16bar 0；16x16bar 16（复维 1）"
+ ],
+ "readings": {
+  "sup_pm": 0,
+  "sup_mp": 0,
+  "ns_c": 2,
+  "comps": 1,
+  "rows_d": 1280,
+  "ns_d": 2,
+  "t0": [
+   "1",
+   "-1",
+   "1",
+   "-1",
+   "-1",
+   "1",
+   "-1",
+   "1",
+   "1",
+   "-1",
+   "1",
+   "-1",
+   "-1",
+   "1",
+   "-1",
+   "1"
+  ],
+  "bad_T": 0,
+  "ahP": 45,
+  "ahM": 45,
+  "bad_B": 0,
+  "bad_Bnc": 25,
+  "BBt_ok": "True",
+  "Brank": 32,
+  "tform": "True",
+  "tf": [
+   "1",
+   "-1",
+   "1",
+   "-1",
+   "-1",
+   "1",
+   "-1",
+   "1",
+   "1",
+   "-1",
+   "1",
+   "-1",
+   "-1",
+   "1",
+   "-1",
+   "1"
+  ],
+  "bad_Pstar": 0,
+  "bad_Pstar_pos": 45,
+  "eq_masks": [
+   341
+  ],
+  "hits_neg": [
+   341,
+   682
+  ],
+  "hits_pos": [],
+  "lam682": [
+   "-1*i",
+   "1*i"
+  ],
+  "sup_pp": 0,
+  "sup_mm": 0,
+  "sup_pm_inv": 16,
+  "ns_k1": 0,
+  "hits_keep": 0,
+  "per_pair": 511,
+  "wdiff": [
+   [
+    "(Fraction(-1, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1))",
+    "(Fraction(1, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1))"
+   ],
+   [
+    "(Fraction(-1, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1))",
+    "(Fraction(1, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1))"
+   ],
+   [
+    "(Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1))",
+    "(Fraction(0, 1), Fraction(1, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1))"
+   ],
+   [
+    "(Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1))",
+    "(Fraction(0, 1), Fraction(1, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1))"
+   ],
+   [
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1), Fraction(0, 1))",
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(1, 1), Fraction(0, 1), Fraction(0, 1))"
+   ],
+   [
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1), Fraction(0, 1))",
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(1, 1), Fraction(0, 1), Fraction(0, 1))"
+   ],
+   [
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1))",
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(1, 1), Fraction(0, 1))"
+   ],
+   [
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1))",
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(1, 1), Fraction(0, 1))"
+   ],
+   [
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1))",
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(1, 1))"
+   ],
+   [
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1))",
+    "(Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(1, 1))"
+   ]
+  ],
+  "match": [
+   15,
+   14,
+   13,
+   12,
+   11,
+   10,
+   9,
+   8,
+   7,
+   6,
+   5,
+   4,
+   3,
+   2,
+   1,
+   0
+  ],
+  "wp": [
+   [
+    "1/2",
+    "1/2",
+    "1/2",
+    "1/2",
+    "1/2"
+   ],
+   [
+    "-1/2",
+    "-1/2",
+    "1/2",
+    "1/2",
+    "1/2"
+   ],
+   [
+    "-1/2",
+    "1/2",
+    "-1/2",
+    "1/2",
+    "1/2"
+   ],
+   [
+    "1/2",
+    "-1/2",
+    "-1/2",
+    "1/2",
+    "1/2"
+   ],
+   [
+    "-1/2",
+    "1/2",
+    "1/2",
+    "-1/2",
+    "1/2"
+   ],
+   [
+    "1/2",
+    "-1/2",
+    "1/2",
+    "-1/2",
+    "1/2"
+   ],
+   [
+    "1/2",
+    "1/2",
+    "-1/2",
+    "-1/2",
+    "1/2"
+   ],
+   [
+    "-1/2",
+    "-1/2",
+    "-1/2",
+    "-1/2",
+    "1/2"
+   ],
+   [
+    "-1/2",
+    "1/2",
+    "1/2",
+    "1/2",
+    "-1/2"
+   ],
+   [
+    "1/2",
+    "-1/2",
+    "1/2",
+    "1/2",
+    "-1/2"
+   ],
+   [
+    "1/2",
+    "1/2",
+    "-1/2",
+    "1/2",
+    "-1/2"
+   ],
+   [
+    "-1/2",
+    "-1/2",
+    "-1/2",
+    "1/2",
+    "-1/2"
+   ],
+   [
+    "1/2",
+    "1/2",
+    "1/2",
+    "-1/2",
+    "-1/2"
+   ],
+   [
+    "-1/2",
+    "-1/2",
+    "1/2",
+    "-1/2",
+    "-1/2"
+   ],
+   [
+    "-1/2",
+    "1/2",
+    "-1/2",
+    "-1/2",
+    "-1/2"
+   ],
+   [
+    "1/2",
+    "-1/2",
+    "-1/2",
+    "-1/2",
+    "-1/2"
+   ]
+  ],
+  "wm": [
+   [
+    "-1/2",
+    "1/2",
+    "1/2",
+    "1/2",
+    "1/2"
+   ],
+   [
+    "1/2",
+    "-1/2",
+    "1/2",
+    "1/2",
+    "1/2"
+   ],
+   [
+    "1/2",
+    "1/2",
+    "-1/2",
+    "1/2",
+    "1/2"
+   ],
+   [
+    "-1/2",
+    "-1/2",
+    "-1/2",
+    "1/2",
+    "1/2"
+   ],
+   [
+    "1/2",
+    "1/2",
+    "1/2",
+    "-1/2",
+    "1/2"
+   ],
+   [
+    "-1/2",
+    "-1/2",
+    "1/2",
+    "-1/2",
+    "1/2"
+   ],
+   [
+    "-1/2",
+    "1/2",
+    "-1/2",
+    "-1/2",
+    "1/2"
+   ],
+   [
+    "1/2",
+    "-1/2",
+    "-1/2",
+    "-1/2",
+    "1/2"
+   ],
+   [
+    "1/2",
+    "1/2",
+    "1/2",
+    "1/2",
+    "-1/2"
+   ],
+   [
+    "-1/2",
+    "-1/2",
+    "1/2",
+    "1/2",
+    "-1/2"
+   ],
+   [
+    "-1/2",
+    "1/2",
+    "-1/2",
+    "1/2",
+    "-1/2"
+   ],
+   [
+    "1/2",
+    "-1/2",
+    "-1/2",
+    "1/2",
+    "-1/2"
+   ],
+   [
+    "-1/2",
+    "1/2",
+    "1/2",
+    "-1/2",
+    "-1/2"
+   ],
+   [
+    "1/2",
+    "-1/2",
+    "1/2",
+    "-1/2",
+    "-1/2"
+   ],
+   [
+    "1/2",
+    "1/2",
+    "-1/2",
+    "-1/2",
+    "-1/2"
+   ],
+   [
+    "-1/2",
+    "-1/2",
+    "-1/2",
+    "-1/2",
+    "-1/2"
+   ]
+  ]
+ }
+}
