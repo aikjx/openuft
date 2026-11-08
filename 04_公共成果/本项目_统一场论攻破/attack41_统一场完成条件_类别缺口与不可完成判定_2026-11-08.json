@@ -1,0 +1,360 @@
+{
+ "round": "attack41_攻破㉝_统一场完成条件_类别缺口与不可完成判定",
+ "date": "2026-11-08",
+ "engine": "attack41_统一场完成条件_类别缺口与不可完成判定_2026-11-08.py",
+ "entries": [
+  {
+   "id": "C01",
+   "claim": "控制组：验收矩阵与红线事实源逐项一致",
+   "verdict": "PASS",
+   "reading": "systems=22 × criteria=8 = cells=176；verdict_dist={'PASS': 18, 'NA': 39, 'PART': 41, 'FAIL': 78}；full_pass=0；W0 pass=18、W1..W7 pass=0；W3 debt=35/2、debt_max=['W3']；0/22、UFT-3=0、L3=0、validated=0 静态命中=4/4"
+  },
+  {
+   "id": "C02",
+   "claim": "完成统一场缺的是三类通过数，不是外部输入条数",
+   "verdict": "FAIL",
+   "reading": "数学自洽 UFT-1=12/22；非测量锚 W3 pass=0、UFT-3=0；实验类 UFT-6=0/22、validated=0；L4 全部 OPEN、176 格 0 体系全过"
+  },
+  {
+   "id": "C03",
+   "claim": "类别互斥定理：[C] 级 / 测量锚外部输入不能翻 W3 或 UFT-3",
+   "verdict": "FAIL",
+   "reading": "W3 定义含「非测量锚」；整合全集「[C] 不纳入」；状态看板「α 测量锚」「第一性内容⟺无量纲量数值」；原判 category_exclusion=1，把定义替换为「测量锚」的变异=0"
+  },
+  {
+   "id": "C04",
+   "claim": "外部输入单调链 6 → 12 → ≥15 → UNBOUNDED，类别通过数恒为 0",
+   "verdict": "FAIL",
+   "reading": "6→validated=0/UFT3=0/L3=0/W3pass=0/debt=35/2/full=0；12→validated=0/UFT3=0/L3=0/W3pass=0/debt=35/2/full=0；15→validated=0/UFT3=0/L3=0/W3pass=0/debt=35/2/full=0；UNBOUNDED→validated=0/UFT3=0/L3=0/W3pass=0/debt=35/2/full=0；注入任意外部输入后 validated/UFT3/L3/W3pass/full_pass 不变，W3 debt 恒 35/2"
+  },
+  {
+   "id": "C05",
+   "claim": "PASS 不可迁移：L3↛L4，伪造 22 个 PASS 也不产生 validated",
+   "verdict": "FAIL",
+   "reading": "L3→L4 闸门 0 ⇒ validated=0；变异闸门 1 ⇒ 假 validated=22（证明守卫有牙）；README 末 8 行「不计攻破数」命中=5；完成度审计 L3↛L4 命中=7/7"
+  },
+  {
+   "id": "C06",
+   "claim": "最小闭合集 C1–C6 是类别缺口，不是「补齐外部输入」",
+   "verdict": "FAIL",
+   "reading": "闭合集 [1, 2, 3, 4, 5, 6]；执行序命中=True；治理零物理代价 2 项（C1/C6）、实质开路 3 项（C2/C3/C4）、依赖项 1 项（C5）；C2 仍要求非测量锚第一性数值与双锚点"
+  },
+  {
+   "id": "C07",
+   "claim": "N1–N18 + 函数级自由度：补齐有限外部输入不可停机枚举",
+   "verdict": "BOUNDARY",
+   "reading": "G1 必要条件 N1..N18=18 条、TUFT 供给 0 核心项命中=True；外部输入链 6→12→≥15→UNBOUNDED；r95 第 1/11 项为函数级自由度，attack39/40 连续谱复发"
+  },
+  {
+   "id": "C08",
+   "claim": "跨源档位计数不一致：21/1 与 19/3 两口径并存",
+   "verdict": "FAIL",
+   "reading": "JSON=(21, 1) / 数据 md=(21, 1) / 判定册=(19, 3) / 整合全集引用=(19, 3)；唯一口径对=[(19, 3), (21, 1)]；本册只登记 MISMATCH，不擅改事实源"
+  },
+  {
+   "id": "C09",
+   "claim": "口径分层：22 体系现测 vs 18 体系快照、1/6 vs score_machinable=3",
+   "verdict": "INFO",
+   "reading": "状态看板 C/O/H/U=[6, 10, 2, 4]（和=22）；整合全集 18 快照 H/O/C/U=[2, 3, 9, 4]（和=18）；方程总汇 UFT 达成度 1/6；达成度 JSON score_machinable=3；分母/口径须逐项声明"
+  },
+  {
+   "id": "C10",
+   "claim": "总裁定：FAIL（作为「补齐外部输入即可完成统一场」）",
+   "verdict": "INFO",
+   "reading": "组织/文档/数学层可闭合，物理层 L4 全 OPEN；[C] 输入不纳入，L3 不迁移 L4，实验通过只证实 GR/标准场论；0/22、UFT-3=0、L3=0、validated=0 不变，不宣称完成统一场"
+  }
+ ],
+ "summary": {
+  "PASS": 1,
+  "FAIL": 6,
+  "BOUNDARY": 1,
+  "INFO": 2
+ },
+ "guards": [
+  {
+   "id": "G41-1",
+   "desc": "验收矩阵自洽：22×8=176、full_pass=[]、W3 debt=35/2 且唯一最大",
+   "ok": true,
+   "reading": "systems=22 cells=176 full=0 W3debt=35/2 debt_max=['W3'] W0=18 nonzero=['W0']"
+  },
+  {
+   "id": "G41-2",
+   "desc": "事实源静态命中与 UFT JSON 读数一致",
+   "ok": true,
+   "reading": "status=6 complete=7 integrated=6 eqsum=4 experiment=4 final=3 UFT1=12/22 UFT6=0/22 score=3"
+  },
+  {
+   "id": "G41-3",
+   "desc": "类别互斥有牙：替换「非测量锚」后结论翻转",
+   "ok": true,
+   "reading": "original=1 mutated=0 W3def=至少输出一个**无量纲量数值**且非测量锚"
+  },
+  {
+   "id": "G41-4",
+   "desc": "外部输入注入不变量：6/12/15/UNBOUNDED 全不改类别通过数",
+   "ok": true,
+   "reading": "6→validated=0/UFT3=0/L3=0/W3pass=0/debt=35/2/full=0；12→validated=0/UFT3=0/L3=0/W3pass=0/debt=35/2/full=0；15→validated=0/UFT3=0/L3=0/W3pass=0/debt=35/2/full=0；UNBOUNDED→validated=0/UFT3=0/L3=0/W3pass=0/debt=35/2/full=0"
+  },
+  {
+   "id": "G41-5",
+   "desc": "PASS 不迁移有牙：L3→L4 闸门置 1 会伪造 22 个 validated",
+   "ok": true,
+   "reading": "gate0=0 gate1=22 nomig=5 redline=4"
+  },
+  {
+   "id": "G41-6",
+   "desc": "最小闭合集 C1–C6 与执行序逐项命中",
+   "ok": true,
+   "reading": "ids=[1, 2, 3, 4, 5, 6] order=True governance=2 substantive=3 dependent=1"
+  },
+  {
+   "id": "G41-7",
+   "desc": "N1–N18、函数级自由度与 6/12/15 链同时命中",
+   "ok": true,
+   "reading": "N=18 g1zero=True ext=[6,12,15] unbounded=True"
+  },
+  {
+   "id": "G41-8",
+   "desc": "跨源计数校准：21/1 与 19/3 差异必须报 MISMATCH",
+   "ok": true,
+   "reading": "json=(21, 1) data=(21, 1) judge=(19, 3) integrated=(19, 3) unique=[(19, 3), (21, 1)]"
+  },
+  {
+   "id": "G41-9",
+   "desc": "双分母与达成度口径：22 现测 / 18 快照 / 1/6 / score=3",
+   "ok": true,
+   "reading": "status=[6, 10, 2, 4] sum=22 integrated=[2, 3, 9, 4] sum=18 ratings={'U': 4, 'H': 2, 'C': 6, 'O': 10} score=3"
+  },
+  {
+   "id": "G41-10",
+   "desc": "书写式守卫：源码无 Python 布尔字面量，红线文本在册",
+   "ok": true,
+   "reading": "literal_true_consts=0 redline_text=True"
+  }
+ ],
+ "guard_pass": "10/10",
+ "readings": {
+  "matrix": {
+   "systems": 22,
+   "criteria": 8,
+   "cells": 176,
+   "verdict_dist": {
+    "PASS": 18,
+    "NA": 39,
+    "PART": 41,
+    "FAIL": 78
+   },
+   "full_pass": 0,
+   "W0_pass": 18,
+   "W3_debt": "35/2",
+   "debt_max": [
+    "W3"
+   ],
+   "nonzero_pass": [
+    "W0"
+   ]
+  },
+  "status_counts": [
+   6,
+   10,
+   2,
+   4
+  ],
+  "integrated_counts_18": [
+   2,
+   3,
+   9,
+   4
+  ],
+  "rating_distribution": {
+   "U": 4,
+   "H": 2,
+   "C": 6,
+   "O": 10
+  },
+  "uft_json": {
+   "uft1_pass": true,
+   "uft1_n": 12,
+   "uft2_pass": false,
+   "uft3_strict": 4,
+   "uft6_n": 0,
+   "score_machinable": 3
+  },
+  "tier_pairs": {
+   "json": [
+    21,
+    1
+   ],
+   "data_md": [
+    21,
+    1
+   ],
+   "judgment": [
+    19,
+    3
+   ],
+   "integrated_quote": [
+    19,
+    3
+   ],
+   "unique": [
+    [
+     19,
+     3
+    ],
+    [
+     21,
+     1
+    ]
+   ]
+  },
+  "external_chain": [
+   6,
+   12,
+   15,
+   "UNBOUNDED"
+  ],
+  "injected": [
+   {
+    "external": 6,
+    "validated": 0,
+    "uft3": 0,
+    "l3": 0,
+    "w3_pass": 0,
+    "w3_debt": "35/2",
+    "full_pass": 0
+   },
+   {
+    "external": 12,
+    "validated": 0,
+    "uft3": 0,
+    "l3": 0,
+    "w3_pass": 0,
+    "w3_debt": "35/2",
+    "full_pass": 0
+   },
+   {
+    "external": 15,
+    "validated": 0,
+    "uft3": 0,
+    "l3": 0,
+    "w3_pass": 0,
+    "w3_debt": "35/2",
+    "full_pass": 0
+   },
+   {
+    "external": "UNBOUNDED",
+    "validated": 0,
+    "uft3": 0,
+    "l3": 0,
+    "w3_pass": 0,
+    "w3_debt": "35/2",
+    "full_pass": 0
+   }
+  ],
+  "category_exclusion": 1,
+  "category_exclusion_mutated": 0,
+  "pass_gate_mutation": {
+   "gate0_validated": 0,
+   "gate1_fake_validated": 22,
+   "readme_no_migration_hits": 5
+  },
+  "closure_ids": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "closure_order": true,
+  "necessary_conditions_N_ids": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18
+  ],
+  "source_static_hits": {
+   "status": 6,
+   "complete": 7,
+   "integrated": 6,
+   "eqsum": 4,
+   "experiment": 4,
+   "final": 3
+  },
+  "redline_hits": 4
+ },
+ "self_corrections": [
+  "首版判定册档位分布正则未容纳「未完成 19」中的空格，现场 runpy 解析前已改为 [^0-9]+",
+  "首版整合全集档位分布正则未容纳「未完成 19 / 纲领草案 3」中的空格，已修正",
+  "首版实验方案书静态词表按无粗体/无空格写法，匹配不到「有预测且对 = **0/22**」与「UFT-3 = 0」，已对齐原文"
+ ],
+ "boundaries": [
+  "本册只做完成条件的类别/账本判定，不构造具体 GUT 谱、不跑 RGE/RK4、不自推新物理",
+  "C07 的函数级自由度是 r95/attack39/attack40 已登记事实的归并，不是新的物理证明",
+  "C08 跨源计数差异只登记 MISMATCH，不修改任何上游事实源",
+  "完成度审计的「完成」仅指组织/文档/数学层；物理层 L4 全 OPEN"
+ ],
+ "methodology_notes": [
+  "G41-10 用 1 == 1 比较式检查布尔字面量，避免 AST 守卫自身写入被扫描命中",
+  "所有数值均带只读事实源路径与行号/JSON 键；纯标准库、无随机、不改 system.json / claims.csv / verify.py"
+ ],
+ "source_refs": {
+  "matrix": "../全维全体系统一场论/数据/全维验收矩阵.json:criteria/systems/cells/verdict_dist/full_pass/bottleneck",
+  "w_judgment": "../全维全体系统一场论/判定_统一场论全域验收矩阵与最小闭合集_2026-10-08.md:L17/L29-40/L103/L120-131",
+  "status": "../状态看板.md:L11/L40-42/L48/L100-107/L118",
+  "complete": "../统一场论完成度审计_20261009.md:L3-6/L17-23/L91-105",
+  "integrated": "../统一理论体系_已验证正确内容整合全集.md:L13-17/L27-29/L1166/L1189-1195",
+  "uft_json": "../本项目_全维自洽与归一化/数据/本项目_统一场论达成度重算_2026-10-08.json:L4-46",
+  "uft_judgment": "../本项目_全维自洽与归一化/判定_本项目_统一场论达成度重算与最小闭合清单_2026-10-08.md:L23/L35-40/L78/L97",
+  "uft_md": "../本项目_全维自洽与归一化/数据/本项目_统一场论达成度重算_2026-10-08.md:L86",
+  "eqsum": "../../理论体系方程总汇_正确方程集_2026-10-14.md:L63/L97/L366/L420",
+  "experiment": "统一场论_实验验证方案书_2026-10-21.md:L5/L33/L36/L41-45",
+  "final": "穷尽攻破_统一场论终局总成_2026-10-21.md:L22/L58-59",
+  "g1": "统一场论必要条件清单_G1_2026-10-30.md:L5-53",
+  "r95": "../本项目_全维自洽与归一化/判定_TUFT-r95-螺旋时空理论_曲率挠率频率角速度_全维审计与攻破_2026-10-17.md:L113-155",
+  "attack39": "attack39_omega自由函数防线_四路封死与定量互斥_2026-11-08_report.txt:L18-21",
+  "attack40": "attack40_力统一承重前提_阈值Yukawa联合可识别性_2026-11-08_report.txt:L17-22"
+ },
+ "cross_refs": [
+  "../全维全体系统一场论/数据/全维验收矩阵.json",
+  "../全维全体系统一场论/判定_统一场论全域验收矩阵与最小闭合集_2026-10-08.md",
+  "../状态看板.md",
+  "../统一场论完成度审计_20261009.md",
+  "../统一理论体系_已验证正确内容整合全集.md",
+  "../../理论体系方程总汇_正确方程集_2026-10-14.md",
+  "统一场论_实验验证方案书_2026-10-21.md",
+  "穷尽攻破_统一场论终局总成_2026-10-21.md",
+  "统一场论必要条件清单_G1_2026-10-30.md",
+  "../本项目_全维自洽与归一化/判定_本项目_统一场论达成度重算与最小闭合清单_2026-10-08.md",
+  "../本项目_全维自洽与归一化/数据/本项目_统一场论达成度重算_2026-10-08.json",
+  "../本项目_全维自洽与归一化/数据/本项目_统一场论达成度重算_2026-10-08.md",
+  "../本项目_全维自洽与归一化/判定_TUFT-r95-螺旋时空理论_曲率挠率频率角速度_全维审计与攻破_2026-10-17.md",
+  "attack39_omega自由函数防线_四路封死与定量互斥_2026-11-08_report.txt",
+  "attack40_力统一承重前提_阈值Yukawa联合可识别性_2026-11-08_report.txt",
+  "判定_attack39_攻破㉛_omega自由函数防线_四路封死与定量互斥_2026-11-08.md",
+  "判定_attack40_攻破㉜_力统一承重前提_阈值Yukawa联合可识别性_2026-11-08.md"
+ ],
+ "redlines": {
+  "zero_of_22": "unchanged",
+  "UFT-3": 0,
+  "L3": 0,
+  "validated": 0
+ },
+ "candidate_verdict": "FAIL",
+ "exit": 0
+}

@@ -1,0 +1,47 @@
+== attack45 攻破㊲·不同假设攻破统一场论：假设替换 × 中间量交叉导数 ==
+-- 靶：把「假设本身」作为自变量，测 10 个替换算子 × 8 个中间量是否产生完成侧迁移 --
+-- 边界：只读事实源、不跑 RGE/RK4、不构造 GUT 谱、不注入新假设、不占 RID、不重复 attack41-44 --
+-- 口径：三态互斥 MIGRATE / INVARIANT / DEGRADE；仅 MIGRATE 且候选数=1 才计唯一化 --
+[PASS     ] F01 | 控制组：假设空间与中间量全部现场解析（不打字）
+            读数: 假设空间={'r125_A': 11, 'r121_H': 9, 'G1_N': 18, 'r123_R': 5, 'r14_routes': 4, 'r133_types': 4, 'omega': 5}；r125 判决 1 / 7 / 3；净前提=+11、未导出=37、closure=0.327、最深 POSTED=5、最小证伪集规模=1、口径 II 自由度=5、全域组合=5184；三套分母={'declared': 18, 'snapshot': 19, 'present': 22}；22x8=176 格、W3=35/2 / W4=15；跨源静态命中 17 组 74/74
+[FAIL     ] F02 | 假设替换 × 中间量交叉导数：迁移数 0/80，MIGRATE 态 0 行
+            读数: 替换算子=10、中间量=8、矩阵格数=80；针词现场命中=46/46（逐行全命中=True）；MIGRATE=0 / INVARIANT=6 / DEGRADE=4，守恒 0+6+4=10；唯一化数=0；新增 POSTED 账=4；state 重算一致=10/10；三态集合=['DEGRADE', 'INVARIANT']
+[FAIL     ] F03 | 最小证伪集在假设替换下不迁移：单点击杀者不因换假设而改变
+            读数: r125 保持四力目标最小证伪集={A05}（规模 1）/ 允许改目标={A08}（规模 1）；11 条假设 A01–A11 判决 1 / 7 / 3、路线 DEAD；r125 明文「无论走哪条退守路径」至少一条假设必然失败；H09 替换后 hitting_size 读数仍为 1（矩阵 80 格中该列迁移=0）
+[FAIL     ] F04 | 四型修补对 closure 的导数恒零：0.327 → 1 不可达
+            读数: r133 四型=['①', '②', '③', '④']（①外部输入 / ②零信息重排 / ③范围退缩 / ④自相矛盾）对「修改」穷尽；19 条逐条审计；r133 明文 closure 从 0.327 推到 1 不可能；r133 元定理「局部修补在结构上不可能闭合全局缺口」；H08 状态=INVARIANT
+[FAIL     ] F05 | 改名与公设放宽不是新假设：零信息重排不产生判别力
+            读数: H02 δθ / β_Ω 注入按闭合性审计只是把自由参数 ε 改名（自由参数改名悖论、未产生真预言）；H01 Ω5→Ω5′ 把违背 1→0 但 δA≡0、公设放宽 ≠ 预言自动出现、下游记账未重做；两行三态均 INVARIANT，8 个中间量逐项不变
+[FAIL     ] F06 | 净前提下降门：假设替换增大而非减少前提账本
+            读数: gate(e,a)=1 当且仅当 a<e；r138/r44 给 e=0（无已知导出）、a=1（新假设/新原理）⇒ gate=0（阳性对照 gate(1,0)=1）；r134 净前提变化=+11、未导出=37、closure=0.327、最深 POSTED=5；H03–H06 四行 DEGRADE（死锁 4/4、已结项、窗口 3→2、nullity 5 维）
+[BOUNDARY ] F07 | C0160 七路径 / C4 两环 beta / 四力本源「不作回答」只读登记
+            读数: attack41 类别注入不变量（6→12→≥15→UNBOUNDED）只作只读事实源；attack42 四类分桶 / attack43 16×4 矩阵 / attack44 10 途径三态表均不重跑；C0160 七路径 6 open 沿用「登记不深攻」；C4 两环 β 维持「外部公式未在本仓核验⇒暂缓」；四力本源与终审裁决「全人类共有的开放问题」不作回答；本册不重判任何一条路径
+[FAIL     ] F08 | 四耦合 DERIVED 空格与 POSTED 账：替换后迁移仍为 0/4
+            读数: attack43/44 继承：四耦合 DERIVED 空格=4 未填、POSTED→DERIVED 迁移 0/4；r134 未导出=37、净前提=+11、closure=0.327、最深 POSTED=5；10 个替换算子中 4 行 DEGRADE（全部为增加前提或缩减窗口），6 行 INVARIANT（零信息重排），无一行把 POSTED 转为 DERIVED
+[INFO     ] F09 | 判据有牙：唯一化 / 迁移 / 嵌入 / 适配 / 净前提门五组阳性对照与变异
+            读数: decides(MIGRATE,1)=1（阳性）；三变异 decides(INVARIANT,1)=0、decides(MIGRATE,2)=0、decides(DEGRADE,1)=0；migrate 有真供给=1 / 无供给=0；gate(1,0)=1、embed_ok(1)=1、fits(12,12)=1；真实值 decides=0、migrate=0、gate=0、embed=0、fits=0 ⇒ 全 0 不是恒否判据造成的
+[INFO     ] F10 | 总裁定：H45 FAIL（不同假设未攻破统一场论），不计攻破数
+            读数: 唯一化数=0/10、交叉导数迁移=0/80、MIGRATE 态=0 行、INVARIANT=6、DEGRADE=4；净前提下降门=0；跨源静态命中 17 组满分=True；编号空号={'attack45': 0, '攻破㊲': 0, 'r413': 0, 'r414': 0}、R 链最新=r402、r403+=0；红线 0/22、UFT-3=0、L3=0、validated=0 不变；不宣称完成统一场、不宣称宇宙本质本源已回答、不占 RID
+[OK] G45-1 | 编号空号与分母守恒：attack45/攻破㊲/r413/r414 0 命中、R 链 r402、三套分母 18/19/22
+            读数: empty_ids={'attack45': 0, '攻破㊲': 0, 'r413': 0, 'r414': 0} file_hits=0 rid=r402 rid402=3 rid403+=0 cells=176 W3=35/2 W4=15 denom={'declared': 18, 'snapshot': 19, 'present': 22} nomig=8
+[OK] G45-2 | 假设空间与中间量现场正则解析（不打字）：17 个读数逐项与事实源一致
+            读数: A=11/11 H=9 N=18 R=5 routes=4 types=['①', '②', '③', '④'] omega=5 verdict=1 / 7 / 3 net=+11 und=37 closure=0.327 deep=5 derived=4 combos=5184 cells=176 denom={'declared': 18, 'snapshot': 19, 'present': 22}
+[OK] G45-3 | 10 行针词表逐行全命中、三态互斥且守恒、state 可重算
+            读数: rows=10 needles=46/46 full=True recompute=10/10 dist={'MIGRATE': 0, 'INVARIANT': 6, 'DEGRADE': 4} cons=0+6+4=10 uniq=0 set=['DEGRADE', 'INVARIANT']
+[OK] G45-4 | 判据有牙：唯一化阳性对照必过、三变异必翻转、迁移/嵌入/适配/净前提门双面对照
+            读数: synth=1 mut=(0,0,0) pos_migrate=(1,0) pos_gate=1 real={'decides_real': 0, 'migrate_real': 0, 'gate_real': 0, 'embed_real': 0, 'fits_real': 0}
+[OK] G45-5 | 交叉导数矩阵：10×8=80 格、无真供给、迁移 0、MIGRATE 行 0
+            读数: rows=10 cols=8 cells=80 supply=0 migrated=0 migrate_rows=0 cols=['W3_debt', 'closure', 'deep_posted', 'freedom_II', 'hitting_size', 'net_premise', 'underived', 'validated']
+[OK] G45-6 | 最小证伪集 / 四型修补 / 改名悖论 / 公设放宽只读命中
+            读数: r125=5/5 r133=5/5 close=4/4 v35=4/4 r123=1/1
+[OK] G45-7 | 净前提下降门与新增 POSTED 账：a=1 > e=0 门未过、4 行 DEGRADE 全带前提代价
+            读数: e=0 a=1 gate=0 pos=1 net=+11 und=37 deep=5 degrade=4 derived=4
+[OK] G45-8 | 跨源静态命中 17 组满分：r14/r15/v35/r121/r123/r125/r134/r133/close/methodF/g1/a41/a41py/final/postulate/csv/a44
+            读数: groups=17 full=True detail=74/74 {'r14': (8, 8), 'r15': (5, 5), 'v35': (6, 6), 'r121': (4, 4), 'r123': (6, 6), 'r125': (8, 8), 'r134': (4, 4), 'r133': (7, 7), 'close': (4, 4), 'methodF': (5, 5), 'g1': (5, 5), 'a41': (2, 2), 'a41py': (2, 2), 'final': (1, 1), 'postulate': (3, 3), 'csv': (2, 2), 'a44': (2, 2)}
+[OK] G45-9 | 不重复项：纯标准库、无 RGE/RK4/两环 beta/C2 双锚点/16x4 矩阵/10 途径三态表实现
+            读数: imports=['ast', 'decimal', 'fractions', 'io', 'json', 'os', 're', 'sys'] third_party=[] probe=['mpmath', 'numpy'] banned_ids=[] banned_funcs=[] funcs=['add', 'decides', 'embed_ok', 'emit', 'fits', 'gate', 'guard', 'has_file_token', 'has_rid', 'hit_all', 'hits_of', 'import_roots', 'migrate', 'parse_i', 'parse_pair', 'read_json', 'read_text', 'route_state']
+[OK] G45-10 | 书写式/红线/只读事实源与总裁定一致性：21 条路径、条目 1/6/1/2、唯一化 0
+            读数: true_consts=[] paths=21/21 entries=10 dist=1/6/1/2 uniq=0 migrated=0 nomig=8
+== 汇总：条目 10；PASS 1 / FAIL 6 / BOUNDARY 1 / INFO 2；守卫 10/10 ==
+== 总裁定：FAIL（不同假设未攻破统一场论）；假设替换 × 中间量迁移数 = 0/80 ==
+红线：0/22、UFT-3=0、L3=0、validated=0 不变；不宣称完成统一场、不宣称宇宙本质本源已回答、不计攻破数；未改治理事实源、未跑 refresh_catalog。

@@ -1,0 +1,47 @@
+== attack42 攻破㉞·C2 硬门：四类机器分桶与双锚点可执行化 ==
+-- 靶：整理册 §六 唯一硬门 C2（非测量锚无量纲数值 + method_F 双锚点）；不重复 attack41 类别注入不变量、不重复 attack40 精确秩/RK4 --
+-- 口径：四类互斥分桶对 43 条预测登记源逐条判定；第④类再逐条过 C2 六条件；双锚点首次做成数值判定 --
+-- 边界：只读事实源、不构造具体 GUT 谱、不跑 RGE/RK4、不占 RID、不改 system.json / claims.csv / 状态看板 --
+[PASS     ] B01 | 控制组：10 靶 / 176 格 / W3 欠账 / 43 条来源分布逐项复现
+            读数: 10 靶 key 现场抽自源码=10、JSON=10、逐键一致=True；22×8=176 格；W3 debt=35/2、pass=0；strict=4 / wide=23；预测登记 43 条来源分布={'imported_constant': 2, 'system_postulate': 22, 'known_literature': 9, 'numerology': 10}；靶场快照体系数=19（文本声明 18，差额=+1）、n_registered_predictions 全 0=True
+[FAIL     ] B02 | 载体枚举首次兑现：全库可机读数值字段分母与守恒式
+            读数: claims.csv=23 / system.json=23 / csv 行=673 / 可机读数值单元格=12（分布={'S02_空间光速螺旋统一力': 4, 'S15_空间光速螺旋曲率挠率几何统一场论': 2, 'S18_曲率能量密度标量约束引力': 6}）；attack*.json=299、*_report.txt=311；system_registry 存在=True；四桶守恒 4+25+10+4=43=预测登记条目数；终局总成自认「枚举器待写」
+[FAIL     ] B03 | 第①桶 测量锚输入：n_anchor>0，禁止把 c/ℏ/G 定义常数当输出
+            读数: 桶①=4 条；逐条 n_anchor=[1, 1, 2, 1]、anchors 非空=True；origin ∈ {known_literature, imported_constant}=0 条；method_F §2 判「导出 c、ℏ、G」为伪目标命中=7/7
+[FAIL     ] B04 | 第②桶 恒等重述：V≤0 与 X=X Detector 有牙
+            读数: 桶②=25 条；靶场例1 V=-3 判 C（净消耗，M02 型）；4 例 V 重算=['-3', '0', '1/4', '0'] 与公布值逐位一致=True；attack16 C01–C03 恒等=['FAIL', 'FAIL', 'FAIL']、C04 阳性对照=PASS、CHK-6a/6b 非恒等=[True, True]
+[FAIL     ] B05 | 第③桶 已否证预测：每条须挂否证出处，无出处不入桶
+            读数: 桶③=10 条（含 observable=False 不可观测量=5）；否证出处静态命中 attack14=4/4、W 册 §4=6/6、实验方案书=3/3；attack14 口径 S15(2)+S18(6)=8 条纯数值字段全部「有预测但错」
+[FAIL     ] B06 | 第④桶 非测量锚输出候选：逐条过 C2 六条件，通过数=0
+            读数: 桶④=4 条：['S03-P001', 'S03-P002', 'S12-P003', 'S14-P002']；逐条 C2 失败原因数=[5, 5, 5, 5]；通过数=0；全部条 V=(1−n_free−n_anchor)/1=0 ⇒ 无信息增益，且 anchors 全空 ⇒ 双锚点未登记
+[FAIL     ] B07 | 双锚点首次机器化：method_F 标志案例与真实候选双锚点通过数
+            读数: me/m_P=4.18546287252E-23 ⇒ α_grav=1.75180994572433697711504E-45（靶场公布 1.75180994573E-45，相对差 3.232669673307597953204594630932207614233796601497E-12）；普朗克锚 G_式/G=1 残差=0（PASS）；粒子锚 G_式/G=570838179358846372310873138877793024336390202.662076096383663 ≈ 公布 5.71e+44 相对差 0.000283398671022115042253697236789799761137998840497204231764（FAIL）⇒ 仅普朗克锚成立、非普适定律；真实 4 条候选双锚点通过数=0
+[BOUNDARY ] B08 | strict=4 逐条核对与口径分歧：数量门槛已过、非测量锚口径未核
+            读数: strict=4（S06=1 + S14=3）、wide=23；22 体系 target_registered 全 0=True；A-3b「V₂>0 无机器数据源」、D-D2「须逐条核对是否属非测量锚」、A-11「卡点已从有没有数字转为数字是不是非测量锚」静态命中=['V₂>0', '须逐条核对是否属非测量锚', '卡点已从']；attack41 记 uft3_strict=4 但 redlines UFT-3=0
+[INFO     ] B09 | V 判别式与 C2 最小可执行条件形式化
+            读数: 判别式=V = (n_hit - n_free - n_anchor) / n_hit；4 例 V=['-3', '0', '1/4', '0']、verdict=['C', 'B', 'A', 'B']，库内唯一 A 档是「假想合格候选」例3（V=1/4）；C2 六条件=['C2-1 具名靶且 3σ', 'C2-2 V>0', 'C2-3 循环检测', 'C2-4 双锚点各自出数且自洽', 'C2-5 L3 四条件且未被自身拟合', 'C2-6 落 22 体系 W3 目标格且 target_registered≥1']；W3 debt 更新规则：第④类通过数 0 ⇒ debt 恒 35/2、target_registered 恒 0
+[INFO     ] B10 | 总裁定：FAIL（C2 硬门未过），统一场论未完成、不计攻破数
+            读数: 第④类通过数=0；整理册 C2 硬门命中=3/3；跨源 0/22 / UFT-3=0 命中终局=4/4、实验=3/3、整合全集=3/3；跨源档位 MISMATCH=[[19, 3], [21, 1]]；红线 0/22、UFT-3=0、L3=0、validated=0 不变；若第④类≥1 只登记「C2 部分闭合、待独立复核」，不宣称完成统一场
+[OK] G42-1 | 分母守恒：22 现测 / 19 快照（声明 18，MISMATCH）分报、四桶和=43、176 格、W3 debt=35/2
+            读数: 22现测/19快照/176/10靶/43条 buckets={1: 4, 2: 25, 3: 10, 4: 4} total=43 W3debt=35/2 快照差额=+1
+[OK] G42-2 | 词表校准：10 靶 key 现场抽自源码且逐键一致，窄/宽双口径都报
+            读数: src=['alpha', 'alpha_s', 'm_mu_over_me', 'm_tau_over_me', 'me_over_mP', 'alpha_grav_e', 'sin2_thetaW', 'mt_over_mW', 'n_gen', 'n_c'] json_keys=10 strict=4 wide=23 V=V = (n_hit - n_free - n_anchor) / n_hit
+[OK] G42-3 | 双锚点有牙：假想合格候选必过，删第二锚点/改测量锚/加自由参数必翻转
+            读数: synthetic=True drop_anchor=False measured_anchor=False extra_free=False real_fourth=0 case=(True, True)
+[OK] G42-4 | 恒等检测器有牙：C04 阳性对照、CHK-6a/6b 非恒等、例1 判 C / 例3 判 A
+            读数: V=['-3', '0', '1/4', '0'] verdicts=['C', 'B', 'A', 'B'] ex1=C ex3=A C04=PASS
+[OK] G42-5 | 第③桶每条挂否证出处，无出处不入桶
+            读数: bucket3=10 a14=4 w=6 exp=3
+[OK] G42-6 | 第①桶每条带 n_anchor 且非定义常数输出
+            读数: bucket1=4 n_anchor=[1, 1, 2, 1] anchors=[['SM_gauge_group'], ['Clifford_algebra_choice'], ['alpha', 'alpha_s'], ['Z4_symmetry_choice']]
+[OK] G42-7 | 跨源静态命中与 MISMATCH 必报：终局/实验/整合/21-1 vs 19-3/strict4 vs UFT3=0
+            读数: final=4 exp=3 integ=3 sort=3 gate=4 tier=[[19, 3], [21, 1]] strict=4 uft3=0 nomig=7
+[OK] G42-8 | 书写式/红线守卫：源码无 Python 布尔字面量、不占 RID、不跑 RGE、不改治理事实源
+            读数: literal_true_consts=0 redline=True no_rid=True no_rge=True
+[OK] G42-9 | 第④桶逐条 C2 六条件全 FAIL 且失败原因覆盖 ≥4 类
+            读数: candidates=['S03-P001', 'S03-P002', 'S12-P003', 'S14-P002'] pass=0 reasons=[['C2-1 未', 'C2-2 V', 'C2-4 双', 'C2-5 L', 'C2-6 W'], ['C2-1 未', 'C2-2 V', 'C2-4 双', 'C2-5 L', 'C2-6 W'], ['C2-1 无', 'C2-2 V', 'C2-4 双', 'C2-5 L', 'C2-6 W'], ['C2-1 无', 'C2-2 V', 'C2-4 双', 'C2-5 L', 'C2-6 W']]
+[OK] G42-10 | 双锚点数值自校准：α_grav 与靶场 12 位报价精度一致、粒子锚比值与 5.71e44 同量级、普朗克锚残差机器零
+            读数: alpha_grav_calc=1.75180994572433697711504E-45 doc=1.75180994573E-45 rel=3.232669673307597953204594630932207614233796601497E-12（停在 12 位报价截断，非机器零） ratio_particle=570838179358846372310873138877793024336390202.662076096383663 planck_res=0
+== 汇总：条目 10；PASS 1 / FAIL 6 / BOUNDARY 1 / INFO 2；守卫 10/10 ==
+== 总裁定：FAIL（C2 硬门未过）；第④类「非测量锚输出且双锚点」通过数=0 ==
+红线：0/22、UFT-3=0、L3=0、validated=0 不变；不宣称完成统一场、不计攻破数；未改治理事实源、未跑 refresh_catalog。

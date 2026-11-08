@@ -1,0 +1,47 @@
+== attack46 攻破㊳·基础攻破：基础块留一抽除 × 上层结论可达性 ==
+-- 靶：把 L0/L1 基础块逐条「置为不可用」，看 12 个上层结论是否悬空或需外部锚 --
+-- 边界：只读事实源、只删不加、不补位、不重参数化、不新增符号/方程、不占 RID、不重复 attack41-45 --
+-- 口径：三态互斥 ORPHAN / INVARIANT / ANCHOR_REQUIRED；完成侧迁移须 COMPLETE 态 --
+[PASS     ] F01 | 控制组：两张依赖图与基础层读数全部现场解析（不打字）
+            读数: UFE2 独立输入=8、正典=26、依赖边=29、终端结论=14、完全孤立=1、承重核心=9、压缩比=3.250；S13 节点=15、边=15、根=3、上层结论=12、节点命中=15/15、基线可达=12/12；正确核=22 条（L0=11）、22 体系 H2/O10/C6/U4、G1 N=18、Ω=5、method_F L0–L4；三套分母={'declared': 18, 'snapshot': 19, 'present': 22}、22x8=176 格、W3=35/2 / W4=15；跨源静态命中 14 组 58/58
+[FAIL     ] F02 | 基础块留一抽除 × 上层结论可达性：完成侧迁移 0/120
+            读数: 基础块=10、上层结论=12、矩阵格数=120；针词现场命中=27/27（逐行全命中=True）；ORPHAN=1 / INVARIANT=6 / ANCHOR_REQUIRED=3，守恒 1+6+3=10；格状态 REACHABLE=79 / UNREACHABLE=5 / EXTERNAL_ANCHOR=36，守恒 79+5+36=120；完成侧迁移=0；state 重算一致=10/10；三态集合=['ANCHOR_REQUIRED', 'INVARIANT', 'ORPHAN']
+[FAIL     ] F03 | 唯一隐性承重块：抽除 S13 公理三(自相似) 使 5 个上层结论悬空
+            读数: B03 抽除后 orphan=5：['M4 双向β流', 'M5 对偶镜像度规', '不动点', '分形维 D=4−γ', '曲率有界']；占 12 个上层结论的 5/12；M4 双向β流 / M5 对偶镜像度规两支及其下游（不动点、分形维 D=4−γ、曲率有界）全部失去上游路径；抽除只制造悬空，不制造完成
+[FAIL     ] F04 | 零承重形式地基：6/10 基础块抽除后 12 个上层结论逐项不变
+            读数: B01 公理一 / B02 公理二 抽除 orphan 各 0；双删（公理一+公理二）后仍 12/12 全可达 ⇒ 三公理在依赖图层面对 M1 主链完全冗余；B04 UFE2 C-10 完全孤立（既无上游也无下游）、B05/B06 K-20/K-21 恒等重排信息增量 0、B08 K-01 时空同一化 L0 定义式 ⇒ 共 6 行 INVARIANT
+[FAIL     ] F05 | 外输锚基础块：3/10 抽除后需外部锚补位，不是完成
+            读数: B07 K-22 α 标准定义（测量锚）、B09 {c,ħ,G} 量纲锚（r377 满秩 det=−2、零空间 0 维 ⇒ α 不可能是量纲层产物）、B10 Ω1–Ω5 几何基座（Ω5 自由常数 ≤1）三行 ANCHOR_REQUIRED；对应 36 格 EXTERNAL_ANCHOR；抽除它们不产生任何 L3 数值输出，只把缺口平移到外部锚
+[FAIL     ] F06 | 净前提下降门：抽除只减前提账本，不改完成判据
+            读数: gate(e,a)=1 当且仅当 a<e；e=0（无已知导出）、a=1（抽除本身不引入新假设，但补位需外部锚）⇒ gate=0（阳性对照 gate(1,0)=1）；r134 净前提=+11、closure=0.327；attack41 注入不变量（6→12→≥15→UNBOUNDED）与本册抽除方向相反，均不改完成判据
+[BOUNDARY ] F07 | attack39–45 / 七路径 / C4 两环 beta / 终审裁决只读登记
+            读数: attack41 类别注入不变量、attack42 四类分桶、attack43 16×4 矩阵、attack44 10 途径三态表、attack45 10 假设替换 × 8 中间量 80 格交叉导数均不重跑；C0160 七路径 6 open 沿用「登记不深攻」；C4 两环 β 维持「外部公式未在本仓核验⇒暂缓」；四力本源与终审裁决「全人类共有的开放问题」不作回答；本册不重判任何一条路径
+[FAIL     ] F08 | 基础层不产出第一性内容：抽除后 0/22 与达成度 1/6 不变
+            读数: 正确核 22 条中 L0=11 条（零经验内容）、K-20/K-21 信息增量 0、K-22 α 标准定义与 G=ℏc/m_P² 循环恒等式判 FAIL；理论体系方程总汇「正确核里没有一条是来料新增的物理」「统一场论达成度 1/6」；method_F「只有 L3 可计入已验证结论」；G1 18 条 TUFT 供给 0 核心项；抽除任一基础块后 0/22、UFT-3=0、L3=0、validated=0 逐项不变
+[INFO     ] F09 | 判据有牙（图论式）：删边 / 加边 / 双删 / 空抽除 / 完成态合成
+            读数: 基线 orphan=0、12/12 全可达=1；删 M1→归一化 边 ⇒ orphan=3（悬空真出现）；加 公理一→M4 边后抽除公理三 ⇒ orphan=2（从 5 降到 2，判据可响应结构变化）；双删（公理一+公理二）⇒ orphan=0；空抽除不存在节点 ⇒ orphan=0；completes(COMPLETE)=1、gate(1,0)=1；真实完成侧迁移=0 ⇒ 零不是恒否判据造成的
+[INFO     ] F10 | 总裁定：H46 FAIL（抽除基础未攻破统一场论），不计攻破数
+            读数: 完成侧迁移=0/120、悬空格=5、零承重块=6、外输锚块=3；净前提下降门=0；跨源静态命中 14 组满分=True；编号空号={'attack46': 0, '攻破㊳': 0, 'r415': 0, 'r416': 0}、R 链最新=r403（r403 命中 4）、r404+=0；红线 0/22、UFT-3=0、L3=0、validated=0 不变；不宣称完成统一场、不宣称宇宙本质本源已回答、不占 RID
+[OK] G46-1 | 编号空号与分母守恒：attack46/攻破㊳/r415/r416 0 命中、R 链实扫 r403、三套分母 18/19/22
+            读数: empty_ids={'attack46': 0, '攻破㊳': 0, 'r415': 0, 'r416': 0} file_hits=0 rid=r403 rid402=3 rid403=4 rid404+=0 cells=176 W3=35/2 W4=15 denom={'declared': 18, 'snapshot': 19, 'present': 22} nomig=8
+[OK] G46-2 | 两张依赖图与基础层读数现场正则解析（不打字）：17 个读数逐项与事实源一致
+            读数: ufe2=8/26/29/14/1/9/3.250 s13=15/15/3/12 nodes_hit=15 base_full=True K=22 L0=11 G1=18 M=6 omega=5
+[OK] G46-3 | 10 行针词表逐行全命中、三态互斥且守恒、state 可重算
+            读数: rows=10 needles=27/27 full=True recompute=10/10 dist={'ORPHAN': 1, 'INVARIANT': 6, 'ANCHOR_REQUIRED': 3} cons=1+6+3=10 complete=0 set=['ANCHOR_REQUIRED', 'INVARIANT', 'ORPHAN']
+[OK] G46-4 | 判据有牙（图论式）：删边 / 加边 / 双删 / 空抽除 / 完成态合成五组对照
+            读数: base=0 full=1 cut=3 add=2 double=0 none=0 synth=1 gate=1 real={'complete_cells': 0, 'gate_real': 0, 'orphan_cells': 5}
+[OK] G46-5 | 抽除矩阵：10×12=120 格、三态守恒 79+5+36=120、完成侧迁移 0
+            读数: rows=10 cols=12 cells=120 dist={'REACHABLE': 79, 'UNREACHABLE': 5, 'EXTERNAL_ANCHOR': 36} cons=79+5+36=120 orphan=5 complete=0
+[OK] G46-6 | 隐性承重 / 零承重 / 外输锚三层分离：仅 1 行 ORPHAN、6 行 INVARIANT、3 行 ANCHOR_REQUIRED
+            读数: ko_b03=5 ['M4 双向β流', 'M5 对偶镜像度规', '不动点', '分形维 D=4−γ', '曲率有界'] ko_b01=0 ko_b02=0 zero=6 anchor=3 anchor_cells=36
+[OK] G46-7 | 基础层只读命中：L0 零经验内容 / L3 门槛 / 正确核无新增物理 / 循环恒等式 / 量纲锚满秩
+            读数: eqbook=6/6 methodF=4/4 ufe2=4/4 ch25=4/4 r377=2/2 g1=2/2
+[OK] G46-8 | 净前提下降门与红线不变量：a=1 > e=0 门未过、抽除后 0/22 逐项不变
+            读数: e=0 a=1 gate=0 pos=1 complete=0 r134=2/2 a41=2/2 a45=3/3
+[OK] G46-9 | 不重复项：纯标准库、无 RGE/RK4/两环 beta/注入/替换导数/16x4 矩阵实现
+            读数: imports=['ast', 'decimal', 'fractions', 'io', 'json', 'os', 're', 'sys'] third_party=[] probe=['mpmath', 'numpy'] banned_ids=[] banned_funcs=[] funcs=['add', 'cell_state', 'completes', 'emit', 'gate', 'grab', 'guard', 'has_file_token', 'has_rid', 'hit_all', 'hits_of', 'import_roots', 'reach', 'read_json', 'read_text']
+[OK] G46-10 | 书写式/红线/只读事实源与总裁定一致性：17 条路径、条目 1/6/1/2、完成侧迁移 0
+            读数: true_consts=[] paths=17/17 entries=10 dist=1/6/1/2 complete=0 orphan=5 nomig=8
+== 汇总：条目 10；PASS 1 / FAIL 6 / BOUNDARY 1 / INFO 2；守卫 10/10 ==
+== 总裁定：FAIL（抽除基础未攻破统一场论）；完成侧迁移 = 0/120，悬空格 = 5 ==
+红线：0/22、UFT-3=0、L3=0、validated=0 不变；不宣称完成统一场、不宣称宇宙本质本源已回答、不计攻破数；未改治理事实源、未跑 refresh_catalog。
