@@ -1,0 +1,54 @@
+attack49 / 2026-11-09 / debt-ledger normalization + #22 errata closure
+
+[A] dynamic numbering
+  {'attack_prior_max': 48, 'attack_current': 49, 'r_max': 403, 'volume_max': 126, 'j_max': 104, 'c_max': 401, 'preexisting_2026_11_09_files': []}
+
+[B] #22 carrier drift
+  107 ledger = 76131 B / 5bfa01fcf4c77bc62b08a2885397603b
+  current    = 72798 B / c4d98d8b4b6c74af62070be293a7a571
+  byte_delta = -3333 ; strict_byte_identity = BYTE_LEDGER_MISMATCH_PERSISTS
+  other_carrier_matches = {'_j85_empty_cell_screen_form_and_torsion_topological_closure_audit.py': True, '_j85_empty_cell_screen_form_and_torsion_topological_closure_audit_out.txt': True, '_j85_screen_cells.csv': True, '_j85_screen.html': True}
+
+[C] semantic invariance
+  semantic_ok = True
+  components = {'json_cells_137': True, 'csv_rows_137': True, 'expected_cells_137': True, 'class_counts_equal_expected': True, 'json_cells_match_class_counts': True, 'csv_matches_json_class_counts': True, 'cell_pairs_identical': True, 'meta_empty_total_137': True, 'meta_gates_23_23': True}
+  json_class_counts = {"已封死": 26, "有条件开放": 97, "值得试": 14}
+  csv_class_counts  = {"已封死": 26, "有条件开放": 97, "值得试": 14}
+  json_cells / csv_rows = 137 / 137
+
+[D] debt ledger
+  {'debt22_status': 'CLOSED_BY_EXTERNAL_ERRATA__HISTORIC_SECTION_UNCHANGED', 'queue_mismatch_count': 2, 'attack47_open_set': '#21 / #22 / #23', 'volume116_closed': ['#21', '#23'], 'volume116_open': ['#22'], 'debt_total': 31, 'new_debts': ['#30', '#31'], 'j101_to_j104_new_debt_zero': True, 'scoreboard_0_6': True}
+
+[E] findings {'PASS': 4, 'BOUNDARY': 3, 'FAIL': 1}
+  PASS F01 : 动态实扫 2026-11-09 无预存落册：attack49 为首空号；r403 / 卷126-J104 / C0401 为当前上界
+  PASS F02 : #22 载体漂移现场复现：107 登记 76131 B / 5bfa01...，现盘 72798 B / c4d98d...，字节差 -3333；其余四件 J85 载体哈希均与 107 §九 一致，漂移被隔离到 JSON
+  PASS F03 : 语义读数不变：JSON 与 CSV 均 137 格；class_counts={"已封死": 26, "有条件开放": 97, "值得试": 14}；逐格 (n_total,n_pass,class) 完全相同；meta gates 23/23
+  PASS F04 : #22 可以外挂更正指针销账：根因（JSON 序列化/元数据覆盖）+ 语义无损伤 + 旧/新字节哈希 + 后续引用规则四件齐备；107 §九 历史表不改
+  BOUNDARY F05 : 严格字节身份仍不匹配：107 §九 表是历史快照，必须与本册后续更正指针并读；不得把「销账」误读为旧表哈希变真
+  BOUNDARY F06 : 债务账现值归一：attack47 把 #21/#22/#23 全列 OPEN_FINITE，卷116 已闭 #21/#23、仅 #22 仍开，跨册口径差 2 项；#30/#31 仍开，总账 31；J101–J104 新债 0；一方程记分板 0/6
+  FAIL F07 : 本次销账不改变物理终判：含引力四力大统一正确方程仍 0 条；没有新的物理方程理论体系；0/22、UFT-3=0、L3=0、validated=0 保持
+  BOUNDARY F08 : 本册不计攻破数、不新增物理结论；只关闭一个台账/引用口径债，且保留 107 历史字节
+
+[F] terminal verdict
+  DEBT22-CLOSED-BY-EXTERNAL-ERRATA--HISTORIC-107-TABLE-UNCHANGED--PHYSICS-VERDICT-UNCHANGED
+  debt22_status = CLOSED_BY_EXTERNAL_ERRATA__HISTORIC_SECTION_UNCHANGED
+  candidate_verdict = CLOSED_WITH_ERRATA
+
+[guards] 15/15
+  PASS G01 : dynamic scan: attack48 -> attack49, r403, volume126/J104, C0401; no pre-existing 2026-11-09 files
+  PASS G02 : md5 helper has positive and negative controls
+  PASS G03 : all declared input files exist on disk
+  PASS G04 : 107 section-nine ledger parsed 5 carriers and all 5 actual files stat-ed
+  PASS G05 : 107 ledger for j85 json = 76131 B / 5bfa01...
+  PASS G06 : current j85 json = 72798 B / c4d98d...; drift -3333 B vs 107 ledger
+  PASS G07 : other four J85 carriers still match 107 section-nine byte/md5 ledger
+  PASS G08 : semantic invariance: 137 cells, class counts and cell tuples match JSON/CSV/108
+  PASS G09 : 108/112 already explain JSON overwrite and unchanged semantic readings
+  PASS G10 : debt queue normalized: #21/#23 mismatch=2, total31, #30/#31 open, J101-J104 new debt 0, scoreboard 0/6
+  PASS G11 : external correction pointer contains old/new byte-hash and semantic-invariance fields
+  PASS G12 : all read-only inputs unchanged during engine runtime (md5 before/after)
+  PASS G13 : no prior attack/J-series engine import; positive control fires
+  PASS G14 : no dollar-brace placeholder and no hard-coded guard True literals
+  PASS G15 : r403 terminal verdict and no-new-system ledger present on disk
+
+EXIT=0

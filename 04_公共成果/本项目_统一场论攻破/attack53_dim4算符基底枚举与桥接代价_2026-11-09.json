@@ -1,0 +1,396 @@
+{
+  "volume": "attack53",
+  "round_label": "攻破㊺",
+  "date": "2026-11-09",
+  "scope": "finite-grammar dim-4 local operator enumeration and bridge price table",
+  "numbering": {
+    "attack_prior_max": 52,
+    "attack_current": 53,
+    "r_max": 406,
+    "volume_max": 130,
+    "j_max": 108,
+    "c_max": 401,
+    "volume131_md": [],
+    "preexisting_attack53": []
+  },
+  "dimension_anchors": {
+    "parsed": {
+      "e^a{}_{\\mu}": 0,
+      "\\omega_\\mu": 1,
+      "T^a{}_{\\mu\\nu}": 1,
+      "R^{ab}{}_{\\mu\\nu}": 2
+    },
+    "D_e": 0,
+    "D_omega": 1,
+    "D_T": 1,
+    "D_R": 2,
+    "D_one_over_kappa2": 2,
+    "dim4_rule": true,
+    "A2_rows": 16,
+    "F2_anchor": true
+  },
+  "grammar": {
+    "builders": [
+      [
+        "R",
+        "2",
+        2,
+        2,
+        "singlet",
+        "gravity"
+      ],
+      [
+        "T",
+        "1",
+        2,
+        1,
+        "singlet",
+        "gravity"
+      ],
+      [
+        "omega",
+        "1",
+        1,
+        2,
+        "singlet",
+        "gravity"
+      ],
+      [
+        "F",
+        "2",
+        2,
+        0,
+        "adjoint",
+        "gauge"
+      ],
+      [
+        "H",
+        "1",
+        0,
+        0,
+        "su2doublet",
+        "matter"
+      ],
+      [
+        "Psi",
+        "3/2",
+        0,
+        0,
+        "fermion",
+        "matter"
+      ],
+      [
+        "D",
+        "1",
+        0,
+        1,
+        "singlet",
+        "derivative"
+      ]
+    ],
+    "constraints": [
+      "sum(d)+2m=4",
+      "sum(p)+n_e<=4",
+      "lorentz_indices_even",
+      "adjoint_F_pairs",
+      "su2_H_pairs",
+      "fermion_number_even",
+      "nonempty"
+    ],
+    "max_n": 4,
+    "max_e": 4,
+    "max_m": 2,
+    "total_signatures": 176,
+    "legal_operators": 60,
+    "in_baseline": 6,
+    "extra": 54,
+    "honesty": "grammar-complete, NOT method-space complete; no Fierz/EOM/boundary-term/field-redefinition reduction, no nonlocal 1PI"
+  },
+  "baseline_reproduced": {
+    "declared": {
+      "R1+e2+k1": "A2.1 Palatini epsilon R e e / 4kappa^2",
+      "e4+k2": "A2.2 cosmological term (kappa-only reading; Lambda not in grammar)",
+      "F2+k0": "A2.3 Yang-Mills F wedge *F",
+      "H2+D2+k0": "A2.4 Higgs kinetic (DH)^2",
+      "H2+k1": "A2.5 Higgs mass (mu^2 replaced by 1/kappa^2 in grammar)",
+      "H4+k0": "A2.6 Higgs quartic lambda H^4",
+      "Psi2+D1+k0": "A2.7 Dirac kinetic (needs gamma matrix, outside grammar)",
+      "H1+Psi2+k0": "A2.8 Yukawa (needs chiral SU(2), outside grammar)"
+    },
+    "reproduced_in_grammar": [
+      "R1+e2+k1",
+      "e4+k2",
+      "F2+k0",
+      "H2+D2+k0",
+      "H2+k1",
+      "H4+k0"
+    ],
+    "not_reproduced": [
+      "Psi2+D1+k0",
+      "H1+Psi2+k0"
+    ],
+    "n_reproduced": 6
+  },
+  "bridge_price_table": {
+    "counts": {
+      "gravity_gauge_direct": 0,
+      "gravity_higgs_bridge": 10,
+      "gravity_torsion": 15,
+      "gravity_fermion": 3,
+      "curvature_square": 1,
+      "gauge_self": 1
+    },
+    "gravity_gauge_direct_operators": [],
+    "gravity_higgs_bridge_operators": [
+      "omega1+H2+D1+e1+k0",
+      "omega1+H2+D1+e3+k0",
+      "omega2+H2+k0",
+      "omega2+H2+e2+k0",
+      "T1+H2+D1+k0",
+      "T1+H2+D1+e2+k0",
+      "T1+omega1+H2+e1+k0",
+      "T2+H2+k0",
+      "R1+H2+k0",
+      "R1+H2+e2+k0"
+    ],
+    "curvature_square_operators": [
+      "R2+k0"
+    ],
+    "min_new_constants": 23,
+    "interpretation": "LOWER BOUND on field-content signature classes, not an exact independent-coupling count: different index contractions of the same field content (F^2 vs F Ftilde, R^2 vs R_mn R^mn) collapse to one signature here",
+    "vol49A_price": "+7/+9 -> 33-37",
+    "xi_nonminimal_coupling": "4911.63",
+    "EC_contact_term_no_free_parameter": true
+  },
+  "positive_controls": {
+    "relaxed_internal_pairs_direct_count": 4,
+    "strict_direct_count": 0,
+    "fires": true
+  },
+  "state_machine": {
+    "verdict": "BRIDGES-EXIST-BUT-NONE-MIX-GRAVITY-WITH-GAUGE",
+    "counterfactuals": {
+      "relax_internal_pairs": "RECHECK",
+      "no_higgs_bridge": "RECHECK",
+      "no_extra_operators": "RECHECK",
+      "drop_baseline": "RECHECK",
+      "fake_direct_bridge": "RECHECK"
+    },
+    "all_controls_fire": true
+  },
+  "legal_operator_sample": [
+    "e2+k2",
+    "e4+k2",
+    "D2+k1",
+    "D2+e2+k1",
+    "D2+e4+k1",
+    "D4+k0",
+    "D4+e2+k0",
+    "D4+e4+k0",
+    "Psi2+D1+e1+k0",
+    "Psi2+D1+e3+k0",
+    "H2+k1",
+    "H2+e2+k1",
+    "H2+e4+k1",
+    "H2+D2+k0",
+    "H2+D2+e2+k0",
+    "H2+D2+e4+k0",
+    "H4+k0",
+    "H4+e2+k0",
+    "H4+e4+k0",
+    "F2+k0",
+    "omega1+D1+e1+k1",
+    "omega1+D1+e3+k1",
+    "omega1+D3+e1+k0",
+    "omega1+D3+e3+k0",
+    "omega1+Psi2+k0",
+    "omega1+Psi2+e2+k0",
+    "omega1+H2+D1+e1+k0",
+    "omega1+H2+D1+e3+k0",
+    "omega2+k1",
+    "omega2+e2+k1",
+    "omega2+D2+k0",
+    "omega2+D2+e2+k0",
+    "omega2+H2+k0",
+    "omega2+H2+e2+k0",
+    "omega3+D1+e1+k0",
+    "omega4+k0",
+    "T1+D1+k1",
+    "T1+D1+e2+k1",
+    "T1+D3+k0",
+    "T1+D3+e2+k0",
+    "T1+Psi2+e1+k0",
+    "T1+H2+D1+k0",
+    "T1+H2+D1+e2+k0",
+    "T1+omega1+e1+k1",
+    "T1+omega1+D2+e1+k0",
+    "T1+omega1+H2+e1+k0",
+    "T1+omega2+D1+k0",
+    "T2+k1",
+    "T2+D2+k0",
+    "T2+H2+k0",
+    "R1+k1",
+    "R1+e2+k1",
+    "R1+D2+k0",
+    "R1+D2+e2+k0",
+    "R1+H2+k0",
+    "R1+H2+e2+k0",
+    "R1+omega1+D1+e1+k0",
+    "R1+omega2+k0",
+    "R1+T1+D1+k0",
+    "R2+k0"
+  ],
+  "findings": [
+    {
+      "code": "F01",
+      "verdict": "PASS",
+      "note": "动态实扫：attack53 为首空号；上界 r406 / 卷130-J108 / C0401，卷 131/J109 仍未落盘。查重：13 卷只提「算符底须允许所有独立不变量 / 不能只列几个方便的项」的要求，09 卷是 `+\\cdots` 示意模板，r287 是 `{1,R}` / `{F²,FF̃}` 控制组，14/15/16/17 卷自认完整 SMEFT/Warsaw 基底未做，attack52 只判 `R¹F¹` 一个单项"
+    },
+    {
+      "code": "F02",
+      "verdict": "PASS",
+      "note": "文法内穷举：构件 `R、T、omega、F、H、Psi、D`（量纲/形式次数/洛伦兹指标/内部表示全部现场取自 13/06/验证报告），约束 `Σd + 2m = 4`（`m` 为 `1/κ²` 幂）、`Σp + n_e ≤ 4`、洛伦兹指标偶数、内部伴随/F/H/费米配对 ⇒ 共 **60** 个合法 dim-4 算符签名，其中 A2.1–A2.8 基准在文法内复现 **6/8** 项（A2.7/A2.8 需 γ 矩阵与手征 SU(2)，属文法外，如实登记），额外 **54** 项"
+    },
+    {
+      "code": "F03",
+      "verdict": "PASS",
+      "note": "**决定性读数**：`gravity-gauge direct` 合法算符 **0** 条 —— `R·F` 因 `n_F` 奇数被内部单态门拦下，`R·F²`/`T²·F²` 因 `Σd≥6` 被维数门拦下；放宽内部配对后升 **4** 条（阳性对照有牙）。这与 attack52 用 Schur/不变空间秩 0 判 dim-4 `R∧F` 恒零是**两条独立路径同一结论**"
+    },
+    {
+      "code": "F04",
+      "verdict": "PASS",
+      "note": "attack52 的 BOUNDARY 被量化：dim-4 **确实存在**桥接项，但全部经 Higgs / 挠率 / 曲率自耦合 —— 引力-Higgs `10` 条（含 `ξ H†H R`，库内 `ξ=4911.63`）、引力-挠率 `15` 条、曲率平方 `1` 条、引力-费米 `3` 条、纯规范自耦合 `1` 条；**没有一条把引力与规范场直接混合**"
+    },
+    {
+      "code": "F05",
+      "verdict": "BOUNDARY",
+      "note": "价格表：每个额外桥接**场内容签名类**至少 +1 个新自由常数，本册得 **23** 类下界；签名层不区分同一场内容的不同指标收缩（`F²`/`FF̃`、`R²`/`R_{μν}R^{μν}` 各并为一类），故这是**下界**而非精确常数个数。49A 卷特定扩展模型参数账 `+7/+9`（SM 26–28 ⇒ 33–37）与之同向，撞 Ω5「自由常数 ≤1」与 r404 E07 `c=2, DEAD`。EC 四费米接触项 `−3κ²/8` 是**系数被 κ² 钉死、无自由参数**的对照，不算新常数"
+    },
+    {
+      "code": "F06",
+      "verdict": "FAIL",
+      "note": "被检命题「补全 dim-4 算符基底后就能找到零代价的引力-规范统一桥接」**不成立**：合法桥接项全部绕道 Higgs/挠率，且每条都要付新常数；承 attack51 的 E1(1:5:7) / E3(常数秩 0) 仍不翻转 ⇒ attack52 的「不宣称所有交叉项都不可能」被收窄为「有桥接、但桥的不是四力、且明码标价」"
+    },
+    {
+      "code": "F07",
+      "verdict": "BOUNDARY",
+      "note": "**诚实射程**：这是「有限构件字母表 + κ² 补偿阶 + 配对规则」下的**文法内枚举完整**，不是方法空间穷尽，也不是完整 SMEFT/Warsaw 基底 —— 未覆盖 Λ/μ² 等有量纲系数、Fierz/EOM 消冗、边界项、场重定义、非局域 1PI 项与更高表示；14 卷明写「没有宣称已经产生完整 SMEFT/WET 基底」，本册不冒充"
+    },
+    {
+      "code": "F08",
+      "verdict": "BOUNDARY",
+      "note": "红线：含引力四力大统一正确方程仍 0 条、无新物理方程理论体系、`0/22、UFT-3=0、L3=0、validated=0`、记分板 0/6 不变；r403 终判、attack50 `#31 = PRICED_OPEN`、attack51/52 结论均不变；不否证 ECSK/SM/GR；不计攻破数、不重判物理条目、不新增债务、不改任何历史字节"
+    }
+  ],
+  "verdict_counts": {
+    "PASS": 4,
+    "BOUNDARY": 3,
+    "FAIL": 1
+  },
+  "candidate_verdict": "BOUNDARY_CLOSED_WITH_PRICE_TABLE",
+  "terminal_verdict": "DIM4-GRAMMAR-ENUMERATED--GRAVITY-GAUGE-DIRECT-BRIDGE-COUNT-ZERO--HIGGS-AND-TORSION-BRIDGES-EXIST--EACH-COSTS-NEW-CONSTANTS--ATTACK52-BOUNDARY-QUANTIFIED",
+  "redlines": [
+    "0/22",
+    "UFT-3=0",
+    "L3=0",
+    "validated=0",
+    "no correct four-force GUT including gravity",
+    "no new physical equation theory system",
+    "attack = structural negative closure, not solved physics"
+  ],
+  "self_corrections": [
+    "The tempting claim \"dim-4 complete operator basis\" was rejected: vol13 itself says the independent combinations depend on field content, symmetry and identities, and vols 14/15/16/17 explicitly declare a complete SMEFT/Warsaw basis undone. This volume only claims grammar-completeness over a declared finite builder alphabet.",
+    "The form-degree gate is not independent of the mass-dimension gate because [e]=0 while deg(e)=1: vierbeins can pad any 4-form for free. The grammar therefore enumerates field-content signatures plus a kappa-squared compensation order m, rather than pretending to enumerate full 4-forms.",
+    "A direct R*F gravity-gauge monomial is killed twice independently: attack52 used Schur/equivariant invariant space rank 0, this volume uses the internal-adjoint pairing rule (n_F must be even) together with sum(d)=4. Relaxing the pairing rule produces direct bridges, so the detector is not trivially zero.",
+    "The EC four-fermion contact term -3kappa^2/8 is deliberately NOT counted as a new free constant because its coefficient is fixed by kappa^2; counting it would inflate the price table.",
+    "Baseline A2.1-A2.8 signatures are matched by exact key strings; signature formatting uses a compact kN notation for the kappa-squared order and eN for vierbein padding.",
+    "A parallel session wrote J109/volume131 constants into a scratch script but has not landed the volume; numbering guards use live lower bounds and record the absence rather than requiring it.",
+    "Baseline signature keys were first written in ad-hoc order (H2+R1+k0) while signature_key emits builder order (R1+H2+k0); corrected all eight keys against the BUILDERS sequence.",
+    "G05 originally contained an always-true all([]) is not None expression; replaced with real enumeration-scale and extra-operator checks.",
+    "The simplified grammar has no gamma matrices and no chiral SU(2) bookkeeping, so A2.7 Dirac kinetic and A2.8 Yukawa cannot be reproduced. Rather than loosening the rules to fake a full 8/8 baseline, the engine records 6/8 reproduced and declares the grammar a conservative under-approximation.",
+    "A stray undefined function name was left in the positive-controls dict inside a dead conditional branch; replaced by the real flag.",
+    "The EC contact-term anchor first used 3kappa^2/2 while vol02 writes kappa^2/2 for the torsion solution; corrected to the literal on disk.",
+    "A KeyError on gravity_fermion was fixed by using has_gravity and has_fermion instead of adding a redundant key.",
+    "The count 23 was initially described as an exact number of new constants. Because the grammar counts field-content signatures and collapses F^2/F Ftilde and R^2/R_mn R^mn into single classes, it is a LOWER BOUND on signature classes, not an exact independent-coupling count; the wording and JSON interpretation field were corrected."
+  ],
+  "guards": [
+    {
+      "code": "G01",
+      "ok": true,
+      "note": "dynamic lower-bound scan: attack52 prior, attack53 first free; r406+ / vol130+ / J108+ / C0401+, volume131 still absent"
+    },
+    {
+      "code": "G02",
+      "ok": true,
+      "note": "all fourteen declared input files exist on disk"
+    },
+    {
+      "code": "G03",
+      "ok": true,
+      "note": "live dimension anchors [e]=0 [omega]=1 [T]=1 [R]=2, [1/kappa^2]=+2, A2.1-A2.16 dim-4 rule"
+    },
+    {
+      "code": "G04",
+      "ok": true,
+      "note": "vol13 grammar requirement, r287 partial-list control, vol09 +... template, vol14 self-declared incomplete SMEFT basis"
+    },
+    {
+      "code": "G05",
+      "ok": true,
+      "note": "finite grammar enumerated 176 signatures, 60 legal operators, 54 extra"
+    },
+    {
+      "code": "G06",
+      "ok": true,
+      "note": "grammar reproduces 6/8 A2 baseline signatures; extra operators exist; xi H^2 R non-minimal coupling present. A2.7/A2.8 need gamma/chiral structure outside this grammar (honest under-approximation)"
+    },
+    {
+      "code": "G07",
+      "ok": true,
+      "note": "gravity-gauge direct dim-4 bridge count 0; relaxing internal pairing makes it 4 (detector has teeth)"
+    },
+    {
+      "code": "G08",
+      "ok": true,
+      "note": "Higgs bridge, torsion bridge and curvature-square operators all present; xi=4911.63 registered on disk"
+    },
+    {
+      "code": "G09",
+      "ok": true,
+      "note": "each extra bridge costs new constants; vol49A +7/+9 -> 33-37, Omega5<=1, r404 E07 c=2 DEAD; EC four-fermion contact anchored"
+    },
+    {
+      "code": "G10",
+      "ok": true,
+      "note": "state machine: dim-4 bridges exist but none mixes gravity with gauge; five counterfactuals flip"
+    },
+    {
+      "code": "G11",
+      "ok": true,
+      "note": "r403 terminal verdict, attack51 E1/E3 and attack52 dim-4 zero theorem on disk"
+    },
+    {
+      "code": "G12",
+      "ok": true,
+      "note": "all read-only inputs unchanged during engine runtime (md5 before/after)"
+    },
+    {
+      "code": "G13",
+      "ok": true,
+      "note": "no prior attack/J-series engine import; positive control fires"
+    },
+    {
+      "code": "G14",
+      "ok": true,
+      "note": "no dollar-brace placeholder, no hard-coded guard True literals"
+    },
+    {
+      "code": "G15",
+      "ok": true,
+      "note": "attack51/52 redlines remain on disk"
+    }
+  ],
+  "guard_pass": 15,
+  "guard_total": 15,
+  "exit": 0
+}

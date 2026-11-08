@@ -1,0 +1,54 @@
+attack50 / 2026-11-09 / #30 #31 price table and debt-closure judgement
+
+[A] dynamic numbering
+  {'attack_prior_max': 49, 'attack_current': 50, 'r_max': 406, 'volume_max': 130, 'j_max': 108, 'c_max': 401, 'post_j100_volumes': [[123, 101], [124, 102], [125, 103], [126, 104], [127, 105], [128, 106], [129, 107], [130, 108]], 'preexisting_attack50': []}
+
+[B] #30 exact arithmetic
+  v2=14/15 Vmin=-28/45 u4/v4=225/196 coef=5/7 target=5/7 residual=0
+  absent_in_105=['u↔v', '真空归一', 'u⁴=(15/14)²v⁴', 'ρ_vac', '(28/45)(15/14)²']
+  present_in_113=['v²=(14/15)u²', 'u⁴=(15/14)²v⁴', '(28/45)(15/14)²', '(5/7) v⁴']
+  status30=CLOSED_BY_EXTERNAL_DERIVATION__HISTORIC_105_UNCHANGED
+
+[C] #31 price table
+  shape_r={'1': '2', '2': '7/5', '5': '10/11', '7/3': '22/17'}
+  normalisation_r=['5'] distinct=True overloaded=True
+  f_A_in_119=False f_A_in_122=True sources=['122_第79轮_登记册第一批25题_J100_求导机检精算判决_成立18否4无定义1不可达1缺仪器1_实测对照与一方程记分板0比6_2026-11-08.md', 'README.md', '卷宗总表.md']
+  status31=PRICED_OPEN
+
+[D] debt ledger
+  {'total': 31, 'accounting': '已闭 10＋转并 1＋仍开 20 ＝ 31', 'new_debt_claims': [(101, 0), (102, 0), (103, 0), (104, 0)], 'no_new_debt_volumes': [106, 107, 108], 'scoreboard_0_6_volumes': [101, 102, 103, 104, 105, 106, 107, 108], 'parallel_touch': [], 'no_new_debt': True, 'scoreboard_0_6': True, 'debt22_precedent': 'CLOSED_BY_EXTERNAL_ERRATA (attack49), historic row unchanged'}
+
+[E] findings {'PASS': 4, 'BOUNDARY': 3, 'FAIL': 1}
+  PASS F01 : 动态实扫：attack50 为首空号；当前上界 r406 / 卷130-J108 / C0401，J101+ 共 8 卷，无预存 2026-11-09 attack50 产物
+  PASS F02 : #30 算术链精确复现：v²=14/15、V_min=−28/45、u⁴/v⁴=(15/14)²=225/196，(28/45)(15/14)²=5/7 残差 0（Fraction）；卷105 五针词 0 命中、卷113 四针词 4/4 命中
+  PASS F03 : #30 = CLOSED_BY_EXTERNAL_DERIVATION__HISTORIC_105_UNCHANGED：开债陈述「105 未显式写出」仍为真，缺口由卷113 §6.1 的显式换算补齐；不改卷105 / 卷113 / 卷122 / 卷宗总表任何字节，后续引用须并读本册指针
+  PASS F04 : #31 价格表：字面 f_A 在卷119 命中 0；形状族 r(A)=(5+A)/(1+2A) 在 A=1,2,5,7/3 给 2, 7/5, 10/11, 22/17 四值互异；归一族 f→A·f 恒给 r=5；同一字母 A 在卷119 内两套函数 ⇒ 符号同名异义
+  BOUNDARY F05 : #31 = PRICED_OPEN 不销：需交付显式 f_A 且输出非矩比值且 V>0 的数值；r405 给出前三矩仍余 1 维连续形状自由度 m₃(t)=400−6t，r406 判补一条 f 形状/归一原理使 s=2 超 Omega5-S 配额、ACCEPTED 0 条出口
+  BOUNDARY F06 : 债务账现值：总账 31（已闭 10＋转并 1＋仍开 20）不变；J101–J108 新债 0、记分板恒 0/6、均未触及 #30/#31；#22 已由 attack49 外挂指针销账但卷宗总表历史行仍列仍开，登记层销账不改写历史账表
+  FAIL F07 : 本次销账与定价不改变物理终判：含引力四力大统一正确方程仍 0 条；没有新的物理方程理论体系；0/22、UFT-3=0、L3=0、validated=0 保持；r403 终判 NO-CORRECT-FOUR-FORCE-GUT 不变
+  BOUNDARY F08 : 本册不计攻破数、不重判物理条目、不新造方程；只关闭 1 条口径债（#30）并给 1 条表达债（#31）标价，且保留全部历史字节
+
+[F] terminal verdict
+  DEBT30-CLOSED-BY-EXTERNAL-DERIVATION--HISTORIC-105-UNCHANGED--DEBT31-PRICED-OPEN--PHYSICS-VERDICT-UNCHANGED
+  candidate_verdict=PARTIAL_CLOSURE
+
+[guards] 17/17
+  PASS G01 : dynamic lower-bound scan: attack49 prior, attack50 first free; r406+ / volume129+ / J107+ / C0401+ (no snapshot equality)
+  PASS G02 : all declared inputs exist and J101+ volume chain scanned live
+  PASS G03 : Fraction arithmetic exact: (28/45)(15/14)^2 = 5/7 with negative control
+  PASS G04 : volume105 has no explicit u<->v conversion; token detector fires on volume122 and on injected text
+  PASS G05 : volume113 states the full u<->v chain in 4/4 literal anchors
+  PASS G06 : volume122 opens #30/#31 (29->31); ledger still lists both open, total 31
+  PASS G07 : shape family gives 4 distinct r; normalisation family gives constant 5; A overloaded
+  PASS G08 : literal f_A absent in 119 and present in the debt-opening volume; no hard-coded whitelist of other volumes
+  PASS G09 : r405 moment insufficiency and r406 no-closure / Omega5-S anchors present
+  PASS G10 : J101+ chain declares no new debt, keeps 0/6, never touches #30/#31
+  PASS G11 : closure state machine baseline: 30 closed by errata, 31 priced open
+  PASS G12 : five counterfactual controls all flip the closure verdict (guards have teeth)
+  PASS G13 : arithmetic detector, shape-family detector and injection control are non-degenerate
+  PASS G14 : all read-only inputs unchanged during engine runtime (md5 before/after)
+  PASS G15 : no prior attack/J-series engine import; positive control fires
+  PASS G16 : no dollar-brace placeholder, no hard-coded guard True literals
+  PASS G17 : r403 terminal verdict, no-new-system ledger and attack49 errata precedent on disk
+
+EXIT=0

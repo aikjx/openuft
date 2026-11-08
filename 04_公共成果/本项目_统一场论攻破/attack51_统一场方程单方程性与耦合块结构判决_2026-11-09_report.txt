@@ -1,0 +1,54 @@
+attack51 / 2026-11-09 / UFE-1 single-equation and coupling-block verdict
+
+[A] dynamic numbering
+  {'attack_prior_max': 50, 'attack_current': 51, 'r_max': 406, 'volume_max': 130, 'j_max': 108, 'c_max': 401, 'preexisting_attack51': []}
+
+[B] single equation
+  declared=1 field_level=5 group_level=7 ratio=1:5:7
+  sections=[('1', '自旋联络'), ('2', ' vierbein '), ('3', '内部规范势'), ('4', ' Higgs 场'), ('5', '物质场')]
+  tags=['C', 'D', 'E', 'H', 'YM']
+  covered=['A1', 'A2', 'A3', 'H', 'Psi', 'e', 'omega'] exact=True
+
+[C] coupling blocks
+  blocks=['EC', 'YM', 'Higgs', 'Dirac', 'Yukawa'] segments=4 gravity=1 internal=1 CROSS=0 control=True
+
+[D] coupling-constant rank
+  counts=[3, 2, 6, 3, 3, 4, 4, 1] total=26 shape=[5, 33] rank_field=5 rank_const=0 injected=1
+
+[E] state machine
+  {'single_eq_verdict': 'NOTATION-LEVEL-ONLY', 'unification_verdict': 'NOT-A-DYNAMICAL-UNIFICATION', 'counterfactuals': {'inject_curvature_cross_term': 'RECHECK', 'let_one_constant_be_solved': 'RECHECK', 'drop_c3_failure': 'RECHECK', 'fake_six_equations': 'RECHECK', 'fake_cross_term': 'RECHECK'}, 'all_controls_fire': True}
+
+[F] findings {'PASS': 4, 'BOUNDARY': 3, 'FAIL': 1}
+  PASS F01 : 动态实扫：attack51 为首空号；上界 r406 / 卷130-J108 / C0401；查重确认全库无「对 00 §2.1 主方程做单方程性/耦合块/常数秩」的机验册
+  PASS F02 : 单方程性定理：00 §2.1 把统一场方程写成 1 条 `δS/δΦ=0`（`\tag{UFE-1}`）；02 现场解析出 §1–§5 共 5 条独立 E-L 方程（§6 自述「五个方程」），按 `A^(i), i=1..3` 展开为 7 条规范群级方程 ⇒ 1 : 5 : 7，七场组 `A1,A2,A3,H,Psi,e,omega` 全覆盖无遗漏
+  PASS F03 : 耦合块定理：01 §2 现场解析出 5 块加号直和 `EC+YM+Higgs+Dirac+Yukawa`；00 §2.1 作用量按 `\\[2pt]` 切段后，同时含引力曲率 `R^{ab}` 与内部曲率 `F^(i)` 的交叉项 **0** 条（引力段 1 / 规范段 1 各自独立存在）；00 §2.2 自己勘误「不能推出 ⋆D⋆F=J」
+  PASS F04 : 常数秩定理：01 §3.3 现场求和 `3+2+6+3+3+4+4+1 = 26` 个自由参数（原文「不是算出来的」）；变分雅可比 5×(7+26) 中场块精确秩 5、耦合常数列全零秩 **0** ⇒ `δS/δΦ=0` 在结构上解不出任何一个耦合常数（注入 1 个可变常数后秩升为 1）
+  BOUNDARY F05 : 与既有册分工（防重复）：r207 = 00 结构/量纲/树级关系名实审计（19 条、44/44 守卫）；r355 = 02 外形式恒等式与 Cartan 秩机核；attack37 = 1+1D/FLRW toy 变分；attack11/UFE1 判定册 = M1–M5 与 26 参数账；r403 U11 = `COMMON-ACTION-NOT-UNIFIED`；本册只做首次「单方程性 + 耦合块 + 常数秩」机器化，不重跑它们的判据
+  FAIL F06 : 被检命题「UFE-1 是一个统一场论方程」**不成立**：它把 ECSK 引力与 SM 场并排装进一个积分号，是记号层（notation）统一；无引力↔规范曲率交叉项、无单一曲率方程、耦合常数不可由方程导出 ⇒ 动力学层未统一。r403 U11 的 C0/C1/C2 PASS / C3 FAIL 与此同向
+  BOUNDARY F07 : 诚实边界：00 §0/§2.2 **自己已声明**「本文件不构成统一场论已经完成的声明」并撤回 UFE-1′，本册是把自陈机器化，不是新否定；不否证 ECSK/SM/GR 物理，T1–T8、量纲 A2.1–A2.16、反常 5/5 零、验证报告 39 PASS 仍成立；00 §2.1 的 `κ²=8πG/c⁴` 是外部输入 G 的定义式重述，不是统一成果
+  BOUNDARY F08 : 红线与治理：含引力四力大统一正确方程 0 条、无新物理方程理论体系、`0/22、UFT-3=0、L3=0、validated=0`、一方程记分板 0/6 全部不变；本册不计攻破数、不新造方程、不重判物理条目、不新增债务、不改任何历史字节
+
+[G] terminal verdict
+  UFE-1-IS-NOTATION-LEVEL-UNIFICATION--FIVE-EL-EQUATIONS-BEHIND-ONE-BOX--ZERO-GRAVITY-GAUGE-CURVATURE-CROSS-TERM--COUPLING-CONSTANT-JACOBIAN-RANK-ZERO
+  candidate_verdict=STRUCTURAL_NEGATIVE_CLOSURE
+
+[guards] 17/17
+  PASS G01 : dynamic lower-bound scan: attack50 prior, attack51 first free; r406+ / vol130+ / J108+
+  PASS G02 : all ten declared input files exist on disk
+  PASS G03 : 00 section 2.1 declares ONE boxed equation deltaS/deltaPhi=0 with Phi and kappa anchors
+  PASS G04 : 02 has exactly five variation sections 1-5, section 6 says "five equations", and boxed tags C/E/YM/H/D are present
+  PASS G05 : field-level 5 EL equations expand to 7 group-level equations covering all 7 field groups
+  PASS G06 : 01 section 2 parses the five additive action blocks live from the S=... line
+  PASS G07 : zero R-wedge-F cross terms while both curvatures occur separately; injection control fires
+  PASS G08 : 00 self-declares vanishing cross commutator, exact curvature split, the UFE-1 prime erratum and the no-completion statement
+  PASS G09 : 01 section 3.3 parses 3+2+6+3+3+4+4+1=26 declared input parameters, not derived
+  PASS G10 : Fraction Gaussian elimination: field Jacobian rank 5, coupling-constant block rank 0, injected control rank 1
+  PASS G11 : equation-to-field incidence matrix is consistent with parsed section titles
+  PASS G12 : closure state machine: one notation-level equation, not a dynamical unification; five counterfactuals all flip to RECHECK
+  PASS G13 : cross-document anchors: r403 U11/C3, r207 structure, r355 forms, attack37 toy, UFE1 M1-M5, attack50 redlines, 47-check verification report
+  PASS G14 : all read-only inputs unchanged during engine runtime (md5 before/after)
+  PASS G15 : no prior attack/J-series engine import; positive control fires
+  PASS G16 : no dollar-brace placeholder and no hard-coded guard True literals
+  PASS G17 : terminal redlines from r403 and attack50 remain on disk
+
+EXIT=0

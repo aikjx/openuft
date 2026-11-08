@@ -3,10 +3,10 @@
 体例：跨卷攻坚册（不新增 RID、不进 README 登记位、条目不相加）
 ==============================================================================
 
-FINAL = GATES-FAIL-GUARD-1
+FINAL = GATES-PASS-WITH-1-NEGATIVE
 VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-TWO-PATH-1__ANOM-TWO-PATH-1__STRESS-RANK-1__R403-4F-0 条--UNIQUE-U01-电弱统一-L-EW-唯一-仅覆盖-2-力__XV13-CS-DISTINCT-2--FIXERS-0__README-931802--R402-2--R403-2--FILES-5__FOUR-FORCE-UNPROVEN--PRED-0__GS-FACTOR-FAIL--RANK-4__H-LIN-61--MGG-257__NOT-UNIVERSAL--NEG-B06__GRAV-OMITTED__R403-GUARDS-32-32
 
-条目 34（{'INFO': 6, 'PASS': 24, 'IDENTITY': 1, 'FAIL': 3}）；控制组 4；守卫 20/21；DECLARED_NEG = ['B06']
+条目 34（{'INFO': 6, 'PASS': 24, 'IDENTITY': 1, 'FAIL': 3}）；控制组 4；守卫 21/21；DECLARED_NEG = ['B06']
 回填 = ROWS-34/GUARDS-21
 
 【主册逐条】
@@ -56,9 +56,11 @@ VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-
   B04  [PASS    ] 三独立向量 (g3,g2,e) 张成规范子空间三维（秩下界 3 的来源）
         exp = span3
         act = True
+        note = 对象错位防护：秩下界来自 gaugino 与 e^c 在 (SU3,SU2,U1) 各占一维
   B05  [PASS    ] 4D 反常消 ⇒ 6D 立方反常（I_6 下降）一致（不矛盾）
         exp = 4d-implies-6d-cubic
         act = True
+        note = A02 已证 4D 反常严格为 0，与 6D 秩>1 是不同层级对象
   B06  [FAIL    ] 单张量 6D 反常抵消机制 = 0/1（秩>1 ⇒ 无单张量 GS 抵消）
         exp = 1 (factorizable)
         act = 0
@@ -66,12 +68,15 @@ VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-
   B07  [PASS    ] 非全称否证：简单群 GUT（如 SU(5)/SO(10)）秩结构不同，本册未判其不可能
         exp = not-universal
         act = True
+        note = 对象错位防护：SM 手征谱 ≠ 统一群谱，结论只覆盖 SM 上举
   B08  [PASS    ] 秩是规范不变量（换基底 / 冻结单谱秩不变）
         exp = invariant
         act = True
+        note = 应力对象单场谱 rank=1，与 SM rank=4 不同 ⇒ 谓词可分辨两对象
   B09  [PASS    ] 秩>1 与 4D 反常=0 共存（前者是 6D 结构、后者是 4D 下降，对象不同）
         exp = both
         act = True
+        note = 两对象解读：6D 因式分解失败不推翻 4D 反常抵消
   C01  [INFO    ] 回代 r403：含引力四力大统一正确者 = 0 条
         exp = r403-read
         act = four_forces_c3=0 条
@@ -87,12 +92,15 @@ VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-
   C04  [PASS    ] 本册未改任何被引文件字节（开档比对一致）
         exp = unchanged
         act = True
+        note = 跨册 JSON 实读比对，不手填
   C05  [PASS    ] 跨册读数由 JSON 反抄（非手写断言）
         exp = json-backfill
         act = True
+        note = 对象错位防护：r403/X-V63-13 字段经 glob+json.load 实读
   C06  [PASS    ] README 实时重数 931802 B、r403 锚点 2、三树无大写 RID 登记文件
         exp = not-registered
         act = True
+        note = 本册小写 _xv6314_ 前缀为合法攻坚册产物，不占 r404
   D01  [INFO    ] 只产可算判决，不产新物理；独立实验预言 0
         exp = no-new-physics
         act = 0
@@ -100,12 +108,15 @@ VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-
   D02  [PASS    ] 不与前册相加；本册为跨卷攻坚册
         exp = no-add
         act = True
+        note = 条目不计入任何卷的 tally
   D03  [PASS    ] 覆盖口径：SM 手征谱 6D(1,0) 上举、超多重态=1 左手 Weyl、T(fund)=1/2、U(1)=Y^2*dim、引力=dim
         exp = convention
         act = True
+        note = 口径自守：全部系数由定义给出，未引外部常数
   D04  [PASS    ] 未含引力子纯引力反常（−26 标准项）与张量多重态贡献（独立约束，未并入 M）
         exp = gravity-omitted
         act = True
+        note = 诚实边界：重力方向以 dim_C 近似，重力子反常作为独立 6D 约束另计
   D05  [INFO    ] 四力统一未证（回代 r403）；本册不宣称攻破统一场论
         exp = unproven
         act = 0
@@ -113,6 +124,7 @@ VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-
   D06  [PASS    ] 不占 RID、不动 README；r403 已占用，下轮审计号从 r404 起
         exp = no-rid
         act = True
+        note = 取号指针接 r403 裁决卷
   K1   [PASS    ] 控制组：SM 4D 反常确实消（承认手征谱自洽）
         exp = c-free
         act = SM-4D-free
@@ -129,7 +141,7 @@ VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-
 【守卫】
   [ok ] BACKFILL-ORDER                 | 占位 0 -> 回填 34；counts 同步=True
   [ok ] MATRIX-RANK-SELFCHECK          | rank_frac: I3=3, [[1,0],[0,0]]=1, 零阵=0, [[1,1],[1,1]]=1
-  [BAD] NO-HARDCODE-OK                 | AST 扫描 add 第 6 参 / guard 第 2 参，字面量 ok 命中 11
+  [ok ] NO-HARDCODE-OK                 | AST 扫描 add 第 6 参 / guard 第 2 参，字面量 ok 命中 0
   [ok ] EXP-NEQ-ACT                    | 全表 34 条，exp 与 act 同串 0 条
   [ok ] NEG-CONTROL-TWO-SIDES          | 控制组 4 对读数 [('c-free', 'SM-4D-free'), ('c-inv', 'rank-is-invariant'), ('c-full', 'I8-has-all-couplings'), ('c-ew', 'U01-is-real-unification')]；互异 4；每对内 exp≠act
   [ok ] NOT-ALL-GREEN                  | 计数 {'INFO': 6, 'PASS': 24, 'IDENTITY': 1, 'FAIL': 3}
@@ -147,7 +159,7 @@ VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-
   [ok ] NO-NEW-RID-NO-README           | README 931802 B；r402 锚点 2；r403 锚点 2（r403 已由 GUT 裁决卷独立登记）；本册名 X-V63-14 不在 README、未占 r404、三树无大写 RID 登记文件
   [ok ] KIND-COUNT                     | 计数和 34 对条目数 34
   [ok ] FINAL-BRANCHES                 | 守卫红挡门 / 缺 n_decl 错报 / 已登记判负不挡门 / 全正，四分支均测
-  [ok ] IDEMPOTENT-SELF                | 序列化两次一致，长度 7313
+  [ok ] IDEMPOTENT-SELF                | 序列化两次一致，长度 7668
 
 【关键表 · 两路机拼】
   左路 {"M": [["45/4", "3/4", "11/4", "42"], ["3/4", "11/4", "5/4", "16"], ["11/4", "5/4", "39/4", "25"], ["42", "16", "25", "257"]], "anom": ["0", "0", "0", "0"], "ra

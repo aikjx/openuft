@@ -1,0 +1,50 @@
+attack53 / 2026-11-09 / dim-4 grammar enumeration and bridge price
+
+[A] numbering
+  {'attack_prior_max': 52, 'attack_current': 53, 'r_max': 406, 'volume_max': 130, 'j_max': 108, 'c_max': 401, 'volume131_md': [], 'preexisting_attack53': []}
+
+[B] grammar
+  {'builders': [['R', '2', 2, 2, 'singlet', 'gravity'], ['T', '1', 2, 1, 'singlet', 'gravity'], ['omega', '1', 1, 2, 'singlet', 'gravity'], ['F', '2', 2, 0, 'adjoint', 'gauge'], ['H', '1', 0, 0, 'su2doublet', 'matter'], ['Psi', '3/2', 0, 0, 'fermion', 'matter'], ['D', '1', 0, 1, 'singlet', 'derivative']], 'constraints': ['sum(d)+2m=4', 'sum(p)+n_e<=4', 'lorentz_indices_even', 'adjoint_F_pairs', 'su2_H_pairs', 'fermion_number_even', 'nonempty'], 'max_n': 4, 'max_e': 4, 'max_m': 2, 'total_signatures': 176, 'legal_operators': 60, 'in_baseline': 6, 'extra': 54, 'honesty': 'grammar-complete, NOT method-space complete; no Fierz/EOM/boundary-term/field-redefinition reduction, no nonlocal 1PI'}
+
+[C] baseline
+  {'R1+e2+k1': 'A2.1 Palatini epsilon R e e / 4kappa^2', 'e4+k2': 'A2.2 cosmological term (kappa-only reading; Lambda not in grammar)', 'F2+k0': 'A2.3 Yang-Mills F wedge *F', 'H2+D2+k0': 'A2.4 Higgs kinetic (DH)^2', 'H2+k1': 'A2.5 Higgs mass (mu^2 replaced by 1/kappa^2 in grammar)', 'H4+k0': 'A2.6 Higgs quartic lambda H^4', 'Psi2+D1+k0': 'A2.7 Dirac kinetic (needs gamma matrix, outside grammar)', 'H1+Psi2+k0': 'A2.8 Yukawa (needs chiral SU(2), outside grammar)'}
+
+[D] price table
+  {'gravity_gauge_direct': 0, 'gravity_higgs_bridge': 10, 'gravity_torsion': 15, 'gravity_fermion': 3, 'curvature_square': 1, 'gauge_self': 1}
+  min_new_constants=23 direct=0 relaxed_direct=4
+
+[E] state machine
+  {'verdict': 'BRIDGES-EXIST-BUT-NONE-MIX-GRAVITY-WITH-GAUGE', 'counterfactuals': {'relax_internal_pairs': 'RECHECK', 'no_higgs_bridge': 'RECHECK', 'no_extra_operators': 'RECHECK', 'drop_baseline': 'RECHECK', 'fake_direct_bridge': 'RECHECK'}, 'all_controls_fire': True}
+
+[F] findings {'PASS': 4, 'BOUNDARY': 3, 'FAIL': 1}
+  PASS F01 : 动态实扫：attack53 为首空号；上界 r406 / 卷130-J108 / C0401，卷 131/J109 仍未落盘。查重：13 卷只提「算符底须允许所有独立不变量 / 不能只列几个方便的项」的要求，09 卷是 `+\cdots` 示意模板，r287 是 `{1,R}` / `{F²,FF̃}` 控制组，14/15/16/17 卷自认完整 SMEFT/Warsaw 基底未做，attack52 只判 `R¹F¹` 一个单项
+  PASS F02 : 文法内穷举：构件 `R、T、omega、F、H、Psi、D`（量纲/形式次数/洛伦兹指标/内部表示全部现场取自 13/06/验证报告），约束 `Σd + 2m = 4`（`m` 为 `1/κ²` 幂）、`Σp + n_e ≤ 4`、洛伦兹指标偶数、内部伴随/F/H/费米配对 ⇒ 共 **60** 个合法 dim-4 算符签名，其中 A2.1–A2.8 基准在文法内复现 **6/8** 项（A2.7/A2.8 需 γ 矩阵与手征 SU(2)，属文法外，如实登记），额外 **54** 项
+  PASS F03 : **决定性读数**：`gravity-gauge direct` 合法算符 **0** 条 —— `R·F` 因 `n_F` 奇数被内部单态门拦下，`R·F²`/`T²·F²` 因 `Σd≥6` 被维数门拦下；放宽内部配对后升 **4** 条（阳性对照有牙）。这与 attack52 用 Schur/不变空间秩 0 判 dim-4 `R∧F` 恒零是**两条独立路径同一结论**
+  PASS F04 : attack52 的 BOUNDARY 被量化：dim-4 **确实存在**桥接项，但全部经 Higgs / 挠率 / 曲率自耦合 —— 引力-Higgs `10` 条（含 `ξ H†H R`，库内 `ξ=4911.63`）、引力-挠率 `15` 条、曲率平方 `1` 条、引力-费米 `3` 条、纯规范自耦合 `1` 条；**没有一条把引力与规范场直接混合**
+  BOUNDARY F05 : 价格表：每个额外桥接**场内容签名类**至少 +1 个新自由常数，本册得 **23** 类下界；签名层不区分同一场内容的不同指标收缩（`F²`/`FF̃`、`R²`/`R_{μν}R^{μν}` 各并为一类），故这是**下界**而非精确常数个数。49A 卷特定扩展模型参数账 `+7/+9`（SM 26–28 ⇒ 33–37）与之同向，撞 Ω5「自由常数 ≤1」与 r404 E07 `c=2, DEAD`。EC 四费米接触项 `−3κ²/8` 是**系数被 κ² 钉死、无自由参数**的对照，不算新常数
+  FAIL F06 : 被检命题「补全 dim-4 算符基底后就能找到零代价的引力-规范统一桥接」**不成立**：合法桥接项全部绕道 Higgs/挠率，且每条都要付新常数；承 attack51 的 E1(1:5:7) / E3(常数秩 0) 仍不翻转 ⇒ attack52 的「不宣称所有交叉项都不可能」被收窄为「有桥接、但桥的不是四力、且明码标价」
+  BOUNDARY F07 : **诚实射程**：这是「有限构件字母表 + κ² 补偿阶 + 配对规则」下的**文法内枚举完整**，不是方法空间穷尽，也不是完整 SMEFT/Warsaw 基底 —— 未覆盖 Λ/μ² 等有量纲系数、Fierz/EOM 消冗、边界项、场重定义、非局域 1PI 项与更高表示；14 卷明写「没有宣称已经产生完整 SMEFT/WET 基底」，本册不冒充
+  BOUNDARY F08 : 红线：含引力四力大统一正确方程仍 0 条、无新物理方程理论体系、`0/22、UFT-3=0、L3=0、validated=0`、记分板 0/6 不变；r403 终判、attack50 `#31 = PRICED_OPEN`、attack51/52 结论均不变；不否证 ECSK/SM/GR；不计攻破数、不重判物理条目、不新增债务、不改任何历史字节
+
+[G] terminal
+  DIM4-GRAMMAR-ENUMERATED--GRAVITY-GAUGE-DIRECT-BRIDGE-COUNT-ZERO--HIGGS-AND-TORSION-BRIDGES-EXIST--EACH-COSTS-NEW-CONSTANTS--ATTACK52-BOUNDARY-QUANTIFIED
+  candidate_verdict=BOUNDARY_CLOSED_WITH_PRICE_TABLE
+
+[guards] 15/15
+  PASS G01 : dynamic lower-bound scan: attack52 prior, attack53 first free; r406+ / vol130+ / J108+ / C0401+, volume131 still absent
+  PASS G02 : all fourteen declared input files exist on disk
+  PASS G03 : live dimension anchors [e]=0 [omega]=1 [T]=1 [R]=2, [1/kappa^2]=+2, A2.1-A2.16 dim-4 rule
+  PASS G04 : vol13 grammar requirement, r287 partial-list control, vol09 +... template, vol14 self-declared incomplete SMEFT basis
+  PASS G05 : finite grammar enumerated 176 signatures, 60 legal operators, 54 extra
+  PASS G06 : grammar reproduces 6/8 A2 baseline signatures; extra operators exist; xi H^2 R non-minimal coupling present. A2.7/A2.8 need gamma/chiral structure outside this grammar (honest under-approximation)
+  PASS G07 : gravity-gauge direct dim-4 bridge count 0; relaxing internal pairing makes it 4 (detector has teeth)
+  PASS G08 : Higgs bridge, torsion bridge and curvature-square operators all present; xi=4911.63 registered on disk
+  PASS G09 : each extra bridge costs new constants; vol49A +7/+9 -> 33-37, Omega5<=1, r404 E07 c=2 DEAD; EC four-fermion contact anchored
+  PASS G10 : state machine: dim-4 bridges exist but none mixes gravity with gauge; five counterfactuals flip
+  PASS G11 : r403 terminal verdict, attack51 E1/E3 and attack52 dim-4 zero theorem on disk
+  PASS G12 : all read-only inputs unchanged during engine runtime (md5 before/after)
+  PASS G13 : no prior attack/J-series engine import; positive control fires
+  PASS G14 : no dollar-brace placeholder, no hard-coded guard True literals
+  PASS G15 : attack51/52 redlines remain on disk
+
+EXIT=0
