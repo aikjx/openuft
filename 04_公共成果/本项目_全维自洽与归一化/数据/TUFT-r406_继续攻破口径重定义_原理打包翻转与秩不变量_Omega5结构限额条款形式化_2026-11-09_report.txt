@@ -1,0 +1,87 @@
+== r406 继续攻破口径重定义：打包翻转 / 秩不变量 / Omega5-S 条款 ==
+VERDICT PRINCIPLE-BUNDLING-FLIPS-VERDICT--RANK-IS-INVARIANT--OMEGA5-S-DEFINED--E09-CANNOT-REVIVE
+ENTRIES 12 {'PASS': 4, 'BOUNDARY': 2, 'INFO': 3, 'CORRECTED': 1, 'FAIL': 2}
+GUARDS 18/18
+
+[PASS] A01 | 继承锚点与留白实读
+    r404 判定册 判定_TUFT-r404_统一所有力_同源化最小代价下界与唯一生存通道_2026-1 3/3；r405 判定册 判定_TUFT-r405_继续攻破唯一通道_前三矩充分性判定_矩反例与协同上界及E0 3/3；r405 数据 md TUFT-r405_继续攻破唯一通道_前三矩充分性判定_矩反例与协同上界及E09重新 2/2；attack42 判定册 判定_attack42_攻破㉞_C2硬门四类机器分桶与双锚点可执行化_2026-11 3/3；method_F method_F_第一性判据.md 2/2；卷116 终卷 116_终卷_第75轮_封卷_终态判定B_no_go_五条逃逸口状态_债务总账1至2 3/3；tuft 历史治理缺口 tuft_第一性归一化总览.md 2/2；r15 自由度预算 判定_TUFT-r15-自由度预算口径与四路代价重算_2026-10-07.md 2/2
+[PASS] B01 | 发现：口径重定义不是无害记账，会翻转 r405 的判决
+    基准（不打包）单点 SURVIVE 0 / 两点协同 SURVIVE 0；打包强度 b=1 时单点 SURVIVE 1、两点协同 SURVIVE 1（翻转组 ['E04+E09']）、两点上界叠加 SURVIVE 0；b=2/3 时协同 SURVIVE 分别 0/0。⇒ 只有「打包 b=1 + 协同」才救得活 E09，这是发现而非裁决。
+[BOUNDARY] B02 | 打包模型的射程
+    bundle 只把「原理条数」压到 b，不改 c / f / c2 / w3 / excl；这是口径重定义的最小形式，未建模「打包同时增强能力」的更强声称。
+[INFO] B03 | 打包强度扫描表（6 组，可复算）
+    b=1: 单点 1 / 两点上界 0 / 两点协同 1 / 翻转组 ['E04+E09']；b=2: 单点 0 / 两点上界 0 / 两点协同 0 / 翻转组 []；b=3: 单点 0 / 两点上界 0 / 两点协同 0 / 翻转组 []。翻转阈值为 b=1 且仅在协同口径，说明「救活通道」需要两个口径让步同时发生。
+[PASS] J01 | 秩不变量定理：条数不是不变量，秩是
+    构造 k 条独立原理的约束雅可比 J_k（k x (k+1)，前 k 列单位阵 + 共享末列），Fraction 精确高斯消元给 rank=[1, 2, 3, 4, 5, 6]；打包后物理约束未变、秩仍 [1, 2, 3, 4, 5, 6]；而口径声称的结构自由度恒为 1，差 [0, 1, 2, 3, 4, 5] 随 k 线性增长。⇒ 把配额的计数对象放在「原理条数」上可被任意重分组击穿；放在 rank(J) 上则在重分组下不变。
+[CORRECTED] J02 | r404 的 s<=1 是自设配额，本册给出条款定义
+    r404 §五把 c<=1、s<=1 作为出口代价配额（自设，非 Omega5 原文）；r405 用它把 E09 从 s=1 提到 s=2 判死，但明确拒判「原理能力单位」。本册把 s 定义为 rank(J_constraint)（独立约束数 / 独立外部输入数），并规定声称值必须等于该不变量，否则只是重贴标签。
+[FAIL] V01 | 打包会制造 attack42 的 C2 假阳性
+    取 n_hit=k（每条原理产出 1 个可检验输出）、n_anchor=0：真实 V_true=(k-k-0)/k=0；打包声称 n_free=1 时 V_claim=(k-1)/k=['1/2', '2/3', '3/4', '4/5', '5/6', '6/7', '7/8']。k=2..8 共 7 个点满足 V_true<=0 而 V_claim>0 ⇒ 仅靠重分组就能把「无信息增益」伪装成「通过 C2-2」，而物理输出一个没多。
+[PASS] S01 | Omega5 结构自由度限额条款的形式化定义与机读判据
+    Omega5-S: s := rank(J_constraint)（独立约束/独立外部输入数），对任意重分组不变；声称值须等于该不变量；s <= 1；且 V_true > 0。违反任一条分别判 RELABELING-ONLY / QUOTA-EXCEEDED / NO-INFORMATION-GAIN。 验收函数 accepts(s_claimed, rank(J), V_true) 已机器实现；阳性对照（rank=1, V=1/2）判 ACCEPTED，证明判据不恒假。
+[FAIL] S02 | E09 不能靠打包复活
+    打包声称 s=1 但 rank(J)=2 ⇒ 判 RELABELING-ONLY；r405 基准 (s=2,rank=2,V=0) 判 QUOTA-EXCEEDED；10 条出口分桶 {'NO-INFORMATION-GAIN': 4, 'RELABELING-ONLY': 6}，ACCEPTED 0 条。⇒ r405 的「不代选」在本册被裁决：口径重定义不能救 E09，它只把约束条数改名，不产生任何新的可检验输出。
+[BOUNDARY] S03 | 条款是治理层定义，不是新物理
+    Omega5-S 把配额计数对象从「原理条数」换成「独立约束秩」，是防口径漂移的治理条款；它不改变任何物理方程、不销任何既有债务。
+[INFO] S04 | 下一步（治理与物理分流，不代执行）
+    ① 若把 Omega5-S 写入 02_共享基础/研究规范 属治理变更，须用户批准，本册未改任何规范文件；② 物理侧唯一实质缺口仍是 r405 §八的 f 归一/形状原理（且输出数值不得为矩比值）；③ 本册裁决不销账：#15/#18/#24/#26 仍开，号段漂移留给归属会话回写。
+[INFO] D01 | 分析发现（只登记、不代改）：并发号段漂移
+    磁盘实读 07_统一场方程/README.md 最大 J 号 = 105，卷宗总表.md 最大 J 号 = 107，漂移 2。首跑与复跑之间卷宗总表上界仍在推进（J106 -> J107），故守卫改为结构性判定（drift>=1）而非锁死具体号值 —— 这是 attack49「并发仓库不得引用上一轮号段快照」教训的一次实时复现。另 attack49 README L1591 的旧上界快照已被 r404/r405 与卷127+ 全面超越。按本仓「不代他人登记」纪律，本册只登记发现，不改这两个文件任何字节。
+
+== KEY NUMBERS ==
+baseline_single_survive = 0
+baseline_pair_synergy_survive = 0
+bundle_scan = [(1, 1, 0, 1), (2, 0, 0, 0), (3, 0, 0, 0)]
+bundle_b1_flipped_pairs = ['E04+E09']
+rank_J_k_1to6 = [1, 2, 3, 4, 5, 6]
+rank_bundled_invariant = [1, 2, 3, 4, 5, 6]
+claimed_vs_rank_gap = [0, 1, 2, 3, 4, 5]
+V_true_k2to8 = ['0', '0', '0', '0', '0', '0', '0']
+V_claim_k2to8 = ['1/2', '2/3', '3/4', '4/5', '5/6', '6/7', '7/8']
+C2_false_positives = 7
+E09_bundle_state = RELABELING-ONLY
+r405_baseline_state = QUOTA-EXCEEDED
+positive_control_state = ACCEPTED
+exit_buckets = {'NO-INFORMATION-GAIN': 4, 'RELABELING-ONLY': 6}
+accepted_exits = 0
+omega5_S_clause = Omega5-S: s := rank(J_constraint)（独立约束/独立外部输入数），对任意重分组不变；声称值须等于该不变量；s <= 1；且 V_true > 0。违反任一条分别判 RELABELING-ONLY / QUOTA-EXCEEDED / NO-INFORMATION-GAIN。
+J_drift_readme_vs_zongbiao = 105 -> 107 (drift 2)
+guards = 18/18
+verdict = PRINCIPLE-BUNDLING-FLIPS-VERDICT--RANK-IS-INVARIANT--OMEGA5-S-DEFINED--E09-CANNOT-REVIVE
+
+== ANCHORS ==
+r404 判定册 | 判定_TUFT-r404_统一所有力_同源化最小代价下界与唯一生存通道_2026-11-09.md | 3/3
+r405 判定册 | 判定_TUFT-r405_继续攻破唯一通道_前三矩充分性判定_矩反例与协同上界及E09重新定价_2026-11-09.md | 3/3
+r405 数据 md | TUFT-r405_继续攻破唯一通道_前三矩充分性判定_矩反例与协同上界及E09重新定价_2026-11-09.md | 2/2
+attack42 判定册 | 判定_attack42_攻破㉞_C2硬门四类机器分桶与双锚点可执行化_2026-11-08.md | 3/3
+method_F | method_F_第一性判据.md | 2/2
+卷116 终卷 | 116_终卷_第75轮_封卷_终态判定B_no_go_五条逃逸口状态_债务总账1至27_七条可交付结论_十二件复算入口与哈希_封卷状态_2026-11-08.md | 3/3
+tuft 历史治理缺口 | tuft_第一性归一化总览.md | 2/2
+r15 自由度预算 | 判定_TUFT-r15-自由度预算口径与四路代价重算_2026-10-07.md | 2/2
+
+== BUNDLE SCAN ==
+b=1 single=1 pair_upper=0 pair_synergy=1 flipped=['E04+E09']
+b=2 single=0 pair_upper=0 pair_synergy=0 flipped=[]
+b=3 single=0 pair_upper=0 pair_synergy=0 flipped=[]
+
+== GUARDS ==
+OK G-A1 | 至少 7/8 继承锚点磁盘实读命中
+OK G-A2 | r404 / r405 / r405 数据三个主锚必须命中
+OK G-B1 | r405 基准（不打包）：单点与两点协同均 0 存活
+OK G-B2 | 打包强度 b=1 使单点 SURVIVE 翻转为 1，b=2 不翻转
+OK G-B3 | 打包必须与协同结合才翻转两点组合；上界叠加口径仍 0
+OK G-B4 | b>=2 时无翻转
+OK G-B5 | 两点组合 45 组
+OK G-J1 | 精确高斯消元：rank(J_k)=k，k=1..6
+OK G-J2 | 打包不改变约束矩阵，秩不变
+OK G-J3 | 声称值恒 1，与秩的差 k-1 线性增长
+OK G-V1 | k=2..8 共 7 个 C2 假阳性点
+OK G-V2 | 真实 V 恒为 0（等价交换）
+OK G-V3 | 打包声称的 V 恒 > 0
+OK G-S1 | E09 打包声称判为重贴标签
+OK G-S2 | r405 基准判为超配额（复核）
+OK G-S3 | 阳性对照：秩 1 且 V>0 判 ACCEPTED（判据有牙）
+OK G-S4 | 10 条出口在新条款下无一条 ACCEPTED
+OK G-D1 | 07 README 号段结构性滞后于卷宗总表（drift >= 1，不锁具体号值）
+
+数学自洽 != 有物理内容 != 实验证实；不宣称统一所有力已完成；条款为治理层定义，不改变物理结论、不销既有债务。
