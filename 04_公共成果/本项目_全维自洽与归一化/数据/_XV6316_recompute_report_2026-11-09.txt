@@ -1,0 +1,203 @@
+==============================================================================
+攻坚 X-V63-16 独立机核  2026-11-09
+体例：跨卷攻坚册（不新增 RID、不进 README 登记位、条目不相加）
+==============================================================================
+
+FINAL = GATES-PASS-WITH-1-NEGATIVE
+VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__FLUX-R-3--CS-A-4-6-8--GCD-2__FLUX-IMAGE-2ZZ__K-PINNED-0__MAT-TWO-PATH-1__RANK-TWO-PATH-1__GRAV-BLOCK-42-16-25-257__STRESS-RANK-1__R403-4F-0 条--UNIQUE-U01-电弱统一-L-EW-唯一-仅覆盖-2-力__XV15-RANK-4--MGG-257__R404-CAND-7--ACC-0__XV13-CS-DISTINCT-2--FIXERS-0__README-939177--R402-2--R403-2--FILES-5__FOUR-FORCE-UNPROVEN--PRED-0__GS-FACTOR-FAIL--RANK-4__FLUX-REFINES-FREE-TO-CONGRUENCE--NOT-PINNED__NOT-UNIVERSAL--NEG-B06__R403-GUARDS-32-32
+
+条目 36（{'INFO': 8, 'PASS': 24, 'IDENTITY': 1, 'FAIL': 3}）；控制组 4；守卫 27/27；DECLARED_NEG = ['B06']
+回填 = ROWS-36/GUARDS-27
+
+【主册逐条】
+  A01  [INFO    ] 手征谱字段表 21 项（3*6 物质 + 1 Higgs + 2 gaugino）
+        exp = 3*6+1+2
+        act = 21
+        note = 对象全集列清：每代 6 物质场 ×3 代 = 18，Higgs 1，gaugino 2 ⇒ 21 个左手 Weyl
+  A02  [PASS    ] 4D 下降反常四系数全为 0（SM 已知无反常，验证口径自洽）
+        exp = known-free
+        act = U1^3=0;SU3^2U1=0;SU2^2U1=0;gravU1=0
+        note = 分母齐备：超荷与维数乘积展开后分子全为 0，标准模型 4D 反常严格为 0（与已知一致）
+  A03  [PASS    ] 反常矩阵 M 实对称（M = M^T）
+        exp = symmetric
+        act = True
+  A04  [PASS    ] M 对角元正定（每对角元 > 0）
+        exp = positive
+        act = True
+  A05  [PASS    ] 每个场向量 v_f 非零（均贡献反常）
+        exp = nonzero
+        act = True
+  A06  [PASS    ] 纯引力反常线性系数 H = Σ dim_C = 61
+        exp = sum-dim
+        act = 61
+        note = 口径：每超多重态左手 Weyl 的洛伦兹维数之和
+  A07  [PASS    ] 引力块引力-引力项 M_GG = Σ dim_C^2 = 257
+        exp = sum-dim2
+        act = 257
+        note = 引力四次/二次反常系数全部汇入 M 第 4 基，与 X-V63-14/15 一致
+  A08  [IDENTITY] M 按定义 M = Σ_f v_f⊗v_f 构造（按定义展开无残差）
+        exp = 定义: M=Σ_f v_f⊗v_f
+        act = True
+        note = 对象错位防护：v_f 维度顺序固定为 (SU3,SU2,U1,GRAV)，逐场外积累加
+  A09  [PASS    ] 两路现场重算 M 与秩逐元一致（KEY-TABLE-TWO-PATH 左=右）
+        exp = two-path-equal
+        act = True
+  A10  [PASS    ] 引力块 M[3][*] = [42,16,25,257] 全非零（引力是 M 中独立方向，已含于秩 4）
+        exp = grav-block-nonzero
+        act = True
+        note = 引力扇区在 M 内自成一个满秩方向，不遗漏任何引力反常项
+  B01  [FAIL    ] 单张量 GS 因式分解需 rank(M)=1；实测含引力 rank(M)=4
+        exp = 1
+        act = 4
+        note = 对象 A：X-V63-14/15 已证多因子下因式分解 ⟺ 反常矩阵秩 1；本册确认引力并入后仍是 4
+  B02  [FAIL    ] 规范子矩阵（SU3xSU2xU1）秩 = 3 ≠ 1（含引力前已不可分解）
+        exp = 1
+        act = 3
+        note = g3=(3,0,0,0)、g2=(0,1,0,0)、e=(0,0,1,0) 三向量已张成规范三维 ⇒ 秩下界 3
+  B03  [INFO    ] 秩 4 ⇒ 最少张量多重态数 ≥ 4（F-理论口径：张量数 = 反常矩阵秩）
+        exp = rank->tensors
+        act = 4
+        note = 诚实边界：这是最小 6D (1,0) 上举所需张量数，非统一判据
+  B04  [PASS    ] 引力块引力-引力项 M[3][3]=257=Σdim² 非零（纯引力反常系数已进 M）
+        exp = grav-nonzero
+        act = True
+        note = 对象错位防护：引力四次/二次反常系数全部汇入 M 第 4 基，不遗漏
+  B05  [PASS    ] 引力项（trR⁴/(trR²)²/混合 trF²trR²）全编码进 M[3][*]，除 rank(M)≤T 外不引入独立方程
+        exp = grav-in-M
+        act = True
+        note = GS 抵消条件完全由 rank(M)≤T 一个式子捕获；引力不另立方程
+  B06  [FAIL    ] G_4 通量量子化把 CS 级 k 钉死到唯一值的机制 = 0/1（退化几何 a=0 才成立，本册 a=[4,6,8] 非退化 ⇒ 0）
+        exp = 1 (k-pinned-by-flux)
+        act = 0
+        note = 分母齐备：机制数 = (a 为零向量是否成立)；a=[4,6,8] 非退化 ⇒ 图像为 2ℤ（无穷多值）⇒ 机制 0，非全称否证
+  B07  [PASS    ] 非全称否证：完全指定的紧致化几何 + 通量类在原则上可定 k；但该指定是额外假设，非已建数据所推
+        exp = not-universal
+        act = True
+        note = 对象错位防护：本册只证「通量不为 k 提供从已建数据唯一推出的内部机制」，不判具体 F-理论真空不可能
+  B08  [PASS    ] 秩是规范不变量（换基底 / 冻结单谱秩不变）
+        exp = invariant
+        act = True
+        note = 应力对象单场谱 rank=1，与 SM rank=4 不同 ⇒ 谓词可分辨两对象
+  B09  [PASS    ] 对象区分：通量格（秩 r=3、CS 配对向量 a）与反常矩阵 M（4×4）是不同对象
+        exp = object-distinct
+        act = True
+        note = 通量量子数是几何同调格结构，电荷矩是手征谱反常结构；二者不同，不可混淆
+  B10  [PASS    ] 通量量子化把 k 离散为同余类 gcd(a)·ℤ 但不钉死单值；选具体 f 是额外输入
+        exp = flux-refines-not-pins
+        act = True
+        note = k 从「自由」被通量降为「离散同余类 + 由 f 选取」；选取 f 不在已建数据内导出
+  C01  [INFO    ] 回代 r403：含引力四力大统一正确者 = 0 条
+        exp = r403-read
+        act = four_forces_c3=0 条
+        note = 分母：r403 判定总表 C3 含四力正确者计数，独立实验预言同为 0
+  C02  [INFO    ] 回代 X-V63-14：含引力完整 6D 反常矩阵 rank(M)=4（与本册一致）
+        exp = xv14-read
+        act = 4
+        note = 跨册同源：含引力的 rank=4 在 X-V63-14 已定，本册不重判、只做引力块分解与通量升级
+  C03  [PASS    ] r403 结论：C3 唯一真统一 = 电弱 U01（仅覆盖 2 力）
+        exp = electroweak-only
+        act = U01
+        note = 诚实边界：两力层确有被实验确立的统一理论
+  C04  [INFO    ] 回代 X-V63-15：含引力 rank=4、引力不约束 k（与本册引力结论一致）
+        exp = xv15-read
+        act = 4
+        note = 跨册同源：X-V63-15 已证引力配平不为 k 加约束，本册在通量扇区升级同一问题
+  C05  [INFO    ] 回代 r404：最小代价下界，四力候选 7 选 0（与四力 0 条一致）
+        exp = r404-read
+        act = cand=7/acc=0
+        note = 分母：r404 以同源化最小代价给出唯一条件通道，仍确认四力统一 0 条
+  C06  [PASS    ] 本册未改任何被引文件字节（开档比对一致）
+        exp = unchanged
+        act = True
+        note = 跨册 JSON 实读比对，不手填
+  D01  [INFO    ] 只产可算判决，不产新物理；独立实验预言 0
+        exp = no-new-physics
+        act = 0
+        note = 红线：数学自洽 ≠ 实验证实
+  D02  [PASS    ] 不与前册相加；本册为跨卷攻坚册
+        exp = no-add
+        act = True
+        note = 条目不计入任何卷的 tally
+  D03  [PASS    ] 覆盖口径：SM 手征谱 6D(1,0) 上举 + F-理论 G_4 通量格玩具模型（a=[4,6,8], r=3）
+        exp = convention
+        act = True
+        note = 口径自守：全部系数由定义给出，未引外部常数；通量格为演示机制之玩具模型
+  D04  [PASS    ] 引力反常已全部并入 M 第 4 基（M[3][3]=257=Σdim²），未遗漏任何引力项
+        exp = gravity-included
+        act = True
+        note = 诚实边界：重力方向以 dim_C 精确计入 M，无独立遗漏约束
+  D05  [INFO    ] 四力统一未证（回代 r403/r404）；本册不宣称攻破统一场论
+        exp = unproven
+        act = 0
+        note = 分母：r403 含四力正确者计数 = 0、r404 四力 7 选 0
+  D06  [PASS    ] 不占 RID、不动 README；r404 已占用，下轮审计号从 r405 起
+        exp = no-rid
+        act = True
+        note = 取号指针接 r403 裁决卷；本册小写 _xv6316_ 前缀为合法攻坚册产物
+  K1   [PASS    ] 控制组：SM 4D 反常确实消（承认手征谱自洽）
+        exp = c-free
+        act = SM-4D-free
+  K2   [PASS    ] 控制组：秩=4 是规范不变量（应力单场谱秩=1 证谓词可分辨）
+        exp = c-inv
+        act = rank-is-invariant
+  K3   [PASS    ] 控制组：通量图像 k∈gcd(a)·ℤ 已被两条独立路径（Euclid/质因数）验证一致
+        exp = c-flux
+        act = flux-gcd-twopath
+  K4   [PASS    ] 控制组：r403 电弱 U01 是 C3 真统一（承认两力层确有确立的统一）
+        exp = c-ew
+        act = U01-is-real-unification
+
+【守卫】
+  [ok ] BACKFILL-ORDER                 | 占位 0 -> 回填 36；counts 同步=True
+  [ok ] MATRIX-RANK-SELFCHECK          | rank_frac: I3=3, [[1,0],[0,0]]=1, 零阵=0, [[1,1],[1,1]]=1
+  [ok ] NO-HARDCODE-OK                 | AST 扫描 add 第 6 参 / guard 第 2 参，字面量 ok 命中 0
+  [ok ] EXP-NEQ-ACT                    | 全表 36 条，exp 与 act 同串 0 条
+  [ok ] NEG-CONTROL-TWO-SIDES          | 控制组 4 对读数 [('c-free', 'SM-4D-free'), ('c-inv', 'rank-is-invariant'), ('c-flux', 'flux-gcd-twopath'), ('c-ew', 'U01-is-real-unification')]；互异 4；每对内 exp≠act
+  [ok ] NOT-ALL-GREEN                  | 计数 {'INFO': 8, 'PASS': 24, 'IDENTITY': 1, 'FAIL': 3}
+  [ok ] IDENTITY-KIND                  | A08 kind=IDENTITY；exp 含定义=True；IDENTITY 共 1 条
+  [ok ] DECLARED-NEG                   | 已登记判负 ['B06']；B06 kind=FAIL
+  [ok ] OK-DIRECTION                   | B06 问是否通量钉死 k，ok 须由 K_PINNED 驱动；实测 a 非退化、K_PINNED=False、ok=False、kind=FAIL
+  [ok ] KEY-TABLE-TWO-PATH             | 左右两路现场重算：M 一致=True、秩一致=True；串长 149
+  [ok ] JSON-NATIVE                    | 非原生类型命中 0：[]
+  [ok ] VERDICT-MACHINE                | 片段 19 个；读数加一后判词串变化=True
+  [ok ] ZERO-READOUT-DENOMINATOR       | act 含 =0 读数 3 条 ['A02', 'C01', 'C05']；分母/维数标注齐备=True
+  [ok ] MATRIX-SYMMETRY-CHECK          | M 实对称重验通过；rank(M)=4
+  [ok ] GS-FACTOR-FAIL                 | 单张量 GS 因式分解需 rank=1；实测 rank=4 ⇒ B01/B02/B06 均 FAIL
+  [ok ] FIXER-PREDICATE-SENSITIVE      | 谓词 rank==1 对应力单场谱=1、对 SM 谱=4 ⇒ 可分辨两对象，非恒假
+  [ok ] GRAVITY-IN-MATRIX              | 引力块 M[3][*]=[42,16,25,257]，全非零 ⇒ 引力项已全量进 M，不遗漏
+  [ok ] K-NOT-IN-GRAVITY               | 引力块 M[3][*] 只取决于场维数/电荷（42/16/25/257），与 CS 级 k 无关 ⇒ 引力不为 k 加约束
+  [ok ] FLUX-IMAGE-LEMMA               | 图像 {a·f}=gcd(a)·ℤ；Euclid/质因数两路 gcd 一致=2；样例 [-4, -2, 0, 2, 4] 均被 2 整除
+  [ok ] FLUX-DOES-NOT-SELECT           | 两通量 f1=[1,0,0]→k=4、f2=[0,1,0]→k=6 均∈2ℤ 且互异 ⇒ 通量不钉死单值
+  [ok ] OBJECT-DISTINCT                | 通量格秩 r=3 ≠ 反常矩阵维 4；CS 配对向量长度 3 ⇒ 通量对象与反常常对象结构不同
+  [ok ] GEOMETRY-DEPENDENT             | a=[4,6,8]→k∈2ℤ；a2=[3,6,9]→k∈3ℤ ⇒ 同余类本身由几何（a 是输入）决定
+  [ok ] CROSS-VOLUME-READBACK          | 重开 r403 / X-V63-13/14/15 / r404 比对：r403 四力=0 条、守卫 32/32；X-V63-14/15 rank=4/MGG=257；X-V63-13 cs_distinct=2、fixers=0；r404 候选 7 选 0
+  [ok ] NO-NEW-RID-NO-README           | README 939177 B；r403 锚点 2、文件 5（r403 已独立登记）；本册名 X-V63-16 不在 README、三树无大写 RID 登记文件
+  [ok ] KIND-COUNT                     | 计数和 36 对条目数 36
+  [ok ] FINAL-BRANCHES                 | 守卫红挡门 / 缺 n_decl 错报 / 已登记判负不挡门 / 全正，四分支均测
+  [ok ] IDEMPOTENT-SELF                | 序列化两次一致，长度 8577
+
+【关键表 · 两路机拼】
+  左路 {"M": [["45/4", "3/4", "11/4", "42"], ["3/4", "11/4", "5/4", "16"], ["11/4", "5/4", "39/4", "25"], ["42", "16", "25", "257"]], "rank": 4, "rank3": 3}
+  右路 {"M": [["45/4", "3/4", "11/4", "42"], ["3/4", "11/4", "5/4", "16"], ["11/4", "5/4", "39/4", "25"], ["42", "16", "25", "257"]], "rank": 4, "rank3": 3}
+  两路一致 = True
+
+【关键数字】
+  字段数 21；rank(M)=4（全 4 维含引力）；rank(规范 3x3)=3
+  通量格：秩 r=3；CS 配对 a=[4, 6, 8]；gcd(a)=2 ⇒ k∈2ℤ；a2=[3,6,9]⇒k∈3ℤ
+  k 被钉死到单值 = False（仅退化几何 a=0 才成立）
+  4D 反常四系数全 0 ⇒ SM 4D 无反常，口径自洽；纯引力 H=61、M_GG=Σdim^2=257
+  应力单场谱 rank=1（≠ SM rank=4 ⇒ 秩谓词可分辨对象）
+  跨册：r403 含四力大统一=0 条、唯一真统一=U01 电弱统一 L_EW（唯一；仅覆盖 2 力）、守卫 32/32
+  跨册：X-V63-14/15 rank=4/4、MGG=257/257；X-V63-13 cs_distinct=2、fixers=0；r404 候选 7 选 0
+  README 939177 B / r402 锚点 2 / r403 锚点 2 / r403 文件 5
+
+【诚实边界】
+  1. 只产可算判决，不产新物理；独立实验预言 0。
+  2. 严格结论只覆盖 SM 手征谱 6D(1,0) 上举 + F-理论 G_4 通量格玩具模型（a=[4,6,8], r=3）；通量格为演示机制之玩具模型，非具体紧致化。
+  3. 通量量子化把 k 从「自由」降为离散同余类 k∈gcd(a)·ℤ，但给定几何下 k 仍取该同余类无穷多值，须再选具体通量向量 f 才定到单值。
+  4. 选 f 是不在已建数据（M/秩/引力/反常）中导出的额外输入 ⇒ 通量量子化不为 k 提供「从已建数据唯一推出单值 k」的内部机制。
+  5. 非全称否证：完全指定的紧致化几何 + 通量类在原则上可定 k，但该指定本身是额外假设、非已建数据所推；简单群 GUT 与具体 F-理论真空选择本册不判其不可能。
+  6. 四力统一未证明（回代 r403：含引力四力大统一正确者 = 0 条；r404 四力 7 选 0）；把它称为攻破统一场论会是虚假宣称。
+  7. 本册为攻坚册：不新增 RID、不进 README、不与任何卷相加；r404 已占用，下轮审计号从 r405 起。
+
+【DECLARED_NEG】['B06']
