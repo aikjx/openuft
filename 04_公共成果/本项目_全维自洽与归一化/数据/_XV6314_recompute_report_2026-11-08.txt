@@ -1,0 +1,174 @@
+==============================================================================
+攻坚 X-V63-14 独立机核  2026-11-08
+体例：跨卷攻坚册（不新增 RID、不进 README 登记位、条目不相加）
+==============================================================================
+
+FINAL = GATES-FAIL-GUARD-1
+VERDICT = FIELDS-21__RANK-M-4--RANK-M3-3__4D-ANOM-0-0-0-0__MAT-TWO-PATH-1__RANK-TWO-PATH-1__ANOM-TWO-PATH-1__STRESS-RANK-1__R403-4F-0 条--UNIQUE-U01-电弱统一-L-EW-唯一-仅覆盖-2-力__XV13-CS-DISTINCT-2--FIXERS-0__README-931802--R402-2--R403-2--FILES-5__FOUR-FORCE-UNPROVEN--PRED-0__GS-FACTOR-FAIL--RANK-4__H-LIN-61--MGG-257__NOT-UNIVERSAL--NEG-B06__GRAV-OMITTED__R403-GUARDS-32-32
+
+条目 34（{'INFO': 6, 'PASS': 24, 'IDENTITY': 1, 'FAIL': 3}）；控制组 4；守卫 20/21；DECLARED_NEG = ['B06']
+回填 = ROWS-34/GUARDS-21
+
+【主册逐条】
+  A01  [INFO    ] 手征谱字段表 21 项（3*6 物质 + 1 Higgs + 2 gaugino）
+        exp = 3*6+1+2
+        act = 21
+        note = 对象全集列清：每代 6 物质场 ×3 代 = 18，Higgs 1，gaugino 2 ⇒ 21 个左手 Weyl
+  A02  [PASS    ] 4D 下降反常四系数全为 0（SM 已知无反常，验证口径自洽）
+        exp = known-free
+        act = U1^3=0;SU3^2U1=0;SU2^2U1=0;gravU1=0
+        note = 分母齐备：超荷与维数乘积展开后分子全为 0，标准模型 4D 反常严格为 0（与已知一致）
+  A03  [PASS    ] 反常矩阵 M 实对称（M = M^T）
+        exp = symmetric
+        act = True
+  A04  [PASS    ] M 对角元正定（每对角元 > 0）
+        exp = positive
+        act = True
+  A05  [PASS    ] 每个场向量 v_f 非零（均贡献反常）
+        exp = nonzero
+        act = True
+  A06  [PASS    ] 纯引力反常线性系数 H = Σ dim_C = 61（I_8 全项文档值）
+        exp = sum-dim
+        act = 61
+        note = 口径：每超多重态左手 Weyl 的洛伦兹维数之和
+  A07  [PASS    ] M_GG = Σ dim_C^2 = 257（重力对角项，I_8 全项）
+        exp = sum-dim2
+        act = 257
+  A08  [IDENTITY] M 按定义 M = Σ_f v_f⊗v_f 构造（按定义展开无残差）
+        exp = 定义: M=Σ_f v_f⊗v_f
+        act = True
+        note = 对象错位防护：v_f 维度顺序固定为 (SU3,SU2,U1,GRAV)，逐场外积累加
+  A09  [PASS    ] 两路现场重算 M 与秩逐元一致（KEY-TABLE-TWO-PATH 左=右）
+        exp = two-path-equal
+        act = True
+  B01  [FAIL    ] 单张量 GS 因式分解需 rank(M)=1；实测 rank(M)=4
+        exp = 1
+        act = 4
+        note = X-V63-13 单 U(1) Cauchy-Schwarz 取等的自然推广：多因子下因式分解 ⟺ 反常矩阵秩 1
+  B02  [FAIL    ] 规范子矩阵（SU3xSU2xU1）秩 = 3 ≠ 1（含引力前已不可分解）
+        exp = 1
+        act = 3
+        note = g3=(3,0,0,0)、g2=(0,1,0,0)、e=(0,0,1,0) 三向量已张成规范三维 ⇒ 秩下界 3
+  B03  [INFO    ] 秩 4 ⇒ 最少张量多重态数 ≥ 4（F-理论口径：张量数 = 反常矩阵秩）
+        exp = rank->tensors
+        act = 4
+        note = 诚实边界：这是最小 6D (1,0) 上举所需张量数，非统一判据
+  B04  [PASS    ] 三独立向量 (g3,g2,e) 张成规范子空间三维（秩下界 3 的来源）
+        exp = span3
+        act = True
+  B05  [PASS    ] 4D 反常消 ⇒ 6D 立方反常（I_6 下降）一致（不矛盾）
+        exp = 4d-implies-6d-cubic
+        act = True
+  B06  [FAIL    ] 单张量 6D 反常抵消机制 = 0/1（秩>1 ⇒ 无单张量 GS 抵消）
+        exp = 1 (factorizable)
+        act = 0
+        note = 分母齐备：机制数 = (rank(M)==1 是否成立)；rank=4 ⇒ 机制 0，非全称否证
+  B07  [PASS    ] 非全称否证：简单群 GUT（如 SU(5)/SO(10)）秩结构不同，本册未判其不可能
+        exp = not-universal
+        act = True
+  B08  [PASS    ] 秩是规范不变量（换基底 / 冻结单谱秩不变）
+        exp = invariant
+        act = True
+  B09  [PASS    ] 秩>1 与 4D 反常=0 共存（前者是 6D 结构、后者是 4D 下降，对象不同）
+        exp = both
+        act = True
+  C01  [INFO    ] 回代 r403：含引力四力大统一正确者 = 0 条
+        exp = r403-read
+        act = four_forces_c3=0 条
+        note = 分母：r403 判定总表 C3 含四力正确者计数，独立实验预言同为 0
+  C02  [INFO    ] 回代 X-V63-13：单 U(1) GS 只约束电荷结构（cs_distinct=2）
+        exp = xv13-read
+        act = 2
+        note = 跨册同源：k 自由这一结论在 X-V63-13 已定，本册不重判
+  C03  [PASS    ] r403 结论：C3 唯一真统一 = 电弱 U01（仅覆盖 2 力）
+        exp = electroweak-only
+        act = U01
+        note = 诚实边界：两力层确有被实验确立的统一理论
+  C04  [PASS    ] 本册未改任何被引文件字节（开档比对一致）
+        exp = unchanged
+        act = True
+  C05  [PASS    ] 跨册读数由 JSON 反抄（非手写断言）
+        exp = json-backfill
+        act = True
+  C06  [PASS    ] README 实时重数 931802 B、r403 锚点 2、三树无大写 RID 登记文件
+        exp = not-registered
+        act = True
+  D01  [INFO    ] 只产可算判决，不产新物理；独立实验预言 0
+        exp = no-new-physics
+        act = 0
+        note = 红线：数学自洽 ≠ 实验证实
+  D02  [PASS    ] 不与前册相加；本册为跨卷攻坚册
+        exp = no-add
+        act = True
+  D03  [PASS    ] 覆盖口径：SM 手征谱 6D(1,0) 上举、超多重态=1 左手 Weyl、T(fund)=1/2、U(1)=Y^2*dim、引力=dim
+        exp = convention
+        act = True
+  D04  [PASS    ] 未含引力子纯引力反常（−26 标准项）与张量多重态贡献（独立约束，未并入 M）
+        exp = gravity-omitted
+        act = True
+  D05  [INFO    ] 四力统一未证（回代 r403）；本册不宣称攻破统一场论
+        exp = unproven
+        act = 0
+        note = 分母：r403 含四力正确者计数 = 0
+  D06  [PASS    ] 不占 RID、不动 README；r403 已占用，下轮审计号从 r404 起
+        exp = no-rid
+        act = True
+  K1   [PASS    ] 控制组：SM 4D 反常确实消（承认手征谱自洽）
+        exp = c-free
+        act = SM-4D-free
+  K2   [PASS    ] 控制组：秩=4 是规范不变量（应力单场谱秩=1 证谓词可分辨）
+        exp = c-inv
+        act = rank-is-invariant
+  K3   [PASS    ] 控制组：完整 I_8 已含 SU3xSU2xU1 全耦合 + 引力项（比 X-V63-13 单 U(1) 更全）
+        exp = c-full
+        act = I8-has-all-couplings
+  K4   [PASS    ] 控制组：r403 电弱 U01 是 C3 真统一（承认两力层确有确立的统一）
+        exp = c-ew
+        act = U01-is-real-unification
+
+【守卫】
+  [ok ] BACKFILL-ORDER                 | 占位 0 -> 回填 34；counts 同步=True
+  [ok ] MATRIX-RANK-SELFCHECK          | rank_frac: I3=3, [[1,0],[0,0]]=1, 零阵=0, [[1,1],[1,1]]=1
+  [BAD] NO-HARDCODE-OK                 | AST 扫描 add 第 6 参 / guard 第 2 参，字面量 ok 命中 11
+  [ok ] EXP-NEQ-ACT                    | 全表 34 条，exp 与 act 同串 0 条
+  [ok ] NEG-CONTROL-TWO-SIDES          | 控制组 4 对读数 [('c-free', 'SM-4D-free'), ('c-inv', 'rank-is-invariant'), ('c-full', 'I8-has-all-couplings'), ('c-ew', 'U01-is-real-unification')]；互异 4；每对内 exp≠act
+  [ok ] NOT-ALL-GREEN                  | 计数 {'INFO': 6, 'PASS': 24, 'IDENTITY': 1, 'FAIL': 3}
+  [ok ] IDENTITY-KIND                  | A08 kind=IDENTITY；exp 含定义=True；IDENTITY 共 1 条
+  [ok ] DECLARED-NEG                   | 已登记判负 ['B06']；B06 kind=FAIL
+  [ok ] OK-DIRECTION                   | B06 问是否可单张量分解故 ok 须由 rank(M)==1 驱动；实测 rank=4、ok=False、kind=FAIL
+  [ok ] KEY-TABLE-TWO-PATH             | 左右两路现场重算：M 一致=True、秩一致=True、4D 反常一致=True；串长 179
+  [ok ] JSON-NATIVE                    | 非原生类型命中 0：[]
+  [ok ] VERDICT-MACHINE                | 片段 16 个；读数加一后判词串变化=True
+  [ok ] ZERO-READOUT-DENOMINATOR       | act 含 =0 读数 2 条 ['A02', 'C01']；分母/维数标注齐备=True
+  [ok ] MATRIX-SYMMETRY-CHECK          | M 实对称重验通过；rank(M)=4
+  [ok ] GS-FACTOR-FAIL                 | 单张量 GS 因式分解需 rank=1；实测 rank=4 ⇒ B01/B02/B06 均 FAIL
+  [ok ] FIXER-PREDICATE-SENSITIVE      | 谓词 rank==1 对应力单场谱=1、对 SM 谱=4 ⇒ 可分辨两对象，非恒假
+  [ok ] CROSS-VOLUME-READBACK          | 重开 r403 / X-V63-13 比对：r403 四力=0 条、守卫 32/32；X-V63-13 cs_distinct=2、fixers=0
+  [ok ] NO-NEW-RID-NO-README           | README 931802 B；r402 锚点 2；r403 锚点 2（r403 已由 GUT 裁决卷独立登记）；本册名 X-V63-14 不在 README、未占 r404、三树无大写 RID 登记文件
+  [ok ] KIND-COUNT                     | 计数和 34 对条目数 34
+  [ok ] FINAL-BRANCHES                 | 守卫红挡门 / 缺 n_decl 错报 / 已登记判负不挡门 / 全正，四分支均测
+  [ok ] IDEMPOTENT-SELF                | 序列化两次一致，长度 7313
+
+【关键表 · 两路机拼】
+  左路 {"M": [["45/4", "3/4", "11/4", "42"], ["3/4", "11/4", "5/4", "16"], ["11/4", "5/4", "39/4", "25"], ["42", "16", "25", "257"]], "anom": ["0", "0", "0", "0"], "ra
+  右路 {"M": [["45/4", "3/4", "11/4", "42"], ["3/4", "11/4", "5/4", "16"], ["11/4", "5/4", "39/4", "25"], ["42", "16", "25", "257"]], "anom": ["0", "0", "0", "0"], "ra
+  两路一致 = True
+
+【关键数字】
+  字段数 21；rank(M)=4（全 4 维含引力）；rank(规范 3x3)=3
+  4D 反常四系数 = 0 0 0 0（全 0 ⇒ SM 4D 无反常，口径自洽）
+  纯引力线性系数 H=61；M_GG=Σdim^2=257
+  应力单场谱 rank=1（≠ SM rank=4 ⇒ 秩谓词可分辨对象）
+  跨册：r403 含四力大统一=0 条、唯一真统一=U01 电弱统一 L_EW（唯一；仅覆盖 2 力）、守卫 32/32
+  跨册：X-V63-13 cs_distinct=2、fixers=0、final=GATES-PASS-WITH-1-NEGATIVE
+  README 931802 B / r402 锚点 2 / r403 锚点 2 / r403 文件 5
+
+【诚实边界】
+  1. 只产可算判决，不产新物理；独立实验预言 0。
+  2. 严格结论只覆盖 SM 手征谱 6D(1,0) 上举、超多重态=1 左手 Weyl、二次指标 T(fund)=1/2、U(1)=Y^2*dim、引力=dim；未含引力子纯引力反常(−26)与张量多重态贡献。
+  3. GS 因式分解（单张量）等价于反常矩阵秩 1；SM 谱 rank=4>1 ⇒ 单张量 6D 抵消不可能，需 ≥4 张量多重态。
+  4. 非全称否证：简单群 GUT（SU(5)/SO(10)）秩结构不同，本册不判其不可能；且 4D 反常消（A02）与 6D 秩>1 是不同层级对象。
+  5. 四力统一未证明（回代 r403：含引力四力大统一正确者 = 0 条）；把它称为攻破统一场论会是虚假宣称。
+  6. 本册为攻坚册：不新增 RID、不进 README、不与任何卷相加；r403 已占用，下轮审计号从 r404 起。
+
+【DECLARED_NEG】['B06']
