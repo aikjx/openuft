@@ -291,7 +291,12 @@ KEY["rank_diff"] = RANK_LEFT - RANK_STRESS
 def _glob_one(pattern):
     return glob.glob(os.path.join(ROOT, pattern))
 
-_r403_hits = _glob_one(os.path.join("数据", "TUFT-r403*json"))
+def _glob_readback(pattern):
+    # 排除「_整理」类汇总/整理册产物，避免与规范 recompute 文件名撞 glob（审计纪律：扫号须覆盖 _ 前缀）
+    return [p for p in glob.glob(os.path.join(ROOT, pattern))
+            if "_整理" not in os.path.basename(p)]
+
+_r403_hits = _glob_readback(os.path.join("数据", "TUFT-r403*json"))
 assert len(_r403_hits) == 1, _r403_hits
 _r403 = json.load(io.open(_r403_hits[0], "r", encoding="utf-8"))
 KEY["r403_verdict"] = _r403.get("verdict", "")
@@ -300,7 +305,7 @@ KEY["r403_unique"] = str(_r403.get("unique_answer", {}).get("c3_and_unified", ""
 KEY["r403_guards_pass"] = int(_r403.get("guards_pass", 0))
 KEY["r403_guards_total"] = int(_r403.get("guards_total", 0))
 
-_xv13_hits = _glob_one(os.path.join("数据", "_XV6313*json"))
+_xv13_hits = _glob_readback(os.path.join("数据", "_XV6313_recompute_*.json"))
 assert len(_xv13_hits) == 1, _xv13_hits
 _xv13 = json.load(io.open(_xv13_hits[0], "r", encoding="utf-8"))
 _xv13_kn = _xv13.get("key_numbers", {})
@@ -308,7 +313,7 @@ KEY["prev13_cs_distinct"] = _xv13_kn.get("prev_cs_distinct", 0)
 KEY["prev13_channel_fixers"] = _xv13_kn.get("channel_fixers_count", 0)
 KEY["prev13_final"] = _xv13.get("final", "")
 
-_xv14_hits = _glob_one(os.path.join("数据", "_XV6314*json"))
+_xv14_hits = _glob_readback(os.path.join("数据", "_XV6314*json"))
 assert len(_xv14_hits) == 1, _xv14_hits
 _xv14 = json.load(io.open(_xv14_hits[0], "r", encoding="utf-8"))
 _xv14_kn = _xv14.get("key_numbers", {})
@@ -316,7 +321,7 @@ KEY["prev14_rankM"] = _xv14_kn.get("rankM")
 KEY["prev14_m_gg"] = _xv14_kn.get("m_gg")
 KEY["prev14_final"] = _xv14.get("final", "")
 
-_xv15_hits = _glob_one(os.path.join("数据", "_XV6315*json"))
+_xv15_hits = _glob_readback(os.path.join("数据", "_XV6315*json"))
 assert len(_xv15_hits) == 1, _xv15_hits
 _xv15 = json.load(io.open(_xv15_hits[0], "r", encoding="utf-8"))
 _xv15_kn = _xv15.get("key_numbers", {})
@@ -324,7 +329,7 @@ KEY["prev15_rankM"] = _xv15_kn.get("rankM")
 KEY["prev15_m_gg"] = _xv15_kn.get("m_gg")
 KEY["prev15_final"] = _xv15.get("final", "")
 
-_r404_hits = _glob_one(os.path.join("数据", "TUFT-r404*json"))
+_r404_hits = _glob_readback(os.path.join("数据", "TUFT-r404*json"))
 assert len(_r404_hits) == 1, _r404_hits
 _r404 = json.load(io.open(_r404_hits[0], "r", encoding="utf-8"))
 _r404_kn = _r404.get("key_numbers", {})
