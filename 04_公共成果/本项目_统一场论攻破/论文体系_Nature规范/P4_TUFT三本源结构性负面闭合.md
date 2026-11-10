@@ -69,6 +69,14 @@ TUFT 三本源作为**几何框架**数学自洽；作为**统一机制**结构�
 
 `统一场论必要条件清单_G1_2026-10-30.md`、`TUFT修复方向定价册_G2_2026-10-30.md`、母册。
 
+## 作者贡献 Author Contributions
+
+G.M.（莫国子，墨行科技）整理 22 条核心必要条件、执行供给审计与 G2 定价、撰写全文。
+
+## 利益冲突 Competing Interests
+
+作者声明无利益冲突。本文审计对象为作者本人参与构建的 TUFT 候选体系；负面结论按同一判据得出，未因作者立场放宽或收紧。
+
 ## 参考文献 References
 
 1. Cartan, É. Sur les variétés à connexion affine. Ann. Sci. Éc. Norm. Supér. 40, 325 (1923).

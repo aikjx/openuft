@@ -1,0 +1,37 @@
+==============================================================================
+attack56 · CUNI-v2 二圈 RGE 复算 + 方程块级净下降门 · 2026-11-10
+==============================================================================
+
+[A] 二圈三点收敛
+  输入(M_Z): a1=59.003557 a2=29.576738 a3=8.4674005
+  loop1  M_GUT=9.7591803e+15 GeV (log10=15.9894)  spread=0.607455  alpha_GUT^-1=25.82103  alpha_s_pred=0.110195 (dev 6.6938%)
+  loop2  M_GUT=1.4273005e+16 GeV (log10=16.1545)  spread=0.1318  alpha_GUT^-1=25.25645  alpha_s_pred=0.119793 (dev 1.4333%)
+  阈值敏感性(M_SUSY 0.5/1/2 TeV): 500: M_GUT=1.78816e+16 a_s=0.122046 dev=3.3417% | 1000: M_GUT=1.4273e+16 a_s=0.119793 dev=1.4333% | 2000: M_GUT=1.14065e+16 a_s=0.117614 dev=0.41145%
+
+[B] 方程块级净下降门 (GATE: delta<0)
+  block                        before  after   delta  class                gate
+  L1 规范块（SO(10) 单群）                 3      1      -2  STRUCTURE_IDENTIFY   True
+  L2 Yukawa 块（y10 单张量）              9      8      -1  STRUCTURE_IDENTIFY   True
+  L3 seesaw 块（126 VEV）              3      1      -2  STRUCTURE_IDENTIFY   True
+  L4 软破缺块（mSUGRA 普适）                0      5       5  AXIOM_SWAP           False
+  L4' 软破缺块（一般 MSSM）                 0    105     105  AXIOM_SWAP           False
+  L5 引力块（G 与 Lambda）                0      2       2  AXIOM_SWAP           False
+  mSUGRA 总账: delta=+2  过门=False
+  一般 MSSM : delta=+102  过门=False
+
+[GUARDS] 12/12
+  A1 二圈仍收敛                   OK  二圈三点发散度 spread=0.1318（一圈 0.607455）
+  A2 二圈 M_GUT 位移             OK  log10(M_GUT) 一圈 15.9894 → 二圈 16.1545（位移 0.165 dex）
+  A3 二圈 alpha_GUT^-1         OK  25.25645（一圈 25.82103）
+  A4 二圈 alpha_s 预言           OK  二圈 alpha_s(M_Z)=0.119793（实测 0.1181，偏差 1.4333%）
+  A5 阈值敏感性有界                 OK  M_SUSY 0.5→2 TeV 使 alpha_s 偏差摆幅 2.93 个百分点
+  B1 负号全部来自结构识别块             OK  负号块=L1 规范块（SO(10) 单群）,L2 Yukawa 块（y10 单张量）,L3 seesaw 块（126 VEV）
+  B2 正号全部来自换公理块              OK  正号块=L4 软破缺块（mSUGRA 普适）,L4' 软破缺块（一般 MSSM）,L5 引力块（G 与 Lambda）
+  B3 mSUGRA 总账仍不过门           OK  delta_total=+2（结构识别 -5 vs 软破缺 +5 与引力 +2）
+  B4 一般 MSSM 总账大幅不过门         OK  delta_total=+102（软破缺一般化后 +105）
+  B5 结构性净减为真                 OK  结构识别三块合计 delta=-5（规范 -2、Yukawa -1、seesaw -2）
+  B6 翻符号的最小代价                OK  需再净减 3 个独立输入才过门（+2 -> <= -1）
+  B7 单点结构导出即可翻符号             OK  反事实总账={"若引力块 G/Lambda 由统一点结构导出（+2 -> -1）": -1, "若软破缺普适性由结构给出而非公理（+5 -> -1）": -4, "两者同时结构导出": -7}
+
+VERDICT: 2-LOOP-SURVIVES--BLOCK-NET-MINUS-5--DEFICIT-LOCALIZED-TO-SOFT-AND-GRAVITY
+ENGINE DONE guards=12/12 exit=0

@@ -98,6 +98,17 @@ mpmath 60 位；常数取 SI 精确/CODATA 2018：c=299792458、e=1.602176634×1
 
 JSON 读数落盘；可复跑。
 
+- 图：`figures/Fig2_forces_light_EN.png`（七条连接 P1–P7 的图面版），全英文，无 CJK 字形依赖。
+- 引擎：`attack_所有力与光速的关系_求导证明精算_2026-10-30.py|.json`（7/7）。
+
+## 作者贡献 Author Contributions
+
+G.M.（莫国子，墨行科技）构建七条连接的求导框架、执行精算与误差核对、撰写全文。
+
+## 利益冲突 Competing Interests
+
+作者声明无利益冲突。研究无外部资助；常数取 CODATA 2018 公布值，所有衍生量由本地引擎复算。
+
 ## 参考文献 References
 
 1. Maxwell, J. C. A dynamical theory of the electromagnetic field. Phil. Trans. R. Soc. 155, 459–512 (1865).
