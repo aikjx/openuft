@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>算法联盟 · 人类知识机制类型遍历 · 新思路迭代攻坚 · 2026-11-11</title>
+<style>
+:root{
+  --bg:#f7f8fa; --panel:#fff; --ink:#1b2330; --muted:#5b6675; --line:#dfe4ec;
+  --accent:#2456a6; --green:#0f7a6a; --warn:#a8541c; --red:#a32d2d; --purple:#6b5b95;
+  --chip:#eef2f8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font-family:"Microsoft YaHei","PingFang SC","Segoe UI",Arial,sans-serif;line-height:1.65}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 24px 64px}
+header{background:linear-gradient(135deg,#eaf0fa,#f6f9fc);border:1px solid var(--line);
+ border-radius:14px;padding:26px 30px;margin-bottom:22px}
+h1{margin:0 0 8px;font-size:25px;letter-spacing:.3px}
+.sub{color:var(--muted);font-size:14px;margin:0}
+.badges{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.badge{background:var(--chip);border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--muted)}
+.badge.strong{background:#e7f0ff;border-color:#bcd2f2;color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.kpi .v{font-size:26px;font-weight:700;color:var(--accent)}
+.kpi .v.g{color:var(--green)} .kpi .v.w{color:var(--warn)} .kpi .v.p{color:var(--purple)}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:4px}
+h2{font-size:18px;margin:30px 0 12px;padding-left:10px;border-left:4px solid var(--accent)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.seesaw{display:grid;grid-template-columns:1fr 90px 1fr;gap:12px;align-items:stretch}
+.end{border-radius:10px;padding:16px 18px;border:1px solid var(--line)}
+.end.c1{background:#f4f8ff;border-color:#bcd2f2}
+.end.c2{background:#f2faf7;border-color:#b9dcd4}
+.end h3{margin:0 0 8px;font-size:15px}
+.end .big{font-size:22px;font-weight:700;margin:6px 0}
+.end p{font-size:13px;margin:0;color:var(--ink)}
+.mid{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+ background:#fff4f2;border:1px solid #e8bdb5;border-radius:10px;color:var(--red);font-size:12px;padding:10px}
+.mid b{font-size:20px;display:block}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f1f4f9;color:var(--muted);font-weight:600;font-size:12px}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;border-radius:4px;padding:1px 7px;font-size:11px;font-weight:600}
+.tag.no{background:#fdecea;color:var(--red)} .tag.uniq{background:#e7f4f0;color:var(--green)}
+.tag.bound{background:#f0ebf7;color:var(--purple)} .tag.zero{background:#eef2f8;color:var(--accent)}
+.bar{height:10px;background:#e9edf4;border-radius:5px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:5px}
+.bar i.g{background:var(--green)} .bar i.w{background:var(--warn)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{border-radius:10px;padding:16px 18px;border:1px solid var(--line);background:#fcfdff}
+.box h3{margin:0 0 8px;font-size:15px}
+.box ul{margin:0;padding-left:18px;font-size:13px}
+.box li{margin-bottom:5px}
+.flowbox{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px}
+.node{background:#f1f4f9;border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.node.hi{background:#e7f0ff;border-color:#bcd2f2;color:var(--accent);font-weight:600}
+.arrow{color:var(--muted)}
+.redline{margin-top:24px;background:#fff4f2;border:1px solid #e8bdb5;border-left:5px solid var(--red);
+ border-radius:10px;padding:16px 20px;color:#6f2620;font-size:14px}
+.redline b{color:var(--red)}
+code{background:#f0f3f8;padding:1px 5px;border-radius:4px;font-size:12px;color:#334}
+footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:900px){.kpis,.two{grid-template-columns:1fr 1fr}.seesaw{grid-template-columns:1fr}}
+@media(max-width:600px){.kpis,.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>算法联盟 · 遍历人类知识机制类型 · 统一场论新思路与迭代攻坚</h1>
+  <p class="sub">全维度可算判决 · 2026-11-11 · openuft / 04_公共成果 / 本项目_全维自洽与归一化</p>
+  <div class="badges">
+    <span class="badge strong">新思路：C1 钉死 + C2 独立预言</span>
+    <span class="badge">10 类机制 · 两遍 20 次迭代</span>
+    <span class="badge">守卫 35/35 · FAIL 0</span>
+    <span class="badge">4 条外部知识锚 · 2 处 BOUNDARY</span>
+    <span class="badge">不占 RID · 不入 README</span>
+  </div>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">10</div><div class="l">覆盖机制类型（数学／理论物理／信息计算／方法论）</div></div>
+  <div class="kpi"><div class="v g">20</div><div class="l">次迭代尝试（第二遍给每类追加一条公理重试）</div></div>
+  <div class="kpi"><div class="v w">0</div><div class="l">次突破（C1 与 C2 同时成立）</div></div>
+  <div class="kpi"><div class="v p">1</div><div class="l">个新思路：钉死—预言跷跷板与自由度转移</div></div>
+</div>
+
+<h2>一、把「攻破」改述为两个可判定条件</h2>
+<div class="panel">
+  <div class="seesaw">
+    <div class="end c1">
+      <h3>C1 · 总自由度账降到 0</h3>
+      <div class="big">p_total = 0</div>
+      <p>p_total = p_eq + p_axiom。p_eq 为仍需外部确定的自由度，p_axiom 为可自由选择的额外假设数。T8 纯自洽闭包把账压到 0。</p>
+    </div>
+    <div class="mid"><b>0 / 20</b>同时成立</div>
+    <div class="end c2">
+      <h3>C2 · 存在独立数值预言</h3>
+      <div class="big">pred ≥ 1</div>
+      <p>推导闭包中，对 3 个独立输入扰动方向都不变、且不是公理注入项的数值陈述。纯自洽系统 6 个派生量全部随输入变化 ⇒ 0 条。</p>
+    </div>
+  </div>
+  <p style="font-size:13px;margin:14px 0 0">跷跷板读数：不注入公理时 p_total=0 但 pred=0；注入公理后扰动不变陈述出现 1 条，可它正是注入的固定点常数本身，扣除注入数后独立预言仍 0，而 p_total 被抬回 1。</p>
+</div>
+
+<h2>二、10 类机制逐条判决</h2>
+<div class="panel">
+  <table>
+    <tr><th>类型</th><th>分支 · 机制</th><th>解集</th><th>p_total</th><th>独立预言</th><th>判定</th></tr>
+    <tr><td>T1</td><td>连续自洽性方程 Aθ=0</td><td>无限直线（零空间维数 1）</td><td>1</td><td>0</td><td><span class="tag no">秩亏</span></td></tr>
+    <tr><td>T2</td><td>β(g)=0 重整化群不动点</td><td>3 个实根（Sturm 计数 3）</td><td>1</td><td>0</td><td><span class="tag no">多不动点</span></td></tr>
+    <tr><td>T3</td><td>Dirac 型整数化 2k−4m=0</td><td>无限格 k=2m（窗口 7 解）</td><td>1</td><td>0</td><td><span class="tag no">格无限</span></td></tr>
+    <tr><td>T4</td><td>表示维数 Σdᵢ²=12</td><td>5 组正整数解</td><td>1</td><td>0</td><td><span class="tag no">不唯一</span></td></tr>
+    <tr><td>T5</td><td>自举线性正性／交叉对称</td><td>凸多面体，4 个顶点</td><td>2</td><td>0</td><td><span class="tag no">区域非点</span></td></tr>
+    <tr><td>T6</td><td>S 对偶 g↔1/g</td><td>二元素等价类 I=5/2</td><td>1</td><td>0</td><td><span class="tag no">对偶简并</span></td></tr>
+    <tr><td>T7</td><td>Kolmogorov 最短描述</td><td>不可判定（256 串 / 255 程序）</td><td>1</td><td>0</td><td><span class="tag bound">BOUNDARY</span></td></tr>
+    <tr><td>T8</td><td>纯自洽推导闭包</td><td>6 个派生量全随输入变化</td><td><b>0</b></td><td>0</td><td><span class="tag zero">C1 成立</span></td></tr>
+    <tr><td>T9</td><td>非线性 xy=1 + 有界性</td><td><b>单元素</b>（区间 + 网格两路）</td><td>1</td><td>0</td><td><span class="tag uniq">唯一可达</span></td></tr>
+    <tr><td>T10</td><td>有限尺寸谱隙外推</td><td>不可判定（极限 4 与 0）</td><td>1</td><td>0</td><td><span class="tag bound">BOUNDARY</span></td></tr>
+  </table>
+</div>
+
+<h2>三、自由度守恒：参数不灭，只会转移</h2>
+<div class="panel">
+  <div class="flowbox">
+    <div class="node">线性一致性<br>凸区域 · p_eq=2</div><span class="arrow">→</span>
+    <div class="node hi">追加非线性约束 xy=1<br>唯一解 · p_eq=0</div><span class="arrow">→</span>
+    <div class="node">代价：p_axiom=1</div><span class="arrow">⇒</span>
+    <div class="node hi">p_total 仍为 1</div>
+  </div>
+  <p style="font-size:13px;margin:14px 0 0">第二遍迭代给每一类追加一条额外公理，10/10 的 p_total 精确 +1。每加一条能把解集压小的约束，就多一个「为什么选这条约束」的自由选择。这与 X-V63 的 k 未钉死、r404 的 rank(M)=4、上一册的反演 nullity=1 是同一病根。</p>
+  <table style="margin-top:14px">
+    <tr><th>迭代</th><th>动作</th><th>突破次数</th><th>唯一解出现</th><th>剩余未排除类型</th></tr>
+    <tr><td>第一遍</td><td>10 类各试一次，按失败分类记账</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><td>第二遍</td><td>每类追加一条公理重试，p_total 全部 +1</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><td>合计</td><td>20 次尝试 + narrowing</td><td><b>0</b></td><td><b>2</b></td><td><b>0</b></td></tr>
+  </table>
+</div>
+
+<h2>四、控制组与三次判据反噬</h2>
+<div class="two">
+  <div class="box">
+    <h3>控制组：格枚举四读数 [7, 5, 3, 9]</h3>
+    <ul>
+      <li>四个窗口读数两两不同，任一等于基线即判 FAIL</li>
+      <li>阳性对照：约束右端改奇数 1，左端恒偶 ⇒ 奇偶禁戒、解数 0</li>
+      <li>阴性对照：平移窗口，格解仍满足 2k−4m=0 ⇒ 按预期恒绿</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h3>三次内存反噬均报 GATES-FAIL</h3>
+    <ul>
+      <li>扰动方向全置零 ⇒ 6 条假阳性不变陈述，甚至假突破</li>
+      <li>移除 T9 非线性抬升 ⇒ 唯一性判据不再报唯一</li>
+      <li>突破判据只留 C1 ⇒ 立刻出现假突破</li>
+    </ul>
+    <p style="font-size:12px;color:var(--muted);margin:8px 0 0">一个 100% 通过、扰动后仍 100% 通过的谓词判别力为 0。</p>
+  </div>
+</div>
+
+<h2>五、下一轮唯一明确的可机算出口</h2>
+<div class="panel">
+  <p style="font-size:13px;margin-top:0">C1 与 C2 同时成立，需要一类「既不由连续输入决定、又不是可自由选择假设」的约束。人类知识里确实有这种对象：<b>实验给定的离散事实</b>（电荷量子化、三代、N_c=3、自旋统计）——它们是输入，但不是可调自由参数。</p>
+  <div class="flowbox" style="margin-top:10px">
+    <div class="node">现行账<br>p_total = p_eq + p_axiom</div><span class="arrow">→</span>
+    <div class="node hi">下一轮账<br>p_total = p_eq + p_axiom + p_exp</div><span class="arrow">→</span>
+    <div class="node">检验：p_exp 的离散事实 + 推导<br>能否生出扰动不变的数值陈述</div>
+  </div>
+  <p style="font-size:13px;margin:12px 0 0">本册机核已具备 <code>breakthrough()</code> 与 <code>invariant_statements()</code>，可直接复用；只需把离散实验事实作为新机制类型加入并区分「自由假设」与「实验给定事实」。在此之前标 OPEN，不宣称解决。</p>
+</div>
+
+<div class="redline">
+  <b>红线</b>：本册 20 次尝试、10 类机制，<b>突破 0 次</b>；四力达成度仍 2/6、四力大统一正确解 0 条、独立实验预言 0。所有结论都是结构层可算判决，不是实验证实；外部定理只作边界标注，不产新物理。<b>不宣称攻破统一场论</b>，不宣称发现宇宙本质本源与方程，不宣称突破力的本质。知识实例不可穷尽，结论只对机制类型层全称成立。
+</div>
+
+<h2>六、判词与交付</h2>
+<div class="panel">
+  <p style="font-size:13px;margin-top:0">机核 <code>_alg_allknowledge_iterative_recompute.py</code>：纯标准库、Fraction 精确 RREF／Sturm／多面体／格枚举／区间传播／推导闭包；守卫 35/35（PASS 28 / INFO 4 / BOUNDARY 3 / FAIL 0）；幂等复跑 MD5 一致，三次反噬全部报警。</p>
+  <p style="font-size:13px"><b>final</b>：<code>ALG-ALLKNOWLEDGE--GATES-PASS-WITH-0-NEGATIVE</code></p>
+  <p style="font-size:13px"><b>verdict</b>：<code>ALG-ALLKNOWLEDGE-ITERATIVE__ATTEMPTS-20__UNIQUE-TYPES-2__DOF-FLOOR-0__NATIVE-PRED-0__SEESAW-PINNING-VS-PREDICTION__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0</code></p>
+  <p style="font-size:13px;margin-bottom:0">产物：主文 md、本 HTML、机核数据 JSON、report txt、交付核验 JSON、机核源码；工作区根另有 ASCII 三部件、拼接器、入口与核验器。当前最大 RID 为 r406，本册不占号，下轮从 r407 起；README 零改动、零删除。</p>
+</div>
+
+<footer>算法联盟 · openuft 全维自洽与归一化 · 2026-11-11 · 浅色主题自包含页面，无外部依赖</footer>
+</div>
+</body>
+</html>
