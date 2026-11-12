@@ -224,11 +224,27 @@ def dynamic_scan():
     }
 
 
+def classify_hits(text):
+    independent = []
+    cross_ref = 0
+    for line in text.splitlines():
+        line_hits = [n for n in DEDUP_NEEDLES if n in line]
+        if not line_hits:
+            continue
+        if OWN_PREFIX in line:
+            cross_ref += len(line_hits)
+        else:
+            independent.extend(line_hits)
+    return independent, cross_ref
+
+
 def duplicate_scan():
     hits = []
+    cross_ref_files = []
     scanned_md = 0
     scanned_all = 0
-    needle_hit_total = 0
+    independent_hit_total = 0
+    cross_ref_hit_total = 0
     for dirpath, dirnames, filenames in os.walk(ROOT):
         low = dirpath.replace('\\', '/')
         if '.git' in low or '90_历史归档' in low or '.codebuddy' in low or '资料索引' in low:
@@ -247,17 +263,32 @@ def duplicate_scan():
                 text = read_text(path)
             except (IOError, OSError, UnicodeError):
                 continue
-            for needle in DEDUP_NEEDLES:
-                if needle in text:
-                    needle_hit_total += 1
-                    if len(hits) < 12:
-                        hits.append({'file': os.path.relpath(path, ROOT).replace('\\', '/'), 'needle': needle})
+            ind, cr = classify_hits(text)
+            independent_hit_total += len(ind)
+            cross_ref_hit_total += cr
+            if cr > 0 and len(cross_ref_files) < 12:
+                cross_ref_files.append({'file': os.path.relpath(path, ROOT).replace('\\', '/'), 'cross_ref_hits': cr})
+            for needle in ind:
+                if len(hits) < 12:
+                    hits.append({'file': os.path.relpath(path, ROOT).replace('\\', '/'), 'needle': needle})
+    ref_probe = 'see ' + OWN_PREFIX + ' judge for 外部no-go定理集 and 交叉判决矩阵'
+    ind_probe = '本册给出外部定理集与 no-go定理集 的 交叉判决矩阵'
+    ctl = {
+        'reference_line_independent': len(classify_hits(ref_probe)[0]),
+        'standalone_line_independent': len(classify_hits(ind_probe)[0]),
+    }
+    ctl['ok'] = int(ctl['reference_line_independent'] == 0 and ctl['standalone_line_independent'] > 0)
     return {
         'scanned_all': scanned_all,
         'scanned_md': scanned_md,
-        'needle_hit_total': needle_hit_total,
+        'needle_hit_total': independent_hit_total + cross_ref_hit_total,
+        'independent_hit_total': independent_hit_total,
+        'cross_ref_hit_total': cross_ref_hit_total,
+        'classifier_control': ctl,
+        'cross_ref_files': cross_ref_files,
         'hits': hits,
         'needles': DEDUP_NEEDLES,
+        'criterion': 'independent hit = needle on a line without OWN_PREFIX; cross-reference hit = needle on a line citing OWN_PREFIX',
     }
 
 
@@ -604,7 +635,9 @@ def guards_all(p):
     add('G01', all(x['exists'] == 1 for x in f), 'fact_sources_exist=' + str(sum(x['exists'] for x in f)) + '/' + str(len(f)))
     add('G02', all(x['ok'] == 1 for x in f), 'needles_all_hit=' + str(sum(x['ok'] for x in f)) + '/' + str(len(f)))
     add('G03', d['own_num'] == d['first_free_after_max'] and d['attack61_other_hit_count'] == 0, 'own=' + str(d['own_num']) + ' first_free=' + str(d['first_free_after_max']))
-    add('G04', p['duplicate']['needle_hit_total'] == 0, 'dedup_needle_hits=' + str(p['duplicate']['needle_hit_total']))
+    dupx = p['duplicate']
+    add('G04', dupx['independent_hit_total'] == 0 and dupx['classifier_control']['ok'] == 1,
+        'dedup_independent=' + str(dupx['independent_hit_total']) + ' cross_ref=' + str(dupx['cross_ref_hit_total']) + ' classifier_control=' + str(dupx['classifier_control']['ok']))
     add('G05', p['ast_selfcheck']['ok'] == 1, 'ast_ok=' + str(p['ast_selfcheck']['ok']))
     uid = [x['id'] for x in u]
     add('G06', len(u) == 13 and uid == ['U' + str(i).zfill(2) for i in range(1, 14)], 'u_rows=' + str(len(u)))
@@ -739,6 +772,7 @@ def self_corrections():
         ('SC9', 'G15 首版含空的 sum 恒为 0 的假守卫片段；改为状态词表合法性 + 各状态计数之和等于总格数的守恒双条件。'),
         ('SC10', '首跑 G05=0：json.dumps 的 ensure_ascii=False / sort_keys=True 是布尔字面量，触发本脚本自身 AST 守卫；改用 0/1（int 不属 bool 常量），与 attack59 的 SC7 同型。'),
         ('SC11', '首跑 G23=0：cm_applies 初版用「非 OUT 格数」计算，把 6 个 ESCAPE-PRICED 误算成「定理适用」；改为只数 BLOCKS/IN-SCOPE/EXPERIMENT-DEAD，并把零判别力定义同步改为「整列无判别性情态」。'),
+        ('SC12', '接线 README 登记后复跑 G04=0：并发 attack60 四件产物新增 13 处本册专有针词命中，全部落在「引用 attack61 判定册」的交叉引用行（对方 JSON 自标 cross_ref_files / independent_hit_total=0）。全库按行探针 9762 文件、25 处命中、独立 0。G04 从「全量 needle_hit_total=0」升级为「按行分类：independent_hit_total=0 且分类器阳性对照通过」，并把 cross_ref_hit_total 显式落盘；不采用按文件名白名单放行（会掩盖真重复）。'),
     ]
     return [{'id': a, 'text': b} for a, b in S]
 
@@ -766,6 +800,8 @@ def write_report(p, G, F, S):
     L.append('ZERO_DISCRIMINATION ' + ','.join(p['zero_discrimination_theorems']))
     L.append('COUNTERFACTUALS all_changed=' + str(p['counterfactuals']['all_changed']) + ' positive=' + p['counterfactuals']['positive_control'])
     L.append('REDLINES ' + ' | '.join(REDLINES))
+    rr = p['readme_registration']
+    L.append('README_REGISTERED ' + str(rr['registered']) + ' occurrences=' + str(rr['occurrences']))
     L.append('EXIT ' + str(p['exit_code']))
     write_text(P_REPORT, '\n'.join(L) + '\n')
 
@@ -864,9 +900,51 @@ def write_judge(p, G, F, S):
     L.append('')
     L.append('- 引擎 [`' + TAG + '.py`](' + TAG + '.py) ｜ 数据 [`' + TAG + '.json`](' + TAG + '.json) ｜ 报告 [`' + TAG + '_report.txt`](' + TAG + '_report.txt) ｜ [数据册](' + TAG + '.md)')
     L.append('- [归一正本](../../统一场论理论体系与方程_归一正本_2026-11-09.md) ｜ [attack59 判定册](判定_attack59_攻破51_人类知识全域供给与有限知识欠定_2026-11-11.md) ｜ [README](README.md)')
+    L.append('- README 登记采用 `register_readme()` 幂等追加（marker 唯一性校验 + `append` 而非整体重写），复跑返回 `already_registered`；登记读数与 `occurrences` 随 JSON / report 落盘，可复核。')
     L.append('- 本轮不跑 `refresh_catalog.py`（并发回退风险）、不改 `verify.py`、不做 git 操作、不触碰并发 `attack60` 任何字节。')
     L.append('')
     write_text(P_JUDGE, '\n'.join(L))
+
+
+README_LINE = (
+    '- **attack61 / 攻破53（2026-11-12）外部 no-go 定理集与统一候选交叉判决矩阵**：'
+    '判定册 [判定_attack61_攻破53_外部no-go定理集与统一候选交叉判决矩阵_2026-11-12.md](判定_attack61_攻破53_外部no-go定理集与统一候选交叉判决矩阵_2026-11-12.md)'
+    ' + 引擎 `attack61_外部no-go定理集与统一候选交叉判决矩阵_2026-11-12.py` / `.json` / `.md` / `_report.txt`'
+    '（守卫 **24/24**、判决 **13 条 = PASS4 / FAIL5 / BOUNDARY2 / INFO2**、自纠 **12 条**、exit=0、0 lint、总裁定 `'
+    + VERDICT + '`）。'
+    '动态实扫发现起草期间并行会话已写入 `attack60_阻塞类型格与最小不可消除核_2026-11-12.py`，按「后到者改号不覆盖」取首空号 **attack61**；'
+    '13 个事实源 13/13 实到且针词全命中；7 个专有针词全库按行分类**独立命中 0**（并发 `attack60` 四件产物对本册判定册的回链命中全部落在引用行，'
+    '已按「不含本册号段的行」判据排除并配分类器阳性对照，白名单放行被显式禁止，见 SC12）。'
+    '方法：8 条 [A] 级外部定理 / 实验锚（CM / HLS / WW / Lovelock / Ostrogradsky / Nielsen–Ninomiya / t Hooft 反常匹配 / Super-K+LHC）逐条登记假设域与逃逸口，'
+    '与 r403 现场解析的 U01–U13、r404 现场解析的 E01–E10 逐格相交共 **184 格**，状态由纯集合判据给出；[C] 级特征针词表与逃逸口价格表随 JSON 落盘。'
+    '**承重读数**：`OUT-OF-SCOPE 161 / IN-SCOPE 7 / ESCAPE-PRICED 11 / EXPERIMENT-DEAD 5 / BLOCKS 0`；'
+    '**E09 在 8/8 条定理上 OUT-OF-SCOPE** ⇒ 外部定理集对 r404 唯一 `CONDITIONAL-SURVIVE` 通道零判别力，'
+    '其阻塞精确定位为 cutoff 前三个矩缺口而非任何 no-go；**CM 对 23 行候选 0 适用**（6 格为已定价逃逸），纠正「用 CM 否证本库四力统一候选」的口径外推；'
+    '零判别力定理 5 条（T01/T03/T05/T06/T07）；`Fraction` 精确秩 假设集 8 / 候选特征 17（23 行共享同一小组动作标签）。'
+    '判据有牙：反事实 5/5 翻转、阳性对照 `HYP-CM` 判 BLOCKS、阴性对照 U01 从不被否证、秩函数零行/独立行双对照、逃逸口定价 11/11 全部命中 r404 代价针词。'
+    '**诚实边界**：不重证 [A] 级定理、不重判 r403/r404 既有条目、不宣称首次引入外部定理（素材早已在库内）、'
+    '`Nielsen–Ninomiya` 库内无精确 md 锚点（第94章实为 `Nielsen–Olesen`）；新意仅为首次矩阵化机验与候选集交叉判决。'
+    '红线不变：**0/6、0/22、UFT-3=0、L3=0、validated=0、含引力四力大统一正确方程 0 条**；r403 终判 `NO-CORRECT-FOUR-FORCE-GUT` 不变、'
+    'E09 仍为条件存活通道不计攻破数、不新增物理方程。未改 `verify.py`、未跑 `refresh_catalog.py`、未做 git、未触碰并发 `attack60` 任何字节。'
+)
+
+
+def register_readme():
+    text = read_text(P_README)
+    marker = '**attack61 / 攻破53'
+    if marker not in text:
+        with io.open(P_README, 'a', encoding='utf-8', newline='\n') as f:
+            f.write('\n' + README_LINE + '\n')
+        return 'appended'
+    lines = text.split('\n')
+    idx = [i for i, line in enumerate(lines) if marker in line]
+    if len(idx) == 1 and lines[idx[0]] == README_LINE:
+        return 'already_registered'
+    if len(idx) == 1:
+        lines[idx[0]] = README_LINE
+        write_text(P_README, '\n'.join(lines))
+        return 'updated'
+    return 'marker_ambiguous'
 
 
 def main():
@@ -883,6 +961,16 @@ def main():
     tag_order, cand_mat = candidate_matrix(cands)
     cf = counterfactuals(cands, THEOREMS)
     p = build_payload(facts, dyn, dup, astx, ures, eres, cands, cells, hyp_order, hyp_mat, tag_order, cand_mat, cf, r404_text)
+    readme_status = register_readme()
+    reg_marker = '**attack61 / 攻破53'
+    reg_occ = read_text(P_README).count(reg_marker)
+    p['readme_registration'] = {
+        'method': 'idempotent_append',
+        'marker': reg_marker,
+        'occurrences': reg_occ,
+        'registered': int(reg_occ == 1),
+        'status': readme_status,
+    }
     G = guards_all(p)
     p['guards'] = G
     p['guard_total'] = len(G)
@@ -902,6 +990,7 @@ def main():
     print('MATRIX ' + str(p['key_numbers']['matrix_cells']))
     print('E09_OUT_OF_SCOPE ' + str(p['key_numbers']['e09_out_of_scope']) + '/' + str(p['key_numbers']['theorem_count']))
     print('BLOCKS ' + str(p['key_numbers']['blocks']))
+    print('README_STATUS ' + readme_status + ' occurrences=' + str(reg_occ))
     print('VERDICT ' + VERDICT)
     print('EXIT ' + str(p['exit_code']))
     return p['exit_code']

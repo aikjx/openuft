@@ -1,0 +1,63 @@
+算法联盟：信息守恒与目标可满足性 · 比特账与最小不可满足核（第九轮）
+================================================================================================
+verdict : ALG-INFO-GATE__ANCHORS-46__IN-6__OUT-40__GAP--2947__COPIED-24of97__ANSWER-IN-INPUT__MODELS-128__SAT-0__MUS-4__PRED-0
+final   : ALG-INFO-GATE--GATES-PASS-WITH-0-NEGATIVE
+counts  : {"INFO": 5, "PASS": 29, "FAIL": 0, "IDENTITY": 1, "BOUNDARY": 1}
+guards  : 36/36
+sha256  : 6617e18065c387d9d7a079a25f828ece601fb58b6d56d1346585cc2e157109d7
+------------------------------------------------------------------------------------------------
+两路机拼：act json.load 逐项 vs exp 正则从原始 JSON 文本抽列，46/46 一致、比特失配 0 条
+来料分层：定义/派生输入 6 项 711 bit；实测输出 40 项；全部 2234 bit
+输出三口径：独立编码 1523 / 通分共享分母 5553 / 27 项双侧 845 bit
+理论脚本：97 个 AST 数值字面量共 3759 bit；其中 24 个与观测锚逐位相等（13 个不同值），复制占比 38.4677%
+------------------------------------------------------------------------------------------------
+★信息账：预设「输出超输入」被数据推翻，如实报含负缺口
+  输入 711 + 程序 3759 = 4470 bit > 输出 1523 bit ⇒ 无信息缺口
+  三口径缺口 -2947 / 1083 / -3625 bit；复制唯一值 935 bit 占输出 61.3920%
+  ⇒ 零自由参数靠把观测值搬进源码字面量达成，不是靠信息压缩
+  阳性对照输出翻倍 ⇒ 缺口 -1424（增量恰 1523 bit）；阴性对照程序比特 0 ⇒ 812
+  跨 8 轮注入账合计下界 81 bit，八轮突破读数全 0
+------------------------------------------------------------------------------------------------
+目标公理 7 原子 + I1 ⇒ 128 个真值指派全枚举
+  满足全部 8 条约束的构型 0 个 ⇒ 目标不可满足
+  最小不可满足核 第 4 层 / 大小 4 / ['A2', 'A3', 'A5', 'I1']；该层 1 个不可满足子集
+  逐条删除后满足数 {'A1': 0, 'A2': 1, 'A3': 1, 'A4': 0, 'A5': 1, 'A6': 0, 'A7': 0, 'I1': 1}
+------------------------------------------------------------------------------------------------
+红线：数学自洽 != 实验证实；四力大统一 0 条正确解；独立实验预言 0；不宣称攻破。
+------------------------------------------------------------------------------------------------
+[PASS] PREV8-RELOADED :: OK
+[PASS] SOURCE-LINK-HEALTH :: OK
+[PASS] EXP-ACT-DISTINCT-AST :: OK
+[PASS] TWO-PATH-LEDGER-EXACT :: OK
+[PASS] BIT-ACCOUNT-PARTITION :: OK
+[PASS] BIT-THREE-CALIBRE :: OK
+[PASS] NO-INFO-GAP-HONEST :: OK
+[PASS] ANSWER-ALREADY-IN-INPUT :: OK
+[PASS] GAQ-LITERALS-AST :: OK
+[PASS] COPIED-LITERALS-DETECTED :: OK
+[PASS] COPY-RATIO-DRIVEN :: OK
+[PASS] CONSERVATION-I1-DATA-DRIVEN :: OK
+[PASS] ROUND-INJECTION-ALL-POSITIVE :: OK
+[PASS] ROUND-INJECTION-ALL-ZERO :: OK
+[PASS] ROUND-LEDGER-CONSISTENT :: OK
+[PASS] MODEL-SPACE-128 :: OK
+[PASS] TARGET-UNSATISFIABLE :: OK
+[PASS] MUS-SIZE-4 :: OK
+[PASS] MUS-MINIMAL :: OK
+[PASS] MUS-BEARING :: OK
+[PASS] SAT-DROP-READINGS :: OK
+[PASS] POS-CTRL-DOUBLED-OUTPUT :: OK
+[IDENTITY] CTRL-IDENTITY-NEVER-HITS :: OK
+[INFO] NOT-ALL-GREEN :: OK
+[PASS] CTRL-FOUR-DISTINCT :: OK
+[PASS] CTRL-NO-EQ-BASE :: OK
+[PASS] SPINE-ZERO :: OK
+[PASS] INFO-UPGRADES-PARAMETER-LEDGER :: OK
+[BOUNDARY] FAMILY-LIMITED-CLAIM :: OK
+[INFO] FOUR-FORCE-INCOMPLETE :: OK
+[INFO] NO-BREAKTHROUGH :: OK
+[INFO] MATH-NOT-EXPERIMENT :: OK
+[INFO] NEXT-EXIT :: OK
+[PASS] NO-HARDCODE-OK :: OK
+[PASS] VERDICT-MACHINE :: OK
+[PASS] FINAL-OF-CONSISTENT :: OK

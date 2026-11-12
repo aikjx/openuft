@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法联盟 · 审计链体检与优化（第十轮）</title>
+<style>
+:root {
+  --bg: #f7f9fc;
+  --panel: #ffffff;
+  --ink: #1f2933;
+  --muted: #5b6b7b;
+  --line: #dbe3ec;
+  --accent: #2f6fb5;
+  --good: #c0392b;
+  --warn: #b7791f;
+  --soft: #eef4fb;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 32px 24px 56px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  line-height: 1.7;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+header {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 26px 30px;
+  margin-bottom: 20px;
+}
+h1 { margin: 0 0 8px; font-size: 26px; letter-spacing: .3px; }
+.sub { color: var(--muted); font-size: 14px; margin: 0; }
+.verdict {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 6px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12.5px;
+  word-break: break-all;
+  color: #24476e;
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 22px;
+}
+.card h2 { margin: 0 0 12px; font-size: 17px; color: var(--accent); }
+.card h2 .tag {
+  display: inline-block;
+  background: var(--soft);
+  color: var(--accent);
+  border-radius: 5px;
+  padding: 1px 8px;
+  margin-right: 8px;
+  font-size: 13px;
+  font-family: Consolas, monospace;
+}
+.big { font-size: 30px; font-weight: 700; color: var(--good); line-height: 1.25; }
+.big.blue { color: var(--accent); }
+.big small { font-size: 14px; font-weight: 400; color: var(--muted); }
+p { margin: 8px 0; font-size: 14px; }
+ul { margin: 8px 0; padding-left: 20px; font-size: 14px; }
+li { margin: 4px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 10px; }
+th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; }
+th { background: var(--soft); color: #24476e; font-weight: 600; }
+td.num { font-family: Consolas, monospace; text-align: right; }
+.section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 26px;
+  margin-bottom: 20px;
+}
+.section h2 { margin: 0 0 14px; font-size: 19px; color: var(--accent); }
+.flow { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.step {
+  flex: 1 1 150px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+}
+.step b { display: block; color: var(--accent); margin-bottom: 4px; font-family: Consolas, monospace; }
+.note {
+  background: #fffaf0;
+  border: 1px solid #ecd9b0;
+  border-left: 4px solid var(--warn);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  margin-top: 14px;
+}
+.redline {
+  background: #fdf1ef;
+  border: 1px solid #e8c4bd;
+  border-left: 4px solid var(--good);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-size: 14px;
+}
+code { font-family: Consolas, "Courier New", monospace; background: var(--soft); padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+footer { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>算法联盟 · 审计链体检、修复与优化</h1>
+  <p class="sub">第十轮 · 2026-11-12 · 审计对象是九轮审计链自身的可核验性与可复现性 · 不占 RID、不入 README、不与任何卷相加</p>
+  <div class="verdict">ALG-HEALTHCHECK__L0-22976B-TO-13796B__COVERED-97__MISMATCH-0__DRIFT-0__KERNELS-19__VERIFY-9__DEFECTS-0__PRED-0</div>
+  <p style="margin-top:14px"><b>结论先行：</b>审计链在数值层面是干净的，但「干净」本身不构成攻破，也不构成完备。机核 <code>34/34</code> 守卫全过，<code>final = ALG-HEALTHCHECK--GATES-PASS-WITH-0-NEGATIVE</code>。</p>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <h2><span class="tag">L0</span>记忆负债清偿</h2>
+    <div class="big">22,976 → 13,796 <small>B</small></div>
+    <p>减少 <b>9,180 B</b>，降幅 <b>39.954735%</b>；关键纪律词 <b>10/10</b> 保留，红线保留。</p>
+    <p>旧版全文归档 <code>_MEMORY_archive_v40_2026-11-12.md</code>，逐册长结论全部可回查。这是本轮唯一真实的文件修复。</p>
+  </div>
+  <div class="card">
+    <h2><span class="tag">L1</span>交付物盘点</h2>
+    <div class="big blue">97 <small>个对象纳入指纹索引</small></div>
+    <p>主文 <b>20</b> / HTML <b>10</b> / 机核 <b>19</b> / 数据 <b>48</b> / report <b>19</b> / verify <b>9</b>。</p>
+    <p>断链 <b>0</b>；report 与 kernel <code>19:19</code> 一一配对；verify 文件与 PASS 读数 <code>9:9</code>。</p>
+  </div>
+  <div class="card">
+    <h2><span class="tag">L2</span>两路机拼自洽</h2>
+    <div class="big blue">0 <small>条失配</small></div>
+    <p>report 正则 vs JSON 结构 <b>19/19</b>；主文摘要 <b>7/7</b>；<code>json_md5</code> 声明 <b>2/2</b> 逐位相等。</p>
+    <p><code>VERIFY-ALL-PASS</code> <b>9/9</b>；HTML 配平与自包含 <b>10/10</b>；README MD5 未变。</p>
+  </div>
+  <div class="card">
+    <h2><span class="tag">L3</span>统一幂等复跑</h2>
+    <div class="big blue">19 <small>个机核 · 0 漂移</small></div>
+    <p>非零返回 <b>0</b>、MD5 漂移 <b>0</b>、自动还原触发 <b>0</b>、零删除、复跑后仓库字节与快照一致。</p>
+    <p>把前九轮「各自宣称幂等」升级为「一次统一复跑、全链路可复现」。</p>
+  </div>
+  <div class="card">
+    <h2><span class="tag">L4</span>诚实改判</h2>
+    <div class="big">defect → coverage</div>
+    <p>预设「存在 ≥1 个失配／漂移」被数据推翻（<code>defects_found = 0</code>）⇒ 不放宽守卫、不改文案硬撑，改驱动量为覆盖度与可复现性。</p>
+    <p>索引分组 <code>20 / 10 / 19 / 48</code>，每个对象带 <code>bytes + md5 + sha256</code>，指纹互异 <b>97/97</b>。</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>五层流程</h2>
+  <div class="flow">
+    <div class="step"><b>L0</b>归档并压缩超长记忆文件，机读校验 10 个纪律锚点未丢</div>
+    <div class="step"><b>L1</b>六类交付物全量盘点，排除本册自身产物以固定口径</div>
+    <div class="step"><b>L2</b>act 结构化 / exp 正则两路独立机拼，跨册一致性核验</div>
+    <div class="step"><b>L3</b>19 个机核统一复跑，48 个数据文件前后 MD5 快照比对</div>
+    <div class="step"><b>L4</b>补齐 97 个对象的完整性指纹，形成可重复体检入口</div>
+  </div>
+  <p style="color:var(--muted)">所有守卫均由实际读数驱动；<code>add()</code> 无布尔字面量，<code>exp</code> 与 <code>act</code> 两族函数 AST 不同且无常量 return。</p>
+</div>
+
+<div class="section">
+  <h2>体例缺口：如实登记，不追改历史卷</h2>
+  <table>
+    <tr><th>缺口</th><th>读数</th><th>处置</th></tr>
+    <tr><td>机核无 <code>content_sha256</code></td><td class="num">10 / 19</td><td>补外部指纹，不改源码</td></tr>
+    <tr><td>主文无 verify 引用</td><td class="num">11 / 20</td><td>统一索引登记，不回写主文</td></tr>
+    <tr><td>主文无红线关键词</td><td class="num">2 / 20</td><td>2026-10-14 早期册，标 BOUNDARY</td></tr>
+    <tr><td>按文件数计 HTML 缺口</td><td class="num">10</td><td>非逐册配对，不断言归属</td></tr>
+  </table>
+  <div class="note">这些是历史册体例差异，不是数值错误。本册不改动任何既有主文、机核、JSON 或 HTML，避免与任何卷相加；改为给全部 97 个对象补齐 <code>md5 + sha256</code> 完整性指纹。</div>
+</div>
+
+<div class="section">
+  <h2>反噬与控制组：判据自己也要被审判</h2>
+  <table>
+    <tr><th>读数（断链 / 漂移 / 失配）</th><th>含义</th><th>门是否响应</th></tr>
+    <tr><td class="num">[0, 0, 0]</td><td>baseline 负对照，恒绿</td><td>否（应当否）</td></tr>
+    <tr><td class="num">[1, 0, 0]</td><td>注入假断链</td><td>链接门挡住</td></tr>
+    <tr><td class="num">[0, 1, 0]</td><td>注入假漂移</td><td>漂移门挡住</td></tr>
+    <tr><td class="num">[0, 0, 1]</td><td>注入假失配</td><td>一致门挡住</td></tr>
+  </table>
+  <p style="margin-top:12px">四个读数两两不同（<code>4</code> 种）。三次反噬分别在内存里拆掉 <code>gate_link_ok</code> / <code>gate_drift_ok</code> / <code>gate_match_ok</code> 之一，各造出 1 个控制组 FAIL 并使 final 变 <code>GATES-FAIL</code>；每次只动一个判据，三个门都承重。</p>
+</div>
+
+<div class="section">
+  <h2>本轮实现事故（真实发生，已修复）</h2>
+  <ul>
+    <li><b>假断链 19 条</b>：预探查漏了 <code>.txt → .json</code> 扩展名替换，19 册全报 <code>NO-JSON</code>。修复：路径构造收敛为唯一函数 <code>json_path_from_report()</code>，核验脚本复用。</li>
+    <li><b>装饰判据</b>：初版有一条依赖特定主文名前缀、且读取尚未生成文件的 MD5 检查，按纪律删除，改为「主文自身引用 → 实物」逐位核对。</li>
+    <li><b>盘点对象漂移</b>：不排除本册产物会让 <code>data_files</code> 从 48 变 50，守卫读数随运行次数变化。修复：新增 <code>is_own()</code> / <code>exclude_own()</code> 六类全过滤。</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>诚实边界与红线</h2>
+  <ul>
+    <li>md5 / sha256 是完整性指纹，不是 Kolmogorov 复杂度，也不证明内容物理正确；零缺陷只覆盖可机读字段，不覆盖语义正确性。</li>
+    <li>本册只审可核验性与可复现性，不重新判定任何既有卷的物理结论；九轮结论一字未改。</li>
+    <li><b>IDENTITY</b>：四类文件数之和 <code>== objects_indexed</code> 是构造恒等式，零判别力，单列不进布尔结论。</li>
+    <li>软出口已全部用完；硬出口仍是带双侧误差棒、理论值落在其可判负区间之外的新实验读数，再查 <code>p_free = 0</code> ∧ LTO ∧ <code>χ² &lt; 3.84145882069</code>。</li>
+  </ul>
+  <div class="redline" style="margin-top:14px">
+    数学自洽 ≠ 实验证实；审计册只产可算判决，不产新物理；四力大统一 0 条正确解；独立实验预言 0；<b>不宣称攻破统一场论，不宣称攻破力的统一</b>。<code>README.md</code> 全程零改动，最大 RID 仍为 <code>r406</code>。
+  </div>
+</div>
+
+<footer>算法联盟 第十轮 · 机核 34/34 守卫 · VERIFY-ALL-PASS · 2026-11-12</footer>
+
+</div>
+</body>
+</html>

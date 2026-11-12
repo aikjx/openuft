@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟 · 信息守恒与目标可满足性（第九轮）</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#5b6572;
+    --line:#e3e8ef; --blue:#2563eb; --blue-soft:#eaf1ff;
+    --amber:#b45309; --amber-soft:#fff5e6; --red:#b91c1c; --red-soft:#fdecec;
+    --green:#15803d; --green-soft:#e9f7ee; --purple:#6d28d9; --purple-soft:#f2ebff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:"Microsoft YaHei","PingFang SC","Segoe UI",Arial,sans-serif;
+       line-height:1.72;font-size:15px}
+  .wrap{max-width:1080px;margin:0 auto;padding:36px 26px 64px}
+  header{background:linear-gradient(135deg,#ffffff 0%,#eef3ff 100%);
+         border:1px solid var(--line);border-radius:14px;padding:30px 32px;margin-bottom:26px}
+  h1{margin:0 0 8px;font-size:26px;letter-spacing:.4px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 14px}
+  .meta{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:8px 22px}
+  .meta b{color:var(--ink);font-weight:600}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;
+          padding:24px 28px;margin-bottom:20px}
+  h2{font-size:19px;margin:0 0 6px;padding-left:12px;border-left:4px solid var(--blue)}
+  .lead{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px}
+  .kpi .n{font-size:27px;font-weight:700;line-height:1.2;color:var(--blue)}
+  .kpi .n.warn{color:var(--amber)}
+  .kpi .n.zero{color:var(--red)}
+  .kpi .t{font-size:13px;color:var(--muted);margin-top:6px}
+  table{width:100%;border-collapse:collapse;margin:14px 0 4px;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:middle}
+  th{background:#f0f4fa;font-weight:600;color:#374151}
+  tr:nth-child(even) td{background:#fbfcfe}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+  .t-pass{background:var(--green-soft);color:var(--green)}
+  .t-fail{background:var(--red-soft);color:var(--red)}
+  .t-info{background:var(--blue-soft);color:var(--blue)}
+  .t-iden{background:var(--purple-soft);color:var(--purple)}
+  .t-bound{background:var(--amber-soft);color:var(--amber)}
+  .callout{background:var(--blue-soft);border-left:4px solid var(--blue);
+           border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;font-size:14px}
+  .callout.amber{background:var(--amber-soft);border-left-color:var(--amber)}
+  .callout.red{background:var(--red-soft);border-left-color:var(--red)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .box{border:1px solid var(--line);border-radius:9px;padding:15px 17px;background:#fbfcfe}
+  .box h3{margin:0 0 8px;font-size:15px;color:var(--blue)}
+  .box.amber h3{color:var(--amber)}
+  .box.red h3{color:var(--red)}
+  ul{margin:8px 0 0;padding-left:20px}
+  li{margin:5px 0}
+  code{background:#f1f4f9;border:1px solid #e6eaf1;border-radius:4px;padding:1px 5px;
+       font-family:Consolas,Monaco,monospace;font-size:13px;color:#334155}
+  .bar{height:16px;border-radius:4px;background:#eef2f8;overflow:hidden;margin-top:7px}
+  .bar > i{display:block;height:100%;background:var(--blue)}
+  .bar.amber > i{background:var(--amber)}
+  .bar.red > i{background:var(--red)}
+  .barrow{margin:9px 0}
+  .barrow .lb{font-size:13px;color:var(--muted)}
+  .mus{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+  .chip{background:var(--red-soft);color:var(--red);border:1px solid #f6cfcf;
+        border-radius:8px;padding:7px 14px;font-weight:700;font-size:14px}
+  .chip.other{background:#f1f4f9;color:var(--muted);border-color:var(--line);font-weight:500}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:26px;line-height:1.9}
+  @media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>信息守恒与目标可满足性</h1>
+  <p class="sub">算法联盟 · 统一场论第九轮 —— 不再数参数、不再找候选，改数信息比特并审判目标本身</p>
+  <div class="meta">
+    <span>日期 <b>2026-11-12</b></span>
+    <span>性质 <b>分析册（不占 RID · 不入 README · 不与审计卷相加）</b></span>
+    <span>机核 <b>36/36 守卫</b></span>
+    <span>核验 <b>VERIFY-ALL-PASS</b></span>
+  </div>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="n">24 / 97</div><div class="t">源码字面量与观测逐位相等</div></div>
+  <div class="kpi"><div class="n warn">61.39%</div><div class="t">复制比特占 40 项输出信息</div></div>
+  <div class="kpi"><div class="n zero">0</div><div class="t">满足全部目标公理的构型</div></div>
+  <div class="kpi"><div class="n">4</div><div class="t">最小不可满足核大小</div></div>
+</div>
+
+<section>
+  <h2>一、范式转换</h2>
+  <p class="lead">前八轮都在数参数个数，把「参数不灭」记录了八次。本轮改数信息比特，并直接审判目标公理集是否可满足。</p>
+  <div class="two">
+    <div class="box">
+      <h3>数参数 → 数比特</h3>
+      <ul>
+        <li>参数可靠改名藏进定义常数、写进源码字面量而消失。</li>
+        <li>精确数值必须有来源，比特藏不住。</li>
+        <li>编码口径：既约分数分子分母分别二进制，标 <span class="tag t-bound">BOUNDARY</span>。</li>
+      </ul>
+    </div>
+    <div class="box amber">
+      <h3>找候选 → 审目标</h3>
+      <ul>
+        <li>把「攻破统一场论」公理化为 7 条原子要求。</li>
+        <li>2^7 = 128 个真值指派 × 2^8 = 256 个约束子集全枚举。</li>
+        <li>输出最小不可满足核（MUS），不是又一次「没找到候选」。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>二、精确比特账：6 项输入，40 项输出</h2>
+  <p class="lead">两路机拼：act 用 json.load 逐项，exp 用正则从原始 JSON 文本抽列；46 项 id / value / kind 逐项一致、比特失配 0 条。</p>
+  <table>
+    <thead><tr><th>层</th><th class="num">条数</th><th class="num">比特</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>定义 / 派生输入</td><td class="num"><b>6</b></td><td class="num"><b>711</b></td><td>C01 C02 C03 C04 C12 C13</td></tr>
+      <tr><td>实测输出</td><td class="num"><b>40</b></td><td class="num"><b>1523</b></td><td>38 measured + 2 measured-bound</td></tr>
+      <tr><td>全部</td><td class="num">46</td><td class="num">2234</td><td><code>711 + 1523 = 2234</code> 逐位自洽</td></tr>
+      <tr><td>理论脚本程序侧</td><td class="num">97 个字面量</td><td class="num">3759</td><td>按 AST 实际形态机读</td></tr>
+    </tbody>
+  </table>
+  <p class="lead" style="margin-top:14px">输出三口径：独立编码 <b>1523</b> / 通分共享分母 <b>5553</b> / 27 项双侧锚 <b>845</b> bit（另带 sigma 561 bit）。★通分口径反而更大（公分母 137 bit、分子随之放大）⇒ 口径决定读数，不预设方向。</p>
+</section>
+
+<section>
+  <h2>三、★预设被数据推翻：输入侧已经装了答案</h2>
+  <p class="lead">本册最初预设「输出信息超过输入 + 程序，故须外部注入」。机算把这个预设直接推翻。</p>
+  <div class="barrow"><div class="lb">输入 711 + 程序 3759 = <b>4470 bit</b></div><div class="bar"><i style="width:100%"></i></div></div>
+  <div class="barrow"><div class="lb">40 项实测输出 = <b>1523 bit</b></div><div class="bar amber"><i style="width:34.1%"></i></div></div>
+  <table>
+    <thead><tr><th>缺口口径</th><th class="num">读数</th><th>符号</th></tr></thead>
+    <tbody>
+      <tr><td>独立编码</td><td class="num">−2947</td><td><span class="tag t-bound">负</span></td></tr>
+      <tr><td>通分共享分母</td><td class="num">+1083</td><td><span class="tag t-pass">正</span></td></tr>
+      <tr><td>27 项双侧锚</td><td class="num">−3625</td><td><span class="tag t-bound">负</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout amber"><b>诚实修正：</b>信息量上没有缺口，程序侧塞的字面量足够覆盖全部输出。按纪律<b>不放宽守卫、不改文案硬撑</b>，改问：这些程序比特里有多少是直接从观测抄来的？</div>
+</section>
+
+<section>
+  <h2>四、信息复制：参数不灭的第九个实例</h2>
+  <p class="lead">理论脚本 97 个数值字面量中，24 个与 46 项锚 value 逐位精确相等（13 个不同值），包括光速、α⁻¹、质子质量、W 质量观测值、水星进动、光偏折等。</p>
+  <div class="barrow"><div class="lb">复制比特占程序侧 3759 bit：<b>38.467678%</b>（按出现计 1446 bit）</div><div class="bar red"><i style="width:38.47%"></i></div></div>
+  <div class="barrow"><div class="lb">复制唯一值占输出 1523 bit：<b>61.391989%</b>（935 bit）</div><div class="bar red"><i style="width:61.39%"></i></div></div>
+  <div class="callout red"><b>核心结论：</b>所谓「零自由参数」不是靠信息压缩达成，而是把观测值搬进了源码字面量。参数个数可记为 0，但那 935 bit 的观测副本是实打实的输入。第六轮「7 条 GAQ 理论值是字面量」在信息层得到独立佐证。</div>
+</section>
+
+<section>
+  <h2>五、目标不可满足与最小不可满足核</h2>
+  <p class="lead">7 条目标原子：A1 单一机制 / A2 零自由参数 / A3 独立数值预言 / A4 实验相容 / A5 不注入实验值 / A6 数学自洽 / A7 解释谱值。第 8 条 I1 由「检测到 24 条观测副本」驱动，禁止 A2 与 A3 与 A5 同时成立。</p>
+  <div class="mus">
+    <span class="chip">A2</span><span class="chip">A3</span><span class="chip">A5</span><span class="chip">I1</span>
+    <span class="chip other">A1</span><span class="chip other">A4</span><span class="chip other">A6</span><span class="chip other">A7</span>
+  </div>
+  <table>
+    <thead><tr><th>项目</th><th>读数</th></tr></thead>
+    <tbody>
+      <tr><td>真值指派 / 约束子集</td><td><code>128</code> 个指派 × <code>256</code> 个子集全枚举</td></tr>
+      <tr><td>满足全部 8 条约束</td><td><b>0 个</b> ⇒ 目标公理集不可满足</td></tr>
+      <tr><td>最小不可满足核</td><td><b>大小 4</b>：<code>[A2, A3, A5, I1]</code>；第 4 层恰 1 个子集，极小性成立</td></tr>
+      <tr><td>逐条删除后满足数</td><td><code>A1:0 A2:1 A3:1 A4:0 A5:1 A6:0 A7:0 I1:1</code> ⇒ 恰好核内四条非零，每条承重</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><b>与第四轮的区别：</b>第四轮审的是判据 C1–C4 的相容性与完备性；本册审的是<b>目标公理集自身的可满足性</b>，输出是精确的不可满足核。结论不是「又没找到候选」，而是「这四条要求放在一起就无解」。</div>
+</section>
+
+<section>
+  <h2>六、跨八轮比特注入账</h2>
+  <p class="lead">把前八轮散落的「参数不灭」实例统一成一张表；每行注入下界由该轮 JSON 机读计数直接算出。</p>
+  <table>
+    <thead><tr><th class="num">轮</th><th>层</th><th class="num">机读计数</th><th class="num">注入下界</th><th class="num">突破</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>实验来料层</td><td class="num">46</td><td class="num">46</td><td class="num">0</td></tr>
+      <tr><td class="num">2</td><td>公理层</td><td class="num">1</td><td class="num">1</td><td class="num">0</td></tr>
+      <tr><td class="num">3</td><td>实验给定事实层</td><td class="num">3</td><td class="num">3</td><td class="num">0</td></tr>
+      <tr><td class="num">4</td><td>判据逻辑层</td><td class="num">2</td><td class="num">2</td><td class="num">0</td></tr>
+      <tr><td class="num">5</td><td>配对层</td><td class="num">8</td><td class="num">8</td><td class="num">0</td></tr>
+      <tr><td class="num">6</td><td>来源层</td><td class="num">4 + 6</td><td class="num">10</td><td class="num">0</td></tr>
+      <tr><td class="num">7</td><td>方程族层</td><td class="num">5</td><td class="num">5</td><td class="num">0</td></tr>
+      <tr><td class="num">8</td><td>离散标签层</td><td class="num">2 + 4</td><td class="num">6</td><td class="num">0</td></tr>
+      <tr style="background:#f0f4fa"><td class="num"><b>合计</b></td><td><b>八轮统一账</b></td><td class="num">—</td><td class="num"><b>81</b></td><td class="num"><b>0</b></td></tr>
+    </tbody>
+  </table>
+  <p class="lead" style="margin-top:12px">每轮注入为正、每轮突破为 0 ⇒ 八次「参数不灭」不是八个巧合，是同一条守恒式的八个投影。</p>
+</section>
+
+<section>
+  <h2>七、控制组与三次反噬</h2>
+  <p class="lead">控制组 <code>46 / 128 / 0 / 4</code> 两两不同。阳性对照输出翻倍 ⇒ 缺口 −2947 → −1424（增量恰 1523 bit）；阴性对照程序比特取 0 ⇒ 缺口 812，单列 <span class="tag t-iden">IDENTITY</span>。</p>
+  <table>
+    <thead><tr><th>变体</th><th>动的层</th><th>结果</th><th class="num">假突破</th><th class="num">报警守卫</th></tr></thead>
+    <tbody>
+      <tr><td>令 I1 失活</td><td>守恒式</td><td><span class="tag t-fail">GATES-FAIL</span></td><td class="num">0 → 1</td><td class="num">11</td></tr>
+      <tr><td>忽略复制证据</td><td>数据层</td><td><span class="tag t-fail">GATES-FAIL</span></td><td class="num">0 → 1</td><td class="num">12</td></tr>
+      <tr><td>删掉 A5 不注入要求</td><td>公理层</td><td><span class="tag t-fail">GATES-FAIL</span></td><td class="num">0 → 1</td><td class="num">10</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>八、交付核验、红线与结论</h2>
+  <table>
+    <thead><tr><th>项目</th><th>读数</th></tr></thead>
+    <tbody>
+      <tr><td>守卫 / 计数</td><td><code>36/36</code>；<code>PASS:29 · INFO:5 · IDENTITY:1 · BOUNDARY:1 · FAIL:0</code></td></tr>
+      <tr><td>final</td><td><code>ALG-INFO-GATE--GATES-PASS-WITH-0-NEGATIVE</code></td></tr>
+      <tr><td>content_sha256</td><td><code>6617e18065c387d9d7a079a25f828ece601fb58b6d56d1346585cc2e157109d7</code></td></tr>
+      <tr><td>核验</td><td><code>VERIFY-ALL-PASS</code>：幂等复跑、摘要自洽、12/12 链接、既有 74 文件零删除零改动</td></tr>
+      <tr><td>README</td><td>零改动，939,177 B，<code>md5=988b0a07e98c3a8111dc3568ac12fd63</code>，最大 RID 仍 <code>r406</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout red">
+    <b>边界与红线：</b>比特数是固定编码下的描述长度上界，不是 Kolmogorov 复杂度；I1 是本地归纳 + 信息守恒弱式，不是全称元物理定理。κ/g 谱为何如此未解释，「力的本质本源」未回答。数学自洽 ≠ 实验证实；四力 2/6、四力大统一 <b>0 条正确解</b>、独立实验预言 <b>0</b>，<b>不宣称攻破统一场论</b>。
+  </div>
+  <p class="lead" style="margin-bottom:0"><b>两条硬结论：</b>①信息层——零自由参数靠把观测值搬进源码字面量（24 / 97 逐位相等、935 bit 占输出 61.391989%），预设「输出超输入」被数据推翻后按数据改判据；②逻辑层——目标公理集在 128 指派上不可满足，最小不可满足核恰为 <code>[A2, A3, A5, I1]</code>。<b>下一轮出口</b>：给出程序侧不含任何观测副本、且能生出 40 项实测数值（1523 bit）的真正可压缩生成机制，仍需一条带双侧误差棒、理论值落在其可判负区间之外的新实验读数验收。</p>
+</section>
+
+<footer>
+  算法联盟分析册 · 第九轮 · 2026-11-12<br>
+  数学自洽 ≠ 实验证实；本册只产可算判决，不产新物理。
+</footer>
+
+</div>
+</body>
+</html>
