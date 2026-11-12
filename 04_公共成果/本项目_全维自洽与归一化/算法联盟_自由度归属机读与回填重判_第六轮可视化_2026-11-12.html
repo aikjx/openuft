@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟 · undetermined 层自由度归属机读 · 2026-11-12</title>
+<style>
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+  --blue:#2563eb; --blue-soft:#eff6ff; --red:#dc2626; --red-soft:#fef2f2;
+  --green:#15803d; --green-soft:#f0fdf4; --amber:#b45309; --amber-soft:#fffbeb;
+  --purple:#6d28d9; --purple-soft:#f5f3ff; --dark:#111827;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,sans-serif;
+  line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto}
+header{margin-bottom:24px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+h1{font-size:28px;margin:8px 0 6px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px}
+.verdict{margin-top:16px;padding:12px 16px;background:var(--dark);color:#f9fafb;border-radius:10px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11.5px;word-break:break-all;line-height:1.8}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.badge.ok{background:var(--green-soft);color:var(--green);border-color:#bbf7d0}
+.badge.no{background:var(--red-soft);color:var(--red);border-color:#fecaca}
+.badge.bd{background:var(--amber-soft);color:var(--amber);border-color:#fde68a}
+.badge.new{background:var(--blue-soft);color:var(--blue);border-color:#bfdbfe}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-top:20px;
+  box-shadow:0 1px 2px rgba(16,24,40,.03)}
+h2{font-size:18px;margin:0 0 4px;font-weight:700}
+h2 .num{color:var(--blue);font-family:ui-monospace,monospace;font-size:14px;margin-right:8px}
+.desc{color:var(--muted);font-size:13px;margin:0 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:13px 12px;background:#fafbfc;text-align:center}
+.kpi .n{font-size:23px;font-weight:700;font-family:ui-monospace,monospace;line-height:1.2}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px}
+.kpi.blue .n{color:var(--blue)} .kpi.red .n{color:var(--red)} .kpi.green .n{color:var(--green)}
+.kpi.amber .n{color:var(--amber)} .kpi.purple .n{color:var(--purple)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{border:1px solid var(--line);border-radius:11px;padding:16px;background:#fafbfc}
+.box h3{font-size:14px;margin:0 0 10px}
+.box.act{background:var(--blue-soft);border-color:#bfdbfe}
+.box.exp{background:var(--purple-soft);border-color:#ddd6fe}
+.big{font-size:25px;font-weight:700;font-family:ui-monospace,monospace;color:var(--blue);line-height:1.2}
+.small{font-size:12px;color:var(--muted);margin-top:6px}
+ul.clean{margin:8px 0 0;padding-left:20px;font-size:12.5px}
+ul.clean li{margin:5px 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{background:#fafbfc;color:var(--muted);font-weight:600;font-size:12px}
+td.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.tag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;font-family:ui-monospace,monospace}
+.tag.lit{background:var(--blue-soft);color:var(--blue)}
+.tag.beta{background:var(--purple-soft);color:var(--purple)}
+.tag.no{background:var(--red-soft);color:var(--red)}
+.tag.yes{background:var(--green-soft);color:var(--green)}
+.tag.bd{background:var(--amber-soft);color:var(--amber)}
+.note{font-size:12.5px;color:var(--muted);margin-top:14px;padding:10px 12px;background:var(--blue-soft);border-radius:8px;border:1px solid #dbeafe}
+.note.warn{background:var(--amber-soft);border-color:#fde68a}
+.note.bad{background:var(--red-soft);border-color:#fecaca}
+.frow{display:grid;grid-template-columns:230px 1fr 100px;align-items:center;gap:12px;margin:10px 0;font-size:12.5px}
+.ftrack{height:22px;background:#f1f3f5;border-radius:5px;overflow:hidden}
+.ffill{height:100%;border-radius:5px;background:linear-gradient(90deg,#93c5fd,#2563eb)}
+.ffill.bad{background:linear-gradient(90deg,#fca5a5,#dc2626)}
+.ffill.green{background:linear-gradient(90deg,#86efac,#15803d)}
+.fval{text-align:right;font-family:ui-monospace,monospace;color:var(--muted)}
+.gapscale{position:relative;height:40px;background:#f1f3f5;border-radius:6px;margin:18px 0 8px;overflow:hidden}
+.gapold{position:absolute;left:0;top:0;bottom:0;width:0.45%;min-width:4px;background:var(--red)}
+.gapnew{position:absolute;left:0;top:0;bottom:0;width:100%;background:linear-gradient(90deg,#fca5a5,#dc2626);opacity:.28}
+.critmark{position:absolute;top:0;bottom:0;left:0.33%;width:2px;background:var(--green)}
+.gaplabel{position:absolute;right:10px;top:9px;font-size:12px;font-family:ui-monospace,monospace;color:var(--red);font-weight:700}
+.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}
+footer{margin-top:26px;padding:18px 20px;border-radius:12px;background:var(--dark);color:#e5e7eb;font-size:12.5px;line-height:1.9}
+footer strong{color:#fff}
+code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f3f4f6;padding:1px 5px;border-radius:4px;font-size:12px}
+@media(max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}.frow{grid-template-columns:140px 1fr 80px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">算法联盟 · 第六轮 · 2026-11-12</div>
+  <h1>undetermined 层自由度归属机读与回填重判</h1>
+  <div class="sub">执行第五轮 OPEN 出口：把 8 对无自由度标注的来源逐条查清，再回填 459 对重跑四门。不找新理论、不加新实验。</div>
+  <div class="verdict">ALG-PFREE-ATTRIBUTION__RECLASSIFIED-8__LITERAL-7__BETA-1__CERTIFIED-5__HITS-0__BEST-GAP-SIGMA-594.3092__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0</div>
+  <div class="badges">
+    <span class="badge ok">守卫 38/38</span>
+    <span class="badge ok">VERIFY-ALL-PASS</span>
+    <span class="badge ok">幂等复跑一致</span>
+    <span class="badge no">0 对可认证 p_free=0</span>
+    <span class="badge bd">p_free 真值不冒充测定</span>
+    <span class="badge new">不占 RID · 不入 README</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">01</span>出口闭合：8 对全部给出确定处置</h2>
+  <p class="desc">第五轮最乐观的配对恰在 <code>undetermined</code> 层。本轮只判「来源能否认证 <code>p_free=0</code>」，不冒充测出底层理论的自由参数真值。</p>
+  <div class="kpis">
+    <div class="kpi blue"><div class="n">8</div><div class="l">待查配对</div></div>
+    <div class="kpi blue"><div class="n">7</div><div class="l">INPUT-LITERAL</div></div>
+    <div class="kpi purple"><div class="n">1</div><div class="l">BETA-INJECTED</div></div>
+    <div class="kpi green"><div class="n">0</div><div class="l">剩余 undetermined</div></div>
+    <div class="kpi red"><div class="n">0</div><div class="l">四门命中</div></div>
+  </div>
+  <div class="note bad" style="margin-top:16px"><strong>结论：</strong>8 对全部不能认证 <code>p_free=0</code>。其中 7 对有「数值陈述以字面量注入」的正证据，1 对有「外部 beta 系数注入」的正证据。原本确定为 <code>zero</code> 的 5 条理论一条没被误改。</div>
+</section>
+
+<section>
+  <h2><span class="num">02</span>两路机拼：脚本 AST 与报告表格</h2>
+  <p class="desc">两个不同文件、两种不同解析方式，互不引用；双向扰动都必须让它们分叉。</p>
+  <div class="split">
+    <div class="box act">
+      <h3>act 路径 · <code>unified_forces_vs_experiment.py</code></h3>
+      <div class="big">97 / 22 / 15</div>
+      <div class="small">数值字面量 / <code>row()</code> 判定调用 / 判定行里理论值为字面量的条数</div>
+      <ul class="clean">
+        <li>7 条目标理论值全部作为数值字面量出现在 AST 里</li>
+        <li>5 条是判定行直接写死的理论值，例如 <code>row("V1 m_W…", 80.409, 80.377, …)</code></li>
+        <li>§20 的 <code>0.2272</code> 只在 INFO 打印里，连判定行都没有</li>
+        <li>α⁻¹ 复核机读为 <code>1/alpha_codata</code> 定义往返表达式（零判别力）</li>
+      </ul>
+    </div>
+    <div class="box exp">
+      <h3>exp 路径 · GAQ V50 报告 §二总表</h3>
+      <div class="big">25 / 4 / 4</div>
+      <div class="small">总表行数 / §六外部锚点组 / §三判据修正记录行</div>
+      <ul class="clean">
+        <li>7 条理论值在「理论值」列逐条唯一命中，数值前缀机读解析</li>
+        <li>锚点：CODATA 2022、PDG 2024、Super-K 2024、pdgLive 2027</li>
+        <li>判据修正：改窗口、降 INFO、阈值放宽至 2%、改下界</li>
+        <li>§四自述第一性来源是标准物理，不是从 A1–A4 公理反向生成</li>
+      </ul>
+    </div>
+  </div>
+  <table style="margin-top:18px">
+    <thead><tr><th>双向正对照（内存扰动，不写回仓库）</th><th>act 读数</th><th>exp 读数</th><th>是否分叉</th></tr></thead>
+    <tbody>
+      <tr><td>基线</td><td class="mono">True</td><td class="mono">True</td><td><span class="tag yes">一致</span></td></tr>
+      <tr><td>只把脚本 <code>80.409 → 80.419</code></td><td class="mono">False</td><td class="mono">True</td><td><span class="tag no">分叉</span></td></tr>
+      <tr><td>只把报告 <code>80.409 → 80.419</code></td><td class="mono">True</td><td class="mono">False</td><td><span class="tag no">分叉</span></td></tr>
+    </tbody>
+  </table>
+  <div class="note">r188 侧另有机读字段：<code>sstar_formula_symbols = 5</code>、<code>framework_beta = 3</code>、<code>mssm_beta_cited = 3</code>、<code>v_fit_from_pdg ≠ 0</code>、<code>framework_intersection = []</code>、<code>repair_zero_cost = 0</code> ⇒ 外部框架注入，且没有零代价修法把注入项消掉。</div>
+</section>
+
+<section>
+  <h2><span class="num">03</span>三账归属逐条读数</h2>
+  <p class="desc"><code>p_eq</code> 方程自由参数 / <code>p_axiom</code> 注入假设 / <code>p_exp</code> 实验给定输入（不进 <code>p_free</code>）。</p>
+  <table>
+    <thead><tr><th>理论输出</th><th>旧状态</th><th>新归属</th><th>p_axiom</th><th>p_exp</th><th>p_free 真值</th><th>认证 zero</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">T06-r188-sstar-SMbeta</td><td class="mono">undetermined</td><td><span class="tag beta">NONZERO-BETA-INJECTED</span></td><td class="mono">1</td><td class="mono">6</td><td class="mono">1</td><td><span class="tag no">否</span></td></tr>
+      <tr><td class="mono">T07-GAQ-sec20</td><td class="mono">undetermined</td><td><span class="tag lit">INPUT-LITERAL</span></td><td class="mono">1</td><td class="mono">4</td><td class="mono">未定</td><td><span class="tag no">否</span></td></tr>
+      <tr><td class="mono">T08-GAQ-sec24</td><td class="mono">undetermined</td><td><span class="tag lit">INPUT-LITERAL</span></td><td class="mono">1</td><td class="mono">4</td><td class="mono">未定</td><td><span class="tag no">否</span></td></tr>
+      <tr><td class="mono">T09-GAQ-sec25</td><td class="mono">undetermined</td><td><span class="tag lit">INPUT-LITERAL</span></td><td class="mono">1</td><td class="mono">4</td><td class="mono">未定</td><td><span class="tag no">否</span></td></tr>
+      <tr style="background:var(--red-soft)"><td class="mono"><strong>T10-GAQ-mW</strong>（第五轮最优）</td><td class="mono">undetermined</td><td><span class="tag lit">INPUT-LITERAL</span></td><td class="mono">1</td><td class="mono">4</td><td class="mono">未定</td><td><span class="tag no">否 · 失格</span></td></tr>
+      <tr><td class="mono">T11-GAQ-mercury</td><td class="mono">undetermined</td><td><span class="tag lit">INPUT-LITERAL</span></td><td class="mono">1</td><td class="mono">4</td><td class="mono">未定</td><td><span class="tag no">否</span></td></tr>
+      <tr><td class="mono">T12-GAQ-light</td><td class="mono">undetermined</td><td><span class="tag lit">INPUT-LITERAL</span></td><td class="mono">1</td><td class="mono">4</td><td class="mono">未定</td><td><span class="tag no">否</span></td></tr>
+      <tr><td class="mono">T13-GAQ-alpha-inv</td><td class="mono">undetermined</td><td><span class="tag lit">INPUT-LITERAL</span></td><td class="mono">1</td><td class="mono">4</td><td class="mono">未定</td><td><span class="tag no">否</span></td></tr>
+    </tbody>
+  </table>
+  <div class="note warn"><code>INPUT-LITERAL</code> 的 <code>p_free</code> 写「未定」不是偷懒：有「数值陈述在报告层被注入」的正证据，但<strong>没有</strong>关于底层理论自由参数个数的证据，因此不写 <code>p_free=1</code> 去冒充测量。单列 <code>BOUNDARY</code>。</div>
+</section>
+
+<section>
+  <h2><span class="num">04</span>回填 459 对：最优失格，认证层后退 222.87 倍</h2>
+  <p class="desc">先用旧状态复算与第五轮互校（<code>[459,14,9,0]</code> 两路一致），再用新归属重跑四门。</p>
+  <div class="frow"><div>全枚举配对</div><div class="ftrack"><div class="ffill" style="width:100%"></div></div><div class="fval">459</div></div>
+  <div class="frow"><div>对象门通过</div><div class="ftrack"><div class="ffill" style="width:3.05%"></div></div><div class="fval">14</div></div>
+  <div class="frow"><div>非污染合法配对</div><div class="ftrack"><div class="ffill" style="width:1.96%"></div></div><div class="fval">9</div></div>
+  <div class="frow"><div>可认证零自由参数层</div><div class="ftrack"><div class="ffill green" style="width:0.44%"></div></div><div class="fval">2</div></div>
+  <div class="frow"><div>四门同时命中</div><div class="ftrack"><div class="ffill bad" style="width:0%"></div></div><div class="fval">0</div></div>
+  <div class="split" style="margin-top:20px">
+    <div class="box" style="background:var(--red-soft);border-color:#fecaca">
+      <h3>回填前 · 全表最优</h3>
+      <div class="small"><code>T10-GAQ-mW × P02</code>：80.409 vs 80.377 ± 0.012 GeV</div>
+      <div class="big" style="color:var(--red);font-size:22px">2.666667 σ</div>
+      <div class="small">χ² = 7.111111，离临界只差 1.36 倍误差棒 ⇒ 但归属未查清，<strong>没资格进计分板</strong></div>
+    </div>
+    <div class="box">
+      <h3>回填后 · 可认证层最优</h3>
+      <div class="small"><code>T02-attack28-SM × P08</code></div>
+      <div class="big" style="color:var(--ink);font-size:22px">594.309222 σ</div>
+      <div class="small">另一对为 <code>T01-SU5-3over8 × P08</code> = 3594.500000σ；后退 <strong>222.865958 倍</strong></div>
+    </div>
+  </div>
+  <div class="gapscale"><div class="gapnew"></div><div class="gapold"></div><div class="critmark"></div><div class="gaplabel">认证层最优 594.3092σ</div></div>
+  <div class="axis"><span>0σ</span><span>临界 1.95996σ</span><span>594σ</span></div>
+  <div class="note bad" style="margin-top:16px"><strong>第五轮 OPEN 的两个分支，本轮落到「查出 nonzero 则失去资格」这一支。</strong>最乐观的一对不是差一点就命中，而是根本没资格进这个赛道的计分板。命中数前后均 0，符合第四轮元纪律「判据升级后必须把旧候选映射回新判据重算」：17 条里只有 8 条改状态，其余 9 条原样。</div>
+</section>
+
+<section>
+  <h2><span class="num">05</span>三次反噬与控制组</h2>
+  <p class="desc">核验只在内存里替换源码单点，不写回仓库；每次都要让读数漂移并触发守卫。</p>
+  <table>
+    <thead><tr><th>变体</th><th>结果</th><th>假读数</th><th>报警守卫数</th></tr></thead>
+    <tbody>
+      <tr><td>把 8 对一律认证为 zero</td><td class="mono">GATES-FAIL</td><td>认证 zero 理论 5 → <strong>13</strong>，认证层最优退回 2.6667σ</td><td class="mono">6</td></tr>
+      <tr><td>忽略字面量证据</td><td class="mono">GATES-FAIL</td><td>剩余 undetermined 0 → <strong>7</strong></td><td class="mono">5</td></tr>
+      <tr><td>卡方临界抬到 1e40</td><td class="mono">GATES-FAIL</td><td>假命中 0 → <strong>2</strong></td><td class="mono">12</td></tr>
+    </tbody>
+  </table>
+  <div class="note warn">控制组四个读数 <code>459 / 8 / 2 / 0</code> 两两不同。阳性对照：第五轮最优配对被归属门真实拦下，不是恒绿；阴性对照：污染配对按预期 <code>χ²≈0</code> 却恒被挡住，单列 <code>IDENTITY</code> 并配 <code>NOT-ALL-GREEN</code>。</div>
+</section>
+
+<section>
+  <h2><span class="num">06</span>守卫、核验与实现事故</h2>
+  <p class="desc">机核 <code>38/38</code> 守卫全过，<code>counts = {PASS:31, INFO:5, IDENTITY:1, BOUNDARY:1, FAIL:0}</code>。</p>
+  <div class="split">
+    <div class="box">
+      <h3>交付核验 VERIFY-ALL-PASS</h3>
+      <ul class="clean">
+        <li><code>content_sha256 = 46a55e08…0019</code></li>
+        <li>幂等复跑 JSON / report MD5 一致、内容摘要自洽</li>
+        <li>链接体检 <code>11/11</code>，断链 0</li>
+        <li>既有 <code>59</code> 个文件零删除零改动</li>
+        <li><code>README.md</code> 零改动（939,177 B，最大 RID 仍 <code>r406</code>）</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>两处实现事故（已修）</h3>
+      <ul class="clean">
+        <li>首次 <code>36/38</code>：守卫以为 7 条目标里 6 条是判定行字面量，机读实际是 <strong>5</strong> 条。没有放宽守卫，而是把更细结构也机读进来（§20 只在 INFO 打印、α⁻¹ 是定义往返表达式）。</li>
+        <li>归属表一度给 <code>INPUT-LITERAL</code> 写 <code>p_free=1</code>，与「不冒充测出真值」冲突。改为记未定，并把 <code>BOUNDARY</code> 守卫改成核验 <code>None</code> 条数确为 7。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">07</span>诚实边界与下一轮硬出口</h2>
+  <ul class="clean">
+    <li>本册判定的是<strong>来源能否认证 <code>p_free=0</code></strong>，不是底层理论的自由参数真值；7 对 GAQ 保持未定，标 <code>BOUNDARY</code>。</li>
+    <li>「理论值是对标脚本里的字面量」只说明现有来源里没有推导链，<strong>不等于</strong>断言该数值在全库其他卷里从未被推导过；本册不替全库做全称否定。</li>
+    <li><code>p_exp</code> 不算自由参数，但它说明这条数值链不是零输入；§三的 4 行判据修正说明 PASS 还依赖可自由选择的阈值口径。</li>
+    <li>四门比三重门严，但不保证完备；0 命中只等于「在这套来料与这套判据下没有」。</li>
+  </ul>
+  <div class="note bad" style="margin-top:16px"><strong>软出口已全部用完，只剩一条硬出口：</strong>构造或检索一条带双侧误差棒、且理论值落在其可判负区间之外的新实验读数，再查是否存在 <code>p_free=0</code>、LTO 通过、<code>χ² &lt; 3.84145882069</code> 的数值陈述。在这样一条读数出现之前，不必再造新理论、也不必再放宽判据；本册不替它预支结论。</div>
+</section>
+
+<footer>
+  <strong>红线：</strong>数学自洽 ≠ 实验证实；本册只产来源参数账与回填层的可算判决，不产新物理。四力达成度 2/6、四力大统一 <strong>0 条正确解</strong>、独立实验预言 <strong>0</strong>，<strong>不宣称攻破统一场论</strong>。<br>
+  算法联盟分析册：不占 RID、不入 README、不与任何审计卷相加；下轮审计号从 <code>r407</code> 起。
+</footer>
+
+</div>
+</body>
+</html>

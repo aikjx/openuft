@@ -1,0 +1,97 @@
+算法联盟：攻破力的统一 · 共享—分置跷跷板与参数下界 / 设计矩阵秩
+================================================================================================
+verdict : ALG-FORCE-UNIFICATION__FORCES-4__KAPPA-CLASSES-3__COUPLING-CLASSES-4__CONFIGS-4__ESCAPE-0__P-MIN-EXTRA-5__RANK-3vs2__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0
+final   : ALG-FORCE-UNIFICATION--GATES-PASS-WITH-0-NEGATIVE
+counts  : {"INFO": 5, "PASS": 27, "FAIL": 0, "IDENTITY": 1, "BOUNDARY": 1}
+guards  : 34/34
+sha256  : 35de74c7a3541ebcaf2b86a54c060d8ebe80945d025de656425d193d72cddcad
+------------------------------------------------------------------------------------------------
+两路机拼：act ħc/m 重算 vs exp r222/r218 回读。
+  hbar*c/e = 1.973269803384E-7 eV*m
+  lambda_W(P02=80.377) = 2.455017981990E-18 m  [r222 同值，偏离 5.262E-61]
+  lambda_W(P03=80.3692) = 2.455256246652E-18 m
+  lambda_pi = 1.461932571660E-15 m  [r222/r218 同值，偏离 2.005E-60]
+  r218 口径差异 2.488521693688E-6 由隐含质量 80.369000 GeV（P03 截断为 80.369）精确解释；比值减一 2.488521693688E-6 / 2.488521693688E-6
+------------------------------------------------------------------------------------------------
+力程谱 kappa 类数 = 3（长程 2 条 + W + pi）；lambda_pi/lambda_W = 595.487521
+耦合谱类数 act=4 exp=4，跨度 37.300209 dex
+Vandermonde RREF：3x3 秩 3，3x2 秩 2，亏 1；单方程参数方向 2 < 参数下界 5
+------------------------------------------------------------------------------------------------
+2x2 穷举（k_split / g_split / p_extra / mismatch / gain / survive / breakthrough）：
+  False False   0   5   4  False False
+  False True    3   2   1  False False
+  True  False   2   3   2  False False
+  True  True    5   0  -1  True  False
+★逃逸配置 0 个：共享 ⇒ 失配 5 被排除；分置 ⇒ 增益 -1 <= 0 只是模板复用
+------------------------------------------------------------------------------------------------
+跨卷脊梁：r218 定价 SURVIVE=0 / 形状命中 0 / 形式外 1；r222 色散残差 1.000E-40
+红线：数学自洽 != 实验证实；四力大统一 0 条正确解；独立实验预言 0；不宣称攻破。
+------------------------------------------------------------------------------------------------
+[PASS] PREV6-RELOADED :: OK
+    第六轮 38/38 守卫、8 对归属闭合、回填 0 命中；第五轮穷举 0 命中。本册不再审来源，直接转向力的物理结构
+[PASS] SOURCE-LINK-HEALTH :: OK
+    本地引用 10 个成品文件，断链 0 个；分母为 0 判 FAIL
+[PASS] FORCE-INVENTORY :: OK
+    四力清单机读：电磁 / 引力 / 弱 / 强（剩余核力），每条带 κ 与质量
+[PASS] EXP-ACT-DISTINCT-AST :: OK
+    AST 核验 act_force_ranges（ħc/m 重算）与 exp_force_ranges（r222/r218 回读）为两个不同函数，return 均非顶层数值常量
+[PASS] TWO-PATH-W-P02-EXACT :: OK
+    两路机拼：act 用 C01/C03/C04 + P02 算 λ_W = 2.455017981990E-18 m，r222 成品读数相同，相对偏离 5.262E-61
+[PASS] TWO-PATH-PI-EXACT :: OK
+    λ_π = 1.461932571660E-15 m：act 从对标脚本 AST 机读 m_π⁰，报告 §六第二来源同值；r222/r218 两卷 λ_π 一致，相对偏离 0.000E+76
+[PASS] ALPHA-G-TWO-SOURCE :: OK
+    α_G act = G·m_p²/(ħc) = 5.906149417E-39，第一册成品 5.906149417E-39，相对偏离 6.634E-61
+[PASS] R218-CALIBRE-EXPLAINED :: OK
+    ★口径差异机算还原：r218 λ_W 比 act(P03) 大 2.488522E-6，由隐含质量 80.369000 GeV（= P03 的 80.3692 被截断为 80.369）精确解释：质量比减一 2.488521693688E-6 与 λ 比减一 2.488521693688E-6 一致；远小于来源自报 0.0104% 阈值
+[PASS] KAPPA-SPECTRUM-3-CLASSES :: OK
+    力程谱机读：κ = 0（电磁、引力两类长程）、κ_W、κ_π，共 3 类；λ_π/λ_W = 595.4875 倍，不是同一个力程
+[PASS] COUPLING-SPECTRUM-4-CLASSES :: OK
+    耦合谱机读：act 四个无量纲耦合两两不同（4 类），第一册 α1/α2/α3/α_G 亦 4 类；跨度 37.3002 dex
+[PASS] RANK-V3-FULL :: OK
+    精确有理 RREF：三个不同 κ 上的 3×3 Vandermonde 设计矩阵秩 3 ⇒ 要插值这三类力程至少需要 3 个独立参数方向
+[PASS] RANK-V2-DEFICIENT :: OK
+    单方程只提供 2 个参数方向 ⇒ 3×2 设计矩阵秩 2、亏 1；参数下界 5（2 个独立质量 + 3 个独立耦合破缺）> 2
+[PASS] NULL-VEC-DISCRIMINATES :: OK
+    零空间负对照：显式构造的非零向量与两列精确正交（残差全 0）；给它加 1 后残差非零 ⇒ 该检验有判别力，不是恒等式
+[PASS] VANDEX-CONSISTENT :: OK
+    秩、亏、零向量、参数下界四项互洽，均由精确有理数机算
+[PASS] SHARED-EXCLUDED :: OK
+    ★共享分支：单一 κ 与单一 g 无法同时给出 3 类力程与 4 类耦合，失配 5 处（κ 2 + g 3）⇒ 被实验谱直接排除
+[PASS] SEPARATE-NO-COMPRESSION :: OK
+    ★分置分支：每条力各自 κ_i / g_i 可拟合，但需额外 5 个参数，MDL 增益 = 4 − 5 = -1 ≤ 0 ⇒ 统一只是模板复用，没有压缩描述
+[PASS] CONFIG-ENUMERATION-COMPLETE :: OK
+    2×2 穷举四种配置（κ 共享/分置 × g 共享/分置），无遗漏、无重复
+[PASS] SEESAW-ZERO-ESCAPE :: OK
+    共享 ⇒ 被排除；分置 ⇒ 增益 -1 ≤ 0；「实验存活 ∧ 压缩增益 > 0」的逃逸配置 0 个 ⇒ 在单方程族内没有第三条路
+[PASS] CTRL-FOUR-DISTINCT :: OK
+    控制组四个计数两两不同：4 / 2 / 0 / 5
+[PASS] CTRL-NO-EQ-BASE :: OK
+    三个对照读数均不等于基线 4，杜绝全表读数相同造成的假判别力
+[PASS] CTRL-POSITIVE-ALERTS :: OK
+    阳性对照：把 κ_W 与 κ_π 人为合并 ⇒ 力程类数 3→2，共享失配 5→4 ⇒ 判据确实由实测力程差驱动
+[IDENTITY] CTRL-IDENTITY-NEVER-HITS :: OK
+    阴性对照：电磁与引力 κ 均为 0，长程段恒绿且不受本册判据影响，单列 IDENTITY 配 NOT-ALL-GREEN
+[INFO] NOT-ALL-GREEN :: OK
+    恒等式与负对照恒绿，但全表另有共享排除、分置零压缩、秩亏、参数下界等非恒绿读数
+[PASS] R218-SPINE-0-SURVIVE :: OK
+    跨卷脊梁：r218 修复定价 {'EMPTY': 15, 'SUICIDE': 1, 'SURVIVE': 0}、形状对撞命中 0、形式外行数 1（色禁闭不在此方程形式内）⇒ 已有卷独立给出「形式统一不可修复」
+[PASS] R222-DISPERSION-RESIDUAL :: OK
+    r222 传播层：色散残差 1.000E-40，质量—力程等价成立 ⇒ 本册用 κ 谱代表力程谱有仓库依据
+[PASS] SPINE-ZERO :: OK
+    跨卷回读：r403 四力正确解 0 条、r404 接受 0、脊梁独立预言 0；第五轮 0 命中、第六轮 0 命中、本册逃逸 0
+[BOUNDARY] FAMILY-LIMITED-CLAIM :: OK
+    本册结论只对 Yukawa/Proca 单方程族 + 这 46 项来料成立；不是「四力统一不可能」的全称定理。换参数化、换方程族或引入新的对称性破缺结构都超出本册可算范围
+[INFO] FOUR-FORCE-INCOMPLETE :: OK
+    红线：四力达成度 2/6（电弱已统一、引力未、候选待实验）；四力大统一 0 条正确解
+[INFO] NO-BREAKTHROUGH :: OK
+    本册不宣称攻破力的统一；给出的是「共享—分置跷跷板」这条结构性判决
+[INFO] MATH-NOT-EXPERIMENT :: OK
+    所有结论都是可算判决（力程谱、秩、参数账），不是实验证实；不产新物理，独立实验预言仍为 0
+[INFO] NEXT-EXIT :: OK
+    要越过本册下界，必须给出能把 3 类力程与 4 类耦合从少于 4 个独立参数里生出来的机制；这仍需要一条带双侧误差棒的新实验读数来验收，不是再放宽判据
+[PASS] NO-HARDCODE-OK :: OK
+    AST 扫描 add/guard 的 ok 参数，布尔字面量命中 0；全部 ok 由计算布尔驱动
+[PASS] VERDICT-MACHINE :: OK
+    把逃逸配置读数 +1 后判词串发生变化，且原读数确实写入判词 ⇒ 判词机读、随读数变化
+[PASS] FINAL-OF-CONSISTENT :: OK
+    final_of(nf_main=0,nf_guard=0,n_decl=5)：守卫 FAIL 挡门、已登记判负不挡门、缺 n_decl 报 GATES-FAIL

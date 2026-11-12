@@ -1,0 +1,116 @@
+算法联盟：undetermined 层 p_free 归属机读 + 回填第五轮 459 对重判
+================================================================================================
+verdict : ALG-PFREE-ATTRIBUTION__RECLASSIFIED-8__LITERAL-7__BETA-1__CERTIFIED-5__HITS-0__BEST-GAP-SIGMA-594.3092__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0
+final   : ALG-PFREE-ATTRIBUTION--GATES-PASS-WITH-0-NEGATIVE
+counts  : {"INFO": 5, "PASS": 31, "FAIL": 0, "IDENTITY": 1, "BOUNDARY": 1}
+guards  : 38/38
+sha256  : 46a55e0871ef2e252aa2498a7ed27d25933920eaeb57655f30910a59f9040019
+------------------------------------------------------------------------------------------------
+执行第五轮 OPEN 出口：8 对 undetermined 逐条机读来源参数账。
+两路机拼：act=GAQ 对标脚本 AST（97 个数值字面量 / 22 个 row 调用，其中 15 个理论值为字面量）；exp=GAQ V50 §二总表（25 行）。
+7 条 GAQ 理论值两路同为字面量；其中 5 条是判定行的字面量理论值，§20 的 0.2272 只在 INFO 打印里，α⁻¹ 复核是 1/alpha_codata 的定义往返表达式。
+r188 机读：symbols=5 / framework_beta=3 / mssm_beta_cited=3 / v_fit_from_pdg 非零 / repair_zero_cost=0
+------------------------------------------------------------------------------------------------
+归属结果：7 对 INPUT-LITERAL + 1 对 NONZERO-BETA-INJECTED；剩余 undetermined 0 对；认证 zero 的理论仍 5 条。
+逐条（tid / old -> new / p_eq,p_axiom,p_exp / 认证 zero）：
+  T01-SU5-3over8 : zero -> zero | None,None,None | cert0=True
+  T02-attack28-SM : zero -> zero | None,None,None | cert0=True
+  T03-attack28-MSSM : nonzero -> nonzero | None,None,None | cert0=False
+  T04-attack28-circular : zero -> zero | None,None,None | cert0=True
+  T05-r188-sstar : nonzero -> nonzero | None,None,None | cert0=False
+  T06-r188-sstar-SMbeta : undetermined -> NONZERO-BETA-INJECTED | 0,1,6 | cert0=False
+  T07-GAQ-sec20 : undetermined -> INPUT-LITERAL | 0,1,4 | cert0=False
+  T08-GAQ-sec24 : undetermined -> INPUT-LITERAL | 0,1,4 | cert0=False
+  T09-GAQ-sec25 : undetermined -> INPUT-LITERAL | 0,1,4 | cert0=False
+  T10-GAQ-mW : undetermined -> INPUT-LITERAL | 0,1,4 | cert0=False
+  T11-GAQ-mercury : undetermined -> INPUT-LITERAL | 0,1,4 | cert0=False
+  T12-GAQ-light : undetermined -> INPUT-LITERAL | 0,1,4 | cert0=False
+  T13-GAQ-alpha-inv : undetermined -> INPUT-LITERAL | 0,1,4 | cert0=False
+  T14-P3-RESTATEMENT : zero -> zero | None,None,None | cert0=True
+  T15-P3-IDENTITY : zero -> zero | None,None,None | cert0=True
+  T16-attack27b-tau_p : nonzero -> nonzero | None,None,None | cert0=False
+  T17-attack34-tau_p : nonzero -> nonzero | None,None,None | cert0=False
+------------------------------------------------------------------------------------------------
+回填前两路互校：act=(459, 14, 9, 0) exp=第五轮 (459, 14, 9, 0) ⇒ 一致
+回填后：全枚举 459 对，对象匹配 14 对，非污染 9 对，可认证零自由参数 2 对，四门命中 0 对（前后均 0）。
+★第五轮最优 T10-GAQ-mW×P02 = 2.666667σ 已失格；认证层最优 T02-attack28-SM×P08 = 594.309222σ，后退 222.865958 倍
+------------------------------------------------------------------------------------------------
+反噬基线：抹掉对象门⇒匹配 14→459；抹掉污染门⇒1 次假命中；抬高卡方临界⇒2 次假命中。
+红线：数学自洽 != 实验证实；四力大统一 0 条正确解；独立实验预言 0；不宣称攻破。
+------------------------------------------------------------------------------------------------
+[PASS] PREV5-RELOADED :: OK
+    第五轮 38/38 守卫、VERIFY-ALL-PASS、穷举命中 0、8 对 undetermined 待查；本册直接承接该 OPEN 出口
+[PASS] SOURCE-LINK-HEALTH :: OK
+    本地引用 11 个成品文件，断链 0 个；分母为 0 判 FAIL
+[PASS] UNDETERMINED-8-ENUMERATED :: OK
+    机读 8 对：GAQ V50 七条（sec20/sec24/sec25/mW/mercury/light/alpha_inv）+ r188 一条（sstar_with_sm_beta）
+[PASS] GAQ-SCRIPT-AST-PARSED :: OK
+    独立第二路径：对标脚本 AST 解析出 22 个 row() 调用、97 个数值字面量
+[PASS] ACT-LITERAL-SCAN :: OK
+    act 路径：7 条理论值全部作为数值字面量出现在脚本 AST 中 ⇒ 来源内没有把它们算出来的表达式
+[PASS] EXP-MD-TABLE-SCAN :: OK
+    exp 路径：7 条理论值在报告 §二总表的「理论值」列逐条唯一命中，数值前缀机读解析
+[PASS] TWO-PATH-AGREE :: OK
+    两路读数一致：act 与 exp 对 7 条给出同一数值，且都等于第五轮 JSON 里的理论值
+[PASS] TWO-PATH-DIVERGE-ON-PERTURBATION :: OK
+    双向正对照：内存里把脚本 80.409→80.419 ⇒ act=False 而 exp=True；只改报告 ⇒ act=True 而 exp=False ⇒ 两路分别可寻址，不是同一表达式改名
+[PASS] EXP-ACT-DISTINCT-AST :: OK
+    AST 核验 act_literal_values 与 exp_md_table_rows 是两个不同函数，且 return 均非顶层数值常量
+[PASS] TARGETS-IN-LITERAL-SUBSET :: OK
+    如实报混合结构：22 个判定行里 15 个理论值是字面量；7 条目标中 5 条落在字面量判定行，§20 的 0.2272 只在 INFO 打印里（连判定行都没有），α⁻¹ 复核由 AST 机读为 1/alpha_codata 的定义往返表达式（对目标量零判别力）
+[PASS] GAQ-ANCHOR-LEDGER :: OK
+    p_exp 机读：§六外部锚点 4 组（CODATA/PDG/Super-K/pdgLive），脚本顶层数值字面量赋值 9 处 ⇒ 数值链不是零输入
+[PASS] GAQ-CRITERION-LEDGER :: OK
+    §三判据修正记录 4 行（改窗口/降 INFO/放宽阈值/改下界）；§四自述第一性来源是标准物理、不是单公理反向生成
+[PASS] R188-BETA-INJECTED :: OK
+    r188 机读：sstar_formula_symbols 5 个、framework_beta 3 个、mssm_beta_cited 3 个、v_fit_from_pdg 非零、framework_intersection 空 ⇒ 外部框架注入
+[PASS] R188-NO-ZERO-COST-REPAIR :: OK
+    r188 repair_zero_cost=0 ⇒ 没有零代价修法把注入项消掉
+[PASS] RECLASSIFY-ALL-8 :: OK
+    8 对全部给出确定处置：7 对 INPUT-LITERAL、1 对 NONZERO-BETA-INJECTED；0 对保持无据待定；原本确定为 zero 的 5 条未被误改
+[PASS] P-FREE-ZERO-NOT-CERTIFIABLE :: OK
+    ★本册判的是「来源能否认证 p_free=0」：8 对全部不能。7 对有注入字面量正证据，1 对有 beta 系数注入正证据
+[BOUNDARY] TRUE-P-FREE-UNDECIDED :: OK
+    不冒充测出底层理论的自由参数真值：7 对 GAQ 记 p_free=未定（只数报告层注入陈述 p_axiom=1、实验输入 p_exp=4）；r188 一条由机读字段确定为 p_free=[1]
+[PASS] TWO-SOURCE-COUNTS-AGREE :: OK
+    回填前先用旧状态复算：act=(459, 14, 9, 0)，exp=第五轮 key_numbers (459, 14, 9, 0) ⇒ 本册复算路径与第五轮成品互校一致
+[PASS] UPGRADE-DOES-NOT-CHANGE-VERDICT :: OK
+    元纪律：判据升级后把旧候选映射回新判据重算。17 条里只有 8 条 undetermined 改变状态，其余 9 条原样；命中数 0→0，既有判决不变
+[PASS] ZERO-HITS-AFTER-RECLASSIFY :: OK
+    回填 459 对重跑四门，命中 0 对；四门同时命中仍为 0
+[PASS] OPTIMUM-DISQUALIFIED :: OK
+    ★第五轮最优 T10-GAQ-mW×P02（2.666667σ）恰在 undetermined 层；归属查清后认证不了 zero ⇒ 失去资格
+[PASS] CERTIFIED-LAYER-RECEDES :: OK
+    可认证零自由参数层只剩 2 对，最优 T02-attack28-SM×P08 = 594.3092σ，比全表最优 2.6667σ 远 222.8660 倍 ⇒ 清账把「离命中最近」推远两个量级
+[PASS] CTRL-FOUR-DISTINCT :: OK
+    控制组四个计数两两不同：459 / 8 / 2 / 0
+[PASS] CTRL-NO-EQ-BASE :: OK
+    三个对照读数均不等于基线 459，杜绝全表读数相同造成的假判别力
+[PASS] CTRL-POSITIVE-ALERTS :: OK
+    阳性对照：第五轮最优配对被本册归属门真实拦下，不是恒绿
+[IDENTITY] CTRL-IDENTITY-NEVER-HITS :: OK
+    阴性对照：5 对污染配对按预期 χ²≈0 却恒被挡住，单列 IDENTITY 配 NOT-ALL-GREEN
+[INFO] NOT-ALL-GREEN :: OK
+    恒等式与负对照恒绿，但全表另有 8 对归属改写、最优失格、认证层后退等非恒绿读数
+[PASS] BACKFIRE-NO-OBJECT-GATE :: OK
+    反噬基线 1：抹掉对象门会让对象匹配数 14→459 ⇒ 对象门承重
+[PASS] BACKFIRE-NO-CONTAM-GATE :: OK
+    反噬基线 2：抹掉污染门出现 1 次假命中 ⇒ LTO 非回述门承重
+[PASS] BACKFIRE-INFLATED-CRIT :: OK
+    反噬基线 3：卡方临界抬到 1e40 出现 2 次假命中 ⇒ 阈值必须驱动判定
+[PASS] NO-HARDCODE-OK :: OK
+    AST 扫描 add/guard 的 ok 参数，布尔字面量命中 0；全部 ok 由计算布尔驱动
+[PASS] VERDICT-MACHINE :: OK
+    把归属改写条数 +1 后判词串发生变化，且原读数确实写入判词 ⇒ 判词机读、随读数变化
+[PASS] SPINE-ZERO :: OK
+    跨卷回读：r403 四力正确解 0 条、r404 接受 0、脊梁独立预言 0；第三轮突破 0、第四轮四重门命中 1、第五轮穷举 0、本册回填 0
+[INFO] FOUR-FORCE-INCOMPLETE :: OK
+    红线：四力达成度 2/6（电弱已统一、引力未、候选待实验）；四力大统一 0 条正确解
+[INFO] NO-BREAKTHROUGH :: OK
+    本册不宣称攻破统一场论；8 对归属查清、最优失格、回填命中仍 0
+[INFO] MATH-NOT-EXPERIMENT :: OK
+    所有结论都是可算判决（来源参数账与回填层），不是实验证实；不产新物理，独立实验预言仍为 0
+[INFO] NEXT-EXIT :: OK
+    8 对归属已闭合，0 命中仍成立 ⇒ 下一轮只剩一条硬出口：构造或检索一条带双侧误差棒、且理论值落在其可判负区间之外的新实验读数；在此之前不必再造新理论
+[PASS] FINAL-OF-CONSISTENT :: OK
+    final_of(nf_main=0,nf_guard=0,n_decl=5)：守卫 FAIL 挡门、已登记判负不挡门、缺 n_decl 报 GATES-FAIL

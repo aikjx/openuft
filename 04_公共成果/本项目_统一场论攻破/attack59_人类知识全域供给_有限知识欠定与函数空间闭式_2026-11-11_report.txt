@@ -1,0 +1,40 @@
+ATTACK59 REPORT 2026-11-11
+VERDICT KNOWLEDGE-FINITE--FREE-FUNCTION-UNDERDETERMINED--FSPACE-CLOSURE-ONLY--NO-PHYSICAL-COMPLETION
+EXIT 0
+
+G01 ok=1 fact_sources=18 exists=18
+G02 ok=1 needle_tolerance=18/18
+G03 ok=1 attack_max=59 attack59_hits=5 judge_exists=1
+G04 ok=1 scanned_md=3016 needle_hit_total=0
+G05 ok=1 third=0 banned=0 literal_bool=0 compile=1
+G06 ok=1 m=1..12 anchors_all_equal + new_point_differs; anchor_ok=1
+G07 ok=1 general yi interpolation Q(xi)==yi all m; general_ok=1
+G08 ok=1 Vandermonde rank=m nullity=0 for m=1..8; interp_ok=1
+G09 ok=1 shape control c=6/5 x2_pred=24/25
+G10 ok=1 alpha_dim=0 eps0*mu0*c^2_dim=0
+G11 ok=1 rank=4 nullity=4 basis_ok=1
+G12 ok=1 G x2: alpha_G_ratio=2 basis_unchanged=1 control_changed=1
+G13 ok=1 loo_representable=8/8 dimless_free=8/8 sub_nullity=[3,3]
+G14 ok=1 registered=290 gap=710 constants=9 digits=97 input=19->26 bits_proxy=322.2270252040741477
+G15 ok=1 legal=342 cells=6840 invariant=1 flips_control=0
+G16 ok=1 flips_mutation=5000 fspace_positive=1 cf_reject=1
+G17 ok=1 redlines=5 no_physical_completion=1
+G18 ok=1 own_py=1 own_judge=1 own_readme=1
+G19 ok=1 entries=18 status={"BOUNDARY": 3, "CORRECTED": 2, "FAIL": 6, "INFO": 4, "PASS": 3}
+G20 ok=1 pre_ok=18/18
+
+SELF_CORRECTIONS 14
+SC1 Top1000 缺口原文为粗体 **710**，严格正则命中 NONE；改容错正则后得 710（独立探针核验）。
+SC2 草稿末尾 dim = dimension_block = ... if False else None 覆盖函数名；删除模块级预计算，改由 main 内调用。
+SC3 G13–G20 旧版只传 2 参（缺 cond）导致 TypeError；全部补齐有判别力的 cond。
+SC4 payload.ast_selfcheck 引用未定义 astc 且按元组下标访问；改为 ac 的 dict 读数。
+SC5 entries / status_count 未定义；补 18 条判定条目与状态计数。
+SC6 G03 / G18 依赖判定册先落盘；本轮先写判定册再跑引擎（判定册不硬编码机器读数）。
+SC7 ast_selfcheck 的 ok = False 是布尔字面量赋值，会被自身守卫误报；改 0，并把 py_compile_ok 改为真编译结果。
+SC8 dim_unchanged / basis_unchanged 属恒真自比较；新增量纲扰动阳性对照 control_basis_changed 提供真判别力。
+SC9 duplicate_scan 只排除 P_JUDGE；补排除 P_JSON / P_MD / P_REPORT / P_README / P_PY 防自指命中。
+SC10 缺 __main__ 入口，脚本不生成产物；补 sys.exit(main())。
+SC11 G04 原设 scanned_md>=1000 属凭空阈值；改为「扫描确实执行且非空」并把实际规模作为读数。
+SC12 G03 原设 attack59_hits<=5 会被本册自身产物数突破；改为 >=1 下界（结构性判定，抗并发漂移）。
+SC13 dimension_block 留一段把 rref 的 (a,piv,rank) 解包成 (_ns,rk,_pv)，拿 piv 列表当秩比较 ⇒ 8/8 假不可表；改取第三元素后恢复真实读数。
+SC14 原 coefficient_free 硬编码 0 且配套文案语义写反（把「系数自由」注成「无需外部无量纲数值」）；升级为子矩阵零空间机器判据 sub_nullity>0，语义改为「系数自由 = 仍须外部数值」。

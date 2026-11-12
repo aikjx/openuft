@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟 · 双侧锚穷举配对与优化搜索 · 2026-11-12</title>
+<style>
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+  --blue:#2563eb; --blue-soft:#eff6ff; --red:#dc2626; --red-soft:#fef2f2;
+  --green:#15803d; --green-soft:#f0fdf4; --amber:#b45309; --amber-soft:#fffbeb;
+  --purple:#6d28d9; --purple-soft:#f5f3ff; --dark:#111827;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,sans-serif;
+  line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto}
+header{margin-bottom:24px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+h1{font-size:28px;margin:8px 0 6px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px}
+.verdict{margin-top:16px;padding:12px 16px;background:var(--dark);color:#f9fafb;border-radius:10px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11.5px;word-break:break-all;line-height:1.8}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.badge.ok{background:var(--green-soft);color:var(--green);border-color:#bbf7d0}
+.badge.no{background:var(--red-soft);color:var(--red);border-color:#fecaca}
+.badge.bd{background:var(--amber-soft);color:var(--amber);border-color:#fde68a}
+.badge.new{background:var(--blue-soft);color:var(--blue);border-color:#bfdbfe}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-top:20px;
+  box-shadow:0 1px 2px rgba(16,24,40,.03)}
+h2{font-size:18px;margin:0 0 4px;font-weight:700}
+h2 .num{color:var(--blue);font-family:ui-monospace,monospace;font-size:14px;margin-right:8px}
+.desc{color:var(--muted);font-size:13px;margin:0 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:13px 12px;background:#fafbfc;text-align:center}
+.kpi .n{font-size:24px;font-weight:700;font-family:ui-monospace,monospace;line-height:1.2}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px}
+.kpi.blue .n{color:var(--blue)} .kpi.red .n{color:var(--red)} .kpi.green .n{color:var(--green)}
+.kpi.amber .n{color:var(--amber)}
+.frow{display:grid;grid-template-columns:210px 1fr 76px;align-items:center;gap:12px;margin:10px 0;font-size:12.5px}
+.ftrack{height:22px;background:#f1f3f5;border-radius:5px;overflow:hidden;position:relative}
+.ffill{height:100%;border-radius:5px;background:linear-gradient(90deg,#93c5fd,#2563eb)}
+.ffill.warn{background:linear-gradient(90deg,#fcd34d,#d97706)}
+.ffill.bad{background:linear-gradient(90deg,#fca5a5,#dc2626)}
+.fval{text-align:right;font-family:ui-monospace,monospace;color:var(--muted)}
+.gates4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gate{border:1px solid var(--line);border-radius:11px;padding:14px;background:#fafbfc}
+.gate .gn{font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:var(--blue)}
+.gate .gt{font-size:14px;font-weight:700;margin:3px 0 8px}
+.gate .gb{font-size:12px;color:var(--muted);min-height:76px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{background:#fafbfc;color:var(--muted);font-weight:600;font-size:12px}
+td.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.tag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;font-family:ui-monospace,monospace}
+.tag.ex{background:var(--red-soft);color:var(--red)}
+.tag.ct{background:var(--amber-soft);color:var(--amber)}
+.tag.best{background:var(--blue-soft);color:var(--blue)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{border:1px solid var(--line);border-radius:11px;padding:16px;background:#fafbfc}
+.box h3{font-size:14px;margin:0 0 10px}
+.big{font-size:26px;font-weight:700;font-family:ui-monospace,monospace;color:var(--blue);line-height:1.2}
+.big.red{color:var(--red)}
+.small{font-size:12px;color:var(--muted);margin-top:6px}
+.gapbar{position:relative;height:34px;background:#f1f3f5;border-radius:6px;margin:14px 0 6px;overflow:hidden}
+.gapfill{height:100%;background:linear-gradient(90deg,#93c5fd,#2563eb);width:60%;border-radius:6px}
+.critline{position:absolute;top:0;bottom:0;width:2px;background:var(--red);left:44.08%}
+.critlabel{position:absolute;top:-2px;left:44.08%;transform:translateX(4px);font-size:10.5px;color:var(--red);font-weight:700}
+.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}
+.note{font-size:12.5px;color:var(--muted);margin-top:12px;padding:10px 12px;background:var(--blue-soft);border-radius:8px;border:1px solid #dbeafe}
+.note.warn{background:var(--amber-soft);border-color:#fde68a}
+.note.bad{background:var(--red-soft);border-color:#fecaca}
+ul.clean{margin:8px 0 0;padding-left:20px;font-size:12.5px}
+ul.clean li{margin:5px 0}
+footer{margin-top:26px;padding:18px 20px;border-radius:12px;background:var(--dark);color:#e5e7eb;font-size:12.5px;line-height:1.9}
+footer strong{color:#fff}
+code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f3f4f6;padding:1px 5px;border-radius:4px;font-size:12px}
+@media(max-width:860px){.kpis,.gates4{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}.frow{grid-template-columns:130px 1fr 64px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">算法联盟 · 第五轮 · 2026-11-12</div>
+  <h1>双侧锚穷举配对与优化搜索</h1>
+  <div class="sub">把第四轮形式化出来的 OPEN 出口一次性跑完：27 项带非零 sigma 的双侧观测 × 17 条历史理论数值输出，全枚举并求 <code>min |gap|</code>。</div>
+  <div class="verdict">ALG-PAIR-OPTIM__PAIRS-459__MATCHED-14__CLEAN-9__HITS-0__BEST-GAP-SIGMA-2.6667__BEST-CHI2-7.1111__SIGMA-INFLATION-1.3606__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0</div>
+  <div class="badges">
+    <span class="badge ok">守卫 38/38</span>
+    <span class="badge ok">VERIFY-ALL-PASS</span>
+    <span class="badge ok">幂等复跑一致</span>
+    <span class="badge no">四门命中 0 对</span>
+    <span class="badge bd">undetermined 8 对</span>
+    <span class="badge new">不占 RID · 不入 README</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">01</span>全枚举漏斗</h2>
+  <p class="desc">四道门逐层收紧。命中数为 0，但每一层都留下可复核的读数，而不是只报一句「没有」。</p>
+  <div class="kpis">
+    <div class="kpi blue"><div class="n">459</div><div class="l">全枚举配对 27×17</div></div>
+    <div class="kpi blue"><div class="n">14</div><div class="l">对象门通过</div></div>
+    <div class="kpi amber"><div class="n">9</div><div class="l">非污染合法配对</div></div>
+    <div class="kpi red"><div class="n">0</div><div class="l">四门同时命中</div></div>
+    <div class="kpi green"><div class="n">38/38</div><div class="l">守卫全过</div></div>
+  </div>
+  <div style="margin-top:20px">
+    <div class="frow"><div>全枚举配对</div><div class="ftrack"><div class="ffill" style="width:100%"></div></div><div class="fval">459</div></div>
+    <div class="frow"><div>对象门通过（拒绝 445）</div><div class="ftrack"><div class="ffill" style="width:3.05%"></div></div><div class="fval">14</div></div>
+    <div class="frow"><div>污染门剔下 5 对</div><div class="ftrack"><div class="ffill warn" style="width:1.96%"></div></div><div class="fval">9</div></div>
+    <div class="frow"><div>卡方判负</div><div class="ftrack"><div class="ffill bad" style="width:1.96%"></div></div><div class="fval">9</div></div>
+    <div class="frow"><div>四门同时命中</div><div class="ftrack"><div class="ffill bad" style="width:0%"></div></div><div class="fval">0</div></div>
+  </div>
+  <div class="note warn">对象门不是装饰：不设它时会出现 <strong>1 对</strong>物理量完全不同却 <code>χ² &lt; 临界</code> 的伪配对 <code>T11-GAQ-mercury × G05</code>（水星进动撞 EHT 阴影）。只按数字找「最接近」会把它选成最优解。</div>
+</section>
+
+<section>
+  <h2><span class="num">02</span>四道门与目标函数</h2>
+  <p class="desc">与前三册 C1／C2／C3／C4 是同一条纪律在配对层的落地，没有新增物理假设。</p>
+  <div class="gates4">
+    <div class="gate"><div class="gn">GATE ①</div><div class="gt">对象同一</div><div class="gb"><code>observable</code> 标签必须相等。挡掉把 <code>α_s</code> 配到 <code>M_Z</code> 这类对象错位。</div></div>
+    <div class="gate"><div class="gn">GATE ②</div><div class="gt">LTO 非回述</div><div class="gb">理论值 ≠ 观测值，且来源不是循环／恒等式／往返反解。挡掉回述对照。</div></div>
+    <div class="gate"><div class="gn">GATE ③</div><div class="gt">p_free 确定为零</div><div class="gb"><code>p_free_status == zero</code>；无标注记 <code>undetermined</code>，不冒充也不判负。</div></div>
+    <div class="gate"><div class="gn">GATE ④</div><div class="gt">带误差棒卡方</div><div class="gb"><code>((theory−obs)/sigma)² &lt; 3.84145882069</code>，临界距离 <code>1.95996398σ</code>。</div></div>
+  </div>
+  <div class="note">目标函数 <code>min |gap|</code>，<code>gap = (theory − obs)/sigma</code>；<code>hit = ① ∧ ② ∧ ③ ∧ ④</code>。本轮「优化」的实质是把 0 命中量化成三个可算量：最小 sigma 距离、最小理论修正量、误差棒放宽倍数。</div>
+</section>
+
+<section>
+  <h2><span class="num">03</span>优化结果：最接近命中的一对</h2>
+  <p class="desc">在 9 对非污染合法配对上求 <code>min |gap|</code>，最优仍是 <code>T10-GAQ-mW × P02</code>，但它被卡方判负。</p>
+  <div class="split">
+    <div class="box">
+      <h3>最优配对读数</h3>
+      <div class="small">理论值（GAQ UFE-1 V1）</div>
+      <div class="big">80.409 <span style="font-size:14px;color:var(--muted)">GeV</span></div>
+      <div class="small" style="margin-top:12px">观测值（PDG 2026, P02）</div>
+      <div class="big" style="color:var(--ink);font-size:22px">80.377 ± 0.012 <span style="font-size:14px;color:var(--muted)">GeV</span></div>
+      <div class="small" style="margin-top:12px">|gap| = <strong>2.666667σ</strong>　χ² = <strong>7.111111</strong></div>
+      <div class="small">临界 χ² = 3.84145882069 ⇒ 超出约 1.85 倍，判 <span class="tag ex">EXCLUDED</span></div>
+    </div>
+    <div class="box">
+      <h3>离翻转还差多少</h3>
+      <div class="small">达到 95% 卡方区间所需最小理论修正</div>
+      <div class="big red">8.48043219E-3 <span style="font-size:14px;color:var(--muted)">GeV</span></div>
+      <div class="small" style="margin-top:12px">或把误差棒放宽</div>
+      <div class="big red">1.360569 <span style="font-size:14px;color:var(--muted)">倍</span></div>
+      <div class="small">即 0.012 → 约 0.0163 GeV。判定处在临界附近，<strong>不稳健</strong>。</div>
+    </div>
+  </div>
+  <div class="gapbar"><div class="gapfill"></div><div class="critline"></div><div class="critlabel">临界 1.95996σ</div></div>
+  <div class="axis"><span>0σ</span><span>最优 2.666667σ</span><span>4σ</span></div>
+  <div class="note bad" style="margin-top:18px"><strong>口径决定判定。</strong> GAQ 原册对同一对用「相对误差 &lt;1%」判 PASS，实算相对误差 <code>0.039812%</code>；本册换带误差棒卡方得 <code>7.111111 &gt; 3.84145882069</code> 判 FAIL。两者问的不是同一个问题，中间恰好差 <code>1.360569</code> 倍误差棒。</div>
+</section>
+
+<section>
+  <h2><span class="num">04</span>14 对对象匹配逐条读数</h2>
+  <p class="desc">全部为精确有理数计算，JSON 内保留逐对证据；下表为小数显示。按 |gap| 从大到小未排序，按编号列出。</p>
+  <table>
+    <thead><tr><th>理论输出</th><th>观测</th><th>判定</th><th>gap (σ)</th><th>χ²</th><th>p_free</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">T01-SU5-3over8</td><td class="mono">P08</td><td><span class="tag ex">EXCLUDED</span></td><td class="mono">3594.500000</td><td class="mono">1.292043E+7</td><td class="mono">zero</td></tr>
+      <tr><td class="mono">T02-attack28-SM</td><td class="mono">P08</td><td><span class="tag ex">EXCLUDED</span></td><td class="mono">−594.309222</td><td class="mono">3.532035E+5</td><td class="mono">zero</td></tr>
+      <tr><td class="mono">T03-attack28-MSSM</td><td class="mono">P08</td><td><span class="tag ex">EXCLUDED</span></td><td class="mono">−57.360125</td><td class="mono">3.290184E+3</td><td class="mono">nonzero</td></tr>
+      <tr><td class="mono">T04-attack28-circular</td><td class="mono">P08</td><td><span class="tag ct">CONTAMINATED</span></td><td class="mono">−20.500000</td><td class="mono">4.202500E+2</td><td class="mono">zero</td></tr>
+      <tr><td class="mono">T05-r188-sstar</td><td class="mono">P08</td><td><span class="tag ex">EXCLUDED</span></td><td class="mono">−6.914868</td><td class="mono">4.781540E+1</td><td class="mono">nonzero</td></tr>
+      <tr><td class="mono">T06-r188-sstar-SMbeta</td><td class="mono">P08</td><td><span class="tag ex">EXCLUDED</span></td><td class="mono">−1489.455224</td><td class="mono">2.218477E+6</td><td class="mono">undetermined</td></tr>
+      <tr><td class="mono">T07-GAQ-sec20</td><td class="mono">P08</td><td><span class="tag ex">EXCLUDED</span></td><td class="mono">−100.500000</td><td class="mono">1.010025E+4</td><td class="mono">undetermined</td></tr>
+      <tr><td class="mono">T08-GAQ-sec24</td><td class="mono">P08</td><td><span class="tag ex">EXCLUDED</span></td><td class="mono">+17.000000</td><td class="mono">2.890000E+2</td><td class="mono">undetermined</td></tr>
+      <tr><td class="mono">T09-GAQ-sec25</td><td class="mono">P08</td><td><span class="tag ex">EXCLUDED</span></td><td class="mono">+14.500000</td><td class="mono">2.102500E+2</td><td class="mono">undetermined</td></tr>
+      <tr style="background:var(--blue-soft)"><td class="mono"><strong>T10-GAQ-mW</strong></td><td class="mono">P02</td><td><span class="tag best">最优 · EXCLUDED</span></td><td class="mono"><strong>+2.666667</strong></td><td class="mono"><strong>7.111111E+0</strong></td><td class="mono">undetermined</td></tr>
+      <tr><td class="mono">T11-GAQ-mercury</td><td class="mono">G01</td><td><span class="tag ct">CONTAMINATED</span></td><td class="mono">0</td><td class="mono">0</td><td class="mono">undetermined</td></tr>
+      <tr><td class="mono">T12-GAQ-light</td><td class="mono">G02</td><td><span class="tag ct">CONTAMINATED</span></td><td class="mono">0</td><td class="mono">0</td><td class="mono">undetermined</td></tr>
+      <tr><td class="mono">T13-GAQ-alpha-inv</td><td class="mono">C06</td><td><span class="tag ct">CONTAMINATED</span></td><td class="mono">0</td><td class="mono">0</td><td class="mono">undetermined</td></tr>
+      <tr><td class="mono">T14-P3-RESTATEMENT</td><td class="mono">P08</td><td><span class="tag ct">CONTAMINATED</span></td><td class="mono">0</td><td class="mono">0</td><td class="mono">zero</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><strong>越干净，差得越远。</strong> 把范围收紧到 <code>p_free = zero</code> 的层，最优是 <code>T02-attack28-SM × P08</code>，<code>|gap| = 594.3092σ</code>，比全表最优差两个量级以上。参数不是消失了，是从方程搬到了公理或误差棒口径里。</div>
+</section>
+
+<section>
+  <h2><span class="num">05</span>三次判据反噬</h2>
+  <p class="desc">核验只在内存里替换源码单点，不写回仓库；每次都要让假读数上升并触发守卫报警。</p>
+  <table>
+    <thead><tr><th>变体</th><th>结果</th><th>假命中／读数漂移</th><th>报警守卫数</th></tr></thead>
+    <tbody>
+      <tr><td>抹掉对象门</td><td class="mono">GATES-FAIL</td><td>对象匹配 14 → <strong>459</strong>，跨对象伪接近归零</td><td class="mono">14</td></tr>
+      <tr><td>抹掉污染门</td><td class="mono">GATES-FAIL</td><td>假命中 0 → <strong>1</strong>（回述对照被放行）</td><td class="mono">15</td></tr>
+      <tr><td>卡方临界抬到 1e40</td><td class="mono">GATES-FAIL</td><td>假命中 0 → <strong>2</strong>，跨对象伪接近 1 → <strong>275</strong></td><td class="mono">14</td></tr>
+    </tbody>
+  </table>
+  <div class="note warn">控制组四个读数 <code>459 / 14 / 9 / 0</code> 两两不同，三个对照均不等于基线。阴性对照：5 对污染配对按预期 <code>χ²≈0</code> 却恒被污染门挡住，单列 <code>IDENTITY</code> 并配 <code>NOT-ALL-GREEN</code>。</div>
+</section>
+
+<section>
+  <h2><span class="num">06</span>口径差异机算还原</h2>
+  <p class="desc">不靠「拍一个容差」蒙混，必须由 sigma 比值平方精确解释。</p>
+  <div class="split">
+    <div class="box">
+      <h3>SU5 树级 3/8 对 P08</h3>
+      <ul class="clean">
+        <li>靶场历史 <code>χ² = 13379760</code>（<code>sigma = 3.93074e-5</code>）</li>
+        <li>本册 P08 <code>sigma = 0.00004</code> ⇒ <code>χ² = 1.292043025E+7</code></li>
+        <li>相对差 <code>3.433019E-2</code>，纯由误差棒口径造成</li>
+        <li>乘 <code>(sigma_本册 / sigma_靶场)² = 1.0355506514</code></li>
+        <li>还原为 <code>1.337975996E+7</code>，与靶场一致</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>两路机拼与交付核验</h3>
+      <ul class="clean">
+        <li>GAQ §二总表 vs §五残差表：<code>m_W = 80.409</code>、<code>§25 = 0.2318</code> 一致</li>
+        <li>卡方临界两路：第三轮 JSON 与靶场 caliber 一致</li>
+        <li>链接体检 <code>11/11</code>，断链 0；既有文件零删除零改动</li>
+        <li><code>README.md</code> 零改动（939,177 B，最大 RID 仍 <code>r406</code>）</li>
+        <li><code>content_sha256 = dbfdeb0d…c5</code>，幂等复跑 MD5 一致</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">实现事故两处已修：核验脚本四个路径漏了 <code>openuft</code> 一级造成假断链 4 条，修正后复核 <code>11/11</code>；口径对照守卫曾把相对误差挂在 <code>BEST</code> 上，反噬变体里触发 <code>NoneType</code> 崩溃，改为钉死固定历史配对，并对零自由参数层加 <code>n/a</code> 安全格式化。</div>
+</section>
+
+<section>
+  <h2><span class="num">07</span>诚实边界与下一轮出口</h2>
+  <p class="desc">0 命中不等于永远不可能，只等于「在这套来料与这套判据下没有」。</p>
+  <ul class="clean">
+    <li>17 条理论输出是仓库已登记的历史候选，不是物理理论全集；27 项锚是 46 项来料里带非零 sigma 的双侧观测，标 <code>BOUNDARY</code>。</li>
+    <li>8 对 <code>undetermined</code> 没有做自由度归属判定，既不放行也不判负；<strong>离命中最近的那对恰好就在这一层</strong>。</li>
+    <li>优化量 <code>8.48043219E-3 GeV</code> 与 <code>1.360569</code> 倍是判定口径的临界距离，不是可证伪预言，更不是建议去调误差棒。</li>
+    <li>四门比三重门严，但不保证完备；<code>tau_p_lifetime</code> 只有单侧下限，穷举对它判别力如实报 0 对。</li>
+  </ul>
+  <div class="note bad" style="margin-top:16px"><strong>下一轮出口（不必等新实验、不必造新假设）：</strong>补做 <code>undetermined</code> 层的 <code>p_free</code> 归属机读，把 GAQ 等 8 对来源的可调参数账逐条查清。若最优对查出 <code>nonzero</code>，它就失去资格；若查出 <code>zero</code>，它成为现有来料里最值得交独立复核的一条。在归属查清之前，本册不替它预支结论。</div>
+</section>
+
+<footer>
+  <strong>红线：</strong>数学自洽 ≠ 实验证实；本册只产配对层与口径层的可算判决，不产新物理。四力达成度 2/6、四力大统一 <strong>0 条正确解</strong>、独立实验预言 <strong>0</strong>，<strong>不宣称攻破统一场论</strong>。<br>
+  算法联盟分析册：不占 RID、不入 README、不与任何审计卷相加；下轮审计号从 <code>r407</code> 起。
+</footer>
+
+</div>
+</body>
+</html>

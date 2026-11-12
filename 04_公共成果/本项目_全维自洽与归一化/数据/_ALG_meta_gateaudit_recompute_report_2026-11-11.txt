@@ -1,0 +1,104 @@
+算法联盟：判据自审 + 模型空间穷举 + 描述压缩增益 + 谓词自指反噬
+============================================================================================
+verdict : ALG-META-GATEAUDIT__MODELS-192__CONSISTENT-125__B3-3__ESCAPE-2__B4-1__C4-ADDED__EXISTING-B4-0__MDL-EFF-GAIN-0__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0
+final   : ALG-META-GATEAUDIT--GATES-PASS-WITH-0-NEGATIVE
+counts  : {"INFO": 5, "PASS": 33, "FAIL": 0, "IDENTITY": 1, "BOUNDARY": 1}
+guards  : 40/40
+sha256  : 1f149cee1fc17097f0a53f2c2c8d1e46e63b4480a339980b7d543d7bfa142a99
+--------------------------------------------------------------------------------------------
+本轮换到元层级：不找新理论，审查前三轮的判据本身。
+模型空间 192 个构型，一致性约束后 125 个。
+第三轮三重门命中 3 个，其中单侧逃逸 2 个（lower、upper）⇒ 逻辑相容但不完备。
+补 C4 双侧阳性证据门后命中 1 个，全部为 two-sided。
+把第三轮 10 条候选映射进来重算：三重门 0 条、四重门 0 条 ⇒ 升级判据不改变既有判决。
+--------------------------------------------------------------------------------------------
+★逃逸实例（现候选中）：K09-MSSM-tau_p-dim6 的 C2 与 C3 均为真且为单侧型，仅因 p_free=1 挂 C1 才未放行。
+最小满足模型必要结构：{"p_free": [0], "lto": [1], "obs_type": ["two-sided"], "survive": [1], "power": [1]}
+--------------------------------------------------------------------------------------------
+M2 描述压缩：原始正增益 1 条，经实验存活层筛后 0 条，最大有效增益 0；模型空间层最小满足模型增益 1。
+M3 谓词自指：基准 1 / p_free+1 0 / lto 全 1 2 / power 全 0 0 / unifies 恒真 125。
+两路机拼：survive 重算 10/10 一致；扰动正对照两路分叉 True。
+--------------------------------------------------------------------------------------------
+反噬基线：抹掉 C4 ⇒ 3 个假突破；unifies 恒真 ⇒ 125 个；抹掉 power ⇒ 三重门命中 6。
+红线：数学自洽 != 实验证实；四力大统一 0 条正确解；独立实验预言 0；不宣称攻破。
+--------------------------------------------------------------------------------------------
+[PASS] PREV3-RELOADED :: OK
+    第三轮 39/39 守卫、10 条候选、突破 0 次；本册把它的 gates 字段当作审查对象
+[PASS] PREV2-RELOADED :: OK
+    第二轮 35/35 守卫、20 次迭代突破 0 次；钉死—预言跷跷板结论回读一致
+[PASS] SOURCE-LINK-HEALTH :: OK
+    本地引用 6 个成品文件，断链 0 个；分母为 0 判 FAIL
+[PASS] LEDGER-RELOADED :: OK
+    回读第一册 46 项实测锚，其中带非零 sigma 的双侧型读数 27 项 ⇒ 双侧观测量本身不缺，缺的是能被理论命中的那一条
+[PASS] CHI2-CRIT-TWO-SOURCES :: OK
+    卡方临界 3.84145882069 两路机读：第三轮 JSON 与卡方靶场 caliber 一致
+[PASS] MODEL-SPACE-ENUMERATED :: OK
+    6 维离散模型空间全枚举 192 个构型，一致性约束后剩 125 个
+[PASS] CONSISTENCY-CONSTRAINTS-BITE :: OK
+    恒等式约束与公理注入约束确实剔掉 67 个自相矛盾构型 ⇒ 穷举不是对空集或全集做装饰统计
+[PASS] TRIPLE-GATE-LOGICALLY-COMPATIBLE :: OK
+    第三轮三重门在逻辑上相容：一致模型空间里有 3 个满足构型 ⇒ 攻破不是逻辑矛盾，缺口在别处
+[PASS] TRIPLE-GATE-INCOMPLETE :: OK
+    ★本轮核心发现：满足三重门的构型里有 2 个是单侧型（lower、upper）⇒ 三重门会把「尚未排除」误当成阳性证据
+[PASS] ESCAPE-WITNESS-IN-EXISTING :: OK
+    现候选里就有实例：K09-MSSM-tau_p-dim6 的 C2 与 C3 均为真、且是单侧型，只因 p_free=1 挂 C1 才没被放行 ⇒ 漏洞不是假想的
+[PASS] EXISTING-C3-TRUE-COUNT :: OK
+    第三轮 C3 为真的候选 2 条：K05-RESTATEMENT-obs、K09-MSSM-tau_p-dim6；其中单侧型存活者需要 C4 兜底
+[PASS] C4-CLOSES-ESCAPE :: OK
+    补上 C4 双侧阳性证据门后，满足构型从 3 降到 1，且剩余全部为双侧型 ⇒ 逃逸被封住
+[PASS] B4-ALL-TWO-SIDED :: OK
+    四重门 1 个满足构型的 obs_type 全部为 two-sided
+[PASS] MIN-B4-NECESSARY-STRUCTURE :: OK
+    最小满足模型的必要结构：{"p_free": [0], "lto": [1], "obs_type": ["two-sided"], "survive": [1], "power": [1]} ⇒ 第三轮 OPEN 出口被形式化为可机算的必要条件
+[PASS] EXISTING-ZERO-B4 :: OK
+    把第三轮 10 条候选映射进模型空间重算：四重门命中 0 条、三重门命中 0 条 ⇒ 升级判据不改变既有判决
+[PASS] EXP-ACT-DISTINCT-AST :: OK
+    AST 核验 survive_act 与 survive_exp 是两个不同函数，且 return 均非顶层数值常量
+[PASS] EXP-ACT-AGREE-ON-SURVIVE :: OK
+    两路机拼：本册精确有理卡方/excluded 重算 vs 第三轮 JSON 布尔字段，10/10 一致
+[PASS] EXP-ACT-DIVERGE-ON-PERTURBATION :: OK
+    正对照：只把 act 路径的卡方压到临界一半，act=True 而 exp=False ⇒ act 确实独立计算，不是照抄 exp
+[PASS] MDL-RAW-GAIN-EXISTS :: OK
+    描述压缩原始增益 >0 的候选 1 条：纯群论常数看似压缩了描述，但还没过实验层
+[PASS] MDL-EFFECTIVE-GAIN-ZERO :: OK
+    ★M2 结论：只认通过实验存活层的陈述后，正增益候选 0 条、最大有效增益 0 ⇒ 目前的「统一」只是重述写法，没有压缩出任何经得起检验的新陈述
+[PASS] MDL-MODEL-LEVEL-POSITIVE :: OK
+    模型空间层最小满足模型的描述增益 1 > 0 ⇒ 逻辑上统一可以压缩，前提仍是必须消费一个双侧观测量
+[PASS] PREDICATE-DISCRIMINATING :: OK
+    ★M3 结论：unifies 对模型扰动敏感——基准 1，p_free+1 ⇒ 0，lto 全置 1 ⇒ 2，power 全置 0 ⇒ 0；三路读数均与基准不同
+[PASS] UNIFY-TRUE-IS-FALSE-BREAKTHROUGH :: OK
+    把 unifies 写成恒真谓词会凭空造出 125 个假突破（真实 1 个）⇒「统一」谓词不能是装饰
+[PASS] CTRL-FOUR-DISTINCT :: OK
+    控制组四个模型计数两两不同：125 / 3 / 2 / 1
+[PASS] CTRL-NO-EQ-BASE :: OK
+    三个对照读数均不等于基线 N_consistent，杜绝全表读数相同造成的假判别力
+[PASS] CTRL-POSITIVE-ALERTS :: OK
+    阳性对照：2 个单侧逃逸构型全部 non-two-sided，C4 确实报警
+[IDENTITY] CTRL-IDENTITY-NEVER-BREAKS :: OK
+    阴性对照：5 个恒等式构型按预期恒绿且无一突破，单列 IDENTITY 配 NOT-ALL-GREEN
+[INFO] NOT-ALL-GREEN :: OK
+    恒等式与负对照恒绿，但全表另有逃逸检出、C4 收紧、MDL 归零等非恒绿读数 ⇒ 配 NOT-ALL-GREEN
+[PASS] BACKFIRE-NO-C4 :: OK
+    反噬基线 1：抹掉 C4 会让假突破从 1 涨到 3 ⇒ C4 承重
+[PASS] BACKFIRE-UNIFIES-TRUE :: OK
+    反噬基线 2：unifies 恒真会造 125 个假突破 ⇒ 谓词承重
+[PASS] BACKFIRE-NO-POWER :: OK
+    反噬基线 3：抹掉 C3 的判别力门会让三重门命中从 3 涨到 6 ⇒ power 门承重
+[PASS] NO-HARDCODE-OK :: OK
+    AST 扫描 add/guard 的 ok 参数，布尔字面量命中 0；全部 ok 由计算布尔驱动
+[PASS] VERDICT-MACHINE :: OK
+    把模型空间总数读数 +1 后判词串发生变化，且原读数确实写入判词 ⇒ 判词机读、随读数变化
+[PASS] SPINE-ZERO :: OK
+    跨卷回读：r403 四力正确解 0 条、r404 接受 0、脊梁独立预言 0；第二册 20 次迭代与第三册 10 条候选突破均 0
+[BOUNDARY] MODEL-SPACE-IS-BOUNDARY :: OK
+    192 个构型是 6 维离散属性的**逻辑影子**，不是物理理论全集；本册结论只对这 6 维抽象层全称成立，对未来新属性保持开放
+[INFO] FOUR-FORCE-INCOMPLETE :: OK
+    红线：四力达成度 2/6（电弱已统一、引力未、候选待实验）；四力大统一 0 条正确解
+[INFO] NO-BREAKTHROUGH :: OK
+    本册不宣称攻破统一场论；升级为四重门后现有候选仍 0 命中
+[INFO] MATH-NOT-EXPERIMENT :: OK
+    所有结论都是可算判决（元逻辑层），不是实验证实；不产新物理，独立实验预言仍为 0
+[INFO] NEW-EXIT-FORMALIZED :: OK
+    第三轮的 OPEN 出口被形式化：攻破所需的新实验读数必须双侧可判、且理论值落在其可判负区间之外
+[PASS] FINAL-OF-CONSISTENT :: OK
+    final_of(nf_main=0,nf_guard=0,n_decl=5)：守卫 FAIL 挡门、已登记判负不挡门、缺 n_decl 报 GATES-FAIL

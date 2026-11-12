@@ -158,7 +158,7 @@ def ledger():
     t = read_text(p_top)
     ids = sorted(set(re.findall(r"\b[A-C]\d{3}\b", t)))
     m_reg = re.search(r"合\s*(\d+)\s*条", t)
-    m_gap = re.search(r"实缺\s*(\d+)", t)
+    m_gap = re.search(r"实缺\s*\**(\d+)\**", t)
     out["top1000_unique_abc_ids"] = len(ids)
     out["top1000_registered"] = int(m_reg.group(1)) if m_reg else None
     out["top1000_gap"] = int(m_gap.group(1)) if m_gap else None
@@ -183,7 +183,7 @@ def ledger():
 
     p_canon = os.path.join(ROOT, FACTS[0][0])
     tc = read_text(p_canon)
-    m_in = re.search(r"(\d+)\s*(?:→|->|→)\s*(\d+)", tc)
+    m_in = re.search(r"(\d+)\s*(?:→|->)\s*(\d+)", tc)
     out["input_from"] = int(m_in.group(1)) if m_in else None
     out["input_to"] = int(m_in.group(2)) if m_in else None
     return out
@@ -315,41 +315,54 @@ def dimension_block():
     alpha_ok = 1 if alpha_dim == (0, 0, 0, 0) else 0
     emc_ok = 1 if emc_dim == (0, 0, 0, 0) else 0
 
-    # G 加倍：量纲向量不变、零空间基不变，但 alpha_G 数值加倍
+    # G 加倍：数值变化不改变量纲指数矩阵 / 零空间基，但 alpha_G 加倍
     g1 = Fraction(1)
     g2 = Fraction(2)
-    # alpha_G ∝ G（m_e^2/(hbar c) 记作 1 个单位化因子）
     ag1, ag2 = g1, g2
     ratio = ag2 / ag1
-    dim_unchanged = 1 if [list(x) for x in DIM] == [list(x) for x in DIM] else 0
     basis_str = [str(list(v)) for v in basis]
     basis2, rank2, _p2 = nullspace(A)
     basis_unchanged = 1 if [str(list(v)) for v in basis2] == basis_str else 0
-
+    # 概念恒真项：指数矩阵不含常数数值，单独登记不承重
+    dim_unchanged = 1 if [list(x) for x in DIM] == [list(x) for x in DIM] else 0
+    # 阳性对照：真扰动 G 的长度指数 => 零空间基必变（证明上面的判据非恒真）
+    dim_mut = [list(x) for x in DIM]
+    dim_mut[0] = [dim_mut[0][k] + (1 if k == 1 else 0) for k in range(4)]
+    a_mut = [[dim_mut[j][i] for j in range(len(DIM_NAMES))] for i in range(4)]
+    basis_mut, rank_mut, _p3 = nullspace(a_mut)
+    control_basis_changed = 1 if [str(list(v)) for v in basis_mut] != basis_str else 0
     # 留一：其余 7 个量纲向量能否张成 holdout 的量纲向量；能张成仍缺无量纲系数
     loo = []
     for h in range(len(DIM_NAMES)):
         cols = [j for j in range(len(DIM_NAMES)) if j != h]
         sub = [[DIM[j][i] for j in cols] for i in range(4)]
-        _ns, rk, _pv = rref(sub)
+        _a, _pv, rk = rref(sub)
+        n_sub = len(cols)
+        sub_nullity = n_sub - rk
         vec = [DIM[h][i] for i in range(4)]
-        sol = None
-        # 求 sub * x = vec 是否有解：增广矩阵秩比较
+        # 求 sub * x = vec 是否有解：增广矩阵秩比较（rref 返回 a,piv,rank）
         aug = [[DIM[j][i] for j in cols] + [vec[i]] for i in range(4)]
         _ra, _pa, rka = rref(aug)
         representable = 1 if rka == rk else 0
+        # 同一量纲向量存在多组指数解 => 无量纲系数不由量纲表决定（机器判据，非硬编码）
+        coefficient_free = 1 if sub_nullity > 0 else 0
         loo.append({"holdout": DIM_NAMES[h], "dim_representable": representable,
-                    "coefficient_free": 0})
+                    "sub_nullity": sub_nullity,
+                    "dimless_coefficient_free": coefficient_free})
     return {
         "dim_names": DIM_NAMES, "dim_vectors": [list(x) for x in DIM],
         "rank": rank, "nullity": len(basis), "basis": [[str(x) for x in v] for v in basis],
         "basis_ok": basis_ok, "alpha_dimensionless_ok": alpha_ok,
         "eps0_mu0_c2_ok": emc_ok,
         "g_double": {"alpha_G_ratio": str(ratio), "dim_unchanged": dim_unchanged,
-                     "nullspace_basis_unchanged": basis_unchanged},
+                     "nullspace_basis_unchanged": basis_unchanged,
+                     "control_basis_changed": control_basis_changed,
+                     "control_rank": rank_mut},
         "leave_one_out": loo,
         "loo_representable": sum(x["dim_representable"] for x in loo),
-        "loo_coefficient_free": sum(x["coefficient_free"] for x in loo),
+        "loo_dimless_free": sum(x["dimless_coefficient_free"] for x in loo),
+        "loo_min_nullity": min(x["sub_nullity"] for x in loo),
+        "loo_max_nullity": max(x["sub_nullity"] for x in loo),
     }
 
 
@@ -424,7 +437,7 @@ def dynamic_scan():
         if m:
             nums.append(int(m.group(1)))
     out = {
-        "attack_max_other": max(nums) if nums else 0,
+        "attack_max_seen": max(nums) if nums else 0,
         "attack59_hits": sum(1 for f in files if "attack59" in f),
         "dir_files": len(files),
     }
@@ -468,7 +481,7 @@ def duplicate_scan():
                 if f.startswith("README") or "资料索引" in dp:
                     continue
                 p = os.path.join(dp, f)
-                if p == P_JUDGE:
+                if p in (P_JSON, P_MD, P_REPORT, P_JUDGE, P_README, P_PY):
                     continue
                 n_md += 1
                 try:
@@ -489,6 +502,11 @@ def duplicate_scan():
 def ast_selfcheck():
     src = read_text(P_PY)
     tree = ast.parse(src)
+    try:
+        compile(src, P_PY, "exec")
+        compile_ok = 1
+    except SyntaxError:
+        compile_ok = 0
     std = set(["sys", "os", "io", "re", "ast", "json", "hashlib", "itertools",
                "fractions", "decimal", "math", "csv", "glob", "collections"])
     third = []
@@ -507,7 +525,7 @@ def ast_selfcheck():
                 banned.append(node.func.id)
         if isinstance(node, ast.Assign):
             v = node.value
-            ok = False
+            ok = 0
             if hasattr(ast, "Constant") and isinstance(v, ast.Constant):
                 ok = v.value is True or v.value is False
             elif isinstance(v, getattr(ast, "NameConstant", ())):
@@ -516,7 +534,7 @@ def ast_selfcheck():
                 literal_bool.append(1)
     return {"third_party_imports": third, "banned_calls": banned,
             "literal_bool_assign": len(literal_bool),
-            "py_compile_ok": 1}
+            "py_compile_ok": compile_ok}
 
 
 def fact_scan():
@@ -548,6 +566,52 @@ def main():
     dim = dimension_block()
     sat = saturation_block()
 
+    E = []
+
+    def Eadd(code, status, text):
+        E.append({"code": code, "status": status, "text": text})
+
+    Eadd("E01", "FAIL", "有限知识锚点唯一确定自由函数：m=1..12 构造 Q=P+∏(x−xi)，全部锚点同值而新点 Q−P≠0，命题被反例否证。")
+    Eadd("E02", "PASS", "限定函数空间为次数≤m−1 多项式时，Vandermonde rank=m、nullity=0，m 个锚点精确唯一确定（m=1..8 全过）。")
+    Eadd("E03", "BOUNDARY", "形状闭式阳性对照 g_c(x)=c·x：1 个锚点即定 c 且新点可预测 ⇒ 唯一性只在「函数空间已闭式」作用域内成立。")
+    Eadd("E04", "FAIL", "「人类知识全域供给」可绕过外部输入 / Ω5：知识条目只是锚点，锚点族不能给出自由函数形状，否证。")
+    Eadd("E05", "FAIL", "量纲零空间 rank=4、nullity=4 ⇒ 4 个独立无量纲组合为自由参数，量纲分析对数值零判别力。")
+    Eadd("E06", "PASS", "量纲表守卫：α=e²/(4πε₀ħc) 与 ε₀μ₀c²=1 的量纲逐分量为零（教科书恒等式机器复现）。")
+    Eadd("E07", "FAIL", "G 加倍只使 α_G 比值=2，量纲向量与零空间基逐位不变 ⇒ 数值变化不能由量纲 / 零空间读出。")
+    Eadd("E08", "BOUNDARY", "留一 holdout：量纲可表性读数见产物，但每个子矩阵零空间 ≥1 ⇒ 同一量纲有无穷多组指数解、无量纲系数在全部 holdout 上自由（仍须外部数值），结论限于量纲层。")
+    Eadd("E09", "INFO", "现场机读账本（有限代理，标 [C]）：Top1000 实登 290 / 缺口 710、A/B/C 编号 42、CODATA 9 常数 97 有效数字、归一正本 INPUT 19→26。")
+    Eadd("E10", "FAIL", "「增加知识锚点可翻转 GATE」：m=1..20 逐格扫描 invariant=1、对照翻转=0 ⇒ 命题否证。")
+    Eadd("E11", "PASS", "变异阳性对照（知识自动转 R，gate(a,e+m)）翻转>0 ⇒ 不变量守卫非恒真。")
+    Eadd("E12", "BOUNDARY", "FSPACE 五条件合取阳性=1、5 组反事实全拒 ⇒ 唯一通道=函数空间闭式；但闭式本身是新增公设输入，不构成物理完成。")
+    Eadd("E13", "FAIL", "知识饱和不改变 gate(a,e)=1⇔a−e<0 的通过条件 ⇒ 「知识饱和即攻破」不成立。")
+    Eadd("E14", "INFO", "全库查重：scanned_md / needle_hit_total 如实记录，不硬编码 0；专有针词按文件计数。")
+    Eadd("E15", "INFO", "动态取号：attack_max / attack59_hits / 并行 r_max 下界均现场实扫，并行号段只作 INFO 不设硬守卫。")
+    Eadd("E16", "INFO", "红线不变 0/6、0/22、UFT-3=0、L3=0、validated=0；本册不计攻破数、不宣称物理完成。")
+    Eadd("E17", "CORRECTED", "Top1000 缺口原文为粗体「实缺 **710**」，严格正则命中 NONE ⇒ 改容错正则后得 710（探针核验）。")
+    Eadd("E18", "CORRECTED", "草稿自抓：末尾覆盖函数名、G13–G20 少传 cond、astc 与 ac 不一致、缺 __main__ 入口、判定册未先落盘 ⇒ 全部修复后复跑。")
+
+    entries = E
+    status_count = {}
+    for e in entries:
+        status_count[e["status"]] = status_count.get(e["status"], 0) + 1
+
+    self_corrections = [
+        "SC1 Top1000 缺口原文为粗体 **710**，严格正则命中 NONE；改容错正则后得 710（独立探针核验）。",
+        "SC2 草稿末尾 dim = dimension_block = ... if False else None 覆盖函数名；删除模块级预计算，改由 main 内调用。",
+        "SC3 G13–G20 旧版只传 2 参（缺 cond）导致 TypeError；全部补齐有判别力的 cond。",
+        "SC4 payload.ast_selfcheck 引用未定义 astc 且按元组下标访问；改为 ac 的 dict 读数。",
+        "SC5 entries / status_count 未定义；补 18 条判定条目与状态计数。",
+        "SC6 G03 / G18 依赖判定册先落盘；本轮先写判定册再跑引擎（判定册不硬编码机器读数）。",
+        "SC7 ast_selfcheck 的 ok = False 是布尔字面量赋值，会被自身守卫误报；改 0，并把 py_compile_ok 改为真编译结果。",
+        "SC8 dim_unchanged / basis_unchanged 属恒真自比较；新增量纲扰动阳性对照 control_basis_changed 提供真判别力。",
+        "SC9 duplicate_scan 只排除 P_JUDGE；补排除 P_JSON / P_MD / P_REPORT / P_README / P_PY 防自指命中。",
+        "SC10 缺 __main__ 入口，脚本不生成产物；补 sys.exit(main())。",
+        "SC11 G04 原设 scanned_md>=1000 属凭空阈值；改为「扫描确实执行且非空」并把实际规模作为读数。",
+        "SC12 G03 原设 attack59_hits<=5 会被本册自身产物数突破；改为 >=1 下界（结构性判定，抗并发漂移）。",
+        "SC13 dimension_block 留一段把 rref 的 (a,piv,rank) 解包成 (_ns,rk,_pv)，拿 piv 列表当秩比较 ⇒ 8/8 假不可表；改取第三元素后恢复真实读数。",
+        "SC14 原 coefficient_free 硬编码 0 且配套文案语义写反（把「系数自由」注成「无需外部无量纲数值」）；升级为子矩阵零空间机器判据 sub_nullity>0，语义改为「系数自由 = 仍须外部数值」。",
+    ]
+
     guards = []
 
     def G(code, cond, reading):
@@ -557,16 +621,17 @@ def main():
       "fact_sources=" + str(len(facts)) + " exists=" + str(sum(r["exists"] for r in facts)))
     G("G02", all(r["tolerance_ok"] == 1 for r in facts),
       "needle_tolerance=" + str(sum(r["tolerance_ok"] for r in facts)) + "/" + str(len(facts)))
-    G("G03", dyn["attack_max_other"] >= 58 and dyn["attack59_hits"] <= 5 and
+    G("G03", dyn["attack_max_seen"] >= 58 and dyn["attack59_hits"] >= 1 and
       os.path.isfile(P_JUDGE),
-      "attack_max=" + str(dyn["attack_max_other"]) + " attack59_hits=" +
+      "attack_max=" + str(dyn["attack_max_seen"]) + " attack59_hits=" +
       str(dyn["attack59_hits"]) + " judge_exists=1")
-    G("G04", dup["scanned_md"] >= 1000,
+    G("G04", dup["scanned_md"] > 0,
       "scanned_md=" + str(dup["scanned_md"]) + " needle_hit_total=" + str(dup["hit_total"]))
     G("G05", len(ac["third_party_imports"]) == 0 and len(ac["banned_calls"]) == 0 and
-      ac["literal_bool_assign"] == 0,
+      ac["literal_bool_assign"] == 0 and ac["py_compile_ok"] == 1,
       "third=" + str(len(ac["third_party_imports"])) + " banned=" +
-      str(len(ac["banned_calls"])) + " literal_bool=" + str(ac["literal_bool_assign"]))
+      str(len(ac["banned_calls"])) + " literal_bool=" + str(ac["literal_bool_assign"]) +
+      " compile=" + str(ac["py_compile_ok"]))
     G("G06", fk["anchor_ok"] == 1,
       "m=1..12 anchors_all_equal + new_point_differs; anchor_ok=" + str(fk["anchor_ok"]))
     G("G07", fk["general_ok"] == 1,
@@ -580,37 +645,41 @@ def main():
     G("G11", dim["rank"] == 4 and dim["nullity"] == 4 and dim["basis_ok"] == 1,
       "rank=" + str(dim["rank"]) + " nullity=" + str(dim["nullity"]) + " basis_ok=" + str(dim["basis_ok"]))
     G("G12", dim["g_double"]["alpha_G_ratio"] == "2" and
-      dim["g_double"]["dim_unchanged"] == 1 and dim["g_double"]["nullspace_basis_unchanged"] == 1,
+      dim["g_double"]["nullspace_basis_unchanged"] == 1 and
+      dim["g_double"]["control_basis_changed"] == 1,
       "G x2: alpha_G_ratio=" + dim["g_double"]["alpha_G_ratio"] +
-      " dim_unchanged=" + str(dim["g_double"]["dim_unchanged"]) +
-      " basis_unchanged=" + str(dim["g_double"]["nullspace_basis_unchanged"]))
-    G("G13 # holdout dim representable / coefficient free",
-      "loo_representable=" + str(dim["loo_representable"]) +
-      " loo_coefficient_free=" + str(dim["loo_coefficient_free"]))
-    G("G14 # knowledge ledger",
-      "abc_ids=" + str(led["top1000_unique_abc_ids"]) +
-      " registered=" + str(led["top1001000_registered"] if False else led["top1000_registered"]) +
-      " gap=" + str(led["top1000_gap"]) +
-      " constants=" + str(led["constants_count"]) +
-      " digits=" + str(led["constant_digits"]) +
-      " bits_proxy=" + led["bits_proxy"][:24] +
-      " input=" + str(led["input_from"]) + "->" + str(led["input_to"]))
-    G("G15 # GATE saturation",
+      " basis_unchanged=" + str(dim["g_double"]["nullspace_basis_unchanged"]) +
+      " control_changed=" + str(dim["g_double"]["control_basis_changed"]))
+    G("G13", dim["loo_dimless_free"] == 8 and dim["loo_min_nullity"] >= 1 and
+      dim["loo_representable"] >= 1,
+      "loo_representable=" + str(dim["loo_representable"]) + "/8" +
+      " dimless_free=" + str(dim["loo_dimless_free"]) + "/8" +
+      " sub_nullity=[" + str(dim["loo_min_nullity"]) + "," +
+      str(dim["loo_max_nullity"]) + "]")
+    G("G14", led["top1000_registered"] == 290 and led["top1000_gap"] == 710 and
+      led["constants_count"] == 9 and led["constant_digits"] == 97 and
+      led["input_from"] == 19 and led["input_to"] == 26,
+      "registered=" + str(led["top1000_registered"]) + " gap=" + str(led["top1000_gap"]) +
+      " constants=" + str(led["constants_count"]) + " digits=" + str(led["constant_digits"]) +
+      " input=" + str(led["input_from"]) + "->" + str(led["input_to"]) +
+      " bits_proxy=" + led["bits_proxy"][:20])
+    G("G15", sat["invariant"] == 1 and sat["flips_control"] == 0 and sat["cells"] > 0,
       "legal=" + str(sat["legal_states"]) + " cells=" + str(sat["cells"]) +
       " invariant=" + str(sat["invariant"]) + " flips_control=" + str(sat["flips_control"]))
-    G("G16 # mutation positive control",
+    G("G16", sat["flips_mutation"] > 0 and sat["fspace_positive"] == 1 and
+      sat["fspace_all_counterfactuals_reject"] == 1,
       "flips_mutation=" + str(sat["flips_mutation"]) +
       " fspace_positive=" + str(sat["fspace_positive"]) +
       " cf_reject=" + str(sat["fspace_all_counterfactuals_reject"]))
-    G("G17 # redline",
+    G("G17", len(REDLINES) == 5 and VERDICT.endswith("NO-PHYSICAL-COMPLETION"),
       "redlines=" + str(len(REDLINES)) + " no_physical_completion=1")
-    G("G18 # own products",
-      "own_py=" + str(1 if os.path.isfile(P_PY) else 0) +
-      " own_judge=" + str(1 if os.path.isfile(P_JUDGE) else 0) +
-      " own_readme=" + str(1 if os.path.isfile(P_README) else 0))
-    G("G19 # entry distribution",
+    G("G18", os.path.isfile(P_PY) and os.path.isfile(P_JUDGE) and os.path.isfile(P_README),
+      "own_py=1 own_judge=1 own_readme=1")
+    G("G19", len(entries) >= 12 and sum(status_count.values()) == len(entries),
       "entries=" + str(len(entries)) + " status=" + json.dumps(status_count, ensure_ascii=True, sort_keys=True))
-    G("G20 # pre-ok", "pre_ok=" + str(sum(g["ok"] for g in guards[:-1])) + "/" + str(len(guards) - 1))
+    pre_ok = sum(g["ok"] for g in guards[:-1])
+    G("G20", pre_ok == len(guards) - 1,
+      "pre_ok=" + str(pre_ok) + "/" + str(len(guards) - 1))
 
     ok_all = all(g["ok"] for g in guards)
     payload = {
@@ -619,10 +688,13 @@ def main():
         "verdict": VERDICT,
         "scope": "只读审计 + 精确有理数判定；不新增物理方程、不重判既有条目、不改治理文件",
         "dynamic_scan": dyn, "fact_sources": facts, "duplicate_scan": dup,
-        "ast_selfcheck": {"third_party_imports": len(astc[0]),
-                          "banned_calls": len(astc[1]), "literal_bool_assign": len(astc[2])},
+        "ast_selfcheck": {"third_party_imports": len(ac["third_party_imports"]),
+                          "banned_calls": len(ac["banned_calls"]),
+                          "literal_bool_assign": ac["literal_bool_assign"],
+                          "py_compile_ok": ac["py_compile_ok"]},
         "knowledge_ledger": led, "finite_knowledge": fk, "dimension": dim,
         "saturation": sat, "entries": entries, "guards": guards,
+        "status_count": status_count,
         "self_corrections": self_corrections,
         "redlines": REDLINES, "no_physical_completion": 1,
         "exit": 0 if ok_all else 1,
@@ -635,7 +707,6 @@ def main():
     print("ENGINE DONE guards=" + str(sum(g["ok"] for g in guards)) + "/" + str(len(guards)) +
           " entries=" + str(len(entries)) + " exit=" + str(payload["exit"]))
     return payload["exit"]
-
 
 def write_md(p):
     L = []
@@ -680,8 +751,10 @@ def write_md(p):
     L.append("- G 加倍：α_G 比值=" + dm["g_double"]["alpha_G_ratio"] +
              "，量纲向量不变=" + str(dm["g_double"]["dim_unchanged"]) +
              "，零空间基不变=" + str(dm["g_double"]["nullspace_basis_unchanged"]) + "。")
-    L.append("- 留一：量纲可表 " + str(dm["loo_representable"]) + "/8 条，系数自由（无需外部无量纲数值）" +
-             str(dm["loo_coefficient_free"]) + "/8 条。")
+    L.append("- 留一：量纲可表 " + str(dm["loo_representable"]) + "/8 条，子矩阵零空间维数 [" +
+             str(dm["loo_min_nullity"]) + "," + str(dm["loo_max_nullity"]) +
+             "] ⇒ 无量纲系数自由 " + str(dm["loo_dimless_free"]) +
+             "/8 条（同一量纲有多组指数解，仍须外部数值输入）。")
     L.append("")
     L.append("## D · GATE 知识饱和不变量")
     L.append("")
@@ -716,14 +789,10 @@ def write_report(p):
     L.append("")
     L.append("SELF_CORRECTIONS " + str(len(p["self_corrections"])))
     for i, s in enumerate(p["self_corrections"]):
-        L.append("SC" + str(i + 1) + " " + s)
+        L.append(s)
     with io.open(P_REPORT, "w", encoding="utf-8", newline="\n") as fh:
         fh.write("\n".join(L) + "\n")
 
 
-# ---------------------------------------------------------------------------
-# 全局读数（在 main 之前算好，供守卫引用）
-# ---------------------------------------------------------------------------
-led = ledger()
-fk = finite_knowledge()
-dim = dimension_block = dimension_block if False else None
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟 · 判据自审与四重门 · 2026-11-11</title>
+<style>
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+  --blue:#2563eb; --blue-soft:#eff6ff; --red:#dc2626; --red-soft:#fef2f2;
+  --green:#15803d; --green-soft:#f0fdf4; --amber:#b45309; --amber-soft:#fffbeb;
+  --purple:#6d28d9; --purple-soft:#f5f3ff; --dark:#111827;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,sans-serif;
+  line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto}
+header{margin-bottom:24px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+h1{font-size:29px;margin:8px 0 6px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px}
+.verdict{margin-top:16px;padding:12px 16px;background:var(--dark);color:#f9fafb;border-radius:10px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;word-break:break-all;line-height:1.8}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.badge.ok{background:var(--green-soft);color:var(--green);border-color:#bbf7d0}
+.badge.no{background:var(--red-soft);color:var(--red);border-color:#fecaca}
+.badge.bd{background:var(--amber-soft);color:var(--amber);border-color:#fde68a}
+.badge.new{background:var(--blue-soft);color:var(--blue);border-color:#bfdbfe}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-top:20px;
+  box-shadow:0 1px 2px rgba(16,24,40,.03)}
+h2{font-size:18px;margin:0 0 4px;font-weight:700}
+h2 .num{color:var(--blue);font-family:ui-monospace,monospace;font-size:14px;margin-right:8px}
+.desc{color:var(--muted);font-size:13px;margin:0 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:13px 12px;background:#fafbfc;text-align:center}
+.kpi .n{font-size:25px;font-weight:700;font-family:ui-monospace,monospace;line-height:1.2}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px}
+.kpi.blue .n{color:var(--blue)} .kpi.red .n{color:var(--red)} .kpi.green .n{color:var(--green)}
+.funnel{margin-top:8px}
+.frow{display:grid;grid-template-columns:190px 1fr 72px;align-items:center;gap:12px;margin:9px 0;font-size:12.5px}
+.ftrack{height:20px;background:#f1f3f5;border-radius:5px;overflow:hidden}
+.ffill{height:100%;border-radius:5px;background:linear-gradient(90deg,#93c5fd,#2563eb)}
+.ffill.esc{background:linear-gradient(90deg,#fca5a5,#dc2626)}
+.ffill.ok{background:linear-gradient(90deg,#86efac,#15803d)}
+.fval{text-align:right;font-family:ui-monospace,monospace;color:var(--muted)}
+.gates4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gate{border:1px solid var(--line);border-radius:11px;padding:14px;background:#fafbfc}
+.gate .gn{font-family:ui-monospace,monospace;font-size:12px;font-weight:700;color:var(--blue)}
+.gate .gt{font-size:14px;font-weight:700;margin:3px 0 8px}
+.gate .gb{font-size:12px;color:var(--muted);min-height:70px}
+.gate.new{background:var(--blue-soft);border-color:#bfdbfe;box-shadow:0 0 0 2px #dbeafe inset}
+.gate.new .gn{color:var(--blue)}
+.tagnew{display:inline-block;font-size:10px;background:var(--blue);color:#fff;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.cards2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.minicard{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fafbfc}
+.minicard .t{font-size:13px;font-weight:700;margin-bottom:6px}
+.minicard .v{font-family:ui-monospace,monospace;font-size:13px;color:var(--blue);margin-bottom:6px}
+.minicard .d{font-size:12px;color:var(--muted)}
+.alert{border-left:3px solid var(--red);background:var(--red-soft);border-radius:0 8px 8px 0;padding:12px 15px;font-size:13px}
+.alert b{color:#991b1b}
+.tuple{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.tuple span{font-family:ui-monospace,monospace;font-size:12px;background:var(--green-soft);color:var(--green);
+  border:1px solid #bbf7d0;border-radius:6px;padding:5px 10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;padding:9px 8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid #f1f3f5}
+tr:last-child td{border-bottom:none}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+.hot{color:var(--red);font-weight:700}
+blockquote{margin:0;padding:14px 18px;background:var(--blue-soft);border-left:4px solid var(--blue);
+  border-radius:0 10px 10px 0;font-size:13.5px}
+.redline{margin-top:14px;padding:12px 16px;background:var(--red-soft);border:1px solid #fecaca;
+  border-radius:10px;color:#991b1b;font-size:13px}
+footer{margin-top:22px;color:var(--muted);font-size:12px;line-height:1.9}
+.filelist{font-family:ui-monospace,monospace;font-size:11.5px;word-break:break-all}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}.gates4,.cards3{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.kpis,.gates4,.cards2,.cards3{grid-template-columns:1fr}
+  .frow{grid-template-columns:110px 1fr 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">算法联盟 · 第四轮 · 元逻辑层</div>
+  <h1>判据自审 × 模型空间穷举 × 四重门</h1>
+  <div class="sub">不再找更好的理论，改为审查前三轮的判据本身 · 2026-11-11 · 不占 RID / 不入 README / 不与任何卷相加</div>
+  <div class="badges">
+    <span class="badge ok">守卫 40/40</span>
+    <span class="badge new">新增 C4 门</span>
+    <span class="badge ok">三次反噬 GATES-FAIL</span>
+    <span class="badge bd">BOUNDARY 1</span>
+    <span class="badge no">现候选四重门命中 0</span>
+  </div>
+  <div class="verdict">ALG-META-GATEAUDIT__MODELS-192__CONSISTENT-125__B3-3__ESCAPE-2__B4-1__C4-ADDED__EXISTING-B4-0__MDL-EFF-GAIN-0__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0</div>
+</header>
+
+<section>
+  <h2><span class="num">01</span>本轮换的思路</h2>
+  <p class="desc">前三轮都在找候选（更多来料、更多机制、更严的实验门）。本轮把<strong>判据本身</strong>当对象：M1 相容性穷举 / M2 描述压缩增益 / M3 谓词自指反噬。三个问题都不需要新实验数据，也不需要新物理假设。</p>
+  <div class="kpis">
+    <div class="kpi"><div class="n">192</div><div class="l">6 维模型空间构型</div></div>
+    <div class="kpi blue"><div class="n">125</div><div class="l">一致性约束后剩余</div></div>
+    <div class="kpi"><div class="n">3</div><div class="l">三重门命中</div></div>
+    <div class="kpi red"><div class="n">2</div><div class="l">单侧判据逃逸</div></div>
+    <div class="kpi green"><div class="n">1</div><div class="l">补 C4 后命中</div></div>
+  </div>
+  <div class="funnel">
+    <div class="frow"><span>全部构型（3×2×4×2×2×2）</span><div class="ftrack"><div class="ffill" style="width:100%"></div></div><span class="fval">192</span></div>
+    <div class="frow"><span>一致性约束后</span><div class="ftrack"><div class="ffill" style="width:65.1%"></div></div><span class="fval">125</span></div>
+    <div class="frow"><span>三重门 C1∧C2∧C3</span><div class="ftrack"><div class="ffill" style="width:1.6%"></div></div><span class="fval">3</span></div>
+    <div class="frow"><span>其中单侧逃逸构型</span><div class="ftrack"><div class="ffill esc" style="width:1.1%"></div></div><span class="fval">2</span></div>
+    <div class="frow"><span>四重门（补 C4）后</span><div class="ftrack"><div class="ffill ok" style="width:0.55%"></div></div><span class="fval">1</span></div>
+  </div>
+  <p class="desc" style="margin-top:14px">第一结论：<b>三重门逻辑相容</b>——攻破不是逻辑矛盾。第二结论：<b>三重门不完备</b>——3 个命中里有 2 个是单侧型，判据会把「尚未排除」误当成阳性证据。</p>
+</section>
+
+<section>
+  <h2><span class="num">02</span>四重门：补上 C4</h2>
+  <p class="desc">第三轮 C3 只要求「存活 + 判别力 + 非恒等式」，没要求观测量双侧。本轮新增第四道门把口子堵上。</p>
+  <div class="gates4">
+    <div class="gate"><div class="gn">C1 · 自由度门</div><div class="gt">p_free == 0</div><div class="gb">无可调参数、无可自由选择的注入假设。实验输入计入 p_exp 但不算自由选择。</div></div>
+    <div class="gate"><div class="gn">C2 · 留一法门</div><div class="gt">LTO 非回述</div><div class="gb">目标观测不作输入、理论值不等于观测值；抓回述与循环版本。</div></div>
+    <div class="gate"><div class="gn">C3 · 实验存活门</div><div class="gt">存活 ∧ 判别力 &gt; 0</div><div class="gb">卡方或边界存活，且存在使其失败的观测读数，且非恒等式。</div></div>
+    <div class="gate new"><div class="gn">C4<span class="tagnew">本轮新增</span></div><div class="gt">双侧阳性证据</div><div class="gb">obs_type 必须为 two-sided。下界/上界型实验只给单侧，存活只意味「尚未排除」，不构成阳性证据。</div></div>
+  </div>
+  <div class="cards2" style="margin-top:16px">
+    <div class="alert"><b>★ 漏洞不是假想的</b><br>第三轮 K09（MSSM dim6 τ_p）实际读数是 <span class="mono">C2=True、C3=True、obs_type=lower</span>，只因 <span class="mono">p_free=1</span> 挂 C1 才没被放行。把它的 p_free 改成 0，三重门就会判它突破——第三轮突破 0 次有一部分是运气，不是判据挡住的。</div>
+    <div class="minicard"><div class="t">最小满足模型的必要结构</div><div class="v">第三轮 OPEN 出口被形式化</div>
+      <div class="tuple"><span>p_free = 0</span><span>lto = 1</span><span>obs_type = two-sided</span><span>survive = 1</span><span>power = 1</span></div>
+      <div class="d" style="margin-top:10px">补 C4 后满足构型 3→1，唯一剩下的构型是双侧型；把第三轮 10 条候选映射进来重算，三重门与四重门都仍 0 命中 ⇒ 升级判据不改变既有判决。</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">03</span>一个被修正的直觉：双侧观测量并不缺</h2>
+  <p class="desc">回读第一册 46 项实测锚，带非零 sigma 的双侧型读数有 <b>27 项</b>。所以缺的不是观测量本身。</p>
+  <div class="cards3">
+    <div class="minicard"><div class="t">现有来料</div><div class="v">27 项双侧锚</div><div class="d">α_s、sin²θ_W、M_W、M_Z、m_top、H₀ 各口径等，都带误差棒。</div></div>
+    <div class="minicard"><div class="t">第三轮双侧候选</div><div class="v">全部被 χ² 排除</div><div class="d">SU5 3/8 → 1.337976E+7；attack28 SM → 3.532035E+5；MSSM → 3.290184E+3。</div></div>
+    <div class="minicard"><div class="t">真正缺的</div><div class="v">能被理论命中的那一条</div><div class="d">由理论给出确定值、非回述、p_free=0，且恰好落在 27 项里某一项的置信区间内。</div></div>
+  </div>
+  <p class="desc" style="margin-top:14px">这个区分把第三轮出口收窄了很多：<b>不必等新实验，先把现有 27 项双侧锚与理论候选做穷举配对</b>。</p>
+</section>
+
+<section>
+  <h2><span class="num">04</span>M2 · 描述压缩增益为零</h2>
+  <p class="desc">MDL 的有限可算影子：<code>gain = 非回述数值陈述数 − (p_free + p_exp)</code>。Kolmogorov 复杂度不可计算，本册不冒充证明，只算参数账与陈述账。</p>
+  <table>
+    <thead><tr><th>口径</th><th>正增益候选数</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>原始增益（只数陈述）</td><td><b>1 条</b></td><td>K01 纯群论 3/8：n_in=0、n_out=1，看似压缩了描述</td></tr>
+      <tr><td>有效增益（只认过实验存活层的陈述）</td><td class="hot">0 条</td><td>K01 被 χ²=1.337976E+7 排除，压缩出来的那条陈述是错的；最大有效增益 0</td></tr>
+      <tr><td>模型空间层最小满足模型</td><td>+1</td><td>逻辑上统一可以压缩描述，前提仍是必须消费一个双侧观测量</td></tr>
+    </tbody>
+  </table>
+  <p class="desc" style="margin-top:12px">结论：目前的「统一」只是重述写法，没有压缩出任何经得起检验的新陈述；但「参数不灭」不是逻辑定律，是当前来料的结构性结果。</p>
+</section>
+
+<section>
+  <h2><span class="num">05</span>M3 · 把判据用到「统一」自己身上</h2>
+  <p class="desc">unifies(m) 若对模型扰动不敏感、或恒真，它本身就是装饰谓词。</p>
+  <table>
+    <thead><tr><th>配置</th><th>四重门命中数</th><th>与基准</th></tr></thead>
+    <tbody>
+      <tr><td>基准</td><td><b>1</b></td><td>—</td></tr>
+      <tr><td>全部模型 p_free + 1</td><td>0</td><td>不同</td></tr>
+      <tr><td>全部模型 lto 置 1</td><td>2</td><td>不同</td></tr>
+      <tr><td>全部模型 power 置 0</td><td>0</td><td>不同</td></tr>
+      <tr><td>unifies := True（恒真）</td><td class="hot">125</td><td>凭空造出 124 个假突破</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">06</span>三次反噬与核验</h2>
+  <p class="desc">只在内存里替换源码单点，不写回仓库。三次都让假突破数上升并触发守卫。</p>
+  <div class="cards3">
+    <div class="minicard"><div class="t">① C4 恒真</div><div class="v">命中 1 → 3 · 10 守卫报警</div><div class="d">去掉双侧门 ⇒ GATES-FAIL。</div></div>
+    <div class="minicard"><div class="t">② unifies 恒真</div><div class="v">命中 1 → 125 · 13 守卫报警</div><div class="d">现候选假突破 10 条 ⇒ GATES-FAIL。</div></div>
+    <div class="minicard"><div class="t">③ C3 去掉判别力</div><div class="v">三重门 3 → 6 · 5 守卫报警</div><div class="d">power 门承重 ⇒ GATES-FAIL。</div></div>
+  </div>
+  <p class="desc" style="margin-top:14px">机核 <b>40/40</b> 守卫，PASS 33 / INFO 5 / IDENTITY 1 / BOUNDARY 1 / FAIL 0；控制组四计数 <span class="mono">125 / 3 / 2 / 1</span> 两两不同；两路机拼 survive 10/10 一致且扰动正对照分叉；幂等复跑 MD5 一致、content_sha256 自洽、VERIFY-ALL-PASS、6/6 链接、前三册 9 文件零删除零改动、README 零改动。</p>
+</section>
+
+<section>
+  <h2><span class="num">07</span>下一轮：不必等新实验的出口</h2>
+  <blockquote>把第一册 46 项实测锚中 <b>27 项带非零 sigma 的双侧观测</b>，与仓库全部历史理论候选的数值输出做<strong>穷举配对</strong>；逐对检查是否存在同时满足 <code>p_free=0</code>、LTO 非回述、<code>χ² &lt; 3.84145882069</code>、且理论值不是由该观测反解得到的组合。若全表 0 命中，才真正需要一条新实验读数；若出现命中，它就是四重门形式化出来的那个五元组。</blockquote>
+  <div class="redline"><b>红线与边界</b>：192 个构型只是 6 维离散属性的逻辑影子，不是物理理论全集；扩维可能检出新的逃逸构型，标 BOUNDARY。四重门比三重门严但不保证完备。数学自洽 ≠ 实验证实；本册只产元逻辑层可算判决、不产新物理。四力 2/6、四力大统一 0 条正确解、独立实验预言 0，<b>不宣称攻破统一场论</b>。</div>
+</section>
+
+<footer>
+  <div><b>交付核验</b>：VERIFY-ALL-PASS · 最大 RID 仍为 r406（下轮审计号从 r407 起）· README 939,177 B 零改动。</div>
+  <div class="filelist" style="margin-top:8px">
+    源码/_alg_meta_gateaudit_recompute.py　·　数据/_ALG_meta_gateaudit_recompute_2026-11-11.json　·　数据/_ALG_meta_gateaudit_recompute_report_2026-11-11.txt　·　数据/_ALG_meta_gateaudit_verify_2026-11-11.json
+  </div>
+  <div style="margin-top:8px">算法联盟分析册 · 2026-11-11 · 浅色自包含可视化，不依赖外部资源</div>
+</footer>
+
+</div>
+</body>
+</html>

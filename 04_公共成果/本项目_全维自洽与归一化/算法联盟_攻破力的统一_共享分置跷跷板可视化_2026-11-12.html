@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟 · 攻破力的统一 · 共享—分置跷跷板 · 2026-11-12</title>
+<style>
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+  --blue:#2563eb; --blue-soft:#eff6ff; --red:#dc2626; --red-soft:#fef2f2;
+  --green:#15803d; --green-soft:#f0fdf4; --amber:#b45309; --amber-soft:#fffbeb;
+  --purple:#6d28d9; --purple-soft:#f5f3ff; --dark:#111827;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,sans-serif;
+  line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto}
+header{margin-bottom:24px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+h1{font-size:28px;margin:8px 0 6px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px}
+.verdict{margin-top:16px;padding:12px 16px;background:var(--dark);color:#f9fafb;border-radius:10px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11.5px;word-break:break-all;line-height:1.8}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.badge.ok{background:var(--green-soft);color:var(--green);border-color:#bbf7d0}
+.badge.no{background:var(--red-soft);color:var(--red);border-color:#fecaca}
+.badge.bd{background:var(--amber-soft);color:var(--amber);border-color:#fde68a}
+.badge.new{background:var(--blue-soft);color:var(--blue);border-color:#bfdbfe}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-top:20px;
+  box-shadow:0 1px 2px rgba(16,24,40,.03)}
+h2{font-size:18px;margin:0 0 4px;font-weight:700}
+h2 .num{color:var(--blue);font-family:ui-monospace,monospace;font-size:14px;margin-right:8px}
+.desc{color:var(--muted);font-size:13px;margin:0 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:13px 12px;background:#fafbfc;text-align:center}
+.kpi .n{font-size:24px;font-weight:700;font-family:ui-monospace,monospace;line-height:1.2}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px}
+.kpi.blue .n{color:var(--blue)} .kpi.red .n{color:var(--red)} .kpi.green .n{color:var(--green)}
+.kpi.amber .n{color:var(--amber)} .kpi.purple .n{color:var(--purple)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{border:1px solid var(--line);border-radius:11px;padding:16px;background:#fafbfc}
+.box h3{font-size:14px;margin:0 0 10px}
+.box.act{background:var(--blue-soft);border-color:#bfdbfe}
+.box.exp{background:var(--purple-soft);border-color:#ddd6fe}
+.box.bad{background:var(--red-soft);border-color:#fecaca}
+.big{font-size:24px;font-weight:700;font-family:ui-monospace,monospace;color:var(--blue);line-height:1.2}
+.big.red{color:var(--red)} .big.green{color:var(--green)}
+.small{font-size:12px;color:var(--muted);margin-top:6px}
+ul.clean{margin:8px 0 0;padding-left:20px;font-size:12.5px}
+ul.clean li{margin:5px 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{background:#fafbfc;color:var(--muted);font-weight:600;font-size:12px}
+td.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.tag{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;font-family:ui-monospace,monospace}
+.tag.no{background:var(--red-soft);color:var(--red)}
+.tag.yes{background:var(--green-soft);color:var(--green)}
+.tag.bd{background:var(--amber-soft);color:var(--amber)}
+.tag.blue{background:var(--blue-soft);color:var(--blue)}
+.note{font-size:12.5px;color:var(--muted);margin-top:14px;padding:10px 12px;background:var(--blue-soft);border-radius:8px;border:1px solid #dbeafe}
+.note.warn{background:var(--amber-soft);border-color:#fde68a}
+.note.bad{background:var(--red-soft);border-color:#fecaca}
+.seesaw{display:grid;grid-template-columns:1fr 54px 1fr;gap:12px;align-items:stretch;margin-top:8px}
+.pan{border:1px solid var(--line);border-radius:11px;padding:16px}
+.pan h3{font-size:14px;margin:0 0 8px}
+.pivot{display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--muted)}
+.bar{height:22px;background:#f1f3f5;border-radius:5px;overflow:hidden;margin:8px 0}
+.bar > div{height:100%;border-radius:5px}
+footer{margin-top:26px;padding:18px 20px;border-radius:12px;background:var(--dark);color:#e5e7eb;font-size:12.5px;line-height:1.9}
+footer strong{color:#fff}
+code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#f3f4f6;padding:1px 5px;border-radius:4px;font-size:12px}
+@media(max-width:860px){.kpis{grid-template-columns:repeat(2,1fr)}.split,.seesaw{grid-template-columns:1fr}.pivot{padding:6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">算法联盟 · 第七轮 · 2026-11-12</div>
+  <h1>攻破力的统一 · 共享—分置跷跷板</h1>
+  <div class="sub">不再审来源与判据，直接解剖「同一个方程描述四力」在参数层要求什么：共享参数被实测谱排除，分置参数零压缩。</div>
+  <div class="verdict">ALG-FORCE-UNIFICATION__FORCES-4__KAPPA-CLASSES-3__COUPLING-CLASSES-4__CONFIGS-4__ESCAPE-0__P-MIN-EXTRA-5__RANK-3vs2__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0</div>
+  <div class="badges">
+    <span class="badge ok">守卫 34/34</span>
+    <span class="badge ok">VERIFY-ALL-PASS</span>
+    <span class="badge ok">幂等复跑一致</span>
+    <span class="badge no">逃逸配置 0 个</span>
+    <span class="badge bd">结论限于单方程族</span>
+    <span class="badge new">不占 RID · 不入 README</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">01</span>参数层的两条硬读数</h2>
+  <p class="desc">实验给定的两条离散谱，与单方程能提供的参数方向。</p>
+  <div class="kpis">
+    <div class="kpi blue"><div class="n">4</div><div class="l">力的条数</div></div>
+    <div class="kpi blue"><div class="n">3</div><div class="l">κ 谱类数</div></div>
+    <div class="kpi purple"><div class="n">4</div><div class="l">耦合谱类数</div></div>
+    <div class="kpi amber"><div class="n">5</div><div class="l">参数下界</div></div>
+    <div class="kpi red"><div class="n">0</div><div class="l">逃逸配置</div></div>
+  </div>
+  <div class="note bad" style="margin-top:16px"><strong>结论：</strong>单方程 Proca／Yukawa 只提供 <code>2</code> 个参数方向；要同时复现 3 类力程与 4 类耦合，至少额外注入 <code>5</code> 个参数，而 4 条力只值 4 ⇒ <code>gain = −1 ≤ 0</code>。「统一」退化为模板复用。</div>
+</section>
+
+<section>
+  <h2><span class="num">02</span>两路机拼：力程精确互校</h2>
+  <p class="desc">act = 从 46 项来料表用 <code>ħc/m</code> 精确有理数重算；exp = 从 r222 / r218 两卷成品 JSON 回读。互不引用。</p>
+  <div class="split">
+    <div class="box act">
+      <h3>act 路径</h3>
+      <div class="big">1.973269803384E-7</div>
+      <div class="small"><code>ħc/e</code>（eV·m），由 C01 / C03 / C04 精确算出</div>
+      <ul class="clean">
+        <li><code>λ_W(P02=80.377) = 2.455017981990E-18 m</code></li>
+        <li><code>λ_W(P03=80.3692) = 2.455256246652E-18 m</code></li>
+        <li><code>λ_π = 1.461932571660E-15 m</code></li>
+        <li>π⁰ 质量从对标脚本 AST 机读，报告 §六为第二来源</li>
+      </ul>
+    </div>
+    <div class="box exp">
+      <h3>exp 路径</h3>
+      <div class="big">5.26E-61</div>
+      <div class="small">λ_W 与 r222 的相对偏离（机器精度）</div>
+      <ul class="clean">
+        <li>λ_W / λ_π 在 r222 与 r218 两卷一致（偏离 <code>2.00E-60</code>）</li>
+        <li><code>α_G = G m_p²/(ħc)</code> 与第一册同值，偏离 <code>6.63E-61</code></li>
+        <li>r222 色散残差 <code>1.0E-40</code> ⇒ 质量—力程等价有仓库依据</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note warn" style="margin-top:16px"><strong>一处口径差异精确还原：</strong>r218 的 λ_W 比 act(P03) 大 <code>2.488521693688E-6</code>。机读其隐含质量为 <code>80.369000 GeV</code>——把 P03 的 80.3692 截断成 80.369。质量比减一 <code>2.488521693688E-6</code> 与力程比减一 <code>2.488521693688E-6</code> 逐位一致，远小于来源自报 <code>0.0104%</code> 阈值。差异由口径解释，不靠拍容差。</div>
+</section>
+
+<section>
+  <h2><span class="num">03</span>实验给定的两条离散谱</h2>
+  <p class="desc">这两条谱是实测事实，不是可调参数；<code>λ_π / λ_W = 595.487521</code> 倍。</p>
+  <div class="split">
+    <div class="box">
+      <h3>力程谱 κ = 1/λ</h3>
+      <table>
+        <thead><tr><th>力</th><th>κ</th><th>力程</th></tr></thead>
+        <tbody>
+          <tr><td>电磁</td><td class="mono">0</td><td>长程（光子无质量）</td></tr>
+          <tr><td>引力</td><td class="mono">0</td><td>长程</td></tr>
+          <tr><td>弱</td><td class="mono">1/λ_W</td><td class="mono">2.455E-18 m</td></tr>
+          <tr><td>强（剩余核力）</td><td class="mono">1/λ_π</td><td class="mono">1.462E-15 m</td></tr>
+        </tbody>
+      </table>
+      <div class="small">共 <strong>3 类</strong>不同取值；2 条长程恒绿，单列 <code>IDENTITY</code>。</div>
+    </div>
+    <div class="box">
+      <h3>耦合谱（无量纲）</h3>
+      <ul class="clean">
+        <li>act：<code>α_em</code> / <code>α_W</code> / <code>α_s</code> / <code>α_G</code> 两两不同 ⇒ <strong>4 类</strong></li>
+        <li>exp：第一册 <code>α1/α2/α3/α_G</code> 亦 <strong>4 类</strong></li>
+        <li><code>α_G = 5.906149417E-39</code>，跨度 <code>37.300209 dex</code></li>
+        <li><code>F_E/F_G = 1.235552E+36</code></li>
+      </ul>
+      <div class="small">共享单一 κ ⇒ 2 处失配；共享单一 g ⇒ 3 处失配；合计 <strong>5 处</strong>。</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">04</span>精确有理 RREF：为什么两个参数不够</h2>
+  <p class="desc">在三个不同 κ 取值上构造 Vandermonde 设计矩阵，用 Fraction 做行最简形。</p>
+  <div class="split">
+    <div class="box">
+      <h3>3×3 设计矩阵</h3>
+      <div class="big green">rank = 3</div>
+      <div class="small">三个不同的 κ ⇒ 要插值这三类力程，至少需要 <strong>3 个独立参数方向</strong>。</div>
+      <div class="bar"><div style="width:100%;background:linear-gradient(90deg,#86efac,#15803d)"></div></div>
+      <div class="small">满秩，可张成。</div>
+    </div>
+    <div class="box bad">
+      <h3>3×2（单方程的 2 个方向）</h3>
+      <div class="big red">rank = 2 · 亏 1</div>
+      <div class="small">欠定；参数下界 <code>5</code>（2 个独立质量 + 3 个独立耦合破缺）远大于 <code>2</code>。</div>
+      <div class="bar"><div style="width:66.67%;background:linear-gradient(90deg,#fca5a5,#dc2626)"></div></div>
+      <div class="small">显式零空间向量 <code>(κ_π−κ_W, −κ_π, κ_W)</code> 与两列精确正交（残差 <code>[0,0]</code>）；加 1 后残差 <code>[1,0]</code> ⇒ 该检验有判别力。</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span>2×2 穷举：0 个逃逸配置</h2>
+  <p class="desc"><code>突破 = 实验存活 ∧ 压缩增益 &gt; 0</code>。四种配置无遗漏、无重复。</p>
+  <table>
+    <thead><tr><th>κ 维度</th><th>g 维度</th><th>额外参数</th><th>失配</th><th>增益</th><th>实验存活</th><th>突破</th></tr></thead>
+    <tbody>
+      <tr><td>共享</td><td>共享</td><td class="mono">0</td><td class="mono">5</td><td class="mono">4</td><td><span class="tag no">否</span></td><td><span class="tag no">否</span></td></tr>
+      <tr><td>共享</td><td>分置</td><td class="mono">3</td><td class="mono">2</td><td class="mono">1</td><td><span class="tag no">否</span></td><td><span class="tag no">否</span></td></tr>
+      <tr><td>分置</td><td>共享</td><td class="mono">2</td><td class="mono">3</td><td class="mono">2</td><td><span class="tag no">否</span></td><td><span class="tag no">否</span></td></tr>
+      <tr style="background:var(--amber-soft)"><td><strong>分置</strong></td><td><strong>分置</strong></td><td class="mono"><strong>5</strong></td><td class="mono">0</td><td class="mono"><strong>−1</strong></td><td><span class="tag yes">是</span></td><td><span class="tag no">否</span></td></tr>
+    </tbody>
+  </table>
+  <div class="seesaw" style="margin-top:20px">
+    <div class="pan" style="background:var(--red-soft);border-color:#fecaca">
+      <h3>共享参数</h3>
+      <div class="small">单一 κ 与单一 g，增益最高（4），但实测谱有 5 处失配 ⇒ <strong>被实验直接排除</strong>。</div>
+    </div>
+    <div class="pivot">⇄</div>
+    <div class="pan" style="background:var(--amber-soft);border-color:#fde68a">
+      <h3>分置参数</h3>
+      <div class="small">能拟合、失配 0，但需额外 5 个参数 ⇒ <code>gain = −1 ≤ 0</code>，<strong>统一只是模板复用</strong>。</div>
+    </div>
+  </div>
+  <div class="note bad" style="margin-top:16px"><strong>共享—分置跷跷板：</strong>三种有正增益的配置全部被实验谱排除，唯一存活的配置增益为负 ⇒ 在单方程族内没有第三条路。跨卷脊梁独立佐证：r218 修复定价 16 组合中 <code>SURVIVE=0</code>、形状对撞命中 0、形式外行 1（色禁闭不在此方程形式内）。</div>
+</section>
+
+<section>
+  <h2><span class="num">06</span>控制组、反噬与核验</h2>
+  <p class="desc">核验只在内存里替换源码单点，不写回仓库。</p>
+  <table>
+    <thead><tr><th>变体</th><th>结果</th><th>假逃逸</th><th>报警守卫数</th></tr></thead>
+    <tbody>
+      <tr><td>强制共享分支存活</td><td class="mono">GATES-FAIL</td><td>0 → <strong>3</strong></td><td class="mono">10</td></tr>
+      <tr><td>把额外参数压成 0</td><td class="mono">GATES-FAIL</td><td>0 → <strong>1</strong></td><td class="mono">10</td></tr>
+      <tr><td>把 κ 谱塌成 1 类</td><td class="mono">GATES-FAIL</td><td>0 → <strong>2</strong></td><td class="mono">14</td></tr>
+    </tbody>
+  </table>
+  <div class="split" style="margin-top:18px">
+    <div class="box">
+      <h3>控制组</h3>
+      <ul class="clean">
+        <li>四个读数 <code>4 / 2 / 0 / 5</code> 两两不同</li>
+        <li>阳性对照：合并 κ_W 与 κ_π ⇒ 类数 3→2、共享失配 5→4</li>
+        <li>阴性对照：电磁与引力 κ=0 恒绿，单列 <code>IDENTITY</code> 配 <code>NOT-ALL-GREEN</code></li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>VERIFY-ALL-PASS</h3>
+      <ul class="clean">
+        <li>34/34 守卫，<code>counts = {PASS:27, INFO:5, IDENTITY:1, BOUNDARY:1, FAIL:0}</code></li>
+        <li><code>content_sha256 = 35de74c7…dcad</code></li>
+        <li>幂等复跑、10/10 链接、既有 64 个文件零删除零改动</li>
+        <li>README 零改动（939,177 B，最大 RID 仍 <code>r406</code>）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note warn">实现事故一处：首次运行 <code>ACT-MPI-MISSING</code>。脚本写的是 <code>134.9768e6</code>，AST 折成 <code>134976800.0</code> 而非 <code>134.9768</code>；按脚本实际字面量定位后一次跑通 ⇒ 来料必须按 AST 实际形态机读，不能照抄文档写法。</div>
+</section>
+
+<section>
+  <h2><span class="num">07</span>诚实边界与结论</h2>
+  <ul class="clean">
+    <li>结论<strong>只对 Yukawa/Proca 单方程族 + 这 46 项来料成立</strong>，单列 <code>BOUNDARY</code>；不是「四力统一不可能」的全称定理。换参数化、换方程族、引入新的对称性破缺结构都超出可算范围。</li>
+    <li>κ 谱与耦合谱是实验给定事实，本册用它们判「共享参数是否相容」，<strong>没有解释这些值为何如此</strong>；「力的本质本源」未被回答。</li>
+    <li>参数下界 <code>5</code> 与 MDL 增益 <code>−1</code> 是这一族内的可算量，不是对任意未来理论的下界。</li>
+  </ul>
+  <div class="note bad" style="margin-top:16px"><strong>对「攻破力的统一」的诚实回答：没有攻破，但把可算边界钉死了。</strong>任何候选都必须付出至少 5 个额外参数才能同时复现 3 类力程与 4 类耦合，而这已让「统一」失去描述压缩；坚持共享参数则被实测谱直接排除。要越过下界，必须给出能从少于 4 个独立参数里生出这两条谱的机制，并且仍需要一条带双侧误差棒、理论值落在其可判负区间之外的新实验读数来验收。在这样一条读数出现之前，本册不替任何候选预支结论。</div>
+</section>
+
+<footer>
+  <strong>红线：</strong>数学自洽 ≠ 实验证实；本册只产结构性可算判决，不产新物理。四力达成度 2/6、四力大统一 <strong>0 条正确解</strong>、独立实验预言 <strong>0</strong>，<strong>不宣称攻破力的统一</strong>。<br>
+  算法联盟分析册：不占 RID、不入 README、不与任何审计卷相加；下轮审计号从 <code>r407</code> 起。
+</footer>
+
+</div>
+</body>
+</html>

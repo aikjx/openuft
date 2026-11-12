@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟 · 实验存活层三重门可视化 · 2026-11-11</title>
+<style>
+:root{
+  --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+  --blue:#2563eb; --blue-soft:#eff6ff; --red:#dc2626; --red-soft:#fef2f2;
+  --green:#15803d; --green-soft:#f0fdf4; --amber:#b45309; --amber-soft:#fffbeb;
+  --purple:#6d28d9; --purple-soft:#f5f3ff;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--ink);
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,sans-serif;
+  line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto}
+header{margin-bottom:26px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+h1{font-size:29px;margin:8px 0 6px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px}
+.verdict{margin-top:16px;padding:12px 16px;background:#111827;color:#f9fafb;border-radius:10px;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;word-break:break-all;line-height:1.8}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted)}
+.badge.ok{background:var(--green-soft);color:var(--green);border-color:#bbf7d0}
+.badge.no{background:var(--red-soft);color:var(--red);border-color:#fecaca}
+.badge.bd{background:var(--amber-soft);color:var(--amber);border-color:#fde68a}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-top:20px;
+  box-shadow:0 1px 2px rgba(16,24,40,.03)}
+h2{font-size:18px;margin:0 0 4px;font-weight:700}
+h2 .num{color:var(--blue);font-family:ui-monospace,monospace;font-size:14px;margin-right:8px}
+.desc{color:var(--muted);font-size:13px;margin:0 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fafbfc}
+.kpi .n{font-size:26px;font-weight:700;font-family:ui-monospace,monospace;line-height:1.2}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:4px}
+.kpi.zero .n{color:var(--red)} .kpi.blue .n{color:var(--blue)} .kpi.green .n{color:var(--green)}
+.gates{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+.gate{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fafbfc;position:relative}
+.gate .gname{font-family:ui-monospace,monospace;font-size:13px;font-weight:700;color:var(--blue)}
+.gate .gtitle{font-size:15px;font-weight:700;margin:4px 0 8px}
+.gate .gbody{font-size:12.5px;color:var(--muted);min-height:64px}
+.gate .gfoot{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--ink)}
+.gate.c3{background:var(--red-soft);border-color:#fecaca}
+.gate.c3 .gname{color:var(--red)}
+.arrow{text-align:center;color:var(--muted);font-size:12px;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 8px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}
+.chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap}
+.chip.ex{background:var(--red-soft);color:var(--red)}
+.chip.rs{background:var(--amber-soft);color:var(--amber)}
+.chip.id{background:var(--purple-soft);color:var(--purple)}
+.chip.zp{background:var(--blue-soft);color:var(--blue)}
+.chip.ne{background:#f3f4f6;color:#4b5563}
+.yes{color:var(--green);font-weight:700} .no{color:var(--red);font-weight:700}
+.bars{margin-top:8px}
+.barrow{display:grid;grid-template-columns:170px 1fr 108px;align-items:center;gap:12px;margin:9px 0;font-size:12px}
+.bartrack{height:16px;background:#f1f3f5;border-radius:5px;overflow:hidden;position:relative}
+.barfill{height:100%;border-radius:5px;background:linear-gradient(90deg,#93c5fd,#2563eb)}
+.barfill.crit{background:repeating-linear-gradient(45deg,#fca5a5,#fca5a5 6px,#fee2e2 6px,#fee2e2 12px)}
+.barval{text-align:right;font-family:ui-monospace,monospace;color:var(--muted)}
+.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:4px 0 0 182px}
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.minicard{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fafbfc}
+.minicard .t{font-size:13px;font-weight:700;margin-bottom:6px}
+.minicard .v{font-family:ui-monospace,monospace;font-size:12px;color:var(--blue);margin-bottom:6px}
+.minicard .d{font-size:12px;color:var(--muted)}
+.survive{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sv{border-left:3px solid var(--amber);background:var(--amber-soft);border-radius:0 8px 8px 0;padding:11px 14px;font-size:12.5px}
+.sv b{display:block;font-size:13px;margin-bottom:3px;color:var(--ink)}
+.seesaw{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-top:8px}
+.ssbox{border:1px solid var(--line);border-radius:10px;padding:16px;text-align:center;background:#fafbfc}
+.ssbox .big{font-size:30px;font-weight:700;font-family:ui-monospace,monospace}
+.ssbox .cap{font-size:12px;color:var(--muted)}
+.ssmid{font-size:24px;color:var(--red)}
+blockquote{margin:0;padding:14px 18px;background:var(--blue-soft);border-left:4px solid var(--blue);
+  border-radius:0 10px 10px 0;font-size:13.5px}
+footer{margin-top:22px;color:var(--muted);font-size:12px;line-height:1.9}
+.filelist{font-family:ui-monospace,monospace;font-size:11.5px;word-break:break-all}
+.redline{margin-top:14px;padding:12px 16px;background:var(--red-soft);border:1px solid #fecaca;
+  border-radius:10px;color:#991b1b;font-size:13px}
+@media(max-width:860px){.kpis,.gates,.cards3,.survive{grid-template-columns:1fr 1fr}
+  .barrow{grid-template-columns:120px 1fr 92px}.axis{margin-left:132px}}
+@media(max-width:560px){.kpis,.gates,.cards3,.survive{grid-template-columns:1fr}
+  .barrow{grid-template-columns:96px 1fr 86px}.axis{margin-left:108px}.seesaw{grid-template-columns:1fr}.ssmid{text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">算法联盟 · 第三轮 · 可算判决</div>
+  <h1>实验给定事实 + 留一法剔伪 + 实验存活层</h1>
+  <div class="sub">统一场论三重门攻坚 · 2026-11-11 · 不占 RID / 不入 README / 不与任何审计卷相加</div>
+  <div class="badges">
+    <span class="badge ok">守卫 39/39</span>
+    <span class="badge ok">幂等复跑</span>
+    <span class="badge ok">三次反噬 GATES-FAIL</span>
+    <span class="badge bd">BOUNDARY 1</span>
+    <span class="badge no">突破 0 次</span>
+    <span class="badge">独立实验预言 0</span>
+  </div>
+  <div class="verdict">ALG-EXPFACTS-SURVIVAL__CANDIDATES-10__BREAKTHROUGH-0__RESTATED-2__EXCLUDED-5__ZERO-POWER-2__C12-ONLY-4__PEXP-MAX-3__NO-BREAKTHROUGH__FOUR-FORCE-2-of-6__PRED-0</div>
+</header>
+
+<section>
+  <h2><span class="num">01</span>总账</h2>
+  <p class="desc">把上一册的 OPEN 出口执行到底：<code>p_total = p_eq + p_axiom + p_exp</code>，其中 C1 只看 <code>p_free = p_eq + p_axiom</code>。</p>
+  <div class="kpis">
+    <div class="kpi"><div class="n">10</div><div class="l">历史候选 / 构造对照</div></div>
+    <div class="kpi zero"><div class="n">0</div><div class="l">突破次数（C1∧C2∧C3）</div></div>
+    <div class="kpi blue"><div class="n">4</div><div class="l">C1∧C2 同时成立</div></div>
+    <div class="kpi green"><div class="n">39/39</div><div class="l">守卫通过</div></div>
+  </div>
+  <div class="cards3" style="margin-top:14px">
+    <div class="minicard"><div class="t">M 类机器可读实测锚</div><div class="v">7 条</div><div class="d">全部来自上册 46 项来料总表，逐条带 value / sigma / meaning。</div></div>
+    <div class="minicard"><div class="t">D 类结构性离散事实</div><div class="v">4 条 · BOUNDARY</div><div class="d">电荷量子化 / 三代 / N_c=3 / 自旋统计：仓库无实测锚，只作符号输入，不计 p_exp。</div></div>
+    <div class="minicard"><div class="t">本地来源文件</div><div class="v">8 个 · 断链 0</div><div class="d">三处两路机拼：SU5 卡方、Super-K 下限、attack28 偏差百分数。</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">02</span>三重门</h2>
+  <p class="desc">突破必须同时通过三道门；任一门被抹掉，机器立刻报 GATES-FAIL 并出现假突破。</p>
+  <div class="gates">
+    <div class="gate">
+      <div class="gname">C1 · 自由度门</div>
+      <div class="gtitle">p_free == 0</div>
+      <div class="gbody">无可调参数、无可自由选择的注入假设。实验输入计入 p_exp，但不算自由选择。LAF 逐项置零机算依赖度，全表最大 p_exp = 3。</div>
+      <div class="gfoot">挡下 <b>3</b> 条：K03 / K09 / K10（均注入额外假设）</div>
+    </div>
+    <div class="gate">
+      <div class="gname">C2 · 留一法门</div>
+      <div class="gtitle">LTO：目标观测非输入</div>
+      <div class="gbody">目标观测量不得作为输入，理论值不得等于观测值。抓回述型伪预言与循环版本。attack28 的 SM / MSSM 三条真预测在此门确实通过。</div>
+      <div class="gfoot">挡下 <b>3</b> 条：K04 循环版 / K05 回述 / K06 恒等式</div>
+    </div>
+    <div class="gate c3">
+      <div class="gname">C3 · 实验存活门</div>
+      <div class="gtitle">存活 ∧ 判别力 &gt; 0</div>
+      <div class="gbody">卡方 / 下界 / 上界判决通过，且存在使其失败的观测读数，且不是恒等式。恒等式 6 个读数全绿 ⇒ 判别力 0；上界型三个 r 值全存活 ⇒ 判别力 0。</div>
+      <div class="gfoot">挡下 <b>8</b> 条，是三重门里最硬的一道</div>
+    </div>
+  </div>
+  <div class="arrow">C1 → C2 → C3　·　三门分别挡下 3 / 3 / 8 条，无一条同时通过</div>
+  <div class="seesaw">
+    <div class="ssbox"><div class="big">4</div><div class="cap">C1∧C2 同时成立（非输入、零可调参数）</div></div>
+    <div class="ssmid">⇒</div>
+    <div class="ssbox"><div class="big" style="color:var(--red)">0</div><div class="cap">走完 C3 后剩余（实验存活层全灭）</div></div>
+  </div>
+  <p class="desc" style="margin-top:14px">这是本册新思路：<b>非输入性—实验存活跷跷板</b>。上一册的「钉死—预言跷跷板」把 C1 与 C2 卡成互斥；本册把 p_exp 纳入后二者不再互斥，缺口被精确推到第三道门。</p>
+</section>
+
+<section>
+  <h2><span class="num">03</span>10 条候选逐条判决</h2>
+  <p class="desc">全部理论值、观测值、下限与偏差均从仓库成品回读；卡方由本册 Fraction 精确重算。</p>
+  <table>
+    <thead><tr><th>id</th><th>来源</th><th>判词</th><th>p_free</th><th>p_exp</th><th>C1</th><th>C2</th><th>C3</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">K01 SU5 3/8</td><td>卡方靶场</td><td><span class="chip ex">EXCLUDED</span></td><td>0</td><td>0</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td></tr>
+      <tr><td class="mono">K02 attack28 SM</td><td>真预测册</td><td><span class="chip ex">EXCLUDED</span></td><td>0</td><td>2</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td></tr>
+      <tr><td class="mono">K03 attack28 MSSM</td><td>真预测册</td><td><span class="chip ex">EXCLUDED</span></td><td>1</td><td>2</td><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td></tr>
+      <tr><td class="mono">K04 循环版 0.2304</td><td>真预测册</td><td><span class="chip rs">RESTATED</span></td><td>0</td><td>3</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td class="mono">K05 观测原样当预测</td><td>阳性对照</td><td><span class="chip rs">RESTATED</span></td><td>0</td><td>1</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td></tr>
+      <tr><td class="mono">K06 α_grav(e) 恒等式</td><td>卡方靶场</td><td><span class="chip id">IDENTITY</span></td><td>0</td><td>0</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td class="mono">K07 BK18 r 上界</td><td>构造探针</td><td><span class="chip zp">ZERO-POWER</span></td><td>0</td><td>1</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td></tr>
+      <tr><td class="mono">K08 最小 SU(5) τ_p</td><td>r120</td><td><span class="chip ex">EXCLUDED</span></td><td>0</td><td>1</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td></tr>
+      <tr><td class="mono">K09 MSSM dim6 τ_p</td><td>r120</td><td><span class="chip ne">NOT-EXCLUDED-ONLY</span></td><td>1</td><td>1</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      <tr><td class="mono">K10 attack34 二圈 τ_p</td><td>attack34</td><td><span class="chip ex">EXCLUDED</span></td><td>1</td><td>1</td><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">04</span>卡方读数：仓库标 PASS 的真预测，在实验存活层被反转</h2>
+  <p class="desc">观测 <code>sin²θ_W = 0.23122</code>、来料表 <code>σ = 0.00004</code>、临界 <code>χ² = 3.84145882069</code>。条形长度按 log₁₀(χ²) 线性映射，虚线为临界值位置。</p>
+  <div class="bars">
+    <div class="barrow"><span>SU(5) 3/8 = 0.375</span><div class="bartrack"><div class="barfill" style="width:100%"></div></div><span class="barval">1.337976E+7</span></div>
+    <div class="barrow"><span>attack28 SM 0.20745</span><div class="bartrack"><div class="barfill" style="width:78.7%"></div></div><span class="barval">3.532035E+5</span></div>
+    <div class="barrow"><span>attack28 MSSM 0.22893</span><div class="bartrack"><div class="barfill" style="width:49.7%"></div></div><span class="barval">3.290184E+3</span></div>
+    <div class="barrow"><span>循环版 0.2304</span><div class="bartrack"><div class="barfill" style="width:37.2%"></div></div><span class="barval">4.202500E+2</span></div>
+    <div class="barrow"><span>95% 临界（1 dof）</span><div class="bartrack"><div class="barfill crit" style="width:8.5%"></div></div><span class="barval">3.84146</span></div>
+    <div class="axis"><span>10⁰</span><span>10²</span><span>10⁴</span><span>10⁶</span><span>10⁸</span></div>
+  </div>
+  <div class="cards3" style="margin-top:18px">
+    <div class="minicard"><div class="t">两路机拼 · SU5</div><div class="v">1.337975996E+7 vs 13379760</div><div class="d">本册精确有理重算 vs 卡方靶场成品，相对差 2.839E-9，字面串不相等。</div></div>
+    <div class="minicard"><div class="t">两路机拼 · 偏差</div><div class="v">10.28127710% / 0.99230387%</div><div class="d">vs attack28 登记 10.2813 / 0.992304，绝对差 2.29E-5 / 1.34E-7。</div></div>
+    <div class="minicard"><div class="t">假设的代价</div><div class="v">p_axiom 0 → 1 · 位移 2.147796E-2</div><div class="d">SM→MSSM 偏差从 10.28% 降到 0.99%，但 C1 挂、χ² 仍超临界约 856 倍。偏差缩小是买来的。</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span>存活 4 条，可算阳性证据 0 条</h2>
+  <p class="desc">χ² ≈ 0 不等于证据；单侧边界型实验的存活只意味「尚未排除」。</p>
+  <div class="survive">
+    <div class="sv"><b>K05 · 卡方精确 0</b>把观测原样当预测的回述对照，被 C2 挡。</div>
+    <div class="sv"><b>K06 · 卡方精确 0</b>恒等式，6 个观测读数全绿、判别力 0，单列 IDENTITY。</div>
+    <div class="sv"><b>K07 · r &lt; 0.032</b>三个不同 r 值全部存活，上界型实验对这组值零判别力。</div>
+    <div class="sv"><b>K09 · τ_p = 2.78656E+36 yr</b>注入维度六算符假设，且下界型只给单侧 ⇒ NOT-EXCLUDED-ONLY。</div>
+  </div>
+  <p class="desc" style="margin-top:14px">控制组四读数两两不同：<span class="mono">1.337976E+7 / 3.532035E+5 / 3.290184E+3 / 4.202500E+2</span>；阳性对照报警、阴性对照恒绿并配 NOT-ALL-GREEN。</p>
+</section>
+
+<section>
+  <h2><span class="num">06</span>判据反噬自己</h2>
+  <p class="desc">核验脚本把机核源码在内存里做单点替换后重新执行，不写回仓库。存活阈值与判别力阈值是两个独立变量，保证每次只动一道门。</p>
+  <div class="cards3">
+    <div class="minicard"><div class="t">① 抬高存活阈值</div><div class="v">2 次假突破 · 8 条守卫报警</div><div class="d">SURVIVE_CRIT 改为 1e40 ⇒ GATES-FAIL。</div></div>
+    <div class="minicard"><div class="t">② 抹掉留一法门</div><div class="v">1 次假突破 · 7 条守卫报警</div><div class="d">C2 恒 True ⇒ 回述候选假突破 ⇒ GATES-FAIL。</div></div>
+    <div class="minicard"><div class="t">③ 抹掉判别力门</div><div class="v">1 次假突破 · 5 条守卫报警</div><div class="d">C3 去掉 power ⇒ 单侧上界候选假突破 ⇒ GATES-FAIL。</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">07</span>下一轮唯一明确的、可机算的出口</h2>
+  <blockquote>构造或检索一条<b>带双侧误差棒、且候选理论值落在其可判负区间之外</b>的新实验读数；然后检验：是否存在一条 <code>p_free = 0</code>、LTO 通过、且在该读数下 <code>χ² &lt; 3.84145882069</code> 的数值陈述？在出现这样的读数之前，任何「攻破」宣告都缺少最后一道门的输入。</blockquote>
+  <div class="redline"><b>红线</b>：数学自洽 ≠ 实验证实；本册只产可算判决，不产新物理。四力达成度 2/6、四力大统一 0 条正确解、独立实验预言 0、不宣称攻破统一场论。4 条结构性离散事实无仓库实测锚，标 BOUNDARY，只对有机器可读锚的 M 类事实全称成立。</div>
+</section>
+
+<footer>
+  <div><b>交付核验</b>：VERIFY-ALL-PASS · 幂等复跑 MD5 一致 · content_sha256 自洽 · 8/8 链接 · 前两册 6 个既有文件零删除零改动 · README.md 零改动 · 最大 RID 仍为 r406（下轮审计号从 r407 起）。</div>
+  <div class="filelist" style="margin-top:8px">
+    源码/_alg_expfacts_survival_recompute.py　·　数据/_ALG_expfacts_survival_recompute_2026-11-11.json　·　数据/_ALG_expfacts_survival_recompute_report_2026-11-11.txt　·　数据/_ALG_expfacts_survival_verify_2026-11-11.json
+  </div>
+  <div style="margin-top:8px">算法联盟分析册 · 2026-11-11 · 浅色自包含可视化，不依赖外部资源</div>
+</footer>
+
+</div>
+</body>
+</html>

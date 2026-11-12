@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>算法联盟 · 破缺谱生成机制穷举与离散标签账（第八轮）</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#5b6572;
+    --line:#e3e8ef; --blue:#2563eb; --blue-soft:#eaf1ff;
+    --amber:#b45309; --amber-soft:#fff5e6; --red:#b91c1c; --red-soft:#fdecec;
+    --green:#15803d; --green-soft:#e9f7ee; --purple:#6d28d9; --purple-soft:#f2ebff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:"Microsoft YaHei","PingFang SC","Segoe UI",Arial,sans-serif;
+       line-height:1.72;font-size:15px}
+  .wrap{max-width:1080px;margin:0 auto;padding:36px 26px 64px}
+  header{background:linear-gradient(135deg,#ffffff 0%,#eef3ff 100%);
+         border:1px solid var(--line);border-radius:14px;padding:30px 32px;margin-bottom:26px}
+  h1{margin:0 0 8px;font-size:26px;letter-spacing:.4px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 14px}
+  .meta{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:8px 22px}
+  .meta b{color:var(--ink);font-weight:600}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;
+          padding:24px 28px;margin-bottom:20px}
+  h2{font-size:19px;margin:0 0 6px;padding-left:12px;border-left:4px solid var(--blue)}
+  .lead{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px}
+  .kpi .n{font-size:28px;font-weight:700;line-height:1.2;color:var(--blue)}
+  .kpi .n.warn{color:var(--amber)}
+  .kpi .n.zero{color:var(--red)}
+  .kpi .t{font-size:13px;color:var(--muted);margin-top:6px}
+  table{width:100%;border-collapse:collapse;margin:14px 0 4px;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:middle}
+  th{background:#f0f4fa;font-weight:600;color:#374151}
+  tr:nth-child(even) td{background:#fbfcfe}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+  .t-pass{background:var(--green-soft);color:var(--green)}
+  .t-fail{background:var(--red-soft);color:var(--red)}
+  .t-info{background:var(--blue-soft);color:var(--blue)}
+  .t-iden{background:var(--purple-soft);color:var(--purple)}
+  .t-bound{background:var(--amber-soft);color:var(--amber)}
+  .gate{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;
+        border-radius:5px;font-size:12px;font-weight:700;margin-right:3px}
+  .g1{background:var(--green-soft);color:var(--green)}
+  .g0{background:var(--red-soft);color:var(--red)}
+  .callout{background:var(--blue-soft);border-left:4px solid var(--blue);
+           border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;font-size:14px}
+  .callout.amber{background:var(--amber-soft);border-left-color:var(--amber)}
+  .callout.red{background:var(--red-soft);border-left-color:var(--red)}
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 6px}
+  .step{background:#f8faff;border:1px solid var(--line);border-radius:9px;padding:13px 10px;text-align:center}
+  .step .sn{font-size:20px;font-weight:700;color:var(--blue)}
+  .step .sl{font-size:12px;color:var(--muted);margin-top:4px}
+  .arrow{text-align:center;color:var(--muted);font-size:18px;padding-top:12px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .box{border:1px solid var(--line);border-radius:9px;padding:15px 17px;background:#fbfcfe}
+  .box h3{margin:0 0 8px;font-size:15px;color:var(--blue)}
+  .box.amber h3{color:var(--amber)}
+  ul{margin:8px 0 0;padding-left:20px}
+  li{margin:5px 0}
+  code{background:#f1f4f9;border:1px solid #e6eaf1;border-radius:4px;padding:1px 5px;
+       font-family:Consolas,Monaco,monospace;font-size:13px;color:#334155}
+  .bar{height:15px;border-radius:4px;background:var(--blue-soft);overflow:hidden;margin-top:5px}
+  .bar > i{display:block;height:100%;background:var(--blue)}
+  .bar.warn > i{background:var(--amber)}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:26px;line-height:1.9}
+  @media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.arrow{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>破缺谱生成机制穷举与离散标签账</h1>
+  <p class="sub">算法联盟 · 统一场论第八轮 —— 把第七轮自划的 BOUNDARY 变成可算对象，并重算参数下界</p>
+  <div class="meta">
+    <span>日期 <b>2026-11-12</b></span>
+    <span>性质 <b>分析册（不占 RID · 不入 README · 不与审计卷相加）</b></span>
+    <span>机核 <b>39/39 守卫</b></span>
+    <span>核验 <b>VERIFY-ALL-PASS</b></span>
+  </div>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="n">5 → 4</div><div class="t">参数下界修正（下降 1）</div></div>
+  <div class="kpi"><div class="n">3</div><div class="t">预算：少于 4 个独立参数</div></div>
+  <div class="kpi"><div class="n warn">8</div><div class="t">显式生成机制族穷举</div></div>
+  <div class="kpi"><div class="n zero">0</div><div class="t">四门全过的族 / 独立实验预言</div></div>
+</div>
+
+<section>
+  <h2>一、本轮攻的是上一册自己划下的边界</h2>
+  <p class="lead">第七轮把结论限定在 Yukawa/Proca 单方程族，并明确把「换参数化、换方程族、引入对称性破缺结构」划在可算范围之外。本轮把它们搬进可算域。</p>
+  <div class="flow">
+    <div class="step"><div class="sn">5</div><div class="sl">第七轮参数下界</div></div>
+    <div class="step"><div class="sn">3 / 2</div><div class="sl">标签两口径（树 / 比特）</div></div>
+    <div class="step"><div class="sn">4</div><div class="sl">修正后下界</div></div>
+    <div class="step"><div class="sn">8</div><div class="sl">生成族四门穷举</div></div>
+    <div class="step"><div class="sn">0</div><div class="sl">突破</div></div>
+  </div>
+  <div class="callout amber"><b>关键诚实标注：</b>g 划分已是最细划分，任何 κ 划分都是它的粗化 ⇒ 该判定恒真、判别力为 0，单列 <span class="tag t-iden">IDENTITY</span> 不进布尔结论。真正有判别力的是标签下界与机制族的数值逐条匹配。</div>
+</section>
+
+<section>
+  <h2>二、划分格与两个标签口径</h2>
+  <p class="lead">κ 谱 3 类（电磁、引力长程 κ=0 合并为一块），g 谱 4 类，共同细化 4 块。两路机拼逐位精确相等，相对偏离 0。</p>
+  <table>
+    <thead><tr><th>口径</th><th>定义</th><th class="num">读数</th><th>合并两个 g 值后</th></tr></thead>
+    <tbody>
+      <tr><td>二元判定树</td><td>区分 4 个状态所需内部节点 <code>4−1</code></td><td class="num"><b>3</b></td><td><span class="tag t-pass">3 → 2（响应）</span></td></tr>
+      <tr><td>二进制比特</td><td><code>ceil(log2 4)</code></td><td class="num"><b>2</b></td><td><span class="tag t-bound">2 → 2（不响应）</span></td></tr>
+    </tbody>
+  </table>
+  <p class="lead" style="margin-top:14px">口径决定读数，两个都报；一个口径对扰动不敏感也如实记录，不藏起来。谱类数合并后 <code>4→3</code>。</p>
+</section>
+
+<section>
+  <h2>三、参数下界为什么从 5 降到 4</h2>
+  <p class="lead">第七轮把 κ 破缺 2 与 g 破缺 3 相加得 5；本轮机读划分格后看到 κ 的三类是从 g 的四类粗化而来，判定可以复用。</p>
+  <div class="two">
+    <div class="box">
+      <h3>第七轮口径（独立相加）</h3>
+      <p style="margin:0"><code>p_min = 2（质量）+ 3（耦合破缺）= 5</code></p>
+      <div class="bar warn"><i style="width:100%"></i></div>
+      <p class="lead" style="margin:8px 0 0">把两组破缺当作互不相干</p>
+    </div>
+    <div class="box amber">
+      <h3>第八轮口径（标签复用）</h3>
+      <p style="margin:0"><code>p_min = 3（离散标签）+ 1（尺度）= 4</code></p>
+      <div class="bar"><i style="width:80%"></i></div>
+      <p class="lead" style="margin:8px 0 0">下降 1，但仍比预算 3 多 1</p>
+    </div>
+  </div>
+  <div class="callout"><b>新思路 · 标签可复用跷跷板：</b>把破缺拆细会让参数账变高，把破缺归并会让参数账变低；归并到极限仍比预算多 1 个，且这 3 个标签本身还要有来源。</div>
+</section>
+
+<section>
+  <h2>四、8 族 × 四门：0 命中</h2>
+  <p class="lead">G1 谱覆盖 / G2 参数预算 ≤3 / G3 数值逐条精确相等 / G4 非回述。每族的参数账、谱类数与失配条数均由生成值机算。</p>
+  <table>
+    <thead><tr>
+      <th>族</th><th>机制</th><th class="num">p</th><th class="num">K</th><th class="num">A</th>
+      <th class="num">失配</th><th>G1 G2 G3 G4</th><th>突破</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>M1</td><td>共享常数</td><td class="num">2</td><td class="num">1</td><td class="num">1</td><td class="num">6</td><td><span class="gate g0">0</span><span class="gate g1">1</span><span class="gate g0">0</span><span class="gate g1">1</span></td><td><span class="tag t-fail">否</span></td></tr>
+      <tr><td>M2</td><td>幂律标度（κ=0 生不出）</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">7</td><td><span class="gate g1">1</span><span class="gate g0">0</span><span class="gate g0">0</span><span class="gate g1">1</span></td><td><span class="tag t-fail">否</span></td></tr>
+      <tr><td>M3</td><td>线性 Vandermonde 插值</td><td class="num">11</td><td class="num">4</td><td class="num">4</td><td class="num">7</td><td><span class="gate g1">1</span><span class="gate g0">0</span><span class="gate g0">0</span><span class="gate g1">1</span></td><td><span class="tag t-fail">否</span></td></tr>
+      <tr><td>M4</td><td>二分支对称性破缺链</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">0</td><td><span class="gate g1">1</span><span class="gate g1">1</span><span class="gate g1">1</span><span class="gate g0">0</span></td><td><span class="tag t-fail">否</span></td></tr>
+      <tr><td>M5</td><td>RG 阈值简版</td><td class="num">3</td><td class="num">3</td><td class="num">4</td><td class="num">3</td><td><span class="gate g1">1</span><span class="gate g1">1</span><span class="gate g0">0</span><span class="gate g1">1</span></td><td><span class="tag t-fail">否</span></td></tr>
+      <tr><td>M6</td><td>表示论宇称类（一比特）</td><td class="num">3</td><td class="num">2</td><td class="num">2</td><td class="num">4</td><td><span class="gate g0">0</span><span class="gate g1">1</span><span class="gate g0">0</span><span class="gate g1">1</span></td><td><span class="tag t-fail">否</span></td></tr>
+      <tr style="background:#fff8ee"><td><b>M7</b></td><td><b>RG 全阈值（最接近）</b></td><td class="num"><b>5</b></td><td class="num">3</td><td class="num">4</td><td class="num">0</td><td><span class="gate g1">1</span><span class="gate g0">0</span><span class="gate g1">1</span><span class="gate g1">1</span></td><td><span class="tag t-fail">否</span></td></tr>
+      <tr><td>M8</td><td>分置模板复用</td><td class="num">8</td><td class="num">3</td><td class="num">4</td><td class="num">0</td><td><span class="gate g1">1</span><span class="gate g0">0</span><span class="gate g1">1</span><span class="gate g0">0</span></td><td><span class="tag t-fail">否</span></td></tr>
+    </tbody>
+  </table>
+  <p class="lead" style="margin-top:14px">四门通过计数 <code>G1=6 / G2=4 / G3=3 / G4=6</code>，全过 <b>0 族</b>；恰好只挂一门的有 <b>3 族</b>，证明四门都承重。</p>
+</section>
+
+<section>
+  <h2>五、三个临界族与离散标签归属</h2>
+  <div class="two">
+    <div class="box">
+      <h3>只挂一门的三个族</h3>
+      <ul>
+        <li><b>M7 只挂 G2</b>：谱覆盖、数值精确、非回述全过，只因 5 个独立阈值 &gt; 预算 3 被挡。</li>
+        <li><b>M5 只挂 G3</b>：3 个参数生对类数，但 g 后三值失配 3 条。</li>
+        <li><b>M4 只挂 G4</b>：3 个二元标签选 4 叶，数值全对，但叶上是整表抄实验谱。</li>
+      </ul>
+    </div>
+    <div class="box amber">
+      <h3>标签由谁注入</h3>
+      <ul>
+        <li>r401 机读：两个宇称类、一比特必要且充分、零比特不足 ⇒ 表示论自动只能生 <b>2 类</b>。</li>
+        <li>r402 Dirac 项唯一，不增加类数。</li>
+        <li>需要 4 类 ⇒ 至少 <b>2 个标签</b>须由外部实验事实注入（<code>p_exp</code>）。</li>
+        <li>第二轮 T3/T4 解数 7 与 5，均 <code>unique=False</code>、<code>pred=0</code>。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout amber"><b>参数不灭的第八个实例：</b>下界从 5 压到 4，但 3 个离散标签里仍有 2 个不是方程生出来的。参数从方程层搬到了标签层。</div>
+</section>
+
+<section>
+  <h2>六、控制组与三次反噬</h2>
+  <p class="lead">控制组四个读数 <code>8 / 3 / 0 / 4</code> 两两不同且对照均不等于基线。反噬只在内存替换源码单点，不写回仓库，每次只动一道门。</p>
+  <table>
+    <thead><tr><th>变体</th><th>结果</th><th class="num">假突破</th><th class="num">报警守卫</th><th>放行的族</th></tr></thead>
+    <tbody>
+      <tr><td>预算 3 → 8</td><td><span class="tag t-fail">GATES-FAIL</span></td><td class="num">0 → 1</td><td class="num">9</td><td>M7</td></tr>
+      <tr><td>拆掉实验存活门 G3</td><td><span class="tag t-fail">GATES-FAIL</span></td><td class="num">0 → 1</td><td class="num">9</td><td>M5</td></tr>
+      <tr><td>拆掉非回述门 G4</td><td><span class="tag t-fail">GATES-FAIL</span></td><td class="num">0 → 1</td><td class="num">9</td><td>M4</td></tr>
+    </tbody>
+  </table>
+  <p class="lead" style="margin-top:12px">三次都恰好放行一个此前只挂该门的临界族 ⇒ 参数预算、数值精确匹配、非回述三门是承重判据。</p>
+</section>
+
+<section>
+  <h2>七、交付核验与红线</h2>
+  <table>
+    <thead><tr><th>项目</th><th>读数</th></tr></thead>
+    <tbody>
+      <tr><td>守卫 / 计数</td><td><code>39/39</code>；<code>PASS:31 · INFO:5 · IDENTITY:2 · BOUNDARY:1 · FAIL:0</code></td></tr>
+      <tr><td>final</td><td><code>ALG-SPECTRUM-GEN--GATES-PASS-WITH-0-NEGATIVE</code></td></tr>
+      <tr><td>content_sha256</td><td><code>1ac2a3dc57be02f9c50fa0ccc76ae3c9b862f5824ed3cca85efb1ae8351e9725</code></td></tr>
+      <tr><td>核验</td><td><code>VERIFY-ALL-PASS</code>：幂等复跑、摘要自洽、11/11 链接、既有 69 文件零删除零改动</td></tr>
+      <tr><td>README</td><td>零改动，939,177 B，<code>md5=988b0a07e98c3a8111dc3568ac12fd63</code>，最大 RID 仍 <code>r406</code></td></tr>
+      <tr><td>跨卷脊梁</td><td>r403 四力正确解 0 条、r404 接受 0；第五／六轮 0 命中、第七轮逃逸 0、本册突破 0</td></tr>
+    </tbody>
+  </table>
+  <div class="callout red">
+    <b>边界与红线：</b>8 族是显式有限枚举，不是全称穷尽；不是「四力统一不可能」的全称定理。κ/g 谱为何如此未被解释，「力的本质本源」未被回答。数学自洽 ≠ 实验证实；四力 2/6、四力大统一 <b>0 条正确解</b>、独立实验预言 <b>0</b>，<b>不宣称攻破统一场论</b>。
+  </div>
+  <p class="lead" style="margin-bottom:0"><b>结论：</b>下界从 5 精确修正到 4（对攻破方向有利），但预算为 3，<code>4 &gt; 3</code>，8 族四门全过 0 族。下一轮须给出能用 3 个以内参数生出 4 类耦合、且标签非外部注入的机制；即便构造出来，仍需一条带双侧误差棒、理论值落在其可判负区间之外的新实验读数来验收。</p>
+</section>
+
+<footer>
+  算法联盟分析册 · 第八轮 · 2026-11-12<br>
+  数学自洽 ≠ 实验证实；本册只产可算判决，不产新物理。
+</footer>
+
+</div>
+</body>
+</html>
