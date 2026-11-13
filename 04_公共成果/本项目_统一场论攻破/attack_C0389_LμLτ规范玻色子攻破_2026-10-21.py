@@ -3,6 +3,11 @@
 from mpmath import mp, mpf, pi, power, log, quad
 mp.dps = 250
 import json
+import sys
+try:  # Windows 控制台默认 GBK，ΣQ³ 的 ³ 会让 print 抛 UnicodeEncodeError
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+except Exception:
+    pass
 
 # U(1)_{Lμ−Lτ} 荷：μ/ν_μ=+1、τ/ν_τ=−1、e/ν_e=0
 # 反常相消（逐代）：A = Σ_f Q_f³；重力反常 B = Σ_f Q_f

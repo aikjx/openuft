@@ -1,0 +1,495 @@
+{
+  "id": "J117-s13-m1-complex-coupling-no-pinning",
+  "date": "2026-11-13",
+  "volume": 138,
+  "verdict": "PASS",
+  "gates": {
+    "total": 75,
+    "passed": 75
+  },
+  "question": "what does M1 do when zeta is complex, and can it pin |Psi|=v?",
+  "answer": "Only Re(zeta) enters the frequency and Im(zeta) sets one common decay rate; the flow is a damped/growing rotation, not J116's isoclinic rotation. M1 is real-linear, so it cannot select any modulus: |Psi|^2=v^2 remains external. The lambda terms cancel in the current divergence, leaving dd_mu J^mu=-2 Im(zeta)|Psi|^2, so the registered conservation claim S13-C0001 is scoped to zeta=0.",
+  "equations": {
+    "E6_minimal_polynomial": "A^2 + 2 b A + (lambda^2+a^2+b^2) I = 0,  A = lambda T + a J - b I, zeta=a+ib",
+    "E6_shifted_form": "(A + b I)^2 = -(lambda^2+a^2) I",
+    "E6_spectrum": "spec A = {-b +/- i sqrt(lambda^2+a^2)}, each twice; det A = (lambda^2+|zeta|^2)^2; tr A = -4b",
+    "E7_j116_scope": "J116 E1 (A^2=-(lambda^2+zeta^2)I and pure rotation) is the b=0 slice",
+    "E8_no_pinning": "A(cX)=cA(X) => no modulus is selected; radial ODE rdot=-b r has fixed points 0 (b!=0) or all r (b=0)",
+    "E9_current_breaking": "dd_mu J^mu = i(zeta-conj zeta)|Psi|^2 = -2 Im(zeta)|Psi|^2"
+  },
+  "key_numbers": {
+    "theta_lam1_re1": "1.414213562373",
+    "period_at_b0": "4.442882938158",
+    "det_lam1_zeta_1_plus_i": "9",
+    "trace_lam1_zeta_1_plus_i": "-4",
+    "eigen_real_part": "-1",
+    "halflife_b1": "0.346573590280",
+    "decay_rates_three_cases": [
+      0.4,
+      0.4,
+      0.4
+    ],
+    "rk4_vs_analytic_error": 1.11e-15,
+    "norm_relative_error": 1.428e-16,
+    "scoreboards": {
+      "one_equation": "0/6",
+      "validated": 0,
+      "four_force_gut": 0,
+      "unique_C3": "L_EW",
+      "open_items": 8,
+      "l4_open": 18,
+      "closed_by_this_volume": 0
+    }
+  },
+  "errata": [
+    {
+      "where": "volume 137 / J116 E1",
+      "what": "A^2=-(lambda^2+zeta^2)I stated without a reality qualifier",
+      "fix": "general identity is A^2+2bA+(lambda^2+a^2+b^2)I=0; the old form is b=0",
+      "impact": "J116 numeric readings and its 78/78 gates are unaffected (its grid was real)"
+    },
+    {
+      "where": "volume 137 / J116 rotation language",
+      "what": "'isoclinic rotation' with frequency sqrt(lambda^2+zeta^2)",
+      "fix": "with Im(zeta)!=0 the flow is a damped/growing rotation with frequency sqrt(lambda^2+Re(zeta)^2)",
+      "impact": "presentation only; norm identity already allowed complex zeta"
+    },
+    {
+      "where": "S13-C0001 / 附录A",
+      "what": "current conservation registered as verified; zeta has no reality condition",
+      "fix": "conservation holds iff Im(zeta)=0, i.e. for 板块一",
+      "impact": "the verified claim is not false, but its scope must be stated"
+    }
+  ],
+  "claim": {
+    "class": "structural-audit-of-an-existing-equation",
+    "target": "S13 M1 with complex zeta: sigma^mu d_mu Psi = lambda Theta Psi* + i zeta Psi",
+    "new_physics": 0,
+    "closed_open_items": 0,
+    "scoreboard": "0/6",
+    "verdict": "M1_COMPLEX_COUPLING__FREQUENCY_USES_RE_ZETA__IM_ZETA_IS_DECAY__NO_MODULUS_PINNING",
+    "proved": [
+      "E6: A^2 + 2bA + (lambda^2+a^2+b^2) I = 0 for zeta=a+ib (exact, rational grid)",
+      "spectrum {-b +/- i sqrt(lambda^2+a^2)}, each twice; det=(lambda^2+|zeta|^2)^2",
+      "J116's A^2=-(lambda^2+zeta^2)I and its pure rotation are the b=0 slice",
+      "i(zeta-conj zeta) = -2b: d|Psi|^2/dt = -2 Im(zeta)|Psi|^2 (J116 identity, kept)",
+      "Psi^dag Theta Psi* = 0 and Psi^T Theta Psi = 0 kill both lambda terms",
+      "dd_mu J^mu = -2 Im(zeta)|Psi|^2, so S13-C0001 is scoped to zeta=0",
+      "A is real-linear, so no modulus v can be selected by M1 (scale covariance)",
+      "rank A = 4: the only static solution is Psi = 0 even for Im zeta != 0"
+    ],
+    "not_proved": [
+      "that M1 is physically wrong (it is only structurally audited)",
+      "the origin of zeta or any reason for it to be real",
+      "any non-linear modulus-pinning mechanism (that would be new physics)",
+      "the spatial sigma.grad term under a complex zeta (out of scope)",
+      "any new unification, mass gap, or force"
+    ],
+    "scope": "0+1-dimensional homogeneous generator; constant complex zeta; the spatial sigma.grad operator and any non-linear extension are out of scope"
+  },
+  "anchors": {
+    "equations.md": {
+      "sha16": "23bdb481262972a6",
+      "present": true
+    },
+    "附录A-符号表.md": {
+      "sha16": "489a43698edb5678",
+      "present": true
+    },
+    "claims.csv": {
+      "sha16": "241bb6b6b5c00367",
+      "present": true
+    },
+    "卷137": {
+      "sha16": "0380b4568cd4f0cc",
+      "present": true
+    },
+    "J116脚本": {
+      "sha16": "1fd2ffecb2d228cc",
+      "present": true
+    }
+  },
+  "gate_details": [
+    {
+      "name": "A01 M1 row carries the +iζΨ term and the |Ψ|²=v² constraint",
+      "ok": true,
+      "detail": "anchor"
+    },
+    {
+      "name": "A02 板块一 states the ζ-less equation (the ζ=0 slice)",
+      "ok": true,
+      "detail": "板块一 = M1 at ζ=0"
+    },
+    {
+      "name": "A03 the symbol table defines ζ as a coupling but never says ζ∈ℝ",
+      "ok": true,
+      "detail": "row: | $\\zeta$ | 附加耦合（M1 线性项系数） |"
+    },
+    {
+      "name": "A04 equations.md contains no reality assertion on ζ",
+      "ok": true,
+      "detail": "no ζ∈ℝ anywhere"
+    },
+    {
+      "name": "A05 S13-C0001 registers current conservation for the ζ-less equation",
+      "ok": true,
+      "detail": "the verified claim is scoped to 板块一"
+    },
+    {
+      "name": "A06 J116's generator grid is real-only (its E1 never saw Im ζ)",
+      "ok": true,
+      "detail": "GRID entries are rationals, not complex"
+    },
+    {
+      "name": "A07 J116 volume states A²=-(λ²+ζ²)I without a reality qualifier",
+      "ok": true,
+      "detail": "the statement under repair"
+    },
+    {
+      "name": "A08 novelty: this is the only *_j117_* script",
+      "ok": true,
+      "detail": "single new script"
+    },
+    {
+      "name": "A09 novelty: at most one registry section on complex coupling/pinning, and it is J117",
+      "ok": true,
+      "detail": "complex-coupling sections = 1"
+    },
+    {
+      "name": "A10 v appears only in the constraint of the M1 row, never in the equation",
+      "ok": true,
+      "detail": "one 'v' occurrence, inside |Ψ|²=v²"
+    },
+    {
+      "name": "B01 T²=-I",
+      "ok": true,
+      "detail": "T=ΘK"
+    },
+    {
+      "name": "B02 J²=-I",
+      "ok": true,
+      "detail": "J=multiplication by i"
+    },
+    {
+      "name": "B03 {T,J}=0",
+      "ok": true,
+      "detail": "duality and phase generators anticommute"
+    },
+    {
+      "name": "B04 A0²=-(λ²+a²)I for A0=λT+aJ (skew part)",
+      "ok": true,
+      "detail": "9 rational points"
+    },
+    {
+      "name": "B05 (A+bI)²=-(λ²+a²)I  [shifted generator is a complex structure]",
+      "ok": true,
+      "detail": "θ=√(λ²+a²) is the oscillation frequency"
+    },
+    {
+      "name": "B06 E6: A²+2bA+(λ²+a²+b²)I=0 (minimal polynomial)",
+      "ok": true,
+      "detail": "holds for complex ζ, all 9 points incl. b=0 and λ=a=0"
+    },
+    {
+      "name": "B07 det A=(λ²+a²+b²)²=(λ²+|ζ|²)²",
+      "ok": true,
+      "detail": "strictly positive unless everything vanishes"
+    },
+    {
+      "name": "B08 tr A=-4 Im(ζ)= -4b",
+      "ok": true,
+      "detail": "the trace counts the dilation"
+    },
+    {
+      "name": "B09 the symmetric part of A is exactly -bI",
+      "ok": true,
+      "detail": "A = skew + isotropic dilation"
+    },
+    {
+      "name": "B10 rank A=4 on every grid point (no nonzero static solution)",
+      "ok": true,
+      "detail": "det=c²>0"
+    },
+    {
+      "name": "B11 A is real-linear: A(cX)=cA(X)",
+      "ok": true,
+      "detail": "c∈{2,-3,1/5,7/3} × 9 points ⇒ scale covariance"
+    },
+    {
+      "name": "B12 char poly det(xI-A)=(x²+2bx+c)²",
+      "ok": true,
+      "detail": "⇒ spectrum {-b±i√(λ²+a²)}, each twice"
+    },
+    {
+      "name": "B-PC1 shifting b by 1/10 breaks the identity (non-zero residual)",
+      "ok": true,
+      "detail": "detector can fail"
+    },
+    {
+      "name": "C01 the 4×4 generator reproduces λΘΨ*+iζΨ in the (Reψ1,Imψ1,Reψ2,Imψ2) basis",
+      "ok": true,
+      "detail": "4 spinors × 9 couplings"
+    },
+    {
+      "name": "C02 Θᵀ=-Θ",
+      "ok": true,
+      "detail": "the source of the identities below"
+    },
+    {
+      "name": "C03 Ψ†ΘΨ*≡0 for every spinor (kills the λ term in the norm flow)",
+      "ok": true,
+      "detail": "4 × 9 exact checks"
+    },
+    {
+      "name": "C04 ΨᵀΘΨ≡0 for every spinor (kills the λ term on the conjugate side)",
+      "ok": true,
+      "detail": "same antisymmetry"
+    },
+    {
+      "name": "C05 i(ζ-ζ̄)=-2Im(ζ): only the imaginary part survives",
+      "ok": true,
+      "detail": "E9 coefficient"
+    },
+    {
+      "name": "C06 (ΘΨ*)†Ψ≡0: the conjugate λ term also vanishes",
+      "ok": true,
+      "detail": "λ cancels pointwise for any complex λ"
+    },
+    {
+      "name": "C-PC1 the coefficient detector distinguishes b=0 from b≠0",
+      "ok": true,
+      "detail": "b=0 ⇒ 0; b≠0 ⇒ nonzero"
+    },
+    {
+      "name": "D01 RK4 equals e^{-bt}[cosθt I+sinθt A0/θ]X0 (err 1.11e-15)",
+      "ok": true,
+      "detail": "λ=1, Imζ=2/5, Reζ=1/2"
+    },
+    {
+      "name": "D02 the modulus is e^{-2bt}|X0|² (rel err 1.4e-16)",
+      "ok": true,
+      "detail": "decay rate independent of λ and Re ζ"
+    },
+    {
+      "name": "D03 b=0: X(2π/θ)=X0 (err 2.2e-16), pure rotation",
+      "ok": true,
+      "detail": "J116's isoclinic rotation is the b=0 slice"
+    },
+    {
+      "name": "D04 b≠0: |X(t+T)|²/|X(t)|²=e^{-2bT}=0.011154844 (no periodicity)",
+      "ok": true,
+      "detail": "damped spiral"
+    },
+    {
+      "name": "D05 the decay rate is -Im(ζ) for three different (λ,Re ζ): 0.400000000, 0.400000000, 0.400000000",
+      "ok": true,
+      "detail": "frequency does not affect the radial rate"
+    },
+    {
+      "name": "D06 positivity scaling: cX(t) is the trajectory from cX0",
+      "ok": true,
+      "detail": "M1 is real-linear ⇒ no preferred modulus"
+    },
+    {
+      "name": "D07 r(2v)/r(v)=2 at every t (here 2.000000000000)",
+      "ok": true,
+      "detail": "the flow cannot distinguish v from 2v"
+    },
+    {
+      "name": "D08 b>0: e^{-bT}=1 has no solution T>0 ⇒ only fixed modulus is 0",
+      "ok": true,
+      "detail": "r=0 is the only fixed point"
+    },
+    {
+      "name": "D09 b=0: every modulus is neutral (e^0=1)",
+      "ok": true,
+      "detail": "flat radial direction, still no selected v"
+    },
+    {
+      "name": "D10 the hard constraint breaks scale covariance: |cΨ|=2v≠v for c=2",
+      "ok": true,
+      "detail": "⇒ |Ψ|²=v² is not implied by the linear flow"
+    },
+    {
+      "name": "D11 rank A=4 ⇒ no static solution except Ψ≡0 (complex ζ included)",
+      "ok": true,
+      "detail": "E3 of J116 extended to Im ζ≠0"
+    },
+    {
+      "name": "D-PC1 a pinning term detector fires on an injected term and not on M1",
+      "ok": true,
+      "detail": "M1–M6 carry no (|Ψ|²-v²)Ψ term"
+    },
+    {
+      "name": "E01 with Re ζ≠0 the λ term still cancels: Ψ†ΘΨ*=0 (C03)",
+      "ok": true,
+      "detail": "λ does not affect conservation"
+    },
+    {
+      "name": "E02 with b≠0 the current is not conserved: ∂_μJ^μ=-2b|Ψ|²",
+      "ok": true,
+      "detail": "E9"
+    },
+    {
+      "name": "E03 at b=0 (板块一) conservation is restored: ∂_μJ^μ=0",
+      "ok": true,
+      "detail": "the registered claim's actual scope"
+    },
+    {
+      "name": "E04 the registered S13-C0001 row has no ζ (it is the ζ=0 statement)",
+      "ok": true,
+      "detail": "scope mismatch documented"
+    },
+    {
+      "name": "E05 the symbol table imposes no reality condition on ζ",
+      "ok": true,
+      "detail": "needs ζ∈ℝ for conservation"
+    },
+    {
+      "name": "E06 for ζ=1+i the modulus halves at t=ln2/2=0.346573590280",
+      "ok": true,
+      "detail": "a 50%% loss is measurable in principle"
+    },
+    {
+      "name": "E07 the divergence sign is -2Im(ζ), matching the norm flow of J116",
+      "ok": true,
+      "detail": "no contradiction: J116's norm identity already allowed complex ζ"
+    },
+    {
+      "name": "E08 no new conserved current is claimed here",
+      "ok": true,
+      "detail": "only the obstruction"
+    },
+    {
+      "name": "E-PC1 divergence detector returns 0 exactly at b=0 and nonzero at b=2/5",
+      "ok": true,
+      "detail": "control"
+    },
+    {
+      "name": "F01 J116's E1 statement is present and is the b=0 slice",
+      "ok": true,
+      "detail": "volume 137, §E1"
+    },
+    {
+      "name": "F02 J116's sampled couplings are all real",
+      "ok": true,
+      "detail": "GRID line"
+    },
+    {
+      "name": "F03 at b=0 the new generator equals J116's A(λ,ζ)",
+      "ok": true,
+      "detail": "backward compatible on the real slice"
+    },
+    {
+      "name": "F04 J116 readings reproduced: Ω(1,1)=1.414213562373, T=4.442882938158",
+      "ok": true,
+      "detail": "no contradiction with volume 137"
+    },
+    {
+      "name": "F05 det reduces to J116's (λ²+ζ²)² on the real slice",
+      "ok": true,
+      "detail": "the repair is additive, not a reversal"
+    },
+    {
+      "name": "F-PC1 the unqualified A²=-(λ²+|ζ|²)I fails whenever b≠0",
+      "ok": true,
+      "detail": "so the erratum is detectable, not cosmetic"
+    },
+    {
+      "name": "F06 J116 artifacts are untouched (json MD5 unchanged)",
+      "ok": true,
+      "detail": "this volume supersedes nothing on disk"
+    },
+    {
+      "name": "G01 authoritative scoreboard is 0/6",
+      "ok": true,
+      "detail": "0/6"
+    },
+    {
+      "name": "G02 validated systems = 0",
+      "ok": true,
+      "detail": "validated=0"
+    },
+    {
+      "name": "G03 correct four-force GUT equations = 0",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "G04 unique C3-level true unification is electroweak L_EW",
+      "ok": true,
+      "detail": "L_EW (2 forces)"
+    },
+    {
+      "name": "G05 ledger OPEN items stay at 8",
+      "ok": true,
+      "detail": "8 OPEN"
+    },
+    {
+      "name": "G06 L4 physics layer stays at 18 OPEN",
+      "ok": true,
+      "detail": "18 OPEN"
+    },
+    {
+      "name": "G07 this volume closes zero OPEN items",
+      "ok": true,
+      "detail": "closed=0"
+    },
+    {
+      "name": "G08 this volume adds zero verified predictions",
+      "ok": true,
+      "detail": "0 new verified"
+    },
+    {
+      "name": "G-PC1 a 6/6 scoreboard would be caught",
+      "ok": true,
+      "detail": "detected"
+    },
+    {
+      "name": "H01 the honest claim block passes its own validator",
+      "ok": true,
+      "detail": "issues: none"
+    },
+    {
+      "name": "H02 a corrupted claim block is caught on four counts",
+      "ok": true,
+      "detail": "issues: 4"
+    },
+    {
+      "name": "H03 this is an erratum-level structural result, not a new law",
+      "ok": true,
+      "detail": "verdict string"
+    },
+    {
+      "name": "H04 no non-linear pinning mechanism is proposed here",
+      "ok": true,
+      "detail": "stated"
+    },
+    {
+      "name": "H05 the origin of zeta is explicitly not addressed",
+      "ok": true,
+      "detail": "stated"
+    },
+    {
+      "name": "H06 the spatial operator is explicitly out of scope",
+      "ok": true,
+      "detail": "stated"
+    },
+    {
+      "name": "H07 zero verified predictions are added",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "H08 the scoreboard cannot move on a structural identity",
+      "ok": true,
+      "detail": "red line"
+    }
+  ],
+  "not_self_derived": [
+    "M1, its constraint, Theta and the zeta symbol row are read from the repository.",
+    "J116's grid and E1 wording are read from volume 137 and its script.",
+    "S13-C0001 is read from claims.csv."
+  ],
+  "red_line": "A structural audit is not a physical refutation; an erratum is not a discovery; the scoreboard stays 0/6 and no OPEN item is closed."
+}

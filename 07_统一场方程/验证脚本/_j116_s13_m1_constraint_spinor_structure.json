@@ -1,0 +1,527 @@
+{
+  "id": "J116-s13-m1-constraint-spinor-structure",
+  "date": "2026-11-13",
+  "volume": 137,
+  "verdict": "PASS",
+  "gates": {
+    "total": 78,
+    "passed": 78
+  },
+  "question": "does M1 really deliver the Higgs structure (S^3 vacuum, spectrum {0,0,0,8kv^2})?",
+  "answer": "No. M1's homogeneous generator is a rotation with frequency Omega=sqrt(lam^2+zeta^2); it has no mass gap, no static vacuum, and zeta is missing from the parameter ledger. The 8kv^2 spectrum comes from an added potential V=kappa(|Psi|^2-v^2)^2, not from M1.",
+  "equations": {
+    "E1_generator_square": "A^2 = -(lambda^2+zeta^2) I,  A = lambda*T + zeta*J",
+    "E2_norm_flow": "d|Psi|^2/dt = -2 Im(zeta) |Psi|^2",
+    "E3_static_solvability": "det A = (lambda^2+zeta^2)^2  (zero only at lambda=zeta=0)",
+    "E4_duality_action": "T A(lambda,zeta) T^-1 = A(lambda,-zeta)",
+    "E5_parameter_count": "lambda, zeta, l, v  (4 scales; the ledger lists 3)"
+  },
+  "key_numbers": {
+    "omega_at_lam1_zeta1": "1.414213562373",
+    "period_at_lam1_zeta1": "4.442882938158",
+    "omega_at_lam1_zeta0.5": "1.118033988750",
+    "period_at_lam1_zeta0.5": "5.619851784833",
+    "det_lam1_zeta1": "4",
+    "drift_points": [
+      {
+        "lam": 1.0,
+        "zeta": "(0.3+0j)",
+        "numeric_ratio": 1.0,
+        "predicted": 1.0
+      },
+      {
+        "lam": 1.0,
+        "zeta": "(0.3+0.4j)",
+        "numeric_ratio": 0.670320046036,
+        "predicted": 0.670320046036
+      },
+      {
+        "lam": 2.0,
+        "zeta": "0.5j",
+        "numeric_ratio": 0.606530659713,
+        "predicted": 0.606530659713
+      }
+    ],
+    "hessian_eigenvalues": [
+      [
+        1e-09,
+        1e-09,
+        1e-09,
+        8.000000001
+      ],
+      [
+        1e-09,
+        1e-09,
+        1e-09,
+        8.000000001
+      ],
+      [
+        1e-09,
+        1e-09,
+        1e-09,
+        8.000000001
+      ]
+    ],
+    "parameter_dimension": {
+      "lambda": 1,
+      "zeta": 1,
+      "v": 1,
+      "ell": -1
+    },
+    "scoreboards": {
+      "one_equation": "0/6",
+      "validated": 0,
+      "four_force_gut": 0,
+      "unique_C3": "L_EW",
+      "open_items": 8,
+      "l4_open": 18,
+      "closed_by_this_volume": 0
+    }
+  },
+  "claim": {
+    "class": "structural-audit-of-an-existing-equation",
+    "target": "S13 M1: sigma^mu d_mu Psi = lambda Theta Psi* + i zeta Psi, |Psi|^2=v^2",
+    "new_physics": 0,
+    "closed_open_items": 0,
+    "scoreboard": "0/6",
+    "verdict": "M1_HAS_NO_MASS_GAP__VACUUM_CONSTRAINT_IS_AN_EXTRA_POSTULATE",
+    "proved": [
+      "T^2=J^2=-I, {T,J}=0, A=A(lam,zeta) skew, A^2=-(lam^2+zeta^2)I",
+      "det A=(lam^2+zeta^2)^2 > 0 for (lam,zeta)!=0: no static homogeneous solution",
+      "d|Psi|^2/dt = -2 Im(zeta)|Psi|^2 exactly",
+      "T A T^-1 = A(lam,-zeta): self-dual iff zeta=0",
+      "zeta is absent from the {lam,l,v} ledger and has mass dimension one",
+      "the {0,0,0,8 kappa v^2} spectrum comes from a hand-written potential"
+    ],
+    "not_proved": [
+      "that M1 is physically wrong (it is only structurally audited)",
+      "the spatial sigma.grad term under duality (chirality flip, out of scope)",
+      "any new unification or any new force"
+    ],
+    "scope": "0+1-dimensional homogeneous generator only; the spatial sigma.grad operator is out of scope"
+  },
+  "anchors": {
+    "equations.md": {
+      "sha16": "23bdb481262972a6",
+      "present": true
+    },
+    "postulates.md": {
+      "sha16": "77bc19854860be09",
+      "present": true
+    },
+    "附录A-符号表.md": {
+      "sha16": "489a43698edb5678",
+      "present": true
+    },
+    "consistency.md": {
+      "sha16": "49159bd7b8297323",
+      "present": true
+    },
+    "验证精算报告_V1.2.md": {
+      "sha16": "49f3b1e19ff1441d",
+      "present": true
+    },
+    "higgs_verify.py": {
+      "sha16": "76a2932d26eec38d",
+      "present": true
+    }
+  },
+  "gate_details": [
+    {
+      "name": "A01 equations.md M1 row carries the +iζΨ term",
+      "ok": true,
+      "detail": "M1 = σ^μ∂_μΨ = λΘΨ* + iζΨ | sha=23bdb481262972a6"
+    },
+    {
+      "name": "A02 the same M1 row carries the hard vacuum constraint |Ψ|²=v²",
+      "ok": true,
+      "detail": "vacuum constraint is stated as part of M1"
+    },
+    {
+      "name": "A03 '板块一' states the SAME equation WITHOUT the iζΨ term",
+      "ok": true,
+      "detail": "板块一 has no zeta; M1 adds it -> internal wording split"
+    },
+    {
+      "name": "A04 §四 parameter ledger lists exactly {λ, ℓ, v}",
+      "ok": true,
+      "detail": "three dimensional parameters"
+    },
+    {
+      "name": "A05 novelty: this volume is the only M1/zeta structural audit in the registry",
+      "ok": true,
+      "detail": "registry M1-audit sections = 1 (only J116/137)"
+    },
+    {
+      "name": "A06 novelty: no earlier verification script is named *_m1_*",
+      "ok": true,
+      "detail": "only this script matches"
+    },
+    {
+      "name": "A07 anchor: appendix A defines ζ as the M1 linear-term coefficient",
+      "ok": true,
+      "detail": "ζ is a declared parameter, not a derived quantity"
+    },
+    {
+      "name": "A08 anchor: higgs_verify.py writes the Mexican-hat potential explicitly",
+      "ok": true,
+      "detail": "V = κ(ρ²-v²)² is hand-coded at line 47"
+    },
+    {
+      "name": "A09 anchor: the report claims '希格斯无须外挂' with spectrum {0,0,0,8κv²}",
+      "ok": true,
+      "detail": "claim under audit"
+    },
+    {
+      "name": "B01 T² = -I exactly",
+      "ok": true,
+      "detail": "T = ΘK is a complex structure"
+    },
+    {
+      "name": "B02 J² = -I exactly",
+      "ok": true,
+      "detail": "J = multiplication by i"
+    },
+    {
+      "name": "B03 TJ + JT = 0 exactly",
+      "ok": true,
+      "detail": "{T,J} = 0 (the two generators anticommute)"
+    },
+    {
+      "name": "B04 T and J are both skew-symmetric",
+      "ok": true,
+      "detail": "Tᵀ=-T, Jᵀ=-J"
+    },
+    {
+      "name": "B05 T⁴ = I exactly (duality period 4)",
+      "ok": true,
+      "detail": "T²=-I ⇒ T⁴=+I: the '对偶周期 4' is a property of T alone"
+    },
+    {
+      "name": "B06 A(λ,ζ) is skew-symmetric for every real (λ,ζ)",
+      "ok": true,
+      "detail": "Aᵀ=-A on 6 rational points"
+    },
+    {
+      "name": "B07 A² = -(λ²+ζ²)I exactly for every real (λ,ζ)",
+      "ok": true,
+      "detail": "6 rational points, exact Fractions"
+    },
+    {
+      "name": "B08 det A = (λ²+ζ²)² exactly for every real (λ,ζ)",
+      "ok": true,
+      "detail": "6 rational points"
+    },
+    {
+      "name": "B09 A⁴ = (λ²+ζ²)² I and tr A = 0",
+      "ok": true,
+      "detail": "characteristic polynomial is (x²+Ω²)²"
+    },
+    {
+      "name": "B-PC1 if J were not an anticommuting complex structure, A² would not be scalar",
+      "ok": true,
+      "detail": "detected"
+    },
+    {
+      "name": "B10 spectrum is ±iΩ with Ω = sqrt(λ²+ζ²) (multiplicity two each)",
+      "ok": true,
+      "detail": "λ=ζ=1 ⇒ Ω=√2=1.414214; eigenvalues ±iΩ, each twice"
+    },
+    {
+      "name": "C01 the static operator A(λ,ζ) is invertible whenever (λ,ζ)≠(0,0)",
+      "ok": true,
+      "detail": "rank 4 on 6 rational points"
+    },
+    {
+      "name": "C02 hence the only static homogeneous solution of M1 is Ψ ≡ 0",
+      "ok": true,
+      "detail": "det A = (λ²+ζ²)² > 0"
+    },
+    {
+      "name": "C03 |Ψ|²=v² is NOT a static solution of M1 (v>0)",
+      "ok": true,
+      "detail": "no nonzero constant spinor solves M1 with ∂Ψ=0"
+    },
+    {
+      "name": "C04 the vacuum constraint is therefore an extra postulate, not a consequence of M1",
+      "ok": true,
+      "detail": "logical arrow M1 → |Ψ|²=v² does not exist"
+    },
+    {
+      "name": "C05 a constant-modulus ROTATING solution does exist (|Ψ(t)|=v for all t)",
+      "ok": true,
+      "detail": "Ψ(t)=cos(Ωt)Ψ₀+sin(Ωt)AΨ₀/Ω; |Ψ(t)|²=|Ψ₀|² exactly"
+    },
+    {
+      "name": "C06 |Ψ|=v is conserved along real-ζ flow (constraint surface is invariant)",
+      "ok": true,
+      "detail": "A is skew ⇒ exp(At) ∈ SO(4) exactly"
+    },
+    {
+      "name": "C07 the rotating vacuum has period 2π/Ω",
+      "ok": true,
+      "detail": "λ=ζ=1 ⇒ period 2π/√2 = 4.442883"
+    },
+    {
+      "name": "C-PC1 at λ=ζ=0 the determinant vanishes and static solutions reappear",
+      "ok": true,
+      "detail": "Ω=0 is the degenerate point; detected"
+    },
+    {
+      "name": "D01 exact identity d|Ψ|²/dt = -2 Im(ζ)|Ψ|² at 24 random rational points",
+      "ok": true,
+      "detail": "zero mismatches"
+    },
+    {
+      "name": "D02 the mechanism: Ψ†ΘΨ* ≡ 0 identically (Θ antisymmetric)",
+      "ok": true,
+      "detail": "the λΘΨ* term is Hermitian-orthogonal to Ψ: a rotation, not a growth"
+    },
+    {
+      "name": "D03 ζ real ⇒ the vacuum constraint |Ψ|²=v² is preserved exactly",
+      "ok": true,
+      "detail": "Im(ζ)=0 ⇒ d|Ψ|²/dt=0"
+    },
+    {
+      "name": "D04 Im(ζ)≠0 ⇒ exponential drift |Ψ(t)|²=|Ψ(0)|² e^{-2 Im(ζ) t}",
+      "ok": true,
+      "detail": "verified numerically below"
+    },
+    {
+      "name": "D05 RK4 integration reproduces e^{-2 Im(ζ) t} to 1e-10 at three points",
+      "ok": true,
+      "detail": "λ=1 ζ=(0.3+0j): 1.0000000000 vs 1.0000000000; λ=1 ζ=(0.3+0.4j): 0.6703200460 vs 0.6703200460; λ=2 ζ=0.5j: 0.6065306597 vs 0.6065306597"
+    },
+    {
+      "name": "D06 the real flow equals cos(Ωt)X₀+sin(Ωt)AX₀/Ω (max err 3.11e-15)",
+      "ok": true,
+      "detail": "RK4 vs analytic, λ=1 ζ=0.5"
+    },
+    {
+      "name": "D07 the norm is exactly constant along the rotation (spread 0.0e+00)",
+      "ok": true,
+      "detail": "|X(t)|² = |X₀|² for all t"
+    },
+    {
+      "name": "D08 the period is 2π/Ω: X(2π/Ω)=X₀ (max err 1.94e-16)",
+      "ok": true,
+      "detail": "λ=1 ζ=0.5 ⇒ T=5.619852"
+    },
+    {
+      "name": "D-PC1 flipping the sign of the ζ term would flip the drift rate",
+      "ok": true,
+      "detail": "ζ→-ζ gives e^{+2Imζt}; detected"
+    },
+    {
+      "name": "E01 T A(λ,ζ) T⁻¹ = A(λ,-ζ) exactly on 6 rational points",
+      "ok": true,
+      "detail": "conjugation by the dual generator flips only the sign of ζ"
+    },
+    {
+      "name": "E02 the λ term is even under T-conjugation",
+      "ok": true,
+      "detail": "T(λT)T⁻¹ = λT"
+    },
+    {
+      "name": "E03 the ζ term is odd under T-conjugation",
+      "ok": true,
+      "detail": "T(ζJ)T⁻¹ = -ζJ"
+    },
+    {
+      "name": "E04 self-dual homogeneous dynamics ⇔ ζ = 0",
+      "ok": true,
+      "detail": "only ζ=0 gives A(λ,ζ)=A(λ,-ζ)"
+    },
+    {
+      "name": "E05 '板块一' is exactly the ζ=0 special case",
+      "ok": true,
+      "detail": "the doc already prints it without iζ"
+    },
+    {
+      "name": "E06 scope boundary: the σ·∇ term is excluded from the duality statement",
+      "ok": true,
+      "detail": "chirality flip of the spatial term is out of scope for this volume"
+    },
+    {
+      "name": "E-PC1 treating the ζ term as even would wrongly predict self-duality for ζ≠0",
+      "ok": true,
+      "detail": "detected"
+    },
+    {
+      "name": "F01 the ledger {λ,ℓ,v} does not contain ζ",
+      "ok": true,
+      "detail": "ζ absent from §四"
+    },
+    {
+      "name": "F02 appendix A does declare ζ (as the M1 linear coefficient)",
+      "ok": true,
+      "detail": "declared in the symbol table but missing from the parameter ledger"
+    },
+    {
+      "name": "F03 dimensional analysis: [∂]=1, [Ψ]=3/2 ⇒ [λ]=1 and [ζ]=1",
+      "ok": true,
+      "detail": "[λ]+3/2 = 5/2 = [ζ]+3/2 ⇒ both carry mass dimension one"
+    },
+    {
+      "name": "F04 therefore M1 as written carries FOUR dimensional parameters, not three",
+      "ok": true,
+      "detail": "{λ, ζ, ℓ, v} with v=ℓ⁻¹: three scales + one extra = 4 > 3"
+    },
+    {
+      "name": "F05 the ledger closes only in the ζ=0 branch (where the term is absent)",
+      "ok": true,
+      "detail": "ζ≠0 ⇒ parameter-count gap of exactly one"
+    },
+    {
+      "name": "F06 restoring the ledger requires an extra relation fixing ζ (none is stated)",
+      "ok": true,
+      "detail": "no relation between ζ, λ, v appears in §四 or in M1"
+    },
+    {
+      "name": "F-PC1 if ζ were dimensionless the count would close, but it is not",
+      "ok": true,
+      "detail": "iζΨ forces [ζ]=[λ]=1; detected"
+    },
+    {
+      "name": "G01 the Hessian of V=κ(|Ψ|²-v²)² is {0,0,0,8κv²} at three vacua",
+      "ok": true,
+      "detail": "reproduces the quoted spectrum: [0.0, 0.0, 0.0, 8.0]; [0.0, 0.0, 0.0, 8.0]; [0.0, 0.0, 0.0, 8.0]"
+    },
+    {
+      "name": "G02 that potential is written by hand in higgs_verify.py",
+      "ok": true,
+      "detail": "the script inserts V explicitly; it is not derived"
+    },
+    {
+      "name": "G03 the potential is nowhere in the M1–M6 table",
+      "ok": true,
+      "detail": "M1–M6 contain no Mexican-hat potential"
+    },
+    {
+      "name": "G04 a hard constraint |Ψ|=v removes one real DOF: 4-1=3",
+      "ok": true,
+      "detail": "the constraint surface is S³ (dim 3); the radial direction is not a mode"
+    },
+    {
+      "name": "G05 under the hard constraint there is no radial mode, hence no 8κv² from M1",
+      "ok": true,
+      "detail": "8κv² needs a fluctuating modulus, i.e. a soft potential"
+    },
+    {
+      "name": "G06 dichotomy: either the constraint is hard (no Higgs mode) or the potential is external",
+      "ok": true,
+      "detail": "both branches contradict '希格斯无须外挂'"
+    },
+    {
+      "name": "G07 the report's '希格斯无须外挂' claim is contradicted by G01/G02",
+      "ok": true,
+      "detail": "claim and script disagree"
+    },
+    {
+      "name": "G-PC1 doubling κ doubles the massive eigenvalue (8κv² → 16κv²)",
+      "ok": true,
+      "detail": "κ=1 baseline; detected"
+    },
+    {
+      "name": "G08 M1 itself supplies no mass gap: λ and ζ only set Ω=√(λ²+ζ²)",
+      "ok": true,
+      "detail": "the spectrum is ±iΩ; there is no real energy gap to identify with m_H"
+    },
+    {
+      "name": "H01 authoritative scoreboard is 0/6",
+      "ok": true,
+      "detail": "0/6"
+    },
+    {
+      "name": "H02 validated systems = 0",
+      "ok": true,
+      "detail": "validated=0"
+    },
+    {
+      "name": "H03 correct four-force GUT equations = 0",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "H04 unique C3-level true unification is electroweak L_EW",
+      "ok": true,
+      "detail": "L_EW (2 forces)"
+    },
+    {
+      "name": "H05 ledger OPEN items stay at 8",
+      "ok": true,
+      "detail": "8 OPEN"
+    },
+    {
+      "name": "H06 L4 physics layer stays at 18 OPEN",
+      "ok": true,
+      "detail": "18 OPEN"
+    },
+    {
+      "name": "H07 this volume closes zero OPEN items",
+      "ok": true,
+      "detail": "closed=0"
+    },
+    {
+      "name": "H08 this volume adds zero verified predictions",
+      "ok": true,
+      "detail": "0 new verified"
+    },
+    {
+      "name": "H-PC1 a 6/6 scoreboard would be caught",
+      "ok": true,
+      "detail": "detected"
+    },
+    {
+      "name": "I01 the honest claim block passes its own validator",
+      "ok": true,
+      "detail": "issues: none"
+    },
+    {
+      "name": "I02 a corrupted claim block is caught on four counts",
+      "ok": true,
+      "detail": "issues: 4"
+    },
+    {
+      "name": "I03 the audit does not claim M1 is physically falsified",
+      "ok": true,
+      "detail": "structural audit only"
+    },
+    {
+      "name": "I04 the spatial operator is explicitly out of scope",
+      "ok": true,
+      "detail": "stated"
+    },
+    {
+      "name": "I05 this is an erratum-level result, not a new law of nature",
+      "ok": true,
+      "detail": "verdict string"
+    },
+    {
+      "name": "I06 no new verified prediction is registered",
+      "ok": true,
+      "detail": "0 new verified predictions"
+    },
+    {
+      "name": "I07 the vacuum constraint is re-classified as a postulate, not a theorem",
+      "ok": true,
+      "detail": "|Ψ|²=v² is not implied by M1"
+    },
+    {
+      "name": "I08 the Higgs mass is traced to an external potential, not to M1",
+      "ok": true,
+      "detail": "8κv² from V=κ(|Ψ|²-v²)²"
+    },
+    {
+      "name": "I09 mathematical structure is not physical validation of UFT",
+      "ok": true,
+      "detail": "red line"
+    }
+  ],
+  "not_self_derived": [
+    "The M1 form and its |Psi|^2=v^2 constraint are read from equations.md, not invented.",
+    "The Mexican-hat potential is read from higgs_verify.py line 47.",
+    "Theta = [[0,-1],[1,0]] is the document's own convention."
+  ],
+  "red_line": "A structural audit is not a physical refutation; finding an erratum is not discovering a new law; the scoreboard stays 0/6."
+}

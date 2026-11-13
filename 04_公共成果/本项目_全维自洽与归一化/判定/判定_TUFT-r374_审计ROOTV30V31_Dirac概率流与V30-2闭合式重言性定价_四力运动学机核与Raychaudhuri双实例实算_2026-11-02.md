@@ -156,7 +156,7 @@
 | JSON | `TUFT-r374_审计ROOTV30V31_Dirac概率流与V30-2闭合式重言性定价_四力运动学机核与Raychaudhuri双实例实算_2026-11-02.json` | 27737 |
 | TXT | `TUFT-r374_审计ROOTV30V31_Dirac概率流与V30-2闭合式重言性定价_四力运动学机核与Raychaudhuri双实例实算_2026-11-02_report_2026-11-02.txt` | 17839 |
 | MD | `TUFT-r374_审计ROOTV30V31_Dirac概率流与V30-2闭合式重言性定价_四力运动学机核与Raychaudhuri双实例实算_2026-11-02.md` | 17962 |
-| 判定 | `判定_判定_TUFT-r374_审计ROOTV30V31_Dirac概率流与V30-2闭合式重言性定价_四力运动学机核与Raychaudhuri双实例实算_2026-11-02.md` | 17962 |
+| 判定 | `判定_TUFT-r374_审计ROOTV30V31_Dirac概率流与V30-2闭合式重言性定价_四力运动学机核与Raychaudhuri双实例实算_2026-11-02.md` | 17962 |
 | HTML | `四力统一方程_TUFT-r374_审计ROOTV30V31_Dirac概率流与V30-2重言性_四力运动学与Raychaudhuri双实例_2026-11-02.html` | 23402 |
 
 **下轮从 r375 起**（取号前必扫三树 + README 两锚点；大文件动手前先写 `_probe_rN.py` 占位）。

@@ -48,9 +48,12 @@
 
 ## 五、验证基线
 
-- verify 硬校验：22 体系 / 17 阶段 / 12837 链接，FAIL 0
-- guard_all：PASS（3 WARN / 548 INFO，待裁定项豁免）
+- verify 硬校验：22 体系 / 17 阶段 / 28489 链接，FAIL 0
+- guard_all：PASS（14 WARN / 1588 INFO；WARN 全部为第四节已登记的 claims 值层待裁定项）
 - guard_selftest：14/14 PASS
 - 端到端门禁：commit 触发守卫 PASS，可安全回滚验证
 - 备份：`openuft/.git/hooks/pre-commit.bak.*`
-- **表头归一化（架构层实证）**：23/23 体系 claims.csv 权威表头 14 列 schema 完全一致——claims 架构归一化达成；**错位问题全部在数据行值层**（S14 行级 15 列右移 / S15·S17 值落错列），表头层无差异
+- **表头归一化（架构层实证）**：23/23 个 `claims.csv`（22 个模块 + 新体系模板）权威表头 14 列 schema 完全一致——claims 架构归一化达成；**错位问题全部在数据行值层**（S14 行级 15 列右移 / S15·S17 值落错列），表头层无差异
+
+> 基线随仓库推进更新（2026-11-13）：上一版记录的 12837 链接 / 3 WARN / 548 INFO 是旧快照；
+> 本轮维护链再生 `DIRECTORY_AUDIT.md` 后链接数随审计表增加，guard_all 的 WARN/INFO 亦按当前 claims 实测刷新。

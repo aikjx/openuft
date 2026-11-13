@@ -3,6 +3,11 @@
 from mpmath import mp, mpf, sqrt
 mp.dps = 250
 import json
+import sys
+try:  # Windows 控制台默认 GBK，⟹ 会让 print 抛 UnicodeEncodeError
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+except Exception:
+    pass
 
 m_Jpsi = mpf('3096.900')                     # MeV
 m_X = mpf('6900')                            # MeV（LHCb J/ψJ/ψ 共振）

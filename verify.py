@@ -34,9 +34,44 @@ RAW_BATCH_PREFIX = '根目录来料_'
 # 遵循通用工程命名惯例（code / img / v1..v8 / en / output…），不是研究内容目录，
 # 因此与 `90_历史归档` / `99_待整理资料` 同源，不套「研究目录必须中文」约束。
 # 匹配单个末段目录名（大小写不敏感）。
+# `scratch` / `figures` 与已列的 scripts / output / cache 属同一类：脚本草稿区与
+# 论文插图导出区，不是研究内容；其英文名是上游工具链的产物（scratch 直接沿用 Python
+# 生态惯例），改名会打断脚本里的相对路径。
 ASSET_DIR_RE = re.compile(
     r'^(v?\d+|[Vv]|[A-Z]_v?\d+|code|img|en|output|test|tests|core|cache|'
+    r'scratch|figures|'
     r'visualization|comprehensive_verification|scripts|_shots|\.pytest_cache)$', re.IGNORECASE)
+
+# `_` 前缀在本库是**工具/备份**约定（_backup、_scratch、_scratch_dead、_pycache_r397、
+# _r320_reg_fake、figures/_legacy_zh…），研究内容目录一律中文命名。因此 `_` 前缀目录
+# 与上列资产目录同源，不套中文命名约束。
+TOOLING_DIR_PREFIX = '_'
+
+# 备份快照：README.bak_r393_before.md、_bak_README_pre_r339.md、
+# _README_before_r382.md、scratch_README_bak_r389.md 等。
+# 快照的相对链接只在**原位置**成立；搬到快照位置后必然全断（实测单文件可达 977 条）。
+# 对快照做断链治理等于要求改写历史字节，会直接毁掉留存价值，故一律豁免。
+BACKUP_NAME_RE = re.compile(r'(^_bak|\.bak|_bak_|^_README_before_|^_README_pre_|^scratch_README_bak)',
+                            re.IGNORECASE)
+
+# `*_来料原件_*` 是对上游来料的**逐字**留档（正文含 MathJax/LaTeX 片段，如
+# `[...](1a)`、`[...](−2c2τ)`）。这些方括号-圆括号组合是数学记号，不是 Markdown 链接；
+# 改写成合法文本就等于毁掉原件，故与 90_历史归档 / 来源语料 同等豁免链接治理。
+VERBATIM_DIR_MARK = '来料原件'
+
+
+def is_tooling(parts) -> bool:
+    """scratch / _scratch* / _backup* / __pycache__ 是脚本草稿与快照区，不做链接治理。"""
+    return any(part in ('scratch', '__pycache__') or part.startswith('_scratch')
+               or part.startswith('_backup') for part in parts)
+
+
+def is_backup_snapshot(path) -> bool:
+    return bool(BACKUP_NAME_RE.search(path.name))
+
+
+def is_verbatim_source(parts) -> bool:
+    return any(VERBATIM_DIR_MARK in part for part in parts)
 
 
 def is_raw_staging(parts) -> bool:
@@ -112,6 +147,7 @@ def main():
         if parts[0] == 'code': continue
         if is_raw_staging(parts): continue
         if is_archive_raw(parts): continue
+        if directory.name.startswith(TOOLING_DIR_PREFIX): continue
         if ASSET_DIR_RE.match(directory.name): continue
         if not re.search(r'[一-鿿]', directory.name):
             errors.append('Research directory must use Chinese: ' + directory.relative_to(ROOT).as_posix())
@@ -120,9 +156,16 @@ def main():
         for p in ROOT.rglob('*.md'):
             if '90_历史归档' in p.relative_to(ROOT).parts: continue
             if is_raw_staging(p.relative_to(ROOT).parts): continue
+            # 脚本草稿区与备份快照不是导航文档：快照的相对链接只在原位置成立，扫描必假阳。
+            if is_tooling(p.relative_to(ROOT).parts): continue
+            if is_backup_snapshot(p): continue
+            if is_verbatim_source(p.relative_to(ROOT).parts): continue
             # 第三方依赖包自带 md 不是本库文档，断链检查不应对它们生效
             if set(x.lower() for x in p.relative_to(ROOT).parts) & {'node_modules', 'dist', '.vite', '.cache'}: continue
             body = re.sub(r'```.*?```', '', p.read_text(encoding='utf-8-sig'), flags=re.S)
+            # 行内代码不是链接：ASCII 图题残留（如 `[image](…favicons…)`）写在反引号里
+            # 时曾被当成链接扫出来（r376 来料件实测），属扫描器假阳。
+            body = re.sub(r'`[^`\n]*`', '', body)
             for target in re.findall(r'!?\[[^\]\n]*\]\(([^\s)]+)\)', body):
                 if re.match(r'^[a-zA-Z][a-zA-Z0-9+.-]*:', target) or target.startswith('#') or target.startswith('@'):
                     # 协议 / 锚点 / 文档宏（如 @context-ref?id=N）均非本地文件路径，跳过校验

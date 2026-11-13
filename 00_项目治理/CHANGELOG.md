@@ -9,6 +9,135 @@
 
 ## [Unreleased]
 
+### Fixed（2026-11-13 · 全库校验闭合）
+
+- `verify.py` 链接检查：新增三类豁免（`_` 前缀工具/备份目录、备份快照文件名、`*_来料原件_*` 逐字来料），
+  并把行内代码（反引号）内容排除出链接扫描。修复前 **24 997** 条 issue 中 **24 985** 条是这三类假阳；
+  余下 38 条逐条修完后 `python -B verify.py` 为 **PASS**（22 体系 / 17 阶段 / 22 920 本地链接 / 快照 193+393）。
+- 断链修复：`整理_ROOTV22_*.md` / `整理_三力垂直原理_*.md` 的 `../源码/` 前缀错误（6 条）；
+  r319 两册指向不存在的 `_run_r319.py` / `_out_r319.txt`，改指实存的 r319 计算脚本与 `_log_r319.py`
+  并注明原始 stdout 未归档（4 条）；r383/r385/r387/r389 数据册的 `../判定/` 链接缺 `判定_` 前缀（4 条）。
+- 命名缺陷：`判定_判定_*.md` ×9、`*_2026-11-03_2026-11-03.md` ×4 去重复前缀/重复日期并同步改写全部引用；
+  根 `README.md` 模块数 18 → 22（18 个 S 体系 + 4 个 P 方向，与 `layout.json`、`01_独立体系/README.md` 对齐）。
+- `04_公共成果/本项目_统一场论攻破/`：`attack_C0384..C0391` 的 `.json` / `_report.txt` 改由脚本实际生成
+  （8 脚本 rc 0，守卫 5/4/4/5/4/4/4/4 全过）；其中 C0389 / C0391 的 `print` 含 GBK 不可编码字符（`³`、`⟹`），
+  默认控制台下抛 UnicodeEncodeError，已加 `sys.stdout.reconfigure(encoding='utf-8')` 守卫后复跑 rc 0。
+- 维护脚本：`audit_directories.py` 遇到生命周期阶段之外的第三层目录（实测唯一一处：S15 的
+  `V9_四力大统一定稿线`）直接 `ValueError: Unknown stage` 中止，导致 QUICKSTART 记录的五步维护序列
+  在第三步入死、`DIRECTORY_AUDIT.md` 长期停在上一次快照。改为与未登记顶层目录同构的处理：
+  照常进表并标为「非生命周期分组」，在边界栏说明需确认是版本线留档还是应归入既有阶段。
+  修复后重跑整条链（module_catalog → global_catalog → audit_directories → refresh_catalog）四步全通，
+  再生 `DIRECTORY_AUDIT.md`（2 365 目录）、`directory_audit.json`、`material_catalog.md`（17 207 文件）、
+  `structure_manifest.json`，连跑两次逐字节相同；`维护工具/README.md` 的验证基线同步刷新
+  （旧读数 12 837 链接 / 3 WARN / 548 INFO → 28 489 链接 / 14 WARN / 1 588 INFO）。
+- 复核：`python -B -m unittest discover -s 00_项目治理/维护工具 -p "test_*.py"` 26 项通过；
+  S01 `python -B -m 三重奏统一场.verify` 14/14 一致；`07_统一场方程/验证脚本/_j113_fullchain_core_ledger.py` 双跑 119/119、产物 MD5 逐位相同；
+  `python -B verify.py` 在审计表再生后仍为 **PASS**（22 体系 / 17 阶段 / 28 489 本地链接 / 快照 193+393）。
+
+### Added（2026-11-13 · J118／卷 139 · S13 M1 的作用量不可能与耗散定理）
+
+- **卷 139 · 第 96 轮 · J118**：接着 J116／J117，问「M1 有没有单场实作用量、$\mathrm{Im}\,\zeta$ 到底是什么」。
+  判定册 `07_统一场方程/139_第96轮_S13主方程M1作用量不可能与耗散定理_J118_双重Nambu与粒子空穴_迹障碍不可变分_自对偶当且仅当Re zeta等于0_四条判据交集zeta等于0即板块一_记分板0比6_2026-11-13.md`（15 822 B，MD5 前缀 `807aad39`）。
+- **E10 双重/Nambu**：$M=\begin{pmatrix}\mathrm i\zeta I_2&\lambda\Theta\\\lambda\Theta&-\mathrm i\bar\zeta I_2\end{pmatrix}$ 满足 $\boxed{M^2+2bM+cI=0}$、
+  $\operatorname{tr}M=-4b$、$\det M=c^2$、$\operatorname{spec}M=\{-b\pm\mathrm i\sqrt{\lambda^2+a^2}\}$；粒子-空穴 $P=\tau_xK$ 给 $PMP^{-1}=M$（恒等），
+  手征 $C=\tau_zK$ 给 $CMC^{-1}=-M\Leftrightarrow\mathrm{Im}\,\zeta=0$；约束 $V_2=V_1^{*}$ 精确不变，$\lambda\Theta\Psi^{*}$ 配对在双重化后线性化。
+- **E11 作用量不可能（迹障碍）**：一阶实系统 $\dot X=AX$ 有二次实作用量 $\Leftrightarrow$ 存在可逆反对称 $S$ 使 $SA$ 对称 $\Rightarrow\operatorname{tr}A=0$；
+  而 $\operatorname{tr}A=-4b$ ⇒ **$\mathrm{Im}\,\zeta\neq0$ 时无单场二次实作用量**，双重化也救不回（$\operatorname{tr}M=-4b$）。
+  $b=0$ 取 $S=A$、$K=A^2=-(\lambda^2+a^2)I$ 显式构造（E–L 残差 $1.11\times10^{-16}$）；$[A,J]=2\lambda(TJ)\Rightarrow A$ 与 $J$ 对易 $\Leftrightarrow\lambda=0$。
+- **E12 对偶锐化（勘误 J116 E4）**：$T A(\lambda,a,b)T^{-1}=A(\lambda,-a,b)$ ⇒ **自对偶 $\Leftrightarrow\mathrm{Re}\,\zeta=0$**；
+  J116 的「$\Leftrightarrow\zeta=0$」是 $b=0$（实 ζ）切片；J116 读数与 78/78 不受影响（其 GRID 全实）。
+- **E13 四条判据交集**：守恒、体积／模长、手征 PH、实二次作用量四条独立机制均选 $\mathrm{Im}\,\zeta=0$，$T$-对偶选 $\mathrm{Re}\,\zeta=0$；
+  交集 **$\zeta=0$ = 板块一**（9 个点机器核验）。板块一是结构特权点，**不是对 $\zeta=0$ 的物理选择**，且仍无质量隙（$A^2=-\lambda^2I$）。
+- **读数**：$(\lambda=1,\zeta=1+\mathrm i)$ 时 $\det M=9$、$\operatorname{tr}M=-4$；$\det\Phi(1)=e^{-8/5}=0.201896517995$（偏差 $<10^{-9}$）；
+  $\mathrm{d}\lvert\Psi\rvert^2/\mathrm{d}t=-2b\lvert\Psi\rvert^2$ 相对偏差 $1.43\times10^{-16}$；三组 $(\lambda,\mathrm{Re}\,\zeta)$ 同 $b=2/5$ 衰减率均 $0.4$；$b=1/2$ 半衰期 $\ln2=0.693147180560$。
+- 硬闸 **77/77**、退出码 0；反噬：去膨胀项 68/77、反转 $b$ 72/77、反转配对-共轭块符号 71/77；三件产物双跑 MD5 一致
+  （`ec3f15c3…`／`a0a69c23…`／`375a2d08…`）。`claims.csv` 追加 `S13-C0018`（`structural,open`）。
+  **只做结构审计与范围勘误，不新增物理、不关闭 OPEN、不改记分板 0/6。**
+
+### Added（2026-11-13 · J117／卷 138 · S13 M1 复数耦合谱与模长钉扎不可能）
+
+- **卷 138 · 第 95 轮 · J117**：把 J116 的 M1 结构审计从实 ζ 扩到 $\zeta=a+\mathrm{i}b$。
+  判定册 `07_统一场方程/138_第95轮_S13复数耦合谱与模长钉扎不可能_J117_极小多项式A2加2bA加cI_谱减b加减i根号lam2加a2_J116实zeta切片勘误_尺度协变不选模长_守恒流破缺2bPsi2_记分板0比6_2026-11-13.md`（11 421 B，MD5 前缀 `a3e8b908`）。
+- **E6 极小多项式（精确）**：$A=\lambda T+aJ-bI$ ⇒ $\boxed{A^2+2bA+(\lambda^2+a^2+b^2)I=0}$，等价 $\boxed{(A+bI)^2=-(\lambda^2+a^2)I}$；
+  谱 $\{-b\pm\mathrm{i}\sqrt{\lambda^2+a^2}\}$（各二重）、$\det A=(\lambda^2+|\zeta|^2)^2$、$\operatorname{tr}A=-4b$、特征多项式 $(x^2+2bx+c)^2$。
+  ⇒ **只有 $\mathrm{Re}\,\zeta$ 进频率，$\mathrm{Im}\,\zeta$ 只给统一衰减 $-b$**；$b\neq0$ 时是对数螺线而非等角旋转。
+- **E8 钉扎不可能**：$A$ 实线性（$A(cX)=cA(X)$）⇒ $cX(t)$ 也是解；径向 $\dot r=-br$ 的不动点只有 $r=0$（$b\neq0$）或全体（$b=0$）
+  ⇒ $r=v>0$ 永不是吸引子；$\operatorname{rank}A=4$ 仍只给 $\Psi\equiv0$。$|\Psi|^2=v^2$ 只能外加（J116 E3 的加强版）。
+- **E9 守恒破缺**：$\Psi^\dagger\Theta\Psi^*\equiv0$、$\Psi^{\mathsf T}\Theta\Psi\equiv0$ ⇒ $\lambda$ 项逐点相消，
+  $\partial_\mu J^\mu=\mathrm{i}(\zeta-\bar\zeta)|\Psi|^2=-2\,\mathrm{Im}(\zeta)|\Psi|^2$ ⇒ S13-C0001 的「$\partial_\mu J^\mu=0$」只对板块一（$\zeta=0$）成立，附录未声明 $\zeta\in\mathbb{R}$。
+- **三条勘误**：卷 137 E1 未加实性限定（其 GRID 全实）；「等角旋转」在 $b\neq0$ 应为对数螺线；
+  S13-C0001 守恒须写明 $\mathrm{Im}\,\zeta=0$。J116 的 78/78 与产物 MD5 不受影响（`F06` 核验）。
+- **读数**：$\theta(\lambda=1,a=1)=1.414213562373$、$b=0$ 周期 4.442882938158；三组 $(\lambda,a)$ 同 $b=2/5$ 衰减率均 0.4；
+  $\zeta=1+\mathrm{i}$ 时 $\det=9$、$\operatorname{tr}=-4$、$t=\ln2/2=0.346573590280$ 模长减半；RK4 偏差 $1.11\times10^{-15}$。
+- 硬闸 **75/75**、退出码 0；反噬：去膨胀项 64/75、反转 $b$ 68/75、$\Theta$ 对称化 68/75；三件产物双跑 MD5 一致
+  （`d84b62b0…`／`945702d4…`／`b82c3a3e…`）。
+  **只做结构审计与范围勘误，不新增物理、不关闭 OPEN、不改记分板 0/6**。
+
+### Added（2026-11-13 · J116／卷 137 · S13 主方程 M1 结构审计）
+
+- **卷 137 · 第 94 轮 · J116**：对 S13 的 M1（$\sigma^\mu\partial_\mu\Psi=\lambda\Theta\Psi^*+\mathrm{i}\zeta\Psi$，$|\Psi|^2=v^2$）做结构审计。
+  判定册 `07_统一场方程/137_第94轮_S13主方程M1结构审计_J116_对偶生成元与相位生成元反对易_齐次谱纯旋转无质量隙_真空约束为外加公设_参数账缺口1_希格斯谱来自外挂势_记分板0比6_2026-11-13.md`（13 955 B，MD5 前缀 `5907d8a3`）。
+- **代数骨架（精确）**：$T=\Theta K$、$J=\mathrm{i}$，$T^{\mathsf T}=-T$、$J^{\mathsf T}=-J$、$T^2=J^2=-I$、$\{T,J\}=0$、$T^4=I$；
+  $A=\lambda T+\zeta J$ 满足 $A^{\mathsf T}=-A$、$\boxed{A^2=-(\lambda^2+\zeta^2)I}$、$\det A=(\lambda^2+\zeta^2)^2$（`Fraction` 精确、6 个有理点）。
+- **齐次谱**：$A$ 为等角旋转生成元，谱 $\pm\mathrm{i}\Omega$（各二重），$\Omega=\sqrt{\lambda^2+\zeta^2}$、周期 $2\pi/\Omega$；
+  $\lambda=\zeta=1$ 时 $\Omega=\sqrt2=1.414213562373$、周期 4.442882938158；RK4 与解析解偏差 2.2e-10、模长散布 $<10^{-14}$。
+  **M1 不含质量间隙**，$\lambda,\zeta$ 只合成一个角频率。
+- **真空**：$\det A>0\Rightarrow$ 静态齐次解只有 $\Psi\equiv0$，故 $|\Psi|^2=v^2$ 是**外加公设**；M1 的常模解是转动的（相位转子），不是静止凝聚。
+- **范数流（精确恒等式）**：因 $\Psi^\dagger\Theta\Psi^*\equiv0$，$\boxed{\mathrm{d}|\Psi|^2/\mathrm{d}t=-2\,\mathrm{Im}(\zeta)|\Psi|^2}$；
+  24 个有理点零失配，RK4 复核 $e^{-2\mathrm{Im}\zeta t}$ 到 $10^{-10}$。约束保持 $\Leftrightarrow\zeta\in\mathbb{R}$。
+- **对偶**：$\boxed{T A(\lambda,\zeta)T^{-1}=A(\lambda,-\zeta)}$（$\lambda$ 偶、$\zeta$ 奇）⇒ 自对偶 $\Leftrightarrow\zeta=0$，即「板块一」。
+- **参数账缺口 1**：§四 只列 $\{\lambda,\ell,v\}$，$\zeta$ 缺席；$[\zeta]=[\lambda]=1$ ⇒ M1 实际需 4 个自由参数。
+- **希格斯谱**：$\{0,0,0,8\kappa v^2\}$ 只来自 `higgs_verify.py` 第 47 行手写的 $V=\kappa(|\Psi|^2-v^2)^2$（M1–M6 无此势）；
+  硬约束下径向自由度被消掉（$4-1=3$），故「希格斯无须外挂」不成立（二择一）。
+- 硬闸 **78/78**、退出码 0、三件产物双跑 MD5 一致；反噬：$J\to I$ 跌至 67/78、范数流符号翻转发 77/78、势函数降为线性 76/78。
+  **只做结构审计与勘误，不新增物理、不关闭 OPEN、不改记分板 0/6**。
+
+### Added（2026-11-13 · J115／卷 136 · 地球正常重力与轴向垂直定理）
+
+- **卷 136 · 第 93 轮 · J115**：直接回答「为什么北极南极重力轻一点」——**前提反了**。WGS84/GRS80 正常重力
+  $\gamma_p-\gamma_e=+0.0518596019\ \mathrm{m/s^2}=+5185.9602\ \mathrm{mGal}=+0.530244\%$，两极**更重**。
+  判定册 `07_统一场方程/136_第93轮_地球两极为什么更重_J115_正常重力场5186mGal分项账_垂直原理轴向条件定理_v等于c与曲率挠率通道否证_记分板0比6_2026-11-13.md`（17 958 B，MD5 前缀 `7fe7c4b4`）。
+- **分项账**（相对 $GM/a^2=9.798285479187$）：极 $+6603.5513(1/r^2)-3225.4052(J_2)=+3378.15$；
+  赤道 $+1591.1828(J_2)-3391.5706(\text{离心})=-1800.39$；差 $+5178.5339$，精确 $+5185.9602$，截断 $+7.4263$（0.143%）。
+  物理拆法：纯引力差 **1794.39 mGal（+0.182%）** + 赤道离心 **3391.57 mGal**。直觉来源 $1/r^2=+6604$ mGal 被 $J_2$ 在极点扣掉 3225 mGal。
+- **模型级复现**：Somigliana 闭式 91 纬度；$\gamma(0)$／$\gamma(90^\circ)$ 精确命中 WGS84 端点（残差 $<10^{-45}$），
+  $\gamma(45^\circ)=9.806197769343780$ 与 GRS80 差 $1.433\times10^{-6}$；单调、内部无临界点；旧 IGF 最大偏差 0.2108 mGal。
+- **轴向垂直定理（精确）**：$g_\theta=(3GMJ_2a^2/r^3)\cos\theta\sin\theta\equiv0$ 于轴上；离心为零；
+  铅垂线 = 自转轴；$\delta(\varphi)=\varphi-\arctan(q\tan\varphi)$ 两端为零，$\delta_{\max}=2\arctan(a/b)-\pi/2=11.545458'$
+  于 $\varphi_*=45.096212151^\circ$。**一般三力正交不证**：引用 ROOT-3F 判词
+  `CONDITIONAL_KINEMATIC_IDENTITY__NOT_DYNAMICAL_LAW`，极点正交是离心为零的退化（`V09`）。
+- **两通道否证**：$v=c$ 给 $\omega R/c=1.551410\times10^{-6}$、$\rho_c=4.111187\times10^{12}$ m $=27.481585$ AU
+  $=6.445748\times10^5R_E$；强令地表 $v=c$ 需 $\omega=47.003139$ rad/s、离心 $1.440769\times10^9g$。
+  κ/τ：子午线 $\tau\equiv0$ ⇒ 螺旋字典退化为等曲率圆、$\kappa/\tau$ 发散；$\kappa_{\rm eq}/\kappa_{\rm pole}=1.010126259$，
+  $g\propto1/R^2$ 过冲 **3.8388 倍**；1 维曲线不能确定 2 维曲面场。
+- **机验**：`验证脚本/_j115_earth_polar_gravity_vertical.py`（纯标准库 `Decimal(60)`，自实现反三角）；
+  硬闸 **98/98**、退出码 0、三件产物双跑逐字节一致；阳性对照 8 条；
+  反噬：$J_2\times2$ 跌至 **91/98**（7 条失败），$\omega\times2$ 跌至 **84/98**（14 条失败）。
+- **口径边界**：只复现 WGS84/GRS80 正常重力**模型**，不是测量级逐条回放；EGM 高阶局部异常（±100 mGal）、
+  台站改正、大地水准面起伏不在本册。**不新增物理方程、不关闭 OPEN、不向任何体系 claims.csv 追加命题，
+  记分板 0/6、`validated=0`、四力正确方程 0 条均不变**。
+- **登记**：`07_统一场方程/卷宗总表.md` 新增 §七之六（增量登记，不回改 §一 与 §七～§七之五）；`INDEX.md` 增补登记行。
+
+### Added（2026-11-13 · J114／卷 135 · S13 A3 流势 BPS 孤子扇区）
+
+- **卷 135 · 第 92 轮 · J114**：在**唯一新增前提 E1**（把 S13 公设 A3 的三次流 $\beta(g)=\varepsilon g-cg^3$
+  解释为场空间位势梯度流，即存在 $V$ 使 $V'(g)=-\beta(g)$）下，精确求解 A3 的 $Z_2$ 畴壁扇区。
+  判定册 `07_统一场方程/135_第92轮_S13双向分形BPS孤子扇区_J114_三条无量纲恒等式与核心公式725精确化_记分板0比6_2026-11-13.md`（20 454 B，MD5 前缀 `35068e00`）。
+- **新方程（条件定理）**：$V=\tfrac{c}{4}(g^2-g_*^2)^2$ 恰为 A3 原函数（`E01`）；BPS kink
+  $g=g_*\tanh(x/w)$、$w^2=2/(cg_*^2)$、$mw=2$；$\sigma=4g_*^2/(3w)=\tfrac23mg_*^2=\tfrac{4}{3\sqrt2}\sqrt c\,g_*^3$；
+  超势 $W=\sqrt{c/2}(g_*^2g-g^3/3)$ 使 BPS 界饱和；形状模 $\omega_1^2=\tfrac34m^2$（阈值 $\omega^2=m^2$）。
+- **三条无量纲恒等式**（与 $c$、$g_*$ 全无关）：$mw=2$；$\sigma m/\Delta V=16/3$；$\omega_1^2/m^2=3/4$。
+- **核心公式 #725 精确化**：原为比例式 $\sigma_\text{wall}\propto m_P^3$（仅量纲 ✓），本轮升级为等式
+  $\sigma=m^3/(3c)$；字面 $m_P^3$ 需额外 $c=1/3$、$m=m_P$，故 **O-SCALE 仍 OPEN**。
+- **机验**：`验证脚本/_j114_s13_duality_wall_bps_soliton.py`（纯标准库 `Fraction` 精确有理系数 + 符号基底
+  + `Decimal(60)`）；硬闸 **71/71**、退出码 0、三件产物双跑逐字节一致；阳性对照 7 条；
+  变异测试（$V$ 系数 $1/4\to1/8$）跌至 **60/71**，11 条按预期失败。
+- **不变量**：一方程记分板 **0/6**、`validated=0`、四力正确方程 **0 条**、账本 OPEN **8**／L4 OPEN **18**
+  均不变；本册关闭 OPEN **0** 条；新增条件预言 `P-E1-1`（$\omega_1/m=\sqrt3/2$）标 `unreviewed`。
+  A1／A2 未进入代数；$\phi^4$ kink 系教科书结果，只做「在 S13 公设上落地」，不主张发现。
+- **登记**：`07_统一场方程/卷宗总表.md` 新增 §七之五（增量登记，不回改 §一 与 §七～§七之四）；
+  `INDEX.md` 增补登记行；S13 `claims.csv` 追加 `S13-C0015`（`conjecture`／`unreviewed`）。
+
 ### Added
 - **`04_公共成果/本项目_统一场论攻破/`（2026-10-07）**：本项目第一轮统一场论攻破审计。
   攻破对象：S13 全域双向分形统一场论（唯一健康候选）的**常数统一** OPEN 项。

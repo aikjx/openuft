@@ -93,10 +93,18 @@ def main():
             if parts[1] not in titles:raise ValueError('Unknown system '+rel)
             owner=parts[1];role=titles[owner];reason='该体系拥有独立身份、证据及发布位置';risk='与相关体系可有谱系关系，不能自动继承证据'
             if len(parts)>2:
-                if parts[2] not in stage_names:raise ValueError('Unknown stage '+rel)
-                role += ' / '+stage_names[parts[2]];reason='以本体系为作用域保留此生命周期职责'
-                if len(parts)>3:role += ' / '+subroles.get(parts[3],parts[3]);reason='本体系内的专题或资料分组，避免流入公共总筐'
-                if parts[2]=='90_历史归档':risk='体系历史保留原始表述，不表示科学认可'
+                # 生命周期阶段之外的第三层目录（如 S15 的 `V9_四力大统一定稿线`）不应让整条
+                # 维护序列中止：这类目录是本体系内部的版本线/专题分组，与顶层目录的
+                # `unregistered` 同等处理——照常进表、标明非生命周期职责、在结尾汇总。
+                # 硬 raise 的实际后果是 `audit_directories.py` 直接失败、DIRECTORY_AUDIT.md
+                # 停在上一次快照，而调用方只看到一条 ValueError，误以为布局已损坏。
+                if parts[2] in stage_names:
+                    role += ' / '+stage_names[parts[2]];reason='以本体系为作用域保留此生命周期职责'
+                    if len(parts)>3:role += ' / '+subroles.get(parts[3],parts[3]);reason='本体系内的专题或资料分组，避免流入公共总筐'
+                    if parts[2]=='90_历史归档':risk='体系历史保留原始表述，不表示科学认可'
+                else:
+                    role += ' / 非生命周期分组';reason='本体系内的版本线或专题分组，不在 layout.json 的 stages 中'
+                    risk='非生命周期分组：不计入阶段推进，需确认是版本线留档还是应当归入既有阶段'
                 if kinds.get(owner)=='unformulated_direction':risk='待建模方向，尚无具体公设，不计为已建立理论'
         elif parts[0]=='90_历史归档':reason='保留历史分析和逐字节快照';risk='旧布局说明与工具不得作为当前约定'
         elif parts[:2]==['02_共享基础','公共计算']:risk='仅共同常数和经典演示；候选理论实现归各体系'

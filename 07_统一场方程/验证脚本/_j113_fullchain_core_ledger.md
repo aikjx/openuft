@@ -1,0 +1,245 @@
+# J113 全维度全链路归一化账本（机读）
+
+- 体积：卷 134 · J113 · 2026-11-13
+- 判决：PASS
+- 硬闸：119/119
+- 链节点：80（层分布 L0:12 L1:8 L2:12 L3:18 L4:9 L5:11 B:9 R:1）
+- 最大深度：19；判决节点 F70 深度：15
+
+## 关键读数
+
+- triad_residual: 1.000000E-60
+- sin2_plus_cos2_minus_1: 0.0000E-55
+- mZ_cos_thetaW_minus_mW: 1.0000E-58
+- rho_tree: 1.000000000000000000
+- G_F_GeV_inv2: 1.16637539E-5
+- b0_nf6: 7
+- alpha_s_MZ_from_Lambda_87_83: 0.118001
+- alpha_s_200_from_same_Lambda: 0.106012
+- alpha_s_MZ_if_Lambda_213: 0.135252
+- compton_1e18eV_m: 1.973270E+11
+- compton_1e18eV_AU: 1.3190
+- photon_mass_bound_1kpc_eV: 6.39493E-27
+- alpha_G_MZ: 5.57851E-35
+- alpha_G_ledger_over_true: 89.630
+- higgs_lambda: 0.129383
+- mercury_arcsec_per_century: 42.9916
+- light_deflection_arcsec: 1.7516
+- delta_rho_top: 0.009353
+- gw150914_joule: 5.3627E+47
+- beta_SM: ["41/10", "-19/6", "-7"]
+- anomaly_sums: {"grav2U1": "0", "U1cubed": "0", "SU2sqU1": "0", "SU3sqU1": "0", "SU3cubed": "0"}
+- scoreboards: {"one_equation_J99_J108_J110_J111": "0/6", "root_ledger_2026_10_14": "1/6", "nineteenth_series_2026_10_14": "2/6"}
+- validated_systems: 0
+- four_force_gut_correct_equations: 0
+- unique_C3_unification: L_EW (electroweak, 2 forces)
+- input_parameters: 26
+- l4_open: 18
+- s13_unreviewed: 4
+
+## 链节点（80）
+
+- F01 [L0/geom/structural] depth=0 | 底流形 M：4 维可定向洛伦兹流形
+- F02 [L0/geom/structural] depth=1 | 号差 (-,+,+,+)，约定一次钉死
+- F03 [L0/alg/structural] depth=1 | 结构群 G = SO(1,3) x SU(3) x SU(2) x U(1)
+- F04 [L0/alg/symmetry] depth=2 | 李代数直和 g = so(1,3) (+) su(3) (+) su(2) (+) u(1)
+- F05 [L0/alg/structural] depth=3 | 总联络 A = 1/2 w^ab M_ab + A^(3)+A^(2)+A^(1)（1-形式，L^-1）
+- F06 [L0/alg/structural] depth=4 | 统一曲率 F = dA + A^A（L^-2）
+- F07 [L0/alg/symmetry] depth=5 | 曲率精确分块 F = R (+) F^(3) (+) F^(2) (+) F^(1)
+- F08 [L0/alg/symmetry] depth=5 | 统一比安基 D_A F = 0（恒等式，不由变分得到）
+- F09 [L0/geom/structural] depth=1 | 六维母体 M_6 -> M_4 x K 紧化（K 的内部几何不唯一）
+- F10 [L0/helix/structural] depth=2 | 圆螺旋 (R,b,omega)：kappa=R w^2/v^2, tau=w b/v^2
+- F11 [L0/helix/symmetry] depth=3 | 三轴恒等式 kappa^2 + tau^2 = (omega/v)^2（精确有理数，单点）
+- F12 [L0/helix/symmetry] depth=4 | Lancret 定理：常挠曲率比 <-> 一般螺旋（反向不稳定）
+- F13 [L1/grav/structural] depth=6 | (1/4kappa^2) eps_abcd (R^ab^e^c^e^d - (Lambda/6) e^a^e^b^e^c^e^d)
+- F14 [L1/gauge/structural] depth=6 | -sum_i (1/2 g_i^2) tr_i (F^(i) ^ *F^(i))，i=3,2,1
+- F15 [L1/higgs/structural] depth=6 | (DH)^dag ^ *(DH) - *V(H)，V = -mu^2 H^dag H + lambda (H^dag H)^2
+- F16 [L1/matter/structural] depth=6 | * psi-bar i gamma^a e_a^mu D_mu psi - *(psi-bar_L Y H psi_R + h.c.)
+- F17 [L1/action/structural] depth=7 | S[Phi] = int (L_grav + L_gauge + L_Higgs + L_matter)，单作用量
+- F18 [L1/action/symmetry] depth=8 | 四项量纲均 = 4（质量量纲），逐项复核
+- F19 [L1/grav/structural] depth=7 | kappa^2 = 8 pi G / c^4（[kappa^2] = M^-1 L^-1 T^2）
+- F20 [L1/gauge/symmetry] depth=7 | g_1 = sqrt(5/3) g_Y 仅 GUT 归一口径；g_1 != g_Y
+- F21 [L2/grav/structural] depth=8 | delta/ delta e^a: G_uv(Gamma~) + Lambda g_uv = kappa^2 T_uv（ECSK coframe 方程）
+- F22 [L2/grav/structural] depth=8 | delta/ delta omega^ab: (1/2) eps_abcd T^c^e^d = kappa^2 s_ab（Cartan 挠率，代数）
+- F23 [L2/gauge/structural] depth=8 | delta/ delta A^(i): D_mu F^{a mu nu} = g_i j^{a nu}（Yang-Mills；两侧同为流密度 L^-3，自然单位下书写）
+- F24 [L2/higgs/structural] depth=8 | delta/ delta H: D_mu D^mu H = mu^2 H - 2 lambda (H^dag H) H（自然单位）
+- F25 [L2/matter/structural] depth=8 | delta/ delta psi-bar: i gamma^a e_a^mu D_mu psi - Y H psi_R = 0（Dirac）
+- F26 [L2/matter/structural] depth=9 | delta/ delta psi: Dirac 共轭方程（手征投影一致）
+- F27 [L2/gauge/symmetry] depth=9 | D_nu j^{a nu} = 0：由 D_nu D_mu F = 0 导出，非额外假设
+- F28 [L2/grav/structural] depth=9 | 推论：s_ab = 0 => T = 0；挠率不传播，不是独立自由度
+- F29 [L2/grav/structural] depth=9 | Dirac 自旋流 => T_{lambda mu nu} = (kappa^2/2) eps_{lambda mu nu rho} J_A^rho
+- F30 [L2/grav/structural] depth=10 | L_int = -(3 kappa^2/8)(psi-bar gamma^5 gamma^a psi)(psi-bar gamma_5 gamma_a psi)
+- F31 [L2/sym/symmetry] depth=9 | Noether 第二定理：nabla_mu T^{mu nu} = 0
+- F32 [L2/sym/symmetry] depth=10 | 广义比安基与能动守恒同构（微分同一性）
+- F33 [L3/grav/structural] depth=9 | 弱场静态极限 nabla^2 Phi = 4 pi G rho
+- F34 [L3/grav/structural] depth=10 | 球对称真空解：Schwarzschild（Birkhoff）
+- F35 [L3/grav/symmetry] depth=11 | 近日点进动 6 pi G M /(a(1-e^2)c^2)
+- F36 [L3/grav/symmetry] depth=11 | 光线偏折 4 G M /(c^2 R)
+- F37 [L3/grav/symmetry] depth=11 | 引力红移 z = G M/(c^2 r)
+- F38 [L3/grav/structural] depth=10 | 引力波 □ h-bar = -16 pi G/c^4 T（TT 规范）
+- F39 [L3/grav/symmetry] depth=11 | 四极辐射功率 P = (G/5c^5)(...)^2
+- F40 [L3/em/structural] depth=10 | U(1)_em 未破缺 => Maxwell 方程（齐次部分由 F08 几何必然）
+- F41 [L3/em/symmetry] depth=11 | Coulomb F = q1 q2 /(4 pi eps0 r^2)
+- F42 [L3/weak/structural] depth=9 | 破缺后 Proca 型：D_mu W^{mu nu} + m_W^2 W^nu = g_2 j^nu
+- F43 [L3/weak/symmetry] depth=10 | G_F/sqrt2 = g_2^2/(8 m_W^2)
+- F44 [L3/ew/symmetry] depth=9 | v^2 = mu^2/lambda = 246.22 GeV；m_W=g_2 v/2, m_Z=(v/2)sqrt(g_2^2+g_Y^2), m_gamma=0
+- F45 [L3/strong/symmetry] depth=9 | QCD 一圈 beta：b_0 = (33-2 n_f)/3
+- F46 [L3/strong/symmetry] depth=10 | alpha_s(mu) = 2 pi /(b_0 ln(mu/Lambda))
+- F47 [L3/strong/symmetry] depth=11 | alpha_s(M_Z) = 0.1180（两圈口径 Lambda^(5)=213 MeV）
+- F48 [L3/strong/symmetry] depth=11 | 一圈自洽值 Lambda_LO^(5) = 87.83 MeV（与 213 MeV 两圈口径区分）
+- F49 [L3/strong/symmetry] depth=10 | 核力 Yukawa 势 U = -g^2 e^{-r/l}/r
+- F50 [L3/grav/symmetry] depth=10 | 引力强度 alpha_G(M_Z) = G M_Z^2/(hbar c)
+- F51 [L4/ew/experiment] depth=11 | V1 m_W = 80.409 vs 80.377 +- 0.012 GeV
+- F52 [L4/ew/symmetry] depth=10 | V2 Delta rho_top = 3 G_F m_t^2/(8 sqrt2 pi^2) = 0.009353
+- F53 [L4/grav/experiment] depth=12 | V3 水星 42.98 arcsec/世纪 vs 42.98
+- F54 [L4/grav/experiment] depth=12 | V4 光线偏折 1.751 arcsec vs 1.751
+- F55 [L4/grav/experiment] depth=12 | V5 GW150914 辐射能 ~5.5e47 J
+- F56 [L4/strong/experiment] depth=12 | V6 alpha_s(200 GeV) = 0.1060
+- F57 [L4/gauge/symmetry] depth=7 | V7 反常系数 5 项精确为 0（有理数精确计算）
+- F58 [L4/ew/symmetry] depth=10 | 树级 custodial rho = m_W^2/(m_Z^2 cos^2 th_W) = 1
+- F59 [L4/higgs/symmetry] depth=10 | m_h^2 = 2 lambda v^2, lambda = m_h^2/(2v^2) = 0.129
+- F60 [L5/crit/experiment] depth=12 | P1 引力：PPN gamma = 1 + 红移（太阳系级）
+- F61 [L5/crit/experiment] depth=11 | P2 引力波速度 = c（GW170817）
+- F62 [L5/crit/-] depth=11 | P3 挠率四费米子：已推导，未实验检验（conjecture）
+- F63 [L5/crit/-] depth=9 | P4 质子稳定 tau_p = infinity（本框架内，与 P7 互斥）
+- F64 [L5/crit/-] depth=8 | P5 三代：需要 chi_6 与六维母体，二者二择一
+- F65 [L5/crit/-] depth=7 | P6 中微子质量：经 nu_R 纳入已修复（2026-09-19）
+- F66 [L5/crit/-] depth=8 | P7 SO(10) M_GUT 区间候选（与 P4 互斥）
+- F67 [L5/verdict/structural] depth=13 | C0-C3 分级：形式/量纲 -> 数学/复现 -> 还原 -> 经验
+- F68 [L5/verdict/structural] depth=14 | 唯一 C3 级真统一 = 电弱 L_EW（2 力）
+- F69 [L5/verdict/structural] depth=14 | 含引力四力大统一正确方程 = 0 条（r403）
+- F70 [L5/verdict/structural] depth=15 | 一方程记分板 = 0/6（UFT 六判据；比安基-守恒同构只是恒等式，不加分）
+- F71 [B/neg/structural] depth=16 | X-1..X-7 拒绝清单 7 条，repairable = false
+- F72 [B/neg/structural] depth=18 | Z ~ 0.01 单位依赖（SI/cgs/Planck 三值互异）
+- F73 [B/neg/structural] depth=17 | X-3：量纲齐次不充分（反例 8.51e87）
+- F74 [B/neg/structural] depth=17 | G = e^2 mu0 c^2/(4 pi alpha m_P^2) 为循环恒等式（零信息）
+- F75 [B/neg/structural] depth=9 | 引力未量子化：UFE-1 作为 EFT 在 M_Pl 失效
+- F76 [B/neg/structural] depth=9 | Yukawa / 味混合角为输入，非推导结果
+- F77 [B/neg/structural] depth=11 | 层级问题/宇宙学常数/暗物质/暗能量不在 v1
+- F78 [B/input/input] depth=10 | 输入层 26 个参数（逐条声明为输入）
+- F79 [B/open/structural] depth=16 | 开放项：L4 物理层 18 OPEN + 账本 8 OPEN + S13 四条 conjecture·unreviewed
+- F80 [R/reading/structural] depth=19 | 阅读口径与诚实声明：本册不构成完成声明；数学自洽 != 物理确认
+
+## 硬闸明细
+
+- [PASS] D01 hbar*c has dimension M L^3 T^-2 = action*speed | M^1 L^3 T^-2 Q^0
+- [PASS] D02 eps0*mu0*c^2 is exactly dimensionless | eps0 mu0 c^2 = 1
+- [PASS] D03 e^2/(eps0*hbar*c) is dimensionless (fine structure alpha) | alpha_em
+- [PASS] D04 G*mass^2/(hbar*c) is dimensionless (alpha_G) | alpha_G
+- [PASS] D05 hbar*c/length is energy | M^1 L^2 T^-2 Q^0
+- [PASS] D06 hbar*c/length^2 is force | M^1 L^1 T^-2 Q^0
+- [PASS] D07 G*mass/length^2 is acceleration (field strength of a point mass) | M^0 L^1 T^-2 Q^0
+- [PASS] D07b G*mass^2/length^2 is force (Newton's law with two masses) | M^1 L^1 T^-2 Q^0
+- [PASS] D08 action (hbar) equals integral of lagrangian density over d^4x | L^4 density
+- [PASS] D09 L^{-2} is the only curvature dimension (R, Lambda) | M^0 L^-2 T^0 Q^0
+- [PASS] D10 kappa^2 * T_uv has dimension L^-2 (ECSK Einstein equation closes) | M^0 L^-2 T^0 Q^0
+- [PASS] D11 (1/4kappa^2)*R*d^4x carries the dimension of action (hbar) | 1/kappa^2 * R * d^4x = hbar slot
+- [PASS] D12 kappa^2 * mass^2 * c^3 / hbar is dimensionless (alpha_G rewritten in kappa) | kappa^2 m^2 c^3 / hbar
+- [PASS] D13 helix curvature kappa = R*w^2/v^2 has dimension L^-1 | M^0 L^-1 T^0 Q^0
+- [PASS] D14 helix torsion tau = w*b/v^2 has dimension L^-1 (b is the pitch rate, a speed) | M^0 L^-1 T^0 Q^0
+- [PASS] D15 kappa^2+tau^2 shares dimension of (omega/v)^2 = L^-2 | L^-2
+- [PASS] D19 torsion T has dimension L^-1 (1-form connection defect) | M^0 L^-1 T^0 Q^0
+- [PASS] D20 Yang-Mills 2-form F has dimension L^-2 (same slot as R) | M^0 L^-2 T^0 Q^0
+- [PASS] D21 G*mass/c^2 is a length (Schwarzschild radius) | M^0 L^1 T^0 Q^0
+- [PASS] D22 hbar*G/c^3 is a length squared (Planck length squared) | l_P^2
+- [PASS] D23 kappa^2*c^2 shares the dimension of G/c^2 (M^-1 L) | kappa^2 c^2 ~ G/c^2
+- [PASS] D24 G_F = 1/(sqrt2 v^2) has dimension M^-2 | M^-2 L^0 T^0 Q^0
+- [PASS] D25 Newtonian potential Phi = -GM/r has dimension v^2 | M^0 L^2 T^-2 Q^0
+- [PASS] D26 gravitational-wave strain h is dimensionless | h_uv
+- [PASS] D27 quadrupole power G/c^5 * (Q^(3))^2 has dimension energy/time | P = dE/dt
+- [PASS] D28 alpha_s and all gauge couplings are dimensionless | g_i, alpha_i
+- [PASS] D-PC1 perturbed kappa2 does NOT close the ECSK equation | kappa2 T exponent drift
+- [PASS] D-PC2 eps0 with T=+4 breaks eps0*mu0*c^2 | the hand-calc trap
+- [PASS] D-PC3 force dimension is distinguishable from energy | MLT^-2 vs ML^2T^-2
+- [PASS] M01 gauge kinetic tr(F^F) : 2*2 | F^2 = 4
+- [PASS] M02 Einstein-Hilbert (1/kappa^2) R e e : 2+2 | R/kappa^2 = 4
+- [PASS] M03 cosmological term (Lambda/kappa^2) e^4 : 2+2 | Lambda/kappa^2 = 4
+- [PASS] M04 Higgs kinetic |DH|^2 : 2*(1+1) | |DH|^2 = 4
+- [PASS] M05 Higgs mass term mu^2 H^dag H : 2+2 | mu^2 H^2 = 4
+- [PASS] M06 Higgs quartic lam (H^dag H)^2 : 4*1 | lam H^4 = 4
+- [PASS] M07 Yukawa psi-bar_L H psi_R : 3/2+1+3/2 | Yukawa = 4
+- [PASS] M08 Dirac psi-bar i gamma e D psi : 3/2+1+3/2 | Dirac = 4
+- [PASS] M09 four-fermion kappa^2 (psi-bar psi)^2 : -2+3+3 | contact = 4
+- [PASS] M10 every UFE-1 term is exactly mass dimension 4 (nine terms, one instrument) | 9/9 terms at 4
+- [PASS] M-PC1 a dimension-3 operator is detected | H^3 = 3
+- [PASS] M-PC2 the two instruments are genuinely different (scalar field is half-integer in SI) | M vs M^1/2 L^1/2 T^-1
+- [PASS] G1-1 ledger has exactly 80 nodes | n=80
+- [PASS] G1-2 all node ids unique and in F01..F80 order | F01..F80
+- [PASS] G1-3 chain is acyclic | 0 cycle issues
+- [PASS] G1-4 parents are all present in the ledger | parent completeness
+- [PASS] G1-5 every node reachable from the L0 roots | forward closure
+- [PASS] G1-6 exactly one sink and it is the reading node F80 | unique sink F80
+- [PASS] G1-7 no orphan node (every non-root has >=1 parent) | roots: ['F01']
+- [PASS] G1-8 every layer L0..L5 plus B and R is populated | layers=8
+- [PASS] G1-9 DAG depth is at least 6 (L0 -> reading) | max depth=19
+- [PASS] G1-10 the deep nodes F79/F80 sit strictly below the verdict node F70 | depth F70=15 F79=16 F80=19
+- [PASS] G1-11 every structural node declares an anchor string | anchor coverage
+- [PASS] G1-12 provenance classes are drawn from the declared vocabulary | [None, 'experiment', 'input', 'structural', 'symmetry']
+- [PASS] G1-PC1 injected cycle is detected | F01 -> F80 loop
+- [PASS] G1-PC2 injected dangling parent is detected | F999 does not exist
+- [PASS] G1-PC3 a second sink is detected (sink uniqueness has teeth) | two sinks
+- [PASS] G1-PC4 a self-parent is reported as a cycle | F36 -> F36
+- [PASS] G1-PC5 the clean ledger reports zero DAG issues | 0 issues
+- [PASS] N01 triad kappa^2+tau^2 == (omega/v)^2 exactly (rational, R=7/3, b=0, w=5/2) | 9/49 == 9/49
+- [PASS] N02 triad general-helix residual at the Decimal-60 rounding floor | resid=1.000000E-60
+- [PASS] N02-PC perturbed kappa breaks the triad identity (positive control) | resid=6.819718E-4
+- [PASS] N03 sin^2(theta_W) + cos^2(theta_W) = 1 | s2+c2-1.00000000000000000000
+- [PASS] N04 m_Z * cos(theta_W) == m_W (tree level) | resid=1.0000E-58
+- [PASS] N05 custodial rho == 1 at tree level | rho=1.000000000000000000
+- [PASS] N06 G_F = 1/(sqrt2 v^2) = 1.1664e-5 GeV^-2 (+-2e-4 relative) | G_F=1.16637539E-5 GeV^-2
+- [PASS] N07 QCD one-loop b_0(n_f=6) == 7 (asymptotic freedom, positive) | b0=7
+- [PASS] N08 Lambda_LO^(5)=87.83 MeV => alpha_s(M_Z)=0.1180 (one-loop self-consistent) | alpha_s(M_Z)=0.118001
+- [PASS] N09 the SAME Lambda_LO^(5) => alpha_s(200 GeV)=0.1060 (second independent anchor) | alpha_s(200)=0.106012
+- [PASS] N10 r194-P3 : two-loop Lambda^(5)=213 MeV inside the one-loop formula gives 0.13525 != 0.1180 | alpha_s(M_Z)=0.135252
+- [PASS] N11 1e-18 eV => reduced Compton 1.9733e11 m = 1.319 AU (solar-system, not galactic) | lambda_C=1.973270E+11 m = 1.3190 AU
+- [PASS] N12 galactic-field (1 kpc) bound is 6.3949e-27 eV, ~9 decades below 1e-18 eV | m_gamma(kpc)=6.39493E-27 eV; ratio=1.564E+8
+- [PASS] N13 alpha_G(M_Z) = G M_Z^2/(hbar c) = 5.5785e-35 | alpha_G=5.57851E-35
+- [PASS] N14 r194-P4 : the ledger value 5e-33 is 89.63x too large | ratio=89.630
+- [PASS] N15 lambda = m_h^2/(2 v^2) = 0.1294 (+-0.001) | lambda=0.129383
+- [PASS] N16 Mercury perihelion = 42.98 arcsec/century (+-1%) | 42.9916 arcsec/cy
+- [PASS] N17 solar light deflection = 1.751 arcsec (+-1%) | 1.7516 arcsec
+- [PASS] N18 Delta rho_top = 3 G_F m_t^2/(8 sqrt2 pi^2) = 0.009353 (+-2%) | Delta rho=0.009353
+- [PASS] N19 GW150914 radiated energy ~3 M_sun c^2 = 5.36e47 J (within 10% of 5.5e47) | 5.363E+47 J
+- [PASS] N20 SM one-loop gauge betas are exactly (41/10, -19/6, -7) | (Fraction(41, 10), Fraction(-19, 6), Fraction(-7, 1))
+- [PASS] N21 at M_Z the three couplings differ by >6x : no one-loop unification (T7) | a3=0.1180 a2=0.033799999999999996713739847109536640346050262451171875 a1=0.0168999999999999983568699235547683201730251312255859375 ratio=6.98
+- [PASS] N22 five anomaly sums vanish exactly: [grav^2 U1], [U1^3], [SU2^2 U1], [SU3^2 U1], [SU3^3] | Y=0 Y3=0 SU2Y=0 SU3Y=0 SU3^3=0
+- [PASS] N22-PC flipping e_R^c hypercharge breaks both Y and Y^3 sums (positive control) | Y=-2 Y3=-2
+- [PASS] N22b adding nu_R (Y=0) leaves all five sums at zero (neutrino fix is anomaly-safe) | nu_R^c Y=0
+- [PASS] N23 G = eps0 mu0 c^3 hbar / m_P^2 has the dimension of G (bridge is dimensionally closed) | M^-1 L^3 T^-2 Q^0
+- [PASS] N23b m_P^2 := hbar c / G is the only content of the bridge (circular, zero information) | G m_P^2 = hbar c  =>  G = hbar c / m_P^2
+- [PASS] N24 h*nu = M c^2 is dimensionally homogeneous yet off by 8.51e87 for Sun-Earth | X-3 counter-example
+- [PASS] N25 Z ~ 0.01 has three distinct values in SI / cgs / Planck (not a number) | 1.0005E-2|5.0000E-1|1.0005E+3
+- [PASS] S01 authoritative one-equation scoreboard is 0/6 | 0/6
+- [PASS] S02 the three scoreboards are mutually distinct and none is 6/6 | 0/6, 1/6, 2/6
+- [PASS] S03 every scoreboard declares its own scope (no cross-citation) | scopes declared
+- [PASS] S04 UFT criteria count is exactly six | UFT-1..6
+- [PASS] S05 attack41 : UFT-1 = 12/22, UFT-6 = 0/22, validated systems = 0 | 12/22 | 0/22 | 0
+- [PASS] S06 unique C3-level true unification is electroweak L_EW (2 of 4 forces) | L_EW, 2 forces
+- [PASS] S07 correct four-force GUT equations = 0 (r403) | NO-CORRECT-FOUR-FORCE-GUT
+- [PASS] S08 U11 (UFE-1) is graded COMMON-ACTION-NOT-UNIFIED | formal family ceiling C2
+- [PASS] S09 scoreboard is not improved by adding inputs (H_41 FAIL still stands) | external input cannot raise a category pass count
+- [PASS] S-PC1 a corrupted scoreboard is detected | 0/6 -> 6/6 must trip the invariant
+- [PASS] I01 input roster has exactly 26 entries | n=26
+- [PASS] I02 input names are unique | no duplicates
+- [PASS] I03 every roster entry is declared as an input (none masquerades as output) | prov=input for all 26
+- [PASS] I04 roster covers all six mass sectors declared in the ledger | 7 sectors
+- [PASS] I05 gauge couplings and the vev are present exactly once | g1,g2,g3,v
+- [PASS] I06 no roster entry is presented as a first-principles derivation | all 26 remain inputs
+- [PASS] I-PC1 a dropped roster entry is detected | 25 entries
+- [PASS] O01 ledger lists 8 named open items | 8 named
+- [PASS] O02 L4 physics layer carries 18 OPEN entries | 18 OPEN
+- [PASS] O03 S13 carries exactly 4 L3 predictions, all conjecture-unreviewed | 4 unreviewed
+- [PASS] O04 P4 (tau_p = infinity) and P7 (SO(10) M_GUT) are mutually exclusive | mutual exclusion recorded, not resolved
+- [PASS] O05 none of the 18 OPEN items is silently counted as passed | 0 closed by this volume
+- [PASS] O-PC1 removing one open item is detected | 7 named
+- [PASS] B01 rejection list has exactly 7 entries and all are distinct | X-1, X-2, X-3, X-4, X-5, X-6, X-7
+- [PASS] B02 all seven rejects are recorded repairable = false | 7/7 false
+- [PASS] B03 gravity is not quantised and UFE-1 fails at M_Pl (T8) | known limit, not a defect claim
+- [PASS] B04 Yukawa and mixing angles are inputs (not derivations) | pointed at roster
+- [PASS] B05 Lambda_cosmo / hierarchy / dark sector are outside v1 | out of scope
+- [PASS] B06 the reading node forbids a completion claim | stated in F80
+- [PASS] B07 mathematical self-consistency is not physical confirmation | red line kept
+- [PASS] B08 finite verification is not proof | red line kept
+- [PASS] B-PC1 an 8th reject without an id would be detected | 8 != 7
+
+> Full-chain normalisation is not force unification; mathematical self-consistency is not physical confirmation.
