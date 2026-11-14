@@ -389,7 +389,7 @@ $$\boxed{\varepsilon_0 = \frac{k^2 \tau \kappa^3}{4\pi \hbar c (\kappa^2 + \tau^
 
 ## 九、参考文献
 
-[1] Zhang, X. Q. (1998). Unified Field Theory. Self-published.
+[1] ZUFT (1998). Unified Field Theory. Self-published.
 
 [2] Einstein, A. (1915). The Field Equations of Gravitation. Sitzungsberichte der Preußischen Akademie der Wissenschaften, 844-847.
 

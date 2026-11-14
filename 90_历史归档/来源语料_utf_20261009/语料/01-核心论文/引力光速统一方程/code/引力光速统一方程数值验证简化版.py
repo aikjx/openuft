@@ -28,7 +28,7 @@ class GravitationalLightSpeedUnificationSimpleVerifier:
         self.G_codata = 6.67430e-11  # 万有引力常数，单位：m³kg⁻¹s⁻²
         self.c_light = 299792458     # 光速，单位：m/s
         
-        # 张祥前常数Z的计算值
+        # ZUFT常数Z的计算值
         self.Z_calculated = self.G_codata * self.c_light / 2
         
         # 近似值（用于验证）

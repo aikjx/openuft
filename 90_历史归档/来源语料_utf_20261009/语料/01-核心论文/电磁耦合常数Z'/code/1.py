@@ -4,7 +4,7 @@ from scipy.constants import c, epsilon_0, hbar, e, G, m_e, m_p, alpha, pi
 
 # 计算 Z' 和 Z
 Z_prime = alpha * hbar * c / e**2  # 修正后的正确公式
-Z = G * c / 2  # 注意：此定义基于张祥前理论，与主流物理学不同
+Z = G * c / 2  # 注意：此定义基于ZUFT理论，与主流物理学不同
 Z_ratio = Z / Z_prime
 
 # 电子-电子和质子-质子力比

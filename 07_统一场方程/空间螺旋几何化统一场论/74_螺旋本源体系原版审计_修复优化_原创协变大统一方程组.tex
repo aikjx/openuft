@@ -1,0 +1,607 @@
+% !TeX program = xelatex
+% =====================================================================
+% OpenUFT · 主体系 74 号卷
+% 螺旋本源体系原版：审计、修复与原创协变方程的全链路判决
+% ---------------------------------------------------------------------
+% 本卷不含任何未在库内复算过的结论；所有数值读数来自同目录
+% 验证脚本/74_helix_covariant_audit.py 的机读产物。
+% =====================================================================
+\documentclass[UTF8,fontset=fandol,11pt]{ctexart}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{array,tabularx,booktabs,longtable}
+\usepackage[unicode=true,hidelinks]{hyperref}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\DD}{\mathrm{D}}
+\newcommand{\bx}{\boldsymbol}
+\newcommand{\eg}{\mathrm{e.g.}}
+\newcommand{\ie}{\mathrm{i.e.}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{\bfseries 螺旋本源体系原版：审计、修复与原创协变方程\\
+\large ——全链路求导证明与精算验证（OpenUFT 主体系 74 号卷）}
+\author{OpenUFT 主体系 \quad 机器仪器：\code{74\_helix\_covariant\_audit.py}}
+\date{2026-11-14}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+本卷处理本体系的\textbf{前版草案}（下称「原版」），其主张是：把「物体周围空间做圆柱螺旋矢量光速发散、总速率恒等于光速」这一启发式，提升为一套带 Frenet--Serret 微分几何、协变导数与规范结构的「统一场论方程组」，并给出 23 条收录式与 8 条废弃式。
+
+本卷的处置是\textbf{审计$\to$修复$\to$原创}：原版不整体进入正式方程组，只有经机器判定成立、且修正后与原版无冲突的部分才被本卷收录。处置分三层：其一，用机器把可判事项全部判完——螺旋公设的速率约束、Frenet 曲率与挠率的解析式与数值对拍、协变导数的三个分量、量纲齐次性、常数算术，共 90 条判定（PASS 56 / FAIL 17 / IDN 2 / BOUNDARY 11 / INFO 4），守卫 G01--G07 与控制组 CT1--CT3 全绿；其二，把审计中确实成立、且相对原版构成\textbf{增量}的部分单独隔离出来，确认其增量只有三项，且三项都不足以支撑「统一场论」这一层级；其三，把原版的其余主张按「已被库内否证 / 量纲不齐 / 结构非单射 / 外部输入未声明」四类逐条定位，不给伪修复。
+
+机器判决的核心有三条：\emph{(1)} 切向速度场的协变导数中\textbf{不出现挠率项}，原版写在 $\dot{\bx T}=\kappa c\,\bx N+\tau c\,\bx B$ 的那一项在 Frenet--Serret 框架下没有来源，由此推出的 $\DD\bx c/\DD t=\kappa c^2\bx N+\tau c^2\bx B$ 残差恰为 $|\tau c^2|$；\emph{(2)} 本源约束 $|\dot{\bx R}|=c$ 使世界线\textbf{类空}，固有时为零、四速度未定义，因而「协变升级」在公理层就不可行，不是技术细节；\emph{(3)} 原版所列「四项几何本源映射」把同一个表达式 $(\bx c-\bx v)\DD m/\DD t$ 同时指派为电场力与磁场力，映射不是单射，四力归因在结构上不成立。
+
+本卷同时给出最小合法修改路线与开放项台账，并声明本卷\textbf{不提升任何条目的证据等级}，不重复计入库内已有的 L3 判定。
+\end{abstract}
+
+\tableofcontents
+
+\section{本卷定位、判定口径与复现约定}
+\label{sec:scope}
+
+\subsection{本卷问什么}
+原版的核心启发式——空间作圆柱螺旋发散、\emph{速率}恒等于光速——是几何上真实且可完全复算的对象；原版的问题在于把这一启发式直接升格为「统一场论」，并用一套以普通全导数书写、缺少联络与张量结构的公式去承载它。本卷因此只做一件事：把「可算的部分算完、把不可算的部分说清楚」，不替原版补物理。
+
+\subsection{判定口径}
+本卷沿用主体系既有的三条口径（见本目录 68/70/71/72 号卷的同一约定）：
+
+\begin{enumerate}
+  \item \textbf{只判三类可机算事项}：数学恒等、量纲自洽、常数算术；不判物理真伪。
+  \item \textbf{恒等式标 IDN}（零预测力），几何定义标 DEF，条件性结果标 RES，外部输入与未闭合项标 BOUNDARY/INFO。
+  \item \textbf{原版自身的缺陷记 FAIL}——这是本卷结论，不是仪器缺陷。
+\end{enumerate}
+
+判定结果与条目类别分列两栏：条目类别（\code{kind}）说明这条判定\emph{是什么性质}的检查，结果（\code{verdict}）说明它\emph{通过了没有}。一条 IDN 类条目可以 PASS，也可以 FAIL。
+
+\subsection{复现约定与退出码}
+机器仪器为同目录的 \code{74\_helix\_covariant\_audit.py}（纯标准库：\code{decimal} 60 位 + \code{fractions} 四元量纲向量 $(M,L,T,I)$，不依赖 \code{sympy}），机读产物为同目录的 \code{74\_helix\_covariant\_audit\_results.json} 与 \code{...\_out.txt}。退出码口径：
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+退出码 & 含义 \\
+\midrule
+0 & 全部条目通过（守卫与控制组同时全绿） \\
+1 & 内容层存在 FAIL（原版缺陷被确认），守卫与控制组全绿 \\
+2 & 仪器层失效：守卫变红或控制组未变红 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+本次运行的读数为：\textbf{条目 90，PASS 56 / FAIL 17 / IDN 2 / BOUNDARY 11 / INFO 4，退出码 1}，仪器层失效条目为空。
+
+\subsection{机器兜底纪律}
+本卷自身的三条纪律，均已在本轮实际执行并留下记录：
+
+\begin{enumerate}
+  \item \textbf{守卫必须能红}。G01--G07 覆盖自实现三角函数的已知特殊角、Machin 公式的 $\pi$、$\sin^2+\cos^2=1$ 归约、量纲工具自洽、有限差分截断阶、解析路径非恒等复读、统计守恒。
+  \item \textbf{控制组必须能红}。CT1--CT3 分别把 $\kappa$ 的 $c$ 幂次写错、把 $\tau$ 的定义少写一个 $c$、把 $\mu_0$ 乘 10；若对应判据在变异后仍报 PASS，则判定器本身失效，本卷立即作废。
+  \item \textbf{量纲类断言必须机器兜底}。本卷编写过程中手算量纲三次出错（把 $[T]$ 符号写反、忘了电荷体密度的三次方幂、把 $R^3$ 写成一个 $R$ 与三个 $R^{-2}$），全部由守卫与量纲判定当场拦下。凡手算量纲，一律不作结论。
+\end{enumerate}
+
+\subsection{红线}
+\begin{itemize}
+  \item 量纲自洽 $\neq$ 物理成立。本卷自己给出反例：原版废弃式 $E=r v^2 c^2/G$ 量纲完全闭合（能量），但库内无任何对应构造。
+  \item 数学自洽 $\neq$ 物理证实。本卷的 $\kappa=r\omega^2/c^2$、$\tau=h\omega/c^2$ 是自洽的，但它们是\emph{已有几何事实}的重述，不是新预言。
+  \item 本卷不提升任何条目的证据等级，不重复计入库内已有的 L3 判定；凡引用他卷结论处一律给出卷号回链。
+\end{itemize}
+
+\section{公理层复核：圆柱螺旋与速率公设}
+\label{sec:axiom}
+
+\subsection{运动学}
+原版的本源公设取一条圆柱螺旋世界线
+\begin{equation}
+  \bx R(t)=r\cos(\omega t)\,\bi+r\sin(\omega t)\,\bj+ht\,\bk ,
+  \label{eq:helix}
+\end{equation}
+其中 $r$ 为螺旋半径、$\omega$ 为角速度、$h$ 为轴向推进速率；速度与加速度为
+\begin{align}
+  \dot{\bx R}&=-r\omega\sin(\omega t)\,\bi+r\omega\cos(\omega t)\,\bj+h\,\bk ,\\
+  \ddot{\bx R}&=-r\omega^2\cos(\omega t)\,\bi-r\omega^2\sin(\omega t)\,\bj .
+\end{align}
+本源守恒约束为
+\begin{equation}
+  \boxed{\,|\dot{\bx R}|^2=(r\omega)^2+h^2=c^2\,}
+  \label{eq:constr}
+\end{equation}
+机器复核（K01/K02）：两组独立参数下的速率约束残差均为\emph{机器零}（$0$，严格为零而非舍入），确认 \eqref{eq:constr} 与 \eqref{eq:helix} 自洽。
+
+\subsection{类空性：本卷第一条承重判决}
+把 \eqref{eq:constr} 当作\emph{恒等式}读，则世界线的切向速率恒等于 $c$，在 $(x,t)$ 记号下其时空间隔满足
+\begin{equation}
+  \dd s^2=|\dd\bx R|^2-c^2\dd t^2\equiv 0 ,
+  \label{eq:null}
+\end{equation}
+即这是一条\emph{类空}（光）曲线。机器用有限弦复核（K18）：相对量 $|ds^2|/(c^2\Delta t^2)$ 在 $\Delta t=10^{-3}\,\mathrm{s}$ 时为 $1.0256\times10^{-7}$，在 $\Delta t=5\times10^{-4}\,\mathrm{s}$ 时为 $2.5641\times10^{-8}$，二者之比 $0.2500$，即 $|ds^2|$ 以\emph{二阶}趋零——这正是类空曲线的局部特征（有限 $\Delta t$ 的弦落在光锥之内，故 $ds^2<0$）。
+
+类空的直接后果是（K19）：
+\begin{equation}
+  \dd\tau=\sqrt{1-\frac{|\dot{\bx R}|^2}{c^2}}\,\dd t\equiv 0
+  \quad\Longrightarrow\quad
+  \frac{\dd\bx R}{\dd\tau}\ \text{未定义}.
+  \label{eq:dtau}
+\end{equation}
+机器读数：$1-|\dot{\bx R}|^2/c^2$ 为\emph{机器零}，$\dd\tau/\dd t=0$。
+
+\begin{quote}
+\textbf{判决 1（承重）}：以原版本源公设为准，\emph{固有时不存在、四速度未定义}。因此后续一切以 $\DD/\DD t$ 为前提的「协变升级」，在\emph{公理层}即不成立——不是差一个联络项、不是记号不统一，而是没有可被协变化的四维对象。
+
+作为阳性对照（K20），令外部声明的光速严格大于螺旋内禀速率（内禀速率 $\sqrt2$，声明 $c=2$），则 $1-|v|^2/c^2=0.5$，固有时 $\dd\tau/\dd t=7.071067811865475244\times10^{-1}=\sqrt{1/2}$，协变构造恢复良定义。可见判决 1 是公设的直接后果，而非计算失误。
+\end{quote}
+
+\section{Frenet 求导：可复算的内核}
+\label{sec:frenet}
+
+\subsection{解析式}
+对 \eqref{eq:helix} 逐阶求导并作叉积，可得
+\begin{equation}
+  \dot{\bx R}\times\ddot{\bx R}=r\omega^2 h\,\bk ,\qquad
+  \dddot{\bx R}=r\omega^3\sin(\omega t)\,\bi-r\omega^3\cos(\omega t)\,\bj .
+\end{equation}
+代入 Frenet 定义
+\begin{equation}
+  \kappa=\frac{|\bx v\times\dot{\bx v}|}{|\bx v|^3},\qquad
+  \tau=\frac{(\bx v\times\dot{\bx v})\cdot\dddot{\bx v}}{|\bx v\times\dot{\bx v}|^2},
+\end{equation}
+并用 \eqref{eq:constr} 化简，得
+\begin{equation}
+  \boxed{\ \kappa=\frac{r\omega^2}{c^2},\qquad \tau=\frac{h\omega}{c^2}\ }
+  \label{eq:kt}
+\end{equation}
+从而 $\kappa/\tau=r\omega/h$（横向线速率与轴向速率之比），且
+\begin{equation}
+  \kappa^2+\tau^2=\frac{\omega^2}{c^2} .
+  \label{eq:main}
+\end{equation}
+机器读数：\eqref{eq:main} 残差 $-1.0\times10^{-60}$（机器零），与本目录 68 号卷 G4 同源。
+
+\subsection{双路径对拍}
+解析式不能自证。本卷对两组参数分别用\emph{有限差分}独立重算 $\kappa$ 与 $\tau$（中心差分 + Richardson 四阶外推，步长减半的误差比读数 $6.2500\times10^{-2}$，即四阶理论 $1/16$，守卫 G05 通过），并与解析式对拍：
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+条目 & 解析值 & 数值值 & 相对残差 \\
+\midrule
+K03 $\kappa$（参数组 1） & $3.0769230769230769230769231\times10^{-1}$ & $3.0769230769230769196581197\times10^{-1}$ & $1.11\times10^{-18}$ \\
+K04 $\kappa$（参数组 2） & $2.5000000000000000000000000\times10^{-1}$ & $2.4999999999999999999891493\times10^{-1}$ & $4.34\times10^{-21}$ \\
+K05 $\tau$（参数组 1） & $4.6153846153846153846153846\times10^{-1}$ & $4.6153846153846153435897437\times10^{-1}$ & $8.89\times10^{-18}$ \\
+K06 $\tau$（参数组 2） & $2.5000000000000000000000000\times10^{-1}$ & $2.4999999999999999999131944\times10^{-1}$ & $3.47\times10^{-20}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+残差\emph{停在差分截断极限而非严格为零}，这正是排除「恒等复读」所需的口径：若两条路径是同一定义的两份写法，残差会落在舍入噪声量级（$\sim10^{-60}$）。两条路径确实独立，故残差停在 $10^{-18}$--$10^{-21}$。
+
+\subsection{极限核验}
+\begin{itemize}
+  \item $h\to0$（平面圆）：$\tau\equiv0$，而 $\kappa=r\omega^2/c^2$ 保持有限（K09）。
+  \item $r\to0$（直线）：$\kappa\equiv0$（K10）。但须注意：此时 Frenet 法向为零向量，\emph{挠率在 Frenet 标架下未定义}（K10b），式 \eqref{eq:kt} 中 $\tau=h\omega/c^2$ 的适用域要求 $r\neq0$；沿族 $r\to0$ 的极限 $\tau\to\omega/h$ 是\emph{族极限}而非直线自身的挠率。
+  \item $\omega\to0$：曲率、挠率同步趋零，退化为静止的匀速直线，属平凡解。
+\end{itemize}
+
+\begin{quote}
+\textbf{判决 2}：\eqref{eq:kt} 成立且可完全复算，但它是\emph{已有几何事实}的解析重述（IDN，零预测力），不构成新增物理。它的可用价值是：给原版后续所有「曲率/挠率」类公式提供了一个\emph{可代入的、无自由度的量}——这一点在 \S\ref{sec:covariant} 反而成为承重约束。
+\end{quote}
+
+\section{协变升级的三条硬判决}
+\label{sec:covariant}
+
+\subsection{判决 3：切向速度场的协变导数不含挠率}
+把原版的思路写清楚：切向速度场取 $\bx c=c\,\bx T$（$c=|\dot{\bx R}|$ 为常数），于是
+\begin{equation}
+  \frac{\DD\bx c}{\DD t}=c\,\frac{\DD\bx T}{\DD t}.
+\end{equation}
+原版在 Frenet 公式处写的是 $\dot{\bx T}=\kappa c\,\bx N+\tau c\,\bx B$，并由此得到
+\begin{equation}
+  \frac{\DD\bx c}{\DD t}=\kappa c^2\,\bx N+\tau c^2\,\bx B .
+  \label{eq:draftdc}
+\end{equation}
+本卷用机器直接分解 $\dddot{\bx R}/\dd t$ 在 Frenet 标架 $(T,N,B)$ 下的三个分量（K11--K13）：
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+条目 & 分量 & 机器读数 & 判读 \\
+\midrule
+K12 & $\bx T$ & $-1.01\times10^{-51}$ & 切向分量恒为零（机器零） \\
+K11 & $\bx N$ & $3.9999999999999999956\times10^{0}$（预期 $c^2\kappa=4$） & 曲率项，量级正确 \\
+K13 & $\bx B$ & $1.52\times10^{-51}$ & 副法向分量恒为零（机器零） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+于是原版式 \eqref{eq:draftdc} 的残差（K15）恰为 $|\tau c^2|=6.0000000000000000000000000\times10^{0}$——即多出来的副法向分量恰等于原版自己声称的挠率项系数；原版的另一版本（$\omega^2 r\,\bx N+\omega\tau\,\bx B$）残差（K14）为 $9.2307692307692307692307692\times10^{-1}$，恰为 $|\omega\tau|$；两式互不相等（K16，互差 $5.0769230769230769230769231\times10^{0}$）。
+
+\begin{quote}
+\textbf{判决 3（承重）}：\emph{切向速度场的协变导数中不出现挠率项}。原版在 $\dot{\bx T}$ 里多写了一个 $\tau c\,\bx B$，这是唯一导致 \eqref{eq:draftdc} 出错的环节；挠率确实存在，但它只出现在 $\dot{\bx N}$ 与 $\dot{\bx B}$ 中。
+\end{quote}
+
+\subsection{判决 4：正确的输运三角表}
+由 $\dd s=c\,\dd t$ 参数化的 Frenet--Serret 方程组的正确形态是
+\begin{equation}
+  \frac{\dd\bx T}{\dd t}=\kappa c\,\bx N,\qquad
+  \frac{\dd\bx N}{\dd t}=-\kappa c\,\bx T+\tau c\,\bx B,\qquad
+  \frac{\dd\bx B}{\dd t}=-\tau c\,\bx N .
+  \label{eq:fs}
+\end{equation}
+机器用有限差分独立复核三行（K17），归一残差 $1.11\times10^{-18}$，三行各自的机器零分量为：$\dd\bx T/\dd t$ 的 $B$ 分量 $4.22\times10^{-52}$、$\dd\bx N/\dd t$ 的 $T$ 分量 $-1.1094\times10^{0}$（预期 $-\kappa c$）、$\dd\bx B/\dd t$ 的 $N$ 分量 $-\tau c$。
+
+\subsection{判决 5：协变升级在公理层不可行}
+判决 1（类空）已经封死了以 $\DD/\DD t$ 为前提的协变化。把二者合起来：
+
+\begin{quote}
+\textbf{判决 5（承重）}：\emph{「保留 $|v_{\text{总}}|=c$ 的本源公设」与「对物体世界线做协变升级」在数学上互斥}。可行出路只有两类：(a) 放弃 $\DD/\DD t$ 这一前提，把螺旋降格为\emph{空间模式}而非物体世界线，此时 $r,\omega,h$ 只是场结构的参数，不再要求四速度存在；(b) 保留协变，但把速率公设改为亚光速（此时固有时存在，协变构造良定义，代价是「矢量光速发散」不再是公设而变成一个待解释的近似）。
+\end{quote}
+
+\subsection{判决 6：四项映射不是单射}
+原版把母力方程的四项分别指派为引力、电场力、磁场力与核力项。但其中第 2、3 项的表达式\emph{逐字相同}——都是 $(\bx c-\bx v)\DD m/\DD t$（S09）。两个不同的相互作用被指派给同一项，映射不可能是单射，因而\emph{不可能}由该式把四种相互作用分别归因。这不是量纲问题，是映射本身的结构缺陷。
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+条目 & 检查 & 读数 & 判读 \\
+\midrule
+S01 & 母力方程量纲 & 三项同量纲 $M L T^{-2}$ & 闭合，但整式 $=\dd[m(\bx c-\bx v)]/\dd t$，是乘积法则恒等（IDN） \\
+S09 & 四项映射 & 第 2、3 项量纲向量同为 $M L T^{-2}$ 且表达式逐字相同 & 非单射，FAIL \\
+S10 & Frenet 公式 & 见 \S\ref{sec:covariant} 判决 3 & FAIL \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{量纲审计：23 条收录方程逐条判定}
+\label{sec:dim}
+
+\subsection{口径}
+量纲以 SI 基本量纲四元组 $(M,L,T,I)$ 表示，向量加法为指数相加；每一式逐项与目标量纲比对，差额向量即缺口。齐次式与非齐次式一律给出机器读数，不做主观评述。本卷读取的口径与库内 2026-10-03 册（\code{判定\_统一场论核心公式\_全目录总结与正确核固化\_2026-10-03.md}）一致，属交叉印证而非重判。
+
+\subsection{收录式逐条判定}
+\begin{longtable}{p{1.5cm}p{5.4cm}p{3.0cm}p{6.0cm}}
+\toprule
+编号 & 方程（原版记号） & 量纲结论 & 读数与判读 \\
+\midrule
+\endfirsthead
+\toprule
+编号 & 方程 & 量纲结论 & 读数与判读 \\
+\midrule
+\endhead
+Eq-09-01 & $\partial\bx R/\partial t=\bx c(\bx x,t)$ & 齐次 & $[R]/[t]=[c]=LT^{-1}$，RES \\
+Eq-09-02 & $\bx R(t)$ 与 $(r\omega)^2+h^2=c^2$ & 齐次 & $L^2T^{-2}=L^2T^{-2}$，DEF（本卷公设底座） \\
+Eq-09-03 & $m=\frac{1}{4\pi G}\oint\tau\cdot\dd\bx\Sigma$ & \textbf{不齐} & 左 $M L^{-2}T^{2}$ vs 质量 $M$，缺口 $L^{-2}T^{2}$（即缺 $L^{-1}T$） \\
+Eq-09-04 & $\bx g=-GM\bx r/r^2$ & 齐次 & 左 $LT^{-2}=$ 加速度，IDN（牛顿引力的记号改写） \\
+Eq-09-05 & $\bx p_0=m_0\bx c_0$ & 齐次 & $M L T^{-1}=$ 动量，IDN \\
+Eq-09-06 & $\bx p=m(\bx c-\bx v)$ & 齐次 & 同上，IDN \\
+Eq-09-07 & $\bx F=(\bx c-\bx v)\DD m/\DD t+m\DD\bx c/\DD t-m\DD\bx v/\DD t$ & 齐次 & 三项同量纲 $MLT^{-2}$；但整式 $=\dd[m(\bx c-\bx v)]/\dd t$，IDN（零信息量） \\
+Eq-09-08 & $\Box L=0$，平直极限 $\nabla^2L-c^{-2}\partial_t^2L=0$ & 齐次 & 两侧同为 $L^{-1}$；数值核验 K21：两侧之差为\emph{机器零} \\
+Eq-09-09 & $q=\frac{1}{4\pi}\oint\omega\,\dd\Omega$ & \textbf{不齐} & 左 $T^{-1}$ vs 电荷 $IT$，缺口 $I T^{2}$ \\
+Eq-09-10 & $E=\gamma mc^2$ & 齐次 & $ML^2T^{-2}=$ 能量，IDN \\
+Eq-09-11 & $\bx B=\frac{\mu_0}{4\pi}\frac{q\,\bx v\times\bx R}{R^3}$ & 齐次 & 左 $MT^{-2}I^{-1}=$ 磁感应强度，IDN（标准毕奥--萨伐尔场） \\
+Eq-09-12 & $\nabla\times\bx A=\bx B$ & 齐次 & 两侧同为 $MT^{-2}I^{-1}$，IDN \\
+Eq-09-13 & $\bx F=(\bx c-\bx v)\DD m/\DD t$ & 齐次 & $MLT^{-2}$，RES \\
+Eq-09-14 & $\bx L=\bx r\times m\bx c$ & 齐次 & $ML^2T^{-1}=$ 角动量，IDN \\
+Eq-09-15 & $\Box\bx A=-4\pi G\bx J_m$ & \textbf{不齐} & 左 $M L^{-1}T^{-2}I^{-1}$ vs 右 $L^2T^{-3}$，缺口 $M L^{-3}T I^{-1}$ \\
+Eq-09-16 & $q=-\frac{\dd}{\dd t}\oint\tau\cdot\dd\bx\Sigma$ & \textbf{不齐} & 左 $LT^{-1}$ vs 电荷 $IT$，缺口 $L^{-1}I^{-1}$ \\
+Eq-09-17 & $\nabla\times\bx E=-\DD\bx B/\DD t$ & 齐次 & 两侧同为 $MT^{-3}I^{-1}$，IDN（标准法拉第律） \\
+Eq-09-18 & $\bx g=c^{-4}\left(\frac{\DD\bx E}{\DD t}\times\bx B+\bx E\times\frac{\DD\bx B}{\DD t}\right)$ & \textbf{不齐} & 左 $M^2L^{-3}T^{-2}I^{-2}$ vs 加速度 $LT^{-2}$，缺口 $M^2L^{-4}I^{-2}$ \\
+Eq-09-19 & $\bx E=-\nabla\phi-\DD\bx A/\DD t$ & \textbf{不可相加} & $\phi$ 读电势：$MLT^{-2}I^{-1}$ vs $MLT^{-3}I^{-1}$（差 $T$）；$\phi$ 读引力势：$LT^{-2}$ vs $MLT^{-3}I^{-1}$（差 $M^{-1}TI^{-1}$）。两种读法均 FAIL \\
+Eq-09-20 & $\Box\bx g=0,\ \Box\bx E=0,\ \Box\bx B=0$ & 齐次（零取同量纲零） & 内容为「无源波动」的一般假设，非本体系特征预言，IDN \\
+Eq-09-21 & $q=ne,\ n\in\mathbb Z,\ \pi_3(SU(2))=\mathbb Z$ & 齐次 & $n$ 无量纲；$\pi_3$ 桥接属外部引用（S04） \\
+Eq-09-22 & $\alpha(\mu)=g'^2(\mu)/(4\pi)$ & 齐次 & 是耦合\emph{定义式}，跑动须另给 $\beta$ 函数与边界条件，IDN \\
+Eq-09-23 & $\bx g_{\rm rad}=-\frac{q}{4\pi\varepsilon_0c^3}\frac{\bx a\times(\bx r\times\bx a)}{r}$ & \textbf{不齐} & 左 $ML^2T^{-4}I^{-1}$ vs 加速度 $LT^{-2}$，缺口 $M I^{-1}$；与库内 2026-10-03 册 X-2/D21b/D22 同型 \\
+\bottomrule
+\caption{原版 23 条收录方程的量纲判定（机器读数，条目号见 \code{74\_helix\_covariant\_audit\_results.json}）}
+\end{longtable}
+
+\subsection{缺陷聚类}
+七条量纲不齐式可归为四类；聚类之所以必要，是因为四类的修复代价完全不同：
+
+\begin{enumerate}
+  \item \textbf{通量型几何定义缺长度/时间标度}（Eq-09-03、09-09、09-16）。三式都试图用「挠率通量 $\oint\tau\cdot\dd\bx\Sigma$」或「角速度通量 $\oint\omega\,\dd\Omega$」直接给出质量/电荷。缺口分别是 $L^{-1}T$、$IT^2$、$L^{-1}I^{-1}$——都\emph{不是}一个可以靠乘常数补齐的标度，而是缺一个额外的几何量（面积元口径、长度标度、电流类比）。三式若不补齐，则质量、电荷都失去定义。
+  \item \textbf{达朗贝尔源项不齐}（Eq-09-15）。左端是磁矢势的波动算子，右端 $G\bx J_m$ 的量纲比它差 $M L^{-3}T I^{-1}$。注意这里的 $\bx A$ 与 $\phi$ 存在\emph{记号撞车}：库内 2026-10-03 册的 $\bx A$ 是引力场（加速度），此处却是磁矢势——跨册引用必须声明口径。
+  \item \textbf{交叉耦合方程不齐}（Eq-09-18）。$c^{-4}$ 的幂次选择使左端携带 $M^2I^{-2}$，而右端是加速度；缺口含 $I^{-2}$ 意味着\emph{即便调整 $c$ 的幂次也消不掉}（$c$ 不带 $M$ 与 $I$）。
+  \item \textbf{势/标势混用与辐射场缺口}（Eq-09-19、09-23）。前者把电场定义写成「梯度项 + 矢势时间导数项」，而两者的自然量纲相差一个 $T$；后者与库内 2026-10-03 册 X-2 同型：缺口含 $M$ 与 $I^{-1}$，任何 $c$ 的幂次都补不上，其唯一自洽读法退化为标准电磁学，零新增物理。
+\end{enumerate}
+
+\subsection{库内锚的交叉核对}
+为防止「量纲自洽 = 新物理」的误判，本卷把八条\emph{教科书物理}式作为对照锚重新审一遍（A01--A08）：标准 Maxwell 三式、$\alpha$ 的标准定义、偶极辐射场、以及三项「最小合法增广」的量纲门槛（引入含副法向分量的 Darboux 矢量 $\bx\Omega=\tau\bx T+\kappa\bx B$、涡量场 $\nabla\times\bx T=\tau\bx T+\kappa\bx B$、挠率场动能项 $[\partial_\tau\tau]^2$）。全部齐次通过。
+
+结论很直接：\emph{原版 23 条中量纲齐次的部分，其内容正是这些教科书式子的记号改写}；真正带结构增量的三条（Eq-09-02 的螺旋、Eq-09-07 的母力框架、Eq-09-22 的跑动式）分别被判决 1--3 限制在「几何恒等」与「定义式」层面。
+
+\subsection{原版废弃公式清单的复核}
+原版列出 8 条废弃式。本卷逐条复核，结论是\emph{废弃的理由需要改写}——其中两条量纲其实闭合、两条是条件性的：
+
+\begin{center}
+\begin{tabular}{p{1.3cm}p{4.6cm}p{2.2cm}p{8.0cm}}
+\toprule
+编号 & 原版废弃式 & 结论 & 本卷复核 \\
+\midrule
+X01 & $E=r v^2c^2/G$ & 闭合但无依据 & 量纲给出能量，闭合；库内无对应构造 ⇒ 闭合 $\neq$ 成立 \\
+X02 & $m=r v^2/G$ & 闭合但无依据 & 量纲给出质量，闭合；同上 \\
+X03 & $4\pi^2r^3c^2/(t^2Ghv)=1$ & 不判死 & 按 $v=$ 速率、$h=$ 长度读，左边量纲 $M^{-1}L^{10}T^{-8}$，非无量纲；原文未附符号表 ⇒ BOUNDARY \\
+X04 & $q=4\pi v^2r/(cG)$ & 不齐 & 左 $ML^{-1}T$ vs 电荷 $IT$，缺口 $ML^{-1}I^{-1}$ \\
+X05 & $m=\eta c q$ & 条件性 & 量纲相容的唯一读法是 $[\eta]=M^{-1}$；若 $\eta$ 是无量纲参数则 FAIL ⇒ 原文须显式声明 $\eta$ 的量纲 \\
+X06 & $G=\alpha^2/\varepsilon_0c^2=\alpha^2\mu_0$ & 不齐 & $[G]=M^{-1}L^3T^{-2}$ vs $[\alpha^2\mu_0]=MLT^{-2}I^{-2}$，根本不在同一量纲族（见 \S\ref{sec:const}） \\
+X07 & 静止电荷产生磁场 & 物理错误 & $B\propto q\bx v$，静止时 $v=0\Rightarrow B\equiv0$，与主张直接矛盾 \\
+X08 & $\alpha=r/h_0$ & 撞尺度开放项 & $\alpha$ 无量纲 $\Rightarrow h_0$ 必须是长度标度，于是 $\alpha$ 被挂在一个外部长度上 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{常数层：一次非恒等的巧合}
+\label{sec:const}
+
+原版把 $G=\alpha^2\mu_0$ 列为恒等式。本卷分两步查。
+
+\textbf{第一步，量纲}：$[\alpha^2\mu_0]=MLT^{-2}I^{-2}$，$[G]=M^{-1}L^3T^{-2}$，两者相差 $M^{-2}L^{-2}I^{2}$，根本不在同一量纲族（X06）。任何等式若两侧量纲不同，就不可能是恒等式。
+
+\textbf{第二步，数值}（N03）：取 CODATA 2018 口径 $e=1.602176634\times10^{-19}\,\mathrm C$、$\varepsilon_0=8.8541878128\times10^{-12}\,\mathrm{F/m}$、$\mu_0=1.25663706212\times10^{-6}\,\mathrm{H/m}$、$c=299792458\,\mathrm{m/s}$、$\hbar=1.054571817\times10^{-34}\,\mathrm{J\,s}$、$G=6.67430\times10^{-11}$，先自算 $\alpha=e^2/(4\pi\varepsilon_0\hbar c)$ 得 $\alpha^{-1}=137.03599900014371619523116$，与实验值 $137.035999084$ 的相对偏差 $6.12\times10^{-10}$（自洽性良好）；再算
+\begin{equation}
+  \frac{\alpha^2\mu_0}{G}=1.0026163909378515263740768 ,
+  \qquad \text{相对偏差}\ 2.62\times10^{-3}.
+\end{equation}
+即：在 $0.26\%$ 的精度上「成立」。由它反推的 $\alpha^{-1}=\sqrt{\mu_0/G}=137.21515176624628894115048$，与实验值差 $1.31\times10^{-3}$（N04）。
+
+\begin{quote}
+\textbf{判决 7}：$G=\alpha^2\mu_0$ \emph{不是恒等式}，而是一个\emph{量纲不齐、精度只到千分之三}的巧合；它不能用来反推 $\alpha$，因而\textbf{零预测力}。附带一条方法论：$0.26\%$ 的「吻合」在常数层是极常见的巧合（量级接近的量相除天然落在 $1\pm10^{-3}$），若不先做量纲检验，这种巧合会被误当成理论证据。
+
+另需提醒：原版把 $\mu_0$ 当作精确的 $4\pi\times10^{-7}\,\mathrm{H/m}$ 使用。实测 $\mu_0$（CODATA 2018）与 $4\pi\times10^{-7}$ 相差 $5.44\times10^{-10}$（N07，2019 年 SI 重定义的余量），任何以 $\mu_0$ 为输入的反解都只在第 9 位有效。
+\end{quote}
+
+作为库内锚的交叉核对，本卷复算 $c^4/(8\pi G)=4.8154538867224223992518906\times10^{42}$，与库内锚点逐位一致，相对偏差 $3.39\times10^{-27}$（N05）；$c^4/G=1.2102555643382062881895930\times10^{44}$，与库内锚点相对偏差 $2.31\times10^{-26}$（N06）。$\varepsilon_0\mu_0c^2=0.99999999999995651906884222$，相对偏差 $4.35\times10^{-14}$（N01，偏差来自 CODATA 有效位数）。
+
+\section{结构层：恒等式、映射与外部输入}
+\label{sec:struct}
+
+\begin{center}
+\begin{tabular}{p{1.3cm}p{4.4cm}p{1.6cm}p{8.0cm}}
+\toprule
+编号 & 检查 & 结论 & 本卷读数与判读 \\
+\midrule
+S01 & 母力方程的结构 & IDN & 量纲闭合，但整式等于 $\dd[m(\bx c-\bx v)]/\dd t$，是乘积法则恒等式；作为「力方程」不提供任何关于 $m,\bx c,\bx v$ 演化之外的信息 \\
+S02 & 四力分项映射 & BOUNDARY & 映射规则未给出；与本目录 62/63 号「对称性 no-go、反解定理」、70 号「力统一供给需求预算」同向，以 70 号定理 E 为准 \\
+S03 & 弱力扇区 & BOUNDARY & 弱扇区在供给/需求预算下不闭合 ⇒ 已被库内否证，本卷不重判 \\
+S04 & 主丛桥接 & INFO & $\pi_3(SU(2))=\mathbb Z$ 属外部引用；几何旋量场 $\to$ 规范场是另行建立的结构对应，不得记为从螺旋公设导出 \\
+S05 & 自由度记账 & BOUNDARY & 引入含副法向分量的场（Darboux 矢量/涡量场）$\Rightarrow$ 新增 1 个场（自由函数）。按「常数$+$节点$+$自由函数」口径自由度数 $+1$（回链本目录 15 号册口径）；按「自由常数 $\le1$」口径不冲突。两口径结论不同 ⇒ 原文须声明采用哪一口径 \\
+S06 & 挠率场的传播性 & BOUNDARY & 量纲门槛已给出（动能项可行），但方程完备性不在本卷判定范围 \\
+S07 & 旋度扰动的可证伪性 & BOUNDARY & 本卷只给量纲门槛，不给定量预言 \\
+S08 & 编号口径 & INFO & 同一批公式在库内已存在 17/18/20/23/28 五种编号口径；原版 36 式为又一口径 ⇒ 跨册引用「第 $N$ 式」必须声明口径 \\
+S09 & 四项映射单射性 & \textbf{FAIL} & 第 2、3 项表达式逐字相同 $\Rightarrow$ 四力归因结构上不成立 \\
+S10 & 原版的 Frenet 公式 & \textbf{FAIL} & $\dot{\bx T}$ 无挠率项（见判决 3） \\
+S11 & 原创归属边界 & BOUNDARY & 见下段 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{quote}
+\textbf{判决 8（原创边界）}：本卷确认的原创增量只有三项，且都不足以支撑「统一场论」这一层级：
+\begin{enumerate}
+  \item \textbf{解析求导可得}（IDN）：$\kappa=r\omega^2/c^2$、$\tau=h\omega/c^2$ 与极限核验——已有几何事实的完整重述；
+  \item \textbf{切向速度场的协变导数不含挠率}（机器零）：这是一条\emph{有用的负面结果}，它直接否证了原版的切向场展开；
+  \item \textbf{类空公设使协变升级不可行}（机器零 + 二阶趋零）：这是一条\emph{结构性负面结果}，它划定了本公设的能力边界。
+\end{enumerate}
+其余「协变改写」是把教科书公式换一套记号（IDN）。按库内 2026-10-03 册的统一场论达成度判据（UFT-1 数学自洽 / UFT-2 四力统一 / UFT-3 常数派生 / UFT-4 观测复现 / UFT-5 可证伪预言 / UFT-6 外部验证）逐条对表，本卷的读数是：\textbf{UFT-1 仅在「修复后」成立；UFT-2 因 S09（映射非单射）与 S03（弱扇区已被否证）不成立；UFT-3 因判决 7 不成立；UFT-4 成立但内容是教科书复现；UFT-5 不成立（23 条中无一条带阈值的新数值预言）；UFT-6 不成立。达成度仍为 $1/6$，与 2026-10-03 册同量级，不因本卷升格。}
+\end{quote}
+
+\section{判决汇总与证据分级}
+\label{sec:verdict}
+
+本卷共 90 条判定。按「性质（kind）」与「结果（verdict）」两栏交叉统计：
+
+\begin{center}
+\begin{tabular}{lrrrrr}
+\toprule
+ & PASS & FAIL & IDN & BOUNDARY & INFO \\
+\midrule
+守卫 G01--G07 与控制组 CT1--CT3 & 10 & 0 & 0 & 0 & 0 \\
+运动学/协变层 K & 17 & 4 & 0 & 1 & 0 \\
+量纲层 D（收录式） & 14 & 7 & 2 & 0 & 0 \\
+量纲层 A（库内锚） & 8 & 0 & 0 & 0 & 0 \\
+量纲层 X（废弃式） & 2 & 2 & 0 & 4 & 0 \\
+常数层 N & 4 & 2 & 0 & 0 & 2 \\
+结构层 S & 1 & 2 & 0 & 6 & 2 \\
+\midrule
+合计 & 56 & 17 & 2 & 11 & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+证据分级沿用库内约定：\textbf{L0} 记号改写，\textbf{L1} 教科书物理的另一种写法，\textbf{L2} 有条件的结构结论，\textbf{L3} 带阈值、可被实验单独否证的数值预言。本卷的分级：
+
+\begin{center}
+\begin{tabular}{p{3.2cm}p{1.6cm}p{9.0cm}}
+\toprule
+结论 & 等级 & 说明 \\
+\midrule
+$\kappa=r\omega^2/c^2$、$\tau=h\omega/c^2$ 及极限核验 & L0 & 几何恒等重述，但求导链完整、可复算，保留为工具 \\
+切向场协变导数无挠率项 & L2 & 负面结构结论；对原版公式的否证力强，但本身不预言可测量 \\
+类空公设 $\Rightarrow$ 协变升级不可行 & L2 & 负面结构结论；划定能力边界 \\
+母力方程 $\bx F=(\bx c-\bx v)\DD m/\DD t+m\DD\bx c/\DD t-m\DD\bx v/\DD t$ & L1 & 乘积法则恒等；量纲闭合但零信息量 \\
+23 条收录式的量纲判定表 & L1 & 一致性筛子；库内 2026-10-03 册已给出同类反例（量纲自洽 $\ne$ 成立） \\
+四力映射非单射 & L2 & 结构性否证，不涉测量 \\
+23 条中任何一条 & \textbf{无 L3} & 无任何带阈值的新数值预言；本卷\textbf{不新增、不重复计} L3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{最小合法修改路线}
+\label{sec:routes}
+
+以下四条是本卷给出的\textit{候选}修复路线。本卷\textbf{不代选}——选择权在提出者与库内裁决，且每条路线的代价都已量化。
+
+\begin{description}
+  \item[R1 · 「空间模式」路线] 保留圆柱螺旋与几何恒等，但把螺旋\emph{降格为空间模式}（场结构），不再视作物体世界线。收益：几何部分（Frenet 标架、涡量场、Darboux 矢量）完整保留；$\nabla\times\bx T=\tau\bx T+\kappa\bx B$ 在三维空间内良定义（量纲门槛 A07 通过）。代价：$r,\omega,h$ 从「公设参数」降为「场参数」；需引入含副法向分量的场（自由度 $+1$，见 S05）；放弃「矢量光速发散」作为公设。
+  \item[R2 · 「亚光速」路线] 把速率公设放宽为 $|\dot{\bx R}|\le c$（亚光速）。收益：固有时存在，协变构造良定义（K20 阳性对照给出 $\dd\tau/\dd t=\sqrt{1/2}$ 的可复算读数）。代价：「光速发速」不再是公设，需要另行解释为何取到接近 $c$；$\kappa,\tau$ 的解析式须改写为含 $v$ 的形式。
+  \item[R3 · 「保公设、去协变」路线] 保留 $|\dot{\bx R}|=c$ 与圆柱螺旋，但只在\emph{三维空间几何层}做 Frenet 分析，不引入四维协变导数。收益：本卷已判决的全部结论原样成立；实现代价最低。代价：无法给出任何四维统一场论，四力统一问题被推迟而非解决。
+  \item[R4 · 「补标度」路线] 为 Eq-09-03/09-09/09-16 补足标度（面积元口径、长度标度、电荷类比），使质量与电荷的几何定义成立。代价：新增 $2\sim3$ 个外部标度，撞库内尺度开放项（与本目录 68 号体系一的拓扑缺口同族）；且只修量纲，不修判决 3、5、6。
+\end{description}
+
+\begin{quote}
+\textbf{路线选择的硬约束}：R1--R3 三条路线\emph{互斥}（分别要求「降格」「放宽」「去协变」），不可叠加；R4 可与任一条叠加，但只解决量纲族中的第一类缺陷。无论选哪条，\textbf{判决 3 与判决 6 都不会被绕过}：原版的 $\dot{\bx T}$ 公式与四项映射必须改写，否则 \eqref{eq:draftdc} 层面的错误会直接进入正式方程组。
+\end{quote}
+
+\section{开放项台账}
+\label{sec:open}
+
+\begin{center}
+\begin{tabular}{p{2.2cm}p{6.2cm}p{5.4cm}}
+\toprule
+编号 & 开放项 & 关闭条件 \\
+\midrule
+X-74-01 & 挠率如何合法进入协变导数 & 给出含副法向分量的场（Darboux 矢量或涡量场）并写出其场方程；量纲门槛已通过（A06/A07），方程完备性未做 \\
+X-74-02 & 类空公设与协变的互斥如何裁决 & 在 R1/R2/R3 中择一；未择前「协变升级」不得进入正式方程组 \\
+X-74-03 & 质量与电荷的几何定义如何补齐标度 & 明确面积元口径与长度标度来源；须避开外部长度硬编码 \\
+X-74-04 & 四力映射需要一个\emph{第四个}独立几何量 & 现映射非单射（S09）；若坚持四力统一，须引入第四个独立结构量并记账自由度 \\
+X-74-05 & 挠率场的传播性与动能项 & 补出完整作用量（动能项量纲门槛 A08 已过），并复核鬼场/梯度不稳定性 \\
+X-74-06 & $\alpha$ 跑动的 $\beta$ 函数来源 & Eq-09-22 只是定义式；跑动须另给 $\beta$ 函数与边界条件，且须声明能标口径（回链本目录能标一致性册） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{复现说明}
+\label{sec:repro}
+
+主仪器（本卷全部读数的来源）：
+\begin{verbatim}
+python -B "验证脚本/74_helix_covariant_audit.py"
+\end{verbatim}
+产物：\code{74\_helix\_covariant\_audit\_results.json}（机读）与 \code{...\_out.txt}（人读），与脚本同目录。退出码语义见 \S\ref{sec:scope}。
+
+本卷另附六个可独立运行的配套脚本（均带自检与退出码口径，产物写回同目录）：
+
+\begin{center}
+\begin{tabular}{p{6.4cm}p{7.4cm}}
+\toprule
+脚本 & 职责 \\
+\midrule
+\code{74\_frenet\_kappa\_tau\_mpmath.py} & Frenet $\kappa,\tau$ 的高精度精算（优先 mpmath 250 位；不可用时退回 \code{decimal} 60 位并如实标注）与解析式对拍 \\
+\code{74\_unified\_force\_covariant\_deriv.py} & 协变导数展开的独立核验：切向场三分量、原版两式的残差、正确输运三角表 \\
+\code{74\_limit\_check\_kappa\_tau.py} & 极限扫描：$h\to0$、$r\to0$、$\omega\to0$ 的退化正确性 \\
+\code{74\_dimensional\_audit.py} & 23 条收录式 + 8 条废弃式的量纲审计（独立实现，带自身量纲工具守卫） \\
+\code{74\_rg\_alpha\_running.py} & 标准模型 1-loop $\alpha$ 跑动（纯标准库 RK4），用于给 Eq-09-22 提供「跑动需要什么」的对照基线 \\
+\code{74\_chi2\_unified\_fit.py} & 联合拟合的可证伪性判定：检验螺旋参数族对标准可观测量的残差是否随参数变化 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+六个脚本与主仪器的关系：主仪器是\emph{汇总门禁}，六个脚本是\emph{专题精算}。凡结论进本卷正文者，以主仪器的机读产物为准；专题脚本只提供独立复核与更宽的扫描。
+
+\section{交叉引用与「不重复计 L3」声明}
+\label{sec:xref}
+
+本卷是本体系的\emph{原创卷}（原版审计$\to$修复$\to$原创方程），但其中的原创增量经本卷自评只到 L2（以负面结构结论为主），因此在本目录的证据台账中\textbf{不新增 L3 条目，也不重复计入他人已登记的 L3}。与本卷相关的既有卷册如下（凡引用均回链原卷，不在本文复述其结论）：
+
+\begin{center}
+\begin{tabular}{p{3.0cm}p{9.8cm}}
+\toprule
+卷号 & 关系 \\
+\midrule
+本目录 62/63 号 & 对称性 no-go 与反解定理：四力映射不可由几何直接给出的库内依据 \\
+本目录 66/67 号 & 光子螺旋坐标语义与类光无 Frenet 标架：与本卷「类空/类光」边界同族 \\
+本目录 68 号 & 曲率挠率定稿与主恒等式 $\kappa^2+\tau^2=(\omega/c)^2$（本卷 K08 同源） \\
+本目录 70 号 & 力统一供给需求预算与定理 E：弱扇区否证的库内依据 \\
+本目录 71/72 号 & 电磁扇区精确解与完成度核定：本卷 Maxwell 部分的对照基线 \\
+\code{04\_公共成果/.../判定\_统一场论核心公式\_全目录总结与正确核固化\_2026-10-03.md} & 23 式规范台账、正确核 22 条、剔除清单 7 条、达成度 $1/6$；本卷的量纲口径与其同源，属交叉印证 \\
+本目录 15 号册 & 自由度口径（常数/节点/自由函数），本卷 S05 的记账依据 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+治理声明：本卷\textbf{不改} \code{claims.csv}、\textbf{不运行} \code{refresh\_catalog.py}、\textbf{不改} \code{verify.py}、\textbf{不触碰}任何他卷字节；卷台账与总纲按本目录既有体例各追加一条。
+
+\appendix
+\section{原版 36 式 $\to$ 23 条收录式 $\to$ 本卷状态总表}
+\label{app:a}
+
+\noindent
+算术必须闭合：$23$ 条收录式 $+$ 8 条原版明示的废弃式 $+$ 5 条原版\emph{未随附逐条原文}者 $=36$。后者本卷无法判读，按诚实边界登记为「不可判」，并列出各自缺什么。
+
+\subsection{收录式 23 条}
+\begin{center}
+\begin{tabular}{p{2.0cm}p{5.4cm}p{2.2cm}p{4.2cm}}
+\toprule
+编号 & 内容 & 本卷判定 & 关键读数/回链 \\
+\midrule
+Eq-09-01 & 时空同一化 & PASS & 量纲齐次 \\
+Eq-09-02 & 圆柱螺旋与约束 & PASS & 公设底座；K01/K02 机器零 \\
+Eq-09-03 & 质量几何定义 & \textbf{FAIL} & 缺口 $L^{-1}T$ \\
+Eq-09-04 & 引力场弱场定义 & PASS & 牛顿引力改写（L1） \\
+Eq-09-05 & 静止动量 & PASS & L1 \\
+Eq-09-06 & 运动动量 & PASS & L1 \\
+Eq-09-07 & 协变母力方程 & PASS & 量纲闭合但恒等（S01） \\
+Eq-09-08 & 协变波动方程 & PASS & K21 两侧机器零 \\
+Eq-09-09 & 电荷几何本源 & \textbf{FAIL} & 缺口 $IT^2$ \\
+Eq-09-10 & 相对论总能量 & PASS & L1 \\
+Eq-09-11 & 运动电荷磁场 & PASS & 标准毕奥--萨伐尔（L1） \\
+Eq-09-12 & 磁矢势涡旋关系 & PASS & L1 \\
+Eq-09-13 & 光速推进动力学 & PASS & 量纲闭合 \\
+Eq-09-14 & 静止角动量 & PASS & L1 \\
+Eq-09-15 & 引力场达朗贝尔方程 & \textbf{FAIL} & 缺口 $ML^{-3}TI^{-1}$ \\
+Eq-09-16 & 通量--电荷拓扑关联 & \textbf{FAIL} & 缺口 $L^{-1}I^{-1}$ \\
+Eq-09-17 & 法拉第感应协变式 & PASS & 标准法拉第律（L1） \\
+Eq-09-18 & 场--引力交叉耦合 & \textbf{FAIL} & 缺口 $M^2L^{-4}I^{-2}$ \\
+Eq-09-19 & 电场矢势定义 & \textbf{FAIL} & 两项不可相加（差 $T$） \\
+Eq-09-20 & 三场协变波动方程 & PASS & IDN：一般无源波动假设 \\
+Eq-09-21 & 拓扑电荷量子化 & PASS & 量纲闭合；$\pi_3$ 为外部引用（S04） \\
+Eq-09-22 & $\alpha$ 的 RG 跑动式 & PASS & IDN：定义式，非跑动预言 \\
+Eq-09-23 & 加速电荷引力辐射类比场 & \textbf{FAIL} & 缺口 $MI^{-1}$；同 2026-10-03 册 X-2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{废弃式 8 条}
+见 \S\ref{sec:dim} 的复核表：X01/X02 量纲闭合但无库内依据；X03 缺符号表（BOUNDARY）；X04、X06 量纲不齐；X05 条件于 $\eta$ 的量纲声明；X07 物理错误；X08 撞尺度开放项。
+
+\subsection{不可判的 5 条}
+原版未随附这 5 条的逐条原文，故本卷不判、只登记缺什么：\emph{(i)} 原始 36 式中的哪 5 条被划入此组；\emph{(ii)} 每条的符号表（尤其 $\eta$、$h_0$、$\Omega$、$d\bx\Sigma$ 的定义）；\emph{(iii)} 每条的适用域与边界条件；\emph{(iv)} 与本卷 Eq-09-01--23 的引用关系；\emph{(v)} 原版所称「36 条逐条审查」的对照表本身（缺失则无法交叉核对审查覆盖率）。
+
+\section{机器读数摘录}
+\label{app:b}
+
+\noindent
+下表为本卷正文引用的全部关键读数，均取自 \code{74\_helix\_covariant\_audit\_results.json}。
+
+\begin{center}
+\begin{tabular}{p{1.6cm}p{9.2cm}p{3.4cm}}
+\toprule
+条目 & 读数 & 结果 \\
+\midrule
+K03/K04 & $\kappa$ 解析 vs 数值相对残差 $1.11\times10^{-18}$ / $4.34\times10^{-21}$ & PASS \\
+K05/K06 & $\tau$ 解析 vs 数值相对残差 $8.89\times10^{-18}$ / $3.47\times10^{-20}$ & PASS \\
+K08 & $\kappa^2+\tau^2-(\omega/c)^2=-1.0\times10^{-60}$ & PASS（机器零） \\
+K11 & $\DD\bx c/\DD t$ 的 $\bx N$ 分量 $3.9999999999999999956$（预期 $4$） & PASS \\
+K12/K13 & $\bx T$ 分量 $-1.01\times10^{-51}$；$\bx B$ 分量 $1.52\times10^{-51}$ & PASS（机器零） \\
+K14 & 原版 $\dot{\bx T}$ 版本残差 $9.2308\times10^{-1}=|\omega\tau|$ & \textbf{FAIL} \\
+K15 & 原版 $\DD\bx c/\DD t$ 版本残差 $6.0000\times10^{0}=|\tau c^2|$ & \textbf{FAIL} \\
+K16 & 两版互差 $5.0769\times10^{0}$ & \textbf{FAIL} \\
+K17 & 输运三角表归一残差 $1.11\times10^{-18}$ & PASS \\
+K18 & $|ds^2|/(c^2\Delta t^2)$：$1.03\times10^{-7}\to2.56\times10^{-8}$，比值 $0.2500$ & PASS（二阶趋零） \\
+K19 & $1-|v|^2/c^2=0$，$\dd\tau/\dd t=0$ & \textbf{FAIL}（协变升级不可行） \\
+K20 & 亚光速对照：$\dd\tau/\dd t=7.071067811865475244\times10^{-1}$ & PASS \\
+K21 & $\nabla^2L$ 与 $c^{-2}\partial_t^2L$ 之差 $0$（机器零） & PASS \\
+D03 & Eq-09-03 缺口 $L^{-2}T^2$ & \textbf{FAIL} \\
+D09 & Eq-09-09 缺口 $IT^2$ & \textbf{FAIL} \\
+D15 & Eq-09-15 缺口 $ML^{-3}TI^{-1}$ & \textbf{FAIL} \\
+D16 & Eq-09-16 缺口 $L^{-1}I^{-1}$ & \textbf{FAIL} \\
+D18 & Eq-09-18 缺口 $M^2L^{-4}I^{-2}$ & \textbf{FAIL} \\
+D19 & Eq-09-19 两项差 $T$（电势读法）/ $M^{-1}TI^{-1}$（引力势读法） & \textbf{FAIL} \\
+D23 & Eq-09-23 缺口 $MI^{-1}$ & \textbf{FAIL} \\
+N01 & $\varepsilon_0\mu_0c^2$ 相对偏差 $4.35\times10^{-14}$ & PASS \\
+N02 & $\alpha^{-1}$ 自算 vs 实验相对偏差 $6.12\times10^{-10}$ & PASS \\
+N03 & $\alpha^2\mu_0/G=1.0026163909378515263740768$（偏差 $2.62\times10^{-3}$） & \textbf{FAIL}（非恒等巧合） \\
+N04 & $\alpha^{-1}_{\rm pred}=137.21515176624628894115048$（偏差 $1.31\times10^{-3}$） & \textbf{FAIL} \\
+N05 & $c^4/(8\pi G)$ 与库内锚点相对偏差 $3.39\times10^{-27}$ & PASS \\
+N06 & $c^4/G$ 与库内锚点相对偏差 $2.31\times10^{-26}$ & PASS \\
+N07 & $\mu_0$ 与 $4\pi\times10^{-7}$ 相对差 $5.44\times10^{-10}$ & INFO \\
+N08 & $Z\equiv Gc/2=1.0004524\times10^{-2}$，与 $0.01$ 相对偏差 $4.52\times10^{-4}$ & INFO（伪显著） \\
+S09/S10 & 映射非单射；原版 Frenet 公式无来源 & \textbf{FAIL} \\
+CT1/CT2/CT3 & $\kappa$ 幂次变异、$\tau$ 定义变异、$\mu_0\times10$ 均使对应判据转红 & PASS（控制组有效） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

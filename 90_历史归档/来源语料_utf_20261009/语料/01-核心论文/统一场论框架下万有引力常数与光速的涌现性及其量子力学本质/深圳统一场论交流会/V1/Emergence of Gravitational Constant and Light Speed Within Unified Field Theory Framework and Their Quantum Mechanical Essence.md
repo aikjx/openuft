@@ -1,10 +1,10 @@
 # Emergence of Gravitational Constant and Light Speed Within Unified Field Theory Framework and Their Quantum Mechanical Essence
 
-**Authors**: Mo Guozhi, Zhang Xiangqian
+**Authors**: Mo Guozhi, ZUFT
 
 ## Abstract
 
-Within the framework of Zhang Xiangqian's Unified Field Theory, this study derives the quantum geometric expression of the gravitational constant based on a全新 physical perspective of **spatial light-speed spiral motion**, revealing its emergent nature and achieving a natural unification of macroscopic gravity and microscopic quantum behavior.
+Within the framework of ZUFT's Unified Field Theory, this study derives the quantum geometric expression of the gravitational constant based on a全新 physical perspective of **spatial light-speed spiral motion**, revealing its emergent nature and achieving a natural unification of macroscopic gravity and microscopic quantum behavior.
 
 ### Core Physical Postulates
 
@@ -22,7 +22,7 @@ Based on the three core postulates of **spacetime unification, spatial light-spe
 
 The unification of gravitational theory and quantum mechanics is the core challenge of modern physics. General relativity accurately describes gravity at macroscopic scales but encounters singularity problems in the quantum domain; quantum mechanics has achieved brilliant results in the microscopic domain but cannot be directly applied to gravity. There is a profound conceptual gap between the two.
 
-Existing unified theories face three major challenges: experimental verification difficulties, high mathematical complexity, and ambiguous physical images. Zhang Xiangqian's Unified Field Theory takes a different approach, based on the core principle that **the universe consists of objects and space**, proposing a new perspective of **spatial geometric motion**, reducing all physical phenomena to dynamic changes in space without additional dimensions or complex mathematics, providing a concise and testable theoretical framework for the grand unification of physics.
+Existing unified theories face three major challenges: experimental verification difficulties, high mathematical complexity, and ambiguous physical images. ZUFT's Unified Field Theory takes a different approach, based on the core principle that **the universe consists of objects and space**, proposing a new perspective of **spatial geometric motion**, reducing all physical phenomena to dynamic changes in space without additional dimensions or complex mathematics, providing a concise and testable theoretical framework for the grand unification of physics.
 
 ### 1.1 Core Research Questions
 

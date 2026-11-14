@@ -3,7 +3,7 @@
 """
 统一场论所有公式可视化系统
 功能：对统一场论18个核心公式进行交互式可视化展示
-作者：张祥前统一场论研究团队
+作者：ZUFT统一场论研究团队
 日期：2025-10-26
 """
 
@@ -889,7 +889,7 @@ class 统一场论公式可视化系统:
         </div>
         
         <div class="footer">
-            <p>© 2025 张祥前统一场论研究团队 | 基于Python和Matplotlib生成的可视化报告</p>
+            <p>© 2025 ZUFT统一场论研究团队 | 基于Python和Matplotlib生成的可视化报告</p>
         </div>
     </div>
     
@@ -1029,7 +1029,7 @@ class 统一场论公式可视化系统:
                         fontsize=24, ha='center', va='center')
                 plt.text(0.5, 0.7, 'Mathematical Visualization of Unified Field Theory', 
                         fontsize=16, ha='center', va='center')
-                plt.text(0.5, 0.6, '张祥前统一场论研究团队', 
+                plt.text(0.5, 0.6, 'ZUFT统一场论研究团队', 
                         fontsize=14, ha='center', va='center')
                 plt.text(0.5, 0.5, datetime.now().strftime('%Y年%m月%d日'), 
                         fontsize=12, ha='center', va='center')

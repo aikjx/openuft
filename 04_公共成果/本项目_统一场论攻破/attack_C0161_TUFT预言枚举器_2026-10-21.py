@@ -118,7 +118,7 @@ ITEMS = [
      "第四代预言与 LHC 冲突" % format(RATIO_S15_EPS0, ".3e"), "攻破⑧⑫"),
     ("P20", "S16", "TUFT 归一化主册",          "candidate_framework",     0, 0,   0, NOT_TESTABLE,
      "0 公设 / 0 claims 空账本（随⑥收口），无预言载体", "攻破⑯"),
-    ("P21", "S17", "统一场论核心公式(张祥前20式)","candidate_theory",      3, 40,  0, NOT_TESTABLE,
+    ("P21", "S17", "统一场论核心公式(ZUFT20式)","candidate_theory",      3, 40,  0, NOT_TESTABLE,
      "40 claims、0 数值预言字段；20 公式逐条证伪，无幸存数值预言", "攻破⑭"),
     ("P22", "S18", "曲率能量密度标量约束引力", "candidate_theory",        3, 8,   6, EXCLUDED,
      "6 条纯数值字段全错：宇宙年龄 %s 倍偏差、CMB 声学尺度 +%s（869%%）自证伪"

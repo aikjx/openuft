@@ -6,7 +6,7 @@
 
 ## 用户指定著作
 
-**[ZXQ2024]** Zhang X Q. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
+**[ZUFT2024]** ZUFT. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
 
 用户提供；未取得全文，出版社和 ISBN 尚未独立核实。未掌握具体页码时，不把项目某条公式断言为已由该书证明。
 
@@ -224,7 +224,7 @@
 
 ## 正文引用与语言版本
 
-正文使用稳定编号，例如 [ZXQ2024]，并在能查到原文时补充具体页码/章节。书目数据由用户提供或尚未独立核实时，保留此状态，不猜测 DOI、页码、版次或译者。
+正文使用稳定编号，例如 [ZUFT2024]，并在能查到原文时补充具体页码/章节。书目数据由用户提供或尚未独立核实时，保留此状态，不猜测 DOI、页码、版次或译者。
 
 英文、日语摘要使用同一套引用编号和原文题名；只翻译说明文字，不虚构英文版、日文版或译本 ISBN。
 

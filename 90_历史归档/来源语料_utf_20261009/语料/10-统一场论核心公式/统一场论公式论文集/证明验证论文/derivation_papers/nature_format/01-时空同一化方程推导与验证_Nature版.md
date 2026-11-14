@@ -6,13 +6,13 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The spacetime unification equation is a core formula of Zhang Xiangqian's Unified Field Theory, revealing the intrinsic unity of space and time through mathematical derivation. It proposes that "space propagates isotropically at the speed of light"—a theoretical hypothesis that provides a mechanistic explanation for the constancy of light speed. This paper systematically constructs the complete derivation process, confirming its mathematical rigor and physical self-consistency through symbolic differentiation and multi-scale numerical verification. The equation naturally derives the principle of light speed invariance, offering a new framework for relativistic effects, quantum mechanical foundations, and the origin of gravity, serving as a key starting point for unifying the four fundamental interactions.
+The spacetime unification equation is a core formula of ZUFT's Unified Field Theory, revealing the intrinsic unity of space and time through mathematical derivation. It proposes that "space propagates isotropically at the speed of light"—a theoretical hypothesis that provides a mechanistic explanation for the constancy of light speed. This paper systematically constructs the complete derivation process, confirming its mathematical rigor and physical self-consistency through symbolic differentiation and multi-scale numerical verification. The equation naturally derives the principle of light speed invariance, offering a new framework for relativistic effects, quantum mechanical foundations, and the origin of gravity, serving as a key starting point for unifying the four fundamental interactions.
 
 ---
 
@@ -20,7 +20,7 @@ The spacetime unification equation is a core formula of Zhang Xiangqian's Unifie
 
 The nature of space and time has long been one of physics' greatest mysteries. Einstein's theory of relativity established the concept of a four-dimensional spacetime continuum, but fundamental questions remain: Why is light speed constant in all reference frames? What is the essence of time flow? Does space possess intrinsic properties?
 
-Zhang Xiangqian's Unified Field Theory offers a revolutionary perspective: space is not a static background but a dynamic entity propagating isotropically at the speed of light. This hypothesis provides a mechanistic explanation for light speed invariance, unifying time, space, matter, and energy into a coherent mathematical framework, and offering new insights into reconciling quantum mechanics with general relativity.
+ZUFT's Unified Field Theory offers a revolutionary perspective: space is not a static background but a dynamic entity propagating isotropically at the speed of light. This hypothesis provides a mechanistic explanation for light speed invariance, unifying time, space, matter, and energy into a coherent mathematical framework, and offering new insights into reconciling quantum mechanics with general relativity.
 
 This work constructs the complete theoretical system of the spacetime unification equation from a mathematical perspective, establishing the identity between spatial propagation speed and light speed through rigorous derivation and verification. This lays the foundation for the mass definition, gravitational field equations, and electromagnetic field unification in Unified Field Theory, potentially representing a deeper fundamental principle in physics.
 
@@ -218,7 +218,7 @@ The spacetime unification equation $\mathbf{r}(t) = \mathbf{C}t$ reveals the ess
 
 [1] Einstein, A. (1905). On the electrodynamics of moving bodies. Annalen der Physik, 17(10), 891-921.
 [2] Minkowski, H. (1908). Space and time. Lecture at the 80th Meeting of German Natural Scientists and Physicians.
-[3] Zhang, X. Q. (2023). Unified Field Theory: Foundations and Significance. Journal of Modern Physics.
+[3] ZUFT (2023). Unified Field Theory: Foundations and Significance. Journal of Modern Physics.
 [4] Feynman, R. P., Leighton, R. B., & Sands, M. (1964). The Feynman Lectures on Physics (Vol. 2). Addison-Wesley.
 [5] Hawking, S. W., & Ellis, G. F. R. (1973). The Large Scale Structure of Space-Time. Cambridge University Press.
 [6] Misner, C. W., Thorne, K. S., & Wheeler, J. A. (1973). Gravitation. W. H. Freeman.

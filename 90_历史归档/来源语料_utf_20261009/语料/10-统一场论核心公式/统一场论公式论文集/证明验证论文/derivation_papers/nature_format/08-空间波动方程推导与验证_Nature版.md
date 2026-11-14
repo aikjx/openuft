@@ -6,18 +6,18 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
-We derive and validate the Spatial Wave Equation from Zhang Xiangqian's Unified Field Theory (UFT) core postulates, geometricizing wave phenomena as natural consequences of spatial light-speed motion. Starting from the spacetime unity equation \( \vec{r}(t) = \vec{C}t \), we derive the wave equation \( \frac{\partial^2 r}{\partial t^2} = c^2 \nabla^2 r \) through rigorous mathematical analysis, including spatial interaction principles, dimensional analysis, and plane wave hypothesis verification. Using separation of variables, we obtain the general solution as a superposition of plane waves propagating at light speed c. Through symbolic computation, high-precision numerical simulation, and comparison with classical wave equations, we confirm the equation's mathematical rigor, physical self-consistency, and experimental compatibility. This formulation provides a unified geometric framework for wave phenomena, completing the UFT core equation system while offering new insights into wave-matter interactions.
+We derive and validate the Spatial Wave Equation from ZUFT's Unified Field Theory (UFT) core postulates, geometricizing wave phenomena as natural consequences of spatial light-speed motion. Starting from the spacetime unity equation \( \vec{r}(t) = \vec{C}t \), we derive the wave equation \( \frac{\partial^2 r}{\partial t^2} = c^2 \nabla^2 r \) through rigorous mathematical analysis, including spatial interaction principles, dimensional analysis, and plane wave hypothesis verification. Using separation of variables, we obtain the general solution as a superposition of plane waves propagating at light speed c. Through symbolic computation, high-precision numerical simulation, and comparison with classical wave equations, we confirm the equation's mathematical rigor, physical self-consistency, and experimental compatibility. This formulation provides a unified geometric framework for wave phenomena, completing the UFT core equation system while offering new insights into wave-matter interactions.
 
 ---
 
 ## Introduction
 
-Waves are fundamental to physics, describing phenomena from electromagnetic radiation to quantum mechanics. However, classical wave equations lack a fundamental geometric interpretation of wave origins. Zhang Xiangqian's Unified Field Theory (UFT) proposes a revolutionary approach by geometrizing waves as spatial light-speed motion variations.
+Waves are fundamental to physics, describing phenomena from electromagnetic radiation to quantum mechanics. However, classical wave equations lack a fundamental geometric interpretation of wave origins. ZUFT's Unified Field Theory (UFT) proposes a revolutionary approach by geometrizing waves as spatial light-speed motion variations.
 
 This work systematically derives the Spatial Wave Equation from UFT's core postulates, solving it to obtain general solutions, and validating it through multiple methods. We demonstrate its compatibility with existing theories while offering a unified geometric perspective on wave essence, positioning it as a cornerstone of unified physics.
 
@@ -191,7 +191,7 @@ This formulation completes the UFT core equation system, providing a unified geo
 
 ## References
 
-1. Zhang, X. Q. (2020). *Unified Field Theory*. China Science and Technology Press.
+1. ZUFT (2020). *Unified Field Theory*. China Science and Technology Press.
 2. Einstein, A. (1905). On the Electrodynamics of Moving Bodies. *Annalen der Physik*, 322(10), 891-921.
 3. Maxwell, J. C. (1865). A Dynamical Theory of the Electromagnetic Field. *Philosophical Transactions of the Royal Society of London*, 155, 459-512.
 4. Michelson, A. A., & Morley, E. W. (1887). On the Relative Motion of the Earth and the Luminiferous Ether. *American Journal of Science*, 34(203), 333-345.

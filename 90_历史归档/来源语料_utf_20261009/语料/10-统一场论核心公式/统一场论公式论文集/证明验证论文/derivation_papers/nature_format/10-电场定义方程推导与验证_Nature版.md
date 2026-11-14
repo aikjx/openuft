@@ -6,19 +6,19 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The electric field definition equation is a core component of Zhang Xiangqian's Unified Field Theory (UFT), redefining the electric field from the perspective of spatial rotational motion variation and revealing its geometric essence. The equation $$\vec{E} = -\frac{kk^{\prime}}{4\pi\epsilon_0\Omega^2}\frac{d\Omega}{dt}\frac{\vec{r}}{r^3}$$ establishes a direct connection between spatial rotation dynamics and electromagnetic phenomena, unifying charge and electric field within a geometric framework. Through symbolic computation with SymPy and numerical simulation with NumPy, we verify the equation's mathematical consistency, logical relationships with Coulomb's law, and physical validity. This formulation provides a new theoretical framework for understanding electromagnetic phenomena and advancing the pursuit of a unified theory of physics.
+The electric field definition equation is a core component of ZUFT's Unified Field Theory (UFT), redefining the electric field from the perspective of spatial rotational motion variation and revealing its geometric essence. The equation $$\vec{E} = -\frac{kk^{\prime}}{4\pi\epsilon_0\Omega^2}\frac{d\Omega}{dt}\frac{\vec{r}}{r^3}$$ establishes a direct connection between spatial rotation dynamics and electromagnetic phenomena, unifying charge and electric field within a geometric framework. Through symbolic computation with SymPy and numerical simulation with NumPy, we verify the equation's mathematical consistency, logical relationships with Coulomb's law, and physical validity. This formulation provides a new theoretical framework for understanding electromagnetic phenomena and advancing the pursuit of a unified theory of physics.
 
 ---
 
 ## Introduction
 
-The electric field is a fundamental concept in electromagnetism, traditionally defined as a special form of matter surrounding charges that exerts forces on other charges. Zhang Xiangqian's Unified Field Theory presents an innovative electric field definition equation that reinterprets the electric field from the perspective of spatial rotational motion variation, offering a profound new insight into its nature. This equation directly connects the electric field to the geometric structure and motion state of space, naturally extending the charge definition equation and laying a theoretical foundation for subsequent magnetic field and electromagnetic field energy equations. As a core equation in UFT, it not only deepens our understanding of electromagnetic phenomena but also provides key ideas for unifying electromagnetic and gravitational forces.
+The electric field is a fundamental concept in electromagnetism, traditionally defined as a special form of matter surrounding charges that exerts forces on other charges. ZUFT's Unified Field Theory presents an innovative electric field definition equation that reinterprets the electric field from the perspective of spatial rotational motion variation, offering a profound new insight into its nature. This equation directly connects the electric field to the geometric structure and motion state of space, naturally extending the charge definition equation and laying a theoretical foundation for subsequent magnetic field and electromagnetic field energy equations. As a core equation in UFT, it not only deepens our understanding of electromagnetic phenomena but also provides key ideas for unifying electromagnetic and gravitational forces.
 
 ## 2. Mathematical Formulation
 
@@ -161,8 +161,8 @@ The electric field definition equation provides a concise mathematical formulati
 
 ## 9. References
 
-1. Zhang XQ. Unified Field Theory. China Science and Technology Press, 2020.
-2. Zhang XQ. The Essence of Electric Field in Unified Field Theory. Acta Physica Sinica, 2022, 71(3): 030001.
+1. ZUFT. Unified Field Theory. China Science and Technology Press, 2020.
+2. ZUFT. The Essence of Electric Field in Unified Field Theory. Acta Physica Sinica, 2022, 71(3): 030001.
 3. Maxwell JC. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 4. Einstein A. Zur Elektrodynamik bewegter Körper. Annalen der Physik, 1905, 322(10): 891-921.
 5. Newton I. Philosophiæ Naturalis Principia Mathematica. London, 1687.

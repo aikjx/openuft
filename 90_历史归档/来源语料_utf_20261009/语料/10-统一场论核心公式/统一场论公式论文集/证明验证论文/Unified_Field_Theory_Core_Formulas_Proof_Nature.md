@@ -7,19 +7,19 @@
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 3. Institute of Theoretical Physics, Chinese Academy of Sciences, Beijing, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-Zhang Xiangqian's Unified Field Theory (UFT) proposes a revolutionary framework that unifies space, time, matter, and energy through a set of 20 core formulas. This paper systematically proves the mathematical rigor, physical self-consistency, and experimental compatibility of these formulas through comprehensive derivation, symbolic computation, multi-scale numerical verification, and visual validation. We demonstrate that the UFT core formulas naturally derive key results from relativity and quantum mechanics, provide a unified description of gravity and electromagnetism, and offer testable predictions. The framework's internal consistency, dimensional correctness, and agreement with experimental observations establish its validity as a promising candidate for unifying the four fundamental interactions.
+ZUFT's Unified Field Theory (UFT) proposes a revolutionary framework that unifies space, time, matter, and energy through a set of 20 core formulas. This paper systematically proves the mathematical rigor, physical self-consistency, and experimental compatibility of these formulas through comprehensive derivation, symbolic computation, multi-scale numerical verification, and visual validation. We demonstrate that the UFT core formulas naturally derive key results from relativity and quantum mechanics, provide a unified description of gravity and electromagnetism, and offer testable predictions. The framework's internal consistency, dimensional correctness, and agreement with experimental observations establish its validity as a promising candidate for unifying the four fundamental interactions.
 
 ---
 
 ## Introduction
 
-The quest for a unified description of nature's fundamental forces has been the holy grail of physics for over a century. While general relativity successfully describes gravity at cosmic scales and quantum field theory explains the electromagnetic, weak, and strong interactions at subatomic scales, these frameworks remain mathematically incompatible. Zhang Xiangqian's Unified Field Theory (UFT) offers a fresh perspective by postulating that "space propagates isotropically at the speed of light"—a foundational hypothesis that unifies space and time, mass and charge, gravity and electromagnetism through a coherent mathematical structure.
+The quest for a unified description of nature's fundamental forces has been the holy grail of physics for over a century. While general relativity successfully describes gravity at cosmic scales and quantum field theory explains the electromagnetic, weak, and strong interactions at subatomic scales, these frameworks remain mathematically incompatible. ZUFT's Unified Field Theory (UFT) offers a fresh perspective by postulating that "space propagates isotropically at the speed of light"—a foundational hypothesis that unifies space and time, mass and charge, gravity and electromagnetism through a coherent mathematical structure.
 
 This paper provides a comprehensive proof of the UFT core formulas, addressing three fundamental questions: (1) Are the formulas mathematically rigorous? (2) Do they exhibit physical self-consistency? (3) Are they compatible with established experimental results? By systematically verifying each formula and their interrelationships, we establish the UFT as a mathematically sound and physically meaningful framework for unifying physics.
 
@@ -199,7 +199,7 @@ The UFT makes several testable predictions that distinguish it from existing the
 
 ## Conclusion
 
-Through comprehensive mathematical verification, multi-scale numerical simulation, and compatibility analysis, we have systematically proven the correctness of Zhang Xiangqian's Unified Field Theory core formulas. The UFT provides a mathematically rigorous and physically self-consistent framework that unifies spacetime, mass, charge, and forces through the fundamental concept of light-speed spatial propagation.
+Through comprehensive mathematical verification, multi-scale numerical simulation, and compatibility analysis, we have systematically proven the correctness of ZUFT's Unified Field Theory core formulas. The UFT provides a mathematically rigorous and physically self-consistent framework that unifies spacetime, mass, charge, and forces through the fundamental concept of light-speed spatial propagation.
 
 Key achievements include:
 
@@ -218,11 +218,11 @@ The UFT represents a significant advancement in theoretical physics, offering a 
 [1] Einstein, A. (1905). On the electrodynamics of moving bodies. Annalen der Physik, 17(10), 891-921.
 [2] Maxwell, J. C. (1865). A dynamical theory of the electromagnetic field. Philosophical Transactions of the Royal Society, 155, 459-512.
 [3] Newton, I. (1687). Philosophiæ Naturalis Principia Mathematica.
-[4] Zhang, X. Q. (2023). Unified Field Theory: Foundations and Significance. Journal of Modern Physics.
+[4] ZUFT (2023). Unified Field Theory: Foundations and Significance. Journal of Modern Physics.
 [5] Hawking, S. W., & Ellis, G. F. R. (1973). The Large Scale Structure of Space-Time. Cambridge University Press.
 [6] Feynman, R. P., Leighton, R. B., & Sands, M. (1964). The Feynman Lectures on Physics. Addison-Wesley.
 [7] Michelson, A. A., & Morley, E. W. (1887). On the relative motion of the earth and the luminiferous ether. American Journal of Science, 34(203), 333-345.
-[8] Zhang, X. Q. (2024). Unified Field Theory Formula Verification Report. Unified Field Theory Research Institute.
+[8] ZUFT (2024). Unified Field Theory Formula Verification Report. Unified Field Theory Research Institute.
 
 ---
 

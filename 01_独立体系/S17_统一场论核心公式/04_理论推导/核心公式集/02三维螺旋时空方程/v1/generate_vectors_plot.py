@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Generate publication-ready plots for velocity, acceleration, and jerk vectors
-from Zhang Xiangqian's Unified Field Theory.
+from ZUFT's Unified Field Theory.
 
 Equations:
 1. Velocity vector: V(t) = -rω sin(ωt)i + rω cos(ωt)j + pk

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论全自动可视化生成器
+ZUFT统一场论全自动可视化生成器
 Unified Field Theory Automatic Visualization Generator
 
 最先进、最规范、全自动化的公式可视化生成系统
@@ -132,7 +132,7 @@ class UnifiedFieldVisualizationEngine:
 
 def main():
     """主函数"""
-    print("🌌 张祥前统一场论全自动可视化生成系统")
+    print("🌌 ZUFT统一场论全自动可视化生成系统")
     print("=" * 60)
     
     engine = UnifiedFieldVisualizationEngine()

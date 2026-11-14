@@ -238,7 +238,7 @@ def verify_universal_constants():
     k_prime = e_std**2 / (4 * math.pi * alpha * hbar * c)
     
     print("\n" + "="*70)
-    print("张祥前统一常数验证")
+    print("ZUFT统一常数验证")
     print("="*70)
     
     print(f"\n[引力光速统一常数Z]")
@@ -301,7 +301,7 @@ def verify_topology_conservation():
 
 def main():
     print("="*70)
-    print("张祥前统一场论与几何化方程全面数值验证")
+    print("ZUFT统一场论与几何化方程全面数值验证")
     print("认证编号：ALG-UNION-COMPAT-2026-V2.0")
     print("权限等级：全域ROOT最高权限")
     print("验证标准：CODATA2022")
@@ -317,7 +317,7 @@ def main():
         ("加速电荷引力场", verify_acceleration_gravity),
         ("力的几何分解", verify_force_decomposition),
         ("四大力耦合常数", verify_coupling_constants),
-        ("张祥前统一常数", verify_universal_constants),
+        ("ZUFT统一常数", verify_universal_constants),
         ("量子化条件", verify_quantization),
     ]
     

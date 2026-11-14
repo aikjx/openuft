@@ -10,11 +10,11 @@ This paper establishes the Gravitational-Light Speed Unification Equation, the f
 
 $$Z = \frac{G \cdot c}{2}$$
 
-Here, $Z$ is the Zhang Xiangqian Constant (precise value $Z = 0.010004524012147 \, \text{kg}^{-1}·\text{m}^4·\text{s}^{-3}$), representing the density flow rate of spatial displacement lines per unit time and volume.
+Here, $Z$ is the ZUFT Constant (precise value $Z = 0.010004524012147 \, \text{kg}^{-1}·\text{m}^4·\text{s}^{-3}$), representing the density flow rate of spatial displacement lines per unit time and volume.
 
 ### Core Theoretical Foundation
 
-Based on Zhang Xiangqian's Unified Field Theory, this derivation rests on three fundamental pillars:
+Based on ZUFT's Unified Field Theory, this derivation rests on three fundamental pillars:
 
 1. **Spacetime Identity**: Time as a quantitative measure of spatial displacement ($\vec{r}(t) = \vec{C}t$)
 2. **Spatial Helical Motion**: Space exhibits cylindrical helical divergence at light speed $c$, unifying gravitational and electromagnetic fields
@@ -34,7 +34,7 @@ The core equation $Z = \frac{G \cdot c}{2}$ is derived through five independent 
 
 This work reveals that the gravitational constant $G$ emerges from the geometric structure of space itself, not as an arbitrary parameter. The Gravitational-Light Speed Unification Equation provides the theoretical foundation for unified field theory, demonstrating that physics at its deepest level is fundamentally geometric and offering a potential cornerstone for revolutionizing our understanding of space, time, matter, and forces.
 
-**Keywords**: Gravitational-Light Speed Unification Equation; Spatial Dynamics; Unified Field Theory; Zhang Xiangqian Constant; Geometric Factor; Gravitational Constant; Speed of Light
+**Keywords**: Gravitational-Light Speed Unification Equation; Spatial Dynamics; Unified Field Theory; ZUFT Constant; Geometric Factor; Gravitational Constant; Speed of Light
 
 ## 1 Introduction
 
@@ -56,9 +56,9 @@ Despite its remarkable success at macroscopic scales, general relativity present
 
 **The Unification Challenge**: Post-Einstein efforts toward unification have included Kaluza-Klein theory, Weyl's gauge approach, superstring theory, and loop quantum gravity. Yet, a compelling theoretical framework unifying gravity and electromagnetism has remained elusive, highlighting the need for innovative approaches to fundamental physics.
 
-### 1.2 Zhang Xiangqian's Unified Field Theory: A Paradigm Shift
+### 1.2 ZUFT's Unified Field Theory: A Paradigm Shift
 
-Zhang Xiangqian's Unified Field Theory introduces a fundamentally new paradigm that reimagines the nature of space and its role in physical interactions. At its core is the revolutionary proposition: **space is not a passive, static background, but an active physical entity with intrinsic dynamic properties**. This concept transforms our understanding from Newton's view of space as a mere "absolute container" to recognizing space as a fundamental participant in all physical processes.
+ZUFT's Unified Field Theory introduces a fundamentally new paradigm that reimagines the nature of space and its role in physical interactions. At its core is the revolutionary proposition: **space is not a passive, static background, but an active physical entity with intrinsic dynamic properties**. This concept transforms our understanding from Newton's view of space as a mere "absolute container" to recognizing space as a fundamental participant in all physical processes.
 
 The theory's key innovations include:
 
@@ -72,7 +72,7 @@ The theory's key innovations include:
 
 ### 1.3 Research Objectives and Scientific Significance
 
-Building upon Zhang Xiangqian's Unified Field Theory, this paper presents the first rigorous derivation of the quantitative relationship between the gravitational constant $G$ and the speed of light $c$ through the geometric factor $\eta=2$ from three-dimensional to two-dimensional projection, establishing the Gravitational-Light Speed Unification Equation: $Z = \frac{G \cdot c}{2}$.
+Building upon ZUFT's Unified Field Theory, this paper presents the first rigorous derivation of the quantitative relationship between the gravitational constant $G$ and the speed of light $c$ through the geometric factor $\eta=2$ from three-dimensional to two-dimensional projection, establishing the Gravitational-Light Speed Unification Equation: $Z = \frac{G \cdot c}{2}$.
 
 #### Core Research Objectives:
 
@@ -82,7 +82,7 @@ Building upon Zhang Xiangqian's Unified Field Theory, this paper presents the fi
 
 3. **Mathematical Unification of Gravity and Electromagnetism**: Establish a quantitative relationship between $G$ and $c$ through the geometric factor $\eta=2$ to provide a key mathematical foundation for the unification of gravity and electromagnetism, exploring the intrinsic connections between fundamental interactions in nature.
 
-4. **Theoretical Self-Consistency Verification**: Systematically verify the intrinsic consistency between the Gravitational-Light Speed Unification Equation and the 17 core formulas of Zhang Xiangqian's Unified Field Theory, further testing the logical rigor and physical rationality of the theory through geometric factor analysis.
+4. **Theoretical Self-Consistency Verification**: Systematically verify the intrinsic consistency between the Gravitational-Light Speed Unification Equation and the 17 core formulas of ZUFT's Unified Field Theory, further testing the logical rigor and physical rationality of the theory through geometric factor analysis.
 
 5. **Cross-Disciplinary Application**: Explore the universality of the geometric factor $\eta=2$ in multiple physics fields including general relativity, quantum gravity, and cosmology, providing new perspectives and tools for theoretical research in these areas.
 
@@ -92,7 +92,7 @@ This research represents a significant advancement in gravitational physics by c
 
 ## 2 Theoretical Framework and Core Postulates
 
-Spatial dynamics theory forms the foundation of Zhang Xiangqian's Unified Field Theory, offering a revolutionary framework for unifying gravity and electromagnetism while revealing fundamental connections between spacetime, matter, and forces. This theory transcends traditional physics' limitation of treating space as a passive backdrop, instead establishing space as an active physical entity with intrinsic dynamic properties.
+Spatial dynamics theory forms the foundation of ZUFT's Unified Field Theory, offering a revolutionary framework for unifying gravity and electromagnetism while revealing fundamental connections between spacetime, matter, and forces. This theory transcends traditional physics' limitation of treating space as a passive backdrop, instead establishing space as an active physical entity with intrinsic dynamic properties.
 
 The theoretical edifice of spatial dynamics is constructed upon six **logically self-consistent core postulates**, which together form a coherent framework providing the necessary foundation for our subsequent mathematical derivations and physical verifications:
 
@@ -198,7 +198,7 @@ Our derivation begins with the recognition that fundamental physical constants m
 2. **Spatial Helical Motion**: $\vec{r}(t) = r\cos\omega t \cdot \vec{i} + r\sin\omega t \cdot \vec{j} + ht \cdot \vec{k}$ - revealing the dual nature of gravitational and electromagnetic fields
 3. **Geometric Factor 2**: The precise mathematical bridge connecting three-dimensional space geometry to two-dimensional interaction planes
 
-This mathematical trilogy provides the complete foundation for deriving $Z = Gc/2$, where $Z$ represents the Zhang Xiangqian Constant emerging from spatial geometry itself.
+This mathematical trilogy provides the complete foundation for deriving $Z = Gc/2$, where $Z$ represents the ZUFT Constant emerging from spatial geometry itself.
 
 Under the guidance of the spacetime identity equation and spatial helical motion theory, spatial dynamics theory establishes a complete mathematical framework for describing spatial motion. The foundational innovation of this theory transcends the conventional paradigm of treating space as a passive, static backdrop. It establishes space itself as a dynamic, physically interactive entity whose fundamental motion can be rigorously characterized through the vector light speed $\mathbf{C}$. This conceptual framework provides a novel mathematical approach for understanding fundamental interactions, including gravity and electromagnetism, through the lens of spatial dynamics.
 
@@ -402,7 +402,7 @@ Through comprehensive theoretical elaboration in this chapter, we have establish
 
 The gravitational-light speed unification equation
 $$Z = \frac{G \cdot c}{2} \quad \text{or} \quad G = \frac{2Z}{c}$$
-serves as the logical starting point and core connection of the entire theoretical framework, establishing the intrinsic relationship between the gravitational constant $G$, light speed $c$, and Zhang Xiangqian's constant $Z$. This equation's theoretical foundation rests upon the fundamental postulates of spatial dynamics theory.
+serves as the logical starting point and core connection of the entire theoretical framework, establishing the intrinsic relationship between the gravitational constant $G$, light speed $c$, and ZUFT's constant $Z$. This equation's theoretical foundation rests upon the fundamental postulates of spatial dynamics theory.
 
 ### 4.2 Core Assumptions of Spatial Dynamics
 
@@ -466,7 +466,7 @@ where $M$ is the total mass enclosed by the closed surface $S$. This result is c
 This chapter establishes the comprehensive mathematical framework for deriving the core equation from fundamental spatial dynamics principles, thereby providing a rigorous theoretical foundation for understanding the profound connections between gravitational phenomena, light speed, and spatial motion.
 
 ### 6.1 Derivation of the Gravitational-Light Speed Unification Equation
-This section presents the direct derivation of the core equation $Z = \frac{G \cdot c}{2}$ from fundamental spatial dynamics principles, establishing the quantitative relationship between gravitational constant $G$, light speed $c$, and Zhang Xiangqian's constant $Z$.
+This section presents the direct derivation of the core equation $Z = \frac{G \cdot c}{2}$ from fundamental spatial dynamics principles, establishing the quantitative relationship between gravitational constant $G$, light speed $c$, and ZUFT's constant $Z$.
 
 **Core Principle**: From the spatial dynamics framework, space surrounding mass objects exhibits three-dimensional spherical symmetric helical divergent motion at light speed $c$, with gravity being the geometric manifestation of this spatial motion.
 
@@ -476,7 +476,7 @@ This section presents the direct derivation of the core equation $Z = \frac{G \c
 - Three-dimensional helical spacetime equation: $\vec{r}(t) = r\cos\omega t \cdot \vec{i} + r\sin\omega t \cdot \vec{j} + ht \cdot \vec{k}$
 
 #### Direct Derivation of the Core Equation
-The fundamental objective of this derivation is: commencing from the fundamental postulates of spatial dynamics theory, to systematically derive the core equation $Z = \frac{G \cdot c}{2}$, establishing the quantitative relationship between the gravitational constant $G$, light speed $c$, and Zhang Xiangqian's constant $Z$.
+The fundamental objective of this derivation is: commencing from the fundamental postulates of spatial dynamics theory, to systematically derive the core equation $Z = \frac{G \cdot c}{2}$, establishing the quantitative relationship between the gravitational constant $G$, light speed $c$, and ZUFT's constant $Z$.
 
 **Step 1: Mass Geometry Definition**
 
@@ -495,7 +495,7 @@ $$\mathbf{g} = -\frac{G m}{r^3} \mathbf{R}$$
 Substituting the mass definition into the gravitational field strength and applying the spatial dynamics constraints, we directly obtain:
 $$G = \frac{2Z}{c} \quad \text{or} \quad Z = \frac{G \cdot c}{2}$$
 
-This equation establishes the fundamental quantitative relationship between the gravitational constant $G$, light speed $c$, and Zhang Xiangqian's constant $Z$, providing the theoretical foundation for the unified description of gravitational and electromagnetic phenomena.
+This equation establishes the fundamental quantitative relationship between the gravitational constant $G$, light speed $c$, and ZUFT's constant $Z$, providing the theoretical foundation for the unified description of gravitational and electromagnetic phenomena.
 
 **Step 2: Rigorous Application of Gauss's Theorem to Gravitational Field Analysis**
 
@@ -596,7 +596,7 @@ This sophisticated dimensional analysis not only comprehensively verifies the ma
 
 Dimensional analysis demonstrates that the dimensional structure of each equation within the derivation process maintains systematic self-consistency, with no dimensional inconsistency issues present.
 
-**Fundamental Conclusion of Theoretical Derivation**: This derivation is entirely based on the basic postulates of Zhang Xiangqian's Unified Field Theory (spatial helical motion, geometric definition of mass, etc.), establishing a profound connection between spatial motion and gravitational phenomena through rigorous application of Gauss's theorem. This derivation not only verifies the mathematical correctness of Newton's law of universal gravitation but, more importantly, reveals the fundamental essence of gravity as the systematic acceleration effect of spatial motion, and establishes the intrinsic connection between the universal gravitational constant $G$ and the speed of light $c$.
+**Fundamental Conclusion of Theoretical Derivation**: This derivation is entirely based on the basic postulates of ZUFT's Unified Field Theory (spatial helical motion, geometric definition of mass, etc.), establishing a profound connection between spatial motion and gravitational phenomena through rigorous application of Gauss's theorem. This derivation not only verifies the mathematical correctness of Newton's law of universal gravitation but, more importantly, reveals the fundamental essence of gravity as the systematic acceleration effect of spatial motion, and establishes the intrinsic connection between the universal gravitational constant $G$ and the speed of light $c$.
 
 **Profound Theoretical Significance of G-c Relationship**: From the perspective of spatial dynamics theory, we have systematically discovered the relationship $G \propto c^2$ through rigorous dimensional analysis. This fundamental discovery provides a solid theoretical foundation for subsequently establishing the gravitational-light speed unification equation. Within the framework of unified field theory, gravity and the speed of light are no longer independent physical constants but different fundamental manifestations of the basic properties of spatial geometry and motion.
 
@@ -634,11 +634,11 @@ are completely equivalent in mathematical structure and profound physical essenc
 - **Physical Symmetry**: Explicitly demonstrates the symmetric nature of gravitational interactions
 - **Derivation Facilitation**: Provides a clear pathway for establishing the G-c relationship in subsequent sections
 
-## 7 Geometric Model of Spatial Motion in Zhang Xiangqian's Unified Field Theory: Geometric Connection Between G and c
+## 7 Geometric Model of Spatial Motion in ZUFT's Unified Field Theory: Geometric Connection Between G and c
 
 ### 7.1 Physical Image and Theoretical Foundation: Geometric Essence of Spatial Dynamics
 
-In the profound theoretical framework of Zhang Xiangqian's Unified Field Theory, we establish a rigorous geometric model of gravitational interaction. This model not only reveals the physical essence of gravity as an effect of spatial motion but, more importantly, provides a geometric foundation for understanding the intrinsic connection between the universal gravitational constant $G$ and the speed of light $c$.
+In the profound theoretical framework of ZUFT's Unified Field Theory, we establish a rigorous geometric model of gravitational interaction. This model not only reveals the physical essence of gravity as an effect of spatial motion but, more importantly, provides a geometric foundation for understanding the intrinsic connection between the universal gravitational constant $G$ and the speed of light $c$.
 
 **Basic Assumptions of Unified Field Theory and Geometric Roots of G-c Relationship**:
 - **Light Speed Nature of Spatial Motion**: The space surrounding a mass body diverges in a three-dimensional spherically symmetric (isotropic) motion at the speed of light $c$, with its basic motion pattern being cylindrical helical. This assumption directly introduces the speed of light $c$ into the geometric origin of gravitational phenomena.
@@ -665,7 +665,7 @@ This model completely breaks through the traditional concept since Newton that r
 
 ### 7.2 Analysis of Effective Contribution of Spatial Motion Direction: Geometric Roots of G-c Relationship
 
-In the framework of spatial dynamics theory, based on the assumptions of Zhang Xiangqian's Unified Field Theory, the space surrounding a mass body diverges at the speed of light $c$ in all directions, but gravitational interaction mainly occurs in the plane perpendicular to the line connecting the two mass centers. This directional characteristic profoundly reveals the geometric connection between the universal gravitational constant $G$ and the speed of light $c$, providing key clues for understanding their quantitative relationship.
+In the framework of spatial dynamics theory, based on the assumptions of ZUFT's Unified Field Theory, the space surrounding a mass body diverges at the speed of light $c$ in all directions, but gravitational interaction mainly occurs in the plane perpendicular to the line connecting the two mass centers. This directional characteristic profoundly reveals the geometric connection between the universal gravitational constant $G$ and the speed of light $c$, providing key clues for understanding their quantitative relationship.
 
 **Mathematical Modeling and Physical Connotation**:
 - Establish a spherical coordinate system $(r, \theta, \phi)$ with the line connecting the two mass centers as the $z$-axis
@@ -703,7 +703,7 @@ This derivation not only reveals the geometric essence of gravity as an effect o
 
 ### 8.1 Spatial Dynamics Definition of Gravitational Field Strength: Light Speed as Basic Parameter of Gravitational Field
 
-In the framework of spatial dynamics theory, based on the assumptions of Zhang Xiangqian's Unified Field Theory, the gravitational field is understood as a geometric effect of the three-dimensional spherically symmetric divergent motion of space surrounding a mass body at the speed of light c. This definition directly links the speed of light $c$ with the essential properties of the gravitational field, suggesting that the universal gravitational constant $G$ must contain information about the speed of light $c$.
+In the framework of spatial dynamics theory, based on the assumptions of ZUFT's Unified Field Theory, the gravitational field is understood as a geometric effect of the three-dimensional spherically symmetric divergent motion of space surrounding a mass body at the speed of light c. This definition directly links the speed of light $c$ with the essential properties of the gravitational field, suggesting that the universal gravitational constant $G$ must contain information about the speed of light $c$.
 
 Gravitational field strength can be defined as the rate of change of the number of spatial displacement lines passing through per unit volume per unit time. This definition inherently includes the speed of light $c$ as a basic parameter of spatial motion:
 
@@ -711,7 +711,7 @@ $$\vec{A} = -G k \frac{\Delta n}{\Delta s} \frac{\vec{r}}{r}$$
 
 where,
 - $G$ is the universal gravitational constant, whose structure implicitly contains information about the speed of light $c$
-- $k$ is the space-mass conversion coefficient in Zhang Xiangqian's Unified Field Theory, containing the factor of the speed of light $c$
+- $k$ is the space-mass conversion coefficient in ZUFT's Unified Field Theory, containing the factor of the speed of light $c$
 - $\Delta n/\Delta s$ represents the linear density change rate of spatial displacement lines
 - $\vec{r}/r$ is the radial unit vector
 
@@ -923,7 +923,7 @@ In the framework of spatial dynamics theory, this section derives the geometric 
 
 #### 9.4.1 Physical Image and Mathematical Model in Spatial Dynamics Theory Framework: Theoretical Basis of G-c Relationship
 
-In the framework of spatial dynamics theory, based on the ideas of Zhang Xiangqian's Unified Field Theory, the gravitational interaction between two mass bodies $m_1$ and $m_2$ is assumed to be the interaction between their surrounding spatial divergence motions:
+In the framework of spatial dynamics theory, based on the ideas of ZUFT's Unified Field Theory, the gravitational interaction between two mass bodies $m_1$ and $m_2$ is assumed to be the interaction between their surrounding spatial divergence motions:
 - The space surrounding mass bodies is assumed to diverge in a three-dimensional spherically symmetric (isotropic) motion at the speed of light $c$ in all directions
 - The gravitational interaction between two mass bodies is considered as the comprehensive effect of their surrounding spatial divergence motions in all directions
 - The effective contribution of field strength is related to the sine function of the polar angle $\theta$, which is determined by the spatial geometric projection characteristics
@@ -1414,13 +1414,13 @@ The relationship between the gravitational constant and the speed of light has b
 
 $$Z = \frac{G \cdot c}{2}$$
 
-Where $Z$ is the Zhang Xiangqian Constant, with dimensions $[M]^{-1}[L]^{4}[T]^{-3}$ and the precise value $Z = 0.010004524012147 \, \text{kg}^{-1}·\text{m}^4·\text{s}^{-3}$.
+Where $Z$ is the ZUFT Constant, with dimensions $[M]^{-1}[L]^{4}[T]^{-3}$ and the precise value $Z = 0.010004524012147 \, \text{kg}^{-1}·\text{m}^4·\text{s}^{-3}$.
 
 ### 10.1 Summary of Core Achievements
 
 #### 10.1.1 Establishment of Gravitational-Light Speed Unification Equation
 
-By rigorously applying Zhang Xiangqian's Unified Field Theory, specifically the Spacetime Identity Equation and Spatial Helical Motion Theory, we have derived a precise mathematical relationship between the gravitational constant G and the speed of light c. This equation represents a significant theoretical breakthrough, revealing for the first time that these two fundamental constants are intimately connected through a specific numerical factor.
+By rigorously applying ZUFT's Unified Field Theory, specifically the Spacetime Identity Equation and Spatial Helical Motion Theory, we have derived a precise mathematical relationship between the gravitational constant G and the speed of light c. This equation represents a significant theoretical breakthrough, revealing for the first time that these two fundamental constants are intimately connected through a specific numerical factor.
 
 #### 10.1.2 Derivation of Geometric Factor 2
 
@@ -1432,7 +1432,7 @@ Based on the spatial dynamics framework, we have provided a geometric interpreta
 
 #### 10.1.4 Theoretical Validation and Consistency
 
-The paper has systematically verified the self-consistency of the Gravitational-Light Speed Unification Equation with 17 core formulas of Zhang Xiangqian's Unified Field Theory, demonstrating its complete mathematical and physical consistency within the broader theoretical framework.
+The paper has systematically verified the self-consistency of the Gravitational-Light Speed Unification Equation with 17 core formulas of ZUFT's Unified Field Theory, demonstrating its complete mathematical and physical consistency within the broader theoretical framework.
 
 ### 10.2 Physical Significance and Theoretical Implications
 
@@ -1490,7 +1490,7 @@ The establishment of the Gravitational-Light Speed Unification Equation represen
 
 This work not only advances our understanding of fundamental physical phenomena but also demonstrates the power of the spatial dynamics framework to provide unified explanations for diverse physical phenomena. The geometric origin of fundamental constants, as revealed through this research, suggests that physics at its deepest level is fundamentally geometric in nature.
 
-The Zhang Xiangqian Constant Z, as the key constant connecting gravitational and electromagnetic interactions, may serve as a cornerstone for future developments in unified field theory. By providing a mathematically rigorous and physically consistent framework for understanding the relationship between space, time, matter, and forces, this research opens new avenues for exploring the deepest mysteries of the physical universe.
+The ZUFT Constant Z, as the key constant connecting gravitational and electromagnetic interactions, may serve as a cornerstone for future developments in unified field theory. By providing a mathematically rigorous and physically consistent framework for understanding the relationship between space, time, matter, and forces, this research opens new avenues for exploring the deepest mysteries of the physical universe.
 
 The journey from the recognition of space as a dynamic physical entity to the establishment of the Gravitational-Light Speed Unification Equation demonstrates the potential of spatial dynamics theory to transform our understanding of the physical world. As we continue to explore the implications of this framework, we may find that many of the most fundamental questions in physics can be answered through a deeper appreciation of the geometric nature of reality itself.
 
@@ -1542,7 +1542,7 @@ This equation demonstrates that G's value is determined by:
 
 #### 11.3.1 G as the Gravitational-Electromagnetic Bridge
 
-Within Zhang Xiangqian's unified field theory, G serves as a crucial bridge connecting gravitational and electromagnetic interactions through the spatial dynamics constant Z.
+Within ZUFT's unified field theory, G serves as a crucial bridge connecting gravitational and electromagnetic interactions through the spatial dynamics constant Z.
 
 **11.3.1.1 Mathematical Expression**: The unified framework expresses G as:
 ```
@@ -1671,7 +1671,7 @@ This represents the most precise theoretical prediction of G in the history of p
 
 #### 12.1.4 Theoretical Self-consistency Verification
 
-**12.1.4.1 Zhang Xiangqian's 17 Core Formulas**: The Gravitational-Light Speed Unification Equation maintains perfect consistency with all 17 core formulas of unified field theory:
+**12.1.4.1 ZUFT's 17 Core Formulas**: The Gravitational-Light Speed Unification Equation maintains perfect consistency with all 17 core formulas of unified field theory:
 - Spacetime Identity Equation: T = c·(ds/c)²
 - Spatial Helical Motion Theory: Three-dimensional spiral equations
 - Geometric Factor Derivation: η = 2
@@ -1780,7 +1780,7 @@ The five-fold experimental verification framework demonstrates that the Gravitat
 
 #### 13.1.1 Theoretical Foundation
 
-The Gravitational-Light Speed Unification Equation Z = G·c/2 exists within Zhang Xiangqian's unified field theory framework, which comprises 17 core formulas that describe the fundamental relationships between space, time, matter, and forces. This chapter provides comprehensive verification of how our unification equation maintains perfect consistency with all core formulas.
+The Gravitational-Light Speed Unification Equation Z = G·c/2 exists within ZUFT's unified field theory framework, which comprises 17 core formulas that describe the fundamental relationships between space, time, matter, and forces. This chapter provides comprehensive verification of how our unification equation maintains perfect consistency with all core formulas.
 
 #### 13.1.2 Verification Methodology
 
@@ -2040,7 +2040,7 @@ The combined framework demonstrates enhanced predictive capabilities, enabling n
 
 ### 13.12 Chapter Summary
 
-This comprehensive verification demonstrates that the Gravitational-Light Speed Unification Equation Z = G·c/2 maintains perfect consistency with all 17 core formulas of Zhang Xiangqian's unified field theory. The equation not only fits seamlessly within the existing theoretical framework but also enhances its predictive power and physical interpretation. This validation confirms that our unification equation represents a genuine theoretical breakthrough rather than an ad hoc modification, providing a solid foundation for future developments in unified field theory.
+This comprehensive verification demonstrates that the Gravitational-Light Speed Unification Equation Z = G·c/2 maintains perfect consistency with all 17 core formulas of ZUFT's unified field theory. The equation not only fits seamlessly within the existing theoretical framework but also enhances its predictive power and physical interpretation. This validation confirms that our unification equation represents a genuine theoretical breakthrough rather than an ad hoc modification, providing a solid foundation for future developments in unified field theory.
 
 ---
 
@@ -2743,13 +2743,13 @@ As we embark on these research endeavors, the spatial dynamics framework promise
 
 ### Primary Sources and Theoretical Foundations
 
-1. **Zhang Xiangqian (2023)**. "Unified Field Theory: Spatial Dynamics Principles and 17 Core Formulas." *International Journal of Spatial Dynamics*, 15(2), 145-287. [Unified field theory foundation and core formulas]
+1. **ZUFT (2023)**. "Unified Field Theory: Spatial Dynamics Principles and 17 Core Formulas." *International Journal of Spatial Dynamics*, 15(2), 145-287. [Unified field theory foundation and core formulas]
 
-2. **Zhang Xiangqian (2024)**. "Gravitational-Light Speed Unification Equation: Theoretical Derivation and Experimental Verification." *Journal of Fundamental Physics*, 28(4), 412-589. [Original derivation and verification of Z = G·c/2]
+2. **ZUFT (2024)**. "Gravitational-Light Speed Unification Equation: Theoretical Derivation and Experimental Verification." *Journal of Fundamental Physics*, 28(4), 412-589. [Original derivation and verification of Z = G·c/2]
 
-3. **Zhang Xiangqian (2024)**. "Spatial Dynamics Constant Z: Mathematical Derivation and Physical Significance." *Mathematical Physics Reviews*, 31(1), 78-156. [Detailed analysis of spatial dynamics constant]
+3. **ZUFT (2024)**. "Spatial Dynamics Constant Z: Mathematical Derivation and Physical Significance." *Mathematical Physics Reviews*, 31(1), 78-156. [Detailed analysis of spatial dynamics constant]
 
-4. **Zhang Xiangqian (2024)**. "The Geometric Factor η = 2: Universal Application Across Physical Domains." *Geometric Physics Quarterly*, 19(3), 234-312. [Cross-disciplinary geometric factor analysis]
+4. **ZUFT (2024)**. "The Geometric Factor η = 2: Universal Application Across Physical Domains." *Geometric Physics Quarterly*, 19(3), 234-312. [Cross-disciplinary geometric factor analysis]
 
 ### Historical and Classical References
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论（ZUFT）常数k与k'的Python验证计算
+ZUFT统一场论（ZUFT）常数k与k'的Python验证计算
 本项目 - 基于全部文档内容的严格求导与验证
 日期：2026-02-05
 """
@@ -33,7 +33,7 @@ hbar = 1.054571817e-34
 pi = math.pi
 
 print("=" * 70)
-print("张祥前统一场论（ZUFT）常数 k 与 k' 的Python验证计算")
+print("ZUFT统一场论（ZUFT）常数 k 与 k' 的Python验证计算")
 print("=" * 70)
 print("\n第1步：使用的CODATA 2018基本常数：")
 print(f"普朗克质量 m_p = {m_p:.6e} kg")

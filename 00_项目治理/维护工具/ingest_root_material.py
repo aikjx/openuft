@@ -46,8 +46,8 @@ MANIFEST = RECORD / 'manifest.json'
 
 # 目录：显式白名单（未列出的一律不搬，避免误伤工作区）
 DIR_BINS = {
-    '整理': ('01_整理包_ZXUFT', '张祥前统一场论研究平台：React 前端 + 17 公式验证脚本 + 图 + 报告',
-             '线索：ZXUFT/ZUFT/Z′ 常数，与 S02/S12「空间光速螺旋」域相邻'),
+    '整理': ('01_整理包_ZUFT', 'ZUFT统一场论研究平台：React 前端 + 17 公式验证脚本 + 图 + 报告',
+             '线索：ZUFT/ZUFT/Z′ 常数，与 S02/S12「空间光速螺旋」域相邻'),
     'tuft': ('02_TUFT_来源', 'TUFT 主线脚本与产出', '线索：与 S14 挠率统一场论 TUFT 同名'),
     'GAQ-UFT_Complete_Book': ('03_GAQ_书稿来源', 'GAQ-UFT 完整书稿（LaTeX + 卷 I–VI + 补充代码）',
                               '线索：与 S03/S07/S08/S09 GAQ 系列同名'),

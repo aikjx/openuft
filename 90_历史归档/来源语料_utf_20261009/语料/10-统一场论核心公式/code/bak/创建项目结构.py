@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论核心公式项目结构创建器
+ZUFT统一场论核心公式项目结构创建器
 Unified Field Theory Core Formulas Project Structure Creator
 
 自动创建17个核心公式的完整项目结构
@@ -237,13 +237,13 @@ $${formula_info['formula']}$$
 
 ## 📚 参考资料
 
-- 张祥前统一场论相关文献
+- ZUFT统一场论相关文献
 - 相关物理学教材
 - 数学物理方法参考书
 
 ---
 
-*本文档是张祥前统一场论核心公式可视化项目的一部分*
+*本文档是ZUFT统一场论核心公式可视化项目的一部分*
 """
     
     with open(folder_path / "README.md", "w", encoding="utf-8") as f:
@@ -255,7 +255,7 @@ $${formula_info['formula']}$$
 ## 🔬 理论基础
 
 ### 统一场论框架
-{formula_info['name']}是张祥前统一场论体系中的重要组成部分，它在整个理论框架中起到[具体作用]的关键作用。
+{formula_info['name']}是ZUFT统一场论体系中的重要组成部分，它在整个理论框架中起到[具体作用]的关键作用。
 
 ### 数学推导
 [待补充详细的数学推导过程]
@@ -423,7 +423,7 @@ def create_index_html():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>张祥前统一场论核心公式可视化</title>
+    <title>ZUFT统一场论核心公式可视化</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -454,7 +454,7 @@ def create_index_html():
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌌 张祥前统一场论</h1>
+            <h1>🌌 ZUFT统一场论</h1>
             <h2>核心公式交互式可视化</h2>
             <p>探索宇宙的统一本质，理解时空、质量、引力的几何化描述</p>
         </div>
@@ -483,7 +483,7 @@ def create_index_html():
 
 def main():
     """主函数"""
-    print("🚀 开始创建张祥前统一场论核心公式项目结构...")
+    print("🚀 开始创建ZUFT统一场论核心公式项目结构...")
     print(f"📊 总共需要创建 {len(FORMULAS)} 个公式的可视化")
     
     # 创建每个公式的文件夹

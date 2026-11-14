@@ -613,7 +613,7 @@ class GeometricFactorAnalysisSystem:
             print("   • Submit to peer review")
             
             print("\n6. CONCLUSION:")
-            print("   The geometric factor derivation in Zhang Xiangqian's paper")
+            print("   The geometric factor derivation in ZUFT's paper")
             print("   contains fundamental mathematical and physical errors.")
             print("   Standard physics provides reliable, tested methods.")
             

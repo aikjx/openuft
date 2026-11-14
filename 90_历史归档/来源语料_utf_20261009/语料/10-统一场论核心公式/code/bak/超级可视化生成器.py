@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论核心公式 - 超级可视化生成器
+ZUFT统一场论核心公式 - 超级可视化生成器
 为19个核心公式分别创建独立的高质量HTML5可视化系统
 达到国际顶级论文标准
 """
@@ -47,7 +47,7 @@ class SuperVisualizationGenerator:
     
     def generate_all_visualizations(self):
         """生成所有19个公式的可视化"""
-        print("🚀 开始生成张祥前统一场论核心公式可视化系统...")
+        print("🚀 开始生成ZUFT统一场论核心公式可视化系统...")
         
         # 创建完整的公式列表
         all_formulas = self.create_complete_formula_list()
@@ -189,7 +189,7 @@ class SuperVisualizationGenerator:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{formula['name']} - 张祥前统一场论可视化</title>
+    <title>{formula['name']} - ZUFT统一场论可视化</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
@@ -303,7 +303,7 @@ class SuperVisualizationGenerator:
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
         <h2>正在加载 {formula['name']} 可视化...</h2>
-        <p>张祥前统一场论 - 高级3D可视化系统</p>
+        <p>ZUFT统一场论 - 高级3D可视化系统</p>
     </div>
     
     <canvas id="canvas"></canvas>
@@ -320,7 +320,7 @@ class SuperVisualizationGenerator:
         
         <div class="physics-insight">
             <h4>🔬 物理意义</h4>
-            <p>该公式是张祥前统一场论的核心组成部分，揭示了宇宙基本规律的深层结构。</p>
+            <p>该公式是ZUFT统一场论的核心组成部分，揭示了宇宙基本规律的深层结构。</p>
         </div>
     </div>
     

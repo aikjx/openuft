@@ -255,7 +255,7 @@ $$f = \sqrt{\frac{Z}{Z'}} \cdot \frac{c}{2} = \frac{c}{2} \cdot \sqrt{4\pi\varep
 
 1. Jackson J D. Classical Electrodynamics[M]. 3rd ed. New York: John Wiley & Sons, 1999.
 
-2. 张祥前. 统一场论（第二版）[M]. 合肥: 安徽科学技术出版社, 2017.
+2. ZUFT. 统一场论（第二版）[M]. 合肥: 安徽科学技术出版社, 2017.
 
 3. Landau L D, Lifshitz E M. Electrodynamics of Continuous Media[M]. 2nd ed. Oxford: Pergamon Press, 1984.
 

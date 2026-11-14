@@ -10,7 +10,7 @@ plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 # ===================== 1. 核心函数定义（修正光速约束） =====================
 def zuft_spiral_trajectory(R0=1.0, omega=0.8, c=1.0, t_range=(0, 10), num_points=1000):
     """
-    生成张祥前统一场论的空间螺旋运动轨迹（满足光速约束 (R0ω)² + vz² = c²）
+    生成ZUFT统一场论的空间螺旋运动轨迹（满足光速约束 (R0ω)² + vz² = c²）
     :param R0: 螺旋圆周半径（空间旋转特征尺度）
     :param omega: 角速度（空间旋转频率）
     :param c: 光速（合速度，归一化为1）
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     ax1.set_xlabel('X (横向旋转)', fontsize=10)
     ax1.set_ylabel('Y (横向旋转)', fontsize=10)
     ax1.set_zlabel('Z (纵向运动)', fontsize=10)
-    ax1.set_title('张祥前统一场论：空间螺旋运动（满足光速约束）', fontsize=12, fontweight='bold')
+    ax1.set_title('ZUFT统一场论：空间螺旋运动（满足光速约束）', fontsize=12, fontweight='bold')
     ax1.legend()
     ax1.grid(alpha=0.3)
     

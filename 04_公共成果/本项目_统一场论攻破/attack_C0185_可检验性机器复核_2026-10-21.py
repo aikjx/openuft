@@ -144,7 +144,7 @@ ITEMS = [
      False, False, False, False, None,
      "0 公设 / 0 claims 空账本（随⑥收口），无预言载体",
      "C0161 P20 / 攻破⑯"),
-    ("C021", "A-C0161", "S17 统一场论核心公式(张祥前20式)",
+    ("C021", "A-C0161", "S17 统一场论核心公式(ZUFT20式)",
      False, True, False, False, None,
      "40 claims、0 数值预言字段；20 公式逐条证伪，无幸存数值预言",
      "C0161 P21 / 攻破⑭"),

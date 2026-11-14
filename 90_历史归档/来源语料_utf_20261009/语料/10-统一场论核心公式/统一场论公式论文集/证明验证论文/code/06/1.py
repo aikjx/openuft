@@ -9,7 +9,7 @@ plt.rcParams['font.sans-serif'] = ['SimHei']  # 用黑体显示中文
 plt.rcParams['axes.unicode_minus'] = False    # 正常显示负号
 
 class ZhangUnifiedFieldTheory:
-    """张祥前统一场论数值验证类"""
+    """ZUFT统一场论数值验证类"""
     
     def __init__(self):
         # 定义符号变量
@@ -232,7 +232,7 @@ class ZhangUnifiedFieldTheory:
 
 def main():
     """主函数：执行完整的验证过程"""
-    print("张祥前统一场论力方程 F = -ma 的Python验证")
+    print("ZUFT统一场论力方程 F = -ma 的Python验证")
     print("=" * 80)
     
     # 创建验证实例
@@ -259,7 +259,7 @@ def main():
         print("✓ 数值验证通过: 数值计算与理论公式一致")
         print("✓ 物理意义明确: 负号源于空间动量视角与物体动量视角的根本区别")
         print()
-        print("张祥前统一场论的力方程 F = -ma 在其理论框架内是自洽的。")
+        print("ZUFT统一场论的力方程 F = -ma 在其理论框架内是自洽的。")
         print("这个负号体现了理论将力的本质归结为物体运动与空间背景运动之间的相互作用。")
         
     except Exception as e:

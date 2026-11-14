@@ -6,7 +6,7 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
@@ -18,7 +18,7 @@ The Unified Field Theory (UFT) energy equation reinterprets energy essence from 
 
 ## Introduction
 
-The concept of energy is central to physics, yet its fundamental nature remains an enduring subject of inquiry. Traditional physics regards energy as a property of matter but has not fully revealed its essence. Zhang Xiangqian's Unified Field Theory presents an innovative energy equation that redefines energy from the perspective of spatial waves, directly connecting energy with the geometric properties of space. This equation represents a significant advancement in energy theory, providing a foundation for the grand unification of physical theories and offering new insights into the fundamental nature of the universe.
+The concept of energy is central to physics, yet its fundamental nature remains an enduring subject of inquiry. Traditional physics regards energy as a property of matter but has not fully revealed its essence. ZUFT's Unified Field Theory presents an innovative energy equation that redefines energy from the perspective of spatial waves, directly connecting energy with the geometric properties of space. This equation represents a significant advancement in energy theory, providing a foundation for the grand unification of physical theories and offering new insights into the fundamental nature of the universe.
 
 ## 2. Mathematical Formulation
 
@@ -193,7 +193,7 @@ The Unified Field Theory energy equation offers a profound reinterpretation of e
 
 ## 10. References
 
-1. Zhang XQ. Unified Field Theory. China Science and Technology Press, 2020.
+1. ZUFT. Unified Field Theory. China Science and Technology Press, 2020.
 2. Einstein A. Zur Elektrodynamik bewegter Körper. Annalen der Physik, 1905, 322(10): 891-921.
 3. Einstein A. Die Grundlage der allgemeinen Relativitätstheorie. Annalen der Physik, 1916, 49(7): 769-822.
 4. Maxwell JC. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.

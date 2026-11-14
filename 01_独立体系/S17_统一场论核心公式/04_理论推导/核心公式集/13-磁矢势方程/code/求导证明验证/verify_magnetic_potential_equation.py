@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论磁矢势方程验证脚本
+ZUFT统一场论磁矢势方程验证脚本
 
-该脚本用于验证张祥前统一场论核心方程 ∇×A = (1/f)B 及其常数 f = √(Z/Z')·(c/2) 的正确性，
+该脚本用于验证ZUFT统一场论核心方程 ∇×A = (1/f)B 及其常数 f = √(Z/Z')·(c/2) 的正确性，
 包括常数计算、量纲分析和数学推导验证。
 """
 
@@ -238,7 +238,7 @@ def verify_fine_structure_constant(Z_prime):
 def main():
     """主验证函数"""
     
-    print("张祥前统一场论磁矢势方程验证脚本")
+    print("ZUFT统一场论磁矢势方程验证脚本")
     print("=" * 60)
     print()
     

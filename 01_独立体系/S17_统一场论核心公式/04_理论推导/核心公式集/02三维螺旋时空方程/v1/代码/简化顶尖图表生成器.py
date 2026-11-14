@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论：简化顶尖学术图表生成系统
+ZUFT统一场论：简化顶尖学术图表生成系统
 """
 
 import numpy as np

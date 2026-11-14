@@ -11,11 +11,11 @@
 
 ## Abstract
 
-The Gravitational-Light Speed Unification Equation G = 2Z/c represents a cornerstone achievement in unified field theory, revealing the profound mathematical relationship between the gravitational constant G, Zhang Xiangqian's constant Z, and the speed of light c. Based on Zhang Xiangqian's unified field theory and spatial dynamics framework, this study systematically presents five rigorous mathematical derivations of the equation: **(1) Spatial Helical Motion Geometric Projection Method**, **(2) Gauss's Law Application Method**, **(3) Tensor Analysis Method**, **(4) Energy Conservation Method**, and **(5) Dimensional Analysis Method**. These five approaches verify the equation's rigor and universality from different mathematical perspectives.
+The Gravitational-Light Speed Unification Equation G = 2Z/c represents a cornerstone achievement in unified field theory, revealing the profound mathematical relationship between the gravitational constant G, ZUFT's constant Z, and the speed of light c. Based on ZUFT's unified field theory and spatial dynamics framework, this study systematically presents five rigorous mathematical derivations of the equation: **(1) Spatial Helical Motion Geometric Projection Method**, **(2) Gauss's Law Application Method**, **(3) Tensor Analysis Method**, **(4) Energy Conservation Method**, and **(5) Dimensional Analysis Method**. These five approaches verify the equation's rigor and universality from different mathematical perspectives.
 
-**Core Research Achievements**: **(1) Rigorous proof of the 3D-2D projection geometric factor 2**, establishing mathematical connection between three-dimensional spatial motion and two-dimensional effective interaction through solid angle integration and spatial motion projection theory; **(2) Complete derivation of the gravitational-light speed unification equation G = 2Z/c**, strictly deriving from basic assumptions of spatial helical motion through five independent mathematical pathways; **(3) Numerical verification results**: Using international standard physical constants for calculation, the relative error is 0% when using precise Zhang Xiangqian constant value (0.010004524012147), and 0.045% when using approximation Z = 0.01, verifying the equation's high precision; **(4) Theoretical self-consistency verification**: Complete compatibility with Newtonian mechanics, general relativity, and quantum field theory within their respective applicable ranges; **(5) Physical constant unity proof**: Successfully unifies G, c, and Z three fundamental physical constants, embodying the core idea of unified field theory.
+**Core Research Achievements**: **(1) Rigorous proof of the 3D-2D projection geometric factor 2**, establishing mathematical connection between three-dimensional spatial motion and two-dimensional effective interaction through solid angle integration and spatial motion projection theory; **(2) Complete derivation of the gravitational-light speed unification equation G = 2Z/c**, strictly deriving from basic assumptions of spatial helical motion through five independent mathematical pathways; **(3) Numerical verification results**: Using international standard physical constants for calculation, the relative error is 0% when using precise ZUFT constant value (0.010004524012147), and 0.045% when using approximation Z = 0.01, verifying the equation's high precision; **(4) Theoretical self-consistency verification**: Complete compatibility with Newtonian mechanics, general relativity, and quantum field theory within their respective applicable ranges; **(5) Physical constant unity proof**: Successfully unifies G, c, and Z three fundamental physical constants, embodying the core idea of unified field theory.
 
-**Keywords**: Unified field theory; Gravitational-light speed unification equation; 3D-2D projection geometric factor; Spatial helical motion; Physical constant unification; Zhang Xiangqian theory
+**Keywords**: Unified field theory; Gravitational-light speed unification equation; 3D-2D projection geometric factor; Spatial helical motion; Physical constant unification; ZUFT theory
 
 ---
 
@@ -45,8 +45,8 @@ After completing general relativity, Einstein devoted three decades to unifying 
 - **Standard Model**: Includes electromagnetic, weak, and strong forces, but fails to include gravity
 - **String Theory**: Attempts to unify all fundamental forces, but lacks experimental verification
 
-**Theoretical Innovations of Zhang Xiangqian's Unified Field Theory**:
-Zhang Xiangqian, in his groundbreaking research, proposed a novel unified field theory framework based on spatial helical motion as the physical foundation. The core innovations include:
+**Theoretical Innovations of ZUFT's Unified Field Theory**:
+ZUFT, in his groundbreaking research, proposed a novel unified field theory framework based on spatial helical motion as the physical foundation. The core innovations include:
 1. **Spatial Dynamics Foundation**: Regarding space itself as a physical entity with dynamic characteristics
 2. **Spacetime Identity Principle**: Time and space are fundamentally unified, with spacetime being the manifestation of spatial motion
 3. **Geometric Definition of Mass**: Mass is the geometric manifestation of spatial motion quantity
@@ -73,7 +73,7 @@ This study is dedicated to rigorously deriving and verifying the mathematical co
 
 ## 2 Fundamental Assumptions of Spatial Dynamics Theory
 
-Spatial dynamics theory forms the mathematical foundation of Zhang Xiangqian's unified field theory. This theory is based on six fundamental assumptions with profound physical connotations, providing a theoretical framework for understanding gravitational phenomena and deriving the unification equation.
+Spatial dynamics theory forms the mathematical foundation of ZUFT's unified field theory. This theory is based on six fundamental assumptions with profound physical connotations, providing a theoretical framework for understanding gravitational phenomena and deriving the unification equation.
 
 ### 2.1 Fundamental Universe Composition
 
@@ -193,7 +193,7 @@ Spatial motion contribution to gravitation includes:
 Therefore, universal gravitation constant:
 $$G = 2k c$$
 
-Define Zhang Xiangqian constant: $Z = k c$, then:
+Define ZUFT constant: $Z = k c$, then:
 $$G = 2Z/c \tag{3-2}$$
 
 This is precisely the standard form of gravitational-light speed unification equation.
@@ -231,7 +231,7 @@ $$\vec{g} = -\frac{G M}{r^2} \hat{r} = -\frac{G \alpha}{c r^2} \cdot c \cdot 4\p
 Simplifying yields:
 $$|\vec{g}| = 4\pi G \alpha$$
 
-Define Zhang Xiangqian constant: $Z = 4\pi G \alpha$, then:
+Define ZUFT constant: $Z = 4\pi G \alpha$, then:
 $$G = \frac{Z c}{2} \tag{3-4}$$
 
 After dimensional analysis and physical significance correction, obtain:
@@ -310,7 +310,7 @@ $$G = \frac{2\pi \rho_s c^2 r^4}{3 m_1 m_2}$$
 
 Using relationship between mass and spatial motion quantity: $m = \beta \rho_s r^3$, where $\beta$ is proportionality constant.
 
-Substituting and defining Zhang Xiangqian constant: $Z = \frac{2\pi \beta c^2}{3}$, obtain:
+Substituting and defining ZUFT constant: $Z = \frac{2\pi \beta c^2}{3}$, obtain:
 $$G = 2Z/c \tag{3-9}$$
 
 ### 3.5 Method Five: Dimensional Analysis Method
@@ -332,7 +332,7 @@ Assume dimensions of basic physical quantities:
 Dimensions of classical universal gravitation constant G:
 $$[G] = [L^3 M^{-1} T^{-2}] \tag{3-10}$$
 
-#### 3.5.3 Dimensions of Zhang Xiangqian Constant Derivation
+#### 3.5.3 Dimensions of ZUFT Constant Derivation
 
 According to geometric definition of mass: $m = k \frac{n}{4\pi}$
 
@@ -341,7 +341,7 @@ Dimensions of spatial displacement vector: $[R] = [L]$
 Therefore, dimensions of proportionality constant $k$ should be:
 $$[k] = [M L^{-2}]$$
 
-Considering characteristic velocity of spatial motion is light speed c, dimensions of Zhang Xiangqian constant are:
+Considering characteristic velocity of spatial motion is light speed c, dimensions of ZUFT constant are:
 $$[Z] = [k c] = [M L^{-2} L T^{-1}] = [M L^{-1} T^{-1}] \tag{3-11}$$
 
 #### 3.5.4 Determination of Dimensional Relationship
@@ -371,7 +371,7 @@ This unity fully proves the correctness and universality of the gravitational-li
 
 ## 4 Main Research Achievements
 
-Based on Zhang Xiangqian's unified field theory spatial dynamics framework and five rigorous mathematical derivation methods, this research achieves the following five major research results:
+Based on ZUFT's unified field theory spatial dynamics framework and five rigorous mathematical derivation methods, this research achieves the following five major research results:
 
 ### 4.1 Rigorous Proof of 3D-2D Projection Geometric Factor 2
 
@@ -419,7 +419,7 @@ $$\vec{g} = -\frac{G m}{r^2} \hat{r}$$
 Combining characteristic velocity of spatial motion (light speed c) with geometric projection effect, obtain:
 $$G = 2k c$$
 
-**Step Six**: Definition of Zhang Xiangqian constant
+**Step Six**: Definition of ZUFT constant
 Define $Z = k c$, then ultimately obtain:
 $$G = 2Z/c \tag{4-1}$$
 
@@ -430,7 +430,7 @@ $$G = 2Z/c \tag{4-1}$$
 4. **Verification Independence**: Strictly verified through five different methods
 
 **Physical Significance**:
-- G = 2Z/c reveals profound connection between gravitational constant, light speed, and Zhang Xiangqian constant
+- G = 2Z/c reveals profound connection between gravitational constant, light speed, and ZUFT constant
 - Embodies spatial motion as essential source of gravity
 - Provides specific mathematical expression for unified field theory
 
@@ -441,13 +441,13 @@ $$G = 2Z/c \tag{4-1}$$
 **International Standard Physical Constants**:
 - Speed of light: $c = 299,792,458 \, \text{m/s}$
 - Universal gravitation constant: $G = 6.67430 \times 10^{-11} \, \text{m}^3\text{kg}^{-1}\text{s}^{-2}$
-- Zhang Xiangqian constant: $Z = \frac{G \cdot c}{2} = \frac{6.67430 \times 10^{-11} \times 2.99792458 \times 10^{8}}{2} = 0.010004524012147 \, \text{kg}^{-1}\cdot\text{m}^{4}\cdot\text{s}^{-3}$
+- ZUFT constant: $Z = \frac{G \cdot c}{2} = \frac{6.67430 \times 10^{-11} \times 2.99792458 \times 10^{8}}{2} = 0.010004524012147 \, \text{kg}^{-1}\cdot\text{m}^{4}\cdot\text{s}^{-3}$
 
-**Zhang Xiangqian Constant Calculation**:
+**ZUFT Constant Calculation**:
 $$Z = \frac{G \cdot c}{2} = \frac{6.67430 \times 10^{-11} \times 2.99792458 \times 10^{8}}{2} = 0.010004524012147 \, \text{kg}^{-1}\cdot\text{m}^{4}\cdot\text{s}^{-3}$$
 
 **Theoretical Value Calculation**:
-Using precise Zhang Xiangqian constant:
+Using precise ZUFT constant:
 $$G_{\text{theoretical}} = \frac{2Z}{c} = \frac{2 \times 0.010004524012147}{2.99792458 \times 10^{8}} = 6.67430 \times 10^{-11} \, \text{m}^3\text{kg}^{-1}\text{s}^{-2}$$
 
 **Observed Value**: $G_{\text{observed}} = 6.67430 \times 10^{-11} \, \text{m}^3\text{kg}^{-1}\text{s}^{-2}$
@@ -461,7 +461,7 @@ $$G_{\text{approximate}} = \frac{2 \times 0.01}{2.99792458 \times 10^{8}} = 6.67
 $$\text{Relative Error} = \frac{|6.67128 - 6.67430| \times 10^{-11}}{6.67430 \times 10^{-11}} = 0.045\%$$
 
 **High-Precision Significance**:
-- When using the precise Zhang Xiangqian constant value, the relative error is 0%, demonstrating perfect theoretical prediction
+- When using the precise ZUFT constant value, the relative error is 0%, demonstrating perfect theoretical prediction
 - Even with the approximate value Z ≈ 0.01, the relative error is only 0.045%, which is well within acceptable physics verification standards
 - This validates the theoretical framework's exceptional precision and credibility
 - The result provides reliable numerical foundation for theoretical practical applications
@@ -511,7 +511,7 @@ This equation shows that three physical constants are not independent, but close
 
 1. **Universal Gravitation Constant G**: No longer a fundamental constant, but composite result of spatial motion and geometric projection
 2. **Speed of Light c**: Not only electromagnetic wave propagation speed, but fundamental rate of spatial motion
-3. **Zhang Xiangqian Constant Z**: Represents fundamental scale of space-mass conversion
+3. **ZUFT Constant Z**: Represents fundamental scale of space-mass conversion
 
 **Unified Verification**:
 
@@ -534,7 +534,7 @@ Considering geometric correction of spatial motion, the unified equation $G \cdo
 
 Three physical constants reflect same physical essence of space:
 1. **Spatial Motion Rate** (light speed c): Fundamental motion attribute of space
-2. **Spatial Motion Quantity** (Zhang Xiangqian constant Z): Geometric measure of spatial motion
+2. **Spatial Motion Quantity** (ZUFT constant Z): Geometric measure of spatial motion
 3. **Gravitational Effect Intensity** (universal gravitation constant G): Conversion intensity from spatial motion to gravitational effect
 
 **Unified Field Theory Significance**:
@@ -550,13 +550,13 @@ This unification proof is core achievement of unified field theory, indicating:
 
 ### 5.1 Main Conclusions
 
-Based on Zhang Xiangqian's unified field theory spatial dynamics framework, this study successfully establishes theoretical foundation of gravitational-light speed unification equation $G = 2Z/c$ through five rigorous mathematical derivation methods, achieving the following main conclusions:
+Based on ZUFT's unified field theory spatial dynamics framework, this study successfully establishes theoretical foundation of gravitational-light speed unification equation $G = 2Z/c$ through five rigorous mathematical derivation methods, achieving the following main conclusions:
 
 1. **Theoretical Rigor**: Through spatial helical motion geometric projection method, Gauss's law application method, tensor analysis method, energy conservation method, and dimensional analysis method, gravitational-light speed unification equation is strictly derived through five independent methods, verifying theoretical mathematical rigor.
 
 2. **Physical Self-Consistency**: Theory shows complete consistency within compatible ranges with Newtonian mechanics, general relativity, and quantum field theory, embodying theoretical self-consistency and universality.
 
-3. **Numerical Precision**: Through verification with international standard physical constants, relative error between theoretical and observed values is 0% when using precise Zhang Xiangqian constant value (0.010004524012147), demonstrating perfect theoretical prediction accuracy.
+3. **Numerical Precision**: Through verification with international standard physical constants, relative error between theoretical and observed values is 0% when using precise ZUFT constant value (0.010004524012147), demonstrating perfect theoretical prediction accuracy.
 
 4. **Geometric Foundation**: Strict proof of 3D-2D projection geometric factor 2 reveals geometric essence of gravity, providing solid geometric foundation for unified field theory.
 
@@ -628,7 +628,7 @@ Establishment of gravitational-light speed unification equation marks an importa
 
 ## References
 
-[1] Zhang Xiangqian. Unified Field Theory[M]. Beijing: Science Press, 2020.
+[1] ZUFT. Unified Field Theory[M]. Beijing: Science Press, 2020.
 [2] Einstein, A. Die Grundlage der allgemeinen Relativitätstheorie[J]. Annalen der Physik, 1916, 49: 769-822.
 [3] Newton, I. Philosophiae Naturalis Principia Mathematica[M]. London: Royal Society, 1687.
 [4] Weinberg, S. The Quantum Theory of Fields[M]. Cambridge: Cambridge University Press, 1995.
@@ -652,6 +652,6 @@ Establishment of gravitational-light speed unification equation marks an importa
 
 ---
 
-**Acknowledgments**: We thank Mr. Zhang Xiangqian for his pioneering theoretical contributions, and research team members for their diligent work in theoretical derivation and numerical verification. This research was supported by [funding agency], for which we express sincere gratitude.
+**Acknowledgments**: We thank Mr. ZUFT for his pioneering theoretical contributions, and research team members for their diligent work in theoretical derivation and numerical verification. This research was supported by [funding agency], for which we express sincere gratitude.
 
-**Declarations**: This research achievement is based on Zhang Xiangqian unified field theory theoretical framework. The authors declare no conflicts of interest.
+**Declarations**: This research achievement is based on ZUFT unified field theory theoretical framework. The authors declare no conflicts of interest.

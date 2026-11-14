@@ -4,7 +4,7 @@ from scipy.integrate import dblquad, tplquad, nquad
 
 class GeometricFactorValidator:
     """
-    几何因子2推导验证类，用于测试和验证张祥前统一场论中几何因子2的五种推导方法
+    几何因子2推导验证类，用于测试和验证ZUFT统一场论中几何因子2的五种推导方法
     """
     
     def __init__(self):
@@ -254,7 +254,7 @@ class GeometricFactorValidator:
         
         if all_passed:
             print("\n结论: 所有五种推导方法均验证了几何因子2的正确性。")
-            print("这证明了在张祥前统一场论框架下，几何因子2是三维各向同性场到二维平面投影的统计几何常数。")
+            print("这证明了在ZUFT统一场论框架下，几何因子2是三维各向同性场到二维平面投影的统计几何常数。")
         else:
             print("\n结论: 部分推导方法验证失败，需要进一步检查问题所在。")
     

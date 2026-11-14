@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Generate a publication-ready 3D helix plot for the cylindrical spiral spacetime equation
-from Zhang Xiangqian's Unified Field Theory.
+from ZUFT's Unified Field Theory.
 
 Equation: vec{R}(t) = r cos(omega t) hat{i} + r sin(omega t) hat{j} + p t hat{k}
 

@@ -249,7 +249,7 @@ f = \sqrt{\frac{Z}{Z'}} \cdot \frac{c}{2} = \sqrt{\frac{1.0004524012147 \times 1
 
 ## 8. 参考文献
 
-1. 张祥前. 统一场论[M]. 安徽科学技术出版社, 2017.
+1. ZUFT. 统一场论[M]. 安徽科学技术出版社, 2017.
 2. CODATA. CODATA Recommended Values of the Fundamental Physical Constants: 2018[J]. Reviews of Modern Physics, 2020, 92(2): 025010.
 3. Buckingham, E. On Physically Similar Systems: Illustrations of the Use of Dimensional Equations[J]. Physical Review, 1914, 4(4): 345-376.
 

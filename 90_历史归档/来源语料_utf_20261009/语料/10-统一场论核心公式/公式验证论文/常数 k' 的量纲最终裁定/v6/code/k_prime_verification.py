@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论（ZUFT）常数k'的全面验证计算
+ZUFT统一场论（ZUFT）常数k'的全面验证计算
 算法联盟 - 基于全部文档内容的严格求导与验证
 日期：2026-02-05
 """
@@ -37,7 +37,7 @@ pi = math.pi
 k_e_standard = 1 / (4 * pi * epsilon_0)
 
 print("=" * 80)
-print("张祥前统一场论（ZUFT）常数 k' 的全面验证计算")
+print("ZUFT统一场论（ZUFT）常数 k' 的全面验证计算")
 print("=" * 80)
 print("\n第1步：使用的CODATA 2018基本常数：")
 print(f"普朗克质量 m_p = {m_p:.6e} kg")

@@ -6,19 +6,19 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The unified field interaction equation is a core component of Zhang Xiangqian's Unified Field Theory (UFT), comprehensively describing how changing magnetic fields generate both gravitational and electric fields through the rigorous mathematical form \(\frac{d\overrightarrow{B}}{dt} = \frac{-\overrightarrow{A}\times\overrightarrow{E}}{c^2} - \frac{\overrightarrow{V}}{c^{2}}\times\frac{d\overrightarrow{E}}{dt}\). This equation reveals the intrinsic connection between electromagnetic and gravitational forces by establishing a direct quantitative relationship between magnetic field variations and induced gravitational-electric field effects. Derived from the universal grand unified equation based on symmetry principles, the equation is verified through symbolic computation, numerical simulation, and consistency analysis. As an important extension of Faraday's law of electromagnetic induction, it provides a theoretical foundation for unifying electromagnetic and gravitational phenomena, representing a significant advance in understanding the fundamental nature of field interactions and force unification.
+The unified field interaction equation is a core component of ZUFT's Unified Field Theory (UFT), comprehensively describing how changing magnetic fields generate both gravitational and electric fields through the rigorous mathematical form \(\frac{d\overrightarrow{B}}{dt} = \frac{-\overrightarrow{A}\times\overrightarrow{E}}{c^2} - \frac{\overrightarrow{V}}{c^{2}}\times\frac{d\overrightarrow{E}}{dt}\). This equation reveals the intrinsic connection between electromagnetic and gravitational forces by establishing a direct quantitative relationship between magnetic field variations and induced gravitational-electric field effects. Derived from the universal grand unified equation based on symmetry principles, the equation is verified through symbolic computation, numerical simulation, and consistency analysis. As an important extension of Faraday's law of electromagnetic induction, it provides a theoretical foundation for unifying electromagnetic and gravitational phenomena, representing a significant advance in understanding the fundamental nature of field interactions and force unification.
 
 ---
 
 ## Introduction
 
-Faraday's law of electromagnetic induction revolutionized physics by showing that changing magnetic fields generate electric fields. However, traditional physics has lacked a corresponding mechanism connecting magnetic field variations to gravitational effects. Zhang Xiangqian's Unified Field Theory presents an innovative equation that extends Faraday's law to include gravitational field generation, offering a complete description of field interactions. This equation forms a dual relationship with the gravitational induction equation, together creating a comprehensive framework for field transformations in unified field theory. As a core equation in UFT, it connects classical electromagnetism with gravitational theory, revealing the underlying symmetry between fundamental forces and representing a crucial step toward the grand unification of physics.
+Faraday's law of electromagnetic induction revolutionized physics by showing that changing magnetic fields generate electric fields. However, traditional physics has lacked a corresponding mechanism connecting magnetic field variations to gravitational effects. ZUFT's Unified Field Theory presents an innovative equation that extends Faraday's law to include gravitational field generation, offering a complete description of field interactions. This equation forms a dual relationship with the gravitational induction equation, together creating a comprehensive framework for field transformations in unified field theory. As a core equation in UFT, it connects classical electromagnetism with gravitational theory, revealing the underlying symmetry between fundamental forces and representing a crucial step toward the grand unification of physics.
 
 ## 2. Mathematical Formulation
 
@@ -205,11 +205,11 @@ In space environments with significant gravitational and electromagnetic field v
 
 ## 9. Conclusion
 
-The unified field interaction equation provides a comprehensive mathematical framework for understanding how changing magnetic fields generate both gravitational and electric fields. Derived from fundamental principles of unified field theory and verified through multiple methods, it demonstrates excellent mathematical consistency and physical validity. This equation extends Faraday's law to include gravitational effects, revealing a deep symmetry between electromagnetic and gravitational phenomena. As a core equation in Zhang Xiangqian's Unified Field Theory, it represents a significant advance toward the grand unification of physics, offering new insights into the fundamental nature of field interactions. Future experimental verification, particularly through gravitational wave observations and precision field measurements, will be crucial for confirming its predictions and further advancing our understanding of the unified nature of physical forces.
+The unified field interaction equation provides a comprehensive mathematical framework for understanding how changing magnetic fields generate both gravitational and electric fields. Derived from fundamental principles of unified field theory and verified through multiple methods, it demonstrates excellent mathematical consistency and physical validity. This equation extends Faraday's law to include gravitational effects, revealing a deep symmetry between electromagnetic and gravitational phenomena. As a core equation in ZUFT's Unified Field Theory, it represents a significant advance toward the grand unification of physics, offering new insights into the fundamental nature of field interactions. Future experimental verification, particularly through gravitational wave observations and precision field measurements, will be crucial for confirming its predictions and further advancing our understanding of the unified nature of physical forces.
 
 ## 10. References
 
-1. Zhang XQ. Unified Field Theory. China Science and Technology Press, 2020.
+1. ZUFT. Unified Field Theory. China Science and Technology Press, 2020.
 2. Einstein A. Relativity: The Special and General Theory. Crown Publishers, 1961.
 3. Maxwell JC. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 4. Faraday M. Experimental Researches in Electricity. Royal Institution, 1831-1855.

@@ -121,7 +121,7 @@ openuft/
 > 单一逻辑：所有方程都是某个作用量的 Euler-Lagrange 变分方程
 - δS/δg = -√|g| G^μν（Einstein）
 - δS/δA = J^μ（Yang-Mills）
-- dP/dt = F（P = m(c-v)，张祥前）
+- dP/dt = F（P = m(c-v)，ZUFT）
 
 ### P（Proof，证明）：从方程到严格定理
 > 核心目标：把几何恒等式变成"严格证明"

@@ -4,18 +4,18 @@
 Xiangqian Zhang, Unified Field Theory Research Team
 
 ## Correspondence
-zhangxiangqian@unifiedfieldtheory.org
+zuft@unifiedfieldtheory.org
 
 ## Received: 15 October 2025; Accepted: 13 December 2025; Published online: 20 December 2025
 
 ## Abstract
-The equation describing how varying gravitational fields induce electromagnetic fields is a cornerstone of Zhang Xiangqian's Unified Field Theory (UTF). This paper presents a rigorous derivation of this equation, comprehensive symbolic differentiation verification using SymPy, numerical validation with NumPy, and a detailed comparison with Maxwell's equations. We demonstrate the equation's mathematical self-consistency, its compatibility with energy conservation principles, and its role in unifying gravitational and electromagnetic forces. The equation, \(\frac{\partial^{2}\mathbf{A}}{\partial t^{2}} = \frac{\mathbf{V}}{f}\left(\nabla\cdot\mathbf{E}\right) - \frac{c^{2}}{f}\left(\nabla\times\mathbf{B}\right)\), establishes a direct quantitative relationship between gravitational field variations and electromagnetic field distributions, providing a mathematical framework for understanding the fundamental unity of physical forces.
+The equation describing how varying gravitational fields induce electromagnetic fields is a cornerstone of ZUFT's Unified Field Theory (UTF). This paper presents a rigorous derivation of this equation, comprehensive symbolic differentiation verification using SymPy, numerical validation with NumPy, and a detailed comparison with Maxwell's equations. We demonstrate the equation's mathematical self-consistency, its compatibility with energy conservation principles, and its role in unifying gravitational and electromagnetic forces. The equation, \(\frac{\partial^{2}\mathbf{A}}{\partial t^{2}} = \frac{\mathbf{V}}{f}\left(\nabla\cdot\mathbf{E}\right) - \frac{c^{2}}{f}\left(\nabla\times\mathbf{B}\right)\), establishes a direct quantitative relationship between gravitational field variations and electromagnetic field distributions, providing a mathematical framework for understanding the fundamental unity of physical forces.
 
 ## 1. Introduction
 
 Gravity and electromagnetism, two of the four fundamental forces in nature, have long been considered distinct phenomena governed by separate mathematical frameworks: general relativity for gravity and Maxwell's equations for electromagnetism. Einstein's lifelong quest for a unified field theory remained unfulfilled, leaving the unification of these forces as one of the greatest challenges in theoretical physics.
 
-Zhang Xiangqian's Unified Field Theory proposes a radical departure from traditional physics by asserting that all physical forces are manifestations of space-time dynamics. At the heart of this theory is the equation describing how varying gravitational fields induce electromagnetic fields, which provides a concrete mathematical link between these two fundamental forces. This equation not only extends our understanding of field interactions but also offers a potential path toward a complete unification of all physical forces.
+ZUFT's Unified Field Theory proposes a radical departure from traditional physics by asserting that all physical forces are manifestations of space-time dynamics. At the heart of this theory is the equation describing how varying gravitational fields induce electromagnetic fields, which provides a concrete mathematical link between these two fundamental forces. This equation not only extends our understanding of field interactions but also offers a potential path toward a complete unification of all physical forces.
 
 In this paper, we present a comprehensive analysis of this pivotal equation, including:
 - Rigorous mathematical derivation from first principles
@@ -399,11 +399,11 @@ This equation not only extends our understanding of fundamental physics but also
 
 ## Acknowledgments
 
-The authors acknowledge the contributions of the Zhang Xiangqian Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
+The authors acknowledge the contributions of the ZUFT Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
 
 ## References
 
-1. Zhang Xiangqian. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
+1. ZUFT. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
 2. Einstein, A. Die Grundlage der allgemeinen Relativitätstheorie. Annalen der Physik, 49(7): 769–822, 1916.
 3. Maxwell, J.C. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 4. Abbott, B.P. et al. (LIGO Scientific and Virgo Collaborations). Observation of Gravitational Waves from a Binary Black Hole Merger. Physical Review Letters, 116(6): 061102, 2016.
@@ -415,7 +415,7 @@ The authors acknowledge the contributions of the Zhang Xiangqian Unified Field T
 
 **Supplementary Materials**: Detailed numerical simulation code, additional verification results, and interactive visualization tools are available at https://unifiedfieldtheory.org/supplementary-materials/12-gravitational-electromagnetic-induction
 
-**Corresponding Author**: zhangxiangqian@unifiedfieldtheory.org
+**Corresponding Author**: zuft@unifiedfieldtheory.org
 
 **Conflict of Interest**: The authors declare no competing financial interests.
 

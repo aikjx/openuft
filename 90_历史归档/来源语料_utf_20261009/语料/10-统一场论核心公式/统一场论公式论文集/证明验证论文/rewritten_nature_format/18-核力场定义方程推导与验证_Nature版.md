@@ -1,9 +1,9 @@
 # Nuclear Force Field Equation: Derivation, Verification, and Geometric Nature of Strong Interactions
 
-**Authors:** Zhang Xiangqian Unified Field Theory Research Team¹
+**Authors:** ZUFT Unified Field Theory Research Team¹
 
 **Affiliations:**
-¹ Zhang Xiangqian Unified Field Theory Research Institute, Nanjing, China
+¹ ZUFT Unified Field Theory Research Institute, Nanjing, China
 
 **Correspondence:** unifiedfieldtheory@research.org
 
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-The nuclear force field equation is a core formula in Zhang Xiangqian's unified field theory, revealing the geometric essence of nuclear forces and their intrinsic connection to gravitational and electromagnetic fields. This paper systematically derives this equation, verifies its correctness, and explores its profound significance and applications in physics, providing a solid foundation for the theoretical framework of unified field theory. Through rigorous mathematical derivation, multi-dimensional verification, and comprehensive physical analysis, we demonstrate that the nuclear force field, as the time rate of change of spatial motion state, is a key link in unifying the four fundamental interactions. Our verification confirms the equation's mathematical rigor, physical self-consistency, and compatibility with existing physical theories, establishing it as a promising approach to understanding strong interactions from a geometric perspective.
+The nuclear force field equation is a core formula in ZUFT's unified field theory, revealing the geometric essence of nuclear forces and their intrinsic connection to gravitational and electromagnetic fields. This paper systematically derives this equation, verifies its correctness, and explores its profound significance and applications in physics, providing a solid foundation for the theoretical framework of unified field theory. Through rigorous mathematical derivation, multi-dimensional verification, and comprehensive physical analysis, we demonstrate that the nuclear force field, as the time rate of change of spatial motion state, is a key link in unifying the four fundamental interactions. Our verification confirms the equation's mathematical rigor, physical self-consistency, and compatibility with existing physical theories, establishing it as a promising approach to understanding strong interactions from a geometric perspective.
 
 ---
 
@@ -19,12 +19,12 @@ The nuclear force field equation is a core formula in Zhang Xiangqian's unified 
 
 ### Introduction
 
-Nuclear force is one of the four fundamental interactions in nature, and its short-range, high-intensity characteristics make it central to nuclear structure and particle physics. Traditional quantum chromodynamics (QCD) describes nuclear forces through complex interactions of quarks and gluons, which is mathematically challenging. Zhang Xiangqian's unified field theory proposes a revolutionary perspective: unifying nuclear forces with gravity and electromagnetism as different manifestations of spacetime geometric motion. This paper aims to rigorously derive the mathematical formula for the nuclear force field from the first principles of this theory and verify its correctness through multi-dimensional analysis. This equation not only deepens our understanding of the nature of nuclear forces but also provides new ideas for unifying various interactions in nature, representing an important component of the unified field theory framework.
+Nuclear force is one of the four fundamental interactions in nature, and its short-range, high-intensity characteristics make it central to nuclear structure and particle physics. Traditional quantum chromodynamics (QCD) describes nuclear forces through complex interactions of quarks and gluons, which is mathematically challenging. ZUFT's unified field theory proposes a revolutionary perspective: unifying nuclear forces with gravity and electromagnetism as different manifestations of spacetime geometric motion. This paper aims to rigorously derive the mathematical formula for the nuclear force field from the first principles of this theory and verify its correctness through multi-dimensional analysis. This equation not only deepens our understanding of the nature of nuclear forces but also provides new ideas for unifying various interactions in nature, representing an important component of the unified field theory framework.
 
 ### Theoretical Framework and Basic Postulates
 
 #### Core Postulates of Unified Field Theory
-The derivation of the nuclear force field equation is based on the following core postulates of Zhang Xiangqian's unified field theory:
+The derivation of the nuclear force field equation is based on the following core postulates of ZUFT's unified field theory:
 
 1. **Spacetime Unification Postulate**: Time and space are different manifestations of the same geometric entity, and time flow is equivalent to spatial displacement at the speed of light \(c\)
 2. **Geometricization Postulate of Physical Quantities**: Physical quantities such as mass, charge, and nuclear force can all be reduced to geometric properties of space motion
@@ -548,10 +548,10 @@ All data and code used in this paper are available in the Supplementary Material
 ---
 
 ## Author Contributions
-- **Zhang Xiangqian Unified Field Theory Research Team**: Conceived and designed the research, performed mathematical derivations, conducted numerical simulations, analyzed data, and wrote the paper.
+- **ZUFT Unified Field Theory Research Team**: Conceived and designed the research, performed mathematical derivations, conducted numerical simulations, analyzed data, and wrote the paper.
 
 ## Competing Interests
 The authors declare no competing financial interests.
 
 ## Acknowledgments
-The authors thank all members of the Zhang Xiangqian Unified Field Theory Research Institute for their valuable discussions and contributions. This research was supported by the Institute's internal research funding program.
+The authors thank all members of the ZUFT Unified Field Theory Research Institute for their valuable discussions and contributions. This research was supported by the Institute's internal research funding program.

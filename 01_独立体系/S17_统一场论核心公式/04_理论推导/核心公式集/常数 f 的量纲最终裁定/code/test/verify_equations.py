@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-验证张祥前统一场论核心方程的推导关系
+验证ZUFT统一场论核心方程的推导关系
 """
 
 import math
@@ -82,7 +82,7 @@ def verify_classical_compatibility():
 
 # 主函数
 def main():
-    print("张祥前统一场论常数f验证")
+    print("ZUFT统一场论常数f验证")
     print("=" * 50)
     
     # 计算f的数值

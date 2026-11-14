@@ -8,7 +8,7 @@ triad_uft.grand_unification — 宇宙大统一力方程
   ├─ m dc/dt   → 引力/核力（光速方向变化）
   └─ -m dv/dt  → 惯性力（牛顿第二定律）
 
-基于张祥前统一场论20核心公式。
+基于ZUFT统一场论20核心公式。
 """
 from dataclasses import dataclass
 import numpy as np
@@ -76,7 +76,7 @@ def mass_velocity_relation(m0, v, c=299792458.0, model="relativistic"):
         m0: 静止质量
         v: 速度大小 (scalar)
         c: 光速
-        model: "relativistic" (相对论m=γm₀) 或 "zhang" (张祥前m=m₀/(1-v/c))
+        model: "relativistic" (相对论m=γm₀) 或 "zhang" (ZUFTm=m₀/(1-v/c))
 
     返回:
         运动质量
@@ -126,5 +126,5 @@ def rest_energy(m0, c=299792458.0):
 
 
 def rest_momentum(m0, c=299792458.0):
-    """静止动量 p₀ = m₀c（张祥前统一场论核心假设）"""
+    """静止动量 p₀ = m₀c（ZUFT统一场论核心假设）"""
     return m0 * c

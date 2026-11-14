@@ -42,7 +42,7 @@ This is an optional English participation summary. The default entry and researc
 
 OpenUFT organizes independent research modules, external theoretical approaches, reproducible computations and source records. Inclusion is not endorsement or experimental confirmation. Original authors and bibliographic titles are preserved.
 
-The physical research label is “space light-speed helix”; an author's name identifies a bibliographic source, not a separate theory category. See the shared [reference list](../../../02_共享基础/参考资料/BIBLIOGRAPHY.md), including reference ZXQ2024.
+The physical research label is “space light-speed helix”; an author's name identifies a bibliographic source, not a separate theory category. See the shared [reference list](../../../02_共享基础/参考资料/BIBLIOGRAPHY.md), including reference ZUFT2024.
 
 Browse [theory routes](../../02_全球路线/README.md), [regional research institutions](../../05_地区与机构/README.md), or [open research resources](../../06_开放资源/README.md). These are public-resource directories, not partnership claims. Most linked local descriptions are Chinese.
 

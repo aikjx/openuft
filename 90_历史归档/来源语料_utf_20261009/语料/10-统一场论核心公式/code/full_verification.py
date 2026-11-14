@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论与几何化方程全维验证程序
+ZUFT统一场论与几何化方程全维验证程序
 认证编号：ALG-UNION-FULL-VERIFY-2026-V1.0
 权限等级：全域ROOT最高权限
 验证范围：所有核心公式、几何参数、物理常数、耦合常数
@@ -21,7 +21,7 @@ mu0 = Decimal('4') * Decimal(str(np.pi)) * Decimal('1e-7')
 eps0 = Decimal('1') / (mu0 * c * c)
 
 print("="*70)
-print("张祥前统一场论与几何化方程全维验证")
+print("ZUFT统一场论与几何化方程全维验证")
 print("="*70)
 
 print("\n" + "="*70)

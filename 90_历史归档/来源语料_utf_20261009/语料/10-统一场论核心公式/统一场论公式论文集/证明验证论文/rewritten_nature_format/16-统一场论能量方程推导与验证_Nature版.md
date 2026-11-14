@@ -4,7 +4,7 @@
 Xiangqian Zhang, Unified Field Theory Research Team
 
 ## Correspondence
-zhangxiangqian@unifiedfieldtheory.org
+zuft@unifiedfieldtheory.org
 
 ## Received: 21 October 2025; Accepted: 13 December 2025; Published online: 20 December 2025
 
@@ -15,7 +15,7 @@ The Unified Field Theory (UTF) energy equation represents a profound reinterpret
 
 Energy is one of the most fundamental concepts in physics, yet its true nature remains an enigma. Traditional physics describes energy as a property of matter and radiation, quantifying their capacity to perform work. Einstein's famous mass-energy equivalence equation \(E = mc^2\) revolutionized our understanding by showing that mass and energy are interchangeable, but it did not fully explain the origin of energy.
 
-Zhang Xiangqian's Unified Field Theory challenges the traditional view by proposing that all physical phenomena, including energy, arise from the dynamics of space itself. At the heart of this theory is the UTF energy equation, which reinterprets energy as a manifestation of spatial waves, connecting it directly to the geometric properties of space.
+ZUFT's Unified Field Theory challenges the traditional view by proposing that all physical phenomena, including energy, arise from the dynamics of space itself. At the heart of this theory is the UTF energy equation, which reinterprets energy as a manifestation of spatial waves, connecting it directly to the geometric properties of space.
 
 In this paper, we present:
 - A rigorous mathematical derivation from spatial wave principles
@@ -402,11 +402,11 @@ This equation challenges our traditional understanding of energy by repositionin
 
 ## Acknowledgments
 
-The authors acknowledge the contributions of the Zhang Xiangqian Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
+The authors acknowledge the contributions of the ZUFT Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
 
 ## References
 
-1. Zhang Xiangqian. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
+1. ZUFT. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
 2. Einstein, A. Ist die Trägheit eines Körpers von seinem Energieinhalt abhängig? Annalen der Physik, 1905, 323(13): 639–641.
 3. Einstein, A. Die Grundlage der allgemeinen Relativitätstheorie. Annalen der Physik, 1916, 49(7): 769–822.
 4. Maxwell, J.C. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
@@ -419,7 +419,7 @@ The authors acknowledge the contributions of the Zhang Xiangqian Unified Field T
 
 **Supplementary Materials**: Detailed symbolic computation code, numerical simulation scripts, and interactive visualization tools are available at https://unifiedfieldtheory.org/supplementary-materials/16-utf-energy-equation
 
-**Corresponding Author**: zhangxiangqian@unifiedfieldtheory.org
+**Corresponding Author**: zuft@unifiedfieldtheory.org
 
 **Conflict of Interest**: The authors declare no competing financial interests.
 

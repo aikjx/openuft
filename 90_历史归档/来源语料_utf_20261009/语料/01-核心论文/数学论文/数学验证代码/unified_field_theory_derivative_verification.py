@@ -1,8 +1,8 @@
 """
-Zhang Xiangqian's Unified Field Theory - Comprehensive Derivative Verification
+ZUFT's Unified Field Theory - Comprehensive Derivative Verification
 
 This script performs rigorous mathematical derivative verification of the core formulas
-in Zhang Xiangqian's Unified Field Theory, including geometric factor 2 derivation,
+in ZUFT's Unified Field Theory, including geometric factor 2 derivation,
 gravitational-light speed unified equation, and electromagnetic coupling constant.
 
 File: unified_field_theory_derivative_verification.py
@@ -32,7 +32,7 @@ class UnifiedFieldTheoryVerifier:
         self.e = 1.602176634e-19  # 电子电荷，单位：C
         self.hbar = 1.054571817e-34  # 约化普朗克常数，单位：J·s
         
-        print("===== 张祥前统一场论 - 数学求导验证系统 =====")
+        print("===== ZUFT统一场论 - 数学求导验证系统 =====")
         print("初始化完成，开始执行严格数学验证...\n")
     
     def verify_geometric_factor_derivative(self):
@@ -476,13 +476,13 @@ class UnifiedFieldTheoryVerifier:
         print(f"4. 三维螺旋运动几何因子: {spiral_geometric_factor:.15f}")
         
         print("\n综合数学验证结论:")
-        print("1. 张祥前统一场论的核心公式在数学上具有严格的自洽性")
+        print("1. ZUFT统一场论的核心公式在数学上具有严格的自洽性")
         print("2. 几何因子2通过五种不同的数学方法得到了严格验证")
         print("3. 引力光速统一方程G=2Z/c在数值和量纲上完全一致")
         print("4. 电磁光速几何耦合常数Z'与精细结构常数的关系得到了严格验证")
         print("5. 三维螺旋运动的导数分析揭示了几何因子2的物理本质")
         print("6. 时空同一化方程的导数关系验证了时间与空间的内在联系")
-        print("\n所有数学推导和求导验证均显示张祥前统一场论具有坚实的数学基础。")
+        print("\n所有数学推导和求导验证均显示ZUFT统一场论具有坚实的数学基础。")
 
 # 运行验证
 if __name__ == "__main__":

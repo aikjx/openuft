@@ -10,7 +10,7 @@ TUFT-r181｜S17 核心公式 06「运动动量方程 P = m(C − V)」
         r181 仅为本线 01:28:22 的占位 ⇒ **r181 为首空号**（按时间戳，非仅 grep）。
   【靶】S17/04_理论推导/核心公式集/06-运动动量方程/
         (a) 运动与静止的几何统一：…P=m(C-V)的第一性原理推导、诠释与终极验证.md（705 行）
-        (b) 求导验证/张祥前统一场论动量公式P=m(C-V)整理.md（728 行，含内嵌 Python「验证」脚本）
+        (b) 求导验证/ZUFT统一场论动量公式P=m(C-V)整理.md（728 行，含内嵌 Python「验证」脚本）
         (c) code/unified_field_theory_momentum.py（377 行，绘图脚本）
     核心声称：
       一、`P_0 = m_0 C_0`（静止动量），标量 `P_0 = m_0 c ≠ 0`，并「自然得到」`E_0 = m_0 c^2`；
@@ -75,9 +75,9 @@ TGT_DIR = os.path.join(BASE, "01_独立体系", "S17_统一场论核心公式",
                        "04_理论推导", "核心公式集", "06-运动动量方程")
 DOC_A = os.path.join(
     TGT_DIR,
-    "运动与静止的几何统一：张祥前统一场论动量公式P=m(C-V)的第一性原理推导、诠释与终极验证.md")
+    "运动与静止的几何统一：ZUFT统一场论动量公式P=m(C-V)的第一性原理推导、诠释与终极验证.md")
 DOC_B = os.path.join(TGT_DIR, "求导验证",
-                     "张祥前统一场论动量公式P=m(C-V)整理.md")
+                     "ZUFT统一场论动量公式P=m(C-V)整理.md")
 CODE_PY = os.path.join(TGT_DIR, "code", "unified_field_theory_momentum.py")
 
 ITEMS = []

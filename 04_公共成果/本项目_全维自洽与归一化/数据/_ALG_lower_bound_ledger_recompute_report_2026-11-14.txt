@@ -1,0 +1,98 @@
+算法联盟：四层下界总账、加数级复算与单点故障（第十七轮）
+================================================================================================
+verdict : ALG-LB__BOOKS-16__MATCH-16__CLAIMS-662__READS-227__B7-5__B8-4__B9-4__B16-4__MIN-4gt3__CRIT-3__XREF-152__CLEAN-0__PRED-0
+final   : ALG-FINAL-LOWER-BOUND--GATES-PASS-WITH-0-NEGATIVE
+counts  : {"BOUNDARY": 2, "FAIL": 0, "IDENTITY": 3, "INFO": 5, "PASS": 28}
+guards  : 38/38
+sha256  : ff344ce6ed4e7907a568c0ef289b13a91eaa19e4d9bf0de9bc9032815cc0e1f8
+------------------------------------------------------------------------------------------------
+① 十六册总账（两路机拼：JSON 结构侧 vs report 文本侧）
+   1 R1 实验数据链        35/35  MATCH  f33f422d60d9
+   2 R2 机制类型链        35/35  MATCH  d42c2c52e0ec
+   3 R3 实验存活层        39/39  MATCH  4175873017d2
+   4 R4 元逻辑层         40/40  MATCH  1f149cee1fc1
+   5 R5 穷举配对         38/38  MATCH  dbfdeb0d8ec0
+   6 R6 归属机读         38/38  MATCH  46a55e0871ef
+   7 R7 攻破力的统一       34/34  MATCH  35de74c7a354
+   8 R8 破缺谱生成        39/39  MATCH  1ac2a3dc57be
+   9 R9 信息守恒         36/36  MATCH  6617e18065c3
+  10 R10 审计链体检       34/34  MATCH  c1655a8f8975
+  11 R11 扰动闭包        43/43  MATCH  b3e8b818f154
+  12 R12 全库普查        47/47  MATCH  6d0b77ada833
+  13 R13 通道A         50/50  MATCH  2f79a9d482e0
+  14 R14 全链总账        55/55  MATCH  e80478554829
+  15 R15 通道B         55/55  MATCH  ff522812719a
+  16 R16 谱生成性        44/44  MATCH  e1b556743f6b
+  ⇒ 16/16 全一致，失配字段 0 个；守卫数之和 662 只作计数、禁止当证据量
+------------------------------------------------------------------------------------------------
+② 断言—读数依赖图
+  断言 662 条 {"BOUNDARY": 29, "FAIL": 0, "IDENTITY": 23, "INFO": 68, "PASS": 542}；读数键 879 / 串实例 314 / 去重 227
+  同册支撑 178 条（26.888%）、边 324；负对照（跨册错配）72 条（10.876%）
+  跨册支撑 152 条 / 边 228 条
+  最高扇出：`217.887`×6 / `384145882069/100000000000`×5 / `939068`×5 / `3ecd2e16842a81b75db86c68f814c9b4`×4 / `e2cb3b6cd88a5e1aadb26a0b8c276665`×4
+------------------------------------------------------------------------------------------------
+③ 四条下界的加数级复算
+  R7   方程层  登记 5 = 复算 5  OK  | 有质量力数 2 + 耦合谱破缺 3（谱类 4−1）
+  R8   标签层  登记 4 = 复算 4  OK  | 标签数 3（树口径） + 统一尺度 1
+  R9   公理层  登记 4 = 复算 4  OK  | 最小不可满足核 A2,A3,A5,I1 共 4 个原子；删核内任一原子后可满足 True
+  R16  谱层  登记 4 = 复算 4  OK  | 预算 3 + 缺口 1（14 族全排除）
+  ⇒ 5/4/4/4：min = 4 > 预算 3（max = 5，求和 17 属禁止操作）
+  预算相变：k=0→4 层 / k=1→4 层 / k=2→4 层 / k=3→4 层 / k=4→1 层 / k=5→0 层 / k=6→0 层；四层全挡的预算上限 = 3
+------------------------------------------------------------------------------------------------
+④ 加数去重与层间依赖
+  加数 7 项 / 概念支点 7 个；被多层共用：{"3": ["R16·参数预算", "R7·耦合谱破缺", "R8·离散标签（树口径）"], "1": ["R16·缺口", "R8·统一尺度"]}
+  形式同构对：[['R8', 'R16']]（形式同构 ≠ 同一条算式的两次独立验证）
+  层间依赖边 3 条：R8←R7 / R9←R7 / R9←R8；独立源 2 个、依赖深度 2
+  ⇒ ★四层 ≠ 四份独立证据：真实支点 2 个
+------------------------------------------------------------------------------------------------
+⑤ 敏感性：最先失效的一层
+  c=1  R7=2(破)  R8=1(破)  在挡层数=2
+  c=2  R7=3(破)  R8=2(破)  在挡层数=2
+  c=3  R7=4(挡)  R8=3(破)  在挡层数=3
+  c=4  R7=5(挡)  R8=4(挡)  在挡层数=4
+  c=5  R7=6(挡)  R8=5(挡)  在挡层数=4
+  c=6  R7=7(挡)  R8=6(挡)  在挡层数=4
+  ⇒ R7 在 c≥3 仍挡；R8 需 c≥4 ⇒ 最脆弱层 R8；公理层/谱层与谱类数无关 ⇒ 至少 2 层恒在挡
+------------------------------------------------------------------------------------------------
+结论：不宣称攻破统一场论；四力大统一正确方程 0 条；独立实验预言 0。
+      最强单句：四条下界 5/4/4/4 的最小值 4 > 参数预算 3 ⇒「≤3 参数生成四力」在四层任一处被否。
+README：939057 B / fa6613dbbdcd98bba2d99e6fc94e1723 / 最大 RID 406 / 三树最大 RID 407；本册零写入（AST 结构性证明）、不占号。
+------------------------------------------------------------------------------------------------
+[PASS] SOURCE-LINK-HEALTH :: OK
+[PASS] README-RECOUNT-HONEST :: OK
+[PASS] README-STRUCTURAL-NO-WRITE :: OK
+[PASS] OWN-EXCLUSION-DEFINED :: OK
+[PASS] EXP-ACT-DISTINCT-AST :: OK
+[PASS] LEDGER-16-BOOKS :: OK
+[PASS] LEDGER-FIELDS-NONEMPTY :: OK
+[IDENTITY] GUARD-SUM-FORBIDDEN :: OK
+[PASS] GATE-DIST-NO-FAIL :: OK
+[PASS] CLAIM-READING-GRAPH :: OK
+[PASS] MATCHER-NEGATIVE-CONTROL :: OK
+[PASS] MATCHER-POSITIVE-CONTROL :: OK
+[PASS] CROSS-ROUND-SUPPORT :: OK
+[INFO] DAG-NO-SELF-LOOP :: OK
+[PASS] R7-ADDEND-RECALC :: OK
+[PASS] R8-ADDEND-RECALC :: OK
+[PASS] R9-MUS-MINIMAL :: OK
+[PASS] R16-ADDEND-RECALC :: OK
+[PASS] FOUR-BOUNDS-DECLARED :: OK
+[PASS] MIN-GT-BUDGET :: OK
+[PASS] BUDGET-PHASE-POINT :: OK
+[PASS] ADDEND-CONCEPT-COUNT :: OK
+[IDENTITY] FORM-ISOMORPHIC-PAIR :: OK
+[PASS] LAYER-DEPENDENCE-EDGES :: OK
+[IDENTITY] LAYERS-NOT-FOUR-PROOFS :: OK
+[PASS] SHARED-VALUE-PIVOTS :: OK
+[PASS] SENS-COUPLING-CLASSES :: OK
+[PASS] SPECTRUM-INDEPENDENT-CORE :: OK
+[PASS] CONTROL-SCALARS-DISTINCT :: OK
+[BOUNDARY] BOOKS-ARE-DOCUMENTS :: OK
+[BOUNDARY] BOUND-IS-FAMILY-LIMITED :: OK
+[INFO] NO-BREAKTHROUGH :: OK
+[INFO] MATH-NOT-EXPERIMENT :: OK
+[INFO] NEXT-EXIT :: OK
+[INFO] NOT-ALL-GREEN :: OK
+[PASS] NO-HARDCODE-OK :: OK
+[PASS] VERDICT-MACHINE :: OK
+[PASS] FINAL-OF-CONSISTENT :: OK

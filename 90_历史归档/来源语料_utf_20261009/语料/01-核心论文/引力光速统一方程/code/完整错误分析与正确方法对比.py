@@ -4,7 +4,7 @@
 完整错误分析与正确方法对比
 Complete Error Analysis and Correct Method Comparison
 
-深入分析张祥前统一场论中几何因子推导的所有错误，
+深入分析ZUFT统一场论中几何因子推导的所有错误，
 并展示正确的物理和数学方法应该如何处理类似问题。
 
 主要内容：
@@ -39,7 +39,7 @@ class ComprehensiveErrorAnalysis:
     def step_by_step_error_analysis(self):
         """逐步错误分析"""
         print("=" * 90)
-        print("逐步错误分析：张祥前统一场论几何因子推导")
+        print("逐步错误分析：ZUFT统一场论几何因子推导")
         print("=" * 90)
         
         errors = [
@@ -292,7 +292,7 @@ class ComprehensiveErrorAnalysis:
     def create_comprehensive_visualization(self):
         """创建综合可视化"""
         fig = plt.figure(figsize=(16, 12))
-        fig.suptitle('Complete Error Analysis: Zhang Xiangqian Geometric Factor', 
+        fig.suptitle('Complete Error Analysis: ZUFT Geometric Factor', 
                      fontsize=16, fontweight='bold')
         
         # 创建子图网格
@@ -566,7 +566,7 @@ class ComprehensiveErrorAnalysis:
         conclusions = [
             'FINAL CONCLUSIONS:',
             '',
-            '❌ Zhang Xiangqian\'s Geometric Factor:',
+            '❌ ZUFT\'s Geometric Factor:',
             '   • Mathematical errors in integration',
             '   • Conceptual confusion (3D vs 2D)',
             '   • Lacks experimental foundation',
@@ -633,8 +633,8 @@ class ComprehensiveErrorAnalysis:
 def main():
     """主函数"""
     print("=" * 90)
-    print("完整错误分析：张祥前统一场论几何因子推导")
-    print("Complete Error Analysis: Zhang Xiangqian Geometric Factor Derivation")
+    print("完整错误分析：ZUFT统一场论几何因子推导")
+    print("Complete Error Analysis: ZUFT Geometric Factor Derivation")
     print("=" * 90)
     
     # 创建分析器
@@ -654,7 +654,7 @@ def main():
     print("\n" + "=" * 90)
     print("最终科学结论")
     print("=" * 90)
-    print("\n张祥前统一场论的几何因子推导包含多个根本性错误：")
+    print("\nZUFT统一场论的几何因子推导包含多个根本性错误：")
     print("1. 数学计算错误（错误的积分表达式）")
     print("2. 概念混淆（立体角vs平面角）")
     print("3. 物理基础缺失（未定义的'空间位移条数'）")

@@ -4,18 +4,18 @@
 Xiangqian Zhang, Unified Field Theory Research Team
 
 ## Correspondence
-zhangxiangqian@unifiedfieldtheory.org
+zuft@unifiedfieldtheory.org
 
 ## Received: 21 October 2025; Accepted: 13 December 2025; Published online: 20 December 2025
 
 ## Abstract
-The unification equation of gravitational and electromagnetic fields represents the culmination of Zhang Xiangqian's Unified Field Theory (UTF), mathematically unifying these two fundamental forces for the first time. This paper presents a rigorous derivation of this equation, \(\mathbf{A} \times \mathbf{B} = \frac{c^{2}}{\epsilon_0}\mathbf{j} + \frac{1}{\epsilon_0}\frac{\partial\mathbf{D}}{\partial t}\), based on the rotational coupling mechanism between fields. Through comprehensive symbolic verification, numerical simulation, and compatibility analysis with Maxwell's equations, we demonstrate the equation's mathematical consistency and physical validity. The equation reveals that gravitational and electromagnetic forces share a common spatial origin, providing a critical theoretical foundation for unifying fundamental interactions. Its profound implications for our understanding of field dynamics, energy conservation, and the possibility of new technologies are also discussed.
+The unification equation of gravitational and electromagnetic fields represents the culmination of ZUFT's Unified Field Theory (UTF), mathematically unifying these two fundamental forces for the first time. This paper presents a rigorous derivation of this equation, \(\mathbf{A} \times \mathbf{B} = \frac{c^{2}}{\epsilon_0}\mathbf{j} + \frac{1}{\epsilon_0}\frac{\partial\mathbf{D}}{\partial t}\), based on the rotational coupling mechanism between fields. Through comprehensive symbolic verification, numerical simulation, and compatibility analysis with Maxwell's equations, we demonstrate the equation's mathematical consistency and physical validity. The equation reveals that gravitational and electromagnetic forces share a common spatial origin, providing a critical theoretical foundation for unifying fundamental interactions. Its profound implications for our understanding of field dynamics, energy conservation, and the possibility of new technologies are also discussed.
 
 ## 1. Introduction
 
 For centuries, physicists have sought to unify the fundamental forces of nature. While Maxwell successfully unified electricity and magnetism in the 19th century, and Einstein spent decades attempting to unify gravity with electromagnetism, a complete unification has remained elusive. Modern physics describes gravity through general relativity's geometric framework and electromagnetic forces through quantum field theory, creating a theoretical divide between these two fundamental interactions.
 
-Zhang Xiangqian's Unified Field Theory challenges this division by proposing that all physical forces arise from the dynamics of space itself. At the heart of this theory is the gravitational-electromagnetic unification equation, which mathematically connects these two forces through a cross product relationship between gravitational field strength and magnetic field induction.
+ZUFT's Unified Field Theory challenges this division by proposing that all physical forces arise from the dynamics of space itself. At the heart of this theory is the gravitational-electromagnetic unification equation, which mathematically connects these two forces through a cross product relationship between gravitational field strength and magnetic field induction.
 
 In this paper, we present:
 - A rigorous mathematical derivation from electromagnetic and gravitational principles
@@ -436,11 +436,11 @@ As experimental techniques advance and our understanding of spatial dynamics dee
 
 ## Acknowledgments
 
-The authors acknowledge the contributions of the Zhang Xiangqian Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
+The authors acknowledge the contributions of the ZUFT Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
 
 ## References
 
-1. Zhang Xiangqian. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
+1. ZUFT. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
 2. Maxwell, J.C. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 3. Einstein, A. Zur Elektrodynamik bewegter Körper. Annalen der Physik, 1905, 322(10): 891–921.
 4. Einstein, A. Die Grundlage der allgemeinen Relativitätstheorie. Annalen der Physik, 1916, 49(7): 769–822.
@@ -453,7 +453,7 @@ The authors acknowledge the contributions of the Zhang Xiangqian Unified Field T
 
 **Supplementary Materials**: Detailed symbolic computation code, numerical simulation scripts, and interactive visualization tools are available at https://unifiedfieldtheory.org/supplementary-materials/17-gravitational-electromagnetic-unification
 
-**Corresponding Author**: zhangxiangqian@unifiedfieldtheory.org
+**Corresponding Author**: zuft@unifiedfieldtheory.org
 
 **Conflict of Interest**: The authors declare no competing financial interests.
 

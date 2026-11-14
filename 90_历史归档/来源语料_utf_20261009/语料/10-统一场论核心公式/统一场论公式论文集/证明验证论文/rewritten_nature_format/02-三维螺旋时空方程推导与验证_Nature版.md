@@ -1,9 +1,9 @@
 # Three-Dimensional Spiral Spacetime Equation: Derivation, Verification, and Geometric Insights into Spatial Dynamics
 
-**Authors:** Zhang Xiangqian Unified Field Theory Research Team¹
+**Authors:** ZUFT Unified Field Theory Research Team¹
 
 **Affiliations:**
-¹ Zhang Xiangqian Unified Field Theory Research Institute, Nanjing, China
+¹ ZUFT Unified Field Theory Research Institute, Nanjing, China
 
 **Correspondence:** unifiedfieldtheory@research.org
 
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-The three-dimensional spiral spacetime equation is a fundamental component of Zhang Xiangqian's unified field theory, revealing the spiral nature of spatial motion by combining rotational and linear propagation. This paper presents a rigorous mathematical derivation and comprehensive verification of the equation, utilizing symbolic differentiation, curvature and torsion calculations, and multi-scale numerical simulation. The equation naturally unifies rotational and linear motion, provides geometric insights through curvature and torsion analysis, and offers a framework for understanding quantum mechanical wave-particle duality, particle spin, and celestial spiral structures. Our verification confirms the equation's mathematical consistency across scales from quantum to cosmic, establishing it as a key geometric foundation for unified field theory.
+The three-dimensional spiral spacetime equation is a fundamental component of ZUFT's unified field theory, revealing the spiral nature of spatial motion by combining rotational and linear propagation. This paper presents a rigorous mathematical derivation and comprehensive verification of the equation, utilizing symbolic differentiation, curvature and torsion calculations, and multi-scale numerical simulation. The equation naturally unifies rotational and linear motion, provides geometric insights through curvature and torsion analysis, and offers a framework for understanding quantum mechanical wave-particle duality, particle spin, and celestial spiral structures. Our verification confirms the equation's mathematical consistency across scales from quantum to cosmic, establishing it as a key geometric foundation for unified field theory.
 
 ---
 
@@ -19,7 +19,7 @@ The three-dimensional spiral spacetime equation is a fundamental component of Zh
 
 ### Introduction
 
-The nature of spatial motion has been a central question in physics. While Einstein's relativity revealed spacetime curvature, it did not fully describe the specific motion patterns of space itself. Traditional physics treats linear and rotational motion as distinct phenomena, lacking a unified geometric framework. Zhang Xiangqian's unified field theory addresses this gap by proposing that space exhibits spiral motion, combining rotation and linear propagation at the speed of light. This hypothesis unifies different motion forms and provides a geometric basis for understanding fundamental physical phenomena.
+The nature of spatial motion has been a central question in physics. While Einstein's relativity revealed spacetime curvature, it did not fully describe the specific motion patterns of space itself. Traditional physics treats linear and rotational motion as distinct phenomena, lacking a unified geometric framework. ZUFT's unified field theory addresses this gap by proposing that space exhibits spiral motion, combining rotation and linear propagation at the speed of light. This hypothesis unifies different motion forms and provides a geometric basis for understanding fundamental physical phenomena.
 
 ### Theoretical Framework
 

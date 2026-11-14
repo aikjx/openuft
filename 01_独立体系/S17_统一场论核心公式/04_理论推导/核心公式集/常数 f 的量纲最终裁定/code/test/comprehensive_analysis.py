@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论常数f的全面分析与推导
+ZUFT统一场论常数f的全面分析与推导
 
 功能：
 1. 综合分析现有结果，推导f的精确值和量纲
@@ -16,7 +16,7 @@ from scipy import constants
 
 def comprehensive_analysis():
     """综合分析常数f的值和量纲"""
-    print("=== 张祥前统一场论常数f的全面分析与推导 ===")
+    print("=== ZUFT统一场论常数f的全面分析与推导 ===")
     print("=" * 70)
     
     # 1. 基本物理常数

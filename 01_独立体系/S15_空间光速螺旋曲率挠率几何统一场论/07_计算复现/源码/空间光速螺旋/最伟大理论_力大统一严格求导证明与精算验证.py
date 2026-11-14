@@ -138,7 +138,7 @@ print("""
   即：(1/k')·(C - V) = E + V×B
 """)
 
-# 张祥前的核心关系：C - V = k'(E + V×B)
+# ZUFT的核心关系：C - V = k'(E + V×B)
 print("  【关键步骤】利用 ZUFT 场方程建立 C, V, E, B 的关系")
 
 print("""

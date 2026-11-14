@@ -1,9 +1,9 @@
 # Spacetime Unification Equation: Derivation, Verification, and Fundamental Insights into Spatial Dynamics
 
-**Authors:** Zhang Xiangqian Unified Field Theory Research Team¹
+**Authors:** ZUFT Unified Field Theory Research Team¹
 
 **Affiliations:**
-¹ Zhang Xiangqian Unified Field Theory Research Institute, Nanjing, China
+¹ ZUFT Unified Field Theory Research Institute, Nanjing, China
 
 **Correspondence:** unifiedfieldtheory@research.org
 
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-The spacetime unification equation is a cornerstone of Zhang Xiangqian's unified field theory, revealing the fundamental unity of space and time through the profound insight that space propagates isotropically at the speed of light. This paper presents a rigorous mathematical derivation and comprehensive verification of the equation, utilizing symbolic differentiation, multi-scale numerical simulation, and physical consistency analysis. The equation naturally yields the principle of constant light speed and provides a new framework for understanding relativistic effects, quantum mechanics foundations, and the origin of gravity. Our verification confirms the equation's mathematical rigor and physical self-consistency across 27 orders of magnitude in time scales, from Planck time to cosmic scales, establishing it as a key starting point for unifying the four fundamental interactions.
+The spacetime unification equation is a cornerstone of ZUFT's unified field theory, revealing the fundamental unity of space and time through the profound insight that space propagates isotropically at the speed of light. This paper presents a rigorous mathematical derivation and comprehensive verification of the equation, utilizing symbolic differentiation, multi-scale numerical simulation, and physical consistency analysis. The equation naturally yields the principle of constant light speed and provides a new framework for understanding relativistic effects, quantum mechanics foundations, and the origin of gravity. Our verification confirms the equation's mathematical rigor and physical self-consistency across 27 orders of magnitude in time scales, from Planck time to cosmic scales, establishing it as a key starting point for unifying the four fundamental interactions.
 
 ---
 
@@ -19,7 +19,7 @@ The spacetime unification equation is a cornerstone of Zhang Xiangqian's unified
 
 ### Introduction
 
-The nature of space and time has been a central puzzle in physics. Einstein's relativity established the concept of a four-dimensional spacetime continuum, but fundamental questions remain unanswered: Why is the speed of light constant in all reference frames? What is the essence of time flow? Does space possess intrinsic properties? Zhang Xiangqian's unified field theory offers a revolutionary perspective by proposing that space is not a static background but a dynamic entity propagating isotropically and无源 at the speed of light. This hypothesis provides a mechanistic explanation for light speed invariance and unifies time, space, matter, and energy within a coherent mathematical system.
+The nature of space and time has been a central puzzle in physics. Einstein's relativity established the concept of a four-dimensional spacetime continuum, but fundamental questions remain unanswered: Why is the speed of light constant in all reference frames? What is the essence of time flow? Does space possess intrinsic properties? ZUFT's unified field theory offers a revolutionary perspective by proposing that space is not a static background but a dynamic entity propagating isotropically and无源 at the speed of light. This hypothesis provides a mechanistic explanation for light speed invariance and unifies time, space, matter, and energy within a coherent mathematical system.
 
 ### Theoretical Framework
 

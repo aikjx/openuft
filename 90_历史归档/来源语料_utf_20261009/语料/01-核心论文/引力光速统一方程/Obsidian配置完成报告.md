@@ -17,10 +17,10 @@
 title: 引力光速统一方程：从空间动力学原理到常数统一的理论推导与验证
 authors:
   - 莫国子
-  - 张祥前
+  - ZUFT
 type: paper
 category: 物理学
-tags: [引力, 光速, 统一场论, 空间动力学, 几何因子, 张祥前常数, 引力光速统一方程]
+tags: [引力, 光速, 统一场论, 空间动力学, 几何因子, ZUFT常数, 引力光速统一方程]
 date: 2025-01-01
 language: zh-CN
 mathjax: true

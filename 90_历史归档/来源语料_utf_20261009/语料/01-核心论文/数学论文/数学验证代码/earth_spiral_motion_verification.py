@@ -1,6 +1,6 @@
 """
 Earth's Spiral Motion, Seasons, and Elliptic Orbit Verification
-Based on Zhang Xiangqian's Unified Field Theory
+Based on ZUFT's Unified Field Theory
 
 This script performs rigorous mathematical verification of:
 1. Earth's cylindrical spiral space motion vs. elliptic orbit
@@ -36,7 +36,7 @@ class EarthSpiralMotionVerifier:
         self.earth_axial_tilt = 23.5  # 地球自转轴倾角，单位：度
         
         print("===== 地球螺旋运动、四季与椭圆轨道验证 =====")
-        print("基于张祥前统一场论的数学验证")
+        print("基于ZUFT统一场论的数学验证")
         print("初始化完成，开始执行严格数学验证...\n")
     
     def verify_space_spiral_motion(self):
@@ -337,7 +337,7 @@ class EarthSpiralMotionVerifier:
         print(f"4. 几何兼容性验证: {'成功' if compatibility_verification else '失败'}")
         
         print("\n综合结论:")
-        print("1. 张祥前统一场论中'地球周围空间的圆柱螺旋运动'与'地球椭圆轨道'完全兼容")
+        print("1. ZUFT统一场论中'地球周围空间的圆柱螺旋运动'与'地球椭圆轨道'完全兼容")
         print("2. 四季的形成是由于地球自转轴倾角导致的，与空间螺旋运动不冲突")
         print("3. 从统一场论可以严格推导出牛顿引力和椭圆轨道，证明了理论的自洽性")
         print("4. 空间螺旋运动是引力场的本质，为宏观天体运动提供了物理基础")

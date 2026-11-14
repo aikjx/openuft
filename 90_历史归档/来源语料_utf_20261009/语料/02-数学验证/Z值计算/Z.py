@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论引力光速统一方程 G = 2Z / c 的数值验证
+ZUFT统一场论引力光速统一方程 G = 2Z / c 的数值验证
 使用CODATA 2018标准常数值
 """
 
 # 定义常数
-Z = 0.01  # 张祥前常数（单位：kg⁻¹·m⁴·s⁻³）
+Z = 0.01  # ZUFT常数（单位：kg⁻¹·m⁴·s⁻³）
 c = 299792458  # 光速（单位：m/s）
 G_exp = 6.67430e-11  # CODATA 2018引力常数实验值（单位：m³ kg⁻¹ s⁻²）
 
@@ -16,8 +16,8 @@ G_calc = 2 * Z / c
 relative_error = abs(G_calc - G_exp) / G_exp * 100
 
 # 输出结果
-print("=== 张祥前统一场论引力光速统一方程验证 ===")
-print(f"张祥前常数 Z = {Z} kg⁻¹·m⁴·s⁻³")
+print("=== ZUFT统一场论引力光速统一方程验证 ===")
+print(f"ZUFT常数 Z = {Z} kg⁻¹·m⁴·s⁻³")
 print(f"光速 c = {c:.3e} m/s")
 print(f"计算引力常数 G_calc = 2 * Z / c = {G_calc:.10e} m³ kg⁻¹ s⁻²")
 print(f"实验引力常数 G_exp = {G_exp:.10e} m³ kg⁻¹ s⁻²")

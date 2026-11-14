@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论：最顶尖规范的学术图表生成系统
+ZUFT统一场论：最顶尖规范的学术图表生成系统
 每个分析模块单独生成高质量学术期刊级别的图表
 """
 
@@ -786,7 +786,7 @@ class TopTierAcademicCharts:
                 spine.set_visible(False)
         
         # 总标题
-        fig.suptitle('张祥前统一场论：圆柱螺旋运动理论框架总览', 
+        fig.suptitle('ZUFT统一场论：圆柱螺旋运动理论框架总览', 
                     fontsize=18, weight='bold', y=0.98)
         
         plt.savefig('09_理论框架总览.png', dpi=300, bbox_inches='tight')

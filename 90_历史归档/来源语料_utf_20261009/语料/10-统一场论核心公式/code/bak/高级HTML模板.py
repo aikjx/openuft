@@ -4,7 +4,7 @@
 最先进HTML5可视化模板生成器
 Advanced HTML5 Visualization Template Generator
 
-为张祥前统一场论公式生成最先进的可视化模板
+为ZUFT统一场论公式生成最先进的可视化模板
 """
 
 def get_advanced_html_template():
@@ -14,7 +14,7 @@ def get_advanced_html_template():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{FORMULA_NAME}} - 张祥前统一场论可视化</title>
+    <title>{{FORMULA_NAME}} - ZUFT统一场论可视化</title>
     <style>
         :root {
             --primary-color: #667eea;
@@ -171,7 +171,7 @@ def get_advanced_html_template():
 </head>
 <body>
     <div id="loading" class="loading">
-        <h3>🌌 加载张祥前统一场论可视化...</h3>
+        <h3>🌌 加载ZUFT统一场论可视化...</h3>
         <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
         <p id="loading-text">正在初始化物理引擎...</p>
     </div>
@@ -259,7 +259,7 @@ def get_advanced_html_template():
             
             initializePhysicsEngine() {
                 console.log("🔬 初始化物理引擎...");
-                // 基于张祥前统一场论的物理计算引擎
+                // 基于ZUFT统一场论的物理计算引擎
             }
             
             setupAdvancedRendering() {

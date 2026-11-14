@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>算法联盟第十七轮 · 四层下界总账、加数级复算与单点故障</title>
+<style>
+body{margin:0;background:#f5f7fa;color:#1b2430;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.72}
+.wrap{max-width:1080px;margin:0 auto;padding:34px 22px 70px}
+h1{font-size:27px;line-height:1.35;margin:8px 0 6px}
+h2{font-size:19px;margin:34px 0 10px;padding-left:11px;border-left:5px solid #2f6fd0}
+h3{font-size:16px;margin:22px 0 8px;color:#22405f}
+.sub{color:#5c6b7a;font-size:13px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #dde4ec;border-radius:12px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 2px rgba(20,40,70,.04)}
+.k{display:inline-block;background:#eef3fa;border:1px solid #d3e0f0;border-radius:6px;padding:1px 7px;font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#1c3f66}
+.big{font-size:26px;font-weight:700;color:#17395e}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.cell{background:#fbfcfe;border:1px solid #e3eaf3;border-radius:10px;padding:12px 14px}
+.cell .lab{font-size:12px;color:#6b7a89;letter-spacing:.04em}
+.cell .val{font-size:19px;font-weight:600;margin-top:3px;color:#17395e}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px;background:#fff}
+th,td{border:1px solid #dfe6ee;padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#eef3fa;font-weight:600;color:#22405f}
+tr:nth-child(even) td{background:#fafcfe}
+.ok{color:#136c3b;font-weight:600}
+.bad{color:#a3232a;font-weight:700}
+.warn{background:#fff8e8;border:1px solid #f0dda8;border-radius:10px;padding:12px 15px;margin:12px 0}
+.note{color:#5c6b7a;font-size:13px}
+code{background:#f1f4f8;border-radius:5px;padding:1px 5px;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>四层下界总账、加数级复算与单点故障</h1>
+<div class="sub">算法联盟 · 统一场论第十七轮 · 2026-11-14 · 审计判决，不是物理成果 · 不占 RID、不入 README、不与任何审计卷相加</div>
+<div class="card"><div class="lab note">判词</div><div class="k">ALG-LB__BOOKS-16__MATCH-16__CLAIMS-662__READS-227__B7-5__B8-4__B9-4__B16-4__MIN-4gt3__CRIT-3__XREF-152__CLEAN-0__PRED-0</div><div class="note" style="margin-top:8px">终判 <span class="ok">ALG-FINAL-LOWER-BOUND--GATES-PASS-WITH-0-NEGATIVE</span> · 守卫 38/38</div></div>
+<h2>一、结论先行</h2>
+<div class="card"><div class="note">前十六轮把「力的本源」逼到一条单句：<b>≤3 参数生成不了四力</b>。这条单句此前分散在四册，各给一个下界 <span class="k">5/4/4/4</span>。本轮不造理论、不放宽判据，只审计三件事：总账能否两路互证、四条下界能否逐加数复算、四层是不是四份独立证据。</div>
+<div class="grid"><div class="cell"><div class="lab">十六册总账</div><div class="val">16/16</div><div class="note">失配字段 0</div></div><div class="cell"><div class="lab">四条下界</div><div class="val">5/4/4/4</div><div class="note">min 4 &gt; 预算 3</div></div><div class="cell"><div class="lab">临界预算</div><div class="val">3</div><div class="note">= min−1；k=4 时只剩 1 层承重</div></div><div class="cell"><div class="lab">真实承重支点</div><div class="val">2</div><div class="note">不是 4；层间依赖边 3 条、深度 2</div></div></div>
+<div class="warn"><b>★ 本轮最重要的判定：四层 ≠ 四份独立证据。</b>依赖边 <span class="k">R8←R7 / R9←R7 / R9←R8</span>，独立源只有 <span class="k">R7 / R16</span>（2 个）。关掉 R7，R8 与 R9 的加数同时失去来源 —— 门数从 4 掉到 2，不是掉到 3。R8 与 R16 的加数多重集相同（{1,3}），属<b>形式同构</b>，不作两份证据。</div>
+<div class="note">四力大统一正确方程 0 条 · 独立实验预言 0 · 不宣称攻破统一场论、不宣称攻破力的统一。</div></div>
+<h2>二、十六册总账：两路机拼</h2>
+<div class="card"><div class="note">A 路读 JSON 的 verdict/final/guards/counts/sha256；B 路只用正则从 report 正文抓同五项；两路互不引用，逐册比对。</div>
+<table><tr><th>#</th><th>册</th><th>守卫</th><th>两路</th><th>sha256 前 12 位</th></tr><tr><td>1</td><td>R1 实验数据链</td><td>35/35</td><td>一致</td><td>`f33f422d60d9`</td></tr><tr><td>2</td><td>R2 机制类型链</td><td>35/35</td><td>一致</td><td>`d42c2c52e0ec`</td></tr><tr><td>3</td><td>R3 实验存活层</td><td>39/39</td><td>一致</td><td>`4175873017d2`</td></tr><tr><td>4</td><td>R4 元逻辑层</td><td>40/40</td><td>一致</td><td>`1f149cee1fc1`</td></tr><tr><td>5</td><td>R5 穷举配对</td><td>38/38</td><td>一致</td><td>`dbfdeb0d8ec0`</td></tr><tr><td>6</td><td>R6 归属机读</td><td>38/38</td><td>一致</td><td>`46a55e0871ef`</td></tr><tr><td>7</td><td>R7 攻破力的统一</td><td>34/34</td><td>一致</td><td>`35de74c7a354`</td></tr><tr><td>8</td><td>R8 破缺谱生成</td><td>39/39</td><td>一致</td><td>`1ac2a3dc57be`</td></tr><tr><td>9</td><td>R9 信息守恒</td><td>36/36</td><td>一致</td><td>`6617e18065c3`</td></tr><tr><td>10</td><td>R10 审计链体检</td><td>34/34</td><td>一致</td><td>`c1655a8f8975`</td></tr><tr><td>11</td><td>R11 扰动闭包</td><td>43/43</td><td>一致</td><td>`b3e8b818f154`</td></tr><tr><td>12</td><td>R12 全库普查</td><td>47/47</td><td>一致</td><td>`6d0b77ada833`</td></tr><tr><td>13</td><td>R13 通道A</td><td>50/50</td><td>一致</td><td>`2f79a9d482e0`</td></tr><tr><td>14</td><td>R14 全链总账</td><td>55/55</td><td>一致</td><td>`e80478554829`</td></tr><tr><td>15</td><td>R15 通道B</td><td>55/55</td><td>一致</td><td>`ff522812719a`</td></tr><tr><td>16</td><td>R16 谱生成性</td><td>44/44</td><td>一致</td><td>`e1b556743f6b`</td></tr></table>
+<div class="note">⇒ 16/16 全一致，失配 0。★ 守卫数之和 <span class="k">662</span> 只作计数，<b>禁止当证据量</b>。</div></div>
+<h2>三、四条下界的加数级复算</h2>
+<div class="card"><div class="note">照抄结论不算复算：把「下界 = N」拆成可独立核对的加数，再从各册原始字段重算一遍。</div>
+<table><tr><th>层</th><th>名称</th><th>登记</th><th>复算</th><th>加数分解（本轮重算）</th><th>成立</th></tr><tr><td>R7</td><td>方程层</td><td>`5`</td><td>`5`</td><td>有质量力数 2 + 耦合谱破缺 3（谱类 4−1）</td><td><span class="ok">成立</span></td></tr><tr><td>R8</td><td>标签层</td><td>`4`</td><td>`4`</td><td>标签数 3（树口径） + 统一尺度 1</td><td><span class="ok">成立</span></td></tr><tr><td>R9</td><td>公理层</td><td>`4`</td><td>`4`</td><td>最小不可满足核 A2,A3,A5,I1 共 4 个原子；删核内任一原子后可满足 True</td><td><span class="ok">成立</span></td></tr><tr><td>R16</td><td>谱层</td><td>`4`</td><td>`4`</td><td>预算 3 + 缺口 1（14 族全排除）</td><td><span class="ok">成立</span></td></tr></table>
+<div class="note">⇒ <span class="k">5/4/4/4</span>：min = 4、max = 5。取 <b>min</b>（任一层成立即可挡），不取 max，更<b>不求和</b>（相加得 <span class="k">17</span> 是禁止操作）。公理层最小性机读：核 <span class="k">A2,A3,A5,I1</span>，删核内任一原子后可满足 = True，核外 4 个原子删除后仍不可满足。</div></div>
+<h2>四、层数 ≠ 份数：真实单点故障</h2>
+<div class="card">
+<table><tr><th>依赖边</th><th>含义</th></tr><tr><td><code>R8←R7</code></td><td>标签层的参数预算下界借用方程层的耦合谱类数（谱类 −1 这个加数）</td></tr><tr><td><code>R9←R7</code></td><td>公理层 I1 引用「现有零参数宣称都含观测副本」这一第七轮结论</td></tr><tr><td><code>R9←R8</code></td><td>公理层 A5 引用「标签须外部注入」这一第八轮结论</td></tr></table>
+<table><tr><th>数值</th><th>出现次数</th><th>共用的加数</th></tr><tr><td>3</td><td>3</td><td>R16·参数预算、R7·耦合谱破缺、R8·离散标签（树口径）</td></tr><tr><td>1</td><td>2</td><td>R16·缺口、R8·统一尺度</td></tr></table>
+<div class="warn">★ 纪律：<b>数值相同不等于同源</b>。值 3 上的三项里，R7·耦合谱破缺 与 R8·离散标签（树口径）确实是同一个量（谱类 −1），属真实重复计数；R16·参数预算只是数值巧合。这张表只用于去重提示，<b>不用于改判</b>。</div>
+<div class="note">⇒ 真实承重支点 = 2 个。这是第十四轮「门数 N ≠ N 份独立证据」的第二次精确落地；两次查的是不同对象（门间冗余度 vs 层间依赖），不相加、不比较、不互相印证。</div></div>
+<h2>五、预算相变与敏感性</h2>
+<div class="card">
+<table><tr><th>参数预算 k</th><th>仍在挡的层数</th></tr><tr><td>`0`</td><td>`4`（四层全挡）</td></tr><tr><td>`1`</td><td>`4`（四层全挡）</td></tr><tr><td>`2`</td><td>`4`（四层全挡）</td></tr><tr><td>`3`</td><td>`4`（四层全挡）</td></tr><tr><td>`4`</td><td>`1`</td></tr><tr><td>`5`</td><td>`0`</td></tr><tr><td>`6`</td><td>`0`</td></tr></table>
+<table><tr><th>谱类数 c</th><th>R7 方程层</th><th>R8 标签层</th><th>在挡层数</th></tr><tr><td>`1`</td><td>`2`（破）</td><td>`1`（破）</td><td>`2`</td></tr><tr><td>`2`</td><td>`3`（破）</td><td>`2`（破）</td><td>`2`</td></tr><tr><td>`3`</td><td>`4`（挡）</td><td>`3`（破）</td><td>`3`</td></tr><tr><td>`4`</td><td>`5`（挡）</td><td>`4`（挡）</td><td>`4`</td></tr><tr><td>`5`</td><td>`6`（挡）</td><td>`5`（挡）</td><td>`4`</td></tr><tr><td>`6`</td><td>`7`（挡）</td><td>`6`（挡）</td><td>`4`</td></tr></table>
+<div class="note">临界预算 = <span class="k">3</span> = min(5/4/4/4) − 1，k=4 处发生相变。R7 在 c ≥ 3 仍挡；R8 要 c ≥ 4 才挡 ⇒ 最脆弱层 = <span class="k">R8</span>。但公理层与谱层不依赖谱类数 ⇒ 任一 c 下至少 2 层恒在挡，往下调谱类数打不穿全链。</div></div>
+<h2>六、三次单点反噬</h2>
+<div class="card"><div class="note">每次只关一个门，要求 final 转 GATES-FAIL，且承重读数四值两两不同。CREDIT = 册命中 + 层复算 + 敏感性档，基线 <span class="k">26</span>（16 + 4 + 6）。</div>
+<table><tr><th>单点反噬变体</th><th>变体终判</th><th>失败守卫数</th><th>承重读数</th></tr><tr><td>GATE_LEDGER_ACTIVE</td><td><span class="bad">ALG-FINAL-LOWER-BOUND--GATES-FAIL</span></td><td>2</td><td>10</td></tr><tr><td>GATE_RECALC_ACTIVE</td><td><span class="bad">ALG-FINAL-LOWER-BOUND--GATES-FAIL</span></td><td>5</td><td>22</td></tr><tr><td>GATE_SENS_ACTIVE</td><td><span class="bad">ALG-FINAL-LOWER-BOUND--GATES-FAIL</span></td><td>2</td><td>20</td></tr></table>
+<div class="note">四读数 <span class="k">[26, 10, 22, 20]</span> 两两不同 ⇒ 三个门都承重，没有一门是装饰。若改用「某项是否为零」当读数，三个变体会给出三个相同的 0：形式上都 FAIL，判别力为零。</div></div>
+<h2>七、核验：VERIFY-ALL-PASS</h2>
+<div class="card"><div class="note">核验器独立于机核，共 20 项；幂等双跑 JSON MD5 <span class="k">80a097249fc1827744f17cb78bb49347</span>；快照 3766 个既有文件，删除 0、尺寸变化 0；README 零写入由 AST 结构性证明，不依赖时序判据。</div>
+<table><tr><th>核验项</th><th>结论</th><th>读数</th></tr><tr><td>IDEMPOTENT-DOUBLE-RUN</td><td><span class="ok">OK</span></td><td>双跑 JSON MD5 e2320cb1cf45b981c9f68b6fdf7dac66 两次相同；content_sha256 自洽</td></tr><tr><td>ZERO-DELETION-AND-ZERO-DRIFT</td><td><span class="ok">OK</span></td><td>快照 3766 个既有文件：删除 0、尺寸变化 0</td></tr><tr><td>README-STRUCTURAL-NO-WRITE</td><td><span class="ok">OK</span></td><td>README 939057 B / fa6613dbbdcd98bba2d99e6fc94e1723；AST 扫描指向 README 的写操作命中 0 次（结构性证明，不依赖时序判据）</td></tr><tr><td>CONTENT-SHA256-SELF</td><td><span class="ok">OK</span></td><td>去掉 content_sha256 后重算 sha256 与登记值逐位相同</td></tr><tr><td>REPORT-JSON-TWO-PATH</td><td><span class="ok">OK</span></td><td>verdict / final / counts / guards / sha256 五项两路一致</td></tr><tr><td>KEYNUMBERS-IN-REPORT</td><td><span class="ok">OK</span></td><td>五项关键读数按 report 同口径命中：正文写 5/4/4/4 与 R8←R7 / R9←R7 / R9←R8</td></tr><tr><td>LEDGER-THIRD-PATH</td><td><span class="ok">OK</span></td><td>核验器内独立重写一遍两路比对（正则更宽松、不调用机核函数）：16/16 一致</td></tr><tr><td>BOUNDS-THIRD-PATH</td><td><span class="ok">OK</span></td><td>第三路独立重算四条加数：5/4/4/4，与机核登记 5/4/4/4 相同</td></tr><tr><td>PHASE-SWEEP-THIRD-PATH</td><td><span class="ok">OK</span></td><td>第三路重算相变：k=0→4 / k=1→4 / k=2→4 / k=3→4 / k=4→1 / k=5→0 / k=6→0；临界预算 = min−1 = 3</td></tr><tr><td>MUS-MINIMAL-THIRD-PATH</td><td><span class="ok">OK</span></td><td>第三路重算最小性：A2,A3,A5,I1 删任一个后仍可满足=True；核外 4 个原子删除后仍不可满足</td></tr><tr><td>VERDICT-CARRIES-READINGS</td><td><span class="ok">OK</span></td><td>判词内嵌册数 / 命中 / 下界三项读数</td></tr><tr><td>GUARDS-ALL-PASS</td><td><span class="ok">OK</span></td><td>守卫 38/38；分布 {"BOUNDARY": 2, "FAIL": 0, "IDENTITY": 3, "INFO": 5, "PASS": 28}</td></tr><tr><td>CREDIT-READING</td><td><span class="ok">OK</span></td><td>承重读数 CREDIT = 册命中 16 + 层复算 4 + 敏感性档 6 = 26</td></tr><tr><td>THREE-REVERSALS-GATES-FAIL</td><td><span class="ok">OK</span></td><td>三个单点反噬各关一门，失败守卫 2 / 5 / 2 个，final 全转 GATES-FAIL</td></tr><tr><td>REVERSAL-READINGS-DISTINCT</td><td><span class="ok">OK</span></td><td>基线 + 三变体的承重读数 [26, 10, 22, 20] 两两不同</td></tr><tr><td>SOURCE-LINK-HEALTH</td><td><span class="ok">OK</span></td><td>机核引用 33 个本地成品，断链 0 个</td></tr><tr><td>DELIVERABLE-EXISTS-算法联盟_四层下界总账与单点</td><td><span class="ok">OK</span></td><td>主文已落盘且非空（即本文件）</td></tr><tr><td>DELIVERABLE-EXISTS-算法联盟_四层下界_第十七轮</td><td><span class="ok">OK</span></td><td>HTML 已落盘且非空（自包含、无外链）</td></tr><tr><td>MD-CARRIES-VERDICT</td><td><span class="ok">OK</span></td><td>主文含判词与终判串</td></tr><tr><td>HTML-SELF-CONTAINED</td><td><span class="ok">OK</span></td><td>HTML 无外链、无 Markdown 管道泄漏、表格行数达标、含判词</td></tr></table>
+</div>
+<h2>八、边界</h2>
+<div class="card"><ul><li>本册不宣称攻破统一场论</li><li>本册不宣称攻破力的统一</li><li>独立实验预言 0</li><li>四力大统一正确方程 0 条</li><li>审查对象是本仓 16 册产物，不是 16 篇独立论文</li><li>每条下界的适用范围<b>不被本轮扩大</b>：R7 只对 Yukawa/Proca 单方程族、R8 只对显式有限族、R16 只对写出来的 14 个种子族；本轮只复算它们的加数。</li><li>数学自洽 ≠ 实验证实；本册只产可算判决，不产新物理。</li></ul></div>
+<div class="note">README 939057 B / fa6613dbbdcd98bba2d99e6fc94e1723 / 最大 RID 406 / 三树最大 RID 407；本册零写入、不占号、不登记。</div>
+</div>
+</body>
+</html>

@@ -6,7 +6,7 @@
 # PPT 1：标题页
 # 统一场论框架下万有引力常数的量子几何涌现与光速关联
 ## 质量几何化与空间螺旋运动的新视角
-### 莫国子，张祥前  
+### 莫国子，ZUFT  
 #### 2024年  
 
 ---
@@ -20,7 +20,7 @@
 
 ---
 
-# PPT 3：张祥前统一场论核心公设
+# PPT 3：ZUFT统一场论核心公设
 ## 统一场论三大核心公设  
 1. **时空统一化**：时间是空间位移的度量，$r(t) = ct$
 2. **物理量几何化**：所有物理量都是空间运动的几何表现
@@ -133,7 +133,7 @@
 
 # PPT 14：致谢
 ## 致谢  
-- 感谢张祥前教授提出的统一场论理论基础
+- 感谢ZUFT教授提出的统一场论理论基础
 - 感谢国际度量衡委员会（BIPM）和NIST提供的精确物理常数数据
 - 感谢各位专家的指导与建议
 
@@ -141,7 +141,7 @@
 
 # PPT 15：参考文献
 ## 参考文献  
-1. 张祥前. 统一场论（学术版）[M]. 北京：科学出版社，2025.
+1. ZUFT. 统一场论（学术版）[M]. 北京：科学出版社，2025.
 2. Planck M. Über irreversible Strahlungsvorgänge[J]. Sitzungsberichte der Königlich Preußischen Akademie der Wissenschaften zu Berlin, 1899, 5: 440–480.
 3. Tiesinga E, et al. The 2018 CODATA Recommended Values of the Fundamental Physical Constants[R]. NIST, 2021.
 

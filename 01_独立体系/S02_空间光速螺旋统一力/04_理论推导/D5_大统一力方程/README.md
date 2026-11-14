@@ -34,6 +34,6 @@ python D5_大统一力方程.py
 
 ## 引用来源
 
-[ZXQ2024] Zhang X Q. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
+[ZUFT2024] ZUFT. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
 
 书目由用户提供，具体页码与论证对应尚待原文核对。[统一参考文献](../../../../02_共享基础/参考资料/BIBLIOGRAPHY.md)。

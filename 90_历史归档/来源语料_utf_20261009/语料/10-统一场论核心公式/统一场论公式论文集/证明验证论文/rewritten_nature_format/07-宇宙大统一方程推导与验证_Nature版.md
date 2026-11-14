@@ -1,7 +1,7 @@
 # The Universal Unified Field Equation: Derivation, Verification, and Force Unification
 
 ## Authors
-Zhang Xiangqian Unified Field Theory Research Team
+ZUFT Unified Field Theory Research Team
 
 ## Date
 December 13, 2025
@@ -10,14 +10,14 @@ December 13, 2025
 v1.0
 
 ## 1. Abstract
-This paper presents a rigorous derivation and comprehensive verification of the Universal Unified Field Equation (UUFE) in Zhang Xiangqian's Unified Field Theory (UTF), which mathematically unifies all four fundamental interactions through spacetime geometry. The equation is expressed as \(\mathbf{F} = \frac{d\mathbf{P}}{dt} = \mathbf{C}\frac{dm}{dt} - \mathbf{V}\frac{dm}{dt} + m\frac{d\mathbf{C}}{dt} - m\frac{d\mathbf{V}}{dt}\), where \(\mathbf{F}\) is force, \(\mathbf{P}\) is momentum, \(\mathbf{C}\) is vector light speed, \(\mathbf{V}\) is object velocity, \(m\) is mass, and \(t\) is time. We provide detailed symbolic differentiation using SymPy, numerical validation across 27 orders of magnitude, multi-scale analysis, and rigorous mathematical self-consistency proofs. The equation successfully reduces to Newtonian mechanics in the classical limit, reproduces relativistic effects at high speeds, and offers a geometric interpretation of all fundamental forces. Our results establish the UUFE as a mathematically rigorous framework for force unification with profound implications for theoretical physics and future technological applications.
+This paper presents a rigorous derivation and comprehensive verification of the Universal Unified Field Equation (UUFE) in ZUFT's Unified Field Theory (UTF), which mathematically unifies all four fundamental interactions through spacetime geometry. The equation is expressed as \(\mathbf{F} = \frac{d\mathbf{P}}{dt} = \mathbf{C}\frac{dm}{dt} - \mathbf{V}\frac{dm}{dt} + m\frac{d\mathbf{C}}{dt} - m\frac{d\mathbf{V}}{dt}\), where \(\mathbf{F}\) is force, \(\mathbf{P}\) is momentum, \(\mathbf{C}\) is vector light speed, \(\mathbf{V}\) is object velocity, \(m\) is mass, and \(t\) is time. We provide detailed symbolic differentiation using SymPy, numerical validation across 27 orders of magnitude, multi-scale analysis, and rigorous mathematical self-consistency proofs. The equation successfully reduces to Newtonian mechanics in the classical limit, reproduces relativistic effects at high speeds, and offers a geometric interpretation of all fundamental forces. Our results establish the UUFE as a mathematically rigorous framework for force unification with profound implications for theoretical physics and future technological applications.
 
 **Keywords**: Unified Field Theory; Universal Unified Field Equation; force unification; spacetime geometry; symbolic computation; numerical validation; multi-scale analysis
 
 ## 2. Introduction
 
 ### 2.1 The Quest for Force Unification
-Since Newton's formulation of gravity and Maxwell's unification of electricity and magnetism, physicists have sought a unified framework for all fundamental interactions. Einstein's pursuit of a unified field theory and modern string theory represent major milestones in this quest. Zhang Xiangqian's UTF introduces a geometric approach that unifies forces through spacetime motion, culminating in the Universal Unified Field Equation (UUFE).
+Since Newton's formulation of gravity and Maxwell's unification of electricity and magnetism, physicists have sought a unified framework for all fundamental interactions. Einstein's pursuit of a unified field theory and modern string theory represent major milestones in this quest. ZUFT's UTF introduces a geometric approach that unifies forces through spacetime motion, culminating in the Universal Unified Field Equation (UUFE).
 
 ### 2.2 Core Principle of UTF
 UTF's central postulate is that **all objects are surrounded by space moving radially outward at the speed of light** \(\mathbf{C}\). This dynamic spacetime background provides the geometric foundation for unifying all forces through a single equation that describes momentum change.
@@ -410,7 +410,7 @@ At cosmic scales, the UUFE provides insights into:
 
 ## 10. Conclusion
 
-This paper presents a comprehensive derivation, verification, and analysis of the Universal Unified Field Equation (UUFE) in Zhang Xiangqian's Unified Field Theory. Through rigorous symbolic computation, extensive numerical validation across 27 orders of magnitude, and detailed mathematical self-consistency proofs, we have established the UUFE as a mathematically sound framework for force unification.
+This paper presents a comprehensive derivation, verification, and analysis of the Universal Unified Field Equation (UUFE) in ZUFT's Unified Field Theory. Through rigorous symbolic computation, extensive numerical validation across 27 orders of magnitude, and detailed mathematical self-consistency proofs, we have established the UUFE as a mathematically sound framework for force unification.
 
 Key achievements include:
 
@@ -441,7 +441,7 @@ All code and data used in this paper are available upon request from the authors
 The authors declare no competing interests.
 
 ## 14. Acknowledgments
-This research was supported by the Zhang Xiangqian Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
+This research was supported by the ZUFT Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
 
 ## 15. References
 

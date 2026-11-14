@@ -3,7 +3,7 @@
 """
 统一场论多维测试优化系统
 功能：对统一场论18个核心公式进行全方位、多维度的自动测试与验证
-作者：张祥前统一场论研究团队
+作者：ZUFT统一场论研究团队
 日期：2025-11-04
 """
 
@@ -44,7 +44,7 @@ class MultidimensionalTestOptimizer:
         # 核心常数定义
         self.c = 299792458.0  # 光速 (m/s)
         self.G = 6.67430e-11  # 万有引力常数 (m³/kg·s²)
-        self.Z_exact = 0.010004524012147  # 张祥前常数精确值
+        self.Z_exact = 0.010004524012147  # ZUFT常数精确值
         self.Z_theoretical = self.G * self.c / 2  # 理论计算的Z值
         
         # 测试配置
@@ -567,7 +567,7 @@ class MultidimensionalTestOptimizer:
             'c': {'L': 1, 'T': -1},  # 光速
             'm': {'M': 1},  # 质量
             'G': {'L': 3, 'M': -1, 'T': -2},  # 引力常数
-            'Z': {'M': -1, 'L': 4, 'T': -3},  # 张祥前常数
+            'Z': {'M': -1, 'L': 4, 'T': -3},  # ZUFT常数
             'P': {'M': 1, 'L': 1, 'T': -1},  # 动量
             'E': {'M': 1, 'L': 2, 'T': -2},  # 能量
             'A': {'L': 1, 'T': -2},  # 加速度/引力场
@@ -639,7 +639,7 @@ class MultidimensionalTestOptimizer:
             if formula_id == 17:
                 # 引力场与电磁场统一方程的代数验证
                 # A·E = k
-                # 使用张祥前常数Z进行验证
+                # 使用ZUFT常数Z进行验证
                 algebraic_error = abs(self.Z_theoretical - self.Z_exact) / self.Z_exact
                 is_correct = algebraic_error < self.tolerance
                 
@@ -1175,7 +1175,7 @@ class MultidimensionalTestOptimizer:
         return result
     
     def _zhang_constant_sensitivity_test(self, formula_id: int, formula_info: Dict[str, Any]) -> Dict[str, Any]:
-        """张祥前常数Z变化敏感度测试"""
+        """ZUFT常数Z变化敏感度测试"""
         start_time = time.time()
         
         # Z的变化百分比
@@ -1845,7 +1845,7 @@ class MultidimensionalTestOptimizer:
             sensitivities = {
                 '引力常数G': [],
                 '光速c': [],
-                '张祥前常数Z': []
+                'ZUFT常数Z': []
             }
             
             # 从测试结果中提取敏感度数据
@@ -1862,7 +1862,7 @@ class MultidimensionalTestOptimizer:
                                 elif 'c_variation_percent' in item and 'sensitivity_coefficient' in item:
                                     sensitivities['光速c'].append(abs(item['sensitivity_coefficient']))
                                 elif 'Z_variation_percent' in item and 'sensitivity_coefficient' in item:
-                                    sensitivities['张祥前常数Z'].append(abs(item['sensitivity_coefficient']))
+                                    sensitivities['ZUFT常数Z'].append(abs(item['sensitivity_coefficient']))
             
             # 计算平均敏感度
             avg_sensitivities = {}

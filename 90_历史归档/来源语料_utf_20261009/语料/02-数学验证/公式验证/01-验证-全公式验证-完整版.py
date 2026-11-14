@@ -103,7 +103,7 @@ class AllFormulasVerifier:
         # 打印量纲分析结果
         print(f"引力常数G的量纲: [M]⁻¹[L]³[T]⁻²")
         print(f"光速c的量纲: [L][T]⁻¹")
-        print(f"张祥前常数Z的量纲: {dim_Z}")
+        print(f"ZUFT常数Z的量纲: {dim_Z}")
         print(f"方程Z = Gc/2的量纲验证: {dim_Z} = {dim_G * dim_c}")
         
         # 验证量纲一致性
@@ -187,7 +187,7 @@ class AllFormulasVerifier:
             {"step": "2. 各向同性修正（几何因子）", 
              "content": "F ∝ 2 × m₁m₂/(R²c)", 
              "check": "几何因子2来源于空间运动的有效贡献积分"},
-            {"step": "3. 引入张祥前常数Z", 
+            {"step": "3. 引入ZUFT常数Z", 
              "content": "F = Z × 2m₁m₂/(R²c)", 
              "check": "Z作为空间运动的几何化表述常数"},
             {"step": "4. 对比万有引力定律", 
@@ -261,7 +261,7 @@ class AllFormulasVerifier:
         formulas = [
             r'/text{1. 几何因子推导:} /quad /int_0^/pi /sin/theta /, d/theta = 2',
             r'/text{2. 引力光速统一方程:} /quad Z = /frac{G c}{2}',
-            r'/text{3. 张祥前常数:} /quad Z /approx 0.01 /, /text{kg}^{-1} /cdot /text{m}^4 /cdot /text{s}^{-3}',
+            r'/text{3. ZUFT常数:} /quad Z /approx 0.01 /, /text{kg}^{-1} /cdot /text{m}^4 /cdot /text{s}^{-3}',
             r'/text{4. 量纲:} /quad [M]^{-1}[L]^4[T]^{-3} = [M]^{-1}[L]^3[T]^{-2} /times [L][T]^{-1}',
             r'/text{5. 精确性:} /quad /text{相对误差仅} 0.045/%'
         ]

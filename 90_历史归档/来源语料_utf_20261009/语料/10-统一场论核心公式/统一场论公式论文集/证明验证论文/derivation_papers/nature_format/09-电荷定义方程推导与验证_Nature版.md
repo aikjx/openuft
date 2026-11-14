@@ -6,18 +6,18 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
-We derive and validate the Charge Definition Equation within Zhang Xiangqian's Unified Field Theory (UFT), geometricizing charge as a manifestation of spatial rotational motion. The equation \( q = k'k\frac{1}{\Omega^2}\frac{d\Omega}{dt} \) establishes charge as proportional to spatial rotation rate and inversely proportional to solid angle squared. Through symbolic computation using SymPy and numerical validation with NumPy, we confirm the equation's mathematical rigor, logical consistency, and compatibility with existing electromagnetic theories. This formulation bridges classical electromagnetism with geometric spacetime concepts, providing a unified perspective that may resolve long-standing unification challenges between electromagnetic and gravitational forces.
+We derive and validate the Charge Definition Equation within ZUFT's Unified Field Theory (UFT), geometricizing charge as a manifestation of spatial rotational motion. The equation \( q = k'k\frac{1}{\Omega^2}\frac{d\Omega}{dt} \) establishes charge as proportional to spatial rotation rate and inversely proportional to solid angle squared. Through symbolic computation using SymPy and numerical validation with NumPy, we confirm the equation's mathematical rigor, logical consistency, and compatibility with existing electromagnetic theories. This formulation bridges classical electromagnetism with geometric spacetime concepts, providing a unified perspective that may resolve long-standing unification challenges between electromagnetic and gravitational forces.
 
 ---
 
 ## Introduction
 
-Charge remains a fundamental yet enigmatic concept in physics, with traditional theories describing its properties without explaining its origin. Zhang Xiangqian's Unified Field Theory proposes a revolutionary geometric definition, deriving charge from spatial rotational motion rather than treating it as a fundamental unexplained property.
+Charge remains a fundamental yet enigmatic concept in physics, with traditional theories describing its properties without explaining its origin. ZUFT's Unified Field Theory proposes a revolutionary geometric definition, deriving charge from spatial rotational motion rather than treating it as a fundamental unexplained property.
 
 This work systematically derives the Charge Definition Equation from UFT postulates, validates it through symbolic and numerical methods, and explores its connections to existing physics theories. The equation's geometric foundation offers a path toward unifying electromagnetic and gravitational forces, addressing one of physics' greatest challenges.
 
@@ -153,9 +153,9 @@ The equation's simplicity and geometric foundation position it as a cornerstone 
 
 ## References
 
-1. Zhang, X. Q. (2020). *Unified Field Theory*. China Science and Technology Press.
+1. ZUFT (2020). *Unified Field Theory*. China Science and Technology Press.
 2. Maxwell, J. C. (1873). *A Treatise on Electricity and Magnetism*. Clarendon Press.
 3. Einstein, A. (1905). Zur Elektrodynamik bewegter Körper. *Annalen der Physik*, 322(10), 891-921.
 4. Newton, I. (1687). *Philosophiæ Naturalis Principia Mathematica*.
 5. Wheeler, J. A., & Misner, C. W. (1973). *Gravitation*. W. H. Freeman.
-6. Zhang, X. Q. (2021). The Essence of Charge in Unified Field Theory. *Acta Physica Sinica*, 70(12), 1200
+6. ZUFT (2021). The Essence of Charge in Unified Field Theory. *Acta Physica Sinica*, 70(12), 1200

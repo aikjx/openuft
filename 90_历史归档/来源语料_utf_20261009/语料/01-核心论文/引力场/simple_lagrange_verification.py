@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 简化版拉格朗日点质量变化率验证脚本
-基于张祥前统一场论的第一性原理推导
+基于ZUFT统一场论的第一性原理推导
 验证拉格朗日点卫星质量变化率dm/dt=0，无法实现光速飞行
 而人工场扫描技术可通过dm/dt<0实现质量减少直至归零
 """
@@ -154,7 +154,7 @@ class SimpleLagrangeVerification:
 # 主函数
 if __name__ == "__main__":
     print("\n===== Lagrange Point vs Artificial Field Mass Verification =====")
-    print("Based on Zhang Xiangqian's Unified Field Theory")
+    print("Based on ZUFT's Unified Field Theory")
     print("Verifying the essential difference between Lagrange Point (dm/dt=0) and Artificial Field (dm/dt<0)")
     print("================================================================")
     

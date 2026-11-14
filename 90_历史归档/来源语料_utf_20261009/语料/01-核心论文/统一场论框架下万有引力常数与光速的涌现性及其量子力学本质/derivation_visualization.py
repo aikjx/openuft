@@ -13,7 +13,7 @@ hbar, c, G, m_p, k, m, N = symbols('hbar c G m_p k m N')
 n, Omega, dm, dOmega, dn = symbols('n Omega dm dOmega dn')
 r, t, p, E, psi = symbols('r t p E psi')
 
-print("=== 张祥前统一场论质量常数k唯一性证明的Python可视化 ===\n")
+print("=== ZUFT统一场论质量常数k唯一性证明的Python可视化 ===\n")
 
 # =============================
 # 1. 质量几何化定义可视化

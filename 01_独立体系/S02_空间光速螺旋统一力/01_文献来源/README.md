@@ -8,9 +8,9 @@
 
 当前尚无本阶段独立产物；不因目录存在而标记完成。
 
-## 引用来源 ZXQ2024
+## 引用来源 ZUFT2024
 
-Zhang X Q. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
+ZUFT. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
 
 书目信息由用户提供；本次未取得书籍全文，未核对具体命题对应页码。体系名称使用“空间光速螺旋”，作者姓名仅用于来源归属。
 

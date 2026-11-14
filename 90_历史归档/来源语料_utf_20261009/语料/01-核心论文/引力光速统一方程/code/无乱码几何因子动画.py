@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 无乱码几何因子动画：3D到2D几何变换可视化
-Zhang Xiangqian Unified Field Theory: Geometric Factor G = 4π/2π = 2
+ZUFT Unified Field Theory: Geometric Factor G = 4π/2π = 2
 
 完全兼容版本，解决中文显示问题
 展示核心数学概念：从球对称3D空间到2D平面投影的几何因子推导
 
-Author: Based on Zhang Xiangqian Unified Field Theory
+Author: Based on ZUFT Unified Field Theory
 Date: 2025-09-16
 """
 
@@ -55,7 +55,7 @@ class GeometricFactorAnimator:
             'title_comparison': 'Value Comparison',
             'title_result': 'Geometric Factor',
             'geometric_factor': 'G = 4π/2π = 2',
-            'zhang_theory': 'Zhang Xiangqian Unified Field Theory',
+            'zhang_theory': 'ZUFT Unified Field Theory',
             'projection_factor': '3D→2D Projection Scaling Factor'
         }
         
@@ -475,7 +475,7 @@ class GeometricFactorAnimator:
         
         # 更新总标题
         progress_percent = (frame / self.total_frames) * 100
-        title = f'Zhang Xiangqian Unified Field Theory: Geometric Factor G = 4π/2π = 2 | Progress: {progress_percent:.0f}%'
+        title = f'ZUFT Unified Field Theory: Geometric Factor G = 4π/2π = 2 | Progress: {progress_percent:.0f}%'
         self.fig.suptitle(title, fontsize=14, fontweight='bold')
     
     def create_animation(self, interval=100):
@@ -503,7 +503,7 @@ class GeometricFactorAnimator:
 def create_static_summary():
     """创建静态总结图"""
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-    fig.suptitle('Zhang Xiangqian Unified Field Theory: Geometric Factor Derivation Summary', 
+    fig.suptitle('ZUFT Unified Field Theory: Geometric Factor Derivation Summary', 
                  fontsize=16, fontweight='bold')
     
     # 1. 3D球面示意
@@ -558,7 +558,7 @@ def create_static_summary():
     ax4.text(0.5, 0.35, '3D spherical symmetric field', fontsize=12, ha='center')
     ax4.text(0.5, 0.25, 'projected to 2D plane', fontsize=12, ha='center')
     ax4.text(0.5, 0.15, 'scaling factor', fontsize=12, ha='center')
-    ax4.text(0.5, 0.05, 'Zhang Xiangqian Unified Field Theory Core Result', 
+    ax4.text(0.5, 0.05, 'ZUFT Unified Field Theory Core Result', 
              fontsize=11, ha='center', style='italic', color='blue', fontweight='bold')
     ax4.set_xlim([0, 1])
     ax4.set_ylim([0, 1])
@@ -570,7 +570,7 @@ def create_static_summary():
 def main():
     """主函数"""
     print("=" * 70)
-    print("Zhang Xiangqian Unified Field Theory: Geometric Factor Animation")
+    print("ZUFT Unified Field Theory: Geometric Factor Animation")
     print("Compatible Version - No Chinese Character Issues")
     print("=" * 70)
     
@@ -591,7 +591,7 @@ def main():
     print("- 2D Planar Projection: 2π radians")
     print("- Geometric Factor: G = 4π/2π = 2")
     print("- Mathematical Derivation: Solid angle integration")
-    print("\nZhang Xiangqian Unified Field Theory Core Mathematical Result")
+    print("\nZUFT Unified Field Theory Core Mathematical Result")
     
     # 保存静态图
     try:

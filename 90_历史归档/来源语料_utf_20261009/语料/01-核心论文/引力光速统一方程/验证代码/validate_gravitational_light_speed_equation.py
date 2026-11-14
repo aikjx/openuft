@@ -6,7 +6,7 @@
 
 核心公式：
 - Z = (G·c)/2  # 引力光速统一方程
-- 其中 Z 为张祥前常数，单位：kg⁻¹·m⁴·s⁻³
+- 其中 Z 为ZUFT常数，单位：kg⁻¹·m⁴·s⁻³
 - G 为万有引力常数，单位：m³·kg⁻¹·s⁻²
 - c 为光速，单位：m/s
 - 2 为几何因子（三维空间到二维相互作用平面的投影效率补偿）
@@ -26,7 +26,7 @@ import numpy as np
 G = 6.67430e-11  # 万有引力常数，单位：m³·kg⁻¹·s⁻² (CODATA 2018)
 c = 299792458    # 光速，单位：m/s
 
-# 论文中给出的张祥前常数Z的理论值
+# 论文中给出的ZUFT常数Z的理论值
 Z_paper = 0.010004524012147  # 单位：kg⁻¹·m⁴·s⁻³
 
 class ValidationError(Exception):
@@ -47,7 +47,7 @@ class GravitationalLightSpeedEquation:
         self.c = c
     
     def calculate_Z(self):
-        """计算张祥前常数Z
+        """计算ZUFT常数Z
         
         Returns:
             float: 计算得到的Z值

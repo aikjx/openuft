@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论核心公式 - 修复版可视化生成器
+ZUFT统一场论核心公式 - 修复版可视化生成器
 创建最高质量的HTML5 + WebGL + MathJax可视化系统
 """
 
@@ -41,7 +41,7 @@ class UnifiedFieldVisualizationGenerator:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{formula_name} - 张祥前统一场论可视化</title>
+    <title>{formula_name} - ZUFT统一场论可视化</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
@@ -149,7 +149,7 @@ class UnifiedFieldVisualizationGenerator:
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
         <h2>正在加载 {formula_name} 可视化...</h2>
-        <p>张祥前统一场论 - 高级3D可视化系统</p>
+        <p>ZUFT统一场论 - 高级3D可视化系统</p>
     </div>
     
     <!-- 主画布 -->
@@ -753,10 +753,10 @@ if __name__ == "__main__":
         ("19", "引力光速统一方程")
     ]
     
-    print("🚀 开始生成张祥前统一场论核心公式可视化系统...")
+    print("🚀 开始生成ZUFT统一场论核心公式可视化系统...")
     
     for formula_id, formula_name in formulas:
         generator.generate_single_formula(formula_id, formula_name)
     
     print("✅ 所有19个公式的可视化生成完成！")
-    print("🌌 张祥前统一场论可视化系统已就绪！")
+    print("🌌 ZUFT统一场论可视化系统已就绪！")

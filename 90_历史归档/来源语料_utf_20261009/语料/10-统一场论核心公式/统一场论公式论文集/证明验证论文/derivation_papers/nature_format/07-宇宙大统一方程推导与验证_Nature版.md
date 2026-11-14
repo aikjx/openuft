@@ -6,12 +6,12 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
-We derive and validate the Universal Force Unification Equation within Zhang Xiangqian's Unified Field Theory framework, revealing forces as momentum variation with spatial geometric origins. The equation \( \overrightarrow{F} = \overrightarrow{C}\frac{dm}{dt} - \overrightarrow{V}\frac{dm}{dt} + m\frac{d\overrightarrow{C}}{dt} - m\frac{d\overrightarrow{V}}{dt} \) unifies all fundamental forces through four components: mass variation effects, spatial background motion variation, and velocity variation. Through symbolic computation, multi-scale numerical validation, dimensional analysis, and compatibility verification with classical mechanics, we confirm the equation's mathematical rigor, physical self-consistency, and natural reduction to Newton's second law at low speeds. This formulation provides a revolutionary spatial geometric interpretation of force essence, potentially resolving long-standing unification challenges while offering new insights into spatial dynamics.
+We derive and validate the Universal Force Unification Equation within ZUFT's Unified Field Theory framework, revealing forces as momentum variation with spatial geometric origins. The equation \( \overrightarrow{F} = \overrightarrow{C}\frac{dm}{dt} - \overrightarrow{V}\frac{dm}{dt} + m\frac{d\overrightarrow{C}}{dt} - m\frac{d\overrightarrow{V}}{dt} \) unifies all fundamental forces through four components: mass variation effects, spatial background motion variation, and velocity variation. Through symbolic computation, multi-scale numerical validation, dimensional analysis, and compatibility verification with classical mechanics, we confirm the equation's mathematical rigor, physical self-consistency, and natural reduction to Newton's second law at low speeds. This formulation provides a revolutionary spatial geometric interpretation of force essence, potentially resolving long-standing unification challenges while offering new insights into spatial dynamics.
 
 ---
 
@@ -19,7 +19,7 @@ We derive and validate the Universal Force Unification Equation within Zhang Xia
 
 Forces represent nature's most fundamental interactions, with four known types: gravity, electromagnetism, strong, and weak nuclear forces. The quest for unification has persisted since Einstein, seeking a framework that transcends traditional force concepts.
 
-Zhang Xiangqian's Unified Field Theory (UFT) proposes a Universal Force Unification Equation that geometrizes forces as momentum variations linked to spatial background motion. This work systematically derives and validates this equation, demonstrating its compatibility with existing theories while offering a unified geometric perspective on force essence.
+ZUFT's Unified Field Theory (UFT) proposes a Universal Force Unification Equation that geometrizes forces as momentum variations linked to spatial background motion. This work systematically derives and validates this equation, demonstrating its compatibility with existing theories while offering a unified geometric perspective on force essence.
 
 ## Theoretical Framework
 
@@ -201,7 +201,7 @@ This formulation offers a profound reimagining of force essence, transcending tr
 
 ## References
 
-1. Zhang, X. Q. (2019). *Unified Field Theory*. University of Science and Technology of China Press.
+1. ZUFT (2019). *Unified Field Theory*. University of Science and Technology of China Press.
 2. Einstein, A. (1916). The Foundation of the General Theory of Relativity. *Annalen der Physik*, 49(7), 769-822.
 3. Newton, I. (1687). *Philosophiæ Naturalis Principia Mathematica*. Royal Society.
 4. Feynman, R. P., Leighton, R. B., & Sands, M. (1964). *The Feynman Lectures on Physics*. Addison-Wesley.

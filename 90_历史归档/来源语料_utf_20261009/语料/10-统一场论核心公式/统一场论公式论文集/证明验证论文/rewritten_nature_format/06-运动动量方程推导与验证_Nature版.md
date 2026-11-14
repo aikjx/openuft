@@ -1,7 +1,7 @@
 # Geometric Derivation and Verification of the Dynamic Momentum Equation in Unified Field Theory
 
 ## Authors
-Zhang Xiangqian Unified Field Theory Research Team
+ZUFT Unified Field Theory Research Team
 
 ## Date
 December 13, 2025
@@ -10,14 +10,14 @@ December 13, 2025
 v1.0
 
 ## 1. Abstract
-This paper presents a rigorous derivation and comprehensive verification of the dynamic momentum equation in Zhang Xiangqian's Unified Field Theory (UTF), formulated as \(\mathbf{P} = m(\mathbf{C} - \mathbf{V})\). Starting from the fundamental postulates of UTF, we derive this equation through geometric analysis of spacetime motion, and verify its consistency with relativistic mechanics, Newtonian physics, and quantum phenomena. We provide detailed symbolic differentiation using SymPy, numerical validation across 27 orders of magnitude, and multi-scale analysis. The equation successfully unifies the four fundamental interactions through geometric interpretation, offering a profound insight into the nature of momentum and force.
+This paper presents a rigorous derivation and comprehensive verification of the dynamic momentum equation in ZUFT's Unified Field Theory (UTF), formulated as \(\mathbf{P} = m(\mathbf{C} - \mathbf{V})\). Starting from the fundamental postulates of UTF, we derive this equation through geometric analysis of spacetime motion, and verify its consistency with relativistic mechanics, Newtonian physics, and quantum phenomena. We provide detailed symbolic differentiation using SymPy, numerical validation across 27 orders of magnitude, and multi-scale analysis. The equation successfully unifies the four fundamental interactions through geometric interpretation, offering a profound insight into the nature of momentum and force.
 
 **Keywords**: Unified Field Theory; dynamic momentum equation; spacetime motion; mass-velocity relation; force unification; symbolic computation; numerical verification
 
 ## 2. Introduction
 
 ### 2.1 Historical Context
-Traditional physics defines momentum as \(\mathbf{P} = m\mathbf{V}\), which describes the motion of an object relative to an observer. However, this framework neglects the fundamental role of spacetime itself. Zhang Xiangqian's UTF proposes a revolutionary perspective: **any object is surrounded by space that moves radially outward at the speed of light** \(\mathbf{C}\), whose magnitude is the constant \(c = 299,792,458\ \text{m/s}\).
+Traditional physics defines momentum as \(\mathbf{P} = m\mathbf{V}\), which describes the motion of an object relative to an observer. However, this framework neglects the fundamental role of spacetime itself. ZUFT's UTF proposes a revolutionary perspective: **any object is surrounded by space that moves radially outward at the speed of light** \(\mathbf{C}\), whose magnitude is the constant \(c = 299,792,458\ \text{m/s}\).
 
 ### 2.2 Core Equation
 The UTF dynamic momentum equation is defined as:
@@ -381,4 +381,4 @@ All code and data used in this paper are available upon request from the authors
 The authors declare no competing interests.
 
 ## 12. Acknowledgments
-This research was supported by the Zhang Xiangqian Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
+This research was supported by the ZUFT Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.

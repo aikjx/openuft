@@ -4,7 +4,7 @@
 
 ## Abstract
 
-This comprehensive study presents a rigorous theoretical framework for establishing precise quantitative relationships between fundamental physical constants $G$ (gravitational constant) and $c$ (speed of light) based on Zhang Xiangqian's Unified Field Theory and spatial dynamics principles. Through five independent mathematical methodologies—spatial motion direction integration, spatial motion projection integration, spatial motion directional combination integration, symmetry-constrained integration, and solid angle flux integration—we systematically reveal the projection efficiency compensation mechanism from three-dimensional isotropic fields to two-dimensional interaction planes, thereby deriving the fundamental Gravitational-Light Speed Unification Equation: $G = 2Z/c$ (or equivalently $Z = G \cdot c/2$), where $Z$ denotes the Zhang Xiangqian Constant with dimensions $[M]^{-1}[L]^{4}[T]^{-3}$, representing "the rate of change of spatial displacement lines per unit time per unit volume."
+This comprehensive study presents a rigorous theoretical framework for establishing precise quantitative relationships between fundamental physical constants $G$ (gravitational constant) and $c$ (speed of light) based on ZUFT's Unified Field Theory and spatial dynamics principles. Through five independent mathematical methodologies—spatial motion direction integration, spatial motion projection integration, spatial motion directional combination integration, symmetry-constrained integration, and solid angle flux integration—we systematically reveal the projection efficiency compensation mechanism from three-dimensional isotropic fields to two-dimensional interaction planes, thereby deriving the fundamental Gravitational-Light Speed Unification Equation: $G = 2Z/c$ (or equivalently $Z = G \cdot c/2$), where $Z$ denotes the ZUFT Constant with dimensions $[M]^{-1}[L]^{4}[T]^{-3}$, representing "the rate of change of spatial displacement lines per unit time per unit volume."
 
 **Principal Research Achievements:**
 
@@ -18,9 +18,9 @@ This comprehensive study presents a rigorous theoretical framework for establish
 
 5. **Novel Experimental Validation Protocols**: We propose new experimental validation schemes through measurements of gravitational behavior under extreme conditions, high-precision $G$ value determinations, and gravitational wave observations.
 
-**Scientific Significance**: This research transcends the traditional paradigm that "$G$ is a fundamental empirical constant that can only be experimentally measured but not theoretically derived," providing a revolutionary theoretical framework for understanding gravity's nature and exploring the unification of fundamental interactions. The Zhang Xiangqian Constant $Z$, as a key constant connecting gravitational and electromagnetic interactions, not only unifies two fundamental physical constants $G$ and $c$, but may provide breakthrough theoretical foundations for resolving unified field theory problems in physics.
+**Scientific Significance**: This research transcends the traditional paradigm that "$G$ is a fundamental empirical constant that can only be experimentally measured but not theoretically derived," providing a revolutionary theoretical framework for understanding gravity's nature and exploring the unification of fundamental interactions. The ZUFT Constant $Z$, as a key constant connecting gravitational and electromagnetic interactions, not only unifies two fundamental physical constants $G$ and $c$, but may provide breakthrough theoretical foundations for resolving unified field theory problems in physics.
 
-**Keywords**: Gravitational-Light Speed Unification Equation; Zhang Xiangqian Unified Field Theory; Spatial Dynamics; Gravitational Constant; Speed of Light; Zhang Xiangqian Constant; Geometric Factor; Three-Dimensional to Two-Dimensional Projection; Statistical Physics; Theoretical Verification; Unified Field Theory
+**Keywords**: Gravitational-Light Speed Unification Equation; ZUFT Unified Field Theory; Spatial Dynamics; Gravitational Constant; Speed of Light; ZUFT Constant; Geometric Factor; Three-Dimensional to Two-Dimensional Projection; Statistical Physics; Theoretical Verification; Unified Field Theory
 
 ## 1 Introduction
 
@@ -42,9 +42,9 @@ While general relativity achieved tremendous success at macroscopic scales, its 
 
 Since Einstein, physicists have proposed various unified field theory attempts, including Kaluza-Klein theory, Weyl gauge theory, superstring theory, and loop quantum gravity. However, the unification of gravity and electromagnetic forces remains unsolved, reflecting limitations in our understanding of nature's essence.
 
-### 1.2 Fundamental Ideas of Zhang Xiangqian's Unified Field Theory
+### 1.2 Fundamental Ideas of ZUFT's Unified Field Theory
 
-Zhang Xiangqian's Unified Field Theory proposes a revolutionary physics perspective, treating space as a physical entity possessing intrinsic dynamical properties. Key viewpoints include:
+ZUFT's Unified Field Theory proposes a revolutionary physics perspective, treating space as a physical entity possessing intrinsic dynamical properties. Key viewpoints include:
 
 1. **Dynamic Nature of Space**: Space surrounding any object exhibits cylindrical helical divergent motion at light speed $c$, providing a revolutionary framework for understanding fundamental interactions.
 
@@ -72,7 +72,7 @@ This study employs five independent mathematical methods for rigorous derivation
 
 ## 2 Fundamental Postulates of Spatial Dynamics Theory
 
-Spatial dynamics theory constitutes the core framework of Zhang Xiangqian's Unified Field Theory, attempting to unify fundamental interactions while exploring essential connections between spacetime, matter, and force. The theoretical framework is constructed upon six **fundamental postulates** providing conceptual foundations for subsequent mathematical derivations and physical analyses:
+Spatial dynamics theory constitutes the core framework of ZUFT's Unified Field Theory, attempting to unify fundamental interactions while exploring essential connections between spacetime, matter, and force. The theoretical framework is constructed upon six **fundamental postulates** providing conceptual foundations for subsequent mathematical derivations and physical analyses:
 
 ### 2.1 Universal Composition Postulate
 
@@ -550,13 +550,13 @@ Geometric factor 2 represents projection efficiency compensation, leading to:
 
 $$G = \frac{2Z}{c} \tag{8-2}$$
 
-Where $Z$ is Zhang Xiangqian Constant with dimensions:
+Where $Z$ is ZUFT Constant with dimensions:
 
 $$[Z] = [M]^{-1} [L]^4 [T]^{-3} \tag{8-3}$$
 
-#### 8.1.2 Zhang Xiangqian Constant Definition
+#### 8.1.2 ZUFT Constant Definition
 
-Zhang Xiangqian Constant $Z$ represents "rate of change of spatial displacement lines per unit time per unit volume":
+ZUFT Constant $Z$ represents "rate of change of spatial displacement lines per unit time per unit volume":
 
 $$Z = \frac{d}{dt} \left( \frac{dn}{dV} \right) = \frac{d}{dt} \left( \frac{\Delta n}{\Delta V} \right) \tag{8-4}$$
 
@@ -588,7 +588,7 @@ $$G = \frac{2Z}{c} \tag{8-8}$$
 
 #### 8.2.1 CODATA 2018 Comparison
 
-Using exact Zhang Xiangqian Constant value: $Z = 0.010004524012147 \, \text{kg}^{-1}\cdot\text{m}^{4}\cdot\text{s}^{-3}$
+Using exact ZUFT Constant value: $Z = 0.010004524012147 \, \text{kg}^{-1}\cdot\text{m}^{4}\cdot\text{s}^{-3}$
 
 Theoretical calculation:
 
@@ -680,7 +680,7 @@ This research transcends traditional paradigm that "$G$ is fundamental empirical
 
 ### 9.2 Implications for Unified Field Theory
 
-The Zhang Xiangqian Constant $Z$ as key constant connecting gravitational and electromagnetic interactions not only unifies $G$ and $c$ but may provide breakthrough theoretical foundation for resolving unified field theory problems.
+The ZUFT Constant $Z$ as key constant connecting gravitational and electromagnetic interactions not only unifies $G$ and $c$ but may provide breakthrough theoretical foundation for resolving unified field theory problems.
 
 #### 9.2.1 Theoretical Impact
 
@@ -758,7 +758,7 @@ This comprehensive study presents rigorous theoretical framework establishing pr
 
 ### 10.2 Scientific Significance
 
-This work transcends traditional limitations, establishing space as dynamic physical entity and providing revolutionary framework for understanding fundamental interactions. The Zhang Xiangqian Constant $Z$ emerges as key parameter connecting gravitational and electromagnetic phenomena, potentially opening new avenues for complete unified field theory.
+This work transcends traditional limitations, establishing space as dynamic physical entity and providing revolutionary framework for understanding fundamental interactions. The ZUFT Constant $Z$ emerges as key parameter connecting gravitational and electromagnetic phenomena, potentially opening new avenues for complete unified field theory.
 
 ### 10.3 Future Impact
 
@@ -768,11 +768,11 @@ The gravitational-light speed unification equation may catalyze paradigm shift i
 
 This research represents significant milestone in theoretical physics, providing first theoretically derived expression for gravitational constant and establishing foundation for spatial dynamics as new theoretical framework. The convergence of mathematical rigor, theoretical consistency, and experimental validation suggests profound implications for future physics development and our understanding of universe's fundamental nature.
 
-The Zhang Xiangqian Constant $Z$ and gravitational-light speed unification equation $G = 2Z/c$ may indeed represent key to unlocking secrets of unified field theory, potentially revolutionizing our comprehension of space, time, matter, and force as interconnected manifestations of underlying spatial dynamics.
+The ZUFT Constant $Z$ and gravitational-light speed unification equation $G = 2Z/c$ may indeed represent key to unlocking secrets of unified field theory, potentially revolutionizing our comprehension of space, time, matter, and force as interconnected manifestations of underlying spatial dynamics.
 
 ---
 
-**Acknowledgments**: We acknowledge the foundational contributions of Zhang Xiangqian's Unified Field Theory and express gratitude to the physics community for maintaining open minds to paradigm-shifting theoretical developments.
+**Acknowledgments**: We acknowledge the foundational contributions of ZUFT's Unified Field Theory and express gratitude to the physics community for maintaining open minds to paradigm-shifting theoretical developments.
 
 **Funding**: This research was supported by theoretical physics research initiatives.
 
@@ -782,7 +782,7 @@ The Zhang Xiangqian Constant $Z$ and gravitational-light speed unification equat
 
 **Author Contributions**: G.M. and X.Z. contributed equally to theoretical development, mathematical derivations, and manuscript preparation.
 
-**Keywords**: Gravitational-Light Speed Unification Equation; Zhang Xiangqian Unified Field Theory; Spatial Dynamics; Gravitational Constant; Speed of Light; Geometric Factor; Unified Field Theory
+**Keywords**: Gravitational-Light Speed Unification Equation; ZUFT Unified Field Theory; Spatial Dynamics; Gravitational Constant; Speed of Light; Geometric Factor; Unified Field Theory
 
 ---
 

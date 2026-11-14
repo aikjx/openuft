@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 3D到2D几何因子动画可视化
-张祥前统一场论：从球对称三维空间到二维投影的几何因子 G = 4π/2π = 2
+ZUFT统一场论：从球对称三维空间到二维投影的几何因子 G = 4π/2π = 2
 
 动画展示：
 1. 三维球对称空间发散场 (4π立体角)
@@ -11,7 +11,7 @@
 4. 几何因子的数学推导动画
 5. 立体角积分的可视化
 
-作者：基于张祥前统一场论
+作者：基于ZUFT统一场论
 创建日期：2025-09-16
 """
 
@@ -424,7 +424,7 @@ class GeometricFactorAnimator:
             '• 2D平面投影',
             '• 几何缩放因子',
             '',
-            '张祥前统一场论:',
+            'ZUFT统一场论:',
             '• 空间光速发散运动',
             '• 质量-空间位移关联',
             '• 引力-电磁统一',
@@ -478,7 +478,7 @@ class GeometricFactorAnimator:
         
         # 更新总标题
         progress_percent = (frame / self.total_frames) * 100
-        self.fig.suptitle(f'张祥前统一场论：3D→2D几何因子动画推导 (G = 4π/2π = 2)\n'
+        self.fig.suptitle(f'ZUFT统一场论：3D→2D几何因子动画推导 (G = 4π/2π = 2)\n'
                          f'进度: {progress_percent:.1f}% | 帧: {frame}/{self.total_frames}', 
                          fontsize=16, fontweight='bold', y=0.95)
         
@@ -506,7 +506,7 @@ class GeometricFactorAnimator:
     def create_static_summary(self):
         """创建静态总结图"""
         fig_summary = plt.figure(figsize=(16, 10))
-        fig_summary.suptitle('张祥前统一场论：几何因子推导总结 (G = 2)', 
+        fig_summary.suptitle('ZUFT统一场论：几何因子推导总结 (G = 2)', 
                            fontsize=18, fontweight='bold')
         
         # 创建网格布局
@@ -577,7 +577,7 @@ class GeometricFactorAnimator:
 def main():
     """主函数：创建和运行动画"""
     print("=" * 60)
-    print("张祥前统一场论：3D→2D几何因子动画可视化")
+    print("ZUFT统一场论：3D→2D几何因子动画可视化")
     print("=" * 60)
     print("正在创建动画...")
     

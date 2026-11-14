@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论核心公式量纲验证（最终版）
+ZUFT统一场论核心公式量纲验证（最终版）
 
-本脚本用于验证张祥前统一场论20个核心公式的量纲正确性，并尝试优化耦合常数量纲
+本脚本用于验证ZUFT统一场论20个核心公式的量纲正确性，并尝试优化耦合常数量纲
 基于国际单位制（SI）的基本量纲：长度[L]、质量[M]、时间[T]、电荷[Q]
 """
 
@@ -612,7 +612,7 @@ def verify_all_formulas():
 def print_verification_results(results):
     """打印验证结果"""
     print("=" * 100)
-    print(f"张祥前统一场论核心公式量纲验证结果 - 单位制: {unit_system.system_type}")
+    print(f"ZUFT统一场论核心公式量纲验证结果 - 单位制: {unit_system.system_type}")
     print("=" * 100)
     print(f"{'序号':<4} {'公式名称':<25} {'左边量纲':<22} {'右边量纲':<22} {'结果':<10}")
     print("-" * 100)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论：基础学术图表生成
+ZUFT统一场论：基础学术图表生成
 """
 
 import numpy as np
@@ -433,7 +433,7 @@ def chart_6_data_table():
 def main():
     """主函数"""
     print("=" * 60)
-    print("张祥前统一场论：基础学术图表生成系统")
+    print("ZUFT统一场论：基础学术图表生成系统")
     print("=" * 60)
     
     # 生成所有图表

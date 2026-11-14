@@ -4,18 +4,18 @@
 Xiangqian Zhang, Unified Field Theory Research Team
 
 ## Correspondence
-zhangxiangqian@unifiedfieldtheory.org
+zuft@unifiedfieldtheory.org
 
 ## Received: 15 October 2025; Accepted: 13 December 2025; Published online: 20 December 2025
 
 ## Abstract
-The equation describing how varying magnetic fields induce both gravitational and electric fields is a cornerstone of Zhang Xiangqian's Unified Field Theory (UTF). This paper presents a rigorous derivation of this equation from the Universal Unified Equation, based on the symmetry principles of field interactions. The equation, \(\frac{d\mathbf{B}}{dt} = \frac{-\mathbf{A}\times\mathbf{E}}{c^2} - \frac{\mathbf{V}}{c^{2}}\times\frac{d\mathbf{E}}{dt}\), comprehensively describes the mechanism by which magnetic field variations simultaneously generate gravitational and electric fields, revealing the intrinsic connection between electromagnetic and gravitational forces. Through extensive symbolic verification, numerical simulation, and compatibility analysis with established theories, we demonstrate that this equation extends Faraday's law of electromagnetic induction to include gravitational effects, providing a critical theoretical foundation for unifying fundamental forces. The equation's profound implications for our understanding of field interactions and its potential technological applications are also discussed.
+The equation describing how varying magnetic fields induce both gravitational and electric fields is a cornerstone of ZUFT's Unified Field Theory (UTF). This paper presents a rigorous derivation of this equation from the Universal Unified Equation, based on the symmetry principles of field interactions. The equation, \(\frac{d\mathbf{B}}{dt} = \frac{-\mathbf{A}\times\mathbf{E}}{c^2} - \frac{\mathbf{V}}{c^{2}}\times\frac{d\mathbf{E}}{dt}\), comprehensively describes the mechanism by which magnetic field variations simultaneously generate gravitational and electric fields, revealing the intrinsic connection between electromagnetic and gravitational forces. Through extensive symbolic verification, numerical simulation, and compatibility analysis with established theories, we demonstrate that this equation extends Faraday's law of electromagnetic induction to include gravitational effects, providing a critical theoretical foundation for unifying fundamental forces. The equation's profound implications for our understanding of field interactions and its potential technological applications are also discussed.
 
 ## 1. Introduction
 
 Faraday's law of electromagnetic induction, discovered in 1831, revolutionized physics by revealing that varying magnetic fields induce electric fields. This fundamental principle, formalized in Maxwell's equations, has become the foundation of modern electrical technology. However, traditional physics has not extended this concept to include gravitational effects, treating gravity and electromagnetism as distinct phenomena governed by separate mathematical frameworks.
 
-Zhang Xiangqian's Unified Field Theory challenges this separation, proposing that all physical forces are manifestations of space-time dynamics. At the heart of this theory is the hypothesis that magnetic field variations not only induce electric fields but also gravitational fields. This comprehensive field interaction, described by the equation \(\frac{d\mathbf{B}}{dt} = \frac{-\mathbf{A}\times\mathbf{E}}{c^2} - \frac{\mathbf{V}}{c^{2}}\times\frac{d\mathbf{E}}{dt}\), represents a profound extension of Faraday's principle and provides a concrete mathematical link between gravitational and electromagnetic phenomena.
+ZUFT's Unified Field Theory challenges this separation, proposing that all physical forces are manifestations of space-time dynamics. At the heart of this theory is the hypothesis that magnetic field variations not only induce electric fields but also gravitational fields. This comprehensive field interaction, described by the equation \(\frac{d\mathbf{B}}{dt} = \frac{-\mathbf{A}\times\mathbf{E}}{c^2} - \frac{\mathbf{V}}{c^{2}}\times\frac{d\mathbf{E}}{dt}\), represents a profound extension of Faraday's principle and provides a concrete mathematical link between gravitational and electromagnetic phenomena.
 
 In this paper, we provide:
 - A rigorous mathematical derivation from the Universal Unified Equation
@@ -483,11 +483,11 @@ As our understanding of field interactions deepens and measurement technologies 
 
 ## Acknowledgments
 
-The authors acknowledge the contributions of the Zhang Xiangqian Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
+The authors acknowledge the contributions of the ZUFT Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
 
 ## References
 
-1. Zhang Xiangqian. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
+1. ZUFT. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
 2. Einstein, A. Die Grundlage der allgemeinen Relativitätstheorie. Annalen der Physik, 1916, 49(7): 769–822.
 3. Maxwell, J.C. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 4. Faraday, M. Experimental Researches in Electricity. Taylor & Francis, 1839.
@@ -502,7 +502,7 @@ The authors acknowledge the contributions of the Zhang Xiangqian Unified Field T
 
 **Supplementary Materials**: Detailed symbolic computation code, numerical simulation scripts, and interactive visualization tools are available at https://unifiedfieldtheory.org/supplementary-materials/15-magnetic-gravitational-induction
 
-**Corresponding Author**: zhangxiangqian@unifiedfieldtheory.org
+**Corresponding Author**: zuft@unifiedfieldtheory.org
 
 **Conflict of Interest**: The authors declare no competing financial interests.
 

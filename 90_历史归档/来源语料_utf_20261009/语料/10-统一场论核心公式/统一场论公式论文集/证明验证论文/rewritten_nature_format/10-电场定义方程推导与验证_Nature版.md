@@ -1,7 +1,7 @@
 # Electric Field Definition Equation: Geometric Derivation and Verification from Spacetime Rotation
 
 ## Authors
-Zhang Xiangqian Unified Field Theory Research Team
+ZUFT Unified Field Theory Research Team
 
 ## Date
 December 13, 2025
@@ -10,14 +10,14 @@ December 13, 2025
 v1.0
 
 ## 1. Abstract
-This paper presents a rigorous geometric derivation and comprehensive verification of the Electric Field Definition Equation (EFDE) in Zhang Xiangqian's Unified Field Theory (UTF). The equation, expressed as \(\mathbf{E} = -\frac{kk'}{4\pi\epsilon_0\Omega^2}\frac{d\Omega}{dt}\frac{\mathbf{r}}{r^3}\), defines the electric field as a manifestation of spacetime rotation variation, where \(\Omega\) is solid angle, \(k\) and \(k'\) are proportionality constants, and \(\epsilon_0\) is the vacuum permittivity. We provide detailed symbolic computation using SymPy, numerical validation across 27 orders of magnitude, and geometric visualization of electric field lines. The EFDE successfully reproduces Coulomb's law, satisfies Gauss's law, and establishes a direct connection between electromagnetic phenomena and spacetime geometry. Our results demonstrate that the electric field is not a fundamental "field" but an emergent feature of spacetime dynamics, providing a unified geometric framework for understanding electromagnetism and gravity.
+This paper presents a rigorous geometric derivation and comprehensive verification of the Electric Field Definition Equation (EFDE) in ZUFT's Unified Field Theory (UTF). The equation, expressed as \(\mathbf{E} = -\frac{kk'}{4\pi\epsilon_0\Omega^2}\frac{d\Omega}{dt}\frac{\mathbf{r}}{r^3}\), defines the electric field as a manifestation of spacetime rotation variation, where \(\Omega\) is solid angle, \(k\) and \(k'\) are proportionality constants, and \(\epsilon_0\) is the vacuum permittivity. We provide detailed symbolic computation using SymPy, numerical validation across 27 orders of magnitude, and geometric visualization of electric field lines. The EFDE successfully reproduces Coulomb's law, satisfies Gauss's law, and establishes a direct connection between electromagnetic phenomena and spacetime geometry. Our results demonstrate that the electric field is not a fundamental "field" but an emergent feature of spacetime dynamics, providing a unified geometric framework for understanding electromagnetism and gravity.
 
 **Keywords**: Unified Field Theory; Electric Field Definition Equation; spacetime rotation; geometric derivation; symbolic computation; numerical validation; Coulomb's law; Gauss's law; multi-scale analysis
 
 ## 2. Introduction
 
 ### 2.1 The Nature of Electric Fields
-Electric fields are fundamental to our understanding of electromagnetism, yet their true nature remains unexplained in traditional theories. While Maxwell's equations describe how electric fields behave, they do not address what electric fields fundamentally are. Zhang Xiangqian's UTF offers a revolutionary perspective: **electric fields are geometric manifestations of spacetime rotation variation**.
+Electric fields are fundamental to our understanding of electromagnetism, yet their true nature remains unexplained in traditional theories. While Maxwell's equations describe how electric fields behave, they do not address what electric fields fundamentally are. ZUFT's UTF offers a revolutionary perspective: **electric fields are geometric manifestations of spacetime rotation variation**.
 
 ### 2.2 Core Postulates
 The derivation of the EFDE is based on two fundamental postulates of UTF:
@@ -359,7 +359,7 @@ The EFDE revolutionizes our understanding of electric fields:
 
 ## 9. Conclusion
 
-This paper presents a comprehensive derivation and verification of the Electric Field Definition Equation in Zhang Xiangqian's Unified Field Theory. Through rigorous geometric derivation, detailed symbolic computation, and extensive numerical validation, we have established the EFDE as a mathematically consistent framework for understanding electric fields as manifestations of spacetime rotation variation.
+This paper presents a comprehensive derivation and verification of the Electric Field Definition Equation in ZUFT's Unified Field Theory. Through rigorous geometric derivation, detailed symbolic computation, and extensive numerical validation, we have established the EFDE as a mathematically consistent framework for understanding electric fields as manifestations of spacetime rotation variation.
 
 Key achievements include:
 1. **Rigorous Derivation**: Derived from first principles using geometric reasoning
@@ -389,7 +389,7 @@ All code and data used in this paper are available upon request from the authors
 The authors declare no competing interests.
 
 ## 13. Acknowledgments
-This research was supported by the Zhang Xiangqian Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
+This research was supported by the ZUFT Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
 
 ## 14. References
 

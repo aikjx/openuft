@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # 三维螺旋时空方程验证与可视化
-# 本代码实现了张祥前统一场论中三维螺旋时空方程的完整数学验证和可视化分析
+# 本代码实现了ZUFT统一场论中三维螺旋时空方程的完整数学验证和可视化分析
 
 import sympy as sp
 import numpy as np

@@ -5,7 +5,7 @@ hbar, c, G, m_p, k = sp.symbols('hbar c G m_p k')
 r, t, omega, n, Omega = sp.symbols('r t omega n Omega')
 M, L, T = sp.symbols('M L T')  # 质量、长度、时间量纲
 
-print("=== 张祥前统一场论核心推导验证 ===\n")
+print("=== ZUFT统一场论核心推导验证 ===\n")
 
 # =============================
 # 1. 质量几何化定义验证
@@ -148,5 +148,5 @@ print(f"✅ 数值验证通过，相对误差: {abs(G_numeric - values['G_codata
 print()
 
 print("=== 验证完成 ===")
-print("结论: 张祥前统一场论框架下的万有引力常数量子几何推导在数学上是自洽的，")
+print("结论: ZUFT统一场论框架下的万有引力常数量子几何推导在数学上是自洽的，")
 print("与经典物理学定义兼容，量纲一致，数值结果与实验观测高度吻合。")

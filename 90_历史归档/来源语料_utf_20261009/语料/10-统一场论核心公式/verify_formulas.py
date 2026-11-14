@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论公式验证脚本
+ZUFT统一场论公式验证脚本
 验证内容：
 1. 常数计算的正确性
 2. 量纲一致性
@@ -181,7 +181,7 @@ def verify_logical_chain():
 
 def main():
     """主函数"""
-    print("张祥前统一场论公式验证")
+    print("ZUFT统一场论公式验证")
     print("=" * 50)
     print()
     
@@ -194,7 +194,7 @@ def main():
     print("2. 量纲一致性: 一致 ✓")
     print("3. 逻辑推导链: 完整 ✓")
     print()
-    print("结论: 张祥前统一场论公式在数学和逻辑上是自洽的。")
+    print("结论: ZUFT统一场论公式在数学和逻辑上是自洽的。")
 
 if __name__ == "__main__":
     main()

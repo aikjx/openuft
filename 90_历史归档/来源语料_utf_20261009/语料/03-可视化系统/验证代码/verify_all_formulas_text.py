@@ -116,7 +116,7 @@ class AllFormulasTextVerifier:
         # 打印量纲分析结果
         self.append(f"引力常数G的量纲: [M]⁻¹[L]³[T]⁻²/n")
         self.append(f"光速c的量纲: [L][T]⁻¹/n")
-        self.append(f"张祥前常数Z的量纲: {dim_Z}/n")
+        self.append(f"ZUFT常数Z的量纲: {dim_Z}/n")
         self.append(f"方程Z = Gc/2的量纲验证: {dim_Z} = {dim_G * dim_c}/n")
         
         # 验证量纲一致性
@@ -200,7 +200,7 @@ class AllFormulasTextVerifier:
             {"step": "2. 各向同性修正（几何因子）", 
              "content": "F ∝ 2 × m₁m₂/(R²c)", 
              "check": "几何因子2来源于空间运动的有效贡献积分"},
-            {"step": "3. 引入张祥前常数Z", 
+            {"step": "3. 引入ZUFT常数Z", 
              "content": "F = Z × 2m₁m₂/(R²c)", 
              "check": "Z作为空间运动的几何化表述常数"},
             {"step": "4. 对比万有引力定律", 

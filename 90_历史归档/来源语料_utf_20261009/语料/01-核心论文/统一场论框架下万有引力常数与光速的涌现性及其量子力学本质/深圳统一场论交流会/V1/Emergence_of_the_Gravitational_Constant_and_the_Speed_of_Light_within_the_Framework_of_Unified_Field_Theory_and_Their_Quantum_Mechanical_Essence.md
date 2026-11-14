@@ -19,7 +19,7 @@ English
 
 ## Abstract
 
-This study, based on the framework of Zhang Xiangqian's Unified Field Theory and a new physical perspective of **spatial geometric motion**, derives the quantum geometric expression of the gravitational constant, clearly revealing its emergent nature and achieving a natural unification of macroscopic gravity and microscopic quantum behavior.
+This study, based on the framework of ZUFT's Unified Field Theory and a new physical perspective of **spatial geometric motion**, derives the quantum geometric expression of the gravitational constant, clearly revealing its emergent nature and achieving a natural unification of macroscopic gravity and microscopic quantum behavior.
 
 ### Core Physical Postulates
 
@@ -47,7 +47,7 @@ This research challenges the traditional physics concept of "irreducible fundame
 
 The unification of gravitational theory and quantum mechanics is one of the **core challenges** and important unsolved mysteries of modern physics. Einstein's general relativity accurately describes gravitational phenomena at the macroscopic scale but falls into inevitable singularity difficulties in the quantum domain; quantum mechanics has achieved brilliant results in the microscopic domain but cannot be directly applied to gravitational phenomena. There is a deep conceptual gap between them.
 
-Existing unified theories face three major challenges: **difficult experimental verification**, **high mathematical complexity**, and **vague physical images**. Zhang Xiangqian's Unified Field Theory takes a different approach, based on the core principle that **the universe is composed of objects and space**, proposing a new physical perspective of **spatial geometric motion**: reducing all physical phenomena to dynamic changes of space itself, without introducing extra dimensions or complex mathematical structures, providing a **concise and experimentally testable theoretical framework** for achieving the grand unification of physics.
+Existing unified theories face three major challenges: **difficult experimental verification**, **high mathematical complexity**, and **vague physical images**. ZUFT's Unified Field Theory takes a different approach, based on the core principle that **the universe is composed of objects and space**, proposing a new physical perspective of **spatial geometric motion**: reducing all physical phenomena to dynamic changes of space itself, without introducing extra dimensions or complex mathematical structures, providing a **concise and experimentally testable theoretical framework** for achieving the grand unification of physics.
 
 ### 1.2 Research Motivation and Innovations
 
@@ -73,7 +73,7 @@ This research challenges traditional physics paradigms, provides new ideas for s
 
 ### 2.1 Core Postulates: From Spatial Geometric Motion to Physical Unification
 
-Zhang Xiangqian's Unified Field Theory is constructed based on three core postulates, which form the absolute starting point of the theory, naturally deriving all physical phenomena from spatial geometric motion:
+ZUFT's Unified Field Theory is constructed based on three core postulates, which form the absolute starting point of the theory, naturally deriving all physical phenomena from spatial geometric motion:
 
 #### 2.1.1 Postulate 1: Principle of Light-Speed Helical Motion of Space
 
@@ -212,7 +212,7 @@ Starting from the geometric definition of mass $m = k \cdot \frac{dn}{d\Omega}$,
    where $G$ is the gravitational constant, $c$ is the speed of light, and $\hbar$ is the reduced Planck constant.
 
 2. **Geometric Interpretation of Unified Field Theory**:
-   Zhang Xiangqian's Unified Field Theory gives a concise and profound geometric image of Planck mass:
+   ZUFT's Unified Field Theory gives a concise and profound geometric image of Planck mass:
    > An object with Planck mass ($m_p$) corresponds to the spatial motion image: there is exactly one ($n=1$) spatial displacement vector, uniformly covering the entire spherical solid angle ($\Omega = 4π$).
 
    **Intuitive Geometric Image**: Imagine an infinitely thin "spatial displacement line" spreading uniformly in all directions at the speed of light, covering the entire three-dimensional space. The existence of this line corresponds to an object with Planck mass.
@@ -296,7 +296,7 @@ The quantum proportional constant $k = 4\pi m_p$ is the core hub of Unified Fiel
 As a bridge connecting geometry and quantum, $k = 4\pi m_p$ plays its role in:
 - **Geometric End**: Correlates pure geometric concepts such as spatial displacement, solid angle, and number density
 - **Physical End**: Connects measurable mass and quantum mechanical parameters ($\hbar, c, G$) related through $m_p$
-- **Essence**: It is the key hub and core logical link for Zhang Xiangqian's Unified Field Theory to unify gravity, spacetime geometry, and quantum world
+- **Essence**: It is the key hub and core logical link for ZUFT's Unified Field Theory to unify gravity, spacetime geometry, and quantum world
 
 #### 3.3.3 In-depth Analysis of Core Physical Connotation
 
@@ -646,7 +646,7 @@ These advantages indicate that Unified Field Theory provides a **simple, intuiti
 
 ### 7.1 Core Conclusions
 
-Based on the framework of Zhang Xiangqian's Unified Field Theory and a new physical perspective of **spatial geometric motion**, this research has achieved the following **breakthrough results**:
+Based on the framework of ZUFT's Unified Field Theory and a new physical perspective of **spatial geometric motion**, this research has achieved the following **breakthrough results**:
 
 1. **Quantum Emergent Nature of Gravitational Constant**: For the first time, clearly reveals that $G$ is not a fundamental constant but an emergent physical quantity jointly determined by quantum mechanics ($\hbar$), relativity ($c$), and quantum gravity scale ($m_p$), **challenging the core concept of "irreducible fundamental constants" in traditional physics**.
 
@@ -696,7 +696,7 @@ This research provides a **concise theoretical framework with experimental testa
 
 ## References
 
-[1] Zhang Xiangqian. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
+[1] ZUFT. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
 
 [2] Mohr P J, Taylor B N, Newell D B. CODATA Recommended Values of the Fundamental Physical Constants: 2018[J]. Reviews of Modern Physics, 2021, 93(2): 025010.
 
@@ -718,4 +718,4 @@ This research provides a **concise theoretical framework with experimental testa
 
 ## Acknowledgments
 
-This research benefits from the theoretical contributions of Mr. Zhang Xiangqian's Unified Field Theory, and thanks all researchers who have contributed to the development of physics.
+This research benefits from the theoretical contributions of Mr. ZUFT's Unified Field Theory, and thanks all researchers who have contributed to the development of physics.

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Generate publication-ready plots for the geometric definition of mass
-from Zhang Xiangqian's Unified Field Theory.
+from ZUFT's Unified Field Theory.
 
 Equations:
 1. Mass geometric definition (integral form): m = k * n / Ω

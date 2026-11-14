@@ -10,7 +10,7 @@
 3. 几何因子的动态计算
 4. 数学公式的同步显示
 
-作者：基于张祥前统一场论
+作者：基于ZUFT统一场论
 """
 
 import numpy as np
@@ -240,7 +240,7 @@ class SimpleGeometricFactorAnimation:
 def create_mathematical_summary():
     """创建数学总结图"""
     fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-    fig.suptitle('张祥前统一场论：几何因子数学推导总结', fontsize=16, fontweight='bold')
+    fig.suptitle('ZUFT统一场论：几何因子数学推导总结', fontsize=16, fontweight='bold')
     
     # 1. 3D立体角
     ax1 = axes[0, 0]
@@ -280,7 +280,7 @@ def create_mathematical_summary():
              bbox=dict(boxstyle="round,pad=0.3", facecolor='yellow', alpha=0.8))
     ax4.text(0.5, 0.4, '物理意义：\n三维球对称场投影到\n二维平面的缩放因子', 
              fontsize=11, ha='center')
-    ax4.text(0.5, 0.2, '张祥前统一场论：\n空间发散运动的几何效应', 
+    ax4.text(0.5, 0.2, 'ZUFT统一场论：\n空间发散运动的几何效应', 
              fontsize=10, ha='center', style='italic')
     ax4.set_xlim([0, 1])
     ax4.set_ylim([0, 1])
@@ -293,7 +293,7 @@ def main():
     """主函数"""
     print("=" * 50)
     print("几何因子动画可视化")
-    print("张祥前统一场论：G = 4π/2π = 2")
+    print("ZUFT统一场论：G = 4π/2π = 2")
     print("=" * 50)
     
     # 创建动画

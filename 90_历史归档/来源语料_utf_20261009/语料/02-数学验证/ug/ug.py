@@ -3,9 +3,9 @@ import scipy.constants as const
 
 def calculate_zhang_constants():
     """
-    计算张祥前统一场论中的核心常数
+    计算ZUFT统一场论中的核心常数
     """
-    print("=== 张祥前统一场论常数计算 ===\n")
+    print("=== ZUFT统一场论常数计算 ===\n")
     
     # 基本物理常数
     c = const.c  # 光速, m/s
@@ -14,9 +14,9 @@ def calculate_zhang_constants():
     # 方法1: 已知Z求μ_g
     print("\n--- 方法1: 已知Z求μ_g ---")
     
-    # 张祥前常数 Z (根据理论定义)
+    # ZUFT常数 Z (根据理论定义)
     Z = 1.001e-2  # m⁴·kg⁻¹·s⁻³ (典型值)
-    print(f"假设张祥前常数 Z = {Z:.3e} m⁴·kg⁻¹·s⁻³")
+    print(f"假设ZUFT常数 Z = {Z:.3e} m⁴·kg⁻¹·s⁻³")
     
     # 计算空间-质量耦合常数 μ_g = c³ / (4πZ)
     mu_g = c**3 / (4 * np.pi * Z)
@@ -30,9 +30,9 @@ def calculate_zhang_constants():
     mu_g_theory = 1.507e85  # 无量纲
     print(f"假设空间-质量耦合常数 μ_g = {mu_g_theory:.3e}")
     
-    # 计算张祥前常数 Z = c³ / (4πμ_g)
+    # 计算ZUFT常数 Z = c³ / (4πμ_g)
     Z_calculated = c**3 / (4 * np.pi * mu_g_theory)
-    print(f"张祥前常数 Z = c³ / (4πμ_g)")
+    print(f"ZUFT常数 Z = c³ / (4πμ_g)")
     print(f"Z = {Z_calculated:.3e} m⁴·kg⁻¹·s⁻³")
     
     return Z, mu_g, Z_calculated
@@ -129,6 +129,6 @@ if __name__ == "__main__":
     physical_significance_analysis()
     
     print(f"\n=== 最终结果总结 ===")
-    print(f"张祥前常数 Z ≈ 1.001 × 10⁻² m⁴·kg⁻¹·s⁻³")
+    print(f"ZUFT常数 Z ≈ 1.001 × 10⁻² m⁴·kg⁻¹·s⁻³")
     print(f"空间-质量耦合常数 μ_g ≈ 1.507 × 10⁸⁵")
     print(f"关系式验证: Z × μ_g = c³/(4π) [自洽]")

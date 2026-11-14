@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 兼容版几何因子动画：3D到2D几何变换可视化
-张祥前统一场论：几何因子 G = 4π/2π = 2
+ZUFT统一场论：几何因子 G = 4π/2π = 2
 
 专为Python 3.8+设计，避免版本兼容性问题
 展示核心数学概念：从球对称3D空间到2D平面投影的几何因子推导
 
-作者：基于张祥前统一场论
+作者：基于ZUFT统一场论
 创建日期：2025-09-16
 """
 
@@ -341,7 +341,7 @@ class GeometricFactorVisualizer:
                               bbox=dict(boxstyle="round,pad=0.3", 
                                       facecolor='yellow', alpha=0.9))
             
-            self.ax_result.text(0.5, 0.3, '张祥前统一场论\n3D→2D投影缩放因子', 
+            self.ax_result.text(0.5, 0.3, 'ZUFT统一场论\n3D→2D投影缩放因子', 
                               fontsize=12, ha='center',
                               transform=self.ax_result.transAxes,
                               color=self.colors['text'])
@@ -366,7 +366,7 @@ class GeometricFactorVisualizer:
         self.animate_final_result(frame)
         
         # 更新总标题
-        self.fig.suptitle(f'张祥前统一场论：几何因子动画推导 G = 4π/2π = 2', 
+        self.fig.suptitle(f'ZUFT统一场论：几何因子动画推导 G = 4π/2π = 2', 
                          fontsize=14, fontweight='bold')
     
     def create_animation(self, interval=120):
@@ -394,7 +394,7 @@ class GeometricFactorVisualizer:
 def create_static_summary():
     """创建静态总结图"""
     fig, axes = plt.subplots(2, 2, figsize=(12, 9))
-    fig.suptitle('张祥前统一场论：几何因子推导总结', fontsize=16, fontweight='bold')
+    fig.suptitle('ZUFT统一场论：几何因子推导总结', fontsize=16, fontweight='bold')
     
     # 1. 3D球面示意
     ax1 = axes[0, 0]
@@ -437,7 +437,7 @@ def create_static_summary():
     ax4.text(0.5, 0.4, '物理意义：', fontsize=12, ha='center', fontweight='bold')
     ax4.text(0.5, 0.3, '三维球对称场投影到', fontsize=11, ha='center')
     ax4.text(0.5, 0.2, '二维平面的缩放因子', fontsize=11, ha='center')
-    ax4.text(0.5, 0.05, '张祥前统一场论核心结果', fontsize=10, ha='center', 
+    ax4.text(0.5, 0.05, 'ZUFT统一场论核心结果', fontsize=10, ha='center', 
              style='italic', color='blue')
     ax4.set_xlim([0, 1])
     ax4.set_ylim([0, 1])
@@ -449,7 +449,7 @@ def create_static_summary():
 def main():
     """主函数"""
     print("=" * 60)
-    print("张祥前统一场论：几何因子动画可视化")
+    print("ZUFT统一场论：几何因子动画可视化")
     print("兼容版本 - 适用于Python 3.8+")
     print("=" * 60)
     
@@ -470,7 +470,7 @@ def main():
     print("- 2D平面投影：2π弧度")
     print("- 几何因子：G = 4π/2π = 2")
     print("- 数学推导：立体角积分")
-    print("\n张祥前统一场论的核心数学结果")
+    print("\nZUFT统一场论的核心数学结果")
     
     # 保存静态图
     try:

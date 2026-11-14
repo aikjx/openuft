@@ -3,7 +3,7 @@ from scipy.constants import hbar, e, c, epsilon_0, alpha
 
 def calculate_Z_prime(version='corrected'):
     """
-    计算张祥前统一场论中的Z'常数。
+    计算ZUFT统一场论中的Z'常数。
     参数:
         version: 'proposed'（文档提议的Z'=hbar/(2e^2)）或 'corrected'（修正的Z'=c/(8*pi*epsilon_0)）
     返回:

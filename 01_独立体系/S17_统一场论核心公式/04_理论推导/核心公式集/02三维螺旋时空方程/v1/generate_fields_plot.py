@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Generate publication-ready plots for the geometric origin of electromagnetic and gravitational fields
-from Zhang Xiangqian's Unified Field Theory.
+from ZUFT's Unified Field Theory.
 
 Equations:
 1. Electric Field: E ∝ p k̂ (axial component)

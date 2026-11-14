@@ -7,7 +7,7 @@
 import math
 
 print("="*85)
-print("张祥前统一场论常数f计算结果的验证分析")
+print("ZUFT统一场论常数f计算结果的验证分析")
 print("="*85)
 print()
 

@@ -74,7 +74,7 @@ def verify_Z_equation(G_value=None, c_value=None, method='mpmath'):
     method: 计算方法 ('numpy', 'scipy', 'mpmath')
     
     返回:
-    Z: 张祥前常数，单位 kg⁻¹·m⁴·s⁻³
+    Z: ZUFT常数，单位 kg⁻¹·m⁴·s⁻³
     """
     # CODATA 2018 引力常数值
     G_codata = 6.67430e-11  # m³kg⁻¹s⁻²
@@ -331,7 +331,7 @@ def plot_G_c_Z_relationship():
     
     ax1.set_title('Z随G的变化（固定c）', fontsize=12)
     ax1.set_xlabel('引力常数G (m³kg⁻¹s⁻²)', fontsize=10)
-    ax1.set_ylabel('张祥前常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=10)
+    ax1.set_ylabel('ZUFT常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=10)
     ax1.grid(True)
     ax1.legend()
     
@@ -349,7 +349,7 @@ def plot_G_c_Z_relationship():
     
     ax2.set_title('Z随c的变化（固定G）', fontsize=12)
     ax2.set_xlabel('光速c (m/s)', fontsize=10)
-    ax2.set_ylabel('张祥前常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=10)
+    ax2.set_ylabel('ZUFT常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=10)
     ax2.grid(True)
     ax2.legend()
     

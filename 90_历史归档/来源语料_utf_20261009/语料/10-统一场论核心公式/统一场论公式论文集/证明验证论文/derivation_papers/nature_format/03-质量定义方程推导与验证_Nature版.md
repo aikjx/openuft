@@ -6,12 +6,12 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
-We present a geometric definition of mass within the framework of Zhang Xiangqian's Unified Field Theory, where mass is geometrized as a manifestation of spatial motion. The mass definition equation \( m = k \cdot \frac{n}{\Omega} \) establishes a quantitative relationship between mass and the rate of spatial point density change. This formulation not only accurately describes mass distribution from microscale particles to macroscopic celestial bodies but also naturally derives the definition of charge through time differentiation, providing a solid foundation for the geometric unification of mass and charge. Through multi-scale numerical verification and symbolic computation, we confirm the mathematical rigor and physical self-consistency of the equation, particularly the derivation of the constant \( k = 4\pi m_p \) (where \( m_p \) is Planck mass) with solid geometric foundations. This work offers a novel geometric perspective on mass essence, potentially representing a significant advancement in fundamental physics theory.
+We present a geometric definition of mass within the framework of ZUFT's Unified Field Theory, where mass is geometrized as a manifestation of spatial motion. The mass definition equation \( m = k \cdot \frac{n}{\Omega} \) establishes a quantitative relationship between mass and the rate of spatial point density change. This formulation not only accurately describes mass distribution from microscale particles to macroscopic celestial bodies but also naturally derives the definition of charge through time differentiation, providing a solid foundation for the geometric unification of mass and charge. Through multi-scale numerical verification and symbolic computation, we confirm the mathematical rigor and physical self-consistency of the equation, particularly the derivation of the constant \( k = 4\pi m_p \) (where \( m_p \) is Planck mass) with solid geometric foundations. This work offers a novel geometric perspective on mass essence, potentially representing a significant advancement in fundamental physics theory.
 
 ---
 
@@ -19,7 +19,7 @@ We present a geometric definition of mass within the framework of Zhang Xiangqia
 
 Mass, one of the most fundamental concepts in physics, has long been a central issue in theoretical exploration. From Newton's absolute mass view to Einstein's relativistic mass concept, and quantum field theory's mass generation mechanisms, our understanding of mass has continuously deepened, yet a unified geometric description remains elusive.
 
-Zhang Xiangqian's Unified Field Theory (UFT) offers a revolutionary perspective by geometricizing mass as a manifestation of spatial motion. This work systematically derives and validates the mass definition equation, establishing its mathematical rigor and physical self-consistency, while revealing its profound implications for fundamental physics.
+ZUFT's Unified Field Theory (UFT) offers a revolutionary perspective by geometricizing mass as a manifestation of spatial motion. This work systematically derives and validates the mass definition equation, establishing its mathematical rigor and physical self-consistency, while revealing its profound implications for fundamental physics.
 
 ## Theoretical Framework
 
@@ -156,7 +156,7 @@ The mass definition equation \( m = k \cdot \frac{n}{\Omega} \) geometricizes ma
 
 ## References
 
-1. Zhang, X. Q. (2023). Unified Field Theory: Foundations and Significance. *Journal of Modern Physics*.
+1. ZUFT (2023). Unified Field Theory: Foundations and Significance. *Journal of Modern Physics*.
 2. Einstein, A. (1905). On the Electrodynamics of Moving Bodies. *Annalen der Physik*.
 3. Planck, M. (1900). On the Theory of the Energy Distribution Law of the Normal Spectrum. *Verhandlungen der Deutschen Physikalischen Gesellschaft*.
 4. Feynman, R. P., Leighton, R. B., & Sands, M. (1964). *The Feynman Lectures on Physics* (Vol. 2). Addison-Wesley.

@@ -188,18 +188,18 @@ def verify_cosmology_formulas():
         verify_dimension(left, right, name)
         print()
 
-# 第六类：张祥前统一场论核心方程融合公式
+# 第六类：ZUFT统一场论核心方程融合公式
 def verify_zhang_formulas():
-    """验证张祥前统一场论核心方程融合公式"""
+    """验证ZUFT统一场论核心方程融合公式"""
     print("=" * 80)
-    print("六、张祥前统一场论核心方程融合公式")
+    print("六、ZUFT统一场论核心方程融合公式")
     print("=" * 80)
     print()
     
     formulas = [
-        ("张祥前时空势归一化公式", "c² r", "φ"),
-        ("张祥前质量积分公式归一化等价式", "4π² r³ Ω/(G T² k)", "∮ (R·dS)"),
-        ("张祥前电荷积分公式归一化等价式", "e Ω/k'", "∮ (R·dS)")
+        ("ZUFT时空势归一化公式", "c² r", "φ"),
+        ("ZUFT质量积分公式归一化等价式", "4π² r³ Ω/(G T² k)", "∮ (R·dS)"),
+        ("ZUFT电荷积分公式归一化等价式", "e Ω/k'", "∮ (R·dS)")
     ]
     
     for name, left, right in formulas:
@@ -229,7 +229,7 @@ def main():
     print()
     print("结论:")
     print("  衍生公式体系在量纲上是自洽的，所有公式都具有明确的物理意义。")
-    print("  公式涵盖从微观量子到宇观宇宙的全尺度，符合张祥前统一场论的框架。")
+    print("  公式涵盖从微观量子到宇观宇宙的全尺度，符合ZUFT统一场论的框架。")
     print()
     print("建议:")
     print("  1. 继续完善数值验证，使用实际物理参数测试公式的准确性")

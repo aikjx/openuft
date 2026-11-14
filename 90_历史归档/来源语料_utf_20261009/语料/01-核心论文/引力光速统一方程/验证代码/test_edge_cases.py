@@ -83,7 +83,7 @@ class TestEdgeCases(unittest.TestCase):
         # 计算无量纲组合
         Z = self.validator.calculate_Z()
         # 检查Z的物理意义是否合理
-        # 张祥前常数Z的量纲是 kg⁻¹·m⁴·s⁻³
+        # ZUFT常数Z的量纲是 kg⁻¹·m⁴·s⁻³
         # 这里我们只验证数值是否为正数
         self.assertGreater(Z, 0)
 

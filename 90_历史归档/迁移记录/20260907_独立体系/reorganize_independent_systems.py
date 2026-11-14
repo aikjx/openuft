@@ -17,7 +17,7 @@ def write(rel,text):
 def link(source,target): return os.path.relpath(ROOT/target,(ROOT/source).parent).replace('\\','/')
 systems=[
 ('S01_螺旋三重奏与谱几何','螺旋三重奏与谱几何','mathematical_framework','曲线曲率、挠率及运动生成元；不自动引入统一场论本体'),
-('S02_张祥前空间运动与统一力','张祥前空间运动与统一力','candidate_theory','空间运动与 P=m(c-v)、F=dP/dt 的统一力假设'),
+('S02_ZUFT空间运动与统一力','ZUFT空间运动与统一力','candidate_theory','空间运动与 P=m(c-v)、F=dP/dt 的统一力假设'),
 ('S03_GAQ几何原子与作用量子','GAQ 几何原子与作用量子','candidate_theory','离散几何元胞、作用量子化、曲率—能量对应及信息—质量对应'),
 ('S04_IEG信息熵引力','IEG 信息熵引力','candidate_theory','几何信息场、信息熵与引力动力学的联系'),
 ('S05_HDU高维紧致化统一','HDU 高维紧致化统一','candidate_theory','高维几何、紧致化及低维常数的投影关系'),
@@ -29,7 +29,7 @@ systems=[
 ('S11_GMUFT几何自由度与耦合','GMUFT 几何自由度与耦合','candidate_framework','曲率、挠率、拖拽与引力—电磁对应；完整场方程待建立'),
 ('S12_空间光速螺旋统一体系','空间光速螺旋统一体系','candidate_theory','空间光速螺旋 v=c 为本源公设的统一场论报告系列'),
 ('P01_空间压缩与密度本体','空间压缩与密度本体','unformulated_direction','保留原 H02 独立方向；具体公设尚未建立'),
-('P02_物体驱动与源场本体','物体驱动与源场本体','unformulated_direction','保留原 H03 独立方向；不与张祥前统一力自动等同'),
+('P02_物体驱动与源场本体','物体驱动与源场本体','unformulated_direction','保留原 H03 独立方向；不与ZUFT统一力自动等同'),
 ('P03_规范对称统一候选','规范对称统一候选','unformulated_direction','保留原 H05 独立方向；需要具体群、表示和作用量'),
 ('P04_量子结构与时空涌现候选','量子结构与时空涌现候选','unformulated_direction','保留原 H06 独立方向；需要微观自由度和动力学'),
 ]
@@ -38,7 +38,7 @@ old_layout=json.loads((ROOT/'00_项目治理/layout.json').read_text(encoding='u
 stages=old_layout['stages']
 template={p.relative_to(ROOT/'01_models/新体系模板').as_posix():p.read_text(encoding='utf-8') for p in (ROOT/'01_models/新体系模板').rglob('*.md')}
 rules={
-'01_models/历史路线01_空间运动/04_理论推导/D5_大统一力方程':'01_独立体系/S02_张祥前空间运动与统一力/04_理论推导/D5_大统一力方程',
+'01_models/历史路线01_空间运动/04_理论推导/D5_大统一力方程':'01_独立体系/S02_ZUFT空间运动与统一力/04_理论推导/D5_大统一力方程',
 '01_models/历史路线01_空间运动/05_一致性检查':'01_独立体系/S01_螺旋三重奏与谱几何/05_一致性检查',
 '01_models/历史路线01_空间运动/09_验证结果':'01_独立体系/S01_螺旋三重奏与谱几何/09_验证结果',
 '01_models/历史路线04_几何作用量/04_理论推导/D0_作用量变分求导':'02_共享基础/经典基准/经典作用量/D0_作用量变分求导',
@@ -99,7 +99,7 @@ for p in sorted(ROOT.rglob('*'),key=lambda p:len(p.parts),reverse=True):
 
 origins={
 'S01_螺旋三重奏与谱几何':[('01_独立体系/S01_螺旋三重奏与谱几何/05_一致性检查/P1_螺旋三重奏_TS1/研究总报告.md','三重奏专题与谱几何研究')],
-'S02_张祥前空间运动与统一力':[('01_独立体系/S02_张祥前空间运动与统一力/04_理论推导/D5_大统一力方程/README.md','D5 统一力定义与复算')],
+'S02_ZUFT空间运动与统一力':[('01_独立体系/S02_ZUFT空间运动与统一力/04_理论推导/D5_大统一力方程/README.md','D5 统一力定义与复算')],
 'S03_GAQ几何原子与作用量子':[('01_独立体系/S03_GAQ几何原子与作用量子/90_历史归档/几何原子_v1合集/几何原子_v1.md','公理 A1–A5；后续全集保留谱系但不假设前提完全相同')],
 'S07_GAQ复曲率融合体系':[('01_独立体系/S07_GAQ复曲率融合体系/13_论文与成果/论文正文/几何原子_v4/v4_全维统一.md','摘要、五公理与三体系融合')],
 'S08_GAQ常数几何化体系':[('01_独立体系/S08_GAQ常数几何化体系/13_论文与成果/论文正文/几何原子_v5/v5_cħ几何化.md','摘要及 v4→v5 常数地位变更')],
@@ -131,7 +131,7 @@ for sid,title,kind,premise in systems+[('新体系模板','新独立体系模板
     sources=[{'path':path,'locator':loc} for path,loc in origins.get(sid,[])]
     if sid.startswith('p'):
         sources=[{'path':base+'/sources.md','locator':'原宽泛路线候选索引；尚无独立公设来源'}]
-    meta={'id':sid,'title':title,'kind':kind,'status':'unreviewed' if not sid.startswith('p') else 'unformulated','hypothesis_revision':None,'premise_summary':premise,'premise_status':'原文主张的归属摘要；非科学认证','postulates':[],'source_records':sources,'related_systems':deps.get(sid,[]),'code_dependencies':['02_共享基础/公共计算/源码'] if sid in ['S01_螺旋三重奏与谱几何','S02_张祥前空间运动与统一力'] else [],'owner':None}
+    meta={'id':sid,'title':title,'kind':kind,'status':'unreviewed' if not sid.startswith('p') else 'unformulated','hypothesis_revision':None,'premise_summary':premise,'premise_status':'原文主张的归属摘要；非科学认证','postulates':[],'source_records':sources,'related_systems':deps.get(sid,[]),'code_dependencies':['02_共享基础/公共计算/源码'] if sid in ['S01_螺旋三重奏与谱几何','S02_ZUFT空间运动与统一力'] else [],'owner':None}
     write(base+'/system.json',json.dumps(meta,ensure_ascii=False,indent=2))
     write(base+'/README.md','# '+title+'\n\n编号：`'+sid+'`；类型：`'+kind+'`。\n\n基础前提：'+premise+'。\n\n独立管理公设、推导、代码、数据、结论及发布，不继承其他体系的证据等级。当前科学状态：待审查；空模板不表示研究完成。\n\n[体系身份](system.json) · [来源与谱系](sources.md) · [体系总表](../README.md)\n\n| 生命周期 | 入口 |\n|---|---|\n'+'\n'.join('| '+stage+' | [说明]('+stage+'/README.md) |' for stage in stages)+'\n\n'+('上游体系：'+', '.join('['+x+'](../'+x+'/README.md)' for x in deps.get(sid,[])) if deps.get(sid) else '目前没有声明对其他候选体系的结论依赖。'))
     if not sid.startswith('p'):
@@ -155,19 +155,19 @@ basebody=''.join(bodylines[:fn.lineno-1]+bodylines[fn.end_lineno:])
 basebody=basebody.replace('from . import physics','import physics_constants as physics').replace(', "zhang_unified_force"','')
 write('02_共享基础/公共计算/源码/classical_derivations.py',basebody)
 bootstrap='from pathlib import Path\nimport sys\nROOT = next(p for p in Path(__file__).resolve().parents if (p / "02_共享基础" / "公共计算" / "源码").is_dir())\nsys.path.insert(0, str(ROOT / "02_共享基础" / "公共计算" / "源码"))\n'
-write('01_独立体系/S02_张祥前空间运动与统一力/07_计算复现/源码/zhang_force.py','# -*- coding: utf-8 -*-\n'+bootstrap+'import math\nimport physics_constants as physics\n\n'+zhang)
+write('01_独立体系/S02_ZUFT空间运动与统一力/07_计算复现/源码/zhang_force.py','# -*- coding: utf-8 -*-\n'+bootstrap+'import math\nimport physics_constants as physics\n\n'+zhang)
 package='01_独立体系/S01_螺旋三重奏与谱几何/07_计算复现/源码/三重奏统一场'
 write(package+'/physics.py','# Shared historical constants; no independent copy.\n'+bootstrap+'from physics_constants import *\n')
 write(package+'/derivations.py','# Classical baseline compatibility import.\n'+bootstrap+'from classical_derivations import *\n')
 for path,module,src in [
-('01_独立体系/S02_张祥前空间运动与统一力/04_理论推导/D5_大统一力方程/D5_大统一力方程.py','import zhang_force as derivations','01_独立体系/S02_张祥前空间运动与统一力/07_计算复现/源码'),
+('01_独立体系/S02_ZUFT空间运动与统一力/04_理论推导/D5_大统一力方程/D5_大统一力方程.py','import zhang_force as derivations','01_独立体系/S02_ZUFT空间运动与统一力/07_计算复现/源码'),
 ('02_共享基础/经典基准/经典作用量/D0_作用量变分求导/D0_作用量变分求导.py','import classical_derivations as derivations','02_共享基础/公共计算/源码'),
 ('01_独立体系/S01_螺旋三重奏与谱几何/09_验证结果/V2_mpmath高精度/verify_V2.py',None,'01_独立体系/S01_螺旋三重奏与谱几何/07_计算复现/源码')]:
     p=ROOT/path;text=p.read_text(encoding='utf-8')
     text=text.replace('SRC = str(PROJECT_ROOT / "02_共享基础" / "公共计算" / "源码")','SRC = str(PROJECT_ROOT / "'+src+'")')
     if module:text=text.replace('from 三重奏统一场 import derivations',module)
     write(path,text)
-write('02_共享基础/公共计算/README.md','# 共享计算基础\n\n这里只保留共同常数与经典演示，不保管候选理论主实现。\n\n- [物理常数](源码/physics_constants.py)\n- [经典变分演示](源码/classical_derivations.py)\n- [D0 入口](../经典基准/经典作用量/D0_作用量变分求导/README.md)\n\n三重奏算法移入 S01；张祥前统一力函数移入 S02。历史常数和演示的科学说明仍需审查。')
+write('02_共享基础/公共计算/README.md','# 共享计算基础\n\n这里只保留共同常数与经典演示，不保管候选理论主实现。\n\n- [物理常数](源码/physics_constants.py)\n- [经典变分演示](源码/classical_derivations.py)\n- [D0 入口](../经典基准/经典作用量/D0_作用量变分求导/README.md)\n\n三重奏算法移入 S01；ZUFT统一力函数移入 S02。历史常数和演示的科学说明仍需审查。')
 write('02_共享基础/经典基准/README.md','# 基准演示\n\n[经典作用量示例](经典作用量/README.md)。数学方法与既有理论演示不单独冒充新的宇宙本体。')
 write('02_共享基础/经典基准/经典作用量/README.md','# 经典作用量\n\n[D0 变分复算](D0_作用量变分求导/README.md)。此入口不等价于 GAQ 几何原子体系。')
 write('03_跨体系研究/跨体系原著/README.md','# 跨体系原著\n\n[GAQ v3 完整原著](GAQ_v3_three_systems.md)同时包含 IEG、HDU、TCL。各体系保留独立章节摘录，原著只有一份主文件；摘录来源和行号见 [溯源登记](../../00_项目治理/chapter_provenance.json)。')

@@ -1,7 +1,7 @@
 # Magnetic Field Definition Equation: Relativistic Derivation and Verification from Spacetime Dynamics
 
 ## Authors
-Zhang Xiangqian Unified Field Theory Research Team
+ZUFT Unified Field Theory Research Team
 
 ## Date
 December 13, 2025
@@ -10,14 +10,14 @@ December 13, 2025
 v1.0
 
 ## 1. Abstract
-This paper presents a rigorous relativistic derivation and comprehensive verification of the Magnetic Field Definition Equation (MFDE) in Zhang Xiangqian's Unified Field Theory (UTF). The equation, expressed as \(\mathbf{B} = \frac{\mu_0 \gamma k k'}{4\pi\Omega^2}\frac{d\Omega}{dt}\frac{[(x-vt)\mathbf{i}+y\mathbf{j}+z\mathbf{k}]}{[\gamma^2(x-vt)^2+y^2+z^2]^{3/2}}\), defines the magnetic field as a relativistic spacetime effect of moving charges, where \(\Omega\) is solid angle, \(k\) and \(k'\) are proportionality constants, \(\mu_0\) is vacuum permeability, and \(\gamma\) is the Lorentz factor. We provide detailed symbolic computation using SymPy, numerical validation across 27 orders of magnitude, and geometric visualization of magnetic field lines. The MFDE successfully reproduces Biot-Savart law, satisfies Ampère's circuital law, and establishes a direct connection between magnetic phenomena and relativistic spacetime dynamics. Our results demonstrate that the magnetic field is not a fundamental "field" but a relativistic emergent feature of spacetime geometry, providing a unified framework for understanding electromagnetism and gravity.
+This paper presents a rigorous relativistic derivation and comprehensive verification of the Magnetic Field Definition Equation (MFDE) in ZUFT's Unified Field Theory (UTF). The equation, expressed as \(\mathbf{B} = \frac{\mu_0 \gamma k k'}{4\pi\Omega^2}\frac{d\Omega}{dt}\frac{[(x-vt)\mathbf{i}+y\mathbf{j}+z\mathbf{k}]}{[\gamma^2(x-vt)^2+y^2+z^2]^{3/2}}\), defines the magnetic field as a relativistic spacetime effect of moving charges, where \(\Omega\) is solid angle, \(k\) and \(k'\) are proportionality constants, \(\mu_0\) is vacuum permeability, and \(\gamma\) is the Lorentz factor. We provide detailed symbolic computation using SymPy, numerical validation across 27 orders of magnitude, and geometric visualization of magnetic field lines. The MFDE successfully reproduces Biot-Savart law, satisfies Ampère's circuital law, and establishes a direct connection between magnetic phenomena and relativistic spacetime dynamics. Our results demonstrate that the magnetic field is not a fundamental "field" but a relativistic emergent feature of spacetime geometry, providing a unified framework for understanding electromagnetism and gravity.
 
 **Keywords**: Unified Field Theory; Magnetic Field Definition Equation; spacetime dynamics; relativistic derivation; symbolic computation; numerical validation; Biot-Savart law; Ampère's law; Lorentz factor; multi-scale analysis
 
 ## 2. Introduction
 
 ### 2.1 The Nature of Magnetic Fields
-Magnetic fields are fundamental to our understanding of electromagnetism, yet their true nature remains unexplained in traditional theories. While Maxwell's equations describe how magnetic fields behave, they do not address what magnetic fields fundamentally are. Zhang Xiangqian's UTF offers a revolutionary perspective: **magnetic fields are relativistic manifestations of spacetime dynamics caused by moving charges**.
+Magnetic fields are fundamental to our understanding of electromagnetism, yet their true nature remains unexplained in traditional theories. While Maxwell's equations describe how magnetic fields behave, they do not address what magnetic fields fundamentally are. ZUFT's UTF offers a revolutionary perspective: **magnetic fields are relativistic manifestations of spacetime dynamics caused by moving charges**.
 
 ### 2.2 Core Postulates
 The derivation of the MFDE is based on three fundamental postulates of UTF:
@@ -420,7 +420,7 @@ The MFDE revolutionizes our understanding of magnetic fields:
 
 ## 9. Conclusion
 
-This paper presents a comprehensive relativistic derivation and verification of the Magnetic Field Definition Equation in Zhang Xiangqian's Unified Field Theory. Through rigorous geometric derivation, detailed symbolic computation, and extensive numerical validation, we have established the MFDE as a mathematically consistent framework for understanding magnetic fields as relativistic manifestations of spacetime dynamics.
+This paper presents a comprehensive relativistic derivation and verification of the Magnetic Field Definition Equation in ZUFT's Unified Field Theory. Through rigorous geometric derivation, detailed symbolic computation, and extensive numerical validation, we have established the MFDE as a mathematically consistent framework for understanding magnetic fields as relativistic manifestations of spacetime dynamics.
 
 Key achievements include:
 1. **Rigorous Derivation**: Derived from first principles using relativistic geometry
@@ -450,7 +450,7 @@ All code and data used in this paper are available upon request from the authors
 The authors declare no competing interests.
 
 ## 13. Acknowledgments
-This research was supported by the Zhang Xiangqian Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
+This research was supported by the ZUFT Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
 
 ## 14. References
 

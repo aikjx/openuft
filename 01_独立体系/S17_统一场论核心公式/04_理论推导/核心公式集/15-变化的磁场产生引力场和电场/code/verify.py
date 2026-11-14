@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-验证张祥前统一场论中变化磁场产生引力场和电场方程的Python分析
+验证ZUFT统一场论中变化磁场产生引力场和电场方程的Python分析
 核心方程：d\vec{B}/dt = -1/c² \vec{A} × \vec{E}
 """
 
@@ -175,7 +175,7 @@ class FieldEquationVerifier:
     def run_full_verification(self):
         """运行完整验证"""
         print("="*60)
-        print("张祥前统一场论场方程验证报告")
+        print("ZUFT统一场论场方程验证报告")
         print("核心方程：d\\vec{B}/dt = -1/c² \\vec{A} × \\vec{E}")
         print("="*60)
         print()

@@ -4,7 +4,7 @@
 
 ## Abstract
 
-Within the framework of Zhang Xiangqian's Unified Field Theory, this study derives the quantum geometric expression of the gravitational constant from the new physical perspective of **spatial light-speed spiral motion**, revealing its emergent nature and achieving a natural unification of macroscopic gravity and microscopic quantum behavior.
+Within the framework of ZUFT's Unified Field Theory, this study derives the quantum geometric expression of the gravitational constant from the new physical perspective of **spatial light-speed spiral motion**, revealing its emergent nature and achieving a natural unification of macroscopic gravity and microscopic quantum behavior.
 
 ### Core Physical Postulates
 
@@ -22,7 +22,7 @@ Based on three core postulates of **spacetime unification, spatial light-speed s
 
 The unification of gravitational theory and quantum mechanics is a core challenge in modern physics. General relativity accurately describes gravity at macroscopic scales but encounters singularity problems in the quantum domain; quantum mechanics achieves brilliance at microscopic scales but cannot be directly applied to gravity. There is a profound conceptual gap between them.
 
-Existing unified theories face three major challenges: experimental verification difficulties, high mathematical complexity, and vague physical images. Zhang Xiangqian's Unified Field Theory takes a different approach, based on the core principle that **the universe consists of objects and space**, and proposes a new perspective of **spatial geometric motion**, reducing all physical phenomena to dynamic changes in space, without additional dimensions or complex mathematics, providing a concise and testable theoretical framework for the grand unification of physics.
+Existing unified theories face three major challenges: experimental verification difficulties, high mathematical complexity, and vague physical images. ZUFT's Unified Field Theory takes a different approach, based on the core principle that **the universe consists of objects and space**, and proposes a new perspective of **spatial geometric motion**, reducing all physical phenomena to dynamic changes in space, without additional dimensions or complex mathematics, providing a concise and testable theoretical framework for the grand unification of physics.
 
 ### 1.1 Core Research Questions
 
@@ -380,7 +380,7 @@ Non-local correlation can be explained by "spatial integrity" and "light-speed r
 
 ### 7.1 Core Conclusions
 
-Within the framework of Zhang Xiangqian's Unified Field Theory, this study proposes the following **innovative viewpoints** based on the new physical perspective of **spatial light-speed spiral motion**:
+Within the framework of ZUFT's Unified Field Theory, this study proposes the following **innovative viewpoints** based on the new physical perspective of **spatial light-speed spiral motion**:
 
 1. **Light-speed correlated quantum emergent nature of gravitational constant**: Proposes that the gravitational constant $G$ is a physical quantity emerging from the combination of quantum mechanics ($\hbar$), relativity ($c$), and quantum gravity scale ($m_p$, Planck mass), directly challenging the core concept of "irreducible fundamental constants" in traditional physics.
 
@@ -430,7 +430,7 @@ This study attempts to provide a **concise, experimentally testable theoretical 
 
 ## References
 
-[1] Zhang X Q. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
+[1] ZUFT. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
 [2] Mohr P J, Taylor B N, Newell D B. CODATA Recommended Values of the Fundamental Physical Constants: 2018[J]. Reviews of Modern Physics, 2021, 93(2): 025010.
 [3] Planck M. On the Law of Distribution of Energy in the Normal Spectrum[J]. Annalen der Physik, 1901, 309(3): 553-563.
 [4] Einstein A. The Foundation of the General Theory of Relativity[J]. Annalen der Physik, 1916, 49(7): 769-822.
@@ -440,8 +440,8 @@ This study attempts to provide a **concise, experimentally testable theoretical 
 [8] 't Hooft G. Determinism Beneath Quantum Mechanics[J]. Fundamental Theories of Physics, 2016, 185: 1-17.
 [9] Schlamminger S, Choi K-Y, Wagner T, et al. Measurement of the gravitational constant using a torsion balance with angular acceleration feedback[J]. Physical Review Letters, 2008, 100(4): 040801.
 [10] Rosi G, Sorrentino F, Cacciapuoti L, et al. Precision measurement of the Newtonian gravitational constant using cold atoms[J]. Nature, 2014, 510(7506): 518-521.
-[11] Mo G Z, Zhang X Q. Emergence of the Gravitational Constant and the Speed of Light within the Framework of Unified Field Theory and Their Quantum Mechanical Essence[Preprint]. Zenodo, 2025. DOI: 10.5281/zenodo.17184831.
+[11] Mo G Z, ZUFT. Emergence of the Gravitational Constant and the Speed of Light within the Framework of Unified Field Theory and Their Quantum Mechanical Essence[Preprint]. Zenodo, 2025. DOI: 10.5281/zenodo.17184831.
 
 ## Acknowledgments
 
-This research benefits from the theoretical contributions of Mr. Zhang Xiangqian's Unified Field Theory. We thank all researchers who have contributed to the development of physics.
+This research benefits from the theoretical contributions of Mr. ZUFT's Unified Field Theory. We thank all researchers who have contributed to the development of physics.

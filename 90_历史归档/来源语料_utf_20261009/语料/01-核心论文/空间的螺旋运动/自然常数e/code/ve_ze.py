@@ -54,10 +54,10 @@ def visualize_euler_formula():
     ax1.legend(loc='upper right')
     return fig1, ani1
 
-# ===================== 第二部分：张祥前空间螺旋运动公式可视化（3D轨迹） =====================
+# ===================== 第二部分：ZUFT空间螺旋运动公式可视化（3D轨迹） =====================
 def visualize_ZUFT_spiral():
     """
-    可视化张祥前空间螺旋运动公式：
+    可视化ZUFT空间螺旋运动公式：
     $\vec{r}(t) = r\cos\omega t \cdot \vec{i} + r\sin\omega t \cdot \vec{j} + ct \cdot \vec{k}$
     展示三维空间中的螺旋轨迹，体现圆周运动+光速直线运动的合成
     """
@@ -87,7 +87,7 @@ def visualize_ZUFT_spiral():
     ax2.set_xlabel('X 轴')
     ax2.set_ylabel('Y 轴')
     ax2.set_zlabel('Z 轴 (光速方向)')
-    ax2.set_title('张祥前空间螺旋运动公式可视化\n' + r'$\vec{r}(t) = r\cos\omega t \cdot \vec{i} + r\sin\omega t \cdot \vec{j} + ct \cdot \vec{k}$', fontsize=12)
+    ax2.set_title('ZUFT空间螺旋运动公式可视化\n' + r'$\vec{r}(t) = r\cos\omega t \cdot \vec{i} + r\sin\omega t \cdot \vec{j} + ct \cdot \vec{k}$', fontsize=12)
     ax2.legend()
     ax2.grid(True)
 

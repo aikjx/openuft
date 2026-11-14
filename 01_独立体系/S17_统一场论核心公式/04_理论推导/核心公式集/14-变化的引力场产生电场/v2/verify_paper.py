@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 论文验证脚本：变化的引力场产生电场
-基于张祥前统一场论的重新求导证明与验证
+基于ZUFT统一场论的重新求导证明与验证
 
 验证内容：
 1. 量纲分析验证
@@ -13,7 +13,7 @@
 import numpy as np
 
 class ZUFTVerifier:
-    """张祥前统一场论验证器"""
+    """ZUFT统一场论验证器"""
     
     def __init__(self):
         """初始化验证器，设置物理常数"""
@@ -138,7 +138,7 @@ class ZUFTVerifier:
     def run_all_verifications(self):
         """运行所有验证"""
         print("="*80)
-        print("张祥前统一场论（ZUFT）验证报告")
+        print("ZUFT统一场论（ZUFT）验证报告")
         print("主题：变化的引力场产生电场")
         print("="*80)
         
@@ -163,7 +163,7 @@ class ZUFTVerifier:
         print("3. 物理场景数值分析验证：通过")
         print("4. 经典电磁学兼容性验证：通过")
         print("\n结论：论文中的理论推导和数值计算是正确的，")
-        print("      张祥前统一场论（ZUFT）的核心方程组具备")
+        print("      ZUFT统一场论（ZUFT）的核心方程组具备")
         print("      数学自洽性、物理合理性和经典兼容性。")
         print("="*80)
 

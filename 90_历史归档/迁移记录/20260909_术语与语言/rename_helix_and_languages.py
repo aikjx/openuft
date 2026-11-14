@@ -7,10 +7,10 @@ import json
 import os
 import zipfile
 ROOT=Path(__file__).resolve().parents[2]
-OLD='S02_张祥前空间运动与统一力';NEW='S02_空间光速螺旋统一力'
+OLD='S02_ZUFT空间运动与统一力';NEW='S02_空间光速螺旋统一力'
 base=ROOT/'90_历史归档/迁移记录/20260909_术语与语言'
 if (base/'变更清单.json').exists():raise SystemExit('Already applied')
-replacements=[(OLD,NEW),('s02_zhang_space_motion','s02_light_speed_helix_force'),('张祥前空间运动与统一力','空间光速螺旋统一力'),('张祥前统一力','空间光速螺旋统一力'),('张祥前空间运动','空间光速螺旋运动'),('张祥前统一场论','空间光速螺旋统一场论'),('zhang_unified_force','helix_unified_force'),('zhang_force','helix_force'),('大统一力方程（张祥前）','空间光速螺旋统一力方程')]
+replacements=[(OLD,NEW),('s02_zuft_space_motion','s02_light_speed_helix_force'),('ZUFT空间运动与统一力','空间光速螺旋统一力'),('ZUFT统一力','空间光速螺旋统一力'),('ZUFT空间运动','空间光速螺旋运动'),('ZUFT统一场论','空间光速螺旋统一场论'),('zhang_unified_force','helix_unified_force'),('zhang_force','helix_force'),('大统一力方程（ZUFT）','空间光速螺旋统一力方程')]
 changes=[]
 for p in ROOT.rglob('*'):
     if not p.is_file() or '90_历史归档' in p.relative_to(ROOT).parts or p.suffix not in ['.md','.py','.json','.csv','.cff','.yml']:continue
@@ -44,10 +44,10 @@ with translations.open('w',encoding='utf-8',newline='') as f:w=csv.DictWriter(f,
 for rel in ['README.md','INDEX.md','QUICKSTART.md']:
     p=ROOT/rel;text=p.read_text(encoding='utf-8-sig');note='\n\n[English](05_全球研究/03_多语种协作/英语/项目介绍.md) · [日本語](05_全球研究/03_多语种协作/日语/项目介绍.md) · [参考文献](02_共享基础/参考资料/BIBLIOGRAPHY.md)\n'
     line=text.find('\n');p.write_text(text[:line]+note+text[line:],encoding='utf-8')
-meta_path=target/'system.json';meta=json.loads(meta_path.read_text(encoding='utf-8'));meta['bibliography_ids']=['ZXQ2024'];meta['naming_note']='体系按空间光速螺旋物理描述命名；S02 为统一力专题，S12 为综合研究。作者只作来源署名。'
+meta_path=target/'system.json';meta=json.loads(meta_path.read_text(encoding='utf-8'));meta['bibliography_ids']=['ZUFT2024'];meta['naming_note']='体系按空间光速螺旋物理描述命名；S02 为统一力专题，S12 为综合研究。作者只作来源署名。'
 meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-citation='Zhang X Q. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.'
+citation='ZUFT. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.'
 for sid in [NEW,'S12_空间光速螺旋统一体系']:
     p=ROOT/'01_独立体系'/sid/'01_文献来源/README.md'
-    p.write_text(p.read_text(encoding='utf-8')+'\n## 引用来源 ZXQ2024\n\n'+citation+'\n\n书目信息由用户提供；本次未取得书籍全文，未核对具体命题对应页码。体系名称使用“空间光速螺旋”，作者姓名仅用于来源归属。\n\n[统一参考文献](../../../02_共享基础/参考资料/BIBLIOGRAPHY.md)。\n',encoding='utf-8')
+    p.write_text(p.read_text(encoding='utf-8')+'\n## 引用来源 ZUFT2024\n\n'+citation+'\n\n书目信息由用户提供；本次未取得书籍全文，未核对具体命题对应页码。体系名称使用“空间光速螺旋”，作者姓名仅用于来源归属。\n\n[统一参考文献](../../../02_共享基础/参考资料/BIBLIOGRAPHY.md)。\n',encoding='utf-8')
 print('Renamed S02 and registered Japanese; changed files:',len(records))

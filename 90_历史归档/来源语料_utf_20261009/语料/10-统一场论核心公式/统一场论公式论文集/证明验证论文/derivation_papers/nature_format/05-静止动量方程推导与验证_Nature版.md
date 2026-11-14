@@ -6,18 +6,18 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
-We derive and validate the rest mass momentum equation within Zhang Xiangqian's Unified Field Theory framework, challenging the traditional view that stationary objects have no momentum. The equation \( \overrightarrow{p}_{0} = m_{0}\overrightarrow{C}_{0} \) reveals that stationary objects possess momentum arising from spatial background motion, with magnitude proportional to rest mass and light speed. Through symbolic computation, multi-scale numerical validation, vector property analysis, and consistency verification with the relativistic mass-energy equivalence, we confirm the equation's mathematical rigor, physical self-consistency, and compatibility with existing theories. This formulation extends momentum concepts from mechanical motion to spatial background motion, unifying mass, momentum, and energy within a geometric framework, while providing new insights into the fundamental nature of matter and space.
+We derive and validate the rest mass momentum equation within ZUFT's Unified Field Theory framework, challenging the traditional view that stationary objects have no momentum. The equation \( \overrightarrow{p}_{0} = m_{0}\overrightarrow{C}_{0} \) reveals that stationary objects possess momentum arising from spatial background motion, with magnitude proportional to rest mass and light speed. Through symbolic computation, multi-scale numerical validation, vector property analysis, and consistency verification with the relativistic mass-energy equivalence, we confirm the equation's mathematical rigor, physical self-consistency, and compatibility with existing theories. This formulation extends momentum concepts from mechanical motion to spatial background motion, unifying mass, momentum, and energy within a geometric framework, while providing new insights into the fundamental nature of matter and space.
 
 ---
 
 ## Introduction
 
-In classical physics, stationary objects are considered momentum-free, with momentum defined as mass-velocity product. However, Zhang Xiangqian's Unified Field Theory (UFT) proposes a revolutionary rest mass momentum equation, revealing that stationary objects retain momentum through spatial background motion. This equation, the fifth core UFT equation, bridges mass definition and energy equations, offering a new perspective on matter's fundamental nature.
+In classical physics, stationary objects are considered momentum-free, with momentum defined as mass-velocity product. However, ZUFT's Unified Field Theory (UFT) proposes a revolutionary rest mass momentum equation, revealing that stationary objects retain momentum through spatial background motion. This equation, the fifth core UFT equation, bridges mass definition and energy equations, offering a new perspective on matter's fundamental nature.
 
 This work systematically derives and validates the rest mass momentum equation, establishing its mathematical rigor, physical consistency, and compatibility with existing theories. We demonstrate its equivalence to Einstein's mass-energy equivalence, while providing a geometric interpretation of momentum that potentially resolves fundamental physics conflicts.
 
@@ -193,7 +193,7 @@ Symbolic computation using SymPy confirms:
 
 ## Conclusion
 
-We have derived and validated the rest mass momentum equation \( \overrightarrow{p}_{0} = m_{0}\overrightarrow{C}_{0} \) within Zhang Xiangqian's Unified Field Theory. This equation revolutionizes momentum concepts, revealing that stationary objects possess momentum through spatial background motion.
+We have derived and validated the rest mass momentum equation \( \overrightarrow{p}_{0} = m_{0}\overrightarrow{C}_{0} \) within ZUFT's Unified Field Theory. This equation revolutionizes momentum concepts, revealing that stationary objects possess momentum through spatial background motion.
 
 Key achievements:
 1. Rigorous mathematical derivation from UFT postulates, extending momentum to spatial background motion
@@ -206,7 +206,7 @@ This work represents a significant step toward unifying fundamental physics, pot
 
 ## References
 
-1. Zhang, X. Q. (2023). Unified Field Theory: Foundations and Significance. *Journal of Modern Physics*.
+1. ZUFT (2023). Unified Field Theory: Foundations and Significance. *Journal of Modern Physics*.
 2. Einstein, A. (1905). Ist die Trägheit eines Körpers von seinem Energieinhalt abhängig? *Annalen der Physik*.
 3. Newton, I. (1687). *Philosophiæ Naturalis Principia Mathematica*.
 4. Misner, C. W., Thorne, K. S., & Wheeler, J. A. (1973). *Gravitation*.

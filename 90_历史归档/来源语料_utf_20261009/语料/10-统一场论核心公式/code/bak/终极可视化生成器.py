@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论核心公式 - 终极可视化生成器
+ZUFT统一场论核心公式 - 终极可视化生成器
 创建最高质量的HTML5 + WebGL + MathJax可视化系统
 达到国际顶级论文标准
 """
@@ -23,7 +23,7 @@ class UnifiedFieldVisualizationGenerator:
     
     def generate_all_visualizations(self):
         """生成所有19个公式的高质量可视化"""
-        print("🚀 开始生成张祥前统一场论核心公式可视化系统...")
+        print("🚀 开始生成ZUFT统一场论核心公式可视化系统...")
         
         for formula in self.database['formulas']:
             print(f"📐 正在生成: {formula['id']}-{formula['name']}")
@@ -66,7 +66,7 @@ class UnifiedFieldVisualizationGenerator:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{formula['name']} - 张祥前统一场论可视化</title>
+    <title>{formula['name']} - ZUFT统一场论可视化</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
@@ -212,7 +212,7 @@ class UnifiedFieldVisualizationGenerator:
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-spinner"></div>
         <h2>正在加载 {formula['name']} 可视化...</h2>
-        <p>张祥前统一场论 - 高级3D可视化系统</p>
+        <p>ZUFT统一场论 - 高级3D可视化系统</p>
     </div>
     
     <!-- 主画布 -->
@@ -961,7 +961,7 @@ class UnifiedFieldVisualizationGenerator:
 
 ## 理论背景
 
-张祥前统一场论认为，{formula['description']}这一观点为理解宇宙的统一本质提供了新的视角。
+ZUFT统一场论认为，{formula['description']}这一观点为理解宇宙的统一本质提供了新的视角。
 
 ## 数学推导
 
@@ -973,7 +973,7 @@ class UnifiedFieldVisualizationGenerator:
 
 ## 参考文献
 
-1. 张祥前. 统一场论. 
+1. ZUFT. 统一场论. 
 2. [其他相关文献]
 """
     
@@ -1012,7 +1012,7 @@ class UnifiedFieldVisualizationGenerator:
 
 {formula['description']}
 
-该公式在张祥前统一场论中占据重要地位，揭示了{', '.join(formula['physics_concepts'])}之间的深层联系。
+该公式在ZUFT统一场论中占据重要地位，揭示了{', '.join(formula['physics_concepts'])}之间的深层联系。
 
 ## 📚 相关文档
 
@@ -1028,7 +1028,7 @@ class UnifiedFieldVisualizationGenerator:
 
 ---
 
-*张祥前统一场论可视化项目 - 探索宇宙的统一本质*
+*ZUFT统一场论可视化项目 - 探索宇宙的统一本质*
 """
     
     def generate_master_index(self):

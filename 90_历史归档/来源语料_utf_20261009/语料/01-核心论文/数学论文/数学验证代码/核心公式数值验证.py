@@ -1,5 +1,5 @@
 """
-Core Formula Numerical Verification for Zhang Xiangqian's Unified Field Theory
+Core Formula Numerical Verification for ZUFT's Unified Field Theory
 
 This script provides numerical verification for the core formulas of Unified Field Theory,
 including geometric factor 2, gravitational-light speed unified equation, and electromagnetic coupling constant.
@@ -306,8 +306,8 @@ if __name__ == "__main__":
     
     This block runs all verification functions and prints a comprehensive summary of results.
     """
-    print("===== Zhang Xiangqian's Unified Field Theory Core Formula Numerical Verification =====")
-    print("===== 张祥前统一场论核心公式数值验证 =====")
+    print("===== ZUFT's Unified Field Theory Core Formula Numerical Verification =====")
+    print("===== ZUFT统一场论核心公式数值验证 =====")
     
     # 运行各项验证
     geometric_factor = verify_geometric_factor()
@@ -327,4 +327,4 @@ if __name__ == "__main__":
     print("2. The gravitational-light speed unified equation G=2Z/c is completely self-consistent in terms of dimensions and numerical values")
     print("3. The electromagnetic coupling constant Z'=c/(8πε₀) has been verified through its relationship with the fine-structure constant")
     print("4. The analysis of three-dimensional spiral motion reveals the physical essence of geometric factor 2: it reflects the geometric properties of space itself")
-    print("5. These verification results provide a solid mathematical foundation for Zhang Xiangqian's Unified Field Theory, demonstrating its self-consistency and rigor")
+    print("5. These verification results provide a solid mathematical foundation for ZUFT's Unified Field Theory, demonstrating its self-consistency and rigor")

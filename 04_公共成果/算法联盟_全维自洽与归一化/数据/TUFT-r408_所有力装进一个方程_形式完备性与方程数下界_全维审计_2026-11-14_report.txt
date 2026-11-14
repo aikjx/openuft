@@ -1,0 +1,114 @@
+==============================================================================
+TUFT-r408 · 所有力装进一个方程 —— 形式完备性与方程数下界
+日期 2026-11-14 ｜ 纯标准库 Python 3.8 ｜ Decimal(60) + Fraction 四元组量纲
+==============================================================================
+
+[一] 形式谱系穷尽性
+  组合数=8  有效形式=['F0', 'F1', 'F1_or_F2', 'F3']  全映射=True  穷尽=True
+    F0  记号层条件式：只给约束/条件，不是动力学方程
+    F1  母作用量式：一个 S，多场变分出多条 E-L 方程；盒装 δS/δΦ=0 只是记号缩写
+    F2  母场方程式：一条场方程同时含多个部门（需部门间交叉耦合块）
+    F3  profile 母公式式：一条静力势/力公式，用 (自旋 s, 媒介子质量 m, 耦合积 g1g2) 三元组覆盖各力
+    F4  单耦合参数式：要求所有耦合由同一原理导出（对 F1/F2 的横切附加要求）
+
+[二] F3 profile 层三元组完备性
+  三元组自由参数组=['s', 'm', 'g1g2'] (维数 3)
+    引力     triple=(2, <10⁻²² eV 界)       静态profile=True  手征标签=False 禁闭标签=False
+    电磁     triple=(1, <10⁻¹⁸ eV 界)       静态profile=True  手征标签=False 禁闭标签=False
+    弱      triple=(1, m_W/Z)             静态profile=False 手征标签=True  禁闭标签=False
+    强      triple=(1 胶子, 0+禁闭)           静态profile=True  手征标签=False 禁闭标签=True 
+    希格斯介导  triple=(0, m_H=125.18)        静态profile=True  手征标签=False 禁闭标签=False
+  静态覆盖(全部)=['引力', '电磁', '强', '希格斯介导']  排除=['弱']
+  基本力静态覆盖=3/4  排除=['弱']
+  外加特征维=['chiral', 'confinement'] (n=2)
+  覆盖计数：cov_static=3  cov0=2  +χ=2  +禁闭=3  两维=3  注入弱静态=4  (基本力 4)  ⇒ 完备=False
+
+[三] F1 动力学层方程数独立复算
+  盒装 UFE-1=1  盒装 δS/δΦ=1  变分节=5  §6「五个方程」=1  作用量块=5  展开场组=7
+  变分节标题=['自旋联络', 'vierbein', '内部规范势', 'Higgs 场', '物质场']
+  00 卷官方否证声明命中=1
+
+[四] F2 交叉块与代价
+  作用量段数=4 引力段=1 规范段=1 交叉段=0（注入 R∧F 后=1）
+  对易子声明命中=1  交叉块量纲=1  规范侧同类项=1  引力侧同类项=L^(4)
+
+[五] F4 单耦合参数穷举
+  Q 分量来源=['e'] 降维合法=True（e 幂=1 时破坏 Q=0 控制=True）
+  全基组组合=117649 命中=21 ；Π 不含 G 自身命中=7
+  全部核=['G^{-1} c^{0} hbar^{0} m^{0} e^{0} alpha^{-1}', 'G^{-1} c^{0} hbar^{0} m^{0} e^{0} alpha^{-2}', 'G^{-1} c^{0} hbar^{0} m^{0} e^{0} alpha^{-3}', 'G^{-1} c^{0} hbar^{0} m^{0} e^{0} alpha^{0}', 'G^{-1} c^{0} hbar^{0} m^{0} e^{0} alpha^{1}', 'G^{-1} c^{0} hbar^{0} m^{0} e^{0} alpha^{2}', 'G^{-1} c^{0} hbar^{0} m^{0} e^{0} alpha^{3}', 'G^{-2} c^{1} hbar^{1} m^{-2} e^{0} alpha^{-1}', 'G^{-2} c^{1} hbar^{1} m^{-2} e^{0} alpha^{-2}', 'G^{-2} c^{1} hbar^{1} m^{-2} e^{0} alpha^{-3}', 'G^{-2} c^{1} hbar^{1} m^{-2} e^{0} alpha^{0}', 'G^{-2} c^{1} hbar^{1} m^{-2} e^{0} alpha^{1}', 'G^{-2} c^{1} hbar^{1} m^{-2} e^{0} alpha^{2}', 'G^{-2} c^{1} hbar^{1} m^{-2} e^{0} alpha^{3}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{-1}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{-2}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{-3}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{0}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{1}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{2}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{3}']
+  非平凡核=['G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{-1}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{-2}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{-3}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{0}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{1}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{2}', 'G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{3}']  平凡核=['G^{-1} c^{0} hbar^{0} m^{0} e^{0} alpha^{-1}']
+  去质量标度：Π 不含 G 自身口径命中=0 ；全穷举口径命中=7
+  m=m_P（独立实算 2.1764343420511266686458768E-8 kg）恒等复读值=1.0000000000000000000000000E+0 相对偏差=0.000000E-36
+
+[六] 记分板
+  F1  eq=7    cross=0    耦合可推导=False 覆盖基本力=4    含动力学=True  ⇒ NOTATION_ONLY
+  F2  eq=1    cross=1    耦合可推导=False 覆盖基本力=4    含动力学=True  ⇒ IMPOSSIBLE_AT_ZERO_COST
+  F3  eq=1    cross=0    耦合可推导=False 覆盖基本力=3    含动力学=False ⇒ INCOMPLETE_DOMAIN
+  F4  eq=None cross=None 耦合可推导=False 覆盖基本力=4    含动力学=True  ⇒ IDENTITY_REPLAY_ONLY
+
+[七] 红线
+  atk51_1_5_7            1:5:7
+  atk51_verdict          STRUCTURAL_NEGATIVE_CLOSURE
+  canon_0of22            0/22
+  canon_0of6             0/6
+  canon_l3               L3
+  canon_not_complete     未完成
+  canon_uft3             UFT-3 = 0
+  canon_validated        validated = 0
+  r404_K                 K01
+  r404_verdict           MINIMUM-COST-LOWER-BOUND--UNIQUE-CONDITIONAL-CHANNEL-IS-Z-PRINCIPLE
+  vol134_scoreboard      0/6
+
+[八] 查重与取号
+  扫描 md=6765  针词命中=0  他方 r408 文件命中=0（本册自身产物 5 件已排除）
+
+[九] 守卫 27 条
+  G01    PASS facts=10 exists=10
+  G02    PASS other r408 filename hits=0 [] ｜ own products excluded=5
+  G03    PASS md scanned=6765 needle hits=0 [] (排除本册产物/README*/资料索引)
+  G04    PASS bad_import=[] bad_call=[] md5=e8223acfbaf0
+  G05    PASS combos=8 valid=['F0', 'F1', 'F1_or_F2', 'F3'] all_mapped=True
+  G06    PASS boxed_tag=1 boxed_deltaS=1
+  G07    PASS var_sections=5 ['自旋联络', 'vierbein', '内部规范势', 'Higgs 场', '物质场']
+  G08    PASS title_five=1
+  G09    PASS action_blocks=5
+  G10    PASS expanded=7 atk51_reading=1:5:7
+  G11    PASS official_denial=1
+  G12    PASS vol74 force rows=5 ['引力', '电磁', '弱', '强', '希格斯介导']
+  G13    PASS triple_groups=['s', 'm', 'g1g2'] dim=3
+  G14    PASS static_excluded=['弱']
+  G15    PASS confine_tag present=['强']
+  G16    PASS basic static covered=3/4 excluded=['弱']
+  G17    PASS extra_dims=['chiral', 'confinement'] n=2
+  G18    PASS cov_static=3 cov0=2 +chi=2 +conf=3 both=3 inject_weak=4 basic=4
+  G19    PASS segments=4 grav=1 gauge=1 cross=0 after_injection=1
+  G20    PASS dim_cross=1 gauge2form=1 grav2form=L^(4)
+  G21    PASS commutator_declared=1
+  G22    PASS full6=117649 hits=21 noG=7 no_mass(noG)=0 no_mass(full)=7
+  G23    PASS e_pow1_breaks_Q=True
+  G24    PASS redline 0/6|0/22|UFT-3 = 0|validated = 0|未完成
+  G25    PASS entries=16 status={'PASS': 9, 'FAIL': 4, 'CORRECTED': 1, 'INFO': 2}
+  G26    PASS self_product_excluded=True
+  G27    PASS fact md5 unchanged=True
+
+[十] 条目 16 条
+  状态分布={'PASS': 9, 'FAIL': 4, 'CORRECTED': 1, 'INFO': 2}
+  D01  PASS      靶定位与事实源（10/10 存在，md5 运行前后双证不变）
+  D02  PASS      形式谱系穷尽性：4 个正交问题 → 8 种组合全覆盖 → 有效形式 F0/F1/F2/F3 + 横切 F4
+  D03  FAIL      F3（profile 母公式）三元组不完备：静态 profile 只覆盖基本力 3/4，弱 无经典静力；加维上限仍为 3/4
+  D04  FAIL      F3 三元组缺 ≥2 个外加特征维（chiral,confinement）：手征与非阿贝尔禁闭不可由 (s,m,q) 计算
+  D05  PASS      F3 判据有牙（阳性对照）：注入「弱存在静力 profile」后覆盖升到 4/4 ⇒ 覆盖判据可被正确翻转，不是恒真
+  D06  PASS      F1 方程数独立复算：盒装 1 : 变分 5 : 作用量块 5 : 展开场组 7（与 attack51 互印）
+  D07  PASS      F1 判词：盒装仅记号层统一，动力学层仍是多条独立 E-L 方程
+  D08  FAIL      F2（真单母场方程）在零代价下不可达：交叉曲率块 0 ⇒ 引入 R∧F 后必破坏 [so(1,3),g_int]=0 与还原
+  D09  PASS      F2 交叉块量纲：R∧F∧e∧e 量纲 1 与规范侧同类项 F∧e∧e（1）齐次 ⇒ 交叉块可写
+  D10  FAIL      F4（单耦合参数）唯一非平凡核心是恒等复读：规范核 G^{0} c^{-1} hbar^{-1} m^{2} e^{0} alpha^{0}（= G·m²/(ħc)），m=m_P（独立实算 2.1764343420511266686458768E-8 kg）相对偏差 0.000000E-36
+  D11  CORRECTED r404 命中数口径更正：「命中 7 组」只在「Π 不含 G 自身」口径下成立；按其自称 6 基组全穷举实为 21 组（含 d=-1 的 7 组 G^{-1} 平凡解与 d=-2 的 7 组）
+  D12  PASS      方程数下界：若要求「覆盖四力且含动力学」，方程数下界与打包方式无关（UFE-1 展开级 7 条）
+  D13  PASS      记分板四行落盘（形式 × 方程数 × 交叉块 × 耦合可推导 × 覆盖力数 × 判决）
+  D14  PASS      红线核对：唯一对外读数仍为 0/6 未完成；0/22、UFT-3=0、L3=0、validated=0、含引力四力正确方程 0 条
+  D15  INFO      与既有册分工：74/75 profile 层红线、attack51 动力学层 1:5:7、109 no-go B、134 归一 0/6、r403–r407 代价链全部继承，本册不重判
+  D16  INFO      自抓与治理：未跑 refresh_catalog、未改 verify.py、未做 git、未触碰他人文件
+
+VERDICT: SINGLE-EQUATION-COMPLETE-NO-GO--FORMS-EXHAUSTIVE--PROFILE-DOMAIN-INCOMPLETE--N_EQ-LOWER-BOUND
+GUARDS 27/27  ENTRIES 16  EXIT=0

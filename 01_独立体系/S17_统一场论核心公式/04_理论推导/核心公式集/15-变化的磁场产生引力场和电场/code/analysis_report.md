@@ -2,7 +2,7 @@
 
 ## 1. 验证概述
 
-本报告使用 Python 对张祥前统一场论核心方程进行了全面验证和分析：
+本报告使用 Python 对ZUFT统一场论核心方程进行了全面验证和分析：
 
 **核心方程**：
 $$\frac{d\vec{B}}{dt} = -\frac{\vec{A} \times \vec{E}}{c^2} - \frac{\vec{v}}{c^2} \times \frac{d\vec{E}}{dt}$$
@@ -132,7 +132,7 @@ python advanced_analysis.py
 
 ## 7. 参考文献
 
-[1] 张祥前. 《统一场论》.
+[1] ZUFT. 《统一场论》.
 [2] Maxwell, J. C. (1865). A dynamical theory of the electromagnetic field. Philosophical Transactions of the Royal Society of London, 155, 459-512.
 
 ---

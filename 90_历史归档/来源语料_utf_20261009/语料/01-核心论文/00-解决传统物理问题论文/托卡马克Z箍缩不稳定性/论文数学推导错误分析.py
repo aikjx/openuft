@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 print("=" * 100)
 print("《引力与电磁力的统一场论验证》论文数学推导错误分析")
-print("基于张祥前统一场论托卡马克应用论文的批判性分析")
+print("基于ZUFT统一场论托卡马克应用论文的批判性分析")
 print("=" * 100)
 
 # 设置打印格式

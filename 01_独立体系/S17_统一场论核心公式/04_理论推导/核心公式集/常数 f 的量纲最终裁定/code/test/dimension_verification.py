@@ -21,7 +21,7 @@ def print_dim(name, dim):
 
 # 5. 核心量纲推导
 print("="*80)
-print("张祥前统一场论常数f量纲验证：Python符号计算分析")
+print("ZUFT统一场论常数f量纲验证：Python符号计算分析")
 print("="*80)
 
 # 5.1 基础量纲定义

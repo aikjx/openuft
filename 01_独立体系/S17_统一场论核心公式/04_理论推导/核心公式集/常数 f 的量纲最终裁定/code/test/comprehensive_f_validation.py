@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-全面验证张祥前统一场论常数f的正确性
+全面验证ZUFT统一场论常数f的正确性
 包括：数值计算、量纲分析、导数验证、公式一致性验证
 """
 
@@ -8,7 +8,7 @@ import math
 import sympy as sp
 
 print("="*90)
-print("张祥前统一场论常数f的全面验证")
+print("ZUFT统一场论常数f的全面验证")
 print("="*90)
 print()
 
@@ -250,7 +250,7 @@ print()
 # 9. 最终结论
 print("=== 9. 最终结论 ===")
 print("=" * 60)
-print(f"通过全面验证，张祥前统一场论常数f的正确值为：")
+print(f"通过全面验证，ZUFT统一场论常数f的正确值为：")
 print(f"  f = {f1_exact:.16f} kg/A ≈ {f1_exact:.6f} kg/A")
 print()
 print("验证结果：")
@@ -260,5 +260,5 @@ print("  ✅ 导数验证通过")
 print("  ✅ 物理合理性验证通过")
 print("  ✅ 公式一致性验证通过")
 print()
-print("结论：张祥前统一场论常数f的数值和量纲是正确的，符合所有物理规律和数学推导。")
+print("结论：ZUFT统一场论常数f的数值和量纲是正确的，符合所有物理规律和数学推导。")
 print("="*90)

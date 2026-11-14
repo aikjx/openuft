@@ -6,12 +6,12 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
-We derive and validate the energy equation within Zhang Xiangqian's Unified Field Theory framework, revealing energy as a manifestation of spatial motion variation. The equation \( E = mC^2 \), where \( m = \frac{m_0}{\sqrt{1 - \frac{v^2}{c^2}}} \), geometricizes mass-energy equivalence through spatial background motion. Through symbolic computation, multi-scale numerical validation, dimensional analysis, and compatibility verification with Einstein's mass-energy equivalence, we confirm the equation's mathematical rigor, physical self-consistency, and natural reduction to classical mechanics at low speeds. This formulation provides a revolutionary spatial geometric interpretation of energy essence, completing the Unified Field Theory core equation system while offering new insights into mass-energy unification.
+We derive and validate the energy equation within ZUFT's Unified Field Theory framework, revealing energy as a manifestation of spatial motion variation. The equation \( E = mC^2 \), where \( m = \frac{m_0}{\sqrt{1 - \frac{v^2}{c^2}}} \), geometricizes mass-energy equivalence through spatial background motion. Through symbolic computation, multi-scale numerical validation, dimensional analysis, and compatibility verification with Einstein's mass-energy equivalence, we confirm the equation's mathematical rigor, physical self-consistency, and natural reduction to classical mechanics at low speeds. This formulation provides a revolutionary spatial geometric interpretation of energy essence, completing the Unified Field Theory core equation system while offering new insights into mass-energy unification.
 
 ---
 
@@ -19,7 +19,7 @@ We derive and validate the energy equation within Zhang Xiangqian's Unified Fiel
 
 Energy remains one of physics' most fundamental yet enigmatic concepts, describing everything from mechanical work to quantum phenomena. Einstein's mass-energy equivalence equation revolutionized physics, but it lacks a fundamental geometric interpretation of energy's spatial origin.
 
-Zhang Xiangqian's Unified Field Theory (UFT) proposes an energy equation that geometrizes energy as spatial motion variation, completing the UFT core equation system. This work systematically derives and validates this equation, demonstrating its compatibility with existing theories while offering a unified spatial geometric perspective on energy essence.
+ZUFT's Unified Field Theory (UFT) proposes an energy equation that geometrizes energy as spatial motion variation, completing the UFT core equation system. This work systematically derives and validates this equation, demonstrating its compatibility with existing theories while offering a unified spatial geometric perspective on energy essence.
 
 ## Theoretical Framework
 
@@ -206,7 +206,7 @@ This formulation offers a profound reinterpretation of energy's spatial origin, 
 
 ## References
 
-1. Zhang, X. Q. (2020). *Unified Field Theory*. China Science and Technology Press.
+1. ZUFT (2020). *Unified Field Theory*. China Science and Technology Press.
 2. Einstein, A. (1905). Ist die Trägheit eines Körpers von seinem Energieinhalt abhängig? *Annalen der Physik*, 323(13), 639-641.
 3. Misner, C. W., Thorne, K. S., & Wheeler, J. A. (1973). *Gravitation*. W. H. Freeman.
 4. Feynman, R. P., Leighton, R. B., & Sands, M. (1964). *The Feynman Lectures on Physics*. Addison-Wesley.

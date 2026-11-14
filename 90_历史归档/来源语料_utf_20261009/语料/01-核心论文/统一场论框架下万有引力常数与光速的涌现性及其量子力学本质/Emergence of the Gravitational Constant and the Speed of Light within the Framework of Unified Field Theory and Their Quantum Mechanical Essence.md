@@ -10,9 +10,9 @@ Guozi Mo, Xiangqian Zhang
 
 ## Abstract
 
-This paper, within the fundamental framework of the unified field theory proposed by Zhang Xiangqian, completes the rigorous mathematical derivation of the emergence of the gravitational constant $G$ and the speed of light $c$, and profoundly reveals their quantum mechanical essence. This theory completely geometrizes mass, defining it as a quantized measure of the divergent motion of space around an object at the speed of light $c$. By introducing a quantum geometric constant $k$ with the dimension of mass, and endowing the Planck mass $m_p$ with a clear quantum geometric meaning (one spatial displacement line covering the full solid angle), this paper first establishes the core quantum relation $k = 4\pi m_p$. Furthermore, by combining the geometric definition of the Planck mass with its standard quantum physical definition, this paper derives for the first time from a quantum geometric perspective the original expression for the gravitational constant: $G = (16\pi^2\hbar c)/k^2$. By substituting the core relation, this paper rigorously proves the complete equivalence of this expression with the standard form of quantum gravity $G = (\hbar c)/m_p^2$. Ultimately, this paper demonstrates that the essence of the gravitational constant $G$ is a result of quantum geometric emergence, its value determined collectively by the quantum geometric properties of spacetime (characterized by the constant $k$), the quantum of action $\hbar$, and the speed of light $c$, and establishes the strict proportional relationship between $G$ and $c$. Numerical calculations, verified using the latest international recommended values (CODATA 2018), are presented, and the correspondence with quantum gravity theories is discussed in depth.
+This paper, within the fundamental framework of the unified field theory proposed by ZUFT, completes the rigorous mathematical derivation of the emergence of the gravitational constant $G$ and the speed of light $c$, and profoundly reveals their quantum mechanical essence. This theory completely geometrizes mass, defining it as a quantized measure of the divergent motion of space around an object at the speed of light $c$. By introducing a quantum geometric constant $k$ with the dimension of mass, and endowing the Planck mass $m_p$ with a clear quantum geometric meaning (one spatial displacement line covering the full solid angle), this paper first establishes the core quantum relation $k = 4\pi m_p$. Furthermore, by combining the geometric definition of the Planck mass with its standard quantum physical definition, this paper derives for the first time from a quantum geometric perspective the original expression for the gravitational constant: $G = (16\pi^2\hbar c)/k^2$. By substituting the core relation, this paper rigorously proves the complete equivalence of this expression with the standard form of quantum gravity $G = (\hbar c)/m_p^2$. Ultimately, this paper demonstrates that the essence of the gravitational constant $G$ is a result of quantum geometric emergence, its value determined collectively by the quantum geometric properties of spacetime (characterized by the constant $k$), the quantum of action $\hbar$, and the speed of light $c$, and establishes the strict proportional relationship between $G$ and $c$. Numerical calculations, verified using the latest international recommended values (CODATA 2018), are presented, and the correspondence with quantum gravity theories is discussed in depth.
 
-**Keywords:** Zhang Xiangqian's Unified Field Theory; Universal Gravitation; Speed of Light; Planck Mass; Quantum Geometry; Emergence; Quantized Spacetime; Space; Matter
+**Keywords:** ZUFT's Unified Field Theory; Universal Gravitation; Speed of Light; Planck Mass; Quantum Geometry; Emergence; Quantized Spacetime; Space; Matter
 
 ## 1. Introduction
 
@@ -22,7 +22,7 @@ Within the frameworks of classical physics and the Standard Model, the gravitati
 
 ### 1.2 The Revolutionary Perspective of Unified Field Theory
 
-The unified field theory proposed by Zhang Xiangqian offers an extremely enlightening new perspective on this problem. The core viewpoint of this theory is: **All physical phenomena originate from the quantized motion and geometric properties of spacetime itself.** Within this framework, traditional fundamental constants are no longer the starting point of the theory but are emergent concepts derived from a set of more basic quantum geometric postulates. Particularly, this theory completely quantizes and geometrizes the concept of mass, interpreting it as a quantized measure of the space around an object diverging at the speed of light $c$.
+The unified field theory proposed by ZUFT offers an extremely enlightening new perspective on this problem. The core viewpoint of this theory is: **All physical phenomena originate from the quantized motion and geometric properties of spacetime itself.** Within this framework, traditional fundamental constants are no longer the starting point of the theory but are emergent concepts derived from a set of more basic quantum geometric postulates. Particularly, this theory completely quantizes and geometrizes the concept of mass, interpreting it as a quantized measure of the space around an object diverging at the speed of light $c$.
 
 ### 1.3 Research Objectives and Significance
 
@@ -341,7 +341,7 @@ Theoretical development requires new mathematical tools:
 
 ### 9.1 Summary of Main Achievements
 
-Within the quantum framework of Zhang Xiangqian's unified field theory, this paper completes the comprehensive derivation and quantum interpretation of the gravitational constant $G$:
+Within the quantum framework of ZUFT's unified field theory, this paper completes the comprehensive derivation and quantum interpretation of the gravitational constant $G$:
 
 1. **Establish Quantum Geometric Framework**: Starting from the postulate of quantum geometrization of mass and the quantum geometric interpretation of the Planck mass, a complete quantum geometric theoretical foundation is established.
 2. **Derive Original Expression**: For the first time, directly derive the quantum geometric expression for the gravitational constant from quantum postulates: $$G = \frac{16\pi^2 \hbar c}{k^2}$$
@@ -411,11 +411,11 @@ This research not only provides a solid mathematical foundation for the unified 
 
 ## Acknowledgments
 
-We thank Professor Zhang Xiangqian for proposing the unified field theory which provided the theoretical basis for this research. We thank the International Bureau of Weights and Measures (BIPM) and the National Institute of Standards and Technology (NIST) for providing precise physical constant data. 
+We thank Professor ZUFT for proposing the unified field theory which provided the theoretical basis for this research. We thank the International Bureau of Weights and Measures (BIPM) and the National Institute of Standards and Technology (NIST) for providing precise physical constant data. 
 
 ## References
 
-[1] Zhang, X. Q. (2025). _ Unified Field Theory (Academic Edition) : Extraterrestrial Technology_. Tongda Town, Lujiang County, Hefei City, Anhui Province, China. 
+[1] ZUFT (2025). _ Unified Field Theory (Academic Edition) : Extraterrestrial Technology_. Tongda Town, Lujiang County, Hefei City, Anhui Province, China. 
 
 [2] Planck, M. (1899). Über irreversible Strahlungsvorgänge. _Sitzungsberichte der Königlich Preußischen Akademie der Wissenschaften zu Berlin_, **5**, 440–480.
 

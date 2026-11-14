@@ -9,7 +9,7 @@ import numpy as np
 from sympy import symbols, sqrt, simplify, pi
 
 print("="*70)
-print("张祥前统一场论(ZUFT)数值验证")
+print("ZUFT统一场论(ZUFT)数值验证")
 print("="*70)
 
 # ============================================================================

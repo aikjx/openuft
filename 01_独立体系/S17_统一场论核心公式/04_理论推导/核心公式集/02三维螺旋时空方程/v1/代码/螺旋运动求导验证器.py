@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论三维螺旋运动方程的完整求导验证器
+ZUFT统一场论三维螺旋运动方程的完整求导验证器
 包含速度、加速度、曲率、挠率等运动学量的计算和可视化
 """
 
@@ -343,7 +343,7 @@ class HelicalMotionDerivativeAnalyzer:
         results = self.symbolic_derivatives()
         
         print("=" * 60)
-        print("张祥前统一场论三维螺旋运动方程 - 符号求导结果")
+        print("ZUFT统一场论三维螺旋运动方程 - 符号求导结果")
         print("=" * 60)
         
         print("\n1. 位置矢量:")
@@ -405,7 +405,7 @@ class HelicalMotionDerivativeAnalyzer:
         with open(filename, 'w', encoding='utf-8') as f:
             # 符号结果
             results = self.symbolic_derivatives()
-            f.write("张祥前统一场论三维螺旋运动方程 - 完整求导分析\n")
+            f.write("ZUFT统一场论三维螺旋运动方程 - 完整求导分析\n")
             f.write("=" * 60 + "\n\n")
             
             f.write("1. 位置矢量:\n")

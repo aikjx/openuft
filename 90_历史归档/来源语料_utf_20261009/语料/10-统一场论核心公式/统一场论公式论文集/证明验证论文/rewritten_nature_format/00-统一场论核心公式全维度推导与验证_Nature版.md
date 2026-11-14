@@ -1,9 +1,9 @@
 # Unified Field Theory: Full-Dimensional Derivation, Verification, and Ultimate Unification of Space Essence and Interactions
 
-**Authors:** Zhang Xiangqian Unified Field Theory Research Team¹
+**Authors:** ZUFT Unified Field Theory Research Team¹
 
 **Affiliations:**
-¹ Zhang Xiangqian Unified Field Theory Research Institute, Nanjing, China
+¹ ZUFT Unified Field Theory Research Institute, Nanjing, China
 
 **Correspondence:** unifiedfieldtheory@research.org
 
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-The pursuit of a unified field theory represents physics' ultimate goal, aiming to unify nature's four fundamental interactions within a single mathematical framework. This paper systematically constructs the complete theoretical system of Zhang Xiangqian's unified field theory, starting from the dynamic essence of space, through rigorous mathematical derivation, full-dimensional derivative verification, multi-scale numerical simulation, and visual analysis. The research reveals that space fundamentally moves in spiral motion at the speed of light, unifying time, space, matter, energy, and interactions within a coherent mathematical system. Through symbolic differentiation, numerical verification, physical consistency analysis, and compatibility verification with existing theories, we confirm the theory's mathematical rigor and physical validity. This paper provides a new approach to resolving the compatibility issue between quantum mechanics and general relativity, potentially representing the next revolution in physics.
+The pursuit of a unified field theory represents physics' ultimate goal, aiming to unify nature's four fundamental interactions within a single mathematical framework. This paper systematically constructs the complete theoretical system of ZUFT's unified field theory, starting from the dynamic essence of space, through rigorous mathematical derivation, full-dimensional derivative verification, multi-scale numerical simulation, and visual analysis. The research reveals that space fundamentally moves in spiral motion at the speed of light, unifying time, space, matter, energy, and interactions within a coherent mathematical system. Through symbolic differentiation, numerical verification, physical consistency analysis, and compatibility verification with existing theories, we confirm the theory's mathematical rigor and physical validity. This paper provides a new approach to resolving the compatibility issue between quantum mechanics and general relativity, potentially representing the next revolution in physics.
 
 ---
 
@@ -23,10 +23,10 @@ The pursuit of a unified field theory represents physics' ultimate goal, aiming 
 Since Newtonian mechanics was established, physics has undergone multiple revolutions: classical mechanics, electromagnetism, relativity, and quantum mechanics. However, profound contradictions exist between these theories: general relativity describes macroscopic gravity, while quantum mechanics describes microscopic particles, and they are mathematically incompatible. A unified field theory aims to unify gravity, electromagnetism, strong nuclear force, and weak nuclear force within a single theoretical framework—the Holy Grail of physics.
 
 #### Historical Attempts at Unified Field Theory
-Einstein devoted his later years to unified field theory research but did not succeed. Modern attempts like string theory and M-theory introduce extra dimensions but lack experimental verification. Zhang Xiangqian's unified field theory takes a different approach, proposing a new theoretical framework starting from the dynamic essence of space.
+Einstein devoted his later years to unified field theory research but did not succeed. Modern attempts like string theory and M-theory introduce extra dimensions but lack experimental verification. ZUFT's unified field theory takes a different approach, proposing a new theoretical framework starting from the dynamic essence of space.
 
 #### New Paradigm for Unified Field Theory: Dynamic Space Hypothesis
-Zhang Xiangqian's unified field theory proposes a revolutionary hypothesis: **space is not a static background but a dynamic entity propagating isotropically and sourcelessly at the speed of light, with spiral motion characteristics**. This hypothesis provides a new perspective for understanding the nature of time, space, matter, and interactions.
+ZUFT's unified field theory proposes a revolutionary hypothesis: **space is not a static background but a dynamic entity propagating isotropically and sourcelessly at the speed of light, with spiral motion characteristics**. This hypothesis provides a new perspective for understanding the nature of time, space, matter, and interactions.
 
 #### Innovations and Contributions of This Paper
 1. First construction of the complete mathematical system of unified field theory, containing 18 core formulas
@@ -655,10 +655,10 @@ All data and code used in this paper are available in the Supplementary Material
 ---
 
 ## Author Contributions
-- **Zhang Xiangqian Unified Field Theory Research Team**: Conceived and designed the research, performed mathematical derivations, conducted numerical simulations, analyzed data, and wrote the paper.
+- **ZUFT Unified Field Theory Research Team**: Conceived and designed the research, performed mathematical derivations, conducted numerical simulations, analyzed data, and wrote the paper.
 
 ## Competing Interests
 The authors declare no competing financial interests.
 
 ## Acknowledgments
-The authors thank all members of the Zhang Xiangqian Unified Field Theory Research Institute for their valuable discussions and contributions. This research was supported by the Institute's internal research funding program.
+The authors thank all members of the ZUFT Unified Field Theory Research Institute for their valuable discussions and contributions. This research was supported by the Institute's internal research funding program.

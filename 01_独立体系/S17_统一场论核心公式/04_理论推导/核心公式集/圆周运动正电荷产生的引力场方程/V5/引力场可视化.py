@@ -227,7 +227,7 @@ def main():
     
     # 创建图形
     fig = plt.figure(figsize=(16, 12))
-    fig.suptitle('圆周运动正电荷引力场可视化：基于张祥前统一场论', fontsize=16, fontweight='bold')
+    fig.suptitle('圆周运动正电荷引力场可视化：基于ZUFT统一场论', fontsize=16, fontweight='bold')
     
     # 使用gridspec创建布局
     gs = gridspec.GridSpec(2, 2, figure=fig)

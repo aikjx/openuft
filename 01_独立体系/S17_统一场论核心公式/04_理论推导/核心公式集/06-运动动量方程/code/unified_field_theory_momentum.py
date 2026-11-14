@@ -1,5 +1,5 @@
 """
-Generate publication-ready, vector-based physics visualizations for Zhang Xiangqian's Unified Field Theory momentum formula P = m(C - V)
+Generate publication-ready, vector-based physics visualizations for ZUFT's Unified Field Theory momentum formula P = m(C - V)
 
 Objective: To accurately and clearly depict the geometric relationship and physical implications of the core momentum formula, adhering to the highest standards of scientific journals.
 

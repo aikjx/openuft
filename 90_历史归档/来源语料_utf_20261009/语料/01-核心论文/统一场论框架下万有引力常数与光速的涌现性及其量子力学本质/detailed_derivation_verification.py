@@ -11,7 +11,7 @@ n, Omega, dm, dOmega, dn = sp.symbols('n Omega dm dOmega dn')
 r, t, p, E, psi = sp.symbols('r t p E psi')
 M, L, T = sp.symbols('M L T')  # 质量、长度、时间量纲
 
-print("=== 张祥前统一场论质量常数k唯一性的详细求导验证 ===\n")
+print("=== ZUFT统一场论质量常数k唯一性的详细求导验证 ===\n")
 
 # =============================
 # 1. 质量几何化定义的微分形式推导
@@ -377,7 +377,7 @@ print()
 
 # 7.5 最终结论
 print("7.5 最终结论：")
-print("   质量常数k是张祥前统一场论中的唯一物理常数，")
+print("   质量常数k是ZUFT统一场论中的唯一物理常数，")
 print("   其表达式k = 4π·m_p与质量几何化定义m = k·n/Ω中的k完全一致。")
 print("   k常数作为连接经典几何与量子力学的桥梁，")
 print("   为实现物理学的大统一提供了新的理论基础。")

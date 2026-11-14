@@ -1,7 +1,7 @@
 # Charge Definition Equation: Geometric Derivation and Verification from Spacetime Rotation
 
 ## Authors
-Zhang Xiangqian Unified Field Theory Research Team
+ZUFT Unified Field Theory Research Team
 
 ## Date
 December 13, 2025
@@ -10,14 +10,14 @@ December 13, 2025
 v1.0
 
 ## 1. Abstract
-This paper presents a rigorous geometric derivation and comprehensive verification of the Charge Definition Equation (CDE) in Zhang Xiangqian's Unified Field Theory (UTF). The equation, expressed as \(q = k'k\frac{1}{\Omega^2}\frac{d\Omega}{dt}\), defines charge as a manifestation of spacetime rotation, where \(\Omega\) is solid angle, \(k\) and \(k'\) are proportionality constants. We provide detailed symbolic computation using SymPy, numerical validation across 27 orders of magnitude, and geometric visualization of spacetime rotation. The CDE successfully explains charge quantization, charge conservation, and establishes a direct connection between electromagnetic phenomena and spacetime geometry. Our results demonstrate that charge is not a fundamental "property" but an emergent feature of spacetime dynamics, providing a unified geometric framework for understanding electromagnetism and gravity.
+This paper presents a rigorous geometric derivation and comprehensive verification of the Charge Definition Equation (CDE) in ZUFT's Unified Field Theory (UTF). The equation, expressed as \(q = k'k\frac{1}{\Omega^2}\frac{d\Omega}{dt}\), defines charge as a manifestation of spacetime rotation, where \(\Omega\) is solid angle, \(k\) and \(k'\) are proportionality constants. We provide detailed symbolic computation using SymPy, numerical validation across 27 orders of magnitude, and geometric visualization of spacetime rotation. The CDE successfully explains charge quantization, charge conservation, and establishes a direct connection between electromagnetic phenomena and spacetime geometry. Our results demonstrate that charge is not a fundamental "property" but an emergent feature of spacetime dynamics, providing a unified geometric framework for understanding electromagnetism and gravity.
 
 **Keywords**: Unified Field Theory; Charge Definition Equation; spacetime rotation; geometric derivation; symbolic computation; numerical validation; multi-scale analysis; charge quantization
 
 ## 2. Introduction
 
 ### 2.1 The Nature of Charge
-Charge is one of the most fundamental concepts in physics, yet its true nature remains elusive in traditional theories. Electromagnetism describes how charges interact but fails to explain what charge itself is. Zhang Xiangqian's UTF offers a revolutionary perspective: **charge is a geometric manifestation of spacetime rotation**. This geometric approach provides a unified framework for understanding both electromagnetic and gravitational phenomena.
+Charge is one of the most fundamental concepts in physics, yet its true nature remains elusive in traditional theories. Electromagnetism describes how charges interact but fails to explain what charge itself is. ZUFT's UTF offers a revolutionary perspective: **charge is a geometric manifestation of spacetime rotation**. This geometric approach provides a unified framework for understanding both electromagnetic and gravitational phenomena.
 
 ### 2.2 Core Postulates
 The derivation of the CDE is based on two fundamental postulates of UTF:
@@ -370,7 +370,7 @@ The CDE revolutionizes our understanding of charge:
 
 ## 9. Conclusion
 
-This paper presents a comprehensive derivation and verification of the Charge Definition Equation in Zhang Xiangqian's Unified Field Theory. Through rigorous geometric derivation, detailed symbolic computation, and extensive numerical validation, we have established the CDE as a mathematically consistent framework for understanding charge as a manifestation of spacetime rotation.
+This paper presents a comprehensive derivation and verification of the Charge Definition Equation in ZUFT's Unified Field Theory. Through rigorous geometric derivation, detailed symbolic computation, and extensive numerical validation, we have established the CDE as a mathematically consistent framework for understanding charge as a manifestation of spacetime rotation.
 
 Key achievements include:
 1. **Rigorous Derivation**: Derived from first principles using geometric reasoning
@@ -400,7 +400,7 @@ All code and data used in this paper are available upon request from the authors
 The authors declare no competing interests.
 
 ## 13. Acknowledgments
-This research was supported by the Zhang Xiangqian Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
+This research was supported by the ZUFT Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
 
 ## 14. References
 

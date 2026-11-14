@@ -7,7 +7,7 @@ plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
 print("="*70)
-print("张祥前统一场论(ZUFT)耦合系数f的Python验证")
+print("ZUFT统一场论(ZUFT)耦合系数f的Python验证")
 print("="*70)
 
 # ============================================================================

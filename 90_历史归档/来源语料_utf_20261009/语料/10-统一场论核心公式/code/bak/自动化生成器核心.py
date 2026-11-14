@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论全自动可视化生成器 - 核心引擎
+ZUFT统一场论全自动可视化生成器 - 核心引擎
 Unified Field Theory Automatic Visualization Generator - Core Engine
 
 基于最先进技术和最规范标准的全自动化公式可视化生成系统
@@ -73,7 +73,7 @@ class AdvancedVisualizationGenerator:
 
 def main():
     """主函数 - 启动全自动生成"""
-    print("🚀 启动张祥前统一场论全自动可视化生成器...")
+    print("🚀 启动ZUFT统一场论全自动可视化生成器...")
     generator = AdvancedVisualizationGenerator()
     print("✅ 核心引擎初始化完成")
 

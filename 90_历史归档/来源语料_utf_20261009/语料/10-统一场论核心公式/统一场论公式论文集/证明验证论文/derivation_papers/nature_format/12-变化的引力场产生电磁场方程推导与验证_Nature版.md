@@ -6,19 +6,19 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The gravitational field-electromagnetic field conversion equation is a core component of Zhang Xiangqian's Unified Field Theory (UFT), revealing the mutual transformation relationship between gravitational and electromagnetic fields and providing a crucial theoretical foundation for unifying these fundamental forces. The equation $$\frac{\partial^{2}\overline{A}}{\partial t^{2}} = \frac{\overline{V}}{f}\left(\overline{\nabla}\cdot\overline{E}\right) - \frac{C^{2}}{f}\left(\overline{\nabla}\times\overline{B}\right)$$ connects the second-order time derivative of the gravitational potential with electromagnetic field properties, revealing their shared spatial origin. Through symbolic computation with SymPy and numerical simulation with NumPy, we verify its mathematical consistency, relationships with the universal grand unified equation and Maxwell's equations, and physical validity. This formulation offers a new theoretical framework for understanding force unification from a geometric and dynamic perspective of space.
+The gravitational field-electromagnetic field conversion equation is a core component of ZUFT's Unified Field Theory (UFT), revealing the mutual transformation relationship between gravitational and electromagnetic fields and providing a crucial theoretical foundation for unifying these fundamental forces. The equation $$\frac{\partial^{2}\overline{A}}{\partial t^{2}} = \frac{\overline{V}}{f}\left(\overline{\nabla}\cdot\overline{E}\right) - \frac{C^{2}}{f}\left(\overline{\nabla}\times\overline{B}\right)$$ connects the second-order time derivative of the gravitational potential with electromagnetic field properties, revealing their shared spatial origin. Through symbolic computation with SymPy and numerical simulation with NumPy, we verify its mathematical consistency, relationships with the universal grand unified equation and Maxwell's equations, and physical validity. This formulation offers a new theoretical framework for understanding force unification from a geometric and dynamic perspective of space.
 
 ---
 
 ## Introduction
 
-Gravitational and electromagnetic forces are two fundamental interactions in nature, traditionally regarded as distinct phenomena governed by separate physical laws. Einstein devoted his later years to unified field theory research without success. Zhang Xiangqian's Unified Field Theory presents an innovative equation describing the conversion between changing gravitational fields and electromagnetic fields, providing new insights into force unification. This equation directly connects the second-order time derivative of the gravitational potential with the divergence of the electric field and curl of the magnetic field, revealing their intrinsic relationship and shared spatial origin. As a core equation in UFT, it not only deepens our understanding of gravitational-electromagnetic interactions but also lays the groundwork for subsequent equations describing field interactions, representing a significant step toward the grand unification of physics.
+Gravitational and electromagnetic forces are two fundamental interactions in nature, traditionally regarded as distinct phenomena governed by separate physical laws. Einstein devoted his later years to unified field theory research without success. ZUFT's Unified Field Theory presents an innovative equation describing the conversion between changing gravitational fields and electromagnetic fields, providing new insights into force unification. This equation directly connects the second-order time derivative of the gravitational potential with the divergence of the electric field and curl of the magnetic field, revealing their intrinsic relationship and shared spatial origin. As a core equation in UFT, it not only deepens our understanding of gravitational-electromagnetic interactions but also lays the groundwork for subsequent equations describing field interactions, representing a significant step toward the grand unification of physics.
 
 ## 2. Mathematical Formulation
 
@@ -161,8 +161,8 @@ The gravitational-electromagnetic field conversion equation provides a sophistic
 
 ## 8. References
 
-1. Zhang XQ. Unified Field Theory. China Science and Technology Press, 2020.
-2. Zhang XQ. Unification Mechanism of Gravitational and Electromagnetic Forces in Unified Field Theory. Acta Physica Sinica, 2023, 72(10): 100001.
+1. ZUFT. Unified Field Theory. China Science and Technology Press, 2020.
+2. ZUFT. Unification Mechanism of Gravitational and Electromagnetic Forces in Unified Field Theory. Acta Physica Sinica, 2023, 72(10): 100001.
 3. Einstein A. Die Grundlage der allgemeinen Relativitätstheorie. Annalen der Physik, 1916, 49(7): 769-822.
 4. Maxwell JC. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 5. Abbott BP, et al. (LIGO Scientific and Virgo Collaborations). Observation of Gravitational Waves from a Binary Black Hole Merger. Physical Review Letters, 2016, 116(6): 061102.

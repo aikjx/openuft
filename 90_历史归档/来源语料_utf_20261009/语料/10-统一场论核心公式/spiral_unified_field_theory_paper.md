@@ -157,7 +157,7 @@ $$\boxed{G \varepsilon_0 = \frac{c^2 k^2 \tau \kappa^3}{4\pi \hbar^2 (\kappa^2 +
 
 ### 6.1 空间螺旋条数的定义
 
-在张祥前的理论中，质量被定义为：
+在ZUFT的理论中，质量被定义为：
 
 $$m = k \cdot \frac{n}{\Omega}$$
 
@@ -423,7 +423,7 @@ G和ε₀都源于空间螺旋几何，它们的差异反映了引力和电磁�
 
 ## 十一、参考文献
 
-[1] Zhang, X. Q. (1998). Unified Field Theory. Self-published.
+[1] ZUFT (1998). Unified Field Theory. Self-published.
 
 [2] Einstein, A. (1915). The Field Equations of Gravitation. Sitzungsberichte der Preußischen Akademie der Wissenschaften, 844-847.
 

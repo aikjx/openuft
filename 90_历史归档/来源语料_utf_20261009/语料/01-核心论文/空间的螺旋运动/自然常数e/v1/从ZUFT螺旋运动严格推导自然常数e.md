@@ -4,7 +4,7 @@
 
 ### 1.1 基本方程
 
-张祥前统一场论（ZUFT）的核心假设：空间以螺旋运动为基本存在形式
+ZUFT统一场论（ZUFT）的核心假设：空间以螺旋运动为基本存在形式
 
 $$\vec{r}(t) = r\cos(\omega t)\hat{i} + r\sin(\omega t)\hat{j} + ht\hat{k}$$
 

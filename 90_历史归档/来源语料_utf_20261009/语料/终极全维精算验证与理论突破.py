@@ -60,7 +60,7 @@ kappa   = 3.162277660168379e-4 # 空间本征曲率 [m^-1]
 tau_val = 2.307625500826972e-6 # 空间本征挠率 [m^-1]
 alpha   = tau_val / kappa      # 精细结构常数 = 1/137.035999084
 K_geom  = hbar / c             # 几何耦合常数 = 3.51767e-43
-Z_val   = G_std * c / 2        # 张祥前常数 ≈ 0.01
+Z_val   = G_std * c / 2        # ZUFT常数 ≈ 0.01
 Zp_val  = c / (8 * math.pi * eps0) # 电磁几何常数
 
 # 导出量
@@ -404,7 +404,7 @@ v.end_section(sec)
 # ============================================================
 # [VI] 22 CORE FORMULAS VERIFICATION (22 tests)
 # ============================================================
-sec = v.begin_section("[VI] 22 Core Formulas of Zhang Xiangqian's Unified Field Theory")
+sec = v.begin_section("[VI] 22 Core Formulas of ZUFT's Unified Field Theory")
 
 # F1: Spacetime unification: r(t) = Ct
 r_t = c * 1.0

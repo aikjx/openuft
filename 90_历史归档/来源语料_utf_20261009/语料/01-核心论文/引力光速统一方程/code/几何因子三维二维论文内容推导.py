@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论：引力光速统一方程中几何因子的严格数学推导
-基于论文《基于张祥前统一场论的引力常数G与光速c关系推导及理论验证》
+ZUFT统一场论：引力光速统一方程中几何因子的严格数学推导
+基于论文《基于ZUFT统一场论的引力常数G与光速c关系推导及理论验证》
 
 核心推导：各向同性修正（几何因子）的严格数学推导
 从球对称的三维空间投影到二维相互作用平面时，几何积分因子为 2
 
-作者：基于张祥前统一场论
+作者：基于ZUFT统一场论
 创建日期：2025-09-16
 """
 
@@ -24,9 +24,9 @@ plt.rcParams['font.sans-serif'] = ['SimHei', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 plt.rcParams['mathtext.fontset'] = 'stix'
 
-class ZhangXiangqianGeometricFactor:
+class ZUFTGeometricFactor:
     """
-    张祥前统一场论几何因子推导类
+    ZUFT统一场论几何因子推导类
     
     核心理论：
     1. 空间是三维且各向同性的
@@ -47,10 +47,10 @@ class ZhangXiangqianGeometricFactor:
         
     def theoretical_foundation(self):
         """
-        理论基础：张祥前统一场论的核心假设
+        理论基础：ZUFT统一场论的核心假设
         """
         print("=" * 80)
-        print("张祥前统一场论：几何因子推导的理论基础")
+        print("ZUFT统一场论：几何因子推导的理论基础")
         print("=" * 80)
         print("1. 宇宙构成：仅由'物体'和'空间'两种基本实体构成")
         print("2. 空间性质：空间不是静态背景，而是具有内在动力学特性的物理实体")
@@ -181,7 +181,7 @@ class ZhangXiangqianGeometricFactor:
         创建三维可视化图像
         """
         fig = plt.figure(figsize=(20, 15))
-        fig.suptitle('张祥前统一场论：几何因子推导可视化\nG = 4π/2π = 2', 
+        fig.suptitle('ZUFT统一场论：几何因子推导可视化\nG = 4π/2π = 2', 
                      fontsize=16, fontweight='bold')
         
         # 1. 三维球对称场
@@ -369,7 +369,7 @@ class ZhangXiangqianGeometricFactor:
             '4. 统一场论：空间发散运动的几何效应',
             '',
             '结论：F ∝ 2 × (m₁m₂)/(R^2c)',
-            '引入张祥前常数Z后：F = Z × 2m₁m₂/(R^2c)'
+            '引入ZUFT常数Z后：F = Z × 2m₁m₂/(R^2c)'
         ]
         
         y_positions = np.linspace(0.95, 0.05, len(meanings))
@@ -408,7 +408,7 @@ class ZhangXiangqianGeometricFactor:
         print("-" * 50)
         print("1. 引力相互作用力：F ∝ m₁m₂/(R^2c^2) × c = m₁m₂/(R^2c)")
         print("2. 各向同性修正：F ∝ 2 × m₁m₂/(R^2c)")
-        print("3. 引入张祥前常数Z：F = Z × 2m₁m₂/(R^2c)")
+        print("3. 引入ZUFT常数Z：F = Z × 2m₁m₂/(R^2c)")
         print("4. 对比万有引力定律：F = G × m₁m₂/R^2")
         print("5. 得到关系：G = 2Z/c")
         print("6. 即：Z = G·c/2")
@@ -441,7 +441,7 @@ def main():
     主函数：完整的几何因子推导演示
     """
     # 创建推导器实例
-    derivator = ZhangXiangqianGeometricFactor()
+    derivator = ZUFTGeometricFactor()
     
     # 1. 理论基础
     derivator.theoretical_foundation()
@@ -462,12 +462,12 @@ def main():
     fig = derivator.create_3d_visualization()
     
     # 保存图像
-    plt.savefig('张祥前统一场论_几何因子推导.png', dpi=300, bbox_inches='tight',
+    plt.savefig('ZUFT统一场论_几何因子推导.png', dpi=300, bbox_inches='tight',
                 facecolor='white', edgecolor='none')
     
     print(f"\n" + "=" * 80)
     print("推导完成！几何因子 G = 2 已通过多种方法验证")
-    print("图像已保存为：张祥前统一场论_几何因子推导.png")
+    print("图像已保存为：ZUFT统一场论_几何因子推导.png")
     print("=" * 80)
     
     plt.show()

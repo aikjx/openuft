@@ -6,13 +6,13 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The three-dimensional helical spacetime equation is a core formula of Zhang Xiangqian's Unified Field Theory, revealing the helical motion nature of objects in spacetime by combining spatial rotational and linear motion into a unified geometric framework. This paper systematically constructs the complete derivation process, confirming its mathematical rigor and physical self-consistency through symbolic differentiation and multi-scale numerical verification. The equation naturally derives the spacetime unification equation as a special case (ω→0), while providing a geometric foundation for understanding quantum wave-particle duality, particle spin, and celestial spiral structures. As an integral part of the Unified Field Theory system, it offers a new perspective on universal motion laws.
+The three-dimensional helical spacetime equation is a core formula of ZUFT's Unified Field Theory, revealing the helical motion nature of objects in spacetime by combining spatial rotational and linear motion into a unified geometric framework. This paper systematically constructs the complete derivation process, confirming its mathematical rigor and physical self-consistency through symbolic differentiation and multi-scale numerical verification. The equation naturally derives the spacetime unification equation as a special case (ω→0), while providing a geometric foundation for understanding quantum wave-particle duality, particle spin, and celestial spiral structures. As an integral part of the Unified Field Theory system, it offers a new perspective on universal motion laws.
 
 ---
 
@@ -20,7 +20,7 @@ The three-dimensional helical spacetime equation is a core formula of Zhang Xian
 
 Since Newtonian mechanics was established, the nature of object motion has been a core issue in physics. Einstein's relativity revealed spacetime relativity, but the specific motion form of objects in spacetime remains incompletely understood. Traditional physical theories treat linear and rotational motion as fundamentally different, lacking a unified geometric description.
 
-Zhang Xiangqian's Unified Field Theory introduces a dynamic spatial nature, proposing the three-dimensional helical spacetime equation that unifies spatial rotational and linear motion within a single mathematical framework. This equation assumes that space around objects moves in cylindrical helices at light speed, providing a new paradigm for geometric spacetime description.
+ZUFT's Unified Field Theory introduces a dynamic spatial nature, proposing the three-dimensional helical spacetime equation that unifies spatial rotational and linear motion within a single mathematical framework. This equation assumes that space around objects moves in cylindrical helices at light speed, providing a new paradigm for geometric spacetime description.
 
 This work constructs the complete theoretical system of the three-dimensional helical spacetime equation from a mathematical perspective, establishing its status as the geometric foundation of Unified Field Theory through rigorous derivation and verification. This lays the groundwork for mass definition, gravitational field equations, and electromagnetic field equations in Unified Field Theory, potentially offering new geometric explanations for quantum phenomena and cosmic structures.
 
@@ -241,7 +241,7 @@ Through symbolic computation, numerical simulation, and visualization analysis, 
 
 ## References
 
-[1] Zhang, X. Q. (2023). Unified Field Theory: Foundations and Significance. Journal of Modern Physics.
+[1] ZUFT (2023). Unified Field Theory: Foundations and Significance. Journal of Modern Physics.
 [2] Einstein, A. (1905). On the electrodynamics of moving bodies. Annalen der Physik.
 [3] Minkowski, H. (1908). Space and time. Address at the 80th Meeting of German Natural Scientists and Physicians.
 [4] Feynman, R. P., Leighton, R. B., & Sands, M. (1964). The Feynman Lectures on Physics (Vol. 2). Addison-Wesley.

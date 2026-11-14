@@ -9,7 +9,7 @@ def calculate_Z_prime():
     return c / (8 * pi * epsilon_0)
 
 def calculate_Z():
-    """计算Z的值（注意：此定义基于张祥前理论，与主流物理学不同）"""
+    """计算Z的值（注意：此定义基于ZUFT理论，与主流物理学不同）"""
     # 注意：在主流物理学中，G和c是独立常数，此定义存在物理意义问题
     return G * c / 2
 
@@ -208,7 +208,7 @@ def create_geometry_factor_visualization():
     print("\n4. 创建几何因子可视化图表")
     
     # 几何因子数据
-    factors = ["经典电磁学 (4π)", "张祥前理论 (8π)", "双层螺旋叠加因子 (2)"]
+    factors = ["经典电磁学 (4π)", "ZUFT理论 (8π)", "双层螺旋叠加因子 (2)"]
     values = [4*pi, 8*pi, 2]
     
     # 创建图表

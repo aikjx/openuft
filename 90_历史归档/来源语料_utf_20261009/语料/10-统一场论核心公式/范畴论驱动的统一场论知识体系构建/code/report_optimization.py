@@ -172,7 +172,7 @@ class ReportOptimizer:
 
 **生成时间**: {datetime.now().strftime('%Y年%m月%d日 %H:%M:%S')}
 **验证工具**: 统一场论综合验证系统 (v1.0)
-**验证范围**: 张祥前统一场论20个核心公式
+**验证范围**: ZUFT统一场论20个核心公式
 
 ## 1. 验证概览
 
@@ -436,7 +436,7 @@ class ReportOptimizer:
 
 **验证工具**：统一场论综合验证系统 (v1.0)  
 **验证时间**：{datetime.now().strftime('%Y年%m月%d日 %H:%M:%S')}  
-**验证范围**：张祥前统一场论20个核心公式
+**验证范围**：ZUFT统一场论20个核心公式
 """
         
         return report

@@ -3,7 +3,7 @@
 """
 统一场论公式可视化验证（简化版）
 功能：对所有统一场论核心方程的验证数据进行可视化展示
-作者：张祥前统一场论研究团队
+作者：ZUFT统一场论研究团队
 日期：2025-10-26
 """
 
@@ -254,7 +254,7 @@ class 统一场论公式可视化验证器:
                         fontsize=24, ha='center', va='center')
                 plt.text(0.5, 0.7, '基于符号求导和数值验证的数学严谨性分析', 
                         fontsize=16, ha='center', va='center')
-                plt.text(0.5, 0.6, '张祥前统一场论研究团队', 
+                plt.text(0.5, 0.6, 'ZUFT统一场论研究团队', 
                         fontsize=14, ha='center', va='center')
                 plt.text(0.5, 0.5, datetime.now().strftime('%Y年%m月%d日'), 
                         fontsize=12, ha='center', va='center')
@@ -562,7 +562,7 @@ class 统一场论公式可视化验证器:
         </div>
         
         <div class="footer">
-            <p>© 2025 张祥前统一场论研究团队 | 基于Python和Matplotlib生成</p>
+            <p>© 2025 ZUFT统一场论研究团队 | 基于Python和Matplotlib生成</p>
         </div>
     </div>
 </body>

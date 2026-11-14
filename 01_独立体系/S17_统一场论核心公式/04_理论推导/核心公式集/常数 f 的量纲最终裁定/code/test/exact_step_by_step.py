@@ -10,7 +10,7 @@
 import math
 
 print("="*85)
-print("张祥前统一场论常数f的精确一步步数值计算")
+print("ZUFT统一场论常数f的精确一步步数值计算")
 print("="*85)
 print()
 

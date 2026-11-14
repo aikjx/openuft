@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论核心公式量纲验证（最终修复版）
+ZUFT统一场论核心公式量纲验证（最终修复版）
 
-此脚本用于验证张祥前统一场论中22个核心公式的量纲一致性
+此脚本用于验证ZUFT统一场论中22个核心公式的量纲一致性
 使用基本量纲：[L]长度、[M]质量、[T]时间、[I]电流
 """
 
@@ -362,7 +362,7 @@ class UnifiedFieldTheoryValidator:
         total_count = len(self.formulas)
         
         print("=" * 80)
-        print("张祥前统一场论核心公式量纲验证")
+        print("ZUFT统一场论核心公式量纲验证")
         print("=" * 80)
         
         for formula_id, formula_name, left_expr, right_expr in self.formulas:

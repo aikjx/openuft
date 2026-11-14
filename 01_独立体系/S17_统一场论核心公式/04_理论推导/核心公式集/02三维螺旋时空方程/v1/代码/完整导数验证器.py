@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论：螺旋运动完整导数验证器
+ZUFT统一场论：螺旋运动完整导数验证器
 验证从零阶到八阶导数的完整数学体系
 """
 
@@ -96,7 +96,7 @@ class CompleteDerivativeValidator:
     def create_comprehensive_analysis(self):
         """创建综合分析"""
         print("=" * 80)
-        print("张祥前统一场论：螺旋运动完整导数分析")
+        print("ZUFT统一场论：螺旋运动完整导数分析")
         print("=" * 80)
         
         # 创建数据存储
@@ -205,7 +205,7 @@ class CompleteDerivativeValidator:
     def create_derivative_plots(self):
         """创建导数可视化图"""
         fig, axes = plt.subplots(3, 3, figsize=(15, 12))
-        fig.suptitle('张祥前统一场论：螺旋运动0-8阶导数分析', fontsize=16)
+        fig.suptitle('ZUFT统一场论：螺旋运动0-8阶导数分析', fontsize=16)
         
         for order in range(9):
             ax = axes[order // 3, order % 2] if order < 8 else axes[2, 2]
@@ -332,7 +332,7 @@ class CompleteDerivativeValidator:
     
     def run_complete_validation(self):
         """运行完整验证"""
-        print("开始张祥前统一场论螺旋运动完整导数验证...")
+        print("开始ZUFT统一场论螺旋运动完整导数验证...")
         
         # 1. 综合分析
         df, analysis_data = self.create_comprehensive_analysis()
@@ -363,7 +363,7 @@ class CompleteDerivativeValidator:
         
         if constant_validations == 9 and theory_validations == 9:
             print("\n✅ 所有验证完全通过！")
-            print("张祥前统一场论的螺旋运动导数体系数学完美！")
+            print("ZUFT统一场论的螺旋运动导数体系数学完美！")
         else:
             print("\n❌ 部分验证失败，需要检查理论。")
         

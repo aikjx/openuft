@@ -1,9 +1,9 @@
 # Mass Definition Equation: Derivation, Verification, and Higher-Order Derivative Analysis in Unified Field Theory
 
-**Authors:** Zhang Xiangqian Unified Field Theory Research Team¹
+**Authors:** ZUFT Unified Field Theory Research Team¹
 
 **Affiliations:**
-¹ Zhang Xiangqian Unified Field Theory Research Institute, Nanjing, China
+¹ ZUFT Unified Field Theory Research Institute, Nanjing, China
 
 **Correspondence:** unifiedfieldtheory@research.org
 
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-The mass definition equation is a cornerstone of Zhang Xiangqian's unified field theory, geometrically relating mass to spatial motion and providing a unified description of mass phenomena across scales. This paper presents a rigorous mathematical derivation and comprehensive verification of the equation, focusing on higher-order derivative analysis of mass-velocity relationships. We establish the quantitative connection between mass and spatial displacement vector density, derive the proportionality constant \( k = 4\pi m_p \) (where \( m_p \) is the Planck mass), and perform symbolic computation to verify the equation's mathematical consistency. Higher-order derivative analysis reveals novel insights into mass variation with velocity, including Taylor expansion of relativistic mass effects and connections to quantum phenomena. Multi-scale numerical verification confirms the equation's applicability from microscale particles to macroscale celestial bodies. This work provides a geometric foundation for unifying mass and charge, offering a promising path toward comprehensive field unification.
+The mass definition equation is a cornerstone of ZUFT's unified field theory, geometrically relating mass to spatial motion and providing a unified description of mass phenomena across scales. This paper presents a rigorous mathematical derivation and comprehensive verification of the equation, focusing on higher-order derivative analysis of mass-velocity relationships. We establish the quantitative connection between mass and spatial displacement vector density, derive the proportionality constant \( k = 4\pi m_p \) (where \( m_p \) is the Planck mass), and perform symbolic computation to verify the equation's mathematical consistency. Higher-order derivative analysis reveals novel insights into mass variation with velocity, including Taylor expansion of relativistic mass effects and connections to quantum phenomena. Multi-scale numerical verification confirms the equation's applicability from microscale particles to macroscale celestial bodies. This work provides a geometric foundation for unifying mass and charge, offering a promising path toward comprehensive field unification.
 
 ---
 
@@ -19,7 +19,7 @@ The mass definition equation is a cornerstone of Zhang Xiangqian's unified field
 
 ### Introduction
 
-The nature of mass has been a fundamental puzzle in physics. While Newton's absolute mass, Einstein's relativistic mass, and quantum field theory's mass generation mechanisms have advanced our understanding, a unified geometric description remains elusive. Zhang Xiangqian's unified field theory addresses this gap by proposing that mass is not an intrinsic property of matter but a manifestation of spatial motion. This geometric perspective unifies mass across scales and connects it to other fundamental properties like charge through derivative relationships.
+The nature of mass has been a fundamental puzzle in physics. While Newton's absolute mass, Einstein's relativistic mass, and quantum field theory's mass generation mechanisms have advanced our understanding, a unified geometric description remains elusive. ZUFT's unified field theory addresses this gap by proposing that mass is not an intrinsic property of matter but a manifestation of spatial motion. This geometric perspective unifies mass across scales and connects it to other fundamental properties like charge through derivative relationships.
 
 ### Theoretical Framework
 

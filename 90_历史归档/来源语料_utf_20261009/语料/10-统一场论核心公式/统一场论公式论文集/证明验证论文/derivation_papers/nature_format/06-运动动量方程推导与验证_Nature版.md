@@ -6,18 +6,18 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
-We derive and validate the motion momentum equation \( \overrightarrow{P} = m(\overrightarrow{C} - \overrightarrow{V}) \) within Zhang Xiangqian's Unified Field Theory framework. This formula extends traditional momentum concepts by incorporating spatial background motion, challenging the classical \( \overrightarrow{P} = m\overrightarrow{V} \) definition. Through rigorous mathematical derivation, geometric analysis, symbolic computation, and consistency verification with Newtonian mechanics and relativity, we confirm the equation's validity. The formula's vector nature, with \( \overrightarrow{C} \) as isotropic light speed vector and \( \overrightarrow{V} \) as object velocity, unifies mass, momentum, and energy while providing a geometric explanation for fundamental forces. Our work demonstrates that this equation naturally derives the relativistic mass-velocity relation and mass-energy equivalence, offering a revolutionary perspective on momentum's physical essence that bridges classical and modern physics.
+We derive and validate the motion momentum equation \( \overrightarrow{P} = m(\overrightarrow{C} - \overrightarrow{V}) \) within ZUFT's Unified Field Theory framework. This formula extends traditional momentum concepts by incorporating spatial background motion, challenging the classical \( \overrightarrow{P} = m\overrightarrow{V} \) definition. Through rigorous mathematical derivation, geometric analysis, symbolic computation, and consistency verification with Newtonian mechanics and relativity, we confirm the equation's validity. The formula's vector nature, with \( \overrightarrow{C} \) as isotropic light speed vector and \( \overrightarrow{V} \) as object velocity, unifies mass, momentum, and energy while providing a geometric explanation for fundamental forces. Our work demonstrates that this equation naturally derives the relativistic mass-velocity relation and mass-energy equivalence, offering a revolutionary perspective on momentum's physical essence that bridges classical and modern physics.
 
 ---
 
 ## Introduction
 
-Traditional physics defines momentum as mass-velocity product, treating space as a static background. However, Zhang Xiangqian's Unified Field Theory (UFT) proposes a revolutionary momentum formula that incorporates spatial background motion, extending momentum concepts beyond mechanical motion.
+Traditional physics defines momentum as mass-velocity product, treating space as a static background. However, ZUFT's Unified Field Theory (UFT) proposes a revolutionary momentum formula that incorporates spatial background motion, extending momentum concepts beyond mechanical motion.
 
 The equation \( \overrightarrow{P} = m(\overrightarrow{C} - \overrightarrow{V}) \) introduces \( \overrightarrow{C} \), a vector light speed with isotropic magnitude c but direction from object center outward. This work systematically derives and validates this formula, clarifying common misconceptions while demonstrating its compatibility with existing theories and potential to unify fundamental forces.
 
@@ -219,7 +219,7 @@ This formula provides a bridge between classical and modern physics, offering a 
 
 ## References
 
-1. Zhang, X. Q. (2023). Unified Field Theory: Foundations and Significance. *Journal of Modern Physics*.
+1. ZUFT (2023). Unified Field Theory: Foundations and Significance. *Journal of Modern Physics*.
 2. Einstein, A. (1905). On the Electrodynamics of Moving Bodies. *Annalen der Physik*.
 3. Einstein, A. (1905). Does the Inertia of a Body Depend Upon Its Energy Content? *Annalen der Physik*.
 4. Newton, I. (1687). *Philosophiæ Naturalis Principia Mathematica*.

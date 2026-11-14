@@ -1,4 +1,4 @@
-# 张祥前统一场论公式量纲验证代码
+# ZUFT统一场论公式量纲验证代码
 # 验证公式量纲的一致性和正确性
 
 import re
@@ -472,7 +472,7 @@ class DimensionAnalyzer:
 
 def main():
     """主函数，验证所有公式的量纲"""
-    print("张祥前统一场论公式量纲验证")
+    print("ZUFT统一场论公式量纲验证")
     print("=" * 60)
     
     analyzer = DimensionAnalyzer()

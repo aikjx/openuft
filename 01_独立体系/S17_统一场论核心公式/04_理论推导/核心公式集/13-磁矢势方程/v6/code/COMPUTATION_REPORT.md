@@ -217,7 +217,7 @@ $$\frac{4\pi\times10^{-7} \times 10^{-6} \times (2.5\times10^{-6})^2}{2\times(3\
 import numpy as np
 
 # 详细计算脚本：磁矢势方程相关的求导与验证
-print("===== 张祥前统一场论（ZUFT）磁矢势方程详细计算 =====")
+print("===== ZUFT统一场论（ZUFT）磁矢势方程详细计算 =====")
 print()
 
 # 1. CODATA 2018 基本物理常数
@@ -848,7 +848,7 @@ if __name__ == "__main__":
 
 4. Zangwill, A. (2013). Modern Electrodynamics. Cambridge University Press.
 
-5. 张祥前. 统一场论. 中国科学技术出版社.
+5. ZUFT. 统一场论. 中国科学技术出版社.
 
 ---
 

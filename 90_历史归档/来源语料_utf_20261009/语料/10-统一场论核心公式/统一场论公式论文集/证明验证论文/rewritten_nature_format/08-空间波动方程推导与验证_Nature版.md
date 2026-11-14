@@ -1,7 +1,7 @@
-# Spacetime Geometry and Wave Phenomena: First-Principles Derivation and Verification of the Spatial Wave Equation in Zhang Xiangqian's Unified Field Theory
+# Spacetime Geometry and Wave Phenomena: First-Principles Derivation and Verification of the Spatial Wave Equation in ZUFT's Unified Field Theory
 
 ## Authors
-Zhang Xiangqian Unified Field Theory Research Team
+ZUFT Unified Field Theory Research Team
 
 ## Date
 December 13, 2025
@@ -10,14 +10,14 @@ December 13, 2025
 v1.0
 
 ## 1. Abstract
-This paper presents a rigorous first-principles derivation and comprehensive verification of the Spatial Wave Equation (SWE) from Zhang Xiangqian's Unified Field Theory (UTF). Based on the core postulate that space moves radially outward at the speed of light in a cylindrical spiral pattern, we derive the SWE through geometric analysis of spacetime motion. The equation is expressed as \(\nabla^2 r - \frac{1}{c^2}\frac{\partial^2 r}{\partial t^2} = 0\), where \(r\) is the spatial displacement field and \(c\) is the speed of light. We provide detailed symbolic computation using SymPy, including higher-order derivative verification, dispersion relation analysis, and numerical validation across 27 orders of magnitude. The SWE naturally reduces to classical wave equations in appropriate limits while offering a geometric interpretation of wave phenomena rooted in spacetime dynamics. Our results establish the SWE as a mathematically rigorous framework that unifies wave theory with spacetime geometry, providing profound insights into the nature of space and its role in physical phenomena.
+This paper presents a rigorous first-principles derivation and comprehensive verification of the Spatial Wave Equation (SWE) from ZUFT's Unified Field Theory (UTF). Based on the core postulate that space moves radially outward at the speed of light in a cylindrical spiral pattern, we derive the SWE through geometric analysis of spacetime motion. The equation is expressed as \(\nabla^2 r - \frac{1}{c^2}\frac{\partial^2 r}{\partial t^2} = 0\), where \(r\) is the spatial displacement field and \(c\) is the speed of light. We provide detailed symbolic computation using SymPy, including higher-order derivative verification, dispersion relation analysis, and numerical validation across 27 orders of magnitude. The SWE naturally reduces to classical wave equations in appropriate limits while offering a geometric interpretation of wave phenomena rooted in spacetime dynamics. Our results establish the SWE as a mathematically rigorous framework that unifies wave theory with spacetime geometry, providing profound insights into the nature of space and its role in physical phenomena.
 
 **Keywords**: Unified Field Theory; Spatial Wave Equation; first-principles derivation; spacetime geometry; symbolic computation; dispersion relation; higher-order derivatives; multi-scale validation
 
 ## 2. Introduction
 
 ### 2.1 From Spacetime Motion to Wave Phenomena
-Waves are fundamental to our understanding of the physical world, yet traditional wave equations lack a deeper geometric foundation. Zhang Xiangqian's UTF introduces a revolutionary perspective: **waves are a natural consequence of spacetime itself moving at the speed of light**. This geometric approach provides a unified framework for understanding all wave phenomena, from electromagnetic radiation to gravitational waves.
+Waves are fundamental to our understanding of the physical world, yet traditional wave equations lack a deeper geometric foundation. ZUFT's UTF introduces a revolutionary perspective: **waves are a natural consequence of spacetime itself moving at the speed of light**. This geometric approach provides a unified framework for understanding all wave phenomena, from electromagnetic radiation to gravitational waves.
 
 ### 2.2 Core Postulates of UTF
 The derivation of the Spatial Wave Equation (SWE) is based on two fundamental postulates:
@@ -315,7 +315,7 @@ The SWE has potential technological applications:
 
 ## 10. Conclusion
 
-This paper presents a rigorous first-principles derivation and comprehensive verification of the Spatial Wave Equation (SWE) in Zhang Xiangqian's Unified Field Theory. Through detailed symbolic computation, including higher-order derivatives up to the 4th order, and numerical validation across 27 orders of magnitude, we have established the SWE as a mathematically consistent framework that unifies wave phenomena with spacetime geometry.
+This paper presents a rigorous first-principles derivation and comprehensive verification of the Spatial Wave Equation (SWE) in ZUFT's Unified Field Theory. Through detailed symbolic computation, including higher-order derivatives up to the 4th order, and numerical validation across 27 orders of magnitude, we have established the SWE as a mathematically consistent framework that unifies wave phenomena with spacetime geometry.
 
 Key achievements include:
 1. **Rigorous Derivation**: Derived from UTF's core postulates without ad hoc assumptions
@@ -351,7 +351,7 @@ All code and data used in this paper are available upon request from the authors
 The authors declare no competing interests.
 
 ## 14. Acknowledgments
-This research was supported by the Zhang Xiangqian Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
+This research was supported by the ZUFT Unified Field Theory Research Team. We thank all contributors to the UTF documentation for their valuable insights and feedback.
 
 ## 15. References
 

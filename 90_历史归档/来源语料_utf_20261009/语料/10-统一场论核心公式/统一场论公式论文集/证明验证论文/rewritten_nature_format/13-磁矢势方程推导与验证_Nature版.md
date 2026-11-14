@@ -4,18 +4,18 @@
 Xiangqian Zhang, Unified Field Theory Research Team
 
 ## Correspondence
-zhangxiangqian@unifiedfieldtheory.org
+zuft@unifiedfieldtheory.org
 
 ## Received: 15 October 2025; Accepted: 13 December 2025; Published online: 20 December 2025
 
 ## Abstract
-The magnetic vector potential equation is a cornerstone of Zhang Xiangqian's Unified Field Theory (UTF), providing an alternative mathematical description of magnetic fields and revealing the deep connection between magnetic phenomena and the geometric structure of space-time. In this paper, we present a rigorous derivation of this equation based on fundamental principles of vector analysis and electromagnetic theory, followed by comprehensive symbolic verification using SymPy and a detailed exploration of its implications in both classical and quantum physics. The equation, \(\nabla \times \mathbf{A} = \frac{\mathbf{B}}{f}\), extends the traditional definition of magnetic vector potential by introducing a universal proportionality constant \(f\), enabling seamless integration with other UTF equations and providing new insights into the unification of electromagnetic and gravitational forces.
+The magnetic vector potential equation is a cornerstone of ZUFT's Unified Field Theory (UTF), providing an alternative mathematical description of magnetic fields and revealing the deep connection between magnetic phenomena and the geometric structure of space-time. In this paper, we present a rigorous derivation of this equation based on fundamental principles of vector analysis and electromagnetic theory, followed by comprehensive symbolic verification using SymPy and a detailed exploration of its implications in both classical and quantum physics. The equation, \(\nabla \times \mathbf{A} = \frac{\mathbf{B}}{f}\), extends the traditional definition of magnetic vector potential by introducing a universal proportionality constant \(f\), enabling seamless integration with other UTF equations and providing new insights into the unification of electromagnetic and gravitational forces.
 
 ## 1. Introduction
 
 Magnetic fields have long been described using the磁感应强度 vector \(\mathbf{B}\), which quantifies the force experienced by moving charges. However, in the 19th century, physicists recognized that magnetic fields could also be described using a vector potential \(\mathbf{A}\), defined such that \(\mathbf{B} = \nabla \times \mathbf{A}\). This alternative description, rooted in vector calculus, has proven invaluable in simplifying complex electromagnetic problems and bridging classical electromagnetism with quantum mechanics.
 
-Zhang Xiangqian's Unified Field Theory builds upon this foundation, introducing a modified magnetic vector potential equation that incorporates a universal proportionality constant \(f\). This modification not only maintains compatibility with classical electromagnetic theory but also enables the equation to fit within the broader framework of UTF, where all physical phenomena are unified through space-time dynamics. The magnetic vector potential equation thus serves as a critical link between electromagnetic theory and the quest for a unified description of all fundamental forces.
+ZUFT's Unified Field Theory builds upon this foundation, introducing a modified magnetic vector potential equation that incorporates a universal proportionality constant \(f\). This modification not only maintains compatibility with classical electromagnetic theory but also enables the equation to fit within the broader framework of UTF, where all physical phenomena are unified through space-time dynamics. The magnetic vector potential equation thus serves as a critical link between electromagnetic theory and the quest for a unified description of all fundamental forces.
 
 In this paper, we provide:
 - A rigorous mathematical derivation from first principles
@@ -82,7 +82,7 @@ $$\mathbf{B} = \nabla \times \mathbf{A}$$
 
 #### Step 3: Incorporation into Unified Field Theory
 
-In Zhang Xiangqian's Unified Field Theory, all physical quantities are described in terms of space-time dynamics. To ensure consistency with other UTF equations and to account for the geometric properties of space, we introduce a universal proportionality constant \(f\), leading to the modified form:
+In ZUFT's Unified Field Theory, all physical quantities are described in terms of space-time dynamics. To ensure consistency with other UTF equations and to account for the geometric properties of space, we introduce a universal proportionality constant \(f\), leading to the modified form:
 
 $$\nabla \times \mathbf{A} = \frac{\mathbf{B}}{f}$$
 
@@ -394,11 +394,11 @@ As our understanding of the universe continues to evolve, the magnetic vector po
 
 ## Acknowledgments
 
-The authors acknowledge the contributions of the Zhang Xiangqian Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
+The authors acknowledge the contributions of the ZUFT Unified Field Theory Research Team and the broader physics community for valuable discussions and feedback.
 
 ## References
 
-1. Zhang Xiangqian. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
+1. ZUFT. Unified Field Theory: A New Perspective on Space, Time, and Matter. 2020.
 2. Maxwell, J.C. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 3. Aharonov, Y., Bohm, D. Significance of electromagnetic potentials in the quantum theory. Physical Review, 115(3): 485–491, 1959.
 4. Jackson, J.D. Classical Electrodynamics. John Wiley & Sons, 1998.
@@ -411,7 +411,7 @@ The authors acknowledge the contributions of the Zhang Xiangqian Unified Field T
 
 **Supplementary Materials**: Detailed symbolic computation code, numerical simulation scripts, and interactive visualization tools are available at https://unifiedfieldtheory.org/supplementary-materials/13-magnetic-vector-potential
 
-**Corresponding Author**: zhangxiangqian@unifiedfieldtheory.org
+**Corresponding Author**: zuft@unifiedfieldtheory.org
 
 **Conflict of Interest**: The authors declare no competing financial interests.
 

@@ -6,19 +6,19 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The gravitational-electromagnetic unification equation is the ultimate core formula of Zhang Xiangqian's Unified Field Theory (UFT), mathematically unifying gravitational and electromagnetic fields while revealing their common essence and spatial origin. The equation $$\overrightarrow{A} \times \overrightarrow{B} = \frac{c^{2}}{\epsilon_0}\overrightarrow{j} + \frac{1}{\epsilon_0}\frac{\partial\overrightarrow{D}}{\partial t}$$ establishes a precise mathematical connection between gravitational-electromagnetic field interactions. Derived from field rotational coupling mechanisms, it is verified through symbolic computation with SymPy, numerical validation, and consistency analysis with Maxwell's equations. This formulation provides a solid mathematical and physical foundation for the complete UFT theoretical system, representing a significant milestone in physics unification.
+The gravitational-electromagnetic unification equation is the ultimate core formula of ZUFT's Unified Field Theory (UFT), mathematically unifying gravitational and electromagnetic fields while revealing their common essence and spatial origin. The equation $$\overrightarrow{A} \times \overrightarrow{B} = \frac{c^{2}}{\epsilon_0}\overrightarrow{j} + \frac{1}{\epsilon_0}\frac{\partial\overrightarrow{D}}{\partial t}$$ establishes a precise mathematical connection between gravitational-electromagnetic field interactions. Derived from field rotational coupling mechanisms, it is verified through symbolic computation with SymPy, numerical validation, and consistency analysis with Maxwell's equations. This formulation provides a solid mathematical and physical foundation for the complete UFT theoretical system, representing a significant milestone in physics unification.
 
 ---
 
 ## Introduction
 
-In modern physics, gravity and electromagnetism are treated as distinct fundamental interactions described by general relativity and Maxwell's equations respectively. These theories differ significantly in mathematical form and physical concepts, presenting a major challenge to their unification. Zhang Xiangqian's Unified Field Theory presents an innovative equation that unifies gravitational and electromagnetic fields, combining all previous UFT equations into a complete, self-consistent theoretical system. This equation represents the final achievement of UFT, realizing both mathematical and physical unification of gravitational and electromagnetic forces, and marking a significant milestone in the pursuit of physics unification.
+In modern physics, gravity and electromagnetism are treated as distinct fundamental interactions described by general relativity and Maxwell's equations respectively. These theories differ significantly in mathematical form and physical concepts, presenting a major challenge to their unification. ZUFT's Unified Field Theory presents an innovative equation that unifies gravitational and electromagnetic fields, combining all previous UFT equations into a complete, self-consistent theoretical system. This equation represents the final achievement of UFT, realizing both mathematical and physical unification of gravitational and electromagnetic forces, and marking a significant milestone in the pursuit of physics unification.
 
 ## 2. Mathematical Formulation
 
@@ -223,11 +223,11 @@ Despite nonlinearity, the equation demonstrates good numerical solvability:
 
 ## 10. Conclusion
 
-The gravitational-electromagnetic unification equation represents the ultimate achievement of Zhang Xiangqian's Unified Field Theory, mathematically unifying gravitational and electromagnetic forces for the first time. Through rigorous derivation, comprehensive verification, and deep physical analysis, it demonstrates excellent mathematical consistency and physical validity. The equation reveals that gravitational and electromagnetic fields share a common spatial origin, with their interactions governed by rotational coupling mechanisms. As the capstone of UFT, it integrates all previous core equations into a complete, self-consistent theoretical system, marking a significant milestone in the pursuit of physics unification. While experimental verification remains challenging, the equation provides a powerful theoretical framework for future research, with potential applications spanning fundamental physics, energy technologies, and space exploration. This achievement opens new horizons for understanding the fundamental nature of the universe and developing transformative technologies.
+The gravitational-electromagnetic unification equation represents the ultimate achievement of ZUFT's Unified Field Theory, mathematically unifying gravitational and electromagnetic forces for the first time. Through rigorous derivation, comprehensive verification, and deep physical analysis, it demonstrates excellent mathematical consistency and physical validity. The equation reveals that gravitational and electromagnetic fields share a common spatial origin, with their interactions governed by rotational coupling mechanisms. As the capstone of UFT, it integrates all previous core equations into a complete, self-consistent theoretical system, marking a significant milestone in the pursuit of physics unification. While experimental verification remains challenging, the equation provides a powerful theoretical framework for future research, with potential applications spanning fundamental physics, energy technologies, and space exploration. This achievement opens new horizons for understanding the fundamental nature of the universe and developing transformative technologies.
 
 ## 11. References
 
-1. Zhang XQ. Unified Field Theory. China Science and Technology Press, 2020.
+1. ZUFT. Unified Field Theory. China Science and Technology Press, 2020.
 2. Maxwell JC. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 3. Einstein A. Zur Elektrodynamik bewegter Körper. Annalen der Physik, 1905, 322(10): 891-921.
 4. Einstein A. Die Grundlage der allgemeinen Relativitätstheorie. Annalen der Physik, 1916, 49(7): 769-822.

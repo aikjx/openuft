@@ -4,7 +4,7 @@ from scipy.optimize import fsolve
 import sympy as sp
 
 class ZhangQianTimePotential:
-    """张祥前统一场论时间势差公式验证类"""
+    """ZUFT统一场论时间势差公式验证类"""
     
     def __init__(self):
         # 物理常数
@@ -62,18 +62,18 @@ class ZhangQianTimePotential:
         
         dt = 86400  # 1天 (秒)
         
-        # 张祥前公式计算
+        # ZUFT公式计算
         delta_tau_zhang = self.time_difference(r1, omega1, p1, r2, omega2, p2, dt)
         
         # 广义相对论计算 (弱场近似)
         delta_tau_gr = - (self.G * self.M_earth) / (self.c**2 * self.R_earth) * dt
         
-        print(f"张祥前公式计算结果: {delta_tau_zhang:.2e} s")
+        print(f"ZUFT公式计算结果: {delta_tau_zhang:.2e} s")
         print(f"广义相对论计算结果: {delta_tau_gr:.2e} s")
         print(f"相对误差: {abs((delta_tau_zhang - delta_tau_gr) / delta_tau_gr * 100):.2f}%")
         
         # 参数匹配验证
-        # 根据张祥前理论，需要满足: r²ω² + p² ≈ -2GM/r
+        # 根据ZUFT理论，需要满足: r²ω² + p² ≈ -2GM/r
         required_value = -2 * self.G * self.M_earth / self.R_earth
         actual_value = r2**2 * omega2**2 + p2**2
         
@@ -120,7 +120,7 @@ class ZhangQianTimePotential:
         tau_lab_sr = gamma * self.tau_muon
         
         print(f"μ子静止寿命: {self.tau_muon:.2e} s")
-        print(f"张祥前公式计算运动寿命: {tau_lab_zhang:.2e} s")
+        print(f"ZUFT公式计算运动寿命: {tau_lab_zhang:.2e} s")
         print(f"狭义相对论计算运动寿命: {tau_lab_sr:.2e} s")
         print(f"相对误差: {abs((tau_lab_zhang - tau_lab_sr) / tau_lab_sr * 100):.2f}%")
         
@@ -149,7 +149,7 @@ class ZhangQianTimePotential:
         
         dt = 86400  # 1天
         
-        # 张祥前公式计算
+        # ZUFT公式计算
         f1 = self.f_function(r1, omega1, 0)
         f2_complex = np.sqrt(1 + (r2**2 * omega2**2 + p2_imaginary**2) / self.c**2)
         f2 = np.real(f2_complex)
@@ -163,7 +163,7 @@ class ZhangQianTimePotential:
         delta_tau_motion = - (self.v_gps**2) / (2 * self.c**2) * dt
         delta_tau_combined = delta_tau_grav + delta_tau_motion
         
-        print(f"张祥前公式计算结果: {delta_tau_zhang:.2e} s ({delta_tau_zhang*1e6:.2f} μs)")
+        print(f"ZUFT公式计算结果: {delta_tau_zhang:.2e} s ({delta_tau_zhang*1e6:.2f} μs)")
         print(f"GR+SR组合计算结果: {delta_tau_combined:.2e} s ({delta_tau_combined*1e6:.2f} μs)")
         print(f"相对误差: {abs((delta_tau_zhang - delta_tau_combined) / delta_tau_combined * 100):.2f}%")
         
@@ -299,7 +299,7 @@ def main():
     """主验证函数"""
     validator = ZhangQianTimePotential()
     
-    print("张祥前统一场论时间势差公式全面验证")
+    print("ZUFT统一场论时间势差公式全面验证")
     print("=" * 60)
     
     # 情况1：纯引力时间膨胀

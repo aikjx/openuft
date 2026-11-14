@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-张祥前统一场论理论框架一致性验证脚本
+ZUFT统一场论理论框架一致性验证脚本
 
 该脚本用于验证理论框架中的核心异常，包括：
 1. 常数f的数值差异问题
@@ -251,7 +251,7 @@ def analyze_conceptual_consistency():
 def main():
     """主验证函数"""
     
-    print("张祥前统一场论理论框架一致性验证脚本")
+    print("ZUFT统一场论理论框架一致性验证脚本")
     print("=" * 70)
     print()
     

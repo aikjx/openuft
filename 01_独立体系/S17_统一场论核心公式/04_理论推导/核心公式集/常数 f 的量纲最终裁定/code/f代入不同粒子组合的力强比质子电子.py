@@ -1,6 +1,6 @@
 #!/usr/bin/env python3 
 """ 
-综合验证张祥前统一场论中耦合常数f和Z'的推导和计算准确性 
+综合验证ZUFT统一场论中耦合常数f和Z'的推导和计算准确性 
 """ 
 
 import numpy as np 
@@ -15,7 +15,7 @@ G = constants.gravitational_constant  # 万有引力常数
 m_p = constants.proton_mass  # 质子质量 
 m_e = constants.electron_mass  # 电子质量 
 
-print("=== 张祥前统一场论综合验证 ===") 
+print("=== ZUFT统一场论综合验证 ===") 
 print() 
 
 # 1. 计算f = (c/2) * sqrt(4πε₀G)

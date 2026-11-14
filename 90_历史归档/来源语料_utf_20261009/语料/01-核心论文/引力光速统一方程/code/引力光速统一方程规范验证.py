@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 引力光速统一方程：Z = Gc/2 的规范Python验证
-基于张祥前统一场论的引力常数G与光速c关系的严格数学验证
+基于ZUFT统一场论的引力常数G与光速c关系的严格数学验证
 
 验证内容：
 1. 量纲分析验证
@@ -35,7 +35,7 @@ class GravitationalLightSpeedUnificationVerifier:
         self.G_codata = 6.67430e-11  # 万有引力常数，单位：m³kg⁻¹s⁻²
         self.c_light = 299792458     # 光速，单位：m/s
         
-        # 张祥前常数Z的计算值
+        # ZUFT常数Z的计算值
         self.Z_calculated = self.G_codata * self.c_light / 2
         
         # 近似值（用于验证）
@@ -62,7 +62,7 @@ class GravitationalLightSpeedUnificationVerifier:
         # 打印量纲分析结果
         print(f"引力常数G的量纲: [M]⁻¹[L]³[T]⁻²")
         print(f"光速c的量纲: [L][T]⁻¹")
-        print(f"张祥前常数Z的量纲: [M]⁻¹[L]⁴[T]⁻³")
+        print(f"ZUFT常数Z的量纲: [M]⁻¹[L]⁴[T]⁻³")
         print(f"\n方程Z = Gc/2的量纲验证: {dim_Z} = {dim_G} × {dim_c}")
         
         # 验证量纲一致性
@@ -100,8 +100,8 @@ class GravitationalLightSpeedUnificationVerifier:
         print("│ {:<38} │ {:<18} │ {:<13} │".format("万有引力常数G (CODATA 2018)", f"{self.G_codata:.5e}", "m³kg⁻¹s⁻²"))
         print("│ {:<38} │ {:<18} │ {:<13} │".format("光速c (精确值)", f"{self.c_light:,}", "m/s"))
         print("│ {:<38} │ {:<18} │ {:<13} │".format("光速c (近似值，30万公里/秒)", f"300000000", "m/s"))
-        print("│ {:<38} │ {:<18} │ {:<13} │".format("张祥前常数Z (精确计算)", f"{Z_exact:.10f}", "kg⁻¹·m⁴·s⁻³"))
-        print("│ {:<38} │ {:<18} │ {:<13} │".format("张祥前常数Z (近似值)", f"{self.Z_assumed}", "kg⁻¹·m⁴·s⁻³"))
+        print("│ {:<38} │ {:<18} │ {:<13} │".format("ZUFT常数Z (精确计算)", f"{Z_exact:.10f}", "kg⁻¹·m⁴·s⁻³"))
+        print("│ {:<38} │ {:<18} │ {:<13} │".format("ZUFT常数Z (近似值)", f"{self.Z_assumed}", "kg⁻¹·m⁴·s⁻³"))
         print("│ {:<38} │ {:<18} │ {:<13} │".format("G预测值 (使用Z≈0.01)", f"{G_predicted:.5e}", "m³kg⁻¹s⁻²"))
         print("│ {:<38} │ {:<18} │ {:<13} │".format("G特别计算 (c=30万km/s, Z=0.01)", f"{G_special:.5e}", "m³kg⁻¹s⁻²"))
         print("│ {:<38} │ {:<18} │ {:<13} │".format("相对误差 (精确c)", f"{relative_error:.6f}%", ""))
@@ -180,7 +180,7 @@ class GravitationalLightSpeedUnificationVerifier:
             {"step": "2. 各向同性修正（几何因子）", 
              "content": "F ∝ 2 × m₁m₂/(R²c)", 
              "valid": True},
-            {"step": "3. 引入张祥前常数Z", 
+            {"step": "3. 引入ZUFT常数Z", 
              "content": "F = Z × 2m₁m₂/(R²c)", 
              "valid": True},
             {"step": "4. 对比万有引力定律", 
@@ -246,7 +246,7 @@ class GravitationalLightSpeedUnificationVerifier:
         ax4.axis('off')
         formulas = [
             r'\text{引力光速统一方程:} \quad Z = \frac{G c}{2}',
-            r'\text{张祥前常数:} \quad Z \approx 0.01 \, \text{kg}^{-1} \cdot \text{m}^4 \cdot \text{s}^{-3}',
+            r'\text{ZUFT常数:} \quad Z \approx 0.01 \, \text{kg}^{-1} \cdot \text{m}^4 \cdot \text{s}^{-3}',
             r'\text{量纲一致性:} \quad [M]^{-1}[L]^4[T]^{-3} = [M]^{-1}[L]^3[T]^{-2} \times [L][T]^{-1}',
             r'\text{相对误差:} \quad \text{仅} 0.045\%'
         ]

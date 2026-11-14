@@ -8,14 +8,14 @@ The gravitational constant $G$ and the speed of light $c$ are two of nature's mo
 
 $$Z = \frac{G \cdot c}{2}$$
 
-where $Z$ is the Zhang Xiangqian Constant ($Z = 0.010004524012147 \, \text{kg}^{-1}·\text{m}^4·\text{s}^{-3}$), representing the density flow rate of space displacement lines per unit time and unit volume. This equation is derived through five independent mathematical methods based on Zhang Xiangqian's unified field theory, which reimagines physics from first principles:
+where $Z$ is the ZUFT Constant ($Z = 0.010004524012147 \, \text{kg}^{-1}·\text{m}^4·\text{s}^{-3}$), representing the density flow rate of space displacement lines per unit time and unit volume. This equation is derived through five independent mathematical methods based on ZUFT's unified field theory, which reimagines physics from first principles:
 1. Time as a quantitative measure of space displacement ($\vec{r}(t) = \vec{C}t$), unifying spacetime
 2. Space flowing in cylindrical spiral patterns at the speed of light $c$, generating all fundamental forces
 3. A geometric factor of 2 arising naturally from 3D-to-2D projection efficiency in our universe
 
 The equation matches experimental measurements perfectly across multiple CODATA datasets, fundamentally redefining $G$ as a derived quantity originating from the geometric structure of space itself rather than an arbitrary empirical parameter. This breakthrough resolves a century-old disconnect between gravity and relativity, provides the most elegant framework for force unification to date, and suggests that physics at its deepest level is fundamentally geometric. Our findings open new avenues for research in quantum gravity, cosmology, and the nature of spacetime itself.
 
-**Keywords:** gravitational-light speed unification; Zhang Xiangqian Constant; spatial dynamics; gravitational constant; speed of light; geometric factor; unified field theory; spacetime geometry
+**Keywords:** gravitational-light speed unification; ZUFT Constant; spatial dynamics; gravitational constant; speed of light; geometric factor; unified field theory; spacetime geometry
 
 ## Introduction
 
@@ -25,7 +25,7 @@ Einstein's general relativity reimagined gravity as the curvature of spacetime, 
 
 This failure reflects a profound crisis at the heart of modern physics. While electromagnetism, the weak force, and the strong force have been unified within the Standard Model, gravity remains an outsider—its true nature elusive, its constant $G$ a stubborn enigma. The inability to unify $G$ and $c$ has prevented us from achieving a complete picture of the universe, leaving fundamental questions about the nature of spacetime, matter, and forces unanswered.
 
-What if this century-old impasse stems from a flawed assumption? Zhang Xiangqian's unified field theory offers a revolutionary perspective by rejecting the conventional view of space as a static backdrop. Instead, it proposes that space itself is a dynamic entity with intrinsic motion:
+What if this century-old impasse stems from a flawed assumption? ZUFT's unified field theory offers a revolutionary perspective by rejecting the conventional view of space as a static backdrop. Instead, it proposes that space itself is a dynamic entity with intrinsic motion:
 - Space flows in cylindrical spiral patterns around all objects at the speed of light $c$
 - Mass is not an intrinsic property of matter but a geometric measure of this light-speed spatial motion
 - All fundamental forces—gravitational and electromagnetic—are dual manifestations of the same underlying spatial dynamics
@@ -36,7 +36,7 @@ In this work, we build on these radical insights to derive the gravitational-lig
 
 ### 2.1 Core Assumptions: A New Physics from First Principles
 
-Zhang Xiangqian's unified field theory redefines the foundations of physics through six self-consistent core assumptions that form a mathematically rigorous framework:
+ZUFT's unified field theory redefines the foundations of physics through six self-consistent core assumptions that form a mathematically rigorous framework:
 
 1. **Dual Ontology of the Universe**: The cosmos consists solely of objects and space—no additional dimensions, fields, or fundamental particles are required. All physical phenomena, from gravity to electromagnetism, emerge from dynamic interactions between objects and space.
 
@@ -130,7 +130,7 @@ Analyzing the net contribution of all solid angles to planar interactions:
 
 ### 4.1 Spatial Dynamics Framework for Gravitational Force
 
-From the perspective of Zhang Xiangqian's unified field theory, gravitational force arises from the interaction of spatial flows around objects. This interaction can be decomposed into four fundamental physical factors:
+From the perspective of ZUFT's unified field theory, gravitational force arises from the interaction of spatial flows around objects. This interaction can be decomposed into four fundamental physical factors:
 
 1. **Mass-Mass Coupling**: Gravitational force depends on the product of the interacting masses, reflecting the additive nature of spatial dynamics:
    $$F \propto m_1 m_2$$
@@ -147,7 +147,7 @@ From the perspective of Zhang Xiangqian's unified field theory, gravitational fo
 Combining these factors yields the spatial dynamics expression for gravitational force:
 $$F = Z \cdot \frac{2 m_1 m_2}{R^2 c} \tag{1}$$
 
-Here, $Z$ is the Zhang Xiangqian Constant, a fundamental constant representing the density flow rate of space displacement lines per unit time and unit volume.
+Here, $Z$ is the ZUFT Constant, a fundamental constant representing the density flow rate of space displacement lines per unit time and unit volume.
 
 ### 4.2 Equivalence with Newton's Universal Gravitation
 
@@ -167,7 +167,7 @@ $$Z = \frac{G \cdot c}{2} \tag{3}$$
 
 This elegant equation represents a paradigm shift in our understanding of gravity and the structure of the universe:
 
-- **$G$ as a Derived Quantity**: For the first time in history, $G$ is revealed as a derived constant rather than a fundamental parameter, its value determined by the speed of light $c$ and the Zhang Xiangqian Constant $Z$
+- **$G$ as a Derived Quantity**: For the first time in history, $G$ is revealed as a derived constant rather than a fundamental parameter, its value determined by the speed of light $c$ and the ZUFT Constant $Z$
 
 - **Geometric Origin of Gravity**: Gravity's strength is no longer a mysterious empirical fact but arises naturally from the geometric structure of space and its intrinsic motion at speed $c$
 
@@ -313,9 +313,9 @@ Our theory offers a new cosmic lens:
 - **Cosmic Expansion**: Does space's intrinsic expansion explain universal acceleration, eliminating dark energy need?
 - **Early Universe Physics**: What does our theory predict about cosmic inflation, the Big Bang, and cosmic structure origin?
 
-### 6.6 The Zhang Xiangqian Constant: A New Physics Pillar
+### 6.6 The ZUFT Constant: A New Physics Pillar
 
-The Zhang Xiangqian Constant $Z$ ($0.010004524012147$ kg⁻¹·m⁴·s⁻³) represents a new fundamental constant with profound significance:
+The ZUFT Constant $Z$ ($0.010004524012147$ kg⁻¹·m⁴·s⁻³) represents a new fundamental constant with profound significance:
 
 - **Physical Meaning**: It describes space displacement line density flow rate, a vacuum fundamental property defining gravitational interaction strength
 - **Numerical Elegance**: Its approximate $0.01$ value (within $0.05\%$) suggests deep connections to our physical laws' mathematical structure, reminiscent of the fine-structure constant's electromagnetism role
@@ -333,7 +333,7 @@ Beyond scientific significance, our work has profound philosophical implications
 
 ## Conclusion
 
-We have derived the gravitational-light speed unification equation $Z = \frac{G \cdot c}{2}$ using five independent mathematical methods based on Zhang Xiangqian's unified field theory. This equation represents a paradigm shift in physics, establishing a precise quantitative relationship between two of nature's most fundamental constants.
+We have derived the gravitational-light speed unification equation $Z = \frac{G \cdot c}{2}$ using five independent mathematical methods based on ZUFT's unified field theory. This equation represents a paradigm shift in physics, establishing a precise quantitative relationship between two of nature's most fundamental constants.
 
 Our key findings include:
 - **The Geometric Factor 2**: A fundamental constant of nature arising from 3D-to-2D projection, confirmed through five independent mathematical derivations
@@ -341,7 +341,7 @@ Our key findings include:
 - **Unified Force Framework**: Gravity and electromagnetism share a common origin in spatial spiral motion, providing the most elegant unification framework to date
 - **Perfect Experimental Agreement**: The equation matches experimental measurements with zero error across multiple CODATA datasets, representing one of the most precise theoretical predictions ever confirmed
 
-This discovery redefines our understanding of gravity, spacetime, and the fundamental forces of nature. It suggests that physics at its deepest level is fundamentally geometric, with space itself as the primary reality from which all phenomena emerge. The Zhang Xiangqian Constant $Z$ emerges as a new fundamental constant, potentially as central to physics as $c$ or $\hbar$.
+This discovery redefines our understanding of gravity, spacetime, and the fundamental forces of nature. It suggests that physics at its deepest level is fundamentally geometric, with space itself as the primary reality from which all phenomena emerge. The ZUFT Constant $Z$ emerges as a new fundamental constant, potentially as central to physics as $c$ or $\hbar$.
 
 Our work resolves a century-old disconnect between gravity and relativity, provides a crucial bridge between general relativity and quantum field theory, and offers a new lens through which to view the cosmos—from the smallest quantum scales to the largest cosmological structures. This is not merely an equation; it is a new foundation for physics, opening unprecedented avenues for research in quantum gravity, cosmology, and the nature of reality itself.
 

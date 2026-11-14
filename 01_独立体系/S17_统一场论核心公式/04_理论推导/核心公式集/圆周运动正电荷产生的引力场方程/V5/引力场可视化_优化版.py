@@ -379,7 +379,7 @@ class Visualizer:
         
         # 创建图形
         fig = plt.figure(figsize=(18, 14))
-        fig.suptitle('圆周运动正电荷引力场可视化：基于张祥前统一场论', fontsize=16, fontweight='bold')
+        fig.suptitle('圆周运动正电荷引力场可视化：基于ZUFT统一场论', fontsize=16, fontweight='bold')
         
         # 使用gridspec创建布局
         gs = gridspec.GridSpec(3, 2, figure=fig, height_ratios=[1, 1, 1])

@@ -16,7 +16,7 @@ Z_prime = c / (8 * np.pi * epsilon_0)
 f = np.sqrt(Z / Z_prime) * (c / 2)
 
 # 显示结果
-print("=== 张祥前统一场论常数 f 的精确计算验证 ===")
+print("=== ZUFT统一场论常数 f 的精确计算验证 ===")
 print(f"引力几何常数 Z = Gc/2 = {Z:.6e} m⁴·kg⁻¹·s⁻³")
 print(f"电磁几何常数 Z' = c/(8πε₀) = {Z_prime:.6e} m⁴·kg⁻¹·s⁻³·C⁻²")
 print(f"比值 Z/Z' = {Z/Z_prime:.6e}")

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Generate publication-ready plots for curvature and torsion in cylindrical spiral motion
-from Zhang Xiangqian's Unified Field Theory.
+from ZUFT's Unified Field Theory.
 
 Equations:
 1. Curvature radius: ρ = (r²ω² + p²) / (rω²)

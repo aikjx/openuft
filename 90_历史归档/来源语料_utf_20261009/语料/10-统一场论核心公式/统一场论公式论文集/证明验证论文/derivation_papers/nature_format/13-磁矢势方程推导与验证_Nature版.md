@@ -6,19 +6,19 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The magnetic vector potential equation is a core component of Zhang Xiangqian's Unified Field Theory (UFT), describing the relationship between the magnetic vector potential and the magnetic field while revealing an alternative mathematical description of magnetic phenomena. The equation $$\vec{\nabla} \times \vec{A} = \frac{\vec{B}}{f}$$ connects the magnetic vector potential to magnetic field geometry, with significant implications for electromagnetic theory and quantum mechanics. Through symbolic computation with SymPy, we verify its mathematical consistency, relationships with other fundamental equations, and physical validity. This formulation provides a new theoretical framework for understanding magnetic fields from a geometric and unified field perspective, with potential applications in unifying electromagnetic theory with quantum mechanics and gravity.
+The magnetic vector potential equation is a core component of ZUFT's Unified Field Theory (UFT), describing the relationship between the magnetic vector potential and the magnetic field while revealing an alternative mathematical description of magnetic phenomena. The equation $$\vec{\nabla} \times \vec{A} = \frac{\vec{B}}{f}$$ connects the magnetic vector potential to magnetic field geometry, with significant implications for electromagnetic theory and quantum mechanics. Through symbolic computation with SymPy, we verify its mathematical consistency, relationships with other fundamental equations, and physical validity. This formulation provides a new theoretical framework for understanding magnetic fields from a geometric and unified field perspective, with potential applications in unifying electromagnetic theory with quantum mechanics and gravity.
 
 ---
 
 ## Introduction
 
-In electromagnetism, magnetic fields are traditionally described using the磁感应强度 vector \(\vec{B}\). However, the introduction of the magnetic vector potential \(\vec{A}\) provides an alternative mathematical description with significant theoretical advantages. The magnetic vector potential simplifies electromagnetic calculations, enables gauge transformations, and explains quantum phenomena like the Aharonov-Bohm effect. Zhang Xiangqian's Unified Field Theory presents an innovative magnetic vector potential equation that further deepens our understanding by connecting the magnetic vector potential to spatial geometric structure and rotational motion, offering new insights into the unification of electromagnetic and gravitational forces. As a core equation in UFT, it builds upon the gravitational-electromagnetic field conversion equation and lays the groundwork for subsequent field interaction equations, representing a crucial step toward the grand unification of physics.
+In electromagnetism, magnetic fields are traditionally described using the磁感应强度 vector \(\vec{B}\). However, the introduction of the magnetic vector potential \(\vec{A}\) provides an alternative mathematical description with significant theoretical advantages. The magnetic vector potential simplifies electromagnetic calculations, enables gauge transformations, and explains quantum phenomena like the Aharonov-Bohm effect. ZUFT's Unified Field Theory presents an innovative magnetic vector potential equation that further deepens our understanding by connecting the magnetic vector potential to spatial geometric structure and rotational motion, offering new insights into the unification of electromagnetic and gravitational forces. As a core equation in UFT, it builds upon the gravitational-electromagnetic field conversion equation and lays the groundwork for subsequent field interaction equations, representing a crucial step toward the grand unification of physics.
 
 ## 2. Mathematical Formulation
 
@@ -56,7 +56,7 @@ This standard representation in classical electromagnetism simplifies many calcu
 
 **Step 3: UFT Formulation with Proportionality Constant**
 
-In Zhang Xiangqian's Unified Field Theory, a proportionality constant \(f\) is introduced to maintain consistency with other UFT equations and account for spatial geometric properties. This results in the UFT magnetic vector potential equation:
+In ZUFT's Unified Field Theory, a proportionality constant \(f\) is introduced to maintain consistency with other UFT equations and account for spatial geometric properties. This results in the UFT magnetic vector potential equation:
 
 $$\vec{\nabla} \times \vec{A} = \frac{\vec{B}}{f}$$
 
@@ -159,7 +159,7 @@ The UFT magnetic vector potential equation provides a sophisticated mathematical
 
 ## 10. References
 
-1. Zhang XQ. Unified Field Theory. China Science and Technology Press, 2020.
+1. ZUFT. Unified Field Theory. China Science and Technology Press, 2020.
 2. Maxwell JC. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 3. Einstein A. Zur Elektrodynamik bewegter Körper. Annalen der Physik, 1905, 322(10): 891-921.
 4. Aharonov Y, Bohm D. Significance of electromagnetic potentials in the quantum theory. Physical Review, 1959, 115(3): 485-491.

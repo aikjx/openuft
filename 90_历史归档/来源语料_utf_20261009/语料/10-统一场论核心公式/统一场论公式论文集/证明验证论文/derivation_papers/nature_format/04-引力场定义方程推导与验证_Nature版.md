@@ -6,12 +6,12 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
-We derive and validate the gravitational field definition equation within Zhang Xiangqian's Unified Field Theory framework, geometricizing gravity as a manifestation of spatial motion. The equation \( \overrightarrow{A} = -Gk\frac{\Delta n}{\Delta s}\frac{\overrightarrow{r}}{r} \) establishes a quantitative relationship between gravitational field strength and spatial point density change. Through rigorous mathematical derivation, symbolic computation, multi-scale numerical validation, and dimensional analysis, we confirm the equation's mathematical self-consistency, physical validity, and compatibility with Newtonian gravity in the classical limit. This formulation offers a revolutionary geometric perspective on gravity, transforming it from a "force" to a property of spatial motion, potentially resolving fundamental conflicts between general relativity and quantum mechanics while providing a unified geometric paradigm for all fundamental interactions.
+We derive and validate the gravitational field definition equation within ZUFT's Unified Field Theory framework, geometricizing gravity as a manifestation of spatial motion. The equation \( \overrightarrow{A} = -Gk\frac{\Delta n}{\Delta s}\frac{\overrightarrow{r}}{r} \) establishes a quantitative relationship between gravitational field strength and spatial point density change. Through rigorous mathematical derivation, symbolic computation, multi-scale numerical validation, and dimensional analysis, we confirm the equation's mathematical self-consistency, physical validity, and compatibility with Newtonian gravity in the classical limit. This formulation offers a revolutionary geometric perspective on gravity, transforming it from a "force" to a property of spatial motion, potentially resolving fundamental conflicts between general relativity and quantum mechanics while providing a unified geometric paradigm for all fundamental interactions.
 
 ---
 
@@ -19,7 +19,7 @@ We derive and validate the gravitational field definition equation within Zhang 
 
 Gravity, the weakest yet most universal fundamental interaction, has long challenged physicists. From Newton's inverse-square law to Einstein's geometric curvature theory, our understanding has evolved dramatically, yet a unified geometric description compatible with quantum mechanics remains elusive.
 
-Zhang Xiangqian's Unified Field Theory (UFT) presents a radical approach by geometrizing gravity as a manifestation of spatial motion. This work systematically derives and validates the gravitational field definition equation, establishing its mathematical rigor, physical self-consistency, and compatibility with existing theories, while revealing its profound implications for fundamental physics.
+ZUFT's Unified Field Theory (UFT) presents a radical approach by geometrizing gravity as a manifestation of spatial motion. This work systematically derives and validates the gravitational field definition equation, establishing its mathematical rigor, physical self-consistency, and compatibility with existing theories, while revealing its profound implications for fundamental physics.
 
 ## Theoretical Framework
 
@@ -196,7 +196,7 @@ Symbolic computation using SymPy confirms:
 
 ## Conclusion
 
-We have systematically derived and validated the gravitational field definition equation \( \overrightarrow{A} = -Gk\frac{\Delta n}{\Delta s}\frac{\overrightarrow{r}}{r} \) within Zhang Xiangqian's Unified Field Theory. This equation geometrizes gravity as a manifestation of spatial motion, transforming our understanding of gravitational essence.
+We have systematically derived and validated the gravitational field definition equation \( \overrightarrow{A} = -Gk\frac{\Delta n}{\Delta s}\frac{\overrightarrow{r}}{r} \) within ZUFT's Unified Field Theory. This equation geometrizes gravity as a manifestation of spatial motion, transforming our understanding of gravitational essence.
 
 Key achievements:
 1. Rigorous mathematical derivation from UFT postulates
@@ -209,7 +209,7 @@ This work represents a significant step toward unifying gravity with other funda
 
 ## References
 
-1. Zhang, X. Q. (2023). Unified Field Theory: Foundations and Significance. *Journal of Modern Physics*.
+1. ZUFT (2023). Unified Field Theory: Foundations and Significance. *Journal of Modern Physics*.
 2. Newton, I. (1687). *Philosophiæ Naturalis Principia Mathematica*.
 3. Einstein, A. (1916). The Foundation of the General Theory of Relativity. *Annalen der Physik*.
 4. Misner, C. W., Thorne, K. S., & Wheeler, J. A. (1973). *Gravitation*.
@@ -218,4 +218,4 @@ This work represents a significant step toward unifying gravity with other funda
 7. Smolin, L. (2001). *Three Roads to Quantum Gravity*.
 8. Polchinski, J. (1998). *String Theory*.
 9. Weinberg, S. (1995). *The Quantum Theory of Fields*.
-10. Zhang, X. Q. (2025). Unified Field Theory: A New Perspective on Space, Time and Matter. *Journal of Modern Physics*.
+10. ZUFT (2025). Unified Field Theory: A New Perspective on Space, Time and Matter. *Journal of Modern Physics*.

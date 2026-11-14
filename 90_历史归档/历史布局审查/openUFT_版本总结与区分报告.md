@@ -41,7 +41,7 @@ $ git ls-remote https://github.com/aikjx/openUFT.git
 
 | 文件 | 日期 | 大小 | 定位 |
 |---|---|---|---|
-| `README.md` | 2026-06-14 | 5.4 KB | **统一场论研究平台**（React + Vite + Three.js + KaTeX 前端项目，基于张祥前统一场论），Node.js/npm 工程仓库 README |
+| `README.md` | 2026-06-14 | 5.4 KB | **统一场论研究平台**（React + Vite + Three.js + KaTeX 前端项目，基于ZUFT统一场论），Node.js/npm 工程仓库 README |
 | `math_analysis_report.md` | 2026-06-15 | 8.7 KB | 早期数学分析报告 |
 
 **该 README 末尾附有迁移说明**：将旧仓库 `github.com/aikjx/my_lib` 与 `gitcode.com/aikjx/my_lib` 同步操作，目标是把所有内容迁到新仓库——这是 openUFT 的**直接前身**。
@@ -51,7 +51,7 @@ $ git ls-remote https://github.com/aikjx/openUFT.git
 ### 阶段二：GAQ-UFT 体系（2026-07-29 ~ 07-31）
 
 **项目代号：GAQ-UFT = Geometric Action Quantum Unified Field Theory（几何作用量子统一场论）**
-**统一标签：AI科技星最高权限 / GMUFT / 张祥前统一场论的几何化版本**
+**统一标签：AI科技星最高权限 / GMUFT / ZUFT统一场论的几何化版本**
 
 #### 2.1 体系化专著（7月29-30日）
 
@@ -90,7 +90,7 @@ $ git ls-remote https://github.com/aikjx/openUFT.git
 
 | 时间 | 文件 | 大小 | 主题 |
 |---|---|---|---|
-| 08-09 | `大统一方程与四力统一全集_AI科技星最高权限版.md` | 22.1 KB | **大统一方程与四力归一化**完整方程库，张祥前统一场论 + GAQ 体系整合（mpmath 200 位审计） |
+| 08-09 | `大统一方程与四力统一全集_AI科技星最高权限版.md` | 22.1 KB | **大统一方程与四力归一化**完整方程库，ZUFT统一场论 + GAQ 体系整合（mpmath 200 位审计） |
 | 08-25 | `G_eps0_full_dimensional_analysis_20260825.md` | 22.1 KB | 引力-曲率-拖拽-电磁耦合全维分析（mpmath 250 位） |
 
 ---

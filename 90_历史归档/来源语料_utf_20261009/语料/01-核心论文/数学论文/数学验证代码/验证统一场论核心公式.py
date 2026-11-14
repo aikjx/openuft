@@ -1,7 +1,7 @@
 """
-Zhang Xiangqian's Unified Field Theory Core Formula Verification
+ZUFT's Unified Field Theory Core Formula Verification
 
-This script numerically verifies the core formulas of Zhang Xiangqian's Unified Field Theory,
+This script numerically verifies the core formulas of ZUFT's Unified Field Theory,
 including geometric factor 2, gravitational-light speed unified equation, and other fundamental relationships.
 
 File: verify_unified_field_theory_formulas.py
@@ -286,11 +286,11 @@ def analyze_spiral_motion():
 
 if __name__ == "__main__":
     """
-    Main execution block for Zhang Xiangqian's Unified Field Theory core formula verification.
+    Main execution block for ZUFT's Unified Field Theory core formula verification.
     
     This block runs all verification functions and prints a comprehensive summary of results.
     """
-    print("===== Zhang Xiangqian's Unified Field Theory Core Formula Verification =====")
+    print("===== ZUFT's Unified Field Theory Core Formula Verification =====")
     
     # Run all verifications
     geometric_factor = verify_geometric_factor()
@@ -307,6 +307,6 @@ if __name__ == "__main__":
     print("4. Time-space unification equation derivative analysis matches theoretical expectations")
     print("5. Geometric factor 2 manifestation in three-dimensional spiral motion is verified")
     
-    print("\nConclusion: The core formulas of Zhang Xiangqian's Unified Field Theory are mathematically self-consistent.")
+    print("\nConclusion: The core formulas of ZUFT's Unified Field Theory are mathematically self-consistent.")
     print("The geometric factor 2, gravitational-light speed unified equation, and electromagnetic coupling constant")
     print("have all passed rigorous mathematical verification.")

@@ -18,7 +18,7 @@
 - `10_D_求导_derivation/D2_经典场论/`（麦克斯韦/爱因斯坦/测地线偏离）
 - `10_D_求导_derivation/D3_量子场论/`（KG/Dirac/Schrödinger/不确定性）
 - `10_D_求导_derivation/D4_规范场/`（YM/Higgs/EW/PDG）
-- `10_D_求导_derivation/D5_大统一力方程/`（张祥前四力分解）
+- `10_D_求导_derivation/D5_大统一力方程/`（ZUFT四力分解）
 
 ## 20_P_证明_proof/ 方法②：证明（12 定理核心）
 

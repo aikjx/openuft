@@ -13,7 +13,7 @@ def clean(s):return html.unescape(re.sub('<[^>]+>','',s))
 def norm(s):return re.sub(r'[^\w]+','',clean(s).lower())
 def author(a):return (a.get('family',a.get('name',''))+' '+a.get('given','')).strip()
 records=[]
-records.append({'id':'ZXQ2024','citation':'Zhang X Q. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.','status':'用户提供；未取得全文，出版社和 ISBN 尚未独立核实','title':'Unified Field Theory (Academic Edition): Extraterrestrial Technology','author':'Zhang, X Q','year':'2024','publisher':'Hope Grace Publishing','isbn':'978-1966423058','type':'book','url':''})
+records.append({'id':'ZUFT2024','citation':'ZUFT. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.','status':'用户提供；未取得全文，出版社和 ISBN 尚未独立核实','title':'Unified Field Theory (Academic Edition): Extraterrestrial Technology','author':'Zhang, X Q','year':'2024','publisher':'Hope Grace Publishing','isbn':'978-1966423058','type':'book','url':''})
 metadata=json.loads((BASE/'文献元数据.json').read_text(encoding='utf-8'))
 resolved=[r for r in metadata if r['status']=='metadata_retrieved']
 legacy=BASE/'原参考文献待核底稿.md'
@@ -70,7 +70,7 @@ for rid,filename in internal:
 
 for row in records:row['citation']=row['citation'].replace('..','.')
 body='# 统一参考文献与引用规则\n\n[结构化引用登记](引用登记.csv) · [BibTeX](references.bib) · [DOI 元数据及失败记录](文献元数据.json) · [原列表底稿](原参考文献待核底稿.md)。\n\n体系按物理内容命名；作者姓名用于来源署名。原题名保留原语言，不将他人著作归为本项目原创。引用登记只表示出处，不证明其中主张成立。\n\n## 用户指定著作\n\n'
-body+='**[ZXQ2024]** '+records[0]['citation']+'\n\n'+records[0]['status']+'。未掌握具体页码时，不把项目某条公式断言为已由该书证明。\n\n## 经典、数学与软件文献\n\n'
+body+='**[ZUFT2024]** '+records[0]['citation']+'\n\n'+records[0]['status']+'。未掌握具体页码时，不把项目某条公式断言为已由该书证明。\n\n## 经典、数学与软件文献\n\n'
 for r in records[1:]:
     if r['id']=='GLOBAL01':body+='\n## 全球路线原始入口\n\n'
     if r['id']=='LOCAL01':body+='\n## 本项目内部研究稿\n\n'
@@ -78,7 +78,7 @@ for r in records[1:]:
     if r.get('url'):body+=' [来源]('+r['url']+')。'
     if r.get('local_link'):body+=' [当前文件]('+r['local_link']+')。'
     body+='\n\n'
-body+='## 正文引用与语言版本\n\n正文使用稳定编号，例如 [ZXQ2024]，并在能查到原文时补充具体页码/章节。书目数据由用户提供或尚未独立核实时，保留此状态，不猜测 DOI、页码、版次或译者。\n\n英文、日语摘要使用同一套引用编号和原文题名；只翻译说明文字，不虚构英文版、日文版或译本 ISBN。\n\n[English](../../05_全球研究/03_多语种协作/英语/项目介绍.md) · [日本語](../../05_全球研究/03_多语种协作/日语/项目介绍.md)。\n'
+body+='## 正文引用与语言版本\n\n正文使用稳定编号，例如 [ZUFT2024]，并在能查到原文时补充具体页码/章节。书目数据由用户提供或尚未独立核实时，保留此状态，不猜测 DOI、页码、版次或译者。\n\n英文、日语摘要使用同一套引用编号和原文题名；只翻译说明文字，不虚构英文版、日文版或译本 ISBN。\n\n[English](../../05_全球研究/03_多语种协作/英语/项目介绍.md) · [日本語](../../05_全球研究/03_多语种协作/日语/项目介绍.md)。\n'
 (BASE/'BIBLIOGRAPHY.md').write_text(body,encoding='utf-8')
 with (BASE/'引用登记.csv').open('w',encoding='utf-8',newline='') as f:
     w=csv.DictWriter(f,fieldnames=['id','citation','status','url','local_path'],extrasaction='ignore');w.writeheader();w.writerows(records)

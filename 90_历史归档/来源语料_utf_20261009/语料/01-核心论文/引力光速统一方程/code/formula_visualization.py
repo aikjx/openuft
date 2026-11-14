@@ -63,7 +63,7 @@ plt.style.use('seaborn-v0_8-paper')
 # Define physical constants
 G = 6.67430e-11  # m³ kg⁻¹ s⁻² (gravitational constant)
 c = 2.99792458e8  # m/s (speed of light)
-Z = 0.010004524012147  # kg⁻¹ m⁴ s⁻³ (Zhang Xiangqian constant)
+Z = 0.010004524012147  # kg⁻¹ m⁴ s⁻³ (ZUFT constant)
 
 # Create img directory if it doesn't exist
 import os
@@ -88,7 +88,7 @@ core_eq = r"$Z = \frac{G \cdot c}{2}$"
 ax.text(0.5, 0.5, core_eq, fontsize=36, ha='center', va='center', transform=ax.transAxes)
 
 # Add annotations for constants
-ax.text(0.2, 0.3, r"$Z$: Zhang Xiangqian Constant", fontsize=12, ha='center', va='center', transform=ax.transAxes)
+ax.text(0.2, 0.3, r"$Z$: ZUFT Constant", fontsize=12, ha='center', va='center', transform=ax.transAxes)
 ax.text(0.5, 0.3, r"$G$: Gravitational Constant", fontsize=12, ha='center', va='center', transform=ax.transAxes)
 ax.text(0.8, 0.3, r"$c$: Speed of Light", fontsize=12, ha='center', va='center', transform=ax.transAxes)
 

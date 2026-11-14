@@ -43,11 +43,11 @@ print(f"回旋频率 f = {1/T_classical:.6e} Hz")
 print(f"回旋角速度 ω = {omega_classical:.6e} rad/s")
 
 # ==========================
-# 2. 张祥前统一场论的数学求导验证
+# 2. ZUFT统一场论的数学求导验证
 # ==========================
 
 print(f"\n" + "="*50)
-print("2. 张祥前统一场论的数学求导验证")
+print("2. ZUFT统一场论的数学求导验证")
 print("="*50)
 
 # 统一场论关键参数推导
@@ -71,7 +71,7 @@ print("- 磁场与空间旋转关系：B ∝ ω")
 print("- 双层螺旋结构导致因子2差异")
 
 print(f"\n2.2 数值计算结果:")
-print(f"=== 张祥前统一场论解法 ===")
+print(f"=== ZUFT统一场论解法 ===")
 print(f"经典回旋角速度 ω_classical = {omega_classical:.6e} rad/s")
 print(f"统一场论角速度 ω_UFT = {omega_uft:.6e} rad/s (2倍关系)")
 print(f"轨道半径 r = {r_uft:.6e} m")
@@ -108,7 +108,7 @@ print(f"   r = mv/(qB) = {r_classical:.6e} m")
 print(f"   T = 2πm/(qB) = {T_classical:.6e} s")
 print(f"   ω = qB/m = {2*np.pi/T_classical:.6e} rad/s")
 
-print("\n2. 张祥前统一场论推导:")
+print("\n2. ZUFT统一场论推导:")
 print(f"   r = mv/(qB) = {r_uft:.6e} m (与传统相同)")
 print(f"   T = πm/(qB) = {T_uft:.6e} s (因子2差异)")
 print(f"   ω_UFT = 2qB/m = {omega_uft:.6e} rad/s")

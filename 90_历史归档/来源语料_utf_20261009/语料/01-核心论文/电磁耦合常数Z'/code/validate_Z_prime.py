@@ -8,7 +8,7 @@ def calculate_Z_prime():
     return Z_prime
 
 def calculate_Z():
-    """计算Z的值（注意：此定义基于张祥前理论，与主流物理学不同）"""
+    """计算Z的值（注意：此定义基于ZUFT理论，与主流物理学不同）"""
     # 注意：在主流物理学中，G和c是独立常数，此定义存在物理意义问题
     Z = G * c / 2
     return Z
@@ -129,7 +129,7 @@ def validate_geometry_factors():
     print(f"经典电磁学几何因子: 4π")
     print(f"库仑常数 k_e = 1/(4πε₀) = {k_e:.10e}")
     
-    # 张祥前理论的几何因子
+    # ZUFT理论的几何因子
     Z_prime_4pi = c / (4 * pi * epsilon_0)
     Z_prime_8pi = calculate_Z_prime()
     print(f"Z' (4π因子) = {Z_prime_4pi:.10e}")

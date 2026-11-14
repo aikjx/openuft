@@ -3,7 +3,7 @@
 """
 正引力场与反引力场的数学验证脚本
 功能：验证拉格朗日点现象与光速飞行原理的数学推导
-基于张祥前统一场论动力学方程
+基于ZUFT统一场论动力学方程
 """
 
 import numpy as np
@@ -273,7 +273,7 @@ def main():
     """主函数"""
     print("=" * 80)
     print("正引力场与反引力场的数学验证程序")
-    print("基于张祥前统一场论动力学方程")
+    print("基于ZUFT统一场论动力学方程")
     print("=" * 80)
     
     verifier = GravitationalFieldVerifier()

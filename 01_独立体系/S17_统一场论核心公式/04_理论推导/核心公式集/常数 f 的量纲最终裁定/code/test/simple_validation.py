@@ -6,7 +6,7 @@
 import math
 
 print("="*80)
-print("张祥前统一场论常数f的核心验证")
+print("ZUFT统一场论常数f的核心验证")
 print("="*80)
 print()
 

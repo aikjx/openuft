@@ -33,7 +33,7 @@ class ConsciousnessEquationVerifier:
         self.neuron_count = 10**11  # 大脑中的神经元数量
         
         print("===== 思想意识的几何化方程数学验证系统 =====")
-        print("基于张祥前统一场论和算法联盟破解成果")
+        print("基于ZUFT统一场论和算法联盟破解成果")
         print("初始化完成，开始执行数学验证...\n")
     
     def verify_storage_equation(self):

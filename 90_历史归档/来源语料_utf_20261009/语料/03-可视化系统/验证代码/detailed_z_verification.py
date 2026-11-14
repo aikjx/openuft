@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-详细验证张祥前常数Z的精确值
+详细验证ZUFT常数Z的精确值
 通过计算确认正确的Z值，比较新旧值的差异
 """
 import numpy as np
@@ -17,7 +17,7 @@ Z_project = 0.0100065  # kg⁻¹·m⁴·s⁻³
 Z_calculated = (G_codata_2018 * c) / 2
 
 # 输出详细计算结果
-print("===== 张祥前常数Z的精确值验证 =====")
+print("===== ZUFT常数Z的精确值验证 =====")
 print(f"使用CODATA 2018推荐值 G = {G_codata_2018} m³·kg⁻¹·s⁻²")
 print(f"光速 c = {c} m·s⁻¹")
 print(f"\n根据公式 Z = (G * c) / 2 计算:")
@@ -46,6 +46,6 @@ print(f"与CODATA值的差异: {abs(G_from_project - G_codata_2018)}")
 
 # 结论
 print(f"\n===== 结论 =====")
-print(f"正确的张祥前常数Z值应为: {Z_calculated}")
+print(f"正确的ZUFT常数Z值应为: {Z_calculated}")
 print(f"为了保持公式G=2Z/c与CODATA 2018值的一致性，应使用此精确值。")
 print("所有相关文件中的Z值0.0100065应更新为此精确值。")

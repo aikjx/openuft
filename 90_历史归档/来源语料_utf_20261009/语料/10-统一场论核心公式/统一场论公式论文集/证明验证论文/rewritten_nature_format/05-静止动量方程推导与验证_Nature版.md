@@ -1,9 +1,9 @@
 # Rest Mass Momentum Equation: Derivation, Verification, and Momentum Conservation Analysis in Unified Field Theory
 
-**Authors:** Zhang Xiangqian Unified Field Theory Research Team¹
+**Authors:** ZUFT Unified Field Theory Research Team¹
 
 **Affiliations:**
-¹ Zhang Xiangqian Unified Field Theory Research Institute, Nanjing, China
+¹ ZUFT Unified Field Theory Research Institute, Nanjing, China
 
 **Correspondence:** unifiedfieldtheory@research.org
 
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-We present a rigorous derivation and comprehensive verification of the rest mass momentum equation from Zhang Xiangqian's unified field theory, which extends momentum concepts to stationary objects. The equation \(\mathbf{p}_0 = m_0\mathbf{C}_0\) reveals that stationary objects possess momentum proportional to their rest mass and the speed of light, challenging traditional Newtonian momentum concepts. This paper derives the equation from spatial background motion principles, verifies it through symbolic computation and numerical simulation, and provides detailed momentum conservation analysis for both single and multi-particle systems. We demonstrate the equation's equivalence to Einstein's mass-energy relation and its compatibility with relativistic mechanics. Momentum conservation is rigorously proven using Noether's theorem and verified across scales from quantum particles to macroscale objects. This work expands our understanding of momentum's geometric origin, unifies mass, momentum, and energy, and provides a foundation for advanced applications in quantum physics and propulsion systems.
+We present a rigorous derivation and comprehensive verification of the rest mass momentum equation from ZUFT's unified field theory, which extends momentum concepts to stationary objects. The equation \(\mathbf{p}_0 = m_0\mathbf{C}_0\) reveals that stationary objects possess momentum proportional to their rest mass and the speed of light, challenging traditional Newtonian momentum concepts. This paper derives the equation from spatial background motion principles, verifies it through symbolic computation and numerical simulation, and provides detailed momentum conservation analysis for both single and multi-particle systems. We demonstrate the equation's equivalence to Einstein's mass-energy relation and its compatibility with relativistic mechanics. Momentum conservation is rigorously proven using Noether's theorem and verified across scales from quantum particles to macroscale objects. This work expands our understanding of momentum's geometric origin, unifies mass, momentum, and energy, and provides a foundation for advanced applications in quantum physics and propulsion systems.
 
 ---
 
@@ -19,7 +19,7 @@ We present a rigorous derivation and comprehensive verification of the rest mass
 
 ### Introduction
 
-Traditional physics defines momentum as mass times velocity, implying zero momentum for stationary objects. However, Zhang Xiangqian's unified field theory proposes that even stationary objects possess momentum due to the background motion of space itself. This rest mass momentum equation extends momentum concepts to include spatial background dynamics, offering a geometric perspective on momentum that unifies mass, energy, and space. This paper derives and verifies this equation, with particular emphasis on momentum conservation principles that validate its physical consistency.
+Traditional physics defines momentum as mass times velocity, implying zero momentum for stationary objects. However, ZUFT's unified field theory proposes that even stationary objects possess momentum due to the background motion of space itself. This rest mass momentum equation extends momentum concepts to include spatial background dynamics, offering a geometric perspective on momentum that unifies mass, energy, and space. This paper derives and verifies this equation, with particular emphasis on momentum conservation principles that validate its physical consistency.
 
 ### Theoretical Framework
 

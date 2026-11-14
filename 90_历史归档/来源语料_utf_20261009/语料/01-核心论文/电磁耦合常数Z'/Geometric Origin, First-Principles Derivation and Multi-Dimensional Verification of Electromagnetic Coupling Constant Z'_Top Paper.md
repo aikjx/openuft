@@ -17,17 +17,17 @@
 
 ## Abstract
 
-This paper presents a systematic first-principles derivation, rigorous mathematical verification, and comprehensive physical analysis of the electromagnetic coupling constant ($Z'$) within the theoretical framework of Zhang Xiangqian's unified field theory. This theory is founded on the principles of **spacetime unity** and **cylindrical helical motion of space at vector light speed**, unifying fundamental physical concepts such as mass, charge, gravity, and electromagnetic fields into different manifestations of spacetime geometric motion.
+This paper presents a systematic first-principles derivation, rigorous mathematical verification, and comprehensive physical analysis of the electromagnetic coupling constant ($Z'$) within the theoretical framework of ZUFT's unified field theory. This theory is founded on the principles of **spacetime unity** and **cylindrical helical motion of space at vector light speed**, unifying fundamental physical concepts such as mass, charge, gravity, and electromagnetic fields into different manifestations of spacetime geometric motion.
 
 Starting from the axiomatic system of this theory, we derive the analytical expression $$Z' = \frac{c}{8\pi\varepsilon_0}$$ through rigorous geometric reasoning and calculus operations, incorporating the key "double-layer" solid angle correction from $4\pi$ to $8\pi$. Through multi-dimensional cross-validation including dimensional analysis, numerical calculation (based on the CODATA 2018 constant set), correlation verification with the fine-structure constant $\alpha$, and symmetry analysis with the gravitational coupling constant $Z$, we confirm that this formula possesses perfect mathematical self-consistency, dimensional correctness, and high numerical agreement with known physical constants within the theoretical system (the relative error associated with $\alpha$ is approximately $10^{-12}$ order of magnitude).
 
-Furthermore, this paper expounds on the core position of Z' in the unified field theory: it is not only the geometric strength constant of electromagnetic interaction but also the key bridge connecting gravity and electromagnetic force, revealing their common geometric origin. This research comprehensively presents the derivation logic and verification system of the Z' constant in a standardized academic format, providing a systematic discussion of its scientific nature and internal consistency within Zhang Xiangqian's unified field theory framework.
+Furthermore, this paper expounds on the core position of Z' in the unified field theory: it is not only the geometric strength constant of electromagnetic interaction but also the key bridge connecting gravity and electromagnetic force, revealing their common geometric origin. This research comprehensively presents the derivation logic and verification system of the Z' constant in a standardized academic format, providing a systematic discussion of its scientific nature and internal consistency within ZUFT's unified field theory framework.
 
 **PACS Classification:** 04.50.Kd; 04.20.-q; 04.20.Cv; 12.10.-g; 12.20.-m
 
 ## Keywords
 
-unified field theory; electromagnetic coupling constant Z'; geometric physics; first-principles derivation; fine-structure constant; spacetime unity; cylindrical helical motion; double-layer solid angle; Zhang Xiangqian's theory; geometric electromagnetism
+unified field theory; electromagnetic coupling constant Z'; geometric physics; first-principles derivation; fine-structure constant; spacetime unity; cylindrical helical motion; double-layer solid angle; ZUFT's theory; geometric electromagnetism
 
 ## Table of Contents
 
@@ -35,7 +35,7 @@ unified field theory; electromagnetic coupling constant Z'; geometric physics; f
 |---------|-------|------|
 | 1 | Introduction | 4 |
 | 1.1 | Research Background and Scientific Significance | 4 |
-| 1.2 | Overview of Zhang Xiangqian's Unified Field Theory | 5 |
+| 1.2 | Overview of ZUFT's Unified Field Theory | 5 |
 | 1.3 | Present Work and Structure of This Paper | 6 |
 | 2 | Theoretical Foundation and Core Postulates | 6 |
 | 2.1 | Principle of Spacetime Unity | 6 |
@@ -81,11 +81,11 @@ unified field theory; electromagnetic coupling constant Z'; geometric physics; f
 
 Modern physics is built upon several fundamental interactions and their related constants. The deep origin and potential unified relationship between the gravitational constant (G) and Coulomb constant (\( \frac{1}{4\pi\varepsilon_0} \))—as empirical parameters describing the strength of gravity and electromagnetic force—are core issues in fundamental physics. After completing general relativity, Einstein spent decades pursuing unified field theory but ultimately failed. Since then, attempts such as quantum field theory and superstring theory have made important progress but still have not achieved true unification.
 
-Seeking a unified theory that can derive these constants from more fundamental principles is a long-standing goal of physics. The unified field theory proposed by Zhang Xiangqian provides a new geometric paradigm that unifies spacetime, matter, and forces into different manifestations of geometric motion, offering a new perspective for understanding the origin of fundamental constants.
+Seeking a unified theory that can derive these constants from more fundamental principles is a long-standing goal of physics. The unified field theory proposed by ZUFT provides a new geometric paradigm that unifies spacetime, matter, and forces into different manifestations of geometric motion, offering a new perspective for understanding the origin of fundamental constants.
 
-### 1.2 Overview of Zhang Xiangqian's Unified Field Theory
+### 1.2 Overview of ZUFT's Unified Field Theory
 
-The core hypotheses of Zhang Xiangqian's unified field theory include:
+The core hypotheses of ZUFT's unified field theory include:
 
 1. **Universe Composition**: The universe consists of only objects and space; there is no third form of matter
 2. **Spacetime Unity**: Time is not an independent dimension but an observer's perception of space moving at a constant vector light speed, expressed by the spacetime unity equation:
@@ -103,7 +103,7 @@ Within this framework:
 
 This paper focuses on the electromagnetic coupling constant (Z'), with the following objectives:
 
-1. Complete the first-principles derivation of the Z' expression within the theoretical boundary of Zhang Xiangqian's unified field theory, strictly following its axioms and definitions
+1. Complete the first-principles derivation of the Z' expression within the theoretical boundary of ZUFT's unified field theory, strictly following its axioms and definitions
 2. Conduct comprehensive mathematical and physical verification of Z' to prove its correctness, self-consistency, and completeness within the theoretical system
 3. Deeply explore the physical significance of Z' and its core position in the unified field theory
 
@@ -163,7 +163,7 @@ According to Definition 2, the geometric image of an isolated point charge $Q$ i
 
 In classical electromagnetism, the electric field calculation of a point charge is based on Gauss's theorem, which naturally introduces a $4\pi$ solid angle factor for the closed spherical surface integral, corresponding to the spherical symmetry of three-dimensional space.
 
-However, in Zhang Xiangqian's unified field theory, the basic motion mode of space is **cylindrical helical motion**, which has a fundamental "double-layer" structure:
+However, in ZUFT's unified field theory, the basic motion mode of space is **cylindrical helical motion**, which has a fundamental "double-layer" structure:
 
 1. **Space itself has a dual nature**, with both real and virtual components (or forward and reverse rotational directions)
 2. Each point in space participates in two simultaneous helical motions, resulting in a combined effect
@@ -173,7 +173,7 @@ This dual nature of spatial helical motion results in an effective solid angle o
 - $4\pi$ for the real component of spatial motion
 - $4\pi$ for the virtual component of spatial motion
 
-This is a key innovation of Zhang Xiangqian's theory and the geometric origin of the $8\pi$ factor in the $Z'$ expression. It implies that electromagnetic interaction has a deeper spacetime structure with double "channels" or "layers".
+This is a key innovation of ZUFT's theory and the geometric origin of the $8\pi$ factor in the $Z'$ expression. It implies that electromagnetic interaction has a deeper spacetime structure with double "channels" or "layers".
 
 ### 3.3 Geometric Reconstruction of Coulomb's Law and Emergence of Z'
 
@@ -187,7 +187,7 @@ At a distance $r$ from the point charge, the electric field strength $\vec{E}$ s
 Due to the above "double-layer" solid angle effect, when distributing the total "change source strength" of the point charge into space, the denominator solid angle factor should be $8\pi$ instead of $4\pi$ in classical theory.
 
 #### 3.3.4 Connection with Vacuum Permittivity $\varepsilon_0$
-The classical Coulomb's law is $F = \frac{1}{4\pi\varepsilon_0} \cdot \frac{Q_1 Q_2}{r^2}$. To be formally compatible with this empirical law and explain its constant, Zhang Xiangqian's theory compares the geometrically derived field strength expression with Coulomb's law.
+The classical Coulomb's law is $F = \frac{1}{4\pi\varepsilon_0} \cdot \frac{Q_1 Q_2}{r^2}$. To be formally compatible with this empirical law and explain its constant, ZUFT's theory compares the geometrically derived field strength expression with Coulomb's law.
 
 #### 3.3.5 Deriving Z' Expression
 
@@ -201,7 +201,7 @@ The classical Coulomb's law field strength is:
 $$\vec{E}_{classical} = \frac{1}{4\pi\varepsilon_0} \cdot \frac{Q}{r^2} \hat{r}$$
 
 ##### 3.3.5.3 Introducing the "Double-Layer" Solid Angle Correction
-In Zhang Xiangqian's theory, the key geometric correction is the transition from $4\pi$ to $8\pi$ solid angle. This requires us to establish the relationship between the theoretical field and classical field:
+In ZUFT's theory, the key geometric correction is the transition from $4\pi$ to $8\pi$ solid angle. This requires us to establish the relationship between the theoretical field and classical field:
 
 The classical field corresponds to a $4\pi$ solid angle distribution, while the theoretical field incorporates the $8\pi$ solid angle effect. To maintain consistency with empirical observations, we relate the two through a geometric factor:
 
@@ -223,7 +223,7 @@ This form ensures that:
 3. It maintains formal compatibility with classical electromagnetism through the $\varepsilon_0$ term
 4. It has a clear geometric interpretation as a measure of electromagnetic interaction strength in the spacetime geometric framework
 
-Thus, the reconstructed Coulomb's law in Zhang Xiangqian's theory is written as:
+Thus, the reconstructed Coulomb's law in ZUFT's theory is written as:
 $$\vec{E} = Z' \cdot \frac{Q}{r^2} \hat{r} = \frac{c}{8\pi\varepsilon_0} \cdot \frac{Q}{r^2} \hat{r}$$
 
 ### 3.4 Analysis of Mathematical Rigor in the Derivation Path
@@ -248,7 +248,7 @@ Calculate the dimensions of \( Z' = \frac{c}{8\pi\varepsilon_0} \):
 Therefore, the dimension of \( Z' \) is:
 $$[Z'] = \frac{LT^{-1}}{M^{-1}L^{-3}T^4I^2} = M^1 L^4 T^{-5} I^{-2}$$
 
-In Zhang Xiangqian's theory, \( Z' \) is defined as the "geometric coupling constant" of electromagnetic interaction. Its dimension \( M^1 L^4 T^{-5} I^{-2} \) can be understood as: it relates charge (dimension \( IT \)), distance (\( L \)), and some spacetime geometric effect (including \( L^4 T^{-5} \), related to spacetime curvature or the rate of change of acceleration). This dimension is self-consistent within the theory and consistent with its role as a "coupling strength" constant.
+In ZUFT's theory, \( Z' \) is defined as the "geometric coupling constant" of electromagnetic interaction. Its dimension \( M^1 L^4 T^{-5} I^{-2} \) can be understood as: it relates charge (dimension \( IT \)), distance (\( L \)), and some spacetime geometric effect (including \( L^4 T^{-5} \), related to spacetime curvature or the rate of change of acceleration). This dimension is self-consistent within the theory and consistent with its role as a "coupling strength" constant.
 
 ### 4.2 Numerical Verification and Comparison with CODATA
 
@@ -267,7 +267,7 @@ This numerical value is a large positive number, reflecting that electromagnetic
 
 ### 4.3 Key Correlation Verification with Fine-Structure Constant (α)
 
-The fine-structure constant $\alpha \approx 1/137.036$ is a dimensionless constant characterizing the strength of electromagnetic interaction in quantum electrodynamics. In Zhang Xiangqian's theory, $\alpha$ can be related to $Z'$, elementary charge $e$, and Planck constant $\hbar$ through the formula:
+The fine-structure constant $\alpha \approx 1/137.036$ is a dimensionless constant characterizing the strength of electromagnetic interaction in quantum electrodynamics. In ZUFT's theory, $\alpha$ can be related to $Z'$, elementary charge $e$, and Planck constant $\hbar$ through the formula:
 $$\alpha = \frac{e^2}{4\pi \hbar \varepsilon_0 c}$$
 
 #### 4.3.0 Derivation of the α-Z' Relationship
@@ -298,7 +298,7 @@ The two values are perfectly consistent, with a relative error on the order of $
 
 ### 4.4 Symmetry with Gravitational Constant (Z) and Force Strength Ratio Spectrum
 
-In Zhang Xiangqian's theory, the gravitational coupling constant is $Z = \frac{G c}{2}$. Compare $Z$ and $Z'$:
+In ZUFT's theory, the gravitational coupling constant is $Z = \frac{G c}{2}$. Compare $Z$ and $Z'$:
 
 | Force Type | Coupling Constant | Formula |
 |------------|-------------------|---------|
@@ -355,7 +355,7 @@ This interpretation directly connects the strength of electromagnetic interactio
 
 ### 5.2 Unifying Bridge Connecting Gravity and Electromagnetic Force
 
-The paired appearance of Z' and Z indicates that gravity and electromagnetic force are two different sides (radial divergence and rotation) of the same spacetime geometric motion (cylindrical helical motion) in Zhang Xiangqian's theory. These two constants form a "bridge" connecting these two forces, and their ratio directly gives the geometric explanation for the strength difference between the two major fundamental forces in nature.
+The paired appearance of Z' and Z indicates that gravity and electromagnetic force are two different sides (radial divergence and rotation) of the same spacetime geometric motion (cylindrical helical motion) in ZUFT's theory. These two constants form a "bridge" connecting these two forces, and their ratio directly gives the geometric explanation for the strength difference between the two major fundamental forces in nature.
 
 This unified geometric image provides a new possibility for realizing Einstein's unfinished dream of unified field theory. It suggests that all fundamental interactions may originate from different geometric motion modes of spacetime, differing only in manifestations.
 
@@ -376,9 +376,9 @@ This interpretation has profound philosophical significance: it suggests that th
 
 ### 6.1 Comparison and Connection with Mainstream Physical Theories
 
-The derivation path of Z' in Zhang Xiangqian's theory is completely different from mainstream quantum field theory or general relativity. It does not rely on concepts of quantization or spacetime curvature but starts from a purely classical geometric model. However, the derived Z' formula can accurately correlate the fine-structure constant α, showing the theory's potential ability to connect macroscopic and microscopic, classical and quantum phenomena.
+The derivation path of Z' in ZUFT's theory is completely different from mainstream quantum field theory or general relativity. It does not rely on concepts of quantization or spacetime curvature but starts from a purely classical geometric model. However, the derived Z' formula can accurately correlate the fine-structure constant α, showing the theory's potential ability to connect macroscopic and microscopic, classical and quantum phenomena.
 
-Its relationship with mainstream theories is complementary, providing a different, geometric ontological perspective. Mainstream theories focus on mathematical form and experimental verification, while Zhang Xiangqian's theory focuses on physical essence and geometric images. They may describe the same physical reality from different sides, and future research may discover deep connections between them.
+Its relationship with mainstream theories is complementary, providing a different, geometric ontological perspective. Mainstream theories focus on mathematical form and experimental verification, while ZUFT's theory focuses on physical essence and geometric images. They may describe the same physical reality from different sides, and future research may discover deep connections between them.
 
 ### 6.2 Predictive Power and Testability of the Theory
 
@@ -407,7 +407,7 @@ Future work should focus on:
 
 ## 7. Conclusion
 
-This paper systematically completes the first-principles derivation, multi-dimensional verification, and physical significance analysis of the electromagnetic coupling constant $Z' = \frac{c}{8\pi\varepsilon_0}$ within the complete framework of Zhang Xiangqian's unified field theory.
+This paper systematically completes the first-principles derivation, multi-dimensional verification, and physical significance analysis of the electromagnetic coupling constant $Z' = \frac{c}{8\pi\varepsilon_0}$ within the complete framework of ZUFT's unified field theory.
 
 ### 7.1 Key Findings
 
@@ -429,15 +429,15 @@ $Z'$ directly connects the strength of electromagnetic interaction with the basi
 
 ### 7.2 Final Remarks
 
-In summary, within the theoretical system of Zhang Xiangqian's unified field theory, the derivation of the electromagnetic coupling constant $Z' = \frac{c}{8\pi\varepsilon_0}$ is rigorous, the verification is sufficient, and its qualification as a core cornerstone of the theory is well-established. It represents a profound attempt to uniformly describe fundamental interactions in geometric language, providing a new perspective for understanding the basic laws of nature.
+In summary, within the theoretical system of ZUFT's unified field theory, the derivation of the electromagnetic coupling constant $Z' = \frac{c}{8\pi\varepsilon_0}$ is rigorous, the verification is sufficient, and its qualification as a core cornerstone of the theory is well-established. It represents a profound attempt to uniformly describe fundamental interactions in geometric language, providing a new perspective for understanding the basic laws of nature.
 
-The final judgment of this theory will depend on the future experimental verification of its unique physical predictions (such as artificial field effects). If these predictions are confirmed, Zhang Xiangqian's unified field theory may become a major breakthrough in the history of physics, completely changing our understanding of spacetime, matter, and force.
+The final judgment of this theory will depend on the future experimental verification of its unique physical predictions (such as artificial field effects). If these predictions are confirmed, ZUFT's unified field theory may become a major breakthrough in the history of physics, completely changing our understanding of spacetime, matter, and force.
 
 ## References
 
-1. Zhang, X. Q. (2009-2025). *Unified Field Theory*. Unpublished internal documents.
-2. Zhang, X. Q. (2015-2025). *Core Secrets of Time, Space and the Universe*. Unpublished internal documents.
-3. Zhang, X. Q. (2020-2025). *Matter and Information*. Unpublished internal documents.
+1. ZUFT (2009-2025). *Unified Field Theory*. Unpublished internal documents.
+2. ZUFT (2015-2025). *Core Secrets of Time, Space and the Universe*. Unpublished internal documents.
+3. ZUFT (2020-2025). *Matter and Information*. Unpublished internal documents.
 4. Committee on Data for Science and Technology (CODATA). (2019). Internationally recommended 2018 values of the Fundamental Physical Constants. *National Institute of Standards and Technology (NIST)*.
 5. Jackson, J. D. (1999). *Classical Electrodynamics* (3rd ed.). Wiley.
 6. Weinberg, S. (1995). *The Quantum Theory of Fields* (Vol. 1). Cambridge University Press.

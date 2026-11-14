@@ -11,7 +11,7 @@ Z = (G_codata_2018 * c) / 2
 
 print(f"CODATA 2018 G 值: {G_codata_2018:.6e} m³·kg⁻¹·s⁻²")
 print(f"光速 c: {c} m·s⁻¹")
-print(f"张祥前常数 Z: {Z:.12f} kg⁻¹·m⁴·s⁻³")
+print(f"ZUFT常数 Z: {Z:.12f} kg⁻¹·m⁴·s⁻³")
 print()
 
 # 验证反向计算：使用 Z 计算 G

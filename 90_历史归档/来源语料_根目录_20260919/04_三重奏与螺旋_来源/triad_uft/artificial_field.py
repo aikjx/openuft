@@ -5,7 +5,7 @@ triad_uft.artificial_field — 变化电磁场产生引力场（人工场设计�
 核心方程：∂B/∂t = -(g × E)/c²
 反解：g = c² (∂B/∂t × E) / |E|²
 
-基于张祥前统一场论。人工场实验设计与参数计算。
+基于ZUFT统一场论。人工场实验设计与参数计算。
 """
 import numpy as np
 from dataclasses import dataclass

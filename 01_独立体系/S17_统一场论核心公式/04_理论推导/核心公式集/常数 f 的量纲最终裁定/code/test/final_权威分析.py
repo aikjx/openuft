@@ -7,7 +7,7 @@ def verify_f_dimension():
     M, L, T, I = sp.symbols('M L T I')
     f = sp.symbols('f')
     
-    print("=== 张祥前统一场论常数 f 量纲的最终权威分析 ===\n")
+    print("=== ZUFT统一场论常数 f 量纲的最终权威分析 ===\n")
     print("基于统一场论核心方程的最准确推导\n")
     
     # 步骤1：使用统一场论中最准确的物理量定义

@@ -103,7 +103,7 @@ ax.set_zlim([-1.5, 1.5])
 ax.set_xlabel('X轴')
 ax.set_ylabel('Y轴')
 ax.set_zlabel('Z轴')
-ax.set_title('张祥前统一场论：双螺旋球面流几何结构\n'
+ax.set_title('ZUFT统一场论：双螺旋球面流几何结构\n'
             'Red: 右旋能流 (电场E, 相位+π/2) | Blue: 左旋能流 (磁场B, 相位-π/2)', 
             fontsize=16, pad=20)
 

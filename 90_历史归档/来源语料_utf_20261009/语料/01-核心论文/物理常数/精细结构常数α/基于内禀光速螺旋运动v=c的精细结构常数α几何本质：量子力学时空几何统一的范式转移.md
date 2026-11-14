@@ -246,6 +246,6 @@ print("="*100)
 
 [4] Feynman R P. QED: The Strange Theory of Light and Matter, Princeton University Press (1985).
 
-[5] Zhang X Q. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
+[5] ZUFT. Unified Field Theory (Academic Edition): Extraterrestrial Technology[M]. Hope Grace Publishing, 2024. ISBN: 978-1966423058.
 
 ---

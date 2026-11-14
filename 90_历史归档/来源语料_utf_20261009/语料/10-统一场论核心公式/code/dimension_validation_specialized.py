@@ -293,7 +293,7 @@ if __name__ == "__main__":
     validator = UnifiedFieldTheoryValidator()
     results = validator.validate_all_formulas()
     
-    print("张祥前统一场论公式量纲验证结果")
+    print("ZUFT统一场论公式量纲验证结果")
     print("=" * 100)
     
     valid_count = 0

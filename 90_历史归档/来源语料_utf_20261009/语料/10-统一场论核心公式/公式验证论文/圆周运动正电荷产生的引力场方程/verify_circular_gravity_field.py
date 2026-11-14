@@ -269,7 +269,7 @@ class CircularGravityFieldAnalyzer:
         print("=== 综合评估 ===")
         print("基于以上多维分析，圆周运动正电荷产生的引力场方程：")
         print("1. 数学推导正确，逻辑严谨")
-        print("2. 符合张祥前统一场论的核心原理")
+        print("2. 符合ZUFT统一场论的核心原理")
         print("3. 量纲一致，方向正确，传播特性合理")
         print("4. 数值计算验证通过")
         print("5. 具有明确的物理意义和应用前景")

@@ -6,17 +6,17 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-Nuclear force, one of the four fundamental interactions, has long been a central puzzle in physics. While quantum chromodynamics provides a complex quark-gluon description, a unified geometric framework remains elusive. Here, we derive and validate the nuclear force field equation from the first principles of Zhang Xiangqian's Unified Field Theory (UFT), revealing the geometric essence of nuclear interactions. The equation $$\mathbf{D} = -g m \frac{d}{dt}\left(\frac{\mathbf{R}}{r^3}\right) = -\frac{g m}{r^3} \left(\mathbf{C} - 3 \frac{\mathbf{R}}{r} \dot{r}\right)$$ unifies nuclear force with gravitational and electromagnetic fields as manifestations of spacetime geometry. Through rigorous symbolic computation, numerical simulation, and dimensional analysis, we verify its mathematical consistency, physical validity, and compatibility with known nuclear properties. This geometric formulation offers a simpler, more unified perspective on nuclear interactions, potentially bridging quantum mechanics and general relativity.
+Nuclear force, one of the four fundamental interactions, has long been a central puzzle in physics. While quantum chromodynamics provides a complex quark-gluon description, a unified geometric framework remains elusive. Here, we derive and validate the nuclear force field equation from the first principles of ZUFT's Unified Field Theory (UFT), revealing the geometric essence of nuclear interactions. The equation $$\mathbf{D} = -g m \frac{d}{dt}\left(\frac{\mathbf{R}}{r^3}\right) = -\frac{g m}{r^3} \left(\mathbf{C} - 3 \frac{\mathbf{R}}{r} \dot{r}\right)$$ unifies nuclear force with gravitational and electromagnetic fields as manifestations of spacetime geometry. Through rigorous symbolic computation, numerical simulation, and dimensional analysis, we verify its mathematical consistency, physical validity, and compatibility with known nuclear properties. This geometric formulation offers a simpler, more unified perspective on nuclear interactions, potentially bridging quantum mechanics and general relativity.
 
 ## Introduction
 
-The nuclear force, responsible for binding protons and neutrons in atomic nuclei, exhibits distinctive characteristics: short-range, strong intensity, and complex dependence on spin and velocity. Traditional quantum chromodynamics (QCD) describes nuclear force through the exchange of gluons between quarks, but this approach faces significant mathematical challenges and lacks a unified framework with other fundamental forces. Zhang Xiangqian's Unified Field Theory (UFT) proposes a revolutionary paradigm shift: all physical interactions, including nuclear force, arise from the dynamic geometry of spacetime itself.
+The nuclear force, responsible for binding protons and neutrons in atomic nuclei, exhibits distinctive characteristics: short-range, strong intensity, and complex dependence on spin and velocity. Traditional quantum chromodynamics (QCD) describes nuclear force through the exchange of gluons between quarks, but this approach faces significant mathematical challenges and lacks a unified framework with other fundamental forces. ZUFT's Unified Field Theory (UFT) proposes a revolutionary paradigm shift: all physical interactions, including nuclear force, arise from the dynamic geometry of spacetime itself.
 
 In this paper, we derive the nuclear force field equation from UFT's core postulates, validate its correctness through multiple approaches, and explore its profound implications for physics. This work represents a crucial step toward unifying all fundamental interactions under a single geometric framework, potentially resolving long-standing paradoxes at the intersection of quantum mechanics and general relativity.
 
@@ -176,7 +176,7 @@ This work represents a significant advance in our understanding of nuclear force
 
 ## References
 
-1. Zhang Xiangqian. Unified Field Theory. University of Science and Technology of China Press, 2020.
+1. ZUFT. Unified Field Theory. University of Science and Technology of China Press, 2020.
 2. Einstein, A. Foundation of the General Theory of Relativity. Annalen der Physik, 49(7): 769-822, 1916.
 3. Einstein, A. On the Electrodynamics of Moving Bodies. Annalen der Physik, 17(10): 891-921, 1905.
 4. Maxwell, J.C. A Treatise on Electricity and Magnetism. Cambridge University Press, 1873.

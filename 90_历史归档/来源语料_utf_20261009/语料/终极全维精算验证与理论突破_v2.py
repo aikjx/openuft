@@ -242,7 +242,7 @@ vv.E()
 # ============================================================
 # [VI] 22 CORE FORMULAS (22)
 # ============================================================
-vv.S("[VI] Zhang Xiangqian 22 Core Formulas (22)")
+vv.S("[VI] ZUFT 22 Core Formulas (22)")
 
 vv.chk("F1: |r(t)|=ct", c*1.0, c, 1e-14)
 vv.ca("F2: r_3D consistent", math.sqrt((rt*math.cos(wt*tt))**2+(rt*math.sin(wt*tt))**2), rt, 1e-8)

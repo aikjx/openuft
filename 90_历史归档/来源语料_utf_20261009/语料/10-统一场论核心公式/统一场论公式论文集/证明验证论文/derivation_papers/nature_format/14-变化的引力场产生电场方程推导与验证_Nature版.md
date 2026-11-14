@@ -6,19 +6,19 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The gravitational induction equation is a core component of Zhang Xiangqian's Unified Field Theory (UFT), establishing a direct quantitative relationship between changing gravitational fields and induced electric fields. The equation $$\vec{E} = -f\frac{d\vec{A}}{dt}$$ extends electromagnetic induction to the gravitational domain, revealing symmetric relationships between fundamental forces. Through symbolic computation with SymPy, we verify its mathematical consistency, relationships with Faraday's law, and physical validity. This formulation offers a new theoretical framework for understanding field interactions and force unification from a geometric perspective of space.
+The gravitational induction equation is a core component of ZUFT's Unified Field Theory (UFT), establishing a direct quantitative relationship between changing gravitational fields and induced electric fields. The equation $$\vec{E} = -f\frac{d\vec{A}}{dt}$$ extends electromagnetic induction to the gravitational domain, revealing symmetric relationships between fundamental forces. Through symbolic computation with SymPy, we verify its mathematical consistency, relationships with Faraday's law, and physical validity. This formulation offers a new theoretical framework for understanding field interactions and force unification from a geometric perspective of space.
 
 ---
 
 ## Introduction
 
-Electromagnetic induction, described by Faraday's law, revolutionized physics by revealing that changing magnetic fields generate electric fields. However, traditional physics has lacked a corresponding "gravitational induction" phenomenon. Zhang Xiangqian's Unified Field Theory presents an innovative equation describing electric field generation from changing gravitational fields, extending the concept of field induction to the gravitational domain. This equation builds upon the magnetic vector potential equation and gravitational-electromagnetic field conversion equation, further completing the UFT theoretical framework. As a core equation in unified field theory, it connects gravitational and electromagnetic phenomena, revealing the underlying symmetry and unification mechanism between these fundamental forces, representing a significant step toward the grand unification of physics.
+Electromagnetic induction, described by Faraday's law, revolutionized physics by revealing that changing magnetic fields generate electric fields. However, traditional physics has lacked a corresponding "gravitational induction" phenomenon. ZUFT's Unified Field Theory presents an innovative equation describing electric field generation from changing gravitational fields, extending the concept of field induction to the gravitational domain. This equation builds upon the magnetic vector potential equation and gravitational-electromagnetic field conversion equation, further completing the UFT theoretical framework. As a core equation in unified field theory, it connects gravitational and electromagnetic phenomena, revealing the underlying symmetry and unification mechanism between these fundamental forces, representing a significant step toward the grand unification of physics.
 
 ## 2. Mathematical Formulation
 
@@ -215,7 +215,7 @@ The gravitational induction equation provides a sophisticated mathematical frame
 
 ## 11. References
 
-1. Zhang XQ. Unified Field Theory. China Science and Technology Press, 2020.
+1. ZUFT. Unified Field Theory. China Science and Technology Press, 2020.
 2. Maxwell JC. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 3. Faraday M. Experimental Researches in Electricity. Royal Institution of Great Britain, 1831-1855.
 4. Einstein A. Zur Elektrodynamik bewegter Körper. Annalen der Physik, 1905, 322(10): 891-921.

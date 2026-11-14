@@ -6,19 +6,19 @@
 1. Unified Field Theory Research Institute, Hefei, China
 2. Department of Physics, University of Science and Technology of China, Hefei, China
 
-**Correspondence:** xqzhang@uft-research.org
+**Correspondence:** contact@uft-research.org
 
 ---
 
 ## Abstract
 
-The magnetic field definition equation is a core component of Zhang Xiangqian's Unified Field Theory (UFT), defining the magnetic field as a spatial effect produced by moving charges and revealing its intrinsic connection to charge motion and relativistic effects. The equation $$\vec{B} = \frac{\mu_{0} \gamma k k^{\prime}}{4 \pi \Omega^{2}} \frac{d \Omega}{d t} \frac{[(x-v t) \vec{i}+y \vec{j}+z \vec{k}]}{[\gamma^{2}(x-v t)^{2}+y^{2}+z^{2}]^{\frac{3}{2}}}$$ incorporates Lorentz contraction effects, connecting magnetic phenomena to relativistic spatial dynamics. Through symbolic computation with SymPy and numerical simulation with NumPy, we verify its mathematical consistency, relationships with the electric field equation and Biot-Savart law, and physical validity. This formulation provides a new theoretical framework for understanding magnetic phenomena from a relativistic and geometric perspective.
+The magnetic field definition equation is a core component of ZUFT's Unified Field Theory (UFT), defining the magnetic field as a spatial effect produced by moving charges and revealing its intrinsic connection to charge motion and relativistic effects. The equation $$\vec{B} = \frac{\mu_{0} \gamma k k^{\prime}}{4 \pi \Omega^{2}} \frac{d \Omega}{d t} \frac{[(x-v t) \vec{i}+y \vec{j}+z \vec{k}]}{[\gamma^{2}(x-v t)^{2}+y^{2}+z^{2}]^{\frac{3}{2}}}$$ incorporates Lorentz contraction effects, connecting magnetic phenomena to relativistic spatial dynamics. Through symbolic computation with SymPy and numerical simulation with NumPy, we verify its mathematical consistency, relationships with the electric field equation and Biot-Savart law, and physical validity. This formulation provides a new theoretical framework for understanding magnetic phenomena from a relativistic and geometric perspective.
 
 ---
 
 ## Introduction
 
-The magnetic field is a fundamental concept in electromagnetism, traditionally defined as a special form of matter surrounding current-carrying conductors or moving charges that exerts forces on other moving charges. Zhang Xiangqian's Unified Field Theory presents an innovative magnetic field definition equation that reinterprets the magnetic field from the perspective of relativistic spatial effects produced by moving charges, offering a profound new insight into its nature. This equation directly connects the magnetic field to the geometric structure of space, rotational motion variations, and charge motion states, naturally extending the electric field definition equation and laying a theoretical foundation for subsequent electromagnetic field energy equations and unification of electromagnetic and gravitational forces. As a core equation in UFT, it not only deepens our understanding of electromagnetic phenomena but also provides key ideas for achieving the grand unification of physics.
+The magnetic field is a fundamental concept in electromagnetism, traditionally defined as a special form of matter surrounding current-carrying conductors or moving charges that exerts forces on other moving charges. ZUFT's Unified Field Theory presents an innovative magnetic field definition equation that reinterprets the magnetic field from the perspective of relativistic spatial effects produced by moving charges, offering a profound new insight into its nature. This equation directly connects the magnetic field to the geometric structure of space, rotational motion variations, and charge motion states, naturally extending the electric field definition equation and laying a theoretical foundation for subsequent electromagnetic field energy equations and unification of electromagnetic and gravitational forces. As a core equation in UFT, it not only deepens our understanding of electromagnetic phenomena but also provides key ideas for achieving the grand unification of physics.
 
 ## 2. Mathematical Formulation
 
@@ -168,8 +168,8 @@ The magnetic field definition equation provides a sophisticated mathematical for
 
 ## 9. References
 
-1. Zhang XQ. Unified Field Theory. China Science and Technology Press, 2020.
-2. Zhang XQ. The Essence of Magnetic Field in Unified Field Theory. Acta Physica Sinica, 2022, 71(5): 050001.
+1. ZUFT. Unified Field Theory. China Science and Technology Press, 2020.
+2. ZUFT. The Essence of Magnetic Field in Unified Field Theory. Acta Physica Sinica, 2022, 71(5): 050001.
 3. Maxwell JC. A Treatise on Electricity and Magnetism. Clarendon Press, 1873.
 4. Einstein A. Zur Elektrodynamik bewegter Körper. Annalen der Physik, 1905, 322(10): 891-921.
 5. Biot JB, Savart F. Recherches sur le magnétisme de la pile de Volta. Annales de Chimie et de Physique, 1820, 15: 222-224.

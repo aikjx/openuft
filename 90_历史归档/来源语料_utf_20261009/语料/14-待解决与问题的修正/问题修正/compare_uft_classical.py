@@ -29,7 +29,7 @@ r_uft = abs(m * v0 / (q * B))
 # 根据统一场论，由于空间是"双层螺旋"结构，立体角从4π变为8π，周期公式出现因子2的差异
 T_uft = abs(np.pi * m / (q * B))  # 因子2的差异，T = πm/(qB) 而非 2πm/(qB)
 
-print("\n=== 张祥前统一场论解法 ===")
+print("\n=== ZUFT统一场论解法 ===")
 print(f"空间旋转角速度 ω = {omega:.4e} rad/s")
 print(f"轨道半径 r = {r_uft:.4e} m")
 print(f"运动周期 T = {T_uft:.4e} s")

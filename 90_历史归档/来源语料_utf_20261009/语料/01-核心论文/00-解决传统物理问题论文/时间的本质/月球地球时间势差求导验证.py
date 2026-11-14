@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 月球和地球的时间势差求导验证脚本
-基于张祥前统一场论的时空理论
+基于ZUFT统一场论的时空理论
 """
 
 import math
@@ -37,7 +37,7 @@ def symbolic_derivation():
     # 定义符号变量
     G, M, r, c = sp.symbols('G M r c')
     
-    # 张祥前统一场论中的时间势函数
+    # ZUFT统一场论中的时间势函数
     phi = -G * M / r
     
     # 时间场强度T与时间势phi的关系
@@ -141,7 +141,7 @@ def calculate_earth_moon_time_potential():
 def calculate_time_potential_gradient():
     """
     计算地球和月球周围的时间势梯度
-    验证张祥前统一场论中空间运动与时间的关系
+    验证ZUFT统一场论中空间运动与时间的关系
     """
     print("\n=== 地球和月球周围的时间势梯度计算 ===")
     
@@ -157,7 +157,7 @@ def calculate_time_potential_gradient():
     moon_phi = -G * M_MOON / moon_distances
     moon_phi_gradient = G * M_MOON / (moon_distances**2)
     
-    # 根据张祥前统一场论，空间运动速度v与时间势梯度的关系：v = -∇φ/c
+    # 根据ZUFT统一场论，空间运动速度v与时间势梯度的关系：v = -∇φ/c
     earth_v = earth_phi_gradient / C
     moon_v = moon_phi_gradient / C
     
@@ -199,10 +199,10 @@ def calculate_time_potential_gradient():
 
 def verify_zxq_unified_field_theory():
     """
-    验证张祥前统一场论中的关键公式
+    验证ZUFT统一场论中的关键公式
     重点验证时间、空间、物质三者的关系
     """
-    print("\n=== 张祥前统一场论公式验证 ===")
+    print("\n=== ZUFT统一场论公式验证 ===")
     
     # 1. 验证空间运动产生时间的关系
     print("\n1. 空间运动产生时间的关系验证:")
@@ -400,7 +400,7 @@ def main():
     主函数
     """
     print("月球和地球的时间势差求导验证")
-    print("基于张祥前统一场论")
+    print("基于ZUFT统一场论")
     print("======================")
     
     # 1. 符号求导验证
@@ -412,7 +412,7 @@ def main():
     # 3. 计算时间势梯度
     gradient_results = calculate_time_potential_gradient()
     
-    # 4. 验证张祥前统一场论
+    # 4. 验证ZUFT统一场论
     unified_theory_results = verify_zxq_unified_field_theory()
     
     # 5. 绘制结果图表
@@ -429,7 +429,7 @@ def main():
     print(f"3. 每天的时间差: {earth_moon_results['delta_time_per_day'] * 1e9:.2f} ns")
     print(f"4. 地球表面空间运动速度: {gradient_results['earth_v'][0]:.6f} m/s")
     print(f"5. 月球表面空间运动速度: {gradient_results['moon_v'][0]:.6f} m/s")
-    print("\n张祥前统一场论验证结果:")
+    print("\nZUFT统一场论验证结果:")
     print(f"- 引力场与空间运动加速度关系验证通过")
     print(f"- 时间势梯度与空间运动速度关系验证通过")
     

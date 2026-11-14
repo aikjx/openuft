@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-验证张祥前常数Z的基本计算
+验证ZUFT常数Z的基本计算
 基于引力光速统一方程 Z = (G * c) / 2
 """
 
@@ -12,7 +12,7 @@ c = 299792458                # m·s⁻¹ (光速)
 Z_calculated = (G_codata_2018 * c) / 2
 Z_paper = 0.010004524012147  # 论文中给出的Z精确值
 
-print("===== 张祥前常数Z的基本验证 =====")
+print("===== ZUFT常数Z的基本验证 =====")
 print(f"使用CODATA 2018推荐值 G = {G_codata_2018} m³·kg⁻¹·s⁻²")
 print(f"光速 c = {c} m·s⁻¹")
 print(f"/n根据公式 Z = (G * c) / 2 计算:")

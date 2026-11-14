@@ -121,7 +121,7 @@ u2 = {
     "v9_factor_3_1": find_line(up["U2"], "\\eta = 2 \\times \\frac{1}{3} \\times \\frac{3}{1} = 2"),
     "v10_factor_8": find_line(up["U2"], "\\eta = \\left( \\frac{1}{2} \\right)^2 \\times 8 = 2"),
     "v11_field_claim": find_line(up["U2"], "这与牛顿引力理论中的引力场形式一致"),
-    "v6_bridge": find_line(up["U2"], "通过计算，我们得到张祥前常数"),
+    "v6_bridge": find_line(up["U2"], "通过计算，我们得到ZUFT常数"),
     "v14_bridge": find_line(up["U2"], "通过进一步的推导，我们可以得到与爱因斯坦场方程形式一致"),
     "v15_bridge": find_line(up["U2"], "结合引力光速统一方程"),
 }
@@ -386,7 +386,7 @@ C2 = {"id": "C2", "verdict": "PASS", "item": "对照：打击面",
 C3 = {"id": "C3", "verdict": "PASS", "item": "继承登记（不重判）",
       "inherited": ["r112：K-03（m=k·dn/dΩ）欠定降级——本族质量定义的同一式",
                     "r114：G 的本源四版本（G=α²μ₀ 反解闭环同族）",
-                    "张祥前审计册 2026-10-12：m=ω²r³ 量纲死、D09 本源质量定义未真正修复"]}
+                    "ZUFT审计册 2026-10-12：m=ω²r³ 量纲死、D09 本源质量定义未真正修复"]}
 
 ENTRIES = [L01, L02, L03, A1, A2, A3, A4, A5, A6, B1, B2, B3, B4, B5, B6, C1, C2, C3]
 

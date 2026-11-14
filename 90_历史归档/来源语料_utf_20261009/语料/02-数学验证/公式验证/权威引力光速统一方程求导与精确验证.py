@@ -996,8 +996,8 @@ class GravitationalLightSpeedUnificationVerifier:
         ax5.legend(lines1 + lines2, labels1 + labels2, fontsize=10, loc='upper left')
         
         ax5.set_xlabel('物理常数值', fontsize=12)
-        ax5.set_ylabel('张祥前常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=12)
-        ax5_twin.set_ylabel('张祥前常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=12)
+        ax5.set_ylabel('ZUFT常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=12)
+        ax5_twin.set_ylabel('ZUFT常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=12)
         ax5.set_title('Z与物理常数的线性关系', fontsize=14)
         ax5.grid(True, alpha=0.3)
         
@@ -1070,7 +1070,7 @@ class GravitationalLightSpeedUnificationVerifier:
             
             ax3d.set_xlabel('引力常数G (m³kg⁻¹s⁻²)', fontsize=12)
             ax3d.set_ylabel('光速c (m/s)', fontsize=12)
-            ax3d.set_zlabel('张祥前常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=12)
+            ax3d.set_zlabel('ZUFT常数Z (kg⁻¹·m⁴·s⁻³)', fontsize=12)
             ax3d.set_title('Z-G-c三维关系图', fontsize=14)
             ax3d.legend()
             

@@ -1,9 +1,9 @@
 # Gravitational Field Definition Equation: Derivation, Verification, and Vector Calculus Analysis in Unified Field Theory
 
-**Authors:** Zhang Xiangqian Unified Field Theory Research Team¹
+**Authors:** ZUFT Unified Field Theory Research Team¹
 
 **Affiliations:**
-¹ Zhang Xiangqian Unified Field Theory Research Institute, Nanjing, China
+¹ ZUFT Unified Field Theory Research Institute, Nanjing, China
 
 **Correspondence:** unifiedfieldtheory@research.org
 
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-We present a rigorous derivation and comprehensive verification of the gravitational field definition equation from Zhang Xiangqian's unified field theory, which geometrically relates gravitational fields to spatial motion dynamics. The equation \(\mathbf{A} = -Gk\frac{\Delta n}{\Delta s}\frac{\mathbf{r}}{r}\) is derived from first principles and verified through detailed vector calculus analysis, including gradient, divergence, and curl calculations. Symbolic computation confirms its mathematical consistency, while numerical simulation validates its applicability across scales from millimeters to kilometers. We demonstrate its equivalence to Newtonian gravity in the classical limit and analyze its geometric interpretation as a manifestation of spatial motion density variation. The equation's conservative field properties (zero curl) and source-dependent divergence are rigorously proven, establishing it as a geometric foundation for unifying gravity with other fundamental interactions. This work provides a framework for avoiding infinities in quantum gravity and enables novel applications in precision gravitational sensing and advanced propulsion systems.
+We present a rigorous derivation and comprehensive verification of the gravitational field definition equation from ZUFT's unified field theory, which geometrically relates gravitational fields to spatial motion dynamics. The equation \(\mathbf{A} = -Gk\frac{\Delta n}{\Delta s}\frac{\mathbf{r}}{r}\) is derived from first principles and verified through detailed vector calculus analysis, including gradient, divergence, and curl calculations. Symbolic computation confirms its mathematical consistency, while numerical simulation validates its applicability across scales from millimeters to kilometers. We demonstrate its equivalence to Newtonian gravity in the classical limit and analyze its geometric interpretation as a manifestation of spatial motion density variation. The equation's conservative field properties (zero curl) and source-dependent divergence are rigorously proven, establishing it as a geometric foundation for unifying gravity with other fundamental interactions. This work provides a framework for avoiding infinities in quantum gravity and enables novel applications in precision gravitational sensing and advanced propulsion systems.
 
 ---
 
@@ -19,7 +19,7 @@ We present a rigorous derivation and comprehensive verification of the gravitati
 
 ### Introduction
 
-Gravity remains the least understood of nature's fundamental forces, with its quantum description eluding unification with other interactions. Zhang Xiangqian's unified field theory offers a geometric perspective by proposing that gravity is not an intrinsic force but a manifestation of spatial motion. This paper derives and verifies the gravitational field definition equation, focusing on vector calculus properties that reveal its mathematical structure and physical significance.
+Gravity remains the least understood of nature's fundamental forces, with its quantum description eluding unification with other interactions. ZUFT's unified field theory offers a geometric perspective by proposing that gravity is not an intrinsic force but a manifestation of spatial motion. This paper derives and verifies the gravitational field definition equation, focusing on vector calculus properties that reveal its mathematical structure and physical significance.
 
 ### Theoretical Framework
 

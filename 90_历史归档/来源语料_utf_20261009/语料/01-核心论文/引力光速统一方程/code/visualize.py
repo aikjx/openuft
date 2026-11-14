@@ -7,7 +7,7 @@ import matplotlib.patches as patches
 # 常量定义
 G = 6.67430e-11  # 引力常数 (m^3 kg^-1 s^-2)
 c = 299792458     # 光速 (m/s)
-Z = (G * c) / 2   # 张祥前常数
+Z = (G * c) / 2   # ZUFT常数
 
 print(f"引力光速统一方程: Z = (G·c)/2")
 print(f"G = {G} m^3 kg^-1 s^-2")
@@ -268,7 +268,7 @@ def plot_constant_relationships():
     ax.scatter(c, Z, c='red', s=100, label=f'实际值: c = {c:.2e}')
     
     ax.set_xlabel('光速 c (m/s)')
-    ax.set_ylabel('张祥前常数 Z (kg^-1·m^4·s^-3)')
+    ax.set_ylabel('ZUFT常数 Z (kg^-1·m^4·s^-3)')
     ax.set_title('引力光速统一方程: Z与c的关系')
     ax.legend()
     ax.grid(True)

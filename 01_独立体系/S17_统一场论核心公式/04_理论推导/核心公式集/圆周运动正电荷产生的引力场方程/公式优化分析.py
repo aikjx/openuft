@@ -192,7 +192,7 @@ class FormulaOptimizationAnalyzer:
         print("$$\vec{A}(\vec{r}, t) = \frac{\omega^2}{r} \vec{r}'(t - r/c)$$")
         print()
         print("具有以下特点:")
-        print("1. 物理基础扎实：基于张祥前统一场论的核心原理")
+        print("1. 物理基础扎实：基于ZUFT统一场论的核心原理")
         print("2. 数学形式简洁：结构清晰，物理意义明确")
         print("3. 验证充分：通过了量纲、方向、传播特性等多重验证")
         print("4. 适用性广：适用于大多数实际情况")

@@ -12,7 +12,7 @@ Based on the theoretical framework of spatial dynamics, this paper proposes and 
 The core contributions of this research include:
 1. Proposing theoretical assumptions of spatial dynamics, including the light-speed motion of space and the unification of space-time
 2. Strictly proving the necessity of the geometric factor 2 through multiple methods such as solid angle integration and statistical averaging
-3. Introducing Zhang Xiangqian Constant Z as a quantitative characterization of fundamental space properties, establishing a theoretical connection between microscopic spatial dynamics and macroscopic gravitational phenomena
+3. Introducing ZUFT Constant Z as a quantitative characterization of fundamental space properties, establishing a theoretical connection between microscopic spatial dynamics and macroscopic gravitational phenomena
 4. Deriving the Gravitational-Light Speed Unification Equation G=2Z/c, describing the gravitational constant G as a derived quantity determined by more fundamental space-time properties
 5. Verifying the self-consistency and rationality of the theory through dimensional analysis, error propagation, and other methods
 
@@ -35,7 +35,7 @@ In this study, we explore the intrinsic connection between gravity and the speed
 
 ### Key Concepts
 
-**Zhang Xiangqian Constant (Z)**: A fundamental constant describing the intrinsic properties of space, with a value of Z=Gc/2≈0.0100045240 kg⁻¹·m⁴·s⁻³.
+**ZUFT Constant (Z)**: A fundamental constant describing the intrinsic properties of space, with a value of Z=Gc/2≈0.0100045240 kg⁻¹·m⁴·s⁻³.
 
 **Geometric Factor**: A mathematical characterization of the projection properties of a spherically symmetric field in three-dimensional space onto a two-dimensional plane, with a precise value of 2 in this study.
 
@@ -81,7 +81,7 @@ $$
 G = 2Z/c
 $$
 
-This equation reveals that the gravitational constant G is not a fundamental constant, but a derived quantity determined by Zhang Xiangqian Constant Z and the speed of light c.
+This equation reveals that the gravitational constant G is not a fundamental constant, but a derived quantity determined by ZUFT Constant Z and the speed of light c.
 
 ### Physical Significance
 
@@ -111,9 +111,9 @@ In the theoretical framework of spatial dynamics, this study systematically deri
 
 1. **Theoretical Necessity of Geometric Factor**: Through multiple independent methods such as solid angle integration and statistical averaging, we have strictly proven that the geometric factor 2 is an inevitable result of three-dimensional space topology and field distribution, reflecting the projection characteristics of a spherically symmetric field in three-dimensional space onto a two-dimensional plane.
 
-2. **Derivative Nature of Gravitational Constant**: The gravitational constant G is not a fundamental constant of nature, but a derived quantity determined by more fundamental space-time properties. Specifically, it is jointly determined by Zhang Xiangqian Constant Z and the speed of light c, with the mathematical relationship G=2Z/c.
+2. **Derivative Nature of Gravitational Constant**: The gravitational constant G is not a fundamental constant of nature, but a derived quantity determined by more fundamental space-time properties. Specifically, it is jointly determined by ZUFT Constant Z and the speed of light c, with the mathematical relationship G=2Z/c.
 
-3. **Physical Significance of Zhang Xiangqian Constant**: As a quantitative characterization of fundamental space properties, Z establishes a theoretical connection between microscopic spatial dynamics and macroscopic gravitational phenomena, with a precise value of Z=Gc/2≈0.0100045240 kg⁻¹·m⁴·s⁻³.
+3. **Physical Significance of ZUFT Constant**: As a quantitative characterization of fundamental space properties, Z establishes a theoretical connection between microscopic spatial dynamics and macroscopic gravitational phenomena, with a precise value of Z=Gc/2≈0.0100045240 kg⁻¹·m⁴·s⁻³.
 
 4. **Self-consistency Verification of the Theory**: Through dimensional analysis, error propagation analysis, and other methods, we have verified the mathematical self-consistency and physical rationality of the Gravitational-Light Speed Unification Equation.
 

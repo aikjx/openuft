@@ -4,7 +4,7 @@ Guozi Mo, Xiangqian Zhang
 
 ## Abstract
 
-This paper proposes a groundbreaking gravitational-light speed unification equation \( Z = Gc/2 \) based on the principles of spatial dynamics theory derived from Zhang Xiangqian's Unified Field Theory. This equation establishes an intrinsic connection between the universal gravitational constant \( G \) and the speed of light \( c \), revealing that \( G \) is not a fundamental constant but a derived quantity determined by the spatial dynamics constant \( Z \) and the speed of light \( c \). Through systematic theoretical derivation and multi-dimensional verification, the equation demonstrates five key verification results: theoretical self-consistency, numerical agreement, dimensional rationality, theoretical compatibility, and universality. The research yields three core achievements: revealing the geometric origin of \( G \), constructing a unified bridge between gravity and electromagnetism, and providing a theoretical foundation for artificial field technology applications. This discovery represents a significant advancement in the field of gravitational theory and opens new avenues for the unification of fundamental forces.
+This paper proposes a groundbreaking gravitational-light speed unification equation \( Z = Gc/2 \) based on the principles of spatial dynamics theory derived from ZUFT's Unified Field Theory. This equation establishes an intrinsic connection between the universal gravitational constant \( G \) and the speed of light \( c \), revealing that \( G \) is not a fundamental constant but a derived quantity determined by the spatial dynamics constant \( Z \) and the speed of light \( c \). Through systematic theoretical derivation and multi-dimensional verification, the equation demonstrates five key verification results: theoretical self-consistency, numerical agreement, dimensional rationality, theoretical compatibility, and universality. The research yields three core achievements: revealing the geometric origin of \( G \), constructing a unified bridge between gravity and electromagnetism, and providing a theoretical foundation for artificial field technology applications. This discovery represents a significant advancement in the field of gravitational theory and opens new avenues for the unification of fundamental forces.
 
 ## Keywords
 
@@ -16,9 +16,9 @@ Spatial Dynamics; Unified Field Theory; Gravitational Constant; Speed of Light; 
 
 The study of gravity has been a central theme in physics for centuries. Since Newton proposed the law of universal gravitation in 1687, our understanding of gravity has undergone profound transformations. Einstein's general relativity further revolutionized our conception by describing gravity as the curvature of spacetime caused by mass-energy. However, despite these remarkable achievements, the fundamental nature of gravity and its unification with other fundamental forces remain outstanding challenges in theoretical physics.
 
-### 1.2 Innovative Perspectives of Zhang Xiangqian's Unified Field Theory
+### 1.2 Innovative Perspectives of ZUFT's Unified Field Theory
 
-Zhang Xiangqian's Unified Field Theory presents a bold new paradigm for understanding physical reality. Unlike traditional theories that treat space as a passive backdrop, this theory posits that space itself is a dynamic entity that participates actively in physical processes. According to this theory, the fundamental essence of matter, energy, and force can be understood through the geometric properties and motions of space itself.
+ZUFT's Unified Field Theory presents a bold new paradigm for understanding physical reality. Unlike traditional theories that treat space as a passive backdrop, this theory posits that space itself is a dynamic entity that participates actively in physical processes. According to this theory, the fundamental essence of matter, energy, and force can be understood through the geometric properties and motions of space itself.
 
 ### 1.3 Research Objectives and Significance
 
@@ -131,11 +131,11 @@ The calculation of gravitational force based on spatial dynamics principles lead
 
 To ensure consistency in theoretical derivation and expression, the paper adopts a unified symbol convention for the universal gravitation expression, using \( F = G\frac{m_1 m_2}{R^2} \) to represent Newton's law of universal gravitation.
 
-## 7 Geometric Model of Spatial Motion in Zhang Xiangqian's Unified Field Theory: Geometric Connection Between G and c
+## 7 Geometric Model of Spatial Motion in ZUFT's Unified Field Theory: Geometric Connection Between G and c
 
 ### 7.1 Physical Image and Theoretical Foundation: Geometric Essence of Spatial Dynamics
 
-In Zhang Xiangqian's Unified Field Theory, the geometric model of gravitational interaction reveals the physical essence of gravity as an effect of spatial motion. This model provides a geometric foundation for understanding the intrinsic connection between \( G \) and \( c \).
+In ZUFT's Unified Field Theory, the geometric model of gravitational interaction reveals the physical essence of gravity as an effect of spatial motion. This model provides a geometric foundation for understanding the intrinsic connection between \( G \) and \( c \).
 
 ### 7.2 Analysis of Effective Contribution of Spatial Motion Direction: Geometric Roots of G-c Relationship
 
@@ -433,5 +433,5 @@ In conclusion, the gravitational-light speed unification equation represents a s
 
 ## References
 
-1. Zhang Xiangqian. Unified Field Theory. 2025.
+1. ZUFT. Unified Field Theory. 2025.
 2. CODATA. 2018 CODATA Recommended Values of the Fundamental Physical Constants.

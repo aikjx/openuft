@@ -31,8 +31,8 @@ dn_dt_expr = (1/k) * dm_dt
 print("\ndn/dt = (1/k) * dm/dt:")
 print(dn_dt_expr)
 
-# For Z definition: Z = dn / (dV dt) - Zhang Xiangqian constant
-print("\nZ定义：Z = dn/(dV dt) - 张祥前常数，空间位移条数的体时变率")
+# For Z definition: Z = dn / (dV dt) - ZUFT constant
+print("\nZ定义：Z = dn/(dV dt) - ZUFT常数，空间位移条数的体时变率")
 n_vt = sp.Function('n')(V, t)
 partial_dV = sp.diff(n_vt, V)
 partial_dt = sp.diff(n_vt, t)
@@ -92,7 +92,7 @@ print("="*50)
 print(eq6)
 
 Z_solved = sp.solve(eq6, Z)[0]
-print("\nSolved for Z (张祥前常数):")
+print("\nSolved for Z (ZUFT常数):")
 print(Z_solved)
 
 # Enhanced numerical verification with CODATA 2018 values
@@ -129,5 +129,5 @@ print("革命性意义：")
 print("="*50)
 print("1. 首次揭示引力常数G的几何物理起源")
 print("2. 通过三维到二维投影几何因子2建立了光速c与G的精确定量关系")
-print("3. 张祥前常数Z = Gc/2 成为物理学基本常数统一的关键环节")
+print("3. ZUFT常数Z = Gc/2 成为物理学基本常数统一的关键环节")
 print("4. 为构建基于几何投影机制的统一场论提供了革命性的理论框架")

@@ -1,0 +1,201 @@
+{
+"checks": [
+{
+"name": "IDEMPOTENT-DOUBLE-RUN",
+"note": "双跑 JSON MD5 e2320cb1cf45b981c9f68b6fdf7dac66 / e2320cb1cf45b981c9f68b6fdf7dac66；content_sha256 两次一致",
+"ok": true
+},
+{
+"name": "ZERO-DELETION-AND-ZERO-DRIFT",
+"note": "快照 3766 个既有文件：删除 0、尺寸变化 0",
+"ok": true
+},
+{
+"name": "README-STRUCTURAL-NO-WRITE",
+"note": "README 939057 B / fa6613dbbdcd98bba2d99e6fc94e1723；双跑前后一致=True，AST 扫描指向 README 的写操作命中 0 次",
+"ok": true
+},
+{
+"name": "CONTENT-SHA256-SELF",
+"note": "去掉 content_sha256 后重算 = ff344ce6ed4e7907…，与登记值一致",
+"ok": true
+},
+{
+"name": "REPORT-JSON-TWO-PATH",
+"note": "五项 verdictY/finalY/countsY/guardsY/sha256Y",
+"ok": true
+},
+{
+"name": "KEYNUMBERS-IN-REPORT",
+"note": "五项关键读数按 report 同口径逐字命中：boundsY/bound_minY/crit_budgetY/readme_md5Y/dep_edgesY（正文写法 5/4/4/4 与 R8←R7 / R9←R7 / R9←R8）；扰动项命中=False ⇒ 判别力=True",
+"ok": true
+},
+{
+"name": "LEDGER-THIRD-PATH",
+"note": "核验器内独立重写一遍两路比对（正则更宽松、不调用机核函数）：16/16 一致；与机核登记的 16/16 相同",
+"ok": true
+},
+{
+"name": "BOUNDS-THIRD-PATH",
+"note": "第三路独立重算四条加数：5 / 4 / 4 / 4（质量 2 + 破缺 3；标签 3 + 1；|MUS| 4；预算 + 1），机核登记 5 / 4 / 4 / 4",
+"ok": true
+},
+{
+"name": "PHASE-SWEEP-THIRD-PATH",
+"note": "第三路重算预算相变：k=0→4 / k=1→4 / k=2→4 / k=3→4 / k=4→1 / k=5→0 / k=6→0；临界预算 = min(bounds)−1 = 3",
+"ok": true
+},
+{
+"name": "MUS-MINIMAL-THIRD-PATH",
+"note": "第三路重算最小性：核 A2,A3,A5,I1 删任一个后仍可满足=True；核外 4 个原子删除后仍不可满足=True",
+"ok": true
+},
+{
+"name": "VERDICT-CARRIES-READINGS",
+"note": "判词内嵌册数/命中/下界三项：ALG-LB__BOOKS-16__MATCH-16__CLAIMS-662__READS-227__B7-5__B8-4__B9-4__B16-4__MIN-4gt3__CRIT…",
+"ok": true
+},
+{
+"name": "GUARDS-ALL-PASS",
+"note": "守卫 38/38；分布 {\"BOUNDARY\": 2, \"FAIL\": 0, \"IDENTITY\": 3, \"INFO\": 5, \"PASS\": 28}",
+"ok": true
+},
+{
+"name": "CREDIT-READING",
+"note": "承重读数 CREDIT = 册命中 16 + 层复算 4 + 敏感性档 6 = 26",
+"ok": true
+},
+{
+"name": "THREE-REVERSALS-GATES-FAIL",
+"note": "三个单点反噬各关一门，final 全转 GATES-FAIL：GATE_LEDGER_ACTIVE→失败守卫 2 / GATE_RECALC_ACTIVE→失败守卫 5 / GATE_SENS_ACTIVE→失败守卫 2",
+"ok": true
+},
+{
+"name": "REVERSAL-READINGS-DISTINCT",
+"note": "基线 + 三变体的承重读数 [26, 10, 22, 20] 两两不同",
+"ok": true
+},
+{
+"name": "SOURCE-LINK-HEALTH",
+"note": "机核引用 33 个本地成品，断链 0 个",
+"ok": true
+},
+{
+"name": "DELIVERABLE-EXISTS-算法联盟_四层下界总账与单点",
+"note": "算法联盟_四层下界总账与单点故障_统一场论第十七轮_2026-11-14.md 18959 B",
+"ok": true
+},
+{
+"name": "DELIVERABLE-EXISTS-算法联盟_四层下界_第十七轮",
+"note": "算法联盟_四层下界_第十七轮可视化_2026-11-14.html 15670 B",
+"ok": true
+},
+{
+"name": "MD-CARRIES-VERDICT",
+"note": "主文含判词与 final；11104 字符",
+"ok": true
+},
+{
+"name": "HTML-SELF-CONTAINED",
+"note": "HTML 无外链=True、无 Markdown 泄漏=True、表格行 69、含判词；11838 字符",
+"ok": true
+}
+],
+"credits": [
+26,
+10,
+22,
+20
+],
+"date": "2026-11-14",
+"deleted": [],
+"drift": [],
+"files_snapshotted": 3766,
+"guards": [
+38,
+38
+],
+"json_md5": "e2320cb1cf45b981c9f68b6fdf7dac66",
+"json_md5_second": "e2320cb1cf45b981c9f68b6fdf7dac66",
+"machine_sha256": "ff344ce6ed4e7907a568c0ef289b13a91eaa19e4d9bf0de9bc9032815cc0e1f8",
+"n_checks": 20,
+"n_fail": 0,
+"readme": {
+"bytes": 939057,
+"md5_after": "fa6613dbbdcd98bba2d99e6fc94e1723",
+"md5_before": "fa6613dbbdcd98bba2d99e6fc94e1723",
+"structurally_unchanged": true
+},
+"source_sha256": "d0189595e971efc9cd18d186e6263000c3dacc350eabdf92e0c42de9297c7e25",
+"third_path": {
+"bounds": [
+5,
+4,
+4,
+4
+],
+"ledger_match": 16,
+"mus_minimal": true,
+"sweep": [
+[
+0,
+4
+],
+[
+1,
+4
+],
+[
+2,
+4
+],
+[
+3,
+4
+],
+[
+4,
+1
+],
+[
+5,
+0
+],
+[
+6,
+0
+]
+]
+},
+"title": "算法联盟第十七轮核验",
+"variants": [
+{
+"credit": 10,
+"err": "",
+"final": "ALG-FINAL-LOWER-BOUND--GATES-FAIL",
+"gate": "GATE_LEDGER_ACTIVE",
+"n_fail": 2,
+"ran": true,
+"tag": "ledger"
+},
+{
+"credit": 22,
+"err": "",
+"final": "ALG-FINAL-LOWER-BOUND--GATES-FAIL",
+"gate": "GATE_RECALC_ACTIVE",
+"n_fail": 5,
+"ran": true,
+"tag": "recalc"
+},
+{
+"credit": 20,
+"err": "",
+"final": "ALG-FINAL-LOWER-BOUND--GATES-FAIL",
+"gate": "GATE_SENS_ACTIVE",
+"n_fail": 2,
+"ran": true,
+"tag": "sens"
+}
+],
+"verdict": "VERIFY-ALL-PASS"
+}
