@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>算法联盟 · 方程清单与求导证明 · 第二十二轮</title>
+<style>
+:root{--bg:#f7f8fa;--card:#ffffff;--ink:#1f2430;--sub:#5b6473;--line:#e3e7ee;
+--accent:#2f5d9e;--good:#1a7f52;--warn:#a2601b;--bad:#a23a3a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+line-height:1.7;padding:28px 20px 64px}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-size:25px;margin:0 0 6px}h2{font-size:18px;margin:32px 0 12px;
+border-left:4px solid var(--accent);padding-left:10px}
+.meta{color:var(--sub);font-size:13px;margin-bottom:20px}
+.code{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:#eef2f8;
+padding:8px 10px;border-radius:6px;word-break:break-all;color:#334}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card .k{font-size:12px;color:var(--sub);letter-spacing:.04em}
+.card .v{font-size:26px;font-weight:650;margin-top:6px;color:var(--accent)}
+.card .n{font-size:12px;color:var(--sub);margin-top:6px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+th{background:#eef2f8;color:#33405a;font-weight:600}
+tr:nth-child(even) td{background:#fafbfd}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:12px;
+background:#e8f1ff;color:var(--accent)}
+ul{padding-left:20px}li{margin:5px 0}
+.foot{color:var(--sub);font-size:12px;margin-top:26px;border-top:1px solid var(--line);padding-top:12px}
+svg{display:block;max-width:100%;height:auto}
+</style></head><body><div class="wrap">
+<h1>全链方程清单整理 · 求导证明与零残差极值精算</h1>
+<div class="meta">算法联盟第二十二轮 · 2026-11-15 · 可算判决册，非物理主张</div>
+<div class="code">ALG-ED__BOOKS-32__MD-33__EQLINES-34__CLAIM-0__LOOSE-9__OBJ-7__FREE-1__NEW-0__HESS-5481632913.734138386__ENV-351972.046724975__DADU--1.008097601__DXDU-1.921466192__PROJ-987833.131617029__RICH-2.129e-22__CLEAN-0__PRED-0</div>
+<div class="cards">
+<div class="card"><div class="k">新方程（真实对象）</div><div class="v">0</div>
+<div class="n">FREE 类 0 个，正对照 1 个</div></div>
+<div class="card"><div class="k">加权投影残差</div><div class="v">987833.132</div>
+<div class="n">大于 0 ⇒ 须至少 1 个新自由参数</div></div>
+<div class="card"><div class="k">解析导数 vs Richardson</div><div class="v">2.129e-22</div>
+<div class="n">最大相对偏离，O(h²) 收敛后外推</div></div>
+</div>
+
+<h2>一、全链方程清单总账</h2>
+<div class="box"><ul>
+<li>实时盘点：32 册判定 JSON、33 篇主文、32 份报告（本册产物按精确名字自指排除）。</li>
+<li>方程类陈述 34 行；含 equation/formula 类键的册 3；登记 no_new_formula 的册 1。</li>
+<li>三路正面声明合计 <b>0</b> 条：JSON 0、主文 0、报告 0。</li>
+<li>松散正则命中 9 行，语义白名单后 <b>0</b> 行；否定／宣称／主张／引述句不算发现。</li>
+</ul></div>
+
+<h2>二、求导分类：为什么没有新方程</h2>
+<div class="box"><table>
+<tr><th>对象</th><th>来源</th><th>类别</th><th>观测依赖</th><th>参数依赖</th></tr>
+<tr><td>E1-WLS-CHI2</td><td>R20</td><td>PARAMETRIC</td><td>是</td><td>是</td></tr>
+<tr><td>E2-RG-LINE</td><td>R1/R20</td><td>OBS-DEPENDENT</td><td>是</td><td>否</td></tr>
+<tr><td>E3-GAP</td><td>R5</td><td>OBS-DEPENDENT</td><td>是</td><td>否</td></tr>
+<tr><td>E4-IDENTITY</td><td>R1-Bianchi-同型</td><td>IDENTITY</td><td>否</td><td>否</td></tr>
+<tr><td>E5-PMIN</td><td>R21</td><td>NON-SMOOTH</td><td>否</td><td>否</td></tr>
+<tr><td>E6-BITS</td><td>R9</td><td>NON-SMOOTH</td><td>否</td><td>否</td></tr>
+<tr><td>E7-CTRL-FREE</td><td>CONTROL</td><td>FREE</td><td>否</td><td>否</td></tr>
+</table></div>
+<p style="font-size:13px;color:#5b6473">分类由精确有理函数导数读数与 AST 名字集机读：FREE 1、IDENTITY 1、NON-SMOOTH 2、OBS-DEPENDENT 2、PARAMETRIC 1。
+E7 是纯数学夹具，用于证明 FREE 谓词非恒假，不作物理证据。</p>
+
+<h2>三、求导证明与精算读数</h2>
+<div class="box"><table>
+<tr><th>精算量</th><th>读数</th></tr>
+<tr><td>一阶条件 F1 / F2</td><td>0.000000000000000000000000 / 0.000000000000000000000000</td></tr>
+<tr><td>符号一阶导 ∂χ²/∂A、∂χ²/∂x</td><td>0.000000000000000000000000 / 0.000000000000000000000000</td></tr>
+<tr><td>二阶导</td><td>288828.810394679 / 110182.050712160</td></tr>
+<tr><td>Hessian det/4</td><td>5481632913.734138386</td></tr>
+<tr><td>包络解析导数</td><td>351972.046724975</td></tr>
+<tr><td>Richardson 差分</td><td>351972.046724975</td></tr>
+<tr><td>最大相对偏离</td><td>2.129e-22</td></tr>
+<tr><td>dA/du 解析 / 差分</td><td>-1.008097601 / -1.008097601</td></tr>
+<tr><td>dx/du 解析 / 差分</td><td>1.921466192 / 1.921466192</td></tr>
+<tr><td>加权投影残差</td><td>987833.131617029</td></tr>
+<tr><td>跨度两路</td><td>3.968908721381 / 3.968908721381 dex</td></tr>
+</table></div>
+
+<h2>四、几何示意：两参数列空间吸收不了扰动</h2>
+<div class="box">
+<svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" role="img"
+aria-label="投影几何示意：残差向量落在两参数列空间之外">
+<rect x="0" y="0" width="680" height="240" fill="#ffffff"/>
+<line x1="60" y1="196" x2="620" y2="196" stroke="#c9d2e0" stroke-width="1"/>
+<line x1="60" y1="196" x2="60" y2="24" stroke="#c9d2e0" stroke-width="1"/>
+<polygon points="60,196 520,196 190,62" fill="#e8f1ff" stroke="#2f5d9e" stroke-width="1.5" opacity="0.75"/>
+<text x="255" y="180" fill="#2f5d9e" font-size="13">span{1, c} · 秩 2</text>
+<line x1="330" y1="196" x2="470" y2="56" stroke="#a23a3a" stroke-width="2.5"/>
+<line x1="330" y1="196" x2="402" y2="126" stroke="#1a7f52" stroke-width="2" stroke-dasharray="5 4"/>
+<line x1="402" y1="126" x2="470" y2="56" stroke="#a2601b" stroke-width="2" stroke-dasharray="3 3"/>
+<circle cx="330" cy="196" r="4" fill="#1f2430"/>
+<circle cx="402" cy="126" r="4" fill="#1a7f52"/>
+<circle cx="470" cy="56" r="4" fill="#a23a3a"/>
+<text x="478" y="52" fill="#a23a3a" font-size="13">v = da/du</text>
+<text x="330" y="216" fill="#5b6473" font-size="12">原点</text>
+<text x="406" y="146" fill="#1a7f52" font-size="12">投影点</text>
+<text x="86" y="36" fill="#1f2430" font-size="13">观测维数 3 · 参数方向 2 · 缺口 1</text>
+<text x="86" y="228" fill="#5b6473" font-size="12">橙色虚线即加权投影残差 987833.132，大于 0</text>
+</svg>
+</div>
+
+<h2>五、控制组、事故与边界</h2>
+<div class="box"><ul>
+<li>求导器控制读数 3.000000、-2.000000、0.000000、0.000000；去重 3 个、零读数 2 个，如实不虚称两两不同。</li>
+<li>事故一：R20 存档 a3 为 60 位截断值，与 1/α_s 精确值相对偏离 1.100e-71；求导器改取 WLS 同口径输入后一阶条件精确为 0。</li>
+<li>事故二：本册 JSON 的 new_equation_count 键被扫进清单，按精确 OWN_TOKENS 排除后两次复跑 MD5 一致。</li>
+<li>边界：只覆盖一圈 SM/MSSM β 与 WLS 单方程族；多元张量恒等式、阶梯定价、整数比特账未进求导器；未被满足 ≠ 不可满足。</li>
+<li>红线：突破 0、独立实验预言 0、四力大统一正确方程 0 条；<b>不宣称攻破统一场论</b>；README 939057 B / 最大 RID 406，本册零写入。</li>
+</ul></div>
+
+<div class="foot">守卫 37/37 · final ALG-R22-EQUATION-DERIV--GATES-PASS-WITH-0-NEGATIVE · content_sha256 e0750f19a29ff9cc… · 本册不占 RID、不入 README、不与任何审计卷相加</div>
+</div></body></html>

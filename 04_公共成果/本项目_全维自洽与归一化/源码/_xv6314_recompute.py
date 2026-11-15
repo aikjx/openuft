@@ -254,6 +254,11 @@ def _glob_one(pattern):
     hits = glob.glob(os.path.join(ROOT, pattern))
     return hits
 
+def _glob_readback(pattern):
+    # 排除「_整理」类汇总/整理册产物，避免与规范 recompute 文件名撞 glob（审计纪律：扫号须覆盖 _ 前缀）
+    return [p for p in glob.glob(os.path.join(ROOT, pattern))
+            if "_整理" not in os.path.basename(p)]
+
 _r403_hits = _glob_one(os.path.join("数据", "TUFT-r403*json"))
 assert len(_r403_hits) == 1, _r403_hits
 _r403 = json.load(io.open(_r403_hits[0], "r", encoding="utf-8"))
@@ -263,7 +268,7 @@ KEY["r403_unique"] = str(_r403.get("unique_answer", {}).get("c3_and_unified", ""
 KEY["r403_guards_pass"] = int(_r403.get("guards_pass", 0))
 KEY["r403_guards_total"] = int(_r403.get("guards_total", 0))
 
-_xv_hits = _glob_one(os.path.join("数据", "_XV6313*json"))
+_xv_hits = _glob_readback(os.path.join("数据", "_XV6313*json"))
 assert len(_xv_hits) == 1, _xv_hits
 _xv = json.load(io.open(_xv_hits[0], "r", encoding="utf-8"))
 _xv_kn = _xv.get("key_numbers", {})

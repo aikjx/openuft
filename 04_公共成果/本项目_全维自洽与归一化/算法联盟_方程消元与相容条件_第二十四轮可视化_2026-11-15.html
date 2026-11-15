@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang='zh-CN'><head><meta charset='utf-8'/>
+<title>算法联盟第二十四轮 · 方程消元与相容条件</title>
+<style>
+body{background:#f7f9fc;color:#243447;font-family:'Segoe UI','Microsoft YaHei',sans-serif;margin:0;padding:28px;line-height:1.75}
+.wrap{max-width:980px;margin:0 auto}
+h1{font-size:24px;margin:0 0 6px}h2{font-size:18px;margin:26px 0 10px;border-left:4px solid #5b8db8;padding-left:10px}
+.meta{color:#6b7c93;font-size:13px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #e1e8f0;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(30,60,90,.05)}
+code{background:#eef3f9;padding:1px 5px;border-radius:3px;font-size:12px}
+.tb{border-collapse:collapse;width:100%;font-size:12px;margin:10px 0}
+.tb th,.tb td{border:1px solid #e1e8f0;padding:6px 8px;text-align:left;vertical-align:top}
+.tb th{background:#eef3f9;font-weight:600}.tb tbody tr:nth-child(even){background:#fbfcfe}
+.big{font-size:20px;font-weight:700;color:#c0655b}
+.ok{color:#2f7d5b;font-weight:600}
+.redline{background:#fff6f5;border:1px solid #f0cfca;border-radius:8px;padding:12px 16px;color:#8a3b32}
+ul{margin:8px 0 8px 20px;padding:0}li{margin:5px 0}
+.foot{color:#6b7c93;font-size:12px;margin-top:24px}
+</style></head><body><div class='wrap'>
+<h1>统一场论方程的代数可解性与消元判负</h1>
+<div class='meta'>算法联盟 · 第二十四轮 · 2026-11-15 · 可算判决（代数层），不产新物理</div>
+<div class='card'>
+<div>判定 <code>ALG-R24-ELIMINATION--GATES-PASS-WITH-0-NEGATIVE</code></div>
+<div>守卫 <span class='ok'>42 / 52</span>，FAIL 0</div>
+<div>判词 <code>ALG-EL__EQ-3__UNK-2__OVER-1__DELTA--6.448206__USTAR-0.071138__CHI2-5933.430263__MSSM-1.161954__P--5__3P--2__MARS-1292.046775__GATE-6__CLEAN-0__PRED-0</code></div>
+</div>
+<div class='card'><span class='big'>Δ = -6.448205763484</span> ≠ 0 ⇒ 方程组无公共零点 ｜
+3 + p = <span class='big'>-2</span> ≤ 0 ⇒ 标度族精确矛盾 ｜ 各需 1 个新自由参数（不相加）</div>
+<h2>一、结构示意</h2><div class='card'><svg viewBox='0 0 660 215' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='三线消元与标度矛盾示意'>
+<rect x='0' y='0' width='660' height='215' fill='#ffffff'/>
+<text x='12' y='22' font-size='13' fill='#243447' font-weight='600'>族 1 · 三条 RG 直线不共点</text>
+<g stroke='#dbe4ee' stroke-width='1'>
+<line x1='40' y1='170' x2='40' y2='40'/><line x1='40' y1='170' x2='300' y2='170'/>
+</g>
+<g stroke-width='2' fill='none'>
+<path d='M50 150 L290 60' stroke='#5b8db8'/><path d='M50 140 L290 112' stroke='#4f9d7a'/>
+<path d='M50 130 L290 155' stroke='#c0655b'/>
+</g>
+<g fill='#c0655b'><circle cx='150' cy='110' r='4'/><circle cx='196' cy='96' r='4'/><circle cx='235' cy='83' r='4'/></g>
+<g font-size='11' fill='#243447'>
+<text x='16' y='36'>α⁻¹</text><text x='292' y='186'>ln(Q/M_Z)</text>
+<text x='48' y='196'>三个两两交点 ⇒ Δ ≠ 0 ⇒ 无公共零点</text>
+</g>
+<text x='340' y='22' font-size='13' fill='#243447' font-weight='600'>族 2 · 标度方程联立</text>
+<g fill='#e8f1fb' stroke='#5b8db8'>
+<rect x='340' y='40' width='290' height='28' rx='5'/><rect x='340' y='80' width='290' height='28' rx='5'/>
+</g>
+<g fill='#fdecea' stroke='#c0655b'>
+<rect x='340' y='120' width='290' height='28' rx='5'/>
+</g>
+<g font-size='11' fill='#243447'>
+<text x='350' y='58'>式(15)：p = −5</text>
+<text x='350' y='98'>闭合轨道条件：3 + p &gt; 0</text>
+<text x='350' y='138'>联立得 3 + p = −2 ≤ 0 ⇒ 精确矛盾</text>
+<text x='350' y='168'>正对照 p = −2 ⇒ 3 + p = 1 &gt; 0，报绿</text>
+<text x='350' y='190' fill='#6b7c93'>两族是不同对象，读数不相加。</text>
+</g>
+</svg></div>
+<h2>二、族 1 · 精确消元</h2><div class='card'><table class='tb'><thead><tr><th>读数</th><th>值</th><th>说明</th></tr></thead><tbody><tr><td>方程数 / 未知数</td><td>3 / 2</td><td>三条 RG 直线共享截距 A 与尺度 x</td></tr><tr><td>超定度</td><td>1</td><td>3 方程 2 未知，必有 1 条独立相容条件</td></tr><tr><td>相容条件 Δ(u_obs)</td><td>-6.448205763484</td><td>Δ = Σ uᵢ aᵢ，u=(c₂−c₃, c₃−c₁, c₁−c₂)</td></tr><tr><td>Δ = 0 的解（自由参数）</td><td>0.071137616979888</td><td>释放 α_s 后系统恰定</td></tr><tr><td>两条消元路径相对偏离</td><td>0.000e+00</td><td>路径一 A+c₃x 与路径二 Δ=0 闭式互不引用</td></tr><tr><td>与 R20 反解值相对偏离</td><td>3.650e-70</td><td>独立消元复算，容差 1e-50</td></tr><tr><td>换算分母 S</td><td>0.007007642413</td><td>S = Σ uᵢ² σᵢ²</td></tr><tr><td>Δ² / S</td><td>5933.430263132726</td><td>与 R20 χ²_min 相对偏离 2.800e-69，单列 IDENTITY</td></tr><tr><td>由前两式解出的 x / A</td><td>25.451112806068 / 42.411953185872</td><td>第三式要求 a₃ = 14.057260313945</td></tr><tr><td>单条位移（σ 单位）</td><td>3441.812789、-713.168416、77.501682</td><td>三条方程各自单独位移到相容所需</td></tr></tbody></table>
+<p><b>口径错位</b>：同一位移在 α_s⁻¹ 口径为 77.501682 σ，在 α_s 口径为 -46.762383 σ，数值不同，禁止比大小或相加。</p></div>
+<h2>三、族 2 · 标度方程</h2><div class='card'><table class='tb'><thead><tr><th>读数</th><th>值</th><th>说明</th></tr></thead><tbody><tr><td>r99 式(15) 标度 p</td><td>-5</td><td>机器审计册登记</td></tr><tr><td>闭合轨道条件 3+p&gt;0</td><td>-2（自算）/ -2（登记）</td><td>3+p = -2 ≤ 0 ⇒ 矛盾</td></tr><tr><td>周期标度指数 (1−p)/2</td><td>3</td><td>p=-2 正对照为 3/2</td></tr><tr><td>有效势二阶导 p=-5</td><td>-2.000e+20</td><td>负 ⇒ 驻点是极大，无稳定圆轨道</td></tr><tr><td>有效势二阶导 p=-2</td><td>1.000e+20</td><td>正 ⇒ 正对照稳定</td></tr><tr><td>火星周期预言 / 观测</td><td>1292.046775 d / 686.980000 d</td><td>相对误差 0.880763304</td></tr><tr><td>牛顿口径相对误差</td><td>0.000014000</td><td>正对照 p=-2 与观测相符</td></tr><tr><td>超定度</td><td>1</td><td>2 条约束 1 个未知 p</td></tr></tbody></table></div>
+<h2>四、门判别力</h2><div class='card'><table class='tb'><thead><tr><th>门</th><th>基线/正/负</th><th>通过率</th><th>判别力</th></tr></thead><tbody><tr><td>E-CHI2-CONSISTENT</td><td>是/否/否</td><td>0.333</td><td>承重</td></tr><tr><td>E-DELTA-NONZERO</td><td>是/否/是</td><td>0.667</td><td>承重</td></tr><tr><td>E-FREE-PARAM-PRICE</td><td>是/否/是</td><td>0.667</td><td>承重</td></tr><tr><td>S-MARS-MISMATCH</td><td>是/否/是</td><td>0.667</td><td>承重</td></tr><tr><td>S-ORBIT-CONDITION-FAIL</td><td>是/否/是</td><td>0.667</td><td>承重</td></tr><tr><td>S-VEFF-UNSTABLE</td><td>是/否/是</td><td>0.667</td><td>承重</td></tr></tbody></table>
+<p>有判别力门 6，装饰门 0；基线 6 / 6 成立。</p></div>
+<h2>五、控制组</h2><div class='card'><table class='tb'><thead><tr><th>配置</th><th>相容条件 Δ</th><th>超定度</th><th>3+p</th><th>闭合轨道成立</th></tr></thead><tbody><tr><td>基线（SM 一圈 β；p=-5）</td><td>-6.448205763484</td><td>1</td><td>-2</td><td>否</td></tr><tr><td>正对照（释放 α_s；p=-2）</td><td>0.000000</td><td>0</td><td>1</td><td>是</td></tr><tr><td>负对照（MSSM β；p=-3）</td><td>-0.069659425857</td><td>1</td><td>0</td><td>边界</td></tr></tbody></table></div>
+<h2>六、两路机拼</h2><div class='card'><table class='tb'><thead><tr><th>类别</th><th>键</th><th>act</th><th>exp</th><th>结论 / 相对偏离</th></tr></thead><tbody><tr><td>逐字</td><td>r99_3plus_p</td><td>-2</td><td>-2</td><td>一致</td></tr><tr><td>逐字</td><td>r22_new_equations</td><td>0</td><td>0</td><td>一致</td></tr><tr><td>逐字</td><td>beta_cross_book</td><td>41/10、-19/6、-7</td><td>41/10、-19/6、-7</td><td>一致</td></tr><tr><td>逐字</td><td>r99_mars_pred_report</td><td>1292.047</td><td>1292.047</td><td>一致</td></tr><tr><td>偏离</td><td>u_star_vs_r20_json</td><td>0.071137616980</td><td>0.071137616980</td><td>3.650e-70</td></tr><tr><td>偏离</td><td>u_star_vs_r20_report</td><td>0.071137616980</td><td>0.071137616980</td><td>3.650e-70</td></tr><tr><td>偏离</td><td>chi2_from_delta_vs_r20_json</td><td>5933.430263132726</td><td>5933.430263132726</td><td>2.800e-69</td></tr><tr><td>偏离</td><td>chi2_from_delta_vs_r20_report</td><td>5933.430263132726</td><td>5933.430263132726</td><td>2.800e-69</td></tr><tr><td>偏离</td><td>delta_a3_inv_vs_r20_json</td><td>5.575496106990</td><td>5.575496106990</td><td>7.965e-70</td></tr><tr><td>偏离</td><td>delta_a3_inv_vs_r20_report</td><td>5.575496106990</td><td>5.575496106990</td><td>7.965e-70</td></tr><tr><td>偏离</td><td>mssm_chi2_vs_r20</td><td>1.161953924803</td><td>1.161953924803</td><td>3.318e-67</td></tr><tr><td>偏离</td><td>mars_obs_derived_vs_report</td><td>686.979999956443</td><td>686.980000000000</td><td>6.340e-11</td></tr></tbody></table>
+<p>逐字类 4 / 4，偏离类 8 / 8；偏离用精确 Fraction 相对偏离加算术容差，不用字符串相等。</p></div>
+<h2>七、边界与红线</h2><div class='card'><ul>
+<li>BOUNDARY：只覆盖一圈 SM/MSSM β 与三条线性 RG 直线；族 2 只覆盖 r99 的 p=-5 / -2；代数无解只对该有限方程组成立，未被满足不等于不可满足。</li>
+<li>IDENTITY：Σu=Σu·c=0、χ²=Δ²/S、Δ(u*)=0、同册两路恒真部分，均不计入证据份数。</li>
+<li>不相加：族 1 与族 2、本轮代数无解与 R20 统计判负、与 R21/R22/R23 各册均不相加。</li>
+<li>规模：46 锚中 27 项双侧；R22 共 7 个方程对象、新方程 0；r99 共 23 条公式判决。</li>
+</ul></div>
+<div class='redline'><b>红线</b>：数学自洽不等于实验证实；四力统一未证；独立实验预言 0；本轮不宣称攻破统一场论，未回答力的本源。参数不灭第二十四实例落在方程联立的代数可解性层。</div>
+<div class='foot'>来料：R20 / R22 / r99 / 46 锚 / beta 独立册，机读不改字节。算法联盟册不占 RID、不入 README；README 本轮零写入。</div>
+</div></body></html>

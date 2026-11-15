@@ -1,0 +1,260 @@
+{
+  "checks": [
+    {
+      "act": 1,
+      "exp": 1,
+      "kind": "PASS",
+      "name": "V-SYNTAX-AST-PARSE",
+      "note": "正式机核 ast.parse 通过（不用 py_compile，避免 .pyc 计入快照）"
+    },
+    {
+      "act": 0,
+      "exp": 0,
+      "kind": "PASS",
+      "name": "V-README-AST-ZERO-WRITE",
+      "note": "机核带写模式的 open 调用 2 处，目标 OUT_JSON、OUT_REPORT；指向 README 的写入 0 处（期望 0）"
+    },
+    {
+      "act": "3df9dca8dc6c9942",
+      "exp": "3df9dca8dc6c9942",
+      "kind": "PASS",
+      "name": "V-CONTENT-SHA256",
+      "note": "判定 JSON 去掉指纹后重算 sha256 与登记值一致=True"
+    },
+    {
+      "act": 0,
+      "exp": 1,
+      "kind": "PASS",
+      "name": "V-TWO-PATH-MISMATCH-ZERO",
+      "note": "36 册 final／verdict／guards 两路 mismatch 0、缺字段 0；正则锚定负对照改一册 report 后 mismatch 1（必须 >0）"
+    },
+    {
+      "act": "ALG-FS__BOOKS-36__REP-36",
+      "exp": "ALG-FS__BOOKS-36__REP-36",
+      "kind": "PASS",
+      "name": "V-VERDICT-MACHINE",
+      "note": "读数 pred_nonzero +1 后判词串发生变化=True"
+    },
+    {
+      "act": 0,
+      "exp": 0,
+      "kind": "PASS",
+      "name": "V-LINK-HEALTH",
+      "note": "来料与跨册路径缺失 0 条（期望 0）"
+    },
+    {
+      "act": 0,
+      "exp": 6,
+      "kind": "PASS",
+      "name": "V-ZERO-POWER-GATES",
+      "note": "6 门全部有判别力、零判别力门 0、恒假门 0"
+    },
+    {
+      "act": "30d4d473 / b409cc09",
+      "exp": "30d4d473 / b409cc09",
+      "kind": "PASS",
+      "name": "V-IDEMPOTENT",
+      "note": "正式机核复跑后判定 JSON 与 report 的 MD5 逐字节不变=True"
+    },
+    {
+      "act": 1,
+      "exp": 1,
+      "kind": "PASS",
+      "name": "V-ATTACK-V1_FAKE_BREAK",
+      "note": "反噬 v1_fake_break 只动 G5-BREAK-EMPTY：FAIL 条目 G5-BREAK-EMPTY、门 FAIL G5-BREAK-EMPTY、final=GATES-FAIL、其它门保持 PASS=True"
+    },
+    {
+      "act": 1,
+      "exp": 1,
+      "kind": "PASS",
+      "name": "V-ATTACK-V2_DROP_REPORT",
+      "note": "反噬 v2_drop_report 只动 G2-LINK-STRUCTURE：FAIL 条目 G2-LINK-STRUCTURE、门 FAIL G2-LINK-STRUCTURE、final=GATES-FAIL、其它门保持 PASS=True"
+    },
+    {
+      "act": 1,
+      "exp": 1,
+      "kind": "PASS",
+      "name": "V-ATTACK-V3_SAME_SOURCE",
+      "note": "反噬 v3_same_source 只动 G1-TWO-PATH-LEDGER：FAIL 条目 G1-TWO-PATH-LEDGER、门 FAIL G1-TWO-PATH-LEDGER、final=GATES-FAIL、其它门保持 PASS=True"
+    },
+    {
+      "act": 1,
+      "exp": 1,
+      "kind": "PASS",
+      "name": "V-ATTACK-V4_UNATTRIBUTED",
+      "note": "反噬 v4_unattributed 只动 G6-NEW-EVIDENCE-ZERO：FAIL 条目 G6-NEW-EVIDENCE-ZERO、门 FAIL G6-NEW-EVIDENCE-ZERO、final=GATES-FAIL、其它门保持 PASS=True"
+    },
+    {
+      "act": 1,
+      "exp": 1,
+      "kind": "PASS",
+      "name": "V-ATTACK-V5_HARDCODE_OK",
+      "note": "反噬 v5_hardcode_ok 只动 E-NO-HARDCODE-OK：FAIL 条目 E-NO-HARDCODE-OK、门 FAIL 无、final=GATES-FAIL、其它门保持 PASS=True"
+    },
+    {
+      "act": 1,
+      "exp": 1,
+      "kind": "PASS",
+      "name": "V-ATTACK-V6_CROSS_CALL",
+      "note": "反噬 v6_cross_call 只动 E-NO-CROSS-PATH-CALL：FAIL 条目 E-NO-CROSS-PATH-CALL、门 FAIL 无、final=GATES-FAIL、其它门保持 PASS=True"
+    },
+    {
+      "act": "205→205 (del 0 / add 0 / drift 0)",
+      "exp": "205→205 (del 0 / add 0 / drift 0)",
+      "kind": "PASS",
+      "name": "V-SNAPSHOT-ZERO-DRIFT",
+      "note": "六次反噬 + 幂等复跑后正式产物快照：删除 0、新增 0、MD5 漂移 0，全部为 0；反噬输出均落在 _scratch/"
+    },
+    {
+      "act": 0,
+      "exp": 0,
+      "kind": "PASS",
+      "name": "V-SNAPSHOT-NO-SELF-CONTAMINATION",
+      "note": "快照 205 件正式产物中，本册自身产物计入 0 件（期望 0，按固定 OWN_TOKENS 排除）"
+    },
+    {
+      "act": "939057/fa6613db",
+      "exp": "939057/fa6613db",
+      "kind": "PASS",
+      "name": "V-README-ZERO-WRITE",
+      "note": "机核三次复跑前后 README 字节数／MD5 不变=True（结构性判据另见 V-README-AST-ZERO-WRITE）"
+    }
+  ],
+  "core_sha256": "84bac01e25d74fa8587c4f201563bdfc9cbc8bc9821f77e09a7906daeb8e0eed",
+  "date": "2026-11-15",
+  "final": "VERIFY-ALL-PASS",
+  "readme": {
+    "bytes": 939057,
+    "max_rid": 406,
+    "md5": "fa6613dbbdcd98bba2d99e6fc94e1723"
+  },
+  "round": "第二十六轮",
+  "snapshot_files": 205,
+  "snapshot_md5": "b595c0da8af7ab806acef26be1285044",
+  "style_all_pass": true,
+  "style_checks": [
+    {
+      "act": 0,
+      "exp": 0,
+      "kind": "PASS",
+      "name": "S-NO-MARKDOWN-PIPE",
+      "note": "HTML 中 Markdown 管道行 0 条（期望 0；表格一律用 table 标签）"
+    },
+    {
+      "act": 0,
+      "exp": 0,
+      "kind": "PASS",
+      "name": "S-HTML-TAG-BALANCE",
+      "note": "标签配对错误 0 处（期望 0）；自闭合 SVG 白名单含 19 种标签"
+    },
+    {
+      "act": 0,
+      "exp": 0,
+      "kind": "PASS",
+      "name": "S-MD-NO-ASCII-DQUOTE",
+      "note": "主文含 ASCII 双引号的行 0 行（期望 0；中文正文用「」）"
+    },
+    {
+      "act": 71,
+      "exp": 71,
+      "kind": "PASS",
+      "name": "S-TABLE-ROW-COUNT",
+      "note": "HTML 表格行 71 行，按 JSON／verify 机拼期望 71 行（六门＋维度矩阵＋两路机拼＋反噬＋册索引＋各表头）"
+    },
+    {
+      "act": 0,
+      "exp": 0,
+      "kind": "PASS",
+      "name": "S-KEYNUM-BACKFILL",
+      "note": "12 个关键读数中未能从判定 JSON 回填进主文的 0 个（期望 0）"
+    }
+  ],
+  "style_count": 5,
+  "style_pass": 5,
+  "title": "全链全维总账与攻击面覆盖度审计 · 核验",
+  "variants": [
+    {
+      "exact_one_target": true,
+      "fail_rows": [
+        "G5-BREAK-EMPTY"
+      ],
+      "final": "ALG-R26-FULLSCOPE--GATES-FAIL",
+      "gates_fail": [
+        "G5-BREAK-EMPTY"
+      ],
+      "kind": "CFG",
+      "n_fail": 1,
+      "tag": "v1_fake_break",
+      "target": "G5-BREAK-EMPTY"
+    },
+    {
+      "exact_one_target": true,
+      "fail_rows": [
+        "G2-LINK-STRUCTURE"
+      ],
+      "final": "ALG-R26-FULLSCOPE--GATES-FAIL",
+      "gates_fail": [
+        "G2-LINK-STRUCTURE"
+      ],
+      "kind": "CFG",
+      "n_fail": 1,
+      "tag": "v2_drop_report",
+      "target": "G2-LINK-STRUCTURE"
+    },
+    {
+      "exact_one_target": true,
+      "fail_rows": [
+        "G1-TWO-PATH-LEDGER"
+      ],
+      "final": "ALG-R26-FULLSCOPE--GATES-FAIL",
+      "gates_fail": [
+        "G1-TWO-PATH-LEDGER"
+      ],
+      "kind": "CFG",
+      "n_fail": 1,
+      "tag": "v3_same_source",
+      "target": "G1-TWO-PATH-LEDGER"
+    },
+    {
+      "exact_one_target": true,
+      "fail_rows": [
+        "G6-NEW-EVIDENCE-ZERO"
+      ],
+      "final": "ALG-R26-FULLSCOPE--GATES-FAIL",
+      "gates_fail": [
+        "G6-NEW-EVIDENCE-ZERO"
+      ],
+      "kind": "CFG",
+      "n_fail": 1,
+      "tag": "v4_unattributed",
+      "target": "G6-NEW-EVIDENCE-ZERO"
+    },
+    {
+      "exact_one_target": true,
+      "fail_rows": [
+        "E-NO-HARDCODE-OK"
+      ],
+      "final": "ALG-R26-FULLSCOPE--GATES-FAIL",
+      "gates_fail": [],
+      "kind": "SRC",
+      "n_fail": 1,
+      "tag": "v5_hardcode_ok",
+      "target": "E-NO-HARDCODE-OK"
+    },
+    {
+      "exact_one_target": true,
+      "fail_rows": [
+        "E-NO-CROSS-PATH-CALL"
+      ],
+      "final": "ALG-R26-FULLSCOPE--GATES-FAIL",
+      "gates_fail": [],
+      "kind": "SRC",
+      "n_fail": 1,
+      "tag": "v6_cross_call",
+      "target": "E-NO-CROSS-PATH-CALL"
+    }
+  ],
+  "verify_all_pass": true,
+  "verify_count": 17,
+  "verify_pass": 17
+}

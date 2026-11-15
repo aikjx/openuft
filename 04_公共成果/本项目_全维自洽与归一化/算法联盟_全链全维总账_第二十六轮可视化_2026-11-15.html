@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang='zh-CN'><head><meta charset='utf-8'/>
+<title>算法联盟第二十六轮 · 全链全维总账与覆盖度</title>
+<style>
+body{background:#f7f9fc;color:#243447;font-family:'Segoe UI','Microsoft YaHei',sans-serif;margin:0;padding:28px;line-height:1.75}
+.wrap{max-width:1000px;margin:0 auto}
+h1{font-size:24px;margin:0 0 6px}h2{font-size:18px;margin:26px 0 10px;border-left:4px solid #5b8db8;padding-left:10px}
+.meta{color:#6b7c93;font-size:13px;margin-bottom:18px}
+.card{background:#fff;border:1px solid #e1e8f0;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(30,60,90,.05)}
+code{background:#eef3f9;padding:1px 5px;border-radius:3px;font-size:12px}
+.tb{border-collapse:collapse;width:100%;font-size:12px;margin:10px 0}
+.tb th,.tb td{border:1px solid #e1e8f0;padding:6px 8px;text-align:left;vertical-align:top}
+.tb th{background:#eef3f9;font-weight:600}.tb tbody tr:nth-child(even){background:#fbfcfe}
+.tb tr.thin td{background:#fff6f5}
+.big{font-size:20px;font-weight:700;color:#c0655b}
+.ok{color:#2f7d5b;font-weight:600}
+.redline{background:#fff6f5;border:1px solid #f0cfca;border-radius:8px;padding:12px 16px;color:#8a3b32}
+ul{margin:8px 0 8px 20px;padding:0}li{margin:5px 0}
+.foot{color:#6b7c93;font-size:12px;margin-top:24px}
+</style></head><body><div class='wrap'>
+
+<h1>全链全维总账与攻击面覆盖度审计</h1>
+<div class='meta'>算法联盟 · 第二十六轮 · 2026-11-15 · 可算判决（整理层），不产新物理</div>
+<div class='card'>
+<div>判定 <code>ALG-R26-FULLSCOPE--GATES-PASS-WITH-0-NEGATIVE</code></div>
+<div>守卫 <span class='ok'>12/12</span>，FAIL 0；六门 <span class='ok'>6/6</span></div>
+<div>判词 <code>ALG-FS__BOOKS-36__REP-36__MIS-0__DIM-12__COVER-4__MEAN-4.166667E+0__BEAR-11__BREAK-0__PRED-0__NEW-0__STRUCT-1__GATE-6</code></div>
+</div>
+<div class='card'><span class='big'>36 册 → 12 维 → 4 册全覆盖</span> ｜ 移除任一单册后 BREAK 仍为 (0, 0) ｜ 全链 PRED 非零册数 <span class='big'>0</span></div>
+<h2>一、结构示意：全维不等于全维独立</h2>
+<div class='card'><svg viewBox='0 0 660 235' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='册数维度与最小覆盖示意'>
+<rect x='0' y='0' width='660' height='235' fill='#ffffff'/>
+<text x='10' y='20' font-size='13' fill='#243447' font-weight='600'>同一份 46 锚来料</text>
+<rect x='10' y='28' width='120' height='34' rx='6' fill='#e8f1fb' stroke='#5b8db8'/>
+<text x='24' y='50' font-size='12' fill='#243447'>46 项观测锚</text>
+<g stroke='#5b8db8' stroke-width='1.5' fill='none'>
+<path d='M130 45 L190 45'/><path d='M130 45 L190 105'/><path d='M130 45 L190 165'/>
+</g>
+<g font-size='11' fill='#243447'>
+<text x='196' y='42'>36 册判定册（不同判据）</text>
+<text x='196' y='102'>12 个攻击面维度（文本标签）</text>
+<text x='196' y='162'>最小覆盖集仅需 4 册</text>
+</g>
+<g fill='#eef3f9' stroke='#9fb6cc'>
+<rect x='190' y='28' width='150' height='26' rx='4'/><rect x='190' y='88' width='150' height='26' rx='4'/>
+</g>
+<rect x='190' y='148' width='150' height='26' rx='4' fill='#fdecea' stroke='#c0655b'/>
+<text x='350' y='46' font-size='11' fill='#6b7c93'>↕ 维度高度重叠，不是 36 份独立证据</text>
+<text x='350' y='106' font-size='11' fill='#6b7c93'>↕ 每册平均命中 4.16666667E+0 维</text>
+<text x='350' y='166' font-size='11' fill='#8a3b32'>↕ 移除任一单册，结论读数不变（0 册变化）</text>
+<rect x='10' y='196' width='640' height='30' rx='6' fill='#fff6f5' stroke='#f0cfca'/>
+<text x='22' y='216' font-size='12' fill='#8a3b32'>独立实验预言不是已有维度：12 维中 PRED 非零册数逐维全为 0</text>
+</svg></div>
+<h2>二、六门判定</h2>
+<div class='card'><table class='tb'><thead><tr><th>门</th><th>结论</th><th>act</th><th>exp</th></tr></thead><tbody>
+<tr><td><code>G1-TWO-PATH-LEDGER</code></td><td class='ok'>PASS</td><td>0</td><td>1</td></tr><tr><td><code>G2-LINK-STRUCTURE</code></td><td class='ok'>PASS</td><td>0</td><td>36</td></tr><tr><td><code>G3-ALL-GREEN-NOT-ADDITIVE</code></td><td class='ok'>PASS</td><td>0</td><td>36</td></tr><tr><td><code>G4-DIMENSION-COVERAGE</code></td><td class='ok'>PASS</td><td>4</td><td>6</td></tr><tr><td><code>G5-BREAK-EMPTY</code></td><td class='ok'>PASS</td><td>0</td><td>0</td></tr><tr><td><code>G6-NEW-EVIDENCE-ZERO</code></td><td class='ok'>PASS</td><td>0</td><td>8</td></tr>
+</tbody></table><p>零判别力门 0、恒假门 0、有判别力门 6；负对照：抽掉一份 report 后未配对 1，注入假突破册后读数 2。</p></div>
+<h2>三、12 维攻击面覆盖矩阵</h2>
+<div class='card'><table class='tb'><thead><tr><th>维度</th><th>提及册数</th><th>承重册数</th><th>PRED 非零</th></tr></thead><tbody>
+<tr><td>方程层</td><td>23</td><td>23</td><td>0</td></tr><tr><td>自由度层</td><td>27</td><td>27</td><td>0</td></tr><tr><td>信息层</td><td>10</td><td>10</td><td>0</td></tr><tr><td>生成元层</td><td>5</td><td>5</td><td>0</td></tr><tr><td>代数层</td><td>10</td><td>10</td><td>0</td></tr><tr><td>求导层</td><td>8</td><td>8</td><td>0</td></tr><tr><td>统计层</td><td>17</td><td>17</td><td>0</td></tr><tr><td>量纲层</td><td>6</td><td>6</td><td>0</td></tr><tr><td>证据质量层</td><td>5</td><td>5</td><td>0</td></tr><tr><td>目录层</td><td>8</td><td>8</td><td>0</td></tr><tr class='thin'><td>模拟层</td><td>1</td><td>1</td><td>0</td></tr><tr><td>力的统一</td><td>30</td><td>30</td><td>0</td></tr>
+</tbody></table><p>两路矩阵相异 29 册；11 维至少有 2 册提及；最薄的是模拟层（1 册）。极小覆盖集：<code>fullchain_scope、vc_spiral、verdict_catalog、r25_cosmos_sim</code>（另一路 6 册）。</p></div>
+<h2>四、两路机拼与负对照</h2>
+<div class='card'><table class='tb'><thead><tr><th>读数</th><th>值</th><th>说明</th></tr></thead><tbody>
+<tr><td>判定册 / report</td><td>36 / 36</td><td>按 stem 一一配对，历史命名不统一</td></tr>
+<tr><td>两路 mismatch / 缺字段</td><td>0 / 0</td><td>act 走 JSON，exp 走 report 纯文本</td></tr>
+<tr><td>正则锚定负对照</td><td>1</td><td>改一册 report 的 final 后 mismatch 上升</td></tr>
+<tr><td>未配对 JSON / report</td><td>0 / 0</td><td>另有 2 份来料 JSON 无 report 属预期结构</td></tr>
+<tr><td>counts.FAIL 合计 / 全绿册</td><td>0 / 36</td><td>判词前缀互异 36 种 ⇒ 不相加</td></tr>
+<tr><td>宣称突破 / PRED 非零（两路）</td><td>0／0 / 0／0</td><td>移除任一单册后仍为 (0, 0)</td></tr>
+</tbody></table></div>
+<h2>五、反噬与幂等</h2>
+<div class='card'><table class='tb'><thead><tr><th>变体</th><th>唯一目标</th><th>FAIL 条目数</th><th>实际 FAIL 条目</th></tr></thead><tbody>
+<tr><td><code>v1_fake_break</code></td><td><code>G5-BREAK-EMPTY</code></td><td>1</td><td>G5-BREAK-EMPTY</td></tr><tr><td><code>v2_drop_report</code></td><td><code>G2-LINK-STRUCTURE</code></td><td>1</td><td>G2-LINK-STRUCTURE</td></tr><tr><td><code>v3_same_source</code></td><td><code>G1-TWO-PATH-LEDGER</code></td><td>1</td><td>G1-TWO-PATH-LEDGER</td></tr><tr><td><code>v4_unattributed</code></td><td><code>G6-NEW-EVIDENCE-ZERO</code></td><td>1</td><td>G6-NEW-EVIDENCE-ZERO</td></tr><tr><td><code>v5_hardcode_ok</code></td><td><code>E-NO-HARDCODE-OK</code></td><td>1</td><td>E-NO-HARDCODE-OK</td></tr><tr><td><code>v6_cross_call</code></td><td><code>E-NO-CROSS-PATH-CALL</code></td><td>1</td><td>E-NO-CROSS-PATH-CALL</td></tr>
+</tbody></table><p>6 次反噬每次只打中唯一目标，全部得到 <code>GATES-FAIL</code>；核验 <span class='ok'>VERIFY-ALL-PASS 17/17</span>；幂等复跑 JSON／report 的 MD5 不变；快照 205→205 删除 0、新增 0、漂移 0；README 零写入（939057 B / fa6613db…）。</p></div>
+<h2>六、全链册索引</h2>
+<div class='card'><table class='tb'><thead><tr><th>stem</th><th>final 前缀</th><th>guards</th><th>命中维度</th></tr></thead><tbody>
+<tr><td><code>UFT_eq_derive</code></td><td>ALG-ALLIANCE</td><td>12/12</td><td>力的统一、方程层、求导层、自由度层</td></tr><tr><td><code>UFT_整理</code></td><td>ALG-UFT-CONSOL</td><td>11/11</td><td>力的统一、求导层、目录层、自由度层</td></tr><tr><td><code>all_directions</code></td><td>ALG-ALL-DIRS</td><td>15/15</td><td>代数层、力的统一、方程层、自由度层</td></tr><tr><td><code>allknowledge_iterative</code></td><td>ALG-ALLKNOWLEDGE</td><td>35/35</td><td>代数层、信息层、力的统一、方程层、自由度层</td></tr><tr><td><code>careful_analysis</code></td><td>ALG-CAREFUL-ANALYSIS</td><td>15/15</td><td>力的统一、方程层、自由度层、量纲层</td></tr><tr><td><code>expdata_fullchain</code></td><td>ALG-EXPDATA</td><td>35/35</td><td>信息层、力的统一、方程层、求导层、统计层、自由度层、量纲层</td></tr><tr><td><code>expfacts_survival</code></td><td>ALG-EXPFACTS</td><td>39/39</td><td>力的统一、统计层、自由度层</td></tr><tr><td><code>external_exit</code></td><td>ALG-EXTERNAL-EXIT</td><td>50/50</td><td>代数层、力的统一、统计层、自由度层、证据质量层、量纲层</td></tr><tr><td><code>final_ledger</code></td><td>ALG-FINAL-LEDGER</td><td>55/55</td><td>信息层、力的统一、方程层、生成元层、统计层、自由度层</td></tr><tr><td><code>force_perp</code></td><td>ALG-FORCE-PERP</td><td>11/11</td><td>力的统一、方程层、目录层、自由度层</td></tr><tr><td><code>force_unification</code></td><td>ALG-FORCE-UNIFICATION</td><td>34/34</td><td>代数层、力的统一、方程层、自由度层</td></tr><tr><td><code>fullchain_scope</code></td><td>ALG-FULLCHAIN-SCOPE</td><td>47/47</td><td>代数层、信息层、力的统一、方程层、生成元层、目录层、统计层、自由度层</td></tr><tr><td><code>fusion_closedloop</code></td><td>ALG-FUSION</td><td>14/14</td><td>力的统一、求导层、自由度层</td></tr><tr><td><code>gravity_source</code></td><td>ALG-FINAL-GRAV-SOURCE</td><td>39/39</td><td>方程层、量纲层</td></tr><tr><td><code>gut_meet</code></td><td>ALG-GUT-MEET</td><td>55/55</td><td>力的统一、方程层、统计层、自由度层</td></tr><tr><td><code>healthcheck</code></td><td>ALG-HEALTHCHECK</td><td>34/34</td><td>力的统一、目录层、证据质量层</td></tr><tr><td><code>helix_erratum</code></td><td>ALG-HELIX-ERRATUM</td><td>10/10</td><td>力的统一、自由度层</td></tr><tr><td><code>hierarchy_cancel</code></td><td>ALG-FINAL-HIERARCHY-CANCEL</td><td>35/35</td><td>代数层、力的统一、方程层、统计层、自由度层、量纲层</td></tr><tr><td><code>information_gate</code></td><td>ALG-INFO-GATE</td><td>36/36</td><td>信息层、力的统一、方程层、统计层、自由度层</td></tr><tr><td><code>j28</code></td><td>ALG-J28</td><td>11/11</td><td>力的统一、方程层、自由度层</td></tr><tr><td><code>lower_bound_ledger</code></td><td>ALG-FINAL-LOWER-BOUND</td><td>38/38</td><td>信息层、力的统一、方程层、自由度层、证据质量层</td></tr><tr><td><code>meta_gateaudit</code></td><td>ALG-META-GATEAUDIT</td><td>40/40</td><td>代数层、信息层、力的统一、统计层、自由度层</td></tr><tr><td><code>pair_optim</code></td><td>ALG-PAIR-OPTIM</td><td>38/38</td><td>力的统一、统计层、自由度层</td></tr><tr><td><code>perturbation_closure</code></td><td>ALG-PERTURB-CLOSURE</td><td>43/43</td><td>代数层、力的统一、统计层</td></tr><tr><td><code>pfree_attribution</code></td><td>ALG-PFREE-ATTRIBUTION</td><td>38/38</td><td>力的统一、统计层、自由度层</td></tr><tr><td><code>r21_evidence</code></td><td>ALG-R21-EVIDENCE</td><td>51/51</td><td>目录层、统计层、证据质量层</td></tr><tr><td><code>r22_equation_deriv</code></td><td>ALG-R22-EQUATION-DERIV</td><td>37/37</td><td>方程层、求导层、目录层、统计层</td></tr><tr><td><code>r23_generator_integrability</code></td><td>ALG-R23-GENERATOR</td><td>41/49</td><td>生成元层</td></tr><tr><td><code>r24_elimination</code></td><td>ALG-R24-ELIMINATION</td><td>42/52</td><td>代数层、信息层、力的统一、方程层、统计层</td></tr><tr><td><code>r25_cosmos_sim</code></td><td>ALG-R25-COSMOS</td><td>12/12</td><td>方程层、模拟层、统计层</td></tr><tr><td><code>source_depth</code></td><td>ALG-FINAL-SOURCE-DEPTH</td><td>44/44</td><td>信息层、方程层、自由度层</td></tr><tr><td><code>spectrum_generation</code></td><td>ALG-SPECTRUM-GEN</td><td>39/39</td><td>力的统一、方程层、生成元层、自由度层</td></tr><tr><td><code>summary</code></td><td>ALG-SUMMARY</td><td>12/12</td><td>力的统一、方程层、求导层、自由度层</td></tr><tr><td><code>triple_certification</code></td><td>ALG-FINAL-TRIPLE-CERT</td><td>55/55</td><td>代数层、信息层、力的统一、求导层、统计层、自由度层</td></tr><tr><td><code>vc_spiral</code></td><td>ALG-VCSP</td><td>14/14</td><td>力的统一、方程层、求导层、生成元层、目录层、自由度层、量纲层</td></tr><tr><td><code>verdict_catalog</code></td><td>ALG-VERDICT-CATALOG</td><td>18/18</td><td>力的统一、方程层、目录层、证据质量层</td></tr>
+</tbody></table></div>
+<h2>七、边界与红线</h2><div class='card'><ul>
+<li>BOUNDARY：12 个攻击面维度中，PRED 非零册数逐维全为 0 ⇒ 「独立实验预言」根本不是已有维度，而是攻击面的结构空缺；整理册不补此维度。</li>
+<li>BOUNDARY：本册与 R1–R25 各册是不同对象：36 册条目、12 个维度、6 条守卫均不相加；整理只改变索引，不改变任何物理读数或判词。</li>
+<li>BOUNDARY：维度定义是本册为审计而设的 12 类文本标签，归属按关键词命中，不是物理分类定理；set cover 结果是贪心上界，非精确最小覆盖；「未被满足 ≠ 不可满足」。</li>
+<li>IDENTITY：全绿只说明每册自身守卫通过，不构成 36 份独立证据；判词前缀 36 种恰说明对象各不相同，按元纪律不相加。单列 IDENTITY，不承重。</li>
+<li>IDENTITY：★核心新发现：覆盖全部 12 个维度最少只需 4 册（fullchain_scope、vc_spiral、verdict_catalog、r25_cosmos_sim），而总册数 36。所谓「全维」是文本覆盖，不是 12 份独立证据；生成元层／证据质量层／模拟层分别仅 5／5／1 册，覆盖最薄的是模拟层。</li>
+<li>IDENTITY：全链「突破 0」不是 36 份证据的合取：移除任一单册，BREAK 读数仍为 (0, 0)。它是同一份 46 锚实验来料在不同判据下的结构投影，因此不存在「移除几册就推翻」的有限最小割。</li>
+<li>INFO：本轮只做整理与覆盖度审计：不新增方程、不新增实验来料、不新增独立预言。整理册自身零新增证据，不宣称攻破统一场论。</li>
+<li>INFO：数学自洽 ≠ 实验证实，全维覆盖 ≠ 全维攻破；独立实验预言 0、四力统一正确方程 0 条，不宣称攻破统一场论或力的本源。</li>
+</ul></div>
+<div class='redline'><b>红线</b>：数学自洽 ≠ 实验证实；全维覆盖 ≠ 全维攻破；独立实验预言 0、四力统一正确方程 0 条，不宣称攻破统一场论。参数不灭第二十六实例落在全链覆盖度层。</div>
+<div class='foot'>机核 sha256 <code>84bac01e25d74fa8587c4f20</code>；来料 46 锚 / R1–R25 判定册 / README，机读不改字节。算法联盟册不占 RID、不入 README；README 本轮零写入。</div>
+</div></body></html>

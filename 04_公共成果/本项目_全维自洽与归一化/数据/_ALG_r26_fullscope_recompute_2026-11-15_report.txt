@@ -1,0 +1,162 @@
+第二十六轮 · 全链全维总账与攻击面覆盖度审计 · 机读报告
+日期 2026-11-15
+
+FINAL   = ALG-R26-FULLSCOPE--GATES-PASS-WITH-0-NEGATIVE
+VERDICT = ALG-FS__BOOKS-36__REP-36__MIS-0__DIM-12__COVER-4__MEAN-4.166667E+0__BEAR-11__BREAK-0__PRED-0__NEW-0__STRUCT-1__GATE-6
+GUARDS  = 12 / 12
+COUNTS  = {"BOUNDARY": 3, "IDENTITY": 3, "INFO": 2, "PASS": 12}
+
+[关键读数]
+  n_books                        = 36
+  n_reports                      = 36
+  raw_json_candidates            = 36
+  two_path_mismatch              = 0
+  two_path_missing               = 0
+  negative_control_mismatch      = 1
+  unpaired_json                  = 0
+  unpaired_report                = 0
+  expected_no_report             = 2
+  fail_total                     = 0
+  all_pass_books                 = 36
+  verdict_prefix_distinct        = 36
+  n_dims                         = 12
+  min_cover                      = 4
+  min_cover_exp_path             = 6
+  uncovered_dims                 = 0
+  mean_dims_per_book             = 4.16666667E+0
+  max_dims_per_book              = 8
+  bearing_dims                   = 11
+  matrices_differ_books          = 29
+  break_books                    = 0
+  pred_nonzero                   = 0
+  break_books_exp                = 0
+  pred_nonzero_exp               = 0
+  single_removal_changed         = 0
+  structural_invariance          = 1
+  new_evidence                   = 0
+  attribution_table_size         = 8
+  n_gates                        = 6
+  gate_pass                      = 6
+  gate_fail                      = 0
+  zero_power_gates               = 0
+  always_false_gates             = 0
+  gate_discriminating            = 6
+  g2_drop_unpaired_control       = 1
+  fake_break_control             = 2
+  spine_independent_predictions  = 0
+
+[六门判定]
+  G1-TWO-PATH-LEDGER                 PASS  act=0                    exp=1                   
+  G2-LINK-STRUCTURE                  PASS  act=0                    exp=36                  
+  G3-ALL-GREEN-NOT-ADDITIVE          PASS  act=0                    exp=36                  
+  G4-DIMENSION-COVERAGE              PASS  act=4                    exp=6                   
+  G5-BREAK-EMPTY                     PASS  act=0                    exp=0                   
+  G6-NEW-EVIDENCE-ZERO               PASS  act=0                    exp=8                   
+
+[守卫与陈述条目]
+  E-NO-HARDCODE-OK                     PASS               AST 扫描 add 调用的 ok 参数，布尔字面量命中 0 处（期望 0）
+  E-EXP-ACT-DISTINCT-AST               PASS               exp 函数 4 个、act 函数 4 个、两路函数体同型 0 处、顶层数值常量 return 0 处（后两者期望 0）
+  E-NO-CROSS-PATH-CALL                 PASS               跨路直接调用命中 0 处（期望 0）；两路抽列按 exp_/act_ 前缀语义白名单
+  E-OWN-TOKENS-EXCLUDE                 PASS               本册 5 件产物全部命中 OWN_TOKENS 自指排除，命中 5 件
+  E-LINK-HEALTH                        PASS               来料与跨册路径缺失 0 条（期望 0）
+  N-ALL-GREEN-IDENTITY                 IDENTITY           全绿只说明每册自身守卫通过，不构成 36 份独立证据；判词前缀 36 种恰说明对象各不相同，按元纪律不相加。单列 IDENTITY，不承重。
+  N-MIN-COVER-FINDING                  IDENTITY           ★核心新发现：覆盖全部 12 个维度最少只需 4 册（fullchain_scope、vc_spiral、verdict_catalog、r25_cosmos_sim），而总册数 36。所谓「全维」是文本覆盖，不是 12 份独立证据；生成元层／证据质量层／模拟层分别仅 5／5／1 册，覆盖最薄的是模
+  N-STRUCTURAL-CONCLUSION              IDENTITY           全链「突破 0」不是 36 份证据的合取：移除任一单册，BREAK 读数仍为 (0, 0)。它是同一份 46 锚实验来料在不同判据下的结构投影，因此不存在「移除几册就推翻」的有限最小割。
+  N-PRED-DIMENSION-GAP                 BOUNDARY           12 个攻击面维度中，PRED 非零册数逐维全为 0 ⇒ 「独立实验预言」根本不是已有维度，而是攻击面的结构空缺；整理册不补此维度。
+  N-NO-NEW-PHYSICS                     INFO               本轮只做整理与覆盖度审计：不新增方程、不新增实验来料、不新增独立预言。整理册自身零新增证据，不宣称攻破统一场论。
+  E-VERDICT-MACHINE                    PASS               读数 +1 后判词串发生变化=True，判词机读
+  N-NO-ADDITION                        BOUNDARY           本册与 R1–R25 各册是不同对象：36 册条目、12 个维度、6 条守卫均不相加；整理只改变索引，不改变任何物理读数或判词。
+  N-BOUNDARY                           BOUNDARY           维度定义是本册为审计而设的 12 类文本标签，归属按关键词命中，不是物理分类定理；set cover 结果是贪心上界，非精确最小覆盖；「未被满足 ≠ 不可满足」。
+  N-RED-LINE                           INFO               数学自洽 ≠ 实验证实，全维覆盖 ≠ 全维攻破；独立实验预言 0、四力统一正确方程 0 条，不宣称攻破统一场论或力的本源。
+
+[12 维攻击面覆盖矩阵]
+  维度             提及册数         承重册数         PRED 非零
+  方程层            23           23           0
+  自由度层           27           27           0
+  信息层            10           10           0
+  生成元层           5            5            0
+  代数层            10           10           0
+  求导层            8            8            0
+  统计层            17           17           0
+  量纲层            6            6            0
+  证据质量层          5            5            0
+  目录层            8            8            0
+  模拟层            1            1            0
+  力的统一           30           30           0
+
+[极小维度覆盖集] fullchain_scope、vc_spiral、verdict_catalog、r25_cosmos_sim
+
+[全链册索引]
+  stem                                     final-prefix                                   guards    dims
+  UFT_eq_derive                            ALG-ALLIANCE                                   12/12     力的统一,方程层,求导层,自由度层
+  UFT_整理                                   ALG-UFT-CONSOL                                 11/11     力的统一,求导层,目录层,自由度层
+  all_directions                           ALG-ALL-DIRS                                   15/15     代数层,力的统一,方程层,自由度层
+  allknowledge_iterative                   ALG-ALLKNOWLEDGE                               35/35     代数层,信息层,力的统一,方程层,自由度层
+  careful_analysis                         ALG-CAREFUL-ANALYSIS                           15/15     力的统一,方程层,自由度层,量纲层
+  expdata_fullchain                        ALG-EXPDATA                                    35/35     信息层,力的统一,方程层,求导层,统计层,自由度层,量纲层
+  expfacts_survival                        ALG-EXPFACTS                                   39/39     力的统一,统计层,自由度层
+  external_exit                            ALG-EXTERNAL-EXIT                              50/50     代数层,力的统一,统计层,自由度层,证据质量层,量纲层
+  final_ledger                             ALG-FINAL-LEDGER                               55/55     信息层,力的统一,方程层,生成元层,统计层,自由度层
+  force_perp                               ALG-FORCE-PERP                                 11/11     力的统一,方程层,目录层,自由度层
+  force_unification                        ALG-FORCE-UNIFICATION                          34/34     代数层,力的统一,方程层,自由度层
+  fullchain_scope                          ALG-FULLCHAIN-SCOPE                            47/47     代数层,信息层,力的统一,方程层,生成元层,目录层,统计层,自由度层
+  fusion_closedloop                        ALG-FUSION                                     14/14     力的统一,求导层,自由度层
+  gravity_source                           ALG-FINAL-GRAV-SOURCE                          39/39     方程层,量纲层
+  gut_meet                                 ALG-GUT-MEET                                   55/55     力的统一,方程层,统计层,自由度层
+  healthcheck                              ALG-HEALTHCHECK                                34/34     力的统一,目录层,证据质量层
+  helix_erratum                            ALG-HELIX-ERRATUM                              10/10     力的统一,自由度层
+  hierarchy_cancel                         ALG-FINAL-HIERARCHY-CANCEL                     35/35     代数层,力的统一,方程层,统计层,自由度层,量纲层
+  information_gate                         ALG-INFO-GATE                                  36/36     信息层,力的统一,方程层,统计层,自由度层
+  j28                                      ALG-J28                                        11/11     力的统一,方程层,自由度层
+  lower_bound_ledger                       ALG-FINAL-LOWER-BOUND                          38/38     信息层,力的统一,方程层,自由度层,证据质量层
+  meta_gateaudit                           ALG-META-GATEAUDIT                             40/40     代数层,信息层,力的统一,统计层,自由度层
+  pair_optim                               ALG-PAIR-OPTIM                                 38/38     力的统一,统计层,自由度层
+  perturbation_closure                     ALG-PERTURB-CLOSURE                            43/43     代数层,力的统一,统计层
+  pfree_attribution                        ALG-PFREE-ATTRIBUTION                          38/38     力的统一,统计层,自由度层
+  r21_evidence                             ALG-R21-EVIDENCE                               51/51     目录层,统计层,证据质量层
+  r22_equation_deriv                       ALG-R22-EQUATION-DERIV                         37/37     方程层,求导层,目录层,统计层
+  r23_generator_integrability              ALG-R23-GENERATOR                              41/49     生成元层
+  r24_elimination                          ALG-R24-ELIMINATION                            42/52     代数层,信息层,力的统一,方程层,统计层
+  r25_cosmos_sim                           ALG-R25-COSMOS                                 12/12     方程层,模拟层,统计层
+  source_depth                             ALG-FINAL-SOURCE-DEPTH                         44/44     信息层,方程层,自由度层
+  spectrum_generation                      ALG-SPECTRUM-GEN                               39/39     力的统一,方程层,生成元层,自由度层
+  summary                                  ALG-SUMMARY                                    12/12     力的统一,方程层,求导层,自由度层
+  triple_certification                     ALG-FINAL-TRIPLE-CERT                          55/55     代数层,信息层,力的统一,求导层,统计层,自由度层
+  vc_spiral                                ALG-VCSP                                       14/14     力的统一,方程层,求导层,生成元层,目录层,自由度层,量纲层
+  verdict_catalog                          ALG-VERDICT-CATALOG                            18/18     力的统一,方程层,目录层,证据质量层
+
+[读数来源归属]
+  n_books                  <- 全链 36 册判定 JSON
+  n_reports                <- 全链 36 册 report
+  two_path_mismatch        <- 两路机拼
+  n_dims                   <- 本册维度定义
+  min_cover                <- 本册 set cover
+  break_books              <- 全链 final 字段
+  pred_nonzero             <- 全链 verdict / key_numbers
+  readme_bytes             <- README.md
+
+[README 实时读数]
+  bytes=939057 md5=fa6613dbbdcd98bba2d99e6fc94e1723 max_rid=406
+
+[身份／边界／信息陈述]
+  IDENTITY   全绿只说明每册自身守卫通过，不构成 36 份独立证据；判词前缀 36 种恰说明对象各不相同，按元纪律不相加。单列 IDENTITY，不承重。
+  IDENTITY   ★核心新发现：覆盖全部 12 个维度最少只需 4 册（fullchain_scope、vc_spiral、verdict_catalog、r25_cosmos_sim），而总册数 36。所谓「全维」是文本覆盖，不是 12 份独立证据；生成元层／证据质量层／模拟层分别仅 5／5／1 册，覆盖最薄的是模拟层。
+  IDENTITY   全链「突破 0」不是 36 份证据的合取：移除任一单册，BREAK 读数仍为 (0, 0)。它是同一份 46 锚实验来料在不同判据下的结构投影，因此不存在「移除几册就推翻」的有限最小割。
+  BOUNDARY   12 个攻击面维度中，PRED 非零册数逐维全为 0 ⇒ 「独立实验预言」根本不是已有维度，而是攻击面的结构空缺；整理册不补此维度。
+  BOUNDARY   本册与 R1–R25 各册是不同对象：36 册条目、12 个维度、6 条守卫均不相加；整理只改变索引，不改变任何物理读数或判词。
+  BOUNDARY   维度定义是本册为审计而设的 12 类文本标签，归属按关键词命中，不是物理分类定理；set cover 结果是贪心上界，非精确最小覆盖；「未被满足 ≠ 不可满足」。
+  INFO       本轮只做整理与覆盖度审计：不新增方程、不新增实验来料、不新增独立预言。整理册自身零新增证据，不宣称攻破统一场论。
+  INFO       数学自洽 ≠ 实验证实，全维覆盖 ≠ 全维攻破；独立实验预言 0、四力统一正确方程 0 条，不宣称攻破统一场论或力的本源。
+
+[来料]
+  数据/_ALG_expdata_fullchain_来料总表_2026-11-11.json
+  数据/_ALG_final_ledger_recompute_2026-11-14.json
+  数据/_ALG_verdict_catalog_recompute_2026-11-14.json
+  数据/_ALG_r21_evidence_recompute_2026-11-15.json
+  数据/_ALG_r22_equation_deriv_recompute_2026-11-15.json
+  数据/_ALG_r23_generator_integrability_recompute_2026-11-15.json
+  数据/_ALG_r24_elimination_recompute_2026-11-15.json
+  数据/_ALG_r25_cosmos_sim_recompute_2026-11-15.json
+  README.md
+
+content_sha256 = 3df9dca8dc6c99422d8b03b7f7bd367a9e5b0142175f76d5015defc24089290a

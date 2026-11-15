@@ -1,0 +1,133 @@
+第二十五轮 · 宇宙演化真实数值模拟与回述机审计 · 机读报告
+日期 2026-11-15
+
+FINAL   = ALG-R25-COSMOS--GATES-FAIL
+VERDICT = ALG-CS__T0-1.38159148E+1__AGEREL-1.370934E-3__ENG-0.000000E+6__H0T-4.887561E+0__LATE-7__EARLY-7__ABSORB-1__PRED-0__FREE-1__CUT-2__GATE-6
+GUARDS  = 11 / 12
+COUNTS  = {"BOUNDARY": 3, "FAIL": 1, "IDENTITY": 2, "INFO": 1, "PASS": 11}
+
+[关键读数]
+  t0_gyr                       = 1.381591477732E+1
+  age_obs_gyr                  = 1.37970000E+1
+  age_rel                      = 1.37093407E-3
+  engine_rel                   = 0.00000000E+8
+  engine_tolerance             = 1.38250167E-14
+  Omega_m                      = 3.133997833916E-1
+  Omega_Lambda                 = 6.847000000000E-1
+  Omega_r                      = 9.209213793900E-5
+  rho_crit_kgm3                = 8.532855163739E-27
+  one_plus_z_eq                = 3.403111171110E+3
+  rad_shift_gyr                = -5.86535706E-3
+  tension_sigma                = 4.88756123E+0
+  sigma_widen_factor           = 3.66233766E+0
+  chi2_crit                    = 3.84145900E+0
+  r20_chi2_min                 = 5.933430263133E+3
+  r20_dalpha_over_sigma        = 4.67623830E+1
+  injection_grid_size          = 7
+  late_hits                    = 7
+  early_distinct               = 7
+  late_absorbed                = 1
+  late_max_response            = 1.89107007E-6
+  early_max_response           = 1.12095998E-1
+  discrimination_ratio         = 5.92764910E+4
+  zeroparam_claim              = 0
+  independent_predictions      = 0
+  independent_control          = 10
+  n_outputs                    = 10
+  extra_params_needed          = 1
+  n_gates                      = 6
+  gate_pass                    = 6
+  gate_fail                    = 0
+  zero_power_gates             = 1
+  always_false_gates           = 0
+  bearing_sources              = 3
+  min_cut_size                 = 2
+  spine_independent_predictions = 0
+
+[六门判定]
+  G1-ENGINE-CONVERGENCE              PASS  act=4.361822087659031873100964 exp=4.361822087659031873100964
+  G2-ENGINE-DISCRIMINATION           PASS  act=1.700034714517324722384959 exp=1.768694115318050446280994
+  G3-ANCHOR-REPRODUCTION             PASS  act=1.381591477732417920838531 exp=1.379700000000000000000000
+  G4-CROSS-ANCHOR-TENSION            PASS  act=5.423076923076923076923077 exp=4.887561225309663130536206
+  G5-UNIFIED-INJECTION-ZEROPARAM     PASS  act=7                          exp=4.676238302011173582601315
+  G6-PROVENANCE-LEDGER               PASS  act=0                          exp=10                        
+
+[守卫与陈述条目]
+  E-NO-HARDCODE-OK                     PASS               AST 扫描 add 调用的 ok 参数，布尔字面量命中 0 处（期望 0）
+  E-EXP-ACT-DISTINCT-AST               PASS               exp 函数 5 个、act 函数 4 个、两路函数体同型 0 处、顶层数值常量 return 0 处（后两者期望 0）
+  E-NO-CROSS-PATH-CALL                 FAIL               跨路直接调用命中 1 处（期望 0）；两路抽列按 exp_/act_ 前缀语义白名单，不按 kind 字段
+  E-OWN-TOKENS-EXCLUDE                 PASS               本册 5 件产物全部命中 OWN_TOKENS 自指排除，命中 5 件
+  E-LINK-HEALTH                        PASS               来料与跨册路径缺失 0 条（期望 0）
+  N-AGE-IS-INPUT-RESTATEMENT           IDENTITY           此复现是回述：H0／Omega_b h2／Omega_c h2／Omega_Lambda／T_CMB 全部来自 46 项观测锚，年龄是它们的函数；K09 sigma 为 0，不构成可判负窗口。单列 IDENTITY，不作独立证据。
+  N-LATE-TIME-ABSORPTION               IDENTITY           晚期宇宙年龄对早期膨胀率注入近零判别力：7／7 档全部落在年龄容差内，最大响应 1.89107007E-6；早期冻结温度最大响应 1.12095998E-1，两者相差 5.92764910E+4 倍。用年龄判注入会得到假绿，必须换到 BBN 冻结温度这类早期专属量。此为对象错位实证，单列 IDENT
+  N-BBN-SCALE-LAW                      BOUNDARY           冻结温度标度律只用 Gamma~T^5 与 H~T^2 的相对约化：T_f/T_f0=(1+delta)^(1/3)，冻结系数与 g_star 相消；不做 Y_p 绝对预言，K12 sigma 为 0 无可判负窗口。
+  E-VERDICT-MACHINE                    PASS               读数 +1 后判词串发生变化=True，判词机读
+  N-NO-NEW-PHYSICS                     INFO               真实数值模拟复现宇宙演化，但全部输出是观测输入的函数；统一力方程注入需自由参数定价；独立实验预言 0，不宣称攻破统一场论或力的本源。
+  N-BOUNDARY                           BOUNDARY           只覆盖平坦 FLRW 的 Friedmann 方程、Lambda+物质+辐射三组份、一圈 SM/MSSM beta 与 R24 的线性 RG 方程组；未含扰动增长、非平坦、暗能量状态方程演化、二圈与阈值修正；未被满足不等于不可满足。
+  N-NO-ADDITION                        BOUNDARY           本册与 R20／R21／R22／R23／R24 是不同对象，条目与门数不相加；引擎收敛属仪器校准 IDENTITY，不承重。
+
+[注入扫描 delta_uni → 晚期年龄 / 早期冻结温度]
+  delta      t0_gyr                     t0_rel_shift               freeze_ratio               freeze_rel_shift
+  -0.30      1.381594090418715142694626E+1 1.891070073412737536482373E-6 8.879040017426007084292690E-1 1.120959982573992915707310E-1
+  -0.10      1.381592234807842702865408E+1 5.479734328012804577951453E-7 9.654893846056297578599328E-1 3.451061539437024214006722E-2
+  -0.03      1.381591695556342050673250E+1 1.576616008715871209484209E-7 9.898982992491293385274733E-1 1.010170075087066147252671E-2
+  0          1.381591477742051729251457E+1 6.972979037724320973508855E-12 1.000000000000000000000000E+0 0
+  0.03       1.381591267114464281221507E+1 1.524458981067982629157430E-7 1.009901634049960980990468E+0 9.901634049960980990468125E-3
+  0.10       1.381590801008225513273902E+1 4.898149730325930235220692E-7 1.032280115456367159213585E+0 3.228011545636715921358523E-2
+  0.30       1.381589628952313689619615E+1 1.338152510368397441894031E-6 1.091392883061105845119131E+0 9.139288306110584511913091E-2
+
+[宇宙演化时间线]
+  z          a                      t_Gyr              H_1/s                d_L_Mpc              mu
+  0          1.000000000000000000000000E+0 1.381591475280E+1  2.182309617841E-18   0.000000000000E-34   -Infinity
+  0.1        9.090909090909090909090909E-1 1.246459314626E+1  2.292948106405E-18   4.779865943730E+2    3.839707858273E+1
+  0.5        6.666666666666666666666667E-1 8.599757698883E+0  2.883662307863E-18   2.930618471660E+3    4.233479641318E+1
+  1          5.000000000000000000000000E-1 5.854544804620E+0  3.903319401216E-18   6.812095785169E+3    4.416640372983E+1
+  2          3.333333333333333333333333E-1 3.277356386604E+0  6.608664504365E-18   1.596158283784E+4    4.601537978083E+1
+  3          2.500000000000000000000000E-1 2.143803301934E+0  9.953695027698E-18   2.606734786549E+4    4.708048423793E+1
+  6          1.428571428571428571428571E-1 9.291304246933E-1  2.274195922034E-17   5.906742328245E+4    4.885674012950E+1
+  10         9.090909090909090909090909E-2 4.712842844820E-1  4.472017354885E-17   1.061431039018E+5    5.012945891692E+1
+  100        9.900990099009900990099010E-3 1.641977971858E-2  1.259482318338E-15   1.297069239732E+6    5.556481580035E+1
+  1089.80    9.167583425009167583425009E-4 3.718440222261E-4  5.062331314143E-14   1.638560206241E+7    6.107231201729E+1
+
+[provenance 账]
+  Omega_m              derived      K01,K04,K05
+  Omega_r              derived      K01,K07,C01,C02,C05,K_B,MPC_M,GYR_S,N_EFF
+  z_eq                 derived      K01,K04,K05,K07,C01,C02,C05,K_B,MPC_M,GYR_S,N_EFF
+  t0_gyr               simulated    K01,K04,K05,K07,K08,C01,C02,C05,K_B,MPC_M,GYR_S,N_EFF
+  H_of_z               simulated    K01,K04,K05,K07,K08,C01,C02,C05,K_B,MPC_M,GYR_S,N_EFF
+  d_L_Mpc              simulated    K01,K04,K05,K07,K08,C01,C02,C05,K_B,MPC_M,GYR_S,N_EFF
+  mu_of_z              simulated    K01,K04,K05,K07,K08,C01,C02,C05,K_B,MPC_M,GYR_S,N_EFF
+  t0_injected          injected     K01,K04,K05,K07,K08,C01,C02,C05,K_B,MPC_M,GYR_S,N_EFF,delta_uni(FREE),R20,R24
+  freeze_ratio         injected     delta_uni(FREE),R20,R24
+  engine_rel           instrument   K01,K04,K05,K08,C01,C05
+
+[两路 H0 张力]
+  exp K01-K02      4.88756123E+0
+  exp K01-K03      4.36966918E-1
+  exp K02-K03      3.22971250E+0
+  act K01          0.00000000E+8
+  act K02          5.42307692E+0
+  act K03          4.74576271E-1
+
+[README 实时读数]
+  bytes=939057 md5=fa6613dbbdcd98bba2d99e6fc94e1723 max_rid=406
+
+[身份／边界／信息陈述]
+  IDENTITY   此复现是回述：H0／Omega_b h2／Omega_c h2／Omega_Lambda／T_CMB 全部来自 46 项观测锚，年龄是它们的函数；K09 sigma 为 0，不构成可判负窗口。单列 IDENTITY，不作独立证据。
+  IDENTITY   晚期宇宙年龄对早期膨胀率注入近零判别力：7／7 档全部落在年龄容差内，最大响应 1.89107007E-6；早期冻结温度最大响应 1.12095998E-1，两者相差 5.92764910E+4 倍。用年龄判注入会得到假绿，必须换到 BBN 冻结温度这类早期专属量。此为对象错位实证，单列 IDENTITY。
+  BOUNDARY   冻结温度标度律只用 Gamma~T^5 与 H~T^2 的相对约化：T_f/T_f0=(1+delta)^(1/3)，冻结系数与 g_star 相消；不做 Y_p 绝对预言，K12 sigma 为 0 无可判负窗口。
+  BOUNDARY   只覆盖平坦 FLRW 的 Friedmann 方程、Lambda+物质+辐射三组份、一圈 SM/MSSM beta 与 R24 的线性 RG 方程组；未含扰动增长、非平坦、暗能量状态方程演化、二圈与阈值修正；未被满足不等于不可满足。
+  BOUNDARY   本册与 R20／R21／R22／R23／R24 是不同对象，条目与门数不相加；引擎收敛属仪器校准 IDENTITY，不承重。
+  INFO       真实数值模拟复现宇宙演化，但全部输出是观测输入的函数；统一力方程注入需自由参数定价；独立实验预言 0，不宣称攻破统一场论或力的本源。
+
+[来料]
+  数据/_ALG_expdata_fullchain_来料总表_2026-11-11.json
+  数据/_ALG_gut_meet_recompute_2026-11-14.json
+  数据/_ALG_r21_evidence_recompute_2026-11-15.json
+  数据/_ALG_r22_equation_deriv_recompute_2026-11-15.json
+  数据/_ALG_r23_generator_integrability_recompute_2026-11-15.json
+  数据/_ALG_r24_elimination_recompute_2026-11-15.json
+  判定_TUFT-r18-G与c核心关系三表审计_2026-10-07.md
+  README.md
+
+content_sha256 = 7ed25c9f846f1a6e38197c55af04d06ae2e1f58bb372e2e2e7d1a959798ca50b
