@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第二十一轮 · R20 证据质量修复</title>
+<style>
+ :root { --bg:#f7f5f0; --card:#ffffff; --ink:#25231f; --mut:#6b665c; --line:#e6e2d9;
+         --red:#c0392b; --blue:#1f6f8b; --purple:#7a4fa3; --gold:#8a6d3b; }
+ * { box-sizing:border-box; }
+ body { margin:0; background:var(--bg); color:var(--ink);
+        font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.72; }
+ .wrap { max-width:960px; margin:0 auto; padding:34px 22px 60px; }
+ h1 { font-size:27px; margin:0 0 6px; }
+ h2 { font-size:18px; margin:32px 0 12px; padding-left:11px; border-left:4px solid var(--blue); }
+ .sub { color:var(--mut); font-size:13px; margin-bottom:22px; }
+ .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+         padding:18px 20px; margin:14px 0; }
+ .kpi { display:flex; flex-wrap:wrap; gap:12px; margin:14px 0; }
+ .kpi div { flex:1 1 170px; background:var(--card); border:1px solid var(--line);
+            border-radius:12px; padding:14px 16px; }
+ .kpi b { display:block; font-size:23px; font-weight:650; margin-top:4px; }
+ .kpi span { font-size:12px; color:var(--mut); }
+ .red { color:var(--red); } .blue { color:var(--blue); }
+ .purple { color:var(--purple); } .gold { color:var(--gold); }
+ table { width:100%; border-collapse:collapse; font-size:13px; }
+ th,td { border:1px solid var(--line); padding:8px 10px; text-align:center; }
+ th { background:#f2efe8; font-weight:600; }
+ td:first-child { text-align:left; }
+ code { background:#f2efe8; padding:1px 5px; border-radius:4px; font-size:12px; }
+ .note { font-size:13px; color:var(--mut); }
+ .flag { border-left:4px solid var(--red); background:#fff7f5; padding:12px 16px; border-radius:8px; margin:14px 0; }
+ .ok { border-left:4px solid var(--blue); background:#f3f9fb; padding:12px 16px; border-radius:8px; margin:14px 0; }
+ .foot { margin-top:34px; font-size:12px; color:var(--mut); border-top:1px solid var(--line); padding-top:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>R20 证据质量缺陷 · 机读盘点与独立复算修复</h1>
+<div class="sub">算法联盟 · 2026-11-15 · 第二十一轮 · 不占号 / 不入 README / 不与任何卷相加 / 不回写 R20 任何产物</div>
+
+<div class="flag"><b>红线：</b>数学自洽不等于实验证实；四力大统一正确方程 0 条、独立实验预言 0；<b>不宣称攻破统一场论</b>。本册不产生新物理。</div>
+
+<div class="kpi">
+ <div><span>机读缺陷</span><b class="red">5</b><span>不预设个数，由 AST/JSON/正文机读</span></div>
+ <div><span>独立复算修复</span><b class="blue">5</b><span>逐项读数与原读数一致</span></div>
+ <div><span>最小承重割</span><b class="purple">2</b><span>合取门数 4 → 3</span></div>
+ <div><span>修复后 escape</span><b class="gold">0</b><span>与 R20 相同，结论未改</span></div>
+</div>
+
+<h2>一 · 缺陷清单与修复状态</h2>
+<div class="card">
+<table>
+      <tr><th>缺陷</th><th>机读判定</th><th>独立复算修复</th></tr>
+      <tr><td>D1-PMIN-LITERAL</td><td>是</td><td>未闭合</td></tr>
+      <tr><td>D2-NEXTRA-LITERAL</td><td>是</td><td>未闭合</td></tr>
+      <tr><td>D3-SPAN-SAME-SOURCE</td><td>是</td><td>未闭合</td></tr>
+      <tr><td>D4-G4-ZERO-POWER</td><td>是</td><td>未闭合</td></tr>
+      <tr><td>D5-REGEX-UNANCHORED</td><td>是</td><td>未闭合</td></tr>
+</table>
+<p class="note">两处手填读数（p_min、n_extra）、一处同源回验（span exp 路径）、一处恒假门（G4）、一处脆弱正则（resid=）。</p>
+</div>
+
+<h2>二 · 四门判别力与最小承重割</h2>
+<div class="card">
+<svg viewBox="0 0 680 230" role="img" aria-label="四门通过数">
+<rect x="0" y="0" width="680" height="230" fill="#fbfaf7"/>
+<rect x="90" y="85" width="72" height="90" rx="5" fill="#1f6f8b"/>
+<text x="126" y="75" text-anchor="middle" font-size="14" fill="#25231f">2/3</text>
+<text x="126" y="198" text-anchor="middle" font-size="13" fill="#6b665c">G1</text>
+<rect x="230" y="130" width="72" height="45" rx="5" fill="#1f6f8b"/>
+<text x="266" y="120" text-anchor="middle" font-size="14" fill="#25231f">1/3</text>
+<text x="266" y="198" text-anchor="middle" font-size="13" fill="#6b665c">G2</text>
+<rect x="370" y="85" width="72" height="90" rx="5" fill="#1f6f8b"/>
+<text x="406" y="75" text-anchor="middle" font-size="14" fill="#25231f">2/3</text>
+<text x="406" y="198" text-anchor="middle" font-size="13" fill="#6b665c">G3</text>
+<rect x="510" y="175" width="72" height="3" rx="5" fill="#c0392b"/>
+<text x="546" y="165" text-anchor="middle" font-size="14" fill="#25231f">0/3</text>
+<text x="546" y="198" text-anchor="middle" font-size="13" fill="#6b665c">G4</text>
+<text x="546" y="218" text-anchor="middle" font-size="11" fill="#c0392b">恒假门</text>
+<line x1="60" y1="175" x2="640" y2="175" stroke="#d8d3c8" stroke-width="1"/>
+</svg>
+<table>
+      <tr><th>门</th><th>通过数 / 配置数</th><th>状态</th></tr>
+      <tr><td>G1 数值交汇</td><td>2 / 3</td><td>有判别力</td></tr>
+      <tr><td>G2 零额外自由度</td><td>1 / 3</td><td>有判别力</td></tr>
+      <tr><td>G3 非回述</td><td>2 / 3</td><td>有判别力</td></tr>
+      <tr><td>G4 双侧可判负锚</td><td>0 / 3</td><td>恒假 · 判别力 0</td></tr>
+</table>
+<p><b>G4 通过数 0/3</b>，配置层判别力为 0 ⇒ 按刀库应单列 IDENTITY 并移出布尔合取。穷举 2⁴ 个门集合得<b>最小承重割 = 2</b>（G1+G4；G2+G4）；剔除恒假门后合取门数 4 → 3，escape 仍 0 ⇒ <b>G4 不承重</b>。与 R14 / R19 的割是不同对象，不相加。</p>
+</div>
+
+<h2>三 · 手填读数升级为可算读数</h2>
+<div class="card">
+<p><b>F1 · p_min：</b>按定义 <code>min{ p : χ²(p) &lt; 阈值 }</code>，p=0 得 5933.4303（不可）、p=1 得 0.000（可）⇒ <b>1</b>，与 R20 手填 1 相同。负对照把 p=1 也换成 p=0 后可行集为空（none），证明读数驱动。</p>
+<p><b>F2 · n_extra：</b>46 锚中 SUSY／阈值尺度登记 <b>0</b> 条、β 差 3 个分量、实际解出 4 个非奇异方向 ⇒ 机读 <b>011</b>，与 R20 的 011 逐位相同。</p>
+</div>
+
+<h2>四 · 跨度四路来料：同源回验的识别</h2>
+<div class="card">
+<table>
+      <tr><th>读数路径</th><th>跨度 (dex)</th><th>性质</th></tr>
+      <tr><td>本册 / R20 重算</td><td>3.968908721</td><td>基准</td></tr>
+      <tr><td>首册存档（同源）</td><td>3.968908721</td><td>同源回验</td></tr>
+      <tr><td>文献独立口径</td><td>3.976065897</td><td>独立来料</td></tr>
+      <tr><td>r64 独立册口径</td><td>3.979821061</td><td>独立来料</td></tr>
+</table>
+<p>R20 的 exp 路径读首册同源存档，相对偏离 0 ⇒ 是<b>同源回验</b>而非独立复算。本册补文献与 r64 两条真独立来料，二者彼此也不同，均未对齐或平均。按「偏离 + 容差」值去重 <b>3</b> 个；按字符串去重是 4 个（精度位数 70 vs 60 造成虚增）。α_s 扰动 1% 后重算跨度移到 4.028688 dex，而三份存档不动 ⇒ 存档只能当对照。</p>
+</div>
+
+<h2>五 · 正则锚定</h2>
+<div class="card">
+<p>松散 <code>resid=</code> 命中 <b>4</b> 个不同残差 1.2e-31、1.2e-31、4.6e-07、1.7e-08，只因首个恰好正确；锚定 <code>sstar_resid=</code> 后唯一命中 <b>1</b> 个 1.2e-31。改名负对照下锚定命中 0 个、松散仍命中 ⇒ 锚定有判别力。JSON 精确残差 0.00000000000000000000000000000011972775320119915 与 report 舍入串 0.00000000000000000000000000000012 只作量级判定。</p>
+</div>
+
+<div class="ok"><b>结论：</b>R20 的物理结论成立，但证据链有 5 处可修质量问题。5 项全部独立复算后读数不变 ⇒ <b>修复只升级证据质量，不改动任何既有结论</b>，也不新增独立实验预言。R20 的 55/55 守卫与判词保持原样，三件产物运行前后逐字节未变。硬出口不变。</div>
+
+<div class="foot">
+判词 <code>ALG-RF__DEF-5__FIX-5__PMIN-1__NEX-011__RATES-2120__ZERO-1__CUT-2__SPAN3-3.976066__SPAN4-3.979821__REGEX-1__ESC-0__CLEAN-0__PRED-0</code><br>
+守卫 51/51 · 判定指纹 2999c97f24385fcd79371fc10677150ed7c530540559e77a17f0255a66d3d500<br>
+机核 <code>源码/_alg_r21_evidence_recompute.py</code> · 判定 <code>数据/_ALG_r21_evidence_recompute_2026-11-15.json</code> · 报告 <code>数据/_ALG_r21_evidence_recompute_report_2026-11-15.txt</code> · 核验 <code>数据/_ALG_r21_evidence_verify_2026-11-15.json</code><br>
+README 939057 B · 最大 RID 406 · 本册零写入
+</div>
+</div>
+</body>
+</html>
