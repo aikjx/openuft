@@ -2,6 +2,7 @@
 
 > 承接 r416：把“封装场给质量”与 SM Yukawa/Higgs 质量机制逐项对表，判定它是新机制还是改名。
 > 引擎：`源码/TUFT-r417_LCP1质量机制Yukawa同构与自由度重定价_2026-11-17.py`；数据：`数据/TUFT-r417_LCP1质量机制Yukawa同构与自由度重定价_2026-11-17.{json,md,_report.txt}`
+> verdict: `LCP1-MASS-MECHANISM--RENAMED-YUKAWA-WHEN-MAPPED--FREEDOM-UNCHANGED-OR-UNDERSTATED--NO-Y-OR-VEV-DERIVED--EW-GAUGE-SECTOR-MISSING--0OF6-UNCHANGED`
 
 ## §0 一句话裁定
 
@@ -50,6 +51,8 @@
 
 改名支：y_f(3) + v_sm(1) + lambda_h(1)，beyond-SM=0，novelty=0。
 新机制支：r416 基准 sigma/v/lambda/y=4；拟合三轻子需 y_e/y_mu/y_tau，累计 6；beta_y/beta_lambda 仍为 +2 个函数级自由度。
+
+下一步机器交接：r418 —— 封装光能否在不引入电弱双重态的前提下生成 W/Z 质量并保持 m_gamma=0。
 
 守卫：24/24；条目：18。
 

@@ -44,6 +44,17 @@ FACTS = [F1, F2, F3, F4, F5, F6, F7]
 VERDICT = ('LCP1-MASS-MECHANISM--RENAMED-YUKAWA-WHEN-MAPPED--FREEDOM-UNCHANGED-OR-'
            'UNDERSTATED--NO-Y-OR-VEV-DERIVED--EW-GAUGE-SECTOR-MISSING--0OF6-UNCHANGED')
 
+NEXT_TARGET = {
+    'r': 'r418',
+    'topic': '封装光能否在不引入电弱双重态的前提下生成 W/Z 质量并保持 m_gamma=0',
+    'why': 'r417 的 electroweak_gauge_sector=FAIL：LCP-1 只列 U(1)em，无 SU(2)_L x U(1)_Y 双重态、W/Z 质量与 Goldstone 机制',
+    'must_decide': [
+        '是否引入 SU(2)_L x U(1)_Y 表示；若引入，则 LCP-1 不再是最小单标量机制',
+        '若不引入，是否给出不破坏 m_gamma=0 的 W/Z 质量载体',
+        '新载体是否增加自由度、是否给出可证伪数值',
+    ],
+}
+
 RED = {
     'completion_0_of_6': True,
     'coverage_0_of_22': True,
@@ -312,6 +323,7 @@ J.append('# 判定册 · TUFT r417：LCP-1 质量机制 Yukawa 同构与自由�
 J.append('')
 J.append('> 承接 r416：把“封装场给质量”与 SM Yukawa/Higgs 质量机制逐项对表，判定它是新机制还是改名。')
 J.append('> 引擎：`源码/' + STEM + '.py`；数据：`数据/' + STEM + '.{json,md,_report.txt}`')
+J.append('> verdict: `' + VERDICT + '`')
 J.append('')
 J.append('## §0 一句话裁定')
 J.append('')
@@ -350,6 +362,8 @@ J.append('')
 J.append('改名支：y_f(3) + v_sm(1) + lambda_h(1)，beyond-SM=0，novelty=0。')
 J.append('新机制支：r416 基准 sigma/v/lambda/y=4；拟合三轻子需 y_e/y_mu/y_tau，累计 6；beta_y/beta_lambda 仍为 +2 个函数级自由度。')
 J.append('')
+J.append('下一步机器交接：' + NEXT_TARGET['r'] + ' —— ' + NEXT_TARGET['topic'] + '。')
+J.append('')
 J.append('守卫：' + str(GUARD_PASS) + '/' + str(GUARD_TOTAL) + '；条目：' + str(len(ENTRIES)) + '。')
 J.append('')
 J.append('红线：0/6 未完成、0/22、UFT-3=0、L3=0、validated=0、含引力四力正确方程 0 条、L3↛L4 全部保持。')
@@ -374,6 +388,7 @@ PAYLOAD = {
     'schema': 'openuft-r417-renamed-yukawa-v1',
     'date': DATE,
     'verdict': VERDICT,
+    'next_target': NEXT_TARGET,
     'redlines': RED,
     'facts_md5': FACT_BEFORE,
     'mapping': MAPPING,
