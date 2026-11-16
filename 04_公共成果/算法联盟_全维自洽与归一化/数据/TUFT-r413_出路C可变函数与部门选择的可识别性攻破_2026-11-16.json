@@ -1,0 +1,323 @@
+{
+ "册": "TUFT-r413",
+ "标题": "出路C可变函数与部门选择的可识别性攻破",
+ "日期": "2026-11-16",
+ "引擎": "源码/TUFT-r413_出路C可变函数与部门选择的可识别性攻破_2026-11-16.py",
+ "可识别性账": [
+  {
+   "shape": "fixed",
+   "assign": "derived",
+   "shape_dof": 1,
+   "assign_bits": 0.0,
+   "numeric_constraints": 1,
+   "missing_constraints": 3,
+   "identifiable": false,
+   "shape_params": "固定形状公设 1 条(+1) + 形状参数 k 个(外部)"
+  },
+  {
+   "shape": "fixed",
+   "assign": "external",
+   "shape_dof": 1,
+   "assign_bits": 4.5849625007,
+   "numeric_constraints": 1,
+   "missing_constraints": 3,
+   "identifiable": false,
+   "shape_params": "固定形状公设 1 条(+1) + 形状参数 k 个(外部)"
+  },
+  {
+   "shape": "free",
+   "assign": "derived",
+   "shape_dof": Infinity,
+   "assign_bits": 0.0,
+   "numeric_constraints": 0,
+   "missing_constraints": 4,
+   "identifiable": false,
+   "shape_params": "自由函数 f∈F：无界自由度(r15 A4/O-OMEGA-NODE)"
+  },
+  {
+   "shape": "free",
+   "assign": "external",
+   "shape_dof": Infinity,
+   "assign_bits": 4.5849625007,
+   "numeric_constraints": 0,
+   "missing_constraints": 4,
+   "identifiable": false,
+   "shape_params": "自由函数 f∈F：无界自由度(r15 A4/O-OMEGA-NODE)"
+  }
+ ],
+ "指派熵": {
+  "n_forces": 4,
+  "n_assignments": 24,
+  "bits": 4.584962500721157,
+  "bits_25E": "4.5849625007211569638343462E+00",
+  "kernel_eval": "log2(4!) = log2(24) = 4.5849625007"
+ },
+ "自由函数自由度账": [
+  {
+   "kind": "连续常数参数",
+   "dof": 1,
+   "example": "c (光速) 视为外部常数"
+  },
+  {
+   "kind": "分区节点",
+   "dof": "每个节点 +1",
+   "example": "r15: 1 常数+4 节点=5 自由度"
+  },
+  {
+   "kind": "自由函数 f(θ)",
+   "dof": "无界(函数空间维)",
+   "example": "r15 A4/O-OMEGA-NODE: 须限额函数+节点总自由度"
+  },
+  {
+   "kind": "形状固定函数 f(θ;p)",
+   "dof": "1(形状公设)+p(形状参数)",
+   "example": "出路C若为幂律则有指数p为外部"
+  }
+ ],
+ "三口径判决": {
+  "strict": {
+   "reading": "严格 Ω5-S（自由函数无界，须函数+节点总自由度限额）",
+   "verdict": "FAIL",
+   "why": "可变函数 f 若无界则违反 Ω5-S；若固定形状则 +1 只买了函数形式，形状参数 k 与部门指派 4.585 bits 仍是外部输入 ⇒ +1 不足以定解四强度",
+   "identifiable": false,
+   "missing_constraints": 3
+  },
+  "loose": {
+   "reading": "宽松（接受外部指派 + 固定形状）",
+   "verdict": "NOT-FALSIFIABLE",
+   "why": "接受 4.585 bits 外部指派 + k 个形状参数后，f 可拟合任意四比值 ⇒ 零判别力（r95「自由则不可证伪」同构复发）；与实验相符不构成预言",
+   "assign_bits": 4.584962500721157,
+   "verdict_tag": "FORM-FITTING-NOT-PREDICTION"
+  },
+  "hybrid": {
+   "reading": "混合（形状固定 + 指派派生，但形状参数外部）",
+   "verdict": "OPEN-COST-UNDERSTATED",
+   "why": "若部门指派可由公设派生(需新原理，非+1)且形状公设固定，仍缺形状参数来源；真实代价 ≥ +1(函数)+1(形状公设)+派生指派原理 ⇒ r410 的\"+1\"低估",
+   "free_any_unbounded": true
+  }
+ },
+ "阳性对照": [
+  {
+   "name": "inject_4_independent_constraints",
+   "before": "missing=3",
+   "after": "missing=0-identifiable",
+   "ok": true
+  },
+  {
+   "name": "inject_short_range_constraint",
+   "before": 24,
+   "after": 18,
+   "ok": true
+  },
+  {
+   "name": "inject_free_function_unbounded",
+   "before": "would-be-+1",
+   "after": "UNBOUNDED-DOF",
+   "ok": true
+  },
+  {
+   "name": "assignment_entropy_correct",
+   "before": "?",
+   "after": "4.5849625",
+   "ok": true
+  }
+ ],
+ "红线": {
+  "canon_0of6": true,
+  "canon_uft3": true,
+  "canon_validated": true,
+  "canon_4force_zero": true,
+  "canon_l3_not_l4": true
+ },
+ "守卫": [
+  {
+   "code": "G00",
+   "ok": true,
+   "value": "fact sources=5"
+  },
+  {
+   "code": "G01",
+   "ok": true,
+   "value": "no fact missing (假零防护) missing=[]"
+  },
+  {
+   "code": "G02",
+   "ok": true,
+   "value": "AST bad_import=[] bad_call=[]"
+  },
+  {
+   "code": "G03",
+   "ok": true,
+   "value": "fact anchors {'r410_c_plus1': True, 'r410_four_ratios': True, 'r411_24': True, 'r411_short_range': True, 'r412_LU6': True}"
+  },
+  {
+   "code": "G04",
+   "ok": true,
+   "value": "redline all TRUE=True"
+  },
+  {
+   "code": "G05",
+   "ok": true,
+   "value": "ledger branches=4"
+  },
+  {
+   "code": "G06",
+   "ok": true,
+   "value": "assignment entropy n=24 bits=4.5849625007"
+  },
+  {
+   "code": "G07",
+   "ok": true,
+   "value": "free-function unbounded detected"
+  },
+  {
+   "code": "G08",
+   "ok": true,
+   "value": "strict verdict=FAIL"
+  },
+  {
+   "code": "G09",
+   "ok": true,
+   "value": "loose verdict=NOT-FALSIFIABLE"
+  },
+  {
+   "code": "G10",
+   "ok": true,
+   "value": "hybrid verdict=OPEN-COST-UNDERSTATED"
+  },
+  {
+   "code": "G11",
+   "ok": true,
+   "value": "no branch fully identifiable from axioms alone (identifiable=[False, False, False, False])"
+  },
+  {
+   "code": "G12",
+   "ok": true,
+   "value": "positive controls=4 ok=4"
+  },
+  {
+   "code": "G13",
+   "ok": true,
+   "value": "self_corrections=2"
+  },
+  {
+   "code": "G14",
+   "ok": true,
+   "value": "facts unchanged (只读)=True"
+  },
+  {
+   "code": "G15",
+   "ok": true,
+   "value": "entries=15 status={'FAIL': 6, 'INFO': 4, 'PASS': 4, 'OPEN': 1}"
+  }
+ ],
+ "条目": [
+  {
+   "code": "A01",
+   "status": "FAIL",
+   "title": "可识别性必要条件：4 个力强度需 4 条独立数值约束定解；出路 C 的一条 f 关系式只给 1 条 ⇒ 缺 3 条",
+   "detail": "missing_constraints=4−1=3（fixed/derived 分支）"
+  },
+  {
+   "code": "A02",
+   "status": "FAIL",
+   "title": "【攻破核心·伪+1】r410 把出路 C 标价为 Ω5-S 结构限额 +1，但\"+1\"买到的只是\"一个结构函数\"；若为自由函数则自由度无界（违反 Ω5-S），若为固定形状则形状参数 k 与指派熵仍是外部输入 ⇒ +1 不足以定解",
+   "detail": "r15 A4/O-OMEGA-NODE：自由函数 ≠ 一个参数；限制常数个数无法限制预测力"
+  },
+  {
+   "code": "A03",
+   "status": "FAIL",
+   "title": "部门选择是外部信息而非公设派生：r411 D09 确认 4!=24 指派全自洽，锁定 1 种须外部输入 log₂(24)=4.5849625007211569638343462E+00 bits",
+   "detail": "r411 D17 阳性对照：注入\"强必须短程\"仅把 24→18，仍需额外约束才能唯一化"
+  },
+  {
+   "code": "A04",
+   "status": "INFO",
+   "title": "自由函数自由度账：连续常数=1 / 分区节点=每节点+1 / 自由函数=无界 / 形状固定函数=1(形状公设)+p(形状参数)",
+   "detail": "连续常数参数→1；分区节点→每个节点 +1；自由函数 f(θ)→无界(函数空间维)；形状固定函数 f(θ;p)→1(形状公设)+p(形状参数)"
+  },
+  {
+   "code": "A05",
+   "status": "PASS",
+   "title": "r410 出路 C 自陈\"须与实验四比值相符\"——本册确认四比值恰是 4 个观测约束，若 f 固定形状且指派派生则恰好定解（missing=0），但此时 f 无自由度去预言四比值之外 ⇒ 退化为把输入重述",
+   "detail": "strict.identifiable=False（结构上可定解但零预言力）"
+  },
+  {
+   "code": "B01",
+   "status": "FAIL",
+   "title": "严格 Ω5-S 口径：出路 C FAIL——可变函数无界违反限额；固定形状则 +1 不够，缺形状参数来源与派生指派原理",
+   "detail": "可变函数 f 若无界则违反 Ω5-S；若固定形状则 +1 只买了函数形式，形状参数 k 与部门指派 4.585 bits 仍是外部输入 ⇒ +1 不足以定解四强度"
+  },
+  {
+   "code": "B02",
+   "status": "FAIL",
+   "title": "宽松口径：接受外部指派+固定形状后 f 可拟合任意四比值 ⇒ 不可证伪（r95「固定则被排除、自由则不可证伪」同构复发）",
+   "detail": "verdict=FORM-FITTING-NOT-PREDICTION；与实验相符不构成预言"
+  },
+  {
+   "code": "B03",
+   "status": "FAIL",
+   "title": "混合口径：真实代价 ≥ +1(函数) +1(形状公设) + 派生指派原理，r410 的\"+1\"被低估",
+   "detail": "若部门指派可由公设派生(需新原理，非+1)且形状公设固定，仍缺形状参数来源；真实代价 ≥ +1(函数)+1(形状公设)+派生指派原理 ⇒ r410 的\"+1\"低估"
+  },
+  {
+   "code": "B04",
+   "status": "INFO",
+   "title": "三口径判决一致指向：LU-6 在现有公设集内不可落地（严格违反限额/宽松不可证伪/混合低估代价）",
+   "detail": "strict=FAIL loose=NOT-FALSIFIABLE hybrid=OPEN-COST-UNDERSTATED"
+  },
+  {
+   "code": "C01",
+   "status": "PASS",
+   "title": "r412 分层定理的应用：LU-6 属 L3 强度层（物理内容=5），本册机器结果再次印证\"高内容层统一必失败\"",
+   "detail": "high_content=5 ⇒ unified=False，与 r412 §5 同向"
+  },
+  {
+   "code": "C02",
+   "status": "INFO",
+   "title": "本册不否证：r410 的 A/B/C 定价框架、r411 的同源归并、r412 的分层定理、r15 的 Ω5 公设；只攻击\"出路 C 的 +1 足矣\"这一具体标价",
+   "detail": "否证的是代价标签，不是研究方向"
+  },
+  {
+   "code": "C03",
+   "status": "INFO",
+   "title": "继承链：卷74(强度=输入) → r15(自由函数无界) → r410(出路C唯一) → r411(24指派) → r412(LU-6条件式) → 本册(伪+1)",
+   "detail": "六册同向，零新物理"
+  },
+  {
+   "code": "D01",
+   "status": "PASS",
+   "title": "阳性对照 4/4 有效：4 约束⇒可识别 / 短程约束⇒24→18 / 自由函数⇒无界 / log₂24≈4.585 精确",
+   "detail": "证明可识别性与熵判据有牙，非恒真"
+  },
+  {
+   "code": "D02",
+   "status": "PASS",
+   "title": "红线读数不变：canon_0of6=True、canon_4force_zero=True、canon_l3_not_l4=True、canon_uft3=True、canon_validated=True",
+   "detail": "全 TRUE"
+  },
+  {
+   "code": "D03",
+   "status": "OPEN",
+   "title": "给用户的最小决策点（不代选）：若坚持推 LU-6，须同时接受三件——① 把\"可变函数\"改为固定形状函数并登记形状公设(+1)；② 给出部门指派的第一性派生原理(替代 4.585 bits 外部输入)；③ 提供形状参数 k 的来源(再 +k 自由度)。三者缺一即落回\"不可证伪\"或\"违反 Ω5-S\"",
+   "detail": "这是 r410 出路 C \"+1\"被攻破后重定价的诚实账单；本册不代用户选"
+  }
+ ],
+ "自纠": [
+  {
+   "code": "SC-1",
+   "issue": "首版把指派熵写成 log2(4)=2 bits",
+   "fix": "部门选择是从 4!=24 种指派中选 1 种，正确为 log2(24)=4.58496 bits",
+   "lesson": "熵的样本空间是\"指派数\"(排列)不是\"力数\"，须回 r411 D09 原文核对"
+  },
+  {
+   "code": "SC-2",
+   "issue": "可识别性判据首版把\"f 关系式\"当作 4 条独立约束",
+   "fix": "α_i=c_i·f 中 c_i 是 4 个新常数，f 关系式只给 1 条结构关系，数值定解仍缺 3 条",
+   "lesson": "结构关系≠数值约束；可识别性按独立数值约束数算"
+  }
+ ],
+ "总裁定": "OUTLET-C-ATTACKED--PLUS-ONE-IS-PSEUDO-COST--FREE-FUNCTION-IS-UNBOUNDED-DOF--ASSIGNMENT-ENTROPY-4.585-BITS-EXTERNAL--LU6-NOT-LANDABLE--0OF6-UNCHANGED",
+ "退出码": 0,
+ "耗时秒": 0.01
+}
