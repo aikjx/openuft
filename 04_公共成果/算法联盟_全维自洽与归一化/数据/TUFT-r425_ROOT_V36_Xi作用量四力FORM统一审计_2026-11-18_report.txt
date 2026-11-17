@@ -1,0 +1,68 @@
+====================================================================================================
+TUFT r425 / ROOT V36 Xi-action four-force FORM audit / 2026-11-18
+====================================================================================================
+SOURCE  exists=True bytes=29456 sha256=76afcd9e934da759e0af9d04
+AST     four_claims=True no_field_equation=True pred_zero=True
+V36NUM  kappa=2.5895361275839111454621695E+12  tau=1.8896758113919626598681268E+10  tau/kappa=7.2973525693000000000000000E-3
+[PASS] V01 | 四力函数的 Ξ 表达式代数精确（Re²/Im/|Ξ|²/ImΞ²）
+            读数: 四项相对残差 0.0000000000000000000000000E+0 / 0.0000000000000000000000000E+0 / 0.0000000000000000000000000E+0 / 0.0000000000000000000000000E+0（220 位，恒等式代入）
+[FAIL] V02 | ★量纲互斥定理：四个“力函数”分两类量纲（f_E 孤立），且均不是力
+            读数: [fG]=L^-2 [fE]=L^-1 [fS]=L^-2 [fW]=L^-2 ⇒ fG=fS=fW=L^-2，唯 fE=L^-1，互异类 2；[F]=M*L*T^-2，四者等于力的个数 0/4
+[FAIL] V03 | ★Ξ 量纲两读法互斥：曲率口径使拉氏量系数失真，QFT 口径使色散失真
+            读数: 口径A [Ξ]=L^-1：色散 T^-2==T^-2 成立（[c²]=L^2*T^-2）但 m²|Ξ|² 要成为能量密度需 [m²]=M*L*T^-2（非 M²）；口径B [Ξ]=1：色散给 L^2*T^-2≠T^-2。两口径不可能同时成立（A=True B=False）
+[FAIL] V04 | 拉格朗日量候选的四个耦合系数量纲互异 ⇒ 四个外部量纲输入
+            读数: L=|∂Ξ|²−m²|Ξ|²−λ(ReΞ)²−μ·ImΞ−g·ImΞ² 在 [Ξ]=L^-1 下：[m²]=M*L*T^-2 [λ]=M*L*T^-2 [μ]=M*T^-2 [g]=M*L*T^-2（四个不同，须外部指定）
+[FAIL] V05 | ★循环反解：τ/κ 是输入 α 的逐位回放（SOURCE 统一零信息量）
+            读数: 输入 α=7.2973525693000000000000000E-3 ⇒ 反解 κ=2.5895361275839111454621695E+12 τ=1.8896758113919626598681268E+10 ⇒ 读出 τ/κ=7.2973525693000000000000000E-3，残差 1.3703599908369580111415489E-220；换 α=1.0000000000000000000000000E-2 ⇒ τ/κ=1.0000000000000000000000000E-2，残差 0.0000000000000000000000000E+0；两读数互异=True ⇒ 判据有牙但纯反解
+[INFO] V06 | 手稿五条"关键观察"全部为代数恒等式（对任意 κ,τ 成立）
+            读数: 取 κ=1.7000000000000000000000000E+0 τ=3.1000000000000000000000000E-1：五条残差 0.0000000000000000000000000E+0,0.0000000000000000000000000E+0,0.0000000000000000000000000E+0,0.0000000000000000000000000E+0,0.0000000000000000000000000E+0（机器零，零信息量）
+[PASS] V07 | 手稿自承的 U(1) 分析可独立复现：只有 |Ξ|² 不变，三项破坏对称性
+            读数: 有理旋转 (cos,sin)=(3/5,4/5)：|Ξ|² 残差 0.0000000000000000000000000E+0（不变）；Re² 残差 8.7040000000000000000000000E-1、Im 残差 6.9387755102040816326530612E-1、ImΞ² 残差 1.4965986394557823129251701E-1（均非零）
+[FAIL] V08 | ★规范群维度亏：单个复标量 Ξ 只载 U(1)（1 维），SM 需 12 维
+            读数: SU(3)×SU(2)×U(1) 维数 12；Ξ 相位群维数 1；亏 11 维；手稿 Part 5 自承"需要 SU(3)×SU(2)×U(1)"⇒ 规范群为外部注入
+[FAIL] V09 | ★孤子方案无场方程：粒子=涡旋不可计算、不可证伪
+            读数: AST/全文扫描 no_field_equation=True；手稿 §6.3 写"方程: ???"、§8.3 写"精确形式需要求解运动方程"但从未给出；与 r419 A1（独立协变作用量）未闭合同判
+[FAIL] V10 | 自发对称破缺不能"恢复"U(1)，单个 U(1) 破缺也不够产生三力
+            读数: SSB 的真空不守恒对称性（不是恢复）；U(1)→nothing 只留 1 光子+1 实标量；三力需 12 维规范群；手稿 §4/§5 把"恢复"与"破缺"混用
+[FAIL] V11 | 引力范畴错误：手稿自承引力不能 Yang-Mills，却把它与三规范力并列 FORM 统一
+            读数: 手稿 §5 第 3 条原文"引力不能被包含在 Yang-Mills 规范场论中"；f_G=Re(Ξ)² 与 f_E/f_W/f_S 的规范场解释不同范畴 ⇒ 并列为"四力统一"无效
+[CORRECTED] V12 | 色散 ω²=c²(κ²+τ²) 是几何定义恒等式，不是从 S[Ξ] 导出的运动方程
+            读数: κ=ρ/(ρ²+b²), τ=b/(ρ²+b²) ⇒ κ²+τ²=1/(ρ²+b²)，ω=c/√(ρ²+b²) ⇒ 恒等式残差 1.6591724171389436284834016E-220；手稿 §7.2 把它当"作用量运动方程"是倒置
+[BOUNDARY] V13 | 孤子质量量子化 ℏω / 时空离散 / 最大能量截断：无方程承载的形而上承诺
+            读数: 无场方程 ⇒ 孤子剖面 f(r),g(r) 不可解、质量不可算；三条"预言"均不可进入 r421 W3 四门（C1 定量数值即失败）
+[INFO] V14 | SOURCE(V35)→FORM(V36) 是命名升级而非物理升级：函数集完全相同
+            读数: V35 与 V36 的四函数同为 {κ², τ, κ²+τ², κτ}；V36 新增的只是把四个函数写进 L 的四个自由系数，未增加任何约束或数值
+[FAIL] V15 | 手稿自承 PRED=0%：无独立可证伪预言
+            读数: fulltext has_pred_zero=True；项" FORM 统一未达成 / 无独立可证伪预言"为作者自报
+[FAIL] V16 | ★W3 四门禁：V36 全部候选被拒（阳性对照仍 PASS，门禁非恒假）
+            读数: 5 个候选中 REJECTED 4（四个 V36 候选全拒），阳性对照=True；W3.pass 保持 0
+[PASS] C1 | 量纲判据的判别力：把 τ 强改为无量纲则 κτ 量纲改变
+            读数: 正确 [κτ]=L^-2；错误 [κ·1]=L^-1；两者不等=True ⇒ 判据有牙
+[PASS] C2 | 循环反解判据的判别力：两个输入 α 给出两个不同 τ/κ
+            读数: α1=7.2973525693000000000000000E-3→τ/κ=7.2973525693000000000000000E-3；α2=1.0000000000000000000000000E-2→τ/κ=1.0000000000000000000000000E-2；互异=True（若恒定则判据无牙）
+[PASS] C3 | U(1) 判据的判别力：|Ξ|² 不变而 Re(Ξ)² 改变
+            读数: 同一旋转下 |Ξ|² 残差 0.0000000000000000000000000E+0 vs Re² 残差 8.7040000000000000000000000E-1，相差 8.7040000000000000000000000E+249 倍
+[PASS] C4 | 规范群维度判据的判别力：假想 SU(3) 三重场维度 8 ≠ 复标量 1
+            读数: SU(3) adjoint dim=8；U(1) complex scalar phase dim=1；差 7
+[PASS] C5 | 孤子判据的判别力：φ⁴ kink 有明确场方程与解析解（残差机器零）
+            读数: φ=v·tanh(x/L), L=1.0000000000000000000000000E+0：φ″−λφ(φ²−v²) 残差 0.0000000000000000000000000E+0 ⇒ 判据能区分"有方程/无方程"
+[PASS] C6 | W3 门禁非恒假：假想四门全过候选可通过
+            读数: 阳性候选门 {'C1': True, 'C2': True, 'C3': True, 'C4': True}；V36 四候选门 [{'C1': True, 'C2': False, 'C3': False, 'C4': False}, {'C1': True, 'C2': False, 'C3': False, 'C4': False}, {'C1': True, 'C2': False, 'C3': False, 'C4': False}, {'C1': False, 'C2': False, 'C3': False, 'C4': False}] ⇒ 门禁区分真候选与反解候选
+  [GUARD PASS] G01 | V36 source read-only found, sha256=76afcd9e934da759
+  [GUARD PASS] G02 | AST/text: four claimed Xi functions present
+  [GUARD PASS] G03 | AST/text: no field equation admitted by manuscript
+  [GUARD PASS] G04 | AST/text: PRED=0% admitted by manuscript
+  [GUARD PASS] G05 | dimension tools: multiply=add exponents; same-dim sum ok
+  [GUARD PASS] G06 | two dimension classes confirmed: fG=fS=fW=L^-2, fE=L^-1 isolated
+  [GUARD PASS] G07 | circular inversion: machine-zero reproduction for two distinct inputs
+  [GUARD PASS] G08 | U(1) rational rotation: modulus invariant, Re^2/Im changed
+  [GUARD PASS] G09 | all entry verdicts in vocabulary
+  [GUARD PASS] G10 | entry count = 22 (16 main + 6 controls); guards so far=9
+  [GUARD PASS] G11 | all readings non-empty
+  [GUARD PASS] G12 | engine deterministic (AST: no random module imported)
+  [GUARD PASS] G13 | r421 W3 gate reference exists
+  [GUARD PASS] G14 | W3 gate rejected 4 V36 candidates, control passed
+  [GUARD PASS] G15 | V36 manuscript size plausible (29456 bytes)
+
+TOTAL entries=22 (BOUNDARY=1, CORRECTED=1, FAIL=10, INFO=2, PASS=8)
+GUARDS 15/15 pass
