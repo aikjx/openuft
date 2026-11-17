@@ -1,0 +1,167 @@
+{
+  "boundary": [
+    "奇偶对称性是牛顿球对称源的几何恒等式，不是新引力定律；来料对此已如实声明。",
+    "奇偶信号能识别的是破坏镜像对称的仪器共模（倾斜等），不是区分引力模型；来料「识别模型错误」的表述存在对象错位。",
+    "理论值用 CODATA 2018 G=6.67430e-11；来料表值与之相差 <3e-6 属舍入，非物理偏离。",
+    "合成数据扣除假动作后的估计与理论值相差 2.4048E-3，属示意管线结果，非真实硬件读数。",
+    "电磁零实验尚未实施；无证据表明变化电磁场改变 G，亦无独立实验预言。",
+    "「亚毫角秒倾斜」为量级估算，使用标准 g 与理想共模投影；实际姿态控制取决于具体仪器。"
+  ],
+  "date": "2026-11-18",
+  "discipline": [
+    "非判定册",
+    "不占RID",
+    "不入README",
+    "不回写既有产物",
+    "两路机拼",
+    "反噬只动一个判据",
+    "flip演示",
+    "来源给一手URL"
+  ],
+  "external_sources": {
+    "atom_interferometry_G": {
+      "authors": "Rosi, Sorrentino, Cacciapuoti, Prevedelli, Tino",
+      "doi": "10.1038/nature13433",
+      "journal": "Nature 510, 518-521 (2014)",
+      "result": "G = 6.6719(99)e-11 m^3 kg^-1 s^-2, 150 ppm",
+      "supports": "冷原子干涉 + 源质量调制测量 G 有真实物理基础；双差分构型抑制共模",
+      "title": "Precision measurement of the Newtonian gravitational constant using cold atoms",
+      "url": "https://www.nature.com/articles/nature13433"
+    },
+    "cold_atom_gravity_review": {
+      "journal": "Quantum Science and Technology (IOP), 2021",
+      "supports": "MAGIA G=6.67191(99)e-11；倾斜/振动/温度/源质量定位为已知系统误差来源",
+      "title": "Testing gravity with cold atom interferometry: results and prospects",
+      "url": "https://iopscience.iop.org/article/10.1088/2058-9565/abd83e"
+    },
+    "dual_MOT_gradiometer": {
+      "doi": "10.1063/5.0040701",
+      "journal": "Rev. Sci. Instrum. 92, 053202 (2021)",
+      "supports": "双传感器重力梯度仪真实存在；基线0.3m，差分加速度灵敏度99 E/Hz",
+      "title": "A dual-magneto-optical-trap atom gravity gradiometer for determining G",
+      "url": "https://doi.org/10.1063/5.0040701"
+    }
+  },
+  "gates": {
+    "G1-numeric-two-path": {
+      "act_rel_C": "1.6135E-6",
+      "act_rel_D": "2.2774E-6",
+      "act_rel_path_C": "0",
+      "act_rel_path_D": "0",
+      "exp": "rel(C,D) < 1e-5",
+      "meaning": "来料数值可独立复算；两路一致属计算核对，非新物理",
+      "ok": true
+    },
+    "G2-parity-is-identity": {
+      "discrimination_power": 0,
+      "exp": "zero residual for all central forces",
+      "meaning": "奇偶对称性对任意偶中心力是恒等式；对识别新模型判别力=0（负读数）",
+      "n_identity": 5,
+      "n_tested": 5,
+      "ok": true
+    },
+    "G3-tilt-diagnosable-flip": {
+      "exp": "odd residual flips on theta; even residual immune",
+      "flip_works": true,
+      "meaning": "奇偶对比可诊断仪器倾斜共模；这是真实但有限的仪器判别力",
+      "odd_at_theta0": "0",
+      "odd_at_theta_budget": "3.9346E-9",
+      "ok": true,
+      "theta_budget_arcsec": "4.137849E-5",
+      "theta_budget_rad": "2.006084E-10"
+    },
+    "G4-error-budget-attribution": {
+      "dlnC_dlnd": "-2.243590E+0",
+      "exp": "tilt stricter than source-positioning",
+      "meaning": "倾斜需亚毫角秒级、定位需厘米级；倾斜更严苛，支持来料定性结论",
+      "ok": true,
+      "position_err_m_for_6p53pct": "1.455257E-2",
+      "position_err_rel_for_6p53pct": "2.910514E-2",
+      "theta_for_6p53pct_arcsec": "4.137849E-5"
+    },
+    "G5-em-null-no-signal": {
+      "claim_in_source": "来料自述：没有证据表明变化电磁场能够改变普适引力常数 G",
+      "exp": "no evidence EM field changes G",
+      "independent_prediction_count": 0,
+      "meaning": "电磁零实验为待做检验，非已生效判负；无新物理、无独立预言",
+      "ok": true
+    }
+  },
+  "geometry": {
+    "C_formula": "C = GM/2 [1/(d-s)^2 + 1/(d+s)^2]",
+    "D_formula": "D = GM/(2s) [1/(d-s)^2 - 1/(d+s)^2]",
+    "s_m": "1.000000E-1",
+    "sensors": "x = ±s",
+    "source_minus": "-d",
+    "source_plus": "+d"
+  },
+  "input": {
+    "C_claim": "3.01270e-8",
+    "C_synth": "3.00546e-8",
+    "D_claim": "1.15873e-7",
+    "G": "6.67430e-11",
+    "M_kg": "100",
+    "d_m": "0.5",
+    "error_budget_rel": "0.0653",
+    "g_local": "9.80665",
+    "gap_m": "0.2"
+  },
+  "kind": "external-material-computable-audit",
+  "model_discrimination_power": 0,
+  "n_forces_tested": 5,
+  "n_gate_ok": 5,
+  "n_gate_total": 5,
+  "n_identity": 5,
+  "parity_scan": {
+    "newton_1over_r2": {
+      "even_residual": "0",
+      "is_identity": true,
+      "odd_residual": "0"
+    },
+    "power_1over_r1": {
+      "even_residual": "0",
+      "is_identity": true,
+      "odd_residual": "0"
+    },
+    "power_1over_r3": {
+      "even_residual": "0",
+      "is_identity": true,
+      "odd_residual": "0"
+    },
+    "power_1over_r4": {
+      "even_residual": "0",
+      "is_identity": true,
+      "odd_residual": "0"
+    },
+    "yukawa_a0.5_lam0.3": {
+      "even_residual": "0",
+      "is_identity": true,
+      "odd_residual": "0"
+    }
+  },
+  "recompute": {
+    "C_claim": "3.01270000E-8",
+    "C_closed": "3.01270486E-8",
+    "C_synth_rel_deviation": "2.404770E-3",
+    "C_vector_path_neg": "-3.01270486E-8",
+    "C_vector_path_pos": "3.01270486E-8",
+    "D_claim": "1.15873000E-7",
+    "D_closed": "1.15873264E-7",
+    "D_vector_path_neg": "1.15873264E-7",
+    "D_vector_path_pos": "1.15873264E-7",
+    "rel_C_two_path": "0",
+    "rel_C_vs_claim": "1.6135E-6",
+    "rel_D_two_path": "0",
+    "rel_D_vs_claim": "2.2774E-6",
+    "vector_even_residual": "0",
+    "vector_odd_residual": "0"
+  },
+  "red_line": "数学自洽 != 实验证实；本轮不宣称攻破统一场论，不宣称发现新引力定律或独立实验预言；四力统一未证。",
+  "source_correctness": {
+    "claim": "ROOT V83 引用「已有晶格原子干涉实验测量过小源质量引力吸引」",
+    "note": "冷原子干涉测 G 与双重力梯度仪均有一手论文；但来料未给出具体 DOI，本册补齐一手 URL 供外部核查。Nature favicon 链接本身不是论文来源。",
+    "verified": true
+  },
+  "title": "ROOT V83 双传感器引力调制与电磁零实验 · 独立可算审计",
+  "verdict": "ROOTV83-AUDIT--NUMERIC-REPRODUCED--PARITY-IDENTITY--MODEL-DISCRIM-0--TILT-FLIP-True--UFT-NOT-BROKEN--NEW-PREDICTION-0"
+}

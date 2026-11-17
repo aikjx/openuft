@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法联盟 · ROOT V83 独立可算审计 · 2026-11-18</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#ffffff; --ink:#1a2230; --sub:#5a6675; --line:#dfe3ea;
+    --accent:#2540a6; --ok:#137a4b; --okbg:#e7f6ee; --neg:#a12a2a; --negbg:#fdecec;
+    --warn:#8a5a00; --warnbg:#fff6e0; --code:#0f2d5c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       line-height:1.65;font-size:15px}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 22px 64px}
+  header{border-left:5px solid var(--accent);padding:6px 0 6px 18px;margin-bottom:26px}
+  h1{font-size:25px;margin:0 0 6px}
+  .meta{color:var(--sub);font-size:13px}
+  .verdict{display:inline-block;margin-top:12px;padding:8px 12px;background:#eef1fb;
+           border:1px solid #c9d4f5;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;
+           font-size:12.5px;color:var(--code);word-break:break-all}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:20px 22px;margin-bottom:18px}
+  h2{font-size:18px;margin:0 0 14px;color:var(--accent)}
+  h3{font-size:15px;margin:18px 0 8px}
+  p{margin:8px 0}
+  .lead{font-size:15.5px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .card{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .card .n{font-size:12px;color:var(--sub);letter-spacing:.04em}
+  .card .v{font-size:15.5px;font-weight:600;margin:6px 0 4px}
+  .tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;font-weight:600}
+  .t-ok{background:var(--okbg);color:var(--ok)}
+  .t-neg{background:var(--negbg);color:var(--neg)}
+  .t-warn{background:var(--warnbg);color:var(--warn)}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
+  th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left}
+  th{background:#f3f5f9;color:var(--sub);font-weight:600}
+  td.num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--code)}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;background:#eef1f7;
+       padding:1px 5px;border-radius:5px;font-size:12.5px;color:var(--code)}
+  .note{background:var(--warnbg);border-left:4px solid #d8a11a;padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#5a4200;margin:12px 0}
+  .identity{background:var(--negbg);border-left:4px solid var(--neg);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#6d1f1f;margin:12px 0}
+  .flip{background:var(--okbg);border-left:4px solid var(--ok);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#0d5636;margin:12px 0}
+  svg{display:block;max-width:100%;height:auto;margin:6px auto}
+  .axis{stroke:#9aa4b2;stroke-width:1}
+  .lbl{fill:var(--sub);font-size:12px;font-family:inherit}
+  .src{font-size:12.5px;color:var(--sub)}
+  .src a{color:var(--accent)}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:24px}
+  @media(max-width:760px){.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>算法联盟 · ROOT V83 独立可算审计</h1>
+  <div class="meta">双传感器引力调制与电磁零实验　|　2026-11-18　|　非判定册 · 不占 RID · 不入 README · 不回写既有产物</div>
+  <div class="verdict">ROOTV83-AUDIT--NUMERIC-REPRODUCED--PARITY-IDENTITY--MODEL-DISCRIM-0--TILT-FLIP-True--UFT-NOT-BROKEN--NEW-PREDICTION-0</div>
+</header>
+
+<section>
+  <h2>三句话结论</h2>
+  <div class="grid3">
+    <div class="card">
+      <div class="n">01 · 数值核对</div>
+      <div class="v">C、D 可独立复算 <span class="tag t-ok">一致</span></div>
+      两路相对偏离 <code>0</code>，对表 <code>1.6e-6 / 2.3e-6</code>。这是计算核对，非新物理。
+    </div>
+    <div class="card">
+      <div class="n">02 · 奇偶对称性</div>
+      <div class="v">几何恒等式 <span class="tag t-neg">判别力 0</span></div>
+      5 种中心力律残差全为 0。「识别模型错误」存在对象错位。
+    </div>
+    <div class="card">
+      <div class="n">03 · 仪器诊断</div>
+      <div class="v">倾斜可翻转 <span class="tag t-ok">flip=True</span></div>
+      odd 随倾斜翻转、even 共模相消。真实但有限的仪器判别力。
+    </div>
+  </div>
+  <div class="note"><b>红线：</b>数学自洽 ≠ 实验证实。本册不宣称攻破统一场论、不宣称新引力定律或独立实验预言；四力统一未证。来料自身亦声明这是几何推导而非新定律，硬件实验尚未实施。</div>
+</section>
+
+<section>
+  <h2>几何构型与信号反转对称性</h2>
+  <svg viewBox="0 0 680 250" role="img" aria-label="双传感器与可移动源质量示意图">
+    <line class="axis" x1="60" y1="140" x2="620" y2="140"/>
+    <polygon points="620,140 610,135 610,145" fill="#9aa4b2"/>
+    <!-- sensors -->
+    <circle cx="240" cy="140" r="8" fill="#2540a6"/>
+    <circle cx="440" cy="140" r="8" fill="#2540a6"/>
+    <text class="lbl" x="240" y="120" text-anchor="middle">传感器 −s</text>
+    <text class="lbl" x="440" y="120" text-anchor="middle">传感器 +s</text>
+    <!-- source +d -->
+    <circle cx="560" cy="140" r="16" fill="#a12a2a" opacity="0.85"/>
+    <text class="lbl" x="560" y="178" text-anchor="middle" fill="#a12a2a">源 M @ +d</text>
+    <!-- source -d -->
+    <circle cx="120" cy="140" r="16" fill="#a12a2a" opacity="0.35" stroke="#a12a2a" stroke-dasharray="3 3"/>
+    <text class="lbl" x="120" y="178" text-anchor="middle" fill="#a12a2a">源 M @ −d</text>
+    <!-- arrows -->
+    <line x1="248" y1="140" x2="544" y2="140" stroke="#2540a6" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <polygon points="544,140 534,136 534,144" fill="#2540a6"/>
+    <text class="lbl" x="392" y="130" text-anchor="middle">源在 +d：两传感器加速度同向</text>
+    <!-- dimensions -->
+    <line class="axis" x1="240" y1="215" x2="440" y2="215"/>
+    <text class="lbl" x="340" y="234" text-anchor="middle">间距 2s = 0.2 m（s = 0.1 m）</text>
+    <text class="lbl" x="520" y="60" text-anchor="middle">d = 0.5 m　M = 100 kg</text>
+  </svg>
+  <p>共模 <code>C = GM/2[1/(d−s)²+1/(d+s)²]</code>：源 +d→−d 时反号（<b>奇</b>）。差分梯度 <code>D = GM/(2s)[1/(d−s)²−1/(d+s)²]</code>：镜像移动下同号（<b>偶</b>）。</p>
+</section>
+
+<section>
+  <h2>一、两路复算（计算核对 IDENTITY）</h2>
+  <table>
+    <tr><th>量</th><th>Path A 闭式</th><th>Path B 逐点矢量</th><th>来料表</th><th>对表偏离</th><th>两路偏离</th></tr>
+    <tr><td>C (m/s²)</td><td class="num">3.01270486E-8</td><td class="num">3.01270486E-8</td><td class="num">3.01270e-8</td><td class="num">1.6135E-6</td><td class="num">0</td></tr>
+    <tr><td>D (s⁻²)</td><td class="num">1.15873264E-7</td><td class="num">1.15873264E-7</td><td class="num">1.15873e-7</td><td class="num">2.2774E-6</td><td class="num">0</td></tr>
+  </table>
+  <p>Path B 用 <code>a_i=GM(x_src−x_i)/|x_src−x_i|³</code> 逐点求和，与闭式不共用中间量。矢量路径直接读出 <code>C(+d)+C(−d)=0</code>、<code>D(+d)−D(−d)=0</code>。合成数据 <code>3.00546e-8</code> 与理论相差 <code>2.40e-3</code>——示意管线估计，非真实硬件。</p>
+</section>
+
+<section>
+  <h2>二、奇偶对称性：跨力律恒等式扫描</h2>
+  <p>把力律推广为任意偶中心力 <code>f(r)</code>，奇偶构造的残差对 <code>f</code> 的形式不做任何假设。</p>
+  <table>
+    <tr><th>力律</th><th>odd 残差</th><th>even 残差</th><th>恒等式</th></tr>
+    <tr><td>1/r²（牛顿）</td><td class="num">0</td><td class="num">0</td><td>是</td></tr>
+    <tr><td>1/r</td><td class="num">0</td><td class="num">0</td><td>是</td></tr>
+    <tr><td>1/r³</td><td class="num">0</td><td class="num">0</td><td>是</td></tr>
+    <tr><td>1/r⁴</td><td class="num">0</td><td class="num">0</td><td>是</td></tr>
+    <tr><td>Yukawa (1+0.5e<sup>−r/0.3</sup>)/r²</td><td class="num">0</td><td class="num">0</td><td>是</td></tr>
+  </table>
+  <div class="identity"><b>负读数 · 判别力 = 0：</b>5/5 力律全部恒绿。奇偶对称性不能区分任何中心力模型——来料「帮助识别模型错误」在"模型"指引力定律时不成立。本册如实登记，不挑口径硬凑一致。即便测到它成立，也不支持或排除任何 GR 替代理论，不触及四力统一。</div>
+</section>
+
+<section>
+  <h2>三、可翻转判据：奇偶对比诊断仪器倾斜</h2>
+  <p>倾斜 <code>θ</code> 使地球重力投影出共模项 <code>gθ</code>：共模信号中被污染（<code>odd=2gθ</code>），差分梯度中相消（<code>even=0</code>）。</p>
+  <table>
+    <tr><th>配置</th><th>θ (rad)</th><th>odd 残差</th><th>even 残差</th><th>判词</th></tr>
+    <tr><td>负对照</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td>SYMMETRIC</td></tr>
+    <tr><td>正对照（预算内）</td><td class="num">2.006084E-10</td><td class="num">3.9346E-9</td><td class="num">0</td><td>TILT-DETECTED</td></tr>
+  </table>
+  <div class="flip"><b>flip 成立 = True：</b>只改 <code>θ</code> 一个量，odd 由 0 变非零、even 恒为 0。证明奇偶对比具备<b>仪器诊断</b>判别力——这是来料主张中成立的部分，与双差分抑制共模的外部实验一致。</div>
+</section>
+
+<section>
+  <h2>四、误差预算归因</h2>
+  <table>
+    <tr><th>机制</th><th>敏感度</th><th>造成 6.53% 相对误差所需</th></tr>
+    <tr><td>源定位 d</td><td class="num">∂lnC/∂lnd = −2.243590</td><td class="num">相对 2.91e-2（约 1.46 cm）</td></tr>
+    <tr><td>仪器倾斜 θ</td><td class="num">odd = 2gθ</td><td class="num">2.01e-10 rad ≈ 4.14e-5 角秒</td></tr>
+  </table>
+  <p>亚毫角秒姿态控制远严于厘米级定位，<b>支持</b>来料「倾斜比定位更严重」的定性结论；「仅靠增加测量次数不足以保证准确」亦成立（系统误差不随 √N 下降）。但这是量级估算，实际严苛度取决于仪器隔振与姿态读出，非精确门限。</p>
+</section>
+
+<section>
+  <h2>五、电磁零实验 · 可证伪但未实施</h2>
+  <p>来料自述「没有证据表明变化电磁场能够改变 G」。本册给出翻转条件：受控电磁调制下若测得 <code>δG/G</code> 显著偏离 0（超出系统误差预算），则 <code>GR-NO-EM-COUPLING</code> 判负、进入待复核候选；若与 0 相容，仅「未排除」而非「证实」。</p>
+  <p>当前无电磁调制 G 的实测读数，独立实验预言数 <code>0</code>。即使未来测到残差，第一解释应是温度、磁场梯度、机械运动等系统误差；「超出 GR」须先排除全部已知通道。</p>
+</section>
+
+<section>
+  <h2>六、外部一手出处（供核查）</h2>
+  <p class="src">来料仅附 Nature favicon 图标链接，非论文来源。本册补齐一手：</p>
+  <table>
+    <tr><th>主题</th><th>一手出处</th><th>支撑</th></tr>
+    <tr><td>冷原子干涉测 G</td><td class="src">Rosi et al., <i>Nature</i> 510, 518 (2014) · DOI 10.1038/nature13433 · <a href="https://www.nature.com/articles/nature13433">nature.com</a></td><td>G=6.6719(99)e-11，150 ppm；双差分抑制共模</td></tr>
+    <tr><td>冷原子引力测量综述</td><td class="src"><i>Quantum Sci. Technol.</i> (IOP) 2021 · <a href="https://iopscience.iop.org/article/10.1088/2058-9565/abd83e">iopscience.iop.org</a></td><td>MAGIA G=6.67191(99)e-11；倾斜/振动/温度/定位为已知误差</td></tr>
+    <tr><td>双重力梯度仪</td><td class="src"><i>Rev. Sci. Instrum.</i> 92, 053202 (2021) · DOI 10.1063/5.0040701</td><td>双传感器梯度仪真实存在，0.3 m 基线，99 E/Hz</td></tr>
+  </table>
+  <p>来料「有真实物理基础」属实；但严格措辞宜核对——上述一手多为冷原子/光晶格重力梯度仪测 G，与「晶格原子干涉测小源质量引力」物理同类而非逐字同题。</p>
+</section>
+
+<section>
+  <h2>七、判据汇总（5/5 ok）</h2>
+  <table>
+    <tr><th>判据</th><th>关键 act</th><th>信息量</th></tr>
+    <tr><td>G1 数值两路</td><td class="num">对表 1.61e-6/2.28e-6；两路 0</td><td>计算核对（IDENTITY）</td></tr>
+    <tr><td>G2 奇偶恒等式</td><td class="num">5/5 恒等；判别力 0</td><td><b>负读数</b>：对模型无效</td></tr>
+    <tr><td>G3 倾斜 flip</td><td class="num">odd 0→3.93e-9，even 恒 0</td><td><b>可翻转正读数</b>：对仪器有效</td></tr>
+    <tr><td>G4 误差归因</td><td class="num">4.14e-5 角秒 vs 1.46 cm</td><td>定性结论可算验证</td></tr>
+    <tr><td>G5 电磁零实验</td><td class="num">独立预言 0；待做</td><td>可证伪但未实施</td></tr>
+  </table>
+  <p>判据 ok 表示"按预定检验得到预期读数"，<b>不代表物理为真</b>。最有信息量的是 G2 的负读数与 G3 的可翻转正读数——两者把来料主张精确切分为「对模型无效、对仪器有效」。</p>
+</section>
+
+<footer>
+  算法联盟 · ROOT V83 独立可算审计 · 2026-11-18　|　源码可复跑，JSON 幂等 SHA 逐字节相等　|　数学自洽 ≠ 实验证实
+</footer>
+
+</div>
+</body>
+</html>

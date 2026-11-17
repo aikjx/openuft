@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法联盟 · ROOT V77 G 与 c 的关系 · 独立可算审计 · 2026-11-18</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#fff; --ink:#1a2230; --sub:#5a6675; --line:#dfe3ea;
+    --accent:#2540a6; --ok:#137a4b; --okbg:#e7f6ee; --neg:#a12a2a; --negbg:#fdecec;
+    --warn:#8a5a00; --warnbg:#fff6e0; --code:#0f2d5c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+       line-height:1.65;font-size:15px}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 22px 64px}
+  header{border-left:5px solid var(--accent);padding:6px 0 6px 18px;margin-bottom:26px}
+  h1{font-size:24px;margin:0 0 6px}
+  .meta{color:var(--sub);font-size:13px}
+  .verdict{display:inline-block;margin-top:12px;padding:8px 12px;background:#eef1fb;
+           border:1px solid #c9d4f5;border-radius:8px;font-family:ui-monospace,Menlo,Consolas,monospace;
+           font-size:11.5px;color:var(--code);word-break:break-all}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:20px 22px;margin-bottom:18px}
+  h2{font-size:18px;margin:0 0 14px;color:var(--accent)}
+  p{margin:8px 0}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .card{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .card .n{font-size:12px;color:var(--sub);letter-spacing:.04em}
+  .card .v{font-size:15px;font-weight:600;margin:6px 0 4px}
+  .tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;font-weight:600}
+  .t-ok{background:var(--okbg);color:var(--ok)}
+  .t-neg{background:var(--negbg);color:var(--neg)}
+  .t-warn{background:var(--warnbg);color:var(--warn)}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
+  th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left}
+  th{background:#f3f5f9;color:var(--sub);font-weight:600}
+  td.num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--code)}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;background:#eef1f7;
+       padding:1px 5px;border-radius:5px;font-size:12.5px;color:var(--code)}
+  .note{background:var(--warnbg);border-left:4px solid #d8a11a;padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#5a4200;margin:12px 0}
+  .identity{background:var(--negbg);border-left:4px solid var(--neg);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#6d1f1f;margin:12px 0}
+  .flip{background:var(--okbg);border-left:4px solid var(--ok);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#0d5636;margin:12px 0}
+  svg{display:block;max-width:100%;height:auto;margin:6px auto}
+  .lbl{fill:var(--sub);font-size:12px;font-family:inherit}
+  .src{font-size:12.5px;color:var(--sub)}
+  .src a{color:var(--accent)}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:24px}
+  @media(max-width:760px){.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>算法联盟 · ROOT V77 G 与 c 的关系 · 独立可算审计</h1>
+  <div class="meta">2026-11-18　|　非判定册 · 不占 RID · 不入 README · 不回写既有产物</div>
+  <div class="verdict">ROOTV77-AUDIT--NUMERIC-REPRO--FIVE-EQS-DEFINITIONAL--C-ALONE-INSUFFICIENT--RG-LAMBDA-IDENTITY--PLANCK-UNIQUE--WRONG-G-FLIP--CODATA-SOURCE-OK--UFT-NOT-BROKEN--NEW-PREDICTION-0</div>
+</header>
+
+<section>
+  <h2>三句话结论</h2>
+  <div class="grid3">
+    <div class="card">
+      <div class="n">01 · 核心结论</div>
+      <div class="v">仅凭 c 推不出 G <span class="tag t-ok">成立</span></div>
+      五个方程 5/5 是定义重排，每条都需额外量 Z/r_g/l_P/α_g。来料结论正确。
+    </div>
+    <div class="card">
+      <div class="n">02 · 数值核对</div>
+      <div class="v">7 项可复算 <span class="tag t-ok">非无输入预测</span></div>
+      对表偏离 ≤1.4e-6，两路 1.22e-9/6.13e-10。属 CODATA 常数代入。
+    </div>
+    <div class="card">
+      <div class="n">03 · 可翻转反例</div>
+      <div class="v">错误 G 判据 <span class="tag t-neg">flip 成立</span></div>
+      电子 44.8 数量级荒谬、普朗克质量归 1。证明"设错会得错误 G"。
+    </div>
+  </div>
+  <div class="note"><b>红线：</b>数学自洽 ≠ 实验证实。不宣称攻破统一场论、不宣称发现 G 的本源定律或独立预言；四力统一未证。来料自身亦声明「从光速独立预测 G 的最终物理证明仍未完成」。</div>
+</section>
+
+<section>
+  <h2>五个方程：全是定义重排</h2>
+  <table>
+    <tr><th>方程</th><th>所需额外量</th><th>残差</th><th>性质</th></tr>
+    <tr><td>G = 2Z/c</td><td>Z（定义为 Gc/2）</td><td class="num">0</td><td>定义重排</td></tr>
+    <tr><td>G = c²r_g/M</td><td>r_g（及 M）</td><td class="num">0</td><td>定义重排</td></tr>
+    <tr><td>G = c³l_P²/ħ</td><td>l_P（及 ħ）</td><td class="num">0</td><td>定义重排</td></tr>
+    <tr><td>G = α_g ħc/m²</td><td>α_g（及 m）</td><td class="num">0</td><td>定义重排</td></tr>
+    <tr><td>κ_E = 8πG/c⁴</td><td>κ_E</td><td class="num">0</td><td>定义重排</td></tr>
+  </table>
+  <div class="identity"><b>负读数 · 判别力 0：</b>5/5 恒等式，每一条都需要一个已含 G 的额外量才能写回 G。c 是 SI 精确定义值，不含 G 的信息。恒等式无论验证多少次，都不增加关于 G 本源的信息——与 V83 奇偶对称性、V79 2f 谐波同属「零判别力」结构。</div>
+</section>
+
+<section>
+  <h2>一、七项数值两路复算</h2>
+  <p><b>Path A：</b>直接代入 CODATA 2022（G=6.67430e-11、c 精确、ħ=1.054571817e-34）。<b>Path B：</b>用 SI 定义 h=6.62607015e-34 派生 ħ=h/2π，并用 l_P=ħ/(m_P c) 独立路径。</p>
+  <table>
+    <tr><th>量</th><th>复算值</th><th>来料表</th><th>相对偏离</th></tr>
+    <tr><td>Z=Gc/2</td><td class="num">1.00045240E-2</td><td class="num">0.010004524012147</td><td class="num">0</td></tr>
+    <tr><td>G/c² (m/kg)</td><td class="num">7.42616027E-28</td><td class="num">7.42616e-28</td><td class="num">3.62e-8</td></tr>
+    <tr><td>8πG/c⁴ (m/J)</td><td class="num">2.07664744E-43</td><td class="num">2.07665e-43</td><td class="num">1.23e-6</td></tr>
+    <tr><td>普朗克长度 (m)</td><td class="num">1.61625502E-35</td><td class="num">1.6162550e-35</td><td class="num">1.48e-8</td></tr>
+    <tr><td>普朗克质量 (kg)</td><td class="num">2.17643434E-8</td><td class="num">2.1764343e-8</td><td class="num">1.93e-8</td></tr>
+    <tr><td>电子 α_g</td><td class="num">1.75180940E-45</td><td class="num">1.75181e-45</td><td class="num">3.43e-7</td></tr>
+    <tr><td>质子 α_g</td><td class="num">5.90614943E-39</td><td class="num">5.90615e-39</td><td class="num">9.59e-8</td></tr>
+  </table>
+  <p>两路一致性：alpha_e 相对 <code>1.22e-9</code>、l_P 相对 <code>6.13e-10</code>。</p>
+  <div class="note"><b>被修正的门限（口径自伤）：</b>初设两路门限 1e-10 导致 G1 假 FAIL。根因是 h/2π 派生的 ħ 比直接输入值（仅 9 位有效数字）更精确，固有差约 1e-9——门限严于输入常数的有效数字。按「门限数据驱动」纪律改为 1e-8 并登记依据，<b>不改数据凑门限</b>。<br><b>CODATA 口径（不制造假阳性错误）：</b>α_e 在 6 位有效数字下与 2018/2022 两版 m_e 都相容（相对差 1.36e-9），如实登记 NO-ERROR，不挑口径制造出处错误。</div>
+</section>
+
+<section>
+  <h2>二、r_g/λ̄_C 恒等式与普朗克质量唯一性</h2>
+  <p><code>r_g/λ̄_C = (Gm/c²)/(ħ/mc) = Gm²/(ħc) = α_g(m)</code>，对电子、质子、普朗克质量三者逐项验证恒等；仅普朗克质量处比值为 1。</p>
+  <div class="identity"><b>但这是循环：</b>m_P=√(ħc/G) 的定义本身已含 G。令 r_g=λ̄_C 解出的 m 正是 m_P，代回得到的 G 就是输入的 G——<code>G_wrong/G=1</code> 是定义的结果，不是独立推导。来料「只有普朗克质量相等」判断正确，但不能由此宣称发现 G。</div>
+</section>
+
+<section>
+  <h2>三、可翻转反例：错误 G 的 flip 演示</h2>
+  <p>若错误地对所有粒子设 <code>r_g=λ̄_C</code>，解出 <code>G_wrong=ħc/m²</code>：</p>
+  <table>
+    <tr><th>粒子</th><th>G_wrong/G</th><th>数量级</th><th>判词</th></tr>
+    <tr><td>电子</td><td class="num">5.708384E+44</td><td class="num">44.8</td><td>荒谬（负对照）</td></tr>
+    <tr><td>质子</td><td class="num">1.693151E+38</td><td class="num">38.2</td><td>荒谬（负对照）</td></tr>
+    <tr><td>普朗克质量</td><td class="num">1.000000E+0</td><td class="num">0</td><td>归一（正对照）</td></tr>
+  </table>
+  <div class="flip"><b>flip 成立：</b>负对照给出偏离 38–45 个数量级的荒谬 G，正对照精确回到 1。证明来料「把两个半径对所有粒子设为相同会产生错误 G」的判断正确，判据对输入敏感、非装饰。</div>
+</section>
+
+<section>
+  <h2>四、外部一手来源</h2>
+  <p class="src">来料附 tsapps.nist.gov favicon 图标，非数值表来源。本册补齐一手：</p>
+  <table>
+    <tr><th>项</th><th>一手出处</th><th>内容</th></tr>
+    <tr><td>CODATA 2022</td><td class="src">NIST SP 961 (May 2024) · <a href="https://pml.nist.gov/cuu/pdf/wall_2022.pdf">pml.nist.gov</a></td><td>G=6.67430(15)e-11（22 ppm）、c 精确</td></tr>
+    <tr><td>wallet card</td><td class="src"><a href="https://physics.nist.gov/cuu/pdf/wallet_2022.pdf">physics.nist.gov</a></td><td>m_e=9.1093837139(28)e-31、m_p=1.67262192595(52)e-27</td></tr>
+    <tr><td>G 单值页</td><td class="src"><a href="https://physics.nist.gov/cgi-bin/cuu/Value?bg">Value?bg</a></td><td>G 相对不确定度 2.2e-5，来源 2022 CODATA</td></tr>
+  </table>
+  <p>来料 G、c 标称值与一手一致；α_e 在给定精度下与 2018/2022 都相容，不构成错误。</p>
+</section>
+
+<section>
+  <h2>五、判据汇总（5/5 ok）</h2>
+  <table>
+    <tr><th>判据</th><th>关键 act</th><th>信息量</th></tr>
+    <tr><td>G1 数值两路</td><td class="num">对表 ≤1.4e-6；两路 1.22e-9/6.13e-10</td><td>计算核对；含门限口径修正</td></tr>
+    <tr><td>G2 五方程定义重排</td><td class="num">5/5 恒等，逐条需额外量</td><td><b>负读数</b>：仅凭 c 推不出 G</td></tr>
+    <tr><td>G3 比值恒等式</td><td class="num">三者恒等；仅 m_P 为 1</td><td>普朗克相等是循环</td></tr>
+    <tr><td>G4 错误 G 反例</td><td class="num">44.8 / 38.2 / 0 数量级</td><td><b>可翻转反例</b>：负荒谬、正归一</td></tr>
+    <tr><td>G5 CODATA 来源</td><td class="num">与 NIST 2022 一致；无假阳性错误</td><td>外部裁决</td></tr>
+  </table>
+  <p>判据 ok 表示「按预定检验得到预期读数」，<b>不代表物理为真</b>。真正未关闭的问题是：零输入推导 Z / l_P / α_g 之一——当前未完成，独立实验预言数保持 0。</p>
+</section>
+
+<footer>
+  算法联盟 · ROOT V77 独立可算审计 · 2026-11-18　|　源码可复跑，JSON 幂等 SHA 逐字节相等　|　数学自洽 ≠ 实验证实
+</footer>
+
+</div>
+</body>
+</html>
