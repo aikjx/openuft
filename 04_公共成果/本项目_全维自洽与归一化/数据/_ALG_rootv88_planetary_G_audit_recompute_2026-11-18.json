@@ -1,0 +1,271 @@
+{
+  "G0": "6.67430000E-11",
+  "bodies": {
+    "Earth": {
+      "M": "5.9722e24",
+      "R": "6.371e6",
+      "g_ref": "9.8",
+      "ref_kind": "平均"
+    },
+    "Jupiter": {
+      "M": "1.89813e27",
+      "R": "6.9911e7",
+      "g_ref": "23.1",
+      "ref_kind": "赤道(1 bar)"
+    },
+    "Mars": {
+      "M": "6.4171e23",
+      "R": "3.3895e6",
+      "g_ref": "3.7",
+      "ref_kind": "平均"
+    },
+    "Moon": {
+      "M": "7.342e22",
+      "R": "1.7374e6",
+      "g_ref": "1.6",
+      "ref_kind": "平均"
+    }
+  },
+  "boundary": [
+    "g=GM/R^2 与 g=(4pi/3)G rho R 由 M=(4pi/3)rho R^3 定义恒等；表面引力不同源于 M、R、rho 不同，不需不同 G。",
+    "木星 23.1 m/s^2 是赤道 1 bar 加速度、25.92 是平均重力、27.01 是极区——来料标注「参考值口径」准确，非数值错误；但球模型 + 自转离心后仍差 0.54 m/s^2，来自扁率/J2/内部质量分布，本册如实报此负读数，不硬凑。",
+    "mu=GM 只给乘积：G 乘 k、M 除 k 得同一 mu。要证明 G 不同必须给独立质量信息或无法被质量分布解释的残差——来料关键难点成立。",
+    "Yukawa 力公式是势的求导（本册两路验证正确）；alpha、q、lam 是待定参数，该模型是有限程相互作用的参数化，不是新力已被发现。",
+    "MICROSCOPE eta(Ti,Pt) 与 PRL 2022 一手精确一致；它约束组成依赖自由落体（WEP），不直接覆盖行星环境依赖的 G——来料已自行声明这一限制，本册确认。",
+    "「当前没有可靠证据证明不同星球具有不同基本 G」成立；但这不等于「G 必然处处相同」，只是未被观测支持。"
+  ],
+  "date": "2026-11-18",
+  "discipline": [
+    "非判定册",
+    "不占RID",
+    "不入README",
+    "不回写既有产物",
+    "两路机拼",
+    "恒等式识别",
+    "mu不可辨识flip",
+    "求导两路",
+    "域判定",
+    "一手URL",
+    "口径差异不误报为错误"
+  ],
+  "external_sources": {
+    "microscope": {
+      "arxiv": "https://arxiv.org/abs/2209.15487",
+      "url": "https://doi.org/10.1103/PhysRevLett.129.121102"
+    },
+    "nssdc_jupiter": {
+      "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/jupiterfact.html"
+    }
+  },
+  "g_identity_scan": [
+    {
+      "body": "Earth",
+      "g_GM_R2": "9.82030229E+0",
+      "g_rho": "9.82030229E+0",
+      "is_identity": true,
+      "rel": "2.0366E-50"
+    },
+    {
+      "body": "Moon",
+      "g_GM_R2": "1.62338104E+0",
+      "g_rho": "1.62338104E+0",
+      "is_identity": true,
+      "rel": "6.1600E-50"
+    },
+    {
+      "body": "Mars",
+      "g_GM_R2": "3.72797726E+0",
+      "g_rho": "3.72797726E+0",
+      "is_identity": true,
+      "rel": "2.6824E-50"
+    },
+    {
+      "body": "Jupiter",
+      "g_GM_R2": "2.59203373E+1",
+      "g_rho": "2.59203373E+1",
+      "is_identity": true,
+      "rel": "0"
+    }
+  ],
+  "gates": {
+    "G1-g-two-forms-identity": {
+      "exp": "g=GM/R^2 == (4pi/3)G rho R for all bodies",
+      "meaning": "两式由 M=(4pi/3)rho R^3 定义恒等；不同 g 不需不同 G（判别力 0）",
+      "n_identity": 4,
+      "n_total": 4,
+      "ok": true
+    },
+    "G2-surface-gravity-scope": {
+      "exp": "3 spherical bodies within 2%; Jupiter scope identified; spherical-model residual reported honestly",
+      "jupiter_verdict": "SCOPE-DIFFERENCE--23.1-EQUATORIAL--25.92-MEAN--SPHERICAL-MODEL-RESIDUAL-0.54-FROM-OBLATENESS-J2",
+      "meaning": "3 个近球体在 2% 内复现；木星 23.1 赤道口径识别正确，但球模型 + 离心仍差 0.54 m/s²（扁率/J2/质量分布）——如实报负读数，不放宽门限硬凑；来料标注「参考值口径」准确，非数值错误",
+      "ok": true,
+      "spherical_residual_reported": "-5.442186E-1"
+    },
+    "G3-mu-nonidentifiable-flip": {
+      "all_mu_recovered": true,
+      "exp": "G*k and M/k give same mu; independent M recovers G",
+      "flip_works": true,
+      "meaning": "只测 mu=GM 无法分离 G/M；须独立质量信息——来料关键难点成立",
+      "ok": true
+    },
+    "G4-yukawa-derivative-two-path": {
+      "exp": "claimed F == -dV/dr (numeric) and alpha=0 -> Newton",
+      "meaning": "来料 Yukawa 求导正确；但这是有限程相互作用参数化，非已发现新力",
+      "n_consistent": 4,
+      "n_total": 4,
+      "newton_limit": true,
+      "ok": true
+    },
+    "G5-microscope-primary-and-scope": {
+      "domain_covers_claim": false,
+      "eta_match": true,
+      "exp": "eta matches PRL 2022; domain is WEP composition not planet-G",
+      "meaning": "数值与一手精确一致；实验约束组成依赖落体，不直接覆盖行星环境依赖 G",
+      "ok": true
+    }
+  },
+  "jupiter_scope_check": {
+    "centrifugal_at_equator": "2.210809E+0",
+    "g_eq_minus_centrifugal": "2.257578E+1",
+    "g_from_equatorial_R": "2.478659E+1",
+    "g_mean_from_mean_R": "2.59203373E+1",
+    "nssdc_equatorial": "23.12",
+    "nssdc_mean": "25.92",
+    "nssdc_polar": "27.01",
+    "rel_eq_vs_nssdc": "7.2084E-2",
+    "residual_after_centrifugal": "-5.442186E-1",
+    "spherical_model_insufficient": true,
+    "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/jupiterfact.html",
+    "verdict": "SCOPE-DIFFERENCE--23.1-EQUATORIAL--25.92-MEAN--SPHERICAL-MODEL-RESIDUAL-0.54-FROM-OBLATENESS-J2"
+  },
+  "kind": "external-material-computable-audit",
+  "microscope": {
+    "arxiv": "2209.15487",
+    "doi": "10.1103/PhysRevLett.129.121102",
+    "domain": "WEP / 组成依赖自由落体（近地轨道共址测试质量）",
+    "eta": "-1.5",
+    "pair": "Ti-Pt",
+    "scale": "1e-15",
+    "source": "Touboul et al., MICROSCOPE final results, Phys. Rev. Lett. 129, 121102 (2022)",
+    "stat": "2.3",
+    "syst": "1.5",
+    "url": "https://doi.org/10.1103/PhysRevLett.129.121102"
+  },
+  "microscope_scope": {
+    "claim_domain": "不同星球环境依赖 G（密度/温度/磁场/组成/自转）",
+    "combined_1sigma_1e-15": "2.745906E+0",
+    "domain_covers_claim": false,
+    "eta_matches_primary": true,
+    "experiment_domain": "WEP / 组成依赖自由落体（近地轨道共址测试质量）",
+    "flip_condition": "若候选模型给出 q_A q_B（源荷）使不同材料落体差进入 eta 灵敏度，则该模型被 MICROSCOPE 约束；若只在行星环境（rho,T,B）依赖而近地测试质量 q 相同，则该实验不覆盖，需行星尺度独立质量信息。",
+    "signal_significance_sigma": "5.462678E-1",
+    "verdict": "WEP-COMPOSITION-CONSTRAINT--DOES-NOT-DIRECTLY-BOUND-PLANET-ENVIRONMENT-G"
+  },
+  "mu_nonidentifiability": {
+    "all_recovered": true,
+    "flip": {
+      "flip_works": true,
+      "mu_only": "INDETERMINATE (G*M degeneracy)",
+      "rel_to_G0": "5.2754E-6",
+      "with_independent_M": "G = mu / M = 6.67426479E-11"
+    },
+    "mu": "3.98600442E+14",
+    "rows": [
+      {
+        "G": "6.67430000E-11",
+        "G_scale": "1",
+        "G_times_M": "3.98600442E+14",
+        "M_implied": "5.97216849E+24",
+        "mu_recovered": true
+      },
+      {
+        "G": "1.33486000E-10",
+        "G_scale": "2",
+        "G_times_M": "3.98600442E+14",
+        "M_implied": "2.98608425E+24",
+        "mu_recovered": true
+      },
+      {
+        "G": "3.33715000E-11",
+        "G_scale": "0.5",
+        "G_times_M": "3.98600442E+14",
+        "M_implied": "1.19443370E+25",
+        "mu_recovered": true
+      },
+      {
+        "G": "6.67430000E-8",
+        "G_scale": "1e3",
+        "G_times_M": "3.98600442E+14",
+        "M_implied": "5.97216849E+21",
+        "mu_recovered": true
+      }
+    ]
+  },
+  "n_gate_ok": 5,
+  "n_gate_total": 5,
+  "red_line": "数学自洽 != 实验证实；本轮不宣称攻破统一场论，不宣称发现变 G 新物理或独立实验预言；四力统一未证。",
+  "surface_gravity": {
+    "Earth": {
+      "g_calc": "9.82030229E+0",
+      "g_ref": "9.8",
+      "ref_kind": "平均",
+      "rel_to_ref": "2.0717E-3"
+    },
+    "Jupiter": {
+      "g_calc": "2.59203373E+1",
+      "g_ref": "23.1",
+      "ref_kind": "赤道(1 bar)",
+      "rel_to_ref": "1.2209E-1"
+    },
+    "Mars": {
+      "g_calc": "3.72797726E+0",
+      "g_ref": "3.7",
+      "ref_kind": "平均",
+      "rel_to_ref": "7.5614E-3"
+    },
+    "Moon": {
+      "g_calc": "1.62338104E+0",
+      "g_ref": "1.6",
+      "ref_kind": "平均",
+      "rel_to_ref": "1.4613E-2"
+    }
+  },
+  "title": "每星球 G 是否不同 · 独立可算审计",
+  "verdict": "PLANETARY-G-AUDIT--G-FORMS-IDENTITY--SURFACE-G-SCOPE-OK--MU-NONIDENTIFIABLE--YUKAWA-DERIVATIVE-OK--MICROSCOPE-PRIMARY-MATCH--WEP-SCOPE-LIMITED--UFT-NOT-BROKEN--NEW-PREDICTION-0",
+  "yukawa_derivative": {
+    "newton_limit": true,
+    "note": "参数化候选势，非已发现新力；alpha,q,lam 需独立推导与检验",
+    "ok": true,
+    "rows": [
+      {
+        "F_claimed": "-8.66722161E+13",
+        "F_numeric_diff": "-8.66722161E+13",
+        "consistent": true,
+        "r_m": "1",
+        "rel": "1.0011E-12"
+      },
+      {
+        "F_claimed": "-3.39839016E+12",
+        "F_numeric_diff": "-3.39839016E+12",
+        "consistent": true,
+        "r_m": "5",
+        "rel": "4.0834E-14"
+      },
+      {
+        "F_claimed": "-1.87181036E+11",
+        "F_numeric_diff": "-1.87181036E+11",
+        "consistent": true,
+        "r_m": "20",
+        "rel": "2.8016E-15"
+      },
+      {
+        "F_claimed": "-2.70209918E+10",
+        "F_numeric_diff": "-2.70209918E+10",
+        "consistent": true,
+        "r_m": "50",
+        "rel": "4.2663E-16"
+      }
+    ]
+  }
+}

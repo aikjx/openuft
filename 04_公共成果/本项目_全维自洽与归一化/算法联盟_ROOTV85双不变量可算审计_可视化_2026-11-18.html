@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法联盟 · ROOT V85 双不变量可算审计 · 可视化 · 2026-11-18</title>
+<style>
+  :root{--bg:#f7f8fa;--panel:#fff;--ink:#1a2230;--sub:#5a6675;--line:#dfe3ea;
+        --accent:#2540a6;--ok:#137a4b;--okbg:#e7f6ee;--neg:#a12a2a;--negbg:#fdecec;
+        --warn:#8a5a00;--warnbg:#fff6e0;--code:#0f2d5c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.65;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1120px;margin:0 auto;padding:34px 22px 70px}
+  header{border-left:5px solid var(--accent);padding:6px 0 6px 18px;margin-bottom:26px}
+  h1{font-size:25px;margin:0 0 6px}
+  .meta{color:var(--sub);font-size:13px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:20px 22px;margin-bottom:18px}
+  h2{font-size:18px;margin:0 0 14px;color:var(--accent)}
+  h3{font-size:15px;margin:18px 0 8px}
+  p{margin:8px 0}
+  .stat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 2px}
+  .scard{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .scard .n{font-size:22px;font-weight:700;color:var(--accent)}
+  .scard .l{font-size:12px;color:var(--sub);margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.3px}
+  th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+  th{background:#f3f5f9;color:var(--sub);font-weight:600}
+  td.num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--code);white-space:nowrap;font-size:12.4px}
+  .vcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.4px;color:var(--code);
+         background:#eef1f7;padding:9px 11px;border-radius:6px;word-break:break-all;margin-top:8px}
+  .note{background:var(--warnbg);border-left:4px solid #d8a11a;padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#5a4200;margin:12px 0}
+  .neg{background:var(--negbg);border-left:4px solid var(--neg);padding:10px 14px;
+       border-radius:6px;font-size:13.5px;color:#7a2020;margin:12px 0}
+  .good{background:var(--okbg);border-left:4px solid var(--ok);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#0d5636;margin:12px 0}
+  .formula{background:#f3f5f9;border-radius:7px;padding:10px 13px;font-size:14px;color:var(--code);
+           font-family:ui-monospace,Menlo,Consolas,monospace;overflow-x:auto}
+  .src{font-size:12px;color:var(--sub);word-break:break-all}
+  .src a{color:var(--accent)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .bar{height:12px;background:#e7ecf7;border-radius:6px;overflow:hidden;min-width:90px}
+  .bar i{display:block;height:100%;background:var(--accent)}
+  .bar.negbar i{background:var(--neg)}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:24px}
+  @media(max-width:820px){.stat{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>算法联盟 · ROOT V85 双不变量可算审计</h1>
+  <div class="meta">径向形状量 Q / 秩≤1 矩阵 D · 2026-11-18 · 非判定册，不占 RID，不入 README，与其余五册不相加</div>
+  <div class="vcode">ROOTV85-AUDIT--Q-NEWTON-IDENTITY--Q-YUKAWA-REPRO--Q-AMPLITUDE-BLIND--RANK1-EXACT--TWO-MEDIATOR-FLIP--Q-BLIND-TO-PERPLANET-G--UFT-NOT-BROKEN--NEW-PREDICTION-0</div>
+</header>
+
+<section>
+  <h2>总览（机读自 JSON）</h2>
+  <div class="stat">
+    <div class="scard"><div class="n">7/7</div><div class="l">判据 ok / 总数</div></div>
+    <div class="scard"><div class="n">1.2E-16</div><div class="l">Q 两路最大相对偏离</div></div>
+    <div class="scard"><div class="n">0.4162</div><div class="l">两媒介 flip 奇异值比</div></div>
+    <div class="scard"><div class="n">0</div><div class="l">独立实验预言</div></div>
+  </div>
+  <p><b>一句话</b>：两个判据的推导都对且可复算，但都只约束<b>模型层结构</b>；Q 按设计看不见「各星球常数 G 幅度不同」，rank≤1 通过也不能证明单媒介存在。</p>
+</section>
+
+<section>
+  <h2>一、径向形状量 Q：恒等式与两路复算</h2>
+  <div class="formula">g = GM/r² ⇒ dg/dr = −2GM/r³ ⇒ Q(r) = −r/(2g)·dg/dr = 1</div>
+  <p>数值路用中心差分 + Richardson 外推 <span class="num">(4D(h/2) − D(h))/3</span>，<span class="num">h = r×10⁻⁴</span>，与解析闭式完全独立。门限 <span class="num">1e-9</span> 由截断阶 <span class="num">h⁴≈1e-16</span> 数据驱动，预留 7 位给混合舍入。</p>
+  <table>
+    <tr><th>扫描</th><th>样本</th><th>最大相对偏离</th><th>门限</th><th>结论</th></tr>
+    <tr><td>牛顿（GM=1/1e6/1e-6，r=1/5/10/50）</td><td class="num">12</td><td class="num">7.5E-17</td><td class="num">1e-9</td><td>恒等式成立</td></tr>
+    <tr><td>Yukawa（A=0.15/−0.3/1，λ=2/10/50，r=1/5/10/20）</td><td class="num">36</td><td class="num">1.1752E-16</td><td class="num">1e-9</td><td>来料闭式正确</td></tr>
+  </table>
+  <div class="formula">g = GM/r²·[1 + A(1+r/λ)e^(−r/λ)] ⇒ Q = 1 + A(r/λ)²e^(−r/λ) / {2[1+A(1+r/λ)e^(−r/λ)]}</div>
+  <svg viewBox="0 0 900 280" width="100%" role="img" aria-label="A=0.15 时 Q 随 r/lambda 的曲线，起点为 1，峰值约 1.038">
+    <rect x="0" y="0" width="900" height="280" fill="#ffffff"/>
+    <line x1="60" y1="240" x2="860" y2="240" stroke="#9aa5b5" stroke-width="1.5"/>
+    <line x1="60" y1="40" x2="60" y2="250" stroke="#9aa5b5" stroke-width="1.5"/>
+    <g stroke="#e5e9f0" stroke-width="1">
+      <line x1="60" y1="190" x2="860" y2="190"/><line x1="60" y1="140" x2="860" y2="140"/>
+      <line x1="60" y1="90" x2="860" y2="90"/><line x1="60" y1="40" x2="860" y2="40"/>
+    </g>
+    <g fill="#5a6675" font-size="12" font-family="monospace">
+      <text x="24" y="244">1.00</text><text x="24" y="194">1.01</text><text x="24" y="144">1.02</text>
+      <text x="24" y="94">1.03</text><text x="24" y="44">1.04</text>
+      <text x="54" y="264">0</text><text x="370" y="264">2</text><text x="690" y="264">4</text>
+      <text x="840" y="264">r/λ</text>
+    </g>
+    <line x1="60" y1="240" x2="860" y2="240" stroke="#137a4b" stroke-width="2" stroke-dasharray="7 5"/>
+    <polyline points="60,240 140,190 220,116 300,66 380,49 460,56 540,77 620,104 700,132 780,156 860,177"
+              fill="none" stroke="#2540a6" stroke-width="3"/>
+    <circle cx="220" cy="116" r="6" fill="#a12a2a"/>
+    <text x="232" y="108" font-size="13" fill="#a12a2a" font-family="monospace">x=1 → Q=1.024849</text>
+    <text x="600" y="34" font-size="13" fill="#2540a6">A=0.15 的 Yukawa 形状量</text>
+    <text x="690" y="228" font-size="12" fill="#137a4b">牛顿 Q=1</text>
+  </svg>
+  <div class="note"><b>判别力边界</b>：<span class="num">d ln g / d ln r = −2Q</span>，因此 <span class="num">Q≡1 ⇔ n=2</span>（扫描 n=1,2,3,4 ⇒ Q=0.5,1,1.5,2）。但 Q 只约束一个标量函数的斜率；<b>Q=1 不等于牛顿引力全部成立</b>。</div>
+</section>
+
+<section>
+  <h2>二、幅度盲：优点与目标错位</h2>
+  <table>
+    <tr><th>GM</th><th>Q(r=1)</th><th>Q(r=10)</th></tr>
+    <tr><td class="num">1</td><td class="num">1</td><td class="num">1</td></tr>
+    <tr><td class="num">1e6</td><td class="num">1</td><td class="num">1</td></tr>
+    <tr><td class="num">1e-6</td><td class="num">1</td><td class="num">1</td></tr>
+  </table>
+  <div class="neg"><b>核心负读数</b>：Q 完全消掉 GM 幅度，因此<b>按设计看不见「不同星球常数 G 不同」</b>。两颗星各自的 Q 都可以是 1，而 G 相差任意倍——差异全部落在被消掉的 GM 里。这与 V88 的 μ=GM 不可辨识是同一堵墙的两面，Q 不能绕过它。</div>
+</section>
+
+<section>
+  <h2>三、精算示例 1.024849：存在性复现，非唯一反演</h2>
+  <p>取 <span class="num">A=0.15, x=r/λ=1</span> 得 <span class="num">Q=1.024848574210</span>，与来料 6 位吻合；把 1.024849 当精确目标反解得 <span class="num">A=0.150002853986</span>。但对任意 x 都有对应 A：</p>
+  <table>
+    <tr><th>x = r/λ</th><th>所需 A</th><th>回代 Q</th></tr>
+    <tr><td class="num">0.5</td><td class="num">4.6700911191E-1</td><td class="num">1.024849</td></tr>
+    <tr><td class="num">1</td><td class="num">1.5000285399E-1</td><td class="num">1.024849</td></tr>
+    <tr><td class="num">2</td><td class="num">9.5359717948E-2</td><td class="num">1.024849</td></tr>
+    <tr><td class="num">3</td><td class="num">1.1341750064E-1</td><td class="num">1.024849</td></tr>
+  </table>
+  <div class="note">来料未给 A/λ/r，故只能登记「存在一组人为参数给出此读数」。机核初跑曾把 x 误当 λ 传入，回代错成 1.00665/1.00407 且门限没抓住；已修正传参并把四组回代命中写进门限，同时登记错误传参必失败的反向守卫。</div>
+</section>
+
+<section>
+  <h2>四、秩≤1 矩阵：严格成立，承重前提必须写明</h2>
+  <div class="formula">Dᵢⱼᴬ = α·q_A·H_A(λ)·(qᵢ−qⱼ) = u ⊗ v ⇒ rank(D) ≤ 1</div>
+  <div class="cols">
+    <div>
+      <h3>单媒介（α₂=0）示例矩阵</h3>
+      <table>
+        <tr><td class="num">8.657374E-1</td><td class="num">2.597212E-1</td><td class="num">−6.060162E-1</td></tr>
+        <tr><td class="num">−9.865465E-1</td><td class="num">−2.959640E-1</td><td class="num">6.905826E-1</td></tr>
+        <tr><td class="num">3.200567E-3</td><td class="num">9.601700E-4</td><td class="num">−2.240397E-3</td></tr>
+      </table>
+      <p class="src">精确 Fraction 路：9 个 2×2 子式全为 0。</p>
+    </div>
+    <div>
+      <h3>奇异值（Jacobi 对角化 DᵀD）</h3>
+      <table>
+        <tr><th>配置</th><th>σ₁</th><th>σ₂</th><th>σ₂/σ₁</th></tr>
+        <tr><td>单媒介</td><td class="num">1.64984887</td><td class="num">1.49E-8</td><td class="num">9.03E-9</td></tr>
+        <tr><td>两媒介</td><td class="num">2.15029390</td><td class="num">8.94952322E-1</td><td class="num">0.416200</td></tr>
+      </table>
+      <div class="bar"><i style="width:100%"></i></div>
+      <div class="bar negbar" style="margin-top:5px"><i style="width:41.62%"></i></div>
+      <p class="src">二分求 α₂=1.782005631784 复现来料比值；精确路有 6 个非零子式。</p>
+    </div>
+  </div>
+  <div class="note"><b>承重前提</b>：H_A(λ) 只依赖源、(qᵢ−qⱼ) 只依赖材料对。若测试质量处在不同源距离，或耦合还依赖环境，矩阵不再可分离，rank≤1 自动失效——那是适用范围被破坏，不是对单媒介的判负。<b>0.4162 是存在性复现</b>，来料未给两媒介参数，满足该比值的参数族无穷多。</div>
+</section>
+
+<section>
+  <h2>五、负对照：判据无法吸收的三个方向</h2>
+  <table>
+    <tr><th>方向</th><th>构造</th><th>读数</th><th>含义</th></tr>
+    <tr><td>常数 G 幅度差</td><td>同一 r=10，GM: 1 → 7</td><td class="num">Q: 1 → 1</td><td>Q 对「各星 G 不同」判别力严格为 0</td></tr>
+    <tr><td>多极矩、无新力</td><td>g=GM/r²(1+J/r²), J=0.001, G 不变</td><td class="num">Q(r=10)=1.00001</td><td>Q 偏离不能唯一归因新力</td></tr>
+    <tr><td>纯共模系统误差</td><td>全 1 矩阵，无新力无媒介</td><td class="num">σ₂/σ₁≈0；子式全零</td><td>rank≤1 通过是必要非充分条件</td></tr>
+  </table>
+  <div class="neg">第三项是最重的负读数：<b>判据通过 ≠ 单媒介存在</b>。要有独立材料标定、独立质量标定，并扣除多极矩/自转/相对论项后的残差，rank≤1 才真正携带模型信息。</div>
+</section>
+
+<section>
+  <h2>六、外部一手核查与红线</h2>
+  <table>
+    <tr><th>来源</th><th>一手 URL</th><th>边界</th></tr>
+    <tr><td>MICROSCOPE 2022，η(Ti,Pt)=(−1.5±2.3<sub>stat</sub>±1.5<sub>syst</sub>)×10⁻¹⁵</td>
+        <td class="src"><a href="https://arxiv.org/abs/2209.15487">arXiv:2209.15487</a> · <a href="https://doi.org/10.1103/PhysRevLett.129.121102">DOI:10.1103/PhysRevLett.129.121102</a></td>
+        <td>只约束组成依赖自由落体；不覆盖 Q 与行星环境依赖 G（沿用 V88 已核验，不相加）</td></tr>
+    <tr><td>Adelberger/Heckel/Nelson, RMP 81, 61 (2009)</td>
+        <td class="src"><a href="https://doi.org/10.1103/RevModPhys.81.61">DOI:10.1103/RevModPhys.81.61</a></td>
+        <td>Yukawa 参数化与 1/r² 检验的一手综述；Q 是形状量重述</td></tr>
+    <tr><td>CODATA 2022 G</td>
+        <td class="src"><a href="https://physics.nist.gov/cgi-bin/cuu/Value?bg">NIST Value?bg</a></td>
+        <td>GM 幅度标定输入；Q 按设计对幅度不敏感</td></tr>
+  </table>
+  <p><b>红线</b>：数学自洽 ≠ 实验证实。本册不宣称攻破统一场论、不宣称发现变 G 新物理、不宣称独立实验预言；四力统一未证。</p>
+  <p class="src">纪律：非判定册 · 不占 RID · 不入 README · 不回写既有产物 · 两路机拼 · 精确 Fraction · Jacobi 奇异值 · 反例翻转 · 三个负对照 · 门限数据驱动 · 一手 URL · 幂等复跑。</p>
+</section>
+
+<footer>算法联盟 · ROOT V85 双不变量可算审计 · 2026-11-18　|　判词/读数机读自 JSON　|　数学自洽 ≠ 实验证实</footer>
+
+</div>
+</body>
+</html>

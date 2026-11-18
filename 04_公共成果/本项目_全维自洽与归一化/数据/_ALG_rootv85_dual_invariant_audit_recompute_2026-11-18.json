@@ -1,0 +1,592 @@
+{
+  "boundary": [
+    "Q=1 是 g∝r^-2 的形状恒等式，两路复算一致；它检验的是径向幂律，不是引力定律整体，更不是四力统一。",
+    "Q 按设计消去 GM 幅度，因此按设计看不见「不同星球常数 G 不同」这一命题；V85 的 Q 不能替代 V88 已判定的 μ=GM 不可辨识。",
+    "Q 偏离 1 不能唯一归因新力：未建模多极矩、自转与相对论修正都能产生偏离；必须先扣已知效应（来料对此已如实声明）。",
+    "rank(D)≤1 在分离性假设下严格成立（9 个 2x2 子式精确为 0 + Jacobi 奇异值比 <1e-7）；两媒介反例把比值翻到 0.4162，证明判据可证伪。",
+    "rank≤1 通过是必要条件而非充分条件：纯共模系统误差同样给出秩 1；必须有独立材料与源的标定才能区分。",
+    "1.024849 与 0.4162 均为人为候选模型读数；本册给出存在性复现参数，来料未给参数故不可唯一反演，不得登记为实测新力。",
+    "MICROSCOPE 的 1e-15 量级只约束组成依赖自由落体，既不明确覆盖径向形状量 Q，也不覆盖行星环境依赖 G。"
+  ],
+  "date": "2026-11-18",
+  "discipline": [
+    "非判定册",
+    "不占RID",
+    "不入README",
+    "不回写既有产物",
+    "两路机拼",
+    "精确Fraction",
+    "Jacobi奇异值",
+    "反例翻转",
+    "负对照",
+    "一手URL",
+    "与既有册不相加"
+  ],
+  "external_sources": {
+    "codata_g": {
+      "scope": "GM 幅度标定的外部输入；Q 按来料设计对此幅度不敏感——这正是它无法判定「各星球 G 是否不同」的原因。",
+      "title": "CODATA 2022 Newtonian constant of gravitation",
+      "url": "https://physics.nist.gov/cgi-bin/cuu/Value?bg"
+    },
+    "isl_review": {
+      "doi": "https://doi.org/10.1103/RevModPhys.81.61",
+      "ref": "Rev. Mod. Phys. 81, 61 (2009)",
+      "scope": "Yukawa 有限程参数化与 1/r^2 检验的一手综述；Q 判据属于该检验家族的形状量重述，不是新定律。",
+      "title": "Adelberger, Heckel, Nelson, Tests of the Gravitational Inverse-Square Law"
+    },
+    "microscope_2022": {
+      "arxiv": "https://arxiv.org/abs/2209.15487",
+      "doi": "https://doi.org/10.1103/PhysRevLett.129.121102",
+      "result": "eta(Ti,Pt) = (-1.5 +/- 2.3_stat +/- 1.5_syst) e-15",
+      "scope": "约束测试质量的组成依赖自由落体；不直接覆盖星球环境依赖 G，也不直接覆盖径向形状量 Q。",
+      "title": "MICROSCOPE: final result of the WEP test (Ti/Pt)",
+      "transferred_from": "V88 册已核验的一手来源，本册只引用不重复计数"
+    }
+  },
+  "gates": {
+    "V85-G1-newton-Q-identity": {
+      "exp": "Q=-r/(2g)dg/dr=1 for g=GM/r^2 (closed == numeric)",
+      "max_rel": "7.5000E-17",
+      "meaning": "Q=1 是牛顿幂律的形状恒等式；不是对新力的判负。",
+      "n_rows": 12,
+      "ok": true,
+      "threshold": "1e-9 (数据驱动：Richardson 截断 ~h^4, h=r*1e-4 ⇒ ~1e-16；留 7 位给 Decimal/浮点混合舍入)"
+    },
+    "V85-G2-yukawa-Q-two-path": {
+      "exp": "Q=1+A x^2 e^-x/[2(1+A(1+x)e^-x)] agrees with independent derivative",
+      "max_rel": "1.1752E-16",
+      "meaning": "来料 Q 公式推导正确；两路独立（解析求导 / 中心差分 Richardson）一致。",
+      "n_rows": 36,
+      "ok": true,
+      "threshold": "1e-9（同上；含 A=1 强修正与 A<0 反号分支）"
+    },
+    "V85-G3-amplitude-blind-sharp-exponent": {
+      "amplitude_blind": true,
+      "amplitude_scan": [
+        {
+          "GM": "1",
+          "Q": [
+            "1.000000000000E+0",
+            "1.000000000000E+0"
+          ]
+        },
+        {
+          "GM": "1e6",
+          "Q": [
+            "1.000000000000E+0",
+            "1.000000000000E+0"
+          ]
+        },
+        {
+          "GM": "1e-6",
+          "Q": [
+            "1.000000000000E+0",
+            "1.000000000000E+0"
+          ]
+        }
+      ],
+      "exp": "Q independent of GM; Q=n/2 for g~r^-n, so Q=1 singles out n=2",
+      "meaning": "幅度盲是优点（免除绝对质量标定）也是边界：它按设计看不见任何「各星球常数 G 幅度不同」。Q=1 对幂律指数是充要的，但对偏离来源不唯一。",
+      "ok": true,
+      "power_scan": [
+        {
+          "Q": "5.000000000000E-1",
+          "n": "1"
+        },
+        {
+          "Q": "1.000000000000E+0",
+          "n": "2"
+        },
+        {
+          "Q": "1.500000000000E+0",
+          "n": "3"
+        },
+        {
+          "Q": "2.000000000000E+0",
+          "n": "4"
+        }
+      ],
+      "sharp": true
+    },
+    "V85-G4-claimed-1024849-existence": {
+      "A_solved_at_x1": "1.500028539855E-1",
+      "Q_at_example": "1.024848574210E+0",
+      "Q_recheck_solved": "1.024849000000E+0",
+      "claimed": "1.024849E+0",
+      "example_A": "0.15",
+      "example_x": "1",
+      "exp": "claimed Q=1.024849 reproduced; but inversion A(x) is non-unique",
+      "gate_self_check_wrong_argument_order": {
+        "note": "把 x 误当 lam 传入时回代应偏离目标；门限须能抓住这一自伤",
+        "swapped_Q_at_x2_x3": [
+          "1.0066526539E+0",
+          "1.0040734591E+0"
+        ],
+        "swapped_fails": true
+      },
+      "matches_6_digits": true,
+      "meaning": "来料示例来自人为设定候选模型（A=0.15, r/lam=1 即复现到 6 位）；来料未给 A/lam/r，同一 Q 可由无穷多组 (A,x) 给出——存在性复现 ≠ 参数反演 ≠ 实测新力。",
+      "nonunique_set": [
+        {
+          "A_required": "1.5000285399E-1",
+          "Q_recheck": "1.0248490000E+0",
+          "x": "1"
+        },
+        {
+          "A_required": "9.5359717948E-2",
+          "Q_recheck": "1.0248490000E+0",
+          "x": "2"
+        },
+        {
+          "A_required": "1.1341750064E-1",
+          "Q_recheck": "1.0248490000E+0",
+          "x": "3"
+        },
+        {
+          "A_required": "4.6700911191E-1",
+          "Q_recheck": "1.0248490000E+0",
+          "x": "0.5"
+        }
+      ],
+      "ok": true
+    },
+    "V85-G5-rank-one-exact-and-numeric": {
+      "exact_fraction": {
+        "single_all_minors_zero": true,
+        "single_n_minors": 9,
+        "systematic_all_minors_zero": true,
+        "two_has_nonzero_minor": true,
+        "two_n_nonzero": 6
+      },
+      "exp": "rank(D)<=1 for separable single-mediator D_ij^A",
+      "jacobi_single_ratio": "9.031834E-9",
+      "jacobi_singular_values": [
+        "1.64984887E+0",
+        "1.49011612E-8",
+        "0"
+      ],
+      "meaning": "来料秩判据在分离性假设下严格成立；承重前提是 H_A(lam) 只依赖源、(q_i-q_j) 只依赖材料对。前提破坏时判据自动失效，不是对单媒介的判负。",
+      "ok": true,
+      "threshold": "1e-7（Jacobi 浮点迭代残差量级；精确路为零容差）"
+    },
+    "V85-G6-two-mediator-flip-04162": {
+      "alpha2_solved": "1.78200563178385E+0",
+      "exact_two_nonzero_minors": 6,
+      "exp": "two independent mediators break rank<=1; ratio flips 0 -> 0.4162",
+      "flip": true,
+      "matches_4_digits": true,
+      "meaning": "反例确证秩判据可翻转；0.4162 由二分调参存在性复现，来料未给两媒介参数，故该数值不是唯一预言，也不是实测。",
+      "ok": true,
+      "ratio_single": "9.03183403E-9",
+      "ratio_two": "4.16200000E-1",
+      "singular_values_two": [
+        "2.15029390E+0",
+        "8.94952322E-1",
+        "8.87256998E-9"
+      ],
+      "target": "0.4162"
+    },
+    "V85-G7-negative-controls": {
+      "Q_blind_to_constant_G": {
+        "GM=1": "1.000000000000E+0",
+        "GM=7": "1.000000000000E+0",
+        "identical": true
+      },
+      "exp": "negative controls along directions the criteria cannot absorb",
+      "meaning": "Q 对星球间常数 G 差异完全盲（按设计）；多极矩在 G 不变时也能让 Q 偏离 1；纯共模系统误差也满足 rank<=1。因此 Q 偏离不能唯一归因新力，rank<=1 通过也不能证明单媒介存在。",
+      "multipole_mimic": {
+        "Q_at_r10": "1.000009999900E+0",
+        "deviates_from_1": true,
+        "model": "g = GM/r^2 [1+J/r^2], J=0.001, G unchanged"
+      },
+      "ok": true,
+      "systematic_passes_rank": {
+        "new_force_present": false,
+        "rank_le_1": true,
+        "ratio": "7.02447475E-9"
+      }
+    }
+  },
+  "kind": "external-material-computable-audit",
+  "n_gate_ok": 7,
+  "n_gate_total": 7,
+  "q_newton_scan": [
+    {
+      "GM": "1",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "1",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "5",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "10",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "50",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1e6",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "1",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1e6",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "5",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1e6",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "10",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1e6",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "50",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1e-6",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "1",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1e-6",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "5",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1e-6",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "10",
+      "rel": "7.5000E-17"
+    },
+    {
+      "GM": "1e-6",
+      "Q_closed": "1.000000000000E+0",
+      "Q_numeric": "1.000000000000E+0",
+      "r": "50",
+      "rel": "7.5000E-17"
+    }
+  ],
+  "q_yukawa_scan": [
+    {
+      "A": "0.15",
+      "Q_closed": "1.010006824544E+0",
+      "Q_numeric": "1.010006824544E+0",
+      "lam": "2",
+      "r": "1",
+      "rel": "7.5141E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.036887682296E+0",
+      "Q_numeric": "1.036887682296E+0",
+      "lam": "2",
+      "r": "5",
+      "rel": "7.9597E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.012557500031E+0",
+      "Q_numeric": "1.012557500031E+0",
+      "lam": "2",
+      "r": "10",
+      "rel": "8.2041E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.000340473968E+0",
+      "Q_numeric": "1.000340473968E+0",
+      "lam": "2",
+      "r": "20",
+      "rel": "7.6432E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.000590471715E+0",
+      "Q_numeric": "1.000590471715E+0",
+      "lam": "10",
+      "r": "1",
+      "rel": "7.5002E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.010006824544E+0",
+      "Q_numeric": "1.010006824544E+0",
+      "lam": "10",
+      "r": "5",
+      "rel": "7.5141E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.024848574210E+0",
+      "Q_numeric": "1.024848574210E+0",
+      "lam": "10",
+      "r": "10",
+      "rel": "7.5793E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.038269913650E+0",
+      "Q_numeric": "1.038269913650E+0",
+      "lam": "10",
+      "r": "20",
+      "rel": "7.8256E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.000025571058E+0",
+      "Q_numeric": "1.000025571058E+0",
+      "lam": "50",
+      "r": "1",
+      "rel": "7.5000E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.000590471715E+0",
+      "Q_numeric": "1.000590471715E+0",
+      "lam": "50",
+      "r": "5",
+      "rel": "7.5002E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.002140712213E+0",
+      "Q_numeric": "1.002140712213E+0",
+      "lam": "50",
+      "r": "10",
+      "rel": "7.5011E-17"
+    },
+    {
+      "A": "0.15",
+      "Q_closed": "1.007051255054E+0",
+      "Q_numeric": "1.007051255054E+0",
+      "lam": "50",
+      "r": "20",
+      "rel": "7.5078E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.687166642350E-1",
+      "Q_numeric": "9.687166642350E-1",
+      "lam": "2",
+      "r": "1",
+      "rel": "7.4540E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.157870641287E-1",
+      "Q_numeric": "9.157870641287E-1",
+      "lam": "2",
+      "r": "5",
+      "rel": "6.3116E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.744224868835E-1",
+      "Q_numeric": "9.744224868835E-1",
+      "lam": "2",
+      "r": "10",
+      "rel": "6.0098E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.993188990112E-1",
+      "Q_numeric": "9.993188990112E-1",
+      "lam": "2",
+      "r": "20",
+      "rel": "7.2132E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.980649428855E-1",
+      "Q_numeric": "9.980649428855E-1",
+      "lam": "10",
+      "r": "1",
+      "rel": "7.4995E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.687166642350E-1",
+      "Q_numeric": "9.687166642350E-1",
+      "lam": "10",
+      "r": "5",
+      "rel": "7.4540E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.291878927607E-1",
+      "Q_numeric": "9.291878927607E-1",
+      "lam": "10",
+      "r": "10",
+      "rel": "7.2507E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.075366292335E-1",
+      "Q_numeric": "9.075366292335E-1",
+      "lam": "10",
+      "r": "20",
+      "rel": "6.6000E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.999159900764E-1",
+      "Q_numeric": "9.999159900764E-1",
+      "lam": "50",
+      "r": "1",
+      "rel": "7.5000E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.980649428855E-1",
+      "Q_numeric": "9.980649428855E-1",
+      "lam": "50",
+      "r": "5",
+      "rel": "7.4995E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.930346171484E-1",
+      "Q_numeric": "9.930346171484E-1",
+      "lam": "50",
+      "r": "10",
+      "rel": "7.4963E-17"
+    },
+    {
+      "A": "-0.3",
+      "Q_closed": "9.776082786179E-1",
+      "Q_numeric": "9.776082786179E-1",
+      "lam": "50",
+      "r": "20",
+      "rel": "7.4746E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.039698655185E+0",
+      "Q_numeric": "1.039698655185E+0",
+      "lam": "2",
+      "r": "1",
+      "rel": "7.5543E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.199266775287E+0",
+      "Q_numeric": "1.199266775287E+0",
+      "lam": "2",
+      "r": "5",
+      "rel": "9.6473E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.080951649928E+0",
+      "Q_numeric": "1.080951649928E+0",
+      "lam": "2",
+      "r": "10",
+      "rel": "1.1752E-16"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.002268863419E+0",
+      "Q_numeric": "1.002268863419E+0",
+      "lam": "2",
+      "r": "20",
+      "rel": "8.4527E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.002267397941E+0",
+      "Q_numeric": "1.002267397941E+0",
+      "lam": "10",
+      "r": "1",
+      "rel": "7.5006E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.039698655185E+0",
+      "Q_numeric": "1.039698655185E+0",
+      "lam": "10",
+      "r": "5",
+      "rel": "7.5543E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.105970778809E+0",
+      "Q_numeric": "1.105970778809E+0",
+      "lam": "10",
+      "r": "10",
+      "rel": "7.8134E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.192510270515E+0",
+      "Q_numeric": "1.192510270515E+0",
+      "lam": "10",
+      "r": "20",
+      "rel": "8.9260E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.000098029541E+0",
+      "Q_numeric": "1.000098029541E+0",
+      "lam": "50",
+      "r": "1",
+      "rel": "7.5000E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.002267397941E+0",
+      "Q_numeric": "1.002267397941E+0",
+      "lam": "50",
+      "r": "5",
+      "rel": "7.5006E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.008259675072E+0",
+      "Q_numeric": "1.008259675072E+0",
+      "lam": "50",
+      "r": "10",
+      "rel": "7.5043E-17"
+    },
+    {
+      "A": "1",
+      "Q_closed": "1.027664194190E+0",
+      "Q_numeric": "1.027664194190E+0",
+      "lam": "50",
+      "r": "20",
+      "rel": "7.5298E-17"
+    }
+  ],
+  "red_line": "数学自洽 != 实验证实；本轮不宣称攻破统一场论，不宣称发现变 G 新物理或独立实验预言；四力统一未证。",
+  "title": "ROOT V85（径向形状量 Q / 秩≤1 矩阵 D）· 来料独立可算审计",
+  "verdict": "ROOTV85-AUDIT--Q-NEWTON-IDENTITY--Q-YUKAWA-REPRO--Q-AMPLITUDE-BLIND--RANK1-EXACT--TWO-MEDIATOR-FLIP--Q-BLIND-TO-PERPLANET-G--UFT-NOT-BROKEN--NEW-PREDICTION-0"
+}

@@ -1,0 +1,39 @@
+ATTACK65 REPORT
+verdict=HONEST-PACKAGES--SCHWARZSCHILD-IDENTITIES-PASS--CHI-B-NOT-GLOBAL--BETA-FREE--LAB-MONOPOLE-TINY--NO-NEW-FORCE
+guards=19/19
+entries={'PASS': 6, 'FAIL': 4, 'INFO': 4}
+
+[A01] PASS Schwarzschild K(R)=48(GM)^2/(c^4R^6) 量纲为 L^-4，且等于 48 chi_g^2/R^4；相对偏差 0.000000E-53
+[A02] PASS 以平均密度代入 M=4*pi*R^3*rho/3 后 K=(256*pi^2/3)*G^2*rho^2/c^4；相对偏差 7.000000E-60，且与 R 无关
+[A03] PASS V80 磁星代表值独立复现：rho=3.846106E+17 kg/m^3，u_B=3.978874E+25 J/m^3，chi_B=1.151058645016E-9
+[A04] PASS B_Q=m_e^2 c^2/(e hbar)=4.414005230712E+9 T；B/B_Q=2.265516119107E+0，与 V80 2.265 一致
+[A05] FAIL chi_B 是局部代表 B 除以全星平均静能密度，不是全星磁能分数；填充因子 1/1e-3/1e-6 给全局分数相差六个量级，不能推出 G 被增强
+[A06] FAIL V80 src 的 DeltaG/G=beta*u_B/(rho c^2) 明示为 hypothesis；同一 chi_B 下目标 1e-12 与 1e-6 分别给 beta=0.000868765465886141889540021333785245569479683665234050323746494 与 868.765465886141889540021333785245569479683665234050323746494，beta 自由故非独立预测
+[A07] PASS V82 0.1 T、1 L、10 m 质量单极估算独立复现：U=3.978873577827E+0 J，DeltaM=4.427093909400E-17 kg，g=2.954775287951E-29 m/s^2
+[A08] FAIL 若能量来自同一封闭装置电池转线圈，电池 -U 与场 +U 抵消，净质量单极变化恰为 0；不能把场能单独当新增外部质量
+[A09] FAIL EM 能量密度 T00(B)=T00(-B)，差分机器零；磁场反转不是质量单极反号，Poynting 矢量的可能反号也不是新引力单极
+[A10] INFO V82 合成噪声 1e-8 m/s^2 下，实验室 GR 单极信号 g/noise=2.954775E-21，低约 21 个量级
+[A11] PASS V80/V82 PROOF_STATUS 均登记四力统一未满足、G 未独立预测、模拟不是新力证据；本册只读复核不覆盖其诚实边界
+[A12] INFO 靶源 6/6 实到；查重扫 446 个 md，3 个专有针词命中 0
+[A13] INFO 范围限定：只审 V80/V82 的星体曲率、chi_B、磁场质量账与反转判据；attack64 已审 V75/V77/V78 的 G no-go 与 EM 源/耦合，不重复裁定
+[A14] INFO 自抓 1 条：首版 dstr 只收 Decimal，beta_scan 的字符串值触发 ValueError；已修为字符串直通并复跑 19/19。量纲与数值断言均由守卫重算，未采用手算读数
+
+G01 PASS fact sources 6/6 :: [{'path': 'd:\\a10\\aikjx\\code\\my_lib\\openuft\\90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V80\\ROOT_V80\\PROOF_STATUS.md', 'needle': '四力统一成功', 'exists': True, 'needle_hit': True}, {'path': 'd:\\a10\\aikjx\\code\\my_lib\\openuft\\90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V80\\ROOT_V80\\book\\ROOT_V80_星际微观统一场论研究总集.md', 'needle': 'chi_B', 'exists': True, 'needle_hit': True}, {'path': 'd:\\a10\\aikjx\\code\\my_lib\\openuft\\90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V80\\ROOT_V80\\src\\cosmos.py', 'needle': 'candidate_field_dependent_fraction', 'exists': True, 'needle_hit': True}, {'path': 'd:\\a10\\aikjx\\code\\my_lib\\openuft\\90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V80\\ROOT_V80\\tests\\test_cosmos.py', 'needle': 'test_magnetic_mass_fraction', 'exists': True, 'needle_hit': True}, {'path': 'd:\\a10\\aikjx\\code\\my_lib\\openuft\\90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V82\\ROOT_V82\\PROOF_STATUS.md', 'needle': '假动作可排除任意开关相关伪差', 'exists': True, 'needle_hit': True}, {'path': 'd:\\a10\\aikjx\\code\\my_lib\\openuft\\90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V82\\ROOT_V82\\web\\index.html', 'needle': 'gEM', 'exists': True, 'needle_hit': True}]
+G02 PASS targeted scan opened files :: files=446 hits=0
+G03 PASS K dimension L^-4 :: L^-4
+G04 PASS K=48 chi_g^2/R^4 :: relative_gap=0.000000E-53
+G05 PASS K mean-density identity :: relative_gap=7.000000E-60
+G06 PASS fixed density K independent of R :: ratio=1.000000000000E+0
+G07 PASS chi_B dimensionless :: 1
+G08 PASS B_Q reproduces 4.414e9 T :: B_Q=4.414005230712E+9
+G09 PASS magnetar B/BQ reproduces 2.265 :: chi_Q=2.265516119107E+0
+G10 PASS magnetar chi_B reproduces 1.15e-9 :: chi_B=1.151058645016E-9
+G11 PASS surface/mean ratio is not global without filling factor :: scan=[{"filling_factor": "1", "global_fraction": "1.15105864501646450383905797143971503020908463123754320953844E-9"}, {"filling_factor": "0.001", "global_fraction": "1.15105864501646450383905797143971503020908463123754320953844E-12"}, {"filling_factor": "0.000001", "global_fraction": "1.15105864501646450383905797143971503020908463123754320953844E-15"}]
+G12 PASS beta hypothesis underdetermined :: scan=[{"target_delta_G_over_G": "1E-12", "beta": "0.000868765465886141889540021333785245569479683665234050323746494"}, {"target_delta_G_over_G": "0.000001", "beta": "868.765465886141889540021333785245569479683665234050323746494"}]
+G13 PASS lab U=3.979 J :: U=3.978873577827E+0
+G14 PASS lab equivalent mass=4.427e-17 kg :: dm=4.427093909400E-17
+G15 PASS lab far-field g=2.955e-29 :: g=2.954775287951E-29
+G16 PASS battery-to-field transfer has zero net mass :: net_J=0.000000E-53
+G17 PASS EM energy monopole even under B reversal :: gap=0.000000E-50
+G18 PASS lab signal far below synthetic noise :: ratio=2.954775E-21
+G19 PASS AST self check :: ok=True

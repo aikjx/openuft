@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ROOT V77 | G 与 c 的关系验证实验室</title>
+<style>
+:root{color-scheme:dark;--bg:#09111b;--paper:#111e2d;--surface:#162638;--line:#2a4156;--text:#e6eff7;--muted:#9bb2c6;--a:#68d3e8;--b:#c6a2ff;--c:#f5c67c;--d:#92d5b2}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#07121e,#10172b 48%,#101e29);font:15px/1.55 system-ui,-apple-system,"Segoe UI","Noto Sans SC",sans-serif;color:var(--text)}.wrap{max-width:1180px;margin:auto;padding:30px 23px 55px}h1{font-size:clamp(25px,4vw,42px);margin:6px 0 8px;line-height:1.24;letter-spacing:-.7px}h2{font-size:20px;margin:2px 0 14px}h3{font-size:16px;margin:0 0 7px}p{margin:6px 0 12px}.lead{max-width:900px;color:var(--muted)}.eyebrow{color:var(--a);font-size:13px;font-weight:750;letter-spacing:1.2px}.status{display:inline-block;border:1px solid #477b7b;background:#123539;border-radius:14px;padding:3px 10px;font-size:12px;color:#bfe3da}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.card{background:rgba(18,32,48,.9);border:1px solid var(--line);border-radius:14px;padding:19px;margin:0 0 15px}.stat{padding:16px}.stat .key{color:var(--muted);font-size:12px}.stat strong{font-size:22px;display:block;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.bodygrid{display:grid;grid-template-columns:340px 1fr;gap:16px}.mono,output,.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.muted{color:var(--muted)}.small{font-size:12px}input[type=range]{width:100%;accent-color:#67cada}.rangehead{display:flex;justify-content:space-between;gap:8px;align-items:center}.rangehead output{font-weight:750;color:var(--a)}label{display:block;margin-top:12px;color:#cbd9e7}.separator{height:1px;background:var(--line);margin:15px 0}canvas{width:100%;height:330px;display:block;background:#0c1623;border:1px solid #27374c;border-radius:12px}.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}.legend span{font-size:12px;padding:4px 7px;background:#1b2e40;border-radius:6px;color:#cbd8e8}.sw{display:inline-block;width:12px;height:3px;vertical-align:middle;margin-right:6px}.formula{font-size:13px;color:#e7eefa;word-break:break-word}.list{margin:0;padding-left:20px}.list li{margin-bottom:7px}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{background:#1e3044;border:1px solid #36516b;color:#d8e8f7;padding:9px 12px;border-radius:8px;cursor:pointer}.tab.active{background:#1a5260;color:white;border-color:#5bc5d4}.result{color:#f4db9c;font-size:14px;font-family:monospace;word-break:break-word}a{color:#81d1ef}.notice{padding:13px;border-left:3px solid #d8a664;background:#2a251f;color:#e7d4b8;border-radius:8px}footer{margin-top:28px;color:var(--muted);font-size:13px}@media(max-width:850px){.bodygrid,.grid{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+<div class="eyebrow">ROOT V77 · 独立物理审计实验室 / 2026-11-17</div>
+<h1>万有引力常数 <em>G</em> 与光速 <em>c</em> 的关系</h1>
+<p class="lead">把正确的数学关系、附加假设、可测量的无量纲量分开。所有计算在浏览器本地完成，不需要联网，也不代表已经从光速独立预测了 G。</p>
+<p class="status">物理状态：严格关系可复算 · 新 G 决定律尚未得到证明</p>
+<div class="grid" style="margin-top:20px">
+<div class="card stat"><div class="key">NIST CODATA 2022 / G</div><strong id="Gref">6.67430 × 10⁻¹¹</strong><div class="small muted">m³ kg⁻¹ s⁻² · 有实验不确定度</div></div>
+<div class="card stat"><div class="key">SI 定义 / c</div><strong>299 792 458</strong><div class="small muted">m/s · 定义精确值</div></div>
+<div class="card stat"><div class="key">Z ≡ Gc / 2</div><strong id="Zref">0.010004524012147</strong><div class="small muted">m⁴ kg⁻¹ s⁻³ · 非无量纲常数</div></div>
+</div>
+<div class="bodygrid"><div>
+<section class="card"><h2>01 · 假设性 c–G 变化</h2><div class="rangehead"><label for="cSlider">假设光速比例 c/c₀</label><output id="cVal">1.00</output></div><input id="cSlider" type="range" min="50" max="150" value="100" step="1" aria-label="假设光速比例">
+<p class="small muted">横轴是假想输入；不同曲线固定不同的其他物理尺度，不能同时作为真实理论。</p>
+<div class="separator"></div><h3>选择一个固定量</h3><div class="tabs" id="scenarios">
+<button class="tab active" data-exponent="-1">固定 Z：指数 −1</button>
+<button class="tab" data-exponent="2">固定 rᵍ 与 M：指数 +2</button>
+<button class="tab" data-exponent="3">固定 ℓₚ 与 ħ：指数 +3</button>
+<button class="tab" data-exponent="0">固定 G：指数 0</button></div>
+<p class="small muted" style="margin-top:14px">条件性计算值（非真实变常数实验）：</p><div class="result" id="scenarioResult">G/G₀ = 1.00000</div></section>
+<section class="card"><h2>02 · 微观质量尺度</h2><div class="rangehead"><label for="massSlider">log₁₀(m/kg)</label><output id="massVal">−27.000</output></div><input id="massSlider" type="range" min="-32" max="-6" step="0.1" value="-27" aria-label="测试质量对数">
+<div class="small muted">对应质量 m = <span class="mono" id="mResult"></span> kg</div>
+<div class="separator"></div><div class="small muted">αᵍ = Gm²/(ħc)</div><div class="result" id="aResult"></div><div class="small muted">引力长度 / 约化康普顿长度</div><div class="result" id="rResult"></div>
+<p class="small muted">两种半径只在 m = mₚ ≈ 2.1764 × 10⁻⁸ kg 时相等。mₚ 此处使用已测 G 计算。</p></section>
+<section class="card"><h2>03 · 原有公式的判断</h2><div class="formula">G = 2Z/c , Z = Gc/2</div><p class="small muted">严格成立，但尚未独立确定 Z。</p><div class="formula">G = c³ℓₚ²/ħ</div><p class="small muted">严格成立，但 ℓₚ 通常从 G 定义。</p><div class="formula">G = αᵍ ħc/m²</div><p class="small muted">严格成立，但 αᵍ 需要独立物理预测。</p><div class="notice small"><b>反例：</b>如果假设 Z=精确 0.01（在 SI 下），得到的 G 与 CODATA 推荐值偏离约 20.12 个标准不确定度。</div></section>
+</div><div>
+<section class="card"><h2>条件性标度关系（可交互）</h2><canvas id="chart" width="790" height="360" role="img" aria-label="假想不同c比例下四个不同固定条件产生的G比率曲线"></canvas>
+<div class="legend"><span><i class="sw" style="background:#68d3e8"></i>固定 Z：x⁻¹</span><span><i class="sw" style="background:#c6a2ff"></i>固定 rᵍ/M：x²</span><span><i class="sw" style="background:#f5c67c"></i>固定 ℓₚ：x³</span><span><i class="sw" style="background:#92d5b2"></i>固定 G：1</span></div></section>
+<section class="card"><h2>四条验证链</h2><ol class="list"><li><b>量纲：</b>只用 c、ħ 及无量纲螺旋角不能构造 G 的 M⁻¹ 量纲。</li><li><b>相对论：</b>Einstein 方程中耦合系数 κₑ = 8πG/c⁴；改变 c 并不能独立固定 G。</li><li><b>天体：</b>轨道通常测得的是 GM，不是独立的 G 和 M。</li><li><b>微观：</b>rᵍ/λ̄ᶜ = αᵍ(m)。只有独立求出无量纲 αᵍ 才可能由此预测 G。</li></ol></section>
+<section class="card"><h2>如何获得真正的新突破？</h2><p>必须给出一个<b>不含实测 G</b>的微观动力学模型，独立计算长度尺度 ℓ* 及无量纲常数 A，再预测 <span class="formula">Gₚᵣₑd = A c³ℓ*²/ħ</span>，最后用独立测量验证。</p><p class="muted small">源码、54 条方程、30 条审查路线、误差传播和 Python 测试在同一个 ROOT V77 ZIP 中。此页面不访问任何外部服务。</p></section>
+</div></div>
+<footer>引用与数据来源：NIST CODATA 2022；JPL DE440。数学恒等式的自动测试并不等于物理理论得到实验证明。</footer>
+</div>
+<script>
+(()=>{'use strict';
+const G=6.67430e-11, C=299792458, hbar=6.62607015e-34/(2*Math.PI);
+const slider=document.getElementById('cSlider'), val=document.getElementById('cVal');
+const mSlider=document.getElementById('massSlider'), massVal=document.getElementById('massVal');
+const chart=document.getElementById('chart'), ctx=chart.getContext('2d');
+let exponent=-1;
+const lines=[{p:-1,color:'#68d3e8'},{p:2,color:'#c6a2ff'},{p:3,color:'#f5c67c'},{p:0,color:'#92d5b2'}];
+const W=chart.width,H=chart.height, left=57,right=17,top=18,bottom=48;
+const mapX=x=>left+(x-.5)*(W-left-right), mapY=y=>H-bottom-(y-.5)/(3.375-.5)*(H-top-bottom);
+function draw(){
+const x=Number(slider.value)/100;val.textContent=x.toFixed(2);
+const gRatio=Math.pow(x,exponent), g=G*gRatio;
+document.getElementById('scenarioResult').textContent=`G/G₀ = ${gRatio.toFixed(7)}; G = ${g.toExponential(9)} SI`;
+ctx.clearRect(0,0,W,H);ctx.fillStyle='#0c1623';ctx.fillRect(0,0,W,H);
+ctx.font='12px system-ui';
+for(const y of [.5,1,1.5,2,2.5,3]){const yy=mapY(y);ctx.strokeStyle='#283d50';ctx.beginPath();ctx.moveTo(left,yy);ctx.lineTo(W-right,yy);ctx.stroke();ctx.fillStyle='#91a7bb';ctx.fillText(y.toFixed(1),15,yy+4)}
+for(const xx of [.5,.75,1,1.25,1.5]){const px=mapX(xx);ctx.strokeStyle='#273a50';ctx.beginPath();ctx.moveTo(px,top);ctx.lineTo(px,H-bottom);ctx.stroke();ctx.fillStyle='#9db0c2';ctx.fillText(xx.toFixed(2),px-13,H-bottom+20)}
+for(const l of lines){ctx.beginPath();ctx.strokeStyle=l.color;ctx.lineWidth=l.p===exponent?3.8:2;ctx.globalAlpha=l.p===exponent?1:.48;
+for(let i=0;i<=200;i++){const xx=.5+i/200, yy=Math.pow(xx,l.p);if(i===0)ctx.moveTo(mapX(xx),mapY(yy));else ctx.lineTo(mapX(xx),mapY(yy))}ctx.stroke();ctx.globalAlpha=1;}
+ctx.setLineDash([5,5]);ctx.strokeStyle='#e9efff';ctx.beginPath();ctx.moveTo(mapX(x),top);ctx.lineTo(mapX(x),H-bottom);ctx.stroke();ctx.setLineDash([]);
+ctx.fillStyle='#c9d6e1';ctx.fillText('假设 c/c₀',W/2-26,H-9);
+ctx.fillStyle='#b5c5d5';ctx.fillText('G/G₀',left,12);
+}
+function mass(){let l=Number(mSlider.value),m=Math.pow(10,l),rg=G*m/(C*C),rc=hbar/(m*C),alpha=rg/rc;
+massVal.textContent=l.toFixed(2);document.getElementById('mResult').textContent=m.toExponential(5);
+document.getElementById('aResult').textContent=alpha.toExponential(6);
+document.getElementById('rResult').textContent=`${rg.toExponential(5)} m / ${rc.toExponential(5)} m`;
+}
+slider.addEventListener('input',draw);mSlider.addEventListener('input',mass);
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');exponent=Number(b.dataset.exponent);draw()}));
+draw();mass();
+})();
+</script></body></html>

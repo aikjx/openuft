@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ROOT V74 · 企业级统一场论验证实验室</title>
+<style>
+:root{color-scheme:dark;--bg:#09111e;--panel:#101e30;--line:#253951;--muted:#9aafc7;--ink:#eaf2fc;--accent:#6cc9ff;--gold:#f3c16e;--good:#72d5ae;--risk:#ffae9b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 18% -30%,#183e62,transparent 50%),var(--bg);color:var(--ink);font:15px/1.6 system-ui,'Microsoft YaHei',sans-serif}header,main,footer{max-width:1320px;margin:auto;padding:22px}h1{font-size:clamp(25px,3.1vw,40px);margin:7px 0}h2{font-size:18px;margin:0 0 12px}header p{color:var(--muted);max-width:1100px}b{color:#fff}.tag{display:inline-block;border:1px solid #426886;border-radius:999px;padding:3px 11px;font-size:12px;color:var(--accent)}.layout{display:grid;grid-template-columns:minmax(320px,1.65fr) minmax(280px,1fr);gap:16px}.panel{background:#0f1b2d;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 9px 24px #0003}.controls{display:grid;gap:11px}label{color:var(--muted);font-size:13px}.control{display:grid;gap:4px}.value{float:right;color:var(--ink);font-family:ui-monospace,Consolas,monospace}input[type=range],select,input[type=search]{width:100%;accent-color:#6cc9ff}select,input[type=search]{background:#15283e;color:var(--ink);border:1px solid #35506c;border-radius:8px;padding:9px;font-size:14px}.btns{display:flex;flex-wrap:wrap;gap:6px}.btns button{background:#182a3f;border:1px solid #39526d;color:#c2d9f4;border-radius:8px;padding:7px 12px;cursor:pointer}.btns button.active{background:#1e5575;border-color:#6cc9ff;color:white}canvas{width:100%;height:auto;border-radius:12px;background:radial-gradient(circle at center,#163249 1%,#0a1522 75%);border:1px solid #30475e;touch-action:pan-y}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.metric{background:#13263a;border:1px solid #25445f;padding:11px;border-radius:9px}.metric span{color:var(--muted);font-size:12px;display:block}.metric strong{font:600 15px ui-monospace,Consolas,monospace;overflow-wrap:anywhere}.warn{border-left:3px solid var(--gold);padding:11px 15px;background:#26271e;color:#e8d5a4;border-radius:0 8px 8px 0;font-size:13px}.fine{font-size:12px;color:var(--muted)}.eq{font:14px/1.55 ui-monospace,Consolas,monospace;display:block;color:#b3e4ff;background:#0b1725;border:1px solid #273e59;border-radius:8px;padding:10px;white-space:pre-wrap;overflow-wrap:anywhere}.table-wrap{overflow:auto;max-height:400px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{position:sticky;top:0;background:#162a40;color:#c6dcf2}.status-T{color:var(--good)}.status-H,.status-O{color:var(--gold)}footer{font-size:12px;color:var(--muted);margin-bottom:28px}@media(max-width:860px){.layout{grid-template-columns:1fr}header,main,footer{padding:14px}.metrics{grid-template-columns:1fr 1fr}}</style>
+</head><body>
+<header>
+<span class="tag">ROOT V74 · 严格科学证明状态 · 离线可运行</span>
+<h1>统一场论研究与反例检验实验室</h1>
+<p>比较空间螺旋、星体表面重力与真正的曲率不变量，并独立操作假设性有限程相互作用。<b>交互动画 ≠ 实验发现；本系统没有证明四力统一，也没有独立预测 G。</b></p>
+</header>
+<main>
+<div class="layout">
+  <section class="panel">
+    <div class="btns" id="tabs"><button class="active" data-mode="helix">空间螺旋</button><button data-mode="planet">星体引力 / 曲率</button><button data-mode="yukawa">有限球候选新力</button><button data-mode="gb">曲率耦合候选场</button></div>
+    <p class="fine" id="sceneSub">严格的三维螺旋轨迹几何；光速约束只是假设。</p>
+    <canvas id="scene" width="920" height="530" aria-label="三维透视物理模拟"></canvas>
+    <p class="warn" id="sceneWarning">本画面为数学演示，不能代替真实物理观测。</p>
+    <h2 style="margin-top:16px">独立可复算方程</h2>
+    <div class="eq" id="equation">κ=Rω²/(R²ω²+u²), τ=uω/(R²ω²+u²)</div>
+  </section>
+  <aside class="panel controls">
+    <h2>模型参数</h2>
+    <div class="control"><label for="body">星体参考参数</label><select id="body"><option value="Earth">地球</option><option value="Moon">月球</option><option value="Mars">火星</option><option value="Jupiter">木星</option><option value="Sun">太阳</option><option value="WhiteDwarf_demo">白矮星（人为示意）</option><option value="NeutronStar_demo">中子星（人为示意）</option></select></div>
+    <div class="control"><label for="pitch">螺旋轴向速度分量 / c <span class="value" id="pitchV"></span></label><input id="pitch" type="range" min="0" max="90" value="35" step="1"></div>
+    <div class="control"><label for="helixR">示意螺旋半径 R <span class="value" id="helixRV"></span></label><input id="helixR" type="range" min="30" max="120" value="68"></div>
+    <div class="control"><label for="yaw">观察旋转角度 <span class="value" id="yawV"></span></label><input id="yaw" type="range" min="-180" max="180" value="-37"></div>
+    <div class="control"><label for="lambdaLog">候选 Yukawa 作用距离 log10(λ/m) <span class="value" id="lambdaLogV"></span></label><input id="lambdaLog" type="range" min="3" max="10" step="0.1" value="6"></div>
+    <div class="control"><label for="alpha">候选强度 α（纯演示） <span class="value" id="alphaV"></span></label><input id="alpha" type="range" min="-1" max="1" step="0.05" value="0.3"></div>
+    <div class="control"><label for="alt">距地表高度 / 星体半径 <span class="value" id="altV"></span></label><input id="alt" type="range" min="0" max="3" step="0.05" value="0.1"></div>
+    <div class="control"><label for="massLog">候选 χ 质量 log10(m₀ / m⁻¹) <span class="value" id="massLogV"></span></label><input id="massLog" type="range" min="-24" max="-3" step="0.5" value="-16"></div>
+    <div class="control"><label for="ellLog">候选长度 log10(ℓ* / m) <span class="value" id="ellLogV"></span></label><input id="ellLog" type="range" min="0" max="12" step="0.5" value="6"></div>
+    <h2>实时计算数值</h2>
+    <div class="metrics"><div class="metric"><span>牛顿表面 g (m/s²)</span><strong id="gValue"></strong></div><div class="metric"><span>外部曲率 K (m⁻⁴)</span><strong id="kValue"></strong></div><div class="metric"><span>当前 gY / gN</span><strong id="yValue"></strong></div><div class="metric"><span>候选 Xi = ℓ*²K/m₀² (η=1)</span><strong id="xiValue"></strong></div></div>
+    <p class="fine">G = 6.67430×10⁻¹¹ 为 CODATA 测量输入；曲率采用不旋转球外 Schwarzschild 近似。α、λ、ℓ*、m₀ 均为人工参数，不是实测信号。</p>
+  </aside>
+</div>
+<section class="panel" style="margin-top:16px">
+  <h2>方程与证明状态索引（可搜索）</h2>
+  <input type="search" id="searchEq" placeholder="搜索：曲率、G、螺旋、异常、Yukawa、作用量……"/>
+  <div class="table-wrap"><table><thead><tr><th>编号</th><th>方程</th><th>验证等级</th><th>说明</th></tr></thead><tbody id="eqBody"></tbody></table></div>
+  <p class="fine">此页只嵌入精选方程，全部 60 条见 data/ROOT_V74_方程索引.csv；成功标准见 PROOF_STATUS.md。</p>
+</section>
+</main><footer>ROOT V74 | 2026-11-17 | 独立离线实验台 | 依据 NASA/NIST/PDG/MICROSCOPE 的公开参考材料 | 严格区分数学模拟与独立实验</footer>
+<script>
+'use strict';
+const G=6.67430e-11,C=299792458;
+const bodies={Earth:[5.9722e24,6371000],Moon:[7.342e22,1737400],Mars:[6.4171e23,3389500],Jupiter:[1.89813e27,69911000],Sun:[1.9884e30,695700000],WhiteDwarf_demo:[.6*1.9884e30,7e6],NeutronStar_demo:[1.4*1.9884e30,12000]};
+const special={WhiteDwarf_demo:1,NeutronStar_demo:1};
+const source=[['K02','螺旋速度 v² = R²ω² + u²','T','严格运动几何'],['K05','螺旋曲率 κ = Rω² / v²','T','严格运动几何'],['K06','螺旋挠率 τ = uω / v²','T','严格运动几何'],['K13','仅由 c、ħ、角度无法构造 G','T','限于这些输入'],['K17','Einstein 方程','C','已确立 GR，G 为输入'],['K22','K = 48(GM/c²)² / r⁶','C','外部 Schwarzschild'],['K23','K(R) = 256π²G²ρ² / (3c⁴)','T','外部球形近似'],['K25','固定 g 时 K ∝ R⁻²','T','外部球形近似'],['K28','χ² Gauss–Bonnet 耦合','H','假设性额外场与参数'],['K29','(□−m₀²+ηℓ*²𝒢)χ = 0','C','给定候选作用量'],['K32','χ=0 为候选线性场的解','T','不能自动产生新力'],['K35','SU(3)×SU(2)×U(1)','C','标准模型输入'],['K38','标准模型 U(1)³ 异常为零','T','给定超荷表'],['K41','三耦合一圈 RG 运行','C','SM 粒子谱已输入'],['K44','RG 量纲嬗变需要 UV 耦合','C','不能单独预测 G'],['K48','有限球 Yukawa 修正','C','给定新媒介的条件推导'],['K53','MICROSCOPE 未发现 WEP 违背','C','真实实验外部证据'],['K58','独立预测 G','O','尚未完成'],['K59','从同一动力学生成三代谱','O','尚未完成'],['K60','四力统一严格证明','O','未完成']];
+let mode='helix';const ids=['pitch','helixR','yaw','lambdaLog','alpha','alt','massLog','ellLog','body'];
+const el=id=>document.getElementById(id);const sci=(n,d=3)=>Number.isFinite(n)?n.toExponential(d):'N/A';
+function shapeFactor(x){if(x<.05)return 1+x*x/10+x**4/280+x**6/15120;if(x<40)return 3*(x*Math.cosh(x)-Math.sinh(x))/x**3;return null;}
+function yukawa(R,r,lambda,alpha){const x=R/lambda,y=r/lambda;let sourceFactor;
+ if(x<=40)sourceFactor=shapeFactor(x)*Math.exp(-y);
+ else sourceFactor=1.5/(x*x*x)*((x-1)*Math.exp(-(r-R)/lambda)+(x+1)*Math.exp(-(r+R)/lambda));
+ return alpha*(1+y)*sourceFactor;
+}
+const can=el('scene'),ctx=can.getContext('2d');let drag=0;
+function project(x,y,z,theta,scale=1){let ct=Math.cos(theta),st=Math.sin(theta);let xr=x*ct-z*st,zr=x*st+z*ct;let depth=4.2+zr/175;let perspective=4.2/Math.max(depth,1.1);return [460+xr*perspective*scale,265-y*perspective*scale,zr];}
+function path3(points,color,width,yaw,scale){if(!points.length)return;ctx.beginPath();points.forEach(([x,y,z],i)=>{let [sx,sy]=project(x,y,z,yaw,scale);if(i)ctx.lineTo(sx,sy);else ctx.moveTo(sx,sy)});ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();}
+function drawHelix(yaw){ctx.fillStyle='#c8daef';ctx.font='17px system-ui';ctx.fillText('圆柱螺旋速度分解  vθ = c cos λ, uz = c sin λ',25,34);
+ const angle=+el('pitch').value*Math.PI/180,R=+el('helixR').value;const cyc=4.5;
+ let pts=[];for(let i=0;i<800;i++){let t=i/799*2*Math.PI*cyc;pts.push([R*Math.cos(t),R*Math.sin(t)*.7,(t/(2*Math.PI*cyc)-.5)*380*Math.sin(angle)]);}
+ for(let t=0;t<=1;t+=.2){let z=(t-.5)*380*Math.sin(angle);path3(Array.from({length:80},(_,i)=>{let a=i*2*Math.PI/79;return [R*Math.cos(a),R*Math.sin(a)*.7,z]}),'#284f71',1.3,yaw,1.7);}
+ path3(pts,'#65d3ff',2.7,yaw,1.7);const t=2*Math.PI*cyc*.72;let [x,y,z]=[R*Math.cos(t),R*Math.sin(t)*.7,(.72-.5)*380*Math.sin(angle)];let [px,py]=project(x,y,z,yaw,1.7);ctx.beginPath();ctx.arc(px,py,7,0,2*Math.PI);ctx.fillStyle='#f1c36e';ctx.fill();
+ ctx.fillStyle='#aac4d9';ctx.font='16px system-ui';ctx.fillText('轴向 / c = '+Math.sin(angle).toFixed(4),25,480);ctx.fillText('环向 / c = '+Math.cos(angle).toFixed(4),25,505);
+}
+function drawPlanet(yaw,name){let [mass,R]=bodies[name];let rad=164;ctx.save();ctx.translate(460,264);ctx.beginPath();ctx.arc(0,0,rad,0,2*Math.PI);ctx.fillStyle='#153a5b';ctx.fill();ctx.clip();
+ for(let lat=-75;lat<=75;lat+=15){let yy=Math.sin(lat*Math.PI/180)*rad,rx=Math.cos(lat*Math.PI/180)*rad;ctx.beginPath();ctx.ellipse(0,yy,rx,Math.max(5,rx*.17),0,0,2*Math.PI);ctx.strokeStyle='rgba(107,197,246,.24)';ctx.lineWidth=1;ctx.stroke()}
+ for(let lng=0;lng<180;lng+=20){let a=lng*Math.PI/180+yaw;ctx.beginPath();ctx.ellipse(0,0,Math.abs(rad*Math.cos(a)),rad,0,0,2*Math.PI);ctx.strokeStyle='rgba(107,197,246,.23)';ctx.stroke()}
+ ctx.restore();ctx.strokeStyle='#8acfff';ctx.beginPath();ctx.arc(460,264,rad,0,2*Math.PI);ctx.stroke();
+ ctx.strokeStyle='#f5bf70';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(460,264);ctx.lineTo(460,264+rad+65);ctx.stroke();ctx.fillStyle='#f5bf70';ctx.beginPath();ctx.moveTo(460,264+rad+75);ctx.lineTo(451,264+rad+57);ctx.lineTo(469,264+rad+57);ctx.fill();
+ ctx.fillStyle='#d2e8ff';ctx.font='18px system-ui';ctx.fillText(name,28,36);ctx.fillStyle='#a7c4de';ctx.font='14px system-ui';ctx.fillText('⬇ 引力方向（示意）',28,65);ctx.fillText('曲率 K 是标量，不是额外受力箭头',28,87);
+}
+function drawYukawa(name){let [mass,R]=bodies[name],r=R*(1+(+el('alt').value)),lambda=Math.pow(10,+el('lambdaLog').value),alpha=+el('alpha').value;let xrange=Array.from({length:150},(_,i)=>Math.pow(10,3+i/149*7));let values=xrange.map(l=>Math.abs(yukawa(R,r,l,alpha)));let max=Math.max(...values,1e-20);
+ ctx.strokeStyle='#324b66';ctx.lineWidth=1;for(let j=0;j<5;j++){let y=110+j*70;ctx.beginPath();ctx.moveTo(80,y);ctx.lineTo(845,y);ctx.stroke()}
+ ctx.beginPath();values.forEach((v,i)=>{let x=80+i/149*765;let y=460-Math.max(0,Math.min(350,350*(Math.log10(Math.max(v,1e-18))+18)/18));if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.strokeStyle='#72d5ae';ctx.lineWidth=3;ctx.stroke();let xsel=80+(Math.log10(lambda)-3)/7*765;ctx.beginPath();ctx.moveTo(xsel,95);ctx.lineTo(xsel,460);ctx.setLineDash([5,5]);ctx.strokeStyle='#ffca7c';ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#cadff0';ctx.font='16px system-ui';ctx.fillText('球外 Yukawa |gY/gN| 对作用距离的条件预测（α及质量源荷为演示值）',25,35);ctx.fillText('log10(λ/m): 3',80,490);ctx.fillText('10',815,490);
+}
+function drawGB(name){let [,R]=bodies[name],Kcalc=48*(G*bodies[name][0]/(C*C))**2/R**6;
+ ctx.fillStyle='#dceaff';ctx.font='17px system-ui';ctx.fillText('候选曲率耦合：m²eff = m₀² − ηℓ*²𝒢（球外真空 𝒢=K）',30,42);
+ let base=bodies.Earth;let kBase=48*(G*base[0]/(C*C))**2/base[1]**6;
+ let entries=Object.entries(bodies);let mx=Math.max(...entries.map(([,v])=>Math.log10(48*(G*v[0]/C**2)**2/v[1]**6)));
+ entries.forEach(([key,v],i)=>{let K=48*(G*v[0]/C**2)**2/v[1]**6;let log=Math.log10(K);let col=(log+46)/(mx+46);let len=Math.max(0,Math.min(600,col*600));let y=100+i*56;ctx.fillStyle='#a9bed4';ctx.font='14px system-ui';ctx.fillText(key,25,y+10);ctx.fillStyle=key===name?'#f1bc74':'#5bb3e6';ctx.fillRect(210,y-3,len,16);ctx.fillStyle='#bccfe1';ctx.fillText(K.toExponential(2)+' m⁻⁴',215+Math.min(600,len),y+11);});
+ ctx.fillStyle='#a6bbd0';ctx.font='14px system-ui';ctx.fillText('条形长度表示 log10(K)，用于示意；不代表新力观测',30,507);
+}
+function rerender(){const name=el('body').value,[mass,R]=bodies[name];const g=G*mass/R**2;const K=48*(G*mass/C**2)**2/R**6;const r=R*(1+(+el('alt').value));const lam=10**(+el('lambdaLog').value);const alpha=+el('alpha').value;const w=yukawa(R,r,lam,alpha);const ell=10**(+el('ellLog').value);const m=10**(+el('massLog').value);const Xi=ell*ell*K/(m*m);
+ ids.slice(0,-1).forEach(id=>el(id+'V').textContent=el(id).value);
+ el('gValue').textContent=g.toFixed(6);el('kValue').textContent=sci(K,3);el('yValue').textContent=sci(w,3);el('xiValue').textContent=sci(Xi,3);
+ ctx.clearRect(0,0,can.width,can.height);const yaw=+el('yaw').value*Math.PI/180;
+ if(mode==='helix'){drawHelix(yaw);el('sceneSub').textContent='运动轨迹示意；螺旋几何不等于普适引力或四力根源。';el('equation').textContent='v²=(Rω)²+u²,   κ=Rω²/v²,   τ=uω/v²';}
+ else if(mode==='planet'){drawPlanet(yaw,name);el('sceneSub').textContent='球形、非旋转外部近似：真实天体受密度结构、自转、多极矩和潮汐影响。';el('equation').textContent='gN=GM/R²;    K=48(GM/c²)²/R⁶;    K(R)=256π²G²ρbar²/(3c⁴)';}
+ else if(mode==='yukawa'){drawYukawa(name);el('sceneSub').textContent='纯粹假设性短程力，点源近似通常不能用于 λ≪R 的星体。';el('equation').textContent='gY/gN=αqS qT F(R/λ)(1+r/λ)exp(−r/λ)';}
+ else{drawGB(name);el('sceneSub').textContent='协变有效场论候选：此处把 η=1 仅作为示意；Xi 不证明真实场存在。';el('equation').textContent='Lχ=−(∇χ)²/2−m₀²χ²/2+ηℓ*²χ²𝒢/2;   (□−m₀²+ηℓ*²𝒢)χ=0';}
+ el('sceneWarning').textContent=(special[name]?'选中的致密星是人为示意参数；':'')+'本页面所有新力和曲率耦合参数都是人为假设；图形不构成实际粒子实验或四力统一证明。';
+}
+function renderEq(){let q=el('searchEq').value.trim().toLowerCase();el('eqBody').replaceChildren();source.filter(row=>row.join(' ').toLowerCase().includes(q)).forEach(([id,eq,status,notes])=>{const tr=document.createElement('tr');[id,eq,status,notes].forEach((text,i)=>{const td=document.createElement('td');td.textContent=text;if(i===2)td.className='status-'+status;tr.appendChild(td)});el('eqBody').appendChild(tr)});}
+ids.forEach(id=>el(id).addEventListener('input',rerender));el('searchEq').addEventListener('input',renderEq);
+el('tabs').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;el('tabs').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));rerender()}));
+can.addEventListener('pointerdown',e=>{drag=e.clientX;can.setPointerCapture(e.pointerId)});can.addEventListener('pointermove',e=>{if(!drag)return;let yaw=el('yaw'),next=Math.max(-180,Math.min(180,+yaw.value+(e.clientX-drag)*.2));yaw.value=next;drag=e.clientX;rerender()});can.addEventListener('pointerup',()=>{drag=0});can.addEventListener('pointercancel',()=>{drag=0});
+renderEq();rerender();
+</script></body></html>

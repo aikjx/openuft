@@ -1,0 +1,26 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "$id":"https://example.invalid/root-gcl-1.0.schema.json",
+ "title":"ROOT Gravity Control Language, synthetic experimental protocol",
+ "type":"object","additionalProperties":false,
+ "required":["version","name","experiment","data_provenance","hypothesis","parameters","design","measurement","controls","safety","decision"],
+ "properties":{
+  "version":{"const":"ROOT-GCL/1.0"},
+  "name":{"type":"string","minLength":1},
+  "experiment":{"enum":["source_mass_reversal","em_energy_audit","dummy_null"]},
+  "data_provenance":{"const":"synthetic"},
+  "hypothesis":{"type":"string","minLength":1},
+  "parameters":{"type":"object","additionalProperties":{"type":"number"}},
+  "design":{"type":"object","required":["samples","randomized_blocks","noise_sigma_m_s2"],"properties":{
+   "samples":{"type":"integer","minimum":8,"maximum":200000,"multipleOf":4},
+   "randomized_blocks":{"const":true},
+   "noise_sigma_m_s2":{"type":"number","exclusiveMinimum":0},
+   "linear_drift_total_m_s2":{"type":"number"},
+   "switch_correlated_artifact_m_s2":{"type":"number"},
+   "seed":{"type":"integer"}},"additionalProperties":false},
+  "measurement":{"type":"object","required":["quantity","unit","instrument"],"properties":{"quantity":{"type":"string"},"unit":{"const":"m/s^2"},"instrument":{"type":"string"}},"additionalProperties":false},
+  "controls":{"type":"array","items":{"type":"string"},"minItems":1,"uniqueItems":true},
+  "safety":{"type":"object","required":["mode","hardware_authorized"],"properties":{"mode":{"const":"simulation-only"},"hardware_authorized":{"const":false}},"additionalProperties":false},
+  "decision":{"type":"object","required":["report_statistic","blind_analysis","require_independent_replication"],"properties":{"report_statistic":{"type":"string"},"blind_analysis":{"type":"boolean"},"require_independent_replication":{"type":"boolean"}},"additionalProperties":false}
+ }
+}

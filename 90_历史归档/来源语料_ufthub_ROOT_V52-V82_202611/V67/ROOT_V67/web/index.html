@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROOT V67 | 引力起源与四力大统一科研实验台</title>
+<style>
+:root{color-scheme:dark;--b:#0a1221;--panel:#111c2e;--line:#293a50;--txt:#ebf3fc;--sub:#9db0c7;--blue:#72b9fb;--mint:#6cd6be;--amber:#f2b66f;--pink:#dd9eeb}
+*{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 12% 0%,#213454 0%,#0b1322 36%,#070c15 100%);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:var(--txt)}
+body{min-height:100vh} .shell{max-width:1470px;margin:auto;padding:26px 22px 45px}.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;padding:12px 0 26px}
+.eyebrow{color:var(--mint);font-size:12px;letter-spacing:.2em;font-weight:800}h1{font-size:clamp(25px,3vw,42px);margin:6px 0 10px;letter-spacing:-.03em}header p{margin:0;color:var(--sub);max-width:920px;line-height:1.7}
+.status{font-size:12px;background:#283346;color:#e0e9f5;border:1px solid #536277;border-radius:30px;padding:9px 14px;white-space:nowrap}.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:17px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tab{background:#142137;color:#c1d4e8;border:1px solid #29425a;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}.tab[aria-selected=true]{background:#274561;color:white;border-color:#63b7f9}
+.panel{background:rgba(17,28,46,.9);border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:0 15px 45px #0004}.canvaswrap{position:relative;background:linear-gradient(145deg,#0b172a,#111e30);border-radius:13px;overflow:hidden;border:1px solid #263d59}.canvaswrap canvas{width:100%;display:block;height:auto;aspect-ratio:980/540}.corner{position:absolute;top:13px;left:15px;color:#a5bdd4;font-size:12px;pointer-events:none}
+.legend{display:flex;gap:15px;flex-wrap:wrap;margin-top:14px;color:var(--sub);font-size:12px}.legend span:before{content:"";display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:10px;background:var(--blue)}.legend span:nth-child(2):before{background:var(--mint)}.legend span:nth-child(3):before{background:var(--amber)}
+.mini{color:var(--sub);font-size:13px;line-height:1.75}.cardtitle{font-size:16px;margin:0 0 15px}.side{display:flex;flex-direction:column;gap:17px}.ctrl{display:block;margin:14px 0}.ctrl>div{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:6px}.ctrl output{font-variant-numeric:tabular-nums;color:var(--mint);font-weight:700}input[type=range]{width:100%;accent-color:#83bbf4;cursor:pointer}
+.metricgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}.metric{background:#14273a;border:1px solid #2a455b;border-radius:12px;padding:13px 14px}.metric small{color:var(--sub);display:block;font-size:11px;margin-bottom:7px}.metric b{font-size:clamp(12px,1.2vw,18px);font-variant-numeric:tabular-nums;word-break:break-all}.prose{margin-top:16px;line-height:1.75;font-size:13px;color:#bbcde0}.prose strong{color:#eaf3ff}.katex{font-family:ui-serif,Georgia,"Times New Roman",serif;color:#afddff}
+.note{border-top:1px solid var(--line);margin-top:19px;padding-top:16px;color:#9ab3cb;line-height:1.7;font-size:12px}.alert{background:#172435;border-left:3px solid var(--amber);padding:10px 13px;margin:12px 0;border-radius:7px;font-size:12px;color:#edcaaa}
+@media(max-width:930px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}}@media(max-width:640px){.side{display:flex}.metricgrid{grid-template-columns:1fr 1fr}.panel{padding:13px}.shell{padding:16px 10px}.tab{padding:9px 10px;font-size:12px}}
+</style></head><body><div class="shell"><header class="top"><div><div class="eyebrow">ROOT V67 · MATHEMATICAL & PHYSICS AUDIT</div><h1>空间螺旋 × 引力起源 × 四力统一</h1><p>可交互的离线研究实验台。严格区分标准物理、条件性推导与玩具假设；三维展示采用 Canvas2D 透视投影，不是经过实测校准的宇宙仿真。</p></div><div class="status">研究中 · 四力大统一尚未获证明</div></header>
+<div class="nav" role="tablist"><button class="tab" data-tab="helix" aria-selected="true">螺旋几何</button><button class="tab" data-tab="earth" aria-selected="false">地球引力 / 理想地磁</button><button class="tab" data-tab="rg" aria-selected="false">三规范耦合 RG</button><button class="tab" data-tab="g" aria-selected="false">诱导引力 / G</button><button class="tab" data-tab="fifth" aria-selected="false">第五力 / 等效原理</button></div>
+<div class="layout"><main class="panel"><div class="canvaswrap"><div class="corner" id="corner">MATHEMATICAL · 3D perspective helix</div><canvas id="scene" width="980" height="540" aria-label="科学模拟图"></canvas></div><div class="legend" id="legend"><span>运动几何</span><span>验证关系</span><span>候选假设</span></div><div class="metricgrid" id="metrics"></div><div class="prose" id="explain"></div></main><aside class="side"><section class="panel"><h2 class="cardtitle">实验参数</h2><div id="controls"></div><div class="alert" id="disclaimer">所有模拟仅作为所选方程的数值示例。</div></section><section class="panel"><h2 class="cardtitle">当前研究判定</h2><div class="mini" id="statusText">Frenet 曲率、挠率由给定轨迹严格求导；它们不是引力耦合或粒子色荷。</div><div class="note">文档：<code>book/ROOT_V67_统一场论_正式研究总集.md</code><br>复算：<code>python run_all.py</code><br>独立数据：<code>python experiments/generate.py</code><br>无网络、无追踪、无服务端依赖。</div></section></aside></div></div>
+<script>
+'use strict';
+const c=document.getElementById('scene'),ctx=c.getContext('2d'); const PI=Math.PI, C=299792458, G=6.67430e-11,ME=5.9722e24,RE=6.371e6,HBAR=1.054571817e-34;
+const state={tab:'helix',pitch:35,helixR:1.5,yaw:25,lat:35,alt:400,rgzoom:19,N:1,ell:1.0,xi:0,mu:.1,beta:-15,lam:1};
+let tick=0;
+const defs={
+ helix:[['pitch','螺旋升角 (°)',0,89,1,'°'],['helixR','螺旋半径 (任意单位)',.5,3,.1,''],['yaw','观察方向 (°)',-180,180,5,'°']],
+ earth:[['lat','参考纬度 (°)',-90,90,1,'°'],['alt','参考高度 (km)',0,2000,20,' km'],['yaw','地球视角 (°)',-180,180,5,'°']],
+ rg:[['rgzoom','最大 log10 能量 (GeV)',12,19,1,'']],
+ g:[['N','场数量 N',1,100,1,''],['ell','截止长度 ℓ/10⁻³⁵ m',.1,12,.1,''],['xi','非最小耦合 ξ',-.1,.16,.01,''],['mu','质量阈值 μ',0,5,.05,'']],
+ fifth:[['beta','组成差异 log10 |βE Δβ|',-18,-11,.25,''],['lam','作用距离 λ / 地球半径',.2,5,.1,'']]
+};
+const fmt=(v,d=4)=>Number(v).toPrecision(d);function proj(x,y,z,zoom=72,yaw=state.yaw){let v=yaw*PI/180;let xx=x*Math.cos(v)-y*Math.sin(v), yy=x*Math.sin(v)+y*Math.cos(v);let elev=.42;let yy2=yy*Math.cos(elev)-z*Math.sin(elev), zz=yy*Math.sin(elev)+z*Math.cos(elev);let pers=750/(750+yy2*50);return [490+zoom*xx*pers,270-zoom*zz*pers,yy2]}
+function bg(){ctx.clearRect(0,0,980,540);ctx.fillStyle='#0b192b';ctx.fillRect(0,0,980,540);ctx.strokeStyle='#1c3045';ctx.lineWidth=1;for(let x=25;x<980;x+=45){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,540);ctx.stroke()}for(let y=20;y<540;y+=45){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(980,y);ctx.stroke()}}
+function curve(points,color='#70adf1',width=2,alpha=1){ctx.beginPath();for(let j=0;j<points.length;j++){let p=points[j];if(j===0)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1])}ctx.strokeStyle=color;ctx.lineWidth=width;ctx.globalAlpha=alpha;ctx.stroke();ctx.globalAlpha=1}
+function line(a,b,col='#74a6d6',width=2){curve([a,b],col,width)}
+function dot(p,color,size=5){ctx.fillStyle=color;ctx.beginPath();ctx.arc(p[0],p[1],size,0,2*PI);ctx.fill()}
+function text(t,x,y,col='#bbcfe6',size=15){ctx.fillStyle=col;ctx.font=size+'px system-ui';ctx.fillText(t,x,y)}
+function axes(){for(const [x,y,z,label,color] of [[3.3,0,0,'X','#f7a86a'],[0,3.3,0,'Y','#6edbb3'],[0,0,3.3,'Z','#83b8fa']]){line(proj(0,0,0),proj(x,y,z),color,2);let p=proj(x,y,z);text(label,p[0]+8,p[1],color)}}
+function drawHelix(){bg();const rad=state.pitch*PI/180,R=state.helixR,turns=4,thmax=4*PI;
+ const pts=[];for(let i=0;i<=320;i++){let th=-thmax+2*thmax*i/320;let z=R*Math.tan(rad)*th;let zoom=75/(1+Math.max(0,R*Math.abs(Math.tan(rad))*thmax-4)*.17);pts.push(proj(R*Math.cos(th),R*Math.sin(th),z,zoom))}
+ axes();curve(pts,'#61bbfa',3);let index=Math.floor((tick*24)%320),p=pts[index];dot(p,'#f4bd75',7);text('轨迹切向（数学示意，不是有质量粒子以 c 飞行）',24,44);
+ let ph=state.pitch*PI/180,vz=Math.sin(ph),vt=Math.cos(ph);let points=[[670,405],[670+155*vz,405],[670+155*vz,405-155*vt]];
+ line(points[0],points[1],'#6cd6be',5);line(points[1],points[2],'#e0a6ec',5);line(points[0],points[2],'#efb76e',3);text('轴向',690,425,'#6cd6be');text('环向',850,280,'#e0a6ec');text('c',785,335,'#efb76e');
+ let kap=Math.cos(ph)**2/R,tau=Math.sin(ph)*Math.cos(ph)/R;
+ metrics([['曲率 κ',fmt(kap)+' /a.u.'],['挠率 τ',fmt(tau)+' /a.u.'],['轴向速度分数',fmt(vz)+' c']]);
+ explain('给定速度大小为 c 的**数学运动学约束**：Rω=c cosλ，u=c sinλ；曲率 κ=cos²λ/R、挠率 τ=sinλ cosλ/R。它**不是**任何有质量粒子实际达到光速的证明。','[MATH] 条件推导；[OPEN] 从螺旋独立产生基本相互作用');}
+function rotate(x,y,z,ang){let cc=Math.cos(ang),ss=Math.sin(ang);return [x*cc-y*ss,x*ss+y*cc,z]}
+function drawEarth(){bg();let yaw=(state.yaw*PI/180)+tick*.15;function sphere(lat,lon){return [3.05*Math.cos(lat)*Math.cos(lon),3.05*Math.cos(lat)*Math.sin(lon),3.05*Math.sin(lat)]}
+ const earthProj=(x)=>proj(...rotate(x[0],x[1],x[2],yaw),68,18);
+ // longitude latitude grid with depth fade
+ for(let la=-75;la<=75;la+=15){let a=la*PI/180,pts=[];for(let i=0;i<=120;i++){let v=sphere(a,i*2*PI/120);pts.push(earthProj(v))}curve(pts,la===0?'#4d90c2':'#3c6287',la===0?1.7:1.1,.55)}
+ for(let lo=0;lo<360;lo+=20){let pts=[];for(let j=0;j<=110;j++){let v=sphere(-PI/2+j*PI/110,lo*PI/180);pts.push(earthProj(v))}curve(pts,'#385775',1,.48)}
+ // schematic radial gravity and ideal magnetic-field vectors, local coordinates
+ for(let lat=-60;lat<=60;lat+=30){for(let lon=0;lon<360;lon+=45){let ph=lat*PI/180,th=lon*PI/180;let pos=sphere(ph,th);let p=earthProj(pos);let vec=earthProj([pos[0]*.78,pos[1]*.78,pos[2]*.78]);line(p,vec,'#edb46d',1.5);dot(p,'#70b3ef',2.2)}}
+ let phi=state.lat*PI/180,p0=sphere(phi,0),point=earthProj([p0[0]*(1+state.alt/6371),p0[1]*(1+state.alt/6371),p0[2]*(1+state.alt/6371)]);dot(point,'#6de2be',7);
+ const r=RE+state.alt*1000,gg=G*ME/(r*r),Beq=31.2e-6*Math.pow(RE/r,3),B=Beq*Math.sqrt(1+3*Math.sin(phi)**2);
+ text('蓝：球形投影网格 | 琥珀：径向引力矢量 | 绿：查询点',23,44);metrics([['参考引力 g',gg.toFixed(5)+' m/s²'],['理想磁偶极 |B|',(B*1e6).toFixed(2)+' μT'],['地球半径 r',(r/1e3).toFixed(0)+' km']]);
+ explain('这是球形点质量引力 g=GM/r² 与理想磁偶极场。只用于经典方程的展示；不包含地球椭球、自转离心修正、EGM2008 或 IGRF 实测系数。','[EST] 已知经典公式；[TOY] 非精密地球数字孪生');}
+function coords(x,y,plot){return [plot[0]+(x-plot[4])/(plot[5]-plot[4])*plot[2],plot[1]+plot[3]-(y-plot[6])/(plot[7]-plot[6])*plot[3]]}
+function chartFrame(xmin,xmax,ymin,ymax){let p=[105,72,770,370,xmin,xmax,ymin,ymax];ctx.fillStyle='#122238';ctx.fillRect(p[0],p[1],p[2],p[3]);ctx.strokeStyle='#45617d';ctx.strokeRect(p[0],p[1],p[2],p[3]);for(let i=0;i<=5;i++){let x=p[0]+p[2]*i/5,y=p[1]+p[3]*i/5;line([x,p[1]],[x,p[1]+p[3]],'#25435e');line([p[0],y],[p[0]+p[2],y],'#25435e');text(fmt(xmin+(xmax-xmin)*i/5,3),x-15,p[1]+p[3]+22,'#b0c2d8',13);text(fmt(ymax-(ymax-ymin)*i/5,3),p[0]-76,y+4,'#b0c2d8',13)}return p}
+function drawRG(){bg();const base=[59.0192406,29.584599,1/.118],b=[4.1,-19/6,-7],mz=91.1876,max=state.rgzoom,p=chartFrame(2,max,0,85),cols=['#71b9fb','#6ad4b4','#f2b36b'];
+ for(let k=0;k<3;k++){let arr=[];for(let i=0;i<=150;i++){let l=2+(max-2)*i/150,mu=10**l,inverse=base[k]-b[k]*Math.log(mu/mz)/(2*PI);arr.push(coords(l,inverse,p))}curve(arr,cols[k],3)}
+ text('SU(5) 归一化；标准模型粒子谱；一圈近似',115,43);
+ for(let i=0;i<3;i++)text(['U(1)','SU(2)','SU(3)'][i],710,100+i*28,cols[i]);
+ metrics([['交点 1–2','1.031 × 10¹³ GeV'],['交点 1–3','2.429 × 10¹⁴ GeV'],['交点 2–3','9.707 × 10¹⁶ GeV']]);
+ explain('采用演示输入 αem⁻¹=127.95、sin²θW=0.23122、αs=0.118，μ₀=MZ=91.1876 GeV。三条标准模型一圈运行曲线**没有同一点汇合**；新物理粒子和阈值可改变此结论。','[COND] 既有标准模型的一圈计算，不是所有 GUT 的否证');}
+function Fmu(mu){if(mu===0)return 1;const z=mu*mu,N=400,h=1/N;let sum=0;for(let i=0;i<=N;i++){let u=i/N, val=u===0?0:Math.exp(-z/u), k=i===0||i===N?1:i%2?4:2;sum+=k*val}return sum*h/3}
+function inducedG(){const ell=state.ell*1e-35, coeff=state.N*(1-6*state.xi)*HBAR/(12*PI*C**3*ell**2)*Fmu(state.mu);return coeff>0?1/coeff:NaN}
+function drawInduced(){bg();let p=chartFrame(.2,12,-1,5),N=state.N,xi=state.xi,mu=state.mu;let points=[];for(let i=0;i<=230;i++){let ell=.2+11.8*i/230,g=12*PI*C**3*(ell*1e-35)**2/(N*(1-6*xi)*HBAR*Fmu(mu));let yy=Math.log10(g/G);points.push(coords(ell,yy,p))}curve(points,'#70bdfb',3);line(coords(state.ell,-1,p),coords(state.ell,5,p),'#eeb879',1);text('横轴：ℓ / 10⁻³⁵m   ·   纵轴：log10(Gtoy/Gmeasured)',111,42);text('0 对应反向拟合恰好等于实验值',115,467,'#aec3d6',13);
+ let Gtoy=inducedG();metrics([['Gtoy (m³/kg/s²)',fmt(Gtoy,5)],['Gtoy / CODATA',fmt(Gtoy/G,5)],['质量阈值 F',fmt(Fmu(mu),5)]]);
+ explain('特定固有时间截止方案下的单圈标量曲率项。此图预设零裸项，N、ξ、μ、ℓ 都是外加参数。任何恰好得到 Gmeasured 的组合都属于**反向标定**；单独一条曲线不证明 G 的微观来源。','[FIT/TOY] G 未从 ROOT 公设独立得出');}
+function drawFifth(){bg();let p=chartFrame(-18,-11,-18,-10),src=state.beta,ln=state.lam;let arr=[];for(let i=0;i<=200;i++){let log=-18+7*i/200,b=Math.pow(10,log),z=1.11/ln,h=(1+z)*Math.exp(-z),eta=b*h;arr.push(coords(log,Math.log10(Math.abs(eta)),p))}curve(arr,'#70b8fa',3);line(coords(-18,Math.log10(2.746e-15),p),coords(-11,Math.log10(2.746e-15),p),'#edb16c',2);
+ let z=1.11/state.lam,beta=Math.pow(10,state.beta),eta=beta*(1+z)*Math.exp(-z);text('合成第五力：仅用于展示参数如何受到差分约束',115,42);
+ metrics([['玩具 |η|',fmt(eta,5)],['MICROSCOPE σ','2.746 × 10⁻¹⁵'],['|η|/σ',fmt(eta/2.746e-15,3)]]);
+ explain('本面板使用小耦合近似 η≈βE(βA−βB)(1+r/λ)e^(−r/λ)，并取 r≈1.11 RE 作演示；它并非 MICROSCOPE 的正式联合似然，也不约束普适性完全相同的第五力。','[TOY] 组成依赖模型；[EST] MICROSCOPE 无发现结果');}
+function metrics(items){document.getElementById('metrics').innerHTML=items.map(x=>'<div class="metric"><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('')}
+function explain(s,status){document.getElementById('explain').innerHTML=s.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');document.getElementById('statusText').textContent=status}
+function ctrlHTML(){const defsHere=defs[state.tab];document.getElementById('controls').innerHTML=defsHere.map(d=>'<label class="ctrl"><div><span>'+d[1]+'</span><output id="o_'+d[0]+'">'+state[d[0]]+d[5]+'</output></div><input type="range" id="i_'+d[0]+'" min="'+d[2]+'" max="'+d[3]+'" step="'+d[4]+'" value="'+state[d[0]]+'"></label>').join('');
+ for(const d of defsHere){let input=document.getElementById('i_'+d[0]);input.addEventListener('input',()=>{state[d[0]]=+input.value;document.getElementById('o_'+d[0]).textContent=input.value+d[5];render()})}
+ document.getElementById('disclaimer').textContent=({helix:'仅数学轨迹；不证明粒子以光速做圆柱运动。',earth:'地球仅球形与理想磁偶极，不包含真实 IGRF 数据。',rg:'只采用标准模型的一圈 β 系数，非 GUT 确认。',g:'输入测得 G 的对比，不能用拟合称为预测。',fifth:'参数约束只作为定性教程，不构成新实验结果。'})[state.tab]}
+function render(){let lab={helix:'MATHEMATICAL · helix geometry',earth:'TOY · Earth spherical gravity + dipole',rg:'CONDITIONAL · one-loop SM renormalization group',g:'FIT / TOY · induced gravity coefficient',fifth:'TOY · composition-dependent fifth force'};document.getElementById('corner').textContent=lab[state.tab];({helix:drawHelix,earth:drawEarth,rg:drawRG,g:drawInduced,fifth:drawFifth})[state.tab]()}
+for(const b of document.querySelectorAll('.tab'))b.onclick=()=>{state.tab=b.dataset.tab;for(const x of document.querySelectorAll('.tab'))x.setAttribute('aria-selected',String(x===b));ctrlHTML();render()};
+function loop(){tick+=.004;if(state.tab==='helix'||state.tab==='earth')render();requestAnimationFrame(loop)}ctrlHTML();render();requestAnimationFrame(loop);
+</script></body></html>

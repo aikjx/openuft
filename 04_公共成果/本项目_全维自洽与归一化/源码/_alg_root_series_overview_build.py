@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""全维整理总览生成器：从三册 JSON 机读判词/门数，生成总览 HTML（避免手抄漂移）。"""
+"""全维整理总览生成器：从六册 JSON 机读判词/门数，生成总览 HTML（避免手抄漂移）。"""
 import os
 import glob
 import json
@@ -10,7 +10,7 @@ ROOT = glob.glob(os.path.join("openuft", "**", "_ALG_rootv77_Gc_relation_audit_r
 assert len(ROOT) == 1, ROOT
 DATA = os.path.dirname(ROOT[0])
 MAIN = os.path.dirname(DATA)
-OUT = os.path.join(MAIN, "算法联盟_ROOT系列三册全维整理总览_2026-11-18.html")
+OUT = os.path.join(MAIN, "算法联盟_ROOT系列六册全维整理总览_2026-11-18.html")
 
 SPECS = [
     {
@@ -45,6 +45,42 @@ SPECS = [
         "external": "CODATA 2022（NIST SP 961）一手补齐；不制造假阳性错误",
         "md": "算法联盟_ROOTV77_G与c关系可算审计_2026-11-18.md",
         "html": "算法联盟_ROOTV77_G与c关系可算审计_可视化_2026-11-18.html",
+    },
+    {
+        "file": "_ALG_rootcore_Gorigin_audit_recompute_2026-11-18.json",
+        "tag": "CORE",
+        "name": "ROOT 核心问题：G 从哪来 / 四力为何未统一",
+        "focus": "量纲唯一性 + 证明链断点",
+        "negative": "G=C c³ℓ²/ħ 量纲唯一但参数不灭（ℓ_P 循环 / 其余偏离 39–49 dex）",
+        "positive": "证明链断点定位第 4 步；四力状态 4/4 与一手及 r403 一致",
+        "external": "CERN W/Z + LEP 精密检验；Donoghue 1994 GR-EFT；CODATA G",
+        "md": "算法联盟_ROOT核心问题_G来源与四力统一可算审计_2026-11-18.md",
+        "html": "算法联盟_ROOT核心问题_G来源与四力统一可算审计_可视化_2026-11-18.html",
+    },
+    {
+        "file": "_ALG_rootv88_planetary_G_audit_recompute_2026-11-18.json",
+        "tag": "V88",
+        "name": "每个星球的基本 G 是否不同",
+        "focus": "μ=GM 不可辨识 + 恒等式",
+        "negative": "g 两式定义恒等（4/4）→ 表面引力差异不需不同 G（判别力 0）",
+        "positive": "μ 简并 flip：G×k/M÷k 同一 μ；须独立 M 才解出 G",
+        "external": "MICROSCOPE η 精确匹配 PRL 2022；只约束 WEP 组成依赖，不覆盖行星环境",
+        "md": "算法联盟_每星球G是否不同可算审计_2026-11-18.md",
+        "html": "算法联盟_每星球G是否不同可算审计_可视化_2026-11-18.html",
+    },
+    {
+        "file": "_ALG_rootv85_dual_invariant_audit_recompute_2026-11-18.json",
+        "tag": "V85",
+        "name": "G 来源、星球差异与双不变量（Q / rank D）",
+        "focus": "形状恒等式 + 秩判据",
+        "negative": "Q 对 GM 幅度零判别力：看不见各星球常数 G 差异；"
+                    "Q 偏离可来自多极矩；纯系统误差也满足 rank≤1",
+        "positive": "Q=1 ⇔ 幂律 n=2（两路 ≤1.2E-16）；单媒介 9 子式精确全零，"
+                    "两媒介 flip 到 0.4162",
+        "external": "MICROSCOPE 2022（沿用 V88，不相加）+ RMP 81,61 的 Yukawa/ISL 综述；"
+                    "两项精算示例均为人为模型存在性复现，非实测",
+        "md": "算法联盟_ROOTV85双不变量可算审计_2026-11-18.md",
+        "html": "算法联盟_ROOTV85双不变量可算审计_可视化_2026-11-18.html",
     },
 ]
 
@@ -87,7 +123,7 @@ HTML = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>算法联盟 · ROOT 系列三册全维整理总览 · 2026-11-18</title>
+<title>算法联盟 · ROOT 系列六册全维整理总览 · 2026-11-18</title>
 <style>
   :root{--bg:#f7f8fa;--panel:#fff;--ink:#1a2230;--sub:#5a6675;--line:#dfe3ea;
         --accent:#2540a6;--ok:#137a4b;--okbg:#e7f6ee;--neg:#a12a2a;--negbg:#fdecec;
@@ -139,14 +175,14 @@ HTML = """<!DOCTYPE html>
 <div class="wrap">
 
 <header>
-  <h1>算法联盟 · ROOT 系列三册全维整理总览</h1>
-  <div class="meta">V77 / V79 / V83 · 2026-11-18 · 非判定册索引，不占 RID，不入 README，三册结论不相加</div>
+  <h1>算法联盟 · ROOT 系列六册全维整理总览</h1>
+  <div class="meta">CORE / V77 / V79 / V83 / V85 / V88 · 2026-11-18 · 非判定册索引，不占 RID，不入 README，六册结论不相加</div>
 </header>
 
 <section>
-  <h2>总览统计（机读自三册 JSON）</h2>
+  <h2>总览统计（机读自六册 JSON）</h2>
   <div class="stat">
-    <div class="scard"><div class="n">3</div><div class="l">审计册</div></div>
+    <div class="scard"><div class="n">__N_BOOKS__</div><div class="l">审计册（机读）</div></div>
     <div class="scard"><div class="n">__TOTAL_GATES__</div><div class="l">判据 ok / 总数</div></div>
     <div class="scard"><div class="n">0</div><div class="l">独立实验预言</div></div>
     <div class="scard"><div class="n">0</div><div class="l">宣称攻破统一场论</div></div>
@@ -159,11 +195,11 @@ HTML = """<!DOCTYPE html>
     <span class="step">外部一手 URL 裁决</span><span class="arrow">→</span>
     <span class="step">红线边界</span>
   </div>
-  <p class="src" style="margin-top:12px">统一范式：具体模型 × 外部一手读数 × 可翻转判据 × 外部裁决。三册共用，不产六件套、不自盖章。</p>
+  <p class="src" style="margin-top:12px">统一范式：具体模型 × 外部一手读数 × 可翻转判据 × 外部裁决。六册共用，不产六件套、不自盖章。</p>
 </section>
 
 <section>
-  <h2>三册对照：负读数与正读数</h2>
+  <h2>六册对照：负读数与正读数</h2>
   <table>
     <tr><th>册 / 对象</th><th>判别焦点</th><th>判据</th><th>负读数（判别力 0 / 域错位）</th><th>正读数（可翻转 / 有效部分）</th></tr>
     __ROWS__
@@ -183,23 +219,26 @@ __VERDICTS__
     <tr><th>册</th><th>核查结论</th></tr>
     __EXTROWS__
   </table>
-  <div class="note">三册来料均只附 favicon 图标链接（google favicon 服务），那不是论文或数据表来源。本系列一律补齐一手 DOI / URL 供外部核查——这是 11-16 方向自审后确立的纪律。</div>
+  <div class="note">六册来料均只附 favicon 图标链接（google favicon 服务），那不是论文或数据表来源。本系列一律补齐一手 DOI / URL 供外部核查——这是 11-16 方向自审后确立的纪律。</div>
 </section>
 
 <section>
   <h2>共享结论与未关闭边界</h2>
-  <p><b>三册共同指向：</b>来料提供的是<b>前提明确的恒等式、定义重排与可复现工程</b>——数值全部可独立复算，但恒等式与定义重排无论验证多少次，都不增加关于引力理论或 G 本源的信息量。三册各找到一个"零判别力"结构（奇偶对称性 / 2f 三角恒等式 / 五个 G 关系式），并各找到一个"可翻转但有限"的有效部分（倾斜诊断 / 模型层频率筛选 / 错误 G 反例）。</p>
+  <p><b>六册共同指向：</b>来料提供的是<b>前提明确的恒等式、定义重排与可复现工程</b>——数值与结构全部可独立复算，但恒等式与定义重排无论验证多少次，都不增加关于引力理论或 G 本源的信息量。六册各找到一个"零判别力/参数不灭"结构（奇偶对称性 / 2f 三角恒等式 / 五个 G 关系式 / g 两式恒等 / G=C c³ℓ²/ħ 量纲结构 / Q 对 GM 幅度盲），并各找到一个"可翻转但有限"的有效部分（倾斜诊断 / 模型层频率筛选 / 错误 G 反例 / μ 简并 / 证明链断点定位 / 秩判据两媒介 flip）。</p>
   <div class="flip"><b>未关闭的真正战场（按外部读数驱动，非按册数驱动）：</b>
     ① V83：高频域双传感器同时测 f/2f 奇偶信号 + 电磁零实验；
     ② V79：在受控电磁调制下测 δG/G 并给系统误差预算，让 G5 判词有机会翻转；
-    ③ V77：零输入推导 Z / l_P / α_g 之一，且给可证伪读数，不再由实测 G 反向定义。
+    ③ V77：零输入推导 Z / l_P / α_g 之一，且给可证伪读数，不再由实测 G 反向定义；<br>
+    ④ V88：给独立质量信息打破 μ=GM 简并，并把 δ(ρ,T,B,组成) 升级为可推导可证伪函数，用地球—月球—太阳—木星—中子星联合观测寻找不可被质量分布解释的残差；<br>
+    ⑤ CORE：点亮证明链第 4 步——找到不含 G 的微观作用量，独立确定 C_micro 与 ℓ_micro，使 G_predicted 落入可证伪区间；<br>
+    ⑥ V85：多半径测 g(r) 并先扣多极矩/自转/相对论项，再报 Q 的误差棒；同时用独立材料与源荷标定区分「单媒介」与「共模系统误差」——否则 rank≤1 通过不携带模型信息。
     结果更新时重跑对应机核，让判词真的有机会改变。</div>
   <p><b>红线：</b>__RED__</p>
   <p class="src">纪律：非判定册 · 不占 RID · 不入 README · 不回写既有产物 · 两路机拼 · 反噬只动一个判据 · flip 演示 · 幂等复跑 · 来源给一手 URL · 不制造假阳性出处错误 · 门限数据驱动。</p>
 </section>
 
 <footer>
-  算法联盟 · ROOT 系列三册全维整理总览 · 2026-11-18　|　判词/门数机读自三册 JSON　|　数学自洽 ≠ 实验证实
+  算法联盟 · ROOT 系列六册全维整理总览 · 2026-11-18　|　判词/门数机读自六册 JSON　|　数学自洽 ≠ 实验证实
 </footer>
 
 </div>
@@ -207,7 +246,8 @@ __VERDICTS__
 </html>
 """
 
-HTML = (HTML.replace("__TOTAL_GATES__", "%s/%s" % (total_gates, total_n))
+HTML = (HTML.replace("__N_BOOKS__", str(len(books)))
+            .replace("__TOTAL_GATES__", "%s/%s" % (total_gates, total_n))
             .replace("__ROWS__", rows)
             .replace("__VERDICTS__", verdicts)
             .replace("__EXTROWS__", ext_rows)

@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ROOT V70 · 多星体与微观引力实验室</title>
+<style>
+:root{color-scheme:dark;--bg:#091421;--panel:#0e2131;--stroke:#2b485f;--bright:#e9f7ff;--muted:#91adc0;--blue:#52b5db;--gold:#efbe6e;--green:#6fe6b0;--red:#ffa29b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 77% 0,#163449,#091421 50%);font:15px/1.6 system-ui,-apple-system,"Noto Sans SC",sans-serif;color:var(--bright)}a{color:var(--blue)}header,.shell{max-width:1240px;margin:auto;padding:22px}header{padding-bottom:5px}h1{font-size:clamp(22px,3vw,35px);margin:0;letter-spacing:.2px}h2{font-size:17px;margin:0 0 12px}h3{font-size:15px;margin:10px 0}.subtitle{color:var(--muted);margin:6px 0 8px}nav{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}button,select,input{font:inherit}button{border:1px solid var(--stroke);border-radius:9px;background:#152e43;color:var(--bright);padding:8px 12px;cursor:pointer}button.active{background:#25526d;border-color:#6cc4e0}.layout{display:grid;grid-template-columns:350px 1fr;gap:16px}.panel{border:1px solid var(--stroke);border-radius:17px;background:linear-gradient(140deg,#10283aee,#0b1b2cee);padding:17px;min-width:0}.field{padding:7px 0 13px;border-bottom:1px solid #234057}.field label{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px;color:#a9c5d5}.field strong{color:#ffffff;font-weight:650}select{background:#163247;border:1px solid #31536a;color:var(--bright);border-radius:8px;padding:9px;width:100%;margin-top:7px}input[type=range]{width:100%;accent-color:#64c0df;margin-top:9px}canvas{width:100%;display:block;border:1px solid #203f54;border-radius:13px;background:#0a1a2a}.planetCanvas{max-height:435px;aspect-ratio:16/9}.chartCanvas{aspect-ratio:16/7;margin-top:13px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:13px 0}.stat{background:#102c3e;border:1px solid #254558;border-radius:11px;padding:11px;min-width:0}.stat small{display:block;color:#a9c3d5;font-size:11px}.stat b{display:block;font-size:clamp(13px,1.8vw,18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.notice{border-left:3px solid var(--gold);padding:10px 13px;color:#e7d5ae;background:#47371955;border-radius:0 8px 8px 0;margin-top:12px}.green{color:var(--green)}.muted{color:var(--muted)}.panel p{margin-top:7px}.mono{font-family:ui-monospace,Consolas,monospace}.hidden{display:none}.foot{font-size:12px;color:var(--muted);margin-top:15px}.labels{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.line{height:1px;background:#254558;margin:12px 0}@media(max-width:880px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}header,.shell{padding:13px}}
+</style></head>
+<body><header><div class="muted" style="font-size:12px;letter-spacing:2px">ROOT RESEARCH LAB · VERSION 70</div><h1>多星体 × 元素组成 × 空间运动</h1><div class="subtitle">从地球引力环境到微观相位，从密度分层到可辨识性——离线科研交互示意</div><nav><button class="active" data-tab="planet">星体力场</button><button data-tab="helix">螺旋运动</button><button data-tab="design">联合实验辨识</button></nav></header>
+<main class="shell" style="padding-top:0"><div class="layout"><aside class="panel">
+<h2>实验参数</h2><div class="field"><label for="body">天体选择</label><select id="body"></select></div>
+<div class="field"><label for="lat">地心纬度 <strong id="latValue"></strong></label><input id="lat" type="range" min="-90" max="90" step="1" value="30"></div>
+<div class="field"><label for="alt">参考半径上的高度 <strong id="altValue"></strong></label><input id="alt" type="range" min="0" max="100" value="5" step="1"></div>
+<div class="field"><label for="yaw">观察角度 <strong id="yawValue"></strong></label><input id="yaw" type="range" min="0" max="360" value="35" step="1"></div>
+<h3>假设性组成差分（非实测）</h3>
+<div class="field"><label for="matA">测试材料 A</label><select id="matA"></select></div>
+<div class="field"><label for="matB">测试材料 B</label><select id="matB"></select></div>
+<div class="field"><label for="lam">Yukawa 衰减长度 <strong id="lamValue"></strong></label><input id="lam" type="range" min="5" max="9" step="0.05" value="7"></div>
+<div class="field"><label for="strength">演示耦合 θ (×10⁻¹⁴) <strong id="strengthValue"></strong></label><input id="strength" type="range" min="-5" max="5" step="0.1" value="0.5"></div>
+<div class="notice">材料 Q 与天体“源电荷”是人为设定的无量纲演示值，绝非真实核物理量。切换参数得到的信号并不代表新力已被发现。</div>
+</aside><section class="panel">
+<div id="planetPane"><h2>地球/行星三维透视与场强</h2><canvas class="planetCanvas" id="sphere" width="950" height="535" aria-label="可转动的球体透视图"></canvas><div id="planetStats" class="stats"></div><canvas class="chartCanvas" id="curve" width="950" height="385" aria-label="引力随高度变化曲线"></canvas><div class="labels"><span>蓝线：球形 + Earth J₂ 引力</span><span>金线：旋转系有效加速度</span><span>标记：当前高度</span></div></div>
+<div id="helixPane" class="hidden"><h2>光速螺旋几何：位置、曲率与挠率</h2><p class="muted">这里只画数学轨迹；不把有质量粒子的整体速度假定为 c。</p><label for="helixAngle">螺旋升角 <strong id="helixAngleValue">35°</strong></label><input id="helixAngle" type="range" min="0" max="85" step="1" value="35"/><canvas id="helixCanvas" width="950" height="520" style="aspect-ratio:16/9"></canvas><div id="helixStats" class="stats"></div><p>条件公式：Rω=v cos λ，u=v sin λ，κ=cos²λ/R，τ=sinλ cosλ/R。这里固定 R=1（示意长度单位）、总速度 v=1（任意单位），不设置真实空间传播速度。</p></div>
+<div id="designPane" class="hidden"><h2>设计矩阵：为什么只换材料仍不能区分所有解释</h2><p>以下是三个明确规定的 <b>假设性特征</b>：Yukawa 点源形状、Kretschmann 曲率比例、旋转强度。参数估计不是对真实观测的拟合。</p><canvas id="rankCanvas" width="950" height="440" style="aspect-ratio:16/8"></canvas><div class="stats"><div class="stat"><small>固定地球环境矩阵秩</small><b>1 / 3</b></div><div class="stat"><small>跨环境合成矩阵秩</small><b class="green">3 / 3</b></div><div class="stat"><small>跨环境样本数</small><b>162（合成）</b></div></div><p>数学证明：在固定位置和来源条件下，若所有候选项都带相同 ΔQ，矩阵每一行都是 ΔQ 乘以固定向量，故秩≤1。改变来源、半径、纬度和材料之后，三个模型函数一般不再共线。满秩不意味着参数误差一定小，也不意味着物理过程真实存在。</p></div>
+<footer class="foot">来源：NASA 行星近似参考、IERS 地球参数。Earth J₂ 仅为二阶近似；其他天体按球形模拟。非完整的 GR/EGM2008/IGRF/真实轨道/天文数字孪生。历史版本与完整推导见 ZIP 内的研究专著。</footer>
+</section></div></main>
+<script>
+const BODIES=/*__BODY_JSON__*/;
+const MAT=/*__MAT_JSON__*/;
+const C=299792458;const $=id=>document.getElementById(id);
+const bodyNames=Object.keys(BODIES),matNames=Object.keys(MAT);
+for(const n of bodyNames){const o=document.createElement('option');o.value=n;o.textContent=n;$('body').appendChild(o)}
+$('body').value='Earth';for(const n of matNames){for(const id of ['matA','matB']){let o=document.createElement('option');o.value=n;o.textContent=n;$(id).appendChild(o)}}$('matA').value='Ti';$('matB').value='Pt';
+let selectedTab='planet';const $v=id=>Number($(id).value);
+function calc(){let b=BODIES[$('body').value],lat=$v('lat')*Math.PI/180,alt=b.r*$v('alt')/100,r=b.r+alt,sl=Math.sin(lat),cl=Math.cos(lat);
+const mu=b.mu,J2=b.j2,x=r*cl,z=r*sl,s2=sl*sl,fac=1.5*J2*mu*b.r*b.r/r**5;
+const gx=-mu*x/r**3+fac*x*(5*s2-1),gz=-mu*z/r**3+fac*z*(5*s2-3);
+const omega=2*Math.PI/(b.spin*3600),cen=omega*omega*x;
+const g=Math.hypot(gx,gz),ge=Math.hypot(gx+cen,gz);
+const tidal=2*mu/r**3,K=48*(mu/(C*C))**2/r**6,redshift=mu*alt/(C*C*b.r*r);
+const lam=10**$v('lam'),factor=Math.exp(-r/lam)*(1+r/lam),theta=$v('strength')*1e-14,eta=theta*(MAT[$('matA').value]-MAT[$('matB').value])*b.Q*factor;
+return {b,r,lat,alt,cl,sl,mu,omega,g,ge,tidal,K,redshift,eta,lam,cen};}
+const sci=(x,d=3)=>Number(x).toExponential(d);
+function stats(){let q=calc();$('latValue').textContent=$v('lat')+'°';$('altValue').textContent=$v('alt')+'% R';$('yawValue').textContent=$v('yaw')+'°';$('lamValue').textContent=sci(q.lam,2)+' m';$('strengthValue').textContent=$v('strength').toFixed(1);
+const values=[['引力场强',q.g.toFixed(5)+' m/s²'],['含旋转的有效值',q.ge.toFixed(5)+' m/s²'],['径向潮汐梯度',sci(q.tidal)+' s⁻²'],['弱场钟频差',sci(q.redshift,4)],['外部曲率 K',sci(q.K)+' m⁻⁴'],['假设性 η（非实测）',sci(q.eta,3)]];
+$('planetStats').innerHTML=values.map(([a,b])=>'<div class="stat"><small>'+a+'</small><b>'+b+'</b></div>').join('');
+return q;}
+function lineCanvas(ctx,a,b,color,width=2){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()}
+function sphere(){let q=calc(),ctx=$('sphere').getContext('2d'),W=950,H=535;ctx.clearRect(0,0,W,H);let cx=470,cy=260,rr=194,yaw=$v('yaw')*Math.PI/180;
+let back=ctx.createRadialGradient(cx-75,cy-80,40,cx,cy,rr);back.addColorStop(0,'#285e79');back.addColorStop(.7,'#11394f');back.addColorStop(1,'#061828');ctx.beginPath();ctx.arc(cx,cy,rr,0,2*Math.PI);ctx.fillStyle=back;ctx.fill();ctx.strokeStyle='#54839a';ctx.lineWidth=1.5;ctx.stroke();
+const pt=(lat,lon)=>{let x=Math.cos(lat)*Math.cos(lon),y=Math.sin(lat),z=Math.cos(lat)*Math.sin(lon);
+let xx=x*Math.cos(yaw)+z*Math.sin(yaw),zz=-x*Math.sin(yaw)+z*Math.cos(yaw);
+return {x:cx+rr*xx,y:cy-rr*y,z:zz}};
+function drawSegments(pointFn,min,max,steps){for(let i=0;i<steps;i++){let p=pointFn(min+(max-min)*i/steps),n=pointFn(min+(max-min)*(i+1)/steps);if(p.z>=-0.03&&n.z>=-0.03){lineCanvas(ctx,[p.x,p.y],[n.x,n.y],'rgba(111,195,218,.40)',1)} }}
+for(let d=-75;d<=75;d+=15){let a=d*Math.PI/180;drawSegments(t=>pt(a,t),-Math.PI,Math.PI,180)}
+for(let d=0;d<360;d+=15){let a=d*Math.PI/180;drawSegments(t=>pt(t,a),-Math.PI/2,Math.PI/2,100)}
+let marker=pt(q.lat,0);ctx.beginPath();ctx.arc(marker.x,marker.y,7,0,Math.PI*2);ctx.fillStyle='#ffce78';ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();
+ctx.fillStyle='#e5f6ff';ctx.font='bold 23px system-ui';ctx.fillText(q.b.name,30,50);ctx.fillStyle='#90adc0';ctx.font='16px system-ui';ctx.fillText('简化旋转透视球体 · 黄点为查询纬度',30,82);ctx.fillText('地心参考半径 '+(q.b.r/1000).toLocaleString('en-US',{maximumFractionDigits:1})+' km',30,112);
+ctx.fillText('请拖动角度滑块或直接在球体上左右拖动',30,H-24);}
+function plot(){let ctx=$('curve').getContext('2d');ctx.clearRect(0,0,950,385);let q=calc(),b=q.b;
+const offX=85,offY=34,szX=810,szY=285;let maxG=b.mu/b.r**2*1.04;
+ctx.font='14px system-ui';ctx.fillStyle='#a6c8db';ctx.fillText('引力加速度 (m/s²)',offX,23);
+for(let k=0;k<=4;k++){let y=offY+szY*k/4;lineCanvas(ctx,[offX,y],[offX+szX,y],'rgba(120,167,193,.16)',1);ctx.fillText((maxG*(1-k/4)).toFixed(1),23,y+4)}
+for(let k=0;k<=4;k++){let x=offX+szX*k/4;ctx.fillText((k*25)+'% R',x-14,offY+szY+25)}
+function draw(which,color){ctx.beginPath();for(let i=0;i<=200;i++){let fract=i/200, r=b.r*(1+fract),lat=q.lat,sl=Math.sin(lat),cl=Math.cos(lat),x=r*cl,z=r*sl,s2=sl*sl,fac=1.5*b.j2*b.mu*b.r*b.r/r**5,gx=-b.mu*x/r**3+fac*x*(5*s2-1),gz=-b.mu*z/r**3+fac*z*(5*s2-3),cen=q.omega**2*x;let val=which==='g'?Math.hypot(gx,gz):Math.hypot(gx+cen,gz),xx=offX+szX*fract,yy=offY+szY*(1-val/maxG);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)}ctx.strokeStyle=color;ctx.lineWidth=3;ctx.stroke()}
+draw('g','#52b5db');draw('eff','#efbe6e');let xx=offX+szX*$v('alt')/100;lineCanvas(ctx,[xx,offY],[xx,offY+szY],'rgba(255,255,255,.6)',1.4);
+ctx.fillStyle='#8fb2c7';ctx.fillText('该图使用球形参考半径；不包含真实地形、潮汐和全部多极矩',offX,374)}
+function helix(){let angle=$v('helixAngle')*Math.PI/180;$('helixAngleValue').textContent=$v('helixAngle')+'°';let co=Math.cos(angle),si=Math.sin(angle),kappa=co*co,tau=si*co;
+$('helixStats').innerHTML=[['环向速度比例',co.toFixed(5)],['轴向速度比例',si.toFixed(5)],['曲率 κ',kappa.toFixed(5)],['挠率 τ',tau.toFixed(5)]].map(([a,b])=>'<div class="stat"><small>'+a+'</small><b>'+b+'</b></div>').join('');
+let ctx=$('helixCanvas').getContext('2d');ctx.clearRect(0,0,950,520);const cx=465,cy=258;
+ctx.beginPath();for(let i=0;i<=700;i++){let t=i/700*8*Math.PI,x=120*Math.cos(t),y=120*Math.sin(t),z=si*t*11,
+px=cx+x*.85+z*.40,py=cy+y*.68-z*.3;if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.strokeStyle='#64d2ea';ctx.lineWidth=3.8;ctx.stroke();
+ctx.fillStyle='#e4f7ff';ctx.font='19px system-ui';ctx.fillText('数学螺旋：曲率 κ = cos²λ / R',26,42);ctx.fillText('挠率 τ = sinλ cosλ / R',26,74);ctx.font='15px system-ui';ctx.fillStyle='#aac3d2';ctx.fillText('R=1，v=1 为示意单位。实际物体不受“内部必以光速”已证实条件约束。',26,494);}
+function rank(){let ctx=$('rankCanvas').getContext('2d');ctx.clearRect(0,0,950,440);let a=[.709107152,1.800325e-17,1.654646e-19],b=[2.566401799,.336595284,.204557979];
+let bars=[a,b],colors=['#dca565','#6fd8ad'];ctx.fillStyle='#dcecf6';ctx.font='20px system-ui';ctx.fillText('奇异值与结构秩（纯数学演示）',30,39);
+for(let k=0;k<2;k++){let off=60+k*445;ctx.fillStyle='#b1cede';ctx.font='16px system-ui';ctx.fillText(k===0?'同一地球环境 · rank=1':'跨天体组合 · rank=3',off,81);
+for(let j=0;j<3;j++){let val=bars[k][j],h=Math.max(4,(Math.log10(val)+20)*10.5),x=off+55+j*98;ctx.fillStyle=colors[k];ctx.fillRect(x,325-h,43,h);ctx.fillStyle='#c6dcec';ctx.font='12px monospace';ctx.fillText(val.toExponential(1),x-10,342);ctx.fillText('σ'+(j+1),x+7,370)}}ctx.fillStyle='#97b7ca';ctx.font='13px system-ui';ctx.fillText('注意：直方图高度为 log 缩放，不代表实验物理强度。',50,414);}
+function update(){stats();sphere();plot();helix();rank()}
+for(const id of ['body','lat','alt','yaw','matA','matB','lam','strength','helixAngle'])$(id).addEventListener('input',update);
+for(const btn of document.querySelectorAll('[data-tab]'))btn.addEventListener('click',()=>{selectedTab=btn.dataset.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));for(const n of ['planet','helix','design'])$(n+'Pane').classList.toggle('hidden',n!==selectedTab);update()});
+const cn=$('sphere');let dragging=false,oldX=0;cn.addEventListener('pointerdown',ev=>{dragging=true;oldX=ev.clientX;cn.setPointerCapture(ev.pointerId)});cn.addEventListener('pointermove',ev=>{if(!dragging)return;let diff=ev.clientX-oldX;oldX=ev.clientX;$('yaw').value=(($v('yaw')+diff*.6)%360+360)%360;update()});cn.addEventListener('pointerup',()=>dragging=false);
+window.ROOTV70={calc,update,BODIES,MAT,description:'All toy charges are artificial; not experimental evidence.'};update();
+</script></body></html>
