@@ -1,0 +1,51 @@
+﻿id,name,equation,proof_status,conditions
+E01,牛顿泊松方程,∇²Φ=4πGρ,E,"弱场静态,牛顿引力"
+E02,球体包围质量,M_enc(r)=4π∫_0^r ρ(t)t²dt,E,球对称
+E03,均匀球密度,ρ=3M/(4πa³),E,均匀球
+E04,球外加速度,g=GM/r²,E,r≥a
+E05,球内加速度,g=GMr/a³,E,r≤a
+E06,左传感器坐标,x_L=-s,Definition,双传感器
+E07,右传感器坐标,x_R=s,Definition,双传感器
+E08,源质量切换,x_M=±d,Definition,源质量左右切换
+E09,距离近端,r_-=d-s,Definition,d>s+a
+E10,距离远端,r_+=d+s,Definition,d>s+a
+E11,共模奇幅度,C_N=GM/2[(d-s)^(-2)+(d+s)^(-2)],E,牛顿源质量
+E12,源位置共模翻转,C(+d)=-C(-d),E,完美镜像
+E13,双传感器偶梯度,D_N=GM/(2s)[(d-s)^(-2)-(d+s)^(-2)],E,梯度分母 2s
+E14,源位置梯度不变,D(+d)=D(-d),E,完美镜像
+E15,ABBA 奇幅度,C_hat=Σ(p_i*y_i)/4,E,p=+--+ 或 -++-
+E16,ABBA 零平均,Σ_i p_i=0,E,4 时点
+E17,ABBA 线性漂移零,Σ_i i*p_i=0,E,等时点
+E18,二次漂移剩余,Σ_i i²*p_i≠0,E,不可盲目宣称全漂移消除
+E19,假动作扣除,C_corr=C_real-C_sham,C,伪差匹配时
+E20,均匀球 Yukawa 因子,F(x)=3(x*cosh(x)-sinh(x))/x³,C,均匀球有限程模型
+E21,Yukawa 作用范围,x=a/λ,Definition,λ>0
+E22,Yukawa 额外势,V_Y=-αGMmF(a/λ)exp(-r/λ)/r,C,候选非筛选第五力
+E23,Yukawa 额外加速度,g_Y=αGMF(a/λ)(1+r/λ)exp(-r/λ)/r²,C,球外
+E24,Yukawa 双传感器幅度,C_Y=GMF/2 Σ_(r=d±s)[(1+r/λ)exp(-r/λ)/r²],C,球外
+E25,数值稳定有限球表达,F*exp(-r/λ)=3[(x-1)exp(-(r-a)/λ)+(x+1)exp(-(r+a)/λ)]/(2x³),E,避免指数上溢
+E26,小 x 展开,F(x)=1+x²/10+x⁴/280+...,E,x≪1
+E27,无限长作用距离极限,lim_{λ→∞}C_Y=C_N,E,β和α退化
+E28,统一测量模型,y(d)=β*C_N(d)+α*C_Y(d)+b+ε,C,固定λ、噪声模型
+E29,设计矩阵,"X=[C_N,C_Y,1]",Definition,至少 3 独立列
+E30,加权最小二乘,θ=(XᵀWX)^(-1)XᵀWy,E,"X满秩,W正定"
+E31,线性估计形式协方差,Cov(θ)=(XᵀWX)^(-1),C,已知独立噪声方差
+E32,可辨识性要求,rank(X)=3,E,三参数
+E33,长程失秩,C_Y→C_N ⇒ rank(X)<3,E,λ→∞
+E34,同形伪差反例,δa_art(d)=α_fake*C_Y(d),E,观测上与新力不可分
+E35,质量偏导,∂C_N/∂M=C_N/M,E,G固定
+E36,距离偏导,∂C_N/∂d=-GM[(d-s)^(-3)+(d+s)^(-3)],E,d>s
+E37,半基线偏导,∂C_N/∂s=GM[(d-s)^(-3)-(d+s)^(-3)],E,d>s
+E38,全基线偏导,∂C_N/∂B=(1/2)∂C_N/∂s,E,B=2s
+E39,倾斜泄露,δa≈g_earth*δθ,C,小角度
+E40,误差传播,σ_C²≈Σ_i(∂C/∂p_i)²σ_i²,C,独立且小误差
+E41,EM 储能,U_B=B²V/(2μ0),E,理想均匀磁场
+E42,总质量当量,ΔM=ΔE_total/c²,E,封闭系统静质量变化
+E43,净能量零,Σ ΔE_internal=0,C,无外部能量交换
+E44,相对 G 幅度,β=G_fit/G_ref,C,M独立准确且无新力时
+E45,不确定度标准化,z=alpha_fit/SE_alpha,C,不包含系统误差
+E46,残差卡方,χ²=Σ(y-Xθ)²/σ²,C,σ已知且独立
+E47,理想 1/r² 退化,C_N≈GM/d²*(1+3s²/d²+...),E,d≫s
+E48,源半径外 Newton 无关,∂C_N/∂a=0,E,球对称且全测点在球外
+E49,源半径 Yukawa 相关,∂C_Y/∂a≠0,C,有限λ的均匀球
+E50,相对光速无量纲化,GM/(dc²),E,引力紧致度

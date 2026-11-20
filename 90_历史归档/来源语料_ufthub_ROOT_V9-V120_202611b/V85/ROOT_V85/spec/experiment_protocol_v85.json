@@ -1,0 +1,21 @@
+{
+  "schema": "ROOT-GCL/2.0",
+  "title": "多源质量—多材料—多距离联合引力诊断（模拟/计划协议）",
+  "science_status": "PROPOSED_ONLY_NOT_CONDUCTED",
+  "simulation_outputs": "SYNTHETIC_NOT_OBSERVED",
+  "hypotheses": {
+    "H0": "普适G0，已建模的质量分布、非球对称和设备系统误差；归一化径向Q符合对应完整源模型，材料差D=0",
+    "H1": "单一有限程、线性可分离的组成依赖媒介；特定近似下D矩阵rank<=1",
+    "H2": "多个媒介/环境屏蔽；允许更高秩或非Yukawa的径向响应",
+    "H_U": "通用源依赖幅度uA；单一来源材料差可为0且与质量标定退化"
+  },
+  "pre_registration_required": ["距离区间及数目", "源质量/材料/密度分布", "测量仪器独立校准", "协方差模型", "有限球尺寸积分模型", "盲分析截止日期", "λ/α参数扫描与多重比较", "结果发布标准"],
+  "reference_constants": {"G_SI": 6.67430e-11, "c_SI": 299792458, "G_status": "measured CODATA input"},
+  "geometry": {"source": "spherical where applicable; measured radius and multipole corrections", "test_materials_minimum": 3, "source_compositions_minimum": 2, "distance_settings_minimum": 4, "sensor_methods_minimum": 2},
+  "controls": ["ABBA/BAAB shuffled source positions", "empty sham actuator", "material-matched dummy", "temperature", "tilt and vibration", "magnetic field", "electrostatics", "independent mass and position calibration", "multipole and support forces"],
+  "measured_outputs": ["raw acceleration with timestamp", "gradient with geometry", "source positions", "test material composition", "temperature/vibration/magnetic controls", "calibration and covariance", "blind key stored separately"],
+  "analysis": ["fit baseline gravity + full multipoles", "Q radial derivative with propagated covariance", "D source-material normalized differential response", "test rank with noise-aware singular values", "compare single/two mediator and nuisance confounds", "provide limits if insensitive"],
+  "decision_rules": ["No claims of new forces from a single fit", "No posterior claim from significance without systematic uncertainty", "Null rank-one matrix alone is not evidence", "Require independent instrument replication and unlocked blind conditions", "Results remain hypotheses until physical observations"],
+  "safety": ["No hardware motion/power control is included", "Industrial mechanical/electrical safety review required before any physical prototype", "Do not imply hazardous magnet or high voltage procedures are validated"],
+  "sources": ["https://physics.nist.gov/cuu/pdf/JPCRD2022CODATA.pdf", "https://pubmed.ncbi.nlm.nih.gov/36179190/", "https://ssd.jpl.nasa.gov/astro_par.html"]
+}

@@ -1,0 +1,51 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROOT V116｜量子诱导引力与 Cassini 理论检验</title>
+<style>
+:root{color-scheme:dark}body{background:#101827;color:#e9f2ff;font:16px/1.65 system-ui,sans-serif;margin:0}
+main{max-width:970px;margin:auto;padding:27px 20px}.panel{background:#1a273a;border:1px solid #39516b;border-radius:14px;padding:22px;margin:14px 0}
+h1{font-size:27px}h2{font-size:20px}p,small{color:#bacce0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
+label{display:block;font-weight:600;margin:14px 0 6px}input{width:100%;accent-color:#6bbdf7}strong{color:#b8e5ff}.mono{font-family:ui-monospace,monospace;word-break:break-word}button{padding:9px 13px;color:white;border:1px solid #59728a;border-radius:7px;background:#2e435e;cursor:pointer}
+svg{background:#111f30;width:100%;border-radius:9px}a{color:#8bd5fd}.measure{margin:10px 0;border-bottom:1px solid #31445b;padding-bottom:5px}
+</style></head><body><main>
+<h1>ROOT V116｜引力尺度与精密引力交叉核验</h1>
+<p>离线实验室：研究已知单标量诱导引力模型是否能同时匹配牛顿常数与长程光偏折。所有结果都是特定模型的条件计算，不代表四力统一。</p>
+<div class="grid">
+<div class="panel"><h2>单标量耦合与 PPN</h2>
+<label>log₁₀ ξ：<span id="xiLog">0</span></label><input id="xi" type="range" min="-10" max="40" step="0.1" value="0">
+<label>log₁₀(作用距离 / λ)：<span id="distLog">0</span></label><input id="dist" type="range" min="-3" max="3" step="0.1" value="0">
+<div class="measure">无质量 BD 参数 ω：<strong class="mono" id="omega"></strong></div>
+<div class="measure">无质量 PPN γ：<strong class="mono" id="gamma"></strong></div>
+<div class="measure">额外标量相对引力强度 α²：<strong class="mono" id="alpha"></strong></div>
+<div class="measure">有限距离局部 γ<sub>loc</sub>：<strong class="mono" id="gloc"></strong></div>
+<div class="measure">按轨道质量归一化的 γ<sub>fit</sub>：<strong class="mono" id="gfit"></strong></div>
+<div class="measure">Cassini 无质量模型 2σ 参考：<strong id="status"></strong></div>
+<button id="reset">恢复默认参数</button>
+</div>
+<div class="panel"><h2>Γ(ξ) 数值曲线</h2><svg id="plot" viewBox="0 0 420 285" role="img" aria-label="Massless PPN gamma versus nonminimal xi">
+<line x1="48" y1="20" x2="48" y2="244" stroke="#b5c6d9"/><line x1="48" y1="244" x2="407" y2="244" stroke="#b5c6d9"/>
+<path id="curve" fill="none" stroke="#92d4ff" stroke-width="2.5"/><line id="point" x1="0" x2="0" stroke="#edb26c" stroke-dasharray="4 4"/>
+<text x="215" y="274" fill="#c4d9ee" font-size="12" text-anchor="middle">log10 ξ from -10 to +40</text></svg>
+<p>蓝线：γ = (1+4ξ)/(1+8ξ)。Cassini 长程无质量模型允许的 ξ 很小，与由 QCD 单尺度恢复 Planck 引力系数所需的 ξ 完全不符。</p></div></div>
+<div class="panel"><h2>QCD 单尺度和引力匹配</h2>
+<p>固定五味、单圈 QCD，α<sub>s</sub>(M<sub>Z</sub>)=0.1180，Λ₅示例≈0.087827 GeV；由实验 G 反算的约化普朗克质量≈2.435×10¹⁸ GeV。</p>
+<div class="measure">EH 系数匹配要求 ξ ≈ <strong>7.689×10³⁸</strong></div>
+<div class="measure">修正长程牛顿常数后的 ξ ≈ <strong>1.025×10³⁹</strong></div>
+<div class="measure">无质量 Cassini 简化 2σ：ξ ≤ <strong>6.25×10⁻⁶</strong></div>
+<div class="measure">允许单独 EH 项时，QCD 标量贡献份额 ≤ <strong>9.02×10⁻²³</strong></div>
+<p>若标量有质量、存在屏蔽或非普遍物质耦合，本页的无质量 Cassini 判断不再直接适用。真实 Cassini 需要光路、轨道及系统误差联合拟合。</p></div>
+<p><small>理论：经典 Jordan 标量—张量 + 已知 QCD 量纲嬗变。仍未推导 G 数值、标准模型规范群和量子引力。</small></p>
+</main><script>
+'use strict';const $=id=>document.getElementById(id);const lim=6.250312515625781e-6;
+const fmt=n=>Number.isFinite(n)?n.toExponential(6):'无定义';
+function redraw(){let t=+$('xi').value;let x=10**t;let d=+$('dist').value;let z=10**d;
+ let a=2*x/(1+6*x);let gam=(1-a)/(1+a);let e=Math.exp(-z);let gLoc=(1-a*e)/(1+a*e);let q=a*(1+z)*e;let gFit=(1-q)/(1+q);
+ $('xiLog').textContent=t.toFixed(1);$('distLog').textContent=d.toFixed(1);
+ $('omega').textContent=fmt(1/(4*x));$('gamma').textContent=fmt(gam);$('alpha').textContent=fmt(a);
+ $('gloc').textContent=fmt(gLoc);$('gfit').textContent=fmt(gFit);
+ $('status').textContent=x<=lim?'条件性相容':'不相容（无质量假设）';
+ const px=u=>48+(u+10)*359/50;const py=g=>244-(g-.49)*220/.52;
+ let curve='';for(let i=0;i<=300;i++){let u=-10+50*i/300,k=10**u,gg=(1+4*k)/(1+8*k);curve+=(i?'L':'M')+px(u).toFixed(2)+' '+py(gg).toFixed(2)+' ';}
+ $('curve').setAttribute('d',curve);$('point').setAttribute('x1',px(t));$('point').setAttribute('x2',px(t));$('point').setAttribute('y1',25);$('point').setAttribute('y2',244);
+}
+['xi','dist'].forEach(id=>$(id).addEventListener('input',redraw));$('reset').addEventListener('click',()=>{$('xi').value=0;$('dist').value=0;redraw()});redraw();
+</script></body></html>

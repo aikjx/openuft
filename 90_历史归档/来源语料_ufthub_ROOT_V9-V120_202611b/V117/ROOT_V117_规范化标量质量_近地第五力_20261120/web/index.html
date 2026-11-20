@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ROOT V117 | 有质量标量第五力实验室</title>
+<style>
+:root{color-scheme:dark;--bg:#080f1d;--panel:#101f34;--line:#2b455f;--fg:#e9f2fd;--muted:#9bb0ca;--a:#62cdf6}
+*{box-sizing:border-box}body{font-family:system-ui,Arial,'Noto Sans CJK SC',sans-serif;background:var(--bg);color:var(--fg);margin:0;line-height:1.7}
+main{max-width:1100px;margin:auto;padding:28px 18px 50px}h1{font-size:30px;line-height:1.2}h2{font-size:18px;margin:0 0 12px}p{color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:730px){.grid{grid-template-columns:1fr}}
+section{background:var(--panel);border:1px solid var(--line);padding:20px;border-radius:15px;margin:16px 0}
+label{display:block;margin:12px 0 2px}input[type=range],select{width:100%;}input{accent-color:var(--a)}select{padding:9px;background:#172840;color:var(--fg);border-radius:8px}
+output{font:600 20px ui-monospace,monospace;color:var(--a)}button{border-radius:8px;background:#243b55;border:1px solid var(--line);padding:9px 12px;color:var(--fg);cursor:pointer}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin:10px 0;border-bottom:1px solid #1c3048;padding:6px 0}
+small{color:var(--muted)}svg{display:block;width:100%;height:auto;background:#0b1c2d;border-radius:9px} .formula{font-family:ui-monospace,monospace;color:#bce7fb;word-break:break-word}
+</style></head><body><main>
+<h1>ROOT V117 · 标量质量、近地第五力与源分布</h1>
+<p>这是指定的经典标量—张量候选模型的离线交互计算器。<strong>不是完整四力统一，也没有通过真实地球数据拟合。</strong></p>
+<div class="grid"><section><h2>模型输入</h2>
+<label for="loglam">四次自耦合 λ₄：<strong id="lamlabel"></strong></label>
+<input type="range" id="loglam" min="-3" max="2" step="0.05" value="0"/>
+<label for="height">距理想球面高度：<strong id="hlabel"></strong></label>
+<input type="range" id="height" min="0" max="2000" step="10" value="0"/>
+<label for="profile">球对称物质分布</label><select id="profile"><option value="uniform">均匀球体（理想模型）</option><option value="inverse_r">密度 ∝ 1/r（理想模型）</option></select>
+<div><button id="reset">恢复 λ₄=1 / 0 km / 均匀球</button></div>
+</section><section><h2>同一作用量推导的结果</h2>
+<div class="row"><span>牛顿校准 ξ</span><output id="xi"></output></div>
+<div class="row"><span>第五力相对强度 a</span><output id="coupling"></output></div>
+<div class="row"><span>规范化标量质量 (eV)</span><output id="mass"></output></div>
+<div class="row"><span>作用程 (km)</span><output id="range"></output></div>
+<div class="row"><span>有限球源第五力 / 牛顿力</span><output id="excess"></output></div>
+<p><small>G 仍为实验输入，用它校准 ξ 并不是由理论预测 G。</small></p>
+</section></div>
+<section><h2>模型算出的球外第五力随高度变化</h2>
+<svg id="plot" viewBox="0 0 660 270" role="img" aria-label="Finite-source Yukawa force profile">
+<line x1="65" y1="12" x2="65" y2="238" stroke="#a9c3da"/><line x1="65" y1="238" x2="640" y2="238" stroke="#a9c3da"/>
+<path id="uplot" fill="none" stroke="#68d1ff" stroke-width="2.8"/>
+<path id="iplot" fill="none" stroke="#ffca86" stroke-dasharray="6 3" stroke-width="2.1"/>
+<line id="cursor" x1="65" x2="65" y1="12" y2="238" stroke="#ffffff" stroke-dasharray="4 5" opacity="0.6"/>
+<text fill="#b8cbd9" font-size="13" x="360" y="260">高度 0 — 2000 km</text>
+<text fill="#b8cbd9" font-size="12" x="78" y="20">对数纵轴：F_Y/F_Newton</text>
+</svg>
+<p><small><span style="color:#68d1ff">━━</span> 均匀球； <span style="color:#ffca86">┄┄</span> 密度 ∝ 1/r。右侧图仅为两种玩具源，不能替代地球五层密度或卫星轨道全局拟合。</small></p>
+</section>
+<section><h2>三个不能跨越的科学边界</h2>
+<p class="formula">mχ² = 2 λ₄ v² / (1+6ξ);　a = 2ξ/(1+6ξ);　ℓ = ħc/(mχc²)</p>
+<p>本示范假定 v=0.08782708 GeV 等于五味单圈 QCD 数学尺度，但<strong>尚未证明自然界存在对应的基本实标量</strong>。远距离 Yukawa 不显著并不说明短距离实验必然通过。</p>
+<p>相同近距离的引力增强可被 GN 的校准吸收，因此应比较不同距离的加速度变化，同时控制地球密度、质量、潮汐与测量误差。ROOT 四力统一及 G 的独立来源仍为 OPEN。</p>
+</section></main>
+<script>
+'use strict';
+const $=s=>document.getElementById(s), v=.0878270801455,mp=2.435323460084e18, hbc=1.973269804e-7, Re=6371000;
+const R=(mp/v)**2,xi=(8*R-1+Math.sqrt((8*R-1)**2+24*R))/12, a=2*xi/(1+6*xi);
+function form(x,u,profile){
+  if(profile==='inverse_r')return ((-Math.expm1(-x))**2)/(x*x)*Math.exp(-u);
+  if(x<.03)return Math.exp(-x-u)*(1+x*x/10+x**4/280+x**6/15120);
+  return 3/(2*x*x*x)*((x-1)*Math.exp(-u)+(x+1)*Math.exp(-2*x-u));
+}
+function force(height,ell,profile){const x=Re/ell,u=height/ell;return a*(1+x+u)*form(x,u,profile);}
+function fmt(z,n=5){return z.toExponential(n)}
+function update(){
+ const lam=10**(+$('loglam').value),km=+$('height').value,profile=$('profile').value;
+ const mass=1e9*Math.sqrt(2*lam)*v/Math.sqrt(1+6*xi),ell=hbc/mass;
+ $('lamlabel').textContent=Number(lam.toPrecision(4)).toString(); $('hlabel').textContent=km+' km';
+ $('xi').textContent=fmt(xi,3);$('coupling').textContent=a.toFixed(6);
+ $('mass').textContent=fmt(mass,5);$('range').textContent=(ell/1000).toFixed(3);
+ $('excess').textContent=fmt(force(km*1000,ell,profile),5);
+ const x1=65,x2=640,y1=12,y2=238;
+ const curve=p=>{let d='';for(let i=0;i<=220;i++){const hh=2000*i/220;const forceVal=Math.max(1e-35,force(hh*1000,ell,p));const yp=y1+(0-Math.max(-16,Math.min(0,Math.log10(forceVal))))/16*(y2-y1);
+ const xx=x1+(x2-x1)*i/220;d+=(i?'L':'M')+xx.toFixed(2)+','+yp.toFixed(2)+' ';}return d;};
+ $('uplot').setAttribute('d',curve('uniform'));$('iplot').setAttribute('d',curve('inverse_r'));
+ const cx=x1+(x2-x1)*km/2000;$('cursor').setAttribute('x1',cx);$('cursor').setAttribute('x2',cx);
+}
+['loglam','height'].forEach(s=>$(s).addEventListener('input',update));$('profile').addEventListener('change',update);
+$('reset').addEventListener('click',()=>{$('loglam').value=0;$('height').value=0;$('profile').value='uniform';update()});update();
+</script></body></html>

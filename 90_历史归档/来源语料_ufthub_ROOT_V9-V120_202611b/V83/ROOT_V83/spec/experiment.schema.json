@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ROOT-GCL/1.1 Research Protocol (simulation-only)",
+  "type": "object",
+  "required": ["version","id","provenance","physics_model","geometry","switching","measurement","controls","safety","acceptance"],
+  "properties": {
+    "version": {"const":"ROOT-GCL/1.1"},
+    "id": {"type":"string","minLength":4},
+    "provenance": {"const":"SYNTHETIC_NOT_OBSERVED"},
+    "physics_model": {"enum":["newtonian_external_sphere","electromagnetic_energy_bookkeeping","electromagnetic_dummy_null"]},
+    "geometry": {"type":"object"},
+    "switching": {"type":"object"},
+    "measurement": {"type":"object"},
+    "controls": {"type":"array","minItems":4,"items":{"type":"string"}},
+    "safety": {"type":"object","required":["hardware_authorized","simulation_only"],"properties":{"hardware_authorized":{"const":false},"simulation_only":{"const":true}}},
+    "acceptance": {"type":"object"}
+  },
+  "additionalProperties":false
+}

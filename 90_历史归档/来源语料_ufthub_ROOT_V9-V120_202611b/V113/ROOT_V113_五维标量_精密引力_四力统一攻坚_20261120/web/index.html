@@ -1,0 +1,73 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROOT V113｜四力统一·精密引力理论审计实验室</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1322;--panel:#172337;--line:#314360;--text:#eff5fd;--sub:#aec0d6;--accent:#70c7fc;--red:#ffb5ab;--green:#a6e9bf}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font:15px/1.65 system-ui,"Microsoft YaHei",sans-serif;margin:0}
+main{max-width:1120px;margin:auto;padding:28px 20px 50px}header{margin-bottom:18px}h1{font-size:27px;margin:0 0 10px}h2{font-size:18px;margin:0 0 12px}
+p{color:var(--sub);margin:6px 0 12px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}label{display:block;font-weight:600;margin:10px 0 4px}
+input[type=range]{width:100%;accent-color:var(--accent)}.value{color:var(--accent);font:600 19px ui-monospace,monospace}
+.note{font-size:12px;color:var(--sub)}.contrast{color:var(--red)}.ok{color:var(--green)}
+button{background:#1e3249;border:1px solid var(--line);color:var(--text);padding:9px 15px;cursor:pointer;border-radius:10px;margin:10px 0}
+.svg{width:100%;background:#0c1727;border-radius:10px;display:block}svg text{fill:#b9c9d8;font:12px system-ui}.metrics{display:flex;gap:14px;flex-wrap:wrap}.mini{flex:1;min-width:120px;background:#0d1b2d;padding:10px;border-radius:9px}.mini strong{display:block;color:var(--accent);font:600 16px ui-monospace,monospace}
+span#status{font-weight:600}footer{color:var(--sub);font-size:13px;margin-top:20px}
+</style></head><body><main><header><h1>ROOT V113｜四力统一：精密引力否决实验室</h1>
+<p>真实实验文献基准 + 条件性数学模型。此页面不显示任何“已证明大统一”的结论。</p></header>
+<div class="grid">
+<section class="card"><h2>① 五维额外标量与 Cassini</h2>
+<label for="w">Brans–Dicke 参数 ω：<span id="wLabel"></span></label><input id="w" type="range" min="0" max="6" step="0.05" value="0">
+<div class="metrics"><div class="mini">PPN γ<strong id="gammaValue">—</strong></div><div class="mini">距离 Cassini 中心<strong id="zValue">—</strong></div><div class="mini">耦合 α²<strong id="alphaValue">—</strong></div></div>
+<p id="status"></p><button id="reset">恢复最简 KK (ω=0)</button>
+<p class="note">Cassini (2003)：γ−1=(2.1±2.3)×10⁻⁵。以简化一维高斯距离显示，并非重做原始数据拟合。</p>
+</section>
+<section class="card"><h2>② 标量质量与局部 Yukawa 修复</h2>
+<label for="mass">标量质量 log₁₀(m/eV)：<span id="massLabel"></span></label><input id="mass" type="range" min="-22" max="-13" step="0.10" value="-17">
+<label for="distance">观察距离 log₁₀(r/AU)：<span id="distLabel"></span></label><input id="distance" type="range" min="-2" max="1" step="0.05" value="0">
+<div class="metrics"><div class="mini">局部 γ(r)<strong id="massGamma">—</strong></div><div class="mini">作用程 λ (AU)<strong id="rangeValue">—</strong></div></div>
+<p class="note contrast">此处 γ(r) 是理想局部弱场模型！不能将 1AU 参数代入视作真正 Cassini 光路拟合。</p>
+</section>
+<section class="card"><h2>③ MICROSCOPE 与材料耦合</h2>
+<label for="delta">材料耦合差 log₁₀|αA−αB|：<span id="deltaLabel"></span></label><input id="delta" type="range" min="-17" max="-6" step="0.2" value="-13">
+<label for="source">源耦合 αS：<span id="sourceLabel"></span></label><input id="source" type="range" min="0" max="1" step="0.01" value="0.3">
+<div class="metrics"><div class="mini">示范 Eötvös η<strong id="etaValue">—</strong></div><div class="mini">保守 2σ 参考包络<strong>6.99×10⁻¹⁵</strong></div></div>
+<p class="note">MICROSCOPE Ti/Pt (2022) 中心 −1.5×10⁻¹⁵。材料标量荷必须由独立模型给定，不能凭 EP 数据反推后声称预测。</p>
+</section>
+<section class="card"><h2>④ 两尺度观测的参数反演</h2>
+<label for="r2">第二观测距离 r₂/r₁：<span id="r2Label"></span></label><input id="r2" type="range" min="1" max="10" step="0.1" value="2">
+<div class="metrics"><div class="mini">二维雅可比行列式<strong id="detValue">—</strong></div><div class="mini">条件数 κ<strong id="condValue">—</strong></div></div>
+<svg class="svg" id="chart" viewBox="0 0 460 220" aria-label="标量质量对局部gamma影响的曲线"><rect x="0" y="0" width="460" height="220" fill="none"/><path id="curve" stroke="#77c4fc" fill="none" stroke-width="2"/><line x1="42" y1="195" x2="440" y2="195" stroke="#789"/><text x="40" y="17">局部模型 |γ(r)−1|（log）</text><text x="190" y="212">log₁₀(m/eV)</text></svg>
+<p class="note">当 r₁=r₂，精确退化为秩≤1；不同尺度可满秩，但低信噪比仍可能无法测出。图形只是理论示意。</p>
+</section>
+</div><footer>研究状态：五维无质量标量的指定极简模型被排除。完整 GR+SU(3)×SU(2)×U(1)、G 的无循环来源、量子 UV 一致性与独立新预言均保持 OPEN。计算不调用网络。</footer>
+</main><script>
+'use strict';const $=id=>document.getElementById(id);const AU=149597870700,HC=1.973269804593025e-7;const center=2.1e-5,sigma=2.3e-5;
+const num=x=>Number.isFinite(x)?x.toExponential(4):'∞';
+function getOmega(){let x=+$('w').value;return x===0?0:10**x;}
+function gam(a,m,r){let u=a*Math.exp(-r*m/HC);return (1-u)/(1+u)}
+function upd(){
+ let w=getOmega(),a=1/(2*w+3),gamma=1-1/(w+2),z=(gamma-1-center)/sigma;
+ $('wLabel').textContent=w===0?'0（最简 KK）':w.toPrecision(4);
+ $('gammaValue').textContent=gamma.toFixed(9);$('alphaValue').textContent=num(a);$('zValue').textContent=z.toFixed(1)+'σ';
+ $('status').textContent=Math.abs(z)<=2?'示范 2σ 窗口内（非独立验证）':'与 Cassini 2σ 示范窗口冲突';
+ $('status').className=Math.abs(z)<=2?'ok':'contrast';
+ let ml=+$('mass').value,dl=+$('distance').value,mm=10**ml,r=AU*10**dl;
+ $('massLabel').textContent=ml.toFixed(2);$('distLabel').textContent=dl.toFixed(2);
+ $('massGamma').textContent=gam(a,mm,r).toFixed(9);$('rangeValue').textContent=num(HC/mm/AU);
+ let delta=10**(+$('delta').value),alphaS=+$('source').value;
+ $('deltaLabel').textContent=(+$('delta').value).toFixed(2);$('sourceLabel').textContent=alphaS.toFixed(2);
+ const factor=(1+r*mm/HC)*Math.exp(-r*mm/HC),dA=(.01+delta)*alphaS*factor,dB=.01*alphaS*factor;
+ let eta=2*(dA-dB)/(2+dA+dB);$('etaValue').textContent=num(eta);
+ let t=+$('r2').value;$('r2Label').textContent=t.toFixed(1);
+ const az=1/3,L=AU;
+ const jac=(rr)=>{let y=Math.exp(-rr/L),u=az*y,da=-2*y/(1+u)**2;return [da,da*az*rr/L]};
+ const j1=jac(L),j2=jac(t*L);let det=j1[0]*j2[1]-j1[1]*j2[0];$('detValue').textContent=num(det);
+ const aa=j1[0]**2+j2[0]**2,bb=j1[1]**2+j2[1]**2,cc=j1[0]*j1[1]+j2[0]*j2[1];
+ const tr=aa+bb,rad=Math.sqrt(Math.max(0,(aa-bb)**2+4*cc*cc));
+ const maxE=(tr+rad)/2,minE=(tr-rad)/2,condition=minE>0?Math.sqrt(maxE/minE):Infinity;
+ $('condValue').textContent=num(condition);
+ let d='';for(let i=0;i<=200;i++) {let xx=-22+i*9/200;let diff=Math.abs(gam(a,10**xx,r)-1);let yy=Math.max(-18,Math.log10(Math.max(1e-18,diff)));let sx=42+i*398/200,sy=195-(yy+18)*170/18;d+=(i?'L':'M')+sx.toFixed(2)+' '+sy.toFixed(2)+' ';}
+ $('curve').setAttribute('d',d);
+}
+['w','mass','distance','delta','source','r2'].forEach(id=>$(id).addEventListener('input',upd));
+$('reset').addEventListener('click',()=>{$('w').value=0;$('mass').value=-17;$('distance').value=0;$('delta').value=-13;$('source').value=.3;$('r2').value=2;upd()});upd();
+</script></body></html>

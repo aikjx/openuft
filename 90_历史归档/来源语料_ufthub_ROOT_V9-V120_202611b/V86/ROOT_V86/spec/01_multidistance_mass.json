@@ -1,0 +1,75 @@
+{
+  "id": "ROOT-V86-01_multidistance_mass",
+  "title": "移动源质量—多距离双传感器",
+  "hypothesis": "Newton+J2+systematics, then pre-registered Yukawa",
+  "design": {
+    "source_mass_kg": 100,
+    "source_radius_m": 0.04,
+    "distances_m": [
+      0.15,
+      0.19,
+      0.24,
+      0.3,
+      0.39,
+      0.51,
+      0.65,
+      0.84,
+      1.08,
+      1.38,
+      1.8
+    ],
+    "source_motion": "A/B/sham randomized",
+    "detector": "double gradiometer OR torsion balance"
+  },
+  "required_raw_columns": [
+    "source position m",
+    "gravitational signal m/s2",
+    "tilt rad",
+    "temperature K",
+    "B field T",
+    "time ISO8601"
+  ],
+  "safety": {
+    "high_field": "requires risk approval",
+    "moving_mass": "mechanical stop and lockout",
+    "human_review": "mandatory before physical instrument operation"
+  },
+  "schema": "ROOT-GCL/2.0",
+  "physics_state": "TEST PROPOSAL, NOT VALIDATED IN REAL HARDWARE",
+  "units": "SI",
+  "data_label": "SYNTHETIC until signed hardware evidence is provided",
+  "stages": [
+    "DEFINE",
+    "DIMENSION",
+    "BASELINE",
+    "CALIBRATE",
+    "RANDOMIZE",
+    "BLIND",
+    "ACQUIRE",
+    "VETO",
+    "INFER",
+    "REPLICATE",
+    "RELEASE"
+  ],
+  "controls": [
+    "source movement",
+    "sham movement",
+    "sensor reversal",
+    "temperature",
+    "tilt",
+    "stray magnetic field",
+    "cable force",
+    "mass/geometry metrology"
+  ],
+  "error_model": {
+    "correlated_noise": "covariance required",
+    "long_term_drift": "measure with interleaved null",
+    "multiple_trials": "pre-register"
+  },
+  "decision_rules": [
+    "do not interpret p alone as physical discovery",
+    "require independent physics sensor and blinded hardware replication",
+    "no fifth-force claim from J2-only Q deviation",
+    "no G prediction from Z=Gc/2"
+  ]
+}

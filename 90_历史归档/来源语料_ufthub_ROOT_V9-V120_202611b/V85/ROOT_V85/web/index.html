@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROOT V85 · 引力耦合跨星体实验室</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,'Segoe UI','Noto Sans SC',sans-serif;--bg:#08111d;--panel:#111f31;--panel2:#15283c;--line:#30465c;--fg:#ebf2f8;--muted:#a5b5c7;--accent:#58c9e6;--gold:#f3c978;--red:#e08b88}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 90% 0%,#142e47 0%,var(--bg) 42%,#09111d 100%);color:var(--fg);line-height:1.52}
+main{width:min(1320px,95vw);margin:auto;padding:28px 4px 54px}header{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:24px}
+.logo{font-size:13px;letter-spacing:.22em;font-weight:800;color:var(--accent)}h1{font-weight:750;font-size:clamp(25px,3.4vw,40px);margin:8px 0}p{margin:9px 0;color:var(--muted)}h2{font-size:18px;margin:0 0 10px}h3{font-size:14px;margin:14px 0 4px}.pill{display:inline-block;border:1px solid #456579;color:#cee6f0;background:#12273a;border-radius:999px;padding:8px 13px;font-size:12px}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px}.panel{border:1px solid var(--line);border-radius:17px;background:var(--panel);padding:20px;box-shadow:0 18px 35px #0002}.stack{display:grid;gap:16px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.control{padding:13px 0;border-top:1px solid #293c50}.control label{display:block;font-size:13px;font-weight:650}.value{color:var(--accent);font-family:ui-monospace,SFMono-Regular,monospace;font-size:13px}input[type=range]{width:100%;margin:10px 0 2px;accent-color:var(--accent)}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.metric{background:var(--panel2);border:1px solid #29445b;border-radius:11px;padding:14px}.metric small{color:var(--muted);display:block}.metric b{font-family:ui-monospace,SFMono-Regular,monospace;font-size:22px;letter-spacing:-.05em;display:block;margin-top:7px;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted)}canvas{width:100%;height:260px;border-radius:8px;background:#0b1725;display:block}table{width:100%;border-collapse:collapse}th,td{text-align:left;border-bottom:1px solid #2a3d51;padding:9px 7px;font-size:12px}th{color:#b8cde0}td{font-variant-numeric:tabular-nums}code{color:var(--gold)}.note{border-left:3px solid var(--gold);background:#26303e;padding:12px 15px;color:#f3dca8;border-radius:3px 9px 9px 3px;font-size:13px}.toggle{display:flex;gap:8px;align-items:center;font-size:13px;padding:11px;border:1px solid #344f63;border-radius:10px;margin-bottom:12px}.foot{font-size:12px;color:#8799ad;margin-top:22px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.panel{padding:16px}}@media(max-width:560px){.metrics{grid-template-columns:1fr}h1{font-size:25px}}
+</style>
+</head><body><main>
+<header><div><div class="logo">ROOT / V85 · THEORY LAB</div><h1>引力常数与跨星体耦合实验室</h1><p>径向形状 Q × 组成响应矩阵 D × 真实物理证据分级</p></div><span class="pill">离线运行 · 假说模拟 · 非真实观测</span></header>
+<div class="layout"><aside class="panel"><h2>候选模型参数</h2><p class="meta">点源 Yukawa + 在径向段恒定的普适修正 u。所有参数为人工假设。</p>
+<div class="control"><div class="row"><label for="alpha">第一新媒介强度 α</label><output class="value" id="alphaVal"></output></div><input type="range" id="alpha" min="-0.35" max="0.5" step="0.005" value="0.15"></div>
+<div class="control"><div class="row"><label for="lambda">作用距离 λ（米）</label><output class="value" id="lambdaVal"></output></div><input type="range" id="lambda" min="0.1" max="2" step="0.01" value="0.35"></div>
+<div class="control"><div class="row"><label for="radius">观测半径 r（米）</label><output class="value" id="radiusVal"></output></div><input type="range" id="radius" min="0.15" max="2.5" step="0.01" value="0.35"></div>
+<div class="control"><div class="row"><label for="universal">通用幅度 u</label><output class="value" id="universalVal"></output></div><input type="range" id="universal" min="-0.25" max="0.3" step="0.005" value="0"></div>
+<div class="control"><div class="row"><label for="alpha2">第二新媒介 β</label><output class="value" id="alpha2Val"></output></div><input type="range" id="alpha2" min="0" max="0.25" step="0.005" value="0"></div>
+<div class="note">重要：实验测得的行星 <code>μ=GM</code> 并不独立确定 G；“rank≤1”只检验一个明确的模型结构，不能证明新力存在。</div></aside>
+<div class="stack"><section class="panel"><h2>径向形状诊断</h2><div class="metrics"><div class="metric"><small>当前 Q（假设）</small><b id="qMetric">—</b></div><div class="metric"><small>标准球对称 Newton</small><b>1.000000</b></div><div class="metric"><small>相对 Newton 幅度</small><b id="fMetric">—</b></div></div><p class="meta">Q = -r g′/(2g)；常数 G、质量 M 的整体幅度抵消，但自转、多极和 GR 修正不能忽略。</p><canvas id="plot" width="820" height="310" role="img" aria-label="径向 Q 曲线模型图"></canvas></section>
+<section class="panel"><h2>不同源 × 不同材料的矩阵检验</h2><p class="meta">显示一个 2×2 的<strong>合成</strong>差分响应矩阵。单独的第一媒介应使行列式≈0；加入独立第二媒介通常偏离。</p><div class="metrics"><div class="metric"><small>差分矩阵 det(D)</small><b id="detMetric">—</b></div><div class="metric"><small>源 1 · 材料对 1</small><b id="d11Metric">—</b></div><div class="metric"><small>源 2 · 材料对 2</small><b id="d22Metric">—</b></div></div><table aria-label="合成材料差矩阵"><thead><tr><th>源体</th><th>测试材料对 P1</th><th>测试材料对 P2</th></tr></thead><tbody><tr><td>S1</td><td id="d11">—</td><td id="d12">—</td></tr><tr><td>S2</td><td id="d21">—</td><td id="d22">—</td></tr></tbody></table><p class="meta" id="rankConclusion">—</p></section>
+<section class="panel"><h2>星体参考：质量与紧致度</h2><p>下表采用公开 JPL 的引力参数 μ 和常用半径进行示意。木星用的是木星系统 μ，因此组合值仅可作近似量级比较；不用于反推每个星球的 G。</p><table><thead><tr><th>天体</th><th>μ = GM (m³/s²)</th><th>表面 g (m/s²)</th></tr></thead><tbody><tr><td>地球</td><td>3.986004355×10¹⁴</td><td id="earth">—</td></tr><tr><td>月球</td><td>4.902800118×10¹²</td><td id="moon">—</td></tr><tr><td>太阳</td><td>1.327124400×10²⁰</td><td id="sun">—</td></tr><tr><td>木星系统（近似）</td><td>1.267127641×10¹⁷</td><td id="jupiter">—</td></tr></tbody></table></section>
+<section class="panel"><h2>对比与科学边界</h2><p>MICROSCOPE 2022 对钛/铂自由落体差给出约 10⁻¹⁵ 水平约束；它限制特定材料组合的耦合乘积，不等于证明所有星体的普适有效 G 不可能随环境变化。</p><p class="meta">已确立：GR 能动张量、Newton 球外形状、轨道 GM、组成差分实验。条件理论：Yukawa、Q 的新力偏离、差分矩阵低秩。开放：G 独立来源、四力统一。</p></section></div></div>
+<p class="foot">ROOT V85 · 文件内所有曲线和可调参数为理论演示。没有连接仪器，没有采集新引力数据。参考：NIST CODATA 2022 · JPL DE440 · MICROSCOPE 2022。无需联网。</p></main>
+<script>
+(function(){'use strict';
+const $=id=>document.getElementById(id);
+const inputIds=['alpha','lambda','radius','universal','alpha2'];
+const v=id=>Number($(id).value);
+const fmt=x=>Number.isFinite(x)?(Math.abs(x)<1e-3&&x!==0?x.toExponential(5):x.toFixed(6)):'无定义';
+function factor(r,lambda){const x=r/lambda;return (1+x)*Math.exp(-x)}
+function qShape(r,a,l,u){const x=r/l,e=Math.exp(-x),d=1+u+a*(1+x)*e;return Math.abs(d)<1e-13?NaN:1+a*x*x*e/(2*d)}
+function makeD(a,b,l){let sources=[{q:.85,r:.3,q2:.2},{q:-.65,r:.6,q2:.9}],pairs=[{d:.5,d2:-.5},{d:-.7,d2:.6}];return sources.map(s=>pairs.map(p=>a*s.q*factor(s.r,l)*p.d + b*s.q2*factor(s.r,2*l)*p.d2))}
+function draw(a,l,u,r){const c=$('plot'),ctx=c.getContext('2d'),W=c.width,H=c.height;ctx.clearRect(0,0,W,H);const left=50,right=W-25,top=18,bottom=H-38;
+const samples=[];let ymin=1,ymax=1;for(let i=0;i<161;i++){let x=.15+i*(2.5-.15)/160,y=qShape(x,a,l,u);if(!Number.isFinite(y))continue;samples.push([x,y]);ymin=Math.min(ymin,y);ymax=Math.max(ymax,y)}
+ymin=Math.min(ymin-.012,.985);ymax=Math.max(ymax+.012,1.015);const px=x=>left+(x-.15)/(2.5-.15)*(right-left),py=y=>bottom-(y-ymin)/(ymax-ymin)*(bottom-top);
+ctx.strokeStyle='#344b60';ctx.lineWidth=1;for(let i=0;i<=4;i++){let yy=top+(bottom-top)*i/4;ctx.beginPath();ctx.moveTo(left,yy);ctx.lineTo(right,yy);ctx.stroke();ctx.fillStyle='#acbece';ctx.font='11px sans-serif';ctx.fillText((ymax-(ymax-ymin)*i/4).toFixed(3),6,yy+3)}
+ctx.strokeStyle='#f3c978';ctx.setLineDash([7,5]);ctx.beginPath();ctx.moveTo(left,py(1));ctx.lineTo(right,py(1));ctx.stroke();ctx.setLineDash([]);
+ctx.strokeStyle='#58c9e6';ctx.lineWidth=3;ctx.beginPath();samples.forEach(([x,y],i)=>{if(i===0)ctx.moveTo(px(x),py(y));else ctx.lineTo(px(x),py(y))});ctx.stroke();
+const y=qShape(r,a,l,u);if(Number.isFinite(y)){ctx.fillStyle='#f0f9ff';ctx.beginPath();ctx.arc(px(r),py(y),5,0,Math.PI*2);ctx.fill()}
+ctx.fillStyle='#9cbbd1';ctx.font='12px sans-serif';ctx.fillText('r = 0.15 m',left,bottom+22);ctx.fillText('2.50 m',right-45,bottom+22)
+}
+function render(){const a=v('alpha'),l=v('lambda'),r=v('radius'),u=v('universal'),b=v('alpha2');inputIds.forEach(id=>$(id+'Val').textContent=v(id).toFixed(3));const q=qShape(r,a,l,u);$('qMetric').textContent=fmt(q);$('fMetric').textContent=fmt(1+u+a*factor(r,l));draw(a,l,u,r);const m=makeD(a,b,l);[['d11',0,0],['d12',0,1],['d21',1,0],['d22',1,1]].forEach(([id,i,j])=>$(id).textContent=fmt(m[i][j]));let det=m[0][0]*m[1][1]-m[0][1]*m[1][0];$('detMetric').textContent=fmt(det);$('d11Metric').textContent=fmt(m[0][0]);$('d22Metric').textContent=fmt(m[1][1]);$('rankConclusion').textContent=b===0?'仅第一媒介：行列式≈0（包括全零矩阵也满足；不是证实新力）。':'加入第二媒介：行列式一般偏离0；真实噪声与伪差也可能导致偏离。';}
+[['earth',3.98600435507e14,6371000],['moon',4.902800118e12,1737400],['sun',1.32712440041279419e20,695700000],['jupiter',1.267127641e17,69911000]].forEach(([id,mu,r])=>$(id).textContent=(mu/(r*r)).toFixed(5));inputIds.forEach(id=>$(id).addEventListener('input',render));render();
+})();
+</script></body></html>

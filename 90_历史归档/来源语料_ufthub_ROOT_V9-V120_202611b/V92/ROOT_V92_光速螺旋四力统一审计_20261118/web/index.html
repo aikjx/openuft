@@ -1,0 +1,49 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ROOT V92 · 空间光速螺旋 / 相对论磁场实验室</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,'Microsoft YaHei',sans-serif;background:#09101f;color:#ecf3ff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 20%,#182c57 0,transparent 56%),#09101f}main{max-width:1180px;margin:auto;padding:28px 20px 40px}h1{font-size:28px;line-height:1.3;margin:0 0 8px;letter-spacing:.01em}h2{font-size:16px;margin:0 0 18px}p{line-height:1.7;color:#b7c6e0}.minor{font-size:13px;color:#8da3c5}.pill{display:inline-block;color:#b9eff9;border:1px solid #3e718e;border-radius:99px;padding:5px 11px;margin-bottom:15px;font-size:12px}section{border:1px solid #344463;border-radius:17px;background:#101b2ecc;padding:20px} .layout{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-top:22px}.choices{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}button{background:#182949;color:#c3d8f6;border:1px solid #4a6389;border-radius:9px;padding:10px 14px;cursor:pointer}button.active{background:#28568b;border-color:#81b5fa;color:#fff}label{display:block;font-size:13px;color:#d4e0f7;margin:20px 0 7px}.sliderline{display:flex;gap:14px;align-items:center}.sliderline input{flex:1;min-width:0;accent-color:#75c9fa}.sliderline span{width:72px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.unitnote{font-size:12px;color:#9daccc;margin-top:22px}.plot{width:100%;height:460px;display:block;background:#0a1529;border-radius:12px;border:1px solid #1e3054}.metrics{margin-top:16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.metric{background:#0e203b;padding:10px 12px;border-radius:8px;border:1px solid #2b476c}.metric .name{font-size:12px;color:#96b2d4}.metric .value{font-size:16px;font-weight:650;margin-top:5px;font-variant-numeric:tabular-nums;word-break:break-all}.warning{padding:12px 14px;background:#35251e;border-left:3px solid #e4b57a;color:#f2d5ac;border-radius:7px;margin-top:18px;font-size:13px;line-height:1.8}.success{background:#122f31;border-left-color:#5bd2c2;color:#b9e6df}.footer{margin-top:22px;color:#91aacb;font-size:13px;line-height:1.8}.hidden{display:none}code{font-family:ui-monospace,monospace;color:#9fe5ff;font-size:12px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.plot{height:320px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body><main><span class="pill">ROOT V92 · THEORY / DEMONSTRATION ONLY · 离线运行</span><h1>空间螺旋、曲率、挠率与四力问题</h1><p>交互对照：<strong>相对论电子在均匀磁场中的真实动力学模型</strong>，以及纯数学的 <strong>v = c 假设轨迹</strong>。后者不能被当作有质量粒子的真实运动证明。</p>
+<div class="layout"><section><h2>参数与模型</h2><div class="choices"><button id="physical" class="active" type="button">电子磁场模型</button><button id="luminal" type="button">总速 c 的数学假设</button></div>
+<div id="physcontrols"><label for="beta">实验室系 v / c</label><div class="sliderline"><input id="beta" type="range" min="0.1" max="0.99" step="0.01" value="0.8"><span id="betaText">0.80</span></div><label for="B">均匀轴向磁场 B</label><div class="sliderline"><input id="B" type="range" min="0.1" max="1" step="0.05" value="0.5"><span id="BText">0.50 T</span></div></div>
+<div id="lumcontrols" class="hidden"><label for="R">假设的螺旋半径 R</label><div class="sliderline"><input id="R" type="range" min="1" max="12" step="0.5" value="4"><span id="RText">4.0 mm</span></div></div>
+<label for="angle">轴向速度分量角度 θ（v_z=v sin θ）</label><div class="sliderline"><input id="angle" type="range" min="0" max="75" step="1" value="30"><span id="angleText">30°</span></div>
+<div class="unitnote">绘图为用于教学的等比例几何投影，不代表外部时空实测值。通过右侧指标核对每一组 SI 单位。</div><div class="warning" id="warning"></div></section>
+<section><canvas id="scene" class="plot" aria-label="螺旋理论轨迹"></canvas><div class="metrics">
+<div class="metric"><div class="name">总速</div><div class="value" id="speed">—</div></div><div class="metric"><div class="name">角频率 ω</div><div class="value" id="omega">—</div></div><div class="metric"><div class="name">空间曲率 κ</div><div class="value" id="kappa">—</div></div><div class="metric"><div class="name">空间挠率 τ</div><div class="value" id="tau">—</div></div><div class="metric"><div class="name">螺旋半径</div><div class="value" id="radius">—</div></div><div class="metric"><div class="name">法向受力</div><div class="value" id="force">—</div></div></div></section></div>
+<div class="footer">闭合公式：<code>κ=Rω²/v²</code>；<code>τ=pω/v²</code>；<code>ω²=v²(κ²+τ²)</code>。在固定坐标系中成立，不赋予 κ、τ 四力共同本源的解释。假设模式仅表示在数学上以 c 作为参数值，并非标准粒子动力学。模型见 <code>../src/helix_physics.py</code>。</div></main>
+<script>
+(()=>{const C=299792458, Q=1.602176634e-19, ME=9.1093837139e-31;let mode='physical';const $=id=>document.getElementById(id);
+function setMode(next){mode=next;$('physical').classList.toggle('active',mode==='physical');$('luminal').classList.toggle('active',mode==='luminal');$('physcontrols').classList.toggle('hidden',mode!=='physical');$('lumcontrols').classList.toggle('hidden',mode!=='luminal');render()}
+$('physical').addEventListener('click',()=>setMode('physical'));$('luminal').addEventListener('click',()=>setMode('luminal'));
+for(let id of ['beta','B','R','angle'])$(id).addEventListener('input',render);
+function fmt(x){return !Number.isFinite(x)?'不适用':Math.abs(x)>=1e5|| (Math.abs(x)>0&&Math.abs(x)<.0001) ? x.toExponential(4) : x.toLocaleString('en-US',{maximumSignificantDigits:6})}
+function draw(R,w,p){
+ const canv=$('scene'), box=canv.getBoundingClientRect(), scale=window.devicePixelRatio||1;
+ canv.width=Math.round(box.width*scale);canv.height=Math.round(box.height*scale);
+ const ctx=canv.getContext('2d');ctx.scale(scale,scale);
+ const W=box.width,H=box.height,turns=3;
+ const raw=(phase)=>{let z=p*phase/w;let x=R*Math.cos(phase),y=R*Math.sin(phase);return [x+.52*z,.38*x-.8*y-.37*z]};
+ let points=[];for(let i=0;i<=800;i++)points.push(raw(i/800*2*Math.PI*turns));
+ let xs=points.map(v=>v[0]),ys=points.map(v=>v[1]);
+ let minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+ let zoom=Math.min((W-100)/Math.max(maxX-minX,1e-15),(H-95)/Math.max(maxY-minY,1e-15));
+ let midX=(minX+maxX)/2,midY=(minY+maxY)/2;
+ const proj=a=>[W*.5+(a[0]-midX)*zoom,H*.52-(a[1]-midY)*zoom];
+ ctx.fillStyle='#0a1529';ctx.fillRect(0,0,W,H);
+ ctx.strokeStyle='#19304f';ctx.lineWidth=1;
+ for(let i=1;i<=8;i++){ctx.beginPath();ctx.moveTo(i*W/9,38);ctx.lineTo(i*W/9,H-22);ctx.stroke();}
+ for(let i=1;i<=5;i++){ctx.beginPath();ctx.moveTo(22,i*H/6);ctx.lineTo(W-22,i*H/6);ctx.stroke();}
+ ctx.beginPath();points.forEach((point,i)=>{let a=proj(point);if(i===0)ctx.moveTo(...a);else ctx.lineTo(...a)});ctx.strokeStyle='#7ecaff';ctx.lineWidth=3;ctx.stroke();
+ let end=proj(points[points.length-1]);ctx.fillStyle='#ffc983';ctx.beginPath();ctx.arc(end[0],end[1],5,0,Math.PI*2);ctx.fill();
+ ctx.font='12px system-ui';ctx.fillStyle='#a4c2df';ctx.fillText(mode==='physical'?'Relativistic magnetic helix · theory only':'v=c path · hypothetical geometry only',16,26);
+}
+function render(){let beta=Number($('beta').value), B=Number($('B').value),Rmm=Number($('R').value),angle=Number($('angle').value),rad=angle*Math.PI/180;$('betaText').textContent=beta.toFixed(2);$('BText').textContent=B.toFixed(2)+' T';$('RText').textContent=Rmm.toFixed(1)+' mm';$('angleText').textContent=angle+'°';
+let v,R,w,p,gamma,force;
+if(mode==='physical'){v=beta*C;gamma=1/Math.sqrt(1-beta*beta);w=Q*B/(gamma*ME);R=v*Math.cos(rad)/w;p=v*Math.sin(rad);force=Q*B*v*Math.cos(rad);$('warning').classList.add('success');$('warning').textContent='已知电磁模型：|ω|=|q|B/(γm)，法向力=|q|v⊥B。它是相对论洛伦兹力的数值演示，不能独立推出电磁力或其他三力。'}
+else{v=C;R=Rmm/1000;w=C*Math.cos(rad)/R;p=C*Math.sin(rad);gamma=Infinity;force=NaN;$('warning').classList.remove('success');$('warning').textContent='仅为几何假设：总速度设置为 c，同时允许非零轴向和横向分量；有质量粒子对应 γ→∞，不能计算有限的相对论受力。平直真空中的自由光子也不能未经外场假设就采用非直线螺旋。'}
+let k=R*w*w/(v*v),tau=p*w/(v*v);
+$('speed').textContent=(v/C).toFixed(3)+' c';$('omega').textContent=fmt(w)+' rad/s';$('kappa').textContent=fmt(k)+' m⁻¹';$('tau').textContent=fmt(tau)+' m⁻¹';$('radius').textContent=fmt(R*1000)+' mm';$('force').textContent=Number.isFinite(force)?fmt(force)+' N':'不适用';draw(R,w,p);
+window.__v92State={mode,beta,B,angle,R,p,omega:w,kappa:k,tau,speed:v,force,closureError:Math.abs(w*w-v*v*(k*k+tau*tau))/(w*w)};
+}
+window.addEventListener('resize',render);render();})();
+</script></body></html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ROOT V118｜四高度引力一致性实验室</title>
+<style>
+:root{color-scheme:dark;--bg:#0b121e;--panel:#172335;--edge:#31435e;--fg:#edf3fc;--muted:#aebdce;--accent:#8bcafa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+main{max-width:1080px;margin:auto;padding:35px 20px}h1{font-size:29px;margin:0 0 12px}h2{font-size:18px;margin-top:0}
+.sub{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media(max-width:730px){.grid{grid-template-columns:1fr}}.card{border:1px solid var(--edge);background:var(--panel);border-radius:16px;padding:20px;margin-bottom:16px}
+label{display:block;margin:12px 0 5px}input[type=range]{width:100%;accent-color:var(--accent)}select{font-size:15px;padding:8px;background:#22344a;color:var(--fg);border:1px solid var(--edge);border-radius:6px;max-width:100%}
+.kpi{color:var(--accent);font:600 20px ui-monospace,Consolas,monospace}.small{font-size:12px;color:var(--muted)}
+code{color:#a3ddff}.row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:7px 0;border-bottom:1px solid #2c3a4e}button{border:1px solid #607b98;color:var(--fg);background:#264564;border-radius:8px;padding:9px 12px;cursor:pointer}a{color:#93cbff}
+svg{background:#0c1727;border-radius:8px;width:100%;height:auto}
+.status{font-weight:600} .note{background:#192f47;border-radius:10px;padding:12px;color:#ccdaea}
+</style></head><body><main><h1>ROOT V118 · 四高度引力一致性实验室</h1>
+<p class="sub">球外线性单 Yukawa 模型：源密度修复、三高度反演、第四高度留出检验、近圆轨道进动。所有读数是合成理论数值，不是卫星实测。</p>
+<div class="grid"><section class="card">
+<h2>选择理论参数</h2><label for="profile">地球密度近似</label>
+<select id="profile"><option value="earth_analytic">2026 解析地球密度近似</option><option value="five_shell_reference">2026 五层球文献参考</option><option value="uniform">均匀球</option><option value="inverse_r">可积 1/r 球</option></select>
+<label for="ell">主标量作用程：<strong id="ellLabel"></strong> km</label><input type="range" id="ell" min="50" max="500" step="1" value="125">
+<label for="alpha">主标量强度：<strong id="alphaLabel"></strong></label><input type="range" id="alpha" min="0.02" max="0.5" step="0.01" value="0.33">
+<label for="secondary">第二标量强度（固定作用程 300 km）：<strong id="secondaryLabel"></strong></label><input type="range" id="secondary" min="0" max="0.25" step="0.01" value="0">
+<div class="row"><span>地表第五力 / Newton</span><span class="kpi" id="surface"></span></div>
+<div class="row"><span>400 km 理论第五力</span><span class="kpi" id="force400"></span></div>
+<div class="row"><span>400 km 近圆轨道额外进动</span><span class="kpi" id="precession"></span></div>
+<button id="reset">恢复基准（125 km, 0.33）</button></section>
+<section class="card"><h2>四高度留出检验</h2>
+<p class="small">四点高度固定为 0、400、800、1200 km。前三点拟合一个作用程及两种幅度；第四点不参与拟合。</p>
+<div class="row"><span>前三点差值比</span><span class="kpi" id="ratio"></span></div>
+<div class="row"><span>拟合单一作用程</span><span class="kpi" id="inferred"></span></div>
+<div class="row"><span>第四点预测 K</span><span class="kpi" id="pred"></span></div>
+<div class="row"><span>第四点真实合成 K</span><span class="kpi" id="truth"></span></div>
+<div class="row"><span>第四点相对残差</span><span class="kpi" id="resid"></span></div>
+<p class="note" id="interpretation">仅单一作用程时应严格闭合；加入第二个作用程后，第四点一般无法通过。</p>
+</section></div>
+<section class="card"><h2>不同高度的理论表观 GM</h2>
+<svg role="img" aria-label="Four synthetic observed gravitational parameters by altitude" id="plot" viewBox="0 0 800 280"><line x1="50" y1="235" x2="760" y2="235" stroke="#8597b0"/><line x1="50" y1="20" x2="50" y2="235" stroke="#8597b0"/>
+<path id="curve" d="" stroke="#8bcafa" stroke-width="3" fill="none"/><g id="dots"></g><text x="400" y="272" text-anchor="middle" fill="#a8bcd2">Height above Earth (0–1200 km)</text><text x="22" y="20" fill="#a8bcd2" font-size="12">K</text></svg>
+<p class="small">曲线采用相对变化以便查看；真实地球的 J₂、其它球谐项、潮汐、大气阻力和 GR 修正并未输入。</p></section>
+<section class="card"><h2>数学身份与科学边界</h2><p><code>K(r)=GM[1+C(1+r/ℓ)e⁻ʳ/ℓ]</code></p>
+<p><code>1/ℓ=1/r−K″(r)/K′(r)</code></p><p><code>K″²−K‴K′−K′²/r²=0</code>，其中 K′≠0。</p>
+<p>这些结论仅针对球外、线性、单一作用程的模型。它们是测试模型的必要条件，不是已经测量到第五力，也不意味着建立了四力共同本源。</p>
+<p class="small">理论密度公式参考 P. Fayet 2026，<a href="https://link.springer.com/article/10.1140/epjc/s10052-026-15933-4">公开论文</a>。如存在非普遍物质耦合，MICROSCOPE 等实验还会提供独立限制，但不能直接套用其针对其它耦合的数值结果。</p></section>
+</main>
+<script>
+'use strict';
+const R=6371000, H=[0,400000,800000,1200000],$=id=>document.getElementById(id);
+const FIVE=[[.5,1],[.1333,.9953],[.1715,.8948],[.1929,.5462],[.0023,.1916]];
+function uni(x){if(x<0.02)return Math.exp(-x)*(1+x*x/10+x*x*x*x/280);return 1.5*((x-1)+(x+1)*Math.exp(-2*x))/(x*x*x)}
+function scaled(x,p){if(p==='uniform')return uni(x);if(p==='inverse_r')return Math.pow(-Math.expm1(-x)/x,2);
+if(p==='five_shell_reference')return FIVE.reduce((acc,[w,f])=>acc+w*Math.exp(-(1-f)*x)*uni(f*x),0);
+if(x<.04)return Math.exp(-x)*(1+x*x/12+11*x*x*x*x/4032);
+const z=Math.exp(-2*x),y=Math.exp(-x);
+return ((7*x*x-24+9*x)+(7*x*x-24-9*x)*z+(-8*x*x+48)*y)/(8*x**4)}
+function excess(h,ell,alpha,profile){let x=R/ell,u=h/ell;return alpha*(1+x+u)*scaled(x,profile)*Math.exp(-u)}
+function uvalue(h,ell){return (1+(R+h)/ell)*Math.exp(-h/ell)}
+function ratioEll(ell){let a=uvalue(H[0],ell),b=uvalue(H[1],ell),c=uvalue(H[2],ell);return (a-b)/(b-c)}
+function inverseRange(ratio){let low=20000,high=5e7;if(ratioEll(low)<ratio||ratioEll(high)>ratio)return NaN;
+for(let i=0;i<95;i++){const mid=(low+high)/2;if(ratioEll(mid)>ratio)low=mid;else high=mid}return (low+high)/2}
+function calc(){const ell=(+$('ell').value)*1000,alpha=+$('alpha').value,sec=+$('secondary').value,prof=$('profile').value;
+$('ellLabel').textContent=(ell/1000).toFixed(0);$('alphaLabel').textContent=alpha.toFixed(2);$('secondaryLabel').textContent=sec.toFixed(2);
+const y=h=>excess(h,ell,alpha,prof)+excess(h,300000,sec,prof),K=H.map(h=>1+y(h));
+$('surface').textContent=(100*y(0)).toFixed(4)+'%';$('force400').textContent=(100*y(400000)).toFixed(5)+'%';
+const r=R+400000,shift=alpha*(r/ell)**2*scaled(R/ell,prof)*Math.exp(-400000/ell)/(1+excess(400000,ell,alpha,prof));
+$('precession').textContent=(shift<1? 360*(1/Math.sqrt(1-shift)-1):NaN).toFixed(3)+'°';
+let ratio=(K[0]-K[1])/(K[1]-K[2]),fit=inverseRange(ratio);
+$('ratio').textContent=ratio.toFixed(6);$('inferred').textContent=isFinite(fit)?(fit/1000).toFixed(3)+' km':'超出范围';
+let pred=NaN,resid=NaN;if(isFinite(fit)){let A=uvalue(0,fit),B=uvalue(H[1],fit),D=(K[0]-K[1])/(A-B),B0=K[0]-D*A;pred=B0+D*uvalue(H[3],fit);resid=(K[3]-pred)/B0;}
+$('pred').textContent=isFinite(pred)?pred.toFixed(9):'—';$('truth').textContent=K[3].toFixed(9);$('resid').textContent=isFinite(resid)?resid.toExponential(4):'—';
+$('interpretation').textContent=sec>0?'已加入第二个标量作用程。前三点可伪装成单尺度，第四点会检查模型错配。':'单尺度基准：第四点在计算误差内与模型预测一致。';
+let min=Math.min(...K),max=Math.max(...K),dif=Math.max(max-min,1e-10),xs=H.map(h=>50+710*h/1200000),ys=K.map(v=>230-195*(v-min)/dif);
+$('curve').setAttribute('d',K.map((v,i)=>(i?'L':'M')+xs[i].toFixed(2)+' '+ys[i].toFixed(2)).join(' '));
+$('dots').innerHTML=K.map((v,i)=>'<circle cx="'+xs[i]+'" cy="'+ys[i]+'" r="5" fill="#b8e4ff"/>').join('');}
+for(const id of ['profile','ell','alpha','secondary'])$(id).addEventListener('input',calc);
+$('reset').addEventListener('click',()=>{$('profile').value='earth_analytic';$('ell').value=125;$('alpha').value=.33;$('secondary').value=0;calc()});
+calc();
+</script></body></html>

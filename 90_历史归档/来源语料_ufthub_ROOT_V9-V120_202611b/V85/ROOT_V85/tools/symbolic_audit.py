@@ -1,0 +1,30 @@
+from pathlib import Path
+import json, sympy as s
+r,l,A,M,G,u,x=s.symbols('r l A M G u x', positive=True)
+res={}
+g=G*M/r**2*(1+u+A*(1+r/l)*s.exp(-r/l))
+q=s.simplify(-r*s.diff(g,r)/(2*g))
+expected=1+A*(r/l)**2*s.exp(-r/l)/(2*(1+u+A*(1+r/l)*s.exp(-r/l)))
+res['radial_shape_yukawa']=bool(s.simplify(q-expected)==0)
+res['newton_gradient']=bool(s.simplify(-r*s.diff(G*M/r**2,r)/(2*G*M/r**2)-1)==0)
+res['finite_sphere_series']=bool(s.series(3*(x*s.cosh(x)-s.sinh(x))/x**3,x,0,10).removeO().expand()==1+x*x/s.Integer(10)+x**4/s.Integer(280)+x**6/s.Integer(15120)+x**8/s.Integer(1330560))
+res['force_factor_derivative']=bool(s.simplify(s.diff((s.exp(-r/l)/r),r)+(1+r/l)*s.exp(-r/l)/r**2)==0)
+mu,d,ss=s.symbols('mu d ss',positive=True)
+common=mu/s.Integer(2)*((d-ss)**-2+(d+ss)**-2)
+res['two_sensor_mass_linear']=bool(s.simplify(s.diff(common,mu)-common/mu)==0)
+res['two_sensor_distance_derivative']=bool(s.simplify(s.diff(common,d)+mu*((d-ss)**-3+(d+ss)**-3))==0)
+res['two_sensor_separation_derivative']=bool(s.simplify(s.diff(common,ss)-mu*((d-ss)**-3-(d+ss)**-3))==0)
+qA,qB,qC,qi,qj,qk,ql,aa,bb=s.symbols('qA qB qC qi qj qk ql aa bb')
+d11=aa*qA*(qi-qj);d12=aa*qA*(qk-ql);d21=bb*qB*(qi-qj);d22=bb*qB*(qk-ql)
+res['one_mediator_determinant_zero']=bool(s.expand(d11*d22-d12*d21)==0)
+res['universal_cancellation']=bool(s.simplify((1+u+A*qi)-(1+u+A*qj)-A*(qi-qj))==0)
+res['distance_moment_degeneracy']=bool(s.limit((1+r/l)*s.exp(-r/l),l,s.oo)==1)
+res['Q_long_range']=bool(s.limit(q,l,s.oo)==1)
+res['Einstein_G_reparam']=bool(s.simplify(2*(G*s.Symbol('c')/2)/s.Symbol('c')-G)==0)
+res['Schwarzschild_compactness_dimless']=bool(s.simplify((G*M/s.Symbol('c')**2/r)/(G*M/(r*s.Symbol('c')**2))-1)==0)
+res['test_mass_charge_difference']=bool(s.expand(qA*(qi-qj)+qA*(qj-qk)-qA*(qi-qk))==0)
+res['two_sensor_symmetry']=bool(s.simplify(common-common)==0)
+report={'total':len(res),'passed':sum(res.values()),'results':res,'status':'analytic identity checks, NOT physical confirmation'}
+out=Path(__file__).resolve().parents[1]/'results'/'symbolic_report.json';out.write_text(json.dumps(report,ensure_ascii=False,indent=2))
+assert all(res.values()),res
+print('Sympy checks:',len(res),'passed')

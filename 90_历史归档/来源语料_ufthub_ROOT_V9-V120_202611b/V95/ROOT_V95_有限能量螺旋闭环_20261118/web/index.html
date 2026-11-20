@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ROOT V95 · 有限磁能内外螺旋实验室</title>
+<style>
+:root{font-family:system-ui,-apple-system,'Noto Sans SC',sans-serif;color-scheme:dark;background:#0b1020;color:#f2f5ff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 10%,#182146,#080d1b 52%);min-height:100vh}.wrap{max-width:1180px;margin:auto;padding:24px}h1{font-size:clamp(23px,3vw,38px);margin:8px 0}h2{font-size:17px;margin-top:0;color:#c6d6ff}.sub{color:#a9b7d5;font-size:14px;line-height:1.6}.head{display:flex;align-items:center;gap:10px;color:#81b5ff;font-weight:700;letter-spacing:2px}.chip{background:#243662;border:1px solid #44659d;color:#b9d9ff;border-radius:50px;padding:5px 11px;font-size:12px}.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,1fr);gap:18px;margin-top:20px}.panel{border:1px solid #2c3962;background:#111a30c9;border-radius:18px;padding:20px;box-shadow:0 20px 50px #0004}canvas{display:block;width:100%;height:auto;background:radial-gradient(circle at center,#19274c,#081122 80%);border-radius:12px}label{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#d3dcf1;font-size:14px;margin-bottom:9px}input[type=range]{width:100%;accent-color:#80bdff;margin:0 0 20px;cursor:pointer}.metric{padding:12px;border-radius:10px;background:#101b34;border:1px solid #324261;margin:10px 0;display:flex;justify-content:space-between;gap:16px;align-items:center}.metric strong{font-size:18px;white-space:nowrap;color:#e8f1ff}.metric span{color:#a5b6d7;font-size:12px}.warning{border-left:3px solid #f5bf78;background:#30281f;color:#f5d6ae;padding:12px;border-radius:7px;font-size:13px;line-height:1.7;margin:16px 0 0}.foot{padding-top:24px;color:#8b9dbd;font-size:12px}.note{color:#a7c6ff;font-size:12px;margin-top:10px}.controls{margin-top:12px}.buttons{display:flex;gap:8px}button{background:#263b66;color:#e8efff;border:1px solid #50668e;border-radius:9px;padding:8px 12px;cursor:pointer}button:hover{background:#385487}@media(max-width:760px){.layout{grid-template-columns:1fr}.wrap{padding:13px}}
+</style></head><body><div class="wrap">
+<div class="head">ROOT · SCIENTIFIC LAB <span class="chip">V95 THEORY</span></div>
+<h1>有限磁能 · 内外螺旋闭环</h1>
+<div class="sub">已知 Maxwell–Lorentz 动力学的条件逆向构造｜有限支撑静磁场｜测试粒子轨迹与稳定性边界<br>本页面只展示模型，不是统一场论证明或真实实验。</div>
+<div class="layout"><section class="panel"><h2>三叶结：空间闭合的指定轨迹</h2><canvas width="760" height="530" id="orbital" aria-label="内外螺旋轨迹的投影视图"></canvas><div class="note">线条颜色表示轨道在环面上的内外位置；线宽仅示意磁场管道，不代表真实线圈。</div><div class="buttons controls"><button id="pause" type="button">暂停动画</button><button id="reset" type="button">重置视角</button></div></section>
+<aside class="panel"><h2>模型参数</h2>
+<label for="eps">局域磁管半径 ε <output id="epsVal">0.30 mm</output></label><input id="eps" type="range" min="0.10" max="0.60" value="0.30" step="0.01">
+<label for="beta">电子速度 v/c <output id="betaVal">0.80</output></label><input id="beta" type="range" min="0.20" max="0.95" value="0.80" step="0.01">
+<label for="angle">视角方位 <output id="angleVal">28°</output></label><input id="angle" type="range" min="0" max="360" value="28" step="1">
+<div class="metric"><span>场能量 U<sub>B</sub>（细管近似）</span><strong id="energy">3.896×10⁻⁴ J</strong></div>
+<div class="metric"><span>轨道磁场幅值范围</span><strong id="bRange">0.109–0.256 T</strong></div>
+<div class="metric"><span>一圈时间</span><strong id="period">0.547 ns</strong></div>
+<div class="metric"><span>经典辐射能（指定轨迹）</span><strong id="radiation">8.148×10⁻²⁵ J</strong></div>
+<div class="warning">重要边界：存在性不等于稳定性。场源电流可能与轨道空间重叠；经典辐射耗能不能由静磁场直接补偿。所有结果均为理论计算。</div>
+</aside></div><div class="foot">R=10 mm，a=2 mm，m=2，n=3（固定）。无网络依赖。能量控件显示 leading-order 的 ε² 近似；精确体积分数据请见 ZIP 的 CSV。</div>
+</div><script>
+(()=>{
+ const $=id=>document.getElementById(id),c=$('orbital'),ctx=c.getContext('2d');let anim=true,phase=0;const baseEnergy=0.0003895804426023451; const mm=0.001;
+ const pretty=(x,n=3)=>x.toExponential(n).replace('e-','×10⁻').replace('e+','×10⁺');
+ function model(u){const R=10,a=2,m=2,n=3,r=R+a*Math.cos(n*u);return [(r*Math.cos(m*u)),(r*Math.sin(m*u)),a*Math.sin(n*u),Math.cos(n*u)];}
+ function draw(){const a=Number($('angle').value)*Math.PI/180,pitch=.42;const p=(u)=>{const t=model(u),xx=t[0]*Math.cos(a)-t[1]*Math.sin(a),yy=t[0]*Math.sin(a)+t[1]*Math.cos(a);return [380+xx*18,275+(yy*Math.sin(pitch)-t[2]*Math.cos(pitch))*18,t[3]];};
+ ctx.clearRect(0,0,760,530);ctx.strokeStyle='#36507d';ctx.lineWidth=1;
+ for(let j=-8;j<=8;j++){ctx.beginPath();ctx.moveTo(0,275+j*32);ctx.lineTo(760,275+j*32);ctx.stroke();}
+ const segments=[];for(let k=0;k<1500;k++){let u=2*Math.PI*k/1500,v=2*Math.PI*(k+1)/1500;let s=p(u),e=p(v);segments.push({s,e,depth:(s[1]+e[1])/2,rho:(s[2]+e[2])/2});}
+ segments.sort((a,b)=>b.depth-a.depth);
+ const eps=Number($('eps').value);ctx.lineCap='round';
+ for(const seg of segments){let col=(seg.rho+1)/2;ctx.strokeStyle=`hsla(${190+80*(1-col)},85%,${54+18*col}%,0.94)`;ctx.lineWidth=Math.max(1.3,2.8+eps*6);ctx.beginPath();ctx.moveTo(seg.s[0],seg.s[1]);ctx.lineTo(seg.e[0],seg.e[1]);ctx.stroke();}
+ const dot=p(phase);ctx.beginPath();ctx.fillStyle='#ffca7f';ctx.shadowColor='#ffc66c';ctx.shadowBlur=17;ctx.arc(dot[0],dot[1],6,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ }
+ function update(){let eps=Number($('eps').value),beta=Number($('beta').value),angle=Number($('angle').value);$('epsVal').textContent=eps.toFixed(2)+' mm';$('betaVal').textContent=beta.toFixed(2);$('angleVal').textContent=angle+'°';
+ let g=1/Math.sqrt(1-beta**2),g0=1/Math.sqrt(1-.8**2),fac=(g*beta/(g0*.8))**2;
+ const e=baseEnergy*(eps/.3)**2*fac;$('energy').textContent=e.toExponential(3)+' J';
+ const scale=g*beta/(g0*.8);$('bRange').textContent=(.108964*scale).toFixed(3)+'–'+(.255744*scale).toFixed(3)+' T';
+ $('period').textContent=(.131298659444488/(beta*299792458)*1e9).toFixed(3)+' ns';
+ const r=8.147688736589692e-25*(g/g0)**4*(beta/.8)**3;$('radiation').textContent=r.toExponential(3)+' J';draw();
+ }
+ for(const id of ['eps','beta','angle'])$(id).addEventListener('input',update);
+ $('pause').addEventListener('click',()=>{anim=!anim;$('pause').textContent=anim?'暂停动画':'继续动画'});
+ $('reset').addEventListener('click',()=>{$('angle').value=28;phase=0;update()});
+ function tick(){if(anim){phase=(phase+.01)%(Math.PI*2);draw()}requestAnimationFrame(tick)}update();tick();
+})();
+</script></body></html>

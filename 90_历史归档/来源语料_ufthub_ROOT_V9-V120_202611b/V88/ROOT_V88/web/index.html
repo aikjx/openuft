@@ -1,0 +1,77 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ROOT V88 · 量子引力纠缠与经典替代检验</title>
+<style>
+:root{font-family:Inter,'Segoe UI','Microsoft Yahei',sans-serif;color:#e9f0ff;background:#0a1121}*{box-sizing:border-box}body{margin:0}header{padding:32px 5% 22px;background:radial-gradient(at 80% 20%,#18356f 0,transparent 45%),#0d1830;border-bottom:1px solid #2b3955}.eyebrow{font-size:12px;letter-spacing:2px;color:#89a8f3}h1{font-size:clamp(22px,3vw,38px);margin:12px 0}header p{color:#aec0df;max-width:850px;line-height:1.8}.pill{display:inline-block;background:#263659;border:1px solid #50689b;border-radius:20px;padding:5px 12px;color:#c9d7fa;font-size:12px}.wrap{max-width:1330px;margin:0 auto;padding:22px 26px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric,.panel{background:#111e36;border:1px solid #2c3a56;border-radius:16px;padding:18px}.metric label{font-size:12px;color:#a8b8da}.metric strong{display:block;font-size:clamp(16px,2vw,25px);margin:9px 0;color:#f6fcff;font-variant-numeric:tabular-nums}.metric small{color:#8195bc}.layout{display:grid;grid-template-columns:330px 1fr;gap:16px;margin-top:16px}.panel h2{font-size:17px;margin:0 0 15px}.control{margin:16px 0}.control header{padding:0;border:0;background:none;display:flex;justify-content:space-between;gap:8px}.control label{font-size:12px;color:#bdcdee}.control output{font-size:12px;color:#78e0cc;font-variant-numeric:tabular-nums}input[type=range]{width:100%;margin-top:10px;accent-color:#81aeff}.notice{font-size:12px;line-height:1.75;color:#b2c2e3;background:#152643;border-left:3px solid #74c1e1;padding:12px;border-radius:6px}.warning{border-left-color:#f5c178}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 18px}button{background:#1b2a47;color:#bacdec;border:1px solid #344d79;border-radius:10px;padding:10px 16px;cursor:pointer}button.active{background:#2861a4;color:white;border-color:#80b9ff}.graph{background:#0b162b;border:1px solid #29415f;border-radius:12px;width:100%;height:280px}.math{font-family:Cambria,'Times New Roman',serif;color:#cde3ff;line-height:1.8}.results{display:grid;grid-template-columns:1fr 1fr;gap:14px}pre{white-space:pre-wrap;word-break:break-word;font-size:13px;line-height:1.7;background:#0c1930;padding:14px;border-radius:12px;border:1px solid #304060;color:#bed0ed}.foot{font-size:12px;color:#91a6c6;padding-top:18px}.ok{color:#74dfba}.bad{color:#ffbc83}@media(max-width:900px){.layout{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}}@media(max-width:540px){.wrap{padding:13px}.metrics{gap:7px}.metric,.panel{padding:13px}.results{grid-template-columns:1fr}}
+</style></head><body><header><div class="eyebrow">ROOT · QUANTUM GRAVITY LAB / V88 · 2026-11-18</div><h1>双量子质量 · 引力相位与纠缠实验室</h1><p>在理想冻结路径的两位置量子比特模型中，计算牛顿势引起的非局部相位、纠缠、局部退相干及库仑同形伪差。所有数值是<strong>理论或合成模拟</strong>，不代表真实量子引力观测。</p><span class="pill">离线计算</span> <span class="pill">归一化密度矩阵</span> <span class="pill">部分转置负性</span> <span class="pill">经典模型审查</span></header>
+<main class="wrap"><section class="metrics"><div class="metric"><label>非局部相位 Δ</label><strong id="phase">--</strong><small>弧度 · 包含可选库仑项</small></div><div class="metric"><label>理想 concurrence</label><strong id="conc">--</strong><small>无退相干纯态</small></div><div class="metric"><label>实际模型负性 N</label><strong id="neg">--</strong><small>局部 Z 退相干</small></div><div class="metric"><label>均等残余电荷抵消值</label><strong id="qeq">--</strong><small>每个物体的库仑强度与引力相等</small></div></section>
+<section class="layout"><aside class="panel"><h2>独立实验参数</h2><div class="control"><header><label>每个物体质量 log10(kg)</label><output id="vmass"></output></header><input id="mass" type="range" min="-16" max="-12" step="0.05" value="-14"></div>
+<div class="control"><header><label>中心距离 d</label><output id="vd"></output></header><input id="d" type="range" min="210" max="1500" step="5" value="450"></div><div class="control"><header><label>每个物体位置分支间距 s</label><output id="vs"></output></header><input id="s" type="range" min="0" max="200" step="5" value="200"></div>
+<div class="control"><header><label>相互作用时间 t</label><output id="vt"></output></header><input id="t" type="range" min="0" max="10" step="0.1" value="1"></div><div class="control"><header><label>每个物体退相干率 Γ</label><output id="vgamma"></output></header><input id="gamma" type="range" min="0" max="0.2" step="0.002" value="0"></div><div class="control"><header><label>库仑强度 / 引力强度</label><output id="vcharge"></output></header><input id="charge" type="range" min="-2" max="2" step="0.05" value="0"></div>
+<div class="notice warning">注意：改变中心距离、分支间距时应满足 d&gt;s。浏览器不模拟真实粒子运动、屏蔽介质、自旋操作和引力场量子化。</div></aside>
+<div class="panel"><h2>解析与数值交叉检查</h2><div class="tabs"><button class="active" data-tab="gamma">退相干曲线</button><button data-tab="mass">质量变化</button><button data-tab="charge">库仑伪差</button><button data-tab="proof">理论边界</button></div><canvas id="chart" class="graph" width="860" height="340"></canvas><div class="results"><section><h3>四条路径的距离</h3><pre id="rmat"></pre></section><section><h3>量子态／误差判据</h3><pre id="facts"></pre></section></div><div class="notice">核心公式：Δ = (Gm₁m₂ − q₁q₂/4πε₀)t/ℏ · (1/r₀₀ − 1/r₀₁ − 1/r₁₀ + 1/r₁₁)。纯态纠缠 C = |sin(Δ/2)|。局部退相干通过 4×4 密度矩阵部分转置特征值求负性。</div></div></section>
+<section class="panel" style="margin-top:16px"><h2>证据等级与已知局限</h2><div class="results"><div><p class="ok">数学上成立</p><p>给定两体 Newton 势算符、冻结路径、初始无纠缠等条件，非局部相位和纯态 concurrence 可严格推出。局部经典通信通道无法从可分初态生成纠缠。</p></div><div><p class="bad">没有证明</p><p>本模拟不证明引力场本身已经量子化，更没有解释 G 的起源、统一四种相互作用或排除所有经典／混合模型。若存在电磁或其他量子通信通道，纠缠不必源于引力。</p></div></div><p class="foot">代表性研究：Bose &amp; Marletto–Vedral (2017); Classical theories of gravity produce entanglement, Nature (2025); Di Biagio, Phys. Rev. D 114, 084050 (2026); Chen &amp; Giacomini, Phys. Rev. X 15, 031063 (2025). 详见科研包 SOURCES.md。</p></section></main>
+<script>
+'use strict';
+const G=6.67430e-11, H=1.0545718176461565e-34, EPS=8.8541878188e-12, e=1.602176634e-19;
+const ids=['mass','d','s','t','gamma','charge'];const get=id=>Number(document.getElementById(id).value);
+let tab='gamma';const fmt=(v,n=7)=>!Number.isFinite(v)?'invalid':(v===0?'0':(Math.abs(v)<0.0001||Math.abs(v)>1e6?v.toExponential(4):v.toFixed(n)));
+function inputs(){return {m:10**get('mass'),d:get('d')*1e-6,s:get('s')*1e-6,t:get('t'),gamma:get('gamma'),charge:get('charge')}}
+function calc(p){
+ const r=[[p.d,p.d+p.s],[p.d-p.s,p.d]];
+ const k=G*p.m*p.m/H*p.t*(1-p.charge);
+ const th=r.map(row=>row.map(x=>k/x));
+ const delta=th[0][0]-th[0][1]-th[1][0]+th[1][1];
+ let vec=th.flat().map(a=>[Math.cos(a)/2,Math.sin(a)/2]);
+ const eta=Math.exp(-p.gamma*p.t);let rho=[];
+ for(let i=0;i<4;i++){rho[i]=[];for(let j=0;j<4;j++){
+   const factor=((i>>1)!==(j>>1)?eta:1)*((i&1)!==(j&1)?eta:1);
+   const aa=vec[i],bb=vec[j];rho[i][j]=[(aa[0]*bb[0]+aa[1]*bb[1])*factor,(aa[1]*bb[0]-aa[0]*bb[1])*factor];
+ }}
+ // Partial transpose on second subsystem, and embed 4x4 complex hermitian into 8x8 real symmetric matrix.
+ const W=8,A=Array.from({length:W},()=>Array(W).fill(0));
+ for(let n=0;n<4;n++)for(let m=0;m<4;m++){
+   const i=n>>1,j=n&1,k=m>>1,l=m&1;
+   const z=rho[2*i+l][2*k+j],a=z[0],b=z[1];
+   A[n][m]=a;A[n][m+4]=-b;A[n+4][m]=b;A[n+4][m+4]=a;
+ }
+ // Jacobi symmetric eigenvalue algorithm for 8x8 real embedding.
+ for(let step=0;step<1200;step++){
+  let v=0,aa=0,bb=1;
+  for(let i=0;i<W;i++)for(let j=i+1;j<W;j++)if(Math.abs(A[i][j])>v){v=Math.abs(A[i][j]);aa=i;bb=j}
+  if(v<1e-13)break;
+  const a=A[aa][aa],b=A[bb][bb],off=A[aa][bb];
+  const tau=(b-a)/(2*off),rot=Math.sign(tau||1)/(Math.abs(tau)+Math.sqrt(1+tau*tau));
+  const co=1/Math.sqrt(1+rot*rot),si=rot*co;
+  A[aa][aa]=a-rot*off;A[bb][bb]=b+rot*off;A[aa][bb]=0;A[bb][aa]=0;
+  for(let j=0;j<W;j++)if(j!==aa && j!==bb){const x=A[j][aa],y=A[j][bb];A[j][aa]=A[aa][j]=co*x-si*y;A[j][bb]=A[bb][j]=si*x+co*y}
+ }
+ const N=Math.max(0,-A.reduce((z,row,i)=>z+Math.min(0,row[i]),0)/2);
+ return {r,th,delta,concurrence:Math.abs(Math.sin(delta/2)),N,qeq:Math.sqrt(4*Math.PI*EPS*G)*p.m};
+}
+function draw(xs,ys,label,color='#6fd4d5'){
+ const can=document.getElementById('chart'),ctx=can.getContext('2d'),w=can.width,h=can.height;
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#0b162b';ctx.fillRect(0,0,w,h);
+ const l=62,r=20,t=22,b=45,mnX=Math.min(...xs),mxX=Math.max(...xs),mnY=Math.min(0,...ys),mxY=Math.max(0.001,...ys);const rangeY=Math.max(1e-20,mxY-mnY);
+ ctx.strokeStyle='#334d71';ctx.lineWidth=1;ctx.fillStyle='#a3b6d6';ctx.font='13px sans-serif';
+ for(let i=0;i<5;i++){let y=t+(h-b-t)*i/4;ctx.beginPath();ctx.moveTo(l,y);ctx.lineTo(w-r,y);ctx.stroke();ctx.fillText((mxY-rangeY*i/4).toExponential(2),5,y+4)}
+ for(let i=0;i<5;i++){let x=l+(w-r-l)*i/4;ctx.fillText(fmt(mnX+(mxX-mnX)*i/4,3),x-12,h-19)}
+ ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();xs.forEach((x,i)=>{let xx=l+(x-mnX)/Math.max(mxX-mnX,1e-20)*(w-l-r),yy=t+(mxY-ys[i])/rangeY*(h-t-b);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)});ctx.stroke();ctx.fillStyle='#b8d8ee';ctx.fillText(label,l+6,15)
+}
+function render(){
+ const p=inputs(); const v=calc(p);
+ document.getElementById('vmass').textContent='10^'+get('mass').toFixed(2)+' kg';document.getElementById('vd').textContent=get('d')+' μm';document.getElementById('vs').textContent=get('s')+' μm';document.getElementById('vt').textContent=p.t.toFixed(1)+' s';document.getElementById('vgamma').textContent=p.gamma.toFixed(3)+' /s';document.getElementById('vcharge').textContent=p.charge.toFixed(2)+' × gravity';
+ document.getElementById('phase').textContent=fmt(v.delta)+' rad';document.getElementById('conc').textContent=fmt(v.concurrence);document.getElementById('neg').textContent=fmt(v.N);document.getElementById('qeq').textContent=fmt(v.qeq/e)+' e';
+ document.getElementById('rmat').textContent=`r00=${fmt(v.r[0][0]*1e6,2)} μm\nr01=${fmt(v.r[0][1]*1e6,2)} μm\nr10=${fmt(v.r[1][0]*1e6,2)} μm\nr11=${fmt(v.r[1][1]*1e6,2)} μm`;
+ document.getElementById('facts').textContent=`局部相干保留因子 e^(−Γt): ${fmt(Math.exp(-p.gamma*p.t))}\n理想负性: ${fmt(v.concurrence/2)}\n退相干负性: ${fmt(v.N)}\n经典局部相位通道: N=0\n当前理论判断: ${v.N>1e-9?'模型含可检测纠缠（非实验）':'未生成可检测纠缠（模型）'}`;
+ const xs=[],ys=[];
+ for(let i=0;i<=100;i++){
+ let z={...p},x;
+ if(tab==='gamma'){x=.2*i/100;z.gamma=x}
+ else if(tab==='mass'){x=-16+4*i/100;z.m=10**x}
+ else if(tab==='charge'){x=-2+4*i/100;z.charge=x}
+ else {x=i/100;z.gamma=x*.2}
+ xs.push(x);const res=calc(z);ys.push(tab==='charge'?res.delta:res.N);
+ }
+ draw(xs,ys,tab==='gamma'?'Negativity vs local dephasing rate Γ':tab==='mass'?'Negativity vs log10 mass':tab==='charge'?'Cross phase vs Coulomb / gravity ratio':'Theory boundary: response under dephasing',tab==='charge'?'#ffc788':'#70d3c1');
+}
+ids.forEach(id=>document.getElementById(id).addEventListener('input',render));document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.remove('active'));b.classList.add('active');tab=b.dataset.tab;render()}));render();
+</script></body></html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ROOT V89 | 量子引力的可证伪实验室</title>
+<style>
+:root{--bg:#08121e;--card:#111e30;--soft:#17283c;--border:#314358;--ink:#e5efff;--muted:#9fb4c8;--blue:#6bb7ff;--green:#8fe0bc;--amber:#f6ce8b}
+*{box-sizing:border-box}body{font-family:system-ui,'Microsoft YaHei','Noto Sans CJK SC',sans-serif;background:var(--bg);color:var(--ink);margin:0;line-height:1.55}
+header{max-width:1260px;margin:auto;padding:34px 24px 14px}header h1{font-size:30px;margin:4px 0;font-weight:700;letter-spacing:.01em}header p{color:var(--muted);max-width:900px}.meta{color:var(--green);font-size:12px;font-weight:700;letter-spacing:.13em}.notice{font-size:13px;padding:12px 15px;border:1px solid #726044;border-radius:12px;background:#312a21;color:#ffdea7;margin:12px 0 0}
+main{max-width:1260px;margin:0 auto;padding:0 24px 40px}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}.tabs button{color:var(--ink);background:#122236;border:1px solid var(--border);border-radius:9px;padding:9px 14px;cursor:pointer}.tabs button.active{background:#19518a;border-color:#4ea4ef}.panel{display:none}.panel.active{display:block}.layout{display:grid;grid-template-columns:340px 1fr;gap:16px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;min-width:0}.card h2{font-size:16px;margin:0 0 16px}.controls{display:grid;gap:12px}.control label{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted)}.control b{color:var(--ink);font-weight:650}.control input{width:100%;accent-color:var(--blue);margin-top:6px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 14px}.metric{border:1px solid var(--border);border-radius:12px;background:var(--soft);padding:15px}.metric small{font-size:12px;color:var(--muted);display:block}.metric strong{font-size:21px;display:block;margin-top:5px;word-break:break-all}.metric .note{font-size:11px;color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}.sub{color:var(--muted);font-size:13px}canvas{width:100%;height:250px;border:1px solid var(--border);background:#0b1929;border-radius:10px}.math{background:#0b1828;padding:12px;border-radius:9px;white-space:pre-wrap;font-size:13px;color:#cbe3ff;overflow:auto}.table{width:100%;border-collapse:collapse;font-size:13px}.table td,.table th{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left}.table th{color:var(--muted)}ol,ul{padding-left:22px;color:#bdcddd}.readout{color:var(--green);font-weight:600}.error{color:#ffc19d}.pill{display:inline-block;background:#21354c;border:1px solid var(--border);border-radius:12px;padding:3px 9px;font-size:11px}.proof{font-size:12px;color:#b7c8db}footer{text-align:center;color:var(--muted);padding:20px}@media(max-width:800px){.layout{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}header h1{font-size:24px}}@media(max-width:490px){.metrics{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="meta">ROOT RESEARCH / V89 · NOV 2026</div><h1>量子引力 · 三层理论比较实验室</h1>
+<p>牛顿双体相位、后牛顿修正与一圈 EFT 修正的严格量级分离；同时检查纠缠、静电退化和数值消差陷阱。</p>
+<div class="notice"><strong>理论及合成模拟 · 非真实量子引力观测</strong>。低能 EFT 势系数仅供指定匹配约定下的数量级审计；本实验室没有证实引力子、四力统一或 G 的独立起源。</div></header>
+<main>
+<div class="tabs" role="tablist">
+<button data-tab="phase" class="active">双体相位 / 纠缠</button><button data-tab="eft">1PN 与 EFT</button><button data-tab="filter">三距离零化</button><button data-tab="classical">经典媒介争议</button><button data-tab="protocol">实验与审计</button>
+</div>
+<section class="panel active" id="pane-phase"><div class="layout"><div class="card"><h2>实验模型参数</h2><div class="controls">
+<div class="control"><label>单个物体质量指数 <b id="v-m">10⁻¹⁴ kg</b></label><input id="m" type="range" min="-16" max="-12.5" step="0.1" value="-14"/></div>
+<div class="control"><label>中心距离 <b id="v-d">450 μm</b></label><input id="d" type="range" min="300" max="1500" step="10" value="450"/></div>
+<div class="control"><label>分支间距（两侧相同）<b id="v-s">200 μm</b></label><input id="s" type="range" min="0" max="240" step="10" value="200"/></div>
+<div class="control"><label>相互作用时间 <b id="v-t">1.00 s</b></label><input id="t" type="range" min="0" max="3" step="0.05" value="1"/></div>
+<div class="control"><label>局部退相干率 <b id="v-gamma">0.000 s⁻¹</b></label><input id="gamma" type="range" min="0" max="0.12" step="0.002" value="0"/></div>
+<div class="control"><label>电荷耦合比 q₁q₂/q²eq <b id="v-charge">0.00</b></label><input id="charge" type="range" min="-2" max="2" step="0.05" value="0"/></div>
+</div></div><div><div class="metrics"><div class="metric"><small>双体非局部相位</small><strong id="phase" class="mono">—</strong><div class="note">rad · 包括指定电荷</div></div><div class="metric"><small>理想纯态 concurrence</small><strong id="conc" class="mono">—</strong><div class="note">0–1，无噪声</div></div><div class="metric"><small>模型负性（退相干）</small><strong id="neg" class="mono">—</strong><div class="note">部分转置数值</div></div></div><div class="card"><h2>距离扫描 · 量子关联</h2><canvas id="plot" width="760" height="260"></canvas><p class="sub">绘制其它参数不变时的牛顿 + 库仑非局部相位。冻结路径近似，不能当作装置的完整仿真。</p></div><div class="card" style="margin-top:14px"><h2>分支距离矩阵</h2><div id="rmat" class="math mono">—</div><p class="sub">所有距离要求大于两个球的半径之和。模型已假定理想路径冻结。</p></div></div></div></section>
+<section class="panel" id="pane-eft"><div class="metrics"><div class="metric"><small>Newton 非局部相位</small><strong id="newton" class="mono">—</strong><div class="note">rad</div></div><div class="metric"><small>代表性 1PN 势相位</small><strong id="pn" class="mono">—</strong><div class="note">rad · 非完整可观测量</div></div><div class="metric"><small>低能一圈 EFT 势相位</small><strong id="qeft" class="mono">—</strong><div class="note">rad · 目前不可探测</div></div></div>
+<div class="split"><div class="card"><h2>展开的理论来源</h2><div class="math">V(r) = −G m₁m₂/r × [1 + 3G(m₁+m₂)/(r c²) + 41Gℏ/(10π r²c³) + …]
+ℓP²=Gℏ/c³
+Δn = (Gm₁m₂t/ℏ) × coefficient × Fₙ</div><p class="sub">1PN 经典势项与量子 EFT 系数依赖明确的匹配方案。物理可观测量还需要同阶过程动力学及完整实验模型。</p></div><div class="card"><h2>与 Newton 量级相差</h2><table class="table"><tr><th>指标</th><th>比值</th></tr><tr><td>|1PN / Newton|</td><td id="pnratio" class="mono">—</td></tr><tr><td>|EFT / Newton|</td><td id="qratio" class="mono">—</td></tr><tr><td>ℓP</td><td id="lp" class="mono">—</td></tr><tr><td>等效净电荷耦合尺度</td><td id="qeq" class="mono">—</td></tr></table><p class="sub">强引力量子相位 ≠ 已测到微小 EFT 一圈修正。</p></div></div></section>
+<section class="panel" id="pane-filter"><div class="split"><div class="card"><h2>三距离双重零化</h2><div class="math">距离：450、600、850 μm（固定）；分支间距继承当前参数
+Aₙ,k = Lⁿ Fₙ(dk)
+w = (A₁ × A₂) / ||A₁ × A₂||
+w·A₁ = 0, w·A₂ = 0
+w·A₃ ≠ 0 （非退化几何）</div><p class="sub">本滤波器可用于高阶距离形状诊断，但不能排除所有高阶电磁、源体结构和装置系统误差。</p></div><div class="card"><h2>高精度与数值误报</h2><table class="table"><tr><td>解析一圈残留</td><td class="mono" id="filtered">—</td></tr><tr><td>普通双精度（等价重排）求差</td><td class="mono" id="artifact">—</td></tr><tr><td>浮点假残差 / 真项</td><td class="mono error" id="artifactratio">—</td></tr><tr><td>形状列夹角 sin θ</td><td class="mono" id="angle">—</td></tr></table><p class="sub">这是 IEEE754 算法漏洞的演示；真正科研数据需要独立高精度求积，且仍受物理噪声约束。</p></div></div></section>
+<section class="panel" id="pane-classical"><div class="split"><div class="card"><h2>受限经典局部通道</h2><p>若某经典共享随机变量仅分别驱动两个量子比特的局部相位门，输出始终为乘积态凸混合，因此不会生成纠缠。</p><div class="math">ρ = ∑z p(z) ρA(z) ⊗ ρB(z)
+Negativity(ρ) = 0</div><p class="readout">本模型的量子纠缠预测与受限 LOCC 零模型确实不同。</p></div><div class="card"><h2>但不能把局部 LOCC 当作全部经典引力</h2><p>2025 Nature 与 2026 PRD 对经典背景、物质传播和引力纠缠有不同解释与反驳。必须先声明“媒介、局域性、物质自由度”的具体定义。</p><ul><li>已确立：局部通信与共享随机性单独不能在初始乘积态间创造纠缠。</li><li>仍需限定：具体经典引力—量子物质理论能否超出该模型。</li><li>未来优先：延迟传播的相位与相关函数，而非单独的 Newton 相位。</li></ul></div></div></section>
+<section class="panel" id="pane-protocol"><div class="split"><div class="card"><h2>完整实验链路</h2><ol><li>形式化作用量、局域性和相位模型</li><li>源质量及密度/几何标定</li><li>电荷、表面势和磁场独立检测</li><li>相位操控、退相干预算与量子态层析</li><li>盲化随机顺序、假动作和零模型</li><li>Newton/PN/EFT 数值数量级与高精度检查</li><li>独立测量平台与真实原始数据复核</li><li>与经典媒介竞争理论的定量似然比较</li></ol></div><div class="card"><h2>严格结论与开放问题</h2><table class="table"><tr><th>结论</th><th>等级</th></tr><tr><td>GR 弱场 → Newton；量子物质势相位</td><td>E</td></tr><tr><td>冻结分支双质量纠缠</td><td>C</td></tr><tr><td>LOCC 相位零模型</td><td>E / 受限</td></tr><tr><td>低能 EFT 圈修正数量级</td><td>C</td></tr><tr><td>实验已观测引力子</td><td>未证实</td></tr><tr><td>由 c 独立预言 G</td><td>开放</td></tr><tr><td>完成四力统一</td><td>开放</td></tr></table><p class="sub">本实验室采用 ROOT-GCL/3.0 机器可读协议，测试数据均注明 SYNTHETIC。</p></div></div></section>
+</main><footer>ROOT V89 · Offline research simulator · THEORETICAL / SYNTHETIC · Not a gravitational experiment</footer>
+<script>
+(()=>{'use strict';
+const G=6.67430e-11,c=299792458,hbar=6.62607015e-34/(2*Math.PI),eps0=8.8541878188e-12,kE=1/(4*Math.PI*eps0),lP2=G*hbar/c**3;
+const $=(sel)=>document.querySelector(sel);const value=(id)=>Number($('#'+id).value);
+const sci=(a,d=5)=>Number.isFinite(a)?a.toExponential(d):'—';
+const dims=(d,s1,s2)=>[d+(s1-s2)/2,d+(s1+s2)/2,d-(s1+s2)/2,d+(s2-s1)/2];
+const fn=(d,s1,s2,n)=>{let r=dims(d,s1,s2);return 1/r[0]**n-1/r[1]**n-1/r[2]**n+1/r[3]**n;};
+const xpr=(s1,s2,d,n)=>fn(d,s1,s2,n);
+const canvas=$('#plot'),ctx=canvas.getContext('2d');
+function neg(g,t,p){
+ let r0=[p[0],p[1],p[2],p[3]].map(v=>[Math.cos(v)/2,Math.sin(v)/2]);
+ // complex matrix density and partial transpose by 4x4 complex arrays
+ let rho=Array.from({length:4},()=>Array.from({length:4},()=>[0,0]));
+ for(let a=0;a<4;a++)for(let b=0;b<4;b++){
+  let z1=(Math.floor(a/2)!==Math.floor(b/2))?Math.exp(-g*t):1;
+  let z2=((a%2)!==(b%2))?Math.exp(-g*t):1;
+  rho[a][b]=[(r0[a][0]*r0[b][0]+r0[a][1]*r0[b][1])*z1*z2,(r0[a][1]*r0[b][0]-r0[a][0]*r0[b][1])*z1*z2];
+ }
+ // For a 4x4 Hermitian complex matrix, minimal eigenvalue via real symmetric embedding + Jacobi.
+ let mat=Array.from({length:8},()=>Array(8).fill(0));
+ for(let i=0;i<4;i++)for(let j=0;j<4;j++){
+  let [re,im]=rho[2*Math.floor(i/2)+(j%2)][2*Math.floor(j/2)+(i%2)];
+  mat[i][j]=re;mat[i][j+4]=-im;mat[i+4][j]=im;mat[i+4][j+4]=re;
+ }
+ for(let it=0;it<360;it++){
+  let p=0,q=1,big=0;for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){const z=Math.abs(mat[i][j]);if(z>big){big=z;p=i;q=j;}}
+  if(big<1e-16)break;
+  const tau=(mat[q][q]-mat[p][p])/(2*mat[p][q]);const z=Math.sign(tau||1)/(Math.abs(tau)+Math.sqrt(1+tau*tau));const co=1/Math.sqrt(1+z*z),si=z*co;
+  const pp=mat[p][p],qq=mat[q][q],pq=mat[p][q];mat[p][p]=pp-z*pq;mat[q][q]=qq+z*pq;mat[p][q]=0;mat[q][p]=0;
+  for(let k=0;k<8;k++)if(k!==p&&k!==q){const u=mat[k][p],v=mat[k][q];mat[k][p]=mat[p][k]=co*u-si*v;mat[k][q]=mat[q][k]=si*u+co*v;}
+ }
+ // Eigenvalues duplicated 2x due to real embedding; negativity = - sum negative / 2.
+ return Math.max(0,-mat.reduce((sum,row,i)=>sum+Math.min(0,row[i]),0)/2);
+}
+function draw(cur,params){
+ let W=canvas.width,H=canvas.height,pad=48;
+ ctx.clearRect(0,0,W,H);ctx.fillStyle='#0b1929';ctx.fillRect(0,0,W,H);
+ const ds=Array.from({length:160},(_,i)=>Math.max(params.s+30e-6,300e-6)+i*(1500e-6-Math.max(params.s+30e-6,300e-6))/159);
+ const ys=ds.map(d=>{let f=fn(d,params.s,params.s,1);return G*params.m**2*params.t/hbar*(1-params.k)*f});
+ const top=Math.max(...ys),bot=Math.min(...ys),yd=(top-bot)||1;
+ ctx.strokeStyle='#294258';ctx.lineWidth=1;
+ for(let i=0;i<5;i++){let y=30+i*(H-60)/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-20,y);ctx.stroke();}
+ ctx.strokeStyle='#6bb7ff';ctx.lineWidth=2.5;ctx.beginPath();ys.forEach((v,i)=>{let x=pad+i*(W-pad-24)/(ys.length-1);let y=30+(top-v)/yd*(H-60);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();
+ ctx.strokeStyle='#8fe0bc';let x=pad+(params.d-ds[0])/(ds[ds.length-1]-ds[0])*(W-pad-24);ctx.beginPath();ctx.moveTo(x,28);ctx.lineTo(x,H-30);ctx.stroke();
+ ctx.fillStyle='#b5cee6';ctx.font='13px ui-monospace, monospace';ctx.fillText('d = 0.3–1.5 mm',pad,H-10);ctx.fillText('Δ range: '+sci(bot,2)+' .. '+sci(top,2),pad,18);
+}
+function compute(){
+ const m=10**value('m'),d=value('d')*1e-6,s=value('s')*1e-6,t=value('t'),g=value('gamma'),k=value('charge');
+ const r=dims(d,s,s),f1=fn(d,s,s,1),f2=fn(d,s,s,2),f3=fn(d,s,s,3);
+ const A=G*m*m*t/hbar,pnLen=3*G*(2*m)/c**2,qLen=41/(10*Math.PI)*lP2;
+ const Dn=A*f1,Dpn=A*pnLen*f2,Dq=A*qLen*f3,delta=Dn*(1-k);
+ const angles=r.map(v=>A*(1-k)/v),C=Math.abs(Math.sin(delta/2));
+ const n=neg(g,t,angles);const qeq=Math.sqrt(4*Math.PI*eps0*G*m*m);
+ $('#phase').textContent=sci(delta,7);$('#conc').textContent=sci(C,7);$('#neg').textContent=sci(n,7);
+ $('#newton').textContent=sci(Dn);$('#pn').textContent=sci(Dpn);$('#qeft').textContent=sci(Dq);
+ $('#pnratio').textContent=sci(Dpn/Dn);$('#qratio').textContent=sci(Dq/Dn);
+ $('#lp').textContent=sci(Math.sqrt(lP2))+' m';$('#qeq').textContent=sci(qeq)+' C';
+ $('#v-m').textContent='10^'+value('m').toFixed(1)+' kg';$('#v-d').textContent=value('d')+' μm';$('#v-s').textContent=value('s')+' μm';$('#v-t').textContent=t.toFixed(2)+' s';$('#v-gamma').textContent=g.toFixed(3)+' s⁻¹';$('#v-charge').textContent=k.toFixed(2);
+ $('#rmat').textContent='[[' + (r[0]*1e6).toFixed(2)+', '+(r[1]*1e6).toFixed(2)+'],\n ['+(r[2]*1e6).toFixed(2)+', '+(r[3]*1e6).toFixed(2)+']] μm';
+ const dset=[450e-6,600e-6,850e-6],L=1e-3;
+ const arr=(order)=>dset.map(x=>fn(x,s,s,order)*L**order);
+ const aa=arr(1),bb=arr(2),cc=arr(3),norm=(z)=>Math.hypot(...z);
+ const a=aa.map(v=>v/norm(aa)),b=bb.map(v=>v/norm(bb));let w=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+ const sn=norm(w);w=w.map(z=>z/sn);const dot=(a,b)=>a.reduce((v,z,i)=>v+z*b[i],0);
+ const ef=A*qLen/L**3*dot(w,cc);
+ // Algebraically equivalent 2/d-1/(d+s)-1/(d-s) ordering: real IEEE754 roundoff demonstration.
+ const sim=dset.map(x=>A*(2/x-1/(x+s)-1/(x-s)+pnLen*fn(x,s,s,2)+qLen*fn(x,s,s,3)));
+ const artifact=dot(w,sim);
+ $('#filtered').textContent=sci(ef);$('#artifact').textContent=sci(artifact);
+ $('#artifactratio').textContent=ef===0?'—':sci(Math.abs(artifact/ef));$('#angle').textContent=sci(sn,4);
+ draw(null,{m,d,s,t,k});
+}
+document.querySelectorAll('input').forEach(input=>input.addEventListener('input',compute));
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('[data-tab]').forEach(v=>v.classList.toggle('active',v===b));
+ document.querySelectorAll('.panel').forEach(v=>v.classList.toggle('active',v.id==='pane-'+b.dataset.tab));
+}));compute();
+})();
+</script></body></html>

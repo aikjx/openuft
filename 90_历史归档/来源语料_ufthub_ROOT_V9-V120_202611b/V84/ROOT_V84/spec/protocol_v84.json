@@ -1,0 +1,18 @@
+{
+  "schema_version":"ROOT-GCL/1.2",
+  "experiment_id":"ROOT-V84-MULTIDIST-SIMULATION",
+  "purpose":"用双传感器、多个源距离及假动作对照检验牛顿信号和候选有限程力的可辨识性",
+  "simulation_only":true,
+  "real_hardware_connected":false,
+  "source":{"mass_kg":100.0,"uniform_sphere_radius_m":0.12},
+  "sensors":{"positions_m":[-0.1,0.1],"sensor_baseline_m":0.2,"unit":"m/s^2"},
+  "distance_grid_m":[0.38,0.46,0.55,0.70,0.90,1.20,1.55],
+  "switch_schedule":{"accepted_patterns":[[1,-1,-1,1],[-1,1,1,-1]],"randomized":true,"blocks_per_distance_per_arm":112},
+  "arms":["SOURCE","SHAM"],
+  "preregistered_model":{"newton_reference_G_SI":6.67430e-11,"lambda_m":0.25,"fit_parameters":["beta_G_ratio","alpha_yukawa","offset_m_s2"]},
+  "mandatory_controls":["mass_geometry","tilt_vibration","sham_motion","temperature","magnetometer","distance_randomization","independent_sensor"],
+  "required_provenance":"SYNTHETIC_NOT_REAL_DATA",
+  "no_instrument_control_commands":true,
+  "pass_conditions":["software_test_pass","provenance_preserved","all_mass_sensors_outside_source_sphere","explicit_systematic_budget"],
+  "forbidden_claims":["fifth_force_discovered_from_synthetic_data","G_independently_predicted","four_force_unified"]
+}

@@ -1,0 +1,26 @@
+from pathlib import Path
+import json,csv
+root=Path(__file__).resolve().parents[1]
+with (root/'results'/'NONCIRCULAR_PLANAR_ORBIT_THEORY.csv').open(encoding='utf-8-sig') as f:
+    rows=list(csv.DictReader(f))
+# to 6 decimal meaningful display, source data kept full in csv
+vals=[[round(float(r[k]),8) for k in ('time_ns','x_mm','y_mm','radius_mm')] for r in rows]
+s=json.loads((root/'results'/'NUMERICAL_SUMMARY_THEORY.json').read_text())
+sh=s['nonlinear_planar_periodic_orbit']
+highlights={'r0_mm':round(sh['r0_m']*1000,9),'delta_r_nm':round(sh['nonlinear_shift_m']*1e9,3),
+ 'return_m':sh['return_position_error_m'],'period_ns':sh['t_seconds']*1e9,
+ 'angle_rad':sh['phi_radians'],'B_T':sh['reference']['B0'],
+ 'I_A':sh['reference']['I_per_coil'],'classification':s['classification']['first_primitive_resonance']}
+html='''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROOT V97 · 非线性内外周期轨道实验室</title><style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#171d33;--muted:#a7b2d2;--line:#3b4773;--accent:#77e9db}*{box-sizing:border-box}body{background:var(--bg);color:#edf3ff;font-family:system-ui,"Microsoft Yahei",sans-serif;margin:0;padding:24px}main{max-width:1150px;margin:auto}h1{font-size:25px;margin:4px 0 10px}.sub{color:var(--muted);margin-bottom:20px}.layout{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}.panel{background:var(--panel);border:1px solid #2b3559;border-radius:18px;padding:18px}canvas{width:100%;max-width:680px;aspect-ratio:1/1;background:#090e1c;border-radius:12px}button{background:var(--accent);border:0;border-radius:8px;padding:10px 15px;color:#07142b;font-weight:700;cursor:pointer}input[type=range]{width:100%}.item{display:flex;justify-content:space-between;border-bottom:1px solid #334264;padding:10px 0;gap:12px}.item span{color:var(--muted)}.value{font-variant-numeric:tabular-nums}p,li{line-height:1.6}.warning{margin-top:14px;color:#efc987}.small{font-size:13px;color:var(--muted)}@media(max-width:800px){.layout{grid-template-columns:1fr}body{padding:12px}}</style></head><body><main>
+<h1>ROOT V97 · 非线性内外螺旋闭环实验室</h1><p class="sub">外部双线圈 Maxwell 场 · 已求解的五圈平面周期轨道 · 纯理论模拟数据</p>
+<div class="layout"><section class="panel"><canvas id="orbit" width="720" height="720" aria-label="非圆形平面轨道图"></canvas><p><button id="play">播放</button> <button id="reset">复位</button> <span id="frameinfo" class="small">初始时刻</span></p><label for="timeIndex">轨道时间进度</label><input id="timeIndex" type="range" min="0" max="1199" step="1" value="0"/></section>
+<section class="panel"><h2>射击解的理论参数</h2><div id="metrics"></div><p class="warning"><b>重要：</b>这里验证的是平面周期轨道。返回残差是数值模型的 ODE 误差；有限截面磁场源的求积误差更大。真实电子会辐射，理想静磁场本身不补充动能。</p><h3>理解闭环</h3><p>两个横向线性频率比满足 ν<sub>r</sub>²+ν<sub>z</sub>²=1。双频整数线性共振构成勾股三元组。实际有限振幅运动需要额外调节线圈电流或参考半径；这个数据集只证明一个数值求得的二维轨道，不能代替三维量子引力理论。</p><p class="small">所有数据来自 results/NONCIRCULAR_PLANAR_ORBIT_THEORY.csv。无网络依赖。页面不改变研究原始数据。</p></section></div></main>
+<script>const DATA=__DATA__;const SUMMARY=__SUMMARY__;const canvas=document.getElementById('orbit'),ctx=canvas.getContext('2d');const slide=document.getElementById('timeIndex'),play=document.getElementById('play'),reset=document.getElementById('reset'),info=document.getElementById('frameinfo');let idx=0,playing=false,raf=0,last=0;
+function draw(){ctx.clearRect(0,0,720,720);const cx=360,cy=360,scale=58;ctx.lineWidth=1;ctx.strokeStyle='#273c65';for(let j=1;j<=6;j++){ctx.beginPath();ctx.arc(cx,cy,j*scale,0,Math.PI*2);ctx.stroke()}ctx.beginPath();ctx.strokeStyle='#3e7fb3';ctx.lineWidth=1.5;for(let i=0;i<DATA.length;i++){let p=DATA[i];if(i===0)ctx.moveTo(cx+p[1]*scale,cy-p[2]*scale);else ctx.lineTo(cx+p[1]*scale,cy-p[2]*scale)}ctx.stroke();ctx.beginPath();ctx.strokeStyle='#75e3d5';ctx.lineWidth=3;for(let i=0;i<=idx;i++){let p=DATA[i];if(i===0)ctx.moveTo(cx+p[1]*scale,cy-p[2]*scale);else ctx.lineTo(cx+p[1]*scale,cy-p[2]*scale)}ctx.stroke();let p=DATA[idx];ctx.beginPath();ctx.fillStyle='#ffcf7a';ctx.arc(cx+p[1]*scale,cy-p[2]*scale,6,0,Math.PI*2);ctx.fill();info.textContent='t='+p[0].toFixed(5)+' ns；半径='+p[3].toFixed(5)+' mm';slide.value=idx}
+const metrics=[['闭环参考半径',SUMMARY.r0_mm.toFixed(9)+' mm'],['非线性半径修正',SUMMARY.delta_r_nm.toFixed(3)+' nm'],['四次径向振荡 / 五圈','4 / 5'],['一组轨道周期',SUMMARY.period_ns.toFixed(7)+' ns'],['磁场 Bz (参考)',SUMMARY.B_T.toFixed(6)+' T'],['每个线圈电流',SUMMARY.I_A.toFixed(3)+' A'],['指定场ODE返回残差',SUMMARY.return_m.toExponential(3)+' m'],['量子/四力统一状态','未完成']];document.getElementById('metrics').innerHTML=metrics.map(([k,v])=>'<div class="item"><span>'+k+'</span><b class="value">'+v+'</b></div>').join('');
+function tick(t){if(!playing)return;if(t-last>20){idx=(idx+4)%DATA.length;last=t;draw()}raf=requestAnimationFrame(tick)}play.onclick=()=>{playing=!playing;play.textContent=playing?'暂停':'播放';if(playing)raf=requestAnimationFrame(tick);else cancelAnimationFrame(raf)};reset.onclick=()=>{playing=false;cancelAnimationFrame(raf);play.textContent='播放';idx=0;draw()};slide.oninput=()=>{idx=Number(slide.value);draw()};draw();</script></body></html>'''
+html=html.replace('__DATA__',json.dumps(vals,separators=(',',':'))).replace('__SUMMARY__',json.dumps(highlights,ensure_ascii=False,separators=(',',':')))
+(root/'web'/'index.html').write_text(html,encoding='utf-8')
+print('wrote offline HTML',len(html))

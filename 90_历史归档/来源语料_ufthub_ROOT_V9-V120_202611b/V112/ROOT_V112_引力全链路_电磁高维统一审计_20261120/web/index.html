@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROOT V112 · 引力 × 电磁跨尺度实验室</title>
+<style>
+:root{color-scheme:dark;--bg:#0a101b;--panel:#142032;--line:#31425c;--ink:#eef4ff;--sub:#aabbd3;--acc:#65b7f5}
+*{box-sizing:border-box}body{font:16px/1.65 system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink);margin:0}
+main{max-width:1040px;margin:0 auto;padding:38px 22px 55px}h1{font-size:28px}h2{font-size:20px}p{color:var(--sub)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin:17px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}@media(max-width:750px){.two{grid-template-columns:1fr}}
+label{display:block;font-weight:600;margin:12px 0 4px}input[type=range]{width:100%;accent-color:var(--acc)}
+.mono{font:19px/1.5 ui-monospace,monospace;color:#9bddff;word-break:break-all}small{color:var(--sub)}
+button{padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:#1e3045;color:var(--ink);cursor:pointer}
+svg{max-width:100%;height:auto;background:#0c1827;border-radius:12px}
+.line{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:10px 0}.status{font-weight:bold}
+a{color:#9bddff}code{background:#273b52;padding:1px 4px;border-radius:3px}
+</style></head><body><main>
+<h1>ROOT V112 · 引力—电磁跨尺度核验台</h1>
+<p>所有计算都使用显式给定的 CODATA 基准数值。展示的是现有 Einstein–Maxwell 理论，<strong>不是已经解决四力统一</strong>。</p>
+<div class="two">
+<div class="card"><h2>荷质极值参数</h2>
+<label for="charge">ξ = |Q|/(M√(4πε₀G))：<span id="xiLabel"></span></label>
+<input id="charge" type="range" min="0" max="1.6" step="0.01" value="0.6">
+<label for="mass">参考质量 M：10^<span id="mLabel"></span> kg</label>
+<input id="mass" type="range" min="-3" max="32" step="1" value="20">
+<div class="line"><small>经典 RN 事件视界</small><span class="status" id="status"></span></div>
+<div class="line"><small>引力半径 r_g</small><span class="mono" id="rg"></span></div>
+<div class="line"><small>内视界 r_−</small><span class="mono" id="rminus"></span></div>
+<div class="line"><small>外视界 r_+</small><span class="mono" id="rplus"></span></div>
+<div class="line"><small>对应电荷 Q</small><span class="mono" id="Q"></span></div>
+<button id="reset" type="button">恢复基准参数</button>
+</div>
+<div class="card">
+<h2>RN 度规 f(r)</h2>
+<svg id="plot" viewBox="0 0 430 290" role="img" aria-label="RN lapse against dimensionless radius">
+<line x1="55" y1="245" x2="400" y2="245" stroke="#c8d8f0" stroke-width="1"/>
+<line x1="55" y1="25" x2="55" y2="245" stroke="#c8d8f0" stroke-width="1"/>
+<line id="zero" x1="55" x2="400" stroke="#667d98" stroke-dasharray="4 3"/>
+<path id="curve" fill="none" stroke="#82d0ff" stroke-width="2.5"/>
+<text x="220" y="278" text-anchor="middle" fill="#c8d8f0" font-size="12">r / r_g</text>
+<text x="11" y="29" fill="#c8d8f0" font-size="12">f(r)</text>
+</svg>
+<p>当 ξ&gt;1 时，经典无旋 RN 几何没有实视界。ξ&gt;1 不代表物体不能存在，例如带电基本粒子不能用这个经典黑洞解完整描述。</p>
+</div></div>
+<div class="card"><h2>跨尺度不可混淆的关系</h2>
+<div class="mono">|F<sub>electric</sub>/F<sub>gravity</sub>| = ξ₁ ξ₂</div>
+<p>该力比仅在牛顿引力与库仑力适用的近似区域成立；RN 视界只属于特定的经典静态球对称解。</p>
+<p>电子 ξ≈2.041×10²¹；质子 ξ≈1.112×10¹⁸。它们都不是普通经典 RN 黑洞。</p>
+</div>
+<div class="card"><h2>五维 Kaluza–Klein 标量一致性</h2>
+<label for="field">F<sub>μν</sub>F<sup>μν</sup> 的示意值：<span id="f2label"></span></label>
+<input id="field" type="range" min="-10" max="10" step="0.5" value="2">
+<div class="line"><small>φ 固定时是否满足纯真空 5D 标量方程？</small><strong id="kkstatus"></strong></div>
+<p>对于 κφ≠0 的标准真空 KK 模型：□φ ∝ F²。φ 严格恒定时必须有 F²=0。该滑块仅用于说明数学条件，不是测量的场强值。</p>
+</div>
+<p><small>理论范围：4D Einstein–Maxwell + 特定 5D 真空 KK 圆维构造。G 为实验输入。任何独立新理论仍须满足等效原理、PPN、引力波及量子一致性检验。</small></p>
+</main><script>
+"use strict";const G=6.67430e-11,c=299792458,eps0=8.8541878128e-12;
+const $=id=>document.getElementById(id),ex=n=>Number.isFinite(n)?n.toExponential(5):"—";
+function update(){
+ const xi=+$("charge").value, mPow=+$("mass").value,M=10**mPow;
+ const rg=G*M/c**2,Q=xi*M*Math.sqrt(4*Math.PI*eps0*G);
+ $("xiLabel").textContent=xi.toFixed(2);$("mLabel").textContent=mPow;
+ $("status").textContent=xi<=1?"有经典 RN 视界":"无经典 RN 视界";
+ $("rg").textContent=ex(rg)+" m";$("Q").textContent=ex(Q)+" C";
+ if(xi<=1){
+  const d=Math.sqrt(Math.max(0,1-xi*xi));
+  $("rminus").textContent=ex(rg*xi*xi/(1+d))+" m";
+  $("rplus").textContent=ex(rg*(1+d))+" m";
+ }else{$("rminus").textContent="无";$("rplus").textContent="无"}
+ const xmin=.25,xmax=3.5,ymin=-2,ymax=5;
+ const px=x=>55+(x-xmin)/(xmax-xmin)*345;
+ const py=y=>245-(y-ymin)/(ymax-ymin)*220;
+ $("zero").setAttribute("y1",py(0));$("zero").setAttribute("y2",py(0));
+ let d="";for(let i=0;i<=220;i++){const x=xmin+(xmax-xmin)*i/220;const y=1-2/x+xi*xi/(x*x);d+=(i===0?"M":"L")+px(x).toFixed(2)+" "+py(y).toFixed(2)+" "}
+ $("curve").setAttribute("d",d);
+}
+function updateKK(){
+ const f2=+$("field").value;$("f2label").textContent=f2.toFixed(1);
+ $("kkstatus").textContent=Math.abs(f2)<1e-12?"相容（必要条件）":"不相容";
+}
+["charge","mass"].forEach(id=>$(id).addEventListener("input",update));
+$("field").addEventListener("input",updateKK);
+$("reset").addEventListener("click",()=>{$("charge").value=".6";$("mass").value="20";$("field").value="2";update();updateKK()});
+update();updateKK();
+</script></body></html>

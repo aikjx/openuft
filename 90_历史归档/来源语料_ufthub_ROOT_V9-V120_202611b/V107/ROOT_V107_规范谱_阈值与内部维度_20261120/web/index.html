@@ -1,0 +1,71 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ROOT V107｜规范耦合阈值审计实验室（理论示范）</title>
+<style>
+:root{color-scheme:light;--ink:#12223a;--blue:#2666d0;--soft:#eaf0fc;--line:#d9e2f0;--warn:#9a5a1d}
+*{box-sizing:border-box}body{font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;margin:0;background:#f5f7fb;color:var(--ink)}
+header{background:linear-gradient(110deg,#142b51,#23447c);padding:29px max(calc((100% - 1150px)/2),24px);color:#fff}h1{margin:0;font-size:26px}header p{margin-bottom:0;color:#d2dff6}
+main{max-width:1150px;margin:28px auto;padding:0 20px;display:grid;grid-template-columns:315px 1fr;gap:18px}
+section{background:white;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 5px 18px #20314d0d}
+label{display:block;font-size:13px;color:#47566b;margin-top:17px;margin-bottom:6px}
+input[type=range]{width:100%;accent-color:var(--blue)}select{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:white;font-size:15px}
+.val{font-variant-numeric:tabular-nums;font-weight:700;color:#244c8e}
+button{margin-top:20px;border:0;background:#235bb3;color:#fff;font-weight:700;padding:11px 15px;border-radius:8px;cursor:pointer;width:100%}
+.tiny{font-size:12px;color:#61728a;line-height:1.6}
+.chartWrap{height:410px;position:relative}canvas{width:100%;height:100%}
+.legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;font-size:13px}.legend span:before{content:"";display:inline-block;width:12px;height:3px;margin-right:6px;vertical-align:middle;background:var(--col)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:15px}.metric{background:#f3f7ff;border-radius:10px;padding:13px;min-width:0}.metric small{color:#506482}.metric strong{display:block;margin-top:6px;font-size:16px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.note{border-left:3px solid #c99235;padding-left:12px;color:#695327;font-size:13px;line-height:1.7}
+footer{grid-column:1/-1;color:#53647c;font-size:13px;padding:4px 8px 25px}
+@media(max-width:800px){main{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}.chartWrap{height:340px}header{padding:24px}}
+</style></head><body>
+<header><h1>ROOT V107 · 规范谱与耦合阈值实验室</h1><p>标准模型 + 矢量样 SU(5) 粒子 | 一圈有效场论 | 全部是理论计算，非实验观测</p></header>
+<main>
+<section>
+<h2 style="margin:0;font-size:19px">设定参数</h2>
+<label for="pairs">新增 5⊕5̄ Dirac 多重态组数</label>
+<select id="pairs"><option value="0">0 组｜最简标准模型</option><option value="1">1 组</option><option value="2">2 组</option><option value="3">3 组</option></select>
+<label for="doublet">双重态质量 log₁₀(MD/GeV)：<span class="val" id="mdVal"></span></label><input type="range" id="doublet" min="2.2" max="13" step="0.01" value="3" />
+<label for="triplet">三重态质量 log₁₀(MT/GeV)：<span class="val" id="mtVal"></span></label><input type="range" id="triplet" min="2.2" max="18" step="0.01" value="12.43"/>
+<button id="applyTwo">应用 V107 两组数学交点</button>
+<button id="applyDegenerate" style="margin-top:8px;background:#536985">对照：完全简并多重态</button>
+<p class="tiny">演示基准：MZ=91.1876 GeV，αem⁻¹=127.930，sin²θW=0.23122，αs=0.1180。采用阶跃阈值，仅一圈；不含两圈、有限匹配、实验排除区、质子衰变及引力。</p>
+</section>
+<section>
+<div class="metrics">
+ <div class="metric"><small>SM 统一缺陷 I₀</small><strong id="inv">—</strong></div>
+ <div class="metric"><small>图中最高能标的三耦合差</small><strong id="spread">—</strong></div>
+ <div class="metric"><small>模型标记</small><strong id="status">—</strong></div>
+</div>
+<div class="chartWrap"><canvas id="plot" aria-label="三个逆规范耦合随能标变化的理论曲线"></canvas></div>
+<div class="legend"><span style="--col:#2464b5">α₁⁻¹</span><span style="--col:#db6f27">α₂⁻¹</span><span style="--col:#22866f">α₃⁻¹</span></div>
+<p class="note">图中三线相交不等于统一场论成立。若把交点解释为传统 SU(5) 的破缺标度，还必须检验 X/Y 重规范玻色子、质子衰变限制、场内容、完整两圈演化和实际粒子搜索。不能仅通过改变滑块宣布发现新力。</p>
+</section>
+<footer>数学补充：单相位联络无法产生局域 F；若所有规范联络只依赖 k 个光滑内部相位，则 k≤3 时局域 tr(F∧F) 为零。k=4 存在非零局部示例，但不自动得到量子化的整体拓扑荷。</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id),b=[4.1,-19/6,-7],dm=[2/5,2/3,0],dt=[4/15,0,2/3],mz=91.1876,a0=[.6*(1-.23122)*127.930,.23122*127.930,1/.1180];
+function af(mu,n,md,mt){let t=Math.log(mu/mz), d=Math.max(0,Math.log(mu/md)),p=Math.max(0,Math.log(mu/mt));return a0.map((a,i)=>a-(b[i]*t+n*(dm[i]*d+dt[i]*p))/(2*Math.PI))}
+function calc(){let n=+$('pairs').value, md=10**(+$('doublet').value),mt=10**(+$('triplet').value);
+ $('mdVal').textContent=md.toExponential(2);$('mtVal').textContent=mt.toExponential(2);
+ const I=((b[1]-b[2])*a0[0]+(b[2]-b[0])*a0[1]+(b[0]-b[1])*a0[2]);$('inv').textContent=I.toFixed(6);
+ const end=af(1e18,n,md,mt),spread=Math.max(...end)-Math.min(...end);$('spread').textContent=spread.toFixed(3);
+ $('status').textContent=n===0?'最简 SM':(md===mt?`${n} 组简并反例`:`${n} 组分裂演示`);
+ draw(n,md,mt);}
+function draw(n,md,mt){let can=$('plot'),r=can.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+ can.width=Math.max(100,Math.round(r.width*dpr));can.height=Math.max(100,Math.round(r.height*dpr));let c=can.getContext('2d');c.scale(dpr,dpr);
+ let W=r.width,H=r.height,L=54,R=12,T=14,B=42, x0=Math.log10(mz),x1=18,y0=0,y1=65;
+ c.clearRect(0,0,W,H);c.fillStyle='#fff';c.fillRect(0,0,W,H);
+ const xp=lx=>L+(lx-x0)/(x1-x0)*(W-L-R),yp=y=>T+(y1-y)/(y1-y0)*(H-T-B);
+ c.font='11px system-ui';c.lineWidth=1;c.strokeStyle='#e6edf8';c.fillStyle='#6b7b94';
+ for(let y=0;y<=60;y+=10){let Y=yp(y);c.beginPath();c.moveTo(L,Y);c.lineTo(W-R,Y);c.stroke();c.fillText(''+y,20,Y+4)}
+ for(let x=2;x<=18;x+=2){let X=xp(x);c.beginPath();c.moveTo(X,T);c.lineTo(X,H-B);c.stroke();c.fillText('10^'+x,X-16,H-18)}
+ c.strokeStyle='#8fa0b9';c.beginPath();c.moveTo(L,T);c.lineTo(L,H-B);c.lineTo(W-R,H-B);c.stroke();
+ let cols=['#2464b5','#db6f27','#22866f'];
+ cols.forEach((color,j)=>{c.beginPath();for(let k=0;k<=420;k++){let lx=x0+(x1-x0)*k/420, y=af(10**lx,n,md,mt)[j]; if(k===0)c.moveTo(xp(lx),yp(y));else c.lineTo(xp(lx),yp(y));}c.lineWidth=2.6;c.strokeStyle=color;c.stroke();});
+ c.fillStyle='#53647c';c.fillText('Energy scale (GeV)',W/2-48,H-2);c.fillText('Inverse α',L+5,T+12);
+}
+for(let id of ['pairs','doublet','triplet'])$(id).addEventListener('input',calc);
+$('applyTwo').addEventListener('click',()=>{$('pairs').value='2';$('doublet').value='3';$('triplet').value=(Math.log10(2695554615385.25)).toFixed(2);calc();});
+$('applyDegenerate').addEventListener('click',()=>{$('pairs').value='2';$('doublet').value='3';$('triplet').value='3';calc();});
+window.addEventListener('resize',calc);calc();
+</script></body></html>

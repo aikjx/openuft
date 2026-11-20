@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROOT V90 | 四分支量子引力与新力形状实验室</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#151d30;--line:#303e57;--fg:#e7eefc;--muted:#aebed6;--focus:#8ac9f4;--warm:#ebc078}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,"Microsoft YaHei",sans-serif;background:linear-gradient(115deg,#0b1020,#121c31);color:var(--fg);line-height:1.55}
+header,main,footer{max-width:1120px;margin:auto;padding:20px}header{padding-top:32px}h1{font-size:clamp(26px,4vw,42px);margin:7px 0}h2{font-size:21px;margin:0 0 14px}h3{font-size:16px;margin:0 0 8px}.eyebrow{letter-spacing:3px;color:var(--focus);font-size:12px;font-weight:700}
+.lead{max-width:800px;color:var(--muted);font-size:16px}.flag{display:inline-block;border:1px solid #745b40;color:#f7d6a2;border-radius:24px;padding:4px 12px;font-size:12px}
+.two{display:grid;grid-template-columns:minmax(280px,350px) 1fr;gap:18px;align-items:start}.panel{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:18px;margin:0 0 18px}.control{margin:16px 0}.control label{display:flex;justify-content:space-between;color:var(--muted);gap:10px;font-size:14px}.control strong{color:var(--fg)}input[type=range]{width:100%;accent-color:#81c5ee;margin:9px 0 0;cursor:pointer}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{padding:12px;background:#0f1829;border:1px solid var(--line);border-radius:11px;overflow-wrap:anywhere}.metric small{display:block;color:var(--muted);font-size:12px}.metric b{font-size:18px;font-variant-numeric:tabular-nums}
+canvas{width:100%;height:260px;display:block;background:#10182a;border-radius:10px;margin-top:8px}.hint{color:var(--muted);font-size:13px}.equation{font-family:Georgia,serif;background:#111c2c;padding:13px;border-radius:8px;overflow-wrap:anywhere}.inline{font-family:monospace;color:#cbd7f2}p{margin:10px 0}footer{color:var(--muted);font-size:13px;padding-bottom:35px}
+@media(max-width:790px){.two{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}header,main,footer{padding:15px}}
+</style></head>
+<body><header><span class="eyebrow">ROOT · V90 / RESEARCH LAB</span><h1>四分支量子引力 · 新力形状实验室</h1><p class="lead">从牛顿非局部相位出发，观察有限程 Yukawa 力在多距离条件下如何趋近牛顿核，并用精确代数消除已知的 1/r 部分。</p><span class="flag">纯理论/合成演示 · 不是实测 · 不代表四力统一</span></header>
+<main><div class="two"><section class="panel"><h2>实验参数</h2><div class="control"><label for="lambda">作用距离 λ <strong id="lambdaValue"></strong></label><input id="lambda" type="range" min="-4" max="0" step="0.025" value="-3"></div>
+<div class="control"><label for="alpha">候选新力强度 α <strong id="alphaValue"></strong></label><input id="alpha" type="range" min="0" max="1" step="0.01" value="0.1"></div>
+<div class="control"><label for="da">A 的分支间距 (μm) <strong id="daValue"></strong></label><input id="da" type="range" min="50" max="250" step="10" value="200"></div>
+<div class="control"><label for="db">B 的分支间距 (μm) <strong id="dbValue"></strong></label><input id="db" type="range" min="50" max="250" step="10" value="200"></div>
+<p class="hint">固定质量 mA=mB=10<sup>−14</sup> kg、相互作用时间 1 s；展示的中心距离 d≥450 μm，确保最短分支距离为正。</p>
+<h3>核心数学</h3><p class="equation">Δ = [GmAmBt/ℏ] · [F₁ + α Fᵧ]</p><p class="equation">Fᵧ − F₁ ≈ sAsB/(3λ³) − d sAsB/(4λ⁴)</p><p class="hint">极长距离时使用级数稳定计算，避免浮点数做两个相近大数之差。</p></section>
+<section><div class="panel"><h2>计算结果（理论）</h2><div class="metrics"><div class="metric"><small>Newton 四分支相位</small><b id="newton">—</b></div><div class="metric"><small>Yukawa 额外相位</small><b id="extra">—</b></div><div class="metric"><small>两距离 Newton 消零后相位</small><b id="nulled">—</b></div></div><p class="hint">正负号取决于势与分支标签约定。相位极小不等于仪器可测量。</p></div>
+<div class="panel"><h2>距离扫描：非局部相位</h2><canvas id="phasePlot" width="760" height="300" role="img" aria-label="牛顿与Yukawa相位的模拟曲线"></canvas><p class="hint">水平轴：中心距离 0.45—1.25 mm。纵轴：理论总相位 rad。</p></div>
+<div class="panel"><h2>作用距离的退化趋势</h2><canvas id="suppressPlot" width="760" height="300" role="img" aria-label="Yukawa相对牛顿的形状偏差"></canvas><p class="hint">纵轴使用对数刻度，展示 |FY−F1|/|F1|。该图不是观测数据。</p></div></section></div>
+<div class="panel"><h2>科研裁定</h2><p>这套实验只计算指定的冻结路径、弱场、非相对论双体势模型。相位纠缠、第五力、量子引力环修正与完整四力统一是不同科学命题。使用电荷反转消除库仑效应，需要读取<strong>带符号、可展开的相位</strong>；仅从纠缠量 |sin(Δ/2)| 无法直接做奇偶线性消去。</p></div></main>
+<footer>ROOT V90 | 独立离线 HTML · 2026-11-18 | 量纲与近似范围以研究文档为准。</footer>
+<script>
+'use strict';
+const G=6.67430e-11,H=6.62607015e-34/(2*Math.PI),A=G*1e-28/H;
+const $=id=>document.getElementById(id);
+function geom(d,a,b){if(d<=(a+b)/2)return null;return [d+(a-b)/2,d+(a+b)/2,d-(a+b)/2,d+(b-a)/2]}
+function kernel(rs,n){return 1/rs[0]**n-1/rs[1]**n-1/rs[2]**n+1/rs[3]**n}
+function diffY(rs,lam){let f1=kernel(rs,1);if(lam<5*Math.max(...rs))return (Math.exp(-rs[0]/lam)/rs[0]-Math.exp(-rs[1]/lam)/rs[1]-Math.exp(-rs[2]/lam)/rs[2]+Math.exp(-rs[3]/lam)/rs[3])-f1;
+// Exact cancellation of n=1 and n=2 analytic moments; n>=3 Taylor.
+let sig=[1,-1,-1,1],sum=0;for(let n=3;n<=21;n++){let moment=0;for(let i=0;i<4;i++)moment+=sig[i]*Math.pow(rs[i]/lam,n-1);let fac=1;for(let k=2;k<=n;k++)fac*=k;sum+=(n%2?-1:1)*moment/(fac*lam)}return sum}
+function format(v){if(!Number.isFinite(v))return '超出数值范围';return v.toExponential(5)}
+function plot(canvas,curves,ylog){const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#10182a';ctx.fillRect(0,0,w,h);
+const xmin=0.00045,xmax=0.00125,left=64,right=w-22,top=20,bottom=h-35;
+let arr=curves.flatMap(c=>c.y.map(v=>ylog?Math.log10(Math.max(Math.abs(v),1e-18)):v));let lo=Math.min(...arr),hi=Math.max(...arr);if(hi===lo){lo-=1;hi+=1}const pad=(hi-lo)*.08;lo-=pad;hi+=pad;
+ctx.strokeStyle='#55657e';ctx.lineWidth=1;for(let i=0;i<=4;i++){let y=top+(bottom-top)*i/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.fillStyle='#acbed9';ctx.font='12px sans-serif';ctx.fillText((hi-(hi-lo)*i/4).toFixed(3),5,y+4)}
+ctx.fillText('0.45 mm',left,bottom+20);ctx.fillText('1.25 mm',right-55,bottom+20);
+let colors=['#82c8f2','#f4c47e','#b08be8'];curves.forEach((curve,j)=>{ctx.strokeStyle=colors[j%colors.length];ctx.lineWidth=2.2;ctx.beginPath();curve.x.forEach((x,i)=>{let yy=ylog?Math.log10(Math.max(Math.abs(curve.y[i]),1e-18)):curve.y[i];let px=left+(x-xmin)/(xmax-xmin)*(right-left),py=bottom-(yy-lo)/(hi-lo)*(bottom-top);if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)});ctx.stroke();ctx.fillStyle=colors[j%colors.length];ctx.fillRect(left+12+j*235,top+4,8,8);ctx.font='12px sans-serif';ctx.fillText(curve.label,left+24+j*235,top+13)})}
+function update(){const lam=10**Number($('lambda').value),alpha=Number($('alpha').value),sa=Number($('da').value)*1e-6,sb=Number($('db').value)*1e-6;
+$('lambdaValue').textContent=(lam*1e3).toPrecision(4)+' mm';$('alphaValue').textContent=alpha.toFixed(2);$('daValue').textContent=Number($('da').value)+' μm';$('dbValue').textContent=Number($('db').value)+' μm';
+let rs1=geom(.00045,sa,sb),rs2=geom(.0006,sa,sb),f1=kernel(rs1,1),d1=diffY(rs1,lam),d2=diffY(rs2,lam),w=-f1/kernel(rs2,1);
+$('newton').textContent=format(A*f1)+' rad';$('extra').textContent=format(alpha*A*(f1+d1))+' rad';$('nulled').textContent=format(alpha*A*(d1+w*d2))+' rad';
+let x=[],n=[],total=[],s=[];for(let i=0;i<81;i++){let d=.00045+(.00125-.00045)*i/80,rs=geom(d,sa,sb),f=kernel(rs,1),dy=diffY(rs,lam);x.push(d);n.push(A*f);total.push(A*(f+alpha*(f+dy)));s.push(Math.abs(dy/f))}
+plot($('phasePlot'),[{x,y:n,label:'Newton'},{x,y:total,label:'Newton + Yukawa'}],false);plot($('suppressPlot'),[{x,y:s,label:'Yukawa 形状差（log10）'}],true);
+}
+for(const id of ['lambda','alpha','da','db'])$(id).addEventListener('input',update);update();
+</script></body></html>

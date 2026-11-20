@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ROOT V109｜内部相位与偏振传播科研实验室</title>
+<style>
+:root{color-scheme:dark;font-family:ui-sans-serif,system-ui,-apple-system,'Microsoft YaHei',sans-serif;background:#080e1c;color:#edf3fc}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 12% 0%,#202b55 0%,#080e1c 46%);min-height:100vh}main{max-width:1150px;margin:0 auto;padding:38px 24px 65px}
+h1{font-size:clamp(25px,3.4vw,38px);margin:10px 0 9px;letter-spacing:-.8px}h2{font-size:19px;margin:2px 0 22px}p{line-height:1.65;color:#aebcda;margin:0 0 16px}.sub{font-size:13px;color:#9eafcf}.over{font-weight:750;letter-spacing:2px;color:#8eabe9;font-size:12px}
+.columns{display:grid;grid-template-columns:360px 1fr;gap:20px;margin-top:28px}.panel{background:rgba(18,28,50,.88);border:1px solid #34405b;border-radius:15px;padding:24px;min-width:0}
+.parameter{margin:16px 0 25px}.parameter label{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:#c9d8ef}.parameter output{color:#b6f0ff;font-variant-numeric:tabular-nums}.parameter input{width:100%;accent-color:#68bedf;cursor:pointer;margin-top:13px}
+button{cursor:pointer;color:#dce9ff;background:#303b57;border:1px solid #586b91;border-radius:8px;padding:10px 16px;font-weight:650}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.stat{background:#0d1931;padding:17px;border-radius:10px;border:1px solid #2b3b5d}.stat small{color:#a6b6cf;display:block;font-size:12px}.stat strong{display:block;font-size:22px;letter-spacing:-.5px;margin-top:8px;font-variant-numeric:tabular-nums}
+svg{display:block;width:100%;background:#0a1528;border-radius:8px;border:1px solid #253651;margin-top:16px}.legend{display:flex;gap:15px;font-size:12px;margin-top:11px;color:#bacce8}.warn{padding:13px 15px;border:1px solid #66573c;border-radius:8px;color:#ead9b4;background:#29261f;font-size:13px;line-height:1.7;margin-top:16px}
+.footer{margin-top:28px;border-top:1px solid #283550;padding-top:18px;font-size:13px;color:#9baccb}code{color:#b2dfff}
+@media(max-width:850px){.columns{grid-template-columns:1fr}.statgrid{grid-template-columns:1fr}main{padding:23px 13px}}
+</style></head>
+<body><main>
+<div class="over">ROOT V109 · THEORY-ONLY · PHYSICS AUDIT</div>
+<h1>内部相位与电磁波传播实验室</h1>
+<p>比较绝热近似与两种圆偏振的完整模式积分。理论基准是已有轴子样电动力学，不代表 ROOT 已独立发现新力，也不是实际观测。</p>
+<div class="columns"><section class="panel">
+<h2>可调模型参数</h2>
+<div class="parameter"><label>内部相位振幅 <output id="ampout">0.40</output></label><input id="amp" data-testid="amplitude" type="range" min="0" max="1.2" step="0.02" value="0.4"></div>
+<div class="parameter"><label>相位变化角频率 <output id="omegaout">0.70</output></label><input id="omega" type="range" min="0.1" max="2" step="0.05" value="0.7"></div>
+<div class="parameter"><label>无量纲耦合 λ <output id="lamout">0.080</output></label><input id="lam" data-testid="coupling" type="range" min="0" max="0.6" step="0.005" value="0.08"></div>
+<div class="parameter"><label>光波数 k <output id="kout">20</output></label><input id="k" type="range" min="1" max="100" step="1" value="20"></div>
+<div class="parameter"><label>传播时长 T <output id="Tout">5.0</output></label><input id="T" type="range" min="1" max="9" step="0.2" value="5"></div>
+<button id="reset" data-testid="reset">恢复基准参数</button>
+</section><section class="panel">
+<h2>传播计算与可辨识性</h2>
+<div class="statgrid">
+ <div class="stat"><small>WKB 偏振转角</small><strong id="wkb" data-testid="wkb">—</strong></div>
+ <div class="stat"><small>完整 A 模式相位轴</small><strong id="full" data-testid="full">—</strong></div>
+ <div class="stat"><small>近似偏差</small><strong id="err" data-testid="error">—</strong></div>
+</div>
+<svg viewBox="0 0 660 250" id="plot" role="img" aria-label="内部相位随传播参数变化的模拟曲线">
+<line x1="50" y1="125" x2="642" y2="125" stroke="#415272"/><line x1="50" y1="12" x2="50" y2="229" stroke="#415272"/>
+<path id="theta_path" d="" fill="none" stroke="#68d5e3" stroke-width="3"/>
+<path id="thetadot_path" d="" fill="none" stroke="#eba3cb" stroke-width="2" stroke-dasharray="5 5"/>
+<text x="14" y="20" fill="#91a8d3" font-size="11">θ</text><text x="626" y="242" fill="#91a8d3" font-size="11">t</text>
+</svg>
+<div class="legend"><span style="color:#68d5e3">● 内部相位 θ(t)</span><span style="color:#eba3cb">● 相位导数 θ′(t)</span></div>
+<div class="warn" id="warning" data-testid="warning">所有数值为无量纲示范模型。仅在绝热条件下，可把端点公式解释为领先阶偏振旋转；非绝热情形应使用完整电磁场与探测器模型。</div>
+<p class="sub" style="margin-top:20px">模型：<code>A±″+[k² ± λk θ′(t)]A±=0</code>；计算采用 RK4 积分与正频初值。<b>不能仅由偏振数据独立确定 λ 与 Δθ。</b></p>
+</section></div>
+<div class="footer">证据层级：理论作用量、模型积分、独立符号检查与有限数值测试；无新实验、无四力统一证明、未独立计算 G。计算以 ħ=c=1 的自然单位和任意参考尺度表示，不等同于实验室秒或米。</div>
+</main>
+<script>
+const ids=['amp','omega','lam','k','T'];const defaultV=[.4,.7,.08,20,5];
+function val(id){return parseFloat(document.getElementById(id).value)}
+function integrate(h,k,lambda,amp,omega,T){
+  const thetaDot=t=>amp*omega*Math.cos(omega*t), thetaDDot=t=>-amp*omega*omega*Math.sin(omega*t);
+  const w0=Math.sqrt(k*k+h*lambda*k*thetaDot(0)); const wp=h*lambda*k*thetaDDot(0)/(2*w0); const a0=1/Math.sqrt(2*w0);
+  let v=[a0,0,-wp*a0/(2*w0),-w0*a0];
+  let n=Math.max(1800,Math.ceil(k*T*28)); const dt=T/n;
+  function der(t,y){const w2=k*k+h*lambda*k*thetaDot(t);return [y[2],y[3],-w2*y[0],-w2*y[1]]}
+  for(let i=0;i<n;i++){let t=i*dt; let a=der(t,v),b=der(t+dt/2,v.map((z,j)=>z+dt*a[j]/2)),c=der(t+dt/2,v.map((z,j)=>z+dt*b[j]/2)),d=der(t+dt,v.map((z,j)=>z+dt*c[j]));v=v.map((z,j)=>z+dt*(a[j]+2*b[j]+2*c[j]+d[j])/6)}
+  return [v[0],v[1]];
+}
+function render(){
+ const amp=val('amp'),omega=val('omega'),lambda=val('lam'),k=val('k'),T=val('T');
+ document.getElementById('ampout').textContent=amp.toFixed(2);
+ document.getElementById('omegaout').textContent=omega.toFixed(2);
+ document.getElementById('lamout').textContent=lambda.toFixed(3);
+ document.getElementById('kout').textContent=k.toFixed(0);
+ document.getElementById('Tout').textContent=T.toFixed(1);
+ const wkb=.5*lambda*amp*Math.sin(omega*T);
+ const a=integrate(1,k,lambda,amp,omega,T),b=integrate(-1,k,lambda,amp,omega,T);
+ let phase=Math.atan2(a[1],a[0])-Math.atan2(b[1],b[0]); phase=Math.atan2(Math.sin(phase),Math.cos(phase));
+ const full=-.5*phase;
+ document.getElementById('wkb').textContent=wkb.toFixed(7)+' rad';
+ document.getElementById('full').textContent=full.toFixed(7)+' rad';
+ document.getElementById('err').textContent=Math.abs(wkb-full).toExponential(2)+' rad';
+ let ad=Math.abs(lambda*amp*omega*omega*k)/(2*Math.pow(Math.max(1e-6,k*k-Math.abs(lambda*amp*omega*k)),1.5));
+ document.getElementById('warning').textContent=(ad>.01?'注意：本组参数可能明显违反绝热近似；':'当前绝热指标较小，但端点结果仍只是近似。')+' 仅模型数值：不得解释为已观测新力。 绝热指标估计 ≤ '+ad.toExponential(2);
+ const build=fn=>{let path='';for(let i=0;i<=180;i++){let t=T*i/180;let y=fn(t);let yy=125-75*y/Math.max(.2,amp,amp*omega);path+=(i?' L ':'M ')+(50+590*i/180).toFixed(2)+' '+yy.toFixed(2)}return path};
+ document.getElementById('theta_path').setAttribute('d',build(t=>amp*Math.sin(omega*t)));
+ document.getElementById('thetadot_path').setAttribute('d',build(t=>amp*omega*Math.cos(omega*t)));
+}
+ids.forEach(id=>document.getElementById(id).addEventListener('input',render));
+document.getElementById('reset').addEventListener('click',()=>{ids.forEach((id,i)=>document.getElementById(id).value=defaultV[i]);render()});
+render();
+</script></body></html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ROOT V93 · 内外螺旋闭环实验室</title>
+<style>
+:root{font-family:Inter,system-ui,'Noto Sans CJK SC','Microsoft YaHei',sans-serif;color-scheme:dark;background:#07101e;color:#f1f5ff}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top left,#162d4b,#081322 50%,#050b13);min-height:100vh}
+main{max-width:1280px;margin:auto;padding:22px}header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-size:clamp(22px,3vw,32px);letter-spacing:-.035em;margin:0 0 9px}p{color:#a9bed8;line-height:1.6;margin:7px 0}
+.tag{border:1px solid #2e5578;border-radius:99px;padding:7px 11px;background:#0b2138;color:#9fe2ff;font-size:12px}
+.panel{background:#0c192c;border:1px solid #28415e;border-radius:18px;padding:16px;box-shadow:0 14px 35px #030b1580}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,1fr);gap:16px;margin-top:18px}
+@media(max-width:880px){.grid{grid-template-columns:1fr}}
+canvas{height:auto;width:100%;min-height:420px;border-radius:11px;display:block;background:linear-gradient(135deg,#071021,#08192b);cursor:grab;touch-action:none}canvas:active{cursor:grabbing}
+.controls{display:grid;gap:15px}.ctl{display:grid;gap:6px}.ctl label{display:flex;justify-content:space-between;font-size:14px;color:#ccd9ef;gap:8px}.ctl output{font-weight:700;font-variant-numeric:tabular-nums;color:#82e5e0}input[type=range]{width:100%;accent-color:#47d7df}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}@media(max-width:610px){.metrics{grid-template-columns:repeat(2,1fr)}}
+.metric{background:#101f32;border:1px solid #25435c;padding:13px;border-radius:12px}.metric .k{font-size:12px;color:#99b5ce}.metric .v{font-size:20px;color:#f5ffff;font-weight:700;margin-top:5px;font-variant-numeric:tabular-nums}
+button{padding:9px 12px;border:1px solid #466e8b;background:#15334b;color:#e5faff;border-radius:9px;cursor:pointer;font-weight:650}button:hover{background:#1e4763}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.small{font-size:12px;color:#9eb4cb}.warn{border-left:3px solid #e8ba6c;padding:12px 15px;background:#39291742;margin-top:15px;line-height:1.7;color:#e8d7ba}
+code{font-family:ui-monospace,monospace;color:#d9fcfa}.footer{margin:20px 0 0;font-size:13px;color:#819db8}
+</style></head><body><main>
+<header><div><h1>ROOT V93｜从内到外 · 从外到内 · 闭环螺旋</h1><p>三维环面曲线、恒定总速度参数化、曲率与角速度的计算实验室。拖拽左侧模型可旋转观察。</p></div><span class="tag">THEORY / GEOMETRY · 离线可用</span></header>
+<div class="grid">
+<section class="panel"><canvas id="view" width="920" height="570" aria-label="可旋转三维闭合环面螺旋可视化"></canvas>
+<div class="bar"><button id="play" aria-label="暂停或播放">暂停动画</button><button id="reset" aria-label="复位角度">复位视角</button><span class="small">青色=外侧 · 紫色=内侧 · 白点=运行位置（慢动作播放）</span></div>
+<div class="metrics">
+<div class="metric"><div class="k">轨迹长度</div><div class="v" id="length">—</div></div>
+<div class="metric"><div class="k">物理运动周期</div><div class="v" id="period">—</div></div>
+<div class="metric"><div class="k">内外 Ω 比</div><div class="v" id="ratio">—</div></div>
+<div class="metric"><div class="k">外 / 内半径</div><div class="v" id="radii">—</div></div>
+<div class="metric"><div class="k">绕轴 / 内外周期</div><div class="v" id="winds">—</div></div>
+<div class="metric"><div class="k">速度一致性</div><div class="v" id="speedtest">—</div></div>
+</div>
+</section>
+<aside class="panel"><h2 style="margin:0 0 16px;font-size:19px">参数控制</h2><div class="controls">
+<div class="ctl"><label for="R">主半径 R <output id="Rv">10.0 mm</output></label><input id="R" type="range" min="3" max="30" step=".5" value="10"></div>
+<div class="ctl"><label for="alpha">小半径与主半径比 a/R <output id="av">0.20</output></label><input id="alpha" type="range" min=".05" max=".75" step=".01" value=".20"></div>
+<div class="ctl"><label for="m">主轴绕行数 m <output id="mv">2</output></label><input id="m" type="range" min="1" max="6" step="1" value="2"></div>
+<div class="ctl"><label for="n">径向内外循环数 n <output id="nv">3</output></label><input id="n" type="range" min="1" max="8" step="1" value="3"></div>
+<div class="ctl"><label for="beta">总速度 β=v/c <output id="bv">0.80</output></label><input id="beta" type="range" min=".1" max="1" step=".05" value=".8"></div>
+</div><div style="margin-top:20px;padding:12px;background:#091521;border-radius:12px;font-size:14px;line-height:1.9">
+<div>ρ(u) = R + a cos(nu)</div><div>z(u) = a sin(nu)</div><div>θ(u) = mu</div><div>σ(u) = √[(an)² + m²ρ²]</div><div>Ω(u) = mβc/σ(u)</div><div>dt/du = σ/(βc)</div></div>
+<div class="warn" id="physicalwarning">当 β=0.8 时可作为有质量粒子的条件运动学模型，但轨迹仍需要实际合力与场源支持。几何闭合本身不生成一种新力。</div>
+</aside></div>
+<p class="footer">该网页不连接外部服务，不使用实验数据。空间闭合不等于时空闭合，闭合轨迹不意味着零能耗、自发产生场或四力统一。模型及计算源码见 ZIP 的 src/ 与 research/。</p>
+</main><script>
+'use strict';
+const C=299792458, TAU=Math.PI*2;
+const get=id=>document.getElementById(id);
+const controls=['R','alpha','m','n','beta'];let yaw=-.8,pitch=.5,drag=false,last=null,playing=true,animS=0,previous=0,cache=null;
+const G=(a,b)=>b?G(b,a%b):a;
+function params(){return {R:+get('R').value/1000, a:(+get('R').value/1000)*(+get('alpha').value),m:+get('m').value,n:+get('n').value,beta:+get('beta').value}}
+function sigma(u,p){let rho=p.R+p.a*Math.cos(p.n*u);return Math.hypot(p.a*p.n,p.m*rho)}
+function pos(u,p){let rho=p.R+p.a*Math.cos(p.n*u);return [rho*Math.cos(p.m*u),rho*Math.sin(p.m*u),p.a*Math.sin(p.n*u),rho]}
+function compute(){const p=params(),N=2400,U=TAU/G(p.m,p.n),points=[],sarr=[0];let L=0,prev=pos(0,p);points.push(prev);for(let i=1;i<=N;i++){let u=U*i/N,o=pos(u,p);L+=(sigma(u,p)+sigma(U*(i-1)/N,p))*U/(2*N);sarr.push(L);points.push(o);prev=o}const ratio=sigma(0,p)/sigma(Math.PI/p.n,p);let vv=0;for(let i=0;i<400;i++){let u=U*i/400,fac=p.beta*C/sigma(u,p),rho=p.R+p.a*Math.cos(p.n*u),vr=-p.a*p.n*Math.sin(p.n*u)*fac,vt=p.m*rho*fac,vz=p.a*p.n*Math.cos(p.n*u)*fac;vv=Math.max(vv,Math.abs((vr*vr+vt*vt+vz*vz)/(p.beta*C)**2-1))}
+cache={p,points,sarr,L,U,ratio};get('Rv').textContent=(p.R*1000).toFixed(1)+' mm';get('av').textContent=(p.a/p.R).toFixed(2);get('mv').textContent=p.m;get('nv').textContent=p.n;get('bv').textContent=p.beta.toFixed(2);
+get('length').textContent=(L*100).toFixed(3)+' cm';get('period').textContent=(L/(p.beta*C)*1e9).toFixed(3)+' ns';get('ratio').textContent=ratio.toFixed(4)+'×';get('radii').textContent=((p.R+p.a)*1e3).toFixed(1)+' / '+((p.R-p.a)*1e3).toFixed(1)+' mm';get('winds').textContent=(p.m/G(p.m,p.n))+' / '+(p.n/G(p.m,p.n));get('speedtest').textContent=vv<2e-14?'恒速成立':'需检查';get('physicalwarning').textContent=p.beta>=1?'β=1 在此仅是曲线的光速数学参数化；不能作为有质量粒子的真实轨迹。真空中自由光子的非测地线运动也需要独立解释。':'β<1 可作有质量粒子的条件运动学轨迹，但需要真实场方程、能量来源与测量才能构成物理模型。';draw()}
+function project(p){let x=p[0],y=p[1],z=p[2],cy=Math.cos(yaw),sy=Math.sin(yaw),cp=Math.cos(pitch),sp=Math.sin(pitch);let X=x*cy-y*sy,Y=x*sy+y*cy;return [X,Y*sp+z*cp,Y*cp-z*sp]}
+function draw(){if(!cache)return;let canvas=get('view'),ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height;ctx.clearRect(0,0,W,H);const p=cache.p,scale=Math.min(W,H)*.38/(p.R+p.a),cx=W*.5,cy=H*.51;
+let segments=cache.points.slice(0,-1).map((v,i)=>({i,v:project(v)}));segments.sort((a,b)=>a.v[2]-b.v[2]);for(const a of segments){let b=project(cache.points[a.i+1]);const idx=(cache.points[a.i][3]-(p.R-p.a))/(2*p.a);const light=32+idx*24;ctx.beginPath();ctx.moveTo(cx+a.v[0]*scale,cy-a.v[1]*scale);ctx.lineTo(cx+b[0]*scale,cy-b[1]*scale);ctx.lineWidth=3;ctx.strokeStyle=`hsl(${270-idx*90},83%,${light}%)`;ctx.stroke()}
+// slow motion: marker follows arclength so it respects constant velocity in the display model
+const target=((animS%1)+1)%1*cache.L;let left=0,right=cache.sarr.length-1;while(left<right){let mid=(left+right)>>1;if(cache.sarr[mid]<target)left=mid+1;else right=mid}let node=cache.points[Math.min(left,cache.points.length-1)],P=project(node);ctx.beginPath();ctx.arc(cx+P[0]*scale,cy-P[1]*scale,7,0,TAU);ctx.fillStyle='#fff5da';ctx.shadowBlur=18;ctx.shadowColor='#78fff4';ctx.fill();ctx.shadowBlur=0;
+ctx.fillStyle='#b1c5df';ctx.font='15px system-ui';ctx.fillText('拖拽旋转 · 模拟慢动作（非真实时间尺度）',20,28);}
+function tick(t){if(previous&&playing){animS+=Math.min((t-previous)/10000,.02)}previous=t;draw();requestAnimationFrame(tick)}
+controls.forEach(id=>get(id).addEventListener('input',compute));get('play').onclick=()=>{playing=!playing;get('play').textContent=playing?'暂停动画':'播放动画'};get('reset').onclick=()=>{yaw=-.8;pitch=.5;draw()};const canv=get('view');canv.addEventListener('pointerdown',e=>{drag=true;last=[e.clientX,e.clientY];canv.setPointerCapture(e.pointerId)});canv.addEventListener('pointermove',e=>{if(!drag)return;yaw+=(e.clientX-last[0])*.009;pitch=Math.max(-1.3,Math.min(1.3,pitch+(e.clientY-last[1])*.009));last=[e.clientX,e.clientY];draw()});canv.addEventListener('pointerup',()=>drag=false);canv.addEventListener('pointercancel',()=>drag=false);window.ROOT_V93_debug=()=>({params:params(),length:cache.L,ratio:cache.ratio,period:cache.L/(cache.p.beta*C),primitivePeriod:cache.U});compute();requestAnimationFrame(tick);
+</script></body></html>

@@ -1,0 +1,49 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ROOT V114 · 多尺度标量引力实验室</title>
+<style>
+:root { color-scheme:dark; --bg:#0d1622;--card:#172538;--border:#314561;--ink:#ecf4fc;--sub:#a9b8cd;--accent:#82c7e8; }
+*{box-sizing:border-box}body{background:var(--bg);color:var(--ink);font:15px/1.65 system-ui,sans-serif;margin:0}main{max-width:1180px;margin:auto;padding:30px 18px 55px}h1{font-size:28px;margin:4px 0}h2{font-size:19px}p{color:var(--sub)}.eyebrow{letter-spacing:.13em;color:#91c7e7;font-size:12px;font-weight:700}.grid{display:grid;grid-template-columns:minmax(320px, .95fr) minmax(320px,1.05fr);gap:18px}@media(max-width:780px){.grid{grid-template-columns:1fr}}.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:18px}label{display:flex;justify-content:space-between;gap:12px;margin-top:17px;font-weight:600}input[type=range]{width:100%;accent-color:var(--accent)}.metric{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #304258;padding:10px 0}.metric span:first-child{color:var(--sub)}.value{font:600 15px ui-monospace,SFMono-Regular,Consolas,monospace;color:#a8ebff;text-align:right}svg{width:100%;height:auto;max-height:310px;background:#0b1726;border-radius:12px}button{border-radius:8px;border:1px solid #50718b;background:#233e5a;padding:8px 14px;color:#eaf7ff;cursor:pointer}button:hover{background:#335a7f}strong{color:#e9f8fb}small{color:var(--sub)}.warning{border-left:3px solid #d4b16d;padding-left:12px}.pill{display:inline-block;border:1px solid #48637f;border-radius:16px;padding:3px 10px;font-size:12px}
+</style></head><body><main>
+<div class="eyebrow">ROOT V114 · EXPERIMENTAL MATHEMATICS LAB</div><h1>多尺度引力 × 标量反演 × 光传播一致性</h1>
+<p>严格限制在一个线性弱场、点源、普遍物质耦合、无屏蔽的经典标量模型中。所有数值均由当前页面实时计算，<strong>不是实验测量或已证实的四力统一</strong>。</p>
+<div class="grid"><section class="card"><h2>参数控制</h2>
+<label for="a">标量耦合 a = α² <strong id="aout">0.33333</strong></label><input id="a" type="range" min="0.01" max="1.0" step="0.000001" value="0.333333">
+<label for="lambda">标量作用程 λ（AU） <strong id="lamout">1.000</strong></label><input id="lambda" type="range" min="0.1" max="10" step="0.01" value="1">
+<label for="r">检测半径 r（AU） <strong id="rout">1.000</strong></label><input id="r" type="range" min="0.1" max="5" step="0.01" value="1">
+<div class="metric"><span>局部度规比值 γ<sub>loc</sub></span><span class="value" id="gamma">—</span></div>
+<div class="metric"><span>势强度 G<sub>potential</sub>/G*</span><span class="value" id="potential">—</span></div>
+<div class="metric"><span>测力强度 G<sub>force</sub>/G*</span><span class="value" id="force">—</span></div>
+<div class="metric"><span>简化光传播归一 γ<sub>toy fit</sub></span><span class="value" id="gamfit">—</span></div>
+<div class="metric"><span>单点反算 λ（AU）</span><span class="value" id="infer">—</span></div>
+<div class="metric"><span>两尺度超额比 Y(2 AU)/Y(0.5 AU)</span><span class="value" id="ratio">—</span></div>
+<div class="metric"><span>标量波传播阈值 f*（Hz）</span><span class="value" id="fstar">—</span></div>
+<p><button type="button" id="reset">恢复 V114 基准</button></p></section>
+<section class="card"><h2>同一模型的不同引力观测</h2><svg viewBox="0 0 540 300" aria-label="局部伽马与有效耦合随距离变化曲线" role="img">
+<line x1="55" y1="245" x2="512" y2="245" stroke="#8ba2b8"/><line x1="55" y1="18" x2="55" y2="245" stroke="#8ba2b8"/>
+<path id="lineGamma" fill="none" stroke="#82c7e8" stroke-width="2.5"/><path id="lineForce" fill="none" stroke="#e5b471" stroke-width="2.5"/><path id="linePotential" fill="none" stroke="#88d9b1" stroke-width="2.5"/>
+<text x="300" y="277" fill="#bacde1" font-size="13" text-anchor="middle">r（AU）</text><text x="8" y="19" fill="#bacde1" font-size="12">比例</text>
+</svg><p><span class="pill" style="color:#82c7e8">蓝：γ 局部比值</span> <span class="pill" style="color:#e5b471">橙：测力/G*</span> <span class="pill" style="color:#88d9b1">绿：引力势/G*</span></p>
+<h2>模型的核心代数关系</h2><div class="value" style="text-align:left;white-space:normal">z=(1−γ)/(1+γ)=a·exp(−r/λ)</div><div class="value" style="text-align:left;white-space:normal">Y=Gforce/G*−1=z(1+r/λ)</div><div class="value" style="text-align:left;white-space:normal">λ=r/(Y/z−1)</div><p>注意：同一组方程不能既用于拟合输入参数，又被称为“独立预测了这些参数”。</p></section></div>
+<section class="card"><h2>光传播与测力的校准不能混为一谈</h2>
+<p>在这里的共形标量模型里，固定张量部分的 G*M 后有 <strong>U+Ψ=2G*M/r</strong>。因此光路一级势与标量分量相消，但轨道动力学所测的有效 GM 却含有 Yukawa 修正。真实 Cassini 是整个光路与轨道的多参数联合拟合，不能把本页 γ<sub>loc</sub> 当作其常数 PPN γ 直接比较。</p>
+<p class="warning">如果 G* 与源质量 M 都没有独立标定，则纯引力观测只确定乘积 G*M，不能无循环地预测 G。ROOT 的强弱电磁四力统一、UV 量子引力、G 本源和独有实验新预言仍为 OPEN。</p>
+<small>理论来源：常规 Jordan 标量—张量弱场和 Yukawa 势；网页为离线模型计算工具，不连接任何外部服务。</small></section>
+</main><script>
+(()=>{'use strict';const $=id=>document.getElementById(id), AU=149597870700,c=299792458;
+const fmt=x=>Number.isFinite(x)?x.toPrecision(9):'无定义';
+const value=(r,a,lam)=>{const x=r/lam,z=a*Math.exp(-x),g=(1-z)/(1+z),Y=z*(1+x);return {g,p:1+z,f:1+Y,z,Y}};
+function line(values){const mx=1.7,my=0.55,px=i=>55+i/(values.length-1)*457,py=v=>245-(Math.max(my,Math.min(mx,v))-my)/(mx-my)*216;return values.map((v,i)=>(i?'L':'M')+px(i).toFixed(2)+' '+py(v).toFixed(2)).join(' ')}
+function update(){let a=+$('a').value,lam=+$('lambda').value,r=+$('r').value;
+ $('aout').textContent=a.toFixed(5);$('lamout').textContent=lam.toFixed(3);$('rout').textContent=r.toFixed(3);
+ const V=value(r,a,lam),q=V.Y/V.z-1;
+ $('gamma').textContent=fmt(V.g);$('potential').textContent=fmt(V.p);$('force').textContent=fmt(V.f);
+ $('gamfit').textContent=fmt(2/V.f-1);$('infer').textContent=fmt(r/q);$('fstar').textContent=(c/(2*Math.PI*lam*AU)).toExponential(6);
+ $('ratio').textContent=fmt(value(2,a,lam).Y/value(.5,a,lam).Y);
+ const vals=Array.from({length:200},(_,i)=>value(.1+(5-.1)*i/199,a,lam));
+ $('lineGamma').setAttribute('d',line(vals.map(v=>v.g)));
+ $('lineForce').setAttribute('d',line(vals.map(v=>v.f)));
+ $('linePotential').setAttribute('d',line(vals.map(v=>v.p)));
+}
+['a','lambda','r'].forEach(id=>$(id).addEventListener('input',update));
+$('reset').addEventListener('click',()=>{$('a').value=.333333;$('lambda').value=1;$('r').value=1;update()});update();
+})();
+</script></body></html>

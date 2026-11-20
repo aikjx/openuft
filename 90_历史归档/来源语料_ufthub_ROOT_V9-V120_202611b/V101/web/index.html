@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROOT V101 | 曲率、拓扑与辐射下界实验室</title><style>
+:root{color-scheme:dark}body{font:16px/1.55 system-ui,-apple-system,"Microsoft Yahei",sans-serif;background:#0a1020;color:#edf2ff;max-width:1050px;margin:0 auto;padding:24px}
+h1{font-size:clamp(24px,4vw,34px);margin-bottom:8px}.sub{color:#aebcdb}.panel{background:#182239;border:1px solid #36435e;padding:18px;border-radius:12px;margin:18px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.item{padding:16px;border-radius:10px;background:#111b31}.value{font-size:22px;font-weight:700;color:#b8dfff}.k{color:#aebcdb;font-size:13px}
+input[type=range]{width:100%}label{display:block;margin:10px 0 4px}small{color:#b3bed4}code{color:#a7e9ed}a{color:#91d2f4}
+</style></head><body>
+<h1>ROOT V101：闭环几何与辐射下界</h1>
+<p class="sub">纯理论、可交互数值教学工具。不是物理实验，也不代表已经实现四力统一或量子引力。</p>
+<div class="panel"><div class="grid"><div><label for="beta">速度 β=v/c：<strong id="betaLbl"></strong></label><input id="beta" type="range" min="0.01" max="0.95" step="0.01" value="0.10"></div><div><label for="length">轨道总长度：<strong id="lengthLbl"></strong></label><input id="length" type="range" min="0.03" max="0.50" step="0.005" value="0.16"></div></div></div>
+<div class="grid"><div class="item"><div class="k">普通闭曲线辐射下界 (J)</div><div class="value" id="generic"></div></div><div class="item"><div class="k">非平凡结辐射下界 (J)</div><div class="value" id="knotted"></div></div><div class="item"><div class="k">最小等效电压积分 (V)</div><div class="value" id="voltage"></div></div><div class="item"><div class="k">最低路径平均切线电场 (V/m)</div><div class="value" id="field"></div></div></div>
+<div class="panel"><p>约束公式：<code>E_rad ≥ [8π q² γ⁴ v³]/[3 ε₀ c³ L]</code>，仅用于光滑、无自交的非平凡结，且基于经典恒速点电荷的规定轨迹辐射模型。</p><p>静态磁场不做功；静态单值电势沿闭合路径做净功也为零，因此**完整周期补偿辐射**需要明确外部供能机制。</p>
+<p>磁场逆问题反例：<code>B2=B0 ez+(C/r)eφ</code>，圆轨道参考运动不变，但外加切向分量改变附近扰动的轴向响应。</p></div>
+<script>
+const c=299792458,eps=8.8541878188e-12,charge=1.602176634e-19;
+const ids=['generic','knotted','voltage','field','betaLbl','lengthLbl'];
+function render(){const b=Number(document.getElementById('beta').value),L=Number(document.getElementById('length').value),g=1/Math.sqrt(1-b*b);
+const C=charge*charge*Math.pow(g,4)*Math.pow(b,3)/(6*Math.PI*eps),gen=C*4*Math.PI*Math.PI/L,knot=4*gen;
+const values=[gen,knot,knot/charge,knot/charge/L];for(let i=0;i<4;i++)document.getElementById(ids[i]).textContent=values[i].toExponential(5);
+document.getElementById('betaLbl').textContent=b.toFixed(2)+' c';document.getElementById('lengthLbl').textContent=L.toFixed(3)+' m'}
+document.getElementById('beta').addEventListener('input',render);document.getElementById('length').addEventListener('input',render);render();
+</script></body></html>

@@ -1,0 +1,29 @@
+import csv
+from pathlib import Path
+R=Path(__file__).resolve().parents[1]
+orig=R/'ledger/V100_ALL_337.csv'
+with orig.open('r',encoding='utf-8-sig',newline='') as f:
+    rows=list(csv.DictReader(f))
+assert len(rows)==337, len(rows)
+extras=[
+('V101-001','结拓扑对经典恒速点电荷辐射能量的下界','CONDITIONAL_PROVEN','嵌入结与Liénard假设保持，已通过符号、数值和单位验证'),
+('V101-002','无拓扑先验的给定总曲率辐射下界','PROVEN','K>0、L>0、常速，验证 E>=CK²/L'),
+('V101-003','V100 旧辐射数值的离散曲率独立复核','NUMERIC_CHECKED','独立离散算法与原计算误差<0.1%；非真实观测'),
+('V101-004','曲率频率不足以唯一确定真空磁场','EXACT_COUNTEREXAMPLE','构造无源环域不同 B，保持相同轨道且扰动响应不同'),
+('V101-005','静态无外部注能场能否维持持续辐射的闭环','CONDITIONAL_NO_GO','给出完整周期的辐射和Schott储能的能量账本'),
+('V101-006','维持指定辐射轨道的非静态电源幅值下界','CONDITIONAL_PROVEN','给出电场线积分必要条件，标注非充分性'),
+('V101-007','连续 Maxwell 源轨道精确存在性区间证书','OPEN','连续场 ODE interval Newton/Krawczyk 存在性严格证明'),
+('V101-008','连续真实轨道无自交结的严格同胚证书','OPEN','获得轨迹嵌入下界和投影交点可靠证书'),
+('V101-009','包含辐射反作用的长期自洽稳定闭环','OPEN','含外部供能、线圈源的自洽耦合时域数值/实验'),
+('V101-010','额外磁场自由度对扰动谱的可辨识性实验','OPEN','多通道轨道/场数据使参数 Fisher/Jacobian 满秩'),
+('V101-011','共同协变作用量导出引力电磁强弱四种作用','OPEN','导出GR+SM已测结构、无异常、量子一致性与新预测'),
+('V101-012','G的无循环独立预测及实验排他检验','OPEN','不把G作为输入或隐式标定，给出可实验验证值')]
+new=[]
+for ident,issue,status,accept in extras:
+    new.append({'id':ident,'issue':issue,'status_or_current_result':status,
+                'acceptance_criterion':accept,'source_version':'V101'})
+assert len(rows)+len(new)==349
+for name,rr in [('V101_NEW_12_ISSUES.csv',new),('ALL_349_ISSUES.csv',rows+new)]:
+    with (R/'ledger'/name).open('w',encoding='utf-8-sig',newline='') as f:
+        w=csv.DictWriter(f,fieldnames=list(rows[0].keys()));w.writeheader();w.writerows(rr)
+print(f'ledger: {len(rows)} historical + {len(new)} V101 = {len(rows)+len(new)}')
