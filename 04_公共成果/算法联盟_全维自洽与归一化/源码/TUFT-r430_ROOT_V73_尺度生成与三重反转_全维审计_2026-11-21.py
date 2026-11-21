@@ -194,12 +194,16 @@ guard("G_dim_extended_identity", rank_aug3 == 3 and ext_satisfied and dim_ext ==
 MP_SQ = HBAR * C_LIGHT / G_STD_SI
 MP_KG = MP_SQ.sqrt()
 MP_GEV = MP_KG / M_PL_GEV_PER_KG
+# 约化普朗克质量 Mbar = m_P/sqrt(8pi)：来料 E029/E030 的 2.435e18 GeV 即此量（不是 m_P 本身）
+MPBAR_GEV = MP_KG / (D(8) * PI).sqrt() / M_PL_GEV_PER_KG
 MP_ROUNDTRIP_KG = MP_GEV * M_PL_GEV_PER_KG
 IDENT_RESID = rel(HBAR * C_LIGHT / (MP_ROUNDTRIP_KG * MP_ROUNDTRIP_KG), G_STD_SI)
-guard("G_planck_identity", rel(MP_GEV, D("2.435e18")) < D("2e-4") and IDENT_RESID < D("1e-50"),
-      "m_P=sqrt(hbar·c/G)=%.6e kg = %.6e GeV（包内参考 2.435e18 为四舍五入值，相对差 %s）；"
+guard("G_planck_identity",
+      rel(MPBAR_GEV, D("2.435e18")) < D("2e-4") and IDENT_RESID < D("1e-50"),
+      "m_P=sqrt(hbar·c/G)=%.6e kg = %.6e GeV；约化普朗克质量 Mbar=m_P/sqrt(8pi)=%.6e GeV"
+      "（来料 E029/E030 的 2.435e18 即 Mbar，四舍五入到 4 位，相对差 %s）；"
       "hbar·c/m_P^2 与 G 的相对差 %s（恒等式）"
-      % (MP_KG, MP_GEV, sci(rel(MP_GEV, D("2.435e18"))), sci(IDENT_RESID)))
+      % (MP_KG, MP_GEV, MPBAR_GEV, sci(rel(MPBAR_GEV, D("2.435e18"))), sci(IDENT_RESID)))
 
 add("V73-A01", "PASS", "E013「G 不能由 c 与 ħ 组合」精确复算",
     "c^a hbar^b 与 G 的分量方程 a+2b=3 / b=-1 / -a-b=-2：rank(A)=%d，rank([A|b])=%d，"
@@ -212,8 +216,9 @@ add("V73-A03", "CORRECTED", "延拓一个质量标度即回到普朗克恒等式
     "加入 m 后的 3×3 系统 rank=3 且唯一解 (a,b,c)=(1,1,-2)，量纲 %s == [G]=%s ⇒ G ≡ c·hbar/m^2，"
     "即 m=sqrt(hbar·c/G)=%.4e kg = %.4e GeV，与 G 的相对差 %s（恒等式）。"
     "故 E013 的「没有其他有量纲输入」是承重前提：不可行性只在 {c,hbar} 集合内成立，"
-    "一旦引入质量标度即退化为已知恒等式、零新内容"
-    % (dstr(dim_ext), dstr(DIMG), MP_KG, MP_GEV, sci(IDENT_RESID)))
+    "一旦引入质量标度即退化为已知恒等式、零新内容。"
+    "（口径提示：来料的 2.435e18 GeV 是约化普朗克质量 Mbar=m_P/sqrt(8pi)=%.6e GeV，不是 m_P 本身）"
+    % (dstr(dim_ext), dstr(DIMG), MP_KG, MP_GEV, sci(IDENT_RESID), MPBAR_GEV))
 
 # ==================================================================
 # B 段：E019–E021 一圈 RG 量纲嬗变 —— 复算、往返、灵敏度与「逆算零自由度」
@@ -265,9 +270,11 @@ guard("G_rg_g_uv_match", rel(G_UV_FITTED, G_UV_REF) < D("1e-15"),
 
 # 「尺度生成」是纯逆算：Lambda(g) 严格单调 ⇒ 任意目标恰有一个 g ⇒ 零约束力
 grid = [D("0.30") + D("0.01") * i for i in range(60)]
-mono = all(scale_from_rg(MU_UV, grid[i]) > scale_from_rg(MU_UV, grid[i + 1]) for i in range(len(grid) - 1))
+# Lambda(g)=mu*exp(-8pi^2/(b0 g^2))：g 增大 ⇒ 指数项趋近 0 ⇒ Lambda 趋近 mu ⇒ 严格单调递增
+mono = all(scale_from_rg(MU_UV, grid[i]) < scale_from_rg(MU_UV, grid[i + 1]) for i in range(len(grid) - 1))
 guard("G_rg_monotone_bijection", mono,
-      "Lambda(g) 在 g∈[0.30,0.89] 上严格单调递减 ⇒ g→Lambda 为双射，任意目标 Lambda 恰对应一个 g")
+      "Lambda(g) 在 g∈[0.30,0.89] 上严格单调递增（值域 (0, mu)）⇒ g→Lambda 为双射，"
+      "任意目标 Lambda 恰对应一个 g（零自由度、零约束力）")
 
 add("V73-B01", "PASS", "E019–E021 一圈量纲嬗变与反推公式独立复算",
     "Lambda=mu·exp(-8pi^2/(b0 g^2))；以 mu=2.435e18 GeV、g=0.55 得 Lambda=%s GeV；"
@@ -289,8 +296,7 @@ add("V73-B04", "CORRECTED", "b0=7 是硬编码外部输入，一圈近似本身�
 # ==================================================================
 # C 段：E030–E031 诱导引力玩具式 —— 闭合账单（N 的量级 + G 的外部性）
 # ==================================================================
-MPBAR_GEV = MP_KG / (D(8) * PI).sqrt() / M_PL_GEV_PER_KG   # 约化普朗克质量 Mbar = m_P/sqrt(8pi)
-MPBAR_PKG = D("2.435e18")
+MPBAR_PKG = D("2.435e18")   # 来料的约化普朗克质量 Mbar（MPBAR_GEV 已在 A 段由 hbar/c/G 算出）
 
 
 def species_count(mpbar_gev, cutoff_gev):
@@ -364,26 +370,30 @@ def point_factor(radius, lam, altitude=D(0)):
     return (1 + y) * (-y).exp()
 
 
-def layered_factor(radius, lam, layers, altitude=D(0)):
-    """layers: [(inner, outer, rho)]；忠实复刻来料的两分支与末项指数切换"""
+def layered_factor(radius, lam, layers, altitude=D(0), force_branch=None):
+    """layers: [(inner, outer, rho)]；忠实复刻来料的两分支与末项指数切换。
+
+    force_branch=None 走来料的 X>=250 判据；"high"/"low" 可强制走某一分支（用于分支等价性检验）。
+    """
     radius = D(str(radius))
     lam = D(str(lam))
     altitude = D(str(altitude))
     mass_norm = D(0)
     weighted = D(0)
     X = radius / lam
+    use_high = (X >= 250) if force_branch is None else (force_branch == "high")
     for inner, outer, rho in layers:
         inner = D(str(inner))
         outer = D(str(outer))
         rho = D(str(rho))
         mass_norm += rho * (outer ** 3 - inner ** 3) / 3
-        if X >= 250:
+        if use_high:
             def sp(x, _X=X):
                 return ((x - 1) * (x - _X).exp() + (x + 1) * (-x - _X).exp()) / 2
             weighted += rho * lam ** 3 * (sp(outer / lam) - sp(inner / lam))
         else:
             weighted += rho * lam ** 3 * (f_of_x(outer / lam) - f_of_x(inner / lam))
-    tail = (-altitude / lam).exp() if X >= 250 else (-(radius + altitude) / lam).exp()
+    tail = (-altitude / lam).exp() if use_high else (-(radius + altitude) / lam).exp()
     return (weighted / mass_norm) * (1 + (radius + altitude) / lam) * tail
 
 
@@ -432,13 +442,18 @@ guard("G_two_layer_same_mass", rel(M_TWO, M_UNIF) < D("1e-40") and RHO_CORE > D(
       "两层球总质量与均匀 rho_mean=5513.4 模型逐位相同：相对差 %s；rho_core=%s kg/m^3"
       % (sci(rel(M_TWO, M_UNIF)), sci(RHO_CORE)))
 
-# X=250 分支切换处无跳变（两分支的指数补偿精确成立）
+# X=250 分支切换：同一组参数下强制走两分支，比较分支差异本身
+# （此前版本误把「跨 lam 窗口的平滑变化」当分支跳变，判据设计错误，由本次守卫拦下）
 LAM_X250 = EARTH_R / D(250)
+T_HIGH = layered_factor(EARTH_R, LAM_X250, TWO_LAYER, force_branch="high")
+T_LOW = layered_factor(EARTH_R, LAM_X250, TWO_LAYER, force_branch="low")
+BRANCH_DIFF = rel(T_HIGH, T_LOW)
+guard("G_layer_branch_continuous", BRANCH_DIFF < D("1e-50"),
+      "X=250 分支切换：同一组参数下强制走两分支，两结果相对差 %s（scaled_primitive=e^{-X}·f(x) 与末项指数"
+      "的补偿精确成立 ⇒ 机器零，非近似）" % sci(BRANCH_DIFF))
+# 平滑性参照（信息量，非分支判据）：跨 ±3e-5 的 lam 窗口的相邻变化
 CONT = [layered_factor(EARTH_R, LAM_X250 * (1 + D(k) / D(100000)), TWO_LAYER) for k in (-3, -1, 0, 1, 3)]
-CONT_JUMP = max(abs(CONT[i + 1] - CONT[i]) for i in range(len(CONT) - 1))
-guard("G_layer_branch_continuous", CONT_JUMP < D("1e-25"),
-      "X=250 分支切换前后 5 点分层因子的最大相邻跳变 %s（末项指数与 scaled_primitive 精确补偿，无断崖）"
-      % sci(CONT_JUMP))
+CONT_SPREAD = max(abs(CONT[i + 1] - CONT[i]) for i in range(len(CONT) - 1))
 
 
 def _simpson(fn, a, b, n):
@@ -510,7 +525,7 @@ add("V73-D02", "PASS", "独立二维积分检验：均匀球形状因子不是�
     "对均匀球的 Yukawa 势做二维 Simpson 积分（径向 × 角向，核 e^{-s/lam}(1/s^3+1/(lam s^2))），"
     "得 (a_Y/a_N)/alpha=%s，与包内解析因子 %s 的相对差 %s；网格加倍后误差 %s → %s。"
     "⇒ 来料的形状因子通过与实现无关的独立数值检验"
-    % (sci(D(NUM_YUK), 12), sci(PKG_ALT, 12), sci(DIFF_YUK), sci(DIFF_YUK_2)))
+    % (sci(D(NUM_YUK), 12), sci(PKG_ALT, 12), sci(DIFF_YUK), sci(DIFF_YUK), sci(DIFF_YUK_2)))
 add("V73-D03", "CORRECTED", "形状因子对「相互作用核」的读法敏感：只用 1/s^3 核会得到不同的数",
     "若把相互作用误当作牛顿型 1/r 力的简化（核仅 1/s^3），同几何同参数下比值变为 %s，"
     "与包内解析值相对差 %s（量级 O(1)，随 x=R/λ 变化）。⇒ 包内因子的隐含前提是"
@@ -518,8 +533,10 @@ add("V73-D03", "CORRECTED", "形状因子对「相互作用核」的读法敏感
     % (sci(D(NUM_NEWTON), 10), sci(DIFF_NEWTON)))
 add("V73-D04", "PASS", "单层退化与两层球总质量恒等（实现自洽）",
     "单层（rho=5513.4）分层实现与均匀球实现逐位一致（相对差 %s）；两层地球模型总质量与均匀模型"
-    "逐位相同（相对差 %s），rho_core=%s kg/m^3。X=250 分支切换处 5 点相邻跳变 %s（无断崖）"
-    % (sci(rel(U_SINGLE, U_1E6)), sci(rel(M_TWO, M_UNIF)), sci(RHO_CORE), sci(CONT_JUMP)))
+    "逐位相同（相对差 %s），rho_core=%s kg/m^3。X=250 分支在同一参数下两分支相对差 %s（精确补偿成立）；"
+    "跨 ±3e-5 的 lam 窗口相邻变化 %s 属函数自身的平滑变化（信息量，非分支跳变）"
+    % (sci(rel(U_SINGLE, U_1E6)), sci(rel(M_TWO, M_UNIF)), sci(RHO_CORE),
+       sci(BRANCH_DIFF), sci(CONT_SPREAD)))
 add("V73-D05", "INFO", "绝对归一化约定未完整声明（诚实边界）",
     "来料未完整声明 Yukawa 球源→加速度比的绝对归一化（源荷代理 Z/A 与质量比代理未给出推导链，"
     "台账 E060 自陈「不是真实普适第五力源荷」）。故本册对形状因子的判定限于：同口径比值、"
@@ -744,4 +761,445 @@ add("V73-G03", "CORRECTED", "候选矩阵第 26–27 行的两条限制合并为
     "=「不消完全同形干扰」。二者同指一个不可约退化 ⇒ 归并为单条开放项（框架内不可闭合），"
     "其余两条路线（零耦合材料控制、外部源调制）只能换数据不能换代数")
 
-# __NEXT__
+# ==================================================================
+# H 段：来料台账 / 候选矩阵 / 结果摘要的条件式交叉核对
+#       （事实源缺失即记 INFO，不产生「解析失败 = 真的为 0」的假零）
+# ==================================================================
+import csv as _csv
+
+FACT = os.path.join(ROOT, "90_历史归档", "来源语料_ufthub_ROOT_V52-V82_202611",
+                    "V73", "ROOT_V73")
+FACT_JSON = os.path.join(FACT, "results", "numerical_summary.json")
+FACT_LEDGER = os.path.join(FACT, "data", "ROOT_V73_核心方程与证明状态.csv")
+FACT_CAND = os.path.join(FACT, "data", "ROOT_V73_全部候选方法与失败条件.csv")
+
+FACT_HASH = {}
+for _p in (FACT_JSON, FACT_LEDGER, FACT_CAND):
+    if os.path.exists(_p):
+        with open(_p, "rb") as _fh:
+            FACT_HASH[os.path.basename(_p)] = hashlib.sha256(_fh.read()).hexdigest()
+
+# --- H-1 结果摘要逐项核对 ---
+FACT_JSON_OK = os.path.exists(FACT_JSON)
+if FACT_JSON_OK:
+    with open(FACT_JSON, "r", encoding="utf-8") as _fh:
+        _js = json.load(_fh)
+    _rg = _js["rg_calibration"]
+    _sh = _js["source_shape"]
+    _cm = _js["conditional_microscope"]
+    _tc = _js["triple_contrast"]
+    CHK = [
+        ("g_uv_fitted", D(str(_rg["g_uv_fitted"])), G_UV_FITTED),
+        ("species_for_IR", D(str(_rg["species_for_IR_as_gravity_cutoff"])), N_PKG),
+        ("eta_95_bound", D(str(_cm["eta_conservative_approx_95_bound"])), ETA_LIMIT),
+        ("alpha_lambda_1e7", D(str(_cm["bound_alpha_lambda_1e7m"])), ALPHA_1E7),
+        ("shape_uniform", D(str(_sh["uniform_sphere"])), U_1E6),
+        ("shape_point", D(str(_sh["point_approx"])), P_1E6),
+        ("shape_two_layer", D(str(_sh["two_layer_sphere_same_mass"])), T_1E6),
+        ("shape_ratio", D(str(_sh["uniform_over_point_ratio"])), U_1E6 / P_1E6),
+        ("noise_std_factor", D(str(_tc["fully_contrast_noise_std_factor"])), NOISE_FACTOR),
+    ]
+    JSON_MAX_REL = max(rel(a, b) for _n, a, b in CHK)
+    RANK_MATCH = int(_tc["unidentifiable_same_signature_rank"]) == RANK_CONF
+    guard("G_fact_json_match", JSON_MAX_REL < D("1e-12") and RANK_MATCH,
+          "来料 results/numerical_summary.json 的 %d 项关键读数与本册独立复算逐项一致（最大相对差 %s）；"
+          "同形不可辨识秩 %s 与本册精确有理数秩 %s 一致"
+          % (len(CHK), sci(JSON_MAX_REL), _tc["unidentifiable_same_signature_rank"], RANK_CONF))
+    add("V73-H01", "PASS", "来料结果摘要的 9 项关键读数与本册独立复算逐项一致",
+        "g_uv_fitted / species / eta 上限 / alpha(λ=1e7) / 三个形状因子 / 球点比 / 噪声因子 共 %d 项，"
+        "最大相对差 %s；同形秩 %s = 本册精确秩 %s。⇒ 本册不是复述来料数字，而是独立算得同一组读数"
+        % (len(CHK), sci(JSON_MAX_REL), _tc["unidentifiable_same_signature_rank"], RANK_CONF))
+else:
+    JSON_MAX_REL = None
+    RANK_MATCH = None
+    add("V73-H01", "INFO", "来料结果摘要缺失，跳过交叉核对（不产生假零）",
+        "未找到 %s ⇒ 本册只报自算读数，不以「核对通过」充数" % FACT_JSON)
+
+# --- H-2 核心方程台账（77 条） ---
+LEDGER_ROWS = []
+if os.path.exists(FACT_LEDGER):
+    with open(FACT_LEDGER, "r", encoding="utf-8-sig", newline="") as _fh:
+        _rd = list(_csv.reader(_fh))
+    LEDGER_ROWS = [r for r in _rd[1:] if r and r[0].strip()]
+LEDGER_BY_CODE = {r[0].strip(): r for r in LEDGER_ROWS}
+LEDGER_STATUS = {}
+for _r in LEDGER_ROWS:
+    _st = _r[4].strip()
+    LEDGER_STATUS[_st] = LEDGER_STATUS.get(_st, 0) + 1
+LEDGER_CODES = [r[0].strip() for r in LEDGER_ROWS]
+LEDGER_CONTIG = all(LEDGER_CODES[i] == "V73-E%03d" % (i + 1) for i in range(len(LEDGER_CODES)))
+
+if LEDGER_ROWS:
+    guard("G_ledger_rows", len(LEDGER_ROWS) == 77 and LEDGER_CONTIG,
+          "台账 %s 共 %d 条且编号 V73-E001..V73-E077 连续无缺"
+          % (os.path.basename(FACT_LEDGER), len(LEDGER_ROWS)))
+    guard("G_ledger_status_domain", set(LEDGER_STATUS) <= set(["E", "C", "H", "O", "X"]),
+          "台账证明状态分布 = %s（仅 E/C/H/O/X 五类，无越界取值）" % LEDGER_STATUS)
+    E013 = LEDGER_BY_CODE.get("V73-E013", ["", "", "", "", ""])
+    E030 = LEDGER_BY_CODE.get("V73-E030", ["", "", "", "", ""])
+    E071 = LEDGER_BY_CODE.get("V73-E071", ["", "", "", "", ""])
+    KEY_OK = (E013[4].strip() == "C" and "不可行" in E013[3]
+              and E030[4].strip() == "H" and "玩具" in E030[2]
+              and E071[4].strip() == "C" and "rank([1,X,X])=2<3" in E071[3])
+    guard("G_ledger_key_rows", KEY_OK,
+          "台账三条关键陈述与本册独立结论一致：E013「G 不能由 c 与 ħ 组合」标 C 且陈述含「不可行」；"
+          "E030 标 H（玩具公式）；E071 标 C 且陈述含 rank([1,X,X])=2<3")
+    add("V73-H02", "PASS", "台账 77 条闭合，E013/E030/E071 三条关键陈述与本册独立结论一致",
+        "台账 %s：%d 条，编号 E001–E077 连续，状态分布 %s（E=已证、C=条件成立、H=玩具/启发、"
+        "O=开放、X=未做）。本册 A/C/G 三段的 FAIL 全部落在这三条已自陈的边界内 ⇒ 是定价不是纠错"
+        % (os.path.basename(FACT_LEDGER), len(LEDGER_ROWS), LEDGER_STATUS))
+else:
+    add("V73-H02", "INFO", "来料台账缺失，跳过台账核对",
+        "未找到 %s" % FACT_LEDGER)
+
+# --- H-3 候选方法矩阵（37 条）的「不能跳过的限制」列 ---
+CAND_ROWS = []
+if os.path.exists(FACT_CAND):
+    with open(FACT_CAND, "r", encoding="utf-8-sig", newline="") as _fh:
+        _rd2 = list(_csv.reader(_fh))
+    CAND_ROWS = [r for r in _rd2[1:] if r and r[0].strip()]
+CAND_LIMIT = [r[6].strip() for r in CAND_ROWS if len(r) > 6]
+CAND_SAME = [t for t in CAND_LIMIT if "同形" in t]
+CAND_SCALE = [r for r in CAND_ROWS if len(r) > 1 and r[1].strip() == "尺度生成"]
+
+if CAND_ROWS:
+    guard("G_cand_rows", len(CAND_ROWS) == 37,
+          "候选方法矩阵 %s 共 %d 条" % (os.path.basename(FACT_CAND), len(CAND_ROWS)))
+    guard("G_cand_same_shape", len(CAND_SAME) == 4,
+          "「不能跳过的限制」列中直指同形伪差的共 %d 条：%s" % (len(CAND_SAME), "；".join(CAND_SAME)))
+    guard("G_cand_scale_gen", len(CAND_SCALE) == 5,
+          "「尺度生成」类候选共 %d 条，其限制列分别写明：%s"
+          % (len(CAND_SCALE), "；".join(r[6].strip() for r in CAND_SCALE)))
+    add("V73-H03", "INFO", "候选矩阵 37 条的限制列已逐条覆盖本册全部 FAIL 点（来料自陈边界）",
+        "37 条候选中 %d 条限制列直指同形伪差（hr 同形 / hrs 同形 / 同形环境伪差不可分 / 不消完全同形干扰），"
+        "「尺度生成」类 %d 条的限制列分别为：%s。⇒ 本册 C02/F02/F03/G02 四个 FAIL 均落在来料自陈的"
+        "限制之内，属边界定价而非新发现；台账 E076「无输入 G 预测」标 O 的结论同样被保留"
+        % (len(CAND_SAME), len(CAND_SCALE), "；".join(r[6].strip() for r in CAND_SCALE)))
+else:
+    add("V73-H03", "INFO", "来料候选矩阵缺失，跳过候选矩阵核对",
+        "未找到 %s" % FACT_CAND)
+
+# ==================================================================
+# W3 四门禁（C1 定量 / C2 非反解 / C3 可执行且未拟合 / C4 双锚点不自相矛盾）
+# ==================================================================
+W3_GATES = [
+    {
+        "id": "V73-尺度生成（RG 量纲嬗变 + 诱导引力场数）",
+        "C1": True, "C2": False, "C3": False, "C4": False,
+        "reason": "Lambda(g) 与 N=96pi^2(Mbar/Lambda)^2 均可算且已复算；但 g->Lambda 是严格单调双射"
+                  "（零约束力），E021/E031 自陈是逆算；b0=7 硬编码、边界耦合与 Mbar 均为外部输入；"
+                  "Mbar 由 G 导出后 N∝1/G，双锚点退化为同一参数的重参数化。",
+    },
+    {
+        "id": "V73-有限尺寸条件界（Yukawa 形状因子 + MICROSCOPE）",
+        "C1": True, "C2": False, "C3": True, "C4": False,
+        "reason": "球源形状因子通过独立二维积分检验（实现无关），条件 alpha 界可算；但界的换算依赖"
+                  "实测 η 与玩具 Z/A 代理荷（台账 E060 自陈非普适源荷），且同卷并存两套地球几何口径，"
+                  "使同一 λ 的界移动 18.33% ⇒ 理论与实验双锚点不自洽。",
+    },
+    {
+        "id": "V73-三重反转 8 态（Walsh–Hadamard）",
+        "C1": True, "C2": True, "C3": True, "C4": False,
+        "reason": "设计矩阵正交性精确成立、无反解、无拟合，量纲与方差缩减均可复算；但 8 观测 / 8 参数"
+                  "⇒ df=0 ⇒ 残差恒 0、无任何拟合优度检验，且对 3 阶（hrs 形）同形伪差的分离力精确为 0。"
+                  "⇒ 「完全正交 ⇒ 可鉴出新力」这一双锚点不成立。",
+    },
+    {
+        "id": "V73-无输入 G 的独立预测（台账 E076 开放项）",
+        "C1": False, "C2": False, "C3": False, "C4": False,
+        "reason": "该候选在库内没有输出物：C 段给出其价码=需 1.4e41 个场且 G 始终外部；"
+                  "台账 E076 本身标 O（开放），本册不为其代做实现。",
+    },
+]
+for gitem in W3_GATES:
+    gitem["PASS"] = bool(gitem["C1"] and gitem["C2"] and gitem["C3"] and gitem["C4"])
+W3_PASS = sum(1 for gitem in W3_GATES if gitem["PASS"])
+guard("G_w3_zero_pass", W3_PASS == 0, "W3 四候选全部未过门，PASS=%d/4" % W3_PASS)
+
+# W3 阳性对照：注入一个 C2=True 的候选 ⇒ 计数必须变化（证明 PASS=0 不是解析失败的假零）
+W3_CTRL = [dict(g) for g in W3_GATES]
+W3_CTRL[2]["C2"] = True
+W3_CTRL[2]["PASS"] = bool(W3_CTRL[2]["C1"] and W3_CTRL[2]["C2"] and W3_CTRL[2]["C3"] and W3_CTRL[2]["C4"])
+W3_CTRL_PASS = sum(1 for gitem in W3_CTRL if gitem["PASS"])
+guard("G_w3_positive_control", W3_CTRL_PASS == W3_PASS + 1,
+      "注入 C2=True 的阳性候选后 PASS 计数 %d -> %d（计数逻辑有牙，PASS=0 非假零）"
+      % (W3_PASS, W3_CTRL_PASS))
+
+add("W3-01", "FAIL", "W3 四门禁：四候选 0/4",
+    "尺度生成（C2/C3/C4 败：纯逆算 + 外部输入 + G 重参数化）、有限尺寸条件界（C2/C4 败：实测 η 反解 + "
+    "两套地球几何口径）、三重反转（C4 败：df=0 无检验力且对 3 阶同形伪差分离力=0）、"
+    "无输入 G 预测（C1–C4 全败，无输出物）。⇒ W3/L3 不得新增计数")
+add("W3-02", "PASS", "W3 门禁机器化并带阳性对照",
+    "C1/C2/C3/C4 四列为可执行布尔；实测 PASS=%d/4；注入一个 C2=True 的阳性候选后 PASS 变为 %d/4 ⇒ "
+    "计数逻辑有牙，0/4 是真读数而非解析失败造成的假零" % (W3_PASS, W3_CTRL_PASS))
+
+# ---------------- 红线与继承口径 ----------------
+REDLINES = {
+    "UFT_goals": "0/6 未完成",
+    "systems": "0/22 完成架构统一",
+    "UFT3": "0（不能第一性独立给出四力耦合常量与量级）",
+    "L3": "0（本轮不新增可证伪独立预言）",
+    "validated": "0（无独立实验验证）",
+    "four_force_correct_equation": "0 条（含引力的四力正确方程）",
+    "L3_to_L4": "L3 不成立，L3→L4 禁止",
+    "w3_pass": "0/4（本轮候选）",
+    "redline": "数学自洽 != 物理证实；机器零 != 新物理；程序通过 != 实验成功；拟合好 != 定律正确",
+}
+add("RED-01", "INFO", "红线计数继承不变",
+    "0/6、0/22、UFT3=0、L3=0、validated=0、含引力四力正确方程 0 条、L3↛L4；"
+    "本轮只是把 ROOT V73 的尺度生成 / 有限尺寸 / 三重反转三条路线压为可复算判定，不增加任何 W3/L3 计数")
+
+# ==================================================================
+# 产物生成：JSON / 数据 md / report / 判定册
+# ==================================================================
+BASE_NAME = "TUFT-r430_ROOT_V73_尺度生成与三重反转_全维审计_2026-11-21"
+VERDICT_NAME = "判定_TUFT-r430-ROOT_V73_尺度生成与三重反转_全维审计_2026-11-21.md"
+
+
+def verdict_counts(rows):
+    out = {}
+    for row in rows:
+        out[row["verdict"]] = out.get(row["verdict"], 0) + 1
+    return out
+
+
+def cell(text):
+    return str(text).replace("|", "\\|").replace("\n", "<br>")
+
+
+def write_text(path, text):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(text)
+
+
+COUNTS = verdict_counts(ENTRIES)
+SOURCE_PATH = os.path.abspath(__file__)
+with open(SOURCE_PATH, "rb") as fh:
+    SOURCE_SHA = hashlib.sha256(fh.read()).hexdigest()
+
+with open(SOURCE_PATH, "r", encoding="utf-8") as fh:
+    SOURCE_TEXT = fh.read()
+PLACEHOLDER = chr(36) + "{"
+guard("G_no_template_placeholder", PLACEHOLDER not in SOURCE_TEXT,
+      "源码不得出现美元花括号占位符")
+guard("G_entry_floor", len(ENTRIES) >= 30, "条目数 %d >= 30" % len(ENTRIES))
+guard("G_guard_floor", len(GUARDS) >= 16, "守卫数 %d >= 16" % len(GUARDS))
+guard("G_counts_sum", sum(COUNTS.values()) == len(ENTRIES),
+      "条目计数闭合：%s" % COUNTS)
+
+json_obj = {
+    "meta": {
+        "rid": RID,
+        "stamp": STAMP,
+        "title": "ROOT V73 尺度生成 / 有限尺寸条件界 / 三重反转 全维审计",
+        "method": "纯标准库 Decimal 60 位 + Fraction 精确算术 + 四元量纲 (M,L,T,Q) + "
+                  "阳性对照 + 独立二维 Simpson 积分 + W3 四门禁 + 幂等 SHA-256",
+        "source_sha256": SOURCE_SHA,
+        "verdict_counts": COUNTS,
+        "entry_total": len(ENTRIES),
+        "guard_total": len(GUARDS),
+        "w3_pass": W3_PASS,
+        "fact_source": os.path.relpath(FACT, ROOT).replace("\\", "/"),
+        "fact_sha256": FACT_HASH,
+    },
+    "entries": ENTRIES,
+    "guards": GUARDS,
+    "w3_gate": W3_GATES,
+    "redlines": REDLINES,
+    "key_numbers": {
+        "dim_rank_A": rank_A,
+        "dim_rank_augmented": rank_aug_real,
+        "dim_det_augmented": str(det_aug_real),
+        "planck_mass_kg": sci(MP_KG, 16),
+        "planck_mass_gev": sci(MP_GEV, 16),
+        "planck_identity_residual": sci(IDENT_RESID),
+        "rg_lambda_from_g": sci(LAMBDA_FROM_G, 16),
+        "rg_roundtrip_residual": sci(RT_RESID),
+        "rg_sensitivity": sci(SENS, 16),
+        "g_uv_fitted": sci(G_UV_FITTED, 16),
+        "species_count": sci(N_PKG, 16),
+        "species_count_2G": sci(N_FROM_2G, 16),
+        "shape_uniform_1e6": sci(U_1E6, 16),
+        "shape_point_1e6": sci(P_1E6, 16),
+        "shape_two_layer_1e6": sci(T_1E6, 16),
+        "shape_ratio_over_point": sci(U_1E6 / P_1E6, 16),
+        "shape_integral_rel_diff": sci(DIFF_YUK),
+        "shape_integral_newton_kernel_rel_diff": sci(DIFF_NEWTON),
+        "eta_95_limit": sci(ETA_LIMIT, 16),
+        "alpha_bound_1e7": sci(ALPHA_1E7, 16),
+        "bound_geometry_shift": sci(BOUND_SHIFT, 16),
+        "noise_factor": sci(NOISE_FACTOR, 16),
+        "bias_low_order_sum": str(LOW_ORDER_BIAS),
+        "bias_third_order": str(THIRD_ORDER_BIAS),
+        "resid_max_saturated_design": str(RESID_MAX),
+        "df_model": DF_MODEL,
+        "rank_same_signature": RANK_CONF,
+        "cross_env_slope": str(SLOPE_FIT),
+        "fact_json_max_rel_diff": (sci(JSON_MAX_REL) if JSON_MAX_REL is not None else None),
+        "w3_pass": W3_PASS,
+        "w3_pass_positive_control": W3_CTRL_PASS,
+    },
+}
+
+json_path = os.path.join(DATA, BASE_NAME + ".json")
+md_path = os.path.join(DATA, BASE_NAME + ".md")
+report_path = os.path.join(DATA, BASE_NAME + "_report.txt")
+verdict_path = os.path.join(os.path.dirname(HERE), VERDICT_NAME)
+
+json_text = json.dumps(json_obj, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+entry_lines = [
+    "| ID | 判定 | 标题 | 读数 |",
+    "|---|---|---|---|",
+]
+for row in ENTRIES:
+    entry_lines.append("| %s | %s | %s | %s |" %
+                       (cell(row["id"]), cell(row["verdict"]), cell(row["title"]), cell(row["detail"])))
+
+guard_lines = ["| ID | OK | 读数 |", "|---|---|---|"]
+for row in GUARDS:
+    guard_lines.append("| %s | %s | %s |" %
+                       (cell(row["id"]), "PASS" if row["ok"] else "FAIL", cell(row["detail"])))
+
+w3_lines = ["| 候选 | C1 | C2 | C3 | C4 | PASS | 理由 |", "|---|---|---|---|---|---|---|"]
+for row in W3_GATES:
+    w3_lines.append("| %s | %s | %s | %s | %s | %s | %s |" % (
+        cell(row["id"]), row["C1"], row["C2"], row["C3"], row["C4"], row["PASS"], cell(row["reason"])))
+
+counts_text = " / ".join("%s=%d" % (k, COUNTS[k]) for k in sorted(COUNTS))
+hash_lines = ["- 事实源 `%s`" % os.path.relpath(FACT, ROOT).replace("\\", "/")]
+for _name in sorted(FACT_HASH):
+    hash_lines.append("  - `%s` SHA-256 `%s`" % (_name, FACT_HASH[_name]))
+if not FACT_HASH:
+    hash_lines.append("  - （事实源文件未找到，本册只报自算读数）")
+
+md_text = "\n".join([
+    "# r430 数据产物：ROOT V73 尺度生成 / 有限尺寸 / 三重反转 全维审计",
+    "",
+    "- 条目：%d（%s）" % (len(ENTRIES), counts_text),
+    "- 守卫：%d/%d" % (sum(1 for g in GUARDS if g["ok"]), len(GUARDS)),
+    "- W3 门禁：%d/4（阳性对照 %d/4）" % (W3_PASS, W3_CTRL_PASS),
+    "- 源码 SHA-256：`%s`" % SOURCE_SHA,
+    "- 判定册：[%s](../%s)" % (VERDICT_NAME, VERDICT_NAME),
+    "- 引擎：[源码](%s)" % ("../源码/" + os.path.basename(SOURCE_PATH)),
+    "",
+    "## 事实源与哈希",
+    "",
+] + hash_lines + [
+    "",
+    "## 条目表",
+    "",
+] + entry_lines + [
+    "",
+    "## 守卫表",
+    "",
+] + guard_lines + [
+    "",
+    "## W3 门禁",
+    "",
+] + w3_lines + [
+    "",
+    "## 红线",
+    "",
+] + ["- %s：%s" % (k, v) for k, v in REDLINES.items()] + [""])
+
+report_text = "\n".join([
+    "r430 ROOT V73 尺度生成/有限尺寸/三重反转 全维审计",
+    "================================================",
+    "entries=%d" % len(ENTRIES),
+    "counts=%s" % counts_text,
+    "guards=%d/%d" % (sum(1 for g in GUARDS if g["ok"]), len(GUARDS)),
+    "w3_pass=%d/4" % W3_PASS,
+    "w3_positive_control=%d/4" % W3_CTRL_PASS,
+    "source_sha256=%s" % SOURCE_SHA,
+    "dim_det_augmented=%s" % det_aug_real,
+    "planck_mass_gev=%s" % sci(MP_GEV),
+    "g_uv_fitted=%s" % sci(G_UV_FITTED),
+    "species_count=%s" % sci(N_PKG),
+    "shape_ratio_over_point=%s" % sci(U_1E6 / P_1E6),
+    "alpha_bound_1e7=%s" % sci(ALPHA_1E7),
+    "bound_geometry_shift=%s" % sci(BOUND_SHIFT),
+    "noise_factor=%s" % sci(NOISE_FACTOR),
+    "bias_third_order=%s" % THIRD_ORDER_BIAS,
+    "rank_same_signature=%s" % RANK_CONF,
+    "cross_env_slope=%s" % SLOPE_FIT,
+    "redline=数学自洽 != 物理证实；机器零 != 新物理；程序通过 != 实验成功；拟合好 != 定律正确",
+])
+
+verdict_text = "\n".join([
+    "# 判定 r430：ROOT V73 尺度生成 / 有限尺寸条件界 / 三重反转 全维审计",
+    "",
+    "## 〇、一句话",
+    "",
+    "ROOT V73 的每一条数值都可以独立复算（本册 9 项关键读数与来料逐位一致），"
+    "但复算的三条路线各自撞在自己的结构边界上：尺度生成是纯逆算且 G 始终外部输入"
+    "（闭合需 1.4e41 个场）；有限尺寸界依赖实测 η 与玩具代理荷，同卷并存两套地球几何使界移动 18.33%；"
+    "三重反转对 3 阶同形伪差的分离力精确为 0 且 df=0 无任何拟合优度检验。W3 四候选 0/4，"
+    "L3/validated/UFT3 计数不变。",
+    "",
+    "## 一、产物",
+    "",
+    "| 顺序 | 文件 | 作用 |",
+    "|---|---|---|",
+    "| 0 | 本判定册 | 三段裁定 + W3 + 红线 |",
+    "| 1 | [引擎](源码/%s) | %d 条目 / %d 守卫 / 纯标准库 |"
+    % (os.path.basename(SOURCE_PATH), len(ENTRIES), len(GUARDS)),
+    "| 2 | [数据 md](数据/%s) · [json](数据/%s) · [报告](数据/%s) | 机器读数留档 |"
+    % (os.path.basename(md_path), os.path.basename(json_path), os.path.basename(report_path)),
+    "",
+    "## 二、条目与守卫",
+    "",
+    "条目 %d（%s），守卫 %d/%d，W3 %d/4（阳性对照 %d/4），源码 SHA-256 `%s`。"
+    % (len(ENTRIES), counts_text, sum(1 for g in GUARDS if g["ok"]), len(GUARDS),
+       W3_PASS, W3_CTRL_PASS, SOURCE_SHA),
+    "",
+    "### 事实源",
+    "",
+] + hash_lines + [
+    "",
+] + entry_lines + [
+    "",
+    "## 三、守卫表",
+    "",
+] + guard_lines + [
+    "",
+    "## 四、W3 门禁",
+    "",
+] + w3_lines + [
+    "",
+    "## 五、红线与边界",
+    "",
+] + ["- %s：%s" % (k, v) for k, v in REDLINES.items()] + [
+    "",
+    "本册不把计算复现、W3 C1 定量、程序守卫通过解释为新物理；不修改 ROOT V73 原文任何字节，"
+    "不覆盖并发会话文件；本册的 FAIL 全部落在来料自陈的限制之内（台账 E013/E021/E031/E060/E071、"
+    "候选矩阵第 2/6/24/25/26/27 行），属边界定价而非新发现。",
+    "",
+])
+
+write_text(json_path, json_text)
+write_text(md_path, md_text)
+write_text(report_path, report_text)
+write_text(verdict_path, verdict_text)
+
+with open(json_path, "r", encoding="utf-8") as fh:
+    reread = fh.read()
+if reread != json_text:
+    raise AssertionError("JSON idempotence failed")
+for p in (md_path, report_path, verdict_path):
+    if os.path.getsize(p) <= 200:
+        raise AssertionError("Empty output: %s" % os.path.basename(p))
+
+
+def main():
+    print("r430 entries=%d counts=%s" % (len(ENTRIES), counts_text))
+    print("r430 guards=%d/%d w3=%d/4 (ctrl=%d/4)" %
+          (sum(1 for g in GUARDS if g["ok"]), len(GUARDS), W3_PASS, W3_CTRL_PASS))
+    print("r430 json=%s" % json_path)
+    print("r430 verdict=%s" % verdict_path)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

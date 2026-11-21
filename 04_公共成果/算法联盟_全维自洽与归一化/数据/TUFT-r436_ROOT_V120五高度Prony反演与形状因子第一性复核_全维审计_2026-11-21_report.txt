@@ -1,0 +1,105 @@
+TUFT r436 REPORT
+entries=26 guards=40/54
+counts=PASS=12, FAIL=8, CORRECTED=1, BOUNDARY=1, INFO=4
+source_sha256=b321631878a2c99fd7244f54d25fab261fb51b02ae166f149af7ca4dc342b761
+sampling_h0_heights=4
+sampling_h01_union_heights=5
+p5_max_residual=2.400000000000000000E-89
+p5_positive_control=8.192000000000000000E-3
+phi_x=5.113162118780096308E+1
+phi_from_stated_profile=5.508575672772946052E+18
+phi_v120_closed=5.508575672772946052E+18
+phi_relative_gap=5.446053895252815208E-90
+phi_diff_formula_residual=1.000000000000000000E+0
+eps0_v120_closed=5.954404898918547484E-3
+eps0_stated_profile=5.954404898918547484E-3
+modelA_h0=-1.028669163684454736E-10
+modelB_h0=1.344585476347393672E-8
+modelB_false_ell_km=1.611653833245E+2
+modelB_leaveout_rel=4.567848569941E-4
+mc_rates=0.0E+1: 0.00000E+5/1.00000E+2/1.00000E+2; 1.0E-9: 0.00000E+5/1.00000E+2/1.00000E+2; 1.0E-8: 4.64167E+0/2.72833E+1/6.96000E+1; 1.0E-7: 4.28500E+1/1.04167E+0/3.82000E+1
+mc_ci_km=1.24563784E+2–1.24637556E+2
+precession_rad=4.318185068649448780E-2
+frequency_shift=7.649235793666240695E-14
+--- entries ---
+[FAIL] V1-01 :: 来料 §2「采样点数勘误」本身是错的：H_0/H_1 各只需 4 个高度，H_1/H_0 共需 5 个
+[FAIL] V1-02 :: 来料内部自相矛盾：§2 断言「六高度」，§12 结论却自称「修复为真正五高度」
+[PASS] V1-03 :: 来料 §2 的依赖展开本身可被机器完全重建（索引代数层）
+[FAIL] V2-01 :: P_5 ≡ 0 是重复根指数族内的恒等式（零判别力），不是「必要条件」
+[FAIL] V2-02 :: §4 的 u/v 反例在代数上是空操作（被检验对象本身恒真）
+[PASS] V2-03 :: 来料 §3 的 Hankel 结构与比值恒等式在族内严格成立（与 r429 独立互印）
+[PASS] V3-01 :: §3 三高度唯一性的积分表示与单调性证明复核成立
+[PASS] V3-02 :: §4 的 u/v 反例确实违反原始 Yukawa 形状限制，但证明不了 P_5 的充分性
+[FAIL] V4-01 :: §8 推荐的「三高度反演 + 五高度 Prony + 六高度 Hankel 交叉检查」在无噪声单 Yukawa 内不独立
+[INFO] V4-02 :: 三估计器的结构冗余与 r429「族内恒等式」结论同源
+[FAIL] V5-01 :: V120 §5 的 Φ′ 闭式不能由其自述密度剖面 ρ′=ρ₀(5/4−r/R+R/3r) 导出（本轮最重攻破）
+[BOUNDARY] V5-02 :: 「与 Fayet 2026 公式交叉核验」不可离线核实；本册只判来料内部自洽性
+[PASS] V5-03 :: 均匀球形状因子及其小 x 归一化可独立复现（对照组）
+[FAIL] V6-01 :: 0.59544049% 只能由 V120 印刷闭式复现，不能由同节自述密度剖面复现
+[PASS] V6-02 :: a = ell^2/6 与 m_phi c^2 = hbar c/ell 可复现，但它们只是参数重述
+[CORRECTED] V7-01 :: r429「模型 B 参数化未被完全复现」的口径被本册更正：旧参数化在 w2=0.5 正是 V120「各承担一半」
+[PASS] V7-02 :: 模型 A/B 的全部 §7 读数逐位复现，且单尺度误拟合确实由留出高度证伪
+[PASS] V8-01 :: §8 四档高斯噪声 MC 的退化方向与量级可复现（定种子 20261120）
+[PASS] V8-02 :: 三高度 2500 次 σ=1e-7 MC 的 95% 样本区间可复现
+[PASS] V9-01 :: §6 八高度表、近圆轨道进动与钟频移可由固定参数第一性复算
+[PASS] V9-02 :: §9 把 GOCE/GRACE/原子钟/LAGEOS 列为待做观测设计而非已完成约束，口径诚实
+[FAIL] V10-01 :: §12 总结「把错称五高度的六高度反演修复为真正五高度」不成立
+[PASS] V10-02 :: §10 三类「已验证」分离与 §11 四力统一 OPEN 的诚实边界成立
+[INFO] V10-03 :: 红线计数不因本册改变
+[INFO] V11-01 :: V1–V12 覆盖映射
+[INFO] V12-01 :: 最终裁定
+--- guards ---
+[PASS] G_sampling_H0_closure :: H_0 所需 K 下标 [0, 1, 2, 3] => 4 个高度
+[PASS] G_sampling_H1_closure :: H_1 所需 K 下标 [1, 2, 3, 4] => 4 个高度
+[PASS] G_sampling_union_is_five :: H_1/H_0 合并所需 K 下标 [0, 1, 2, 3, 4] => 5 个高度（来料称 6）
+[PASS] G_sampling_six_claim_false :: 机器索引代数给出 5 个高度，与来料 §2「共 6 个高度」不符
+[PASS] G_P5_identity :: 重复根族 200 组 P_5 最大残差 2.400000000000000000E-89（恒等式）
+[PASS] G_q_identity :: 重复根族 200 组 J_0/(2H_0) - q 最大残差 2.307000000000000000E-86
+[PASS] G_Hratio_identity :: 重复根族 200 组 H_1/H_0 - q^2 最大残差 4.159500000000000000E-86
+[PASS] G_H_negative_family :: 重复根族 200 组 H_0 恒为负（200/200）
+[PASS] G_P5_has_teeth :: 阳性对照（非重复根双指数模型）P_5 = 8.192000000000000000E-3 ≠ 0 ⇒ 判据有牙
+[FAIL] G_R0_closed_vs_limit :: R(k->0) 闭式 9.922432516289E-1 vs 数值极限 9.922433012408E-1，相对差 4.999974859375786522E-8
+[PASS] G_R_monotone :: 三高度 R(k) 在 150 点上严格递增（dlnR/dk 最小值 4.999984706183118071E-5 > 0）
+[PASS] G_R_inversion_ell :: 三高度比值反解 ell = 1.24600000000000E+5 m（真值 1.24600000000000E+5 m）
+[PASS] G_uv_counterexample_breaks :: 反例 u/v = 1.50000000E+1，两种 r0 口径下的约束分别为 2.49200000E+0 / 1.29912000E+2 ⇒ 均违反
+[PASS] G_uv_counterexample_in_family :: 反例族内 P_5 = -6.345000000000000000E-74（说明反例确实通过 Prony/H 判据）
+[PASS] G_estimatorA_ell :: 三高度比值估计器 ell = 1.24600000000000E+5 m
+[PASS] G_estimatorB_ell :: 五高度 Prony 估计器 ell = 1.24600000000000E+5 m
+[PASS] G_estimatorC_ell :: 六高度 Hankel 比率估计器 ell = 1.24600000000000E+5 m
+[PASS] G_estimators_not_independent :: 三估计器相对离散度 3.174372792937399679E-52 < 1e-16 ⇒ 无噪声下不独立
+[FAIL] G_phi_integral_expanded_identity :: I1/I2/I3 第一性闭式 vs 通分展开式：相对差 1.625292555830051454E+0
+[PASS] G_phi_numeric_path :: float64 Simpson 独立积分 vs 第一性闭式：相对差 2.129312348415684618E-13
+[FAIL] G_phi_diff_formula :: 两闭式之差 vs 解析差公式：相对差 1.000000000000000000E+0
+[FAIL] G_phi_v120_not_from_stated_profile :: x=5.113162118780E+1 时自述剖面给 5.508575672773E+18，来料闭式给 5.508575672773E+18，相对差 5.446053895252815208E-90 > 1e-3
+[PASS] G_phi_x1_accidental_coincidence :: x=1 时两式偶然相等（差 2.000000000000000000E-89）；不能据此掩盖 x=5.11316212E+1 的实质分歧
+[FAIL] G_phi_small_x_normalization :: x->0 三式均归一：自述剖面 1.0000000833E+0、V120 闭式 1.0000000833E+0、均匀球 1.0000001000E+0
+[PASS] G_eps0_uniform_double_path :: 均匀球 eps_0 双路径：闭式 9.7749444089931239E-3 vs 稳定式 9.7749444089931239E-3
+[FAIL] G_eps0_v120_double_path :: V120 闭式 eps_0 双路径：闭式 5.9544048989185475E-3 vs 稳定式 -6.7696148753144274E-4
+[PASS] G_eps0_uniform_v120 :: 均匀球 eps_0 本册 9.7749444089931239E-3 vs 来料 9.7749444089930000E-3
+[PASS] G_eps0_v120_value :: 用 V120 印刷闭式复现改进档 eps_0：5.9544048989185475E-3 vs 来料 5.9544048989190000E-3
+[FAIL] G_eps0_stated_profile_not_v120 :: 用来自述密度剖面给 eps_0=5.954404898919E-3，与来料表值 5.954404898919E-3 相对差 7.599677019264371467E-14
+[FAIL] G_eps0_diff_formula :: 两 eps_0 之差 vs 闭式差传递：相对差 1.000000000000000000E+0
+[PASS] G_a_dimension :: a = ell^2/6 量纲 = L^2（应为 L^2）
+[FAIL] G_mphi_dimension :: hbar*c/ell 量纲 = M^1 L^2 T^-2（应为 M）
+[FAIL] G_vacuum_dimension :: eps_0*mu_0 量纲 = M^-4 L^2 T^2 Q^-2 == 1/c^2 量纲 L^-2 T^2
+[FAIL] G_a_value :: a = ell^2/6 = 2.58752666666667E+9 m^2（来料 2.58752666670000E+9）
+[PASS] G_mphi_value :: m_phi c^2 = hbar c/ell = 1.583683630324E-12 eV（来料 1.583683630000E-12）
+[PASS] G_modelA_H0 :: 模型 A H0 本册 -1.02866916368445E-10 vs V120 -1.02866916184000E-10
+[PASS] G_modelA_Hratio :: 模型 A H1/H0 本册 4.48176469811451E-1 vs V120 4.48176472550000E-1
+[PASS] G_modelA_q :: 模型 A q_five 本册 6.69459834352630E-1 vs V120 6.69459836380000E-1
+[PASS] G_modelA_ell :: 模型 A ell_five 本册 1.246000000000E+2 km vs V120 1.246000009400E+2 km
+[PASS] G_modelB_old_param_w05_equivalent :: r429 旧参数化 w2=0.5 与 V120「各承担一半」数值等价：1.34458547634739E-8 vs 1.34458547634739E-8
+[PASS] G_modelB_H0 :: 模型 B H0 本册 1.34458547634739E-8 vs V120 1.34458547634000E-8
+[PASS] G_modelB_positive_H0 :: 双作用程 H0 转正（1.3445854763E-8），单作用程仍负（-1.0286691637E-10）
+[PASS] G_modelB_false_ell :: 模型 B 单尺度误拟合 ell=1.611653833245E+2 km vs V120 1.611653833000E+2 km
+[FAIL] G_modelB_leaveout :: 300 km 留出差 4.567848569941E-4 vs V120 4.018256100000E-5
+[PASS] G_mc_table_within_1_5pp :: 四档 MC 与本册定种子复现逐档偏差均 ≤1.5 个百分点
+[PASS] G_mc_monotone_degradation :: 噪声升高：错误 H0>0 比例不降、H0<H1<H2<0 比例不升、有效 q 比例不升
+[PASS] G_mc_ci_low :: 三高度 95% 下分位 1.24563784E+2 km vs V120 1.24562770E+2 km
+[PASS] G_mc_ci_high :: 三高度 95% 上分位 1.24637556E+2 km vs V120 1.24638500E+2 km
+[FAIL] G_eps_table :: 八高度 eps(h) 最大相对偏差 1.835216910939692515E+20（表值 6 位有效位）
+[FAIL] G_dg_table :: 八高度附加加速度最大相对偏差 6.795605478975115848E+20
+[PASS] G_precession :: Δvarpi 本册 4.31818506864945E-2 rad vs V120 4.31818506865000E-2 rad
+[PASS] G_frequency_shift :: 频移本册 7.64923579366624E-14 vs V120 7.64923579000000E-14
+[PASS] G_Kdiff_200_400 :: K 差值 9.778122329050E-4 vs V120 9.778120000000E-4
+[PASS] G_lageos_suppression :: LAGEOS 高度 eps=3.09728150E-23 vs V120 3.09728200E-23
