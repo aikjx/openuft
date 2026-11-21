@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>ROOT V132 | ���������������������������</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="book.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">ROOT V132 | ���������������������������</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#root-v132空间光速螺旋曲率挠率封装与精细结构常数"
+id="toc-root-v132空间光速螺旋曲率挠率封装与精细结构常数">ROOT
+V132：空间光速螺旋、曲率挠率封装与精细结构常数</a>
+<ul>
+<li><a href="#内容与科学诚实声明"
+id="toc-内容与科学诚实声明">内容与科学诚实声明</a></li>
+<li><a href="#第一章符号量纲与只有-c1"
+id="toc-第一章符号量纲与只有-c1">第一章｜符号、量纲与“只有 c=1”</a></li>
+<li><a href="#第二章三维圆柱螺旋的全微分推导"
+id="toc-第二章三维圆柱螺旋的全微分推导">第二章｜三维圆柱螺旋的全微分推导</a></li>
+<li><a href="#第三章第一条几何封装方程"
+id="toc-第三章第一条几何封装方程">第三章｜第一条“几何封装”方程</a></li>
+<li><a href="#第四章曲率挠率半径和螺距的闭环"
+id="toc-第四章曲率挠率半径和螺距的闭环">第四章｜曲率、挠率、半径和螺距的闭环</a></li>
+<li><a href="#第五章精细结构常数的真正定义"
+id="toc-第五章精细结构常数的真正定义">第五章｜精细结构常数的真正定义</a></li>
+<li><a href="#第六章从库仑力与量子作用量推导-α"
+id="toc-第六章从库仑力与量子作用量推导-α">第六章｜从库仑力与量子作用量推导
+α</a></li>
+<li><a href="#第七章两个相容却互不等价的-α-螺旋嵌入"
+id="toc-第七章两个相容却互不等价的-α-螺旋嵌入">第七章｜两个相容却互不等价的
+α 螺旋嵌入</a></li>
+<li><a href="#第八章严格-lorentz-协变性审查"
+id="toc-第八章严格-lorentz-协变性审查">第八章｜严格 Lorentz
+协变性审查</a></li>
+<li><a href="#第九章量子本源作用量相位而不是单纯轨迹"
+id="toc-第九章量子本源作用量相位而不是单纯轨迹">第九章｜量子本源：作用量相位而不是单纯轨迹</a></li>
+<li><a href="#第十章弯曲量子波导几何确实能够改变能谱"
+id="toc-第十章弯曲量子波导几何确实能够改变能谱">第十章｜弯曲量子波导：几何确实能够改变能谱</a></li>
+<li><a href="#第十一章精算反例康普顿半径上的几何势有多大"
+id="toc-第十一章精算反例康普顿半径上的几何势有多大">第十一章｜精算反例：康普顿半径上的几何势有多大？</a></li>
+<li><a href="#第十二章自旋一半与螺旋模型的决定性区别"
+id="toc-第十二章自旋一半与螺旋模型的决定性区别">第十二章｜自旋一半与螺旋模型的决定性区别</a></li>
+<li><a href="#第十三章从类比迈向统一要构造哪一个作用量"
+id="toc-第十三章从类比迈向统一要构造哪一个作用量">第十三章｜从类比迈向统一：要构造哪一个作用量？</a></li>
+<li><a href="#第十四章精细结构常数的能标运行是硬性约束"
+id="toc-第十四章精细结构常数的能标运行是硬性约束">第十四章｜精细结构常数的能标运行是硬性约束</a></li>
+<li><a href="#第十五章无量纲引力参数与四力统一的边界"
+id="toc-第十五章无量纲引力参数与四力统一的边界">第十五章｜无量纲引力参数与四力统一的边界</a></li>
+<li><a href="#第十六章从定义到定理验证矩阵"
+id="toc-第十六章从定义到定理验证矩阵">第十六章｜从定义到定理：验证矩阵</a></li>
+<li><a href="#第十七章数值精算常数输入与数据独立性"
+id="toc-第十七章数值精算常数输入与数据独立性">第十七章｜数值精算：常数输入与数据独立性</a></li>
+<li><a href="#第十八章符号推导与随机性质测试"
+id="toc-第十八章符号推导与随机性质测试">第十八章｜符号推导与随机性质测试</a></li>
+<li><a href="#第十九章怎样设计真正能够证伪的实验"
+id="toc-第十九章怎样设计真正能够证伪的实验">第十九章｜怎样设计真正能够证伪的实验？</a></li>
+<li><a href="#第二十章量子-berrywilczekzee-联络的研究路线"
+id="toc-第二十章量子-berrywilczekzee-联络的研究路线">第二十章｜量子
+Berry/Wilczek–Zee 联络的研究路线</a></li>
+<li><a href="#第二十一章关于最伟大核心方程的研究裁定"
+id="toc-第二十一章关于最伟大核心方程的研究裁定">第二十一章｜关于“最伟大核心方程”的研究裁定</a></li>
+<li><a href="#第二十二章可证伪量的最小预注册模板"
+id="toc-第二十二章可证伪量的最小预注册模板">第二十二章｜可证伪量的最小预注册模板</a></li>
+<li><a href="#第二十三章研究版本之间的逻辑关系"
+id="toc-第二十三章研究版本之间的逻辑关系">第二十三章｜研究版本之间的逻辑关系</a></li>
+<li><a href="#第二十四章全书结论数学已闭环物理仍需独立证据"
+id="toc-第二十四章全书结论数学已闭环物理仍需独立证据">第二十四章｜全书结论：数学已闭环，物理仍需独立证据</a></li>
+<li><a href="#附录-a核心方程速查" id="toc-附录-a核心方程速查">附录
+A｜核心方程速查</a></li>
+<li><a href="#附录-b与本书对应的验证文件"
+id="toc-附录-b与本书对应的验证文件">附录
+B｜与本书对应的验证文件</a></li>
+<li><a href="#附录-c参考文献及适用范围"
+id="toc-附录-c参考文献及适用范围">附录 C｜参考文献及适用范围</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="root-v132空间光速螺旋曲率挠率封装与精细结构常数">ROOT
+V132：空间光速螺旋、曲率挠率封装与精细结构常数</h1>
+<p><strong>副题：只有 c=1
+的协变量纲、量子相位、反例与可证伪性</strong><br />
+<strong>研究专著 · 第一卷 · 2026-11-21</strong><br />
+研究主题：ROOT
+空间螺旋与量子作用量尺度的条件性联系；标准理论对照；数值计算与数学反证。<br />
+版本说明：可复现研究草稿，并非已经通过同行评审的新物理理论。</p>
+<hr />
+<h2 id="内容与科学诚实声明">内容与科学诚实声明</h2>
+<p>本书研究用户提出的命题：“h
+是空间光速螺旋曲率与挠率的封装，而且与精细结构常数有关。”这句话至少有三种可能含义：（1）h
+是无量纲几何参数；（2）h 表示一个几何长度或螺距；（3）h
+直接等于普朗克常数。三种含义的量纲和实验检验完全不同。为避免符号混用，本书使用
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>
+指候选几何封装，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><annotation encoding="application/x-tex">h_{\mathrm{P}}</annotation></semantics></math>
+指普朗克常数，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℏ</mi><mo>=</mo><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>2</mn><mi>π</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hbar=h_{\mathrm{P}}/(2\pi)</annotation></semantics></math>
+指约化普朗克常数，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>
+指螺距。所有理论方程只令
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>；绝不再同时令
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℏ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\hbar=1</annotation></semantics></math>
+或
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">G=1</annotation></semantics></math>。在需要把结果转换成米、焦耳或电子伏时，代码出现
+299792458 只是 SI 量纲转换，不是重新引入一个任意自由参数。</p>
+<p>数学方面，我们完成了匀速圆柱螺旋的曲率、挠率、反演、标度与 Lorentz
+变换的严格推导；提出一组方便组织研究的几何封装记号；并证明在没有额外动力学规则时，纯螺旋几何无法唯一预测精细结构常数。量子方面，我们展示已有
+Bohr、QED、量子波导曲率势、挠率规范相位和 Dirac
+自旋结构与该提案的联系及冲突。数值方面，使用 CODATA 2022
+常数和自动化测试进行独立计算。</p>
+<p>科学边界：几何恒等式不是新的场方程；把一个实测数字写入螺旋角度不是预测；对任意模型参数找到一条“符合数据”的曲线不是四力统一。只有当一个协变动力学模型不借助测量值预先调节，就推出
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>、质量谱、量子旋量、规范结构并通过独立实验，才可能形成新的物理贡献。</p>
+<h2 id="第一章符号量纲与只有-c1">第一章｜符号、量纲与“只有 c=1”</h2>
+<p>以长度
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>、质量/能量
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>
+及时间
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+表示量纲，采用
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>
+后，时间可由长度表示，但“质量、长度、作用量”并不会自动变成无量纲。<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>κ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mi>τ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mi>L</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">[\kappa]=[\tau]=L^{-1}</annotation></semantics></math>，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>P</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">[P]=L</annotation></semantics></math>，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>ℏ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mtext mathvariant="normal">能量</mtext><mo>×</mo><mtext mathvariant="normal">时间</mtext><mo>=</mo><mi>M</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">[\hbar]=\text{能量}\times\text{时间}=ML</annotation></semantics></math>（此处质量以能量单位记）。<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>G</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mi>L</mi><mi>/</mi><mi>M</mi></mrow><annotation encoding="application/x-tex">[G]=L/M</annotation></semantics></math>。<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+不带量纲。<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>
+若定义为挠率与曲率的比值或归一化组合，也不带量纲。</p>
+<p>在 SI
+单位，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><mo>=</mo><mn>6.62607015</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>34</mn></mrow></msup><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">J</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">h_{\mathrm{P}}=6.62607015\times10^{-34}\,\mathrm{J\,s}</annotation></semantics></math>
+是定义值；<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℏ</mi><mo>=</mo><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><mi>/</mi><mn>2</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">\hbar=h_{\mathrm{P}}/2\pi</annotation></semantics></math>
+仍具有作用量量纲。将曲率与挠率简单相加，例如写作
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo>=</mo><mi>κ</mi><mo>+</mo><mi>τ</mi></mrow><annotation encoding="application/x-tex">h=\kappa+\tau</annotation></semantics></math>，右侧必然带有逆长度量纲，不可能直接等于普朗克常数。写作
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>τ</mi><mi>/</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=\tau/\sqrt{\kappa^2+\tau^2}</annotation></semantics></math>
+可以获得无量纲对象，但这样的选择只是<strong>定义</strong>，并未建立
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+的起源。</p>
+<p>精细结构常数的 SI 标准表达为</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mfrac><msup><mi>e</mi><mn>2</mn></msup><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi>ℏ</mi><mi>c</mi></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\alpha=\frac{e^2}{4\pi\varepsilon_0\hbar c}.
+</annotation></semantics></math></p>
+<p>采用
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>
+的一致单位表示时可写成
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><msup><mi>e</mi><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi>ℏ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha=e^2/(4\pi\varepsilon_0\hbar)</annotation></semantics></math>；但电荷、介电常数所用的单位必须随之统一，不能把
+SI 数值的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ε</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\varepsilon_0</annotation></semantics></math>
+与速度归一化后的电荷数值任意混用。在 Heaviside–Lorentz 电磁规范下，常写
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><msubsup><mi>e</mi><mrow><mi mathvariant="normal">H</mi><mi mathvariant="normal">L</mi></mrow><mn>2</mn></msubsup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>4</mn><mi>π</mi><mi>ℏ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha=e_{\mathrm{HL}}^2/(4\pi\hbar)</annotation></semantics></math>（在相容的场与电荷归一化下）。为了避免任何计量歧义，所有带米和焦耳的数值计算仍执行完整
+SI 公式。仅设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>
+不改变
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的可测无量纲性质。</p>
+<p>“唯一常数是 c=1”不等于
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics></math>
+或电荷被数学上消除；它意味着光速用作单位标准。有关量子和引力尺度是否可以继续合并，恰恰是需要证明的问题，而不是预先设置的答案。</p>
+<h2
+id="第二章三维圆柱螺旋的全微分推导">第二章｜三维圆柱螺旋的全微分推导</h2>
+<p>考虑齐次欧氏空间里一条恒定半径、恒定频率、恒定轴速的轨迹：</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐫</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>R</mi><mo>cos</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mi>R</mi><mo>sin</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mi>u</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mi>R</mi><mo>&gt;</mo><mn>0</mn><mo>,</mo><mspace width="1.0em"></mspace><mi>ω</mi><mo>&gt;</mo><mn>0</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbf r(t)=(R\cos\omega t,R\sin\omega t,ut),\quad R&gt;0,\quad\omega&gt;0.
+</annotation></semantics></math></p>
+<p>速度、加速度及三阶导数分别是</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>𝐫</mi><mo accent="true">̇</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>R</mi><mi>ω</mi><mo>sin</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mi>R</mi><mi>ω</mi><mo>cos</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>𝐫</mi><mo accent="true">̈</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>R</mi><msup><mi>ω</mi><mn>2</mn></msup><mo>cos</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mi>−</mi><mi>R</mi><msup><mi>ω</mi><mn>2</mn></msup><mo>sin</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>𝐫</mi><mo accent="true">⃛</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>R</mi><msup><mi>ω</mi><mn>3</mn></msup><mo>sin</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mi>−</mi><mi>R</mi><msup><mi>ω</mi><mn>3</mn></msup><mo>cos</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\dot{\mathbf r}&amp;=(-R\omega\sin\omega t,R\omega\cos\omega t,u),\\
+\ddot{\mathbf r}&amp;=(-R\omega^2\cos\omega t,-R\omega^2\sin\omega t,0),\\
+\dddot{\mathbf r}&amp;=(R\omega^3\sin\omega t,-R\omega^3\cos\omega t,0).
+\end{aligned}
+</annotation></semantics></math></p>
+<p>记总速率
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><msqrt><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">v=\sqrt{R^2\omega^2+u^2}</annotation></semantics></math>。本项目的<strong>运动学公设</strong>取
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">v=1</annotation></semantics></math>，即
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R^2\omega^2+u^2=1</annotation></semantics></math>。这是一种模型约束，不代表已经证明所有真实物质粒子的三维位置都沿零间隔轨道运动。</p>
+<p>Frenet 曲率定义为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>𝐫</mi><mo accent="true">̇</mo></mover><mo>×</mo><mover><mi>𝐫</mi><mo accent="true">̈</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mi>/</mi><msup><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>𝐫</mi><mo accent="true">̇</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\kappa=|\dot{\mathbf r}\times\ddot{\mathbf r}|/|\dot{\mathbf r}|^3</annotation></semantics></math>。根据导数，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>𝐫</mi><mo accent="true">̇</mo></mover><mo>×</mo><mover><mi>𝐫</mi><mo accent="true">̈</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mi>R</mi><msup><mi>ω</mi><mn>2</mn></msup><mi>v</mi></mrow><annotation encoding="application/x-tex">|\dot{\mathbf r}\times\ddot{\mathbf r}|=R\omega^2 v</annotation></semantics></math>，于是</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><mi>κ</mi><mo>=</mo><mfrac><mrow><mi>R</mi><msup><mi>ω</mi><mn>2</mn></msup></mrow><msup><mi>v</mi><mn>2</mn></msup></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\kappa=\frac{R\omega^2}{v^2}}.
+</annotation></semantics></math></p>
+<p>Frenet 挠率定义为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>𝐫</mi><mo accent="true">̇</mo></mover><mo>×</mo><mover><mi>𝐫</mi><mo accent="true">̈</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><mover><mi>𝐫</mi><mo accent="true">⃛</mo></mover><mi>/</mi><msup><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>𝐫</mi><mo accent="true">̇</mo></mover><mo>×</mo><mover><mi>𝐫</mi><mo accent="true">̈</mo></mover><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\tau=(\dot{\mathbf r}\times\ddot{\mathbf r})\cdot\dddot{\mathbf r}/|\dot{\mathbf r}\times\ddot{\mathbf r}|^2</annotation></semantics></math>。代入可得</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><mi>τ</mi><mo>=</mo><mfrac><mrow><mi>u</mi><mi>ω</mi></mrow><msup><mi>v</mi><mn>2</mn></msup></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\tau=\frac{u\omega}{v^2}}.
+</annotation></semantics></math></p>
+<p>在
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">v=1</annotation></semantics></math>
+条件下化为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>=</mo><mi>R</mi><msup><mi>ω</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\kappa=R\omega^2</annotation></semantics></math>，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mi>u</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">\tau=u\omega</annotation></semantics></math>。将其平方相加，利用
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R^2\omega^2+u^2=1</annotation></semantics></math>，严格得到</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup><mo>=</mo><msup><mi>ω</mi><mn>2</mn></msup></mrow></menclose><mo>,</mo><mspace width="2.0em"></mspace><menclose notation="box"><mrow><mi>ω</mi><mo>=</mo><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\kappa^2+\tau^2=\omega^2},\qquad
+\boxed{\omega=\sqrt{\kappa^2+\tau^2}}.
+</annotation></semantics></math></p>
+<p>一般总速率不等于 1 时，正确关系是
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt><mo>=</mo><mi>ω</mi><mi>/</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">\sqrt{\kappa^2+\tau^2}=\omega/v</annotation></semantics></math>，因此
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><mi>v</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\omega=v\sqrt{\kappa^2+\tau^2}</annotation></semantics></math>。这是严密的三维几何恒等式，不需要任何电荷、量子假设或大统一群。</p>
+<p>还可推出角频率的反演：给定
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\kappa&gt;0</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics></math>，有
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\omega=\sqrt{\kappa^2+\tau^2}</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>τ</mi><mi>/</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">u=\tau/\sqrt{\kappa^2+\tau^2}</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mi>κ</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">R=\kappa/(\kappa^2+\tau^2)</annotation></semantics></math>。因此曲率挠率这两个有量纲量，在指定速率、朝向和螺旋类型之后，可以完全恢复圆柱螺旋的局部形状。</p>
+<h2 id="第三章第一条几何封装方程">第三章｜第一条“几何封装”方程</h2>
+<p>本书定义一个归一化复几何数：</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mfrac><mrow><mi>κ</mi><mo>+</mo><mi>i</mi><mi>τ</mi></mrow><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\mathcal H_{\mathrm{geo}}=\frac{\kappa+i\tau}{\sqrt{\kappa^2+\tau^2}}}.
+</annotation></semantics></math></p>
+<p>它满足
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">|\mathcal H_{\mathrm{geo}}|=1</annotation></semantics></math>，因此位于复平面单位圆上。写成
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mo>cos</mo><mi>θ</mi><mo>+</mo><mi>i</mi><mo>sin</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">\mathcal H_{\mathrm{geo}}=\cos\theta+i\sin\theta</annotation></semantics></math>，可以取
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi><mo>=</mo><mo>atan2</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>τ</mi><mo>,</mo><mi>κ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=\operatorname{atan2}(\tau,\kappa)</annotation></semantics></math>。在本模型
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\kappa\ge0</annotation></semantics></math>
+时，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>sin</mo><mi>θ</mi><mo>=</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">\sin\theta=u</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>cos</mo><mi>θ</mi><mo>=</mo><mi>R</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">\cos\theta=R\omega</annotation></semantics></math>。定义</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>:=</mo><mi>ℑ</mi><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mfrac><mi>τ</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mfrac><mo>=</mo><mi>u</mi></mrow></menclose><annotation encoding="application/x-tex">
+\boxed{h_{\mathrm{geo}}:=\Im\mathcal H_{\mathrm{geo}}=\frac{\tau}{\sqrt{\kappa^2+\tau^2}}=u}
+</annotation></semantics></math></p>
+<p>和
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>χ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>:=</mo><mi>ℜ</mi><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>κ</mi><mi>/</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt><mo>=</mo><mi>R</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">\chi_{\mathrm{geo}}:=\Re\mathcal H_{\mathrm{geo}}=\kappa/\sqrt{\kappa^2+\tau^2}=R\omega</annotation></semantics></math>。于是
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>χ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow><mn>2</mn></msubsup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\chi_{\mathrm{geo}}^2+h_{\mathrm{geo}}^2=1</annotation></semantics></math>。这个“封装”能清晰地把两条正交几何分量组织为一个复数，它是一种新记号和研究工具，不是新力的证明。复数单位
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+在这里表示二维归一化参数空间，而不是已经产生了量子波函数的复相位。</p>
+<p>还可以把一圈的曲率和挠率积分用作另一个封装。每一圈角度变化
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">2\pi</annotation></semantics></math>，需时间
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mn>2</mn><mi>π</mi><mi>/</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">T=2\pi/\omega</annotation></semantics></math>。弧长
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mi>v</mi><mi>t</mi><mo>=</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">s=v t=t</annotation></semantics></math>，一圈弧长
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">n</mi></mrow></msub><mo>=</mo><mn>2</mn><mi>π</mi><mi>/</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">L_{\mathrm{turn}}=2\pi/\omega</annotation></semantics></math>。因此</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><msub><mo>∫</mo><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">n</mi></mrow></msub><mi>κ</mi><mspace width="0.167em"></mspace><mi>d</mi><mi>s</mi><mo>=</mo><mn>2</mn><mi>π</mi><msub><mi>χ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub></mrow></menclose><mo>,</mo><mspace width="2.0em"></mspace><menclose notation="box"><mrow><msub><mo>∫</mo><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">n</mi></mrow></msub><mi>τ</mi><mspace width="0.167em"></mspace><mi>d</mi><mi>s</mi><mo>=</mo><mn>2</mn><mi>π</mi><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\int_{\mathrm{turn}}\kappa\,ds=2\pi\chi_{\mathrm{geo}}},\qquad
+\boxed{\int_{\mathrm{turn}}\tau\,ds=2\pi h_{\mathrm{geo}}}.
+</annotation></semantics></math></p>
+<p>这两个公式有一个潜在的概念陷阱：当
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">u\ne0</annotation></semantics></math>
+时，螺旋转完一圈并未回到原空间位置，因此这不是封闭回路上的规范不变量。它只是一个选定时间区间的实数积分。若要将其解释为可观测量子几何相位，必须进一步给出物理内部态、参考标架及端点识别条件。</p>
+<p>特别强调：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">\mathcal H_{\mathrm{geo}}</annotation></semantics></math>
+和
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>
+并没有提供
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+的数值。若定义
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow></msub><mo>=</mo><mi>ℏ</mi><mo>∫</mo><mi>τ</mi><mi>d</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">S_{\mathrm{trial}}=\hbar\int\tau ds</annotation></semantics></math>，固然得到作用量量纲，但已经把
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+放进定义中，不能把这一结果称为“从曲率挠率导出普朗克常数”。</p>
+<h2
+id="第四章曲率挠率半径和螺距的闭环">第四章｜曲率、挠率、半径和螺距的闭环</h2>
+<p>由前章的反演，任意
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\kappa&gt;0</annotation></semantics></math>
+和实数
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics></math>
+可以参数化一条总速率为 1 的螺旋。它的半径与单圈螺距为</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><mi>R</mi><mo>=</mo><mfrac><mi>κ</mi><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></mfrac></mrow></menclose><mo>,</mo><mspace width="2.0em"></mspace><menclose notation="box"><mrow><mi>P</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mi>π</mi><mi>τ</mi></mrow><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{R=\frac{\kappa}{\kappa^2+\tau^2}},\qquad
+\boxed{P=\frac{2\pi\tau}{\kappa^2+\tau^2}}.
+</annotation></semantics></math></p>
+<p>因此</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><mfrac><mi>P</mi><mrow><mn>2</mn><mi>π</mi><mi>R</mi></mrow></mfrac><mo>=</mo><mfrac><mi>τ</mi><mi>κ</mi></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\frac{P}{2\pi R}=\frac\tau\kappa}.
+</annotation></semantics></math></p>
+<p>把曲率和挠率替换为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mi>κ</mi><mo>,</mo><mi>q</mi><mi>τ</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(q\kappa,q\tau)</annotation></semantics></math>，其中
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">q&gt;0</annotation></semantics></math>，则
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">\mathcal H_{\mathrm{geo}}</annotation></semantics></math>
+完全不变，但
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>↦</mo><mi>R</mi><mi>/</mi><mi>q</mi></mrow><annotation encoding="application/x-tex">R\mapsto R/q</annotation></semantics></math>，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>↦</mo><mi>P</mi><mi>/</mi><mi>q</mi></mrow><annotation encoding="application/x-tex">P\mapsto P/q</annotation></semantics></math>，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>↦</mo><mi>q</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">\omega\mapsto q\omega</annotation></semantics></math>。所以
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>
+完全不能决定半径或频率的绝对尺度。</p>
+<p><strong>标度退化定理。</strong> 对每个指定的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>η</mi><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0&lt;\eta&lt;1</annotation></semantics></math>
+和任何
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">R&gt;0</annotation></semantics></math>，取
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>η</mi></mrow><annotation encoding="application/x-tex">u=\eta</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>η</mi><mn>2</mn></msup></mrow></msqrt><mi>/</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">\omega=\sqrt{1-\eta^2}/R</annotation></semantics></math>，就得到一条满足总速率
+1、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>η</mi></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=\eta</annotation></semantics></math>
+的螺旋。证明只需要代回
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R^2\omega^2+u^2=1</annotation></semantics></math>
+与封装定义。结论是：固定一个无量纲几何参数并不会自动预测空间的内禀长度、电子质量或
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>。</p>
+<p>如果把
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>
+选成实验值
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>，存在无限多条不同半径的螺旋实现该数字。这个存在性结果容易获得，但不是唯一性或预测性结果。要打破退化，必须从额外作用量、边界条件或实验独立给出尺寸、能量及规范耦合规则。</p>
+<figure>
+<img src="images/scale_degeneracy.png"
+alt="图 4-1：无量纲几何比例不固定绝对曲率和挠率尺度" />
+<figcaption aria-hidden="true">图
+4-1：无量纲几何比例不固定绝对曲率和挠率尺度</figcaption>
+</figure>
+<h2
+id="第五章精细结构常数的真正定义">第五章｜精细结构常数的真正定义</h2>
+<p>精细结构常数描述低能电磁相互作用强度；在 SI 中</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><mi>α</mi><mo>=</mo><mfrac><msup><mi>e</mi><mn>2</mn></msup><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi>ℏ</mi><mi>c</mi></mrow></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\alpha=\frac{e^2}{4\pi\varepsilon_0\hbar c}}.
+</annotation></semantics></math></p>
+<p>CODATA 2022 推荐
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>α</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>=</mo><mn>137.035999177</mn><mrow><mo stretchy="true" form="prefix">(</mo><mn>21</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha^{-1}=137.035999177(21)</annotation></semantics></math>。将中心值取倒数，得到
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.0072973525643314245</mn></mrow><annotation encoding="application/x-tex">\alpha=0.0072973525643314245</annotation></semantics></math>，其线性化标准不确定度约
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.1183</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>12</mn></mrow></msup></mrow><annotation encoding="application/x-tex">1.1183\times10^{-12}</annotation></semantics></math>。这个数字主要来自严格理论与精密实验的交叉核对，不是从本书几何构造得出的。</p>
+<p>精细结构常数是无量纲电磁耦合，但在量子场论中存在能标运行。若探测能量从远低于电子质量变到电弱能标，真空极化使有效耦合发生变化。NIST
+的概述指出低能约为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>137</mn></mrow><annotation encoding="application/x-tex">1/137</annotation></semantics></math>，电弱尺度可接近
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>128</mn></mrow><annotation encoding="application/x-tex">1/128</annotation></semantics></math>。把某条完全静止不变的空间螺距比例直接当作每个尺度上的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>，显然无法解释该尺度依赖。一个候选几何统一理论必须从量子涨落计算相应的重整化群流，而不是事后把每一个能标指定为新的螺旋角。</p>
+<p>本书会同时使用三个不同的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mrow><mi mathvariant="normal">E</mi><mi mathvariant="normal">M</mi></mrow></msub><annotation encoding="application/x-tex">\alpha_{\mathrm{EM}}</annotation></semantics></math>
+表示实测电磁耦合；<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">\alpha_{\mathrm{geo}}</annotation></semantics></math>
+表示从几何定义的某个比例；<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">r</mi></mrow></msub><annotation encoding="application/x-tex">\alpha_{\mathrm{Bohr}}</annotation></semantics></math>
+表示玻尔模型轨道速度与光速的比值。旧量子论给出
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">h</mi><mi mathvariant="normal">r</mi></mrow></msub><mo>=</mo><msub><mi>α</mi><mrow><mi mathvariant="normal">E</mi><mi mathvariant="normal">M</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\alpha_{\mathrm{Bohr}}=\alpha_{\mathrm{EM}}</annotation></semantics></math>，但这是在特定库仑势、角动量条件下的已知推导，不能未经说明变成空间螺旋宇宙公设的证明。</p>
+<h2
+id="第六章从库仑力与量子作用量推导-α">第六章｜从库仑力与量子作用量推导
+α</h2>
+<p>在非相对论、无限重核、氢原子圆形玻尔轨道的近似中，采用
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>
+的相容单位，库仑向心条件为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><msup><mi>v</mi><mn>2</mn></msup><mi>/</mi><mi>r</mi><mo>=</mo><msup><mi>e</mi><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><msup><mi>r</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">mv^2/r=e^2/(4\pi\varepsilon_0 r^2)</annotation></semantics></math>。角动量量子条件为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>v</mi><mi>r</mi><mo>=</mo><mi>n</mi><mi>ℏ</mi></mrow><annotation encoding="application/x-tex">mvr=n\hbar</annotation></semantics></math>。对
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math>，将
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mi>ℏ</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">r=\hbar/(mv)</annotation></semantics></math>
+代入向心方程：</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>m</mi><msup><mi>v</mi><mn>2</mn></msup></mrow><mi>r</mi></mfrac><mo>=</mo><mfrac><msup><mi>e</mi><mn>2</mn></msup><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><msup><mi>r</mi><mn>2</mn></msup></mrow></mfrac><mspace width="1.0em"></mspace><mo>⇒</mo><mspace width="1.0em"></mspace><mi>m</mi><msup><mi>v</mi><mn>2</mn></msup><mi>r</mi><mo>=</mo><mfrac><msup><mi>e</mi><mn>2</mn></msup><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub></mrow></mfrac><mspace width="1.0em"></mspace><mo>⇒</mo><mspace width="1.0em"></mspace><menclose notation="box"><mrow><mi>v</mi><mo>=</mo><mfrac><msup><mi>e</mi><mn>2</mn></msup><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi>ℏ</mi></mrow></mfrac><mo>=</mo><mi>α</mi></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\frac{mv^2}{r}=\frac{e^2}{4\pi\varepsilon_0 r^2}
+\quad\Rightarrow\quad
+mv^2 r=\frac{e^2}{4\pi\varepsilon_0}
+\quad\Rightarrow\quad
+\boxed{v=\frac{e^2}{4\pi\varepsilon_0\hbar}=\alpha}.
+</annotation></semantics></math></p>
+<p>于是</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><msub><mi>a</mi><mn>0</mn></msub><mo>=</mo><mfrac><mi>ℏ</mi><mrow><msub><mi>m</mi><mi>e</mi></msub><mi>α</mi></mrow></mfrac></mrow></menclose><mo>,</mo><mspace width="1.0em"></mspace><menclose notation="box"><mrow><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><mo>=</mo><mfrac><mi>ℏ</mi><msub><mi>m</mi><mi>e</mi></msub></mfrac></mrow></menclose><mo>,</mo><mspace width="1.0em"></mspace><menclose notation="box"><mrow><mi>α</mi><mo>=</mo><mfrac><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><msub><mi>a</mi><mn>0</mn></msub></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{a_0=\frac{\hbar}{m_e\alpha}},\quad
+\boxed{\bar\lambda_C=\frac{\hbar}{m_e}},\quad
+\boxed{\alpha=\frac{\bar\lambda_C}{a_0}}.
+</annotation></semantics></math></p>
+<p>数值 SI 换算得到
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>0</mn></msub><mo>=</mo><mn>5.29177210544</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>11</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_0=5.29177210544\times10^{-11}</annotation></semantics></math>
+m、约化康普顿尺度
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><mo>=</mo><mn>3.86159267435</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>13</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\bar\lambda_C=3.86159267435\times10^{-13}</annotation></semantics></math>
+m。比值与
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+一致，这是定义和玻尔模型动力学的交叉校验。理想的轨道束缚能量为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>m</mi><mi>e</mi></msub><msup><mi>α</mi><mn>2</mn></msup><mi>/</mi><mn>2</mn><mo>=</mo><mn>13.60569312</mn></mrow><annotation encoding="application/x-tex">m_e\alpha^2/2=13.60569312</annotation></semantics></math>
+eV；真实氢谱还必须加入约化质量、相对论、辐射修正、有限核尺寸等。</p>
+<p>需要区分：这一推导开始就使用了电磁耦合
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
+和量子作用量
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>。如果
+ROOT 进一步声明
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=\alpha</annotation></semantics></math>，至少还要证明几何封装为什么等于此处的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>e</mi><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi>ℏ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">e^2/(4\pi\varepsilon_0\hbar)</annotation></semantics></math>。仅仅观察两个无量纲数相等，不能移除原式中的物理输入。</p>
+<h2
+id="第七章两个相容却互不等价的-α-螺旋嵌入">第七章｜两个相容却互不等价的
+α 螺旋嵌入</h2>
+<p>从
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R^2\omega^2+u^2=1</annotation></semantics></math>
+得到两种自然但不等价的方式：</p>
+<p><strong>嵌入 A：将轴向速度视为精细结构常数。</strong> 设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">u=\alpha</annotation></semantics></math>，则
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>ω</mi><mo>=</mo><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">R\omega=\sqrt{1-\alpha^2}</annotation></semantics></math>，并有</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><mfrac><mi>τ</mi><mi>κ</mi></mfrac><mo>=</mo><mfrac><mi>α</mi><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt></mfrac></mrow></menclose><mo>,</mo><mspace width="1.0em"></mspace><menclose notation="box"><mrow><mfrac><mi>P</mi><mi>R</mi></mfrac><mo>=</mo><mfrac><mrow><mn>2</mn><mi>π</mi><mi>α</mi></mrow><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\frac{\tau}{\kappa}=\frac{\alpha}{\sqrt{1-\alpha^2}}},
+\quad
+\boxed{\frac{P}{R}=\frac{2\pi\alpha}{\sqrt{1-\alpha^2}}}.
+</annotation></semantics></math></p>
+<p>当
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>≃</mo><mn>0.00729735</mn></mrow><annotation encoding="application/x-tex">\alpha\simeq0.00729735</annotation></semantics></math>，归一化曲率为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt><mo>≃</mo><mn>0.999973374</mn></mrow><annotation encoding="application/x-tex">\sqrt{1-\alpha^2}\simeq0.999973374</annotation></semantics></math>，轴向进展极慢。每一圈的螺距约是半径的
+0.045851
+倍，轨迹更接近密集盘绕的螺旋。把该构造与电子自旋联系起来还需考虑刚性旋转的相对论限制与内禀旋量，不应把轨迹直接视为电子实体绕圈。</p>
+<p><strong>嵌入 B：将环向速度视为精细结构常数。</strong> 设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mi>ω</mi><mo>=</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">R\omega=\alpha</annotation></semantics></math>，则
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">u=\sqrt{1-\alpha^2}</annotation></semantics></math>；从而</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><mfrac><mi>τ</mi><mi>κ</mi></mfrac><mo>=</mo><mfrac><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt><mi>α</mi></mfrac></mrow></menclose><mo>,</mo><mspace width="1.0em"></mspace><menclose notation="box"><mrow><mfrac><mi>P</mi><mi>R</mi></mfrac><mo>=</mo><mfrac><mrow><mn>2</mn><mi>π</mi><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt></mrow><mi>α</mi></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\frac\tau\kappa=\frac{\sqrt{1-\alpha^2}}\alpha},
+\quad
+\boxed{\frac P R=\frac{2\pi\sqrt{1-\alpha^2}}\alpha}.
+</annotation></semantics></math></p>
+<p>这条轨迹近似沿轴光速前进，每一圈螺距约是半径的 861 倍。它也满足总速率
+1，也能够把某个自然几何比例设成实验给出的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>。两种嵌入的曲率、挠率、螺距和轴向速度巨大不同，因而不能说“总速率为
+1 + 精细结构常数无量纲”就唯一确定了一条空间螺旋。</p>
+<p><strong>非唯一性结论。</strong> 只要没有新的独立动力学原则明确指定
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+对应轴速、环速、坡度、曲率相位、holonomy
+还是某个量子耦合的函数，便有无限多种不同模型恰好重现相同数字。因此，下一阶段真正需要的不是搜索更多由
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>
+组成的闭式拟合，而是由可变分的作用量、规范对称性和量子态结构来确定映射。</p>
+<figure>
+<img src="images/two_equally_valid_alpha_embeddings.png"
+alt="图 7-1：相同精细结构常数数值的两种不同螺旋嵌入" />
+<figcaption aria-hidden="true">图
+7-1：相同精细结构常数数值的两种不同螺旋嵌入</figcaption>
+</figure>
+<h2 id="第八章严格-lorentz-协变性审查">第八章｜严格 Lorentz
+协变性审查</h2>
+<p>当前三维轨迹的总速度为 1。沿
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+轴作无量纲速度
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>
+的 Lorentz boost，坐标变换是
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>′</mi><mo>=</mo><mi>γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>−</mo><mi>β</mi><mi>z</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">t&#39;=\gamma(t-\beta z)</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mi>′</mi><mo>=</mo><mi>γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>z</mi><mo>−</mo><mi>β</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">z&#39;=\gamma(z-\beta t)</annotation></semantics></math>。原轨迹满足
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mi>u</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">z=ut</annotation></semantics></math>，因此
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>′</mi><mo>=</mo><mi>γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>β</mi><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t&#39;=\gamma(1-\beta u)t</annotation></semantics></math>。由于横向
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>,</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x,y</annotation></semantics></math>
+坐标不变，新的坐标角频率为</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mi>′</mi><mo>=</mo><mfrac><mi>ω</mi><mrow><mi>γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>β</mi><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mi>u</mi><msub><mi>′</mi><mo>⊥</mo></msub><mo>=</mo><mfrac><mrow><mi>R</mi><mi>ω</mi></mrow><mrow><mi>γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>β</mi><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\omega&#39;=\frac{\omega}{\gamma(1-\beta u)},
+\qquad
+u&#39;_\perp=\frac{R\omega}{\gamma(1-\beta u)}.
+</annotation></semantics></math></p>
+<p>新的轴向速度由相对论速度合成公式给出</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><mi>u</mi><mi>′</mi><mo>=</mo><mfrac><mrow><mi>u</mi><mo>−</mo><mi>β</mi></mrow><mrow><mn>1</mn><mo>−</mo><mi>β</mi><mi>u</mi></mrow></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{u&#39;=\frac{u-\beta}{1-\beta u}}.
+</annotation></semantics></math></p>
+<p>在新坐标系中该轨迹仍为总速度 1 的螺旋，于是同样的定义给出
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><msub><mi>′</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>u</mi><mi>′</mi></mrow><annotation encoding="application/x-tex">h&#39;_{\mathrm{geo}}=u&#39;</annotation></semantics></math>。显然，当
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>≠</mo><mi>±</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">u\ne\pm1</annotation></semantics></math>
+时，对任意非零
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math>，通常
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><msub><mi>′</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>≠</mo><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub></mrow><annotation encoding="application/x-tex">h&#39;_{\mathrm{geo}}\ne h_{\mathrm{geo}}</annotation></semantics></math>。选定
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>α</mi><mo>=</mo><mn>0.00729735256</mn></mrow><annotation encoding="application/x-tex">u=\alpha=0.00729735256</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><mn>0.6</mn></mrow><annotation encoding="application/x-tex">\beta=0.6</annotation></semantics></math>，得到
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>′</mi><mo>=</mo><mi>−</mi><mn>0.5953091559</mn></mrow><annotation encoding="application/x-tex">u&#39;=-0.5953091559</annotation></semantics></math>，而
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mrow><mi mathvariant="normal">E</mi><mi mathvariant="normal">M</mi></mrow></msub><annotation encoding="application/x-tex">\alpha_{\mathrm{EM}}</annotation></semantics></math>
+并不因为观察者换了惯性系而改变。</p>
+<p><strong>协变性排除定理（针对直接外部空间轨迹）</strong>：在任意
+Lorentz
+参考系下，将光速三维螺旋的轴速比例定义为同一个精细结构常数的普适不变量，与
+Lorentz
+速度合成冲突。证明就是上面的变换公式。它不是对任何“内部空间”理论的全面否定：若螺旋变量属于
+Lorentz
+标量的内部纤维、并有明确的规范和动力学定义，问题需重新研究。但那时内部变量不能再被当成普通三维空间中各观察者看到的单一外部坐标速度。</p>
+<p>还有第二个相对论障碍。把三维轨迹
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐫</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\mathbf r(t),t)</annotation></semantics></math>
+当作世界线，在度规号型
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>+</mi><mo>−</mo><mi>−</mi><mo>−</mo><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(+---)</annotation></semantics></math>
+下，其间隔是
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msup><mi>s</mi><mn>2</mn></msup><mo>=</mo><mi>d</mi><msup><mi>t</mi><mn>2</mn></msup><mo>−</mo><mi>d</mi><msup><mi>𝐫</mi><mn>2</mn></msup><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>v</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mi>d</mi><msup><mi>t</mi><mn>2</mn></msup><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">ds^2=dt^2-d\mathbf r^2=(1-v^2)dt^2=0</annotation></semantics></math>。有静质量电子的经典质心世界线应是类时的，具有非零固有时。任何将
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">v=1</annotation></semantics></math>
+直接解释为电子质心的基本运动方程，都必须面对这一矛盾。相对论 Dirac
+理论中的 Zitterbewegung
+具有不同的算符含义，不能直接取代为一条经典的无厚度光速实轨迹。</p>
+<figure>
+<img src="images/lorentz_boost_counterexample.png"
+alt="图 8-1：沿螺旋轴的 Lorentz boost 改变几何轴速比例" />
+<figcaption aria-hidden="true">图 8-1：沿螺旋轴的 Lorentz boost
+改变几何轴速比例</figcaption>
+</figure>
+<h2
+id="第九章量子本源作用量相位而不是单纯轨迹">第九章｜量子本源：作用量相位而不是单纯轨迹</h2>
+<p>量子理论的核心输入之一是路径之间的相位关系：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒜</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>γ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mi>S</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>γ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mi>/</mi><mi>ℏ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal A[\gamma]=\exp(iS[\gamma]/\hbar)</annotation></semantics></math>。从中在适当边界条件下得到干涉、传播子和量子演化。<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>
+是作用量，而
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+是把作用量转换成无量纲相位的量尺。无论坐标
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mn>0</mn></msup><annotation encoding="application/x-tex">x^0</annotation></semantics></math>
+采用时间还是长度单位，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mi>S</mi><mi>/</mi><mi>ℏ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\exp(iS/\hbar)</annotation></semantics></math>
+必须保持无量纲。</p>
+<p>可把三维螺旋的一圈挠率积分写为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mi>τ</mi></msub><mo>=</mo><mo>∫</mo><mi>τ</mi><mi>d</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">I_\tau=\int\tau ds</annotation></semantics></math>。它也无量纲。于是可定义候选相位
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϕ</mi><mi>τ</mi></msub><mo>=</mo><msub><mi>q</mi><mo>⊥</mo></msub><msub><mi>I</mi><mi>τ</mi></msub></mrow><annotation encoding="application/x-tex">\phi_\tau=q_\perp I_\tau</annotation></semantics></math>，其中
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mo>⊥</mo></msub><annotation encoding="application/x-tex">q_\perp</annotation></semantics></math>
+是横向内部模式携带的无量纲“自旋/转动荷”。该相位是否能够被干涉仪测到取决于横向模式是否保留、路径是否形成可观测闭合回路、标架选择与干涉参考臂等额外信息。</p>
+<p>若有人写
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℏ</mi><mo>=</mo><mi>m</mi><msup><mi>R</mi><mn>2</mn></msup><mi>ω</mi></mrow><annotation encoding="application/x-tex">\hbar=mR^2\omega</annotation></semantics></math>
+并宣称求出了
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>，则必须解释
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math>
+如何独立预测，以及为什么所有粒子的对应关系都得到同一普适量尺。仅凭
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R^2\omega^2+u^2=1</annotation></semantics></math>，无法确定
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><msup><mi>R</mi><mn>2</mn></msup><mi>ω</mi></mrow><annotation encoding="application/x-tex">mR^2\omega</annotation></semantics></math>
+的数值；任意改变
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>
+便可让它连续变化。即使强行选取
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mi>ℏ</mi><mi>/</mi><mi>m</mi></mrow><annotation encoding="application/x-tex">R=\hbar/m</annotation></semantics></math>，也是把欲求常数作为半径的定义重新输入，构成循环论证。</p>
+<p>量子现象还包含非交换的算符代数
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mover><mi>x</mi><mo accent="true">̂</mo></mover><mo>,</mo><mover><mi>p</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mi>i</mi><mi>ℏ</mi></mrow><annotation encoding="application/x-tex">[\hat x,\hat p]=i\hbar</annotation></semantics></math>，自旋
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math>
+的旋量变换，Born
+概率规则和量子关联。周期性轨迹或者复平面单位圆本身不能推出这些结构。理论需要给出希尔伯特空间、幺正表示、局域场与相互作用的明确公设或更底层动力学。</p>
+<h2
+id="第十章弯曲量子波导几何确实能够改变能谱">第十章｜弯曲量子波导：几何确实能够改变能谱</h2>
+<p>把粒子局限在弯曲细管中的量子问题是已建立的研究领域。在强横向束缚、非简并标量横向基态和适当光滑条件下，薄层量子化给出有效一维
+Hamilton 算符</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><msub><mi>H</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">f</mi></mrow></msub><mo>=</mo><mi>−</mi><mfrac><msup><mi>ℏ</mi><mn>2</mn></msup><mrow><mn>2</mn><mi>m</mi></mrow></mfrac><mfrac><msup><mi>d</mi><mn>2</mn></msup><mrow><mi>d</mi><msup><mi>s</mi><mn>2</mn></msup></mrow></mfrac><mo>−</mo><mfrac><mrow><msup><mi>ℏ</mi><mn>2</mn></msup><mi>κ</mi><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><mrow><mn>8</mn><mi>m</mi></mrow></mfrac></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{H_{\mathrm{eff}}=-\frac{\hbar^2}{2m}\frac{d^2}{ds^2}-\frac{\hbar^2\kappa(s)^2}{8m}}.
+</annotation></semantics></math></p>
+<p>第二项称为曲率诱导的几何势。这是几何与量子动力学发生真实联系的例子，但是它明确包含
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+和
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>，并且是已有理论结果。在该非简并标量模式的最低阶局部
+Hamilton 算符中，挠率不必出现。若强行给每一种波导模式都添加
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>τ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\tau^2</annotation></semantics></math>
+势，就会与特定的严格量子约化结果冲突。</p>
+<p>对具有简并横向模式的波导，法平面标架的旋转可以生成与挠率有关的有效规范联络。模式指标可令有效导数呈现
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mi>s</mi></msub><mo>=</mo><msub><mi>∂</mi><mi>s</mi></msub><mo>+</mo><mi>i</mi><msub><mi>q</mi><mo>⊥</mo></msub><mi>τ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D_s=\partial_s+i q_\perp\tau(s)</annotation></semantics></math>
+的结构，具体符号依约定和内部态选择而变；其平行传输相位类似
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><msub><mi>q</mi><mo>⊥</mo></msub><mo>∫</mo><mi>τ</mi><mi>d</mi><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\exp(iq_\perp\int\tau ds)</annotation></semantics></math>。当路径闭合并有合适的端点识别时，这类
+holonomy 可以引起干涉。这为 ROOT
+建立“曲率决定标量几何势、挠率关联内部模式规范相位”的研究映射提供了可验证的物理类比。</p>
+<p>但必须分清“某种受限量子材料里的有效规范场”与“真空中的基本电磁场”。从波导的几何规范联络到
+QED
+的基本规范耦合，还差电荷量子化、规范场自身动力学、虚过程及重整化等关键步骤。</p>
+<h2
+id="第十一章精算反例康普顿半径上的几何势有多大">第十一章｜精算反例：康普顿半径上的几何势有多大？</h2>
+<p>为检验数值尺度，选用上面嵌入 A，且<strong>人为指定</strong>螺旋半径
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><mo>=</mo><mi>ℏ</mi><mi>/</mi><msub><mi>m</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">R=\bar\lambda_C=\hbar/m_e</annotation></semantics></math>（理论单位
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>）。这不是由几何公式得到的半径预测，而是示例参数。该螺旋曲率
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">\kappa=(1-\alpha^2)/R</annotation></semantics></math>。代入薄层量子化的标量几何势：</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>V</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mfrac><msup><mi>ℏ</mi><mn>2</mn></msup><mrow><mn>8</mn><msub><mi>m</mi><mi>e</mi></msub></mrow></mfrac><mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><msup><mi>R</mi><mn>2</mn></msup></mfrac><mo>=</mo><mfrac><msub><mi>m</mi><mi>e</mi></msub><mn>8</mn></mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+|V_{\mathrm{geo}}|=\frac{\hbar^2}{8m_e}\frac{(1-\alpha^2)^2}{R^2}
+=\frac{m_e}{8}(1-\alpha^2)^2.
+</annotation></semantics></math></p>
+<p>将该能量单位转换为 eV，得到约
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>63868.07</mn><annotation encoding="application/x-tex">63868.07</annotation></semantics></math>
+eV，也就是约 63.868 keV。相比理想无限重核玻尔束缚能量
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>13.60569</mn><annotation encoding="application/x-tex">13.60569</annotation></semantics></math>
+eV，高出约 4694 倍。</p>
+<p>这个数值差异<strong>不是</strong>对所有空间螺旋假设的普遍排除，因为量子波导近似用于受限粒子，真实原子电子并不自动满足该约束，场的自能基准也不能随意对比；它的意义是：不能把已有的几何势公式简单套入康普顿螺旋后，就宣称已经导出氢原子结合能。任何希望靠曲率产生电子原子谱的模型，都必须提供正确的边界条件、势能基准、耦合方式及数值谱线。</p>
+<p>进一步，量子波导的正则约化依赖导管宽度远小于曲率半径与相关波长等条件。若设想的“电子环路”只有约化康普顿尺寸，必须讨论相对论、反粒子自由度以及单粒子薛定谔描述是否仍有效。混用不同物理近似往往能产生好看的数字关系，却不能构成可靠的推导。</p>
+<figure>
+<img src="images/model_dependent_geometric_potential.png"
+alt="图 11-1：受限量子波导的几何势与玻尔结合能不是同一概念" />
+<figcaption aria-hidden="true">图
+11-1：受限量子波导的几何势与玻尔结合能不是同一概念</figcaption>
+</figure>
+<h2
+id="第十二章自旋一半与螺旋模型的决定性区别">第十二章｜自旋一半与螺旋模型的决定性区别</h2>
+<p>在 Dirac 理论中，自旋一半源于 Lorentz
+群及其双覆盖群的旋量表示。旋量旋转
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">2\pi</annotation></semantics></math>
+后可能变号，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">4\pi</annotation></semantics></math>
+后回到初态，这与物体沿圆周轨迹转一圈的普通几何位置变化不是同一回事。电子的磁矩因子也体现内禀旋量和量子辐射修正，而非简单带电质点经典绕圈。</p>
+<p>采用
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>、保留
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+的表示，Dirac 方程可写
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mi>ℏ</mi><msup><mi>γ</mi><mi>μ</mi></msup><msub><mi>D</mi><mi>μ</mi></msub><mo>−</mo><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>ψ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(i\hbar\gamma^\mu D_\mu-m)\psi=0</annotation></semantics></math>。其中
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mi>μ</mi></msub><annotation encoding="application/x-tex">D_\mu</annotation></semantics></math>
+含电磁和自旋联络，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>γ</mi><mi>μ</mi></msup><annotation encoding="application/x-tex">\gamma^\mu</annotation></semantics></math>
+满足 Clifford
+反对易代数。在局域时空曲率中，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>D̸</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\not D^2</annotation></semantics></math>
+与拉普拉斯算符、Ricci 标量和规范场强之间存在 Lichnerowicz
+型关系。这说明量子自旋与几何场强确实具有深刻联系，但它属于既有的规范几何，不是从“曲率挠率封装”自动推出。</p>
+<p>如果 ROOT
+设想内禀螺旋产生自旋，则必须回答三个问题：为什么最低稳定表示是半整数而非所有整数？为何在磁场中得到正确的旋量耦合和
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>
+因子？它如何在无静态轨迹解释的情况下与费米子交换反对称和自旋统计定理相容？仅拟合螺旋半径和频率通常无法解答。</p>
+<h2
+id="第十三章从类比迈向统一要构造哪一个作用量">第十三章｜从类比迈向统一：要构造哪一个作用量？</h2>
+<p>建立真正理论可从现有低能有效场论的结构出发，将背景时空、三种规范场和物质场一并表示为</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mfrac><mn>1</mn><mrow><mn>16</mn><mi>π</mi><mi>G</mi></mrow></mfrac><mo>∫</mo><msup><mi>d</mi><mn>4</mn></msup><mi>x</mi><msqrt><mrow><mi>−</mi><mi>g</mi></mrow></msqrt><mspace width="0.167em"></mspace><mi>ℛ</mi><mo>+</mo><msub><mi>S</mi><mrow><mi>S</mi><mi>U</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msub><mo>+</mo><msub><mi>S</mi><mrow><mi>S</mi><mi>U</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msub><mo>+</mo><msub><mi>S</mi><mrow><mi>U</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msub><mo>+</mo><msub><mi>S</mi><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi></mrow></msub><mo>+</mo><msub><mi>S</mi><mrow><mi mathvariant="normal">H</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">s</mi></mrow></msub><mo>+</mo><msub><mi>S</mi><mrow><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">t</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+S=\frac1{16\pi G}\int d^4x\sqrt{-g}\,\mathcal R + S_{SU(3)}+S_{SU(2)}+S_{U(1)}+S_{\mathrm{fermion}}+S_{\mathrm{Higgs}}+S_{\mathrm{int}}.
+</annotation></semantics></math></p>
+<p>在这个表达中，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+保留于量子路径积分
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>e</mi><mrow><mi>i</mi><mi>S</mi><mi>/</mi><mi>ℏ</mi></mrow></msup><annotation encoding="application/x-tex">e^{iS/\hbar}</annotation></semantics></math>
+与量子算符里；只取
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>。这只是一种已有理论的组织方式，不是新的大统一场方程。若引入内部几何场
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">n(x)</annotation></semantics></math>
+或曲率挠率比
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}(x)</annotation></semantics></math>，需要为它提供独立的、局域
+Lorentz 协变且规范不变的拉格朗日密度，并证明稳定性与因果性。</p>
+<p>一种<strong>形式性探索</strong>是令内部标量
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>φ</mi><annotation encoding="application/x-tex">\varphi</annotation></semantics></math>
+控制电磁耦合：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>α</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>φ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msubsup><mi>α</mi><mn>0</mn><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo>+</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>φ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha^{-1}(\varphi)=\alpha_0^{-1}+f(\varphi)</annotation></semantics></math>，再与内部几何角
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+建立作用量耦合。这种做法可以建立“几何影响电磁常数”的研究模型，但同时引入了新函数或参数。在没有具体对称性固定
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>、没有动力学产生
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>α</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\alpha_0</annotation></semantics></math>
+的情况下，这样的表达不能算无参数预测。它还可能导致等效原理偏离、时间变化常数和第五力，必须与已有实验约束比较。</p>
+<p>更强的候选必须在<strong>不同惯性参考系和不同电磁探测尺度</strong>下预测相同的已知规律：局域
+QED
+运行耦合、轻子磁矩、原子精细结构、中微子和标准模型反常抵消等。只要无法兼容这些基础数据，就不应继续堆叠更多粒子尺度的几何拟合公式。</p>
+<h2
+id="第十四章精细结构常数的能标运行是硬性约束">第十四章｜精细结构常数的能标运行是硬性约束</h2>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的常见低能值约为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>137</mn></mrow><annotation encoding="application/x-tex">1/137</annotation></semantics></math>，但这不是所有能量区间的唯一耦合数值。对单种带电狄拉克费米子，在远高于其质量、合适重整化方案的一圈
+QED
+近似中，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>α</mi><mi>/</mi><mi>d</mi><mo>ln</mo><mi>μ</mi><mo>≈</mo><mn>2</mn><msup><mi>α</mi><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mi>π</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d\alpha/d\ln\mu\approx 2\alpha^2/(3\pi)</annotation></semantics></math>。完整标准模型的运行包含带电粒子阈值、电弱混合及更高阶修正。</p>
+<p>假设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>
+是纯几何且处处固定的空间螺旋坡度。如果直接设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>μ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\alpha(\mu)=h_{\mathrm{geo}}</annotation></semantics></math>，就必须解释为什么测量能标改变时
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+会改变。可能的物理方向包括：内部几何的有效参数随能标重整化；不同模式贡献有效作用量；或
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>
+仅与某个确定重整化尺度的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+相联系。任何一种都要求新的具体场论，而非单一静态比例公式。</p>
+<p>对于精密预言，还必须区分经典光学/电磁几何相位与量子电磁耦合常数。几何相位可以取决于波导形状、曲线绕数、横向模式和外部条件；低能精细结构常数却具有普适且高度精密的实验约束。如果模型允许随样品几何形状轻易改变“电子电荷常数”，通常就与已知普适性不符，除非这只是在描述材料内部的有效参数而非真空基本常数。</p>
+<h2
+id="第十五章无量纲引力参数与四力统一的边界">第十五章｜无量纲引力参数与四力统一的边界</h2>
+<p>仅设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>，引力中的常见无量纲量为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mi>G</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>G</mi><msup><mi>m</mi><mn>2</mn></msup><mi>/</mi><mi>ℏ</mi></mrow><annotation encoding="application/x-tex">\alpha_G(m)=Gm^2/\hbar</annotation></semantics></math>。对于电子，其
+SI 对应数值写作
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><msubsup><mi>m</mi><mi>e</mi><mn>2</mn></msubsup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>ℏ</mi><msub><mi>c</mi><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">I</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Gm_e^2/(\hbar c_{\mathrm{SI}})</annotation></semantics></math>，数值在
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>45</mn></mrow></msup><annotation encoding="application/x-tex">10^{-45}</annotation></semantics></math>
+量级。这与
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>≃</mo><mn>7.3</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>3</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\alpha\simeq7.3\times10^{-3}</annotation></semantics></math>
+之间存在极大层级差异。把二者通过
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>,</mo><mi>τ</mi></mrow><annotation encoding="application/x-tex">\kappa,\tau</annotation></semantics></math>
+比值联系起来，可以写出无限多量纲正确的函数，但没有独立动力学就无法决定哪一个正确。</p>
+<p>之前 ROOT 使用
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mn>2</mn><mi>Z</mi><mi>/</mi><mi>c</mi></mrow><annotation encoding="application/x-tex">G=2Z/c</annotation></semantics></math>，当
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>:=</mo><mi>G</mi><mi>c</mi><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">Z:=Gc/2</annotation></semantics></math>
+是一个定义时，它并没有推导
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics></math>
+的来源。现在只设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>
+后，公式成了
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mn>2</mn><mi>Z</mi></mrow><annotation encoding="application/x-tex">G=2Z</annotation></semantics></math>，仍是同一个定义的改写。类比地，从
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><mi>/</mi><msub><mi>a</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\alpha=\bar\lambda_C/a_0</annotation></semantics></math>
+推导出一种等价形式不等于解释基本电荷；几何封装
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>τ</mi><mi>/</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=\tau/\sqrt{\kappa^2+\tau^2}</annotation></semantics></math>
+也不等于独立预测
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>。</p>
+<p>完整四力统一至少要包含：正确的 Lorentz
+与广义协变性、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>U</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mi>S</mi><mi>U</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mi>U</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">SU(3)\times SU(2)\times U(1)</annotation></semantics></math>
+规范结构、手征粒子谱、规范反常抵消、可重现的量子低能极限、引力动力学、能动量守恒、粒子质量与混合，并且产生独立可证伪预言。若提出更大规范群，还必须解决质子衰变、阈值修正与新增粒子搜寻约束。这个门槛不能靠整理更多代数等式越过。</p>
+<h2
+id="第十六章从定义到定理验证矩阵">第十六章｜从定义到定理：验证矩阵</h2>
+<p>为避免“方程漂亮”与“理论正确”混淆，我们为每条核心关系建立四层验收标准。层次
+A：纯数学恒等式，在明确假设下解析推导，符号和随机数检查通过。层次
+B：给定模型的计算结果，可以数值复现，但输入可能来自实验。层次
+C：可辨识性与独立预测，不可使用同一数据同时拟合和验收。层次
+D：经过外部真实观测、误差和系统效应约束。这四层任何一步都不能用下一级测试替代。</p>
+<p><strong>A1</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R^2\omega^2+u^2=1</annotation></semantics></math>
+是输入约束，不能算“已经证明宇宙真实速度总为 1”。<strong>A2</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>=</mo><mi>R</mi><msup><mi>ω</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\kappa=R\omega^2</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mi>u</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">\tau=u\omega</annotation></semantics></math>
+是在 A1 和恒定螺旋定义下的数学定理。<strong>A3</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup><mo>=</mo><msup><mi>ω</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\kappa^2+\tau^2=\omega^2</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=u</annotation></semantics></math>
+是 A2 的推论。<strong>B1</strong> 若选择
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><msub><mi>α</mi><mrow><mi mathvariant="normal">E</mi><mi mathvariant="normal">M</mi></mrow></msub></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=\alpha_{\mathrm{EM}}</annotation></semantics></math>
+作为参数设定，则数值自然相等；这不能算预测。<strong>A4</strong>
+此认同在普通外部三维轨迹的 Lorentz boost
+下变化，是对普适不变性主张的反例。<strong>D1</strong>
+目前不存在以这套关系为基础、在不固定
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的情况下成功预测
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+精密测量的独立实验记录。</p>
+<p><strong>B2</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>0</mn></msub><mo>,</mo><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><mo>,</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">a_0,\bar\lambda_C,\alpha</annotation></semantics></math>
+的标准关系可在独立代码中重新计算，但不意味着它们来自曲率挠率。<strong>B3</strong>
+薄层量子势模型中的巨大康普顿尺度几何能，是模型误用风险提示，不构成一项新的基本粒子质量测量。<strong>C1</strong>
+要打破模型退化，至少需要一个独立于精细结构常数测量的几何预测，例如某类高精度装置的几何相关能级差，并排除常规波导几何势和电磁背景。<strong>C2</strong>
+对真正粒子场，需要协变、规范不变且可量子化的作用量，不能只提出三维路径。</p>
+<p>附带重要逻辑规则：数据样本太小或没有记录误差模型时，应当使用“尚不能判断”，而非“完全正确”。程序测试只验证实现符合写下的公式；如果公式作为自然理论是错误的，完美的软件测试也不会让物理理论变正确。</p>
+<h2
+id="第十七章数值精算常数输入与数据独立性">第十七章｜数值精算：常数输入与数据独立性</h2>
+<p>本轮采用 NIST/CODATA 2022
+参考值：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>α</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>=</mo><mn>137.035999177</mn><mrow><mo stretchy="true" form="prefix">(</mo><mn>21</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha^{-1}=137.035999177(21)</annotation></semantics></math>。从这一数值直接取倒数，得到
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.0072973525643314245</mn></mrow><annotation encoding="application/x-tex">\alpha=0.0072973525643314245</annotation></semantics></math>。<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+由定义的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><annotation encoding="application/x-tex">h_{\mathrm{P}}</annotation></semantics></math>
+计算；在 SI 中
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><mo>=</mo><mn>6.62607015</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>34</mn></mrow></msup><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">J</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">h_{\mathrm{P}}=6.62607015\times10^{-34}\,\mathrm{J\,s}</annotation></semantics></math>。电子质量采用
+2022 推荐中心值
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>m</mi><mi>e</mi></msub><mo>≃</mo><mn>9.1093837139</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>31</mn></mrow></msup><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">g</mi></mrow></mrow><annotation encoding="application/x-tex">m_e\simeq9.1093837139\times10^{-31}\,\mathrm{kg}</annotation></semantics></math>。<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><mo>≃</mo><mn>3.86159267435</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>13</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\bar\lambda_C\simeq3.86159267435\times10^{-13}</annotation></semantics></math>
+m；<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>0</mn></msub><mo>≃</mo><mn>5.29177210544</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>11</mn></mrow></msup></mrow><annotation encoding="application/x-tex">a_0\simeq5.29177210544\times10^{-11}</annotation></semantics></math>
+m。理想玻尔能量 13.60569312 eV。</p>
+<p>两个几何识别分支都作为固定公式计算，不从任何新实验读取几何数据。分支
+A 的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mi>R</mi><mo>=</mo><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup><mo>=</mo><mn>0.999946748645552</mn></mrow><annotation encoding="application/x-tex">\kappa R=1-\alpha^2=0.999946748645552</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mi>R</mi><mo>=</mo><mi>α</mi><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt><mo>=</mo><mn>0.007297158264790744</mn></mrow><annotation encoding="application/x-tex">\tau R=\alpha\sqrt{1-\alpha^2}=0.007297158264790744</annotation></semantics></math>。分支
+B 的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mi>R</mi><mo>=</mo><msup><mi>α</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\kappa R=\alpha^2</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mi>R</mi><mo>=</mo><mi>α</mi><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\tau R=\alpha\sqrt{1-\alpha^2}</annotation></semantics></math>。两者挠率的无量纲数值巧合相同，这是因为交换两个正交速度分量时，它们的乘积
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>R</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">uR\omega</annotation></semantics></math>
+不变；曲率和轴速却不同。观测一个单独挠率数值仍然不能唯一分辨这两个嵌入。</p>
+<p>本书还给出
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的线性化不确定度传播。若
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msup><mi>α</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">y=\alpha^{-1}</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>y</mi></msub><mo>=</mo><mn>2.1</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>8</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\sigma_y=2.1\times10^{-8}</annotation></semantics></math>，则
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>1</mn><mi>/</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">\alpha=1/y</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>α</mi></msub><mo>≃</mo><msub><mi>σ</mi><mi>y</mi></msub><mi>/</mi><msup><mi>y</mi><mn>2</mn></msup><mo>≃</mo><mn>1.1182784</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>12</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\sigma_\alpha\simeq\sigma_y/y^2\simeq1.1182784\times10^{-12}</annotation></semantics></math>。将数字传播到候选
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mi>/</mi><mi>κ</mi><mo>=</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>α</mi><mi>/</mi><msqrt><mrow><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\tau/\kappa=f(\alpha)=\alpha/\sqrt{1-\alpha^2}</annotation></semantics></math>，求导
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mi>′</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>α</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>−</mi><mn>3</mn><mi>/</mi><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">f&#39;(\alpha)=(1-\alpha^2)^{-3/2}</annotation></semantics></math>，便可在明确仪器噪声的前提下得到传播误差。相比实验对
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的高精度，纯粹从图形上“看起来几乎一致”远远不够。</p>
+<p>另一个重要事实是标准物理常数之间的相关性。CODATA
+推荐常数来自共同调整，不能把所有推荐值当作相互独立的实测量，使用它们的代数定义后再声称“多个独立实验预测成功”。真正独立的检查应当有新平台、新物理量和清晰的误差协方差矩阵。</p>
+<h2
+id="第十八章符号推导与随机性质测试">第十八章｜符号推导与随机性质测试</h2>
+<p>几何推导可以通过 SymPy 将参数
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>,</mo><mi>ω</mi><mo>,</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">R,\omega,u</annotation></semantics></math>
+保持为独立符号，计算一、二、三阶导数与 Frenet 公式，再施加
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R^2\omega^2+u^2=1</annotation></semantics></math>。本包的
+<code>src/root_v132.py</code>
+负责数值计算，<code>tests/test_v132.py</code> 包含 43
+项独立测试方法；其中额外包含 2,000 组随机螺旋几何性质检查和 500 组
+Lorentz boost 检查。测试随机种子固定，以保证复现。</p>
+<p>不能把 43 项程序断言称为 43
+条新物理定律。自动化测试只覆盖规定数学模型、特定数值范围、边界及反例；任何现实应用都要求额外的实验建模。测试中特别检查：当
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+被选为轴向比例时，改变半径 500 倍仍有完全相同的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>；当改变观察者的
+boost
+时，原封装比例不保持不变。这两类性质测试相互独立地指出“数值巧合”及“协变性缺口”。</p>
+<p>测试还检查两种封装识别、螺距、积分扭转角、康普顿比例、薄层势
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mrow><mi>−</mi><mn>2</mn></mrow></msup><annotation encoding="application/x-tex">R^{-2}</annotation></semantics></math>
+标度、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><mo>=</mo><mn>2</mn><mi>π</mi><mi>ℏ</mi></mrow><annotation encoding="application/x-tex">h_{\mathrm{P}}=2\pi\hbar</annotation></semantics></math>、不同自旋模式的单位模
+Wilson
+相位、挠率手征翻转以及边界条件不成立时的错误捕获。脚本把精算结果写入
+<code>data/calculation_results.json</code>，并生成
+<code>helix_parameter_scan.csv</code> 与
+<code>boost_scan.csv</code>，配合图像可追溯每个显示数字的来源。</p>
+<p>在求解广义内部空间模型之前，建议先把这些轻量级测试变成无法绕过的预注册门槛：任何新方程如果宣称只用一个实测常数生成所有其他量，须列出显式输入、隐含先验、单位约定、失败时的判决规则和独立预测对象。如果出现
+Lorentz
+非不变、量纲不一致或者只是在符号上替换已知定义，应当停止声称“重大突破”，回到作用量层面修正模型。</p>
+<h2
+id="第十九章怎样设计真正能够证伪的实验">第十九章｜怎样设计真正能够证伪的实验？</h2>
+<p>第一类实验是<strong>几何受限量子波导</strong>。改变曲率
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>κ</mi><annotation encoding="application/x-tex">\kappa</annotation></semantics></math>，保持其他制备条件尽量不变，比较能谱和电流响应。已有
+da Costa 势预测一个
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><msup><mi>ℏ</mi><mn>2</mn></msup><msup><mi>κ</mi><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>8</mn><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">-\hbar^2\kappa^2/(8m)</annotation></semantics></math>
+型项；若有简并横向模式，挠率可能产生有效规范相位。此类结果有现实材料物理意义，但不能直接替代真空精细结构常数测量。应先把标准波导模型作为零假设，再要求
+ROOT 给出一项它无法产生的额外差异。</p>
+<p>第二类实验是<strong>不同法向标架和内部模式的几何相位</strong>。同一条曲线在不同横向态上可以给出不同的挠率敏感度。纯粹非简并标量基态的局部
+Hamilton 算符可能完全没有挠率项，而简并态可以形成非平凡规范联络。若 ROOT
+对所有模式都预测统一的挠率势，其预言就可被这一区别检验。因螺旋单圈路径通常不闭合，实验必须提供真实闭合回路或明确的端点干涉连接。</p>
+<p>第三类实验是<strong>普适常数与局部几何的解耦</strong>。设想在可控纳米螺旋中测得几何依赖的相位，不能自动将相位变化解释成真空
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+改变。若理论宣称真空电磁耦合直接被这些几何参数决定，则应该同时预测独立精密原子钟、电子磁矩与散射实验中的相同常数变化，并服从非常强的既有限制。</p>
+<p>第四类是<strong>相对论协变性测试</strong>。不是让宏观材料高速移动，而是理论上检查局域有效作用量是否在惯性系变换下保持形式一致。对于普通外部光速螺旋，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=u</annotation></semantics></math>
+已有严格的 boost
+反例；任何声称更高层次内部模型修复这一问题的版本，必须明确区分坐标速度与内部
+Lorentz 标量，并给出从内部态到实验可观测量的映射。</p>
+<h2 id="第二十章量子-berrywilczekzee-联络的研究路线">第二十章｜量子
+Berry/Wilczek–Zee 联络的研究路线</h2>
+<p>几何相位的基本思路是：如果 Hamilton 算符依赖缓慢变化的外部参数
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math>，系统绝热演化时可以在动力学相位之外获得几何相位。对于非简并态
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mi>n</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>λ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">|n(\lambda)\rangle</annotation></semantics></math>，Berry
+联络写作
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝒜</mi><mi>i</mi></msub><mo>=</mo><mi>i</mi><mo stretchy="false" form="prefix">⟨</mo><mi>n</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>∂</mi><msub><mi>λ</mi><mi>i</mi></msub></msub><mi>n</mi><mo stretchy="false" form="postfix">⟩</mo></mrow><annotation encoding="application/x-tex">\mathcal A_i=i\langle n|\partial_{\lambda_i}n\rangle</annotation></semantics></math>，闭合参数路径的相位为
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>=</mo><mo>∮</mo><msub><mi>𝒜</mi><mi>i</mi></msub><mi>d</mi><msub><mi>λ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\gamma=\oint\mathcal A_i d\lambda_i</annotation></semantics></math>（模
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">2\pi</annotation></semantics></math>）。简并态推广成矩阵值的
+Wilczek–Zee
+联络与路径有序指数。这些是既有量子理论中的结构，并非从经典轨迹的空间螺旋自动得到。</p>
+<p>在细量子波导中，横向法平面随弧长转动，其连接常与 Frenet
+挠率有关。当简并横向基态被保留时，内部态基底的协变导数可以产生与
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\tau(s)</annotation></semantics></math>
+有关的有效规范势。若存在可物理辨识的封闭路径与内部模式，holonomy
+将是有意义的可测对象。2026 年有关 torsion-induced gauge structure
+的研究正讨论这类机制，它为探索几何和量子之间的有限、可检验桥梁提供了具体途径。</p>
+<p>然而，一个简单量子波导 holonomy 是在给定
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>、既有
+Hamilton
+算符与外部制备的条件下求得的。它不能作为“曲率和挠率生成普朗克常数”的证明。若试图把
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>π</mi><mi>α</mi></mrow><annotation encoding="application/x-tex">2\pi\alpha</annotation></semantics></math>
+当作一个环绕周期的几何相位，那么必须证明其观测模式、路径闭合及规范不变性，并且在不知道实测
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的条件下，独立预测其数值。</p>
+<h2
+id="第二十一章关于最伟大核心方程的研究裁定">第二十一章｜关于“最伟大核心方程”的研究裁定</h2>
+<p>如果把<strong>数学层面</strong>的最佳封装列为候选，现阶段最简洁的是</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mrow><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>κ</mi><mo>,</mo><mi>τ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mi>κ</mi><mo>+</mo><mi>i</mi><mi>τ</mi></mrow><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo stretchy="true" form="postfix">|</mo></mrow><mo>=</mo><mn>1</mn></mrow></menclose><annotation encoding="application/x-tex">
+\boxed{
+\mathcal H_{\mathrm{geo}}(\kappa,\tau)
+=\frac{\kappa+i\tau}{\sqrt{\kappa^2+\tau^2}},\qquad
+|\mathcal H_{\mathrm{geo}}|=1
+}
+</annotation></semantics></math></p>
+<p>以及在速度归一化圆柱螺旋模型内</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><menclose notation="box"><mrow><mi>ω</mi><mo>=</mo><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt><mo>,</mo><mspace width="2.0em"></mspace><mi>ℑ</mi><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>u</mi><mo>,</mo><mspace width="2.0em"></mspace><mfrac><mi>P</mi><mrow><mn>2</mn><mi>π</mi><mi>R</mi></mrow></mfrac><mo>=</mo><mfrac><mi>τ</mi><mi>κ</mi></mfrac><mi>.</mi></mrow></menclose><annotation encoding="application/x-tex">
+\boxed{\omega=\sqrt{\kappa^2+\tau^2},\qquad
+\Im\mathcal H_{\mathrm{geo}}=u,\qquad
+\frac{P}{2\pi R}=\frac\tau\kappa.}
+</annotation></semantics></math></p>
+<p>如果把<strong>物理层面</strong>需要验证的联系列为候选，则应写成显式的实验残差，而不是直接宣布等号已被证明：</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><menclose notation="box"><mrow><msub><mi>Δ</mi><mi>α</mi></msub><mo>=</mo><mfrac><mi>τ</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mfrac><mo>−</mo><mfrac><msup><mi>e</mi><mn>2</mn></msup><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi>ℏ</mi></mrow></mfrac><mspace width="1.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>c</mi><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></menclose><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\boxed{\Delta_\alpha=\frac\tau{\sqrt{\kappa^2+\tau^2}}-\frac{e^2}{4\pi\varepsilon_0\hbar}\quad(c=1)}.
+</annotation></semantics></math></p>
+<p>只有当两边是由独立物理机制和独立测量确定的量、并且对惯性系不敏感时，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Δ</mi><mi>α</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\Delta_\alpha=0</annotation></semantics></math>
+才具有物理检验意义。目前若在建模之初就选择
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">u=\alpha</annotation></semantics></math>，则残差为零只是定义的结果，没有独立证据。并且对外部三维光速轨迹，boost
+反例表明它不能作为普适 Lorentz
+标量。更严格的未来形式须把外部坐标比例换成内部协变场理论的不变量。</p>
+<p>若所谓“h 的本源”是指
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><annotation encoding="application/x-tex">h_{\mathrm{P}}</annotation></semantics></math>，那么本轮没有从
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>,</mo><mi>τ</mi></mrow><annotation encoding="application/x-tex">\kappa,\tau</annotation></semantics></math>
+推出它。若“h 的本源”是指
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>，本轮已经给出明确几何定义、反演和解析证明。若意图是找到
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的精确物理起源，则本轮给出了主要阻碍和可证伪路线，尚未完成最终答案。科学进步的一种形式是证明某条直觉路线上隐含着无法消除的自由度，并据此排除错误路线。</p>
+<h2
+id="第二十二章可证伪量的最小预注册模板">第二十二章｜可证伪量的最小预注册模板</h2>
+<p>预注册研究不应写“用尽一切算法找到吻合”，而应写明：理论参数从何而来、预测量是什么、在什么条件下宣布失败。对量子波导类比，预注册版本可固定横向束缚方式、曲线半径、弧长、横向模式及能谱测量方式；用标准受限
+Hamilton 算符计算一个零假设数据集；再提供 ROOT
+独立产生的新项以及其预测能谱偏移。留出部分器件和数据集不能参与新项系数的拟合。</p>
+<p>对“几何生成真空
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>”的强主张，预注册必须更加严格：首先给出完全确定的内部几何和参数，不使用
+CODATA 的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+设置螺距、角度、绕数或模式参数；其次计算出的
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+必须具备明确的重整化能标与不确定度；再次在独立电子磁矩、原子反冲、量子
+Hall
+等实验中符合相同耦合常数约束。如果只能通过事后修改几何映射来适应每个实验，就没有可证伪内容。</p>
+<p>为了保护研究的可信度，实验方案还应规定阴性结果如何公开：若粒子质量谱、Lorentz
+不变性或已知 QED
+关系失败，则需要标注该具体版本“被数据排除”，不能用更改参数的方式将原始预注册结论改成成功。新版本可以继续研究，但应保留版本日志和真实失败记录。</p>
+<h2
+id="第二十三章研究版本之间的逻辑关系">第二十三章｜研究版本之间的逻辑关系</h2>
+<p>此前 ROOT V119–V126 建立了若干 Yukawa
+第五力的离散谱反演和观测一致性检验；V127–V131
+更多研究量子相位、曲率联络、标准模型反常、大统一规范耦合以及粒子阈值。这些领域的数学工具都具有独立的意义，但它们不会自动因为出现在同一
+ZIP 中就形成一套不含额外输入的“终极理论”。</p>
+<p>本轮 V132
+返回更基础的提问：一个空间螺旋的曲率和挠率能否承载量子作用量尺度与精细结构常数？答案分三层。第一层：可以组织成明确定义的无量纲几何复数及积分。第二层：可以在受限量子波导中产生已有的几何势与条件性的有效规范相位。第三层：尚不能从普通三维光速螺旋独立预测
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+或
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>；而把轴向速度直接当作普适
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+与 Lorentz
+变换冲突。研究应当以这一分界作为后续实验和理论工作的起点。</p>
+<p>并非每次版本升级都应增加一个新的基本粒子、任意耦合或自由函数。更有希望的路线是以一套尽可能小的内部自由度和协变作用量为基础，提出能在实验上与
+QED/GR
+区分的单一、明确预言。若不能产生这种预言，理论应当被标识为“几何类比/解释性数学模型”，而非已经得到四力统一。</p>
+<h2
+id="第二十四章全书结论数学已闭环物理仍需独立证据">第二十四章｜全书结论：数学已闭环，物理仍需独立证据</h2>
+<p><strong>第一，几何定理已证明。</strong> 设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">v=1</annotation></semantics></math>，恒定圆柱螺旋有
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>=</mo><mi>R</mi><msup><mi>ω</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\kappa=R\omega^2</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mi>u</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">\tau=u\omega</annotation></semantics></math>、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>ω</mi><mn>2</mn></msup><mo>=</mo><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\omega^2=\kappa^2+\tau^2</annotation></semantics></math>。归一化复数
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">\mathcal H_{\mathrm{geo}}</annotation></semantics></math>
+封装了正交分量，与速度的几何分解完全一致。半径与螺距可从
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>,</mo><mi>τ</mi></mrow><annotation encoding="application/x-tex">\kappa,\tau</annotation></semantics></math>
+反演。所有结果在明确的运动学假设下成立。</p>
+<p><strong>第二，与
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的等号不是独立预测。</strong> 无论选
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=\alpha</annotation></semantics></math>
+还是
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>χ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">\chi_{\mathrm{geo}}=\alpha</annotation></semantics></math>，都可以构造满足光速约束的螺旋。选择本身没有解释
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+从何而来。对外部空间三维轨迹，前一种直接认同还存在明确的 Lorentz
+协变性反例。因此，在新的内禀协变机制得到证明前，不应把它作为已发现的自然常数定律。</p>
+<p><strong>第三，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>
+不等于
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mi mathvariant="normal">P</mi></msub><annotation encoding="application/x-tex">h_{\mathrm{P}}</annotation></semantics></math>。</strong>
+几何比例无量纲，普朗克常数具有作用量量纲。把
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+插入一个挠率积分能得到作用量，但不是
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+的来源。若要独立求出
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>，理论必须增加可检查的物理机制、固定的尺度和不依赖
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+输入的预测程序。</p>
+<p><strong>第四，真实量子几何相互作用是存在的。</strong>
+曲率可导致受限量子运动的标量几何势，在适当简并内部模式下挠率可产生有效规范联络及可观测
+holonomy。它们是可以严谨研究的桥梁，但适用领域和假设必须写清，不能直接称为真空
+QED 或基本粒子统一。</p>
+<p><strong>第五，四力大统一仍是开放问题。</strong> V132
+没有推出正确的三代粒子谱、重整化群、引力尺度、<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics></math>
+或量子引力的全套动力学，也没有通过新的独立精密实验。它提供了较为明确的数学封装、反例和后续研究门槛，这些是可以实际复现的科学进展。</p>
+<h2 id="附录-a核心方程速查">附录 A｜核心方程速查</h2>
+<ol type="1">
+<li>单一单位选择：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>，保留
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℏ</mi><mo>,</mo><mi>G</mi></mrow><annotation encoding="application/x-tex">\hbar,G</annotation></semantics></math>。</li>
+<li>三维螺旋：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐫</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>R</mi><mo>cos</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mi>R</mi><mo>sin</mo><mi>ω</mi><mi>t</mi><mo>,</mo><mi>u</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbf r(t)=(R\cos\omega t,R\sin\omega t,ut)</annotation></semantics></math>。</li>
+<li>光速约束：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>R</mi><mn>2</mn></msup><msup><mi>ω</mi><mn>2</mn></msup><mo>+</mo><msup><mi>u</mi><mn>2</mn></msup><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R^2\omega^2+u^2=1</annotation></semantics></math>。</li>
+<li>曲率：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mo>=</mo><mi>R</mi><msup><mi>ω</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\kappa=R\omega^2</annotation></semantics></math>。</li>
+<li>挠率：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>=</mo><mi>u</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">\tau=u\omega</annotation></semantics></math>。</li>
+<li>频率：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\omega=\sqrt{\kappa^2+\tau^2}</annotation></semantics></math>。</li>
+<li>几何复封装：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℋ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>κ</mi><mo>+</mo><mi>i</mi><mi>τ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\mathcal H_{\mathrm{geo}}=(\kappa+i\tau)/\sqrt{\kappa^2+\tau^2}</annotation></semantics></math>。</li>
+<li>几何虚分量：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>τ</mi><mi>/</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt><mo>=</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">h_{\mathrm{geo}}=\tau/\sqrt{\kappa^2+\tau^2}=u</annotation></semantics></math>。</li>
+<li>几何实分量：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>χ</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>κ</mi><mi>/</mi><msqrt><mrow><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow></msqrt><mo>=</mo><mi>R</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">\chi_{\mathrm{geo}}=\kappa/\sqrt{\kappa^2+\tau^2}=R\omega</annotation></semantics></math>。</li>
+<li>半径反演：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mi>κ</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">R=\kappa/(\kappa^2+\tau^2)</annotation></semantics></math>。</li>
+<li>单圈螺距：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><mn>2</mn><mi>π</mi><mi>τ</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>κ</mi><mn>2</mn></msup><mo>+</mo><msup><mi>τ</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">P=2\pi\tau/(\kappa^2+\tau^2)</annotation></semantics></math>。</li>
+<li>一圈扭转积分：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∫</mo><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">n</mi></mrow></msub><mi>τ</mi><mi>d</mi><mi>s</mi><mo>=</mo><mn>2</mn><mi>π</mi><mi>u</mi></mrow><annotation encoding="application/x-tex">\int_{\mathrm{turn}}\tau ds=2\pi u</annotation></semantics></math>；注意单圈不构成闭合空间回路。</li>
+<li>精细结构常数：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><msup><mi>e</mi><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub><mi>ℏ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha=e^2/(4\pi\varepsilon_0\hbar)</annotation></semantics></math>，仅设
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>
+并要求电荷单位一致。</li>
+<li>玻尔关系：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><mi>/</mi><msub><mi>a</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\alpha=\bar\lambda_C/a_0</annotation></semantics></math>，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>λ</mi><mo accent="true">‾</mo></mover><mi>C</mi></msub><mo>=</mo><mi>ℏ</mi><mi>/</mi><msub><mi>m</mi><mi>e</mi></msub></mrow><annotation encoding="application/x-tex">\bar\lambda_C=\hbar/m_e</annotation></semantics></math>，<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>0</mn></msub><mo>=</mo><mi>ℏ</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>m</mi><mi>e</mi></msub><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">a_0=\hbar/(m_e\alpha)</annotation></semantics></math>。</li>
+<li>Boost
+变换：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>′</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>−</mo><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>β</mi><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">u&#39;=(u-\beta)/(1-\beta u)</annotation></semantics></math>。</li>
+<li>受限粒子几何势：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>=</mo><mi>−</mi><msup><mi>ℏ</mi><mn>2</mn></msup><msup><mi>κ</mi><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>8</mn><mi>m</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">V_{\mathrm{geo}}=-\hbar^2\kappa^2/(8m)</annotation></semantics></math>，在特定非简并薄层条件下成立。</li>
+<li>路径相位：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>e</mi><mrow><mi>i</mi><mi>S</mi><mi>/</mi><mi>ℏ</mi></mrow></msup><annotation encoding="application/x-tex">e^{iS/\hbar}</annotation></semantics></math>；这个公式把
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ℏ</mi><annotation encoding="application/x-tex">\hbar</annotation></semantics></math>
+作为输入。</li>
+<li>引力无量纲参数：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>α</mi><mi>G</mi></msub><mo>=</mo><mi>G</mi><msup><mi>m</mi><mn>2</mn></msup><mi>/</mi><mi>ℏ</mi></mrow><annotation encoding="application/x-tex">\alpha_G=Gm^2/\hbar</annotation></semantics></math>。</li>
+<li>候选检验残差：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Δ</mi><mi>α</mi></msub><mo>=</mo><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><mo>−</mo><msub><mi>α</mi><mrow><mi mathvariant="normal">E</mi><mi mathvariant="normal">M</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\Delta_\alpha=h_{\mathrm{geo}}-\alpha_{\mathrm{EM}}</annotation></semantics></math>，只有独立测得左右两边才有证伪意义。</li>
+</ol>
+<h2 id="附录-b与本书对应的验证文件">附录 B｜与本书对应的验证文件</h2>
+<ul>
+<li><code>src/root_v132.py</code>：全部核心几何与常数计算，开头写明单位约定。</li>
+<li><code>tests/test_v132.py</code>：43 项新测试，其中还包含 2,000
+条随机几何性质、500 条 Lorentz 变换性质。</li>
+<li><code>scripts/generate_results.py</code>：生成 CSV、JSON
+和四张可视化图。</li>
+<li><code>data/calculation_results.json</code>：精算结果的可复算机器格式。</li>
+<li><code>data/helix_parameter_scan.csv</code>：无量纲角度和挠率扫描。</li>
+<li><code>data/boost_scan.csv</code>：Lorentz boost 反例扫描。</li>
+<li><code>figures/two_equally_valid_alpha_embeddings.png</code>：同一
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+的两种不同螺旋嵌入。</li>
+<li><code>figures/lorentz_boost_counterexample.png</code>：<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">o</mi></mrow></msub><annotation encoding="application/x-tex">h_{\mathrm{geo}}</annotation></semantics></math>
+非普适不变量。</li>
+<li><code>figures/model_dependent_geometric_potential.png</code>：模型依赖几何势尺度。</li>
+<li><code>figures/scale_degeneracy.png</code>：固定无量纲
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+时绝对尺度不唯一。</li>
+</ul>
+<h2 id="附录-c参考文献及适用范围">附录 C｜参考文献及适用范围</h2>
+<ol type="1">
+<li>NIST/CODATA 2022 fundamental
+constants：https://physics.nist.gov/cuu/Constants/
+。精细结构常数、电子质量和标准数据。</li>
+<li>NIST, Current advances: The fine-structure
+constant：https://physics.nist.gov/cuu/Constants/alpha.html
+。电磁耦合、Bohr 速度类比和运行耦合的概述（部分历史性 SI 叙述应以当前
+CODATA 为准）。</li>
+<li>CODATA 2022
+常数推荐论文：https://www.nist.gov/publications/codata-recommended-values-fundamental-physical-constants-2022
+。</li>
+<li>R. C. T. da Costa, Quantum mechanics of a constrained particle,
+<em>Physical Review A</em> <strong>23</strong>, 1982 (1981 publication
+listing)：https://journals.aps.org/pra/abstract/10.1103/PhysRevA.23.1982
+。曲率诱导势和受限量子系统。</li>
+<li>Xu-Yang Hou, Xianlong Gao, Hao Guo, <em>Torsion-induced gauge
+structure in curved quantum waveguides</em>
+(2026)：https://arxiv.org/abs/2606.03725
+。非简并标量态与简并内部态的挠率区别。</li>
+<li><em>Quantum mechanics of particles constrained to spiral curves with
+application to polyene chains</em>, Journal of Molecular Modeling
+(2024)：https://pmc.ncbi.nlm.nih.gov/articles/PMC11217072/
+。受限曲线上的量子动力学应用。</li>
+<li><em>Determination of the fine-structure constant with an accuracy of
+81 parts per trillion</em>, Nature 588
+(2020)：https://www.nature.com/articles/s41586-020-2964-7
+。独立精密精细结构常数测量实例。</li>
+</ol>
+<p>这些文献支持已建立的数学和物理背景，不支持“ROOT 已经从曲率挠率推导出
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>”之类更强断言。本书的“几何封装”主要是定义与研究组织方法，其额外物理内容必须通过独立预测检验。</p>
+<hr />
+<p><strong>书稿完成说明。</strong>
+这是可出版扩写的第一卷研究专著草稿。用户提出的“一亿字”属于远超单次可可靠生成和校验的规模，本卷没有用重复扩写、伪造结果或无意义填充凑字数；另附长期出版蓝图。未来每一卷应明确新定理、反例、实验或复算贡献，接受逐卷修订和同行核验。</p>
+</body>
+</html>

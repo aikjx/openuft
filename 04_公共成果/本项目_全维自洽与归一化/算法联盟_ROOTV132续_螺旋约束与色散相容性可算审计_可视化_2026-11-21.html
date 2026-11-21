@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法联盟 · ROOT V132 续 螺旋约束与色散相容性可算审计 · 2026-11-21</title>
+<style>
+  :root{--bg:#f7f8fa;--panel:#fff;--ink:#1a2230;--sub:#5a6675;--line:#dfe3ea;
+        --accent:#2540a6;--ok:#137a4b;--okbg:#e7f6ee;--neg:#a12a2a;--negbg:#fdecec;
+        --warn:#8a5a00;--warnbg:#fff6e0;--code:#0f2d5c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.65;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1120px;margin:0 auto;padding:34px 22px 70px}
+  header{border-left:5px solid var(--accent);padding:6px 0 6px 18px;margin-bottom:26px}
+  h1{font-size:25px;margin:0 0 6px}
+  .meta{color:var(--sub);font-size:13px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:20px 22px;margin-bottom:18px}
+  h2{font-size:18px;margin:0 0 14px;color:var(--accent)}
+  h3{font-size:15px;margin:18px 0 8px}
+  p{margin:8px 0}
+  .stat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 2px}
+  .scard{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .scard .n{font-size:22px;font-weight:700;color:var(--accent)}
+  .scard .l{font-size:12px;color:var(--sub);margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.3px}
+  th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+  th{background:#f3f5f9;color:var(--sub);font-weight:600}
+  td.num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--code);white-space:nowrap;font-size:12.4px}
+  .vcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.4px;color:var(--code);
+         background:#eef1f7;padding:9px 11px;border-radius:6px;word-break:break-all;margin-top:8px}
+  .note{background:var(--warnbg);border-left:4px solid #d8a11a;padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#5a4200;margin:12px 0}
+  .neg{background:var(--negbg);border-left:4px solid var(--neg);padding:10px 14px;
+       border-radius:6px;font-size:13.5px;color:#7a2020;margin:12px 0}
+  .good{background:var(--okbg);border-left:4px solid var(--ok);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#0d5636;margin:12px 0}
+  .formula{background:#f3f5f9;border-radius:7px;padding:10px 13px;font-size:14px;color:var(--code);
+           font-family:ui-monospace,Menlo,Consolas,monospace;overflow-x:auto}
+  .src{font-size:12px;color:var(--sub);word-break:break-all}
+  .src a{color:var(--accent)}
+  .tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:5px;margin-left:6px}
+  .tag.ok{background:var(--okbg);color:var(--ok)}
+  .tag.neg{background:var(--negbg);color:var(--neg)}
+  footer{color:var(--sub);font-size:12px;text-align:center;margin-top:24px}
+  @media(max-width:820px){.stat{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>算法联盟 · ROOT V132 续「螺旋约束 vs 色散」相容性可算审计</h1>
+  <div class="meta">(S) R²ω²+u²=1 与 (D) E²=p²+m² 的双方程相容性 · 2026-11-21 · 非判定册，不占 RID，不入 README，与 TUFT 链不相加</div>
+  <div class="vcode">ROOTV132B-AUDIT--SPIRAL-VS-DISPERSION--MASSIVE-INCOMPATIBLE--MASSLESS-IDENTITY--FLIP-THRESHOLD-2ROUTE--TWO-READINGS-DEAD--SR-PRIMARY-OK--UFT-NOT-BROKEN--NEW-PREDICTION-0</div>
+</header>
+
+<section>
+  <h2>总览（机读自 JSON）</h2>
+  <div class="stat">
+    <div class="scard"><div class="n">6/6</div><div class="l">判据 ok / 总数</div></div>
+    <div class="scard"><div class="n">12</div><div class="l">有质量有限 p 不相容</div></div>
+    <div class="scard"><div class="n">707.106</div><div class="l">翻转阈值 p*/m</div></div>
+    <div class="scard"><div class="n">0</div><div class="l">独立实验预言</div></div>
+  </div>
+  <p><b>一句话</b>：V132 审「每条方程是不是定义重排」；本册审「两条方程互相是否相容」。结论：螺旋约束要求总速率恰为 c，色散对有质量粒子给 v&lt;1——两者不能同时描述同一粒子。换判据类型得到不同的负读数形态，但结论同向：无新可判负动力学。</p>
+</section>
+
+<section>
+  <h2>一、外部裁决：v = p/E</h2>
+  <div class="formula">Feynman Lectures Vol I Ch.16　(16.13) E²−P²c²=m₀²c⁴　(16.14) Pc=Ev/c　⇒　v = Pc²/E = p/√(p²+m²)</div>
+  <p><b>m&gt;0 且 p 有限 ⇒ v&lt;1 严格</b>；v=1 只在 m=0 或 p→∞。外部一手：<span class="src"><a href="https://www.feynmanlectures.caltech.edu/I_16.html">Caltech 托管的 Feynman Lectures 原文</a></span>。这是 SR 教科书结论，本册只用它裁决，不包装成新物理发现。</p>
+</section>
+
+<section>
+  <h2>二、核心负读数：16 组扫描，12 不相容 <span class="tag neg">内部不相容</span></h2>
+  <table>
+    <tr><th>案例</th><th>p</th><th>v</th><th>1−v</th><th>判词</th></tr>
+    <tr><td>光子 m=0</td><td class="num">任意</td><td class="num">1</td><td class="num">0</td><td>COMPATIBLE-IDENTITY</td></tr>
+    <tr><td>电子 p=m_e</td><td class="num">5.109990E-1 MeV</td><td class="num">7.0710678119E-1</td><td class="num">2.928932E-1</td><td>INCOMPATIBLE</td></tr>
+    <tr><td>质子 p=m_p</td><td class="num">9.382721E+2 MeV</td><td class="num">7.0710678119E-1</td><td class="num">2.928932E-1</td><td>INCOMPATIBLE</td></tr>
+    <tr><td>单位质量 p=m</td><td class="num">1</td><td class="num">7.0710678119E-1</td><td class="num">2.928932E-1</td><td>INCOMPATIBLE</td></tr>
+  </table>
+  <div class="neg"><b>残差不是舍入误差</b>：电子在 p=m_e 处 1−v=0.293，远大于容差 1e-6。(S) 把总速率钉死在 1，(D) 对有质量粒子给出严格小于 1 的速率——结构冲突，只能二选一或作用于不同对象。</div>
+  <div class="good">正负对照：12 组有质量有限动量全 INCOMPATIBLE（负对照）；4 组无质量全 COMPATIBLE-IDENTITY（正对照）。但无质量处 v=1 是<b>恒等式</b>，不区分任何粒子，判别力 0。</div>
+</section>
+
+<section>
+  <h2>三、可翻转阈值与反噬</h2>
+  <div class="formula">1 − p/√(p²+m²) = tol　⇒　p*/m = (1−tol)/√(2tol−tol²)　（tol = 1e−6）</div>
+  <table>
+    <tr><th>读数</th><th>值</th></tr>
+    <tr><td>p*/m 解析 / 二分（220 次）</td><td class="num">7.071062508564E+2 / 7.071062508564E+2</td></tr>
+    <tr><td>两路相对偏离</td><td class="num">5.6168E-56</td></tr>
+    <tr><td>电子 p*</td><td class="num">3.61330552E+2 MeV（≈361.3 MeV）</td></tr>
+    <tr><td>质子 p*</td><td class="num">6.63458059E+5 MeV（≈663.5 GeV）</td></tr>
+  </table>
+  <table>
+    <tr><th>电子动量</th><th>1−v</th><th>判词</th></tr>
+    <tr><td class="num">p=10 m_e = 5.109990E+0 MeV</td><td class="num">4.962810E-3</td><td>INCOMPATIBLE</td></tr>
+    <tr><td class="num">p=1000 m_e = 5.109990E+2 MeV</td><td class="num">4.999996E-7</td><td>COMPATIBLE-WITHIN-TOL</td></tr>
+  </table>
+  <div class="note">反噬：把同一实体误标为无质量（m→0）→ 判词翻回 COMPATIBLE-IDENTITY。判据非装饰。<b>但须如实说明</b>：有质量粒子只在 p→∞ 极限才使 v→1，p* 是容差点而非物理可达态，「相容」判词受 tol 支配。</div>
+</section>
+
+<section>
+  <h2>四、两读法分叉：两条路都不产新动力学 <span class="tag neg">双分支封死</span></h2>
+  <table>
+    <tr><th>读法</th><th>含义</th><th>判决</th></tr>
+    <tr><td>A：螺旋约束 = 同一粒子质心速率</td><td>(S) 与 (D) 描述同一 m&gt;0 粒子</td><td>CONTRADICTS-DISPERSION（12 组矛盾）</td></tr>
+    <tr><td>B：螺旋约束只描述无质量内层光</td><td>复合粒子速率仍是 p/E&lt;1</td><td>IDENTITY-FOR-MASSLESS--NO-NEW-EQUATION</td></tr>
+  </table>
+  <p>读法 B 即「封装光即物质」结构，本册不重复推导，只引用既有封装光审计：<b>恒等 2 / 需输入 4 / 新方程 0</b>，p_free=3。读 A 与同表色散矛盾；读 B 退化为恒等且无新方程——两分支都不产新的可判负动力学。</p>
+</section>
+
+<section>
+  <h2>五、两路 v 与门控纪律</h2>
+  <div class="formula">路 A v=p/√(p²+m²)　|　路 B η=asinh(p/m), v=tanh(η)=sinh η/cosh η　|　max rel = 2.5125E-59</div>
+  <p>两路是同一色散的不同参数化，属恒等式数值核对。按纪律<b>标 IDENTITY、不承重</b>——不让「数值一致」冒充独立证据。门 ok 由 act 算出，no-hardcoded-ok 守卫 True。</p>
+</section>
+
+<section>
+  <h2>六、外部一手与红线</h2>
+  <table>
+    <tr><th>项</th><th>一手出处</th></tr>
+    <tr><td>色散与速度关系</td><td class="src"><a href="https://www.feynmanlectures.caltech.edu/I_16.html">Feynman Lectures Vol I Ch.16 (Caltech 原文)</a> — eq16.13/16.14</td></tr>
+    <tr><td>粒子质量</td><td class="src"><a href="https://pml.nist.gov/cuu/pdf/wall_2022.pdf">NIST SP 961 (2024)</a> — m_e, m_p</td></tr>
+    <tr><td>二手交叉核对</td><td class="src"><a href="https://en.wikipedia.org/wiki/Special_relativity">Special relativity (secondary)</a> — 非一手裁决</td></tr>
+  </table>
+  <div class="neg">数学自洽 ≠ 实验证实。本册不宣称攻破统一场论、不宣称发现新方程或独立实验预言；四力统一未证。来料未附来源，本册补一手并如实标注，不制造假阳性出处错误。</div>
+  <p style="font-size:12.5px;color:var(--sub)">复现：python -c "import glob,runpy; h=glob.glob('openuft/**/_alg_rootv132b_spiral_dispersion_audit_recompute.py',recursive=True); assert len(h)==1; runpy.run_path(h[0],run_name='__main__')"　|　幂等 SHA-256 0c49a9da382524f9… 逐字节相等　|　README 零写入</p>
+</section>
+
+<footer>算法联盟 · ROOT V132 续 螺旋约束与色散相容性可算审计 · 2026-11-21 · 非判定册，不与 TUFT 链相加</footer>
+</div>
+</body>
+</html>

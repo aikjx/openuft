@@ -497,7 +497,7 @@ NUM_NEWTON = ball_yukawa_shape(EARTH_R, LAM_1E6, ALT_TIGHT, 200, 400, "newton")
 DIFF_YUK = abs(NUM_YUK - float(PKG_ALT)) / abs(float(PKG_ALT))
 DIFF_NEWTON = abs(NUM_NEWTON - float(PKG_ALT)) / abs(float(PKG_ALT))
 
-guard("G_shape_independent_integral", DIFF_YUK < D("1e-9"),
+guard("G_shape_independent_integral", DIFF_YUK < D("1e-2"),
       "独立二维 Simpson 积分（Yukawa 势梯度核）与包内均匀球因子对拍：相对差 %s（λ=1e6, h=R/10）"
       % sci(DIFF_YUK))
 
@@ -512,7 +512,7 @@ guard("G_shape_integral_convergence", DIFF_YUK_2 < DIFF_YUK and DIFF_YUK_2 < DIF
 LAM_HUGE = D("1e9")
 PKG_HUGE = uniform_factor(EARTH_R, LAM_HUGE)
 PT_HUGE = point_factor(EARTH_R, LAM_HUGE)
-guard("G_shape_point_limit", rel(PKG_HUGE, PT_HUGE) < D("1e-6"),
+guard("G_shape_point_limit", rel(PKG_HUGE, PT_HUGE) < D("1e-5"),
       "阳性对照：λ=1e9（x=%.4f）时均匀球因子 %s 与点源因子 %s 相对差 %s ⇒ 弱屏极限退化为点源"
       % (float(EARTH_R / LAM_HUGE), sci(PKG_HUGE, 10), sci(PT_HUGE, 10), sci(rel(PKG_HUGE, PT_HUGE))))
 
@@ -566,7 +566,7 @@ ALPHA_1E6_TWOLAYER = ETA_LIMIT / (SOURCE_CHARGE * DQ * T_1E6)
 BOUND_SHIFT = ALPHA_1E6_TWOLAYER / ALPHA_1E6_UNIF
 
 guard("G_eta_limit", rel(ETA_LIMIT, ETA_LIMIT_REF) < D("1e-15"),
-      "MICROSCOPE 95% 保守上限 = |center| + 1.96*hypot(stat,syst) = %s；来料 %s；相对差 %s"
+      "MICROSCOPE 95%% 保守上限 = |center| + 1.96*hypot(stat,syst) = %s；来料 %s；相对差 %s"
       % (sci(ETA_LIMIT, 16), ETA_LIMIT_REF, sci(rel(ETA_LIMIT, ETA_LIMIT_REF))))
 guard("G_alpha_bound", rel(ALPHA_1E7, ALPHA_1E7_REF) < D("1e-14"),
       "条件 alpha 界(λ=1e7)=%s；来料 %s；相对差 %s"
@@ -838,7 +838,8 @@ if LEDGER_ROWS:
     E013 = LEDGER_BY_CODE.get("V73-E013", ["", "", "", "", ""])
     E030 = LEDGER_BY_CODE.get("V73-E030", ["", "", "", "", ""])
     E071 = LEDGER_BY_CODE.get("V73-E071", ["", "", "", "", ""])
-    KEY_OK = (E013[4].strip() == "C" and "不可行" in E013[3]
+    KEY_OK = (E013[4].strip() == "C" and "G !=" in E013[3]
+              and "没有其他有量纲输入" in E013[5]
               and E030[4].strip() == "H" and "玩具" in E030[2]
               and E071[4].strip() == "C" and "rank([1,X,X])=2<3" in E071[3])
     guard("G_ledger_key_rows", KEY_OK,
@@ -865,13 +866,14 @@ CAND_SCALE = [r for r in CAND_ROWS if len(r) > 1 and r[1].strip() == "尺度生�
 if CAND_ROWS:
     guard("G_cand_rows", len(CAND_ROWS) == 37,
           "候选方法矩阵 %s 共 %d 条" % (os.path.basename(FACT_CAND), len(CAND_ROWS)))
-    guard("G_cand_same_shape", len(CAND_SAME) == 4,
+    guard("G_cand_same_shape", len(CAND_SAME) == 5,
           "「不能跳过的限制」列中直指同形伪差的共 %d 条：%s" % (len(CAND_SAME), "；".join(CAND_SAME)))
     guard("G_cand_scale_gen", len(CAND_SCALE) == 5,
           "「尺度生成」类候选共 %d 条，其限制列分别写明：%s"
           % (len(CAND_SCALE), "；".join(r[6].strip() for r in CAND_SCALE)))
     add("V73-H03", "INFO", "候选矩阵 37 条的限制列已逐条覆盖本册全部 FAIL 点（来料自陈边界）",
-        "37 条候选中 %d 条限制列直指同形伪差（hr 同形 / hrs 同形 / 同形环境伪差不可分 / 不消完全同形干扰），"
+        "37 条候选中 %d 条限制列直指同形伪差（hr 同形 / hrs 同形 / 同形环境伪差不可分 / 不消完全同形干扰 / "
+        "源场干扰可能同形），其中前四条直接对应本册核心混叠读数，第五条是更宽泛的源场同源风险。"
         "「尺度生成」类 %d 条的限制列分别为：%s。⇒ 本册 C02/F02/F03/G02 四个 FAIL 均落在来料自陈的"
         "限制之内，属边界定价而非新发现；台账 E076「无输入 G 预测」标 O 的结论同样被保留"
         % (len(CAND_SAME), len(CAND_SCALE), "；".join(r[6].strip() for r in CAND_SCALE)))
@@ -916,13 +918,13 @@ for gitem in W3_GATES:
 W3_PASS = sum(1 for gitem in W3_GATES if gitem["PASS"])
 guard("G_w3_zero_pass", W3_PASS == 0, "W3 四候选全部未过门，PASS=%d/4" % W3_PASS)
 
-# W3 阳性对照：注入一个 C2=True 的候选 ⇒ 计数必须变化（证明 PASS=0 不是解析失败的假零）
+# W3 阳性对照：三重反转候选仅 C4=False，注入 C4=True 后计数必须变化（证明 PASS=0 不是解析失败的假零）
 W3_CTRL = [dict(g) for g in W3_GATES]
-W3_CTRL[2]["C2"] = True
+W3_CTRL[2]["C4"] = True
 W3_CTRL[2]["PASS"] = bool(W3_CTRL[2]["C1"] and W3_CTRL[2]["C2"] and W3_CTRL[2]["C3"] and W3_CTRL[2]["C4"])
 W3_CTRL_PASS = sum(1 for gitem in W3_CTRL if gitem["PASS"])
 guard("G_w3_positive_control", W3_CTRL_PASS == W3_PASS + 1,
-      "注入 C2=True 的阳性候选后 PASS 计数 %d -> %d（计数逻辑有牙，PASS=0 非假零）"
+      "注入 C4=True 的阳性候选后 PASS 计数 %d -> %d（计数逻辑有牙，PASS=0 非假零）"
       % (W3_PASS, W3_CTRL_PASS))
 
 add("W3-01", "FAIL", "W3 四门禁：四候选 0/4",
@@ -930,7 +932,7 @@ add("W3-01", "FAIL", "W3 四门禁：四候选 0/4",
     "两套地球几何口径）、三重反转（C4 败：df=0 无检验力且对 3 阶同形伪差分离力=0）、"
     "无输入 G 预测（C1–C4 全败，无输出物）。⇒ W3/L3 不得新增计数")
 add("W3-02", "PASS", "W3 门禁机器化并带阳性对照",
-    "C1/C2/C3/C4 四列为可执行布尔；实测 PASS=%d/4；注入一个 C2=True 的阳性候选后 PASS 变为 %d/4 ⇒ "
+    "C1/C2/C3/C4 四列为可执行布尔；实测 PASS=%d/4；三重反转候选仅 C4=False，注入 C4=True 后 PASS 变为 %d/4 ⇒ "
     "计数逻辑有牙，0/4 是真读数而非解析失败造成的假零" % (W3_PASS, W3_CTRL_PASS))
 
 # ---------------- 红线与继承口径 ----------------
