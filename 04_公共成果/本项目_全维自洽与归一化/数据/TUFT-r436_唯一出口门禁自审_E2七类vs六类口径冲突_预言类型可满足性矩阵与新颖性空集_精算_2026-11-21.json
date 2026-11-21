@@ -1,0 +1,844 @@
+{
+ "cond_cost": [
+  {
+   "cost": "须为体系外生连续输入 (r432 基组闭包: {c,hbar,G} 只生成 1)",
+   "gate": "C2",
+   "type": "T1"
+  },
+  {
+   "cost": "须含绝对标度, 否则双锚无定义",
+   "gate": "C4",
+   "type": "T1"
+  },
+  {
+   "cost": "须指向尚未观测的整数量 (否则是重述已知事实, 见 T6)",
+   "gate": "C3",
+   "type": "T2"
+  },
+  {
+   "cost": "代数数的来源须唯一, 否则等价于自由参数",
+   "gate": "C2",
+   "type": "T3"
+  },
+  {
+   "cost": "同 T2-C3",
+   "gate": "C3",
+   "type": "T3"
+  },
+  {
+   "cost": "须给出参数化闭式而非定性形状",
+   "gate": "C1",
+   "type": "T4"
+  },
+  {
+   "cost": "形状参数不得由被解释谱反解",
+   "gate": "C2",
+   "type": "T4"
+  },
+  {
+   "cost": "须有独立于拟合样本的盲测数据集",
+   "gate": "C3",
+   "type": "T4"
+  },
+  {
+   "cost": "同 T1-C4",
+   "gate": "C4",
+   "type": "T4"
+  },
+  {
+   "cost": "须转成可盲测的定量边界而非定性不等式",
+   "gate": "C3",
+   "type": "T5"
+  }
+ ],
+ "control_rows": [
+  {
+   "code": "CTRL-1",
+   "note": "严口径 0/5 vs 宽口径(把 COND 当满足) 4/5 => 矩阵能区分 \"条件满足\" 与 \"已满足\"",
+   "ok": true
+  },
+  {
+   "code": "CTRL-2",
+   "note": "把 E2 的六类改为七类 => 豁免类数从 1 变 0 => 计数冲突可被修法消除 (随输入重算)",
+   "ok": true
+  },
+  {
+   "code": "CTRL-3",
+   "note": "占用项从 1 改 0 => 连续余量从 0 变 1 => 预算账非硬编码",
+   "ok": true
+  },
+  {
+   "code": "CTRL-4",
+   "note": "把样本 target_observed 翻转即改变 c3_pass => 新颖性判据非恒假",
+   "ok": true
+  }
+ ],
+ "controls": {
+  "ok": 4,
+  "total": 4
+ },
+ "counts": {
+  "BOUNDARY": 3,
+  "CORRECTED": 2,
+  "FAIL": 5,
+  "INFO": 2,
+  "PASS": 5,
+  "total": 17
+ },
+ "criteria": [
+  {
+   "body": "任何 \"唯一出口 / 准入门禁\" 在被当作结论使用前, 必须对门禁自身做可满足性矩阵: (预言类型 x 门禁) 逐格判 OK/COND/NA/NO, 且每个 COND 格登记非零解锁代价. 出现 \"全 OK 类型 = 0\" 时, 出口不可被任何单一预言类型独立满足.",
+   "id": "M-10",
+   "title": "门禁自审判据"
+  },
+  {
+   "body": "NA (门禁对该类型不适用) 不得计入 \"通过\". 典型: 双锚一致性对纯整数/代数/不等式预言恒真. 把 NA 记成通过会人为抬高过门数, 属读数造假.",
+   "id": "M-11",
+   "title": "空满足禁计判据"
+  },
+  {
+   "body": "\"零成本预言\" 在计入任何成绩前, 先查其目标是否已被观测. 指向已观测事实的整数/代数关系属重述, 不构成盲测路径 (败 C3), 无论其推导多干净.",
+   "id": "M-12",
+   "title": "新颖性前置判据"
+  },
+  {
+   "body": "连续输入 (个) 与离散信息 (bit) 必须分列报告, 禁止相加或互相折算. 任何 \"总输入数\" = 连续个数 + bit 的读数一律无效 (承 r434 §5.3).",
+   "id": "M-13",
+   "title": "两轴分列判据"
+  }
+ ],
+ "date": "2026-11-21",
+ "entries": [
+  {
+   "code": "T1a",
+   "detail": "r429 §三 分类学为 7 类 (机器抓取 7/7), 而 T4 表 E2 原文写 \"provenance 在六类之外\"; 差 1 类且未指明豁免者 => 字面读法下存在 1 个体系内类满足 E2, E2 不能单独作为 \"体系外\" 判据. 修法: E2 应写 \"七类之外\".",
+   "status": "CORRECTED",
+   "title": "E2 口径计数冲突: 七类 vs 六类"
+  },
+  {
+   "code": "T1b",
+   "detail": "无论豁免哪一类 c*, 它仍须过 E3 (=C1..C4); r429 §四 七类 passed 全 False (REJECTED 判词 9 条) => 出口合取结论与 r429 T4 逐位一致, 本册不推翻其裁决.",
+   "status": "PASS",
+   "title": "合取结论不因 E2 歧义改变"
+  },
+  {
+   "code": "T1c",
+   "detail": "r429 未给出 \"被排除的第六类\" 名单, 故 E2 的可过集在字面上是非空且未刻画; 本册只登记该缺口并要求补名单, 不代填.",
+   "status": "BOUNDARY",
+   "title": "E2 定义不完备 (边界登记)"
+  },
+  {
+   "code": "T2a",
+   "detail": "类型 = {连续无量纲, 整数/拓扑, 代数数, 函数/形状, 不等式/符号}; 穷尽依据是 \"预言给出的对象的数学类型\", 与具体理论无关 => 判据不循环.",
+   "status": "PASS",
+   "title": "预言类型受控穷举 5 类"
+  },
+  {
+   "code": "T2b",
+   "detail": "OK 6 格 / COND 10 格 / NA 3 格 / NO 1 格; 每个 COND 格均登记非零解锁代价.",
+   "status": "PASS",
+   "title": "可满足性矩阵 20 格机核"
+  },
+  {
+   "code": "T3a",
+   "detail": "full_ok = 0/5. T1 败 C2 (须外生连续输入), T2 败 C3 (须指向未观测整数量), T3 双 COND, T4 全 COND, T5 结构败 C1 (无定量数值). => \"零成本过四门\" 的预言类型为空.",
+   "status": "FAIL",
+   "title": "无任何预言类型四门全 OK"
+  },
+  {
+   "code": "T3b",
+   "detail": "纯整数/代数数/不等式预言不含绝对标度, 双锚一致性恒真 (vacuous). 若把 NA 记为 \"通过\", 会人为抬高 3/5 类型的过门数 => 本册规定 NA 不得计入通过, 并建议 E4 改写为 \"含绝对标度时须双锚一致, 否则显式标 N/A\".",
+   "status": "CORRECTED",
+   "title": "C4 对 T2/T3/T5 是空满足, 不是通过"
+  },
+  {
+   "code": "T4a",
+   "detail": "Omega5 上限 1, r431 的标度比 eta 已占用 1 => 余量 0. r432 基组闭包又证非平凡连续无量纲数必为外生 (需 >=1) => 赤字 1. 这不是 \"尚未找到\", 是预算已满.",
+   "status": "FAIL",
+   "title": "连续轴余量为 0: \"零外部输入 + 连续定量\" 不可同时"
+  },
+  {
+   "code": "T5a",
+   "detail": "I_group = log2(5) = 2.32192809 bit; I_gen = log2(3) = 1.58496250 bit; 合计 log2(15) = 3.906890595 bit. 账面与 r434 的 3.9069 bit 逐位一致 (独立的 5x3 受控表).",
+   "status": "PASS",
+   "title": "离散轴 bit 账 (与连续轴分列)"
+  },
+  {
+   "code": "T5b",
+   "detail": "r433 已裁定离散来源两腿全败 (预置撞 O1 / 第一性导出仍需 4.585 bit 外部选择). 本册不重判该裁决, 只把它记为 \"离散轴余量 = 0 bit\", 与连续轴余量 0 并列构成两轴同时耗尽.",
+   "status": "FAIL",
+   "title": "离散轴余量为 0 (两腿全封)"
+  },
+  {
+   "code": "T5c",
+   "detail": "错误合并演示: 1 + 3.9069 = 4.90689059, 该数无物理意义. 两轴必须分列 (承 r434 §5.3); 任何把它们相加得到的 \"总输入数\" 一律无效.",
+   "status": "BOUNDARY",
+   "title": "\"1 个连续输入 = 3.9069 bit\" 不成立"
+  },
+  {
+   "code": "T6a",
+   "detail": "4 条样本 (N_gen=3 / N_c=3 / 电荷量子化 / det(3_1)=3) 均零连续输入, 但预言目标全部已被观测 => 结构性败 C3. 这不是 \"缺输入\", 而是 \"缺未被观测的可盲测目标\".",
+   "status": "FAIL",
+   "title": "库内零成本离散预言全是重述 (新颖性集空)"
+  },
+  {
+   "code": "T6b",
+   "detail": "形式样本 X1 (指向未观测整数量) 过 C3, 与 4 条实样本形成正负对照 => novel_set 为空是读数而非判据失效. X1 无物理内容, 不计入任何候选.",
+   "status": "PASS",
+   "title": "新颖性判据有牙 (形式对照)"
+  },
+  {
+   "code": "T6c",
+   "detail": "理论在已知 3 代之后构造出 k=2, 属事后贴合 (时间序与盲测性均不满足); 要成为盲测预言, 整数目标必须在测量前给出且不可事后改.",
+   "status": "INFO",
+   "title": "为何 \"3 代 / 3 色\" 不能算预言"
+  },
+  {
+   "code": "T7a",
+   "detail": "连续型: 需 >=1 外生连续输入, 余量 0 (T4a) => 不可行. 离散型: 零连续输入可行, 但新颖集空 (T6a) => 不可行. => 在 \"零预置 + 结构自由度<=1\" 下, 现存门禁与现存候选集的交为空.",
+   "status": "FAIL",
+   "title": "出口可行性二分: 两型路径同时封死"
+  },
+  {
+   "code": "T7b",
+   "detail": "判决对象 = \"r429 的 E1-E4 门禁 + 库内现存候选集\". 若出现 (i) 指向未观测整数量的具体预言 或 (ii) 未占用预算的外生连续输入, 本册判据须重新求值. 本册不否证统一场论方向, 不宣称 \"不可能\".",
+   "status": "BOUNDARY",
+   "title": "本册判决的作用域 (不越界)"
+  },
+  {
+   "code": "T7c",
+   "detail": "r429 给门禁与七类全败 / r430 外生 0/40 / r431 标度 / r432 基组闭包 / r433 离散两腿 / r434 记账三元组 —— 本册全部继承不重判, 新增的只有 \"门禁自身可满足性 + C4 空满足 + 新颖性空集\" 三项.",
+   "status": "INFO",
+   "title": "与 r429-r434 的关系: 审门禁而非重判"
+  }
+ ],
+ "guard_rows": [
+  {
+   "code": "G-A0",
+   "note": "撞号自检: 排除本册产物后, r436 在 判定/源码/数据 三处他册命中 0 (实得 0)",
+   "ok": true
+  },
+  {
+   "code": "G-A0b",
+   "note": "本册产物识别有效 (至少识别到自身脚本 1 个, 实得 3) => G-A0 的排除规则非空转",
+   "ok": true
+  },
+  {
+   "code": "G-A0c",
+   "note": "撞号事件登记: 并行 r435 他册 >= 3 件 (判定/源码/数据齐全), 实得 8 => 本册顺延 r436 有据, 非无故跳号",
+   "ok": true
+  },
+  {
+   "code": "G-A0d",
+   "note": "并行 r435 主产物 >= 3 件且主题为 \"账基组选择反解 / 口径不变性元层\", 与本册 \"门禁自审\" 不同 => 分工可辨 (实得主产物 5 件)",
+   "ok": true
+  },
+  {
+   "code": "G-A1",
+   "note": "r429/r431/r432/r433/r434 判定册磁盘各存在一份",
+   "ok": true
+  },
+  {
+   "code": "G-A2",
+   "note": "r429 含 E1-E4 四条件 (本册审查对象)",
+   "ok": true
+  },
+  {
+   "code": "G-A3",
+   "note": "r429 含 C1-C4 四门 (本册矩阵的列)",
+   "ok": true
+  },
+  {
+   "code": "G-A4",
+   "note": "r429 T4 表 E2 原文写 \"provenance 在六类之外\" (本册 T1 的冲突对象存在)",
+   "ok": true
+  },
+  {
+   "code": "G-A5",
+   "note": "r429 §三 分类学自称七类 (与 E2 的 \"六类\" 构成计数冲突)",
+   "ok": true
+  },
+  {
+   "code": "G-A6",
+   "note": "r432 含基组闭包与 N_ext (本册 T4 连续轴余量的上游)",
+   "ok": true
+  },
+  {
+   "code": "G-A7",
+   "note": "r433 含 \"两腿全封\" 与 O1 (本册 T5 离散轴余量的上游)",
+   "ok": true
+  },
+  {
+   "code": "G-A8",
+   "note": "r434 含记账三元组与 bit 账 (本册 T5 \"不得相加\" 纪律的来源)",
+   "ok": true
+  },
+  {
+   "code": "G-A9",
+   "note": "r434 §5.3 明文要求 (连续, 离散/bit) 作为二元组分列 (本册 G-H 纪律依据)",
+   "ok": true
+  },
+  {
+   "code": "G-A10",
+   "note": "r429 七类来源类名机器抓取 7/7 (实得 7: FIT,TOY,MATH,SCHEME,DEFINITION,ISSUE,SYSTEM-DERIVED)",
+   "ok": true
+  },
+  {
+   "code": "G-B1",
+   "note": "两处计数机读: 分类学 7 类, E2 原文 6 类",
+   "ok": true
+  },
+  {
+   "code": "G-B2",
+   "note": "计数差恰为 1 (= 被 E2 字面豁免的类数; 机器 7-6)",
+   "ok": true
+  },
+  {
+   "code": "G-C1",
+   "note": "r429 §四 表中 REJECTED 判词 >= 7 (实得 9) => 七类在 C1-C4 上全 False",
+   "ok": true
+  },
+  {
+   "code": "G-D1",
+   "note": "预言类型受控穷举 5 类 (连续 / 整数 / 代数 / 形状 / 不等式)",
+   "ok": true
+  },
+  {
+   "code": "G-D2",
+   "note": "五类型 key 互异 (无重复定义)",
+   "ok": true
+  },
+  {
+   "code": "G-E1",
+   "note": "矩阵 5x4 = 20 格齐备 (行=预言类型, 列=C1..C4)",
+   "ok": true
+  },
+  {
+   "code": "G-E2",
+   "note": "矩阵取值只在四值域内 (OK/COND/NA/NO)",
+   "ok": true
+  },
+  {
+   "code": "G-E3",
+   "note": "矩阵 20 格全部分类 (OK 6 / COND 10 / NA 3 / NO 1)",
+   "ok": true
+  },
+  {
+   "code": "G-E4",
+   "note": "矩阵双侧有牙: 存在 OK 格 (6) 也存在 NO 格 (1) => 非恒真/恒假",
+   "ok": true
+  },
+  {
+   "code": "G-E5",
+   "note": "COND 格数与统计一致 (10)",
+   "ok": true
+  },
+  {
+   "code": "G-E6",
+   "note": "每个 COND 格都登记了非零解锁代价 (缺 0 格)",
+   "ok": true
+  },
+  {
+   "code": "G-E7",
+   "note": "无任何预言类型四门全 OK (实得 0) => 每种类型至少需 1 次 COND 解锁",
+   "ok": true
+  },
+  {
+   "code": "G-E8",
+   "note": "C4 对 T2/T3/T5 恒 NA (空满足) => C4 对纯数/纯符号预言零判别力 (实得 T2,T3,T5)",
+   "ok": true
+  },
+  {
+   "code": "G-F1",
+   "note": "连续轴: 上限 1 (Omega5) 与 已占用 1 (r431 的标度比 eta) 均为 1",
+   "ok": true
+  },
+  {
+   "code": "G-F2",
+   "note": "连续轴余量 = 0 (上限 - 占用) => 任何再要求 \">=1 连续输入\" 的预言即赤字 1",
+   "ok": true
+  },
+  {
+   "code": "G-F3",
+   "note": "r431 正文含 eta (连续轴占用项的来源锚点)",
+   "ok": true
+  },
+  {
+   "code": "G-F4",
+   "note": "T1 型预言需 1 个外生连续输入, 余量 0 => 赤字 1",
+   "ok": true
+  },
+  {
+   "code": "G-G1",
+   "note": "log2(5) 与参考值一致 (Delta < 1e-50)",
+   "ok": true
+  },
+  {
+   "code": "G-G2",
+   "note": "log2(3) 与参考值一致 (Delta < 1e-50)",
+   "ok": true
+  },
+  {
+   "code": "G-G3",
+   "note": "log2(15) = log2(5) + log2(3) 在 60 位内精确 (Delta < 1e-55)",
+   "ok": true
+  },
+  {
+   "code": "G-G4",
+   "note": "离散信息量落在 (3.9, 3.91) bit 区间 (实得 3.90689059)",
+   "ok": true
+  },
+  {
+   "code": "G-G5",
+   "note": "Omega5 的形式是 \"自由连续常数 <= 1\" (上限 1), 不含任何离散/bit 项 => 对离散轴的覆盖为空集",
+   "ok": true
+  },
+  {
+   "code": "G-G6",
+   "note": "r433 两腿 (预置 / 需外部选择) 全封 => 离散轴余量 0 的来源锚点",
+   "ok": true
+  },
+  {
+   "code": "G-G7",
+   "note": "错误合并演示 (1 + 3.9069 = 4.90689059) 只用于说明其无意义, 不得作为预算读数",
+   "ok": true
+  },
+  {
+   "code": "G-G8",
+   "note": "纪律来自 r434 §5.3 明文 (连续, 离散/bit) 二元组, 本册遵守同一纪律",
+   "ok": true
+  },
+  {
+   "code": "G-H1",
+   "note": "现存零连续输入样本 4 条 (机器登记形式, 不重判其物理)",
+   "ok": true
+  },
+  {
+   "code": "G-H2",
+   "note": "四条样本均满足 zero_cont_input=True (本册 H 节的前提)",
+   "ok": true
+  },
+  {
+   "code": "G-H3",
+   "note": "四条样本的预言目标均已被观测 => 全部败 C3 (盲测路径缺失)",
+   "ok": true
+  },
+  {
+   "code": "G-H4",
+   "note": "机器判定: 现存样本 c3_pass = 0/4",
+   "ok": true
+  },
+  {
+   "code": "G-H5",
+   "note": "新颖性集为空 (现存样本 0/4 全部指向已观测事实)",
+   "ok": true
+  },
+  {
+   "code": "G-H6",
+   "note": "形式对照 X1 过 C3 => 判据有牙 (\"指向未观测整数\" 的形态确实存在, 只是库内无实体样本)",
+   "ok": true
+  },
+  {
+   "code": "G-H7",
+   "note": "X1 显式标注为 FORM-ONLY 非候选 (不宣称发现)",
+   "ok": true
+  },
+  {
+   "code": "G-I1",
+   "note": "连续型路径不可行: 需 1 个连续输入而余量 0",
+   "ok": true
+  },
+  {
+   "code": "G-I2",
+   "note": "离散型路径不可行: 余量 0 bit 且新颖集 0 条",
+   "ok": true
+  },
+  {
+   "code": "G-I3",
+   "note": "两型路径同时不可行 => E1-E4 且 新颖 的合取在现存候选集上为空",
+   "ok": true
+  },
+  {
+   "code": "G-CTRL",
+   "note": "控制组 4/4 全过 (径区分 / 修法可消除 / 预算可重算 / 新颖判据有牙)",
+   "ok": true
+  },
+  {
+   "code": "G-K1",
+   "note": "可迁移判据 4 条 (M-10..M-13)",
+   "ok": true
+  },
+  {
+   "code": "G-K2",
+   "note": "四条判据均有正文",
+   "ok": true
+  },
+  {
+   "code": "G-S1",
+   "note": "自抓 S1 已修正 (撞号守卫自伤)",
+   "ok": true
+  },
+  {
+   "code": "G-S2",
+   "note": "自抓 S2 已修正 (字典遍历键当值)",
+   "ok": true
+  },
+  {
+   "code": "G-S3",
+   "note": "自抓 S3 已修正 (自洽守卫写成全过断言)",
+   "ok": true
+  },
+  {
+   "code": "G-S4",
+   "note": "自抓 S4 已修正 (恒真占位守卫)",
+   "ok": true
+  },
+  {
+   "code": "G-J1",
+   "note": "条目分类计数与总数自洽 (17)",
+   "ok": true
+  },
+  {
+   "code": "G-J2",
+   "note": "守卫总数 >= 40 (实得 57)",
+   "ok": true
+  },
+  {
+   "code": "G-J3",
+   "note": "注册计数器与守卫列表长度一致 (58 vs 58)",
+   "ok": true
+  }
+ ],
+ "guards": {
+  "ok": 59,
+  "total": 59
+ },
+ "matrix": {
+  "T1": {
+   "C1": "OK",
+   "C2": "COND",
+   "C3": "OK",
+   "C4": "COND"
+  },
+  "T2": {
+   "C1": "OK",
+   "C2": "OK",
+   "C3": "COND",
+   "C4": "NA"
+  },
+  "T3": {
+   "C1": "OK",
+   "C2": "COND",
+   "C3": "COND",
+   "C4": "NA"
+  },
+  "T4": {
+   "C1": "COND",
+   "C2": "COND",
+   "C3": "COND",
+   "C4": "COND"
+  },
+  "T5": {
+   "C1": "NO",
+   "C2": "OK",
+   "C3": "COND",
+   "C4": "NA"
+  }
+ },
+ "name": "TUFT-r436_唯一出口门禁自审_E2七类vs六类口径冲突_预言类型可满足性矩阵与新颖性空集_精算_2026-11-21",
+ "numbers": {
+  "E2_literal_exempts_one_class": true,
+  "I_gen_bit": "1.58496250072115618145373894394781650875981440769248106045575",
+  "I_group_bit": "2.32192809488736234787031942948939017586483139302458061205476",
+  "I_total_bit": "3.90689059560851852932405837343720668462464580071706167251051",
+  "both_paths_feasible": false,
+  "c4_vacuous_types": [
+   "T2",
+   "T3",
+   "T5"
+  ],
+  "classes_found_in_r429": [
+   "FIT",
+   "TOY",
+   "MATH",
+   "SCHEME",
+   "DEFINITION",
+   "ISSUE",
+   "SYSTEM-DERIVED"
+  ],
+  "cond_cells": [
+   "T1-C2",
+   "T1-C4",
+   "T2-C3",
+   "T3-C2",
+   "T3-C3",
+   "T4-C1",
+   "T4-C2",
+   "T4-C3",
+   "T4-C4",
+   "T5-C3"
+  ],
+  "cond_missing_cost": [],
+  "conjunction_verdict_unchanged": true,
+  "criteria": [
+   {
+    "body": "任何 \"唯一出口 / 准入门禁\" 在被当作结论使用前, 必须对门禁自身做可满足性矩阵: (预言类型 x 门禁) 逐格判 OK/COND/NA/NO, 且每个 COND 格登记非零解锁代价. 出现 \"全 OK 类型 = 0\" 时, 出口不可被任何单一预言类型独立满足.",
+    "id": "M-10",
+    "title": "门禁自审判据"
+   },
+   {
+    "body": "NA (门禁对该类型不适用) 不得计入 \"通过\". 典型: 双锚一致性对纯整数/代数/不等式预言恒真. 把 NA 记成通过会人为抬高过门数, 属读数造假.",
+    "id": "M-11",
+    "title": "空满足禁计判据"
+   },
+   {
+    "body": "\"零成本预言\" 在计入任何成绩前, 先查其目标是否已被观测. 指向已观测事实的整数/代数关系属重述, 不构成盲测路径 (败 C3), 无论其推导多干净.",
+    "id": "M-12",
+    "title": "新颖性前置判据"
+   },
+   {
+    "body": "连续输入 (个) 与离散信息 (bit) 必须分列报告, 禁止相加或互相折算. 任何 \"总输入数\" = 连续个数 + bit 的读数一律无效 (承 r434 §5.3).",
+    "id": "M-13",
+    "title": "两轴分列判据"
+   }
+  ],
+  "deficit_continuous": 1,
+  "e2_exempt_classes": 1,
+  "form_only": {
+   "anchor": "FORM-ONLY (无物理内容, 不构成 W3)",
+   "c3_pass": true,
+   "form": "某未测量能标的整数拓扑指标 = 2",
+   "id": "X1",
+   "ptype": "T2",
+   "target_observed": false,
+   "zero_cont_input": true
+  },
+  "form_only_novel": [
+   "X1"
+  ],
+  "full_ok_count": 0,
+  "full_ok_types": [],
+  "gate_C": [
+   {
+    "code": "C1",
+    "key": "quantitative",
+    "text": "给出定量数值"
+   },
+   {
+    "code": "C2",
+    "key": "non_backsolve",
+    "text": "非由被解释数据反解"
+   },
+   {
+    "code": "C3",
+    "key": "blind_path",
+    "text": "存在未参与拟合的盲测路径"
+   },
+   {
+    "code": "C4",
+    "key": "dual_anchor",
+    "text": "普朗克 + 粒子 双锚一致"
+   }
+  ],
+  "gate_E": [
+   {
+    "code": "E1",
+    "key": "pre_registered_frozen",
+    "text": "预注册冻结 (推出前冻结, 不可事后调参)"
+   },
+   {
+    "code": "E2",
+    "key": "provenance_outside_classes",
+    "text": "provenance 在体系内来源类之外"
+   },
+   {
+    "code": "E3",
+    "key": "passes_C1_C4",
+    "text": "过 C1-C4 四门"
+   },
+   {
+    "code": "E4",
+    "key": "dual_anchor_consistent",
+    "text": "普朗克锚 + 粒子锚 一致"
+   }
+  ],
+  "invalid_sum_continuous_plus_bits": "4.90689059560851852932405837343720668462464580071706167251051",
+  "invalid_sum_label": "INVALID-NO-PHYSICAL-MEANING",
+  "lenient_types_if_cond_counted": [
+   "T1",
+   "T2",
+   "T3",
+   "T4"
+  ],
+  "margin_continuous": 0,
+  "margin_discrete_bits": 0,
+  "matrix_counts": {
+   "COND": 10,
+   "NA": 3,
+   "NO": 1,
+   "OK": 6,
+   "total": 20
+  },
+  "n_classes_in_E2_text": 6,
+  "n_classes_taxonomy": 7,
+  "need_continuous_for_T1": 1,
+  "novel_set": [],
+  "novel_set_size": 0,
+  "occupied_continuous": 1,
+  "omega5_cap": 1,
+  "omega5_covers_discrete": false,
+  "own_r436_artifacts": [
+   "TUFT-r436_唯一出口门禁自审_E2七类vs六类口径冲突_预言类型可满足性矩阵与新颖性空集_精算_2026-11-21.json",
+   "TUFT-r436_唯一出口门禁自审_E2七类vs六类口径冲突_预言类型可满足性矩阵与新颖性空集_精算_2026-11-21.py",
+   "TUFT-r436_唯一出口门禁自审_E2七类vs六类口径冲突_预言类型可满足性矩阵与新颖性空集_精算_2026-11-21_report.txt"
+  ],
+  "parallel_r435_artifacts": [
+   "TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21.json",
+   "TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21.md",
+   "TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21.py",
+   "TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21_report.txt",
+   "_reg_r435.py",
+   "_stage_r435.py",
+   "_verify_r435.py",
+   "判定_TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21.md"
+  ],
+  "parallel_r435_main_artifacts": [
+   "TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21.json",
+   "TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21.md",
+   "TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21.py",
+   "TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21_report.txt",
+   "判定_TUFT-r435_账基组选择反解定理_口径不变性元层边界与离散输入来源轴再定价_精算_2026-11-21.md"
+  ],
+  "path_continuous_feasible": false,
+  "path_discrete_feasible": false,
+  "pre_existing_r436_foreign": [],
+  "prediction_types": [
+   {
+    "code": "T1",
+    "key": "continuous_dimensionless",
+    "text": "连续无量纲数 (alpha, m_e/m_P, Lambda)"
+   },
+   {
+    "code": "T2",
+    "key": "integer_topological",
+    "text": "整数/拓扑数 (N_gen, N_c, 反常系数, 结行列式)"
+   },
+   {
+    "code": "T3",
+    "key": "algebraic_number",
+    "text": "代数数 (phi, sqrt2)"
+   },
+   {
+    "code": "T4",
+    "key": "function_shape",
+    "text": "函数/形状 (谱形, 势形, 标度函数)"
+   },
+   {
+    "code": "T5",
+    "key": "inequality_sign",
+    "text": "不等式/符号 (正定性, 上界, 序)"
+   }
+  ],
+  "r429_rejected_judgements": 9,
+  "samples": [
+   {
+    "anchor": "r432/r433 三代=SU(2)_2 三扇区",
+    "c3_pass": false,
+    "form": "N_gen = 3 (SU(2)_k 不可约表示数 k+1, k=2)",
+    "id": "S1",
+    "ptype": "T2",
+    "target_observed": true,
+    "zero_cont_input": true
+   },
+   {
+    "anchor": "R16 三叶结 pi_1 -> SU(3) 基本表示",
+    "c3_pass": false,
+    "form": "N_c = 3 (SU(3) 基本表示维数)",
+    "id": "S2",
+    "ptype": "T2",
+    "target_observed": true,
+    "zero_cont_input": true
+   },
+   {
+    "anchor": "R10/R11 Dirac 量子化 + 反常消除",
+    "c3_pass": false,
+    "form": "电荷量子化 Q/e in (1/3)Z",
+    "id": "S3",
+    "ptype": "T3",
+    "target_observed": true,
+    "zero_cont_input": true
+   },
+   {
+    "anchor": "R19 结行列式 det(K)=|Delta(-1)|",
+    "c3_pass": false,
+    "form": "det(K_3_1) = 3 (三叶结行列式)",
+    "id": "S4",
+    "ptype": "T2",
+    "target_observed": true,
+    "zero_cont_input": true
+   }
+  ],
+  "self_checks": [
+   {
+    "fix": "新增 `is_own(name)` 排除本册产物 (脚本/json/report/判定册均含 `TUFT-r436`), 并补 `G-A0b` 断言排除规则至少命中自身 1 个 (证明排除非空转).",
+    "id": "S1",
+    "kind": "撞号守卫自伤",
+    "lesson": "查重/撞号守卫必须与\"本册产物集合\"同步定义; 且必须有\"排除规则确实命中自身\"的阳性对照 —— 否则无法区分\"排除得当\"与\"排除过头把真撞号也滤掉\".",
+    "problem": "首版 `G-A0` 直接对 判定/源码/数据 三处的 `*r436*` 计数要求 0 命中, 但脚本自身已落盘在源码目录, 重跑时 json/report 也在数据目录 => 恒假; 首跑报 \"实得 5\", 把\"自己\"当成\"撞号\"."
+   },
+   {
+    "fix": "改为 `for v in r.values()` 显式遍历取值.",
+    "id": "S2",
+    "kind": "字典遍历键当值",
+    "lesson": "对 dict 直接 for / in 得到的是键; 任何\"取值域\"断言必须写 `.values()`. 本条与 r37 的\"量纲工具自身要过守卫\"同族: 判据对象选错比判据写错更难发现.",
+    "problem": "首版 `G-E2` 写 `set(k for r in MATRIX.values() for k in r) <= {OK,COND,NA,NO}`, 遍历到的其实是行字典的键 C1..C4 => 与四值域不相交 => 假失败."
+   },
+   {
+    "fix": "改为独立注册计数器对照 `N_REGISTERED[0] == len(GUARDS)`, 检查 `guard()` 无漏记 (有判别力), 全过与否交由退出码承担.",
+    "id": "S3",
+    "kind": "自洽守卫写成全过断言",
+    "lesson": "\"自洽\"类守卫不得写成\"全过\"; 它会把失败条数放大 1 并制造\"看起来又在别处坏了\"的假象.",
+    "problem": "首版 `G-J3` 写 `g_ok == len(GUARDS)` (即\"全过\"), 于是任何其它守卫失败时它会额外多报一条失败, 把\"2 条真失败\"显示成\"3 条\", 污染归因."
+   },
+   {
+    "fix": "改为只断言 `OMEGA5_CAP == 1` 的实算, 并在 note 里写清\"不含离散项\"的语义.",
+    "id": "S4",
+    "kind": "恒真占位守卫",
+    "lesson": "守卫里不要写\"副作用 + 恒真\"占位: 恒真守卫会稀释全过读数, 让人误以为检查过某件事 (与 r434 S2\"硬编码结论\"同型的弱化版).",
+    "problem": "首版 `G-G5` 写成 `not put(\"omega5_covers_discrete\", False) if False else True`, 既产生副作用又恒为真 => 在 53/53 里占位而不提供任何信息."
+   }
+  ]
+ },
+ "round": "r436",
+ "self_checks": [
+  {
+   "fix": "新增 `is_own(name)` 排除本册产物 (脚本/json/report/判定册均含 `TUFT-r436`), 并补 `G-A0b` 断言排除规则至少命中自身 1 个 (证明排除非空转).",
+   "id": "S1",
+   "kind": "撞号守卫自伤",
+   "lesson": "查重/撞号守卫必须与\"本册产物集合\"同步定义; 且必须有\"排除规则确实命中自身\"的阳性对照 —— 否则无法区分\"排除得当\"与\"排除过头把真撞号也滤掉\".",
+   "problem": "首版 `G-A0` 直接对 判定/源码/数据 三处的 `*r436*` 计数要求 0 命中, 但脚本自身已落盘在源码目录, 重跑时 json/report 也在数据目录 => 恒假; 首跑报 \"实得 5\", 把\"自己\"当成\"撞号\"."
+  },
+  {
+   "fix": "改为 `for v in r.values()` 显式遍历取值.",
+   "id": "S2",
+   "kind": "字典遍历键当值",
+   "lesson": "对 dict 直接 for / in 得到的是键; 任何\"取值域\"断言必须写 `.values()`. 本条与 r37 的\"量纲工具自身要过守卫\"同族: 判据对象选错比判据写错更难发现.",
+   "problem": "首版 `G-E2` 写 `set(k for r in MATRIX.values() for k in r) <= {OK,COND,NA,NO}`, 遍历到的其实是行字典的键 C1..C4 => 与四值域不相交 => 假失败."
+  },
+  {
+   "fix": "改为独立注册计数器对照 `N_REGISTERED[0] == len(GUARDS)`, 检查 `guard()` 无漏记 (有判别力), 全过与否交由退出码承担.",
+   "id": "S3",
+   "kind": "自洽守卫写成全过断言",
+   "lesson": "\"自洽\"类守卫不得写成\"全过\"; 它会把失败条数放大 1 并制造\"看起来又在别处坏了\"的假象.",
+   "problem": "首版 `G-J3` 写 `g_ok == len(GUARDS)` (即\"全过\"), 于是任何其它守卫失败时它会额外多报一条失败, 把\"2 条真失败\"显示成\"3 条\", 污染归因."
+  },
+  {
+   "fix": "改为只断言 `OMEGA5_CAP == 1` 的实算, 并在 note 里写清\"不含离散项\"的语义.",
+   "id": "S4",
+   "kind": "恒真占位守卫",
+   "lesson": "守卫里不要写\"副作用 + 恒真\"占位: 恒真守卫会稀释全过读数, 让人误以为检查过某件事 (与 r434 S2\"硬编码结论\"同型的弱化版).",
+   "problem": "首版 `G-G5` 写成 `not put(\"omega5_covers_discrete\", False) if False else True`, 既产生副作用又恒为真 => 在 53/53 里占位而不提供任何信息."
+  }
+ ],
+ "verdict": "EXIT-GATE-AUDIT--E2-SIX-VS-SEVEN-MISMATCH--NO-TYPE-FULL-OK--C4-VACUOUS-FOR-3OF5--MARGIN-0-ON-BOTH-AXES--NOVELTY-SET-EMPTY--0OF6-UNCHANGED"
+}

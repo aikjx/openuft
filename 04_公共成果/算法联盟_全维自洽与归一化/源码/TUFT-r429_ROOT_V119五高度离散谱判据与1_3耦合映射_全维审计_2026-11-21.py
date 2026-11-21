@@ -150,6 +150,11 @@ def eps_pointmass(r, alpha=ALPHA_Y):
 # 区块 V1：离散谱判据的代数重建与判别力定价
 # ==================================================================
 # V1-01 恒等式：D_n = C q^n (a + b n)，H_n = -C^2 b^2 q^{2n}
+# ★本段整体提升到 90 位：H_n = D_n*D_{n+2} - D_{n+1}^2 是 D 的二阶相消量（D 本身 ~1e-6，
+#   H ~1e-10），60 位 Decimal 下部分 (dr, ell) 组合的「闭式 - 独立采样」残差落在 1e-25 的
+#   舍入地板（探针实测同一路径在 90 位下可达 1e-52）。此处抬高精度而非放宽阈值，
+#   以保留该守卫对「闭式漏因子」类实质错误的鉴别力（首版漏 q^2 因子时残差是 0.13 量级）。
+getcontext().prec = 90
 cases = []
 for dr_m in (D("50000"), D("20000"), D("100000")):
     for ell_m in (L_, D("90000"), D("300000")):
@@ -197,6 +202,7 @@ add("V1-01", "PASS", "离散谱判据的代数结构可完整重建（严格恒�
     "⇒ 来料所述「必要条件」在代数上确实成立。"
     "★方法论留痕：首版闭式漏掉 q^2 因子（H_n 写成 -C^2 b^2 q^{2n}），被守卫 G_identity_reconstruct 当场拦下"
     % (sci(max_h_err), sci(max_d_err), sci(max_ratio_err)))
+getcontext().prec = 60   # 恢复默认精度（后续 V2+ 各段按 60 位口径设计）
 
 # V1-02 判别力定价：恒等式对任意参数成立 ⇒ 对单作用程族零判别力；阳性对照（非指数形状破裂）
 shape_mult = lambda r: 1 + K_ * (r - R_E)
@@ -227,7 +233,13 @@ add("V1-02", "FAIL", "该「必要条件」对单作用程族零判别力（只�
 # V1-03 由 H_1/H_0 反解采样步长
 ratio_num = h_seq(1, EPS0_USED) / h_seq(0, EPS0_USED)
 dr_from_ratio = L_ * (-ratio_num.ln()) / D(2)
-dr_pred_50 = L_ * (-Q ** 2).ln() / D(2)
+# ★正向闭合路径：dr=50 km 正推 q^2=e^{-2dr/ell}，再反解回 dr（首版此行写成 -Q ** 2，
+#   Python 解析为 -(Q**2) < 0 ⇒ Decimal.ln() 抛 InvalidOperation；该缺陷被 V1 段守卫
+#   的先行失败遮蔽，守卫修好后暴露，已修正为 -(Q**2) 并补 G_dr_forward_50km 守卫）。
+dr_pred_50 = L_ * (-(Q ** 2).ln()) / D(2)
+guard("G_dr_forward_50km", rel(dr_pred_50, DR) < D("1e-3"),
+      "由 dr=50 km 正推 q^2=%s 再反解得 dr = %s m（正向闭合）"
+      % (sci(Q ** 2), fs(dr_pred_50, 8)))
 guard("G_ratio_invert_dr", abs(rel(dr_from_ratio, DR)) < D("1e-3"),
       "由 %s 反解 dr = %s m（来料隐含 50 km）" % (ratio_num, fs(dr_from_ratio, 8)))
 guard("G_ratio_forward_50km", rel(Q ** 2, H1H0_V119) < D("1e-6"),
@@ -368,11 +380,25 @@ def eps0_uniform_integral(alpha=ALPHA_Y, rho=D("5515")):
     return D(4) * D(str(math.pi)) * alpha * (1 + U_) * (-U_).exp() * I / (K_ * mass)
 
 
-guard("G_sinh_cosh_guard", rel(dsinh(D(1)), D("1.1752011936438014568823818505956")) < D("1e-40")
-      and rel(dcosh(D(1)), D("1.5430806348152437784779056207571")) < D("1e-40"),
-      "自实现 dsinh/dcosh 在 x=1 处与解析值一致（相对残差 %s / %s）"
-      % (sci(rel(dsinh(D(1)), D("1.1752011936438014568823818505956")), 3),
-         sci(rel(dcosh(D(1)), D("1.5430806348152437784779056207571")), 3)))
+# ★口径纪律：首版本守卫的参照值只有 31 位有效数字（sinh(1)=1.1752011936438014568823818505956），
+#   却要求 1e-40 的相对残差 —— 容差与被核数值的「报价精度」不同源（违反本库 r59 册沉淀的
+#   「容差必须与报价精度同源」纪律），实测残差 6.9e-34 / 2.5e-32 恰为参照值自身截断地板。
+#   此处把参照值补足到 60 位有效数字并把阈值收紧到 1e-50。
+_SINH1 = D("1.175201193643801456882381850595600815155717981334095870229565")
+_COSH1 = D("1.543080634815243778477905620757061682601529112365863704737402")
+# ★第二处留痕：首版手抄的 sinh(1) 参照值在第 33 位起有误（...5956008|18161|37018694...，
+#   正确为 ...5956008|15155|57179813...），由 90 位独立复算抓出（残差 2.6e-36）。
+#   此处同时加「cosh^2 - sinh^2 = 1」自洽检查（90 位下可达 1e-88），防实现级错误。
+guard("G_sinh_cosh_guard", rel(dsinh(D(1)), _SINH1) < D("1e-50")
+      and rel(dcosh(D(1)), _COSH1) < D("1e-50"),
+      "自实现 dsinh/dcosh 在 x=1 处与 60 位解析值一致（相对残差 %s / %s）"
+      % (sci(rel(dsinh(D(1)), _SINH1), 3),
+         sci(rel(dcosh(D(1)), _COSH1), 3)))
+with localcontext() as _sc:
+    _sc.prec = 90
+    _ident = dcosh(D(1)) ** 2 - dsinh(D(1)) ** 2
+guard("G_sinh_cosh_identity", abs(_ident - 1) < D("1e-80"),
+      "cosh^2 - sinh^2 = 1 自洽检查（90 位，残差 %s）" % sci(abs(_ident - 1), 3))
 
 
 lead_u, extra_u = eps0_uniform_closed()
@@ -384,7 +410,9 @@ guard("G_uniform_match_v119", rel(lead_u, EPS0_UNIFORM_V119) < D("1e-8"),
 guard("G_uniform_exact_correction_tiny", abs(extra_u) < D("1e-40"),
       "指数级精确修正 %s（小到可忽略但保留）" % sci(extra_u))
 eps_pm_surface = eps_pointmass(R_E)
-guard("G_pointmass_vs_extended", rel(eps_pm_surface, lead_u) > D("1e15"),
+# ★守卫判据写法修正：首版用 rel(a,b)=|a-b|/|b| 判「量级分离」，但量级相差 19 个数量级时
+#   相对差恒 ≈ 1.0（不是 1e15），判据与文案语义不一致 ⇒ 改用比值判据。
+guard("G_pointmass_vs_extended", (lead_u / eps_pm_surface) > D("1e15"),
       "阳性对照：点质量口径地表 eps = %s，与均匀球口径差 %.1f 个量级 ⇒ 两机制不可混同"
       % (sci(eps_pm_surface), float(math.log10(abs(lead_u / eps_pm_surface)))))
 add("V2-01", "PASS", "均匀球地表 Yukawa 异常可第一性推导并逐位复现 0.97749444%",
@@ -467,7 +495,9 @@ guard("G_mphi_value", rel(MPHI_EXACT, MPHI_V119) < D("1e-3"),
       "m_phi c^2 = hbar c / ell = %s eV（来料 %s，相对差 %s）"
       % (fs(MPHI_EXACT, 12), MPHI_V119, sci(rel(MPHI_EXACT, MPHI_V119))))
 a_common = D(3) * L_ ** 2 / D(2)
-guard("G_a_convention_gap", rel(a_common, A_L2_OVER_6) > D("8"),
+# ★守卫判据写法修正（与 G_pointmass_vs_extended 同型）：rel() 是相对差，比值 9 倍时相对差仅 0.889，
+#   判据应使用比值而非相对差。
+guard("G_a_convention_gap", (a_common / A_L2_OVER_6) > D("8"),
       "口径差：ell=sqrt(6a) 给 a=%s；常用 ell=sqrt(2a/3) 给 a=%s；相差 %.1f 倍"
       % (fs(A_L2_OVER_6, 10), fs(a_common, 10), float(a_common / A_L2_OVER_6)))
 add("V3-01", "CORRECTED", "标量质量 m_phi c^2 的精确值与来料小偏差",
@@ -637,9 +667,12 @@ mc_rows = []
 for sig in (D("1e-7"), D("1e-8"), D("1e-9"), D("1e-10")):
     c, t = mc_flip(sig)
     mc_rows.append((sig, c, t))
-mono = all(mc_rows[i][1] <= mc_rows[i + 1][1] for i in range(len(mc_rows) - 1))
-guard("G_noise_mc_monotone", mono,
-      "本册 MC 翻转率随噪声下降单调不增：" + "; ".join("%s -> %d/%d" % (sci(s, 1), c, t) for s, c, t in mc_rows))
+# ★守卫方向修正：首版写成 mc_rows[i] <= mc_rows[i+1]（要求翻转数随噪声下降而上升），
+#   与物理相反 ⇒ 恒假。正确方向是「后一档 ≤ 前一档」；并加饱和条件（最低档零翻转）作阳性对照。
+mono = all(mc_rows[i + 1][1] <= mc_rows[i][1] for i in range(len(mc_rows) - 1))
+guard("G_noise_mc_monotone", mono and mc_rows[-1][1] == 0,
+      "本册 MC 翻转计数随噪声下降单调不增且最低档饱和为 0："
+      + "; ".join("%s -> %d/%d" % (sci(s, 1), c, t) for s, c, t in mc_rows))
 # 解析噪声传播
 d0v = d_seq(0, EPS0_USED)
 d1v = d_seq(1, EPS0_USED)
@@ -844,6 +877,22 @@ md_text = "\n".join([
     "",
 ] + ["- %s：%s" % (k, v) for k, v in REDLINES.items()] + [""])
 
+# 来料 V1–V12 需求 -> 本册条目编号 的显式覆盖映射（供判定册 §一 之后直接引用，避免口径漂移）
+V_COVERAGE = [
+    ("来料 V1", "离散谱判据的代数重建（D_n / H_n 结构与恒等式）", "V1-01 / V1-02"),
+    ("来料 V2", "H_0 与 H_1/H_0 的逐项复算与判别力定价", "V1-03 / V1-04 / V1-05"),
+    ("来料 V3", "均匀球 Yukawa 地表异常第一性复核 + 分层形状因子比值阳性对照", "V2-01 / V2-02 / V2-03"),
+    ("来料 V4", "a = ell^2/6 与 m_phi c^2 换算 + 映射口径登记", "V3-01 / V3-02 / V3-03"),
+    ("来料 V5", "§五 eps(h) 七高度表与 400 km 额外加速度逐点复算", "V4-01"),
+    ("来料 V6", "近拱点进动三式复算与口径敏感性", "V4-02 / V4-03"),
+    ("来料 V7", "时钟频移复算（符号方向自检）", "V5-01"),
+    ("来料 V8", "噪声敏感性 MC（12000 次 x 4 档）与统计下界", "V7-01 / V7-02 / V7-03 / V7-04"),
+    ("来料 V9", "G_inf / G_lab 口径与 G = 2Z/c 自指性", "V6-01 / V6-02 / V8-01"),
+    ("来料 V10", "ell 无源等边界登记（外部输入声明）", "V8-01 / V8-02"),
+    ("来料 V11", "模型 B（双作用程）被必要条件排除的独立复现", "V1-05"),
+    ("来料 V12", "数学原创性边界（不宣称新定理）", "V8-02 + RED-01"),
+]
+
 report_text = "\n".join([
     "r429 ROOT V119 五高度离散谱判据与 1/3 耦合映射 全维审计",
     "=" * 60,
@@ -853,7 +902,7 @@ report_text = "\n".join([
     "source_sha256=%s" % SOURCE_SHA,
     "eps0_uniform=%s" % sci(lead_u, 12),
     "eps0_improved_target=%s" % sci(EPS0_IMPROVED_V119, 12),
-    "h0_eps_profile=%s" % sci(h0_eps_profile),
+    "h0_closed_prof=%s" % sci(h0_closed_prof),
     "h0_v119=%s" % H0A_V119,
     "dg400=%s" % sci(dg400),
     "precession_exact=%s" % sci(prec_exact),
@@ -880,10 +929,16 @@ verdict_text = "\n".join([
     "",
     "| 顺序 | 文件 | 作用 |",
     "|---|---|---|",
-    "| 0 | 本判定册 | V1–V8 裁定 + 红线 |",
+    "| 0 | 本判定册 | V1–V8 裁定 + 来料 V1–V12 覆盖映射 + 红线 |",
     "| 1 | [引擎](源码/%s) | %d 条目 / %d 守卫 / 纯标准库 |" % (os.path.basename(SOURCE_PATH), len(ENTRIES), len(GUARDS)),
     "| 2 | [数据 md](数据/%s) · [json](数据/%s) · [报告](数据/%s) | 机器读数留档 |" %
         (os.path.basename(md_path), os.path.basename(json_path), os.path.basename(report_path)),
+    "",
+    "## 一之二、来料 V1–V12 需求 → 本册条目覆盖映射",
+    "",
+    "| 来料项 | 需求 | 本册对应条目 |",
+    "|---|---|---|",
+] + ["| %s | %s | %s |" % (a, b, c) for a, b, c in V_COVERAGE] + [
     "",
     "## 二、条目与守卫",
     "",
@@ -903,6 +958,23 @@ verdict_text = "\n".join([
     "## 五、红线与边界",
     "",
 ] + ["- %s：%s" % (k, v) for k, v in REDLINES.items()] + [
+    "",
+    "## 六、本轮自伤登记（引擎自身的缺陷，全部由守卫/双路径/独立复算抓出）",
+    "",
+    "| 编号 | 缺陷 | 抓出方式 | 处理 |",
+    "|---|---|---|---|",
+    "| A01 | V1 闭式 H_n 漏 q^2 因子（写成 -C^2 b^2 q^{2n}） | 守卫 G_identity_reconstruct 残差 8.9e-1 当场拦下 | 改为 q^{2n+2}，9 组参数残差降至 5.24e-55 |",
+    "| A02 | d_seq 索引偏移（D_0 取成 kt(0)-kt(-DR) 外推值） | H_0 与闭式差 1.23 倍 | 改为 kt((n+1)DR)-kt(nDR)，dual_h 同步修正 |",
+    "| A03 | Python 3.8 Decimal 无 sinh/cosh | 直接抛 AttributeError | 自实现 dsinh/dcosh + 解析值与 cosh^2-sinh^2=1 双守卫 |",
+    "| A04 | `-Q ** 2` 被 Python 解析为 -(Q**2)<0 | 守卫先行失败被遮蔽，修好后暴露 InvalidOperation | 改为 -(Q**2)，并补 G_dr_forward_50km 正向闭合守卫 |",
+    "| A05 | G_sinh_cosh_guard 的容差与参照值报价精度不同源（31 位参照 vs 1e-40 阈值） | 残差恒 6.9e-34（= 参照值自身截断地板） | 参照值补足 60 位，阈值收紧至 1e-50 |",
+    "| A06 | 手抄 sinh(1) 参照值自第 33 位起有误（...5956008\\|18161\\|37018694...） | 90 位独立复算抓出，残差 2.6e-36 | 修正参照值，并加 cosh^2-sinh^2=1 自洽守卫 |",
+    "| A07 | 两处守卫用 rel()（相对差）判「量级分离」 | 量级差 19 / 9 倍时相对差恒约 1，恒假 | 改为比值判据（G_pointmass_vs_extended / G_a_convention_gap） |",
+    "| A08 | G_noise_mc_monotone 方向写反（要求翻转数随噪声上升） | 计数 1762 -> 163 -> 0 -> 0 恒假 | 改为「后一档 <= 前一档」+ 最低档饱和为 0 的阳性对照 |",
+    "| A09 | V5 引力频移的相减方向写反 | 得 -7.649e-14（与来料反号） | 改为 (dU(R+400km)-dU(R))/c^2，并加 G_redshift_sign 自检 |",
+    "| A10 | V1-04 把 H_0 绝对值判为「不可复现」 | 机器复算给出 rel 1.35e-4（可复现） | 改判 CORRECTED，并给出反解 ell 与跨口径敏感性 |",
+    "| A11 | V7 硬编码 z=16.71（自造数据） | 与同族反解值不符 | 删除，改为统计下界 z>=3.4807564 与模型外推 16.9924 的相容性判定 |",
+    "| A12 | report_text 引用已删除变量 h0_eps_profile | 静态检索发现残留 | 改名为 h0_closed_prof |",
     "",
     "本册不把数值复现解释为新物理，不修改来料原文，不覆盖并发会话文件；"
     "来料自承的「未获 V118 原始 ZIP、未做原始归档验收」边界沿用不代做。",
