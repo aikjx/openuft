@@ -1,0 +1,91 @@
+TUFT-r442 扩展规范群承载下界重算 · 复算报告
+stamp = 2026-11-22
+verdict = EXTENDED-GAUGE-BOUND--SU5-5b10-BRANCHING-EXACT--DIM-BOUND-INVARIANT--BLOCK-BOUND-AND-Y-DOF-ARE-GROUP-RELATIVE--CENTRALIZER-7-NOT-5--PARETO-INCOMPARABLE
+
+GG_DEC = (1,1)x1[1] + (1,2)x1[2] + (3,1)x2[6] + (3,2)x1[6]
+SM_NEED = (1,1)x1[1] + (1,2)x1[2] + (3,1)x2[6] + (3,2)x1[6]
+LAM_5 = -1/3, -1/3, -1/3, 1/2, 1/2
+LAM_5B = 1/3, 1/3, 1/3, -1/2, -1/2
+LAM_10 = -2/3, -2/3, 1/6, 1/6, -2/3, 1/6, 1/6, 1/6, 1/6, 1
+TR_Y2_5B = 5/6  TR_T32_5B = 1/2
+TR_Y2_10 = 5/2  TR_T32_10 = 3/2
+GUT_RATIO = 5/3
+SIN2_THETA_W = 3/8
+ANOMALY_5B = -1/4, 1/6, -5/36, 0
+ANOMALY_10 = 1/4, -1/6, 5/36, 0
+ANOMALY_SUM = 0, 0, 0, 0
+CENTRAL_SU5 = 1 / 1 / 1 (5 / 5bar / 10) sum=2
+CENTRAL_SM15 = 7 (formula sum m^2 = 7, naive blockwise = 5)
+PARETO = {"names": ["SM_5blocks", "SU5_5b10", "SO10_16"], "dim": [15, 15, 16], "blocks": [5, 2, 1], "y_free": [5, 0, 0], "predictions": [0, 2, 3], "risk": [0, 2, 1]}
+
+ENTRIES 11
+  [PASS] E01 SU(5) 的 5bar ⊕ 10 在 SU(3)xSU(2) 下分支与 r441 的 dec_sm 逐块一致
+  [PASS] E02 T_24 本征值机器复算与 SM 超荷逐块数值相等
+  [INFO] E03 SU(5) 不可约块数 = 2 ≠ r441 的 5 ⇒ 块数下界是「群依赖」的
+  [PASS] E04 T_24 traceless：Tr(Y) 在 5bar 与 10 上各自为零
+  [PASS] E05 sin^2 theta_W = 3/8 由 Tr(Y^2):Tr(T_3^2) = 5:3 双路径一致给出
+  [CORRECTED] E06 r441 的 y_values_sm 含 1/3（应为 -1/3）：登记，不改其字节
+  [PASS] E07 反常不在块内消除，而在 5bar 与 10 之间跨块消除
+  [INFO] E08 帕累托前沿：结构三列上 SU(5) 弱占优 SM，四列（加排除风险）才不可比
+  [PASS] E09 r441 §九 U1（扩展规范群）已答：维数下界不变，块数与 Y 自由度口径需重述
+  [INFO] E10 最小 SU(5) 已被实验排除：帕累托上「少自由度」点的代价必须显式登记
+  [CORRECTED] E11 r441 的 CD_SM(=dec_count=5) 与 CD_DIRECT(=central_dim=2) 口径不一致
+
+GUARDS 50/50
+  [OK] G0-1 SU(n) 反对称表示维数 C(5,k)  |  C(5,1)=5 · C(5,2)=10
+  [OK] G0-2 su(5) 生成元个数 = 24  |  24 = 8(SU3) + 3(SU2) + 12(X/Y) + 1(T_24)
+  [OK] G0-3 生成元矩阵阶数 5 / 5 / 10  |  5, 5bar 各 5x5 · 10 为 10x10
+  [OK] G0-4 全部生成元 Hermitian  |  T^dag = T（Lambda^2 保持 Hermitian）
+  [OK] G0-5 全部生成元 traceless  |  Tr(T)=0 在 5 与 10 上均为 0
+  [OK] G0-6 [T_24, SU(3)_a] = 0（矩阵对易，非对称性）  |  T_24 = diag(-1/3 x3, 1/2 x2) 在色块上为标量 ⇒ 与 su(3) 对易
+  [OK] G0-7 [T_24, SU(2)_i] = 0（矩阵对易，非对称性）  |  T_24 在弱块上为标量 ⇒ 与 su(2) 对易
+  [OK] G1-1 5bar 在 SU(3)xSU(2) 下分支为 (3bar,1) + (1,2)  |  (3bar,1)[3] + (1,2)[2] = 5
+  [OK] G1-2 10 在 SU(3)xSU(2) 下分支为 (3,2) + (3bar,1) + (1,1)  |  (3,2)[6] + (3bar,1)[3] + (1,1)[1] = 10
+  [OK] G1-3 5bar + 10 维数 = 15  |  5 + 10 = 15
+  [OK] G1-4 与 r441 的 dec_sm 逐块双向一致（缺 0 / 多 0）  |  GG = (1,1)x1[1] + (1,2)x1[2] + (3,1)x2[6] + (3,2)x1[6]  ≡  SM_NEED = (1,1)x1[1] + (1,2)x1[2] + (3,1)x2[6] + (3,2)x1[6]
+  [OK] G1-5 5bar+10 的 SU(3)xSU(2) 块数仍 = 5  |  键数 4 但重数之和 5（(3,1) 出现两次）
+  [OK] G1-6 T_24 在 5bar 上的本征值多重集 = {1/3 x3, -1/2 x2}  |  5bar: 3 个 +1/3（d_R^c）· 2 个 -1/2（L）
+  [OK] G1-7 T_24 在 10 上的本征值多重集 = {-2/3 x3, 1/6 x6, 1 x1}  |  10: 3 个 -2/3（u_R^c）· 6 个 +1/6（Q_L）· 1 个 +1（e_R^c）
+  [OK] G1-8 10 的本征值 = 5 的本征值两两之和（逐项）  |  Lambda^2 的权 = 两两之和
+  [OK] G2-1 5bar 的 Tr(Y) = 0（T_24 traceless）  |  3*(1/3) + 2*(-1/2) = 0
+  [OK] G2-2 10 的 Tr(Y) = 0  |  3*(-2/3) + 6*(1/6) + 1*(1) = 0
+  [OK] G2-3 Tr(Y^2)：5bar = 5/6，10 = 5/2  |  5/6 · 5/2
+  [OK] G2-4 Tr(T_3^2)：5bar = 1/2，10 = 3/2  |  1/2 · 3/2
+  [OK] G2-5 GUT 归一比 Tr(Y^2)/Tr(T_3^2) = 5/3（5bar 路径）  |  (5/6)/(1/2) = 5/3
+  [OK] G2-6 GUT 归一比 = 5/3（10 路径，独立复算）  |  (5/2)/(3/2) = 5/3
+  [OK] G2-7 sin^2 theta_W = 1/(1 + 5/3) = 3/8  |  g_1^2 = (5/3) g_prime^2 ⇒ sin^2 = (3/5)/(1+3/5) = 3/8
+  [OK] G2-8 SM 正确超荷集去重后仍为 5 个（r441 计数不受 d_R 符号影响）  |  correct={-1, -1/2, -1/3, 1/6, 2/3} · r441={-1, -1/2, 1/6, 1/3, 2/3}
+  [OK] G3-1 r441 口径 SM 单代四条反常精确为零（独立重写复算）  |  [SU2]^2U1=0 · [SU3]^2U1=0 · U1^3=0 · grav-U1=0
+  [OK] G3-2 5bar + 10 合计四条反常精确为零  |  5bar ⊕ 10 的左手场内容与 SM_CHIRAL 逐场相同 ⇒ 必然为零
+  [OK] G3-3 逐场等价性：5bar+10 的 (d3,d2,Y_LH) 多重集 = SM_CHIRAL  |  5 条逐场一一对应
+  [OK] G3-4 5bar 单独不为零（跨块消除的证据）  |  a22 = -1/4 · a33 = +1/6 · ayyy = -5/36 · grav-U1 = 0
+  [OK] G3-5 10 单独不为零且与 5bar 精确互补  |  a22 = +1/4 · a33 = -1/6 · ayyy = +5/36 ⇒ 三块相加归零
+  [OK] G3-6 grav-U1 在 5bar 与 10 上各自为零（不是跨块消除）  |  与 a22/ayyy 的消除机制不同，必须分开陈述
+  [OK] G4-1 central(SU(5), 5) = 1（Schur，机器验证）  |  5 在 SU(5) 下不可约
+  [OK] G4-2 central(SU(5), 5bar) = 1（机器验证）  |  5bar 不可约
+  [OK] G4-3 central(SU(5), 10) = 1（Lambda^2 表示，机器验证）  |  10 在 SU(5) 下不可约
+  [OK] G4-4 central(SU(5), 5bar ⊕ 10) = 2（直和可加）  |  1 + 1 = 2：两个不可约块各一个整体归一
+  [OK] G4-5 central(SU(3)xSU(2), 15) = 7（两个 (3,1) 等价副本可混合）  |  大矩阵=7 · 公式 Σm^2=7 · naive 逐块和=5
+  [OK] G0-8 消元器压力测试 A：300x3（重复单位行）秩 = 3  |  crank=3
+  [OK] G0-9 消元器压力测试 B：3000x225（重复单位行）秩 = 225  |  crank=225
+  [OK] G4-5a SM15 的 11 个生成元全部块对角（拦截 bdiag 构造错误）  |  非对角块元素必须全零
+  [OK] G4-5b 阳性对照：naive 逐块和 = 5 ≠ 中心化子 7（判据有牙）  |  naive=5 · 正确=7 · 若 naive 也得 7 则「等价副本混合」判据无效
+  [OK] G4-6 块数下界「群依赖」：同一 15 维在 SU(5) 下 2 块、在 SU(3)xSU(2) 下 5 块  |  维数恒 15，块数 5 -> 2 ⇒ 引用 r441 的 bound_blocks=5 必须加「相对 SU(3)xSU(2)」
+  [OK] G5-1 三方案维数 = [15, 15, 16]（SO(10) 为 16 维 Weyl 旋量）  |  SO(10) 的 16 = 15 + nu_R（旋量维 2^(10/2-1)=16，与基本表示 10 维不同，必须声明）
+  [OK] G5-2 三方案不可约块数单调下降 = [5, 2, 1]  |  SO(10) 的 16 为单块（Spin(10) 旋量表示不可约）
+  [OK] G5-3 Y 自由参数：SM = 5，SU(5)/SO(10) = 0  |  此列 = 对角超荷赋值数（不是中心化子：SM 的 15 维中心化子是 7）；SU(5) 起 Y 是 T_24 本征值 ⇒ 5 个值全被钉死，自由参数 0
+  [OK] G5-4 结构三列上 SU(5) 弱占优 SM；加入「排除风险」后才不可比  |  不可比只在四列（含风险/预言）成立；三列上 SU(5) 严格不劣 ⇒ 不得声称三列不可比
+  [OK] G5-5 自由度 5 -> 0 的代价被显式登记（不是「免费统一」）  |  代价 = 质子衰变 + 最小 SU(5) 已被实验排除
+  [OK] G6-1 r441 的 bound_dim = 15 在扩群下不变  |  维数下界与群无关（在「承载同一物质内容」前提下）
+  [OK] G6-2 r441 的 bound_blocks = 5 是「相对 SU(3)xSU(2)」的下界  |  扩群可把 5 块压到 2 块 ⇒ 该下界必须加子群限定
+  [OK] G6-3 r441 的 bound_y = 5 是「Y 为外部 U(1) 标量」时的自由度  |  Y 嵌入 SU(5) 后自由参数 0；两数（5 与 0）不可互换
+  [OK] G6-4 r441 的 y_values_sm 含 1/3（应为 -1/3）——登记，不改其字节  |  r441 SM_SINGLE 的 d_R 写 +1/3；其 SM_CHIRAL 写 -1/3（正确）⇒ 计数 5 不受影响
+  [OK] G6-6 r441 的 CD_SM(=dec_count=5) 与 CD_DIRECT(=central_dim=2) 不是同一个量  |  5 维上 r441 用 central_dim 得 2；15 维上直接取 dec_count 得 5；若统一用 central_dim，15 维应为 7 ⇒ 两个读数不可直接相减/相比
+  [OK] G6-5 本册不推翻 r441 的任何条目（三下界方向全部保持）  |  只新增「群依赖」限定，不撤任何 r441 判定
+
+PASS = 6
+FAIL = 0
+INFO = 3
+GUARDS_TOTAL = 50
+GUARDS_PASS = 50
+VERDICT = EXTENDED-GAUGE-BOUND--SU5-5b10-BRANCHING-EXACT--DIM-BOUND-INVARIANT--BLOCK-BOUND-AND-Y-DOF-ARE-GROUP-RELATIVE--CENTRALIZER-7-NOT-5--PARETO-INCOMPARABLE
