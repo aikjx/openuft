@@ -1,0 +1,82 @@
+attack68 report - Omega5 结构限额改造定价：修改公设集不等于净前提下降
+date: 2026-11-23
+entries: 20 ; counts: {'PASS': 6, 'FAIL': 7, 'BOUNDARY': 1, 'CORRECTED': 2, 'INFO': 4}
+guards: 23/23 PASS ; exit=0
+
+[PASS] A01 : 只读承接：attack66 关掉主链，attack67 关掉三条 KK 出口，剩余出口是修改公设集
+    attack67 X02 明确写着「若允许通量/轨形/D 膜/非微扰等新假设，结论需重判；这些属修改公设集，代价与 r14 ③vs④ 同型」。本册只给该出口的机器价格，不代选。
+[PASS] A02 : r14 路线4 的「公设违背0」是旧账本会计结果，不是自由度为零
+    旧 Ω5 只数连续常数；在 r15 口径 II 下路线4 p=6->8、nullity=3->5、总自由度 5->7。账面合规的实质是把 +2 外部输入登记为合法。
+[FAIL] A03 : 只把 Ω5 数字从 1 改成 3 不解决问题：节点/函数自由度仍无界
+    C01 在有物质时自由度 = 1 常数 + 4 分区节点 + 无界形状函数；r15 D-04 已判「仅改数字不解决问题」。本册把该结论转成候选表：C01 delta=+2 且 n_cap=None。
+[FAIL] A04 : 总限额7但不补识别约束：路线4 的合法代价是 delta=+2
+    C03 取 f<=3,n<=4，允许原模型 1+4 自由度再多 2 个连续常数；a=2,e=0,R=0 ⇒ delta=+2，净前提上升，不满足 r134 严格净下降门。
+[FAIL] A05 : 总限额7且新公理自带2条识别约束：delta=0，只能打平不能过门
+    C04 取 a=2,e=2；即使两条识别约束来自新公理，delta=a-e=0。r134 的门是 delta<0，不是 delta<=0。
+[BOUNDARY] A06 : 声称新公理自带3条识别约束的 C05 在换公理集口径下非法
+    C05 的 e=3>a+R=2。若要合法必须解锁 R>0；但 attack55 定理给出 GATE⇒s=0且R>=1，解锁 R 后它已变成结构识别控制组，不再是我换公理集出口。
+[FAIL] A07 : 有限动作表复算：5 个换公理集候选中 0 个满足 delta<0
+    C01–C05 中合法者 delta 分别为 +2、0、+2、0，C05 非法；控制组 C06 delta=-1 但 s=0。swap_gate_count=0 与 attack55 的完整 784 格结论一致。
+[PASS] A08 : 结构识别控制组可过门，但它是 R>0 的既有依赖识别，不是新公理出口
+    C06 取 a=0,e=1,s=0,R=1 ⇒ delta=-1；attack55 §4 唯一过门路径是 STRUCTURE_IDENTIFY，且全库真实供给仅 r119 电弱控制组、TUFT 侧为 0。
+[FAIL] A09 : 窗口数不能替代预测力：路线4 名义窗口3，但可识别性未改善
+    r14 路线4 保留3窗口而路线3为2；但 r12 rank_numeric=1、cond=inf、pool_usable=0，路线4 nullity=5。窗口计数必须与 nullity/cond 联读，单独报「3窗口」会高估预测力。
+[FAIL] A10 : attack55 全库供给普查：真实结构识别供给 TUFT 侧为0
+    本册不重跑全库文本扫描，直接引用 attack55 E05：唯一实体是 r119 电弱控制组（非 TUFT），供给侧「外部输入」提及很多而净减结构闭式供给为0。
+[PASS] A11 : attack67 的通量/轨形/D 膜/非微扰出路必须重判，不能继承主链失败读数
+    这些机制改变作用量与谱问题，属于新增场/拓扑/边界条件；按其是否提供净下降识别约束重新进本册候选表，不自动恢复轻带电手征费米子。
+[CORRECTED] A12 : 更正 r14 读法的常见误引：公设违背0 ≠ 零外部输入
+    r14 原文说路线4「自洽（唯一：有来源且零违背）」；r15 D-02 已更正其真实代价仍是 +2 自由度。本册进一步指出：若不接受 A4 总自由度限额，改数字只是把无界节点继续藏在 Ω5 口径 I 里。
+[INFO] A13 : 新增判据 D-12（公设改写守恒律）：换公理集不能凭空产生净前提下降
+    若新公理同时产生输入 a 与其识别 e，在 R=0 的换公理集口径下 e<=a，故 delta=a-e>=0；要 delta<0 必须使用既有结构依赖 R>0，而那已归入结构识别控制组。
+[INFO] A14 : 新增判据 D-13（窗口-可识别性联读）：可证伪窗口必须与 nullity/cond 同时报告
+    只报窗口数会把「名义通道数量」误当「可判别预测数量」；r14 路线4 的3窗口在 nullity=5、rank_numeric=1、cond=inf 下不能升级为3条独立判据。
+[FAIL] A15 : 修改公设集不能在当前账本内把 attack66/67 的失败读数翻成统一成功
+    荷质比 1E21、单电荷模质量 5E17 GeV、g=1、零模-电荷互斥、手征-维数锁死都是主链内部算术/整数/奇偶结论；改 Ω5 只改变记账合法性，不自动提供新的谱识别结构。
+[PASS] X01 : 交叉一致性：本册把 r14/r15 的③vs④选择点推进为可枚举动作表
+    候选表给出每条改造的 a/e/s/R/o、合法性与 delta；不再停在「修改公设集是哲学选择」。
+[CORRECTED] X02 : 射程限定：这是公设集记账的定价，不是对一切更彻底形式体系的普遍否证
+    若放弃「输入可数」或重定义可导出性口径，需另立账本；本册不改该前提，也不宣称所有统一理论不可能。
+[PASS] X03 : 红线一致：0/6、0/22、UFT-3=0、L3=0、validated=0、含引力四力正确方程0条
+    本册没有新增被验证的 L3 预言，也没有把候选出口的账面合规升级为完成度。
+[INFO] X04 : 不代选与不推荐声明
+    本册只给代价、合法性与门禁满足情况；③（零新输入、窗口少）与④（登记新输入、账本改写）的选择权保留给用户。
+[INFO] X05 : 治理留痕：未改 verify.py、未跑 refresh_catalog、未做 git 操作
+    所有引用均为只读；本册产物为引擎 .py、.json、_report.txt 与判定册。
+
+CANDIDATE TABLE
+  C01 s=1 a=2 e=0 R=0 delta=2.0000000000000000000000000E+0 legal=True gate=False : 只改数字：Omega5 f<=3，节点仍无上限
+  C02 s=1 a=2 e=2 R=0 delta=0.0000000000000000000000000E+25 legal=True gate=False : A4 总限额 f+n<=5，路线4 仍要 +2 自由度
+  C03 s=1 a=2 e=0 R=0 delta=2.0000000000000000000000000E+0 legal=True gate=False : A4 总限额 f<=3,n<=4（总7），不补识别
+  C04 s=1 a=2 e=2 R=0 delta=0.0000000000000000000000000E+25 legal=True gate=False : 总限额7，且新公理自带2条识别约束
+  C05 s=1 a=2 e=3 R=0 delta=-1.0000000000000000000000000E+0 legal=False gate=False : 总限额7，且声称自带3条识别约束
+  C06 s=0 a=0 e=1 R=1 delta=-1.0000000000000000000000000E+0 legal=True gate=True : 控制组：结构识别（非换公理集）
+  C07 s=0 a=0 e=0 R=0 delta=0.0000000000000000000000000E+25 legal=True gate=False : 路线3：放弃 beta 通道（零新输入）
+
+GRID COUNTS
+  gate_actions = 22
+  identification_gate_actions = 22
+  legal_actions = 140
+  mutant_e_le_a_plus1_swap_gate = 3
+  mutant_unlock_R_swap_gate = 8
+  swap_gate_actions = 0
+
+KEY NUMBERS
+  baseline_const = 1.0000000000000000000000000E+0
+  baseline_nodes = 4.0000000000000000000000000E+0
+  baseline_total_freedom = 5.0000000000000000000000000E+0
+  route4_delta_p = 2.0000000000000000000000000E+0
+  route4_delta_nullity = 2.0000000000000000000000000E+0
+  caliber_II_route4 = 7.0000000000000000000000000E+0
+  swap_candidate_count = 5
+  swap_gate_candidate_count = 0
+  compact_swap_gate_actions = 0
+  compact_identification_gate_actions = 22
+
+CROSS REFS
+  - attack66 判定册 (承接): 已知物理复算与荷质比/g因子失败在本册保持有效，不被公设改写自动抹去。
+  - attack67 X02 (直接起点): 通量/轨形/D膜/非微扰属修改公设集，必须定价后重判。
+  - attack55 判定册 (互印): GATE⇒s=0且R>=1；4/4出口delta_min>=0；TUFT侧结构识别供给0。
+  - r14 三条出路代价矩阵 (口径来源): 真正选择点3vs4；路线4账面合规但 +2自由度、nullity 3->5。
+  - r15 自由度预算口径 (口径修正): I=1/II=5/III=5；仅改数字无效；A4要求常数限额+节点/函数总自由度限额。
+  - r12 可识别性解阻 (交叉约束): rank_strict=3、rank_numeric=1、cond=inf、pool_usable=0。

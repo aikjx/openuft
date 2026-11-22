@@ -1,0 +1,329 @@
+{
+  "round": "attack69",
+  "title": "求导证明验证：D-12 净前提下降与 D-13 联读不可约",
+  "date": "2026-11-23",
+  "source": "attack68 D-12/D-13 + attack55 分类定理",
+  "scope": "记账函数的精确导数与格点证明；不产生新物理",
+  "counts": {
+    "PASS": 8,
+    "FAIL": 3,
+    "INFO": 3,
+    "CORRECTED": 1
+  },
+  "entries_total": 15,
+  "guard_pass": 20,
+  "guard_total": 20,
+  "exit_code": 0,
+  "items": [
+    {
+      "code": "P01",
+      "verdict": "PASS",
+      "title": "D-12 一阶导数精确证明：∂delta/∂a=+1、∂delta/∂e=-1",
+      "detail": "对线性函数 delta=a-e 使用 Fraction(1/7) 步长的向前、向后、中心差分三路对拍，六个导数全部精确等于 +1/-1；不是浮点近似。"
+    },
+    {
+      "code": "P02",
+      "verdict": "PASS",
+      "title": "D-12 边界证明：换公理集 e≤a 时 delta_min=0，严格负门不可达",
+      "detail": "a∈[0,6]、e∈[0,a] 的整数格点穷举，最小值 0 全部在 e=a 取得；因 ∂delta/∂e=-1<0，边界上界 e=a 必为最小点，机器枚举与解析导数一致。"
+    },
+    {
+      "code": "P03",
+      "verdict": "PASS",
+      "title": "D-12 一般化：e≤a+R 时 delta_min=-R，净下降只由既有结构依赖 R 产生",
+      "detail": "R=0,1,2,3 四个边界逐格枚举，delta_min 分别为 0,-1,-2,-3；∂delta_min/∂R=-1。与 attack55 定理 GATE⇒s=0且R>=1 逐位一致。"
+    },
+    {
+      "code": "P04",
+      "verdict": "FAIL",
+      "title": "变异守卫：把 e≤a 放宽为 e≤a+1 可制造 delta=-1，但违反换公理集账本",
+      "detail": "整数格点中存在 e=a+1 的负 delta 解；这些解全部不满足 attack68 C01–C05 的 s=1,R=0 合法性约束，属偷偷解锁新识别来源。"
+    },
+    {
+      "code": "P05",
+      "verdict": "FAIL",
+      "title": "attack68 换公理集候选表的求导复核：合法候选无严格负 delta",
+      "detail": "C01/C03 delta=+2，C02/C04 delta=0，C05 delta=-1 但非法；本册导数与边界证明给出同一结论，未发现 attack68 的候选表算术错误。"
+    },
+    {
+      "code": "P06",
+      "verdict": "PASS",
+      "title": "求导证明验证 attack68 控制组：delta=-1 只在 s=0,R=1 结构识别路径出现",
+      "detail": "C06 落在本册一般化边界 R=1 的 delta_min=-R 上；它不是换公理集出口，而是利用既有未用结构依赖。"
+    },
+    {
+      "code": "P07",
+      "verdict": "PASS",
+      "title": "D-13 不可约性：可识别性结论不是窗口数 W 的函数",
+      "detail": "同一 W=3 在 (N=5,rho=1,cond=inf) 与 (N=0,rho=3,cond=finite) 下分别得 NOT-IDENTIFIABLE / IDENTIFIABLE；W 单变量映射出现二值歧义。"
+    },
+    {
+      "code": "P08",
+      "verdict": "FAIL",
+      "title": "路线4 的名义 3 窗口不能推出可识别预测力",
+      "detail": "按联读函数，route4_as_reported=(W=3,N=5,rho=1,cond=inf) 判 NOT-IDENTIFIABLE；单独报 W=3 会掩盖 nullity 与数值秩约束。"
+    },
+    {
+      "code": "P09",
+      "verdict": "INFO",
+      "title": "证明口径：本册只证明记账函数的导数与边界，不证明任何物理理论不存在",
+      "detail": "delta=a-e 是 attack55/68 的账本变量；有限差分与格点枚举验证的是账本结构，不涉及作用量变分或谱求解。"
+    },
+    {
+      "code": "P10",
+      "verdict": "PASS",
+      "title": "复核链闭合：attack68 → attack69 的关键读数逐项一致",
+      "detail": "swap_gate=0、structure-identify gate=-1、mutant unlock R 产生负 delta 三项均在本册独立复现；attack68 无需回滚。"
+    },
+    {
+      "code": "P11",
+      "verdict": "INFO",
+      "title": "自纠正记录：首版若只看 W=3 会把路线4误当更强预测面，已改为 W/N/rho/cond 四元组判读",
+      "detail": "该纠正不改变任何既有结论，只收紧本册表述。"
+    },
+    {
+      "code": "X01",
+      "verdict": "PASS",
+      "title": "新增机器产物：导数表、边界表、W 歧义表全部写入 JSON",
+      "detail": "json 内含 derivative_proof、swap_lattice_summary、general_boundary、mutant_summary、joint_reading_rows、w_verdict_map。"
+    },
+    {
+      "code": "X02",
+      "verdict": "CORRECTED",
+      "title": "射程限定：本册验证的是 D-12/D-13 的记账函数，不把账本门当作物理 no-go 定理",
+      "detail": "若未来重定义 delta 或可识别性判据，需重跑本册；不得把本册结论外推为所有理论不可能。"
+    },
+    {
+      "code": "X03",
+      "verdict": "PASS",
+      "title": "红线不变：0/6、0/22、UFT-3=0、L3=0、validated=0、含引力四力正确方程0条",
+      "detail": "本册没有新增 L3 预言，也不改变任何体系完成度。"
+    },
+    {
+      "code": "X04",
+      "verdict": "INFO",
+      "title": "治理：未改 verify.py、未跑 refresh_catalog.py、未做 git 操作",
+      "detail": "产物仅本引擎 .py/.json/_report.txt 与判定册、README 登记。"
+    }
+  ],
+  "guards": [
+    {
+      "code": "G0-1",
+      "name": "d(delta)/da = +1 by forward/backward/central differences",
+      "status": "PASS",
+      "detail": "[Fraction(1, 1), Fraction(1, 1), Fraction(1, 1)]"
+    },
+    {
+      "code": "G0-2",
+      "name": "d(delta)/de = -1 by forward/backward/central differences",
+      "status": "PASS",
+      "detail": "[Fraction(-1, 1), Fraction(-1, 1), Fraction(-1, 1)]"
+    },
+    {
+      "code": "G0-3",
+      "name": "swap lattice e<=a has delta_min=0 attained at e=a",
+      "status": "PASS",
+      "detail": "min=0 count=7"
+    },
+    {
+      "code": "G0-R0",
+      "name": "e<=a+R => delta_min=-R for R=0",
+      "status": "PASS",
+      "detail": "delta_min=0"
+    },
+    {
+      "code": "G0-R1",
+      "name": "e<=a+R => delta_min=-R for R=1",
+      "status": "PASS",
+      "detail": "delta_min=-1"
+    },
+    {
+      "code": "G0-R2",
+      "name": "e<=a+R => delta_min=-R for R=2",
+      "status": "PASS",
+      "detail": "delta_min=-2"
+    },
+    {
+      "code": "G0-R3",
+      "name": "e<=a+R => delta_min=-R for R=3",
+      "status": "PASS",
+      "detail": "delta_min=-3"
+    },
+    {
+      "code": "G0-4",
+      "name": "mutant e<=a+1 gives delta_min=-1",
+      "status": "PASS",
+      "detail": "-1"
+    },
+    {
+      "code": "G0-5",
+      "name": "mutant negative solutions violate e<=a",
+      "status": "PASS",
+      "detail": "violation_count=7"
+    },
+    {
+      "code": "G0-6",
+      "name": "same W=3 yields two different verdicts when N/rho/cond differ",
+      "status": "PASS",
+      "detail": "{3: {'NOT-IDENTIFIABLE', 'IDENTIFIABLE'}, 2: {'NOT-IDENTIFIABLE'}}"
+    },
+    {
+      "code": "G0-7",
+      "name": "route4 W=3 is NOT-IDENTIFIABLE under joint reading",
+      "status": "PASS",
+      "detail": "NOT-IDENTIFIABLE"
+    },
+    {
+      "code": "G0-8",
+      "name": "W=2 example has a single verdict, so ambiguity is specifically at W=3",
+      "status": "PASS",
+      "detail": "{3: {'NOT-IDENTIFIABLE', 'IDENTIFIABLE'}, 2: {'NOT-IDENTIFIABLE'}}"
+    },
+    {
+      "code": "G0-9",
+      "name": "mutant bound is strictly better than swap bound by one unit",
+      "status": "PASS",
+      "detail": "-1 < 0"
+    },
+    {
+      "code": "G0-10",
+      "name": "general boundary delta_min is strictly monotone in R",
+      "status": "PASS",
+      "detail": "[Fraction(0, 1), Fraction(-1, 1), Fraction(-2, 1), Fraction(-3, 1)]"
+    },
+    {
+      "code": "G-C1",
+      "name": "entries >= 12",
+      "status": "PASS",
+      "detail": "15"
+    },
+    {
+      "code": "G-C2",
+      "name": "guards >= 15 at self-check point",
+      "status": "PASS",
+      "detail": "15"
+    },
+    {
+      "code": "G-C3",
+      "name": "unique entry codes",
+      "status": "PASS",
+      "detail": "15"
+    },
+    {
+      "code": "G-C4",
+      "name": "key entries present",
+      "status": "PASS",
+      "detail": "ok"
+    },
+    {
+      "code": "G-C5",
+      "name": "cross refs present",
+      "status": "PASS",
+      "detail": "4"
+    },
+    {
+      "code": "G-C6",
+      "name": "counts sum to entries",
+      "status": "PASS",
+      "detail": "{'PASS': 8, 'FAIL': 3, 'INFO': 3, 'CORRECTED': 1}"
+    }
+  ],
+  "self_corrections": [
+    "F-1 导数证明初始值只写了中心差分，后补向前/向后/中心三路对拍以排除实现偏置。",
+    "F-2 D-13 首版把 W=3 当成单调强度指标，改用四元组 verdict 函数后同一 W 出现两判读。"
+  ],
+  "cross_refs": [
+    {
+      "target": "attack68 D-12",
+      "relation": "求导验证",
+      "detail": "delta=a-e 的一阶导数与 e<=a 边界最小化证明。"
+    },
+    {
+      "target": "attack68 D-13",
+      "relation": "反例验证",
+      "detail": "同一 W=3 对应两种可识别性判读，证明 W 单变量不可约。"
+    },
+    {
+      "target": "attack55 分类定理",
+      "relation": "互印",
+      "detail": "delta_min=-R，GATE 只由 R>0 的结构识别路径可达。"
+    },
+    {
+      "target": "r14/r15",
+      "relation": "口径承接",
+      "detail": "路线4 +2 自由度、nullity=5，窗口数必须与可识别性联读。"
+    }
+  ],
+  "derivative_proof": {
+    "d_da_forward": "1",
+    "d_da_backward": "1",
+    "d_da_central": "1",
+    "d_de_forward": "-1",
+    "d_de_backward": "-1",
+    "d_de_central": "-1"
+  },
+  "swap_lattice_summary": {
+    "a_range": "0..6",
+    "point_count": 28,
+    "delta_min": "0",
+    "min_at_e_equals_a": true
+  },
+  "general_boundary": [
+    {
+      "R": 0,
+      "delta_min": "0"
+    },
+    {
+      "R": 1,
+      "delta_min": "-1"
+    },
+    {
+      "R": 2,
+      "delta_min": "-2"
+    },
+    {
+      "R": 3,
+      "delta_min": "-3"
+    }
+  ],
+  "mutant_summary": {
+    "constraint": "e<=a+1",
+    "delta_min": "-1",
+    "violates_e_le_a": 7
+  },
+  "joint_reading_rows": [
+    {
+      "route": "route4_as_reported",
+      "W": 3,
+      "N": 5,
+      "rho": 1,
+      "cond": "inf",
+      "verdict": "NOT-IDENTIFIABLE"
+    },
+    {
+      "route": "route3_as_reported",
+      "W": 2,
+      "N": 3,
+      "rho": 1,
+      "cond": "inf",
+      "verdict": "NOT-IDENTIFIABLE"
+    },
+    {
+      "route": "hypothetical_clean",
+      "W": 3,
+      "N": 0,
+      "rho": 3,
+      "cond": "finite",
+      "verdict": "IDENTIFIABLE"
+    }
+  ],
+  "w_verdict_map": {
+    "3": [
+      "IDENTIFIABLE",
+      "NOT-IDENTIFIABLE"
+    ],
+    "2": [
+      "NOT-IDENTIFIABLE"
+    ]
+  }
+}

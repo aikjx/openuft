@@ -1,0 +1,57 @@
+attack69 report - 求导证明验证：D-12 净前提下降与 D-13 联读不可约
+date: 2026-11-23
+entries: 15 ; counts: {'PASS': 8, 'FAIL': 3, 'INFO': 3, 'CORRECTED': 1}
+guards: 20/20 PASS ; exit=0
+
+[PASS] P01 : D-12 一阶导数精确证明：∂delta/∂a=+1、∂delta/∂e=-1
+    对线性函数 delta=a-e 使用 Fraction(1/7) 步长的向前、向后、中心差分三路对拍，六个导数全部精确等于 +1/-1；不是浮点近似。
+[PASS] P02 : D-12 边界证明：换公理集 e≤a 时 delta_min=0，严格负门不可达
+    a∈[0,6]、e∈[0,a] 的整数格点穷举，最小值 0 全部在 e=a 取得；因 ∂delta/∂e=-1<0，边界上界 e=a 必为最小点，机器枚举与解析导数一致。
+[PASS] P03 : D-12 一般化：e≤a+R 时 delta_min=-R，净下降只由既有结构依赖 R 产生
+    R=0,1,2,3 四个边界逐格枚举，delta_min 分别为 0,-1,-2,-3；∂delta_min/∂R=-1。与 attack55 定理 GATE⇒s=0且R>=1 逐位一致。
+[FAIL] P04 : 变异守卫：把 e≤a 放宽为 e≤a+1 可制造 delta=-1，但违反换公理集账本
+    整数格点中存在 e=a+1 的负 delta 解；这些解全部不满足 attack68 C01–C05 的 s=1,R=0 合法性约束，属偷偷解锁新识别来源。
+[FAIL] P05 : attack68 换公理集候选表的求导复核：合法候选无严格负 delta
+    C01/C03 delta=+2，C02/C04 delta=0，C05 delta=-1 但非法；本册导数与边界证明给出同一结论，未发现 attack68 的候选表算术错误。
+[PASS] P06 : 求导证明验证 attack68 控制组：delta=-1 只在 s=0,R=1 结构识别路径出现
+    C06 落在本册一般化边界 R=1 的 delta_min=-R 上；它不是换公理集出口，而是利用既有未用结构依赖。
+[PASS] P07 : D-13 不可约性：可识别性结论不是窗口数 W 的函数
+    同一 W=3 在 (N=5,rho=1,cond=inf) 与 (N=0,rho=3,cond=finite) 下分别得 NOT-IDENTIFIABLE / IDENTIFIABLE；W 单变量映射出现二值歧义。
+[FAIL] P08 : 路线4 的名义 3 窗口不能推出可识别预测力
+    按联读函数，route4_as_reported=(W=3,N=5,rho=1,cond=inf) 判 NOT-IDENTIFIABLE；单独报 W=3 会掩盖 nullity 与数值秩约束。
+[INFO] P09 : 证明口径：本册只证明记账函数的导数与边界，不证明任何物理理论不存在
+    delta=a-e 是 attack55/68 的账本变量；有限差分与格点枚举验证的是账本结构，不涉及作用量变分或谱求解。
+[PASS] P10 : 复核链闭合：attack68 → attack69 的关键读数逐项一致
+    swap_gate=0、structure-identify gate=-1、mutant unlock R 产生负 delta 三项均在本册独立复现；attack68 无需回滚。
+[INFO] P11 : 自纠正记录：首版若只看 W=3 会把路线4误当更强预测面，已改为 W/N/rho/cond 四元组判读
+    该纠正不改变任何既有结论，只收紧本册表述。
+[PASS] X01 : 新增机器产物：导数表、边界表、W 歧义表全部写入 JSON
+    json 内含 derivative_proof、swap_lattice_summary、general_boundary、mutant_summary、joint_reading_rows、w_verdict_map。
+[CORRECTED] X02 : 射程限定：本册验证的是 D-12/D-13 的记账函数，不把账本门当作物理 no-go 定理
+    若未来重定义 delta 或可识别性判据，需重跑本册；不得把本册结论外推为所有理论不可能。
+[PASS] X03 : 红线不变：0/6、0/22、UFT-3=0、L3=0、validated=0、含引力四力正确方程0条
+    本册没有新增 L3 预言，也不改变任何体系完成度。
+[INFO] X04 : 治理：未改 verify.py、未跑 refresh_catalog.py、未做 git 操作
+    产物仅本引擎 .py/.json/_report.txt 与判定册、README 登记。
+
+DERIVATIVE PROOF
+  d_da_forward = 1
+  d_da_backward = 1
+  d_da_central = 1
+  d_de_forward = -1
+  d_de_backward = -1
+  d_de_central = -1
+
+BOUNDARY
+  swap_delta_min = 0 ; count = 7
+  R=0 delta_min=0
+  R=1 delta_min=-1
+  R=2 delta_min=-2
+  R=3 delta_min=-3
+  mutant_delta_min=-1 violations=7
+
+JOINT READING
+  route4_as_reported W=3 N=5 rho=1 cond=inf -> NOT-IDENTIFIABLE
+  route3_as_reported W=2 N=3 rho=1 cond=inf -> NOT-IDENTIFIABLE
+  hypothetical_clean W=3 N=0 rho=3 cond=finite -> IDENTIFIABLE
+  W->verdict map = {'3': ['IDENTIFIABLE', 'NOT-IDENTIFIABLE'], '2': ['NOT-IDENTIFIABLE']}

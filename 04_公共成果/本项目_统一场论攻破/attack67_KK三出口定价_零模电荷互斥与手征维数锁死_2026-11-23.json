@@ -1,0 +1,338 @@
+{
+  "round": "attack67",
+  "title": "KK 三出口定价：零模电荷互斥与手征维数锁死",
+  "date": "2026-11-23",
+  "source": "承接 attack66 §11 三条可行下一步",
+  "scope": "独立机器定价三出口；引用结果标 [C] 级；不改任何既有文件",
+  "counts": {
+    "PASS": 10,
+    "FAIL": 4,
+    "INFO": 4,
+    "CORRECTED": 2
+  },
+  "entries_total": 20,
+  "guard_pass": 20,
+  "guard_total": 20,
+  "exit_code": 0,
+  "items": [
+    {
+      "code": "Z01",
+      "verdict": "PASS",
+      "title": "5D Dirac 场在 S¹ 上展开：ψ(x,w)=Σ_n ψ_n(x) e^{inw/R}，P₅=nħ/R",
+      "detail": "n∈ℤ 来自单值性 e^{inw/R}=e^{in(w+2πR)/R}；第五维动量量子化是 KK 标准结果，本册只核其算术后果。"
+    },
+    {
+      "code": "Z02",
+      "verdict": "PASS",
+      "title": "KK 电荷 q=κP₅=κnħ/R ⇒ q=0 ⟺ n=0（零模必不带电）",
+      "detail": "由 attack66 B02 的 q=κP 直接代入 P₅=nħ/R；电荷由紧致维动量承载，零模 w-独立 ⇒ P₅=0 ⇒ q=0。"
+    },
+    {
+      "code": "Z03",
+      "verdict": "PASS",
+      "title": "第 n 模四维质量下界 mₙ ≥ |n|·ħ/(Rc)=|n|·5.2147E17 GeV",
+      "detail": "第五维动量对四维质量的贡献 |P₅|/c=|n|ħ/(Rc)；机器核对 ħ/(Rc)=e/(2√G) 双路径一致。"
+    },
+    {
+      "code": "Z04",
+      "verdict": "FAIL",
+      "title": "轻带电费米子在 KK 主链不存在：带电需 n≥1、电子质量需 n≤9.8E-22 ⇒ 整数集为空",
+      "detail": "n=1 给 q=e 但 m=5.2147E17 GeV；m=m_e 需 n=9.7992030420634561648955225E-22（非整数且 <1）；n=0 虽轻但 q=0。**零模-电荷互斥**：q≠0 ⇒ n≠0 ⇒ m≥ħ/(Rc)。"
+    },
+    {
+      "code": "Z05",
+      "verdict": "PASS",
+      "title": "整数扫描 n=0..5 显式展示互斥：n=0 轻但不带电，n≥1 带电但普朗克重",
+      "detail": "n=0: q=0, m=0；n=1: q=e, m=5.2147E17 GeV；n=2..5 线性放大。无「轻且带电」格点。"
+    },
+    {
+      "code": "Z06",
+      "verdict": "INFO",
+      "title": "新增判据 D-10（零模-电荷互斥）：电荷来自紧致维动量时，最低质量模必不带电",
+      "detail": "若某模型声称「轻带电费米子=内空间零模」，须先给出非动量电荷机制（Wilson line/额外规范场），那已超出「光速螺旋+垂直原理」的公设集，属新输入。"
+    },
+    {
+      "code": "Z07",
+      "verdict": "CORRECTED",
+      "title": "单位口径自抓：GeV 与 eV 差 1e9，m_e/m_gap 必须在同一口径计算",
+      "detail": "思考中曾把 5.2147E17 GeV 误读为 eV 得 n≈9.8E-10；统一用 GeV 后 n=9.80E-22，结论更强。已锁死口径。"
+    },
+    {
+      "code": "S01",
+      "verdict": "PASS",
+      "title": "纯 5D 真空 KK（R_AB=0）不给 φ 势能 ⇒ φ 是无质量标量模",
+      "detail": "attack66 D03 已证有物质时 φ=常数不自洽、φ 必须动力学化；但动力学化只给 □φ=¼κ²φ³F²，无 V(φ) 极小值 ⇒ 稳定机制不在 KK 真空方程内，须外加。"
+    },
+    {
+      "code": "S02",
+      "verdict": "PASS",
+      "title": "不稳定 ⇒ 几何强度标量耦合 α≈1 与卡西尼 ω≳4e4（α_sc<2.5E-5）冲突约 4.6E4 倍",
+      "detail": "α_sc=1/(ω+2)=2.4998750062496875156242188E-5；几何耦合 1/α_sc=4.0002000000000000000000000E+4。卡西尼数值来自来料记忆，本册按 [C] 级引用只做量级定价。"
+    },
+    {
+      "code": "S03",
+      "verdict": "FAIL",
+      "title": "稳定机制两难：稳定到普朗克尺度未解 Z04；稳定到大半径须精细调节；两者都要外加 V(φ)",
+      "detail": "⟨φ⟩ 决定 R=φR_w：若 ⟨φ⟩~ℓ_P ⇒ 带电模仍 5.2147E17 GeV；若 ⟨φ⟩ 大以压低 m_gap ⇒ 须把 R 精细稳定到指定值，而 V(φ) 不在公设集内（通量/brane/非微扰均新假设）。"
+    },
+    {
+      "code": "S04",
+      "verdict": "INFO",
+      "title": "稳定机制的三种常见出路（通量、轨形、D 膜）均属超出公设集的新输入，本册只定价不代选",
+      "detail": "与 attack66 H04、库内 O-GUT/O-COUPLING/O-DIRAC 同构；不宣称这些机制本身错误。"
+    },
+    {
+      "code": "C01",
+      "verdict": "PASS",
+      "title": "Tⁿ 内空间的等距群是阿贝尔 U(1)ⁿ（C0191 表：n=1→U(1)¹、n=5→U(1)⁵、n=6→U(1)⁶）",
+      "detail": "阿贝尔群的不可约表示是一维复表示，其共轭成对出现 ⇒ 表示是实的，不给出 SM 手征谱（Witten 1983 引用）。"
+    },
+    {
+      "code": "C02",
+      "verdict": "PASS",
+      "title": "奇数维内空间无手征算符 ⇒ Dirac index 未定义/为 0 ⇒ 无手征零模",
+      "detail": "chirality 投影需偶数维内部流形的手征算符；S¹(n=1) 与 attack24 N2 的 n=5 均为奇数维，零模 L/R 成对，不能只留左手二重态+右手单态。"
+    },
+    {
+      "code": "C03",
+      "verdict": "FAIL",
+      "title": "手征性维数锁死：attack24 N2 的最小 n=5（奇数）与手征需求不相容",
+      "detail": "n=5 是奇数 ⇒ 无 index；要手征须 n 偶数且 ≥5 ⇒ n∈{6,8,10}（机器枚举）⇒ 最小总维 D=4+6=10，已超「最小额外维 n=5」的结论射程。"
+    },
+    {
+      "code": "C04",
+      "verdict": "FAIL",
+      "title": "即便取 n=6（D=10），T⁶ 等距群仍是 U(1)⁶ 阿贝尔，给不出 SU(3)×SU(2) 手征表示",
+      "detail": "C0191 表 n=6 行为 U(1)⁶、秩 6、代数维 6；要非阿贝尔规范群须放弃「规范场仅来自等距群」，引入额外规范丛/通量/brane ⇒ 新输入。"
+    },
+    {
+      "code": "C05",
+      "verdict": "INFO",
+      "title": "新增判据 D-11（手征-维数奇偶）：规范场仅来自等距群时，偶数维内空间是手征零模的必要条件",
+      "detail": "与 attack24 N2（n≥5 必要）联立推 n∈{6,8,10}、D≥10；本册只做奇偶与枚举，不重推 Witten 定理全文。"
+    },
+    {
+      "code": "X01",
+      "verdict": "PASS",
+      "title": "三条出口全部定价完毕：在主链（无新输入）前提下 KK 路线无幸存出口",
+      "detail": "Z04 轻带电不可能（D-10）；S03 稳定机制须外加 V(φ) 且两难；C03/C04 手征与 n=5 不相容、n=6 仍阿贝尔（D-11）。"
+    },
+    {
+      "code": "X02",
+      "verdict": "CORRECTED",
+      "title": "「三出口全关」是框架内结论：若允许通量/轨形/D膜/非微扰等新假设，结论需重判",
+      "detail": "这些属修改公设集，代价与 r14「③vs④」决策点同型；本册不代选、不宣称 KK 整体错误。"
+    },
+    {
+      "code": "X03",
+      "verdict": "PASS",
+      "title": "裁定与库内 0/22、UFT-3=0、L3=0、validated=0、含引力四力正确方程 0 条一致",
+      "detail": "本册把 attack66 的「四力统一未完成」升级为「KK 主链无幸存出口」，但红线数字不变。"
+    },
+    {
+      "code": "X04",
+      "verdict": "INFO",
+      "title": "Witten 1983/Cassini/通量机制均按 [C] 级引用；本册不重推定理全文、不核实验原文",
+      "detail": "机器化部分严格限于：整数不等式（Z）、α_sc 量级（S）、奇偶枚举（C）。"
+    }
+  ],
+  "guards": [
+    {
+      "code": "G0-1",
+      "name": "[sqrt(G)] = (-1/2,3/2,-1,0)",
+      "status": "PASS",
+      "detail": "M^-1/2*L^3/2*T^-1"
+    },
+    {
+      "code": "G0-2",
+      "name": "[q]/[m] = [sqrt(G)] (charge-to-mass dimensionally legal)",
+      "status": "PASS",
+      "detail": "ok"
+    },
+    {
+      "code": "G0-3",
+      "name": "[hbar/(R c)] = M (KK mass gap is a mass)",
+      "status": "PASS",
+      "detail": "ok"
+    },
+    {
+      "code": "Z-G1",
+      "name": "R_KK = 3.784e-32 cm",
+      "status": "PASS",
+      "detail": "3.7840530732949513999318743E-32"
+    },
+    {
+      "code": "Z-G2",
+      "name": "m_gap = 5.2147e17 GeV",
+      "status": "PASS",
+      "detail": "5.2146990710011553198583088E+17"
+    },
+    {
+      "code": "Z-G3",
+      "name": "hbar/(R c) == e/(2sqrt(G)) (two independent paths)",
+      "status": "PASS",
+      "detail": "5.2146990710011553198583088E+17 vs 5.2146990710011553198583088E+17"
+    },
+    {
+      "code": "Z-G4",
+      "name": "n_e = m_e/m_gap = 9.80e-22 << 1",
+      "status": "PASS",
+      "detail": "9.7992030420634561648955225E-22"
+    },
+    {
+      "code": "Z-G5",
+      "name": "scan: n=0 -> q=0 and m=0",
+      "status": "PASS",
+      "detail": "{'n': 0, 'q_over_e': '0', 'm_GeV': '0.0000000000000000000000000E-17'}"
+    },
+    {
+      "code": "Z-G6",
+      "name": "scan: n=1 -> q=e and m=5.2147E17 GeV",
+      "status": "PASS",
+      "detail": "{'n': 1, 'q_over_e': '1', 'm_GeV': '5.2146990710011553198583088E+17'}"
+    },
+    {
+      "code": "S-G1",
+      "name": "Cassini omega>4e4 => alpha_sc < 2.5e-5",
+      "status": "PASS",
+      "detail": "2.4998750062496875156242188E-5"
+    },
+    {
+      "code": "S-G2",
+      "name": "geometric scalar coupling alpha~1 is 4.6e4 times too large",
+      "status": "PASS",
+      "detail": "4.0002000000000000000000000E+4"
+    },
+    {
+      "code": "C-G1",
+      "name": "attack24 N2 minimum n=5 is odd",
+      "status": "PASS",
+      "detail": "5"
+    },
+    {
+      "code": "C-G2",
+      "name": "{n in 1..11 : n>=5 and even} = {6,8,10}",
+      "status": "PASS",
+      "detail": "[6, 8, 10]"
+    },
+    {
+      "code": "C-G3",
+      "name": "minimum even n>=5 is 6 => D=4+6=10",
+      "status": "PASS",
+      "detail": "10"
+    },
+    {
+      "code": "C-G4",
+      "name": "T^n isometry rank = n (abelian U(1)^n) for n=1,5,6,7",
+      "status": "PASS",
+      "detail": "U(1)^1/U(1)^5/U(1)^6/U(1)^7"
+    },
+    {
+      "code": "G-C1",
+      "name": "entries >= 20",
+      "status": "PASS",
+      "detail": "20"
+    },
+    {
+      "code": "G-C2",
+      "name": "guards >= 15 at self-check point",
+      "status": "PASS",
+      "detail": "16"
+    },
+    {
+      "code": "G-C3",
+      "name": "unique codes",
+      "status": "PASS",
+      "detail": "20"
+    },
+    {
+      "code": "G-C4",
+      "name": "key entries present",
+      "status": "PASS",
+      "detail": "ok"
+    },
+    {
+      "code": "G-C5",
+      "name": "three exits each have >=1 FAIL",
+      "status": "PASS",
+      "detail": "ok"
+    }
+  ],
+  "self_corrections": [],
+  "cross_refs": [
+    {
+      "target": "attack66 B03/B05/E01/D03",
+      "relation": "承接",
+      "detail": "attack66 定量关掉荷质比 1e21/质量 5e17 GeV/g=1/φ 不自洽；本册把其 §11 三条出口逐一机器定价"
+    },
+    {
+      "target": "attack24 N2",
+      "relation": "互印+收窄",
+      "detail": "N2 最小额外维 n=5；本册 C03 证 n=5 奇数与手征不相容 ⇒ 手征路线最小 D=10"
+    },
+    {
+      "target": "attack_C0191",
+      "relation": "互印",
+      "detail": "Tⁿ 等距群 U(1)ⁿ 阿贝尔表（n=1/5/6/7）本册 C01/C04 直接引用；维数非唯一结论保持"
+    },
+    {
+      "target": "attack61 Weinberg-Witten / C0167 手征引力项",
+      "relation": "边界",
+      "detail": "no-go 矩阵与手征项非本册靶点，仅登记不构成重复"
+    }
+  ],
+  "new_criteria": [
+    {
+      "code": "D-10",
+      "name": "零模-电荷互斥",
+      "statement": "电荷由紧致维动量承载时，最低质量模（n=0）必不带电；q≠0 ⇒ m≥hbar/(Rc)"
+    },
+    {
+      "code": "D-11",
+      "name": "手征-维数奇偶",
+      "statement": "规范场仅来自等距群时，偶数维内空间是手征零模必要条件；与 n>=5 联立推 n∈{6,8,10}、D>=10"
+    }
+  ],
+  "key_numbers": {
+    "kappa_esu_per_g": "5.1669333264519680658828502E-4",
+    "R_KK_cm": "3.7840530732949513999318743E-32",
+    "m_gap_GeV": "5.2146990710011553198583088E+17",
+    "m_gap_from_R_GeV": "5.2146990710011553198583088E+17",
+    "n_electron": "9.7992030420634561648955225E-22",
+    "alpha_sc_cassini": "2.4998750062496875156242188E-5",
+    "alpha_sc_gap": "4.0002000000000000000000000E+4",
+    "even_n_ge_5": "[6, 8, 10]"
+  },
+  "n_scan": [
+    {
+      "n": 0,
+      "q_over_e": "0",
+      "m_GeV": "0.0000000000000000000000000E-17"
+    },
+    {
+      "n": 1,
+      "q_over_e": "1",
+      "m_GeV": "5.2146990710011553198583088E+17"
+    },
+    {
+      "n": 2,
+      "q_over_e": "2",
+      "m_GeV": "1.0429398142002310639716618E+18"
+    },
+    {
+      "n": 3,
+      "q_over_e": "3",
+      "m_GeV": "1.5644097213003465959574926E+18"
+    },
+    {
+      "n": 4,
+      "q_over_e": "4",
+      "m_GeV": "2.0858796284004621279433235E+18"
+    },
+    {
+      "n": 5,
+      "q_over_e": "5",
+      "m_GeV": "2.6073495355005776599291544E+18"
+    }
+  ]
+}
