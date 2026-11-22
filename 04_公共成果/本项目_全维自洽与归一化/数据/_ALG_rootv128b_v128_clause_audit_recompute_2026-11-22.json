@@ -1,0 +1,615 @@
+{
+  "boundary": [
+    "本册未执行真实太阳系星历联合拟合（来料明言未执行）；不伪造拟合结果",
+    "月球激光测距与守恒律两项因缺一手输入未做，如实登记为 open",
+    "判别地板 1e-3 arcsec/cy 为输入参数，非本册发现",
+    "H5 的秩结论为首阶解析（K ∝ rho^2 e^-rho），与 I1 闭式数值核对已给",
+    "λ >> a 区不可反驳 != 已被证实；未排除 != 已确认"
+  ],
+  "constants": {
+    "AU_m": "1.4959787070E+11",
+    "GM_Sun_m3s2": "1.327124400180E+20",
+    "arcsec_per_rad": "2.062648062471E+5",
+    "floor_arcsec_per_century": "1.00E-3",
+    "tol_exact": "1.00E-40",
+    "tol_ident": "1.00E-20"
+  },
+  "convention": "SI 内部计算；AU 与 arcsec 仅用于与外部星历对照；alpha_Y 无量纲（由 (1) 齐次性强制）",
+  "date": "2026-11-22",
+  "discipline": [
+    "原文五式逐字核对，不重述为自有结论",
+    "代数恒等与数值一致分开报，恒等形式不承重",
+    "负对照：量纲检查须能检出故意错误（a_r 少一次长度）",
+    "门限先定后跑；TOL_EXACT=1e-40 为代数相等门限，非物理门限",
+    "无写死 ok：字面量禁用，机读校验",
+    "幂等：两次运行 JSON 逐字节相同",
+    "不自盖章：门全过 != 有物理内容；本册新物理预言 0"
+  ],
+  "gates": {
+    "H1-kappa-closed-form-exact": true,
+    "H2-apsidal-relation-first-order-only": true,
+    "H3-outer-planets-extension": true,
+    "H4-dimensional-homogeneity": true,
+    "H5-jacobian-rank-iff-distinct-a": true,
+    "H6-no-hardcoded-ok": true
+  },
+  "guards": {
+    "checked_patterns": 2,
+    "no_hardcoded_ok": true
+  },
+  "h1_kappa_closed_form": {
+    "algebraic_identity_ok": true,
+    "max_rel": "5.5687E-60",
+    "note": "1+alpha g - alpha rho^2 e^-rho 与 1+alpha e^-rho(1+rho-rho^2) 恒等 => 原文 (4) 不是展开结果，是精确闭式，对任意 alpha 成立。该式比原文自述的「弱耦合」条件更强。",
+    "ok": true,
+    "rows": [
+      {
+        "a_over_AU": "0.38709893",
+        "alpha": "1e-9",
+        "kappa2_strict": "6.833913623355E-13",
+        "kappa2_v128": "6.833913623355E-13",
+        "lam_over_AU": "0.18",
+        "rel": "4.3899E-60"
+      },
+      {
+        "a_over_AU": "0.38709893",
+        "alpha": "0.1",
+        "kappa2_strict": "6.716616422883E-13",
+        "kappa2_v128": "6.716616422883E-13",
+        "lam_over_AU": "0.18",
+        "rel": "2.9777E-60"
+      },
+      {
+        "a_over_AU": "1.0",
+        "alpha": "1",
+        "kappa2_strict": "3.591496524949E-14",
+        "kappa2_v128": "3.591496524949E-14",
+        "lam_over_AU": "0.18",
+        "rel": "5.5687E-60"
+      },
+      {
+        "a_over_AU": "1.0",
+        "alpha": "2",
+        "kappa2_strict": "6.880575968696E-14",
+        "kappa2_v128": "6.880575968696E-14",
+        "lam_over_AU": "1.0",
+        "rel": "2.9067E-60"
+      },
+      {
+        "a_over_AU": "5.20336301",
+        "alpha": "0.5",
+        "kappa2_strict": "2.652291563507E-16",
+        "kappa2_v128": "2.652291563507E-16",
+        "lam_over_AU": "1.0",
+        "rel": "3.7703E-60"
+      },
+      {
+        "a_over_AU": "30.06896348",
+        "alpha": "2",
+        "kappa2_strict": "2.525938180668E-18",
+        "kappa2_v128": "2.525938180668E-18",
+        "lam_over_AU": "30.0",
+        "rel": "0"
+      }
+    ],
+    "strong_coupling_alpha2_rel": "3.9241E-60",
+    "tolerance": "1.00E-40"
+  },
+  "h2_apsidal_relation": {
+    "alpha_at_1pct_bias": "3.746741E-2",
+    "alpha_zero_both_zero": true,
+    "analytic_identity": "Delta_v128 = (kappa_r/n) * Delta_exact",
+    "bias_coefficient_empirical": "2.6920741845E-1",
+    "bias_coefficient_predicted": "2.6921366888E-1",
+    "bias_coefficient_rel": "2.3217E-5",
+    "max_identity_rel": "9.5995E-51",
+    "note": "原文 (5) 精确等于 (kappa/n)*[2pi(n/kappa-1)]，系统偏低因子 (1-kappa/n)，其首阶系数 rho^2 e^-rho/2 已机读核对。α<0.038 时偏差 <1%，对任何现实 α（<=1e-9）都无关紧要；但 (5) 不能当精确关系用。",
+    "ok": true,
+    "rows": [
+      {
+        "alpha": "1e-9",
+        "bias_1_minus_kappa_over_n": "2.692137E-10",
+        "dvarpi_exact": "1.691519368849E-9",
+        "dvarpi_v128": "1.691519368394E-9",
+        "identity_rel": "9.5995E-51",
+        "kappa_over_n": "9.999999997308E-1",
+        "relative_underestimate": "2.692137E-10"
+      },
+      {
+        "alpha": "1e-3",
+        "bias_1_minus_kappa_over_n": "2.691512E-4",
+        "dvarpi_exact": "1.691582043844E-3",
+        "dvarpi_v128": "1.691126752537E-3",
+        "identity_rel": "1.3571E-56",
+        "kappa_over_n": "9.997308488179E-1",
+        "relative_underestimate": "2.691512E-4"
+      },
+      {
+        "alpha": "0.1",
+        "bias_1_minus_kappa_over_n": "2.631510E-2",
+        "dvarpi_exact": "1.698112757127E-1",
+        "dvarpi_v128": "1.653426743445E-1",
+        "identity_rel": "1.8144E-59",
+        "kappa_over_n": "9.736848960740E-1",
+        "relative_underestimate": "2.631510E-2"
+      },
+      {
+        "alpha": "0.5",
+        "bias_1_minus_kappa_over_n": "1.210762E-1",
+        "dvarpi_exact": "8.655402987793E-1",
+        "dvarpi_v128": "7.607439965983E-1",
+        "identity_rel": "2.8919E-59",
+        "kappa_over_n": "8.789238325139E-1",
+        "relative_underestimate": "1.210762E-1"
+      }
+    ]
+  },
+  "h3_outer_planets": {
+    "exclusion_reach": [
+      {
+        "group": "inner",
+        "lam_reach_AU": "1.98631571E+5",
+        "planet": "Mercury"
+      },
+      {
+        "group": "inner",
+        "lam_reach_AU": "2.34753636E+5",
+        "planet": "Venus"
+      },
+      {
+        "group": "inner",
+        "lam_reach_AU": "2.54537967E+5",
+        "planet": "Earth"
+      },
+      {
+        "group": "inner",
+        "lam_reach_AU": "2.82193213E+5",
+        "planet": "Mars"
+      },
+      {
+        "group": "outer",
+        "lam_reach_AU": "3.84357618E+5",
+        "planet": "Jupiter"
+      },
+      {
+        "group": "outer",
+        "lam_reach_AU": "4.46975518E+5",
+        "planet": "Saturn"
+      },
+      {
+        "group": "outer",
+        "lam_reach_AU": "5.32685227E+5",
+        "planet": "Uranus"
+      },
+      {
+        "group": "outer",
+        "lam_reach_AU": "5.96243358E+5",
+        "planet": "Neptune"
+      }
+    ],
+    "exclusion_reach_max_AU": "5.96243358E+5",
+    "exclusion_reach_max_planet": "Neptune",
+    "exclusion_reach_mercury_AU": "1.98631571E+5",
+    "first_lam_where_outer_dominates_AU": "1.000000E+1",
+    "n_planets": 8,
+    "note": "外行星 a 达 30 AU，(a/lam)^2 e^{-a/lam} 与内行星不同 => 相对谱形随 λ 跨 20.64 dex，这正是原文 §3 所说「不同轨道之间的差异」的载体。",
+    "ok": true,
+    "ratio_span_dex": "2.0643E+1",
+    "reach_gain_from_outer": "3.001755E+0",
+    "rows": [
+      {
+        "Jupiter": "7.576474E-13",
+        "Jupiter_over_Mercury": "8.522459E-21",
+        "Mercury": "8.890009E+7",
+        "Neptune": "1.928096E-120",
+        "lam_AU": "1.000000E-1",
+        "max_over_planets": "8.890009E+7",
+        "max_planet": "Mercury"
+      },
+      {
+        "Jupiter": "8.186958E+5",
+        "Jupiter_over_Mercury": "3.053488E-2",
+        "Mercury": "2.681183E+7",
+        "Neptune": "3.131103E-5",
+        "lam_AU": "1.000000E+0",
+        "max_over_planets": "2.681183E+7",
+        "max_planet": "Mercury"
+      },
+      {
+        "Jupiter": "2.087931E+6",
+        "Jupiter_over_Mercury": "1.429447E+0",
+        "Mercury": "1.460657E+6",
+        "Neptune": "3.477897E+4",
+        "lam_AU": "5.000000E+0",
+        "max_over_planets": "2.348853E+6",
+        "max_planet": "Mars"
+      },
+      {
+        "Jupiter": "8.780760E+5",
+        "Jupiter_over_Mercury": "2.313358E+0",
+        "Mercury": "3.795678E+5",
+        "Neptune": "1.758032E+5",
+        "lam_AU": "1.000000E+1",
+        "max_over_planets": "8.780760E+5",
+        "max_planet": "Jupiter"
+      },
+      {
+        "Jupiter": "1.380104E+5",
+        "Jupiter_over_Mercury": "3.189043E+0",
+        "Mercury": "4.327643E+4",
+        "Neptune": "1.449899E+5",
+        "lam_AU": "3.000000E+1",
+        "max_over_planets": "1.663190E+5",
+        "max_planet": "Uranus"
+      },
+      {
+        "Jupiter": "1.402424E+4",
+        "Jupiter_over_Mercury": "3.568314E+0",
+        "Mercury": "3.930215E+3",
+        "Neptune": "2.631974E+4",
+        "lam_AU": "1.000000E+2",
+        "max_over_planets": "2.631974E+4",
+        "max_planet": "Neptune"
+      },
+      {
+        "Jupiter": "1.469661E+2",
+        "Jupiter_over_Mercury": "3.726386E+0",
+        "Mercury": "3.943931E+1",
+        "Neptune": "3.449930E+2",
+        "lam_AU": "1.000000E+3",
+        "max_over_planets": "3.449930E+2",
+        "max_planet": "Neptune"
+      },
+      {
+        "Jupiter": "1.476559E+0",
+        "Jupiter_over_Mercury": "3.742573E+0",
+        "Mercury": "3.945305E-1",
+        "Neptune": "3.544567E+0",
+        "lam_AU": "1.000000E+4",
+        "max_over_planets": "3.544567E+0",
+        "max_planet": "Neptune"
+      },
+      {
+        "Jupiter": "1.477251E-2",
+        "Jupiter_over_Mercury": "3.744196E+0",
+        "Mercury": "3.945442E-3",
+        "Neptune": "3.554172E-2",
+        "lam_AU": "1.000000E+5",
+        "max_over_planets": "3.554172E-2",
+        "max_planet": "Neptune"
+      }
+    ]
+  },
+  "h4_dimensional_check": {
+    "GM_equals_G_times_M": true,
+    "all_homogeneous": true,
+    "negative_control_detected": true,
+    "note": "指数向量 (M,L,T)。原文 (1) 的齐次性强制 alpha 无量纲——这是原文 §4「ROOT 螺旋场推导独立耦合参数」的前提；若 alpha 带量纲则整串式子失效。",
+    "ok": true,
+    "rows": [
+      {
+        "dim_lhs": "(0, 2, -2)",
+        "dim_rhs": "(0, 2, -2)",
+        "formula": "(1) Phi = -GM/r (1+alpha e^-r/lam)",
+        "homogeneous": true
+      },
+      {
+        "dim_lhs": "(0, 1, -2)",
+        "dim_rhs": "(0, 1, -2)",
+        "formula": "(2) a_r = -(GM/r^2)[...]",
+        "homogeneous": true
+      },
+      {
+        "dim_lhs": "(0, 0, 0)",
+        "dim_rhs": "(0, 0, 0)",
+        "formula": "(2') (1+r/lam) e^-r/lam 无量纲",
+        "homogeneous": true
+      },
+      {
+        "dim_lhs": "(0, 0, -2)",
+        "dim_rhs": "(0, 0, -2)",
+        "formula": "(3) n^2 = (GM/a^3)[...]",
+        "homogeneous": true
+      },
+      {
+        "dim_lhs": "(0, 0, -2)",
+        "dim_rhs": "(0, 0, -2)",
+        "formula": "(4) kappa_r^2 = (GM/a^3)[...]",
+        "homogeneous": true
+      },
+      {
+        "dim_lhs": "(0, 0, 0)",
+        "dim_rhs": "(0, 0, 0)",
+        "formula": "(5) Delta_varpi = 2pi(1-kappa/n)",
+        "homogeneous": true
+      },
+      {
+        "dim_lhs": "(0, 0, 0)",
+        "dim_rhs": "(0, 0, 0)",
+        "formula": "(6) Delta_varpi_Y = pi alpha (a/lam)^2 e^..",
+        "homogeneous": true
+      },
+      {
+        "dim_lhs": "(0, 0, 0)",
+        "dim_rhs": "(0, 0, 0)",
+        "formula": "alpha 必须无量纲（否则 (1) 不齐次）",
+        "homogeneous": true
+      }
+    ]
+  },
+  "h5_identifiability_rank": {
+    "big_lambda_rank2": true,
+    "big_lambda_spread": "2.968186E-5",
+    "minors": [
+      {
+        "a_diff_over_lam": "6.72466120E-2",
+        "pair": "Mercury/Venus"
+      },
+      {
+        "a_diff_over_lam": "1.22580236E-1",
+        "pair": "Mercury/Earth"
+      },
+      {
+        "a_diff_over_lam": "2.27312676E-1",
+        "pair": "Mercury/Mars"
+      },
+      {
+        "a_diff_over_lam": "9.63252816E-1",
+        "pair": "Mercury/Jupiter"
+      },
+      {
+        "a_diff_over_lam": "1.82999428E+0",
+        "pair": "Mercury/Saturn"
+      },
+      {
+        "a_diff_over_lam": "3.76083300E+0",
+        "pair": "Mercury/Uranus"
+      },
+      {
+        "a_diff_over_lam": "5.93637291E+0",
+        "pair": "Mercury/Neptune"
+      },
+      {
+        "a_diff_over_lam": "5.53336240E-2",
+        "pair": "Venus/Earth"
+      },
+      {
+        "a_diff_over_lam": "1.60066064E-1",
+        "pair": "Venus/Mars"
+      },
+      {
+        "a_diff_over_lam": "8.96006204E-1",
+        "pair": "Venus/Jupiter"
+      },
+      {
+        "a_diff_over_lam": "1.76274767E+0",
+        "pair": "Venus/Saturn"
+      },
+      {
+        "a_diff_over_lam": "3.69358639E+0",
+        "pair": "Venus/Uranus"
+      },
+      {
+        "a_diff_over_lam": "5.86912630E+0",
+        "pair": "Venus/Neptune"
+      },
+      {
+        "a_diff_over_lam": "1.04732440E-1",
+        "pair": "Earth/Mars"
+      },
+      {
+        "a_diff_over_lam": "8.40672580E-1",
+        "pair": "Earth/Jupiter"
+      },
+      {
+        "a_diff_over_lam": "1.70741404E+0",
+        "pair": "Earth/Saturn"
+      },
+      {
+        "a_diff_over_lam": "3.63825276E+0",
+        "pair": "Earth/Uranus"
+      },
+      {
+        "a_diff_over_lam": "5.81379267E+0",
+        "pair": "Earth/Neptune"
+      },
+      {
+        "a_diff_over_lam": "7.35940140E-1",
+        "pair": "Mars/Jupiter"
+      },
+      {
+        "a_diff_over_lam": "1.60268160E+0",
+        "pair": "Mars/Saturn"
+      },
+      {
+        "a_diff_over_lam": "3.53352032E+0",
+        "pair": "Mars/Uranus"
+      },
+      {
+        "a_diff_over_lam": "5.70906023E+0",
+        "pair": "Mars/Neptune"
+      },
+      {
+        "a_diff_over_lam": "8.66741462E-1",
+        "pair": "Jupiter/Saturn"
+      },
+      {
+        "a_diff_over_lam": "2.79758018E+0",
+        "pair": "Jupiter/Uranus"
+      },
+      {
+        "a_diff_over_lam": "4.97312009E+0",
+        "pair": "Jupiter/Neptune"
+      },
+      {
+        "a_diff_over_lam": "1.93083872E+0",
+        "pair": "Saturn/Uranus"
+      },
+      {
+        "a_diff_over_lam": "4.10637863E+0",
+        "pair": "Saturn/Neptune"
+      },
+      {
+        "a_diff_over_lam": "2.17553991E+0",
+        "pair": "Uranus/Neptune"
+      }
+    ],
+    "note": "解析 dlnK/dlnlam = -2 + a/lam：各行星 a 不同 => 两列不共线 => 秩 2 => (alpha,lam) 可分辨；单行星秩 1 => 原文 §3「仅比较一颗行星不足」成立。lam >> a_max 时所有行星的斜率都趋 -2 => 秩退化 1，即使多行星也不可分辨。",
+    "numeric_dlnK_dlnlam": [
+      "-1.92268219E+0",
+      "-1.85540611E+0",
+      "-1.80010268E+0",
+      "-1.69562214E+0",
+      "-9.60480656E-1",
+      "-9.62020855E-2",
+      "1.82816057E+0",
+      "4.01012253E+0"
+    ],
+    "ok": true,
+    "rank2_with_distinct_a": true,
+    "rows": [
+      {
+        "a_over_AU": "3.870989E-1",
+        "dlnK_dlnlam": "-1.92258021E+0",
+        "planet": "Mercury"
+      },
+      {
+        "a_over_AU": "7.233320E-1",
+        "dlnK_dlnlam": "-1.85533360E+0",
+        "planet": "Venus"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "dlnK_dlnlam": "-1.79999998E+0",
+        "planet": "Earth"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "dlnK_dlnlam": "-1.69526754E+0",
+        "planet": "Mars"
+      },
+      {
+        "a_over_AU": "5.203363E+0",
+        "dlnK_dlnlam": "-9.59327398E-1",
+        "planet": "Jupiter"
+      },
+      {
+        "a_over_AU": "9.537070E+0",
+        "dlnK_dlnlam": "-9.25859360E-2",
+        "planet": "Saturn"
+      },
+      {
+        "a_over_AU": "1.919126E+1",
+        "dlnK_dlnlam": "1.83825279E+0",
+        "planet": "Uranus"
+      },
+      {
+        "a_over_AU": "3.006896E+1",
+        "dlnK_dlnlam": "4.01379270E+0",
+        "planet": "Neptune"
+      }
+    ],
+    "single_planet_rank2": false
+  },
+  "kind": "external-material-computable-audit",
+  "n_gate_ok": 6,
+  "n_gate_total": 6,
+  "planets": [
+    {
+      "P_days": "8.79691000E+1",
+      "a_AU": "3.8709893000E-1",
+      "e": "2.05630690E-1",
+      "group": "inner",
+      "name": "Mercury"
+    },
+    {
+      "P_days": "2.24700800E+2",
+      "a_AU": "7.2333199000E-1",
+      "e": "6.77323000E-3",
+      "group": "inner",
+      "name": "Venus"
+    },
+    {
+      "P_days": "3.65256400E+2",
+      "a_AU": "1.0000001100E+0",
+      "e": "1.67102200E-2",
+      "group": "inner",
+      "name": "Earth"
+    },
+    {
+      "P_days": "6.86980000E+2",
+      "a_AU": "1.5236623100E+0",
+      "e": "9.34123300E-2",
+      "group": "inner",
+      "name": "Mars"
+    },
+    {
+      "P_days": "4.33258900E+3",
+      "a_AU": "5.2033630100E+0",
+      "e": "4.83926600E-2",
+      "group": "outer",
+      "name": "Jupiter"
+    },
+    {
+      "P_days": "1.07592200E+4",
+      "a_AU": "9.5370703200E+0",
+      "e": "5.41506000E-2",
+      "group": "outer",
+      "name": "Saturn"
+    },
+    {
+      "P_days": "3.06854000E+4",
+      "a_AU": "1.9191263930E+1",
+      "e": "4.71677100E-2",
+      "group": "outer",
+      "name": "Uranus"
+    },
+    {
+      "P_days": "6.01890000E+4",
+      "a_AU": "3.0068963480E+1",
+      "e": "8.58587000E-3",
+      "group": "outer",
+      "name": "Neptune"
+    }
+  ],
+  "red_line": "数学自洽 != 实验证实；不宣称攻破统一场论；不宣称发现新方程；不宣称独立实验预言；未被满足 != 不可满足；四力统一未证。",
+  "relation_to_first_volume": "同一审计第二册，与 ROOTV128V129 第一册不相加，不构成新的独立攻击面",
+  "target": "ROOT V128 原文五式 + §3 可辨识性断言 + §4 检验清单（可算部分）",
+  "title": "ROOT V128 补册：原文逐式核对 + 外行星扩展 + 量纲自动验证 · 可算审计",
+  "v128_clause_checklist": {
+    "done": 4,
+    "in_material_sec4": [
+      {
+        "item": "水星近日点进动",
+        "status": "第一册 G7 已做（GR 正对照 42.9805952）"
+      },
+      {
+        "item": "金星、地球、火星联合约束",
+        "status": "第一册 G7 已做（四内行星 15 格）"
+      },
+      {
+        "item": "木星至海王星检验远距离变化",
+        "status": "本册 H3 已做（新增 4 外行星）"
+      },
+      {
+        "item": "月球激光测距检验长期漂移",
+        "status": "未做：需 LLR 一手时序数据，本册不伪造"
+      },
+      {
+        "item": "太阳质量变化与 G 漂移区分",
+        "status": "第一册 G6 已做（维数计数 + 翻转门槛）"
+      },
+      {
+        "item": "ROOT 螺旋场推导独立耦合参数",
+        "status": "未做：来料未给出该推导，本册不能代推"
+      },
+      {
+        "item": "量纲和守恒律自动验证",
+        "status": "本册 H4 已做（量纲）；守恒律来料未给，未做"
+      }
+    ],
+    "partial_or_open": 3
+  },
+  "verdict": "ROOTV128B-CLAUSE-AUDIT--KAPPA-CLOSED-FORM-IS-EXACT-NOT-EXPANDED--TWO-PI-ONE-MINUS-KAPPA-OVER-N-IS-FIRST-ORDER-ONLY--OUTER-PLANETS-EXTEND-TO-NEPTUNE--DIMENSIONAL-HOMOGENEITY-PASSES-FORCES-ALPHA-DIMENSIONLESS--JACOBIAN-RANK-2-IFF-DISTINCT-SEMIMAJOR-AXES--LAMBDA-INF-MAKES-RANK-1--FIT-NOT-EXECUTED--UFT-NOT-BROKEN--NEW-PREDICTION-0",
+  "verdict_type": "clause-by-clause verification / outer-planet extension / dimensional analysis"
+}

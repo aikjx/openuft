@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法联盟 · ROOT V128+V129 Yukawa 第五力与轨道可辨识性可算审计 · 2026-11-21</title>
+<style>
+  :root{--bg:#f7f8fa;--panel:#fff;--ink:#1a2230;--sub:#5a6675;--line:#dfe3ea;
+        --accent:#2540a6;--ok:#137a4b;--okbg:#e7f6ee;--neg:#a12a2a;--negbg:#fdecec;
+        --warn:#8a5a00;--warnbg:#fff6e0;--code:#0f2d5c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.65;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1140px;margin:0 auto;padding:34px 22px 70px}
+  header{border-left:5px solid var(--accent);padding:6px 0 6px 18px;margin-bottom:26px}
+  h1{font-size:24px;margin:0 0 6px;line-height:1.35}
+  .meta{color:var(--sub);font-size:13px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:20px 22px;margin-bottom:18px}
+  h2{font-size:18px;margin:0 0 14px;color:var(--accent)}
+  p{margin:8px 0}
+  .stat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 2px}
+  .scard{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .scard .n{font-size:22px;font-weight:700;color:var(--accent)}
+  .scard .l{font-size:12px;color:var(--sub);margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.3px}
+  th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+  th{background:#f3f5f9;color:var(--sub);font-weight:600}
+  td.num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--code);white-space:nowrap;font-size:12.4px}
+  .vcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.4px;color:var(--code);
+         background:#eef1f7;padding:9px 11px;border-radius:6px;word-break:break-all;margin-top:8px}
+  .note{background:var(--warnbg);border-left:4px solid #d8a11a;padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#5a4200;margin:12px 0}
+  .neg{background:var(--negbg);border-left:4px solid var(--neg);padding:10px 14px;
+       border-radius:6px;font-size:13.5px;color:#7a2020;margin:12px 0}
+  .good{background:var(--okbg);border-left:4px solid var(--ok);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#0d5636;margin:12px 0}
+  .formula{background:#f3f5f9;border-radius:7px;padding:10px 13px;font-size:13.6px;color:var(--code);
+           font-family:ui-monospace,Menlo,Consolas,monospace;overflow-x:auto;margin:10px 0}
+  .src{font-size:12px;color:var(--sub)}
+  .src a{color:var(--accent);text-decoration:none;border-bottom:1px dotted #9aa8c4}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:820px){.two{grid-template-columns:1fr}.stat{grid-template-columns:repeat(2,1fr)}}
+  .tag{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:20px;
+       background:#eef1f7;color:var(--sub);margin-left:6px}
+  footer{text-align:center;color:var(--sub);font-size:12.5px;margin-top:26px}
+  .axis{font-size:11.5px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>ROOT V128+V129 · 螺旋引力场 / Yukawa 第五力 / 轨道残差可辨识性<br>可算审计</h1>
+  <div class="meta">算法联盟 · 2026-11-21 · 非判定册，不占 RID，不入 README，不与 TUFT 链相加 ·
+    机核 8 门全过 · 幂等 SHA-256 e4107d25f99b1432…</div>
+</header>
+
+<section>
+  <div class="stat">
+    <div class="scard"><div class="n">8 / 8</div><div class="l">门禁全过</div></div>
+    <div class="scard"><div class="n">4 路</div><div class="l">进动公式互证</div></div>
+    <div class="scard"><div class="n">0</div><div class="l">任意偏心率推广的新意</div></div>
+    <div class="scard"><div class="n">11 / 15</div><div class="l">参数格被星历排除</div></div>
+  </div>
+  <div class="note">来料自述边界，本册一条不越：<b>「属于已知 Yukawa 第五力模型的弱耦合近圆轨道结果，不是已经证明的 ROOT 原创统一场方程」</b>；「没有证明 G 在变化，也没有证明螺旋运动是四种基本力的共同本源」；V129 裁定表：<b>实际 DE 星历联合拟合：尚未执行</b>；<b>从螺旋唯一推导四力：尚未证明</b>。</div>
+</section>
+
+<section>
+  <h2>一、审计对象：三行公式，七个问题</h2>
+  <div class="formula">
+Φ(r) = −GM/r · (1 + α<sub>Y</sub> e<sup>−ρ</sup>)　　　g(r) ≡ (1+ρ) e<sup>−ρ</sup>　　　ρ = r/λ
+F(r) = GM/r² · [ 1 + α<sub>Y</sub> g(r) ]　　　　μ(r) ≡ GM[1 + α<sub>Y</sub> g(r)]
+Ω² = μ/r³　　　κ²/Ω² = 1 + r μ′/μ = 1 − α<sub>Y</sub>ρ²e<sup>−ρ</sup> / (1+α<sub>Y</sub>g)
+  </div>
+  <p class="axis">G1 力是否真是 −Φ′？　G2 Ω、κ 闭式是否可靠？　G3 V128 近圆公式是什么身份？　G4 V129 任意偏心积分是什么身份？　G5 λ→∞ 极限是什么？　G6 Ġ/Ṁ 退化有多硬？　G7 真实星历把这些参数压到哪里？</p>
+</section>
+
+<section>
+  <h2>二、G1 / G2：结构与频率，两路复算</h2>
+  <table>
+    <tr><th>门</th><th>两路</th><th>最大相对偏离</th><th>极限/负对照</th></tr>
+    <tr><td>G1 力 = −Φ′</td><td>解析闭式 vs 三级 Richardson 中心差分（108 个 (r,λ,α) 点）</td>
+        <td class="num">4.6271e-28</td><td>α=0 时与 GM/r² 逐位相等；漏 (1+ρ) 因子偏 <b>2.09e-2</b>，被检出</td></tr>
+    <tr><td>G2 Ω²、κ²</td><td>解析 1+rμ′/μ vs 数值 (1/r³)d(r⁴Ω²)/dr</td>
+        <td class="num">3.5027e-29</td><td>α=0 时 κ²/Ω²=1 精确；α=1e-9 修正量 <b>−1.193e-10</b>（负号成立）</td></tr>
+  </table>
+  <div class="good">修正为负 ⇒ κ &lt; Ω ⇒ 顺行附加进动，与 GR 同向。符号定了，后文不能翻转。</div>
+</section>
+
+<section>
+  <h2>三、G3：V128 近圆公式是一阶项（斜率收敛比 → 2）</h2>
+  <p>判据对象取<b>斜率</b> Δϖ<sub>ex</sub>/α，而不是 Δϖ 的相对偏差——后者在领先阶是 −g + ¾A 的部分抵消，是 O(1) 量之差，对高阶项过敏，属对象错位。</p>
+  <table>
+    <tr><th>α</th><th>Δϖ<sub>ex</sub>/α</th><th>偏离 πA</th><th>相邻比值</th></tr>
+    <tr><td class="num">1e-2</td><td class="num">1.692149085908</td><td class="num">3.722790e-4</td><td>—</td></tr>
+    <tr><td class="num">5e-3</td><td class="num">1.691833403368</td><td class="num">1.856524e-4</td><td class="num">2.0052</td></tr>
+    <tr><td class="num">2.5e-3</td><td class="num">1.691676180054</td><td class="num">9.270439e-5</td><td class="num">2.0026</td></tr>
+    <tr><td class="num">1e-3</td><td class="num">1.691582043844</td><td class="num">3.705252e-5</td><td class="num">2.5019（α 比 2.5，符合）</td></tr>
+  </table>
+  <p>πA = <b>1.691519368786</b>。偏离逐次精确减半 ⇒ 斜率线性收敛到 πA ⇒ <b>V128 公式确为精确式的一阶项</b>。抵消系数实测 −3.70525213e-2 vs 解析预言 −3.70330312e-2，相对差 5.3e-4。</p>
+  <div class="note">副产品比「一阶」更强：正因为 O(α) 项几乎抵消，该公式精度远优于一阶——α 要到 <b>0.23983</b> 相对误差才达 1%。这既解释了它数值上「看起来很好」，也说明<b>不能用数值好论证物理对</b>。</div>
+</section>
+
+<section>
+  <h2>四、G4：V129 任意偏心积分 = 已发表 I₁ 闭式（四路互证，新意 0）</h2>
+  <div class="formula">Δϖ<sub>129</sub> = (α/e) ∫₀<sup>2π</sup> (1 + r(f)/λ) e<sup>−r(f)/λ</sup> cos f df　　r(f) = a(1−e²)/(1+e cos f)</div>
+  <table>
+    <tr><th>路</th><th>方法</th><th>结果</th></tr>
+    <tr><td>A</td><td>数值求积（Simpson + Richardson）</td><td>基准</td></tr>
+    <tr><td>B</td><td>已发表闭式：2πα a√(1−e²)/(eλ) · e<sup>−a/λ</sup> · I₁(ae/λ)</td><td>与 A <b>逐点相等</b></td></tr>
+    <tr><td>C</td><td>e → 0 归约到 V128 公式</td><td>偏离严格 ∝ e²</td></tr>
+    <tr><td>D</td><td>Binet 方程 RK4 直接量近点角（独立于 Gauss 与 Bessel）</td><td>与 B 一致，O(α) 修正可分辨</td></tr>
+  </table>
+  <table>
+    <tr><th>e</th><th>V129 积分</th><th>已发表 I₁ 闭式</th><th>相对差</th></tr>
+    <tr><td class="num">0.01</td><td class="num">3.749760812582e-4</td><td class="num">3.749760812582e-4</td><td class="num">6.7e-58</td></tr>
+    <tr><td class="num">0.2056</td><td class="num">4.300100464442e-4</td><td class="num">4.300100464442e-4</td><td class="num">5.6e-59</td></tr>
+    <tr><td class="num">0.4</td><td class="num">6.040417027137e-4</td><td class="num">6.040417027137e-4</td><td class="num">1.3e-58</td></tr>
+    <tr><td class="num">0.6</td><td class="num">9.606530433655e-4</td><td class="num">9.606530433655e-4</td><td class="num">6.2e-60</td></tr>
+  </table>
+  <p>C 路（V128 公式为 e→0 极限）：3.3871e-2 (e=0.1) → 3.3583e-4 → 3.3580e-6 → 3.3580e-8 → 3.3580e-10 (e=1e-5)，<b>严格按 e² 下降</b>。这给出「近圆」的定量含义：误差 ≈ 3.4e-2 (e/0.1)²。</p>
+  <p>D 路：Δϖ<sub>Binet</sub> 与闭式相差 1.8276e-3 (α=1e-2)，该差除以 α 恒为 0.182764 / 0.182581 / 0.182490（离散度 1.5e-3）⇒ 差是 O(α²) 二阶项。</p>
+  <div class="neg"><b>定价</b>：正确性 = 1（四路互证），<b>新意 = 0</b>。任意偏心率的 Yukawa 进动早有一阶精确闭式（Iorio 2012b；Deng &amp; Xie, RAA 14 (2014) 2, 式(4)）。V129 用积分形式重写了它，把 e→0 归约当自洽检验——这是复习，不是发现。<b>换名／换写法不是新方程。</b></div>
+</section>
+
+<section>
+  <h2>五、G5：λ→∞ 是纯粹的 GM 重标定</h2>
+  <table>
+    <tr><th>λ/a</th><th>Δϖ（rad/圈）</th><th>渐近 παa²/λ²</th><th>比值</th><th>μ<sub>eff</sub>/GM</th></tr>
+    <tr><td class="num">10</td><td class="num">2.78202965e-2</td><td class="num">3.07445576e-2</td><td class="num">0.90489</td><td class="num">1.9953211598</td></tr>
+    <tr><td class="num">100</td><td class="num">3.04386603e-4</td><td class="num">3.07445576e-4</td><td class="num">0.99005</td><td class="num">1.9999503321</td></tr>
+    <tr><td class="num">1000</td><td class="num">3.07138286e-6</td><td class="num">3.07445576e-6</td><td class="num">0.99900</td><td class="num">1.9999995003</td></tr>
+    <tr><td class="num">10000</td><td class="num">3.07414833e-8</td><td class="num">3.07445576e-8</td><td class="num">0.99990</td><td class="num">1.9999999950</td></tr>
+  </table>
+  <p>log-log 斜率末值 <b>−1.999609</b> ⇒ Δϖ ∝ λ⁻² → 0；同时 μ<sub>eff</sub>/GM → 1+α（末端 1.9999999950，与 2 相对差 2.4998e-9）。纯 G 重标定给 κ²/Ω² = 1，进动<b>精确为 0</b>。</p>
+  <div class="neg">两条同时成立 ⇒ 大 λ 下 Yukawa 退化为 GM 的常数重标定，而这个 GM 恰恰由同一批轨道数据反推。<b>参数被自己的观测吸收 ⇒ 该区不可反驳。不可反驳不是被证实。</b></div>
+</section>
+
+<section>
+  <h2>六、G7：真实星历把参数压到哪里</h2>
+  <svg viewBox="0 0 680 300" width="100%" style="max-width:680px;display:block;margin:6px auto 2px">
+    <text x="8" y="16" font-size="12.5" fill="#5a6675">预测进动（4 行星取最大，arcsec/世纪）对地板 1e-3 的比值；红=被排除，绿=存活</text>
+    <!-- grid -->
+    <g font-family="ui-monospace,Menlo,Consolas,monospace">
+      <!-- column headers -->
+      <text x="196" y="42" font-size="11.5" fill="#5a6675" text-anchor="middle">α = 1</text>
+      <text x="370" y="42" font-size="11.5" fill="#5a6675" text-anchor="middle">α = 1e−3</text>
+      <text x="544" y="42" font-size="11.5" fill="#5a6675" text-anchor="middle">α = 1.3e−9</text>
+      <!-- row labels -->
+      <text x="182" y="66" font-size="11" fill="#1a2230" text-anchor="end">0.18 AU</text>
+      <text x="182" y="110" font-size="11" fill="#1a2230" text-anchor="end">1 AU</text>
+      <text x="182" y="154" font-size="11" fill="#1a2230" text-anchor="end">10 AU</text>
+      <text x="182" y="198" font-size="11" fill="#1a2230" text-anchor="end">1e3 AU</text>
+      <text x="182" y="242" font-size="11" fill="#1a2230" text-anchor="end">2.29e5 AU</text>
+      <!-- cells row1 -->
+      <g>
+        <rect x="196" y="50" width="150" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="271" y="71" font-size="11.5" fill="#a12a2a" text-anchor="middle">1.453e+8</text>
+        <rect x="370" y="50" width="150" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="445" y="71" font-size="11.5" fill="#a12a2a" text-anchor="middle">1.453e+5</text>
+        <rect x="544" y="50" width="128" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="608" y="71" font-size="11.5" fill="#a12a2a" text-anchor="middle">0.1888</text>
+      </g>
+      <!-- row2 -->
+      <g>
+        <rect x="196" y="94" width="150" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="271" y="115" font-size="11.5" fill="#a12a2a" text-anchor="middle">2.681e+7</text>
+        <rect x="370" y="94" width="150" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="445" y="115" font-size="11.5" fill="#a12a2a" text-anchor="middle">2.681e+4</text>
+        <rect x="544" y="94" width="128" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="608" y="115" font-size="11.5" fill="#a12a2a" text-anchor="middle">0.03486</text>
+      </g>
+      <!-- row3 -->
+      <g>
+        <rect x="196" y="138" width="150" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="271" y="159" font-size="11.5" fill="#a12a2a" text-anchor="middle">6.838e+5</text>
+        <rect x="370" y="138" width="150" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="445" y="159" font-size="11.5" fill="#a12a2a" text-anchor="middle">683.8</text>
+        <rect x="544" y="138" width="128" height="34" rx="6" fill="#e7f6ee" stroke="#a9d8c0"/>
+        <text x="608" y="159" font-size="11.5" fill="#137a4b" text-anchor="middle">8.89e−4</text>
+      </g>
+      <!-- row4 -->
+      <g>
+        <rect x="196" y="182" width="150" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="271" y="203" font-size="11.5" fill="#a12a2a" text-anchor="middle">79.51</text>
+        <rect x="370" y="182" width="150" height="34" rx="6" fill="#fdecec" stroke="#e8b6b6"/>
+        <text x="445" y="203" font-size="11.5" fill="#a12a2a" text-anchor="middle">0.07951</text>
+        <rect x="544" y="182" width="128" height="34" rx="6" fill="#e7f6ee" stroke="#a9d8c0"/>
+        <text x="608" y="203" font-size="11.5" fill="#137a4b" text-anchor="middle">1.03e−7</text>
+      </g>
+      <!-- row5 -->
+      <g>
+        <rect x="196" y="226" width="150" height="34" rx="6" fill="#fff6e0" stroke="#e0c07a"/>
+        <text x="271" y="247" font-size="11.5" fill="#8a5a00" text-anchor="middle">1.515e−3 临界</text>
+        <rect x="370" y="226" width="150" height="34" rx="6" fill="#e7f6ee" stroke="#a9d8c0"/>
+        <text x="445" y="247" font-size="11.5" fill="#137a4b" text-anchor="middle">1.515e−6</text>
+        <rect x="544" y="226" width="128" height="34" rx="6" fill="#e7f6ee" stroke="#a9d8c0"/>
+        <text x="608" y="247" font-size="11.5" fill="#137a4b" text-anchor="middle">1.97e−12</text>
+      </g>
+      <text x="196" y="282" font-size="11" fill="#5a6675">行：作用程 λ（2.29e5 AU = INPOP19a 99.7% 下界）　列：耦合强度 α</text>
+      <text x="196" y="296" font-size="11" fill="#5a6675">15 格中 11 格超过地板 1e−3 ⇒ 被排除</text>
+    </g>
+  </svg>
+  <p><b>正对照</b>：同一套机器算 GR 水星进动 = <b>42.9805952</b> arcsec/世纪（教科书 42.98），通过 ⇒ 机器量的就是进动。</p>
+  <p><b>独立收敛点</b>：二分求出「α=1 时水星进动降到地板以下」的 λ = <b>1.98632e5 AU</b>；INPOP19a 99.7% 下界 3.43e13 km = <b>2.29281e5 AU</b>。相对差 <b>13.4%</b>。</p>
+  <div class="good">两条完全不同的观测渠道（本册近日点算式 vs INPOP19a 测距/多普勒残差）独立指向同一量级的可测性边界。这是<b>一致性观察，不是互相证明</b>。</div>
+  <div class="neg">排除在<b>可测</b>处最强；存活窗口（λ ≳ 2e5 AU）恰好是<b>进动落到地板、且模型退化为 GM 常数重标定</b>的地方。<b>存活区与不可反驳区重合。</b></div>
+</section>
+
+<section>
+  <h2>七、G6：Ġ/Ṁ 的退化是维数计数</h2>
+  <div class="formula">μ = G M　⇒　μ̇/μ = Ġ/G + Ṁ/M　（一方程，两未知量）</div>
+  <table>
+    <tr><th>分裂</th><th>Ġ/G</th><th>Ṁ/M</th><th>和</th><th>100 年后 lnμ 相对变化</th></tr>
+    <tr><td>只有 Ġ</td><td class="num">1.0e-13</td><td class="num">0</td><td class="num">1.0e-13</td><td class="num">1.00000000e-11</td></tr>
+    <tr><td>只有 Ṁ</td><td class="num">0</td><td class="num">1.0e-13</td><td class="num">1.0e-13</td><td class="num">1.00000000e-11</td></tr>
+    <tr><td>各半</td><td class="num">5.0e-14</td><td class="num">5.0e-14</td><td class="num">1.0e-13</td><td class="num">1.00000000e-11</td></tr>
+    <tr><td>三倍半 + 负</td><td class="num">1.5e-13</td><td class="num">−5.0e-14</td><td class="num">1.0e-13</td><td class="num">1.00000000e-11</td></tr>
+  </table>
+  <p>四个模型的可观测量差<b>精确为 0</b>（不是"很小"，是逐位相同）。翻转条件（定量）：外部独立 Ġ/G 先验宽度 δ 能分裂，当且仅当 <b>δ &lt; |s|</b>。取 δ=1e-12 不可分裂；取 δ=1e-14 可分裂 ⇒ 判词翻转。</p>
+  <div class="note">属 IDENTITY 类，<b>不承重</b>。V129 的「证明不可辨识」应降格为「在当前观测量与当前精度下不可辨识」——<b>未被满足 ≠ 不可满足</b>。</div>
+</section>
+
+<section>
+  <h2>八、外部一手 / 本轮勘误 / 红线</h2>
+  <table>
+    <tr><th>项</th><th>一手出处</th></tr>
+    <tr><td>Yukawa 作用程与强度上界</td><td class="src"><a href="https://arxiv.org/abs/0708.1080">Iorio, arXiv:0708.1080</a>（JHEP 10 (2007) 041）：λ ≲ 0.18 AU（任意 α）；Mars α ≲ 1.3e−9</td></tr>
+    <tr><td>行星历表对 Yukawa 的抑制约束</td><td class="src"><a href="https://arxiv.org/abs/2006.12304">Bernus et al., arXiv:2006.12304</a>（PRD 102, 021501）：λ<sub>g</sub> &gt; 3.93e13 km (90% CL)、&gt; 3.43e13 km (99.7% CL)</td></tr>
+    <tr><td>任意偏心率进动闭式</td><td class="src"><a href="https://doi.org/10.1088/1674-4527/14/2/002">Deng &amp; Xie, RAA 14 (2014) 2, 式(4)</a>：含 I₁ 的一阶精确闭式</td></tr>
+  </table>
+  <div class="note"><b>本轮勘误（如实登记）</b>：3.43e13 km = <b>2.29281e5 AU = 1.11159 pc</b>，不是「约 229 AU」——检索阶段曾差 10³ 倍。机核内设 erratum 字段（读数 True）把换算钉死。与项目已记录的「dex 端点错选」同族：<b>读数出错不是数据问题，是对象错位</b>。</div>
+  <div class="neg">数学自洽 ≠ 实验证实；不宣称攻破统一场论；不宣称发现新方程；不宣称独立实验预言；未被满足 ≠ 不可满足；四力统一未证。<br>
+  本册<b>未执行</b> DE 星历联合拟合；判别地板 1e−3 arcsec/世纪是<b>输入参数</b>，非本册发现。</div>
+  <p style="font-size:12.5px;color:var(--sub)">复现：python -c "import glob,runpy; h=glob.glob('openuft/**/_alg_rootv128v129_yukawa_ephemeris_audit_recompute.py',recursive=True); assert len(h)==1; runpy.run_path(h[0],run_name='__main__')"　|　19.8 s/次　|　幂等 SHA-256 e4107d25f99b1432… 逐字节相等　|　README 零写入（源码无写路径）</p>
+</section>
+
+<footer>算法联盟 · ROOT V128+V129 联合册 · 2026-11-21 · 非判定册，不与 TUFT 链相加</footer>
+</div>
+</body>
+</html>

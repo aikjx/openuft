@@ -1,0 +1,796 @@
+{
+  "boundary": [
+    "本册不执行真实 DE 星历联合拟合：所有 (alpha,lam) 判定基于解析式 + 已发表边界值",
+    "判别地板 1e-3 arcsec/cy 是输入参数，非本册发现；不据此做卡方检验",
+    "V129 积分与已发表 I1 闭式相等 => 该推广新意 0；正确性已机读验证",
+    "lam >> a 区不可反驳，不等于被证实；未排除 != 已确认",
+    "1e-3~1e-9 的 alpha 上界依赖 EPM2004 单一来源补充进动（Iorio 2007 自述需他组复核）"
+  ],
+  "constants": {
+    "AU_m": "1.4959787070E+11",
+    "GM_Sun_m3s2": "1.327124400180E+20",
+    "arcsec_per_rad": "2.062648062471E+5",
+    "c_m_s": "2.997924580E+8",
+    "floor_arcsec_per_century": "1.00E-3",
+    "tol_deriv": "1.00E-14",
+    "tol_id": "1.00E-20",
+    "tol_quad": "1.00E-30"
+  },
+  "convention": "SI 内部计算；AU/arcsec 仅用于与外部星历对照；alpha_Y 与 lam 无量纲化后引入",
+  "date": "2026-11-21",
+  "discipline": [
+    "两路复算：解析闭式 vs Richardson 数值微分 / 数值求积 vs 已发表闭式 / Binet ODE",
+    "IDENTITY 类（维数计数、定义重排）单列不承重",
+    "负对照：漏 (1+r/lam) 因子必须被检出",
+    "正对照：GR 对 Mercury 进动须复现 42.98 arcsec/cy",
+    "门限先定后跑，未按数据放宽",
+    "外部一手来源逐条给 https URL",
+    "无写死 ok：AST 级禁用字面量",
+    "幂等：两次运行 JSON 逐字节相同",
+    "不自盖章：gate 全过 != 有物理内容",
+    "来料自述未完成项（DE 联合拟合、四力唯一推导）原样保留"
+  ],
+  "external": {
+    "all_https": true,
+    "material_gave_source": true,
+    "note": "外部数字只登记不重拟合；本册未执行 DE 星历联合拟合（来料亦自述未执行）。",
+    "sources": [
+      {
+        "cite": "Iorio, JHEP 10 (2007) 041",
+        "claim": "lam <~ 0.18 AU（任意 alpha）；Mars alpha <~ 1.3e-9；两者与零相容",
+        "id": "iorio2007",
+        "url": "https://arxiv.org/abs/0708.1080"
+      },
+      {
+        "cite": "Bernus et al., PRD 102 (2020) 021501",
+        "claim": "lam_g > 3.93e13 km (90%CL)；> 3.43e13 km (99.7%CL)；lam/sqrt(-alpha) > 3.02e13 km (99.7%CL)",
+        "id": "inpop19a",
+        "url": "https://arxiv.org/abs/2006.12304"
+      },
+      {
+        "cite": "Deng & Xie, RAA 14 (2014) 2, eq.(4)",
+        "claim": "任意偏心率 Yukawa 进动闭式：omega_dot = alpha n a sqrt(1-e^2)/(e lam) exp(-a/lam) I1(a e/lam)",
+        "id": "dengxie2014",
+        "url": "https://doi.org/10.1088/1674-4527/14/2/002"
+      }
+    ]
+  },
+  "g1_force_two_route": {
+    "max_rel": "4.6271E-28",
+    "n_points": 108,
+    "negative_control_detected": true,
+    "negative_control_rel_dev": "2.0946E-2",
+    "newton_limit_rel": "0",
+    "note": "F(r)=GM/r^2[1+alpha(1+r/lam)e^{-r/lam}] 由 Phi 微分得；负对照（漏掉 (1+r/lam) 项）偏离 O(1)，判据有判别力。",
+    "ok": true,
+    "sign_convention": "F(r)=+Phi'(r)=GM/r^2[1+alpha(1+r/lam)e^{-r/lam}]（幅值，向内）",
+    "tolerance": "1.00E-14",
+    "worst_row": {
+      "F_analytic": "6.08037113E-3",
+      "F_richardson": "6.08037113E-3",
+      "alpha": "1.00E+0",
+      "lam_over_AU": "1.800000E-1",
+      "r_over_AU": "1.000000E+0",
+      "rel": "4.6271E-28"
+    }
+  },
+  "g2_frequency_two_route": {
+    "decrement_at_alpha1e9": "1.193185E-10",
+    "decrement_sign_negative": true,
+    "kepler_limit_rel": "0",
+    "max_rel": "3.5027E-29",
+    "note": "kap^2/Om^2 = 1 + r mu'/mu = 1 - alpha (r/lam)^2 e^{-r/lam}/[1+alpha g]；g'<0 且 mu>0 => 修正为负 => 顺行附加进动（与 GR 同向）。",
+    "ok": true,
+    "rows": [
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "9.9999999946E-1",
+        "k2o2_numeric": "9.9999999946E-1",
+        "lam_over_AU": "0.18",
+        "rel": "1.1132E-39"
+      },
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9946177008E-1",
+        "k2o2_numeric": "9.9946177008E-1",
+        "lam_over_AU": "0.18",
+        "rel": "1.1134E-33"
+      },
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "6.0606359895E-1",
+        "k2o2_numeric": "6.0606359895E-1",
+        "lam_over_AU": "0.18",
+        "rel": "1.3439E-30"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "9.9999999988E-1",
+        "k2o2_numeric": "9.9999999988E-1",
+        "lam_over_AU": "0.18",
+        "rel": "1.3695E-39"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9988068450E-1",
+        "k2o2_numeric": "9.9988068450E-1",
+        "lam_over_AU": "0.18",
+        "rel": "1.3696E-33"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "8.8363065507E-1",
+        "k2o2_numeric": "8.8363065507E-1",
+        "lam_over_AU": "0.18",
+        "rel": "1.5115E-30"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "9.9999999998E-1",
+        "k2o2_numeric": "9.9999999998E-1",
+        "lam_over_AU": "0.18",
+        "rel": "3.4568E-38"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9998489851E-1",
+        "k2o2_numeric": "9.9998489851E-1",
+        "lam_over_AU": "0.18",
+        "rel": "3.4569E-32"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "9.8492854715E-1",
+        "k2o2_numeric": "9.8492854715E-1",
+        "lam_over_AU": "0.18",
+        "rel": "3.5027E-29"
+      },
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "9.9999999990E-1",
+        "k2o2_numeric": "9.9999999990E-1",
+        "lam_over_AU": "1.0",
+        "rel": "1.3029E-44"
+      },
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9989834701E-1",
+        "k2o2_numeric": "9.9989834701E-1",
+        "lam_over_AU": "1.0",
+        "rel": "1.3018E-38"
+      },
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "9.4760279617E-1",
+        "k2o2_numeric": "9.4760279617E-1",
+        "lam_over_AU": "1.0",
+        "rel": "7.0806E-36"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "9.9999999963E-1",
+        "k2o2_numeric": "9.9999999963E-1",
+        "lam_over_AU": "1.0",
+        "rel": "1.1633E-41"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9963239103E-1",
+        "k2o2_numeric": "9.9963239103E-1",
+        "lam_over_AU": "1.0",
+        "rel": "1.1628E-35"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "7.8805844238E-1",
+        "k2o2_numeric": "7.8805844238E-1",
+        "lam_over_AU": "1.0",
+        "rel": "8.5042E-33"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "9.9999999949E-1",
+        "k2o2_numeric": "9.9999999949E-1",
+        "lam_over_AU": "1.0",
+        "rel": "1.6787E-40"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9949438430E-1",
+        "k2o2_numeric": "9.9949438430E-1",
+        "lam_over_AU": "1.0",
+        "rel": "1.6786E-34"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "6.7360371233E-1",
+        "k2o2_numeric": "6.7360371233E-1",
+        "lam_over_AU": "1.0",
+        "rel": "1.6079E-31"
+      },
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "1.0000000000E+0",
+        "k2o2_numeric": "1.0000000000E+0",
+        "lam_over_AU": "10.0",
+        "rel": "2.0345E-52"
+      },
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9999855988E-1",
+        "k2o2_numeric": "9.9999855988E-1",
+        "lam_over_AU": "10.0",
+        "rel": "2.0324E-46"
+      },
+      {
+        "a_over_AU": "3.870989E-1",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "9.9927895721E-1",
+        "k2o2_numeric": "9.9927895721E-1",
+        "lam_over_AU": "10.0",
+        "rel": "1.0183E-43"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "9.9999999999E-1",
+        "k2o2_numeric": "9.9999999999E-1",
+        "lam_over_AU": "10.0",
+        "rel": "3.7323E-49"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9999096062E-1",
+        "k2o2_numeric": "9.9999096062E-1",
+        "lam_over_AU": "10.0",
+        "rel": "3.7286E-43"
+      },
+      {
+        "a_over_AU": "1.000000E+0",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "9.9546520412E-1",
+        "k2o2_numeric": "9.9546520412E-1",
+        "lam_over_AU": "10.0",
+        "rel": "1.8791E-40"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E-9",
+        "k2o2_analytic": "9.9999999998E-1",
+        "k2o2_numeric": "9.9999999998E-1",
+        "lam_over_AU": "10.0",
+        "rel": "1.0141E-47"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E-3",
+        "k2o2_analytic": "9.9998008519E-1",
+        "k2o2_numeric": "9.9998008519E-1",
+        "lam_over_AU": "10.0",
+        "rel": "1.0131E-41"
+      },
+      {
+        "a_over_AU": "1.523662E+0",
+        "alpha": "1.00E+0",
+        "k2o2_analytic": "9.8998017250E-1",
+        "k2o2_numeric": "9.8998017250E-1",
+        "lam_over_AU": "10.0",
+        "rel": "5.1489E-39"
+      }
+    ],
+    "tolerance": "1.00E-14"
+  },
+  "g3_v128_first_order": {
+    "A_factor": "5.3842733776E-1",
+    "alpha_at_1pct_deviation": "2.398299E-1",
+    "alpha_zero_both_exact_zero": true,
+    "cancellation_coefficient_empirical": "-3.70525213E-2",
+    "cancellation_coefficient_predicted": "-3.70330312E-2",
+    "cancellation_rel": "5.2629E-4",
+    "g_factor": "3.6678747210E-1",
+    "note": "斜率收敛比 ->2 证实 V128 公式是精确式的一阶项；又因 O(alpha) 项为 -g+3A/4 的部分抵消，该公式实际精度远优于一阶（alpha<0.24 时误差仍 <1%）。",
+    "ok": true,
+    "ratio_tends_to_2": true,
+    "rows": [
+      {
+        "alpha": "1e-2",
+        "exact": "1.692149085908E-2",
+        "exact_over_alpha": "1.692149085908E+0",
+        "first_order": "1.691519368786E-2",
+        "pi_times_A": "1.691519368786E+0",
+        "rel_dev_exact_vs_first": "3.722790E-4",
+        "slope_dev_from_piA": "3.722790E-4"
+      },
+      {
+        "alpha": "5e-3",
+        "exact": "8.459167016838E-3",
+        "exact_over_alpha": "1.691833403368E+0",
+        "first_order": "8.457596843932E-3",
+        "pi_times_A": "1.691519368786E+0",
+        "rel_dev_exact_vs_first": "1.856524E-4",
+        "slope_dev_from_piA": "1.856524E-4"
+      },
+      {
+        "alpha": "2.5e-3",
+        "exact": "4.229190450134E-3",
+        "exact_over_alpha": "1.691676180054E+0",
+        "first_order": "4.228798421966E-3",
+        "pi_times_A": "1.691519368786E+0",
+        "rel_dev_exact_vs_first": "9.270439E-5",
+        "slope_dev_from_piA": "9.270439E-5"
+      },
+      {
+        "alpha": "1e-3",
+        "exact": "1.691582043844E-3",
+        "exact_over_alpha": "1.691582043844E+0",
+        "first_order": "1.691519368786E-3",
+        "pi_times_A": "1.691519368786E+0",
+        "rel_dev_exact_vs_first": "3.705252E-5",
+        "slope_dev_from_piA": "3.705252E-5"
+      }
+    ],
+    "slope_convergence_ratios": [
+      "2.005248E+0",
+      "2.002628E+0",
+      "2.501972E+0"
+    ]
+  },
+  "g4_v129_arbitrary_e": {
+    "binet_dev_over_alpha_spread_rel": "1.5036E-3",
+    "binet_first_order_confirmed": true,
+    "binet_rows": [
+      {
+        "alpha": "1e-2",
+        "dev_over_alpha": "1.827641E-1",
+        "dvarpi_bessel": "4.300100464442E-3",
+        "dvarpi_binet": "4.307959503150E-3",
+        "rel_dev": "1.8276E-3"
+      },
+      {
+        "alpha": "5e-3",
+        "dev_over_alpha": "1.825810E-1",
+        "dvarpi_bessel": "2.150050232221E-3",
+        "dvarpi_binet": "2.152013024294E-3",
+        "rel_dev": "9.1291E-4"
+      },
+      {
+        "alpha": "2.5e-3",
+        "dev_over_alpha": "1.824897E-1",
+        "dvarpi_bessel": "1.075025116110E-3",
+        "dvarpi_binet": "1.075515568574E-3",
+        "rel_dev": "4.5622E-4"
+      }
+    ],
+    "limit_monotone": true,
+    "limit_rows": [
+      {
+        "V128_formula": "3.748501947387E-4",
+        "bessel": "3.875467992201E-4",
+        "e": "0.1",
+        "rel_dev": "3.3871E-2"
+      },
+      {
+        "V128_formula": "3.748501947387E-4",
+        "bessel": "3.749760812582E-4",
+        "e": "0.01",
+        "rel_dev": "3.3583E-4"
+      },
+      {
+        "V128_formula": "3.748501947387E-4",
+        "bessel": "3.748514534960E-4",
+        "e": "0.001",
+        "rel_dev": "3.3580E-6"
+      },
+      {
+        "V128_formula": "3.748501947387E-4",
+        "bessel": "3.748502073262E-4",
+        "e": "1e-4",
+        "rel_dev": "3.3580E-8"
+      },
+      {
+        "V128_formula": "3.748501947387E-4",
+        "bessel": "3.748501948645E-4",
+        "e": "1e-5",
+        "rel_dev": "3.3580E-10"
+      }
+    ],
+    "limit_smallest_e_dev": "3.3580E-10",
+    "max_rel_integral_vs_published": "6.7204E-58",
+    "negative_control_detected": true,
+    "negative_control_rel_dev": "8.0750E-1",
+    "note": "V129 积分与已发表 I1 闭式逐点相等 => 该「任意偏心率推广」新意 0（正确性可验证）；Binet ODE 第四路给出同一数值且 O(alpha) 修正可分辨。",
+    "ok": true,
+    "rows": [
+      {
+        "V129_integral": "3.749760812582E-4",
+        "e": "0.01",
+        "published_I1_closed": "3.749760812582E-4",
+        "rel": "6.7204E-58"
+      },
+      {
+        "V129_integral": "3.780038977972E-4",
+        "e": "0.05",
+        "published_I1_closed": "3.780038977972E-4",
+        "rel": "7.6719E-59"
+      },
+      {
+        "V129_integral": "4.300100464442E-4",
+        "e": "0.2056",
+        "published_I1_closed": "4.300100464442E-4",
+        "rel": "5.5813E-59"
+      },
+      {
+        "V129_integral": "6.040417027137E-4",
+        "e": "0.4",
+        "published_I1_closed": "6.040417027137E-4",
+        "rel": "1.2747E-58"
+      },
+      {
+        "V129_integral": "9.606530433655E-4",
+        "e": "0.6",
+        "published_I1_closed": "9.606530433655E-4",
+        "rel": "6.2458E-60"
+      }
+    ],
+    "tolerance_integral": "1.00E-30"
+  },
+  "g5_absorption_limit": {
+    "exponent_tends_to_minus2": true,
+    "log_log_exponents": [
+      "-1.960936E+0",
+      "-1.996092E+0",
+      "-1.999609E+0"
+    ],
+    "mu_eff_converges_to_1_plus_alpha": true,
+    "mu_eff_dev_from_1_plus_alpha_at_lam1e4a": "2.499833E-9",
+    "note": "lam>>a 时 dvarpi ∝ lam^-2 -> 0，而 mu_eff/GM -> 1+alpha。两者合起来 = Yukawa 退化为 GM 的重标定，被同一批轨道数据吸收 => 不可反驳。",
+    "ok": true,
+    "pure_g_rescaling_has_only_zero_precession_rel": "0",
+    "rows": [
+      {
+        "asymptotic_pi_a2_lam^-2": "3.07445576E-2",
+        "dvarpi_orb": "2.78202965E-2",
+        "lam_over_a": "10",
+        "mu_eff_over_GM": "1.9953211598E+0",
+        "ratio_to_asymptotic": "9.04885244E-1"
+      },
+      {
+        "asymptotic_pi_a2_lam^-2": "3.07445576E-4",
+        "dvarpi_orb": "3.04386603E-4",
+        "lam_over_a": "100",
+        "mu_eff_over_GM": "1.9999503321E+0",
+        "ratio_to_asymptotic": "9.90050357E-1"
+      },
+      {
+        "asymptotic_pi_a2_lam^-2": "3.07445576E-6",
+        "dvarpi_orb": "3.07138286E-6",
+        "lam_over_a": "1000",
+        "mu_eff_over_GM": "1.9999995003E+0",
+        "ratio_to_asymptotic": "9.99000505E-1"
+      },
+      {
+        "asymptotic_pi_a2_lam^-2": "3.07445576E-8",
+        "dvarpi_orb": "3.07414833E-8",
+        "lam_over_a": "10000",
+        "mu_eff_over_GM": "1.9999999950E+0",
+        "ratio_to_asymptotic": "9.99900005E-1"
+      }
+    ]
+  },
+  "g6_gdot_mdot_degeneracy": {
+    "Mdot_window_width_equals_prior_width": true,
+    "delta_needed_to_separate": "1.00E-13",
+    "exactly_degenerate": true,
+    "flip_works": true,
+    "max_observable_difference": "0",
+    "note": "mu_dot/mu 只含和 => 一方程两未知量（维数计数，IDENTITY 类，非新定理）。翻转条件是外部 Gdot/G 先验宽度 delta < |s|：delta=1e-12 不可分裂，delta=1e-14 可分裂 => 结构性退化，但不是原理上不可辨识。",
+    "ok": true,
+    "prior_width_loose_hypothetical": "1.00E-12",
+    "prior_width_tight_hypothetical": "1.00E-14",
+    "rows": [
+      {
+        "Gdot_over_G": "1.0000E-13",
+        "Mdot_over_M": "0",
+        "ln_mu_rel_at_100yr": "1.00000000E-11",
+        "split": "Gdot_only",
+        "sum": "1.0000E-13"
+      },
+      {
+        "Gdot_over_G": "0",
+        "Mdot_over_M": "1.0000E-13",
+        "ln_mu_rel_at_100yr": "1.00000000E-11",
+        "split": "Mdot_only",
+        "sum": "1.0000E-13"
+      },
+      {
+        "Gdot_over_G": "5.0000E-14",
+        "Mdot_over_M": "5.0000E-14",
+        "ln_mu_rel_at_100yr": "1.00000000E-11",
+        "split": "half_half",
+        "sum": "1.0000E-13"
+      },
+      {
+        "Gdot_over_G": "1.5000E-13",
+        "Mdot_over_M": "-5.0000E-14",
+        "ln_mu_rel_at_100yr": "1.00000000E-11",
+        "split": "threehalves_neg",
+        "sum": "1.0000E-13"
+      }
+    ],
+    "s_value": "1.00E-13",
+    "separable_with_loose_prior": false,
+    "separable_with_tight_prior": true
+  },
+  "g7_ephemeris_adjudication": {
+    "GR_positive_control_expected": "42.98",
+    "GR_positive_control_mercury_arcsec_cy": "4.29805952E+1",
+    "GR_positive_control_ok": true,
+    "cells": [
+      {
+        "alpha": "1",
+        "dvarpi_Earth_arcsec_cy": "7.738953E+6",
+        "dvarpi_Mars_arcsec_cy": "5.595636E+5",
+        "dvarpi_Mercury_arcsec_cy": "1.452626E+8",
+        "dvarpi_Venus_arcsec_cy": "3.058469E+7",
+        "excluded": true,
+        "lam_label": "0.18",
+        "lam_src": "Iorio2007 lam_upper",
+        "max_arcsec_cy": "1.452626E+8",
+        "ratio_to_floor": "1.452626E+11"
+      },
+      {
+        "alpha": "1e-3",
+        "dvarpi_Earth_arcsec_cy": "7.738953E+3",
+        "dvarpi_Mars_arcsec_cy": "5.595636E+2",
+        "dvarpi_Mercury_arcsec_cy": "1.452626E+5",
+        "dvarpi_Venus_arcsec_cy": "3.058469E+4",
+        "excluded": true,
+        "lam_label": "0.18",
+        "lam_src": "Iorio2007 lam_upper",
+        "max_arcsec_cy": "1.452626E+5",
+        "ratio_to_floor": "1.452626E+8"
+      },
+      {
+        "alpha": "1.3e-9",
+        "dvarpi_Earth_arcsec_cy": "1.006064E-2",
+        "dvarpi_Mars_arcsec_cy": "7.274327E-4",
+        "dvarpi_Mercury_arcsec_cy": "1.888414E-1",
+        "dvarpi_Venus_arcsec_cy": "3.976009E-2",
+        "excluded": true,
+        "lam_label": "0.18",
+        "lam_src": "Iorio2007 lam_upper",
+        "max_arcsec_cy": "1.888414E-1",
+        "ratio_to_floor": "1.888414E+2"
+      },
+      {
+        "alpha": "1",
+        "dvarpi_Earth_arcsec_cy": "2.383568E+7",
+        "dvarpi_Mars_arcsec_cy": "1.739709E+7",
+        "dvarpi_Mercury_arcsec_cy": "2.681183E+7",
+        "dvarpi_Venus_arcsec_cy": "2.673549E+7",
+        "excluded": true,
+        "lam_label": "1.0",
+        "lam_src": "AU-scale",
+        "max_arcsec_cy": "2.681183E+7",
+        "ratio_to_floor": "2.681183E+10"
+      },
+      {
+        "alpha": "1e-3",
+        "dvarpi_Earth_arcsec_cy": "2.383568E+4",
+        "dvarpi_Mars_arcsec_cy": "1.739709E+4",
+        "dvarpi_Mercury_arcsec_cy": "2.681183E+4",
+        "dvarpi_Venus_arcsec_cy": "2.673549E+4",
+        "excluded": true,
+        "lam_label": "1.0",
+        "lam_src": "AU-scale",
+        "max_arcsec_cy": "2.681183E+4",
+        "ratio_to_floor": "2.681183E+7"
+      },
+      {
+        "alpha": "1.3e-9",
+        "dvarpi_Earth_arcsec_cy": "3.098638E-2",
+        "dvarpi_Mars_arcsec_cy": "2.261622E-2",
+        "dvarpi_Mercury_arcsec_cy": "3.485537E-2",
+        "dvarpi_Venus_arcsec_cy": "3.475614E-2",
+        "excluded": true,
+        "lam_label": "1.0",
+        "lam_src": "AU-scale",
+        "max_arcsec_cy": "3.485537E-2",
+        "ratio_to_floor": "3.485537E+1"
+      },
+      {
+        "alpha": "1",
+        "dvarpi_Earth_arcsec_cy": "5.862428E+5",
+        "dvarpi_Mars_arcsec_cy": "6.838088E+5",
+        "dvarpi_Mercury_arcsec_cy": "3.795678E+5",
+        "dvarpi_Venus_arcsec_cy": "5.126395E+5",
+        "excluded": true,
+        "lam_label": "10.0",
+        "lam_src": "10 AU",
+        "max_arcsec_cy": "6.838088E+5",
+        "ratio_to_floor": "6.838088E+8"
+      },
+      {
+        "alpha": "1e-3",
+        "dvarpi_Earth_arcsec_cy": "5.862428E+2",
+        "dvarpi_Mars_arcsec_cy": "6.838088E+2",
+        "dvarpi_Mercury_arcsec_cy": "3.795678E+2",
+        "dvarpi_Venus_arcsec_cy": "5.126395E+2",
+        "excluded": true,
+        "lam_label": "10.0",
+        "lam_src": "10 AU",
+        "max_arcsec_cy": "6.838088E+2",
+        "ratio_to_floor": "6.838088E+5"
+      },
+      {
+        "alpha": "1.3e-9",
+        "dvarpi_Earth_arcsec_cy": "7.621157E-4",
+        "dvarpi_Mars_arcsec_cy": "8.889514E-4",
+        "dvarpi_Mercury_arcsec_cy": "4.934381E-4",
+        "dvarpi_Venus_arcsec_cy": "6.664314E-4",
+        "excluded": false,
+        "lam_label": "10.0",
+        "lam_src": "10 AU",
+        "max_arcsec_cy": "8.889514E-4",
+        "ratio_to_floor": "8.889514E-1"
+      },
+      {
+        "alpha": "1",
+        "dvarpi_Earth_arcsec_cy": "6.472507E+1",
+        "dvarpi_Mars_arcsec_cy": "7.951220E+1",
+        "dvarpi_Mercury_arcsec_cy": "3.943931E+1",
+        "dvarpi_Venus_arcsec_cy": "5.506959E+1",
+        "excluded": true,
+        "lam_label": "1e3",
+        "lam_src": "1e3 AU",
+        "max_arcsec_cy": "7.951220E+1",
+        "ratio_to_floor": "7.951220E+4"
+      },
+      {
+        "alpha": "1e-3",
+        "dvarpi_Earth_arcsec_cy": "6.472507E-2",
+        "dvarpi_Mars_arcsec_cy": "7.951220E-2",
+        "dvarpi_Mercury_arcsec_cy": "3.943931E-2",
+        "dvarpi_Venus_arcsec_cy": "5.506959E-2",
+        "excluded": true,
+        "lam_label": "1e3",
+        "lam_src": "1e3 AU",
+        "max_arcsec_cy": "7.951220E-2",
+        "ratio_to_floor": "7.951220E+1"
+      },
+      {
+        "alpha": "1.3e-9",
+        "dvarpi_Earth_arcsec_cy": "8.414260E-8",
+        "dvarpi_Mars_arcsec_cy": "1.033659E-7",
+        "dvarpi_Mercury_arcsec_cy": "5.127110E-8",
+        "dvarpi_Venus_arcsec_cy": "7.159047E-8",
+        "excluded": false,
+        "lam_label": "1e3",
+        "lam_src": "1e3 AU",
+        "max_arcsec_cy": "1.033659E-7",
+        "ratio_to_floor": "1.033659E-4"
+      },
+      {
+        "alpha": "1",
+        "dvarpi_Earth_arcsec_cy": "1.232445E-3",
+        "dvarpi_Mars_arcsec_cy": "1.514800E-3",
+        "dvarpi_Mercury_arcsec_cy": "7.505148E-4",
+        "dvarpi_Venus_arcsec_cy": "1.048304E-3",
+        "excluded": true,
+        "lam_label": "2.293e5",
+        "lam_src": "INPOP19a lam_lower(99.7%)",
+        "max_arcsec_cy": "1.514800E-3",
+        "ratio_to_floor": "1.514800E+0"
+      },
+      {
+        "alpha": "1e-3",
+        "dvarpi_Earth_arcsec_cy": "1.232445E-6",
+        "dvarpi_Mars_arcsec_cy": "1.514800E-6",
+        "dvarpi_Mercury_arcsec_cy": "7.505148E-7",
+        "dvarpi_Venus_arcsec_cy": "1.048304E-6",
+        "excluded": false,
+        "lam_label": "2.293e5",
+        "lam_src": "INPOP19a lam_lower(99.7%)",
+        "max_arcsec_cy": "1.514800E-6",
+        "ratio_to_floor": "1.514800E-3"
+      },
+      {
+        "alpha": "1.3e-9",
+        "dvarpi_Earth_arcsec_cy": "1.602178E-12",
+        "dvarpi_Mars_arcsec_cy": "1.969239E-12",
+        "dvarpi_Mercury_arcsec_cy": "9.756692E-13",
+        "dvarpi_Venus_arcsec_cy": "1.362795E-12",
+        "excluded": false,
+        "lam_label": "2.293e5",
+        "lam_src": "INPOP19a lam_lower(99.7%)",
+        "max_arcsec_cy": "1.969239E-12",
+        "ratio_to_floor": "1.969239E-9"
+      }
+    ],
+    "convergence_note": "本册独立算出的「Mercury 进动降到地板以下」的 lam 与 INPOP19a 99.7% 下界 2.293e5 AU 落在同一量级（相对差见上），两者用不同可观测量，属一致性观察而非互相证明。",
+    "convergence_with_INPOP19a_rel": "1.3368E-1",
+    "floor_arcsec_cy": "1.00E-3",
+    "floor_note": "地板是输入参数（量级同 EPM2004 补充进动不确定度），非本册发现。",
+    "lam_unfalsifiable_AU": "1.98631571E+5",
+    "n_cells": 15,
+    "n_excluded": 11,
+    "ok": true,
+    "unit_check": {
+      "INPOP_90_AU": "2.62704274E+5",
+      "INPOP_99.7_AU": "2.29281338E+5",
+      "INPOP_99.7_km": "3.430000E+13",
+      "INPOP_99.7_pc": "1.11158730E+0",
+      "erratum_229AU_is_false": true,
+      "erratum_note": "3.43e13 km 换算为 2.293e5 AU（1.11 pc）；曾误记为约 229 AU，差 1e3 倍，本册如实登记勘误。"
+    }
+  },
+  "gates": {
+    "G1-force-equals-minus-dPhi-dr": true,
+    "G2-omega-kappa-two-route": true,
+    "G3-V128-is-first-order": true,
+    "G4-V129-integral-equals-published-bessel": true,
+    "G5-lambda-large-pure-G-rescaling": true,
+    "G6-Gdot-Mdot-degenerate": true,
+    "G7-ephemeris-adjudication": true,
+    "G8-no-hardcoded-ok": true
+  },
+  "guards": {
+    "checked_patterns": 2,
+    "no_hardcoded_ok": true
+  },
+  "kind": "external-material-computable-audit",
+  "n_gate_ok": 8,
+  "n_gate_total": 8,
+  "planets": [
+    {
+      "P_days": "8.79691000E+1",
+      "a_AU": "3.8709893000E-1",
+      "e": "2.05630690E-1",
+      "name": "Mercury"
+    },
+    {
+      "P_days": "2.24700800E+2",
+      "a_AU": "7.2333199000E-1",
+      "e": "6.77323000E-3",
+      "name": "Venus"
+    },
+    {
+      "P_days": "3.65256400E+2",
+      "a_AU": "1.0000001100E+0",
+      "e": "1.67102200E-2",
+      "name": "Earth"
+    },
+    {
+      "P_days": "6.86980000E+2",
+      "a_AU": "1.5236623100E+0",
+      "e": "9.34123300E-2",
+      "name": "Mars"
+    }
+  ],
+  "red_line": "数学自洽 != 实验证实；不宣称攻破统一场论；不宣称发现新方程；不宣称独立实验预言；未被满足 != 不可满足；四力统一未证。",
+  "target": "Yukawa 第五力 + 螺旋进动公式 + 任意偏心率积分 + G/M 可辨识性",
+  "title": "ROOT V128+V129：螺旋引力场 / Yukawa 第五力 / 轨道残差可辨识性 · 可算审计",
+  "verdict": "ROOTV128V129-AUDIT--YUKAWA-FORCE-EQUALS-MINUS-DPHI--KAPPA-ANALYTIC-EQUALS-NUMERIC--V128-IS-FIRST-ORDER-OF-EXACT--V129-INTEGRAL-EQUALS-PUBLISHED-BESSEL-I1--ARBITRARY-E-NOVELTY-0--LAMBDA-LARGE-IS-PURE-GM-RESCALE-UNFALSIFIABLE--GDOT-MDOT-ONE-EQUATION-TWO-UNKNOWNS--EPHEMERIS-EXCLUDES-WHERE-TESTABLE--FIT-NOT-EXECUTED--UFT-NOT-BROKEN--NEW-PREDICTION-0",
+  "verdict_type": "orbital-dynamics / fifth-force observability / identifiability"
+}

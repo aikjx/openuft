@@ -1,0 +1,180 @@
+================================================================================================
+ROOT 系列十一册跨册对账汇总 · 机核（11 门）
+================================================================================================
+kind    : cross-volume-reconciliation-ledger
+date    : 2026-11-21
+red_line: 数学自洽 != 实验证实；不宣称攻破统一场论，不宣称新方程或独立实验预言；四力统一未证。
+
+------------------------------------------------------------------------------------------------
+一、十一册机读总表（门数不相加）
+------------------------------------------------------------------------------------------------
+short          gate     bytes  verdict_tail
+rootv132       7/7      11365  UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv132b      6/6      11062  UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv132c      7/7      9458   UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv133       9/9      12082  UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv134       11/11    15058  UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv134sec8   11/11    12811  UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv77        5/5      8072   UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv79        4/4      10028  UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv83        5/5      6629   UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv85        7/7      16971  UFT-NOT-BROKEN--NEW-PREDICTION-0
+rootv88        5/5      9512   UFT-NOT-BROKEN--NEW-PREDICTION-0
+合计门账（仅作盘点，不作证据份数）: 77/77
+
+------------------------------------------------------------------------------------------------
+二、11 门逐条读数
+------------------------------------------------------------------------------------------------
+[XG1] ok=True
+   exp: 11/11 册 verdict 均以 UFT-NOT-BROKEN--NEW-PREDICTION-0 结尾；负对照（UFT-BROKEN / NEW-PREDICTION-1）必须被拒
+   act: n_books=11 n_tail_ok=11 neg_rej=True pos_acc=True
+   why: 盘点门（SELF-CENSUS）：判词是本链自己写的，判别力弱，只用来确认没有漏读/被改写的册，不作为外部证据。
+
+[XG10] ok=True
+   exp: 11 册 × 4 条核心纪律 = 44 项须全中（非判定册 / 不占RID / 不入README / 不回写既有产物）
+   act: books_full=11/11 core_items=44/44
+   why: 纪律一致性：11 册在 discipline 字段里都自报了四条核心边界，机器逐册核对，确认本系列确实按「审计而非判定」的定位产出。
+
+[XG11] ok=True
+   exp: 本文件零写死 ok 字面量；11-18 批三册各 1 处写死 ok 须按「文件+行号+门名」完整登记，行号须真指向该字面量，不得漏登或过期
+   act: self_hits=0 dirty={'rootv77': 1, 'rootv79': 1, 'rootv83': 1} missing=[] stale=[] bad_line=[] counted=3
+   why: 负读数必须显式登记：2026-11-18 批的 V77/V79/V83 各有一处把 ok 布尔写死在门字典里（守卫是 2026-11-21 批才引入的）。逐条核对：三处该门其余读数均支持该门通过，故不是伪造，但按「ok 须由读数驱动」的纪律属于瑕疵，必须登记而不是掩盖。
+
+[XG2] ok=True
+   exp: 路由A（各册自报 n_gate_ok/n_gate_total 求和）须等于路由B（逐门重数 ok 求和）；翻掉任一门的 ok 后两路必须分叉
+   act: routeA=77/77 routeB=77/77 victim=('rootv132', 'G1-eight-equations-are-unit-reductions') flipped_b=76 mismatch=[]
+   why: 门账两路机拼：自报字段与逐门重数必须逐册一致；负对照证明该判据能被单门改动推翻（非装饰）。
+
+[XG3] ok=True
+   exp: 每册须至少保留 1 门非恒等（承重）门（取两路并集的保守侧）；全恒等的合成册必须被判 NO-LOAD-BEARING
+   act: n_identity_data=6 n_identity_text=17 n_identity_union=17 n_known_theory=7 n_non_novel_union=24 n_novel_candidate=53 divergence=11 all_books_have_load=True synthetic_all_identity=NO-LOAD-BEARING
+   why: 把「通过的门」拆成恒等/重排与承重两类：恒等门通过不构成证据。分类走两条独立路（数据结构字段 / 门内叙述文本），并集取保守侧；分歧逐条列出而不强行抹平。负对照证明本判据能识别「全靠恒等式撑门面」的册。★口径补充：另有 7 门自称「既有理论/教科书结论」（Wong 1970、Witten 1982、Atiyah–Singer、Yang–Mills 既有结构、标准 SM 已知谱），它们既非恒等也非重排，但同样是「复核别人」而非「ROOT 新证据」，故与恒等门合并为「非新增门」24 门；剩余 53 门只是「既非恒等也非既有理论」的候选，不等于已成立的新证据。
+
+[XG4] ok=True
+   exp: 三册三条独立路线须同判 α 外生；构造一个 det=0 且有无量纲非平凡解的合成闭包时「闭包可定 α」必须为真（判据可翻）
+   act: r132=True r133=True r134sec8=True real_fixable=False synthetic_fixable=True
+   why: 跨册一致：V132 走量纲/数量级（α_G 随 m 跨 4.4757E+1 dex）、V133 走参数敏感度（10% λ 扰动给 21% α 变化 > 5% 门限）、V134§8 走基组闭包（det=-2 满秩、唯一无量纲数 1）。三条路线互不引用同一算式，却给同一结论 ⇒ α 必外生。
+
+[XG5] ok=True
+   exp: 三段自由参数集合均非空且互不为子集（迁移而非消除）；零自由参数预言总数=0；合成一个被吞并的场景时 migrated 必须给 False
+   act: |s1|=2 |s2|=6 |s3|=3 zero_free_total=0 migrated_1to2=True migrated_2to3=True synthetic_absorbed=False
+   why: 参数不灭的形态是「迁移」：V133 (λ,I) → V134 (表示,a,b,谱)+ (G,g_i,y_f,v) → V134§8 (势幅,ν_R,Yukawa)。三段互不为子集 ⇒ 没有任何一册真正消掉了自由参数，只是把不灭的位置往后挪。
+
+[XG6] ok=True
+   exp: V134 G10 与 V134§8 G2 两处反噬须同时成立且同源残差逐字相同；把纯规范残差换成非零值时反噬判据必须给 False
+   act: flags=True residual_same=True(3.0751E-10|3.0751E-10) real=True synthetic_no_backlash=False
+   why: 反噬链单向自洽：V134 证明纯标架联络 F=0 → 打掉 V133「标架/挠率联络即规范耦合」；V134§8 用同一残差再打一次 V135 步骤1。两处引用的残差逐字相同 ⇒ 同一对象审计两次，按纪律标「同源」，不相加为两份证据。
+
+[XG7] ok=True
+   exp: 每个 discrimination_power=0 的门须同时被数据路与文本路判为恒等，且其 ok 只表示负读数；一个「无判别力却按承重讲」的合成门必须被抓住
+   act: n_zero_disc=2 misuse=0 synthetic_misuse_caught=True
+   why: 判别力 0 的门（V79 的 2f 三角恒等式、V83 的奇偶恒等式）通过只说明「该判据对该问题无信息」，不是通过式证据。本门用文本路独立复核数据路的分类，避免自证。
+
+[XG8] ok=True
+   exp: 全部登记字段求和须为 0；人为注入 1 条后求和须变成 1（证明求和真的读到数而非恒 0）
+   act: total=0 books_reporting=4 injected_total=1
+   why: 这是本册唯一允许的加法：11 册的零自由参数预测计数逐项相加。全部为 0 ⇒ 仍为 0，相加不制造任何新证据；注入负对照证明求和不是空转。
+
+[XG9] ok=True
+   exp: 11/11 册须至少含一条 https 一手链接；非 https 的裸 http 链接数须为 0；只含 http:// 的合成文本必须被判「无一手来源」
+   act: books_with_https=11 without=[] distinct_urls=37 plain_http=0 synthetic_http_only=False
+   why: 外部裁决覆盖：每册都给了可点开的一手链接（NIST CODATA / DOI / PDG 等）；沿线纪律要求「不制造假阳性出处错误」，故 11-21 批另做了 DOI 自检修正（Atiyah–Singer）。
+
+------------------------------------------------------------------------------------------------
+三、五条反复出现且未被突破的硬边界
+------------------------------------------------------------------------------------------------
+[B1-alpha-exogenous] α 由外部输入决定，模型只容纳不推导  (anchors=3)
+   rootv132     "spread_e_to_planck_dex": "4.475651E+1"   [逐字校验 OK]
+   rootv133     "sensitivity_10pct": "2.100000E-1"   [逐字校验 OK]
+   rootv134sec8 "det": "-2"   [逐字校验 OK]
+
+[B2-G-exogenous] 只令 c=1 不能确定 G（G 仍是外部输入）  (anchors=2)
+   rootv132     "alpha_planck_c1": "1.0000000000E+0"   [逐字校验 OK]
+   rootv132     "spread_e_to_planck_dex": "4.475651E+1"   [逐字校验 OK]
+
+[B3-mass-spectrum-exogenous] 质量比与手征谱均不在 {c,ℏ,G} 闭包内，必外生  (anchors=3)
+   rootv134sec8 "m_mu_over_m_e": "2.06768283E+2"   [逐字校验 OK]
+   rootv133     "ratio_obs_CODATA2022": "2.06768283E+2"   [逐字校验 OK]
+   rootv134sec8 "alpha_must_be_exogenous": true   [逐字校验 OK]
+
+[B4-parameters-migrate-not-extinct] 自由参数在三册间迁移而非消除  (anchors=3)
+   rootv133     "lambda_for_alpha_low": "2.94882851E+16"   [逐字校验 OK]
+   rootv134     "coefficient_epsilon_path": "7.70000000E-1"   [逐字校验 OK]
+   rootv134sec8 "needs_external_amplitudes": true   [逐字校验 OK]
+
+[B5-cross-volume-backlash] V134 纯标架 F=0 反噬 V133 标架即规范耦合，V134§8 复用同一残差  (anchors=3)
+   rootv134     "V133_Omega_perp_pure_gauge_flux_zero": true   [逐字校验 OK]
+   rootv134     "pure_gauge_max_flux_residual": "3.0751E-10"   [逐字校验 OK]
+   rootv134sec8 "pure_frame_flux_residual": "3.0751E-10"   [逐字校验 OK]
+
+------------------------------------------------------------------------------------------------
+四、守卫
+------------------------------------------------------------------------------------------------
+[ANCHOR-SINGLE] ok=True  来料总表锚点唯一命中 1 次
+[BOOK-COUNT-11] ok=True  入选册数 = 11
+[EXP-NE-ACT] ok=True  11 门 exp 与 act 均非同一字符串
+[GATE-ACCOUNT] ok=True  门账两路一致
+[JSON-NATIVE] ok=True  全部门值均为 JSON 原生类型
+[NO-HARDCODE-OK] ok=True  本文件写死 ok 字面量 = 0
+[PARALLEL-OUTPUT-FINGERPRINTED] ok=True  排除的并行产物已记指纹：{'rootv128v129': [31610, '7bf69d31aa9f']}
+[SCOPE-REGISTERED] ok=True  glob 命中 12 个文件 = 入选 11 + 排除 1；未登记 []；缺失 []
+[SUBSTRING-ANCHORS] ok=True  五条硬边界 14 个登记读数逐字校验，未命中 0 个
+
+------------------------------------------------------------------------------------------------
+五、负读数与边界（如实登记，不掩盖）
+------------------------------------------------------------------------------------------------
+N1 写死 ok：{'rootv77': 1, 'rootv79': 1, 'rootv83': 1}（行号已登记于 XG11，逐条核对读数自洽，但 ok 不可由读数推翻）
+N2 恒等/重排门：17 门（数据路 6 / 文本路 17，取并集保守侧）；承重门：60 门
+N2b 两路分类分歧：11 条（逐条列出，不抹平）
+     rootv132     G2-planck-alpha-identities                     data=False text=True
+     rootv132b    G1-two-route-v-identity                        data=False text=True
+     rootv132b    G4-two-readings-fork                           data=False text=True
+     rootv132c    G1-alpha-two-route-identity                    data=False text=True
+     rootv133     G1-gauge-invariance-identity                   data=False text=True
+     rootv133     G2-legendre-elimination-consistency            data=False text=True
+     rootv133     G3-charge-quantization-coefficient             data=False text=True
+     rootv77      G1-seven-numbers-two-path                      data=False text=True
+     rootv77      G3-rg-lambda-identity-planck-unique            data=False text=True
+     rootv79      G1-numeric-two-path                            data=False text=True
+     rootv85      V85-G1-newton-Q-identity                       data=False text=True
+N2c 既有理论复核门（既非恒等也非重排，但同样是「复核别人」）：7 门
+     rootv132c    G2-power-counting-dim-2
+     rootv134     G1-one-dim-representation-impossible
+     rootv134     G3-nonabelian-field-strength
+     rootv134     G4-wong-transport
+     rootv134     G5-five-anomalies-exact
+     rootv134     G6-witten-even-doublet
+     rootv134sec8 G8-key-table-open-count
+N2d 非新增门合计（恒等 ∪ 既有理论）= 24 / 77；既非恒等也非既有理论的候选 = 53 门
+     ★候选 ≠ 新证据：其中大量门是负读数判据（判「做不到」），不构成 ROOT 的正向增量。
+N3 判别力为 0 的门：2 门（rootv79/G2-b2-trig-identity, rootv83/G2-parity-is-identity）
+N4 同源不相加：rootv134 与 rootv134sec8 共用残差 3.0751E-10，计 1 份
+N5 独立预言计数：0
+
+边界: 本册是横向对账，不产生新的物理判断；它检验的是「已产出的 11 册之间是否互相自洽」。
+边界: 门账 77/77 全通过不等于 77 条证据：其中恒等/重排门占比在本册 XG3 单独登记。
+边界: 11 册的结论互相印证只说明本链内部一致，不构成对外部世界的证据。
+边界: α/G/质量三条外生边界由三条互不引用同一算式的路线得到，但仍属「同一个模型的三种视角」。
+边界: V134 反噬 V133 是链内自我修正，属正常审计行为，不是外部反驳。
+边界: 三册写死 ok 的瑕疵已登记；其门内读数支持该门通过，但 ok 本身不可由读数推翻。
+边界: 真正的硬出口（外部新读数 + 可认证零自由参数的非回述输出）仍未出现，独立预言数保持 0。
+
+------------------------------------------------------------------------------------------------
+六、范围声明与被排除的并行产物（发现即登记，禁止静默略过）
+------------------------------------------------------------------------------------------------
+入选 11 册：rootv132, rootv132b, rootv132c, rootv133, rootv134, rootv134sec8, rootv77, rootv79, rootv83, rootv85, rootv88
+glob 命中 12 个文件；未登记 []；范围缺失 []
+排除 rootv128v129   file=_ALG_rootv128v129_yukawa_ephemeris_audit_recompute_2026-11-21.json bytes=31610 sha256=7bf69d31aa9f03e1c39d892c
+     理由：2026-11-22 00:29 由并行会话新增（V128/V129 Yukawa·历表审计）。非本轮会话产物：本册不重复审计、不代为背书、不并入门账，仅登记其存在与指纹。
+说明：被排除册只登记存在与指纹，不计门账、不做背书；若它日后被并行会话改动，指纹变化可被本册下一轮检出。
+
+------------------------------------------------------------------------------------------------
+七、机读结论
+------------------------------------------------------------------------------------------------
+verdict : ROOTSERIES-CROSSVOLUME-LEDGER-BOOKS-11-GATE-ACCOUNT-77-OF-77-IDENTITY-GATES-17-KNOWN-THEORY-GATES-7-NON-NOVEL-24-OF-77-ALPHA-EXOGENOUS-3-ROUTES-PARAMS-MIGRATE-1-2-3-BACKLASH-CHAIN-SAME-OBJECT-ZERO-DISCRIM-NON-LOAD-BEARING-INDEPENDENT-PREDICTIONS-0-FIRST-HAND-11-OF-11-DISCIPLINE-CORE-44-OF-44-HARDCODED-OK-FLAW-3-BOOKS-REGISTERED-UFT-NOT-BROKEN-NEW-PREDICTION-0
+final   : GATES-PASS-11-OF-11
+guards  : 9/9 通过
+sha256  : ed8e8f13ee3903207b20fa611c5064f6f0cae6e4e09675967c95a4672b9fa82a
+idem    : TRUE（复跑字节一致）
+json    : _ALG_rootseries_crossvolume_ledger_recompute_2026-11-21.json
+
