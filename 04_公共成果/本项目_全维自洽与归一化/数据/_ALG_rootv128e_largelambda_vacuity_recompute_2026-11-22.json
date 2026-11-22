@@ -1,0 +1,400 @@
+{
+ "kind": "algorithm-alliance-audit-recompute",
+ "not_a_verdict_volume": true,
+ "occupies_rid": false,
+ "enters_readme": false,
+ "title": "ROOT V128 第五册 大 lambda 扫描空转与整体幅度不可辨识性",
+ "date": "2026-11-22",
+ "target": "Phi(r) = -(mu/r)(1 + alpha exp(-r/lambda))",
+ "upstream": {
+  "file": "_ALG_rootv128c_ephemeris_jointfit_recompute_2026-11-22.json",
+  "sha256": "c7e500af6dd71626d5fad1915e44dc9540badf718087d31eb3b38dd8276f9553",
+  "bytes": 20726,
+  "relation": "只读继承；不重拟合；不改判词"
+ },
+ "verdict": "ROOTV128E-VACUITY-CLAIM-REFUTED--TAIL-NOT-SCALING-AS-LAMBDA-SQUARED",
+ "verdict_type": "machine",
+ "final": "GATES-FAIL--L1-L3-L5",
+ "n_gate_ok": 8,
+ "n_gate_total": 11,
+ "guards": [
+  "L1",
+  "L8",
+  "G-VERDICT-MACHINE",
+  "G-NO-HARDCODE-OK",
+  "G-LINK"
+ ],
+ "identity_gates": [
+  "L3"
+ ],
+ "load_bearing_gates": [
+  "L5",
+  "L6",
+  "L7"
+ ],
+ "negative_gates": [
+  "L4",
+  "L7"
+ ],
+ "gates": [
+  {
+   "id": "L1",
+   "kind": "guard",
+   "title": "自检：零势机器零 / Kepler 收敛 / 积分两路互验 / Richardson",
+   "ok": false,
+   "notes": [
+    "c0=0 Shapiro 积分机器零 max|I| = 0",
+    "Kepler 残差 max|E - e sinE - M| = 1.000000E-59",
+    "Shapiro 核 数值 vs 闭式 rel = 1.006266E-02",
+    "偏折核 数值 vs 闭式 rel = 3.014785E-02",
+    "FAIL: 两路不一致",
+    "Simpson 收敛：S(200) vs S(400) rel = 1.942809E-16；Richardson vs 闭式 pi/4 rel = 9.868238E-18",
+    "FAIL: Richardson 未达精度"
+   ],
+   "readings": {
+    "zero_potential_integral_max": "0",
+    "kepler_residual_max": "1.000000E-59",
+    "shapiro_kernel_rel": "1.006266E-02",
+    "deflection_kernel_rel": "3.014785E-02",
+    "richardson_rel_vs_closed": "9.868238E-18"
+   }
+  },
+  {
+   "id": "L2",
+   "kind": "structural",
+   "title": "统一零方向：C 常数时全部势线性泛函只整体缩放，形状量不变",
+   "ok": true,
+   "notes": [
+    "三个泛函的比值与理论幂律的最大偏离 = 1.000000E-59",
+    "Shapiro 比例指数 = 1（Phi 线性泛函）；偏折 = 1；周期 = -1/2",
+    "进动：对纯 1/r 势恒为 0（第四册已机读 8.862149E-19），本册继承不重算"
+   ],
+   "rows": [
+    {
+     "c0": "0.1",
+     "shapiro_ratio_dev": "7.383370E-60",
+     "deflection_ratio_dev": "0",
+     "period_ratio_dev": "0",
+     "shape_shapiro_dev_from_1": "1.000000E-59",
+     "shape_deflection_dev_from_1": "0"
+    },
+    {
+     "c0": "0.3",
+     "shapiro_ratio_dev": "9.492904E-60",
+     "deflection_ratio_dev": "0",
+     "period_ratio_dev": "0",
+     "shape_shapiro_dev_from_1": "1.000000E-59",
+     "shape_deflection_dev_from_1": "0"
+    },
+    {
+     "c0": "0.5",
+     "shapiro_ratio_dev": "0",
+     "deflection_ratio_dev": "0",
+     "period_ratio_dev": "0",
+     "shape_shapiro_dev_from_1": "0",
+     "shape_deflection_dev_from_1": "0"
+    }
+   ],
+   "readings": {
+    "max_ratio_deviation": "1.000000E-59",
+    "base_shapiro_integral": "-1.504883E+01",
+    "base_deflection_integral": "2.060295E+00",
+    "base_period": "6.283185E+00"
+   }
+  },
+  {
+   "id": "L3",
+   "kind": "identity",
+   "title": "质量-振幅精确简并：(mu,c0) ≡ (mu/(1-c0),0)，非近似",
+   "ok": false,
+   "identity": true,
+   "notes": [
+    "Phi 逐点差 max = 1.457143E+01（恒等，按纪律单列 IDENTITY，不承重）",
+    "同一 t 的 r(t) 相对差 max = 1.113722E-01（两参数化给出同一条轨道）",
+    "6 个泛函枚举：最大相对差 = 1.040816E+00 => 全部简并",
+    "FAIL: 简并不精确"
+   ],
+   "readings": {
+    "phi_pointwise_max": "1.457143E+01",
+    "radius_at_fixed_t_max_rel": "1.113722E-01",
+    "six_functional_enumeration_max_rel": "1.040816E+00",
+    "c0_used": "3.000000E-01"
+   }
+  },
+  {
+   "id": "L4",
+   "kind": "structural-negative",
+   "title": "等效原理通道对质量耦合 Yukawa 结构性失效（负读数）",
+   "ok": true,
+   "negative_reading": true,
+   "notes": [
+    "耦合质量 (q=m) 时 eta 恒为 0，max|eta| = 0",
+    "=> 强等效原理不破 => 自由落体普适 => Eotvos/MICROSCOPE/LLR 通道**看不见**该第五力",
+    "耦合重子数时 eta(Fe,Ti) at alpha=1e-6, lambda>>r = 3.399998E-09（非零）",
+    "同样 alpha 下 baryon 耦合 eta / mass 耦合 eta 之比 = 3.399998E+291（判别力存在）"
+   ],
+   "rows": [
+    {
+     "coupling": "mass (q=m)",
+     "eta": "0"
+    },
+    {
+     "coupling": "baryon (q=B)",
+     "eta": "3.399998E-09"
+    }
+   ],
+   "readings": {
+    "eta_mass_coupling_max": "0",
+    "eta_baryon_coupling_illustrative": "3.399998E-09",
+    "discrimination_ratio": "3.399998E+291"
+   }
+  },
+  {
+   "id": "L5",
+   "kind": "load-bearing",
+   "title": "尾部 sigma_alpha 与 alpha_hat 同乘 lam^2 => 只有一个 beta 约束",
+   "ok": false,
+   "notes": [
+    "EPM2011：sigma_beta 极限 = 4.503522E-13；lam=30 处偏离 5.970739E-02；dev*lam 序列 1.791E+00 / 1.799E+00 / 1.802E+00 / 1.785E+00 / 1.621E+00 / 0",
+    "INPOP10a：sigma_beta 极限 = 1.607088E-12；lam=30 处偏离 1.086602E-01；dev*lam 序列 3.260E+00 / 3.396E+00 / 3.447E+00 / 3.422E+00 / 3.111E+00 / 0",
+    "O(1/lam) 律：去掉 lam=30 后 dev*lam 的相对散布 = 1.119178E-01",
+    "=> alpha_hat 与 sigma_alpha 在尾部同乘 lam^2，即整个拟合只是 beta 拟合的换算式",
+    "FAIL: 尾部未呈现 O(1/lam) 收敛"
+   ],
+   "detail": {
+    "EPM2011": {
+     "n_tail_points": 6,
+     "sigma_beta_limit": "4.503522E-13",
+     "beta_hat_limit": "-2.137223E-13",
+     "dev_at_30": "5.970739E-02",
+     "dev_times_lam_series": [
+      "1.791222E+00",
+      "1.798837E+00",
+      "1.802367E+00",
+      "1.785269E+00",
+      "1.620954E+00",
+      "0"
+     ],
+     "spread_dev_times_lam_all": "1.119178E-01",
+     "spread_dev_times_lam_drop_first": "1.119178E-01",
+     "beta_hat_dev_series": [
+      "7.340626E-03",
+      "2.645021E-03",
+      "2.779308E-04",
+      "2.760592E-05",
+      "2.339484E-06",
+      "0"
+     ]
+    },
+    "INPOP10a": {
+     "n_tail_points": 6,
+     "sigma_beta_limit": "1.607088E-12",
+     "beta_hat_limit": "-1.067529E-13",
+     "dev_at_30": "1.086602E-01",
+     "dev_times_lam_series": [
+      "3.259805E+00",
+      "3.396329E+00",
+      "3.447229E+00",
+      "3.422339E+00",
+      "3.111217E+00",
+      "0"
+     ],
+     "spread_dev_times_lam_all": "1.080000E-01",
+     "spread_dev_times_lam_drop_first": "1.080000E-01",
+     "beta_hat_dev_series": [
+      "5.833377E-01",
+      "1.772551E-01",
+      "1.772130E-02",
+      "1.755456E-03",
+      "1.592463E-04",
+      "0"
+     ]
+    }
+   },
+   "readings": {
+    "upstream_sha256_prefix": "c7e500af6dd71626",
+    "upstream_bytes": 20726,
+    "worst_spread_dev_times_lam": "1.119178E-01",
+    "lam_for_dev_below_1e_3": "1.000000E+04"
+   }
+  },
+  {
+   "id": "L6",
+   "kind": "load-bearing",
+   "title": "尾部格点塌缩：k 个 lambda 点 = 1 个 beta 约束",
+   "ok": true,
+   "notes": [
+    "EPM2011：尾部 6 点，alpha 比 / lam^2 比 逐对吻合，beta 比序列 9.6063E-01 / 9.8410E-01 / 9.9838E-01 / 9.9984E-01 / 9.9998E-01",
+    "INPOP10a：尾部 6 点，alpha 比 / lam^2 比 逐对吻合，beta 比序列 9.3262E-01 / 9.7049E-01 / 9.9691E-01 / 9.9969E-01 / 9.9997E-01",
+    "尾部 max|beta 比 - 1| = 6.737580E-02（lam=30 那一对含 O(1/lam) 修正）",
+    "=> 尾部 k 个 lambda 格点不构成 k 份独立检验，而是同一个 beta 区间的 k 次重写"
+   ],
+   "detail": {
+    "EPM2011": {
+     "n_tail_points": 6,
+     "lambda_points": [
+      "3.000E+01",
+      "1.000E+02",
+      "1.000E+03",
+      "1.000E+04",
+      "1.000E+05",
+      "1.000E+06"
+     ],
+     "alpha_ratio_vs_lam2_ratio": [
+      "10.6737 / 11.1111",
+      "98.4100 / 100.0000",
+      "99.8379 / 100.0000",
+      "99.9838 / 100.0000",
+      "99.9984 / 100.0000"
+     ],
+     "beta_ratio_series": [
+      "9.6063E-01",
+      "9.8410E-01",
+      "9.9838E-01",
+      "9.9984E-01",
+      "9.9998E-01"
+     ],
+     "independent_constraints_in_tail": 1
+    },
+    "INPOP10a": {
+     "n_tail_points": 6,
+     "lambda_points": [
+      "3.000E+01",
+      "1.000E+02",
+      "1.000E+03",
+      "1.000E+04",
+      "1.000E+05",
+      "1.000E+06"
+     ],
+     "alpha_ratio_vs_lam2_ratio": [
+      "10.3625 / 11.1111",
+      "97.0486 / 100.0000",
+      "99.6906 / 100.0000",
+      "99.9689 / 100.0000",
+      "99.9969 / 100.0000"
+     ],
+     "beta_ratio_series": [
+      "9.3262E-01",
+      "9.7049E-01",
+      "9.9691E-01",
+      "9.9969E-01",
+      "9.9997E-01"
+     ],
+     "independent_constraints_in_tail": 1
+    }
+   },
+   "readings": {
+    "worst_beta_ratio_deviation": "6.737580E-02"
+   }
+  },
+  {
+   "id": "L7",
+   "kind": "load-bearing-negative",
+   "title": "排除带两端由两个互不相关机制决定（负读数：带不是物理对象）",
+   "ok": true,
+   "negative_reading": true,
+   "notes": [
+    "EPM2011：第三册上端 1.000000E+06 ↔ beta 交叉解析 1.222636E+06，比值 1.22264E+00（网格步长 1.25893E+00）",
+    "      下端 1.258925E-02 由 exp(-a/lam) 截断给出（形状机制，与 beta 无关）",
+    "INPOP10a：第三册上端 5.011872E+05 ↔ beta 交叉解析 5.732434E+05，比值 1.14377E+00（网格步长 1.25893E+00）",
+    "      下端 1.258925E-02 由 exp(-a/lam) 截断给出（形状机制，与 beta 无关）",
+    "=> 「7.90 dex 排除带」不是一个物理带，而是两个互不相关条件的交集：低端指数截断、高端 beta 交叉"
+   ],
+   "detail": {
+    "EPM2011": {
+     "reported_band_AU": [
+      "1.258925E-02",
+      "1.000000E+06"
+     ],
+     "reported_decades": "7.900000E+00",
+     "n_excluded": 80,
+     "n_grid": 111,
+     "beta_hat_at_edge": "-2.137223E-13",
+     "sigma_beta_at_edge": "4.503522E-13",
+     "upper_edge_from_beta_crossing": "1.222636E+06",
+     "edge_ratio_beta_over_reported": "1.22264E+00",
+     "grid_step": "1.25893E+00"
+    },
+    "INPOP10a": {
+     "reported_band_AU": [
+      "1.258925E-02",
+      "5.011872E+05"
+     ],
+     "reported_decades": "7.600000E+00",
+     "n_excluded": 77,
+     "n_grid": 111,
+     "beta_hat_at_edge": "-1.067529E-13",
+     "sigma_beta_at_edge": "1.607088E-12",
+     "upper_edge_from_beta_crossing": "5.732434E+05",
+     "edge_ratio_beta_over_reported": "1.14377E+00",
+     "grid_step": "1.25893E+00"
+    }
+   },
+   "readings": {}
+  },
+  {
+   "id": "L8",
+   "kind": "guard",
+   "title": "判别力反噬：假剖面与单点扰动必须使 L5 判据失败",
+   "ok": true,
+   "notes": [
+    "真剖面 dev*lam 散布 = 1.119178E-01（通过 L5）",
+    "假剖面 dev*lam 散布 = 1.009101E+03（L5 判据必须失败）",
+    "另有正对照：把尾部单点 sigma 乘 1.5，dev*lam 散布应显著上升",
+    "单点 +50% 后 dev*lam 散布 = 2.800734E+04"
+   ],
+   "readings": {
+    "spread_true": "1.119178E-01",
+    "spread_fake_profile": "1.009101E+03",
+    "spread_single_point_perturbed": "2.800734E+04"
+   }
+  },
+  {
+   "id": "G-VERDICT-MACHINE",
+   "kind": "guard",
+   "title": "判词机读：三个承重标志任一翻转必须改变判词串",
+   "ok": true,
+   "notes": [
+    "基线长度 349；三个变体长度 [67, 58, 64]"
+   ],
+   "readings": {}
+  },
+  {
+   "id": "G-NO-HARDCODE-OK",
+   "kind": "guard",
+   "title": "AST 守卫：ok 不得写死（顶层常量且无任何条件翻转即为装饰判据）",
+   "ok": true,
+   "notes": [
+    "扫描 11 个含 ok 的函数",
+    "零命中"
+   ],
+   "readings": {
+    "n_functions_scanned": 11
+   }
+  },
+  {
+   "id": "G-LINK",
+   "kind": "guard",
+   "title": "链接体检：JSON 与报告均含判词串与日期",
+   "ok": true,
+   "notes": [
+    "_ALG_rootv128e_largelambda_vacuity_recompute_2026-11-22.json: verdict=True date=True",
+    "_ALG_rootv128e_largelambda_vacuity_recompute_report_2026-11-22.txt: verdict=True date=True"
+   ],
+   "readings": {}
+  }
+ ],
+ "discipline": [
+  "恒等门（L3）单列不承重",
+  "跨册读数只继承不重算，冲突时报负读数不改上游",
+  "ok 由读数驱动，AST 守卫禁止常量赋值",
+  "判词由唯一构造函数生成，三标志任一翻转必变",
+  "回填顺序：占位 -> 回读 -> 再写 -> 守卫 -> FINAL -> 报告"
+ ],
+ "red_line": [
+  "不宣称攻破统一场论",
+  "不产生新物理，独立实验预言 0",
+  "本册不修正第三册任何判词",
+  "「大 lambda 空转」不等于「V128 被证伪」"
+ ]
+}
