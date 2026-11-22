@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法联盟 · ROOT V128 第四册 形状无关径向第五力约束 · 2026-11-22</title>
+<style>
+  :root{--bg:#f7f8fa;--panel:#fff;--ink:#1a2230;--sub:#5a6675;--line:#dfe3ea;
+        --accent:#2540a6;--ok:#137a4b;--okbg:#e7f6ee;--neg:#a12a2a;--negbg:#fdecec;
+        --warn:#8a5a00;--warnbg:#fff6e0;--code:#0f2d5c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.65;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1140px;margin:0 auto;padding:34px 22px 70px}
+  header{border-left:5px solid var(--accent);padding:6px 0 6px 18px;margin-bottom:26px}
+  h1{font-size:23px;margin:0 0 6px;line-height:1.35}
+  .meta{color:var(--sub);font-size:13px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:20px 22px;margin-bottom:18px}
+  h2{font-size:18px;margin:0 0 14px;color:var(--accent)}
+  h3{font-size:15px;margin:18px 0 8px;color:var(--ink)}
+  p{margin:8px 0}
+  .stat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 2px}
+  .scard{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .scard .n{font-size:20px;font-weight:700;color:var(--accent)}
+  .scard .l{font-size:12px;color:var(--sub);margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.2px}
+  th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f3f5f9;color:var(--sub);font-weight:600}
+  td.num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--code);white-space:nowrap;font-size:12.3px}
+  td.ok{color:var(--ok);font-weight:700}
+  td.bad{color:var(--neg);font-weight:700}
+  .note{background:var(--warnbg);border-left:4px solid #d8a11a;padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#5a4200;margin:12px 0}
+  .neg{background:var(--negbg);border-left:4px solid var(--neg);padding:10px 14px;
+       border-radius:6px;font-size:13.5px;color:#7a2020;margin:12px 0}
+  .good{background:var(--okbg);border-left:4px solid var(--ok);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#0d5636;margin:12px 0}
+  .formula{background:#f3f5f9;border-radius:7px;padding:10px 13px;font-size:13.4px;color:var(--code);
+           font-family:ui-monospace,Menlo,Consolas,monospace;overflow-x:auto;margin:10px 0;white-space:pre}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .chain{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
+  .cbox{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12.8px}
+  .cbox b{color:var(--accent);display:block;margin-bottom:4px;font-size:13px}
+  footer{text-align:center;color:var(--sub);font-size:12.5px;margin-top:26px}
+  @media(max-width:820px){.stat,.chain,.two{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>ROOT V128 第四册 · 形状无关的径向第五力约束</h1>
+  <div class="meta">算法联盟 · 2026-11-22 · 非判定册，不占 RID，不入 README ·
+    8 门全过 · 幂等 SHA-256 f590b8be019a153d… · 与前三册不相加</div>
+</header>
+
+<section>
+  <div class="stat"><div class="scard"><div class="n">8 / 8</div><div class="l">门禁全过</div></div><div class="scard"><div class="n">8.86e−19</div><div class="l">零方向核（信号 O(1)）</div></div><div class="scard"><div class="n">1.18e−15</div><div class="l">J 与解析值互验</div></div><div class="scard"><div class="n">3.054</div><div class="l">δχ²（门槛 11.07）</div></div></div>
+  <div class="neg"><b>先划清「攻」的边界</b>：统一场论作为研究纲领<b>不能被一次计算攻破</b>。本册把第三册的形状假设去掉——不再问「这个 Yukawa 能不能活」，而是问<b>「任意径向额外力，这组数据给了多少空间」</b>。结论是：存在一个<b>精确的零方向</b>，整体幅度零信息；能被约束的只有形状变化，而它被压到 1e−12 量级。</div>
+</section>
+
+<section>
+  <h2>1. 结构事实：C ≡ 常数是精确零方向</h2>
+  <div class="formula">Phi = -(mu/r)(1 - C(r))      =>      dPhi = (mu/r) C(r)
+
+C == 常数  =>  dPhi ∝ mu/r  =>  轨道仍是闭椭圆  =>  Delta_varpi = 0   （精确，不是近似）</div>
+  <p>所以「径向第五力的整体幅度」对近点进动<b>恰好零信息</b>——不是约束很弱，是代数上完全无信息。机读验证：核的绝对值 <b>8.862e−19</b>，信号尺度 <b>O(1)</b> 弧度/圈，抑制 18 个数量级。</p>
+<svg viewBox="0 0 1000 330" width="100%" role="img"><rect x="76" y="24" width="900" height="254" fill="#fbfcfe" stroke="#dfe3ea"/><line x1="76" y1="253.4" x2="976" y2="253.4" stroke="#eef1f6"/><text x="68" y="257.4" font-size="11" fill="#8a94a4" text-anchor="end">0.0</text><line x1="76" y1="232.9" x2="976" y2="232.9" stroke="#eef1f6"/><text x="68" y="236.9" font-size="11" fill="#8a94a4" text-anchor="end">0.1</text><line x1="76" y1="212.5" x2="976" y2="212.5" stroke="#eef1f6"/><text x="68" y="216.5" font-size="11" fill="#8a94a4" text-anchor="end">0.2</text><line x1="76" y1="192.0" x2="976" y2="192.0" stroke="#eef1f6"/><text x="68" y="196.0" font-size="11" fill="#8a94a4" text-anchor="end">0.3</text><line x1="76" y1="171.5" x2="976" y2="171.5" stroke="#eef1f6"/><text x="68" y="175.5" font-size="11" fill="#8a94a4" text-anchor="end">0.4</text><line x1="76" y1="151.0" x2="976" y2="151.0" stroke="#eef1f6"/><text x="68" y="155.0" font-size="11" fill="#8a94a4" text-anchor="end">0.5</text><line x1="76" y1="130.5" x2="976" y2="130.5" stroke="#eef1f6"/><text x="68" y="134.5" font-size="11" fill="#8a94a4" text-anchor="end">0.6</text><line x1="76" y1="110.0" x2="976" y2="110.0" stroke="#eef1f6"/><text x="68" y="114.0" font-size="11" fill="#8a94a4" text-anchor="end">0.7</text><line x1="76" y1="89.5" x2="976" y2="89.5" stroke="#eef1f6"/><text x="68" y="93.5" font-size="11" fill="#8a94a4" text-anchor="end">0.8</text><line x1="76" y1="69.1" x2="976" y2="69.1" stroke="#eef1f6"/><text x="68" y="73.1" font-size="11" fill="#8a94a4" text-anchor="end">0.9</text><line x1="173.1" y1="24" x2="173.1" y2="278" stroke="#eef1f6"/><text x="173.1" y="296" font-size="11" fill="#8a94a4" text-anchor="middle">0.32</text><line x1="393.6" y1="24" x2="393.6" y2="278" stroke="#eef1f6"/><text x="393.6" y="296" font-size="11" fill="#8a94a4" text-anchor="middle">1.00</text><line x1="614.2" y1="24" x2="614.2" y2="278" stroke="#eef1f6"/><text x="614.2" y="296" font-size="11" fill="#8a94a4" text-anchor="middle">3.16</text><line x1="834.8" y1="24" x2="834.8" y2="278" stroke="#eef1f6"/><text x="834.8" y="296" font-size="11" fill="#8a94a4" text-anchor="middle">10.00</text><text x="526" y="322" font-size="12" fill="#5a6675" text-anchor="middle">r / AU（对数）</text><text x="18" y="151" font-size="12" fill="#5a6675" transform="rotate(-90 18 151)">c(r) 相对 0.2 AU 归一</text><rect x="169.2" y="24" width="663.7" height="254" fill="#eaf0fb" opacity="0.55"/><line x1="84.8" y1="48.6" x2="967.2" y2="48.6" stroke="#a12a2a" stroke-width="2.6" stroke-dasharray="9 5"/><text x="526.0" y="38.6" font-size="12.5" fill="#a12a2a">C ≡ 常数 ⇒ 精确零方向（整体幅度零信息）</text><polyline points="76.0,46.6 80.1,47.5 84.2,48.3 88.3,49.2 92.4,50.1 96.5,51.0 100.5,52.0 104.6,52.9 108.7,53.8 112.8,54.8 116.9,55.8 121.0,56.8 125.1,57.8 129.2,58.9 133.3,59.9 137.4,61.0 141.5,62.1 145.5,63.2 149.6,64.3 153.7,65.4 157.8,66.6 161.9,67.8 166.0,69.0 170.1,70.2 174.2,71.4 178.3,72.6 182.4,73.9 186.5,75.2 190.5,76.5 194.6,77.8 198.7,79.1 202.8,80.5 206.9,81.9 211.0,83.3 215.1,84.7 219.2,86.1 223.3,87.5 227.4,89.0 231.5,90.5 235.5,92.0 239.6,93.5 243.7,95.0 247.8,96.6 251.9,98.2 256.0,99.8 260.1,101.4 264.2,103.0 268.3,104.6 272.4,106.3 276.5,108.0 280.5,109.7 284.6,111.4 288.7,113.1 292.8,114.8 296.9,116.6 301.0,118.4 305.1,120.2 309.2,122.0 313.3,123.8 317.4,125.6 321.5,127.4 325.5,129.3 329.6,131.1 333.7,133.0 337.8,134.9 341.9,136.8 346.0,138.7 350.1,140.6 354.2,142.5 358.3,144.5 362.4,146.4 366.5,148.4 370.5,150.3 374.6,152.3 378.7,154.2 382.8,156.2 386.9,158.1 391.0,160.1 395.1,162.1 399.2,164.0 403.3,166.0 407.4,168.0 411.5,169.9 415.5,171.9 419.6,173.8 423.7,175.8 427.8,177.7 431.9,179.6 436.0,181.6 440.1,183.5 444.2,185.4 448.3,187.2 452.4,189.1 456.5,191.0 460.5,192.8 464.6,194.6 468.7,196.5 472.8,198.2 476.9,200.0 481.0,201.8 485.1,203.5 489.2,205.2 493.3,206.9 497.4,208.5 501.5,210.2 505.5,211.8 509.6,213.4 513.7,214.9 517.8,216.4 521.9,217.9 526.0,219.4 530.1,220.8 534.2,222.2 538.3,223.6 542.4,224.9 546.5,226.2 550.5,227.5 554.6,228.8 558.7,230.0 562.8,231.1 566.9,232.3 571.0,233.4 575.1,234.4 579.2,235.5 583.3,236.4 587.4,237.4 591.5,238.3 595.5,239.2 599.6,240.1 603.7,240.9 607.8,241.7 611.9,242.4 616.0,243.1 620.1,243.8 624.2,244.5 628.3,245.1 632.4,245.7 636.5,246.2 640.5,246.8 644.6,247.3 648.7,247.7 652.8,248.2 656.9,248.6 661.0,249.0 665.1,249.4 669.2,249.7 673.3,250.0 677.4,250.3 681.5,250.6 685.5,250.9 689.6,251.1 693.7,251.3 697.8,251.5 701.9,251.7 706.0,251.9 710.1,252.1 714.2,252.2 718.3,252.3 722.4,252.5 726.5,252.6 730.5,252.7 734.6,252.8 738.7,252.8 742.8,252.9 746.9,253.0 751.0,253.0 755.1,253.1 759.2,253.1 763.3,253.2 767.4,253.2 771.5,253.2 775.5,253.3 779.6,253.3 783.7,253.3 787.8,253.3 791.9,253.3 796.0,253.3 800.1,253.4 804.2,253.4 808.3,253.4 812.4,253.4 816.5,253.4 820.5,253.4 824.6,253.4 828.7,253.4 832.8,253.4 836.9,253.4 841.0,253.4 845.1,253.4 849.2,253.4 853.3,253.4 857.4,253.4 861.5,253.4 865.5,253.4 869.6,253.4 873.7,253.4 877.8,253.4 881.9,253.4 886.0,253.4 890.1,253.4 894.2,253.4 898.3,253.4 902.4,253.4 906.5,253.4 910.5,253.4 914.6,253.4 918.7,253.4 922.8,253.4 926.9,253.4 931.0,253.4 935.1,253.4 939.2,253.4 943.3,253.4 947.4,253.4 951.5,253.4 955.5,253.4 959.6,253.4 963.7,253.4 967.8,253.4 971.9,253.4 976.0,253.4" fill="none" stroke="#2540a6" stroke-width="2.2"/><line x1="711.3" y1="77.3" x2="773.1" y2="77.3" stroke="#2540a6" stroke-width="2.6"/><text x="781.9" y="81.3" font-size="11.5" fill="#2540a6">Yukawa λ = 1 AU</text><polyline points="76.0,47.9 80.1,48.2 84.2,48.5 88.3,48.8 92.4,49.1 96.5,49.4 100.5,49.7 104.6,50.0 108.7,50.4 112.8,50.7 116.9,51.0 121.0,51.4 125.1,51.7 129.2,52.1 133.3,52.4 137.4,52.8 141.5,53.2 145.5,53.6 149.6,54.0 153.7,54.4 157.8,54.8 161.9,55.2 166.0,55.6 170.1,56.0 174.2,56.5 178.3,56.9 182.4,57.4 186.5,57.9 190.5,58.3 194.6,58.8 198.7,59.3 202.8,59.8 206.9,60.3 211.0,60.9 215.1,61.4 219.2,61.9 223.3,62.5 227.4,63.1 231.5,63.6 235.5,64.2 239.6,64.8 243.7,65.4 247.8,66.0 251.9,66.7 256.0,67.3 260.1,68.0 264.2,68.6 268.3,69.3 272.4,70.0 276.5,70.7 280.5,71.4 284.6,72.1 288.7,72.9 292.8,73.6 296.9,74.4 301.0,75.1 305.1,75.9 309.2,76.7 313.3,77.5 317.4,78.4 321.5,79.2 325.5,80.1 329.6,80.9 333.7,81.8 337.8,82.7 341.9,83.7 346.0,84.6 350.1,85.5 354.2,86.5 358.3,87.5 362.4,88.4 366.5,89.5 370.5,90.5 374.6,91.5 378.7,92.6 382.8,93.6 386.9,94.7 391.0,95.8 395.1,96.9 399.2,98.1 403.3,99.2 407.4,100.4 411.5,101.5 415.5,102.7 419.6,103.9 423.7,105.2 427.8,106.4 431.9,107.7 436.0,108.9 440.1,110.2 444.2,111.5 448.3,112.9 452.4,114.2 456.5,115.6 460.5,116.9 464.6,118.3 468.7,119.7 472.8,121.1 476.9,122.6 481.0,124.0 485.1,125.5 489.2,126.9 493.3,128.4 497.4,129.9 501.5,131.4 505.5,133.0 509.6,134.5 513.7,136.1 517.8,137.6 521.9,139.2 526.0,140.8 530.1,142.4 534.2,144.0 538.3,145.7 542.4,147.3 546.5,149.0 550.5,150.6 554.6,152.3 558.7,153.9 562.8,155.6 566.9,157.3 571.0,159.0 575.1,160.7 579.2,162.4 583.3,164.1 587.4,165.8 591.5,167.5 595.5,169.3 599.6,171.0 603.7,172.7 607.8,174.4 611.9,176.1 616.0,177.9 620.1,179.6 624.2,181.3 628.3,183.0 632.4,184.7 636.5,186.4 640.5,188.1 644.6,189.8 648.7,191.4 652.8,193.1 656.9,194.8 661.0,196.4 665.1,198.0 669.2,199.6 673.3,201.3 677.4,202.8 681.5,204.4 685.5,206.0 689.6,207.5 693.7,209.0 697.8,210.5 701.9,212.0 706.0,213.5 710.1,214.9 714.2,216.3 718.3,217.7 722.4,219.1 726.5,220.5 730.5,221.8 734.6,223.1 738.7,224.3 742.8,225.6 746.9,226.8 751.0,228.0 755.1,229.1 759.2,230.3 763.3,231.3 767.4,232.4 771.5,233.4 775.5,234.5 779.6,235.4 783.7,236.4 787.8,237.3 791.9,238.2 796.0,239.0 800.1,239.8 804.2,240.6 808.3,241.4 812.4,242.1 816.5,242.8 820.5,243.5 824.6,244.1 828.7,244.7 832.8,245.3 836.9,245.9 841.0,246.4 845.1,246.9 849.2,247.4 853.3,247.8 857.4,248.3 861.5,248.7 865.5,249.0 869.6,249.4 873.7,249.7 877.8,250.0 881.9,250.3 886.0,250.6 890.1,250.9 894.2,251.1 898.3,251.3 902.4,251.5 906.5,251.7 910.5,251.9 914.6,252.0 918.7,252.2 922.8,252.3 926.9,252.4 931.0,252.5 935.1,252.6 939.2,252.7 943.3,252.8 947.4,252.9 951.5,252.9 955.5,253.0 959.6,253.1 963.7,253.1 967.8,253.1 971.9,253.2 976.0,253.2" fill="none" stroke="#137a4b" stroke-width="2.2" stroke-dasharray="7 4"/><line x1="711.3" y1="95.7" x2="773.1" y2="95.7" stroke="#137a4b" stroke-width="2.6" stroke-dasharray="7 4"/><text x="781.9" y="99.7" font-size="11.5" fill="#137a4b">Yukawa λ = 3 AU</text><polyline points="76.0,48.3 80.1,48.4 84.2,48.6 88.3,48.7 92.4,48.8 96.5,48.9 100.5,49.0 104.6,49.1 108.7,49.2 112.8,49.4 116.9,49.5 121.0,49.6 125.1,49.8 129.2,49.9 133.3,50.0 137.4,50.2 141.5,50.3 145.5,50.5 149.6,50.6 153.7,50.8 157.8,50.9 161.9,51.1 166.0,51.2 170.1,51.4 174.2,51.6 178.3,51.8 182.4,51.9 186.5,52.1 190.5,52.3 194.6,52.5 198.7,52.7 202.8,52.9 206.9,53.1 211.0,53.3 215.1,53.5 219.2,53.7 223.3,53.9 227.4,54.1 231.5,54.4 235.5,54.6 239.6,54.8 243.7,55.1 247.8,55.3 251.9,55.6 256.0,55.8 260.1,56.1 264.2,56.3 268.3,56.6 272.4,56.9 276.5,57.2 280.5,57.5 284.6,57.7 288.7,58.0 292.8,58.3 296.9,58.7 301.0,59.0 305.1,59.3 309.2,59.6 313.3,60.0 317.4,60.3 321.5,60.7 325.5,61.0 329.6,61.4 333.7,61.7 337.8,62.1 341.9,62.5 346.0,62.9 350.1,63.3 354.2,63.7 358.3,64.1 362.4,64.6 366.5,65.0 370.5,65.4 374.6,65.9 378.7,66.3 382.8,66.8 386.9,67.3 391.0,67.8 395.1,68.2 399.2,68.8 403.3,69.3 407.4,69.8 411.5,70.3 415.5,70.9 419.6,71.4 423.7,72.0 427.8,72.5 431.9,73.1 436.0,73.7 440.1,74.3 444.2,74.9 448.3,75.6 452.4,76.2 456.5,76.8 460.5,77.5 464.6,78.2 468.7,78.9 472.8,79.6 476.9,80.3 481.0,81.0 485.1,81.7 489.2,82.5 493.3,83.2 497.4,84.0 501.5,84.8 505.5,85.6 509.6,86.4 513.7,87.2 517.8,88.0 521.9,88.9 526.0,89.8 530.1,90.6 534.2,91.5 538.3,92.4 542.4,93.4 546.5,94.3 550.5,95.2 554.6,96.2 558.7,97.2 562.8,98.2 566.9,99.2 571.0,100.2 575.1,101.3 579.2,102.3 583.3,103.4 587.4,104.5 591.5,105.6 595.5,106.7 599.6,107.8 603.7,109.0 607.8,110.1 611.9,111.3 616.0,112.5 620.1,113.7 624.2,114.9 628.3,116.2 632.4,117.4 636.5,118.7 640.5,120.0 644.6,121.3 648.7,122.6 652.8,123.9 656.9,125.3 661.0,126.6 665.1,128.0 669.2,129.4 673.3,130.8 677.4,132.2 681.5,133.6 685.5,135.1 689.6,136.5 693.7,138.0 697.8,139.5 701.9,141.0 706.0,142.5 710.1,144.0 714.2,145.5 718.3,147.1 722.4,148.6 726.5,150.2 730.5,151.7 734.6,153.3 738.7,154.9 742.8,156.5 746.9,158.1 751.0,159.7 755.1,161.3 759.2,163.0 763.3,164.6 767.4,166.2 771.5,167.9 775.5,169.5 779.6,171.1 783.7,172.8 787.8,174.4 791.9,176.1 796.0,177.7 800.1,179.4 804.2,181.0 808.3,182.7 812.4,184.3 816.5,186.0 820.5,187.6 824.6,189.2 828.7,190.8 832.8,192.5 836.9,194.1 841.0,195.7 845.1,197.2 849.2,198.8 853.3,200.4 857.4,201.9 861.5,203.5 865.5,205.0 869.6,206.5 873.7,208.0 877.8,209.5 881.9,210.9 886.0,212.4 890.1,213.8 894.2,215.2 898.3,216.6 902.4,217.9 906.5,219.3 910.5,220.6 914.6,221.9 918.7,223.1 922.8,224.4 926.9,225.6 931.0,226.8 935.1,227.9 939.2,229.1 943.3,230.2 947.4,231.3 951.5,232.3 955.5,233.3 959.6,234.3 963.7,235.3 967.8,236.2 971.9,237.1 976.0,238.0" fill="none" stroke="#8a5a00" stroke-width="2.2" stroke-dasharray="4 4"/><line x1="711.3" y1="114.1" x2="773.1" y2="114.1" stroke="#8a5a00" stroke-width="2.6" stroke-dasharray="4 4"/><text x="781.9" y="118.1" font-size="11.5" fill="#8a5a00">Yukawa λ = 8 AU</text><line x1="85.3" y1="24" x2="85.3" y2="278" stroke="#c8cfdb" stroke-dasharray="3 4"/><text x="85.3" y="36" font-size="10" fill="#9aa4b4" text-anchor="middle">0.2</text><line x1="261.7" y1="24" x2="261.7" y2="278" stroke="#c8cfdb" stroke-dasharray="3 4"/><text x="261.7" y="36" font-size="10" fill="#9aa4b4" text-anchor="middle">0.5</text><line x1="438.2" y1="24" x2="438.2" y2="278" stroke="#c8cfdb" stroke-dasharray="3 4"/><text x="438.2" y="36" font-size="10" fill="#9aa4b4" text-anchor="middle">1.3</text><line x1="614.7" y1="24" x2="614.7" y2="278" stroke="#c8cfdb" stroke-dasharray="3 4"/><text x="614.7" y="36" font-size="10" fill="#9aa4b4" text-anchor="middle">3.2</text><line x1="791.2" y1="24" x2="791.2" y2="278" stroke="#c8cfdb" stroke-dasharray="3 4"/><text x="791.2" y="36" font-size="10" fill="#9aa4b4" text-anchor="middle">8</text><line x1="967.6" y1="24" x2="967.6" y2="278" stroke="#c8cfdb" stroke-dasharray="3 4"/><text x="967.6" y="36" font-size="10" fill="#9aa4b4" text-anchor="middle">20</text><text x="84.8" y="241.1" font-size="11.5" fill="#5a6675">阴影 = 行星实际采样范围（水星近日 0.31 AU … 土星远日 9.9 AU）</text></svg>
+  <div class="note"><b>这幅图就是全册的论点。</b>红虚线是零方向：无论如何缩放，进动都恰好为 0。彩色曲线是 Yukawa：λ 越小，profile 在采样范围内变化越剧烈，越容易被抓住；λ 越大越贴近平坦线，越接近零信息。第三册观察到的「λ 大则 σ<sub>α</sub> 爆炸」，本质就是曲线在往红线上贴。</div>
+</section>
+
+<section>
+  <h2>2. 形状无关的约束：只有反差被约束</h2>
+  <p>把 <span class="formula" style="display:inline;padding:2px 6px">C(r) = Σ c_k w_k(r)</span> 参数化成 ln r 上的光滑单位分解（<b>Σ w_k ≡ 1</b>，这一条使 <span class="formula" style="display:inline;padding:2px 6px">c=(1,1,…,1)</span> 恰好落在零方向上）。整体水平不进入模型，拟合在相邻反差 <span class="formula" style="display:inline;padding:2px 6px">e_k = c_k − c_{k+1}</span> 上做。</p>
+<svg viewBox="0 0 1000 300" width="100%" role="img"><rect x="132" y="30" width="828" height="214" fill="#fbfcfe" stroke="#dfe3ea"/><line x1="162.7" y1="30" x2="162.7" y2="244" stroke="#eef1f6"/><text x="162.7" y="262" font-size="11" fill="#8a94a4" text-anchor="middle">1e-13</text><line x1="316.0" y1="30" x2="316.0" y2="244" stroke="#eef1f6"/><text x="316.0" y="262" font-size="11" fill="#8a94a4" text-anchor="middle">1e-12</text><line x1="469.3" y1="30" x2="469.3" y2="244" stroke="#eef1f6"/><text x="469.3" y="262" font-size="11" fill="#8a94a4" text-anchor="middle">1e-11</text><line x1="622.7" y1="30" x2="622.7" y2="244" stroke="#eef1f6"/><text x="622.7" y="262" font-size="11" fill="#8a94a4" text-anchor="middle">1e-10</text><line x1="776.0" y1="30" x2="776.0" y2="244" stroke="#eef1f6"/><text x="776.0" y="262" font-size="11" fill="#8a94a4" text-anchor="middle">1e-9</text><line x1="929.3" y1="30" x2="929.3" y2="244" stroke="#eef1f6"/><text x="929.3" y="262" font-size="11" fill="#8a94a4" text-anchor="middle">1e-8</text><text x="546" y="292" font-size="12" fill="#5a6675" text-anchor="middle">最宽一侧 95% 区间绝对值 |Δt|</text><text x="122" y="55.4" font-size="12" fill="#1a2230" text-anchor="end">c1-c2</text><line x1="162.7" y1="51.4" x2="336.1" y2="51.4" stroke="#2540a6" stroke-width="7" stroke-linecap="round" opacity="0.28"/><circle cx="336.1" cy="51.4" r="4.6" fill="#2540a6"/><text x="346.1" y="55.4" font-size="11.5" fill="#2540a6">1.35e-12</text><text x="122" y="98.2" font-size="12" fill="#1a2230" text-anchor="end">c2-c3</text><line x1="162.7" y1="94.2" x2="353.6" y2="94.2" stroke="#2540a6" stroke-width="7" stroke-linecap="round" opacity="0.28"/><circle cx="353.6" cy="94.2" r="4.6" fill="#2540a6"/><text x="363.6" y="98.2" font-size="11.5" fill="#2540a6">1.76e-12</text><text x="122" y="141.0" font-size="12" fill="#1a2230" text-anchor="end">c3-c4</text><line x1="162.7" y1="137.0" x2="302.6" y2="137.0" stroke="#2540a6" stroke-width="7" stroke-linecap="round" opacity="0.28"/><circle cx="302.6" cy="137.0" r="4.6" fill="#2540a6"/><text x="312.6" y="141.0" font-size="11.5" fill="#2540a6">8.18e-13</text><text x="122" y="183.8" font-size="12" fill="#1a2230" text-anchor="end">c4-c5</text><line x1="162.7" y1="179.8" x2="898.7" y2="179.8" stroke="#a12a2a" stroke-width="7" stroke-linecap="round" opacity="0.28"/><circle cx="898.7" cy="179.8" r="4.6" fill="#a12a2a"/><text x="908.7" y="183.8" font-size="11.5" fill="#a12a2a">6.31e-09</text><text x="122" y="226.6" font-size="12" fill="#1a2230" text-anchor="end">c5-c6</text><line x1="162.7" y1="222.6" x2="637.0" y2="222.6" stroke="#a12a2a" stroke-width="7" stroke-linecap="round" opacity="0.28"/><circle cx="637.0" cy="222.6" r="4.6" fill="#a12a2a"/><text x="647.0" y="226.6" font-size="11.5" fill="#a12a2a">1.24e-10</text><text x="138" y="20" font-size="11.5" fill="#5a6675">合并拟合：12 点 / m=5 / dof=7 / δχ²=3.054（门槛 11.07）</text></svg>
+  <table>
+    <tr><th>反差</th><th>点估计</th><th>σ</th><th>95% 区间</th></tr>
+    <tr><td>c1-c2</td><td class="num">-2.849966E-13</td><td class="num">5.449513E-13</td><td class="num">[-1.353081E-12, 7.830882E-13]</td></tr><tr><td>c2-c3</td><td class="num">-5.694411E-13</td><td class="num">6.068413E-13</td><td class="num">[-1.758828E-12, 6.199461E-13]</td></tr><tr><td>c3-c4</td><td class="num">-1.889251E-13</td><td class="num">3.209333E-13</td><td class="num">[-8.179427E-13, 4.400926E-13]</td></tr><tr><td>c4-c5</td><td class="num">-2.365282E-9</td><td class="num">2.013587E-9</td><td class="num">[-6.311840E-9, 1.581275E-9]</td></tr><tr><td>c5-c6</td><td class="num">-2.172954E-11</td><td class="num">5.217055E-11</td><td class="num">[-1.239819E-10, 8.052286E-11]</td></tr>
+  </table>
+  <div class="good"><b>可读的说法</b>：相对势深 <span class="formula" style="display:inline;padding:2px 6px">δΦ/(μ/r)</span> 在 0.2–3 AU 内的变化被限制在 <b>1e−12</b> 量级，在 3–8 AU 内限制在 <b>1e−9</b> 量级。而它的<b>整体水平完全自由</b>。合并拟合 12 点 / m=5 / dof=7，δχ²=<b>3.054</b>，门槛 χ²₉₅(5)=<b>11.07</b> ⇒ 数据<b>不需要</b>任何形状变化。</div>
+  <div class="note"><b>硬限制（必须登记）</b>：两套历表用<b>同样 6 颗行星</b>，同一行星的核向量完全相同，合并后 12 行只有 <b>6 个不同行</b>，秩至多 6。故 m=6 恰好定、<b>m≥7 必奇异</b>。机读证据：N=8 返回奇异，N=5/N=6 均可解。要提径向分辨率只能增加行星或探测器，不是改算法。</div>
+  <div class="two">
+    <div>
+      <h3>稳健性：N=5（0.25–16 AU）</h3>
+      <table>
+        <tr><th>量</th><th>值</th></tr>
+        <tr><td>反差个数 m</td><td class="num">4</td></tr>
+        <tr><td>δχ²</td><td class="num">2.468541E+0</td></tr>
+        <tr><td>门槛 χ²₉₅(m)</td><td class="num">9.4877</td></tr>
+        <tr><td>cond(A)</td><td class="num">9.291811E+6</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>N=6（0.20–20 AU）</h3>
+      <table>
+        <tr><th>量</th><th>值</th></tr>
+        <tr><td>反差个数 m</td><td class="num">5</td></tr>
+        <tr><td>δχ²</td><td class="num">3.053887E+0</td></tr>
+        <tr><td>门槛 χ²₉₅(m)</td><td class="num">11.0705</td></tr>
+        <tr><td>cond(A)</td><td class="num">3.936509E+7</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>3. V128 的大 λ 极限：它就是一个常数径向加速度</h2>
+  <div class="formula">C   = -a (1 - r/lam + r^2/(2 lam^2) - ...)
+dPhi = -a mu/r  +  a mu/lam  -  a mu r/(2 lam^2)  + ...
+        └ GM 重标定 ┘  └ 常数势 ┘   └ 常数加速度 ┘
+          精确零方向      零力         第一个可约束项
+
+=>  Delta_varpi ∝ a/lam^2   =>   sigma_a ∝ lam^2      （第三册 J6 的代数原因）</div>
+  <p>这一步把第三册的「σ<sub>α</sub> ∝ λ²」从<b>数值观察</b>升级为<b>代数归约</b>。响应系数 J 有两条独立路径：求积核，与 Bessel 闭式的 λ→∞ 解析极限，互验到 1.18e−15。</p>
+  <table>
+    <tr><th>行星</th><th>J（求积）</th><th>J = −2π√(1−e²)（解析）</th><th>相对差</th></tr>
+    <tr><td>Earth</td><td class="num">-6.2823080145E+0</td><td class="num">-6.2823080145E+0</td><td class="num">1.184290E-15</td></tr><tr><td>Jupiter</td><td class="num">-6.2758238575E+0</td><td class="num">-6.2758238575E+0</td><td class="num">1.183665E-15</td></tr><tr><td>Mars</td><td class="num">-6.2557121357E+0</td><td class="num">-6.2557121357E+0</td><td class="num">1.181731E-15</td></tr><tr><td>Mercury</td><td class="num">-6.1489115262E+0</td><td class="num">-6.1489115262E+0</td><td class="num">1.171585E-15</td></tr><tr><td>Saturn</td><td class="num">-6.2739664914E+0</td><td class="num">-6.2739664914E+0</td><td class="num">1.183486E-15</td></tr><tr><td>Venus</td><td class="num">-6.2830411798E+0</td><td class="num">-6.2830411798E+0</td><td class="num">1.184361E-15</td></tr>
+  </table>
+  <div class="two">
+    <div>
+      <h3>核比收敛（水星）</h3>
+      <table>
+        <tr><th>λ/a</th><th>核比</th><th>(1−r)·λ</th></tr>
+        <tr><td class="num">1.0000E+2</td><td class="num">9.90049835E-1</td><td class="num">9.950165E-1</td></tr><tr><td class="num">1.0000E+3</td><td class="num">9.99000497E-1</td><td class="num">9.995026E-1</td></tr><tr><td class="num">1.0000E+4</td><td class="num">9.99900003E-1</td><td class="num">9.999750E-1</td></tr><tr><td class="num">1.0000E+5</td><td class="num">9.99989998E-1</td><td class="num">1.000245E+0</td></tr><tr><td class="num">1.0000E+6</td><td class="num">9.99998998E-1</td><td class="num">1.002500E+0</td></tr>
+      </table>
+      <p style="font-size:12.8px;color:var(--sub)">(1−r)·λ → 1，正是 e<sup>−r/λ</sup> 展开的 O(1/λ) 截断，不是机器误差。</p>
+    </div>
+    <div>
+      <h3>交叉项诊断（水星）</h3>
+      <table>
+        <tr><th>α</th><th>有限振幅偏离</th></tr>
+        <tr><td class="num">1.0000E-2</td><td class="num">9.900988E-3</td></tr><tr><td class="num">1.0000E-3</td><td class="num">9.989986E-4</td></tr>
+      </table>
+      <p style="font-size:12.8px;color:var(--sub)">偏离正比 α（9.91 vs 理论 10）⇒ 这是 O(α²) 二阶项，不是修正定律。</p>
+    </div>
+  </div>
+<svg viewBox="0 0 1000 360" width="100%" role="img"><rect x="84" y="26" width="890" height="280" fill="#fbfcfe" stroke="#dfe3ea"/><line x1="96.4" y1="26" x2="96.4" y2="306" stroke="#eef1f6"/><text x="96.4" y="323" font-size="10.5" fill="#8a94a4" text-anchor="middle">1e-1</text><line x1="220.0" y1="26" x2="220.0" y2="306" stroke="#eef1f6"/><text x="220.0" y="323" font-size="10.5" fill="#8a94a4" text-anchor="middle">1e0</text><line x1="343.6" y1="26" x2="343.6" y2="306" stroke="#eef1f6"/><text x="343.6" y="323" font-size="10.5" fill="#8a94a4" text-anchor="middle">1e1</text><line x1="467.2" y1="26" x2="467.2" y2="306" stroke="#eef1f6"/><text x="467.2" y="323" font-size="10.5" fill="#8a94a4" text-anchor="middle">1e2</text><line x1="590.8" y1="26" x2="590.8" y2="306" stroke="#eef1f6"/><text x="590.8" y="323" font-size="10.5" fill="#8a94a4" text-anchor="middle">1e3</text><line x1="714.4" y1="26" x2="714.4" y2="306" stroke="#eef1f6"/><text x="714.4" y="323" font-size="10.5" fill="#8a94a4" text-anchor="middle">1e4</text><line x1="838.0" y1="26" x2="838.0" y2="306" stroke="#eef1f6"/><text x="838.0" y="323" font-size="10.5" fill="#8a94a4" text-anchor="middle">1e5</text><line x1="961.6" y1="26" x2="961.6" y2="306" stroke="#eef1f6"/><text x="961.6" y="323" font-size="10.5" fill="#8a94a4" text-anchor="middle">1e6</text><line x1="84" y1="297.8" x2="974" y2="297.8" stroke="#eef1f6"/><text x="76" y="301.3" font-size="10.5" fill="#8a94a4" text-anchor="end">1e-12</text><line x1="84" y1="256.6" x2="974" y2="256.6" stroke="#eef1f6"/><text x="76" y="260.1" font-size="10.5" fill="#8a94a4" text-anchor="end">1e-10</text><line x1="84" y1="215.4" x2="974" y2="215.4" stroke="#eef1f6"/><text x="76" y="218.9" font-size="10.5" fill="#8a94a4" text-anchor="end">1e-8</text><line x1="84" y1="174.2" x2="974" y2="174.2" stroke="#eef1f6"/><text x="76" y="177.7" font-size="10.5" fill="#8a94a4" text-anchor="end">1e-6</text><line x1="84" y1="133.1" x2="974" y2="133.1" stroke="#eef1f6"/><text x="76" y="136.6" font-size="10.5" fill="#8a94a4" text-anchor="end">1e-4</text><line x1="84" y1="91.9" x2="974" y2="91.9" stroke="#eef1f6"/><text x="76" y="95.4" font-size="10.5" fill="#8a94a4" text-anchor="end">1e-2</text><line x1="84" y1="50.7" x2="974" y2="50.7" stroke="#eef1f6"/><text x="76" y="54.2" font-size="10.5" fill="#8a94a4" text-anchor="end">1e0</text><line x1="84" y1="50.7" x2="974" y2="50.7" stroke="#a12a2a" stroke-width="1.6" stroke-dasharray="7 4"/><text x="92" y="43.7" font-size="11.5" fill="#a12a2a">α = 1（V128 名义耦合）</text><polyline points="467.2,215.4 590.8,174.2 714.4,133.1 838.0,91.9 961.6,50.7" fill="none" stroke="#8a5a00" stroke-width="1.8" stroke-dasharray="8 5" opacity="0.9"/><text x="526.2" y="183.8" font-size="11.5" fill="#8a5a00">斜率 2 参考线（∝λ²）</text><polyline points="96.4,258.4 182.8,284.7 220.0,284.4 306.4,265.7 402.6,235.7 467.2,214.5 590.8,173.4 714.4,132.2 838.0,91.1 961.6,49.9" fill="none" stroke="#2540a6" stroke-width="2.4"/><circle cx="96.4" cy="258.4" r="3.2" fill="#2540a6"/><circle cx="182.8" cy="284.7" r="3.2" fill="#2540a6"/><circle cx="220.0" cy="284.4" r="3.2" fill="#2540a6"/><circle cx="306.4" cy="265.7" r="3.2" fill="#2540a6"/><circle cx="402.6" cy="235.7" r="3.2" fill="#2540a6"/><circle cx="467.2" cy="214.5" r="3.2" fill="#2540a6"/><circle cx="590.8" cy="173.4" r="3.2" fill="#2540a6"/><circle cx="714.4" cy="132.2" r="3.2" fill="#2540a6"/><circle cx="838.0" cy="91.1" r="3.2" fill="#2540a6"/><circle cx="961.6" cy="49.9" r="3.2" fill="#2540a6"/><text x="121.6" y="299.7" font-size="11.5" fill="#2540a6">λ≈1 AU 处 α₉₅=4.48e−12</text><text x="847.8" y="40.5" font-size="11.5" fill="#2540a6">λ=1e6 AU 处 α₉₅=1.096</text><text x="529" y="352" font-size="12" fill="#5a6675" text-anchor="middle">λ / AU（对数）</text><text x="18" y="166" font-size="12" fill="#5a6675" transform="rotate(-90 18 166)">α₉₅（95% 上界）</text></svg>
+  <div class="neg"><b>一个必须记下来的事故</b>：首跑这一门用<b>有限振幅</b> α=1e−2，核比收敛到 <b>0.99</b> 而非 1，六行星一致到 1e−4，一度像「1% 的物理修正」。真因是零方向部分（O(α)）与可约束部分（O(α/λ²)）之间有个 O(α²) 交叉项，α=1e−2 时正好 1%。<b>新纪律：有限振幅探针只能测「信号是否高于噪声」，不能测标度律；标度律必须用导数。</b></div>
+</section>
+
+<section>
+  <h2>4. 八门读数</h2>
+  <table>
+    <tr><th>门</th><th>判定</th></tr>
+    <tr><td>K1-kernel-selfcheck-machine-zero</td><td class="ok">PASS</td></tr><tr><td>K2-gr-1pn-positive-control</td><td class="ok">PASS</td></tr><tr><td>K3-yukawa-matches-published-closed-form</td><td class="ok">PASS</td></tr><tr><td>K4-exact-null-space-and-partition-of-unity</td><td class="ok">PASS</td></tr><tr><td>K5-offsupport-window-zero-information</td><td class="ok">PASS</td></tr><tr><td>K6-shape-agnostic-contrast-fit</td><td class="ok">PASS</td></tr><tr><td>K7-no-hardcoded-ok-and-convergence</td><td class="ok">PASS</td></tr><tr><td>K8-large-lambda-reduces-to-constant-acceleration</td><td class="ok">PASS</td></tr>
+  </table>
+  <div class="good"><b>K2 为什么门限是 1e−6 而不是更紧</b>：所用 Φ<sub>eff</sub> 是 1PN 截断势，它给出的精确进动与 6πμ/(c²p) 之差本身是 O(μ/(c²a))。水星 ε=2.55e−8，实测残差 3.91e−8 ≈ 1.5ε——<b>这正是应当看到的 2PN 高阶项，不是机核误差</b>。把它当 bug 收紧门限，是拿物理当 bug 修。</div>
+  <div class="note"><b>K3 的意义</b>：求积侧对 α 精确、闭式侧对 α 一阶，两条互不引用的数学路径一致到 <b>2.50e−17</b>。这不仅验证本册机核，也<b>回头确认第三册的核没被算错</b>。</div>
+</section>
+
+<section>
+  <h2>5. 排除了什么 / 没排除什么</h2>
+  <div class="two">
+    <div>
+      <h3 style="color:var(--neg)">被挡住</h3>
+      <ul style="font-size:13.4px;padding-left:20px;margin:6px 0">
+        <li>相对势深在 0.2–3 AU 内变化 &gt; ~1e−12 的任何径向力</li>
+        <li>在 3–8 AU 内变化 &gt; ~6e−9 的任何径向力</li>
+        <li>特别地：λ ≲ 3 AU 的 Yukawa（profile 变化是 O(α)，α 被压到 1e−12 量级）</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:var(--ok)">没挡住</h3>
+      <ul style="font-size:13.4px;padding-left:20px;margin:6px 0">
+        <li>任何整体幅度（C≡常数 精确零信息，无论多大）</li>
+        <li>完全落在无采样区（&lt;0.05 AU 或 &gt;3e3 AU）的力：核<b>恰好 0</b></li>
+        <li>在 0.2–20 AU 内近似平坦的形状</li>
+        <li>只在别的观测量留痕的效应（本册一个都没做）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>「支撑外核恰好 0」不能读成「该区间不存在该力」。</b>它只说明这个观测量的信息量在那里是零。<b>没证明统一场论成立或失败；没证明第五力不存在；没排除非 Yukawa 形状；独立实验预言 0。</b></div>
+</section>
+
+<section>
+  <h2>6. 四册链：从「新意」到「观测」到「形状无关」</h2>
+  <div class="chain">
+    <div class="cbox"><b>第一册</b>V129 积分 ≡ 已发表 I₁ 闭式（6.7e−58）<br><b>新意 0</b>；λ→∞ 只是 GM 重标定</div>
+    <div class="cbox"><b>第二册</b>V128 的 κ<sub>r</sub>² 比自述<b>更精确</b>；Δϖ 一阶式比自述<b>更松</b>；外行星把边界推远 3.00 倍</div>
+    <div class="cbox"><b>第三册</b>真实星历拟合：Δχ² 峰 <b>0.44</b> 不过门槛；7.9 dex 排除带两端无约束</div>
+    <div class="cbox"><b>第四册（本册）</b>去掉形状假设：整体幅度<b>精确零信息</b>；大 λ 归约为常数加速度；形状变化压到 <b>1e−12</b></div>
+  </div>
+  <p style="margin-top:14px">四册不相加，每册只判「一个具体对象 against 一组具体数据」。<b>统一场论作为研究纲领没有被攻破，也不会被一次计算攻破。被攻破的只能是具体模型。</b>而 V128 这个具体模型的全部处境是：</p>
+  <div class="neg"><b>它活在一个由形状定义的盲区里，而不是活在数据支持里。</b></div>
+</section>
+
+<section>
+  <h2>7. 下一步（open，本册未执行）</h2>
+  <p>打破「整体幅度零信息」只有一条路：<b>换观测量</b>。</p>
+  <table>
+    <tr><th>观测量</th><th>是否打破零方向</th><th>本册为何未做</th></tr>
+    <tr><td>测距 / GM 测定</td><td class="ok">是</td><td>需一手时序或 GM 解算表</td></tr>
+    <tr><td>Shapiro 时间延迟</td><td class="ok">是</td><td>同上</td></tr>
+    <tr><td>LLR（月球激光测距）</td><td class="ok">是</td><td>需一手正常点残差序列</td></tr>
+    <tr><td>脉冲星计时</td><td class="ok">是（灵敏度高一个量级以上）</td><td>需一手 TOA 数据</td></tr>
+    <tr><td>自旋 / 参考系拖曳</td><td>部分</td><td>需引力磁型偏离，V128 未给出</td></tr>
+  </table>
+  <div class="note">在不引入一手数据的前提下，本册已经把「给定这两个观测量能说多少」说尽。继续在同一方向堆册，只会重复同一个零方向。</div>
+</section>
+
+<footer>
+  算法联盟 · ROOT V128 第四册 · 2026-11-22 · 非判定册，不占 RID，不入 README，不与 TUFT 链相加<br>
+  机读 <code>_ALG_rootv128d_shapeless_force_bound_recompute_2026-11-22.json</code>（37,987 B，SHA f590b8be019a153d…）
+  · 数据机读自第三册 JSON，未重新转录 · 两次运行逐字节相等
+</footer>
+
+</div>
+</body>
+</html>

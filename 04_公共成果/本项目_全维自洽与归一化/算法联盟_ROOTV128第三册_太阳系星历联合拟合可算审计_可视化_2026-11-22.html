@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法联盟 · ROOT V128 第三册 太阳系星历联合拟合 · 2026-11-22</title>
+<style>
+  :root{--bg:#f7f8fa;--panel:#fff;--ink:#1a2230;--sub:#5a6675;--line:#dfe3ea;
+        --accent:#2540a6;--ok:#137a4b;--okbg:#e7f6ee;--neg:#a12a2a;--negbg:#fdecec;
+        --warn:#8a5a00;--warnbg:#fff6e0;--code:#0f2d5c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.65;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1140px;margin:0 auto;padding:34px 22px 70px}
+  header{border-left:5px solid var(--accent);padding:6px 0 6px 18px;margin-bottom:26px}
+  h1{font-size:23px;margin:0 0 6px;line-height:1.35}
+  .meta{color:var(--sub);font-size:13px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+          padding:20px 22px;margin-bottom:18px}
+  h2{font-size:18px;margin:0 0 14px;color:var(--accent)}
+  p{margin:8px 0}
+  .stat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 2px}
+  .scard{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .scard .n{font-size:20px;font-weight:700;color:var(--accent)}
+  .scard .l{font-size:12px;color:var(--sub);margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.2px}
+  th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f3f5f9;color:var(--sub);font-weight:600}
+  td.num{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--code);white-space:nowrap;font-size:12.3px}
+  .note{background:var(--warnbg);border-left:4px solid #d8a11a;padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#5a4200;margin:12px 0}
+  .neg{background:var(--negbg);border-left:4px solid var(--neg);padding:10px 14px;
+       border-radius:6px;font-size:13.5px;color:#7a2020;margin:12px 0}
+  .good{background:var(--okbg);border-left:4px solid var(--ok);padding:10px 14px;
+        border-radius:6px;font-size:13.5px;color:#0d5636;margin:12px 0}
+  .formula{background:#f3f5f9;border-radius:7px;padding:10px 13px;font-size:13.6px;color:var(--code);
+           font-family:ui-monospace,Menlo,Consolas,monospace;overflow-x:auto;margin:10px 0}
+  .src a{color:var(--accent);text-decoration:none;border-bottom:1px dotted #9aa8c4}
+  footer{text-align:center;color:var(--sub);font-size:12.5px;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>ROOT V128 第三册 · 太阳系星历联合拟合（首次实际执行）</h1>
+  <div class="meta">算法联盟 · 2026-11-22 · 非判定册，不占 RID，不入 README ·
+    7 门全过 · 幂等 SHA-256 c7e500af6dd71626… ·
+    补第一册 G7 与第二册都登记为「未执行」的那个口子</div>
+</header>
+
+<section>
+  <div class="stat">
+    <div class="scard"><div class="n">7 / 7</div><div class="l">门禁全过</div></div>
+    <div class="scard"><div class="n">7.9 dex</div><div class="l">α=1 的排除带宽度</div></div>
+    <div class="scard"><div class="n">0.44</div><div class="l">Δχ² 峰（门槛 3.84）</div></div>
+    <div class="scard"><div class="n">1.52</div><div class="l">EPM2011 χ²/dof</div></div>
+  </div>
+  <div class="neg"><b>先划清「攻」的边界</b>：统一场论作为研究纲领<b>不能被一次计算攻破</b>。能被计算攻破的，是某个具体模型面对某组具体数据。本册攻的对象被限死为：<b>V128 提出的 Yukawa 第五力，用 EPM2011 与 INPOP10a 的实测补充进动，能不能活？</b></div>
+</section>
+
+<section>
+  <h2>一、数据：三篇独立文献逐字一致（J1）</h2>
+  <p>拟合对象不是自造的数，是别人测出的<b>补充进动</b>（已扣除牛顿＋GR 的残差），单位 mas/世纪：</p>
+  <table>
+    <tr><th>行星</th><th>EPM2011</th><th>INPOP10a</th></tr>
+    <tr><td>水星</td><td class="num">−2.0 ± 3.0</td><td class="num">0.4 ± 0.6</td></tr>
+    <tr><td>金星</td><td class="num">2.6 ± 1.6</td><td class="num">0.2 ± 1.5</td></tr>
+    <tr><td>地球</td><td class="num">0.19 ± 0.19</td><td class="num">−0.2 ± 0.9（EMB）</td></tr>
+    <tr><td>火星</td><td class="num">−0.020 ± 0.037</td><td class="num">−0.04 ± 0.15</td></tr>
+    <tr><td>木星</td><td class="num">58.7 ± 28.3</td><td class="num">−41 ± 42</td></tr>
+    <tr><td>土星</td><td class="num">−0.32 ± 0.47</td><td class="num">0.15 ± 0.65</td></tr>
+  </table>
+  <p class="src" style="font-size:12.5px;color:#5a6675">同表三处逐字一致：<a href="https://arxiv.org/abs/1510.02946">arXiv:1510.02946 表1</a> · <a href="https://doi.org/10.1140/epjc/s10052-015-3771-4">EPJC 75:539 表1</a> · <a href="https://doi.org/10.1140/epjc/s10052-017-4722-z">EPJC 77:149 表1</a>（原始测量 Pitjev &amp; Pitjeva 2013 / Fienga et al. 2011）。EMB 按地球 a 近似，相对差 3e−5。</p>
+</section>
+
+<section>
+  <h2>二、拟合器先自校准，再碰真实数据（J2）</h2>
+  <p>注入已知 (α*, λ*) = (3e−3, 1 AU) + 确定性噪声（固定种子 20261122 的 LCG，保证幂等），100 次实现：</p>
+  <table>
+    <tr><th>量</th><th>读数</th><th>期望</th><th>判定</th></tr>
+    <tr><td>标准化残差均值 ⟨z⟩</td><td class="num">0.104</td><td class="num">0</td><td>无偏</td></tr>
+    <tr><td>标准化残差标准差 sd(z)</td><td class="num">0.970</td><td class="num">1</td><td>σ 标定正确</td></tr>
+    <tr><td>1σ 覆盖率</td><td class="num">64.0%</td><td class="num">68.3%</td><td>通过</td></tr>
+    <tr><td>95% 覆盖率</td><td class="num">96.0%</td><td class="num">95%</td><td>通过</td></tr>
+  </table>
+  <div class="good">如果拟合器本身有偏或 σ 算错，后面所有上界都不可信。<b>这一步过了，后面的数才有资格被引用。</b></div>
+</section>
+
+<section>
+  <h2>三、真实拟合：残差不需要第五力（J3 / J5）</h2>
+  <div class="formula">模型（V128 盒装式，对 α 线性）：Δϖ_i = α · K_i(λ)
+K_i = 2π a_i √(1−e_i²) / (e_i λ) · e^{−a_i/λ} · I₁(a_i e_i / λ) × (圈/世纪)
+零假设：α = 0（纯牛顿＋GR）</div>
+  <table>
+    <tr><th>历表</th><th>χ²(α=0)</th><th>dof</th><th>χ²/dof</th><th>与标准引力相容</th></tr>
+    <tr><td>EPM2011</td><td class="num">9.1431</td><td class="num">6</td><td class="num"><b>1.524</b></td><td>是</td></tr>
+    <tr><td>INPOP10a</td><td class="num">1.5889</td><td class="num">6</td><td class="num"><b>0.265</b></td><td>是</td></tr>
+  </table>
+  <p><b>来料所问「是否存在无法由标准引力解释的共同残差」的直接答案</b> —— Δχ² = χ²(0) − min<sub>α</sub>χ² 的全局峰：</p>
+  <table>
+    <tr><th>历表</th><th>峰 Δχ²</th><th>峰位 λ</th><th>95% 门槛</th><th>显著改善？</th></tr>
+    <tr><td>EPM2011</td><td class="num"><b>0.444</b></td><td class="num">0.01 AU</td><td class="num">3.841</td><td><b>否</b></td></tr>
+    <tr><td>INPOP10a</td><td class="num"><b>0.448</b></td><td class="num">0.126 AU</td><td class="num">3.841</td><td><b>否</b></td></tr>
+  </table>
+  <div class="neg"><b>不存在无法由标准引力理论解释的共同残差。</b>引入第五力不能显著改善拟合——两套独立历表的峰值都只有门槛的 1/9 左右。<b>注意这是「未检出」，不是「不存在」。</b></div>
+</section>
+
+<section>
+  <h2>四、α=1 的可排除窗口是一条有限带（J4）</h2>
+  <svg viewBox="0 0 680 330" width="100%" style="max-width:680px;display:block;margin:8px auto 4px">
+    <!-- excluded band shading -->
+    <rect x="86.5" y="40" width="513.5" height="230" fill="#fdecec"/>
+    <rect x="80" y="40" width="520" height="230" fill="none" stroke="#dfe3ea"/>
+    <!-- horizontal grid -->
+    <g stroke="#f0f2f6">
+      <line x1="80" y1="204.3" x2="600" y2="204.3"/>
+      <line x1="80" y1="138.6" x2="600" y2="138.6"/>
+    </g>
+    <!-- alpha=1 line -->
+    <line x1="80" y1="72.9" x2="600" y2="72.9" stroke="#a12a2a" stroke-dasharray="6 4" stroke-width="1.4"/>
+    <text x="604" y="76" font-size="10.5" fill="#a12a2a">α=1</text>
+    <!-- alpha_95 curve (lambda >= 0.1) -->
+    <polyline points="145,238.6 190.4,259.6 210,259.9 255.4,244.5 306,220.5 340,203.6 405,170.8 470,137.9 535,105.0 600,72.2"
+              fill="none" stroke="#2540a6" stroke-width="2.4"/>
+    <!-- unconstrained short-range point -->
+    <circle cx="80" cy="54.4" r="4" fill="#fff" stroke="#2540a6" stroke-width="2"/>
+    <text x="88" y="50" font-size="10.5" fill="#2540a6">λ=0.01：α₉₅=13.4，无约束</text>
+    <!-- band edges -->
+    <line x1="86.5" y1="40" x2="86.5" y2="270" stroke="#a12a2a" stroke-width="1.1" stroke-dasharray="4 4"/>
+    <line x1="600" y1="40" x2="600" y2="270" stroke="#a12a2a" stroke-width="1.1" stroke-dasharray="4 4"/>
+    <text x="92" y="290" font-size="10.5" fill="#a12a2a">短程端 0.0126 AU</text>
+    <text x="596" y="290" font-size="10.5" fill="#a12a2a" text-anchor="end">长程端约 1e6 AU</text>
+    <text x="340" y="60" font-size="12" fill="#a12a2a" text-anchor="middle" font-weight="600">排除带：7.9 个数量级</text>
+    <!-- axes -->
+    <g font-size="10.5" fill="#5a6675">
+      <text x="74" y="274" text-anchor="end">1e−12</text>
+      <text x="74" y="208" text-anchor="end">1e−8</text>
+      <text x="74" y="142" text-anchor="end">1e−4</text>
+      <text x="74" y="76" text-anchor="end">1</text>
+      <text x="80" y="306" text-anchor="middle">0.01</text>
+      <text x="145" y="306" text-anchor="middle">0.1</text>
+      <text x="210" y="306" text-anchor="middle">1</text>
+      <text x="275" y="306" text-anchor="middle">10</text>
+      <text x="340" y="306" text-anchor="middle">100</text>
+      <text x="405" y="306" text-anchor="middle">1e3</text>
+      <text x="470" y="306" text-anchor="middle">1e4</text>
+      <text x="535" y="306" text-anchor="middle">1e5</text>
+      <text x="600" y="306" text-anchor="middle">1e6</text>
+      <text x="340" y="324" text-anchor="middle">作用程 λ（AU，对数）</text>
+      <text x="24" y="155" text-anchor="middle" transform="rotate(-90 24 155)">α 的 95% 上界（对数）</text>
+    </g>
+  </svg>
+  <p>蓝曲线在红虚线<b>下方</b>即 α=1 被排除。曲线在两侧都抬头穿过 α=1：</p>
+  <table>
+    <tr><th>历表</th><th>排除带 (AU)</th><th>跨距</th><th>排除网格点</th></tr>
+    <tr><td>EPM2011</td><td class="num"><b>1.259e−2 → 1.000e+6</b></td><td class="num"><b>7.90 dex</b></td><td class="num">80 / 111</td></tr>
+    <tr><td>INPOP10a</td><td class="num">1.259e−2 → 5.012e+5</td><td class="num">7.60 dex</td><td class="num">77 / 111</td></tr>
+  </table>
+  <p><b>关键是这是「带」不是「上界」</b>，两端都不设限：</p>
+  <p>① <b>短程端</b>（λ ≲ 0.013 AU）：e<sup>−a/λ</sup> 把力压成零，行星感觉不到。</p>
+  <p>② <b>长程端</b>（λ ≳ 1e6 AU）：K ∝ λ<sup>−2</sup> → 0，同样感觉不到。且这里 <b>α 根本不是可独立测量的参数</b>——λ ≫ a 时 Yukawa 退化为 GM 的常数重标定，被历表拟合吸收进 GM<sub>⊙</sub>。</p>
+  <div class="good">J6 机读给出退化的定量形态：λ 增加 5 个数量级，σ<sub>α</sub> 涨 <b>9.98e9 倍</b>（理论 1e10，相对差 1.8e−3）。<b>退化不是本册假设的，是拟合自己长出来的。</b></div>
+</section>
+
+<section>
+  <h2>五、必查陷阱：线性化站不站得住</h2>
+  <p>上面 α₉₅ 小到 1e−12，来自<b>对 α 一阶</b>的 Δϖ = αK。若界本身就落在公式失效处，那就是自欺。在 95% 上界处算每圈进动 |α₉₅|·K<sub>orb</sub>：</p>
+  <table>
+    <tr><th>历表</th><th>最坏 |α₉₅|·K<sub>orb</sub></th><th>判定</th></tr>
+    <tr><td>EPM2011</td><td class="num">3.13e−10</td><td>远 ≪ 1，线性域内</td></tr>
+    <tr><td>INPOP10a</td><td class="num">9.29e−10</td><td>远 ≪ 1，线性域内</td></tr>
+  </table>
+  <p>反过来看同一张表的另一列——<b>α=1 处的每圈进动：1.04 到 1.70 rad，即 60° 到 97° 每圈</b>。轨道在这个力下根本不存在。</p>
+  <div class="neg">所以「α=1 被排除」<b>不是线性外推的假象</b>：线性式已经给出荒谬量级，真实（非线性）效应只会更荒谬。这个排除是 <b>a fortiori</b> 成立的。<br><br>
+  与 Iorio (2007) 用 EPM2004 给的 α ≲ 1.3e−9 相比，本册在 λ=0.1 AU 处给 8.2e−11，约紧 16 倍——<b>不是矛盾，是数据代差</b>（文献本身写明 EPM2011/INPOP10a 相对 EPM2004 significantly improved）。</div>
+</section>
+
+<section>
+  <h2>六、本册证明了什么，没证明什么</h2>
+  <table>
+    <tr><th>证明了</th><th>没有证明</th></tr>
+    <tr>
+      <td>① V128 的 Yukawa 在 λ ∈ [0.013, 1e6] AU 内与实测行星进动不相容（α=O(1)）<br>
+          ② 两套独立历表补充进动均与 α=0 相容（χ²/dof = 1.52、0.27）<br>
+          ③ 引入第五力不能显著改善拟合（Δχ² 峰 0.44/0.45 vs 门槛 3.84）<br>
+          ④ 长程端「不设限」是可辨识性退化，非测量不足（σ<sub>α</sub> ∝ λ² 已机读验证）</td>
+      <td>① <b>没有证明统一场论成立或失败</b>——只判决一个具体模型 against 一组数据<br>
+          ② <b>没有证明第五力不存在</b>——未检出 ≠ 不存在<br>
+          ③ 没有排除非 Yukawa 形状的修改引力<br>
+          ④ <b>没有独立预言</b>，本轮独立实验预言计数仍为 <b>0</b><br>
+          ⑤ 没有重拟合星历，数据是别人测的</td>
+    </tr>
+  </table>
+  <div class="note"><b>已知弱点</b>：χ²/dof &lt; 2 是常规约定非严格检验；木星 EPM2011 的 58.7±28.3 是 2.1σ、金星 2.6±1.6 是 1.6σ（合理涨落内，但未逐一追查来源）；带的两端只精确到 0.1 dex 网格，λ=1e6 AU 处为临界判定（95% 区间 [−1.097, 0.669]，上沿距 1 仅差 33%）。</div>
+  <div class="neg">数学自洽 ≠ 实验证实；<b>本册不给「统一场论成立/失败」的判决，只给「一个具体模型 against 一组具体数据」的统计判决</b>；未检出 ≠ 不存在；未被满足 ≠ 不可满足；独立实验预言 0；四力统一未证。</div>
+  <p style="font-size:12.5px;color:var(--sub)">复现：python -c "import glob,runpy; h=glob.glob('openuft/**/_alg_rootv128c_ephemeris_jointfit_recompute.py',recursive=True); assert len(h)==1; runpy.run_path(h[0],run_name='__main__')"　|　幂等 SHA-256 c7e500af6dd71626… 逐字节相等　|　README 零写入（源码无写路径）</p>
+</section>
+
+<footer>算法联盟 · ROOT V128 第三册 · 2026-11-22 · 非判定册，不与 TUFT 链相加</footer>
+</div>
+</body>
+</html>

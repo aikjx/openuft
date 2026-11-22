@@ -1,0 +1,1054 @@
+{
+  "boundary": [
+    "本册判决的是「这组数据对任意径向势的约束力」，不是「统一场论成立/失败」",
+    "「整体幅度零信息」是精确结构事实，但它只对近点进动成立",
+    "打破该零方向必须换观测量（测距/GM 测定/时间延迟），本册未执行，标为 open",
+    "支撑外窗口核恰好 0 = 无行星采样 = 零信息；不能读作「该区间不存在该力」",
+    "反差区间有限不等于约束强：本册如实报数值，不设「够紧」的主观门槛",
+    "未被满足 != 不可满足；未检出 != 不存在",
+    "本册独立实验预言 0；不产新物理"
+  ],
+  "constants": {
+    "AU_m": "1.4959787070E+11",
+    "GM_sun": "1.3271244002E+20",
+    "c_light": "2.9979245800E+8",
+    "chi2_95_1dof": "3.8414588207E+0",
+    "romberg_levels": [
+      64,
+      128,
+      256,
+      512
+    ],
+    "z_95": "1.9599639845E+0"
+  },
+  "data_source": {
+    "file": "_ALG_rootv128c_ephemeris_jointfit_recompute_2026-11-22.json",
+    "note": "机读第三册登记的三源一致数据，不重新转录，本册不引入新数据"
+  },
+  "date": "2026-11-22",
+  "discipline": [
+    "先证机核（K1 机器零 + 奇性）再报读数；GR 1PN 正对照是全链条含单位换算的检验",
+    "跨册归约（K3）用两条互不引用的数学路径：精确求积 vs Bessel 闭式",
+    "零方向不靠数值观察，靠代数证明 + 机器零双证",
+    "拟合在相邻反差上做，避开奇异法方程；整体水平不进入模型",
+    "两档基（N=6 / N=9）并报，参数增多须使区间变宽，否则视为机核有问题",
+    "节点表按折返点缓存，r(s) 与 C 无关这一事实本身也是机核正确性的结构保证",
+    "无写死 ok；幂等两次 JSON 逐字节相等",
+    "不自盖章：门全过 != 有新物理；本册新物理 0"
+  ],
+  "gates": {
+    "K1-kernel-selfcheck-machine-zero": true,
+    "K2-gr-1pn-positive-control": true,
+    "K3-yukawa-matches-published-closed-form": true,
+    "K4-exact-null-space-and-partition-of-unity": true,
+    "K5-offsupport-window-zero-information": true,
+    "K6-shape-agnostic-contrast-fit": true,
+    "K7-no-hardcoded-ok-and-convergence": true,
+    "K8-large-lambda-reduces-to-constant-acceleration": true
+  },
+  "guards": {
+    "checked_patterns": 2,
+    "convergence": [
+      {
+        "final_ladder_step": "7.7555E-1",
+        "finest_simpson": "7.755465564736E-1",
+        "planet": "Mercury",
+        "rel_gap": "1.0633E-19",
+        "romberg_value": "7.755465564736E-1"
+      },
+      {
+        "final_ladder_step": "7.9453E-1",
+        "finest_simpson": "7.945279953223E-1",
+        "planet": "Earth",
+        "rel_gap": "3.7849E-22",
+        "romberg_value": "7.945279953223E-1"
+      },
+      {
+        "final_ladder_step": "7.9360E-1",
+        "finest_simpson": "7.936020491939E-1",
+        "planet": "Jupiter",
+        "rel_gap": "3.2865E-21",
+        "romberg_value": "7.936020491939E-1"
+      }
+    ],
+    "max_rel_gap": "1.063276E-19",
+    "no_hardcoded_ok": true,
+    "note": "Romberg 外推到 O(h^10)；最细 Simpson 与外推值之差须 <1e-10 相对，否则不得报出 1e-13 级别的一致性（K3）。先证收敛，再报读数。",
+    "ok": true
+  },
+  "k1_kernel_selfcheck": {
+    "linearity_probe_amplitude": "1.0000E-7",
+    "linearity_probe_product": "1.845595E-13",
+    "max_abs_at_C0": "8.862149E-19",
+    "max_cd_h_convergence_rel": "1.440816E-10",
+    "max_even_over_odd": "1.845595E-6",
+    "note": "(a) C==0 必须机器零（Kepler 闭合）。(b) 中心差分在 h 与 h/2 下必须一致到 1e-6 以内，这是「偶部被抵消」的直接证据，也是 Richardson 外推成立的前提。(c) 偶部/奇部比是物理非线性度：本册报出的反差上界约 1e-8，取 1e-7 作保守探针，乘积须 <<1e-4 才算真正在线性区。门限 1e-17 是机器零地板（信号 O(1) 弧度/圈），非物理门限。",
+    "ok": true,
+    "rows": [
+      {
+        "cd_h_convergence_rel": "1.3739E-10",
+        "delta_varpi_at_C0_rad": "-3.2298E-21",
+        "even_over_odd_part": "1.1968E-8",
+        "kernel_at_lam_half_a": "1.7006732877E+0",
+        "planet": "Earth"
+      },
+      {
+        "cd_h_convergence_rel": "1.3759E-10",
+        "delta_varpi_at_C0_rad": "-2.8014E-20",
+        "even_over_odd_part": "1.0046E-7",
+        "kernel_at_lam_half_a": "1.7006706026E+0",
+        "planet": "Jupiter"
+      },
+      {
+        "cd_h_convergence_rel": "1.3828E-10",
+        "delta_varpi_at_C0_rad": "-1.1541E-19",
+        "even_over_odd_part": "3.7538E-7",
+        "kernel_at_lam_half_a": "1.7006353771E+0",
+        "planet": "Mars"
+      },
+      {
+        "cd_h_convergence_rel": "1.4408E-10",
+        "delta_varpi_at_C0_rad": "-8.8621E-19",
+        "even_over_odd_part": "1.8456E-6",
+        "kernel_at_lam_half_a": "1.6997654532E+0",
+        "planet": "Mercury"
+      },
+      {
+        "cd_h_convergence_rel": "1.3765E-10",
+        "delta_varpi_at_C0_rad": "-3.5413E-20",
+        "even_over_odd_part": "1.2583E-7",
+        "kernel_at_lam_half_a": "1.7006690546E+0",
+        "planet": "Saturn"
+      },
+      {
+        "cd_h_convergence_rel": "1.3737E-10",
+        "delta_varpi_at_C0_rad": "-5.2861E-22",
+        "even_over_odd_part": "1.9661E-9",
+        "kernel_at_lam_half_a": "1.7006733254E+0",
+        "planet": "Venus"
+      }
+    ]
+  },
+  "k2_gr_positive_control": {
+    "max_rel_diff": "3.909106E-8",
+    "note": "唯一带外部已知答案的全链条检验：势 -> 折返条件 -> 求积 -> 弧度/圈 -> 与 6 pi GM/(c^2 a(1-e^2)) 比对。若口径或符号错，此门必 FAIL。门限取 1e-6 而非更紧：所用 Phi_eff 是 1PN 截断势，其精确进动与该式的差本身是 O(mu/(c^2 a)) 量级（水星约 2.5e-8），实测残差正是这个量级，属本册本来就该看到的 2PN 高阶项，不是机核误差。",
+    "ok": true,
+    "rows": [
+      {
+        "delta_varpi_quadrature_rad": "1.8610891770E-7",
+        "eps": "9.870628E-9",
+        "planet": "Earth",
+        "predicted_6pi_eps_over_1me2": "1.8610891494E-7",
+        "rel_diff": "1.480799E-8"
+      },
+      {
+        "delta_varpi_quadrature_rad": "3.5840995203E-8",
+        "eps": "1.896971E-9",
+        "planet": "Jupiter",
+        "predicted_6pi_eps_over_1me2": "3.5840995101E-8",
+        "rel_diff": "2.848015E-9"
+      },
+      {
+        "delta_varpi_quadrature_rad": "1.2318659288E-7",
+        "eps": "6.478226E-9",
+        "planet": "Mars",
+        "predicted_6pi_eps_over_1me2": "1.2318659168E-7",
+        "rel_diff": "9.759171E-9"
+      },
+      {
+        "delta_varpi_quadrature_rad": "5.0186537501E-7",
+        "eps": "2.549898E-8",
+        "planet": "Mercury",
+        "predicted_6pi_eps_over_1me2": "5.0186535539E-7",
+        "rel_diff": "3.909106E-8"
+      },
+      {
+        "delta_varpi_quadrature_rad": "1.9566191605E-8",
+        "eps": "1.034975E-9",
+        "planet": "Saturn",
+        "predicted_6pi_eps_over_1me2": "1.9566191575E-8",
+        "rel_diff": "1.552935E-9"
+      },
+      {
+        "delta_varpi_quadrature_rad": "2.5723389866E-7",
+        "eps": "1.364606E-8",
+        "planet": "Venus",
+        "predicted_6pi_eps_over_1me2": "2.5723389340E-7",
+        "rel_diff": "2.046955E-8"
+      }
+    ]
+  },
+  "k3_yukawa_crossvolume": {
+    "max_rel_diff": "2.499864E-17",
+    "n_cases": 18,
+    "note": "求积侧对 alpha 精确（中心差分 + Richardson 取 alpha->0 导数，即单位 alpha 的核），闭式侧对 alpha 一阶、对 e 精确。两者一致 => 第三册的核没被算错，且本册的求积机核与它同口径。门限 1e-13 由差分地板决定，非物理门限。",
+    "ok": true,
+    "rows": [
+      {
+        "bessel_closed_form": "1.3326541336E-5",
+        "lam_over_a": "5.0000E-2",
+        "planet": "Mercury",
+        "quadrature_kernel": "1.3326541336E-5",
+        "rel_diff": "1.8762E-17"
+      },
+      {
+        "bessel_closed_form": "5.8940181977E-1",
+        "lam_over_a": "2.0000E-1",
+        "planet": "Mercury",
+        "quadrature_kernel": "5.8940181977E-1",
+        "rel_diff": "2.4472E-19"
+      },
+      {
+        "bessel_closed_form": "1.1370176611E+0",
+        "lam_over_a": "1.0000E+0",
+        "planet": "Mercury",
+        "quadrature_kernel": "1.1370176611E+0",
+        "rel_diff": "1.5906E-18"
+      },
+      {
+        "bessel_closed_form": "1.0070734783E-1",
+        "lam_over_a": "5.0000E+0",
+        "planet": "Mercury",
+        "quadrature_kernel": "1.0070734783E-1",
+        "rel_diff": "2.1131E-17"
+      },
+      {
+        "bessel_closed_form": "3.3040895311E-3",
+        "lam_over_a": "3.0000E+1",
+        "planet": "Mercury",
+        "quadrature_kernel": "3.3040895311E-3",
+        "rel_diff": "2.4868E-17"
+      },
+      {
+        "bessel_closed_form": "3.4046942428E-5",
+        "lam_over_a": "3.0000E+2",
+        "planet": "Mercury",
+        "quadrature_kernel": "3.4046942428E-5",
+        "rel_diff": "2.4999E-17"
+      },
+      {
+        "bessel_closed_form": "2.6260861742E-6",
+        "lam_over_a": "5.0000E-2",
+        "planet": "Earth",
+        "quadrature_kernel": "2.6260861742E-6",
+        "rel_diff": "1.7958E-20"
+      },
+      {
+        "bessel_closed_form": "5.2958507676E-1",
+        "lam_over_a": "2.0000E-1",
+        "planet": "Earth",
+        "quadrature_kernel": "5.2958507676E-1",
+        "rel_diff": "3.9970E-21"
+      },
+      {
+        "bessel_closed_form": "1.1556063151E+0",
+        "lam_over_a": "1.0000E+0",
+        "planet": "Earth",
+        "quadrature_kernel": "1.1556063151E+0",
+        "rel_diff": "1.4284E-18"
+      },
+      {
+        "bessel_closed_form": "1.0287051906E-1",
+        "lam_over_a": "5.0000E+0",
+        "planet": "Earth",
+        "quadrature_kernel": "1.0287051906E-1",
+        "rel_diff": "2.1060E-17"
+      },
+      {
+        "bessel_closed_form": "3.3757498308E-3",
+        "lam_over_a": "3.0000E+1",
+        "planet": "Earth",
+        "quadrature_kernel": "3.3757498308E-3",
+        "rel_diff": "2.4865E-17"
+      },
+      {
+        "bessel_closed_form": "3.4785565851E-5",
+        "lam_over_a": "3.0000E+2",
+        "planet": "Earth",
+        "quadrature_kernel": "3.4785565851E-5",
+        "rel_diff": "2.4999E-17"
+      },
+      {
+        "bessel_closed_form": "2.9845048993E-6",
+        "lam_over_a": "5.0000E-2",
+        "planet": "Saturn",
+        "quadrature_kernel": "2.9845048993E-6",
+        "rel_diff": "2.7615E-19"
+      },
+      {
+        "bessel_closed_form": "5.3327761301E-1",
+        "lam_over_a": "2.0000E-1",
+        "planet": "Saturn",
+        "quadrature_kernel": "5.3327761301E-1",
+        "rel_diff": "1.4589E-20"
+      },
+      {
+        "bessel_closed_form": "1.1544546891E+0",
+        "lam_over_a": "1.0000E+0",
+        "planet": "Saturn",
+        "quadrature_kernel": "1.1544546891E+0",
+        "rel_diff": "1.4382E-18"
+      },
+      {
+        "bessel_closed_form": "1.0273529244E-1",
+        "lam_over_a": "5.0000E+0",
+        "planet": "Saturn",
+        "quadrature_kernel": "1.0273529244E-1",
+        "rel_diff": "2.1064E-17"
+      },
+      {
+        "bessel_closed_form": "3.3712688198E-3",
+        "lam_over_a": "3.0000E+1",
+        "planet": "Saturn",
+        "quadrature_kernel": "3.3712688198E-3",
+        "rel_diff": "2.4866E-17"
+      },
+      {
+        "bessel_closed_form": "3.4739378399E-5",
+        "lam_over_a": "3.0000E+2",
+        "planet": "Saturn",
+        "quadrature_kernel": "3.4739378399E-5",
+        "rel_diff": "2.4999E-17"
+      }
+    ]
+  },
+  "k4_exact_null_space": {
+    "all_ones_kernel": {
+      "Earth": {
+        "d_dvarpi_d_beta_along_ones": "5.5508E-48",
+        "delta_varpi_at_c_half_ones": "-3.2298E-21",
+        "single_window_kernel": "0",
+        "vs_single_window_kernel": "0"
+      },
+      "Jupiter": {
+        "d_dvarpi_d_beta_along_ones": "4.6480E-50",
+        "delta_varpi_at_c_half_ones": "-2.8014E-20",
+        "single_window_kernel": "0",
+        "vs_single_window_kernel": "0"
+      },
+      "Mars": {
+        "d_dvarpi_d_beta_along_ones": "3.9654E-50",
+        "delta_varpi_at_c_half_ones": "-1.1541E-19",
+        "single_window_kernel": "0",
+        "vs_single_window_kernel": "0"
+      },
+      "Mercury": {
+        "d_dvarpi_d_beta_along_ones": "1.2081E-50",
+        "delta_varpi_at_c_half_ones": "-8.8621E-19",
+        "single_window_kernel": "-1.260642E+1",
+        "vs_single_window_kernel": "9.5833E-52"
+      },
+      "Saturn": {
+        "d_dvarpi_d_beta_along_ones": "-5.7955E-49",
+        "delta_varpi_at_c_half_ones": "-3.5413E-20",
+        "single_window_kernel": "0",
+        "vs_single_window_kernel": "0"
+      },
+      "Venus": {
+        "d_dvarpi_d_beta_along_ones": "2.3546E-48",
+        "delta_varpi_at_c_half_ones": "-5.2861E-22",
+        "single_window_kernel": "0",
+        "vs_single_window_kernel": "0"
+      }
+    },
+    "const_C_half_kernel": {
+      "Earth": "-3.2298E-21",
+      "Jupiter": "-2.8014E-20",
+      "Mars": "-1.1541E-19",
+      "Mercury": "-8.8621E-19",
+      "Saturn": "-3.5413E-20",
+      "Venus": "-5.2861E-22"
+    },
+    "knots_AU": [
+      "2.000000E-1",
+      "5.023773E-1",
+      "1.261915E+0",
+      "3.169786E+0",
+      "7.962143E+0",
+      "2.000000E+1"
+    ],
+    "max_abs_const_C_kernel_rad": "8.862149E-19",
+    "max_all_ones_effect": "8.862149E-19",
+    "n_windows": 6,
+    "note": "C==const 且 c0!=1 => dPhi = mu_eff/r => 仍是闭椭圆 => 进动恰好 0。这条不是数值上的小量，是精确零：单位分解 Sum w_k ≡ 1 使 c=(1..1) 恰好落在该方向上。注意 c=(1..1) 的**有限振幅**对应 mu_eff = 0（无束缚轨道），故零方向用导数检验，另用 c=0.5*ones 做有限振幅自洽，两者都必须为 0。",
+    "ok": true,
+    "partition_of_unity_max_dev": "0"
+  },
+  "k5_offsupport_window": {
+    "max_abs_kernel": "0",
+    "n_windows": 3,
+    "note": "bump 完全落在 [r_p, r_a] 之外 => C 在轨道上恒 0 => 核恒 0。这不是「约束很弱」，是**零信息**：没有行星去过那里。第三册 J4 的「两端无约束」在这里变成几何事实。（注意必须用紧凑支撑 bump；单位分解的前后两窗带平台，放到远处会把行星罩进 w_1 里，那样测的是零方向而非零支撑。）",
+    "ok": true,
+    "ranges_AU": [
+      "1e-4..0.05",
+      "3e3..1e5"
+    ],
+    "rows": [
+      {
+        "band": "far_outer",
+        "max_abs_kernel": "0",
+        "planet": "Earth"
+      },
+      {
+        "band": "far_outer",
+        "max_abs_kernel": "0",
+        "planet": "Jupiter"
+      },
+      {
+        "band": "far_outer",
+        "max_abs_kernel": "0",
+        "planet": "Mars"
+      },
+      {
+        "band": "far_outer",
+        "max_abs_kernel": "0",
+        "planet": "Mercury"
+      },
+      {
+        "band": "far_outer",
+        "max_abs_kernel": "0",
+        "planet": "Saturn"
+      },
+      {
+        "band": "far_outer",
+        "max_abs_kernel": "0",
+        "planet": "Venus"
+      },
+      {
+        "band": "far_inner",
+        "max_abs_kernel": "0",
+        "planet": "Earth"
+      },
+      {
+        "band": "far_inner",
+        "max_abs_kernel": "0",
+        "planet": "Jupiter"
+      },
+      {
+        "band": "far_inner",
+        "max_abs_kernel": "0",
+        "planet": "Mars"
+      },
+      {
+        "band": "far_inner",
+        "max_abs_kernel": "0",
+        "planet": "Mercury"
+      },
+      {
+        "band": "far_inner",
+        "max_abs_kernel": "0",
+        "planet": "Saturn"
+      },
+      {
+        "band": "far_inner",
+        "max_abs_kernel": "0",
+        "planet": "Venus"
+      }
+    ]
+  },
+  "k6_shape_agnostic": {
+    "fits": {
+      "N5_0.25_16": {
+        "knots_AU": [
+          "2.500000E-1",
+          "7.071068E-1",
+          "2.000000E+0",
+          "5.656854E+0",
+          "1.600000E+1"
+        ],
+        "n_windows": 5,
+        "per_dataset": {
+          "EPM2011": {
+            "chi2_95_at_m_dof": "9.4877",
+            "chi2_at_zero": "9.14313785E+0",
+            "chi2_min": "3.36669783E+0",
+            "cond_normal_matrix": "1.261295E+7",
+            "contrasts": [
+              {
+                "ci95_hi": "1.939136E-10",
+                "ci95_lo": "-9.547893E-11",
+                "contrast": "c1-c2",
+                "e_hat": "4.921732E-11",
+                "sigma": "7.382597E-11"
+              },
+              {
+                "ci95_hi": "7.794958E-13",
+                "ci95_lo": "-3.470356E-13",
+                "contrast": "c2-c3",
+                "e_hat": "2.162301E-13",
+                "sigma": "2.873858E-13"
+              },
+              {
+                "ci95_hi": "-1.165992E-10",
+                "ci95_lo": "-4.117443E-9",
+                "contrast": "c3-c4",
+                "e_hat": "-2.117021E-9",
+                "sigma": "1.020642E-9"
+              },
+              {
+                "ci95_hi": "3.900670E-10",
+                "ci95_lo": "-1.889340E-10",
+                "contrast": "c4-c5",
+                "e_hat": "1.005665E-10",
+                "sigma": "1.477071E-10"
+              }
+            ],
+            "delta_chi2": "5.776440E+0",
+            "dof": 2,
+            "n_par": 4,
+            "n_points": 6,
+            "needs_shape_variation": false,
+            "reason": "dof=2 太小，delta_chi2 不可作显著性判据；反差区间仍有效但偏乐观",
+            "significance_unreliable": true,
+            "solvable": true,
+            "worst_ci95_abs": "4.117443E-9"
+          },
+          "INPOP10a": {
+            "chi2_95_at_m_dof": "9.4877",
+            "chi2_at_zero": "1.58891833E+0",
+            "chi2_min": "5.56255606E-2",
+            "cond_normal_matrix": "1.976841E+6",
+            "contrasts": [
+              {
+                "ci95_hi": "1.909579E-11",
+                "ci95_lo": "-3.878271E-11",
+                "contrast": "c1-c2",
+                "e_hat": "-9.843463E-12",
+                "sigma": "1.476519E-11"
+              },
+              {
+                "ci95_hi": "2.421251E-12",
+                "ci95_lo": "-1.801822E-12",
+                "contrast": "c2-c3",
+                "e_hat": "3.097145E-13",
+                "sigma": "1.077334E-12"
+              },
+              {
+                "ci95_hi": "4.447493E-9",
+                "ci95_lo": "-1.490155E-9",
+                "contrast": "c3-c4",
+                "e_hat": "1.478669E-9",
+                "sigma": "1.514734E-9"
+              },
+              {
+                "ci95_hi": "3.532325E-10",
+                "ci95_lo": "-4.475136E-10",
+                "contrast": "c4-c5",
+                "e_hat": "-4.714055E-11",
+                "sigma": "2.042757E-10"
+              }
+            ],
+            "delta_chi2": "1.533293E+0",
+            "dof": 2,
+            "n_par": 4,
+            "n_points": 6,
+            "needs_shape_variation": false,
+            "reason": "dof=2 太小，delta_chi2 不可作显著性判据；反差区间仍有效但偏乐观",
+            "significance_unreliable": true,
+            "solvable": true,
+            "worst_ci95_abs": "4.447493E-9"
+          }
+        },
+        "pooled": {
+          "chi2_95_at_m_dof": "9.4877",
+          "chi2_at_zero": "1.07320562E+1",
+          "chi2_min": "8.26351474E+0",
+          "cond_normal_matrix": "9.291811E+6",
+          "contrasts": [
+            {
+              "ci95_hi": "2.080537E-11",
+              "ci95_lo": "-3.594916E-11",
+              "contrast": "c1-c2",
+              "e_hat": "-7.571895E-12",
+              "sigma": "1.447846E-11"
+            },
+            {
+              "ci95_hi": "7.666753E-13",
+              "ci95_lo": "-3.217945E-13",
+              "contrast": "c2-c3",
+              "e_hat": "2.224404E-13",
+              "sigma": "2.776760E-13"
+            },
+            {
+              "ci95_hi": "6.646998E-10",
+              "ci95_lo": "-2.653225E-9",
+              "contrast": "c3-c4",
+              "e_hat": "-9.942626E-10",
+              "sigma": "8.464250E-10"
+            },
+            {
+              "ci95_hi": "2.844508E-10",
+              "ci95_lo": "-1.847430E-10",
+              "contrast": "c4-c5",
+              "e_hat": "4.985391E-11",
+              "sigma": "1.196945E-10"
+            }
+          ],
+          "delta_chi2": "2.468541E+0",
+          "dof": 8,
+          "n_par": 4,
+          "n_points": 12,
+          "needs_shape_variation": false,
+          "significance_unreliable": false,
+          "solvable": true,
+          "worst_ci95_abs": "2.653225E-9"
+        }
+      },
+      "N6_0.20_20": {
+        "knots_AU": [
+          "2.000000E-1",
+          "5.023773E-1",
+          "1.261915E+0",
+          "3.169786E+0",
+          "7.962143E+0",
+          "2.000000E+1"
+        ],
+        "n_windows": 6,
+        "per_dataset": {
+          "EPM2011": {
+            "chi2_95_at_m_dof": "11.0705",
+            "chi2_at_zero": "9.14313785E+0",
+            "chi2_min": "2.62961541E+0",
+            "cond_normal_matrix": "5.395475E+7",
+            "contrasts": [
+              {
+                "ci95_hi": "7.298663E-12",
+                "ci95_lo": "-3.593707E-12",
+                "contrast": "c1-c2",
+                "e_hat": "1.852478E-12",
+                "sigma": "2.778717E-12"
+              },
+              {
+                "ci95_hi": "5.919845E-13",
+                "ci95_lo": "-1.839235E-12",
+                "contrast": "c2-c3",
+                "e_hat": "-6.236253E-13",
+                "sigma": "6.202205E-13"
+              },
+              {
+                "ci95_hi": "4.691941E-13",
+                "ci95_lo": "-8.265483E-13",
+                "contrast": "c3-c4",
+                "e_hat": "-1.786771E-13",
+                "sigma": "3.305526E-13"
+              },
+              {
+                "ci95_hi": "-2.773814E-10",
+                "ci95_lo": "-9.795115E-9",
+                "contrast": "c4-c5",
+                "e_hat": "-5.036248E-9",
+                "sigma": "2.428038E-9"
+              },
+              {
+                "ci95_hi": "8.234960E-11",
+                "ci95_lo": "-1.700163E-10",
+                "contrast": "c5-c6",
+                "e_hat": "-4.383336E-11",
+                "sigma": "6.438024E-11"
+              }
+            ],
+            "delta_chi2": "6.513522E+0",
+            "dof": 1,
+            "n_par": 5,
+            "n_points": 6,
+            "needs_shape_variation": false,
+            "reason": "dof=1 太小，delta_chi2 不可作显著性判据；反差区间仍有效但偏乐观",
+            "significance_unreliable": true,
+            "solvable": true,
+            "worst_ci95_abs": "9.795115E-9"
+          },
+          "INPOP10a": {
+            "chi2_95_at_m_dof": "11.0705",
+            "chi2_at_zero": "1.58891833E+0",
+            "chi2_min": "1.87992792E-2",
+            "cond_normal_matrix": "4.204244E+7",
+            "contrasts": [
+              {
+                "ci95_hi": "7.187415E-13",
+                "ci95_lo": "-1.459733E-12",
+                "contrast": "c1-c2",
+                "e_hat": "-3.704956E-13",
+                "sigma": "5.557434E-13"
+              },
+              {
+                "ci95_hi": "6.403330E-12",
+                "ci95_lo": "-5.111359E-12",
+                "contrast": "c2-c3",
+                "e_hat": "6.459854E-13",
+                "sigma": "2.937474E-12"
+              },
+              {
+                "ci95_hi": "2.269151E-12",
+                "ci95_lo": "-2.983859E-12",
+                "contrast": "c3-c4",
+                "e_hat": "-3.573542E-13",
+                "sigma": "1.340078E-12"
+              },
+              {
+                "ci95_hi": "1.058028E-8",
+                "ci95_lo": "-3.544977E-9",
+                "contrast": "c4-c5",
+                "e_hat": "3.517652E-9",
+                "sigma": "3.603448E-9"
+              },
+              {
+                "ci95_hi": "1.950552E-10",
+                "ci95_lo": "-1.539615E-10",
+                "contrast": "c5-c6",
+                "e_hat": "2.054689E-11",
+                "sigma": "8.903651E-11"
+              }
+            ],
+            "delta_chi2": "1.570119E+0",
+            "dof": 1,
+            "n_par": 5,
+            "n_points": 6,
+            "needs_shape_variation": false,
+            "reason": "dof=1 太小，delta_chi2 不可作显著性判据；反差区间仍有效但偏乐观",
+            "significance_unreliable": true,
+            "solvable": true,
+            "worst_ci95_abs": "1.058028E-8"
+          }
+        },
+        "pooled": {
+          "chi2_95_at_m_dof": "11.0705",
+          "chi2_at_zero": "1.07320562E+1",
+          "chi2_min": "7.67816910E+0",
+          "cond_normal_matrix": "3.936509E+7",
+          "contrasts": [
+            {
+              "ci95_hi": "7.830882E-13",
+              "ci95_lo": "-1.353081E-12",
+              "contrast": "c1-c2",
+              "e_hat": "-2.849966E-13",
+              "sigma": "5.449513E-13"
+            },
+            {
+              "ci95_hi": "6.199461E-13",
+              "ci95_lo": "-1.758828E-12",
+              "contrast": "c2-c3",
+              "e_hat": "-5.694411E-13",
+              "sigma": "6.068413E-13"
+            },
+            {
+              "ci95_hi": "4.400926E-13",
+              "ci95_lo": "-8.179427E-13",
+              "contrast": "c3-c4",
+              "e_hat": "-1.889251E-13",
+              "sigma": "3.209333E-13"
+            },
+            {
+              "ci95_hi": "1.581275E-9",
+              "ci95_lo": "-6.311840E-9",
+              "contrast": "c4-c5",
+              "e_hat": "-2.365282E-9",
+              "sigma": "2.013587E-9"
+            },
+            {
+              "ci95_hi": "8.052286E-11",
+              "ci95_lo": "-1.239819E-10",
+              "contrast": "c5-c6",
+              "e_hat": "-2.172954E-11",
+              "sigma": "5.217055E-11"
+            }
+          ],
+          "delta_chi2": "3.053887E+0",
+          "dof": 7,
+          "n_par": 5,
+          "n_points": 12,
+          "needs_shape_variation": false,
+          "significance_unreliable": false,
+          "solvable": true,
+          "worst_ci95_abs": "6.311840E-9"
+        }
+      }
+    },
+    "note": "相邻反差 e_k = c_k - c_{k+1} 是全部可约束的自由度；整体水平（c 全加同一常数）落在精确零方向，故不进入模型——不是约束弱，是零信息。N=5 与 N=6 两档并报；显著性门槛按自由度取 chi2_95(m)（查表，不是拟合出来的）。",
+    "ok": true,
+    "rank_cap_demo": {
+      "n_distinct_planets": 6,
+      "n_par": 7,
+      "n_windows": 8,
+      "note": "两套历表共用同样 6 颗行星，同一行星核向量相同 => 设计矩阵最多 6 个不同行 => 最多 6 个反差可定。N=8 必奇异，这是硬限制。",
+      "pooled_solvable": false
+    }
+  },
+  "k8_large_lambda_reduction": {
+    "max_J_rel_diff": "1.184361E-15",
+    "max_cross_term_scaling_error": "8.936993E-2",
+    "max_kernel_ratio_deviation_at_lam_1e6a": "1.002500E-6",
+    "note": "把第三册 J6 的「sigma_alpha 正比 lam^2」从数值观察升级为代数归约：大 lam 时 V128 的 Yukawa **就是一个常数径向加速度**，幅度 alpha*mu/(2 lam^2)；J 是单位常数加速度的近点进动响应，另有解析值 -2 pi sqrt(1-e^2)，两条独立路径互验到 1e-15。★判据用核（alpha->0 导数）而非有限振幅：有限振幅下有 O(alpha^2) 交叉项（零方向背景与可约束项耦合），会给出一个 alpha 量级的假偏离（首跑 alpha=1e-2 时恰好 0.99，曾被误读为 1% 物理效应）。本册把该交叉项单独测出，并验证它正比 alpha（alf=1e-2 vs 1e-3 差 10 倍），从而确认它是二阶项而非修正定律。",
+    "ok": true,
+    "rows": [
+      {
+        "J_analytic_minus_2pi_sqrt_1me2": "-6.2823080145E+0",
+        "J_numeric": "-6.2823080145E+0",
+        "J_rel_diff": "1.184290E-15",
+        "finite_alpha_cross_term": [
+          {
+            "alpha": "1.0000E-2",
+            "finite_alpha_deficit": "9.900988E-3"
+          },
+          {
+            "alpha": "1.0000E-3",
+            "finite_alpha_deficit": "9.989986E-4"
+          }
+        ],
+        "large_lambda_kernel_ratio": [
+          {
+            "kernel_ratio": "9.90049835E-1",
+            "lam_over_a": "1.0000E+2",
+            "one_minus_ratio_times_lam": "9.950165E-1"
+          },
+          {
+            "kernel_ratio": "9.99000497E-1",
+            "lam_over_a": "1.0000E+3",
+            "one_minus_ratio_times_lam": "9.995026E-1"
+          },
+          {
+            "kernel_ratio": "9.99900003E-1",
+            "lam_over_a": "1.0000E+4",
+            "one_minus_ratio_times_lam": "9.999750E-1"
+          },
+          {
+            "kernel_ratio": "9.99989998E-1",
+            "lam_over_a": "1.0000E+5",
+            "one_minus_ratio_times_lam": "1.000245E+0"
+          },
+          {
+            "kernel_ratio": "9.99998998E-1",
+            "lam_over_a": "1.0000E+6",
+            "one_minus_ratio_times_lam": "1.002500E+0"
+          }
+        ],
+        "planet": "Earth"
+      },
+      {
+        "J_analytic_minus_2pi_sqrt_1me2": "-6.2758238575E+0",
+        "J_numeric": "-6.2758238575E+0",
+        "J_rel_diff": "1.183665E-15",
+        "finite_alpha_cross_term": [
+          {
+            "alpha": "1.0000E-2",
+            "finite_alpha_deficit": "9.900988E-3"
+          },
+          {
+            "alpha": "1.0000E-3",
+            "finite_alpha_deficit": "9.989994E-4"
+          }
+        ],
+        "large_lambda_kernel_ratio": [
+          {
+            "kernel_ratio": "9.90049860E-1",
+            "lam_over_a": "1.0000E+2",
+            "one_minus_ratio_times_lam": "9.950140E-1"
+          },
+          {
+            "kernel_ratio": "9.99000498E-1",
+            "lam_over_a": "1.0000E+3",
+            "one_minus_ratio_times_lam": "9.995024E-1"
+          },
+          {
+            "kernel_ratio": "9.99900003E-1",
+            "lam_over_a": "1.0000E+4",
+            "one_minus_ratio_times_lam": "9.999750E-1"
+          },
+          {
+            "kernel_ratio": "9.99989998E-1",
+            "lam_over_a": "1.0000E+5",
+            "one_minus_ratio_times_lam": "1.000245E+0"
+          },
+          {
+            "kernel_ratio": "9.99998998E-1",
+            "lam_over_a": "1.0000E+6",
+            "one_minus_ratio_times_lam": "1.002500E+0"
+          }
+        ],
+        "planet": "Jupiter"
+      },
+      {
+        "J_analytic_minus_2pi_sqrt_1me2": "-6.2557121357E+0",
+        "J_numeric": "-6.2557121357E+0",
+        "J_rel_diff": "1.181731E-15",
+        "finite_alpha_cross_term": [
+          {
+            "alpha": "1.0000E-2",
+            "finite_alpha_deficit": "9.900988E-3"
+          },
+          {
+            "alpha": "1.0000E-3",
+            "finite_alpha_deficit": "9.990022E-4"
+          }
+        ],
+        "large_lambda_kernel_ratio": [
+          {
+            "kernel_ratio": "9.90049939E-1",
+            "lam_over_a": "1.0000E+2",
+            "one_minus_ratio_times_lam": "9.950061E-1"
+          },
+          {
+            "kernel_ratio": "9.99000498E-1",
+            "lam_over_a": "1.0000E+3",
+            "one_minus_ratio_times_lam": "9.995016E-1"
+          },
+          {
+            "kernel_ratio": "9.99900003E-1",
+            "lam_over_a": "1.0000E+4",
+            "one_minus_ratio_times_lam": "9.999749E-1"
+          },
+          {
+            "kernel_ratio": "9.99989998E-1",
+            "lam_over_a": "1.0000E+5",
+            "one_minus_ratio_times_lam": "1.000245E+0"
+          },
+          {
+            "kernel_ratio": "9.99998998E-1",
+            "lam_over_a": "1.0000E+6",
+            "one_minus_ratio_times_lam": "1.002500E+0"
+          }
+        ],
+        "planet": "Mars"
+      },
+      {
+        "J_analytic_minus_2pi_sqrt_1me2": "-6.1489115262E+0",
+        "J_numeric": "-6.1489115262E+0",
+        "J_rel_diff": "1.171585E-15",
+        "finite_alpha_cross_term": [
+          {
+            "alpha": "1.0000E-2",
+            "finite_alpha_deficit": "9.900990E-3"
+          },
+          {
+            "alpha": "1.0000E-3",
+            "finite_alpha_deficit": "9.990273E-4"
+          }
+        ],
+        "large_lambda_kernel_ratio": [
+          {
+            "kernel_ratio": "9.90050355E-1",
+            "lam_over_a": "1.0000E+2",
+            "one_minus_ratio_times_lam": "9.949645E-1"
+          },
+          {
+            "kernel_ratio": "9.99000503E-1",
+            "lam_over_a": "1.0000E+3",
+            "one_minus_ratio_times_lam": "9.994974E-1"
+          },
+          {
+            "kernel_ratio": "9.99900003E-1",
+            "lam_over_a": "1.0000E+4",
+            "one_minus_ratio_times_lam": "9.999745E-1"
+          },
+          {
+            "kernel_ratio": "9.99989998E-1",
+            "lam_over_a": "1.0000E+5",
+            "one_minus_ratio_times_lam": "1.000245E+0"
+          },
+          {
+            "kernel_ratio": "9.99998998E-1",
+            "lam_over_a": "1.0000E+6",
+            "one_minus_ratio_times_lam": "1.002500E+0"
+          }
+        ],
+        "planet": "Mercury"
+      },
+      {
+        "J_analytic_minus_2pi_sqrt_1me2": "-6.2739664914E+0",
+        "J_numeric": "-6.2739664914E+0",
+        "J_rel_diff": "1.183486E-15",
+        "finite_alpha_cross_term": [
+          {
+            "alpha": "1.0000E-2",
+            "finite_alpha_deficit": "9.900988E-3"
+          },
+          {
+            "alpha": "1.0000E-3",
+            "finite_alpha_deficit": "9.989996E-4"
+          }
+        ],
+        "large_lambda_kernel_ratio": [
+          {
+            "kernel_ratio": "9.90049868E-1",
+            "lam_over_a": "1.0000E+2",
+            "one_minus_ratio_times_lam": "9.950132E-1"
+          },
+          {
+            "kernel_ratio": "9.99000498E-1",
+            "lam_over_a": "1.0000E+3",
+            "one_minus_ratio_times_lam": "9.995023E-1"
+          },
+          {
+            "kernel_ratio": "9.99900003E-1",
+            "lam_over_a": "1.0000E+4",
+            "one_minus_ratio_times_lam": "9.999750E-1"
+          },
+          {
+            "kernel_ratio": "9.99989998E-1",
+            "lam_over_a": "1.0000E+5",
+            "one_minus_ratio_times_lam": "1.000245E+0"
+          },
+          {
+            "kernel_ratio": "9.99998998E-1",
+            "lam_over_a": "1.0000E+6",
+            "one_minus_ratio_times_lam": "1.002500E+0"
+          }
+        ],
+        "planet": "Saturn"
+      },
+      {
+        "J_analytic_minus_2pi_sqrt_1me2": "-6.2830411798E+0",
+        "J_numeric": "-6.2830411798E+0",
+        "J_rel_diff": "1.184361E-15",
+        "finite_alpha_cross_term": [
+          {
+            "alpha": "1.0000E-2",
+            "finite_alpha_deficit": "9.900988E-3"
+          },
+          {
+            "alpha": "1.0000E-3",
+            "finite_alpha_deficit": "9.989985E-4"
+          }
+        ],
+        "large_lambda_kernel_ratio": [
+          {
+            "kernel_ratio": "9.90049832E-1",
+            "lam_over_a": "1.0000E+2",
+            "one_minus_ratio_times_lam": "9.950168E-1"
+          },
+          {
+            "kernel_ratio": "9.99000497E-1",
+            "lam_over_a": "1.0000E+3",
+            "one_minus_ratio_times_lam": "9.995027E-1"
+          },
+          {
+            "kernel_ratio": "9.99900002E-1",
+            "lam_over_a": "1.0000E+4",
+            "one_minus_ratio_times_lam": "9.999750E-1"
+          },
+          {
+            "kernel_ratio": "9.99989998E-1",
+            "lam_over_a": "1.0000E+5",
+            "one_minus_ratio_times_lam": "1.000245E+0"
+          },
+          {
+            "kernel_ratio": "9.99998998E-1",
+            "lam_over_a": "1.0000E+6",
+            "one_minus_ratio_times_lam": "1.002500E+0"
+          }
+        ],
+        "planet": "Venus"
+      }
+    ]
+  },
+  "kind": "external-material-computable-audit",
+  "method": "一维精确近点角求积：折返点条件线性解 (E,L^2)，Delta_varpi = 2 Delta_theta - 2pi；对 e 精确、对势偏离精确；Simpson + Neville 外推到 O(h^10)",
+  "n_gate_ok": 8,
+  "n_gate_total": 8,
+  "red_line": "数学自洽 != 实验证实；不宣称攻破统一场论；本册只给「给定量测 + 任意径向势」的可约束程度判决；未被满足 != 不可满足。",
+  "relation_to_prior": "第三册只判单尺度 Yukawa；本册去掉形状假设，与前册不相加",
+  "structural_result": "势写 Phi = -(mu/r)(1-C)；C==const <=> dPhi ∝ mu/r <=> 闭椭圆 <=> 进动恰好 0；故整体幅度零信息，只有 C 的形状变化可约束",
+  "target": "任意径向势偏离 dPhi(r) against EPM2011 / INPOP10a 补充进动",
+  "title": "ROOT V128 第四册：形状无关的径向第五力约束 · 可算审计",
+  "verdict": "ROOTV128D-SHAPE-AGNOSTIC-BOUND-EXECUTED--EXACT-NULL-DIRECTION-IS-PURE-GM-RESCALING--PERIHELION-GIVES-ZERO-INFORMATION-ON-OVERALL-AMPLITUDE--QUADRATURE-MATCHES-PUBLISHED-YUKAWA-CLOSED-FORM--GR-1PN-POSITIVE-CONTROL-REPRODUCES-6PI-GM-OVER-C2P--ONLY-SHAPE-VARIATION-IS-CONSTRAINED--V128-SURVIVES-ONLY-WHERE-ITS-PROFILE-IS-SHAPE-FLAT--LARGE-LAMBDA-YUKAWA-IS-A-CONSTANT-ACCELERATION-ALGEBRAICALLY--UFT-NOT-BROKEN--NO-INDEPENDENT-PREDICTION",
+  "verdict_type": "model-independent constraint on any radial potential deviation"
+}
