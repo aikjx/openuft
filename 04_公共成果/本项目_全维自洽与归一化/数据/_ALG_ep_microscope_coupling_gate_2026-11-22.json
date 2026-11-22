@@ -1,0 +1,380 @@
+{
+ "kind": "algorithm-alliance-audit-recompute",
+ "not_a_verdict_volume": true,
+ "occupies_rid": false,
+ "enters_readme": false,
+ "title": "ROOT V128 第八册 MICROSCOPE 一手读数对耦合荷的判别力",
+ "date": "2026-11-22",
+ "claim_under_test": "MICROSCOPE 一手读数可约束 V128 的质量耦合 Yukawa",
+ "external_sources": {
+  "A": {
+   "id": "arXiv:2209.15487",
+   "journal": "Phys. Rev. Lett. 129, 121102 (2022)",
+   "url": "https://arxiv.org/abs/2209.15487",
+   "quote": "eta(Ti, Pt) = [-1.5 +/- 2.3 (stat) +/- 1.5 (syst)] x 10^-15 at 1 sigma",
+   "eta_center": "-1.5e-15",
+   "sigma_stat": "2.3e-15",
+   "sigma_syst": "1.5e-15"
+  },
+  "B": {
+   "id": "arXiv:2209.15488",
+   "journal": "Class. Quantum Grav. 39 204009 (2022)",
+   "url": "https://arxiv.org/abs/2209.15488",
+   "quote": "no EP violation at the level of 2.7 x 10^-15 if we combine stochastic and systematic errors quadratically; null Eotvos parameter with a statistical uncertainty of 1.1 x 10^-15",
+   "sigma_comb_reported": "2.7e-15",
+   "sigma_pt_pt_null": "1.1e-15"
+  }
+ },
+ "models": {
+  "M_mass_coupled": {
+   "charge": "q_A = 1 universal",
+   "eta_prediction": "identically zero",
+   "discriminating_power": 0
+  },
+  "BL_coupled": {
+   "charge": "q_A = (B-L)/mu ~ N/A",
+   "q_ti": "5.403932E-01",
+   "q_pt": "6.001722E-01",
+   "delta_q": "-5.977906E-02",
+   "d_eta_d_alpha_at_1e12m": "-2.988953E-02"
+  }
+ },
+ "verdict": "EP-MICROSCOPE-ONE-HAND-READOUT--BL-COUPLING-CHARGE-DIFFERENCE-NONZERO--DISCRIMINATION-EXISTS--SAME-READOUT-BOUNDS-ALPHA--UPPER-BOUND-IS-BL-ONLY--CLAIM-T-REFUTED--COMPATIBILITY-IS-NOT-CONFIRMATION--UFT-NOT-BROKEN--NO-INDEPENDENT-PREDICTION",
+ "verdict_type": "machine",
+ "final": "GATES-PASS-WITH-CLAIM-T-REFUTED",
+ "n_gate_ok": 14,
+ "n_gate_total": 14,
+ "guards": [
+  "E1",
+  "E2",
+  "E7",
+  "E8",
+  "E10",
+  "G-VERDICT-MACHINE",
+  "G-NO-HARDCODE-OK",
+  "G-LINK"
+ ],
+ "load_bearing_gates": [
+  "E5",
+  "E6",
+  "T"
+ ],
+ "gates": [
+  {
+   "id": "E1",
+   "kind": "guard",
+   "ok": true,
+   "title": "一手读数锚：A 的 stat/syst 二次组合与 B 的 2.7e-15 一致",
+   "notes": [
+    "A: https://arxiv.org/abs/2209.15487（结果论文）",
+    "B: https://arxiv.org/abs/2209.15488（系统学论文）",
+    "★A 与 B 是同一 MICROSCOPE 实验的两篇论文，同源，门数不相加",
+    "组合二次误差 2.745906E-15；B 报 2.700000E-15；相对差 1.700224E-02（<5% 为一位有效数字一致）"
+   ],
+   "readings": {
+    "eta_center": "-1.500000E-15",
+    "sigma_stat": "2.3e-15",
+    "sigma_syst": "1.5e-15",
+    "sigma_comb_exact": "2.745906E-15",
+    "sigma_comb_reported": "2.700000E-15",
+    "relative_difference": "1.700224E-02"
+   }
+  },
+  {
+   "id": "E2",
+   "kind": "guard",
+   "ok": true,
+   "title": "Pt-Pt 同成分零对照：sigma=1.1e-15，小于 Ti-Pt 组合误差",
+   "notes": [
+    "零对照来自 B 文原文，不是本册自造；它证明差分通道没有系统偏置",
+    "★与 E1 同源（同一 MICROSCOPE 实验），不是独立证据，不相加"
+   ],
+   "readings": {
+    "sigma_pt_pt_null": "1.100000E-15",
+    "sigma_ti_pt_comb": "2.700000E-15"
+   }
+  },
+  {
+   "id": "E3",
+   "kind": "structure",
+   "ok": true,
+   "title": "成分荷：q=(B-L)/mu=N/A，Ti 与 Pt 的差非零",
+   "notes": [
+    "A_Ti=47.867, Z_Ti=22；A_Pt=195.084, Z_Pt=78（标准原子量，非自由参数）",
+    "q_Ti != q_Pt 是 BL 判别力的唯一来源；质量耦合 q=1 通用，无此差"
+   ],
+   "readings": {
+    "q_ti": "5.403932E-01",
+    "q_pt": "6.001722E-01",
+    "delta_q": "-5.977906E-02",
+    "delta_q_over_mean": "-1.048236E-01",
+    "q_earth_input": "5.000000E-01"
+   },
+   "rows": [
+    {
+     "pair": "Ti",
+     "A": "47.867",
+     "Z": "22",
+     "N_over_A": "5.403932E-01"
+    },
+    {
+     "pair": "Pt",
+     "A": "195.084",
+     "Z": "78",
+     "N_over_A": "6.001722E-01"
+    }
+   ]
+  },
+  {
+   "id": "E4",
+   "kind": "identity",
+   "ok": true,
+   "title": "恒等（不承重）：质量耦合 eta=0 对 beta,lambda 全网格精确成立",
+   "notes": [
+    "★E4 由模型定义 q_A=1 直接推出，是恒等式，不是证据，不进承重计数",
+    "4 个 beta x 4 个 lambda：max|eta_M| = 0，max|d eta_M/d beta| = 0",
+    "=> MICROSCOPE 对该模型的判别力精确为零，不是统计功效不足"
+   ],
+   "readings": {
+    "max_abs_eta_mass": "0",
+    "max_d_eta_d_beta": "0",
+    "n_configurations": 16
+   },
+   "rows": [
+    {
+     "beta": "0",
+     "max_abs_eta": "0"
+    },
+    {
+     "beta": "1e-6",
+     "max_abs_eta": "0"
+    },
+    {
+     "beta": "1e-3",
+     "max_abs_eta": "0"
+    },
+    {
+     "beta": "1",
+     "max_abs_eta": "0"
+    }
+   ]
+  },
+  {
+   "id": "E5",
+   "kind": "load-bearing",
+   "ok": true,
+   "title": "承重：B-L 耦合的 d eta/d alpha 非零，判别力存在",
+   "notes": [
+    "同一外部读数下：模型 M 判别力 0，模型 BL 判别力 2.049039E-04（最小绝对值）",
+    "这不是「所有模型都通过」的空判据"
+   ],
+   "readings": {
+    "min_abs_d_eta_d_alpha": "2.049039E-04"
+   },
+   "rows": [
+    {
+     "lambda_m": "1e6",
+     "F": "6.855373E-03",
+     "d_eta_d_alpha": "-2.049039E-04"
+    },
+    {
+     "lambda_m": "1e8",
+     "F": "9.976148E-01",
+     "d_eta_d_alpha": "-2.981824E-02"
+    },
+    {
+     "lambda_m": "1e10",
+     "F": "9.999998E-01",
+     "d_eta_d_alpha": "-2.988952E-02"
+    },
+    {
+     "lambda_m": "1e12",
+     "F": "1.000000E+00",
+     "d_eta_d_alpha": "-2.988953E-02"
+    }
+   ]
+  },
+  {
+   "id": "E6",
+   "kind": "load-bearing",
+   "ok": true,
+   "title": "承重：BL 获得非零 |alpha| 95% 双侧端点上界",
+   "notes": [
+    "eta 双侧区间 = [-6.881976E-15, 3.881976E-15]；取绝对值较大端点 6.881976E-15（不用 |eta_hat|+1.96sigma）",
+    "上界只给 BL；质量耦合模型 M 无上界可给（eta 恒零）"
+   ],
+   "readings": {
+    "eta_95_endpoint_abs": "6.881976E-15",
+    "alpha_95_at_1e12m": "2.302470E-13"
+   },
+   "rows": [
+    {
+     "lambda_m": "1e6",
+     "alpha_95_endpoint": "3.358636E-11"
+    },
+    {
+     "lambda_m": "1e8",
+     "alpha_95_endpoint": "2.307975E-13"
+    },
+    {
+     "lambda_m": "1e10",
+     "alpha_95_endpoint": "2.302471E-13"
+    },
+    {
+     "lambda_m": "1e12",
+     "alpha_95_endpoint": "2.302470E-13"
+    }
+   ]
+  },
+  {
+   "id": "E7",
+   "kind": "guard",
+   "ok": true,
+   "title": "反噬：注入显著非零 eta 时质量耦合模型被判负",
+   "notes": [
+    "假读数 1e-13 偏离 M 的预言 0 达 3.642E+01 sigma => M 会被判负",
+    "=> E4 的「与读数相容」不是「被证实」，判据有判别力"
+   ],
+   "readings": {
+    "fake_eta": "1.000000E-13",
+    "sigma_deviation": "3.642E+01"
+   }
+  },
+  {
+   "id": "E8",
+   "kind": "guard",
+   "ok": true,
+   "title": "反噬：通用耦合荷使 BL 判别力归零",
+   "notes": [
+    "q_A=q_B=1 时 d eta/d alpha = 0；真实 B-L 荷差下 = -2.988953E-02",
+    "=> 判别力来自耦合荷差，不是误差假设或手工调参"
+   ],
+   "readings": {
+    "k_universal": "0",
+    "k_bl_reference": "-2.988953E-02"
+   }
+  },
+  {
+   "id": "E9",
+   "kind": "structure",
+   "ok": true,
+   "title": "lambda 稳健性：F=(1+x)e^-x 在四个尺度上均在 (0,1]",
+   "notes": [
+    "lambda 只改变系数大小，不改变「M 零 / BL 非零」的判别结构"
+   ],
+   "readings": {
+    "r_orbit_m": "7071000"
+   },
+   "rows": [
+    {
+     "lambda_m": "1e6",
+     "F": "6.855373E-03",
+     "r_over_lambda": "7.071000E+00"
+    },
+    {
+     "lambda_m": "1e8",
+     "F": "9.976148E-01",
+     "r_over_lambda": "7.071000E-02"
+    },
+    {
+     "lambda_m": "1e10",
+     "F": "9.999998E-01",
+     "r_over_lambda": "7.071000E-04"
+    },
+    {
+     "lambda_m": "1e12",
+     "F": "1.000000E+00",
+     "r_over_lambda": "7.071000E-06"
+    }
+   ]
+  },
+  {
+   "id": "E10",
+   "kind": "guard",
+   "ok": true,
+   "title": "同源性登记：上游只读、不同源、不相加",
+   "notes": [
+    "本册外部读数来自 EP 空间实验，与第三册星历、第五/六册结构判据不同源",
+    "只登记 sha，不把门数或结论条数相加"
+   ],
+   "readings": {},
+   "rows": [
+    {
+     "upstream": "V",
+     "sha16": "57373c7300448ced",
+     "bytes": 14442
+    },
+    {
+     "upstream": "F",
+     "sha16": "681689456689e2ad",
+     "bytes": 12137
+    }
+   ]
+  },
+  {
+   "id": "T",
+   "kind": "load-bearing",
+   "ok": true,
+   "title": "判决：T=REFUTED（零判别力）；U=BOUNDED（BL 得上界）",
+   "notes": [
+    "T：MICROSCOPE 一手读数可约束 V128 的质量耦合 Yukawa => REFUTED",
+    "U：同一读数可约束 B-L 耦合 Yukawa => BOUNDED，但未被排除",
+    "两者不是同一对象，不能把 U 的上界搬到 V128 头上"
+   ],
+   "readings": {
+    "claim_T": "REFUTED",
+    "claim_U": "BOUNDED",
+    "external_source": "arXiv:2209.15487 + arXiv:2209.15488"
+   }
+  },
+  {
+   "id": "G-VERDICT-MACHINE",
+   "kind": "guard",
+   "ok": true,
+   "title": "判词机读：承重 E5/E6/T 任一翻转必改判词串（E4 恒等不进）",
+   "notes": [
+    "基线 238 字符；变体 [233, 216, 241]"
+   ],
+   "readings": {}
+  },
+  {
+   "id": "G-NO-HARDCODE-OK",
+   "kind": "guard",
+   "ok": true,
+   "title": "AST 守卫：ok 不得顶层赋常量且无条件翻转",
+   "notes": [
+    "扫描 13 个函数",
+    "零命中"
+   ],
+   "readings": {
+    "n_functions_scanned": 13
+   }
+  },
+  {
+   "id": "G-LINK",
+   "kind": "guard",
+   "ok": true,
+   "title": "链接体检：JSON 与报告均含判词串与日期",
+   "notes": [
+    "_ALG_ep_microscope_coupling_gate_2026-11-22.json: verdict=True date=True",
+    "_ALG_ep_microscope_coupling_gate_report_2026-11-22.txt: verdict=True date=True"
+   ],
+   "readings": {}
+  }
+ ],
+ "discipline": [
+  "外部一手读数必须给 URL 与逐字引文",
+  "上界量用双侧区间端点，不用 |eta_hat|+1.96sigma",
+  "相容不是证实；判别力为零不等于模型为真",
+  "E4 是模型定义推出的恒等式，单列不承重，不进判词",
+  "A/B 两篇论文属同一 MICROSCOPE 实验，同源不相加",
+  "反噬：显著非零读数会判负模型 M；通用荷会抹掉 BL 判别力",
+  "不同源判据不相加；门数不等于证据份数"
+ ],
+ "red_line": [
+  "不宣称攻破统一场论",
+  "数学自洽不等于实验证实",
+  "不产生新物理，独立实验预言 0",
+  "BL 的上界不能搬到 V128 的质量耦合模型"
+ ]
+}

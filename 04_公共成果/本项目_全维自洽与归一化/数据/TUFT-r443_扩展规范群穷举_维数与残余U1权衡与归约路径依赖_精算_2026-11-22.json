@@ -1,0 +1,259 @@
+{
+  "tag": "TUFT-r443_扩展规范群穷举_维数与残余U1权衡与归约路径依赖_精算_2026-11-22",
+  "stamp": "2026-11-22",
+  "verdict": "DIM-RESIDUAL-U1-TRADEOFF-MACHINE-VERIFIED--CENTRAL-IS-BASIS-DEPENDENT--TRINIFICATION-BLOCKCOUNT-CHAIN-DEPENDENT--SU6-6BAR15-VETOED-BY-SU2^2U1",
+  "guards": {
+    "pass": 11,
+    "total": 11,
+    "items": [
+      [
+        "G1-5",
+        true,
+        "SU5 dim=15"
+      ],
+      [
+        "G1-6",
+        true,
+        "SU5 != SM_UNIT"
+      ],
+      [
+        "G8-2",
+        true,
+        "dim15 存在残余≠0"
+      ],
+      [
+        "G8-3",
+        true,
+        "dim16 存在残余≠1"
+      ],
+      [
+        "G8-4",
+        true,
+        "dim27 存在残余≠2"
+      ],
+      [
+        "G8-5",
+        true,
+        "dim15 全部=2 项(SM 分块/SU(5))，其中扩展群=1 项"
+      ],
+      [
+        "G8-6",
+        true,
+        "dim16 群扣 nu_R 后仍有外源：SO(10)=0, Pati-Salam=0, flipped SU(5)=0"
+      ],
+      [
+        "G8-7",
+        true,
+        "E6 扣 nu_R 后外源 = 11（应 11 = 5 + 5bar + 1）"
+      ],
+      [
+        "G9-1",
+        true,
+        "块基 central=7"
+      ],
+      [
+        "G9-2",
+        true,
+        "SU(5) 基 central=2"
+      ],
+      [
+        "G9-3",
+        true,
+        "两基给出同一值 ⇒ 基依赖不可证"
+      ]
+    ]
+  },
+  "entries": [
+    [
+      "I01",
+      "PASS",
+      "SM 单代 15 态基线自洽",
+      "dim = 15，块 = (3,2)[1/6]x1 + (3,1)[-2/3]x1 + (3,1)[1/3]x1 + (1,2)[-1/2]x1 + (1,1)[1]x1，反常 = SU2^2U1=0 / SU3^2U1=0 / U1^3=0 / grav=0"
+    ],
+    [
+      "I02",
+      "PASS",
+      "SU(5) 5bar+10 独立重写复现 r442 分支与本征值",
+      "5bar=[+1/3*3,-1/2*2] 10=[-2/3*3,+1/6*6,+1]；逐块等于 SM_UNIT"
+    ],
+    [
+      "I03",
+      "PASS",
+      "SU(5) 反常逐块复现 r442",
+      "5bar[SU2^2U1=-1/4 / SU3^2U1=1/6 / U1^3=-5/36 / grav=0] ; 10[SU2^2U1=1/4 / SU3^2U1=-1/6 / U1^3=5/36 / grav=0] ; 和[SU2^2U1=0 / SU3^2U1=0 / U1^3=0 / grav=0]"
+    ],
+    [
+      "I04",
+      "PASS",
+      "SO(10) 16 = SM 15 + nu_R：外源维数 1（仅 nu_R），扣 nu_R 后 0",
+      "dim=16 外源=1（扣 nu_R 后 0）解 c=(1,0) rank=2"
+    ],
+    [
+      "I05",
+      "PASS",
+      "E6 27 外源维数 12 = 11（5+5bar+1）+ 1（第二个 nu_R）",
+      "dim=27 外源=12（扣 nu_R 后 11）外源块=(3,1)[-1/3]x1 + (3,1)[1/3]x1 + (1,2)[-1/2]x1 + (1,2)[1/2]x1 + (1,1)[0]x2"
+    ],
+    [
+      "I06",
+      "PASS",
+      "Pati-Salam 16 = SM 15 + nu_R：外源维数 1（仅 nu_R），扣 nu_R 后 0",
+      "dim=16 外源=1（扣 nu_R 后 0）解 (p,q)=(1,1/2) rank=2"
+    ],
+    [
+      "I07",
+      "PASS",
+      "flipped SU(5) 16 = SM 15 + nu_R；Y 需 c_X = 1/5 ≠ 0 ⇒ 与 SO(10) 机器可区分",
+      "dim=16 外源=1（扣 nu_R 后 0）解 (c1,c2)=(-1/5,1/5) rank=2 nullity=0"
+    ],
+    [
+      "I08",
+      "FAIL",
+      "「SU(6) 6bar+15 可作无反常单代承载」不成立",
+      "dim=21 外源=6/5 a22=1/4（≠0）; c 自由 nullity=1; 四条=SU2^2U1=1/4 / SU3^2U1=-1/6 / U1^3=5/36 / grav=0"
+    ],
+    [
+      "I09",
+      "BOUNDARY",
+      "trinification 的 (d3,d2) 块结构依赖归约链 ⇒ 块数非群不变量",
+      "链A(只破缺 SU(3)_L) 可投影=False；链B 可投影=True，dim=27 central=35"
+    ],
+    [
+      "I10",
+      "INFO",
+      "维数—残余 U(1) 权衡表（残余 = rank(G) - 4）",
+      "SM 分块: dim=15 残余=0; SU(5): dim=15 残余=0; SO(10): dim=16 残余=1; E6: dim=27 残余=2; Pati-Salam: dim=16 残余=1; flipped SU(5): dim=16 残余=1; SU(6): dim=21 残余=1"
+    ],
+    [
+      "I11",
+      "CORRECTED",
+      "r442 的 CENTRAL_SU5=2 与 CENTRAL_SM15=7 是不同基，不可同表并列",
+      "同一 15 维物质：块基 central=7，SU(5)-不可约基 central=2"
+    ],
+    [
+      "I12",
+      "INFO",
+      "帕累托扩展（维数 / 块数 / 中心化子 / 残余U(1) / 外源态）",
+      "SM 分块: 15/5/7/0/0; SU(5): 15/5/7/0/0; SO(10): 16/6/10/1/1; E6: 27/11/35/2/12; Pati-Salam: 16/6/10/1/1; flipped SU(5): 16/6/10/1/1; SU(6): 21/8/18/1/6"
+    ],
+    [
+      "I13",
+      "INFO",
+      "自抓三处（本轮实际发生，均已修）",
+      "(a) 区间写法造成假缺口：正则 ROOT_V(\\d+) 对「ROOT_V119-V135」只抓到 119 与 135 ⇒ 中间号被误判为未攻破，须逐号展开；(b) 守卫 G8-5 首版把基准 SM 分块算进候选集 （它也是 dim=15）⇒ 候选数恒为 2、断言必红；修正为先在扩展群族内剔除基准再判唯一。(c) 口径混用：初稿把 SO(10) 写成「零外源」、E6 写成「11 个外源态」，而机器 exotic 给 1 与 12 ⇒ 根因是 nu_R 算不算外源；已改为两列并列 + G8-6/G8-7 锁死。教训：凡「唯一性」断言必须说清**比较集**，凡「外源」读数必须说清**是否含 nu_R**"
+    ],
+    [
+      "I14",
+      "PASS",
+      "唯一对外读数不变",
+      "0/6 未完成 · 0/22 · UFT-3=0 · L3=0 · validated=0"
+    ]
+  ],
+  "counts": {
+    "PASS": 8,
+    "FAIL": 1,
+    "BOUNDARY": 1,
+    "INFO": 3,
+    "CORRECTED": 1
+  },
+  "key_numbers": {
+    "rank_sm_total": 4,
+    "tradeoff": [
+      {
+        "group": "SM 分块",
+        "rank": 4,
+        "dim": 15,
+        "blocks": 5,
+        "central": 7,
+        "residual_u1": 0,
+        "exotic_dim": 0,
+        "exotic_no_nu": 0
+      },
+      {
+        "group": "SU(5)",
+        "rank": 4,
+        "dim": 15,
+        "blocks": 5,
+        "central": 7,
+        "residual_u1": 0,
+        "exotic_dim": 0,
+        "exotic_no_nu": 0
+      },
+      {
+        "group": "SO(10)",
+        "rank": 5,
+        "dim": 16,
+        "blocks": 6,
+        "central": 10,
+        "residual_u1": 1,
+        "exotic_dim": 1,
+        "exotic_no_nu": 0
+      },
+      {
+        "group": "E6",
+        "rank": 6,
+        "dim": 27,
+        "blocks": 11,
+        "central": 35,
+        "residual_u1": 2,
+        "exotic_dim": 12,
+        "exotic_no_nu": 11
+      },
+      {
+        "group": "Pati-Salam",
+        "rank": 5,
+        "dim": 16,
+        "blocks": 6,
+        "central": 10,
+        "residual_u1": 1,
+        "exotic_dim": 1,
+        "exotic_no_nu": 0
+      },
+      {
+        "group": "flipped SU(5)",
+        "rank": 5,
+        "dim": 16,
+        "blocks": 6,
+        "central": 10,
+        "residual_u1": 1,
+        "exotic_dim": 1,
+        "exotic_no_nu": 0
+      },
+      {
+        "group": "SU(6)",
+        "rank": 5,
+        "dim": 21,
+        "blocks": 8,
+        "central": 18,
+        "residual_u1": 1,
+        "exotic_dim": 6,
+        "exotic_no_nu": 5
+      }
+    ],
+    "dim15_groups": [
+      "SM 分块",
+      "SU(5)"
+    ],
+    "dim15_ext_groups": [
+      "SU(5)"
+    ],
+    "dim16_groups": [
+      "SO(10)",
+      "Pati-Salam",
+      "flipped SU(5)"
+    ],
+    "dim27_groups": [
+      "E6"
+    ],
+    "central_block_basis": 7,
+    "central_su5_basis": 2,
+    "flip_cx": "1/5",
+    "su6_a22": "1/4",
+    "su6_nullity": 1,
+    "e6_exotic_dim": 12,
+    "trini_chain_a_projectable": false,
+    "trini_chain_b_projectable": true,
+    "trini_chain_b_dim": 27,
+    "trini_chain_b_central": 35
+  }
+}

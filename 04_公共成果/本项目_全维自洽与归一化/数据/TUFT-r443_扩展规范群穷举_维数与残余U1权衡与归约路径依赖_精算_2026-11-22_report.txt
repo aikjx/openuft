@@ -1,0 +1,65 @@
+TUFT-r443 扩展规范群穷举 · 维数与残余 U1 权衡 · 归约路径依赖
+==============================================================================
+stamp   : 2026-11-22
+verdict : DIM-RESIDUAL-U1-TRADEOFF-MACHINE-VERIFIED--CENTRAL-IS-BASIS-DEPENDENT--TRINIFICATION-BLOCKCOUNT-CHAIN-DEPENDENT--SU6-6BAR15-VETOED-BY-SU2^2U1
+rank_sm : 4（SU(3) 2 + SU(2) 1 + U(1)_Y 1）
+
+-- 权衡表 --
+group             rank   dim   blk  central  resU1  exotic exoNonNu
+SM 分块                4    15     5        7      0       0        0
+SU(5)                4    15     5        7      0       0        0
+SO(10)               5    16     6       10      1       1        0
+E6                   6    27    11       35      2      12       11
+Pati-Salam           5    16     6       10      1       1        0
+flipped SU(5)        5    16     6       10      1       1        0
+SU(6)                5    21     8       18      1       6        5
+
+DIM15_ALL      = SM 分块/SU(5)
+DIM15_EXT      = SU(5)
+DIM16          = SO(10)/Pati-Salam/flipped SU(5)
+DIM27          = E6
+CENTRAL_BLOCK  = 7
+CENTRAL_SU5    = 2
+E6_EXOTIC_DIM  = 12  (扣 nu_R 后 11)
+FLIP_CX        = 1/5
+SU6_A22        = 1/4  (nullity=1)
+TRINI_A_PROJ   = False
+TRINI_B_PROJ   = True  dim=27 central=35
+
+ENTRIES 14
+  [PASS] I01 SM 单代 15 态基线自洽
+  [PASS] I02 SU(5) 5bar+10 独立重写复现 r442 分支与本征值
+  [PASS] I03 SU(5) 反常逐块复现 r442
+  [PASS] I04 SO(10) 16 = SM 15 + nu_R：外源维数 1（仅 nu_R），扣 nu_R 后 0
+  [PASS] I05 E6 27 外源维数 12 = 11（5+5bar+1）+ 1（第二个 nu_R）
+  [PASS] I06 Pati-Salam 16 = SM 15 + nu_R：外源维数 1（仅 nu_R），扣 nu_R 后 0
+  [PASS] I07 flipped SU(5) 16 = SM 15 + nu_R；Y 需 c_X = 1/5 ≠ 0 ⇒ 与 SO(10) 机器可区分
+  [FAIL] I08 「SU(6) 6bar+15 可作无反常单代承载」不成立
+  [BOUNDARY] I09 trinification 的 (d3,d2) 块结构依赖归约链 ⇒ 块数非群不变量
+  [INFO] I10 维数—残余 U(1) 权衡表（残余 = rank(G) - 4）
+  [CORRECTED] I11 r442 的 CENTRAL_SU5=2 与 CENTRAL_SM15=7 是不同基，不可同表并列
+  [INFO] I12 帕累托扩展（维数 / 块数 / 中心化子 / 残余U(1) / 外源态）
+  [INFO] I13 自抓三处（本轮实际发生，均已修）
+  [PASS] I14 唯一对外读数不变
+
+GUARDS 11/11
+  [OK] G1-5  |  SU5 dim=15
+  [OK] G1-6  |  SU5 != SM_UNIT
+  [OK] G8-2  |  dim15 存在残余≠0
+  [OK] G8-3  |  dim16 存在残余≠1
+  [OK] G8-4  |  dim27 存在残余≠2
+  [OK] G8-5  |  dim15 全部=2 项(SM 分块/SU(5))，其中扩展群=1 项
+  [OK] G8-6  |  dim16 群扣 nu_R 后仍有外源：SO(10)=0, Pati-Salam=0, flipped SU(5)=0
+  [OK] G8-7  |  E6 扣 nu_R 后外源 = 11（应 11 = 5 + 5bar + 1）
+  [OK] G9-1  |  块基 central=7
+  [OK] G9-2  |  SU(5) 基 central=2
+  [OK] G9-3  |  两基给出同一值 ⇒ 基依赖不可证
+
+PASS = 8
+FAIL = 1
+BOUNDARY = 1
+INFO = 3
+CORRECTED = 1
+GUARDS_TOTAL = 11
+GUARDS_PASS = 11
+VERDICT = DIM-RESIDUAL-U1-TRADEOFF-MACHINE-VERIFIED--CENTRAL-IS-BASIS-DEPENDENT--TRINIFICATION-BLOCKCOUNT-CHAIN-DEPENDENT--SU6-6BAR15-VETOED-BY-SU2^2U1
