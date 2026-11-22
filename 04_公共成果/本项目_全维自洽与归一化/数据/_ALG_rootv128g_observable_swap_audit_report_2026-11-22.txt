@@ -1,0 +1,114 @@
+==============================================================================
+ROOT V128 第七册 · 「换观测量」出路的可算自审
+算法联盟可算审计（非判定册）  date : 2026-11-22
+==============================================================================
+
+claim_S : 换观测量可在 beta=0 处测出 lambda（本链前册留下的出路）
+upstream_V : ROOTV128E-LARGE-LAMBDA-SCAN-VACUITY-PROV / 57373c7300448ced / 14442 B
+upstream_F : ROOTV128F-LAMBDA-UNIDENTIFIABLE-AT-NULL- / 681689456689e2ad / 12137 B
+
+------------------------------------------------------------------------------
+[P1] OK    自检：beta=0 势与五泛函逐点不变；积分四阶
+       beta=0 时 Phi 对不同 lambda 逐点差 max = 0（机器零）
+       五类泛函在 beta=0、lambda=1 与 100 AU 上的差 max = 0
+       预渐近诊断（不作门）：逐次比(n=100,200,400) = 1.672E+03，早期收敛快于四阶，故自检取 n=200/400/800/1600
+       渐近段积分误差逐次比 = 1.600E+01 / 1.600E+01（四阶应约 16，门限 12<o<20 不放宽）
+       .worst_phi_diff                           = 0
+       .worst_functional_diff                    = 0
+       .pre_asymptotic_ratio_diagnostic_only     = 1.672E+03
+       .error_ratios                             = ['1.600E+01', '1.600E+01']
+       | name=shapiro  Q_lam1=-7.379008E+00  Q_lam100=-7.379008E+00  diff=0
+       | name=light_bend  Q_lam1=1.997505E+00  Q_lam100=1.997505E+00  diff=0
+       | name=redshift  Q_lam1=1.666667E-01  Q_lam100=1.666667E-01  diff=0
+       | name=range  Q_lam1=-1.098612E+00  Q_lam100=-1.098612E+00  diff=0
+       | name=orbital_T  Q_lam1=1.000000E+00  Q_lam100=1.000000E+00  diff=0
+
+[P2] OK    五类势泛函在 beta=0 处 dQ/dlambda 恒零（承重）
+       五类观测量 × 4 个 lambda：max|dQ/dlambda|_(beta=0) = 0
+       同一批配置中 min|dQ/dbeta|_(beta=0) = 1.213511E-02（>0，说明观测量对信号本身敏感）
+       链式法则：dQ/dlambda = ∫ (deltaQ/deltaPhi)(dPhi/dlambda)，而 beta=0 时 dPhi/dlambda 逐点为零
+       .max_abs_dQ_dlambda_at_null               = 0
+       .min_abs_dQ_dbeta_at_null                 = 1.213511E-02
+       | name=shapiro  label=Shapiro 延迟（沿视线积分势）  max_abs_dQ_dlambda_at_beta0=0  min_abs_dQ_dbeta_at_beta0=5.694694E-02
+       | name=light_bend  label=光线偏折（横向梯度积分）  max_abs_dQ_dlambda_at_beta0=0  min_abs_dQ_dbeta_at_beta0=1.398659E-01
+       | name=redshift  label=引力红移（两端势差）  max_abs_dQ_dlambda_at_beta0=0  min_abs_dQ_dbeta_at_beta0=1.493425E-02
+       | name=range  label=雷达测距往返（沿路径积分势的一阶修正）  max_abs_dQ_dlambda_at_beta0=0  min_abs_dQ_dbeta_at_beta0=1.213511E-02
+       | name=orbital_T  label=轨道周期（势决定的特征时标）  max_abs_dQ_dlambda_at_beta0=0  min_abs_dQ_dbeta_at_beta0=1.691691E-02
+
+[P3] OK    非线性势泛函同样零导数：障碍与线性性无关（承重）
+       非线性泛函 Q = ∫Phi^2 dl：max|dQ/dlambda|_(beta=0) = 0
+       => 障碍不是泛函的线性性，而是 beta=0 时 Phi 本身不含 lambda
+       .max_abs_dQ2_dlambda_at_null              = 0
+       | lam_AU=0.5  dQ2_dlambda=0  dQ2_dbeta=1.871409E-02
+       | lam_AU=1  dQ2_dlambda=0  dQ2_dbeta=2.898964E-01
+       | lam_AU=10  dQ2_dlambda=0  dQ2_dbeta=1.132347E+02
+       | lam_AU=100  dQ2_dlambda=0  dQ2_dbeta=1.311560E+04
+
+[P4] OK    边界：注入非零 beta 后所有泛函恢复 lambda 灵敏度
+       注入 beta=1e-3 后，五类泛函的最小 |dQ/dlambda| = 1.043543E-04（全部 >0）
+       => 「不可辨识」严格限于零假设，不是 Yukawa 的 lambda 永远不可测
+       .min_over_observables_abs_dQ_dlambda      = 1.043543E-04
+       | name=shapiro  min_abs_dQ_dlambda_at_beta1e3=5.075195E-04
+       | name=light_bend  min_abs_dQ_dlambda_at_beta1e3=1.015039E-03
+       | name=redshift  min_abs_dQ_dlambda_at_beta1e3=1.043543E-04
+       | name=range  min_abs_dQ_dlambda_at_beta1e3=1.149687E-04
+       | name=orbital_T  min_abs_dQ_dlambda_at_beta1e3=1.353284E-04
+
+[P6] OK    设计研究：换观测量只改善 beta 精度，不改善 lambda 可辨识性
+       统一假定相对精度 sigma_Q/|Q| = 1e-9（**设计研究，不是观测约束**）
+       五类泛函的 sigma_beta 已在表中；最优 = 1.425912E-09（redshift）
+       关键：无论哪种观测量，P2 已证 sigma_lambda = infinity 在 beta=0 不改善
+       => 换观测量可以改善 beta 的精度，但不能改变 lambda 的不可辨识性
+       .assumed_relative_precision               = 1.000000E-09
+       .best_observable                          = redshift
+       .best_sigma_beta                          = 1.425912E-09
+       | name=shapiro  Q_at_null=-7.379008E+00  dQ_dbeta=8.420489E-01  sigma_beta_assumed=8.763158E-09
+       | name=light_bend  Q_at_null=1.997505E+00  dQ_dbeta=1.203814E+00  sigma_beta_assumed=1.659313E-09
+       | name=redshift  Q_at_null=1.666667E-01  dQ_dbeta=1.168843E-01  sigma_beta_assumed=1.425912E-09
+       | name=range  Q_at_null=-1.098612E+00  dQ_dbeta=2.063356E-01  sigma_beta_assumed=5.324396E-09
+       | name=orbital_T  Q_at_null=1.000000E+00  dQ_dbeta=1.839397E-01  sigma_beta_assumed=5.436564E-09
+
+[P7] OK    反噬：直接把参数当观测量会使判据翻转（循环论证）
+       伪观测量 Q_fake = lambda（不是势的泛函，而是参数自身）：dQ/dlambda = 1.000000E+00
+       P2 判据在此会 FAIL ⇒ 判别力存在，不是「所有对象都通过」
+       但这类 Q_fake 若被当成观测，等于把待测量写进仪器，属循环论证
+       .fake_dQ_dlambda                          = 1.000000E+00
+
+[P8] OK    上游一致性：第五/六册判词存在且本册只作推广
+       V 册判词前缀 ROOTV128E-LARGE-LAMBDA-SCAN-VACU…，sha 57373c7300448ced，14442 B
+       F 册判词前缀 ROOTV128F-LAMBDA-UNIDENTIFIABLE-…，sha 681689456689e2ad，12137 B
+       本册结论是第五册（幅度简并）与第六册（beta=0 处 lambda 奇性）的推广，不推翻任何上游判词
+       | volume=V  verdict_prefix=ROOTV128E-LARGE-LAMBDA-SCAN-VACUITY-PROV  sha=57373c7300448ced  bytes=14442
+       | volume=F  verdict_prefix=ROOTV128F-LAMBDA-UNIDENTIFIABLE-AT-NULL-  sha=681689456689e2ad  bytes=12137
+
+[P5] OK    自噬：本链自己的「换观测量」出路被判 REFUTED
+       命题 S（本链第四/五/六册留下的出路）：「把观测量从近点进动换成 Shapiro / 测距 / LLR / 红移 / 周期，就能在 beta=0 处测出 lambda」
+       机读判决：P2（五类泛函 dQ/dlambda 全零）+ P3（非线性泛函同样零）⇒ S = REFUTED
+       这不是实验否证，是可辨识性的代数否证：beta=0 时 Phi 不含 lambda，任何 Phi 的泛函都不可能携带 lambda 信息
+       .claim_S                                  = REFUTED
+       .source_volumes                           = V128 第四/五/六册
+
+[G-VERDICT-MACHINE] OK    判词机读：三个承重标志任一翻转必改判词串
+       基线 352 字符；变体 [58, 64, 44]
+
+[G-NO-HARDCODE-OK] OK    AST 守卫：ok 不得顶层赋常量且无条件翻转
+       扫描 10 个函数
+       零命中
+       .n_functions_scanned                      = 10
+
+[G-LINK] OK    链接体检：JSON 与报告均含判词串与日期
+       _ALG_rootv128g_observable_swap_audit_2026-11-22.json: verdict=True date=True
+       _ALG_rootv128g_observable_swap_audit_report_2026-11-22.txt: verdict=True date=True
+
+------------------------------------------------------------------------------
+verdict   : ROOTV128G-OBSERVABLE-SWAP-DOES-NOT-RESCUE-LAMBDA--ALL-POTENTIAL-FUNCTIONALS-HAVE-ZERO-LAMBDA-DERIVATIVE-AT-BETA-ZERO--NOT-A-LINEARITY-ISSUE-NONLINEAR-FUNCTIONALS-ALSO-DEGENERATE--CLAIM-S-FROM-OWN-PRIOR-VOLUMES-REFUTED--SWAPPING-OBSERVABLE-IMPROVES-BETA-PRECISION-ONLY--NONZERO-BETA-RESTORES-LAMBDA-INFORMATION--UFT-NOT-BROKEN--NO-INDEPENDENT-PREDICTION
+final     : GATES-PASS-WITH-CLAIM-REFUTED
+guards    : P1 P7 G-VERDICT-MACHINE G-NO-HARDCODE-OK G-LINK
+bearing   : P2 P3 P5
+n_gate_ok : 11 / 11
+
+red_line  : 不宣称攻破统一场论；不产生新物理；独立实验预言 0；
+            本册判的是本链自己的命题 S，不引入任何外部读数。
+boundary  : beta=0 处所有势泛函对 lambda 零导数；beta!=0 时恢复（P4）。
+            不证明第五力不存在，不证明 Yukawa 的 lambda 永远不可测。
+==============================================================================

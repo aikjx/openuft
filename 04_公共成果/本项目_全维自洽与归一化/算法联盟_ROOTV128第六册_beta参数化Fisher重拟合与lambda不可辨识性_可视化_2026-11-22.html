@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>ROOT V128 第六册 · beta Fisher 重拟合与 lambda 不可辨识性</title>
+<style>
+:root{--bg:#ffffff;--panel:#f7f8fa;--line:#d8dee4;--ink:#1f2328;--dim:#57606a;
+--blue:#1f6feb;--green:#15803d;--red:#b91c1c;--orange:#d97706;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.65;font-size:15px}
+.wrap{max-width:760px;margin:0 auto;padding:32px 22px 56px}
+h1{font-size:21px;font-weight:650;margin:0 0 6px}
+.sub{color:var(--dim);font-size:13px;margin-bottom:22px}
+.verdict{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--green);padding:13px 16px;border-radius:6px;margin-bottom:26px}
+.verdict code{font-family:Consolas,Menlo,monospace;font-size:11.5px;color:var(--blue);word-break:break-all;line-height:1.7}
+h2{font-size:16px;font-weight:640;margin:32px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+p{margin:9px 0}
+figure{margin:16px 0 8px}
+figcaption{color:var(--dim);font-size:12.5px;margin-top:6px}
+svg{display:block;width:100%;height:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left}
+th{background:var(--panel);color:var(--dim);font-weight:620}
+.num{font-family:Consolas,Menlo,monospace;font-size:12.5px}
+.note{background:#fff8ec;border:1px solid #f0d9a8;border-radius:6px;padding:11px 14px;font-size:13px;margin:14px 0;color:#5c4415}
+.eq{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 16px;font-family:Consolas,Menlo,monospace;font-size:12.5px;color:var(--blue);margin:12px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>第六册 · β 参数化 Fisher 重拟合与零假设处 λ 不可辨识性</h1>
+<div class="sub">ROOT V128 Yukawa 势 &nbsp;·&nbsp; 算法联盟可算审计（非判定册） &nbsp;·&nbsp; 2026-11-22 &nbsp;·&nbsp; 11 门 / 11 通过</div>
+
+<div class="verdict"><code>ROOTV128F-LAMBDA-UNIDENTIFIABLE-AT-NULL--FISHER-LAMBDA-COLUMN-IS-EXACTLY-ZERO--CRAMER-RAO-BOUND-DIVERGES--SIGMA-LAMBDA-SCALES-AS-ONE-OVER-BETA--ALPHA-AND-BETA-FITS-ARE-EXACT-RESCALE--CHI2-PEAK-IS-NOISE-NOT-A-LAMBDA-MEASUREMENT--INJECTION-RECOVERY-SHOWS-ONLY-NONZERO-BETA-GIVES-LAMBDA--UFT-NOT-BROKEN--NO-INDEPENDENT-PREDICTION</code></div>
+
+<h2>一、问题</h2>
+<p>第五册证明 α 上界除以 λ² 后在大 λ 端恒定，因此尾部 6 个格点只有 1 份信息。但那是对<strong>已发布约束</strong>的再解释。本册从数据出发直接重拟合，回答一个更硬的问题：</p>
+<p><strong>在零假设 β = 0 处，λ 本身可辨识吗？</strong></p>
+<div class="eq">y_i = β · G_i(λ),    G_i(λ) = λ² K_i(λ)<br>∂y_i/∂λ = β · G_i′(λ)  ── β=0 ──&gt;  0  （逐分量为零）</div>
+<p>所以 Fisher 矩阵关于 λ 的整列/整行<strong>精确为零</strong>，行列式为零，σ_λ 的 Cramér–Rao 下界发散。这是代数事实，不是精度不足。</p>
+
+<h2>二、零假设处与非零处的 Fisher 结构</h2>
+<figure>
+<svg viewBox="0 0 660 300" role="img" aria-label="零假设与非零处的 Fisher 矩阵结构">
+<rect x="0" y="0" width="660" height="300" fill="#f7f8fa"/>
+<g font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="12" fill="#1f2328">
+<text x="40" y="36">beta = 0（零假设）</text><text x="370" y="36">beta = 1e-2（注入信号）</text>
+</g>
+<g font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="12" fill="#57606a">
+<text x="196" y="278">beta</text><text x="290" y="278">lambda</text>
+<text x="516" y="278">beta</text><text x="610" y="278">lambda</text>
+</g>
+<!-- 左矩阵 -->
+<g stroke="#d8dee4" stroke-width="1" fill="none">
+<rect x="110" y="64" width="88" height="88"/><rect x="198" y="64" width="88" height="88"/>
+<rect x="110" y="152" width="88" height="88"/><rect x="198" y="152" width="88" height="88"/>
+</g>
+<rect x="111" y="65" width="86" height="86" fill="#bfdbfe"/>
+<rect x="199" y="153" width="86" height="86" fill="#e5e7eb"/>
+<rect x="111" y="153" width="86" height="86" fill="#e5e7eb"/>
+<g font-family="Consolas,monospace" font-size="13" fill="#1e40af">
+<text x="132" y="116">F_bb</text>
+</g>
+<g font-family="Consolas,monospace" font-size="14" fill="#b91c1c">
+<text x="220" y="116">0</text><text x="132" y="204">0</text><text x="220" y="204">0</text>
+</g>
+<!-- 右矩阵 -->
+<g stroke="#d8dee4" stroke-width="1" fill="none">
+<rect x="430" y="64" width="88" height="88"/><rect x="518" y="64" width="88" height="88"/>
+<rect x="430" y="152" width="88" height="88"/><rect x="518" y="152" width="88" height="88"/>
+</g>
+<rect x="431" y="65" width="86" height="86" fill="#bfdbfe"/>
+<rect x="519" y="65" width="86" height="86" fill="#bbf7d0"/>
+<rect x="431" y="153" width="86" height="86" fill="#bbf7d0"/>
+<rect x="519" y="153" width="86" height="86" fill="#bbf7d0"/>
+<g font-family="Consolas,monospace" font-size="13" fill="#1e40af">
+<text x="452" y="116">F_bb</text><text x="540" y="116">F_bl</text>
+<text x="452" y="204">F_lb</text><text x="540" y="204">F_ll</text>
+</g>
+<text x="40" y="266" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11.5" fill="#b91c1c">
+det F = 0  =&gt;  sigma_lambda 下界发散
+</text>
+<text x="370" y="266" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11.5" fill="#15803d">
+det F = 1.119E+108  =&gt;  lambda 可辨识
+</text>
+</svg>
+<figcaption>图 1　同一模型在 β=0 与 β=1e−2 处的 2×2 Fisher 结构。β=0 时 λ 整列/整行为零（左，精确 0）；注入非零 β 后四元全非零（右），λ 变为可辨识。两套数据集 × 6 个 λ 上，左图的零读数均为精确 0。</figcaption>
+</figure>
+
+<h2>三、σ_λ 由 1/β 标度</h2>
+<figure>
+<svg viewBox="0 0 660 240" role="img" aria-label="sigma lambda 与 beta 的 1/beta 标度">
+<rect x="0" y="0" width="660" height="240" fill="#f7f8fa"/>
+<line x1="80" y1="180" x2="620" y2="180" stroke="#d8dee4"/>
+<line x1="80" y1="40" x2="80" y2="180" stroke="#d8dee4"/>
+<polyline points="100,49.0 300,101.8 500,154.6" fill="none" stroke="#15803d" stroke-width="1.4" stroke-dasharray="5 4"/>
+<polyline points="100,49.0 300,101.8 500,154.6" fill="none" stroke="#1f6feb" stroke-width="2.4"/>
+<g fill="#1f6feb">
+<circle cx="100" cy="49.0" r="4.2"/><circle cx="300" cy="101.8" r="4.2"/><circle cx="500" cy="154.6" r="4.2"/>
+</g>
+<g font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11" fill="#57606a">
+<text x="76" y="196">1E-4</text><text x="276" y="196">1E-3</text><text x="476" y="196">1E-2</text>
+<text x="316" y="218">beta</text>
+<text x="24" y="54">1E-18</text><text x="24" y="107">1E-19</text><text x="24" y="160">1E-20</text>
+<text x="24" y="32">sigma_lambda (AU)</text>
+</g>
+<g font-family="Consolas,monospace" font-size="11" fill="#1f2328">
+<text x="108" y="42">1.03E-18</text><text x="308" y="95">1.03E-19</text><text x="508" y="148">1.03E-20</text>
+</g>
+<text x="300" y="72" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11.5" fill="#15803d">斜率 -1：sigma_lambda 正比于 1/beta</text>
+<text x="80" y="230" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11" fill="#b91c1c">beta -&gt; 0 时 sigma_lambda 发散（左端，超出画布）</text>
+</svg>
+<figcaption>图 2　在 λ=1 AU、EPM2011 上注入三个 β 后的 σ_λ（对数轴）。β 每涨 10 倍，σ_λ 精确降 10 倍：σ_λ·β = 1.030206E−22，相对散布为 0。虚线为斜率 −1 参考。</figcaption>
+</figure>
+<p>结论是：λ 的可辨识性<strong>完全由一个非零 β 供给</strong>。增加数据量只能整体缩小方差，改变不了 1/β 的发散结构。正对照：注入 β=1e−3、λ=10 AU 的无噪声数据，网格拟合<strong>精确</strong>恢复到 10 AU，次优点 χ² = 4.34E+59。</p>
+
+<h2>四、χ² 剖面：峰是噪声，不是 λ 的测量</h2>
+<figure>
+<svg viewBox="0 0 660 240" role="img" aria-label="chi2 剖面与 95 百分比门槛">
+<rect x="0" y="0" width="660" height="240" fill="#f7f8fa"/>
+<line x1="64" y1="190" x2="620" y2="190" stroke="#d8dee4"/>
+<line x1="64" y1="40" x2="64" y2="190" stroke="#d8dee4"/>
+<line x1="64" y1="55.6" x2="620" y2="55.6" stroke="#b91c1c" stroke-width="1.2" stroke-dasharray="5 4"/>
+<polyline points="64.0,90.7 74.1,90.7 84.2,90.7 94.3,90.7 104.4,91.6 114.5,101.6 124.7,124.1 134.8,97.7 144.9,141.9 155.0,150.8 165.1,126.7 175.2,119.1 185.3,115.2 195.4,112.3 205.5,109.7 215.6,107.4 225.7,105.6 235.9,104.3 246.0,103.4 256.1,102.8 266.2,102.4 276.3,102.2 286.4,102.0 296.5,101.9 306.6,101.9 316.7,101.8 326.8,101.8 336.9,101.8 347.1,101.8 357.2,101.8 367.3,101.8 377.4,101.8 387.5,101.8 397.6,101.8 407.7,101.8 417.8,101.8 427.9,101.8 438.0,101.8 448.1,101.8 458.3,101.8 468.4,101.8 478.5,101.8 488.6,101.8 498.7,101.8 508.8,101.8 518.9,101.8 529.0,101.8 539.1,101.8 549.2,101.8 559.3,101.8 569.5,101.8 579.6,101.8 589.7,101.8 599.8,101.8 609.9,101.8 620.0,101.8" fill="none" stroke="#1f6feb" stroke-width="1.8"/>
+<polyline points="64.0,90.7 74.1,90.7 84.2,90.7 94.3,90.7 104.4,90.7 114.5,90.6 124.7,90.7 134.8,92.6 144.9,103.4 155.0,139.5 165.1,185.5 175.2,147.2 185.3,138.9 195.4,137.3 205.5,139.2 215.6,143.2 225.7,148.0 235.9,152.6 246.0,156.5 256.1,159.5 266.2,161.6 276.3,163.1 286.4,164.0 296.5,164.7 306.6,165.1 316.7,165.4 326.8,165.5 336.9,165.6 347.1,165.7 357.2,165.7 367.3,165.8 377.4,165.8 387.5,165.8 397.6,165.8 407.7,165.8 417.8,165.8 427.9,165.8 438.0,165.8 448.1,165.8 458.3,165.8 468.4,165.8 478.5,165.8 488.6,165.8 498.7,165.8 508.8,165.8 518.9,165.8 529.0,165.8 539.1,165.8 549.2,165.8 559.3,165.8 569.5,165.8 579.6,165.8 589.7,165.8 599.8,165.8 609.9,165.8 620.0,165.8" fill="none" stroke="#d97706" stroke-width="1.6"/>
+<g font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11" fill="#57606a">
+<text x="60" y="204">1E-2</text><text x="180" y="204">1E0</text><text x="304" y="204">1E2</text>
+<text x="428" y="204">1E4</text><text x="552" y="204">1E6</text>
+<text x="310" y="226">lambda (AU)</text>
+<text x="20" y="44">10</text><text x="20" y="81">1</text><text x="20" y="119">0.1</text><text x="20" y="156">0.01</text>
+<text x="20" y="30">delta chi2</text>
+</g>
+<text x="70" y="49.6" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11" fill="#b91c1c">95% 门槛 3.841459</text>
+<text x="300" y="128" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11.5" fill="#1f6feb">峰 0.444444</text>
+<text x="300" y="146" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="11.5" fill="#d97706">峰 0.447598</text>
+</svg>
+<figcaption>图 3　在完整 111 点网格上的 Δχ² profile（EPM2011，蓝；INPOP10a，橙；纵轴对数）。两峰分别 0.444444 / 0.447598，与第三册登记值一致（相对差 1e−7 量级，来自上游 7 位存储）。95% 门槛 3.841459（红虚线）在画布上方——峰高只有门槛的约 1/8.6。β 固定为 0 时，该曲线变为恒零的水平线。</figcaption>
+</figure>
+
+<h2>五、边界</h2>
+<div class="note">
+<strong>没有证明统一场论成立或失败。</strong>本册判的是「β=0 处 λ 的 Fisher 列恒为零」，不是「V128 被证伪」，也不是「任何 Yukawa 模型的 λ 都不可测」——正对照（图 2 与 N7）已证非零 β 时 λ 唯一可恢复。<br>
+核闭式与观测表和第三册同源，本册是<strong>结构判据</strong>，不是新的独立观测证据。独立实验预言 <strong>0</strong>；不重拟合星历；不回写第三册或第五册判词。<br>
+力统一现状未变：含引力四力且 C0–C3 全过者 <strong>0 行</strong>；跨度 <span class="num">33.33 dex</span> / 残差 <span class="num">14.19 dex</span>；存活通道 <strong>0</strong>。
+</div>
+
+<div class="sub" style="margin-top:26px">
+机核：<span class="num">_alg_rootv128f_lambda_identifiability_recompute.py</span>（32,188 B，AST 通过，两跑逐字节相同）　·　
+机读：<span class="num">_ALG_rootv128f_beta_fisher_recompute_2026-11-22.json</span>（12,137 B，sha <span class="num">681689456689e2ad</span>）
+</div>
+
+</div>
+</body>
+</html>

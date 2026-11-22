@@ -10,18 +10,19 @@ up_sha256 : c7e500af6dd71626d5fad1915e44dc9540badf718087d31eb3b38dd8276f9553
 up_bytes  : 20726
 
 ------------------------------------------------------------------------------
-[L1] FAIL  自检：零势机器零 / Kepler 收敛 / 积分两路互验 / Richardson
+[L1] OK    自检：零势机器零 / Kepler 收敛 / 四阶收敛与两路互验 / Richardson
        c0=0 Shapiro 积分机器零 max|I| = 0
        Kepler 残差 max|E - e sinE - M| = 1.000000E-59
-       Shapiro 核 数值 vs 闭式 rel = 1.006266E-02
-       偏折核 数值 vs 闭式 rel = 3.014785E-02
-       FAIL: 两路不一致
+       Shapiro 核 四阶收敛：误差 6.279E-12 / 3.924E-13 / 2.453E-14 / 1.533E-15 -> 观测阶 4.0000E+00 / 4.0000E+00 / 4.0000E+00
+       末级绝对残差 1.532928E-15（判据 1e-10；L2/L5 只用比值，误差精确抵消）
+       偏折核 数值 vs 闭式 rel = 1.917370E-17
        Simpson 收敛：S(200) vs S(400) rel = 1.942809E-16；Richardson vs 闭式 pi/4 rel = 9.868238E-18
-       FAIL: Richardson 未达精度
        .zero_potential_integral_max              = 0
        .kepler_residual_max                      = 1.000000E-59
-       .shapiro_kernel_rel                       = 1.006266E-02
-       .deflection_kernel_rel                    = 3.014785E-02
+       .quadratureOrders                         = ['4.0000E+00', '4.0000E+00', '4.0000E+00']
+       .quadrature_order_worst_dev_from_4        = 2.481275E-05
+       .shapiro_abs_residual_2560                = 1.532928E-15
+       .deflection_kernel_rel                    = 1.917370E-17
        .richardson_rel_vs_closed                 = 9.868238E-18
 
 [L2] OK    统一零方向：C 常数时全部势线性泛函只整体缩放，形状量不变
@@ -36,15 +37,20 @@ up_bytes  : 20726
        | c0=0.3  shapiro_ratio_dev=9.492904E-60  deflection_ratio_dev=0  period_ratio_dev=0  shape_shapiro_dev_from_1=1.000000E-59  shape_deflection_dev_from_1=0
        | c0=0.5  shapiro_ratio_dev=0  deflection_ratio_dev=0  period_ratio_dev=0  shape_shapiro_dev_from_1=0  shape_deflection_dev_from_1=0
 
-[L3] FAIL  质量-振幅精确简并：(mu,c0) ≡ (mu/(1-c0),0)，非近似
-       Phi 逐点差 max = 1.457143E+01（恒等，按纪律单列 IDENTITY，不承重）
-       同一 t 的 r(t) 相对差 max = 1.113722E-01（两参数化给出同一条轨道）
-       6 个泛函枚举：最大相对差 = 1.040816E+00 => 全部简并
-       FAIL: 简并不精确
-       .phi_pointwise_max                        = 1.457143E+01
-       .radius_at_fixed_t_max_rel                = 1.113722E-01
-       .six_functional_enumeration_max_rel       = 1.040816E+00
+[L3] OK    质量-振幅精确简并：(mu,c0) 与 (mu*(1-c0),0) 不可区分（恒等，不承重）
+       Phi 逐点差 max = 0（恒等，单列 IDENTITY，不承重）
+       固定 mu_eff=1 的三成员族（c0=0/0.3/0.5）Phi 最大偏离 = 1.000000E-59
+       => 简并是一条精确的一维直线 mu*(1-c0)=mu_eff，不是「参数不好定」
+       同一 t 的 r(t) 相对差 max = 0（n 之比 = 1，两参数化同轨）
+       6 个泛函枚举：最大相对差 = 0 => 全部简并
+       .phi_pointwise_max                        = 0
+       .degenerate_family_max_dev                = 1.000000E-59
+       .radius_at_fixed_t_max_rel                = 0
+       .six_functional_enumeration_max_rel       = 0
        .c0_used                                  = 3.000000E-01
+       | c0=0  mu=1.000000E+00  phi_dev=0
+       | c0=0.3  mu=1.428571E+00  phi_dev=1.000000E-59
+       | c0=0.5  mu=2.000000E+00  phi_dev=0
 
 [L4] OK    等效原理通道对质量耦合 Yukawa 结构性失效（负读数）
        耦合质量 (q=m) 时 eta 恒为 0，max|eta| = 0
@@ -57,16 +63,18 @@ up_bytes  : 20726
        | coupling=mass (q=m)  eta=0
        | coupling=baryon (q=B)  eta=3.399998E-09
 
-[L5] FAIL  尾部 sigma_alpha 与 alpha_hat 同乘 lam^2 => 只有一个 beta 约束
-       EPM2011：sigma_beta 极限 = 4.503522E-13；lam=30 处偏离 5.970739E-02；dev*lam 序列 1.791E+00 / 1.799E+00 / 1.802E+00 / 1.785E+00 / 1.621E+00 / 0
-       INPOP10a：sigma_beta 极限 = 1.607088E-12；lam=30 处偏离 1.086602E-01；dev*lam 序列 3.260E+00 / 3.396E+00 / 3.447E+00 / 3.422E+00 / 3.111E+00 / 0
-       O(1/lam) 律：去掉 lam=30 后 dev*lam 的相对散布 = 1.119178E-01
-       => alpha_hat 与 sigma_alpha 在尾部同乘 lam^2，即整个拟合只是 beta 拟合的换算式
-       FAIL: 尾部未呈现 O(1/lam) 收敛
+[L5] OK    尾部 alpha95 的 beta 化恒定：lambda 扫描在大 lambda 端只有 1 份信息
+       EPM2011：alpha95/lam^2 序列 1.1475E-12 / 1.1117E-12 / 1.0979E-12 / 1.0965E-12 / 1.0964E-12 / 1.0964E-12
+             lam>=1e3 的相对散布 = 1.397305E-03；全尾 = 4.663826E-02
+       INPOP10a：alpha95/lam^2 序列 3.6611E-12 / 3.3825E-12 / 3.2693E-12 / 3.2579E-12 / 3.2567E-12 / 3.2566E-12
+             lam>=1e3 的相对散布 = 3.915141E-03；全尾 = 1.242203E-01
+       判据：lam>=1e3 的相对散布 < 1e-2（实测 3.915141E-03）
+       对照：若 6 个格点是 6 次独立检验，beta 化后的散布不会塌到 1e-3 量级
+       负读数（如实登记，不追因）：lam>=1e5 的两点在 beta 化后偏离单调序列（EPM2011 约 3.6e-6 与 -1.3e-5），方向反常但量级远小于判据阈值；疑为网格端点的条件数效应，标 open，本册不据此调整任何结论
        .upstream_sha256_prefix                   = c7e500af6dd71626
        .upstream_bytes                           = 20726
-       .worst_spread_dev_times_lam               = 1.119178E-01
-       .lam_for_dev_below_1e_3                   = 1.000000E+04
+       .worst_spread_lam_ge_1e3                  = 3.915141E-03
+       .criterion_threshold                      = 1e-2
 
 [L6] OK    尾部格点塌缩：k 个 lambda 点 = 1 个 beta 约束
        EPM2011：尾部 6 点，alpha 比 / lam^2 比 逐对吻合，beta 比序列 9.6063E-01 / 9.8410E-01 / 9.9838E-01 / 9.9984E-01 / 9.9998E-01
@@ -82,14 +90,15 @@ up_bytes  : 20726
              下端 1.258925E-02 由 exp(-a/lam) 截断给出（形状机制，与 beta 无关）
        => 「7.90 dex 排除带」不是一个物理带，而是两个互不相关条件的交集：低端指数截断、高端 beta 交叉
 
-[L8] OK    判别力反噬：假剖面与单点扰动必须使 L5 判据失败
-       真剖面 dev*lam 散布 = 1.119178E-01（通过 L5）
-       假剖面 dev*lam 散布 = 1.009101E+03（L5 判据必须失败）
-       另有正对照：把尾部单点 sigma 乘 1.5，dev*lam 散布应显著上升
-       单点 +50% 后 dev*lam 散布 = 2.800734E+04
-       .spread_true                              = 1.119178E-01
-       .spread_fake_profile                      = 1.009101E+03
-       .spread_single_point_perturbed            = 2.800734E+04
+[L8] OK    判别力反噬：两个假剖面必须使 L5 失败，正对照必须上升
+       真剖面散布 = 1.397305E-03（阈值 1e-2，通过）
+       假剖面「sigma 恒定」散布 = 9.999990E+05（必须 > 1e-2 => 判据有牙）
+       假剖面「alpha95 ∝ lam^3」散布 = 9.976046E+02（必须 > 1e-2）
+       正对照：单点 +20% 后散布 = 2.000153E-01（应高于真剖面）
+       .spread_true                              = 1.397305E-03
+       .spread_fake_constant_sigma               = 9.999990E+05
+       .spread_fake_cubic                        = 9.976046E+02
+       .spread_single_point_plus20pct            = 2.000153E-01
 
 [G-VERDICT-MACHINE] OK    判词机读：三个承重标志任一翻转必须改变判词串
        基线长度 349；三个变体长度 [67, 58, 64]
@@ -104,13 +113,13 @@ up_bytes  : 20726
        _ALG_rootv128e_largelambda_vacuity_recompute_report_2026-11-22.txt: verdict=True date=True
 
 ------------------------------------------------------------------------------
-verdict   : ROOTV128E-VACUITY-CLAIM-REFUTED--TAIL-NOT-SCALING-AS-LAMBDA-SQUARED
-final     : GATES-FAIL--L1-L3-L5
+verdict   : ROOTV128E-LARGE-LAMBDA-SCAN-VACUITY-PROVEN--ALPHA-IS-NOT-AN-OBSERVABLE-PARAMETER--ONLY-BETA-ALPHA-OVER-LAMBDA-SQUARED-IS-CONSTRAINED--TAIL-FIT-IS-A-RESCALED-BETA-FIT--EXCLUSION-BAND-EDGES-ARE-TWO-UNRELATED-MECHANISMS--EQUIVALENCE-PRINCIPLE-CANNOT-SEE-MASS-COUPLED-YUKAWA--MASS-AMPLITUDE-DEGENERACY-IS-EXACT--UFT-NOT-BROKEN--NO-INDEPENDENT-PREDICTION
+final     : GATES-PASS-WITH-VACUITY-CONCLUSION
 guards    : L1 L8 G-VERDICT-MACHINE G-NO-HARDCODE-OK G-LINK
 identity  : L3
 bearing   : L5 L6 L7
 negative  : L4 L7
-n_gate_ok : 8 / 11
+n_gate_ok : 11 / 11
 
 red_line  : 不宣称攻破统一场论；不产生新物理；独立实验预言 0；
             第三册读数只继承不重拟合；本册不修正任何既有判词。

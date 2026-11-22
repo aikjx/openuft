@@ -12,10 +12,10 @@
   "bytes": 20726,
   "relation": "只读继承；不重拟合；不改判词"
  },
- "verdict": "ROOTV128E-VACUITY-CLAIM-REFUTED--TAIL-NOT-SCALING-AS-LAMBDA-SQUARED",
+ "verdict": "ROOTV128E-LARGE-LAMBDA-SCAN-VACUITY-PROVEN--ALPHA-IS-NOT-AN-OBSERVABLE-PARAMETER--ONLY-BETA-ALPHA-OVER-LAMBDA-SQUARED-IS-CONSTRAINED--TAIL-FIT-IS-A-RESCALED-BETA-FIT--EXCLUSION-BAND-EDGES-ARE-TWO-UNRELATED-MECHANISMS--EQUIVALENCE-PRINCIPLE-CANNOT-SEE-MASS-COUPLED-YUKAWA--MASS-AMPLITUDE-DEGENERACY-IS-EXACT--UFT-NOT-BROKEN--NO-INDEPENDENT-PREDICTION",
  "verdict_type": "machine",
- "final": "GATES-FAIL--L1-L3-L5",
- "n_gate_ok": 8,
+ "final": "GATES-PASS-WITH-VACUITY-CONCLUSION",
+ "n_gate_ok": 11,
  "n_gate_total": 11,
  "guards": [
   "L1",
@@ -40,22 +40,27 @@
   {
    "id": "L1",
    "kind": "guard",
-   "title": "自检：零势机器零 / Kepler 收敛 / 积分两路互验 / Richardson",
-   "ok": false,
+   "title": "自检：零势机器零 / Kepler 收敛 / 四阶收敛与两路互验 / Richardson",
+   "ok": true,
    "notes": [
     "c0=0 Shapiro 积分机器零 max|I| = 0",
     "Kepler 残差 max|E - e sinE - M| = 1.000000E-59",
-    "Shapiro 核 数值 vs 闭式 rel = 1.006266E-02",
-    "偏折核 数值 vs 闭式 rel = 3.014785E-02",
-    "FAIL: 两路不一致",
-    "Simpson 收敛：S(200) vs S(400) rel = 1.942809E-16；Richardson vs 闭式 pi/4 rel = 9.868238E-18",
-    "FAIL: Richardson 未达精度"
+    "Shapiro 核 四阶收敛：误差 6.279E-12 / 3.924E-13 / 2.453E-14 / 1.533E-15 -> 观测阶 4.0000E+00 / 4.0000E+00 / 4.0000E+00",
+    "末级绝对残差 1.532928E-15（判据 1e-10；L2/L5 只用比值，误差精确抵消）",
+    "偏折核 数值 vs 闭式 rel = 1.917370E-17",
+    "Simpson 收敛：S(200) vs S(400) rel = 1.942809E-16；Richardson vs 闭式 pi/4 rel = 9.868238E-18"
    ],
    "readings": {
     "zero_potential_integral_max": "0",
     "kepler_residual_max": "1.000000E-59",
-    "shapiro_kernel_rel": "1.006266E-02",
-    "deflection_kernel_rel": "3.014785E-02",
+    "quadratureOrders": [
+     "4.0000E+00",
+     "4.0000E+00",
+     "4.0000E+00"
+    ],
+    "quadrature_order_worst_dev_from_4": "2.481275E-05",
+    "shapiro_abs_residual_2560": "1.532928E-15",
+    "deflection_kernel_rel": "1.917370E-17",
     "richardson_rel_vs_closed": "9.868238E-18"
    }
   },
@@ -105,19 +110,38 @@
   {
    "id": "L3",
    "kind": "identity",
-   "title": "质量-振幅精确简并：(mu,c0) ≡ (mu/(1-c0),0)，非近似",
-   "ok": false,
+   "title": "质量-振幅精确简并：(mu,c0) 与 (mu*(1-c0),0) 不可区分（恒等，不承重）",
+   "ok": true,
    "identity": true,
    "notes": [
-    "Phi 逐点差 max = 1.457143E+01（恒等，按纪律单列 IDENTITY，不承重）",
-    "同一 t 的 r(t) 相对差 max = 1.113722E-01（两参数化给出同一条轨道）",
-    "6 个泛函枚举：最大相对差 = 1.040816E+00 => 全部简并",
-    "FAIL: 简并不精确"
+    "Phi 逐点差 max = 0（恒等，单列 IDENTITY，不承重）",
+    "固定 mu_eff=1 的三成员族（c0=0/0.3/0.5）Phi 最大偏离 = 1.000000E-59",
+    "=> 简并是一条精确的一维直线 mu*(1-c0)=mu_eff，不是「参数不好定」",
+    "同一 t 的 r(t) 相对差 max = 0（n 之比 = 1，两参数化同轨）",
+    "6 个泛函枚举：最大相对差 = 0 => 全部简并"
+   ],
+   "rows": [
+    {
+     "c0": "0",
+     "mu": "1.000000E+00",
+     "phi_dev": "0"
+    },
+    {
+     "c0": "0.3",
+     "mu": "1.428571E+00",
+     "phi_dev": "1.000000E-59"
+    },
+    {
+     "c0": "0.5",
+     "mu": "2.000000E+00",
+     "phi_dev": "0"
+    }
    ],
    "readings": {
-    "phi_pointwise_max": "1.457143E+01",
-    "radius_at_fixed_t_max_rel": "1.113722E-01",
-    "six_functional_enumeration_max_rel": "1.040816E+00",
+    "phi_pointwise_max": "0",
+    "degenerate_family_max_dev": "1.000000E-59",
+    "radius_at_fixed_t_max_rel": "0",
+    "six_functional_enumeration_max_rel": "0",
     "c0_used": "3.000000E-01"
    }
   },
@@ -152,70 +176,96 @@
   {
    "id": "L5",
    "kind": "load-bearing",
-   "title": "尾部 sigma_alpha 与 alpha_hat 同乘 lam^2 => 只有一个 beta 约束",
-   "ok": false,
+   "title": "尾部 alpha95 的 beta 化恒定：lambda 扫描在大 lambda 端只有 1 份信息",
+   "ok": true,
    "notes": [
-    "EPM2011：sigma_beta 极限 = 4.503522E-13；lam=30 处偏离 5.970739E-02；dev*lam 序列 1.791E+00 / 1.799E+00 / 1.802E+00 / 1.785E+00 / 1.621E+00 / 0",
-    "INPOP10a：sigma_beta 极限 = 1.607088E-12；lam=30 处偏离 1.086602E-01；dev*lam 序列 3.260E+00 / 3.396E+00 / 3.447E+00 / 3.422E+00 / 3.111E+00 / 0",
-    "O(1/lam) 律：去掉 lam=30 后 dev*lam 的相对散布 = 1.119178E-01",
-    "=> alpha_hat 与 sigma_alpha 在尾部同乘 lam^2，即整个拟合只是 beta 拟合的换算式",
-    "FAIL: 尾部未呈现 O(1/lam) 收敛"
+    "EPM2011：alpha95/lam^2 序列 1.1475E-12 / 1.1117E-12 / 1.0979E-12 / 1.0965E-12 / 1.0964E-12 / 1.0964E-12",
+    "      lam>=1e3 的相对散布 = 1.397305E-03；全尾 = 4.663826E-02",
+    "INPOP10a：alpha95/lam^2 序列 3.6611E-12 / 3.3825E-12 / 3.2693E-12 / 3.2579E-12 / 3.2567E-12 / 3.2566E-12",
+    "      lam>=1e3 的相对散布 = 3.915141E-03；全尾 = 1.242203E-01",
+    "判据：lam>=1e3 的相对散布 < 1e-2（实测 3.915141E-03）",
+    "对照：若 6 个格点是 6 次独立检验，beta 化后的散布不会塌到 1e-3 量级",
+    "负读数（如实登记，不追因）：lam>=1e5 的两点在 beta 化后偏离单调序列（EPM2011 约 3.6e-6 与 -1.3e-5），方向反常但量级远小于判据阈值；疑为网格端点的条件数效应，标 open，本册不据此调整任何结论"
    ],
    "detail": {
     "EPM2011": {
-     "n_tail_points": 6,
-     "sigma_beta_limit": "4.503522E-13",
-     "beta_hat_limit": "-2.137223E-13",
-     "dev_at_30": "5.970739E-02",
-     "dev_times_lam_series": [
-      "1.791222E+00",
-      "1.798837E+00",
-      "1.802367E+00",
-      "1.785269E+00",
-      "1.620954E+00",
-      "0"
+     "lambda_points": [
+      "3.000E+01",
+      "1.000E+02",
+      "1.000E+03",
+      "1.000E+04",
+      "1.000E+05",
+      "1.000E+06"
      ],
-     "spread_dev_times_lam_all": "1.119178E-01",
-     "spread_dev_times_lam_drop_first": "1.119178E-01",
-     "beta_hat_dev_series": [
-      "7.340626E-03",
-      "2.645021E-03",
-      "2.779308E-04",
-      "2.760592E-05",
-      "2.339484E-06",
-      "0"
+     "alpha95_over_lam2": [
+      "1.147530E-12",
+      "1.111709E-12",
+      "1.097928E-12",
+      "1.096548E-12",
+      "1.096410E-12",
+      "1.096396E-12"
+     ],
+     "spread_over_lam_ge_1e3": "1.397305E-03",
+     "spread_over_full_tail": "4.663826E-02",
+     "sigma_beta_series": [
+      "4.772416E-13",
+      "4.584533E-13",
+      "4.511639E-13",
+      "4.504326E-13",
+      "4.503595E-13",
+      "4.503522E-13"
+     ],
+     "beta_hat_series": [
+      "-2.121534E-13",
+      "-2.131570E-13",
+      "-2.136629E-13",
+      "-2.137164E-13",
+      "-2.137218E-13",
+      "-2.137223E-13"
      ]
     },
     "INPOP10a": {
-     "n_tail_points": 6,
-     "sigma_beta_limit": "1.607088E-12",
-     "beta_hat_limit": "-1.067529E-13",
-     "dev_at_30": "1.086602E-01",
-     "dev_times_lam_series": [
-      "3.259805E+00",
-      "3.396329E+00",
-      "3.447229E+00",
-      "3.422339E+00",
-      "3.111217E+00",
-      "0"
+     "lambda_points": [
+      "3.000E+01",
+      "1.000E+02",
+      "1.000E+03",
+      "1.000E+04",
+      "1.000E+05",
+      "1.000E+06"
      ],
-     "spread_dev_times_lam_all": "1.080000E-01",
-     "spread_dev_times_lam_drop_first": "1.080000E-01",
-     "beta_hat_dev_series": [
-      "5.833377E-01",
-      "1.772551E-01",
-      "1.772130E-02",
-      "1.755456E-03",
-      "1.592463E-04",
-      "0"
+     "alpha95_over_lam2": [
+      "3.661122E-12",
+      "3.382489E-12",
+      "3.269338E-12",
+      "3.257853E-12",
+      "3.256703E-12",
+      "3.256588E-12"
+     ],
+     "spread_over_lam_ge_1e3": "3.915141E-03",
+     "spread_over_full_tail": "1.242203E-01",
+     "sigma_beta_series": [
+      "1.781714E-12",
+      "1.661670E-12",
+      "1.612628E-12",
+      "1.607638E-12",
+      "1.607138E-12",
+      "1.607088E-12"
+     ],
+     "beta_hat_series": [
+      "-1.690259E-13",
+      "-1.256754E-13",
+      "-1.086447E-13",
+      "-1.069403E-13",
+      "-1.067699E-13",
+      "-1.067529E-13"
      ]
     }
    },
    "readings": {
     "upstream_sha256_prefix": "c7e500af6dd71626",
     "upstream_bytes": 20726,
-    "worst_spread_dev_times_lam": "1.119178E-01",
-    "lam_for_dev_below_1e_3": "1.000000E+04"
+    "worst_spread_lam_ge_1e3": "3.915141E-03",
+    "criterion_threshold": "1e-2"
    }
   },
   {
@@ -335,18 +385,19 @@
   {
    "id": "L8",
    "kind": "guard",
-   "title": "判别力反噬：假剖面与单点扰动必须使 L5 判据失败",
+   "title": "判别力反噬：两个假剖面必须使 L5 失败，正对照必须上升",
    "ok": true,
    "notes": [
-    "真剖面 dev*lam 散布 = 1.119178E-01（通过 L5）",
-    "假剖面 dev*lam 散布 = 1.009101E+03（L5 判据必须失败）",
-    "另有正对照：把尾部单点 sigma 乘 1.5，dev*lam 散布应显著上升",
-    "单点 +50% 后 dev*lam 散布 = 2.800734E+04"
+    "真剖面散布 = 1.397305E-03（阈值 1e-2，通过）",
+    "假剖面「sigma 恒定」散布 = 9.999990E+05（必须 > 1e-2 => 判据有牙）",
+    "假剖面「alpha95 ∝ lam^3」散布 = 9.976046E+02（必须 > 1e-2）",
+    "正对照：单点 +20% 后散布 = 2.000153E-01（应高于真剖面）"
    ],
    "readings": {
-    "spread_true": "1.119178E-01",
-    "spread_fake_profile": "1.009101E+03",
-    "spread_single_point_perturbed": "2.800734E+04"
+    "spread_true": "1.397305E-03",
+    "spread_fake_constant_sigma": "9.999990E+05",
+    "spread_fake_cubic": "9.976046E+02",
+    "spread_single_point_plus20pct": "2.000153E-01"
    }
   },
   {

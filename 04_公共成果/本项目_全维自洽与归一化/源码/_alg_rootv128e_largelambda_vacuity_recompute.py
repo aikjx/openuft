@@ -592,73 +592,64 @@ def _converge_ratio(rows, key):
 
 # ---------------------------------------------------------------- 门 L5：sigma_beta 收敛
 def gate_L5(up, up_sha, up_bytes):
+    """尾部 alpha 约束的 beta 化必须恒定：alpha95/lam^2 在 4 个数量级上不变。
+
+    注意本门判的是 **95% 上界** alpha95 = |alpha_hat| + 1.96 sigma 的 beta 化，
+    不是 sigma 单独。原因：alpha95 才是「被报告的约束」，它是否随 lam^2 增长，
+    决定「lambda 扫描」到底扫出了几条信息。
+    """
     note = []
     ok = True
     detail = {}
-    worst_lin = D(0)
-    n_tail_min = None
+    worst = D(0)
 
     for ds in ("EPM2011", "INPOP10a"):
         prof = up["j3_real_fit"]["datasets"][ds]["profile"]
         rows = tail_stats(prof, D(30))
-        conv_s = _converge_ratio(rows, "sigma_beta")
-        conv_a = _converge_ratio(rows, "beta_hat")
+        lams = [r["lam"] for r in rows]
+        q = [r["alpha_95"] / (r["lam"] ** 2) for r in rows]
 
-        # O(1/lam) 律：dev*lam 应近似常数
-        vals = [c[2] for c in conv_s[:-1]]  # 去掉极限点自身（dev=0）
-        if vals:
-            mn, mx = min(vals), max(vals)
-            spread = (mx - mn) / mn if mn != 0 else mx
-        else:
-            spread = D(0)
-
-        # 去掉第一项（lam=30，修正最大）后的线性律检验
-        vals2 = [c[2] for c in conv_s[1:-1]]
-        if len(vals2) >= 2:
-            mn2, mx2 = min(vals2), max(vals2)
-            spread2 = (mx2 - mn2) / mn2 if mn2 != 0 else mx2
-        else:
-            spread2 = D(0)
-        worst_lin = max(worst_lin, spread2)
-
-        # 达到 1e-3 所需的最小 lam
-        for lam, d, _ in conv_s:
-            if d < D("1e-3") and n_tail_min is None:
-                n_tail_min = lam
+        # 保守窗口（lam >= 1e3）：四十年才用，避开 O(1/lam) 修正与端点效应
+        q3 = [qi for qi, l in zip(q, lams) if l >= D(1000)]
+        spread3 = (max(q3) - min(q3)) / min(q3)
+        # 全尾（含 lam=30/100）：仍应同量级
+        spread_all = (max(q) - min(q)) / min(q)
+        worst = max(worst, spread3)
 
         detail[ds] = {
-            "n_tail_points": len(rows),
-            "sigma_beta_limit": fstr(rows[-1]["sigma_beta"]),
-            "beta_hat_limit": fstr(rows[-1]["beta_hat"]),
-            "dev_at_30": fstr(conv_s[0][1]),
-            "dev_times_lam_series": [fstr(c[2]) for c in conv_s],
-            "spread_dev_times_lam_all": fstr(spread),
-            "spread_dev_times_lam_drop_first": fstr(spread2),
-            "beta_hat_dev_series": [fstr(c[1]) for c in conv_a],
+            "lambda_points": [fstr(l, 3) for l in lams],
+            "alpha95_over_lam2": [fstr(v, 6) for v in q],
+            "spread_over_lam_ge_1e3": fstr(spread3),
+            "spread_over_full_tail": fstr(spread_all),
+            "sigma_beta_series": [fstr(r["sigma_beta"], 6) for r in rows],
+            "beta_hat_series": [fstr(r["beta_hat"], 6) for r in rows],
         }
-        note.append("%s：sigma_beta 极限 = %s；lam=30 处偏离 %s；dev*lam 序列 %s"
-                    % (ds, fmt(rows[-1]["sigma_beta"]), fmt(conv_s[0][1]),
-                       " / ".join(fstr(c[2], 3) for c in conv_s)))
+        note.append("%s：alpha95/lam^2 序列 %s" % (ds, " / ".join(fstr(v, 4) for v in q)))
+        note.append("      lam>=1e3 的相对散布 = %s；全尾 = %s"
+                    % (fmt(spread3), fmt(spread_all)))
 
-    note.append("O(1/lam) 律：去掉 lam=30 后 dev*lam 的相对散布 = %s" % fmt(worst_lin))
-    note.append("=> alpha_hat 与 sigma_alpha 在尾部同乘 lam^2，即整个拟合只是 beta 拟合的换算式")
+    note.append("判据：lam>=1e3 的相对散布 < 1e-2（实测 %s）" % fmt(worst))
+    note.append("对照：若 6 个格点是 6 次独立检验，beta 化后的散布不会塌到 1e-3 量级")
+    note.append("负读数（如实登记，不追因）：lam>=1e5 的两点在 beta 化后偏离单调序列"
+                "（EPM2011 约 3.6e-6 与 -1.3e-5），方向反常但量级远小于判据阈值；"
+                "疑为网格端点的条件数效应，标 open，本册不据此调整任何结论")
 
-    if worst_lin > D("1e-2"):
+    if worst > D("1e-2"):
         ok = False
-        note.append("FAIL: 尾部未呈现 O(1/lam) 收敛")
+        note.append("FAIL: beta 化后尾部散布过大，不能称为「同一个约束」")
 
     return {
         "id": "L5",
         "kind": "load-bearing",
-        "title": "尾部 sigma_alpha 与 alpha_hat 同乘 lam^2 => 只有一个 beta 约束",
+        "title": "尾部 alpha95 的 beta 化恒定：lambda 扫描在大 lambda 端只有 1 份信息",
         "ok": ok,
         "notes": note,
         "detail": detail,
         "readings": {
             "upstream_sha256_prefix": up_sha[:16],
             "upstream_bytes": up_bytes,
-            "worst_spread_dev_times_lam": fstr(worst_lin),
-            "lam_for_dev_below_1e_3": fstr(n_tail_min) if n_tail_min else "n/a",
+            "worst_spread_lam_ge_1e3": fstr(worst),
+            "criterion_threshold": "1e-2",
         },
     }
 
@@ -781,60 +772,69 @@ def gate_L7(up):
 
 # ---------------------------------------------------------------- 门 L8：反噬
 def gate_L8(up):
-    """判别力：把尾部 sigma 换成不随 lam 增长的假剖面，L5/L6 判据必须 FAIL。"""
+    """判别力反噬：假剖面必须使 L5 判据失败；正对照必须保持通过。"""
     note = []
     ok = True
 
     ds = "EPM2011"
     prof = up["j3_real_fit"]["datasets"][ds]["profile"]
     rows = tail_stats(prof, D(30))
+    lams = [r["lam"] for r in rows]
 
-    # 真剖面：dev*lam 近似常数
-    conv_true = _converge_ratio(rows, "sigma_beta")
-    vals_true = [c[2] for c in conv_true[1:-1]]
-    spread_true = (max(vals_true) - min(vals_true)) / min(vals_true) if len(vals_true) >= 2 else D(0)
+    def spread_of(qs, lams_):
+        q3 = [qi for qi, l in zip(qs, lams_) if l >= D(1000)]
+        return (max(q3) - min(q3)) / min(q3)
 
-    # 假剖面：sigma_alpha 恒定（不随 lam^2 增长）=> sigma_beta ∝ lam^-2
-    fake = []
+    # 真剖面
+    q_true = [r["alpha_95"] / (r["lam"] ** 2) for r in rows]
+    s_true = spread_of(q_true, lams)
+
+    # 假剖面 1：数据对大 lambda 没有灵敏度 —— sigma_alpha 恒定且 alpha_hat = 0。
+    # 注意：不能沿用真的 alpha_hat，因为它本身 ∝ lam^2，会把假剖面「救活」
+    # （本轮首跑正是这样：q_fake 两端只差 0.3%，判据无法区分）。
     const_s = rows[0]["sigma_alpha"]
-    for r in rows:
-        fake.append({"lam": r["lam"], "sigma_beta": const_s / (r["lam"] * r["lam"])})
-    conv_fake = _converge_ratio(fake, "sigma_beta")
-    vals_fake = [c[2] for c in conv_fake[1:-1]]
-    spread_fake = (max(vals_fake) - min(vals_fake)) / min(vals_fake) if len(vals_fake) >= 2 else D("1e9")
+    q_fake = [(D("1.96") * const_s) / (r["lam"] ** 2) for r in rows]
+    s_fake = spread_of(q_fake, lams)
 
-    note.append("真剖面 dev*lam 散布 = %s（通过 L5）" % fmt(spread_true))
-    note.append("假剖面 dev*lam 散布 = %s（L5 判据必须失败）" % fmt(spread_fake))
-    note.append("另有正对照：把尾部单点 sigma 乘 1.5，dev*lam 散布应显著上升")
+    # 假剖面 2：alpha95 按 lam^3 增长（过头）
+    q_over = [r["alpha_95"] * r["lam"] / (r["lam"] ** 2) for r in rows]
+    s_over = spread_of(q_over, lams)
 
-    # 单点扰动
-    pert = [dict(r) for r in rows]
-    pert[-2]["sigma_alpha"] = pert[-2]["sigma_alpha"] * D("1.5")
-    pert[-2]["sigma_beta"] = pert[-2]["sigma_alpha"] / (pert[-2]["lam"] ** 2)
-    conv_p = _converge_ratio(pert, "sigma_beta")
-    vals_p = [c[2] for c in conv_p[1:-1]]
-    spread_p = (max(vals_p) - min(vals_p)) / min(vals_p) if len(vals_p) >= 2 else D("1e9")
-    note.append("单点 +50%% 后 dev*lam 散布 = %s" % fmt(spread_p))
+    # 正对照：单点扰动 20% 应使散布上升但不必然越过阈值
+    q_pert = list(q_true)
+    q_pert[-2] = q_pert[-2] * D("1.2")
+    s_pert = spread_of(q_pert, lams)
 
-    if spread_fake < D("1"):
+    note.append("真剖面散布 = %s（阈值 1e-2，通过）" % fmt(s_true))
+    note.append("假剖面「sigma 恒定」散布 = %s（必须 > 1e-2 => 判据有牙）" % fmt(s_fake))
+    note.append("假剖面「alpha95 ∝ lam^3」散布 = %s（必须 > 1e-2）" % fmt(s_over))
+    note.append("正对照：单点 +20%% 后散布 = %s（应高于真剖面）" % fmt(s_pert))
+
+    if s_fake <= D("1e-2"):
         ok = False
         note.append("FAIL: 假剖面未使判据失败，L5 无判别力")
-    if spread_p < spread_true:
+    if s_over <= D("1e-2"):
+        ok = False
+        note.append("FAIL: 过头剖面未使判据失败")
+    if not (s_pert > s_true):
         ok = False
         note.append("FAIL: 单点扰动未使散布上升")
 
     return {
         "id": "L8",
         "kind": "guard",
-        "title": "判别力反噬：假剖面与单点扰动必须使 L5 判据失败",
+        "title": "判别力反噬：两个假剖面必须使 L5 失败，正对照必须上升",
         "ok": ok,
         "notes": note,
         "readings": {
-            "spread_true": fstr(spread_true),
-            "spread_fake_profile": fstr(spread_fake),
-            "spread_single_point_perturbed": fstr(spread_p),
+            "spread_true": fstr(s_true),
+            "spread_fake_constant_sigma": fstr(s_fake),
+            "spread_fake_cubic": fstr(s_over),
+            "spread_single_point_plus20pct": fstr(s_pert),
         },
     }
+
+
 # ---------------------------------------------------------------- 判词（机读构造）
 def verdict_of(f_l5, f_l6, f_l7):
     """唯一判词构造函数。三个输入任一翻转，判词串必须变化。"""

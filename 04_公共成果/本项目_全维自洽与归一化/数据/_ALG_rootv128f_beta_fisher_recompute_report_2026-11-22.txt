@@ -1,0 +1,115 @@
+==============================================================================
+ROOT V128 第六册 · beta 参数化 Fisher 重拟合与零假设处 lambda 不可辨识性
+算法联盟可算审计（非判定册）  date : 2026-11-22
+==============================================================================
+
+target    : Phi(r) = -(mu/r)(1 + alpha exp(-r/lambda))
+question  : 在零假设 beta = 0 处，lambda 本身可辨识吗
+upstream  : _ALG_rootv128c_ephemeris_jointfit_recompute_2026-11-22.json
+up_sha256 : c7e500af6dd71626d5fad1915e44dc9540badf718087d31eb3b38dd8276f9553
+up_bytes  : 20726
+
+------------------------------------------------------------------------------
+[N1] OK    自检：独立核 vs 上游 sigma_alpha；差分导数两路
+       本册独立核 vs 第三册 sigma_alpha：22 例，最大相对差 1.647343E-05
+       注意：同一进动闭式与同一观测表，属同一来源，不构成独立证据
+       dG/dlam 两种步长（1e-7 与 1e-6，均 Richardson）最大相对差 9.611540E-13
+       .n_cross_check                            = 22
+       .worst_sigma_rel                          = 1.647343E-05
+       .worst_derivative_rel                     = 9.611540E-13
+       | ds=EPM2011  lam_AU=1.000E-02  sigma_mine=5.092130E+00  sigma_upstream=5.092130E+00  rel=9.492846E-08
+       | ds=EPM2011  lam_AU=1.000E-01  sigma_mine=3.358156E-11  sigma_upstream=3.358156E-11  rel=2.230116E-09
+       | ds=EPM2011  lam_AU=5.000E-01  sigma_mine=2.201844E-12  sigma_upstream=2.201844E-12  rel=1.266269E-07
+       | ds=EPM2011  lam_AU=1.000E+00  sigma_mine=2.053353E-12  sigma_upstream=2.053353E-12  rel=1.298535E-07
+       | ds=EPM2011  lam_AU=5.000E+00  sigma_mine=1.549914E-11  sigma_upstream=1.549914E-11  rel=2.807728E-07
+       | ds=EPM2011  lam_AU=3.000E+01  sigma_mine=4.295179E-10  sigma_upstream=4.295174E-10  rel=1.266379E-06
+       | ds=EPM2011  lam_AU=1.000E+02  sigma_mine=4.584542E-09  sigma_upstream=4.584533E-09  rel=1.910842E-06
+       | ds=EPM2011  lam_AU=1.000E+03  sigma_mine=4.511649E-07  sigma_upstream=4.511639E-07  rel=2.318516E-06
+
+[N2] OK    零假设处 lambda 的 Fisher 列精确为零（承重）
+       两套数据集 × 6 个 lambda：beta=0 与 alpha=0 两种参数化下，Fisher 的 lambda 列/行逐点精确为 0（max = 0）
+       => det F = 0，sigma_lambda 的 Cramer-Rao 下界发散；这不是「拟合不好」，是雅可比列恒为零
+       注入 beta=1e-30 后 f11 由 0 变为 2.340497E-17（>0）
+       .max_lambda_column_at_null                = 0
+       .f11_beta_at_1e_minus_30                  = 2.340497E-17
+       | ds=EPM2011  lam_AU=0.1  f01_beta=0  f11_beta=0  f01_alpha=0  f11_alpha=0  det_beta=0  cr_beta=None
+       | ds=EPM2011  lam_AU=1  f01_beta=0  f11_beta=0  f01_alpha=0  f11_alpha=0  det_beta=0  cr_beta=None
+       | ds=EPM2011  lam_AU=10  f01_beta=0  f11_beta=0  f01_alpha=0  f11_alpha=0  det_beta=0  cr_beta=None
+       | ds=EPM2011  lam_AU=100  f01_beta=0  f11_beta=0  f01_alpha=0  f11_alpha=0  det_beta=0  cr_beta=None
+       | ds=EPM2011  lam_AU=1e3  f01_beta=0  f11_beta=0  f01_alpha=0  f11_alpha=0  det_beta=0  cr_beta=None
+       | ds=EPM2011  lam_AU=1e5  f01_beta=0  f11_beta=0  f01_alpha=0  f11_alpha=0  det_beta=0  cr_beta=None
+       | ds=INPOP10a  lam_AU=0.1  f01_beta=0  f11_beta=0  f01_alpha=0  f11_alpha=0  det_beta=0  cr_beta=None
+       | ds=INPOP10a  lam_AU=1  f01_beta=0  f11_beta=0  f01_alpha=0  f11_alpha=0  det_beta=0  cr_beta=None
+
+[N3] OK    Fisher 在 (alpha,lam)→(beta,lam) 下按 J^T F J 变换
+       F_B = J^T F_A J 三个分量与 det 比的最大相对差 = 5.715802E-56
+       => 零假设的奇性在两种参数化下同时存在，不是「换参数能救」
+       .worst_rel                                = 5.715802E-56
+       | ds=EPM2011  lam_AU=1  rel_F00=0  rel_F01=3.801275E-60  rel_F11=4.256779E-60  det_ratio_rel_vs_lam4=4.632190E-58
+       | ds=EPM2011  lam_AU=10  rel_F00=5.642067E-60  rel_F01=0  rel_F11=4.065811E-59  det_ratio_rel_vs_lam4=6.153624E-57
+       | ds=EPM2011  lam_AU=100  rel_F00=4.196529E-60  rel_F01=4.305114E-58  rel_F11=5.715802E-56  det_ratio_rel_vs_lam4=3.069624E-56
+       | ds=INPOP10a  lam_AU=1  rel_F00=1.212472E-60  rel_F01=6.041622E-60  rel_F11=0  det_ratio_rel_vs_lam4=1.197980E-59
+       | ds=INPOP10a  lam_AU=10  rel_F00=8.633270E-60  rel_F01=1.097141E-58  rel_F11=6.653924E-58  det_ratio_rel_vs_lam4=1.110128E-57
+       | ds=INPOP10a  lam_AU=100  rel_F00=0  rel_F01=5.719732E-59  rel_F11=1.659397E-56  det_ratio_rel_vs_lam4=2.754156E-56
+
+[N4] OK    alpha / beta 两种线性拟合精确等价（恒等，不承重）
+       12 组：beta_hat = alpha_hat/lam^2、sigma_beta = sigma_alpha/lam^2、delta_chi2 相同，最大相对差 3.163483E-59
+       这是恒等（同节点、同权重、线性重标），按纪律单列 IDENTITY，不承重
+       .worst_rel                                = 3.163483E-59
+
+[N5] OK    beta 自由 profile 与上游峰逐字一致；beta 固定 0 时 chi2 平坦
+       EPM2011：beta 自由 profile 峰 4.444444E-01 vs 第三册 4.444444E-01（rel 1.000000E-07）；beta 固定 0 时 chi2(lam) 恒为 base，无 lambda 信息
+       INPOP10a：beta 自由 profile 峰 4.475984E-01 vs 第三册 4.475984E-01（rel 6.707717E-08）；beta 固定 0 时 chi2(lam) 恒为 base，无 lambda 信息
+       => 0.444/0.448 的峰是 beta 自由 profile 的噪声起伏，不是 lambda 被测定
+       .worst_rel_to_upstream                    = 1.000000E-07
+       | ds=EPM2011  peak_delta_chi2_mine=4.444444E-01  upstream=4.444444E-01  rel=1.000000E-07  peak_lam_AU=1.000000E-02  beta0_chi2_flat=True
+       | ds=INPOP10a  peak_delta_chi2_mine=4.475984E-01  upstream=4.475984E-01  rel=6.707717E-08  peak_lam_AU=1.258925E-01  beta0_chi2_flat=True
+
+[N6] OK    sigma_lambda ∝ 1/beta；零假设处发散（承重）
+       sigma_lambda * beta 序列 1.03021E-22 / 1.03021E-22 / 1.03021E-22；相对散布 0（应 < 1e-6）
+       => sigma_lambda 不是「样本数不够」，而是被 1/beta 精确标度；beta→0 时发散
+       .spread_sigma_lambda_times_beta           = 0
+       | beta=1e-4  det_F=1.119248E+104  sigma_beta=1.025291E-33  sigma_lambda_AU=1.030206E-18  sigma_lambda_times_beta=1.030206E-22
+       | beta=1e-3  det_F=1.119248E+106  sigma_beta=1.025291E-33  sigma_lambda_AU=1.030206E-19  sigma_lambda_times_beta=1.030206E-22
+       | beta=1e-2  det_F=1.119248E+108  sigma_beta=1.025291E-33  sigma_lambda_AU=1.030206E-20  sigma_lambda_times_beta=1.030206E-22
+
+[N7] OK    正对照：注入非零 beta 后 lambda 被唯一恢复
+       注入 beta=1e-3、lambda=10 AU（无噪声）：最佳网格点 1.00000E+01 AU，相对偏离 0
+       chi2 在真点 = 0；次优网格点 1.25893E+01 AU 的 chi2 = 4.335546E+59
+       .best_lam_AU                              = 1.00000E+01
+       .chi2_at_true                             = 0
+       .dev_from_true                            = 0
+
+[N8] OK    反噬：导数置零会使判据误报，必须由 N1 守门
+       正确 dG：det F = 1.119248E+108（>0，lambda 可辨识）
+       人为置零 dG：det F = 0（误报为不可辨识）
+       => 判据依赖「导数确实算出来」这个前提；本册用 N1 的两种步长互验守住它。若只报 det=0 而不报导数自检，属装饰判据
+       .det_correct                              = 1.119248E+108
+       .det_zero_derivative                      = 0
+
+[G-VERDICT-MACHINE] OK    判词机读：三个承重标志任一翻转必改判词串
+       基线 326 字符；变体 [45, 43, 53]
+
+[G-NO-HARDCODE-OK] OK    AST 守卫：ok 不得顶层赋常量且无条件翻转
+       扫描 10 个函数
+       零命中
+       .n_functions_scanned                      = 10
+
+[G-LINK] OK    链接体检：JSON 与报告均含判词串与日期
+       _ALG_rootv128f_beta_fisher_recompute_2026-11-22.json: verdict=True date=True
+       _ALG_rootv128f_beta_fisher_recompute_report_2026-11-22.txt: verdict=True date=True
+
+------------------------------------------------------------------------------
+verdict   : ROOTV128F-LAMBDA-UNIDENTIFIABLE-AT-NULL--FISHER-LAMBDA-COLUMN-IS-EXACTLY-ZERO--CRAMER-RAO-BOUND-DIVERGES--SIGMA-LAMBDA-SCALES-AS-ONE-OVER-BETA--ALPHA-AND-BETA-FITS-ARE-EXACT-RESCALE--CHI2-PEAK-IS-NOISE-NOT-A-LAMBDA-MEASUREMENT--INJECTION-RECOVERY-SHOWS-ONLY-NONZERO-BETA-GIVES-LAMBDA--UFT-NOT-BROKEN--NO-INDEPENDENT-PREDICTION
+final     : GATES-PASS-WITH-UNIDENTIFIABILITY-CONCLUSION
+guards    : N1 N8 G-VERDICT-MACHINE G-NO-HARDCODE-OK G-LINK
+identity  : N4
+bearing   : N2 N5 N6
+n_gate_ok : 11 / 11
+
+red_line  : 不宣称攻破统一场论；不产生新物理；独立实验预言 0；
+            核与观测表与第三册同源，不算独立证据；不改任何既有判词。
+boundary  : 判的是「beta=0 处 lambda 不可辨识」，不是「V128 被证伪」，
+            也不是「任何 Yukawa 模型的 lambda 都不可测」。
+            注入非零 beta 后 lambda 恢复（N7），边界清楚。
+==============================================================================

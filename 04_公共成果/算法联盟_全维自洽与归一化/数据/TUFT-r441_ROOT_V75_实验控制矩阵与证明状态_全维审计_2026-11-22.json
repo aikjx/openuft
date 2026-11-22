@@ -1,0 +1,419 @@
+{
+  "meta": {
+    "rid": "r441",
+    "stamp": "2026-11-22",
+    "title": "ROOT V75 实验控制矩阵与证明状态全维审计",
+    "verdict_counts": {
+      "PASS": 10,
+      "INFO": 2,
+      "CORRECTED": 2,
+      "FAIL": 1
+    },
+    "entry_total": 15,
+    "guard_total": 42,
+    "w3_pass": 0,
+    "w3_positive_control": 1,
+    "method": "纯标准库 Decimal 60 位 + Fraction 精确量纲矩阵 + SHA-256 + W3 四门禁 + 幂等产物",
+    "source": "90_历史归档/来源语料_ufthub_ROOT_V52-V82_202611/V75/ROOT_V75",
+    "source_sha256": "03bdbf8c1c9498acc73deeeb9bf60a6f9bbec946db44b5e202e562aba0f94e6d",
+    "fact_sha256": {
+      "SHA256_MANIFEST.csv": "127c9f7685c3ed48723fad953bea65e482175a8dd6a4d76ce5c1665b17304d7d",
+      "README.md": "03b26ccd167db883fb5614579acf68b4309d0c91063ded95872690db81e50453",
+      "PROOF_STATUS.md": "807200e7c71c3b9e57a428d3fc4ce4c7d19bb6e8ad0f5a7054656cd37c0ed671",
+      "ROOT_V75_变化电磁场与引力起源_严格推导研究专著.md": "e1c01a0351e041996c6cdf8be5ac3642f45e8e173979e479d8dd2dde8ac98554",
+      "ROOT_V75_核心方程与证明状态.csv": "a69af67e9859ff78a069bfa38404ba1966d1c4383a0e989a2b3a077f44425f1a",
+      "ROOT_V75_多维影响因素与实验控制矩阵.csv": "dc3633a0dfe7a8648b58fbcde562f8727150749c0c380e6b9d7231ee80a4779b",
+      "numerical_summary.json": "ff795ab2faaf2166adddba9a3998f22b942fbc8c03634c9b5f0fb146ec429ec9",
+      "verification_report.json": "ebf952d6e44b2c98f9cca8691202d5b4842e0a4f6053df693bb5c205955b8afa",
+      "browser_smoke.json": "7bbd83919840bc138ee12d54ff4466a9571233b84b7f94dcfd1b6ac691f57adc",
+      "em_gravity.py": "a37914427e749f594222bb34950e2866eaacca3c379d3540c2ae101c4659700d"
+    }
+  },
+  "entries": [
+    {
+      "id": "V75-A01",
+      "verdict": "PASS",
+      "title": "V75 事实源哈希链完整且计数闭合",
+      "detail": "SHA256_MANIFEST 共 28 项逐项一致；方程 50 条、因素控制 30 条、扫描数据 15/25/1001 点、工程测试 41/5/10 均可机读。"
+    },
+    {
+      "id": "V75-A02",
+      "verdict": "INFO",
+      "title": "V75 自陈边界与 attack64 分工不重复",
+      "detail": "本册只读审计 V75 自身的方程目录/因素矩阵/数值摘要/工程测试/实验状态；G no-go 与电磁源-耦合混同继承 attack64，不重判。"
+    },
+    {
+      "id": "V75-B01",
+      "verdict": "PASS",
+      "title": "10 T/1 m 六个代表数值可独立复算",
+      "detail": "u_B=3.978873577823E+7 J/m³、U_B=1.666666666887E+8 J、m_eq=1.854416760334E-9 kg、g(1m)=1.237693378350E-19 m/s²、g(2m)=3.094233445875E-20 m/s²、|h00(2m)|=1.377119606798E-36；与 results/numerical_summary.json 最大相对差 3.843358E-16。"
+    },
+    {
+      "id": "V75-B02",
+      "verdict": "PASS",
+      "title": "1 MV/m 电场数值与单位口径一致",
+      "detail": "u=4.427093909395E+0 J/m³、rho_eq=4.925806286443E-17 kg/m³，最大相对差 1.468208E-16；该能量密度比 10 T 磁场低约 7 个量级。"
+    },
+    {
+      "id": "V75-B03",
+      "verdict": "PASS",
+      "title": "50 Hz 准静态感应能量与有效域可复算",
+      "detail": "<U_B>=8.333333334434E+7 J，<U_E_ind>=9.151179909624E-6 J，ratio=1.098142E-13，omega*a/c=1.047923E-6；来料仅在该小参数下成立，不能外推高频。"
+    },
+    {
+      "id": "V75-B04",
+      "verdict": "PASS",
+      "title": "零不变量平面波仍有非零能量，反例成立",
+      "detail": "取 E=1 MV/m、B=E/c 且正交，I1=0.000E-61、P=0，但 u=8.854188E+0 J/m³>0 ⇒ 仅用 F² 或 E·B 替代完整 T_μν 会漏掉电磁辐射引力源。"
+    },
+    {
+      "id": "V75-B05",
+      "verdict": "PASS",
+      "title": "“变化率必要”被静态场与旋转场反例排除",
+      "detail": "dB/dt=0 的静态 B 仍有 u_B=3.978873577823E+7 J/m³；等幅旋转 B 的能量单极与静态同值；变化率不能充当引力单极的唯一变量。"
+    },
+    {
+      "id": "V75-C01",
+      "verdict": "PASS",
+      "title": "G 来源在给定电磁/几何输入集内量纲无解",
+      "detail": "以 {c,E,B,ω,a} 的 (M,L,T,Q) 指数矩阵做精确有理数判定，rank(A)=3、rank([A|G])=4；M 行要求 x_E+x_B=-1 而 Q 行要求 x_E+x_B=0，故不相容；阳性对照取 [a] 时 rank 不增（=3），说明判据非恒假。"
+    },
+    {
+      "id": "V75-C02",
+      "verdict": "CORRECTED",
+      "title": "50 条方程证明状态显示“已知/条件/候选/反例”未混写",
+      "detail": "状态分布：known=23、conditional=13、counterexample=3、candidate=3、derived/condition/necessary/toy 等=8；E35–E42 的标量–光子模型仍列 candidate/derived conditional，E44 明确 [G] 需独立质量/长度动力学。"
+    },
+    {
+      "id": "V75-C03",
+      "verdict": "CORRECTED",
+      "title": "标量–光子候选不是无参数预言",
+      "detail": "E35–E42 给出候选作用量与三条条件场方程，但 M_*、m_phi、xi、Lambda 均未由理论定值；E41 只给 F_g>0 与 1+phi/Lambda>0 的必要稳定性条件，E40 的有效张量耦合明确不等于实验室 G_Cav。"
+    },
+    {
+      "id": "V75-D01",
+      "verdict": "PASS",
+      "title": "30 项实验控制矩阵覆盖 8 类且无空字段",
+      "detail": "分布：[('假说', 2), ('引力', 5), ('时空', 2), ('物质', 5), ('电磁', 9), ('统计', 2), ('边界', 2), ('量子', 3)]；控制项从 B/E/相位/dB/dt 扩展到材料、支架、热、地球 g/潮汐、传播延迟、多极矩、第五力与盲测统计，说明来料没有把“装置重力样信号”直接等同于新引力。"
+    },
+    {
+      "id": "V75-D02",
+      "verdict": "PASS",
+      "title": "工程测试与实验确证被明确分层",
+      "detail": "41 项单元测试、5 组符号校核、10 项 Chromium 交互与 0 page/console errors 只证明离线模型/网页按定义实现；verification_report.scientific_status 明写 no new measurement / no four-force unification。"
+    },
+    {
+      "id": "V75-E01",
+      "verdict": "FAIL",
+      "title": "W3 四候选 0/4",
+      "detail": "G 起源：无数值且量纲无解；EM 源：标准 GR 已知结果而非体系内新推；标量候选：自由参数未锚定；人工重力：玩具 g 用外部 G 且无实测。四者分别败在不同门，不能合并为 W3 通过。"
+    },
+    {
+      "id": "V75-E02",
+      "verdict": "PASS",
+      "title": "W3 门禁带阳性对照",
+      "detail": "四项全真的合成候选使 PASS 从 0/4 升到 1/4，证明 C1–C4 是可执行的判据而非恒假集合。"
+    },
+    {
+      "id": "V75-RED-01",
+      "verdict": "INFO",
+      "title": "红线计数继承不变",
+      "detail": "0/6、0/22、UFT3=0、L3=0、validated=0、含引力四力正确方程 0 条、L3↛L4；本册只给 V75 条件结果定价。"
+    }
+  ],
+  "guards": [
+    {
+      "id": "V75_source_exists_SHA256_MANIFEST.csv",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\SHA256_MANIFEST.csv"
+    },
+    {
+      "id": "V75_source_exists_README.md",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\README.md"
+    },
+    {
+      "id": "V75_source_exists_PROOF_STATUS.md",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\PROOF_STATUS.md"
+    },
+    {
+      "id": "V75_source_exists_ROOT_V75_变化电磁场与引力起源_严格推导研究专著.md",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\book\\ROOT_V75_变化电磁场与引力起源_严格推导研究专著.md"
+    },
+    {
+      "id": "V75_source_exists_ROOT_V75_核心方程与证明状态.csv",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\data\\ROOT_V75_核心方程与证明状态.csv"
+    },
+    {
+      "id": "V75_source_exists_ROOT_V75_多维影响因素与实验控制矩阵.csv",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\data\\ROOT_V75_多维影响因素与实验控制矩阵.csv"
+    },
+    {
+      "id": "V75_source_exists_numerical_summary.json",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\results\\numerical_summary.json"
+    },
+    {
+      "id": "V75_source_exists_verification_report.json",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\results\\verification_report.json"
+    },
+    {
+      "id": "V75_source_exists_browser_smoke.json",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\results\\browser_smoke.json"
+    },
+    {
+      "id": "V75_source_exists_em_gravity.py",
+      "ok": true,
+      "detail": "事实源存在：90_历史归档\\来源语料_ufthub_ROOT_V52-V82_202611\\V75\\ROOT_V75\\src\\em_gravity.py"
+    },
+    {
+      "id": "V75_manifest_all_match",
+      "ok": true,
+      "detail": "SHA256_MANIFEST 28 项逐项一致；不一致=[]"
+    },
+    {
+      "id": "V75_equation_rows",
+      "ok": true,
+      "detail": "核心方程与证明状态共 50 条（E01-E50）"
+    },
+    {
+      "id": "V75_factor_rows",
+      "ok": true,
+      "detail": "实验控制矩阵共 30 条控制变量"
+    },
+    {
+      "id": "V75_data_rows",
+      "ok": true,
+      "detail": "数据行数：magnetic=15 / em=25 / time=1001"
+    },
+    {
+      "id": "V75_verification_counts",
+      "ok": true,
+      "detail": "工程读数：41 passed / 5 passed / 10 passed; zero page and console errors"
+    },
+    {
+      "id": "V75_browser_count",
+      "ok": true,
+      "detail": "浏览器交互 10/10，page/console errors=0/0"
+    },
+    {
+      "id": "V75_honest_boundary",
+      "ok": true,
+      "detail": "PROOF_STATUS 明写尚无独立参数证明、无新仪器数据、无四力统一"
+    },
+    {
+      "id": "V75_readme_no_unification",
+      "ok": true,
+      "detail": "README 明确区分已证 GR 机制与未证 G 起源/四力统一"
+    },
+    {
+      "id": "V75_eps0_from_mu0_c",
+      "ok": true,
+      "detail": "eps0=1/(mu0 c^2) 相对差 1.122276E-17"
+    },
+    {
+      "id": "V75_10T_numbers",
+      "ok": true,
+      "detail": "10 T/1 m 六个代表值最大相对差 3.843358E-16（小于 1e-12）"
+    },
+    {
+      "id": "V75_1MV_numbers",
+      "ok": true,
+      "detail": "1 MV/m 场能与质量密度最大相对差 1.468208E-16"
+    },
+    {
+      "id": "V75_quasistatic_numbers",
+      "ok": true,
+      "detail": "50 Hz 准静态四项最大相对差 1.006857E-16；omega*a/c=1.047923E-6 < 1e-5"
+    },
+    {
+      "id": "V75_null_wave",
+      "ok": true,
+      "detail": "平面波 I1=0.000E-61，P=0，u=8.854188E+0 J/m^3 > 0；说明 F^2=0 不等于无引力源"
+    },
+    {
+      "id": "V75_counterexamples",
+      "ok": true,
+      "detail": "静态 B 与等幅旋转 B 均保持 u=B^2/(2mu0)>0；变化率不是能量单极的必要条件"
+    },
+    {
+      "id": "V75_G_dim_rank_gap",
+      "ok": true,
+      "detail": "给定 {c,E,B,omega,a} 时 rank(A)=3 < rank([A|G])=4 ⇒ 量纲空间内拼不出 G"
+    },
+    {
+      "id": "V75_G_dim_positive_control",
+      "ok": true,
+      "detail": "阳性对照：目标量 [a] 在 A 的列空间内，rank(A)=3 == rank([A|a])=3（判据非恒假）"
+    },
+    {
+      "id": "V75_status_partition",
+      "ok": true,
+      "detail": "证明状态分布：known=23 / conditional=13 / counterexample=3 / candidate=3 / 其它=8"
+    },
+    {
+      "id": "V75_eq_present_E01",
+      "ok": true,
+      "detail": "方程索引含 E01：Einstein–Hilbert + Maxwell S"
+    },
+    {
+      "id": "V75_eq_present_E05",
+      "ok": true,
+      "detail": "方程索引含 E05：Einstein field"
+    },
+    {
+      "id": "V75_eq_present_E17",
+      "ok": true,
+      "detail": "方程索引含 E17：Toy magnetic sphere energy"
+    },
+    {
+      "id": "V75_eq_present_E18",
+      "ok": true,
+      "detail": "方程索引含 E18：Toy external gravity"
+    },
+    {
+      "id": "V75_eq_present_E27",
+      "ok": true,
+      "detail": "方程索引含 E27：Average energy ratio"
+    },
+    {
+      "id": "V75_eq_present_E31",
+      "ok": true,
+      "detail": "方程索引含 E31：Null-wave invariants"
+    },
+    {
+      "id": "V75_eq_present_E35",
+      "ok": true,
+      "detail": "方程索引含 E35：Scalar-photon action"
+    },
+    {
+      "id": "V75_eq_present_E41",
+      "ok": true,
+      "detail": "方程索引含 E41：Ghost avoidance"
+    },
+    {
+      "id": "V75_eq_present_E44",
+      "ok": true,
+      "detail": "方程索引含 E44：G dimension"
+    },
+    {
+      "id": "V75_eq_present_E47",
+      "ok": true,
+      "detail": "方程索引含 E47：Gravitational no-EM counterexample"
+    },
+    {
+      "id": "V75_eq_present_E50",
+      "ok": true,
+      "detail": "方程索引含 E50：Pure EM Ricci scalar"
+    },
+    {
+      "id": "V75_factor_matrix_coverage",
+      "ok": true,
+      "detail": "因素矩阵覆盖 8 类：[('假说', 2), ('引力', 5), ('时空', 2), ('物质', 5), ('电磁', 9), ('统计', 2), ('边界', 2), ('量子', 3)]；30 行必要字段均非空"
+    },
+    {
+      "id": "V75_no_new_measurement",
+      "ok": true,
+      "detail": "数值摘要与验证报告一致：无新仪器测量、无新物理发现"
+    },
+    {
+      "id": "V75_w3_zero",
+      "ok": true,
+      "detail": "W3 四候选全部未过门，PASS=0/4"
+    },
+    {
+      "id": "V75_w3_positive_control",
+      "ok": true,
+      "detail": "合成阳性候选后 PASS 计数 0 -> 1，0/4 非解析失败假零"
+    }
+  ],
+  "w3_gate": [
+    {
+      "id": "G_from_EM",
+      "C1": false,
+      "C2": false,
+      "C3": false,
+      "C4": false
+    },
+    {
+      "id": "EM_source_is_gravity",
+      "C1": true,
+      "C2": false,
+      "C3": true,
+      "C4": true
+    },
+    {
+      "id": "scalar_photon_candidate",
+      "C1": false,
+      "C2": false,
+      "C3": true,
+      "C4": false
+    },
+    {
+      "id": "artificial_g_detectable",
+      "C1": true,
+      "C2": false,
+      "C3": false,
+      "C4": false
+    }
+  ],
+  "key_numbers": {
+    "source": "90_历史归档/来源语料_ufthub_ROOT_V52-V82_202611/V75/ROOT_V75",
+    "manifest_items": 28,
+    "manifest_bad": 0,
+    "equation_rows": 50,
+    "factor_rows": 30,
+    "factor_categories": 8,
+    "status_distribution": {
+      "known": 23,
+      "conditional": 13,
+      "derived": 1,
+      "toy": 1,
+      "condition": 1,
+      "counterexample": 3,
+      "candidate": 3,
+      "derived conditional": 3,
+      "necessary condition": 1,
+      "known conditional": 1
+    },
+    "data_rows": {
+      "magnetic_scan": 15,
+      "em_scan": 25,
+      "time_series": 1001
+    },
+    "engineering": {
+      "unit_tests": "41 passed",
+      "symbolic_checks": "5 passed",
+      "chromium_interactions": "10 passed; zero page and console errors"
+    },
+    "browser_passed": "10/10",
+    "scientific_status": "No independent derivation of G; no new measurement; no four-force unification",
+    "eps0_from_mu0_c_rel": "1.122276E-17",
+    "B_10T_u_J_m3": "3.978873577823E+7",
+    "toy_g_at_1m_m_s2": "1.237693378350E-19",
+    "toy_metric_h00_at_2m": "1.377119606798E-36",
+    "wave_I1_T2": "0.000E-61",
+    "wave_u_J_m3": "8.854188E+0",
+    "quasistatic_parameter": "1.047923E-6",
+    "dim_rank_A": 3,
+    "dim_rank_augmented_G": 4,
+    "dim_rank_positive_control": 3,
+    "w3_pass": "0/4",
+    "w3_positive_control": "1/4"
+  },
+  "redlines": {
+    "UFT_goals": "0/6 未完成",
+    "systems": "0/22",
+    "UFT3": 0,
+    "L3": 0,
+    "validated": 0,
+    "four_force_correct_equations": 0,
+    "L3_implies_L4": false
+  }
+}
