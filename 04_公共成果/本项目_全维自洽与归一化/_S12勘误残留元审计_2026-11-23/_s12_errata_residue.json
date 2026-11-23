@@ -1,0 +1,79 @@
+{
+  "subject": "S12 勘误残留元审计：撤销 CLOSED 与残留 CLOSED 的内部冲突",
+  "object_boundary": "对象是 S12《大统一方程全集》勘误后的文档内部一致性；第8章已攻的 tanθ 联立矛盾/归一化空/I≡0/H0拟合**不重算**；与 r403/r404/r405/V51 均非同一对象，不相加",
+  "verdict": "S12-ERRATA-RESIDUE--TWO-PATH-MERGE-ERRATA-VS-RESIDUE--SAME-CLAIM-BOTH-REVOKED-AND-CLOSED--INTERNAL-INCONSISTENCY-NOT-NEW-PHYSICS-REFUTATION--ERRATA-NUMERIC-861-CORRECT-137-IS-CIRCULAR--CH8-OLD-CLAIMS-NOT-RECOMPUTED--NO-NEW-EQUATION--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM",
+  "counts": {
+    "gate": 4,
+    "neg": 2,
+    "identity": 1,
+    "failed": 0
+  },
+  "independent_prediction_count": 0,
+  "key_readings": {
+    "errata_lines": 2,
+    "residue_lines": 4,
+    "residue_marked_closed": 1,
+    "internal_conflict": true,
+    "theta_rad": "0.0072974",
+    "2pi_over_theta": "861.01",
+    "2pi_over_137": "0.04585"
+  },
+  "gates": [
+    {
+      "id": "E1-errata-exists",
+      "kind": "gate",
+      "exp": "文档存在勘误声明：2π/θ≠137、撤销 CLOSED",
+      "act": "勘误行数=2; 首行 L114: > - 数值验证：$\\sin^{-1}(\\alpha) = 89.5816^\\circ$，$2\\pi/\\theta = 861 \\neq 137$（故原 $\\alpha^{-1}=",
+      "ok": true,
+      "note": "独立路 A：只读勘误/撤销声明，不看残留宣称；第114行『861≠137 撤销 CLOSED』+ 第600行『α OPEN 勘误』应都在"
+    },
+    {
+      "id": "E2-residue-exists",
+      "kind": "gate",
+      "exp": "文档仍残留 α⁻¹=2π/θ=137 宣称且部分标 CLOSED",
+      "act": "残留行数=4; 标CLOSED=1; 行号=[129, 642, 749, 767]",
+      "ok": true,
+      "note": "独立路 B：只读残留宣称，不看勘误声明；第129/642/749/767行应仍在，其中 767 标 CLOSED（rel_err≤3.48e-199）"
+    },
+    {
+      "id": "E3-internal-conflict",
+      "kind": "gate",
+      "exp": "同一 α⁻¹=2π/θ 被同时判『撤销』与『CLOSED』",
+      "act": "勘误行=2 残留行=4 其中CLOSED=1 ⇒ 冲突=True",
+      "ok": true,
+      "note": "两路机拼交叉：路A说撤销、路B仍宣称CLOSED，同一对象自相矛盾；这是文档内部一致性缺陷，不是物理判负"
+    },
+    {
+      "id": "E4-errata-numeric-correct",
+      "kind": "gate",
+      "exp": "勘误数值：2π/arcsin(α)≈861≠137",
+      "act": "α=0.0072974; θ=arcsin(α)=0.0072974 rad; 2π/θ=861.01; 2π/137.036=0.04585",
+      "ok": true,
+      "note": "独立复算证实勘误：θ=arcsin(α) 给 2π/θ≈861，远非 137；残留式 2π/137.036≈0.0459 rad 才是 θ，反代才得 α⁻¹=137——循环定义"
+    },
+    {
+      "id": "E5-definition-identity",
+      "kind": "identity",
+      "exp": "2π/θ · θ = 2π（定义恒等）",
+      "act": "2π/θ×θ=6.28318530717958647692528676655900576839433879875020000000000 = 2π",
+      "ok": true,
+      "note": "纯代数恒等，单列不承重；不代表 θ 由几何第一性给出"
+    },
+    {
+      "id": "E6-remove-errata-neg",
+      "kind": "neg",
+      "exp": "抹掉勘误行后内部冲突判定必须翻红",
+      "act": "原勘误=2 抹掉后=0; 冲突 原=True 后=False",
+      "ok": true,
+      "note": "负对照：证明 E3 的冲突由勘误行真实承载，不是解析器假象"
+    },
+    {
+      "id": "E7-inject-residue-neg",
+      "kind": "neg",
+      "exp": "注入假 CLOSED 残留行必须被路B抓出",
+      "act": "原 closed=1 注入后=2",
+      "ok": true,
+      "note": "反噬：若注入后计数不变则路B判别力 0"
+    }
+  ]
+}

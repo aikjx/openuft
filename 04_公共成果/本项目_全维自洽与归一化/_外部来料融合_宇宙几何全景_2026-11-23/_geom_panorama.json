@@ -1,0 +1,139 @@
+{
+  "subject": "宇宙几何全景 · 来料三公式独立复核与弱场适用范围边界",
+  "object_boundary": "对象是来料 HTML 的三个标准公式与适用范围；与 r403 统一方程总表、r404/r405 出口归零、V51 三代质量均非同一对象，不相加",
+  "verdict": "GEOM-PANORAMA--THREE-STANDARD-FORMULAS-VERIFIED--TORUS-K-SIGN-STRUCTURE-EXACT--AB-PHASE-LINEAR-IN-FLUX--WEAK-FIELD-DEFLECTION-READOUTS-REPRODUCED--BUT-INNER-RAY-B-2RS-BELOW-PHOTON-CAPTURE-2.598RS--DELTA-1RAD-NOT-WEAK-FIELD--FAR-FIELD-CONTROL-VALID--FORMULA-CORRECT-APPLICABILITY-BOUNDED--NO-NEW-PHYSICS--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM",
+  "counts": {
+    "gate": 10,
+    "neg": 3,
+    "identity": 1,
+    "failed": 0
+  },
+  "independent_prediction_count": 0,
+  "key_readings": {
+    "torus_K_outer": "0.580551523947750362844702467343976777939042089985486211901306",
+    "torus_K_inner": "-1.13960113960113960113960113960113960113960113960113960113960",
+    "torus_K_waist": "0E+4",
+    "deflection_deg": [
+      "57.30",
+      "35.81",
+      "23.87"
+    ],
+    "delta_inner_rad": "1",
+    "b_crit_over_rs": "2.598076",
+    "inner_ray_captured": true
+  },
+  "gates": [
+    {
+      "id": "T1-torus-outer-positive",
+      "kind": "gate",
+      "exp": "外赤道 K=1/(r(R+r))>0",
+      "act": "K=0.580551523947750362844702467343976777939042089985486211901306",
+      "ok": true,
+      "note": "来料『外圈正曲率』读数复算成立"
+    },
+    {
+      "id": "T2-torus-inner-negative",
+      "kind": "gate",
+      "exp": "内赤道 K=-1/(r(R-r))<0",
+      "act": "K=-1.13960113960113960113960113960113960113960113960113960113960",
+      "ok": true,
+      "note": "来料『内圈负曲率』读数复算成立"
+    },
+    {
+      "id": "T3-torus-waist-zero",
+      "kind": "gate",
+      "exp": "腰线 theta=pi/2 处 K=0",
+      "act": "K=0E+4",
+      "ok": true,
+      "note": "来料『中间纬线 K=0』读数复算成立"
+    },
+    {
+      "id": "T4-torus-sign-invariant",
+      "kind": "neg",
+      "exp": "换 R/r 外正内负结构不变",
+      "act": "R=2,r=0.65:(0.580551523947750362844702467343976777939042089985486211901306,-1.13960113960113960113960113960113960113960113960113960113960); R=1.2,r=1.0:(0.454545454545454545454545454545454545454545454545454545454545,-5)",
+      "ok": true,
+      "note": "负对照：符号结构不依赖专用参数组；若换参数翻号则 T1/T2 无判别力"
+    },
+    {
+      "id": "A-flux-1.20",
+      "kind": "gate",
+      "exp": "每圈相位=2*pi*flux (flux=1.20)",
+      "act": "phase=7.539822368615503772310344119870806922073206558500240 rad",
+      "ok": true,
+      "note": "来料『相位正比磁通、放大便于观察』关系复算；flux=0 给出零相位"
+    },
+    {
+      "id": "A-flux-2.40",
+      "kind": "gate",
+      "exp": "每圈相位=2*pi*flux (flux=2.40)",
+      "act": "phase=15.079644737231007544620688239741613844146413117000480 rad",
+      "ok": true,
+      "note": "来料『相位正比磁通、放大便于观察』关系复算；flux=0 给出零相位"
+    },
+    {
+      "id": "A-flux-0.00",
+      "kind": "gate",
+      "exp": "每圈相位=2*pi*flux (flux=0.00)",
+      "act": "phase=0E-51 rad",
+      "ok": true,
+      "note": "来料『相位正比磁通、放大便于观察』关系复算；flux=0 给出零相位"
+    },
+    {
+      "id": "A2-ab-linear-ratio",
+      "kind": "gate",
+      "exp": "相位比 = 磁通比 = 2",
+      "act": "ratio=2",
+      "ok": true,
+      "note": "AB 相位对磁通的线性性，独立于单点读数"
+    },
+    {
+      "id": "L1-deflection-readout",
+      "kind": "gate",
+      "exp": "三条弱场偏转读数复现来料 57.30/35.81/23.87",
+      "act": "delta(deg)=['57.30', '35.81', '23.87']",
+      "ok": true,
+      "note": "公式 delta=4GM/(c^2 b)=2 r_s/b 本身正确，读数与来料一致"
+    },
+    {
+      "id": "L2-weak-field-identity",
+      "kind": "identity",
+      "exp": "4GM/(c^2 b) ≡ 2 r_s/b (r_s=2GM/c^2)",
+      "act": "代入 r_s=2GM/c^2 ⇒ 4GM/(c^2 b)=(2 r_s)/b，恒等",
+      "ok": true,
+      "note": "定义恒等，单列不承重；不代表在强场适用"
+    },
+    {
+      "id": "L3-weakfield-out-of-range",
+      "kind": "gate",
+      "exp": "最内侧光线 delta=1 rad 不满足 delta<<1",
+      "act": "delta(b=2 r_s)=1 rad = 57.2957795130823208767981548141051703324054724665644277110131 deg",
+      "ok": true,
+      "note": "来料称『弱场公式精确计算』；但 delta=1 rad 偏离小角近似一个量级以上，该点已非弱场。这是可算的适用范围判决，非来料整体否证"
+    },
+    {
+      "id": "L4-photon-capture-boundary",
+      "kind": "gate",
+      "exp": "b=2 r_s < b_crit=3√3/2 r_s ⇒ 光线被捕获",
+      "act": "b_crit=2.598076 r_s; 最内侧 b=2.0 r_s; 被捕获=True",
+      "ok": true,
+      "note": "史瓦西光子球捕获截面：撞击参数小于 b_crit 的光子落入视界、不逃逸；来料把它画成逃逸光线并标偏转角，是强场区误用"
+    },
+    {
+      "id": "L5-far-field-neg",
+      "kind": "neg",
+      "exp": "远场 b=20 r_s 弱场公式有效(证明非恒错)",
+      "act": "delta=0.1 rad (5.7296 deg); b>b_crit=True",
+      "ok": true,
+      "note": "负对照沿『判据无法吸收的方向』位移：把撞击参数移到远场，弱场公式与捕获判据同时放行——证明 L3/L4 是边界问题，不是公式恒假"
+    },
+    {
+      "id": "L6-inject-fake-bcrit",
+      "kind": "neg",
+      "exp": "注入假 b_crit=1.5 r_s 使捕获判定翻转",
+      "act": "真实判定=True; 注入后判定=False",
+      "ok": true,
+      "note": "反噬：若篡改捕获临界值后结论不变，则 L4 判别力 0 或写死"
+    }
+  ]
+}

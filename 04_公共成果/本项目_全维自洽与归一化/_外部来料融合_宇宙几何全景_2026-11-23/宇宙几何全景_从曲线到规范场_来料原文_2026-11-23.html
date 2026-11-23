@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宇宙几何全景：从曲线到规范场</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0d12; --panel:rgba(15,20,29,0.82); --line:rgba(255,255,255,0.09);
+    --cyan:#4ee1d6; --violet:#9b8cf2; --amber:#e8a855; --teal:#5fd0a8; --text:#e8eaed; --muted:#7b8394; --danger:#e8747a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{ width:100%; height:100%; overflow:hidden; background:radial-gradient(ellipse at 30% 15%, #10151f 0%, var(--bg) 55%, #050708 100%); color:var(--text); font-family:'Noto Sans SC','Space Grotesk',sans-serif; }
+  .app{ position:absolute; inset:0; display:flex; flex-direction:column; }
+
+  header{ padding:20px 32px 0; display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0; flex-wrap:wrap; gap:12px; }
+  .eyebrow{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.16em; color:var(--cyan); text-transform:uppercase; margin-bottom:6px; opacity:.85; }
+  h1{ font-family:'Space Grotesk'; font-weight:600; font-size:19px; letter-spacing:-0.01em; max-width:640px; }
+  h1 small{ display:block; font-family:'Noto Sans SC'; font-weight:400; font-size:11.5px; color:var(--muted); margin-top:5px; }
+
+  .tabs{ display:flex; gap:5px; background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:12px; padding:4px; flex-wrap:wrap; }
+  .tab{ font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:8px 12px; border-radius:9px; cursor:pointer; color:var(--muted); transition:.15s; white-space:nowrap; }
+  .tab.active{ background:linear-gradient(135deg, rgba(78,225,214,.16), rgba(155,140,242,.16)); color:var(--text); }
+
+  .stage{ position:relative; flex:1; min-height:0; }
+  .view{ position:absolute; inset:0; display:none; }
+  .view.active{ display:block; }
+
+  .canvas-wrap{ position:absolute; inset:0; } .canvas-wrap canvas{ display:block; width:100%; height:100%; }
+  .veil{ position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(5,7,8,0.42) 0%, rgba(5,7,8,0) 16%, rgba(5,7,8,0) 78%, rgba(5,7,8,0.55) 100%); }
+
+  .dock{ position:absolute; left:30px; bottom:24px; width:320px; background:var(--panel); backdrop-filter:blur(18px); border:1px solid var(--line); border-radius:16px; padding:18px 20px 16px; pointer-events:auto; max-height:56vh; overflow-y:auto; }
+  .dock::-webkit-scrollbar{width:6px;} .dock::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15); border-radius:4px;}
+  .dock h2{ font-family:'Space Grotesk'; font-size:12.5px; font-weight:600; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .dock h2::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); }
+  .dock .sub{ font-size:10.8px; color:var(--muted); margin-bottom:14px; line-height:1.55; }
+  .row{ margin-bottom:13px; }
+  .row-label{ display:flex; justify-content:space-between; align-items:baseline; font-family:'JetBrains Mono',monospace; font-size:10.8px; color:var(--muted); margin-bottom:6px; }
+  .row-label b{ color:var(--text); font-weight:500; }
+  .row-label .val{ color:var(--cyan); font-weight:700; }
+  input[type=range]{ -webkit-appearance:none; width:100%; height:3px; border-radius:2px; outline:none; background:linear-gradient(90deg,var(--cyan),var(--violet)); }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:#fff; border:2px solid var(--cyan); cursor:pointer; box-shadow:0 0 10px rgba(78,225,214,.6); }
+  .derived{ padding-top:12px; border-top:1px solid var(--line); display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; font-family:'JetBrains Mono',monospace; font-size:10.3px; }
+  .derived .k{ color:var(--muted); } .derived .v{ color:var(--text); font-weight:600; }
+  .derived .v.pos{ color:var(--amber); } .derived .v.neg{ color:var(--violet); } .derived .v.te{ color:var(--teal); }
+  .note{ margin-top:12px; font-size:10.5px; line-height:1.6; color:var(--muted); padding:10px 11px; border-radius:10px; background:rgba(255,255,255,.03); border:1px solid var(--line); }
+
+  .legend{ position:absolute; right:30px; top:20px; display:flex; flex-direction:column; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); pointer-events:none; text-align:right; }
+  .legend .li{ display:flex; align-items:center; gap:7px; justify-content:flex-end; }
+  .legend .sw{ width:14px; height:3px; border-radius:2px; }
+
+  .hint{ position:absolute; left:50%; top:18px; transform:translateX(-50%); font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); opacity:.55; pointer-events:none; }
+
+  /* synthesis view */
+  #view-synth{ overflow-y:auto; padding:26px 40px 60px; }
+  .synth-wrap{ max-width:920px; margin:0 auto; }
+  .synth-head{ font-family:'Space Grotesk'; font-size:18px; font-weight:600; margin-bottom:6px; }
+  .synth-sub{ font-size:12px; color:var(--muted); margin-bottom:22px; line-height:1.6; }
+  table.synth{ width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:22px; }
+  table.synth th, table.synth td{ padding:11px 13px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+  table.synth th{ font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+  table.synth td b{ color:var(--text); }
+  table.synth tr td:first-child{ color:var(--cyan); font-weight:600; white-space:nowrap; }
+  .verdict-box{ background:rgba(232,116,122,0.06); border:1px solid rgba(232,116,122,0.25); border-radius:14px; padding:18px 20px; font-size:13px; line-height:1.75; color:#e8d4d5; }
+  .verdict-box b{ color:var(--danger); }
+  .synth-note{ margin-top:18px; font-size:11.5px; color:var(--muted); line-height:1.7; }
+
+  @media (max-width:900px){
+    .dock{ width:calc(100% - 44px); left:22px; right:22px; max-height:42vh; }
+    .legend{ display:none; }
+    header{ padding:16px 18px 0; } h1{ font-size:16px; }
+    #view-synth{ padding:20px 20px 50px; }
+    table.synth{ font-size:11px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <div class="eyebrow">Beyond Curve Geometry</div>
+      <h1>宇宙运动用到的几何，不止一种
+        <small>四种不同数学结构，各管一种运动，目前没有被统一验证</small>
+      </h1>
+    </div>
+    <div class="tabs">
+      <div class="tab active" data-view="surface">曲面曲率</div>
+      <div class="tab" data-view="spacetime">时空曲率 · 测地线</div>
+      <div class="tab" data-view="gauge">规范曲率 · AB效应</div>
+      <div class="tab" data-view="synth">全景总结</div>
+    </div>
+  </header>
+
+  <div class="stage">
+
+    <!-- ============ SURFACE ============ -->
+    <div class="view active" id="view-surface">
+      <div class="canvas-wrap" id="canvas-surface"></div>
+      <div class="veil"></div>
+      <div class="hint">拖动旋转 · 滚轮缩放</div>
+      <div class="legend">
+        <div class="li">主曲率为正（穹顶状）<span class="sw" style="background:var(--amber)"></span></div>
+        <div class="li">K = 0（可展平，抛物点）<span class="sw" style="background:#ffffff"></span></div>
+        <div class="li">主曲率为负（马鞍状）<span class="sw" style="background:var(--violet)"></span></div>
+      </div>
+      <div class="dock">
+        <h2>曲面：两个主曲率，不是一个数</h2>
+        <div class="sub">高斯曲率 K = κ₁·κ₂ = cosθ / (r(R+r·cosθ))，环面精确解析公式</div>
+        <div class="row">
+          <div class="row-label"><b>主半径 R</b><span class="val" id="R-val">2.00</span></div>
+          <input type="range" id="R-slider" min="1.0" max="3.0" step="0.02" value="2.0">
+        </div>
+        <div class="row">
+          <div class="row-label"><b>管半径 r</b><span class="val" id="r-val">0.65</span></div>
+          <input type="range" id="r-slider" min="0.3" max="1.4" step="0.02" value="0.65">
+        </div>
+        <div class="derived">
+          <div class="k">最大 K（外赤道）</div><div class="v pos" id="Kmax-val">–</div>
+          <div class="k">最小 K（内赤道）</div><div class="v neg" id="Kmin-val">–</div>
+        </div>
+        <div class="note">外圈（远离洞口）永远是正曲率（像球面局部），内圈（靠近洞口）永远是负曲率（像马鞍），中间纬线正好 K=0——这是精确解析结果，不是近似。曲线的"挠率"这个概念在这里不适用：升到曲面维度，需要的是全新的两个数，不是给旧符号加个下标。</div>
+      </div>
+    </div>
+
+    <!-- ============ SPACETIME ============ -->
+    <div class="view" id="view-spacetime">
+      <div class="canvas-wrap" id="canvas-spacetime"></div>
+      <div class="veil"></div>
+      <div class="hint">拖动旋转 · 滚轮缩放</div>
+      <div class="legend">
+        <div class="li">光线路径（真实弱场偏转公式）<span class="sw" style="background:var(--cyan)"></span></div>
+        <div class="li">视界 r_s<span class="sw" style="background:var(--amber)"></span></div>
+      </div>
+      <div class="dock">
+        <h2>时空：测地线，不需要"力"</h2>
+        <div class="sub">下方漏斗是史瓦西度规空间切片的等距嵌入（Flamm 抛物面），只是二维示意；光线偏转角用真实弱场公式 δ=4GM/(c²b)=2r_s/b 精确计算</div>
+        <div class="row">
+          <div class="row-label"><b>史瓦西半径 r_s（可视化单位）</b><span class="val" id="rs-val">0.80</span></div>
+          <input type="range" id="rs-slider" min="0.3" max="1.8" step="0.02" value="0.8">
+        </div>
+        <div class="derived" id="deflect-readout">
+          <div class="k">光线①偏转角</div><div class="v" id="d1-val">–</div>
+          <div class="k">光线②偏转角</div><div class="v" id="d2-val">–</div>
+          <div class="k">光线③偏转角</div><div class="v" id="d3-val">–</div>
+        </div>
+        <div class="note">经典"橡皮膜"比喻常被物理学家批评为逻辑上有点循环（用地球重力去解释引力本身）。这里保留漏斗只是为了直观展示"路径因曲率弯曲、越靠近质量弯得越急"，真正精确的部分是三条光线的偏转角——它们由已经过实验验证的广义相对论弱场公式算出，不是随手画的曲线。</div>
+      </div>
+    </div>
+
+    <!-- ============ GAUGE ============ -->
+    <div class="view" id="view-gauge">
+      <div class="canvas-wrap" id="canvas-gauge"></div>
+      <div class="veil"></div>
+      <div class="hint">拖动旋转 · 滚轮缩放</div>
+      <div class="legend">
+        <div class="li">磁通量（螺线管内部）<span class="sw" style="background:var(--amber)"></span></div>
+        <div class="li">粒子轨迹（B=0 区域）<span class="sw" style="background:var(--cyan)"></span></div>
+        <div class="li">累计几何相位（颜色）<span class="sw" style="background:var(--violet)"></span></div>
+      </div>
+      <div class="dock">
+        <h2>规范场：另一种"曲率"，活在别的空间里</h2>
+        <div class="sub">阿哈罗诺夫-玻姆效应（已被实验反复验证）：电子全程走在磁场为零的区域，依然因为圈内磁通量获得可测的量子相位</div>
+        <div class="row">
+          <div class="row-label"><b>磁通量 Φ（已放大，便于观察）</b><span class="val" id="flux-val">1.20</span></div>
+          <input type="range" id="flux-slider" min="0" max="3" step="0.05" value="1.2">
+        </div>
+        <div class="derived">
+          <div class="k">完成圈数</div><div class="v te" id="loops-val">0.00</div>
+          <div class="k">累计几何相位</div><div class="v" id="phase-val">0.00 rad</div>
+        </div>
+        <div class="note">为了让相位肉眼可见，这里把每圈的相位增量做了夸张放大，真实阿哈罗诺夫-玻姆相位远小于一整圈；但"相位只取决于圈内磁通量、和粒子在零场区域怎么走无关"这个物理关系是真实的。这种曲率活在"内部对称空间"（这里是 U(1)），和左边"时空曲率"是完全不同的数学对象——这正是为什么引力和电磁力至今没能被证实统一进同一套几何。</div>
+      </div>
+    </div>
+
+    <!-- ============ SYNTHESIS ============ -->
+    <div class="view" id="view-synth">
+      <div class="synth-wrap">
+        <div class="synth-head">全景总结：一个几何量能描述所有运动吗？</div>
+        <div class="synth-sub">诚实的回答：不能，至少现在还不能。物理学目前需要好几种不同类型的几何对象，分别管不同的运动，它们之间没有被实验证实的统一桥梁。</div>
+        <table class="synth">
+          <tr><th>运动 / 相互作用</th><th>对应的几何对象</th><th>状态</th></tr>
+          <tr><td>空间曲线的形状</td><td>曲率 κ、挠率 τ（两个标量函数）</td><td><b>完备</b> —— 曲线基本定理保证</td></tr>
+          <tr><td>曲面的形状</td><td>两个主曲率 κ₁、κ₂（高斯曲率 K、平均曲率 H）</td><td><b>完备</b> —— 曲面基本定理保证</td></tr>
+          <tr><td>引力（广义相对论）</td><td>黎曼曲率张量 R^ρ_σμν（4维时空20个独立分量）；测地线方程</td><td>目前最精确的引力理论，已通过大量实验检验，但只描述引力</td></tr>
+          <tr><td>电磁 / 弱 / 强相互作用</td><td>规范丛联络曲率（杨-米尔斯场强 F=dA+A∧A），活在内部对称空间</td><td>标准模型的数学基础，已验证；但和黎曼曲率是不同类型的对象，不能互相代入</td></tr>
+          <tr><td>量子态演化</td><td>希尔伯特空间中的幺正演化、贝里相位</td><td>已验证，但和上面两种"曲率"不是同一数学范畴</td></tr>
+          <tr><td>熵增 / 时间箭头</td><td>统计力学，不属于曲率范畴</td><td>和以上概念目前没有几何层面的统一</td></tr>
+        </table>
+        <div class="verdict-box">
+          把引力、规范力、量子演化统一进同一个几何框架，是<b>量子引力</b>这个悬而未决的世纪难题——弦论、圈量子引力是目前的候选方向，但都还没有可重复的实验验证。任何文档如果声称"一个曲率+挠率公理就能同时推出四种力、量子自旋，还能顺带解决哥德巴赫猜想"，这个说法本身已经超出了当前物理学能够证明的范围，需要用和这里同等级别的精确公式、可证伪预言去支撑，而不是形式上的符号替换。
+        </div>
+        <div class="synth-note">这三个可视化里的公式都是可以查证的标准结果：环面高斯曲率公式、史瓦西弱场光偏转公式 δ=4GM/(c²b)、阿哈罗诺夫-玻姆相位与磁通量的正比关系。你可以拿这几个公式去和任何一本微分几何或广义相对论教材核对。</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const cyanC=new THREE.Color(0x4ee1d6), amberC=new THREE.Color(0xe8a855), violetC=new THREE.Color(0x9b8cf2), whiteC=new THREE.Color(0xffffff);
+
+  function makeSceneBasics(container, opts){
+    opts=opts||{};
+    const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(0x0a0d12, opts.fog||0.02);
+    const camera=new THREE.PerspectiveCamera(46,1,0.1,1000);
+    const renderer=new THREE.WebGLRenderer({antialias:true, alpha:true});
+    container.appendChild(renderer.domElement);
+    scene.add(new THREE.AmbientLight(0x445566, 1.1));
+    const key=new THREE.PointLight(0x4ee1d6,2.0,60); key.position.set(8,10,6); scene.add(key);
+    const rim=new THREE.PointLight(0x9b8cf2,1.5,60); rim.position.set(-10,-4,-8); scene.add(rim);
+    if(opts.warm){ const w=new THREE.PointLight(0xe8a855,1.1,50); w.position.set(2,-6,8); scene.add(w); }
+    if(opts.stars!==false){
+      const n=800, pos=new Float32Array(n*3);
+      for(let i=0;i<n;i++){ const r=50+Math.random()*140, th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+        pos[i*3]=r*Math.sin(ph)*Math.cos(th); pos[i*3+1]=r*Math.sin(ph)*Math.sin(th); pos[i*3+2]=r*Math.cos(ph); }
+      const geo=new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+      scene.add(new THREE.Points(geo, new THREE.PointsMaterial({color:0x8891a3,size:0.5,transparent:true,opacity:0.4})));
+    }
+    let camDist=opts.dist||9, camPhi=opts.phi||1.05, camTheta=opts.theta||0.8, isDown=false,lastX=0,lastY=0,idle=0;
+    function setCam(){ camera.position.set(camDist*Math.sin(camPhi)*Math.cos(camTheta), camDist*Math.cos(camPhi), camDist*Math.sin(camPhi)*Math.sin(camTheta)); camera.lookAt(0,0,0); }
+    renderer.domElement.addEventListener('pointerdown', e=>{isDown=true;lastX=e.clientX;lastY=e.clientY;idle=0;});
+    window.addEventListener('pointerup', ()=> isDown=false);
+    window.addEventListener('pointermove', e=>{ if(!isDown) return; const dx=e.clientX-lastX, dy=e.clientY-lastY; lastX=e.clientX; lastY=e.clientY; camTheta-=dx*0.006; camPhi=Math.min(Math.max(camPhi-dy*0.006,0.2),Math.PI-0.2); setCam(); });
+    renderer.domElement.addEventListener('wheel', e=>{ camDist=Math.min(Math.max(camDist+e.deltaY*0.01,3),30); setCam(); }, {passive:true});
+    function resize(){ const w=container.clientWidth,h=container.clientHeight; renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)); renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+    setCam(); resize();
+    function idleSpin(dt, rate){ if(!isDown){ idle+=dt; if(idle>2.5){ camTheta+=dt*(rate||0.05); setCam(); } } else idle=0; }
+    return {scene,camera,renderer,resize,idleSpin,container};
+  }
+
+  // ===================== SURFACE (torus Gaussian curvature) =====================
+  const surface = (function(){
+    const container = document.getElementById('canvas-surface');
+    const base = makeSceneBasics(container, {dist:8.5, phi:1.1, theta:0.6, fog:0.018});
+    let mesh=null, rings=null;
+
+    function build(R,r){
+      if(mesh){ base.scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
+      if(rings){ rings.forEach(o=>{base.scene.remove(o); o.geometry.dispose(); o.material.dispose();}); }
+      const radialSeg=48, tubularSeg=96;
+      const positions=[], colors=[], idx=[];
+      const posMax = 1/(r*(R+r)), negMax = 1/(r*Math.max(R-r,0.05));
+      for(let i=0;i<=tubularSeg;i++){
+        const phi=(i/tubularSeg)*Math.PI*2;
+        for(let j=0;j<=radialSeg;j++){
+          const theta=(j/radialSeg)*Math.PI*2;
+          const ct=Math.cos(theta), st=Math.sin(theta), cp=Math.cos(phi), sp=Math.sin(phi);
+          const x=(R+r*ct)*cp, y=r*st, z=(R+r*ct)*sp;
+          positions.push(x,y,z);
+          const K = ct/(r*(R+r*ct));
+          let col;
+          if(K>=0) col = whiteC.clone().lerp(amberC, Math.min(K/posMax,1));
+          else col = whiteC.clone().lerp(violetC, Math.min(-K/negMax,1));
+          colors.push(col.r,col.g,col.b);
+        }
+      }
+      const rowLen = radialSeg+1;
+      for(let i=0;i<tubularSeg;i++){
+        for(let j=0;j<radialSeg;j++){
+          const a=i*rowLen+j, b2=a+1, c=(i+1)*rowLen+j, d=c+1;
+          idx.push(a,c,b2); idx.push(b2,c,d);
+        }
+      }
+      const geo=new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+      geo.setAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+      geo.setIndex(idx); geo.computeVertexNormals();
+      mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({vertexColors:true, metalness:0.3, roughness:0.4, side:THREE.DoubleSide}));
+      base.scene.add(mesh);
+
+      // annotate outer/inner/zero rings
+      rings=[];
+      function ringAt(theta, color){
+        const pts=[]; const N=100;
+        for(let i=0;i<=N;i++){ const phi=(i/N)*Math.PI*2; const ct=Math.cos(theta), st=Math.sin(theta);
+          pts.push(new THREE.Vector3((R+r*ct)*Math.cos(phi), r*st, (R+r*ct)*Math.sin(phi))); }
+        const g=new THREE.BufferGeometry().setFromPoints(pts);
+        const l=new THREE.Line(g, new THREE.LineBasicMaterial({color, linewidth:2}));
+        base.scene.add(l); rings.push(l);
+      }
+      ringAt(0, 0xe8a855);
+      ringAt(Math.PI, 0x9b8cf2);
+      ringAt(Math.PI/2, 0xffffff);
+      ringAt(-Math.PI/2, 0xffffff);
+
+      return { Kmax: posMax, Kmin: -negMax };
+    }
+    return { base, build };
+  })();
+
+  const Rsl=document.getElementById('R-slider'), rsl=document.getElementById('r-slider');
+  const Rval=document.getElementById('R-val'), rval=document.getElementById('r-val');
+  const KmaxEl=document.getElementById('Kmax-val'), KminEl=document.getElementById('Kmin-val');
+  function refreshSurface(){
+    const R=parseFloat(Rsl.value), r=Math.min(parseFloat(rsl.value), R-0.15);
+    Rval.textContent=R.toFixed(2); rval.textContent=r.toFixed(2);
+    const res = surface.build(R,r);
+    KmaxEl.textContent='+'+res.Kmax.toFixed(3);
+    KminEl.textContent=res.Kmin.toFixed(3);
+  }
+  Rsl.addEventListener('input', refreshSurface);
+  rsl.addEventListener('input', refreshSurface);
+  refreshSurface();
+
+  // ===================== SPACETIME (Flamm paraboloid + light bending) =====================
+  const spacetime = (function(){
+    const container = document.getElementById('canvas-spacetime');
+    const base = makeSceneBasics(container, {dist:12, phi:1.0, theta:0.9, fog:0.014, warm:true});
+    let grid=null, horizon=null, rays=[];
+
+    function buildGrid(rs){
+      if(grid){ base.scene.remove(grid); grid.geometry.dispose(); grid.material.dispose(); }
+      if(horizon){ base.scene.remove(horizon); horizon.geometry.dispose(); horizon.material.dispose(); }
+      const rings=28, spokes=48, Rmax=9;
+      const positions=[];
+      function h(r){ const rr=Math.max(r,rs); return -2*Math.sqrt(rs*(rr-rs)); }
+      // radial lines
+      for(let s=0;s<spokes;s++){
+        const ang=(s/spokes)*Math.PI*2;
+        for(let i=0;i<rings;i++){
+          const r0=rs + (i/rings)*(Rmax-rs), r1=rs + ((i+1)/rings)*(Rmax-rs);
+          positions.push(r0*Math.cos(ang), h(r0), r0*Math.sin(ang), r1*Math.cos(ang), h(r1), r1*Math.sin(ang));
+        }
+      }
+      // ring lines
+      for(let i=0;i<=rings;i+=3){
+        const r=rs + (i/rings)*(Rmax-rs);
+        for(let s=0;s<spokes;s++){
+          const a0=(s/spokes)*Math.PI*2, a1=((s+1)/spokes)*Math.PI*2;
+          positions.push(r*Math.cos(a0), h(r), r*Math.sin(a0), r*Math.cos(a1), h(r), r*Math.sin(a1));
+        }
+      }
+      const geo=new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+      grid = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({color:0x4ee1d6, transparent:true, opacity:0.4}));
+      base.scene.add(grid);
+
+      horizon = new THREE.Mesh(new THREE.SphereGeometry(rs,32,32), new THREE.MeshStandardMaterial({color:0x1a1008, emissive:0xe8a855, emissiveIntensity:0.35, roughness:0.5}));
+      horizon.position.set(0, h(rs), 0);
+      base.scene.add(horizon);
+    }
+
+    function buildRays(rs, impactParams){
+      rays.forEach(r=>{ base.scene.remove(r); r.geometry.dispose(); r.material.dispose(); });
+      rays=[];
+      const deflections=[];
+      const cols=[0x4ee1d6, 0x9b8cf2, 0xe8a855];
+      impactParams.forEach((b,idx)=>{
+        const delta = 2*rs/b; // = 4GM/(c^2 b), with r_s=2GM/c^2
+        const w = b*0.9;
+        const Xmax = 10, N=160;
+        const pts=[];
+        let z = -b; // start line: will fill below properly (see loop for z accumulation)
+        z = b; // ray approaches from -x at height b, bends toward z=0
+        let zz = b;
+        for(let i=0;i<=N;i++){
+          const x = -Xmax + (i/N)*2*Xmax;
+          const sig = 1/(1+Math.exp(-x/w));
+          const angle = -delta*sig;
+          if(i>0){
+            const xPrev = -Xmax + ((i-1)/N)*2*Xmax;
+            const dx = x - xPrev;
+            zz += Math.tan(angle)*dx;
+          }
+          pts.push(new THREE.Vector3(x, 0.05, zz));
+        }
+        const geo = new THREE.BufferGeometry().setFromPoints(pts);
+        const line = new THREE.Line(geo, new THREE.LineBasicMaterial({color:cols[idx], transparent:true, opacity:0.9}));
+        base.scene.add(line); rays.push(line);
+        deflections.push(delta*180/Math.PI);
+      });
+      return deflections;
+    }
+
+    return { base, buildGrid, buildRays };
+  })();
+
+  const rsSl=document.getElementById('rs-slider'), rsVal=document.getElementById('rs-val');
+  const d1El=document.getElementById('d1-val'), d2El=document.getElementById('d2-val'), d3El=document.getElementById('d3-val');
+  function refreshSpacetime(){
+    const rs=parseFloat(rsSl.value);
+    rsVal.textContent=rs.toFixed(2);
+    spacetime.buildGrid(rs);
+    const bs=[2.0*rs, 3.2*rs, 4.8*rs];
+    const defl=spacetime.buildRays(rs, bs);
+    d1El.textContent=defl[0].toFixed(2)+'°';
+    d2El.textContent=defl[1].toFixed(2)+'°';
+    d3El.textContent=defl[2].toFixed(2)+'°';
+  }
+  rsSl.addEventListener('input', refreshSpacetime);
+  refreshSpacetime();
+
+  // ===================== GAUGE (Aharonov-Bohm) =====================
+  const gauge = (function(){
+    const container = document.getElementById('canvas-gauge');
+    const base = makeSceneBasics(container, {dist:8, phi:1.25, theta:0.5, fog:0.02, warm:true});
+
+    // solenoid
+    const solRadius=0.45, solHeight=3.2;
+    const solMesh = new THREE.Mesh(new THREE.CylinderGeometry(solRadius, solRadius, solHeight, 24, 1, true),
+      new THREE.MeshStandardMaterial({color:0x2a3040, transparent:true, opacity:0.25, side:THREE.DoubleSide, roughness:0.6}));
+    base.scene.add(solMesh);
+    const fieldArrows=[];
+    for(let i=0;i<6;i++){
+      const ang=(i/6)*Math.PI*2;
+      const ax=new THREE.ArrowHelper(new THREE.Vector3(0,1,0), new THREE.Vector3(solRadius*0.55*Math.cos(ang), -solHeight/2*0.7, solRadius*0.55*Math.sin(ang)), 1.1, 0xe8a855, 0.2, 0.09);
+      base.scene.add(ax); fieldArrows.push(ax);
+    }
+
+    const loopR = 2.1;
+    const orbitGeo = new THREE.BufferGeometry().setFromPoints(
+      Array.from({length:65}, (_,i)=>{ const a=(i/64)*Math.PI*2; return new THREE.Vector3(loopR*Math.cos(a),0,loopR*Math.sin(a)); })
+    );
+    base.scene.add(new THREE.Line(orbitGeo, new THREE.LineBasicMaterial({color:0x4ee1d6, transparent:true, opacity:0.3})));
+
+    const particle = new THREE.Mesh(new THREE.SphereGeometry(0.1,16,16), new THREE.MeshStandardMaterial({color:0xffffff, emissive:0xffffff, emissiveIntensity:0.7}));
+    base.scene.add(particle);
+
+    const TRAIL_N=140;
+    const trailGeo=new THREE.BufferGeometry();
+    const trailPos=new Float32Array(TRAIL_N*3), trailCol=new Float32Array(TRAIL_N*3);
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos,3));
+    trailGeo.setAttribute('color', new THREE.BufferAttribute(trailCol,3));
+    const trail = new THREE.Points(trailGeo, new THREE.PointsMaterial({size:0.09, vertexColors:true, transparent:true, opacity:0.9}));
+    base.scene.add(trail);
+    let trailBuf=[];
+
+    let ang=0, accumPhase=0, loops=0;
+    function tick(dt, flux){
+      const omega=0.9;
+      ang += dt*omega;
+      loops = ang/(Math.PI*2);
+      accumPhase += dt*omega*flux;
+      particle.position.set(loopR*Math.cos(ang), 0, loopR*Math.sin(ang));
+
+      const hue=(accumPhase*0.15)%1;
+      const c = new THREE.Color().setHSL(hue<0?hue+1:hue, 0.75, 0.6);
+      trailBuf.push({p:particle.position.clone(), c});
+      if(trailBuf.length>TRAIL_N) trailBuf.shift();
+      for(let i=0;i<TRAIL_N;i++){
+        const e=trailBuf[i];
+        if(e){ trailPos[i*3]=e.p.x; trailPos[i*3+1]=e.p.y; trailPos[i*3+2]=e.p.z; trailCol[i*3]=e.c.r; trailCol[i*3+1]=e.c.g; trailCol[i*3+2]=e.c.b; }
+      }
+      trailGeo.attributes.position.needsUpdate=true;
+      trailGeo.attributes.color.needsUpdate=true;
+
+      fieldArrows.forEach(a=>{ a.setLength(0.9+0.5*flux, 0.2, 0.09); });
+
+      return { loops, accumPhase };
+    }
+    return { base, tick };
+  })();
+
+  const fluxSl=document.getElementById('flux-slider'), fluxVal=document.getElementById('flux-val');
+  const loopsEl=document.getElementById('loops-val'), phaseEl=document.getElementById('phase-val');
+  fluxSl.addEventListener('input', ()=> fluxVal.textContent = parseFloat(fluxSl.value).toFixed(2));
+
+  // ===================== tabs =====================
+  const tabs=document.querySelectorAll('.tab');
+  const views={ surface:document.getElementById('view-surface'), spacetime:document.getElementById('view-spacetime'), gauge:document.getElementById('view-gauge'), synth:document.getElementById('view-synth') };
+  function activate(name){
+    tabs.forEach(t=>t.classList.toggle('active', t.dataset.view===name));
+    Object.keys(views).forEach(k=>views[k].classList.toggle('active', k===name));
+    requestAnimationFrame(()=>{ surface.base.resize(); spacetime.base.resize(); gauge.base.resize(); });
+  }
+  tabs.forEach(t=>t.addEventListener('click', ()=>activate(t.dataset.view)));
+  window.addEventListener('resize', ()=>{ surface.base.resize(); spacetime.base.resize(); gauge.base.resize(); });
+
+  // ===================== main loop =====================
+  let lastT=performance.now();
+  function loop(){
+    requestAnimationFrame(loop);
+    const now=performance.now(); const dt=Math.min((now-lastT)/1000,0.05); lastT=now;
+
+    if(views.surface.classList.contains('active')){
+      surface.base.idleSpin(dt, 0.05);
+      surface.base.renderer.render(surface.base.scene, surface.base.camera);
+    }
+    if(views.spacetime.classList.contains('active')){
+      spacetime.base.idleSpin(dt, 0.04);
+      spacetime.base.renderer.render(spacetime.base.scene, spacetime.base.camera);
+    }
+    if(views.gauge.classList.contains('active')){
+      const flux=parseFloat(fluxSl.value);
+      const r=gauge.tick(dt, flux);
+      loopsEl.textContent=r.loops.toFixed(2);
+      phaseEl.textContent=r.accumPhase.toFixed(2)+' rad';
+      gauge.base.idleSpin(dt, 0.03);
+      gauge.base.renderer.render(gauge.base.scene, gauge.base.camera);
+    }
+  }
+  loop();
+})();
+</script>
+</body>
+</html>

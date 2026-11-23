@@ -1,0 +1,31 @@
+出路 C 代价可翻覆性元审计 · r410 / r412 / r413
+========================================================================
+判词: EXIT-C-COST-META--TWO-PATH-LEDGER-4OF4-MATCH--ASSIGN-ENTROPY-LOG2-24-4.5849625007--PLUS-ONE-PSEUDO-COST-REPRODUCED--INJECT-FOUR-CONSTRAINTS-FLIPS-IDENTIFIABLE--ASSIGN-DERIVATION-ALONE-INSUFFICIENT--L0-L5-NOT-C0-C3-AXIS--EXIT-C-CLOSED-R421--UNIQUE-EXIT-R437-EXTERNAL--NO-NEW-EXIT--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM
+门数: gate=15 neg=3 identity=0 failed=0
+对象边界: 只审 r410 的 +1 标价、r412 的 LU-6 条件式、r413 的四分支可识别性账；排除 r414 图论、r415 方法谱系、r421 验收器、r437 出口重证，不相加
+独立预言计数: 0
+------------------------------------------------------------------------
+[PASS] G00-ast-precheck                   gate     exp=AST 前置：无禁Import、无eval/exec、add 的 ok 不写死 | act=bad_import=[] bad_call=[] hardcoded_ok=[] // 守卫不写死；本判据自己若被写死 ok 也必须翻红
+[PASS] M1-price-chain-anchors             gate     exp=五段代价链锚点齐备：+1→未落地→伪+1→已关闭→体系外唯一出口 | act=markers={'r410_plus1': True, 'r412_open': True, 'r413_pseudo': True, 'r421_closed': True, 'r437_unique_exit': True} // 按纪律取链条最新重定价：r421 已关闭出路 C，r437 重证唯一出口 E1–E4；不照抄 r410 的旧『+1 唯一可能』
+[PASS] M2-latest-no-reopen                gate     exp=最新链未重开出路 C：r421 关闭且 r437 仍指体系外来料 | act=r421_closed=True r437_unique_exit=True // 只核价格标签是否被后续册重开；不重判 r421/r437 的物理内容
+[PASS] A1-two-path-ledger                 gate     exp=路A(JSON) 与路B(MD表格) 四分支逐格一致 | act=A=4行 B=4行 match=True // 路 B 从判定册 Markdown 表格抽取，不读取 r413 JSON 派生字段作计算输入；bits 用 1e-9 容差吸收 MD 10 位截断
+[PASS] A2-rule-recompute                  gate     exp=路C(原始规则) 与路A(JSON) 四分支逐格一致 | act=C=4行 match=True // 规则：4 强度需 4 数值约束；fixed=1/free=0；external 指派=log2(4!) bits，derived=0
+[PASS] B1-assignment-entropy              gate     exp=log2(4!)=4.584962500721... 与 JSON 双字段一致 | act=recompute=4.58496250072115618145373894394781650875981440769248106045575 json_bits=4.584962500721157 json_25E=4.5849625007211569638343462 diff18=0.41503749927884381854626105605218349124018559230751893954424 tol=1E-15 // 由 n_assignments=24 独立算熵；不是把 JSON 文本抄回报告。JSON bits 是 16 位浮点序列化，25E 字段为 25 位；实测差约 8e-16，容差取 1e-15 对应继承末位截断，非放宽物理门限
+[PASS] B2-wrong-sample-space-neg          neg      exp=若把熵样本空间错取 3!，读数必须翻红 | act=log2(3!)=2.58496250072115618145373894394781650875981440769248106045575 vs log2(4!)=4.58496250072115618145373894394781650875981440769248106045575 差=2.00000000000000000000000000000000000000000000000000000000000 // 反噬：若错把力数当指派数仍能通过，则熵门无判别力
+[PASS] B3-short-range-constraint          gate     exp=注入短程约束 24→18 使指派熵下降但不归零 | act=controls=[{'name': 'inject_short_range_constraint', 'before': 24, 'after': 18, 'ok': True}] bits24=4.58496250072115618145373894394781650875981440769248106045575 bits18=4.16992500144231236290747788789563301751962881538496212091151 // 正对照：判据能响应约束注入；但 18>1，仍不能唯一化
+[PASS] C1-plus-one-pseudo                 gate     exp=四分支无一可由公设内 +1 定解，复现 r413 伪+1 | act=identifiable=0/4 plus_one_adequate=0/4 // 复算路线与 r413 总裁定一致；本册不把它当成新证据份数
+[PASS] C2-inject-four-constraints         neg      exp=注入 4 条假数值约束+内部形状参数使 fixed/derived 翻绿 | act=before(missing=3,adequate=False) after(missing=0,adequate=True) // 反噬：若注入 4 条约束仍不能翻绿，则『不可识别』是写死结论；翻绿只说明判据有牙，不说明外部买入后成为公设内预言
+[PASS] C3-assign-derivation-insufficient  gate     exp=只派生部门指派、补 3 条数值约束仍不够 | act=bits=0 missing=3 identifiable=False adequate=False // 证明 4.585 bits 是必要非充分项；不能把派生指派当成 +1 已含内容
+[PASS] C4-free-function-collapse          gate     exp=把自由函数塌成固定形状仍缺 3 条约束，+1 不复活 | act=free(missing=4) collapsed(missing=3,adequate=False) // 负对照不保留被测机制：塌掉自由函数后不再含无界自由度，若此时判据仍称伪+1 则须由缺约束数承载，而非由自由函数标签承载
+[PASS] C5-chain-reprice-visible           gate     exp=+1 标签在三册中被重定价，后续关闭可见 | act=r410=True r412=True r413=True closed=True // 本册审计的是价格标签的可翻覆性，不是新造统一方案
+[PASS] H1-axis-not-identical              gate     exp=L0-L5 结构层不等于 C0-C3 证据口径轴 | act=L=['L0几何代数', 'L1作用量', 'L2场方程', 'L3还原', 'L4验证', 'L5判据'](6) C=['C0', 'C1', 'C2', 'C3'](4) // 两轴基数不同且语义不同：前者是构造层级，后者是正确性证据强度
+[PASS] H2-criteria-not-identical          gate     exp=三判据维度不等于四层证据口径 | act=Lcriteria=['形式统一(单一格式)', '数值统一(单一强度)', '结构统一(恒等式)'] Cnames=['实证层', '形式 / 量纲层', '数学 / 复现层', '还原层'] // 结构/形式/数值统一 不等于 形式量纲/数学复现/还原/实证
+[PASS] H3-no-explicit-map                 gate     exp=被引来源没有 L 层到 C 层的显式映射表 | act=explicit_map=[] // 无映射却跨轴搬运即对象错位；不能凭名字都带数字就同列
+[PASS] H4-cross-axis-transfer-fails       gate     exp=L0 恒等式 PASS 不能搬运成 r403 的 C3 统一候选 | act=L0_PASS=2 C3_unified=['U01'] U_ids_in_L_table=[] // L0 PASS 是结构恒等式，C3 PASS∧unified 是实证统一；两者对象不同，不能相加
+[PASS] H5-fake-mapping-neg                neg      exp=注入伪映射 L0→C3 才许可跨轴搬运，判据必须翻红 | act=base=False injected=True // 反噬：若没有映射也能搬运，则轴区分门是恒绿装饰
+------------------------------------------------------------------------
+熵: log2(4!)=4.58496250072115618145373894394781650875981440769248106045575 ; log2(3!)=2.58496250072115618145373894394781650875981440769248106045575 ; log2(18)=4.16992500144231236290747788789563301751962881538496212091151
+轴: L=['L0几何代数', 'L1作用量', 'L2场方程', 'L3还原', 'L4验证', 'L5判据'] C=['C0', 'C1', 'C2', 'C3'] ; L0_PASS=2 ; C3_unified=['U01']
+继承: r421_outlet_closed=True ; r437_external_exit=True
+------------------------------------------------------------------------
+Decimal 60 ; 路A JSON / 路B MD表格 / 路C 原始规则 ; 全确定性无随机 ; 不占RID

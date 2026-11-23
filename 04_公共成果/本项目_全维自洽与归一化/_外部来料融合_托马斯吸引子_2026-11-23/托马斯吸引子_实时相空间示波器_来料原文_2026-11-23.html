@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>托马斯吸引子 · 实时相空间示波器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050705;
+    --bg-panel:rgba(6,14,8,0.82);
+    --phosphor:#45ff9c;
+    --phosphor-dim:#12603a;
+    --phosphor-faint:#1c3826;
+    --amber:#ffb020;
+    --cyan:#4fd8ff;
+    --magenta:#ff5fa8;
+    --text:#bdf5d6;
+    --text-dim:#5f9c7c;
+    --hairline:rgba(69,255,156,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; width:100%; height:100%;
+    background:var(--bg);
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    color:var(--text);
+    overflow:hidden;
+  }
+  #scene{position:fixed; inset:0;}
+
+  /* ---------- boot sequence ---------- */
+  #boot{
+    position:fixed; inset:0; z-index:200; background:#050705;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    transition:opacity 0.6s ease;
+  }
+  #boot.hide{ opacity:0; pointer-events:none; }
+  #boot .bline{
+    color:var(--phosphor); font-size:12px; letter-spacing:1.5px; margin:3px 0;
+    text-shadow:0 0 6px rgba(69,255,156,0.5); opacity:0;
+    animation:bootFade 0.25s forwards;
+  }
+  #boot .cursor{ display:inline-block; width:7px; height:12px; background:var(--phosphor); margin-left:3px; animation:blink 0.9s steps(1) infinite; vertical-align:-2px; }
+  @keyframes bootFade{ to{ opacity:1; } }
+  @keyframes blink{ 50%{ opacity:0; } }
+  #boot .bar{
+    width:280px; height:2px; background:var(--phosphor-faint); margin-top:14px; overflow:hidden;
+  }
+  #boot .bar-fill{ height:100%; width:0%; background:var(--phosphor); box-shadow:0 0 8px var(--phosphor); }
+
+  /* ---------- CRT overlay ---------- */
+  #crt{
+    position:fixed; inset:0; pointer-events:none; z-index:50;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0px,
+        rgba(0,0,0,0) 2px,
+        rgba(0,0,0,0.16) 3px,
+        rgba(0,0,0,0) 4px
+      );
+    mix-blend-mode:multiply;
+    animation:flicker 6s infinite;
+  }
+  #vignette{
+    position:fixed; inset:0; pointer-events:none; z-index:49;
+    box-shadow: inset 0 0 180px 60px rgba(0,0,0,0.75);
+  }
+  @keyframes flicker{
+    0%,100%{opacity:1;}
+    92%{opacity:1;}
+    93%{opacity:0.94;}
+    94%{opacity:1;}
+  }
+
+  .panel{
+    position:fixed;
+    background:var(--bg-panel);
+    border:1px solid var(--hairline);
+    backdrop-filter:blur(2px);
+    padding:14px 16px;
+    z-index:40;
+    font-size:11px;
+    letter-spacing:0.3px;
+    line-height:1.55;
+  }
+  .val{ color:var(--phosphor); text-shadow:0 0 6px rgba(69,255,156,0.5); }
+
+  #hud-title{ top:18px; left:18px; max-width:340px; }
+  #hud-title .eyebrow{ color:var(--text-dim); font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+  #hud-title h1{
+    margin:4px 0 8px; font-size:16px; font-weight:600; color:var(--phosphor);
+    text-shadow:0 0 8px rgba(69,255,156,0.45); letter-spacing:0.5px;
+  }
+  #hud-title .eq{ color:var(--text); font-size:12px; margin:2px 0; }
+  #hud-title .eq .op{ color:var(--amber); }
+  #hud-title .note{ margin-top:10px; color:var(--text-dim); font-size:10.5px; line-height:1.6; }
+
+  #hud-readout{ top:18px; right:18px; min-width:230px; }
+  .row{ display:flex; justify-content:space-between; gap:14px; padding:2px 0; }
+  .row .k{ color:var(--text-dim); }
+  .row .v{ color:var(--phosphor); text-shadow:0 0 5px rgba(69,255,156,0.4); }
+  .divider{ height:1px; background:var(--hairline); margin:8px 0; }
+  .trace-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+
+  #hud-lyapunov{ top:328px; right:18px; width:230px; }
+  #hud-lyapunov .ctrl-title{ color:var(--text-dim); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; display:flex; justify-content:space-between; }
+  #ly-canvas{ width:100%; height:70px; display:block; border:1px solid var(--hairline); }
+  #hud-lyapunov .foot{ margin-top:6px; font-size:9.5px; color:var(--text-dim); line-height:1.5; }
+
+  #hud-poincare{ top:508px; right:18px; width:230px; }
+  #hud-poincare .ctrl-title{ color:var(--text-dim); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; display:flex; justify-content:space-between; }
+  #poincare-canvas{ width:100%; height:150px; display:block; border:1px solid var(--hairline); }
+  #hud-poincare .foot{ margin-top:6px; font-size:9.5px; color:var(--text-dim); line-height:1.5; }
+  #hud-poincare .foot .dim{ color:var(--phosphor); }
+
+  #hud-controls{ bottom:18px; left:18px; width:280px; }
+  #hud-controls .ctrl-title{ color:var(--text-dim); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+  .field{ margin:10px 0; }
+  .field .fhead{ display:flex; justify-content:space-between; margin-bottom:4px; }
+  .field .fhead .fname{ color:var(--text); }
+  .field .fhead .fval{ color:var(--phosphor); }
+  input[type=range]{ -webkit-appearance:none; width:100%; height:2px; background:var(--phosphor-faint); outline:none; }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:11px; height:11px; border-radius:50%;
+    background:var(--phosphor); box-shadow:0 0 8px rgba(69,255,156,0.8); cursor:pointer; margin-top:-4.5px;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:11px; height:11px; border-radius:50%; border:none;
+    background:var(--phosphor); box-shadow:0 0 8px rgba(69,255,156,0.8); cursor:pointer;
+  }
+  .btnrow{ display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+  button, .toggle{
+    background:transparent; border:1px solid var(--phosphor-dim); color:var(--phosphor);
+    font-family:inherit; font-size:10px; letter-spacing:0.6px; text-transform:uppercase;
+    padding:7px 9px; cursor:pointer; transition:all 0.15s ease;
+  }
+  button:hover, .toggle:hover{ background:rgba(69,255,156,0.1); border-color:var(--phosphor); }
+  button:active{ background:rgba(69,255,156,0.2); }
+  .toggle.active{ background:rgba(69,255,156,0.18); border-color:var(--phosphor); }
+
+  #hud-views{ bottom:18px; left:314px; width:150px; }
+  #hud-views .ctrl-title{ color:var(--text-dim); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+  #hud-views .btnrow{ margin-top:0; }
+  #hud-views button{ flex:1 1 40%; }
+
+  #regime-tag{
+    position:fixed; bottom:18px; right:18px; z-index:40;
+    padding:9px 14px; border:1px solid var(--hairline); background:var(--bg-panel);
+    font-size:11px; letter-spacing:1px; text-transform:uppercase; text-align:right;
+  }
+  #regime-tag .rv{ font-weight:600; }
+  #regime-tag .hint{ display:block; margin-top:5px; font-size:9px; color:var(--text-dim); letter-spacing:0.5px; text-transform:none; }
+
+  #fps{
+    position:fixed; top:18px; left:50%; transform:translateX(-50%);
+    z-index:40; font-size:10px; color:var(--text-dim); letter-spacing:1px;
+  }
+  #fps .v{ color:var(--phosphor); }
+
+  ::selection{ background:rgba(69,255,156,0.3); }
+
+  @media (max-width: 760px){
+    #hud-title{ max-width:220px; font-size:10px; }
+    #hud-readout, #hud-lyapunov, #hud-poincare, #hud-views, #fps{ display:none; }
+    #hud-controls{ width:200px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="boot">
+  <div id="boot-lines"></div>
+  <div class="bar"><div class="bar-fill" id="boot-bar"></div></div>
+</div>
+
+<div id="scene"></div>
+<div id="vignette"></div>
+<div id="crt"></div>
+<div id="fps">帧率 <span class="v" id="fps-val">60</span> fps</div>
+
+<div class="panel" id="hud-title">
+  <div class="eyebrow">相空间示波器 · dynamical system</div>
+  <h1>Thomas 循环对称吸引子</h1>
+  <div class="eq">ẋ <span class="op">=</span> sin(y) − b·x</div>
+  <div class="eq">ẏ <span class="op">=</span> sin(z) − b·y</div>
+  <div class="eq">ż <span class="op">=</span> sin(x) − b·z</div>
+  <div class="note">
+    三条示踪轨迹以几乎相同的初始条件出发（相差 1×10⁻⁵），实时用 RK4 积分，
+    观察它们随时间指数分离——对初始条件的敏感依赖（"蝴蝶效应"）的直接可视化。
+    右侧图表用独立的一对轨迹以标准 Benettin 重归一化算法实时估计最大李雅普诺夫指数 λ₁。
+  </div>
+</div>
+
+<div class="panel" id="hud-readout">
+  <div class="row"><span class="k">迭代步数</span><span class="v" id="r-steps">0</span></div>
+  <div class="row"><span class="k">耗散率 ∇·F = −3b</span><span class="v" id="r-div">−0.570</span></div>
+  <div class="row"><span class="k">运行时间</span><span class="v" id="r-time">0.0 s</span></div>
+  <div class="row"><span class="k">近似盒维数 D_box</span><span class="v" id="r-dim">…</span></div>
+  <div class="divider"></div>
+  <div class="row"><span class="k"><span class="trace-dot" style="background:#45ff9c;box-shadow:0 0 6px #45ff9c;"></span>轨迹 A</span><span class="v" id="r-a">0.000, 0.000, 0.000</span></div>
+  <div class="row"><span class="k"><span class="trace-dot" style="background:#4fd8ff;box-shadow:0 0 6px #4fd8ff;"></span>轨迹 B</span><span class="v" id="r-b">0.000, 0.000, 0.000</span></div>
+  <div class="row"><span class="k"><span class="trace-dot" style="background:#ff5fa8;box-shadow:0 0 6px #ff5fa8;"></span>轨迹 C</span><span class="v" id="r-c">0.000, 0.000, 0.000</span></div>
+  <div class="divider"></div>
+  <div class="row"><span class="k">A↔B 间距</span><span class="v" id="r-sep">0.000e+0</span></div>
+</div>
+
+<div class="panel" id="hud-lyapunov">
+  <div class="ctrl-title"><span>李雅普诺夫指数估计</span><span class="val" id="ly-val">λ₁ ≈ 0.000</span></div>
+  <canvas id="ly-canvas"></canvas>
+  <div class="foot">每 8 步重归一化间距至 10⁻⁸，累计 ln(d/d₀) 求平均。λ₁ &gt; 0 ⇒ 混沌；λ₁ ≤ 0 ⇒ 收敛稳态。</div>
+</div>
+
+<div class="panel" id="hud-poincare">
+  <div class="ctrl-title"><span>庞加莱截面 z≈0</span><span class="val" id="poincare-count">0 点</span></div>
+  <canvas id="poincare-canvas"></canvas>
+  <div class="foot">三条轨迹穿越 z=0 平面时记录 (x,y)，磷光余晖式累积。截面上浮现的褶皱结构即吸引子的分形横切面。</div>
+</div>
+
+<div class="panel" id="hud-controls">
+  <div class="ctrl-title">控制台</div>
+  <div class="field">
+    <div class="fhead"><span class="fname">阻尼系数 b</span><span class="fval" id="v-b">0.190</span></div>
+    <input type="range" id="s-b" min="0.02" max="1.0" step="0.001" value="0.19">
+  </div>
+  <div class="field">
+    <div class="fhead"><span class="fname">积分速度（步/帧）</span><span class="fval" id="v-speed">6</span></div>
+    <input type="range" id="s-speed" min="1" max="30" step="1" value="6">
+  </div>
+  <div class="field">
+    <div class="fhead"><span class="fname">轨迹长度</span><span class="fval" id="v-trail">4000</span></div>
+    <input type="range" id="s-trail" min="400" max="9000" step="100" value="4000">
+  </div>
+  <div class="btnrow">
+    <button id="btn-play" class="toggle active">运行中 ‖</button>
+    <button id="btn-reset">重新播种</button>
+    <button id="btn-cloud" class="toggle active">背景点云</button>
+    <button id="btn-grid" class="toggle active">参照网格</button>
+    <button id="btn-rotate" class="toggle active">自动旋转</button>
+  </div>
+</div>
+
+<div class="panel" id="hud-views">
+  <div class="ctrl-title">视角</div>
+  <div class="btnrow">
+    <button id="view-iso">等距</button>
+    <button id="view-top">俯视</button>
+    <button id="view-front">正视</button>
+    <button id="view-side">侧视</button>
+  </div>
+</div>
+
+<div id="regime-tag">
+  状态：<span class="rv" id="regime-val" style="color:var(--phosphor);">强混沌 · 分形</span>
+  <span class="hint">空格 暂停 · R 重播 · C 点云 · G 网格</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script>
+(function(){
+
+  // ============================================================
+  // 0. 引导序列（纯视觉，与主逻辑解耦）
+  // ============================================================
+  const bootLines = [
+    'INIT PHASE-SPACE OSCILLOSCOPE...',
+    'LOADING THOMAS CYCLIC SYSTEM  ẋ=sin(y)-bx',
+    'RK4 INTEGRATOR ONLINE  dt=0.012',
+    'CALIBRATING ATTRACTOR MANIFOLD...',
+    'SEEDING TRACE A / B / C  Δ=1e-5',
+    'READY.'
+  ];
+  const bootLinesEl = document.getElementById('boot-lines');
+  const bootBar = document.getElementById('boot-bar');
+  let bl = 0;
+  function typeBootLine(){
+    if(bl >= bootLines.length){
+      bootBar.style.transition = 'width 0.3s ease';
+      bootBar.style.width = '100%';
+      setTimeout(()=>{ document.getElementById('boot').classList.add('hide'); }, 380);
+      return;
+    }
+    const div = document.createElement('div');
+    div.className = 'bline';
+    div.textContent = bootLines[bl];
+    if(bl === bootLines.length-1){
+      const cur = document.createElement('span');
+      cur.className = 'cursor';
+      div.appendChild(cur);
+    }
+    bootLinesEl.appendChild(div);
+    bootBar.style.width = Math.round(((bl+1)/bootLines.length)*100)+'%';
+    bl++;
+    setTimeout(typeBootLine, 190);
+  }
+  setTimeout(typeBootLine, 120);
+
+  // ============================================================
+  // 1. 托马斯系统动力学
+  // ============================================================
+  let b = 0.19;
+  const DT = 0.012;
+  const SCALE = 1.6;
+
+  function deriv(x,y,z, out){
+    out[0] = Math.sin(y) - b*x;
+    out[1] = Math.sin(z) - b*y;
+    out[2] = Math.sin(x) - b*z;
+  }
+  const _k1=[0,0,0],_k2=[0,0,0],_k3=[0,0,0],_k4=[0,0,0];
+  function rk4(p, dt, out){
+    const x=p[0], y=p[1], z=p[2];
+    deriv(x,y,z,_k1);
+    deriv(x+dt/2*_k1[0], y+dt/2*_k1[1], z+dt/2*_k1[2], _k2);
+    deriv(x+dt/2*_k2[0], y+dt/2*_k2[1], z+dt/2*_k2[2], _k3);
+    deriv(x+dt*_k3[0],   y+dt*_k3[1],   z+dt*_k3[2],   _k4);
+    out[0] = x + dt/6*(_k1[0]+2*_k2[0]+2*_k3[0]+_k4[0]);
+    out[1] = y + dt/6*(_k1[1]+2*_k2[1]+2*_k3[1]+_k4[1]);
+    out[2] = z + dt/6*(_k1[2]+2*_k2[2]+2*_k3[2]+_k4[2]);
+  }
+
+  // ============================================================
+  // 2. three.js 场景与渲染器
+  // ============================================================
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x050705, 8, 34);
+
+  const camera = new THREE.PerspectiveCamera(55, window.innerWidth/window.innerHeight, 0.05, 500);
+  const ISO = {pos:[6.5,4.5,8.5]}, TOP = {pos:[0.001,11,0.001]}, FRONT = {pos:[0,0.3,11]}, SIDE = {pos:[11,0.3,0]};
+  camera.position.set(...ISO.pos);
+
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:false});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x050705, 1);
+  document.getElementById('scene').appendChild(renderer.domElement);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.5;
+  controls.minDistance = 2;
+  controls.maxDistance = 60;
+
+  function flyTo(target){
+    camera.position.set(target.pos[0], target.pos[1], target.pos[2]);
+    controls.update();
+  }
+
+  // ---- 真实泛光后处理（失败时静默降级为直接渲染）----
+  let composer = null;
+  try{
+    if(typeof THREE.EffectComposer === 'function' && typeof THREE.UnrealBloomPass === 'function'){
+      composer = new THREE.EffectComposer(renderer);
+      composer.addPass(new THREE.RenderPass(scene, camera));
+      const bloomPass = new THREE.UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        1.15,   // 强度
+        0.55,   // 半径
+        0.12    // 亮度阈值：只有磷光轨迹与点云会起辉，暗色网格不受影响
+      );
+      composer.addPass(bloomPass);
+    }
+  }catch(err){
+    composer = null;
+  }
+  function renderFrame(){
+    if(composer) composer.render();
+    else renderer.render(scene, camera);
+  }
+
+  // ---- 柔光圆形贴图（用于点云与轨迹头部辉光）----
+  function makeGlowTexture(){
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0,   'rgba(255,255,255,1)');
+    g.addColorStop(0.25,'rgba(255,255,255,0.9)');
+    g.addColorStop(0.6, 'rgba(255,255,255,0.25)');
+    g.addColorStop(1,   'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,64,64);
+    const tex = new THREE.CanvasTexture(c);
+    tex.needsUpdate = true;
+    return tex;
+  }
+  const glowTex = makeGlowTexture();
+
+  // ---- 参照网格 / 边界线框（示波器坐标图）----
+  const gridGroup = new THREE.Group();
+  const grid1 = new THREE.GridHelper(12, 12, 0x1c3826, 0x12241a);
+  grid1.material.transparent = true; grid1.material.opacity = 0.35;
+  grid1.position.y = -5.2;
+  gridGroup.add(grid1);
+
+  const boxGeo = new THREE.BoxGeometry(9.5,9.5,9.5);
+  const boxEdges = new THREE.EdgesGeometry(boxGeo);
+  const boxMat = new THREE.LineBasicMaterial({color:0x1c3826, transparent:true, opacity:0.4});
+  const boxWire = new THREE.LineSegments(boxEdges, boxMat);
+  gridGroup.add(boxWire);
+
+  // 坐标轴（短线 + 端点辉光，暗色不抢戏）
+  function axisLine(dir, color){
+    const geo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-dir[0]*5.2,-dir[1]*5.2,-dir[2]*5.2),
+      new THREE.Vector3(dir[0]*5.2,dir[1]*5.2,dir[2]*5.2)
+    ]);
+    return new THREE.Line(geo, new THREE.LineBasicMaterial({color, transparent:true, opacity:0.5}));
+  }
+  gridGroup.add(axisLine([1,0,0], 0x2a5c3d));
+  gridGroup.add(axisLine([0,1,0], 0x2a5c3d));
+  gridGroup.add(axisLine([0,0,1], 0x2a5c3d));
+  scene.add(gridGroup);
+
+  // 原点标记
+  const originMat = new THREE.SpriteMaterial({map:glowTex, color:0x2a5c3d, transparent:true, opacity:0.6, depthWrite:false, blending:THREE.AdditiveBlending});
+  const originSprite = new THREE.Sprite(originMat);
+  originSprite.scale.set(0.35,0.35,0.35);
+  scene.add(originSprite);
+
+  // ============================================================
+  // 3. 背景稳态点云（上下文参照，柔光点精灵）
+  // ============================================================
+  let cloudPoints = null;
+  const CLOUD_N = 130000;
+
+  function buildCloud(){
+    if(cloudPoints){ scene.remove(cloudPoints); cloudPoints.geometry.dispose(); cloudPoints.material.dispose(); }
+    const positions = new Float32Array(CLOUD_N*3);
+    const colors = new Float32Array(CLOUD_N*3);
+    let p = [0.1, 0.0, 0.0];
+    const tmp = [0,0,0];
+    for(let i=0;i<3000;i++){ rk4(p, DT, tmp); p[0]=tmp[0]; p[1]=tmp[1]; p[2]=tmp[2]; }
+    for(let i=0;i<CLOUD_N;i++){
+      rk4(p, DT, tmp); p[0]=tmp[0]; p[1]=tmp[1]; p[2]=tmp[2];
+      const idx = i*3;
+      positions[idx]   = p[0]*SCALE;
+      positions[idx+1] = p[1]*SCALE;
+      positions[idx+2] = p[2]*SCALE;
+      const r = Math.sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
+      const t = Math.min(r/4.2, 1);
+      colors[idx]   = 0.05 + t*0.12;
+      colors[idx+1] = 0.20 + t*0.32;
+      colors[idx+2] = 0.14 + t*0.12;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+    const mat = new THREE.PointsMaterial({
+      size:0.05, map:glowTex, vertexColors:true, transparent:true, opacity:0.55,
+      depthWrite:false, blending:THREE.AdditiveBlending, sizeAttenuation:true
+    });
+    cloudPoints = new THREE.Points(geo, mat);
+    scene.add(cloudPoints);
+
+    estimateBoxDimension(positions, CLOUD_N);
+  }
+
+  // ---- 近似盒维数（box-counting dimension）----
+  // 用多个盒尺寸 eps 统计被占据的立方盒数 N(eps)，对 log(N) ~ log(1/eps) 做线性回归，
+  // 斜率即为分形维度的有限采样估计。这是真实的 Minkowski-Bouligand 盒维数算法，
+  // 精度受限于采样点数与盒尺寸范围，因此标注为"近似"。
+  const dimReadout = document.getElementById('r-dim');
+  function estimateBoxDimension(positions, n){
+    const epsList = [0.5, 0.36, 0.26, 0.19, 0.14, 0.10];
+    const logInvEps = [], logN = [];
+    for(const eps of epsList){
+      const occupied = new Set();
+      for(let i=0;i<n;i++){
+        const idx = i*3;
+        const bx = Math.floor(positions[idx]/eps);
+        const by = Math.floor(positions[idx+1]/eps);
+        const bz = Math.floor(positions[idx+2]/eps);
+        occupied.add(bx+'_'+by+'_'+bz);
+      }
+      logInvEps.push(Math.log(1/eps));
+      logN.push(Math.log(occupied.size));
+    }
+    const m = epsList.length;
+    const mx = logInvEps.reduce((a,c)=>a+c,0)/m;
+    const my = logN.reduce((a,c)=>a+c,0)/m;
+    let num=0, den=0;
+    for(let i=0;i<m;i++){ num += (logInvEps[i]-mx)*(logN[i]-my); den += (logInvEps[i]-mx)**2; }
+    const dim = den > 0 ? num/den : NaN;
+    if(dimReadout) dimReadout.textContent = isFinite(dim) ? dim.toFixed(3) : '—';
+  }
+
+  // ============================================================
+  // 4. 实时示踪轨迹（RK4 逐帧积分，非预计算）
+  // ============================================================
+  const TRACE_COLORS = [0x45ff9c, 0x4fd8ff, 0xff5fa8];
+  let TRAIL_MAX = 4000;
+
+  function makeTrace(colorHex){
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(TRAIL_MAX*3);
+    const colors = new Float32Array(TRAIL_MAX*3);
+    geo.setAttribute('position', new THREE.BufferAttribute(positions,3).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors,3).setUsage(THREE.DynamicDrawUsage));
+    geo.setDrawRange(0,0);
+    const mat = new THREE.LineBasicMaterial({
+      vertexColors:true, transparent:true, opacity:0.95,
+      blending:THREE.AdditiveBlending, depthWrite:false
+    });
+    const line = new THREE.Line(geo, mat);
+    scene.add(line);
+
+    // 辉光头：核心亮点 + 柔光外晕（两层精灵）
+    const core = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex, color:colorHex, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending}));
+    core.scale.set(0.16,0.16,0.16);
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex, color:colorHex, transparent:true, opacity:0.35, depthWrite:false, blending:THREE.AdditiveBlending}));
+    halo.scale.set(0.55,0.55,0.55);
+    scene.add(core); scene.add(halo);
+
+    const c = new THREE.Color(colorHex);
+    const css = '#' + colorHex.toString(16).padStart(6,'0');
+    return { line, geo, core, halo, color:c, css, points:[], p:[0,0,0] };
+  }
+
+  let traces = [];
+  function seedTraces(){
+    traces.forEach(t=>{
+      scene.remove(t.line); scene.remove(t.core); scene.remove(t.halo);
+      t.geo.dispose(); t.line.material.dispose();
+      t.core.material.dispose(); t.halo.material.dispose();
+    });
+    traces = [];
+    const base = [0.1, 0.2, 0.3];
+    const eps = 1e-5;
+    const seeds = [
+      [base[0], base[1], base[2]],
+      [base[0]+eps, base[1], base[2]],
+      [base[0], base[1]+eps, base[2]],
+    ];
+    for(let i=0;i<3;i++){
+      const tr = makeTrace(TRACE_COLORS[i]);
+      tr.p = seeds[i].slice();
+      const tmp=[0,0,0];
+      for(let s=0;s<1500;s++){ rk4(tr.p, DT, tmp); tr.p[0]=tmp[0]; tr.p[1]=tmp[1]; tr.p[2]=tmp[2]; }
+      traces.push(tr);
+    }
+    stepCount = 0;
+    elapsed = 0;
+  }
+
+  function updateTraceGeometry(tr){
+    const n = tr.points.length;
+    const posAttr = tr.geo.getAttribute('position');
+    const colAttr = tr.geo.getAttribute('color');
+    for(let i=0;i<n;i++){
+      const pt = tr.points[i];
+      const idx = i*3;
+      posAttr.array[idx]   = pt[0]*SCALE;
+      posAttr.array[idx+1] = pt[1]*SCALE;
+      posAttr.array[idx+2] = pt[2]*SCALE;
+      const fade = i/n;
+      const br = 0.06 + 0.94*fade;
+      colAttr.array[idx]   = tr.color.r*br;
+      colAttr.array[idx+1] = tr.color.g*br;
+      colAttr.array[idx+2] = tr.color.b*br;
+    }
+    posAttr.needsUpdate = true;
+    colAttr.needsUpdate = true;
+    tr.geo.setDrawRange(0, n);
+    tr.geo.computeBoundingSphere();
+
+    if(n>0){
+      const last = tr.points[n-1];
+      tr.core.position.set(last[0]*SCALE, last[1]*SCALE, last[2]*SCALE);
+      tr.halo.position.copy(tr.core.position);
+    }
+  }
+
+  // ============================================================
+  // 5. 李雅普诺夫指数实时估计（独立影子轨迹，Benettin 重归一化）
+  // ============================================================
+  const D0 = 1e-8;
+  const RENORM_STEPS = 8;
+  let lyP = [0.1,0.2,0.3];
+  let lyQ = [0.1+D0,0.2,0.3];
+  let lySum = 0, lyCount = 0, lyRenormCounter = 0;
+  let lyHistory = [];
+  const LY_HISTORY_MAX = 140;
+  let lyLambda = 0;
+
+  (function primeLy(){
+    const tmp=[0,0,0];
+    for(let s=0;s<1500;s++){
+      rk4(lyP, DT, tmp); lyP[0]=tmp[0]; lyP[1]=tmp[1]; lyP[2]=tmp[2];
+      rk4(lyQ, DT, tmp); lyQ[0]=tmp[0]; lyQ[1]=tmp[1]; lyQ[2]=tmp[2];
+    }
+    // 重新对齐影子点，使初始间距精确为 D0
+    const dx=lyQ[0]-lyP[0], dy=lyQ[1]-lyP[1], dz=lyQ[2]-lyP[2];
+    const d = Math.sqrt(dx*dx+dy*dy+dz*dz) || 1;
+    lyQ = [lyP[0]+dx/d*D0, lyP[1]+dy/d*D0, lyP[2]+dz/d*D0];
+  })();
+
+  function stepLyapunov(){
+    const tmp=[0,0,0];
+    rk4(lyP, DT, tmp); lyP[0]=tmp[0]; lyP[1]=tmp[1]; lyP[2]=tmp[2];
+    rk4(lyQ, DT, tmp); lyQ[0]=tmp[0]; lyQ[1]=tmp[1]; lyQ[2]=tmp[2];
+    lyRenormCounter++;
+    if(lyRenormCounter >= RENORM_STEPS){
+      const dx=lyQ[0]-lyP[0], dy=lyQ[1]-lyP[1], dz=lyQ[2]-lyP[2];
+      const d = Math.sqrt(dx*dx+dy*dy+dz*dz) || 1e-15;
+      const localLy = Math.log(d/D0);
+      lySum += localLy;
+      lyCount++;
+      lyHistory.push(localLy);
+      if(lyHistory.length > LY_HISTORY_MAX) lyHistory.shift();
+      // 重归一化：把影子点拉回距离 D0，方向保持不变
+      lyQ = [lyP[0]+dx/d*D0, lyP[1]+dy/d*D0, lyP[2]+dz/d*D0];
+      lyRenormCounter = 0;
+      lyLambda = lySum / (lyCount * RENORM_STEPS * DT);
+    }
+  }
+
+  function resetLyapunov(){
+    lyP = [0.1,0.2,0.3]; lyQ = [0.1+D0,0.2,0.3];
+    lySum=0; lyCount=0; lyRenormCounter=0; lyHistory=[]; lyLambda=0;
+    const tmp=[0,0,0];
+    for(let s=0;s<1500;s++){
+      rk4(lyP, DT, tmp); lyP[0]=tmp[0]; lyP[1]=tmp[1]; lyP[2]=tmp[2];
+      rk4(lyQ, DT, tmp); lyQ[0]=tmp[0]; lyQ[1]=tmp[1]; lyQ[2]=tmp[2];
+    }
+    const dx=lyQ[0]-lyP[0], dy=lyQ[1]-lyP[1], dz=lyQ[2]-lyP[2];
+    const d = Math.sqrt(dx*dx+dy*dy+dz*dz) || 1;
+    lyQ = [lyP[0]+dx/d*D0, lyP[1]+dy/d*D0, lyP[2]+dz/d*D0];
+  }
+
+  // 迷你示波图：绘制 ln(d/d0) 的锯齿历史
+  const lyCanvas = document.getElementById('ly-canvas');
+  const lyCtx = lyCanvas.getContext('2d');
+  function resizeLyCanvas(){
+    const rect = lyCanvas.getBoundingClientRect();
+    lyCanvas.width = rect.width * (window.devicePixelRatio||1);
+    lyCanvas.height = rect.height * (window.devicePixelRatio||1);
+  }
+  resizeLyCanvas();
+  window.addEventListener('resize', resizeLyCanvas);
+
+  function drawLyChart(){
+    const w = lyCanvas.width, h = lyCanvas.height;
+    lyCtx.clearRect(0,0,w,h);
+    lyCtx.strokeStyle = 'rgba(69,255,156,0.12)';
+    lyCtx.lineWidth = 1;
+    lyCtx.beginPath();
+    lyCtx.moveTo(0,h/2); lyCtx.lineTo(w,h/2);
+    lyCtx.stroke();
+    if(lyHistory.length < 2) return;
+    const maxAbs = Math.max(0.6, ...lyHistory.map(v=>Math.abs(v)));
+    lyCtx.beginPath();
+    lyCtx.strokeStyle = '#ffb020';
+    lyCtx.lineWidth = 1.4;
+    lyCtx.shadowColor = '#ffb020';
+    lyCtx.shadowBlur = 4;
+    for(let i=0;i<lyHistory.length;i++){
+      const x = (i/(LY_HISTORY_MAX-1))*w;
+      const y = h/2 - (lyHistory[i]/maxAbs)*(h/2-4);
+      if(i===0) lyCtx.moveTo(x,y); else lyCtx.lineTo(x,y);
+    }
+    lyCtx.stroke();
+    lyCtx.shadowBlur = 0;
+  }
+
+  // ============================================================
+  // 5b. 庞加莱截面（z=0 平面穿越点，磷光余晖式累积散点图）
+  // ============================================================
+  const POINCARE_MAX = 5000;
+  const POINCARE_RANGE = 6.5; // 画布映射的坐标半径（缩放后单位）
+  let poincarePoints = []; // [x, y, colorHexString]
+
+  const poCanvas = document.getElementById('poincare-canvas');
+  const poCtx = poCanvas.getContext('2d');
+  function resizePoCanvas(){
+    const rect = poCanvas.getBoundingClientRect();
+    poCanvas.width = rect.width * (window.devicePixelRatio||1);
+    poCanvas.height = rect.height * (window.devicePixelRatio||1);
+  }
+  resizePoCanvas();
+  window.addEventListener('resize', resizePoCanvas);
+
+  const poincareCountEl = document.getElementById('poincare-count');
+
+  function drawPoincare(){
+    const w = poCanvas.width, h = poCanvas.height;
+    poCtx.fillStyle = 'rgba(5,7,5,1)';
+    poCtx.fillRect(0,0,w,h);
+    // 十字准线
+    poCtx.strokeStyle = 'rgba(69,255,156,0.10)';
+    poCtx.lineWidth = 1;
+    poCtx.beginPath();
+    poCtx.moveTo(w/2,0); poCtx.lineTo(w/2,h);
+    poCtx.moveTo(0,h/2); poCtx.lineTo(w,h/2);
+    poCtx.stroke();
+
+    const n = poincarePoints.length;
+    for(let i=0;i<n;i++){
+      const pt = poincarePoints[i];
+      const age = i/n; // 0=最旧 1=最新
+      const px = w/2 + (pt[0]/POINCARE_RANGE)*(w/2);
+      const py = h/2 - (pt[1]/POINCARE_RANGE)*(h/2);
+      if(px<0||px>w||py<0||py>h) continue;
+      poCtx.fillStyle = pt[2];
+      poCtx.globalAlpha = 0.15 + age*0.75;
+      poCtx.fillRect(px-0.9, py-0.9, 1.8, 1.8);
+    }
+    poCtx.globalAlpha = 1;
+    poincareCountEl.textContent = n.toLocaleString() + ' 点';
+  }
+
+  function resetPoincare(){ poincarePoints = []; }
+
+  // ============================================================
+  // 6. 状态、读数与状态分类
+  // ============================================================
+  let stepCount = 0;
+  let elapsed = 0;
+  let running = true;
+  const tmpOut = [0,0,0];
+
+  function classifyRegime(bv){
+    if(bv > 0.9428) return {text:'稳态收敛 · 无混沌', color:'#ffb020'};
+    if(bv > 0.33)   return {text:'弱混沌 · 螺旋紧致', color:'#4fd8ff'};
+    if(bv > 0.10)   return {text:'强混沌 · 分形', color:'#45ff9c'};
+    return {text:'极致拉伸 · 高维分形', color:'#ff5fa8'};
+  }
+  function refreshRegimeTag(){
+    const r = classifyRegime(b);
+    const el = document.getElementById('regime-val');
+    el.textContent = r.text;
+    el.style.color = r.color;
+  }
+
+  // ============================================================
+  // 7. 初始化
+  // ============================================================
+  buildCloud();
+  seedTraces();
+  refreshRegimeTag();
+
+  // ============================================================
+  // 8. 交互控件
+  // ============================================================
+  const sB = document.getElementById('s-b');
+  const sSpeed = document.getElementById('s-speed');
+  const sTrail = document.getElementById('s-trail');
+  let stepsPerFrame = parseInt(sSpeed.value,10);
+
+  sB.addEventListener('input', e=>{
+    b = parseFloat(e.target.value);
+    document.getElementById('v-b').textContent = b.toFixed(3);
+    document.getElementById('r-div').textContent = (-3*b).toFixed(3);
+    refreshRegimeTag();
+    resetLyapunov();
+  });
+  sB.addEventListener('change', ()=>{
+    // 释放滑块后才重建背景点云与盒维数估计（较重的计算，避免拖动时卡顿）
+    if(dimReadout) dimReadout.textContent = '…';
+    buildCloud();
+    resetPoincare(); // 旧 b 值的截面点已不代表当前系统，清空重新累积
+  });
+  sSpeed.addEventListener('input', e=>{
+    stepsPerFrame = parseInt(e.target.value,10);
+    document.getElementById('v-speed').textContent = stepsPerFrame;
+  });
+  sTrail.addEventListener('input', e=>{
+    TRAIL_MAX = parseInt(e.target.value,10);
+    document.getElementById('v-trail').textContent = TRAIL_MAX;
+    seedTraces();
+  });
+
+  function doReset(){ seedTraces(); resetLyapunov(); resetPoincare(); }
+  document.getElementById('btn-reset').addEventListener('click', doReset);
+
+  const btnCloud = document.getElementById('btn-cloud');
+  function toggleCloud(){
+    cloudPoints.visible = !cloudPoints.visible;
+    btnCloud.classList.toggle('active', cloudPoints.visible);
+  }
+  btnCloud.addEventListener('click', toggleCloud);
+
+  const btnGrid = document.getElementById('btn-grid');
+  function toggleGrid(){
+    gridGroup.visible = !gridGroup.visible;
+    btnGrid.classList.toggle('active', gridGroup.visible);
+  }
+  btnGrid.addEventListener('click', toggleGrid);
+
+  const btnRotate = document.getElementById('btn-rotate');
+  btnRotate.addEventListener('click', ()=>{
+    controls.autoRotate = !controls.autoRotate;
+    btnRotate.classList.toggle('active', controls.autoRotate);
+  });
+
+  const btnPlay = document.getElementById('btn-play');
+  function togglePlay(){
+    running = !running;
+    btnPlay.textContent = running ? '运行中 ‖' : '已暂停 ▶';
+    btnPlay.classList.toggle('active', running);
+  }
+  btnPlay.addEventListener('click', togglePlay);
+
+  document.getElementById('view-iso').addEventListener('click', ()=>flyTo(ISO));
+  document.getElementById('view-top').addEventListener('click', ()=>flyTo(TOP));
+  document.getElementById('view-front').addEventListener('click', ()=>flyTo(FRONT));
+  document.getElementById('view-side').addEventListener('click', ()=>flyTo(SIDE));
+
+  window.addEventListener('keydown', e=>{
+    if(e.code === 'Space'){ e.preventDefault(); togglePlay(); }
+    else if(e.key === 'r' || e.key === 'R'){ doReset(); }
+    else if(e.key === 'c' || e.key === 'C'){ toggleCloud(); }
+    else if(e.key === 'g' || e.key === 'G'){ toggleGrid(); }
+  });
+
+  document.getElementById('r-div').textContent = (-3*b).toFixed(3);
+
+  // ============================================================
+  // 9. 动画循环
+  // ============================================================
+  const readoutA = document.getElementById('r-a');
+  const readoutB = document.getElementById('r-b');
+  const readoutC = document.getElementById('r-c');
+  const readoutSep = document.getElementById('r-sep');
+  const readoutSteps = document.getElementById('r-steps');
+  const readoutTime = document.getElementById('r-time');
+  const lyValEl = document.getElementById('ly-val');
+  const fpsValEl = document.getElementById('fps-val');
+
+  function fmtVec(p){ return p[0].toFixed(3)+', '+p[1].toFixed(3)+', '+p[2].toFixed(3); }
+
+  let lastFrameTime = performance.now();
+  let fpsSmooth = 60;
+
+  function animate(now){
+    requestAnimationFrame(animate);
+    const dtReal = now - lastFrameTime;
+    lastFrameTime = now;
+    if(dtReal > 0 && dtReal < 250){
+      const instFps = 1000/dtReal;
+      fpsSmooth += (instFps - fpsSmooth) * 0.08;
+    }
+
+    if(running){
+      for(let s=0;s<stepsPerFrame;s++){
+        for(const tr of traces){
+          const prevZ = tr.p[2], prevX = tr.p[0], prevY = tr.p[1];
+          rk4(tr.p, DT, tmpOut);
+          tr.p[0]=tmpOut[0]; tr.p[1]=tmpOut[1]; tr.p[2]=tmpOut[2];
+          tr.points.push(tr.p.slice());
+          if(tr.points.length > TRAIL_MAX) tr.points.shift();
+
+          // 庞加莱截面：检测 z=0 平面穿越并线性插值交点
+          if((prevZ < 0) !== (tr.p[2] < 0)){
+            const t = prevZ / (prevZ - tr.p[2]);
+            const cx = (prevX + t*(tr.p[0]-prevX)) * SCALE;
+            const cy = (prevY + t*(tr.p[1]-prevY)) * SCALE;
+            poincarePoints.push([cx, cy, tr.css]);
+            if(poincarePoints.length > POINCARE_MAX) poincarePoints.shift();
+          }
+        }
+        stepLyapunov();
+        stepCount++;
+        elapsed += DT;
+      }
+      for(const tr of traces) updateTraceGeometry(tr);
+    }
+
+    if(stepCount % 3 === 0){
+      readoutA.textContent = fmtVec(traces[0].p);
+      readoutB.textContent = fmtVec(traces[1].p);
+      readoutC.textContent = fmtVec(traces[2].p);
+      const dx = traces[0].p[0]-traces[1].p[0];
+      const dy = traces[0].p[1]-traces[1].p[1];
+      const dz = traces[0].p[2]-traces[1].p[2];
+      const sep = Math.sqrt(dx*dx+dy*dy+dz*dz);
+      readoutSep.textContent = sep.toExponential(2);
+      readoutSteps.textContent = stepCount.toLocaleString();
+      readoutTime.textContent = elapsed.toFixed(1)+' s';
+      lyValEl.textContent = 'λ₁ ≈ ' + lyLambda.toFixed(3);
+      fpsValEl.textContent = Math.round(fpsSmooth);
+      drawLyChart();
+      drawPoincare();
+    }
+
+    controls.update();
+    renderFrame();
+  }
+  requestAnimationFrame(animate);
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    if(composer) composer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+})();
+</script>
+</body>
+</html>
