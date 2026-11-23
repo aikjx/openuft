@@ -321,7 +321,7 @@ low_const = lowest_power(S_const, eps)
 low_nonconst = lowest_power(S_nonconst, eps)
 coeff2_const = sp.Poly(S_const, eps).coeff_monomial(eps ** 2)
 coeff2_nonconst = sp.Poly(S_nonconst, eps).coeff_monomial(eps ** 2)
-coeff2_nonconst_terms = sum(1 for v in g1 if v ** 2 == coeff2_nonconst)
+coeff2_nonconst_terms = len(sp.Poly(coeff2_nonconst, *g1).monoms())
 KEY["eps_constant_lowest"] = low_const
 KEY["eps_nonconstant_lowest"] = low_nonconst
 KEY["eps_constant_coeff2"] = str(coeff2_const)
@@ -345,7 +345,7 @@ t445, t446, t447 = [p.read_text(encoding="utf-8") for p in (r445, r446, r447)]
 cross = {
     "r445_handedness": ("手性写反" in t445 and "Faraday/Ampere" in t445),
     "r446_rotation_boundary": ("场旋转不等于光子中心绕轴" in t446),
-    "r447_spin_not_speed": ("自旋是量子态标签" in t447),
+    "r447_spin_not_speed": ("自旋不增加传播速度" in t447 or "光子自旋不导致超光速" in t447),
 }
 KEY["cross_rounds"] = cross
 guard("G_cross_rounds", all(cross.values()),

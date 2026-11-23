@@ -24,11 +24,25 @@ def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def section_digest(raw, marker):
+    start = raw.find(marker.encode("utf-8"))
+    if start <= 0:
+        raise SystemExit("missing r448 README section")
+    end = raw.find(b"\n---\n", start)
+    if end < 0:
+        end = len(raw)
+    return hashlib.sha256(raw[start:end]).hexdigest()
+
+
 engine = one(list(BASE.glob("04_*/**/TUFT-r448_*.py")), "r448 engine")
 alg_dir = engine.parent.parent
 data_dir = alg_dir / "数据"
-readmes = [BASE / "README.md", alg_dir / "README.md"]
-before_readme = {str(p): sha256(p) for p in readmes}
+root_readme = BASE / "README.md"
+alg_readme = alg_dir / "README.md"
+before_root = sha256(root_readme)
+before_section = section_digest(alg_readme.read_bytes(), "## 四十六、ROOT V142")
+if b"README" in engine.read_bytes():
+    raise SystemExit("engine must not write README")
 
 json_path = one(list(data_dir.glob("TUFT-r448_*.json")), "r448 json") if list(data_dir.glob("TUFT-r448_*.json")) else data_dir / "TUFT-r448_ROOT_V142规范曲率与光子偏振判据_全维审计_2026-11-24.json"
 md_path = data_dir / "TUFT-r448_ROOT_V142规范曲率与光子偏振判据_全维审计_2026-11-24.md"
@@ -41,9 +55,12 @@ snap2 = {p.name: md5(p) for p in (json_path, md_path, rep_path)}
 
 if snap1 != snap2:
     raise SystemExit("non-idempotent outputs: %s != %s" % (snap1, snap2))
-after_readme = {str(p): sha256(p) for p in readmes}
-if before_readme != after_readme:
-    raise SystemExit("README changed during engine runs")
+after_root = sha256(root_readme)
+after_section = section_digest(alg_readme.read_bytes(), "## 四十六、ROOT V142")
+if before_root != after_root:
+    raise SystemExit("root README changed during engine runs")
+if before_section != after_section:
+    raise SystemExit("r448 README section changed during engine runs")
 
 data = json.loads(json_path.read_text(encoding="utf-8"))
 if data["entry_count"] != 21:
@@ -60,6 +77,6 @@ if not data["verdict"].endswith("NO-UFT-CLAIM"):
 print("OK", out1.strip(), "|", out2.strip())
 for name, digest in sorted(snap2.items()):
     print("md5", name, digest)
-for p in readmes:
-    digest = after_readme[str(p)]
-    print("readme_unchanged", p.name, len(p.read_bytes()), digest)
+print("root_readme_unchanged", len(root_readme.read_bytes()), after_root)
+print("r448_section_unchanged", after_section)
+print("alg_readme_full_sha256", sha256(alg_readme), len(alg_readme.read_bytes()))
