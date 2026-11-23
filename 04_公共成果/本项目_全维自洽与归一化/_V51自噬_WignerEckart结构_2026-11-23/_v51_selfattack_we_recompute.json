@@ -1,0 +1,119 @@
+{
+  "subject": "V51 自噬：j=1 零模质量矩阵 Wigner-Eckart 结构",
+  "object_boundary": "核验对象是上一册攻击 B 的物理前提（非对角元可实现性）；J78 三点 Yukawa CG 与 ROOTV137 迹恒等/GS 均为不同对象，不相加",
+  "verdict": "V51-SELFATTACK-WE--J1-ZEROMODE-OPSPACE-1-PLUS-3-PLUS-5-EQUALS-9-EXACT--SINGLET-K0-FORCES-EXACT-TRIPLET-DEGENERACY-RATIO-1-4--OFFDIAG-PATHS-ALLOWED-ONLY-FOR-K-GE-1-CG-NEZERO-NOT-MATRIX-ELEMENT--REDUCED-ME-UNSUPPLIED-BY-INPUT--ATTACK-B-PREMISE-CONDITIONAL-ON-NONSCALAR-HIGGS--K3-TRIANGLE-FORBIDDEN-NEG--PARAM-COUNT-9-EQUALS-DIM-HERM3--NEG-CONTROL-MEASURED-DRIVEN-NO-HARDCODE-OK--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM",
+  "counts": {
+    "gate": 8,
+    "neg": 2,
+    "identity": 1,
+    "failed": 0
+  },
+  "independent_prediction_count": 0,
+  "cg_key_values": {
+    "CG(1,-1;2,2|1,1)": "sqrt(15)/5",
+    "CG(1,0;1,1|1,1)": "-sqrt(2)/2",
+    "T00_diag": [
+      "1",
+      "1",
+      "1"
+    ]
+  },
+  "dims": {
+    "opspace_rep": 1,
+    "opspace_k0k1": 4,
+    "opspace_all": 9,
+    "herm_k0": 1,
+    "herm_k0k1": 4,
+    "herm_all": 9
+  },
+  "gates": [
+    {
+      "id": "D1-k0-scalar",
+      "kind": "gate",
+      "exp": "k=0 算符 ∝ I (Schur)",
+      "act": "T00=[[1, 0, 0], [0, 1, 0], [0, 0, 1]]; diag equal=True; offdiag zero=True",
+      "ok": true,
+      "note": "标量算符在不可约三重态内正比单位阵 ⇒ 严格简并"
+    },
+    {
+      "id": "D2-k2-offdiag",
+      "kind": "gate",
+      "exp": "k=2,q=2 非对角元 CG 系数非零(通路允许)",
+      "act": "CG(1,-1;2,2|1,1)=sqrt(15)/5; 约化矩阵元<j||T^2||j>未由来料给定",
+      "ok": true,
+      "note": "选择定则允许该非对角通路，但矩阵元 = CG×约化矩阵元，后者依赖 Higgs 径向重叠，来料未给定 ⇒ 只能报「允许」不能报「必非零」"
+    },
+    {
+      "id": "D3-k3-forbidden",
+      "kind": "neg",
+      "exp": "k=3 全零(三角禁戒)",
+      "act": "k=3 非零 CG 计数=0",
+      "ok": true,
+      "note": "负对照：仪器非恒非零；k>|j+j'| 必禁"
+    },
+    {
+      "id": "D4-k1-offdiag",
+      "kind": "gate",
+      "exp": "k=1,q=±1 非对角 CG 系数非零(通路允许)",
+      "act": "CG(1,0;1,1|1,1)=-sqrt(2)/2, CG(1,0;1,-1|1,-1)=sqrt(2)/2; 约化矩阵元未给定",
+      "ok": true,
+      "note": "矢量算符在选择定则层提供非对角通路；矩阵元幅度仍乘未给定的约化矩阵元"
+    },
+    {
+      "id": "D5-opspace-dim",
+      "kind": "gate",
+      "exp": "算符空间复维 1 / 4 / 9",
+      "act": "rank(k0)=1 rank(k0+k1)=4 rank(all)=9",
+      "ok": true,
+      "note": "End(C^3) 分解 1⊕3⊕5=9；群论维数精确"
+    },
+    {
+      "id": "D6-herm-singlet",
+      "kind": "gate",
+      "exp": "单态(仅 k=0) 厄米维=1",
+      "act": "herm_rank(k<=0)=1, (k<=1)=4, (k<=2)=9",
+      "ok": true,
+      "note": "仅标量 Higgs ⇒ 质量矩阵 1 个实参数 ⇒ 严格简并"
+    },
+    {
+      "id": "D7-singlet-degenerate",
+      "kind": "gate",
+      "exp": "单态 ⇒ 三谱全等, m1^2/(4m0m2)=1/4",
+      "act": "eig=[1, 1, 1] ratio=1/4",
+      "ok": true,
+      "note": "简并谱下不等式恒真(1/4<=1)，但不能区分三代 ⇒ 判别力 0"
+    },
+    {
+      "id": "D8-premise-conditional",
+      "kind": "gate",
+      "exp": "攻击B非对角需 k>=1 (Higgs 非标量)",
+      "act": "D2/D4 非对角通路在 k>=1 存在; D1/D6 单态 k=0 无非对角",
+      "ok": true,
+      "note": "前提有条件成立：来料 h(x)『任意非负分布』未指定 SU(2) 张量结构；若 h 各向同性(仅 k=0)则非对角被 CG 禁死，攻击 B 失效；若 h 含 l>=1 分量则成立，但这是新自由输入"
+    },
+    {
+      "id": "D9-mutant-singlet-split",
+      "kind": "neg",
+      "exp": "仅 k=0 要求三不同谱 ⇒ 矛盾(实测驱动)",
+      "act": "h0=1; T00对角相等=True; 非对角全零=True ⇒ 单态谱必三简并",
+      "ok": true,
+      "note": "负对照翻红：标量 Higgs 厄米维=1 且正比单位阵，实测无法产生质量分裂，必须引入非标量分量；ok 由 D1/D6 实测驱动非人为构造"
+    },
+    {
+      "id": "D10-param-count-group",
+      "kind": "gate",
+      "exp": "1+3+5=9=dim Herm(3) ⇒ 任意谱可拟合",
+      "act": "复维 r012=9, 厄米维 h012=9, Herm(3)实维=9",
+      "ok": true,
+      "note": "群论支撑攻击 C：k=0,1,2 全开时 9 实参数 = 一般厄米 3x3，足以拟合任意三本征值谱 ⇒ 判别力 0"
+    },
+    {
+      "id": "D11-schur",
+      "kind": "identity",
+      "exp": "Schur 引理：不可约表示内标量算符 ∝ I",
+      "act": "实测: diag相等=True 非对角零=True h0=1",
+      "ok": true,
+      "note": "由 D1 与 D6 实测驱动，属群论恒等结构，单列不承重"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+统一方程元审计 · r403 unified 标签分层判别力
+================================================================
+判词: UNIFIED-LABEL-META--TWO-PATH-MERGE-13-ROWS-EXACT--C3-UNIFIED-IS-1-GOLD-U01--C3-FOURFORCE-IS-0-ONLY-IN-C3-CALIBER--C3-TO-C2-DOWNGRADE-REVIVES-2-FORMAL-ONLY--C0-FALSE-POSITIVE-6-OF-7--CONJUNCTION-LOCK-BOTH-CONDITIONS-LOAD-BEARING--U12-BREAKS-C0-C1-LEVEL-IMPLICATION-TRUE-ANOMALY--NO-NEW-EQUATION--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM
+门数: gate=9 neg=4 identity=0 failed=0
+对象边界: 对象是 r403 的 13 行候选总表（U01-U13）；与三代质量不等式 V50/V51、r404 代价下界、r405 矩反例均非同一对象，不相加
+独立预言计数: 0
+----------------------------------------------------------------
+[PASS] A1-two-path-merge          gate       exp=JSON 路与 md 抽列路 13 行逐格一致 | act=ids_a=13 ids_b=13 same_ids=True mismatch=0 // 两路数据源互不引用：路 A 读 JSON candidates，路 B 正则解析判定册 md 表格；不一致即拒绝进入后续判词。若 mismatch>0 打印前 3 条：[]
+[PASS] A2-poison-control          neg        exp=注入坏行必须被两路机拼抓出(反噬) | act=把 U01 forces 改 7 后 detected=True // 负对照：若注入任意坏行仍 ALL-PASS，则两路机拼判别力 0
+[PASS] B1-c3-unified-one          gate       exp=C3∧unified 恰 1 条 = 金标准 | act=n=1 set=['U01'] // 继承 r403 G20；不重判候选，只从表数据重数
+[PASS] B2-c3-fourforce-zero       gate       exp=C3∧unified∧四力 恰 0 条 | act=n=0 set=[] // 继承 r403 G21；注意结论必须标注 C3 口径
+[PASS] B3-c3-pass-two             gate       exp=C3 PASS 共 2 条但只有 1 条统一 | act=C3 PASS=['U01', 'U02']; 其中 unified=['U01'] // C3 PASS 与 unified 是两个正交维度：U02 C3 PASS 但统一=False
+[PASS] B4-tier-downgrade-revive   gate       exp=口径 C3→C2 时四力统一 0→2 | act=C3四力=0; C2四力=['U09', 'U10']; C1四力=['U09', 'U10', 'U12']; C0四力=['U09', 'U10'] // 口径降级立刻复活 2 条『四力统一』，但其 status 分别为 PROFILE-LEVEL-ONLY / FORM-UNIFIED-DYNAMICS-NOT-UNIFIED ⇒ 形式统一非动力学统一
+[PASS] B5-c0-false-positive       gate       exp=C0∧unified=7 其中假阳性 6 | act=n=7 gold=['U01'] 假阳性=['U03', 'U04', 'U05', 'U06', 'U09', 'U10'] rate=6/7 // unified 标签在 C0 层假阳性率 6/7；判别力随层级放宽而衰减
+[PASS] B6-c2-false-positive       gate       exp=C2∧unified∧四力 假阳性 2/2 | act=n=2 假阳性=['U09', 'U10'] // 即使在 C2『还原层』，四力 unified 标签仍 2/2 假阳性
+[PASS] C1-lock-removal            gate       exp=合取锁移除任一条件即失锁 | act=移除C3→7(['U01', 'U03', 'U04', 'U05', 'U06', 'U09', 'U10']); 移除unified→2(['U01', 'U02']); 两者都在→1(['U01']) // 两个条件都承重：移除 C3→7 条，移除 unified→2 条，均非唯一；只有合取才得 1。与全链整理册的 N1/N2/N3 合取锁同型但对象不同，不相加
+[PASS] C2-inject-flip             neg        exp=注入假四力候选使 C3∧四力 0→1 | act=注入前=0 注入后=1 set=['X99'] // 负对照：判据必须能被一个假候选翻红；若注入后仍 0 则该计数是写死常量
+[PASS] C3-mutant-level-collapse   neg        exp=层级塌缩(C0 当 C3)使唯一答案 1→7 | act=塌缩后=7 (原 1) // 负对照沿『判据无法吸收的方向』位移：抹掉层级差异后唯一答案立刻失真
+[PASS] E1-level-monotone          gate       exp=层级蕴含检查：恰 U12 破坏 C0⊇C1 | act=sizes={'c0': 11, 'c1': 10, 'c2': 6, 'c3': 2}; 破坏集合=['U12']; 明细={'c1-not-in-c0': ['U12'], 'c2-not-in-c1': [], 'c3-not-in-c2': []} // 如实登记：U12 几何势族 C0=FAIL（量纲层不过）却 C1=PASS（数学复现过），破坏 C0⊇C1 蕴含；r403 未指出该异常。C2⊆C1⊆C0 对其余 12 行成立。首跑原假设「全层级单调」被数据证伪，不放宽门限、改断言为「异常恰 1 条」
+[PASS] E2-patch-monotone-neg      neg        exp=抹掉 U12 异常后 E1 必须翻红 | act=原异常=['U12']; 修补后异常=[] // 负对照：证明 E1 的异常读数由 U12 真实承载，不是恒真陈述或解析假象
+----------------------------------------------------------------
+分层: {"C3_unified": ["U01"], "C3_fourforce_unified": [], "C3_PASS_all": ["U01", "U02"], "C2_unified_fourforce": ["U09", "U10"], "C1_unified_fourforce": ["U09", "U10", "U12"], "C0_unified": ["U01", "U03", "U04", "U05", "U06", "U09", "U10"], "C0_false_positive": ["U03", "U04", "U05", "U06", "U09", "U10"], "C0_false_positive_rate": "6/7"}
+两路机拼: 路A=TUFT-r403_所有力的大统一方程_正确性判决总表与唯一答案_2026-11-08.json
+          路B=判定_TUFT-r403_所有力的大统一方程_正确性判决总表与唯一答案_2026-11-08.md
+----------------------------------------------------------------
+只读继承 r403; 不重判候选、不新造方程; 全确定性无随机

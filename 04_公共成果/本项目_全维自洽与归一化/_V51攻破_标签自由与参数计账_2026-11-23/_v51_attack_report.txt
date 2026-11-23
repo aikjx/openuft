@@ -1,0 +1,35 @@
+V51 攻破引擎 · 独立复算报告
+==============================================================
+判词: V51-ATTACK--LABEL-FREEDOM-MAKES-INEQUALITY-NON-UNIVERSAL--SAME-TRIPLE-BOTH-HOLDS-AND-FAILS-BY-ASSIGNMENT--OFFDIAGONAL-YUKAWA-ESCAPE-EIGENSPECTRUM-VIOLATES-DIAGONAL-INEQUALITY--POSITIVITY-FIX-14-OF-40-PD-ALL-14-VIOLATE-26-TACHYONIC-EXCLUDED--PARAM-COUNT-NFREE-GE-NOBS-UNDERDETERMINED--DISCRIMINATION-ZERO-UNDER-ARBITRARY-H--ANOMALY-CG-GS-ALREADY-COVERED-J78-ROOTV137-NOT-RECOMPUTED--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM
+门数: gate=10 neg=4 identity=1 failed=0
+对象边界: 攻击对象是 V50 复核意见的判据 m1^2<=4m0m2 与『任意非负 h』；与仓库 48_V50、ROOTV137、J78 非同一对象；反常/CG/GS 部分已被J78 与 ROOTV137 机验，本轮不重算、不相加
+独立预言计数: 0
+--------------------------------------------------------------
+[PASS] A1-label-dependent       gate       exp=不等式随质量->权重指派翻转 | act=6 种指派中 成立2 / 失败4 // 若恒成立=判别力 0；若恒失败=与来料『电子占中间可达』矛盾。混合才证明判据依赖未固定标签
+[PASS] A2-electron-middle       gate       exp=电子占 P1 时不等式成立 | act=m_e^2/(4 m_tau m_mu)=3.48E-7 // 复现来料『电子占中间模落在锥内』
+[PASS] A3-mass-order-fails      gate       exp=质量序指派(mu 占 P1)时不等式失败 | act=m_mu^2/(4 m_e m_tau)=3.073793 // 复现来料『几何序=质量序被排除』；同一三质量两种结论
+[PASS] A4-equal-mass-neg        neg        exp=全等质量任意指派均成立(负对照) | act=6/6 成立 // 负对照：等质量时 1<=4 恒真，证明 A1 的翻转来自质量不等而非仪器
+[PASS] A5-mutant-c3             neg        exp=系数 4->3 电子占中间仍成立(不反噬该支) | act=3*m_tau*m_mu=563220.423 // 记录：该指派余量极大，单一系数扰动不足以翻转；判别力问题不靠系数微调解决
+[PASS] B1-diag-satisfies        gate       exp=对角元(电子占中间)满足不等式 | act=m1^2/(4m0m2)=3.48E-7 // 确认逃逸实验的起点成立
+[PASS] B2-offdiag-escape        gate       exp=正定样本中本征值谱违反不等式 | act=正定14档内违反14档(100.0%); max(mid^2/(4lohi))=1013.192519; 最坏x=7.1540 // 物理质量是本征值；全部正定样本均违反对角不等式 ⇒ 判据在酉变换下不守恒。违反率分母改为正定样本数，不再把非物理点算作分母
+[PASS] B5-positivity-boundary   gate       exp=40 档中非正定样本确实存在且被显式剔除 | act=正定14档 / 非正定26档; 首个非正定 k=15(lo=-0.073125) // 负本征值 ⇒ 质量平方为负 ⇒ 非物理谱，必须显式剔除而非静默过滤。该门自身可翻红：若全 40 档正定（n_nonpos=0）则 FAIL
+[PASS] B3-xzero-control         neg        exp=x=0 谱=对角元集合(正对照) | act=eig=['0.510999', '105.658376', '1776.860000'] diag=['0.510999', '105.658376', '1776.860000'] // 正对照：无耦合时谱严格等于对角元集合；证明 B2 的违反来自非对角元，而非本征值排序把 m_mu 抬成中间者（后者属攻击 A 的标签自由，另门处理）
+[PASS] B4-similarity            identity   exp=相似变换谱不变(实测迹/行列式残差) | act=x=7.1540: |Δtrace|=0.000 |Δdet|/det=0.000 // 数值谱由 Jacobi 正交相似得到；残差由实测驱动非写死，恒等结构单列不承重
+[PASS] C1-params-N2             gate       exp=N=2 参数计账 | act=n_free=2 n_obs=3 欠定=False // N=2 时 2<3 约束过定（判别力存在）；N>=3 时欠定（任意谱可拟合，判别力 0）
+[PASS] C1-params-N3             gate       exp=N=3 参数计账 | act=n_free=3 n_obs=3 欠定=True // N=2 时 2<3 约束过定（判别力存在）；N>=3 时欠定（任意谱可拟合，判别力 0）
+[PASS] C1-params-N4             gate       exp=N=4 参数计账 | act=n_free=4 n_obs=3 欠定=True // N=2 时 2<3 约束过定（判别力存在）；N>=3 时欠定（任意谱可拟合，判别力 0）
+[PASS] C2-arbitrary-h           gate       exp=n_free 随 N 无上界 ⇒ 任意 h 永远欠定 | act=N=[5, 10, 20, 50] 对应 n_free=[5, 10, 20, 50]; n_obs=3 // 判别力 0 的根源；由无上界序列驱动非写死；与 J70 事后编造定理同族
+[PASS] C3-mutant-nobs           neg        exp=若 n_obs 增至 4 则 N=3 不再欠定 | act=n_free(N=3)=3 < n_obs_mutant=4 // 负对照：判别力随观测量增加恢复，证明 C1 不是恒真
+--------------------------------------------------------------
+正定性审计: 总40档 正定14档(违反14档, 100.0%) 非正定26档(首个k=15)
+  ★修复记录: 旧版报「违反 14/40」掩盖了 26 档负本征值(非物理); 现分母改为正定样本数, 14/14 全违反, 非正定档显式剔除
+--------------------------------------------------------------
+指派明细：
+  e->P0,mu->P1,tau->P2         P1=mu   ratio=3.073793     失败
+  e->P0,tau->P1,mu->P2         P1=tau  ratio=14619.162495 失败
+  mu->P0,e->P1,tau->P2         P1=e    ratio=0.000000     成立
+  mu->P0,tau->P1,e->P2         P1=tau  ratio=14619.162495 失败
+  tau->P0,e->P1,mu->P2         P1=e    ratio=0.000000     成立
+  tau->P0,mu->P1,e->P2         P1=mu   ratio=3.073793     失败
+--------------------------------------------------------------
+Decimal prec=60; Jacobi eigen 500 iters; 全确定性枚举(无随机采样)

@@ -1,0 +1,120 @@
+{
+  "subject": "出口归零元审计：r404/r405 SURVIVE 1→0 判据结构与可翻覆性",
+  "object_boundary": "对象是 r404 代价穷举 + r405 三矩反例与 E09 重定价；继承链最新锚 r437。与 r403 unified 标签元审计、V50/V51 三代质量非同一对象，不相加",
+  "verdict": "EXIT-ZERO-META--INDEPENDENT-RECOMPUTE-SPAN-14-187-RMS-MATCH--THREE-MOMENTS-FIX-R-NOT-F-Q-2038-25-1978--SURVIVE-ZERO-IS-CALIBER-BLOCKED-NOT-CANDIDATE-PHYSICS--QUOTA-1-TO-2-REVIVES-E09-REMOVE-E09-GOES-0--INJECT-FAKE-EXIT-FLIPS-0-TO-1--LATEST-REPRICE-R437-LOGICALLY-OPEN-UNIQUE-EXIT-EXTERNAL--ZERO-NOT-CLOSED-DEBT--NO-NEW-EXIT--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM",
+  "counts": {
+    "gate": 8,
+    "neg": 3,
+    "identity": 0,
+    "failed": 0
+  },
+  "independent_prediction_count": 0,
+  "independent_recompute": {
+    "span_from_Q": "33.3257713876834837444305724239867757890208347545840727629949",
+    "span_inherited": "33.325771387683483744430572",
+    "rms_from_Q": "14.1879910952688404250257647092500818267111950046506747733688",
+    "rms_inherited": "14.187991095268840425025765",
+    "q_t": {
+      "-1": "203/8",
+      "0": "25",
+      "1": "197/8"
+    },
+    "survive_r404_quota1": [
+      "E09"
+    ],
+    "survive_r405_repriced_quota1": [],
+    "survive_r405_repriced_quota2": [
+      "E09"
+    ]
+  },
+  "gates": [
+    {
+      "id": "A1-span-rms-independent",
+      "kind": "gate",
+      "exp": "从原始 Q 独立重算跨度/RMS 与继承逐位一致",
+      "act": "span_B=33.3257713876834837444305724239867757890208347545840727629949 vs A=33.325771387683483744430572 Δ=4.239867757890208347545840727629949E-25; rms_B=14.1879910952688404250257647092500818267111950046506747733688 vs A=14.187991095268840425025765 Δ=2.907499181732888049953493252266312E-25",
+      "ok": true,
+      "note": "路 B 从 Q={em,w,s,G} 四个原始耦合常数独立算 log10 跨度与 RMS，只读派生值作末尾比对，不构成同源回验；容差 1e-23 对应继承值 25 位有效数字末位(实测 Δspan=4.24e-25、Δrms=2.91e-25 均为截断残差非物理偏离)"
+    },
+    {
+      "id": "A2-span-poison-neg",
+      "kind": "neg",
+      "exp": "注入假耦合使跨度变化(反噬)",
+      "act": "原跨度=33.3257713876834837444305724239867757890208347545840727629949 注入后=44.2535214900699689453469256391067675271427257936177285974785 变化=True",
+      "ok": true,
+      "note": "负对照：若注入 1e10 常数跨度仍不变，则 A1 判别力 0"
+    },
+    {
+      "id": "D1-three-moment-independent",
+      "kind": "gate",
+      "exp": "从 x/w0/c 独立重算三矩族与 JSON 逐格一致",
+      "act": "m0..m4(t=-1,0,1)_B=[['16', '40', '120', '406', '1476'], ['16', '40', '120', '400', '1416'], ['16', '40', '120', '394', '1356']]; match=True",
+      "ok": true,
+      "note": "路 B 从原始 x=(1,2,3,4)/w0=(4,4,4,4)/c=(1,-3,3,-1) 算 w(t)=w0+tc 的 0..4 阶矩；不读 JSON moments 作计算输入，仅末尾比对"
+    },
+    {
+      "id": "D2-moments-f-not-identifiable",
+      "kind": "gate",
+      "exp": "前三矩恒定、r 恒定但 q=m3/m0 三值变化 ⇒ f 不可识别",
+      "act": "m0/1/2 全族恒定=True; r={-1: Fraction(5, 2), 0: Fraction(5, 2), 1: Fraction(5, 2)}; q={-1: Fraction(203, 8), 0: Fraction(25, 1), 1: Fraction(197, 8)}",
+      "ok": true,
+      "note": "继承 r405 M03/M04：三矩定住 Z/r 但定不住 f；本册从原始权重独立重算 q=203/8,25,197/8，证明『归零』中 f 不可识别是候选属性非判据恒假"
+    },
+    {
+      "id": "D3-positivity-neg",
+      "kind": "neg",
+      "exp": "正性区间外权重出现负值(反例失效边界)",
+      "act": "t=2 权重=['6', '-2', '10', '2'] 含负=True",
+      "ok": true,
+      "note": "负对照：若任意 t 权重恒非负则该族合法范围无边界，反例的正性区间 (-4/3,4/3) 失去意义"
+    },
+    {
+      "id": "B1-quota-is-load-bearing",
+      "kind": "gate",
+      "exp": "归零由 s 配额承载：重定价 s=1→2 超配额，放宽配额 1→2 复活",
+      "act": "r404口径(s=1,quota1)=['E09']; r405重定价(s=2,quota1)=[]; 放宽quota2=['E09']",
+      "ok": true,
+      "note": "元审计核心：E09 的 w3/excl 等候选属性在重定价中未变，只 s 由 1→2；归零由 Ω5 结构配额(s<=1)这一判据口径造成，放宽到 s<=2 即复活。 标注『判据/配额挡住』而非『候选物理属性挡住』——这是可翻覆的口径判决，不是物理否证"
+    },
+    {
+      "id": "B2-quota-monotone",
+      "kind": "gate",
+      "exp": "配额单调放宽使重定价 E09 复活(判据有牙)",
+      "act": "quota1:0 quota2:1 quota3:1; 重定价E09 s=2",
+      "ok": true,
+      "note": "正对照：配额 1→2 使重定价 E09 从 0 复活到 1，配额 2→3 不再增加；证明判据非恒假门，且其承重杠杆确为 s 配额"
+    },
+    {
+      "id": "C1-remove-e09",
+      "kind": "gate",
+      "exp": "移除 E09 后单点 SURVIVE 变 0",
+      "act": "原=['E09'] 移除后=[]",
+      "ok": true,
+      "note": "移除敏感性：唯一存活由 E09 单一出口承载；移除后 0，证明 r404 的『恰 1 条』不是全集根目录恒真"
+    },
+    {
+      "id": "C2-inject-flip",
+      "kind": "neg",
+      "exp": "注入假零代价出口使 SURVIVE 0→1",
+      "act": "注入前=[] 注入后=['X99']",
+      "ok": true,
+      "note": "反噬：判据必须能被一个假出口翻红；若注入后仍 0 则 SURVIVE 计数写死"
+    },
+    {
+      "id": "E1-latest-reprice-anchor",
+      "kind": "gate",
+      "exp": "继承链最新定价 r437：分类逻辑开放、唯一出口体系外E1-E4",
+      "act": "r437_verdict_markers=True",
+      "ok": true,
+      "note": "按纪律 19 取链条最新一次重定价（r437），不照抄 r404 标题型『恰 1 条』；E09 在 r406 已被 E09-CANNOT-REVIVE 钉死，r437 未重开"
+    },
+    {
+      "id": "E2-zero-not-closed-debt",
+      "kind": "gate",
+      "exp": "归零≠关债务：卷116 #15 仍开放、R03 BOUNDARY",
+      "act": "r405 key_numbers E09=DEAD 单通道归零=0",
+      "ok": true,
+      "note": "继承 r405 R03：SURVIVE 1→0 是重定价不是关债务；债务 #15 状态仍开，不得把『归零』写成『问题解决』"
+    }
+  ]
+}

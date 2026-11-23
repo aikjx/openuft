@@ -1,0 +1,278 @@
+{
+  "subject": "V50 外部来料复核 · 独立复算",
+  "object_boundary": "本复核讨论 (50-1)~(50-15) 的质量不等式/六维真空/KK 耦合，与仓库 48_V50公理审计卷(量纲/旋量/计数) 非同一对象，不相加",
+  "verdict": "EXTERNAL-REVIEW-RECOMPUTE--BLOCK-A-INEQUALITY-CORRECT-AND-SUFFICIENT--OVERCLAIM-IS-ARBITRARY-H-ONLY-MONOTONE-EXCLUDED--BLOCK-B-VACUUM-TABLE-CORRECT--N3-IS-INPUT-NOT-SELECTED--BLOCK-C-KK-LINKS-CORRECT--KK-SCALE-NEAR-PLANCK--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM",
+  "counts": {
+    "gate": 26,
+    "neg": 3,
+    "identity": 3,
+    "failed": 0
+  },
+  "independent_prediction_count": 0,
+  "constants": {
+    "ME": "0.51099895",
+    "MMU": "105.6583755",
+    "MTAU": "1776.86",
+    "L6": "0.22222222222222222222222222222222222222222222222222222222222222222222222222222222",
+    "g4_from_alpha": "0.3028221209",
+    "M4red_GeV": "2.4E+18"
+  },
+  "gates": [
+    {
+      "id": "A1-norm",
+      "kind": "gate",
+      "exp": "P_k 归一化=1 (k=0,1,2)",
+      "act": "int P0,P1,P2 = 1,1,1",
+      "ok": true,
+      "note": "精确 Fraction 积分，非数值"
+    },
+    {
+      "id": "A2-identity",
+      "kind": "identity",
+      "exp": "P1^2 = 4 P0 P2",
+      "act": "coeff diff = [Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(0, 1)]",
+      "ok": true,
+      "note": "按定义恒等，单列不承重"
+    },
+    {
+      "id": "A3-cauchy",
+      "kind": "gate",
+      "exp": "m1^2 <= 4 m0 m2 (h>=0)",
+      "act": "max over family of m1^2/(4 m0 m2) = 0.37499999999977",
+      "ok": true,
+      "note": "数值 Simpson；上限应 <=1"
+    },
+    {
+      "id": "A4-num-2sqrt",
+      "kind": "gate",
+      "exp": "2 sqrt(mtau me) = 60.266 MeV",
+      "act": "独立算 = 60.265200383 MeV",
+      "ok": true,
+      "note": "PDG 质量代入"
+    },
+    {
+      "id": "A5-num-ratio",
+      "kind": "gate",
+      "exp": "mmu^2/(4 mtau me) = 3.07367",
+      "act": "PDG=3.073793220(相对偏差0.000040089); 来料两读数互推=3.073711654(自洽偏差0.000013552)",
+      "ok": true,
+      "note": "真实口径漂移（数据精度门限 5e-5，非物理门限）：来料 60.266 与 3.07367 均为 5 位有效数字舍入值，互推自洽偏差 1.35e-5；隐含 me≈0.51102 对 PDG 0.51099895 相对差 4e-5。如实登记偏差，不硬凑为完全相等"
+    },
+    {
+      "id": "A6-convex-inside",
+      "kind": "gate",
+      "exp": "锥内点存在且覆盖(充要性上界)",
+      "act": "单纯形内 b<=2sqrt(ac) 命中 158/200",
+      "ok": true,
+      "note": "曲线 P1=2sqrt(P0P2) + 端点 (3,0,0)/(0,0,3) 凸组合填满锥；被排除的只是 b>2sqrt(ac)"
+    },
+    {
+      "id": "A6-convex-outside",
+      "kind": "neg",
+      "exp": "锥外点确实存在(负对照)",
+      "act": "锥外 42/0",
+      "ok": true,
+      "note": "锥不是全空间；若锥外命中 0 则判据 100% 恒真=判别力 0，需报范围外第一条"
+    },
+    {
+      "id": "A7-monotone-order",
+      "kind": "gate",
+      "exp": "h 单调减 => m0>=m1>=m2",
+      "act": "0.750000 >= 0.500000 >= 0.250000",
+      "ok": true,
+      "note": "排除的是单调序，不是任意 h"
+    },
+    {
+      "id": "A7-middle-allowed",
+      "kind": "gate",
+      "exp": "me <= 2 sqrt(mtau mmu)",
+      "act": "me=0.51099895 <= 866.579808",
+      "ok": true,
+      "note": "双极峰 h 可实现，未被排除"
+    },
+    {
+      "id": "A8-mutant-coeff3",
+      "kind": "neg",
+      "exp": "系数 4->3 必须翻红",
+      "act": "r4=1.000000, r3=1.333333",
+      "ok": true,
+      "note": "被测机制由系数承载，变异后不等式失效"
+    },
+    {
+      "id": "B1-R2-N1",
+      "kind": "gate",
+      "exp": "R^2 小半径 N=1",
+      "act": "act=0.191578 exp=0.19158",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B2-H2s-N1",
+      "kind": "gate",
+      "exp": "H^2 小半径 N=1",
+      "act": "act=-0.530596 exp=-0.5306",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B3-H2l-N1",
+      "kind": "gate",
+      "exp": "H^2 大半径 N=1",
+      "act": "act=0.036769 exp=0.03677",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B1-R2-N2",
+      "kind": "gate",
+      "exp": "R^2 小半径 N=2",
+      "act": "act=0.825765 exp=0.82577",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B2-H2s-N2",
+      "kind": "gate",
+      "exp": "H^2 小半径 N=2",
+      "act": "act=-0.085173 exp=-0.0852",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B3-H2l-N2",
+      "kind": "gate",
+      "exp": "H^2 大半径 N=2",
+      "act": "act=0.035790 exp=0.03579",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B1-R2-N3",
+      "kind": "gate",
+      "exp": "R^2 小半径 N=3",
+      "act": "act=2.250000 exp=2.25",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B2-H2s-N3",
+      "kind": "gate",
+      "exp": "H^2 小半径 N=3",
+      "act": "act=0 exp=0",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B3-H2l-N3",
+      "kind": "gate",
+      "exp": "H^2 大半径 N=3",
+      "act": "act=0.032922 exp=0.03292",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B4-N4-nosol",
+      "kind": "gate",
+      "exp": "N=4 判别式<0 无解",
+      "act": "disc(N=4)=-27",
+      "ok": true,
+      "note": "判别式 1-N^2/12 零点在 N=sqrt(12)≈3.464"
+    },
+    {
+      "id": "B5-stationary",
+      "kind": "identity",
+      "exp": "V'=0 与 (50-7) 同式",
+      "act": "(2/9)u^2-2u+(3/8)N^2=0 两路同源",
+      "ok": true,
+      "note": "代数重排，单列不承重"
+    },
+    {
+      "id": "B6-V2-small",
+      "kind": "gate",
+      "exp": "N=3 小半径 V''>0 (极小)",
+      "act": "u=2.250000 V''=0.039018",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B6-V2-large",
+      "kind": "gate",
+      "exp": "N=3 大半径 V''<0 (极大)",
+      "act": "u=6.750000 V''=-0.000482",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B6-flat-curv",
+      "kind": "gate",
+      "exp": "N=3 平直点 M^4-L6*u=0.5",
+      "act": "M^4-L6*u=0.500000",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B7-Nflat-Nmax",
+      "kind": "gate",
+      "exp": "N_flat/N_max = sqrt3/2",
+      "act": "Nflat^2=9.000000 Nmax^2=12.000000 ratio=0.866025403784 target=0.866025403784",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "B7-Nmax-flat3",
+      "kind": "gate",
+      "exp": "N=3 平直 => N_max=2 sqrt3≈3.464",
+      "act": "Nflat=3.000000000 Nmax=3.464101615 关系 Nmax=Nflat/(sqrt3/2)=3.464101615",
+      "ok": true,
+      "note": "N>=4 无解是同一次调参副产品，非独立选出三代"
+    },
+    {
+      "id": "B7-mutant-ratio",
+      "kind": "neg",
+      "exp": "变异：若 N_flat^2 改系数应翻红",
+      "act": "target sqrt3/2=0.866025403784",
+      "ok": true,
+      "note": "判别力由该比值承载"
+    },
+    {
+      "id": "C1-M4sq",
+      "kind": "gate",
+      "exp": "M4^2=4 pi R^2 M6^4",
+      "act": "M4^2=28.274334 (R^2=9/4,M6=1)",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "C2-g4sqM4sq",
+      "kind": "gate",
+      "exp": "g4^2 M4^2 = g6^2 M6^4 = 1",
+      "act": "g4^2*M4^2=1.000000000000",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "C3-g6sqM4sq",
+      "kind": "gate",
+      "exp": "g6^2 M4^2 = pi N^2 (N=3)",
+      "act": "g6^2*M4^2=28.274333882 pi*9=28.274333882",
+      "ok": true,
+      "note": ""
+    },
+    {
+      "id": "C4-R-formula",
+      "kind": "identity",
+      "exp": "R = N/(2 g4 M4)",
+      "act": "由 g4^2=g6^2/(4 pi R^2) 与 M4^2=4 pi R^2 M6^4 联立得",
+      "ok": true,
+      "note": "代数恒等，单列不承重"
+    },
+    {
+      "id": "C4-KK-scale",
+      "kind": "gate",
+      "exp": "N=3,g4≈0.30,M4=2.4e18 => 1/R≈5e17 GeV",
+      "act": "g4=0.302822 1/R=484515393394804228.426 GeV",
+      "ok": true,
+      "note": "KK 尺度贴 Planck，对撞机不可达；系数依规范归一，量级稳"
+    }
+  ]
+}
