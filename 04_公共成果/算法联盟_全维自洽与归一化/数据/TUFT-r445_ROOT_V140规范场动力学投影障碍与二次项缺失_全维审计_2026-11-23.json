@@ -1,0 +1,248 @@
+{
+  "round": "r445",
+  "topic": "ROOT V140 规范场动力学 投影障碍与二次项缺失 全维审计",
+  "date": "2026-11-23",
+  "source": "04_公共成果/算法联盟_全维自洽与归一化/数据/TUFT-ROOT_V140_来料全文_2026-11-23.md",
+  "source_sha256": "d09d62a80c7bb61f310a31030bda760eb2366414822f0e6dd10e8f025d9bd073",
+  "engine_sha256": "9be2ba3dfdfd8ea4c37fbab144694ee9e8927ce73cd84ba3c1dcd8fc822656c2",
+  "verdict": "BIANCHI-EXACT-BUT-EXACT-FORM--PROJECTION-RANK-OBSTRUCTION--QUARTIC-VACUUM-NO-PROPAGATION--COUNTEREXAMPLE-CONFIRMED--CIRCULAR-POLARIZATION-HANDEDNESS-ERROR--W3-1OF4",
+  "counts": {
+    "CORRECTED": 2,
+    "INFO": 5,
+    "PASS": 6,
+    "FAIL": 3,
+    "BOUNDARY": 1
+  },
+  "guard_pass": 15,
+  "guard_total": 15,
+  "entries": [
+    {
+      "id": "A-01",
+      "verdict": "CORRECTED",
+      "title": "F=dq∧dp 本身是恰当形式，来料只说 dF=0 属弱化表述",
+      "detail": "机器核验 F=dq1∧dp1+dq2∧dp2=d(q1 dp1+q2 dp2) 逐分量残差 0。来料写「由 d²=0 立即得 dF=0」，实际上 F 已经是一阶恰当形式，dF=d(dA)=0 是二次应用；更关键的是势 A_μ=q_a∂_μp_a 已由内部变量直接给出，不需要另引规范场。这是 Darboux 标准型，不是新物理自由度。"
+    },
+    {
+      "id": "A-02",
+      "verdict": "INFO",
+      "title": "两对变量是 4D 闭二形式的 Darboux 标准型：8 变量−2 辛冗余=6 分量",
+      "detail": "8 个内部变量减去 2 维辛同构冗余等于 F_{μν} 的 6 个独立分量；来料把重参数化当作额外结构，实际并未增加物理自由度。这也意味着 U(1) 规范变换 A→A+dχ 在内部变量侧对应辛变换。"
+    },
+    {
+      "id": "A-03",
+      "verdict": "INFO",
+      "title": "g_F 无量纲但未推导，外部输入账继续累积",
+      "detail": "S_F 前因子 ℏ/(4g_F²) 中的 g_F 来料自陈「尚未独立推导」；与 r444 D-04 的 f 定价同型，属 [C] 外部输入，本册不代选其来源。"
+    },
+    {
+      "id": "B-01",
+      "verdict": "PASS",
+      "title": "变分给出的是 J 在内部梯度方向上的投影，不是完整 Maxwell 方程",
+      "detail": "反例上 J·∂q1=0、J·∂p1=0，两条变分方程逐位成立，但 J 本身非零。来料这一区分正确，是本轮最有价值的定性推进。"
+    },
+    {
+      "id": "B-02",
+      "verdict": "PASS",
+      "title": "秩判据可执行：rank=4 ⇒ J=0，rank<4 ⇒ 存在额外解",
+      "detail": "本册把来料的文字判据实现为精确高斯消元：反例梯度秩=2（额外解存在），四标准基对照秩=4（J=0 唯一）。这是新增判据 D-11 的机器版。"
+    },
+    {
+      "id": "C-01",
+      "verdict": "PASS",
+      "title": "严格反例完整复现：几何运动方程成立但 J≠0",
+      "detail": "取 z=4.0000000000000000000000000E-1，B=(cos2z,sin2z,0)、E=0、J=(0,2cos2z,2sin2z,0) 与来料逐项一致；同时 J·∂q=J·∂p=0。这是真正的反例，不是数值误差：梯度秩 2<4，J 位于正交补内。"
+    },
+    {
+      "id": "C-02",
+      "verdict": "PASS",
+      "title": "来料「应力-能量仍守恒」自述正确，但守恒不是 Maxwell 方程的充分条件",
+      "detail": "机器算得 J_μF^{μν} 逐分量为 0，故 ∂_μT^{μν}=0。但 J≠0 同时成立 ⇒ 能量守恒与真空电磁方程可分离。来料据此断言「内部旋转+正交几何+能量守恒不足以证明电磁理论」正确。"
+    },
+    {
+      "id": "C-03",
+      "verdict": "FAIL",
+      "title": "反例同时否证「几何结构自动给动力学」：这是 V140 的承重阴性结果",
+      "detail": "三项条件（dF=0 的 Bianchi、内部变分方程、T 守恒）全部满足而 J≠0 ⇒ V139–V140 的几何层不能单独产生 Maxwell 动力学。该否证成立且不可通过调参数绕过，因为根因是梯度秩不足（结构性），不是某个系数取值不当。"
+    },
+    {
+      "id": "D-01",
+      "verdict": "PASS",
+      "title": "常量背景附近 S_F=O(ε⁴) 可独立复算",
+      "detail": "q_a=q_{a0}+εξ_a、p_a=p_{a0}+εη_a 且背景常量 ⇒ dq∧dp=ε²dξ∧dη，F²∝ε⁴，标度比 1.0000000000000000000000000E+4 与 (ε₁/ε₂)⁴ 逐位相等。来料第二个障碍成立。"
+    },
+    {
+      "id": "D-02",
+      "verdict": "FAIL",
+      "title": "最简模型无二次自由传播项：不能作为光子基本理论",
+      "detail": "S_F 从 ε⁴ 起 ⇒ 常量真空附近不存在线性化场方程与自由传播自由度。来料提出的两条出路（新动力学结构 / 非平凡背景）都尚未给出：前者须引入新作用量项，后者须给出 F0≠0 的背景并解释其非零应力-能量。在此之前该模型不能描述真空中的自由光子。"
+    },
+    {
+      "id": "E-01",
+      "verdict": "CORRECTED",
+      "title": "来料圆偏振场违反其自称的 Maxwell 方程：B 手性写反",
+      "detail": "取 E=(cos ks,sin ks,0)、s=t−z，来料给 B=(sin ks,−cos ks,0)。机器算得 ∇×E+∂_tB=1.9106729782512120392846205E+0≠0、∇×B−∂_tE=1.9106729782512120392846205E+0≠0。正确传播方向 +z 的圆偏振应为 B=(−sin ks,cos ks,0)=ẑ×E，此时两组残差均为 0。E·B=0、|E|=|B| 两种写法都满足，来料用这两个弱条件掩盖了手性错误。"
+    },
+    {
+      "id": "E-02",
+      "verdict": "INFO",
+      "title": "标准圆偏振是平面波模式，不是 Frenet 光速螺旋",
+      "detail": "圆偏振描述场矢量在固定传播方向上的旋转（k 向量沿直线），螺旋描述世界线的 Frenet 挠率；两者数学对象不同。来料「为光速螺旋提供更符合物理的解释方向」只能作为类比，不能当推导证据。"
+    },
+    {
+      "id": "F-01",
+      "verdict": "FAIL",
+      "title": "W3 四门禁 1/4：反例数值为合成构造，无盲路径、无双锚点",
+      "detail": "C1 定量成立（J 分量、ε⁴ 标度、圆偏振残差都是具体数）；C2 失败：数值均由定义构造而非独立测量；C3 失败：全库无 V140 实验或独立测量路径，来料自陈「程序精确计算」；C4 失败：仅合成参数 z=0.4、ε=1e−2 等，无第二独立锚。阳性对照 4/4，门禁非死门。"
+    },
+    {
+      "id": "F-02",
+      "verdict": "BOUNDARY",
+      "title": "ZIP / 66 项测试 / SHA-256 无法离线核验",
+      "detail": "全库无 ROOT_V140_Composition_Dynamics_Complete.zip，无 manifest 与测试报告落盘；本册只审正文可算部分（与 r443/r444 同型）。"
+    },
+    {
+      "id": "F-03",
+      "verdict": "INFO",
+      "title": "红线计数继承不变",
+      "detail": "0/6、0/22、UFT-3=0、L3=0、validated=0、含引力四力正确方程 0 条、L3 不蕴含 L4；本册新增的是判据与缺口定价，不提升任何计数。"
+    },
+    {
+      "id": "G-01",
+      "verdict": "PASS",
+      "title": "新增可执行判据 D-11（投影-完备性）与 D-12（二次项存在性）",
+      "detail": "D-11：对 δS/δu_i∝J·∇u_i，先算梯度秩；rank<4 时禁止从投影方程推出 J=0（本册反例 rank=2）。D-12：声称描述自由光子的作用量必须在常量背景附近有非零 ε² 项；F=dq∧dp 型给 S_F=O(ε⁴)，直接判不合格。两条均可机器执行。"
+    },
+    {
+      "id": "G-02",
+      "verdict": "INFO",
+      "title": "分工边界与不重判清单",
+      "detail": "不重判 r408/r409/r410/r412/r413/r415/r421/r429/r436/r440–r444；不代做 V140 ZIP 验收；不把圆偏振类比当光速螺旋推导；不改任何历史册字节。"
+    }
+  ],
+  "guards": [
+    {
+      "id": "G_A_exact_form",
+      "ok": true,
+      "detail": "F=dq1∧dp1+dq2∧dp2=d(q1 dp1+q2 dp2) 逐分量残差 0 —— F 本身恰当，来料只说 dF=0 属弱化表述"
+    },
+    {
+      "id": "G_A_bianchi_trivial",
+      "ok": true,
+      "detail": "常系数线性场下 F 分量为常数（∂_lam F_mu_nu≡0）⇒ dF=0 平凡；一般情形由 d²=0 保证，非动力学结论"
+    },
+    {
+      "id": "G_A_darboux_count",
+      "ok": true,
+      "detail": "两对内部变量 8 个，辛同构冗余 2 维，8−2=6=F_{mu nu} 独立分量数 —— 内部变量是 F 的重参数化，非新自由度"
+    },
+    {
+      "id": "G_B_projection_satisfied",
+      "ok": true,
+      "detail": "反例满足 J·∂q=0、J·∂p=0，两条投影变分方程均成立"
+    },
+    {
+      "id": "G_B_rank_defect",
+      "ok": true,
+      "detail": "反例仅一对变量，梯度秩=2<4 ⇒ J 可藏在正交补中，投影方程不足以钉死 J=0"
+    },
+    {
+      "id": "G_B_rank_has_teeth",
+      "ok": true,
+      "detail": "阳性对照四标准基秩=4，判据非恒假：秩=4 时 J 与四个基正交 ⇒ J=0"
+    },
+    {
+      "id": "G_C_B_field",
+      "ok": true,
+      "detail": "F13=−sin2z、F23=cos2z ⇒ B=(cos2z,sin2z,0) 与来料逐项一致"
+    },
+    {
+      "id": "G_C_J_nonzero",
+      "ok": true,
+      "detail": "J=(0,2cos2z,2sin2z,0) 残差 0，非零范数 2.0000000000000000000000000E+0 ⇒ 反例成立"
+    },
+    {
+      "id": "G_C_T_conserved",
+      "ok": true,
+      "detail": "J_mu F^{mu nu} 逐分量最大 0 ⇒ T^{mu nu} 守恒，来料自述正确"
+    },
+    {
+      "id": "G_D_quartic_scaling",
+      "ok": true,
+      "detail": "F² 随 eps 的标度比 1.0000000000000000000000000E+4 = (eps1/eps2)^4 1.0000000000000000000000000E+4 ⇒ S_F=O(eps^4)，无 eps^2 二次项"
+    },
+    {
+      "id": "G_E_claim_polarization_fails",
+      "ok": true,
+      "detail": "来料 B=(sin ks,−cos ks,0) 的 Faraday 残差 1.9106729782512120392846205E+0、Ampere 残差 1.9106729782512120392846205E+0 均非零 ⇒ 不满足其自称的 ∇_μF^{μν}=0"
+    },
+    {
+      "id": "G_E_correct_polarization_passes",
+      "ok": true,
+      "detail": "正确圆偏振 B=(−sin ks,cos ks,0) 的 Faraday/Ampere 残差均 0 ⇒ 阳性对照通过，判据有牙"
+    },
+    {
+      "id": "G_E_orthonormal",
+      "ok": true,
+      "detail": "E·B=0、sin²+cos² 对 1 的最大偏差 2.0000000000000000000000000E-60（60 位级数截断）⇒ |E|=|B|=1 对 3 个 s 点成立（两种手性都满足）"
+    },
+    {
+      "id": "G_F_w3_gate",
+      "ok": true,
+      "detail": "V140 W3 通过 1/4，阳性对照 4/4"
+    },
+    {
+      "id": "G_F_zip_absent",
+      "ok": true,
+      "detail": "全库 ROOT_V140 ZIP 命中 0，66 项测试与 SHA256 自述不代验收"
+    }
+  ],
+  "key_numbers": {
+    "A_vector": [
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "B_field": [
+      "0.696706709347165420920749981642324926101786013708060783637143",
+      "0.717356090899522761627174610581385366192785237791422820989683",
+      "0"
+    ],
+    "E_dot_B_max": "0",
+    "F_component_count": 6,
+    "F_exact_resid": "0",
+    "J_field": [
+      "0",
+      "1.39341341869433084184149996328464985220357202741612156727429",
+      "1.43471218179904552325434922116277073238557047558284564197937",
+      "0"
+    ],
+    "J_nonzero_norm": "2.00000000000000000000000000000000000000000000000000000000000",
+    "ampere_claim_max": "1.91067297825121203928462045513609979648842816526407534903522",
+    "ampere_correct_max": "0",
+    "counts": {
+      "CORRECTED": 2,
+      "INFO": 5,
+      "PASS": 6,
+      "FAIL": 3,
+      "BOUNDARY": 1
+    },
+    "dF_resid": "0",
+    "darboux_gauge_dim": 2,
+    "darboux_var_count": 8,
+    "divT_max": "0E-59",
+    "entry_count": 17,
+    "eps_scaling_ratio": "1E+4",
+    "faraday_claim_max": "1.91067297825121203928462045513609979648842816526407534903522",
+    "faraday_correct_max": "0",
+    "guard_pass": 15,
+    "guard_total": 15,
+    "proj_p": "0E-60",
+    "proj_q": "0E-59",
+    "projection_rank": 2,
+    "sin2cos2_dev": "2E-60",
+    "w3_pos_n": 4,
+    "w3_v140_n": 1,
+    "zip_hits": 0
+  }
+}
