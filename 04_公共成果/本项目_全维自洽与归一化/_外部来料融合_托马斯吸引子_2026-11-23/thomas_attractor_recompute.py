@@ -120,7 +120,8 @@ const_match = all(
 add("A1-two-path-constants", "gate", "路A(HTML解析) 与路B(独立写死) 常数逐项一致",
     "A=%s ; mismatch=%s" % (A, [k for k in B if A[k] != B[k]]),
     const_match,
-    "两路数据源互不引用；warmups 是循环上界集合 {1500,3000}")
+    "两路数据源互不引用；warmups 是循环上界集合 {1500,3000}；"
+    "i<3 是轨迹条数循环非 warmup，按上界>=100 过滤")
 
 
 # ---------------------------------------------------------------------------
@@ -252,7 +253,7 @@ regime_scan = {
     "0.95": lyapunov(0.95, 12000, warmup=1500, d0=1e-8, renorm=8, dt=0.012),
     "1.20": ly_nonchaotic,
 }
-add("B4-regime-labels-fact", "gate", "状态分类阈值与三个实测 λ₁ 事实登记（不冒充分岔定理）",
+add("B4-regime-labels-fact", "gate", "状态分类阈值与实测 λ₁ 扫描事实登记（不冒充分岔定理）",
     "scan=%s ; thresholds=%s" % (
         {k: round(v, 6) for k, v in regime_scan.items()}, A["thresholds"]),
     (A["thresholds"] == B["thresholds"]
@@ -343,7 +344,7 @@ add("C2-box-dimension", "gate", "130000 点云盒维数有限且双实现一致"
         dim_str, dim_str2, [(round(x, 4), round(y, 2)) for x, y in raw]),
     (math.isfinite(dim_str) and 1.0 < dim_str < 3.0
      and abs(dim_str - dim_str2) < 1e-12),
-    "盒维数是有限采样 Minkowski 估计，不是严格分形维数定理")
+    "三维盒计数；盒维数是有限采样 Minkowski 估计，不是严格分形维数定理")
 dim_coarse, _ = box_dimension(cloud, [2.0, 1.0])
 add("C3-box-scale-neg", "neg", "改用过粗盒尺度时维数估计必须变化",
     "fine=%.6f coarse=%.6f" % (dim_str, dim_coarse),
@@ -353,7 +354,7 @@ add("C3-box-scale-neg", "neg", "改用过粗盒尺度时维数估计必须变化
 # ---------------------------------------------------------------------------
 # 红线
 # ---------------------------------------------------------------------------
-add("D1-redline", "gate", "来料性质保持：独regated 实验预言 0、不升级为统一场论证据",
+add("D1-redline", "gate", "来料性质保持：独立实验预言 0、不升级为统一场论证据",
     "independent_prediction_count=0 html_md5=%s bytes=%d" % (html_md5, html_bytes),
     ("统一场论" not in src and "实验预言" not in src),
     "来料是动力系统可视化，不提供新实验读数，不接入四力统一判据")

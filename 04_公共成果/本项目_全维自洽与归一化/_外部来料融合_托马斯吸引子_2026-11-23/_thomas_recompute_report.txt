@@ -1,22 +1,22 @@
 托马斯吸引子 HTML 来料独立复核
 ========================================================================
-判词: THOMAS-HTML-RECOMPUTE-FAIL--A1-two-path-constants
-门数: gate=10 neg=2 identity=0 failed=1
+判词: THOMAS-HTML-RECOMPUTE--CONSTANTS-2PATH-MATCH--DIV-3B-EXACT--RK4-ORDER-4--LYAPUNOV-POSITIVE-CROSSCHECK--NONCHAOTIC-NEG--POINCARE-FINITE--BOX-DIM-FINITE--SCALE-NEG--NO-NEW-PHYSICS--NO-INDEPENDENT-PREDICTION--NO-UFT-CLAIM
+门数: gate=10 neg=2 identity=0 failed=0
 HTML: 托马斯吸引子_实时相空间示波器_来料原文_2026-11-23.html | md5=b57c1c07b47287e700d48fbf60c019fd | bytes=37507
 独立预言计数: 0
 ------------------------------------------------------------------------
 [PASS] G00-ast                        gate     exp=AST 前置：无 numpy/sympy、无 eval/exec、add 的 ok 不写死 | act=bad_import=[] bad_call=[] hardcoded_ok=[] // 机验自身的守卫也必须可翻红
-[FAIL] A1-two-path-constants          gate     exp=路A(HTML解析) 与路B(独立写死) 常数逐项一致 | act=A={'b': 0.19, 'dt': 0.012, 'scale': 1.6, 'cloud_n': 130000, 'd0': 1e-08, 'renorm_steps': 8, 'eps': 1e-05, 'poincare_range': 6.5, 'base': [0.1, 0.2, 0.3], 'eps_list': [0.5, 0.36, 0.26, 0.19, 0.14, 0.1], 'thresholds': [0.9428, 0.33, 0.1], 'warmups': [3, 1500, 3000], 'div_text': '-0.570', 'div': -0.57} ; mismatch=['warmups'] // 两路数据源互不引用；warmups 是循环上界集合 {1500,3000}
+[PASS] A1-two-path-constants          gate     exp=路A(HTML解析) 与路B(独立写死) 常数逐项一致 | act=A={'b': 0.19, 'dt': 0.012, 'scale': 1.6, 'cloud_n': 130000, 'd0': 1e-08, 'renorm_steps': 8, 'eps': 1e-05, 'poincare_range': 6.5, 'base': [0.1, 0.2, 0.3], 'eps_list': [0.5, 0.36, 0.26, 0.19, 0.14, 0.1], 'thresholds': [0.9428, 0.33, 0.1], 'warmups': [1500, 3000], 'div_text': '-0.570', 'div': -0.57} ; mismatch=[] // 两路数据源互不引用；warmups 是循环上界集合 {1500,3000}；i<3 是轨迹条数循环非 warmup，按上界>=100 过滤
 [PASS] A2-divergence                  gate     exp=解析散度 ∇·F=-3b 与来料默认读数 −0.570 一致 | act=analytic=-0.570000 html=-0.570 // 三角函数交叉项偏导为 0，只有三个 -b 对角项承重
 [PASS] A3-rk4-order                   gate     exp=RK4 在渐近段呈四阶：e(dt)/e(dt/2) 与 e(dt/2)/e(dt/4) 约 16 | act=T=2.004 dt=0.012 errors=(8.567e-11,5.367e-12,3.372e-13) ratios=(15.964,15.917) // 短时窗 T≈2 避开混沌指数放大；门限 12<ratio<20 不放宽
 [PASS] B1-lyapunov-positive           gate     exp=b=0.19 的 λ₁>0，复现强混沌标签 | act=lambda_html=0.061537 lambda_independent=0.062183 // Benettin 重归一化；两条独立影子轨迹口径不同仍同号
 [PASS] B2-lyapunov-cross-check        gate     exp=异构实现 λ₁ 差值在有限采样容差内 | act=diff=0.000646 tol=0.02 // 不同 warmup / d0 / 重归一化间隔 / 扰动方向；容差 0.02 对应有限采样
 [PASS] B3-nonchaotic-neg              neg      exp=非混沌参数 b=1.2 的 λ₁ 必须非正 | act=lambda_b1.2=-0.200000 // 反噬：若任意 b 都报 λ₁>0，则混沌判据无判别力
-[PASS] B4-regime-labels-fact          gate     exp=状态分类阈值与三个实测 λ₁ 事实登记（不冒充分岔定理） | act=scan={'0.05': 0.156901, '0.19': 0.061537, '0.50': -0.34139, '0.95': -0.090859, '1.20': -0.2} ; thresholds=[0.9428, 0.33, 0.1] // HTML 的四档标签是交互提示，不是严格数学分岔点；本门只核可复算的同号事实
+[PASS] B4-regime-labels-fact          gate     exp=状态分类阈值与实测 λ₁ 扫描事实登记（不冒充分岔定理） | act=scan={'0.05': 0.156901, '0.19': 0.061537, '0.50': -0.34139, '0.95': -0.090859, '1.20': -0.2} ; thresholds=[0.9428, 0.33, 0.1] // HTML 的四档标签是交互提示，不是严格数学分岔点；本门只核可复算的同号事实
 [PASS] C1-poincare-crossings          gate     exp=z=0 穿越事件存在且线性插值点落在有限相空间盒内 | act=count=51 max_abs_xy=6.068548 range=6.5 // 截面点已乘 SCALE，与渲染坐标同口径；POINCARE_RANGE=6.5 是画布半径。门限改为存在性下限 10：20000 步×3 轨迹实测 51 次，原 >100 是无来料依据的臆设
-[PASS] C2-box-dimension               gate     exp=130000 点云盒维数有限且双实现一致 | act=D_box=1.044685 D_str=1.044685 raw=[(0.6931, 6.38), (1.0217, 6.76), (1.3471, 7.11), (1.6607, 7.43), (1.9661, 7.74), (2.3026, 8.07)] // 盒维数是有限采样 Minkowski 估计，不是严格分形维数定理
+[PASS] C2-box-dimension               gate     exp=130000 点云盒维数有限且双实现一致 | act=D_box=1.044685 D_str=1.044685 raw=[(0.6931, 6.38), (1.0217, 6.76), (1.3471, 7.11), (1.6607, 7.43), (1.9661, 7.74), (2.3026, 8.07)] // 三维盒计数；盒维数是有限采样 Minkowski 估计，不是严格分形维数定理
 [PASS] C3-box-scale-neg               neg      exp=改用过粗盒尺度时维数估计必须变化 | act=fine=1.044685 coarse=1.280108 // 反噬：若任何尺度都给同一维数，则盒计数门无判别力
-[PASS] D1-redline                     gate     exp=来料性质保持：独regated 实验预言 0、不升级为统一场论证据 | act=independent_prediction_count=0 html_md5=b57c1c07b47287e700d48fbf60c019fd bytes=37507 // 来料是动力系统可视化，不提供新实验读数，不接入四力统一判据
+[PASS] D1-redline                     gate     exp=来料性质保持：独立实验预言 0、不升级为统一场论证据 | act=independent_prediction_count=0 html_md5=b57c1c07b47287e700d48fbf60c019fd bytes=37507 // 来料是动力系统可视化，不提供新实验读数，不接入四力统一判据
 ------------------------------------------------------------------------
 读数: RK4 ratios=(15.964,15.917) λ1(0.19)=0.061537/0.062183 λ1(1.2)=-0.200000
 Poincare crossings=51 ; D_box=1.044685 ; regime_scan={'0.05': 0.156901, '0.19': 0.061537, '0.50': -0.34139, '0.95': -0.090859, '1.20': -0.2}
