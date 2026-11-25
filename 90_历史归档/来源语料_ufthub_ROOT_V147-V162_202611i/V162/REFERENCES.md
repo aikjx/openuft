@@ -1,0 +1,6 @@
+- D. A. Dicus et al., Effective Lagrangians and low-energy photon-photon scattering, https://doi.org/10.1103/PhysRevD.57.2443
+- Measuring vacuum polarization with high-power lasers, https://www.cambridge.org/core/journals/high-power-laser-science-and-engineering/article/measuring-vacuum-polarization-with-highpower-lasers/4699862C25071FAE6C837CC21AFCA1BA
+- Nonlinear electrodynamics without birefringence, https://doi.org/10.1007/JHEP01(2023)039
+- ATLAS 2019 light-by-light observation, https://doi.org/10.1103/PhysRevLett.123.052001
+- NIST CODATA 2022 alpha: https://physics.nist.gov/cgi-bin/cuu/Value?alph
+- NIST CODATA 2022 reduced Compton wavelength: https://physics.nist.gov/cgi-bin/cuu/Value?ecomwlbar
