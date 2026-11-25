@@ -1,0 +1,7 @@
+@echo off
+cd /d "%~dp0.."
+python -m pip install -r requirements.txt
+python run_all.py
+python symbolic_audit.py
+python verify_manifest.py
+pause

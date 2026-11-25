@@ -1,0 +1,73 @@
+% ROOT V147: mathematical audit; compile with XeLaTeX and ctexart if available.
+% This LaTeX source is a reproducible report, NOT a proof of four-force unification.
+\documentclass[11pt]{ctexart}
+\usepackage{amsmath,amssymb,geometry,booktabs,hyperref}
+\geometry{a4paper,margin=24mm}
+\title{ROOT V147：磁通稳定、径向场与手征谱的数学审计}
+\author{ROOT 研究记录｜仅采用 $c=1$，保留 $\hbar,G$ 的独立量纲}
+\date{2026年11月24日}
+\begin{document}
+\maketitle
+\noindent\textbf{状态：}本报告仅证明指定六维候选模型的一些代数和变分结果，\emph{没有证明四力统一，也没有实验发现新力}。
+\section{起点与降维势}
+\begin{equation}
+ S_6=\int d^6X\sqrt{-g_6}\left[\frac{K_6}{2}\mathcal R_6-\Lambda_6-\frac{\chi_6}{4}F_{MN}F^{MN}\right],\qquad c=1.
+\end{equation}
+对 $M_4\times S^2$ 的磁通 $F_{\theta\phi}=\frac n2\sin\theta$，有
+\begin{equation}
+ V(R,n)=\frac{A}{R^2}-\frac{B}{R^4}+\frac{C}{R^6},\qquad
+ A=4\pi\Lambda_6R_0^4,\quad B=4\pi K_6R_0^4,\quad C=\frac{\pi\chi_6n^2R_0^4}{2},
+\end{equation}
+\begin{equation}
+ K_4=4\pi K_6R_0^2=\frac1{8\pi G_4}.
+\end{equation}
+\section{磁通反号简并和不能唯一选择三代}
+\begin{equation}
+ V(R,n)=V(R,-n),\quad \mathrm{ind}(D_q)=qn,
+\end{equation}
+因此稳定势不能固定内部手征指标的符号。平直真空条件
+\begin{equation}
+ \Lambda_6\chi_6n^2=2K_6^2,\qquad
+ R_*^2=\frac{\chi_6n^2}{4K_6}
+\end{equation}
+可对任意 $n\ne0$ 通过选择 $\Lambda_6$ 构造，故没有独立预测 $n=3$。
+\section{临界点与径向场}
+令 $y=R^2$ 与 $D=B^2-3AC$。对 $D>0$，
+\begin{equation}
+ y_\pm=\frac{B\pm\sqrt D}{A},\quad y_-\text{局部极小},\quad y_+\text{局部极大}.
+\end{equation}
+取 $\varphi=2\sqrt{K_4}\ln(R/R_0)$，
+\begin{equation}
+ \mu_\varphi^2=\left.\frac{\partial^2V}{\partial\varphi^2}\right|_*
+ =\frac{2\sqrt D}{K_4y_-^2},\qquad
+ \frac{dR_-}{dC}=\frac{3}{4R_-\sqrt D}.
+\end{equation}
+物理质量 $m_\varphi=\hbar\mu_\varphi$，作用程 $\lambda_\varphi=1/\mu_\varphi$。临界时 $\mu_\varphi^2\to0^+$，而参数敏感度发散。
+\section{条件性第五力}
+仅当四维测试物质最小耦合 Jordan 度规时，
+\begin{equation}
+ g^J_{\mu\nu}=e^{-\varphi/\sqrt{K_4}}g^E_{\mu\nu},\quad
+ \beta=\sqrt{K_4}\frac{d\ln\mathcal A}{d\varphi}=-\frac12,\quad
+ \alpha_\varphi=2\beta^2=\frac12.
+\end{equation}
+\begin{equation}
+ \frac{\delta g(r)}{g_{\mathrm{tensor}}(r)}=
+ \frac12\left(1+\frac{r}{\lambda_\varphi}\right)e^{-r/\lambda_\varphi}.
+\end{equation}
+这一式子依赖物质耦合假设，不等于 ROOT 对地球的新观测结果。
+\section{固定球面背景的中性测试标量谱}
+\begin{equation}
+ -\Delta_{S^2}Y_{\ell m}=\ell(\ell+1)Y_{\ell m},\quad
+ \mu_\ell^2=\mu_6^2+\frac{\ell(\ell+1)}{R^2},\quad d_\ell=2\ell+1.
+\end{equation}
+\textbf{此式不等于完整耦合六维引力—Maxwell—费米子涨落谱。}
+\section{规范异常构造性审计}
+给每个标准模型左手 Weyl 表示统一 $F=+1$，三代有
+\begin{equation}
+ \mathcal A_{SU(3)^2F}=6,\quad \mathcal A_{SU(2)^2F}=6,\quad
+ \mathcal A_{Y^2F}=10,\quad \mathcal A_{F^3}=\mathcal A_{\mathrm{grav}^2F}=45.
+\end{equation}
+添加标准模型非阿贝尔规范单态不改变前两项，故该荷指派不能仅靠规范单态修复。反例是加入右手中微子的无异常 $U(1)_{B-L}$ 荷指派，但这没有推导出三代粒子。
+\section{结论}
+获得了严格的模型限制及条件性第五力表达；仍不能从光速螺旋独立推出 $SU(3)\times SU(2)\times U(1)$、粒子谱、$G$、$\hbar$。详见 \texttt{theory/V147\_完整中文数学审计.md}、代码、测试和生成数据。
+\end{document}

@@ -1,0 +1,98 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=21mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref}
+\title{ROOT V148: Lorentz Covariance Audit of the Null-Speed Spatial Helix}
+\author{Reproducible Research Audit (not a proof of unified field theory)}
+\date{24 November 2026}
+\begin{document}
+\maketitle
+\section{Unit convention}
+Only $c=1$ is adopted. Both $\hbar$ and $G$ remain independent, dimensionful constants:
+$[\hbar]=ML$, $[G]=L/M$, $[\kappa]=[\tau]=[\omega]=L^{-1}$.
+\section{Ideal null-speed spatial helix}
+Consider the inertial coordinates of a proposed helical spatial trajectory:
+\begin{align}
+X^\mu(t)&=(t,a\cos\omega t,a\sin\omega t,ut),\\
+a^2\omega^2+u^2&=1.
+\end{align}
+Its spatial velocity, acceleration and jerk are
+\begin{align}
+\mathbf v&=(-a\omega\sin\omega t,a\omega\cos\omega t,u),\\
+\mathbf a_s&=(-a\omega^2\cos\omega t,-a\omega^2\sin\omega t,0),\\
+\mathbf j&=(a\omega^3\sin\omega t,-a\omega^3\cos\omega t,0).
+\end{align}
+The Euclidean Frenet curvature and torsion are
+\begin{equation}
+\kappa=\frac{|\mathbf v\times\mathbf a_s|}{|\mathbf v|^3}
+=\frac{a\omega^2}{a^2\omega^2+u^2},\qquad
+\tau=\frac{\mathbf v\cdot(\mathbf a_s\times\mathbf j)}{|\mathbf v\times\mathbf a_s|^2}
+=\frac{u\omega}{a^2\omega^2+u^2}.
+\end{equation}
+Hence under the null-speed constraint,
+\begin{equation}
+\boxed{\kappa=a\omega^2,\qquad \tau=u\omega,\qquad\kappa^2+\tau^2=\omega^2.}
+\end{equation}
+Although $\dot X^2=0$, the curve is not a free null geodesic:
+$\ddot X^\mu=(0,\mathbf a_s)$ is nonzero and not proportional to $\dot X^\mu$.
+\section{Lorentz boost along the helix axis}
+For a boost $\beta$ along $z$, define
+\begin{equation}
+D=\gamma(1-\beta u),\quad \gamma=(1-\beta^2)^{-1/2}.
+\end{equation}
+The transformed coordinates satisfy $t'=Dt$ and the spatial projection remains a helix with
+\begin{equation}
+\boxed{
+\omega'=\frac\omega D,\qquad
+u'=\frac{u-\beta}{1-\beta u},\qquad
+a'=a,\qquad \kappa'=a(\omega')^2,\quad\tau'=u'\omega'.
+}
+\end{equation}
+At $\beta=u$, the spatial torsion vanishes: $u'=\tau'=0$.
+Therefore spatial Frenet curvature and torsion are not universal Lorentz scalar quantities.
+\section{Conditional obstruction to identifying geometrical and quantum frequency}
+If a null pointlike object has tangent four-momentum $p^\mu=E\dot X^\mu$ in the chosen original time parametrization, then $E'=DE$, whereas the coordinate helix frequency transforms as $\omega'=\omega/D$. Thus
+\begin{equation}
+\boxed{\frac{E'}{\hbar|\omega'|}=D^2\frac{E}{\hbar|\omega|}.}
+\end{equation}
+It is not consistent to impose $E=\hbar|\omega_{\mathrm{geometric}}|$ universally without additional dynamics. This does not alter the correct photon relation involving the phase frequency of a covariant wave four-vector.
+\section{Rotating electromagnetic fields are not a helical ray}
+Let $\varphi=k(t-z)$ and
+\begin{align}
+\mathbf E&=E_0(\cos\varphi,\sin\varphi,0),\\
+\mathbf B&=E_0(-\sin\varphi,\cos\varphi,0).
+\end{align}
+The vacuum Maxwell equations hold:
+\begin{equation}
+\partial_t\mathbf B+\nabla\times\mathbf E=0,\qquad
+\nabla\times\mathbf B-\partial_t\mathbf E=0,
+\end{equation}
+and the Lorentz invariants and energy flux are
+\begin{equation}
+\boxed{\mathbf E\cdot\mathbf B=0,\quad
+\mathbf E^2-\mathbf B^2=0,\quad \mathbf E\times\mathbf B=E_0^2\hat{\mathbf z}.}
+\end{equation}
+The field vectors rotate, but energy flows along the straight $+z$ direction. The photon phase frequency and energy both transform under an axial boost with Doppler factor $\gamma(1-\beta)$.
+\section{A single smooth rotation frame or phase is insufficient}
+For $R(x)\in SO(3)$, the pure gauge connection $\Omega=R^{-1}dR$ has vanishing Maurer--Cartan curvature:
+\begin{equation}
+\boxed{d\Omega+\Omega\wedge\Omega=0.}
+\end{equation}
+Likewise, for smooth $\theta$, $A=d\theta$ has $F=dA=d^2\theta=0$.
+An independent propagating gauge field cannot be inferred from mere frame rotation.
+A massless $U(1)$ gauge field has two physical propagating polarizations (four potential components, one transversality constraint, one residual gauge equivalence).
+\section{Spherical Earth--Moon reference, not a new ROOT prediction}
+For the exterior spherical reference approximation,
+\begin{equation}
+\mathbf g(\mathbf r)=-\frac{GM}{r^3}\mathbf r.
+\end{equation}
+Inputs: JPL DE440 Earth $GM=398600.435507\,\mathrm{km^3s^{-2}}$ and Moon $GM=4902.800118\,\mathrm{km^3s^{-2}}$; approximate mean radii $6371$ and $1737.4\,\mathrm{km}$.
+Calculated spherical surface values: Earth $9.820250332024\,\mathrm{ms^{-2}}$, Moon $1.624218876561\,\mathrm{ms^{-2}}$. No independent derivation of $GM$ has been made.
+\section{Scientific status}
+The derived relations are established geometry and Maxwell theory applied to a proposed trajectory. This is a conditional mathematical audit, \emph{not} evidence for an experimentally validated unification of gravity, electromagnetism, weak and strong interactions. A unified action, gauge group, fermion spectrum, quantum consistency and parameter-free predictions remain open.
+\begin{thebibliography}{9}
+\bibitem{jpl} NASA/JPL, \url{https://ssd.jpl.nasa.gov/astro_par.html}.
+\bibitem{tong} D. Tong, GR lecture notes, \url{https://www.damtp.cam.ac.uk/user/tong/gr/grhtml/S1.html}.
+\bibitem{openstax} OpenStax, Plane Electromagnetic Waves, \url{https://openstax.org/books/university-physics-volume-2/pages/16-2-plane-electromagnetic-waves}.
+\bibitem{nist} NIST CODATA Constants, \url{https://physics.nist.gov/cuu/Constants/index.html}.
+\end{thebibliography}
+\end{document}
